@@ -1,0 +1,165 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom base styles */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply antialiased;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-slate-100;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-400;
+  }
+}
+
+/* Custom components */
+@layer components {
+  /* Hide scrollbar for horizontal scroll areas */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Glass effect */
+  .glass {
+    @apply bg-white/80 backdrop-blur-md;
+  }
+
+  /* Card hover effect */
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-amber-500 via-rose-500 to-purple-500 bg-clip-text text-transparent;
+  }
+
+  /* Level-specific button styles */
+  .btn-a1 {
+    @apply bg-gradient-to-r from-a1-primary to-a1-secondary text-white;
+  }
+
+  .btn-a2 {
+    @apply bg-gradient-to-r from-a2-primary to-a2-secondary text-white;
+  }
+
+  .btn-b1 {
+    @apply bg-gradient-to-r from-b1-primary to-b1-secondary text-white;
+  }
+
+  .btn-b2 {
+    @apply bg-gradient-to-r from-b2-primary to-b2-secondary text-white;
+  }
+}
+
+/* Custom utilities */
+@layer utilities {
+  /* Animation delay utilities */
+  .delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .delay-300 {
+    animation-delay: 300ms;
+  }
+
+  /* Safe area padding for mobile */
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+/* Framer Motion animation helper */
+.will-change-transform {
+  will-change: transform;
+}
+
+/* Speech synthesis visual feedback */
+@keyframes pulse-speak {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+.speaking {
+  animation: pulse-speak 0.5s ease-in-out infinite;
+}
+
+/* Loading spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Bounce animation for chat typing indicator */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-bounce {
+  animation: bounce 0.6s ease-in-out infinite;
+}
+
+/* Focus ring styles */
+*:focus-visible {
+  @apply outline-none ring-2 ring-amber-500/50 ring-offset-2;
+}
+
+/* Selection color */
+::selection {
+  @apply bg-amber-200 text-amber-900;
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
