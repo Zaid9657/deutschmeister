@@ -59,20 +59,36 @@
   }
 
   /* Level-specific button styles */
-  .btn-a1 {
-    @apply bg-gradient-to-r from-a1-primary to-a1-secondary text-white;
+  .btn-a1-1 {
+    @apply bg-gradient-to-r from-a1-1-primary to-a1-1-secondary text-white;
   }
 
-  .btn-a2 {
-    @apply bg-gradient-to-r from-a2-primary to-a2-secondary text-white;
+  .btn-a1-2 {
+    @apply bg-gradient-to-r from-a1-2-primary to-a1-2-secondary text-white;
   }
 
-  .btn-b1 {
-    @apply bg-gradient-to-r from-b1-primary to-b1-secondary text-white;
+  .btn-a2-1 {
+    @apply bg-gradient-to-r from-a2-1-primary to-a2-1-secondary text-white;
   }
 
-  .btn-b2 {
-    @apply bg-gradient-to-r from-b2-primary to-b2-secondary text-white;
+  .btn-a2-2 {
+    @apply bg-gradient-to-r from-a2-2-primary to-a2-2-secondary text-white;
+  }
+
+  .btn-b1-1 {
+    @apply bg-gradient-to-r from-b1-1-primary to-b1-1-secondary text-white;
+  }
+
+  .btn-b1-2 {
+    @apply bg-gradient-to-r from-b1-2-primary to-b1-2-secondary text-white;
+  }
+
+  .btn-b2-1 {
+    @apply bg-gradient-to-r from-b2-1-primary to-b2-1-secondary text-white;
+  }
+
+  .btn-b2-2 {
+    @apply bg-gradient-to-r from-b2-2-primary to-b2-2-secondary text-white;
   }
 }
 

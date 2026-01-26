@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth } from './AuthContext';
 import { supabase } from '../utils/supabase';
-import { vocabulary, sentences, grammar, levels } from '../data/content';
+import { vocabulary, sentences, grammar, levels, levelOrder } from '../data/content';
 
 const ProgressContext = createContext({});
 
@@ -9,14 +9,21 @@ export const useProgress = () => useContext(ProgressContext);
 
 const UNLOCK_THRESHOLD = 70; // 70% required to unlock next level
 
+// Initialize empty progress for all 8 sub-levels
+const getInitialProgress = () => ({
+  'a1.1': { vocabulary: [], sentences: [], grammar: [] },
+  'a1.2': { vocabulary: [], sentences: [], grammar: [] },
+  'a2.1': { vocabulary: [], sentences: [], grammar: [] },
+  'a2.2': { vocabulary: [], sentences: [], grammar: [] },
+  'b1.1': { vocabulary: [], sentences: [], grammar: [] },
+  'b1.2': { vocabulary: [], sentences: [], grammar: [] },
+  'b2.1': { vocabulary: [], sentences: [], grammar: [] },
+  'b2.2': { vocabulary: [], sentences: [], grammar: [] },
+});
+
 export const ProgressProvider = ({ children }) => {
   const { user } = useAuth();
-  const [progress, setProgress] = useState({
-    a1: { vocabulary: [], sentences: [], grammar: [] },
-    a2: { vocabulary: [], sentences: [], grammar: [] },
-    b1: { vocabulary: [], sentences: [], grammar: [] },
-    b2: { vocabulary: [], sentences: [], grammar: [] },
-  });
+  const [progress, setProgress] = useState(getInitialProgress());
   const [loading, setLoading] = useState(true);
 
   // Load progress from Supabase when user logs in
@@ -27,7 +34,13 @@ export const ProgressProvider = ({ children }) => {
       // Load from localStorage for non-authenticated users
       const stored = localStorage.getItem('deutschmeister_progress');
       if (stored) {
-        setProgress(JSON.parse(stored));
+        try {
+          const parsed = JSON.parse(stored);
+          // Merge with initial progress to ensure all levels exist
+          setProgress({ ...getInitialProgress(), ...parsed });
+        } catch {
+          setProgress(getInitialProgress());
+        }
       }
       setLoading(false);
     }
@@ -46,7 +59,8 @@ export const ProgressProvider = ({ children }) => {
       }
 
       if (data) {
-        setProgress(data.progress);
+        // Merge with initial progress to ensure all levels exist
+        setProgress({ ...getInitialProgress(), ...data.progress });
       } else {
         // Initialize progress in database
         await saveProgressToDb(progress);
@@ -84,6 +98,9 @@ export const ProgressProvider = ({ children }) => {
   // Mark an item as learned
   const markAsLearned = async (level, category, itemId) => {
     const newProgress = { ...progress };
+    if (!newProgress[level]) {
+      newProgress[level] = { vocabulary: [], sentences: [], grammar: [] };
+    }
     if (!newProgress[level][category].includes(itemId)) {
       newProgress[level][category] = [...newProgress[level][category], itemId];
       setProgress(newProgress);
@@ -94,11 +111,13 @@ export const ProgressProvider = ({ children }) => {
   // Unmark an item as learned
   const unmarkAsLearned = async (level, category, itemId) => {
     const newProgress = { ...progress };
-    newProgress[level][category] = newProgress[level][category].filter(
-      (id) => id !== itemId
-    );
-    setProgress(newProgress);
-    await saveProgressToDb(newProgress);
+    if (newProgress[level] && newProgress[level][category]) {
+      newProgress[level][category] = newProgress[level][category].filter(
+        (id) => id !== itemId
+      );
+      setProgress(newProgress);
+      await saveProgressToDb(newProgress);
+    }
   };
 
   // Check if an item is learned
@@ -128,14 +147,14 @@ export const ProgressProvider = ({ children }) => {
 
   // Check if a level is unlocked
   const isLevelUnlocked = (level) => {
-    const levelIndex = levels.indexOf(level);
-    if (levelIndex === 0) return true; // A1 is always unlocked
+    const levelIndex = levelOrder.indexOf(level);
+    if (levelIndex === 0) return true; // a1.1 is always unlocked
 
-    const previousLevel = levels[levelIndex - 1];
+    const previousLevel = levelOrder[levelIndex - 1];
     return getLevelProgress(previousLevel) >= UNLOCK_THRESHOLD;
   };
 
-  // Get total stats
+  // Get total stats across all levels
   const getTotalStats = () => {
     let totalVocab = 0;
     let totalSentences = 0;
@@ -155,7 +174,7 @@ export const ProgressProvider = ({ children }) => {
     };
   };
 
-  // Get overall progress
+  // Get overall progress across all levels
   const getOverallProgress = () => {
     let totalItems = 0;
     let learnedItems = 0;

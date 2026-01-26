@@ -4,7 +4,14 @@ import { TrendingUp, BookOpen, MessageSquare, Award } from 'lucide-react';
 import LevelCard from '../components/LevelCard';
 import { useProgress } from '../contexts/ProgressContext';
 import { useAuth } from '../contexts/AuthContext';
-import { levels } from '../data/content';
+import { mainLevels, getSubLevels } from '../data/content';
+
+const mainLevelInfo = {
+  A1: { name: 'Sunrise Warmth', icon: '🌅', color: 'from-amber-400 to-orange-400' },
+  A2: { name: 'Forest Calm', icon: '🌿', color: 'from-emerald-400 to-teal-400' },
+  B1: { name: 'Ocean Depth', icon: '🌊', color: 'from-blue-400 to-indigo-400' },
+  B2: { name: 'Twilight Elegance', icon: '🌙', color: 'from-purple-400 to-pink-400' },
+};
 
 const DashboardPage = () => {
   const { t } = useTranslation();
@@ -105,7 +112,7 @@ const DashboardPage = () => {
           </div>
         </motion.div>
 
-        {/* Level Cards */}
+        {/* Level Cards Grouped by Main Level */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -114,17 +121,49 @@ const DashboardPage = () => {
           <h2 className="font-display text-2xl font-bold text-slate-800 mb-6">
             Your Levels
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {levels.map((level, index) => (
-              <motion.div
-                key={level}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 + index * 0.1 }}
-              >
-                <LevelCard level={level} />
-              </motion.div>
-            ))}
+
+          <div className="space-y-8">
+            {mainLevels.map((mainLevel, groupIndex) => {
+              const info = mainLevelInfo[mainLevel];
+              const subLevels = getSubLevels(mainLevel);
+
+              return (
+                <motion.div
+                  key={mainLevel}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 + groupIndex * 0.1 }}
+                  className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100"
+                >
+                  {/* Main Level Header */}
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${info.color} flex items-center justify-center`}>
+                      <span className="text-2xl">{info.icon}</span>
+                    </div>
+                    <div>
+                      <h3 className="font-display text-xl font-bold text-slate-800">
+                        {mainLevel} - {info.name}
+                      </h3>
+                      <p className="text-sm text-slate-500">2 sub-levels</p>
+                    </div>
+                  </div>
+
+                  {/* Sub-Level Cards */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {subLevels.map((level, index) => (
+                      <motion.div
+                        key={level}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.6 + groupIndex * 0.1 + index * 0.05 }}
+                      >
+                        <LevelCard level={level} />
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </motion.div>
       </div>

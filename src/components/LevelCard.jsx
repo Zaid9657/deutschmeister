@@ -4,12 +4,17 @@ import { motion } from 'framer-motion';
 import { Lock, ChevronRight, Sun, TreePine, Waves, Moon } from 'lucide-react';
 import { useProgress } from '../contexts/ProgressContext';
 import { useTheme } from '../contexts/ThemeContext';
+import { levelOrder, levelThemes as contentLevelThemes } from '../data/content';
 
 const iconMap = {
-  a1: Sun,
-  a2: TreePine,
-  b1: Waves,
-  b2: Moon,
+  'a1.1': Sun,
+  'a1.2': Sun,
+  'a2.1': TreePine,
+  'a2.2': TreePine,
+  'b1.1': Waves,
+  'b1.2': Waves,
+  'b2.1': Moon,
+  'b2.2': Moon,
 };
 
 const LevelCard = ({ level }) => {
@@ -21,16 +26,22 @@ const LevelCard = ({ level }) => {
   const progress = getLevelProgress(level);
   const unlocked = isLevelUnlocked(level);
   const theme = getThemeForLevel(level);
-  const Icon = iconMap[level];
+  const Icon = iconMap[level] || Sun;
+  const levelInfo = contentLevelThemes[level] || {};
 
-  const levelKey = level.toLowerCase();
-  const previousLevel = level === 'a1' ? null : ['a1', 'a2', 'b1', 'b2'][['a1', 'a2', 'b1', 'b2'].indexOf(level) - 1];
+  // Get previous level for unlock message
+  const levelIndex = levelOrder.indexOf(level);
+  const previousLevel = levelIndex > 0 ? levelOrder[levelIndex - 1] : null;
 
   const handleClick = () => {
     if (unlocked) {
       navigate(`/level/${level}`);
     }
   };
+
+  // Format level for display (a1.1 -> A1.1)
+  const displayLevel = level.toUpperCase();
+  const part = levelInfo.part || (level.endsWith('.1') ? 1 : 2);
 
   return (
     <motion.div
@@ -51,49 +62,59 @@ const LevelCard = ({ level }) => {
       />
 
       {/* Content */}
-      <div className="relative p-6 sm:p-8">
-        <div className="flex items-start justify-between mb-4">
-          <div
-            className={`w-14 h-14 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center ${
-              !unlocked ? 'opacity-50' : ''
-            }`}
-          >
-            {unlocked ? (
-              <Icon className="w-7 h-7 text-white" />
-            ) : (
-              <Lock className="w-7 h-7 text-white" />
-            )}
+      <div className="relative p-6">
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex items-center gap-3">
+            <div
+              className={`w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center ${
+                !unlocked ? 'opacity-50' : ''
+              }`}
+            >
+              {unlocked ? (
+                <Icon className="w-6 h-6 text-white" />
+              ) : (
+                <Lock className="w-6 h-6 text-white" />
+              )}
+            </div>
+            {/* Part indicator badge */}
+            <div
+              className={`px-2 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-medium ${
+                !unlocked ? 'opacity-50' : ''
+              }`}
+            >
+              Part {part}
+            </div>
           </div>
           {unlocked && (
             <motion.div
               whileHover={{ x: 4 }}
-              className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center"
+              className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center"
             >
-              <ChevronRight className="w-5 h-5 text-white" />
+              <ChevronRight className="w-4 h-4 text-white" />
             </motion.div>
           )}
         </div>
 
         <h3
-          className={`font-display text-2xl font-semibold text-white mb-1 ${
+          className={`font-display text-xl font-semibold text-white mb-1 ${
             !unlocked ? 'opacity-70' : ''
           }`}
         >
-          {t(`levels.${levelKey}.name`)}
+          {t(`levels.${level}.name`, { defaultValue: displayLevel })}
         </h3>
         <p
           className={`text-white/80 text-sm mb-1 ${
             !unlocked ? 'opacity-60' : ''
           }`}
         >
-          {t(`levels.${levelKey}.theme`)}
+          {t(`levels.${level}.theme`, { defaultValue: levelInfo.name || '' })}
         </p>
         <p
-          className={`text-white/70 text-sm mb-6 ${
+          className={`text-white/70 text-xs mb-4 line-clamp-2 ${
             !unlocked ? 'opacity-50' : ''
           }`}
         >
-          {t(`levels.${levelKey}.description`)}
+          {t(`levels.${level}.description`, { defaultValue: levelInfo.description || '' })}
         </p>
 
         {/* Progress bar */}
@@ -118,8 +139,8 @@ const LevelCard = ({ level }) => {
 
         {/* Locked message */}
         {!unlocked && previousLevel && (
-          <div className="mt-4 p-3 bg-white/10 backdrop-blur-sm rounded-lg">
-            <p className="text-white/80 text-sm text-center">
+          <div className="mt-3 p-2 bg-white/10 backdrop-blur-sm rounded-lg">
+            <p className="text-white/80 text-xs text-center">
               {t('dashboard.unlockRequirement', {
                 percent: UNLOCK_THRESHOLD,
                 level: previousLevel.toUpperCase(),
@@ -133,7 +154,7 @@ const LevelCard = ({ level }) => {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="mt-4 w-full py-3 bg-white/20 backdrop-blur-sm rounded-xl text-white font-medium hover:bg-white/30 transition-colors"
+            className="mt-3 w-full py-2.5 bg-white/20 backdrop-blur-sm rounded-xl text-white font-medium text-sm hover:bg-white/30 transition-colors"
           >
             {progress > 0 ? t('dashboard.continue') : t('dashboard.start')}
           </motion.button>
@@ -141,8 +162,8 @@ const LevelCard = ({ level }) => {
       </div>
 
       {/* Decorative elements */}
-      <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-white/5 rounded-full" />
-      <div className="absolute -top-8 -left-8 w-24 h-24 bg-white/5 rounded-full" />
+      <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-white/5 rounded-full" />
+      <div className="absolute -top-6 -left-6 w-20 h-20 bg-white/5 rounded-full" />
     </motion.div>
   );
 };

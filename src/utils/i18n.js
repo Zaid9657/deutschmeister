@@ -69,25 +69,45 @@ const resources = {
       },
       // Levels
       levels: {
-        a1: {
-          name: 'A1 - Beginner',
-          theme: 'Sunrise Warmth',
-          description: 'Start your German journey with basics: greetings, numbers, and everyday phrases.',
+        'a1.1': {
+          name: 'A1.1 - Beginner I',
+          theme: 'Sunrise Warmth I',
+          description: 'Your first steps in German: basic greetings and essential words.',
         },
-        a2: {
-          name: 'A2 - Elementary',
-          theme: 'Forest Calm',
-          description: 'Expand your vocabulary with daily life topics and simple conversations.',
+        'a1.2': {
+          name: 'A1.2 - Beginner II',
+          theme: 'Sunrise Warmth II',
+          description: 'Building your foundation with family, time, and daily expressions.',
         },
-        b1: {
-          name: 'B1 - Intermediate',
-          theme: 'Ocean Depth',
-          description: 'Dive deeper into German with complex sentences and professional topics.',
+        'a2.1': {
+          name: 'A2.1 - Elementary I',
+          theme: 'Forest Calm I',
+          description: 'Exploring everyday German: work, travel, and daily activities.',
         },
-        b2: {
-          name: 'B2 - Upper Intermediate',
-          theme: 'Twilight Elegance',
-          description: 'Master advanced grammar and express yourself fluently.',
+        'a2.2': {
+          name: 'A2.2 - Elementary II',
+          theme: 'Forest Calm II',
+          description: 'Deepening your roots with social situations and conversations.',
+        },
+        'b1.1': {
+          name: 'B1.1 - Intermediate I',
+          theme: 'Ocean Depth I',
+          description: 'Diving into fluency with opinions, career, and society topics.',
+        },
+        'b1.2': {
+          name: 'B1.2 - Intermediate II',
+          theme: 'Ocean Depth II',
+          description: 'Navigating complex waters with advanced grammar structures.',
+        },
+        'b2.1': {
+          name: 'B2.1 - Upper Intermediate I',
+          theme: 'Twilight Elegance I',
+          description: 'Refining your expression with formal and academic German.',
+        },
+        'b2.2': {
+          name: 'B2.2 - Upper Intermediate II',
+          theme: 'Twilight Elegance II',
+          description: 'Mastering the language with sophisticated expressions.',
         },
       },
       // Level Page
@@ -210,25 +230,45 @@ const resources = {
       },
       // Levels
       levels: {
-        a1: {
-          name: 'A1 - Anfänger',
-          theme: 'Sonnenaufgangswärme',
-          description: 'Beginne deine Deutschreise mit Grundlagen: Begrüßungen, Zahlen und Alltagsphrasen.',
+        'a1.1': {
+          name: 'A1.1 - Anfänger I',
+          theme: 'Sonnenaufgang Wärme I',
+          description: 'Deine ersten Schritte auf Deutsch: Begrüßungen und wichtige Wörter.',
         },
-        a2: {
-          name: 'A2 - Grundstufe',
-          theme: 'Waldruhe',
-          description: 'Erweitere deinen Wortschatz mit Alltagsthemen und einfachen Gesprächen.',
+        'a1.2': {
+          name: 'A1.2 - Anfänger II',
+          theme: 'Sonnenaufgang Wärme II',
+          description: 'Dein Fundament aufbauen mit Familie, Zeit und Alltagsausdrücken.',
         },
-        b1: {
-          name: 'B1 - Mittelstufe',
-          theme: 'Meerestiefe',
-          description: 'Tauche tiefer in die deutsche Sprache mit komplexen Sätzen und beruflichen Themen.',
+        'a2.1': {
+          name: 'A2.1 - Grundstufe I',
+          theme: 'Waldruhe I',
+          description: 'Alltägliches Deutsch entdecken: Arbeit, Reisen und tägliche Aktivitäten.',
         },
-        b2: {
-          name: 'B2 - Obere Mittelstufe',
-          theme: 'Dämmerungseleganz',
-          description: 'Meistere fortgeschrittene Grammatik und drücke dich fließend aus.',
+        'a2.2': {
+          name: 'A2.2 - Grundstufe II',
+          theme: 'Waldruhe II',
+          description: 'Deine Wurzeln vertiefen mit sozialen Situationen und Gesprächen.',
+        },
+        'b1.1': {
+          name: 'B1.1 - Mittelstufe I',
+          theme: 'Meerestiefe I',
+          description: 'In die Sprachgewandtheit eintauchen mit Meinungen, Karriere und Gesellschaft.',
+        },
+        'b1.2': {
+          name: 'B1.2 - Mittelstufe II',
+          theme: 'Meerestiefe II',
+          description: 'Durch komplexe Gewässer navigieren mit fortgeschrittenen Grammatikstrukturen.',
+        },
+        'b2.1': {
+          name: 'B2.1 - Obere Mittelstufe I',
+          theme: 'Dämmerungseleganz I',
+          description: 'Deinen Ausdruck verfeinern mit formellem und akademischem Deutsch.',
+        },
+        'b2.2': {
+          name: 'B2.2 - Obere Mittelstufe II',
+          theme: 'Dämmerungseleganz II',
+          description: 'Die Sprache meistern mit anspruchsvollen Ausdrücken.',
         },
       },
       // Level Page
