@@ -2,13 +2,12 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, BookOpen, MessageSquare, BookMarked, Volume2, Mic, Sun, TreePine, Waves, Moon } from 'lucide-react';
+import { ArrowLeft, BookOpen, MessageSquare, Volume2, Mic, Sun, TreePine, Waves, Moon } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useProgress } from '../contexts/ProgressContext';
-import { vocabulary, sentences, grammar, levels, levelThemes as contentLevelThemes } from '../data/content';
+import { vocabulary, sentences, levels, levelThemes as contentLevelThemes } from '../data/content';
 import WordCard from '../components/WordCard';
 import SentenceCard from '../components/SentenceCard';
-import GrammarCard from '../components/GrammarCard';
 import SpeakingPractice from '../components/SpeakingPractice';
 
 const iconMap = {
@@ -49,14 +48,12 @@ const LevelPage = () => {
   const tabs = [
     { id: 'vocabulary', label: t('levelPage.vocabulary'), icon: BookOpen },
     { id: 'sentences', label: t('levelPage.sentences'), icon: MessageSquare },
-    { id: 'grammar', label: t('levelPage.grammar'), icon: BookMarked },
     { id: 'audio', label: t('levelPage.audio'), icon: Volume2 },
     { id: 'speaking', label: t('levelPage.speaking'), icon: Mic },
   ];
 
   const levelVocabulary = vocabulary[level] || [];
   const levelSentences = sentences[level] || [];
-  const levelGrammar = grammar[level] || [];
 
   const handleSpeak = (text) => {
     if ('speechSynthesis' in window) {
@@ -198,20 +195,6 @@ const LevelPage = () => {
                 {levelSentences.length === 0 && (
                   <div className="col-span-full text-center py-12 text-slate-500">
                     No sentences available for this level yet.
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Grammar Tab */}
-            {activeTab === 'grammar' && (
-              <div className="space-y-4">
-                {levelGrammar.map((item) => (
-                  <GrammarCard key={item.id} grammar={item} level={level} />
-                ))}
-                {levelGrammar.length === 0 && (
-                  <div className="text-center py-12 text-slate-500">
-                    No grammar items available for this level yet.
                   </div>
                 )}
               </div>

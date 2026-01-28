@@ -14,6 +14,7 @@ import LevelPage from './pages/LevelPage';
 import ProfilePage from './pages/ProfilePage';
 import GrammarSectionPage from './pages/GrammarSectionPage';
 import GrammarTopicsPage from './pages/GrammarTopicsPage';
+import GrammarLessonPage from './pages/GrammarLessonPage';
 
 function App() {
   return (
@@ -69,6 +70,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <GrammarTopicsPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/grammar/:level/:topicSlug"
+                  element={
+                    <ProtectedRoute>
+                      <GrammarLessonPage />
                     </ProtectedRoute>
                   }
                 />

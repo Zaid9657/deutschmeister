@@ -14,9 +14,7 @@ const GrammarTopicCard = ({ topic, level, isUnlocked, isCompleted, progress = 0 
 
   const handleClick = () => {
     if (isUnlocked) {
-      // Phase 2: Navigate to lesson page
-      // navigate(`/grammar/${level}/${topic.slug}`);
-      console.log('Topic clicked:', topic.slug);
+      navigate(`/grammar/${level}/${topic.slug}`);
     }
   };
 
