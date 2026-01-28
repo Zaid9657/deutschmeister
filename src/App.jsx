@@ -12,6 +12,8 @@ import UpdatePasswordPage from './pages/UpdatePasswordPage';
 import DashboardPage from './pages/DashboardPage';
 import LevelPage from './pages/LevelPage';
 import ProfilePage from './pages/ProfilePage';
+import GrammarSectionPage from './pages/GrammarSectionPage';
+import GrammarTopicsPage from './pages/GrammarTopicsPage';
 
 function App() {
   return (
@@ -51,6 +53,22 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <ProfilePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/grammar"
+                  element={
+                    <ProtectedRoute>
+                      <GrammarSectionPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/grammar/:level"
+                  element={
+                    <ProtectedRoute>
+                      <GrammarTopicsPage />
                     </ProtectedRoute>
                   }
                 />

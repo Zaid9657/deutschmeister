@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth } from './AuthContext';
 import { supabase } from '../utils/supabase';
 import { vocabulary, sentences, grammar, levels, levelOrder } from '../data/content';
+import { getTopicsForLevel } from '../data/grammarTopics';
 
 const ProgressContext = createContext({});
 
@@ -11,14 +12,14 @@ const UNLOCK_THRESHOLD = 70; // 70% required to unlock next level
 
 // Initialize empty progress for all 8 sub-levels
 const getInitialProgress = () => ({
-  'a1.1': { vocabulary: [], sentences: [], grammar: [] },
-  'a1.2': { vocabulary: [], sentences: [], grammar: [] },
-  'a2.1': { vocabulary: [], sentences: [], grammar: [] },
-  'a2.2': { vocabulary: [], sentences: [], grammar: [] },
-  'b1.1': { vocabulary: [], sentences: [], grammar: [] },
-  'b1.2': { vocabulary: [], sentences: [], grammar: [] },
-  'b2.1': { vocabulary: [], sentences: [], grammar: [] },
-  'b2.2': { vocabulary: [], sentences: [], grammar: [] },
+  'a1.1': { vocabulary: [], sentences: [], grammar: [], grammarTopics: {} },
+  'a1.2': { vocabulary: [], sentences: [], grammar: [], grammarTopics: {} },
+  'a2.1': { vocabulary: [], sentences: [], grammar: [], grammarTopics: {} },
+  'a2.2': { vocabulary: [], sentences: [], grammar: [], grammarTopics: {} },
+  'b1.1': { vocabulary: [], sentences: [], grammar: [], grammarTopics: {} },
+  'b1.2': { vocabulary: [], sentences: [], grammar: [], grammarTopics: {} },
+  'b2.1': { vocabulary: [], sentences: [], grammar: [], grammarTopics: {} },
+  'b2.2': { vocabulary: [], sentences: [], grammar: [], grammarTopics: {} },
 });
 
 export const ProgressProvider = ({ children }) => {
@@ -193,6 +194,77 @@ export const ProgressProvider = ({ children }) => {
     return Math.round((learnedItems / totalItems) * 100);
   };
 
+  // ==========================================
+  // Grammar Topics Progress Methods
+  // ==========================================
+
+  // Get progress for a specific grammar topic
+  const getGrammarTopicProgress = (level, topicId) => {
+    const topicProgress = progress[level]?.grammarTopics?.[topicId];
+    if (!topicProgress) {
+      return { completed: false, progress: 0, currentStage: 1, score: 0 };
+    }
+    return topicProgress;
+  };
+
+  // Check if a grammar topic is unlocked (sequential unlocking)
+  const isGrammarTopicUnlocked = (level, topicIndex) => {
+    // First topic is always unlocked if the level is unlocked
+    if (topicIndex === 0) return isLevelUnlocked(level);
+
+    // Check if previous topic is completed
+    const topics = getTopicsForLevel(level);
+    if (topicIndex >= topics.length) return false;
+
+    const previousTopic = topics[topicIndex - 1];
+    const previousProgress = getGrammarTopicProgress(level, previousTopic.id);
+    return previousProgress.completed;
+  };
+
+  // Get overall progress for grammar section of a level
+  const getGrammarSectionProgress = (level) => {
+    const topics = getTopicsForLevel(level);
+    if (topics.length === 0) return 0;
+
+    let completedCount = 0;
+    topics.forEach(topic => {
+      const topicProgress = getGrammarTopicProgress(level, topic.id);
+      if (topicProgress.completed) completedCount++;
+    });
+
+    return Math.round((completedCount / topics.length) * 100);
+  };
+
+  // Update grammar topic progress
+  const updateGrammarTopicProgress = async (level, topicId, progressData) => {
+    const newProgress = { ...progress };
+    if (!newProgress[level]) {
+      newProgress[level] = { vocabulary: [], sentences: [], grammar: [], grammarTopics: {} };
+    }
+    if (!newProgress[level].grammarTopics) {
+      newProgress[level].grammarTopics = {};
+    }
+
+    newProgress[level].grammarTopics[topicId] = {
+      ...newProgress[level].grammarTopics[topicId],
+      ...progressData,
+    };
+
+    setProgress(newProgress);
+    await saveProgressToDb(newProgress);
+  };
+
+  // Mark grammar topic as completed
+  const completeGrammarTopic = async (level, topicId, score = 100) => {
+    await updateGrammarTopicProgress(level, topicId, {
+      completed: true,
+      progress: 100,
+      currentStage: 5,
+      score,
+      completedAt: new Date().toISOString(),
+    });
+  };
+
   const value = {
     progress,
     loading,
@@ -204,6 +276,12 @@ export const ProgressProvider = ({ children }) => {
     getTotalStats,
     getOverallProgress,
     UNLOCK_THRESHOLD,
+    // Grammar topics
+    getGrammarTopicProgress,
+    isGrammarTopicUnlocked,
+    getGrammarSectionProgress,
+    updateGrammarTopicProgress,
+    completeGrammarTopic,
   };
 
   return (

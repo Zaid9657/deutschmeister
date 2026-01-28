@@ -8,6 +8,7 @@ const resources = {
       nav: {
         home: 'Home',
         dashboard: 'Dashboard',
+        grammar: 'Grammar',
         profile: 'Profile',
         login: 'Login',
         signup: 'Sign Up',
@@ -169,6 +170,7 @@ const resources = {
       nav: {
         home: 'Startseite',
         dashboard: 'Dashboard',
+        grammar: 'Grammatik',
         profile: 'Profil',
         login: 'Anmelden',
         signup: 'Registrieren',
