@@ -334,6 +334,188 @@ export const grammarContent = {
           { en: 'Some common words break the patterns - always learn with article', de: 'Einige häufige Wörter brechen die Muster - immer mit Artikel lernen' },
         ],
       },
+      stage4: {
+        title: { en: 'Guided Practice', de: 'Geführte Übung' },
+        instructions: {
+          en: 'Practice identifying grammatical gender. Choose the correct article for each noun.',
+          de: 'Übe das Erkennen des grammatischen Geschlechts. Wähle den richtigen Artikel für jedes Nomen.',
+        },
+        exercises: [
+          {
+            type: 'multiple-choice',
+            question: { en: 'Which article goes with "Tisch" (table)?', de: 'Welcher Artikel gehört zu "Tisch"?' },
+            options: ['der', 'die', 'das'],
+            correct: 0,
+            explanation: {
+              en: '"Tisch" is masculine: der Tisch. Many objects can be any gender - you must memorize them!',
+              de: '"Tisch" ist maskulin: der Tisch. Viele Objekte können jedes Geschlecht haben - du musst sie auswendig lernen!',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Which article goes with "Lampe" (lamp)?', de: 'Welcher Artikel gehört zu "Lampe"?' },
+            options: ['der', 'die', 'das'],
+            correct: 1,
+            explanation: {
+              en: '"Lampe" is feminine: die Lampe. Words ending in -e are often feminine.',
+              de: '"Lampe" ist feminin: die Lampe. Wörter, die auf -e enden, sind oft feminin.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Which article goes with "Mädchen" (girl)?', de: 'Welcher Artikel gehört zu "Mädchen"?' },
+            options: ['der', 'die', 'das'],
+            correct: 2,
+            explanation: {
+              en: '"Mädchen" is neuter: das Mädchen. Words ending in -chen are ALWAYS neuter, even for people!',
+              de: '"Mädchen" ist neutral: das Mädchen. Wörter, die auf -chen enden, sind IMMER neutral, auch für Personen!',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'Complete: ___ Freiheit (freedom) - hint: -heit ending', de: 'Ergänze: ___ Freiheit - Hinweis: -heit Endung' },
+            answer: 'die',
+            acceptableAnswers: ['die', 'Die'],
+            explanation: {
+              en: 'Words ending in -heit are always feminine: die Freiheit.',
+              de: 'Wörter, die auf -heit enden, sind immer feminin: die Freiheit.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Which article goes with "Montag" (Monday)?', de: 'Welcher Artikel gehört zu "Montag"?' },
+            options: ['der', 'die', 'das'],
+            correct: 0,
+            explanation: {
+              en: 'Days of the week are masculine: der Montag, der Dienstag, etc.',
+              de: 'Wochentage sind maskulin: der Montag, der Dienstag, usw.',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'Complete: ___ Museum - hint: -um ending', de: 'Ergänze: ___ Museum - Hinweis: -um Endung' },
+            answer: 'das',
+            acceptableAnswers: ['das', 'Das'],
+            explanation: {
+              en: 'Words ending in -um are usually neuter: das Museum, das Datum.',
+              de: 'Wörter, die auf -um enden, sind meist neutral: das Museum, das Datum.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Which gender pattern is correct?', de: 'Welches Geschlechtsmuster ist richtig?' },
+            options: [
+              '-ung endings are masculine',
+              '-ung endings are feminine',
+              '-ung endings are neuter',
+            ],
+            correct: 1,
+            explanation: {
+              en: 'Words ending in -ung are always feminine: die Zeitung, die Übung, die Wohnung.',
+              de: 'Wörter, die auf -ung enden, sind immer feminin: die Zeitung, die Übung, die Wohnung.',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'Complete: ___ Sommer (summer)', de: 'Ergänze: ___ Sommer' },
+            answer: 'der',
+            acceptableAnswers: ['der', 'Der'],
+            explanation: {
+              en: 'Seasons are masculine: der Sommer, der Winter, der Frühling, der Herbst.',
+              de: 'Jahreszeiten sind maskulin: der Sommer, der Winter, der Frühling, der Herbst.',
+            },
+          },
+        ],
+      },
+      stage5: {
+        title: { en: 'Mastery Challenge', de: 'Meisterschaftsprüfung' },
+        instructions: {
+          en: 'Complete these advanced exercises to master German noun gender.',
+          de: 'Schließe diese fortgeschrittenen Übungen ab, um das deutsche Nomen-Geschlecht zu meistern.',
+        },
+        exercises: [
+          {
+            type: 'word-order',
+            question: { en: 'Order these nouns from masculine to feminine to neuter:', de: 'Ordne diese Nomen von maskulin zu feminin zu neutral:' },
+            words: ['Mädchen', 'Frau', 'Mann'],
+            correctOrder: ['Mann', 'Frau', 'Mädchen'],
+            explanation: {
+              en: 'der Mann (masculine), die Frau (feminine), das Mädchen (neuter - because of -chen!)',
+              de: 'der Mann (maskulin), die Frau (feminin), das Mädchen (neutral - wegen -chen!)',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write the German article for "the newspaper" (Zeitung):', de: 'Schreibe den deutschen Artikel für "the newspaper" (Zeitung):' },
+            answer: 'die',
+            acceptableAnswers: ['die', 'Die'],
+            explanation: {
+              en: 'die Zeitung - words ending in -ung are always feminine.',
+              de: 'die Zeitung - Wörter, die auf -ung enden, sind immer feminin.',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Match: Mann, Frau, Kind with der, die, das:', de: 'Zuordnen: Mann, Frau, Kind mit der, die, das:' },
+            words: ['der Kind', 'die Mann', 'das Frau'],
+            correctOrder: ['der Mann', 'die Frau', 'das Kind'],
+            explanation: {
+              en: 'der Mann, die Frau, das Kind - basic gender assignments for people.',
+              de: 'der Mann, die Frau, das Kind - grundlegende Geschlechtszuweisungen für Personen.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write the article + noun for "a girl" in German:', de: 'Schreibe den Artikel + Nomen für "a girl" auf Deutsch:' },
+            answer: 'ein Mädchen',
+            acceptableAnswers: ['ein Mädchen', 'Ein Mädchen', 'ein mädchen'],
+            explanation: {
+              en: 'ein Mädchen - neuter because of the -chen ending, so "ein" not "eine".',
+              de: 'ein Mädchen - neutral wegen der -chen Endung, also "ein" nicht "eine".',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Put these feminine-ending patterns in order (-ung, -heit, -keit):', de: 'Ordne diese femininen Endungsmuster (-ung, -heit, -keit):' },
+            words: ['Möglichkeit', 'Zeitung', 'Freiheit'],
+            correctOrder: ['Zeitung', 'Freiheit', 'Möglichkeit'],
+            explanation: {
+              en: 'All three endings (-ung, -heit, -keit) are always feminine: die Zeitung, die Freiheit, die Möglichkeit.',
+              de: 'Alle drei Endungen (-ung, -heit, -keit) sind immer feminin: die Zeitung, die Freiheit, die Möglichkeit.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write "the book" in German:', de: 'Schreibe "the book" auf Deutsch:' },
+            answer: 'das Buch',
+            acceptableAnswers: ['das Buch', 'Das Buch', 'das buch'],
+            explanation: {
+              en: 'das Buch - "Buch" is neuter. This must be memorized!',
+              de: 'das Buch - "Buch" ist neutral. Das muss auswendig gelernt werden!',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write "the teacher" (male) in German:', de: 'Schreibe "the teacher" (männlich) auf Deutsch:' },
+            answer: 'der Lehrer',
+            acceptableAnswers: ['der Lehrer', 'Der Lehrer', 'der lehrer'],
+            explanation: {
+              en: 'der Lehrer - male professions ending in -er are masculine.',
+              de: 'der Lehrer - männliche Berufe, die auf -er enden, sind maskulin.',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Order these neuter words (das ...):', de: 'Ordne diese neutralen Wörter (das ...):' },
+            words: ['Kind', 'Buch', 'Mädchen'],
+            correctOrder: ['Buch', 'Kind', 'Mädchen'],
+            explanation: {
+              en: 'All are neuter: das Buch, das Kind, das Mädchen. Alphabetical order for das-words.',
+              de: 'Alle sind neutral: das Buch, das Kind, das Mädchen. Alphabetische Reihenfolge für das-Wörter.',
+            },
+          },
+        ],
+      },
     },
 
     'definite-articles': {
@@ -387,6 +569,184 @@ export const grammarContent = {
           { en: 'Articles change in different cases (accusative, dative, etc.) - you\'ll learn this later!', de: 'Artikel ändern sich in verschiedenen Fällen (Akkusativ, Dativ, etc.) - das lernst du später!' },
         ],
       },
+      stage4: {
+        title: { en: 'Guided Practice', de: 'Geführte Übung' },
+        instructions: {
+          en: 'Practice using definite articles. Choose the correct article for each noun.',
+          de: 'Übe die Verwendung bestimmter Artikel. Wähle den richtigen Artikel für jedes Nomen.',
+        },
+        exercises: [
+          {
+            type: 'multiple-choice',
+            question: { en: 'Complete: ___ Hund ist groß.', de: 'Ergänze: ___ Hund ist groß.' },
+            options: ['Der', 'Die', 'Das'],
+            correct: 0,
+            explanation: {
+              en: 'Der Hund - "Hund" is masculine, so we use "der".',
+              de: 'Der Hund - "Hund" ist maskulin, also benutzen wir "der".',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Complete: ___ Katze schläft.', de: 'Ergänze: ___ Katze schläft.' },
+            options: ['Der', 'Die', 'Das'],
+            correct: 1,
+            explanation: {
+              en: 'Die Katze - "Katze" is feminine, so we use "die".',
+              de: 'Die Katze - "Katze" ist feminin, also benutzen wir "die".',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Complete: ___ Buch ist interessant.', de: 'Ergänze: ___ Buch ist interessant.' },
+            options: ['Der', 'Die', 'Das'],
+            correct: 2,
+            explanation: {
+              en: 'Das Buch - "Buch" is neuter, so we use "das".',
+              de: 'Das Buch - "Buch" ist neutral, also benutzen wir "das".',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: '___ Kinder spielen im Park. (plural)', de: '___ Kinder spielen im Park. (Plural)' },
+            answer: 'Die',
+            acceptableAnswers: ['Die', 'die'],
+            explanation: {
+              en: 'Die Kinder - ALL plurals use "die", regardless of the singular gender.',
+              de: 'Die Kinder - ALLE Plurale benutzen "die", unabhängig vom Geschlecht im Singular.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Which article is used for ALL plural nouns?', de: 'Welcher Artikel wird für ALLE Pluralnomen verwendet?' },
+            options: ['der', 'die', 'das', 'den'],
+            correct: 1,
+            explanation: {
+              en: '"Die" is used for all plural nouns, regardless of their singular gender.',
+              de: '"Die" wird für alle Pluralnomen verwendet, unabhängig von ihrem Singular-Geschlecht.',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: '___ Sonne scheint heute. (feminine)', de: '___ Sonne scheint heute. (feminin)' },
+            answer: 'Die',
+            acceptableAnswers: ['Die', 'die'],
+            explanation: {
+              en: 'Die Sonne - "Sonne" is feminine.',
+              de: 'Die Sonne - "Sonne" ist feminin.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Complete: ___ Apfel ist rot.', de: 'Ergänze: ___ Apfel ist rot.' },
+            options: ['Der', 'Die', 'Das'],
+            correct: 0,
+            explanation: {
+              en: 'Der Apfel - "Apfel" is masculine.',
+              de: 'Der Apfel - "Apfel" ist maskulin.',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: '___ Wasser ist kalt. (neuter)', de: '___ Wasser ist kalt. (neutral)' },
+            answer: 'Das',
+            acceptableAnswers: ['Das', 'das'],
+            explanation: {
+              en: 'Das Wasser - "Wasser" is neuter.',
+              de: 'Das Wasser - "Wasser" ist neutral.',
+            },
+          },
+        ],
+      },
+      stage5: {
+        title: { en: 'Mastery Challenge', de: 'Meisterschaftsprüfung' },
+        instructions: {
+          en: 'Complete these advanced exercises to master definite articles.',
+          de: 'Schließe diese fortgeschrittenen Übungen ab, um bestimmte Artikel zu meistern.',
+        },
+        exercises: [
+          {
+            type: 'word-order',
+            question: { en: 'Create a sentence: "The man reads" - Mann / liest / Der', de: 'Bilde einen Satz: "The man reads" - Mann / liest / Der' },
+            words: ['liest', 'Mann', 'Der'],
+            correctOrder: ['Der', 'Mann', 'liest'],
+            explanation: {
+              en: 'Der Mann liest. Subject (Der Mann) + Verb (liest).',
+              de: 'Der Mann liest. Subjekt (Der Mann) + Verb (liest).',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Translate: "The woman is singing."', de: 'Übersetze: "The woman is singing."' },
+            answer: 'Die Frau singt',
+            acceptableAnswers: ['Die Frau singt', 'Die Frau singt.', 'die Frau singt'],
+            explanation: {
+              en: 'Die Frau singt. "Frau" is feminine, so "die" is used.',
+              de: 'Die Frau singt. "Frau" ist feminin, also wird "die" benutzt.',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Create: "The child plays" - spielt / Kind / Das', de: 'Bilde: "The child plays" - spielt / Kind / Das' },
+            words: ['spielt', 'Das', 'Kind'],
+            correctOrder: ['Das', 'Kind', 'spielt'],
+            explanation: {
+              en: 'Das Kind spielt. "Kind" is neuter.',
+              de: 'Das Kind spielt. "Kind" ist neutral.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Translate: "The children are playing."', de: 'Übersetze: "The children are playing."' },
+            answer: 'Die Kinder spielen',
+            acceptableAnswers: ['Die Kinder spielen', 'Die Kinder spielen.', 'die Kinder spielen'],
+            explanation: {
+              en: 'Die Kinder spielen. Plural always uses "die".',
+              de: 'Die Kinder spielen. Plural benutzt immer "die".',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "The sun is shining."', de: 'Schreibe: "The sun is shining."' },
+            answer: 'Die Sonne scheint',
+            acceptableAnswers: ['Die Sonne scheint', 'Die Sonne scheint.', 'die Sonne scheint'],
+            explanation: {
+              en: 'Die Sonne scheint. "Sonne" is feminine.',
+              de: 'Die Sonne scheint. "Sonne" ist feminin.',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Create: "The dog is big" - groß / Der / Hund / ist', de: 'Bilde: "The dog is big" - groß / Der / Hund / ist' },
+            words: ['groß', 'Hund', 'ist', 'Der'],
+            correctOrder: ['Der', 'Hund', 'ist', 'groß'],
+            explanation: {
+              en: 'Der Hund ist groß. Standard word order for "to be" sentences.',
+              de: 'Der Hund ist groß. Standard-Wortstellung für "sein"-Sätze.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "The book is interesting."', de: 'Schreibe: "The book is interesting."' },
+            answer: 'Das Buch ist interessant',
+            acceptableAnswers: ['Das Buch ist interessant', 'Das Buch ist interessant.', 'das Buch ist interessant'],
+            explanation: {
+              en: 'Das Buch ist interessant. "Buch" is neuter.',
+              de: 'Das Buch ist interessant. "Buch" ist neutral.',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Order: cat / The / sleeps - Die Katze schläft', de: 'Ordne: Katze / Die / schläft' },
+            words: ['schläft', 'Katze', 'Die'],
+            correctOrder: ['Die', 'Katze', 'schläft'],
+            explanation: {
+              en: 'Die Katze schläft. Subject + Verb word order.',
+              de: 'Die Katze schläft. Subjekt + Verb Wortstellung.',
+            },
+          },
+        ],
+      },
     },
 
     'indefinite-articles': {
@@ -438,6 +798,184 @@ export const grammarContent = {
         ],
         warnings: [
           { en: 'Don\'t confuse "ein" (article) with "eins" (number one)!', de: 'Verwechsle nicht "ein" (Artikel) mit "eins" (Zahl eins)!' },
+        ],
+      },
+      stage4: {
+        title: { en: 'Guided Practice', de: 'Geführte Übung' },
+        instructions: {
+          en: 'Practice using indefinite articles (ein, eine) and their negations (kein, keine).',
+          de: 'Übe die Verwendung unbestimmter Artikel (ein, eine) und ihrer Verneinungen (kein, keine).',
+        },
+        exercises: [
+          {
+            type: 'multiple-choice',
+            question: { en: 'Complete: Das ist ___ Mann. (a man)', de: 'Ergänze: Das ist ___ Mann. (a man)' },
+            options: ['ein', 'eine', 'einen'],
+            correct: 0,
+            explanation: {
+              en: '"Mann" is masculine, so we use "ein" in the nominative case.',
+              de: '"Mann" ist maskulin, also benutzen wir "ein" im Nominativ.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Complete: Das ist ___ Frau. (a woman)', de: 'Ergänze: Das ist ___ Frau. (a woman)' },
+            options: ['ein', 'eine', 'einen'],
+            correct: 1,
+            explanation: {
+              en: '"Frau" is feminine, so we use "eine".',
+              de: '"Frau" ist feminin, also benutzen wir "eine".',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Complete: Das ist ___ Kind. (a child)', de: 'Ergänze: Das ist ___ Kind. (a child)' },
+            options: ['ein', 'eine', 'einen'],
+            correct: 0,
+            explanation: {
+              en: '"Kind" is neuter, and neuter uses "ein" (same as masculine in nominative).',
+              de: '"Kind" ist neutral, und neutral benutzt "ein" (wie maskulin im Nominativ).',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'Das ist ___ Problem. (not a problem)', de: 'Das ist ___ Problem. (kein Problem)' },
+            answer: 'kein',
+            acceptableAnswers: ['kein', 'Kein'],
+            explanation: {
+              en: '"Problem" is neuter, so we use "kein" for negation.',
+              de: '"Problem" ist neutral, also benutzen wir "kein" für die Verneinung.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Complete: Ich habe ___ Zeit. (no time)', de: 'Ergänze: Ich habe ___ Zeit. (keine Zeit)' },
+            options: ['kein', 'keine', 'keinen'],
+            correct: 1,
+            explanation: {
+              en: '"Zeit" is feminine, so we use "keine" for negation.',
+              de: '"Zeit" ist feminin, also benutzen wir "keine" für die Verneinung.',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'Ich brauche ___ Auto. (a car - neuter)', de: 'Ich brauche ___ Auto. (ein Auto - neutral)' },
+            answer: 'ein',
+            acceptableAnswers: ['ein', 'Ein'],
+            explanation: {
+              en: '"Auto" is neuter: ein Auto.',
+              de: '"Auto" ist neutral: ein Auto.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'How do you say "Those are books" (plural, no article)?', de: 'Wie sagt man "Those are books" (Plural, kein Artikel)?' },
+            options: ['Das sind ein Bücher', 'Das sind eine Bücher', 'Das sind Bücher'],
+            correct: 2,
+            explanation: {
+              en: 'There is no plural indefinite article in German - just use the noun alone.',
+              de: 'Es gibt keinen unbestimmten Artikel im Plural - benutze nur das Nomen allein.',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'Das ist ___ Lampe. (a lamp - feminine)', de: 'Das ist ___ Lampe. (eine Lampe - feminin)' },
+            answer: 'eine',
+            acceptableAnswers: ['eine', 'Eine'],
+            explanation: {
+              en: '"Lampe" is feminine: eine Lampe.',
+              de: '"Lampe" ist feminin: eine Lampe.',
+            },
+          },
+        ],
+      },
+      stage5: {
+        title: { en: 'Mastery Challenge', de: 'Meisterschaftsprüfung' },
+        instructions: {
+          en: 'Complete these advanced exercises to master indefinite articles.',
+          de: 'Schließe diese fortgeschrittenen Übungen ab, um unbestimmte Artikel zu meistern.',
+        },
+        exercises: [
+          {
+            type: 'word-order',
+            question: { en: 'Create: "That is a man" - Mann / ist / ein / Das', de: 'Bilde: "That is a man" - Mann / ist / ein / Das' },
+            words: ['ein', 'Das', 'Mann', 'ist'],
+            correctOrder: ['Das', 'ist', 'ein', 'Mann'],
+            explanation: {
+              en: 'Das ist ein Mann. Standard structure for "This is a..." sentences.',
+              de: 'Das ist ein Mann. Standardstruktur für "Das ist ein..." Sätze.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Translate: "I have a dog." (masculine)', de: 'Übersetze: "I have a dog." (maskulin)' },
+            answer: 'Ich habe einen Hund',
+            acceptableAnswers: ['Ich habe einen Hund', 'Ich habe einen Hund.', 'ich habe einen Hund'],
+            explanation: {
+              en: 'Ich habe einen Hund. After "haben", the object is accusative, so "ein" becomes "einen" for masculine.',
+              de: 'Ich habe einen Hund. Nach "haben" steht das Objekt im Akkusativ, also wird "ein" zu "einen" für maskulin.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Translate: "That is not a problem."', de: 'Übersetze: "That is not a problem."' },
+            answer: 'Das ist kein Problem',
+            acceptableAnswers: ['Das ist kein Problem', 'Das ist kein Problem.', 'das ist kein Problem'],
+            explanation: {
+              en: 'Das ist kein Problem. "Problem" is neuter, so "kein" (not "keine").',
+              de: 'Das ist kein Problem. "Problem" ist neutral, also "kein" (nicht "keine").',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Create: "I have no time" - Zeit / habe / keine / Ich', de: 'Bilde: "I have no time" - Zeit / habe / keine / Ich' },
+            words: ['keine', 'Ich', 'Zeit', 'habe'],
+            correctOrder: ['Ich', 'habe', 'keine', 'Zeit'],
+            explanation: {
+              en: 'Ich habe keine Zeit. Subject + Verb + Object structure.',
+              de: 'Ich habe keine Zeit. Subjekt + Verb + Objekt Struktur.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "She is a student." (female)', de: 'Schreibe: "She is a student." (weiblich)' },
+            answer: 'Sie ist Studentin',
+            acceptableAnswers: ['Sie ist Studentin', 'Sie ist Studentin.', 'sie ist Studentin', 'Sie ist eine Studentin'],
+            explanation: {
+              en: 'Sie ist Studentin. No article needed for professions in German!',
+              de: 'Sie ist Studentin. Kein Artikel für Berufe im Deutschen nötig!',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Create: "That is a woman" - Frau / ist / Das / eine', de: 'Bilde: "That is a woman" - Frau / ist / Das / eine' },
+            words: ['eine', 'ist', 'Das', 'Frau'],
+            correctOrder: ['Das', 'ist', 'eine', 'Frau'],
+            explanation: {
+              en: 'Das ist eine Frau. Feminine nouns use "eine".',
+              de: 'Das ist eine Frau. Feminine Nomen benutzen "eine".',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "I need a car."', de: 'Schreibe: "I need a car."' },
+            answer: 'Ich brauche ein Auto',
+            acceptableAnswers: ['Ich brauche ein Auto', 'Ich brauche ein Auto.', 'ich brauche ein Auto'],
+            explanation: {
+              en: 'Ich brauche ein Auto. "Auto" is neuter, so "ein" (no change in accusative for neuter).',
+              de: 'Ich brauche ein Auto. "Auto" ist neutral, also "ein" (keine Änderung im Akkusativ für neutral).',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "He has no idea." (keine Ahnung)', de: 'Schreibe: "He has no idea." (keine Ahnung)' },
+            answer: 'Er hat keine Ahnung',
+            acceptableAnswers: ['Er hat keine Ahnung', 'Er hat keine Ahnung.', 'er hat keine Ahnung'],
+            explanation: {
+              en: 'Er hat keine Ahnung. "Ahnung" is feminine, so "keine".',
+              de: 'Er hat keine Ahnung. "Ahnung" ist feminin, also "keine".',
+            },
+          },
         ],
       },
     },
@@ -508,6 +1046,184 @@ export const grammarContent = {
           { en: 'sie (lowercase) = she/they; Sie (uppercase) = formal you. Context matters!', de: 'sie (kleingeschrieben) = sie/they; Sie (großgeschrieben) = formelles Sie. Kontext ist wichtig!' },
         ],
       },
+      stage4: {
+        title: { en: 'Guided Practice', de: 'Geführte Übung' },
+        instructions: {
+          en: 'Practice using personal pronouns correctly. Pay attention to formal vs. informal forms.',
+          de: 'Übe die korrekte Verwendung von Personalpronomen. Achte auf formelle vs. informelle Formen.',
+        },
+        exercises: [
+          {
+            type: 'multiple-choice',
+            question: { en: 'Which pronoun means "I"?', de: 'Welches Pronomen bedeutet "I"?' },
+            options: ['du', 'ich', 'er', 'wir'],
+            correct: 1,
+            explanation: {
+              en: '"ich" means "I" - the first person singular pronoun.',
+              de: '"ich" bedeutet "I" - das Personalpronomen der ersten Person Singular.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Which pronoun would you use with a close friend?', de: 'Welches Pronomen würdest du mit einem guten Freund benutzen?' },
+            options: ['Sie', 'du', 'ihr', 'wir'],
+            correct: 1,
+            explanation: {
+              en: 'Use "du" with friends, family, and children - it\'s the informal singular "you".',
+              de: 'Benutze "du" mit Freunden, Familie und Kindern - es ist das informelle "du" im Singular.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Which pronoun is formal "you"?', de: 'Welches Pronomen ist das formelle "Sie"?' },
+            options: ['du', 'ihr', 'Sie', 'sie'],
+            correct: 2,
+            explanation: {
+              en: '"Sie" (capitalized) is the formal "you" - used with strangers and in professional settings.',
+              de: '"Sie" (großgeschrieben) ist das formelle "Sie" - benutzt mit Fremden und in professionellen Situationen.',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: '___ komme aus Deutschland. (I come from Germany)', de: '___ komme aus Deutschland.' },
+            answer: 'Ich',
+            acceptableAnswers: ['Ich', 'ich'],
+            explanation: {
+              en: 'Ich komme aus Deutschland. "Ich" is always capitalized at the start of a sentence.',
+              de: 'Ich komme aus Deutschland. "Ich" wird am Satzanfang immer großgeschrieben.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'What does "sie" (lowercase) mean?', de: 'Was bedeutet "sie" (kleingeschrieben)?' },
+            options: ['she only', 'they only', 'she or they', 'formal you'],
+            correct: 2,
+            explanation: {
+              en: '"sie" (lowercase) can mean either "she" or "they" - context determines which!',
+              de: '"sie" (kleingeschrieben) kann entweder "sie" (she) oder "sie" (they) bedeuten - der Kontext bestimmt es!',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: '___ seid meine Freunde. (You all are - informal plural)', de: '___ seid meine Freunde. (Ihr seid)' },
+            answer: 'Ihr',
+            acceptableAnswers: ['Ihr', 'ihr'],
+            explanation: {
+              en: '"Ihr" is informal plural "you" - used when addressing multiple friends/family.',
+              de: '"Ihr" ist informelles Plural-"du" - benutzt wenn man mehrere Freunde/Familie anspricht.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'When meeting your professor for the first time, you should use:', de: 'Wenn du deinen Professor zum ersten Mal triffst, solltest du benutzen:' },
+            options: ['du', 'ihr', 'Sie', 'wir'],
+            correct: 2,
+            explanation: {
+              en: 'Always use "Sie" with professors, officials, and strangers - it shows respect.',
+              de: 'Benutze immer "Sie" mit Professoren, Beamten und Fremden - es zeigt Respekt.',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: '___ lernen Deutsch. (We are learning German)', de: '___ lernen Deutsch.' },
+            answer: 'Wir',
+            acceptableAnswers: ['Wir', 'wir'],
+            explanation: {
+              en: 'Wir lernen Deutsch. "Wir" is "we" in German.',
+              de: 'Wir lernen Deutsch. "Wir" bedeutet "we" im Deutschen.',
+            },
+          },
+        ],
+      },
+      stage5: {
+        title: { en: 'Mastery Challenge', de: 'Meisterschaftsprüfung' },
+        instructions: {
+          en: 'Complete these advanced exercises to master personal pronouns.',
+          de: 'Schließe diese fortgeschrittenen Übungen ab, um Personalpronomen zu meistern.',
+        },
+        exercises: [
+          {
+            type: 'word-order',
+            question: { en: 'Order pronouns: 1st person, 2nd informal, 2nd formal', de: 'Ordne Pronomen: 1. Person, 2. informell, 2. formell' },
+            words: ['Sie', 'ich', 'du'],
+            correctOrder: ['ich', 'du', 'Sie'],
+            explanation: {
+              en: 'ich (1st person I), du (2nd informal), Sie (2nd formal).',
+              de: 'ich (1. Person), du (2. Person informell), Sie (2. Person formell).',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Translate: "She is a doctor."', de: 'Übersetze: "She is a doctor."' },
+            answer: 'Sie ist Ärztin',
+            acceptableAnswers: ['Sie ist Ärztin', 'Sie ist Ärztin.', 'sie ist Ärztin'],
+            explanation: {
+              en: 'Sie ist Ärztin. "Sie" (she) + verb "ist" + profession (no article).',
+              de: 'Sie ist Ärztin. "Sie" + Verb "ist" + Beruf (kein Artikel).',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Translate: "Are you Mr. Müller?" (formal)', de: 'Übersetze: "Are you Mr. Müller?" (formell)' },
+            answer: 'Sind Sie Herr Müller',
+            acceptableAnswers: ['Sind Sie Herr Müller', 'Sind Sie Herr Müller?', 'sind Sie Herr Müller'],
+            explanation: {
+              en: 'Sind Sie Herr Müller? Verb-first for questions, "Sie" for formal.',
+              de: 'Sind Sie Herr Müller? Verb am Anfang für Fragen, "Sie" für formell.',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Create: "We are learning German" - Deutsch / lernen / Wir', de: 'Bilde: "We are learning German" - Deutsch / lernen / Wir' },
+            words: ['lernen', 'Wir', 'Deutsch'],
+            correctOrder: ['Wir', 'lernen', 'Deutsch'],
+            explanation: {
+              en: 'Wir lernen Deutsch. Subject + Verb + Object.',
+              de: 'Wir lernen Deutsch. Subjekt + Verb + Objekt.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "He is a teacher."', de: 'Schreibe: "He is a teacher."' },
+            answer: 'Er ist Lehrer',
+            acceptableAnswers: ['Er ist Lehrer', 'Er ist Lehrer.', 'er ist Lehrer'],
+            explanation: {
+              en: 'Er ist Lehrer. No article before professions in German.',
+              de: 'Er ist Lehrer. Kein Artikel vor Berufen im Deutschen.',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Order: all 3rd person pronouns (he, she, it)', de: 'Ordne: alle 3. Person Pronomen (er, sie, es)' },
+            words: ['es', 'sie', 'er'],
+            correctOrder: ['er', 'sie', 'es'],
+            explanation: {
+              en: 'er (he), sie (she), es (it) - the three 3rd person singular pronouns.',
+              de: 'er, sie, es - die drei Personalpronomen der 3. Person Singular.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "You are my friend." (informal)', de: 'Schreibe: "You are my friend." (informell)' },
+            answer: 'Du bist mein Freund',
+            acceptableAnswers: ['Du bist mein Freund', 'Du bist mein Freund.', 'du bist mein Freund', 'Du bist meine Freundin'],
+            explanation: {
+              en: 'Du bist mein Freund. Use "du" for informal singular.',
+              de: 'Du bist mein Freund. Benutze "du" für informelles Singular.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "They are nice." (about a group)', de: 'Schreibe: "They are nice." (über eine Gruppe)' },
+            answer: 'Sie sind nett',
+            acceptableAnswers: ['Sie sind nett', 'Sie sind nett.', 'sie sind nett'],
+            explanation: {
+              en: 'Sie sind nett. "sie" (lowercase) for "they".',
+              de: 'Sie sind nett. "sie" (kleingeschrieben) für "they".',
+            },
+          },
+        ],
+      },
     },
 
     'verb-sein': {
@@ -562,6 +1278,184 @@ export const grammarContent = {
         ],
         warnings: [
           { en: '"sein" is completely irregular - memorize each form!', de: '"sein" ist völlig unregelmäßig - lerne jede Form auswendig!' },
+        ],
+      },
+      stage4: {
+        title: { en: 'Guided Practice', de: 'Geführte Übung' },
+        instructions: {
+          en: 'Practice conjugating "sein" (to be). Choose the correct form for each pronoun.',
+          de: 'Übe die Konjugation von "sein". Wähle die richtige Form für jedes Pronomen.',
+        },
+        exercises: [
+          {
+            type: 'multiple-choice',
+            question: { en: 'Ich ___ müde. (I am tired)', de: 'Ich ___ müde.' },
+            options: ['bin', 'bist', 'ist', 'sind'],
+            correct: 0,
+            explanation: {
+              en: 'ich bin - "bin" is the form for "ich" (I am).',
+              de: 'ich bin - "bin" ist die Form für "ich".',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Du ___ klug. (You are smart)', de: 'Du ___ klug.' },
+            options: ['bin', 'bist', 'ist', 'sind'],
+            correct: 1,
+            explanation: {
+              en: 'du bist - "bist" is the form for "du" (informal you).',
+              de: 'du bist - "bist" ist die Form für "du".',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Er ___ Lehrer. (He is a teacher)', de: 'Er ___ Lehrer.' },
+            options: ['bin', 'bist', 'ist', 'sind'],
+            correct: 2,
+            explanation: {
+              en: 'er ist - "ist" is the form for "er/sie/es" (he/she/it).',
+              de: 'er ist - "ist" ist die Form für "er/sie/es".',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'Wir ___ Freunde. (We are friends)', de: 'Wir ___ Freunde.' },
+            answer: 'sind',
+            acceptableAnswers: ['sind', 'Sind'],
+            explanation: {
+              en: 'wir sind - "sind" is used with "wir" (we).',
+              de: 'wir sind - "sind" wird mit "wir" benutzt.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Ihr ___ willkommen. (You all are welcome)', de: 'Ihr ___ willkommen.' },
+            options: ['bin', 'bist', 'seid', 'sind'],
+            correct: 2,
+            explanation: {
+              en: 'ihr seid - "seid" is the form for "ihr" (informal plural you).',
+              de: 'ihr seid - "seid" ist die Form für "ihr".',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'Sie ___ nett. (They are nice)', de: 'Sie ___ nett.' },
+            answer: 'sind',
+            acceptableAnswers: ['sind', 'Sind'],
+            explanation: {
+              en: 'sie sind - "sind" is used with "sie" (they) and formal "Sie".',
+              de: 'sie sind - "sind" wird mit "sie" (they) und formellem "Sie" benutzt.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Es ___ kalt. (It is cold)', de: 'Es ___ kalt.' },
+            options: ['bin', 'bist', 'ist', 'sind'],
+            correct: 2,
+            explanation: {
+              en: 'es ist - "ist" is used with "es" (it).',
+              de: 'es ist - "ist" wird mit "es" benutzt.',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'Sind Sie Herr Müller? – Ja, ich ___ Herr Müller.', de: 'Sind Sie Herr Müller? – Ja, ich ___ Herr Müller.' },
+            answer: 'bin',
+            acceptableAnswers: ['bin', 'Bin'],
+            explanation: {
+              en: 'ich bin - responding about yourself uses "bin".',
+              de: 'ich bin - wenn du über dich selbst antwortest, benutze "bin".',
+            },
+          },
+        ],
+      },
+      stage5: {
+        title: { en: 'Mastery Challenge', de: 'Meisterschaftsprüfung' },
+        instructions: {
+          en: 'Complete these advanced exercises to master the verb "sein".',
+          de: 'Schließe diese fortgeschrittenen Übungen ab, um das Verb "sein" zu meistern.',
+        },
+        exercises: [
+          {
+            type: 'word-order',
+            question: { en: 'Create: "I am tired" - müde / bin / Ich', de: 'Bilde: "I am tired" - müde / bin / Ich' },
+            words: ['müde', 'Ich', 'bin'],
+            correctOrder: ['Ich', 'bin', 'müde'],
+            explanation: {
+              en: 'Ich bin müde. Subject + verb + adjective.',
+              de: 'Ich bin müde. Subjekt + Verb + Adjektiv.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Translate: "She is a doctor."', de: 'Übersetze: "She is a doctor."' },
+            answer: 'Sie ist Ärztin',
+            acceptableAnswers: ['Sie ist Ärztin', 'Sie ist Ärztin.', 'sie ist Ärztin'],
+            explanation: {
+              en: 'Sie ist Ärztin. No article before professions!',
+              de: 'Sie ist Ärztin. Kein Artikel vor Berufen!',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Order the conjugation: ich, du, er forms', de: 'Ordne die Konjugation: ich, du, er Formen' },
+            words: ['ist', 'bist', 'bin'],
+            correctOrder: ['bin', 'bist', 'ist'],
+            explanation: {
+              en: 'bin (ich), bist (du), ist (er/sie/es).',
+              de: 'bin (ich), bist (du), ist (er/sie/es).',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "We are friends."', de: 'Schreibe: "We are friends."' },
+            answer: 'Wir sind Freunde',
+            acceptableAnswers: ['Wir sind Freunde', 'Wir sind Freunde.', 'wir sind Freunde'],
+            explanation: {
+              en: 'Wir sind Freunde. "wir" uses "sind".',
+              de: 'Wir sind Freunde. "wir" benutzt "sind".',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "You are welcome." (informal plural)', de: 'Schreibe: "You are welcome." (informell Plural)' },
+            answer: 'Ihr seid willkommen',
+            acceptableAnswers: ['Ihr seid willkommen', 'Ihr seid willkommen.', 'ihr seid willkommen'],
+            explanation: {
+              en: 'Ihr seid willkommen. "ihr" uses "seid".',
+              de: 'Ihr seid willkommen. "ihr" benutzt "seid".',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Create a question: "Are you a teacher?" (formal)', de: 'Bilde eine Frage: "Are you a teacher?" (formell)' },
+            words: ['Lehrer', 'Sie', 'Sind'],
+            correctOrder: ['Sind', 'Sie', 'Lehrer'],
+            explanation: {
+              en: 'Sind Sie Lehrer? Verb first for yes/no questions.',
+              de: 'Sind Sie Lehrer? Verb am Anfang für Ja/Nein-Fragen.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "It is important."', de: 'Schreibe: "It is important."' },
+            answer: 'Es ist wichtig',
+            acceptableAnswers: ['Es ist wichtig', 'Es ist wichtig.', 'es ist wichtig'],
+            explanation: {
+              en: 'Es ist wichtig. "es" uses "ist".',
+              de: 'Es ist wichtig. "es" benutzt "ist".',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Order wir, ihr, sie/Sie forms:', de: 'Ordne wir, ihr, sie/Sie Formen:' },
+            words: ['sind', 'seid', 'sind'],
+            correctOrder: ['sind', 'seid', 'sind'],
+            explanation: {
+              en: 'sind (wir), seid (ihr), sind (sie/Sie). Note: wir and sie/Sie share "sind".',
+              de: 'sind (wir), seid (ihr), sind (sie/Sie). Beachte: wir und sie/Sie teilen "sind".',
+            },
+          },
         ],
       },
     },
@@ -633,6 +1527,184 @@ export const grammarContent = {
         ],
         warnings: [
           { en: 'Don\'t forget: du hast (not habst!), er hat (not habt!)', de: 'Nicht vergessen: du hast (nicht habst!), er hat (nicht habt!)' },
+        ],
+      },
+      stage4: {
+        title: { en: 'Guided Practice', de: 'Geführte Übung' },
+        instructions: {
+          en: 'Practice conjugating "haben" (to have). Choose the correct form for each pronoun.',
+          de: 'Übe die Konjugation von "haben". Wähle die richtige Form für jedes Pronomen.',
+        },
+        exercises: [
+          {
+            type: 'multiple-choice',
+            question: { en: 'Ich ___ ein Auto. (I have a car)', de: 'Ich ___ ein Auto.' },
+            options: ['habe', 'hast', 'hat', 'haben'],
+            correct: 0,
+            explanation: {
+              en: 'ich habe - "habe" is the form for "ich" (I have).',
+              de: 'ich habe - "habe" ist die Form für "ich".',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Du ___ Recht. (You are right)', de: 'Du ___ Recht.' },
+            options: ['habe', 'hast', 'hat', 'haben'],
+            correct: 1,
+            explanation: {
+              en: 'du hast - "hast" is the form for "du". Note: no "b"!',
+              de: 'du hast - "hast" ist die Form für "du". Beachte: kein "b"!',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Er ___ Hunger. (He is hungry)', de: 'Er ___ Hunger.' },
+            options: ['habe', 'hast', 'hat', 'haben'],
+            correct: 2,
+            explanation: {
+              en: 'er hat - "hat" is the form for "er/sie/es". The -b- is dropped!',
+              de: 'er hat - "hat" ist die Form für "er/sie/es". Das -b- fällt weg!',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'Wir ___ Glück. (We are lucky)', de: 'Wir ___ Glück.' },
+            answer: 'haben',
+            acceptableAnswers: ['haben', 'Haben'],
+            explanation: {
+              en: 'wir haben - "haben" is used with "wir" (same as infinitive).',
+              de: 'wir haben - "haben" wird mit "wir" benutzt (wie der Infinitiv).',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Ihr ___ viele Bücher. (You all have many books)', de: 'Ihr ___ viele Bücher.' },
+            options: ['habe', 'hast', 'habt', 'haben'],
+            correct: 2,
+            explanation: {
+              en: 'ihr habt - "habt" is the form for "ihr".',
+              de: 'ihr habt - "habt" ist die Form für "ihr".',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'Sie ___ drei Kinder. (They have three children)', de: 'Sie ___ drei Kinder.' },
+            answer: 'haben',
+            acceptableAnswers: ['haben', 'Haben'],
+            explanation: {
+              en: 'sie haben - "haben" is used with "sie" (they) and formal "Sie".',
+              de: 'sie haben - "haben" wird mit "sie" (they) und formellem "Sie" benutzt.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Complete: Sie ___ Zeit. (She has time)', de: 'Ergänze: Sie ___ Zeit.' },
+            options: ['habe', 'hast', 'hat', 'haben'],
+            correct: 2,
+            explanation: {
+              en: 'sie hat - "hat" for "she". (sie + verb in 3rd person singular)',
+              de: 'sie hat - "hat" für "sie". (sie + Verb in 3. Person Singular)',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'Ich ___ keine Ahnung. (I have no idea)', de: 'Ich ___ keine Ahnung.' },
+            answer: 'habe',
+            acceptableAnswers: ['habe', 'Habe'],
+            explanation: {
+              en: 'Ich habe keine Ahnung - a common expression meaning "I have no idea".',
+              de: 'Ich habe keine Ahnung - ein häufiger Ausdruck.',
+            },
+          },
+        ],
+      },
+      stage5: {
+        title: { en: 'Mastery Challenge', de: 'Meisterschaftsprüfung' },
+        instructions: {
+          en: 'Complete these advanced exercises to master the verb "haben".',
+          de: 'Schließe diese fortgeschrittenen Übungen ab, um das Verb "haben" zu meistern.',
+        },
+        exercises: [
+          {
+            type: 'word-order',
+            question: { en: 'Create: "I have a car" - Auto / habe / ein / Ich', de: 'Bilde: "I have a car" - Auto / habe / ein / Ich' },
+            words: ['ein', 'Ich', 'Auto', 'habe'],
+            correctOrder: ['Ich', 'habe', 'ein', 'Auto'],
+            explanation: {
+              en: 'Ich habe ein Auto. Subject + verb + article + object.',
+              de: 'Ich habe ein Auto. Subjekt + Verb + Artikel + Objekt.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Translate: "He is hungry." (using haben)', de: 'Übersetze: "He is hungry." (mit haben)' },
+            answer: 'Er hat Hunger',
+            acceptableAnswers: ['Er hat Hunger', 'Er hat Hunger.', 'er hat Hunger'],
+            explanation: {
+              en: 'Er hat Hunger. German uses "haben" + noun for many expressions.',
+              de: 'Er hat Hunger. Deutsch benutzt "haben" + Nomen für viele Ausdrücke.',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Order the conjugation: ich, du, er forms', de: 'Ordne die Konjugation: ich, du, er Formen' },
+            words: ['hat', 'hast', 'habe'],
+            correctOrder: ['habe', 'hast', 'hat'],
+            explanation: {
+              en: 'habe (ich), hast (du), hat (er/sie/es).',
+              de: 'habe (ich), hast (du), hat (er/sie/es).',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "Do you have time?" (informal)', de: 'Schreibe: "Do you have time?" (informell)' },
+            answer: 'Hast du Zeit',
+            acceptableAnswers: ['Hast du Zeit', 'Hast du Zeit?', 'hast du Zeit'],
+            explanation: {
+              en: 'Hast du Zeit? Verb first for yes/no questions.',
+              de: 'Hast du Zeit? Verb am Anfang für Ja/Nein-Fragen.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "We are lucky."', de: 'Schreibe: "We are lucky."' },
+            answer: 'Wir haben Glück',
+            acceptableAnswers: ['Wir haben Glück', 'Wir haben Glück.', 'wir haben Glück'],
+            explanation: {
+              en: 'Wir haben Glück. "to be lucky" = "Glück haben" in German.',
+              de: 'Wir haben Glück. "to be lucky" = "Glück haben" auf Deutsch.',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Create question: "Do you have questions?" (ihr)', de: 'Bilde Frage: "Do you have questions?" (ihr)' },
+            words: ['Fragen', 'ihr', 'Habt'],
+            correctOrder: ['Habt', 'ihr', 'Fragen'],
+            explanation: {
+              en: 'Habt ihr Fragen? Verb first for questions.',
+              de: 'Habt ihr Fragen? Verb am Anfang für Fragen.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "She is afraid." (Angst haben)', de: 'Schreibe: "She is afraid." (Angst haben)' },
+            answer: 'Sie hat Angst',
+            acceptableAnswers: ['Sie hat Angst', 'Sie hat Angst.', 'sie hat Angst'],
+            explanation: {
+              en: 'Sie hat Angst. "to be afraid" = "Angst haben".',
+              de: 'Sie hat Angst. "to be afraid" = "Angst haben".',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Order wir, ihr, sie forms:', de: 'Ordne wir, ihr, sie Formen:' },
+            words: ['haben', 'haben', 'habt'],
+            correctOrder: ['haben', 'habt', 'haben'],
+            explanation: {
+              en: 'haben (wir), habt (ihr), haben (sie/Sie).',
+              de: 'haben (wir), habt (ihr), haben (sie/Sie).',
+            },
+          },
         ],
       },
     },
@@ -709,6 +1781,184 @@ export const grammarContent = {
           { en: 'This pattern is for REGULAR verbs only - irregular verbs like "sein" and "haben" have their own patterns', de: 'Dieses Muster ist nur für REGELMÄSSIGE Verben - unregelmäßige Verben wie "sein" und "haben" haben eigene Muster' },
         ],
       },
+      stage4: {
+        title: { en: 'Guided Practice', de: 'Geführte Übung' },
+        instructions: {
+          en: 'Practice conjugating regular verbs in the present tense. Apply the pattern: stem + ending.',
+          de: 'Übe die Konjugation regelmäßiger Verben im Präsens. Wende das Muster an: Stamm + Endung.',
+        },
+        exercises: [
+          {
+            type: 'multiple-choice',
+            question: { en: 'What is the stem of "spielen" (to play)?', de: 'Was ist der Stamm von "spielen"?' },
+            options: ['spiel', 'spielen', 'spiele', 'spielst'],
+            correct: 0,
+            explanation: {
+              en: 'Remove -en from spielen → spiel. This stem is used for all conjugations.',
+              de: 'Entferne -en von spielen → spiel. Dieser Stamm wird für alle Konjugationen benutzt.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Ich ___ Fußball. (spielen)', de: 'Ich ___ Fußball. (spielen)' },
+            options: ['spiel', 'spiele', 'spielst', 'spielt'],
+            correct: 1,
+            explanation: {
+              en: 'ich spiele - stem (spiel) + ending (-e) for "ich".',
+              de: 'ich spiele - Stamm (spiel) + Endung (-e) für "ich".',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Du ___ Deutsch. (lernen)', de: 'Du ___ Deutsch. (lernen)' },
+            options: ['lerne', 'lernst', 'lernt', 'lernen'],
+            correct: 1,
+            explanation: {
+              en: 'du lernst - stem (lern) + ending (-st) for "du".',
+              de: 'du lernst - Stamm (lern) + Endung (-st) für "du".',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'Er ___ Sport. (machen - to do)', de: 'Er ___ Sport. (machen)' },
+            answer: 'macht',
+            acceptableAnswers: ['macht', 'Macht'],
+            explanation: {
+              en: 'er macht - stem (mach) + ending (-t) for "er/sie/es".',
+              de: 'er macht - Stamm (mach) + Endung (-t) für "er/sie/es".',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Wir ___ Brot. (kaufen - to buy)', de: 'Wir ___ Brot. (kaufen)' },
+            options: ['kaufe', 'kaufst', 'kauft', 'kaufen'],
+            correct: 3,
+            explanation: {
+              en: 'wir kaufen - the "wir" form is identical to the infinitive!',
+              de: 'wir kaufen - die "wir"-Form ist identisch mit dem Infinitiv!',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'Ihr ___ Kaffee. (trinken - to drink)', de: 'Ihr ___ Kaffee. (trinken)' },
+            answer: 'trinkt',
+            acceptableAnswers: ['trinkt', 'Trinkt'],
+            explanation: {
+              en: 'ihr trinkt - stem (trink) + ending (-t) for "ihr".',
+              de: 'ihr trinkt - Stamm (trink) + Endung (-t) für "ihr".',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Du ___ viel. (arbeiten - to work)', de: 'Du ___ viel. (arbeiten)' },
+            options: ['arbeitst', 'arbeitest', 'arbeitt', 'arbeit'],
+            correct: 1,
+            explanation: {
+              en: 'du arbeitest - when stem ends in -t, add -est (not just -st).',
+              de: 'du arbeitest - wenn der Stamm auf -t endet, füge -est hinzu (nicht nur -st).',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'Sie (they) ___ viel. (arbeiten)', de: 'Sie (sie) ___ viel. (arbeiten)' },
+            answer: 'arbeiten',
+            acceptableAnswers: ['arbeiten', 'Arbeiten'],
+            explanation: {
+              en: 'sie arbeiten - the "sie/Sie" form is identical to the infinitive.',
+              de: 'sie arbeiten - die "sie/Sie"-Form ist identisch mit dem Infinitiv.',
+            },
+          },
+        ],
+      },
+      stage5: {
+        title: { en: 'Mastery Challenge', de: 'Meisterschaftsprüfung' },
+        instructions: {
+          en: 'Complete these advanced exercises to master regular verb conjugation.',
+          de: 'Schließe diese fortgeschrittenen Übungen ab, um die Konjugation regelmäßiger Verben zu meistern.',
+        },
+        exercises: [
+          {
+            type: 'word-order',
+            question: { en: 'Create: "I play soccer" - Fußball / spiele / Ich', de: 'Bilde: "I play soccer" - Fußball / spiele / Ich' },
+            words: ['spiele', 'Fußball', 'Ich'],
+            correctOrder: ['Ich', 'spiele', 'Fußball'],
+            explanation: {
+              en: 'Ich spiele Fußball. Subject + Verb + Object.',
+              de: 'Ich spiele Fußball. Subjekt + Verb + Objekt.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Translate: "She lives in Berlin." (wohnen)', de: 'Übersetze: "She lives in Berlin." (wohnen)' },
+            answer: 'Sie wohnt in Berlin',
+            acceptableAnswers: ['Sie wohnt in Berlin', 'Sie wohnt in Berlin.', 'sie wohnt in Berlin'],
+            explanation: {
+              en: 'Sie wohnt in Berlin. wohnen → wohn + t = wohnt',
+              de: 'Sie wohnt in Berlin. wohnen → wohn + t = wohnt',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Order the endings: ich, du, er/sie/es', de: 'Ordne die Endungen: ich, du, er/sie/es' },
+            words: ['-t', '-st', '-e'],
+            correctOrder: ['-e', '-st', '-t'],
+            explanation: {
+              en: '-e (ich), -st (du), -t (er/sie/es).',
+              de: '-e (ich), -st (du), -t (er/sie/es).',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "We are buying bread." (kaufen)', de: 'Schreibe: "We are buying bread." (kaufen)' },
+            answer: 'Wir kaufen Brot',
+            acceptableAnswers: ['Wir kaufen Brot', 'Wir kaufen Brot.', 'wir kaufen Brot'],
+            explanation: {
+              en: 'Wir kaufen Brot. "wir" form = infinitive.',
+              de: 'Wir kaufen Brot. "wir"-Form = Infinitiv.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "He works a lot." (arbeiten)', de: 'Schreibe: "He works a lot." (arbeiten)' },
+            answer: 'Er arbeitet viel',
+            acceptableAnswers: ['Er arbeitet viel', 'Er arbeitet viel.', 'er arbeitet viel'],
+            explanation: {
+              en: 'Er arbeitet viel. Stem ends in -t, so add -et (not just -t).',
+              de: 'Er arbeitet viel. Stamm endet auf -t, also füge -et hinzu (nicht nur -t).',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Create: "You all drink coffee" (ihr) - trinkt / Kaffee / Ihr', de: 'Bilde: "You all drink coffee" (ihr) - trinkt / Kaffee / Ihr' },
+            words: ['Kaffee', 'trinkt', 'Ihr'],
+            correctOrder: ['Ihr', 'trinkt', 'Kaffee'],
+            explanation: {
+              en: 'Ihr trinkt Kaffee. ihr + stem + t.',
+              de: 'Ihr trinkt Kaffee. ihr + Stamm + t.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "I listen to music." (hören)', de: 'Schreibe: "I listen to music." (hören)' },
+            answer: 'Ich höre Musik',
+            acceptableAnswers: ['Ich höre Musik', 'Ich höre Musik.', 'ich höre Musik'],
+            explanation: {
+              en: 'Ich höre Musik. hören → hör + e = höre',
+              de: 'Ich höre Musik. hören → hör + e = höre',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Order the endings: wir, ihr, sie/Sie', de: 'Ordne die Endungen: wir, ihr, sie/Sie' },
+            words: ['-en', '-en', '-t'],
+            correctOrder: ['-en', '-t', '-en'],
+            explanation: {
+              en: '-en (wir), -t (ihr), -en (sie/Sie). Note: wir and sie/Sie both use -en.',
+              de: '-en (wir), -t (ihr), -en (sie/Sie). Beachte: wir und sie/Sie benutzen beide -en.',
+            },
+          },
+        ],
+      },
     },
   },
 
@@ -763,6 +2013,144 @@ export const grammarContent = {
         ],
         warnings: [
           { en: 'Unlike English, starting with time/place changes nothing about verb position!', de: 'Anders als im Englischen ändert der Beginn mit Zeit/Ort nichts an der Verbposition!' },
+        ],
+      },
+      stage4: {
+        title: { en: 'Guided Practice', de: 'Geführte Übung' },
+        instructions: {
+          en: 'Practice German sentence structure. Remember: the verb is always in position 2!',
+          de: 'Übe die deutsche Satzstruktur. Denke daran: das Verb ist immer in Position 2!',
+        },
+        exercises: [
+          {
+            type: 'multiple-choice',
+            question: { en: 'In German statements, the verb is always in position...', de: 'In deutschen Aussagesätzen steht das Verb immer in Position...' },
+            options: ['1', '2', '3', 'anywhere'],
+            correct: 1,
+            explanation: {
+              en: 'The verb is ALWAYS in position 2 in German statements. This is called the V2 rule.',
+              de: 'Das Verb steht IMMER in Position 2 in deutschen Aussagesätzen. Das nennt man die V2-Regel.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Which sentence has correct word order?', de: 'Welcher Satz hat die richtige Wortstellung?' },
+            options: ['Ich nach Hause gehe.', 'Ich gehe nach Hause.', 'Gehe ich nach Hause.', 'Nach Hause ich gehe.'],
+            correct: 1,
+            explanation: {
+              en: '"Ich gehe nach Hause." - Subject (Ich) + Verb (gehe) + Rest. Verb in position 2!',
+              de: '"Ich gehe nach Hause." - Subjekt (Ich) + Verb (gehe) + Rest. Verb in Position 2!',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: '"Heute gehe ich nach Hause." - What is in position 1?', de: '"Heute gehe ich nach Hause." - Was steht in Position 1?' },
+            options: ['gehe (verb)', 'ich (subject)', 'Heute (time)', 'Hause (place)'],
+            correct: 2,
+            explanation: {
+              en: '"Heute" (today) is in position 1. The verb "gehe" stays in position 2, pushing "ich" to position 3.',
+              de: '"Heute" steht in Position 1. Das Verb "gehe" bleibt in Position 2, und "ich" rutscht auf Position 3.',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'Complete with correct word order: Morgen ___ ich Fußball. (spielen)', de: 'Ergänze mit korrekter Wortstellung: Morgen ___ ich Fußball. (spielen)' },
+            answer: 'spiele',
+            acceptableAnswers: ['spiele', 'Spiele'],
+            explanation: {
+              en: 'Morgen spiele ich Fußball. Time (Morgen) + Verb (spiele) + Subject (ich) + Object.',
+              de: 'Morgen spiele ich Fußball. Zeit (Morgen) + Verb (spiele) + Subjekt (ich) + Objekt.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'What is the correct order for extra information (TMP)?', de: 'Was ist die richtige Reihenfolge für zusätzliche Informationen (TMP)?' },
+            options: ['Place-Manner-Time', 'Manner-Time-Place', 'Time-Manner-Place', 'Time-Place-Manner'],
+            correct: 2,
+            explanation: {
+              en: 'Time-Manner-Place (TMP): Ich fahre morgen (T) mit dem Zug (M) nach Berlin (P).',
+              de: 'Zeit-Art-Ort (TMP): Ich fahre morgen (Z) mit dem Zug (A) nach Berlin (O).',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'Position 2 is sometimes called the "verb _____".', de: 'Position 2 wird manchmal "Verb_____" genannt.' },
+            answer: 'throne',
+            acceptableAnswers: ['throne', 'Throne', 'thron', 'Thron'],
+            explanation: {
+              en: 'Position 2 is the "verb throne" - the verb sits there and never moves!',
+              de: 'Position 2 ist der "Verbthron" - das Verb sitzt dort und bewegt sich nie!',
+            },
+          },
+        ],
+      },
+      stage5: {
+        title: { en: 'Mastery Challenge', de: 'Meisterschaftsprüfung' },
+        instructions: {
+          en: 'Complete these advanced exercises to master German sentence structure.',
+          de: 'Schließe diese fortgeschrittenen Übungen ab, um die deutsche Satzstruktur zu meistern.',
+        },
+        exercises: [
+          {
+            type: 'word-order',
+            question: { en: 'Create: "I am going home" - nach Hause / gehe / Ich', de: 'Bilde: "I am going home" - nach Hause / gehe / Ich' },
+            words: ['nach Hause', 'Ich', 'gehe'],
+            correctOrder: ['Ich', 'gehe', 'nach Hause'],
+            explanation: {
+              en: 'Ich gehe nach Hause. Subject + Verb (position 2) + Rest.',
+              de: 'Ich gehe nach Hause. Subjekt + Verb (Position 2) + Rest.',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Start with "Heute": I play soccer today', de: 'Beginne mit "Heute": Ich spiele heute Fußball' },
+            words: ['Fußball', 'spiele', 'Heute', 'ich'],
+            correctOrder: ['Heute', 'spiele', 'ich', 'Fußball'],
+            explanation: {
+              en: 'Heute spiele ich Fußball. Time first, verb stays 2nd, subject moves to 3rd.',
+              de: 'Heute spiele ich Fußball. Zeit zuerst, Verb bleibt 2., Subjekt rutscht auf 3.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Translate: "Tomorrow I am going to Berlin."', de: 'Übersetze: "Tomorrow I am going to Berlin."' },
+            answer: 'Morgen fahre ich nach Berlin',
+            acceptableAnswers: ['Morgen fahre ich nach Berlin', 'Morgen fahre ich nach Berlin.', 'morgen fahre ich nach Berlin'],
+            explanation: {
+              en: 'Morgen fahre ich nach Berlin. Time + Verb + Subject + Place.',
+              de: 'Morgen fahre ich nach Berlin. Zeit + Verb + Subjekt + Ort.',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Apply TMP: We go / tomorrow / by train / to Berlin', de: 'Wende TMP an: Wir fahren / morgen / mit dem Zug / nach Berlin' },
+            words: ['nach Berlin', 'mit dem Zug', 'morgen', 'Wir fahren'],
+            correctOrder: ['Wir fahren', 'morgen', 'mit dem Zug', 'nach Berlin'],
+            explanation: {
+              en: 'Wir fahren morgen mit dem Zug nach Berlin. Time-Manner-Place order.',
+              de: 'Wir fahren morgen mit dem Zug nach Berlin. Zeit-Art-Ort Reihenfolge.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "He plays soccer every day."', de: 'Schreibe: "He plays soccer every day."' },
+            answer: 'Er spielt jeden Tag Fußball',
+            acceptableAnswers: ['Er spielt jeden Tag Fußball', 'Er spielt jeden Tag Fußball.', 'er spielt jeden Tag Fußball'],
+            explanation: {
+              en: 'Er spielt jeden Tag Fußball. Subject + Verb + Time + Object.',
+              de: 'Er spielt jeden Tag Fußball. Subjekt + Verb + Zeit + Objekt.',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Create a question: "Are you going home?" - du / Gehst / nach Hause', de: 'Bilde eine Frage: "Gehst du nach Hause?"' },
+            words: ['nach Hause', 'Gehst', 'du'],
+            correctOrder: ['Gehst', 'du', 'nach Hause'],
+            explanation: {
+              en: 'Gehst du nach Hause? For questions, verb comes first.',
+              de: 'Gehst du nach Hause? Bei Fragen steht das Verb am Anfang.',
+            },
+          },
         ],
       },
     },
@@ -829,6 +2217,164 @@ export const grammarContent = {
           { en: 'After "sein", both sides are nominative: "Er ist ein guter Lehrer"', de: 'Nach "sein" sind beide Seiten Nominativ: "Er ist ein guter Lehrer"' },
         ],
       },
+      stage4: {
+        title: { en: 'Guided Practice', de: 'Geführte Übung' },
+        instructions: {
+          en: 'Practice identifying and using the nominative case (subject of the sentence).',
+          de: 'Übe das Erkennen und Verwenden des Nominativs (Subjekt des Satzes).',
+        },
+        exercises: [
+          {
+            type: 'multiple-choice',
+            question: { en: 'The nominative case is used for the...', de: 'Der Nominativ wird für ... verwendet.' },
+            options: ['object', 'subject', 'indirect object', 'prepositional phrase'],
+            correct: 1,
+            explanation: {
+              en: 'The nominative marks the SUBJECT - the person or thing doing the action.',
+              de: 'Der Nominativ markiert das SUBJEKT - die Person oder Sache, die die Handlung ausführt.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: '"Der Mann liest ein Buch." - What is the subject?', de: '"Der Mann liest ein Buch." - Was ist das Subjekt?' },
+            options: ['ein Buch', 'Der Mann', 'liest', 'ein'],
+            correct: 1,
+            explanation: {
+              en: '"Der Mann" is the subject (nominative). He is doing the reading.',
+              de: '"Der Mann" ist das Subjekt (Nominativ). Er führt das Lesen aus.',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: '___ Frau singt. (The woman - nominative)', de: '___ Frau singt. (Die Frau - Nominativ)' },
+            answer: 'Die',
+            acceptableAnswers: ['Die', 'die'],
+            explanation: {
+              en: 'Die Frau singt. "Frau" is feminine, nominative = "die".',
+              de: 'Die Frau singt. "Frau" ist feminin, Nominativ = "die".',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Which question word finds the nominative?', de: 'Welches Fragewort findet den Nominativ?' },
+            options: ['Wen?', 'Wem?', 'Wer/Was?', 'Wohin?'],
+            correct: 2,
+            explanation: {
+              en: '"Wer?" (who?) or "Was?" (what?) finds the nominative subject.',
+              de: '"Wer?" oder "Was?" findet das Nominativ-Subjekt.',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: '___ Kind spielt. (The child - neuter nominative)', de: '___ Kind spielt. (Das Kind - neutral Nominativ)' },
+            answer: 'Das',
+            acceptableAnswers: ['Das', 'das'],
+            explanation: {
+              en: 'Das Kind spielt. "Kind" is neuter, nominative = "das".',
+              de: 'Das Kind spielt. "Kind" ist neutral, Nominativ = "das".',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'After "sein" (to be), what case is used on both sides?', de: 'Nach "sein" welcher Fall wird auf beiden Seiten verwendet?' },
+            options: ['Accusative', 'Dative', 'Nominative', 'Genitive'],
+            correct: 2,
+            explanation: {
+              en: 'After "sein", both sides are nominative: "Er ist ein Lehrer" (both Er and Lehrer are nominative).',
+              de: 'Nach "sein" sind beide Seiten Nominativ: "Er ist ein Lehrer".',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'Er ist ___ Lehrer. (a teacher - nominative)', de: 'Er ist ___ Lehrer. (ein Lehrer - Nominativ)' },
+            answer: 'ein',
+            acceptableAnswers: ['ein', 'Ein'],
+            explanation: {
+              en: 'Er ist ein Lehrer. After "sein", use nominative = "ein" for masculine.',
+              de: 'Er ist ein Lehrer. Nach "sein" benutze Nominativ = "ein" für maskulin.',
+            },
+          },
+        ],
+      },
+      stage5: {
+        title: { en: 'Mastery Challenge', de: 'Meisterschaftsprüfung' },
+        instructions: {
+          en: 'Complete these advanced exercises to master the nominative case.',
+          de: 'Schließe diese fortgeschrittenen Übungen ab, um den Nominativ zu meistern.',
+        },
+        exercises: [
+          {
+            type: 'word-order',
+            question: { en: 'Create: "The man reads a book" - ein Buch / liest / Der Mann', de: 'Bilde: "The man reads a book"' },
+            words: ['ein Buch', 'Der Mann', 'liest'],
+            correctOrder: ['Der Mann', 'liest', 'ein Buch'],
+            explanation: {
+              en: 'Der Mann liest ein Buch. Subject (nominative) + Verb + Object.',
+              de: 'Der Mann liest ein Buch. Subjekt (Nominativ) + Verb + Objekt.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Translate: "The woman is singing."', de: 'Übersetze: "The woman is singing."' },
+            answer: 'Die Frau singt',
+            acceptableAnswers: ['Die Frau singt', 'Die Frau singt.', 'die Frau singt'],
+            explanation: {
+              en: 'Die Frau singt. Feminine subject = "die" in nominative.',
+              de: 'Die Frau singt. Feminines Subjekt = "die" im Nominativ.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "Who is that?"', de: 'Schreibe: "Who is that?"' },
+            answer: 'Wer ist das',
+            acceptableAnswers: ['Wer ist das', 'Wer ist das?', 'wer ist das'],
+            explanation: {
+              en: 'Wer ist das? "Wer" is the nominative question word.',
+              de: 'Wer ist das? "Wer" ist das Nominativ-Fragewort.',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Create: "The child is playing" - spielt / Das / Kind', de: 'Bilde: "The child is playing"' },
+            words: ['Kind', 'spielt', 'Das'],
+            correctOrder: ['Das', 'Kind', 'spielt'],
+            explanation: {
+              en: 'Das Kind spielt. Neuter subject uses "das".',
+              de: 'Das Kind spielt. Neutrales Subjekt benutzt "das".',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "He is a teacher."', de: 'Schreibe: "He is a teacher."' },
+            answer: 'Er ist Lehrer',
+            acceptableAnswers: ['Er ist Lehrer', 'Er ist Lehrer.', 'er ist Lehrer', 'Er ist ein Lehrer'],
+            explanation: {
+              en: 'Er ist Lehrer. No article for professions after "sein".',
+              de: 'Er ist Lehrer. Kein Artikel für Berufe nach "sein".',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Order nominative articles: masculine, feminine, neuter', de: 'Ordne Nominativ-Artikel: maskulin, feminin, neutral' },
+            words: ['das', 'die', 'der'],
+            correctOrder: ['der', 'die', 'das'],
+            explanation: {
+              en: 'der (masculine), die (feminine), das (neuter) - the nominative definite articles.',
+              de: 'der (maskulin), die (feminin), das (neutral) - die Nominativ-Artikel.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "The animals are playing." (plural)', de: 'Schreibe: "The animals are playing." (Plural)' },
+            answer: 'Die Tiere spielen',
+            acceptableAnswers: ['Die Tiere spielen', 'Die Tiere spielen.', 'die Tiere spielen'],
+            explanation: {
+              en: 'Die Tiere spielen. ALL plurals use "die" in nominative.',
+              de: 'Die Tiere spielen. ALLE Plurale benutzen "die" im Nominativ.',
+            },
+          },
+        ],
+      },
     },
 
     'accusative-intro': {
@@ -880,6 +2426,184 @@ export const grammarContent = {
         ],
         warnings: [
           { en: 'Common mistake: using "der" instead of "den" for masculine direct objects', de: 'Häufiger Fehler: "der" statt "den" für maskuline direkte Objekte zu verwenden' },
+        ],
+      },
+      stage4: {
+        title: { en: 'Guided Practice', de: 'Geführte Übung' },
+        instructions: {
+          en: 'Practice the accusative case. Remember: only masculine articles change!',
+          de: 'Übe den Akkusativ. Denke daran: nur maskuline Artikel ändern sich!',
+        },
+        exercises: [
+          {
+            type: 'multiple-choice',
+            question: { en: 'The accusative case is used for the...', de: 'Der Akkusativ wird für ... verwendet.' },
+            options: ['subject', 'direct object', 'indirect object', 'prepositional phrase'],
+            correct: 1,
+            explanation: {
+              en: 'The accusative marks the DIRECT OBJECT - the thing receiving the action.',
+              de: 'Der Akkusativ markiert das DIREKTE OBJEKT - die Sache, die die Handlung erhält.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Which article changes in the accusative?', de: 'Welcher Artikel ändert sich im Akkusativ?' },
+            options: ['die (feminine)', 'das (neuter)', 'der (masculine)', 'die (plural)'],
+            correct: 2,
+            explanation: {
+              en: 'Only MASCULINE changes: der → den, ein → einen. Everything else stays the same!',
+              de: 'Nur MASKULIN ändert sich: der → den, ein → einen. Alles andere bleibt gleich!',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'Ich sehe ___ Mann. (the man - accusative)', de: 'Ich sehe ___ Mann. (den Mann - Akkusativ)' },
+            answer: 'den',
+            acceptableAnswers: ['den', 'Den'],
+            explanation: {
+              en: 'Ich sehe den Mann. Masculine der → den in accusative.',
+              de: 'Ich sehe den Mann. Maskulin der → den im Akkusativ.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Ich sehe ___ Frau. (the woman)', de: 'Ich sehe ___ Frau.' },
+            options: ['der', 'den', 'die', 'das'],
+            correct: 2,
+            explanation: {
+              en: 'Feminine stays "die" in accusative - no change!',
+              de: 'Feminin bleibt "die" im Akkusativ - keine Änderung!',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'Er hat ___ Hund. (a dog - masculine accusative)', de: 'Er hat ___ Hund. (einen Hund - maskulin Akkusativ)' },
+            answer: 'einen',
+            acceptableAnswers: ['einen', 'Einen'],
+            explanation: {
+              en: 'Er hat einen Hund. ein → einen for masculine accusative.',
+              de: 'Er hat einen Hund. ein → einen für maskulin Akkusativ.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Ich sehe ___ Kind. (the child - neuter)', de: 'Ich sehe ___ Kind. (das Kind - neutral)' },
+            options: ['der', 'den', 'die', 'das'],
+            correct: 3,
+            explanation: {
+              en: 'Neuter stays "das" in accusative - no change!',
+              de: 'Neutral bleibt "das" im Akkusativ - keine Änderung!',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'Sie kauft ___ Tasche. (a bag - feminine)', de: 'Sie kauft ___ Tasche. (eine Tasche - feminin)' },
+            answer: 'eine',
+            acceptableAnswers: ['eine', 'Eine'],
+            explanation: {
+              en: 'eine Tasche - feminine stays "eine" in accusative.',
+              de: 'eine Tasche - feminin bleibt "eine" im Akkusativ.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Which question word finds the accusative?', de: 'Welches Fragewort findet den Akkusativ?' },
+            options: ['Wer?', 'Wem?', 'Wen/Was?', 'Wohin?'],
+            correct: 2,
+            explanation: {
+              en: '"Wen?" (whom?) or "Was?" finds the accusative direct object.',
+              de: '"Wen?" oder "Was?" findet das Akkusativ-Objekt.',
+            },
+          },
+        ],
+      },
+      stage5: {
+        title: { en: 'Mastery Challenge', de: 'Meisterschaftsprüfung' },
+        instructions: {
+          en: 'Complete these advanced exercises to master the accusative case.',
+          de: 'Schließe diese fortgeschrittenen Übungen ab, um den Akkusativ zu meistern.',
+        },
+        exercises: [
+          {
+            type: 'word-order',
+            question: { en: 'Create: "I see the man" - den Mann / sehe / Ich', de: 'Bilde: "I see the man"' },
+            words: ['den Mann', 'sehe', 'Ich'],
+            correctOrder: ['Ich', 'sehe', 'den Mann'],
+            explanation: {
+              en: 'Ich sehe den Mann. Subject + Verb + Accusative Object.',
+              de: 'Ich sehe den Mann. Subjekt + Verb + Akkusativ-Objekt.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Translate: "He has a dog." (masculine)', de: 'Übersetze: "He has a dog." (maskulin)' },
+            answer: 'Er hat einen Hund',
+            acceptableAnswers: ['Er hat einen Hund', 'Er hat einen Hund.', 'er hat einen Hund'],
+            explanation: {
+              en: 'Er hat einen Hund. ein → einen for masculine accusative.',
+              de: 'Er hat einen Hund. ein → einen für maskulin Akkusativ.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "She is buying a bag." (feminine)', de: 'Schreibe: "She is buying a bag." (feminin)' },
+            answer: 'Sie kauft eine Tasche',
+            acceptableAnswers: ['Sie kauft eine Tasche', 'Sie kauft eine Tasche.', 'sie kauft eine Tasche'],
+            explanation: {
+              en: 'Sie kauft eine Tasche. Feminine stays "eine" in accusative.',
+              de: 'Sie kauft eine Tasche. Feminin bleibt "eine" im Akkusativ.',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Order: nominative → accusative for masculine', de: 'Ordne: Nominativ → Akkusativ für maskulin' },
+            words: ['den', 'der'],
+            correctOrder: ['der', 'den'],
+            explanation: {
+              en: 'der (nominative) → den (accusative) for masculine.',
+              de: 'der (Nominativ) → den (Akkusativ) für maskulin.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "I see the woman."', de: 'Schreibe: "I see the woman."' },
+            answer: 'Ich sehe die Frau',
+            acceptableAnswers: ['Ich sehe die Frau', 'Ich sehe die Frau.', 'ich sehe die Frau'],
+            explanation: {
+              en: 'Ich sehe die Frau. Feminine "die" doesn\'t change.',
+              de: 'Ich sehe die Frau. Feminin "die" ändert sich nicht.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "We need a car." (neuter)', de: 'Schreibe: "We need a car." (neutral)' },
+            answer: 'Wir brauchen ein Auto',
+            acceptableAnswers: ['Wir brauchen ein Auto', 'Wir brauchen ein Auto.', 'wir brauchen ein Auto'],
+            explanation: {
+              en: 'Wir brauchen ein Auto. Neuter "ein" doesn\'t change in accusative.',
+              de: 'Wir brauchen ein Auto. Neutral "ein" ändert sich im Akkusativ nicht.',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Order indefinite articles: ein → einen (which gender changes?)', de: 'Ordne: ein → einen (welches Geschlecht ändert sich?)' },
+            words: ['neuter', 'feminine', 'masculine'],
+            correctOrder: ['masculine', 'feminine', 'neuter'],
+            explanation: {
+              en: 'Only masculine changes: ein → einen. Feminine and neuter stay the same.',
+              de: 'Nur maskulin ändert sich: ein → einen. Feminin und neutral bleiben gleich.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write: "I see the child." (neuter)', de: 'Schreibe: "I see the child." (neutral)' },
+            answer: 'Ich sehe das Kind',
+            acceptableAnswers: ['Ich sehe das Kind', 'Ich sehe das Kind.', 'ich sehe das Kind'],
+            explanation: {
+              en: 'Ich sehe das Kind. Neuter "das" doesn\'t change in accusative.',
+              de: 'Ich sehe das Kind. Neutral "das" ändert sich im Akkusativ nicht.',
+            },
+          },
         ],
       },
     },
