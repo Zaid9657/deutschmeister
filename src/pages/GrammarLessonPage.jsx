@@ -22,6 +22,8 @@ import { getTopicContent, hasContent } from '../data/grammarContent';
 import StageIntroduction from '../components/grammar/StageIntroduction';
 import StageExamples from '../components/grammar/StageExamples';
 import StageRuleBreakdown from '../components/grammar/StageRuleBreakdown';
+import StageGuidedPractice from '../components/grammar/StageGuidedPractice';
+import StageMastery from '../components/grammar/StageMastery';
 
 const stages = [
   { id: 1, name: { en: 'Introduction', de: 'Einführung' }, icon: BookOpen, color: 'blue' },
@@ -135,6 +137,34 @@ const GrammarLessonPage = () => {
   const currentStageInfo = stages[currentStage - 1];
   const StageIcon = currentStageInfo.icon;
 
+  // Handle exercise stage completion (stages 4 and 5)
+  const handleExerciseComplete = async () => {
+    // Mark current stage as completed
+    setStageCompleted(prev => ({ ...prev, [currentStage]: true }));
+
+    // Calculate progress percentage
+    const progressPercent = Math.round((currentStage / 5) * 100);
+
+    if (currentStage === 4) {
+      // Move to stage 5
+      setCurrentStage(5);
+      await updateGrammarTopicProgress(level, topic.id, {
+        currentStage: 5,
+        progress: progressPercent,
+        completed: false,
+      });
+    } else if (currentStage === 5) {
+      // Topic completed!
+      await completeGrammarTopic(level, topic.id, 100);
+      navigate(`/grammar/${level}`);
+    }
+  };
+
+  // Check if stage has content
+  const hasStageContent = (stageNum) => {
+    return !!content[`stage${stageNum}`];
+  };
+
   // Render stage content based on current stage
   const renderStageContent = () => {
     const stageContent = content[`stage${currentStage}`];
@@ -147,6 +177,16 @@ const GrammarLessonPage = () => {
       case 3:
         return <StageRuleBreakdown content={stageContent} isGerman={isGerman} theme={theme} />;
       case 4:
+        if (stageContent && stageContent.exercises) {
+          return (
+            <StageGuidedPractice
+              content={stageContent}
+              isGerman={isGerman}
+              theme={theme}
+              onComplete={handleExerciseComplete}
+            />
+          );
+        }
         return (
           <div className="text-center py-12">
             <PenTool className="w-16 h-16 text-amber-400 mx-auto mb-4" />
@@ -159,6 +199,16 @@ const GrammarLessonPage = () => {
           </div>
         );
       case 5:
+        if (stageContent && stageContent.exercises) {
+          return (
+            <StageMastery
+              content={stageContent}
+              isGerman={isGerman}
+              theme={theme}
+              onComplete={handleExerciseComplete}
+            />
+          );
+        }
         return (
           <div className="text-center py-12">
             <Trophy className="w-16 h-16 text-rose-400 mx-auto mb-4" />
@@ -173,6 +223,15 @@ const GrammarLessonPage = () => {
       default:
         return null;
     }
+  };
+
+  // Check if we should show the navigation footer (hide for exercise stages with content)
+  const showNavigationFooter = () => {
+    if (currentStage === 4 || currentStage === 5) {
+      const stageContent = content[`stage${currentStage}`];
+      return !(stageContent && stageContent.exercises);
+    }
+    return true;
   };
 
   return (
@@ -309,44 +368,46 @@ const GrammarLessonPage = () => {
               </AnimatePresence>
             </div>
 
-            {/* Navigation Footer */}
-            <div className="border-t border-slate-100 px-6 py-4 bg-slate-50">
-              <div className="flex items-center justify-between">
-                <button
-                  onClick={goToPreviousStage}
-                  disabled={currentStage === 1}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                    currentStage === 1
-                      ? 'text-slate-300 cursor-not-allowed'
-                      : 'text-slate-600 hover:bg-slate-200'
-                  }`}
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                  {isGerman ? 'Zurück' : 'Previous'}
-                </button>
+            {/* Navigation Footer - hidden for exercise stages with content */}
+            {showNavigationFooter() && (
+              <div className="border-t border-slate-100 px-6 py-4 bg-slate-50">
+                <div className="flex items-center justify-between">
+                  <button
+                    onClick={goToPreviousStage}
+                    disabled={currentStage === 1}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                      currentStage === 1
+                        ? 'text-slate-300 cursor-not-allowed'
+                        : 'text-slate-600 hover:bg-slate-200'
+                    }`}
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                    {isGerman ? 'Zurück' : 'Previous'}
+                  </button>
 
-                <div className="text-sm text-slate-500">
-                  {currentStage} / 5
+                  <div className="text-sm text-slate-500">
+                    {currentStage} / 5
+                  </div>
+
+                  <button
+                    onClick={handleStageComplete}
+                    className={`flex items-center gap-2 px-6 py-2 rounded-lg font-medium transition-all bg-gradient-to-r ${theme.gradient} text-white hover:shadow-lg`}
+                  >
+                    {currentStage === 5 ? (
+                      <>
+                        {isGerman ? 'Abschließen' : 'Complete'}
+                        <Trophy className="w-5 h-5" />
+                      </>
+                    ) : (
+                      <>
+                        {isGerman ? 'Weiter' : 'Continue'}
+                        <ChevronRight className="w-5 h-5" />
+                      </>
+                    )}
+                  </button>
                 </div>
-
-                <button
-                  onClick={handleStageComplete}
-                  className={`flex items-center gap-2 px-6 py-2 rounded-lg font-medium transition-all bg-gradient-to-r ${theme.gradient} text-white hover:shadow-lg`}
-                >
-                  {currentStage === 5 ? (
-                    <>
-                      {isGerman ? 'Abschließen' : 'Complete'}
-                      <Trophy className="w-5 h-5" />
-                    </>
-                  ) : (
-                    <>
-                      {isGerman ? 'Weiter' : 'Continue'}
-                      <ChevronRight className="w-5 h-5" />
-                    </>
-                  )}
-                </button>
               </div>
-            </div>
+            )}
           </div>
         </motion.div>
 

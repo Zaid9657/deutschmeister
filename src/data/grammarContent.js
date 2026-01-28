@@ -76,6 +76,184 @@ export const grammarContent = {
           { en: 'Don\'t pronounce W like English W - it\'s always like V!', de: 'Sprich W nicht wie englisches W aus - es ist immer wie V!' },
         ],
       },
+      stage4: {
+        title: { en: 'Guided Practice', de: 'Geführte Übung' },
+        instructions: {
+          en: 'Test your knowledge of German pronunciation rules. Select the correct answer for each question.',
+          de: 'Teste dein Wissen über deutsche Ausspracheregeln. Wähle die richtige Antwort für jede Frage.',
+        },
+        exercises: [
+          {
+            type: 'multiple-choice',
+            question: { en: 'How is the German "W" pronounced?', de: 'Wie wird das deutsche "W" ausgesprochen?' },
+            options: ['Like English "w"', 'Like English "v"', 'Like English "f"', 'Like English "b"'],
+            correct: 1,
+            explanation: {
+              en: 'German "W" is pronounced like English "V". For example, "Wasser" (water) sounds like "VAH-ser".',
+              de: 'Das deutsche "W" wird wie das englische "V" ausgesprochen. Zum Beispiel klingt "Wasser" wie "VAH-ser".',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'What sound does "ß" make?', de: 'Welchen Laut macht "ß"?' },
+            options: ['A "z" sound', 'A "b" sound', 'A sharp "s" sound', 'A "sh" sound'],
+            correct: 2,
+            explanation: {
+              en: 'ß (Eszett) makes a sharp "s" sound. It\'s used after long vowels, like in "Straße" (street).',
+              de: 'ß (Eszett) macht einen scharfen "s"-Laut. Es wird nach langen Vokalen verwendet, wie in "Straße".',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'The German letter "V" sounds like English _____.', de: 'Der deutsche Buchstabe "V" klingt wie englisches _____.' },
+            answer: 'f',
+            acceptableAnswers: ['f', 'F', '"f"', '"F"'],
+            explanation: {
+              en: 'German "V" is pronounced like English "F". "Vater" (father) sounds like "FAH-ter".',
+              de: 'Das deutsche "V" wird wie das englische "F" ausgesprochen. "Vater" klingt wie "FAH-ter".',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'Which word contains an umlaut?', de: 'Welches Wort enthält einen Umlaut?' },
+            options: ['Haus', 'Buch', 'schön', 'Brot'],
+            correct: 2,
+            explanation: {
+              en: '"Schön" contains ö, which is an umlaut. Umlauts are ä, ö, and ü - modified vowels with two dots.',
+              de: '"Schön" enthält ö, das ein Umlaut ist. Umlaute sind ä, ö und ü - modifizierte Vokale mit zwei Punkten.',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'How is "J" pronounced in German?', de: 'Wie wird "J" im Deutschen ausgesprochen?' },
+            options: ['Like English "j" in "jump"', 'Like English "y" in "yes"', 'Like English "g" in "gem"', 'Like English "h"'],
+            correct: 1,
+            explanation: {
+              en: 'German "J" sounds like English "Y". "Ja" (yes) is pronounced "yah".',
+              de: 'Das deutsche "J" klingt wie das englische "Y". "Ja" wird "yah" ausgesprochen.',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'The letter "ü" sounds like "ee" with _____ lips.', de: 'Der Buchstabe "ü" klingt wie "ee" mit _____ Lippen.' },
+            answer: 'rounded',
+            acceptableAnswers: ['rounded', 'round', 'gerundeten', 'runden'],
+            explanation: {
+              en: 'To pronounce "ü", say "ee" while rounding your lips as if saying "oo". Try it with "über"!',
+              de: 'Um "ü" auszusprechen, sage "ee" während du deine Lippen rundest, als ob du "oo" sagen würdest. Probiere es mit "über"!',
+            },
+          },
+          {
+            type: 'multiple-choice',
+            question: { en: 'How is "Z" pronounced in German?', de: 'Wie wird "Z" im Deutschen ausgesprochen?' },
+            options: ['Like English "z"', 'Like "ts"', 'Like "s"', 'Like "sh"'],
+            correct: 1,
+            explanation: {
+              en: 'German "Z" sounds like "ts". "Zeit" (time) is pronounced "tsait".',
+              de: 'Das deutsche "Z" klingt wie "ts". "Zeit" wird "tsait" ausgesprochen.',
+            },
+          },
+          {
+            type: 'fill-blank',
+            question: { en: 'German "S" before a vowel sounds like English _____.', de: 'Das deutsche "S" vor einem Vokal klingt wie englisches _____.' },
+            answer: 'z',
+            acceptableAnswers: ['z', 'Z', '"z"', '"Z"'],
+            explanation: {
+              en: 'German "S" at the start of a word before a vowel is voiced, like English "Z". "Sonne" sounds like "ZON-nuh".',
+              de: 'Das deutsche "S" am Wortanfang vor einem Vokal ist stimmhaft, wie das englische "Z". "Sonne" klingt wie "ZON-nuh".',
+            },
+          },
+        ],
+      },
+      stage5: {
+        title: { en: 'Mastery Challenge', de: 'Meisterschaftsprüfung' },
+        instructions: {
+          en: 'Complete these advanced exercises to demonstrate your mastery of German pronunciation.',
+          de: 'Schließe diese fortgeschrittenen Übungen ab, um deine Beherrschung der deutschen Aussprache zu demonstrieren.',
+        },
+        exercises: [
+          {
+            type: 'word-order',
+            question: { en: 'Arrange these letters in alphabetical order (German):', de: 'Ordne diese Buchstaben in alphabetischer Reihenfolge (Deutsch):' },
+            words: ['ü', 'ä', 'ö', 'ß'],
+            correctOrder: ['ä', 'ö', 'ß', 'ü'],
+            explanation: {
+              en: 'In German alphabetical order: ä comes after a, ö after o, ß after s, and ü after u.',
+              de: 'In deutscher alphabetischer Reihenfolge: ä kommt nach a, ö nach o, ß nach s und ü nach u.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'How would you spell the sound "ts" in German?', de: 'Wie würdest du den Laut "ts" auf Deutsch schreiben?' },
+            answer: 'z',
+            acceptableAnswers: ['z', 'Z'],
+            explanation: {
+              en: 'The "ts" sound in German is written as "Z". Example: Zeit (time) = "tsait"',
+              de: 'Der "ts"-Laut wird im Deutschen als "Z" geschrieben. Beispiel: Zeit = "tsait"',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Put these words in order based on their first letter sound (V sound first):', de: 'Ordne diese Wörter nach ihrem Anfangslaut (V-Laut zuerst):' },
+            words: ['Vater', 'Wein', 'Jahr'],
+            correctOrder: ['Wein', 'Vater', 'Jahr'],
+            explanation: {
+              en: 'Wein starts with a V sound (W=V), Vater starts with an F sound (V=F), Jahr starts with a Y sound (J=Y).',
+              de: 'Wein beginnt mit einem V-Laut (W=V), Vater beginnt mit einem F-Laut (V=F), Jahr beginnt mit einem J-Laut (J=Y).',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write the German word for "street" (with ß):', de: 'Schreibe das deutsche Wort für "street" (mit ß):' },
+            answer: 'Straße',
+            acceptableAnswers: ['Straße', 'straße', 'STRASSE', 'Strasse', 'strasse'],
+            explanation: {
+              en: 'Straße uses ß after the long "a" sound. The ß represents a sharp "s" sound.',
+              de: 'Straße verwendet ß nach dem langen "a"-Laut. Das ß repräsentiert einen scharfen "s"-Laut.',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Order these words from soft "ch" to hard "ch" sound:', de: 'Ordne diese Wörter von weichem "ch" zu hartem "ch":' },
+            words: ['auch', 'ich', 'Buch'],
+            correctOrder: ['ich', 'auch', 'Buch'],
+            explanation: {
+              en: '"ch" after i/e is soft (ich), after a/o/u is harder (auch, Buch). "Ich" has the softest sound.',
+              de: '"ch" nach i/e ist weich (ich), nach a/o/u ist härter (auch, Buch). "Ich" hat den weichsten Laut.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write a German word that contains "ö":', de: 'Schreibe ein deutsches Wort mit "ö":' },
+            answer: 'schön',
+            acceptableAnswers: ['schön', 'Schön', 'König', 'könig', 'mögen', 'Möbel', 'hören', 'Löwe', 'böse', 'Körper', 'öffnen'],
+            explanation: {
+              en: 'Words with ö include: schön (beautiful), König (king), mögen (to like), hören (to hear), Löwe (lion).',
+              de: 'Wörter mit ö sind: schön, König, mögen, hören, Löwe, böse, Körper, öffnen.',
+            },
+          },
+          {
+            type: 'translation',
+            question: { en: 'Write the German word for "yes":', de: 'Schreibe das deutsche Wort für "yes":' },
+            answer: 'ja',
+            acceptableAnswers: ['ja', 'Ja', 'JA'],
+            explanation: {
+              en: '"Ja" means yes. Remember, the J sounds like English Y, so it\'s pronounced "yah".',
+              de: '"Ja" bedeutet yes. Denke daran, das J klingt wie das englische Y, also wird es "yah" ausgesprochen.',
+            },
+          },
+          {
+            type: 'word-order',
+            question: { en: 'Arrange to spell "beautiful" in German:', de: 'Ordne, um "beautiful" auf Deutsch zu buchstabieren:' },
+            words: ['ö', 'h', 's', 'c', 'n'],
+            correctOrder: ['s', 'c', 'h', 'ö', 'n'],
+            explanation: {
+              en: 'Schön means beautiful. Note the "sch" combination makes a "sh" sound, and ö is a rounded vowel.',
+              de: 'Schön bedeutet beautiful. Beachte, die "sch"-Kombination macht einen "sch"-Laut, und ö ist ein gerundeter Vokal.',
+            },
+          },
+        ],
+      },
     },
 
     'nouns-gender': {
