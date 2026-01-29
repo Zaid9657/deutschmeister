@@ -60,10 +60,19 @@ const GrammarLessonPage = () => {
     let cancelled = false;
     const loadData = async () => {
       setDataLoading(true);
+      console.log(`[GrammarLessonPage] loading data for level="${level}", slug="${topicSlug}"`);
       const [fetchedTopic, fetchedContent] = await Promise.all([
         fetchTopicBySlug(level, topicSlug),
         fetchTopicContent(level, topicSlug),
       ]);
+      console.log(`[GrammarLessonPage] fetched topic:`, fetchedTopic);
+      console.log(`[GrammarLessonPage] fetched content stages:`, {
+        stage1: fetchedContent?.stage1 ? 'present' : 'NULL',
+        stage2: fetchedContent?.stage2 ? 'present' : 'NULL',
+        stage3: fetchedContent?.stage3 ? 'present' : 'NULL',
+        stage4: fetchedContent?.stage4 ? 'present' : 'NULL',
+        stage5: fetchedContent?.stage5 ? 'present' : 'NULL',
+      });
       if (!cancelled) {
         setTopic(fetchedTopic);
         setContent(fetchedContent);
@@ -73,6 +82,7 @@ const GrammarLessonPage = () => {
     if (levels.includes(level) && unlocked) {
       loadData();
     } else {
+      console.log(`[GrammarLessonPage] skipping load: level="${level}" valid=${levels.includes(level)}, unlocked=${unlocked}`);
       setDataLoading(false);
     }
     return () => { cancelled = true; };

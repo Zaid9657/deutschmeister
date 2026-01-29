@@ -15,10 +15,12 @@ const uuidCache = new Map();
 export async function lookupTopicUUID(level, slug) {
   const cacheKey = `${level}:${slug}`;
   if (uuidCache.has(cacheKey)) {
+    console.log(`[grammarService] lookupTopicUUID cache hit: ${cacheKey} →`, uuidCache.get(cacheKey));
     return uuidCache.get(cacheKey);
   }
 
   try {
+    console.log(`[grammarService] lookupTopicUUID querying: sub_level="${level}", slug="${slug}"`);
     const { data, error } = await supabase
       .from('grammar_topics')
       .select('id')
@@ -26,14 +28,18 @@ export async function lookupTopicUUID(level, slug) {
       .eq('slug', slug)
       .single();
 
+    console.log(`[grammarService] lookupTopicUUID result:`, { data, error });
+
     if (error || !data) {
+      console.warn(`[grammarService] lookupTopicUUID failed for ${cacheKey}:`, error);
       uuidCache.set(cacheKey, null);
       return null;
     }
 
     uuidCache.set(cacheKey, data.id);
     return data.id;
-  } catch {
+  } catch (err) {
+    console.error(`[grammarService] lookupTopicUUID exception for ${cacheKey}:`, err);
     uuidCache.set(cacheKey, null);
     return null;
   }
@@ -117,6 +123,11 @@ function mapDbExerciseToApp(dbRow) {
 function buildStage2(examples) {
   if (!examples || examples.length === 0) return null;
 
+  console.log(`[grammarService] buildStage2: processing ${examples.length} examples`);
+  if (examples.length > 0) {
+    console.log(`[grammarService] buildStage2 sample row:`, examples[0]);
+  }
+
   return {
     title: { en: 'Examples', de: 'Beispiele' },
     examples: examples.map(ex => ({
@@ -133,12 +144,20 @@ function buildStage2(examples) {
 function buildStage3(rules) {
   if (!rules || rules.length === 0) return null;
 
+  console.log(`[grammarService] buildStage3: processing ${rules.length} rules`);
+
   const tables = [];
   const tips = [];
   const warnings = [];
 
-  rules.forEach(rule => {
+  rules.forEach((rule, i) => {
     const content = rule.content || {};
+    console.log(`[grammarService] buildStage3 rule[${i}]:`, {
+      rule_type: rule.rule_type,
+      title_en: rule.title_en,
+      contentKeys: Object.keys(content),
+      contentType: typeof rule.content,
+    });
 
     if (rule.rule_type === 'table' || rule.rule_type === 'pattern') {
       tables.push({
@@ -153,8 +172,12 @@ function buildStage3(rules) {
       tips.push(content.en ? content : { en: rule.title_en || '', de: rule.title_de || '' });
     } else if (rule.rule_type === 'warning') {
       warnings.push(content.en ? content : { en: rule.title_en || '', de: rule.title_de || '' });
+    } else {
+      console.warn(`[grammarService] buildStage3: unknown rule_type "${rule.rule_type}"`);
     }
   });
+
+  console.log(`[grammarService] buildStage3 result: ${tables.length} tables, ${tips.length} tips, ${warnings.length} warnings`);
 
   return {
     title: { en: 'Rules & Patterns', de: 'Regeln und Muster' },
@@ -169,12 +192,17 @@ function buildExerciseStages(exercises) {
   const stage4Exercises = [];
   const stage5Exercises = [];
 
-  (exercises || []).forEach(ex => {
+  console.log(`[grammarService] buildExerciseStages: processing ${(exercises || []).length} exercises`);
+
+  (exercises || []).forEach((ex, i) => {
+    console.log(`[grammarService] exercise[${i}]:`, { stage: ex.stage, type: ex.exercise_type, stageType: typeof ex.stage });
     const mapped = mapDbExerciseToApp(ex);
     if (ex.stage === 4) {
       stage4Exercises.push(mapped);
     } else if (ex.stage === 5) {
       stage5Exercises.push(mapped);
+    } else {
+      console.warn(`[grammarService] exercise[${i}] has unexpected stage: ${ex.stage} (type: ${typeof ex.stage})`);
     }
   });
 
@@ -208,24 +236,30 @@ function buildExerciseStages(exercises) {
  */
 export async function fetchTopicsForLevel(level) {
   try {
+    console.log(`[grammarService] fetchTopicsForLevel: querying level="${level}"`);
     const { data, error } = await supabase
       .from('grammar_topics')
       .select('*')
       .eq('sub_level', level)
       .order('topic_order');
 
+    console.log(`[grammarService] fetchTopicsForLevel result:`, { count: data?.length, error });
+
     if (!error && data && data.length > 0) {
       // Cache all UUIDs
       data.forEach(row => {
         uuidCache.set(`${level}:${row.slug}`, row.id);
       });
-      return data.map(mapDbTopicToApp);
+      const mapped = data.map(mapDbTopicToApp);
+      console.log(`[grammarService] fetchTopicsForLevel: returning ${mapped.length} DB topics`);
+      return mapped;
     }
-  } catch {
-    // Fall through to static data
+  } catch (err) {
+    console.error(`[grammarService] fetchTopicsForLevel exception:`, err);
   }
 
   // Fallback to static data
+  console.log(`[grammarService] fetchTopicsForLevel: falling back to static data for level="${level}"`);
   return getTopicsForLevel(level);
 }
 
@@ -234,6 +268,7 @@ export async function fetchTopicsForLevel(level) {
  */
 export async function fetchTopicBySlug(level, slug) {
   try {
+    console.log(`[grammarService] fetchTopicBySlug: level="${level}", slug="${slug}"`);
     const { data, error } = await supabase
       .from('grammar_topics')
       .select('*')
@@ -241,12 +276,15 @@ export async function fetchTopicBySlug(level, slug) {
       .eq('slug', slug)
       .single();
 
+    console.log(`[grammarService] fetchTopicBySlug result:`, { data, error });
+
     if (!error && data) {
       uuidCache.set(`${level}:${slug}`, data.id);
       return mapDbTopicToApp(data);
     }
-  } catch {
-    // Fall through to static data
+    console.warn(`[grammarService] fetchTopicBySlug: no DB data, falling back to static`);
+  } catch (err) {
+    console.error(`[grammarService] fetchTopicBySlug exception:`, err);
   }
 
   return getTopicBySlug(level, slug);
@@ -259,12 +297,16 @@ export async function fetchTopicBySlug(level, slug) {
 export async function fetchTopicContent(level, slug) {
   // Always get static content as baseline (especially for stage 1)
   const staticContent = getTopicContent(level, slug);
+  console.log(`[grammarService] fetchTopicContent: level="${level}", slug="${slug}", hasStaticContent=${!!staticContent}`);
 
   // Try to get the topic UUID
   const topicUUID = await lookupTopicUUID(level, slug);
   if (!topicUUID) {
+    console.log(`[grammarService] fetchTopicContent: no UUID found, returning static content`);
     return staticContent;
   }
+
+  console.log(`[grammarService] fetchTopicContent: UUID="${topicUUID}", fetching from content tables...`);
 
   try {
     // Parallel fetch from all content tables
@@ -286,12 +328,19 @@ export async function fetchTopicContent(level, slug) {
         .order('order_index'),
     ]);
 
+    console.log(`[grammarService] fetchTopicContent raw responses:`, {
+      examples: { data: examplesRes.data?.length, error: examplesRes.error },
+      rules: { data: rulesRes.data?.length, error: rulesRes.error },
+      exercises: { data: exercisesRes.data?.length, error: exercisesRes.error },
+    });
+
     const examples = examplesRes.data || [];
     const rules = rulesRes.data || [];
     const exercises = exercisesRes.data || [];
 
     // If all tables are empty, use static content entirely
     if (examples.length === 0 && rules.length === 0 && exercises.length === 0) {
+      console.log(`[grammarService] fetchTopicContent: all content tables empty, returning static`);
       return staticContent;
     }
 
@@ -300,7 +349,14 @@ export async function fetchTopicContent(level, slug) {
     const dbStage3 = buildStage3(rules);
     const { stage4: dbStage4, stage5: dbStage5 } = buildExerciseStages(exercises);
 
-    return {
+    console.log(`[grammarService] fetchTopicContent built stages:`, {
+      stage2: dbStage2 ? `${dbStage2.examples?.length} examples` : 'null (using static)',
+      stage3: dbStage3 ? `${dbStage3.tables?.length} tables, ${dbStage3.tips?.length} tips` : 'null (using static)',
+      stage4: dbStage4 ? `${dbStage4.exercises?.length} exercises` : 'null (using static)',
+      stage5: dbStage5 ? `${dbStage5.exercises?.length} exercises` : 'null (using static)',
+    });
+
+    const result = {
       // Stage 1 always from static (no DB table for introduction)
       stage1: staticContent?.stage1 || null,
       // Prefer DB data, fall back to static
@@ -309,7 +365,18 @@ export async function fetchTopicContent(level, slug) {
       stage4: dbStage4 || staticContent?.stage4 || null,
       stage5: dbStage5 || staticContent?.stage5 || null,
     };
-  } catch {
+
+    console.log(`[grammarService] fetchTopicContent final result:`, {
+      stage1: result.stage1 ? 'present' : 'NULL',
+      stage2: result.stage2 ? 'present' : 'NULL',
+      stage3: result.stage3 ? 'present' : 'NULL',
+      stage4: result.stage4 ? 'present' : 'NULL',
+      stage5: result.stage5 ? 'present' : 'NULL',
+    });
+
+    return result;
+  } catch (err) {
+    console.error(`[grammarService] fetchTopicContent exception:`, err);
     return staticContent;
   }
 }
@@ -326,10 +393,13 @@ export async function loadUserGrammarProgress(userId) {
   if (!userId) return {};
 
   try {
+    console.log(`[grammarService] loadUserGrammarProgress: userId="${userId}"`);
     const { data, error } = await supabase
       .from('user_grammar_progress')
       .select('*, grammar_topics(slug, sub_level, topic_order)')
       .eq('user_id', userId);
+
+    console.log(`[grammarService] loadUserGrammarProgress result:`, { count: data?.length, error });
 
     if (error || !data || data.length === 0) {
       return {};
