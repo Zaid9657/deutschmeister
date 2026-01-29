@@ -1,6 +1,16 @@
 import { supabase } from '../utils/supabase';
 
 // ==========================================
+// Helpers
+// ==========================================
+
+/** Convert app-level (a1.1) to DB sub_level (A1.1) */
+const toDbLevel = (level) => level.toUpperCase();
+
+/** Convert DB sub_level (A1.1) to app-level (a1.1) */
+const toAppLevel = (dbLevel) => dbLevel.toLowerCase();
+
+// ==========================================
 // UUID Cache - maps "level:slug" → UUID
 // ==========================================
 const uuidCache = new Map();
@@ -17,11 +27,12 @@ export async function lookupTopicUUID(level, slug) {
     return uuidCache.get(cacheKey);
   }
 
-  console.log(`[grammarService] lookupTopicUUID querying: sub_level="${level}", slug="${slug}"`);
+  const dbLevel = toDbLevel(level);
+  console.log(`[grammarService] lookupTopicUUID querying: sub_level="${dbLevel}", slug="${slug}"`);
   const { data, error } = await supabase
     .from('grammar_topics')
     .select('id')
-    .eq('sub_level', level)
+    .eq('sub_level', dbLevel)
     .eq('slug', slug)
     .single();
 
@@ -43,8 +54,9 @@ export async function lookupTopicUUID(level, slug) {
 
 /** Map a grammar_topics DB row to the app's topic format */
 function mapDbTopicToApp(dbRow) {
+  const appLevel = toAppLevel(dbRow.sub_level);
   return {
-    id: `${dbRow.sub_level}-gt${dbRow.topic_order}`,
+    id: `${appLevel}-gt${dbRow.topic_order}`,
     order: dbRow.topic_order,
     slug: dbRow.slug,
     titleEn: dbRow.title_en,
@@ -219,12 +231,13 @@ function buildExerciseStages(exercises) {
  * Returns empty array if nothing found.
  */
 export async function fetchTopicsForLevel(level) {
-  console.log(`[grammarService] fetchTopicsForLevel: level="${level}"`);
+  const dbLevel = toDbLevel(level);
+  console.log(`[grammarService] fetchTopicsForLevel: level="${level}" → DB sub_level="${dbLevel}"`);
 
   const { data, error } = await supabase
     .from('grammar_topics')
     .select('*')
-    .eq('sub_level', level)
+    .eq('sub_level', dbLevel)
     .order('topic_order');
 
   console.log(`[grammarService] fetchTopicsForLevel result:`, {
@@ -256,12 +269,13 @@ export async function fetchTopicsForLevel(level) {
  * Returns null if not found.
  */
 export async function fetchTopicBySlug(level, slug) {
-  console.log(`[grammarService] fetchTopicBySlug: level="${level}", slug="${slug}"`);
+  const dbLevel = toDbLevel(level);
+  console.log(`[grammarService] fetchTopicBySlug: level="${level}" → DB sub_level="${dbLevel}", slug="${slug}"`);
 
   const { data, error } = await supabase
     .from('grammar_topics')
     .select('*')
-    .eq('sub_level', level)
+    .eq('sub_level', dbLevel)
     .eq('slug', slug)
     .single();
 
@@ -389,10 +403,11 @@ export async function loadUserGrammarProgress(userId) {
   data.forEach(row => {
     if (row.grammar_topics) {
       const { sub_level, topic_order, slug } = row.grammar_topics;
-      const legacyId = `${sub_level}-gt${topic_order}`;
+      const appLevel = toAppLevel(sub_level);
+      const legacyId = `${appLevel}-gt${topic_order}`;
 
       // Cache UUID while we're at it
-      uuidCache.set(`${sub_level}:${slug}`, row.topic_id);
+      uuidCache.set(`${appLevel}:${slug}`, row.topic_id);
 
       progressMap[legacyId] = {
         completed: row.completed,
