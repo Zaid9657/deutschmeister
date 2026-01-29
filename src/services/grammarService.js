@@ -1,4 +1,5 @@
 import { supabase } from '../utils/supabase';
+import { getTopicContent as getStaticContent } from '../data/grammarContent';
 
 // ==========================================
 // Helpers
@@ -357,8 +358,11 @@ export async function fetchTopicContent(level, slug) {
   const dbStage3 = buildStage3(rules);
   const { stage4: dbStage4, stage5: dbStage5 } = buildExerciseStages(exercises);
 
+  // Stage 1 (Introduction) has no DB table — use static data
+  const staticContent = getStaticContent(level, slug);
+
   const result = {
-    stage1: null, // No DB table for introductions
+    stage1: staticContent?.stage1 || null,
     stage2: dbStage2,
     stage3: dbStage3,
     stage4: dbStage4,
@@ -366,7 +370,7 @@ export async function fetchTopicContent(level, slug) {
   };
 
   console.log(`[grammarService] fetchTopicContent FINAL:`, {
-    stage1: 'null (no DB table)',
+    stage1: result.stage1 ? 'from static' : 'null (no static data either)',
     stage2: dbStage2 ? `${dbStage2.examples.length} examples` : 'null',
     stage3: dbStage3 ? `${dbStage3.tables.length}t/${dbStage3.tips.length}tip/${dbStage3.warnings.length}w` : 'null',
     stage4: dbStage4 ? `${dbStage4.exercises.length} exercises` : 'null',
