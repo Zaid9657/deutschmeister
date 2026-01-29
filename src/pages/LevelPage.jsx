@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, BookOpen, MessageSquare, Volume2, Mic, Sun, TreePine, Waves, Moon } from 'lucide-react';
+import { ArrowLeft, BookOpen, MessageSquare, Volume2, Mic, Sun, TreePine, Waves, Moon, Loader2 } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useProgress } from '../contexts/ProgressContext';
-import { vocabulary, sentences, levels, levelThemes as contentLevelThemes } from '../data/content';
+import { levels, levelThemes as contentLevelThemes } from '../data/content';
+import { fetchWordsForLevel, fetchSentencesForLevel } from '../services/vocabularyService';
 import WordCard from '../components/WordCard';
 import SentenceCard from '../components/SentenceCard';
 import SpeakingPractice from '../components/SpeakingPractice';
@@ -29,6 +30,9 @@ const LevelPage = () => {
   const { getLevelProgress, isLevelUnlocked } = useProgress();
 
   const [activeTab, setActiveTab] = useState('vocabulary');
+  const [levelVocabulary, setLevelVocabulary] = useState([]);
+  const [levelSentences, setLevelSentences] = useState([]);
+  const [vocabLoading, setVocabLoading] = useState(true);
 
   const theme = getThemeForLevel(level);
   const progress = getLevelProgress(level);
@@ -45,15 +49,33 @@ const LevelPage = () => {
     return () => setCurrentLevel(null);
   }, [level, unlocked, navigate, setCurrentLevel]);
 
+  // Fetch vocabulary and sentences from Supabase
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      setVocabLoading(true);
+      const [words, sents] = await Promise.all([
+        fetchWordsForLevel(level),
+        fetchSentencesForLevel(level),
+      ]);
+      if (!cancelled) {
+        setLevelVocabulary(words);
+        setLevelSentences(sents);
+        setVocabLoading(false);
+      }
+    };
+    if (levels.includes(level) && unlocked) {
+      load();
+    }
+    return () => { cancelled = true; };
+  }, [level, unlocked]);
+
   const tabs = [
     { id: 'vocabulary', label: t('levelPage.vocabulary'), icon: BookOpen },
     { id: 'sentences', label: t('levelPage.sentences'), icon: MessageSquare },
     { id: 'audio', label: t('levelPage.audio'), icon: Volume2 },
     { id: 'speaking', label: t('levelPage.speaking'), icon: Mic },
   ];
-
-  const levelVocabulary = vocabulary[level] || [];
-  const levelSentences = sentences[level] || [];
 
   const handleSpeak = (text) => {
     if ('speechSynthesis' in window) {
@@ -174,13 +196,29 @@ const LevelPage = () => {
           >
             {/* Vocabulary Tab */}
             {activeTab === 'vocabulary' && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {levelVocabulary.map((word) => (
-                  <WordCard key={word.id} word={word} level={level} />
-                ))}
-                {levelVocabulary.length === 0 && (
-                  <div className="col-span-full text-center py-12 text-slate-500">
-                    No vocabulary items available for this level yet.
+              <div>
+                {vocabLoading && (
+                  <div className="flex items-center justify-center py-12">
+                    <Loader2 className="w-8 h-8 text-slate-400 animate-spin" />
+                  </div>
+                )}
+                {!vocabLoading && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {levelVocabulary.map((word) => (
+                      <WordCard key={word.id} word={word} level={level} />
+                    ))}
+                    {levelVocabulary.length === 0 && (
+                      <div className="col-span-full bg-white rounded-xl border border-rose-200 p-6">
+                        <h3 className="text-lg font-bold text-rose-700 mb-2">No vocabulary from Supabase</h3>
+                        <div className="text-sm font-mono bg-rose-50 rounded-lg p-3 text-rose-800 mb-3">
+                          <p><strong>Level queried:</strong> {level.toUpperCase()}</p>
+                          <p><strong>Table:</strong> words WHERE sub_level = '{level.toUpperCase()}'</p>
+                        </div>
+                        <p className="text-slate-600 text-sm">
+                          Check browser console for [vocabularyService] logs. Possible causes: missing RLS SELECT policy, no data for this level, or column name mismatch.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -188,13 +226,29 @@ const LevelPage = () => {
 
             {/* Sentences Tab */}
             {activeTab === 'sentences' && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {levelSentences.map((sentence) => (
-                  <SentenceCard key={sentence.id} sentence={sentence} level={level} />
-                ))}
-                {levelSentences.length === 0 && (
-                  <div className="col-span-full text-center py-12 text-slate-500">
-                    No sentences available for this level yet.
+              <div>
+                {vocabLoading && (
+                  <div className="flex items-center justify-center py-12">
+                    <Loader2 className="w-8 h-8 text-slate-400 animate-spin" />
+                  </div>
+                )}
+                {!vocabLoading && (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {levelSentences.map((sentence) => (
+                      <SentenceCard key={sentence.id} sentence={sentence} level={level} />
+                    ))}
+                    {levelSentences.length === 0 && (
+                      <div className="col-span-full bg-white rounded-xl border border-rose-200 p-6">
+                        <h3 className="text-lg font-bold text-rose-700 mb-2">No sentences from Supabase</h3>
+                        <div className="text-sm font-mono bg-rose-50 rounded-lg p-3 text-rose-800 mb-3">
+                          <p><strong>Level queried:</strong> {level.toUpperCase()}</p>
+                          <p><strong>Table:</strong> sentences WHERE sub_level = '{level.toUpperCase()}'</p>
+                        </div>
+                        <p className="text-slate-600 text-sm">
+                          Check browser console for [vocabularyService] logs. Possible causes: missing RLS SELECT policy, no data for this level, or column name mismatch.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -210,8 +264,14 @@ const LevelPage = () => {
                   Click on any word or sentence to hear its pronunciation.
                 </p>
 
+                {vocabLoading && (
+                  <div className="flex items-center justify-center py-12">
+                    <Loader2 className="w-8 h-8 text-slate-400 animate-spin" />
+                  </div>
+                )}
+
                 {/* Vocabulary Audio List */}
-                {levelVocabulary.length > 0 && (
+                {!vocabLoading && levelVocabulary.length > 0 && (
                   <div className="mb-8">
                     <h3 className="font-semibold text-slate-700 mb-4">Vocabulary</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -233,7 +293,7 @@ const LevelPage = () => {
                 )}
 
                 {/* Sentences Audio List */}
-                {levelSentences.length > 0 && (
+                {!vocabLoading && levelSentences.length > 0 && (
                   <div>
                     <h3 className="font-semibold text-slate-700 mb-4">Sentences</h3>
                     <div className="space-y-3">
@@ -254,7 +314,7 @@ const LevelPage = () => {
                   </div>
                 )}
 
-                {levelVocabulary.length === 0 && levelSentences.length === 0 && (
+                {!vocabLoading && levelVocabulary.length === 0 && levelSentences.length === 0 && (
                   <div className="text-center py-12 text-slate-500">
                     No audio content available for this level yet.
                   </div>
