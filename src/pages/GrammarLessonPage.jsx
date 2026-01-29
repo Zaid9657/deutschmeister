@@ -12,13 +12,13 @@ import {
   PenTool,
   Trophy,
   Check,
-  Lock
+  Lock,
+  Loader2
 } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useProgress } from '../contexts/ProgressContext';
 import { levels } from '../data/content';
-import { getTopicBySlug } from '../data/grammarTopics';
-import { getTopicContent, hasContent } from '../data/grammarContent';
+import { fetchTopicBySlug, fetchTopicContent } from '../services/grammarService';
 import StageIntroduction from '../components/grammar/StageIntroduction';
 import StageExamples from '../components/grammar/StageExamples';
 import StageRuleBreakdown from '../components/grammar/StageRuleBreakdown';
@@ -47,12 +47,36 @@ const GrammarLessonPage = () => {
 
   const [currentStage, setCurrentStage] = useState(1);
   const [stageCompleted, setStageCompleted] = useState({});
+  const [topic, setTopic] = useState(null);
+  const [content, setContent] = useState(null);
+  const [dataLoading, setDataLoading] = useState(true);
 
   const theme = getThemeForLevel(level);
   const unlocked = isLevelUnlocked(level);
-  const topic = getTopicBySlug(level, topicSlug);
-  const content = getTopicContent(level, topicSlug);
   const isGerman = i18n.language === 'de';
+
+  // Fetch topic and content from Supabase (with static fallback)
+  useEffect(() => {
+    let cancelled = false;
+    const loadData = async () => {
+      setDataLoading(true);
+      const [fetchedTopic, fetchedContent] = await Promise.all([
+        fetchTopicBySlug(level, topicSlug),
+        fetchTopicContent(level, topicSlug),
+      ]);
+      if (!cancelled) {
+        setTopic(fetchedTopic);
+        setContent(fetchedContent);
+        setDataLoading(false);
+      }
+    };
+    if (levels.includes(level) && unlocked) {
+      loadData();
+    } else {
+      setDataLoading(false);
+    }
+    return () => { cancelled = true; };
+  }, [level, topicSlug, unlocked]);
 
   // Load saved progress
   useEffect(() => {
@@ -72,10 +96,18 @@ const GrammarLessonPage = () => {
 
   // Redirect if invalid
   useEffect(() => {
-    if (!levels.includes(level) || !unlocked || !topic) {
+    if (!dataLoading && (!levels.includes(level) || !unlocked || !topic)) {
       navigate(`/grammar/${level}`);
     }
-  }, [level, unlocked, topic, navigate]);
+  }, [level, unlocked, topic, navigate, dataLoading]);
+
+  if (dataLoading) {
+    return (
+      <div className={`min-h-screen bg-gradient-to-br ${theme.bgGradient} pt-20 flex items-center justify-center`}>
+        <Loader2 className="w-10 h-10 text-slate-400 animate-spin" />
+      </div>
+    );
+  }
 
   if (!topic || !content) {
     return (

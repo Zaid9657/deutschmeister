@@ -3,6 +3,11 @@ import { useAuth } from './AuthContext';
 import { supabase } from '../utils/supabase';
 import { vocabulary, sentences, grammar, levels, levelOrder } from '../data/content';
 import { getTopicsForLevel } from '../data/grammarTopics';
+import {
+  loadUserGrammarProgress,
+  saveUserGrammarProgress,
+  lookupTopicUUID,
+} from '../services/grammarService';
 
 const ProgressContext = createContext({});
 
@@ -49,6 +54,7 @@ export const ProgressProvider = ({ children }) => {
 
   const loadProgress = async () => {
     try {
+      // Load JSON blob progress (existing system)
       const { data, error } = await supabase
         .from('user_progress')
         .select('*')
@@ -59,12 +65,48 @@ export const ProgressProvider = ({ children }) => {
         console.error('Error loading progress:', error);
       }
 
+      let baseProgress = getInitialProgress();
       if (data) {
-        // Merge with initial progress to ensure all levels exist
-        setProgress({ ...getInitialProgress(), ...data.progress });
-      } else {
+        baseProgress = { ...baseProgress, ...data.progress };
+      }
+
+      // Also load from user_grammar_progress table (new system)
+      const supabaseGrammarProgress = await loadUserGrammarProgress(user.id);
+
+      // Merge: Supabase grammar progress takes precedence over JSON blob
+      if (Object.keys(supabaseGrammarProgress).length > 0) {
+        levels.forEach(level => {
+          if (!baseProgress[level]) {
+            baseProgress[level] = { vocabulary: [], sentences: [], grammar: [], grammarTopics: {} };
+          }
+          if (!baseProgress[level].grammarTopics) {
+            baseProgress[level].grammarTopics = {};
+          }
+        });
+
+        // supabaseGrammarProgress keys are like "a1.1-gt1"
+        // We need to figure out which level they belong to and merge
+        Object.entries(supabaseGrammarProgress).forEach(([topicId, topicProgress]) => {
+          // topicId format: "a1.1-gt1" → level is everything before the last "-gt"
+          const levelMatch = topicId.match(/^(.+)-gt\d+$/);
+          if (levelMatch) {
+            const level = levelMatch[1];
+            if (baseProgress[level]) {
+              // Supabase data takes precedence
+              baseProgress[level].grammarTopics[topicId] = {
+                ...baseProgress[level].grammarTopics[topicId],
+                ...topicProgress,
+              };
+            }
+          }
+        });
+      }
+
+      setProgress(baseProgress);
+
+      if (!data) {
         // Initialize progress in database
-        await saveProgressToDb(progress);
+        await saveProgressToDb(baseProgress);
       }
     } catch (error) {
       console.error('Error loading progress:', error);
@@ -94,6 +136,26 @@ export const ProgressProvider = ({ children }) => {
     } catch (error) {
       console.error('Error saving progress:', error);
     }
+  };
+
+  // Helper: resolve topic slug from topicId (e.g. "a1.1-gt1" → slug)
+  const resolveSlugFromTopicId = (level, topicId) => {
+    const topics = getTopicsForLevel(level);
+    const topic = topics.find(t => t.id === topicId);
+    return topic?.slug || null;
+  };
+
+  // Helper: save progress to user_grammar_progress table (fire-and-forget)
+  const saveToGrammarProgressTable = async (level, topicId, progressData) => {
+    if (!user) return;
+
+    const slug = resolveSlugFromTopicId(level, topicId);
+    if (!slug) return;
+
+    const topicUUID = await lookupTopicUUID(level, slug);
+    if (!topicUUID) return; // grammar_topics table is empty, skip
+
+    await saveUserGrammarProgress(user.id, topicUUID, progressData);
   };
 
   // Mark an item as learned
@@ -235,7 +297,7 @@ export const ProgressProvider = ({ children }) => {
     return Math.round((completedCount / topics.length) * 100);
   };
 
-  // Update grammar topic progress
+  // Update grammar topic progress (dual-save: JSON blob + user_grammar_progress table)
   const updateGrammarTopicProgress = async (level, topicId, progressData) => {
     const newProgress = { ...progress };
     if (!newProgress[level]) {
@@ -245,16 +307,21 @@ export const ProgressProvider = ({ children }) => {
       newProgress[level].grammarTopics = {};
     }
 
-    newProgress[level].grammarTopics[topicId] = {
+    const mergedData = {
       ...newProgress[level].grammarTopics[topicId],
       ...progressData,
     };
 
+    newProgress[level].grammarTopics[topicId] = mergedData;
+
     setProgress(newProgress);
     await saveProgressToDb(newProgress);
+
+    // Also save to user_grammar_progress table (fire-and-forget)
+    saveToGrammarProgressTable(level, topicId, mergedData);
   };
 
-  // Mark grammar topic as completed
+  // Mark grammar topic as completed (dual-save)
   const completeGrammarTopic = async (level, topicId, score = 100) => {
     await updateGrammarTopicProgress(level, topicId, {
       completed: true,

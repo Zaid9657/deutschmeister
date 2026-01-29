@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { ArrowLeft, BookMarked, CheckCircle, Sun, TreePine, Waves, Moon } from 'lucide-react';
+import { ArrowLeft, BookMarked, CheckCircle, Sun, TreePine, Waves, Moon, Loader2 } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useProgress } from '../contexts/ProgressContext';
 import { levels, levelThemes as contentLevelThemes } from '../data/content';
-import { getTopicsForLevel } from '../data/grammarTopics';
+import { fetchTopicsForLevel } from '../services/grammarService';
 import GrammarTopicCard from '../components/GrammarTopicCard';
 
 const iconMap = {
@@ -27,16 +27,18 @@ const GrammarTopicsPage = () => {
   const { setCurrentLevel, getThemeForLevel } = useTheme();
   const { isLevelUnlocked, getGrammarTopicProgress, isGrammarTopicUnlocked, getGrammarSectionProgress } = useProgress();
 
+  const [topics, setTopics] = useState([]);
+  const [topicsLoading, setTopicsLoading] = useState(true);
+
   const theme = getThemeForLevel(level);
   const unlocked = isLevelUnlocked(level);
   const Icon = iconMap[level] || Sun;
   const levelInfo = contentLevelThemes[level] || {};
-  const topics = getTopicsForLevel(level);
   const isGerman = i18n.language === 'de';
 
   // Calculate section progress
   const sectionProgress = getGrammarSectionProgress ? getGrammarSectionProgress(level) : 0;
-  const completedTopics = topics.filter((topic, index) => {
+  const completedTopics = topics.filter((topic) => {
     const progress = getGrammarTopicProgress ? getGrammarTopicProgress(level, topic.id) : { completed: false };
     return progress.completed;
   }).length;
@@ -49,6 +51,23 @@ const GrammarTopicsPage = () => {
     setCurrentLevel(level);
     return () => setCurrentLevel(null);
   }, [level, unlocked, navigate, setCurrentLevel]);
+
+  // Fetch topics from Supabase (with static fallback)
+  useEffect(() => {
+    let cancelled = false;
+    const loadTopics = async () => {
+      setTopicsLoading(true);
+      const fetched = await fetchTopicsForLevel(level);
+      if (!cancelled) {
+        setTopics(fetched);
+        setTopicsLoading(false);
+      }
+    };
+    if (levels.includes(level) && unlocked) {
+      loadTopics();
+    }
+    return () => { cancelled = true; };
+  }, [level, unlocked]);
 
   // Format level for display (a1.1 -> A1.1)
   const displayLevel = level.toUpperCase();
@@ -150,7 +169,13 @@ const GrammarTopicsPage = () => {
             </div>
           </div>
 
-          {topics.map((topic, index) => {
+          {topicsLoading && (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="w-8 h-8 text-slate-400 animate-spin" />
+            </div>
+          )}
+
+          {!topicsLoading && topics.map((topic, index) => {
             const topicProgress = getGrammarTopicProgress ? getGrammarTopicProgress(level, topic.id) : { completed: false, progress: 0 };
             const isTopicUnlocked = isGrammarTopicUnlocked ? isGrammarTopicUnlocked(level, index) : index === 0;
 
@@ -172,7 +197,7 @@ const GrammarTopicsPage = () => {
             );
           })}
 
-          {topics.length === 0 && (
+          {!topicsLoading && topics.length === 0 && (
             <div className="text-center py-12 text-slate-500 bg-white rounded-xl border border-slate-200">
               {isGerman
                 ? 'Keine Grammatik-Themen für dieses Level verfügbar.'
