@@ -50,33 +50,42 @@ const GrammarLessonPage = () => {
   const [topic, setTopic] = useState(null);
   const [content, setContent] = useState(null);
   const [dataLoading, setDataLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
 
   const theme = getThemeForLevel(level);
   const unlocked = isLevelUnlocked(level);
   const isGerman = i18n.language === 'de';
 
-  // Fetch topic and content from Supabase (with static fallback)
+  // Fetch topic and content from Supabase ONLY
   useEffect(() => {
     let cancelled = false;
     const loadData = async () => {
       setDataLoading(true);
+      setFetchError(null);
       console.log(`[GrammarLessonPage] loading data for level="${level}", slug="${topicSlug}"`);
-      const [fetchedTopic, fetchedContent] = await Promise.all([
-        fetchTopicBySlug(level, topicSlug),
-        fetchTopicContent(level, topicSlug),
-      ]);
-      console.log(`[GrammarLessonPage] fetched topic:`, fetchedTopic);
-      console.log(`[GrammarLessonPage] fetched content stages:`, {
-        stage1: fetchedContent?.stage1 ? 'present' : 'NULL',
-        stage2: fetchedContent?.stage2 ? 'present' : 'NULL',
-        stage3: fetchedContent?.stage3 ? 'present' : 'NULL',
-        stage4: fetchedContent?.stage4 ? 'present' : 'NULL',
-        stage5: fetchedContent?.stage5 ? 'present' : 'NULL',
-      });
-      if (!cancelled) {
-        setTopic(fetchedTopic);
-        setContent(fetchedContent);
-        setDataLoading(false);
+      try {
+        const [fetchedTopic, fetchedContent] = await Promise.all([
+          fetchTopicBySlug(level, topicSlug),
+          fetchTopicContent(level, topicSlug),
+        ]);
+        console.log(`[GrammarLessonPage] fetched topic:`, fetchedTopic);
+        console.log(`[GrammarLessonPage] fetched content:`, fetchedContent);
+        if (!cancelled) {
+          setTopic(fetchedTopic);
+          setContent(fetchedContent);
+          if (!fetchedTopic) {
+            setFetchError(`Topic not found in Supabase: level="${level}", slug="${topicSlug}"`);
+          } else if (!fetchedContent) {
+            setFetchError(`Content tables returned 0 rows for topic UUID. Check RLS policies on grammar_examples, grammar_rules, grammar_exercises.`);
+          }
+          setDataLoading(false);
+        }
+      } catch (err) {
+        console.error(`[GrammarLessonPage] fetch error:`, err);
+        if (!cancelled) {
+          setFetchError(err.message || String(err));
+          setDataLoading(false);
+        }
       }
     };
     if (levels.includes(level) && unlocked) {
@@ -95,7 +104,6 @@ const GrammarLessonPage = () => {
       if (progress.currentStage) {
         setCurrentStage(progress.currentStage);
       }
-      // Mark completed stages
       const completed = {};
       for (let i = 1; i < progress.currentStage; i++) {
         completed[i] = true;
@@ -103,13 +111,6 @@ const GrammarLessonPage = () => {
       setStageCompleted(completed);
     }
   }, [level, topic, getGrammarTopicProgress]);
-
-  // Redirect if invalid
-  useEffect(() => {
-    if (!dataLoading && (!levels.includes(level) || !unlocked || !topic)) {
-      navigate(`/grammar/${level}`);
-    }
-  }, [level, unlocked, topic, navigate, dataLoading]);
 
   if (dataLoading) {
     return (
@@ -121,17 +122,29 @@ const GrammarLessonPage = () => {
 
   if (!topic || !content) {
     return (
-      <div className="min-h-screen bg-slate-50 pt-20 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-slate-600">
-            {isGerman ? 'Inhalt wird bald verfügbar sein.' : 'Content coming soon.'}
-          </p>
-          <button
-            onClick={() => navigate(`/grammar/${level}`)}
-            className="mt-4 px-4 py-2 bg-slate-800 text-white rounded-lg"
-          >
-            {isGerman ? 'Zurück' : 'Go Back'}
-          </button>
+      <div className="min-h-screen bg-slate-50 pt-20 pb-12">
+        <div className="max-w-2xl mx-auto px-4 pt-12">
+          <div className="bg-white rounded-2xl shadow-lg border border-rose-200 p-8">
+            <h2 className="text-xl font-bold text-rose-700 mb-4">No content found from Supabase</h2>
+            <div className="space-y-2 text-sm font-mono bg-rose-50 rounded-lg p-4 text-rose-800 mb-6">
+              <p><strong>Level:</strong> {level}</p>
+              <p><strong>Slug:</strong> {topicSlug}</p>
+              <p><strong>Topic found:</strong> {topic ? 'YES' : 'NO'}</p>
+              <p><strong>Content found:</strong> {content ? 'YES' : 'NO'}</p>
+              {fetchError && <p><strong>Error:</strong> {fetchError}</p>}
+            </div>
+            <p className="text-slate-600 text-sm mb-6">
+              Check the browser console for detailed [grammarService] logs. Common causes:
+              missing RLS SELECT policy on grammar_examples / grammar_rules / grammar_exercises,
+              or topic slug mismatch in grammar_topics table.
+            </p>
+            <button
+              onClick={() => navigate(`/grammar/${level}`)}
+              className="px-4 py-2 bg-slate-800 text-white rounded-lg"
+            >
+              Go Back
+            </button>
+          </div>
         </div>
       </div>
     );

@@ -198,10 +198,15 @@ const GrammarTopicsPage = () => {
           })}
 
           {!topicsLoading && topics.length === 0 && (
-            <div className="text-center py-12 text-slate-500 bg-white rounded-xl border border-slate-200">
-              {isGerman
-                ? 'Keine Grammatik-Themen für dieses Level verfügbar.'
-                : 'No grammar topics available for this level yet.'}
+            <div className="bg-white rounded-xl border border-rose-200 p-6">
+              <h3 className="text-lg font-bold text-rose-700 mb-2">No topics from Supabase</h3>
+              <div className="text-sm font-mono bg-rose-50 rounded-lg p-3 text-rose-800 mb-3">
+                <p><strong>Level queried:</strong> {level}</p>
+                <p><strong>Table:</strong> grammar_topics WHERE sub_level = '{level}'</p>
+              </div>
+              <p className="text-slate-600 text-sm">
+                Check browser console for [grammarService] logs. Likely cause: missing RLS SELECT policy on grammar_topics for anon role.
+              </p>
             </div>
           )}
         </motion.div>
