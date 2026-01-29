@@ -33,6 +33,9 @@ const stages = [
   { id: 5, name: { en: 'Mastery', de: 'Meisterschaft' }, icon: Trophy, color: 'rose' },
 ];
 
+// TODO: Re-enable stage locking for production
+const STAGE_LOCKING_ENABLED = false;
+
 const GrammarLessonPage = () => {
   const { level, topicSlug } = useParams();
   const navigate = useNavigate();
@@ -177,8 +180,8 @@ const GrammarLessonPage = () => {
   };
 
   const handleStageClick = (stageId) => {
-    // Can only go to completed stages or current stage
-    if (stageId <= currentStage || stageCompleted[stageId]) {
+    // TODO: Re-enable stage locking for production
+    if (!STAGE_LOCKING_ENABLED || stageId <= currentStage || stageCompleted[stageId]) {
       setCurrentStage(stageId);
     }
   };
@@ -336,7 +339,8 @@ const GrammarLessonPage = () => {
               {stages.map((stage, index) => {
                 const isCompleted = stageCompleted[stage.id];
                 const isCurrent = currentStage === stage.id;
-                const isLocked = stage.id > currentStage && !isCompleted;
+                // TODO: Re-enable stage locking for production
+                const isLocked = STAGE_LOCKING_ENABLED && stage.id > currentStage && !isCompleted;
                 const Icon = stage.icon;
 
                 return (
