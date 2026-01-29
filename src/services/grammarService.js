@@ -100,7 +100,19 @@ function mapDbExerciseToApp(dbRow) {
 
   if (dbRow.exercise_type === 'multiple_choice') {
     exercise.options = dbRow.options || [];
-    exercise.correct = parseInt(dbRow.correct_answer, 10);
+    // correct_answer may be a numeric index OR the text of the correct option
+    const parsed = parseInt(dbRow.correct_answer, 10);
+    if (!isNaN(parsed) && parsed >= 0 && parsed < exercise.options.length) {
+      exercise.correct = parsed;
+    } else {
+      // Match the text against options (case-insensitive, trimmed)
+      const needle = String(dbRow.correct_answer).trim().toLowerCase();
+      const idx = exercise.options.findIndex(
+        opt => String(opt).trim().toLowerCase() === needle
+      );
+      exercise.correct = idx >= 0 ? idx : 0;
+      console.log(`[grammarService] MC correct_answer="${dbRow.correct_answer}" → matched option index ${idx}`);
+    }
   } else if (dbRow.exercise_type === 'fill_blank' || dbRow.exercise_type === 'translation') {
     exercise.answer = dbRow.correct_answer;
     exercise.acceptableAnswers = dbRow.acceptable_answers || [dbRow.correct_answer];
