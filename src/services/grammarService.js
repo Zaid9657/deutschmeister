@@ -165,9 +165,9 @@ function buildStage3(rules) {
         rows: content.rows || [],
       });
     } else if (rule.rule_type === 'tip' || rule.rule_type === 'note') {
-      tips.push(content.en ? content : { en: rule.title_en || '', de: rule.title_de || '' });
+      tips.push({ en: content.text_en || content.en || rule.title_en || '', de: content.text_de || content.de || rule.title_de || '' });
     } else if (rule.rule_type === 'warning') {
-      warnings.push(content.en ? content : { en: rule.title_en || '', de: rule.title_de || '' });
+      warnings.push({ en: content.text_en || content.en || rule.title_en || '', de: content.text_de || content.de || rule.title_de || '' });
     } else {
       console.warn(`[grammarService] UNKNOWN rule_type: "${rule.rule_type}"`);
     }
