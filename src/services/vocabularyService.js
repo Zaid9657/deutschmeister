@@ -4,8 +4,8 @@ import { supabase } from '../utils/supabase';
 // Helpers
 // ==========================================
 
-/** Convert app-level (a1.1) to DB level (A1.1) */
-const toDbLevel = (level) => level.toUpperCase();
+/** Convert app-level to DB level — words/sentences use lowercase (a1.1) */
+const toDbLevel = (level) => level.toLowerCase();
 
 // ==========================================
 // Data Transformation Helpers
