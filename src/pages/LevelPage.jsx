@@ -27,7 +27,7 @@ const LevelPage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { setCurrentLevel, getThemeForLevel } = useTheme();
-  const { getLevelProgress, isLevelUnlocked } = useProgress();
+  const { getLevelProgress, isLevelUnlocked, registerLevelItemCounts } = useProgress();
 
   const [activeTab, setActiveTab] = useState('vocabulary');
   const [levelVocabulary, setLevelVocabulary] = useState([]);
@@ -62,6 +62,7 @@ const LevelPage = () => {
       if (!cancelled) {
         setLevelVocabulary(words);
         setLevelSentences(sents);
+        registerLevelItemCounts(level, words.length, sents.length);
         setVocabLoading(false);
       }
     };

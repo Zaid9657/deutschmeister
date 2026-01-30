@@ -31,6 +31,8 @@ export const ProgressProvider = ({ children }) => {
   const { user } = useAuth();
   const [progress, setProgress] = useState(getInitialProgress());
   const [loading, setLoading] = useState(true);
+  // Actual item counts per level from Supabase (overrides static content.js counts)
+  const [levelItemCounts, setLevelItemCounts] = useState({});
 
   // Load progress from Supabase when user logs in
   useEffect(() => {
@@ -188,13 +190,27 @@ export const ProgressProvider = ({ children }) => {
     return progress[level]?.[category]?.includes(itemId) || false;
   };
 
+  // Register actual item counts fetched from Supabase for a level
+  const registerLevelItemCounts = (level, vocabCount, sentenceCount) => {
+    setLevelItemCounts(prev => {
+      const existing = prev[level];
+      // Skip update if counts haven't changed to avoid re-renders
+      if (existing && existing.vocabulary === vocabCount && existing.sentences === sentenceCount) {
+        return prev;
+      }
+      return { ...prev, [level]: { vocabulary: vocabCount, sentences: sentenceCount } };
+    });
+  };
+
   // Calculate progress percentage for a level
   const getLevelProgress = (level) => {
     const levelProgress = progress[level];
     if (!levelProgress) return 0;
 
-    const totalVocab = vocabulary[level]?.length || 0;
-    const totalSentences = sentences[level]?.length || 0;
+    // Prefer actual Supabase counts over static content.js counts
+    const counts = levelItemCounts[level];
+    const totalVocab = counts?.vocabulary ?? (vocabulary[level]?.length || 0);
+    const totalSentences = counts?.sentences ?? (sentences[level]?.length || 0);
     const totalGrammar = grammar[level]?.length || 0;
     const total = totalVocab + totalSentences + totalGrammar;
 
@@ -339,6 +355,7 @@ export const ProgressProvider = ({ children }) => {
     unmarkAsLearned,
     isItemLearned,
     getLevelProgress,
+    registerLevelItemCounts,
     isLevelUnlocked,
     getTotalStats,
     getOverallProgress,
