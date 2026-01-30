@@ -126,6 +126,12 @@ const resources = {
         explanation: 'Explanation',
         listenPronunciation: 'Listen to pronunciation',
         practiceConversation: 'Practice conversation with AI',
+        reading: 'Reading',
+        markRead: 'Mark as Read',
+        read: 'Read',
+        showTranslation: 'Show translation',
+        hideTranslation: 'Hide translation',
+        words: 'words',
       },
       // Profile
       profile: {
@@ -288,6 +294,12 @@ const resources = {
         explanation: 'Erklärung',
         listenPronunciation: 'Aussprache anhören',
         practiceConversation: 'Konversation mit KI üben',
+        reading: 'Lesen',
+        markRead: 'Als gelesen markieren',
+        read: 'Gelesen',
+        showTranslation: 'Übersetzung zeigen',
+        hideTranslation: 'Übersetzung verbergen',
+        words: 'Wörter',
       },
       // Profile
       profile: {

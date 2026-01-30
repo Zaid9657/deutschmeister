@@ -17,14 +17,14 @@ const UNLOCK_THRESHOLD = 70; // 70% required to unlock next level
 
 // Initialize empty progress for all 8 sub-levels
 const getInitialProgress = () => ({
-  'a1.1': { vocabulary: [], sentences: [], grammar: [], grammarTopics: {} },
-  'a1.2': { vocabulary: [], sentences: [], grammar: [], grammarTopics: {} },
-  'a2.1': { vocabulary: [], sentences: [], grammar: [], grammarTopics: {} },
-  'a2.2': { vocabulary: [], sentences: [], grammar: [], grammarTopics: {} },
-  'b1.1': { vocabulary: [], sentences: [], grammar: [], grammarTopics: {} },
-  'b1.2': { vocabulary: [], sentences: [], grammar: [], grammarTopics: {} },
-  'b2.1': { vocabulary: [], sentences: [], grammar: [], grammarTopics: {} },
-  'b2.2': { vocabulary: [], sentences: [], grammar: [], grammarTopics: {} },
+  'a1.1': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], grammarTopics: {} },
+  'a1.2': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], grammarTopics: {} },
+  'a2.1': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], grammarTopics: {} },
+  'a2.2': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], grammarTopics: {} },
+  'b1.1': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], grammarTopics: {} },
+  'b1.2': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], grammarTopics: {} },
+  'b2.1': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], grammarTopics: {} },
+  'b2.2': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], grammarTopics: {} },
 });
 
 export const ProgressProvider = ({ children }) => {
@@ -79,7 +79,7 @@ export const ProgressProvider = ({ children }) => {
       if (Object.keys(supabaseGrammarProgress).length > 0) {
         levels.forEach(level => {
           if (!baseProgress[level]) {
-            baseProgress[level] = { vocabulary: [], sentences: [], grammar: [], grammarTopics: {} };
+            baseProgress[level] = { vocabulary: [], sentences: [], grammar: [], paragraphs: [], grammarTopics: {} };
           }
           if (!baseProgress[level].grammarTopics) {
             baseProgress[level].grammarTopics = {};
@@ -164,7 +164,10 @@ export const ProgressProvider = ({ children }) => {
   const markAsLearned = async (level, category, itemId) => {
     const newProgress = { ...progress };
     if (!newProgress[level]) {
-      newProgress[level] = { vocabulary: [], sentences: [], grammar: [] };
+      newProgress[level] = { vocabulary: [], sentences: [], grammar: [], paragraphs: [] };
+    }
+    if (!newProgress[level][category]) {
+      newProgress[level][category] = [];
     }
     if (!newProgress[level][category].includes(itemId)) {
       newProgress[level][category] = [...newProgress[level][category], itemId];
@@ -191,14 +194,13 @@ export const ProgressProvider = ({ children }) => {
   };
 
   // Register actual item counts fetched from Supabase for a level
-  const registerLevelItemCounts = (level, vocabCount, sentenceCount) => {
+  const registerLevelItemCounts = (level, vocabCount, sentenceCount, paragraphCount = 0) => {
     setLevelItemCounts(prev => {
       const existing = prev[level];
-      // Skip update if counts haven't changed to avoid re-renders
-      if (existing && existing.vocabulary === vocabCount && existing.sentences === sentenceCount) {
+      if (existing && existing.vocabulary === vocabCount && existing.sentences === sentenceCount && existing.paragraphs === paragraphCount) {
         return prev;
       }
-      return { ...prev, [level]: { vocabulary: vocabCount, sentences: sentenceCount } };
+      return { ...prev, [level]: { vocabulary: vocabCount, sentences: sentenceCount, paragraphs: paragraphCount } };
     });
   };
 
@@ -212,14 +214,16 @@ export const ProgressProvider = ({ children }) => {
     const totalVocab = counts?.vocabulary ?? (vocabulary[level]?.length || 0);
     const totalSentences = counts?.sentences ?? (sentences[level]?.length || 0);
     const totalGrammar = grammar[level]?.length || 0;
-    const total = totalVocab + totalSentences + totalGrammar;
+    const totalParagraphs = counts?.paragraphs ?? 0;
+    const total = totalVocab + totalSentences + totalGrammar + totalParagraphs;
 
     if (total === 0) return 0;
 
     const learnedVocab = levelProgress.vocabulary?.length || 0;
     const learnedSentences = levelProgress.sentences?.length || 0;
     const learnedGrammar = levelProgress.grammar?.length || 0;
-    const learned = learnedVocab + learnedSentences + learnedGrammar;
+    const learnedParagraphs = levelProgress.paragraphs?.length || 0;
+    const learned = learnedVocab + learnedSentences + learnedGrammar + learnedParagraphs;
 
     return Math.round((learned / total) * 100);
   };
@@ -238,18 +242,21 @@ export const ProgressProvider = ({ children }) => {
     let totalVocab = 0;
     let totalSentences = 0;
     let totalGrammar = 0;
+    let totalParagraphs = 0;
 
     levels.forEach((level) => {
       totalVocab += progress[level]?.vocabulary?.length || 0;
       totalSentences += progress[level]?.sentences?.length || 0;
       totalGrammar += progress[level]?.grammar?.length || 0;
+      totalParagraphs += progress[level]?.paragraphs?.length || 0;
     });
 
     return {
       vocabulary: totalVocab,
       sentences: totalSentences,
       grammar: totalGrammar,
-      total: totalVocab + totalSentences + totalGrammar,
+      paragraphs: totalParagraphs,
+      total: totalVocab + totalSentences + totalGrammar + totalParagraphs,
     };
   };
 
@@ -259,13 +266,16 @@ export const ProgressProvider = ({ children }) => {
     let learnedItems = 0;
 
     levels.forEach((level) => {
-      totalItems += (vocabulary[level]?.length || 0);
-      totalItems += (sentences[level]?.length || 0);
+      const counts = levelItemCounts[level];
+      totalItems += counts?.vocabulary ?? (vocabulary[level]?.length || 0);
+      totalItems += counts?.sentences ?? (sentences[level]?.length || 0);
       totalItems += (grammar[level]?.length || 0);
+      totalItems += counts?.paragraphs ?? 0;
 
       learnedItems += progress[level]?.vocabulary?.length || 0;
       learnedItems += progress[level]?.sentences?.length || 0;
       learnedItems += progress[level]?.grammar?.length || 0;
+      learnedItems += progress[level]?.paragraphs?.length || 0;
     });
 
     if (totalItems === 0) return 0;
@@ -317,7 +327,7 @@ export const ProgressProvider = ({ children }) => {
   const updateGrammarTopicProgress = async (level, topicId, progressData) => {
     const newProgress = { ...progress };
     if (!newProgress[level]) {
-      newProgress[level] = { vocabulary: [], sentences: [], grammar: [], grammarTopics: {} };
+      newProgress[level] = { vocabulary: [], sentences: [], grammar: [], paragraphs: [], grammarTopics: {} };
     }
     if (!newProgress[level].grammarTopics) {
       newProgress[level].grammarTopics = {};
