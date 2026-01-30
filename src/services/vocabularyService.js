@@ -4,7 +4,7 @@ import { supabase } from '../utils/supabase';
 // Helpers
 // ==========================================
 
-/** Convert app-level (a1.1) to DB sub_level (A1.1) */
+/** Convert app-level (a1.1) to DB level (A1.1) */
 const toDbLevel = (level) => level.toUpperCase();
 
 // ==========================================
@@ -49,12 +49,12 @@ function mapDbSentenceToApp(dbRow, index) {
  */
 export async function fetchWordsForLevel(level) {
   const dbLevel = toDbLevel(level);
-  console.log(`[vocabularyService] fetchWordsForLevel: level="${level}" → DB sub_level="${dbLevel}"`);
+  console.log(`[vocabularyService] fetchWordsForLevel: level="${level}" → DB level="${dbLevel}"`);
 
   const { data, error } = await supabase
     .from('words')
     .select('*')
-    .eq('sub_level', dbLevel)
+    .eq('level', dbLevel)
     .order('id');
 
   console.log(`[vocabularyService] fetchWordsForLevel result:`, {
@@ -70,7 +70,7 @@ export async function fetchWordsForLevel(level) {
   }
 
   if (!data || data.length === 0) {
-    console.warn(`[vocabularyService] fetchWordsForLevel: NO WORDS in Supabase for level="${level}" (sub_level="${dbLevel}")`);
+    console.warn(`[vocabularyService] fetchWordsForLevel: NO WORDS in Supabase for level="${level}" (level="${dbLevel}")`);
     return [];
   }
 
@@ -83,12 +83,12 @@ export async function fetchWordsForLevel(level) {
  */
 export async function fetchSentencesForLevel(level) {
   const dbLevel = toDbLevel(level);
-  console.log(`[vocabularyService] fetchSentencesForLevel: level="${level}" → DB sub_level="${dbLevel}"`);
+  console.log(`[vocabularyService] fetchSentencesForLevel: level="${level}" → DB level="${dbLevel}"`);
 
   const { data, error } = await supabase
     .from('sentences')
     .select('*')
-    .eq('sub_level', dbLevel)
+    .eq('level', dbLevel)
     .order('id');
 
   console.log(`[vocabularyService] fetchSentencesForLevel result:`, {
@@ -104,7 +104,7 @@ export async function fetchSentencesForLevel(level) {
   }
 
   if (!data || data.length === 0) {
-    console.warn(`[vocabularyService] fetchSentencesForLevel: NO SENTENCES in Supabase for level="${level}" (sub_level="${dbLevel}")`);
+    console.warn(`[vocabularyService] fetchSentencesForLevel: NO SENTENCES in Supabase for level="${level}" (level="${dbLevel}")`);
     return [];
   }
 
