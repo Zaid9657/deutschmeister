@@ -16,6 +16,18 @@ const WordCard = ({ word, level }) => {
   const learned = isItemLearned(level, 'vocabulary', word.id);
 
   const handleSpeak = (text) => {
+    if (word.audioUrl) {
+      const audio = new Audio(word.audioUrl);
+      audio.play().catch(() => {
+        // Fall back to speech synthesis if audio_url fails
+        speakWithSynthesis(text);
+      });
+    } else {
+      speakWithSynthesis(text);
+    }
+  };
+
+  const speakWithSynthesis = (text) => {
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'de-DE';
@@ -69,6 +81,9 @@ const WordCard = ({ word, level }) => {
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-2xl font-display font-semibold text-slate-800">
+                {word.article && (
+                  <span className="text-slate-400 mr-1">{word.article}</span>
+                )}
                 {word.word}
               </h3>
               <button
@@ -91,7 +106,7 @@ const WordCard = ({ word, level }) => {
                 exit={{ opacity: 0, height: 0 }}
                 className="mb-4 p-4 bg-slate-50 rounded-xl"
               >
-                <div className="flex items-start justify-between mb-2">
+                <div className="flex items-start justify-between">
                   <p className="text-slate-800 font-medium">{word.example}</p>
                   <button
                     onClick={() => handleSpeak(word.example)}
@@ -100,7 +115,6 @@ const WordCard = ({ word, level }) => {
                     <Volume2 className="w-4 h-4 text-slate-600" />
                   </button>
                 </div>
-                <p className="text-slate-500 text-sm">{word.exampleTranslation}</p>
               </motion.div>
             )}
           </AnimatePresence>

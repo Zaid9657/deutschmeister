@@ -211,8 +211,8 @@ const LevelPage = () => {
                       <div className="col-span-full bg-white rounded-xl border border-rose-200 p-6">
                         <h3 className="text-lg font-bold text-rose-700 mb-2">No vocabulary from Supabase</h3>
                         <div className="text-sm font-mono bg-rose-50 rounded-lg p-3 text-rose-800 mb-3">
-                          <p><strong>Level queried:</strong> {level.toUpperCase()}</p>
-                          <p><strong>Table:</strong> words WHERE sub_level = '{level.toUpperCase()}'</p>
+                          <p><strong>Level queried:</strong> {level.toLowerCase()}</p>
+                          <p><strong>Table:</strong> words WHERE level = '{level.toLowerCase()}'</p>
                         </div>
                         <p className="text-slate-600 text-sm">
                           Check browser console for [vocabularyService] logs. Possible causes: missing RLS SELECT policy, no data for this level, or column name mismatch.
@@ -241,8 +241,8 @@ const LevelPage = () => {
                       <div className="col-span-full bg-white rounded-xl border border-rose-200 p-6">
                         <h3 className="text-lg font-bold text-rose-700 mb-2">No sentences from Supabase</h3>
                         <div className="text-sm font-mono bg-rose-50 rounded-lg p-3 text-rose-800 mb-3">
-                          <p><strong>Level queried:</strong> {level.toUpperCase()}</p>
-                          <p><strong>Table:</strong> sentences WHERE sub_level = '{level.toUpperCase()}'</p>
+                          <p><strong>Level queried:</strong> {level.toLowerCase()}</p>
+                          <p><strong>Table:</strong> sentences WHERE level = '{level.toLowerCase()}'</p>
                         </div>
                         <p className="text-slate-600 text-sm">
                           Check browser console for [vocabularyService] logs. Possible causes: missing RLS SELECT policy, no data for this level, or column name mismatch.

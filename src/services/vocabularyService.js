@@ -18,11 +18,13 @@ const toDbLevel = (level) => level.toLowerCase();
 function mapDbWordToApp(dbRow, index) {
   return {
     id: dbRow.id || `word-${index}`,
-    word: dbRow.word || dbRow.word_de || '',
-    translation: dbRow.translation || dbRow.word_en || '',
-    example: dbRow.example_de || dbRow.example || '',
-    exampleTranslation: dbRow.example_en || dbRow.example_translation || '',
+    word: dbRow.german || '',
+    translation: dbRow.english || '',
+    example: dbRow.example_sentence || '',
     category: dbRow.category || '',
+    article: dbRow.article || '',
+    plural: dbRow.plural || '',
+    audioUrl: dbRow.audio_url || '',
   };
 }
 
