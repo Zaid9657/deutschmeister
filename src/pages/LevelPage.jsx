@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, BookOpen, MessageSquare, Volume2, Mic, Sun, TreePine, Waves, Moon, Loader2 } from 'lucide-react';
+import { ArrowLeft, BookOpen, MessageSquare, Volume2, Mic, Sun, TreePine, Waves, Moon, Loader2, Filter } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useProgress } from '../contexts/ProgressContext';
 import { levels, levelThemes as contentLevelThemes } from '../data/content';
@@ -33,6 +33,7 @@ const LevelPage = () => {
   const [levelVocabulary, setLevelVocabulary] = useState([]);
   const [levelSentences, setLevelSentences] = useState([]);
   const [vocabLoading, setVocabLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
   const theme = getThemeForLevel(level);
   const progress = getLevelProgress(level);
@@ -88,6 +89,24 @@ const LevelPage = () => {
 
   // Format level for display (a1.1 -> A1.1)
   const displayLevel = level.toUpperCase();
+
+  // Derive unique categories from loaded vocabulary
+  const categories = useMemo(() => {
+    const cats = [...new Set(levelVocabulary.map((w) => w.category).filter(Boolean))];
+    cats.sort();
+    return cats;
+  }, [levelVocabulary]);
+
+  // Filter vocabulary by selected category
+  const filteredVocabulary = useMemo(() => {
+    if (selectedCategory === 'all') return levelVocabulary;
+    return levelVocabulary.filter((w) => w.category === selectedCategory);
+  }, [levelVocabulary, selectedCategory]);
+
+  // Reset category filter when level changes
+  useEffect(() => {
+    setSelectedCategory('all');
+  }, [level]);
 
   return (
     <div className={`min-h-screen bg-gradient-to-br ${theme.bgGradient} pt-20 pb-12`}>
@@ -203,23 +222,61 @@ const LevelPage = () => {
                   </div>
                 )}
                 {!vocabLoading && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {levelVocabulary.map((word) => (
-                      <WordCard key={word.id} word={word} level={level} />
-                    ))}
-                    {levelVocabulary.length === 0 && (
-                      <div className="col-span-full bg-white rounded-xl border border-rose-200 p-6">
-                        <h3 className="text-lg font-bold text-rose-700 mb-2">No vocabulary from Supabase</h3>
-                        <div className="text-sm font-mono bg-rose-50 rounded-lg p-3 text-rose-800 mb-3">
-                          <p><strong>Level queried:</strong> {level.toLowerCase()}</p>
-                          <p><strong>Table:</strong> words WHERE level = '{level.toLowerCase()}'</p>
+                  <>
+                    {/* Category filter */}
+                    {categories.length > 1 && (
+                      <div className="mb-6">
+                        <div className="flex items-center gap-2 mb-3">
+                          <Filter className="w-4 h-4 text-slate-500" />
+                          <span className="text-sm font-medium text-slate-600">Category</span>
                         </div>
-                        <p className="text-slate-600 text-sm">
-                          Check browser console for [vocabularyService] logs. Possible causes: missing RLS SELECT policy, no data for this level, or column name mismatch.
-                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          <button
+                            onClick={() => setSelectedCategory('all')}
+                            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                              selectedCategory === 'all'
+                                ? 'bg-slate-800 text-white'
+                                : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                            }`}
+                          >
+                            All ({levelVocabulary.length})
+                          </button>
+                          {categories.map((cat) => (
+                            <button
+                              key={cat}
+                              onClick={() => setSelectedCategory(cat)}
+                              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                                selectedCategory === cat
+                                  ? 'bg-slate-800 text-white'
+                                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                              }`}
+                            >
+                              {cat} ({levelVocabulary.filter((w) => w.category === cat).length})
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     )}
-                  </div>
+
+                    {/* Word cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {filteredVocabulary.map((word) => (
+                        <WordCard key={word.id} word={word} level={level} />
+                      ))}
+                      {levelVocabulary.length === 0 && (
+                        <div className="col-span-full bg-white rounded-xl border border-rose-200 p-6">
+                          <h3 className="text-lg font-bold text-rose-700 mb-2">No vocabulary from Supabase</h3>
+                          <div className="text-sm font-mono bg-rose-50 rounded-lg p-3 text-rose-800 mb-3">
+                            <p><strong>Level queried:</strong> {level.toLowerCase()}</p>
+                            <p><strong>Table:</strong> words WHERE level = '{level.toLowerCase()}'</p>
+                          </div>
+                          <p className="text-slate-600 text-sm">
+                            Check browser console for [vocabularyService] logs. Possible causes: missing RLS SELECT policy, no data for this level, or column name mismatch.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </>
                 )}
               </div>
             )}
