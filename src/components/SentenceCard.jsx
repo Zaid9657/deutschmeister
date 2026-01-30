@@ -1,9 +1,22 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Volume2, Check, RotateCcw, Eye, EyeOff } from 'lucide-react';
+import { Volume2, Check, Eye, EyeOff } from 'lucide-react';
 import { useProgress } from '../contexts/ProgressContext';
 import { useTheme } from '../contexts/ThemeContext';
+import resolveConfig from 'tailwindcss/resolveConfig';
+import tailwindConfig from '../../tailwind.config.js';
+
+const fullConfig = resolveConfig(tailwindConfig);
+const twColors = fullConfig.theme.colors;
+
+function getHex(token) {
+  if (!token) return undefined;
+  const parts = token.split('-');
+  const shade = parts.pop();
+  const group = parts.join('-');
+  return twColors?.[group]?.[shade];
+}
 
 const SentenceCard = ({ sentence, level }) => {
   const { t } = useTranslation();
@@ -12,6 +25,8 @@ const SentenceCard = ({ sentence, level }) => {
   const [showTranslation, setShowTranslation] = useState(false);
 
   const theme = getThemeForLevel(level);
+  const primaryHex = getHex(theme.primary);
+  const secondaryHex = getHex(theme.secondary);
   const learned = isItemLearned(level, 'sentences', sentence.id);
 
   const handleSpeak = () => {
@@ -36,25 +51,30 @@ const SentenceCard = ({ sentence, level }) => {
       layout
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`relative bg-white rounded-2xl shadow-lg border-2 overflow-hidden transition-colors ${
-        learned ? `border-${theme.primary}` : 'border-slate-100'
-      }`}
+      className="relative bg-white rounded-2xl shadow-lg border-2 overflow-hidden transition-colors"
+      style={{ borderColor: learned ? primaryHex : '#f1f5f9' }}
     >
       {/* Learned indicator bar */}
       {learned && (
-        <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${theme.gradient}`} />
+        <div
+          className="absolute top-0 left-0 right-0 h-1"
+          style={{ background: `linear-gradient(to right, ${primaryHex}, ${secondaryHex})` }}
+        />
       )}
 
       <div className="p-6">
         {/* Topic tag */}
         <div className="flex items-center justify-between mb-4">
-          <span
-            className={`inline-block px-3 py-1 text-xs font-medium rounded-full bg-${theme.primary}/10 text-${theme.primary}`}
-          >
-            {sentence.topic}
-          </span>
+          {sentence.topic && (
+            <span
+              className="inline-block px-3 py-1 text-xs font-medium rounded-full"
+              style={{ backgroundColor: primaryHex + '1A', color: primaryHex }}
+            >
+              {sentence.topic}
+            </span>
+          )}
           {learned && (
-            <span className={`flex items-center gap-1 text-xs font-medium text-${theme.primary}`}>
+            <span className="flex items-center gap-1 text-xs font-medium" style={{ color: primaryHex }}>
               <Check className="w-4 h-4" />
               {t('levelPage.learned')}
             </span>
@@ -69,10 +89,10 @@ const SentenceCard = ({ sentence, level }) => {
             </p>
             <button
               onClick={handleSpeak}
-              className={`p-2 rounded-full hover:bg-${theme.primary}/10 transition-colors flex-shrink-0`}
+              className="p-2 rounded-full hover:bg-slate-100 transition-colors flex-shrink-0"
               title={t('levelPage.listenPronunciation')}
             >
-              <Volume2 className={`w-5 h-5 text-${theme.primary}`} />
+              <Volume2 className="w-5 h-5" style={{ color: primaryHex }} />
             </button>
           </div>
         </div>
@@ -110,23 +130,15 @@ const SentenceCard = ({ sentence, level }) => {
         {/* Action button */}
         <button
           onClick={toggleLearned}
-          className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl transition-all ${
+          className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl transition-all border-2"
+          style={
             learned
-              ? `bg-${theme.primary} text-white shadow-lg shadow-${theme.primary}/25`
-              : `border-2 border-dashed border-slate-200 hover:border-${theme.primary} hover:bg-${theme.primary}/5 text-slate-600`
-          }`}
+              ? { backgroundColor: primaryHex, color: '#fff', borderColor: primaryHex }
+              : { borderColor: '#e2e8f0', borderStyle: 'dashed', color: '#475569' }
+          }
         >
-          {learned ? (
-            <>
-              <RotateCcw className="w-4 h-4" />
-              <span>{t('levelPage.learned')}</span>
-            </>
-          ) : (
-            <>
-              <Check className="w-4 h-4" />
-              <span>{t('levelPage.markLearned')}</span>
-            </>
-          )}
+          <Check className="w-4 h-4" />
+          <span>{learned ? t('levelPage.learned') : t('levelPage.markLearned')}</span>
         </button>
       </div>
     </motion.div>
