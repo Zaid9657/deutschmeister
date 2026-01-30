@@ -1,18 +1,33 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Volume2, Check, RotateCcw, BookOpen } from 'lucide-react';
+import { Volume2, Check, BookOpen } from 'lucide-react';
 import { useProgress } from '../contexts/ProgressContext';
 import { useTheme } from '../contexts/ThemeContext';
+import resolveConfig from 'tailwindcss/resolveConfig';
+import tailwindConfig from '../../tailwind.config.js';
+
+const fullConfig = resolveConfig(tailwindConfig);
+const twColors = fullConfig.theme.colors;
+
+/** Look up the hex value for a theme color token like 'a1-1-primary' */
+function getHex(token) {
+  if (!token) return undefined;
+  const parts = token.split('-');
+  // e.g. 'a1-1-primary' → group='a1-1', shade='primary'
+  const shade = parts.pop();
+  const group = parts.join('-');
+  return twColors?.[group]?.[shade];
+}
 
 const WordCard = ({ word, level }) => {
   const { t } = useTranslation();
   const { isItemLearned, markAsLearned, unmarkAsLearned } = useProgress();
   const { getThemeForLevel } = useTheme();
-  const [isFlipped, setIsFlipped] = useState(false);
   const [showExample, setShowExample] = useState(false);
 
   const theme = getThemeForLevel(level);
+  const primaryHex = getHex(theme.primary);
   const learned = isItemLearned(level, 'vocabulary', word.id);
 
   const handleSpeak = (text) => {
@@ -53,14 +68,14 @@ const WordCard = ({ word, level }) => {
       className="relative"
     >
       <div
-        className={`relative bg-white rounded-2xl shadow-lg border-2 transition-colors ${
-          learned ? `border-${theme.primary}` : 'border-slate-100'
-        }`}
+        className="relative bg-white rounded-2xl shadow-lg border-2 transition-colors"
+        style={{ borderColor: learned ? primaryHex : '#f1f5f9' }}
       >
         {/* Learned badge */}
         {learned && (
           <div
-            className={`absolute -top-2 -right-2 w-8 h-8 bg-${theme.primary} rounded-full flex items-center justify-center shadow-lg`}
+            className="absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
+            style={{ backgroundColor: primaryHex }}
           >
             <Check className="w-5 h-5 text-white" />
           </div>
@@ -69,13 +84,16 @@ const WordCard = ({ word, level }) => {
         {/* Card content */}
         <div className="p-6">
           {/* Category tag */}
-          <div className="mb-4">
-            <span
-              className={`inline-block px-3 py-1 text-xs font-medium rounded-full bg-${theme.primary}/10 text-${theme.primary}`}
-            >
-              {word.category}
-            </span>
-          </div>
+          {word.category && (
+            <div className="mb-4">
+              <span
+                className="inline-block px-3 py-1 text-xs font-medium rounded-full"
+                style={{ backgroundColor: primaryHex + '1A', color: primaryHex }}
+              >
+                {word.category}
+              </span>
+            </div>
+          )}
 
           {/* Main word */}
           <div className="mb-4">
@@ -88,10 +106,10 @@ const WordCard = ({ word, level }) => {
               </h3>
               <button
                 onClick={() => handleSpeak(word.word)}
-                className={`p-2 rounded-full hover:bg-${theme.primary}/10 transition-colors`}
+                className="p-2 rounded-full hover:bg-slate-100 transition-colors"
                 title={t('levelPage.listenPronunciation')}
               >
-                <Volume2 className={`w-5 h-5 text-${theme.primary}`} />
+                <Volume2 className="w-5 h-5" style={{ color: primaryHex }} />
               </button>
             </div>
             <p className="text-slate-600">{word.translation}</p>
@@ -123,22 +141,23 @@ const WordCard = ({ word, level }) => {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowExample(!showExample)}
-              className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-xl border border-slate-200 hover:border-${theme.primary} hover:bg-${theme.primary}/5 transition-colors`}
+              className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors"
             >
               <BookOpen className="w-4 h-4" />
               <span className="text-sm">{t('levelPage.example')}</span>
             </button>
             <button
               onClick={toggleLearned}
-              className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-xl transition-colors ${
+              className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-xl transition-colors border"
+              style={
                 learned
-                  ? `bg-${theme.primary} text-white`
-                  : `border border-slate-200 hover:bg-${theme.primary}/10`
-              }`}
+                  ? { backgroundColor: primaryHex, color: '#fff', borderColor: primaryHex }
+                  : { borderColor: '#e2e8f0', color: '#334155' }
+              }
             >
               {learned ? (
                 <>
-                  <RotateCcw className="w-4 h-4" />
+                  <Check className="w-4 h-4" />
                   <span className="text-sm">{t('levelPage.learned')}</span>
                 </>
               ) : (
