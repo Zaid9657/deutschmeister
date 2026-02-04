@@ -15,6 +15,9 @@ import ProfilePage from './pages/ProfilePage';
 import GrammarSectionPage from './pages/GrammarSectionPage';
 import GrammarTopicsPage from './pages/GrammarTopicsPage';
 import GrammarLessonPage from './pages/GrammarLessonPage';
+import ReadingSectionPage from './pages/ReadingSectionPage';
+import ReadingLessonsPage from './pages/ReadingLessonsPage';
+import ReadingLessonPage from './pages/ReadingLessonPage';
 
 function App() {
   return (
@@ -78,6 +81,30 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <GrammarLessonPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/reading"
+                  element={
+                    <ProtectedRoute>
+                      <ReadingSectionPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/reading/:level"
+                  element={
+                    <ProtectedRoute>
+                      <ReadingLessonsPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/reading/:level/:lessonId"
+                  element={
+                    <ProtectedRoute>
+                      <ReadingLessonPage />
                     </ProtectedRoute>
                   }
                 />

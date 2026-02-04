@@ -17,14 +17,14 @@ const UNLOCK_THRESHOLD = 70; // 70% required to unlock next level
 
 // Initialize empty progress for all 8 sub-levels
 const getInitialProgress = () => ({
-  'a1.1': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], grammarTopics: {} },
-  'a1.2': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], grammarTopics: {} },
-  'a2.1': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], grammarTopics: {} },
-  'a2.2': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], grammarTopics: {} },
-  'b1.1': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], grammarTopics: {} },
-  'b1.2': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], grammarTopics: {} },
-  'b2.1': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], grammarTopics: {} },
-  'b2.2': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], grammarTopics: {} },
+  'a1.1': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], readingLessons: [], grammarTopics: {} },
+  'a1.2': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], readingLessons: [], grammarTopics: {} },
+  'a2.1': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], readingLessons: [], grammarTopics: {} },
+  'a2.2': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], readingLessons: [], grammarTopics: {} },
+  'b1.1': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], readingLessons: [], grammarTopics: {} },
+  'b1.2': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], readingLessons: [], grammarTopics: {} },
+  'b2.1': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], readingLessons: [], grammarTopics: {} },
+  'b2.2': { vocabulary: [], sentences: [], grammar: [], paragraphs: [], readingLessons: [], grammarTopics: {} },
 });
 
 export const ProgressProvider = ({ children }) => {
@@ -79,7 +79,7 @@ export const ProgressProvider = ({ children }) => {
       if (Object.keys(supabaseGrammarProgress).length > 0) {
         levels.forEach(level => {
           if (!baseProgress[level]) {
-            baseProgress[level] = { vocabulary: [], sentences: [], grammar: [], paragraphs: [], grammarTopics: {} };
+            baseProgress[level] = { vocabulary: [], sentences: [], grammar: [], paragraphs: [], readingLessons: [], grammarTopics: {} };
           }
           if (!baseProgress[level].grammarTopics) {
             baseProgress[level].grammarTopics = {};
@@ -327,7 +327,7 @@ export const ProgressProvider = ({ children }) => {
   const updateGrammarTopicProgress = async (level, topicId, progressData) => {
     const newProgress = { ...progress };
     if (!newProgress[level]) {
-      newProgress[level] = { vocabulary: [], sentences: [], grammar: [], paragraphs: [], grammarTopics: {} };
+      newProgress[level] = { vocabulary: [], sentences: [], grammar: [], paragraphs: [], readingLessons: [], grammarTopics: {} };
     }
     if (!newProgress[level].grammarTopics) {
       newProgress[level].grammarTopics = {};

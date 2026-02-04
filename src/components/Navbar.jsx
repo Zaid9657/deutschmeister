@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, LogOut, Globe, Home, LayoutDashboard, BookMarked } from 'lucide-react';
+import { Menu, X, User, LogOut, Globe, Home, LayoutDashboard, BookMarked, BookOpen } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 const Navbar = () => {
@@ -63,6 +63,13 @@ const Navbar = () => {
                 >
                   <BookMarked size={18} />
                   {t('nav.grammar')}
+                </Link>
+                <Link
+                  to="/reading"
+                  className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors"
+                >
+                  <BookOpen size={18} />
+                  {t('nav.reading')}
                 </Link>
                 <Link
                   to="/profile"
@@ -156,6 +163,14 @@ const Navbar = () => {
                   >
                     <BookMarked size={20} />
                     {t('nav.grammar')}
+                  </Link>
+                  <Link
+                    to="/reading"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
+                  >
+                    <BookOpen size={20} />
+                    {t('nav.reading')}
                   </Link>
                   <Link
                     to="/profile"
