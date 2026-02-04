@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth } from './AuthContext';
 import { supabase } from '../utils/supabase';
-import { vocabulary, sentences, grammar, levels, levelOrder } from '../data/content';
+import { vocabulary, sentences, grammar, levels } from '../data/content';
 import { getTopicsForLevel } from '../data/grammarTopics';
 import {
   loadUserGrammarProgress,
@@ -12,8 +12,6 @@ import {
 const ProgressContext = createContext({});
 
 export const useProgress = () => useContext(ProgressContext);
-
-const UNLOCK_THRESHOLD = 70; // 70% required to unlock next level
 
 // Initialize empty progress for all 8 sub-levels
 const getInitialProgress = () => ({
@@ -228,15 +226,6 @@ export const ProgressProvider = ({ children }) => {
     return Math.round((learned / total) * 100);
   };
 
-  // Check if a level is unlocked
-  const isLevelUnlocked = (level) => {
-    const levelIndex = levelOrder.indexOf(level);
-    if (levelIndex === 0) return true; // a1.1 is always unlocked
-
-    const previousLevel = levelOrder[levelIndex - 1];
-    return getLevelProgress(previousLevel) >= UNLOCK_THRESHOLD;
-  };
-
   // Get total stats across all levels
   const getTotalStats = () => {
     let totalVocab = 0;
@@ -293,20 +282,6 @@ export const ProgressProvider = ({ children }) => {
       return { completed: false, progress: 0, currentStage: 1, score: 0 };
     }
     return topicProgress;
-  };
-
-  // Check if a grammar topic is unlocked (sequential unlocking)
-  const isGrammarTopicUnlocked = (level, topicIndex) => {
-    // First topic is always unlocked if the level is unlocked
-    if (topicIndex === 0) return isLevelUnlocked(level);
-
-    // Check if previous topic is completed
-    const topics = getTopicsForLevel(level);
-    if (topicIndex >= topics.length) return false;
-
-    const previousTopic = topics[topicIndex - 1];
-    const previousProgress = getGrammarTopicProgress(level, previousTopic.id);
-    return previousProgress.completed;
   };
 
   // Get overall progress for grammar section of a level
@@ -366,13 +341,10 @@ export const ProgressProvider = ({ children }) => {
     isItemLearned,
     getLevelProgress,
     registerLevelItemCounts,
-    isLevelUnlocked,
     getTotalStats,
     getOverallProgress,
-    UNLOCK_THRESHOLD,
     // Grammar topics
     getGrammarTopicProgress,
-    isGrammarTopicUnlocked,
     getGrammarSectionProgress,
     updateGrammarTopicProgress,
     completeGrammarTopic,

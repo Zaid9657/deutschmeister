@@ -29,7 +29,7 @@ const LevelPage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { setCurrentLevel, getThemeForLevel } = useTheme();
-  const { getLevelProgress, isLevelUnlocked, registerLevelItemCounts } = useProgress();
+  const { getLevelProgress, registerLevelItemCounts } = useProgress();
 
   const [activeTab, setActiveTab] = useState('vocabulary');
   const [levelVocabulary, setLevelVocabulary] = useState([]);
@@ -41,18 +41,17 @@ const LevelPage = () => {
 
   const theme = getThemeForLevel(level);
   const progress = getLevelProgress(level);
-  const unlocked = isLevelUnlocked(level);
   const Icon = iconMap[level] || Sun;
   const levelInfo = contentLevelThemes[level] || {};
 
   useEffect(() => {
-    if (!levels.includes(level) || !unlocked) {
+    if (!levels.includes(level)) {
       navigate('/dashboard');
       return;
     }
     setCurrentLevel(level);
     return () => setCurrentLevel(null);
-  }, [level, unlocked, navigate, setCurrentLevel]);
+  }, [level, navigate, setCurrentLevel]);
 
   // Fetch vocabulary and sentences from Supabase
   useEffect(() => {
@@ -72,11 +71,11 @@ const LevelPage = () => {
         setVocabLoading(false);
       }
     };
-    if (levels.includes(level) && unlocked) {
+    if (levels.includes(level)) {
       load();
     }
     return () => { cancelled = true; };
-  }, [level, unlocked]);
+  }, [level]);
 
   const tabs = [
     { id: 'vocabulary', label: t('levelPage.vocabulary'), icon: BookOpen },

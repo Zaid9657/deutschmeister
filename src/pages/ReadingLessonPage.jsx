@@ -30,7 +30,7 @@ const ReadingLessonPage = () => {
   const navigate = useNavigate();
   const { i18n, t } = useTranslation();
   const { getThemeForLevel, setCurrentLevel } = useTheme();
-  const { isLevelUnlocked, isItemLearned, markAsLearned } = useProgress();
+  const { isItemLearned, markAsLearned } = useProgress();
   const { user } = useAuth();
 
   const [lesson, setLesson] = useState(null);
@@ -39,19 +39,18 @@ const ReadingLessonPage = () => {
   const [showTranslation, setShowTranslation] = useState(false);
 
   const theme = getThemeForLevel(level);
-  const unlocked = isLevelUnlocked(level);
   const isGerman = i18n.language === 'de';
   const isCompleted = lesson ? isItemLearned(level, 'readingLessons', lesson.id) : false;
 
   // Redirect if invalid
   useEffect(() => {
-    if (!levels.includes(level) || !unlocked) {
+    if (!levels.includes(level)) {
       navigate('/reading');
       return;
     }
     setCurrentLevel(level);
     return () => setCurrentLevel(null);
-  }, [level, unlocked, navigate, setCurrentLevel]);
+  }, [level, navigate, setCurrentLevel]);
 
   // Fetch lesson data
   useEffect(() => {
@@ -68,11 +67,11 @@ const ReadingLessonPage = () => {
         setLoading(false);
       }
     };
-    if (levels.includes(level) && unlocked) {
+    if (levels.includes(level)) {
       load();
     }
     return () => { cancelled = true; };
-  }, [level, lessonId, unlocked]);
+  }, [level, lessonId]);
 
   // Find current lesson index and neighbors
   const currentIndex = allLessons.findIndex((l) => l.id === lessonId);

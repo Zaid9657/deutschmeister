@@ -25,13 +25,12 @@ const GrammarTopicsPage = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const { setCurrentLevel, getThemeForLevel } = useTheme();
-  const { isLevelUnlocked, getGrammarTopicProgress, isGrammarTopicUnlocked, getGrammarSectionProgress } = useProgress();
+  const { getGrammarTopicProgress, getGrammarSectionProgress } = useProgress();
 
   const [topics, setTopics] = useState([]);
   const [topicsLoading, setTopicsLoading] = useState(true);
 
   const theme = getThemeForLevel(level);
-  const unlocked = isLevelUnlocked(level);
   const Icon = iconMap[level] || Sun;
   const levelInfo = contentLevelThemes[level] || {};
   const isGerman = i18n.language === 'de';
@@ -44,13 +43,13 @@ const GrammarTopicsPage = () => {
   }).length;
 
   useEffect(() => {
-    if (!levels.includes(level) || !unlocked) {
+    if (!levels.includes(level)) {
       navigate('/grammar');
       return;
     }
     setCurrentLevel(level);
     return () => setCurrentLevel(null);
-  }, [level, unlocked, navigate, setCurrentLevel]);
+  }, [level, navigate, setCurrentLevel]);
 
   // Fetch topics from Supabase (with static fallback)
   useEffect(() => {
@@ -63,11 +62,11 @@ const GrammarTopicsPage = () => {
         setTopicsLoading(false);
       }
     };
-    if (levels.includes(level) && unlocked) {
+    if (levels.includes(level)) {
       loadTopics();
     }
     return () => { cancelled = true; };
-  }, [level, unlocked]);
+  }, [level]);
 
   // Format level for display (a1.1 -> A1.1)
   const displayLevel = level.toUpperCase();
@@ -177,7 +176,6 @@ const GrammarTopicsPage = () => {
 
           {!topicsLoading && topics.map((topic, index) => {
             const topicProgress = getGrammarTopicProgress ? getGrammarTopicProgress(level, topic.id) : { completed: false, progress: 0 };
-            const isTopicUnlocked = isGrammarTopicUnlocked ? isGrammarTopicUnlocked(level, index) : index === 0;
 
             return (
               <motion.div
@@ -189,7 +187,6 @@ const GrammarTopicsPage = () => {
                 <GrammarTopicCard
                   topic={topic}
                   level={level}
-                  isUnlocked={isTopicUnlocked}
                   isCompleted={topicProgress.completed}
                   progress={topicProgress.progress || 0}
                 />

@@ -499,12 +499,3 @@ export const getLevelTotalItems = (level) => {
   return vocabCount + sentenceCount + grammarCount;
 };
 
-// Helper to check if level is unlocked based on previous level progress
-export const isLevelUnlocked = (level, progress) => {
-  const levelIndex = levelOrder.indexOf(level);
-  if (levelIndex === 0) return true; // a1.1 is always unlocked
-
-  const previousLevel = levelOrder[levelIndex - 1];
-  const previousProgress = progress[previousLevel] || 0;
-  return previousProgress >= 70;
-};

@@ -15,25 +15,24 @@ const ReadingLessonsPage = () => {
   const { i18n } = useTranslation();
   const { t } = useTranslation();
   const { setCurrentLevel, getThemeForLevel } = useTheme();
-  const { isLevelUnlocked, isItemLearned } = useProgress();
+  const { isItemLearned } = useProgress();
 
   const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const theme = getThemeForLevel(level);
-  const unlocked = isLevelUnlocked(level);
   const levelInfo = contentLevelThemes[level] || {};
   const isGerman = i18n.language === 'de';
 
-  // Redirect if invalid level or locked
+  // Redirect if invalid level
   useEffect(() => {
-    if (!levels.includes(level) || !unlocked) {
+    if (!levels.includes(level)) {
       navigate('/reading');
       return;
     }
     setCurrentLevel(level);
     return () => setCurrentLevel(null);
-  }, [level, unlocked, navigate, setCurrentLevel]);
+  }, [level, navigate, setCurrentLevel]);
 
   // Fetch lessons from Supabase
   useEffect(() => {
@@ -46,11 +45,11 @@ const ReadingLessonsPage = () => {
         setLoading(false);
       }
     };
-    if (levels.includes(level) && unlocked) {
+    if (levels.includes(level)) {
       load();
     }
     return () => { cancelled = true; };
-  }, [level, unlocked]);
+  }, [level]);
 
   const completedCount = lessons.filter((l) =>
     isItemLearned(level, 'readingLessons', l.id)
@@ -60,13 +59,6 @@ const ReadingLessonsPage = () => {
     lessons.length > 0 ? Math.round((completedCount / lessons.length) * 100) : 0;
 
   const displayLevel = level.toUpperCase();
-
-  // Check if a lesson is unlocked (sequential: first always unlocked, rest require previous completed)
-  const isLessonUnlocked = (index) => {
-    if (index === 0) return true;
-    const previousLesson = lessons[index - 1];
-    return isItemLearned(level, 'readingLessons', previousLesson.id);
-  };
 
   return (
     <div className={`min-h-screen bg-gradient-to-br ${theme.bgGradient} pt-20 pb-12`}>
@@ -184,7 +176,6 @@ const ReadingLessonsPage = () => {
           {!loading &&
             lessons.map((lesson, index) => {
               const completed = isItemLearned(level, 'readingLessons', lesson.id);
-              const lessonUnlocked = isLessonUnlocked(index);
 
               return (
                 <motion.div
@@ -197,7 +188,6 @@ const ReadingLessonsPage = () => {
                     lesson={lesson}
                     level={level}
                     index={index}
-                    isUnlocked={lessonUnlocked}
                     isCompleted={completed}
                   />
                 </motion.div>

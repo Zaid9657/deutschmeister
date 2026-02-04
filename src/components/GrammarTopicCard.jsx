@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Lock, ChevronRight, Clock, CheckCircle, Circle } from 'lucide-react';
+import { ChevronRight, Clock, CheckCircle, Circle } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 
-const GrammarTopicCard = ({ topic, level, isUnlocked, isCompleted, progress = 0 }) => {
-  const { t, i18n } = useTranslation();
+const GrammarTopicCard = ({ topic, level, isCompleted, progress = 0 }) => {
+  const { i18n } = useTranslation();
   const navigate = useNavigate();
   const { getThemeForLevel } = useTheme();
 
@@ -13,18 +13,13 @@ const GrammarTopicCard = ({ topic, level, isUnlocked, isCompleted, progress = 0 
   const isGerman = i18n.language === 'de';
 
   const handleClick = () => {
-    if (isUnlocked) {
-      navigate(`/grammar/${level}/${topic.slug}`);
-    }
+    navigate(`/grammar/${level}/${topic.slug}`);
   };
 
   // Determine status icon and colors
   const getStatusIcon = () => {
     if (isCompleted) {
       return <CheckCircle className="w-5 h-5 text-emerald-500" />;
-    }
-    if (!isUnlocked) {
-      return <Lock className="w-5 h-5 text-slate-400" />;
     }
     if (progress > 0) {
       return <Circle className="w-5 h-5 text-amber-500" style={{ strokeDasharray: '100', strokeDashoffset: 100 - progress }} />;
@@ -34,7 +29,6 @@ const GrammarTopicCard = ({ topic, level, isUnlocked, isCompleted, progress = 0 
 
   const getStatusText = () => {
     if (isCompleted) return isGerman ? 'Abgeschlossen' : 'Completed';
-    if (!isUnlocked) return isGerman ? 'Gesperrt' : 'Locked';
     if (progress > 0) return isGerman ? 'In Bearbeitung' : 'In Progress';
     return isGerman ? 'Nicht gestartet' : 'Not Started';
   };
@@ -43,12 +37,12 @@ const GrammarTopicCard = ({ topic, level, isUnlocked, isCompleted, progress = 0 
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={isUnlocked ? { scale: 1.01, y: -2 } : {}}
+      whileHover={{ scale: 1.01, y: -2 }}
       transition={{ duration: 0.2 }}
       onClick={handleClick}
-      className={`relative bg-white rounded-xl border shadow-sm overflow-hidden ${
-        isUnlocked ? 'cursor-pointer hover:shadow-md' : 'cursor-not-allowed opacity-60'
-      } ${isCompleted ? 'border-emerald-200' : 'border-slate-200'}`}
+      className={`relative bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md ${
+        isCompleted ? 'border-emerald-200' : 'border-slate-200'
+      }`}
     >
       {/* Completed indicator bar */}
       {isCompleted && (
@@ -61,9 +55,7 @@ const GrammarTopicCard = ({ topic, level, isUnlocked, isCompleted, progress = 0 
           <div className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center ${
             isCompleted
               ? `bg-gradient-to-br ${theme.gradient} text-white`
-              : isUnlocked
-                ? 'bg-slate-100 text-slate-600'
-                : 'bg-slate-50 text-slate-400'
+              : 'bg-slate-100 text-slate-600'
           }`}>
             <span className="font-bold">{topic.order}</span>
           </div>
@@ -71,16 +63,12 @@ const GrammarTopicCard = ({ topic, level, isUnlocked, isCompleted, progress = 0 
           {/* Content */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <h3 className={`font-semibold truncate ${
-                isUnlocked ? 'text-slate-800' : 'text-slate-500'
-              }`}>
+              <h3 className="font-semibold truncate text-slate-800">
                 {isGerman ? topic.titleDe : topic.titleEn}
               </h3>
             </div>
 
-            <p className={`text-sm line-clamp-2 ${
-              isUnlocked ? 'text-slate-600' : 'text-slate-400'
-            }`}>
+            <p className="text-sm line-clamp-2 text-slate-600">
               {isGerman ? topic.descriptionDe : topic.descriptionEn}
             </p>
 
@@ -100,7 +88,7 @@ const GrammarTopicCard = ({ topic, level, isUnlocked, isCompleted, progress = 0 
           </div>
 
           {/* Action indicator */}
-          {isUnlocked && !isCompleted && (
+          {!isCompleted && (
             <motion.div
               whileHover={{ x: 4 }}
               className="flex-shrink-0 self-center"
@@ -108,17 +96,10 @@ const GrammarTopicCard = ({ topic, level, isUnlocked, isCompleted, progress = 0 
               <ChevronRight className="w-5 h-5 text-slate-400" />
             </motion.div>
           )}
-
-          {/* Lock icon for locked topics */}
-          {!isUnlocked && (
-            <div className="flex-shrink-0 self-center">
-              <Lock className="w-5 h-5 text-slate-300" />
-            </div>
-          )}
         </div>
 
         {/* Progress bar for in-progress topics */}
-        {isUnlocked && progress > 0 && !isCompleted && (
+        {progress > 0 && !isCompleted && (
           <div className="mt-3 pt-3 border-t border-slate-100">
             <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
               <span>{isGerman ? 'Fortschritt' : 'Progress'}</span>

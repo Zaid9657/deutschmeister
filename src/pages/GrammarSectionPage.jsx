@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { BookMarked, Lock, ChevronRight, CheckCircle, Sun, TreePine, Waves, Moon } from 'lucide-react';
+import { BookMarked, ChevronRight, CheckCircle, Sun, TreePine, Waves, Moon } from 'lucide-react';
 import { useProgress } from '../contexts/ProgressContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { mainLevels, getSubLevels, levelThemes as contentLevelThemes } from '../data/content';
@@ -28,7 +28,7 @@ const iconMap = {
 const GrammarSectionPage = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const { isLevelUnlocked, getGrammarSectionProgress, getGrammarTopicProgress } = useProgress();
+  const { getGrammarSectionProgress, getGrammarTopicProgress } = useProgress();
   const { getThemeForLevel } = useTheme();
 
   const isGerman = i18n.language === 'de';
@@ -55,7 +55,6 @@ const GrammarSectionPage = () => {
   // Grammar level card component
   const GrammarLevelCard = ({ level }) => {
     const theme = getThemeForLevel(level);
-    const unlocked = isLevelUnlocked(level);
     const Icon = iconMap[level] || Sun;
     const levelInfo = contentLevelThemes[level] || {};
     const topics = getTopicsForLevel(level);
@@ -69,9 +68,7 @@ const GrammarSectionPage = () => {
     const progressPercent = topics.length > 0 ? Math.round((completedTopics / topics.length) * 100) : 0;
 
     const handleClick = () => {
-      if (unlocked) {
-        navigate(`/grammar/${level}`);
-      }
+      navigate(`/grammar/${level}`);
     };
 
     const displayLevel = level.toUpperCase();
@@ -79,12 +76,12 @@ const GrammarSectionPage = () => {
 
     return (
       <motion.div
-        whileHover={unlocked ? { scale: 1.02, y: -2 } : {}}
+        whileHover={{ scale: 1.02, y: -2 }}
         transition={{ duration: 0.2 }}
         onClick={handleClick}
-        className={`relative bg-white rounded-xl border shadow-sm overflow-hidden ${
-          unlocked ? 'cursor-pointer hover:shadow-md' : 'cursor-not-allowed'
-        } ${progressPercent === 100 ? 'border-emerald-200' : 'border-slate-200'}`}
+        className={`relative bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md ${
+          progressPercent === 100 ? 'border-emerald-200' : 'border-slate-200'
+        }`}
       >
         {/* Completed indicator bar */}
         {progressPercent === 100 && (
@@ -94,62 +91,45 @@ const GrammarSectionPage = () => {
         <div className="p-4">
           <div className="flex items-center gap-4">
             {/* Icon */}
-            <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${
-              unlocked
-                ? `bg-gradient-to-br ${theme.gradient}`
-                : 'bg-slate-100'
-            }`}>
-              {unlocked ? (
-                <Icon className="w-6 h-6 text-white" />
-              ) : (
-                <Lock className="w-6 h-6 text-slate-400" />
-              )}
+            <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br ${theme.gradient}`}>
+              <Icon className="w-6 h-6 text-white" />
             </div>
 
             {/* Content */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <h3 className={`font-semibold ${unlocked ? 'text-slate-800' : 'text-slate-400'}`}>
+                <h3 className="font-semibold text-slate-800">
                   {displayLevel}
                 </h3>
-                <span className={`px-2 py-0.5 rounded-full text-xs ${
-                  unlocked ? 'bg-slate-100 text-slate-600' : 'bg-slate-50 text-slate-400'
-                }`}>
+                <span className="px-2 py-0.5 rounded-full text-xs bg-slate-100 text-slate-600">
                   Part {part}
                 </span>
               </div>
-              <p className={`text-sm ${unlocked ? 'text-slate-600' : 'text-slate-400'}`}>
+              <p className="text-sm text-slate-600">
                 {topics.length} {isGerman ? 'Themen' : 'topics'}
               </p>
             </div>
 
             {/* Progress / Status */}
             <div className="flex-shrink-0 flex items-center gap-3">
-              {unlocked && (
-                <>
-                  <div className="text-right">
-                    <p className={`text-sm font-medium ${progressPercent === 100 ? 'text-emerald-600' : 'text-slate-700'}`}>
-                      {completedTopics}/{topics.length}
-                    </p>
-                    <p className="text-xs text-slate-400">
-                      {progressPercent}%
-                    </p>
-                  </div>
-                  {progressPercent === 100 ? (
-                    <CheckCircle className="w-5 h-5 text-emerald-500" />
-                  ) : (
-                    <ChevronRight className="w-5 h-5 text-slate-400" />
-                  )}
-                </>
-              )}
-              {!unlocked && (
-                <Lock className="w-5 h-5 text-slate-300" />
+              <div className="text-right">
+                <p className={`text-sm font-medium ${progressPercent === 100 ? 'text-emerald-600' : 'text-slate-700'}`}>
+                  {completedTopics}/{topics.length}
+                </p>
+                <p className="text-xs text-slate-400">
+                  {progressPercent}%
+                </p>
+              </div>
+              {progressPercent === 100 ? (
+                <CheckCircle className="w-5 h-5 text-emerald-500" />
+              ) : (
+                <ChevronRight className="w-5 h-5 text-slate-400" />
               )}
             </div>
           </div>
 
           {/* Progress bar */}
-          {unlocked && progressPercent > 0 && progressPercent < 100 && (
+          {progressPercent > 0 && progressPercent < 100 && (
             <div className="mt-3 pt-3 border-t border-slate-100">
               <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                 <motion.div

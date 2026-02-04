@@ -2,20 +2,20 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, LogOut, Globe, Home, LayoutDashboard, BookMarked, BookOpen } from 'lucide-react';
+import { Menu, X, User, LogOut, Globe, Home, LayoutDashboard, BookMarked, BookOpen, Crown, Sparkles } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../contexts/SubscriptionContext';
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
   const { user, signOut } = useAuth();
+  const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription } = useSubscription();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const [showLangMenu, setShowLangMenu] = useState(false);
 
   const toggleLanguage = () => {
     const newLang = i18n.language === 'en' ? 'de' : 'en';
     i18n.changeLanguage(newLang);
-    setShowLangMenu(false);
   };
 
   const handleSignOut = async () => {
@@ -23,6 +23,11 @@ const Navbar = () => {
     navigate('/');
     setIsOpen(false);
   };
+
+  const isGerman = i18n.language === 'de';
+  const inTrial = user ? isInFreeTrial() : false;
+  const isSubscribed = user ? hasActiveSubscription() : false;
+  const trialDays = user ? getTrialDaysRemaining() : 0;
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
@@ -79,6 +84,32 @@ const Navbar = () => {
                   {t('nav.profile')}
                 </Link>
               </>
+            )}
+
+            {/* Subscription Status Badge */}
+            {user && isSubscribed && (
+              <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-semibold">
+                <Crown size={12} />
+                Pro
+              </span>
+            )}
+            {user && inTrial && !isSubscribed && (
+              <Link
+                to="/subscription"
+                className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-semibold hover:bg-amber-200 transition-colors"
+              >
+                <Sparkles size={12} />
+                {trialDays}d {isGerman ? 'Test' : 'trial'}
+              </Link>
+            )}
+            {user && !inTrial && !isSubscribed && (
+              <Link
+                to="/subscription"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-semibold hover:from-amber-600 hover:to-orange-600 transition-all"
+              >
+                <Crown size={12} />
+                {isGerman ? 'Abonnieren' : 'Subscribe'}
+              </Link>
             )}
 
             {/* Language Toggle */}
@@ -180,11 +211,33 @@ const Navbar = () => {
                     <User size={20} />
                     {t('nav.profile')}
                   </Link>
+
+                  {/* Subscription status in mobile */}
+                  {isSubscribed && (
+                    <div className="flex items-center gap-2 px-4 py-2">
+                      <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-semibold">
+                        <Crown size={12} />
+                        Pro
+                      </span>
+                    </div>
+                  )}
+                  {!isSubscribed && (
+                    <Link
+                      to="/subscription"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition-colors"
+                    >
+                      <Crown size={20} />
+                      {inTrial
+                        ? `${trialDays}d ${isGerman ? 'Test verbleibend' : 'trial left'}`
+                        : isGerman ? 'Abonnieren' : 'Subscribe'}
+                    </Link>
+                  )}
                 </>
               )}
 
               <button
-                onClick={toggleLanguage}
+                onClick={() => { toggleLanguage(); setIsOpen(false); }}
                 className="flex items-center gap-3 w-full px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
               >
                 <Globe size={20} />

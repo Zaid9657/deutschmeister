@@ -12,7 +12,6 @@ import {
   PenTool,
   Trophy,
   Check,
-  Lock,
   Loader2
 } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
@@ -33,16 +32,12 @@ const stages = [
   { id: 5, name: { en: 'Mastery', de: 'Meisterschaft' }, icon: Trophy, color: 'rose' },
 ];
 
-// TODO: Re-enable stage locking for production
-const STAGE_LOCKING_ENABLED = false;
-
 const GrammarLessonPage = () => {
   const { level, topicSlug } = useParams();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const { getThemeForLevel } = useTheme();
   const {
-    isLevelUnlocked,
     getGrammarTopicProgress,
     updateGrammarTopicProgress,
     completeGrammarTopic
@@ -56,7 +51,6 @@ const GrammarLessonPage = () => {
   const [fetchError, setFetchError] = useState(null);
 
   const theme = getThemeForLevel(level);
-  const unlocked = isLevelUnlocked(level);
   const isGerman = i18n.language === 'de';
 
   // Fetch topic and content from Supabase ONLY
@@ -91,14 +85,14 @@ const GrammarLessonPage = () => {
         }
       }
     };
-    if (levels.includes(level) && unlocked) {
+    if (levels.includes(level)) {
       loadData();
     } else {
-      console.log(`[GrammarLessonPage] skipping load: level="${level}" valid=${levels.includes(level)}, unlocked=${unlocked}`);
+      console.log(`[GrammarLessonPage] skipping load: level="${level}" valid=${levels.includes(level)}`);
       setDataLoading(false);
     }
     return () => { cancelled = true; };
-  }, [level, topicSlug, unlocked]);
+  }, [level, topicSlug]);
 
   // Load saved progress
   useEffect(() => {
@@ -180,8 +174,7 @@ const GrammarLessonPage = () => {
   };
 
   const handleStageClick = (stageId) => {
-    // TODO: Re-enable stage locking for production
-    if (!STAGE_LOCKING_ENABLED || stageId <= currentStage || stageCompleted[stageId]) {
+    if (stageId <= currentStage || stageCompleted[stageId]) {
       setCurrentStage(stageId);
     }
   };
@@ -339,8 +332,7 @@ const GrammarLessonPage = () => {
               {stages.map((stage, index) => {
                 const isCompleted = stageCompleted[stage.id];
                 const isCurrent = currentStage === stage.id;
-                // TODO: Re-enable stage locking for production
-                const isLocked = STAGE_LOCKING_ENABLED && stage.id > currentStage && !isCompleted;
+                const isLocked = stage.id > currentStage && !isCompleted;
                 const Icon = stage.icon;
 
                 return (
