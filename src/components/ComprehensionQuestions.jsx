@@ -76,14 +76,9 @@ const ComprehensionQuestions = ({ questions, theme }) => {
                       </span>
                       <div className="flex-1">
                         <p className="font-medium text-slate-800">
-                          {isGerman ? q.question_de : q.question_en}
+                          {q.question_de}
                         </p>
-                        {!isGerman && q.question_de && (
-                          <p className="text-sm text-slate-500 mt-1 italic">
-                            {q.question_de}
-                          </p>
-                        )}
-                        {isGerman && q.question_en && (
+                        {q.question_en && (
                           <p className="text-sm text-slate-500 mt-1 italic">
                             {q.question_en}
                           </p>
@@ -125,14 +120,9 @@ const ComprehensionQuestions = ({ questions, theme }) => {
                         >
                           <div className="mt-2 p-3 bg-emerald-50 rounded-lg border border-emerald-100">
                             <p className="text-sm font-medium text-emerald-800">
-                              {isGerman ? q.answer_de : q.answer_en}
+                              {q.answer_de}
                             </p>
-                            {!isGerman && q.answer_de && (
-                              <p className="text-xs text-emerald-600 mt-1 italic">
-                                {q.answer_de}
-                              </p>
-                            )}
-                            {isGerman && q.answer_en && (
+                            {q.answer_en && (
                               <p className="text-xs text-emerald-600 mt-1 italic">
                                 {q.answer_en}
                               </p>
