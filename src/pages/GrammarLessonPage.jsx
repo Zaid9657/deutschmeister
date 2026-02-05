@@ -12,6 +12,7 @@ import {
   PenTool,
   Trophy,
   Check,
+  Lock,
   Loader2
 } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
