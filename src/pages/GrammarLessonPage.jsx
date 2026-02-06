@@ -26,11 +26,56 @@ import StageGuidedPractice from '../components/grammar/StageGuidedPractice';
 import StageMastery from '../components/grammar/StageMastery';
 
 const stages = [
-  { id: 1, name: { en: 'Introduction', de: 'Einführung' }, icon: BookOpen, color: 'blue' },
-  { id: 2, name: { en: 'Examples', de: 'Beispiele' }, icon: MessageSquare, color: 'emerald' },
-  { id: 3, name: { en: 'Rules', de: 'Regeln' }, icon: Table2, color: 'purple' },
-  { id: 4, name: { en: 'Practice', de: 'Übung' }, icon: PenTool, color: 'amber' },
-  { id: 5, name: { en: 'Mastery', de: 'Meisterschaft' }, icon: Trophy, color: 'rose' },
+  {
+    id: 1,
+    name: { en: 'Introduction', de: 'Einführung' },
+    icon: BookOpen,
+    color: 'blue',
+    bgGradient: 'bg-gradient-to-r from-blue-500 to-blue-600',
+    bgClass: 'bg-blue-500',
+    textClass: 'text-blue-600',
+    borderClass: 'border-blue-400'
+  },
+  {
+    id: 2,
+    name: { en: 'Examples', de: 'Beispiele' },
+    icon: MessageSquare,
+    color: 'emerald',
+    bgGradient: 'bg-gradient-to-r from-emerald-500 to-emerald-600',
+    bgClass: 'bg-emerald-500',
+    textClass: 'text-emerald-600',
+    borderClass: 'border-emerald-400'
+  },
+  {
+    id: 3,
+    name: { en: 'Rules', de: 'Regeln' },
+    icon: Table2,
+    color: 'purple',
+    bgGradient: 'bg-gradient-to-r from-purple-500 to-purple-600',
+    bgClass: 'bg-purple-500',
+    textClass: 'text-purple-600',
+    borderClass: 'border-purple-400'
+  },
+  {
+    id: 4,
+    name: { en: 'Practice', de: 'Übung' },
+    icon: PenTool,
+    color: 'amber',
+    bgGradient: 'bg-gradient-to-r from-amber-500 to-amber-600',
+    bgClass: 'bg-amber-500',
+    textClass: 'text-amber-600',
+    borderClass: 'border-amber-400'
+  },
+  {
+    id: 5,
+    name: { en: 'Mastery', de: 'Meisterschaft' },
+    icon: Trophy,
+    color: 'rose',
+    bgGradient: 'bg-gradient-to-r from-rose-500 to-rose-600',
+    bgClass: 'bg-rose-500',
+    textClass: 'text-rose-600',
+    borderClass: 'border-rose-400'
+  },
 ];
 
 const GrammarLessonPage = () => {
@@ -343,7 +388,7 @@ const GrammarLessonPage = () => {
                       disabled={isLocked}
                       className={`relative flex flex-col items-center p-2 rounded-lg transition-all ${
                         isCurrent
-                          ? `bg-${stage.color}-50 border-2 border-${stage.color}-400`
+                          ? `bg-${stage.color}-50 border-2 ${stage.borderClass}`
                           : isCompleted
                             ? 'bg-emerald-50 hover:bg-emerald-100'
                             : isLocked
@@ -353,7 +398,7 @@ const GrammarLessonPage = () => {
                     >
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                         isCurrent
-                          ? `bg-${stage.color}-500 text-white`
+                          ? `${stage.bgClass} text-white`
                           : isCompleted
                             ? 'bg-emerald-500 text-white'
                             : 'bg-slate-200 text-slate-500'
@@ -367,7 +412,7 @@ const GrammarLessonPage = () => {
                         )}
                       </div>
                       <span className={`text-xs mt-1 font-medium hidden sm:block ${
-                        isCurrent ? `text-${stage.color}-600` : isCompleted ? 'text-emerald-600' : 'text-slate-500'
+                        isCurrent ? stage.textClass : isCompleted ? 'text-emerald-600' : 'text-slate-500'
                       }`}>
                         {isGerman ? stage.name.de : stage.name.en}
                       </span>
@@ -394,7 +439,7 @@ const GrammarLessonPage = () => {
         >
           <div className="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
             {/* Stage Header */}
-            <div className={`bg-gradient-to-r from-${currentStageInfo.color}-500 to-${currentStageInfo.color}-600 px-6 py-4`}>
+            <div className={`${currentStageInfo.bgGradient} px-6 py-4`}>
               <div className="flex items-center gap-3">
                 <StageIcon className="w-6 h-6 text-white" />
                 <div>
