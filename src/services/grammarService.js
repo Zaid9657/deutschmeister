@@ -67,6 +67,10 @@ function mapDbTopicToApp(dbRow) {
     icon: dbRow.icon || 'book',
     estimatedTime: dbRow.estimated_time || 20,
     uuid: dbRow.id,
+    // Introduction fields (optional, added via migration)
+    introductionEn: dbRow.introduction_en || null,
+    introductionDe: dbRow.introduction_de || null,
+    keyPoints: dbRow.key_points || null,
   };
 }
 
@@ -371,13 +375,33 @@ export async function fetchTopicContent(level, slug) {
   const dbStage3 = buildStage3(rules);
   const { stage4: dbStage4, stage5: dbStage5 } = buildExerciseStages(exercises);
 
-  // Stage 1 (Introduction) - try static data first, then create default from topic data
+  // Stage 1 (Introduction) - priority: DB fields > static file > generated defaults
   const staticContent = getStaticContent(level, slug);
-  let stage1Content = staticContent?.stage1;
+  let stage1Content = null;
 
-  if (!stage1Content) {
-    // Create default introduction from topic data
-    console.log(`[grammarService] No static stage1 for ${slug}, creating default from topic data`);
+  // Priority 1: Check if topic has introduction in database
+  if (topicData.introductionEn || topicData.introductionDe) {
+    console.log(`[grammarService] Using database introduction for ${slug}`);
+    stage1Content = {
+      title: {
+        en: topicData.titleEn,
+        de: topicData.titleDe,
+      },
+      introduction: {
+        en: topicData.introductionEn || topicData.descriptionEn || `Learn about ${topicData.titleEn}.`,
+        de: topicData.introductionDe || topicData.descriptionDe || `Lerne über ${topicData.titleDe}.`,
+      },
+      keyPoints: topicData.keyPoints || [],
+    };
+  }
+  // Priority 2: Use static content if available
+  else if (staticContent?.stage1) {
+    console.log(`[grammarService] Using static introduction for ${slug}`);
+    stage1Content = staticContent.stage1;
+  }
+  // Priority 3: Generate default from basic topic data
+  else {
+    console.log(`[grammarService] Generating default introduction for ${slug}`);
     stage1Content = {
       title: {
         en: topicData.titleEn,
