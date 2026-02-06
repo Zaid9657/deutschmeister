@@ -5,10 +5,10 @@ import { getTopicContent as getStaticContent } from '../data/grammarContent';
 // Helpers
 // ==========================================
 
-/** Convert app-level (a1.1) to DB sub_level (A1.1) */
-const toDbLevel = (level) => level.toUpperCase();
+/** Convert app-level (a1.1) to DB sub_level (a1.1) - no conversion needed, both lowercase */
+const toDbLevel = (level) => level.toLowerCase();
 
-/** Convert DB sub_level (A1.1) to app-level (a1.1) */
+/** Convert DB sub_level (a1.1) to app-level (a1.1) - no conversion needed, both lowercase */
 const toAppLevel = (dbLevel) => dbLevel.toLowerCase();
 
 // ==========================================
