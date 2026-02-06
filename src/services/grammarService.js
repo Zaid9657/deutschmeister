@@ -315,13 +315,14 @@ export async function fetchTopicBySlug(level, slug) {
 export async function fetchTopicContent(level, slug) {
   console.log(`[grammarService] fetchTopicContent: level="${level}", slug="${slug}"`);
 
-  // Step 1: Get topic UUID
-  const topicUUID = await lookupTopicUUID(level, slug);
-  if (!topicUUID) {
-    console.error(`[grammarService] fetchTopicContent: NO UUID for "${level}/${slug}" — topic not in grammar_topics table`);
+  // Step 1: Get topic data (including UUID)
+  const topicData = await fetchTopicBySlug(level, slug);
+  if (!topicData || !topicData.uuid) {
+    console.error(`[grammarService] fetchTopicContent: NO topic found for "${level}/${slug}"`);
     return null;
   }
 
+  const topicUUID = topicData.uuid;
   console.log(`[grammarService] fetchTopicContent: UUID="${topicUUID}", fetching content tables...`);
 
   // Step 2: Parallel fetch from all content tables
@@ -361,8 +362,8 @@ export async function fetchTopicContent(level, slug) {
   console.log(`[grammarService] fetchTopicContent counts: examples=${examples.length}, rules=${rules.length}, exercises=${exercises.length}`);
 
   if (examples.length === 0 && rules.length === 0 && exercises.length === 0) {
-    console.warn(`[grammarService] fetchTopicContent: ALL content tables returned 0 rows for UUID="${topicUUID}". Possible RLS issue or no content.`);
-    return null;
+    console.warn(`[grammarService] fetchTopicContent: ALL content tables returned 0 rows for UUID="${topicUUID}". Will show introduction only. Check RLS policies or add content.`);
+    // Continue anyway - we'll show at least the introduction stage
   }
 
   // Step 3: Transform
@@ -370,11 +371,41 @@ export async function fetchTopicContent(level, slug) {
   const dbStage3 = buildStage3(rules);
   const { stage4: dbStage4, stage5: dbStage5 } = buildExerciseStages(exercises);
 
-  // Stage 1 (Introduction) has no DB table — use static data
+  // Stage 1 (Introduction) - try static data first, then create default from topic data
   const staticContent = getStaticContent(level, slug);
+  let stage1Content = staticContent?.stage1;
+
+  if (!stage1Content) {
+    // Create default introduction from topic data
+    console.log(`[grammarService] No static stage1 for ${slug}, creating default from topic data`);
+    stage1Content = {
+      title: {
+        en: topicData.titleEn,
+        de: topicData.titleDe,
+      },
+      introduction: {
+        en: topicData.descriptionEn || `Learn about ${topicData.titleEn} in German grammar.`,
+        de: topicData.descriptionDe || `Lerne über ${topicData.titleDe} in der deutschen Grammatik.`,
+      },
+      keyPoints: [
+        {
+          en: `Understand the concept of ${topicData.titleEn}`,
+          de: `Verstehe das Konzept von ${topicData.titleDe}`,
+        },
+        {
+          en: 'Learn when and how to use it correctly',
+          de: 'Lerne, wann und wie man es richtig verwendet',
+        },
+        {
+          en: 'Practice with real examples',
+          de: 'Übe mit echten Beispielen',
+        },
+      ],
+    };
+  }
 
   const result = {
-    stage1: staticContent?.stage1 || null,
+    stage1: stage1Content,
     stage2: dbStage2,
     stage3: dbStage3,
     stage4: dbStage4,
@@ -382,7 +413,7 @@ export async function fetchTopicContent(level, slug) {
   };
 
   console.log(`[grammarService] fetchTopicContent FINAL:`, {
-    stage1: result.stage1 ? 'from static' : 'null (no static data either)',
+    stage1: result.stage1 ? (staticContent?.stage1 ? 'from static' : 'default from topic data') : 'null',
     stage2: dbStage2 ? `${dbStage2.examples.length} examples` : 'null',
     stage3: dbStage3 ? `${dbStage3.tables.length}t/${dbStage3.tips.length}tip/${dbStage3.warnings.length}w` : 'null',
     stage4: dbStage4 ? `${dbStage4.exercises.length} exercises` : 'null',
