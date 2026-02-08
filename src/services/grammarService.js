@@ -430,6 +430,13 @@ export async function fetchTopicContent(level, slug) {
   const introData = introRes.data;
   let stage1Content = null;
 
+  // DEBUG: Log what we received from grammar_introductions
+  console.log(`[grammarService] DEBUG introData for ${slug}:`, {
+    exists: !!introData,
+    hasHookEn: !!introData?.hook_en,
+    fullData: introData,
+  });
+
   // Priority 1: Check if topic has rich introduction in grammar_introductions table (NEW FORMAT)
   if (introData && introData.hook_en) {
     console.log(`[grammarService] Using NEW FORMAT grammar_introductions for ${slug}`);
@@ -468,7 +475,10 @@ export async function fetchTopicContent(level, slug) {
   }
   // Priority 2: Check if topic has introduction in grammar_topics table (OLD ENRICHED FORMAT)
   else if (topicData.introductionEn || topicData.introductionDe) {
-    console.log(`[grammarService] Using grammar_topics introduction fields for ${slug}`);
+    console.log(`[grammarService] Using grammar_topics introduction fields for ${slug}`, {
+      hasIntroEn: !!topicData.introductionEn,
+      hasIntroDe: !!topicData.introductionDe,
+    });
     stage1Content = {
       title: {
         en: topicData.titleEn,
