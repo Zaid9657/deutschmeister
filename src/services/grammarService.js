@@ -368,13 +368,8 @@ export async function fetchTopicContent(level, slug) {
   const topicUUID = topicData.uuid;
   console.log(`[grammarService] fetchTopicContent: UUID="${topicUUID}", fetching content tables...`);
 
-  // Step 2: Parallel fetch from all content tables (including new grammar_introductions)
-  const [introRes, examplesRes, rulesRes, exercisesRes] = await Promise.all([
-    supabase
-      .from('grammar_introductions')
-      .select('*')
-      .eq('topic_id', topicUUID)
-      .single(),
+  // Step 2: Parallel fetch from content tables (NO grammar_introductions - using grammar_rules instead)
+  const [examplesRes, rulesRes, exercisesRes] = await Promise.all([
     supabase
       .from('grammar_examples')
       .select('*')
@@ -394,24 +389,23 @@ export async function fetchTopicContent(level, slug) {
   ]);
 
   console.log(`[grammarService] fetchTopicContent RAW RESPONSES:`, {
-    introduction: { found: !!introRes.data, error: introRes.error },
     examples: { count: examplesRes.data?.length ?? 0, error: examplesRes.error },
     rules: { count: rulesRes.data?.length ?? 0, error: rulesRes.error },
     exercises: { count: exercisesRes.data?.length ?? 0, error: exercisesRes.error },
   });
 
   // Log errors explicitly
-  if (introRes.error && introRes.error.code !== 'PGRST116') {
-    // PGRST116 = no rows returned, which is fine (old format topics)
-    console.error(`[grammarService] grammar_introductions ERROR:`, introRes.error);
-  }
   if (examplesRes.error) console.error(`[grammarService] grammar_examples ERROR:`, examplesRes.error);
   if (rulesRes.error) console.error(`[grammarService] grammar_rules ERROR:`, rulesRes.error);
   if (exercisesRes.error) console.error(`[grammarService] grammar_exercises ERROR:`, exercisesRes.error);
 
   const examples = examplesRes.data || [];
-  const rules = rulesRes.data || [];
+  const allRules = rulesRes.data || [];
   const exercises = exercisesRes.data || [];
+
+  // Separate introduction rule from regular rules
+  const introRule = allRules.find(rule => rule.rule_type === 'introduction' && rule.order_index === 0);
+  const rules = allRules.filter(rule => !(rule.rule_type === 'introduction' && rule.order_index === 0));
 
   console.log(`[grammarService] fetchTopicContent counts: examples=${examples.length}, rules=${rules.length}, exercises=${exercises.length}`);
 
@@ -425,51 +419,52 @@ export async function fetchTopicContent(level, slug) {
   const dbStage3 = buildStage3(rules);
   const { stage4: dbStage4, stage5: dbStage5 } = buildExerciseStages(exercises);
 
-  // Stage 1 (Introduction) - priority: grammar_introductions table > grammar_topics fields > static file > generated defaults
+  // Stage 1 (Introduction) - priority: grammar_rules introduction > grammar_topics fields > static file > generated defaults
   const staticContent = getStaticContent(level, slug);
-  const introData = introRes.data;
   let stage1Content = null;
 
-  // DEBUG: Log what we received from grammar_introductions
-  console.log(`[grammarService] DEBUG introData for ${slug}:`, {
-    exists: !!introData,
-    hasHookEn: !!introData?.hook_en,
-    fullData: introData,
+  // DEBUG: Log what we received from grammar_rules introduction
+  console.log(`[grammarService] DEBUG introRule for ${slug}:`, {
+    exists: !!introRule,
+    hasContent: !!introRule?.content,
+    hasHookEn: !!introRule?.content?.hook_en,
+    fullData: introRule,
   });
 
-  // Priority 1: Check if topic has rich introduction in grammar_introductions table (NEW FORMAT)
-  if (introData && introData.hook_en) {
-    console.log(`[grammarService] Using NEW FORMAT grammar_introductions for ${slug}`);
+  // Priority 1: Check if topic has rich introduction in grammar_rules (NEW FORMAT)
+  if (introRule && introRule.content && introRule.content.hook_en) {
+    console.log(`[grammarService] Using NEW FORMAT introduction from grammar_rules for ${slug}`);
+    const content = introRule.content;
     stage1Content = {
       title: {
         en: topicData.titleEn,
         de: topicData.titleDe,
       },
-      // New rich format
+      // New rich format from grammar_rules content JSONB
       hook: {
-        en: introData.hook_en,
-        de: introData.hook_de || introData.hook_en,
+        en: content.hook_en,
+        de: content.hook_de || content.hook_en,
       },
       englishComparison: {
-        en: introData.english_comparison_en,
-        de: introData.english_comparison_de || introData.english_comparison_en,
+        en: content.english_comparison_en,
+        de: content.english_comparison_de || content.english_comparison_en,
       },
       germanDifference: {
-        en: introData.german_difference_en,
-        de: introData.german_difference_de || introData.german_difference_en,
+        en: content.german_difference_en,
+        de: content.german_difference_de || content.german_difference_en,
       },
-      previewExample: introData.preview_example_de ? {
-        german: introData.preview_example_de,
-        english: introData.preview_example_en,
-        highlight: introData.preview_highlight,
+      previewExample: content.preview_example_de ? {
+        german: content.preview_example_de,
+        english: content.preview_example_en,
+        highlight: content.preview_highlight,
       } : null,
       scenario: {
-        en: introData.scenario_en,
-        de: introData.scenario_de || introData.scenario_en,
+        en: content.scenario_en,
+        de: content.scenario_de || content.scenario_en,
       },
       whyItMatters: {
-        en: introData.why_it_matters_en,
-        de: introData.why_it_matters_de || introData.why_it_matters_en,
+        en: content.why_it_matters_en,
+        de: content.why_it_matters_de || content.why_it_matters_en,
       },
     };
   }
