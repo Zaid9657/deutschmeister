@@ -136,6 +136,14 @@ function mapDbExerciseToApp(dbRow) {
     exercise.hint = dbRow.hint;
   }
 
+  // NEW FIELD: Detailed explanation of why the answer is correct
+  if (dbRow.why_correct_en) {
+    exercise.whyCorrect = {
+      en: dbRow.why_correct_en,
+      de: dbRow.why_correct_de || dbRow.why_correct_en,
+    };
+  }
+
   return exercise;
 }
 
@@ -153,6 +161,13 @@ function buildStage2(examples) {
       pronunciation: '',
       audioHint: ex.grammar_highlight || '',
       audioUrl: ex.audio_url || null,
+      // NEW FIELDS for rich format
+      explanation: ex.explanation_en ? {
+        en: ex.explanation_en,
+        de: ex.explanation_de || ex.explanation_en,
+      } : null,
+      wordBreakdown: ex.word_breakdown || null,  // JSONB array
+      difficulty: ex.difficulty || 1,  // 1=easy, 2=medium, 3=hard
     })),
   };
 }
@@ -179,11 +194,35 @@ function buildStage3(rules) {
         },
         headers: content.headers || [],
         rows: content.rows || [],
+        // NEW FIELDS
+        keyInsight: rule.key_insight_en ? {
+          en: rule.key_insight_en,
+          de: rule.key_insight_de || rule.key_insight_en,
+        } : null,
+        commonMistakes: rule.common_mistakes || null,  // JSONB array
+        memoryTrick: rule.memory_trick_en ? {
+          en: rule.memory_trick_en,
+          de: rule.memory_trick_de || rule.memory_trick_en,
+        } : null,
+        formalNote: rule.formal_note_en ? {
+          en: rule.formal_note_en,
+          de: rule.formal_note_de || rule.formal_note_en,
+        } : null,
       });
     } else if (rule.rule_type === 'tip' || rule.rule_type === 'note') {
-      tips.push({ en: content.text_en || content.en || rule.title_en || '', de: content.text_de || content.de || rule.title_de || '' });
+      tips.push({
+        en: content.text_en || content.en || rule.title_en || '',
+        de: content.text_de || content.de || rule.title_de || '',
+        memoryTrick: rule.memory_trick_en ? {
+          en: rule.memory_trick_en,
+          de: rule.memory_trick_de || rule.memory_trick_en,
+        } : null,
+      });
     } else if (rule.rule_type === 'warning') {
-      warnings.push({ en: content.text_en || content.en || rule.title_en || '', de: content.text_de || content.de || rule.title_de || '' });
+      warnings.push({
+        en: content.text_en || content.en || rule.title_en || '',
+        de: content.text_de || content.de || rule.title_de || '',
+      });
     } else {
       console.warn(`[grammarService] UNKNOWN rule_type: "${rule.rule_type}"`);
     }
@@ -329,12 +368,18 @@ export async function fetchTopicContent(level, slug) {
   const topicUUID = topicData.uuid;
   console.log(`[grammarService] fetchTopicContent: UUID="${topicUUID}", fetching content tables...`);
 
-  // Step 2: Parallel fetch from all content tables
-  const [examplesRes, rulesRes, exercisesRes] = await Promise.all([
+  // Step 2: Parallel fetch from all content tables (including new grammar_introductions)
+  const [introRes, examplesRes, rulesRes, exercisesRes] = await Promise.all([
+    supabase
+      .from('grammar_introductions')
+      .select('*')
+      .eq('topic_id', topicUUID)
+      .single(),
     supabase
       .from('grammar_examples')
       .select('*')
       .eq('topic_id', topicUUID)
+      .order('difficulty', { ascending: true })  // Order by difficulty (1=easy, 3=hard)
       .order('order_index'),
     supabase
       .from('grammar_rules')
@@ -349,12 +394,17 @@ export async function fetchTopicContent(level, slug) {
   ]);
 
   console.log(`[grammarService] fetchTopicContent RAW RESPONSES:`, {
+    introduction: { found: !!introRes.data, error: introRes.error },
     examples: { count: examplesRes.data?.length ?? 0, error: examplesRes.error },
     rules: { count: rulesRes.data?.length ?? 0, error: rulesRes.error },
     exercises: { count: exercisesRes.data?.length ?? 0, error: exercisesRes.error },
   });
 
   // Log errors explicitly
+  if (introRes.error && introRes.error.code !== 'PGRST116') {
+    // PGRST116 = no rows returned, which is fine (old format topics)
+    console.error(`[grammarService] grammar_introductions ERROR:`, introRes.error);
+  }
   if (examplesRes.error) console.error(`[grammarService] grammar_examples ERROR:`, examplesRes.error);
   if (rulesRes.error) console.error(`[grammarService] grammar_rules ERROR:`, rulesRes.error);
   if (exercisesRes.error) console.error(`[grammarService] grammar_exercises ERROR:`, exercisesRes.error);
@@ -375,13 +425,50 @@ export async function fetchTopicContent(level, slug) {
   const dbStage3 = buildStage3(rules);
   const { stage4: dbStage4, stage5: dbStage5 } = buildExerciseStages(exercises);
 
-  // Stage 1 (Introduction) - priority: DB fields > static file > generated defaults
+  // Stage 1 (Introduction) - priority: grammar_introductions table > grammar_topics fields > static file > generated defaults
   const staticContent = getStaticContent(level, slug);
+  const introData = introRes.data;
   let stage1Content = null;
 
-  // Priority 1: Check if topic has introduction in database
-  if (topicData.introductionEn || topicData.introductionDe) {
-    console.log(`[grammarService] Using database introduction for ${slug}`);
+  // Priority 1: Check if topic has rich introduction in grammar_introductions table (NEW FORMAT)
+  if (introData && introData.hook_en) {
+    console.log(`[grammarService] Using NEW FORMAT grammar_introductions for ${slug}`);
+    stage1Content = {
+      title: {
+        en: topicData.titleEn,
+        de: topicData.titleDe,
+      },
+      // New rich format
+      hook: {
+        en: introData.hook_en,
+        de: introData.hook_de || introData.hook_en,
+      },
+      englishComparison: {
+        en: introData.english_comparison_en,
+        de: introData.english_comparison_de || introData.english_comparison_en,
+      },
+      germanDifference: {
+        en: introData.german_difference_en,
+        de: introData.german_difference_de || introData.german_difference_en,
+      },
+      previewExample: introData.preview_example_de ? {
+        german: introData.preview_example_de,
+        english: introData.preview_example_en,
+        highlight: introData.preview_highlight,
+      } : null,
+      scenario: {
+        en: introData.scenario_en,
+        de: introData.scenario_de || introData.scenario_en,
+      },
+      whyItMatters: {
+        en: introData.why_it_matters_en,
+        de: introData.why_it_matters_de || introData.why_it_matters_en,
+      },
+    };
+  }
+  // Priority 2: Check if topic has introduction in grammar_topics table (OLD ENRICHED FORMAT)
+  else if (topicData.introductionEn || topicData.introductionDe) {
+    console.log(`[grammarService] Using grammar_topics introduction fields for ${slug}`);
     stage1Content = {
       title: {
         en: topicData.titleEn,
@@ -394,14 +481,14 @@ export async function fetchTopicContent(level, slug) {
       keyPoints: topicData.keyPoints || [],
     };
   }
-  // Priority 2: Use static content if available
+  // Priority 3: Use static content if available
   else if (staticContent?.stage1) {
-    console.log(`[grammarService] Using static introduction for ${slug}`);
+    console.log(`[grammarService] Using static grammarContent.js for ${slug}`);
     stage1Content = staticContent.stage1;
   }
-  // Priority 3: Generate default from basic topic data
+  // Priority 4: Generate default from basic topic data
   else {
-    console.log(`[grammarService] Generating default introduction for ${slug}`);
+    console.log(`[grammarService] Generating fallback introduction for ${slug}`);
     stage1Content = {
       title: {
         en: topicData.titleEn,
