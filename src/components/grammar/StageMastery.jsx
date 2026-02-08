@@ -385,27 +385,58 @@ const StageMastery = ({ content, isGerman, theme, onComplete }) => {
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`mt-6 p-4 rounded-xl ${
-                  isCorrect ? 'bg-emerald-50 border border-emerald-200' : 'bg-amber-50 border border-amber-200'
-                }`}
+                className="mt-6 space-y-3"
               >
-                <div className="flex items-start gap-3">
-                  {isCorrect ? (
-                    <CheckCircle className="w-6 h-6 text-emerald-500 flex-shrink-0 mt-0.5" />
-                  ) : (
-                    <Lightbulb className="w-6 h-6 text-amber-500 flex-shrink-0 mt-0.5" />
-                  )}
-                  <div>
-                    <p className={`font-semibold ${isCorrect ? 'text-emerald-800' : 'text-amber-800'}`}>
-                      {isCorrect
-                        ? (isGerman ? 'Ausgezeichnet!' : 'Excellent!')
-                        : (isGerman ? 'Guter Versuch!' : 'Good try!')}
-                    </p>
-                    <p className={`text-sm mt-1 ${isCorrect ? 'text-emerald-700' : 'text-amber-700'}`}>
-                      {isGerman ? currentExercise.explanation.de : currentExercise.explanation.en}
-                    </p>
+                {/* Basic feedback */}
+                <div className={`p-4 rounded-xl ${
+                  isCorrect ? 'bg-emerald-50 border border-emerald-200' : 'bg-amber-50 border border-amber-200'
+                }`}>
+                  <div className="flex items-start gap-3">
+                    {isCorrect ? (
+                      <CheckCircle className="w-6 h-6 text-emerald-500 flex-shrink-0 mt-0.5" />
+                    ) : (
+                      <Lightbulb className="w-6 h-6 text-amber-500 flex-shrink-0 mt-0.5" />
+                    )}
+                    <div>
+                      <p className={`font-semibold ${isCorrect ? 'text-emerald-800' : 'text-amber-800'}`}>
+                        {isCorrect
+                          ? (isGerman ? 'Ausgezeichnet!' : 'Excellent!')
+                          : (isGerman ? 'Guter Versuch!' : 'Good try!')}
+                      </p>
+                      {currentExercise.explanation && (currentExercise.explanation.en || currentExercise.explanation.de) && (
+                        <p className={`text-sm mt-1 ${isCorrect ? 'text-emerald-700' : 'text-amber-700'}`}>
+                          {isGerman ? currentExercise.explanation.de : currentExercise.explanation.en}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
+
+                {/* NEW: Detailed "Why Correct" explanation (for correct answers only) */}
+                {isCorrect && currentExercise.whyCorrect && (currentExercise.whyCorrect.en || currentExercise.whyCorrect.de) && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl p-5 shadow-sm"
+                  >
+                    <div className="flex gap-4">
+                      <div className="flex-shrink-0">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                          <Lightbulb className="w-5 h-5 text-white" />
+                        </div>
+                      </div>
+                      <div>
+                        <h5 className="font-bold text-blue-900 mb-2 flex items-center gap-2">
+                          {isGerman ? '💡 Warum ist das richtig?' : '💡 Why This Is Correct'}
+                        </h5>
+                        <p className="text-blue-800 leading-relaxed text-sm">
+                          {isGerman ? currentExercise.whyCorrect.de : currentExercise.whyCorrect.en}
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
               </motion.div>
             )}
           </AnimatePresence>
