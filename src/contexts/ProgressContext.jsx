@@ -54,21 +54,22 @@ export const ProgressProvider = ({ children }) => {
 
   const loadProgress = async () => {
     try {
+      // OLD SYSTEM COMMENTED OUT - user_progress table doesn't exist
       // Load JSON blob progress (existing system)
-      const { data, error } = await supabase
-        .from('user_progress')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
+      // const { data, error } = await supabase
+      //   .from('user_progress')
+      //   .select('*')
+      //   .eq('user_id', user.id)
+      //   .single();
 
-      if (error && error.code !== 'PGRST116') {
-        console.error('Error loading progress:', error);
-      }
+      // if (error && error.code !== 'PGRST116') {
+      //   console.error('Error loading progress:', error);
+      // }
 
       let baseProgress = getInitialProgress();
-      if (data) {
-        baseProgress = { ...baseProgress, ...data.progress };
-      }
+      // if (data) {
+      //   baseProgress = { ...baseProgress, ...data.progress };
+      // }
 
       // Also load from user_grammar_progress table (new system)
       const supabaseGrammarProgress = await loadUserGrammarProgress(user.id);
@@ -104,10 +105,11 @@ export const ProgressProvider = ({ children }) => {
 
       setProgress(baseProgress);
 
-      if (!data) {
-        // Initialize progress in database
-        await saveProgressToDb(baseProgress);
-      }
+      // OLD SYSTEM COMMENTED OUT - no longer saving to user_progress table
+      // if (!data) {
+      //   // Initialize progress in database
+      //   await saveProgressToDb(baseProgress);
+      // }
     } catch (error) {
       console.error('Error loading progress:', error);
     } finally {
@@ -121,21 +123,23 @@ export const ProgressProvider = ({ children }) => {
       return;
     }
 
-    try {
-      const { error } = await supabase
-        .from('user_progress')
-        .upsert({
-          user_id: user.id,
-          progress: newProgress,
-          updated_at: new Date().toISOString(),
-        });
+    // OLD SYSTEM COMMENTED OUT - user_progress table doesn't exist
+    // Progress is now saved via user_grammar_progress table in saveToGrammarProgressTable
+    // try {
+    //   const { error } = await supabase
+    //     .from('user_progress')
+    //     .upsert({
+    //       user_id: user.id,
+    //       progress: newProgress,
+    //       updated_at: new Date().toISOString(),
+    //     });
 
-      if (error) {
-        console.error('Error saving progress:', error);
-      }
-    } catch (error) {
-      console.error('Error saving progress:', error);
-    }
+    //   if (error) {
+    //     console.error('Error saving progress:', error);
+    //   }
+    // } catch (error) {
+    //   console.error('Error saving progress:', error);
+    // }
   };
 
   // Helper: resolve topic slug from topicId (e.g. "a1.1-gt1" → slug)
