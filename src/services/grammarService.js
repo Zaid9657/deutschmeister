@@ -223,6 +223,9 @@ function buildStage3(rules) {
         en: content.text_en || content.en || rule.title_en || '',
         de: content.text_de || content.de || rule.title_de || '',
       });
+    } else if (rule.rule_type === 'introduction') {
+      // Skip introduction rules - they're handled separately in Stage 1
+      console.log(`[grammarService] Skipping introduction rule (handled in Stage 1)`);
     } else {
       console.warn(`[grammarService] UNKNOWN rule_type: "${rule.rule_type}"`);
     }
@@ -403,9 +406,9 @@ export async function fetchTopicContent(level, slug) {
   const allRules = rulesRes.data || [];
   const exercises = exercisesRes.data || [];
 
-  // Separate introduction rule from regular rules
-  const introRule = allRules.find(rule => rule.rule_type === 'introduction' && rule.order_index === 0);
-  const rules = allRules.filter(rule => !(rule.rule_type === 'introduction' && rule.order_index === 0));
+  // Separate introduction rule from regular rules (use first introduction found, filter out all)
+  const introRule = allRules.find(rule => rule.rule_type === 'introduction');
+  const rules = allRules.filter(rule => rule.rule_type !== 'introduction');
 
   console.log(`[grammarService] fetchTopicContent counts: examples=${examples.length}, rules=${rules.length}, exercises=${exercises.length}`);
 
