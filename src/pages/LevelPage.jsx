@@ -7,12 +7,12 @@ import { useTheme } from '../contexts/ThemeContext';
 import { useProgress } from '../contexts/ProgressContext';
 import { levels, levelThemes as contentLevelThemes } from '../data/content';
 import { fetchWordsForLevel, fetchSentencesForLevel } from '../services/vocabularyService';
-import { fetchParagraphsForLevel } from '../services/paragraphService';
 import { fetchTopicsForLevel } from '../services/grammarService';
+import { getReadingLessonsByLevel } from '../services/readingService';
 import WordCard from '../components/WordCard';
 import SentenceCard from '../components/SentenceCard';
-import ParagraphCard from '../components/ParagraphCard';
 import GrammarTopicCard from '../components/GrammarTopicCard';
+import ReadingLessonCard from '../components/ReadingLessonCard';
 import SpeakingPractice from '../components/SpeakingPractice';
 
 const iconMap = {
@@ -31,17 +31,17 @@ const LevelPage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { setCurrentLevel, getThemeForLevel } = useTheme();
-  const { getLevelProgress, registerLevelItemCounts, getGrammarTopicProgress } = useProgress();
+  const { getLevelProgress, registerLevelItemCounts, getGrammarTopicProgress, isItemLearned } = useProgress();
 
   const [activeTab, setActiveTab] = useState('vocabulary');
   const [levelVocabulary, setLevelVocabulary] = useState([]);
   const [levelSentences, setLevelSentences] = useState([]);
-  const [levelParagraphs, setLevelParagraphs] = useState([]);
   const [grammarTopics, setGrammarTopics] = useState([]);
+  const [readingLessons, setReadingLessons] = useState([]);
   const [vocabLoading, setVocabLoading] = useState(true);
   const [grammarLoading, setGrammarLoading] = useState(true);
+  const [readingLoading, setReadingLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedTopic, setSelectedTopic] = useState('all');
 
   const theme = getThemeForLevel(level);
   const progress = getLevelProgress(level);
@@ -62,16 +62,14 @@ const LevelPage = () => {
     let cancelled = false;
     const load = async () => {
       setVocabLoading(true);
-      const [words, sents, paras] = await Promise.all([
+      const [words, sents] = await Promise.all([
         fetchWordsForLevel(level),
         fetchSentencesForLevel(level),
-        fetchParagraphsForLevel(level),
       ]);
       if (!cancelled) {
         setLevelVocabulary(words);
         setLevelSentences(sents);
-        setLevelParagraphs(paras);
-        registerLevelItemCounts(level, words.length, sents.length, paras.length);
+        registerLevelItemCounts(level, words.length, sents.length);
         setVocabLoading(false);
       }
     };
@@ -98,11 +96,28 @@ const LevelPage = () => {
     return () => { cancelled = true; };
   }, [level]);
 
+  // Fetch reading lessons from Supabase
+  useEffect(() => {
+    let cancelled = false;
+    const loadReading = async () => {
+      setReadingLoading(true);
+      const lessons = await getReadingLessonsByLevel(level);
+      if (!cancelled) {
+        setReadingLessons(lessons);
+        setReadingLoading(false);
+      }
+    };
+    if (levels.includes(level)) {
+      loadReading();
+    }
+    return () => { cancelled = true; };
+  }, [level]);
+
   const tabs = [
     { id: 'vocabulary', label: t('levelPage.vocabulary'), icon: BookOpen },
     { id: 'sentences', label: t('levelPage.sentences'), icon: MessageSquare },
     { id: 'grammar', label: t('levelPage.grammar'), icon: BookMarked },
-    { id: 'paragraphs', label: t('levelPage.reading'), icon: FileText },
+    { id: 'reading', label: t('levelPage.reading'), icon: FileText },
     { id: 'audio', label: t('levelPage.audio'), icon: Volume2 },
     { id: 'speaking', label: t('levelPage.speaking'), icon: Mic },
   ];
@@ -132,23 +147,9 @@ const LevelPage = () => {
     return levelVocabulary.filter((w) => w.category === selectedCategory);
   }, [levelVocabulary, selectedCategory]);
 
-  // Derive unique topics from loaded paragraphs
-  const paragraphTopics = useMemo(() => {
-    const topics = [...new Set(levelParagraphs.map((p) => p.topic).filter(Boolean))];
-    topics.sort();
-    return topics;
-  }, [levelParagraphs]);
-
-  // Filter paragraphs by selected topic
-  const filteredParagraphs = useMemo(() => {
-    if (selectedTopic === 'all') return levelParagraphs;
-    return levelParagraphs.filter((p) => p.topic === selectedTopic);
-  }, [levelParagraphs, selectedTopic]);
-
   // Reset filters when level changes
   useEffect(() => {
     setSelectedCategory('all');
-    setSelectedTopic('all');
   }, [level]);
 
   return (
@@ -392,63 +393,37 @@ const LevelPage = () => {
               </div>
             )}
 
-            {/* Paragraphs / Reading Tab */}
-            {activeTab === 'paragraphs' && (
+            {/* Reading Tab */}
+            {activeTab === 'reading' && (
               <div>
-                {vocabLoading && (
+                {readingLoading && (
                   <div className="flex items-center justify-center py-12">
                     <Loader2 className="w-8 h-8 text-slate-400 animate-spin" />
                   </div>
                 )}
-                {!vocabLoading && (
-                  <>
-                    {/* Topic filter */}
-                    {paragraphTopics.length > 1 && (
-                      <div className="mb-6">
-                        <div className="flex items-center gap-2 mb-3">
-                          <Filter className="w-4 h-4 text-slate-500" />
-                          <span className="text-sm font-medium text-slate-600">Topic</span>
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          <button
-                            onClick={() => setSelectedTopic('all')}
-                            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                              selectedTopic === 'all'
-                                ? 'bg-slate-800 text-white'
-                                : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
-                            }`}
-                          >
-                            All ({levelParagraphs.length})
-                          </button>
-                          {paragraphTopics.map((topic) => (
-                            <button
-                              key={topic}
-                              onClick={() => setSelectedTopic(topic)}
-                              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                                selectedTopic === topic
-                                  ? 'bg-slate-800 text-white'
-                                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
-                              }`}
-                            >
-                              {topic} ({levelParagraphs.filter((p) => p.topic === topic).length})
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Paragraph cards — single column for readability */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                      {filteredParagraphs.map((paragraph) => (
-                        <ParagraphCard key={paragraph.id} paragraph={paragraph} level={level} />
-                      ))}
-                      {levelParagraphs.length === 0 && (
-                        <div className="col-span-full bg-white rounded-xl border border-slate-200 p-6 text-center">
-                          <p className="text-slate-500">No reading paragraphs available for this level yet.</p>
-                        </div>
-                      )}
-                    </div>
-                  </>
+                {!readingLoading && readingLessons.length > 0 && (
+                  <div className="space-y-3">
+                    {readingLessons.map((lesson, index) => (
+                      <motion.div
+                        key={lesson.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                      >
+                        <ReadingLessonCard
+                          lesson={lesson}
+                          level={level}
+                          index={index}
+                          isCompleted={isItemLearned(level, 'readingLessons', lesson.id)}
+                        />
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+                {!readingLoading && readingLessons.length === 0 && (
+                  <div className="bg-white rounded-xl border border-slate-200 p-6 text-center">
+                    <p className="text-slate-500">No reading lessons available for this level yet.</p>
+                  </div>
                 )}
               </div>
             )}

@@ -16,8 +16,6 @@ import DashboardPage from './pages/DashboardPage';
 import LevelPage from './pages/LevelPage';
 import ProfilePage from './pages/ProfilePage';
 import GrammarLessonPage from './pages/GrammarLessonPage';
-import ReadingSectionPage from './pages/ReadingSectionPage';
-import ReadingLessonsPage from './pages/ReadingLessonsPage';
 import ReadingLessonPage from './pages/ReadingLessonPage';
 import SubscriptionPage from './pages/SubscriptionPage';
 import PaymentPage from './pages/PaymentPage';
@@ -88,22 +86,6 @@ function App() {
                     element={
                       <SubscriptionGuard>
                         <GrammarLessonPage />
-                      </SubscriptionGuard>
-                    }
-                  />
-                  <Route
-                    path="/reading"
-                    element={
-                      <SubscriptionGuard>
-                        <ReadingSectionPage />
-                      </SubscriptionGuard>
-                    }
-                  />
-                  <Route
-                    path="/reading/:level"
-                    element={
-                      <SubscriptionGuard>
-                        <ReadingLessonsPage />
                       </SubscriptionGuard>
                     }
                   />

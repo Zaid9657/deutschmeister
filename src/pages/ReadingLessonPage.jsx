@@ -45,7 +45,7 @@ const ReadingLessonPage = () => {
   // Redirect if invalid
   useEffect(() => {
     if (!levels.includes(level)) {
-      navigate('/reading');
+      navigate('/dashboard');
       return;
     }
     setCurrentLevel(level);
@@ -116,7 +116,7 @@ const ReadingLessonPage = () => {
                 : 'This lesson could not be found in the database.'}
             </p>
             <button
-              onClick={() => navigate(`/reading/${level}`)}
+              onClick={() => navigate(`/level/${level}`)}
               className="px-4 py-2 bg-slate-800 text-white rounded-lg"
             >
               {t('common.back')}
@@ -145,7 +145,7 @@ const ReadingLessonPage = () => {
           className="mb-6"
         >
           <button
-            onClick={() => navigate(`/reading/${level}`)}
+            onClick={() => navigate(`/level/${level}`)}
             className="flex items-center gap-2 text-slate-600 hover:text-slate-800 mb-4 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />

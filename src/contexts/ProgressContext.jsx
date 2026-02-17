@@ -8,6 +8,10 @@ import {
   saveUserGrammarProgress,
   lookupTopicUUID,
 } from '../services/grammarService';
+import {
+  loadUserReadingProgress,
+  getReadingLessonsByLevel,
+} from '../services/readingService';
 
 const ProgressContext = createContext({});
 
@@ -100,6 +104,31 @@ export const ProgressProvider = ({ children }) => {
               };
             }
           }
+        });
+      }
+
+      // Also load from user_reading_progress table
+      const completedLessonIds = await loadUserReadingProgress(user.id);
+      if (completedLessonIds.size > 0) {
+        // Fetch reading lessons per level to map lesson IDs to levels
+        const levelLessonsPromises = levels.map(async (level) => {
+          const lessons = await getReadingLessonsByLevel(level);
+          return { level, lessons };
+        });
+        const allLevelLessons = await Promise.all(levelLessonsPromises);
+
+        allLevelLessons.forEach(({ level, lessons }) => {
+          if (!baseProgress[level]) {
+            baseProgress[level] = { vocabulary: [], sentences: [], grammar: [], paragraphs: [], readingLessons: [], grammarTopics: {} };
+          }
+          if (!baseProgress[level].readingLessons) {
+            baseProgress[level].readingLessons = [];
+          }
+          lessons.forEach((lesson) => {
+            if (completedLessonIds.has(lesson.id) && !baseProgress[level].readingLessons.includes(lesson.id)) {
+              baseProgress[level].readingLessons.push(lesson.id);
+            }
+          });
         });
       }
 
