@@ -15,8 +15,6 @@ import UpdatePasswordPage from './pages/UpdatePasswordPage';
 import DashboardPage from './pages/DashboardPage';
 import LevelPage from './pages/LevelPage';
 import ProfilePage from './pages/ProfilePage';
-import GrammarSectionPage from './pages/GrammarSectionPage';
-import GrammarTopicsPage from './pages/GrammarTopicsPage';
 import GrammarLessonPage from './pages/GrammarLessonPage';
 import ReadingSectionPage from './pages/ReadingSectionPage';
 import ReadingLessonsPage from './pages/ReadingLessonsPage';
@@ -82,22 +80,6 @@ function App() {
                     element={
                       <SubscriptionGuard>
                         <ProfilePage />
-                      </SubscriptionGuard>
-                    }
-                  />
-                  <Route
-                    path="/grammar"
-                    element={
-                      <SubscriptionGuard>
-                        <GrammarSectionPage />
-                      </SubscriptionGuard>
-                    }
-                  />
-                  <Route
-                    path="/grammar/:level"
-                    element={
-                      <SubscriptionGuard>
-                        <GrammarTopicsPage />
                       </SubscriptionGuard>
                     }
                   />

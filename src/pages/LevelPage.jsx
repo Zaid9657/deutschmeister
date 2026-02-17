@@ -2,15 +2,17 @@ import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, BookOpen, MessageSquare, Volume2, Mic, Sun, TreePine, Waves, Moon, Loader2, Filter, FileText } from 'lucide-react';
+import { ArrowLeft, BookOpen, BookMarked, MessageSquare, Volume2, Mic, Sun, TreePine, Waves, Moon, Loader2, Filter, FileText } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useProgress } from '../contexts/ProgressContext';
 import { levels, levelThemes as contentLevelThemes } from '../data/content';
 import { fetchWordsForLevel, fetchSentencesForLevel } from '../services/vocabularyService';
 import { fetchParagraphsForLevel } from '../services/paragraphService';
+import { fetchTopicsForLevel } from '../services/grammarService';
 import WordCard from '../components/WordCard';
 import SentenceCard from '../components/SentenceCard';
 import ParagraphCard from '../components/ParagraphCard';
+import GrammarTopicCard from '../components/GrammarTopicCard';
 import SpeakingPractice from '../components/SpeakingPractice';
 
 const iconMap = {
@@ -29,13 +31,15 @@ const LevelPage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { setCurrentLevel, getThemeForLevel } = useTheme();
-  const { getLevelProgress, registerLevelItemCounts } = useProgress();
+  const { getLevelProgress, registerLevelItemCounts, getGrammarTopicProgress } = useProgress();
 
   const [activeTab, setActiveTab] = useState('vocabulary');
   const [levelVocabulary, setLevelVocabulary] = useState([]);
   const [levelSentences, setLevelSentences] = useState([]);
   const [levelParagraphs, setLevelParagraphs] = useState([]);
+  const [grammarTopics, setGrammarTopics] = useState([]);
   const [vocabLoading, setVocabLoading] = useState(true);
+  const [grammarLoading, setGrammarLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedTopic, setSelectedTopic] = useState('all');
 
@@ -77,9 +81,27 @@ const LevelPage = () => {
     return () => { cancelled = true; };
   }, [level]);
 
+  // Fetch grammar topics from Supabase
+  useEffect(() => {
+    let cancelled = false;
+    const loadGrammar = async () => {
+      setGrammarLoading(true);
+      const topics = await fetchTopicsForLevel(level);
+      if (!cancelled) {
+        setGrammarTopics(topics);
+        setGrammarLoading(false);
+      }
+    };
+    if (levels.includes(level)) {
+      loadGrammar();
+    }
+    return () => { cancelled = true; };
+  }, [level]);
+
   const tabs = [
     { id: 'vocabulary', label: t('levelPage.vocabulary'), icon: BookOpen },
     { id: 'sentences', label: t('levelPage.sentences'), icon: MessageSquare },
+    { id: 'grammar', label: t('levelPage.grammar'), icon: BookMarked },
     { id: 'paragraphs', label: t('levelPage.reading'), icon: FileText },
     { id: 'audio', label: t('levelPage.audio'), icon: Volume2 },
     { id: 'speaking', label: t('levelPage.speaking'), icon: Mic },
@@ -327,6 +349,44 @@ const LevelPage = () => {
                         </p>
                       </div>
                     )}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Grammar Tab */}
+            {activeTab === 'grammar' && (
+              <div>
+                {grammarLoading && (
+                  <div className="flex items-center justify-center py-12">
+                    <Loader2 className="w-8 h-8 text-slate-400 animate-spin" />
+                  </div>
+                )}
+                {!grammarLoading && grammarTopics.length > 0 && (
+                  <div className="space-y-3">
+                    {grammarTopics.map((topic, index) => {
+                      const topicProgress = getGrammarTopicProgress(level, topic.id);
+                      return (
+                        <motion.div
+                          key={topic.id}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.05 }}
+                        >
+                          <GrammarTopicCard
+                            topic={topic}
+                            level={level}
+                            isCompleted={topicProgress.completed}
+                            progress={topicProgress.progress || 0}
+                          />
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                )}
+                {!grammarLoading && grammarTopics.length === 0 && (
+                  <div className="col-span-full bg-white rounded-xl border border-slate-200 p-6 text-center">
+                    <p className="text-slate-500">No grammar topics available for this level yet.</p>
                   </div>
                 )}
               </div>
