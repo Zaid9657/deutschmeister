@@ -1,19 +1,14 @@
 import { motion } from 'framer-motion';
 import { CheckCircle, XCircle } from 'lucide-react';
 
+// Extract answer key from option string: "a) 2,50 €" → "a", "Richtig" → "Richtig"
+const getAnswerKey = (option) => {
+  const match = option.match(/^([a-d])\)/);
+  return match ? match[1] : option;
+};
+
 const QuestionCard = ({ question, selectedAnswer, onAnswer, showResult = false, index }) => {
-  const isMultipleChoice = question.question_type === 'multiple_choice';
-  const isRichtigFalsch = question.question_type === 'richtig_falsch';
-
-  const options = isRichtigFalsch
-    ? ['Richtig', 'Falsch']
-    : [question.option_a, question.option_b, question.option_c, question.option_d].filter(Boolean);
-
-  const optionLabels = isRichtigFalsch
-    ? ['Richtig', 'Falsch']
-    : ['A', 'B', 'C', 'D'];
-
-  const isCorrect = selectedAnswer === question.correct_answer;
+  const options = question.options || [];
 
   return (
     <motion.div
@@ -33,9 +28,9 @@ const QuestionCard = ({ question, selectedAnswer, onAnswer, showResult = false, 
       {/* Options */}
       <div className="space-y-2 ml-10">
         {options.map((option, i) => {
-          const optionValue = isRichtigFalsch ? option : optionLabels[i];
-          const isSelected = selectedAnswer === optionValue;
-          const isCorrectOption = question.correct_answer === optionValue;
+          const isSelected = selectedAnswer === option;
+          const optionKey = getAnswerKey(option);
+          const isCorrectOption = question.correct_answer === optionKey;
 
           let borderColor = 'border-slate-200';
           let bgColor = 'bg-white hover:bg-slate-50';
@@ -60,15 +55,12 @@ const QuestionCard = ({ question, selectedAnswer, onAnswer, showResult = false, 
           return (
             <button
               key={i}
-              onClick={() => !showResult && onAnswer(question.question_number, optionValue)}
+              onClick={() => !showResult && onAnswer(question.question_number, option)}
               disabled={showResult}
               className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${borderColor} ${bgColor} ${textColor} ${
                 showResult ? 'cursor-default' : 'cursor-pointer'
               }`}
             >
-              <span className="flex-shrink-0 w-6 h-6 rounded-full border border-current flex items-center justify-center text-xs font-medium">
-                {isRichtigFalsch ? (option === 'Richtig' ? 'R' : 'F') : optionLabels[i]}
-              </span>
               <span className="flex-1">{option}</span>
               {showResult && isCorrectOption && <CheckCircle size={18} className="text-emerald-500 flex-shrink-0" />}
               {showResult && isSelected && !isCorrectOption && <XCircle size={18} className="text-rose-500 flex-shrink-0" />}

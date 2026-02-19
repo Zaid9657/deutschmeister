@@ -1,8 +1,16 @@
+// Extract answer key from option string: "a) 2,50 €" → "a", "Richtig" → "Richtig"
+export function getAnswerKey(option) {
+  if (!option) return option;
+  const match = option.match(/^([a-d])\)/);
+  return match ? match[1] : option;
+}
+
 export function calculateScore(questions, answers) {
   if (!questions || questions.length === 0) return 0;
   let correct = 0;
   questions.forEach((q) => {
-    if (answers[q.question_number] === q.correct_answer) correct++;
+    const selectedKey = getAnswerKey(answers[q.question_number]);
+    if (selectedKey === q.correct_answer) correct++;
   });
   return Math.round((correct / questions.length) * 100);
 }

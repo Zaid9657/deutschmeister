@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Trophy, RotateCcw, ArrowLeft, CheckCircle, XCircle } from 'lucide-react';
-import { getPerformanceMessage, getLevelTheme } from '../../utils/listeningHelpers';
+import { getPerformanceMessage, getLevelTheme, getAnswerKey } from '../../utils/listeningHelpers';
 import { useTranslation } from 'react-i18next';
 import QuestionCard from './QuestionCard';
 import DialogueTranscript from './DialogueTranscript';
@@ -12,7 +12,7 @@ const ResultsView = ({ exercise, questions, answers, score, dialogues, playsUsed
   const isGerman = i18n.language === 'de';
   const theme = getLevelTheme(exercise.level);
   const message = getPerformanceMessage(score);
-  const correctCount = questions.filter((q) => answers[q.question_number] === q.correct_answer).length;
+  const correctCount = questions.filter((q) => getAnswerKey(answers[q.question_number]) === q.correct_answer).length;
 
   // Animated circle progress
   const circumference = 2 * Math.PI * 54;
