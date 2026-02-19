@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, LogOut, Globe, Home, LayoutDashboard, Crown, Sparkles } from 'lucide-react';
+import { Menu, X, User, LogOut, Globe, Home, LayoutDashboard, Crown, Sparkles, Headphones } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 
@@ -68,6 +68,13 @@ const Navbar = () => {
                 >
                   <User size={18} />
                   {t('nav.profile')}
+                </Link>
+                <Link
+                  to="/listening"
+                  className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors"
+                >
+                  <Headphones size={18} />
+                  {isGerman ? 'Hören' : 'Listening'}
                 </Link>
               </>
             )}
@@ -180,6 +187,14 @@ const Navbar = () => {
                   >
                     <User size={20} />
                     {t('nav.profile')}
+                  </Link>
+                  <Link
+                    to="/listening"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
+                  >
+                    <Headphones size={20} />
+                    {isGerman ? 'Hören' : 'Listening'}
                   </Link>
 
                   {/* Subscription status in mobile */}

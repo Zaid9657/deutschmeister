@@ -19,6 +19,9 @@ import GrammarLessonPage from './pages/GrammarLessonPage';
 import ReadingLessonPage from './pages/ReadingLessonPage';
 import SubscriptionPage from './pages/SubscriptionPage';
 import PaymentPage from './pages/PaymentPage';
+import ListeningHome from './pages/Listening/ListeningHome';
+import LevelExercises from './pages/Listening/LevelExercises';
+import ExercisePlayer from './pages/Listening/ExercisePlayer';
 
 function App() {
   return (
@@ -94,6 +97,30 @@ function App() {
                     element={
                       <SubscriptionGuard>
                         <ReadingLessonPage />
+                      </SubscriptionGuard>
+                    }
+                  />
+                  <Route
+                    path="/listening"
+                    element={
+                      <SubscriptionGuard>
+                        <ListeningHome />
+                      </SubscriptionGuard>
+                    }
+                  />
+                  <Route
+                    path="/listening/:level"
+                    element={
+                      <SubscriptionGuard>
+                        <LevelExercises />
+                      </SubscriptionGuard>
+                    }
+                  />
+                  <Route
+                    path="/listening/:level/:exerciseNumber"
+                    element={
+                      <SubscriptionGuard>
+                        <ExercisePlayer />
                       </SubscriptionGuard>
                     }
                   />
