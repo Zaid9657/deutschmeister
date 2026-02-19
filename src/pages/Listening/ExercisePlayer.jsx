@@ -31,7 +31,7 @@ const ExercisePlayer = () => {
   };
 
   const handleSubmit = async () => {
-    if (!allQuestionsAnswered(questions, answers) || submitted) return;
+    if (submitted || questions.length === 0) return;
 
     const calculatedScore = calculateScore(questions, answers);
     setScore(calculatedScore);
@@ -39,8 +39,13 @@ const ExercisePlayer = () => {
 
     if (exercise) {
       setSaving(true);
-      await saveProgress(exercise.id, calculatedScore, answers, playsUsed);
-      setSaving(false);
+      try {
+        await saveProgress(exercise.id, calculatedScore, answers, playsUsed);
+      } catch (err) {
+        console.error('Error saving progress:', err);
+      } finally {
+        setSaving(false);
+      }
     }
   };
 
@@ -144,7 +149,7 @@ const ExercisePlayer = () => {
                 <QuestionCard
                   key={q.id || q.question_number}
                   question={q}
-                  selectedAnswer={answers[q.question_number]}
+                  selectedAnswer={answers[q.id || q.question_number]}
                   onAnswer={handleAnswer}
                   index={i}
                 />

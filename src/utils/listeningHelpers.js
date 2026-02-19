@@ -9,7 +9,8 @@ export function calculateScore(questions, answers) {
   if (!questions || questions.length === 0) return 0;
   let correct = 0;
   questions.forEach((q) => {
-    const selectedKey = getAnswerKey(answers[q.question_number]);
+    const key = q.id || q.question_number;
+    const selectedKey = getAnswerKey(answers[key]);
     if (selectedKey === q.correct_answer) correct++;
   });
   return Math.round((correct / questions.length) * 100);
@@ -65,5 +66,6 @@ export function getAudioUrl(level, exerciseNumber) {
 }
 
 export function allQuestionsAnswered(questions, answers) {
-  return questions.every((q) => answers[q.question_number] !== undefined);
+  if (!questions || questions.length === 0) return false;
+  return Object.keys(answers).length >= questions.length;
 }

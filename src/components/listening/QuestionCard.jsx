@@ -9,6 +9,7 @@ const getAnswerKey = (option) => {
 
 const QuestionCard = ({ question, selectedAnswer, onAnswer, showResult = false, index }) => {
   const options = question.options || [];
+  const questionKey = question.id || question.question_number;
 
   return (
     <motion.div
@@ -20,7 +21,7 @@ const QuestionCard = ({ question, selectedAnswer, onAnswer, showResult = false, 
       {/* Question header */}
       <div className="flex items-start gap-3 mb-4">
         <span className="flex-shrink-0 w-7 h-7 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-sm font-semibold">
-          {question.question_number}
+          {question.question_number || (index + 1)}
         </span>
         <p className="text-slate-800 font-medium leading-relaxed">{question.question_text}</p>
       </div>
@@ -55,7 +56,7 @@ const QuestionCard = ({ question, selectedAnswer, onAnswer, showResult = false, 
           return (
             <button
               key={i}
-              onClick={() => !showResult && onAnswer(question.question_number, option)}
+              onClick={() => !showResult && onAnswer(questionKey, option)}
               disabled={showResult}
               className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${borderColor} ${bgColor} ${textColor} ${
                 showResult ? 'cursor-default' : 'cursor-pointer'

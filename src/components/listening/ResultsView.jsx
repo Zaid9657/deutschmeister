@@ -12,7 +12,7 @@ const ResultsView = ({ exercise, questions, answers, score, dialogues, playsUsed
   const isGerman = i18n.language === 'de';
   const theme = getLevelTheme(exercise.level);
   const message = getPerformanceMessage(score);
-  const correctCount = questions.filter((q) => getAnswerKey(answers[q.question_number]) === q.correct_answer).length;
+  const correctCount = questions.filter((q) => getAnswerKey(answers[q.id || q.question_number]) === q.correct_answer).length;
 
   // Animated circle progress
   const circumference = 2 * Math.PI * 54;
@@ -100,7 +100,7 @@ const ResultsView = ({ exercise, questions, answers, score, dialogues, playsUsed
           <QuestionCard
             key={q.id || q.question_number}
             question={q}
-            selectedAnswer={answers[q.question_number]}
+            selectedAnswer={answers[q.id || q.question_number]}
             showResult
             index={i}
           />
