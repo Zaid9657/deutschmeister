@@ -154,8 +154,73 @@ function MistakeCard({ m }) {
           <div style={{ fontSize: 15, color: "#166534" }}>{m.correct_de || m.correct_en || m.correct}</div>
         </div>
       </div>
-      {m.why && <p style={{ fontSize: 13, color: "#555", margin: "6px 0 0", paddingLeft: 2 }}>{m.why_en || m.why_de || m.why}</p>}
+      {(m.explanation_en || m.explanation_de || m.why) && (
+        <p style={{ fontSize: 13, color: "#555", margin: "6px 0 0", paddingLeft: 2 }}>
+          {m.explanation_en || m.explanation_de || m.why_en || m.why_de || m.why}
+        </p>
+      )}
+      {m.memory_trick_en && <MemoryTrickBox>{m.memory_trick_en}</MemoryTrickBox>}
     </div>
+  );
+}
+
+function MemoryTrickBox({ children }) {
+  return (
+    <div style={{ background: "#FFFBEB", borderRadius: 8, padding: "12px 16px", margin: "12px 0", borderLeft: "4px solid #F59E0B", display: "flex", gap: 10, alignItems: "flex-start" }}>
+      <span style={{ fontSize: 18, flexShrink: 0 }}>💡</span>
+      <p style={{ fontSize: 14, lineHeight: 1.65, color: "#92400E", margin: 0 }}>{children}</p>
+    </div>
+  );
+}
+
+function WarningBox({ children }) {
+  return (
+    <div style={{ background: "#FFF1F2", borderRadius: 8, padding: "14px 18px", margin: "12px 0", borderLeft: "4px solid #E11D48", display: "flex", gap: 10, alignItems: "flex-start" }}>
+      <span style={{ fontSize: 18, flexShrink: 0 }}>⚠️</span>
+      <p style={{ fontSize: 14, lineHeight: 1.65, color: "#9F1239", margin: 0 }}>{children}</p>
+    </div>
+  );
+}
+
+function DialogueExchange({ exchange }) {
+  const isA = exchange.speaker === 'A' || exchange.speaker === 'Speaker A';
+  return (
+    <div style={{ display: "flex", justifyContent: isA ? "flex-start" : "flex-end", margin: "10px 0" }}>
+      <div style={{
+        maxWidth: "75%", background: isA ? "#EFF6FF" : "#F0FDF4",
+        borderRadius: isA ? "4px 16px 16px 16px" : "16px 4px 16px 16px",
+        padding: "12px 16px", border: `1px solid ${isA ? "#BFDBFE" : "#BBF7D0"}`,
+      }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: isA ? "#3B82F6" : "#16A34A", marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.04em" }}>
+          {exchange.speaker_label || exchange.speaker || (isA ? 'Speaker A' : 'Speaker B')}
+        </div>
+        <div style={{ fontSize: 16, fontWeight: 600, color: "#1a1a1a", marginBottom: 2 }}>{exchange.german || exchange.de}</div>
+        {(exchange.english || exchange.en) && (
+          <div style={{ fontSize: 13, color: "#666", fontStyle: "italic" }}>{exchange.english || exchange.en}</div>
+        )}
+        {exchange.grammar_note && (
+          <div style={{ fontSize: 12, color: "#555", marginTop: 6, paddingTop: 6, borderTop: "1px solid #e5e7eb", lineHeight: 1.5 }}>
+            {exchange.grammar_note}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+const EXPLANATION_TYPE_LABELS = {
+  explanation_core: 'Core Concepts',
+  explanation_patterns: 'Patterns',
+  explanation_comparison: 'Comparison',
+  explanation_exceptions: 'Exceptions',
+};
+
+function ExplanationTypeLabel({ type }) {
+  const label = EXPLANATION_TYPE_LABELS[type] || type;
+  return (
+    <span style={{ fontSize: 11, fontWeight: 700, color: "#6366F1", background: "#EEF2FF", padding: "3px 10px", borderRadius: 4, textTransform: "uppercase", letterSpacing: "0.04em" }}>
+      {label}
+    </span>
   );
 }
 
@@ -263,12 +328,26 @@ export default function GrammarLessonPage() {
       const examples = examplesRes.data || [];
       const exercises = exercisesRes.data || [];
 
+      // DEBUG: Log raw data from Supabase
+      console.log('RAW RULES:', rules);
+      console.log('RAW EXAMPLES:', examples);
+      console.log('RAW EXERCISES:', exercises);
+
       // 3. Organize content by type
       const introductionRule = rules.find(r => r.rule_type === 'introduction');
       const tables = rules.filter(r => r.rule_type === 'table' || r.rule_type === 'pattern');
       const tips = rules.filter(r => r.rule_type === 'tip' || r.rule_type === 'note');
       const signalWordsRule = rules.find(r => r.rule_type === 'signal_words');
       const summaryRule = rules.find(r => r.rule_type === 'summary');
+      const explanations = rules.filter(r =>
+        r.rule_type === 'explanation_core' ||
+        r.rule_type === 'explanation_patterns' ||
+        r.rule_type === 'explanation_comparison' ||
+        r.rule_type === 'explanation_exceptions'
+      );
+      const dialogues = rules.filter(r => r.rule_type === 'dialogue');
+      const warnings = rules.filter(r => r.rule_type === 'warning');
+      const commonMistakeRules = rules.filter(r => r.rule_type === 'common_mistakes');
 
       // Collect common mistakes from any rule that has them
       const allMistakes = [];
@@ -285,14 +364,38 @@ export default function GrammarLessonPage() {
         tips,
         signalWords: signalWordsRule?.content || null,
         commonMistakes: allMistakes,
-        exercises: exercises.map(ex => ({
-          question: ex.question_en,
-          options: ex.options || [],
-          correctAnswer: ex.correct_answer,
-          explanation: ex.explanation_en,
-          type: ex.exercise_type,
-        })),
-        summary: summaryRule?.content?.points || null,
+        explanations,
+        dialogues,
+        warnings,
+        commonMistakeRules,
+        exercises: exercises
+          .map(ex => {
+            // Handle different question field names
+            const question = ex.question_en || ex.question_de || ex.question || '';
+
+            // Handle options - might be JSONB array or already parsed
+            let options = [];
+            if (Array.isArray(ex.options)) {
+              options = ex.options;
+            } else if (typeof ex.options === 'string') {
+              try {
+                options = JSON.parse(ex.options);
+              } catch (e) {
+                console.warn('Failed to parse options:', ex.options);
+              }
+            }
+
+            return {
+              question,
+              options,
+              correctAnswer: ex.correct_answer,
+              explanation: ex.explanation_en || ex.explanation_de || ex.explanation || '',
+              type: ex.exercise_type,
+            };
+          })
+          // FILTER OUT translation exercises with no options (BUG 1)
+          .filter(ex => ex.options && ex.options.length > 0),
+        summary: summaryRule?.content || null,
       });
 
       setLoading(false);
@@ -429,6 +532,37 @@ export default function GrammarLessonPage() {
           </>
         )}
 
+        {/* Deep Dive (Explanations) */}
+        {content.explanations.length > 0 && (
+          <>
+            <SectionHeading number={sectionNumber++}>Deep Dive</SectionHeading>
+            {content.explanations.map((exp, i) => {
+              const c = exp.content || {};
+              return (
+                <div key={i} style={{ margin: "20px 0" }}>
+                  <div style={{ display: "flex", gap: 10, alignItems: "center", margin: "0 0 12px" }}>
+                    <ExplanationTypeLabel type={exp.rule_type} />
+                    {exp.title_en && (
+                      <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a1a", margin: 0 }}>{exp.title_en}</h3>
+                    )}
+                  </div>
+                  {c.content_en && <P>{c.content_en}</P>}
+                  {c.content_de && !c.content_en && <P>{c.content_de}</P>}
+                  {exp.key_insight_en && <KeyBox>{exp.key_insight_en}</KeyBox>}
+                  {exp.memory_trick_en && <MemoryTrickBox>{exp.memory_trick_en}</MemoryTrickBox>}
+                  {c.headers && c.rows && (
+                    <GrammarTable data={{
+                      title: c.table_title || null,
+                      headers: c.headers,
+                      rows: c.rows,
+                    }} />
+                  )}
+                </div>
+              );
+            })}
+          </>
+        )}
+
         {/* Grammar Tables */}
         {content.tables.length > 0 && (
           <>
@@ -465,13 +599,134 @@ export default function GrammarLessonPage() {
           </>
         )}
 
+        {/* Dialogue */}
+        {content.dialogues.length > 0 && (
+          <>
+            <SectionHeading number={sectionNumber++}>Dialogue</SectionHeading>
+            {content.dialogues.map((dlg, i) => {
+              const c = dlg.content || {};
+              return (
+                <div key={i} style={{ margin: "18px 0" }}>
+                  {(c.context_en || dlg.title_en) && (
+                    <P>{c.context_en || dlg.title_en}</P>
+                  )}
+                  {c.exchanges && Array.isArray(c.exchanges) && (
+                    <div style={{ margin: "16px 0", padding: "16px", background: "#FAFAFA", borderRadius: 12 }}>
+                      {c.exchanges.map((exchange, ei) => (
+                        <DialogueExchange key={ei} exchange={exchange} />
+                      ))}
+                    </div>
+                  )}
+                  {c.grammar_focus_en && (
+                    <KeyBox>{c.grammar_focus_en}</KeyBox>
+                  )}
+                </div>
+              );
+            })}
+          </>
+        )}
+
         {/* Tips & Patterns */}
         {content.tips.length > 0 && (
           <>
             <SectionHeading number={sectionNumber++}>Tips & Patterns</SectionHeading>
-            {content.tips.map((tip, i) => (
-              <KeyBox key={i}>{tip.content?.text_en || tip.title_en}</KeyBox>
-            ))}
+            {content.tips.map((tip, i) => {
+              const c = tip.content || {};
+              return (
+                <div key={i} style={{ margin: "18px 0" }}>
+                  {tip.title_en && (
+                    <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a1a", margin: "0 0 12px" }}>
+                      {tip.title_en}
+                    </h3>
+                  )}
+
+                  {/* Content text (content_en / content_de) */}
+                  {(c.content_en || c.content_de) && <P>{c.content_en || c.content_de}</P>}
+
+                  {/* Key insight from the rule */}
+                  {tip.key_insight_en && <KeyBox>{tip.key_insight_en}</KeyBox>}
+
+                  {/* Memory trick from the rule */}
+                  {tip.memory_trick_en && <MemoryTrickBox>{tip.memory_trick_en}</MemoryTrickBox>}
+
+                  {/* Simple text tip */}
+                  {c.text_en && <KeyBox>{c.text_en}</KeyBox>}
+
+                  {/* Verb list with groups (BUG 2 FIX) */}
+                  {c.type === 'verb_list' && c.groups && Array.isArray(c.groups) && c.groups.length > 0 && (
+                    <div style={{ margin: "12px 0" }}>
+                      {c.groups.map((group, gi) => (
+                        <div key={gi} style={{ margin: "20px 0" }}>
+                          {group.category_en && (
+                            <h4 style={{ fontSize: 14, fontWeight: 700, color: "#1a1a1a", margin: "0 0 10px", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                              {group.category_en}
+                            </h4>
+                          )}
+                          {group.verbs && Array.isArray(group.verbs) && (
+                            <div style={{ display: "grid", gap: 8 }}>
+                              {group.verbs.map((verb, vi) => (
+                                <div key={vi} style={{ padding: "10px 14px", background: "#FAFAFA", borderRadius: 6, borderLeft: "3px solid #3B82F6" }}>
+                                  <div style={{ fontSize: 15, marginBottom: 2 }}>
+                                    <strong style={{ color: "#1a1a1a" }}>{verb.de}</strong>
+                                    <span style={{ color: "#666", marginLeft: 6, fontSize: 14 }}>= {verb.en}</span>
+                                  </div>
+                                  {verb.example && (
+                                    <div style={{ fontSize: 13, color: "#888", fontStyle: "italic", marginTop: 4 }}>
+                                      "{verb.example}"
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Steps pattern (BUG 2 FIX) */}
+                  {c.type === 'steps' && c.steps && Array.isArray(c.steps) && c.steps.length > 0 && (
+                    <div style={{ margin: "12px 0" }}>
+                      {c.steps.map((step, si) => (
+                        <div key={si} style={{ display: "flex", gap: 12, margin: "16px 0", alignItems: "flex-start" }}>
+                          <div style={{
+                            width: 28, height: 28, borderRadius: "50%", background: "#1a1a1a", color: "#fff",
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            fontSize: 13, fontWeight: 700, flexShrink: 0,
+                          }}>
+                            {step.step}
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: 15, fontWeight: 700, color: "#1a1a1a", marginBottom: 4 }}>
+                              {step.title_en}
+                            </div>
+                            {step.detail_en && (
+                              <div style={{ fontSize: 14, color: "#555", lineHeight: 1.6 }}>
+                                {step.detail_en}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Pattern or rule text */}
+                  {c.pattern_en && (
+                    <div style={{ background: "#F8FAFC", borderRadius: 8, padding: "14px 18px", margin: "12px 0", borderLeft: "4px solid #1a1a1a" }}>
+                      <p style={{ fontSize: 15, lineHeight: 1.65, color: "#1a1a1a", margin: 0, fontWeight: 500 }}>
+                        {c.pattern_en}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Fallback: if no structured content, show title */}
+                  {!c.text_en && !c.content_en && !c.content_de && c.type !== 'verb_list' && c.type !== 'steps' && !c.pattern_en && !tip.key_insight_en && tip.title_en && (
+                    <KeyBox>{tip.title_en}</KeyBox>
+                  )}
+                </div>
+              );
+            })}
           </>
         )}
 
@@ -507,12 +762,39 @@ export default function GrammarLessonPage() {
         )}
 
         {/* Common Mistakes */}
-        {content.commonMistakes.length > 0 && (
+        {(content.commonMistakes.length > 0 || content.commonMistakeRules.length > 0) && (
           <>
             <SectionHeading number={sectionNumber++}>Common Mistakes</SectionHeading>
+            {/* Mistakes from rule fields (common_mistakes column) */}
             {content.commonMistakes.map((m, i) => (
-              <MistakeCard key={i} m={m} />
+              <MistakeCard key={`field-${i}`} m={m} />
             ))}
+            {/* Mistakes from common_mistakes rule type */}
+            {content.commonMistakeRules.map((rule, ri) => {
+              const c = rule.content || {};
+              return (
+                <div key={`rule-${ri}`} style={{ margin: "16px 0" }}>
+                  {c.intro_en && <P>{c.intro_en}</P>}
+                  {c.mistakes && Array.isArray(c.mistakes) && c.mistakes.map((m, mi) => (
+                    <MistakeCard key={mi} m={m} />
+                  ))}
+                  {rule.memory_trick_en && <MemoryTrickBox>{rule.memory_trick_en}</MemoryTrickBox>}
+                </div>
+              );
+            })}
+          </>
+        )}
+
+        {/* Warnings */}
+        {content.warnings.length > 0 && (
+          <>
+            <SectionHeading number={sectionNumber++}>Warnings</SectionHeading>
+            {content.warnings.map((w, i) => {
+              const c = w.content || {};
+              return (
+                <WarningBox key={i}>{c.content_en || c.content_de || w.title_en || 'Warning'}</WarningBox>
+              );
+            })}
           </>
         )}
 
@@ -568,12 +850,68 @@ export default function GrammarLessonPage() {
         {content.summary && (
           <div style={{ background: "#F8FAFC", borderRadius: 12, padding: "24px 28px", margin: "48px 0 0", border: "1px solid #E2E8F0" }}>
             <h3 style={{ fontSize: 17, fontWeight: 700, color: "#1a1a1a", margin: "0 0 14px" }}>Quick Reference</h3>
-            {content.summary.map((point, i) => (
-              <div key={i} style={{ display: "flex", gap: 10, margin: "8px 0" }}>
-                <span style={{ color: "#3B82F6", fontWeight: 700, fontSize: 14, flexShrink: 0 }}>→</span>
-                <span style={{ fontSize: 14, color: "#444", lineHeight: 1.5 }}>{point}</span>
+
+            {/* Key Formula */}
+            {content.summary.key_formula && (
+              <KeyBox>{content.summary.key_formula}</KeyBox>
+            )}
+
+            {/* One-sentence summary */}
+            {content.summary.one_sentence_summary_en && (
+              <p style={{ fontSize: 15, color: "#333", margin: "12px 0", fontStyle: "italic", lineHeight: 1.65 }}>
+                {content.summary.one_sentence_summary_en}
+              </p>
+            )}
+
+            {/* Top Rules */}
+            {content.summary.top_rules && Array.isArray(content.summary.top_rules) && content.summary.top_rules.length > 0 && (
+              <div style={{ margin: "14px 0" }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "#16A34A", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.04em" }}>Key Rules</div>
+                {content.summary.top_rules.map((rule, i) => (
+                  <div key={i} style={{ display: "flex", gap: 10, margin: "6px 0" }}>
+                    <span style={{ color: "#22C55E", fontWeight: 700, fontSize: 14, flexShrink: 0 }}>✓</span>
+                    <span style={{ fontSize: 14, color: "#444", lineHeight: 1.5 }}>{typeof rule === 'string' ? rule : rule.en || rule.text}</span>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
+
+            {/* Top Mistakes */}
+            {content.summary.top_mistakes && Array.isArray(content.summary.top_mistakes) && content.summary.top_mistakes.length > 0 && (
+              <div style={{ margin: "14px 0" }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "#EF4444", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.04em" }}>Watch Out For</div>
+                {content.summary.top_mistakes.map((mistake, i) => (
+                  <div key={i} style={{ display: "flex", gap: 10, margin: "6px 0" }}>
+                    <span style={{ color: "#EF4444", fontWeight: 700, fontSize: 14, flexShrink: 0 }}>⚠</span>
+                    <span style={{ fontSize: 14, color: "#444", lineHeight: 1.5 }}>{typeof mistake === 'string' ? mistake : mistake.en || mistake.text}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Memory Trick */}
+            {content.summary.memory_trick_en && (
+              <MemoryTrickBox>{content.summary.memory_trick_en}</MemoryTrickBox>
+            )}
+
+            {/* Next Step */}
+            {content.summary.next_step_en && (
+              <p style={{ fontSize: 14, color: "#3B82F6", margin: "14px 0 0", fontWeight: 500 }}>
+                Next → {content.summary.next_step_en}
+              </p>
+            )}
+
+            {/* Fallback: old format with points array */}
+            {content.summary.points && Array.isArray(content.summary.points) && (
+              <>
+                {content.summary.points.map((point, i) => (
+                  <div key={i} style={{ display: "flex", gap: 10, margin: "8px 0" }}>
+                    <span style={{ color: "#3B82F6", fontWeight: 700, fontSize: 14, flexShrink: 0 }}>→</span>
+                    <span style={{ fontSize: 14, color: "#444", lineHeight: 1.5 }}>{point}</span>
+                  </div>
+                ))}
+              </>
+            )}
           </div>
         )}
 
