@@ -182,24 +182,31 @@ function WarningBox({ children }) {
   );
 }
 
-function DialogueExchange({ exchange }) {
-  const isA = exchange.speaker === 'A' || exchange.speaker === 'Speaker A';
+function DialogueExchange({ exchange, index }) {
+  const isEven = (index || 0) % 2 === 0;
+  const speaker = exchange.speaker_label || exchange.speaker || (isEven ? 'Speaker A' : 'Speaker B');
+  const isLeft = isEven;
   return (
-    <div style={{ display: "flex", justifyContent: isA ? "flex-start" : "flex-end", margin: "10px 0" }}>
+    <div style={{ display: "flex", justifyContent: isLeft ? "flex-start" : "flex-end", margin: "10px 0" }}>
       <div style={{
-        maxWidth: "75%", background: isA ? "#EFF6FF" : "#F0FDF4",
-        borderRadius: isA ? "4px 16px 16px 16px" : "16px 4px 16px 16px",
-        padding: "12px 16px", border: `1px solid ${isA ? "#BFDBFE" : "#BBF7D0"}`,
+        maxWidth: "75%", background: isLeft ? "#EFF6FF" : "#F0FDF4",
+        borderRadius: isLeft ? "4px 16px 16px 16px" : "16px 4px 16px 16px",
+        padding: "12px 16px", border: `1px solid ${isLeft ? "#BFDBFE" : "#BBF7D0"}`,
       }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: isA ? "#3B82F6" : "#16A34A", marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.04em" }}>
-          {exchange.speaker_label || exchange.speaker || (isA ? 'Speaker A' : 'Speaker B')}
+        <div style={{ fontSize: 11, fontWeight: 700, color: isLeft ? "#3B82F6" : "#16A34A", marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.04em" }}>
+          {speaker}
         </div>
-        <div style={{ fontSize: 16, fontWeight: 600, color: "#1a1a1a", marginBottom: 2 }}>{exchange.german || exchange.de}</div>
-        {(exchange.english || exchange.en) && (
-          <div style={{ fontSize: 13, color: "#666", fontStyle: "italic" }}>{exchange.english || exchange.en}</div>
+        <div style={{ fontSize: 16, fontWeight: 600, color: "#1a1a1a", marginBottom: 2 }}>{exchange.de || exchange.german}</div>
+        {(exchange.en || exchange.english) && (
+          <div style={{ fontSize: 13, color: "#666", fontStyle: "italic" }}>{exchange.en || exchange.english}</div>
+        )}
+        {exchange.highlight && (
+          <div style={{ fontSize: 12, color: "#6366F1", marginTop: 6, paddingTop: 6, borderTop: "1px solid #e5e7eb", lineHeight: 1.5, fontWeight: 500 }}>
+            {exchange.highlight}
+          </div>
         )}
         {exchange.grammar_note && (
-          <div style={{ fontSize: 12, color: "#555", marginTop: 6, paddingTop: 6, borderTop: "1px solid #e5e7eb", lineHeight: 1.5 }}>
+          <div style={{ fontSize: 12, color: "#555", marginTop: exchange.highlight ? 4 : 6, paddingTop: exchange.highlight ? 0 : 6, borderTop: exchange.highlight ? "none" : "1px solid #e5e7eb", lineHeight: 1.5 }}>
             {exchange.grammar_note}
           </div>
         )}
@@ -546,8 +553,27 @@ export default function GrammarLessonPage() {
                       <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a1a", margin: 0 }}>{exp.title_en}</h3>
                     )}
                   </div>
-                  {c.content_en && <P>{c.content_en}</P>}
-                  {c.content_de && !c.content_en && <P>{c.content_de}</P>}
+
+                  {/* Sections array (primary structure) */}
+                  {c.sections && Array.isArray(c.sections) && c.sections.map((section, si) => (
+                    <div key={si} style={{ margin: "16px 0" }}>
+                      {(section.title_en || section.title_de) && (
+                        <h4 style={{ fontSize: 15, fontWeight: 700, color: "#1a1a1a", margin: "0 0 8px" }}>
+                          {section.title_en || section.title_de}
+                        </h4>
+                      )}
+                      {(section.content_en || section.content_de) && (
+                        <div style={{ fontSize: 15, lineHeight: 1.85, color: "#333", margin: "0 0 14px", whiteSpace: "pre-line" }}>
+                          {section.content_en || section.content_de}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+
+                  {/* Fallback: direct content_en/content_de (flat structure) */}
+                  {!c.sections && c.content_en && <P>{c.content_en}</P>}
+                  {!c.sections && c.content_de && !c.content_en && <P>{c.content_de}</P>}
+
                   {exp.key_insight_en && <KeyBox>{exp.key_insight_en}</KeyBox>}
                   {exp.memory_trick_en && <MemoryTrickBox>{exp.memory_trick_en}</MemoryTrickBox>}
                   {c.headers && c.rows && (
@@ -605,15 +631,16 @@ export default function GrammarLessonPage() {
             <SectionHeading number={sectionNumber++}>Dialogue</SectionHeading>
             {content.dialogues.map((dlg, i) => {
               const c = dlg.content || {};
+              const lines = c.lines || c.exchanges || [];
               return (
                 <div key={i} style={{ margin: "18px 0" }}>
-                  {(c.context_en || dlg.title_en) && (
-                    <P>{c.context_en || dlg.title_en}</P>
+                  {(c.context_en || c.context_de || dlg.title_en) && (
+                    <P>{c.context_en || c.context_de || dlg.title_en}</P>
                   )}
-                  {c.exchanges && Array.isArray(c.exchanges) && (
+                  {lines.length > 0 && (
                     <div style={{ margin: "16px 0", padding: "16px", background: "#FAFAFA", borderRadius: 12 }}>
-                      {c.exchanges.map((exchange, ei) => (
-                        <DialogueExchange key={ei} exchange={exchange} />
+                      {lines.map((line, li) => (
+                        <DialogueExchange key={li} exchange={line} index={li} />
                       ))}
                     </div>
                   )}
@@ -851,8 +878,18 @@ export default function GrammarLessonPage() {
           <div style={{ background: "#F8FAFC", borderRadius: 12, padding: "24px 28px", margin: "48px 0 0", border: "1px solid #E2E8F0" }}>
             <h3 style={{ fontSize: 17, fontWeight: 700, color: "#1a1a1a", margin: "0 0 14px" }}>Quick Reference</h3>
 
-            {/* Key Formula */}
-            {content.summary.key_formula && (
+            {/* Golden Rule */}
+            {(content.summary.golden_rule_en || content.summary.golden_rule_de) && (
+              <div style={{ background: "#FFFBEB", borderRadius: 8, padding: "14px 18px", margin: "0 0 16px", borderLeft: "4px solid #F59E0B" }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: "#D97706", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.04em" }}>Golden Rule</div>
+                <p style={{ fontSize: 15, lineHeight: 1.65, color: "#92400E", margin: 0, fontWeight: 600 }}>
+                  {content.summary.golden_rule_en || content.summary.golden_rule_de}
+                </p>
+              </div>
+            )}
+
+            {/* Key Formula (alternate field name) */}
+            {content.summary.key_formula && !content.summary.golden_rule_en && (
               <KeyBox>{content.summary.key_formula}</KeyBox>
             )}
 
@@ -861,6 +898,18 @@ export default function GrammarLessonPage() {
               <p style={{ fontSize: 15, color: "#333", margin: "12px 0", fontStyle: "italic", lineHeight: 1.65 }}>
                 {content.summary.one_sentence_summary_en}
               </p>
+            )}
+
+            {/* Quick Reference bullet points */}
+            {content.summary.quick_reference && Array.isArray(content.summary.quick_reference) && content.summary.quick_reference.length > 0 && (
+              <div style={{ margin: "14px 0" }}>
+                {content.summary.quick_reference.map((point, i) => (
+                  <div key={i} style={{ display: "flex", gap: 10, margin: "8px 0" }}>
+                    <span style={{ color: "#3B82F6", fontWeight: 700, fontSize: 14, flexShrink: 0 }}>→</span>
+                    <span style={{ fontSize: 14, color: "#444", lineHeight: 1.5 }}>{typeof point === 'string' ? point : point.en || point.text}</span>
+                  </div>
+                ))}
+              </div>
             )}
 
             {/* Top Rules */}
@@ -890,14 +939,14 @@ export default function GrammarLessonPage() {
             )}
 
             {/* Memory Trick */}
-            {content.summary.memory_trick_en && (
-              <MemoryTrickBox>{content.summary.memory_trick_en}</MemoryTrickBox>
+            {(content.summary.memory_trick_en || content.summary.memory_trick_de) && (
+              <MemoryTrickBox>{content.summary.memory_trick_en || content.summary.memory_trick_de}</MemoryTrickBox>
             )}
 
-            {/* Next Step */}
-            {content.summary.next_step_en && (
+            {/* What Next / Next Step */}
+            {(content.summary.what_next_en || content.summary.next_step_en) && (
               <p style={{ fontSize: 14, color: "#3B82F6", margin: "14px 0 0", fontWeight: 500 }}>
-                Next → {content.summary.next_step_en}
+                Next → {content.summary.what_next_en || content.summary.next_step_en}
               </p>
             )}
 
