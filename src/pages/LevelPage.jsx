@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, BookOpen, BookMarked, MessageSquare, Volume2, Mic, Sun, TreePine, Waves, Moon, Loader2, Filter, FileText } from 'lucide-react';
+import { ArrowLeft, BookOpen, BookMarked, MessageSquare, Headphones, Mic, Sun, TreePine, Waves, Moon, Loader2, Filter, FileText } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useProgress } from '../contexts/ProgressContext';
 import { levels, levelThemes as contentLevelThemes } from '../data/content';
@@ -14,6 +14,8 @@ import SentenceCard from '../components/SentenceCard';
 import GrammarTopicCard from '../components/GrammarTopicCard';
 import ReadingLessonCard from '../components/ReadingLessonCard';
 import SpeakingPractice from '../components/SpeakingPractice';
+import { useLevelExercises } from '../hooks/useListening';
+import ExerciseCard from '../components/listening/ExerciseCard';
 
 const iconMap = {
   'a1.1': Sun,
@@ -42,6 +44,9 @@ const LevelPage = () => {
   const [grammarLoading, setGrammarLoading] = useState(true);
   const [readingLoading, setReadingLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
+
+  // Listening exercises for this level
+  const { exercises: listeningExercises, loading: listeningLoading } = useLevelExercises(level.toUpperCase());
 
   const theme = getThemeForLevel(level);
   const progress = getLevelProgress(level);
@@ -118,18 +123,9 @@ const LevelPage = () => {
     { id: 'sentences', label: t('levelPage.sentences'), icon: MessageSquare },
     { id: 'grammar', label: t('levelPage.grammar'), icon: BookMarked },
     { id: 'reading', label: t('levelPage.reading'), icon: FileText },
-    { id: 'audio', label: t('levelPage.audio'), icon: Volume2 },
+    { id: 'listening', label: t('levelPage.listening'), icon: Headphones },
     { id: 'speaking', label: t('levelPage.speaking'), icon: Mic },
   ];
-
-  const handleSpeak = (text) => {
-    if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'de-DE';
-      utterance.rate = 0.85;
-      speechSynthesis.speak(utterance);
-    }
-  };
 
   // Format level for display (a1.1 -> A1.1)
   const displayLevel = level.toUpperCase();
@@ -428,69 +424,25 @@ const LevelPage = () => {
               </div>
             )}
 
-            {/* Audio Tab */}
-            {activeTab === 'audio' && (
-              <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-8">
-                <h2 className="font-display text-2xl font-bold text-slate-800 mb-6">
-                  {t('levelPage.listenPronunciation')}
-                </h2>
-                <p className="text-slate-600 mb-8">
-                  Click on any word or sentence to hear its pronunciation.
-                </p>
-
-                {vocabLoading && (
+            {/* Listening Tab */}
+            {activeTab === 'listening' && (
+              <div>
+                {listeningLoading && (
                   <div className="flex items-center justify-center py-12">
                     <Loader2 className="w-8 h-8 text-slate-400 animate-spin" />
                   </div>
                 )}
-
-                {/* Vocabulary Audio List */}
-                {!vocabLoading && levelVocabulary.length > 0 && (
-                  <div className="mb-8">
-                    <h3 className="font-semibold text-slate-700 mb-4">Vocabulary</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                      {levelVocabulary.map((word) => (
-                        <button
-                          key={word.id}
-                          onClick={() => handleSpeak(word.word)}
-                          className={`flex items-center gap-3 p-4 rounded-xl bg-slate-50 hover:bg-${theme.primary}/10 transition-colors text-left`}
-                        >
-                          <Volume2 className={`w-5 h-5 text-${theme.primary} flex-shrink-0`} />
-                          <div>
-                            <p className="font-medium text-slate-800">{word.word}</p>
-                            <p className="text-sm text-slate-500">{word.translation}</p>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
+                {!listeningLoading && listeningExercises.length > 0 && (
+                  <div className="space-y-3">
+                    {listeningExercises.map((exercise, index) => (
+                      <ExerciseCard key={exercise.id} exercise={exercise} index={index} />
+                    ))}
                   </div>
                 )}
-
-                {/* Sentences Audio List */}
-                {!vocabLoading && levelSentences.length > 0 && (
-                  <div>
-                    <h3 className="font-semibold text-slate-700 mb-4">Sentences</h3>
-                    <div className="space-y-3">
-                      {levelSentences.map((sentence) => (
-                        <button
-                          key={sentence.id}
-                          onClick={() => handleSpeak(sentence.german)}
-                          className={`flex items-center gap-3 p-4 rounded-xl bg-slate-50 hover:bg-${theme.primary}/10 transition-colors text-left w-full`}
-                        >
-                          <Volume2 className={`w-5 h-5 text-${theme.primary} flex-shrink-0`} />
-                          <div>
-                            <p className="font-medium text-slate-800">{sentence.german}</p>
-                            <p className="text-sm text-slate-500">{sentence.english}</p>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {!vocabLoading && levelVocabulary.length === 0 && levelSentences.length === 0 && (
-                  <div className="text-center py-12 text-slate-500">
-                    No audio content available for this level yet.
+                {!listeningLoading && listeningExercises.length === 0 && (
+                  <div className="bg-white rounded-xl border border-slate-200 p-6 text-center">
+                    <Headphones size={48} className="mx-auto mb-4 text-slate-300" />
+                    <p className="text-slate-500">{t('levelPage.noListening', 'No listening exercises available for this level yet.')}</p>
                   </div>
                 )}
               </div>
