@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, BookOpen, BookMarked, MessageSquare, Headphones, Mic, Sun, TreePine, Waves, Moon, Loader2, Filter, FileText } from 'lucide-react';
+import { ArrowLeft, BookOpen, BookMarked, MessageSquare, Headphones, Mic, Radio, Sun, TreePine, Waves, Moon, Loader2, Filter, FileText } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useProgress } from '../contexts/ProgressContext';
 import { levels, levelThemes as contentLevelThemes } from '../data/content';
@@ -14,6 +14,7 @@ import SentenceCard from '../components/SentenceCard';
 import GrammarTopicCard from '../components/GrammarTopicCard';
 import ReadingLessonCard from '../components/ReadingLessonCard';
 import SpeakingPractice from '../components/SpeakingPractice';
+import PodcastsTab from '../components/level/PodcastsTab';
 import { useLevelExercises } from '../hooks/useListening';
 import ExerciseCard from '../components/listening/ExerciseCard';
 
@@ -124,6 +125,7 @@ const LevelPage = () => {
     { id: 'grammar', label: t('levelPage.grammar'), icon: BookMarked },
     { id: 'reading', label: t('levelPage.reading'), icon: FileText },
     { id: 'listening', label: t('levelPage.listening'), icon: Headphones },
+    { id: 'podcasts', label: t('levelPage.podcasts', 'Podcasts'), icon: Radio },
     { id: 'speaking', label: t('levelPage.speaking'), icon: Mic },
   ];
 
@@ -446,6 +448,11 @@ const LevelPage = () => {
                   </div>
                 )}
               </div>
+            )}
+
+            {/* Podcasts Tab */}
+            {activeTab === 'podcasts' && (
+              <PodcastsTab subLevel={level.toUpperCase()} />
             )}
 
             {/* Speaking Tab */}
