@@ -8,6 +8,7 @@ import { calculateScore, allQuestionsAnswered, getAudioUrl, getLevelTheme } from
 import AudioPlayer from '../../components/listening/AudioPlayer';
 import QuestionCard from '../../components/listening/QuestionCard';
 import ResultsView from '../../components/listening/ResultsView';
+import SEO from '../../components/SEO';
 
 const ExercisePlayer = () => {
   const { level, exerciseNumber } = useParams();
@@ -85,6 +86,11 @@ const ExercisePlayer = () => {
 
   return (
     <div className="min-h-screen pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+      <SEO
+        title={`Listening Exercise ${exerciseNumber} - German ${level}`}
+        description={`German listening comprehension exercise ${exerciseNumber} for level ${level}. Listen to native speaker dialogues and answer questions.`}
+        path={`/listening/${level}/${exerciseNumber}`}
+      />
       <div className="max-w-3xl mx-auto">
         {/* Back button */}
         <motion.button

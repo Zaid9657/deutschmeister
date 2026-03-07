@@ -24,6 +24,7 @@ import {
 } from '../services/readingService';
 import VocabularyList from '../components/VocabularyList';
 import ComprehensionQuestions from '../components/ComprehensionQuestions';
+import SEO from '../components/SEO';
 
 const ReadingLessonPage = () => {
   const { level, lessonId } = useParams();
@@ -137,6 +138,11 @@ const ReadingLessonPage = () => {
 
   return (
     <div className={`min-h-screen bg-gradient-to-br ${theme.bgGradient} pt-20 pb-12`}>
+      <SEO
+        title={lesson ? `${lesson.title_en || lesson.title} - German Reading ${level.toUpperCase()}` : `German Reading Practice ${level.toUpperCase()}`}
+        description={lesson ? `Read and understand: ${lesson.title_en || lesson.title}. German reading practice for ${level.toUpperCase()} with vocabulary and comprehension questions.` : `German reading exercises for level ${level.toUpperCase()}.`}
+        path={`/reading/${level}/${lessonId}`}
+      />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div

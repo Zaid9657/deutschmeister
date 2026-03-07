@@ -5,6 +5,7 @@ import LevelCard from '../components/LevelCard';
 import { useProgress } from '../contexts/ProgressContext';
 import { useAuth } from '../contexts/AuthContext';
 import { mainLevels, getSubLevels } from '../data/content';
+import SEO from '../components/SEO';
 
 const mainLevelInfo = {
   A1: { name: 'Sunrise Warmth', icon: '🌅', color: 'from-amber-400 to-orange-400' },
@@ -50,6 +51,11 @@ const DashboardPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-20 pb-12">
+      <SEO
+        title="Dashboard - Your German Learning Progress"
+        description="Track your German learning progress across all CEFR levels. Vocabulary, grammar, listening, and reading progress at a glance."
+        path="/dashboard"
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
