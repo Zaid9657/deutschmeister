@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { ArrowRight, BookOpen, MessageSquare, Award, Sparkles, Sun, TreePine, Waves, Moon } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import SEO from '../components/SEO';
 
 const LandingPage = () => {
   const { t } = useTranslation();
@@ -44,6 +45,24 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen">
+      <SEO
+        title="Learn German Online - Free Lessons A1 to B2"
+        description="Master German with free interactive lessons. Grammar, vocabulary, listening exercises, and podcasts for English speakers. CEFR levels A1.1 to B2.2."
+        path="/"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "DeutschMeister",
+          "url": "https://deutsch-meister.de/",
+          "description": "Free German language learning platform for English speakers",
+          "inLanguage": ["de", "en"],
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://deutsch-meister.de/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }}
+      />
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Background gradient */}

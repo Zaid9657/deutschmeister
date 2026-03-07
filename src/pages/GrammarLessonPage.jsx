@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { Loader2 } from 'lucide-react';
+import SEO from '../components/SEO';
 
 // ─── Color System ───
 const GENDER = {
@@ -474,6 +475,20 @@ export default function GrammarLessonPage() {
 
   return (
     <div style={{ fontFamily: "'Source Serif 4', Georgia, serif", background: "#fff", minHeight: "100vh" }}>
+      <SEO
+        title={`${topic.title_en} - German Grammar ${level.toUpperCase()}`}
+        description={topic.title_de ? `${topic.title_en} (${topic.title_de}) - German grammar lesson for ${level.toUpperCase()} with examples, rules, and practice exercises.` : `${topic.title_en} - German grammar lesson for ${level.toUpperCase()} with examples, rules, and practice exercises.`}
+        path={`/grammar/${level}/${slug}`}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Course",
+          "name": `${topic.title_en} - German Grammar ${level.toUpperCase()}`,
+          "description": `Learn ${topic.title_en} in German with clear explanations, examples, and exercises`,
+          "provider": { "@type": "Organization", "name": "DeutschMeister", "url": "https://deutsch-meister.de/" },
+          "inLanguage": "de",
+          "isAccessibleForFree": true
+        }}
+      />
       {/* Header */}
       <div style={{ borderBottom: "1px solid #eee", padding: "20px 0" }}>
         <div style={{ maxWidth: 720, margin: "0 auto", padding: "0 24px" }}>
