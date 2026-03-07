@@ -133,18 +133,41 @@ const LevelPage = () => {
   // Format level for display (a1.1 -> A1.1)
   const displayLevel = level.toUpperCase();
 
-  // SEO metadata per level
-  const levelSeoMap = {
-    'A1.1': { label: 'A1.1 - Beginner', educationalLevel: 'Beginner', desc: 'Start learning German with A1.1 beginner topics: articles, pronouns, basic verbs, and sentence structure. Free lessons with practice exercises.' },
-    'A1.2': { label: 'A1.2 - Beginner Plus', educationalLevel: 'Beginner', desc: 'Continue beginner German with A1.2: accusative case, separable verbs, possessive pronouns, and daily conversation. Free interactive lessons.' },
-    'A2.1': { label: 'A2.1 - Elementary', educationalLevel: 'Elementary', desc: 'Elementary German A2.1: dative case, reflexive verbs, comparative forms, and prepositions. Build on your basics with free exercises.' },
-    'A2.2': { label: 'A2.2 - Elementary Plus', educationalLevel: 'Elementary', desc: 'Advance your elementary German with A2.2: genitive case, passive voice basics, subordinate clauses, and connectors.' },
-    'B1.1': { label: 'B1.1 - Intermediate', educationalLevel: 'Intermediate', desc: 'Intermediate German B1.1: subjunctive mood, relative clauses, indirect speech, and complex sentence structures.' },
-    'B1.2': { label: 'B1.2 - Intermediate Plus', educationalLevel: 'Intermediate', desc: 'Strengthen your intermediate German with B1.2: Konjunktiv II, participial constructions, and advanced connectors.' },
-    'B2.1': { label: 'B2.1 - Upper Intermediate', educationalLevel: 'Upper Intermediate', desc: 'Upper intermediate German B2.1: extended attributes, nominal style, advanced passive constructions, and formal writing.' },
-    'B2.2': { label: 'B2.2 - Upper Intermediate Plus', educationalLevel: 'Upper Intermediate', desc: 'Master upper intermediate German B2.2: modal particles, subjunctive in indirect speech, and academic German.' },
+  // SEO metadata per level and tab
+  const grammarSeo = {
+    'A1.1': { title: 'German Grammar A1.1 - Complete Beginner', desc: 'Start learning German grammar with A1.1 beginner lessons. Master personal pronouns, sein & haben, articles, noun gender, and basic word order.' },
+    'A1.2': { title: 'German Grammar A1.2 - Elementary Basics', desc: 'Continue your German journey with A1.2 grammar. Learn regular verb conjugation, accusative case, negation, possessive articles, and separable verbs.' },
+    'A2.1': { title: 'German Grammar A2.1 - Elementary Intermediate', desc: 'Advance your German with A2.1 grammar topics. Master dative case, two-way prepositions, reflexive verbs, and comparative adjectives.' },
+    'A2.2': { title: 'German Grammar A2.2 - Pre-Intermediate', desc: 'Build fluency with A2.2 German grammar. Learn genitive case, relative clauses, passive voice basics, and subordinate clause word order.' },
+    'B1.1': { title: 'German Grammar B1.1 - Intermediate', desc: 'Reach intermediate German with B1.1 grammar. Master Konjunktiv II, extended adjective endings, infinitive clauses, and past perfect tense.' },
+    'B1.2': { title: 'German Grammar B1.2 - Upper Intermediate', desc: 'Strengthen your German with B1.2 grammar. Learn indirect speech, passive alternatives, advanced modal verbs, and complex sentence structures.' },
+    'B2.1': { title: 'German Grammar B2.1 - Advanced Intermediate', desc: 'Polish your German with B2.1 grammar. Master participle constructions, subjunctive mood, nominal style, and advanced relative clauses.' },
+    'B2.2': { title: 'German Grammar B2.2 - Upper Advanced', desc: 'Perfect your German with B2.2 grammar. Learn advanced Konjunktiv I, complex passive forms, academic writing style, and nuanced connectors.' },
   };
-  const seo = levelSeoMap[displayLevel] || { label: displayLevel, educationalLevel: 'Beginner', desc: `German lessons for level ${displayLevel}.` };
+  const vocabSeo = {
+    title: `German Vocabulary ${displayLevel} - Word Lists & Practice`,
+    desc: `Build your German vocabulary for level ${displayLevel}. Curated word lists with audio pronunciation, example sentences, and progress tracking.`,
+  };
+  const listeningSeo = {
+    title: `German Listening Practice ${displayLevel} - Audio Exercises`,
+    desc: `Improve your German comprehension with ${displayLevel} listening exercises. Native speaker dialogues with multiple choice questions and instant feedback.`,
+  };
+  const podcastsSeo = {
+    title: `German Learning Videos ${displayLevel} - Podcasts`,
+    desc: `Watch German learning videos for level ${displayLevel}. Video lessons covering grammar and vocabulary with native speakers. Free to access.`,
+  };
+
+  const tabSeoMap = {
+    grammar: grammarSeo[displayLevel] || { title: `German Grammar ${displayLevel}`, desc: `German grammar lessons for level ${displayLevel}.` },
+    vocabulary: vocabSeo,
+    sentences: { title: `German Sentences ${displayLevel} - Practice Phrases`, desc: `Practice German sentences and phrases for level ${displayLevel}. Learn everyday expressions with translations.` },
+    listening: listeningSeo,
+    podcasts: podcastsSeo,
+    speaking: { title: `German Speaking Practice ${displayLevel}`, desc: `Practice speaking German at ${displayLevel} level with AI-powered conversation prompts and feedback.` },
+    reading: { title: `German Reading Practice ${displayLevel}`, desc: `Read German texts at ${displayLevel} level with vocabulary support and comprehension questions.` },
+  };
+  const seo = tabSeoMap[activeTab] || tabSeoMap.grammar;
+  const seoEducationalLevel = displayLevel.startsWith('A1') ? 'Beginner' : displayLevel.startsWith('A2') ? 'Elementary' : displayLevel.startsWith('B1') ? 'Intermediate' : 'Upper Intermediate';
 
   // Derive unique categories from loaded vocabulary
   const categories = useMemo(() => {
@@ -167,16 +190,16 @@ const LevelPage = () => {
   return (
     <div className={`min-h-screen bg-gradient-to-br ${theme.bgGradient} pt-20 pb-12`}>
       <SEO
-        title={`German Lessons ${seo.label}`}
+        title={seo.title}
         description={seo.desc}
         path={`/level/${level}`}
         structuredData={{
           "@context": "https://schema.org",
           "@type": "Course",
-          "name": `German ${displayLevel}`,
+          "name": seo.title,
           "description": seo.desc,
           "provider": { "@type": "Organization", "name": "DeutschMeister", "url": "https://deutsch-meister.de/" },
-          "educationalLevel": seo.educationalLevel,
+          "educationalLevel": seoEducationalLevel,
           "inLanguage": "de",
           "isAccessibleForFree": true
         }}
