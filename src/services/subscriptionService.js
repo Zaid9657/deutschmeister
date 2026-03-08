@@ -63,6 +63,8 @@ export const createSubscription = async (userId, planType, pricePaid) => {
 
   if (planType === 'monthly') {
     subscriptionEnd.setMonth(subscriptionEnd.getMonth() + 1);
+  } else if (planType === 'yearly') {
+    subscriptionEnd.setFullYear(subscriptionEnd.getFullYear() + 1);
   } else if (planType === 'quarterly') {
     subscriptionEnd.setMonth(subscriptionEnd.getMonth() + 3);
   }

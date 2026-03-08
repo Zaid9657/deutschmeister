@@ -81,7 +81,7 @@ const Navbar = () => {
             )}
             {user && inTrial && !isSubscribed && (
               <Link
-                to="/subscription"
+                to="/pricing"
                 className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-semibold hover:bg-amber-200 transition-colors"
               >
                 <Sparkles size={12} />
@@ -90,7 +90,7 @@ const Navbar = () => {
             )}
             {user && !inTrial && !isSubscribed && (
               <Link
-                to="/subscription"
+                to="/pricing"
                 className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-semibold hover:from-amber-600 hover:to-orange-600 transition-all"
               >
                 <Crown size={12} />
@@ -192,7 +192,7 @@ const Navbar = () => {
                   )}
                   {!isSubscribed && (
                     <Link
-                      to="/subscription"
+                      to="/pricing"
                       onClick={() => setIsOpen(false)}
                       className="flex items-center gap-3 px-4 py-3 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition-colors"
                     >

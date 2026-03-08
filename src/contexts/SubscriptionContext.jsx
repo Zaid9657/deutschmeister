@@ -92,6 +92,10 @@ export const SubscriptionProvider = ({ children }) => {
     await loadSubscriptionData();
   };
 
+  const checkSubscriptionStatus = async () => {
+    await loadSubscriptionData();
+  };
+
   const value = {
     subscription,
     profile,
@@ -102,6 +106,7 @@ export const SubscriptionProvider = ({ children }) => {
     hasActiveSubscription,
     createSubscription,
     refreshSubscription,
+    checkSubscriptionStatus,
   };
 
   return (

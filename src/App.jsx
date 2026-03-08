@@ -4,6 +4,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { ProgressProvider } from './contexts/ProgressContext';
 import { SubscriptionProvider } from './contexts/SubscriptionContext';
 import Navbar from './components/Navbar';
+import LemonSqueezyProvider from './components/LemonSqueezyProvider';
 import ProtectedRoute from './components/ProtectedRoute';
 import SubscriptionGuard from './components/SubscriptionGuard';
 import TrialBanner from './components/TrialBanner';
@@ -18,6 +19,8 @@ import ProfilePage from './pages/ProfilePage';
 import GrammarLessonPage from './pages/GrammarLessonPage';
 import ReadingLessonPage from './pages/ReadingLessonPage';
 import SubscriptionPage from './pages/SubscriptionPage';
+import PricingPage from './pages/PricingPage';
+import SubscriptionSuccessPage from './pages/SubscriptionSuccessPage';
 import PaymentPage from './pages/PaymentPage';
 import ExercisePlayer from './pages/Listening/ExercisePlayer';
 
@@ -26,6 +29,7 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <SubscriptionProvider>
+          <LemonSqueezyProvider>
           <ThemeProvider>
             <ProgressProvider>
               <div className="min-h-screen bg-slate-50">
@@ -39,12 +43,21 @@ function App() {
                   <Route path="/reset-password" element={<ResetPasswordPage />} />
                   <Route path="/update-password" element={<UpdatePasswordPage />} />
 
-                  {/* Subscription page (requires auth only, not subscription) */}
+                  {/* Subscription/pricing pages (require auth only, not subscription) */}
                   <Route
                     path="/subscription"
                     element={
                       <ProtectedRoute>
                         <SubscriptionPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route path="/pricing" element={<PricingPage />} />
+                  <Route
+                    path="/subscription/success"
+                    element={
+                      <ProtectedRoute>
+                        <SubscriptionSuccessPage />
                       </ProtectedRoute>
                     }
                   />
@@ -113,6 +126,7 @@ function App() {
               </div>
             </ProgressProvider>
           </ThemeProvider>
+          </LemonSqueezyProvider>
         </SubscriptionProvider>
       </AuthProvider>
     </BrowserRouter>

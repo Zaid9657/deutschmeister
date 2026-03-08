@@ -1,12 +1,13 @@
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Crown, Check, Clock, Shield, Zap } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
+import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
 
 const SubscriptionPage = () => {
   const { i18n } = useTranslation();
-  const navigate = useNavigate();
+  const { user } = useAuth();
   const {
     isInFreeTrial,
     getTrialDaysRemaining,
@@ -19,49 +20,64 @@ const SubscriptionPage = () => {
   const daysLeft = getTrialDaysRemaining();
   const isSubscribed = hasActiveSubscription();
 
+  const handleSubscribe = (planType) => {
+    const plan = LEMONSQUEEZY_CONFIG.plans[planType];
+    const checkoutUrl = LEMONSQUEEZY_CONFIG.getCheckoutUrl(
+      plan.variantId,
+      user?.email || '',
+      user?.id || ''
+    );
+    window.open(checkoutUrl, '_blank');
+  };
+
   const plans = [
     {
       id: 'monthly',
-      name: isGerman ? 'Monatlich' : 'Monthly',
-      price: '10',
+      name: isGerman ? 'Pro Monatlich' : 'Pro Monthly',
+      price: '9.99',
       period: isGerman ? '/Monat' : '/month',
       features: isGerman
         ? [
-            'Zugang zu allen Stufen (A1–B2)',
-            'Unbegrenzte Grammatikübungen',
-            'Alle Leseübungen',
+            'Zugang zu allen 8 Stufen (A1.1–B2.2)',
+            'Alle Grammatiklektionen mit Übungen',
+            'Hörverständnisübungen',
+            'Podcasts & Video-Inhalte',
             'Fortschrittsverfolgung',
-            'Sprechübungen mit KI',
+            'Jederzeit kündbar',
           ]
         : [
-            'Access to all levels (A1–B2)',
-            'Unlimited grammar exercises',
-            'All reading lessons',
+            'Full access to all 8 levels (A1.1–B2.2)',
+            'All grammar lessons with exercises',
+            'Listening comprehension exercises',
+            'Podcasts & video content',
             'Progress tracking',
-            'AI speaking practice',
+            'Cancel anytime',
           ],
       highlight: false,
     },
     {
-      id: 'quarterly',
-      name: isGerman ? 'Vierteljährlich' : 'Quarterly',
-      price: '20',
-      period: isGerman ? '/3 Monate' : '/3 months',
-      savings: isGerman ? 'Spare 10€' : 'Save €10',
+      id: 'yearly',
+      name: isGerman ? 'Pro Jährlich' : 'Pro Yearly',
+      price: '79.99',
+      period: isGerman ? '/Jahr' : '/year',
+      savings: isGerman ? 'Spare 33%' : 'Save 33%',
+      monthlyEquiv: '6.67',
       features: isGerman
         ? [
             'Alles im Monatsplan',
-            '3 Monate Zugang',
-            'Bester Wert',
-            'Fortschrittsverfolgung',
+            '33% günstiger als monatlich',
             'Prioritäts-Support',
+            'Frühzeitiger Zugang zu neuen Inhalten',
+            'Fortschrittsverfolgung',
+            'Jederzeit kündbar',
           ]
         : [
             'Everything in Monthly',
-            '3 months access',
-            'Best value',
-            'Progress tracking',
+            'Save 33% compared to monthly',
             'Priority support',
+            'Early access to new content',
+            'Progress tracking',
+            'Cancel anytime',
           ],
       highlight: true,
     },
@@ -110,9 +126,9 @@ const SubscriptionPage = () => {
                       {isGerman ? 'Aktives Abonnement' : 'Active Subscription'}
                     </p>
                     <p className="text-sm text-emerald-600">
-                      {subscription?.plan_type === 'monthly'
-                        ? isGerman ? 'Monatsplan' : 'Monthly Plan'
-                        : isGerman ? 'Vierteljahresplan' : 'Quarterly Plan'}
+                      {subscription?.plan_type === 'yearly'
+                        ? isGerman ? 'Jahresplan' : 'Yearly Plan'
+                        : isGerman ? 'Monatsplan' : 'Monthly Plan'}
                       {' — '}
                       {isGerman ? 'Gültig bis' : 'Valid until'}{' '}
                       {new Date(subscription?.subscription_end).toLocaleDateString(
@@ -199,6 +215,11 @@ const SubscriptionPage = () => {
                     {plan.savings}
                   </span>
                 )}
+                {plan.monthlyEquiv && (
+                  <p className="mt-1 text-xs text-slate-500">
+                    {isGerman ? `Nur €${plan.monthlyEquiv}/Monat` : `Only €${plan.monthlyEquiv}/month`}
+                  </p>
+                )}
               </div>
 
               <ul className="space-y-3 mb-6">
@@ -211,7 +232,7 @@ const SubscriptionPage = () => {
               </ul>
 
               <button
-                onClick={() => navigate(`/payment/${plan.id}`)}
+                onClick={() => handleSubscribe(plan.id)}
                 disabled={isSubscribed}
                 className={`w-full py-3 rounded-xl font-semibold transition-all ${
                   isSubscribed
@@ -228,6 +249,18 @@ const SubscriptionPage = () => {
             </motion.div>
           ))}
         </div>
+
+        {/* Trial info */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          className="text-center text-sm text-slate-500 mb-8"
+        >
+          {isGerman
+            ? 'Alle Pläne beinhalten eine 7-tägige kostenlose Testphase. Jederzeit kündbar.'
+            : 'All plans include a 7-day free trial. Cancel anytime.'}
+        </motion.p>
 
         {/* Features grid */}
         <motion.div
