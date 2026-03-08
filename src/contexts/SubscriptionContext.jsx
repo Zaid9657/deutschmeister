@@ -92,7 +92,7 @@ export const SubscriptionProvider = ({ children }) => {
     await loadSubscriptionData();
   };
 
-  const checkSubscriptionStatus = async () => {
+  const reloadSubscription = async () => {
     await loadSubscriptionData();
   };
 
@@ -106,7 +106,7 @@ export const SubscriptionProvider = ({ children }) => {
     hasActiveSubscription,
     createSubscription,
     refreshSubscription,
-    checkSubscriptionStatus,
+    checkSubscriptionStatus: reloadSubscription,
   };
 
   return (
