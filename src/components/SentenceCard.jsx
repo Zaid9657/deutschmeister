@@ -84,7 +84,16 @@ const SentenceCard = ({ sentence, level }) => {
         {/* German sentence */}
         <div className="mb-4">
           <div className="flex items-start justify-between gap-4">
-            <p className="text-xl font-display text-slate-800 leading-relaxed">
+            <p
+              className="text-slate-800"
+              style={{
+                fontFamily: "'Inter', 'Segoe UI', system-ui, sans-serif",
+                fontSize: 19,
+                lineHeight: 1.7,
+                fontWeight: 500,
+                letterSpacing: '0.01em',
+              }}
+            >
               {sentence.german}
             </p>
             <button
@@ -123,7 +132,16 @@ const SentenceCard = ({ sentence, level }) => {
             }}
             className="overflow-hidden"
           >
-            <p className="pt-2 text-slate-600">{sentence.english}</p>
+            <p
+              className="pt-2 text-slate-600"
+              style={{
+                fontFamily: "'Inter', 'Segoe UI', system-ui, sans-serif",
+                fontSize: 16,
+                lineHeight: 1.6,
+              }}
+            >
+              {sentence.english}
+            </p>
           </motion.div>
         </div>
 

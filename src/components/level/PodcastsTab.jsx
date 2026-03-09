@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../utils/supabase';
 import { useTranslation } from 'react-i18next';
-import { Play, Headphones, Clock, X } from 'lucide-react';
+import { Play, Headphones, Clock, X, Radio } from 'lucide-react';
 
 const PodcastsTab = ({ subLevel }) => {
   const { i18n } = useTranslation();
@@ -50,11 +50,24 @@ const PodcastsTab = ({ subLevel }) => {
 
   if (podcasts.length === 0) {
     return (
-      <div className="text-center py-12">
-        <Headphones className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-gray-600">
-          {isGerman ? 'Podcasts kommen bald!' : 'Podcasts coming soon!'}
-        </h3>
+      <div className="flex items-center justify-center py-16">
+        <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-10 max-w-md w-full text-center">
+          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-orange-400 to-rose-500 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-orange-200">
+            <Radio className="w-10 h-10 text-white" />
+          </div>
+          <h3 className="text-xl font-bold text-slate-800 mb-2">
+            {isGerman ? 'Neue Podcasts kommen bald!' : 'New podcasts coming soon!'}
+          </h3>
+          <p className="text-slate-500 text-sm leading-relaxed">
+            {isGerman
+              ? 'Wir arbeiten an neuen Video-Lektionen für dieses Niveau. Schau bald wieder vorbei!'
+              : "We're working on new video lessons for this level. Check back soon!"}
+          </p>
+          <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-50 text-orange-600 text-sm font-medium">
+            <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse" />
+            {isGerman ? 'In Arbeit' : 'In progress'}
+          </div>
+        </div>
       </div>
     );
   }

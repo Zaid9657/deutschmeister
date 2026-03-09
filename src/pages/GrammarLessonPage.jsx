@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import { Loader2 } from 'lucide-react';
+import { useSubscription } from '../contexts/SubscriptionContext';
+import { Loader2, ArrowLeft, Sparkles } from 'lucide-react';
 import SEO from '../components/SEO';
 
 // ─── Color System ───
@@ -280,6 +281,8 @@ export default function GrammarLessonPage() {
   const slug = topicSlug; // Router uses 'topicSlug', we use 'slug' internally
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { isInFreeTrial, hasActiveSubscription } = useSubscription();
+  const showUpgradeCta = user && isInFreeTrial() && !hasActiveSubscription();
 
   const [loading, setLoading] = useState(true);
   const [topic, setTopic] = useState(null);
@@ -567,9 +570,19 @@ export default function GrammarLessonPage() {
       {/* Header */}
       <div style={{ borderBottom: "1px solid #eee", padding: "20px 0" }}>
         <div style={{ maxWidth: 720, margin: "0 auto", padding: "0 24px" }}>
-          <a onClick={() => navigate(`/grammar/${level}`)} style={{ fontSize: 13, color: "#999", textDecoration: "none", cursor: "pointer" }}>
-            ← Back to {level.toUpperCase()}
-          </a>
+          <button
+            onClick={() => navigate(`/level/${level}`)}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 8,
+              fontSize: 15, color: "#64748B", background: "none", border: "none",
+              cursor: "pointer", padding: "8px 0", fontFamily: "inherit",
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.color = "#1a1a1a"}
+            onMouseLeave={(e) => e.currentTarget.style.color = "#64748B"}
+          >
+            <ArrowLeft size={18} />
+            Back to {level.toUpperCase()}
+          </button>
         </div>
       </div>
 
@@ -957,6 +970,20 @@ export default function GrammarLessonPage() {
                   <button onClick={handleReset} style={{ padding: "10px 30px", borderRadius: 8, border: "1.5px solid #1a1a1a", background: "#fff", color: "#1a1a1a", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
                     Try again
                   </button>
+                  {showUpgradeCta && score >= content.exercises.length * 0.5 && (
+                    <div style={{ marginTop: 24, padding: "16px 20px", borderRadius: 12, background: "linear-gradient(135deg, #FFF7ED, #FEF3C7)", border: "1px solid #FDE68A" }}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 8 }}>
+                        <Sparkles size={16} style={{ color: "#D97706" }} />
+                        <span style={{ fontSize: 14, fontWeight: 600, color: "#92400E" }}>Enjoying DeutschMeister?</span>
+                      </div>
+                      <p style={{ fontSize: 13, color: "#78716C", margin: "0 0 12px", lineHeight: 1.5 }}>
+                        Subscribe to keep learning after your trial ends.
+                      </p>
+                      <Link to="/pricing" style={{ display: "inline-block", padding: "8px 20px", borderRadius: 8, background: "linear-gradient(to right, #F59E0B, #EA580C)", color: "#fff", fontSize: 13, fontWeight: 600, textDecoration: "none" }}>
+                        Upgrade to Pro
+                      </Link>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

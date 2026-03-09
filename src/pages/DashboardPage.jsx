@@ -1,9 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { TrendingUp, BookOpen, MessageSquare, Award } from 'lucide-react';
+import { TrendingUp, BookOpen, MessageSquare, Award, Crown, Clock } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import LevelCard from '../components/LevelCard';
 import { useProgress } from '../contexts/ProgressContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../contexts/SubscriptionContext';
 import { mainLevels, getSubLevels } from '../data/content';
 import SEO from '../components/SEO';
 
@@ -17,7 +19,11 @@ const mainLevelInfo = {
 const DashboardPage = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription } = useSubscription();
   const { getOverallProgress, getTotalStats } = useProgress();
+  const inTrial = user ? isInFreeTrial() : false;
+  const isSubscribed = user ? hasActiveSubscription() : false;
+  const trialDays = user ? getTrialDaysRemaining() : 0;
 
   const overallProgress = getOverallProgress();
   const stats = getTotalStats();
@@ -70,6 +76,37 @@ const DashboardPage = () => {
             {t('dashboard.subtitle')}
           </p>
         </motion.div>
+
+        {/* Trial Status Banner */}
+        {inTrial && !isSubscribed && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05 }}
+            className="mb-8"
+          >
+            <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border border-amber-200 p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 flex items-center justify-center flex-shrink-0">
+                  <Clock className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-800">
+                    {trialDays} day{trialDays !== 1 ? 's' : ''} left in your free trial
+                  </p>
+                  <p className="text-sm text-slate-500">Upgrade to keep learning without limits</p>
+                </div>
+              </div>
+              <Link
+                to="/pricing"
+                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all shadow-md shadow-amber-200 whitespace-nowrap"
+              >
+                <Crown className="w-4 h-4" />
+                Upgrade to Pro
+              </Link>
+            </div>
+          </motion.div>
+        )}
 
         {/* Stats Overview */}
         <motion.div

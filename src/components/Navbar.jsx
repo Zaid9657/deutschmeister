@@ -82,9 +82,11 @@ const Navbar = () => {
             {user && inTrial && !isSubscribed && (
               <Link
                 to="/pricing"
-                className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 text-xs font-semibold hover:bg-amber-200 transition-colors"
+                className="relative flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-100 to-orange-100 text-amber-700 text-sm font-bold hover:from-amber-200 hover:to-orange-200 transition-all shadow-sm hover:shadow-md border border-amber-200"
               >
-                <Sparkles size={12} />
+                <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-amber-400 animate-ping opacity-75" />
+                <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-amber-400" />
+                <Sparkles size={14} />
                 {trialDays}d {isGerman ? 'Test' : 'trial'}
               </Link>
             )}
@@ -194,12 +196,21 @@ const Navbar = () => {
                     <Link
                       to="/pricing"
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 transition-colors"
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 text-amber-700 hover:from-amber-100 hover:to-orange-100 transition-all border border-amber-200"
                     >
-                      <Crown size={20} />
-                      {inTrial
-                        ? `${trialDays}d ${isGerman ? 'Test verbleibend' : 'trial left'}`
-                        : isGerman ? 'Abonnieren' : 'Subscribe'}
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 flex items-center justify-center flex-shrink-0">
+                        <Crown size={16} className="text-white" />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-sm">
+                          {inTrial
+                            ? `${trialDays} ${isGerman ? 'Tage Test verbleibend' : `day${trialDays !== 1 ? 's' : ''} trial left`}`
+                            : isGerman ? 'Abonnieren' : 'Subscribe'}
+                        </p>
+                        {inTrial && (
+                          <p className="text-xs text-amber-500">{isGerman ? 'Jetzt upgraden' : 'Upgrade now'}</p>
+                        )}
+                      </div>
                     </Link>
                   )}
                 </>

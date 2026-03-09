@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { Trophy, RotateCcw, ArrowLeft, CheckCircle, XCircle } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Trophy, RotateCcw, ArrowLeft, CheckCircle, XCircle, Sparkles } from 'lucide-react';
 import { getPerformanceMessage, getLevelTheme, getAnswerKey } from '../../utils/listeningHelpers';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../contexts/AuthContext';
+import { useSubscription } from '../../contexts/SubscriptionContext';
 import QuestionCard from './QuestionCard';
 import DialogueTranscript from './DialogueTranscript';
 
@@ -10,6 +12,9 @@ const ResultsView = ({ exercise, questions, answers, score, dialogues, playsUsed
   const navigate = useNavigate();
   const { i18n } = useTranslation();
   const isGerman = i18n.language === 'de';
+  const { user } = useAuth();
+  const { isInFreeTrial, hasActiveSubscription } = useSubscription();
+  const showUpgradeCta = user && isInFreeTrial() && !hasActiveSubscription();
   const theme = getLevelTheme(exercise.level);
   const message = getPerformanceMessage(score);
   const correctCount = questions.filter((q) => getAnswerKey(answers[q.id || q.question_number]) === q.correct_answer).length;
@@ -125,6 +130,34 @@ const ResultsView = ({ exercise, questions, answers, score, dialogues, playsUsed
           {isGerman ? 'Nochmal' : 'Try Again'}
         </button>
       </div>
+
+      {/* Upgrade CTA for trial users */}
+      {showUpgradeCta && score >= 50 && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.5 }}
+          className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border border-amber-200 p-5 text-center"
+        >
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Sparkles size={16} className="text-amber-500" />
+            <span className="font-semibold text-amber-800 text-sm">
+              {isGerman ? 'DeutschMeister gefällt dir?' : 'Enjoying DeutschMeister?'}
+            </span>
+          </div>
+          <p className="text-xs text-amber-600 mb-3">
+            {isGerman
+              ? 'Abonniere, um nach deinem Test weiter zu lernen.'
+              : 'Subscribe to keep learning after your trial ends.'}
+          </p>
+          <Link
+            to="/pricing"
+            className="inline-flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-semibold rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all"
+          >
+            {isGerman ? 'Jetzt upgraden' : 'Upgrade to Pro'}
+          </Link>
+        </motion.div>
+      )}
     </div>
   );
 };

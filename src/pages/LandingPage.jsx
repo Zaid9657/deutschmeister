@@ -1,13 +1,18 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { ArrowRight, BookOpen, MessageSquare, Award, Sparkles, Sun, TreePine, Waves, Moon } from 'lucide-react';
+import { ArrowRight, BookOpen, MessageSquare, Award, Sparkles, Sun, TreePine, Waves, Moon, Clock } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../contexts/SubscriptionContext';
 import SEO from '../components/SEO';
 
 const LandingPage = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription } = useSubscription();
+  const inTrial = user ? isInFreeTrial() : false;
+  const isSubscribed = user ? hasActiveSubscription() : false;
+  const trialDays = user ? getTrialDaysRemaining() : 0;
 
   const features = [
     {
@@ -157,6 +162,30 @@ const LandingPage = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Trial Banner for logged-in trial users */}
+      {user && inTrial && !isSubscribed && (
+        <section className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-100">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 flex items-center justify-center flex-shrink-0">
+                  <Clock className="w-5 h-5 text-white" />
+                </div>
+                <p className="text-slate-700 font-medium">
+                  You have <span className="text-amber-600 font-bold">{trialDays} day{trialDays !== 1 ? 's' : ''}</span> left in your free trial
+                </p>
+              </div>
+              <Link
+                to="/pricing"
+                className="px-6 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all shadow-md shadow-amber-200 text-sm"
+              >
+                Upgrade to Pro
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Features Section */}
       <section className="py-24 bg-white">
