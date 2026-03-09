@@ -463,7 +463,7 @@ export default function GrammarLessonPage() {
     return (
       <div style={{ maxWidth: 720, margin: "80px auto", padding: "0 24px", textAlign: "center" }}>
         <h1 style={{ fontSize: 24, color: "#1a1a1a" }}>Topic not found</h1>
-        <button onClick={() => navigate(`/grammar/${level}`)} style={{ marginTop: 20, padding: "10px 20px", borderRadius: 8, border: "1px solid #ddd", background: "#fff", cursor: "pointer" }}>
+        <button onClick={() => navigate(`/level/${level}`)} style={{ marginTop: 20, padding: "10px 20px", borderRadius: 8, border: "1px solid #ddd", background: "#fff", cursor: "pointer" }}>
           Back to {level.toUpperCase()}
         </button>
       </div>
@@ -551,7 +551,7 @@ export default function GrammarLessonPage() {
   };
 
   return (
-    <div style={{ fontFamily: "'Source Serif 4', Georgia, serif", background: "#fff", minHeight: "100vh" }}>
+    <div style={{ fontFamily: "'Source Serif 4', Georgia, serif", background: "#fff", minHeight: "100vh", paddingTop: 64 }}>
       <SEO
         title={`${topicSeoData.title} | German Grammar ${level.toUpperCase()}`}
         description={topicSeoData.description}
