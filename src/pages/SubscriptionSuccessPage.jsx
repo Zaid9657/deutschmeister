@@ -1,26 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { CheckCircle, Loader2, ArrowRight } from 'lucide-react';
+import { CheckCircle, Loader2, ArrowRight, AlertCircle } from 'lucide-react';
 import { useSubscription } from '../contexts/SubscriptionContext';
 
 const SubscriptionSuccessPage = () => {
   const navigate = useNavigate();
-  const { refreshSubscription } = useSubscription();
+  const { refreshSubscription, hasActiveSubscription } = useSubscription();
   const [loading, setLoading] = useState(true);
+  const [verified, setVerified] = useState(false);
 
   useEffect(() => {
+    let cancelled = false;
+
     const verifySubscription = async () => {
-      // Wait for webhook to process
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      // Poll up to 5 times, 3 seconds apart, waiting for webhook to process
+      const maxAttempts = 5;
+      const delayMs = 3000;
 
-      // Check subscription status
-      await refreshSubscription();
+      for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        if (cancelled) return;
 
+        await new Promise(resolve => setTimeout(resolve, delayMs));
+        await refreshSubscription();
+
+        if (hasActiveSubscription()) {
+          setVerified(true);
+          setLoading(false);
+          return;
+        }
+
+        console.log(`Subscription check attempt ${attempt}/${maxAttempts} — not active yet`);
+      }
+
+      // After all attempts, stop loading even if not verified
       setLoading(false);
     };
 
     verifySubscription();
+
+    return () => { cancelled = true; };
   }, []);
 
   return (
@@ -37,10 +56,10 @@ const SubscriptionSuccessPage = () => {
               Processing your subscription...
             </h1>
             <p className="text-gray-400">
-              Please wait a moment
+              Please wait while we confirm your payment
             </p>
           </>
-        ) : (
+        ) : verified ? (
           <>
             <motion.div
               initial={{ scale: 0 }}
@@ -63,6 +82,35 @@ const SubscriptionSuccessPage = () => {
               className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-xl transition-colors"
             >
               Start Learning
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          </>
+        ) : (
+          <>
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', delay: 0.2 }}
+            >
+              <AlertCircle className="w-20 h-20 text-amber-400 mx-auto mb-6" />
+            </motion.div>
+
+            <h1 className="text-2xl font-bold text-white mb-4">
+              Payment Received!
+            </h1>
+
+            <p className="text-gray-300 mb-4">
+              Your payment was successful. Your subscription may take a moment to activate.
+            </p>
+            <p className="text-gray-400 text-sm mb-8">
+              If your Pro status doesn't appear right away, try refreshing the page in a minute.
+            </p>
+
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-xl transition-colors"
+            >
+              Go to Dashboard
               <ArrowRight className="w-5 h-5" />
             </button>
           </>

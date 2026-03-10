@@ -1,9 +1,9 @@
 const { createClient } = require('@supabase/supabase-js');
 const crypto = require('crypto');
 
-// Initialize Supabase with service role key
+// Initialize Supabase with service role key (bypasses RLS)
 const supabase = createClient(
-  process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
+  process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co',
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
@@ -23,21 +23,35 @@ const verifySignature = (payload, signature, secret) => {
 };
 
 exports.handler = async (event) => {
-  // Only allow POST
+  // CORS headers for preflight
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Signature',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  };
+
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' };
+  }
+
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
+    return { statusCode: 405, headers, body: 'Method Not Allowed' };
   }
 
   try {
-    // Get signature from headers
+    // Verify signature — reject if invalid
     const signature = event.headers['x-signature'];
     const webhookSecret = process.env.LEMONSQUEEZY_WEBHOOK_SECRET;
 
-    // Verify signature
-    if (webhookSecret && signature) {
+    if (webhookSecret) {
+      if (!signature) {
+        console.error('Missing webhook signature');
+        return { statusCode: 401, headers, body: 'Missing signature' };
+      }
       const isValid = verifySignature(event.body, signature, webhookSecret);
       if (!isValid) {
         console.error('Invalid webhook signature');
+        return { statusCode: 401, headers, body: 'Invalid signature' };
       }
     }
 
@@ -46,70 +60,92 @@ exports.handler = async (event) => {
     const eventType = payload.meta?.event_name;
     const data = payload.data;
 
-    console.log('Webhook received:', eventType);
+    console.log('Webhook received:', eventType, 'Data ID:', data?.id);
 
-    // Log webhook for debugging
-    await supabase.from('webhook_logs').insert({
-      event_type: eventType || 'unknown',
-      payload: payload,
-      processed: false
-    });
+    // Log webhook event
+    const { data: logEntry, error: logError } = await supabase
+      .from('webhook_logs')
+      .insert({
+        event_type: eventType || 'unknown',
+        payload: payload,
+        processed: false
+      })
+      .select('id')
+      .single();
 
-    // Handle different event types
-    switch (eventType) {
-      case 'order_created':
-        await handleOrderCreated(data, payload.meta);
-        break;
-
-      case 'subscription_created':
-        await handleSubscriptionCreated(data, payload.meta);
-        break;
-
-      case 'subscription_updated':
-        await handleSubscriptionUpdated(data, payload.meta);
-        break;
-
-      case 'subscription_cancelled':
-        await handleSubscriptionCancelled(data, payload.meta);
-        break;
-
-      case 'subscription_expired':
-        await handleSubscriptionExpired(data, payload.meta);
-        break;
-
-      default:
-        console.log('Unhandled event type:', eventType);
+    if (logError) {
+      console.error('Error logging webhook:', logError);
     }
 
-    // Mark as processed
-    await supabase
-      .from('webhook_logs')
-      .update({ processed: true })
-      .eq('payload->>data->>id', data?.id);
+    const logId = logEntry?.id;
 
-    return { statusCode: 200, body: 'OK' };
+    // Handle event types
+    let handlerError = null;
+    try {
+      switch (eventType) {
+        case 'order_created':
+          await handleOrderCreated(data, payload.meta);
+          break;
+        case 'subscription_created':
+          await handleSubscriptionCreated(data, payload.meta);
+          break;
+        case 'subscription_updated':
+          await handleSubscriptionUpdated(data, payload.meta);
+          break;
+        case 'subscription_cancelled':
+          await handleSubscriptionCancelled(data, payload.meta);
+          break;
+        case 'subscription_expired':
+          await handleSubscriptionExpired(data, payload.meta);
+          break;
+        default:
+          console.log('Unhandled event type:', eventType);
+      }
+    } catch (err) {
+      handlerError = err;
+      console.error('Handler error for', eventType, ':', err.message);
+    }
+
+    // Mark log entry as processed (using the log ID, not bad JSON path)
+    if (logId) {
+      await supabase
+        .from('webhook_logs')
+        .update({
+          processed: !handlerError,
+          error: handlerError?.message || null
+        })
+        .eq('id', logId);
+    }
+
+    if (handlerError) {
+      return { statusCode: 500, headers, body: 'Handler error' };
+    }
+
+    return { statusCode: 200, headers, body: 'OK' };
 
   } catch (error) {
     console.error('Webhook error:', error);
 
     // Log error
-    await supabase.from('webhook_logs').insert({
-      event_type: 'error',
-      payload: { error: error.message, body: event.body },
-      processed: false,
-      error: error.message
-    });
+    try {
+      await supabase.from('webhook_logs').insert({
+        event_type: 'error',
+        payload: { error: error.message, body: event.body?.substring(0, 5000) },
+        processed: false,
+        error: error.message
+      });
+    } catch (logErr) {
+      console.error('Failed to log error:', logErr);
+    }
 
-    return { statusCode: 500, body: 'Internal Server Error' };
+    return { statusCode: 500, headers, body: 'Internal Server Error' };
   }
 };
 
 async function handleOrderCreated(data, meta) {
   const customData = meta?.custom_data || {};
   const userId = customData.user_id;
-
-  console.log('Order created for user:', userId);
-  // Order created - subscription_created will follow for subscriptions
+  console.log('Order created for user:', userId, 'Order ID:', data?.id);
 }
 
 async function handleSubscriptionCreated(data, meta) {
@@ -118,9 +154,11 @@ async function handleSubscriptionCreated(data, meta) {
   const attributes = data?.attributes || {};
 
   if (!userId) {
-    console.error('No user_id in custom data');
-    return;
+    console.error('No user_id in custom data. Meta:', JSON.stringify(meta));
+    throw new Error('No user_id in webhook custom_data');
   }
+
+  console.log('Processing subscription_created for user:', userId);
 
   // Determine plan type from variant name
   const variantName = attributes.variant_name || '';
@@ -131,8 +169,8 @@ async function handleSubscriptionCreated(data, meta) {
     ? new Date(attributes.renews_at)
     : new Date(Date.now() + (planType === 'yearly' ? 365 : 30) * 24 * 60 * 60 * 1000);
 
-  // Create or update subscription
-  const { error } = await supabase
+  // Create or update subscription (upsert on user_id unique constraint)
+  const { error: subError } = await supabase
     .from('subscriptions')
     .upsert({
       user_id: userId,
@@ -151,21 +189,26 @@ async function handleSubscriptionCreated(data, meta) {
       onConflict: 'user_id'
     });
 
-  if (error) {
-    console.error('Error creating subscription:', error);
-    return;
+  if (subError) {
+    console.error('Error creating subscription:', subError);
+    throw subError;
   }
 
-  // Update profile
-  await supabase
+  // Update profile — mark as subscribed and clear trial
+  const { error: profileError } = await supabase
     .from('profiles')
     .update({
       is_subscribed: true,
-      trial_ends_at: null
+      updated_at: new Date().toISOString()
     })
     .eq('id', userId);
 
-  console.log('Subscription created for user:', userId, 'Plan:', planType);
+  if (profileError) {
+    console.error('Error updating profile:', profileError);
+    throw profileError;
+  }
+
+  console.log('Subscription created successfully for user:', userId, 'Plan:', planType);
 }
 
 async function handleSubscriptionUpdated(data, meta) {
@@ -188,6 +231,7 @@ async function handleSubscriptionUpdated(data, meta) {
 
   if (error) {
     console.error('Error updating subscription:', error);
+    throw error;
   }
 
   console.log('Subscription updated:', subscriptionId);
@@ -197,32 +241,35 @@ async function handleSubscriptionCancelled(data, meta) {
   const subscriptionId = String(data.id);
   const attributes = data?.attributes || {};
 
-  // Get the user_id from the subscription
   const { data: subscription } = await supabase
     .from('subscriptions')
     .select('user_id')
     .eq('lemonsqueezy_subscription_id', subscriptionId)
     .single();
 
-  if (subscription) {
-    const endsAt = attributes.ends_at
-      ? new Date(attributes.ends_at).toISOString()
-      : null;
+  if (!subscription) {
+    console.error('Subscription not found for cancellation:', subscriptionId);
+    return;
+  }
 
-    const { error } = await supabase
-      .from('subscriptions')
-      .update({
-        status: 'cancelled',
-        cancel_at_period_end: true,
-        cancelled_at: new Date().toISOString(),
-        subscription_end: endsAt,
-        updated_at: new Date().toISOString()
-      })
-      .eq('lemonsqueezy_subscription_id', subscriptionId);
+  const endsAt = attributes.ends_at
+    ? new Date(attributes.ends_at).toISOString()
+    : null;
 
-    if (error) {
-      console.error('Error cancelling subscription:', error);
-    }
+  const { error } = await supabase
+    .from('subscriptions')
+    .update({
+      status: 'cancelled',
+      cancel_at_period_end: true,
+      cancelled_at: new Date().toISOString(),
+      subscription_end: endsAt,
+      updated_at: new Date().toISOString()
+    })
+    .eq('lemonsqueezy_subscription_id', subscriptionId);
+
+  if (error) {
+    console.error('Error cancelling subscription:', error);
+    throw error;
   }
 
   console.log('Subscription cancelled:', subscriptionId);
@@ -231,28 +278,39 @@ async function handleSubscriptionCancelled(data, meta) {
 async function handleSubscriptionExpired(data, meta) {
   const subscriptionId = String(data.id);
 
-  // Get the user_id from the subscription
   const { data: subscription } = await supabase
     .from('subscriptions')
     .select('user_id')
     .eq('lemonsqueezy_subscription_id', subscriptionId)
     .single();
 
-  if (subscription) {
-    await supabase
-      .from('subscriptions')
-      .update({
-        status: 'expired',
-        updated_at: new Date().toISOString()
-      })
-      .eq('lemonsqueezy_subscription_id', subscriptionId);
-
-    // Update profile
-    await supabase
-      .from('profiles')
-      .update({ is_subscribed: false })
-      .eq('id', subscription.user_id);
+  if (!subscription) {
+    console.error('Subscription not found for expiration:', subscriptionId);
+    return;
   }
 
-  console.log('Subscription expired:', subscriptionId);
+  const { error: subError } = await supabase
+    .from('subscriptions')
+    .update({
+      status: 'expired',
+      updated_at: new Date().toISOString()
+    })
+    .eq('lemonsqueezy_subscription_id', subscriptionId);
+
+  if (subError) {
+    console.error('Error expiring subscription:', subError);
+    throw subError;
+  }
+
+  // Mark profile as unsubscribed
+  const { error: profileError } = await supabase
+    .from('profiles')
+    .update({ is_subscribed: false })
+    .eq('id', subscription.user_id);
+
+  if (profileError) {
+    console.error('Error updating profile on expiry:', profileError);
+  }
+
+  console.log('Subscription expired:', subscriptionId, 'User:', subscription.user_id);
 }

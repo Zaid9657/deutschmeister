@@ -70,8 +70,12 @@ export const SubscriptionProvider = ({ children }) => {
   };
 
   const hasActiveSubscription = () => {
+    // Check subscription record first
     const subStatus = checkSubscriptionStatus(subscription);
-    return subStatus.isActive;
+    if (subStatus.isActive) return true;
+    // Fallback: profile.is_subscribed (set by webhook even if subscription query misses)
+    if (profile?.is_subscribed) return true;
+    return false;
   };
 
   const hasAccess = isInFreeTrial() || hasActiveSubscription();

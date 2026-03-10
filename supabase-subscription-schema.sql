@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS public.subscriptions (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-  plan_type TEXT NOT NULL CHECK (plan_type IN ('monthly', 'quarterly')),
+  plan_type TEXT NOT NULL CHECK (plan_type IN ('monthly', 'yearly', 'quarterly')),
   status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'cancelled', 'expired')),
   trial_start TIMESTAMPTZ,
   trial_end TIMESTAMPTZ,

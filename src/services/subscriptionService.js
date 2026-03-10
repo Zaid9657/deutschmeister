@@ -106,6 +106,11 @@ export const checkTrialStatus = (profile) => {
     return { isInTrial: false, daysRemaining: 0, hasTrialStarted: false };
   }
 
+  // If user is subscribed, they're no longer in trial
+  if (profile.is_subscribed) {
+    return { isInTrial: false, daysRemaining: 0, hasTrialStarted: true };
+  }
+
   const now = new Date();
   const trialEnd = new Date(profile.trial_ends_at);
   const diffMs = trialEnd - now;
