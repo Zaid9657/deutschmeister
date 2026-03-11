@@ -1,14 +1,19 @@
-const { createClient } = require('@supabase/supabase-js');
-const crypto = require('crypto');
+import { createClient } from '@supabase/supabase-js';
+import crypto from 'crypto';
 
 // Initialize Supabase with service role key (bypasses RLS)
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+let supabase;
+try {
+  supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+} catch (e) {
+  console.error('Failed to initialize Supabase client:', e.message);
+}
 
 // Verify webhook signature
-const verifySignature = (payload, signature, secret) => {
+function verifySignature(payload, signature, secret) {
   try {
     const hmac = crypto.createHmac('sha256', secret);
     const digest = hmac.update(payload).digest('hex');
@@ -20,10 +25,11 @@ const verifySignature = (payload, signature, secret) => {
     console.error('Signature verification error:', error);
     return false;
   }
-};
+}
 
 // Helper: log to webhook_logs with error details
 async function logWebhookEvent(eventType, payload, processed, errorMsg) {
+  if (!supabase) return;
   try {
     await supabase.from('webhook_logs').insert({
       event_type: eventType || 'unknown',
@@ -36,7 +42,7 @@ async function logWebhookEvent(eventType, payload, processed, errorMsg) {
   }
 }
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type, X-Signature',
@@ -52,7 +58,7 @@ exports.handler = async (event) => {
   }
 
   // Pre-flight check: is service role key configured?
-  if (!supabaseKey) {
+  if (!supabaseKey || !supabase) {
     console.error('CRITICAL: SUPABASE_SERVICE_ROLE_KEY is not set!');
     await logWebhookEvent('config_error', { error: 'SUPABASE_SERVICE_ROLE_KEY is not set' }, false, 'Missing service role key');
     return { statusCode: 500, headers, body: 'Server misconfigured' };
@@ -112,7 +118,7 @@ exports.handler = async (event) => {
       console.error('Handler error for', eventType, ':', err.message, err.stack);
     }
 
-    // Log result — always write a fresh row with the outcome
+    // Log result
     await logWebhookEvent(eventType, payload, !handlerError, handlerError?.message);
 
     if (handlerError) {

@@ -6,6 +6,11 @@
 [functions]
   node_bundler = "esbuild"
 
+# Ensure function endpoints are not caught by the SPA catch-all
+[[redirects]]
+  from = "/.netlify/functions/*"
+  status = 200
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
