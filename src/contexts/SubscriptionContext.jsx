@@ -114,8 +114,25 @@ export const SubscriptionProvider = ({ children }) => {
     await loadSubscriptionData();
   };
 
-  const reloadSubscription = async () => {
-    await loadSubscriptionData();
+  // Safety net: call verify-subscription function to recover missed webhooks
+  const verifySubscription = async () => {
+    if (!user) return false;
+    try {
+      const res = await fetch('/.netlify/functions/verify-subscription', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: user.id }),
+      });
+      const data = await res.json();
+      if (data.status === 'active') {
+        await loadSubscriptionData();
+        return true;
+      }
+      return false;
+    } catch (err) {
+      console.error('verify-subscription error:', err);
+      return false;
+    }
   };
 
   const value = {
@@ -128,7 +145,7 @@ export const SubscriptionProvider = ({ children }) => {
     hasActiveSubscription,
     createSubscription,
     refreshSubscription,
-    checkSubscriptionStatus: reloadSubscription,
+    verifySubscription,
   };
 
   return (

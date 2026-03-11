@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Crown, Check, Clock, Shield, Zap, Loader2 } from 'lucide-react';
+import { Crown, Check, Clock, Shield, Zap, Loader2, RefreshCw } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
@@ -15,8 +15,10 @@ const SubscriptionPage = () => {
     hasActiveSubscription,
     subscription,
     refreshSubscription,
+    verifySubscription,
   } = useSubscription();
   const [verifying, setVerifying] = useState(false);
+  const [verifyMessage, setVerifyMessage] = useState('');
   const pollRef = useRef(null);
   const isGerman = i18n.language === 'de';
 
@@ -28,6 +30,7 @@ const SubscriptionPage = () => {
   useEffect(() => {
     if (isSubscribed && verifying) {
       setVerifying(false);
+      setVerifyMessage('');
       if (pollRef.current) {
         clearInterval(pollRef.current);
         pollRef.current = null;
@@ -51,19 +54,41 @@ const SubscriptionPage = () => {
     );
     window.open(checkoutUrl, '_blank');
 
-    // Start polling for subscription activation after checkout opens
+    // Start polling: first poll Supabase, then call verify as fallback
     setVerifying(true);
+    setVerifyMessage('');
     let count = 0;
     pollRef.current = setInterval(async () => {
       count += 1;
       await refreshSubscription();
-      // Stop after 20 attempts (60s) — visibilitychange listener continues after
+
+      // After 15s of polling Supabase, try the verify endpoint as fallback
+      if (count === 5) {
+        await verifySubscription();
+      }
+
+      // Stop after 20 attempts (60s)
       if (count >= 20) {
         clearInterval(pollRef.current);
         pollRef.current = null;
         setVerifying(false);
       }
     }, 3000);
+  };
+
+  // Manual "Verify my subscription" button handler
+  const handleManualVerify = async () => {
+    setVerifying(true);
+    setVerifyMessage('');
+    const recovered = await verifySubscription();
+    if (!recovered) {
+      setVerifyMessage(
+        isGerman
+          ? 'Kein Abonnement gefunden. Bitte warten Sie einige Minuten und versuchen Sie es erneut.'
+          : 'No subscription found. Please wait a few minutes and try again.'
+      );
+    }
+    setVerifying(false);
   };
 
   const plans = [
@@ -237,6 +262,22 @@ const SubscriptionPage = () => {
               </div>
             </div>
           </motion.div>
+        )}
+
+        {/* Already paid? Verify button */}
+        {!isSubscribed && !verifying && (
+          <div className="mb-8 text-center">
+            <button
+              onClick={handleManualVerify}
+              className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 underline underline-offset-2 transition-colors"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              {isGerman ? 'Bereits bezahlt? Abonnement überprüfen' : 'Already paid? Verify my subscription'}
+            </button>
+            {verifyMessage && (
+              <p className="mt-2 text-sm text-red-500">{verifyMessage}</p>
+            )}
+          </div>
         )}
 
         {/* Plan Cards */}
