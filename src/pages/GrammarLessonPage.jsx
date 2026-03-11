@@ -476,95 +476,29 @@ export default function GrammarLessonPage() {
 
   let sectionNumber = 1;
 
-  // Per-topic SEO metadata
-  const topicSeoMap = {
-    // A1.1 Topics
-    'personal-pronouns': {
-      title: 'German Personal Pronouns (ich, du, er, sie, es)',
-      description: 'Master German personal pronouns: ich, du, er, sie, es, wir, ihr, sie, Sie. Learn when to use formal vs informal pronouns with examples and exercises.',
-    },
-    'sein-conjugation': {
-      title: 'German Verb "sein" (to be) Conjugation',
-      description: 'Learn to conjugate "sein" (to be) in German: ich bin, du bist, er ist. Complete guide with examples, pronunciation tips, and practice exercises.',
-    },
-    'haben-conjugation': {
-      title: 'German Verb "haben" (to have) Conjugation',
-      description: 'Master "haben" (to have) conjugation in German: ich habe, du hast, er hat. Essential verb for beginners with examples and exercises.',
-    },
-    'definite-articles': {
-      title: 'German Definite Articles (der, die, das)',
-      description: 'Understand German definite articles: der (masculine), die (feminine), das (neuter). Learn patterns to remember noun genders with tips and practice.',
-    },
-    'indefinite-articles': {
-      title: 'German Indefinite Articles (ein, eine)',
-      description: 'Learn German indefinite articles: ein, eine, ein. Understand the difference from English "a/an" and when to use each form.',
-    },
-    'noun-gender': {
-      title: 'German Noun Gender - Masculine, Feminine, Neuter',
-      description: 'Crack the code of German noun gender. Learn rules, patterns, and memory tricks to know if a noun is der, die, or das.',
-    },
-    'basic-word-order': {
-      title: 'German Word Order - Basic Sentence Structure',
-      description: 'Master German word order rules. Learn the verb-second rule, how to structure statements and questions. Essential for building correct sentences.',
-    },
-    'yes-no-questions': {
-      title: 'German Yes/No Questions - How to Ask',
-      description: 'Learn to form yes/no questions in German by inverting subject and verb. Simple patterns with examples and practice exercises.',
-    },
-    // A1.2 Topics
-    'regular-verb-conjugation': {
-      title: 'German Regular Verb Conjugation - Present Tense',
-      description: 'Master German regular verb endings: -e, -st, -t, -en. Learn the pattern that works for most German verbs with examples and exercises.',
-    },
-    'accusative-case': {
-      title: 'German Accusative Case Explained (den, die, das)',
-      description: 'Understand the German accusative case for direct objects. Learn when der becomes den, which articles change, and practice with exercises.',
-    },
-    'negation-nicht-kein': {
-      title: 'German Negation - nicht vs kein',
-      description: 'Learn when to use "nicht" vs "kein" in German. Clear rules for negating verbs, nouns, and adjectives with examples and practice.',
-    },
-    'possessive-articles': {
-      title: 'German Possessive Articles (mein, dein, sein, ihr)',
-      description: 'Master German possessive articles: mein, dein, sein, ihr, unser, euer. Learn endings for all cases with examples and exercises.',
-    },
-    'plural-forms': {
-      title: 'German Plural Forms - How to Make Nouns Plural',
-      description: 'Learn the 5 German plural patterns: -e, -er, -n/-en, -s, and umlaut changes. Rules and tricks to remember plural forms.',
-    },
-    'w-questions': {
-      title: 'German W-Questions (wer, was, wo, wann, warum)',
-      description: 'Master German question words: wer, was, wo, wann, warum, wie, welche. Form questions correctly with examples and practice.',
-    },
-    'modal-verbs-intro': {
-      title: 'German Modal Verbs - können, müssen, wollen',
-      description: 'Introduction to German modal verbs: können (can), müssen (must), wollen (want). Learn conjugation and sentence structure with exercises.',
-    },
-    'separable-verbs': {
-      title: 'German Separable Verbs (anfangen, aufstehen, mitkommen)',
-      description: 'Understand German separable prefix verbs. Learn when the prefix separates, common verbs, and practice with real examples.',
-    },
-  };
-  const topicSeoData = topicSeoMap[slug] || {
-    title: topic.title_en,
-    description: `Learn ${topic.title_en} in German with clear explanations, examples, and practice exercises. Free ${level.toUpperCase()} grammar lesson for English speakers.`,
-  };
+  // Dynamic SEO metadata — generated from topic data for all 64 topics
+  const levelUpper = level.toUpperCase();
+  const seoTitle = `${topic.title_en} | German ${levelUpper} Grammar`;
+  const seoDescription = `Learn ${topic.title_en} in German with clear rules, examples, and free exercises. ${levelUpper} grammar lesson at DeutschMeister.`;
+  const canonicalPath = `/grammar/${level.toLowerCase()}/${slug}`;
 
   return (
     <div style={{ fontFamily: "'Source Serif 4', Georgia, serif", background: "#fff", minHeight: "100vh", paddingTop: 64 }}>
       <SEO
-        title={`${topicSeoData.title} | German Grammar ${level.toUpperCase()}`}
-        description={topicSeoData.description}
-        path={`/grammar/${level}/${slug}`}
+        title={seoTitle}
+        description={seoDescription}
+        path={canonicalPath}
+        type="article"
         structuredData={{
           "@context": "https://schema.org",
-          "@type": "Course",
-          "name": `${topicSeoData.title} - German Grammar ${level.toUpperCase()}`,
-          "description": topicSeoData.description,
-          "provider": { "@type": "Organization", "name": "DeutschMeister", "url": "https://deutsch-meister.de/" },
-          "educationalLevel": level.toUpperCase().startsWith('A1') ? 'Beginner' : level.toUpperCase().startsWith('A2') ? 'Elementary' : level.toUpperCase().startsWith('B1') ? 'Intermediate' : 'Upper Intermediate',
-          "inLanguage": "de",
-          "isAccessibleForFree": true
+          "@type": "Article",
+          "headline": topic.title_en,
+          "description": `Learn ${topic.title_en} in German with examples and exercises`,
+          "author": { "@type": "Organization", "name": "DeutschMeister" },
+          "publisher": { "@type": "Organization", "name": "DeutschMeister" },
+          "mainEntityOfPage": `https://deutsch-meister.de${canonicalPath}`,
+          "educationalLevel": levelUpper,
+          "inLanguage": ["de", "en"]
         }}
       />
       {/* Header */}
