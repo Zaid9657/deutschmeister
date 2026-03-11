@@ -2,10 +2,10 @@ const { createClient } = require('@supabase/supabase-js');
 const crypto = require('crypto');
 
 // Initialize Supabase with service role key (bypasses RLS)
-const supabase = createClient(
-  process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co',
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Verify webhook signature
 const verifySignature = (payload, signature, secret) => {
@@ -22,8 +22,21 @@ const verifySignature = (payload, signature, secret) => {
   }
 };
 
+// Helper: log to webhook_logs with error details
+async function logWebhookEvent(eventType, payload, processed, errorMsg) {
+  try {
+    await supabase.from('webhook_logs').insert({
+      event_type: eventType || 'unknown',
+      payload: payload,
+      processed: processed,
+      error: errorMsg || null,
+    });
+  } catch (e) {
+    console.error('Failed to write webhook_logs:', e.message);
+  }
+}
+
 exports.handler = async (event) => {
-  // CORS headers for preflight
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type, X-Signature',
@@ -38,8 +51,15 @@ exports.handler = async (event) => {
     return { statusCode: 405, headers, body: 'Method Not Allowed' };
   }
 
+  // Pre-flight check: is service role key configured?
+  if (!supabaseKey) {
+    console.error('CRITICAL: SUPABASE_SERVICE_ROLE_KEY is not set!');
+    await logWebhookEvent('config_error', { error: 'SUPABASE_SERVICE_ROLE_KEY is not set' }, false, 'Missing service role key');
+    return { statusCode: 500, headers, body: 'Server misconfigured' };
+  }
+
   try {
-    // Verify signature — reject if invalid
+    // Verify signature
     const signature = event.headers['x-signature'];
     const webhookSecret = process.env.LEMONSQUEEZY_WEBHOOK_SECRET;
 
@@ -53,6 +73,8 @@ exports.handler = async (event) => {
         console.error('Invalid webhook signature');
         return { statusCode: 401, headers, body: 'Invalid signature' };
       }
+    } else {
+      console.warn('WARNING: LEMONSQUEEZY_WEBHOOK_SECRET is not set — skipping signature verification');
     }
 
     // Parse payload
@@ -61,23 +83,7 @@ exports.handler = async (event) => {
     const data = payload.data;
 
     console.log('Webhook received:', eventType, 'Data ID:', data?.id);
-
-    // Log webhook event
-    const { data: logEntry, error: logError } = await supabase
-      .from('webhook_logs')
-      .insert({
-        event_type: eventType || 'unknown',
-        payload: payload,
-        processed: false
-      })
-      .select('id')
-      .single();
-
-    if (logError) {
-      console.error('Error logging webhook:', logError);
-    }
-
-    const logId = logEntry?.id;
+    console.log('Meta:', JSON.stringify(payload.meta));
 
     // Handle event types
     let handlerError = null;
@@ -103,41 +109,21 @@ exports.handler = async (event) => {
       }
     } catch (err) {
       handlerError = err;
-      console.error('Handler error for', eventType, ':', err.message);
+      console.error('Handler error for', eventType, ':', err.message, err.stack);
     }
 
-    // Mark log entry as processed (using the log ID, not bad JSON path)
-    if (logId) {
-      await supabase
-        .from('webhook_logs')
-        .update({
-          processed: !handlerError,
-          error: handlerError?.message || null
-        })
-        .eq('id', logId);
-    }
+    // Log result — always write a fresh row with the outcome
+    await logWebhookEvent(eventType, payload, !handlerError, handlerError?.message);
 
     if (handlerError) {
-      return { statusCode: 500, headers, body: 'Handler error' };
+      return { statusCode: 500, headers, body: JSON.stringify({ error: handlerError.message }) };
     }
 
     return { statusCode: 200, headers, body: 'OK' };
 
   } catch (error) {
-    console.error('Webhook error:', error);
-
-    // Log error
-    try {
-      await supabase.from('webhook_logs').insert({
-        event_type: 'error',
-        payload: { error: error.message, body: event.body?.substring(0, 5000) },
-        processed: false,
-        error: error.message
-      });
-    } catch (logErr) {
-      console.error('Failed to log error:', logErr);
-    }
-
+    console.error('Webhook top-level error:', error.message, error.stack);
+    await logWebhookEvent('error', { error: error.message, body: event.body?.substring(0, 5000) }, false, error.message);
     return { statusCode: 500, headers, body: 'Internal Server Error' };
   }
 };
@@ -153,12 +139,13 @@ async function handleSubscriptionCreated(data, meta) {
   const userId = customData.user_id;
   const attributes = data?.attributes || {};
 
-  if (!userId) {
-    console.error('No user_id in custom data. Meta:', JSON.stringify(meta));
-    throw new Error('No user_id in webhook custom_data');
-  }
+  console.log('subscription_created — custom_data:', JSON.stringify(customData));
+  console.log('subscription_created — attributes:', JSON.stringify(attributes));
 
-  console.log('Processing subscription_created for user:', userId);
+  if (!userId) {
+    console.error('No user_id in custom data. Full meta:', JSON.stringify(meta));
+    throw new Error('No user_id in webhook custom_data. Keys present: ' + Object.keys(customData).join(', '));
+  }
 
   // Determine plan type from variant name
   const variantName = attributes.variant_name || '';
@@ -168,6 +155,8 @@ async function handleSubscriptionCreated(data, meta) {
   const subscriptionEnd = attributes.renews_at
     ? new Date(attributes.renews_at)
     : new Date(Date.now() + (planType === 'yearly' ? 365 : 30) * 24 * 60 * 60 * 1000);
+
+  console.log('Upserting subscription for user:', userId, 'plan:', planType);
 
   // Create or update subscription (upsert on user_id unique constraint)
   const { error: subError } = await supabase
@@ -190,36 +179,45 @@ async function handleSubscriptionCreated(data, meta) {
     });
 
   if (subError) {
-    console.error('Error creating subscription:', subError);
-    throw subError;
+    console.error('Supabase subscriptions upsert error:', JSON.stringify(subError));
+    throw new Error(`subscriptions upsert failed: ${subError.message} (code: ${subError.code}, details: ${subError.details})`);
   }
 
-  // Update profile — mark as subscribed and clear trial
+  console.log('Subscription upserted OK. Now updating profile...');
+
+  // Update profile — use upsert so it works even if profile row doesn't exist yet
   const { error: profileError } = await supabase
     .from('profiles')
-    .update({
+    .upsert({
+      id: userId,
       is_subscribed: true,
       updated_at: new Date().toISOString()
-    })
-    .eq('id', userId);
+    }, {
+      onConflict: 'id'
+    });
 
   if (profileError) {
-    console.error('Error updating profile:', profileError);
-    throw profileError;
+    console.error('Supabase profiles upsert error:', JSON.stringify(profileError));
+    throw new Error(`profiles upsert failed: ${profileError.message} (code: ${profileError.code}, details: ${profileError.details})`);
   }
 
-  console.log('Subscription created successfully for user:', userId, 'Plan:', planType);
+  console.log('SUCCESS: Subscription created for user:', userId, 'Plan:', planType);
 }
 
 async function handleSubscriptionUpdated(data, meta) {
   const attributes = data?.attributes || {};
   const subscriptionId = String(data.id);
+  const customData = meta?.custom_data || {};
+  const userId = customData.user_id;
+
+  console.log('subscription_updated — subscriptionId:', subscriptionId, 'userId:', userId);
 
   const renewsAt = attributes.renews_at
     ? new Date(attributes.renews_at).toISOString()
     : null;
 
-  const { error } = await supabase
+  // Try to update by lemonsqueezy_subscription_id first
+  const { data: updated, error } = await supabase
     .from('subscriptions')
     .update({
       status: attributes.status || 'active',
@@ -227,11 +225,59 @@ async function handleSubscriptionUpdated(data, meta) {
       cancel_at_period_end: attributes.cancelled || false,
       updated_at: new Date().toISOString()
     })
-    .eq('lemonsqueezy_subscription_id', subscriptionId);
+    .eq('lemonsqueezy_subscription_id', subscriptionId)
+    .select('id');
 
   if (error) {
-    console.error('Error updating subscription:', error);
-    throw error;
+    console.error('Error updating subscription:', JSON.stringify(error));
+    throw new Error(`subscription update failed: ${error.message}`);
+  }
+
+  // If no rows matched (subscription_updated arrived before subscription_created),
+  // create the subscription if we have a user_id
+  if (!updated || updated.length === 0) {
+    console.warn('No subscription found for ID:', subscriptionId, '— attempting upsert with user_id:', userId);
+
+    if (userId) {
+      const variantName = attributes.variant_name || '';
+      const planType = variantName.toLowerCase().includes('yearly') ? 'yearly' : 'monthly';
+
+      const { error: upsertError } = await supabase
+        .from('subscriptions')
+        .upsert({
+          user_id: userId,
+          plan_type: planType,
+          status: attributes.status || 'active',
+          subscription_start: new Date().toISOString(),
+          subscription_end: renewsAt,
+          lemonsqueezy_subscription_id: subscriptionId,
+          lemonsqueezy_customer_id: String(attributes.customer_id || ''),
+          lemonsqueezy_order_id: String(attributes.order_id || ''),
+          lemonsqueezy_product_id: String(attributes.product_id || ''),
+          lemonsqueezy_variant_id: String(attributes.variant_id || ''),
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'user_id'
+        });
+
+      if (upsertError) {
+        console.error('Fallback upsert error:', JSON.stringify(upsertError));
+        throw new Error(`subscription fallback upsert failed: ${upsertError.message}`);
+      }
+
+      // Also mark profile as subscribed
+      await supabase
+        .from('profiles')
+        .upsert({
+          id: userId,
+          is_subscribed: true,
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'id' });
+
+      console.log('Fallback upsert OK for user:', userId);
+    } else {
+      console.warn('subscription_updated: no matching row and no user_id — skipping');
+    }
   }
 
   console.log('Subscription updated:', subscriptionId);
@@ -241,14 +287,19 @@ async function handleSubscriptionCancelled(data, meta) {
   const subscriptionId = String(data.id);
   const attributes = data?.attributes || {};
 
-  const { data: subscription } = await supabase
+  const { data: subscription, error: findError } = await supabase
     .from('subscriptions')
     .select('user_id')
     .eq('lemonsqueezy_subscription_id', subscriptionId)
-    .single();
+    .maybeSingle();
+
+  if (findError) {
+    console.error('Error finding subscription for cancellation:', JSON.stringify(findError));
+    throw findError;
+  }
 
   if (!subscription) {
-    console.error('Subscription not found for cancellation:', subscriptionId);
+    console.warn('Subscription not found for cancellation:', subscriptionId);
     return;
   }
 
@@ -268,7 +319,7 @@ async function handleSubscriptionCancelled(data, meta) {
     .eq('lemonsqueezy_subscription_id', subscriptionId);
 
   if (error) {
-    console.error('Error cancelling subscription:', error);
+    console.error('Error cancelling subscription:', JSON.stringify(error));
     throw error;
   }
 
@@ -278,14 +329,19 @@ async function handleSubscriptionCancelled(data, meta) {
 async function handleSubscriptionExpired(data, meta) {
   const subscriptionId = String(data.id);
 
-  const { data: subscription } = await supabase
+  const { data: subscription, error: findError } = await supabase
     .from('subscriptions')
     .select('user_id')
     .eq('lemonsqueezy_subscription_id', subscriptionId)
-    .single();
+    .maybeSingle();
+
+  if (findError) {
+    console.error('Error finding subscription for expiry:', JSON.stringify(findError));
+    throw findError;
+  }
 
   if (!subscription) {
-    console.error('Subscription not found for expiration:', subscriptionId);
+    console.warn('Subscription not found for expiration:', subscriptionId);
     return;
   }
 
@@ -298,18 +354,18 @@ async function handleSubscriptionExpired(data, meta) {
     .eq('lemonsqueezy_subscription_id', subscriptionId);
 
   if (subError) {
-    console.error('Error expiring subscription:', subError);
+    console.error('Error expiring subscription:', JSON.stringify(subError));
     throw subError;
   }
 
   // Mark profile as unsubscribed
   const { error: profileError } = await supabase
     .from('profiles')
-    .update({ is_subscribed: false })
+    .update({ is_subscribed: false, updated_at: new Date().toISOString() })
     .eq('id', subscription.user_id);
 
   if (profileError) {
-    console.error('Error updating profile on expiry:', profileError);
+    console.error('Error updating profile on expiry:', JSON.stringify(profileError));
   }
 
   console.log('Subscription expired:', subscriptionId, 'User:', subscription.user_id);
