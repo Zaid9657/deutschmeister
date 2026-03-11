@@ -1,6 +1,8 @@
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Crown, Check, Clock, Shield, Zap } from 'lucide-react';
+import { Crown, Check, Clock, Shield, Zap, Loader2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
@@ -13,12 +15,51 @@ const SubscriptionPage = () => {
     getTrialDaysRemaining,
     hasActiveSubscription,
     subscription,
+    refreshSubscription,
   } = useSubscription();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [verifying, setVerifying] = useState(false);
+  const pollCountRef = useRef(0);
   const isGerman = i18n.language === 'de';
 
   const inTrial = isInFreeTrial();
   const daysLeft = getTrialDaysRemaining();
   const isSubscribed = hasActiveSubscription();
+
+  // Handle return from LemonSqueezy checkout with ?payment=success
+  useEffect(() => {
+    if (searchParams.get('payment') !== 'success') return;
+    if (isSubscribed) {
+      // Already active — clear param
+      setSearchParams({}, { replace: true });
+      return;
+    }
+
+    setVerifying(true);
+    pollCountRef.current = 0;
+
+    const poll = setInterval(async () => {
+      pollCountRef.current += 1;
+      await refreshSubscription();
+
+      // Will re-render and isSubscribed will update; stop after 10 attempts (30s)
+      if (pollCountRef.current >= 10) {
+        clearInterval(poll);
+        setVerifying(false);
+        setSearchParams({}, { replace: true });
+      }
+    }, 3000);
+
+    return () => clearInterval(poll);
+  }, [searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Stop polling once subscription is confirmed
+  useEffect(() => {
+    if (isSubscribed && verifying) {
+      setVerifying(false);
+      setSearchParams({}, { replace: true });
+    }
+  }, [isSubscribed, verifying, setSearchParams]);
 
   const handleSubscribe = (planType) => {
     const plan = LEMONSQUEEZY_CONFIG.plans[planType];
@@ -104,6 +145,29 @@ const SubscriptionPage = () => {
               : 'Unlock all content and master German with full access to all levels and features.'}
           </p>
         </motion.div>
+
+        {/* Payment verification */}
+        {verifying && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8 p-4 rounded-xl border bg-blue-50 border-blue-200"
+          >
+            <div className="flex items-center gap-3">
+              <Loader2 className="w-5 h-5 text-blue-600 animate-spin" />
+              <div>
+                <p className="font-semibold text-blue-800">
+                  {isGerman ? 'Zahlung wird bestätigt...' : 'Verifying your payment...'}
+                </p>
+                <p className="text-sm text-blue-600">
+                  {isGerman
+                    ? 'Dies kann einige Sekunden dauern. Bitte schließen Sie diese Seite nicht.'
+                    : 'This may take a few seconds. Please do not close this page.'}
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
 
         {/* Status Card */}
         {(inTrial || isSubscribed) && (

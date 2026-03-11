@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { useAuth } from './AuthContext';
 import {
   getSubscription,
@@ -18,6 +18,7 @@ export const SubscriptionProvider = ({ children }) => {
   const [subscription, setSubscription] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const lastRefreshRef = useRef(0);
 
   const loadSubscriptionData = useCallback(async () => {
     if (!user) {
@@ -58,6 +59,23 @@ export const SubscriptionProvider = ({ children }) => {
   useEffect(() => {
     loadSubscriptionData();
   }, [loadSubscriptionData]);
+
+  // Refresh subscription data when user returns to tab (e.g. after LemonSqueezy checkout)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && user) {
+        // Throttle: only refresh if more than 5 seconds since last refresh
+        const now = Date.now();
+        if (now - lastRefreshRef.current > 5000) {
+          lastRefreshRef.current = now;
+          loadSubscriptionData();
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [user, loadSubscriptionData]);
 
   const isInFreeTrial = () => {
     const trialStatus = checkTrialStatus(profile);
