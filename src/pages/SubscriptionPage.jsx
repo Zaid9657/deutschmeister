@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Crown, Check, Clock, Shield, Zap, Loader2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -17,49 +16,31 @@ const SubscriptionPage = () => {
     subscription,
     refreshSubscription,
   } = useSubscription();
-  const [searchParams, setSearchParams] = useSearchParams();
   const [verifying, setVerifying] = useState(false);
-  const pollCountRef = useRef(0);
+  const pollRef = useRef(null);
   const isGerman = i18n.language === 'de';
 
   const inTrial = isInFreeTrial();
   const daysLeft = getTrialDaysRemaining();
   const isSubscribed = hasActiveSubscription();
 
-  // Handle return from LemonSqueezy checkout with ?payment=success
-  useEffect(() => {
-    if (searchParams.get('payment') !== 'success') return;
-    if (isSubscribed) {
-      // Already active — clear param
-      setSearchParams({}, { replace: true });
-      return;
-    }
-
-    setVerifying(true);
-    pollCountRef.current = 0;
-
-    const poll = setInterval(async () => {
-      pollCountRef.current += 1;
-      await refreshSubscription();
-
-      // Will re-render and isSubscribed will update; stop after 10 attempts (30s)
-      if (pollCountRef.current >= 10) {
-        clearInterval(poll);
-        setVerifying(false);
-        setSearchParams({}, { replace: true });
-      }
-    }, 3000);
-
-    return () => clearInterval(poll);
-  }, [searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
-
   // Stop polling once subscription is confirmed
   useEffect(() => {
     if (isSubscribed && verifying) {
       setVerifying(false);
-      setSearchParams({}, { replace: true });
+      if (pollRef.current) {
+        clearInterval(pollRef.current);
+        pollRef.current = null;
+      }
     }
-  }, [isSubscribed, verifying, setSearchParams]);
+  }, [isSubscribed, verifying]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current);
+    };
+  }, []);
 
   const handleSubscribe = (planType) => {
     const plan = LEMONSQUEEZY_CONFIG.plans[planType];
@@ -69,6 +50,20 @@ const SubscriptionPage = () => {
       user?.id || ''
     );
     window.open(checkoutUrl, '_blank');
+
+    // Start polling for subscription activation after checkout opens
+    setVerifying(true);
+    let count = 0;
+    pollRef.current = setInterval(async () => {
+      count += 1;
+      await refreshSubscription();
+      // Stop after 20 attempts (60s) — visibilitychange listener continues after
+      if (count >= 20) {
+        clearInterval(pollRef.current);
+        pollRef.current = null;
+        setVerifying(false);
+      }
+    }, 3000);
   };
 
   const plans = [

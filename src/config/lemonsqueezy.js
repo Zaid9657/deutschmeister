@@ -37,11 +37,9 @@ export const LEMONSQUEEZY_CONFIG = {
   // Generate checkout URL with user info
   getCheckoutUrl: (variantId, userEmail, userId) => {
     const baseUrl = `https://deutsch-meister.lemonsqueezy.com/checkout/buy/${variantId}`;
-    const siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://deutschmeister.netlify.app';
     const params = new URLSearchParams({
       'checkout[email]': userEmail || '',
       'checkout[custom][user_id]': userId || '',
-      'checkout[success_url]': `${siteUrl}/subscription?payment=success`,
     });
     return `${baseUrl}?${params.toString()}`;
   }
