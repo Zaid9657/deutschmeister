@@ -9,6 +9,7 @@ const SEO = ({
   type = 'website',
   image = 'https://deutsch-meister.de/og-image.png',
   structuredData,
+  extraStructuredData,
 }) => {
   const siteTitle = 'DeutschMeister';
   const fullTitle = title ? `${title} | ${siteTitle}` : `${siteTitle} - Learn German`;
@@ -43,6 +44,11 @@ const SEO = ({
       {structuredData && (
         <script type="application/ld+json">
           {JSON.stringify(structuredData)}
+        </script>
+      )}
+      {extraStructuredData && (
+        <script type="application/ld+json">
+          {JSON.stringify(extraStructuredData)}
         </script>
       )}
     </Helmet>

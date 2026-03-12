@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
-import { Loader2, ArrowLeft, ArrowRight, Sparkles, BookOpen } from 'lucide-react';
+import { Loader2, ArrowLeft, ArrowRight, Sparkles, BookOpen, ChevronRight } from 'lucide-react';
 import SEO from '../components/SEO';
 import { grammarTopics } from '../data/grammarTopics';
 
@@ -501,10 +501,29 @@ export default function GrammarLessonPage() {
           "educationalLevel": levelUpper,
           "inLanguage": ["de", "en"]
         }}
+        extraStructuredData={{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://deutsch-meister.de/" },
+            { "@type": "ListItem", "position": 2, "name": "Grammar", "item": "https://deutsch-meister.de/grammar" },
+            { "@type": "ListItem", "position": 3, "name": levelUpper, "item": `https://deutsch-meister.de/grammar/${level.toLowerCase()}` },
+            { "@type": "ListItem", "position": 4, "name": topic.title_en }
+          ]
+        }}
       />
-      {/* Header */}
-      <div style={{ borderBottom: "1px solid #eee", padding: "20px 0" }}>
+      {/* Breadcrumbs + Back button */}
+      <div style={{ borderBottom: "1px solid #eee", padding: "16px 0" }}>
         <div style={{ maxWidth: 720, margin: "0 auto", padding: "0 24px" }}>
+          <nav style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 4, fontSize: 13, marginBottom: 8 }}>
+            <Link to="/" style={{ color: "#9ca3af", textDecoration: "none" }} onMouseEnter={e => e.currentTarget.style.color = "#3B82F6"} onMouseLeave={e => e.currentTarget.style.color = "#9ca3af"}>Home</Link>
+            <ChevronRight size={12} color="#d1d5db" />
+            <Link to="/grammar" style={{ color: "#9ca3af", textDecoration: "none" }} onMouseEnter={e => e.currentTarget.style.color = "#3B82F6"} onMouseLeave={e => e.currentTarget.style.color = "#9ca3af"}>Grammar</Link>
+            <ChevronRight size={12} color="#d1d5db" />
+            <Link to={`/grammar/${level.toLowerCase()}`} style={{ color: "#9ca3af", textDecoration: "none" }} onMouseEnter={e => e.currentTarget.style.color = "#3B82F6"} onMouseLeave={e => e.currentTarget.style.color = "#9ca3af"}>{levelUpper}</Link>
+            <ChevronRight size={12} color="#d1d5db" />
+            <span style={{ color: "#374151", fontWeight: 500 }}>{topic.title_en}</span>
+          </nav>
           <button
             onClick={() => navigate(`/level/${level}`)}
             style={{
