@@ -35,6 +35,7 @@ const TrialBanner = () => {
           <button
             onClick={() => setDismissed(true)}
             className="text-white/80 hover:text-white transition-colors"
+            aria-label="Dismiss trial banner"
           >
             <X className="w-4 h-4" />
           </button>

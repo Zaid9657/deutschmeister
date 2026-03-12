@@ -89,6 +89,7 @@ const PodcastsTab = ({ subLevel }) => {
               <button
                 onClick={closePodcast}
                 className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="Close podcast player"
               >
                 <X className="w-6 h-6 text-gray-500" />
               </button>

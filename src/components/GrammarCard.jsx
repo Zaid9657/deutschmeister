@@ -125,6 +125,7 @@ const GrammarCard = ({ grammar, level }) => {
                       handleSpeak(grammar.example);
                     }}
                     className={`p-1 rounded-full hover:bg-${theme.primary}/10 transition-colors`}
+                    aria-label="Listen to example"
                   >
                     <Volume2 className={`w-4 h-4 text-${theme.primary}`} />
                   </button>

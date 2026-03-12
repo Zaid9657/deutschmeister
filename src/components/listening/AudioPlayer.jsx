@@ -101,6 +101,7 @@ const AudioPlayer = ({ src, onPlayCountChange, disabled = false }) => {
               ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
               : 'bg-indigo-500 text-white hover:bg-indigo-600'
           }`}
+          aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
         >
           {isPlaying ? <Pause size={20} /> : <Play size={20} className="ml-0.5" />}
         </motion.button>
@@ -140,6 +141,7 @@ const AudioPlayer = ({ src, onPlayCountChange, disabled = false }) => {
               : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
           }`}
           title="Restart audio"
+          aria-label="Restart audio"
         >
           <RotateCcw size={16} />
         </motion.button>
