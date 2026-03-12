@@ -234,6 +234,389 @@ function ExplanationTypeLabel({ type }) {
   );
 }
 
+// Renders a comparison_table (array of {aspect, english, german} or similar)
+function ComparisonTable({ data }) {
+  if (!Array.isArray(data) || data.length === 0) return null;
+  const keys = Object.keys(data[0]);
+  return (
+    <div style={{ overflowX: "auto", margin: "12px 0" }}>
+      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+        <thead>
+          <tr>
+            {keys.map(k => (
+              <th key={k} style={{ textAlign: "left", padding: "8px 12px", background: "#F1F5F9", borderBottom: "2px solid #E2E8F0", fontWeight: 700, color: "#334155", textTransform: "capitalize" }}>
+                {k.replace(/_/g, ' ')}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((row, ri) => (
+            <tr key={ri}>
+              {keys.map(k => (
+                <td key={k} style={{ padding: "8px 12px", borderBottom: "1px solid #F1F5F9", color: "#333", lineHeight: 1.6 }}>
+                  {typeof row[k] === 'string' ? row[k] : JSON.stringify(row[k])}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+// Renders a categorized list (e.g., gender meanings with category+examples)
+function CategoryList({ title, categories }) {
+  if (!Array.isArray(categories) || categories.length === 0) return null;
+  return (
+    <div style={{ margin: "12px 0", padding: "12px 16px", background: "#F8FAFC", borderRadius: 10, borderLeft: "3px solid #6366F1" }}>
+      {title && <h4 style={{ fontSize: 15, fontWeight: 700, color: "#1a1a1a", margin: "0 0 8px" }}>{title}</h4>}
+      {categories.map((cat, ci) => (
+        <div key={ci} style={{ margin: "6px 0" }}>
+          <span style={{ fontWeight: 600, color: "#334155" }}>{cat.category || cat.name || cat.title}: </span>
+          <span style={{ color: "#555" }}>{cat.examples || cat.description || cat.text || ''}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Generic renderer for any explanation content object — handles all known structures
+function ExplanationContent({ content: c }) {
+  if (!c || typeof c !== 'object') return null;
+  const rendered = [];
+
+  // 1. sections array (most common — 30 rules)
+  if (Array.isArray(c.sections)) {
+    c.sections.forEach((section, si) => {
+      rendered.push(
+        <div key={`sec-${si}`} style={{ margin: "16px 0", padding: "12px 16px", background: "#F8FAFC", borderRadius: 10, borderLeft: "3px solid #6366F1" }}>
+          {(section.title_en || section.title_de) && (
+            <h4 style={{ fontSize: 15, fontWeight: 700, color: "#1a1a1a", margin: "0 0 8px" }}>
+              {section.title_en || section.title_de}
+            </h4>
+          )}
+          {(section.content_en || section.content_de) && (
+            <div style={{ fontSize: 15, lineHeight: 1.85, color: "#333", whiteSpace: "pre-line" }}>
+              {section.content_en || section.content_de}
+            </div>
+          )}
+        </div>
+      );
+    });
+  }
+
+  // 2. intro_en (used by many non-sections structures)
+  if (c.intro_en) {
+    rendered.push(<p key="intro" style={{ fontSize: 16, lineHeight: 1.85, color: "#333", margin: "0 0 14px" }}>{c.intro_en}</p>);
+  }
+
+  // 3. paragraphs_en (used by 13 rules)
+  if (Array.isArray(c.paragraphs_en)) {
+    c.paragraphs_en.forEach((para, pi) => {
+      rendered.push(<p key={`para-${pi}`} style={{ fontSize: 15, lineHeight: 1.85, color: "#333", margin: "0 0 14px", whiteSpace: "pre-line" }}>{para}</p>);
+    });
+  }
+
+  // 4. analogy_en
+  if (c.analogy_en) {
+    rendered.push(
+      <div key="analogy" style={{ margin: "12px 0", padding: "14px 16px", background: "#FFFBEB", borderRadius: 10, borderLeft: "3px solid #F59E0B" }}>
+        <span style={{ fontWeight: 700, color: "#92400E", fontSize: 13, display: "block", marginBottom: 4 }}>Analogy</span>
+        <span style={{ fontSize: 15, lineHeight: 1.7, color: "#78350F" }}>{c.analogy_en}</span>
+      </div>
+    );
+  }
+
+  // 5. native_perspective_en
+  if (c.native_perspective_en) {
+    rendered.push(
+      <div key="native" style={{ margin: "12px 0", padding: "14px 16px", background: "#F0FDF4", borderRadius: 10, borderLeft: "3px solid #22C55E" }}>
+        <span style={{ fontWeight: 700, color: "#166534", fontSize: 13, display: "block", marginBottom: 4 }}>Native Perspective</span>
+        <span style={{ fontSize: 15, lineHeight: 1.7, color: "#14532D" }}>{c.native_perspective_en}</span>
+      </div>
+    );
+  }
+
+  // 6. comparison_table (array of row objects)
+  if (Array.isArray(c.comparison_table)) {
+    rendered.push(<ComparisonTable key="comp-table" data={c.comparison_table} />);
+  }
+
+  // 7. what_transfers_en / what_doesnt_transfer_en
+  if (c.what_transfers_en) {
+    rendered.push(
+      <div key="transfers" style={{ margin: "12px 0", padding: "12px 16px", background: "#F0FDF4", borderRadius: 10, borderLeft: "3px solid #22C55E" }}>
+        <span style={{ fontWeight: 700, color: "#166534", fontSize: 13 }}>What transfers from English: </span>
+        <span style={{ fontSize: 15, color: "#333", lineHeight: 1.7 }}>{c.what_transfers_en}</span>
+      </div>
+    );
+  }
+  if (c.what_doesnt_transfer_en) {
+    rendered.push(
+      <div key="no-transfers" style={{ margin: "12px 0", padding: "12px 16px", background: "#FEF2F2", borderRadius: 10, borderLeft: "3px solid #EF4444" }}>
+        <span style={{ fontWeight: 700, color: "#991B1B", fontSize: 13 }}>What doesn't transfer: </span>
+        <span style={{ fontSize: 15, color: "#333", lineHeight: 1.7 }}>{c.what_doesnt_transfer_en}</span>
+      </div>
+    );
+  }
+
+  // 8. key_insight_en / key_point_en / key_insight / good_news_en / trap_to_avoid_en / helpful_contrast_en / rule_of_thumb_en / stress_rule_en / key_test_en / usage_note_en / when_not_to_contract_en
+  const insightKeys = ['key_insight_en', 'key_point_en', 'key_insight', 'good_news_en', 'rule_of_thumb_en', 'key_test_en', 'helpful_contrast_en', 'stress_rule_en', 'usage_note_en', 'when_not_to_contract_en'];
+  insightKeys.forEach(k => {
+    if (c[k] && typeof c[k] === 'string') {
+      rendered.push(
+        <div key={k} style={{ margin: "12px 0", padding: "14px 16px", background: "#EEF2FF", borderRadius: 10, borderLeft: "3px solid #6366F1" }}>
+          <span style={{ fontWeight: 700, color: "#3730A3", fontSize: 13, display: "block", marginBottom: 4 }}>{k.replace(/_en$/, '').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</span>
+          <span style={{ fontSize: 15, lineHeight: 1.7, color: "#1E1B4B", whiteSpace: "pre-line" }}>{c[k]}</span>
+        </div>
+      );
+    }
+  });
+
+  if (c.trap_to_avoid_en) {
+    rendered.push(
+      <div key="trap" style={{ margin: "12px 0", padding: "14px 16px", background: "#FEF2F2", borderRadius: 10, borderLeft: "3px solid #EF4444" }}>
+        <span style={{ fontWeight: 700, color: "#991B1B", fontSize: 13, display: "block", marginBottom: 4 }}>Trap to Avoid</span>
+        <span style={{ fontSize: 15, lineHeight: 1.7, color: "#7F1D1D" }}>{c.trap_to_avoid_en}</span>
+      </div>
+    );
+  }
+
+  // 9. key_pairs_en
+  if (c.key_pairs_en) {
+    rendered.push(<p key="key-pairs" style={{ fontSize: 15, lineHeight: 1.85, color: "#333", margin: "0 0 14px", fontStyle: "italic" }}>{c.key_pairs_en}</p>);
+  }
+
+  // 10. modals / prepositions / conjunctions / patterns / situations / categories (arrays of structured items)
+  const listArrayKeys = ['modals', 'prepositions', 'conjunctions', 'separable_prefixes', 'inseparable_prefixes'];
+  listArrayKeys.forEach(k => {
+    if (Array.isArray(c[k]) && c[k].length > 0) {
+      const items = c[k];
+      rendered.push(
+        <div key={k} style={{ margin: "12px 0" }}>
+          {items.map((item, ii) => (
+            <div key={ii} style={{ margin: "8px 0", padding: "12px 16px", background: "#F8FAFC", borderRadius: 10, borderLeft: "3px solid #6366F1" }}>
+              {(item.verb || item.preposition || item.conjunction || item.prefix) && (
+                <span style={{ fontWeight: 700, fontSize: 16, color: "#1a1a1a" }}>
+                  {item.verb || item.preposition || item.conjunction || item.prefix}
+                  {item.meaning && <span style={{ fontWeight: 400, color: "#666", marginLeft: 8 }}>— {item.meaning}</span>}
+                </span>
+              )}
+              {item.use && <p style={{ fontSize: 14, color: "#555", margin: "4px 0" }}>{item.use}</p>}
+              {item.case && <p style={{ fontSize: 14, color: "#555", margin: "4px 0" }}>Case: {item.case}</p>}
+              {item.example_de && (
+                <p style={{ fontSize: 14, margin: "4px 0", color: "#1D4ED8", fontStyle: "italic" }}>
+                  {item.example_de}
+                  {item.example_en && <span style={{ color: "#888", fontStyle: "normal" }}> — {item.example_en}</span>}
+                </p>
+              )}
+              {item.examples && typeof item.examples === 'string' && (
+                <p style={{ fontSize: 14, color: "#555", margin: "4px 0" }}>{item.examples}</p>
+              )}
+            </div>
+          ))}
+        </div>
+      );
+    }
+  });
+
+  // 11. patterns / situations / categories (arrays with title+items or title+explanation)
+  const groupArrayKeys = ['patterns', 'situations', 'categories'];
+  groupArrayKeys.forEach(k => {
+    if (Array.isArray(c[k]) && c[k].length > 0) {
+      c[k].forEach((group, gi) => {
+        rendered.push(
+          <div key={`${k}-${gi}`} style={{ margin: "12px 0", padding: "12px 16px", background: "#F8FAFC", borderRadius: 10, borderLeft: "3px solid #6366F1" }}>
+            {(group.title || group.name || group.pattern) && (
+              <h4 style={{ fontSize: 15, fontWeight: 700, color: "#1a1a1a", margin: "0 0 6px" }}>
+                {group.title || group.name || group.pattern}
+              </h4>
+            )}
+            {group.explanation && <p style={{ fontSize: 14, color: "#555", margin: "4px 0", lineHeight: 1.7 }}>{group.explanation}</p>}
+            {group.description && <p style={{ fontSize: 14, color: "#555", margin: "4px 0", lineHeight: 1.7 }}>{group.description}</p>}
+            {group.example_de && (
+              <p style={{ fontSize: 14, margin: "4px 0", color: "#1D4ED8", fontStyle: "italic" }}>
+                {group.example_de}
+                {group.example_en && <span style={{ color: "#888", fontStyle: "normal" }}> — {group.example_en}</span>}
+              </p>
+            )}
+            {Array.isArray(group.examples) && group.examples.map((ex, ei) => (
+              <p key={ei} style={{ fontSize: 14, margin: "2px 0", color: "#1D4ED8", fontStyle: "italic" }}>
+                {typeof ex === 'string' ? ex : (ex.de || ex.example_de || '')}
+                {(ex.en || ex.example_en) && <span style={{ color: "#888", fontStyle: "normal" }}> — {ex.en || ex.example_en}</span>}
+              </p>
+            ))}
+            {Array.isArray(group.items) && group.items.map((item, ii) => (
+              <p key={ii} style={{ fontSize: 14, margin: "2px 0", color: "#555" }}>
+                {typeof item === 'string' ? item : (item.text || item.de || JSON.stringify(item))}
+              </p>
+            ))}
+          </div>
+        );
+      });
+    }
+  });
+
+  // 12. Gender-specific meaning/ending groups (masculine_meanings, feminine_meanings, neuter_meanings, masculine_endings, etc.)
+  const genderGroupKeys = ['masculine_meanings', 'feminine_meanings', 'neuter_meanings', 'masculine_endings', 'feminine_endings', 'neuter_endings', 'masculine_examples', 'feminine_examples', 'neuter_examples'];
+  genderGroupKeys.forEach(k => {
+    if (c[k] && typeof c[k] === 'object') {
+      const group = c[k];
+      if (Array.isArray(group.categories)) {
+        rendered.push(<CategoryList key={k} title={group.title || k.replace(/_/g, ' ')} categories={group.categories} />);
+      } else if (Array.isArray(group.endings || group.examples || group)) {
+        const items = group.endings || group.examples || group;
+        rendered.push(<CategoryList key={k} title={group.title || k.replace(/_/g, ' ')} categories={items} />);
+      } else if (typeof group === 'string') {
+        rendered.push(<p key={k} style={{ fontSize: 15, lineHeight: 1.85, color: "#333", margin: "0 0 14px" }}>{group}</p>);
+      }
+    }
+  });
+
+  // 13. Table data: definite_table, indefinite_table, negative_table, forms_table, full_comparison
+  const tableKeys = ['definite_table', 'indefinite_table', 'negative_table', 'forms_table', 'full_comparison'];
+  tableKeys.forEach(k => {
+    if (c[k] && typeof c[k] === 'object') {
+      const tbl = c[k];
+      if (tbl.headers && tbl.rows) {
+        rendered.push(
+          <div key={k} style={{ overflowX: "auto", margin: "12px 0" }}>
+            {tbl.title && <h4 style={{ fontSize: 14, fontWeight: 700, color: "#334155", margin: "0 0 8px" }}>{tbl.title}</h4>}
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+              <thead>
+                <tr>
+                  {tbl.headers.map((h, hi) => (
+                    <th key={hi} style={{ textAlign: "left", padding: "8px 12px", background: "#F1F5F9", borderBottom: "2px solid #E2E8F0", fontWeight: 700, color: "#334155" }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {tbl.rows.map((row, ri) => (
+                  <tr key={ri}>
+                    {(Array.isArray(row) ? row : Object.values(row)).map((cell, ci) => (
+                      <td key={ci} style={{ padding: "8px 12px", borderBottom: "1px solid #F1F5F9", color: "#333" }}>{typeof cell === 'string' ? cell : JSON.stringify(cell)}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      }
+    }
+  });
+
+  // 14. key_changes (array of {case, change, example})
+  if (Array.isArray(c.key_changes)) {
+    c.key_changes.forEach((change, ci) => {
+      rendered.push(
+        <div key={`change-${ci}`} style={{ margin: "8px 0", padding: "10px 14px", background: "#F8FAFC", borderRadius: 8, borderLeft: "3px solid #6366F1" }}>
+          {change.case && <span style={{ fontWeight: 700, color: "#1a1a1a" }}>{change.case}: </span>}
+          {change.change && <span style={{ color: "#555" }}>{change.change}</span>}
+          {change.example && <p style={{ fontSize: 14, color: "#1D4ED8", fontStyle: "italic", margin: "4px 0" }}>{change.example}</p>}
+        </div>
+      );
+    });
+  }
+
+  // 15. question_words (array of {word, meaning, example})
+  if (Array.isArray(c.question_words)) {
+    c.question_words.forEach((qw, qi) => {
+      rendered.push(
+        <div key={`qw-${qi}`} style={{ margin: "8px 0", padding: "10px 14px", background: "#F8FAFC", borderRadius: 8, borderLeft: "3px solid #6366F1" }}>
+          <span style={{ fontWeight: 700, fontSize: 16, color: "#1a1a1a" }}>{qw.word}</span>
+          {qw.meaning && <span style={{ color: "#666", marginLeft: 8 }}>— {qw.meaning}</span>}
+          {qw.example && <p style={{ fontSize: 14, color: "#1D4ED8", fontStyle: "italic", margin: "4px 0" }}>{qw.example}</p>}
+        </div>
+      );
+    });
+  }
+
+  // 16. verb_pairs / example_pair
+  if (Array.isArray(c.verb_pairs)) {
+    c.verb_pairs.forEach((vp, vi) => {
+      rendered.push(
+        <div key={`vp-${vi}`} style={{ margin: "8px 0", padding: "10px 14px", background: "#F8FAFC", borderRadius: 8, borderLeft: "3px solid #6366F1" }}>
+          {(vp.movement || vp.position) && <span style={{ fontWeight: 700, color: "#1a1a1a" }}>{vp.movement || ''} / {vp.position || ''}</span>}
+          {vp.meaning && <span style={{ color: "#666", marginLeft: 8 }}>— {vp.meaning}</span>}
+          {vp.example && <p style={{ fontSize: 14, color: "#1D4ED8", fontStyle: "italic", margin: "4px 0" }}>{vp.example}</p>}
+        </div>
+      );
+    });
+  }
+  if (c.example_pair && typeof c.example_pair === 'object') {
+    const ep = c.example_pair;
+    rendered.push(
+      <div key="example-pair" style={{ margin: "12px 0", padding: "12px 16px", background: "#F8FAFC", borderRadius: 10, borderLeft: "3px solid #6366F1" }}>
+        {ep.movement && <p style={{ fontSize: 14, margin: "2px 0" }}><strong>Movement:</strong> {ep.movement}</p>}
+        {ep.position && <p style={{ fontSize: 14, margin: "2px 0" }}><strong>Position:</strong> {ep.position}</p>}
+      </div>
+    );
+  }
+
+  // 17. pattern_en / pattern_observation_en / formula_en / visual_en / mnemonic_en / alternate_mnemonic_en / plural_rule_en
+  const textKeys = ['pattern_en', 'pattern_observation_en', 'formula_en', 'visual_en', 'mnemonic_en', 'alternate_mnemonic_en', 'plural_rule_en'];
+  textKeys.forEach(k => {
+    if (c[k] && typeof c[k] === 'string') {
+      rendered.push(
+        <div key={k} style={{ margin: "12px 0", padding: "14px 16px", background: "#FFFBEB", borderRadius: 10, borderLeft: "3px solid #F59E0B" }}>
+          <span style={{ fontWeight: 700, color: "#92400E", fontSize: 13, display: "block", marginBottom: 4 }}>{k.replace(/_en$/, '').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</span>
+          <span style={{ fontSize: 15, lineHeight: 1.7, color: "#78350F", whiteSpace: "pre-line" }}>{c[k]}</span>
+        </div>
+      );
+    }
+  });
+
+  // 18. structure_comparison / with_modal_verbs / with_perfect_tense (objects with various keys)
+  const objKeys = ['structure_comparison', 'with_modal_verbs', 'with_perfect_tense', 'contractions_table'];
+  objKeys.forEach(k => {
+    if (c[k] && typeof c[k] === 'object') {
+      if (Array.isArray(c[k])) {
+        rendered.push(<ComparisonTable key={k} data={c[k]} />);
+      } else {
+        const obj = c[k];
+        if (obj.headers && obj.rows) {
+          rendered.push(
+            <div key={k} style={{ overflowX: "auto", margin: "12px 0" }}>
+              {obj.title && <h4 style={{ fontSize: 14, fontWeight: 700, color: "#334155", margin: "0 0 8px" }}>{obj.title}</h4>}
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
+                <thead><tr>{obj.headers.map((h, hi) => <th key={hi} style={{ textAlign: "left", padding: "8px 12px", background: "#F1F5F9", borderBottom: "2px solid #E2E8F0", fontWeight: 700, color: "#334155" }}>{h}</th>)}</tr></thead>
+                <tbody>{obj.rows.map((row, ri) => <tr key={ri}>{(Array.isArray(row) ? row : Object.values(row)).map((cell, ci) => <td key={ci} style={{ padding: "8px 12px", borderBottom: "1px solid #F1F5F9", color: "#333" }}>{typeof cell === 'string' ? cell : JSON.stringify(cell)}</td>)}</tr>)}</tbody>
+              </table>
+            </div>
+          );
+        } else {
+          // Generic key-value rendering
+          const entries = Object.entries(obj).filter(([, v]) => typeof v === 'string');
+          if (entries.length > 0) {
+            rendered.push(
+              <div key={k} style={{ margin: "12px 0", padding: "12px 16px", background: "#F8FAFC", borderRadius: 10, borderLeft: "3px solid #6366F1" }}>
+                <h4 style={{ fontSize: 14, fontWeight: 700, color: "#334155", margin: "0 0 8px" }}>{k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</h4>
+                {entries.map(([ek, ev]) => (
+                  <p key={ek} style={{ fontSize: 14, color: "#555", margin: "4px 0", lineHeight: 1.6 }}>
+                    <strong>{ek.replace(/_/g, ' ')}: </strong>{ev}
+                  </p>
+                ))}
+              </div>
+            );
+          }
+        }
+      }
+    }
+  });
+
+  // 19. Fallback: direct content_en/content_de or text
+  if (rendered.length === 0) {
+    if (c.content_en) rendered.push(<p key="fb-en" style={{ fontSize: 16, lineHeight: 1.85, color: "#333", margin: "0 0 14px" }}>{c.content_en}</p>);
+    else if (c.content_de) rendered.push(<p key="fb-de" style={{ fontSize: 16, lineHeight: 1.85, color: "#333", margin: "0 0 14px" }}>{c.content_de}</p>);
+    else if (c.text) rendered.push(<p key="fb-text" style={{ fontSize: 16, lineHeight: 1.85, color: "#333", margin: "0 0 14px" }}>{c.text}</p>);
+  }
+
+  return <>{rendered}</>;
+}
+
 function Exercise({ exercise, index, onAnswer, userAnswer, showResult }) {
   const isCorrect = userAnswer === exercise.correctAnswer;
   return (
@@ -601,20 +984,10 @@ export default function GrammarLessonPage() {
           <>
             <SectionHeading number={sectionNumber++}>Deep Dive</SectionHeading>
             {content.explanations.map((exp, i) => {
-              // Parse content: handle string (double-encoded JSON), object, or missing
               let c = exp.content || {};
               if (typeof c === 'string') {
                 try { c = JSON.parse(c); } catch { c = {}; }
               }
-
-              // Resolve sections: content.sections array, content itself as array, or top-level sections on exp
-              const sections = Array.isArray(c.sections)
-                ? c.sections
-                : Array.isArray(c)
-                  ? c
-                  : Array.isArray(exp.sections)
-                    ? exp.sections
-                    : [];
 
               return (
                 <div key={i} style={{ margin: "20px 0" }}>
@@ -625,31 +998,7 @@ export default function GrammarLessonPage() {
                     )}
                   </div>
 
-                  {/* Sections array */}
-                  {sections.length > 0 && sections.map((section, si) => (
-                    <div key={si} style={{ margin: "16px 0", padding: "12px 16px", background: "#f8fafc", borderRadius: 10, borderLeft: "3px solid #6366f1" }}>
-                      {(section.title_en || section.title_de) && (
-                        <h4 style={{ fontSize: 15, fontWeight: 700, color: "#1a1a1a", margin: "0 0 8px" }}>
-                          {section.title_en || section.title_de}
-                        </h4>
-                      )}
-                      {(section.content_en || section.content_de) && (
-                        <div style={{ fontSize: 15, lineHeight: 1.85, color: "#333", whiteSpace: "pre-line" }}>
-                          {section.content_en || section.content_de}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-
-                  {/* Fallback: direct content_en/content_de on the content object */}
-                  {sections.length === 0 && c.content_en && <P>{c.content_en}</P>}
-                  {sections.length === 0 && !c.content_en && c.content_de && <P>{c.content_de}</P>}
-
-                  {/* Fallback: direct text on the content object */}
-                  {sections.length === 0 && !c.content_en && !c.content_de && c.text && <P>{c.text}</P>}
-
-                  {/* Fallback: top-level content_en/content_de on the rule itself */}
-                  {sections.length === 0 && !c.content_en && !c.content_de && !c.text && exp.content_en && <P>{exp.content_en}</P>}
+                  <ExplanationContent content={c} />
 
                   {exp.key_insight_en && <KeyBox>{exp.key_insight_en}</KeyBox>}
                   {exp.memory_trick_en && <MemoryTrickBox>{exp.memory_trick_en}</MemoryTrickBox>}
