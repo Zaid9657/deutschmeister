@@ -3,8 +3,9 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
-import { Loader2, ArrowLeft, Sparkles } from 'lucide-react';
+import { Loader2, ArrowLeft, ArrowRight, Sparkles, BookOpen } from 'lucide-react';
 import SEO from '../components/SEO';
+import { grammarTopics } from '../data/grammarTopics';
 
 // ─── Color System ───
 const GENDER = {
@@ -1016,6 +1017,103 @@ export default function GrammarLessonPage() {
         )}
 
       </div>
+
+      {/* Related Topics / Continue Learning */}
+      {(() => {
+        const topics = grammarTopics[level] || [];
+        const currentIndex = topics.findIndex(t => t.slug === slug);
+        if (currentIndex === -1 || topics.length === 0) return null;
+
+        const prevTopic = currentIndex > 0 ? topics[currentIndex - 1] : null;
+        const nextTopic = currentIndex < topics.length - 1 ? topics[currentIndex + 1] : null;
+
+        // Pick up to 2 other topics from the same level (not prev/next/current)
+        const otherTopics = topics.filter((_, i) =>
+          i !== currentIndex && i !== currentIndex - 1 && i !== currentIndex + 1
+        ).slice(0, 2);
+
+        return (
+          <div style={{ maxWidth: 720, margin: "0 auto", padding: "48px 24px 64px" }}>
+            <div style={{ borderTop: "1px solid #e5e7eb", paddingTop: 32 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
+                <BookOpen size={20} color="#1a1a1a" />
+                <h3 style={{ fontSize: 18, fontWeight: 700, color: "#1a1a1a", margin: 0 }}>
+                  Continue Learning
+                </h3>
+              </div>
+
+              {/* Prev / Next navigation */}
+              <div style={{ display: "grid", gridTemplateColumns: prevTopic && nextTopic ? "1fr 1fr" : "1fr", gap: 12, marginBottom: otherTopics.length > 0 ? 20 : 0 }}>
+                {prevTopic && (
+                  <Link
+                    to={`/grammar/${level}/${prevTopic.slug}`}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 12, padding: "14px 16px",
+                      border: "1px solid #e5e7eb", borderRadius: 12, textDecoration: "none",
+                      transition: "border-color 0.15s, box-shadow 0.15s",
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = "#3B82F6"; e.currentTarget.style.boxShadow = "0 0 0 1px #3B82F6"; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = "#e5e7eb"; e.currentTarget.style.boxShadow = "none"; }}
+                  >
+                    <ArrowLeft size={16} color="#6b7280" style={{ flexShrink: 0 }} />
+                    <div>
+                      <div style={{ fontSize: 11, color: "#9ca3af", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>Previous</div>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: "#1a1a1a", lineHeight: 1.3 }}>{prevTopic.titleEn}</div>
+                    </div>
+                  </Link>
+                )}
+                {nextTopic && (
+                  <Link
+                    to={`/grammar/${level}/${nextTopic.slug}`}
+                    style={{
+                      display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 12, padding: "14px 16px",
+                      border: "1px solid #e5e7eb", borderRadius: 12, textDecoration: "none",
+                      textAlign: "right", transition: "border-color 0.15s, box-shadow 0.15s",
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = "#3B82F6"; e.currentTarget.style.boxShadow = "0 0 0 1px #3B82F6"; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = "#e5e7eb"; e.currentTarget.style.boxShadow = "none"; }}
+                  >
+                    <div>
+                      <div style={{ fontSize: 11, color: "#9ca3af", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>Next</div>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: "#1a1a1a", lineHeight: 1.3 }}>{nextTopic.titleEn}</div>
+                    </div>
+                    <ArrowRight size={16} color="#6b7280" style={{ flexShrink: 0 }} />
+                  </Link>
+                )}
+              </div>
+
+              {/* More topics from this level */}
+              {otherTopics.length > 0 && (
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: "#6b7280", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    More from {level.toUpperCase()}
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {otherTopics.map(t => (
+                      <Link
+                        key={t.slug}
+                        to={`/grammar/${level}/${t.slug}`}
+                        style={{
+                          display: "flex", alignItems: "center", gap: 10, padding: "10px 14px",
+                          background: "#f9fafb", borderRadius: 8, textDecoration: "none",
+                          fontSize: 14, color: "#374151", fontWeight: 500,
+                          transition: "background 0.15s",
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.background = "#f0f4ff"; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = "#f9fafb"; }}
+                      >
+                        <span style={{ color: "#3B82F6", fontSize: 16 }}>→</span>
+                        {t.titleEn}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      })()}
+
     </div>
   );
 }
