@@ -1,11 +1,36 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
-import { BookMarked, ChevronRight, CheckCircle, Sun, TreePine, Waves, Moon } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { BookMarked, ChevronRight, CheckCircle, Sun, TreePine, Waves, Moon, ChevronDown } from 'lucide-react';
 import { useProgress } from '../contexts/ProgressContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { mainLevels, getSubLevels, levelThemes as contentLevelThemes } from '../data/content';
 import { getTopicsForLevel, getTotalGrammarTopics } from '../data/grammarTopics';
+import SEO from '../components/SEO';
+
+const faqItems = [
+  {
+    question: 'How many grammar topics does DeutschMeister cover?',
+    answer: 'DeutschMeister covers 64 German grammar topics across 8 CEFR levels, from A1.1 (complete beginner) to B2.2 (upper intermediate).',
+  },
+  {
+    question: 'Is DeutschMeister free?',
+    answer: 'Yes, all grammar explanations and exercises are free to access. No account required.',
+  },
+  {
+    question: 'Are the grammar explanations in English or German?',
+    answer: "Both! Every topic is explained in English first, with a bilingual toggle to switch to German when you're ready.",
+  },
+  {
+    question: "What's included in each grammar lesson?",
+    answer: 'Each lesson includes an introduction, examples with audio, clear grammar rules, and interactive exercises with answer explanations.',
+  },
+  {
+    question: 'What levels does DeutschMeister cover?',
+    answer: 'We cover A1.1, A1.2, A2.1, A2.2, B1.1, B1.2, B2.1, and B2.2 — taking you from beginner to upper intermediate.',
+  },
+];
 
 const mainLevelInfo = {
   A1: { name: 'Sunrise Warmth', icon: '🌅', color: 'from-amber-400 to-orange-400' },
@@ -146,8 +171,29 @@ const GrammarSectionPage = () => {
     );
   };
 
+  const [openFaq, setOpenFaq] = useState(null);
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-20 pb-12">
+      <SEO
+        title="German Grammar Lessons | 64 Free Topics"
+        description="Master German grammar with 64 free lessons across 8 CEFR levels (A1–B2). Clear explanations, examples, and interactive exercises for every topic."
+        path="/grammar"
+        structuredData={faqSchema}
+      />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -282,6 +328,53 @@ const GrammarSectionPage = () => {
               ? 'Jedes Grammatik-Thema hat 5 Lernphasen: Einführung, geführte Übung, freie Übung, Quiz und Meisterschaft.'
               : 'Each grammar topic has 5 learning stages: Introduction, Guided Practice, Free Practice, Quiz, and Mastery.'}
           </p>
+        </motion.div>
+
+        {/* FAQ Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.9 }}
+          className="mt-12"
+        >
+          <h2 className="font-display text-2xl font-bold text-slate-800 mb-6 text-center">
+            {isGerman ? 'Häufig gestellte Fragen' : 'Frequently Asked Questions'}
+          </h2>
+          <div className="space-y-3">
+            {faqItems.map((item, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-xl border border-slate-200 overflow-hidden"
+              >
+                <button
+                  onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                  className="w-full flex items-center justify-between p-4 text-left hover:bg-slate-50 transition-colors"
+                >
+                  <span className="font-medium text-slate-800 pr-4">{item.question}</span>
+                  <ChevronDown
+                    className={`w-5 h-5 text-slate-400 flex-shrink-0 transition-transform duration-200 ${
+                      openFaq === index ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+                <AnimatePresence>
+                  {openFaq === index && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <p className="px-4 pb-4 text-slate-600 text-sm leading-relaxed">
+                        {item.answer}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
+          </div>
         </motion.div>
       </div>
     </div>
