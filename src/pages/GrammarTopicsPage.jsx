@@ -8,6 +8,18 @@ import { useProgress } from '../contexts/ProgressContext';
 import { levels, levelThemes as contentLevelThemes } from '../data/content';
 import { fetchTopicsForLevel } from '../services/grammarService';
 import GrammarTopicCard from '../components/GrammarTopicCard';
+import SEO from '../components/SEO';
+
+const levelSeoDescriptions = {
+  'a1.1': 'Start learning German grammar with 8 beginner lessons. Master nouns, articles, pronouns, and basic sentence structure. Free exercises with explanations.',
+  'a1.2': 'Continue your German A1 journey with accusative case, negation, modal verbs, and prepositions. 8 free lessons with examples and exercises.',
+  'a2.1': 'German A2.1 grammar: dative case, two-way prepositions, separable verbs, and perfect tense. 8 free lessons for lower-intermediate learners.',
+  'a2.2': 'Master German A2.2 grammar including reflexive verbs, conjunctions, comparative and superlative forms. 8 free lessons with exercises.',
+  'b1.1': 'German B1.1 grammar for intermediate learners. Genitive case, relative clauses, Konjunktiv II, and infinitive constructions. 8 free lessons.',
+  'b1.2': 'German B1.2 grammar: passive voice, adjective declension, verbs with prepositions, and indirect questions. 8 free lessons with exercises.',
+  'b2.1': 'Upper-intermediate German grammar. Konjunktiv I, participial adjectives, extended attributes, and double infinitive. 8 free B2.1 lessons.',
+  'b2.2': 'Advanced German B2.2 grammar: modal particles, functional verb structures, complex sentences, and academic style. 8 free lessons.',
+};
 
 const iconMap = {
   'a1.1': Sun,
@@ -73,6 +85,30 @@ const GrammarTopicsPage = () => {
 
   return (
     <div className={`min-h-screen bg-gradient-to-br ${theme.bgGradient} pt-20 pb-12`}>
+      <SEO
+        title={`German ${displayLevel} Grammar | 8 Free Lessons`}
+        description={levelSeoDescriptions[level] || `Learn German ${displayLevel} grammar with 8 free lessons, exercises, and explanations.`}
+        path={`/grammar/${level}`}
+        structuredData={{
+          '@context': 'https://schema.org',
+          '@type': 'Course',
+          name: `German ${displayLevel} Grammar`,
+          description: levelSeoDescriptions[level],
+          provider: {
+            '@type': 'Organization',
+            name: 'DeutschMeister',
+            sameAs: 'https://deutsch-meister.de',
+          },
+          educationalLevel: level.toUpperCase().split('.')[0],
+          inLanguage: 'de',
+          numberOfLessons: topics.length || 8,
+          hasCourseInstance: {
+            '@type': 'CourseInstance',
+            courseMode: 'online',
+            courseWorkload: 'PT2H',
+          },
+        }}
+      />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
