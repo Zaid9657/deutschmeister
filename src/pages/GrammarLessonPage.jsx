@@ -601,7 +601,21 @@ export default function GrammarLessonPage() {
           <>
             <SectionHeading number={sectionNumber++}>Deep Dive</SectionHeading>
             {content.explanations.map((exp, i) => {
-              const c = exp.content || {};
+              // Parse content: handle string (double-encoded JSON), object, or missing
+              let c = exp.content || {};
+              if (typeof c === 'string') {
+                try { c = JSON.parse(c); } catch { c = {}; }
+              }
+
+              // Resolve sections: content.sections array, content itself as array, or top-level sections on exp
+              const sections = Array.isArray(c.sections)
+                ? c.sections
+                : Array.isArray(c)
+                  ? c
+                  : Array.isArray(exp.sections)
+                    ? exp.sections
+                    : [];
+
               return (
                 <div key={i} style={{ margin: "20px 0" }}>
                   <div style={{ display: "flex", gap: 10, alignItems: "center", margin: "0 0 12px" }}>
@@ -611,25 +625,31 @@ export default function GrammarLessonPage() {
                     )}
                   </div>
 
-                  {/* Sections array (primary structure) */}
-                  {c.sections && Array.isArray(c.sections) && c.sections.map((section, si) => (
-                    <div key={si} style={{ margin: "16px 0" }}>
+                  {/* Sections array */}
+                  {sections.length > 0 && sections.map((section, si) => (
+                    <div key={si} style={{ margin: "16px 0", padding: "12px 16px", background: "#f8fafc", borderRadius: 10, borderLeft: "3px solid #6366f1" }}>
                       {(section.title_en || section.title_de) && (
                         <h4 style={{ fontSize: 15, fontWeight: 700, color: "#1a1a1a", margin: "0 0 8px" }}>
                           {section.title_en || section.title_de}
                         </h4>
                       )}
                       {(section.content_en || section.content_de) && (
-                        <div style={{ fontSize: 15, lineHeight: 1.85, color: "#333", margin: "0 0 14px", whiteSpace: "pre-line" }}>
+                        <div style={{ fontSize: 15, lineHeight: 1.85, color: "#333", whiteSpace: "pre-line" }}>
                           {section.content_en || section.content_de}
                         </div>
                       )}
                     </div>
                   ))}
 
-                  {/* Fallback: direct content_en/content_de (flat structure) */}
-                  {!c.sections && c.content_en && <P>{c.content_en}</P>}
-                  {!c.sections && c.content_de && !c.content_en && <P>{c.content_de}</P>}
+                  {/* Fallback: direct content_en/content_de on the content object */}
+                  {sections.length === 0 && c.content_en && <P>{c.content_en}</P>}
+                  {sections.length === 0 && !c.content_en && c.content_de && <P>{c.content_de}</P>}
+
+                  {/* Fallback: direct text on the content object */}
+                  {sections.length === 0 && !c.content_en && !c.content_de && c.text && <P>{c.text}</P>}
+
+                  {/* Fallback: top-level content_en/content_de on the rule itself */}
+                  {sections.length === 0 && !c.content_en && !c.content_de && !c.text && exp.content_en && <P>{exp.content_en}</P>}
 
                   {exp.key_insight_en && <KeyBox>{exp.key_insight_en}</KeyBox>}
                   {exp.memory_trick_en && <MemoryTrickBox>{exp.memory_trick_en}</MemoryTrickBox>}
