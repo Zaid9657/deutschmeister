@@ -1,85 +1,64 @@
-# DeutschMeister - German Learning Platform
-> A comprehensive, free German learning platform for English speakers, covering CEFR levels A1 through B2.
+# DeutschMeister
 
-Website: https://deutsch-meister.de/
+> A free German language learning platform covering CEFR levels A1.1 to B2.2.
 
 ## About
 
-DeutschMeister is a structured German language learning platform designed for English speakers. It provides interactive lessons, exercises, and multimedia content across 8 CEFR sub-levels: A1.1, A1.2, A2.1, A2.2, B1.1, B1.2, B2.1, and B2.2. The platform is free to access, mobile-friendly, and features a bilingual interface (English/German).
+DeutschMeister (https://deutsch-meister.de) is a comprehensive German grammar and vocabulary learning resource. All content is free to access without an account.
 
-## Features
+## What We Offer
 
-### Grammar (64 topics)
-Each grammar topic follows a 5-stage learning path:
-1. Introduction - Context, English comparison, preview examples
-2. Examples - Annotated German sentences with translations and grammar highlights
-3. Rules - Tables, patterns, and structured grammar explanations
-4. Practice - Multiple-choice exercises with instant feedback and scoring
-5. Mastery - Summary, key formulas, common mistakes, and memory tricks
-
-Topics cover all core German grammar: noun genders, cases (Nominativ, Akkusativ, Dativ, Genitiv), verb conjugation, sentence structure, modal verbs, passive voice, subjunctive mood, relative clauses, and more.
+### Grammar (64 Topics)
+- 8 CEFR sub-levels: A1.1, A1.2, A2.1, A2.2, B1.1, B1.2, B2.1, B2.2
+- 8 grammar topics per level
+- Every topic explained in English first, then German
+- Interactive exercises with answer explanations
+- Audio for all examples
+- Topics include: cases (nominative, accusative, dative, genitive), articles, prepositions, verb conjugation, modal verbs, separable verbs, word order, sentence structure, and more
 
 ### Vocabulary
-Level-specific word lists with:
-- German word, English translation, and example sentences
-- Category filtering (food, travel, work, etc.)
-- Audio pronunciation via text-to-speech
-- Progress tracking with "mark as learned"
+- Organized by CEFR level
+- Words with translations, examples, and audio
 
-### Listening Comprehension (48 exercises, 480 dialogues)
-- 6 exercises per level across all 8 sub-levels
-- Audio dialogues with multiple-choice comprehension questions
-- Limited replay system (max 3 plays per exercise)
-- Score tracking and progress saving
+### Sentences
+- Example sentences for each level
+- Translations and audio included
 
-### Video Podcasts
-- Available for A1.1, A1.2, and A2.1 levels
-- Video-based German learning content
-- Modal video player with native controls
+### Listening
+- Listening exercises for each level
+- Audio with comprehension questions
 
-### Reading
-- Level-appropriate reading passages
-- Comprehension exercises
-- Vocabulary integration
+### Podcasts
+- Video podcasts for listening practice
+- Levels A1.1 to A2.1 available
+- Native German speech with level-appropriate content
 
-### Speaking Practice
-- AI-powered conversation practice
-- Level-appropriate prompts and scenarios
+## Key Features
 
-## Content Structure
+- Bilingual toggle (English/German interface)
+- No account required for free content
+- Mobile-friendly design
+- Audio pronunciation for vocabulary and examples
+- Exercises with explanations for why answers are correct
 
-Each level (A1.1 through B2.2) contains:
-- Vocabulary words and phrases
-- Sentences with translations
-- Grammar topics with interactive lessons
-- Reading passages
-- Listening exercises
-- Video podcasts (A1-A2 levels)
-- Speaking practice activities
+## Target Audience
 
-## Technical Details
+- English speakers learning German
+- Self-study learners
+- Beginner to upper-intermediate levels (A1-B2)
+- Anyone preparing for German language exams
 
-- Built with React + Vite
-- Deployed on Netlify
-- Backend: Supabase (PostgreSQL database + storage)
-- Bilingual interface: English and German
-- Responsive design for mobile and desktop
-- User authentication with progress tracking
+## Links
 
-## FAQ
-
-### What level should I start at?
-If you have zero German knowledge, start at A1.1. If you know basic greetings and simple phrases, try A1.2. If you can form simple sentences and know basic grammar, start at A2.1. Take the placement exercises at any level to gauge your understanding - if you score above 80%, move to the next level.
-
-### How is German grammar different from English?
-German has several key differences from English: (1) All nouns have grammatical gender - masculine (der), feminine (die), or neuter (das). (2) German uses four grammatical cases (Nominativ, Akkusativ, Dativ, Genitiv) that change article and adjective endings based on the noun's role in the sentence. (3) Verb position follows strict rules - in main clauses the verb is always second, in subordinate clauses it moves to the end. (4) German has separable verbs where the prefix detaches and moves to the end of the sentence. (5) Compound nouns are written as single words (e.g., Handschuh = hand + shoe = glove).
-
-### What are the German cases?
-German has four cases: Nominativ (subject - who/what does the action), Akkusativ (direct object - who/what receives the action), Dativ (indirect object - to/for whom), and Genitiv (possession - whose). Each case changes the articles: der/die/das/die become den/die/das/die (Akkusativ), dem/der/dem/den (Dativ), and des/der/des/der (Genitiv). Learning cases is essential for correct German - DeutschMeister teaches them progressively starting from A1.2.
-
-### How do I conjugate German verbs?
-Regular German verbs follow a pattern: remove the -en ending and add personal endings. For "spielen" (to play): ich spiele, du spielst, er/sie/es spielt, wir spielen, ihr spielt, sie/Sie spielen. Irregular verbs like "sein" (to be), "haben" (to have), and "werden" (to become) must be memorized. Many common verbs have stem changes in du/er forms (e.g., "fahren" becomes "du faehrst"). DeutschMeister covers verb conjugation starting at A1.1 with progressive complexity through B2.
+- Homepage: https://deutsch-meister.de
+- Grammar: https://deutsch-meister.de/grammar
+- Vocabulary: https://deutsch-meister.de/vocabulary
+- Listening: https://deutsch-meister.de/listening
+- Podcasts: https://deutsch-meister.de/podcasts
+- Pricing: https://deutsch-meister.de/pricing
 
 ## Contact
 
-Website: https://deutsch-meister.de/
+Website: https://deutsch-meister.de
+Email: contact@deutsch-meister.de
+YouTube: https://youtube.com/@deutschmeister_de
