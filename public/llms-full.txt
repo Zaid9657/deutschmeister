@@ -1,0 +1,169 @@
+# DeutschMeister
+
+> A free German language learning platform covering CEFR levels A1.1 to B2.2.
+
+## About
+
+DeutschMeister (https://deutsch-meister.de) is a comprehensive German grammar and vocabulary learning resource. All content is free to access without an account.
+
+## What We Offer
+
+### Grammar (64 Topics)
+- 8 CEFR sub-levels: A1.1, A1.2, A2.1, A2.2, B1.1, B1.2, B2.1, B2.2
+- 8 grammar topics per level
+- Every topic explained in English first, then German
+- Interactive exercises with answer explanations
+- Audio for all examples
+- Topics include: cases (nominative, accusative, dative, genitive), articles, prepositions, verb conjugation, modal verbs, separable verbs, word order, sentence structure, and more
+
+### Vocabulary
+- Organized by CEFR level
+- Words with translations, examples, and audio
+
+### Sentences
+- Example sentences for each level
+- Translations and audio included
+
+### Listening
+- Listening exercises for each level
+- Audio with comprehension questions
+
+### Podcasts
+- Video podcasts for listening practice
+- Levels A1.1 to A2.1 available
+- Native German speech with level-appropriate content
+
+## Complete Grammar Topic List
+
+### A1.1 - Complete Beginner
+1. Alphabet & Pronunciation
+2. Nouns & Gender
+3. Definite Articles
+4. Indefinite Articles
+5. Personal Pronouns
+6. Verb sein
+7. Verb haben
+8. Present Tense Regular
+
+### A1.2 - Elementary
+1. Basic Sentence Structure
+2. Nominative Case
+3. Accusative Case Introduction
+4. Numbers & Counting
+5. Question Words
+6. Negation
+7. Modal Verbs Introduction
+8. Prepositions with Accusative
+
+### A2.1 - Pre-Intermediate
+1. Dative Case
+2. Prepositions with Dative
+3. Two-Way Prepositions
+4. Possessive Pronouns
+5. Separable Verbs
+6. Perfect Tense with haben
+7. Perfect Tense with sein
+8. Imperative Mood
+
+### A2.2 - Lower Intermediate
+1. Reflexive Verbs
+2. Simple Past sein haben
+3. Coordinating Conjunctions
+4. Subordinating Conjunctions
+5. Word Order in Subordinate Clauses
+6. Comparative
+7. Superlative
+8. Future Tense
+
+### B1.1 - Intermediate
+1. Genitive Case
+2. Genitive Prepositions
+3. Relative Clauses Nominative Accusative
+4. Relative Clauses Dative Genitive
+5. Konjunktiv II würde
+6. Konjunktiv II wäre hätte
+7. Infinitive with zu
+8. um zu ohne zu
+
+### B1.2 - Upper Intermediate
+1. Passive Voice Present
+2. Passive Voice Past
+3. Verbs with Prepositions
+4. Adjective Declension Strong
+5. Adjective Declension Weak Mixed
+6. Simple Past Narrative
+7. Indirect Questions
+8. N-Declension Nouns
+
+### B2.1 - Advanced
+1. Konjunktiv II Past
+2. Konjunktiv I Reported Speech
+3. Passive Alternatives
+4. Participial Adjectives
+5. Extended Attributes
+6. Double Infinitive
+7. Causative Constructions
+8. Nominalization
+
+### B2.2 - Upper Advanced
+1. Advanced Conjunctions
+2. Modal Particles
+3. Functional Verb Structures
+4. Subjunctive Fixed Expressions
+5. Complex Sentence Building
+6. Register and Style
+7. Future Perfect
+8. Review and Integration
+
+## Key Features
+
+- Bilingual toggle (English/German interface)
+- No account required for free content
+- Mobile-friendly design
+- Audio pronunciation for vocabulary and examples
+- Exercises with explanations for why answers are correct
+
+## Target Audience
+
+- English speakers learning German
+- Self-study learners
+- Beginner to upper-intermediate levels (A1-B2)
+- Anyone preparing for German language exams
+
+## URL Structure
+
+Individual grammar topics are available at:
+https://deutsch-meister.de/grammar/{level}/{topic-slug}
+
+Examples:
+- https://deutsch-meister.de/grammar/a1.1/alphabet-pronunciation
+- https://deutsch-meister.de/grammar/a1.2/accusative-intro
+- https://deutsch-meister.de/grammar/a2.1/dative-case
+- https://deutsch-meister.de/grammar/b1.1/genitive-case
+- https://deutsch-meister.de/grammar/b2.1/konjunktiv-i-reported-speech
+- https://deutsch-meister.de/grammar/b2.2/modal-particles
+
+Grammar level pages:
+- https://deutsch-meister.de/grammar/a1.1
+- https://deutsch-meister.de/grammar/a1.2
+- https://deutsch-meister.de/grammar/a2.1
+- https://deutsch-meister.de/grammar/a2.2
+- https://deutsch-meister.de/grammar/b1.1
+- https://deutsch-meister.de/grammar/b1.2
+- https://deutsch-meister.de/grammar/b2.1
+- https://deutsch-meister.de/grammar/b2.2
+
+## Links
+
+- Homepage: https://deutsch-meister.de
+- Grammar: https://deutsch-meister.de/grammar
+- Vocabulary: https://deutsch-meister.de/vocabulary
+- Listening: https://deutsch-meister.de/listening
+- Podcasts: https://deutsch-meister.de/podcasts
+- Pricing: https://deutsch-meister.de/pricing
+
+## Contact
+
+Website: https://deutsch-meister.de
+Email: contact@deutsch-meister.de
+YouTube: https://youtube.com/@deutschmeister_de
