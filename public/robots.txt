@@ -1,6 +1,10 @@
 # DeutschMeister - German Learning Platform
 # https://deutsch-meister.de/
 
+# AI/LLM Crawler Information
+# llms.txt: https://deutsch-meister.de/llms.txt
+# llms-full.txt: https://deutsch-meister.de/llms-full.txt
+
 User-agent: Googlebot
 Allow: /
 
