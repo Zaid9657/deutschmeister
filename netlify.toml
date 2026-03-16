@@ -6,6 +6,47 @@
 [functions]
   node_bundler = "esbuild"
 
+# Force lowercase grammar level URLs
+[[redirects]]
+  from = "/grammar/A1.1"
+  to = "/grammar/a1.1"
+  status = 301
+
+[[redirects]]
+  from = "/grammar/A1.2"
+  to = "/grammar/a1.2"
+  status = 301
+
+[[redirects]]
+  from = "/grammar/A2.1"
+  to = "/grammar/a2.1"
+  status = 301
+
+[[redirects]]
+  from = "/grammar/A2.2"
+  to = "/grammar/a2.2"
+  status = 301
+
+[[redirects]]
+  from = "/grammar/B1.1"
+  to = "/grammar/b1.1"
+  status = 301
+
+[[redirects]]
+  from = "/grammar/B1.2"
+  to = "/grammar/b1.2"
+  status = 301
+
+[[redirects]]
+  from = "/grammar/B2.1"
+  to = "/grammar/b2.1"
+  status = 301
+
+[[redirects]]
+  from = "/grammar/B2.2"
+  to = "/grammar/b2.2"
+  status = 301
+
 # Ensure function endpoints are not caught by the SPA catch-all
 [[redirects]]
   from = "/.netlify/functions/*"

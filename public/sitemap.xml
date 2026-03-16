@@ -36,42 +36,42 @@
 
   <!-- Grammar Level Pages -->
   <url>
-    <loc>https://deutsch-meister.de/grammar/A1.1</loc>
+    <loc>https://deutsch-meister.de/grammar/a1.1</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/grammar/A1.2</loc>
+    <loc>https://deutsch-meister.de/grammar/a1.2</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/grammar/A2.1</loc>
+    <loc>https://deutsch-meister.de/grammar/a2.1</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/grammar/A2.2</loc>
+    <loc>https://deutsch-meister.de/grammar/a2.2</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/grammar/B1.1</loc>
+    <loc>https://deutsch-meister.de/grammar/b1.1</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/grammar/B1.2</loc>
+    <loc>https://deutsch-meister.de/grammar/b1.2</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/grammar/B2.1</loc>
+    <loc>https://deutsch-meister.de/grammar/b2.1</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/grammar/B2.2</loc>
+    <loc>https://deutsch-meister.de/grammar/b2.2</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
