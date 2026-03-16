@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { ArrowRight, BookOpen, MessageSquare, Award, Sparkles, Sun, TreePine, Waves, Moon, Clock } from 'lucide-react';
+import { ArrowRight, BookOpen, MessageSquare, Award, Sparkles, Sun, TreePine, Waves, Moon, Clock, Youtube, ExternalLink } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import SEO from '../components/SEO';
@@ -251,6 +251,37 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Learn on YouTube */}
+      <section className="py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <div className="w-14 h-14 mx-auto mb-5 rounded-2xl bg-red-600 flex items-center justify-center shadow-lg shadow-red-200">
+              <Youtube className="w-7 h-7 text-white" />
+            </div>
+            <h2 className="font-display text-3xl sm:text-4xl font-bold text-slate-800 mb-3">
+              Learn on YouTube
+            </h2>
+            <p className="text-slate-600 text-lg mb-8 max-w-lg mx-auto">
+              Watch our German lessons on YouTube — new videos every week covering grammar, vocabulary, and real conversations.
+            </p>
+            <a
+              href="https://www.youtube.com/@deutschmeister_de"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition-colors shadow-lg shadow-red-200"
+            >
+              <Youtube className="w-5 h-5" />
+              Subscribe on YouTube
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="py-12 bg-slate-900 text-slate-400">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -262,6 +293,16 @@ const LandingPage = () => {
               DeutschMeister
             </span>
           </div>
+          <a
+            href="https://www.youtube.com/@deutschmeister_de"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-slate-400 hover:text-red-400 transition-colors mb-4"
+            aria-label="DeutschMeister YouTube channel"
+          >
+            <Youtube className="w-5 h-5" />
+            <span className="text-sm">YouTube</span>
+          </a>
           <p className="text-sm">
             &copy; {new Date().getFullYear()} DeutschMeister. All rights reserved.
           </p>

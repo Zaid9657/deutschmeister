@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../utils/supabase';
 import { useTranslation } from 'react-i18next';
-import { Play, Headphones, Clock, X, Radio } from 'lucide-react';
+import { Play, Headphones, Clock, X, Radio, Youtube } from 'lucide-react';
 
 const PodcastsTab = ({ subLevel }) => {
   const { i18n } = useTranslation();
@@ -119,6 +119,24 @@ const PodcastsTab = ({ subLevel }) => {
           </div>
         </div>
       )}
+
+      {/* YouTube Channel Link */}
+      <div className="flex items-center gap-3 p-4 rounded-xl bg-red-50 border border-red-100">
+        <Youtube className="w-6 h-6 text-red-600 flex-shrink-0" />
+        <p className="text-sm text-slate-600 flex-1">
+          {isGerman
+            ? 'Unsere Videos sind auch auf YouTube verfügbar!'
+            : 'Our videos are also available on YouTube!'}
+        </p>
+        <a
+          href="https://www.youtube.com/@deutschmeister_de"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm font-semibold text-red-600 hover:text-red-700 whitespace-nowrap"
+        >
+          {isGerman ? 'Kanal ansehen →' : 'Visit channel →'}
+        </a>
+      </div>
 
       {/* Podcast Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
