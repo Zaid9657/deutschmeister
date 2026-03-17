@@ -36,19 +36,26 @@ export const SubscriptionProvider = ({ children }) => {
 
       setSubscription(sub);
 
-      // Auto-start free trial for new users (no profile yet)
-      if (!prof) {
+      // Auto-start free trial for new users
+      let currentProfile = prof;
+
+      // If no profile yet, wait for DB trigger to create it (race condition)
+      if (!currentProfile) {
+        await new Promise(r => setTimeout(r, 1500));
+        currentProfile = await getUserProfile(user.id);
+      }
+
+      if (!currentProfile) {
+        // Still no profile — create one with trial via insert
         await startFreeTrial(user.id);
-        const newProfile = await getUserProfile(user.id);
-        setProfile(newProfile);
-      } else if (!prof.trial_started_at) {
+        currentProfile = await getUserProfile(user.id);
+      } else if (!currentProfile.trial_started_at) {
         // Profile exists but trial never started
         await startFreeTrial(user.id);
-        const updatedProfile = await getUserProfile(user.id);
-        setProfile(updatedProfile);
-      } else {
-        setProfile(prof);
+        currentProfile = await getUserProfile(user.id);
       }
+
+      setProfile(currentProfile);
     } catch (error) {
       console.error('Error loading subscription data:', error);
     } finally {
