@@ -115,22 +115,8 @@ function App() {
                         </SubscriptionGuard>
                       }
                     />
-                    <Route
-                      path="/grammar"
-                      element={
-                        <SubscriptionGuard>
-                          <GrammarSectionPage />
-                        </SubscriptionGuard>
-                      }
-                    />
-                    <Route
-                      path="/grammar/:level"
-                      element={
-                        <SubscriptionGuard>
-                          <GrammarTopicsPage />
-                        </SubscriptionGuard>
-                      }
-                    />
+                    <Route path="/grammar" element={<GrammarSectionPage />} />
+                    <Route path="/grammar/:level" element={<GrammarTopicsPage />} />
                     <Route
                       path="/grammar/:level/:topicSlug"
                       element={
