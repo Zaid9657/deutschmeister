@@ -30,6 +30,10 @@ const ExercisePlayer = lazy(() => import('./pages/Listening/ExercisePlayer'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 const GrammarSectionPage = lazy(() => import('./pages/GrammarSectionPage'));
 const GrammarTopicsPage = lazy(() => import('./pages/GrammarTopicsPage'));
+const ReadingSectionPage = lazy(() => import('./pages/ReadingSectionPage'));
+const ReadingLessonsPage = lazy(() => import('./pages/ReadingLessonsPage'));
+const ListeningHome = lazy(() => import('./pages/Listening/ListeningHome'));
+const LevelExercises = lazy(() => import('./pages/Listening/LevelExercises'));
 
 function PageLoader() {
   return (
@@ -136,10 +140,42 @@ function App() {
                       }
                     />
                     <Route
+                      path="/reading"
+                      element={
+                        <SubscriptionGuard>
+                          <ReadingSectionPage />
+                        </SubscriptionGuard>
+                      }
+                    />
+                    <Route
+                      path="/reading/:level"
+                      element={
+                        <SubscriptionGuard>
+                          <ReadingLessonsPage />
+                        </SubscriptionGuard>
+                      }
+                    />
+                    <Route
                       path="/reading/:level/:lessonId"
                       element={
                         <SubscriptionGuard>
                           <ReadingLessonPage />
+                        </SubscriptionGuard>
+                      }
+                    />
+                    <Route
+                      path="/listening"
+                      element={
+                        <SubscriptionGuard>
+                          <ListeningHome />
+                        </SubscriptionGuard>
+                      }
+                    />
+                    <Route
+                      path="/listening/:level"
+                      element={
+                        <SubscriptionGuard>
+                          <LevelExercises />
                         </SubscriptionGuard>
                       }
                     />
