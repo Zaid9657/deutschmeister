@@ -60,12 +60,10 @@ export const startFreeTrial = async (userId) => {
 
   // If update matched a row, we're done
   if (updateData && updateData.length > 0) {
-    console.log('[startFreeTrial] trial activated via update');
     return updateData[0];
   }
 
   // Fallback: profile doesn't exist yet, insert it
-  console.log('[startFreeTrial] no profile found, inserting...');
   const { data: insertData, error: insertError } = await supabase
     .from('profiles')
     .insert({
@@ -82,7 +80,6 @@ export const startFreeTrial = async (userId) => {
     return null;
   }
 
-  console.log('[startFreeTrial] trial activated via insert');
   return insertData?.[0] || null;
 };
 

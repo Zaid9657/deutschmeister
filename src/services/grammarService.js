@@ -24,12 +24,10 @@ const uuidCache = new Map();
 export async function lookupTopicUUID(level, slug) {
   const cacheKey = `${level}:${slug}`;
   if (uuidCache.has(cacheKey)) {
-    console.log(`[grammarService] lookupTopicUUID cache hit: ${cacheKey} →`, uuidCache.get(cacheKey));
     return uuidCache.get(cacheKey);
   }
 
   const dbLevel = toDbLevel(level);
-  console.log(`[grammarService] lookupTopicUUID querying: sub_level="${dbLevel}", slug="${slug}"`);
   const { data, error } = await supabase
     .from('grammar_topics')
     .select('id')
@@ -37,7 +35,6 @@ export async function lookupTopicUUID(level, slug) {
     .eq('slug', slug)
     .single();
 
-  console.log(`[grammarService] lookupTopicUUID result:`, { data, error });
 
   if (error || !data) {
     console.warn(`[grammarService] lookupTopicUUID FAILED for ${cacheKey}:`, error);
@@ -115,7 +112,6 @@ function mapDbExerciseToApp(dbRow) {
         opt => String(opt).trim().toLowerCase() === needle
       );
       exercise.correct = idx >= 0 ? idx : 0;
-      console.log(`[grammarService] MC correct_answer="${dbRow.correct_answer}" → matched option index ${idx}`);
     }
   } else if (dbRow.exercise_type === 'fill_blank' || dbRow.exercise_type === 'translation') {
     exercise.answer = dbRow.correct_answer;
@@ -151,7 +147,6 @@ function mapDbExerciseToApp(dbRow) {
 function buildStage2(examples) {
   if (!examples || examples.length === 0) return null;
 
-  console.log(`[grammarService] buildStage2: ${examples.length} examples, sample:`, examples[0]);
 
   return {
     title: { en: 'Examples', de: 'Beispiele' },
@@ -176,7 +171,6 @@ function buildStage2(examples) {
 function buildStage3(rules) {
   if (!rules || rules.length === 0) return null;
 
-  console.log(`[grammarService] buildStage3: ${rules.length} rules`);
 
   const tables = [];
   const tips = [];
@@ -184,7 +178,6 @@ function buildStage3(rules) {
 
   rules.forEach((rule, i) => {
     const content = rule.content || {};
-    console.log(`[grammarService] rule[${i}]: type="${rule.rule_type}", title="${rule.title_en}", content=`, content);
 
     if (rule.rule_type === 'table' || rule.rule_type === 'pattern') {
       tables.push({
@@ -225,13 +218,11 @@ function buildStage3(rules) {
       });
     } else if (rule.rule_type === 'introduction') {
       // Skip introduction rules - they're handled separately in Stage 1
-      console.log(`[grammarService] Skipping introduction rule (handled in Stage 1)`);
     } else {
       console.warn(`[grammarService] UNKNOWN rule_type: "${rule.rule_type}"`);
     }
   });
 
-  console.log(`[grammarService] buildStage3 output: ${tables.length} tables, ${tips.length} tips, ${warnings.length} warnings`);
 
   return {
     title: { en: 'Rules & Patterns', de: 'Regeln und Muster' },
@@ -246,10 +237,8 @@ function buildExerciseStages(exercises) {
   const stage4Exercises = [];
   const stage5Exercises = [];
 
-  console.log(`[grammarService] buildExerciseStages: ${(exercises || []).length} exercises`);
 
   (exercises || []).forEach((ex, i) => {
-    console.log(`[grammarService] exercise[${i}]: stage=${ex.stage} (${typeof ex.stage}), type="${ex.exercise_type}"`);
     const mapped = mapDbExerciseToApp(ex);
     if (ex.stage === 4) {
       stage4Exercises.push(mapped);
@@ -291,19 +280,12 @@ function buildExerciseStages(exercises) {
  */
 export async function fetchTopicsForLevel(level) {
   const dbLevel = toDbLevel(level);
-  console.log(`[grammarService] fetchTopicsForLevel: level="${level}" → DB sub_level="${dbLevel}"`);
 
   const { data, error } = await supabase
     .from('grammar_topics')
     .select('*')
     .eq('sub_level', dbLevel)
     .order('topic_order');
-
-  console.log(`[grammarService] fetchTopicsForLevel result:`, {
-    rowCount: data?.length ?? 0,
-    error,
-    firstRow: data?.[0] ?? null,
-  });
 
   if (error) {
     console.error(`[grammarService] fetchTopicsForLevel ERROR:`, error);
@@ -329,7 +311,6 @@ export async function fetchTopicsForLevel(level) {
  */
 export async function fetchTopicBySlug(level, slug) {
   const dbLevel = toDbLevel(level);
-  console.log(`[grammarService] fetchTopicBySlug: level="${level}" → DB sub_level="${dbLevel}", slug="${slug}"`);
 
   const { data, error } = await supabase
     .from('grammar_topics')
@@ -338,7 +319,6 @@ export async function fetchTopicBySlug(level, slug) {
     .eq('slug', slug)
     .single();
 
-  console.log(`[grammarService] fetchTopicBySlug result:`, { data, error });
 
   if (error) {
     console.error(`[grammarService] fetchTopicBySlug ERROR:`, error);
@@ -359,7 +339,6 @@ export async function fetchTopicBySlug(level, slug) {
  * Returns null if topic not found or content tables empty.
  */
 export async function fetchTopicContent(level, slug) {
-  console.log(`[grammarService] fetchTopicContent: level="${level}", slug="${slug}"`);
 
   // Step 1: Get topic data (including UUID)
   const topicData = await fetchTopicBySlug(level, slug);
@@ -369,7 +348,6 @@ export async function fetchTopicContent(level, slug) {
   }
 
   const topicUUID = topicData.uuid;
-  console.log(`[grammarService] fetchTopicContent: UUID="${topicUUID}", fetching content tables...`);
 
   // Step 2: Parallel fetch from content tables (NO grammar_introductions - using grammar_rules instead)
   const [examplesRes, rulesRes, exercisesRes] = await Promise.all([
@@ -391,12 +369,6 @@ export async function fetchTopicContent(level, slug) {
       .order('order_index'),
   ]);
 
-  console.log(`[grammarService] fetchTopicContent RAW RESPONSES:`, {
-    examples: { count: examplesRes.data?.length ?? 0, error: examplesRes.error },
-    rules: { count: rulesRes.data?.length ?? 0, error: rulesRes.error },
-    exercises: { count: exercisesRes.data?.length ?? 0, error: exercisesRes.error },
-  });
-
   // Log errors explicitly
   if (examplesRes.error) console.error(`[grammarService] grammar_examples ERROR:`, examplesRes.error);
   if (rulesRes.error) console.error(`[grammarService] grammar_rules ERROR:`, rulesRes.error);
@@ -410,7 +382,6 @@ export async function fetchTopicContent(level, slug) {
   const introRule = allRules.find(rule => rule.rule_type === 'introduction');
   const rules = allRules.filter(rule => rule.rule_type !== 'introduction');
 
-  console.log(`[grammarService] fetchTopicContent counts: examples=${examples.length}, rules=${rules.length}, exercises=${exercises.length}`);
 
   if (examples.length === 0 && rules.length === 0 && exercises.length === 0) {
     console.warn(`[grammarService] fetchTopicContent: ALL content tables returned 0 rows for UUID="${topicUUID}". Will show introduction only. Check RLS policies or add content.`);
@@ -426,17 +397,8 @@ export async function fetchTopicContent(level, slug) {
   const staticContent = getStaticContent(level, slug);
   let stage1Content = null;
 
-  // DEBUG: Log what we received from grammar_rules introduction
-  console.log(`[grammarService] DEBUG introRule for ${slug}:`, {
-    exists: !!introRule,
-    hasContent: !!introRule?.content,
-    hasHookEn: !!introRule?.content?.hook_en,
-    fullData: introRule,
-  });
-
   // Priority 1: Check if topic has rich introduction in grammar_rules (NEW FORMAT)
   if (introRule && introRule.content && introRule.content.hook_en) {
-    console.log(`[grammarService] Using NEW FORMAT introduction from grammar_rules for ${slug}`);
     const content = introRule.content;
     stage1Content = {
       title: {
@@ -473,10 +435,6 @@ export async function fetchTopicContent(level, slug) {
   }
   // Priority 2: Check if topic has introduction in grammar_topics table (OLD ENRICHED FORMAT)
   else if (topicData.introductionEn || topicData.introductionDe) {
-    console.log(`[grammarService] Using grammar_topics introduction fields for ${slug}`, {
-      hasIntroEn: !!topicData.introductionEn,
-      hasIntroDe: !!topicData.introductionDe,
-    });
     stage1Content = {
       title: {
         en: topicData.titleEn,
@@ -491,12 +449,10 @@ export async function fetchTopicContent(level, slug) {
   }
   // Priority 3: Use static content if available
   else if (staticContent?.stage1) {
-    console.log(`[grammarService] Using static grammarContent.js for ${slug}`);
     stage1Content = staticContent.stage1;
   }
   // Priority 4: Generate default from basic topic data
   else {
-    console.log(`[grammarService] Generating fallback introduction for ${slug}`);
     stage1Content = {
       title: {
         en: topicData.titleEn,
@@ -531,14 +487,6 @@ export async function fetchTopicContent(level, slug) {
     stage5: dbStage5,
   };
 
-  console.log(`[grammarService] fetchTopicContent FINAL:`, {
-    stage1: result.stage1 ? (staticContent?.stage1 ? 'from static' : 'default from topic data') : 'null',
-    stage2: dbStage2 ? `${dbStage2.examples.length} examples` : 'null',
-    stage3: dbStage3 ? `${dbStage3.tables.length}t/${dbStage3.tips.length}tip/${dbStage3.warnings.length}w` : 'null',
-    stage4: dbStage4 ? `${dbStage4.exercises.length} exercises` : 'null',
-    stage5: dbStage5 ? `${dbStage5.exercises.length} exercises` : 'null',
-  });
-
   return result;
 }
 
@@ -553,13 +501,11 @@ export async function fetchTopicContent(level, slug) {
 export async function loadUserGrammarProgress(userId) {
   if (!userId) return {};
 
-  console.log(`[grammarService] loadUserGrammarProgress: userId="${userId}"`);
   const { data, error } = await supabase
     .from('user_grammar_progress')
     .select('*, grammar_topics(slug, sub_level, topic_order)')
     .eq('user_id', userId);
 
-  console.log(`[grammarService] loadUserGrammarProgress result:`, { count: data?.length, error });
 
   if (error || !data || data.length === 0) {
     return {};

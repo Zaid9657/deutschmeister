@@ -51,20 +51,12 @@ function mapDbSentenceToApp(dbRow, index) {
  */
 export async function fetchWordsForLevel(level) {
   const dbLevel = toDbLevel(level);
-  console.log(`[vocabularyService] fetchWordsForLevel: level="${level}" → DB level="${dbLevel}"`);
 
   const { data, error } = await supabase
     .from('words')
     .select('*')
     .eq('level', dbLevel)
     .order('id');
-
-  console.log(`[vocabularyService] fetchWordsForLevel result:`, {
-    rowCount: data?.length ?? 0,
-    error,
-    firstRow: data?.[0] ?? null,
-    columnNames: data?.[0] ? Object.keys(data[0]) : [],
-  });
 
   if (error) {
     console.error(`[vocabularyService] fetchWordsForLevel ERROR:`, error);
@@ -85,20 +77,12 @@ export async function fetchWordsForLevel(level) {
  */
 export async function fetchSentencesForLevel(level) {
   const dbLevel = toDbLevel(level);
-  console.log(`[vocabularyService] fetchSentencesForLevel: level="${level}" → DB level="${dbLevel}"`);
 
   const { data, error } = await supabase
     .from('sentences')
     .select('*')
     .eq('level', dbLevel)
     .order('id');
-
-  console.log(`[vocabularyService] fetchSentencesForLevel result:`, {
-    rowCount: data?.length ?? 0,
-    error,
-    firstRow: data?.[0] ?? null,
-    columnNames: data?.[0] ? Object.keys(data[0]) : [],
-  });
 
   if (error) {
     console.error(`[vocabularyService] fetchSentencesForLevel ERROR:`, error);

@@ -30,7 +30,6 @@ const SubscriptionSuccessPage = () => {
           return;
         }
 
-        console.log(`Subscription check attempt ${attempt}/${maxAttempts} — not active yet`);
       }
 
       // After all attempts, stop loading even if not verified

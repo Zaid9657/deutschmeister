@@ -36,19 +36,12 @@ function mapDbParagraphToApp(dbRow, index) {
  */
 export async function fetchParagraphsForLevel(level) {
   const dbLevel = toDbLevel(level);
-  console.log(`[paragraphService] fetchParagraphsForLevel: level="${level}" → DB level="${dbLevel}"`);
 
   const { data, error } = await supabase
     .from('paragraphs')
     .select('*')
     .eq('level', dbLevel)
     .order('order_index');
-
-  console.log(`[paragraphService] fetchParagraphsForLevel result:`, {
-    rowCount: data?.length ?? 0,
-    error,
-    firstRow: data?.[0] ?? null,
-  });
 
   if (error) {
     console.error(`[paragraphService] fetchParagraphsForLevel ERROR:`, error);

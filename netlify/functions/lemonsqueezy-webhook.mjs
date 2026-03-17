@@ -43,8 +43,15 @@ async function logWebhookEvent(eventType, payload, processed, errorMsg) {
 }
 
 export const handler = async (event) => {
+  const allowedOrigins = [
+    'https://deutsch-meister.de',
+    'https://www.deutsch-meister.de',
+  ];
+  const origin = event.headers?.origin || '';
+  const corsOrigin = allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
+
   const headers = {
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': corsOrigin,
     'Access-Control-Allow-Headers': 'Content-Type, X-Signature',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
   };

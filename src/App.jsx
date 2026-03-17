@@ -27,6 +27,7 @@ const PricingPage = lazy(() => import('./pages/PricingPage'));
 const SubscriptionSuccessPage = lazy(() => import('./pages/SubscriptionSuccessPage'));
 const PaymentPage = lazy(() => import('./pages/PaymentPage'));
 const ExercisePlayer = lazy(() => import('./pages/Listening/ExercisePlayer'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 function PageLoader() {
   return (
@@ -133,8 +134,8 @@ function App() {
                       }
                     />
 
-                    {/* Fallback route */}
-                    <Route path="*" element={<LandingPage />} />
+                    {/* 404 page */}
+                    <Route path="*" element={<NotFoundPage />} />
                   </Routes>
                 </Suspense>
               </div>

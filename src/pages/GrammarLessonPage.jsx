@@ -723,11 +723,6 @@ export default function GrammarLessonPage() {
       const examples = examplesRes.data || [];
       const exercises = exercisesRes.data || [];
 
-      // DEBUG: Log raw data from Supabase
-      console.log('RAW RULES:', rules);
-      console.log('RAW EXAMPLES:', examples);
-      console.log('RAW EXERCISES:', exercises);
-
       // 3. Organize content by type
       const introductionRule = rules.find(r => r.rule_type === 'introduction');
       const tables = rules.filter(r => r.rule_type === 'table' || r.rule_type === 'pattern');
