@@ -28,6 +28,8 @@ const SubscriptionSuccessPage = lazy(() => import('./pages/SubscriptionSuccessPa
 const PaymentPage = lazy(() => import('./pages/PaymentPage'));
 const ExercisePlayer = lazy(() => import('./pages/Listening/ExercisePlayer'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+const GrammarSectionPage = lazy(() => import('./pages/GrammarSectionPage'));
+const GrammarTopicsPage = lazy(() => import('./pages/GrammarTopicsPage'));
 
 function PageLoader() {
   return (
@@ -106,6 +108,22 @@ function App() {
                       element={
                         <SubscriptionGuard>
                           <ProfilePage />
+                        </SubscriptionGuard>
+                      }
+                    />
+                    <Route
+                      path="/grammar"
+                      element={
+                        <SubscriptionGuard>
+                          <GrammarSectionPage />
+                        </SubscriptionGuard>
+                      }
+                    />
+                    <Route
+                      path="/grammar/:level"
+                      element={
+                        <SubscriptionGuard>
+                          <GrammarTopicsPage />
                         </SubscriptionGuard>
                       }
                     />
