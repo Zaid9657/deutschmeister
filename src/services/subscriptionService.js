@@ -27,8 +27,11 @@ export const getUserProfile = async (userId) => {
     .maybeSingle();
 
   if (error) {
-    console.error('Error fetching profile:', error);
+    console.error('[getUserProfile] error:', error);
     return null;
+  }
+  if (!data) {
+    console.warn('[getUserProfile] no profile found for user:', userId);
   }
   return data;
 };
@@ -39,21 +42,48 @@ export const startFreeTrial = async (userId) => {
   const trialEnd = new Date(now);
   trialEnd.setDate(trialEnd.getDate() + 7);
 
-  const { data, error } = await supabase
+  // Try update first (profile usually exists from DB trigger)
+  const { data: updateData, error: updateError } = await supabase
     .from('profiles')
-    .upsert({
+    .update({
+      trial_started_at: now.toISOString(),
+      trial_ends_at: trialEnd.toISOString(),
+      is_subscribed: false,
+      updated_at: now.toISOString(),
+    })
+    .eq('id', userId)
+    .select();
+
+  if (updateError) {
+    console.error('[startFreeTrial] update failed:', updateError);
+  }
+
+  // If update matched a row, we're done
+  if (updateData && updateData.length > 0) {
+    console.log('[startFreeTrial] trial activated via update');
+    return updateData[0];
+  }
+
+  // Fallback: profile doesn't exist yet, insert it
+  console.log('[startFreeTrial] no profile found, inserting...');
+  const { data: insertData, error: insertError } = await supabase
+    .from('profiles')
+    .insert({
       id: userId,
       trial_started_at: now.toISOString(),
       trial_ends_at: trialEnd.toISOString(),
       is_subscribed: false,
       updated_at: now.toISOString(),
-    });
+    })
+    .select();
 
-  if (error) {
-    console.error('Error starting free trial:', error);
+  if (insertError) {
+    console.error('[startFreeTrial] insert failed:', insertError);
     return null;
   }
-  return data;
+
+  console.log('[startFreeTrial] trial activated via insert');
+  return insertData?.[0] || null;
 };
 
 // Create a new subscription
