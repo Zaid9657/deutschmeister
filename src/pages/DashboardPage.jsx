@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { TrendingUp, BookOpen, MessageSquare, Award, Crown, Clock } from 'lucide-react';
+import { TrendingUp, BookOpen, MessageSquare, Award, Crown, Clock, Mic } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import LevelCard from '../components/LevelCard';
 import { useProgress } from '../contexts/ProgressContext';
@@ -132,6 +132,29 @@ const DashboardPage = () => {
               <p className="text-sm text-slate-500">{stat.label}</p>
             </motion.div>
           ))}
+        </motion.div>
+
+        {/* Speaking Practice Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          className="mb-12"
+        >
+          <Link
+            to="/speaking"
+            className="block bg-white rounded-2xl p-6 shadow-lg border border-slate-100 hover:border-teal-200 hover:shadow-xl transition-all group"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-r from-teal-400 to-cyan-500 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                <Mic className="w-7 h-7 text-white" />
+              </div>
+              <div>
+                <h3 className="font-display text-lg font-bold text-slate-800 mb-0.5">Sprechen üben</h3>
+                <p className="text-sm text-slate-500">Übe Konversation mit einem KI-Gesprächspartner</p>
+              </div>
+            </div>
+          </Link>
         </motion.div>
 
         {/* Overall Progress Bar */}

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, LogOut, Globe, Home, LayoutDashboard, Crown, Sparkles } from 'lucide-react';
+import { Menu, X, User, LogOut, Globe, Home, LayoutDashboard, Crown, Sparkles, Mic } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 
@@ -61,6 +61,13 @@ const Navbar = () => {
                 >
                   <LayoutDashboard size={18} />
                   {t('nav.dashboard')}
+                </Link>
+                <Link
+                  to="/speaking"
+                  className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors"
+                >
+                  <Mic size={18} />
+                  Sprechen
                 </Link>
                 <Link
                   to="/profile"
@@ -176,6 +183,14 @@ const Navbar = () => {
                   >
                     <LayoutDashboard size={20} />
                     {t('nav.dashboard')}
+                  </Link>
+                  <Link
+                    to="/speaking"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
+                  >
+                    <Mic size={20} />
+                    Sprechen
                   </Link>
                   <Link
                     to="/profile"

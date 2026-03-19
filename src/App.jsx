@@ -34,6 +34,7 @@ const ReadingSectionPage = lazy(() => import('./pages/ReadingSectionPage'));
 const ReadingLessonsPage = lazy(() => import('./pages/ReadingLessonsPage'));
 const ListeningHome = lazy(() => import('./pages/Listening/ListeningHome'));
 const LevelExercises = lazy(() => import('./pages/Listening/LevelExercises'));
+const SpeakingPage = lazy(() => import('./pages/SpeakingPage'));
 
 function PageLoader() {
   return (
@@ -170,6 +171,15 @@ function App() {
                       element={
                         <SubscriptionGuard>
                           <ExercisePlayer />
+                        </SubscriptionGuard>
+                      }
+                    />
+
+                    <Route
+                      path="/speaking"
+                      element={
+                        <SubscriptionGuard>
+                          <SpeakingPage />
                         </SubscriptionGuard>
                       }
                     />
