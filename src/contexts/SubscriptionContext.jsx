@@ -14,19 +14,25 @@ const SubscriptionContext = createContext({});
 export const useSubscription = () => useContext(SubscriptionContext);
 
 export const SubscriptionProvider = ({ children }) => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [subscription, setSubscription] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const lastRefreshRef = useRef(0);
 
   const loadSubscriptionData = useCallback(async () => {
+    // Don't resolve loading until auth is done — otherwise the guard
+    // sees loading=false + hasAccess=false and redirects prematurely.
+    if (authLoading) return;
+
     if (!user) {
       setSubscription(null);
       setProfile(null);
       setLoading(false);
       return;
     }
+
+    setLoading(true);
 
     try {
       const [sub, prof] = await Promise.all([
@@ -61,7 +67,7 @@ export const SubscriptionProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, authLoading]);
 
   useEffect(() => {
     loadSubscriptionData();
