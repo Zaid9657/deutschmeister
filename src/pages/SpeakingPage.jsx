@@ -1,9 +1,11 @@
-import { useState } from 'react';
-import { Mic, Clock, ChevronRight } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
+import { Mic, Clock, ChevronRight, Crown, ArrowRight, Loader2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { LEVEL_CONFIGS, getConfigForLevel } from '../constants/speakingPrompts';
 import SpeakingPractice from '../components/SpeakingPractice';
 import SpeakingEvaluationResults from '../components/SpeakingEvaluationResults';
+import SpeakingUsageIndicator from '../components/SpeakingUsageIndicator';
 
 const LEVEL_ORDER = ['A1.1', 'A1.2', 'A2.1', 'A2.2', 'B1.1', 'B1.2', 'B2.1', 'B2.2'];
 
@@ -53,13 +55,115 @@ function SoundWaveSVG() {
   );
 }
 
+function UsageGate({ usage }) {
+  if (!usage || usage.allowed) return null;
+
+  const { reason, tier, used, limit, nextAvailable } = usage;
+
+  if (reason === 'subscription_required') {
+    return (
+      <div className="max-w-md mx-auto mb-8 bg-white rounded-2xl border border-slate-200 p-6 text-center">
+        <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+          <Crown className="w-7 h-7 text-white" />
+        </div>
+        <h3 className="font-bold text-slate-800 mb-2">Abo erforderlich</h3>
+        <p className="text-sm text-slate-500 mb-4">
+          Sprechübungen sind für Abonnenten verfügbar. Starte mit dem Pro-Abo und erhalte 5 Gespräche pro Monat.
+        </p>
+        <Link
+          to="/pricing"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-xl transition-colors text-sm"
+        >
+          Pläne ansehen
+          <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
+    );
+  }
+
+  if (reason === 'monthly_limit_reached') {
+    return (
+      <div className="max-w-md mx-auto mb-8 bg-white rounded-2xl border border-slate-200 p-6 text-center">
+        <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center">
+          <Mic className="w-7 h-7 text-white" />
+        </div>
+        <h3 className="font-bold text-slate-800 mb-2">Monatliches Limit erreicht</h3>
+        <p className="text-sm text-slate-500 mb-1">
+          Du hast {used}/{limit} Gespräche diesen Monat genutzt.
+        </p>
+        <p className="text-sm text-slate-500 mb-4">
+          Upgrade auf Premium für unbegrenzte Sprechübungen.
+        </p>
+        <Link
+          to="/pricing"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded-xl transition-colors text-sm"
+        >
+          <Crown className="w-4 h-4" />
+          Auf Premium upgraden
+        </Link>
+      </div>
+    );
+  }
+
+  if (reason === 'trial_cooldown') {
+    const hours = nextAvailable
+      ? Math.max(1, Math.ceil((new Date(nextAvailable).getTime() - Date.now()) / (1000 * 60 * 60)))
+      : '?';
+    return (
+      <div className="max-w-md mx-auto mb-8 bg-white rounded-2xl border border-slate-200 p-6 text-center">
+        <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-slate-100 flex items-center justify-center">
+          <Clock className="w-7 h-7 text-slate-400" />
+        </div>
+        <h3 className="font-bold text-slate-800 mb-2">Nächste Sitzung in ~{hours}h</h3>
+        <p className="text-sm text-slate-500 mb-4">
+          In der Testversion kannst du eine Sprechübung pro 24 Stunden machen. Upgrade für mehr Sitzungen.
+        </p>
+        <Link
+          to="/pricing"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-xl transition-colors text-sm"
+        >
+          Pläne ansehen
+          <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
+    );
+  }
+
+  return null;
+}
+
 const SpeakingPage = () => {
   const { user } = useAuth();
   const [phase, setPhase] = useState('select');
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [evaluation, setEvaluation] = useState(null);
+  const [usage, setUsage] = useState(null);
+  const [usageLoading, setUsageLoading] = useState(true);
+
+  const fetchUsage = useCallback(async () => {
+    if (!user?.id) { setUsageLoading(false); return; }
+    try {
+      const res = await fetch('/api/speaking/check-speaking-usage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: user.id }),
+      });
+      if (res.ok) {
+        setUsage(await res.json());
+      }
+    } catch (err) {
+      console.error('Failed to check speaking usage:', err);
+    } finally {
+      setUsageLoading(false);
+    }
+  }, [user?.id]);
+
+  useEffect(() => {
+    fetchUsage();
+  }, [fetchUsage]);
 
   const handleSelectLevel = (level) => {
+    if (usage && !usage.allowed) return;
     setSelectedLevel(level);
     setEvaluation(null);
     setPhase('practice');
@@ -68,6 +172,8 @@ const SpeakingPage = () => {
   const handleComplete = (eval_) => {
     setEvaluation(eval_);
     setPhase(eval_ ? 'results' : 'select');
+    // Refresh usage after session
+    fetchUsage();
   };
 
   const handleCancel = () => {
@@ -95,7 +201,7 @@ const SpeakingPage = () => {
     setPhase('select');
   };
 
-  // Practice phase — full viewport, no wrapper needed
+  // Practice phase
   if (phase === 'practice' && selectedLevel) {
     return (
       <SpeakingPractice
@@ -122,6 +228,8 @@ const SpeakingPage = () => {
     );
   }
 
+  const isBlocked = usage && !usage.allowed;
+
   // Select phase
   return (
     <div className="min-h-screen bg-slate-50 pt-16">
@@ -137,9 +245,18 @@ const SpeakingPage = () => {
               <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-3 tracking-tight">
                 Sprechen üben
               </h1>
-              <p className="text-base sm:text-lg text-slate-500 max-w-md leading-relaxed">
+              <p className="text-base sm:text-lg text-slate-500 max-w-md leading-relaxed mb-4">
                 Wähle dein Level und führe ein 10-minütiges Gespräch mit deinem KI-Sprachpartner.
               </p>
+              {/* Usage indicator */}
+              {usageLoading ? (
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 text-slate-400 text-xs">
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  Laden…
+                </div>
+              ) : (
+                <SpeakingUsageIndicator usage={usage} />
+              )}
             </div>
             <div className="hidden sm:block w-48 h-28 flex-shrink-0 ml-8 animate-[fadeIn_0.8s_ease-out]">
               <SoundWaveSVG />
@@ -148,9 +265,12 @@ const SpeakingPage = () => {
         </div>
       </div>
 
+      {/* Usage Gate */}
+      {!usageLoading && <UsageGate usage={usage} />}
+
       {/* Level Grid */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 pb-16 -mt-2">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div className={`grid grid-cols-1 sm:grid-cols-2 gap-5 ${isBlocked ? 'opacity-50 pointer-events-none' : ''}`}>
           {LEVEL_ORDER.map((level, index) => {
             const config = getConfigForLevel(level);
             const colors = LEVEL_COLORS[level];
@@ -160,7 +280,8 @@ const SpeakingPage = () => {
               <button
                 key={level}
                 onClick={() => handleSelectLevel(level)}
-                className="group relative text-left rounded-2xl border border-gray-200/60 bg-white/80 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-0.5 hover:border-gray-300/80 active:scale-[0.98]"
+                disabled={isBlocked}
+                className="group relative text-left rounded-2xl border border-gray-200/60 bg-white/80 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-0.5 hover:border-gray-300/80 active:scale-[0.98] disabled:cursor-not-allowed"
                 style={{ animationDelay: `${index * 60}ms` }}
               >
                 {/* Left accent bar */}
