@@ -122,10 +122,23 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
       const sessionRes = await fetch('/api/speaking/speaking-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ systemPrompt: config.systemPrompt, level: config.level }),
+        body: JSON.stringify({ systemPrompt: config.systemPrompt, level: config.level, user_id: userId }),
       });
       if (!sessionRes.ok) {
         const err = await sessionRes.json().catch(() => ({}));
+        if (sessionRes.status === 403) {
+          const reason = err.reason;
+          if (reason === 'subscription_required') {
+            throw new Error('Ein Abonnement ist erforderlich, um Sprechübungen zu nutzen.');
+          } else if (reason === 'monthly_limit_reached') {
+            throw new Error(`Monatliches Limit erreicht (${err.used}/${err.limit} Sitzungen). Upgrade auf Premium für unbegrenzte Übungen.`);
+          } else if (reason === 'trial_cooldown') {
+            const next = new Date(err.nextAvailable);
+            const hours = Math.ceil((next.getTime() - Date.now()) / (1000 * 60 * 60));
+            throw new Error(`Testversion: Nächste Sitzung in ~${hours} Stunde${hours !== 1 ? 'n' : ''} verfügbar.`);
+          }
+          throw new Error(err.error || 'Zugriff verweigert');
+        }
         throw new Error(err.error || `Session creation failed (${sessionRes.status})`);
       }
       const { client_secret } = await sessionRes.json();

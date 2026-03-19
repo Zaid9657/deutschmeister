@@ -147,6 +147,16 @@ async function handleOrderCreated(data, meta) {
   console.log('Order created for user:', userId, 'Order ID:', data?.id);
 }
 
+const PREMIUM_VARIANT_IDS = [
+  '35d5a630-5fd2-417b-9100-fab542fd9dfc',
+  'f189cf9e-feed-477e-9dd3-fad5c3c22c3c',
+];
+
+function getSubscriptionTier(variantId) {
+  if (PREMIUM_VARIANT_IDS.includes(variantId)) return 'premium';
+  return 'pro';
+}
+
 async function handleSubscriptionCreated(data, meta) {
   const customData = meta?.custom_data || {};
   const userId = customData.user_id;
@@ -163,6 +173,8 @@ async function handleSubscriptionCreated(data, meta) {
   // Determine plan type from variant name
   const variantName = attributes.variant_name || '';
   const planType = variantName.toLowerCase().includes('yearly') ? 'yearly' : 'monthly';
+  const variantId = String(attributes.variant_id || '');
+  const tier = getSubscriptionTier(variantId);
 
   // Calculate subscription end date
   const subscriptionEnd = attributes.renews_at
@@ -204,6 +216,7 @@ async function handleSubscriptionCreated(data, meta) {
     .upsert({
       id: userId,
       is_subscribed: true,
+      subscription_tier: tier,
       updated_at: new Date().toISOString()
     }, {
       onConflict: 'id'
@@ -214,7 +227,7 @@ async function handleSubscriptionCreated(data, meta) {
     throw new Error(`profiles upsert failed: ${profileError.message} (code: ${profileError.code}, details: ${profileError.details})`);
   }
 
-  console.log('SUCCESS: Subscription created for user:', userId, 'Plan:', planType);
+  console.log('SUCCESS: Subscription created for user:', userId, 'Plan:', planType, 'Tier:', tier);
 }
 
 async function handleSubscriptionUpdated(data, meta) {
@@ -254,6 +267,8 @@ async function handleSubscriptionUpdated(data, meta) {
     if (userId) {
       const variantName = attributes.variant_name || '';
       const planType = variantName.toLowerCase().includes('yearly') ? 'yearly' : 'monthly';
+      const variantId = String(attributes.variant_id || '');
+      const tier = getSubscriptionTier(variantId);
 
       const { error: upsertError } = await supabase
         .from('subscriptions')
@@ -278,16 +293,17 @@ async function handleSubscriptionUpdated(data, meta) {
         throw new Error(`subscription fallback upsert failed: ${upsertError.message}`);
       }
 
-      // Also mark profile as subscribed
+      // Also mark profile as subscribed with tier
       await supabase
         .from('profiles')
         .upsert({
           id: userId,
           is_subscribed: true,
+          subscription_tier: tier,
           updated_at: new Date().toISOString()
         }, { onConflict: 'id' });
 
-      console.log('Fallback upsert OK for user:', userId);
+      console.log('Fallback upsert OK for user:', userId, 'Tier:', tier);
     } else {
       console.warn('subscription_updated: no matching row and no user_id — skipping');
     }
@@ -371,10 +387,10 @@ async function handleSubscriptionExpired(data, meta) {
     throw subError;
   }
 
-  // Mark profile as unsubscribed
+  // Mark profile as unsubscribed and reset tier
   const { error: profileError } = await supabase
     .from('profiles')
-    .update({ is_subscribed: false, updated_at: new Date().toISOString() })
+    .update({ is_subscribed: false, subscription_tier: 'free', updated_at: new Date().toISOString() })
     .eq('id', subscription.user_id);
 
   if (profileError) {

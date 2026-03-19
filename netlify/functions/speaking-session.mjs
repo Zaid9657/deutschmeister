@@ -1,3 +1,17 @@
+import { createClient } from '@supabase/supabase-js';
+import { checkUsage } from './check-speaking-usage.mjs';
+import { incrementUsage } from './increment-speaking-usage.mjs';
+
+const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+let supabase;
+try {
+  supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+} catch (e) {
+  console.error('Failed to initialize Supabase client:', e.message);
+}
+
 const VOICE_MAP = {
   'a1.1': 'coral', 'a1.2': 'coral',
   'a2.1': 'shimmer', 'a2.2': 'shimmer',
@@ -33,11 +47,31 @@ export const handler = async (event) => {
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'Server misconfigured' }) };
   }
 
+  if (!supabaseKey || !supabase) {
+    console.error('SUPABASE_SERVICE_ROLE_KEY is not set');
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Server misconfigured' }) };
+  }
+
   try {
-    const { systemPrompt, level } = JSON.parse(event.body || '{}');
+    const { systemPrompt, level, user_id } = JSON.parse(event.body || '{}');
 
     if (!systemPrompt || !level) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'systemPrompt and level are required' }) };
+    }
+
+    // Check usage limits if user_id is provided
+    if (user_id) {
+      const usage = await checkUsage(user_id);
+      if (!usage.allowed) {
+        return {
+          statusCode: 403,
+          headers,
+          body: JSON.stringify({
+            error: 'Speaking limit reached',
+            ...usage,
+          }),
+        };
+      }
     }
 
     const normalizedLevel = level.toLowerCase();
@@ -74,6 +108,15 @@ export const handler = async (event) => {
     }
 
     const data = await response.json();
+
+    // Increment usage after successful session creation
+    if (user_id) {
+      try {
+        await incrementUsage(user_id);
+      } catch (err) {
+        console.error('Failed to increment usage (non-blocking):', err.message);
+      }
+    }
 
     return {
       statusCode: 200,
