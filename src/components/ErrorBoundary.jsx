@@ -1,6 +1,18 @@
 import React from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 
+function isChunkLoadError(error) {
+  if (!error) return false;
+  const msg = error.message || '';
+  return (
+    msg.includes('Failed to fetch dynamically imported module') ||
+    msg.includes('Loading chunk') ||
+    msg.includes('Loading CSS chunk') ||
+    msg.includes('is not a valid JavaScript MIME type') ||
+    msg.includes("Expected a JavaScript")
+  );
+}
+
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -13,6 +25,19 @@ class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     console.error('ErrorBoundary caught:', error, errorInfo);
+
+    // Auto-reload once for stale chunk errors (new deploy invalidated old assets)
+    if (isChunkLoadError(error)) {
+      const key = 'chunk_reload_ts';
+      const last = sessionStorage.getItem(key);
+      const now = Date.now();
+      // Only auto-reload if we haven't done so in the last 10 seconds (prevent loop)
+      if (!last || now - Number(last) > 10000) {
+        sessionStorage.setItem(key, String(now));
+        window.location.reload();
+        return;
+      }
+    }
   }
 
   handleReload = () => {
@@ -35,7 +60,9 @@ class ErrorBoundary extends React.Component {
               Something went wrong
             </h1>
             <p className="text-slate-500 mb-8">
-              An unexpected error occurred. Please try refreshing the page.
+              {isChunkLoadError(this.state.error)
+                ? 'A new version is available. Please refresh the page.'
+                : 'An unexpected error occurred. Please try refreshing the page.'}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
