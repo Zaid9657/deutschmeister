@@ -760,8 +760,8 @@ export default function GrammarLessonPage() {
         commonMistakeRules,
         exercises: exercises
           .map(ex => {
-            // Handle different question field names
-            const question = ex.question_en || ex.question_de || ex.question || '';
+            // Handle different question field names — prefer German
+            const question = ex.question_de || ex.question_en || ex.question || '';
 
             // Handle options - might be JSONB array or already parsed
             let options = [];
@@ -779,7 +779,7 @@ export default function GrammarLessonPage() {
               question,
               options,
               correctAnswer: ex.correct_answer,
-              explanation: ex.explanation_en || ex.explanation_de || ex.explanation || '',
+              explanation: ex.explanation_de || ex.explanation_en || ex.explanation || '',
               type: ex.exercise_type,
             };
           })
