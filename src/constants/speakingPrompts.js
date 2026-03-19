@@ -1,5 +1,5 @@
 /**
- * @typedef {'nova' | 'shimmer' | 'echo' | 'onyx'} Voice
+ * @typedef {'alloy' | 'ash' | 'ballad' | 'coral' | 'echo' | 'sage' | 'shimmer' | 'verse'} Voice
  * @typedef {'slow' | 'normal' | 'fast'} SpeakingSpeed
  *
  * @typedef {Object} LevelConfig
@@ -20,7 +20,7 @@ export const LEVEL_CONFIGS = {
     level: 'A1.1',
     name: 'Anfänger 1',
     description: 'Erste Schritte: Begrüßungen, Zahlen, Farben und einfache Sätze.',
-    voice: 'nova',
+    voice: 'coral',
     speakingSpeed: 'slow',
     durationMinutes: 10,
     topics: [
@@ -65,7 +65,7 @@ Beginne mit: "Hallo! Ich bin Frau Müller. Wie heißt du?"`,
     level: 'A1.2',
     name: 'Anfänger 2',
     description: 'Alltagssituationen: Einkaufen, Uhrzeit, Wegbeschreibung und einfache Dialoge.',
-    voice: 'nova',
+    voice: 'coral',
     speakingSpeed: 'slow',
     durationMinutes: 10,
     topics: [
@@ -282,7 +282,7 @@ Beginne mit: "Hi, ich bin Thomas. Sag mal, hast du in letzter Zeit etwas Interes
     level: 'B2.1',
     name: 'Oberstufe 1',
     description: 'Anspruchsvolle Gespräche: abstrakte Themen, Redewendungen, differenzierte Argumentation.',
-    voice: 'onyx',
+    voice: 'alloy',
     speakingSpeed: 'fast',
     durationMinutes: 10,
     topics: [
@@ -327,7 +327,7 @@ Beginne mit: "Guten Tag, ich bin Professorin Hartmann. Lassen Sie uns heute übe
     level: 'B2.2',
     name: 'Oberstufe 2',
     description: 'Nahezu muttersprachliche Konversation: Ironie, Humor, Nuancen und kulturelle Feinheiten.',
-    voice: 'onyx',
+    voice: 'alloy',
     speakingSpeed: 'fast',
     durationMinutes: 10,
     topics: [

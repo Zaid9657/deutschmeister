@@ -1,8 +1,8 @@
 const VOICE_MAP = {
-  'a1.1': 'nova', 'a1.2': 'nova',
+  'a1.1': 'coral', 'a1.2': 'coral',
   'a2.1': 'shimmer', 'a2.2': 'shimmer',
   'b1.1': 'echo', 'b1.2': 'echo',
-  'b2.1': 'onyx', 'b2.2': 'onyx',
+  'b2.1': 'alloy', 'b2.2': 'alloy',
 };
 
 export const handler = async (event) => {
@@ -41,7 +41,7 @@ export const handler = async (event) => {
     }
 
     const normalizedLevel = level.toLowerCase();
-    const voice = VOICE_MAP[normalizedLevel] || 'nova';
+    const voice = VOICE_MAP[normalizedLevel] || 'coral';
     const isA1 = normalizedLevel.startsWith('a1');
     const silenceDuration = isA1 ? 1000 : 700;
 
