@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, BookOpen, BookMarked, MessageSquare, Headphones, Mic, Radio, Sun, TreePine, Waves, Moon, Loader2, Filter, FileText } from 'lucide-react';
+import { ArrowLeft, BookOpen, BookMarked, MessageSquare, Headphones, Radio, Sun, TreePine, Waves, Moon, Loader2, Filter, FileText } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useProgress } from '../contexts/ProgressContext';
 import { levels, levelThemes as contentLevelThemes } from '../data/content';
@@ -13,7 +13,6 @@ import WordCard from '../components/WordCard';
 import SentenceCard from '../components/SentenceCard';
 import GrammarTopicCard from '../components/GrammarTopicCard';
 import ReadingLessonCard from '../components/ReadingLessonCard';
-// SpeakingPractice replaced with Coming Soon placeholder
 import PodcastsTab from '../components/level/PodcastsTab';
 import { useLevelExercises } from '../hooks/useListening';
 import ExerciseCard from '../components/listening/ExerciseCard';
@@ -127,7 +126,6 @@ const LevelPage = () => {
     { id: 'reading', label: t('levelPage.reading'), icon: FileText },
     { id: 'listening', label: t('levelPage.listening'), icon: Headphones },
     { id: 'podcasts', label: t('levelPage.podcasts', 'Podcasts'), icon: Radio },
-    { id: 'speaking', label: t('levelPage.speaking'), icon: Mic },
   ];
 
   // Format level for display (a1.1 -> A1.1)
@@ -163,7 +161,6 @@ const LevelPage = () => {
     sentences: { title: `German Sentences ${displayLevel} - Practice Phrases`, desc: `Practice German sentences and phrases for level ${displayLevel}. Learn everyday expressions with translations.` },
     listening: listeningSeo,
     podcasts: podcastsSeo,
-    speaking: { title: `German Speaking Practice ${displayLevel}`, desc: `Practice speaking German at ${displayLevel} level with AI-powered conversation prompts and feedback.` },
     reading: { title: `German Reading Practice ${displayLevel}`, desc: `Read German texts at ${displayLevel} level with vocabulary support and comprehension questions.` },
   };
   const seo = tabSeoMap[activeTab] || tabSeoMap.grammar;
@@ -507,26 +504,6 @@ const LevelPage = () => {
               <PodcastsTab subLevel={level.toUpperCase()} />
             )}
 
-            {/* Speaking Tab */}
-            {activeTab === 'speaking' && (
-              <div className="flex items-center justify-center py-16">
-                <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-10 max-w-md w-full text-center">
-                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-200">
-                    <Mic className="w-10 h-10 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-800 mb-2">
-                    {t('levelPage.speakingComingSoonTitle', 'Speaking Practice - Coming Soon')}
-                  </h3>
-                  <p className="text-slate-500 text-sm leading-relaxed mb-6">
-                    {t('levelPage.speakingComingSoonDesc', "We're working on AI-powered speaking exercises. Stay tuned!")}
-                  </p>
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-50 text-purple-600 text-sm font-medium">
-                    <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
-                    {t('levelPage.comingSoon', 'Coming soon')}
-                  </div>
-                </div>
-              </div>
-            )}
           </motion.div>
         </AnimatePresence>
       </div>
