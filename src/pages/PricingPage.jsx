@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Check, Sparkles, Crown, Zap, Mic, Star } from 'lucide-react';
+import { Check, Sparkles, Crown, Zap, Mic, Star, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
@@ -9,12 +9,24 @@ import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
 const PricingPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { isInFreeTrial, hasActiveSubscription, getTrialDaysRemaining } = useSubscription();
+  const { isInFreeTrial, hasActiveSubscription, getTrialDaysRemaining, profile } = useSubscription();
   const [billingCycle, setBillingCycle] = useState('monthly');
 
-  const isSubscribed = user ? hasActiveSubscription() : false;
   const inTrial = user ? isInFreeTrial() : false;
   const trialDaysRemaining = user ? getTrialDaysRemaining() : 0;
+
+  // Determine current subscription tier
+  const currentTier = (() => {
+    if (!user) return null;
+    if (profile?.subscription_tier === 'premium') return 'premium';
+    if (profile?.subscription_tier === 'pro') return 'pro';
+    if (profile?.is_subscribed) return 'pro'; // legacy fallback
+    if (inTrial) return 'trial';
+    return 'free';
+  })();
+
+  const isOnPro = currentTier === 'pro';
+  const isOnPremium = currentTier === 'premium';
 
   const handleSubscribe = (planKey) => {
     if (!user) {
@@ -32,8 +44,37 @@ const PricingPage = () => {
 
   const proKey = billingCycle === 'yearly' ? 'yearly' : 'monthly';
   const premiumKey = billingCycle === 'yearly' ? 'premiumYearly' : 'premiumMonthly';
-  const proPlan = LEMONSQUEEZY_CONFIG.plans[proKey];
-  const premiumPlan = LEMONSQUEEZY_CONFIG.plans[premiumKey];
+
+  // Button config for Pro card
+  const proButton = (() => {
+    if (isOnPro) return { label: 'Aktuelles Abo', disabled: true, style: 'current' };
+    if (isOnPremium) return { label: 'Enthalten', disabled: true, style: 'included' };
+    return { label: 'Jetzt starten', disabled: false, style: 'pro' };
+  })();
+
+  // Button config for Premium card
+  const premiumButton = (() => {
+    if (isOnPremium) return { label: 'Aktuelles Abo', disabled: true, style: 'current' };
+    if (isOnPro) return { label: 'Jetzt upgraden', disabled: false, style: 'upgrade' };
+    return { label: 'Jetzt starten', disabled: false, style: 'premium' };
+  })();
+
+  const getButtonClasses = (style) => {
+    switch (style) {
+      case 'current':
+        return 'bg-gray-700 text-gray-300 cursor-not-allowed';
+      case 'included':
+        return 'bg-gray-700 text-gray-400 cursor-not-allowed';
+      case 'pro':
+        return 'bg-blue-600 hover:bg-blue-700 text-white';
+      case 'premium':
+        return 'bg-yellow-500 hover:bg-yellow-400 text-black font-bold';
+      case 'upgrade':
+        return 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-black font-bold';
+      default:
+        return 'bg-gray-600 text-white';
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 py-16 px-4 pt-24">
@@ -52,7 +93,7 @@ const PricingPage = () => {
             Get full access to all lessons, grammar exercises, listening practice, and AI speaking.
           </p>
 
-          {inTrial && (
+          {inTrial && !isOnPro && !isOnPremium && (
             <div className="mt-6 inline-flex items-center gap-2 bg-yellow-500/20 text-yellow-400 px-4 py-2 rounded-full">
               <Sparkles className="w-5 h-5" />
               <span>{trialDaysRemaining} days left in your free trial</span>
@@ -99,11 +140,23 @@ const PricingPage = () => {
 
           {/* Pro Plan */}
           <motion.div
-            className="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-2xl p-8"
+            className={`relative bg-gray-800/50 backdrop-blur border rounded-2xl p-8 ${
+              isOnPro ? 'border-blue-500/60 ring-1 ring-blue-500/30' : 'border-gray-700'
+            }`}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1 }}
           >
+            {/* Current Plan Badge */}
+            {isOnPro && (
+              <div className="absolute -top-3 left-6">
+                <span className="bg-blue-500 text-white font-semibold px-3 py-0.5 rounded-full text-xs flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3 h-3" />
+                  Aktuell
+                </span>
+              </div>
+            )}
+
             <div className="flex items-center gap-2 mb-4">
               <Zap className="w-6 h-6 text-blue-400" />
               <h2 className="text-2xl font-bold text-white">Pro</h2>
@@ -144,7 +197,7 @@ const PricingPage = () => {
               </li>
               <li className="flex items-start gap-3 text-gray-300">
                 <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-                <span>Podcasts & video content</span>
+                <span>Podcasts &amp; video content</span>
               </li>
               <li className="flex items-start gap-3 text-gray-300">
                 <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
@@ -161,27 +214,39 @@ const PricingPage = () => {
             </ul>
 
             <button
-              onClick={() => handleSubscribe(proKey)}
-              disabled={isSubscribed}
-              className="w-full py-3 px-6 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors"
+              onClick={() => !proButton.disabled && handleSubscribe(proKey)}
+              disabled={proButton.disabled}
+              className={`w-full py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 ${getButtonClasses(proButton.style)}`}
             >
-              {isSubscribed ? 'Already Subscribed' : 'Start 7-Day Free Trial'}
+              {proButton.style === 'current' && <CheckCircle2 className="w-4 h-4" />}
+              {proButton.label}
             </button>
           </motion.div>
 
           {/* Premium Plan - Highlighted */}
           <motion.div
-            className="relative bg-gradient-to-b from-yellow-500/10 to-gray-800/50 backdrop-blur border-2 border-yellow-500/50 rounded-2xl p-8"
+            className={`relative bg-gradient-to-b from-yellow-500/10 to-gray-800/50 backdrop-blur rounded-2xl p-8 ${
+              isOnPremium
+                ? 'border-2 border-yellow-400 ring-1 ring-yellow-400/30'
+                : 'border-2 border-yellow-500/50'
+            }`}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
           >
             {/* Badge */}
             <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-              <span className="bg-yellow-500 text-black font-bold px-4 py-1 rounded-full text-sm flex items-center gap-1.5">
-                <Star className="w-3.5 h-3.5" />
-                MOST POPULAR
-              </span>
+              {isOnPremium ? (
+                <span className="bg-yellow-400 text-black font-bold px-4 py-1 rounded-full text-sm flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  Aktuell
+                </span>
+              ) : (
+                <span className="bg-yellow-500 text-black font-bold px-4 py-1 rounded-full text-sm flex items-center gap-1.5">
+                  <Star className="w-3.5 h-3.5" />
+                  MOST POPULAR
+                </span>
+              )}
             </div>
 
             <div className="flex items-center gap-2 mb-4 mt-2">
@@ -239,25 +304,29 @@ const PricingPage = () => {
             </ul>
 
             <button
-              onClick={() => handleSubscribe(premiumKey)}
-              disabled={isSubscribed}
-              className="w-full py-3 px-6 bg-yellow-500 hover:bg-yellow-400 disabled:bg-gray-600 disabled:cursor-not-allowed text-black font-bold rounded-xl transition-colors"
+              onClick={() => !premiumButton.disabled && handleSubscribe(premiumKey)}
+              disabled={premiumButton.disabled}
+              className={`w-full py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 ${getButtonClasses(premiumButton.style)}`}
             >
-              {isSubscribed ? 'Already Subscribed' : 'Start 7-Day Free Trial'}
+              {premiumButton.style === 'current' && <CheckCircle2 className="w-4 h-4" />}
+              {premiumButton.style === 'upgrade' && <Crown className="w-4 h-4" />}
+              {premiumButton.label}
             </button>
           </motion.div>
         </div>
 
         {/* Free Trial Info */}
-        <motion.div
-          className="text-center mt-12 text-gray-400"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        >
-          <p>All plans include a <strong className="text-white">7-day free trial</strong></p>
-          <p className="text-sm mt-2">Cancel anytime. No questions asked.</p>
-        </motion.div>
+        {!isOnPro && !isOnPremium && (
+          <motion.div
+            className="text-center mt-12 text-gray-400"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            <p>All plans include a <strong className="text-white">7-day free trial</strong></p>
+            <p className="text-sm mt-2">Cancel anytime. No questions asked.</p>
+          </motion.div>
+        )}
 
         {/* Trust Badges */}
         <motion.div
