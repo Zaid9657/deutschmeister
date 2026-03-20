@@ -8,6 +8,97 @@ const SPEAKING_LABELS = {
   ai_speaking: 'Lehrer spricht…',
 };
 
+/**
+ * Check browser compatibility for WebRTC speaking features.
+ * Returns { supported: true } or { supported: false, reason: string }.
+ */
+export function checkSpeakingSupport() {
+  if (typeof window === 'undefined') {
+    return { supported: false, reason: 'no_window' };
+  }
+  if (!window.RTCPeerConnection && !window.webkitRTCPeerConnection) {
+    return { supported: false, reason: 'no_webrtc' };
+  }
+  if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== 'function') {
+    return { supported: false, reason: 'no_media_devices' };
+  }
+  return { supported: true };
+}
+
+function classifyConnectionError(err) {
+  const msg = (err?.message || err?.name || '').toLowerCase();
+
+  // Microphone permission denied
+  if (
+    msg.includes('permission denied') ||
+    msg.includes('not allowed') ||
+    msg.includes('notallowederror') ||
+    err?.name === 'NotAllowedError'
+  ) {
+    return {
+      userMessage: 'Mikrofon-Zugriff verweigert. Bitte erlaube den Mikrofon-Zugriff in deinen Browser-Einstellungen und versuche es erneut.',
+      type: 'permission',
+    };
+  }
+
+  // No microphone found
+  if (
+    msg.includes('not found') ||
+    msg.includes('notfounderror') ||
+    msg.includes('requested device not found') ||
+    err?.name === 'NotFoundError'
+  ) {
+    return {
+      userMessage: 'Kein Mikrofon gefunden. Bitte schließe ein Mikrofon an und versuche es erneut.',
+      type: 'no_device',
+    };
+  }
+
+  // Device not readable (e.g. in use by another app)
+  if (
+    msg.includes('not readable') ||
+    msg.includes('notreadableerror') ||
+    err?.name === 'NotReadableError'
+  ) {
+    return {
+      userMessage: 'Das Mikrofon konnte nicht geöffnet werden. Möglicherweise wird es von einer anderen App verwendet.',
+      type: 'device_busy',
+    };
+  }
+
+  // Browser doesn't support required APIs
+  if (
+    msg.includes('not supported') ||
+    msg.includes('rtcpeerconnection') ||
+    msg.includes('getusermedia')
+  ) {
+    return {
+      userMessage: 'Dein Browser unterstützt diese Funktion nicht. Bitte verwende Chrome, Edge oder Safari (Desktop).',
+      type: 'unsupported',
+    };
+  }
+
+  // Network / API failure
+  if (
+    msg.includes('failed to fetch') ||
+    msg.includes('networkerror') ||
+    msg.includes('network') ||
+    msg.includes('connection failed') ||
+    msg.includes('aborted')
+  ) {
+    return {
+      userMessage: 'Verbindung fehlgeschlagen — bitte prüfe deine Internetverbindung und versuche es erneut.',
+      type: 'network',
+    };
+  }
+
+  // Default
+  return {
+    userMessage: 'Verbindung fehlgeschlagen — bitte erneut versuchen.',
+    type: 'unknown',
+  };
+}
+
 function generateSessionToken() {
   return 'sp_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
 }
@@ -118,40 +209,86 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
   const handleConnect = async () => {
     setConnectionState('connecting');
     setError(null);
-    try {
-      const sessionRes = await fetch('/api/speaking/speaking-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ systemPrompt: config.systemPrompt, level: config.level, user_id: userId }),
-      });
-      if (!sessionRes.ok) {
-        const err = await sessionRes.json().catch(() => ({}));
-        if (sessionRes.status === 403) {
-          const reason = err.reason;
-          if (reason === 'subscription_required') {
-            throw new Error('Ein Abonnement ist erforderlich, um Sprechübungen zu nutzen.');
-          } else if (reason === 'monthly_limit_reached') {
-            throw new Error(`Monatliches Limit erreicht (${err.used}/${err.limit} Sitzungen). Upgrade auf Premium für unbegrenzte Übungen.`);
-          } else if (reason === 'trial_cooldown') {
-            const next = new Date(err.nextAvailable);
-            const hours = Math.ceil((next.getTime() - Date.now()) / (1000 * 60 * 60));
-            throw new Error(`Testversion: Nächste Sitzung in ~${hours} Stunde${hours !== 1 ? 'n' : ''} verfügbar.`);
-          }
-          throw new Error(err.error || 'Zugriff verweigert');
-        }
-        throw new Error(err.error || `Session creation failed (${sessionRes.status})`);
-      }
-      const { client_secret } = await sessionRes.json();
 
-      const pc = new RTCPeerConnection();
+    // Pre-flight: check browser compatibility
+    const compat = checkSpeakingSupport();
+    if (!compat.supported) {
+      const msg = compat.reason === 'no_webrtc'
+        ? 'Dein Browser unterstützt diese Funktion nicht. Bitte verwende Chrome, Edge oder Safari (Desktop).'
+        : 'Dein Browser unterstützt kein Mikrofon. Bitte verwende Chrome, Edge oder Safari (Desktop).';
+      setError(msg);
+      setConnectionState('error');
+      return;
+    }
+
+    try {
+      // 1. Request microphone FIRST so the user sees the permission prompt early
+      //    (especially important on iOS Safari where timing matters)
+      let stream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      } catch (micErr) {
+        console.error('Microphone access error:', micErr);
+        const classified = classifyConnectionError(micErr);
+        setError(classified.userMessage);
+        setConnectionState('error');
+        return;
+      }
+      streamRef.current = stream;
+
+      // 2. Create session via backend
+      let client_secret;
+      try {
+        const sessionRes = await fetch('/api/speaking/speaking-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ systemPrompt: config.systemPrompt, level: config.level, user_id: userId }),
+        });
+        if (!sessionRes.ok) {
+          const err = await sessionRes.json().catch(() => ({}));
+          if (sessionRes.status === 403) {
+            const reason = err.reason;
+            if (reason === 'subscription_required') {
+              throw new Error('Ein Abonnement ist erforderlich, um Sprechübungen zu nutzen.');
+            } else if (reason === 'monthly_limit_reached') {
+              throw new Error(`Monatliches Limit erreicht (${err.used}/${err.limit} Sitzungen). Upgrade auf Premium für unbegrenzte Übungen.`);
+            } else if (reason === 'trial_cooldown') {
+              const next = new Date(err.nextAvailable);
+              const hours = Math.ceil((next.getTime() - Date.now()) / (1000 * 60 * 60));
+              throw new Error(`Testversion: Nächste Sitzung in ~${hours} Stunde${hours !== 1 ? 'n' : ''} verfügbar.`);
+            }
+            throw new Error(err.error || 'Zugriff verweigert');
+          }
+          throw new Error(err.error || `Sitzung konnte nicht erstellt werden (${sessionRes.status})`);
+        }
+        const data = await sessionRes.json();
+        client_secret = data.client_secret;
+      } catch (apiErr) {
+        // Stop the mic stream we already acquired
+        stream.getTracks().forEach((t) => t.stop());
+        streamRef.current = null;
+        console.error('Session API error:', apiErr);
+        // If it's already a German message from our 403 handling, pass it through
+        if (apiErr.message && !apiErr.message.startsWith('Failed to fetch')) {
+          setError(apiErr.message);
+        } else {
+          setError(classifyConnectionError(apiErr).userMessage);
+        }
+        setConnectionState('error');
+        return;
+      }
+
+      // 3. Set up WebRTC peer connection
+      const RTCPeer = window.RTCPeerConnection || window.webkitRTCPeerConnection;
+      const pc = new RTCPeer();
       pcRef.current = pc;
 
       const audioEl = document.createElement('audio');
       audioEl.autoplay = true;
+      // iOS Safari requires playsinline
+      audioEl.setAttribute('playsinline', '');
       pc.ontrack = (e) => { audioEl.srcObject = e.streams[0]; };
 
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      streamRef.current = stream;
       stream.getTracks().forEach((track) => pc.addTrack(track, stream));
 
       const dc = pc.createDataChannel('oai-events');
@@ -163,17 +300,21 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
 
+      // 4. Exchange SDP with OpenAI Realtime
       const sdpRes = await fetch('https://api.openai.com/v1/realtime', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${client_secret}`, 'Content-Type': 'application/sdp' },
         body: offer.sdp,
       });
-      if (!sdpRes.ok) throw new Error(`OpenAI Realtime connection failed (${sdpRes.status})`);
+      if (!sdpRes.ok) {
+        throw new Error(`Verbindung zum Sprachserver fehlgeschlagen (${sdpRes.status})`);
+      }
       const answerSdp = await sdpRes.text();
       await pc.setRemoteDescription({ type: 'answer', sdp: answerSdp });
     } catch (err) {
       console.error('Connection error:', err);
-      setError(err.message);
+      const classified = classifyConnectionError(err);
+      setError(err.message || classified.userMessage);
       setConnectionState('error');
       cleanup();
     }

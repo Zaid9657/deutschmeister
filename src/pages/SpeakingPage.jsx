@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Mic, Clock, ChevronRight, Crown, ArrowRight, Loader2 } from 'lucide-react';
+import { Mic, Clock, ChevronRight, Crown, ArrowRight, Loader2, AlertTriangle, Monitor } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { LEVEL_CONFIGS, getConfigForLevel } from '../constants/speakingPrompts';
-import SpeakingPractice from '../components/SpeakingPractice';
+import SpeakingPractice, { checkSpeakingSupport } from '../components/SpeakingPractice';
 import SpeakingEvaluationResults from '../components/SpeakingEvaluationResults';
 import SpeakingUsageIndicator from '../components/SpeakingUsageIndicator';
 
@@ -132,6 +132,25 @@ function UsageGate({ usage }) {
   return null;
 }
 
+function BrowserUnsupportedBanner() {
+  return (
+    <div className="max-w-lg mx-auto mb-8 bg-white rounded-2xl border border-amber-200 p-6 text-center">
+      <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-amber-50 flex items-center justify-center">
+        <AlertTriangle className="w-7 h-7 text-amber-500" />
+      </div>
+      <h3 className="font-bold text-slate-800 mb-2">Browser nicht unterstützt</h3>
+      <p className="text-sm text-slate-500 mb-4">
+        Dein Browser unterstützt die benötigten Audio-Funktionen nicht.
+        Sprechübungen erfordern WebRTC und Mikrofon-Zugriff.
+      </p>
+      <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-600">
+        <Monitor className="w-4 h-4" />
+        Bitte verwende <strong>Chrome</strong>, <strong>Edge</strong> oder <strong>Safari</strong> (Desktop)
+      </div>
+    </div>
+  );
+}
+
 const SpeakingPage = () => {
   const { user } = useAuth();
   const [phase, setPhase] = useState('select');
@@ -139,6 +158,8 @@ const SpeakingPage = () => {
   const [evaluation, setEvaluation] = useState(null);
   const [usage, setUsage] = useState(null);
   const [usageLoading, setUsageLoading] = useState(true);
+
+  const browserSupport = useMemo(() => checkSpeakingSupport(), []);
 
   const fetchUsage = useCallback(async () => {
     if (!user?.id) { setUsageLoading(false); return; }
@@ -265,12 +286,15 @@ const SpeakingPage = () => {
         </div>
       </div>
 
+      {/* Browser Unsupported Banner */}
+      {!browserSupport.supported && <BrowserUnsupportedBanner />}
+
       {/* Usage Gate */}
-      {!usageLoading && <UsageGate usage={usage} />}
+      {browserSupport.supported && !usageLoading && <UsageGate usage={usage} />}
 
       {/* Level Grid */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 pb-16 -mt-2">
-        <div className={`grid grid-cols-1 sm:grid-cols-2 gap-5 ${isBlocked ? 'opacity-50 pointer-events-none' : ''}`}>
+        <div className={`grid grid-cols-1 sm:grid-cols-2 gap-5 ${isBlocked || !browserSupport.supported ? 'opacity-50 pointer-events-none' : ''}`}>
           {LEVEL_ORDER.map((level, index) => {
             const config = getConfigForLevel(level);
             const colors = LEVEL_COLORS[level];
