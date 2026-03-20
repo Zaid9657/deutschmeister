@@ -1,16 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
-import { checkUsage } from './check-speaking-usage.mjs';
-import { incrementUsage } from './increment-speaking-usage.mjs';
-
-const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-let supabase;
-try {
-  supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
-} catch (e) {
-  console.error('Failed to initialize Supabase client:', e.message);
-}
+import { supabase, supabaseKey } from './_shared/supabase.mjs';
+import { checkUsage, incrementUsage } from './_shared/speakingUsage.mjs';
 
 const VOICE_MAP = {
   'a1.1': 'coral', 'a1.2': 'coral',
@@ -61,7 +50,9 @@ export const handler = async (event) => {
 
     // Check usage limits if user_id is provided
     if (user_id) {
+      console.log('[speaking-session] Checking usage for user:', user_id);
       const usage = await checkUsage(user_id);
+      console.log('[speaking-session] Usage check result:', JSON.stringify(usage));
       if (!usage.allowed) {
         return {
           statusCode: 403,
@@ -113,8 +104,9 @@ export const handler = async (event) => {
     if (user_id) {
       try {
         await incrementUsage(user_id);
+        console.log('[speaking-session] Usage incremented for user:', user_id);
       } catch (err) {
-        console.error('Failed to increment usage (non-blocking):', err.message);
+        console.error('[speaking-session] Failed to increment usage:', err.message);
       }
     }
 

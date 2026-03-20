@@ -1,28 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-let supabase;
-try {
-  supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
-} catch (e) {
-  console.error('Failed to initialize Supabase client:', e.message);
-}
-
-export async function incrementUsage(userId) {
-  const { error } = await supabase
-    .from('speaking_usage')
-    .insert({
-      user_id: userId,
-      created_at: new Date().toISOString(),
-    });
-
-  if (error) {
-    console.error('Error incrementing speaking usage:', error.message);
-    throw error;
-  }
-}
+import { supabaseKey, supabase } from './_shared/supabase.mjs';
+import { incrementUsage } from './_shared/speakingUsage.mjs';
 
 export const handler = async (event) => {
   const allowedOrigins = [
