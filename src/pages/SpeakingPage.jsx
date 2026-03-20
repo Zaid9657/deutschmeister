@@ -132,21 +132,43 @@ function UsageGate({ usage }) {
   return null;
 }
 
-function BrowserUnsupportedBanner() {
+function BrowserUnsupportedBanner({ browserSupport }) {
+  const isInApp = browserSupport.reason === 'in_app_browser';
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+    } catch {
+      window.prompt('URL kopieren:', window.location.href);
+    }
+  };
+
   return (
     <div className="max-w-lg mx-auto mb-8 bg-white rounded-2xl border border-amber-200 p-6 text-center">
       <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-amber-50 flex items-center justify-center">
         <AlertTriangle className="w-7 h-7 text-amber-500" />
       </div>
-      <h3 className="font-bold text-slate-800 mb-2">Browser nicht unterstützt</h3>
+      <h3 className="font-bold text-slate-800 mb-2">
+        {isInApp ? 'In-App-Browser erkannt' : 'Browser nicht unterstützt'}
+      </h3>
       <p className="text-sm text-slate-500 mb-4">
-        Dein Browser unterstützt die benötigten Audio-Funktionen nicht.
-        Sprechübungen erfordern WebRTC und Mikrofon-Zugriff.
+        {isInApp
+          ? 'Bitte öffne diese Seite in Safari oder Chrome. In-App-Browser unterstützen kein Mikrofon.'
+          : 'Dein Browser unterstützt die benötigten Audio-Funktionen nicht. Sprechübungen erfordern WebRTC und Mikrofon-Zugriff.'}
       </p>
-      <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-600">
-        <Monitor className="w-4 h-4" />
-        Bitte verwende <strong>Chrome</strong>, <strong>Edge</strong> oder <strong>Safari</strong> (Desktop)
-      </div>
+      {isInApp ? (
+        <button
+          onClick={handleCopy}
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-semibold text-sm transition-colors"
+        >
+          URL kopieren
+        </button>
+      ) : (
+        <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-600">
+          <Monitor className="w-4 h-4" />
+          Bitte verwende <strong>Chrome</strong>, <strong>Edge</strong> oder <strong>Safari</strong> (Desktop)
+        </div>
+      )}
     </div>
   );
 }
@@ -287,7 +309,7 @@ const SpeakingPage = () => {
       </div>
 
       {/* Browser Unsupported Banner */}
-      {!browserSupport.supported && <BrowserUnsupportedBanner />}
+      {!browserSupport.supported && <BrowserUnsupportedBanner browserSupport={browserSupport} />}
 
       {/* Usage Gate */}
       {browserSupport.supported && !usageLoading && <UsageGate usage={usage} />}

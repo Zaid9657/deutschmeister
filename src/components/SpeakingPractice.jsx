@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { Mic, Volume2, Loader2, Phone, PhoneOff, X, AlertCircle, MessageSquare } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { Mic, Volume2, Loader2, Phone, PhoneOff, X, AlertCircle, MessageSquare, ExternalLink, Copy, CheckCheck } from 'lucide-react';
 import { getConfigForLevel } from '../constants/speakingPrompts';
 
 const SPEAKING_LABELS = {
@@ -8,25 +8,67 @@ const SPEAKING_LABELS = {
   ai_speaking: 'Lehrer spricht…',
 };
 
+// ---------------------------------------------------------------------------
+// Platform / browser detection helpers
+// ---------------------------------------------------------------------------
+
+const IN_APP_BROWSER_PATTERNS = [
+  /FBAN/i,                // Facebook
+  /FBAV/i,                // Facebook
+  /FB_IAB/i,              // Facebook in-app
+  /Instagram/i,           // Instagram
+  /Twitter/i,             // Twitter / X
+  /Line\//i,              // Line
+  /MicroMessenger/i,      // WeChat
+  /LinkedInApp/i,         // LinkedIn
+  /BytedanceWebview/i,    // TikTok
+  /musical_ly/i,          // TikTok (old)
+  /TikTok/i,              // TikTok
+  /Snapchat/i,            // Snapchat
+  /Pinterest/i,           // Pinterest
+];
+
+function detectInAppBrowser() {
+  if (typeof navigator === 'undefined') return null;
+  const ua = navigator.userAgent || '';
+  for (const pattern of IN_APP_BROWSER_PATTERNS) {
+    if (pattern.test(ua)) return pattern.source.replace(/[/\\^$*+?.()|[\]{}]/g, '').replace(/i$/, '');
+  }
+  return null;
+}
+
+function isIOS() {
+  if (typeof navigator === 'undefined') return false;
+  const ua = navigator.userAgent || '';
+  return /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+
 /**
  * Check browser compatibility for WebRTC speaking features.
- * Returns { supported: true } or { supported: false, reason: string }.
+ * Returns { supported, reason, inAppBrowser?, isIOS? }.
  */
 export function checkSpeakingSupport() {
   if (typeof window === 'undefined') {
     return { supported: false, reason: 'no_window' };
   }
+
+  const inApp = detectInAppBrowser();
+  if (inApp) {
+    return { supported: false, reason: 'in_app_browser', inAppBrowser: inApp, isIOS: isIOS() };
+  }
+
   if (!window.RTCPeerConnection && !window.webkitRTCPeerConnection) {
-    return { supported: false, reason: 'no_webrtc' };
+    return { supported: false, reason: 'no_webrtc', isIOS: isIOS() };
   }
   if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== 'function') {
-    return { supported: false, reason: 'no_media_devices' };
+    return { supported: false, reason: 'no_media_devices', isIOS: isIOS() };
   }
-  return { supported: true };
+  return { supported: true, isIOS: isIOS() };
 }
 
 function classifyConnectionError(err) {
   const msg = (err?.message || err?.name || '').toLowerCase();
+  const ios = isIOS();
 
   // Microphone permission denied
   if (
@@ -36,7 +78,9 @@ function classifyConnectionError(err) {
     err?.name === 'NotAllowedError'
   ) {
     return {
-      userMessage: 'Mikrofon-Zugriff verweigert. Bitte erlaube den Mikrofon-Zugriff in deinen Browser-Einstellungen und versuche es erneut.',
+      userMessage: ios
+        ? 'Mikrofon-Zugriff verweigert. Gehe zu Einstellungen > Safari > Mikrofon und erlaube den Zugriff für deutsch-meister.de'
+        : 'Mikrofon-Zugriff verweigert. Bitte erlaube den Zugriff in deinen Browser-Einstellungen.',
       type: 'permission',
     };
   }
@@ -99,6 +143,101 @@ function classifyConnectionError(err) {
   };
 }
 
+// ---------------------------------------------------------------------------
+// In-app browser warning screen
+// ---------------------------------------------------------------------------
+
+function InAppBrowserGate({ onCancel }) {
+  const [copied, setCopied] = useState(false);
+  const url = typeof window !== 'undefined' ? window.location.href : '';
+  const ios = isIOS();
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback: prompt user to copy manually
+      window.prompt('URL kopieren:', url);
+    }
+  };
+
+  const handleOpenExternal = () => {
+    // On iOS, window.open in in-app browsers sometimes opens Safari
+    window.open(url, '_blank');
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 bg-gradient-to-br from-slate-900 via-slate-800 to-teal-900 flex flex-col items-center justify-center px-6">
+      <div className="max-w-sm w-full text-center">
+        {/* Icon */}
+        <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-amber-500/15 border border-amber-500/25 flex items-center justify-center">
+          <AlertCircle className="w-10 h-10 text-amber-400" />
+        </div>
+
+        <h2 className="text-xl font-bold text-white mb-3">
+          In-App-Browser erkannt
+        </h2>
+        <p className="text-sm text-white/60 leading-relaxed mb-6">
+          Bitte öffne diese Seite in {ios ? 'Safari' : 'Chrome oder Safari'}. In-App-Browser unterstützen kein Mikrofon.
+        </p>
+
+        {/* URL box */}
+        <div className="bg-white/[0.06] rounded-xl border border-white/10 p-3 mb-4">
+          <p className="text-xs text-white/40 mb-1.5 text-left">Seiten-URL:</p>
+          <p className="text-sm text-white/80 break-all text-left font-mono">{url}</p>
+        </div>
+
+        {/* Action buttons */}
+        <div className="flex flex-col gap-3">
+          <button
+            onClick={handleCopy}
+            className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-teal-500 hover:bg-teal-400 text-white font-semibold transition-colors text-sm"
+          >
+            {copied ? (
+              <>
+                <CheckCheck className="w-4 h-4" />
+                Kopiert!
+              </>
+            ) : (
+              <>
+                <Copy className="w-4 h-4" />
+                URL kopieren
+              </>
+            )}
+          </button>
+
+          <button
+            onClick={handleOpenExternal}
+            className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold transition-colors text-sm border border-white/10"
+          >
+            <ExternalLink className="w-4 h-4" />
+            {ios ? 'In Safari öffnen' : 'Im Browser öffnen'}
+          </button>
+
+          <button
+            onClick={onCancel}
+            className="mt-1 text-xs text-white/30 hover:text-white/50 transition-colors py-2"
+          >
+            Abbrechen
+          </button>
+        </div>
+
+        {/* Instructions */}
+        <div className="mt-6 bg-white/[0.04] rounded-xl border border-white/[0.06] p-4 text-left">
+          <p className="text-xs font-semibold text-white/50 mb-2 uppercase tracking-wider">Anleitung</p>
+          <ol className="text-xs text-white/40 space-y-1.5 list-decimal list-inside">
+            <li>Tippe oben auf die drei Punkte (⋯) oder das Menü</li>
+            <li>Wähle „{ios ? 'In Safari öffnen' : 'Im Browser öffnen'}"</li>
+            <li>Oder kopiere die URL und füge sie in {ios ? 'Safari' : 'Chrome'} ein</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function generateSessionToken() {
   return 'sp_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
 }
@@ -111,6 +250,8 @@ function formatTime(seconds) {
 
 const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
   const config = getConfigForLevel(level);
+  const browserCheck = useMemo(() => checkSpeakingSupport(), []);
+  const isInAppBrowser = browserCheck.reason === 'in_app_browser';
 
   const [connectionState, setConnectionState] = useState('disconnected');
   const [speakingState, setSpeakingState] = useState('idle');
@@ -349,6 +490,11 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
   const totalTime = config.durationMinutes * 60;
   const timerProgress = isConnected ? ((totalTime - timeRemaining) / totalTime) * 100 : 0;
   const timerCircumference = 2 * Math.PI * 28;
+
+  // In-app browser gate — must come after all hooks
+  if (isInAppBrowser) {
+    return <InAppBrowserGate onCancel={onCancel} />;
+  }
 
   // Evaluating screen
   if (evaluating) {
