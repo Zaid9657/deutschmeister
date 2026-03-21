@@ -88,101 +88,101 @@
 
   <!-- Vocabulary Level Pages -->
   <url>
-    <loc>https://deutsch-meister.de/vocabulary/A1.1</loc>
+    <loc>https://deutsch-meister.de/vocabulary/a1.1</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/vocabulary/A1.2</loc>
+    <loc>https://deutsch-meister.de/vocabulary/a1.2</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/vocabulary/A2.1</loc>
+    <loc>https://deutsch-meister.de/vocabulary/a2.1</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/vocabulary/A2.2</loc>
+    <loc>https://deutsch-meister.de/vocabulary/a2.2</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/vocabulary/B1.1</loc>
+    <loc>https://deutsch-meister.de/vocabulary/b1.1</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/vocabulary/B1.2</loc>
+    <loc>https://deutsch-meister.de/vocabulary/b1.2</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/vocabulary/B2.1</loc>
+    <loc>https://deutsch-meister.de/vocabulary/b2.1</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/vocabulary/B2.2</loc>
+    <loc>https://deutsch-meister.de/vocabulary/b2.2</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <!-- Listening Level Pages -->
   <url>
-    <loc>https://deutsch-meister.de/listening/A1.1</loc>
+    <loc>https://deutsch-meister.de/listening/a1.1</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/listening/A1.2</loc>
+    <loc>https://deutsch-meister.de/listening/a1.2</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/listening/A2.1</loc>
+    <loc>https://deutsch-meister.de/listening/a2.1</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/listening/A2.2</loc>
+    <loc>https://deutsch-meister.de/listening/a2.2</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/listening/B1.1</loc>
+    <loc>https://deutsch-meister.de/listening/b1.1</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/listening/B1.2</loc>
+    <loc>https://deutsch-meister.de/listening/b1.2</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/listening/B2.1</loc>
+    <loc>https://deutsch-meister.de/listening/b2.1</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/listening/B2.2</loc>
+    <loc>https://deutsch-meister.de/listening/b2.2</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <!-- Podcast Pages -->
   <url>
-    <loc>https://deutsch-meister.de/podcasts/A1.1</loc>
+    <loc>https://deutsch-meister.de/podcasts/a1.1</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/podcasts/A1.2</loc>
+    <loc>https://deutsch-meister.de/podcasts/a1.2</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://deutsch-meister.de/podcasts/A2.1</loc>
+    <loc>https://deutsch-meister.de/podcasts/a2.1</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

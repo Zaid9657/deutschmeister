@@ -58,18 +58,20 @@ export const SubscriptionProvider = ({ children }) => {
       // Auto-start free trial for new users
       let currentProfile = prof;
 
-      // If no profile yet, wait for DB trigger to create it (race condition)
+      // Profile should be created by DB trigger on auth.users insert.
+      // If not yet available (slight delay), retry once after a short wait.
       if (!currentProfile) {
-        await new Promise(r => setTimeout(r, 1500));
+        await new Promise(r => setTimeout(r, 800));
         currentProfile = await getUserProfile(user.id);
       }
 
+      // Safety net: if DB trigger didn't fire or profile still missing,
+      // create profile with trial dates from the frontend.
       if (!currentProfile) {
-        // Still no profile — create one with trial via insert
         await startFreeTrial(user.id);
         currentProfile = await getUserProfile(user.id);
       } else if (!currentProfile.trial_started_at) {
-        // Profile exists but trial never started
+        // Profile exists but trial dates are NULL — backfill them
         await startFreeTrial(user.id);
         currentProfile = await getUserProfile(user.id);
       }
