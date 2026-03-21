@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Headphones, Play, Pause, Volume2, ChevronRight, Loader2 } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Headphones, Play, Pause, Loader2, Volume2, ChevronRight } from 'lucide-react';
 import { supabase } from '../../utils/supabase';
 
-const LevelTestListening = ({ level, sublevel, onComplete, onSkip }) => {
-  // States
-  const [stage, setStage] = useState('loading'); // loading, intro, exercise
-  const [exercises, setExercises] = useState([]);
+const LevelTestListening = ({ onComplete, onSkip }) => {
+  const [stage, setStage] = useState('intro'); // intro, loading, testing
+  const [exercises, setExercises] = useState([]); // Array of {level, exercise, questions}
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [currentQuestions, setCurrentQuestions] = useState([]);
   const [answers, setAnswers] = useState({});
@@ -13,108 +12,90 @@ const LevelTestListening = ({ level, sublevel, onComplete, onSkip }) => {
   const [playCount, setPlayCount] = useState(0);
   const [audioProgress, setAudioProgress] = useState(0);
   const [error, setError] = useState(null);
-  // Track all questions across exercises for final score calculation
-  const allQuestionsRef = useRef([]);
 
   const audioRef = useRef(null);
   const maxPlays = 3;
 
-  // Fetch exercises on mount
-  useEffect(() => {
-    fetchExercises();
-  }, [sublevel]);
+  // Levels to test (one exercise per main level)
+  const testLevels = ['A1.1', 'A2.1', 'B1.1', 'B2.1'];
 
-  const fetchExercises = async () => {
+  // Fetch one exercise from each level
+  const loadExercises = async () => {
+    setStage('loading');
+    setError(null);
+
     try {
-      // Fetch 2 exercises at the determined level
-      const { data: exerciseData, error: exerciseError } = await supabase
-        .from('listening_exercises')
-        .select('*')
-        .eq('level', sublevel)
-        .order('exercise_number')
-        .limit(2);
-
-      if (exerciseError) throw exerciseError;
-
-      if (!exerciseData || exerciseData.length === 0) {
-        // Try parent level if no exercises at sublevel
-        const { data: fallbackData, error: fallbackError } = await supabase
+      const exercisePromises = testLevels.map(async (level) => {
+        const { data: exerciseData, error: exError } = await supabase
           .from('listening_exercises')
           .select('*')
-          .ilike('level', `${level}%`)
-          .order('exercise_number')
-          .limit(2);
+          .eq('level', level)
+          .limit(6);
 
-        if (fallbackError) throw fallbackError;
+        if (exError) throw exError;
+        if (!exerciseData || exerciseData.length === 0) return null;
 
-        if (!fallbackData || fallbackData.length === 0) {
-          setError('No listening exercises available for this level.');
-          setStage('intro');
-          return;
-        }
+        // Pick a random exercise
+        const randomIndex = Math.floor(Math.random() * exerciseData.length);
+        const exercise = exerciseData[randomIndex];
 
-        setExercises(fallbackData);
-      } else {
-        setExercises(exerciseData);
+        // Fetch questions
+        const { data: questionsData, error: qError } = await supabase
+          .from('listening_questions')
+          .select('*')
+          .eq('exercise_id', exercise.id)
+          .order('question_number');
+
+        if (qError) throw qError;
+
+        return {
+          level,
+          exercise,
+          questions: questionsData || []
+        };
+      });
+
+      const results = await Promise.all(exercisePromises);
+      const validExercises = results.filter(r => r !== null && r.questions.length > 0);
+
+      if (validExercises.length === 0) {
+        setError('No listening exercises available');
+        return;
       }
 
-      setStage('intro');
+      setExercises(validExercises);
+      setCurrentQuestions(validExercises[0].questions);
+      setStage('testing');
+
     } catch (err) {
-      console.error('Error fetching exercises:', err);
-      setError('Failed to load listening exercises.');
-      setStage('intro');
+      console.error('Error loading exercises:', err);
+      setError('Failed to load exercises');
     }
   };
 
-  const fetchQuestions = async (exerciseId) => {
-    const { data, error } = await supabase
-      .from('listening_questions')
-      .select('*')
-      .eq('exercise_id', exerciseId)
-      .order('question_number');
-
-    if (error) {
-      console.error('Error fetching questions:', error);
-      return [];
-    }
-    return data || [];
-  };
-
-  const startListening = async () => {
-    if (exercises.length === 0) {
-      onSkip();
-      return;
-    }
-
-    const questions = await fetchQuestions(exercises[0].id);
-    setCurrentQuestions(questions);
-    allQuestionsRef.current = [...questions];
-    setCurrentExerciseIndex(0);
-    setPlayCount(0);
-    setStage('exercise');
-  };
-
+  // Audio URL — uses level as-is (e.g., "A1.1") matching Supabase storage structure
   const getAudioUrl = (exercise) => {
+    if (!exercise) return '';
     return `https://omqyueddktqeyrrqvnyq.supabase.co/storage/v1/object/public/audio/listening/${exercise.level}/exercise${exercise.exercise_number}.mp3`;
   };
 
+  // Audio controls
   const togglePlay = () => {
     if (!audioRef.current) return;
 
     if (isPlaying) {
       audioRef.current.pause();
-    } else {
-      if (playCount < maxPlays) {
-        if (audioRef.current.currentTime === 0 || audioRef.current.ended) {
-          setPlayCount(prev => prev + 1);
-        }
-        audioRef.current.play();
-      }
+      setIsPlaying(false);
+    } else if (playCount < maxPlays) {
+      audioRef.current.play();
+      setIsPlaying(true);
     }
   };
 
   const handleAudioEnded = () => {
     setIsPlaying(false);
+    setPlayCount(prev => prev + 1);
+    setAudioProgress(0);
   };
 
   const handleTimeUpdate = () => {
@@ -124,11 +105,8 @@ const LevelTestListening = ({ level, sublevel, onComplete, onSkip }) => {
     }
   };
 
-  // Use consistent key for each question (id with fallback to question_number)
-  const getQuestionKey = (question) => question.id || question.question_number;
-
-  const handleAnswerSelect = (questionKey, option) => {
-    // Extract the answer key (e.g., "a" from "a) 0,99 €" or use full option for Richtig/Falsch)
+  // Answer handling
+  const handleAnswerSelect = (questionId, option) => {
     let answerKey;
     if (option.match(/^[a-d]\)/)) {
       answerKey = option.charAt(0);
@@ -138,65 +116,79 @@ const LevelTestListening = ({ level, sublevel, onComplete, onSkip }) => {
 
     setAnswers(prev => ({
       ...prev,
-      [questionKey]: answerKey
+      [questionId]: answerKey
     }));
   };
 
-  const allCurrentQuestionsAnswered = () => {
+  const allQuestionsAnswered = () => {
     if (currentQuestions.length === 0) return false;
-    return currentQuestions.every(q => {
-      const key = getQuestionKey(q);
-      return answers[key] !== undefined && answers[key] !== null;
-    });
+    return currentQuestions.every(q => answers[q.id] !== undefined);
   };
 
-  const nextExercise = async () => {
+  // Navigation
+  const nextExercise = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+    setIsPlaying(false);
+    setPlayCount(0);
+    setAudioProgress(0);
+
     if (currentExerciseIndex < exercises.length - 1) {
       const nextIndex = currentExerciseIndex + 1;
-      const questions = await fetchQuestions(exercises[nextIndex].id);
-      allQuestionsRef.current = [...allQuestionsRef.current, ...questions];
-      setCurrentQuestions(questions);
       setCurrentExerciseIndex(nextIndex);
-      setPlayCount(0);
-      setAudioProgress(0);
-      setIsPlaying(false);
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
+      setCurrentQuestions(exercises[nextIndex].questions);
     } else {
       calculateAndComplete();
     }
   };
 
   const calculateAndComplete = () => {
-    const allQuestions = allQuestionsRef.current;
-    let correct = 0;
+    const levelScores = {};
 
-    allQuestions.forEach(q => {
-      const userAnswer = answers[getQuestionKey(q)];
-      if (userAnswer === q.correct_answer) {
-        correct++;
-      }
+    exercises.forEach(({ level, questions }) => {
+      const mainLevel = level.substring(0, 2); // A1, A2, B1, B2
+      let correct = 0;
+      const total = questions.length;
+
+      questions.forEach(q => {
+        if (answers[q.id] === q.correct_answer) {
+          correct++;
+        }
+      });
+
+      levelScores[mainLevel] = {
+        correct,
+        total,
+        percentage: total > 0 ? Math.round((correct / total) * 100) : 0
+      };
     });
 
-    const score = allQuestions.length > 0 ? Math.round((correct / allQuestions.length) * 100) : 0;
-    onComplete(score, answers);
+    // Determine listening level using 60% threshold
+    let determinedLevel = 'A1';
+    for (const level of ['A1', 'A2', 'B1', 'B2']) {
+      if (levelScores[level] && levelScores[level].percentage >= 60) {
+        determinedLevel = level;
+      } else {
+        break;
+      }
+    }
+
+    // Overall percentage
+    const totalCorrect = Object.values(levelScores).reduce((sum, s) => sum + s.correct, 0);
+    const totalQuestions = Object.values(levelScores).reduce((sum, s) => sum + s.total, 0);
+    const overallPercentage = totalQuestions > 0 ? Math.round((totalCorrect / totalQuestions) * 100) : 0;
+
+    onComplete(overallPercentage, {
+      levelScores,
+      determinedLevel,
+      answers
+    });
   };
 
-  const currentExercise = exercises[currentExerciseIndex];
-
-  // Loading state
-  if (stage === 'loading') {
-    return (
-      <div className="level-test-container">
-        <div className="question-card" style={{ padding: '3rem', textAlign: 'center' }}>
-          <Loader2 size={48} className="spin" style={{ color: '#1D9E75', marginBottom: '1rem' }} />
-          <p>Loading listening exercises...</p>
-        </div>
-      </div>
-    );
-  }
+  const currentExercise = exercises[currentExerciseIndex]?.exercise;
+  const currentLevel = exercises[currentExerciseIndex]?.level;
 
   // Intro screen
   if (stage === 'intro') {
@@ -207,175 +199,194 @@ const LevelTestListening = ({ level, sublevel, onComplete, onSkip }) => {
             <div className="listening-icon">
               <Headphones size={40} />
             </div>
-            <h2>Listening Comprehension</h2>
-            <span className={`level-badge level-${level.toLowerCase()}`}>{sublevel}</span>
+            <h2>Listening Test</h2>
+            <p className="listening-subtitle">Test your comprehension across all levels</p>
           </div>
 
-          {error ? (
-            <div className="listening-error">
-              <p>{error}</p>
-              <button className="skip-btn" onClick={onSkip} style={{ marginTop: '1rem' }}>
-                Skip to Speaking Test
-              </button>
+          <div className="listening-info">
+            <div className="info-item">
+              <Volume2 size={18} />
+              <span>4 exercises</span>
             </div>
-          ) : (
-            <>
-              <div className="listening-info">
-                <div className="info-item">
-                  <Volume2 size={20} />
-                  <span>{exercises.length} exercise{exercises.length !== 1 ? 's' : ''}</span>
-                </div>
-                <div className="info-item">
-                  <Play size={20} />
-                  <span>Max 3 plays per audio</span>
-                </div>
-              </div>
+            <div className="info-item">
+              <Play size={18} />
+              <span>3 plays per audio</span>
+            </div>
+          </div>
 
-              <div className="listening-instructions">
-                <h3>Instructions</h3>
-                <ul>
-                  <li>Listen to each audio clip carefully</li>
-                  <li>You can replay up to 3 times</li>
-                  <li>Answer the comprehension questions</li>
-                  <li>This tests your listening at {sublevel} level</li>
-                </ul>
-              </div>
+          <div className="listening-instructions">
+            <h3>How it works</h3>
+            <ul>
+              <li>You'll hear 4 audio clips, one from each level (A1 → B2)</li>
+              <li>Listen carefully — you can replay each audio up to 3 times</li>
+              <li>Answer the comprehension questions for each clip</li>
+              <li>Your listening level will be determined by your accuracy</li>
+            </ul>
+          </div>
 
-              <div className="listening-actions">
-                <button className="skip-btn" onClick={onSkip}>
-                  Skip Listening
-                </button>
-                <button className="start-test-btn" onClick={startListening}>
-                  Start Listening Test
-                </button>
+          <div className="listening-levels-preview">
+            {testLevels.map((level, i) => (
+              <div key={level} className="level-preview-item">
+                <span className="level-number">{i + 1}</span>
+                <span className={`level-badge level-${level.substring(0, 2).toLowerCase()}`}>
+                  {level}
+                </span>
               </div>
-            </>
-          )}
+            ))}
+          </div>
+
+          <div className="listening-actions">
+            <button className="skip-btn" onClick={onSkip}>
+              Skip Listening
+            </button>
+            <button className="start-test-btn" onClick={loadExercises}>
+              Start Listening Test
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
-  // Exercise screen
-  if (stage === 'exercise' && currentExercise) {
+  // Loading screen
+  if (stage === 'loading') {
     return (
       <div className="level-test-container">
-        <div className="question-card">
-          {/* Header */}
-          <div className="question-header">
-            <div className="question-header-left">
-              <span className="header-title">Listening Test</span>
-              <span className={`level-badge level-${level.toLowerCase()}`}>{sublevel}</span>
-            </div>
-            <span className="question-counter">
-              Exercise {currentExerciseIndex + 1} of {exercises.length}
-            </span>
-          </div>
+        <div className="question-card" style={{ padding: '3rem', textAlign: 'center' }}>
+          <Loader2 size={48} className="spin" style={{ color: '#1D9E75', marginBottom: '1rem' }} />
+          <h2>Loading Exercises...</h2>
+          <p style={{ color: '#666' }}>Preparing listening test from all levels</p>
+        </div>
+      </div>
+    );
+  }
 
-          {/* Progress Bar */}
-          <div className="progress-bar-container">
-            <div
-              className="progress-bar-fill"
-              style={{ width: `${((currentExerciseIndex + 1) / exercises.length) * 100}%` }}
-            />
-          </div>
-
-          {/* Audio Player */}
-          <div className="listening-player">
-            <audio
-              ref={audioRef}
-              src={getAudioUrl(currentExercise)}
-              onPlay={() => setIsPlaying(true)}
-              onPause={() => setIsPlaying(false)}
-              onEnded={handleAudioEnded}
-              onTimeUpdate={handleTimeUpdate}
-            />
-
-            <div className="audio-controls">
-              <button
-                className={`play-button ${playCount >= maxPlays && !isPlaying ? 'disabled' : ''}`}
-                onClick={togglePlay}
-                disabled={playCount >= maxPlays && !isPlaying}
-              >
-                {isPlaying ? <Pause size={24} /> : <Play size={24} />}
-              </button>
-
-              <div className="audio-progress-container">
-                <div className="audio-progress-bar">
-                  <div
-                    className="audio-progress-fill"
-                    style={{ width: `${audioProgress}%` }}
-                  />
-                </div>
-              </div>
-
-              <span className="play-count">
-                {playCount}/{maxPlays} plays
-              </span>
-            </div>
-
-            {currentExercise.title && (
-              <p className="exercise-title">{currentExercise.title}</p>
-            )}
-          </div>
-
-          {/* Questions */}
-          <div className="listening-questions">
-            <h3>Questions</h3>
-            {currentQuestions.map((question, qIndex) => {
-              const qKey = getQuestionKey(question);
-              return (
-                <div key={qKey} className="listening-question">
-                  <p className="question-text">
-                    {qIndex + 1}. {question.question_text}
-                  </p>
-                  <div className="options-list">
-                    {question.options.map((option, oIndex) => {
-                      const userAnswer = answers[qKey];
-                      let isSelected = false;
-                      if (userAnswer) {
-                        if (option.match(/^[a-d]\)/)) {
-                          isSelected = option.charAt(0) === userAnswer;
-                        } else {
-                          isSelected = option === userAnswer;
-                        }
-                      }
-                      return (
-                        <button
-                          key={oIndex}
-                          className={`option-btn ${isSelected ? 'selected' : ''}`}
-                          onClick={() => handleAnswerSelect(qKey, option)}
-                        >
-                          <span className="option-text">{option}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Footer */}
-          <div className="question-footer">
-            <button className="skip-btn" onClick={onSkip}>
-              Skip
-            </button>
-            <button
-              className="next-btn"
-              onClick={nextExercise}
-              disabled={!allCurrentQuestionsAnswered()}
-            >
-              {currentExerciseIndex < exercises.length - 1 ? 'Next Exercise' : 'Continue to Speaking'}
-              <ChevronRight size={18} style={{ marginLeft: '0.25rem' }} />
-            </button>
+  // Error state
+  if (error) {
+    return (
+      <div className="level-test-container">
+        <div className="question-card" style={{ padding: '2rem', textAlign: 'center' }}>
+          <p style={{ color: '#ef4444', marginBottom: '1rem' }}>{error}</p>
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+            <button className="skip-btn" onClick={onSkip}>Skip Listening</button>
+            <button className="start-test-btn" onClick={loadExercises} style={{ maxWidth: '200px' }}>Try Again</button>
           </div>
         </div>
       </div>
     );
   }
 
-  return null;
+  // Testing screen
+  return (
+    <div className="level-test-container">
+      <div className="question-card">
+        {/* Header */}
+        <div className="question-header">
+          <div className="question-header-left">
+            <span className="header-title">Listening Test</span>
+            <span className={`level-badge level-${currentLevel?.substring(0, 2).toLowerCase()}`}>
+              {currentLevel}
+            </span>
+          </div>
+          <span className="question-counter">
+            Exercise {currentExerciseIndex + 1} of {exercises.length}
+          </span>
+        </div>
+
+        {/* Progress Bar */}
+        <div className="progress-bar-container">
+          <div
+            className="progress-bar-fill"
+            style={{ width: `${((currentExerciseIndex) / exercises.length) * 100}%` }}
+          />
+        </div>
+
+        {/* Audio Player */}
+        <div className="listening-player">
+          <audio
+            ref={audioRef}
+            src={getAudioUrl(currentExercise)}
+            onEnded={handleAudioEnded}
+            onTimeUpdate={handleTimeUpdate}
+          />
+
+          <div className="audio-controls">
+            <button
+              className={`play-button ${playCount >= maxPlays ? 'disabled' : ''}`}
+              onClick={togglePlay}
+              disabled={playCount >= maxPlays}
+            >
+              {isPlaying ? <Pause size={24} /> : <Play size={24} />}
+            </button>
+
+            <div className="audio-progress-container">
+              <div className="audio-progress-bar">
+                <div
+                  className="audio-progress-fill"
+                  style={{ width: `${audioProgress}%` }}
+                />
+              </div>
+            </div>
+
+            <span className="play-count">{playCount}/{maxPlays} plays</span>
+          </div>
+
+          {currentExercise?.title && (
+            <p className="exercise-title">{currentExercise.title}</p>
+          )}
+        </div>
+
+        {/* Questions */}
+        <div className="listening-questions">
+          <h3>Questions</h3>
+          {currentQuestions.map((question, qIndex) => (
+            <div key={question.id} className="listening-question">
+              <p className="question-text">
+                {qIndex + 1}. {question.question_text}
+              </p>
+              <div className="options-list">
+                {question.options?.map((option, oIndex) => {
+                  const userAnswer = answers[question.id];
+                  let isSelected = false;
+                  if (userAnswer) {
+                    if (option.match(/^[a-d]\)/)) {
+                      isSelected = option.charAt(0) === userAnswer;
+                    } else {
+                      isSelected = option === userAnswer;
+                    }
+                  }
+                  return (
+                    <button
+                      key={oIndex}
+                      className={`option-btn ${isSelected ? 'selected' : ''}`}
+                      onClick={() => handleAnswerSelect(question.id, option)}
+                    >
+                      <span className="option-text">{option}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div className="question-footer">
+          <button className="skip-btn" onClick={onSkip}>
+            Skip
+          </button>
+          <button
+            className="next-btn"
+            onClick={nextExercise}
+            disabled={!allQuestionsAnswered()}
+          >
+            {currentExerciseIndex < exercises.length - 1 ? 'Next Exercise' : 'Continue to Speaking'}
+            <ChevronRight size={18} style={{ marginLeft: '0.25rem' }} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default LevelTestListening;

@@ -164,14 +164,16 @@ const LevelTest = () => {
 
         {testState === 'listening' && (
           <LevelTestListening
-            level={determinedLevel}
-            sublevel={determinedSublevel}
-            onComplete={(score, listenAnswers) => {
+            onComplete={(score, details) => {
               setListeningScore(score);
-              setListeningAnswers(listenAnswers);
+              setListeningAnswers(details);
               setTestState('speaking');
             }}
-            onSkip={() => setTestState('speaking')}
+            onSkip={() => {
+              setListeningScore(null);
+              setListeningAnswers(null);
+              setTestState('speaking');
+            }}
           />
         )}
 
