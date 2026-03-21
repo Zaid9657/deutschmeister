@@ -179,13 +179,14 @@ const LevelTest = () => {
 
         {testState === 'speaking' && (
           <LevelTestSpeaking
-            level={determinedLevel}
-            sublevel={determinedSublevel}
             onComplete={(evaluation) => {
               setSpeakingScore(evaluation);
               setTestState('results');
             }}
-            onSkip={() => setTestState('results')}
+            onSkip={() => {
+              setSpeakingScore(null);
+              setTestState('results');
+            }}
           />
         )}
 

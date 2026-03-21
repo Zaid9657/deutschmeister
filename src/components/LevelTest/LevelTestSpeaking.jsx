@@ -1,119 +1,61 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Mic, Volume2, Phone, PhoneOff, Loader2, AlertCircle } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Mic, PhoneOff, Loader2, AlertCircle, Volume2, Phone, Sparkles } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
-const getAssessmentPrompt = (level, sublevel) => {
-  const levelDescriptions = {
-    'A1': 'complete beginner - use very simple words, speak slowly, ask about basic topics like name, age, family, hobbies',
-    'A2': 'elementary - use simple sentences, everyday topics like daily routine, shopping, travel plans',
-    'B1': 'intermediate - use more complex sentences, discuss opinions, experiences, future plans',
-    'B2': 'upper intermediate - use sophisticated vocabulary, discuss abstract topics, current events, hypotheticals'
-  };
+// Universal adaptive assessment prompt - no level dependency
+const ADAPTIVE_ASSESSMENT_PROMPT = `Du bist Frau Schmidt, eine erfahrene und freundliche Deutschlehrerin, die einen mündlichen Einstufungstest durchführt.
 
-  const levelExamples = {
-    'A1': 'Wie heißt du? Woher kommst du? Was machst du gern?',
-    'A2': 'Was hast du gestern gemacht? Beschreibe deine Familie. Was möchtest du am Wochenende machen?',
-    'B1': 'Was denkst du über soziale Medien? Erzähle von einer interessanten Reise. Was würdest du anders machen?',
-    'B2': 'Wie beurteilst du die aktuelle Klimapolitik? Was wäre passiert, wenn du einen anderen Beruf gewählt hättest?'
-  };
+DEIN ZIEL:
+Ermittle das CEFR-Sprachniveau (A1, A2, B1 oder B2) des Schülers durch ein natürliches Gespräch.
 
-  const systemPrompt = `Du bist ein erfahrener Deutschlehrer, der einen kurzen Einstufungstest durchführt.
+ADAPTIVE STRATEGIE:
+1. STARTE BEI A2 (Mitte) - nicht zu leicht, nicht zu schwer
+2. BEOBACHTE die Antwort:
+   - Flüssig, korrekte Grammatik, guter Wortschatz? → SCHWIERIGER (B1/B2)
+   - Zögern, viele Fehler, Grundwortschatz? → LEICHTER (A1)
+   - Angemessen für das Level? → BLEIB auf diesem Level
+3. WECHSLE THEMEN um verschiedene Fähigkeiten zu testen
 
-LEVEL DES SCHÜLERS (basierend auf dem schriftlichen Test): ${sublevel} (${levelDescriptions[level] || levelDescriptions['A1']})
+FRAGEN-BEISPIELE PRO LEVEL:
+A1: Wie heißt du? Woher kommst du? Was machst du gern?
+A2: Was hast du gestern gemacht? Beschreibe deine Familie. Was möchtest du am Wochenende machen?
+B1: Was denkst du über soziale Medien? Erzähle von einer interessanten Reise. Was würdest du ändern?
+B2: Wie beurteilst du die Work-Life-Balance? Diskutiere die Auswirkungen von KI. Was wäre passiert, wenn...?
 
-DEINE AUFGABE:
-1. Beginne auf dem angegebenen Level mit einer freundlichen Begrüßung
-2. Stelle 3-4 kurze Fragen, um das Sprachniveau zu überprüfen
-3. PASSE DICH AN: Wenn der Schüler gut antwortet, stelle eine etwas schwierigere Frage. Wenn er Schwierigkeiten hat, vereinfache.
-4. Sei ermutigend aber notiere mental Grammatikfehler, Wortschatzprobleme und Aussprache
-
-BEISPIELFRAGEN FÜR DIESES LEVEL:
-${levelExamples[level] || levelExamples['A1']}
+GESPRÄCHSABLAUF (2-3 Minuten):
+1. Begrüßung: "Hallo! Ich bin Frau Schmidt. Schön, dich kennenzulernen!"
+2. Erste Frage (A2): z.B. "Erzähl mir ein bisschen von dir."
+3. 3-4 weitere Fragen - PASSE DAS NIVEAU AN
+4. Abschluss: "Vielen Dank für das nette Gespräch! Das war's für heute."
 
 WICHTIGE REGELN:
-- Sprich NUR Deutsch (keine englischen Erklärungen)
-- Halte deine Antworten kurz (1-2 Sätze)
-- Korrigiere NICHT während des Tests - das ist eine Bewertung
-- Nach 3-4 Fragen, beende höflich: "Vielen Dank! Das war der Sprechtest."
-- Sprich langsam und deutlich für niedrigere Levels, natürlicher für höhere
+- Sprich NUR Deutsch (keine englischen Wörter)
+- Halte deine Antworten KURZ (1-2 Sätze), dann stelle die nächste Frage
+- KORRIGIERE NICHT - dies ist ein Test, keine Unterrichtsstunde
+- Sei warm, freundlich und ermutigend
+- Wenn der Schüler nicht versteht, formuliere einfacher um
+- Passe deine SPRECHGESCHWINDIGKEIT an das erkannte Level an
 
-SPRECHGESCHWINDIGKEIT:
-${level === 'A1' ? 'Sehr langsam und deutlich' : level === 'A2' ? 'Langsam und klar' : level === 'B1' ? 'Normale Geschwindigkeit' : 'Natürliche, flüssige Geschwindigkeit'}
+Beginne JETZT mit der Begrüßung und deiner ersten Frage.`;
 
-Beginne jetzt mit einer kurzen Begrüßung und deiner ersten Frage.`;
-
-  const voices = {
-    'A1': 'coral',
-    'A2': 'shimmer',
-    'B1': 'echo',
-    'B2': 'alloy'
-  };
-
-  return {
-    systemPrompt,
-    voice: voices[level] || 'coral'
-  };
-};
-
-const LevelTestSpeaking = ({ level, sublevel, onComplete, onSkip }) => {
+const LevelTestSpeaking = ({ onComplete, onSkip }) => {
   const { user } = useAuth();
-  const [stage, setStage] = useState('intro'); // intro, connecting, active, evaluating, error
+  const [stage, setStage] = useState('intro');
   const [error, setError] = useState(null);
-  const [speakingState, setSpeakingState] = useState('idle'); // idle, user_speaking, ai_speaking
+  const [isUserSpeaking, setIsUserSpeaking] = useState(false);
+  const [isAiSpeaking, setIsAiSpeaking] = useState(false);
   const [messages, setMessages] = useState([]);
-  const [timeRemaining, setTimeRemaining] = useState(180); // 3 minutes
+  const [timeRemaining, setTimeRemaining] = useState(180);
 
-  const pcRef = useRef(null);
-  const dcRef = useRef(null);
-  const streamRef = useRef(null);
+  const peerConnectionRef = useRef(null);
+  const dataChannelRef = useRef(null);
+  const audioElementRef = useRef(null);
+  const localStreamRef = useRef(null);
   const timerRef = useRef(null);
   const messagesRef = useRef([]);
-  const transcriptRef = useRef('');
 
   // Keep messagesRef in sync
   useEffect(() => { messagesRef.current = messages; }, [messages]);
-
-  const saveMessage = useCallback((role, content) => {
-    if (!content?.trim()) return;
-    setMessages(prev => [...prev, { role, content: content.trim() }]);
-  }, []);
-
-  const handleDataChannelMessage = useCallback((event) => {
-    try {
-      const msg = JSON.parse(event.data);
-      switch (msg.type) {
-        case 'input_audio_buffer.speech_started':
-          setSpeakingState('user_speaking'); break;
-        case 'input_audio_buffer.speech_stopped':
-          setSpeakingState('idle'); break;
-        case 'response.audio_transcript.delta':
-          if (msg.delta) transcriptRef.current += msg.delta;
-          break;
-        case 'response.audio_transcript.done':
-          if (transcriptRef.current.trim()) saveMessage('assistant', transcriptRef.current);
-          transcriptRef.current = '';
-          break;
-        case 'response.audio.started':
-          setSpeakingState('ai_speaking'); break;
-        case 'response.done':
-          setSpeakingState('idle'); break;
-        case 'conversation.item.input_audio_transcription.completed':
-          if (msg.transcript?.trim()) saveMessage('user', msg.transcript);
-          break;
-        default: break;
-      }
-    } catch { /* ignore non-JSON */ }
-  }, [saveMessage]);
-
-  const cleanup = useCallback(() => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    if (dcRef.current) { dcRef.current.close(); dcRef.current = null; }
-    if (pcRef.current) { pcRef.current.close(); pcRef.current = null; }
-    if (streamRef.current) { streamRef.current.getTracks().forEach(t => t.stop()); streamRef.current = null; }
-  }, []);
-
-  // Cleanup on unmount
-  useEffect(() => { return () => cleanup(); }, [cleanup]);
 
   const startSession = async () => {
     if (!user) {
@@ -125,88 +67,115 @@ const LevelTestSpeaking = ({ level, sublevel, onComplete, onSkip }) => {
     setError(null);
 
     try {
-      // 1. Get microphone
+      // Get session token from backend
+      const response = await fetch('/api/speaking/speaking-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemPrompt: ADAPTIVE_ASSESSMENT_PROMPT,
+          level: 'assessment',
+          voice: 'shimmer'
+        })
+      });
+
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error || 'Failed to create speaking session');
+      }
+
+      const { client_secret } = await response.json();
+
+      // Microphone
       let stream;
       try {
         stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       } catch (micErr) {
-        setError('Microphone access denied. Please allow microphone access and try again.');
-        setStage('error');
-        return;
+        throw new Error('Microphone access denied. Please allow microphone access and try again.');
       }
-      streamRef.current = stream;
+      localStreamRef.current = stream;
 
-      // 2. Create session via backend (level test — no usage tracking)
-      const config = getAssessmentPrompt(level, sublevel);
-
-      const sessionRes = await fetch('/api/speaking/speaking-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          systemPrompt: config.systemPrompt,
-          level: sublevel,
-          voice: config.voice,
-        }),
-      });
-
-      if (!sessionRes.ok) {
-        const err = await sessionRes.json().catch(() => ({}));
-        throw new Error(err.error || `Failed to create session (${sessionRes.status})`);
-      }
-
-      const { client_secret } = await sessionRes.json();
-
-      // 3. Set up WebRTC
-      const RTCPeer = window.RTCPeerConnection || window.webkitRTCPeerConnection;
-      const pc = new RTCPeer();
-      pcRef.current = pc;
+      // Set up WebRTC
+      const pc = new RTCPeerConnection();
+      peerConnectionRef.current = pc;
 
       const audioEl = document.createElement('audio');
       audioEl.autoplay = true;
       audioEl.setAttribute('playsinline', '');
-      pc.ontrack = (e) => { audioEl.srcObject = e.streams[0]; };
+      audioElementRef.current = audioEl;
 
+      pc.ontrack = (e) => { audioEl.srcObject = e.streams[0]; };
       stream.getTracks().forEach(track => pc.addTrack(track, stream));
 
       const dc = pc.createDataChannel('oai-events');
-      dcRef.current = dc;
+      dataChannelRef.current = dc;
       dc.onopen = () => {
         setStage('active');
         startTimer();
       };
       dc.onmessage = handleDataChannelMessage;
-      dc.onclose = () => {
-        if (stage === 'active') endSession();
-      };
 
+      // SDP exchange
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
 
-      // 4. Exchange SDP with OpenAI Realtime
-      const sdpRes = await fetch('https://api.openai.com/v1/realtime', {
+      const sdpResponse = await fetch('https://api.openai.com/v1/realtime', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${client_secret}`,
-          'Content-Type': 'application/sdp',
+          'Content-Type': 'application/sdp'
         },
-        body: offer.sdp,
+        body: offer.sdp
       });
 
-      if (!sdpRes.ok) {
-        throw new Error(`Voice server connection failed (${sdpRes.status})`);
+      if (!sdpResponse.ok) {
+        throw new Error(`Voice server connection failed (${sdpResponse.status})`);
       }
 
-      const answerSdp = await sdpRes.text();
+      const answerSdp = await sdpResponse.text();
       await pc.setRemoteDescription({ type: 'answer', sdp: answerSdp });
 
     } catch (err) {
       console.error('Speaking session error:', err);
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach(t => t.stop());
-        streamRef.current = null;
+      if (localStreamRef.current) {
+        localStreamRef.current.getTracks().forEach(t => t.stop());
+        localStreamRef.current = null;
       }
       setError(err.message || 'Failed to start speaking session');
       setStage('error');
+    }
+  };
+
+  const handleDataChannelMessage = (event) => {
+    try {
+      const data = JSON.parse(event.data);
+
+      switch (data.type) {
+        case 'input_audio_buffer.speech_started':
+          setIsUserSpeaking(true);
+          break;
+        case 'input_audio_buffer.speech_stopped':
+          setIsUserSpeaking(false);
+          break;
+        case 'response.audio.started':
+          setIsAiSpeaking(true);
+          break;
+        case 'response.audio.done':
+        case 'response.done':
+          setIsAiSpeaking(false);
+          break;
+        case 'conversation.item.input_audio_transcription.completed':
+          if (data.transcript) {
+            setMessages(prev => [...prev, { role: 'user', content: data.transcript }]);
+          }
+          break;
+        case 'response.audio_transcript.done':
+          if (data.transcript) {
+            setMessages(prev => [...prev, { role: 'assistant', content: data.transcript }]);
+          }
+          break;
+      }
+    } catch (err) {
+      console.error('Data channel error:', err);
     }
   };
 
@@ -222,50 +191,62 @@ const LevelTestSpeaking = ({ level, sublevel, onComplete, onSkip }) => {
     }, 1000);
   };
 
-  const endSession = useCallback(async () => {
+  const cleanup = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    if (localStreamRef.current) {
+      localStreamRef.current.getTracks().forEach(track => track.stop());
+      localStreamRef.current = null;
+    }
+    if (dataChannelRef.current) { dataChannelRef.current.close(); dataChannelRef.current = null; }
+    if (peerConnectionRef.current) { peerConnectionRef.current.close(); peerConnectionRef.current = null; }
+    if (audioElementRef.current) { audioElementRef.current.srcObject = null; }
+  };
+
+  const endSession = async () => {
     cleanup();
     const currentMessages = messagesRef.current;
 
-    if (currentMessages.length === 0) {
+    if (currentMessages.length > 0) {
+      setStage('evaluating');
+      await evaluateConversation(currentMessages);
+    } else {
       onComplete(null);
-      return;
     }
+  };
 
-    setStage('evaluating');
-
+  const evaluateConversation = async (conversationMessages) => {
     try {
-      const evalRes = await fetch('/api/speaking/evaluate-speaking', {
+      const response = await fetch('/api/speaking/evaluate-speaking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           user_id: user.id,
           session_token: `level-test-${Date.now()}`,
-          level: sublevel,
-          messages: currentMessages,
-        }),
+          level: 'adaptive',
+          messages: conversationMessages
+        })
       });
 
-      if (evalRes.ok) {
-        const evaluation = await evalRes.json();
-        onComplete(evaluation);
-      } else {
-        console.error('Evaluation failed:', await evalRes.text());
-        onComplete(null);
-      }
+      if (!response.ok) throw new Error('Evaluation failed');
+
+      const evaluation = await response.json();
+      onComplete(evaluation);
+
     } catch (err) {
       console.error('Evaluation error:', err);
       onComplete(null);
     }
-  }, [cleanup, user, sublevel, onComplete]);
+  };
+
+  useEffect(() => {
+    return () => cleanup();
+  }, []);
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
-
-  const isUserSpeaking = speakingState === 'user_speaking';
-  const isAiSpeaking = speakingState === 'ai_speaking';
 
   // Intro screen
   if (stage === 'intro') {
@@ -277,28 +258,36 @@ const LevelTestSpeaking = ({ level, sublevel, onComplete, onSkip }) => {
               <Mic size={40} />
             </div>
             <h2>Speaking Test</h2>
-            <span className={`level-badge level-${level.toLowerCase()}`}>{sublevel}</span>
+            <div className="adaptive-badge">
+              <Sparkles size={14} />
+              Adaptive A1–B2
+            </div>
           </div>
 
           <div className="speaking-info">
             <div className="info-item">
               <Phone size={20} />
-              <span>3 minute conversation</span>
+              <span>2-3 minute conversation</span>
             </div>
             <div className="info-item">
-              <Volume2 size={20} />
-              <span>AI evaluates your speaking</span>
+              <Sparkles size={20} />
+              <span>Adapts to your level</span>
             </div>
           </div>
 
           <div className="speaking-instructions">
             <h3>How it works</h3>
             <ul>
-              <li>You'll have a short conversation with an AI German teacher</li>
-              <li>Speak naturally — the AI will ask you simple questions</li>
-              <li>Your pronunciation, grammar, and vocabulary will be assessed</li>
-              <li>The conversation lasts about 3 minutes</li>
+              <li>You'll have a natural conversation with Frau Schmidt, an AI German teacher</li>
+              <li>She'll start with medium-difficulty questions and adapt based on your responses</li>
+              <li>Speak at whatever level you're comfortable — simple or advanced</li>
+              <li>Your grammar, vocabulary, fluency, and pronunciation will be assessed</li>
             </ul>
+          </div>
+
+          <div className="speaking-tip">
+            <Volume2 size={18} />
+            <span>Tip: Speak naturally! It's better to make mistakes than to stay silent.</span>
           </div>
 
           {!user && (
@@ -325,20 +314,20 @@ const LevelTestSpeaking = ({ level, sublevel, onComplete, onSkip }) => {
     );
   }
 
-  // Connecting screen
+  // Connecting
   if (stage === 'connecting') {
     return (
       <div className="level-test-container">
         <div className="question-card" style={{ padding: '3rem', textAlign: 'center' }}>
           <Loader2 size={48} className="spin" style={{ color: '#1D9E75', marginBottom: '1rem' }} />
           <h2>Connecting...</h2>
-          <p style={{ color: '#666' }}>Setting up your speaking session</p>
+          <p style={{ color: '#666' }}>Setting up your conversation with Frau Schmidt</p>
         </div>
       </div>
     );
   }
 
-  // Error screen
+  // Error
   if (stage === 'error') {
     return (
       <div className="level-test-container">
@@ -348,16 +337,14 @@ const LevelTestSpeaking = ({ level, sublevel, onComplete, onSkip }) => {
           <p style={{ color: '#666', marginBottom: '1.5rem' }}>{error}</p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
             <button className="skip-btn" onClick={onSkip}>Skip Speaking</button>
-            <button className="start-test-btn" onClick={startSession} style={{ maxWidth: '150px' }}>
-              Try Again
-            </button>
+            <button className="start-test-btn" onClick={startSession} style={{ maxWidth: '200px' }}>Try Again</button>
           </div>
         </div>
       </div>
     );
   }
 
-  // Evaluating screen
+  // Evaluating
   if (stage === 'evaluating') {
     return (
       <div className="level-test-container">
@@ -370,7 +357,7 @@ const LevelTestSpeaking = ({ level, sublevel, onComplete, onSkip }) => {
     );
   }
 
-  // Active conversation screen
+  // Active conversation
   if (stage === 'active') {
     return (
       <div className="level-test-container">
@@ -379,39 +366,42 @@ const LevelTestSpeaking = ({ level, sublevel, onComplete, onSkip }) => {
           <div className="question-header">
             <div className="question-header-left">
               <span className="header-title">Speaking Test</span>
-              <span className={`level-badge level-${level.toLowerCase()}`}>{sublevel}</span>
+              <div className="adaptive-badge small">
+                <Sparkles size={12} />
+                Adaptive
+              </div>
             </div>
             <span className={`timer ${timeRemaining < 30 ? 'timer-warning' : ''}`}>
               {formatTime(timeRemaining)}
             </span>
           </div>
 
-          {/* Avatar / Status */}
+          {/* Avatar */}
           <div className="speaking-avatar-area">
             <div className={`speaking-avatar ${isUserSpeaking ? 'user-speaking' : ''} ${isAiSpeaking ? 'ai-speaking' : ''}`}>
               {isAiSpeaking ? <Volume2 size={40} /> : <Mic size={40} />}
             </div>
             <p className="speaking-status">
               {isUserSpeaking && 'Du sprichst...'}
-              {isAiSpeaking && 'Lehrer spricht...'}
+              {isAiSpeaking && 'Frau Schmidt spricht...'}
               {!isUserSpeaking && !isAiSpeaking && 'Bereit zum Sprechen'}
             </p>
           </div>
 
-          {/* Recent Messages */}
+          {/* Transcript */}
           <div className="speaking-transcript">
-            {messages.slice(-4).map((msg, i) => (
+            {messages.slice(-6).map((msg, i) => (
               <div key={i} className={`transcript-message ${msg.role}`}>
-                <span className="transcript-role">{msg.role === 'user' ? 'Du' : 'Lehrer'}:</span>
+                <span className="transcript-role">{msg.role === 'user' ? 'Du' : 'Frau Schmidt'}:</span>
                 <span className="transcript-text">{msg.content}</span>
               </div>
             ))}
             {messages.length === 0 && (
-              <p className="transcript-empty">Die Konversation beginnt...</p>
+              <p className="transcript-empty">Warte auf Frau Schmidt...</p>
             )}
           </div>
 
-          {/* End Button */}
+          {/* Footer */}
           <div className="speaking-footer">
             <button className="end-call-btn" onClick={endSession}>
               <PhoneOff size={20} />

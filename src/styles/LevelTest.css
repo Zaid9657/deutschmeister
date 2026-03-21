@@ -906,6 +906,46 @@
   line-height: 1.5;
 }
 
+/* Adaptive Badge */
+.adaptive-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.85rem;
+  background: linear-gradient(135deg, #e1f5ee, #e6f1fb, #f3e8ff);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555;
+}
+
+.adaptive-badge.small {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+}
+
+.adaptive-badge svg {
+  color: #7c3aed;
+}
+
+/* Speaking Tip */
+.speaking-tip {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: #f0fdf4;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #166534;
+}
+
+.speaking-tip svg {
+  flex-shrink: 0;
+  color: #1D9E75;
+}
+
 .speaking-login-notice {
   display: flex;
   align-items: center;
