@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { Helmet } from 'react-helmet-async';
+import SEO from '../components/SEO';
 import LevelTestLanding from '../components/LevelTest/LevelTestLanding';
 import LevelTestQuestion from '../components/LevelTest/LevelTestQuestion';
 import LevelTestListening from '../components/LevelTest/LevelTestListening';
@@ -141,10 +141,30 @@ const LevelTest = () => {
 
   return (
     <>
-      <Helmet>
-        <title>German Level Test | Find Your CEFR Level | DeutschMeister</title>
-        <meta name="description" content="Take our free German level test to discover your CEFR level from A1 to B2. 40 questions, 15-20 minutes, instant results with personalized recommendations." />
-      </Helmet>
+      <SEO
+        title="Free German Level Test - Find Your CEFR Level"
+        description="Take our free German placement test. 40 questions, listening & speaking in 15-20 minutes. Get your CEFR level (A1-B2) with instant personalized results."
+        path="/level-test"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "name": "German Level Test",
+          "description": "Free CEFR placement test for German learners. Written, listening, and speaking assessment from A1 to B2.",
+          "url": "https://deutsch-meister.de/level-test",
+          "applicationCategory": "EducationalApplication",
+          "operatingSystem": "Web",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "EUR"
+          },
+          "provider": {
+            "@type": "Organization",
+            "name": "DeutschMeister",
+            "url": "https://deutsch-meister.de"
+          }
+        }}
+      />
 
       <div className="level-test-page">
         {testState === 'landing' && (

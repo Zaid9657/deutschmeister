@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Mic, Clock, ChevronRight, Crown, ArrowRight, Loader2, AlertTriangle, Monitor } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import SEO from '../components/SEO';
 import { LEVEL_CONFIGS, getConfigForLevel } from '../constants/speakingPrompts';
 import SpeakingPractice, { checkSpeakingSupport } from '../components/SpeakingPractice';
 import SpeakingEvaluationResults from '../components/SpeakingEvaluationResults';
@@ -276,6 +277,31 @@ const SpeakingPage = () => {
   // Select phase
   return (
     <div className="min-h-screen bg-slate-50 pt-16">
+      <SEO
+        title="AI German Speaking Practice"
+        description="Practice speaking German with an AI teacher. Real-time conversations, pronunciation feedback, and CEFR-level assessment. Try it free!"
+        path="/speaking"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "name": "German AI Speaking Practice",
+          "description": "Practice speaking German with an AI-powered conversation partner. Get real-time feedback on pronunciation, grammar, and vocabulary.",
+          "url": "https://deutsch-meister.de/speaking",
+          "applicationCategory": "EducationalApplication",
+          "operatingSystem": "Web",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "EUR",
+            "description": "Free trial available"
+          },
+          "provider": {
+            "@type": "Organization",
+            "name": "DeutschMeister",
+            "url": "https://deutsch-meister.de"
+          }
+        }}
+      />
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-b from-teal-500/10 via-teal-500/5 to-transparent">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16">

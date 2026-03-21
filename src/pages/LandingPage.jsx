@@ -247,6 +247,35 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Speaking Practice CTA */}
+      <section className="py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex flex-col md:flex-row items-center gap-8 p-8 rounded-3xl bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-100"
+          >
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-400 to-emerald-500 flex items-center justify-center flex-shrink-0">
+              <MessageSquare className="w-8 h-8 text-white" />
+            </div>
+            <div className="flex-1 text-center md:text-left">
+              <h3 className="text-xl font-bold text-slate-800 mb-2">Practice Speaking with AI</h3>
+              <p className="text-slate-600">
+                Have real-time German conversations with an AI teacher. Get feedback on pronunciation, grammar, and vocabulary at your level.
+              </p>
+            </div>
+            <Link
+              to="/speaking"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-teal-600 text-white font-semibold rounded-xl hover:bg-teal-700 transition-colors flex-shrink-0"
+            >
+              Try Speaking
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-24 bg-gradient-to-r from-amber-500 via-rose-500 to-purple-500">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
