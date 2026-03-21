@@ -124,7 +124,10 @@ const LevelTestListening = ({ level, sublevel, onComplete, onSkip }) => {
     }
   };
 
-  const handleAnswerSelect = (questionId, option) => {
+  // Use consistent key for each question (id with fallback to question_number)
+  const getQuestionKey = (question) => question.id || question.question_number;
+
+  const handleAnswerSelect = (questionKey, option) => {
     // Extract the answer key (e.g., "a" from "a) 0,99 €" or use full option for Richtig/Falsch)
     let answerKey;
     if (option.match(/^[a-d]\)/)) {
@@ -135,13 +138,16 @@ const LevelTestListening = ({ level, sublevel, onComplete, onSkip }) => {
 
     setAnswers(prev => ({
       ...prev,
-      [questionId]: answerKey
+      [questionKey]: answerKey
     }));
   };
 
   const allCurrentQuestionsAnswered = () => {
     if (currentQuestions.length === 0) return false;
-    return currentQuestions.every(q => answers[q.id] !== undefined && answers[q.id] !== null);
+    return currentQuestions.every(q => {
+      const key = getQuestionKey(q);
+      return answers[key] !== undefined && answers[key] !== null;
+    });
   };
 
   const nextExercise = async () => {
@@ -168,7 +174,7 @@ const LevelTestListening = ({ level, sublevel, onComplete, onSkip }) => {
     let correct = 0;
 
     allQuestions.forEach(q => {
-      const userAnswer = answers[q.id];
+      const userAnswer = answers[getQuestionKey(q)];
       if (userAnswer === q.correct_answer) {
         correct++;
       }
@@ -316,34 +322,38 @@ const LevelTestListening = ({ level, sublevel, onComplete, onSkip }) => {
           {/* Questions */}
           <div className="listening-questions">
             <h3>Questions</h3>
-            {currentQuestions.map((question, qIndex) => (
-              <div key={question.id} className="listening-question">
-                <p className="question-text">
-                  {qIndex + 1}. {question.question_text}
-                </p>
-                <div className="options-list">
-                  {question.options.map((option, oIndex) => {
-                    const isSelected = (() => {
-                      const userAnswer = answers[question.id];
-                      if (!userAnswer) return false;
-                      if (option.match(/^[a-d]\)/)) {
-                        return option.charAt(0) === userAnswer;
+            {currentQuestions.map((question, qIndex) => {
+              const qKey = getQuestionKey(question);
+              return (
+                <div key={qKey} className="listening-question">
+                  <p className="question-text">
+                    {qIndex + 1}. {question.question_text}
+                  </p>
+                  <div className="options-list">
+                    {question.options.map((option, oIndex) => {
+                      const userAnswer = answers[qKey];
+                      let isSelected = false;
+                      if (userAnswer) {
+                        if (option.match(/^[a-d]\)/)) {
+                          isSelected = option.charAt(0) === userAnswer;
+                        } else {
+                          isSelected = option === userAnswer;
+                        }
                       }
-                      return option === userAnswer;
-                    })();
-                    return (
-                      <button
-                        key={oIndex}
-                        className={`option-btn ${isSelected ? 'selected' : ''}`}
-                        onClick={() => handleAnswerSelect(question.id, option)}
-                      >
-                        <span className="option-text">{option}</span>
-                      </button>
-                    );
-                  })}
+                      return (
+                        <button
+                          key={oIndex}
+                          className={`option-btn ${isSelected ? 'selected' : ''}`}
+                          onClick={() => handleAnswerSelect(qKey, option)}
+                        >
+                          <span className="option-text">{option}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Footer */}
