@@ -1,7 +1,59 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Mic, Volume2, Phone, PhoneOff, Loader2, AlertCircle } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { getConfigForLevel } from '../../constants/speakingPrompts';
+
+const getAssessmentPrompt = (level, sublevel) => {
+  const levelDescriptions = {
+    'A1': 'complete beginner - use very simple words, speak slowly, ask about basic topics like name, age, family, hobbies',
+    'A2': 'elementary - use simple sentences, everyday topics like daily routine, shopping, travel plans',
+    'B1': 'intermediate - use more complex sentences, discuss opinions, experiences, future plans',
+    'B2': 'upper intermediate - use sophisticated vocabulary, discuss abstract topics, current events, hypotheticals'
+  };
+
+  const levelExamples = {
+    'A1': 'Wie heißt du? Woher kommst du? Was machst du gern?',
+    'A2': 'Was hast du gestern gemacht? Beschreibe deine Familie. Was möchtest du am Wochenende machen?',
+    'B1': 'Was denkst du über soziale Medien? Erzähle von einer interessanten Reise. Was würdest du anders machen?',
+    'B2': 'Wie beurteilst du die aktuelle Klimapolitik? Was wäre passiert, wenn du einen anderen Beruf gewählt hättest?'
+  };
+
+  const systemPrompt = `Du bist ein erfahrener Deutschlehrer, der einen kurzen Einstufungstest durchführt.
+
+LEVEL DES SCHÜLERS (basierend auf dem schriftlichen Test): ${sublevel} (${levelDescriptions[level] || levelDescriptions['A1']})
+
+DEINE AUFGABE:
+1. Beginne auf dem angegebenen Level mit einer freundlichen Begrüßung
+2. Stelle 3-4 kurze Fragen, um das Sprachniveau zu überprüfen
+3. PASSE DICH AN: Wenn der Schüler gut antwortet, stelle eine etwas schwierigere Frage. Wenn er Schwierigkeiten hat, vereinfache.
+4. Sei ermutigend aber notiere mental Grammatikfehler, Wortschatzprobleme und Aussprache
+
+BEISPIELFRAGEN FÜR DIESES LEVEL:
+${levelExamples[level] || levelExamples['A1']}
+
+WICHTIGE REGELN:
+- Sprich NUR Deutsch (keine englischen Erklärungen)
+- Halte deine Antworten kurz (1-2 Sätze)
+- Korrigiere NICHT während des Tests - das ist eine Bewertung
+- Nach 3-4 Fragen, beende höflich: "Vielen Dank! Das war der Sprechtest."
+- Sprich langsam und deutlich für niedrigere Levels, natürlicher für höhere
+
+SPRECHGESCHWINDIGKEIT:
+${level === 'A1' ? 'Sehr langsam und deutlich' : level === 'A2' ? 'Langsam und klar' : level === 'B1' ? 'Normale Geschwindigkeit' : 'Natürliche, flüssige Geschwindigkeit'}
+
+Beginne jetzt mit einer kurzen Begrüßung und deiner ersten Frage.`;
+
+  const voices = {
+    'A1': 'coral',
+    'A2': 'shimmer',
+    'B1': 'echo',
+    'B2': 'alloy'
+  };
+
+  return {
+    systemPrompt,
+    voice: voices[level] || 'coral'
+  };
+};
 
 const LevelTestSpeaking = ({ level, sublevel, onComplete, onSkip }) => {
   const { user } = useAuth();
@@ -20,8 +72,6 @@ const LevelTestSpeaking = ({ level, sublevel, onComplete, onSkip }) => {
 
   // Keep messagesRef in sync
   useEffect(() => { messagesRef.current = messages; }, [messages]);
-
-  const config = getConfigForLevel(sublevel);
 
   const saveMessage = useCallback((role, content) => {
     if (!content?.trim()) return;
@@ -87,15 +137,15 @@ const LevelTestSpeaking = ({ level, sublevel, onComplete, onSkip }) => {
       streamRef.current = stream;
 
       // 2. Create session via backend (level test — no usage tracking)
-      const testPrompt = `${config.systemPrompt}\n\nIMPORTANT: This is a SHORT level placement test (3 minutes max). Ask 3-4 simple questions to assess the student's speaking level at ${sublevel}. Be encouraging but note grammar/vocabulary issues for evaluation.`;
+      const config = getAssessmentPrompt(level, sublevel);
 
       const sessionRes = await fetch('/api/speaking/speaking-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          systemPrompt: testPrompt,
+          systemPrompt: config.systemPrompt,
           level: sublevel,
-          // Omit user_id to skip usage tracking for level test
+          voice: config.voice,
         }),
       });
 

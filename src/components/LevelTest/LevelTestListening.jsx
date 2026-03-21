@@ -12,7 +12,6 @@ const LevelTestListening = ({ level, sublevel, onComplete, onSkip }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [playCount, setPlayCount] = useState(0);
   const [audioProgress, setAudioProgress] = useState(0);
-  const [showQuestions, setShowQuestions] = useState(false);
   const [error, setError] = useState(null);
   // Track all questions across exercises for final score calculation
   const allQuestionsRef = useRef([]);
@@ -92,7 +91,6 @@ const LevelTestListening = ({ level, sublevel, onComplete, onSkip }) => {
     allQuestionsRef.current = [...questions];
     setCurrentExerciseIndex(0);
     setPlayCount(0);
-    setShowQuestions(false);
     setStage('exercise');
   };
 
@@ -117,7 +115,6 @@ const LevelTestListening = ({ level, sublevel, onComplete, onSkip }) => {
 
   const handleAudioEnded = () => {
     setIsPlaying(false);
-    setShowQuestions(true);
   };
 
   const handleTimeUpdate = () => {
@@ -146,7 +143,6 @@ const LevelTestListening = ({ level, sublevel, onComplete, onSkip }) => {
       setCurrentQuestions(questions);
       setCurrentExerciseIndex(nextIndex);
       setPlayCount(0);
-      setShowQuestions(false);
       setAudioProgress(0);
       setIsPlaying(false);
       if (audioRef.current) {
@@ -308,51 +304,47 @@ const LevelTestListening = ({ level, sublevel, onComplete, onSkip }) => {
             )}
           </div>
 
-          {/* Questions (shown after first play) */}
-          {showQuestions && (
-            <div className="listening-questions">
-              <h3>Questions</h3>
-              {currentQuestions.map((question, qIndex) => (
-                <div key={question.id} className="listening-question">
-                  <p className="question-text">
-                    {qIndex + 1}. {question.question_text}
-                  </p>
-                  <div className="options-list">
-                    {question.options.map((option, oIndex) => {
-                      const optionMatch = option.match(/^([a-d])\)/);
-                      const optionKey = optionMatch ? optionMatch[1] : option;
-                      const isSelected = answers[question.id] === optionKey;
-                      return (
-                        <button
-                          key={oIndex}
-                          className={`option-btn ${isSelected ? 'selected' : ''}`}
-                          onClick={() => handleAnswerSelect(question.id, optionKey)}
-                        >
-                          <span className="option-text">{option}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
+          {/* Questions */}
+          <div className="listening-questions">
+            <h3>Questions</h3>
+            {currentQuestions.map((question, qIndex) => (
+              <div key={question.id} className="listening-question">
+                <p className="question-text">
+                  {qIndex + 1}. {question.question_text}
+                </p>
+                <div className="options-list">
+                  {question.options.map((option, oIndex) => {
+                    const optionMatch = option.match(/^([a-d])\)/);
+                    const optionKey = optionMatch ? optionMatch[1] : option;
+                    const isSelected = answers[question.id] === optionKey;
+                    return (
+                      <button
+                        key={oIndex}
+                        className={`option-btn ${isSelected ? 'selected' : ''}`}
+                        onClick={() => handleAnswerSelect(question.id, optionKey)}
+                      >
+                        <span className="option-text">{option}</span>
+                      </button>
+                    );
+                  })}
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            ))}
+          </div>
 
           {/* Footer */}
           <div className="question-footer">
             <button className="skip-btn" onClick={onSkip}>
               Skip
             </button>
-            {showQuestions && (
-              <button
-                className="next-btn"
-                onClick={nextExercise}
-                disabled={!allCurrentQuestionsAnswered()}
-              >
-                {currentExerciseIndex < exercises.length - 1 ? 'Next Exercise' : 'Continue to Speaking'}
-                <ChevronRight size={18} style={{ marginLeft: '0.25rem' }} />
-              </button>
-            )}
+            <button
+              className="next-btn"
+              onClick={nextExercise}
+              disabled={!allCurrentQuestionsAnswered()}
+            >
+              {currentExerciseIndex < exercises.length - 1 ? 'Next Exercise' : 'Continue to Speaking'}
+              <ChevronRight size={18} style={{ marginLeft: '0.25rem' }} />
+            </button>
           </div>
         </div>
       </div>
