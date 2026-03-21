@@ -35,6 +35,7 @@ const ReadingLessonsPage = lazy(() => import('./pages/ReadingLessonsPage'));
 const ListeningHome = lazy(() => import('./pages/Listening/ListeningHome'));
 const LevelExercises = lazy(() => import('./pages/Listening/LevelExercises'));
 const SpeakingPage = lazy(() => import('./pages/SpeakingPage'));
+const LevelTest = lazy(() => import('./pages/LevelTest'));
 
 function PageLoader() {
   return (
@@ -74,6 +75,7 @@ function App() {
                       }
                     />
                     <Route path="/pricing" element={<PricingPage />} />
+                    <Route path="/level-test" element={<LevelTest />} />
                     <Route
                       path="/subscription/success"
                       element={
