@@ -51,7 +51,7 @@ const LockedContentOverlay = ({ level }) => {
           </Link>
 
           <Link
-            to="/grammar/a1.1"
+            to="/level/a1.1"
             className="inline-flex items-center justify-center gap-2 text-sm text-emerald-600 hover:text-emerald-700 transition-colors mt-2"
           >
             <Sparkles size={14} />

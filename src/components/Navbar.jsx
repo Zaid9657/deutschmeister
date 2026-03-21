@@ -66,6 +66,15 @@ const Navbar = () => {
               <BookOpen size={18} />
               {isGerman ? 'Grammatik' : 'Grammar'}
             </Link>
+            {!user && (
+              <Link
+                to="/level/a1.1"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-sm font-semibold hover:bg-emerald-100 transition-colors"
+              >
+                <Sparkles size={14} />
+                A1.1 Free
+              </Link>
+            )}
 
             {user && (
               <>
@@ -203,6 +212,16 @@ const Navbar = () => {
                 <BookOpen size={20} />
                 {isGerman ? 'Grammatik' : 'Grammar'}
               </Link>
+              {!user && (
+                <Link
+                  to="/level/a1.1"
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-50 text-emerald-700 font-semibold"
+                >
+                  <Sparkles size={20} />
+                  A1.1 Free
+                </Link>
+              )}
 
               {user && (
                 <>

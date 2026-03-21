@@ -118,7 +118,7 @@ const LandingPage = () => {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
-                to={user ? '/dashboard' : '/grammar/a1.1'}
+                to={user ? '/dashboard' : '/level/a1.1'}
                 className="group px-8 py-4 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-2xl shadow-lg shadow-rose-500/25 hover:shadow-xl hover:shadow-rose-500/30 transition-all flex items-center gap-2"
               >
                 {user ? t('landing.getStarted') : 'Start Learning Free'}
@@ -291,7 +291,7 @@ const LandingPage = () => {
               Join thousands of learners mastering German with DeutschMeister's structured approach.
             </p>
             <Link
-              to={user ? '/dashboard' : '/grammar/a1.1'}
+              to={user ? '/dashboard' : '/level/a1.1'}
               className="inline-flex items-center gap-2 px-8 py-4 bg-white text-rose-600 font-semibold rounded-2xl hover:bg-slate-50 transition-colors shadow-lg"
             >
               {user ? 'Go to Dashboard' : 'Start A1.1 Free'}
