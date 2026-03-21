@@ -2,9 +2,12 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookMarked, ChevronRight, CheckCircle, Sun, TreePine, Waves, Moon, ChevronDown } from 'lucide-react';
+import { BookMarked, ChevronRight, CheckCircle, Sun, TreePine, Waves, Moon, ChevronDown, Lock, Sparkles } from 'lucide-react';
 import { useProgress } from '../contexts/ProgressContext';
 import { useTheme } from '../contexts/ThemeContext';
+import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../contexts/SubscriptionContext';
+import { isLevelFree } from '../config/freeTier';
 import { mainLevels, getSubLevels, levelThemes as contentLevelThemes } from '../data/content';
 import { getTopicsForLevel, getTotalGrammarTopics } from '../data/grammarTopics';
 import SEO from '../components/SEO';
@@ -16,7 +19,7 @@ const faqItems = [
   },
   {
     question: 'Is DeutschMeister free?',
-    answer: 'Yes, all grammar explanations and exercises are free to access. No account required.',
+    answer: 'A1.1 content (grammar, vocabulary, listening) is completely free — no account required. Sign up for a free 7-day trial to unlock all levels from A1.2 to B2.2.',
   },
   {
     question: 'Are the grammar explanations in English or German?',
@@ -77,12 +80,18 @@ const GrammarSectionPage = () => {
 
   const overallProgress = calculateOverallProgress();
 
+  const { user } = useAuth();
+  const { hasAccess } = useSubscription();
+  const isFreeOrHasAccess = (level) => isLevelFree(level) || (user && hasAccess);
+
   // Grammar level card component
   const GrammarLevelCard = ({ level }) => {
     const theme = getThemeForLevel(level);
     const Icon = iconMap[level] || Sun;
     const levelInfo = contentLevelThemes[level] || {};
     const topics = getTopicsForLevel(level);
+    const free = isLevelFree(level);
+    const accessible = isFreeOrHasAccess(level);
 
     // Calculate progress for this level
     let completedTopics = 0;
@@ -129,6 +138,14 @@ const GrammarSectionPage = () => {
                 <span className="px-2 py-0.5 rounded-full text-xs bg-slate-100 text-slate-600">
                   Part {part}
                 </span>
+                {free && (
+                  <span className="px-2 py-0.5 rounded-full text-xs bg-emerald-100 text-emerald-700 font-semibold">
+                    FREE
+                  </span>
+                )}
+                {!accessible && !free && (
+                  <Lock className="w-3.5 h-3.5 text-slate-400" />
+                )}
               </div>
               <p className="text-sm text-slate-600">
                 {topics.length} {isGerman ? 'Themen' : 'topics'}
@@ -137,16 +154,22 @@ const GrammarSectionPage = () => {
 
             {/* Progress / Status */}
             <div className="flex-shrink-0 flex items-center gap-3">
-              <div className="text-right">
-                <p className={`text-sm font-medium ${progressPercent === 100 ? 'text-emerald-600' : 'text-slate-700'}`}>
-                  {completedTopics}/{topics.length}
-                </p>
-                <p className="text-xs text-slate-400">
-                  {progressPercent}%
-                </p>
-              </div>
-              {progressPercent === 100 ? (
-                <CheckCircle className="w-5 h-5 text-emerald-500" />
+              {accessible ? (
+                <>
+                  <div className="text-right">
+                    <p className={`text-sm font-medium ${progressPercent === 100 ? 'text-emerald-600' : 'text-slate-700'}`}>
+                      {completedTopics}/{topics.length}
+                    </p>
+                    <p className="text-xs text-slate-400">
+                      {progressPercent}%
+                    </p>
+                  </div>
+                  {progressPercent === 100 ? (
+                    <CheckCircle className="w-5 h-5 text-emerald-500" />
+                  ) : (
+                    <ChevronRight className="w-5 h-5 text-slate-400" />
+                  )}
+                </>
               ) : (
                 <ChevronRight className="w-5 h-5 text-slate-400" />
               )}
@@ -154,7 +177,7 @@ const GrammarSectionPage = () => {
           </div>
 
           {/* Progress bar */}
-          {progressPercent > 0 && progressPercent < 100 && (
+          {accessible && progressPercent > 0 && progressPercent < 100 && (
             <div className="mt-3 pt-3 border-t border-slate-100">
               <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
                 <motion.div

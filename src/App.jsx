@@ -8,6 +8,7 @@ import Navbar from './components/Navbar';
 import LemonSqueezyProvider from './components/LemonSqueezyProvider';
 import ProtectedRoute from './components/ProtectedRoute';
 import SubscriptionGuard from './components/SubscriptionGuard';
+import LevelSubscriptionGuard from './components/LevelSubscriptionGuard';
 import TrialBanner from './components/TrialBanner';
 import { Loader2 } from 'lucide-react';
 
@@ -93,20 +94,12 @@ function App() {
                       }
                     />
 
-                    {/* Protected routes (require auth + subscription/trial) */}
+                    {/* Dashboard & Profile (require auth + subscription/trial) */}
                     <Route
                       path="/dashboard"
                       element={
                         <SubscriptionGuard>
                           <DashboardPage />
-                        </SubscriptionGuard>
-                      }
-                    />
-                    <Route
-                      path="/level/:level"
-                      element={
-                        <SubscriptionGuard>
-                          <LevelPage />
                         </SubscriptionGuard>
                       }
                     />
@@ -118,65 +111,68 @@ function App() {
                         </SubscriptionGuard>
                       }
                     />
+
+                    {/* Level-aware routes — A1.1 is free, others require auth + subscription */}
+                    <Route
+                      path="/level/:level"
+                      element={
+                        <LevelSubscriptionGuard>
+                          <LevelPage />
+                        </LevelSubscriptionGuard>
+                      }
+                    />
+
+                    {/* Grammar — section & topic list are public, lessons are level-gated */}
                     <Route path="/grammar" element={<GrammarSectionPage />} />
                     <Route path="/grammar/:level" element={<GrammarTopicsPage />} />
                     <Route
                       path="/grammar/:level/:topicSlug"
                       element={
-                        <SubscriptionGuard>
+                        <LevelSubscriptionGuard>
                           <GrammarLessonPage />
-                        </SubscriptionGuard>
+                        </LevelSubscriptionGuard>
                       }
                     />
-                    <Route
-                      path="/reading"
-                      element={
-                        <SubscriptionGuard>
-                          <ReadingSectionPage />
-                        </SubscriptionGuard>
-                      }
-                    />
+
+                    {/* Reading — section overview is public, level pages are level-gated */}
+                    <Route path="/reading" element={<ReadingSectionPage />} />
                     <Route
                       path="/reading/:level"
                       element={
-                        <SubscriptionGuard>
+                        <LevelSubscriptionGuard>
                           <ReadingLessonsPage />
-                        </SubscriptionGuard>
+                        </LevelSubscriptionGuard>
                       }
                     />
                     <Route
                       path="/reading/:level/:lessonId"
                       element={
-                        <SubscriptionGuard>
+                        <LevelSubscriptionGuard>
                           <ReadingLessonPage />
-                        </SubscriptionGuard>
+                        </LevelSubscriptionGuard>
                       }
                     />
-                    <Route
-                      path="/listening"
-                      element={
-                        <SubscriptionGuard>
-                          <ListeningHome />
-                        </SubscriptionGuard>
-                      }
-                    />
+
+                    {/* Listening — section overview is public, level pages are level-gated */}
+                    <Route path="/listening" element={<ListeningHome />} />
                     <Route
                       path="/listening/:level"
                       element={
-                        <SubscriptionGuard>
+                        <LevelSubscriptionGuard>
                           <LevelExercises />
-                        </SubscriptionGuard>
+                        </LevelSubscriptionGuard>
                       }
                     />
                     <Route
                       path="/listening/:level/:exerciseNumber"
                       element={
-                        <SubscriptionGuard>
+                        <LevelSubscriptionGuard>
                           <ExercisePlayer />
-                        </SubscriptionGuard>
+                        </LevelSubscriptionGuard>
                       }
                     />
 
+                    {/* Speaking — fully gated (AI costs) */}
                     <Route
                       path="/speaking"
                       element={

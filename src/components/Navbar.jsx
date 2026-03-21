@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, LogOut, Globe, Home, LayoutDashboard, Crown, Sparkles, Mic, ClipboardCheck } from 'lucide-react';
+import { Menu, X, User, LogOut, Globe, Home, LayoutDashboard, Crown, Sparkles, Mic, ClipboardCheck, BookOpen } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 
@@ -58,6 +58,13 @@ const Navbar = () => {
             >
               <ClipboardCheck size={18} />
               {isGerman ? 'Einstufungstest' : 'Level Test'}
+            </Link>
+            <Link
+              to="/grammar"
+              className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors"
+            >
+              <BookOpen size={18} />
+              {isGerman ? 'Grammatik' : 'Grammar'}
             </Link>
 
             {user && (
@@ -187,6 +194,14 @@ const Navbar = () => {
               >
                 <ClipboardCheck size={20} />
                 {isGerman ? 'Einstufungstest' : 'Level Test'}
+              </Link>
+              <Link
+                to="/grammar"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
+              >
+                <BookOpen size={20} />
+                {isGerman ? 'Grammatik' : 'Grammar'}
               </Link>
 
               {user && (

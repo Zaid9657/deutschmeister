@@ -1,16 +1,23 @@
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { ChevronRight, Clock, CheckCircle, Circle } from 'lucide-react';
+import { ChevronRight, Clock, CheckCircle, Circle, Lock } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../contexts/SubscriptionContext';
+import { isLevelFree } from '../config/freeTier';
 
 const GrammarTopicCard = ({ topic, level, isCompleted, progress = 0 }) => {
   const { i18n } = useTranslation();
   const navigate = useNavigate();
   const { getThemeForLevel } = useTheme();
 
+  const { user } = useAuth();
+  const { hasAccess } = useSubscription();
   const theme = getThemeForLevel(level);
   const isGerman = i18n.language === 'de';
+  const free = isLevelFree(level);
+  const locked = !free && !(user && hasAccess);
 
   const handleClick = () => {
     navigate(`/grammar/${level}/${topic.slug}`);
@@ -66,6 +73,12 @@ const GrammarTopicCard = ({ topic, level, isCompleted, progress = 0 }) => {
               <h3 className="font-semibold truncate text-slate-800">
                 {isGerman ? topic.titleDe : topic.titleEn}
               </h3>
+              {locked && <Lock className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />}
+              {free && !isCompleted && (
+                <span className="px-1.5 py-0.5 rounded text-[10px] bg-emerald-100 text-emerald-700 font-semibold flex-shrink-0">
+                  FREE
+                </span>
+              )}
             </div>
 
             <p className="text-sm line-clamp-2 text-slate-600">
