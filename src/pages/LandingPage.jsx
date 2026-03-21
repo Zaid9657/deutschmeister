@@ -226,6 +226,27 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Level Test CTA */}
+      <section className="level-test-cta">
+        <div className="container">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="cta-content"
+          >
+            <h2>Not sure where to start?</h2>
+            <p>Take our free German level test to find out your CEFR level and get personalized recommendations.</p>
+            <div className="cta-features">
+              <span>✓ 40 questions</span>
+              <span>✓ 15-20 minutes</span>
+              <span>✓ Instant results</span>
+            </div>
+            <Link to="/level-test" className="cta-button">Take the Level Test</Link>
+          </motion.div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-24 bg-gradient-to-r from-amber-500 via-rose-500 to-purple-500">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

@@ -179,3 +179,73 @@
     display: none !important;
   }
 }
+
+/* Level Test CTA (Landing Page) */
+.level-test-cta {
+  background: linear-gradient(135deg, #e1f5ee 0%, #e6f1fb 100%);
+  padding: 4rem 1rem;
+  text-align: center;
+}
+
+.level-test-cta .container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.level-test-cta h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 0.75rem;
+}
+
+.level-test-cta p {
+  font-size: 1.1rem;
+  color: #444;
+  margin: 0 0 1.5rem;
+  line-height: 1.6;
+}
+
+.cta-features {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.cta-features span {
+  color: #1D9E75;
+  font-weight: 500;
+}
+
+.level-test-cta .cta-button {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background: #1D9E75;
+  color: white;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.level-test-cta .cta-button:hover {
+  background: #178a66;
+}
+
+@media (max-width: 480px) {
+  .level-test-cta {
+    padding: 3rem 1rem;
+  }
+
+  .level-test-cta h2 {
+    font-size: 1.5rem;
+  }
+
+  .cta-features {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

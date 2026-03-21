@@ -19,6 +19,19 @@ export const SubscriptionProvider = ({ children }) => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const lastRefreshRef = useRef(0);
+  const prevUserIdRef = useRef(null);
+
+  // When user changes (login/logout), immediately set loading=true so the
+  // guard never sees a stale hasAccess=false between user change and data load.
+  useEffect(() => {
+    const newUserId = user?.id ?? null;
+    if (newUserId !== prevUserIdRef.current) {
+      if (newUserId) {
+        setLoading(true);
+      }
+      prevUserIdRef.current = newUserId;
+    }
+  }, [user]);
 
   const loadSubscriptionData = useCallback(async () => {
     // Don't resolve loading until auth is done — otherwise the guard
