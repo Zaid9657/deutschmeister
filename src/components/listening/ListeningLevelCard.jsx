@@ -1,14 +1,21 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Headphones, CheckCircle, ChevronRight } from 'lucide-react';
+import { Headphones, CheckCircle, ChevronRight, Lock } from 'lucide-react';
 import { getLevelTheme, getLevelSubtitle } from '../../utils/listeningHelpers';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../contexts/AuthContext';
+import { useSubscription } from '../../contexts/SubscriptionContext';
+import { isLevelFree } from '../../config/freeTier';
 
 const ListeningLevelCard = ({ level, totalExercises, completedExercises, index }) => {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
+  const { user } = useAuth();
+  const { hasAccess } = useSubscription();
   const theme = getLevelTheme(level);
   const subtitle = getLevelSubtitle(level, i18n.language);
+  const free = isLevelFree(level);
+  const locked = !free && !(user && hasAccess);
   const progress = totalExercises > 0 ? Math.round((completedExercises / totalExercises) * 100) : 0;
   const isComplete = totalExercises > 0 && completedExercises === totalExercises;
 
@@ -40,6 +47,10 @@ const ListeningLevelCard = ({ level, totalExercises, completedExercises, index }
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <h3 className="font-display font-semibold text-lg text-slate-800">{level}</h3>
+            {free && (
+              <span className="px-2 py-0.5 rounded-full text-[10px] bg-emerald-100 text-emerald-700 font-semibold">FREE</span>
+            )}
+            {locked && <Lock size={14} className="text-slate-400" />}
             {isComplete && <CheckCircle size={16} className="text-emerald-500" />}
           </div>
           <p className="text-sm text-slate-500 mb-3">{subtitle}</p>

@@ -76,7 +76,14 @@ function App() {
                       }
                     />
                     <Route path="/pricing" element={<PricingPage />} />
-                    <Route path="/level-test" element={<LevelTest />} />
+                    <Route
+                      path="/level-test"
+                      element={
+                        <ProtectedRoute>
+                          <LevelTest />
+                        </ProtectedRoute>
+                      }
+                    />
                     <Route
                       path="/subscription/success"
                       element={
