@@ -124,7 +124,15 @@ const LevelTestListening = ({ level, sublevel, onComplete, onSkip }) => {
     }
   };
 
-  const handleAnswerSelect = (questionId, answerKey) => {
+  const handleAnswerSelect = (questionId, option) => {
+    // Extract the answer key (e.g., "a" from "a) 0,99 €" or use full option for Richtig/Falsch)
+    let answerKey;
+    if (option.match(/^[a-d]\)/)) {
+      answerKey = option.charAt(0);
+    } else {
+      answerKey = option;
+    }
+
     setAnswers(prev => ({
       ...prev,
       [questionId]: answerKey
@@ -132,7 +140,8 @@ const LevelTestListening = ({ level, sublevel, onComplete, onSkip }) => {
   };
 
   const allCurrentQuestionsAnswered = () => {
-    return currentQuestions.every(q => answers[q.id] !== undefined);
+    if (currentQuestions.length === 0) return false;
+    return currentQuestions.every(q => answers[q.id] !== undefined && answers[q.id] !== null);
   };
 
   const nextExercise = async () => {
@@ -314,14 +323,19 @@ const LevelTestListening = ({ level, sublevel, onComplete, onSkip }) => {
                 </p>
                 <div className="options-list">
                   {question.options.map((option, oIndex) => {
-                    const optionMatch = option.match(/^([a-d])\)/);
-                    const optionKey = optionMatch ? optionMatch[1] : option;
-                    const isSelected = answers[question.id] === optionKey;
+                    const isSelected = (() => {
+                      const userAnswer = answers[question.id];
+                      if (!userAnswer) return false;
+                      if (option.match(/^[a-d]\)/)) {
+                        return option.charAt(0) === userAnswer;
+                      }
+                      return option === userAnswer;
+                    })();
                     return (
                       <button
                         key={oIndex}
                         className={`option-btn ${isSelected ? 'selected' : ''}`}
-                        onClick={() => handleAnswerSelect(question.id, optionKey)}
+                        onClick={() => handleAnswerSelect(question.id, option)}
                       >
                         <span className="option-text">{option}</span>
                       </button>
