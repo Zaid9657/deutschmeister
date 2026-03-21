@@ -216,14 +216,82 @@ const LevelTestSpeaking = ({ onComplete, onSkip }) => {
 
   const evaluateConversation = async (conversationMessages) => {
     try {
+      const placementPrompt = `Du bist ein erfahrener CEFR-Prüfer. Analysiere dieses Gespräch und BESTIMME das Sprachniveau des Schülers.
+
+GESPRÄCH:
+${conversationMessages.map(m => `${m.role === 'user' ? 'Schüler' : 'Lehrer'}: ${m.content}`).join('\n')}
+
+BEWERTE JEDE KATEGORIE (0-20 Punkte) BASIEREND AUF DEM GEZEIGTEN NIVEAU:
+
+1. AUSSPRACHE (pronunciation): Wie verständlich spricht der Schüler?
+   - 16-20: Sehr klar, kaum Akzent, natürliche Intonation (B2+)
+   - 12-15: Gut verständlich, leichter Akzent, angemessene Intonation (B1)
+   - 8-11: Verständlich mit etwas Mühe, merklicher Akzent (A2)
+   - 4-7: Schwer verständlich, starker Akzent (A1)
+   - 0-3: Kaum verständlich
+
+2. GRAMMATIK (grammar): Wie korrekt ist die Grammatik?
+   - 16-20: Komplexe Strukturen, wenige Fehler, Konjunktiv, Nebensätze (B2)
+   - 12-15: Gute Grundstruktur, einige Fehler bei komplexeren Formen (B1)
+   - 8-11: Einfache Sätze meist korrekt, Fehler bei Fällen/Artikeln (A2)
+   - 4-7: Grundlegende Wortstellung, häufige Fehler (A1)
+   - 0-3: Kaum grammatische Struktur
+
+3. WORTSCHATZ (vocabulary): Wie breit und präzise ist der Wortschatz?
+   - 16-20: Reicher, nuancierter Wortschatz, idiomatische Ausdrücke (B2)
+   - 12-15: Guter Alltagswortschatz, kann Meinungen ausdrücken (B1)
+   - 8-11: Grundwortschatz für alltägliche Situationen (A2)
+   - 4-7: Sehr begrenzter Wortschatz, nur Grundbegriffe (A1)
+   - 0-3: Minimaler Wortschatz
+
+4. FLÜSSIGKEIT (fluency): Wie flüssig spricht der Schüler?
+   - 16-20: Fließend, natürliches Tempo, kaum Pausen (B2)
+   - 12-15: Meist flüssig, gelegentliche Pausen zum Nachdenken (B1)
+   - 8-11: Merkliche Pausen, aber kann Gedanken vervollständigen (A2)
+   - 4-7: Häufige Pausen, stockend (A1)
+   - 0-3: Sehr stockend, lange Pausen
+
+5. VERSTÄNDNIS (comprehension): Wie gut versteht der Schüler?
+   - 16-20: Versteht komplexe Fragen, reagiert angemessen (B2)
+   - 12-15: Versteht die meisten Fragen, bittet selten um Wiederholung (B1)
+   - 8-11: Versteht einfache Fragen, braucht manchmal Vereinfachung (A2)
+   - 4-7: Versteht nur sehr einfache Fragen (A1)
+   - 0-3: Versteht kaum
+
+BESTIMME DAS GESAMTNIVEAU:
+- 80-100 Punkte = B2
+- 60-79 Punkte = B1
+- 40-59 Punkte = A2
+- 20-39 Punkte = A1
+- 0-19 Punkte = unter A1
+
+Antworte NUR mit diesem JSON (keine Erklärung davor oder danach):
+{
+  "scores": {
+    "pronunciation": <0-20>,
+    "grammar": <0-20>,
+    "vocabulary": <0-20>,
+    "fluency": <0-20>,
+    "comprehension": <0-20>
+  },
+  "total_score": <0-100>,
+  "determined_level": "<A1|A2|B1|B2>",
+  "determined_sublevel": "<A1.1|A1.2|A2.1|A2.2|B1.1|B1.2|B2.1|B2.2>",
+  "feedback": "<2-3 Sätze auf Deutsch über die Stärken und Verbesserungsmöglichkeiten>",
+  "strengths": ["<Stärke 1>", "<Stärke 2>"],
+  "improvements": ["<Verbesserung 1>", "<Verbesserung 2>"],
+  "recommendation": "<HÖHER|GLEICH|WIEDERHOLEN>"
+}`;
+
       const response = await fetch('/api/speaking/evaluate-speaking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           user_id: user.id,
           session_token: `level-test-${Date.now()}`,
-          level: 'adaptive',
-          messages: conversationMessages
+          level: 'placement',
+          messages: conversationMessages,
+          customPrompt: placementPrompt
         })
       });
 

@@ -86,7 +86,7 @@ export const handler = async (event) => {
   }
 
   try {
-    const { user_id, session_token, level, messages } = JSON.parse(event.body || '{}');
+    const { user_id, session_token, level, messages, customPrompt } = JSON.parse(event.body || '{}');
 
     if (!user_id || !session_token || !level || !messages || messages.length === 0) {
       return {
@@ -96,8 +96,8 @@ export const handler = async (event) => {
       };
     }
 
-    // Call Claude API for evaluation
-    const evaluationPrompt = buildEvaluationPrompt(level, messages);
+    // Use custom prompt (e.g., placement test) or default evaluation prompt
+    const evaluationPrompt = customPrompt || buildEvaluationPrompt(level, messages);
 
     const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
