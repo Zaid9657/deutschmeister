@@ -4,6 +4,21 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Mail, Lock, Eye, EyeOff, AlertCircle, Loader2, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../utils/supabase';
+
+const logFailedSignup = (email, error) => {
+  supabase
+    .from('signup_attempts')
+    .insert({
+      email,
+      error_code: error.code || error.status || null,
+      error_message: error.message || 'Unknown error',
+      user_agent: navigator.userAgent,
+    })
+    .then(({ error: logError }) => {
+      if (logError) console.error('Failed to log signup attempt:', logError);
+    });
+};
 
 const SignupPage = () => {
   const { t } = useTranslation();
@@ -38,11 +53,13 @@ const SignupPage = () => {
       const { error } = await signUp(email, password);
       if (error) {
         setError(error.message);
+        logFailedSignup(email, error);
       } else {
         setSuccess(true);
       }
     } catch (err) {
       setError('An unexpected error occurred');
+      logFailedSignup(email, { code: 'unexpected', message: err.message || 'Unexpected error' });
     } finally {
       setLoading(false);
     }
