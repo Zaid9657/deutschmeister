@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, LogOut, Globe, Home, LayoutDashboard, Crown, Sparkles, Mic, ClipboardCheck, BookOpen, PlayCircle } from 'lucide-react';
+import { Menu, X, User, LogOut, Globe, LayoutDashboard, Crown, Sparkles, Mic, ClipboardCheck, BookOpen, PlayCircle, ChevronDown } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 
@@ -12,6 +12,8 @@ const Navbar = () => {
   const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription } = useSubscription();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef(null);
 
   const toggleLanguage = () => {
     const newLang = i18n.language === 'en' ? 'de' : 'en';
@@ -19,15 +21,31 @@ const Navbar = () => {
   };
 
   const handleSignOut = async () => {
+    setUserMenuOpen(false);
     await signOut();
     navigate('/');
     setIsOpen(false);
   };
 
+  // Close user menu on outside click
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
   const isGerman = i18n.language === 'de';
   const inTrial = user ? isInFreeTrial() : false;
   const isSubscribed = user ? hasActiveSubscription() : false;
   const trialDays = user ? getTrialDaysRemaining() : 0;
+
+  const NavSeparator = () => (
+    <div className="w-px h-5 bg-slate-200" />
+  );
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
@@ -44,72 +62,49 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6">
-            <Link
-              to="/"
-              className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors"
-            >
-              <Home size={18} />
-              {t('nav.home')}
-            </Link>
-            <Link
-              to="/level-test"
-              className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors"
-            >
-              <ClipboardCheck size={18} />
-              {isGerman ? 'Einstufungstest' : 'Level Test'}
-            </Link>
-            <Link
-              to="/grammar"
-              className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors"
-            >
-              <BookOpen size={18} />
+          <div className="hidden lg:flex items-center gap-1">
+            {/* Content Links */}
+            <Link to="/grammar" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
               {isGerman ? 'Grammatik' : 'Grammar'}
             </Link>
-            <Link
-              to="/video-library"
-              className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors"
-            >
-              <PlayCircle size={18} />
-              {isGerman ? 'Videos' : 'Videos'}
+            <Link to="/video-library" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+              Videos
             </Link>
-            {!user && (
-              <Link
-                to="/level/a1.1"
-                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-sm font-semibold hover:bg-emerald-100 transition-colors"
-              >
-                <Sparkles size={14} />
-                A1.1 Free
+            {user && (
+              <Link to="/speaking" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+                {isGerman ? 'Sprechen' : 'Speaking'}
               </Link>
             )}
 
+            <NavSeparator />
+
+            {/* Tools */}
+            <Link to="/level-test" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+              {isGerman ? 'Einstufungstest' : 'Level Test'}
+            </Link>
             {user && (
+              <Link to="/dashboard" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+                Dashboard
+              </Link>
+            )}
+
+            {/* Free CTA for anonymous users */}
+            {!user && (
               <>
+                <NavSeparator />
                 <Link
-                  to="/dashboard"
-                  className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors"
+                  to="/level/a1.1"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-sm font-semibold hover:bg-emerald-100 transition-colors"
                 >
-                  <LayoutDashboard size={18} />
-                  {t('nav.dashboard')}
-                </Link>
-                <Link
-                  to="/speaking"
-                  className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors"
-                >
-                  <Mic size={18} />
-                  {isGerman ? 'Sprechen' : 'Speaking'}
-                </Link>
-                <Link
-                  to="/profile"
-                  className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors"
-                >
-                  <User size={18} />
-                  {t('nav.profile')}
+                  <Sparkles size={14} />
+                  A1.1 Free
                 </Link>
               </>
             )}
 
-            {/* Subscription Status Badge */}
+            <NavSeparator />
+
+            {/* Subscription Status */}
             {user && isSubscribed && (
               <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-semibold">
                 <Crown size={12} />
@@ -119,11 +114,11 @@ const Navbar = () => {
             {user && inTrial && !isSubscribed && (
               <Link
                 to="/pricing"
-                className="relative flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-100 to-orange-100 text-amber-700 text-sm font-bold hover:from-amber-200 hover:to-orange-200 transition-all shadow-sm hover:shadow-md border border-amber-200"
+                className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-100 to-orange-100 text-amber-700 text-xs font-bold hover:from-amber-200 hover:to-orange-200 transition-all border border-amber-200"
               >
-                <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-amber-400 animate-ping opacity-75" />
-                <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-amber-400" />
-                <Sparkles size={14} />
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping opacity-75" />
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-400" />
+                <Sparkles size={12} />
                 {trialDays}d {isGerman ? 'Test' : 'trial'}
               </Link>
             )}
@@ -133,39 +128,72 @@ const Navbar = () => {
                 className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-semibold hover:from-amber-600 hover:to-orange-600 transition-all"
               >
                 <Crown size={12} />
-                {isGerman ? 'Abonnieren' : 'Subscribe'}
+                {isGerman ? 'Upgrade' : 'Upgrade'}
               </Link>
             )}
 
-            {/* Language Toggle */}
+            {/* Language Toggle — icon only */}
             <button
               onClick={toggleLanguage}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors text-slate-700"
+              className="flex items-center justify-center w-9 h-9 rounded-lg bg-slate-100 hover:bg-slate-200 transition-colors text-slate-600"
+              title={i18n.language === 'en' ? 'Deutsch' : 'English'}
             >
               <Globe size={18} />
-              <span className="uppercase font-medium">{i18n.language}</span>
             </button>
 
-            {/* Auth Buttons */}
+            {/* User Menu / Auth */}
             {user ? (
-              <button
-                onClick={handleSignOut}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800 text-white hover:bg-slate-700 transition-colors"
-              >
-                <LogOut size={18} />
-                {t('nav.logout')}
-              </button>
+              <div className="relative" ref={userMenuRef}>
+                <button
+                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors text-slate-600"
+                >
+                  <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center">
+                    <User size={14} className="text-slate-600" />
+                  </div>
+                  <ChevronDown size={14} className={`transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                <AnimatePresence>
+                  {userMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 4, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 4, scale: 0.95 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 mt-1 w-48 bg-white rounded-xl border border-slate-200 shadow-lg py-1 z-50"
+                    >
+                      <Link
+                        to="/profile"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                      >
+                        <User size={16} />
+                        {t('nav.profile')}
+                      </Link>
+                      <div className="border-t border-slate-100 my-1" />
+                      <button
+                        onClick={handleSignOut}
+                        className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                      >
+                        <LogOut size={16} />
+                        {t('nav.logout')}
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             ) : (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <Link
                   to="/login"
-                  className="px-4 py-2 text-slate-700 hover:text-slate-900 transition-colors"
+                  className="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
                 >
                   {t('nav.login')}
                 </Link>
                 <Link
                   to="/signup"
-                  className="px-4 py-2 rounded-lg bg-gradient-to-r from-amber-500 to-rose-500 text-white hover:from-amber-600 hover:to-rose-600 transition-all"
+                  className="px-4 py-2 rounded-lg bg-gradient-to-r from-amber-500 to-rose-500 text-white text-sm font-semibold hover:from-amber-600 hover:to-rose-600 transition-all"
                 >
                   {t('nav.signup')}
                 </Link>
@@ -176,7 +204,7 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors"
+            className="lg:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors"
             aria-label={isOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isOpen}
           >
@@ -192,141 +220,153 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-b border-slate-200"
+            className="lg:hidden bg-white border-b border-slate-200"
           >
-            <div className="px-4 py-4 space-y-3">
-              <Link
-                to="/"
-                onClick={() => setIsOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
-              >
-                <Home size={20} />
-                {t('nav.home')}
-              </Link>
-              <Link
-                to="/level-test"
-                onClick={() => setIsOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
-              >
-                <ClipboardCheck size={20} />
-                {isGerman ? 'Einstufungstest' : 'Level Test'}
-              </Link>
+            <div className="px-4 py-4 space-y-1">
+              {/* Content Section */}
+              <p className="px-4 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                {isGerman ? 'Lernen' : 'Learn'}
+              </p>
               <Link
                 to="/grammar"
                 onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
               >
-                <BookOpen size={20} />
-                {isGerman ? 'Grammatik' : 'Grammar'}
+                <BookOpen size={20} className="text-slate-500" />
+                <span className="text-slate-700 font-medium">{isGerman ? 'Grammatik' : 'Grammar'}</span>
               </Link>
               <Link
                 to="/video-library"
                 onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
               >
-                <PlayCircle size={20} />
-                {isGerman ? 'Videos' : 'Videos'}
+                <PlayCircle size={20} className="text-slate-500" />
+                <span className="text-slate-700 font-medium">Videos</span>
               </Link>
-              {!user && (
+              {user && (
                 <Link
-                  to="/level/a1.1"
+                  to="/speaking"
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-50 text-emerald-700 font-semibold"
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
                 >
-                  <Sparkles size={20} />
-                  A1.1 Free
+                  <Mic size={20} className="text-slate-500" />
+                  <span className="text-slate-700 font-medium">{isGerman ? 'Sprechen' : 'Speaking'}</span>
                 </Link>
               )}
 
-              {user && (
-                <>
+              {/* Tools Section */}
+              <div className="border-t border-slate-100 mt-2 pt-2">
+                <p className="px-4 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                  {isGerman ? 'Werkzeuge' : 'Tools'}
+                </p>
+                <Link
+                  to="/level-test"
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
+                >
+                  <ClipboardCheck size={20} className="text-slate-500" />
+                  <span className="text-slate-700 font-medium">{isGerman ? 'Einstufungstest' : 'Level Test'}</span>
+                </Link>
+                {user && (
                   <Link
                     to="/dashboard"
                     onClick={() => setIsOpen(false)}
                     className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
                   >
-                    <LayoutDashboard size={20} />
-                    {t('nav.dashboard')}
+                    <LayoutDashboard size={20} className="text-slate-500" />
+                    <span className="text-slate-700 font-medium">Dashboard</span>
                   </Link>
+                )}
+              </div>
+
+              {/* Free CTA for anonymous users */}
+              {!user && (
+                <div className="border-t border-slate-100 mt-2 pt-2">
                   <Link
-                    to="/speaking"
+                    to="/level/a1.1"
                     onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-50 text-emerald-700 font-semibold"
                   >
-                    <Mic size={20} />
-                    {isGerman ? 'Sprechen' : 'Speaking'}
+                    <Sparkles size={20} />
+                    A1.1 Free
                   </Link>
-                  <Link
-                    to="/profile"
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
-                  >
-                    <User size={20} />
-                    {t('nav.profile')}
-                  </Link>
-                  {/* Subscription status in mobile */}
-                  {isSubscribed && (
-                    <div className="flex items-center gap-2 px-4 py-2">
-                      <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-semibold">
-                        <Crown size={12} />
-                        Pro
-                      </span>
-                    </div>
-                  )}
-                  {!isSubscribed && (
-                    <Link
-                      to="/pricing"
-                      onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 text-amber-700 hover:from-amber-100 hover:to-orange-100 transition-all border border-amber-200"
-                    >
-                      <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 flex items-center justify-center flex-shrink-0">
-                        <Crown size={16} className="text-white" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-sm">
-                          {inTrial
-                            ? `${trialDays} ${isGerman ? 'Tage Test verbleibend' : `day${trialDays !== 1 ? 's' : ''} trial left`}`
-                            : isGerman ? 'Abonnieren' : 'Subscribe'}
-                        </p>
-                        {inTrial && (
-                          <p className="text-xs text-amber-500">{isGerman ? 'Jetzt upgraden' : 'Upgrade now'}</p>
-                        )}
-                      </div>
-                    </Link>
-                  )}
-                </>
+                </div>
               )}
 
-              <button
-                onClick={() => { toggleLanguage(); setIsOpen(false); }}
-                className="flex items-center gap-3 w-full px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
-              >
-                <Globe size={20} />
-                <span>{i18n.language === 'en' ? 'Deutsch' : 'English'}</span>
-              </button>
-
-              <div className="pt-3 border-t border-slate-200">
-                {user ? (
-                  <button
-                    onClick={handleSignOut}
-                    className="flex items-center gap-3 w-full px-4 py-3 rounded-lg bg-slate-800 text-white"
+              {/* Subscription status for logged-in users */}
+              {user && !isSubscribed && (
+                <div className="border-t border-slate-100 mt-2 pt-2">
+                  <Link
+                    to="/pricing"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 text-amber-700 border border-amber-200"
                   >
-                    <LogOut size={20} />
-                    {t('nav.logout')}
-                  </button>
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 flex items-center justify-center flex-shrink-0">
+                      <Crown size={16} className="text-white" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-sm">
+                        {inTrial
+                          ? `${trialDays} ${isGerman ? 'Tage Test verbleibend' : `day${trialDays !== 1 ? 's' : ''} trial left`}`
+                          : isGerman ? 'Abonnieren' : 'Subscribe'}
+                      </p>
+                      {inTrial && (
+                        <p className="text-xs text-amber-500">{isGerman ? 'Jetzt upgraden' : 'Upgrade now'}</p>
+                      )}
+                    </div>
+                  </Link>
+                </div>
+              )}
+              {user && isSubscribed && (
+                <div className="flex items-center gap-2 px-4 py-2 mt-2 border-t border-slate-100 pt-4">
+                  <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-semibold">
+                    <Crown size={12} />
+                    Pro
+                  </span>
+                </div>
+              )}
+
+              {/* Bottom: Language + Auth */}
+              <div className="border-t border-slate-100 mt-2 pt-2 space-y-1">
+                <button
+                  onClick={() => { toggleLanguage(); setIsOpen(false); }}
+                  className="flex items-center gap-3 w-full px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
+                >
+                  <Globe size={20} className="text-slate-500" />
+                  <span className="text-slate-700 font-medium">{i18n.language === 'en' ? 'Deutsch' : 'English'}</span>
+                </button>
+
+                {user ? (
+                  <>
+                    <Link
+                      to="/profile"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
+                    >
+                      <User size={20} className="text-slate-500" />
+                      <span className="text-slate-700 font-medium">{t('nav.profile')}</span>
+                    </Link>
+                    <button
+                      onClick={handleSignOut}
+                      className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
+                    >
+                      <LogOut size={20} />
+                      <span className="font-medium">{t('nav.logout')}</span>
+                    </button>
+                  </>
                 ) : (
-                  <div className="space-y-2">
+                  <div className="space-y-2 pt-2">
                     <Link
                       to="/login"
                       onClick={() => setIsOpen(false)}
-                      className="block w-full px-4 py-3 text-center rounded-lg border border-slate-300 hover:bg-slate-50 transition-colors"
+                      className="block w-full px-4 py-3 text-center rounded-lg border border-slate-300 hover:bg-slate-50 transition-colors text-slate-700 font-medium"
                     >
                       {t('nav.login')}
                     </Link>
                     <Link
                       to="/signup"
                       onClick={() => setIsOpen(false)}
-                      className="block w-full px-4 py-3 text-center rounded-lg bg-gradient-to-r from-amber-500 to-rose-500 text-white"
+                      className="block w-full px-4 py-3 text-center rounded-lg bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold"
                     >
                       {t('nav.signup')}
                     </Link>
