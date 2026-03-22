@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, PlayCircle, FileText, Download, Image, X, Loader2 } from 'lucide-react';
+import { ArrowLeft, PlayCircle, FileText, Download, Image, X, Loader2, ZoomIn, ZoomOut, RotateCcw, Maximize2 } from 'lucide-react';
 import { supabase } from '../utils/supabase';
 import SEO from '../components/SEO';
 
@@ -18,10 +18,35 @@ const VideoDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [mindmapOpen, setMindmapOpen] = useState(false);
+  const [slidesFullscreen, setSlidesFullscreen] = useState(false);
+  const [zoom, setZoom] = useState(1);
 
   useEffect(() => {
     fetchVideo();
   }, [id]);
+
+  // Lock body scroll when lightbox is open
+  useEffect(() => {
+    if (mindmapOpen || slidesFullscreen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [mindmapOpen, slidesFullscreen]);
+
+  // Escape key to close lightboxes
+  const handleKeyDown = useCallback((e) => {
+    if (e.key === 'Escape') {
+      setMindmapOpen(false);
+      setSlidesFullscreen(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
 
   const fetchVideo = async () => {
     const { data, error: fetchError } = await supabase
@@ -48,6 +73,15 @@ const VideoDetailPage = () => {
     if (l.startsWith('B2')) return 'bg-purple-100 text-purple-700';
     return 'bg-slate-100 text-slate-600';
   };
+
+  const openMindmap = () => {
+    setZoom(1);
+    setMindmapOpen(true);
+  };
+
+  const zoomIn = () => setZoom(prev => Math.min(prev + 0.25, 3));
+  const zoomOut = () => setZoom(prev => Math.max(prev - 0.25, 0.5));
+  const zoomReset = () => setZoom(1);
 
   if (loading) {
     return (
@@ -140,125 +174,227 @@ const VideoDetailPage = () => {
           </motion.div>
         )}
 
-        {/* Resources Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Mind Map */}
-          {mindmapUrl && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm"
-            >
-              <div className="p-4 border-b border-slate-100">
-                <div className="flex items-center gap-2">
-                  <Image size={18} className="text-rose-500" />
-                  <h3 className="font-semibold text-slate-800">
-                    {isGerman ? 'Mindmap' : 'Mind Map'}
-                  </h3>
-                </div>
+        {/* Mind Map — Full Width */}
+        {mindmapUrl && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm mb-8"
+          >
+            <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Image size={18} className="text-rose-500" />
+                <h3 className="font-semibold text-slate-800">
+                  {isGerman ? 'Mindmap' : 'Mind Map'}
+                </h3>
               </div>
-              <div
-                className="cursor-pointer hover:opacity-90 transition-opacity"
-                onClick={() => setMindmapOpen(true)}
+              <button
+                onClick={openMindmap}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 text-slate-600 text-sm font-medium hover:bg-slate-100 transition-colors"
               >
-                <img
-                  src={mindmapUrl}
-                  alt={`Mind map for ${video.title}`}
-                  className="w-full h-auto"
+                <Maximize2 size={14} />
+                {isGerman ? 'Vergrößern' : 'Fullscreen'}
+              </button>
+            </div>
+            <div
+              className="cursor-pointer hover:opacity-95 transition-opacity"
+              onClick={openMindmap}
+            >
+              <img
+                src={mindmapUrl}
+                alt={`Mind map for ${video.title}`}
+                className="w-full h-auto"
+              />
+            </div>
+            <div className="p-3 border-t border-slate-100">
+              <a
+                href={mindmapUrl}
+                download
+                className="flex items-center justify-center gap-2 w-full py-2 px-4 rounded-lg bg-slate-50 text-slate-600 text-sm font-medium hover:bg-slate-100 transition-colors"
+              >
+                <Download size={16} />
+                {isGerman ? 'Herunterladen' : 'Download'}
+              </a>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Slides — Full Width, Taller */}
+        {slidesUrl && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm mb-8"
+          >
+            <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <FileText size={18} className="text-rose-500" />
+                <h3 className="font-semibold text-slate-800">
+                  {isGerman ? 'Folien' : 'Slides'}
+                </h3>
+              </div>
+              <button
+                onClick={() => setSlidesFullscreen(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 text-slate-600 text-sm font-medium hover:bg-slate-100 transition-colors"
+              >
+                <Maximize2 size={14} />
+                {isGerman ? 'Vollbild' : 'Fullscreen'}
+              </button>
+            </div>
+            <div className="p-4">
+              <div className="bg-slate-50 rounded-lg border border-slate-200 overflow-hidden" style={{ height: '600px' }}>
+                <iframe
+                  src={`${slidesUrl}#toolbar=1&navpanes=0`}
+                  className="w-full h-full"
+                  title="Slides"
                 />
               </div>
-              <div className="p-3 border-t border-slate-100">
-                <a
-                  href={mindmapUrl}
-                  download
-                  className="flex items-center justify-center gap-2 w-full py-2 px-4 rounded-lg bg-slate-50 text-slate-600 text-sm font-medium hover:bg-slate-100 transition-colors"
-                >
-                  <Download size={16} />
-                  {isGerman ? 'Herunterladen' : 'Download'}
-                </a>
-              </div>
-            </motion.div>
-          )}
-
-          {/* Slides */}
-          {slidesUrl && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm"
-            >
-              <div className="p-4 border-b border-slate-100">
-                <div className="flex items-center gap-2">
-                  <FileText size={18} className="text-rose-500" />
-                  <h3 className="font-semibold text-slate-800">
-                    {isGerman ? 'Folien' : 'Slides'}
-                  </h3>
-                </div>
-              </div>
-              <div className="p-4">
-                <div className="aspect-[4/3] bg-slate-50 rounded-lg border border-slate-200 flex items-center justify-center mb-3">
-                  <iframe
-                    src={`${slidesUrl}#toolbar=0`}
-                    className="w-full h-full rounded-lg"
-                    title="Slides"
-                  />
-                </div>
-              </div>
-              <div className="p-3 border-t border-slate-100 flex gap-2">
-                <a
-                  href={slidesUrl}
-                  download
-                  className="flex items-center justify-center gap-2 flex-1 py-2 px-4 rounded-lg bg-slate-50 text-slate-600 text-sm font-medium hover:bg-slate-100 transition-colors"
-                >
-                  <Download size={16} />
-                  {isGerman ? 'PDF herunterladen' : 'Download PDF'}
-                </a>
-                <a
-                  href={slidesUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-rose-50 text-rose-600 text-sm font-medium hover:bg-rose-100 transition-colors"
-                >
-                  <FileText size={16} />
-                  {isGerman ? 'Öffnen' : 'Open'}
-                </a>
-              </div>
-            </motion.div>
-          )}
-        </div>
+            </div>
+            <div className="p-3 border-t border-slate-100 flex gap-2">
+              <a
+                href={slidesUrl}
+                download
+                className="flex items-center justify-center gap-2 flex-1 py-2 px-4 rounded-lg bg-slate-50 text-slate-600 text-sm font-medium hover:bg-slate-100 transition-colors"
+              >
+                <Download size={16} />
+                {isGerman ? 'PDF herunterladen' : 'Download PDF'}
+              </a>
+              <a
+                href={slidesUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-rose-50 text-rose-600 text-sm font-medium hover:bg-rose-100 transition-colors"
+              >
+                <FileText size={16} />
+                {isGerman ? 'Öffnen' : 'Open'}
+              </a>
+            </div>
+          </motion.div>
+        )}
       </div>
 
-      {/* Lightbox for Mind Map */}
+      {/* Mind Map Lightbox */}
       <AnimatePresence>
         {mindmapOpen && mindmapUrl && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 bg-black/90 flex flex-col"
             onClick={() => setMindmapOpen(false)}
           >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="relative max-w-5xl w-full max-h-[90vh]"
+            {/* Toolbar */}
+            <div
+              className="flex items-center justify-between px-4 py-3 bg-black/50"
               onClick={(e) => e.stopPropagation()}
             >
-              <button
-                onClick={() => setMindmapOpen(false)}
-                className="absolute -top-12 right-0 text-white/80 hover:text-white transition-colors"
-              >
-                <X size={28} />
-              </button>
-              <img
+              <span className="text-white/70 text-sm font-medium">
+                {isGerman ? 'Mindmap' : 'Mind Map'} — {video.title}
+              </span>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={zoomOut}
+                  className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+                  title="Zoom out"
+                >
+                  <ZoomOut size={20} />
+                </button>
+                <span className="text-white/60 text-sm w-14 text-center">
+                  {Math.round(zoom * 100)}%
+                </span>
+                <button
+                  onClick={zoomIn}
+                  className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+                  title="Zoom in"
+                >
+                  <ZoomIn size={20} />
+                </button>
+                <button
+                  onClick={zoomReset}
+                  className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+                  title="Reset zoom"
+                >
+                  <RotateCcw size={18} />
+                </button>
+                <div className="w-px h-6 bg-white/20 mx-1" />
+                <button
+                  onClick={() => setMindmapOpen(false)}
+                  className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+                  title="Close"
+                >
+                  <X size={22} />
+                </button>
+              </div>
+            </div>
+
+            {/* Image container with zoom */}
+            <div
+              className="flex-1 overflow-auto flex items-center justify-center"
+              onClick={(e) => e.stopPropagation()}
+              style={{ touchAction: 'pinch-zoom' }}
+            >
+              <motion.img
                 src={mindmapUrl}
                 alt={`Mind map for ${video.title}`}
-                className="w-full h-auto max-h-[85vh] object-contain rounded-lg"
+                className="max-w-none select-none"
+                style={{
+                  transform: `scale(${zoom})`,
+                  transformOrigin: 'center center',
+                  transition: 'transform 0.2s ease',
+                }}
+                draggable={false}
               />
-            </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Slides Fullscreen Lightbox */}
+      <AnimatePresence>
+        {slidesFullscreen && slidesUrl && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 bg-black/95 flex flex-col"
+          >
+            {/* Toolbar */}
+            <div className="flex items-center justify-between px-4 py-3 bg-black/50">
+              <span className="text-white/70 text-sm font-medium">
+                {isGerman ? 'Folien' : 'Slides'} — {video.title}
+              </span>
+              <div className="flex items-center gap-1">
+                <a
+                  href={slidesUrl}
+                  download
+                  className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+                  title="Download"
+                >
+                  <Download size={18} />
+                </a>
+                <div className="w-px h-6 bg-white/20 mx-1" />
+                <button
+                  onClick={() => setSlidesFullscreen(false)}
+                  className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+                  title="Close"
+                >
+                  <X size={22} />
+                </button>
+              </div>
+            </div>
+
+            {/* Full viewport PDF */}
+            <div className="flex-1">
+              <iframe
+                src={`${slidesUrl}#toolbar=1&navpanes=1&scrollbar=1`}
+                className="w-full h-full"
+                title="Slides fullscreen"
+              />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
