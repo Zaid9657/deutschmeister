@@ -37,6 +37,8 @@ const ListeningHome = lazy(() => import('./pages/Listening/ListeningHome'));
 const LevelExercises = lazy(() => import('./pages/Listening/LevelExercises'));
 const SpeakingPage = lazy(() => import('./pages/SpeakingPage'));
 const LevelTest = lazy(() => import('./pages/LevelTest'));
+const VideoLibraryPage = lazy(() => import('./pages/VideoLibraryPage'));
+const VideoDetailPage = lazy(() => import('./pages/VideoDetailPage'));
 
 function PageLoader() {
   return (
@@ -76,6 +78,8 @@ function App() {
                       }
                     />
                     <Route path="/pricing" element={<PricingPage />} />
+                    <Route path="/video-library" element={<VideoLibraryPage />} />
+                    <Route path="/video-library/:id" element={<VideoDetailPage />} />
                     <Route
                       path="/level-test"
                       element={

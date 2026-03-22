@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, LogOut, Globe, Home, LayoutDashboard, Crown, Sparkles, Mic, ClipboardCheck, BookOpen } from 'lucide-react';
+import { Menu, X, User, LogOut, Globe, Home, LayoutDashboard, Crown, Sparkles, Mic, ClipboardCheck, BookOpen, PlayCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 
@@ -65,6 +65,13 @@ const Navbar = () => {
             >
               <BookOpen size={18} />
               {isGerman ? 'Grammatik' : 'Grammar'}
+            </Link>
+            <Link
+              to="/video-library"
+              className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors"
+            >
+              <PlayCircle size={18} />
+              {isGerman ? 'Videos' : 'Videos'}
             </Link>
             {!user && (
               <Link
@@ -211,6 +218,14 @@ const Navbar = () => {
               >
                 <BookOpen size={20} />
                 {isGerman ? 'Grammatik' : 'Grammar'}
+              </Link>
+              <Link
+                to="/video-library"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
+              >
+                <PlayCircle size={20} />
+                {isGerman ? 'Videos' : 'Videos'}
               </Link>
               {!user && (
                 <Link
