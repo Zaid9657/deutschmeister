@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Mic, PhoneOff, Loader2, AlertCircle, Volume2, Phone, Sparkles } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -53,6 +53,7 @@ const LevelTestSpeaking = ({ onComplete, onSkip }) => {
   const localStreamRef = useRef(null);
   const timerRef = useRef(null);
   const messagesRef = useRef([]);
+  const transcriptRef = useRef('');
 
   // Keep messagesRef in sync
   useEffect(() => { messagesRef.current = messages; }, [messages]);
@@ -145,7 +146,15 @@ const LevelTestSpeaking = ({ onComplete, onSkip }) => {
     }
   };
 
-  const handleDataChannelMessage = (event) => {
+  const saveMessage = useCallback((role, content) => {
+    if (!content?.trim()) return;
+    const msg = { role, content: content.trim() };
+    setMessages(prev => [...prev, msg]);
+    // Also update ref immediately for reliable access in endSession
+    messagesRef.current = [...messagesRef.current, msg];
+  }, []);
+
+  const handleDataChannelMessage = useCallback((event) => {
     try {
       const data = JSON.parse(event.data);
 
@@ -156,28 +165,25 @@ const LevelTestSpeaking = ({ onComplete, onSkip }) => {
         case 'input_audio_buffer.speech_stopped':
           setIsUserSpeaking(false);
           break;
+        case 'response.audio_transcript.delta':
+          if (data.delta) transcriptRef.current += data.delta;
+          break;
+        case 'response.audio_transcript.done':
+          if (transcriptRef.current.trim()) saveMessage('assistant', transcriptRef.current);
+          transcriptRef.current = '';
+          break;
         case 'response.audio.started':
           setIsAiSpeaking(true);
           break;
-        case 'response.audio.done':
         case 'response.done':
           setIsAiSpeaking(false);
           break;
         case 'conversation.item.input_audio_transcription.completed':
-          if (data.transcript) {
-            setMessages(prev => [...prev, { role: 'user', content: data.transcript }]);
-          }
-          break;
-        case 'response.audio_transcript.done':
-          if (data.transcript) {
-            setMessages(prev => [...prev, { role: 'assistant', content: data.transcript }]);
-          }
+          if (data.transcript?.trim()) saveMessage('user', data.transcript);
           break;
       }
-    } catch (err) {
-      console.error('Data channel error:', err);
-    }
-  };
+    } catch { /* ignore non-JSON */ }
+  }, [saveMessage]);
 
   const startTimer = () => {
     timerRef.current = setInterval(() => {
@@ -203,8 +209,30 @@ const LevelTestSpeaking = ({ onComplete, onSkip }) => {
   };
 
   const endSession = async () => {
-    cleanup();
-    const currentMessages = messagesRef.current;
+    // Stop timer first
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = null;
+
+    // Small delay to let final transcript messages arrive before closing
+    await new Promise(r => setTimeout(r, 500));
+
+    // Save any pending assistant transcript
+    if (transcriptRef.current.trim()) {
+      saveMessage('assistant', transcriptRef.current);
+      transcriptRef.current = '';
+    }
+
+    // Read messages before cleanup closes the connection
+    const currentMessages = [...messagesRef.current];
+
+    // Now cleanup connections
+    if (localStreamRef.current) {
+      localStreamRef.current.getTracks().forEach(track => track.stop());
+      localStreamRef.current = null;
+    }
+    if (dataChannelRef.current) { dataChannelRef.current.close(); dataChannelRef.current = null; }
+    if (peerConnectionRef.current) { peerConnectionRef.current.close(); peerConnectionRef.current = null; }
+    if (audioElementRef.current) { audioElementRef.current.srcObject = null; }
 
     if (currentMessages.length > 0) {
       setStage('evaluating');

@@ -90,7 +90,7 @@ const Navbar = () => {
                   className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors"
                 >
                   <Mic size={18} />
-                  Sprechen
+                  {isGerman ? 'Sprechen' : 'Speaking'}
                 </Link>
                 <Link
                   to="/profile"
@@ -239,7 +239,7 @@ const Navbar = () => {
                     className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
                   >
                     <Mic size={20} />
-                    Sprechen
+                    {isGerman ? 'Sprechen' : 'Speaking'}
                   </Link>
                   <Link
                     to="/profile"
