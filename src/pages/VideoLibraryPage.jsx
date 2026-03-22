@@ -139,22 +139,19 @@ const VideoLibraryPage = () => {
                   to={`/video-library/${video.id}`}
                   className="group block bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
                 >
-                  {/* Thumbnail / Preview */}
-                  <div className="relative aspect-video bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
-                    {video.mindmap_url ? (
-                      <img
-                        src={`${STORAGE_BASE}${video.mindmap_url}`}
-                        alt={video.title}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <PlayCircle size={48} className="text-slate-300 group-hover:text-rose-400 transition-colors" />
-                    )}
+                  {/* Thumbnail */}
+                  <div className="relative aspect-video bg-gradient-to-br from-rose-50 via-slate-100 to-purple-50 flex items-center justify-center">
+                    <PlayCircle size={48} className="text-slate-300 group-hover:text-rose-400 transition-colors" />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
                       <div className="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
                         <PlayCircle size={28} className="text-rose-500 ml-0.5" />
                       </div>
                     </div>
+                    {video.level && (
+                      <span className={`absolute top-3 left-3 px-2 py-0.5 rounded-full text-xs font-semibold ${getLevelColor(video.level)}`}>
+                        {video.level}
+                      </span>
+                    )}
                   </div>
 
                   {/* Content */}
