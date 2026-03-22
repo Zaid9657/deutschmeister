@@ -200,21 +200,11 @@ const VideoLibraryPage = () => {
                     className="group block bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1"
                   >
                     {/* Thumbnail */}
-                    <div className={`relative aspect-video bg-gradient-to-br ${getGradient(index)} flex items-center justify-center overflow-hidden`}>
-                      {/* Title overlay */}
-                      <div className="absolute inset-0 flex items-center justify-center p-6">
-                        <p className="text-white/30 text-lg font-bold text-center line-clamp-2 select-none">
-                          {video.title}
-                        </p>
-                      </div>
-
+                    <div className={`relative aspect-video bg-gradient-to-br ${getGradient(index)} flex items-center justify-center`}>
                       {/* Play button */}
-                      <div className="relative z-10 w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/30 group-hover:scale-110 transition-all duration-300">
+                      <div className="w-16 h-16 rounded-full bg-white/50 flex items-center justify-center group-hover:bg-white/80 group-hover:scale-110 transition-all duration-300">
                         <Play size={28} className="text-white ml-1" fill="white" />
                       </div>
-
-                      {/* Bottom gradient */}
-                      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/40 to-transparent" />
 
                       {/* Level badge — top right */}
                       {video.level && levelColors && (
