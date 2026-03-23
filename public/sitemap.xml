@@ -19,6 +19,11 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://deutsch-meister.de/intro</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://deutsch-meister.de/video-library</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>

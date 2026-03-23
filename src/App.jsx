@@ -10,6 +10,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import SubscriptionGuard from './components/SubscriptionGuard';
 import LevelSubscriptionGuard from './components/LevelSubscriptionGuard';
 import TrialBanner from './components/TrialBanner';
+import FloatingIntroButton from './components/FloatingIntroButton';
 import { Loader2 } from 'lucide-react';
 
 // Lazy-loaded page components for code splitting
@@ -39,6 +40,7 @@ const SpeakingPage = lazy(() => import('./pages/SpeakingPage'));
 const LevelTest = lazy(() => import('./pages/LevelTest'));
 const VideoLibraryPage = lazy(() => import('./pages/VideoLibraryPage'));
 const VideoDetailPage = lazy(() => import('./pages/VideoDetailPage'));
+const IntroPage = lazy(() => import('./pages/IntroPage'));
 
 function PageLoader() {
   return (
@@ -59,10 +61,12 @@ function App() {
               <div className="min-h-screen bg-slate-50">
                 <Navbar />
                 <TrialBanner />
+                <FloatingIntroButton />
                 <Suspense fallback={<PageLoader />}>
                   <Routes>
                     {/* Public routes */}
                     <Route path="/" element={<LandingPage />} />
+                    <Route path="/intro" element={<IntroPage />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/signup" element={<SignupPage />} />
                     <Route path="/reset-password" element={<ResetPasswordPage />} />

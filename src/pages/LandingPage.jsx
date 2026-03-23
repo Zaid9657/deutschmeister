@@ -343,16 +343,38 @@ const LandingPage = () => {
               DeutschMeister
             </span>
           </div>
-          <a
-            href="https://www.youtube.com/@deutschmeister_de"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-slate-400 hover:text-red-400 transition-colors mb-4"
-            aria-label="DeutschMeister YouTube channel"
-          >
-            <Youtube className="w-5 h-5" />
-            <span className="text-sm">YouTube</span>
-          </a>
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <Link
+              to="/intro"
+              className="text-slate-400 hover:text-white transition-colors text-sm"
+            >
+              About
+            </Link>
+            <span className="text-slate-600">·</span>
+            <a
+              href="https://www.youtube.com/@deutschmeister_de"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-slate-400 hover:text-red-400 transition-colors text-sm"
+            >
+              <Youtube className="w-4 h-4" />
+              YouTube
+            </a>
+            <span className="text-slate-600">·</span>
+            <Link
+              to="/grammar"
+              className="text-slate-400 hover:text-white transition-colors text-sm"
+            >
+              Grammar
+            </Link>
+            <span className="text-slate-600">·</span>
+            <Link
+              to="/video-library"
+              className="text-slate-400 hover:text-white transition-colors text-sm"
+            >
+              Videos
+            </Link>
+          </div>
           <p className="text-sm">
             &copy; {new Date().getFullYear()} DeutschMeister. All rights reserved.
           </p>
