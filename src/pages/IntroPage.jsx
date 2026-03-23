@@ -49,7 +49,7 @@ const IntroPage = () => {
               poster=""
             >
               <source
-                src="https://omqyueddktqeyrrqvnyq.supabase.co/storage/v1/object/public/video-library/intro/intro-ar.mp4"
+                src="https://omqyueddktqeyrrqvnyq.supabase.co/storage/v1/object/public/video-library/intro/DeutschMeister.mp4"
                 type="video/mp4"
               />
               Your browser does not support video.
