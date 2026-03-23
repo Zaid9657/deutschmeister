@@ -1,9 +1,39 @@
+import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, BookOpen, Play } from 'lucide-react';
+import { ArrowRight, BookOpen } from 'lucide-react';
 import SEO from '../components/SEO';
 
+const STORAGE_KEY = 'dm_intro_lang';
+
+const VIDEOS = {
+  en: 'https://omqyueddktqeyrrqvnyq.supabase.co/storage/v1/object/public/video-library/intro/Master_German.mp4',
+  ar: 'https://omqyueddktqeyrrqvnyq.supabase.co/storage/v1/object/public/video-library/intro/DeutschMeister.mp4',
+};
+
 const IntroPage = () => {
+  const [lang, setLang] = useState(() => {
+    try { return localStorage.getItem(STORAGE_KEY) || 'en'; }
+    catch { return 'en'; }
+  });
+  const videoRef = useRef(null);
+
+  const switchLang = (newLang) => {
+    if (newLang === lang) return;
+    setLang(newLang);
+    try { localStorage.setItem(STORAGE_KEY, newLang); } catch {}
+  };
+
+  // Swap video source and reload when language changes
+  useEffect(() => {
+    if (videoRef.current) {
+      const wasPlaying = !videoRef.current.paused;
+      videoRef.current.src = VIDEOS[lang];
+      videoRef.current.load();
+      if (wasPlaying) videoRef.current.play().catch(() => {});
+    }
+  }, [lang]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-20 pb-16">
       <SEO
@@ -34,44 +64,61 @@ const IntroPage = () => {
           </p>
         </motion.div>
 
+        {/* Language Toggle */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          className="flex justify-center gap-2 mb-6"
+        >
+          <button
+            onClick={() => switchLang('en')}
+            className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
+              lang === 'en'
+                ? 'bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-md'
+                : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-300 hover:shadow-sm'
+            }`}
+          >
+            🇬🇧 English
+          </button>
+          <button
+            onClick={() => switchLang('ar')}
+            className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
+              lang === 'ar'
+                ? 'bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-md'
+                : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-300 hover:shadow-sm'
+            }`}
+          >
+            🇸🇦 العربية
+          </button>
+        </motion.div>
+
         {/* Video Player */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="mb-6"
+          className="mb-10"
         >
           <div className="bg-black rounded-2xl overflow-hidden shadow-2xl">
             <video
+              ref={videoRef}
               controls
               className="w-full aspect-video"
               preload="metadata"
-              poster=""
+              key={lang}
             >
-              <source
-                src="https://omqyueddktqeyrrqvnyq.supabase.co/storage/v1/object/public/video-library/intro/DeutschMeister.mp4"
-                type="video/mp4"
-              />
+              <source src={VIDEOS[lang]} type="video/mp4" />
               Your browser does not support video.
             </video>
           </div>
         </motion.div>
 
-        {/* Language Note */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="text-center text-slate-500 text-sm mb-12"
-        >
-          🇸🇦 This video is in Arabic
-        </motion.p>
-
         {/* CTA Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
+          transition={{ delay: 0.4 }}
           className="bg-white rounded-3xl border border-slate-200 shadow-lg p-8 sm:p-10 text-center"
         >
           <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-800 mb-3">

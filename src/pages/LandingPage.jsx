@@ -348,7 +348,7 @@ const LandingPage = () => {
               to="/intro"
               className="text-slate-400 hover:text-white transition-colors text-sm"
             >
-              About
+              Intro Video
             </Link>
             <span className="text-slate-600">·</span>
             <a
