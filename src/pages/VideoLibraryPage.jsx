@@ -1,16 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { PlayCircle, Play, Loader2, Video } from 'lucide-react';
 import { supabase } from '../utils/supabase';
+import { generateThumbnail, getCachedThumbnail } from '../utils/videoThumbnail';
 import SEO from '../components/SEO';
 
+const STORAGE_BASE = 'https://omqyueddktqeyrrqvnyq.supabase.co/storage/v1/object/public/video-library/';
+
 const LEVEL_COLORS = {
-  A1: { bg: 'bg-emerald-500', text: 'text-white', pill: 'bg-emerald-100 text-emerald-700', pillActive: 'bg-emerald-600 text-white' },
-  A2: { bg: 'bg-sky-500', text: 'text-white', pill: 'bg-sky-100 text-sky-700', pillActive: 'bg-sky-600 text-white' },
-  B1: { bg: 'bg-amber-500', text: 'text-white', pill: 'bg-amber-100 text-amber-700', pillActive: 'bg-amber-600 text-white' },
-  B2: { bg: 'bg-purple-500', text: 'text-white', pill: 'bg-purple-100 text-purple-700', pillActive: 'bg-purple-600 text-white' },
+  A1: { bg: 'bg-emerald-500', text: 'text-white', pillActive: 'bg-emerald-600 text-white' },
+  A2: { bg: 'bg-sky-500', text: 'text-white', pillActive: 'bg-sky-600 text-white' },
+  B1: { bg: 'bg-amber-500', text: 'text-white', pillActive: 'bg-amber-600 text-white' },
+  B2: { bg: 'bg-purple-500', text: 'text-white', pillActive: 'bg-purple-600 text-white' },
 };
 
 const THUMBNAIL_GRADIENTS = [
@@ -21,6 +24,64 @@ const THUMBNAIL_GRADIENTS = [
   'from-pink-400 via-rose-500 to-red-500',
   'from-teal-400 via-cyan-500 to-blue-500',
 ];
+
+// Lazy thumbnail component — generates on intersection
+const VideoThumbnail = ({ videoId, audioUrl, index }) => {
+  const [thumbnail, setThumbnail] = useState(() => getCachedThumbnail(videoId));
+  const [loading, setLoading] = useState(false);
+  const ref = useRef(null);
+  const attempted = useRef(false);
+
+  useEffect(() => {
+    if (thumbnail || !audioUrl || attempted.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !attempted.current) {
+          attempted.current = true;
+          observer.disconnect();
+          setLoading(true);
+          const videoUrl = `${STORAGE_BASE}${audioUrl}`;
+          generateThumbnail(videoUrl, videoId).then((result) => {
+            if (result) setThumbnail(result);
+            setLoading(false);
+          });
+        }
+      },
+      { rootMargin: '200px' }
+    );
+
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [videoId, audioUrl, thumbnail]);
+
+  const gradient = THUMBNAIL_GRADIENTS[index % THUMBNAIL_GRADIENTS.length];
+
+  return (
+    <div ref={ref} className={`relative aspect-video flex items-center justify-center overflow-hidden ${!thumbnail ? `bg-gradient-to-br ${gradient}` : 'bg-black'}`}>
+      {thumbnail ? (
+        <img
+          src={thumbnail}
+          alt=""
+          className="w-full h-full object-cover"
+        />
+      ) : loading ? (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-8 h-8 border-2 border-white/30 border-t-white/80 rounded-full animate-spin" />
+        </div>
+      ) : null}
+
+      {/* Play button overlay — always visible */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${
+          thumbnail ? 'bg-black/40 group-hover:bg-black/60' : 'bg-white/40 group-hover:bg-white/70'
+        }`}>
+          <Play size={24} className="text-white ml-0.5" fill="white" />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const VideoLibraryPage = () => {
   const { i18n } = useTranslation();
@@ -49,7 +110,6 @@ const VideoLibraryPage = () => {
     setLoading(false);
   };
 
-  // Build level counts
   const levelCounts = {};
   videos.forEach(v => {
     if (v.level) {
@@ -66,10 +126,6 @@ const VideoLibraryPage = () => {
   const getLevelKey = (level) => {
     if (!level) return null;
     return level.toUpperCase().substring(0, 2);
-  };
-
-  const getGradient = (index) => {
-    return THUMBNAIL_GRADIENTS[index % THUMBNAIL_GRADIENTS.length];
   };
 
   if (loading) {
@@ -200,15 +256,16 @@ const VideoLibraryPage = () => {
                     className="group block bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1"
                   >
                     {/* Thumbnail */}
-                    <div className={`relative aspect-video bg-gradient-to-br ${getGradient(index)} flex items-center justify-center`}>
-                      {/* Play button */}
-                      <div className="w-16 h-16 rounded-full bg-white/50 flex items-center justify-center group-hover:bg-white/80 group-hover:scale-110 transition-all duration-300">
-                        <Play size={28} className="text-white ml-1" fill="white" />
-                      </div>
+                    <div className="relative">
+                      <VideoThumbnail
+                        videoId={video.id}
+                        audioUrl={video.audio_url}
+                        index={index}
+                      />
 
                       {/* Level badge — top right */}
                       {video.level && levelColors && (
-                        <span className={`absolute top-3 right-3 px-2.5 py-1 rounded-lg text-xs font-bold ${levelColors.bg} ${levelColors.text} shadow-sm`}>
+                        <span className={`absolute top-3 right-3 px-2.5 py-1 rounded-lg text-xs font-bold ${levelColors.bg} ${levelColors.text} shadow-sm z-10`}>
                           {video.level}
                         </span>
                       )}
