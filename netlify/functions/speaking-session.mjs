@@ -42,7 +42,7 @@ export const handler = async (event) => {
   }
 
   try {
-    const { systemPrompt, level, user_id } = JSON.parse(event.body || '{}');
+    const { systemPrompt, level, user_id, voice: requestedVoice } = JSON.parse(event.body || '{}');
 
     if (!systemPrompt || !level) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'systemPrompt and level are required' }) };
@@ -66,7 +66,8 @@ export const handler = async (event) => {
     }
 
     const normalizedLevel = level.toLowerCase();
-    const voice = VOICE_MAP[normalizedLevel] || 'coral';
+    // Use requested voice if provided, otherwise look up from level map
+    const voice = requestedVoice || VOICE_MAP[normalizedLevel] || 'coral';
     const isA1 = normalizedLevel.startsWith('a1');
     const silenceDuration = isA1 ? 1000 : 700;
 
