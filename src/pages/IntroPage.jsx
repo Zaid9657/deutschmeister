@@ -1,26 +1,36 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, BookOpen } from 'lucide-react';
+import { ArrowRight, BookOpen, Loader2 } from 'lucide-react';
 import SEO from '../components/SEO';
 
 const STORAGE_KEY = 'dm_intro_lang';
+const BASE_URL = 'https://omqyueddktqeyrrqvnyq.supabase.co/storage/v1/object/public/video-library/intro';
 
-const VIDEOS = {
-  en: 'https://omqyueddktqeyrrqvnyq.supabase.co/storage/v1/object/public/video-library/intro/Master_German.mp4',
-  ar: 'https://omqyueddktqeyrrqvnyq.supabase.co/storage/v1/object/public/video-library/intro/DeutschMeister.mp4',
-};
+const LANGUAGES = [
+  { code: 'en', flag: '🇬🇧', label: 'English', file: 'Master_German.mp4' },
+  { code: 'ar', flag: '🇸🇦', label: 'العربية', file: 'DeutschMeister.mp4' },
+  { code: 'es', flag: '🇪🇸', label: 'Español', file: 'deutschmeister_intro_spanish.mp4' },
+  { code: 'ru', flag: '🇷🇺', label: 'Русский', file: 'deutschmeister_intro_russian.mp4' },
+  { code: 'hi', flag: '🇮🇳', label: 'हिन्दी', file: 'deutschmeister_intro_hindi.mp4' },
+  { code: 'zh', flag: '🇨🇳', label: '中文', file: 'deutschmeister_intro_chinese.mp4' },
+];
 
 const IntroPage = () => {
   const [lang, setLang] = useState(() => {
     try { return localStorage.getItem(STORAGE_KEY) || 'en'; }
     catch { return 'en'; }
   });
+  const [loading, setLoading] = useState(false);
   const videoRef = useRef(null);
+
+  const currentVideo = LANGUAGES.find(l => l.code === lang) || LANGUAGES[0];
+  const videoUrl = `${BASE_URL}/${currentVideo.file}`;
 
   const switchLang = (newLang) => {
     if (newLang === lang) return;
     setLang(newLang);
+    setLoading(true);
     try { localStorage.setItem(STORAGE_KEY, newLang); } catch {}
   };
 
@@ -28,11 +38,13 @@ const IntroPage = () => {
   useEffect(() => {
     if (videoRef.current) {
       const wasPlaying = !videoRef.current.paused;
-      videoRef.current.src = VIDEOS[lang];
+      videoRef.current.src = videoUrl;
       videoRef.current.load();
       if (wasPlaying) videoRef.current.play().catch(() => {});
     }
-  }, [lang]);
+  }, [videoUrl]);
+
+  const handleCanPlay = () => setLoading(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-20 pb-16">
@@ -64,33 +76,26 @@ const IntroPage = () => {
           </p>
         </motion.div>
 
-        {/* Language Toggle */}
+        {/* Language Selector */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="flex justify-center gap-2 mb-6"
+          className="flex flex-wrap justify-center gap-2 mb-6"
         >
-          <button
-            onClick={() => switchLang('en')}
-            className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
-              lang === 'en'
-                ? 'bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-md'
-                : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-300 hover:shadow-sm'
-            }`}
-          >
-            🇬🇧 English
-          </button>
-          <button
-            onClick={() => switchLang('ar')}
-            className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
-              lang === 'ar'
-                ? 'bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-md'
-                : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-300 hover:shadow-sm'
-            }`}
-          >
-            🇸🇦 العربية
-          </button>
+          {LANGUAGES.map(({ code, flag, label }) => (
+            <button
+              key={code}
+              onClick={() => switchLang(code)}
+              className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
+                lang === code
+                  ? 'bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-md'
+                  : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-300 hover:shadow-sm'
+              }`}
+            >
+              {flag} {label}
+            </button>
+          ))}
         </motion.div>
 
         {/* Video Player */}
@@ -100,15 +105,22 @@ const IntroPage = () => {
           transition={{ delay: 0.2 }}
           className="mb-10"
         >
-          <div className="bg-black rounded-2xl overflow-hidden shadow-2xl">
+          <div className="relative bg-black rounded-2xl overflow-hidden shadow-2xl">
+            {loading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/60 z-10">
+                <Loader2 className="w-10 h-10 animate-spin text-white" />
+              </div>
+            )}
             <video
               ref={videoRef}
               controls
               className="w-full aspect-video"
               preload="metadata"
               key={lang}
+              onCanPlay={handleCanPlay}
+              onLoadedData={handleCanPlay}
             >
-              <source src={VIDEOS[lang]} type="video/mp4" />
+              <source src={videoUrl} type="video/mp4" />
               Your browser does not support video.
             </video>
           </div>
