@@ -1,12 +1,13 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, FileText, Download, X, Loader2, Maximize2 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { supabase } from '../utils/supabase';
 import SEO from '../components/SEO';
 
 const STORAGE_BASE = 'https://omqyueddktqeyrrqvnyq.supabase.co/storage/v1/object/public/video-library/';
+const LANG_KEY = 'dm_video_lang';
 
 const VideoDetailPage = () => {
   const { id } = useParams();
@@ -17,33 +18,16 @@ const VideoDetailPage = () => {
   const [video, setVideo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [slidesFullscreen, setSlidesFullscreen] = useState(false);
+  const [lang, setLang] = useState(() => {
+    try { return localStorage.getItem(LANG_KEY) || 'en'; }
+    catch { return 'en'; }
+  });
+  const [videoLoading, setVideoLoading] = useState(false);
+  const videoRef = useRef(null);
 
   useEffect(() => {
     fetchVideo();
   }, [id]);
-
-  // Lock body scroll when lightbox is open
-  useEffect(() => {
-    if (slidesFullscreen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => { document.body.style.overflow = ''; };
-  }, [slidesFullscreen]);
-
-  // Escape key to close lightbox
-  const handleKeyDown = useCallback((e) => {
-    if (e.key === 'Escape') {
-      setSlidesFullscreen(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyDown]);
 
   const fetchVideo = async () => {
     const { data, error: fetchError } = await supabase
@@ -57,9 +41,37 @@ const VideoDetailPage = () => {
       setError(isGerman ? 'Video nicht gefunden.' : 'Video not found.');
     } else {
       setVideo(data);
+      // If user preferred Arabic but this video has no Arabic, fall back to English
+      if (!data.audio_url_ar && lang === 'ar') {
+        setLang('en');
+      }
     }
     setLoading(false);
   };
+
+  const hasArabic = video?.audio_url_ar;
+  const activeUrl = lang === 'ar' && hasArabic
+    ? `${STORAGE_BASE}${video.audio_url_ar}`
+    : video?.audio_url ? `${STORAGE_BASE}${video.audio_url}` : null;
+
+  const switchLang = (newLang) => {
+    if (newLang === lang) return;
+    setLang(newLang);
+    setVideoLoading(true);
+    try { localStorage.setItem(LANG_KEY, newLang); } catch {}
+  };
+
+  // Swap video source when language changes
+  useEffect(() => {
+    if (videoRef.current && activeUrl) {
+      const wasPlaying = !videoRef.current.paused;
+      videoRef.current.src = activeUrl;
+      videoRef.current.load();
+      if (wasPlaying) videoRef.current.play().catch(() => {});
+    }
+  }, [activeUrl]);
+
+  const handleCanPlay = () => setVideoLoading(false);
 
   const getLevelColor = (level) => {
     if (!level) return 'bg-slate-100 text-slate-600';
@@ -94,9 +106,6 @@ const VideoDetailPage = () => {
       </div>
     );
   }
-
-  const videoUrl = video.audio_url ? `${STORAGE_BASE}${video.audio_url}` : null;
-  const slidesUrl = video.slides_url ? `${STORAGE_BASE}${video.slides_url}` : null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-20 pb-12">
@@ -138,21 +147,60 @@ const VideoDetailPage = () => {
           )}
         </motion.div>
 
+        {/* Language Toggle — only if Arabic version exists */}
+        {hasArabic && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05 }}
+            className="flex gap-2 mb-4"
+          >
+            <button
+              onClick={() => switchLang('en')}
+              className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
+                lang === 'en'
+                  ? 'bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-md'
+                  : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-300 hover:shadow-sm'
+              }`}
+            >
+              🇬🇧 English
+            </button>
+            <button
+              onClick={() => switchLang('ar')}
+              className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
+                lang === 'ar'
+                  ? 'bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-md'
+                  : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-300 hover:shadow-sm'
+              }`}
+            >
+              🇸🇦 العربية
+            </button>
+          </motion.div>
+        )}
+
         {/* Video Player */}
-        {videoUrl && (
+        {activeUrl && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="mb-8"
           >
-            <div className="bg-black rounded-2xl overflow-hidden shadow-xl">
+            <div className="relative bg-black rounded-2xl overflow-hidden shadow-xl">
+              {videoLoading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/60 z-10">
+                  <Loader2 className="w-10 h-10 animate-spin text-white" />
+                </div>
+              )}
               <video
+                ref={videoRef}
                 controls
                 className="w-full aspect-video"
                 preload="metadata"
+                key={`${id}-${lang}`}
+                onCanPlay={handleCanPlay}
+                onLoadedData={handleCanPlay}
               >
-                <source src={videoUrl} type="video/mp4" />
+                <source src={activeUrl} type="video/mp4" />
                 {isGerman
                   ? 'Dein Browser unterstützt kein Video.'
                   : 'Your browser does not support video.'}
@@ -160,108 +208,7 @@ const VideoDetailPage = () => {
             </div>
           </motion.div>
         )}
-
-        {/* Slides */}
-        {slidesUrl && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm mb-8"
-          >
-            <div className="p-4 border-b border-slate-100 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <FileText size={18} className="text-rose-500" />
-                <h3 className="font-semibold text-slate-800">
-                  {isGerman ? 'Folien' : 'Slides'}
-                </h3>
-              </div>
-              <button
-                onClick={() => setSlidesFullscreen(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 text-slate-600 text-sm font-medium hover:bg-slate-100 transition-colors"
-              >
-                <Maximize2 size={14} />
-                {isGerman ? 'Vollbild' : 'Fullscreen'}
-              </button>
-            </div>
-            <div className="p-4">
-              <div className="bg-slate-50 rounded-lg border border-slate-200 overflow-hidden" style={{ height: '600px' }}>
-                <iframe
-                  src={`${slidesUrl}#toolbar=1&navpanes=0`}
-                  className="w-full h-full"
-                  title="Slides"
-                />
-              </div>
-            </div>
-            <div className="p-3 border-t border-slate-100 flex gap-2">
-              <a
-                href={slidesUrl}
-                download
-                className="flex items-center justify-center gap-2 flex-1 py-2 px-4 rounded-lg bg-slate-50 text-slate-600 text-sm font-medium hover:bg-slate-100 transition-colors"
-              >
-                <Download size={16} />
-                {isGerman ? 'PDF herunterladen' : 'Download PDF'}
-              </a>
-              <a
-                href={slidesUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-rose-50 text-rose-600 text-sm font-medium hover:bg-rose-100 transition-colors"
-              >
-                <FileText size={16} />
-                {isGerman ? 'Öffnen' : 'Open'}
-              </a>
-            </div>
-          </motion.div>
-        )}
       </div>
-
-      {/* Slides Fullscreen Lightbox */}
-      <AnimatePresence>
-        {slidesFullscreen && slidesUrl && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 bg-black/95 flex flex-col"
-          >
-            {/* Toolbar */}
-            <div className="flex items-center justify-between px-4 py-3 bg-black/50">
-              <span className="text-white/70 text-sm font-medium">
-                {isGerman ? 'Folien' : 'Slides'} — {video.title}
-              </span>
-              <div className="flex items-center gap-1">
-                <a
-                  href={slidesUrl}
-                  download
-                  className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
-                  title="Download"
-                >
-                  <Download size={18} />
-                </a>
-                <div className="w-px h-6 bg-white/20 mx-1" />
-                <button
-                  onClick={() => setSlidesFullscreen(false)}
-                  className="p-2 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors"
-                  title="Close"
-                >
-                  <X size={22} />
-                </button>
-              </div>
-            </div>
-
-            {/* Full viewport PDF */}
-            <div className="flex-1">
-              <iframe
-                src={`${slidesUrl}#toolbar=1&navpanes=1&scrollbar=1`}
-                className="w-full h-full"
-                title="Slides fullscreen"
-              />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };
