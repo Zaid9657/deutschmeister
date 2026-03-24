@@ -41,6 +41,7 @@ const LevelTest = lazy(() => import('./pages/LevelTest'));
 const VideoLibraryPage = lazy(() => import('./pages/VideoLibraryPage'));
 const VideoDetailPage = lazy(() => import('./pages/VideoDetailPage'));
 const IntroPage = lazy(() => import('./pages/IntroPage'));
+const AdminVideosPage = lazy(() => import('./pages/AdminVideosPage'));
 
 function PageLoader() {
   return (
@@ -194,6 +195,16 @@ function App() {
                         <SubscriptionGuard>
                           <SpeakingPage />
                         </SubscriptionGuard>
+                      }
+                    />
+
+                    {/* Admin */}
+                    <Route
+                      path="/admin/videos"
+                      element={
+                        <ProtectedRoute>
+                          <AdminVideosPage />
+                        </ProtectedRoute>
                       }
                     />
 

@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, LogOut, Globe, LayoutDashboard, Crown, Sparkles, Mic, ClipboardCheck, BookOpen, PlayCircle, ChevronDown } from 'lucide-react';
+import { Menu, X, User, LogOut, Globe, LayoutDashboard, Crown, Sparkles, Mic, ClipboardCheck, BookOpen, PlayCircle, ChevronDown, Film } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 
@@ -170,6 +170,14 @@ const Navbar = () => {
                       >
                         <User size={16} />
                         {t('nav.profile')}
+                      </Link>
+                      <Link
+                        to="/admin/videos"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                      >
+                        <Film size={16} />
+                        Admin: Add Video
                       </Link>
                       <div className="border-t border-slate-100 my-1" />
                       <button
@@ -345,6 +353,14 @@ const Navbar = () => {
                     >
                       <User size={20} className="text-slate-500" />
                       <span className="text-slate-700 font-medium">{t('nav.profile')}</span>
+                    </Link>
+                    <Link
+                      to="/admin/videos"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
+                    >
+                      <Film size={20} className="text-slate-500" />
+                      <span className="text-slate-700 font-medium">Admin: Add Video</span>
                     </Link>
                     <button
                       onClick={handleSignOut}
