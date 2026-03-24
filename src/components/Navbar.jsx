@@ -42,6 +42,7 @@ const Navbar = () => {
   const inTrial = user ? isInFreeTrial() : false;
   const isSubscribed = user ? hasActiveSubscription() : false;
   const trialDays = user ? getTrialDaysRemaining() : 0;
+  const isAdmin = user?.email === 'zaid199660@gmail.com';
 
   const NavSeparator = () => (
     <div className="w-px h-5 bg-slate-200" />
@@ -171,14 +172,16 @@ const Navbar = () => {
                         <User size={16} />
                         {t('nav.profile')}
                       </Link>
-                      <Link
-                        to="/admin/videos"
-                        onClick={() => setUserMenuOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
-                      >
-                        <Film size={16} />
-                        Admin: Add Video
-                      </Link>
+                      {isAdmin && (
+                        <Link
+                          to="/admin/videos"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                        >
+                          <Film size={16} />
+                          Admin: Add Video
+                        </Link>
+                      )}
                       <div className="border-t border-slate-100 my-1" />
                       <button
                         onClick={handleSignOut}
@@ -354,14 +357,16 @@ const Navbar = () => {
                       <User size={20} className="text-slate-500" />
                       <span className="text-slate-700 font-medium">{t('nav.profile')}</span>
                     </Link>
-                    <Link
-                      to="/admin/videos"
-                      onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
-                    >
-                      <Film size={20} className="text-slate-500" />
-                      <span className="text-slate-700 font-medium">Admin: Add Video</span>
-                    </Link>
+                    {isAdmin && (
+                      <Link
+                        to="/admin/videos"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
+                      >
+                        <Film size={20} className="text-slate-500" />
+                        <span className="text-slate-700 font-medium">Admin: Add Video</span>
+                      </Link>
+                    )}
                     <button
                       onClick={handleSignOut}
                       className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
