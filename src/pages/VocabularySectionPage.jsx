@@ -81,7 +81,7 @@ const VocabularySectionPage = () => {
     const progressPercent = wordCount > 0 ? Math.round((completedCount / wordCount) * 100) : 0;
 
     const isFree = isLevelFree(level);
-    const canAccess = isFree || hasAccess(level);
+    const canAccess = isFree || (user && hasAccess);
 
     const handleClick = () => {
       if (canAccess) {
