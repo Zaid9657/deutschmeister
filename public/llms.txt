@@ -1,64 +1,84 @@
-# DeutschMeister
+# DeutschMeister - German Language Learning Platform
 
-> A free German language learning platform covering CEFR levels A1.1 to B2.2.
-
-## About
-
-DeutschMeister (https://deutsch-meister.de) is a comprehensive German grammar and vocabulary learning resource. All content is free to access without an account.
-
-## What We Offer
-
-### Grammar (64 Topics)
-- 8 CEFR sub-levels: A1.1, A1.2, A2.1, A2.2, B1.1, B1.2, B2.1, B2.2
-- 8 grammar topics per level
-- Every topic explained in English first, then German
-- Interactive exercises with answer explanations
-- Audio for all examples
-- Topics include: cases (nominative, accusative, dative, genitive), articles, prepositions, verb conjugation, modal verbs, separable verbs, word order, sentence structure, and more
-
-### Vocabulary
-- Organized by CEFR level
-- Words with translations, examples, and audio
-
-### Sentences
-- Example sentences for each level
-- Translations and audio included
-
-### Listening
-- Listening exercises for each level
-- Audio with comprehension questions
-
-### Podcasts
-- Video podcasts for listening practice
-- Levels A1.1 to A2.1 available
-- Native German speech with level-appropriate content
+## Overview
+DeutschMeister (https://deutsch-meister.de) is a comprehensive German learning platform covering CEFR levels A1.1 to B2.2. The site offers grammar lessons, vocabulary, listening exercises, podcasts, AI speaking practice, and a CEFR level placement test.
 
 ## Key Features
 
-- Bilingual toggle (English/German interface)
-- No account required for free content
-- Mobile-friendly design
-- Audio pronunciation for vocabulary and examples
-- Exercises with explanations for why answers are correct
+### German Grammar (64 Topics)
+Complete German grammar curriculum organized by CEFR level. Each of the 8 sub-levels (A1.1, A1.2, A2.1, A2.2, B1.1, B1.2, B2.1, B2.2) contains 8 grammar topics. Topics include cases (Nominative, Accusative, Dative, Genitive), articles, prepositions, verb conjugation, word order, and more. All explanations are in English with German examples.
+URL: https://deutsch-meister.de/grammar
+
+### German Level Test (Free CEFR Placement Test)
+Free online German proficiency test covering reading, listening, and speaking. The test takes 15-20 minutes and provides instant results showing the user's CEFR level from A1 to B2. Includes adaptive AI speaking assessment.
+URL: https://deutsch-meister.de/level-test
+
+### AI Speaking Practice
+AI-powered German conversation practice available 24/7. Users speak with an AI tutor named "Frau Schmidt" who adapts to their level (A1-B2) and provides real-time feedback on grammar and pronunciation. No scheduling required.
+URL: https://deutsch-meister.de/speaking
+
+### German Podcasts for Learners
+24 podcast episodes across all 8 CEFR levels (3 episodes per level). Each episode features native speaker audio with full transcripts and translations. Designed for learning on the go.
+URL: https://deutsch-meister.de/podcasts
+
+### Listening Exercises
+480 listening dialogues with comprehension questions across all levels. Native speaker audio with varying speeds and accents.
+URL: https://deutsch-meister.de/listening
+
+### Vocabulary
+Vocabulary lists organized by CEFR level with audio pronunciation and example sentences.
+URL: https://deutsch-meister.de/vocabulary
+
+### Video Library
+Educational videos covering German grammar, pronunciation, and cultural topics.
+URL: https://deutsch-meister.de/video-library
+
+### Reading Lessons
+Reading passages with comprehension questions tailored to each CEFR level.
+URL: https://deutsch-meister.de/reading
+
+## Content Statistics
+- 64 grammar topics (8 per level × 8 levels)
+- 24 podcast episodes with transcripts
+- 480 listening dialogues
+- AI speaking practice for all 8 levels
+- Free CEFR placement test (A1-B2)
+- Interactive exercises with instant feedback
+- Full bilingual support (English/German)
+
+## Technical Features
+- Multi-stage grammar lessons with introduction, examples, guided practice, and mastery exercises
+- Progress tracking across all content types
+- Subscription system with 7-day free trial
+- Mobile-responsive design
+- Audio playback for all vocabulary, sentences, and examples
+- Schema.org markup for SEO (Quiz, PodcastSeries, SoftwareApplication, FAQPage)
+
+## Access Levels
+- **A1.1 content:** Free, no signup required
+- **A1.2-B2.2 content:** Free account required (7-day trial)
+- **AI Speaking Practice:** Trial available, premium plans for unlimited sessions
+- **Premium Plans:** Monthly and yearly subscriptions available
 
 ## Target Audience
-
 - English speakers learning German
-- Self-study learners
-- Beginner to upper-intermediate levels (A1-B2)
-- Anyone preparing for German language exams
+- Self-study learners at all levels (A1-B2)
+- Students preparing for German language exams (Goethe-Zertifikat, TestDaF)
+- Anyone seeking structured, comprehensive German learning resources
 
-## Links
-
+## Main Pages
 - Homepage: https://deutsch-meister.de
 - Grammar: https://deutsch-meister.de/grammar
-- Vocabulary: https://deutsch-meister.de/vocabulary
-- Listening: https://deutsch-meister.de/listening
+- Level Test: https://deutsch-meister.de/level-test
+- Speaking Practice: https://deutsch-meister.de/speaking
 - Podcasts: https://deutsch-meister.de/podcasts
+- Listening: https://deutsch-meister.de/listening
+- Vocabulary: https://deutsch-meister.de/vocabulary
+- Video Library: https://deutsch-meister.de/video-library
+- Reading: https://deutsch-meister.de/reading
 - Pricing: https://deutsch-meister.de/pricing
+- Dashboard: https://deutsch-meister.de/dashboard
 
 ## Contact
-
 Website: https://deutsch-meister.de
-Email: contact@deutsch-meister.de
 YouTube: https://youtube.com/@deutschmeister_de
