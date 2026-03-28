@@ -1,10 +1,23 @@
 const { createClient } = require('@supabase/supabase-js');
 
 exports.handler = async (event) => {
-  const supabase = createClient(
-    process.env.VITE_SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co',
-    process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY
-  );
+  // Use env vars if available, otherwise use the same public values as the frontend
+  // These are safe to hardcode since podcasts are public data and the anon key is already in the frontend bundle
+  const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
+  const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcXl1ZWRka3RxZXlycnF2bnlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwMzQyMjIsImV4cCI6MjA4NDYxMDIyMn0.1QAEt_aDNH-aT1464lhDeKFWTliVKbuv74up5RvtcVo';
+
+  if (!supabaseUrl || !supabaseKey) {
+    console.error('Missing Supabase credentials:', {
+      hasUrl: !!supabaseUrl,
+      hasKey: !!supabaseKey
+    });
+    return {
+      statusCode: 500,
+      body: 'Configuration error - missing database credentials'
+    };
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseKey);
 
   const { data: podcasts, error } = await supabase
     .from('podcasts')
