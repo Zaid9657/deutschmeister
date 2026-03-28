@@ -44,6 +44,7 @@ const IntroPage = lazy(() => import('./pages/IntroPage'));
 const AdminVideosPage = lazy(() => import('./pages/AdminVideosPage'));
 const PodcastsPage = lazy(() => import('./pages/PodcastsPage'));
 const GrammarOverviewPage = lazy(() => import('./pages/GrammarOverviewPage'));
+const VocabularySectionPage = lazy(() => import('./pages/VocabularySectionPage'));
 
 function PageLoader() {
   return (
@@ -172,6 +173,9 @@ function App() {
                         </LevelSubscriptionGuard>
                       }
                     />
+
+                    {/* Vocabulary — section overview is public */}
+                    <Route path="/vocabulary" element={<VocabularySectionPage />} />
 
                     {/* Listening — section overview is public, level pages are level-gated */}
                     <Route path="/listening" element={<ListeningHome />} />
