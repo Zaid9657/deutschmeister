@@ -1,0 +1,35 @@
+<svg width="3000" height="3000" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="3000" height="3000" fill="url(#bgGradient)"/>
+
+  <!-- Title -->
+  <text x="1500" y="1200" font-family="Arial, sans-serif" font-size="200" font-weight="bold" fill="white" text-anchor="middle">
+    DeutschMeister
+  </text>
+
+  <!-- Subtitle -->
+  <text x="1500" y="1450" font-family="Arial, sans-serif" font-size="120" fill="rgba(255,255,255,0.9)" text-anchor="middle">
+    Learn German Podcast
+  </text>
+
+  <!-- Levels -->
+  <text x="1500" y="1700" font-family="Arial, sans-serif" font-size="100" fill="rgba(255,255,255,0.8)" text-anchor="middle">
+    Levels A1 - B2
+  </text>
+
+  <!-- Badge -->
+  <circle cx="1500" cy="2100" r="250" fill="rgba(255,255,255,0.15)"/>
+  <text x="1500" y="2100" font-family="Arial, sans-serif" font-size="140" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="central">
+    24
+  </text>
+  <text x="1500" y="2250" font-family="Arial, sans-serif" font-size="80" fill="rgba(255,255,255,0.9)" text-anchor="middle">
+    Episodes
+  </text>
+</svg>

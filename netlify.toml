@@ -58,6 +58,12 @@
   to = "/grammar/b2.2"
   status = 301
 
+# Podcast RSS Feed
+[[redirects]]
+  from = "/podcast-feed.xml"
+  to = "/.netlify/functions/podcast-feed"
+  status = 200
+
 # Speaking API proxy
 [[redirects]]
   from = "/api/speaking/*"
