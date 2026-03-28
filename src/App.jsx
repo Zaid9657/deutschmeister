@@ -43,6 +43,7 @@ const VideoDetailPage = lazy(() => import('./pages/VideoDetailPage'));
 const IntroPage = lazy(() => import('./pages/IntroPage'));
 const AdminVideosPage = lazy(() => import('./pages/AdminVideosPage'));
 const PodcastsPage = lazy(() => import('./pages/PodcastsPage'));
+const GrammarOverviewPage = lazy(() => import('./pages/GrammarOverviewPage'));
 
 function PageLoader() {
   return (
@@ -142,6 +143,7 @@ function App() {
 
                     {/* Grammar — section & topic list are public, lessons are level-gated */}
                     <Route path="/grammar" element={<GrammarSectionPage />} />
+                    <Route path="/grammar/overview" element={<GrammarOverviewPage />} />
                     <Route path="/grammar/:level" element={<GrammarTopicsPage />} />
                     <Route
                       path="/grammar/:level/:topicSlug"

@@ -8,6 +8,7 @@ DeutschMeister (https://deutsch-meister.de) is a comprehensive German learning p
 ### German Grammar (64 Topics)
 Complete German grammar curriculum organized by CEFR level. Each of the 8 sub-levels (A1.1, A1.2, A2.1, A2.2, B1.1, B1.2, B2.1, B2.2) contains 8 grammar topics. Topics include cases (Nominative, Accusative, Dative, Genitive), articles, prepositions, verb conjugation, word order, and more. All explanations are in English with German examples.
 URL: https://deutsch-meister.de/grammar
+Complete Reference Guide: https://deutsch-meister.de/grammar/overview
 
 ### German Level Test (Free CEFR Placement Test)
 Free online German proficiency test covering reading, listening, and speaking. The test takes 15-20 minutes and provides instant results showing the user's CEFR level from A1 to B2. Includes adaptive AI speaking assessment.
