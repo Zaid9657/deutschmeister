@@ -10,6 +10,7 @@ import { useSubscription } from '../contexts/SubscriptionContext';
 import { isLevelFree } from '../config/freeTier';
 import { mainLevels, getSubLevels, levelThemes as contentLevelThemes } from '../data/content';
 import { getReadingLessonCounts, getReadingLessonsByLevel } from '../services/readingService';
+import SEO from '../components/SEO';
 
 const LESSON_COUNTS = {
   'a1.1': 3, 'a1.2': 4,
@@ -188,8 +189,15 @@ const ReadingSectionPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-20 pb-12">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <>
+      <SEO
+        title="German Reading Practice | 52 Lessons A1-B2 | DeutschMeister"
+        description="Improve your German reading comprehension with 52 leveled reading passages. Authentic texts with comprehension questions for all CEFR levels from A1 to B2."
+        keywords="German reading practice, German reading comprehension, learn German reading, German texts for learners, CEFR reading exercises"
+        path="/reading"
+      />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-20 pb-12">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -336,6 +344,7 @@ const ReadingSectionPage = () => {
         </motion.div>
       </div>
     </div>
+    </>
   );
 };
 

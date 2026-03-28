@@ -3,6 +3,7 @@ import { Headphones } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useListeningLevels } from '../../hooks/useListening';
 import ListeningLevelCard from '../../components/listening/ListeningLevelCard';
+import SEO from '../../components/SEO';
 
 const ListeningHome = () => {
   const { t, i18n } = useTranslation();
@@ -18,8 +19,15 @@ const ListeningHome = () => {
   }
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+    <>
+      <SEO
+        title="German Listening Practice | 480 Audio Exercises A1-B2 | DeutschMeister"
+        description="Improve your German listening comprehension with 480 native speaker dialogues across all CEFR levels. Interactive exercises with questions and instant feedback."
+        keywords="German listening practice, German audio exercises, German listening comprehension, learn German listening, German dialogues"
+        path="/listening"
+      />
+      <div className="min-h-screen pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -53,6 +61,7 @@ const ListeningHome = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
