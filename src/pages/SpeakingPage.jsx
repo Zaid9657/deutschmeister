@@ -278,29 +278,77 @@ const SpeakingPage = () => {
   return (
     <div className="min-h-screen bg-slate-50 pt-16">
       <SEO
-        title="AI German Speaking Practice"
-        description="Practice speaking German with an AI teacher. Real-time conversations, pronunciation feedback, and CEFR-level assessment. Try it free!"
+        title="AI German Speaking Practice | Conversation Partner Online | DeutschMeister"
+        description="Practice speaking German with our AI conversation partner. Get instant feedback on pronunciation and grammar. Available 24/7, no scheduling needed. Try free today."
+        keywords="German speaking practice, AI German tutor, practice German conversation, German speaking partner online, speak German with AI"
         path="/speaking"
-        structuredData={{
-          "@context": "https://schema.org",
-          "@type": "WebApplication",
-          "name": "German AI Speaking Practice",
-          "description": "Practice speaking German with an AI-powered conversation partner. Get real-time feedback on pronunciation, grammar, and vocabulary.",
-          "url": "https://deutsch-meister.de/speaking",
-          "applicationCategory": "EducationalApplication",
-          "operatingSystem": "Web",
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "EUR",
-            "description": "Free trial available"
+        structuredData={[
+          {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "DeutschMeister AI Speaking Practice",
+            "description": "AI-powered German conversation partner that helps you practice speaking German with real-time feedback on pronunciation and grammar.",
+            "applicationCategory": "EducationalApplication",
+            "operatingSystem": "Web browser",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "EUR",
+              "description": "Free trial available"
+            },
+            "featureList": [
+              "Real-time conversation with AI",
+              "Pronunciation feedback",
+              "Grammar correction",
+              "Adaptive difficulty (A1-B2)",
+              "Available 24/7"
+            ],
+            "inLanguage": ["de", "en"],
+            "provider": {
+              "@type": "Organization",
+              "name": "DeutschMeister",
+              "url": "https://deutsch-meister.de"
+            }
           },
-          "provider": {
-            "@type": "Organization",
-            "name": "DeutschMeister",
-            "url": "https://deutsch-meister.de"
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "How does AI German speaking practice work?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "You have a real-time voice conversation with our AI tutor 'Frau Schmidt'. The AI adapts to your level (A1-B2), corrects mistakes, and helps you practice natural German conversation."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is the AI speaking practice free?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, you get a free trial session to try the AI speaking practice. Premium plans offer unlimited sessions for regular practice."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What level of German do I need?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The AI adapts to all levels from A1 (beginner) to B2 (upper intermediate). It starts at your level and adjusts based on your responses."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can AI really help me improve my German speaking?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes! Regular practice with AI helps build confidence and fluency. You can practice anytime without scheduling, make mistakes without embarrassment, and get immediate feedback on grammar and pronunciation."
+                }
+              }
+            ]
           }
-        }}
+        ]}
       />
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-b from-teal-500/10 via-teal-500/5 to-transparent">
