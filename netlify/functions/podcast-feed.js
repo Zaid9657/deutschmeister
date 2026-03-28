@@ -69,7 +69,7 @@ exports.handler = async (event) => {
       <itunes:author>DeutschMeister</itunes:author>
       <itunes:duration>${duration}</itunes:duration>
       <pubDate>${pubDate}</pubDate>
-      <enclosure url="${audioUrl}" type="audio/mpeg" length="0"/>
+      <enclosure url="${audioUrl}" type="audio/mp4" length="0"/>
       <guid isPermaLink="false">deutschmeister-${ep.id}</guid>
       <itunes:explicit>false</itunes:explicit>
       <itunes:episode>${episodeNumber}</itunes:episode>
@@ -101,9 +101,9 @@ exports.handler = async (event) => {
     <itunes:category text="Education">
       <itunes:category text="Language Learning"/>
     </itunes:category>
-    <itunes:image href="${baseUrl}/podcast-cover.jpg"/>
+    <itunes:image href="${baseUrl}/podcast-cover.svg"/>
     <image>
-      <url>${baseUrl}/podcast-cover.jpg</url>
+      <url>${baseUrl}/podcast-cover.svg</url>
       <title>DeutschMeister - Learn German Podcast</title>
       <link>${baseUrl}/podcasts</link>
     </image>
