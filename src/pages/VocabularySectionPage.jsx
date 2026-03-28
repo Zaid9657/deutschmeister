@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, ChevronRight, CheckCircle, Sun, TreePine, Waves, Moon, Lock } from 'lucide-react';
 import { useProgress } from '../contexts/ProgressContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -33,7 +33,7 @@ const VocabularySectionPage = () => {
   const { hasAccess } = useSubscription();
 
   const [wordCounts, setWordCounts] = useState({});
-  const [expandedLevel, setExpandedLevel] = useState(null);
+  const [expandedLevel, setExpandedLevel] = useState('A1');
 
   // Fetch word counts from DB
   useEffect(() => {
@@ -116,7 +116,7 @@ const VocabularySectionPage = () => {
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-slate-500">{levelInfo.nameEn}</p>
+                <p className="text-xs text-slate-500">{levelInfo.name}</p>
               </div>
             </div>
 
@@ -237,18 +237,20 @@ const VocabularySectionPage = () => {
                   </button>
 
                   {/* Sub-levels */}
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      className="grid gap-4 sm:grid-cols-2 mb-4"
-                    >
-                      {subLevels.map((level) => (
-                        <VocabularyLevelCard key={level} level={level} />
-                      ))}
-                    </motion.div>
-                  )}
+                  <AnimatePresence>
+                    {isExpanded && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="grid gap-4 sm:grid-cols-2 mb-4"
+                      >
+                        {subLevels.map((level) => (
+                          <VocabularyLevelCard key={level} level={level} />
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
 
                   {/* Show first level by default (A1.1) */}
                   {!isExpanded && mainLevel === 'A1' && (
