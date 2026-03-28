@@ -142,28 +142,65 @@ const LevelTest = () => {
   return (
     <>
       <SEO
-        title="Free German Level Test - Find Your CEFR Level"
-        description="Take our free German placement test. 40 questions, listening & speaking in 15-20 minutes. Get your CEFR level (A1-B2) with instant personalized results."
+        title="Free German Level Test | Find Your CEFR Level (A1-B2) | DeutschMeister"
+        description="Take our free German level test to discover your CEFR level. Test your reading, listening, and speaking skills in 15 minutes. Instant results with personalized learning recommendations."
+        keywords="German level test, CEFR test, German placement test, what level is my German, German proficiency test, free German test"
         path="/level-test"
-        structuredData={{
-          "@context": "https://schema.org",
-          "@type": "WebApplication",
-          "name": "German Level Test",
-          "description": "Free CEFR placement test for German learners. Written, listening, and speaking assessment from A1 to B2.",
-          "url": "https://deutsch-meister.de/level-test",
-          "applicationCategory": "EducationalApplication",
-          "operatingSystem": "Web",
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "EUR"
+        structuredData={[
+          {
+            "@context": "https://schema.org",
+            "@type": "Quiz",
+            "name": "German CEFR Level Test",
+            "description": "Free online German proficiency test covering reading, listening, and speaking. Discover your level from A1 to B2.",
+            "educationalLevel": ["A1", "A2", "B1", "B2"],
+            "learningResourceType": "Assessment",
+            "inLanguage": ["en", "de"],
+            "isAccessibleForFree": true,
+            "provider": {
+              "@type": "Organization",
+              "name": "DeutschMeister",
+              "url": "https://deutsch-meister.de"
+            }
           },
-          "provider": {
-            "@type": "Organization",
-            "name": "DeutschMeister",
-            "url": "https://deutsch-meister.de"
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "How long does the German level test take?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The complete test takes approximately 15-20 minutes, including written, listening, and speaking sections."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is the German level test free?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, the German level test is completely free. You'll receive instant results showing your CEFR level from A1 to B2."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What does the German level test include?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The test includes three sections: written comprehension (grammar and vocabulary), listening comprehension with native speaker audio, and speaking assessment with AI feedback."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What CEFR levels does the test cover?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The test assesses levels from complete beginner (A1) to upper intermediate (B2), following the Common European Framework of Reference for Languages."
+                }
+              }
+            ]
           }
-        }}
+        ]}
       />
 
       <div className="level-test-page">

@@ -5,6 +5,7 @@ const BASE_URL = 'https://deutsch-meister.de';
 const SEO = ({
   title,
   description,
+  keywords,
   path = '',
   type = 'website',
   image = 'https://deutsch-meister.de/og-image.png',
@@ -15,11 +16,15 @@ const SEO = ({
   const fullTitle = title ? `${title} | ${siteTitle}` : `${siteTitle} - Learn German`;
   const url = `${BASE_URL}${path}`;
 
+  // Handle arrays of structured data
+  const structuredDataArray = Array.isArray(structuredData) ? structuredData : structuredData ? [structuredData] : [];
+
   return (
     <Helmet>
       <html lang="de" />
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
+      {keywords && <meta name="keywords" content={keywords} />}
       <link rel="canonical" href={url} />
       <link rel="alternate" hrefLang="en" href={url} />
       <link rel="alternate" hrefLang="de" href={url} />
@@ -41,11 +46,11 @@ const SEO = ({
       <meta name="twitter:image" content={image} />
 
       {/* Structured Data */}
-      {structuredData && (
-        <script type="application/ld+json">
-          {JSON.stringify(structuredData)}
+      {structuredDataArray.map((data, index) => (
+        <script key={index} type="application/ld+json">
+          {JSON.stringify(data)}
         </script>
-      )}
+      ))}
       {extraStructuredData && (
         <script type="application/ld+json">
           {JSON.stringify(extraStructuredData)}
