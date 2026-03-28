@@ -42,6 +42,7 @@ const VideoLibraryPage = lazy(() => import('./pages/VideoLibraryPage'));
 const VideoDetailPage = lazy(() => import('./pages/VideoDetailPage'));
 const IntroPage = lazy(() => import('./pages/IntroPage'));
 const AdminVideosPage = lazy(() => import('./pages/AdminVideosPage'));
+const PodcastsPage = lazy(() => import('./pages/PodcastsPage'));
 
 function PageLoader() {
   return (
@@ -85,6 +86,7 @@ function App() {
                     <Route path="/pricing" element={<PricingPage />} />
                     <Route path="/video-library" element={<VideoLibraryPage />} />
                     <Route path="/video-library/:id" element={<VideoDetailPage />} />
+                    <Route path="/podcasts" element={<PodcastsPage />} />
                     <Route
                       path="/level-test"
                       element={

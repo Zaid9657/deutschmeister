@@ -374,6 +374,13 @@ const LandingPage = () => {
             >
               Videos
             </Link>
+            <span className="text-slate-600">·</span>
+            <Link
+              to="/podcasts"
+              className="text-slate-400 hover:text-white transition-colors text-sm"
+            >
+              Podcasts
+            </Link>
           </div>
           <p className="text-sm">
             &copy; {new Date().getFullYear()} DeutschMeister. All rights reserved.

@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, LogOut, Globe, LayoutDashboard, Crown, Sparkles, Mic, ClipboardCheck, BookOpen, PlayCircle, ChevronDown, Film } from 'lucide-react';
+import { Menu, X, User, LogOut, Globe, LayoutDashboard, Crown, Sparkles, Mic, ClipboardCheck, BookOpen, PlayCircle, ChevronDown, Film, Radio } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 
@@ -70,6 +70,9 @@ const Navbar = () => {
             </Link>
             <Link to="/video-library" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
               Videos
+            </Link>
+            <Link to="/podcasts" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+              Podcasts
             </Link>
             {user && (
               <Link to="/speaking" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
@@ -253,6 +256,14 @@ const Navbar = () => {
               >
                 <PlayCircle size={20} className="text-slate-500" />
                 <span className="text-slate-700 font-medium">Videos</span>
+              </Link>
+              <Link
+                to="/podcasts"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
+              >
+                <Radio size={20} className="text-slate-500" />
+                <span className="text-slate-700 font-medium">Podcasts</span>
               </Link>
               {user && (
                 <Link
