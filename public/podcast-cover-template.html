@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>DeutschMeister Podcast Cover - 3000x3000</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #1e293b;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    }
+
+    .instructions {
+      color: white;
+      max-width: 800px;
+      margin: 0 auto 20px;
+      padding: 20px;
+      background: #334155;
+      border-radius: 10px;
+    }
+
+    .instructions h2 {
+      margin-top: 0;
+    }
+
+    .instructions ol {
+      padding-left: 20px;
+    }
+
+    .instructions code {
+      background: #1e293b;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: monospace;
+    }
+
+    #cover {
+      width: 3000px;
+      height: 3000px;
+      background: linear-gradient(135deg, #F59E0B 0%, #EA580C 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin: 0 auto;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    .icon {
+      width: 600px;
+      height: 600px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 150px;
+    }
+
+    .icon svg {
+      width: 400px;
+      height: 400px;
+      fill: white;
+    }
+
+    .title {
+      font-size: 280px;
+      font-weight: 900;
+      color: white;
+      text-align: center;
+      letter-spacing: -8px;
+      margin: 0;
+      text-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    .subtitle {
+      font-size: 140px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.95);
+      text-align: center;
+      margin: 40px 0 0 0;
+      letter-spacing: 2px;
+    }
+
+    .badge {
+      position: absolute;
+      bottom: 280px;
+      background: white;
+      color: #EA580C;
+      font-size: 120px;
+      font-weight: 900;
+      padding: 50px 120px;
+      border-radius: 100px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      letter-spacing: 10px;
+    }
+
+    .episodes {
+      position: absolute;
+      top: 200px;
+      right: 200px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 90px;
+      font-weight: 700;
+      padding: 40px 80px;
+      border-radius: 50px;
+      backdrop-filter: blur(10px);
+    }
+
+    @media screen and (max-width: 3100px) {
+      #cover {
+        transform: scale(0.25);
+        transform-origin: top center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="instructions">
+    <h2>📸 DeutschMeister Podcast Cover Generator</h2>
+    <p><strong>Instructions to create 3000x3000px JPG:</strong></p>
+    <ol>
+      <li>Open browser DevTools (F12)</li>
+      <li>Click "Toggle device toolbar" (Ctrl+Shift+M)</li>
+      <li>Set dimensions to: <code>3000 x 3000</code></li>
+      <li>Zoom to 100%</li>
+      <li>Right-click on the orange cover below → "Screenshot Node" or use full-page screenshot extension</li>
+      <li>Save as <code>podcast-cover.jpg</code></li>
+      <li>Upload to <code>/public/podcast-cover.jpg</code></li>
+    </ol>
+    <p><strong>Alternative:</strong> Use this design as a reference in Canva or Figma</p>
+  </div>
+
+  <div id="cover">
+    <!-- Episode count badge -->
+    <div class="episodes">24 Episodes</div>
+
+    <!-- Microphone icon -->
+    <div class="icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+        <path d="M19 10v2a7 7 0 0 1-14 0v-2H3v2a9 9 0 0 0 8 8.94V23h2v-2.06A9 9 0 0 0 21 12v-2h-2z"/>
+      </svg>
+    </div>
+
+    <!-- Title -->
+    <h1 class="title">DeutschMeister</h1>
+
+    <!-- Subtitle -->
+    <p class="subtitle">Learn German Podcast</p>
+
+    <!-- Level badge -->
+    <div class="badge">A1 → B2</div>
+  </div>
+</body>
+</html>
