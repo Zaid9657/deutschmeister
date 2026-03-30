@@ -1,169 +1,173 @@
-# DeutschMeister
+# DeutschMeister - Full Platform Documentation
 
-> A free German language learning platform covering CEFR levels A1.1 to B2.2.
+> Comprehensive German language learning platform for English speakers. Free from A1.1 to B2.2 with AI-powered features.
 
 ## About
 
-DeutschMeister (https://deutsch-meister.de) is a comprehensive German grammar and vocabulary learning resource. All content is free to access without an account.
+DeutschMeister (https://deutsch-meister.de) is a free German learning platform covering CEFR levels A1.1 to B2.2. It offers 64 grammar topics, AI speaking practice, a free level test, podcasts, listening exercises, vocabulary, and reading lessons — all with English explanations.
 
-## What We Offer
+## Access Model
+- **A1.1:** Free forever, no signup required
+- **A1.2–B2.2:** Free account + 7-day trial, then subscription
+- **Monthly plan:** €9.99/month
+- **Yearly plan:** €79.99/year (best value)
+- **AI Speaking Practice:** Included with subscription
+
+## Features
 
 ### Grammar (64 Topics)
 - 8 CEFR sub-levels: A1.1, A1.2, A2.1, A2.2, B1.1, B1.2, B2.1, B2.2
-- 8 grammar topics per level
-- Every topic explained in English first, then German
-- Interactive exercises with answer explanations
+- 8 grammar topics per level (64 total)
+- English explanations with German examples
 - Audio for all examples
-- Topics include: cases (nominative, accusative, dative, genitive), articles, prepositions, verb conjugation, modal verbs, separable verbs, word order, sentence structure, and more
+- Interactive exercises with instant feedback
+- Multi-stage lessons: introduction → examples → guided practice → mastery
+- Progress tracking across all topics
 
-### Vocabulary
-- Organized by CEFR level
-- Words with translations, examples, and audio
+### AI Speaking Practice
+- Conversation with AI tutor "Frau Schmidt"
+- Adapts to your level (A1–B2)
+- Real-time pronunciation and grammar feedback
+- Available 24/7, no scheduling required
+- Free trial session available
+- URL: https://deutsch-meister.de/speaking
 
-### Sentences
-- Example sentences for each level
-- Translations and audio included
-
-### Listening
-- Listening exercises for each level
-- Audio with comprehension questions
+### CEFR Level Test (Free)
+- Tests reading, listening, and speaking
+- 15–20 minutes to complete
+- Instant results: A1.1 to B2.2
+- AI-powered speaking evaluation
+- Personalized recommendations
+- URL: https://deutsch-meister.de/level-test
 
 ### Podcasts
-- Video podcasts for listening practice
-- Levels A1.1 to A2.1 available
-- Native German speech with level-appropriate content
+- 24 episodes (3 per CEFR level)
+- Native speaker audio
+- Full German transcripts + English translations
+- Subscribe via RSS: https://deutsch-meister.de/podcast-feed.xml
+- Works with Spotify, Apple Podcasts, Google Podcasts
+- URL: https://deutsch-meister.de/podcasts
+
+### Listening Exercises
+- 480+ native speaker dialogues
+- Comprehension questions with instant feedback
+- Varying speeds and accents
+- All 8 CEFR levels covered
+- URL: https://deutsch-meister.de/listening
+
+### Vocabulary
+- Word lists organized by CEFR level
+- Audio pronunciation for every word
+- Example sentences with translations
+- URL: https://deutsch-meister.de/vocabulary
+
+### Reading Lessons
+- 52 leveled reading passages (A1–B2)
+- Comprehension questions
+- Authentic German texts
+- URL: https://deutsch-meister.de/reading
 
 ## Complete Grammar Topic List
 
-### A1.1 - Complete Beginner
-1. Alphabet & Pronunciation
-2. Nouns & Gender
-3. Definite Articles
-4. Indefinite Articles
-5. Personal Pronouns
-6. Verb sein
-7. Verb haben
-8. Present Tense Regular
+### A1.1 — Complete Beginner (FREE)
+1. Alphabet & Pronunciation — https://deutsch-meister.de/grammar/a1.1/alphabet-pronunciation
+2. Nouns & Gender — https://deutsch-meister.de/grammar/a1.1/nouns-gender
+3. Definite Articles (der/die/das) — https://deutsch-meister.de/grammar/a1.1/definite-articles
+4. Indefinite Articles (ein/eine) — https://deutsch-meister.de/grammar/a1.1/indefinite-articles
+5. Personal Pronouns — https://deutsch-meister.de/grammar/a1.1/personal-pronouns
+6. Verb sein (to be) — https://deutsch-meister.de/grammar/a1.1/verb-sein
+7. Verb haben (to have) — https://deutsch-meister.de/grammar/a1.1/verb-haben
+8. Present Tense Regular Verbs — https://deutsch-meister.de/grammar/a1.1/present-tense-regular
 
-### A1.2 - Elementary
-1. Basic Sentence Structure
-2. Nominative Case
-3. Accusative Case Introduction
-4. Numbers & Counting
-5. Question Words
-6. Negation
-7. Modal Verbs Introduction
-8. Prepositions with Accusative
+### A1.2 — Elementary
+1. Basic Sentence Structure — https://deutsch-meister.de/grammar/a1.2/sentence-structure
+2. Nominative Case — https://deutsch-meister.de/grammar/a1.2/nominative-case
+3. Accusative Case Introduction — https://deutsch-meister.de/grammar/a1.2/accusative-intro
+4. Numbers & Counting — https://deutsch-meister.de/grammar/a1.2/numbers-counting
+5. Question Words (W-Fragen) — https://deutsch-meister.de/grammar/a1.2/question-words
+6. Negation (nicht/kein) — https://deutsch-meister.de/grammar/a1.2/negation
+7. Modal Verbs Introduction — https://deutsch-meister.de/grammar/a1.2/modal-verbs-intro
+8. Prepositions with Accusative — https://deutsch-meister.de/grammar/a1.2/prepositions-accusative
 
-### A2.1 - Pre-Intermediate
-1. Dative Case
-2. Prepositions with Dative
-3. Two-Way Prepositions
-4. Possessive Pronouns
-5. Separable Verbs
-6. Perfect Tense with haben
-7. Perfect Tense with sein
-8. Imperative Mood
+### A2.1 — Pre-Intermediate
+1. Dative Case — https://deutsch-meister.de/grammar/a2.1/dative-case
+2. Prepositions with Dative — https://deutsch-meister.de/grammar/a2.1/prepositions-dative
+3. Two-Way Prepositions — https://deutsch-meister.de/grammar/a2.1/two-way-prepositions
+4. Possessive Pronouns — https://deutsch-meister.de/grammar/a2.1/possessive-pronouns
+5. Separable Verbs — https://deutsch-meister.de/grammar/a2.1/separable-verbs
+6. Perfect Tense with haben — https://deutsch-meister.de/grammar/a2.1/perfect-tense-haben
+7. Perfect Tense with sein — https://deutsch-meister.de/grammar/a2.1/perfect-tense-sein
+8. Imperative Mood — https://deutsch-meister.de/grammar/a2.1/imperative
 
-### A2.2 - Lower Intermediate
-1. Reflexive Verbs
-2. Simple Past sein haben
-3. Coordinating Conjunctions
-4. Subordinating Conjunctions
-5. Word Order in Subordinate Clauses
-6. Comparative
-7. Superlative
-8. Future Tense
+### A2.2 — Intermediate Foundations
+1. Reflexive Verbs — https://deutsch-meister.de/grammar/a2.2/reflexive-verbs
+2. Simple Past (sein & haben) — https://deutsch-meister.de/grammar/a2.2/simple-past-sein-haben
+3. Coordinating Conjunctions — https://deutsch-meister.de/grammar/a2.2/coordinating-conjunctions
+4. Subordinating Conjunctions — https://deutsch-meister.de/grammar/a2.2/subordinating-conjunctions
+5. Word Order in Subordinate Clauses — https://deutsch-meister.de/grammar/a2.2/subordinate-word-order
+6. Comparative — https://deutsch-meister.de/grammar/a2.2/comparative
+7. Superlative — https://deutsch-meister.de/grammar/a2.2/superlative
+8. Future Tense (werden) — https://deutsch-meister.de/grammar/a2.2/future-tense
 
-### B1.1 - Intermediate
-1. Genitive Case
-2. Genitive Prepositions
-3. Relative Clauses Nominative Accusative
-4. Relative Clauses Dative Genitive
-5. Konjunktiv II würde
-6. Konjunktiv II wäre hätte
-7. Infinitive with zu
-8. um zu ohne zu
+### B1.1 — Lower Intermediate
+1. Genitive Case — https://deutsch-meister.de/grammar/b1.1/genitive-case
+2. Genitive Prepositions — https://deutsch-meister.de/grammar/b1.1/genitive-prepositions
+3. Relative Clauses (Nominative/Accusative) — https://deutsch-meister.de/grammar/b1.1/relative-clauses-nom-acc
+4. Relative Clauses (Dative/Genitive) — https://deutsch-meister.de/grammar/b1.1/relative-clauses-dat-gen
+5. Konjunktiv II with würde — https://deutsch-meister.de/grammar/b1.1/konjunktiv-ii-wurde
+6. Konjunktiv II with wäre/hätte — https://deutsch-meister.de/grammar/b1.1/konjunktiv-ii-ware-hatte
+7. Infinitive with zu — https://deutsch-meister.de/grammar/b1.1/infinitive-with-zu
+8. um zu / ohne zu — https://deutsch-meister.de/grammar/b1.1/um-zu-ohne-zu
 
-### B1.2 - Upper Intermediate
-1. Passive Voice Present
-2. Passive Voice Past
-3. Verbs with Prepositions
-4. Adjective Declension Strong
-5. Adjective Declension Weak Mixed
-6. Simple Past Narrative
-7. Indirect Questions
-8. N-Declension Nouns
+### B1.2 — Intermediate
+1. Passive Voice (Present) — https://deutsch-meister.de/grammar/b1.2/passive-present
+2. Passive Voice (Past) — https://deutsch-meister.de/grammar/b1.2/passive-past
+3. Verbs with Prepositions — https://deutsch-meister.de/grammar/b1.2/verbs-with-prepositions
+4. Adjective Declension (Strong) — https://deutsch-meister.de/grammar/b1.2/adjective-declension-strong
+5. Adjective Declension (Weak/Mixed) — https://deutsch-meister.de/grammar/b1.2/adjective-declension-weak
+6. Simple Past Narrative — https://deutsch-meister.de/grammar/b1.2/simple-past-narrative
+7. Indirect Questions — https://deutsch-meister.de/grammar/b1.2/indirect-questions
+8. N-Declension Nouns — https://deutsch-meister.de/grammar/b1.2/n-declension
 
-### B2.1 - Advanced
-1. Konjunktiv II Past
-2. Konjunktiv I Reported Speech
-3. Passive Alternatives
-4. Participial Adjectives
-5. Extended Attributes
-6. Double Infinitive
-7. Causative Constructions
-8. Nominalization
+### B2.1 — Upper Intermediate
+1. Konjunktiv II (Past) — https://deutsch-meister.de/grammar/b2.1/konjunktiv-ii-past
+2. Konjunktiv I (Reported Speech) — https://deutsch-meister.de/grammar/b2.1/konjunktiv-i
+3. Passive Alternatives — https://deutsch-meister.de/grammar/b2.1/passive-alternatives
+4. Participial Adjectives — https://deutsch-meister.de/grammar/b2.1/participial-adjectives
+5. Extended Attributes — https://deutsch-meister.de/grammar/b2.1/extended-attributes
+6. Double Infinitive — https://deutsch-meister.de/grammar/b2.1/double-infinitive
+7. Causative Constructions — https://deutsch-meister.de/grammar/b2.1/causative-constructions
+8. Nominalization — https://deutsch-meister.de/grammar/b2.1/nominalization
 
-### B2.2 - Upper Advanced
-1. Advanced Conjunctions
-2. Modal Particles
-3. Functional Verb Structures
-4. Subjunctive Fixed Expressions
-5. Complex Sentence Building
-6. Register and Style
-7. Future Perfect
-8. Review and Integration
-
-## Key Features
-
-- Bilingual toggle (English/German interface)
-- No account required for free content
-- Mobile-friendly design
-- Audio pronunciation for vocabulary and examples
-- Exercises with explanations for why answers are correct
-
-## Target Audience
-
-- English speakers learning German
-- Self-study learners
-- Beginner to upper-intermediate levels (A1-B2)
-- Anyone preparing for German language exams
+### B2.2 — Advanced Foundations
+1. Advanced Conjunctions — https://deutsch-meister.de/grammar/b2.2/advanced-conjunctions
+2. Modal Particles — https://deutsch-meister.de/grammar/b2.2/modal-particles
+3. Functional Verb Structures — https://deutsch-meister.de/grammar/b2.2/functional-verb-structures
+4. Subjunctive Fixed Expressions — https://deutsch-meister.de/grammar/b2.2/subjunctive-expressions
+5. Complex Sentence Building — https://deutsch-meister.de/grammar/b2.2/complex-sentences
+6. Register and Style — https://deutsch-meister.de/grammar/b2.2/register-style
+7. Future Perfect — https://deutsch-meister.de/grammar/b2.2/future-perfect
+8. Review & Integration — https://deutsch-meister.de/grammar/b2.2/review-integration
 
 ## URL Structure
 
-Individual grammar topics are available at:
-https://deutsch-meister.de/grammar/{level}/{topic-slug}
+- Grammar section: https://deutsch-meister.de/grammar
+- Grammar level: https://deutsch-meister.de/grammar/{level} (e.g. /grammar/a1.1)
+- Grammar topic: https://deutsch-meister.de/grammar/{level}/{topic-slug}
+- Vocabulary level: https://deutsch-meister.de/vocabulary/{level}
+- Listening level: https://deutsch-meister.de/listening/{level}
 
-Examples:
-- https://deutsch-meister.de/grammar/a1.1/alphabet-pronunciation
-- https://deutsch-meister.de/grammar/a1.2/accusative-intro
-- https://deutsch-meister.de/grammar/a2.1/dative-case
-- https://deutsch-meister.de/grammar/b1.1/genitive-case
-- https://deutsch-meister.de/grammar/b2.1/konjunktiv-i-reported-speech
-- https://deutsch-meister.de/grammar/b2.2/modal-particles
+## Target Audience
+- English speakers learning German (A1 to B2)
+- Self-study learners wanting structured progression
+- Students preparing for Goethe-Zertifikat or TestDaF
+- Anyone wanting free AI conversation practice
 
-Grammar level pages:
-- https://deutsch-meister.de/grammar/a1.1
-- https://deutsch-meister.de/grammar/a1.2
-- https://deutsch-meister.de/grammar/a2.1
-- https://deutsch-meister.de/grammar/a2.2
-- https://deutsch-meister.de/grammar/b1.1
-- https://deutsch-meister.de/grammar/b1.2
-- https://deutsch-meister.de/grammar/b2.1
-- https://deutsch-meister.de/grammar/b2.2
+## Contact & Support
+- Website: https://deutsch-meister.de
+- Support: contact@deutsch-meister.de
+- YouTube: https://youtube.com/@deutschmeister_de
 
-## Links
+---
 
-- Homepage: https://deutsch-meister.de
-- Grammar: https://deutsch-meister.de/grammar
-- Vocabulary: https://deutsch-meister.de/vocabulary
-- Listening: https://deutsch-meister.de/listening
-- Podcasts: https://deutsch-meister.de/podcasts
-- Pricing: https://deutsch-meister.de/pricing
-
-## Contact
-
-Website: https://deutsch-meister.de
-Email: contact@deutsch-meister.de
-YouTube: https://youtube.com/@deutschmeister_de
+*Last updated: 2026-03-30*
