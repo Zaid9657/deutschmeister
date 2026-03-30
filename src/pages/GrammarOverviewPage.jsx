@@ -60,7 +60,18 @@ const GrammarOverviewPage = () => {
         description="Master German grammar with our complete guide covering all 64 topics from A1 to B2. Organized by CEFR level with clear explanations and examples. The definitive German grammar reference."
         keywords="German grammar guide, German grammar topics, CEFR grammar, German cases, German verb conjugation, learn German grammar, complete German grammar"
         path="/grammar/overview"
-        structuredData={generateItemListSchema()}
+        structuredData={[
+          generateItemListSchema(),
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://deutsch-meister.de"},
+              {"@type": "ListItem", "position": 2, "name": "Grammar", "item": "https://deutsch-meister.de/grammar"},
+              {"@type": "ListItem", "position": 3, "name": "Complete Guide", "item": "https://deutsch-meister.de/grammar/overview"}
+            ]
+          }
+        ]}
       />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">

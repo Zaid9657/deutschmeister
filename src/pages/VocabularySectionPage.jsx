@@ -173,6 +173,14 @@ const VocabularySectionPage = () => {
         description="Build your German vocabulary with organized word lists for levels A1 to B2. Learn essential words with audio pronunciation and example sentences."
         keywords="German vocabulary, German word lists, learn German words, German vocabulary by level, CEFR vocabulary, German nouns, German verbs"
         path="/vocabulary"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://deutsch-meister.de"},
+            {"@type": "ListItem", "position": 2, "name": "Vocabulary", "item": "https://deutsch-meister.de/vocabulary"}
+          ]
+        }}
       />
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-20 pb-12">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">

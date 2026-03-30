@@ -25,6 +25,14 @@ const ListeningHome = () => {
         description="Improve your German listening comprehension with 480 native speaker dialogues across all CEFR levels. Interactive exercises with questions and instant feedback."
         keywords="German listening practice, German audio exercises, German listening comprehension, learn German listening, German dialogues"
         path="/listening"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://deutsch-meister.de"},
+            {"@type": "ListItem", "position": 2, "name": "Listening", "item": "https://deutsch-meister.de/listening"}
+          ]
+        }}
       />
       <div className="min-h-screen pt-24 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">

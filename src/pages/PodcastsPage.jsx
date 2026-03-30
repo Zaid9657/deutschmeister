@@ -125,6 +125,14 @@ const PodcastsPage = () => {
                 }
               }
             ]
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://deutsch-meister.de"},
+              {"@type": "ListItem", "position": 2, "name": "Podcasts", "item": "https://deutsch-meister.de/podcasts"}
+            ]
           }
         ]}
       />

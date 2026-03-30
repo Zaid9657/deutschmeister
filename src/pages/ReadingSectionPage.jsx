@@ -195,6 +195,14 @@ const ReadingSectionPage = () => {
         description="Improve your German reading comprehension with 52 leveled reading passages. Authentic texts with comprehension questions for all CEFR levels from A1 to B2."
         keywords="German reading practice, German reading comprehension, learn German reading, German texts for learners, CEFR reading exercises"
         path="/reading"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://deutsch-meister.de"},
+            {"@type": "ListItem", "position": 2, "name": "Reading", "item": "https://deutsch-meister.de/reading"}
+          ]
+        }}
       />
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-20 pb-12">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">

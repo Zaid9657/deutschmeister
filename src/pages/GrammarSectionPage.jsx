@@ -215,7 +215,36 @@ const GrammarSectionPage = () => {
         title="German Grammar Lessons | 64 Free Topics"
         description="Master German grammar with 64 free lessons across 8 CEFR levels (A1–B2). Clear explanations, examples, and interactive exercises for every topic."
         path="/grammar"
-        structuredData={faqSchema}
+        structuredData={[
+          faqSchema,
+          {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": "Complete German Grammar Course",
+            "description": "Master German grammar with 64 topics covering CEFR levels A1 to B2. Clear English explanations, examples with translations, and interactive exercises.",
+            "provider": {
+              "@type": "Organization",
+              "name": "DeutschMeister",
+              "sameAs": "https://deutsch-meister.de"
+            },
+            "educationalLevel": ["Beginner", "Intermediate", "Advanced"],
+            "inLanguage": ["en", "de"],
+            "isAccessibleForFree": true,
+            "hasCourseInstance": {
+              "@type": "CourseInstance",
+              "courseMode": "online",
+              "courseWorkload": "PT40H"
+            }
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://deutsch-meister.de"},
+              {"@type": "ListItem", "position": 2, "name": "Grammar", "item": "https://deutsch-meister.de/grammar"}
+            ]
+          }
+        ]}
       />
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
