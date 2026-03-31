@@ -227,22 +227,30 @@ const LandingPage = () => {
       </section>
 
       {/* Level Test CTA */}
-      <section className="level-test-cta">
-        <div className="container">
+      <section className="py-16 bg-gradient-to-br from-[#e1f5ee] to-[#e6f1fb]">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="cta-content"
           >
-            <h2>Not sure where to start?</h2>
-            <p>Take our free German level test to find out your CEFR level and get personalized recommendations.</p>
-            <div className="cta-features">
-              <span>✓ 40 questions</span>
-              <span>✓ 15-20 minutes</span>
-              <span>✓ Instant results</span>
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 mb-3">
+              Not sure where to start?
+            </h2>
+            <p className="text-lg text-slate-600 mb-6 leading-relaxed">
+              Take our free German level test to find out your CEFR level and get personalized recommendations.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mb-6">
+              <span className="text-[#1D9E75] font-medium">✓ 40 questions</span>
+              <span className="text-[#1D9E75] font-medium">✓ 15-20 minutes</span>
+              <span className="text-[#1D9E75] font-medium">✓ Instant results</span>
             </div>
-            <Link to="/level-test" className="cta-button">Take the Level Test</Link>
+            <Link
+              to="/level-test"
+              className="inline-block px-8 py-4 bg-[#1D9E75] hover:bg-[#178a66] text-white text-lg font-semibold rounded-xl transition-colors shadow-md shadow-emerald-200"
+            >
+              Take the Level Test
+            </Link>
           </motion.div>
         </div>
       </section>
@@ -343,7 +351,7 @@ const LandingPage = () => {
               DeutschMeister
             </span>
           </div>
-          <div className="flex items-center justify-center gap-4 mb-4">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mb-4">
             <Link
               to="/intro"
               className="text-slate-400 hover:text-white transition-colors text-sm"

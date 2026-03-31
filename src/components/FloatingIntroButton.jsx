@@ -56,11 +56,11 @@ const FloatingIntroButton = () => {
     <AnimatePresence>
       {visible && (
         <motion.div
-          initial={{ x: -100, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: -100, opacity: 0 }}
+          initial={{ y: 80, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 80, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-          className="fixed bottom-6 left-6 z-40"
+          className="fixed bottom-20 left-4 z-40 sm:bottom-6 sm:left-6"
         >
           <div className="relative">
             <button

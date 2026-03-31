@@ -45,6 +45,7 @@ const AdminVideosPage = lazy(() => import('./pages/AdminVideosPage'));
 const PodcastsPage = lazy(() => import('./pages/PodcastsPage'));
 const GrammarOverviewPage = lazy(() => import('./pages/GrammarOverviewPage'));
 const VocabularySectionPage = lazy(() => import('./pages/VocabularySectionPage'));
+const SentenceXRay = lazy(() => import('./pages/SentenceXRay'));
 
 function PageLoader() {
   return (
@@ -205,6 +206,9 @@ function App() {
                         </SubscriptionGuard>
                       }
                     />
+
+                    {/* Sentence X-Ray — public tool */}
+                    <Route path="/analyze" element={<SentenceXRay />} />
 
                     {/* Admin */}
                     <Route
