@@ -42,10 +42,10 @@ const LandingPage = () => {
   ];
 
   const levels = [
-    { level: 'A1', icon: Sun, color: 'from-a1-primary to-a1-secondary', name: 'Beginner' },
-    { level: 'A2', icon: TreePine, color: 'from-a2-primary to-a2-secondary', name: 'Elementary' },
-    { level: 'B1', icon: Waves, color: 'from-b1-primary to-b1-secondary', name: 'Intermediate' },
-    { level: 'B2', icon: Moon, color: 'from-b2-primary to-b2-secondary', name: 'Upper Intermediate' },
+    { level: 'A1', icon: Sun,      color: 'from-[#F4B99A] to-[#D9A8B4]', name: 'Beginner' },
+    { level: 'A2', icon: TreePine, color: 'from-[#7BAF8E] to-[#A8D4AC]', name: 'Elementary' },
+    { level: 'B1', icon: Waves,    color: 'from-[#5A7A9A] to-[#B0D4E8]', name: 'Intermediate' },
+    { level: 'B2', icon: Moon,     color: 'from-[#8A7AAF] to-[#BDB0D9]', name: 'Upper Intermediate' },
   ];
 
   return (
