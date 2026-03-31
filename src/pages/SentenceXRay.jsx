@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Scan, ArrowRight, Loader2, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { Scan, ArrowRight, Loader2, AlertCircle, ChevronDown, ChevronUp, Type, Sparkles, Eye } from 'lucide-react';
 import SEO from '../components/SEO';
 
 const ROLE_LABELS = {
@@ -160,6 +160,75 @@ function CaseLegend() {
   );
 }
 
+const HOW_IT_WORKS = [
+  { icon: Type,     step: '1', label: 'Paste any German sentence' },
+  { icon: Sparkles, step: '2', label: 'AI analyzes grammar instantly' },
+  { icon: Eye,      step: '3', label: 'See cases, roles, and why' },
+];
+
+const PREVIEW_WORDS = [
+  { text: 'Ich',     case: 'nominative', role: 'subject',         translation: 'I' },
+  { text: 'gebe',    case: null,         role: 'verb',            translation: 'give' },
+  { text: 'dir',     case: 'dative',     role: 'indirect_object', translation: 'to you' },
+  { text: 'das Buch', case: 'accusative', role: 'direct_object',  translation: 'the book' },
+];
+
+function HowItWorks() {
+  return (
+    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-0 py-4">
+      {HOW_IT_WORKS.map(({ icon: Icon, step, label }, i) => (
+        <div key={step} className="flex sm:flex-1 items-center gap-2 sm:justify-center">
+          <div className="flex-shrink-0 w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center">
+            <Icon size={14} className="text-slate-500" />
+          </div>
+          <span className="text-sm text-slate-500">
+            <span className="font-semibold text-slate-600">{step}.</span> {label}
+          </span>
+          {i < HOW_IT_WORKS.length - 1 && (
+            <ArrowRight size={14} className="hidden sm:block text-slate-300 ml-2 flex-shrink-0" />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function PreviewExample({ onTryIt }) {
+  return (
+    <div className="rounded-2xl border border-dashed border-slate-300 bg-white/60 p-4">
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+          Example result
+        </span>
+        <button
+          onClick={onTryIt}
+          className="text-xs text-indigo-500 hover:text-indigo-700 font-medium transition-colors"
+        >
+          Try it yourself ↑
+        </button>
+      </div>
+
+      <p className="text-sm font-medium text-slate-500 italic mb-3">
+        "Ich gebe dir das Buch." — <span className="not-italic">I give you the book.</span>
+      </p>
+
+      <div className="flex flex-wrap gap-2">
+        {PREVIEW_WORDS.map((word) => {
+          const style = getStyle(word.case);
+          return (
+            <div key={word.text} className="flex flex-col items-center gap-1">
+              <span className={`px-3 py-1.5 rounded-lg text-sm font-semibold border opacity-80 ${style.chip}`}>
+                {word.text}
+              </span>
+              <span className="text-xs text-slate-400 italic">{word.translation}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 const SentenceXRay = () => {
   const [sentence, setSentence] = useState('');
   const [result, setResult] = useState(null);
@@ -272,27 +341,38 @@ const SentenceXRay = () => {
           </div>
         </motion.div>
 
-        {/* Example sentences */}
+        {/* How it works + preview — hidden once user has a result */}
         {!result && !loading && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.15 }}
-            className="mb-8"
+            className="mb-6 space-y-4"
           >
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-1">
-              Try an example
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {EXAMPLES.map((ex) => (
-                <button
-                  key={ex}
-                  onClick={() => analyze(ex)}
-                  className="text-sm px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-700 hover:bg-indigo-50 transition-colors"
-                >
-                  {ex}
-                </button>
-              ))}
+            {/* How it works */}
+            <div className="bg-white rounded-2xl border border-slate-200 px-4 divide-y divide-slate-100 sm:divide-y-0">
+              <HowItWorks />
+            </div>
+
+            {/* Visual preview */}
+            <PreviewExample onTryIt={() => document.querySelector('textarea')?.focus()} />
+
+            {/* Example sentences */}
+            <div>
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-1">
+                Or try an example
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {EXAMPLES.map((ex) => (
+                  <button
+                    key={ex}
+                    onClick={() => analyze(ex)}
+                    className="text-sm px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-700 hover:bg-indigo-50 transition-colors"
+                  >
+                    {ex}
+                  </button>
+                ))}
+              </div>
             </div>
           </motion.div>
         )}
