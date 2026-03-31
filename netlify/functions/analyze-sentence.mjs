@@ -1,3 +1,22 @@
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+let supabase;
+try {
+  supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+} catch (e) {
+  console.error('Failed to initialize Supabase client:', e.message);
+}
+
+const DAILY_LIMITS = {
+  anonymous: 3,
+  free:      5,
+  pro:       30,
+  premium:   Infinity,
+};
+
 const SYSTEM_PROMPT = `You are a German grammar analyzer. Given a German sentence, break it down into its grammatical components.
 
 For each meaningful unit (words that belong together like "dem Kind", "die Mutter"):
@@ -32,6 +51,59 @@ JSON format:
   "fullTranslation": "string — natural English translation of the whole sentence"
 }`;
 
+// Returns { tier, limit } for a user_id. Falls back to 'free' on any error.
+async function getUserTier(userId) {
+  if (!supabase || !userId) return { tier: 'anonymous', limit: DAILY_LIMITS.anonymous };
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('subscription_tier, is_subscribed')
+    .eq('id', userId)
+    .maybeSingle();
+
+  if (!profile) return { tier: 'free', limit: DAILY_LIMITS.free };
+
+  const tier = profile.subscription_tier === 'premium' ? 'premium'
+             : profile.subscription_tier === 'pro'     ? 'pro'
+             : profile.is_subscribed                   ? 'pro'   // legacy fallback
+             : 'free';
+
+  return { tier, limit: DAILY_LIMITS[tier] };
+}
+
+// Returns how many times this user/anon has analyzed today (UTC day).
+async function countTodayUsage(userId, anonymousId) {
+  if (!supabase) return 0;
+
+  const startOfDay = new Date();
+  startOfDay.setUTCHours(0, 0, 0, 0);
+
+  let query = supabase
+    .from('xray_usage')
+    .select('id', { count: 'exact', head: true })
+    .gte('used_at', startOfDay.toISOString());
+
+  if (userId) {
+    query = query.eq('user_id', userId);
+  } else if (anonymousId) {
+    query = query.eq('anonymous_id', anonymousId).is('user_id', null);
+  } else {
+    return 0;
+  }
+
+  const { count } = await query;
+  return count ?? 0;
+}
+
+async function recordUsage(userId, anonymousId, sentence) {
+  if (!supabase) return;
+  await supabase.from('xray_usage').insert({
+    user_id:      userId || null,
+    anonymous_id: userId ? null : (anonymousId || null),
+    sentence:     sentence?.slice(0, 500) || null,
+  });
+}
+
 export const handler = async (event) => {
   const allowedOrigins = [
     'https://deutsch-meister.de',
@@ -61,24 +133,37 @@ export const handler = async (event) => {
   }
 
   try {
-    const { sentence } = JSON.parse(event.body || '{}');
+    const { sentence, userId, anonymousId } = JSON.parse(event.body || '{}');
 
     if (!sentence || typeof sentence !== 'string' || sentence.trim().length === 0) {
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({ error: 'sentence is required' }),
-      };
+      return { statusCode: 400, headers, body: JSON.stringify({ error: 'sentence is required' }) };
     }
-
     if (sentence.trim().length > 500) {
+      return { statusCode: 400, headers, body: JSON.stringify({ error: 'Sentence too long (max 500 characters)' }) };
+    }
+
+    // --- Usage gate ---
+    const { tier, limit } = await getUserTier(userId || null);
+    const usedToday = await countTodayUsage(userId || null, anonymousId || null);
+
+    if (limit !== Infinity && usedToday >= limit) {
       return {
-        statusCode: 400,
+        statusCode: 429,
         headers,
-        body: JSON.stringify({ error: 'Sentence too long (max 500 characters)' }),
+        body: JSON.stringify({
+          error: 'limit_reached',
+          tier,
+          limit,
+          usedToday,
+          remaining: 0,
+        }),
       };
     }
 
+    // --- Record usage before calling Claude (counts even on API error) ---
+    await recordUsage(userId || null, anonymousId || null, sentence.trim());
+
+    // --- Call Claude ---
     const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -99,11 +184,7 @@ export const handler = async (event) => {
     if (!claudeResponse.ok) {
       const errorText = await claudeResponse.text();
       console.error('Claude API error:', claudeResponse.status, errorText);
-      return {
-        statusCode: 502,
-        headers,
-        body: JSON.stringify({ error: 'Failed to analyze sentence' }),
-      };
+      return { statusCode: 502, headers, body: JSON.stringify({ error: 'Failed to analyze sentence' }) };
     }
 
     const claudeData = await claudeResponse.json();
@@ -114,19 +195,17 @@ export const handler = async (event) => {
       const jsonMatch = responseText.match(/\{[\s\S]*\}/);
       if (!jsonMatch) throw new Error('No JSON found in response');
       analysis = JSON.parse(jsonMatch[0]);
-    } catch (parseError) {
+    } catch {
       console.error('Failed to parse Claude response:', responseText);
-      return {
-        statusCode: 500,
-        headers,
-        body: JSON.stringify({ error: 'Failed to parse analysis response' }),
-      };
+      return { statusCode: 500, headers, body: JSON.stringify({ error: 'Failed to parse analysis response' }) };
     }
+
+    const remaining = limit === Infinity ? null : Math.max(0, limit - usedToday - 1);
 
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(analysis),
+      body: JSON.stringify({ ...analysis, usage: { tier, limit: limit === Infinity ? null : limit, usedToday: usedToday + 1, remaining } }),
     };
   } catch (error) {
     console.error('analyze-sentence error:', error.message, error.stack);

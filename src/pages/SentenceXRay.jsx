@@ -1,53 +1,56 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Scan, ArrowRight, Loader2, AlertCircle, ChevronDown, ChevronUp, Type, Sparkles, Eye } from 'lucide-react';
+import { Scan, ArrowRight, Loader2, AlertCircle, ChevronDown, ChevronUp, Type, Sparkles, Eye, Crown } from 'lucide-react';
 import SEO from '../components/SEO';
+import { useAuth } from '../contexts/AuthContext';
+
+// ─── constants ───────────────────────────────────────────────────────────────
 
 const ROLE_LABELS = {
-  subject: 'Subject',
-  direct_object: 'Direct Object',
-  indirect_object: 'Indirect Object',
-  verb: 'Verb',
-  adverb: 'Adverb',
-  adjective: 'Adjective',
+  subject:            'Subject',
+  direct_object:      'Direct Object',
+  indirect_object:    'Indirect Object',
+  verb:               'Verb',
+  adverb:             'Adverb',
+  adjective:          'Adjective',
   preposition_phrase: 'Prep. Phrase',
-  conjunction: 'Conjunction',
-  particle: 'Particle',
-  other: 'Other',
+  conjunction:        'Conjunction',
+  particle:           'Particle',
+  other:              'Other',
 };
 
 const CASE_STYLES = {
   nominative: {
-    chip: 'bg-[#E6F1FB] border border-[#378ADD] text-[#0C447C]',
+    chip:  'bg-[#E6F1FB] border border-[#378ADD] text-[#0C447C]',
     badge: 'bg-[#378ADD] text-white',
-    card: 'border-[#378ADD] bg-[#E6F1FB]/40',
+    card:  'border-[#378ADD] bg-[#E6F1FB]/40',
     label: 'Nominative',
   },
   accusative: {
-    chip: 'bg-[#FAECE7] border border-[#D85A30] text-[#712B13]',
+    chip:  'bg-[#FAECE7] border border-[#D85A30] text-[#712B13]',
     badge: 'bg-[#D85A30] text-white',
-    card: 'border-[#D85A30] bg-[#FAECE7]/40',
+    card:  'border-[#D85A30] bg-[#FAECE7]/40',
     label: 'Accusative',
   },
   dative: {
-    chip: 'bg-[#E1F5EE] border border-[#1D9E75] text-[#085041]',
+    chip:  'bg-[#E1F5EE] border border-[#1D9E75] text-[#085041]',
     badge: 'bg-[#1D9E75] text-white',
-    card: 'border-[#1D9E75] bg-[#E1F5EE]/40',
+    card:  'border-[#1D9E75] bg-[#E1F5EE]/40',
     label: 'Dative',
   },
   genitive: {
-    chip: 'bg-[#EEEDFE] border border-[#7F77DD] text-[#3C3489]',
+    chip:  'bg-[#EEEDFE] border border-[#7F77DD] text-[#3C3489]',
     badge: 'bg-[#7F77DD] text-white',
-    card: 'border-[#7F77DD] bg-[#EEEDFE]/40',
+    card:  'border-[#7F77DD] bg-[#EEEDFE]/40',
     label: 'Genitive',
   },
 };
 
 const DEFAULT_STYLE = {
-  chip: 'bg-slate-100 border border-slate-300 text-slate-700',
+  chip:  'bg-slate-100 border border-slate-300 text-slate-700',
   badge: 'bg-slate-500 text-white',
-  card: 'border-slate-200 bg-slate-50',
+  card:  'border-slate-200 bg-slate-50',
   label: null,
 };
 
@@ -59,9 +62,46 @@ const EXAMPLES = [
   'Ich kaufe meiner Schwester ein Geschenk.',
 ];
 
+const HOW_IT_WORKS = [
+  { icon: Type,     step: '1', label: 'Paste any German sentence' },
+  { icon: Sparkles, step: '2', label: 'AI analyzes grammar instantly' },
+  { icon: Eye,      step: '3', label: 'See cases, roles, and why' },
+];
+
+const PREVIEW_WORDS = [
+  { text: 'Ich',      case: 'nominative', role: 'subject',         translation: 'I' },
+  { text: 'gebe',     case: null,         role: 'verb',            translation: 'give' },
+  { text: 'dir',      case: 'dative',     role: 'indirect_object', translation: 'to you' },
+  { text: 'das Buch', case: 'accusative', role: 'direct_object',   translation: 'the book' },
+];
+
+const TIER_LABELS = {
+  anonymous: 'visitor',
+  free:      'free account',
+  pro:       'Pro',
+  premium:   'Premium',
+};
+
+const ANON_ID_KEY = 'dm_xray_anon_id';
+
+function getOrCreateAnonId() {
+  try {
+    let id = localStorage.getItem(ANON_ID_KEY);
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem(ANON_ID_KEY, id);
+    }
+    return id;
+  } catch {
+    return 'unknown';
+  }
+}
+
 function getStyle(caseVal) {
   return CASE_STYLES[caseVal] || DEFAULT_STYLE;
 }
+
+// ─── sub-components ───────────────────────────────────────────────────────────
 
 function WordChip({ word, isSelected, onClick }) {
   const style = getStyle(word.case);
@@ -160,19 +200,6 @@ function CaseLegend() {
   );
 }
 
-const HOW_IT_WORKS = [
-  { icon: Type,     step: '1', label: 'Paste any German sentence' },
-  { icon: Sparkles, step: '2', label: 'AI analyzes grammar instantly' },
-  { icon: Eye,      step: '3', label: 'See cases, roles, and why' },
-];
-
-const PREVIEW_WORDS = [
-  { text: 'Ich',     case: 'nominative', role: 'subject',         translation: 'I' },
-  { text: 'gebe',    case: null,         role: 'verb',            translation: 'give' },
-  { text: 'dir',     case: 'dative',     role: 'indirect_object', translation: 'to you' },
-  { text: 'das Buch', case: 'accusative', role: 'direct_object',  translation: 'the book' },
-];
-
 function HowItWorks() {
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-0 py-4">
@@ -207,11 +234,9 @@ function PreviewExample({ onTryIt }) {
           Try it yourself ↑
         </button>
       </div>
-
       <p className="text-sm font-medium text-slate-500 italic mb-3">
         "Ich gebe dir das Buch." — <span className="not-italic">I give you the book.</span>
       </p>
-
       <div className="flex flex-wrap gap-2">
         {PREVIEW_WORDS.map((word) => {
           const style = getStyle(word.case);
@@ -229,12 +254,88 @@ function PreviewExample({ onTryIt }) {
   );
 }
 
+function UsageBar({ usage, isLoggedIn }) {
+  if (!usage || usage.remaining === null) return null; // premium = unlimited
+
+  const { limit, usedToday, remaining, tier } = usage;
+  const pct = Math.min(100, (usedToday / limit) * 100);
+  const isLow = remaining <= 1;
+
+  return (
+    <div className="flex items-center gap-3">
+      <div className="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+        <div
+          className={`h-full rounded-full transition-all duration-500 ${isLow ? 'bg-amber-400' : 'bg-indigo-400'}`}
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+      <span className={`text-xs font-medium whitespace-nowrap ${isLow ? 'text-amber-600' : 'text-slate-500'}`}>
+        {remaining} of {limit} left today
+        {!isLoggedIn && (
+          <Link to="/signup" className="ml-1.5 text-indigo-500 hover:text-indigo-700 underline underline-offset-2">
+            Sign up for more
+          </Link>
+        )}
+      </span>
+    </div>
+  );
+}
+
+function LimitReachedBanner({ tier, limit, isLoggedIn }) {
+  const tierLabel = TIER_LABELS[tier] || tier;
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 p-5 text-center"
+    >
+      <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-amber-100 mb-3">
+        <Crown size={20} className="text-amber-600" />
+      </div>
+      <h3 className="font-display font-bold text-slate-800 text-base mb-1">
+        You've used all {limit} {tierLabel} {limit === 1 ? 'analysis' : 'analyses'} today
+      </h3>
+      <p className="text-sm text-slate-600 mb-4">
+        {isLoggedIn
+          ? 'Upgrade to Pro for 30 daily analyses, or Premium for unlimited.'
+          : 'Create a free account for 5 daily analyses, or upgrade to Pro.'}
+      </p>
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
+        <Link
+          to="/pricing"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-semibold rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all shadow-sm"
+        >
+          <Crown size={14} />
+          {isLoggedIn ? 'Upgrade to Pro' : 'See plans'}
+        </Link>
+        {!isLoggedIn && (
+          <Link
+            to="/signup"
+            className="inline-flex items-center gap-2 px-5 py-2.5 border border-slate-300 text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-50 transition-colors"
+          >
+            Sign up free
+          </Link>
+        )}
+        <span className="text-xs text-slate-400">Or come back tomorrow!</span>
+      </div>
+    </motion.div>
+  );
+}
+
+// ─── main page ────────────────────────────────────────────────────────────────
+
 const SentenceXRay = () => {
-  const [sentence, setSentence] = useState('');
-  const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const { user } = useAuth();
+  const [sentence, setSentence]       = useState('');
+  const [result, setResult]           = useState(null);
+  const [loading, setLoading]         = useState(false);
+  const [error, setError]             = useState(null);
   const [selectedWord, setSelectedWord] = useState(null);
+  const [limitReached, setLimitReached] = useState(null); // { tier, limit }
+  const [usage, setUsage]             = useState(null);   // { tier, limit, usedToday, remaining }
+
+  // Stable anonymous ID
+  const [anonId] = useState(() => getOrCreateAnonId());
 
   const analyze = async (text) => {
     const trimmed = (text || sentence).trim();
@@ -243,6 +344,7 @@ const SentenceXRay = () => {
     setLoading(true);
     setError(null);
     setResult(null);
+    setLimitReached(null);
     setSelectedWord(null);
     if (text) setSentence(text);
 
@@ -250,16 +352,27 @@ const SentenceXRay = () => {
       const res = await fetch('/.netlify/functions/analyze-sentence', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sentence: trimmed }),
+        body: JSON.stringify({
+          sentence:    trimmed,
+          userId:      user?.id || null,
+          anonymousId: user?.id ? null : anonId,
+        }),
       });
 
       const data = await res.json();
+
+      if (res.status === 429) {
+        setLimitReached({ tier: data.tier, limit: data.limit });
+        setUsage({ tier: data.tier, limit: data.limit, usedToday: data.usedToday, remaining: 0 });
+        return;
+      }
 
       if (!res.ok) {
         throw new Error(data.error || 'Analysis failed');
       }
 
       setResult(data);
+      if (data.usage) setUsage(data.usage);
     } catch (err) {
       setError(err.message || 'Something went wrong. Please try again.');
     } finally {
@@ -274,9 +387,14 @@ const SentenceXRay = () => {
     }
   };
 
-  const handleWordClick = (index) => {
-    setSelectedWord(selectedWord === index ? null : index);
+  const reset = () => {
+    setResult(null);
+    setSentence('');
+    setError(null);
+    setLimitReached(null);
   };
+
+  const showIntro = !result && !loading && !limitReached;
 
   return (
     <div className="min-h-screen bg-slate-50 pt-20 pb-16">
@@ -319,12 +437,18 @@ const SentenceXRay = () => {
             rows={2}
             className="w-full resize-none text-slate-800 text-base placeholder:text-slate-400 focus:outline-none leading-relaxed"
           />
-          <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-            <span className="text-xs text-slate-400">{sentence.length}/500</span>
+          <div className="flex items-center justify-between gap-3 pt-2 border-t border-slate-100">
+            <div className="flex-1 min-w-0">
+              {usage ? (
+                <UsageBar usage={usage} isLoggedIn={!!user} />
+              ) : (
+                <span className="text-xs text-slate-400">{sentence.length}/500</span>
+              )}
+            </div>
             <button
               onClick={() => analyze()}
-              disabled={loading || !sentence.trim()}
-              className="flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-violet-500 to-indigo-600 text-white text-sm font-semibold rounded-xl hover:from-violet-600 hover:to-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+              disabled={loading || !sentence.trim() || !!limitReached}
+              className="flex-shrink-0 flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-violet-500 to-indigo-600 text-white text-sm font-semibold rounded-xl hover:from-violet-600 hover:to-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
             >
               {loading ? (
                 <>
@@ -341,41 +465,41 @@ const SentenceXRay = () => {
           </div>
         </motion.div>
 
-        {/* How it works + preview — hidden once user has a result */}
-        {!result && !loading && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.15 }}
-            className="mb-6 space-y-4"
-          >
-            {/* How it works */}
-            <div className="bg-white rounded-2xl border border-slate-200 px-4 divide-y divide-slate-100 sm:divide-y-0">
-              <HowItWorks />
-            </div>
-
-            {/* Visual preview */}
-            <PreviewExample onTryIt={() => document.querySelector('textarea')?.focus()} />
-
-            {/* Example sentences */}
-            <div>
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-1">
-                Or try an example
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {EXAMPLES.map((ex) => (
-                  <button
-                    key={ex}
-                    onClick={() => analyze(ex)}
-                    className="text-sm px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-700 hover:bg-indigo-50 transition-colors"
-                  >
-                    {ex}
-                  </button>
-                ))}
+        {/* Intro: how it works + preview + examples */}
+        <AnimatePresence>
+          {showIntro && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ delay: 0.15 }}
+              className="mb-6 space-y-4"
+            >
+              <div className="bg-white rounded-2xl border border-slate-200 px-4 divide-y divide-slate-100 sm:divide-y-0">
+                <HowItWorks />
               </div>
-            </div>
-          </motion.div>
-        )}
+
+              <PreviewExample onTryIt={() => document.querySelector('textarea')?.focus()} />
+
+              <div>
+                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-1">
+                  Or try an example
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {EXAMPLES.map((ex) => (
+                    <button
+                      key={ex}
+                      onClick={() => analyze(ex)}
+                      className="text-sm px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-700 hover:bg-indigo-50 transition-colors"
+                    >
+                      {ex}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Error */}
         <AnimatePresence>
@@ -388,6 +512,24 @@ const SentenceXRay = () => {
             >
               <AlertCircle size={18} className="flex-shrink-0 mt-0.5" />
               <p className="text-sm">{error}</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Limit reached */}
+        <AnimatePresence>
+          {limitReached && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="mb-6"
+            >
+              <LimitReachedBanner
+                tier={limitReached.tier}
+                limit={limitReached.limit}
+                isLoggedIn={!!user}
+              />
             </motion.div>
           )}
         </AnimatePresence>
@@ -418,7 +560,7 @@ const SentenceXRay = () => {
                     key={i}
                     word={word}
                     isSelected={selectedWord === i}
-                    onClick={() => handleWordClick(i)}
+                    onClick={() => setSelectedWord(selectedWord === i ? null : i)}
                   />
                 ))}
               </div>
@@ -436,7 +578,7 @@ const SentenceXRay = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: result.words.length * 0.06 + 0.1 }}
-                  className="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200"
+                  className="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 mb-6"
                 >
                   <p className="text-xs font-semibold text-amber-600 uppercase tracking-wider mb-1">
                     Key Insight
@@ -451,9 +593,9 @@ const SentenceXRay = () => {
               )}
 
               {/* Analyze another */}
-              <div className="mt-6 text-center">
+              <div className="text-center">
                 <button
-                  onClick={() => { setResult(null); setSentence(''); setError(null); }}
+                  onClick={reset}
                   className="text-sm text-slate-500 hover:text-slate-700 transition-colors underline underline-offset-2"
                 >
                   Analyze another sentence
