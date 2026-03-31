@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { ArrowRight, BookOpen, MessageSquare, Award, Sparkles, Sun, TreePine, Waves, Moon, Clock, Youtube, ExternalLink } from 'lucide-react';
+import { ArrowRight, BookOpen, MessageSquare, Award, Sparkles, Sun, TreePine, Waves, Moon, Clock, Youtube, ExternalLink, Scan } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import SEO from '../components/SEO';
@@ -159,6 +159,99 @@ const LandingPage = () => {
                 </div>
               </motion.div>
             ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Sentence X-Ray Feature Section */}
+      <section className="py-20 bg-gradient-to-b from-slate-50 to-white border-b border-slate-100">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex flex-col lg:flex-row items-center gap-12"
+          >
+            {/* Left: copy + CTA */}
+            <div className="flex-1 text-center lg:text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-100 text-violet-700 text-xs font-semibold mb-4">
+                <Scan size={13} />
+                New Tool
+              </div>
+              <h2 className="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-4 leading-tight">
+                Understand Any German Sentence Instantly
+              </h2>
+              <p className="text-lg text-slate-600 mb-6 leading-relaxed">
+                Paste any sentence. See cases, roles, and why — in seconds.
+              </p>
+
+              {/* Value props */}
+              <div className="flex flex-wrap justify-center lg:justify-start gap-x-5 gap-y-2 mb-8">
+                {['Works with any sentence', 'Color-coded cases', 'Explains the WHY'].map((v) => (
+                  <span key={v} className="flex items-center gap-1.5 text-sm text-slate-600">
+                    <span className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>
+                    {v}
+                  </span>
+                ))}
+              </div>
+
+              <Link
+                to="/analyze"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-gradient-to-r from-violet-500 to-indigo-600 text-white font-semibold rounded-2xl hover:from-violet-600 hover:to-indigo-700 transition-all shadow-lg shadow-indigo-200 text-base"
+              >
+                <Scan size={18} />
+                Try Sentence X-Ray
+                <ArrowRight size={16} />
+              </Link>
+            </div>
+
+            {/* Right: static visual preview */}
+            <div className="flex-1 w-full max-w-md lg:max-w-none">
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.15 }}
+                className="bg-white rounded-2xl border border-slate-200 shadow-xl shadow-slate-200/60 p-5"
+              >
+                {/* Mock input */}
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 mb-4">
+                  <span className="flex-1 text-sm text-slate-600 font-medium">Der Mann gibt dem Kind einen Apfel.</span>
+                  <Link
+                    to="/analyze"
+                    className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-violet-500 to-indigo-600 text-white text-xs font-semibold rounded-lg hover:from-violet-600 hover:to-indigo-700 transition-all"
+                  >
+                    <Scan size={12} />
+                    Analyze
+                  </Link>
+                </div>
+
+                {/* Color-coded chips */}
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {[
+                    { text: 'Der Mann',    bg: 'bg-[#E6F1FB]', border: 'border-[#378ADD]', color: 'text-[#0C447C]', label: 'Nominative · Subject' },
+                    { text: 'gibt',        bg: 'bg-slate-100',  border: 'border-slate-300',  color: 'text-slate-700', label: 'Verb' },
+                    { text: 'dem Kind',    bg: 'bg-[#E1F5EE]', border: 'border-[#1D9E75]', color: 'text-[#085041]', label: 'Dative · Indirect Obj.' },
+                    { text: 'einen Apfel', bg: 'bg-[#FAECE7]', border: 'border-[#D85A30]', color: 'text-[#712B13]', label: 'Accusative · Direct Obj.' },
+                  ].map((chip) => (
+                    <div key={chip.text} className="flex flex-col gap-1">
+                      <span className={`px-3 py-1.5 rounded-lg text-sm font-semibold border ${chip.bg} ${chip.border} ${chip.color}`}>
+                        {chip.text}
+                      </span>
+                      <span className="text-[10px] text-slate-400 px-1">{chip.label}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Mini insight box */}
+                <div className="p-3 rounded-xl bg-amber-50 border border-amber-200">
+                  <p className="text-xs font-semibold text-amber-600 mb-0.5">Key Insight</p>
+                  <p className="text-xs text-slate-700 leading-relaxed">
+                    Cases tell German who does what — not word order. <span className="font-medium">"dem Kind"</span> is dative because it receives the apple indirectly.
+                  </p>
+                </div>
+              </motion.div>
+            </div>
           </motion.div>
         </div>
       </section>
