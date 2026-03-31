@@ -399,9 +399,29 @@ const SentenceXRay = () => {
   return (
     <div className="min-h-screen bg-slate-50 pt-20 pb-16">
       <SEO
-        title="Sentence X-Ray — German Grammar Analyzer"
-        description="Paste any German sentence and instantly see a visual breakdown of each word's grammatical role, case, and function."
+        title="Sentence X-Ray — Analyze Any German Sentence"
+        description="Paste any German sentence and instantly see the grammatical breakdown. Color-coded cases, word roles, and explanations for why each word works the way it does."
         path="/analyze"
+        keywords="German grammar analyzer, German sentence analysis, German cases, nominative accusative dative genitive, learn German grammar"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "name": "Sentence X-Ray",
+          "description": "Analyze any German sentence to see grammatical cases, word roles, and explanations.",
+          "url": "https://deutsch-meister.de/analyze",
+          "applicationCategory": "EducationalApplication",
+          "operatingSystem": "Any",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "provider": {
+            "@type": "Organization",
+            "name": "DeutschMeister",
+            "url": "https://deutsch-meister.de"
+          }
+        }}
       />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6">

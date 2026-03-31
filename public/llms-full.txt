@@ -4,7 +4,7 @@
 
 ## About
 
-DeutschMeister (https://deutsch-meister.de) is a free German learning platform covering CEFR levels A1.1 to B2.2. It offers 64 grammar topics, AI speaking practice, a free level test, podcasts, listening exercises, vocabulary, and reading lessons — all with English explanations.
+DeutschMeister (https://deutsch-meister.de) is a free German learning platform covering CEFR levels A1.1 to B2.2. It offers 64 grammar topics, AI speaking practice, a free level test, podcasts, listening exercises, vocabulary, reading lessons, and a free Sentence X-Ray grammar analyzer — all with English explanations.
 
 ## Access Model
 - **A1.1:** Free forever, no signup required
@@ -66,6 +66,16 @@ DeutschMeister (https://deutsch-meister.de) is a free German learning platform c
 - Comprehension questions
 - Authentic German texts
 - URL: https://deutsch-meister.de/reading
+
+### Sentence X-Ray (Free Tool)
+- Analyzes any German sentence and shows a visual grammatical breakdown
+- Color-coded cases: nominative (blue), accusative (coral), dative (teal), genitive (purple)
+- Identifies word roles: subject, direct object, indirect object, verb, adverb, and more
+- Explains WHY each word has its case or role (not just labels)
+- Suggests relevant grammar topics to learn more
+- Highlights key insight per sentence (word order, emphasis, grammar pattern)
+- Usage limits: 3/day (anonymous), 5/day (free account), 30/day (Pro), unlimited (Premium)
+- URL: https://deutsch-meister.de/analyze
 
 ## Complete Grammar Topic List
 
@@ -170,4 +180,4 @@ DeutschMeister (https://deutsch-meister.de) is a free German learning platform c
 
 ---
 
-*Last updated: 2026-03-30*
+*Last updated: 2026-03-31*

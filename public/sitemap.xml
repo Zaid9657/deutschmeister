@@ -24,6 +24,11 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://deutsch-meister.de/analyze</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://deutsch-meister.de/video-library</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
