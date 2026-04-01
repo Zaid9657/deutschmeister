@@ -1,15 +1,27 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
-import { ArrowRight, BookOpen, MessageSquare, Award, Sparkles, Sun, TreePine, Waves, Moon, Clock, Youtube, ExternalLink, Scan } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, BookOpen, MessageSquare, Award, Sparkles, Sun, TreePine, Waves, Moon, Clock, Youtube, ExternalLink, Scan, X } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import SEO from '../components/SEO';
+
+const BANNER_KEY = 'xray-banner-dismissed';
 
 const LandingPage = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription } = useSubscription();
+
+  const [bannerVisible, setBannerVisible] = useState(() => {
+    try { return !localStorage.getItem(BANNER_KEY); } catch { return false; }
+  });
+
+  const dismissBanner = () => {
+    setBannerVisible(false);
+    try { localStorage.setItem(BANNER_KEY, '1'); } catch { /* ignore */ }
+  };
   const inTrial = user ? isInFreeTrial() : false;
   const isSubscribed = user ? hasActiveSubscription() : false;
   const trialDays = user ? getTrialDaysRemaining() : 0;
@@ -50,6 +62,41 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen">
+      {/* Announcement Banner — logged-in users only */}
+      <AnimatePresence>
+        {user && bannerVisible && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="overflow-hidden"
+          >
+            <div className="flex items-center justify-between gap-3 px-4 sm:px-6 py-3 bg-[#E6F1FB] border-b border-[#378ADD]/20" style={{ minHeight: '48px' }}>
+              <p className="text-sm font-medium text-[#0C447C] flex-1 min-w-0">
+                🆕 <span className="font-semibold">New: Sentence X-Ray</span> — paste any German sentence, see exactly why each word works.
+              </p>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <Link
+                  to="/analyze"
+                  onClick={dismissBanner}
+                  className="px-3 py-1.5 rounded-lg bg-[#378ADD] text-white text-xs font-semibold hover:bg-[#2d6db5] transition-colors whitespace-nowrap"
+                >
+                  Try it →
+                </Link>
+                <button
+                  onClick={dismissBanner}
+                  className="p-1 rounded-md text-[#378ADD] hover:bg-[#378ADD]/10 transition-colors"
+                  aria-label="Dismiss"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <SEO
         title="Learn German Online - Free Lessons A1 to B2"
         description="Master German with free interactive lessons. Grammar, vocabulary, listening exercises, and podcasts for English speakers. CEFR levels A1.1 to B2.2."
