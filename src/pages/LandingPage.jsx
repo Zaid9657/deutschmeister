@@ -73,8 +73,8 @@ const LandingPage = () => {
             className="overflow-hidden"
           >
             <div className="flex items-center justify-between gap-3 px-4 sm:px-6 py-3 bg-[#E6F1FB] border-b border-[#378ADD]/20" style={{ minHeight: '48px' }}>
-              <p className="text-sm font-medium text-[#0C447C] flex-1 min-w-0">
-                🆕 <span className="font-semibold">New: Sentence X-Ray</span> — paste any German sentence, see exactly why each word works.
+              <p className="text-sm font-medium text-[#0C447C] flex-1 min-w-0 no-underline not-italic" style={{ textDecoration: 'none' }}>
+                <span style={{ textDecoration: 'none' }}>✨</span> <span className="font-semibold">New: Sentence X-Ray</span> — paste any German sentence, see exactly why each word works.
               </p>
               <div className="flex items-center gap-2 flex-shrink-0">
                 <Link

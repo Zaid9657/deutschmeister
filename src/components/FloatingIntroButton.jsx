@@ -60,7 +60,7 @@ const FloatingIntroButton = () => {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 80, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-          className="fixed bottom-20 left-4 z-40 sm:bottom-6 sm:left-6"
+          className="fixed bottom-24 left-4 z-50 sm:bottom-6 sm:left-6"
         >
           <div className="relative">
             <button
