@@ -1,30 +1,23 @@
 import { supabase } from './supabase.mjs';
 
-const PRO_MONTHLY_LIMIT = 5;
+// Sessions per month for Pro; sessions per day for trial
+const PRO_MONTHLY_LIMIT   = 30;
+const TRIAL_DAILY_LIMIT   = 5;
 
+// Tiers: pro | free_trial | free_expired
 async function getTier(userId) {
   const { data: profile } = await supabase
     .from('profiles')
-    .select('subscription_tier, is_subscribed, trial_started_at, trial_ends_at')
+    .select('subscription_tier, is_subscribed, trial_ends_at')
     .eq('id', userId)
     .maybeSingle();
 
-  if (!profile) return 'free';
+  if (!profile) return 'free_expired';
 
-  // Explicit tier set by webhook
-  if (profile.subscription_tier === 'premium') return 'premium';
-  if (profile.subscription_tier === 'pro') return 'pro';
+  if (profile.subscription_tier === 'pro' || profile.is_subscribed) return 'pro';
 
-  // Fallback: check is_subscribed flag (legacy, treat as pro)
-  if (profile.is_subscribed) return 'pro';
-
-  // Check active trial
-  if (profile.trial_started_at && profile.trial_ends_at) {
-    const now = new Date();
-    if (now < new Date(profile.trial_ends_at)) return 'trial';
-  }
-
-  return 'free';
+  const trialActive = profile.trial_ends_at && new Date(profile.trial_ends_at) > new Date();
+  return trialActive ? 'free_trial' : 'free_expired';
 }
 
 async function getMonthlySessionCount(userId) {
@@ -44,17 +37,21 @@ async function getMonthlySessionCount(userId) {
   return count || 0;
 }
 
-async function getLastSessionTime(userId) {
-  const { data, error } = await supabase
-    .from('speaking_usage')
-    .select('created_at')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .maybeSingle();
+async function getDailySessionCount(userId) {
+  const startOfDay = new Date();
+  startOfDay.setUTCHours(0, 0, 0, 0);
 
-  if (error || !data) return null;
-  return new Date(data.created_at);
+  const { count, error } = await supabase
+    .from('speaking_usage')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', userId)
+    .gte('created_at', startOfDay.toISOString());
+
+  if (error) {
+    console.error('Error counting daily sessions:', error.message);
+    return 0;
+  }
+  return count || 0;
 }
 
 export async function checkUsage(userId) {
@@ -62,8 +59,8 @@ export async function checkUsage(userId) {
   const tier = await getTier(userId);
   console.log('[checkUsage] User tier:', tier);
 
-  if (tier === 'premium') {
-    return { allowed: true, unlimited: true, tier };
+  if (tier === 'free_expired') {
+    return { allowed: false, tier, reason: 'subscription_required' };
   }
 
   if (tier === 'pro') {
@@ -78,22 +75,16 @@ export async function checkUsage(userId) {
     };
   }
 
-  if (tier === 'trial') {
-    const lastSession = await getLastSessionTime(userId);
-    console.log('[checkUsage] Trial user last session:', lastSession);
-    if (!lastSession) {
-      return { allowed: true, tier };
-    }
-    const hoursSince = (Date.now() - lastSession.getTime()) / (1000 * 60 * 60);
-    if (hoursSince >= 24) {
-      return { allowed: true, tier };
-    }
-    const nextAvailable = new Date(lastSession.getTime() + 24 * 60 * 60 * 1000).toISOString();
-    return { allowed: false, tier, reason: 'trial_cooldown', nextAvailable };
-  }
-
-  // free tier
-  return { allowed: false, tier: 'free', reason: 'subscription_required' };
+  // free_trial: 5 sessions/day
+  const used = await getDailySessionCount(userId);
+  console.log('[checkUsage] Trial user sessions today:', used, '/', TRIAL_DAILY_LIMIT);
+  return {
+    allowed: used < TRIAL_DAILY_LIMIT,
+    used,
+    limit: TRIAL_DAILY_LIMIT,
+    tier,
+    ...(used >= TRIAL_DAILY_LIMIT && { reason: 'daily_limit_reached' }),
+  };
 }
 
 export async function incrementUsage(userId) {

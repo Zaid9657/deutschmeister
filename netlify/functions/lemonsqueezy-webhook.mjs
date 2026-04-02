@@ -147,13 +147,7 @@ async function handleOrderCreated(data, meta) {
   console.log('Order created for user:', userId, 'Order ID:', data?.id);
 }
 
-const PREMIUM_VARIANT_IDS = [
-  '35d5a630-5fd2-417b-9100-fab542fd9dfc',
-  'f189cf9e-feed-477e-9dd3-fad5c3c22c3c',
-];
-
-function getSubscriptionTier(variantId) {
-  if (PREMIUM_VARIANT_IDS.includes(variantId)) return 'premium';
+function getSubscriptionTier(_variantId) {
   return 'pro';
 }
 

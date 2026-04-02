@@ -195,7 +195,7 @@ const PodcastsPage = () => {
                           {!accessible && (
                             <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-black/20 text-white text-xs font-semibold">
                               <Lock className="w-3 h-3" />
-                              Premium
+                              Pro
                             </span>
                           )}
                         </div>

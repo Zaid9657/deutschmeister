@@ -79,7 +79,6 @@ const TIER_LABELS = {
   anonymous: 'visitor',
   free:      'free account',
   pro:       'Pro',
-  premium:   'Premium',
 };
 
 const ANON_ID_KEY = 'dm_xray_anon_id';
@@ -255,7 +254,7 @@ function PreviewExample({ onTryIt }) {
 }
 
 function UsageBar({ usage, isLoggedIn }) {
-  if (!usage || usage.remaining === null) return null; // premium = unlimited
+  if (!usage || usage.remaining === null) return null;
 
   const { limit, usedToday, remaining, tier } = usage;
   const pct = Math.min(100, (usedToday / limit) * 100);
@@ -297,7 +296,7 @@ function LimitReachedBanner({ tier, limit, isLoggedIn }) {
       </h3>
       <p className="text-sm text-slate-600 mb-4">
         {isLoggedIn
-          ? 'Upgrade to Pro for 30 daily analyses, or Premium for unlimited.'
+          ? 'Upgrade to Pro for 30 daily analyses.'
           : 'Create a free account for 5 daily analyses, or upgrade to Pro.'}
       </p>
       <div className="flex flex-col sm:flex-row items-center justify-center gap-2">

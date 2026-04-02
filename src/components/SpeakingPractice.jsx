@@ -392,11 +392,9 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
             if (reason === 'subscription_required') {
               throw new Error('Ein Abonnement ist erforderlich, um Sprechübungen zu nutzen.');
             } else if (reason === 'monthly_limit_reached') {
-              throw new Error(`Monatliches Limit erreicht (${err.used}/${err.limit} Sitzungen). Upgrade auf Premium für unbegrenzte Übungen.`);
-            } else if (reason === 'trial_cooldown') {
-              const next = new Date(err.nextAvailable);
-              const hours = Math.ceil((next.getTime() - Date.now()) / (1000 * 60 * 60));
-              throw new Error(`Testversion: Nächste Sitzung in ~${hours} Stunde${hours !== 1 ? 'n' : ''} verfügbar.`);
+              throw new Error(`Monatliches Limit erreicht (${err.used}/${err.limit} Sitzungen). Upgrade auf Pro für mehr Übungen.`);
+            } else if (reason === 'daily_limit_reached') {
+              throw new Error(`Tageslimit erreicht (${err.used}/${err.limit} Sitzungen). Morgen stehen wieder ${err.limit} zur Verfügung.`);
             }
             throw new Error(err.error || 'Zugriff verweigert');
           }

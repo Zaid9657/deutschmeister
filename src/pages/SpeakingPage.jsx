@@ -69,14 +69,14 @@ function UsageGate({ usage }) {
         </div>
         <h3 className="font-bold text-slate-800 mb-2">Abo erforderlich</h3>
         <p className="text-sm text-slate-500 mb-4">
-          Sprechübungen sind für Abonnenten verfügbar. Starte mit dem Pro-Abo und erhalte 5 Gespräche pro Monat.
+          Deine Testphase ist abgelaufen. Upgrade auf Pro für 30 Gespräche pro Monat.
         </p>
         <Link
           to="/pricing"
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-xl transition-colors text-sm"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors text-sm"
         >
-          Pläne ansehen
-          <ArrowRight className="w-4 h-4" />
+          <Crown className="w-4 h-4" />
+          Auf Pro upgraden
         </Link>
       </div>
     );
@@ -89,42 +89,36 @@ function UsageGate({ usage }) {
           <Mic className="w-7 h-7 text-white" />
         </div>
         <h3 className="font-bold text-slate-800 mb-2">Monatliches Limit erreicht</h3>
-        <p className="text-sm text-slate-500 mb-1">
-          Du hast {used}/{limit} Gespräche diesen Monat genutzt.
-        </p>
         <p className="text-sm text-slate-500 mb-4">
-          Upgrade auf Premium für unbegrenzte Sprechübungen.
+          Du hast {used}/{limit} Gespräche diesen Monat genutzt.
         </p>
         <Link
           to="/pricing"
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded-xl transition-colors text-sm"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors text-sm"
         >
           <Crown className="w-4 h-4" />
-          Auf Premium upgraden
+          Auf Pro upgraden
         </Link>
       </div>
     );
   }
 
-  if (reason === 'trial_cooldown') {
-    const hours = nextAvailable
-      ? Math.max(1, Math.ceil((new Date(nextAvailable).getTime() - Date.now()) / (1000 * 60 * 60)))
-      : '?';
+  if (reason === 'daily_limit_reached') {
     return (
       <div className="max-w-md mx-auto mb-8 bg-white rounded-2xl border border-slate-200 p-6 text-center">
         <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-slate-100 flex items-center justify-center">
-          <Clock className="w-7 h-7 text-slate-400" />
+          <Mic className="w-7 h-7 text-slate-400" />
         </div>
-        <h3 className="font-bold text-slate-800 mb-2">Nächste Sitzung in ~{hours}h</h3>
+        <h3 className="font-bold text-slate-800 mb-2">Tageslimit erreicht</h3>
         <p className="text-sm text-slate-500 mb-4">
-          In der Testversion kannst du eine Sprechübung pro 24 Stunden machen. Upgrade für mehr Sitzungen.
+          Du hast heute {used}/{limit} Gespräche in der Testversion genutzt. Morgen stehen wieder {limit} zur Verfügung, oder upgrade auf Pro für 30 pro Monat.
         </p>
         <Link
           to="/pricing"
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-xl transition-colors text-sm"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors text-sm"
         >
-          Pläne ansehen
-          <ArrowRight className="w-4 h-4" />
+          <Crown className="w-4 h-4" />
+          Auf Pro upgraden
         </Link>
       </div>
     );

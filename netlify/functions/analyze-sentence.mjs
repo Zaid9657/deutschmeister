@@ -10,11 +10,12 @@ try {
   console.error('Failed to initialize Supabase client:', e.message);
 }
 
+// Tiers: anonymous | free_expired | free_trial | pro
 const DAILY_LIMITS = {
-  anonymous: 3,
-  free:      5,
-  pro:       30,
-  premium:   Infinity,
+  anonymous:    1,
+  free_expired: 1,
+  free_trial:   10,
+  pro:          50,
 };
 
 const SYSTEM_PROMPT = `You are a German grammar analyzer. Given a German sentence, break it down into its grammatical components.
@@ -51,23 +52,25 @@ JSON format:
   "fullTranslation": "string — natural English translation of the whole sentence"
 }`;
 
-// Returns { tier, limit } for a user_id. Falls back to 'free' on any error.
+// Returns { tier, limit } for a user_id.
 async function getUserTier(userId) {
   if (!supabase || !userId) return { tier: 'anonymous', limit: DAILY_LIMITS.anonymous };
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('subscription_tier, is_subscribed')
+    .select('subscription_tier, is_subscribed, trial_ends_at')
     .eq('id', userId)
     .maybeSingle();
 
-  if (!profile) return { tier: 'free', limit: DAILY_LIMITS.free };
+  if (!profile) return { tier: 'free_expired', limit: DAILY_LIMITS.free_expired };
 
-  const tier = profile.subscription_tier === 'premium' ? 'premium'
-             : profile.subscription_tier === 'pro'     ? 'pro'
-             : profile.is_subscribed                   ? 'pro'   // legacy fallback
-             : 'free';
+  if (profile.subscription_tier === 'pro' || profile.is_subscribed) {
+    return { tier: 'pro', limit: DAILY_LIMITS.pro };
+  }
 
+  // Distinguish active trial from expired trial
+  const trialActive = profile.trial_ends_at && new Date(profile.trial_ends_at) > new Date();
+  const tier = trialActive ? 'free_trial' : 'free_expired';
   return { tier, limit: DAILY_LIMITS[tier] };
 }
 
