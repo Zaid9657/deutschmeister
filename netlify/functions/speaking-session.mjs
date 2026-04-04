@@ -81,6 +81,7 @@ export const handler = async (event) => {
         model: 'gpt-4o-realtime-preview',
         voice,
         instructions: systemPrompt,
+        max_response_output_tokens: 150,
         input_audio_transcription: { model: 'whisper-1' },
         turn_detection: {
           type: 'server_vad',

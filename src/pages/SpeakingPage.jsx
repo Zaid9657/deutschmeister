@@ -103,15 +103,15 @@ function UsageGate({ usage }) {
     );
   }
 
-  if (reason === 'daily_limit_reached') {
+  if (reason === 'trial_limit_reached') {
     return (
       <div className="max-w-md mx-auto mb-8 bg-white rounded-2xl border border-slate-200 p-6 text-center">
-        <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-slate-100 flex items-center justify-center">
-          <Mic className="w-7 h-7 text-slate-400" />
+        <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center">
+          <Mic className="w-7 h-7 text-white" />
         </div>
-        <h3 className="font-bold text-slate-800 mb-2">Tageslimit erreicht</h3>
+        <h3 className="font-bold text-slate-800 mb-2">2 kostenlose Sitzungen genutzt</h3>
         <p className="text-sm text-slate-500 mb-4">
-          Du hast heute {used}/{limit} Gespräche in der Testversion genutzt. Morgen stehen wieder {limit} zur Verfügung, oder upgrade auf Pro für 30 pro Monat.
+          Du hast deine {limit} kostenlosen Sprechübungen aus der Testversion verwendet. Upgrade auf Pro für 30 Gespräche pro Monat.
         </p>
         <Link
           to="/pricing"

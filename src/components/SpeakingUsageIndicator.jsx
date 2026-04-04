@@ -23,7 +23,7 @@ const SpeakingUsageIndicator = ({ usage }) => {
     );
   }
 
-  // Trial — X/5 today
+  // Trial — X/2 total (lifetime)
   if (tier === 'free_trial') {
     const pct = limit ? ((used || 0) / limit) * 100 : 0;
     return (
@@ -36,7 +36,7 @@ const SpeakingUsageIndicator = ({ usage }) => {
             style={{ width: `${Math.min(pct, 100)}%` }}
           />
         </div>
-        <span className="text-emerald-500 font-normal">heute</span>
+        <span className="text-emerald-500 font-normal">kostenlos</span>
       </div>
     );
   }

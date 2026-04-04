@@ -97,7 +97,8 @@ export const handler = async (event) => {
     }
 
     // Use custom prompt (e.g., placement test) or default evaluation prompt
-    const evaluationPrompt = customPrompt || buildEvaluationPrompt(level, messages);
+    const trimmedMessages = messages.slice(-20);
+    const evaluationPrompt = customPrompt || buildEvaluationPrompt(level, trimmedMessages);
 
     const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -107,7 +108,7 @@ export const handler = async (event) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 1024,
         messages: [
           { role: 'user', content: evaluationPrompt },

@@ -22,7 +22,7 @@ export const LEVEL_CONFIGS = {
     description: 'Erste Schritte: Begrüßungen, Zahlen, Farben und einfache Sätze.',
     voice: 'coral',
     speakingSpeed: 'slow',
-    durationMinutes: 10,
+    durationMinutes: 5,
     topics: [
       'Begrüßung und Vorstellung',
       'Zahlen von 1 bis 20',
@@ -67,7 +67,7 @@ Beginne mit: "Hallo! Ich bin Frau Müller. Wie heißt du?"`,
     description: 'Alltagssituationen: Einkaufen, Uhrzeit, Wegbeschreibung und einfache Dialoge.',
     voice: 'coral',
     speakingSpeed: 'slow',
-    durationMinutes: 10,
+    durationMinutes: 5,
     topics: [
       'Einkaufen im Supermarkt',
       'Uhrzeit und Tagesablauf',
@@ -110,7 +110,7 @@ Beginne mit: "Guten Tag! Ich bin Herr Schmidt. Wie geht es Ihnen heute?"`,
     description: 'Alltagskommunikation: Perfekt, Dativ, Präpositionen und Erlebnisse erzählen.',
     voice: 'shimmer',
     speakingSpeed: 'normal',
-    durationMinutes: 10,
+    durationMinutes: 5,
     topics: [
       'Erlebnisse und Erfahrungen',
       'Reisen und Urlaub',
@@ -153,7 +153,7 @@ Beginne mit: "Hi! Ich bin Anna. Schön dich kennenzulernen! Was hast du heute ge
     description: 'Meinungen äußern, Vergleiche machen, über Zukunftspläne sprechen.',
     voice: 'shimmer',
     speakingSpeed: 'normal',
-    durationMinutes: 10,
+    durationMinutes: 5,
     topics: [
       'Zukunftspläne und Träume',
       'Vergleiche und Meinungen',
@@ -196,7 +196,7 @@ Beginne mit: "Hey! Ich bin Max. Sag mal, was sind deine Pläne für dieses Jahr?
     description: 'Diskussionen führen, Meinungen begründen, komplexere Grammatik anwenden.',
     voice: 'echo',
     speakingSpeed: 'normal',
-    durationMinutes: 10,
+    durationMinutes: 5,
     topics: [
       'Aktuelle Nachrichten und Ereignisse',
       'Umwelt und Nachhaltigkeit',
@@ -240,7 +240,7 @@ Beginne mit: "Guten Tag! Ich bin Professorin Weber. Heute möchte ich mit Ihnen 
     description: 'Komplexe Diskussionen, Problemlösung, Erfahrungsberichte und Argumentation.',
     voice: 'echo',
     speakingSpeed: 'normal',
-    durationMinutes: 10,
+    durationMinutes: 5,
     topics: [
       'Gesellschaft und Politik',
       'Technologie und Zukunft',
@@ -284,7 +284,7 @@ Beginne mit: "Hi, ich bin Thomas. Sag mal, hast du in letzter Zeit etwas Interes
     description: 'Anspruchsvolle Gespräche: abstrakte Themen, Redewendungen, differenzierte Argumentation.',
     voice: 'alloy',
     speakingSpeed: 'fast',
-    durationMinutes: 10,
+    durationMinutes: 5,
     topics: [
       'Wissenschaft und Forschung',
       'Ethik und Moral',
@@ -329,7 +329,7 @@ Beginne mit: "Guten Tag, ich bin Professorin Hartmann. Lassen Sie uns heute übe
     description: 'Nahezu muttersprachliche Konversation: Ironie, Humor, Nuancen und kulturelle Feinheiten.',
     voice: 'alloy',
     speakingSpeed: 'fast',
-    durationMinutes: 10,
+    durationMinutes: 5,
     topics: [
       'Deutsche Kultur und Identität',
       'Satire und Humor',

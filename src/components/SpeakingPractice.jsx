@@ -393,8 +393,8 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
               throw new Error('Ein Abonnement ist erforderlich, um Sprechübungen zu nutzen.');
             } else if (reason === 'monthly_limit_reached') {
               throw new Error(`Monatliches Limit erreicht (${err.used}/${err.limit} Sitzungen). Upgrade auf Pro für mehr Übungen.`);
-            } else if (reason === 'daily_limit_reached') {
-              throw new Error(`Tageslimit erreicht (${err.used}/${err.limit} Sitzungen). Morgen stehen wieder ${err.limit} zur Verfügung.`);
+            } else if (reason === 'trial_limit_reached') {
+              throw new Error(`Kostenlose Sitzungen aufgebraucht (${err.used}/${err.limit}). Upgrade auf Pro für mehr Übungen.`);
             }
             throw new Error(err.error || 'Zugriff verweigert');
           }
