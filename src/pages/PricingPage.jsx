@@ -1,10 +1,77 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Check, Sparkles, Zap, Mic, CheckCircle2 } from 'lucide-react';
+import { Check, Sparkles, Zap, Mic, CheckCircle2, ChevronDown } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
+
+// i18n-ready: strings are hardcoded EN/DE pairs — wire to i18n when needed
+
+const OBJECTIONS = [
+  {
+    q_de: 'Noch eine Grammatik-Webseite?',
+    q_en: 'Another grammar website?',
+    a_de: 'DeutschMeister erklärt Grammatik auf Englisch, bevor es die deutschen Regeln zeigt. Kein Fachjargon, keine Tabellen ohne Kontext.',
+    a_en: 'DeutschMeister explains grammar in English first, then shows you how German does it. No jargon, no tables without context.',
+  },
+  {
+    q_de: 'Kann KI wirklich beim Deutschlernen helfen?',
+    q_en: 'Can AI really help me learn German?',
+    a_de: 'Unser Sentence X-Ray analysiert jeden deutschen Satz und zeigt dir Fälle, Rollen und Satzstruktur — sofort. Kein anderes Tool macht das.',
+    a_en: 'Our Sentence X-Ray analyzes any German sentence and shows you cases, roles, and structure — instantly. No other tool does this.',
+  },
+  {
+    q_de: 'Lohnt sich das, wenn es kostenlose Alternativen gibt?',
+    q_en: 'Is it worth it when free alternatives exist?',
+    a_de: 'Kostenlose Ressourcen erklären WAS. Wir erklären WARUM. Dieser Unterschied entscheidet, ob Grammatik hängen bleibt.',
+    a_en: 'Free resources explain WHAT. We explain WHY. That difference is what makes grammar stick.',
+  },
+];
+
+const FAQS = [
+  {
+    q_de: 'Kann ich vor dem Kauf testen?',
+    q_en: 'Can I try before buying?',
+    a_de: 'Ja! A1.1 ist komplett kostenlos, ohne Anmeldung. Teste auch den Sentence X-Ray und 2 kostenlose Sprechübungen.',
+    a_en: 'Yes! A1.1 is completely free, no signup needed. Try Sentence X-Ray and 2 free speaking sessions too.',
+  },
+  {
+    q_de: 'Was passiert nach der Testphase?',
+    q_en: 'What happens after the trial?',
+    a_de: 'Du behältst Zugang zu allen kostenlosen Inhalten. Nur Premium-Features wie Sprechübungen und erweiterte Analysen erfordern ein Abo.',
+    a_en: 'You keep access to all free content. Only premium features like speaking practice and extended analyses require a subscription.',
+  },
+  {
+    q_de: 'Kann ich jederzeit kündigen?',
+    q_en: 'Can I cancel anytime?',
+    a_de: 'Ja, jederzeit. Keine Fragen, keine versteckten Kosten.',
+    a_en: 'Yes, anytime. No questions asked, no hidden fees.',
+  },
+];
+
+function FaqItem({ q_en, q_de, a_en, a_de }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border border-gray-700 rounded-xl overflow-hidden">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-6 py-4 text-left text-white font-medium hover:bg-gray-800/60 transition-colors"
+      >
+        <span>{q_en} <span className="text-gray-500 font-normal text-sm">/ {q_de}</span></span>
+        <ChevronDown
+          className={`w-5 h-5 text-gray-400 flex-shrink-0 ml-4 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+        />
+      </button>
+      {open && (
+        <div className="px-6 pb-5 text-gray-300 text-sm leading-relaxed border-t border-gray-700/60 pt-4">
+          <p>{a_en}</p>
+          <p className="mt-2 text-gray-500">{a_de}</p>
+        </div>
+      )}
+    </div>
+  );
+}
 
 const PricingPage = () => {
   const navigate = useNavigate();
@@ -67,11 +134,13 @@ const PricingPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
+          {/* EN: "Finally Understand German Grammar" */}
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Unlock Your German Potential
+            Deutsche Grammatik endlich verstehen
           </h1>
+          {/* EN: "Join hundreds of learners using DeutschMeister to master German grammar — from cases to sentence structure." */}
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Get full access to all lessons, grammar exercises, listening practice, and AI speaking.
+            Join hundreds of learners using DeutschMeister to master German grammar — from cases to sentence structure.
           </p>
 
           {inTrial && !isOnPro && (
@@ -146,7 +215,7 @@ const PricingPage = () => {
               </li>
               <li className="flex items-start gap-3 text-gray-300">
                 <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-                <span>3 Sentence X-Ray analyses/day</span>
+                <span>1 Sentence X-Ray analysis per day</span>
               </li>
               <li className="flex items-start gap-3 text-gray-300">
                 <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
@@ -154,7 +223,7 @@ const PricingPage = () => {
               </li>
               <li className="flex items-start gap-3 text-gray-300">
                 <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-                <span>1 free speaking trial session</span>
+                <span>2 free AI speaking sessions</span>
               </li>
             </ul>
 
@@ -178,12 +247,18 @@ const PricingPage = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
           >
-            {/* Badge */}
+            {/* Top badge — "Current" if subscribed, otherwise yearly/monthly badge */}
             <div className="absolute -top-4 left-1/2 -translate-x-1/2">
               {isOnPro ? (
                 <span className="bg-blue-500 text-white font-bold px-4 py-1 rounded-full text-sm flex items-center gap-1.5">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   Aktuell
+                </span>
+              ) : billingCycle === 'yearly' ? (
+                /* EN: "Best Value" */
+                <span className="bg-green-500 text-white font-bold px-4 py-1 rounded-full text-sm flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  Beliebteste Wahl
                 </span>
               ) : (
                 <span className="bg-blue-600 text-white font-bold px-4 py-1 rounded-full text-sm flex items-center gap-1.5">
@@ -208,44 +283,64 @@ const PricingPage = () => {
             </div>
 
             {billingCycle === 'yearly' && (
-              <p className="text-green-400 text-sm mb-4">
-                That&apos;s only &euro;6.67/month!
-              </p>
+              <>
+                <p className="text-green-400 text-sm mb-1">
+                  That&apos;s only &euro;6.67/month!
+                </p>
+                {/* EN: "Less than €0.22/day — cheaper than a single coffee" */}
+                <p className="text-gray-400 text-xs mb-4">
+                  Weniger als €0.22 pro Tag — günstiger als ein Kaffee
+                </p>
+              </>
             )}
-            {billingCycle === 'monthly' && <div className="mb-4" />}
+            {billingCycle === 'monthly' && (
+              <>
+                {/* EN: "Less than €0.33/day — cheaper than a single coffee" */}
+                <p className="text-gray-400 text-xs mb-4">
+                  Weniger als €0.33 pro Tag — günstiger als ein Kaffee
+                </p>
+              </>
+            )}
 
             <p className="text-gray-400 mb-6">
               Full access to everything
             </p>
 
             <ul className="space-y-3 mb-8">
+              {/* EN: "Master all 64 grammar topics from beginner to upper-intermediate" */}
               <li className="flex items-start gap-3 text-gray-300">
                 <Check className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                <span>Full access to all 8 levels (A1.1–B2.2)</span>
+                <span>Master all 64 grammar topics from beginner to upper-intermediate</span>
               </li>
+              {/* EN: "Learn with interactive exercises that explain WHY answers are correct" */}
               <li className="flex items-start gap-3 text-gray-300">
                 <Check className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                <span>All grammar lessons with exercises</span>
+                <span>Learn with interactive exercises that explain WHY answers are correct</span>
               </li>
+              {/* EN: "Train your ear with native-speaker audio at your level" */}
               <li className="flex items-start gap-3 text-gray-300">
                 <Check className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                <span>Listening comprehension exercises</span>
+                <span>Train your ear with native-speaker audio at your level</span>
               </li>
+              {/* EN: "Reinforce learning with grammar podcasts and video explanations" */}
               <li className="flex items-start gap-3 text-gray-300">
                 <Check className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                <span>Podcasts &amp; video content</span>
+                <span>Reinforce learning with grammar podcasts and video explanations</span>
               </li>
+              {/* EN: "Track your progress and see how far you've come" */}
               <li className="flex items-start gap-3 text-gray-300">
                 <Check className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                <span>Progress tracking</span>
+                <span>Track your progress and see how far you&apos;ve come</span>
               </li>
+              {/* EN: "Practice speaking German with AI — 30 conversations per month" */}
               <li className="flex items-start gap-3 text-gray-300">
                 <Mic className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                <span>5 speaking sessions per month</span>
+                <span>Practice speaking German with AI — 30 conversations per month</span>
               </li>
+              {/* EN: "Analyze any German sentence instantly — understand cases, roles, and word order" */}
               <li className="flex items-start gap-3 text-gray-300">
                 <Check className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                <span>30 Sentence X-Ray analyses/day</span>
+                <span>Analyze any German sentence instantly — understand cases, roles, and word order</span>
               </li>
               <li className="flex items-start gap-3 text-gray-300">
                 <Check className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
@@ -297,6 +392,52 @@ const PricingPage = () => {
             <span>7-Day Money Back</span>
           </div>
         </motion.div>
+
+        {/* Objection Handling — "Du fragst dich vielleicht..." / "You might be wondering..." */}
+        <motion.div
+          className="mt-20"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          <h2 className="text-2xl font-bold text-white text-center mb-2">
+            Du fragst dich vielleicht&hellip;
+          </h2>
+          <p className="text-gray-500 text-center text-sm mb-10">You might be wondering&hellip;</p>
+
+          <div className="grid md:grid-cols-3 gap-4">
+            {OBJECTIONS.map((item, i) => (
+              <div
+                key={i}
+                className="bg-gray-800/50 border border-gray-700 rounded-2xl p-6"
+              >
+                <p className="font-semibold text-white mb-1">{item.q_en}</p>
+                <p className="text-xs text-gray-500 mb-4">{item.q_de}</p>
+                <p className="text-gray-300 text-sm leading-relaxed">{item.a_en}</p>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* FAQ */}
+        <motion.div
+          className="mt-16"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+        >
+          <h2 className="text-2xl font-bold text-white text-center mb-2">
+            Häufige Fragen
+          </h2>
+          <p className="text-gray-500 text-center text-sm mb-10">Common Questions</p>
+
+          <div className="max-w-2xl mx-auto space-y-3">
+            {FAQS.map((item, i) => (
+              <FaqItem key={i} {...item} />
+            ))}
+          </div>
+        </motion.div>
+
       </div>
     </div>
   );

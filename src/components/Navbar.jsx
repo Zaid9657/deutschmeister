@@ -90,6 +90,11 @@ const Navbar = () => {
               <Scan size={14} />
               {isGerman ? 'Satz-Analyse' : 'X-Ray'}
             </Link>
+            {!user && (
+              <Link to="/pricing" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+                {isGerman ? 'Preise' : 'Pricing'}
+              </Link>
+            )}
             {user && (
               <Link to="/dashboard" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
                 Dashboard
@@ -178,6 +183,14 @@ const Navbar = () => {
                       >
                         <User size={16} />
                         {t('nav.profile')}
+                      </Link>
+                      <Link
+                        to="/pricing"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                      >
+                        <Crown size={16} />
+                        {isGerman ? 'Preise' : 'Pricing'}
                       </Link>
                       {isAdmin && (
                         <Link
