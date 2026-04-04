@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Eye, EyeOff, AlertCircle, Loader2, CheckCircle2 } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, AlertCircle, Loader2, CheckCircle2, Check } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../utils/supabase';
 
@@ -112,11 +112,27 @@ const SignupPage = () => {
             </div>
           </Link>
           <h1 className="font-display text-3xl font-bold text-slate-800 mb-2">
-            Create Account
+            {/* EN: Start Free */}
+            Kostenlos starten
           </h1>
-          <p className="text-slate-600">
-            Start your German learning journey today
+          <p className="text-slate-600 mb-4">
+            {/* EN: Create an account and get instant access to: */}
+            Erstelle ein Konto und erhalte sofort Zugang zu:
           </p>
+          {/* Free tier value list */}
+          <ul className="text-left inline-block space-y-1 mb-2">
+            {[
+              'Alle A1.1-Lektionen — ohne Einschränkung', // EN: All A1.1 lessons — no restrictions
+              '2 kostenlose KI-Sprechübungen',             // EN: 2 free AI speaking sessions
+              '5 Sentence X-Ray Analysen pro Tag',         // EN: 5 Sentence X-Ray analyses per day
+              '7 Tage Pro-Testversion inklusive',          // EN: 7-day Pro trial included
+            ].map((item) => (
+              <li key={item} className="flex items-center gap-2 text-sm text-slate-600">
+                <Check className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                {item}
+              </li>
+            ))}
+          </ul>
         </div>
 
         {/* Form */}
@@ -212,8 +228,14 @@ const SignupPage = () => {
             </button>
           </form>
 
+          {/* Trust line */}
+          {/* EN: No credit card required · Cancel anytime */}
+          <p className="mt-3 text-center text-xs text-slate-400">
+            Keine Kreditkarte erforderlich · Jederzeit kündbar
+          </p>
+
           {/* Login link */}
-          <p className="mt-6 text-center text-slate-600">
+          <p className="mt-5 text-center text-slate-600">
             {t('auth.hasAccount')}{' '}
             <Link to="/login" className="text-amber-600 hover:text-amber-700 font-medium">
               {t('auth.login')}

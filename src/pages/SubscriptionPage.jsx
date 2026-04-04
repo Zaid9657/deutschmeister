@@ -157,12 +157,12 @@ const SubscriptionPage = () => {
             <Crown className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-2">
-            DeutschMeister Pro
+            {/* EN: Pick up where you left off */}
+            Mach weiter, wo du aufgehört hast
           </h1>
           <p className="text-slate-600 max-w-lg mx-auto">
-            {isGerman
-              ? 'Schalte alle Inhalte frei und meistere Deutsch mit vollem Zugang zu allen Stufen und Funktionen.'
-              : 'Unlock all content and master German with full access to all levels and features.'}
+            {/* EN: Your trial is over, but your progress stays. Choose a plan and keep learning without limits. */}
+            Deine Testphase ist vorbei, aber dein Fortschritt bleibt. Wähle einen Plan und lerne ohne Limits weiter.
           </p>
         </motion.div>
 

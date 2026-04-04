@@ -67,16 +67,19 @@ function UsageGate({ usage }) {
         <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
           <Crown className="w-7 h-7 text-white" />
         </div>
-        <h3 className="font-bold text-slate-800 mb-2">Abo erforderlich</h3>
+        {/* EN: Your trial is over — but your progress isn't */}
+        <h3 className="font-bold text-slate-800 mb-2">Deine Testphase ist vorbei — aber dein Fortschritt nicht</h3>
         <p className="text-sm text-slate-500 mb-4">
-          Deine Testphase ist abgelaufen. Upgrade auf Pro für 30 Gespräche pro Monat.
+          {/* EN: You've already taken the first step. With Pro you get 30 AI conversations per month and pick up right where you left off. */}
+          Du hast bereits den ersten Schritt gemacht. Mit Pro bekommst du 30 KI-Gespräche pro Monat und machst da weiter, wo du aufgehört hast.
         </p>
         <Link
           to="/pricing"
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors text-sm"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold rounded-xl transition-all shadow-md shadow-amber-200 text-sm"
         >
           <Crown className="w-4 h-4" />
-          Auf Pro upgraden
+          {/* EN: Keep learning with Pro */}
+          Weiter lernen mit Pro
         </Link>
       </div>
     );
@@ -88,16 +91,19 @@ function UsageGate({ usage }) {
         <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center">
           <Mic className="w-7 h-7 text-white" />
         </div>
-        <h3 className="font-bold text-slate-800 mb-2">Monatliches Limit erreicht</h3>
+        {/* EN: You're learning faster than expected */}
+        <h3 className="font-bold text-slate-800 mb-2">Du lernst schneller als erwartet</h3>
         <p className="text-sm text-slate-500 mb-4">
-          Du hast {used}/{limit} Gespräche diesen Monat genutzt.
+          {/* EN: You've used all {used}/{limit} conversations this month. That shows real progress. Upgrade for more practice time. */}
+          Du hast alle {used}/{limit} Gespräche diesen Monat genutzt. Das zeigt echten Fortschritt. Upgrade für mehr Übungszeit.
         </p>
         <Link
           to="/pricing"
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors text-sm"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold rounded-xl transition-all shadow-md shadow-amber-200 text-sm"
         >
           <Crown className="w-4 h-4" />
-          Auf Pro upgraden
+          {/* EN: Unlock more conversations */}
+          Mehr Gespräche freischalten
         </Link>
       </div>
     );
@@ -109,16 +115,19 @@ function UsageGate({ usage }) {
         <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center">
           <Mic className="w-7 h-7 text-white" />
         </div>
-        <h3 className="font-bold text-slate-800 mb-2">2 kostenlose Sitzungen genutzt</h3>
+        {/* EN: Your first impression of AI speaking practice */}
+        <h3 className="font-bold text-slate-800 mb-2">Dein erster Eindruck von KI-Sprechübungen</h3>
         <p className="text-sm text-slate-500 mb-4">
-          Du hast deine {limit} kostenlosen Sprechübungen aus der Testversion verwendet. Upgrade auf Pro für 30 Gespräche pro Monat.
+          {/* EN: You've used your 2 free sessions. Did it help? With Pro you practice 30 times per month — and get an evaluation after every conversation. */}
+          Du hast deine 2 kostenlosen Sitzungen genutzt. Hat es geholfen? Mit Pro übst du 30 Mal pro Monat — und bekommst nach jedem Gespräch eine Bewertung.
         </p>
         <Link
           to="/pricing"
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors text-sm"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-bold rounded-xl transition-all shadow-md shadow-blue-200 text-sm"
         >
           <Crown className="w-4 h-4" />
-          Auf Pro upgraden
+          {/* EN: Continue with Pro */}
+          Mit Pro weitermachen
         </Link>
       </div>
     );

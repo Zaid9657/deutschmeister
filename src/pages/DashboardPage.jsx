@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { TrendingUp, BookOpen, MessageSquare, Award, Crown, Clock, Mic } from 'lucide-react';
@@ -8,6 +9,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { mainLevels, getSubLevels } from '../data/content';
 import SEO from '../components/SEO';
+import WelcomeModal, { LS_KEY } from '../components/WelcomeModal';
 
 const mainLevelInfo = {
   A1: { name: 'Sunrise Warmth', icon: '🌅', color: 'from-amber-400 to-orange-400' },
@@ -27,6 +29,22 @@ const DashboardPage = () => {
 
   const overallProgress = getOverallProgress();
   const stats = getTotalStats();
+
+  const isNewUser =
+    stats.vocabulary === 0 &&
+    stats.sentences === 0 &&
+    stats.grammar === 0 &&
+    overallProgress === 0;
+
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  useEffect(() => {
+    if (isNewUser && !localStorage.getItem(LS_KEY)) {
+      setShowWelcome(true);
+    }
+  // Only run once on mount — stats won't change meaningfully between renders
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const statCards = [
     {
@@ -56,6 +74,8 @@ const DashboardPage = () => {
   ];
 
   return (
+    <>
+    {showWelcome && <WelcomeModal onDismiss={() => setShowWelcome(false)} />}
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-20 pb-12">
       <SEO
         title="Dashboard - Your German Learning Progress"
@@ -234,6 +254,7 @@ const DashboardPage = () => {
         </motion.div>
       </div>
     </div>
+    </>
   );
 };
 

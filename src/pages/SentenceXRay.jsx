@@ -292,30 +292,29 @@ function LimitReachedBanner({ tier, limit, isLoggedIn }) {
         <Crown size={20} className="text-amber-600" />
       </div>
       <h3 className="font-display font-bold text-slate-800 text-base mb-1">
-        You've used all {limit} {tierLabel} {limit === 1 ? 'analysis' : 'analyses'} today
-      </h3>
-      <p className="text-sm text-slate-600 mb-4">
         {isLoggedIn
-          ? 'Upgrade to Pro for 30 daily analyses.'
-          : 'Create a free account for 5 daily analyses, or upgrade to Pro.'}
-      </p>
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
+          ? /* EN: You've used all {limit} analyses today — back tomorrow, or: */
+            `Du hast heute alle ${limit} Analysen genutzt — morgen geht's weiter, oder:`
+          : /* EN: Create a free account for 5 analyses per day — or try Pro with 50 analyses daily. */
+            'Erstelle ein kostenloses Konto für 5 Analysen pro Tag — oder teste Pro mit 50 Analysen täglich.'}
+      </h3>
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mt-4">
         <Link
           to="/pricing"
           className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-semibold rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all shadow-sm"
         >
           <Crown size={14} />
-          {isLoggedIn ? 'Upgrade to Pro' : 'See plans'}
+          {/* EN: Upgrade to Pro now — 50 analyses per day */}
+          {isLoggedIn ? 'Jetzt auf Pro upgraden — 50 Analysen pro Tag' : 'Pro testen — 50 Analysen täglich'}
         </Link>
         {!isLoggedIn && (
           <Link
             to="/signup"
             className="inline-flex items-center gap-2 px-5 py-2.5 border border-slate-300 text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-50 transition-colors"
           >
-            Sign up free
+            Kostenlos registrieren
           </Link>
         )}
-        <span className="text-xs text-slate-400">Or come back tomorrow!</span>
       </div>
     </motion.div>
   );
