@@ -134,8 +134,46 @@ function renderRuleContent(content) {
                 </div>
 
                 <div class="px-5 py-4 bg-white">
+                  {/* Introduction rule type — custom rich content fields */}
+                  {rule.rule_type === 'introduction' && content && (
+                    <div class="space-y-4">
+                      {content.hook_en && (
+                        <p class="text-base font-semibold text-slate-800">{content.hook_en}</p>
+                      )}
+                      {content.german_difference_en && (
+                        <p class="text-sm text-slate-700 leading-relaxed">{content.german_difference_en}</p>
+                      )}
+                      {content.english_comparison_en && (
+                        <p class="text-sm text-slate-600 leading-relaxed">{content.english_comparison_en}</p>
+                      )}
+                      {content.scenario_en && (
+                        <div class="p-3 rounded-lg bg-slate-50 border border-slate-200 text-sm text-slate-700">
+                          <span class="font-semibold text-slate-500 text-xs uppercase tracking-wider block mb-1">Why you need this</span>
+                          {content.scenario_en}
+                        </div>
+                      )}
+                      {content.preview_example_de && (
+                        <div class="p-3 rounded-lg border border-slate-200 bg-white">
+                          <p class="font-display text-lg font-bold text-slate-900">{content.preview_example_de}</p>
+                          {content.preview_example_en && (
+                            <p class="text-sm text-slate-500 italic mt-0.5">{content.preview_example_en}</p>
+                          )}
+                          {content.preview_note_en && (
+                            <p class="text-xs text-amber-700 mt-2 bg-amber-50 px-2 py-1 rounded">{content.preview_note_en}</p>
+                          )}
+                        </div>
+                      )}
+                      {content.why_it_matters_en && (
+                        <div class="flex items-start gap-3 p-3 rounded-xl bg-amber-50 border border-amber-200">
+                          <span class="text-amber-500 text-lg flex-shrink-0">💡</span>
+                          <p class="text-sm text-amber-900">{content.why_it_matters_en}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                   {/* Plain text content */}
-                  {hasText && !hasTable && !hasList && (
+                  {rule.rule_type !== 'introduction' && hasText && !hasTable && !hasList && (
                     <p class="text-slate-700 leading-relaxed whitespace-pre-line">
                       {content?.text ?? contentText}
                     </p>
@@ -143,25 +181,30 @@ function renderRuleContent(content) {
 
                   {/* Table content */}
                   {hasTable && (
-                    <div class="overflow-x-auto">
-                      <table class="w-full text-sm border-collapse">
-                        <thead>
-                          <tr class={`${meta.bg}`}>
-                            {(content?.headers ?? []).map((h) => (
-                              <th class="px-4 py-2 text-left font-semibold text-slate-700 border border-slate-200">{h}</th>
-                            ))}
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {(content?.rows ?? []).map((row, i) => (
-                            <tr class={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                              {(Array.isArray(row) ? row : [row]).map((cell) => (
-                                <td class="px-4 py-2.5 border border-slate-200 text-slate-700 font-accent">{String(cell ?? '')}</td>
+                    <div class="space-y-2">
+                      {content?.description_en && (
+                        <p class="text-sm text-slate-600 mb-3">{content.description_en}</p>
+                      )}
+                      <div class="overflow-x-auto">
+                        <table class="w-full text-sm border-collapse">
+                          <thead>
+                            <tr class={`${meta.bg}`}>
+                              {(content?.headers ?? []).map((h) => (
+                                <th class="px-4 py-2 text-left font-semibold text-slate-700 border border-slate-200">{h}</th>
                               ))}
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody>
+                            {(content?.rows ?? []).map((row, i) => (
+                              <tr class={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                                {(Array.isArray(row) ? row : [row]).map((cell) => (
+                                  <td class="px-4 py-2.5 border border-slate-200 text-slate-700 font-accent">{String(cell ?? '')}</td>
+                                ))}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   )}
 
@@ -193,15 +236,37 @@ function renderRuleContent(content) {
                     </div>
                   )}
 
-                  {/* Common mistakes */}
+                  {/* Common mistakes — shape: {wrong, correct, explanation_en} or plain string */}
                   {mistakes.length > 0 && (
                     <div class="mt-3 p-3 rounded-xl bg-red-50 border border-red-200">
                       <p class="text-xs font-bold text-red-700 uppercase tracking-wider mb-2">Common Mistakes</p>
-                      <ul class="space-y-1">
+                      <ul class="space-y-3">
                         {mistakes.map((m) => (
-                          <li class="text-sm text-red-800 flex items-start gap-2">
-                            <span class="flex-shrink-0 mt-0.5">✗</span>
-                            <span>{typeof m === 'string' ? m : (m?.mistake ?? m?.text ?? JSON.stringify(m))}</span>
+                          <li class="text-sm text-red-800">
+                            {typeof m === 'string' ? (
+                              <span class="flex items-start gap-2">
+                                <span class="flex-shrink-0 mt-0.5">✗</span>
+                                <span>{m}</span>
+                              </span>
+                            ) : (
+                              <div class="space-y-0.5">
+                                {m.wrong && (
+                                  <p class="flex items-start gap-2">
+                                    <span class="flex-shrink-0 font-bold text-red-600">✗</span>
+                                    <span class="line-through text-red-600">{m.wrong}</span>
+                                  </p>
+                                )}
+                                {m.correct && (
+                                  <p class="flex items-start gap-2">
+                                    <span class="flex-shrink-0 font-bold text-emerald-600">✓</span>
+                                    <span class="text-emerald-700 font-medium">{m.correct}</span>
+                                  </p>
+                                )}
+                                {m.explanation_en && (
+                                  <p class="text-xs text-slate-600 pl-5">{m.explanation_en}</p>
+                                )}
+                              </div>
+                            )}
                           </li>
                         ))}
                       </ul>
@@ -221,11 +286,28 @@ function renderRuleContent(content) {
         <h2 class="font-display text-2xl font-bold text-slate-800 mb-5">Examples</h2>
         <div class="space-y-4">
           {examples.map((ex) => {
-            // word_breakdown may be null, an array, or a wrapped object
+            // word_breakdown can be:
+            //   - null / undefined
+            //   - a plain object: { "Wie": "how/what", "du": "you" }  ← actual shape
+            //   - an array of { word, translation, role } objects
             const rawBreakdown = ex.word_breakdown;
-            const breakdown = Array.isArray(rawBreakdown)
-              ? rawBreakdown
-              : (rawBreakdown?.words ?? rawBreakdown?.items ?? null);
+            let breakdownRows = null;
+            if (Array.isArray(rawBreakdown) && rawBreakdown.length > 0) {
+              // Array of objects — already the expected shape
+              breakdownRows = rawBreakdown.map((w) => ({
+                word: w.word ?? w.de ?? String(w[0] ?? ''),
+                meaning: w.translation ?? w.en ?? String(w[1] ?? ''),
+                role: w.role ?? w.function ?? w[2] ?? null,
+              }));
+            } else if (rawBreakdown && typeof rawBreakdown === 'object') {
+              // Plain object: keys are German words, values are meanings
+              breakdownRows = Object.entries(rawBreakdown).map(([word, meaning]) => ({
+                word,
+                meaning: String(meaning),
+                role: null,
+              }));
+            }
+
             return (
               <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden">
                 <div class="px-5 py-4">
@@ -243,22 +325,26 @@ function renderRuleContent(content) {
                   )}
 
                   {/* Word breakdown table */}
-                  {breakdown && Array.isArray(breakdown) && breakdown.length > 0 && (
+                  {breakdownRows && breakdownRows.length > 0 && (
                     <div class="mt-4 overflow-x-auto">
                       <table class="w-full text-xs border-collapse">
                         <thead>
                           <tr class="bg-slate-50">
                             <th class="px-3 py-2 text-left font-semibold text-slate-600 border border-slate-200">Wort</th>
                             <th class="px-3 py-2 text-left font-semibold text-slate-600 border border-slate-200">Bedeutung</th>
-                            <th class="px-3 py-2 text-left font-semibold text-slate-600 border border-slate-200">Funktion</th>
+                            {breakdownRows.some((r) => r.role) && (
+                              <th class="px-3 py-2 text-left font-semibold text-slate-600 border border-slate-200">Funktion</th>
+                            )}
                           </tr>
                         </thead>
                         <tbody>
-                          {breakdown.map((w, i) => (
+                          {breakdownRows.map((w, i) => (
                             <tr class={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                              <td class="px-3 py-2 border border-slate-200 font-accent font-medium">{w.word ?? w.de ?? w[0]}</td>
-                              <td class="px-3 py-2 border border-slate-200 text-slate-600 italic">{w.translation ?? w.en ?? w[1]}</td>
-                              <td class="px-3 py-2 border border-slate-200 text-slate-500">{w.role ?? w.function ?? w[2] ?? '—'}</td>
+                              <td class="px-3 py-2 border border-slate-200 font-accent font-medium">{w.word}</td>
+                              <td class="px-3 py-2 border border-slate-200 text-slate-600 italic">{w.meaning}</td>
+                              {breakdownRows.some((r) => r.role) && (
+                                <td class="px-3 py-2 border border-slate-200 text-slate-500">{w.role ?? '—'}</td>
+                              )}
                             </tr>
                           ))}
                         </tbody>
