@@ -13,6 +13,11 @@ export const LEVEL_META = {
   'b2.2': { label: 'B2.2', name: 'Twilight Elegance II', color: 'from-purple-600 to-indigo-600', bg: 'bg-violet-50',  border: 'border-violet-200', badge: 'bg-violet-100 text-violet-800'},
 };
 
+// Supabase stores sub_level as "A1.1" (uppercase). All our routing and
+// LEVEL_META keys use lowercase. Normalize at the boundary so the rest
+// of the code never has to worry about case.
+const normalizeLevel = (level) => level?.toLowerCase() ?? level;
+
 /** Fetch every topic (slug + level) — used in getStaticPaths */
 export async function getAllTopicPaths() {
   const { data, error } = await supabase
@@ -22,19 +27,20 @@ export async function getAllTopicPaths() {
     .order('topic_order');
 
   if (error) throw new Error(`getAllTopicPaths: ${error.message}`);
-  return data ?? [];
+  return (data ?? []).map((t) => ({ ...t, sub_level: normalizeLevel(t.sub_level) }));
 }
 
 /** Fetch all topics for a given level — used on level index pages */
 export async function getTopicsForLevel(subLevel) {
+  // Query using ilike so it matches regardless of case stored in DB
   const { data, error } = await supabase
     .from('grammar_topics')
     .select('id, slug, title_en, title_de, description_en, description_de, topic_order')
-    .eq('sub_level', subLevel)
+    .ilike('sub_level', subLevel)
     .order('topic_order');
 
   if (error) throw new Error(`getTopicsForLevel(${subLevel}): ${error.message}`);
-  return data ?? [];
+  return (data ?? []).map((t) => ({ ...t, sub_level: normalizeLevel(t.sub_level) }));
 }
 
 /** Fetch all topics for all levels — used on the /grammar index */
@@ -46,21 +52,24 @@ export async function getAllTopics() {
     .order('topic_order');
 
   if (error) throw new Error(`getAllTopics: ${error.message}`);
-  return data ?? [];
+  return (data ?? []).map((t) => ({ ...t, sub_level: normalizeLevel(t.sub_level) }));
 }
 
 /** Fetch full topic data including rules, examples, exercises */
 export async function getTopicFull(subLevel, slug) {
-  // 1. Topic
+  // 1. Topic — use ilike so "a1.1" matches "A1.1" in the DB
   const { data: topic, error: topicErr } = await supabase
     .from('grammar_topics')
     .select('*')
-    .eq('sub_level', subLevel)
+    .ilike('sub_level', subLevel)
     .eq('slug', slug)
     .single();
 
   if (topicErr) throw new Error(`getTopicFull topic(${subLevel}/${slug}): ${topicErr.message}`);
   if (!topic) return null;
+
+  // Normalize the level on the topic itself
+  topic.sub_level = normalizeLevel(topic.sub_level);
 
   // 2. Rules, examples, exercises — parallel fetch
   const [rulesRes, examplesRes, exercisesRes] = await Promise.all([
@@ -89,7 +98,7 @@ export async function getTopicFull(subLevel, slug) {
   const { data: siblings } = await supabase
     .from('grammar_topics')
     .select('slug, title_en, topic_order')
-    .eq('sub_level', subLevel)
+    .ilike('sub_level', subLevel)
     .order('topic_order');
 
   const idx = (siblings ?? []).findIndex(t => t.slug === slug);

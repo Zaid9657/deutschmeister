@@ -19,7 +19,7 @@ if (!data) {
 }
 
 const { topic, rules, examples, exercises, prev, next } = data;
-const meta = LEVEL_META[level];
+const meta = LEVEL_META[level] ?? LEVEL_META['a1.1']; // fallback prevents crash on unexpected level value
 
 const pageTitle = `${topic.title_en} — ${meta.label} Grammatik | DeutschMeister`;
 const pageDesc = topic.description_en
@@ -112,10 +112,18 @@ function renderRuleContent(content) {
         <h2 class="font-display text-2xl font-bold text-slate-800 mb-5">Rules & Explanations</h2>
         <div class="space-y-6">
           {rules.map((rule) => {
-            const content = rule.content;
-            const hasTable = content?.headers && content?.rows;
-            const hasList = content?.items;
-            const hasText = content?.text || typeof content === 'string';
+            // content may be a plain string, a parsed object, or null
+            const raw = rule.content;
+            const content = (raw && typeof raw === 'object') ? raw : null;
+            const contentText = typeof raw === 'string' ? raw : null;
+
+            const hasTable = !!(content?.headers?.length && content?.rows?.length);
+            const hasList  = !!(content?.items?.length);
+            const hasText  = !!(content?.text || contentText);
+
+            // common_mistakes: guard for null / non-array
+            const mistakes = Array.isArray(rule.common_mistakes) ? rule.common_mistakes : [];
+
             return (
               <div class={`rounded-2xl border-2 ${meta.border} overflow-hidden`}>
                 <div class={`px-5 py-4 ${meta.bg}`}>
@@ -129,7 +137,7 @@ function renderRuleContent(content) {
                   {/* Plain text content */}
                   {hasText && !hasTable && !hasList && (
                     <p class="text-slate-700 leading-relaxed whitespace-pre-line">
-                      {content?.text ?? content}
+                      {content?.text ?? contentText}
                     </p>
                   )}
 
@@ -139,16 +147,16 @@ function renderRuleContent(content) {
                       <table class="w-full text-sm border-collapse">
                         <thead>
                           <tr class={`${meta.bg}`}>
-                            {content.headers.map((h) => (
+                            {(content?.headers ?? []).map((h) => (
                               <th class="px-4 py-2 text-left font-semibold text-slate-700 border border-slate-200">{h}</th>
                             ))}
                           </tr>
                         </thead>
                         <tbody>
-                          {content.rows.map((row, i) => (
+                          {(content?.rows ?? []).map((row, i) => (
                             <tr class={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                              {row.map((cell) => (
-                                <td class="px-4 py-2.5 border border-slate-200 text-slate-700 font-accent">{cell}</td>
+                              {(Array.isArray(row) ? row : [row]).map((cell) => (
+                                <td class="px-4 py-2.5 border border-slate-200 text-slate-700 font-accent">{String(cell ?? '')}</td>
                               ))}
                             </tr>
                           ))}
@@ -160,10 +168,10 @@ function renderRuleContent(content) {
                   {/* List content */}
                   {hasList && (
                     <ul class="space-y-1.5">
-                      {content.items.map((item) => (
+                      {(content?.items ?? []).map((item) => (
                         <li class="flex items-start gap-2 text-slate-700 text-sm">
                           <span class="text-indigo-400 mt-1 flex-shrink-0">▸</span>
-                          <span>{item}</span>
+                          <span>{typeof item === 'string' ? item : JSON.stringify(item)}</span>
                         </li>
                       ))}
                     </ul>
@@ -186,14 +194,14 @@ function renderRuleContent(content) {
                   )}
 
                   {/* Common mistakes */}
-                  {rule.common_mistakes && rule.common_mistakes.length > 0 && (
+                  {mistakes.length > 0 && (
                     <div class="mt-3 p-3 rounded-xl bg-red-50 border border-red-200">
                       <p class="text-xs font-bold text-red-700 uppercase tracking-wider mb-2">Common Mistakes</p>
                       <ul class="space-y-1">
-                        {rule.common_mistakes.map((m) => (
+                        {mistakes.map((m) => (
                           <li class="text-sm text-red-800 flex items-start gap-2">
                             <span class="flex-shrink-0 mt-0.5">✗</span>
-                            <span>{typeof m === 'string' ? m : m.mistake ?? JSON.stringify(m)}</span>
+                            <span>{typeof m === 'string' ? m : (m?.mistake ?? m?.text ?? JSON.stringify(m))}</span>
                           </li>
                         ))}
                       </ul>
@@ -213,7 +221,11 @@ function renderRuleContent(content) {
         <h2 class="font-display text-2xl font-bold text-slate-800 mb-5">Examples</h2>
         <div class="space-y-4">
           {examples.map((ex) => {
-            const breakdown = ex.word_breakdown;
+            // word_breakdown may be null, an array, or a wrapped object
+            const rawBreakdown = ex.word_breakdown;
+            const breakdown = Array.isArray(rawBreakdown)
+              ? rawBreakdown
+              : (rawBreakdown?.words ?? rawBreakdown?.items ?? null);
             return (
               <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden">
                 <div class="px-5 py-4">
