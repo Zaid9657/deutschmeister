@@ -83,16 +83,9 @@
   from = "/assets/*"
   status = 404
 
-# Astro-generated grammar pages — serve static HTML directly.
-# These files exist in dist/grammar/**/ so Netlify finds them first.
-# No redirect needed; the explicit rule here prevents the SPA catch-all
-# from swallowing 404s on grammar routes that don't exist.
-[[redirects]]
-  from = "/grammar/*"
-  to = "/grammar/:splat"
-  status = 200
-
-# SPA catch-all (non-grammar routes only)
+# SPA catch-all — grammar routes are real static files in dist/grammar/ so
+# Netlify serves them directly before this rule fires. Only truly missing
+# paths (non-grammar, non-asset) fall through to the SPA.
 [[redirects]]
   from = "/*"
   to = "/index.html"
