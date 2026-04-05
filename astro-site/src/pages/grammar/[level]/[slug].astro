@@ -19,16 +19,16 @@ if (!data) {
 }
 
 const { topic, rules, examples, exercises, prev, next } = data;
-const meta = LEVEL_META[level] ?? LEVEL_META['a1.1']; // fallback prevents crash on unexpected level value
+const meta = LEVEL_META[level] ?? LEVEL_META['a1.1'];
 
-const pageTitle = `${topic.title_en} — ${meta.label} Grammatik | DeutschMeister`;
-const pageDesc = topic.description_en
-  ? `${topic.description_en} Mit Beispielen, Regeln und interaktiven Übungen für ${meta.label}.`
-  : `Lerne ${topic.title_en} auf ${meta.label}-Niveau mit Regeln, Beispielen und Übungen. Kostenlos auf DeutschMeister.`;
-
+const topicTitle = topic?.title_en ?? slug;
 const canonicalUrl = `https://deutsch-meister.de/grammar/${level}/${slug}`;
 
-// JSON-LD schemas
+const pageTitle = `${topicTitle} — ${meta.label} Grammatik | DeutschMeister`;
+const pageDesc = topic?.description_en
+  ? `${topic.description_en} Mit Beispielen, Regeln und interaktiven Übungen für ${meta.label}.`
+  : `Lerne ${topicTitle} auf ${meta.label}-Niveau mit Regeln, Beispielen und Übungen. Kostenlos auf DeutschMeister.`;
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -36,7 +36,7 @@ const breadcrumbSchema = {
     { '@type': 'ListItem', position: 1, name: 'Home',      item: 'https://deutsch-meister.de/' },
     { '@type': 'ListItem', position: 2, name: 'Grammatik', item: 'https://deutsch-meister.de/grammar' },
     { '@type': 'ListItem', position: 3, name: meta.label,  item: `https://deutsch-meister.de/grammar/${level}` },
-    { '@type': 'ListItem', position: 4, name: topic.title_en, item: canonicalUrl },
+    { '@type': 'ListItem', position: 4, name: topicTitle,  item: canonicalUrl },
   ],
 };
 
@@ -49,20 +49,8 @@ const articleSchema = {
   inLanguage: 'de',
   publisher: { '@type': 'Organization', name: 'DeutschMeister', url: 'https://deutsch-meister.de' },
   educationalLevel: meta.label,
-  about: { '@type': 'Thing', name: `German grammar: ${topic.title_en}` },
+  about: { '@type': 'Thing', name: `German grammar: ${topicTitle}` },
 };
-
-// Helper: render a rule's content JSONB — could be { text }, a table object, or a list
-function renderRuleContent(content) {
-  if (!content) return '';
-  if (typeof content === 'string') return content;
-  // Table: { headers: [], rows: [] }
-  if (content.headers && content.rows) return null; // handled in template
-  // List: { items: [] }
-  if (content.items) return null; // handled in template
-  if (content.text) return content.text;
-  return JSON.stringify(content);
-}
 ---
 
 <Layout title={pageTitle} description={pageDesc} canonical={canonicalUrl} jsonLd={[breadcrumbSchema, articleSchema]}>
@@ -86,20 +74,20 @@ function renderRuleContent(content) {
 
     <!-- Title -->
     <h1 class="font-display text-4xl sm:text-5xl font-bold text-slate-900 mb-2 leading-tight">
-      {topic.title_en}
+      {topicTitle}
     </h1>
-    {topic.title_de && topic.title_de !== topic.title_en && (
+    {topic?.title_de && topic.title_de !== topicTitle && (
       <p class="text-xl text-slate-500 mb-6 font-display">{topic.title_de}</p>
     )}
 
-    {topic.description_en && (
+    {topic?.description_en && (
       <p class="text-lg text-slate-600 leading-relaxed mb-8 border-l-4 border-slate-200 pl-4">
         {topic.description_en}
       </p>
     )}
 
     <!-- Introduction -->
-    {topic.introduction_en && (
+    {topic?.introduction_en && (
       <section class="mb-10 prose prose-slate max-w-none">
         <h2 class="font-display text-2xl font-bold text-slate-800 mb-3">Introduction</h2>
         <div class="text-slate-700 leading-relaxed whitespace-pre-line">{topic.introduction_en}</div>
@@ -376,7 +364,7 @@ function renderRuleContent(content) {
         Grammatik lernen ist nur der Anfang
       </p>
       <p class="text-slate-600 text-sm mb-4">
-        Übe {topic.title_en} in echten Gesprächen mit deinem KI-Sprachpartner.
+        Übe {topicTitle} in echten Gesprächen mit deinem KI-Sprachpartner.
       </p>
       <a
         href="https://deutsch-meister.de/signup"
@@ -398,7 +386,7 @@ function renderRuleContent(content) {
           </svg>
           <div class="min-w-0">
             <p class="text-xs text-slate-400 mb-0.5">Vorheriges</p>
-            <p class="text-sm font-semibold text-slate-700 truncate">{prev.title_en}</p>
+            <p class="text-sm font-semibold text-slate-700 truncate">{prev?.title_en ?? prev?.slug}</p>
           </div>
         </a>
       ) : (
@@ -412,7 +400,7 @@ function renderRuleContent(content) {
         >
           <div class="min-w-0">
             <p class="text-xs text-slate-400 mb-0.5">Nächstes</p>
-            <p class="text-sm font-semibold text-slate-700 truncate">{next.title_en}</p>
+            <p class="text-sm font-semibold text-slate-700 truncate">{next?.title_en ?? next?.slug}</p>
           </div>
           <svg class="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />

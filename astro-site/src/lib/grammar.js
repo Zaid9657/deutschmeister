@@ -94,6 +94,20 @@ export async function getTopicFull(subLevel, slug) {
   if (examplesRes.error)  throw new Error(`examples: ${examplesRes.error.message}`);
   if (exercisesRes.error) throw new Error(`exercises: ${exercisesRes.error.message}`);
 
+  // Normalize exercises: options/correct_answer may arrive as JSON strings
+  // when Supabase returns JSONB columns that weren't auto-parsed.
+  const exercises_normalized = (exercisesRes.data ?? []).map((ex) => {
+    let options = ex.options;
+    if (typeof options === 'string') {
+      try { options = JSON.parse(options); } catch { options = []; }
+    }
+    if (!Array.isArray(options)) options = [];
+    // Flatten object options ({label,value}) to plain strings for consistency
+    options = options.map((o) => (typeof o === 'string' ? o : (o?.label ?? o?.value ?? String(o))));
+
+    return { ...ex, options, correct_answer: ex.correct_answer ?? '' };
+  });
+
   // 3. Adjacent topics for prev/next navigation
   const { data: siblings } = await supabase
     .from('grammar_topics')
@@ -107,9 +121,9 @@ export async function getTopicFull(subLevel, slug) {
 
   return {
     topic,
-    rules:     rulesRes.data     ?? [],
-    examples:  examplesRes.data  ?? [],
-    exercises: exercisesRes.data ?? [],
+    rules:     rulesRes.data       ?? [],
+    examples:  examplesRes.data    ?? [],
+    exercises: exercises_normalized,
     prev,
     next,
   };
