@@ -1,5 +1,8 @@
 [build]
-  command = "npm run build"
+  # Build both the Astro grammar site and the Vite SPA, then merge outputs.
+  # Astro grammar pages land in dist/ first; Vite SPA overwrites the root
+  # without touching the /grammar/ subdirectory.
+  command = "cd astro-site && npm install && npm run build && cp -r dist/grammar ../dist/grammar && cd .. && npm run build"
   publish = "dist"
   functions = "netlify/functions"
 
@@ -80,7 +83,16 @@
   from = "/assets/*"
   status = 404
 
-# SPA catch-all
+# Astro-generated grammar pages — serve static HTML directly.
+# These files exist in dist/grammar/**/ so Netlify finds them first.
+# No redirect needed; the explicit rule here prevents the SPA catch-all
+# from swallowing 404s on grammar routes that don't exist.
+[[redirects]]
+  from = "/grammar/*"
+  to = "/grammar/:splat"
+  status = 200
+
+# SPA catch-all (non-grammar routes only)
 [[redirects]]
   from = "/*"
   to = "/index.html"

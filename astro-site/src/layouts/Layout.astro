@@ -1,0 +1,176 @@
+---
+export interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+  jsonLd?: object | object[];
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogImage = 'https://deutsch-meister.de/og-default.png',
+  jsonLd,
+  noindex = false,
+} = Astro.props;
+
+const canonicalUrl = canonical ?? Astro.url.href;
+const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Primary Meta -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="DeutschMeister" />
+    <meta property="og:locale" content="de_DE" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Nunito+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- JSON-LD Structured Data -->
+    {jsonLdArray.map((schema) => (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    ))}
+  </head>
+
+  <body class="font-body bg-slate-50 text-slate-800 antialiased">
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <!-- Logo -->
+          <a href="https://deutsch-meister.de/" class="flex items-center gap-2">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 via-rose-400 to-purple-500 flex items-center justify-center">
+              <span class="text-white font-display font-bold text-xl">D</span>
+            </div>
+            <span class="font-display font-semibold text-xl text-slate-800 hidden sm:block">
+              DeutschMeister
+            </span>
+          </a>
+
+          <!-- Desktop nav -->
+          <div class="hidden md:flex items-center gap-1">
+            <a href="/grammar" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+              Grammatik
+            </a>
+            <a href="https://deutsch-meister.de/video-library" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+              Videos
+            </a>
+            <a href="https://deutsch-meister.de/podcasts" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+              Podcasts
+            </a>
+            <div class="w-px h-5 bg-slate-200 mx-1"></div>
+            <a href="https://deutsch-meister.de/analyze" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+              X-Ray
+            </a>
+            <a href="https://deutsch-meister.de/level-test" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+              Einstufungstest
+            </a>
+            <div class="w-px h-5 bg-slate-200 mx-1"></div>
+            <a
+              href="https://deutsch-meister.de/signup"
+              class="px-4 py-2 rounded-lg bg-gradient-to-r from-amber-500 to-rose-500 text-white text-sm font-semibold hover:from-amber-600 hover:to-rose-600 transition-all"
+            >
+              Kostenlos starten
+            </a>
+            <a
+              href="https://deutsch-meister.de/login"
+              class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+            >
+              Anmelden
+            </a>
+          </div>
+
+          <!-- Mobile: just login + signup -->
+          <div class="md:hidden flex items-center gap-2">
+            <a href="https://deutsch-meister.de/login" class="px-3 py-1.5 text-sm font-medium text-slate-600">
+              Anmelden
+            </a>
+            <a href="https://deutsch-meister.de/signup" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-rose-500 text-white text-sm font-semibold">
+              Starten
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page content -->
+    <main class="pt-16">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 mt-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid sm:grid-cols-3 gap-8 mb-8">
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 via-rose-400 to-purple-500 flex items-center justify-center">
+                <span class="text-white font-display font-bold text-sm">D</span>
+              </div>
+              <span class="font-display font-semibold text-white">DeutschMeister</span>
+            </div>
+            <p class="text-sm leading-relaxed">
+              Deutsch lernen mit KI — von A1.1 bis B2.2. Grammatik, Sprechen, Hören und Lesen.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-white font-semibold text-sm mb-3">Grammatik</h3>
+            <ul class="space-y-2 text-sm">
+              <li><a href="/grammar/a1.1" class="hover:text-white transition-colors">A1.1 Grammatik</a></li>
+              <li><a href="/grammar/a1.2" class="hover:text-white transition-colors">A1.2 Grammatik</a></li>
+              <li><a href="/grammar/a2.1" class="hover:text-white transition-colors">A2.1 Grammatik</a></li>
+              <li><a href="/grammar/b1.1" class="hover:text-white transition-colors">B1.1 Grammatik</a></li>
+              <li><a href="/grammar" class="hover:text-white transition-colors">Alle Niveaus →</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-white font-semibold text-sm mb-3">Lernen</h3>
+            <ul class="space-y-2 text-sm">
+              <li><a href="https://deutsch-meister.de/speaking" class="hover:text-white transition-colors">KI-Sprechübungen</a></li>
+              <li><a href="https://deutsch-meister.de/analyze" class="hover:text-white transition-colors">Sentence X-Ray</a></li>
+              <li><a href="https://deutsch-meister.de/level-test" class="hover:text-white transition-colors">Einstufungstest</a></li>
+              <li><a href="https://deutsch-meister.de/pricing" class="hover:text-white transition-colors">Preise</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="border-t border-slate-800 pt-6 text-center text-xs">
+          © {new Date().getFullYear()} DeutschMeister · Alle Rechte vorbehalten
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

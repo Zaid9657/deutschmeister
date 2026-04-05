@@ -1,0 +1,104 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getTopicsForLevel, SUB_LEVELS, LEVEL_META } from '../../lib/grammar.js';
+import '../../styles/global.css';
+
+export async function getStaticPaths() {
+  return SUB_LEVELS.map((level) => ({ params: { level } }));
+}
+
+const { level } = Astro.params;
+const meta = LEVEL_META[level];
+const topics = await getTopicsForLevel(level);
+
+const title = `${meta.label} Grammatik — ${topics.length} Themen | DeutschMeister`;
+const description = `Alle ${topics.length} Grammatikthemen für ${meta.label}: ${topics.slice(0, 4).map(t => t.title_en).join(', ')} und mehr. Mit Regeln, Beispielen und Übungen.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: title,
+  description,
+  url: `https://deutsch-meister.de/grammar/${level}`,
+  breadcrumb: {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de/' },
+      { '@type': 'ListItem', position: 2, name: 'Grammatik', item: 'https://deutsch-meister.de/grammar' },
+      { '@type': 'ListItem', position: 3, name: meta.label, item: `https://deutsch-meister.de/grammar/${level}` },
+    ],
+  },
+};
+---
+
+<Layout title={title} description={description} canonical={`https://deutsch-meister.de/grammar/${level}`} jsonLd={jsonLd}>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-10">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-sm text-slate-500 mb-8" aria-label="Breadcrumb">
+      <a href="https://deutsch-meister.de/" class="hover:text-slate-700 transition-colors">Home</a>
+      <span>/</span>
+      <a href="/grammar" class="hover:text-slate-700 transition-colors">Grammatik</a>
+      <span>/</span>
+      <span class="text-slate-800 font-medium">{meta.label}</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="mb-10">
+      <div class={`inline-flex items-center gap-3 px-4 py-2 rounded-xl ${meta.bg} ${meta.border} border mb-4`}>
+        <div class={`w-8 h-8 rounded-lg bg-gradient-to-r ${meta.color} flex items-center justify-center`}>
+          <span class="text-white font-display font-bold text-xs">{meta.label}</span>
+        </div>
+        <span class="font-semibold text-slate-700">{meta.name}</span>
+      </div>
+      <h1 class="font-display text-4xl font-bold text-slate-900 mb-3">
+        {meta.label} Grammatik
+      </h1>
+      <p class="text-slate-600 text-lg">
+        {topics.length} Themen mit Erklärungen, Beispielen und interaktiven Übungen.
+      </p>
+    </div>
+
+    <!-- Topic list -->
+    <div class="space-y-3">
+      {topics.map((topic, i) => (
+        <a
+          href={`/grammar/${level}/${topic.slug}`}
+          class={`flex items-center gap-4 p-5 rounded-xl border ${meta.border} bg-white hover:shadow-md hover:-translate-y-0.5 transition-all group`}
+        >
+          <span class={`w-8 h-8 rounded-lg ${meta.bg} ${meta.badge} flex items-center justify-center text-sm font-bold flex-shrink-0`}>
+            {i + 1}
+          </span>
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-slate-800 group-hover:text-slate-900 transition-colors">
+              {topic.title_en}
+            </p>
+            {topic.title_de && topic.title_de !== topic.title_en && (
+              <p class="text-sm text-slate-500 mt-0.5">{topic.title_de}</p>
+            )}
+            {topic.description_en && (
+              <p class="text-sm text-slate-500 mt-1 line-clamp-1">{topic.description_en}</p>
+            )}
+          </div>
+          <svg class="w-5 h-5 text-slate-300 group-hover:text-slate-500 group-hover:translate-x-0.5 transition-all flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      ))}
+    </div>
+
+    <!-- Level navigation -->
+    <div class="mt-10 pt-8 border-t border-slate-200">
+      <p class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Andere Niveaus</p>
+      <div class="flex flex-wrap gap-2">
+        {SUB_LEVELS.filter(l => l !== level).map((l) => (
+          <a
+            href={`/grammar/${l}`}
+            class={`px-3 py-1.5 rounded-full text-sm font-semibold ${LEVEL_META[l].badge} hover:scale-105 transition-transform`}
+          >
+            {LEVEL_META[l].label}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</Layout>

@@ -1,0 +1,105 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getAllTopics, SUB_LEVELS, LEVEL_META } from '../../lib/grammar.js';
+import '../../styles/global.css';
+
+const allTopics = await getAllTopics();
+
+// Group by level
+const byLevel = SUB_LEVELS.map((level) => ({
+  level,
+  meta: LEVEL_META[level],
+  topics: allTopics.filter((t) => t.sub_level === level),
+}));
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Deutsche Grammatik A1–B2 | DeutschMeister',
+  description: 'Alle 64 Grammatikthemen von A1.1 bis B2.2 — kostenlos, mit Erklärungen, Beispielen und Übungen.',
+  url: 'https://deutsch-meister.de/grammar',
+  provider: { '@type': 'Organization', name: 'DeutschMeister', url: 'https://deutsch-meister.de' },
+};
+---
+
+<Layout
+  title="Deutsche Grammatik A1–B2 | DeutschMeister"
+  description="64 Grammatikthemen von A1.1 bis B2.2. Artikel, Kasus, Konjunktiv und mehr — mit Erklärungen, Beispielen und interaktiven Übungen."
+  canonical="https://deutsch-meister.de/grammar"
+  jsonLd={jsonLd}
+>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-12">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="font-display text-4xl sm:text-5xl font-bold text-slate-900 mb-4">
+        Deutsche Grammatik
+      </h1>
+      <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+        64 Themen von A1.1 bis B2.2 — mit Regeln, Beispielen und interaktiven Übungen. Jedes Thema einzeln erklärbar.
+      </p>
+      <div class="mt-6 flex flex-wrap justify-center gap-2">
+        {byLevel.map(({ level, meta }) => (
+          <a
+            href={`/grammar/${level}`}
+            class={`px-3 py-1.5 rounded-full text-sm font-semibold ${meta.badge} transition-all hover:scale-105`}
+          >
+            {meta.label}
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- Level sections -->
+    <div class="space-y-10">
+      {byLevel.map(({ level, meta, topics }) => (
+        <section>
+          <div class="flex items-center gap-3 mb-4">
+            <a href={`/grammar/${level}`} class="group flex items-center gap-3">
+              <div class={`w-10 h-10 rounded-xl bg-gradient-to-r ${meta.color} flex items-center justify-center shadow-sm`}>
+                <span class="text-white font-display font-bold text-sm">{meta.label}</span>
+              </div>
+              <h2 class="font-display text-2xl font-bold text-slate-800 group-hover:text-slate-600 transition-colors">
+                {meta.label} — {meta.name}
+              </h2>
+            </a>
+          </div>
+
+          <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {topics.map((topic, i) => (
+              <a
+                href={`/grammar/${level}/${topic.slug}`}
+                class={`block p-4 rounded-xl border ${meta.border} ${meta.bg} hover:shadow-md transition-all group`}
+              >
+                <span class="text-xs font-semibold text-slate-400 mb-1 block">#{i + 1}</span>
+                <p class="font-semibold text-slate-800 text-sm group-hover:text-slate-900 leading-snug">
+                  {topic.title_en}
+                </p>
+                {topic.description_en && (
+                  <p class="text-xs text-slate-500 mt-1 line-clamp-2">{topic.description_en}</p>
+                )}
+              </a>
+            ))}
+          </div>
+
+          <a href={`/grammar/${level}`} class="inline-flex items-center gap-1 mt-3 text-sm text-slate-500 hover:text-slate-700 transition-colors">
+            Alle {meta.label}-Themen ansehen →
+          </a>
+        </section>
+      ))}
+    </div>
+
+    <!-- CTA -->
+    <div class="mt-16 text-center p-8 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200">
+      <h2 class="font-display text-2xl font-bold text-slate-800 mb-2">Grammatik allein reicht nicht</h2>
+      <p class="text-slate-600 mb-6 max-w-md mx-auto">
+        Übe das Gelernte mit KI-Sprechübungen, Lesestücken und interaktiven Aufgaben.
+      </p>
+      <a
+        href="https://deutsch-meister.de/signup"
+        class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold hover:from-amber-600 hover:to-rose-600 transition-all shadow-lg shadow-amber-200"
+      >
+        Kostenlos starten — 7 Tage Pro inklusive
+      </a>
+    </div>
+  </div>
+</Layout>
