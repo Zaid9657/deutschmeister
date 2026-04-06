@@ -182,24 +182,64 @@ const LevelTestResults = ({
         <div className="results-section">
           <h2>Test Summary</h2>
           <div className="section-summary">
-            {sections.map((section, index) => (
-              <div key={index} className={`section-item ${section.completed ? 'completed' : 'skipped'}`}>
-                <div className="section-icon-wrapper">
-                  <section.icon size={20} />
+            {sections.map((section, index) => {
+              // Special treatment: speaking row for logged-out users who skipped it
+              if (section.name === 'Speaking' && !section.completed && !user) {
+                return (
+                  <div key={index} className="section-item skipped" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%' }}>
+                      <div className="section-icon-wrapper">
+                        <Mic size={20} />
+                      </div>
+                      <div className="section-info" style={{ flex: 1 }}>
+                        <span className="section-name">Speaking</span>
+                        <span className="section-detail" style={{ color: '#f59e0b', fontWeight: 600 }}>
+                          Not tested yet — try a free session
+                        </span>
+                      </div>
+                    </div>
+                    <Link
+                      to="/speaking"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        padding: '8px 16px',
+                        background: 'linear-gradient(to right, #14b8a6, #10b981)',
+                        color: '#fff',
+                        fontWeight: 600,
+                        borderRadius: '10px',
+                        textDecoration: 'none',
+                        fontSize: '0.85rem',
+                        marginLeft: '44px',
+                      }}
+                    >
+                      <Mic size={14} />
+                      Try a free AI speaking session at {finalSublevel}
+                    </Link>
+                  </div>
+                );
+              }
+
+              return (
+                <div key={index} className={`section-item ${section.completed ? 'completed' : 'skipped'}`}>
+                  <div className="section-icon-wrapper">
+                    <section.icon size={20} />
+                  </div>
+                  <div className="section-info">
+                    <span className="section-name">{section.name}</span>
+                    <span className="section-detail">{section.detail}</span>
+                  </div>
+                  <div className="section-status">
+                    {section.completed ? (
+                      <CheckCircle2 size={20} className="status-completed" />
+                    ) : (
+                      <XCircle size={20} className="status-skipped" />
+                    )}
+                  </div>
                 </div>
-                <div className="section-info">
-                  <span className="section-name">{section.name}</span>
-                  <span className="section-detail">{section.detail}</span>
-                </div>
-                <div className="section-status">
-                  {section.completed ? (
-                    <CheckCircle2 size={20} className="status-completed" />
-                  ) : (
-                    <XCircle size={20} className="status-skipped" />
-                  )}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -338,6 +378,14 @@ const LevelTestResults = ({
         <div className="results-section">
           <h2>Recommended Next Steps</h2>
           <div className="recommendation-cards">
+            <Link to="/speaking" className="recommendation-card">
+              <div className="rec-icon">🗣️</div>
+              <div className="rec-content">
+                <h3>Practice Speaking with AI</h3>
+                <p>Have a real conversation at your {finalSublevel} level and get instant feedback on pronunciation, grammar, and vocabulary.</p>
+              </div>
+            </Link>
+
             <Link to={`/grammar/${finalSublevel.toLowerCase().replace('.', '-')}`} className="recommendation-card">
               <div className="rec-icon">📚</div>
               <div className="rec-content">
@@ -360,7 +408,7 @@ const LevelTestResults = ({
               <Link to="/speaking" className="recommendation-card">
                 <div className="rec-icon">🗣️</div>
                 <div className="rec-content">
-                  <h3>Practice Speaking</h3>
+                  <h3>More Speaking Practice</h3>
                   <p>Build confidence with AI conversations</p>
                 </div>
               </Link>
