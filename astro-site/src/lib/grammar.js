@@ -20,6 +20,19 @@ const normalizeLevel = (level) => level?.toLowerCase() ?? level;
 
 /** Fetch every topic (slug + level) — used in getStaticPaths */
 async function fetchTopicPaths() {
+  // Connectivity diagnostic — visible in Netlify build logs
+  try {
+    const diagUrl = `https://omqyueddktqeyrrqvnyq.supabase.co/rest/v1/grammar_topics?select=count&limit=1`;
+    const diagKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+    console.log('[grammar] Testing Supabase connectivity:', diagUrl);
+    const diagResp = await fetch(diagUrl, {
+      headers: { apikey: diagKey ?? '', Authorization: `Bearer ${diagKey ?? ''}` },
+    });
+    console.log('[grammar] Supabase test response status:', diagResp.status);
+  } catch (diagErr) {
+    console.error('[grammar] Raw fetch test FAILED:', diagErr.message, diagErr.cause?.code);
+  }
+
   const { data, error } = await supabase
     .from('grammar_topics')
     .select('slug, sub_level')
