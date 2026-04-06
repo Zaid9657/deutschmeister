@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Scan, ArrowRight, Loader2, AlertCircle, ChevronDown, ChevronUp, Type, Sparkles, Eye, Crown } from 'lucide-react';
 import SEO from '../components/SEO';
@@ -324,7 +324,10 @@ function LimitReachedBanner({ tier, limit, isLoggedIn }) {
 
 const SentenceXRay = () => {
   const { user } = useAuth();
-  const [sentence, setSentence]       = useState('');
+  const [searchParams] = useSearchParams();
+
+  // Pre-fill sentence from ?s= query param (used by daily email CTA links)
+  const [sentence, setSentence]       = useState(() => searchParams.get('s') ?? '');
   const [result, setResult]           = useState(null);
   const [loading, setLoading]         = useState(false);
   const [error, setError]             = useState(null);
@@ -334,6 +337,13 @@ const SentenceXRay = () => {
 
   // Stable anonymous ID
   const [anonId] = useState(() => getOrCreateAnonId());
+
+  // Auto-analyze if sentence arrived via ?s= param
+  useEffect(() => {
+    const prefill = searchParams.get('s');
+    if (prefill?.trim()) analyze(prefill.trim());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const analyze = async (text) => {
     const trimmed = (text || sentence).trim();

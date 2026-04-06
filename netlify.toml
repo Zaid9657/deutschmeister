@@ -9,6 +9,9 @@
 [functions]
   node_bundler = "esbuild"
 
+[functions.daily-sentence]
+  schedule = "0 7 * * *"  # 07:00 UTC daily (09:00 CET / 08:00 GMT)
+
 # Security headers for all pages
 [[headers]]
   for = "/*"
@@ -76,6 +79,12 @@
 # Ensure function endpoints are not caught by the SPA catch-all
 [[redirects]]
   from = "/.netlify/functions/*"
+  status = 200
+
+# Unsubscribe handler
+[[redirects]]
+  from = "/unsubscribe"
+  to = "/.netlify/functions/unsubscribe"
   status = 200
 
 # Return 404 for missing hashed assets (prevents serving index.html as JS/CSS)
