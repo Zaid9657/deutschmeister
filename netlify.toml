@@ -9,8 +9,9 @@
 [functions]
   node_bundler = "esbuild"
 
+# 07:00 UTC daily (09:00 CET / 08:00 GMT)
 [functions.daily-sentence]
-  schedule = "0 7 * * *"  # 07:00 UTC daily (09:00 CET / 08:00 GMT)
+  schedule = "0 7 * * *"
 
 # Security headers for all pages
 [[headers]]
@@ -76,11 +77,6 @@
   to = "/.netlify/functions/:splat"
   status = 200
 
-# Ensure function endpoints are not caught by the SPA catch-all
-[[redirects]]
-  from = "/.netlify/functions/*"
-  status = 200
-
 # Unsubscribe handler
 [[redirects]]
   from = "/unsubscribe"
@@ -90,6 +86,7 @@
 # Return 404 for missing hashed assets (prevents serving index.html as JS/CSS)
 [[redirects]]
   from = "/assets/*"
+  to = "/404.html"
   status = 404
 
 # SPA catch-all — grammar routes are real static files in dist/grammar/ so
