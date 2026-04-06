@@ -125,35 +125,30 @@ const PricingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 py-16 px-4 pt-24">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 px-4 pt-20 pb-16">
       <div className="max-w-4xl mx-auto">
 
         {/* Header */}
         <motion.div
-          className="text-center mb-12"
+          className="text-center mb-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          {/* EN: "Finally Understand German Grammar" */}
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Deutsche Grammatik endlich verstehen
+          <h1 className="text-2xl md:text-3xl font-bold text-white mb-3">
+            Choose Your Plan
           </h1>
-          {/* EN: "Join hundreds of learners using DeutschMeister to master German grammar — from cases to sentence structure." */}
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Join hundreds of learners using DeutschMeister to master German grammar — from cases to sentence structure.
-          </p>
 
           {inTrial && !isOnPro && (
-            <div className="mt-6 inline-flex items-center gap-2 bg-yellow-500/20 text-yellow-400 px-4 py-2 rounded-full">
-              <Sparkles className="w-5 h-5" />
-              <span>{trialDaysRemaining} days left in your free trial</span>
+            <div className="inline-flex items-center gap-2 bg-yellow-500/20 text-yellow-400 px-4 py-2 rounded-full">
+              <Sparkles className="w-4 h-4" />
+              <span className="text-sm">{trialDaysRemaining} days left in your free trial</span>
             </div>
           )}
         </motion.div>
 
         {/* Billing Toggle */}
         <motion.div
-          className="flex justify-center mb-10"
+          className="flex justify-center mb-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.05 }}
@@ -186,43 +181,43 @@ const PricingPage = () => {
         </motion.div>
 
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
 
           {/* Free Plan */}
           <motion.div
-            className="relative bg-gray-800/50 backdrop-blur border border-gray-700 rounded-2xl p-8"
+            className="relative bg-gray-800/50 backdrop-blur border border-gray-700 rounded-2xl p-5"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1 }}
           >
-            <div className="flex items-center gap-2 mb-4">
-              <h2 className="text-2xl font-bold text-white">Free</h2>
+            <div className="flex items-center gap-2 mb-3">
+              <h2 className="text-xl font-bold text-white">Free</h2>
             </div>
 
-            <div className="mb-6">
-              <span className="text-5xl font-bold text-white">&euro;0</span>
+            <div className="mb-3">
+              <span className="text-4xl font-bold text-white">&euro;0</span>
               <span className="text-gray-400">/forever</span>
             </div>
 
-            <p className="text-gray-400 mb-6">
+            <p className="text-gray-400 text-sm mb-4">
               Start learning with no commitment
             </p>
 
-            <ul className="space-y-3 mb-8">
-              <li className="flex items-start gap-3 text-gray-300">
-                <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+            <ul className="space-y-2 mb-5">
+              <li className="flex items-start gap-2.5 text-sm text-gray-300">
+                <Check className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                 <span>Full A1.1 level — no signup required</span>
               </li>
-              <li className="flex items-start gap-3 text-gray-300">
-                <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+              <li className="flex items-start gap-2.5 text-sm text-gray-300">
+                <Check className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                 <span>1 Sentence X-Ray analysis per day</span>
               </li>
-              <li className="flex items-start gap-3 text-gray-300">
-                <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+              <li className="flex items-start gap-2.5 text-sm text-gray-300">
+                <Check className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                 <span>Free level test</span>
               </li>
-              <li className="flex items-start gap-3 text-gray-300">
-                <Check className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+              <li className="flex items-start gap-2.5 text-sm text-gray-300">
+                <Check className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
                 <span>2 free AI speaking sessions</span>
               </li>
             </ul>
@@ -240,7 +235,7 @@ const PricingPage = () => {
 
           {/* Pro Plan */}
           <motion.div
-            className={`relative bg-gradient-to-b from-blue-500/10 to-gray-800/50 backdrop-blur rounded-2xl p-8 border-2 ${
+            className={`relative bg-gradient-to-b from-blue-500/10 to-gray-800/50 backdrop-blur rounded-2xl p-5 border-2 ${
               isOnPro ? 'border-blue-400 ring-1 ring-blue-400/30' : 'border-blue-500/50'
             }`}
             initial={{ opacity: 0, x: 20 }}
@@ -268,13 +263,13 @@ const PricingPage = () => {
               )}
             </div>
 
-            <div className="flex items-center gap-2 mb-4 mt-2">
-              <Zap className="w-6 h-6 text-blue-400" />
-              <h2 className="text-2xl font-bold text-white">Pro</h2>
+            <div className="flex items-center gap-2 mb-3 mt-2">
+              <Zap className="w-5 h-5 text-blue-400" />
+              <h2 className="text-xl font-bold text-white">Pro</h2>
             </div>
 
-            <div className="mb-2">
-              <span className="text-5xl font-bold text-white">
+            <div className="mb-1">
+              <span className="text-4xl font-bold text-white">
                 &euro;{billingCycle === 'yearly' ? '79.99' : '9.99'}
               </span>
               <span className="text-gray-400">
@@ -283,68 +278,48 @@ const PricingPage = () => {
             </div>
 
             {billingCycle === 'yearly' && (
-              <>
-                <p className="text-green-400 text-sm mb-1">
-                  That&apos;s only &euro;6.67/month!
-                </p>
-                {/* EN: "Less than €0.22/day — cheaper than a single coffee" */}
-                <p className="text-gray-400 text-xs mb-4">
-                  Weniger als €0.22 pro Tag — günstiger als ein Kaffee
-                </p>
-              </>
+              <p className="text-green-400 text-xs mb-3">
+                That&apos;s only &euro;6.67/month — less than €0.22/day
+              </p>
             )}
             {billingCycle === 'monthly' && (
-              <>
-                {/* EN: "Less than €0.33/day — cheaper than a single coffee" */}
-                <p className="text-gray-400 text-xs mb-4">
-                  Weniger als €0.33 pro Tag — günstiger als ein Kaffee
-                </p>
-              </>
+              <p className="text-gray-400 text-xs mb-3">
+                Less than €0.33/day — cheaper than a coffee
+              </p>
             )}
 
-            <p className="text-gray-400 mb-6">
+            <p className="text-gray-400 text-sm mb-4">
               Full access to everything
             </p>
 
-            <ul className="space-y-3 mb-8">
-              {/* EN: "Master all 64 grammar topics from beginner to upper-intermediate" */}
-              <li className="flex items-start gap-3 text-gray-300">
-                <Check className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                <span>Master all 64 grammar topics from beginner to upper-intermediate</span>
+            <ul className="space-y-2 mb-5">
+              <li className="flex items-start gap-2.5 text-sm text-gray-300">
+                <Check className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+                <span>All 64 grammar topics — A1.1 to B2.2</span>
               </li>
-              {/* EN: "Learn with interactive exercises that explain WHY answers are correct" */}
-              <li className="flex items-start gap-3 text-gray-300">
-                <Check className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                <span>Learn with interactive exercises that explain WHY answers are correct</span>
+              <li className="flex items-start gap-2.5 text-sm text-gray-300">
+                <Check className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+                <span>Interactive exercises that explain WHY answers are correct</span>
               </li>
-              {/* EN: "Train your ear with native-speaker audio at your level" */}
-              <li className="flex items-start gap-3 text-gray-300">
-                <Check className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                <span>Train your ear with native-speaker audio at your level</span>
+              <li className="flex items-start gap-2.5 text-sm text-gray-300">
+                <Check className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+                <span>Native-speaker listening exercises at your level</span>
               </li>
-              {/* EN: "Reinforce learning with grammar podcasts and video explanations" */}
-              <li className="flex items-start gap-3 text-gray-300">
-                <Check className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                <span>Reinforce learning with grammar podcasts and video explanations</span>
+              <li className="flex items-start gap-2.5 text-sm text-gray-300">
+                <Check className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+                <span>Grammar podcasts and video explanations</span>
               </li>
-              {/* EN: "Track your progress and see how far you've come" */}
-              <li className="flex items-start gap-3 text-gray-300">
-                <Check className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                <span>Track your progress and see how far you&apos;ve come</span>
+              <li className="flex items-start gap-2.5 text-sm text-gray-300">
+                <Mic className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+                <span>AI speaking practice — 30 sessions/month</span>
               </li>
-              {/* EN: "Practice speaking German with AI — 30 conversations per month" */}
-              <li className="flex items-start gap-3 text-gray-300">
-                <Mic className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                <span>Practice speaking German with AI — 30 conversations per month</span>
+              <li className="flex items-start gap-2.5 text-sm text-gray-300">
+                <Check className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+                <span>Unlimited Sentence X-Ray analysis</span>
               </li>
-              {/* EN: "Analyze any German sentence instantly — understand cases, roles, and word order" */}
-              <li className="flex items-start gap-3 text-gray-300">
-                <Check className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                <span>Analyze any German sentence instantly — understand cases, roles, and word order</span>
-              </li>
-              <li className="flex items-start gap-3 text-gray-300">
-                <Check className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                <span>Cancel anytime</span>
+              <li className="flex items-start gap-2.5 text-sm text-gray-300">
+                <Check className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
+                <span>Progress tracking + cancel anytime</span>
               </li>
             </ul>
 
@@ -362,19 +337,18 @@ const PricingPage = () => {
         {/* Free Trial Info */}
         {!isOnPro && (
           <motion.div
-            className="text-center mt-12 text-gray-400"
+            className="text-center mt-6 text-gray-400 text-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            <p>Pro includes a <strong className="text-white">7-day free trial</strong></p>
-            <p className="text-sm mt-2">Cancel anytime. No questions asked.</p>
+            <p>Pro includes a <strong className="text-white">7-day free trial</strong> — cancel anytime.</p>
           </motion.div>
         )}
 
         {/* Trust Badges */}
         <motion.div
-          className="flex flex-wrap justify-center gap-8 mt-12 text-gray-500 text-sm"
+          className="flex flex-wrap justify-center gap-8 mt-6 text-gray-500 text-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
