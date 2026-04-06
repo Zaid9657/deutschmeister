@@ -435,6 +435,75 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Urgency / Pain Section */}
+      <section className="py-20 bg-slate-900">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="font-display text-4xl sm:text-5xl font-bold text-white mb-10 leading-tight">
+              Your German Won't Improve<br className="hidden sm:block" /> By Waiting.
+            </h2>
+
+            <div className="grid sm:grid-cols-3 gap-6 mb-12">
+              {[
+                'Every day you delay is another conversation you can\'t have.',
+                'Another job opportunity that passes you by.',
+                'Another moment where you freeze instead of speak.',
+              ].map((text, i) => (
+                <div key={i} className="px-5 py-5 rounded-2xl bg-slate-800 border border-slate-700 text-slate-300 text-base leading-relaxed">
+                  {text}
+                </div>
+              ))}
+            </div>
+
+            <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto mb-12 leading-relaxed">
+              Start your free trial today.{' '}
+              <span className="text-white font-semibold">7 days of full Pro access.</span>{' '}
+              If it&apos;s not for you, cancel with one click — no charge, no questions.
+            </p>
+
+            <div className="grid sm:grid-cols-2 gap-5 max-w-xl mx-auto">
+              {/* Monthly card */}
+              <div className="rounded-2xl bg-slate-800 border border-slate-700 p-6 flex flex-col items-center gap-4">
+                <div className="text-center">
+                  <p className="text-white font-bold text-lg">Pro Monthly</p>
+                  <p className="text-slate-400 text-sm">€9.99 / month</p>
+                </div>
+                <Link
+                  to="/signup"
+                  className="group w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-xl shadow-lg shadow-rose-900/40 hover:shadow-rose-900/60 transition-all"
+                >
+                  Start Free Trial
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
+
+              {/* Yearly card */}
+              <div className="rounded-2xl bg-slate-800 border border-slate-700 p-6 flex flex-col items-center gap-4">
+                <div className="text-center">
+                  <div className="inline-flex items-center gap-1.5 mb-1">
+                    <p className="text-white font-bold text-lg">Pro Yearly</p>
+                    <span className="px-2 py-0.5 rounded-full bg-green-500 text-white text-[10px] font-bold">Save 33%</span>
+                  </div>
+                  <p className="text-slate-400 text-sm">€79.99 / year</p>
+                  <p className="text-green-400 text-xs mt-0.5">That&apos;s €0.22/day — less than a coffee</p>
+                </div>
+                <Link
+                  to="/signup"
+                  className="group w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-xl shadow-lg shadow-rose-900/40 hover:shadow-rose-900/60 transition-all"
+                >
+                  Start Free Trial
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Trial Banner for logged-in trial users */}
       {user && inTrial && !isSubscribed && (
         <section className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-100">
