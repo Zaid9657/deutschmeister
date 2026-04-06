@@ -95,6 +95,12 @@
   to = "/.netlify/functions/daily-sentence"
   status = 200
 
+# Test endpoint — always sends only to zaid@deutsch-meister.de
+[[redirects]]
+  from = "/api/send-daily-test"
+  to = "/.netlify/functions/send-daily-test"
+  status = 200
+
 # SPA catch-all — grammar routes are real static files in dist/grammar/ so
 # Netlify serves them directly before this rule fires. Only truly missing
 # paths (non-grammar, non-asset) fall through to the SPA.
