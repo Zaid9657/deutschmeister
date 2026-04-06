@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@netlify/functions": "^5.1.5",
     "@supabase/supabase-js": "^2.39.0",
     "framer-motion": "^10.16.0",
     "i18next": "^23.7.0",
