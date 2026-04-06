@@ -146,40 +146,34 @@ const LandingPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            {/* Logo */}
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="mx-auto mb-8 w-24 h-24 rounded-3xl bg-gradient-to-br from-amber-400 via-rose-400 to-purple-500 flex items-center justify-center shadow-2xl shadow-rose-500/25"
-            >
-              <span className="text-white font-display font-bold text-5xl">D</span>
-            </motion.div>
-
-            <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold text-slate-800 mb-6">
-              {t('landing.title')}
+            <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold text-slate-800 mb-6 leading-tight">
+              The Fastest Way to Speak German.{' '}
+              <span className="bg-gradient-to-r from-amber-500 to-rose-500 bg-clip-text text-transparent">Period.</span>
             </h1>
             <p className="text-xl sm:text-2xl text-slate-600 max-w-3xl mx-auto mb-10 leading-relaxed">
-              {t('landing.subtitle')}
+              AI-powered speaking practice at your exact CEFR level. Real conversations. Real feedback. Real results — for less than a coffee a day.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
               <Link
-                to={user ? '/dashboard' : '/level/a1.1'}
-                className="group px-8 py-4 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-2xl shadow-lg shadow-rose-500/25 hover:shadow-xl hover:shadow-rose-500/30 transition-all flex items-center gap-2"
+                to="/level-test"
+                className="group w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-2xl shadow-lg shadow-rose-500/25 hover:shadow-xl hover:shadow-rose-500/30 transition-all flex items-center justify-center gap-2"
               >
-                {user ? t('landing.getStarted') : 'Start Learning Free'}
+                Find Your Level — Free Test
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
-              {!user && (
-                <Link
-                  to="/login"
-                  className="px-8 py-4 border-2 border-slate-200 text-slate-700 font-semibold rounded-2xl hover:border-slate-300 hover:bg-slate-50 transition-all"
-                >
-                  {t('landing.login')}
-                </Link>
-              )}
+              <Link
+                to="/speaking"
+                className="group w-full sm:w-auto px-8 py-4 border-2 border-slate-300 text-slate-700 font-semibold rounded-2xl hover:border-slate-400 hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
+              >
+                Try Speaking Practice
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
             </div>
+
+            <p className="text-sm text-slate-500">
+              ✓ No credit card required &nbsp;&nbsp; ✓ 7-day free Pro trial &nbsp;&nbsp; ✓ Cancel anytime
+            </p>
           </motion.div>
 
           {/* Level Preview */}
