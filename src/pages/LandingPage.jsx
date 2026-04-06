@@ -297,6 +297,144 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Comparison Table Section */}
+      <section className="py-20 bg-white border-b border-slate-100">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-3">
+              See Why Learners Switch to DeutschMeister
+            </h2>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="overflow-x-auto rounded-2xl border border-slate-200 shadow-lg shadow-slate-100"
+          >
+            <table className="w-full min-w-[640px] border-collapse text-sm">
+              <thead>
+                <tr className="border-b border-slate-200">
+                  <th className="text-left px-5 py-4 text-slate-500 font-medium bg-slate-50 w-[200px]">Feature</th>
+                  {/* DeutschMeister — highlighted */}
+                  <th className="px-5 py-4 bg-amber-50 border-x border-amber-200 w-[160px]">
+                    <div className="flex flex-col items-center gap-1.5">
+                      <span className="px-2.5 py-0.5 rounded-full bg-amber-400 text-white text-[10px] font-bold tracking-wide uppercase">Best Value</span>
+                      <span className="font-bold text-slate-900 text-base">DeutschMeister</span>
+                    </div>
+                  </th>
+                  <th className="px-5 py-4 text-center text-slate-600 font-semibold bg-slate-50">Group Classes</th>
+                  <th className="px-5 py-4 text-center text-slate-600 font-semibold bg-slate-50">Private Tutor</th>
+                  <th className="px-5 py-4 text-center text-slate-600 font-semibold bg-slate-50">Grammar Apps</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  {
+                    feature: 'Monthly Cost',
+                    dm: { text: '€9.99', positive: true },
+                    group: { text: '€150+', positive: false },
+                    tutor: { text: '€50–100', positive: false },
+                    apps: { text: '€0–15', neutral: true },
+                  },
+                  {
+                    feature: 'AI Speaking Practice',
+                    dm: { text: '✓ Unlimited', positive: true },
+                    group: { text: '5 min/class', positive: false },
+                    tutor: { text: '✓ 1-on-1', positive: true },
+                    apps: { text: '✗ None', positive: false },
+                  },
+                  {
+                    feature: 'Available 24/7',
+                    dm: { text: '✓', positive: true },
+                    group: { text: '✗ Fixed times', positive: false },
+                    tutor: { text: '✗ Book ahead', positive: false },
+                    apps: { text: '✓', positive: true },
+                  },
+                  {
+                    feature: 'Adapts to your level',
+                    dm: { text: '✓ Automatic', positive: true },
+                    group: { text: '✗ One pace', positive: false },
+                    tutor: { text: '✓ Manual', positive: true },
+                    apps: { text: '✗ Generic', positive: false },
+                  },
+                  {
+                    feature: 'Grammar A1–B2',
+                    dm: { text: '✓ 64 topics', positive: true },
+                    group: { text: 'Varies', neutral: true },
+                    tutor: { text: 'Varies', neutral: true },
+                    apps: { text: '✓ Varies', positive: true },
+                  },
+                  {
+                    feature: 'Instant feedback',
+                    dm: { text: '✓ AI scoring', positive: true },
+                    group: { text: 'Next class', positive: false },
+                    tutor: { text: 'End of session', positive: false },
+                    apps: { text: '✗ Basic', positive: false },
+                  },
+                  {
+                    feature: 'Sentence analysis',
+                    dm: { text: '✓ X-Ray tool', positive: true },
+                    group: { text: '✗', positive: false },
+                    tutor: { text: '✗', positive: false },
+                    apps: { text: '✗', positive: false },
+                  },
+                  {
+                    feature: 'Free level test',
+                    dm: { text: '✓', positive: true },
+                    group: { text: '€50+', positive: false },
+                    tutor: { text: '€30+', positive: false },
+                    apps: { text: 'Basic quiz', neutral: true },
+                  },
+                ].map((row, i) => {
+                  const cell = ({ text, positive, neutral }) => {
+                    const color = positive
+                      ? 'text-emerald-600 font-medium'
+                      : neutral
+                      ? 'text-slate-500'
+                      : 'text-slate-400';
+                    return <span className={color}>{text}</span>;
+                  };
+                  return (
+                    <tr key={i} className={`border-b border-slate-100 ${i % 2 === 1 ? 'bg-slate-50/50' : ''}`}>
+                      <td className="px-5 py-3.5 text-slate-700 font-medium">{row.feature}</td>
+                      <td className="px-5 py-3.5 text-center bg-amber-50/70 border-x border-amber-100">
+                        {cell(row.dm)}
+                      </td>
+                      <td className="px-5 py-3.5 text-center">{cell(row.group)}</td>
+                      <td className="px-5 py-3.5 text-center">{cell(row.tutor)}</td>
+                      <td className="px-5 py-3.5 text-center">{cell(row.apps)}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-center mt-10"
+          >
+            <Link
+              to="/signup"
+              className="group inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-2xl shadow-lg shadow-rose-500/25 hover:shadow-xl hover:shadow-rose-500/30 transition-all"
+            >
+              Start Your Free Trial
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Trial Banner for logged-in trial users */}
       {user && inTrial && !isSubscribed && (
         <section className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-100">
