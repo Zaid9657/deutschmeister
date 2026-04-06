@@ -179,7 +179,7 @@ async function sendEmail(resendKey, to, subject, html) {
       Authorization: `Bearer ${resendKey}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ from: FROM_ADDRESS, to: [to], subject, html }),
+    body: JSON.stringify({ from: FROM_ADDRESS, to: [to], reply_to: 'zaid199660@gmail.com', subject, html }),
   });
   if (!res.ok) {
     const text = await res.text();

@@ -1,8 +1,8 @@
 import { createHmac } from 'crypto';
 import sentences from './data/daily-sentences.json' with { type: 'json' };
 
-const FROM_ADDRESS = 'DeutschMeister <zaid@deutsch-meister.de>';
-const TEST_EMAIL   = 'zaid@deutsch-meister.de';
+const FROM_ADDRESS   = 'DeutschMeister <zaid@deutsch-meister.de>';
+const DEFAULT_EMAIL  = 'zaid199660@gmail.com';
 const BASE_URL     = 'https://deutsch-meister.de';
 const UNSUB_SECRET = process.env.UNSUB_SECRET || process.env.CAMPAIGN_SECRET || 'changeme';
 
@@ -93,11 +93,13 @@ function buildEmail(sentence) {
 </html>`;
 }
 
-export const handler = async () => {
+export const handler = async (event) => {
   const resendKey = process.env.RESEND_API_KEY;
   if (!resendKey) {
     return { statusCode: 500, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'RESEND_API_KEY not set' }) };
   }
+
+  const to = event?.queryStringParameters?.email || DEFAULT_EMAIL;
 
   const sentence = todaysSentence();
   const html     = buildEmail(sentence);
@@ -106,7 +108,7 @@ export const handler = async () => {
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: FROM_ADDRESS, to: [TEST_EMAIL], subject, html }),
+    body: JSON.stringify({ from: FROM_ADDRESS, to: [to], reply_to: 'zaid199660@gmail.com', subject, html }),
   });
 
   if (!res.ok) {
@@ -117,6 +119,6 @@ export const handler = async () => {
   return {
     statusCode: 200,
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ok: true, to: TEST_EMAIL, sentence: sentence.sentence_de }),
+    body: JSON.stringify({ ok: true, to, sentence: sentence.sentence_de }),
   };
 };
