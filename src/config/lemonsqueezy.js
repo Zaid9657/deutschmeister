@@ -9,7 +9,7 @@ export const LEMONSQUEEZY_CONFIG = {
       price: 9.99,
       currency: 'EUR',
       interval: 'month',
-      variantId: import.meta.env.VITE_LEMONSQUEEZY_MONTHLY_VARIANT_ID || '1393033',
+      variantId: import.meta.env.VITE_LEMONSQUEEZY_MONTHLY_VARIANT_ID || 'dfc81ca3-78f5-4bab-9d62-dca75b3f7e21',
       features: [
         'Full access to all 8 levels (A1.1–B2.2)',
         'All grammar lessons with exercises',
@@ -26,7 +26,7 @@ export const LEMONSQUEEZY_CONFIG = {
       price: 79.99,
       currency: 'EUR',
       interval: 'year',
-      variantId: import.meta.env.VITE_LEMONSQUEEZY_YEARLY_VARIANT_ID || '1393055',
+      variantId: import.meta.env.VITE_LEMONSQUEEZY_YEARLY_VARIANT_ID || 'd58c1838-d935-4c59-a0ac-0bfce8ec9c3b',
       features: [
         'Everything in Pro Monthly',
         'Save 33% compared to monthly',
