@@ -144,21 +144,31 @@ export const handler = async (event) => {
       };
     }
 
-    // Save evaluation to Supabase
+    // Save evaluation to Supabase.
+    // Table schema requires: session_id (NOT NULL) and score (NOT NULL).
+    // session_id maps to the session_token string sent from the frontend.
+    // score is the 0-100 total; individual breakdown goes in *_score columns.
     const { data: savedEval, error: saveError } = await supabase
       .from('speaking_evaluations')
       .insert({
         user_id,
+        session_id:           session_token,
         session_token,
         level,
-        scores: evaluation.scores,
-        total_score: evaluation.total_score,
-        feedback: evaluation.feedback,
-        strengths: evaluation.strengths,
-        improvements: evaluation.improvements,
-        recommendation: evaluation.recommendation,
-        message_count: messages.length,
-        created_at: new Date().toISOString(),
+        score:                evaluation.total_score ?? 0,
+        total_score:          evaluation.total_score ?? 0,
+        pronunciation_score:  evaluation.scores?.pronunciation ?? null,
+        grammar_score:        evaluation.scores?.grammar       ?? null,
+        vocabulary_score:     evaluation.scores?.vocabulary    ?? null,
+        fluency_score:        evaluation.scores?.fluency       ?? null,
+        comprehension_score:  evaluation.scores?.comprehension ?? null,
+        scores:               evaluation.scores,
+        feedback:             evaluation.feedback,
+        strengths:            evaluation.strengths,
+        improvements:         evaluation.improvements,
+        recommendation:       evaluation.recommendation,
+        message_count:        messages.length,
+        created_at:           new Date().toISOString(),
       })
       .select()
       .single();
