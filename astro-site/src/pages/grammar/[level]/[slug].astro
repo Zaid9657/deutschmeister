@@ -24,10 +24,10 @@ const meta = LEVEL_META[level] ?? LEVEL_META['a1.1'];
 const topicTitle = topic?.title_en ?? slug;
 const canonicalUrl = `https://deutsch-meister.de/grammar/${level}/${slug}`;
 
-const pageTitle = `${topicTitle} — ${meta.label} Grammatik | DeutschMeister`;
+const pageTitle = `German ${topicTitle} Explained in English | ${meta.label} Grammar Guide`;
 const pageDesc = topic?.description_en
-  ? `${topic.description_en} Mit Beispielen, Regeln und interaktiven Übungen für ${meta.label}.`
-  : `Lerne ${topicTitle} auf ${meta.label}-Niveau mit Regeln, Beispielen und Übungen. Kostenlos auf DeutschMeister.`;
+  ? `${topic.description_en} Includes rules, examples, and practice exercises for ${meta.label} German learners.`.slice(0, 160)
+  : `Learn German ${topicTitle} explained in English with clear rules, real examples, and interactive exercises. ${meta.label} level.`.slice(0, 160);
 
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
@@ -46,7 +46,7 @@ const articleSchema = {
   headline: pageTitle,
   description: pageDesc,
   url: canonicalUrl,
-  inLanguage: 'de',
+  inLanguage: 'en',
   publisher: { '@type': 'Organization', name: 'DeutschMeister', url: 'https://deutsch-meister.de' },
   educationalLevel: meta.label,
   about: { '@type': 'Thing', name: `German grammar: ${topicTitle}` },

@@ -424,6 +424,60 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* Grammar Topics Section */}
+      <section className="py-16 bg-slate-50 border-t border-slate-100">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <div className="text-center mb-8">
+              <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
+                Start with the Most Important Topics
+              </h2>
+              <p className="text-slate-600">
+                Free grammar lessons explained in English — rules, examples, and exercises.
+              </p>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-3 mb-6">
+              {[
+                { href: '/grammar/a1.1/nouns-gender',          level: 'A1.1', label: 'Nouns & Gender',            desc: 'der / die / das — why every noun has a gender' },
+                { href: '/grammar/a1.2/accusative-intro',       level: 'A1.2', label: 'Accusative Case',           desc: 'When "der" becomes "den" and why it matters' },
+                { href: '/grammar/a2.1/prepositions-dative',    level: 'A2.1', label: 'Dative Prepositions',       desc: 'mit, nach, seit, von, zu, bei, aus, gegenüber' },
+                { href: '/grammar/b1.1/konjunktiv-ii-wurde',    level: 'B1.1', label: 'Konjunktiv II (würde)',     desc: 'Express wishes, hypotheticals, and polite requests' },
+              ].map(({ href, level, label, desc }) => (
+                <a
+                  key={href}
+                  href={href}
+                  className="flex items-start gap-4 p-4 bg-white rounded-xl border border-slate-200 hover:border-amber-300 hover:shadow-md transition-all group"
+                >
+                  <span className="flex-shrink-0 px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 text-xs font-bold mt-0.5">
+                    {level}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="font-semibold text-slate-800 group-hover:text-amber-700 transition-colors text-sm">
+                      German {label} Explained
+                    </p>
+                    <p className="text-xs text-slate-500 mt-0.5 leading-snug">{desc}</p>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-amber-500 group-hover:translate-x-0.5 transition-all flex-shrink-0 mt-0.5" />
+                </a>
+              ))}
+            </div>
+            <div className="text-center">
+              <a
+                href="/grammar"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-700 hover:text-amber-900 transition-colors"
+              >
+                Browse all 64 grammar topics
+                <ArrowRight className="w-4 h-4" />
+              </a>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-24 bg-gradient-to-r from-amber-500 via-rose-500 to-purple-500">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
