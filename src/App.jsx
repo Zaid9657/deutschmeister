@@ -90,14 +90,7 @@ function App() {
                     <Route path="/video-library" element={<VideoLibraryPage />} />
                     <Route path="/video-library/:id" element={<VideoDetailPage />} />
                     <Route path="/podcasts" element={<PodcastsPage />} />
-                    <Route
-                      path="/level-test"
-                      element={
-                        <ProtectedRoute>
-                          <LevelTest />
-                        </ProtectedRoute>
-                      }
-                    />
+                    <Route path="/level-test" element={<LevelTest />} />
                     <Route
                       path="/subscription/success"
                       element={
@@ -198,14 +191,7 @@ function App() {
                     />
 
                     {/* Speaking — fully gated (AI costs) */}
-                    <Route
-                      path="/speaking"
-                      element={
-                        <SubscriptionGuard>
-                          <SpeakingPage />
-                        </SubscriptionGuard>
-                      }
-                    />
+                    <Route path="/speaking" element={<SpeakingPage />} />
 
                     {/* Sentence X-Ray — public tool */}
                     <Route path="/analyze" element={<SentenceXRay />} />

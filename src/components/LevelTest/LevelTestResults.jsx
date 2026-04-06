@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Trophy, Target, BookOpen, RefreshCw, Headphones, Mic, PenTool, CheckCircle2, XCircle } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
 
 const LevelTestResults = ({
   answers,
@@ -95,6 +96,8 @@ const LevelTestResults = ({
 
   const { level: finalLevel, sublevel: finalSublevel } = calculateFinalLevel();
 
+  const { user } = useAuth();
+
   // Section completion status
   const sections = [
     {
@@ -137,6 +140,43 @@ const LevelTestResults = ({
             {finalSublevel}
           </div>
         </div>
+
+        {/* Signup CTA for guests */}
+        {!user && (
+          <div style={{
+            margin: '0 0 24px',
+            padding: '20px 24px',
+            background: 'linear-gradient(135deg, #fef3c7 0%, #fce7f3 100%)',
+            borderRadius: '16px',
+            border: '1px solid #fbbf24',
+            textAlign: 'center',
+          }}>
+            <p style={{ fontWeight: 700, fontSize: '1.1rem', color: '#1e293b', marginBottom: '6px' }}>
+              Save your results and start practicing at {finalSublevel}
+            </p>
+            <p style={{ color: '#475569', fontSize: '0.9rem', marginBottom: '16px' }}>
+              Create a free account to track your progress, unlock your level, and get 2 free AI speaking sessions.
+            </p>
+            <Link
+              to={`/signup?level=${finalSublevel}`}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '12px 28px',
+                background: 'linear-gradient(to right, #f59e0b, #f43f5e)',
+                color: '#fff',
+                fontWeight: 600,
+                borderRadius: '12px',
+                textDecoration: 'none',
+                fontSize: '1rem',
+                boxShadow: '0 4px 14px rgba(244,63,94,0.3)',
+              }}
+            >
+              Sign up free — save my results
+            </Link>
+          </div>
+        )}
 
         {/* Section Summary */}
         <div className="results-section">

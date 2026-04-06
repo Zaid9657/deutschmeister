@@ -248,6 +248,48 @@ const SpeakingPage = () => {
     setPhase('select');
   };
 
+  // Guest gate — show compelling signup page instead of redirecting silently
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white flex items-center justify-center px-4 pt-20 pb-12">
+        <div className="max-w-lg w-full text-center">
+          <div className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-teal-400 to-emerald-500 flex items-center justify-center shadow-xl shadow-teal-200">
+            <Mic className="w-10 h-10 text-white" />
+          </div>
+          <h1 className="text-3xl font-bold text-slate-900 mb-3">
+            AI Speaking Practice
+          </h1>
+          <p className="text-lg text-slate-600 mb-2">
+            Create your free account to try AI Speaking Practice.
+          </p>
+          <p className="text-slate-500 mb-8">
+            Your first <strong className="text-teal-600">2 sessions are free</strong> — no credit card required. Practice real German conversations with an AI teacher and get instant feedback on grammar, vocabulary, and pronunciation.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
+            <Link
+              to="/signup"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-2xl shadow-lg shadow-rose-200 hover:shadow-xl transition-all"
+            >
+              Create Free Account
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+            <Link
+              to="/login"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-slate-200 text-slate-700 font-semibold rounded-2xl hover:border-slate-300 hover:bg-slate-50 transition-all"
+            >
+              Log In
+            </Link>
+          </div>
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-slate-500">
+            <span>✓ 2 free sessions included</span>
+            <span>✓ No credit card required</span>
+            <span>✓ Cancel anytime</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Practice phase
   if (phase === 'practice' && selectedLevel) {
     return (
