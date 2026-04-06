@@ -19,7 +19,7 @@ export const LEVEL_META = {
 const normalizeLevel = (level) => level?.toLowerCase() ?? level;
 
 /** Fetch every topic (slug + level) — used in getStaticPaths */
-export async function getAllTopicPaths() {
+async function fetchTopicPaths() {
   const { data, error } = await supabase
     .from('grammar_topics')
     .select('slug, sub_level')
@@ -28,6 +28,19 @@ export async function getAllTopicPaths() {
 
   if (error) throw new Error(`getAllTopicPaths: ${error.message}`);
   return (data ?? []).map((t) => ({ ...t, sub_level: normalizeLevel(t.sub_level) }));
+}
+
+export async function getAllTopicPaths() {
+  try {
+    return await fetchTopicPaths();
+  } catch (err) {
+    if (err.message?.includes('fetch failed') || err.cause?.code === 'UND_ERR_CONNECT_TIMEOUT') {
+      console.warn('getAllTopicPaths: fetch failed, retrying in 3s…', err.message);
+      await new Promise((r) => setTimeout(r, 3000));
+      return await fetchTopicPaths();
+    }
+    throw err;
+  }
 }
 
 /** Fetch all topics for a given level — used on level index pages */
