@@ -1,5 +1,5 @@
 import { createHmac } from 'crypto';
-import sentences from '../../src/data/daily-sentences.json' assert { type: 'json' };
+import sentences from './data/daily-sentences.json' with { type: 'json' };
 
 const FROM_ADDRESS = 'DeutschMeister <zaid@deutsch-meister.de>';
 const TEST_EMAIL   = 'zaid@deutsch-meister.de';

@@ -1,0 +1,182 @@
+[
+  {
+    "sentence_de": "Der Mann gibt dem Kind einen Apfel.",
+    "hint": "This sentence uses three different cases at once — can you spot nominative, dative, and accusative?",
+    "level": "A1",
+    "grammar_focus": "Three cases in one sentence"
+  },
+  {
+    "sentence_de": "Ich kaufe meiner Mutter ein Buch.",
+    "hint": "Who gets the book? The dative tells you — and it changes the article.",
+    "level": "A1",
+    "grammar_focus": "Dative indirect object"
+  },
+  {
+    "sentence_de": "Das Mädchen schreibt ihrem Freund einen Brief.",
+    "hint": "Three cases again — but this time with a possessive pronoun doing the heavy lifting.",
+    "level": "A2",
+    "grammar_focus": "Possessive pronouns in dative"
+  },
+  {
+    "sentence_de": "Wegen des schlechten Wetters bleiben wir zu Hause.",
+    "hint": "'Wegen' always demands the genitive — and most learners never see it coming.",
+    "level": "A2",
+    "grammar_focus": "Genitive preposition: wegen"
+  },
+  {
+    "sentence_de": "Er hat das Buch auf den Tisch gelegt.",
+    "hint": "Two-way prepositions: 'auf' takes accusative for movement, dative for location. Which one here?",
+    "level": "A2",
+    "grammar_focus": "Two-way prepositions (Wechselpräpositionen)"
+  },
+  {
+    "sentence_de": "Sie ist seit drei Jahren in Deutschland.",
+    "hint": "'Seit' uses present tense in German — past tense would be wrong here, unlike English.",
+    "level": "A2",
+    "grammar_focus": "Seit + present tense"
+  },
+  {
+    "sentence_de": "Ich werde morgen früher aufstehen.",
+    "hint": "This is the future tense — built with 'werden' + infinitive at the very end.",
+    "level": "A2",
+    "grammar_focus": "Futur I (werden + infinitive)"
+  },
+  {
+    "sentence_de": "Er arbeitet, obwohl er krank ist.",
+    "hint": "'Obwohl' is a subordinating conjunction — it kicks the verb to the end of the clause.",
+    "level": "B1",
+    "grammar_focus": "Subordinating conjunction: obwohl"
+  },
+  {
+    "sentence_de": "Die Kinder, die gestern gespielt haben, sind jetzt müde.",
+    "hint": "A relative clause in nominative — 'die' here is a relative pronoun, not an article.",
+    "level": "B1",
+    "grammar_focus": "Relative clauses (nominative)"
+  },
+  {
+    "sentence_de": "Das Buch, das ich dir empfohlen habe, ist ausverkauft.",
+    "hint": "The relative pronoun here is 'das' in accusative — its form depends on the noun and its case in the clause.",
+    "level": "B1",
+    "grammar_focus": "Relative clauses (accusative)"
+  },
+  {
+    "sentence_de": "Wenn ich mehr Zeit hätte, würde ich Deutsch intensiver lernen.",
+    "hint": "Konjunktiv II: the classic 'if I had…, I would…' structure — entirely built without 'würden' in the if-clause.",
+    "level": "B1",
+    "grammar_focus": "Konjunktiv II: contrary-to-fact conditionals"
+  },
+  {
+    "sentence_de": "Er ließ das Auto reparieren.",
+    "hint": "'Lassen' + infinitive means 'to have something done' — a causative construction English handles differently.",
+    "level": "B1",
+    "grammar_focus": "Lassen as causative verb"
+  },
+  {
+    "sentence_de": "Um fit zu bleiben, geht sie jeden Tag joggen.",
+    "hint": "'Um…zu' expresses purpose — and the subject of both clauses must be the same.",
+    "level": "B1",
+    "grammar_focus": "Um…zu (infinitive of purpose)"
+  },
+  {
+    "sentence_de": "Das Paket wird morgen geliefert.",
+    "hint": "Passive voice in Futur I — 'werden' does double duty for both future and passive here.",
+    "level": "B1",
+    "grammar_focus": "Passive voice (Vorgangspassiv)"
+  },
+  {
+    "sentence_de": "Je mehr er lernt, desto besser wird sein Deutsch.",
+    "hint": "'Je…desto' is a comparative intensifier — both parts need a comparative adjective or adverb.",
+    "level": "B2",
+    "grammar_focus": "Je…desto comparative"
+  },
+  {
+    "sentence_de": "Trotz seiner Müdigkeit arbeitete er weiter.",
+    "hint": "'Trotz' takes the genitive — and 'seiner' is a genitive masculine possessive pronoun.",
+    "level": "B2",
+    "grammar_focus": "Genitive preposition: trotz"
+  },
+  {
+    "sentence_de": "Das Ergebnis hängt davon ab, wie viel Zeit wir investieren.",
+    "hint": "A da-compound ('davon') replaces a preposition + pronoun, followed by a full subordinate clause.",
+    "level": "B2",
+    "grammar_focus": "Da-compounds with subordinate clauses"
+  },
+  {
+    "sentence_de": "Anstatt zu schlafen, hat er die ganze Nacht gelesen.",
+    "hint": "'Anstatt zu' = 'instead of' + verb — the infinitive construction replaces a full clause.",
+    "level": "B2",
+    "grammar_focus": "Anstatt zu (infinitive)"
+  },
+  {
+    "sentence_de": "Er behauptet, keine Zeit zu haben.",
+    "hint": "Accusative-and-infinitive — 'keine Zeit zu haben' is the whole object of 'behauptet'.",
+    "level": "B2",
+    "grammar_focus": "Infinitive clauses as objects"
+  },
+  {
+    "sentence_de": "Das Haus, in dem wir wohnen, wurde 1920 gebaut.",
+    "hint": "A dative relative clause with a preposition — 'dem' is dative masculine because 'in' + dative = location.",
+    "level": "B2",
+    "grammar_focus": "Relative clauses with prepositions (dative)"
+  },
+  {
+    "sentence_de": "Er kann Klavier spielen.",
+    "hint": "Modal verb 'können' + infinitive: the infinitive always goes to the end in present tense.",
+    "level": "A1",
+    "grammar_focus": "Modal verbs (können)"
+  },
+  {
+    "sentence_de": "Ich habe gestern Abend einen Film gesehen.",
+    "hint": "Perfekt tense with 'haben': the past participle jumps to the very end of the sentence.",
+    "level": "A2",
+    "grammar_focus": "Perfekt with haben"
+  },
+  {
+    "sentence_de": "Sie ist nach Berlin gefahren.",
+    "hint": "Motion verbs use 'sein' in the Perfekt, not 'haben' — a rule that trips up almost every learner.",
+    "level": "A2",
+    "grammar_focus": "Perfekt with sein (motion verbs)"
+  },
+  {
+    "sentence_de": "Die Lehrerin, deren Unterricht immer interessant ist, kommt aus Wien.",
+    "hint": "'Deren' is the genitive feminine relative pronoun — it shows possession within the relative clause.",
+    "level": "B2",
+    "grammar_focus": "Genitive relative pronouns (dessen/deren)"
+  },
+  {
+    "sentence_de": "Er fragte, ob sie Zeit hätte.",
+    "hint": "Indirect speech with 'ob' shifts the verb to Konjunktiv I — the grammar of reported speech.",
+    "level": "B2",
+    "grammar_focus": "Konjunktiv I in indirect speech"
+  },
+  {
+    "sentence_de": "Das Fenster ist geöffnet worden.",
+    "hint": "Passive perfect tense: three verbs in a row — ist + past participle + worden.",
+    "level": "B2",
+    "grammar_focus": "Passive Perfekt (worden)"
+  },
+  {
+    "sentence_de": "Ich muss jeden Tag zur Arbeit fahren.",
+    "hint": "'Müssen' + infinitive: notice how 'fahren' goes to the end, and 'zur' contracts 'zu der'.",
+    "level": "A1",
+    "grammar_focus": "Modal verb: müssen + contraction"
+  },
+  {
+    "sentence_de": "Sie hat sich die Hände gewaschen.",
+    "hint": "Reflexive verb in Perfekt — 'sich' stays close to the subject, and the accusative body-part takes a definite article.",
+    "level": "B1",
+    "grammar_focus": "Reflexive verbs in Perfekt"
+  },
+  {
+    "sentence_de": "Nachdem er gegessen hatte, machte er einen Spaziergang.",
+    "hint": "Plusquamperfekt in a 'nachdem' clause — the earlier event uses past perfect, the later one simple past.",
+    "level": "B1",
+    "grammar_focus": "Plusquamperfekt (past perfect) with nachdem"
+  },
+  {
+    "sentence_de": "Obwohl das Buch schwer zu verstehen ist, liest sie es gern.",
+    "hint": "'Obwohl' sends its verb to the end — and 'zu verstehen' is an infinitive phrase within that clause.",
+    "level": "B1",
+    "grammar_focus": "Obwohl + embedded infinitive phrase"
+  }
+]
