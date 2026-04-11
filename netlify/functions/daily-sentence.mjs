@@ -9,7 +9,7 @@ const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.su
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const FROM_ADDRESS = 'DeutschMeister <zaid@deutsch-meister.de>';
 const BASE_URL = 'https://deutsch-meister.de';
-const TEST_EMAIL = 'zaid@deutsch-meister.de';
+const TEST_EMAIL = 'zaid199660@gmail.com';
 
 // Secret used to sign unsubscribe tokens — keep in env vars
 const UNSUB_SECRET = process.env.UNSUB_SECRET || process.env.CAMPAIGN_SECRET || 'changeme';
@@ -198,27 +198,16 @@ const innerHandler = async (event) => {
   if (!resendKey)    return { statusCode: 500, body: 'RESEND_API_KEY not set' };
   if (!supabaseKey)  return { statusCode: 500, body: 'SUPABASE_SERVICE_ROLE_KEY not set' };
 
-  // Dual-mode: scheduled invocation (no httpMethod) runs live.
-  // HTTP GET/POST requests must pass ?test=true to limit sending to TEST_EMAIL,
-  // OR pass ?secret=<CAMPAIGN_SECRET> to run live via HTTP (for manual triggers).
-  // Without one of these, HTTP requests are rejected to prevent accidental bulk sends.
-  const isScheduled = !event.httpMethod;
+  // Mode detection:
+  // - Scheduler invocations and unguarded HTTP calls both run in PRODUCTION mode (send to all users).
+  // - Pass ?test=true or {"test":true} in the body to send only to TEST_EMAIL.
+  // - Pass ?secret=<CAMPAIGN_SECRET> to also force production mode from an HTTP trigger (optional, kept for compatibility).
   const qs = event.queryStringParameters || {};
 
   let bodyPayload = {};
   try { bodyPayload = JSON.parse(event.body || '{}'); } catch { /* ignore */ }
 
   const isTest = qs.test === 'true' || bodyPayload.test === true;
-  const campaignSecret = process.env.CAMPAIGN_SECRET;
-  const hasSecret = campaignSecret && (qs.secret === campaignSecret || bodyPayload.secret === campaignSecret);
-
-  if (!isScheduled && !isTest && !hasSecret) {
-    return {
-      statusCode: 401,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: 'Pass ?test=true to send a test email, or ?secret=<CAMPAIGN_SECRET> to run live.' }),
-    };
-  }
 
   const sentence = todaysSentence();
   console.log(`Daily sentence [${isTest ? 'TEST MODE' : 'LIVE'}]: "${sentence.sentence_de}" [${sentence.level}]`);
