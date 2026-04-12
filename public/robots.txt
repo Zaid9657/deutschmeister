@@ -33,3 +33,4 @@ Disallow: /admin/
 Disallow: /api/
 
 Sitemap: https://deutsch-meister.de/sitemap.xml
+Sitemap: https://deutsch-meister.de/sitemap-0.xml

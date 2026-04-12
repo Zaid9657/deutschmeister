@@ -7,6 +7,7 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://deutsch-meister.de',
   output: 'static',
+  trailingSlash: 'never',
   integrations: [
     react(),
     tailwind({ applyBaseStyles: false }),
