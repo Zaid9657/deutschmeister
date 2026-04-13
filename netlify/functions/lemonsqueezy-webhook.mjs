@@ -27,7 +27,8 @@ function verifySignature(payload, signature, secret) {
   }
 }
 
-// Helper: log to webhook_logs with error details
+// Helper: log to webhook_logs with error details.
+// NOTE: If the webhook_logs table doesn't exist in Supabase, all logging fails silently.
 async function logWebhookEvent(eventType, payload, processed, errorMsg) {
   if (!supabase) return;
   try {
@@ -38,7 +39,7 @@ async function logWebhookEvent(eventType, payload, processed, errorMsg) {
       error: errorMsg || null,
     });
   } catch (e) {
-    console.error('Failed to write webhook_logs:', e.message);
+    console.error('Failed to write webhook_logs:', e.message, e.stack);
   }
 }
 
@@ -288,7 +289,7 @@ async function handleSubscriptionUpdated(data, meta) {
       }
 
       // Also mark profile as subscribed with tier
-      await supabase
+      const { error: profileError } = await supabase
         .from('profiles')
         .upsert({
           id: userId,
@@ -297,9 +298,15 @@ async function handleSubscriptionUpdated(data, meta) {
           updated_at: new Date().toISOString()
         }, { onConflict: 'id' });
 
+      if (profileError) {
+        console.error('Fallback profile upsert error:', JSON.stringify(profileError));
+        throw new Error(`profiles upsert failed: ${profileError.message} (code: ${profileError.code}, details: ${profileError.details})`);
+      }
+
       console.log('Fallback upsert OK for user:', userId, 'Tier:', tier);
     } else {
-      console.warn('subscription_updated: no matching row and no user_id — skipping');
+      console.error('subscription_updated: no matching row and no user_id — cannot process');
+      throw new Error(`subscription_updated: no subscription found for ID ${subscriptionId} and no user_id in custom_data — retry needed`);
     }
   }
 
@@ -389,6 +396,7 @@ async function handleSubscriptionExpired(data, meta) {
 
   if (profileError) {
     console.error('Error updating profile on expiry:', JSON.stringify(profileError));
+    throw new Error(`profile update on expiry failed: ${profileError.message} (code: ${profileError.code}, details: ${profileError.details})`);
   }
 
   console.log('Subscription expired:', subscriptionId, 'User:', subscription.user_id);
