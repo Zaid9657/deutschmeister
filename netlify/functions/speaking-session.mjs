@@ -68,26 +68,34 @@ export const handler = async (event) => {
     const normalizedLevel = level.toLowerCase();
     // Use requested voice if provided, otherwise look up from level map
     const voice = requestedVoice || VOICE_MAP[normalizedLevel] || 'coral';
-    const isA1 = normalizedLevel.startsWith('a1');
-    const silenceDuration = isA1 ? 1000 : 700;
 
-    const response = await fetch('https://api.openai.com/v1/realtime/sessions', {
+    const response = await fetch('https://api.openai.com/v1/realtime/client_secrets', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-realtime-preview',
-        voice,
-        instructions: systemPrompt,
-        max_response_output_tokens: 80,
-        input_audio_transcription: { model: 'whisper-1' },
-        turn_detection: {
-          type: 'server_vad',
-          threshold: 0.7,
-          silence_duration_ms: silenceDuration,
-          prefix_padding_ms: 400,
+        session: {
+          type: 'realtime',
+          model: 'gpt-realtime',
+          instructions: systemPrompt,
+          modalities: ['audio', 'text'],
+          max_response_output_tokens: 300,
+          input_audio_transcription: { model: 'whisper-1' },
+          audio: {
+            input: {
+              turn_detection: {
+                type: 'semantic_vad',
+                eagerness: 'low',
+                create_response: true,
+                interrupt_response: true,
+              },
+            },
+            output: {
+              voice,
+            },
+          },
         },
       }),
     });
@@ -103,6 +111,7 @@ export const handler = async (event) => {
     }
 
     const data = await response.json();
+    console.log('[speaking-session] GA client_secrets response shape:', JSON.stringify(data));
 
     // Increment usage after successful session creation
     if (user_id) {
@@ -114,12 +123,14 @@ export const handler = async (event) => {
       }
     }
 
+    // GA response: { value: "ek_...", expires_at: ... } at top level
+    // Fall back to legacy nested shape just in case
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({
-        client_secret: data.client_secret?.value || data.client_secret,
-        expires_at: data.client_secret?.expires_at || data.expires_at,
+        client_secret: data.value || data.client_secret?.value || data.client_secret,
+        expires_at: data.expires_at || data.client_secret?.expires_at,
       }),
     };
   } catch (error) {

@@ -318,17 +318,20 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
         case 'input_audio_buffer.speech_stopped':
           setSpeakingState('idle'); break;
         case 'response.audio_transcript.delta':
+        case 'response.output_audio_transcript.delta':
           if (msg.delta) {
             transcriptRef.current += msg.delta;
             setCurrentTranscript(transcriptRef.current);
           }
           break;
         case 'response.audio_transcript.done':
+        case 'response.output_audio_transcript.done':
           if (transcriptRef.current.trim()) saveMessage('assistant', transcriptRef.current);
           transcriptRef.current = '';
           setCurrentTranscript('');
           break;
         case 'response.audio.started':
+        case 'response.output_audio.started':
           setSpeakingState('ai_speaking'); break;
         case 'response.done':
           setSpeakingState('idle'); break;
@@ -439,8 +442,8 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
 
-      // 4. Exchange SDP with OpenAI Realtime
-      const sdpRes = await fetch('https://api.openai.com/v1/realtime', {
+      // 4. Exchange SDP with OpenAI Realtime (GA endpoint)
+      const sdpRes = await fetch('https://api.openai.com/v1/realtime/calls', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${client_secret}`, 'Content-Type': 'application/sdp' },
         body: offer.sdp,
