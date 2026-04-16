@@ -338,7 +338,12 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
         case 'conversation.item.input_audio_transcription.completed':
           if (msg.transcript?.trim()) saveMessage('user', msg.transcript);
           break;
-        default: break;
+        case 'error':
+          console.error('[Realtime] Server error:', JSON.stringify(msg.error));
+          break;
+        default:
+          console.log('[Realtime] Unhandled event:', msg.type);
+          break;
       }
     } catch { /* ignore non-JSON */ }
   }, [saveMessage]);
