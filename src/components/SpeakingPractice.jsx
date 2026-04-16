@@ -435,7 +435,18 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
 
       const dc = pc.createDataChannel('oai-events');
       dcRef.current = dc;
-      dc.onopen = () => { setConnectionState('connected'); };
+      dc.onopen = () => {
+        setConnectionState('connected');
+        // Enable input audio transcription (GA requires this via session.update)
+        dc.send(JSON.stringify({
+          type: 'session.update',
+          session: {
+            input_audio_transcription: {
+              model: 'gpt-4o-mini-transcribe',
+            },
+          },
+        }));
+      };
       dc.onmessage = handleDataChannelMessage;
       dc.onclose = () => { setConnectionState((prev) => prev === 'connected' ? 'disconnected' : prev); };
 
