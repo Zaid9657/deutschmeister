@@ -80,9 +80,7 @@ export const handler = async (event) => {
           type: 'realtime',
           model: 'gpt-realtime',
           instructions: systemPrompt,
-          modalities: ['audio', 'text'],
-          max_response_output_tokens: 300,
-          input_audio_transcription: { model: 'whisper-1' },
+          input_audio_transcription: { model: 'gpt-4o-mini-transcribe' },
           audio: {
             input: {
               turn_detection: {
