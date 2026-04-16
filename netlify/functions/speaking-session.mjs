@@ -85,7 +85,9 @@ export const handler = async (event) => {
         input_audio_transcription: { model: 'whisper-1' },
         turn_detection: {
           type: 'server_vad',
+          threshold: 0.7,
           silence_duration_ms: silenceDuration,
+          prefix_padding_ms: 400,
         },
       }),
     });
