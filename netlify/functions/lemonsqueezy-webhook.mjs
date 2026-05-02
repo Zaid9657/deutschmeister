@@ -118,6 +118,9 @@ export const handler = async (event) => {
         case 'subscription_expired':
           await handleSubscriptionExpired(data, payload.meta);
           break;
+        case 'subscription_payment_failed':
+          await handlePaymentFailed(data, payload.meta, payload);
+          break;
         default:
           console.log('Unhandled event type:', eventType);
       }
@@ -400,4 +403,23 @@ async function handleSubscriptionExpired(data, meta) {
   }
 
   console.log('Subscription expired:', subscriptionId, 'User:', subscription.user_id);
+}
+
+async function handlePaymentFailed(data, meta, payload) {
+  const userId = meta?.custom_data?.user_id;
+  const subscriptionId = data?.attributes?.subscription_id || data?.id;
+  const eventId = data?.id;
+
+  console.log(`Payment failed — user: ${userId} sub: ${subscriptionId}`);
+
+  const { error } = await supabase.from('payment_failures').insert({
+    user_id: userId,
+    lemonsqueezy_subscription_id: String(subscriptionId),
+    lemonsqueezy_event_id: String(eventId),
+    raw_payload: payload
+  });
+
+  if (error) {
+    console.error('Failed to log payment failure:', error);
+  }
 }
