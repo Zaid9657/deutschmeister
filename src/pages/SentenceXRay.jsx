@@ -169,7 +169,7 @@ function WordCard({ word, index }) {
               </p>
               {word.grammarTopic && (
                 <Link
-                  to={`/grammar/a1.1/${word.grammarTopic}`}
+                  to={`/grammar/a1.1/${word.grammarTopic}/`}
                   className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-blue-600 hover:text-blue-800 transition-colors"
                 >
                   Learn more: {word.grammarTopic.replace(/-/g, ' ')}

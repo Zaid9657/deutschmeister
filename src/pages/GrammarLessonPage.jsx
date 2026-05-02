@@ -898,7 +898,7 @@ export default function GrammarLessonPage() {
             <ChevronRight size={12} color="#d1d5db" />
             <Link to="/grammar" style={{ color: "#9ca3af", textDecoration: "none" }} onMouseEnter={e => e.currentTarget.style.color = "#3B82F6"} onMouseLeave={e => e.currentTarget.style.color = "#9ca3af"}>Grammar</Link>
             <ChevronRight size={12} color="#d1d5db" />
-            <Link to={`/grammar/${level.toLowerCase()}`} style={{ color: "#9ca3af", textDecoration: "none" }} onMouseEnter={e => e.currentTarget.style.color = "#3B82F6"} onMouseLeave={e => e.currentTarget.style.color = "#9ca3af"}>{levelUpper}</Link>
+            <Link to={`/grammar/${level.toLowerCase()}/`} style={{ color: "#9ca3af", textDecoration: "none" }} onMouseEnter={e => e.currentTarget.style.color = "#3B82F6"} onMouseLeave={e => e.currentTarget.style.color = "#9ca3af"}>{levelUpper}</Link>
             <ChevronRight size={12} color="#d1d5db" />
             <span style={{ color: "#374151", fontWeight: 500 }}>{topic.title_en}</span>
           </nav>
@@ -1429,7 +1429,7 @@ export default function GrammarLessonPage() {
               <div style={{ display: "grid", gridTemplateColumns: prevTopic && nextTopic ? "1fr 1fr" : "1fr", gap: 12, marginBottom: otherTopics.length > 0 ? 20 : 0 }}>
                 {prevTopic && (
                   <Link
-                    to={`/grammar/${level}/${prevTopic.slug}`}
+                    to={`/grammar/${level}/${prevTopic.slug}/`}
                     style={{
                       display: "flex", alignItems: "center", gap: 12, padding: "14px 16px",
                       border: "1px solid #e5e7eb", borderRadius: 12, textDecoration: "none",
@@ -1447,7 +1447,7 @@ export default function GrammarLessonPage() {
                 )}
                 {nextTopic && (
                   <Link
-                    to={`/grammar/${level}/${nextTopic.slug}`}
+                    to={`/grammar/${level}/${nextTopic.slug}/`}
                     style={{
                       display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 12, padding: "14px 16px",
                       border: "1px solid #e5e7eb", borderRadius: 12, textDecoration: "none",
@@ -1475,7 +1475,7 @@ export default function GrammarLessonPage() {
                     {otherTopics.map(t => (
                       <Link
                         key={t.slug}
-                        to={`/grammar/${level}/${t.slug}`}
+                        to={`/grammar/${level}/${t.slug}/`}
                         style={{
                           display: "flex", alignItems: "center", gap: 10, padding: "10px 14px",
                           background: "#f9fafb", borderRadius: 8, textDecoration: "none",

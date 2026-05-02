@@ -575,10 +575,10 @@ const LandingPage = () => {
             </div>
             <div className="grid sm:grid-cols-2 gap-3 mb-6">
               {[
-                { href: '/grammar/a1.1/nouns-gender',          level: 'A1.1', label: 'Nouns & Gender',            desc: 'der / die / das — why every noun has a gender' },
-                { href: '/grammar/a1.2/accusative-intro',       level: 'A1.2', label: 'Accusative Case',           desc: 'When "der" becomes "den" and why it matters' },
-                { href: '/grammar/a2.1/prepositions-dative',    level: 'A2.1', label: 'Dative Prepositions',       desc: 'mit, nach, seit, von, zu, bei, aus, gegenüber' },
-                { href: '/grammar/b1.1/konjunktiv-ii-wurde',    level: 'B1.1', label: 'Konjunktiv II (würde)',     desc: 'Express wishes, hypotheticals, and polite requests' },
+                { href: '/grammar/a1.1/nouns-gender/',          level: 'A1.1', label: 'Nouns & Gender',            desc: 'der / die / das — why every noun has a gender' },
+                { href: '/grammar/a1.2/accusative-intro/',       level: 'A1.2', label: 'Accusative Case',           desc: 'When "der" becomes "den" and why it matters' },
+                { href: '/grammar/a2.1/prepositions-dative/',    level: 'A2.1', label: 'Dative Prepositions',       desc: 'mit, nach, seit, von, zu, bei, aus, gegenüber' },
+                { href: '/grammar/b1.1/konjunktiv-ii-wurde/',    level: 'B1.1', label: 'Konjunktiv II (würde)',     desc: 'Express wishes, hypotheticals, and polite requests' },
               ].map(({ href, level, label, desc }) => (
                 <a
                   key={href}

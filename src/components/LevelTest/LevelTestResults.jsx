@@ -386,7 +386,7 @@ const LevelTestResults = ({
               </div>
             </Link>
 
-            <Link to={`/grammar/${finalSublevel.toLowerCase().replace('.', '-')}`} className="recommendation-card">
+            <Link to={`/grammar/${finalSublevel.toLowerCase()}/`} className="recommendation-card">
               <div className="rec-icon">📚</div>
               <div className="rec-content">
                 <h3>Start {finalSublevel} Grammar</h3>

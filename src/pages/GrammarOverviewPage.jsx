@@ -151,7 +151,7 @@ const GrammarOverviewPage = () => {
                     {topics.map((topic, index) => (
                       <li key={topic.id}>
                         <Link
-                          to={`/grammar/${level}/${topic.slug}`}
+                          to={`/grammar/${level}/${topic.slug}/`}
                           className="group flex items-start gap-4 p-4 rounded-xl border-2 border-slate-100 hover:border-blue-300 hover:bg-blue-50/50 transition-all"
                         >
                           <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-blue-100 text-blue-700 font-bold text-sm flex items-center justify-center">
@@ -265,7 +265,7 @@ const GrammarOverviewPage = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              to="/grammar/a1.1"
+              to="/grammar/a1.1/"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-blue-600 font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all"
             >
               Start at A1.1

@@ -2,7 +2,7 @@
   # Build order: SPA first (creates dist/), then Astro, then merge Astro output
   # into the SPA dist/ so grammar files aren't wiped by the Vite build.
   # _astro/ contains Astro's JS/CSS chunks; grammar/ contains the HTML pages.
-  command = "npm run build && cd astro-site && npm install && npm run build && cd .. && cp -r astro-site/dist/grammar dist/grammar && mkdir -p dist/_astro && cp -r astro-site/dist/_astro/. dist/_astro/ && cp astro-site/dist/sitemap-0.xml dist/ && cp astro-site/dist/sitemap-index.xml dist/"
+  command = "npm run build && cd astro-site && npm install && npm run build && cd .. && cp -r astro-site/dist/grammar dist/grammar && mkdir -p dist/_astro && cp -r astro-site/dist/_astro/. dist/_astro/ && cp astro-site/dist/sitemap-0.xml dist/"
   publish = "dist"
   functions = "netlify/functions"
 
