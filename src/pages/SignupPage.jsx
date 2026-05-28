@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { trackSignupStarted } from '../lib/funnelTracking';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Eye, EyeOff, AlertCircle, Loader2, CheckCircle2, Check } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, AlertCircle, Loader2, Check } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../utils/supabase';
 
@@ -25,13 +26,14 @@ const SignupPage = () => {
   const navigate = useNavigate();
   const { signUp } = useAuth();
 
+  useEffect(() => { trackSignupStarted(); }, []);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,7 +57,8 @@ const SignupPage = () => {
         setError(error.message);
         logFailedSignup(email, error);
       } else {
-        setSuccess(true);
+        navigate('/verify-email', { replace: true });
+        return;
       }
     } catch (err) {
       setError('An unexpected error occurred');
@@ -64,38 +67,6 @@ const SignupPage = () => {
       setLoading(false);
     }
   };
-
-  if (success) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100 px-4 py-12">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="w-full max-w-md text-center"
-        >
-          <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-8">
-            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-green-100 flex items-center justify-center">
-              <CheckCircle2 className="w-8 h-8 text-green-600" />
-            </div>
-            <h2 className="font-display text-2xl font-bold text-slate-800 mb-4">
-              Check Your Email
-            </h2>
-            <p className="text-slate-600 mb-6">
-              {t('auth.verifyEmail')}
-              <br />
-              <span className="text-amber-600 font-medium">{email}</span>
-            </p>
-            <Link
-              to="/login"
-              className="inline-block px-6 py-3 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-rose-600 transition-all"
-            >
-              Go to Login
-            </Link>
-          </div>
-        </motion.div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100 px-4 py-12">

@@ -1,16 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { trackLandingView } from '../lib/funnelTracking';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, MessageSquare, Sun, TreePine, Waves, Moon, Clock, Youtube, ExternalLink, Scan, X } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import SEO from '../components/SEO';
+import StatsBar from '../components/StatsBar';
 
 const BANNER_KEY = 'xray-banner-dismissed';
 
 const LandingPage = () => {
   const { user } = useAuth();
   const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription } = useSubscription();
+
+  useEffect(() => { trackLandingView(); }, []);
 
   const [bannerVisible, setBannerVisible] = useState(() => {
     try { return !localStorage.getItem(BANNER_KEY); } catch { return false; }
@@ -174,6 +178,8 @@ const LandingPage = () => {
           </motion.div>
         </div>
       </section>
+
+      <StatsBar />
 
       {/* Level Test CTA */}
       <section className="py-16 bg-gradient-to-br from-[#e1f5ee] to-[#e6f1fb]">
@@ -692,6 +698,27 @@ const LandingPage = () => {
               <Youtube className="w-4 h-4" />
               YouTube
             </a>
+            <span className="text-slate-600">·</span>
+            <Link
+              to="/faq"
+              className="text-slate-400 hover:text-white transition-colors text-sm"
+            >
+              FAQ
+            </Link>
+            <span className="text-slate-600">·</span>
+            <Link
+              to="/ueber-uns"
+              className="text-slate-400 hover:text-white transition-colors text-sm"
+            >
+              Über uns
+            </Link>
+            <span className="text-slate-600">·</span>
+            <Link
+              to="/vergleich"
+              className="text-slate-400 hover:text-white transition-colors text-sm"
+            >
+              Vergleich
+            </Link>
             <span className="text-slate-600">·</span>
             <Link
               to="/grammar"

@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { trackPricingViewed } from '../lib/funnelTracking';
 import { motion } from 'framer-motion';
 import { Check, Sparkles, Zap, Mic, CheckCircle2, ChevronDown } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -77,6 +78,8 @@ const PricingPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { isInFreeTrial, getTrialDaysRemaining, profile } = useSubscription();
+  useEffect(() => { trackPricingViewed(); }, []);
+
   const [billingCycle, setBillingCycle] = useState('monthly');
 
   const inTrial = user ? isInFreeTrial() : false;
@@ -409,6 +412,24 @@ const PricingPage = () => {
             {FAQS.map((item, i) => (
               <FaqItem key={i} {...item} />
             ))}
+          </div>
+
+          <div className="text-center mt-8 space-y-3">
+            <Link
+              to="/faq"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              Alle häufigen Fragen ansehen
+              <ChevronDown className="w-4 h-4 -rotate-90" />
+            </Link>
+            <br />
+            <Link
+              to="/vergleich"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              Sieh dir den Vergleich an
+              <ChevronDown className="w-4 h-4 -rotate-90" />
+            </Link>
           </div>
         </motion.div>
 

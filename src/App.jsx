@@ -9,6 +9,8 @@ import LemonSqueezyProvider from './components/LemonSqueezyProvider';
 import ProtectedRoute from './components/ProtectedRoute';
 import SubscriptionGuard from './components/SubscriptionGuard';
 import LevelSubscriptionGuard from './components/LevelSubscriptionGuard';
+import EmailVerificationGate from './components/EmailVerificationGate';
+import OnboardingGate from './components/onboarding/OnboardingGate';
 import TrialBanner from './components/TrialBanner';
 import FloatingIntroButton from './components/FloatingIntroButton';
 import { Loader2 } from 'lucide-react';
@@ -46,6 +48,12 @@ const PodcastsPage = lazy(() => import('./pages/PodcastsPage'));
 const GrammarOverviewPage = lazy(() => import('./pages/GrammarOverviewPage'));
 const VocabularySectionPage = lazy(() => import('./pages/VocabularySectionPage'));
 const SentenceXRay = lazy(() => import('./pages/SentenceXRay'));
+const FAQPage = lazy(() => import('./pages/FAQPage'));
+const UeberUnsPage = lazy(() => import('./pages/UeberUnsPage'));
+const VerifyEmailPage = lazy(() => import('./pages/VerifyEmailPage'));
+const IntroSlides = lazy(() => import('./components/onboarding/IntroSlides'));
+const VergleichHubPage = lazy(() => import('./pages/VergleichHubPage'));
+const ComparisonPage = lazy(() => import('./pages/ComparisonPage'));
 
 function PageLoader() {
   return (
@@ -76,17 +84,36 @@ function App() {
                     <Route path="/signup" element={<SignupPage />} />
                     <Route path="/reset-password" element={<ResetPasswordPage />} />
                     <Route path="/update-password" element={<UpdatePasswordPage />} />
+                    <Route path="/verify-email" element={<VerifyEmailPage />} />
+                    <Route
+                      path="/onboarding"
+                      element={
+                        <ProtectedRoute>
+                          <EmailVerificationGate>
+                            <IntroSlides />
+                          </EmailVerificationGate>
+                        </ProtectedRoute>
+                      }
+                    />
 
                     {/* Subscription/pricing pages (require auth only, not subscription) */}
                     <Route
                       path="/subscription"
                       element={
                         <ProtectedRoute>
-                          <SubscriptionPage />
+                          <EmailVerificationGate>
+                            <OnboardingGate>
+                              <SubscriptionPage />
+                            </OnboardingGate>
+                          </EmailVerificationGate>
                         </ProtectedRoute>
                       }
                     />
                     <Route path="/pricing" element={<PricingPage />} />
+                    <Route path="/faq" element={<FAQPage />} />
+                    <Route path="/ueber-uns" element={<UeberUnsPage />} />
+                    <Route path="/vergleich" element={<VergleichHubPage />} />
+                    <Route path="/vergleich/:slug" element={<ComparisonPage />} />
                     <Route path="/video-library" element={<VideoLibraryPage />} />
                     <Route path="/video-library/:id" element={<VideoDetailPage />} />
                     <Route path="/podcasts" element={<PodcastsPage />} />
@@ -95,7 +122,11 @@ function App() {
                       path="/subscription/success"
                       element={
                         <ProtectedRoute>
-                          <SubscriptionSuccessPage />
+                          <EmailVerificationGate>
+                            <OnboardingGate>
+                              <SubscriptionSuccessPage />
+                            </OnboardingGate>
+                          </EmailVerificationGate>
                         </ProtectedRoute>
                       }
                     />
@@ -103,17 +134,25 @@ function App() {
                       path="/payment/:planType"
                       element={
                         <ProtectedRoute>
-                          <PaymentPage />
+                          <EmailVerificationGate>
+                            <OnboardingGate>
+                              <PaymentPage />
+                            </OnboardingGate>
+                          </EmailVerificationGate>
                         </ProtectedRoute>
                       }
                     />
 
-                    {/* Dashboard & Profile (require auth + subscription/trial) */}
+                    {/* Dashboard & Profile (require auth + email verification + subscription/trial) */}
                     <Route
                       path="/dashboard"
                       element={
                         <SubscriptionGuard>
-                          <DashboardPage />
+                          <EmailVerificationGate>
+                            <OnboardingGate>
+                              <DashboardPage />
+                            </OnboardingGate>
+                          </EmailVerificationGate>
                         </SubscriptionGuard>
                       }
                     />
@@ -121,17 +160,25 @@ function App() {
                       path="/profile"
                       element={
                         <SubscriptionGuard>
-                          <ProfilePage />
+                          <EmailVerificationGate>
+                            <OnboardingGate>
+                              <ProfilePage />
+                            </OnboardingGate>
+                          </EmailVerificationGate>
                         </SubscriptionGuard>
                       }
                     />
 
-                    {/* Level-aware routes — A1.1 is free, others require auth + subscription */}
+                    {/* Level-aware routes — A1.1 is free, others require auth + email verification + subscription */}
                     <Route
                       path="/level/:level"
                       element={
                         <LevelSubscriptionGuard>
-                          <LevelPage />
+                          <EmailVerificationGate>
+                            <OnboardingGate>
+                              <LevelPage />
+                            </OnboardingGate>
+                          </EmailVerificationGate>
                         </LevelSubscriptionGuard>
                       }
                     />
@@ -144,7 +191,11 @@ function App() {
                       path="/grammar/:level/:topicSlug"
                       element={
                         <LevelSubscriptionGuard>
-                          <GrammarLessonPage />
+                          <EmailVerificationGate>
+                            <OnboardingGate>
+                              <GrammarLessonPage />
+                            </OnboardingGate>
+                          </EmailVerificationGate>
                         </LevelSubscriptionGuard>
                       }
                     />
@@ -155,7 +206,11 @@ function App() {
                       path="/reading/:level"
                       element={
                         <LevelSubscriptionGuard>
-                          <ReadingLessonsPage />
+                          <EmailVerificationGate>
+                            <OnboardingGate>
+                              <ReadingLessonsPage />
+                            </OnboardingGate>
+                          </EmailVerificationGate>
                         </LevelSubscriptionGuard>
                       }
                     />
@@ -163,7 +218,11 @@ function App() {
                       path="/reading/:level/:lessonId"
                       element={
                         <LevelSubscriptionGuard>
-                          <ReadingLessonPage />
+                          <EmailVerificationGate>
+                            <OnboardingGate>
+                              <ReadingLessonPage />
+                            </OnboardingGate>
+                          </EmailVerificationGate>
                         </LevelSubscriptionGuard>
                       }
                     />
@@ -177,7 +236,11 @@ function App() {
                       path="/listening/:level"
                       element={
                         <LevelSubscriptionGuard>
-                          <LevelExercises />
+                          <EmailVerificationGate>
+                            <OnboardingGate>
+                              <LevelExercises />
+                            </OnboardingGate>
+                          </EmailVerificationGate>
                         </LevelSubscriptionGuard>
                       }
                     />
@@ -185,13 +248,26 @@ function App() {
                       path="/listening/:level/:exerciseNumber"
                       element={
                         <LevelSubscriptionGuard>
-                          <ExercisePlayer />
+                          <EmailVerificationGate>
+                            <OnboardingGate>
+                              <ExercisePlayer />
+                            </OnboardingGate>
+                          </EmailVerificationGate>
                         </LevelSubscriptionGuard>
                       }
                     />
 
                     {/* Speaking — fully gated (AI costs) */}
-                    <Route path="/speaking" element={<SpeakingPage />} />
+                    <Route
+                      path="/speaking"
+                      element={
+                        <EmailVerificationGate>
+                          <OnboardingGate>
+                            <SpeakingPage />
+                          </OnboardingGate>
+                        </EmailVerificationGate>
+                      }
+                    />
 
                     {/* Sentence X-Ray — public tool */}
                     <Route path="/analyze" element={<SentenceXRay />} />
@@ -201,7 +277,11 @@ function App() {
                       path="/admin/videos"
                       element={
                         <ProtectedRoute>
-                          <AdminVideosPage />
+                          <EmailVerificationGate>
+                            <OnboardingGate>
+                              <AdminVideosPage />
+                            </OnboardingGate>
+                          </EmailVerificationGate>
                         </ProtectedRoute>
                       }
                     />

@@ -1,13 +1,21 @@
+import { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { useTranslation } from 'react-i18next';
+import { trackPaywallShown } from '../lib/funnelTracking';
 
 const SubscriptionGuard = ({ children }) => {
   const { user, loading: authLoading } = useAuth();
   const { hasAccess, loading: subLoading } = useSubscription();
   const location = useLocation();
   const { t } = useTranslation();
+
+  useEffect(() => {
+    if (!authLoading && !subLoading && user && !hasAccess) {
+      trackPaywallShown(location.pathname);
+    }
+  }, [authLoading, subLoading, user, hasAccess, location.pathname]);
 
   if (authLoading || subLoading) {
     return (

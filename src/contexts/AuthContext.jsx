@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../utils/supabase';
+import { identify, resetAnalytics } from '../lib/analytics';
+import { trackSignupCompleted } from '../lib/funnelTracking';
 
 const AuthContext = createContext({});
 
@@ -24,6 +26,20 @@ export const AuthProvider = ({ children }) => {
       async (event, session) => {
         setUser(session?.user ?? null);
         setLoading(false);
+
+        if (session?.user) {
+          identify(session.user.id, {
+            email: session.user.email,
+            signup_date: session.user.created_at,
+          });
+        }
+
+        if (event === 'SIGNED_IN' && session?.user?.created_at) {
+          const createdAt = new Date(session.user.created_at);
+          if (Date.now() - createdAt.getTime() < 60_000) {
+            trackSignupCompleted();
+          }
+        }
       }
     );
 
@@ -50,6 +66,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signOut = async () => {
+    resetAnalytics();
     const { error } = await supabase.auth.signOut();
     return { error };
   };
@@ -68,9 +85,12 @@ export const AuthProvider = ({ children }) => {
     return { data, error };
   };
 
+  const isEmailVerified = !!user?.email_confirmed_at;
+
   const value = {
     user,
     loading,
+    isEmailVerified,
     signUp,
     signIn,
     signOut,

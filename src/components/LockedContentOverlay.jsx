@@ -1,9 +1,13 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Lock, Sparkles } from 'lucide-react';
+import { trackPaywallShown } from '../lib/funnelTracking';
 
 const LockedContentOverlay = ({ level }) => {
   const { i18n } = useTranslation();
+
+  useEffect(() => { trackPaywallShown(level || 'unknown'); }, [level]);
   const isGerman = i18n.language === 'de';
 
   return (
