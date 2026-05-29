@@ -1,7 +1,8 @@
 import { Trophy, ArrowRight, RotateCcw, ArrowLeft, Star, TrendingUp, CheckCircle, AlertTriangle } from 'lucide-react';
 
 const SCORE_LABELS = {
-  pronunciation: 'Aussprache',
+  // True acoustic pronunciation scoring planned — requires audio analysis pipeline
+  intelligibility: 'Verständlichkeit',
   grammar: 'Grammatik',
   vocabulary: 'Wortschatz',
   fluency: 'Flüssigkeit',

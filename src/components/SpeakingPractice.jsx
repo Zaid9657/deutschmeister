@@ -43,10 +43,6 @@ function isIOS() {
   return /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 }
 
-/**
- * Check browser compatibility for WebRTC speaking features.
- * Returns { supported, reason, inAppBrowser?, isIOS? }.
- */
 export function checkSpeakingSupport() {
   if (typeof window === 'undefined') {
     return { supported: false, reason: 'no_window' };
@@ -57,11 +53,14 @@ export function checkSpeakingSupport() {
     return { supported: false, reason: 'in_app_browser', inAppBrowser: inApp, isIOS: isIOS() };
   }
 
-  if (!window.RTCPeerConnection && !window.webkitRTCPeerConnection) {
-    return { supported: false, reason: 'no_webrtc', isIOS: isIOS() };
+  if (!window.WebSocket) {
+    return { supported: false, reason: 'no_websocket', isIOS: isIOS() };
   }
   if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== 'function') {
     return { supported: false, reason: 'no_media_devices', isIOS: isIOS() };
+  }
+  if (!window.AudioContext && !window.webkitAudioContext) {
+    return { supported: false, reason: 'no_audio_context', isIOS: isIOS() };
   }
   return { supported: true, isIOS: isIOS() };
 }
@@ -70,7 +69,6 @@ function classifyConnectionError(err) {
   const msg = (err?.message || err?.name || '').toLowerCase();
   const ios = isIOS();
 
-  // Microphone permission denied
   if (
     msg.includes('permission denied') ||
     msg.includes('not allowed') ||
@@ -85,7 +83,6 @@ function classifyConnectionError(err) {
     };
   }
 
-  // No microphone found
   if (
     msg.includes('not found') ||
     msg.includes('notfounderror') ||
@@ -98,7 +95,6 @@ function classifyConnectionError(err) {
     };
   }
 
-  // Device not readable (e.g. in use by another app)
   if (
     msg.includes('not readable') ||
     msg.includes('notreadableerror') ||
@@ -110,11 +106,11 @@ function classifyConnectionError(err) {
     };
   }
 
-  // Browser doesn't support required APIs
   if (
     msg.includes('not supported') ||
-    msg.includes('rtcpeerconnection') ||
-    msg.includes('getusermedia')
+    msg.includes('websocket') ||
+    msg.includes('getusermedia') ||
+    msg.includes('audiocontext')
   ) {
     return {
       userMessage: 'Dein Browser unterstützt diese Funktion nicht. Bitte verwende Chrome, Edge oder Safari (Desktop).',
@@ -122,7 +118,6 @@ function classifyConnectionError(err) {
     };
   }
 
-  // Network / API failure
   if (
     msg.includes('failed to fetch') ||
     msg.includes('networkerror') ||
@@ -136,11 +131,49 @@ function classifyConnectionError(err) {
     };
   }
 
-  // Default
   return {
     userMessage: 'Verbindung fehlgeschlagen — bitte erneut versuchen.',
     type: 'unknown',
   };
+}
+
+// ---------------------------------------------------------------------------
+// Audio helpers
+// ---------------------------------------------------------------------------
+
+function floatTo16BitPCM(float32Array) {
+  const buf = new Int16Array(float32Array.length);
+  for (let i = 0; i < float32Array.length; i++) {
+    const s = Math.max(-1, Math.min(1, float32Array[i]));
+    buf[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
+  }
+  return buf;
+}
+
+function int16ToFloat32(int16Array) {
+  const float32 = new Float32Array(int16Array.length);
+  for (let i = 0; i < int16Array.length; i++) {
+    float32[i] = int16Array[i] / 0x8000;
+  }
+  return float32;
+}
+
+function base64Encode(int16Array) {
+  const bytes = new Uint8Array(int16Array.buffer);
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
+
+function base64Decode(base64) {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return new Int16Array(bytes.buffer);
 }
 
 // ---------------------------------------------------------------------------
@@ -158,20 +191,17 @@ function InAppBrowserGate({ onCancel }) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Fallback: prompt user to copy manually
       window.prompt('URL kopieren:', url);
     }
   };
 
   const handleOpenExternal = () => {
-    // On iOS, window.open in in-app browsers sometimes opens Safari
     window.open(url, '_blank');
   };
 
   return (
     <div className="fixed inset-0 z-50 bg-gradient-to-br from-slate-900 via-slate-800 to-teal-900 flex flex-col items-center justify-center px-6">
       <div className="max-w-sm w-full text-center">
-        {/* Icon */}
         <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-amber-500/15 border border-amber-500/25 flex items-center justify-center">
           <AlertCircle className="w-10 h-10 text-amber-400" />
         </div>
@@ -183,13 +213,11 @@ function InAppBrowserGate({ onCancel }) {
           Bitte öffne diese Seite in {ios ? 'Safari' : 'Chrome oder Safari'}. In-App-Browser unterstützen kein Mikrofon.
         </p>
 
-        {/* URL box */}
         <div className="bg-white/[0.06] rounded-xl border border-white/10 p-3 mb-4">
           <p className="text-xs text-white/40 mb-1.5 text-left">Seiten-URL:</p>
           <p className="text-sm text-white/80 break-all text-left font-mono">{url}</p>
         </div>
 
-        {/* Action buttons */}
         <div className="flex flex-col gap-3">
           <button
             onClick={handleCopy}
@@ -224,7 +252,6 @@ function InAppBrowserGate({ onCancel }) {
           </button>
         </div>
 
-        {/* Instructions */}
         <div className="mt-6 bg-white/[0.04] rounded-xl border border-white/[0.06] p-4 text-left">
           <p className="text-xs font-semibold text-white/50 mb-2 uppercase tracking-wider">Anleitung</p>
           <ol className="text-xs text-white/40 space-y-1.5 list-decimal list-inside">
@@ -260,26 +287,38 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
   const [messages, setMessages] = useState([]);
   const [error, setError] = useState(null);
   const [evaluating, setEvaluating] = useState(false);
+  const [saveWarning, setSaveWarning] = useState(false);
 
   const sessionTokenRef = useRef(generateSessionToken());
-  const pcRef = useRef(null);
-  const dcRef = useRef(null);
+  const retryQueueRef = useRef([]);
+  const wsRef = useRef(null);
   const streamRef = useRef(null);
   const timerRef = useRef(null);
   const messagesRef = useRef([]);
-  const transcriptRef = useRef('');
   const transcriptEndRef = useRef(null);
+
+  // Audio refs
+  const inputCtxRef = useRef(null);
+  const outputCtxRef = useRef(null);
+  const processorRef = useRef(null);
+  const sourceRef = useRef(null);
+  const playbackCursorRef = useRef(0);
+  const micBufferRef = useRef([]);
+  const setupCompleteRef = useRef(false);
+
+  // Transcript accumulators
+  const assistantTranscriptRef = useRef('');
+  const userTranscriptRef = useRef('');
 
   useEffect(() => {
     messagesRef.current = messages;
   }, [messages]);
 
-  // Auto-scroll transcript
   useEffect(() => {
     transcriptEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, currentTranscript]);
 
-  // Timer countdown
+  // Timer countdown — only starts after setupComplete sets connectionState to 'connected'
   useEffect(() => {
     if (connectionState !== 'connected') return;
     timerRef.current = setInterval(() => {
@@ -291,107 +330,238 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
     return () => clearInterval(timerRef.current);
   }, [connectionState]);
 
+  // ---------------------------------------------------------------------------
+  // Message persistence with retry queue (preserved from prior implementation)
+  // ---------------------------------------------------------------------------
+
+  const persistMessage = useCallback(async (payload) => {
+    const res = await fetch('/api/speaking/save-speaking-message', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error(`save failed: ${res.status}`);
+  }, []);
+
   const saveMessage = useCallback(async (role, content) => {
     if (!content || !content.trim()) return;
     const msg = { role, content: content.trim() };
     setMessages((prev) => [...prev, msg]);
+    const payload = {
+      session_token: sessionTokenRef.current,
+      user_id: userId, role, content: content.trim(), level: config.level,
+    };
     try {
-      await fetch('/api/speaking/save-speaking-message', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          session_token: sessionTokenRef.current,
-          user_id: userId, role, content: content.trim(), level: config.level,
-        }),
-      });
-    } catch (err) {
-      console.error('Failed to save message:', err);
+      await persistMessage(payload);
+    } catch {
+      retryQueueRef.current.push(payload);
+      setTimeout(async () => {
+        const queue = [...retryQueueRef.current];
+        retryQueueRef.current = [];
+        for (const item of queue) {
+          try { await persistMessage(item); }
+          catch { setSaveWarning(true); }
+        }
+      }, 3000);
     }
-  }, [userId, config.level]);
+  }, [userId, config.level, persistMessage]);
 
-  const handleDataChannelMessage = useCallback((event) => {
+  // ---------------------------------------------------------------------------
+  // Audio output: play 24kHz PCM from Gemini
+  // ---------------------------------------------------------------------------
+
+  const playAudioChunk = useCallback((base64Data) => {
+    if (!outputCtxRef.current) return;
+    const ctx = outputCtxRef.current;
+    const int16 = base64Decode(base64Data);
+    const float32 = int16ToFloat32(int16);
+    const buffer = ctx.createBuffer(1, float32.length, 24000);
+    buffer.copyToChannel(float32, 0);
+    const src = ctx.createBufferSource();
+    src.buffer = buffer;
+    src.connect(ctx.destination);
+
+    const now = ctx.currentTime;
+    if (playbackCursorRef.current < now) {
+      playbackCursorRef.current = now;
+    }
+    src.start(playbackCursorRef.current);
+    playbackCursorRef.current += buffer.duration;
+  }, []);
+
+  // ---------------------------------------------------------------------------
+  // WebSocket message handler (Gemini Live protocol)
+  // ---------------------------------------------------------------------------
+
+  const handleWsMessage = useCallback(async (event) => {
+    let payload;
     try {
-      const msg = JSON.parse(event.data);
-      switch (msg.type) {
-        case 'input_audio_buffer.speech_started':
-          setSpeakingState('user_speaking'); break;
-        case 'input_audio_buffer.speech_stopped':
-          setSpeakingState('idle'); break;
-        case 'response.audio_transcript.delta':
-        case 'response.output_audio_transcript.delta':
-          if (msg.delta) {
-            transcriptRef.current += msg.delta;
-            setCurrentTranscript(transcriptRef.current);
-          }
-          break;
-        case 'response.audio_transcript.done':
-        case 'response.output_audio_transcript.done':
-          if (transcriptRef.current.trim()) saveMessage('assistant', transcriptRef.current);
-          transcriptRef.current = '';
-          setCurrentTranscript('');
-          break;
-        case 'response.audio.started':
-        case 'response.output_audio.started':
-          setSpeakingState('ai_speaking'); break;
-        case 'response.done':
-          setSpeakingState('idle'); break;
-        case 'conversation.item.input_audio_transcription.completed':
-          if (msg.transcript?.trim()) saveMessage('user', msg.transcript);
-          break;
-        case 'error':
-          console.error('[Realtime] Server error:', JSON.stringify(msg.error));
-          break;
-        default:
-          console.log('[Realtime] Unhandled event:', msg.type);
-          break;
+      if (typeof event.data === 'string') {
+        payload = JSON.parse(event.data);
+      } else if (event.data instanceof Blob) {
+        const text = await event.data.text();
+        payload = JSON.parse(text);
+      } else if (event.data instanceof ArrayBuffer) {
+        const text = new TextDecoder().decode(event.data);
+        payload = JSON.parse(text);
+      } else {
+        return;
       }
-    } catch { /* ignore non-JSON */ }
-  }, [saveMessage]);
+    } catch { return; }
+
+    // Setup complete — session is live
+    if (payload.setupComplete != null) {
+      setupCompleteRef.current = true;
+      setConnectionState('connected');
+      // Flush any buffered mic data
+      const buffered = micBufferRef.current;
+      micBufferRef.current = [];
+      const ws = wsRef.current;
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        for (const chunk of buffered) {
+          ws.send(JSON.stringify(chunk));
+        }
+      }
+      return;
+    }
+
+    // Top-level error
+    if (payload.error) {
+      console.error('[Gemini] Server error:', JSON.stringify(payload.error));
+      setError(payload.error.message || 'Serverfehler');
+      return;
+    }
+
+    const sc = payload.serverContent;
+    if (!sc) return;
+
+    // Barge-in: user interrupted the model
+    if (sc.interrupted) {
+      playbackCursorRef.current = 0;
+      setSpeakingState('user_speaking');
+      return;
+    }
+
+    // Output transcription (assistant)
+    if (sc.outputTranscription?.text) {
+      assistantTranscriptRef.current += sc.outputTranscription.text;
+      setCurrentTranscript(assistantTranscriptRef.current);
+    }
+
+    // Input transcription (user)
+    if (sc.inputTranscription?.text) {
+      userTranscriptRef.current += sc.inputTranscription.text;
+      setSpeakingState('user_speaking');
+    }
+
+    // Audio from model
+    if (sc.modelTurn?.parts) {
+      for (const part of sc.modelTurn.parts) {
+        if (part.inlineData && part.inlineData.mimeType?.startsWith('audio/')) {
+          setSpeakingState('ai_speaking');
+          playAudioChunk(part.inlineData.data);
+        }
+      }
+    }
+
+    // Turn complete — commit transcripts
+    if (sc.turnComplete) {
+      if (userTranscriptRef.current.trim()) {
+        saveMessage('user', userTranscriptRef.current);
+      }
+      if (assistantTranscriptRef.current.trim()) {
+        saveMessage('assistant', assistantTranscriptRef.current);
+      }
+      userTranscriptRef.current = '';
+      assistantTranscriptRef.current = '';
+      setCurrentTranscript('');
+      setSpeakingState('idle');
+    }
+  }, [saveMessage, playAudioChunk]);
+
+  // ---------------------------------------------------------------------------
+  // Cleanup
+  // ---------------------------------------------------------------------------
 
   const cleanup = useCallback(() => {
     clearInterval(timerRef.current);
-    if (dcRef.current) { dcRef.current.close(); dcRef.current = null; }
-    if (pcRef.current) { pcRef.current.close(); pcRef.current = null; }
-    if (streamRef.current) { streamRef.current.getTracks().forEach((t) => t.stop()); streamRef.current = null; }
+    setupCompleteRef.current = false;
+    micBufferRef.current = [];
+
+    if (processorRef.current) {
+      processorRef.current.disconnect();
+      processorRef.current = null;
+    }
+    if (sourceRef.current) {
+      sourceRef.current.disconnect();
+      sourceRef.current = null;
+    }
+    if (inputCtxRef.current && inputCtxRef.current.state !== 'closed') {
+      inputCtxRef.current.close().catch(() => {});
+      inputCtxRef.current = null;
+    }
+    if (outputCtxRef.current && outputCtxRef.current.state !== 'closed') {
+      outputCtxRef.current.close().catch(() => {});
+      outputCtxRef.current = null;
+    }
+    if (wsRef.current) {
+      wsRef.current.close();
+      wsRef.current = null;
+    }
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((t) => t.stop());
+      streamRef.current = null;
+    }
   }, []);
+
+  // ---------------------------------------------------------------------------
+  // Connect: mic → session → WebSocket → audio pipeline
+  // ---------------------------------------------------------------------------
 
   const handleConnect = async () => {
     setConnectionState('connecting');
     setError(null);
 
-    // Pre-flight: check browser compatibility
     const compat = checkSpeakingSupport();
     if (!compat.supported) {
-      const msg = compat.reason === 'no_webrtc'
-        ? 'Dein Browser unterstützt diese Funktion nicht. Bitte verwende Chrome, Edge oder Safari (Desktop).'
-        : 'Dein Browser unterstützt kein Mikrofon. Bitte verwende Chrome, Edge oder Safari (Desktop).';
-      setError(msg);
+      setError('Dein Browser unterstützt diese Funktion nicht. Bitte verwende Chrome, Edge oder Safari (Desktop).');
       setConnectionState('error');
       return;
     }
 
     try {
-      // 1. Request microphone FIRST so the user sees the permission prompt early
-      //    (especially important on iOS Safari where timing matters)
+      // 1. Acquire microphone
       let stream;
       try {
-        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            channelCount: 1,
+            sampleRate: 16000,
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true,
+          },
+        });
       } catch (micErr) {
         console.error('Microphone access error:', micErr);
-        const classified = classifyConnectionError(micErr);
-        setError(classified.userMessage);
+        setError(classifyConnectionError(micErr).userMessage);
         setConnectionState('error');
         return;
       }
       streamRef.current = stream;
 
-      // 2. Create session via backend
-      let client_secret;
+      // 2. Get ephemeral token from backend
+      let ephemeralToken;
       try {
         const sessionRes = await fetch('/api/speaking/speaking-session', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ systemPrompt: config.systemPrompt, level: config.level, user_id: userId }),
+          body: JSON.stringify({
+            systemPrompt: config.systemPrompt,
+            level: config.level,
+            user_id: userId,
+            voice: config.voice,
+          }),
         });
         if (!sessionRes.ok) {
           const err = await sessionRes.json().catch(() => ({}));
@@ -409,13 +579,11 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
           throw new Error(err.error || `Sitzung konnte nicht erstellt werden (${sessionRes.status})`);
         }
         const data = await sessionRes.json();
-        client_secret = data.client_secret;
+        ephemeralToken = data.ephemeral_token;
       } catch (apiErr) {
-        // Stop the mic stream we already acquired
         stream.getTracks().forEach((t) => t.stop());
         streamRef.current = null;
         console.error('Session API error:', apiErr);
-        // If it's already a German message from our 403 handling, pass it through
         if (apiErr.message && !apiErr.message.startsWith('Failed to fetch')) {
           setError(apiErr.message);
         } else {
@@ -425,63 +593,107 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
         return;
       }
 
-      // 3. Set up WebRTC peer connection
-      const RTCPeer = window.RTCPeerConnection || window.webkitRTCPeerConnection;
-      const pc = new RTCPeer();
-      pcRef.current = pc;
+      // 3. Open WebSocket to Gemini Live
+      const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContentConstrained?access_token=${encodeURIComponent(ephemeralToken)}`;
+      const ws = new WebSocket(wsUrl);
+      wsRef.current = ws;
 
-      const audioEl = document.createElement('audio');
-      audioEl.autoplay = true;
-      // iOS Safari requires playsinline
-      audioEl.setAttribute('playsinline', '');
-      pc.ontrack = (e) => { audioEl.srcObject = e.streams[0]; };
-
-      stream.getTracks().forEach((track) => pc.addTrack(track, stream));
-
-      const dc = pc.createDataChannel('oai-events');
-      dcRef.current = dc;
-      dc.onopen = () => {
-        setConnectionState('connected');
-        // Enable input audio transcription (GA requires this via session.update)
-        dc.send(JSON.stringify({
-          type: 'session.update',
-          session: {
-            input_audio_transcription: {
-              model: 'gpt-4o-mini-transcribe',
-            },
+      ws.onopen = () => {
+        ws.send(JSON.stringify({
+          setup: {
+            outputAudioTranscription: {},
+            inputAudioTranscription: {},
+            sessionResumption: {},
           },
         }));
       };
-      dc.onmessage = handleDataChannelMessage;
-      dc.onclose = () => { setConnectionState((prev) => prev === 'connected' ? 'disconnected' : prev); };
 
-      const offer = await pc.createOffer();
-      await pc.setLocalDescription(offer);
+      ws.onmessage = handleWsMessage;
 
-      // 4. Exchange SDP with OpenAI Realtime (GA endpoint)
-      const sdpRes = await fetch('https://api.openai.com/v1/realtime/calls', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${client_secret}`, 'Content-Type': 'application/sdp' },
-        body: offer.sdp,
-      });
-      if (!sdpRes.ok) {
-        throw new Error(`Verbindung zum Sprachserver fehlgeschlagen (${sdpRes.status})`);
-      }
-      const answerSdp = await sdpRes.text();
-      await pc.setRemoteDescription({ type: 'answer', sdp: answerSdp });
+      ws.onerror = (e) => {
+        console.error('[Gemini WS] error:', e);
+        if (connectionState !== 'connected') {
+          setError('Verbindung zum Sprachserver fehlgeschlagen.');
+          setConnectionState('error');
+          cleanup();
+        }
+      };
+
+      ws.onclose = (e) => {
+        console.log('[Gemini WS] closed:', e.code, e.reason);
+        setConnectionState((prev) => prev === 'connected' ? 'disconnected' : prev);
+      };
+
+      // 4. Set up audio input pipeline (16kHz)
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      const inputCtx = new AudioCtx({ sampleRate: 16000 });
+      inputCtxRef.current = inputCtx;
+
+      const micSource = inputCtx.createMediaStreamSource(stream);
+      sourceRef.current = micSource;
+
+      const processor = inputCtx.createScriptProcessor(4096, 1, 1);
+      processorRef.current = processor;
+
+      processor.onaudioprocess = (e) => {
+        const float32 = e.inputBuffer.getChannelData(0);
+        const int16 = floatTo16BitPCM(float32);
+        const b64 = base64Encode(int16);
+        const chunk = {
+          realtimeInput: {
+            mediaChunks: [{ mimeType: 'audio/pcm;rate=16000', data: b64 }],
+          },
+        };
+
+        if (!setupCompleteRef.current) {
+          micBufferRef.current.push(chunk);
+          return;
+        }
+
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify(chunk));
+        }
+      };
+
+      micSource.connect(processor);
+      processor.connect(inputCtx.destination);
+
+      // 5. Set up audio output context (24kHz)
+      const outputCtx = new AudioCtx({ sampleRate: 24000 });
+      outputCtxRef.current = outputCtx;
+      playbackCursorRef.current = 0;
+
     } catch (err) {
       console.error('Connection error:', err);
-      const classified = classifyConnectionError(err);
-      setError(err.message || classified.userMessage);
+      setError(err.message || classifyConnectionError(err).userMessage);
       setConnectionState('error');
       cleanup();
     }
   };
 
+  // ---------------------------------------------------------------------------
+  // Disconnect → evaluate
+  // ---------------------------------------------------------------------------
+
   const handleDisconnect = useCallback(async () => {
+    // Commit any remaining accumulated transcripts before cleanup
+    if (userTranscriptRef.current.trim()) {
+      saveMessage('user', userTranscriptRef.current);
+      userTranscriptRef.current = '';
+    }
+    if (assistantTranscriptRef.current.trim()) {
+      saveMessage('assistant', assistantTranscriptRef.current);
+      assistantTranscriptRef.current = '';
+    }
+    setCurrentTranscript('');
+
     cleanup();
     setConnectionState('disconnected');
     setSpeakingState('idle');
+
+    // Wait a tick for messages state to update from the saveMessage calls above
+    await new Promise((r) => setTimeout(r, 50));
+
     const currentMessages = messagesRef.current;
     if (currentMessages.length === 0) { onComplete?.(null); return; }
     setEvaluating(true);
@@ -494,11 +706,16 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
           level: config.level, messages: currentMessages,
         }),
       });
-      if (evalRes.ok) { onComplete?.(await evalRes.json()); }
-      else { console.error('Evaluation failed:', await evalRes.text()); onComplete?.(null); }
+      if (evalRes.ok) {
+        const result = await evalRes.json();
+        onComplete?.(result);
+      } else {
+        console.error('Evaluation failed:', await evalRes.text());
+        onComplete?.(null);
+      }
     } catch (err) { console.error('Evaluation error:', err); onComplete?.(null); }
     finally { setEvaluating(false); }
-  }, [cleanup, userId, config.level, onComplete]);
+  }, [cleanup, userId, config.level, onComplete, saveMessage]);
 
   useEffect(() => { return () => { cleanup(); }; }, [cleanup]);
 
@@ -508,12 +725,10 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
   const timerProgress = isConnected ? ((totalTime - timeRemaining) / totalTime) * 100 : 0;
   const timerCircumference = 2 * Math.PI * 28;
 
-  // In-app browser gate — must come after all hooks
   if (isInAppBrowser) {
     return <InAppBrowserGate onCancel={onCancel} />;
   }
 
-  // Evaluating screen
   if (evaluating) {
     return (
       <div className="fixed inset-0 z-50 bg-gradient-to-br from-slate-900 via-slate-800 to-teal-900 flex flex-col items-center justify-center">
@@ -720,6 +935,15 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
                 <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
                 <span>{error}</span>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Save warning — non-blocking */}
+        {saveWarning && (
+          <div className="w-full max-w-md mb-4">
+            <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300/80 backdrop-blur-sm text-center">
+              Einige Nachrichten konnten nicht gespeichert werden
             </div>
           </div>
         )}

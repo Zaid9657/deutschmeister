@@ -19,7 +19,7 @@ function buildEvaluationPrompt(level, messages) {
 
 Analysiere das folgende Gespräch und bewerte den Schüler in 5 Kategorien (jeweils 0–20 Punkte):
 
-1. **Aussprache** (pronunciation) – Wie klar und korrekt ist die Aussprache?
+1. **Verständlichkeit** (intelligibility) – Wie klar hat der Schüler kommuniziert? Bewerte anhand des Transkripts: Kohärenz, ob die Bedeutung klar rüberkam, Wortwahl. Du hast KEIN Audio – beurteile NICHT die akustische Aussprache.
 2. **Grammatik** (grammar) – Wie korrekt sind Satzstruktur, Konjugation, Kasus?
 3. **Wortschatz** (vocabulary) – Wie angemessen und vielfältig ist der Wortschatz für das Niveau?
 4. **Flüssigkeit** (fluency) – Wie flüssig und natürlich spricht der Schüler?
@@ -33,7 +33,7 @@ ${conversationText}
 Antworte NUR mit einem JSON-Objekt in diesem Format (keine Erklärung davor oder danach):
 {
   "scores": {
-    "pronunciation": <0-20>,
+    "intelligibility": <0-20>,
     "grammar": <0-20>,
     "vocabulary": <0-20>,
     "fluency": <0-20>,
@@ -96,51 +96,58 @@ export const handler = async (event) => {
       };
     }
 
-    // Use custom prompt (e.g., placement test) or default evaluation prompt
-    const trimmedMessages = messages.slice(-20);
-    const evaluationPrompt = customPrompt || buildEvaluationPrompt(level, trimmedMessages);
+    const evaluationPrompt = customPrompt || buildEvaluationPrompt(level, messages);
 
-    const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': anthropicKey,
-        'anthropic-version': '2023-06-01',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1024,
-        messages: [
-          { role: 'user', content: evaluationPrompt },
-        ],
-      }),
-    });
-
-    if (!claudeResponse.ok) {
-      const errorText = await claudeResponse.text();
-      console.error('Claude API error:', claudeResponse.status, errorText);
-      return {
-        statusCode: claudeResponse.status,
-        headers,
-        body: JSON.stringify({ error: 'Failed to evaluate conversation', details: errorText }),
-      };
+    async function callClaude(prompt) {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': anthropicKey,
+          'anthropic-version': '2023-06-01',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 1024,
+          messages: [{ role: 'user', content: prompt }],
+        }),
+      });
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error('Claude API error:', res.status, errorText);
+        return null;
+      }
+      const data = await res.json();
+      return data.content?.[0]?.text || '';
     }
 
-    const claudeData = await claudeResponse.json();
-    const responseText = claudeData.content?.[0]?.text || '';
+    function tryParseEvaluation(text) {
+      if (!text) return null;
+      try { return JSON.parse(text); } catch {}
+      const match = text.match(/\{[\s\S]*\}/);
+      if (match) { try { return JSON.parse(match[0]); } catch {} }
+      return null;
+    }
 
-    // Parse JSON from Claude's response
-    let evaluation;
-    try {
-      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) throw new Error('No JSON found in response');
-      evaluation = JSON.parse(jsonMatch[0]);
-    } catch (parseError) {
-      console.error('Failed to parse Claude response:', responseText);
+    const responseText = await callClaude(evaluationPrompt);
+    let evaluation = tryParseEvaluation(responseText);
+
+    if (!evaluation) {
+      console.warn('First parse failed, retrying with stricter prompt');
+      const retryPrompt = evaluationPrompt + '\n\nWICHTIG: Antworte NUR mit validem JSON. Kein Text davor oder danach. Nur das JSON-Objekt.';
+      const retryText = await callClaude(retryPrompt);
+      evaluation = tryParseEvaluation(retryText);
+    }
+
+    if (!evaluation) {
+      console.error('Evaluation JSON parse failed after retry');
       return {
-        statusCode: 500,
+        statusCode: 200,
         headers,
-        body: JSON.stringify({ error: 'Failed to parse evaluation response' }),
+        body: JSON.stringify({
+          evaluation_failed: true,
+          message: 'Auswertung konnte nicht erstellt werden, bitte versuche es erneut.',
+        }),
       };
     }
 
@@ -157,7 +164,8 @@ export const handler = async (event) => {
         level,
         score:                evaluation.total_score ?? 0,
         total_score:          evaluation.total_score ?? 0,
-        pronunciation_score:  evaluation.scores?.pronunciation ?? null,
+        // DB column still named pronunciation_score; maps to intelligibility score from eval
+        pronunciation_score:  evaluation.scores?.intelligibility ?? null,
         grammar_score:        evaluation.scores?.grammar       ?? null,
         vocabulary_score:     evaluation.scores?.vocabulary    ?? null,
         fluency_score:        evaluation.scores?.fluency       ?? null,
@@ -175,7 +183,6 @@ export const handler = async (event) => {
 
     if (saveError) {
       console.error('Error saving evaluation:', JSON.stringify(saveError));
-      // Still return the evaluation even if save fails
     }
 
     return {
@@ -184,6 +191,7 @@ export const handler = async (event) => {
       body: JSON.stringify({
         ...evaluation,
         evaluation_id: savedEval?.id || null,
+        saved: !saveError,
       }),
     };
   } catch (error) {

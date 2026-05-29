@@ -22,10 +22,16 @@ export function useOnboarding() {
     supabase
       .from('profiles')
       .select('onboarding_completed_at')
-      .eq('user_id', user.id)
+      .eq('id', user.id)
       .single()
-      .then(({ data }) => {
+      .then(({ data, error }) => {
         if (cancelled) return;
+        if (error) {
+          console.warn('Failed to load onboarding state:', error.message);
+          setOnboardingCompletedAt('error');
+          setProfileLoaded(true);
+          return;
+        }
         setOnboardingCompletedAt(data?.onboarding_completed_at ?? null);
         setProfileLoaded(true);
       });
@@ -44,7 +50,7 @@ export function useOnboarding() {
         const { error } = await supabase
           .from('profiles')
           .update({ onboarding_completed_at: new Date().toISOString() })
-          .eq('user_id', user.id);
+          .eq('id', user.id);
 
         if (error) {
           console.error('Failed to mark onboarding complete:', error);

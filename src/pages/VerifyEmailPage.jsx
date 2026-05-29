@@ -9,6 +9,7 @@ import {
   trackVerificationEmailResent,
   trackEmailVerified,
 } from '../lib/funnelTracking';
+import { logAuditEvent, AUDIT_EVENTS } from '../lib/auditLogger';
 
 const VerifyEmailPage = () => {
   const navigate = useNavigate();
@@ -35,6 +36,7 @@ const VerifyEmailPage = () => {
       const { data: { user: freshUser } } = await supabase.auth.getUser();
       if (freshUser?.email_confirmed_at) {
         trackEmailVerified();
+        logAuditEvent(AUDIT_EVENTS.EMAIL_VERIFIED);
         clearInterval(interval);
         navigate('/dashboard', { replace: true });
       }

@@ -7,6 +7,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import SEO from '../components/SEO';
 import StatsBar from '../components/StatsBar';
+// Usage: <OptimizedImage src="/hero.png" alt="Hero" width={800} height={600} /> — auto-serves .webp with .png fallback
 
 const BANNER_KEY = 'xray-banner-dismissed';
 
@@ -739,6 +740,13 @@ const LandingPage = () => {
               className="text-slate-400 hover:text-white transition-colors text-sm"
             >
               Podcasts
+            </Link>
+            <span className="text-slate-600">·</span>
+            <Link
+              to="/leitfaden/telc-b1"
+              className="text-slate-400 hover:text-white transition-colors text-sm"
+            >
+              telc B1 Guide
             </Link>
           </div>
           <p className="text-sm">

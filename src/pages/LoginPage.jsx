@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Mail, Lock, Eye, EyeOff, AlertCircle, Loader2 } from 'lucide-react';
@@ -10,6 +10,8 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { signIn } = useAuth();
+  const [searchParams] = useSearchParams();
+  const timedOut = searchParams.get('reason') === 'timeout';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -62,6 +64,12 @@ const LoginPage = () => {
 
         {/* Form */}
         <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-8">
+          {timedOut && (
+            <div className="mb-6 p-4 bg-amber-50 border border-amber-100 rounded-xl text-amber-700 text-sm">
+              Du wurdest wegen Inaktivität abgemeldet.
+            </div>
+          )}
+
           {error && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}

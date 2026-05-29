@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../utils/supabase';
 import { identify, resetAnalytics } from '../lib/analytics';
 import { trackSignupCompleted } from '../lib/funnelTracking';
+import { logAuditEvent, AUDIT_EVENTS } from '../lib/auditLogger';
 
 const AuthContext = createContext({});
 
@@ -38,6 +39,9 @@ export const AuthProvider = ({ children }) => {
           const createdAt = new Date(session.user.created_at);
           if (Date.now() - createdAt.getTime() < 60_000) {
             trackSignupCompleted();
+            logAuditEvent(AUDIT_EVENTS.SIGNUP);
+          } else {
+            logAuditEvent(AUDIT_EVENTS.LOGIN);
           }
         }
       }
@@ -66,6 +70,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signOut = async () => {
+    await logAuditEvent(AUDIT_EVENTS.LOGOUT);
     resetAnalytics();
     const { error } = await supabase.auth.signOut();
     return { error };

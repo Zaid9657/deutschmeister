@@ -13,6 +13,8 @@ import EmailVerificationGate from './components/EmailVerificationGate';
 import OnboardingGate from './components/onboarding/OnboardingGate';
 import TrialBanner from './components/TrialBanner';
 import FloatingIntroButton from './components/FloatingIntroButton';
+import SessionTimeoutModal from './components/SessionTimeoutModal';
+import { useSessionTimeout } from './hooks/useSessionTimeout';
 import { Loader2 } from 'lucide-react';
 
 // Lazy-loaded page components for code splitting
@@ -54,6 +56,7 @@ const VerifyEmailPage = lazy(() => import('./pages/VerifyEmailPage'));
 const IntroSlides = lazy(() => import('./components/onboarding/IntroSlides'));
 const VergleichHubPage = lazy(() => import('./pages/VergleichHubPage'));
 const ComparisonPage = lazy(() => import('./pages/ComparisonPage'));
+const TelcB1Page = lazy(() => import('./pages/leitfaden/TelcB1Page'));
 
 function PageLoader() {
   return (
@@ -61,6 +64,11 @@ function PageLoader() {
       <Loader2 className="w-8 h-8 animate-spin text-slate-400" />
     </div>
   );
+}
+
+function SessionTimeoutWrapper() {
+  const { showWarning, stayLoggedIn } = useSessionTimeout();
+  return <SessionTimeoutModal show={showWarning} onStay={stayLoggedIn} />;
 }
 
 function App() {
@@ -75,6 +83,7 @@ function App() {
                 <Navbar />
                 <TrialBanner />
                 <FloatingIntroButton />
+                <SessionTimeoutWrapper />
                 <Suspense fallback={<PageLoader />}>
                   <Routes>
                     {/* Public routes */}
@@ -114,6 +123,7 @@ function App() {
                     <Route path="/ueber-uns" element={<UeberUnsPage />} />
                     <Route path="/vergleich" element={<VergleichHubPage />} />
                     <Route path="/vergleich/:slug" element={<ComparisonPage />} />
+                    <Route path="/leitfaden/telc-b1" element={<TelcB1Page />} />
                     <Route path="/video-library" element={<VideoLibraryPage />} />
                     <Route path="/video-library/:id" element={<VideoDetailPage />} />
                     <Route path="/podcasts" element={<PodcastsPage />} />

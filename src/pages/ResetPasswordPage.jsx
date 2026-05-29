@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Mail, AlertCircle, Loader2, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { logAuditEvent, AUDIT_EVENTS } from '../lib/auditLogger';
 
 const ResetPasswordPage = () => {
   const { t } = useTranslation();
@@ -24,6 +25,7 @@ const ResetPasswordPage = () => {
       if (error) {
         setError(error.message);
       } else {
+        logAuditEvent(AUDIT_EVENTS.PASSWORD_RESET_REQUESTED, { email });
         setSuccess(true);
       }
     } catch (err) {

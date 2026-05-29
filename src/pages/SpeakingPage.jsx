@@ -217,9 +217,13 @@ const SpeakingPage = () => {
   };
 
   const handleComplete = (eval_) => {
-    setEvaluation(eval_);
-    setPhase(eval_ ? 'results' : 'select');
-    // Refresh usage after session
+    if (eval_?.evaluation_failed) {
+      setEvaluation(eval_);
+      setPhase('eval_failed');
+    } else {
+      setEvaluation(eval_);
+      setPhase(eval_ ? 'results' : 'select');
+    }
     fetchUsage();
   };
 
@@ -299,6 +303,37 @@ const SpeakingPage = () => {
         onComplete={handleComplete}
         onCancel={handleCancel}
       />
+    );
+  }
+
+  // Evaluation failed phase — retry prompt
+  if (phase === 'eval_failed') {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white flex items-center justify-center px-4 pt-20 pb-12">
+        <div className="max-w-md w-full text-center">
+          <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center">
+            <AlertTriangle className="w-8 h-8 text-amber-500" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-800 mb-2">Auswertung fehlgeschlagen</h2>
+          <p className="text-sm text-slate-500 mb-6">
+            {evaluation?.message || 'Auswertung konnte nicht erstellt werden, bitte versuche es erneut.'}
+          </p>
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={handleRetry}
+              className="flex items-center justify-center gap-2 w-full py-3.5 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-xl transition-colors shadow-md shadow-teal-200"
+            >
+              Nochmal üben
+            </button>
+            <button
+              onClick={handleBack}
+              className="text-sm text-slate-400 hover:text-slate-600 transition-colors py-2"
+            >
+              Zurück zur Übersicht
+            </button>
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -416,7 +451,7 @@ const SpeakingPage = () => {
                 Sprechen üben
               </h1>
               <p className="text-base sm:text-lg text-slate-500 max-w-md leading-relaxed mb-4">
-                Wähle dein Level und führe ein 10-minütiges Gespräch mit deinem KI-Sprachpartner.
+                Wähle dein Level und führe ein Gespräch mit deinem KI-Sprachpartner.
               </p>
               {/* Usage indicator */}
               {usageLoading ? (
@@ -494,7 +529,7 @@ const SpeakingPage = () => {
                     </div>
                     <div className="flex items-center gap-1 text-slate-400 flex-shrink-0">
                       <Clock className="w-3 h-3" />
-                      <span className="text-[11px] font-medium">~10 Min</span>
+                      <span className="text-[11px] font-medium">~{config.durationMinutes} Min</span>
                     </div>
                   </div>
                 </div>

@@ -2,11 +2,28 @@ import { supabase, supabaseKey } from './_shared/supabase.mjs';
 import { checkUsage, incrementUsage } from './_shared/speakingUsage.mjs';
 
 const VOICE_MAP = {
-  'a1.1': 'coral', 'a1.2': 'coral',
-  'a2.1': 'shimmer', 'a2.2': 'shimmer',
-  'b1.1': 'echo', 'b1.2': 'echo',
-  'b2.1': 'alloy', 'b2.2': 'alloy',
+  'a1.1': 'Zephyr', 'a1.2': 'Zephyr',
+  'a2.1': 'Zephyr', 'a2.2': 'Zephyr',
+  'b1.1': 'Charon', 'b1.2': 'Charon',
+  'b2.1': 'Charon', 'b2.2': 'Charon',
 };
+
+const GEMINI_MODEL = 'models/gemini-2.5-flash-native-audio-preview-12-2025';
+
+function buildFieldMask(setup) {
+  const paths = [];
+  for (const key of Object.keys(setup)) {
+    const val = setup[key];
+    if (val && typeof val === 'object' && !Array.isArray(val) && Object.keys(val).length > 0) {
+      for (const subKey of Object.keys(val)) {
+        paths.push(`${key}.${subKey}`);
+      }
+    } else {
+      paths.push(key);
+    }
+  }
+  return paths.join(',');
+}
 
 export const handler = async (event) => {
   const allowedOrigins = [
@@ -30,10 +47,10 @@ export const handler = async (event) => {
     return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
   }
 
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    console.error('OPENAI_API_KEY is not set');
-    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Server misconfigured' }) };
+    console.error('GEMINI_API_KEY is not set');
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Server nicht konfiguriert (fehlender API-Schlüssel)' }) };
   }
 
   if (!supabaseKey || !supabase) {
@@ -48,7 +65,6 @@ export const handler = async (event) => {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'systemPrompt and level are required' }) };
     }
 
-    // Check usage limits if user_id is provided
     if (user_id) {
       console.log('[speaking-session] Checking usage for user:', user_id);
       const usage = await checkUsage(user_id);
@@ -66,51 +82,69 @@ export const handler = async (event) => {
     }
 
     const normalizedLevel = level.toLowerCase();
-    // Use requested voice if provided, otherwise look up from level map
-    const voice = requestedVoice || VOICE_MAP[normalizedLevel] || 'coral';
+    const voice = requestedVoice || VOICE_MAP[normalizedLevel] || 'Zephyr';
 
-    const response = await fetch('https://api.openai.com/v1/realtime/client_secrets', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        session: {
-          type: 'realtime',
-          model: 'gpt-realtime',
-          instructions: systemPrompt,
-          audio: {
-            input: {
-              turn_detection: {
-                type: 'semantic_vad',
-                eagerness: 'low',
-                create_response: true,
-                interrupt_response: true,
-              },
-            },
-            output: {
-              voice,
-            },
-          },
+    const now = new Date();
+    const expireTime = new Date(now.getTime() + 30 * 60 * 1000).toISOString();
+    const newSessionExpireTime = new Date(now.getTime() + 60 * 1000).toISOString();
+
+    const bidiSetup = {
+      model: GEMINI_MODEL,
+      generationConfig: {
+        responseModalities: ['AUDIO'],
+        temperature: 0.7,
+        speechConfig: {
+          voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } },
+          languageCode: 'de-DE',
         },
-      }),
+      },
+      systemInstruction: { parts: [{ text: systemPrompt || '' }] },
+      inputAudioTranscription: {},
+      outputAudioTranscription: {},
+    };
+
+    const fieldMask = buildFieldMask(bidiSetup);
+
+    const tokenUrl = `https://generativelanguage.googleapis.com/v1alpha/auth_tokens?key=${encodeURIComponent(apiKey)}`;
+
+    const tokenBody = {
+      uses: 1,
+      expireTime,
+      newSessionExpireTime,
+      bidiGenerateContentSetup: bidiSetup,
+      fieldMask,
+    };
+
+    console.log('[speaking-session] Requesting Gemini ephemeral token, fieldMask:', fieldMask);
+
+    const response = await fetch(tokenUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(tokenBody),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('OpenAI Realtime API error:', response.status, errorText);
+      console.error('Gemini auth_tokens error:', response.status, errorText);
       return {
         statusCode: response.status,
         headers,
-        body: JSON.stringify({ error: 'Failed to create realtime session', details: errorText }),
+        body: JSON.stringify({ error: 'Sprachsitzung konnte nicht erstellt werden', details: errorText }),
       };
     }
 
     const data = await response.json();
-    console.log('[speaking-session] GA client_secrets response shape:', JSON.stringify(data));
+    const ephemeralToken = data.name;
 
-    // Increment usage after successful session creation
+    if (!ephemeralToken) {
+      console.error('No token name in Gemini response:', JSON.stringify(data));
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ error: 'Ungültige Token-Antwort vom Server' }),
+      };
+    }
+
     if (user_id) {
       try {
         await incrementUsage(user_id);
@@ -120,14 +154,15 @@ export const handler = async (event) => {
       }
     }
 
-    // GA response: { value: "ek_...", expires_at: ... } at top level
-    // Fall back to legacy nested shape just in case
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({
-        client_secret: data.value || data.client_secret?.value || data.client_secret,
-        expires_at: data.expires_at || data.client_secret?.expires_at,
+        ephemeral_token: ephemeralToken,
+        model: GEMINI_MODEL,
+        voice,
+        language_code: 'de-DE',
+        expires_at: expireTime,
       }),
     };
   } catch (error) {

@@ -34,3 +34,5 @@ export const trackEmailVerified = () => track('email_verified');
 export const trackComparisonHubViewed = () => track('comparison_hub_viewed');
 export const trackComparisonPageViewed = (competitor) => track('comparison_page_viewed', { competitor });
 export const trackComparisonCtaClicked = (competitor, ctaType) => track('comparison_cta_clicked', { competitor, cta_type: ctaType });
+
+export const trackLeitfadenViewed = (topic) => track('leitfaden_viewed', { topic });

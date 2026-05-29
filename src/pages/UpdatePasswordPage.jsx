@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Lock, Eye, EyeOff, AlertCircle, Loader2, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { logAuditEvent, AUDIT_EVENTS } from '../lib/auditLogger';
 
 const UpdatePasswordPage = () => {
   const { t } = useTranslation();
@@ -38,6 +39,7 @@ const UpdatePasswordPage = () => {
       if (error) {
         setError(error.message);
       } else {
+        logAuditEvent(AUDIT_EVENTS.PASSWORD_CHANGED);
         setSuccess(true);
         setTimeout(() => navigate('/login'), 2000);
       }
