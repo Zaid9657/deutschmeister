@@ -158,6 +158,23 @@ function int16ToFloat32(int16Array) {
   return float32;
 }
 
+// Average-pooling downsampler for browsers that don't honor a custom
+// AudioContext sampleRate (e.g. older Safari) — Gemini requires 16kHz input.
+function downsampleTo(float32, fromRate, toRate) {
+  if (fromRate === toRate) return float32;
+  const ratio = fromRate / toRate;
+  const newLen = Math.floor(float32.length / ratio);
+  const out = new Float32Array(newLen);
+  for (let i = 0; i < newLen; i++) {
+    const start = Math.floor(i * ratio);
+    const end = Math.min(Math.floor((i + 1) * ratio), float32.length);
+    let sum = 0;
+    for (let j = start; j < end; j++) sum += float32[j];
+    out[i] = sum / (end - start || 1);
+  }
+  return out;
+}
+
 function base64Encode(int16Array) {
   const bytes = new Uint8Array(int16Array.buffer);
   let binary = '';
@@ -303,8 +320,10 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
   const processorRef = useRef(null);
   const sourceRef = useRef(null);
   const playbackCursorRef = useRef(0);
+  const scheduledSourcesRef = useRef([]);
   const micBufferRef = useRef([]);
   const setupCompleteRef = useRef(false);
+  const endingRef = useRef(false);
 
   // Transcript accumulators
   const assistantTranscriptRef = useRef('');
@@ -346,6 +365,9 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
   const saveMessage = useCallback(async (role, content) => {
     if (!content || !content.trim()) return;
     const msg = { role, content: content.trim() };
+    // Update the ref synchronously so handleDisconnect sees messages committed
+    // in the same tick (React state lags one render behind).
+    messagesRef.current = [...messagesRef.current, msg];
     setMessages((prev) => [...prev, msg]);
     const payload = {
       session_token: sessionTokenRef.current,
@@ -380,6 +402,12 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
     const src = ctx.createBufferSource();
     src.buffer = buffer;
     src.connect(ctx.destination);
+    scheduledSourcesRef.current.push(src);
+    src.onended = () => {
+      const arr = scheduledSourcesRef.current;
+      const idx = arr.indexOf(src);
+      if (idx !== -1) arr.splice(idx, 1);
+    };
 
     const now = ctx.currentTime;
     if (playbackCursorRef.current < now) {
@@ -387,6 +415,16 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
     }
     src.start(playbackCursorRef.current);
     playbackCursorRef.current += buffer.duration;
+  }, []);
+
+  // Barge-in: stop everything already scheduled, not just future chunks —
+  // otherwise the model keeps talking until the queued buffers drain.
+  const stopPlayback = useCallback(() => {
+    for (const s of scheduledSourcesRef.current) {
+      try { s.stop(); } catch { /* already stopped */ }
+    }
+    scheduledSourcesRef.current = [];
+    playbackCursorRef.current = 0;
   }, []);
 
   // ---------------------------------------------------------------------------
@@ -437,7 +475,7 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
 
     // Barge-in: user interrupted the model
     if (sc.interrupted) {
-      playbackCursorRef.current = 0;
+      stopPlayback();
       setSpeakingState('user_speaking');
       return;
     }
@@ -477,7 +515,7 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
       setCurrentTranscript('');
       setSpeakingState('idle');
     }
-  }, [saveMessage, playAudioChunk]);
+  }, [saveMessage, playAudioChunk, stopPlayback]);
 
   // ---------------------------------------------------------------------------
   // Cleanup
@@ -487,6 +525,11 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
     clearInterval(timerRef.current);
     setupCompleteRef.current = false;
     micBufferRef.current = [];
+
+    for (const s of scheduledSourcesRef.current) {
+      try { s.stop(); } catch { /* already stopped */ }
+    }
+    scheduledSourcesRef.current = [];
 
     if (processorRef.current) {
       processorRef.current.disconnect();
@@ -505,6 +548,11 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
       outputCtxRef.current = null;
     }
     if (wsRef.current) {
+      // Detach handlers first so an intentional close doesn't re-enter
+      // the unexpected-close path below.
+      wsRef.current.onmessage = null;
+      wsRef.current.onerror = null;
+      wsRef.current.onclose = null;
       wsRef.current.close();
       wsRef.current = null;
     }
@@ -521,6 +569,7 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
   const handleConnect = async () => {
     setConnectionState('connecting');
     setError(null);
+    endingRef.current = false;
 
     const compat = checkSpeakingSupport();
     if (!compat.supported) {
@@ -530,7 +579,29 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
     }
 
     try {
-      // 1. Acquire microphone
+      // 1. Create audio contexts synchronously, inside the user gesture —
+      // iOS Safari blocks contexts created or resumed outside a gesture,
+      // and any await before this point would leave the gesture window.
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      let inputCtx;
+      try {
+        inputCtx = new AudioCtx({ sampleRate: 16000 });
+      } catch {
+        inputCtx = new AudioCtx(); // custom rate rejected — we downsample below
+      }
+      let outputCtx;
+      try {
+        outputCtx = new AudioCtx({ sampleRate: 24000 });
+      } catch {
+        outputCtx = new AudioCtx(); // buffers carry 24000 explicitly; browser resamples
+      }
+      inputCtxRef.current = inputCtx;
+      outputCtxRef.current = outputCtx;
+      playbackCursorRef.current = 0;
+      if (inputCtx.state === 'suspended') inputCtx.resume().catch(() => {});
+      if (outputCtx.state === 'suspended') outputCtx.resume().catch(() => {});
+
+      // 2. Acquire microphone
       let stream;
       try {
         stream = await navigator.mediaDevices.getUserMedia({
@@ -544,13 +615,14 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
         });
       } catch (micErr) {
         console.error('Microphone access error:', micErr);
+        cleanup();
         setError(classifyConnectionError(micErr).userMessage);
         setConnectionState('error');
         return;
       }
       streamRef.current = stream;
 
-      // 2. Get ephemeral token from backend
+      // 3. Get ephemeral token from backend
       let ephemeralToken;
       try {
         const sessionRes = await fetch('/api/speaking/speaking-session', {
@@ -581,8 +653,7 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
         const data = await sessionRes.json();
         ephemeralToken = data.ephemeral_token;
       } catch (apiErr) {
-        stream.getTracks().forEach((t) => t.stop());
-        streamRef.current = null;
+        cleanup();
         console.error('Session API error:', apiErr);
         if (apiErr.message && !apiErr.message.startsWith('Failed to fetch')) {
           setError(apiErr.message);
@@ -593,7 +664,7 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
         return;
       }
 
-      // 3. Open WebSocket to Gemini Live
+      // 4. Open WebSocket to Gemini Live
       const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContentConstrained?access_token=${encodeURIComponent(ephemeralToken)}`;
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
@@ -612,31 +683,39 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
 
       ws.onerror = (e) => {
         console.error('[Gemini WS] error:', e);
-        if (connectionState !== 'connected') {
+        // setupCompleteRef (not connectionState) — the state variable here is a
+        // stale render-time closure and would misreport an established session.
+        if (!setupCompleteRef.current) {
+          cleanup();
           setError('Verbindung zum Sprachserver fehlgeschlagen.');
           setConnectionState('error');
-          cleanup();
         }
       };
 
       ws.onclose = (e) => {
         console.log('[Gemini WS] closed:', e.code, e.reason);
-        setConnectionState((prev) => prev === 'connected' ? 'disconnected' : prev);
+        if (setupCompleteRef.current && !endingRef.current) {
+          // Server ended the session unexpectedly (timeout, network drop) —
+          // commit what we have and evaluate instead of leaving a dead UI.
+          handleDisconnect();
+        }
       };
 
-      // 4. Set up audio input pipeline (16kHz)
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      const inputCtx = new AudioCtx({ sampleRate: 16000 });
-      inputCtxRef.current = inputCtx;
-
+      // 5. Set up audio input pipeline (16kHz)
       const micSource = inputCtx.createMediaStreamSource(stream);
       sourceRef.current = micSource;
 
       const processor = inputCtx.createScriptProcessor(4096, 1, 1);
       processorRef.current = processor;
 
+      const micRate = inputCtx.sampleRate;
+      if (micRate !== 16000) {
+        console.warn(`[Audio] Input context running at ${micRate}Hz, downsampling to 16kHz`);
+      }
+
       processor.onaudioprocess = (e) => {
-        const float32 = e.inputBuffer.getChannelData(0);
+        const raw = e.inputBuffer.getChannelData(0);
+        const float32 = micRate === 16000 ? raw : downsampleTo(raw, micRate, 16000);
         const int16 = floatTo16BitPCM(float32);
         const b64 = base64Encode(int16);
         const chunk = {
@@ -658,11 +737,6 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
       micSource.connect(processor);
       processor.connect(inputCtx.destination);
 
-      // 5. Set up audio output context (24kHz)
-      const outputCtx = new AudioCtx({ sampleRate: 24000 });
-      outputCtxRef.current = outputCtx;
-      playbackCursorRef.current = 0;
-
     } catch (err) {
       console.error('Connection error:', err);
       setError(err.message || classifyConnectionError(err).userMessage);
@@ -676,6 +750,10 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
   // ---------------------------------------------------------------------------
 
   const handleDisconnect = useCallback(async () => {
+    // Guard against double entry (timer expiry + user click + ws close)
+    if (endingRef.current) return;
+    endingRef.current = true;
+
     // Commit any remaining accumulated transcripts before cleanup
     if (userTranscriptRef.current.trim()) {
       saveMessage('user', userTranscriptRef.current);
@@ -690,9 +768,6 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
     cleanup();
     setConnectionState('disconnected');
     setSpeakingState('idle');
-
-    // Wait a tick for messages state to update from the saveMessage calls above
-    await new Promise((r) => setTimeout(r, 50));
 
     const currentMessages = messagesRef.current;
     if (currentMessages.length === 0) { onComplete?.(null); return; }
