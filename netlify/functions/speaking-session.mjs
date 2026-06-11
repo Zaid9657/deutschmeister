@@ -11,6 +11,47 @@ const VOICE_MAP = {
 
 const GEMINI_MODEL = 'models/gemini-2.5-flash-native-audio-preview-12-2025';
 
+// Server-owned placement-test prompt (level test). Selected via the validated
+// `mode: 'placement'` flag — clients can never supply free-text prompts here.
+const PLACEMENT_PROMPT = `Du bist Frau Schmidt, eine erfahrene und freundliche Deutschlehrerin, die einen mündlichen Einstufungstest durchführt. Du sprichst JETZT, LIVE, per Sprachanruf mit einer einzelnen Person.
+
+DEIN ZIEL:
+Ermittle das CEFR-Sprachniveau (A1, A2, B1 oder B2) deines Gegenübers durch ein natürliches Gespräch.
+
+WIE DU SPRICHST:
+- Du sprichst IMMER nur als Frau Schmidt. Verwende NIEMALS Rollenbezeichnungen wie "LEHRERIN:" in deinen Antworten.
+- Du stellst EINE Frage, dann bist du STILL und wartest auf die Antwort.
+- Halte deine Antworten KURZ (1-2 Sätze), dann stelle die nächste Frage.
+
+ADAPTIVE STRATEGIE:
+1. STARTE BEI A2 (Mitte) - nicht zu leicht, nicht zu schwer
+2. BEOBACHTE die Antwort:
+   - Flüssig, korrekte Grammatik, guter Wortschatz? → SCHWIERIGER (B1/B2)
+   - Zögern, viele Fehler, Grundwortschatz? → LEICHTER (A1)
+   - Angemessen für das Level? → BLEIB auf diesem Level
+3. WECHSLE THEMEN um verschiedene Fähigkeiten zu testen
+
+FRAGEN-BEISPIELE PRO LEVEL:
+A1: Wie heißt du? Woher kommst du? Was machst du gern?
+A2: Was hast du gestern gemacht? Beschreibe deine Familie. Was möchtest du am Wochenende machen?
+B1: Was denkst du über soziale Medien? Erzähle von einer interessanten Reise. Was würdest du ändern?
+B2: Wie beurteilst du die Work-Life-Balance? Diskutiere die Auswirkungen von KI. Was wäre passiert, wenn...?
+
+GESPRÄCHSABLAUF (2-3 Minuten):
+1. Begrüßung: "Hallo! Ich bin Frau Schmidt. Schön, dich kennenzulernen!"
+2. Erste Frage (A2): z.B. "Erzähl mir ein bisschen von dir."
+3. 3-4 weitere Fragen - PASSE DAS NIVEAU AN
+4. Abschluss: "Vielen Dank für das nette Gespräch! Das war's für heute."
+
+WICHTIGE REGELN:
+- Sprich NUR Deutsch. Nur wenn dein Gegenüber einen KOMPLETTEN englischen Satz spricht (mehrere englische Wörter, ein echter Satz — nicht nur ein einzelnes Wort), sage freundlich: "Auf Deutsch bitte!" Bei einem einzelnen unklaren Wort oder akzentbehaftetem Deutsch gehe IMMER davon aus, dass es Deutsch war, und führe das Gespräch normal weiter.
+- KORRIGIERE NICHT - dies ist ein Test, keine Unterrichtsstunde
+- Sei warm, freundlich und ermutigend
+- Wenn dein Gegenüber nicht versteht, formuliere einfacher um
+- Passe deine SPRECHGESCHWINDIGKEIT an das erkannte Level an
+
+Beginne JETZT mit der Begrüßung und deiner ersten Frage.`;
+
 function buildFieldMask(setup) {
   const paths = [];
   for (const key of Object.keys(setup)) {
@@ -67,28 +108,37 @@ export const handler = async (event) => {
       return unauthorizedResponse(headers);
     }
 
-    const { systemPrompt, level, voice: requestedVoice } = JSON.parse(event.body || '{}');
+    const { systemPrompt, level, voice: requestedVoice, mode } = JSON.parse(event.body || '{}');
 
-    if (!systemPrompt || !level) {
+    // Placement mode uses the server-owned prompt — clients only send a flag.
+    const isPlacement = mode === 'placement';
+    const effectivePrompt = isPlacement ? PLACEMENT_PROMPT : systemPrompt;
+    const effectiveLevel = isPlacement ? 'placement' : level;
+
+    if (!effectivePrompt || !effectiveLevel) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'systemPrompt and level are required' }) };
     }
 
-    console.log('[speaking-session] Checking usage for user:', user_id);
-    const usage = await checkUsage(user_id);
-    console.log('[speaking-session] Usage check result:', JSON.stringify(usage));
-    if (!usage.allowed) {
-      return {
-        statusCode: 403,
-        headers,
-        body: JSON.stringify({
-          error: 'Speaking limit reached',
-          ...usage,
-        }),
-      };
+    // Placement sessions (level test) are exempt from the speaking quota —
+    // still JWT-gated, but they don't consume or block on practice sessions.
+    if (!isPlacement) {
+      console.log('[speaking-session] Checking usage for user:', user_id);
+      const usage = await checkUsage(user_id);
+      console.log('[speaking-session] Usage check result:', JSON.stringify(usage));
+      if (!usage.allowed) {
+        return {
+          statusCode: 403,
+          headers,
+          body: JSON.stringify({
+            error: 'Speaking limit reached',
+            ...usage,
+          }),
+        };
+      }
     }
 
-    const normalizedLevel = level.toLowerCase();
-    const voice = requestedVoice || VOICE_MAP[normalizedLevel] || 'Zephyr';
+    const normalizedLevel = effectiveLevel.toLowerCase();
+    const voice = isPlacement ? 'Zephyr' : (requestedVoice || VOICE_MAP[normalizedLevel] || 'Zephyr');
 
     const now = new Date();
     const expireTime = new Date(now.getTime() + 30 * 60 * 1000).toISOString();
@@ -104,7 +154,7 @@ export const handler = async (event) => {
           languageCode: 'de-DE',
         },
       },
-      systemInstruction: { parts: [{ text: systemPrompt || '' }] },
+      systemInstruction: { parts: [{ text: effectivePrompt || '' }] },
       inputAudioTranscription: {},
       outputAudioTranscription: {},
     };
@@ -151,7 +201,7 @@ export const handler = async (event) => {
       };
     }
 
-    if (user_id) {
+    if (!isPlacement) {
       try {
         await incrementUsage(user_id);
         console.log('[speaking-session] Usage incremented for user:', user_id);

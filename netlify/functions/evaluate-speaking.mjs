@@ -55,6 +55,59 @@ Empfehlung:
 - WIEDERHOLEN: total_score < 40 → Schüler sollte diese Lektion wiederholen`;
 }
 
+// Placement-test evaluation (level test). Server-owned, selected via the
+// validated `mode: 'placement'` flag — never client-supplied prompt text.
+// Output keys (scores.pronunciation etc.) are kept for UI compatibility with
+// LevelTestResults, but every criterion is defined from transcript evidence
+// only — Claude has no audio.
+function buildPlacementPrompt(messages) {
+  const conversationText = messages
+    .map(m => `${m.role === 'user' ? 'Schüler' : 'Lehrerin'}: ${m.content}`)
+    .join('\n');
+
+  return `Du bist ein erfahrener CEFR-Prüfer. Analysiere dieses Einstufungsgespräch und BESTIMME das Sprachniveau des Schülers.
+
+WICHTIG: Du siehst nur das TRANSKRIPT, kein Audio. Bewerte ausschließlich, was im Text erkennbar ist. Das Transkript stammt aus automatischer Spracherkennung und kann Erkennungsfehler enthalten — sei nachsichtig bei einzelnen seltsamen Wörtern und bewerte nur Muster, die sich über mehrere Äußerungen zeigen.
+
+GESPRÄCH:
+${conversationText}
+
+BEWERTE JEDE KATEGORIE (0-20 Punkte) BASIEREND AUF DEM GEZEIGTEN NIVEAU:
+
+1. VERSTÄNDLICHKEIT (pronunciation): Wie klar kam die Bedeutung im Transkript rüber? Kohärenz, nachvollziehbare Aussagen, passende Wortwahl. NICHT die akustische Aussprache — die kannst du nicht hören.
+2. GRAMMATIK (grammar): Satzbau, Konjugation, Kasus. 16-20: komplexe Strukturen, Nebensätze, Konjunktiv (B2) / 12-15: gute Grundstruktur (B1) / 8-11: einfache Sätze meist korrekt (A2) / 4-7: häufige Fehler (A1).
+3. WORTSCHATZ (vocabulary): 16-20: reich, nuanciert, idiomatisch (B2) / 12-15: guter Alltagswortschatz, Meinungen (B1) / 8-11: Grundwortschatz (A2) / 4-7: nur Grundbegriffe (A1).
+4. AUSDRUCKSFLUSS (fluency): Wie flüssig wirkt der Ausdruck im Transkript: vollständige Sätze, Verknüpfungen (und, aber, weil...), zusammenhängende Gedanken statt abgehackter Einzelwörter. NICHT Sprechtempo oder Pausen — die kannst du nicht hören.
+5. VERSTÄNDNIS (comprehension): Wie gut versteht und beantwortet der Schüler die Fragen? Reagiert er passend auch auf schwierigere Fragen?
+
+BESTIMME DAS GESAMTNIVEAU:
+- 80-100 Punkte = B2
+- 60-79 Punkte = B1
+- 40-59 Punkte = A2
+- 0-39 Punkte = A1
+
+KONFIDENZ: Bei weniger als 4 Schüler-Antworten oder sehr kurzen Antworten ist die Einstufung unsicher — setze confidence auf "low". Bei 4-6 substanziellen Antworten "medium", bei mehr "high".
+
+Antworte NUR mit diesem JSON (keine Erklärung davor oder danach):
+{
+  "scores": {
+    "pronunciation": <0-20>,
+    "grammar": <0-20>,
+    "vocabulary": <0-20>,
+    "fluency": <0-20>,
+    "comprehension": <0-20>
+  },
+  "total_score": <0-100>,
+  "determined_level": "<A1|A2|B1|B2>",
+  "determined_sublevel": "<A1.1|A1.2|A2.1|A2.2|B1.1|B1.2|B2.1|B2.2>",
+  "confidence": "<low|medium|high>",
+  "feedback": "<2-3 Sätze auf Deutsch über die Stärken und Verbesserungsmöglichkeiten>",
+  "strengths": ["<Stärke 1>", "<Stärke 2>"],
+  "improvements": ["<Verbesserung 1>", "<Verbesserung 2>"],
+  "recommendation": "<GLEICH>"
+}`;
+}
+
 export const handler = async (event) => {
   const allowedOrigins = [
     'https://deutsch-meister.de',
@@ -95,7 +148,10 @@ export const handler = async (event) => {
       return unauthorizedResponse(headers);
     }
 
-    const { session_token, level, messages } = JSON.parse(event.body || '{}');
+    const { session_token, level: requestedLevel, messages, mode } = JSON.parse(event.body || '{}');
+
+    const isPlacement = mode === 'placement';
+    const level = isPlacement ? 'placement' : requestedLevel;
 
     if (!session_token || !level || !Array.isArray(messages) || messages.length === 0) {
       return {
@@ -111,7 +167,9 @@ export const handler = async (event) => {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'messages payload too large' }) };
     }
 
-    const evaluationPrompt = buildEvaluationPrompt(level, messages);
+    const evaluationPrompt = isPlacement
+      ? buildPlacementPrompt(messages)
+      : buildEvaluationPrompt(level, messages);
 
     async function callClaude(prompt) {
       const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -188,8 +246,9 @@ export const handler = async (event) => {
         level,
         score:                evaluation.total_score ?? 0,
         total_score:          evaluation.total_score ?? 0,
-        // DB column still named pronunciation_score; maps to intelligibility score from eval
-        pronunciation_score:  evaluation.scores?.intelligibility ?? null,
+        // DB column still named pronunciation_score; maps to intelligibility score
+        // from the standard eval, or the legacy pronunciation key in placement mode
+        pronunciation_score:  evaluation.scores?.intelligibility ?? evaluation.scores?.pronunciation ?? null,
         grammar_score:        evaluation.scores?.grammar       ?? null,
         vocabulary_score:     evaluation.scores?.vocabulary    ?? null,
         fluency_score:        evaluation.scores?.fluency       ?? null,
