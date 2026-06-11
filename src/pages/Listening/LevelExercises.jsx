@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useLevelExercises } from '../../hooks/useListening';
 import { getLevelTheme, getLevelSubtitle } from '../../utils/listeningHelpers';
 import ExerciseCard from '../../components/listening/ExerciseCard';
+import SEO from '../../components/SEO';
 
 const LevelExercises = () => {
   const { level } = useParams();
@@ -25,6 +26,7 @@ const LevelExercises = () => {
 
   return (
     <div className="min-h-screen pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+      <SEO title="German Listening Exercises" description="Practice German listening comprehension with level-appropriate audio exercises." path="/listening" noindex />
       <div className="max-w-3xl mx-auto">
         {/* Back button */}
         <motion.button

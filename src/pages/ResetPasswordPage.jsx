@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Mail, AlertCircle, Loader2, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { logAuditEvent, AUDIT_EVENTS } from '../lib/auditLogger';
+import SEO from '../components/SEO';
 
 const ResetPasswordPage = () => {
   const { t } = useTranslation();
@@ -70,6 +71,7 @@ const ResetPasswordPage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100 px-4 py-12">
+      <SEO title="Reset Password" description="Reset your DeutschMeister account password." path="/reset-password" noindex />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

@@ -24,6 +24,17 @@
     Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
     X-XSS-Protection = "1; mode=block"
 
+# Hashed bundles — filenames change on every build, safe to cache forever
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
 # Force lowercase grammar level URLs
 [[redirects]]
   from = "/grammar/A1.1"

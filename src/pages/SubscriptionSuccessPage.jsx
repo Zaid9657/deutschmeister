@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { CheckCircle, Loader2, ArrowRight, AlertCircle } from 'lucide-react';
 import { useSubscription } from '../contexts/SubscriptionContext';
+import SEO from '../components/SEO';
 
 const SubscriptionSuccessPage = () => {
   const navigate = useNavigate();
@@ -43,6 +44,7 @@ const SubscriptionSuccessPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
+      <SEO title="Welcome to Pro!" description="Your DeutschMeister Pro subscription is active." path="/subscription/success" noindex />
       <motion.div
         className="max-w-md w-full bg-gray-800 rounded-2xl p-8 text-center"
         initial={{ opacity: 0, scale: 0.95 }}

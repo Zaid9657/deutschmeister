@@ -5,14 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node scripts/optimize-images.cjs && vite build",
     "preview": "vite preview",
     "lighthouse": "node scripts/lighthouse-audit.js --url=http://localhost:4173",
     "lighthouse:mobile": "node scripts/lighthouse-audit.js --url=http://localhost:4173 --preset=mobile",
     "lighthouse:desktop": "node scripts/lighthouse-audit.js --url=http://localhost:4173 --preset=desktop",
     "lighthouse:prod": "node scripts/lighthouse-audit.js --url=https://www.deutsch-meister.de --preset=mobile",
     "indexnow": "node scripts/ping-indexnow.mjs",
-    "optimize:images": "node scripts/optimize-images.js"
+    "optimize:images": "node scripts/optimize-images.cjs"
   },
   "dependencies": {
     "@netlify/functions": "^5.1.5",

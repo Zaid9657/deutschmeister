@@ -10,6 +10,7 @@ import {
   trackEmailVerified,
 } from '../lib/funnelTracking';
 import { logAuditEvent, AUDIT_EVENTS } from '../lib/auditLogger';
+import SEO from '../components/SEO';
 
 const VerifyEmailPage = () => {
   const navigate = useNavigate();
@@ -71,6 +72,7 @@ const VerifyEmailPage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100 px-4 py-12">
+      <SEO title="Verify Your Email" description="Confirm your email address to activate your DeutschMeister account." path="/verify-email" noindex />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

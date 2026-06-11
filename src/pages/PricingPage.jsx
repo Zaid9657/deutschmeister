@@ -6,6 +6,7 @@ import { Check, Sparkles, Zap, Mic, CheckCircle2, ChevronDown } from 'lucide-rea
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
+import SEO from '../components/SEO';
 
 // i18n-ready: strings are hardcoded EN/DE pairs — wire to i18n when needed
 
@@ -129,6 +130,7 @@ const PricingPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 px-4 pt-20 pb-16">
+      <SEO title="Pricing — Free Trial & Pro Plans" description="Start free, upgrade when ready. DeutschMeister Pro unlocks all 64 German grammar topics, AI speaking practice, and listening exercises." path="/pricing" />
       <div className="max-w-4xl mx-auto">
 
         {/* Header */}

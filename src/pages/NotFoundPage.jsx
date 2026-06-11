@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
 import { Home, ArrowLeft } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const NotFoundPage = () => {
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+      <SEO title="Page Not Found" description="This page does not exist. Explore German grammar lessons from A1 to B2 on DeutschMeister." path="/404" noindex />
       <div className="max-w-md w-full text-center">
         <div className="mx-auto mb-6 w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-400 via-rose-400 to-purple-500 flex items-center justify-center shadow-lg">
           <span className="text-white font-bold text-4xl">?</span>

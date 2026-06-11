@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Lock, Eye, EyeOff, AlertCircle, Loader2, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { logAuditEvent, AUDIT_EVENTS } from '../lib/auditLogger';
+import SEO from '../components/SEO';
 
 const UpdatePasswordPage = () => {
   const { t } = useTranslation();
@@ -78,6 +79,7 @@ const UpdatePasswordPage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100 px-4 py-12">
+      <SEO title="Update Password" description="Choose a new password for your DeutschMeister account." path="/update-password" noindex />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

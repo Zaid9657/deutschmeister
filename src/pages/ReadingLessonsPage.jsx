@@ -8,6 +8,7 @@ import { useProgress } from '../contexts/ProgressContext';
 import { levels, levelThemes as contentLevelThemes } from '../data/content';
 import { getReadingLessonsByLevel } from '../services/readingService';
 import ReadingLessonCard from '../components/ReadingLessonCard';
+import SEO from '../components/SEO';
 
 const ReadingLessonsPage = () => {
   const { level } = useParams();
@@ -62,6 +63,7 @@ const ReadingLessonsPage = () => {
 
   return (
     <div className={`min-h-screen bg-gradient-to-br ${theme.bgGradient} pt-20 pb-12`}>
+      <SEO title="German Reading Practice" description="Level-appropriate German reading lessons with comprehension exercises from A1 to B2." path="/reading" />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div

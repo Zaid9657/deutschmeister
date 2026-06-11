@@ -11,6 +11,7 @@ const SEO = ({
   image = 'https://deutsch-meister.de/og-image.png',
   structuredData,
   extraStructuredData,
+  noindex = false,
 }) => {
   const siteTitle = 'DeutschMeister';
   const fullTitle = title ? `${title} | ${siteTitle}` : `${siteTitle} - Learn German`;
@@ -21,10 +22,13 @@ const SEO = ({
 
   return (
     <Helmet>
-      <html lang="de" />
+      {/* Page content is English (explanations for English speakers learning
+          German) — must match index.html's lang="en" to avoid conflicting
+          language signals. */}
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
       {keywords && <meta name="keywords" content={keywords} />}
+      {noindex && <meta name="robots" content="noindex, nofollow" />}
       <link rel="canonical" href={url} />
       <link rel="alternate" hrefLang="en" href={url} />
       <link rel="alternate" hrefLang="de" href={url} />
@@ -36,8 +40,8 @@ const SEO = ({
       <meta property="og:description" content={description} />
       <meta property="og:image" content={image} />
       <meta property="og:site_name" content={siteTitle} />
-      <meta property="og:locale" content="de_DE" />
-      <meta property="og:locale:alternate" content="en_US" />
+      <meta property="og:locale" content="en_US" />
+      <meta property="og:locale:alternate" content="de_DE" />
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />

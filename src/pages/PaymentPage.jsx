@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { CreditCard, Lock, ArrowLeft, Check, Shield } from 'lucide-react';
 import { useSubscription } from '../contexts/SubscriptionContext';
+import SEO from '../components/SEO';
 
 const PLANS = {
   monthly: { price: 10, months: 1 },
@@ -92,6 +93,7 @@ const PaymentPage = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 pt-24 pb-12 px-4">
+      <SEO title="Checkout" description="Complete your DeutschMeister Pro subscription." path="/payment" noindex />
       <div className="max-w-2xl mx-auto">
         {/* Back button */}
         <button

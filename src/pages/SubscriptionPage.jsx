@@ -5,6 +5,7 @@ import { Crown, Check, Clock, Shield, Zap, Loader2, RefreshCw } from 'lucide-rea
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
+import SEO from '../components/SEO';
 
 const SubscriptionPage = () => {
   const { i18n } = useTranslation();
@@ -146,6 +147,7 @@ const SubscriptionPage = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 pt-24 pb-12 px-4">
+      <SEO title="Subscription" description="Manage your DeutschMeister subscription." path="/subscription" noindex />
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <motion.div

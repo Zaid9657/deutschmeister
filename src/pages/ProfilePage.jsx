@@ -7,6 +7,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { useProgress } from '../contexts/ProgressContext';
 import { levels } from '../data/content';
+import SEO from '../components/SEO';
 
 const ProfilePage = () => {
   const { t, i18n } = useTranslation();
@@ -57,6 +58,7 @@ const ProfilePage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-20 pb-12">
+      <SEO title="Your Profile" description="Manage your DeutschMeister profile and learning preferences." path="/profile" noindex />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
