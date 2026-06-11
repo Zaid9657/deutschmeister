@@ -22,10 +22,12 @@ Analysiere das folgende Gespräch und bewerte den Schüler in 5 Kategorien (jewe
 1. **Verständlichkeit** (intelligibility) – Wie klar hat der Schüler kommuniziert? Bewerte anhand des Transkripts: Kohärenz, ob die Bedeutung klar rüberkam, Wortwahl. Du hast KEIN Audio – beurteile NICHT die akustische Aussprache.
 2. **Grammatik** (grammar) – Wie korrekt sind Satzstruktur, Konjugation, Kasus?
 3. **Wortschatz** (vocabulary) – Wie angemessen und vielfältig ist der Wortschatz für das Niveau?
-4. **Flüssigkeit** (fluency) – Wie flüssig und natürlich spricht der Schüler?
+4. **Flüssigkeit** (fluency) – Wie flüssig wirkt der Ausdruck im Transkript: vollständige Sätze, Verknüpfungen (und, aber, weil...), natürlicher Gesprächsfluss statt abgehackter Einzelwörter. Du hast KEIN Audio – beurteile NICHT Sprechtempo, Pausen oder Zögern.
 5. **Verständnis** (comprehension) – Wie gut versteht und reagiert der Schüler auf Fragen?
 
 Berücksichtige dabei das erwartete Niveau ${level.toUpperCase()}. Ein A1-Schüler wird anders bewertet als ein B2-Schüler.
+
+WICHTIG: Das Transkript stammt aus automatischer Spracherkennung und kann Erkennungsfehler enthalten. Sei nachsichtig bei einzelnen seltsamen oder unpassenden Wörtern, die wahrscheinlich Transkriptionsfehler sind – werte sie NICHT als Fehler des Schülers. Bewerte nur Muster, die sich über mehrere Äußerungen hinweg zeigen.
 
 Gespräch:
 ${conversationText}
@@ -149,6 +151,15 @@ export const handler = async (event) => {
           message: 'Auswertung konnte nicht erstellt werden, bitte versuche es erneut.',
         }),
       };
+    }
+
+    // A level-up recommendation needs enough evidence: short sessions with few
+    // student turns can score high without demonstrating sustained ability.
+    const MIN_USER_TURNS_FOR_LEVEL_UP = 5;
+    const userTurns = messages.filter(m => m.role === 'user').length;
+    if (evaluation.recommendation === 'HÖHER' && userTurns < MIN_USER_TURNS_FOR_LEVEL_UP) {
+      console.log(`Downgrading HÖHER to GLEICH: only ${userTurns} user turns`);
+      evaluation.recommendation = 'GLEICH';
     }
 
     // Save evaluation to Supabase.
