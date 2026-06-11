@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -38,10 +39,12 @@ export const handler = async (event) => {
   }
 
   try {
-    const { user_id } = JSON.parse(event.body || '{}');
-
+    // Identity comes from the verified JWT — this endpoint reads subscription
+    // state and can activate recovered subscriptions, so it must never act on
+    // a client-supplied user_id.
+    const user_id = await getAuthenticatedUserId(event);
     if (!user_id) {
-      return { statusCode: 400, headers, body: JSON.stringify({ error: 'user_id required' }) };
+      return unauthorizedResponse(headers);
     }
 
     console.log('verify-subscription called for user:', user_id);

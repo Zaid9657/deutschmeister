@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Mic, Clock, ChevronRight, Crown, ArrowRight, Loader2, AlertTriangle, Monitor } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { getAuthHeaders } from '../utils/supabase';
 import SEO from '../components/SEO';
 import { LEVEL_CONFIGS, getConfigForLevel } from '../constants/speakingPrompts';
 import SpeakingPractice, { checkSpeakingSupport } from '../components/SpeakingPractice';
@@ -192,8 +193,8 @@ const SpeakingPage = () => {
     try {
       const res = await fetch('/api/speaking/check-speaking-usage', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: user.id }),
+        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
+        body: JSON.stringify({}),
       });
       if (res.ok) {
         setUsage(await res.json());

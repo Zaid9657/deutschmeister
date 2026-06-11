@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Mic, Volume2, Loader2, Phone, PhoneOff, X, AlertCircle, MessageSquare, ExternalLink, Copy, CheckCheck } from 'lucide-react';
 import { getConfigForLevel } from '../constants/speakingPrompts';
+import { getAuthHeaders } from '../utils/supabase';
 
 const SPEAKING_LABELS = {
   idle: 'Bereit',
@@ -356,7 +357,7 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
   const persistMessage = useCallback(async (payload) => {
     const res = await fetch('/api/speaking/save-speaking-message', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
       body: JSON.stringify(payload),
     });
     if (!res.ok) throw new Error(`save failed: ${res.status}`);
@@ -371,7 +372,7 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
     setMessages((prev) => [...prev, msg]);
     const payload = {
       session_token: sessionTokenRef.current,
-      user_id: userId, role, content: content.trim(), level: config.level,
+      role, content: content.trim(), level: config.level,
     };
     try {
       await persistMessage(payload);
@@ -627,11 +628,10 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
       try {
         const sessionRes = await fetch('/api/speaking/speaking-session', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
           body: JSON.stringify({
             systemPrompt: config.systemPrompt,
             level: config.level,
-            user_id: userId,
             voice: config.voice,
           }),
         });
@@ -775,9 +775,9 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
     try {
       const evalRes = await fetch('/api/speaking/evaluate-speaking', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
         body: JSON.stringify({
-          user_id: userId, session_token: sessionTokenRef.current,
+          session_token: sessionTokenRef.current,
           level: config.level, messages: currentMessages,
         }),
       });

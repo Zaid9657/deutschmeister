@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Scan, ArrowRight, Loader2, AlertCircle, ChevronDown, ChevronUp, Type, Sparkles, Eye, Crown } from 'lucide-react';
 import SEO from '../components/SEO';
 import { useAuth } from '../contexts/AuthContext';
+import { getAuthHeaders } from '../utils/supabase';
 
 // ─── constants ───────────────────────────────────────────────────────────────
 
@@ -359,10 +360,9 @@ const SentenceXRay = () => {
     try {
       const res = await fetch('/.netlify/functions/analyze-sentence', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
         body: JSON.stringify({
           sentence:    trimmed,
-          userId:      user?.id || null,
           anonymousId: user?.id ? null : anonId,
         }),
       });

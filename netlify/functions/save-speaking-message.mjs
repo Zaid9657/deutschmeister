@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -38,21 +39,31 @@ export const handler = async (event) => {
   }
 
   try {
-    const { session_token, user_id, role, content, level } = JSON.parse(event.body || '{}');
+    // Identity comes from the verified JWT, never from the request body.
+    const authUserId = await getAuthenticatedUserId(event);
+    if (!authUserId) {
+      return unauthorizedResponse(headers);
+    }
 
-    if (!session_token || !user_id || !role || !content) {
+    const { session_token, role, content, level } = JSON.parse(event.body || '{}');
+
+    if (!session_token || !role || !content) {
       return {
         statusCode: 400,
         headers,
-        body: JSON.stringify({ error: 'session_token, user_id, role, and content are required' }),
+        body: JSON.stringify({ error: 'session_token, role, and content are required' }),
       };
+    }
+
+    if (!['user', 'assistant'].includes(role) || typeof content !== 'string' || content.length > 5000) {
+      return { statusCode: 400, headers, body: JSON.stringify({ error: 'invalid message payload' }) };
     }
 
     const { data, error } = await supabase
       .from('speaking_messages')
       .insert({
         session_token,
-        user_id,
+        user_id: authUserId,
         role,
         content,
         level: level || null,

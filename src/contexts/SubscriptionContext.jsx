@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { useAuth } from './AuthContext';
+import { getAuthHeaders } from '../utils/supabase';
 import {
   getSubscription,
   getUserProfile,
@@ -148,8 +149,8 @@ export const SubscriptionProvider = ({ children }) => {
     try {
       const res = await fetch('/.netlify/functions/verify-subscription', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: user.id }),
+        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
+        body: JSON.stringify({}),
       });
       const data = await res.json();
       if (data.status === 'active') {

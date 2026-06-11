@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { getAuthenticatedUserId } from './_shared/auth.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -136,7 +137,12 @@ export const handler = async (event) => {
   }
 
   try {
-    const { sentence, userId, anonymousId } = JSON.parse(event.body || '{}');
+    const { sentence, anonymousId } = JSON.parse(event.body || '{}');
+
+    // Tier is derived from the verified JWT when present; without a valid
+    // token the caller is anonymous (1/day) — a body-supplied userId is
+    // never trusted, since anyone could claim another user's pro quota.
+    const userId = await getAuthenticatedUserId(event);
 
     if (!sentence || typeof sentence !== 'string' || sentence.trim().length === 0) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'sentence is required' }) };

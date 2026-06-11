@@ -1,5 +1,6 @@
 import { supabaseKey, supabase } from './_shared/supabase.mjs';
 import { checkUsage } from './_shared/speakingUsage.mjs';
+import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 
 export const handler = async (event) => {
   const allowedOrigins = [
@@ -28,12 +29,13 @@ export const handler = async (event) => {
   }
 
   try {
-    const { user_id } = JSON.parse(event.body || '{}');
-    if (!user_id) {
-      return { statusCode: 400, headers, body: JSON.stringify({ error: 'user_id is required' }) };
+    // Identity comes from the verified JWT, never from the request body.
+    const authUserId = await getAuthenticatedUserId(event);
+    if (!authUserId) {
+      return unauthorizedResponse(headers);
     }
 
-    const result = await checkUsage(user_id);
+    const result = await checkUsage(authUserId);
 
     return {
       statusCode: 200,

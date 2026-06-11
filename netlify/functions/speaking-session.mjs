@@ -1,5 +1,6 @@
 import { supabase, supabaseKey } from './_shared/supabase.mjs';
 import { checkUsage, incrementUsage } from './_shared/speakingUsage.mjs';
+import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 
 const VOICE_MAP = {
   'a1.1': 'Zephyr', 'a1.2': 'Zephyr',
@@ -59,26 +60,31 @@ export const handler = async (event) => {
   }
 
   try {
-    const { systemPrompt, level, user_id, voice: requestedVoice } = JSON.parse(event.body || '{}');
+    // Identity comes from the verified JWT — sessions cost real Gemini quota,
+    // so unauthenticated or unmetered token minting is not allowed.
+    const user_id = await getAuthenticatedUserId(event);
+    if (!user_id) {
+      return unauthorizedResponse(headers);
+    }
+
+    const { systemPrompt, level, voice: requestedVoice } = JSON.parse(event.body || '{}');
 
     if (!systemPrompt || !level) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'systemPrompt and level are required' }) };
     }
 
-    if (user_id) {
-      console.log('[speaking-session] Checking usage for user:', user_id);
-      const usage = await checkUsage(user_id);
-      console.log('[speaking-session] Usage check result:', JSON.stringify(usage));
-      if (!usage.allowed) {
-        return {
-          statusCode: 403,
-          headers,
-          body: JSON.stringify({
-            error: 'Speaking limit reached',
-            ...usage,
-          }),
-        };
-      }
+    console.log('[speaking-session] Checking usage for user:', user_id);
+    const usage = await checkUsage(user_id);
+    console.log('[speaking-session] Usage check result:', JSON.stringify(usage));
+    if (!usage.allowed) {
+      return {
+        statusCode: 403,
+        headers,
+        body: JSON.stringify({
+          error: 'Speaking limit reached',
+          ...usage,
+        }),
+      };
     }
 
     const normalizedLevel = level.toLowerCase();

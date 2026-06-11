@@ -77,18 +77,22 @@ export const handler = async (event) => {
     const signature = event.headers['x-signature'];
     const webhookSecret = process.env.LEMONSQUEEZY_WEBHOOK_SECRET;
 
-    if (webhookSecret) {
-      if (!signature) {
-        console.error('Missing webhook signature');
-        return { statusCode: 401, headers, body: 'Missing signature' };
-      }
-      const isValid = verifySignature(event.body, signature, webhookSecret);
-      if (!isValid) {
-        console.error('Invalid webhook signature');
-        return { statusCode: 401, headers, body: 'Invalid signature' };
-      }
-    } else {
-      console.warn('WARNING: LEMONSQUEEZY_WEBHOOK_SECRET is not set — skipping signature verification');
+    // Signature verification is mandatory — without it, anyone can POST a
+    // forged payload and grant themselves a subscription. A missing secret is
+    // a deployment error, never a reason to skip verification.
+    if (!webhookSecret) {
+      console.error('CRITICAL: LEMONSQUEEZY_WEBHOOK_SECRET is not set — rejecting webhook');
+      await logWebhookEvent('config_error', { error: 'LEMONSQUEEZY_WEBHOOK_SECRET is not set' }, false, 'Missing webhook secret');
+      return { statusCode: 500, headers, body: 'Server misconfigured' };
+    }
+    if (!signature) {
+      console.error('Missing webhook signature');
+      return { statusCode: 401, headers, body: 'Missing signature' };
+    }
+    const isValid = verifySignature(event.body, signature, webhookSecret);
+    if (!isValid) {
+      console.error('Invalid webhook signature');
+      return { statusCode: 401, headers, body: 'Invalid signature' };
     }
 
     // Parse payload

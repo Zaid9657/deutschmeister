@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -88,17 +89,29 @@ export const handler = async (event) => {
   }
 
   try {
-    const { user_id, session_token, level, messages, customPrompt } = JSON.parse(event.body || '{}');
+    // Identity comes from the verified JWT, never from the request body.
+    const user_id = await getAuthenticatedUserId(event);
+    if (!user_id) {
+      return unauthorizedResponse(headers);
+    }
 
-    if (!user_id || !session_token || !level || !messages || messages.length === 0) {
+    const { session_token, level, messages } = JSON.parse(event.body || '{}');
+
+    if (!session_token || !level || !Array.isArray(messages) || messages.length === 0) {
       return {
         statusCode: 400,
         headers,
-        body: JSON.stringify({ error: 'user_id, session_token, level, and messages are required' }),
+        body: JSON.stringify({ error: 'session_token, level, and messages are required' }),
       };
     }
 
-    const evaluationPrompt = customPrompt || buildEvaluationPrompt(level, messages);
+    // Bound the input — a real session never exceeds this, but an abusive
+    // caller could otherwise feed arbitrarily large prompts to Claude.
+    if (messages.length > 200 || messages.some(m => typeof m?.content !== 'string' || m.content.length > 5000)) {
+      return { statusCode: 400, headers, body: JSON.stringify({ error: 'messages payload too large' }) };
+    }
+
+    const evaluationPrompt = buildEvaluationPrompt(level, messages);
 
     async function callClaude(prompt) {
       const res = await fetch('https://api.anthropic.com/v1/messages', {
