@@ -23,6 +23,9 @@ const meta = LEVEL_META[level] ?? LEVEL_META['a1.1'];
 
 const topicTitle = topic?.title_en ?? slug;
 const canonicalUrl = `https://deutsch-meister.de/grammar/${level}/${slug}`;
+// Site is trailingSlash: 'always' — the no-slash URL 301-redirects to this.
+// canonical/og:url must match the final URL (and the sitemap) exactly.
+const canonicalUrlSlash = `${canonicalUrl}/`;
 
 const pageTitle = `German ${topicTitle} Explained in English | ${meta.label} Grammar Guide`;
 const pageDesc = topic?.description_en
@@ -53,7 +56,7 @@ const articleSchema = {
 };
 ---
 
-<Layout title={pageTitle} description={pageDesc} canonical={canonicalUrl} jsonLd={[breadcrumbSchema, articleSchema]}>
+<Layout title={pageTitle} description={pageDesc} canonical={canonicalUrlSlash} jsonLd={[breadcrumbSchema, articleSchema]}>
   <div class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
 
     <!-- Breadcrumb -->
