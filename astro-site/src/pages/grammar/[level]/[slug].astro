@@ -37,9 +37,9 @@ const breadcrumbSchema = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home',      item: 'https://deutsch-meister.de/' },
-    { '@type': 'ListItem', position: 2, name: 'Grammatik', item: 'https://deutsch-meister.de/grammar' },
-    { '@type': 'ListItem', position: 3, name: meta.label,  item: `https://deutsch-meister.de/grammar/${level}` },
-    { '@type': 'ListItem', position: 4, name: topicTitle,  item: canonicalUrl },
+    { '@type': 'ListItem', position: 2, name: 'Grammatik', item: 'https://deutsch-meister.de/grammar/' },
+    { '@type': 'ListItem', position: 3, name: meta.label,  item: `https://deutsch-meister.de/grammar/${level}/` },
+    { '@type': 'ListItem', position: 4, name: topicTitle,  item: canonicalUrlSlash },
   ],
 };
 
@@ -48,7 +48,7 @@ const articleSchema = {
   '@type': 'Article',
   headline: pageTitle,
   description: pageDesc,
-  url: canonicalUrl,
+  url: canonicalUrlSlash,
   inLanguage: 'en',
   publisher: { '@type': 'Organization', name: 'DeutschMeister', url: 'https://deutsch-meister.de' },
   educationalLevel: meta.label,

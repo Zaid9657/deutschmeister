@@ -19,13 +19,13 @@ const jsonLd = {
   '@type': 'CollectionPage',
   name: title,
   description,
-  url: `https://deutsch-meister.de/grammar/${level}`,
+  url: `https://deutsch-meister.de/grammar/${level}/`,
   breadcrumb: {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de/' },
-      { '@type': 'ListItem', position: 2, name: 'Grammatik', item: 'https://deutsch-meister.de/grammar' },
-      { '@type': 'ListItem', position: 3, name: meta.label, item: `https://deutsch-meister.de/grammar/${level}` },
+      { '@type': 'ListItem', position: 2, name: 'Grammatik', item: 'https://deutsch-meister.de/grammar/' },
+      { '@type': 'ListItem', position: 3, name: meta.label, item: `https://deutsch-meister.de/grammar/${level}/` },
     ],
   },
 };
