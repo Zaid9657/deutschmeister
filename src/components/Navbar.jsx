@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, User, LogOut, Globe, LayoutDashboard, Crown, Sparkles, Mic, ClipboardCheck, BookOpen, PlayCircle, ChevronDown, Film, Radio, Scan } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
+import Logo from './Logo';
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
@@ -53,14 +54,8 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 via-rose-400 to-purple-500 flex items-center justify-center">
-              <span className="text-white font-display font-bold text-xl">D</span>
-            </div>
-            <span className="font-display font-semibold text-xl text-slate-800 hidden sm:block">
-              DeutschMeister
-            </span>
-          </Link>
+          <Logo size={40} showWordmark to="/" />
+
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">
