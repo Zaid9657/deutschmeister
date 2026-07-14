@@ -1,13 +1,15 @@
 import { supabase } from '../utils/supabase';
 
-// Fetch user's active subscription
+// Fetch the user's most relevant subscription row.
+// We do NOT filter by status: access is decided by the paid period
+// (subscription_end), so 'cancelled' and 'past_due' rows must be visible too.
+// Order by subscription_end desc so the row with the furthest-out period wins.
 export const getSubscription = async (userId) => {
   const { data, error } = await supabase
     .from('subscriptions')
     .select('*')
     .eq('user_id', userId)
-    .eq('status', 'active')
-    .order('created_at', { ascending: false })
+    .order('subscription_end', { ascending: false, nullsFirst: false })
     .limit(1)
     .maybeSingle();
 
@@ -150,15 +152,23 @@ export const checkTrialStatus = (profile) => {
   };
 };
 
-// Check subscription status from subscription data
+// Single source of truth for paid access: a subscription grants access iff its
+// PAID PERIOD is still live (subscription_end > now), regardless of status.
+//   - 'cancelled' with a future end → renewal off but paid through period → access
+//   - 'past_due'  with a future end → failed-renewal grace period → access
+//   - end <= now, or missing/unparseable end, or no row → no access
 export const checkSubscriptionStatus = (subscription) => {
-  if (!subscription) {
+  if (!subscription || !subscription.subscription_end) {
     return { isActive: false, expiresAt: null };
   }
 
-  const now = new Date();
   const endDate = new Date(subscription.subscription_end);
-  const isActive = subscription.status === 'active' && endDate > now;
+  // Guard against an unparseable date — never crash, treat as no access.
+  if (Number.isNaN(endDate.getTime())) {
+    return { isActive: false, expiresAt: null };
+  }
+
+  const isActive = endDate > new Date();
 
   return {
     isActive,

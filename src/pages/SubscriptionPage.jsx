@@ -27,6 +27,16 @@ const SubscriptionPage = () => {
   const daysLeft = getTrialDaysRemaining();
   const isSubscribed = hasActiveSubscription();
 
+  // Safe end-date label: null / unparseable → null (caller hides the line),
+  // never the literal string "Invalid Date".
+  const validUntil = (() => {
+    const raw = subscription?.subscription_end;
+    if (!raw) return null;
+    const d = new Date(raw);
+    if (Number.isNaN(d.getTime())) return null;
+    return d.toLocaleDateString(isGerman ? 'de-DE' : 'en-US');
+  })();
+
   // Stop polling once subscription is confirmed
   useEffect(() => {
     if (isSubscribed && verifying) {
@@ -215,10 +225,12 @@ const SubscriptionPage = () => {
                       {subscription?.plan_type === 'yearly'
                         ? isGerman ? 'Jahresplan' : 'Yearly Plan'
                         : isGerman ? 'Monatsplan' : 'Monthly Plan'}
-                      {' — '}
-                      {isGerman ? 'Gültig bis' : 'Valid until'}{' '}
-                      {new Date(subscription?.subscription_end).toLocaleDateString(
-                        isGerman ? 'de-DE' : 'en-US'
+                      {validUntil && (
+                        <>
+                          {' — '}
+                          {isGerman ? 'Gültig bis' : 'Valid until'}{' '}
+                          {validUntil}
+                        </>
                       )}
                     </p>
                   </div>
