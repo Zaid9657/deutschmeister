@@ -116,14 +116,13 @@ export const SubscriptionProvider = ({ children }) => {
     return trialStatus.daysRemaining;
   };
 
-  const hasActiveSubscription = () => {
-    // Check subscription record first
-    const subStatus = checkSubscriptionStatus(subscription);
-    if (subStatus.isActive) return true;
-    // Fallback: profile.is_subscribed (set by webhook even if subscription query misses)
-    if (profile?.is_subscribed) return true;
-    return false;
-  };
+  // Single source of truth for paid access: the subscription's paid period.
+  // We deliberately do NOT fall back to profile.is_subscribed here — that flag
+  // and the subscriptions row used to disagree (blocking payers / showing the
+  // wrong page). Both the route guard and the "Pro" badge now read this value,
+  // so they can never diverge. (Trial access is handled separately by
+  // isInFreeTrial(); this only governs paid access.)
+  const hasActiveSubscription = () => checkSubscriptionStatus(subscription).isActive;
 
   const hasAccess = isInFreeTrial() || hasActiveSubscription();
 
