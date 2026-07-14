@@ -122,6 +122,9 @@ export const handler = async (event) => {
         case 'subscription_expired':
           await handleSubscriptionExpired(data, payload.meta);
           break;
+        case 'subscription_payment_success':
+          await handleSubscriptionPaymentSuccess(data, payload.meta);
+          break;
         case 'subscription_payment_failed':
           await handlePaymentFailed(data, payload.meta, payload);
           break;
@@ -149,14 +152,125 @@ export const handler = async (event) => {
   }
 };
 
+// Resolve the app user_id when custom_data.user_id is absent.
+// Order of precedence:
+//   1. custom_data.user_id (the happy path)
+//   2. an existing subscriptions row matching lemonsqueezy_subscription_id
+//   3. the payload's user_email matched against auth.users, then profiles
+// Returns null only if every strategy fails.
+async function resolveUserId(customData, attributes, lemonsqueezySubscriptionId) {
+  if (customData?.user_id) return customData.user_id;
+
+  // (a) existing subscription row for this LS subscription id
+  if (lemonsqueezySubscriptionId) {
+    const { data: existing, error } = await supabase
+      .from('subscriptions')
+      .select('user_id')
+      .eq('lemonsqueezy_subscription_id', String(lemonsqueezySubscriptionId))
+      .maybeSingle();
+    if (error) {
+      console.error('resolveUserId: subscriptions lookup error:', JSON.stringify(error));
+    } else if (existing?.user_id) {
+      console.log('resolveUserId: matched by lemonsqueezy_subscription_id:', lemonsqueezySubscriptionId);
+      return existing.user_id;
+    }
+  }
+
+  // (b) email → auth.users, then profiles
+  const email = attributes?.user_email;
+  if (email) {
+    const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
+    if (authError) {
+      console.error('resolveUserId: auth listUsers error:', JSON.stringify(authError));
+    } else {
+      const match = authUsers?.users?.find(
+        (u) => (u.email || '').toLowerCase() === email.toLowerCase()
+      );
+      if (match) {
+        console.log('resolveUserId: matched by user_email via auth.users:', email);
+        return match.id;
+      }
+    }
+
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('id')
+      .ilike('email', email)
+      .maybeSingle();
+    if (profileError) {
+      console.error('resolveUserId: profiles lookup error:', JSON.stringify(profileError));
+    } else if (profile?.id) {
+      console.log('resolveUserId: matched by user_email via profiles:', email);
+      return profile.id;
+    }
+  }
+
+  return null;
+}
+
 async function handleOrderCreated(data, meta) {
   const customData = meta?.custom_data || {};
+  const attributes = data?.attributes || {};
+  const orderId = String(data?.id || '');
   const userId = customData.user_id;
-  console.log('Order created for user:', userId, 'Order ID:', data?.id);
+
+  console.log('Order created for user:', userId, 'Order ID:', orderId);
+
+  // total is integer cents; write the real amount to the matching subscription row.
+  if (attributes.total != null && orderId) {
+    const pricePaid = Number(attributes.total) / 100;
+    const { data: updated, error } = await supabase
+      .from('subscriptions')
+      .update({ price_paid: pricePaid, updated_at: new Date().toISOString() })
+      .eq('lemonsqueezy_order_id', orderId)
+      .select('id');
+
+    if (error) {
+      console.error('order_created: price_paid update error:', JSON.stringify(error));
+    } else if (!updated || updated.length === 0) {
+      // The paired subscription_created may not have landed yet; not fatal.
+      console.warn('order_created: no subscription row for order', orderId, '— price_paid deferred');
+    } else {
+      console.log('order_created: price_paid', pricePaid, 'set for order', orderId);
+    }
+  }
 }
 
 function getSubscriptionTier(_variantId) {
   return 'pro';
+}
+
+// subscription_payment_success: data is a subscription-invoice, so data.id is the
+// invoice id — the subscription row is keyed by attributes.subscription_id.
+// total is integer cents.
+async function handleSubscriptionPaymentSuccess(data, meta) {
+  const attributes = data?.attributes || {};
+  const subscriptionId = String(attributes.subscription_id || '');
+
+  console.log('subscription_payment_success — invoice:', data?.id, 'sub:', subscriptionId);
+
+  if (attributes.total == null || !subscriptionId) {
+    console.warn('subscription_payment_success: missing total or subscription_id — skipping price update');
+    return;
+  }
+
+  const pricePaid = Number(attributes.total) / 100;
+  const { data: updated, error } = await supabase
+    .from('subscriptions')
+    .update({ price_paid: pricePaid, updated_at: new Date().toISOString() })
+    .eq('lemonsqueezy_subscription_id', subscriptionId)
+    .select('id');
+
+  if (error) {
+    console.error('subscription_payment_success: price_paid update error:', JSON.stringify(error));
+    throw new Error(`subscription_payment_success price update failed: ${error.message}`);
+  }
+
+  if (!updated || updated.length === 0) {
+    console.warn('subscription_payment_success: no subscription row for', subscriptionId, '— price_paid not written');
+  } else {
+    console.log('subscription_payment_success: price_paid', pricePaid, 'set for sub', subscriptionId);
+  }
 }
 
 async function handleSubscriptionCreated(data, meta) {
@@ -262,11 +376,13 @@ async function handleSubscriptionUpdated(data, meta) {
   }
 
   // If no rows matched (subscription_updated arrived before subscription_created),
-  // create the subscription if we have a user_id
+  // create the subscription if we can resolve a user. custom_data.user_id may be
+  // absent, so fall back to matching on lemonsqueezy_subscription_id / user_email.
   if (!updated || updated.length === 0) {
-    console.warn('No subscription found for ID:', subscriptionId, '— attempting upsert with user_id:', userId);
+    const resolvedUserId = await resolveUserId(customData, attributes, subscriptionId);
+    console.warn('No subscription found for ID:', subscriptionId, '— attempting upsert with user_id:', resolvedUserId);
 
-    if (userId) {
+    if (resolvedUserId) {
       const variantName = attributes.variant_name || '';
       const planType = variantName.toLowerCase().includes('yearly') ? 'yearly' : 'monthly';
       const variantId = String(attributes.variant_id || '');
@@ -275,7 +391,7 @@ async function handleSubscriptionUpdated(data, meta) {
       const { error: upsertError } = await supabase
         .from('subscriptions')
         .upsert({
-          user_id: userId,
+          user_id: resolvedUserId,
           plan_type: planType,
           status: attributes.status || 'active',
           subscription_start: new Date().toISOString(),
@@ -299,7 +415,7 @@ async function handleSubscriptionUpdated(data, meta) {
       const { error: profileError } = await supabase
         .from('profiles')
         .upsert({
-          id: userId,
+          id: resolvedUserId,
           is_subscribed: true,
           subscription_tier: tier,
           updated_at: new Date().toISOString()
@@ -310,10 +426,10 @@ async function handleSubscriptionUpdated(data, meta) {
         throw new Error(`profiles upsert failed: ${profileError.message} (code: ${profileError.code}, details: ${profileError.details})`);
       }
 
-      console.log('Fallback upsert OK for user:', userId, 'Tier:', tier);
+      console.log('Fallback upsert OK for user:', resolvedUserId, 'Tier:', tier);
     } else {
-      console.error('subscription_updated: no matching row and no user_id — cannot process');
-      throw new Error(`subscription_updated: no subscription found for ID ${subscriptionId} and no user_id in custom_data — retry needed`);
+      console.error('subscription_updated: no matching row and could not resolve user by id, subscription_id, or email — cannot process');
+      throw new Error(`subscription_updated: no subscription found for ID ${subscriptionId} and could not resolve user_id (no custom_data.user_id, no match on lemonsqueezy_subscription_id, no user_email match) — retry needed`);
     }
   }
 
