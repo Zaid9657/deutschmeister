@@ -62,7 +62,8 @@ const CONVERSATION_RULES = `WICHTIG — WIE DU SPRICHST:
 - Du beantwortest deine eigenen Fragen NICHT.
 - Bei Stille länger als 10 Sekunden sagst du nur: "Kein Problem. Nimm dir Zeit." — und bist wieder still.
 - Halte deine Antworten KURZ (1–2 Sätze).
-- Sprich NUR Deutsch. Nur wenn dein Gegenüber einen KOMPLETTEN englischen Satz spricht (mehrere englische Wörter, ein echter Satz — nicht nur ein einzelnes Wort), sage freundlich: "Auf Deutsch bitte!" Bei einem einzelnen unklaren Wort oder akzentbehaftetem Deutsch gehe IMMER davon aus, dass es Deutsch war, und führe das Gespräch normal weiter.`;
+- Sprich NUR Deutsch. Nur wenn dein Gegenüber einen KOMPLETTEN englischen Satz spricht (mehrere englische Wörter, ein echter Satz — nicht nur ein einzelnes Wort), sage freundlich: "Auf Deutsch bitte!" Bei einem einzelnen unklaren Wort oder akzentbehaftetem Deutsch gehe IMMER davon aus, dass es Deutsch war, und führe das Gespräch normal weiter.
+- Dein Gegenüber spricht Deutsch mit fremdsprachigem Akzent: interpretiere unklare Äußerungen IMMER als Deutsch und wechsle NIEMALS ins Englische.`;
 
 // Build the mission system prompt from a speaking_missions row: the
 // mission-specific role, target structures and extra instructions, combined
@@ -260,29 +261,40 @@ export const handler = async (event) => {
         },
       },
       systemInstruction: { parts: [{ text: effectivePrompt || '' }] },
-      inputAudioTranscription: {},
+      // Pin input recognition to German — learners speak accented German, and
+      // auto-detect was transcribing e.g. "Mein Name ist" as English "My name is".
+      inputAudioTranscription: { languageCode: 'de-DE' },
       outputAudioTranscription: {},
     };
 
-    const fieldMask = buildFieldMask(bidiSetup);
-
     const tokenUrl = `https://generativelanguage.googleapis.com/v1alpha/auth_tokens?key=${encodeURIComponent(apiKey)}`;
 
-    const tokenBody = {
-      uses: 1,
-      expireTime,
-      newSessionExpireTime,
-      bidiGenerateContentSetup: bidiSetup,
-      fieldMask,
+    const mintToken = async (setup) => {
+      const fieldMask = buildFieldMask(setup);
+      console.log('[speaking-session] Requesting Gemini ephemeral token, fieldMask:', fieldMask);
+      return fetch(tokenUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          uses: 1,
+          expireTime,
+          newSessionExpireTime,
+          bidiGenerateContentSetup: setup,
+          fieldMask,
+        }),
+      });
     };
 
-    console.log('[speaking-session] Requesting Gemini ephemeral token, fieldMask:', fieldMask);
+    let response = await mintToken(bidiSetup);
 
-    const response = await fetch(tokenUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(tokenBody),
-    });
+    // Defensive: input languageCode is not in the public AudioTranscriptionConfig
+    // proto. If the mint rejects it, retry once without the pin so session creation
+    // never breaks — the system-prompt rule still biases recognition to German.
+    if (!response.ok && bidiSetup.inputAudioTranscription?.languageCode) {
+      const rejectText = await response.text();
+      console.warn('[speaking-session] token mint rejected input languageCode, retrying without pin:', response.status, rejectText);
+      response = await mintToken({ ...bidiSetup, inputAudioTranscription: {} });
+    }
 
     if (!response.ok) {
       const errorText = await response.text();
