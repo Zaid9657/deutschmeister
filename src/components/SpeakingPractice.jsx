@@ -9,6 +9,12 @@ const SPEAKING_LABELS = {
   ai_speaking: 'Lehrer spricht…',
 };
 
+// A live Gemini session streams server frames (model audio or input/output
+// transcription) continuously while in use. If nothing arrives for this long
+// while we still believe we're "connected", the socket has silently half-closed
+// (no close frame → no onclose → no reconnect) and audio is going into a void.
+const STALE_SOCKET_MS = 25000;
+
 // ---------------------------------------------------------------------------
 // Platform / browser detection helpers
 // ---------------------------------------------------------------------------
@@ -333,6 +339,7 @@ const SpeakingPractice = ({ level, mission = null, userId, onComplete, onCancel 
   const endFiredRef = useRef(false);
   const evalStartedRef = useRef(false);
   const openWebSocketRef = useRef(null);
+  const lastServerMsgRef = useRef(0); // liveness watchdog: last inbound frame time
 
   // Transcript accumulators
   const assistantTranscriptRef = useRef('');
@@ -350,6 +357,23 @@ const SpeakingPractice = ({ level, mission = null, userId, onComplete, onCancel 
   useEffect(() => {
     if (connectionState !== 'connected') return;
     timerRef.current = setInterval(() => {
+      // Liveness watchdog: a silently half-closed socket never fires onclose, so
+      // the onclose-driven reconnect can't help and the mic just posts audio into
+      // a dead socket while the UI sits on "Bereit". Detect the server silence and
+      // recover — one reconnect, then a graceful end — instead of freezing.
+      if (
+        setupCompleteRef.current &&
+        lastServerMsgRef.current &&
+        Date.now() - lastServerMsgRef.current > STALE_SOCKET_MS
+      ) {
+        if (!reconnectAttemptedRef.current) {
+          reconnectAttemptedRef.current = true;
+          attemptReconnect();
+        } else {
+          handleConnectionLost();
+        }
+        return;
+      }
       setTimeRemaining((prev) => {
         if (prev <= 1) { handleDisconnect(); return 0; }
         return prev - 1;
@@ -441,6 +465,7 @@ const SpeakingPractice = ({ level, mission = null, userId, onComplete, onCancel 
   // ---------------------------------------------------------------------------
 
   const handleWsMessage = useCallback(async (event) => {
+    lastServerMsgRef.current = Date.now(); // liveness: any frame keeps the socket "alive"
     let payload;
     try {
       if (typeof event.data === 'string') {
@@ -656,6 +681,17 @@ const SpeakingPractice = ({ level, mission = null, userId, onComplete, onCancel 
   // left intact; only a fresh ephemeral token + WebSocket are re-established.
   const attemptReconnect = useCallback(async () => {
     setupCompleteRef.current = false;
+    // Neutralize the previous socket. On an onclose-driven reconnect it is already
+    // closed (no-op); on a watchdog-driven reconnect it is a dead-but-"open" socket
+    // that must be detached so its late events can't re-enter this flow.
+    const stale = wsRef.current;
+    if (stale) {
+      stale.onmessage = null;
+      stale.onerror = null;
+      stale.onclose = null;
+      try { stale.close(); } catch { /* already closing */ }
+      wsRef.current = null;
+    }
     stopPlayback();
     setSpeakingState('idle');
     setConnectionState('reconnecting');
