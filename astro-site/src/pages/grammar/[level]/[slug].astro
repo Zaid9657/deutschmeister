@@ -2,6 +2,7 @@
 import Layout from '../../../layouts/Layout.astro';
 import ExercisePlayer from '../../../components/ExercisePlayer.jsx';
 import RuleContent from '../../../components/RuleContent.astro';
+import RichText from '../../../components/RichText.astro';
 import { getAllTopicPaths, getTopicFull, SUB_LEVELS, LEVEL_META } from '../../../lib/grammar.js';
 import '../../../styles/global.css';
 
@@ -13,6 +14,30 @@ const hasRenderable = (v) => {
   if (Array.isArray(v)) return v.length > 0;
   if (typeof v === 'object') return Object.keys(v).length > 0;
   return true;
+};
+
+// word_breakdown is stored as a plain object whose key order does NOT follow
+// the sentence (e.g. "Der Tisch ist groß." → {Der, ist, Tisch, groß}). Re-order
+// the rows to match the actual word order of sentence_de. Words not found in the
+// sentence keep their original relative order at the end (stable).
+const orderBySentence = (rows, sentence) => {
+  if (!sentence || !Array.isArray(rows)) return rows;
+  const norm = (s) => String(s).toLowerCase().replace(/[^\p{L}\p{N}äöüß]/gu, '');
+  const tokens = sentence.split(/\s+/).map(norm);
+  const lowerSentence = sentence.toLowerCase();
+  const BIG = Number.MAX_SAFE_INTEGER;
+  const posOf = (word) => {
+    const w = norm(word);
+    if (!w) return BIG;
+    const ti = tokens.indexOf(w);
+    if (ti !== -1) return ti;                 // whole-word match (preferred)
+    const si = lowerSentence.indexOf(w);      // fallback: substring position
+    return si === -1 ? BIG : 1000 + si;       // ranked after all token matches
+  };
+  return rows
+    .map((r, i) => ({ r, i, p: posOf(r.word) }))
+    .sort((a, b) => (a.p - b.p) || (a.i - b.i))
+    .map((x) => x.r);
 };
 
 export async function getStaticPaths() {
@@ -48,7 +73,7 @@ const breadcrumbSchema = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home',      item: 'https://deutsch-meister.de/' },
-    { '@type': 'ListItem', position: 2, name: 'Grammatik', item: 'https://deutsch-meister.de/grammar/' },
+    { '@type': 'ListItem', position: 2, name: 'Grammar', item: 'https://deutsch-meister.de/grammar/' },
     { '@type': 'ListItem', position: 3, name: meta.label,  item: `https://deutsch-meister.de/grammar/${level}/` },
     { '@type': 'ListItem', position: 4, name: topicTitle,  item: canonicalUrlSlash },
   ],
@@ -74,7 +99,7 @@ const articleSchema = {
     <nav class="flex items-center gap-2 text-sm text-slate-500 mb-8 flex-wrap" aria-label="Breadcrumb">
       <a href="https://deutsch-meister.de/" class="hover:text-slate-700 transition-colors">Home</a>
       <span>/</span>
-      <a href="/grammar" class="hover:text-slate-700 transition-colors">Grammatik</a>
+      <a href="/grammar" class="hover:text-slate-700 transition-colors">Grammar</a>
       <span>/</span>
       <a href={`/grammar/${level}`} class="hover:text-slate-700 transition-colors">{meta.label}</a>
       <span>/</span>
@@ -137,9 +162,9 @@ const articleSchema = {
             return (
               <div class={`rounded-2xl border-2 ${meta.border} overflow-hidden`}>
                 <div class={`px-5 py-4 ${meta.bg}`}>
-                  <h3 class="font-display text-lg font-bold text-slate-800">{rule.title_en}</h3>
+                  <h3 class="font-display text-lg font-bold text-slate-800"><RichText text={rule.title_en} /></h3>
                   {rule.title_de && rule.title_de !== rule.title_en && (
-                    <p class="text-sm text-slate-500 mt-0.5">{rule.title_de}</p>
+                    <p class="text-sm text-slate-500 mt-0.5"><RichText text={rule.title_de} /></p>
                   )}
                 </div>
 
@@ -149,18 +174,18 @@ const articleSchema = {
                   {isIntro && content && (
                     <div class="space-y-4">
                       {content.hook_en && (
-                        <p class="text-base font-semibold text-slate-800">{content.hook_en}</p>
+                        <p class="text-base font-semibold text-slate-800"><RichText text={content.hook_en} /></p>
                       )}
                       {content.german_difference_en && (
-                        <p class="text-sm text-slate-700 leading-relaxed">{content.german_difference_en}</p>
+                        <p class="text-sm text-slate-700 leading-relaxed"><RichText text={content.german_difference_en} /></p>
                       )}
                       {content.english_comparison_en && (
-                        <p class="text-sm text-slate-600 leading-relaxed">{content.english_comparison_en}</p>
+                        <p class="text-sm text-slate-600 leading-relaxed"><RichText text={content.english_comparison_en} /></p>
                       )}
                       {content.scenario_en && (
                         <div class="p-3 rounded-lg bg-slate-50 border border-slate-200 text-sm text-slate-700">
                           <span class="font-semibold text-slate-500 text-xs uppercase tracking-wider block mb-1">Why you need this</span>
-                          {content.scenario_en}
+                          <RichText text={content.scenario_en} />
                         </div>
                       )}
                       {content.preview_example_de && (
@@ -170,14 +195,14 @@ const articleSchema = {
                             <p class="text-sm text-slate-500 italic mt-0.5">{content.preview_example_en}</p>
                           )}
                           {content.preview_note_en && (
-                            <p class="text-xs text-amber-700 mt-2 bg-amber-50 px-2 py-1 rounded">{content.preview_note_en}</p>
+                            <p class="text-xs text-amber-700 mt-2 bg-amber-50 px-2 py-1 rounded"><RichText text={content.preview_note_en} /></p>
                           )}
                         </div>
                       )}
                       {content.why_it_matters_en && (
                         <div class="flex items-start gap-3 p-3 rounded-xl bg-amber-50 border border-amber-200">
                           <span class="text-amber-500 text-lg flex-shrink-0">💡</span>
-                          <p class="text-sm text-amber-900">{content.why_it_matters_en}</p>
+                          <p class="text-sm text-amber-900"><RichText text={content.why_it_matters_en} /></p>
                         </div>
                       )}
                     </div>
@@ -194,7 +219,7 @@ const articleSchema = {
                   {showColKeyInsight && (
                     <div class="mt-4 flex items-start gap-3 p-3 rounded-xl bg-amber-50 border border-amber-200">
                       <span class="text-amber-500 text-lg flex-shrink-0">💡</span>
-                      <p class="text-sm text-amber-900 font-medium">{rule.key_insight_en}</p>
+                      <p class="text-sm text-amber-900 font-medium"><RichText text={rule.key_insight_en} /></p>
                     </div>
                   )}
 
@@ -202,7 +227,7 @@ const articleSchema = {
                   {showColMemoryTrick && (
                     <div class="mt-3 flex items-start gap-3 p-3 rounded-xl bg-purple-50 border border-purple-200">
                       <span class="text-purple-500 text-lg flex-shrink-0">🧠</span>
-                      <p class="text-sm text-purple-900">{rule.memory_trick_en}</p>
+                      <p class="text-sm text-purple-900"><RichText text={rule.memory_trick_en} /></p>
                     </div>
                   )}
 
@@ -233,7 +258,7 @@ const articleSchema = {
                                   </p>
                                 )}
                                 {m.explanation_en && (
-                                  <p class="text-xs text-slate-600 pl-5">{m.explanation_en}</p>
+                                  <p class="text-xs text-slate-600 pl-5"><RichText text={m.explanation_en} /></p>
                                 )}
                               </div>
                             )}
@@ -279,6 +304,9 @@ const articleSchema = {
               }));
             }
 
+            // Present the words in the sentence's actual order, not the DB's.
+            if (breakdownRows) breakdownRows = orderBySentence(breakdownRows, ex.sentence_de);
+
             return (
               <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden">
                 <div class="px-5 py-4">
@@ -301,10 +329,10 @@ const articleSchema = {
                       <table class="w-full text-xs border-collapse">
                         <thead>
                           <tr class="bg-slate-50">
-                            <th class="px-3 py-2 text-left font-semibold text-slate-600 border border-slate-200">Wort</th>
-                            <th class="px-3 py-2 text-left font-semibold text-slate-600 border border-slate-200">Bedeutung</th>
+                            <th class="px-3 py-2 text-left font-semibold text-slate-600 border border-slate-200">Word</th>
+                            <th class="px-3 py-2 text-left font-semibold text-slate-600 border border-slate-200">Meaning</th>
                             {breakdownRows.some((r) => r.role) && (
-                              <th class="px-3 py-2 text-left font-semibold text-slate-600 border border-slate-200">Funktion</th>
+                              <th class="px-3 py-2 text-left font-semibold text-slate-600 border border-slate-200">Function</th>
                             )}
                           </tr>
                         </thead>
@@ -344,16 +372,16 @@ const articleSchema = {
     <!-- Upgrade CTA -->
     <div class={`rounded-2xl border ${meta.border} ${meta.bg} p-6 mb-10 text-center`}>
       <p class="font-display text-xl font-bold text-slate-800 mb-1">
-        Grammatik lernen ist nur der Anfang
+        Grammar is just the beginning
       </p>
       <p class="text-slate-600 text-sm mb-4">
-        Übe {topicTitle} in echten Gesprächen mit deinem KI-Sprachpartner.
+        Practice {topicTitle} in real conversations with your AI language partner.
       </p>
       <a
         href="https://deutsch-meister.de/signup"
         class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold text-sm hover:from-amber-600 hover:to-rose-600 transition-all shadow-md shadow-amber-200"
       >
-        Kostenlos starten — 7 Tage Pro inklusive
+        Get started free — 7 days of Pro included
       </a>
     </div>
 
@@ -368,7 +396,7 @@ const articleSchema = {
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
           <div class="min-w-0">
-            <p class="text-xs text-slate-400 mb-0.5">Vorheriges</p>
+            <p class="text-xs text-slate-400 mb-0.5">Previous</p>
             <p class="text-sm font-semibold text-slate-700 truncate">{prev?.title_en ?? prev?.slug}</p>
           </div>
         </a>
@@ -382,7 +410,7 @@ const articleSchema = {
           class="flex items-center gap-2 px-4 py-3 rounded-xl border border-slate-200 bg-white hover:shadow-md transition-all group max-w-[45%] text-right ml-auto"
         >
           <div class="min-w-0">
-            <p class="text-xs text-slate-400 mb-0.5">Nächstes</p>
+            <p class="text-xs text-slate-400 mb-0.5">Next</p>
             <p class="text-sm font-semibold text-slate-700 truncate">{next?.title_en ?? next?.slug}</p>
           </div>
           <svg class="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -397,7 +425,7 @@ const articleSchema = {
     <!-- All topics in this level -->
     <div class="mt-8 pt-6 border-t border-slate-200">
       <a href={`/grammar/${level}`} class="text-sm text-slate-500 hover:text-slate-700 transition-colors">
-        ← Alle {meta.label}-Themen
+        ← All {meta.label} topics
       </a>
     </div>
 
