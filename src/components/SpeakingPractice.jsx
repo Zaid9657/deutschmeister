@@ -293,8 +293,10 @@ function formatTime(seconds) {
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
 
-const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
+const SpeakingPractice = ({ level, mission = null, userId, onComplete, onCancel }) => {
+  const isMission = !!mission;
   const config = getConfigForLevel(level);
+  const hintWords = Array.isArray(mission?.hint_words) ? mission.hint_words : [];
   const browserCheck = useMemo(() => checkSpeakingSupport(), []);
   const isInAppBrowser = browserCheck.reason === 'in_app_browser';
 
@@ -325,6 +327,12 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
   const micBufferRef = useRef([]);
   const setupCompleteRef = useRef(false);
   const endingRef = useRef(false);
+  // Mission logging + resilience
+  const startTimeRef = useRef(0);
+  const reconnectAttemptedRef = useRef(false);
+  const endFiredRef = useRef(false);
+  const evalStartedRef = useRef(false);
+  const openWebSocketRef = useRef(null);
 
   // Transcript accumulators
   const assistantTranscriptRef = useRef('');
@@ -450,7 +458,9 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
 
     // Setup complete — session is live
     if (payload.setupComplete != null) {
+      if (endingRef.current) return; // a late reconnect must not revive an ended session
       setupCompleteRef.current = true;
+      if (!startTimeRef.current) startTimeRef.current = Date.now();
       setConnectionState('connected');
       // Flush any buffered mic data
       const buffered = micBufferRef.current;
@@ -564,13 +574,200 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
   }, []);
 
   // ---------------------------------------------------------------------------
+  // Session-end logging + evaluation (shared by normal close and lost-connection)
+  // ---------------------------------------------------------------------------
+
+  // Log the session end exactly once (duration + user turn count). Best-effort:
+  // a failure here must never block evaluation or leave the user stuck.
+  const fireSessionEnd = useCallback(async () => {
+    if (endFiredRef.current) return;
+    endFiredRef.current = true;
+    if (!startTimeRef.current) return; // session never went live — nothing to close
+    const duration = Math.max(0, Math.round((Date.now() - startTimeRef.current) / 1000));
+    const userTurns = messagesRef.current.filter((m) => m.role === 'user').length;
+    try {
+      await fetch('/api/speaking/speaking-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
+        body: JSON.stringify({
+          action: 'end',
+          session_token: sessionTokenRef.current,
+          duration_seconds: duration,
+          user_turns: userTurns,
+          status: 'completed',
+        }),
+      });
+    } catch (err) {
+      console.warn('[speaking] session end log failed:', err?.message);
+    }
+  }, []);
+
+  const runEvaluation = useCallback(async () => {
+    if (evalStartedRef.current) return;
+    evalStartedRef.current = true;
+    const currentMessages = messagesRef.current;
+    if (currentMessages.length === 0) { onComplete?.(null); return; }
+    setEvaluating(true);
+    try {
+      const evalRes = await fetch('/api/speaking/evaluate-speaking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
+        body: JSON.stringify({
+          session_token: sessionTokenRef.current,
+          level: config.level, messages: currentMessages,
+        }),
+      });
+      if (evalRes.ok) {
+        onComplete?.(await evalRes.json());
+      } else {
+        console.error('Evaluation failed:', await evalRes.text());
+        onComplete?.(null);
+      }
+    } catch (err) { console.error('Evaluation error:', err); onComplete?.(null); }
+    finally { setEvaluating(false); }
+  }, [config.level, onComplete]);
+
+  // Reconnect failed (or a second drop): surface a friendly state instead of a
+  // dead screen, and still log the session end. Progress is already persisted
+  // message-by-message, so nothing is lost.
+  const handleConnectionLost = useCallback(() => {
+    if (endingRef.current) return;
+    endingRef.current = true;
+    if (userTranscriptRef.current.trim()) {
+      saveMessage('user', userTranscriptRef.current);
+      userTranscriptRef.current = '';
+    }
+    if (assistantTranscriptRef.current.trim()) {
+      saveMessage('assistant', assistantTranscriptRef.current);
+      assistantTranscriptRef.current = '';
+    }
+    setCurrentTranscript('');
+    cleanup();
+    setSpeakingState('idle');
+    setConnectionState('lost');
+    fireSessionEnd();
+  }, [cleanup, saveMessage, fireSessionEnd]);
+
+  // ---------------------------------------------------------------------------
   // Connect: mic → session → WebSocket → audio pipeline
   // ---------------------------------------------------------------------------
+
+  // One reconnect attempt after an unexpected drop. The mic + audio contexts are
+  // left intact; only a fresh ephemeral token + WebSocket are re-established.
+  const attemptReconnect = useCallback(async () => {
+    setupCompleteRef.current = false;
+    stopPlayback();
+    setSpeakingState('idle');
+    setConnectionState('reconnecting');
+    try {
+      const ok = await openWebSocketRef.current?.(true);
+      if (!ok) handleConnectionLost();
+    } catch {
+      handleConnectionLost();
+    }
+  }, [stopPlayback, handleConnectionLost]);
+
+  // Request an ephemeral token and open the Gemini Live socket. Returns true when
+  // the socket was created; on a fresh attempt it renders the terminal error
+  // state itself, on a reconnect it throws so the caller can fall back.
+  const openWebSocket = async (isReconnect) => {
+    let ephemeralToken;
+    try {
+      const body = isMission
+        ? { missionId: mission.id, level: config.level, voice: config.voice, session_token: sessionTokenRef.current }
+        : { systemPrompt: config.systemPrompt, level: config.level, voice: config.voice, session_token: sessionTokenRef.current };
+      const sessionRes = await fetch('/api/speaking/speaking-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
+        body: JSON.stringify(body),
+      });
+      if (!sessionRes.ok) {
+        const err = await sessionRes.json().catch(() => ({}));
+        if (sessionRes.status === 403) {
+          const reason = err.reason;
+          if (reason === 'subscription_required') {
+            throw new Error('Ein Abonnement ist erforderlich, um Sprechübungen zu nutzen.');
+          } else if (reason === 'monthly_limit_reached') {
+            throw new Error(`Monatliches Limit erreicht (${err.used}/${err.limit} Sitzungen). Upgrade auf Pro für mehr Übungen.`);
+          } else if (reason === 'trial_limit_reached') {
+            throw new Error(`Kostenlose Sitzungen aufgebraucht (${err.used}/${err.limit}). Upgrade auf Pro für mehr Übungen.`);
+          }
+          throw new Error(err.error || 'Zugriff verweigert');
+        }
+        throw new Error(err.error || `Sitzung konnte nicht erstellt werden (${sessionRes.status})`);
+      }
+      const data = await sessionRes.json();
+      ephemeralToken = data.ephemeral_token;
+    } catch (apiErr) {
+      console.error('Session API error:', apiErr);
+      if (isReconnect) throw apiErr;
+      cleanup();
+      if (apiErr.message && !apiErr.message.startsWith('Failed to fetch')) {
+        setError(apiErr.message);
+      } else {
+        setError(classifyConnectionError(apiErr).userMessage);
+      }
+      setConnectionState('error');
+      return false;
+    }
+
+    const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContentConstrained?access_token=${encodeURIComponent(ephemeralToken)}`;
+    const ws = new WebSocket(wsUrl);
+    wsRef.current = ws;
+
+    ws.onopen = () => {
+      ws.send(JSON.stringify({
+        setup: {
+          outputAudioTranscription: {},
+          inputAudioTranscription: {},
+          sessionResumption: {},
+        },
+      }));
+    };
+
+    ws.onmessage = handleWsMessage;
+
+    ws.onerror = (e) => {
+      console.error('[Gemini WS] error:', e);
+      // setupCompleteRef (not connectionState) — the state variable here is a
+      // stale render-time closure and would misreport an established session.
+      if (setupCompleteRef.current) return; // live session: let onclose decide
+      if (isReconnect) { handleConnectionLost(); return; }
+      cleanup();
+      setError('Verbindung zum Sprachserver fehlgeschlagen.');
+      setConnectionState('error');
+    };
+
+    ws.onclose = (e) => {
+      console.log('[Gemini WS] closed:', e.code, e.reason);
+      if (endingRef.current) return;
+      if (!setupCompleteRef.current) {
+        // Closed before ever going live.
+        if (isReconnect) handleConnectionLost();
+        return;
+      }
+      // Unexpected drop of a live session: try exactly one reconnect, then give
+      // up gracefully.
+      if (!reconnectAttemptedRef.current) {
+        reconnectAttemptedRef.current = true;
+        attemptReconnect();
+      } else {
+        handleConnectionLost();
+      }
+    };
+
+    return true;
+  };
+  openWebSocketRef.current = openWebSocket;
 
   const handleConnect = async () => {
     setConnectionState('connecting');
     setError(null);
     endingRef.current = false;
+    endFiredRef.current = false;
+    evalStartedRef.current = false;
+    reconnectAttemptedRef.current = false;
+    startTimeRef.current = 0;
 
     const compat = checkSpeakingSupport();
     if (!compat.supported) {
@@ -623,85 +820,13 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
       }
       streamRef.current = stream;
 
-      // 3. Get ephemeral token from backend
-      let ephemeralToken;
-      try {
-        const sessionRes = await fetch('/api/speaking/speaking-session', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
-          body: JSON.stringify({
-            systemPrompt: config.systemPrompt,
-            level: config.level,
-            voice: config.voice,
-          }),
-        });
-        if (!sessionRes.ok) {
-          const err = await sessionRes.json().catch(() => ({}));
-          if (sessionRes.status === 403) {
-            const reason = err.reason;
-            if (reason === 'subscription_required') {
-              throw new Error('Ein Abonnement ist erforderlich, um Sprechübungen zu nutzen.');
-            } else if (reason === 'monthly_limit_reached') {
-              throw new Error(`Monatliches Limit erreicht (${err.used}/${err.limit} Sitzungen). Upgrade auf Pro für mehr Übungen.`);
-            } else if (reason === 'trial_limit_reached') {
-              throw new Error(`Kostenlose Sitzungen aufgebraucht (${err.used}/${err.limit}). Upgrade auf Pro für mehr Übungen.`);
-            }
-            throw new Error(err.error || 'Zugriff verweigert');
-          }
-          throw new Error(err.error || `Sitzung konnte nicht erstellt werden (${sessionRes.status})`);
-        }
-        const data = await sessionRes.json();
-        ephemeralToken = data.ephemeral_token;
-      } catch (apiErr) {
-        cleanup();
-        console.error('Session API error:', apiErr);
-        if (apiErr.message && !apiErr.message.startsWith('Failed to fetch')) {
-          setError(apiErr.message);
-        } else {
-          setError(classifyConnectionError(apiErr).userMessage);
-        }
-        setConnectionState('error');
-        return;
-      }
+      // 3 + 4. Ephemeral token + WebSocket (shared with the reconnect path)
+      const opened = await openWebSocket(false);
+      if (!opened) return;
 
-      // 4. Open WebSocket to Gemini Live
-      const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContentConstrained?access_token=${encodeURIComponent(ephemeralToken)}`;
-      const ws = new WebSocket(wsUrl);
-      wsRef.current = ws;
-
-      ws.onopen = () => {
-        ws.send(JSON.stringify({
-          setup: {
-            outputAudioTranscription: {},
-            inputAudioTranscription: {},
-            sessionResumption: {},
-          },
-        }));
-      };
-
-      ws.onmessage = handleWsMessage;
-
-      ws.onerror = (e) => {
-        console.error('[Gemini WS] error:', e);
-        // setupCompleteRef (not connectionState) — the state variable here is a
-        // stale render-time closure and would misreport an established session.
-        if (!setupCompleteRef.current) {
-          cleanup();
-          setError('Verbindung zum Sprachserver fehlgeschlagen.');
-          setConnectionState('error');
-        }
-      };
-
-      ws.onclose = (e) => {
-        console.log('[Gemini WS] closed:', e.code, e.reason);
-        if (setupCompleteRef.current && !endingRef.current) {
-          // Server ended the session unexpectedly (timeout, network drop) —
-          // commit what we have and evaluate instead of leaving a dead UI.
-          handleDisconnect();
-        }
-      };
-
-      // 5. Set up audio input pipeline (16kHz)
+      // 5. Set up audio input pipeline (16kHz). The processor sends to whatever
+      // socket is current (wsRef), so a reconnect swaps the socket underneath it
+      // without rebuilding the mic graph.
       const micSource = inputCtx.createMediaStreamSource(stream);
       sourceRef.current = micSource;
 
@@ -729,8 +854,9 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
           return;
         }
 
-        if (ws.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify(chunk));
+        const sock = wsRef.current;
+        if (sock && sock.readyState === WebSocket.OPEN) {
+          sock.send(JSON.stringify(chunk));
         }
       };
 
@@ -746,7 +872,7 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
   };
 
   // ---------------------------------------------------------------------------
-  // Disconnect → evaluate
+  // Disconnect → log end → evaluate
   // ---------------------------------------------------------------------------
 
   const handleDisconnect = useCallback(async () => {
@@ -769,28 +895,9 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
     setConnectionState('disconnected');
     setSpeakingState('idle');
 
-    const currentMessages = messagesRef.current;
-    if (currentMessages.length === 0) { onComplete?.(null); return; }
-    setEvaluating(true);
-    try {
-      const evalRes = await fetch('/api/speaking/evaluate-speaking', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
-        body: JSON.stringify({
-          session_token: sessionTokenRef.current,
-          level: config.level, messages: currentMessages,
-        }),
-      });
-      if (evalRes.ok) {
-        const result = await evalRes.json();
-        onComplete?.(result);
-      } else {
-        console.error('Evaluation failed:', await evalRes.text());
-        onComplete?.(null);
-      }
-    } catch (err) { console.error('Evaluation error:', err); onComplete?.(null); }
-    finally { setEvaluating(false); }
-  }, [cleanup, userId, config.level, onComplete, saveMessage]);
+    await fireSessionEnd();
+    await runEvaluation();
+  }, [cleanup, saveMessage, fireSessionEnd, runEvaluation]);
 
   useEffect(() => { return () => { cleanup(); }; }, [cleanup]);
 
@@ -819,6 +926,41 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
     );
   }
 
+  // Connection lost after a failed reconnect — friendly recovery instead of a
+  // frozen screen. Progress is saved; offer to evaluate what we have.
+  if (connectionState === 'lost') {
+    const hasTranscript = messages.length > 0;
+    return (
+      <div className="fixed inset-0 z-50 bg-gradient-to-br from-slate-900 via-slate-800 to-teal-900 flex flex-col items-center justify-center px-6">
+        <div className="max-w-sm w-full text-center">
+          <div className="w-16 h-16 mx-auto mb-5 rounded-full bg-amber-500/15 border border-amber-500/25 flex items-center justify-center">
+            <AlertCircle className="w-8 h-8 text-amber-400" />
+          </div>
+          <h2 className="text-xl font-bold text-white mb-2">Verbindung verloren</h2>
+          <p className="text-sm text-white/60 leading-relaxed mb-6">
+            Verbindung verloren — dein Fortschritt ist gespeichert.
+          </p>
+          <div className="flex flex-col gap-3">
+            {hasTranscript && (
+              <button
+                onClick={runEvaluation}
+                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-teal-500 hover:bg-teal-400 text-white font-semibold transition-colors text-sm"
+              >
+                Gespräch auswerten
+              </button>
+            )}
+            <button
+              onClick={() => onCancel?.()}
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold transition-colors text-sm border border-white/10"
+            >
+              Zurück zur Übersicht
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 z-50 bg-gradient-to-br from-slate-900 via-slate-800 to-teal-900 flex flex-col overflow-hidden">
       {/* Dot grid background */}
@@ -829,11 +971,13 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
 
       {/* Top bar */}
       <div className="relative z-10 flex items-center justify-between px-4 sm:px-6 py-4 bg-white/[0.06] backdrop-blur-md border-b border-white/[0.06]">
-        <div className="flex items-center gap-2.5">
-          <span className="px-2.5 py-1 rounded-lg bg-white/10 text-white/90 text-xs font-bold tracking-wide">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <span className="px-2.5 py-1 rounded-lg bg-white/10 text-white/90 text-xs font-bold tracking-wide flex-shrink-0">
             {config.level}
           </span>
-          <span className="text-sm text-white/40 hidden sm:inline">{config.name}</span>
+          <span className="text-sm text-white/40 hidden sm:inline truncate">
+            {isMission ? (mission.title_de || mission.title_en) : config.name}
+          </span>
         </div>
 
         {/* Center timer */}
@@ -868,6 +1012,25 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
           )}
         </div>
       </div>
+
+      {/* Mission hint words — kept on screen for the whole session */}
+      {isMission && hintWords.length > 0 && (
+        <div className="relative z-10 px-4 sm:px-6 py-2.5 bg-white/[0.03] border-b border-white/[0.05]">
+          <div className="max-w-2xl mx-auto flex items-center gap-2 flex-wrap justify-center">
+            <span className="text-[10px] uppercase tracking-wider text-white/30 font-semibold mr-1">
+              Hilfswörter
+            </span>
+            {hintWords.map((word, i) => (
+              <span
+                key={i}
+                className="px-2.5 py-1 rounded-full bg-teal-500/15 border border-teal-400/20 text-teal-200/90 text-xs font-medium"
+              >
+                {word}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Center stage */}
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-4">
@@ -964,6 +1127,11 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
               }`} />
               {SPEAKING_LABELS[speakingState]}
             </span>
+          ) : connectionState === 'reconnecting' ? (
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/15 text-amber-300 text-sm font-medium backdrop-blur-sm border border-amber-500/20">
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              Verbindung wird wiederhergestellt…
+            </span>
           ) : connectionState === 'connecting' ? (
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.06] text-white/50 text-sm font-medium backdrop-blur-sm border border-white/[0.08]">
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -1034,7 +1202,7 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
             <div className="absolute inset-0 rounded-full bg-emerald-400/30 animate-[pulseRing_2s_ease-out_infinite]" />
             <Phone className="w-8 h-8" />
           </button>
-        ) : connectionState === 'connecting' ? (
+        ) : connectionState === 'connecting' || connectionState === 'reconnecting' ? (
           <div className="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center">
             <Loader2 className="w-8 h-8 text-white/50 animate-spin" />
           </div>
@@ -1053,11 +1221,13 @@ const SpeakingPractice = ({ level, userId, onComplete, onCancel }) => {
             ? 'Gespräch starten'
             : connectionState === 'connecting'
               ? 'Verbinde…'
-              : 'Beenden & Auswerten'}
+              : connectionState === 'reconnecting'
+                ? 'Verbindung wird wiederhergestellt…'
+                : 'Beenden & Auswerten'}
         </p>
 
         <button
-          onClick={() => { cleanup(); onCancel?.(); }}
+          onClick={() => { endingRef.current = true; cleanup(); onCancel?.(); }}
           className="mt-4 flex items-center gap-1.5 text-xs text-white/25 hover:text-white/50 transition-colors py-2 px-4"
         >
           <X className="w-3.5 h-3.5" />
