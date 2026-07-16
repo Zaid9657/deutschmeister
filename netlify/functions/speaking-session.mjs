@@ -3,14 +3,20 @@ import { supabase, supabaseKey } from './_shared/supabase.mjs';
 import { checkUsage, incrementUsage } from './_shared/speakingUsage.mjs';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 
+// Warm, teacher-suited OpenAI Realtime voices (coral/shimmer are the softest).
 const VOICE_MAP = {
-  'a1.1': 'Zephyr', 'a1.2': 'Zephyr',
-  'a2.1': 'Zephyr', 'a2.2': 'Zephyr',
-  'b1.1': 'Charon', 'b1.2': 'Charon',
-  'b2.1': 'Charon', 'b2.2': 'Charon',
+  'a1.1': 'coral', 'a1.2': 'coral',
+  'a2.1': 'coral', 'a2.2': 'coral',
+  'b1.1': 'shimmer', 'b1.2': 'shimmer',
+  'b2.1': 'shimmer', 'b2.2': 'shimmer',
 };
 
-const GEMINI_MODEL = 'models/gemini-2.5-flash-native-audio-preview-12-2025';
+// Valid GA Realtime voices — used to reject stale client-sent values (e.g. the
+// old Gemini "Zephyr"/"Charon") so we never forward an invalid voice to OpenAI.
+const OPENAI_VOICES = new Set(['alloy', 'ash', 'ballad', 'coral', 'echo', 'sage', 'shimmer', 'verse', 'marin', 'cedar']);
+
+const OPENAI_MODEL = 'gpt-realtime-2.1-mini';
+const TRANSCRIBE_MODEL = 'gpt-4o-mini-transcribe';
 
 // Server-owned placement-test prompt (level test). Selected via the validated
 // `mode: 'placement'` flag — clients can never supply free-text prompts here.
@@ -88,21 +94,6 @@ function buildMissionPrompt(mission) {
   return sections.join('\n\n');
 }
 
-function buildFieldMask(setup) {
-  const paths = [];
-  for (const key of Object.keys(setup)) {
-    const val = setup[key];
-    if (val && typeof val === 'object' && !Array.isArray(val) && Object.keys(val).length > 0) {
-      for (const subKey of Object.keys(val)) {
-        paths.push(`${key}.${subKey}`);
-      }
-    } else {
-      paths.push(key);
-    }
-  }
-  return paths.join(',');
-}
-
 export const handler = async (event) => {
   const allowedOrigins = [
     'https://deutsch-meister.de',
@@ -125,9 +116,9 @@ export const handler = async (event) => {
     return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
   }
 
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
-    console.error('GEMINI_API_KEY is not set');
+    console.error('OPENAI_API_KEY is not set');
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'Server nicht konfiguriert (fehlender API-Schlüssel)' }) };
   }
 
@@ -137,8 +128,8 @@ export const handler = async (event) => {
   }
 
   try {
-    // Identity comes from the verified JWT — sessions cost real Gemini quota,
-    // so unauthenticated or unmetered token minting is not allowed.
+    // Identity comes from the verified JWT — sessions cost real OpenAI quota,
+    // so unauthenticated or unmetered session minting is not allowed.
     const user_id = await getAuthenticatedUserId(event);
     if (!user_id) {
       return unauthorizedResponse(headers);
@@ -158,7 +149,7 @@ export const handler = async (event) => {
     } = JSON.parse(event.body || '{}');
 
     // Session-end logging: the client reports final metrics for a session it
-    // previously started. No Gemini token is minted on this path.
+    // previously started. No OpenAI session is minted on this path.
     if (action === 'end') {
       if (!providedToken) {
         return { statusCode: 400, headers, body: JSON.stringify({ error: 'session_token is required to end a session' }) };
@@ -240,65 +231,62 @@ export const handler = async (event) => {
     }
 
     const normalizedLevel = effectiveLevel.toLowerCase();
-    const voice = isPlacement ? 'Zephyr' : (requestedVoice || VOICE_MAP[normalizedLevel] || 'Zephyr');
+    // Never trust a client-sent voice unless it is a real GA voice — the frontend
+    // still carries legacy Gemini names. Fall back to the warm level default.
+    const voice = (requestedVoice && OPENAI_VOICES.has(requestedVoice))
+      ? requestedVoice
+      : (VOICE_MAP[normalizedLevel] || 'coral');
 
     // Session token ties the start row to later save/evaluate calls. Reuse the
     // client-provided token when present, otherwise mint one and return it.
     const sessionToken = providedToken || `sp_${randomUUID()}`;
 
-    const now = new Date();
-    const expireTime = new Date(now.getTime() + 30 * 60 * 1000).toISOString();
-    const newSessionExpireTime = new Date(now.getTime() + 60 * 1000).toISOString();
-
-    const bidiSetup = {
-      model: GEMINI_MODEL,
-      generationConfig: {
-        responseModalities: ['AUDIO'],
-        temperature: 0.7,
-        speechConfig: {
-          voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } },
-          languageCode: 'de-DE',
+    // Mint an OpenAI Realtime ephemeral session (client_secret) for the WebRTC
+    // handshake. Input transcription is pinned to German so accented speech is
+    // recognised as German rather than mis-detected as English/Arabic.
+    const buildSession = (withTranscription) => ({
+      session: {
+        type: 'realtime',
+        model: OPENAI_MODEL,
+        instructions: effectivePrompt,
+        audio: {
+          input: {
+            ...(withTranscription
+              ? { transcription: { model: TRANSCRIBE_MODEL, language: 'de' } }
+              : {}),
+            turn_detection: {
+              type: 'semantic_vad',
+              eagerness: 'low',
+              create_response: true,
+              interrupt_response: true,
+            },
+          },
+          output: { voice },
         },
       },
-      systemInstruction: { parts: [{ text: effectivePrompt || '' }] },
-      // Pin input recognition to German — learners speak accented German, and
-      // auto-detect was transcribing e.g. "Mein Name ist" as English "My name is".
-      inputAudioTranscription: { languageCode: 'de-DE' },
-      outputAudioTranscription: {},
-    };
+    });
 
-    const tokenUrl = `https://generativelanguage.googleapis.com/v1alpha/auth_tokens?key=${encodeURIComponent(apiKey)}`;
-
-    const mintToken = async (setup) => {
-      const fieldMask = buildFieldMask(setup);
-      console.log('[speaking-session] Requesting Gemini ephemeral token, fieldMask:', fieldMask);
-      return fetch(tokenUrl, {
+    const mintSession = (withTranscription) =>
+      fetch('https://api.openai.com/v1/realtime/client_secrets', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          uses: 1,
-          expireTime,
-          newSessionExpireTime,
-          bidiGenerateContentSetup: setup,
-          fieldMask,
-        }),
+        headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(buildSession(withTranscription)),
       });
-    };
 
-    let response = await mintToken(bidiSetup);
+    let response = await mintSession(true);
 
-    // Defensive: input languageCode is not in the public AudioTranscriptionConfig
-    // proto. If the mint rejects it, retry once without the pin so session creation
-    // never breaks — the system-prompt rule still biases recognition to German.
-    if (!response.ok && bidiSetup.inputAudioTranscription?.languageCode) {
+    // Defensive: an earlier GA revision rejected the transcription block at
+    // creation time. If it 4xxs, retry without it and rely on the client's
+    // session.update over the data channel to enable German transcription.
+    if (!response.ok) {
       const rejectText = await response.text();
-      console.warn('[speaking-session] token mint rejected input languageCode, retrying without pin:', response.status, rejectText);
-      response = await mintToken({ ...bidiSetup, inputAudioTranscription: {} });
+      console.warn('[speaking-session] client_secrets rejected (retrying without transcription block):', response.status, rejectText);
+      response = await mintSession(false);
     }
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Gemini auth_tokens error:', response.status, errorText);
+      console.error('OpenAI Realtime API error:', response.status, errorText);
       return {
         statusCode: response.status,
         headers,
@@ -307,10 +295,11 @@ export const handler = async (event) => {
     }
 
     const data = await response.json();
-    const ephemeralToken = data.name;
+    // GA returns { value: "ek_...", expires_at, session } at top level.
+    const clientSecret = data.value || data.client_secret?.value || data.client_secret;
 
-    if (!ephemeralToken) {
-      console.error('No token name in Gemini response:', JSON.stringify(data));
+    if (!clientSecret) {
+      console.error('No client_secret in OpenAI response:', JSON.stringify(data));
       return {
         statusCode: 500,
         headers,
@@ -351,11 +340,11 @@ export const handler = async (event) => {
       statusCode: 200,
       headers,
       body: JSON.stringify({
-        ephemeral_token: ephemeralToken,
-        model: GEMINI_MODEL,
+        client_secret: clientSecret,
+        model: OPENAI_MODEL,
         voice,
-        language_code: 'de-DE',
-        expires_at: expireTime,
+        language_code: 'de',
+        expires_at: data.expires_at || data.client_secret?.expires_at || null,
         session_token: sessionToken,
       }),
     };
