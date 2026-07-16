@@ -9,10 +9,10 @@ const SPEAKING_LABELS = {
   ai_speaking: 'Lehrer spricht…',
 };
 
-// A live Gemini session streams server frames (model audio or input/output
-// transcription) continuously while in use. If nothing arrives for this long
-// while we still believe we're "connected", the socket has silently half-closed
-// (no close frame → no onclose → no reconnect) and audio is going into a void.
+// A live Realtime session streams data-channel events (transcript deltas, speech
+// start/stop, transcription-completed) continuously while in use. If nothing
+// arrives for this long while we still believe we're "connected", the peer
+// connection has silently died and audio is going nowhere.
 const STALE_SOCKET_MS = 25000;
 
 // ---------------------------------------------------------------------------
@@ -50,6 +50,7 @@ function isIOS() {
   return /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 }
 
+// Check browser compatibility for the WebRTC speaking flow.
 export function checkSpeakingSupport() {
   if (typeof window === 'undefined') {
     return { supported: false, reason: 'no_window' };
@@ -60,14 +61,11 @@ export function checkSpeakingSupport() {
     return { supported: false, reason: 'in_app_browser', inAppBrowser: inApp, isIOS: isIOS() };
   }
 
-  if (!window.WebSocket) {
-    return { supported: false, reason: 'no_websocket', isIOS: isIOS() };
+  if (!window.RTCPeerConnection && !window.webkitRTCPeerConnection) {
+    return { supported: false, reason: 'no_webrtc', isIOS: isIOS() };
   }
   if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== 'function') {
     return { supported: false, reason: 'no_media_devices', isIOS: isIOS() };
-  }
-  if (!window.AudioContext && !window.webkitAudioContext) {
-    return { supported: false, reason: 'no_audio_context', isIOS: isIOS() };
   }
   return { supported: true, isIOS: isIOS() };
 }
@@ -115,9 +113,8 @@ function classifyConnectionError(err) {
 
   if (
     msg.includes('not supported') ||
-    msg.includes('websocket') ||
-    msg.includes('getusermedia') ||
-    msg.includes('audiocontext')
+    msg.includes('rtcpeerconnection') ||
+    msg.includes('getusermedia')
   ) {
     return {
       userMessage: 'Dein Browser unterstützt diese Funktion nicht. Bitte verwende Chrome, Edge oder Safari (Desktop).',
@@ -142,62 +139,6 @@ function classifyConnectionError(err) {
     userMessage: 'Verbindung fehlgeschlagen — bitte erneut versuchen.',
     type: 'unknown',
   };
-}
-
-// ---------------------------------------------------------------------------
-// Audio helpers
-// ---------------------------------------------------------------------------
-
-function floatTo16BitPCM(float32Array) {
-  const buf = new Int16Array(float32Array.length);
-  for (let i = 0; i < float32Array.length; i++) {
-    const s = Math.max(-1, Math.min(1, float32Array[i]));
-    buf[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
-  }
-  return buf;
-}
-
-function int16ToFloat32(int16Array) {
-  const float32 = new Float32Array(int16Array.length);
-  for (let i = 0; i < int16Array.length; i++) {
-    float32[i] = int16Array[i] / 0x8000;
-  }
-  return float32;
-}
-
-// Average-pooling downsampler for browsers that don't honor a custom
-// AudioContext sampleRate (e.g. older Safari) — Gemini requires 16kHz input.
-function downsampleTo(float32, fromRate, toRate) {
-  if (fromRate === toRate) return float32;
-  const ratio = fromRate / toRate;
-  const newLen = Math.floor(float32.length / ratio);
-  const out = new Float32Array(newLen);
-  for (let i = 0; i < newLen; i++) {
-    const start = Math.floor(i * ratio);
-    const end = Math.min(Math.floor((i + 1) * ratio), float32.length);
-    let sum = 0;
-    for (let j = start; j < end; j++) sum += float32[j];
-    out[i] = sum / (end - start || 1);
-  }
-  return out;
-}
-
-function base64Encode(int16Array) {
-  const bytes = new Uint8Array(int16Array.buffer);
-  let binary = '';
-  for (let i = 0; i < bytes.length; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return btoa(binary);
-}
-
-function base64Decode(base64) {
-  const binary = atob(base64);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-  return new Int16Array(bytes.buffer);
 }
 
 // ---------------------------------------------------------------------------
@@ -317,33 +258,24 @@ const SpeakingPractice = ({ level, mission = null, userId, onComplete, onCancel 
 
   const sessionTokenRef = useRef(generateSessionToken());
   const retryQueueRef = useRef([]);
-  const wsRef = useRef(null);
+  // WebRTC transport
+  const pcRef = useRef(null);
+  const dcRef = useRef(null);
+  const audioElRef = useRef(null);
   const streamRef = useRef(null);
   const timerRef = useRef(null);
   const messagesRef = useRef([]);
   const transcriptEndRef = useRef(null);
-
-  // Audio refs
-  const inputCtxRef = useRef(null);
-  const outputCtxRef = useRef(null);
-  const processorRef = useRef(null);
-  const sourceRef = useRef(null);
-  const playbackCursorRef = useRef(0);
-  const scheduledSourcesRef = useRef([]);
-  const micBufferRef = useRef([]);
-  const setupCompleteRef = useRef(false);
+  // Connection lifecycle + resilience
+  const connectedRef = useRef(false); // data channel open === live session
   const endingRef = useRef(false);
-  // Mission logging + resilience
   const startTimeRef = useRef(0);
   const reconnectAttemptedRef = useRef(false);
   const endFiredRef = useRef(false);
   const evalStartedRef = useRef(false);
-  const openWebSocketRef = useRef(null);
+  const openConnRef = useRef(null);
   const lastServerMsgRef = useRef(0); // liveness watchdog: last inbound frame time
-
-  // Transcript accumulators
-  const assistantTranscriptRef = useRef('');
-  const userTranscriptRef = useRef('');
+  const assistantTranscriptRef = useRef(''); // accumulates AI transcript deltas
 
   useEffect(() => {
     messagesRef.current = messages;
@@ -353,16 +285,15 @@ const SpeakingPractice = ({ level, mission = null, userId, onComplete, onCancel 
     transcriptEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, currentTranscript]);
 
-  // Timer countdown — only starts after setupComplete sets connectionState to 'connected'
+  // Timer countdown — only starts once the data channel opens (connectionState 'connected')
   useEffect(() => {
     if (connectionState !== 'connected') return;
     timerRef.current = setInterval(() => {
-      // Liveness watchdog: a silently half-closed socket never fires onclose, so
-      // the onclose-driven reconnect can't help and the mic just posts audio into
-      // a dead socket while the UI sits on "Bereit". Detect the server silence and
-      // recover — one reconnect, then a graceful end — instead of freezing.
+      // Liveness watchdog: a peer connection can die without emitting a clean
+      // close, leaving the UI stuck on "Bereit". Detect the data-channel silence
+      // and recover — one reconnect, then a graceful end — instead of freezing.
       if (
-        setupCompleteRef.current &&
+        connectedRef.current &&
         lastServerMsgRef.current &&
         Date.now() - lastServerMsgRef.current > STALE_SOCKET_MS
       ) {
@@ -383,7 +314,7 @@ const SpeakingPractice = ({ level, mission = null, userId, onComplete, onCancel 
   }, [connectionState]);
 
   // ---------------------------------------------------------------------------
-  // Message persistence with retry queue (preserved from prior implementation)
+  // Message persistence with retry queue
   // ---------------------------------------------------------------------------
 
   const persistMessage = useCallback(async (payload) => {
@@ -419,191 +350,103 @@ const SpeakingPractice = ({ level, mission = null, userId, onComplete, onCancel 
         }
       }, 3000);
     }
-  }, [userId, config.level, persistMessage]);
+  }, [config.level, persistMessage]);
 
   // ---------------------------------------------------------------------------
-  // Audio output: play 24kHz PCM from Gemini
+  // OpenAI Realtime data-channel events
   // ---------------------------------------------------------------------------
 
-  const playAudioChunk = useCallback((base64Data) => {
-    if (!outputCtxRef.current) return;
-    const ctx = outputCtxRef.current;
-    const int16 = base64Decode(base64Data);
-    const float32 = int16ToFloat32(int16);
-    const buffer = ctx.createBuffer(1, float32.length, 24000);
-    buffer.copyToChannel(float32, 0);
-    const src = ctx.createBufferSource();
-    src.buffer = buffer;
-    src.connect(ctx.destination);
-    scheduledSourcesRef.current.push(src);
-    src.onended = () => {
-      const arr = scheduledSourcesRef.current;
-      const idx = arr.indexOf(src);
-      if (idx !== -1) arr.splice(idx, 1);
-    };
+  const handleDataChannelMessage = useCallback((event) => {
+    lastServerMsgRef.current = Date.now(); // liveness: any frame keeps the session "alive"
+    let msg;
+    try { msg = JSON.parse(event.data); } catch { return; }
 
-    const now = ctx.currentTime;
-    if (playbackCursorRef.current < now) {
-      playbackCursorRef.current = now;
-    }
-    src.start(playbackCursorRef.current);
-    playbackCursorRef.current += buffer.duration;
-  }, []);
+    switch (msg.type) {
+      case 'input_audio_buffer.speech_started':
+        setSpeakingState('user_speaking');
+        break;
+      case 'input_audio_buffer.speech_stopped':
+        setSpeakingState('idle');
+        break;
 
-  // Barge-in: stop everything already scheduled, not just future chunks —
-  // otherwise the model keeps talking until the queued buffers drain.
-  const stopPlayback = useCallback(() => {
-    for (const s of scheduledSourcesRef.current) {
-      try { s.stop(); } catch { /* already stopped */ }
-    }
-    scheduledSourcesRef.current = [];
-    playbackCursorRef.current = 0;
-  }, []);
-
-  // ---------------------------------------------------------------------------
-  // WebSocket message handler (Gemini Live protocol)
-  // ---------------------------------------------------------------------------
-
-  const handleWsMessage = useCallback(async (event) => {
-    lastServerMsgRef.current = Date.now(); // liveness: any frame keeps the socket "alive"
-    let payload;
-    try {
-      if (typeof event.data === 'string') {
-        payload = JSON.parse(event.data);
-      } else if (event.data instanceof Blob) {
-        const text = await event.data.text();
-        payload = JSON.parse(text);
-      } else if (event.data instanceof ArrayBuffer) {
-        const text = new TextDecoder().decode(event.data);
-        payload = JSON.parse(text);
-      } else {
-        return;
-      }
-    } catch { return; }
-
-    // Setup complete — session is live
-    if (payload.setupComplete != null) {
-      if (endingRef.current) return; // a late reconnect must not revive an ended session
-      setupCompleteRef.current = true;
-      if (!startTimeRef.current) startTimeRef.current = Date.now();
-      setConnectionState('connected');
-      // Flush any buffered mic data
-      const buffered = micBufferRef.current;
-      micBufferRef.current = [];
-      const ws = wsRef.current;
-      if (ws && ws.readyState === WebSocket.OPEN) {
-        for (const chunk of buffered) {
-          ws.send(JSON.stringify(chunk));
+      // Assistant audio transcript (streamed) — 'output_audio' is the GA name,
+      // 'audio_transcript' kept for backward compatibility.
+      case 'response.audio_transcript.delta':
+      case 'response.output_audio_transcript.delta':
+        if (msg.delta) {
+          assistantTranscriptRef.current += msg.delta;
+          setCurrentTranscript(assistantTranscriptRef.current);
         }
-      }
-      return;
-    }
+        break;
+      case 'response.audio_transcript.done':
+      case 'response.output_audio_transcript.done':
+        if (assistantTranscriptRef.current.trim()) saveMessage('assistant', assistantTranscriptRef.current);
+        assistantTranscriptRef.current = '';
+        setCurrentTranscript('');
+        break;
 
-    // Top-level error
-    if (payload.error) {
-      console.error('[Gemini] Server error:', JSON.stringify(payload.error));
-      setError(payload.error.message || 'Serverfehler');
-      return;
-    }
+      case 'response.audio.started':
+      case 'response.output_audio.started':
+        setSpeakingState('ai_speaking');
+        break;
+      case 'response.done':
+        setSpeakingState('idle');
+        break;
 
-    const sc = payload.serverContent;
-    if (!sc) return;
+      // User speech transcription (input) — arrives complete.
+      case 'conversation.item.input_audio_transcription.completed':
+        if (msg.transcript?.trim()) saveMessage('user', msg.transcript);
+        break;
 
-    // Barge-in: user interrupted the model
-    if (sc.interrupted) {
-      stopPlayback();
-      setSpeakingState('user_speaking');
-      return;
-    }
+      case 'error':
+        console.error('[Realtime] Server error:', JSON.stringify(msg.error));
+        break;
 
-    // Output transcription (assistant)
-    if (sc.outputTranscription?.text) {
-      assistantTranscriptRef.current += sc.outputTranscription.text;
-      setCurrentTranscript(assistantTranscriptRef.current);
+      default:
+        break;
     }
-
-    // Input transcription (user)
-    if (sc.inputTranscription?.text) {
-      userTranscriptRef.current += sc.inputTranscription.text;
-      setSpeakingState('user_speaking');
-    }
-
-    // Audio from model
-    if (sc.modelTurn?.parts) {
-      for (const part of sc.modelTurn.parts) {
-        if (part.inlineData && part.inlineData.mimeType?.startsWith('audio/')) {
-          setSpeakingState('ai_speaking');
-          playAudioChunk(part.inlineData.data);
-        }
-      }
-    }
-
-    // Turn complete — commit transcripts
-    if (sc.turnComplete) {
-      if (userTranscriptRef.current.trim()) {
-        saveMessage('user', userTranscriptRef.current);
-      }
-      if (assistantTranscriptRef.current.trim()) {
-        saveMessage('assistant', assistantTranscriptRef.current);
-      }
-      userTranscriptRef.current = '';
-      assistantTranscriptRef.current = '';
-      setCurrentTranscript('');
-      setSpeakingState('idle');
-    }
-  }, [saveMessage, playAudioChunk, stopPlayback]);
+  }, [saveMessage]);
 
   // ---------------------------------------------------------------------------
-  // Cleanup
+  // Teardown
   // ---------------------------------------------------------------------------
+
+  // Close the peer connection + data channel + remote audio. Leaves the mic
+  // stream alone so a reconnect can reuse it.
+  const closePeer = useCallback(() => {
+    if (dcRef.current) {
+      dcRef.current.onopen = null;
+      dcRef.current.onmessage = null;
+      dcRef.current.onclose = null;
+      try { dcRef.current.close(); } catch { /* already closed */ }
+      dcRef.current = null;
+    }
+    if (pcRef.current) {
+      pcRef.current.onconnectionstatechange = null;
+      pcRef.current.ontrack = null;
+      try { pcRef.current.close(); } catch { /* already closed */ }
+      pcRef.current = null;
+    }
+    if (audioElRef.current) {
+      try { audioElRef.current.srcObject = null; } catch { /* noop */ }
+      audioElRef.current = null;
+    }
+  }, []);
 
   const cleanup = useCallback(() => {
     clearInterval(timerRef.current);
-    setupCompleteRef.current = false;
-    micBufferRef.current = [];
-
-    for (const s of scheduledSourcesRef.current) {
-      try { s.stop(); } catch { /* already stopped */ }
-    }
-    scheduledSourcesRef.current = [];
-
-    if (processorRef.current) {
-      processorRef.current.disconnect();
-      processorRef.current = null;
-    }
-    if (sourceRef.current) {
-      sourceRef.current.disconnect();
-      sourceRef.current = null;
-    }
-    if (inputCtxRef.current && inputCtxRef.current.state !== 'closed') {
-      inputCtxRef.current.close().catch(() => {});
-      inputCtxRef.current = null;
-    }
-    if (outputCtxRef.current && outputCtxRef.current.state !== 'closed') {
-      outputCtxRef.current.close().catch(() => {});
-      outputCtxRef.current = null;
-    }
-    if (wsRef.current) {
-      // Detach handlers first so an intentional close doesn't re-enter
-      // the unexpected-close path below.
-      wsRef.current.onmessage = null;
-      wsRef.current.onerror = null;
-      wsRef.current.onclose = null;
-      wsRef.current.close();
-      wsRef.current = null;
-    }
+    connectedRef.current = false;
+    closePeer();
     if (streamRef.current) {
       streamRef.current.getTracks().forEach((t) => t.stop());
       streamRef.current = null;
     }
-  }, []);
+  }, [closePeer]);
 
   // ---------------------------------------------------------------------------
   // Session-end logging + evaluation (shared by normal close and lost-connection)
   // ---------------------------------------------------------------------------
 
-  // Log the session end exactly once (duration + user turn count). Best-effort:
-  // a failure here must never block evaluation or leave the user stuck.
   const fireSessionEnd = useCallback(async () => {
     if (endFiredRef.current) return;
     endFiredRef.current = true;
@@ -658,10 +501,6 @@ const SpeakingPractice = ({ level, mission = null, userId, onComplete, onCancel 
   const handleConnectionLost = useCallback(() => {
     if (endingRef.current) return;
     endingRef.current = true;
-    if (userTranscriptRef.current.trim()) {
-      saveMessage('user', userTranscriptRef.current);
-      userTranscriptRef.current = '';
-    }
     if (assistantTranscriptRef.current.trim()) {
       saveMessage('assistant', assistantTranscriptRef.current);
       assistantTranscriptRef.current = '';
@@ -674,40 +513,37 @@ const SpeakingPractice = ({ level, mission = null, userId, onComplete, onCancel 
   }, [cleanup, saveMessage, fireSessionEnd]);
 
   // ---------------------------------------------------------------------------
-  // Connect: mic → session → WebSocket → audio pipeline
+  // Connect: mic → session → WebRTC (SDP) → data channel
   // ---------------------------------------------------------------------------
 
-  // One reconnect attempt after an unexpected drop. The mic + audio contexts are
-  // left intact; only a fresh ephemeral token + WebSocket are re-established.
+  // One reconnect attempt after an unexpected drop. The mic stream is left
+  // intact; only a fresh client secret + peer connection are re-established.
   const attemptReconnect = useCallback(async () => {
-    setupCompleteRef.current = false;
-    // Neutralize the previous socket. On an onclose-driven reconnect it is already
-    // closed (no-op); on a watchdog-driven reconnect it is a dead-but-"open" socket
-    // that must be detached so its late events can't re-enter this flow.
-    const stale = wsRef.current;
-    if (stale) {
-      stale.onmessage = null;
-      stale.onerror = null;
-      stale.onclose = null;
-      try { stale.close(); } catch { /* already closing */ }
-      wsRef.current = null;
-    }
-    stopPlayback();
+    connectedRef.current = false;
+    closePeer(); // tear down the dead peer connection, keep the mic
     setSpeakingState('idle');
     setConnectionState('reconnecting');
     try {
-      const ok = await openWebSocketRef.current?.(true);
+      const ok = await openConnRef.current?.(true);
       if (!ok) handleConnectionLost();
     } catch {
       handleConnectionLost();
     }
-  }, [stopPlayback, handleConnectionLost]);
+  }, [closePeer, handleConnectionLost]);
 
-  // Request an ephemeral token and open the Gemini Live socket. Returns true when
-  // the socket was created; on a fresh attempt it renders the terminal error
-  // state itself, on a reconnect it throws so the caller can fall back.
-  const openWebSocket = async (isReconnect) => {
-    let ephemeralToken;
+  // Mint an ephemeral session, open the peer connection, exchange SDP. Returns
+  // true when the handshake was initiated; on a fresh attempt it renders the
+  // terminal error state itself, on a reconnect it throws so the caller falls back.
+  const openRealtimeConnection = async (isReconnect) => {
+    // Ensure a live mic stream (fresh connect acquires it earlier for an early
+    // permission prompt; reconnect reuses it).
+    if (!streamRef.current) {
+      streamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
+    }
+    const stream = streamRef.current;
+
+    // 1. Ephemeral client secret from the backend (carries mission/level/quota).
+    let clientSecret;
     try {
       const body = isMission
         ? { missionId: mission.id, level: config.level, voice: config.voice, session_token: sessionTokenRef.current }
@@ -733,7 +569,8 @@ const SpeakingPractice = ({ level, mission = null, userId, onComplete, onCancel 
         throw new Error(err.error || `Sitzung konnte nicht erstellt werden (${sessionRes.status})`);
       }
       const data = await sessionRes.json();
-      ephemeralToken = data.ephemeral_token;
+      clientSecret = data.client_secret;
+      if (!clientSecret) throw new Error('Ungültige Sitzungsantwort vom Server');
     } catch (apiErr) {
       console.error('Session API error:', apiErr);
       if (isReconnect) throw apiErr;
@@ -747,43 +584,39 @@ const SpeakingPractice = ({ level, mission = null, userId, onComplete, onCancel 
       return false;
     }
 
-    const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContentConstrained?access_token=${encodeURIComponent(ephemeralToken)}`;
-    const ws = new WebSocket(wsUrl);
-    wsRef.current = ws;
+    // 2. Peer connection + remote audio playback + mic tracks.
+    const RTCPeer = window.RTCPeerConnection || window.webkitRTCPeerConnection;
+    const pc = new RTCPeer();
+    pcRef.current = pc;
 
-    ws.onopen = () => {
-      ws.send(JSON.stringify({
-        setup: {
-          outputAudioTranscription: {},
-          inputAudioTranscription: {},
-          sessionResumption: {},
-        },
-      }));
+    const audioEl = document.createElement('audio');
+    audioEl.autoplay = true;
+    audioEl.setAttribute('playsinline', ''); // iOS Safari
+    audioElRef.current = audioEl;
+    pc.ontrack = (e) => { audioEl.srcObject = e.streams[0]; };
+
+    stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+
+    // 3. Data channel for realtime events.
+    const dc = pc.createDataChannel('oai-events');
+    dcRef.current = dc;
+    dc.onopen = () => {
+      connectedRef.current = true;
+      if (!startTimeRef.current) startTimeRef.current = Date.now();
+      lastServerMsgRef.current = Date.now();
+      setConnectionState('connected');
+      // Belt-and-suspenders: also request German input transcription over the
+      // data channel in case the creation-time transcription block was dropped.
+      try {
+        dc.send(JSON.stringify({
+          type: 'session.update',
+          session: { audio: { input: { transcription: { model: 'gpt-4o-mini-transcribe', language: 'de' } } } },
+        }));
+      } catch { /* noop */ }
     };
-
-    ws.onmessage = handleWsMessage;
-
-    ws.onerror = (e) => {
-      console.error('[Gemini WS] error:', e);
-      // setupCompleteRef (not connectionState) — the state variable here is a
-      // stale render-time closure and would misreport an established session.
-      if (setupCompleteRef.current) return; // live session: let onclose decide
-      if (isReconnect) { handleConnectionLost(); return; }
-      cleanup();
-      setError('Verbindung zum Sprachserver fehlgeschlagen.');
-      setConnectionState('error');
-    };
-
-    ws.onclose = (e) => {
-      console.log('[Gemini WS] closed:', e.code, e.reason);
-      if (endingRef.current) return;
-      if (!setupCompleteRef.current) {
-        // Closed before ever going live.
-        if (isReconnect) handleConnectionLost();
-        return;
-      }
-      // Unexpected drop of a live session: try exactly one reconnect, then give
-      // up gracefully.
+    dc.onmessage = handleDataChannelMessage;
+    dc.onclose = () => {
+      if (endingRef.current || !connectedRef.current) return;
       if (!reconnectAttemptedRef.current) {
         reconnectAttemptedRef.current = true;
         attemptReconnect();
@@ -792,9 +625,44 @@ const SpeakingPractice = ({ level, mission = null, userId, onComplete, onCancel 
       }
     };
 
+    // Treat a failed/closed peer connection as an unexpected drop. 'disconnected'
+    // is left to the liveness watchdog since WebRTC often self-heals from it.
+    pc.onconnectionstatechange = () => {
+      const st = pc.connectionState;
+      if (st !== 'failed' && st !== 'closed') return;
+      if (endingRef.current || !connectedRef.current) return;
+      if (!reconnectAttemptedRef.current) {
+        reconnectAttemptedRef.current = true;
+        attemptReconnect();
+      } else {
+        handleConnectionLost();
+      }
+    };
+
+    // 4. SDP offer/answer with the GA calls endpoint.
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+    const sdpRes = await fetch('https://api.openai.com/v1/realtime/calls', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${clientSecret}`, 'Content-Type': 'application/sdp' },
+      body: offer.sdp,
+    });
+    if (!sdpRes.ok) {
+      const detail = await sdpRes.text().catch(() => '');
+      console.error('Realtime SDP error:', sdpRes.status, detail);
+      const sdpErr = new Error(`Verbindung zum Sprachserver fehlgeschlagen (${sdpRes.status})`);
+      if (isReconnect) throw sdpErr;
+      cleanup();
+      setError(sdpErr.message);
+      setConnectionState('error');
+      return false;
+    }
+    const answerSdp = await sdpRes.text();
+    await pc.setRemoteDescription({ type: 'answer', sdp: answerSdp });
+
     return true;
   };
-  openWebSocketRef.current = openWebSocket;
+  openConnRef.current = openRealtimeConnection;
 
   const handleConnect = async () => {
     setConnectionState('connecting');
@@ -804,6 +672,7 @@ const SpeakingPractice = ({ level, mission = null, userId, onComplete, onCancel 
     evalStartedRef.current = false;
     reconnectAttemptedRef.current = false;
     startTimeRef.current = 0;
+    connectedRef.current = false;
 
     const compat = checkSpeakingSupport();
     if (!compat.supported) {
@@ -813,40 +682,9 @@ const SpeakingPractice = ({ level, mission = null, userId, onComplete, onCancel 
     }
 
     try {
-      // 1. Create audio contexts synchronously, inside the user gesture —
-      // iOS Safari blocks contexts created or resumed outside a gesture,
-      // and any await before this point would leave the gesture window.
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      let inputCtx;
+      // Acquire the mic first so the permission prompt shows early (iOS timing).
       try {
-        inputCtx = new AudioCtx({ sampleRate: 16000 });
-      } catch {
-        inputCtx = new AudioCtx(); // custom rate rejected — we downsample below
-      }
-      let outputCtx;
-      try {
-        outputCtx = new AudioCtx({ sampleRate: 24000 });
-      } catch {
-        outputCtx = new AudioCtx(); // buffers carry 24000 explicitly; browser resamples
-      }
-      inputCtxRef.current = inputCtx;
-      outputCtxRef.current = outputCtx;
-      playbackCursorRef.current = 0;
-      if (inputCtx.state === 'suspended') inputCtx.resume().catch(() => {});
-      if (outputCtx.state === 'suspended') outputCtx.resume().catch(() => {});
-
-      // 2. Acquire microphone
-      let stream;
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({
-          audio: {
-            channelCount: 1,
-            sampleRate: 16000,
-            echoCancellation: true,
-            noiseSuppression: true,
-            autoGainControl: true,
-          },
-        });
+        streamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
       } catch (micErr) {
         console.error('Microphone access error:', micErr);
         cleanup();
@@ -854,51 +692,9 @@ const SpeakingPractice = ({ level, mission = null, userId, onComplete, onCancel 
         setConnectionState('error');
         return;
       }
-      streamRef.current = stream;
 
-      // 3 + 4. Ephemeral token + WebSocket (shared with the reconnect path)
-      const opened = await openWebSocket(false);
+      const opened = await openRealtimeConnection(false);
       if (!opened) return;
-
-      // 5. Set up audio input pipeline (16kHz). The processor sends to whatever
-      // socket is current (wsRef), so a reconnect swaps the socket underneath it
-      // without rebuilding the mic graph.
-      const micSource = inputCtx.createMediaStreamSource(stream);
-      sourceRef.current = micSource;
-
-      const processor = inputCtx.createScriptProcessor(4096, 1, 1);
-      processorRef.current = processor;
-
-      const micRate = inputCtx.sampleRate;
-      if (micRate !== 16000) {
-        console.warn(`[Audio] Input context running at ${micRate}Hz, downsampling to 16kHz`);
-      }
-
-      processor.onaudioprocess = (e) => {
-        const raw = e.inputBuffer.getChannelData(0);
-        const float32 = micRate === 16000 ? raw : downsampleTo(raw, micRate, 16000);
-        const int16 = floatTo16BitPCM(float32);
-        const b64 = base64Encode(int16);
-        const chunk = {
-          realtimeInput: {
-            mediaChunks: [{ mimeType: 'audio/pcm;rate=16000', data: b64 }],
-          },
-        };
-
-        if (!setupCompleteRef.current) {
-          micBufferRef.current.push(chunk);
-          return;
-        }
-
-        const sock = wsRef.current;
-        if (sock && sock.readyState === WebSocket.OPEN) {
-          sock.send(JSON.stringify(chunk));
-        }
-      };
-
-      micSource.connect(processor);
-      processor.connect(inputCtx.destination);
-
     } catch (err) {
       console.error('Connection error:', err);
       setError(err.message || classifyConnectionError(err).userMessage);
@@ -912,15 +708,10 @@ const SpeakingPractice = ({ level, mission = null, userId, onComplete, onCancel 
   // ---------------------------------------------------------------------------
 
   const handleDisconnect = useCallback(async () => {
-    // Guard against double entry (timer expiry + user click + ws close)
+    // Guard against double entry (timer expiry + user click + peer close)
     if (endingRef.current) return;
     endingRef.current = true;
 
-    // Commit any remaining accumulated transcripts before cleanup
-    if (userTranscriptRef.current.trim()) {
-      saveMessage('user', userTranscriptRef.current);
-      userTranscriptRef.current = '';
-    }
     if (assistantTranscriptRef.current.trim()) {
       saveMessage('assistant', assistantTranscriptRef.current);
       assistantTranscriptRef.current = '';
