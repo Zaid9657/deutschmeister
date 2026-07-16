@@ -11,10 +11,17 @@ try {
   console.error('Failed to initialize Supabase client:', e.message);
 }
 
-function buildEvaluationPrompt(level, messages) {
+function buildEvaluationPrompt(level, messages, passCriteria = null) {
   const conversationText = messages
     .map(m => `${m.role === 'user' ? 'Student' : 'Teacher'}: ${m.content}`)
     .join('\n');
+
+  // Mission sessions add the mission's pass criteria and require a boolean
+  // `passed` in the output. Free/level sessions leave both empty.
+  const missionSection = passCriteria
+    ? `\n\nMISSIONSZIEL — BESTEHENSKRITERIEN:\n${passCriteria}\n\nBeurteile zusätzlich, ob der Schüler diese Kriterien in diesem Gespräch erfüllt hat, und setze das Feld "passed" entsprechend (true = erfüllt, false = nicht erfüllt).`
+    : '';
+  const passedLine = passCriteria ? '\n  "passed": <true|false>,' : '';
 
   return `Du bist ein erfahrener Deutschlehrer, der die Sprechfähigkeiten eines Schülers auf dem Niveau ${level.toUpperCase()} bewertet.
 
@@ -31,7 +38,7 @@ Berücksichtige dabei das erwartete Niveau ${level.toUpperCase()}. Ein A1-Schül
 WICHTIG: Das Transkript stammt aus automatischer Spracherkennung und kann Erkennungsfehler enthalten. Sei nachsichtig bei einzelnen seltsamen oder unpassenden Wörtern, die wahrscheinlich Transkriptionsfehler sind – werte sie NICHT als Fehler des Schülers. Bewerte nur Muster, die sich über mehrere Äußerungen hinweg zeigen.
 
 Gespräch:
-${conversationText}
+${conversationText}${missionSection}
 
 Antworte NUR mit einem JSON-Objekt in diesem Format (keine Erklärung davor oder danach):
 {
@@ -42,7 +49,7 @@ Antworte NUR mit einem JSON-Objekt in diesem Format (keine Erklärung davor oder
     "fluency": <0-20>,
     "comprehension": <0-20>
   },
-  "total_score": <0-100>,
+  "total_score": <0-100>,${passedLine}
   "feedback": "<2-3 Sätze Feedback auf Deutsch>",
   "strengths": ["<Stärke 1>", "<Stärke 2>"],
   "improvements": ["<Verbesserung 1>", "<Verbesserung 2>"],
@@ -167,9 +174,38 @@ export const handler = async (event) => {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'messages payload too large' }) };
     }
 
+    // Mission sessions carry a mission_id in speaking_sessions; when present we
+    // fold the mission's pass_criteria into the evaluation and record pass/fail.
+    let missionPassCriteria = null;
+    let missionSessionToken = null;
+    if (!isPlacement && session_token) {
+      const { data: sessionRow, error: sessionLookupError } = await supabase
+        .from('speaking_sessions')
+        .select('mission_id')
+        .eq('session_token', session_token)
+        .eq('user_id', user_id)
+        .maybeSingle();
+      if (sessionLookupError) {
+        console.error('Error looking up speaking session:', JSON.stringify(sessionLookupError));
+      }
+      if (sessionRow?.mission_id) {
+        const { data: missionRow, error: missionError } = await supabase
+          .from('speaking_missions')
+          .select('pass_criteria')
+          .eq('id', sessionRow.mission_id)
+          .single();
+        if (missionError) {
+          console.error('Error fetching mission pass_criteria:', JSON.stringify(missionError));
+        } else {
+          missionPassCriteria = missionRow?.pass_criteria || null;
+          missionSessionToken = session_token;
+        }
+      }
+    }
+
     const evaluationPrompt = isPlacement
       ? buildPlacementPrompt(messages)
-      : buildEvaluationPrompt(level, messages);
+      : buildEvaluationPrompt(level, messages, missionPassCriteria);
 
     async function callClaude(prompt) {
       const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -268,11 +304,26 @@ export const handler = async (event) => {
       console.error('Error saving evaluation:', JSON.stringify(saveError));
     }
 
+    // Mission sessions: record pass/fail on the session row.
+    let passed = null;
+    if (missionSessionToken) {
+      passed = evaluation.passed === true;
+      const { error: sessionUpdateError } = await supabase
+        .from('speaking_sessions')
+        .update({ evaluated: true, passed })
+        .eq('session_token', missionSessionToken)
+        .eq('user_id', user_id);
+      if (sessionUpdateError) {
+        console.error('Error updating speaking session pass status:', JSON.stringify(sessionUpdateError));
+      }
+    }
+
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({
         ...evaluation,
+        passed,
         evaluation_id: savedEval?.id || null,
         saved: !saveError,
       }),
