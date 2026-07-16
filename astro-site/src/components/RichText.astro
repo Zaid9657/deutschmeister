@@ -1,0 +1,44 @@
+---
+/**
+ * RichText — renders prose while toning down "shouted" ALL-CAPS emphasis.
+ *
+ * The grammar content in the DB uses mid-sentence ALL-CAPS words for emphasis
+ * (e.g. "sound TRULY German", "add MORE nuance"). At render time we display
+ * such words as **bold lowercase** instead — the emphasis is kept, the shouting
+ * isn't. The database is never modified.
+ *
+ * A token qualifies as shouted emphasis only when it is:
+ *   - a run of 2+ uppercase letters (German umlauts included), optionally with
+ *     an internal hyphen/apostrophe (so "ALL-CAPS" counts, single letters don't),
+ *   - NOT line-initial (line-initial caps are labels/headers like "MEANING:"),
+ *   - NOT part of a mixed-case token (so "dER", "ÜBERrascht" are left alone).
+ * Everything else — including reference tables and example sentences, which use
+ * a different component path — is rendered verbatim.
+ */
+const { text } = Astro.props;
+const raw = text == null ? '' : String(text);
+
+// 2+ uppercase run, may contain internal hyphen/apostrophe.
+const TOKEN = /[A-ZÄÖÜ][A-ZÄÖÜ'’\-]*[A-ZÄÖÜ]/gu;
+const isLetterNum = (c) => !!c && /[\p{L}\p{N}]/u.test(c);
+const isLower = (c) => !!c && /\p{Ll}/u.test(c);
+
+const segs = [];
+let last = 0;
+for (const m of raw.matchAll(TOKEN)) {
+  const i = m.index;
+  const tok = m[0];
+  const end = i + tok.length;
+  const before = raw[i - 1];
+  const after = raw[end];
+  // Skip line-initial runs (labels/headings) and runs glued to a larger word.
+  const lineInitial = /(^|\n)[^\S\n]*$/.test(raw.slice(0, i));
+  if (lineInitial || isLetterNum(before) || isLower(after)) continue;
+  if (i > last) segs.push({ b: false, v: raw.slice(last, i) });
+  segs.push({ b: true, v: tok.toLowerCase() });
+  last = end;
+}
+if (last < raw.length) segs.push({ b: false, v: raw.slice(last) });
+if (segs.length === 0) segs.push({ b: false, v: raw });
+---
+{segs.map((s) => (s.b ? <strong class="font-semibold">{s.v}</strong> : <Fragment>{s.v}</Fragment>))}

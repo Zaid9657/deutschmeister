@@ -12,6 +12,7 @@
  * skipping what doesn't, following the template's EN-primary / DE-muted convention.
  */
 import Self from './RuleContent.astro';
+import RichText from './RichText.astro';
 
 const { node, meta, depth = 0 } = Astro.props;
 
@@ -122,7 +123,7 @@ const headingSize = depth === 0 ? 'text-base' : 'text-sm';
 ---
 {/* --- Scalar --- */}
 {kindOf === 'scalar' && nonEmpty(node) && (
-  <p class="text-slate-700 leading-relaxed whitespace-pre-line">{String(node)}</p>
+  <p class="text-slate-700 leading-relaxed whitespace-pre-line"><RichText text={String(node)} /></p>
 )}
 
 {/* --- Table (nested or top-level) --- */}
@@ -130,9 +131,9 @@ const headingSize = depth === 0 ? 'text-base' : 'text-sm';
   <div class="space-y-2">
     {(node.description_en || node.description_de) && (
       <p class="text-sm text-slate-600 mb-1">
-        {node.description_en ?? node.description_de}
+        <RichText text={node.description_en ?? node.description_de} />
         {node.description_en && node.description_de && (
-          <span class="block text-slate-400">{node.description_de}</span>
+          <span class="block text-slate-400"><RichText text={node.description_de} /></span>
         )}
       </p>
     )}
@@ -165,7 +166,7 @@ const headingSize = depth === 0 ? 'text-base' : 'text-sm';
     {node.filter(nonEmpty).map((item) => (
       <li class="flex items-start gap-2 text-slate-700 text-sm">
         <span class="text-indigo-400 mt-1 flex-shrink-0">▸</span>
-        <span class="whitespace-pre-line">{isScalar(item) ? String(item) : JSON.stringify(item)}</span>
+        <span class="whitespace-pre-line">{isScalar(item) ? <RichText text={String(item)} /> : JSON.stringify(item)}</span>
       </li>
     ))}
   </ul>
@@ -191,13 +192,13 @@ const headingSize = depth === 0 ? 'text-base' : 'text-sm';
               </p>
             )}
             {(m.explanation_en || m.explanation_de) && (
-              <p class="text-xs text-slate-600 pl-5">{m.explanation_en ?? m.explanation_de}</p>
+              <p class="text-xs text-slate-600 pl-5"><RichText text={m.explanation_en ?? m.explanation_de} /></p>
             )}
             {m.explanation_en && m.explanation_de && (
-              <p class="text-xs text-slate-400 pl-5">{m.explanation_de}</p>
+              <p class="text-xs text-slate-400 pl-5"><RichText text={m.explanation_de} /></p>
             )}
             {m.memory_trick_en && (
-              <p class="text-xs text-purple-700 pl-5">🧠 {m.memory_trick_en}</p>
+              <p class="text-xs text-purple-700 pl-5">🧠 <RichText text={m.memory_trick_en} /></p>
             )}
           </div>
         </li>
@@ -244,10 +245,10 @@ const headingSize = depth === 0 ? 'text-base' : 'text-sm';
             <p class="text-xs text-slate-400">{String(s.title_de)}</p>
           )}
           {(s.detail_en ?? s.detail) && (
-            <p class="text-sm text-slate-600 leading-relaxed whitespace-pre-line mt-0.5">{String(s.detail_en ?? s.detail)}</p>
+            <p class="text-sm text-slate-600 leading-relaxed whitespace-pre-line mt-0.5"><RichText text={String(s.detail_en ?? s.detail)} /></p>
           )}
           {s.detail_de && (
-            <p class="text-xs text-slate-400 whitespace-pre-line">{String(s.detail_de)}</p>
+            <p class="text-xs text-slate-400 whitespace-pre-line"><RichText text={String(s.detail_de)} /></p>
           )}
         </div>
       </li>
@@ -306,8 +307,8 @@ const headingSize = depth === 0 ? 'text-base' : 'text-sm';
   <div class="space-y-3">
     {parsed.title.en && (
       <div>
-        <h4 class={`font-display ${headingSize} font-bold text-slate-800`}>{parsed.title.en}</h4>
-        {parsed.title.de && <p class="text-xs text-slate-400">{parsed.title.de}</p>}
+        <h4 class={`font-display ${headingSize} font-bold text-slate-800`}><RichText text={parsed.title.en} /></h4>
+        {parsed.title.de && <p class="text-xs text-slate-400"><RichText text={parsed.title.de} /></p>}
       </div>
     )}
     {parsed.units.map((u) => (
@@ -316,8 +317,8 @@ const headingSize = depth === 0 ? 'text-base' : 'text-sm';
           <div class="flex items-start gap-3 p-3 rounded-xl bg-amber-50 border border-amber-200">
             <span class="text-amber-500 text-lg flex-shrink-0">💡</span>
             <div>
-              <p class="text-sm text-amber-900 font-medium whitespace-pre-line">{u.en}</p>
-              {u.de && <p class="text-xs text-amber-700/70 mt-1 whitespace-pre-line">{u.de}</p>}
+              <p class="text-sm text-amber-900 font-medium whitespace-pre-line"><RichText text={u.en} /></p>
+              {u.de && <p class="text-xs text-amber-700/70 mt-1 whitespace-pre-line"><RichText text={u.de} /></p>}
             </div>
           </div>
         )}
@@ -325,8 +326,8 @@ const headingSize = depth === 0 ? 'text-base' : 'text-sm';
           <div class="flex items-start gap-3 p-3 rounded-xl bg-purple-50 border border-purple-200">
             <span class="text-purple-500 text-lg flex-shrink-0">🧠</span>
             <div>
-              <p class="text-sm text-purple-900 whitespace-pre-line">{u.en}</p>
-              {u.de && <p class="text-xs text-purple-700/70 mt-1 whitespace-pre-line">{u.de}</p>}
+              <p class="text-sm text-purple-900 whitespace-pre-line"><RichText text={u.en} /></p>
+              {u.de && <p class="text-xs text-purple-700/70 mt-1 whitespace-pre-line"><RichText text={u.de} /></p>}
             </div>
           </div>
         )}
@@ -335,8 +336,8 @@ const headingSize = depth === 0 ? 'text-base' : 'text-sm';
             {!NO_LABEL.has(u.b) && (
               <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">{humanize(u.b)}</span>
             )}
-            {u.en && <p class="text-slate-700 leading-relaxed whitespace-pre-line">{u.en}</p>}
-            {u.de && <p class="text-sm text-slate-400 leading-relaxed whitespace-pre-line mt-0.5">{u.de}</p>}
+            {u.en && <p class="text-slate-700 leading-relaxed whitespace-pre-line"><RichText text={u.en} /></p>}
+            {u.de && <p class="text-sm text-slate-400 leading-relaxed whitespace-pre-line mt-0.5"><RichText text={u.de} /></p>}
           </div>
         )}
         {u.kind !== 'text' && (
