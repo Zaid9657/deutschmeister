@@ -1,8 +1,19 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import ExercisePlayer from '../../../components/ExercisePlayer.jsx';
+import RuleContent from '../../../components/RuleContent.astro';
 import { getAllTopicPaths, getTopicFull, SUB_LEVELS, LEVEL_META } from '../../../lib/grammar.js';
 import '../../../styles/global.css';
+
+// True when a rule's JSONB content (object, array, or plain string) holds
+// anything worth rendering — used to skip the white body only when it would
+// otherwise be empty.
+const hasRenderable = (v) => {
+  if (v == null || v === '') return false;
+  if (Array.isArray(v)) return v.length > 0;
+  if (typeof v === 'object') return Object.keys(v).length > 0;
+  return true;
+};
 
 export async function getStaticPaths() {
   const paths = await getAllTopicPaths();
@@ -103,17 +114,25 @@ const articleSchema = {
         <h2 class="font-display text-2xl font-bold text-slate-800 mb-5">Rules & Explanations</h2>
         <div class="space-y-6">
           {rules.map((rule) => {
-            // content may be a plain string, a parsed object, or null
+            // content may be a plain string, a parsed object, an array, or null
             const raw = rule.content;
-            const content = (raw && typeof raw === 'object') ? raw : null;
-            const contentText = typeof raw === 'string' ? raw : null;
-
-            const hasTable = !!(content?.headers?.length && content?.rows?.length);
-            const hasList  = !!(content?.items?.length);
-            const hasText  = !!(content?.text || contentText);
+            const content = (raw && typeof raw === 'object' && !Array.isArray(raw)) ? raw : null;
+            const isIntro = rule.rule_type === 'introduction';
 
             // common_mistakes: guard for null / non-array
             const mistakes = Array.isArray(rule.common_mistakes) ? rule.common_mistakes : [];
+
+            // key_insight / memory_trick can live on their own columns OR nested
+            // inside the content JSONB. The generic renderer surfaces the nested
+            // ones, so the column callouts below fire only for the column values
+            // (avoids double-rendering the same insight).
+            const showColKeyInsight = !!rule.key_insight_en;
+            const showColMemoryTrick = !!rule.memory_trick_en;
+
+            // Only render the white body when it will actually contain something.
+            const showBody = (isIntro && !!content)
+              || (!isIntro && hasRenderable(raw))
+              || showColKeyInsight || showColMemoryTrick || mistakes.length > 0;
 
             return (
               <div class={`rounded-2xl border-2 ${meta.border} overflow-hidden`}>
@@ -124,9 +143,10 @@ const articleSchema = {
                   )}
                 </div>
 
+                {showBody && (
                 <div class="px-5 py-4 bg-white">
                   {/* Introduction rule type — custom rich content fields */}
-                  {rule.rule_type === 'introduction' && content && (
+                  {isIntro && content && (
                     <div class="space-y-4">
                       {content.hook_en && (
                         <p class="text-base font-semibold text-slate-800">{content.hook_en}</p>
@@ -163,64 +183,23 @@ const articleSchema = {
                     </div>
                   )}
 
-                  {/* Plain text content */}
-                  {rule.rule_type !== 'introduction' && hasText && !hasTable && !hasList && (
-                    <p class="text-slate-700 leading-relaxed whitespace-pre-line">
-                      {content?.text ?? contentText}
-                    </p>
+                  {/* All other rule types — recursive, shape-aware renderer that
+                      handles bilingual prose, string lists, sections, steps,
+                      mistakes, dialogue, nested tables and grouped objects. */}
+                  {!isIntro && hasRenderable(raw) && (
+                    <RuleContent node={raw} meta={meta} />
                   )}
 
-                  {/* Table content */}
-                  {hasTable && (
-                    <div class="space-y-2">
-                      {content?.description_en && (
-                        <p class="text-sm text-slate-600 mb-3">{content.description_en}</p>
-                      )}
-                      <div class="overflow-x-auto">
-                        <table class="w-full text-sm border-collapse">
-                          <thead>
-                            <tr class={`${meta.bg}`}>
-                              {(content?.headers ?? []).map((h) => (
-                                <th class="px-4 py-2 text-left font-semibold text-slate-700 border border-slate-200">{h}</th>
-                              ))}
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {(content?.rows ?? []).map((row, i) => (
-                              <tr class={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                                {(Array.isArray(row) ? row : [row]).map((cell) => (
-                                  <td class="px-4 py-2.5 border border-slate-200 text-slate-700 font-accent">{String(cell ?? '')}</td>
-                                ))}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* List content */}
-                  {hasList && (
-                    <ul class="space-y-1.5">
-                      {(content?.items ?? []).map((item) => (
-                        <li class="flex items-start gap-2 text-slate-700 text-sm">
-                          <span class="text-indigo-400 mt-1 flex-shrink-0">▸</span>
-                          <span>{typeof item === 'string' ? item : JSON.stringify(item)}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-
-                  {/* Key insight */}
-                  {rule.key_insight_en && (
+                  {/* Key insight (column) */}
+                  {showColKeyInsight && (
                     <div class="mt-4 flex items-start gap-3 p-3 rounded-xl bg-amber-50 border border-amber-200">
                       <span class="text-amber-500 text-lg flex-shrink-0">💡</span>
                       <p class="text-sm text-amber-900 font-medium">{rule.key_insight_en}</p>
                     </div>
                   )}
 
-                  {/* Memory trick */}
-                  {rule.memory_trick_en && (
+                  {/* Memory trick (column) */}
+                  {showColMemoryTrick && (
                     <div class="mt-3 flex items-start gap-3 p-3 rounded-xl bg-purple-50 border border-purple-200">
                       <span class="text-purple-500 text-lg flex-shrink-0">🧠</span>
                       <p class="text-sm text-purple-900">{rule.memory_trick_en}</p>
@@ -264,6 +243,7 @@ const articleSchema = {
                     </div>
                   )}
                 </div>
+                )}
               </div>
             );
           })}

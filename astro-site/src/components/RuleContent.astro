@@ -1,0 +1,353 @@
+---
+/**
+ * RuleContent — recursive, defensive renderer for a grammar_rules `content`
+ * JSONB blob (or any nested value inside it).
+ *
+ * The grammar content in Supabase uses a rich, per-rule_type schema that varies
+ * widely: bilingual prose fields (`*_en` / `*_de`), string lists, arrays of
+ * `sections`/`steps`/`mistakes`/dialogue lines, nested tables (`comparison_table`,
+ * `verb_pairs`, `definite_table`, …) and grouped objects (`neuter_endings`, …).
+ * Rather than hard-code every key, we walk the value and render by shape so that
+ * ANY populated content produces visible body content — rendering what exists and
+ * skipping what doesn't, following the template's EN-primary / DE-muted convention.
+ */
+import Self from './RuleContent.astro';
+
+const { node, meta, depth = 0 } = Astro.props;
+
+const EN_DE = /_(en|de)$/;
+const isScalar = (v) => v == null || ['string', 'number', 'boolean'].includes(typeof v);
+const isObj = (v) => v && typeof v === 'object' && !Array.isArray(v);
+const isTable = (v) => isObj(v) && Array.isArray(v.headers) && v.headers.length > 0
+  && Array.isArray(v.rows) && v.rows.length > 0;
+const nonEmpty = (v) => !(v == null || v === '' || (Array.isArray(v) && v.length === 0)
+  || (isObj(v) && Object.keys(v).length === 0));
+
+const titleCase = (s) => String(s).replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+const base = (k) => k.replace(EN_DE, '');
+const humanize = (k) => titleCase(base(k));
+
+// Keys whose values are self-explanatory prose — show them without a label.
+const NO_LABEL = new Set([
+  'intro', 'text', 'content', 'description', 'paragraph', 'paragraphs', 'hook',
+  'detail', 'summary', 'one_sentence_summary', 'good_news', 'native_perspective',
+  'analogy', 'grammar_focus', 'context', 'pattern', 'formula', 'visual',
+  // structural container keys — their contents are self-describing
+  'sections', 'exchanges', 'lines', 'mistakes', 'steps',
+]);
+// Keys handled as their own structural pieces (headings/meta) — never as labels.
+const TITLE_KEYS = new Set(['title', 'title_en', 'title_de', 'heading', 'heading_en', 'heading_de', 'name']);
+// Purely presentational / redundant keys we don't render on their own.
+const SKIP_KEYS = new Set(['type', 'highlight_row', 'accuracy_note', 'speakers']);
+
+const strOf = (v) => (v == null ? null : String(v));
+
+/** Build a title {en, de} from an object's title-ish keys. */
+function pickTitle(o) {
+  const en = o.title_en ?? o.title ?? o.heading_en ?? o.heading ?? o.name ?? null;
+  const de = o.title_de ?? o.heading_de ?? null;
+  return { en: en != null ? String(en) : null, de: de != null && de !== en ? String(de) : null };
+}
+
+/**
+ * Turn an object's entries into ordered render "units", pairing `_en`/`_de`
+ * siblings and classifying each value by shape.
+ */
+function toUnits(obj) {
+  const used = new Set();
+  const units = [];
+  const title = pickTitle(obj);
+  for (const k of [...TITLE_KEYS, 'title_de', 'heading_de']) used.add(k);
+
+  for (const k of Object.keys(obj)) {
+    if (used.has(k) || SKIP_KEYS.has(k)) continue;
+    const v = obj[k];
+    if (!nonEmpty(v)) { used.add(k); continue; }
+    const b = base(k);
+
+    if (isScalar(v) && EN_DE.test(k)) {
+      const en = obj[`${b}_en`];
+      const de = obj[`${b}_de`];
+      used.add(`${b}_en`); used.add(`${b}_de`);
+      units.push({ kind: 'text', b, en: strOf(en), de: en !== de ? strOf(de) : null });
+      continue;
+    }
+    used.add(k);
+    if (isScalar(v)) { units.push({ kind: 'text', b, en: strOf(v), de: null, noSuffix: true }); continue; }
+    if (isTable(v)) { units.push({ kind: 'table', b, table: v }); continue; }
+    if (Array.isArray(v)) { units.push({ kind: 'array', b, arr: v }); continue; }
+    if (isObj(v)) { units.push({ kind: 'object', b, obj: v }); continue; }
+  }
+  return { title, units };
+}
+
+/** Classify an array by the shape of its items. */
+function classify(arr) {
+  if (arr.every(isScalar)) return 'strings';
+  if (arr.every(isObj)) {
+    if (arr.some((o) => 'wrong' in o || 'correct' in o)) return 'mistakes';
+    if (arr.some((o) => 'speaker' in o)) return 'dialogue';
+    if (arr.some((o) => 'step' in o)) return 'steps';
+    if (arr.some((o) => 'title_en' in o || 'title' in o || 'heading_en' in o || 'heading' in o)
+        && arr.some((o) => 'content_en' in o || 'content' in o || 'content_de' in o || 'detail_en' in o))
+      return 'sections';
+    if (arr.every((o) => Object.values(o).every(isScalar))) return 'objtable';
+    return 'blocks';
+  }
+  return 'blocks';
+}
+
+/** Union of keys across flat objects, preserving first-seen order. */
+function unionKeys(arr) {
+  const seen = [];
+  const set = new Set();
+  for (const o of arr) for (const k of Object.keys(o)) if (!set.has(k) && nonEmpty(o[k])) { set.add(k); seen.push(k); }
+  return seen;
+}
+
+const cell = (v) => (v == null ? '' : (isScalar(v) ? String(v) : JSON.stringify(v)));
+
+// --- Compute what to render for THIS node -------------------------------------
+const kindOf = isScalar(node) ? 'scalar'
+  : Array.isArray(node) ? 'array'
+  : isTable(node) ? 'table'
+  : isObj(node) ? 'object'
+  : 'none';
+
+const arrType = kindOf === 'array' ? classify(node) : null;
+const objtableCols = (kindOf === 'array' && arrType === 'objtable') ? unionKeys(node) : [];
+const parsed = kindOf === 'object' ? toUnits(node) : null;
+
+const headingSize = depth === 0 ? 'text-base' : 'text-sm';
+---
+{/* --- Scalar --- */}
+{kindOf === 'scalar' && nonEmpty(node) && (
+  <p class="text-slate-700 leading-relaxed whitespace-pre-line">{String(node)}</p>
+)}
+
+{/* --- Table (nested or top-level) --- */}
+{kindOf === 'table' && (
+  <div class="space-y-2">
+    {(node.description_en || node.description_de) && (
+      <p class="text-sm text-slate-600 mb-1">
+        {node.description_en ?? node.description_de}
+        {node.description_en && node.description_de && (
+          <span class="block text-slate-400">{node.description_de}</span>
+        )}
+      </p>
+    )}
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse">
+        <thead>
+          <tr class={meta.bg}>
+            {node.headers.map((h) => (
+              <th class="px-4 py-2 text-left font-semibold text-slate-700 border border-slate-200">{String(h)}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {node.rows.map((row, i) => (
+            <tr class={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+              {(Array.isArray(row) ? row : [row]).map((c) => (
+                <td class="px-4 py-2.5 border border-slate-200 text-slate-700 font-accent">{cell(c)}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+)}
+
+{/* --- Array of plain strings --- */}
+{kindOf === 'array' && arrType === 'strings' && (
+  <ul class="space-y-1.5">
+    {node.filter(nonEmpty).map((item) => (
+      <li class="flex items-start gap-2 text-slate-700 text-sm">
+        <span class="text-indigo-400 mt-1 flex-shrink-0">▸</span>
+        <span class="whitespace-pre-line">{isScalar(item) ? String(item) : JSON.stringify(item)}</span>
+      </li>
+    ))}
+  </ul>
+)}
+
+{/* --- Array of "mistakes" (wrong / correct / explanation) --- */}
+{kindOf === 'array' && arrType === 'mistakes' && (
+  <div class="p-3 rounded-xl bg-red-50 border border-red-200">
+    <ul class="space-y-3">
+      {node.map((m) => (
+        <li class="text-sm text-red-800">
+          <div class="space-y-0.5">
+            {m.wrong && (
+              <p class="flex items-start gap-2">
+                <span class="flex-shrink-0 font-bold text-red-600">✗</span>
+                <span class="line-through text-red-600">{String(m.wrong)}</span>
+              </p>
+            )}
+            {m.correct && (
+              <p class="flex items-start gap-2">
+                <span class="flex-shrink-0 font-bold text-emerald-600">✓</span>
+                <span class="text-emerald-700 font-medium">{String(m.correct)}</span>
+              </p>
+            )}
+            {(m.explanation_en || m.explanation_de) && (
+              <p class="text-xs text-slate-600 pl-5">{m.explanation_en ?? m.explanation_de}</p>
+            )}
+            {m.explanation_en && m.explanation_de && (
+              <p class="text-xs text-slate-400 pl-5">{m.explanation_de}</p>
+            )}
+            {m.memory_trick_en && (
+              <p class="text-xs text-purple-700 pl-5">🧠 {m.memory_trick_en}</p>
+            )}
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
+
+{/* --- Array of dialogue lines --- */}
+{kindOf === 'array' && arrType === 'dialogue' && (
+  <div class="space-y-2">
+    {node.map((line) => (
+      <div class="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+        {line.speaker && (
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">{String(line.speaker)}</p>
+        )}
+        {(line.text_de ?? line.de) && (
+          <p class="font-display text-slate-900">{String(line.text_de ?? line.de)}</p>
+        )}
+        {(line.text_en ?? line.en) && (
+          <p class="text-sm text-slate-500 italic">{String(line.text_en ?? line.en)}</p>
+        )}
+        {(line.grammar_note ?? line.highlight) && (
+          <p class="text-xs text-indigo-600 mt-1">{String(line.grammar_note ?? line.highlight)}</p>
+        )}
+      </div>
+    ))}
+  </div>
+)}
+
+{/* --- Array of numbered steps --- */}
+{kindOf === 'array' && arrType === 'steps' && (
+  <ol class="space-y-3">
+    {node.map((s, i) => (
+      <li class="flex items-start gap-3">
+        <span class={`flex-shrink-0 w-6 h-6 rounded-full ${meta.badge} text-xs font-bold flex items-center justify-center`}>
+          {s.step ?? i + 1}
+        </span>
+        <div class="min-w-0">
+          {(s.title_en ?? s.title) && (
+            <p class="font-semibold text-slate-800 text-sm">{String(s.title_en ?? s.title)}</p>
+          )}
+          {s.title_de && s.title_de !== (s.title_en ?? s.title) && (
+            <p class="text-xs text-slate-400">{String(s.title_de)}</p>
+          )}
+          {(s.detail_en ?? s.detail) && (
+            <p class="text-sm text-slate-600 leading-relaxed whitespace-pre-line mt-0.5">{String(s.detail_en ?? s.detail)}</p>
+          )}
+          {s.detail_de && (
+            <p class="text-xs text-slate-400 whitespace-pre-line">{String(s.detail_de)}</p>
+          )}
+        </div>
+      </li>
+    ))}
+  </ol>
+)}
+
+{/* --- Array of titled sections --- */}
+{kindOf === 'array' && arrType === 'sections' && (
+  <div class="space-y-4">
+    {node.map((sec) => (
+      <div class="rounded-xl border border-slate-200 bg-white px-4 py-3">
+        <Self node={sec} meta={meta} depth={depth + 1} />
+      </div>
+    ))}
+  </div>
+)}
+
+{/* --- Array of flat objects → table --- */}
+{kindOf === 'array' && arrType === 'objtable' && (
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm border-collapse">
+      <thead>
+        <tr class={meta.bg}>
+          {objtableCols.map((c) => (
+            <th class="px-3 py-2 text-left font-semibold text-slate-700 border border-slate-200">{humanize(c)}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {node.map((o, i) => (
+          <tr class={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+            {objtableCols.map((c) => (
+              <td class="px-3 py-2 border border-slate-200 text-slate-700 font-accent">{cell(o[c])}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}
+
+{/* --- Array of nested objects → recurse into blocks --- */}
+{kindOf === 'array' && arrType === 'blocks' && (
+  <div class="space-y-3">
+    {node.filter(nonEmpty).map((item) => (
+      <div class="rounded-xl border border-slate-200 bg-white px-4 py-3">
+        <Self node={item} meta={meta} depth={depth + 1} />
+      </div>
+    ))}
+  </div>
+)}
+
+{/* --- Object → heading + ordered units --- */}
+{kindOf === 'object' && parsed && (
+  <div class="space-y-3">
+    {parsed.title.en && (
+      <div>
+        <h4 class={`font-display ${headingSize} font-bold text-slate-800`}>{parsed.title.en}</h4>
+        {parsed.title.de && <p class="text-xs text-slate-400">{parsed.title.de}</p>}
+      </div>
+    )}
+    {parsed.units.map((u) => (
+      <div>
+        {u.kind === 'text' && u.b === 'key_insight' && (
+          <div class="flex items-start gap-3 p-3 rounded-xl bg-amber-50 border border-amber-200">
+            <span class="text-amber-500 text-lg flex-shrink-0">💡</span>
+            <div>
+              <p class="text-sm text-amber-900 font-medium whitespace-pre-line">{u.en}</p>
+              {u.de && <p class="text-xs text-amber-700/70 mt-1 whitespace-pre-line">{u.de}</p>}
+            </div>
+          </div>
+        )}
+        {u.kind === 'text' && u.b === 'memory_trick' && (
+          <div class="flex items-start gap-3 p-3 rounded-xl bg-purple-50 border border-purple-200">
+            <span class="text-purple-500 text-lg flex-shrink-0">🧠</span>
+            <div>
+              <p class="text-sm text-purple-900 whitespace-pre-line">{u.en}</p>
+              {u.de && <p class="text-xs text-purple-700/70 mt-1 whitespace-pre-line">{u.de}</p>}
+            </div>
+          </div>
+        )}
+        {u.kind === 'text' && u.b !== 'key_insight' && u.b !== 'memory_trick' && (
+          <div>
+            {!NO_LABEL.has(u.b) && (
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">{humanize(u.b)}</span>
+            )}
+            {u.en && <p class="text-slate-700 leading-relaxed whitespace-pre-line">{u.en}</p>}
+            {u.de && <p class="text-sm text-slate-400 leading-relaxed whitespace-pre-line mt-0.5">{u.de}</p>}
+          </div>
+        )}
+        {u.kind !== 'text' && (
+          <div>
+            {!NO_LABEL.has(u.b) && (
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">{humanize(u.b)}</span>
+            )}
+            <Self node={u.kind === 'table' ? u.table : u.kind === 'array' ? u.arr : u.obj} meta={meta} depth={depth + 1} />
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+)}
