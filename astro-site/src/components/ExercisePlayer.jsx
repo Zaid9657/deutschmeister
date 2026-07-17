@@ -64,7 +64,7 @@ function FillBlank({ exercise, onAnswer, answered }) {
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={(e) => e.key === 'Enter' && submit()}
         disabled={submitted}
-        placeholder="Antwort eingeben…"
+        placeholder="Type your answer…"
         className={`flex-1 px-4 py-2.5 rounded-xl border-2 text-sm transition-all focus:outline-none ${
           submitted
             ? isCorrect
@@ -78,7 +78,7 @@ function FillBlank({ exercise, onAnswer, answered }) {
           onClick={submit}
           className="px-4 py-2.5 rounded-xl bg-indigo-500 text-white text-sm font-semibold hover:bg-indigo-600 transition-colors"
         >
-          Prüfen
+          Check
         </button>
       )}
       {submitted && !isCorrect && (
@@ -99,7 +99,7 @@ export default function ExercisePlayer({ exercises }) {
 
   if (!exercises || exercises.length === 0) {
     return (
-      <p className="text-slate-500 text-sm italic">Für dieses Thema sind noch keine Übungen verfügbar.</p>
+      <p className="text-slate-500 text-sm italic">No exercises available for this topic yet.</p>
     );
   }
 
@@ -137,15 +137,15 @@ export default function ExercisePlayer({ exercises }) {
         <div className={`text-5xl font-bold mb-2 ${pct >= 70 ? 'text-emerald-500' : pct >= 40 ? 'text-amber-500' : 'text-red-500'}`}>
           {pct}%
         </div>
-        <p className="text-slate-600 mb-1">{score} von {exercises.length} richtig</p>
+        <p className="text-slate-600 mb-1">{score} of {exercises.length} correct</p>
         <p className="text-slate-500 text-sm mb-6">
-          {pct >= 70 ? 'Ausgezeichnet! Du hast das Thema gut verstanden.' : pct >= 40 ? 'Guter Anfang — lies die Regeln nochmal durch und versuche es erneut.' : 'Kein Problem — Grammatik braucht Übung. Nochmal von vorne!'}
+          {pct >= 70 ? "Excellent! You've got a good grasp of this topic." : pct >= 40 ? 'Good start — review the rules and try again.' : 'No problem — grammar takes practice. Start over!'}
         </p>
         <button
           onClick={restart}
           className="px-6 py-2.5 rounded-xl bg-indigo-500 text-white font-semibold hover:bg-indigo-600 transition-colors"
         >
-          Nochmal üben
+          Practice again
         </button>
       </div>
     );
@@ -155,7 +155,7 @@ export default function ExercisePlayer({ exercises }) {
     <div>
       {/* Progress */}
       <div className="flex items-center justify-between mb-4">
-        <span className="text-sm text-slate-500">Frage {current + 1} von {exercises.length}</span>
+        <span className="text-sm text-slate-500">Question {current + 1} of {exercises.length}</span>
         <div className="flex gap-1">
           {exercises.map((_, i) => (
             <div
@@ -183,7 +183,7 @@ export default function ExercisePlayer({ exercises }) {
       {/* Explanation */}
       {showExplanation && exercise.explanation_en && (
         <div className="mt-4 p-4 rounded-xl bg-blue-50 border border-blue-200 text-sm text-blue-800">
-          <strong>Erklärung:</strong> {exercise.explanation_en}
+          <strong>Explanation:</strong> {exercise.explanation_en}
         </div>
       )}
 
@@ -194,7 +194,7 @@ export default function ExercisePlayer({ exercises }) {
             onClick={next}
             className="px-5 py-2.5 rounded-xl bg-slate-800 text-white text-sm font-semibold hover:bg-slate-700 transition-colors"
           >
-            {current + 1 >= exercises.length ? 'Ergebnis ansehen →' : 'Weiter →'}
+            {current + 1 >= exercises.length ? 'See results →' : 'Next →'}
           </button>
         </div>
       )}

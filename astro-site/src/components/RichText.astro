@@ -22,6 +22,8 @@ const raw = text == null ? '' : String(text);
 const TOKEN = /[A-ZÄÖÜ][A-ZÄÖÜ'’\-]*[A-ZÄÖÜ]/gu;
 const isLetterNum = (c) => !!c && /[\p{L}\p{N}]/u.test(c);
 const isLower = (c) => !!c && /\p{Ll}/u.test(c);
+// Roman numerals are legitimate all-caps (Konjunktiv II, Futur II, …) — keep them.
+const ROMAN = new Set(['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII']);
 
 const segs = [];
 let last = 0;
@@ -33,7 +35,7 @@ for (const m of raw.matchAll(TOKEN)) {
   const after = raw[end];
   // Skip line-initial runs (labels/headings) and runs glued to a larger word.
   const lineInitial = /(^|\n)[^\S\n]*$/.test(raw.slice(0, i));
-  if (lineInitial || isLetterNum(before) || isLower(after)) continue;
+  if (lineInitial || isLetterNum(before) || isLower(after) || ROMAN.has(tok)) continue;
   if (i > last) segs.push({ b: false, v: raw.slice(last, i) });
   segs.push({ b: true, v: tok.toLowerCase() });
   last = end;
