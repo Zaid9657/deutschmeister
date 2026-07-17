@@ -24,6 +24,11 @@ const isLetterNum = (c) => !!c && /[\p{L}\p{N}]/u.test(c);
 const isLower = (c) => !!c && /\p{Ll}/u.test(c);
 // Roman numerals are legitimate all-caps (Konjunktiv II, Futur II, …) — keep them.
 const ROMAN = new Set(['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII']);
+// German words where ALL-CAPS spells ß as SS, so a naive lowercase gives the
+// WRONG spelling ("BLOSS" → "bloss" instead of "bloß"). Map the exact uppercase
+// token to its correct display form. These render even line-initial (headings),
+// since the misspelling would otherwise leak through in that position too.
+const CAPS_OVERRIDE = new Map([['BLOSS', 'bloß']]);
 
 const segs = [];
 let last = 0;
@@ -33,11 +38,15 @@ for (const m of raw.matchAll(TOKEN)) {
   const end = i + tok.length;
   const before = raw[i - 1];
   const after = raw[end];
-  // Skip line-initial runs (labels/headings) and runs glued to a larger word.
+  const override = CAPS_OVERRIDE.get(tok);
+  // Always skip runs glued to a larger word (mixed-case like "dER", "ÜBERrascht").
+  if (isLetterNum(before) || isLower(after)) continue;
+  // Line-initial runs (labels/headings) and roman numerals stay as-is — unless the
+  // token has an explicit spelling override, which must apply in every position.
   const lineInitial = /(^|\n)[^\S\n]*$/.test(raw.slice(0, i));
-  if (lineInitial || isLetterNum(before) || isLower(after) || ROMAN.has(tok)) continue;
+  if (!override && (lineInitial || ROMAN.has(tok))) continue;
   if (i > last) segs.push({ b: false, v: raw.slice(last, i) });
-  segs.push({ b: true, v: tok.toLowerCase() });
+  segs.push({ b: true, v: override ?? tok.toLowerCase() });
   last = end;
 }
 if (last < raw.length) segs.push({ b: false, v: raw.slice(last) });
