@@ -3,7 +3,8 @@ import Layout from '../../../layouts/Layout.astro';
 import ExercisePlayer from '../../../components/ExercisePlayer.jsx';
 import RuleContent from '../../../components/RuleContent.astro';
 import RichText from '../../../components/RichText.astro';
-import { getAllTopicPaths, getTopicFull, SUB_LEVELS, LEVEL_META } from '../../../lib/grammar.js';
+import { getAllTopicPaths, getTopicFull, getAllTopics, SUB_LEVELS, LEVEL_META } from '../../../lib/grammar.js';
+import { RELATED_TOPICS } from '../../../lib/relatedTopics.js';
 import '../../../styles/global.css';
 
 // True when a rule's JSONB content (object, array, or plain string) holds
@@ -56,6 +57,20 @@ if (!data) {
 
 const { topic, rules, examples, exercises, prev, next } = data;
 const meta = LEVEL_META[level] ?? LEVEL_META['a1.1'];
+
+// Related topics: prefer the DB `related_slugs` column when populated, otherwise
+// fall back to the static grammatical mapping. Resolve each slug to a full topic
+// (for its title + level) and drop unknowns / self-references.
+const allTopics = await getAllTopics();
+const topicIndex = new Map(allTopics.map((t) => [t.slug, t]));
+const relatedSlugs = (Array.isArray(topic.related_slugs) && topic.related_slugs.length > 0)
+  ? topic.related_slugs
+  : (RELATED_TOPICS[slug] ?? []);
+const relatedTopics = relatedSlugs
+  .filter((s) => s && s !== slug)
+  .map((s) => topicIndex.get(s))
+  .filter(Boolean)
+  .slice(0, 5);
 
 const topicTitle = topic?.title_en ?? slug;
 const canonicalUrl = `https://deutsch-meister.de/grammar/${level}/${slug}`;
@@ -384,6 +399,34 @@ const articleSchema = {
         Get started free — 7 days of Pro included
       </a>
     </div>
+
+    <!-- Related Topics -->
+    {relatedTopics.length > 0 && (
+      <section class="mb-10">
+        <h2 class="font-display text-2xl font-bold text-slate-800 mb-5">Related Topics</h2>
+        <div class="grid sm:grid-cols-2 gap-3">
+          {relatedTopics.map((rt) => {
+            const rmeta = LEVEL_META[rt.sub_level] ?? meta;
+            return (
+              <a
+                href={`/grammar/${rt.sub_level}/${rt.slug}`}
+                class="flex items-start gap-3 p-4 rounded-xl border border-slate-200 bg-white hover:shadow-md hover:border-slate-300 transition-all group"
+              >
+                <span class={`flex-shrink-0 mt-0.5 px-2 py-0.5 rounded-full text-[10px] font-bold ${rmeta.badge}`}>
+                  {rmeta.label}
+                </span>
+                <div class="min-w-0">
+                  <p class="text-sm font-semibold text-slate-800 group-hover:text-slate-900">{rt.title_en}</p>
+                  {rt.description_en && (
+                    <p class="text-xs text-slate-500 leading-snug mt-0.5 line-clamp-2">{rt.description_en}</p>
+                  )}
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    )}
 
     <!-- Prev / Next navigation -->
     <nav class="flex items-center justify-between gap-4 pt-6 border-t border-slate-200">
