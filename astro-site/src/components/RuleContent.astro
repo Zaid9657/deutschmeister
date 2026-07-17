@@ -35,6 +35,8 @@ const NO_LABEL = new Set([
   'analogy', 'grammar_focus', 'context', 'pattern', 'formula', 'visual',
   // structural container keys — their contents are self-describing
   'sections', 'exchanges', 'lines', 'mistakes', 'steps',
+  // structural scalar keys that read like raw JSON field names
+  'key_formula', 'category',
 ]);
 // Keys handled as their own structural pieces (headings/meta) — never as labels.
 const TITLE_KEYS = new Set(['title', 'title_en', 'title_de', 'heading', 'heading_en', 'heading_de', 'name']);
@@ -129,13 +131,21 @@ const headingSize = depth === 0 ? 'text-base' : 'text-sm';
 {/* --- Table (nested or top-level) --- */}
 {kindOf === 'table' && (
   <div class="space-y-2">
-    {(node.description_en || node.description_de) && (
-      <p class="text-sm text-slate-600 mb-1">
-        <RichText text={node.description_en ?? node.description_de} />
-        {node.description_en && node.description_de && (
-          <span class="block text-slate-400"><RichText text={node.description_de} /></span>
+    {(node.title_en || node.title) && (
+      <div>
+        <h4 class={`font-display ${headingSize} font-bold text-slate-800`}><RichText text={String(node.title_en ?? node.title)} /></h4>
+        {node.title_de && node.title_de !== (node.title_en ?? node.title) && (
+          <p class="text-xs text-slate-400"><RichText text={String(node.title_de)} /></p>
         )}
-      </p>
+      </div>
+    )}
+    {(node.description_en || node.description_de) && (
+      <div class="text-sm text-slate-600 mb-1">
+        <p class="whitespace-pre-line"><RichText text={String(node.description_en ?? node.description_de)} /></p>
+        {node.description_en && node.description_de && (
+          <p class="mt-0.5 text-slate-400 whitespace-pre-line"><RichText text={String(node.description_de)} /></p>
+        )}
+      </div>
     )}
     <div class="overflow-x-auto">
       <table class="w-full text-sm border-collapse">
@@ -340,11 +350,11 @@ const headingSize = depth === 0 ? 'text-base' : 'text-sm';
             {u.de && <p class="text-sm text-slate-400 leading-relaxed whitespace-pre-line mt-0.5"><RichText text={u.de} /></p>}
           </div>
         )}
+        {/* Container units (tables, arrays, nested objects) render their own
+            title/content — a humanized key label here just reads as a raw JSON
+            field name ("Definite Table", "Groups", "Top Rules"), so drop it. */}
         {u.kind !== 'text' && (
           <div>
-            {!NO_LABEL.has(u.b) && (
-              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">{humanize(u.b)}</span>
-            )}
             <Self node={u.kind === 'table' ? u.table : u.kind === 'array' ? u.arr : u.obj} meta={meta} depth={depth + 1} />
           </div>
         )}

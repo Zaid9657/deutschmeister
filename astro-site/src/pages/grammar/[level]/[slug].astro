@@ -17,23 +17,30 @@ const hasRenderable = (v) => {
   return true;
 };
 
-// word_breakdown is stored as a plain object whose key order does NOT follow
-// the sentence (e.g. "Der Tisch ist groß." → {Der, ist, Tisch, groß}). Re-order
-// the rows to match the actual word order of sentence_de. Words not found in the
-// sentence keep their original relative order at the end (stable).
+// word_breakdown is stored as a plain object whose key order does NOT follow the
+// sentence (e.g. "Der Tisch ist groß." → {Der, ist, Tisch, groß}, or "Ich gebe
+// dem Mann das Buch." → {Ich, gebe, das Buch, dem Mann}). Re-order the rows to
+// match the actual word order of sentence_de. Keys may be multi-word phrase
+// chunks ("dem Mann", "in Berlin"), so match by position within the sentence,
+// not by single-token lookup. Chunks not found keep their relative order at the
+// end (stable).
 const orderBySentence = (rows, sentence) => {
   if (!sentence || !Array.isArray(rows)) return rows;
-  const norm = (s) => String(s).toLowerCase().replace(/[^\p{L}\p{N}äöüß]/gu, '');
-  const tokens = sentence.split(/\s+/).map(norm);
-  const lowerSentence = sentence.toLowerCase();
+  // Lowercase, collapse anything non-letter/number to single spaces.
+  const clean = (s) => String(s).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+  const sNorm = clean(sentence);
+  const padded = ` ${sNorm} `;
+  const sTokens = sNorm ? sNorm.split(' ') : [];
   const BIG = Number.MAX_SAFE_INTEGER;
-  const posOf = (word) => {
-    const w = norm(word);
+  const posOf = (chunk) => {
+    const w = clean(chunk);
     if (!w) return BIG;
-    const ti = tokens.indexOf(w);
-    if (ti !== -1) return ti;                 // whole-word match (preferred)
-    const si = lowerSentence.indexOf(w);      // fallback: substring position
-    return si === -1 ? BIG : 1000 + si;       // ranked after all token matches
+    // Whole word/phrase match on space boundaries (handles "dem mann").
+    const idx = padded.indexOf(` ${w} `);
+    if (idx !== -1) return idx;
+    // Fallback: position of the chunk's first token, ranked after phrase matches.
+    const ti = sTokens.indexOf(w.split(' ')[0]);
+    return ti === -1 ? BIG : 1_000_000 + ti;
   };
   return rows
     .map((r, i) => ({ r, i, p: posOf(r.word) }))
