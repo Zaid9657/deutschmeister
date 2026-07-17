@@ -2,7 +2,7 @@
   # Build order: SPA first (creates dist/), then Astro, then merge Astro output
   # into the SPA dist/ so grammar files aren't wiped by the Vite build.
   # _astro/ contains Astro's JS/CSS chunks; grammar/ contains the HTML pages.
-  command = "npm run build && cd astro-site && npm install && npm run build && cd .. && cp -r astro-site/dist/grammar dist/grammar && mkdir -p dist/_astro && cp -r astro-site/dist/_astro/. dist/_astro/ && cp astro-site/dist/sitemap-0.xml dist/ && node scripts/ping-indexnow.mjs || true"
+  command = "npm run build && cd astro-site && npm install && npm run build && cd .. && cp -r astro-site/dist/grammar dist/grammar && mkdir -p dist/_astro && cp -r astro-site/dist/_astro/. dist/_astro/ && cp astro-site/dist/404.html dist/404.html && cp astro-site/dist/sitemap-0.xml dist/ && node scripts/ping-indexnow.mjs || true"
   publish = "dist"
   functions = "netlify/functions"
 
@@ -112,10 +112,160 @@
   to = "/.netlify/functions/send-daily-test"
   status = 200
 
-# SPA catch-all — grammar routes are real static files in dist/grammar/ so
-# Netlify serves them directly before this rule fires. Only truly missing
-# paths (non-grammar, non-asset) fall through to the SPA.
+# ---------------------------------------------------------------------------
+# SPA route allow-list — serve the app shell (200) for every REAL client-side
+# route in the React router (src/App.jsx). Netlify serves existing static files
+# (grammar/, _astro/, /404.html, root index.html, public assets) directly and
+# skips these non-forced rewrites, so only param/hash SPA routes reach here.
+# Anything NOT matched here falls through to the 404 rule below — that is what
+# turns unknown URLs into real HTTP 404s instead of a 200 + SPA shell.
+#
+# Keep this list in sync with the <Route> paths in src/App.jsx.
+# ---------------------------------------------------------------------------
+
+# --- Exact SPA routes ---
 [[redirects]]
-  from = "/*"
+  from = "/intro"
   to = "/index.html"
   status = 200
+[[redirects]]
+  from = "/login"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/signup"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/reset-password"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/update-password"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/verify-email"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/onboarding"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/pricing"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/faq"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/ueber-uns"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/podcasts"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/level-test"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/dashboard"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/profile"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/vocabulary"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/speaking"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/analyze"
+  to = "/index.html"
+  status = 200
+
+# --- Route families (bare route + params/sub-paths) ---
+[[redirects]]
+  from = "/subscription"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/subscription/*"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/payment/*"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/vergleich"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/vergleich/*"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/leitfaden/*"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/video-library"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/video-library/*"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/level/*"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/reading"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/reading/*"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/listening"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/listening/*"
+  to = "/index.html"
+  status = 200
+[[redirects]]
+  from = "/admin/*"
+  to = "/index.html"
+  status = 200
+
+# Grammar is served as static Astro files in dist/grammar/ (real files win
+# before this rule). This only catches non-existent grammar sub-paths, which
+# the SPA's /grammar/:level(/:topicSlug) routes render as the app shell — same
+# behaviour as before, so grammar deep-links keep working.
+[[redirects]]
+  from = "/grammar/*"
+  to = "/index.html"
+  status = 200
+
+# ---------------------------------------------------------------------------
+# Real 404 — final catch-all. Any request that is neither a static file nor a
+# known SPA route above returns the static 404 page WITH a 404 status (not the
+# old 200 + SPA shell). Must stay LAST so the allow-list wins first.
+# ---------------------------------------------------------------------------
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
