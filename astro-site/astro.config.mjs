@@ -12,8 +12,13 @@ export default defineConfig({
     react(),
     tailwind({ applyBaseStyles: false }),
     sitemap({
-      // Only emit grammar routes in this sitemap — the SPA has its own
-      filter: (page) => page.includes('/grammar/'),
+      // Emit the statically-rendered public routes into this sitemap
+      // (grammar + comparison + guide pages). SPA-only routes stay in
+      // public/sitemap-spa.xml. The 404 page is excluded.
+      filter: (page) =>
+        page.includes('/grammar/') ||
+        page.includes('/vergleich') ||
+        page.includes('/leitfaden/'),
     }),
   ],
   build: {

@@ -1,0 +1,273 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/global.css';
+
+const FAQ_ITEMS = [
+  { q: 'Wie lange sollte ich mich auf telc B1 vorbereiten?', a: 'Mindestens 8 Wochen bei täglichem Lernen von 30–60 Minuten. Wenn du schon auf A2-Niveau bist und regelmäßig Deutsch sprichst, kann es schneller gehen. Wenn du von A1 startest, plan lieber 4–6 Monate ein.' },
+  { q: 'Was ist der Unterschied zwischen telc B1 und Goethe B1?', a: 'Beide Prüfungen testen dasselbe CEFR-Niveau (B1). Der Aufbau unterscheidet sich leicht: telc hat Sprachbausteine als eigenen Teil, Goethe nicht. Beide werden für Aufenthalt und Einbürgerung anerkannt. Wähle die Prüfung, die in deiner Region leichter verfügbar ist.' },
+  { q: 'Kann man telc B1 ohne Sprachkurs bestehen?', a: 'Ja — viele bestehen die Prüfung im Selbststudium. Entscheidend ist, dass du regelmäßig übst und besonders das Sprechen nicht vernachlässigst. KI-Sprechtraining wie bei Deutschmeister hilft dir, die mündliche Prüfung vorzubereiten, auch ohne Lehrer.' },
+  { q: 'Was passiert, wenn ich einen Teil der Prüfung nicht bestehe?', a: 'Bei telc kannst du den schriftlichen und den mündlichen Teil getrennt wiederholen. Du musst nicht die gesamte Prüfung nochmal machen — nur den Teil, den du nicht bestanden hast.' },
+  { q: 'Wie teuer ist die telc B1 Prüfung?', a: 'Die Gebühren variieren je nach Prüfungszentrum, liegen aber meist zwischen 150 und 200 Euro. Erkundige dich bei deiner lokalen VHS oder einem telc-Prüfungszentrum nach dem genauen Preis.' },
+  { q: 'Brauche ich telc B1 für die Einbürgerung?', a: 'Für die Einbürgerung in Deutschland brauchst du Deutschkenntnisse auf B1-Niveau. Sowohl telc Deutsch B1 als auch Goethe-Zertifikat B1 und der DTZ (Deutsch-Test für Zuwanderer) werden anerkannt.' },
+  { q: 'Ist telc B1 schwer?', a: 'Mit guter Vorbereitung ist telc B1 machbar. Die größte Hürde für die meisten Kandidaten ist die mündliche Prüfung — weil sie im Alltag zu wenig sprechen üben. Regelmäßiges Sprechtraining ist der Schlüssel.' },
+  { q: 'Wo kann ich telc B1 ablegen?', a: 'telc-Prüfungen werden an über 3.000 Prüfungszentren weltweit angeboten. In Deutschland findest du Prüfungszentren über die telc-Website oder bei deiner lokalen Volkshochschule (VHS).' },
+];
+
+const TOC = [
+  ['#was-ist-telc', 'Was ist die telc B1 Prüfung?'],
+  ['#aufbau', 'Der Aufbau der telc B1 Prüfung'],
+  ['#bestehen', 'Wie viele Punkte braucht man zum Bestehen?'],
+  ['#lernplan', 'Dein 8-Wochen-Lernplan für telc B1'],
+  ['#fehler', 'Die 5 häufigsten Fehler bei der telc B1 Prüfung'],
+  ['#deutschmeister', 'Wie Deutschmeister dich auf telc B1 vorbereitet'],
+  ['#faq', 'Häufige Fragen zur telc B1 Prüfung'],
+];
+
+const WEEKS = [
+  { week: 'Woche 1–2', title: 'Grundlagen auffrischen', icon: '📖', tasks: ['Grammatik A2 wiederholen: Perfekt, Modalverben, Nebensätze mit weil/dass/wenn', 'Wortschatz Alltag: 200 Wörter pro Woche aktiv üben', 'Täglich 1 Hörübung auf A2-Niveau — Ohren einstellen', 'Einstufungstest machen und Schwächen identifizieren'], tip: 'Nutze die Grammatik-Lektionen auf Deutschmeister — jedes Thema wird auf Englisch erklärt, damit du das WARUM verstehst, nicht nur das WAS.' },
+  { week: 'Woche 3–4', title: 'B1-Grammatik aufbauen', icon: '🧱', tasks: ['Konjunktiv II (würde + Infinitiv, hätte, wäre)', 'Relativsätze (der, die, das als Relativpronomen)', 'Passiv Präsens und Präteritum', 'Konnektoren: obwohl, trotzdem, deshalb, deswegen', 'Tägliches Hörtraining auf B1-Niveau'], tip: 'Bei den Sprachbausteinen kommt genau diese Grammatik. Das Sentence X-Ray Tool zeigt dir bei jedem Satz, welcher Fall und welche Struktur verwendet wird.' },
+  { week: 'Woche 5–6', title: 'Prüfungsformat trainieren', icon: '📝', tasks: ['Leseverstehen: Übungstexte mit Zeitlimit lesen', 'Sprachbausteine: Lückentext-Übungen mit Grammatikfokus', 'Schreiben: 2 Briefe pro Woche (Beschwerde, Einladungsantwort, Anfrage)', 'Hörverstehen: B1-Dialoge, Durchsagen, kurze Berichte', 'Sprechen: Täglich 10 Minuten freies Sprechen üben'], tip: 'Starte jetzt mit dem KI-Sprechtraining. Themen: Reisen, Gesundheit, Arbeit, Wohnen — genau die Themen, die in der Prüfung drankommen.' },
+  { week: 'Woche 7', title: 'Schwächen gezielt angehen', icon: '🎯', tasks: ['Analysiere deine bisherigen Fehler: Wo verlierst du Punkte?', 'Grammatik-Lücken schließen: Nochmal die schwierigen Themen', 'Zeitmanagement: Schriftliche Übungen mit Stoppuhr', 'Mündliche Prüfung simulieren: Vorstellen, Thema, Planung'], tip: 'Nutze den Sentence X-Ray für Sätze, die du falsch geschrieben hast. Er zeigt dir genau, wo der Fehler liegt — Kasus, Wortstellung, Verbform.' },
+  { week: 'Woche 8', title: 'Generalprobe', icon: '🏁', tasks: ['Komplette Schriftliche Prüfung unter Prüfungsbedingungen simulieren', 'Mündliche Prüfung mit Sprechpartner oder KI üben', 'Keine neuen Themen — nur wiederholen und festigen', 'Ausreichend schlafen, kein Last-Minute-Pauken am Prüfungstag'], tip: 'Letzte Woche: Qualität vor Quantität. Lieber 3 gute Sprechübungen als 10 hastige.' },
+];
+
+const ERRORS = [
+  { title: '1. Sprechen nicht genug geübt', body: 'Der größte Fehler. Viele lernen monatelang Grammatik und Vokabeln, sprechen aber kaum. In der mündlichen Prüfung merkt man das sofort: lange Pausen, unsichere Satzstellung, kein natürlicher Gesprächsfluss. Übe jeden Tag mindestens 10 Minuten freies Sprechen — mit einem Partner, einem Tandem oder dem KI-Sprechtraining.' },
+  { title: '2. Zeitmanagement im schriftlichen Teil', body: 'Der schriftliche Teil ist lang. Wenn du beim Leseverstehen zu viel Zeit verbringst, fehlt sie beim Schreiben. Lösung: Übe vorab mit Stoppuhr. Lies zuerst die Aufgaben, dann den Text. Nicht jedes Wort muss verstanden werden — du suchst spezifische Informationen.' },
+  { title: '3. Beim Schreiben: falsche Textsorte', body: 'Du sollst einen formellen Brief schreiben und schreibst wie eine WhatsApp-Nachricht. Oder umgekehrt. Lerne die Unterschiede: „Sehr geehrte Damen und Herren" vs. „Liebe Frau Müller" vs. „Hallo Maria". Anrede, Schlussformel und Ton müssen zum Anlass passen.' },
+  { title: '4. Sprachbausteine unterschätzen', body: 'Die Sprachbausteine sehen einfach aus — drei Optionen, eine ist richtig. Aber hier werden genau die Grammatikfallen getestet, die Lerner am häufigsten machen: Dativ vs. Akkusativ, Adjektivendungen, Präpositionen. Regelmäßiges Training mit dem Sentence X-Ray hilft: Du lernst, jeden Satz zu analysieren.' },
+  { title: '5. Nicht auf den Partner eingehen (mündliche Prüfung)', body: 'In der Paarprüfung wirst du nicht nur danach bewertet, was du sagst — sondern auch, wie du auf deinen Partner reagierst. Hör zu, stell Rückfragen, greif seine Ideen auf. Die Prüfer wollen echte Kommunikation sehen, nicht zwei Monologe.' },
+];
+
+const DM_CARDS = [
+  { exam: 'Mündliche Prüfung', feature: 'KI-Sprechtraining', detail: 'Übe Prüfungsthemen (Reisen, Wohnen, Gesundheit) im freien Gespräch. Die KI gibt sofort Feedback zu Grammatik, Wortschatz und Ausdruck.' },
+  { exam: 'Hörverstehen', feature: 'Hörübungen A1–B2', detail: 'Authentische Dialoge und Monologe auf jedem Niveau. Trainiere dein Ohr für Alltagssprache, Durchsagen und Berichte.' },
+  { exam: 'Sprachbausteine', feature: 'Grammatik + Sentence X-Ray', detail: 'Verstehe Grammatik nicht nur als Regel, sondern im Kontext. Das Sentence X-Ray Tool zerlegt jeden Satz — Fälle, Wortarten, Satzglieder.' },
+  { exam: 'Leseverstehen', feature: 'Lesetexte A1–B2', detail: 'Übe mit steigender Textlänge und Komplexität. Von kurzen Anzeigen bis zu längeren Texten — genau wie in der Prüfung.' },
+];
+
+const EXAM_ROWS = [
+  ['Leseverstehen', 'Texte verstehen: Anzeigen, E-Mails, Zeitungsartikel, Aushänge', 'ca. 90 Min. (mit Sprachbausteinen)'],
+  ['Sprachbausteine', 'Grammatik und Wortschatz im Kontext: Lückentext mit Auswahlmöglichkeiten', '(in den 90 Min. enthalten)'],
+  ['Hörverstehen', 'Gespräche, Durchsagen, Radiosendungen verstehen', 'ca. 30 Min.'],
+  ['Schriftlicher Ausdruck', 'Einen persönlichen oder halbformellen Brief/E-Mail schreiben', 'ca. 30 Min.'],
+  ['Mündliche Prüfung', 'Gespräch mit Partner: sich vorstellen, über ein Thema sprechen, gemeinsam etwas planen', 'ca. 15–20 Min. (Paarprüfung)'],
+];
+
+const title = 'telc B1 Vorbereitung: Leitfaden 2026 | DeutschMeister';
+const description = 'telc Deutsch B1 Vorbereitung: 8-Wochen-Lernplan, Prüfungsaufbau, häufige Fehler und Tipps. Alles, was du zum Bestehen brauchst.';
+const keywords = 'telc Deutsch B1 Vorbereitung, telc B1 bestehen, telc B1 Prüfung Ablauf, telc B1 Lernplan, Deutsch B1 Prüfung';
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: 'telc Deutsch B1: Der komplette Leitfaden zur Vorbereitung (2026)',
+    author: { '@type': 'Organization', name: 'DeutschMeister' },
+    publisher: { '@type': 'Organization', name: 'DeutschMeister' },
+    datePublished: '2026-05-28',
+    dateModified: '2026-05-28',
+    description: 'Kompletter Leitfaden zur telc Deutsch B1 Vorbereitung mit 8-Wochen-Lernplan, Prüfungsaufbau, Tipps und häufigen Fehlern.',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQ_ITEMS.map((item) => ({ '@type': 'Question', name: item.q, acceptedAnswer: { '@type': 'Answer', text: item.a } })),
+  },
+];
+---
+
+<Layout title={title} description={description} keywords={keywords} canonical="https://deutsch-meister.de/leitfaden/telc-b1/" jsonLd={jsonLd}>
+  <div class="bg-gradient-to-br from-slate-50 via-white to-slate-100">
+    <article class="max-w-3xl mx-auto px-4 sm:px-6 pt-12 pb-20 prose-custom">
+      <!-- Header -->
+      <header class="mb-12">
+        <div class="inline-flex items-center gap-2 bg-purple-50 text-purple-700 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
+          <span aria-hidden="true">📖</span> Leitfaden
+        </div>
+        <h1 class="font-display text-3xl sm:text-4xl lg:text-[2.75rem] font-bold text-slate-800 leading-tight mb-6">
+          telc Deutsch B1: Der komplette Leitfaden zur Vorbereitung (2026)
+        </h1>
+        <p class="text-lg text-slate-600 leading-relaxed">
+          Du bereitest dich auf die <strong>telc Deutsch B1 Prüfung</strong> vor? Egal ob für den Aufenthaltstitel, die Einbürgerung oder den Beruf — dieser Leitfaden gibt dir alles, was du brauchst. Du erfährst, wie die Prüfung aufgebaut ist, was du Woche für Woche lernen solltest, und welche Fehler du vermeiden musst. Keine Theorie, keine Umwege. Nur das, was dich wirklich durch die telc B1 Prüfung bringt.
+        </p>
+        <p class="text-slate-500 text-sm mt-4">Lesezeit: ca. 15 Minuten · Zuletzt aktualisiert: Mai 2026</p>
+      </header>
+
+      <!-- Table of Contents -->
+      <nav class="mb-16 bg-white rounded-2xl border border-slate-100 p-6">
+        <p class="font-semibold text-slate-700 mb-3 text-sm uppercase tracking-wide">Inhalt</p>
+        <ol class="space-y-1.5 text-sm">
+          {TOC.map(([href, label], i) => (
+            <li><a href={href} class="text-amber-600 hover:text-amber-700 transition-colors">{i + 1}. {label}</a></li>
+          ))}
+        </ol>
+      </nav>
+
+      <!-- Section 1 -->
+      <section id="was-ist-telc" class="mb-16 scroll-mt-24">
+        <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-800 mb-6">Was ist die telc B1 Prüfung?</h2>
+        <p>telc steht für „The European Language Certificates". Die telc Deutsch B1 Prüfung ist eine der anerkanntesten Sprachprüfungen für Deutsch als Fremdsprache. Sie prüft, ob du das Niveau B1 des Gemeinsamen Europäischen Referenzrahmens (GER) erreicht hast.</p>
+        <p>B1 bedeutet: Du kannst dich in den meisten Alltagssituationen verständigen. Du verstehst die Hauptpunkte eines Gesprächs, wenn Standarddeutsch gesprochen wird. Du kannst über Erfahrungen berichten, Pläne erklären und kurze Texte zu vertrauten Themen schreiben.</p>
+        <p>telc Deutsch B1 wird in Deutschland von Behörden, Arbeitgebern und Bildungseinrichtungen anerkannt. Für den Aufenthaltstitel und die Einbürgerung ist B1 die Mindestanforderung. Die Prüfung wird auch international an Goethe-Instituten und Prüfungszentren angeboten.</p>
+        <h3 class="font-display text-xl font-bold text-slate-800 mt-8 mb-4">telc B1 vs. Goethe B1: Was ist der Unterschied?</h3>
+        <p>Beide Prüfungen testen dasselbe Sprachniveau und werden für Aufenthalt und Einbürgerung anerkannt. Der wichtigste Unterschied: telc hat einen eigenen Prüfungsteil „Sprachbausteine" (Grammatik und Wortschatz im Kontext), den Goethe nicht als separaten Teil hat. Manche Kandidaten empfinden telc als etwas praxisnäher. Letztlich ist der Unterschied gering — wähle die Prüfung, die in deiner Stadt leichter verfügbar ist.</p>
+        <p>Auch der DTZ (Deutsch-Test für Zuwanderer) kann B1 nachweisen. Er ist die Abschlussprüfung der Integrationskurse und testet auf A2–B1 Niveau. Wenn du gezielt B1 brauchst, ist telc oder Goethe die sicherere Wahl.</p>
+      </section>
+
+      <!-- Section 2 -->
+      <section id="aufbau" class="mb-16 scroll-mt-24">
+        <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-800 mb-6">Der Aufbau der telc B1 Prüfung</h2>
+        <p>Die telc Deutsch B1 Prüfung besteht aus zwei Teilen: einer schriftlichen und einer mündlichen Prüfung. Der schriftliche Teil wird an einem Tag absolviert, die mündliche Prüfung kann am selben oder an einem anderen Tag stattfinden.</p>
+        <div class="overflow-x-auto my-8">
+          <table class="w-full text-sm border-collapse">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-200">
+                <th class="text-left px-4 py-3 font-semibold text-slate-700">Prüfungsteil</th>
+                <th class="text-left px-4 py-3 font-semibold text-slate-700">Was wird geprüft?</th>
+                <th class="text-left px-4 py-3 font-semibold text-slate-700">Dauer</th>
+              </tr>
+            </thead>
+            <tbody>
+              {EXAM_ROWS.map(([teil, was, dauer], i) => (
+                <tr class={`border-b border-slate-100 ${i % 2 === 1 ? 'bg-slate-50/50' : ''}`}>
+                  <td class="px-4 py-3 font-medium text-slate-800">{teil}</td>
+                  <td class="px-4 py-3 text-slate-600">{was}</td>
+                  <td class="px-4 py-3 text-slate-600">{dauer}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <h3 class="font-display text-xl font-bold text-slate-800 mt-8 mb-4">Der schriftliche Teil im Detail</h3>
+        <p><strong>Leseverstehen:</strong> Du liest verschiedene Texte — von kurzen Anzeigen bis hin zu längeren Zeitungsartikeln. Die Aufgaben testen, ob du die Hauptaussagen verstehst und Details zuordnen kannst. Tipp: Lies zuerst die Aufgaben, dann den Text. So weißt du, wonach du suchst.</p>
+        <p><strong>Sprachbausteine:</strong> Dieser Teil ist einzigartig für telc. Du bekommst einen Lückentext und musst die richtige Grammatikform oder das richtige Wort aus drei Optionen wählen. Hier zeigt sich, ob du <a href="/grammar/b1.1" class="text-amber-600 hover:text-amber-700 font-medium">Grammatik auf B1-Niveau</a> wirklich verstehst — nicht nur auswendig gelernt hast.</p>
+        <p><strong>Hörverstehen:</strong> Du hörst Dialoge und Monologe — Alltagsgespräche, Durchsagen am Bahnhof, kurze Radioberichte. Die Aufgabe: Hauptaussagen erfassen und Detailinformationen zuordnen. Das Audio wird zweimal abgespielt. Regelmäßiges <a href="https://deutsch-meister.de/listening" class="text-amber-600 hover:text-amber-700 font-medium">Hörtraining</a> ist hier der Schlüssel.</p>
+        <p><strong>Schriftlicher Ausdruck:</strong> Du schreibst einen Brief oder eine E-Mail zu einem vorgegebenen Thema. Typisch: Antwort auf eine Einladung, Beschwerde, oder Anfrage. Achte auf die richtige Anrede, eine klare Struktur und einen passenden Schluss.</p>
+        <h3 class="font-display text-xl font-bold text-slate-800 mt-8 mb-4">Die mündliche Prüfung</h3>
+        <p>Die mündliche Prüfung findet normalerweise als Paarprüfung statt — du sprichst mit einem anderen Kandidaten. Zwei Prüfer bewerten euch.</p>
+        <p>Der Ablauf hat drei Teile: Zuerst stellst du dich kurz vor (Kontaktaufnahme). Dann sprichst du über ein vorgegebenes Thema — zum Beispiel Reisen, Gesundheit oder Medien. Im dritten Teil plant ihr gemeinsam etwas — zum Beispiel ein Fest oder einen Ausflug. Hier geht es nicht um perfekte Grammatik. Es geht darum, dass du kommunizieren kannst, auf deinen Partner eingehst und das Gespräch am Laufen hältst.</p>
+        <p>Das <a href="https://deutsch-meister.de/speaking" class="text-amber-600 hover:text-amber-700 font-medium">KI-Sprechtraining von Deutschmeister</a> simuliert genau solche Gesprächssituationen. Du übst, frei zu sprechen, und bekommst sofort Feedback zu Grammatik und Ausdruck.</p>
+      </section>
+
+      <!-- Section 3 -->
+      <section id="bestehen" class="mb-16 scroll-mt-24">
+        <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-800 mb-6">Wie viele Punkte braucht man zum Bestehen?</h2>
+        <p>Um die telc Deutsch B1 Prüfung zu bestehen, brauchst du mindestens <strong>60% der Punkte</strong> — und zwar in beiden Teilen getrennt. Das heißt: Du musst sowohl den schriftlichen als auch den mündlichen Teil mit mindestens 60% bestehen.</p>
+        <p>Wenn du einen Teil nicht bestehst, kannst du ihn einmal wiederholen, ohne den anderen Teil nochmal ablegen zu müssen. Das ist ein Vorteil gegenüber manchen anderen Prüfungen.</p>
+        <p>Die schriftliche Prüfung bringt maximal 225 Punkte, die mündliche maximal 75 Punkte. Insgesamt also 300 Punkte. Du brauchst 135 Punkte im schriftlichen und 45 Punkte im mündlichen Teil.</p>
+        <div class="bg-amber-50 border border-amber-100 rounded-xl p-5 mt-6">
+          <p class="text-amber-800 text-sm font-medium flex items-start gap-2">
+            <span aria-hidden="true" class="flex-shrink-0">🎯</span>
+            <span>Ziel nicht auf 60% — ziel auf 70–75%. Das gibt dir einen Sicherheitspuffer. Besonders beim Schreiben und Sprechen, wo die Bewertung subjektiver ist.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- Section 4 -->
+      <section id="lernplan" class="mb-16 scroll-mt-24">
+        <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-800 mb-6">Dein 8-Wochen-Lernplan für telc B1</h2>
+        <p>Dieser Plan geht davon aus, dass du bereits auf A2-Niveau bist und täglich 30–60 Minuten lernst. Wenn du weniger Zeit hast, streck den Plan. Wenn du mehr Zeit hast, mach die Übungen gründlicher — aber überspring keine Woche.</p>
+        <p class="mb-6">Bevor du loslegst: Mach den <a href="https://deutsch-meister.de/level-test" class="text-amber-600 hover:text-amber-700 font-medium">kostenlosen Einstufungstest</a>. In 5 Minuten weißt du, wo du wirklich stehst. Nicht wo du glaubst zu stehen.</p>
+        {WEEKS.map((w) => (
+          <div class="bg-white rounded-2xl border border-slate-100 p-6 mb-6">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="text-2xl" aria-hidden="true">{w.icon}</span>
+              <div>
+                <p class="text-sm font-semibold text-amber-600">{w.week}</p>
+                <h3 class="font-display text-lg font-bold text-slate-800">{w.title}</h3>
+              </div>
+            </div>
+            <ul class="space-y-2 mb-4">
+              {w.tasks.map((task) => (
+                <li class="flex items-start gap-2 text-sm text-slate-600">
+                  <span class="text-emerald-500 flex-shrink-0 mt-0.5" aria-hidden="true">✓</span>
+                  <span>{task}</span>
+                </li>
+              ))}
+            </ul>
+            <div class="bg-slate-50 rounded-lg p-3">
+              <p class="text-xs text-slate-500"><strong class="text-slate-700">Deutschmeister-Tipp:</strong> {w.tip}</p>
+            </div>
+          </div>
+        ))}
+      </section>
+
+      <!-- Section 5 -->
+      <section id="fehler" class="mb-16 scroll-mt-24">
+        <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-800 mb-6">Die 5 häufigsten Fehler bei der telc B1 Prüfung</h2>
+        {ERRORS.map((err) => (
+          <div class="mb-6">
+            <h3 class="font-display text-lg font-bold text-slate-800 mb-2 flex items-start gap-2">
+              <span class="text-amber-500 flex-shrink-0 mt-0.5" aria-hidden="true">⚠️</span>
+              {err.title}
+            </h3>
+            <p class="text-slate-600 leading-relaxed">{err.body}</p>
+          </div>
+        ))}
+      </section>
+
+      <!-- Section 6 -->
+      <section id="deutschmeister" class="mb-16 scroll-mt-24">
+        <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-800 mb-6">Wie Deutschmeister dich auf telc B1 vorbereitet</h2>
+        <p>Deutschmeister wurde von einem Arzt in Deutschland gebaut, der selbst Sprachprüfungen bestehen musste. Die Plattform ist kein Spiel — sie ist ein Werkzeug für Leute, die eine Prüfung bestehen müssen. So passt sie zur telc B1 Vorbereitung:</p>
+        <div class="grid sm:grid-cols-2 gap-4 my-8">
+          {DM_CARDS.map((item) => (
+            <div class="bg-white rounded-xl border border-slate-100 p-5">
+              <p class="text-xs font-semibold text-purple-600 uppercase tracking-wide mb-1">Prüfungsteil: {item.exam}</p>
+              <p class="font-semibold text-slate-800 mb-2">{item.feature}</p>
+              <p class="text-sm text-slate-600">{item.detail}</p>
+            </div>
+          ))}
+        </div>
+        <p>Dazu kommt: Ein <a href="https://deutsch-meister.de/level-test" class="text-amber-600 hover:text-amber-700 font-medium">kostenloser Einstufungstest</a>, der dir in 5 Minuten zeigt, wo du stehst. <a href="/grammar/b1.2" class="text-amber-600 hover:text-amber-700 font-medium">Grammatik-Lektionen bis B2</a> mit Erklärungen auf Englisch. Und <a href="https://deutsch-meister.de/pricing" class="text-amber-600 hover:text-amber-700 font-medium">Preise</a>, die deutlich unter einer Sprachschule liegen. Neugierig, wie Deutschmeister im Vergleich zu anderen Plattformen abschneidet? Schau dir den <a href="/vergleich/" class="text-amber-600 hover:text-amber-700 font-medium">ehrlichen Vergleich</a> an.</p>
+      </section>
+
+      <!-- Section 7: FAQ -->
+      <section id="faq" class="mb-16 scroll-mt-24">
+        <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-800 mb-8">Häufige Fragen zur telc B1 Prüfung</h2>
+        <div class="space-y-3">
+          {FAQ_ITEMS.map((item) => (
+            <details class="border border-slate-200 rounded-xl overflow-hidden group">
+              <summary class="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-slate-50 transition-colors cursor-pointer list-none">
+                <span class="font-medium text-slate-800 pr-4">{item.q}</span>
+                <span class="text-slate-400 flex-shrink-0 transition-transform group-open:rotate-180" aria-hidden="true">▾</span>
+              </summary>
+              <div class="px-5 pb-5 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-4">{item.a}</div>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-8 sm:p-12 text-center not-prose">
+        <h2 class="font-display text-2xl sm:text-3xl font-bold text-white mb-3">Starte deine telc B1 Vorbereitung</h2>
+        <p class="text-slate-400 mb-8 max-w-lg mx-auto">Mach den Einstufungstest, finde dein Niveau und fang an zu lernen. A1.1 ist kostenlos, der Rest kostet weniger als ein Kaffee pro Tag.</p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <a href="https://deutsch-meister.de/level-test" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-xl shadow-lg shadow-rose-500/25 hover:from-amber-600 hover:to-rose-600 transition-all">
+            Einstufungstest starten <span aria-hidden="true">→</span>
+          </a>
+          <a href="https://deutsch-meister.de/signup" class="inline-flex items-center gap-2 px-6 py-3 border border-slate-600 text-slate-300 font-medium rounded-xl hover:bg-slate-700 transition-colors">
+            Kostenlos registrieren
+          </a>
+        </div>
+      </section>
+
+      <!-- Disclaimer -->
+      <p class="text-xs text-slate-400 text-center mt-8">
+        Dieser Leitfaden dient der allgemeinen Information und ersetzt keine offizielle Prüfungsvorbereitung. Aktuelle Prüfungsformate und -gebühren findest du auf telc.net. Stand: Mai 2026.
+      </p>
+    </article>
+  </div>
+</Layout>
+
+<style>
+  .prose-custom p {
+    color: #475569;
+    line-height: 1.75;
+    margin-bottom: 1rem;
+  }
+  .prose-custom strong {
+    color: #1e293b;
+  }
+</style>

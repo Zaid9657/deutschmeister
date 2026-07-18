@@ -2,7 +2,7 @@
   # Build order: SPA first (creates dist/), then Astro, then merge Astro output
   # into the SPA dist/ so grammar files aren't wiped by the Vite build.
   # _astro/ contains Astro's JS/CSS chunks; grammar/ contains the HTML pages.
-  command = "npm run build && cd astro-site && npm install && npm run build && cd .. && cp -r astro-site/dist/grammar dist/grammar && mkdir -p dist/_astro && cp -r astro-site/dist/_astro/. dist/_astro/ && cp astro-site/dist/404.html dist/404.html && cp astro-site/dist/sitemap-0.xml dist/ && node scripts/ping-indexnow.mjs || true"
+  command = "npm run build && cd astro-site && npm install && npm run build && cd .. && cp -r astro-site/dist/grammar dist/grammar && cp -r astro-site/dist/vergleich dist/vergleich && cp -r astro-site/dist/leitfaden dist/leitfaden && mkdir -p dist/_astro && cp -r astro-site/dist/_astro/. dist/_astro/ && cp astro-site/dist/404.html dist/404.html && cp astro-site/dist/sitemap-0.xml dist/ && node scripts/ping-indexnow.mjs || true"
   publish = "dist"
   functions = "netlify/functions"
 
@@ -206,10 +206,12 @@
   from = "/payment/*"
   to = "/index.html"
   status = 200
-[[redirects]]
-  from = "/vergleich"
-  to = "/index.html"
-  status = 200
+# /vergleich (hub), /vergleich/babbel|duolingo|lingoda and /leitfaden/telc-b1 are
+# now static Astro files in dist/ — Netlify serves those real files before these
+# non-forced rewrites. These remain only as the SPA fallback for any OTHER
+# /vergleich/* or /leitfaden/* path that has no static file (e.g. an unknown
+# comparison slug, which the SPA redirects to the hub). The bare "/vergleich"
+# exact rule was removed so it can't shadow the static hub index.
 [[redirects]]
   from = "/vergleich/*"
   to = "/index.html"
