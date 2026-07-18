@@ -70,6 +70,13 @@ const meta = LEVEL_META[level] ?? LEVEL_META['a1.1'];
 // (for its title + level) and drop unknowns / self-references.
 const allTopics = await getAllTopics();
 const topicIndex = new Map(allTopics.map((t) => [t.slug, t]));
+
+// Global next topic (bridges level boundaries — the last topic of a1.1 points to
+// the first of a1.2). Used by the end-of-topic momentum block. getTopicFull's
+// `next` is within-level only, so compute the cross-level order here.
+const orderedAll = SUB_LEVELS.flatMap((l) => allTopics.filter((t) => t.sub_level === l));
+const curIdx = orderedAll.findIndex((t) => t.sub_level === level && t.slug === slug);
+const nextGlobal = (curIdx !== -1 && curIdx < orderedAll.length - 1) ? orderedAll[curIdx + 1] : null;
 const relatedSlugs = (Array.isArray(topic.related_slugs) && topic.related_slugs.length > 0)
   ? topic.related_slugs
   : (RELATED_TOPICS[slug] ?? []);
@@ -386,10 +393,59 @@ const articleSchema = {
         <h2 class="font-display text-2xl font-bold text-slate-800 mb-2">Practice Exercises</h2>
         <p class="text-slate-500 text-sm mb-5">{exercises.length} interactive {exercises.length === 1 ? 'exercise' : 'exercises'}</p>
         <div class="rounded-2xl border-2 border-indigo-100 bg-white p-6">
-          <ExercisePlayer exercises={exercises} client:visible />
+          <ExercisePlayer exercises={exercises} topicId={topic.id} client:visible />
         </div>
       </section>
     )}
+
+    <!-- Momentum block — keep learners moving to the next topic. The next-up card
+         is static (order is known at build); the score line is filled client-side
+         after the exercises are finished. -->
+    <section class="mb-10">
+      <!-- Score recap (revealed once the exercises are completed) -->
+      <div id="momentum-score" class="hidden mb-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-center">
+        <p class="text-sm font-semibold text-emerald-800">
+          You got <span id="momentum-score-val" class="font-bold"></span> on this topic's exercises.
+        </p>
+        <p id="momentum-score-note" class="text-xs text-emerald-700 mt-0.5"></p>
+      </div>
+
+      {nextGlobal ? (
+        <a
+          href={`/grammar/${nextGlobal.sub_level}/${nextGlobal.slug}`}
+          class="block rounded-2xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all group"
+        >
+          <p class="text-xs font-bold uppercase tracking-wider text-indigo-500 mb-2">Next up</p>
+          <div class="flex items-center gap-4">
+            <div class="min-w-0 flex-1">
+              <p class="font-display text-xl sm:text-2xl font-bold text-slate-900 leading-snug group-hover:text-indigo-700 transition-colors">
+                {nextGlobal.title_en}
+              </p>
+              {nextGlobal.description_en && (
+                <p class="text-sm text-slate-500 mt-1 line-clamp-2">{nextGlobal.description_en}</p>
+              )}
+              <span class={`inline-block mt-2 text-[10px] font-bold px-2 py-0.5 rounded-full ${(LEVEL_META[nextGlobal.sub_level] ?? meta).badge}`}>
+                {(LEVEL_META[nextGlobal.sub_level] ?? meta).label}
+              </span>
+            </div>
+            <span class="flex-shrink-0 w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xl group-hover:bg-indigo-700 group-hover:translate-x-0.5 transition-all">
+              →
+            </span>
+          </div>
+        </a>
+      ) : (
+        <div class="rounded-2xl border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-6 text-center">
+          <p class="font-display text-xl font-bold text-slate-900">🏆 That's the last topic — you've reached the end of the path.</p>
+          <p class="text-sm text-slate-500 mt-1">Revisit any topic to keep it sharp.</p>
+        </div>
+      )}
+
+      <div class="mt-3 text-center">
+        <a href={`/grammar/${level}`} class="text-sm text-slate-500 hover:text-slate-700 transition-colors">
+          ← Back to {meta.label} overview
+        </a>
+      </div>
+    </section>
 
     <!-- Upgrade CTA -->
     <div class={`rounded-2xl border ${meta.border} ${meta.bg} p-6 mb-10 text-center`}>
@@ -480,4 +536,24 @@ const articleSchema = {
     </div>
 
   </div>
+
+  <!-- Fill the momentum score recap once the exercises are finished. The
+       ExercisePlayer island dispatches `grammar:done` with the tally (and,
+       for signed-in users, records progress to user_grammar_progress). -->
+  <script is:inline>
+    window.addEventListener('grammar:done', function (e) {
+      var d = (e && e.detail) || {};
+      var box = document.getElementById('momentum-score');
+      var val = document.getElementById('momentum-score-val');
+      var note = document.getElementById('momentum-score-note');
+      if (!box || !val) return;
+      val.textContent = d.score + '/' + d.total + ' (' + d.pct + '%)';
+      if (note) {
+        note.textContent = d.pct >= 70
+          ? "Nice — that's a pass. Keep the momentum going below."
+          : 'Review the rules above, then try again anytime. Next topic is ready when you are.';
+      }
+      box.classList.remove('hidden');
+    });
+  </script>
 </Layout>

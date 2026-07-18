@@ -11,6 +11,8 @@ const { level } = Astro.params;
 const meta = LEVEL_META[level];
 const topics = await getTopicsForLevel(level);
 
+const levelPath = topics.map((t, i) => ({ id: t.id, slug: t.slug, n: i + 1 }));
+
 const title = `${meta.label} Grammatik — ${topics.length} Themen | DeutschMeister`;
 const description = `Alle ${topics.length} Grammatikthemen für ${meta.label}: ${topics.slice(0, 4).map(t => t.title_en).join(', ')} und mehr. Mit Regeln, Beispielen und Übungen.`;
 
@@ -56,6 +58,13 @@ const jsonLd = {
       <p class="text-slate-600 text-lg">
         {topics.length} Themen mit Erklärungen, Beispielen und interaktiven Übungen.
       </p>
+      <!-- Per-level progress — hidden until the client fills it for a signed-in user. -->
+      <div data-level-bar class="hidden items-center gap-3 mt-4 max-w-sm">
+        <div class="flex-1 h-2 rounded-full bg-slate-100 overflow-hidden">
+          <div data-level-bar-fill class={`h-full rounded-full bg-gradient-to-r ${meta.color} transition-all`} style="width:0%"></div>
+        </div>
+        <span data-level-bar-text class="text-sm font-semibold text-slate-500 whitespace-nowrap">0/{topics.length}</span>
+      </div>
     </div>
 
     <!-- Topic list -->
@@ -63,10 +72,12 @@ const jsonLd = {
       {topics.map((topic, i) => (
         <a
           href={`/grammar/${level}/${topic.slug}`}
+          data-topic-card
+          data-topic-id={topic.id}
           class={`flex items-center gap-4 p-5 rounded-xl border ${meta.border} bg-white hover:shadow-md hover:-translate-y-0.5 transition-all group`}
         >
-          <span class={`w-8 h-8 rounded-lg ${meta.bg} ${meta.badge} flex items-center justify-center text-sm font-bold flex-shrink-0`}>
-            {i + 1}
+          <span data-topic-badge class={`w-8 h-8 rounded-lg ${meta.bg} ${meta.badge} flex items-center justify-center text-sm font-bold flex-shrink-0`}>
+            <span data-topic-num>{i + 1}</span>
           </span>
           <div class="flex-1 min-w-0">
             <p class="font-semibold text-slate-800 group-hover:text-slate-900 transition-colors">
@@ -101,4 +112,62 @@ const jsonLd = {
       </div>
     </div>
   </div>
+
+  <!-- Path data for the client enhancer (this level, in order) -->
+  <script id="gm-level-path" type="application/json" is:inline set:html={JSON.stringify(levelPath)}></script>
+  <script>
+    // Progressive enhancement: checks + current highlight + progress bar for the
+    // signed-in user. Logged-out/SEO visitors stay JS-light (localStorage gate).
+    (async function () {
+      const el = document.getElementById('gm-level-path');
+      if (!el) return;
+      const path = JSON.parse(el.textContent);
+      const hasSession = (() => {
+        try {
+          for (let i = 0; i < localStorage.length; i++) {
+            const k = localStorage.key(i);
+            if (k && /^sb-.*-auth-token$/.test(k)) return true;
+          }
+        } catch (e) { /* ignore */ }
+        return false;
+      })();
+      if (!hasSession) return;
+
+      try {
+        const mod = await import('../../lib/grammarProgress.js');
+        const { user, byTopic } = await mod.getProgress();
+        if (!user) return;
+
+        const completed = new Set(path.filter((t) => byTopic[t.id]?.is_completed).map((t) => t.id));
+        const current = path.find((t) => !completed.has(t.id)) || null;
+
+        // Progress bar
+        const bar = document.querySelector('[data-level-bar]');
+        if (bar) {
+          bar.classList.remove('hidden');
+          bar.classList.add('flex');
+          const fill = bar.querySelector('[data-level-bar-fill]');
+          const text = bar.querySelector('[data-level-bar-text]');
+          if (fill) fill.style.width = `${Math.round((completed.size / path.length) * 100)}%`;
+          if (text) text.textContent = `${completed.size}/${path.length}`;
+        }
+
+        // Rows — checks + current highlight
+        document.querySelectorAll('[data-topic-card]').forEach((card) => {
+          const id = card.getAttribute('data-topic-id');
+          const badge = card.querySelector('[data-topic-badge]');
+          const num = card.querySelector('[data-topic-num]');
+          if (completed.has(id)) {
+            if (num) num.textContent = '✓';
+            if (badge) { badge.classList.add('bg-emerald-500', 'text-white'); }
+            card.classList.add('ring-1', 'ring-emerald-300');
+          } else if (current && id === current.id) {
+            card.classList.add('ring-2', 'ring-indigo-400', 'shadow-md');
+          }
+        });
+      } catch (e) {
+        console.warn('[grammar] level enhancer failed', e);
+      }
+    })();
+  </script>
 </Layout>
