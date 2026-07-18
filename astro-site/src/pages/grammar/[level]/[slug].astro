@@ -5,6 +5,7 @@ import RuleContent from '../../../components/RuleContent.astro';
 import RichText from '../../../components/RichText.astro';
 import { getAllTopicPaths, getTopicFull, getAllTopics, SUB_LEVELS, LEVEL_META } from '../../../lib/grammar.js';
 import { RELATED_TOPICS } from '../../../lib/relatedTopics.js';
+import { TOPIC_SEO } from '../../../lib/topicSeo.js';
 import '../../../styles/global.css';
 
 // True when a rule's JSONB content (object, array, or plain string) holds
@@ -112,9 +113,24 @@ const articleSchema = {
   educationalLevel: meta.label,
   about: { '@type': 'Thing', name: `German grammar: ${topicTitle}` },
 };
+
+// Per-topic SEO enrichment (snippet intro + FAQ section + FAQPage schema).
+const seoExtra = TOPIC_SEO[`${level}/${slug}`];
+const jsonLdSchemas = [breadcrumbSchema, articleSchema];
+if (seoExtra?.faqs?.length) {
+  jsonLdSchemas.push({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: seoExtra.faqs.map(({ q, a }) => ({
+      '@type': 'Question',
+      name: q,
+      acceptedAnswer: { '@type': 'Answer', text: a },
+    })),
+  });
+}
 ---
 
-<Layout title={pageTitle} description={pageDesc} canonical={canonicalUrlSlash} jsonLd={[breadcrumbSchema, articleSchema]}>
+<Layout title={pageTitle} description={pageDesc} canonical={canonicalUrlSlash} jsonLd={jsonLdSchemas}>
   <div class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
 
     <!-- Breadcrumb -->
@@ -139,6 +155,12 @@ const articleSchema = {
     </h1>
     {topic?.title_de && topic.title_de !== topicTitle && (
       <p class="text-xl text-slate-500 mb-6 font-display">{topic.title_de}</p>
+    )}
+
+    {seoExtra?.snippetIntro && (
+      <p class="text-lg text-slate-700 leading-relaxed mb-4">
+        {seoExtra.snippetIntro}
+      </p>
     )}
 
     {topic?.description_en && (
@@ -431,6 +453,24 @@ const articleSchema = {
               </a>
             );
           })}
+        </div>
+      </section>
+    )}
+
+    <!-- Per-topic FAQ (see src/lib/topicSeo.js) -->
+    {seoExtra?.faqs?.length > 0 && (
+      <section class="mb-10">
+        <h2 class="font-display text-2xl font-bold text-slate-800 mb-5">{seoExtra.faqHeading ?? 'Common questions'}</h2>
+        <div class="space-y-3">
+          {seoExtra.faqs.map(({ q, a }) => (
+            <details class="rounded-2xl border border-slate-200 bg-white overflow-hidden group">
+              <summary class="flex items-center justify-between gap-3 px-5 py-4 cursor-pointer list-none font-semibold text-slate-800 hover:bg-slate-50 transition-colors">
+                <span>{q}</span>
+                <span class="text-slate-400 flex-shrink-0 transition-transform group-open:rotate-180" aria-hidden="true">▾</span>
+              </summary>
+              <p class="px-5 pb-5 pt-1 text-sm text-slate-600 leading-relaxed">{a}</p>
+            </details>
+          ))}
         </div>
       </section>
     )}

@@ -194,13 +194,13 @@ const ReadingSectionPage = () => {
         title="German Reading Practice | 52 Lessons A1-B2 | DeutschMeister"
         description="Improve your German reading comprehension with 52 leveled reading passages. Authentic texts with comprehension questions for all CEFR levels from A1 to B2."
         keywords="German reading practice, German reading comprehension, learn German reading, German texts for learners, CEFR reading exercises"
-        path="/reading"
+        path="/reading/"
         structuredData={{
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://deutsch-meister.de"},
-            {"@type": "ListItem", "position": 2, "name": "Reading", "item": "https://deutsch-meister.de/reading"}
+            {"@type": "ListItem", "position": 2, "name": "Reading", "item": "https://deutsch-meister.de/reading/"}
           ]
         }}
       />
