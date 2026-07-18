@@ -1,0 +1,41 @@
+---
+import Layout from '../layouts/Layout.astro';
+import '../styles/global.css';
+
+// Astro always emits src/pages/404.astro as /404.html (even with
+// build.format: 'directory'), which Netlify serves for the 404 fallback.
+---
+
+<Layout
+  title="Page Not Found (404) | DeutschMeister"
+  description="This page doesn't exist or has moved. Explore German grammar lessons from A1 to B2 on DeutschMeister."
+  canonical="https://deutsch-meister.de/"
+  noindex={true}
+>
+  <div class="min-h-[60vh] flex items-center justify-center px-4 py-20">
+    <div class="max-w-md w-full text-center">
+      <div class="mx-auto mb-6 w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-400 via-rose-400 to-purple-500 flex items-center justify-center shadow-lg">
+        <span class="text-white font-display font-bold text-4xl">?</span>
+      </div>
+      <h1 class="font-display text-6xl font-bold text-slate-800 mb-2">404</h1>
+      <h2 class="text-xl font-semibold text-slate-600 mb-4">Page Not Found</h2>
+      <p class="text-slate-500 mb-8">
+        The page you're looking for doesn't exist or has been moved.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a
+          href="https://deutsch-meister.de/"
+          class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all"
+        >
+          Go home
+        </a>
+        <a
+          href="/grammar"
+          class="inline-flex items-center justify-center gap-2 px-6 py-3 border-2 border-slate-200 text-slate-700 font-semibold rounded-xl hover:bg-slate-50 transition-colors"
+        >
+          Browse grammar
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>
