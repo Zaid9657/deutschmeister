@@ -14,6 +14,14 @@ import SpeakingSession from '../components/speaking/SpeakingSession';
 import SpeakingEvaluationResults from '../components/SpeakingEvaluationResults';
 
 const LEVEL_ORDER = ['A1.1', 'A1.2', 'A2.1', 'A2.2', 'B1.1', 'B1.2', 'B2.1', 'B2.2'];
+// English display names for the level picker (the German names in
+// speakingPrompts.js are shared with the AI prompt config and stay unchanged).
+const LEVEL_NAMES_EN = {
+  'A1.1': 'Beginner 1', 'A1.2': 'Beginner 2',
+  'A2.1': 'Elementary 1', 'A2.2': 'Elementary 2',
+  'B1.1': 'Intermediate 1', 'B1.2': 'Intermediate 2',
+  'B2.1': 'Upper Intermediate 1', 'B2.2': 'Upper Intermediate 2',
+};
 const DURATIONS = [5, 10, 15];
 const PRICE_CENTS = { 5: 100, 10: 200, 15: 300 };
 const SUB_FREE_5MIN_PER_DAY = 2;
@@ -33,8 +41,8 @@ function getNextLevel(current) {
 }
 
 function euros(cents) {
-  if (!cents) return '0 €';
-  return cents % 100 === 0 ? `${cents / 100} €` : `${(cents / 100).toFixed(2).replace('.', ',')} €`;
+  if (!cents) return '€0';
+  return cents % 100 === 0 ? `€${cents / 100}` : `€${(cents / 100).toFixed(2)}`;
 }
 
 function utcMidnightISO() {
@@ -46,7 +54,7 @@ function BrowserUnsupportedBanner({ browserSupport }) {
   const isInApp = browserSupport.reason === 'in_app_browser';
   const handleCopy = async () => {
     try { await navigator.clipboard.writeText(window.location.href); }
-    catch { window.prompt('URL kopieren:', window.location.href); }
+    catch { window.prompt('Copy URL:', window.location.href); }
   };
   return (
     <div className="max-w-lg mx-auto mb-6 bg-white rounded-2xl border border-amber-200 p-6 text-center">
@@ -54,20 +62,20 @@ function BrowserUnsupportedBanner({ browserSupport }) {
         <AlertTriangle className="w-7 h-7 text-amber-500" />
       </div>
       <h3 className="font-bold text-slate-800 mb-2">
-        {isInApp ? 'In-App-Browser erkannt' : 'Browser nicht unterstützt'}
+        {isInApp ? 'In-app browser detected' : 'Browser not supported'}
       </h3>
       <p className="text-sm text-slate-500 mb-4">
         {isInApp
-          ? 'Bitte öffne diese Seite in Safari oder Chrome. In-App-Browser unterstützen kein Mikrofon.'
-          : 'Dein Browser unterstützt die benötigten Audio-Funktionen nicht.'}
+          ? "Please open this page in Safari or Chrome. In-app browsers don't support the microphone."
+          : "Your browser doesn't support the required audio features."}
       </p>
       {isInApp ? (
         <button onClick={handleCopy} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-semibold text-sm transition-colors">
-          URL kopieren
+          Copy URL
         </button>
       ) : (
         <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-600">
-          <Monitor className="w-4 h-4" /> Bitte verwende <strong>Chrome</strong>, <strong>Edge</strong> oder <strong>Safari</strong>
+          <Monitor className="w-4 h-4" /> Please use <strong>Chrome</strong>, <strong>Edge</strong> or <strong>Safari</strong>
         </div>
       )}
     </div>
@@ -83,10 +91,10 @@ function MissionResultBanner({ passed }) {
       </div>
       <div>
         <h3 className={`font-bold ${isPassed ? 'text-green-700' : 'text-amber-700'}`}>
-          {isPassed ? 'Mission bestanden!' : 'Fast geschafft'}
+          {isPassed ? 'Mission complete!' : 'Almost there'}
         </h3>
         <p className={`text-sm ${isPassed ? 'text-green-600' : 'text-amber-600'}`}>
-          {isPassed ? 'Du hast das Missionsziel erreicht. Weiter so!' : 'Du hast das Ziel noch nicht ganz erreicht — versuch es gleich nochmal.'}
+          {isPassed ? 'You reached the mission goal. Keep it up!' : "You didn't quite reach the goal — give it another try."}
         </p>
       </div>
     </div>
@@ -182,13 +190,13 @@ const SpeakingPage = () => {
 
   let fiveMinLabel;
   if (subscriber) {
-    fiveMinLabel = fiveMinIsFree ? `5 Min · noch ${fiveMinFreeRemaining}/${SUB_FREE_5MIN_PER_DAY} heute gratis` : '5 Min — 1 €';
+    fiveMinLabel = fiveMinIsFree ? `5 min · ${fiveMinFreeRemaining}/${SUB_FREE_5MIN_PER_DAY} free today` : '5 min — €1';
   } else if (usage?.unlimited) {
-    fiveMinLabel = '5 Min · gratis';
+    fiveMinLabel = '5 min · free';
   } else {
-    fiveMinLabel = fiveMinIsFree ? `5 Min · noch ${fiveMinFreeRemaining} gratis` : '5 Min — 1 €';
+    fiveMinLabel = fiveMinIsFree ? `5 min · ${fiveMinFreeRemaining} free left` : '5 min — €1';
   }
-  const durationLabel = (m) => (m === 5 ? fiveMinLabel : `${m} Min — ${euros(PRICE_CENTS[m])}`);
+  const durationLabel = (m) => (m === 5 ? fiveMinLabel : `${m} min — ${euros(PRICE_CENTS[m])}`);
 
   const activeMission = missions.find((m) => m.id === selectedMissionId) || null;
   const missionLocked = !!activeMission && !activeMission.is_free && !hasAccess;
@@ -212,7 +220,7 @@ const SpeakingPage = () => {
         return;
       }
       if (!res.ok) {
-        setStartError({ type: 'error', message: data.error || 'Sitzung konnte nicht gestartet werden.' });
+        setStartError({ type: 'error', message: data.error || 'The session could not be started.' });
         return;
       }
       setSession({
@@ -226,7 +234,7 @@ const SpeakingPage = () => {
       setPhase('session');
     } catch (err) {
       console.error('start error:', err);
-      setStartError({ type: 'error', message: 'Netzwerkfehler — bitte erneut versuchen.' });
+      setStartError({ type: 'error', message: 'Network error — please try again.' });
     } finally {
       setStarting(false);
     }
@@ -250,16 +258,16 @@ const SpeakingPage = () => {
           <div className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-teal-400 to-emerald-500 flex items-center justify-center shadow-xl shadow-teal-200">
             <Mic className="w-10 h-10 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-slate-900 mb-3">Sprechen üben</h1>
+          <h1 className="text-3xl font-bold text-slate-900 mb-3">German Speaking Practice</h1>
           <p className="text-slate-500 mb-8">
-            Melde dich an, um mit deinem KI-Sprachpartner Deutsch zu üben — mit sofortigem Feedback.
+            Sign in to practice speaking German with your AI conversation partner — with instant feedback.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link to="/signup" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-2xl shadow-lg shadow-rose-200 hover:shadow-xl transition-all">
-              Kostenlos registrieren <ArrowRight className="w-5 h-5" />
+              Sign up free <ArrowRight className="w-5 h-5" />
             </Link>
             <Link to="/login" className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-slate-200 text-slate-700 font-semibold rounded-2xl hover:border-slate-300 hover:bg-slate-50 transition-all">
-              Anmelden
+              Log in
             </Link>
           </div>
         </div>
@@ -290,10 +298,10 @@ const SpeakingPage = () => {
           <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center">
             <AlertTriangle className="w-8 h-8 text-amber-500" />
           </div>
-          <h2 className="text-xl font-bold text-slate-800 mb-2">Auswertung fehlgeschlagen</h2>
-          <p className="text-sm text-slate-500 mb-6">{evaluation?.message || 'Auswertung konnte nicht erstellt werden.'}</p>
+          <h2 className="text-xl font-bold text-slate-800 mb-2">Evaluation failed</h2>
+          <p className="text-sm text-slate-500 mb-6">{evaluation?.message || 'The evaluation could not be created.'}</p>
           <button onClick={backToSetup} className="w-full py-3.5 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-xl transition-colors">
-            Zurück zur Übersicht
+            Back to overview
           </button>
         </div>
       </div>
@@ -323,9 +331,9 @@ const SpeakingPage = () => {
   return (
     <div className="min-h-screen bg-slate-50 pt-16">
       <SEO
-        title="Deutsch sprechen üben | KI-Sprachpartner | DeutschMeister"
-        description="Übe Deutsch sprechen mit einem KI-Sprachpartner: geführte Missionen oder freies Gespräch, mit sofortigem Feedback. A1 bis B2."
-        path="/speaking"
+        title="German Speaking Practice with an AI Partner | DeutschMeister"
+        description="Practice speaking German with an AI conversation partner: guided missions or free conversation, with instant feedback. Levels A1 to B2."
+        path="/speaking/"
       />
 
       <div className="max-w-lg mx-auto px-4 sm:px-6 py-6 sm:py-10">
@@ -333,9 +341,9 @@ const SpeakingPage = () => {
         <div className="flex items-start justify-between mb-6">
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-teal-100/80 text-teal-700 text-[11px] font-semibold mb-2 tracking-wide uppercase">
-              <Mic className="w-3 h-3" /> KI-Sprachpraxis
+              <Mic className="w-3 h-3" /> AI Speaking Practice
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Sprechen üben</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">German Speaking Practice</h1>
           </div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-sm font-semibold text-slate-700 shadow-sm">
             <Wallet className="w-4 h-4 text-teal-500" />
@@ -362,10 +370,10 @@ const SpeakingPage = () => {
             </button>
           ))}
         </div>
-        <p className="text-sm text-slate-500 mb-6">{levelConfig.name}</p>
+        <p className="text-sm text-slate-500 mb-6">{LEVEL_NAMES_EN[selectedLevel] || levelConfig.name}</p>
 
         {/* Duration */}
-        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Dauer</label>
+        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Duration</label>
         <div className="relative mb-6">
           <select
             value={selectedMinutes}
@@ -382,7 +390,7 @@ const SpeakingPage = () => {
         {/* Missions */}
         <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Mission (optional)</label>
         {missionsLoading ? (
-          <div className="flex items-center gap-2 text-slate-400 text-sm py-3"><Loader2 className="w-4 h-4 animate-spin" /> Missionen laden…</div>
+          <div className="flex items-center gap-2 text-slate-400 text-sm py-3"><Loader2 className="w-4 h-4 animate-spin" /> Loading missions…</div>
         ) : (
           <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 mb-2">
             <button
@@ -391,7 +399,7 @@ const SpeakingPage = () => {
                 selectedMissionId === null ? 'bg-slate-800 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
               }`}
             >
-              <MessageCircle className="w-3.5 h-3.5" /> Freies Gespräch
+              <MessageCircle className="w-3.5 h-3.5" /> Free Conversation
             </button>
             {missions.map((m) => {
               const locked = !m.is_free && !hasAccess;
@@ -405,7 +413,7 @@ const SpeakingPage = () => {
                   }`}
                 >
                   <span className={`text-[11px] font-bold ${selected ? 'text-teal-100' : 'text-slate-400'}`}>{m.mission_order}</span>
-                  <span className="truncate max-w-[9rem]">{m.title_de}</span>
+                  <span className="truncate max-w-[9rem]">{m.title_en || m.title_de}</span>
                   {m.is_free ? null : locked ? <Lock className="w-3 h-3" /> : null}
                 </button>
               );
@@ -430,7 +438,7 @@ const SpeakingPage = () => {
         {/* Start error / notices */}
         {startError?.type === 'funds' && (
           <div className="mb-4 p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-sm text-amber-700 text-center">
-            Guthaben reicht nicht — Aufladen kommt in Kürze.
+            Not enough credit — top-ups are coming soon.
           </div>
         )}
         {startError?.type === 'error' && (
@@ -440,14 +448,14 @@ const SpeakingPage = () => {
         )}
         {!canAfford && !startError && (
           <div className="mb-4 p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-sm text-amber-700 text-center">
-            Guthaben reicht nicht — Aufladen kommt in Kürze.
+            Not enough credit — top-ups are coming soon.
           </div>
         )}
 
         {/* Start / upgrade */}
         {missionLocked ? (
           <Link to="/pricing" className="flex items-center justify-center gap-2 w-full py-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold rounded-2xl shadow-md shadow-amber-200 transition-all">
-            <Crown className="w-5 h-5" /> Mit Pro freischalten
+            <Crown className="w-5 h-5" /> Unlock with Pro
           </Link>
         ) : (
           <button
@@ -456,11 +464,11 @@ const SpeakingPage = () => {
             className="flex items-center justify-center gap-2 w-full py-4 bg-teal-500 hover:bg-teal-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl shadow-md shadow-teal-200 transition-all active:scale-[0.99]"
           >
             {starting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Play className="w-5 h-5" />}
-            {selectedCost > 0 ? `Starten · ${euros(selectedCost)}` : 'Starten'}
+            {selectedCost > 0 ? `Start · ${euros(selectedCost)}` : 'Start'}
           </button>
         )}
         <p className="text-center text-xs text-slate-400 mt-3">
-          {activeMission ? 'Geführte Mission' : 'Freies Gespräch'} · {selectedMinutes} Minuten
+          {activeMission ? 'Guided mission' : 'Free conversation'} · {selectedMinutes} minutes
         </p>
       </div>
     </div>

@@ -409,14 +409,14 @@ const SentenceXRay = () => {
       <SEO
         title="Sentence X-Ray — Analyze Any German Sentence"
         description="Paste any German sentence and instantly see the grammatical breakdown. Color-coded cases, word roles, and explanations for why each word works the way it does."
-        path="/analyze"
+        path="/analyze/"
         keywords="German grammar analyzer, German sentence analysis, German cases, nominative accusative dative genitive, learn German grammar"
         structuredData={{
           "@context": "https://schema.org",
           "@type": "WebApplication",
           "name": "Sentence X-Ray",
           "description": "Analyze any German sentence to see grammatical cases, word roles, and explanations.",
-          "url": "https://deutsch-meister.de/analyze",
+          "url": "https://deutsch-meister.de/analyze/",
           "applicationCategory": "EducationalApplication",
           "operatingSystem": "Any",
           "offers": {

@@ -71,26 +71,26 @@ const ROUTES = [
   {
     path: '/speaking',
     dir: 'speaking',
-    title: 'Deutsch sprechen üben | KI-Sprachpartner | DeutschMeister',
-    description: 'Übe Deutsch sprechen mit einem KI-Sprachpartner: geführte Missionen oder freies Gespräch, mit sofortigem Feedback. A1 bis B2.',
+    title: 'German Speaking Practice with an AI Partner | DeutschMeister',
+    description: 'Practice speaking German with an AI conversation partner: guided missions or free conversation, with instant feedback. Levels A1 to B2.',
     jsonLd: [],
     content: `
 <div class="min-h-screen bg-slate-50 pt-16"><div class="max-w-lg mx-auto px-4 sm:px-6 py-6 sm:py-10">
   <div class="mb-6">
-    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-teal-100/80 text-teal-700 text-[11px] font-semibold mb-2 tracking-wide uppercase">KI-Sprachpraxis</div>
-    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Sprechen üben</h1>
+    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-teal-100/80 text-teal-700 text-[11px] font-semibold mb-2 tracking-wide uppercase">AI Speaking Practice</div>
+    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">German Speaking Practice</h1>
   </div>
   <p class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Level</p>
   <div class="flex gap-2 overflow-x-auto pb-2 mb-1">
     ${LEVELS.map((l) => `<span class="flex-shrink-0 px-4 py-2 rounded-xl text-sm font-bold bg-white text-slate-600 border border-slate-200">${l}</span>`).join('\n    ')}
   </div>
-  <p class="text-sm text-slate-500 mb-6">Anfänger 1</p>
-  <p class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Dauer</p>
-  <p class="text-slate-800 font-medium mb-6">5, 10 oder 15 Minuten</p>
+  <p class="text-sm text-slate-500 mb-6">Beginner 1</p>
+  <p class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Duration</p>
+  <p class="text-slate-800 font-medium mb-6">5, 10 or 15 minutes</p>
   <p class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Mission (optional)</p>
-  <p class="text-slate-600 text-sm mb-6">Freies Gespräch oder geführte Missionen mit sofortigem Feedback — von A1 bis B2.</p>
-  <p class="flex items-center justify-center gap-2 w-full py-4 bg-teal-500 text-white font-bold rounded-2xl shadow-md shadow-teal-200 text-center">Starten</p>
-  <p class="text-center text-xs text-slate-400 mt-3">Freies Gespräch · 5 Minuten</p>
+  <p class="text-slate-600 text-sm mb-6">Free conversation or guided missions with instant feedback — levels A1 to B2.</p>
+  <p class="flex items-center justify-center gap-2 w-full py-4 bg-teal-500 text-white font-bold rounded-2xl shadow-md shadow-teal-200 text-center">Start</p>
+  <p class="text-center text-xs text-slate-400 mt-3">Free conversation · 5 minutes</p>
 </div></div>`,
   },
   {
@@ -126,7 +126,7 @@ const ROUTES = [
         '@type': 'BreadcrumbList',
         itemListElement: [
           { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de' },
-          { '@type': 'ListItem', position: 2, name: 'Level Test', item: 'https://deutsch-meister.de/level-test' },
+          { '@type': 'ListItem', position: 2, name: 'Level Test', item: 'https://deutsch-meister.de/level-test/' },
         ],
       },
     ],
@@ -177,7 +177,7 @@ const ROUTES = [
         '@type': 'WebApplication',
         name: 'Sentence X-Ray',
         description: 'Analyze any German sentence to see grammatical cases, word roles, and explanations.',
-        url: 'https://deutsch-meister.de/analyze',
+        url: 'https://deutsch-meister.de/analyze/',
         applicationCategory: 'EducationalApplication',
         operatingSystem: 'Any',
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
@@ -222,7 +222,7 @@ const ROUTES = [
         '@type': 'PodcastSeries',
         name: 'DeutschMeister German Learning Podcast',
         description: 'German language learning podcast with 24 episodes covering levels A1 to B2. Each episode features native speaker conversations with transcripts and vocabulary explanations.',
-        webFeed: 'https://deutsch-meister.de/podcasts',
+        webFeed: 'https://deutsch-meister.de/podcasts/',
         inLanguage: ['de', 'en'],
         numberOfEpisodes: 24,
         genre: ['Education', 'Language Learning'],
@@ -244,7 +244,7 @@ const ROUTES = [
         '@type': 'BreadcrumbList',
         itemListElement: [
           { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de' },
-          { '@type': 'ListItem', position: 2, name: 'Podcasts', item: 'https://deutsch-meister.de/podcasts' },
+          { '@type': 'ListItem', position: 2, name: 'Podcasts', item: 'https://deutsch-meister.de/podcasts/' },
         ],
       },
     ],
@@ -288,7 +288,7 @@ const ROUTES = [
         '@type': 'BreadcrumbList',
         itemListElement: [
           { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de' },
-          { '@type': 'ListItem', position: 2, name: 'Listening', item: 'https://deutsch-meister.de/listening' },
+          { '@type': 'ListItem', position: 2, name: 'Listening', item: 'https://deutsch-meister.de/listening/' },
         ],
       },
     ],
@@ -314,7 +314,7 @@ const ROUTES = [
         '@type': 'BreadcrumbList',
         itemListElement: [
           { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de' },
-          { '@type': 'ListItem', position: 2, name: 'Reading', item: 'https://deutsch-meister.de/reading' },
+          { '@type': 'ListItem', position: 2, name: 'Reading', item: 'https://deutsch-meister.de/reading/' },
         ],
       },
     ],
@@ -343,7 +343,9 @@ function mustReplace(html, pattern, replacement, label, route) {
 
 let summary = [];
 for (const route of ROUTES) {
-  const url = BASE + route.path;
+  // These routes are served at the trailing-slash URL (/route 301s to /route/),
+  // so canonical/og:url/JSON-LD must use the slash form.
+  const url = `${BASE}${route.path}/`;
   let html = shell;
   html = mustReplace(html, /<title>[\s\S]*?<\/title>/, `<title>${route.title}</title>`, 'title', route.path);
   html = mustReplace(html, /(<meta name="description" content=")[^"]*(")/, `$1${esc(route.description)}$2`, 'description', route.path);

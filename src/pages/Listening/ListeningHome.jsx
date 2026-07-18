@@ -24,13 +24,13 @@ const ListeningHome = () => {
         title="German Listening Practice | 480 Audio Exercises A1-B2 | DeutschMeister"
         description="Improve your German listening comprehension with 480 native speaker dialogues across all CEFR levels. Interactive exercises with questions and instant feedback."
         keywords="German listening practice, German audio exercises, German listening comprehension, learn German listening, German dialogues"
-        path="/listening"
+        path="/listening/"
         structuredData={{
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://deutsch-meister.de"},
-            {"@type": "ListItem", "position": 2, "name": "Listening", "item": "https://deutsch-meister.de/listening"}
+            {"@type": "ListItem", "position": 2, "name": "Listening", "item": "https://deutsch-meister.de/listening/"}
           ]
         }}
       />

@@ -145,7 +145,7 @@ const LevelTest = () => {
         title="Free German Level Test | Find Your CEFR Level (A1-B2) | DeutschMeister"
         description="Take our free German level test to discover your CEFR level. Test your reading, listening, and speaking skills in 15 minutes. Instant results with personalized learning recommendations."
         keywords="German level test, CEFR test, German placement test, what level is my German, German proficiency test, free German test"
-        path="/level-test"
+        path="/level-test/"
         structuredData={[
           {
             "@context": "https://schema.org",
@@ -205,7 +205,7 @@ const LevelTest = () => {
             "@type": "BreadcrumbList",
             "itemListElement": [
               {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://deutsch-meister.de"},
-              {"@type": "ListItem", "position": 2, "name": "Level Test", "item": "https://deutsch-meister.de/level-test"}
+              {"@type": "ListItem", "position": 2, "name": "Level Test", "item": "https://deutsch-meister.de/level-test/"}
             ]
           }
         ]}

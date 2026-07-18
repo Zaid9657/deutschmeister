@@ -70,14 +70,14 @@ const PodcastsPage = () => {
         title="German Podcasts for Beginners | Learn German A1-B2 | DeutschMeister"
         description="Free German podcasts designed for learners. 24 episodes with native speaker audio and transcripts for levels A1 to B2. Improve your German listening skills while commuting or relaxing."
         keywords="German podcast for beginners, learn German podcast, German listening practice, German audio lessons, German podcast with transcript"
-        path="/podcasts"
+        path="/podcasts/"
         structuredData={[
           {
             "@context": "https://schema.org",
             "@type": "PodcastSeries",
             "name": "DeutschMeister German Learning Podcast",
             "description": "German language learning podcast with 24 episodes covering levels A1 to B2. Each episode features native speaker conversations with transcripts and vocabulary explanations.",
-            "webFeed": "https://deutsch-meister.de/podcasts",
+            "webFeed": "https://deutsch-meister.de/podcasts/",
             "inLanguage": ["de", "en"],
             "numberOfEpisodes": 24,
             "genre": ["Education", "Language Learning"],
@@ -131,7 +131,7 @@ const PodcastsPage = () => {
             "@type": "BreadcrumbList",
             "itemListElement": [
               {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://deutsch-meister.de"},
-              {"@type": "ListItem", "position": 2, "name": "Podcasts", "item": "https://deutsch-meister.de/podcasts"}
+              {"@type": "ListItem", "position": 2, "name": "Podcasts", "item": "https://deutsch-meister.de/podcasts/"}
             ]
           }
         ]}
