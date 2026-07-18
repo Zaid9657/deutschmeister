@@ -13,7 +13,7 @@
 
 ## Main URLs
 - Homepage: https://deutsch-meister.de
-- Grammar Guide: https://deutsch-meister.de/grammar/overview
+- Grammar Guide: https://deutsch-meister.de/grammar/
 - Level Test: https://deutsch-meister.de/level-test
 - AI Speaking: https://deutsch-meister.de/speaking
 - Podcasts: https://deutsch-meister.de/podcasts
