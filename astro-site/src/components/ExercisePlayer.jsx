@@ -1,4 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+// Cheap synchronous check for a stored Supabase session, so the logged-out
+// majority never fetches the Supabase client chunk.
+function hasStoredSession() {
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && /^sb-.*-auth-token$/.test(k)) return true;
+    }
+  } catch { /* ignore */ }
+  return false;
+}
 
 const ICONS = {
   correct: '✓',
@@ -90,12 +102,31 @@ function FillBlank({ exercise, onAnswer, answered }) {
   );
 }
 
-export default function ExercisePlayer({ exercises }) {
+export default function ExercisePlayer({ exercises, topicId }) {
   const [current, setCurrent] = useState(0);
   const [results, setResults] = useState([]); // array of booleans
   const [answered, setAnswered] = useState(false);
   const [showExplanation, setShowExplanation] = useState(false);
   const [done, setDone] = useState(false);
+
+  // On completion: surface the tally to the page's momentum block, and (for
+  // signed-in users) record the run to user_grammar_progress — same shape the
+  // SPA writes, so the dashboard's continue-state stays in sync. Fire-and-forget.
+  useEffect(() => {
+    if (!done || !exercises || exercises.length === 0) return;
+    const total = exercises.length;
+    const score = results.filter(Boolean).length;
+    const pct = Math.round((score / total) * 100);
+    try {
+      window.dispatchEvent(new CustomEvent('grammar:done', { detail: { score, total, pct } }));
+    } catch { /* ignore */ }
+    if (topicId && hasStoredSession()) {
+      import('../lib/grammarProgress.js')
+        .then((m) => m.recordAttempt(topicId, pct))
+        .catch(() => {});
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [done]);
 
   if (!exercises || exercises.length === 0) {
     return (

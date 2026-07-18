@@ -12,6 +12,14 @@ const byLevel = SUB_LEVELS.map((level) => ({
   topics: allTopics.filter((t) => t.sub_level === level),
 }));
 
+// Flat, ordered path across all levels — the client uses this (plus the user's
+// progress) to pick the "continue" target and highlight the current topic.
+const orderedPath = byLevel.flatMap(({ level, topics }) =>
+  topics.map((t, i) => ({ id: t.id, level, slug: t.slug, title: t.title_en, n: i + 1 }))
+);
+const firstTopic = orderedPath[0];
+const totalTopics = orderedPath.length;
+
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
@@ -30,7 +38,7 @@ const jsonLd = {
 >
   <div class="max-w-5xl mx-auto px-4 sm:px-6 py-12">
     <!-- Header -->
-    <div class="text-center mb-12">
+    <div class="text-center mb-8">
       <h1 class="font-display text-4xl sm:text-5xl font-bold text-slate-900 mb-4">
         Deutsche Grammatik
       </h1>
@@ -49,11 +57,46 @@ const jsonLd = {
       </div>
     </div>
 
+    <!-- Continue / start hero. Server-rendered in the logged-out "start" state
+         (SEO-safe, no JS); the client upgrades it to a resume card when a
+         signed-in user with progress is detected. -->
+    {firstTopic && (
+      <a
+        id="gm-hero"
+        href={`/grammar/${firstTopic.level}/${firstTopic.slug}`}
+        class="block mb-12 rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50 to-white p-6 sm:p-7 hover:shadow-md transition-all group"
+      >
+        <div class="flex items-center gap-5">
+          <div class="hidden sm:flex w-14 h-14 rounded-2xl bg-white border border-indigo-100 items-center justify-center flex-shrink-0 shadow-sm">
+            <span id="gm-hero-icon" class="text-2xl">📖</span>
+          </div>
+          <div class="min-w-0 flex-1">
+            <p id="gm-hero-eyebrow" class="text-xs font-bold uppercase tracking-wider text-indigo-500 mb-1">
+              New here? Start with the basics
+            </p>
+            <p id="gm-hero-title" class="font-display text-lg sm:text-xl font-bold text-slate-900 leading-snug">
+              A1.1 · Topic 1: {firstTopic.title}
+            </p>
+            <p id="gm-hero-sub" class="text-sm text-slate-500 mt-0.5">
+              64 topics from complete beginner to upper-intermediate.
+            </p>
+          </div>
+          <span
+            id="gm-hero-btn"
+            class="hidden sm:inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-indigo-600 text-white font-semibold text-sm group-hover:bg-indigo-700 transition-all flex-shrink-0"
+          >
+            <span id="gm-hero-btn-label">Start learning</span>
+            <span aria-hidden="true" class="group-hover:translate-x-0.5 transition-transform">→</span>
+          </span>
+        </div>
+      </a>
+    )}
+
     <!-- Level sections -->
     <div class="space-y-10">
       {byLevel.map(({ level, meta, topics }) => (
         <section>
-          <div class="flex items-center gap-3 mb-4">
+          <div class="flex items-center gap-3 mb-4 flex-wrap">
             <a href={`/grammar/${level}`} class="group flex items-center gap-3">
               <div class={`w-10 h-10 rounded-xl bg-gradient-to-r ${meta.color} flex items-center justify-center shadow-sm`}>
                 <span class="text-white font-display font-bold text-sm">{meta.label}</span>
@@ -62,15 +105,27 @@ const jsonLd = {
                 {meta.label} — {meta.name}
               </h2>
             </a>
+            <!-- Per-level progress — hidden until the client fills it for a signed-in user. -->
+            <div data-level-bar={level} class="hidden items-center gap-2 sm:ml-auto w-full sm:w-auto mt-2 sm:mt-0">
+              <div class="flex-1 sm:w-32 h-2 rounded-full bg-slate-100 overflow-hidden">
+                <div data-level-bar-fill class={`h-full rounded-full bg-gradient-to-r ${meta.color} transition-all`} style="width:0%"></div>
+              </div>
+              <span data-level-bar-text class="text-xs font-semibold text-slate-500 whitespace-nowrap">0/{topics.length}</span>
+            </div>
           </div>
 
           <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {topics.map((topic, i) => (
               <a
                 href={`/grammar/${level}/${topic.slug}`}
-                class={`block p-4 rounded-xl border ${meta.border} ${meta.bg} hover:shadow-md transition-all group`}
+                data-topic-card
+                data-topic-id={topic.id}
+                class={`relative block p-4 rounded-xl border ${meta.border} ${meta.bg} hover:shadow-md transition-all group`}
               >
-                <span class="text-xs font-semibold text-slate-400 mb-1 block">#{i + 1}</span>
+                <span class="flex items-center gap-1.5 mb-1">
+                  <span data-topic-num class="text-xs font-semibold text-slate-400">#{i + 1}</span>
+                  <span data-topic-check class="hidden items-center justify-center w-4 h-4 rounded-full bg-emerald-500 text-white text-[10px] font-bold" aria-label="Completed">✓</span>
+                </span>
                 <p class="font-semibold text-slate-800 text-sm group-hover:text-slate-900 leading-snug">
                   {topic.title_en}
                 </p>
@@ -102,4 +157,100 @@ const jsonLd = {
       </a>
     </div>
   </div>
+
+  <!-- Ordered path for the client enhancer -->
+  <script id="gm-ordered" type="application/json" is:inline set:html={JSON.stringify(orderedPath)}></script>
+  <script>
+    // Progressive enhancement: only runs for signed-in users. Logged-out/SEO
+    // visitors never load the Supabase client (kept behind the localStorage gate).
+    (async function () {
+      const el = document.getElementById('gm-ordered');
+      if (!el) return;
+      const ordered = JSON.parse(el.textContent);
+      const totalTopics = ordered.length;
+      const hasSession = (() => {
+        try {
+          for (let i = 0; i < localStorage.length; i++) {
+            const k = localStorage.key(i);
+            if (k && /^sb-.*-auth-token$/.test(k)) return true;
+          }
+        } catch (e) { /* ignore */ }
+        return false;
+      })();
+      if (!hasSession) return;
+
+      try {
+        const mod = await import('../../lib/grammarProgress.js');
+        const { user, byTopic } = await mod.getProgress();
+        if (!user) return;
+
+        const completed = new Set(ordered.filter((t) => byTopic[t.id]?.is_completed).map((t) => t.id));
+        const current = ordered.find((t) => !completed.has(t.id)) || null;
+        const completedCount = completed.size;
+
+        // 1. Continue hero
+        const hero = document.getElementById('gm-hero');
+        if (hero) {
+          const eyebrow = document.getElementById('gm-hero-eyebrow');
+          const title = document.getElementById('gm-hero-title');
+          const sub = document.getElementById('gm-hero-sub');
+          const icon = document.getElementById('gm-hero-icon');
+          const btnLabel = document.getElementById('gm-hero-btn-label');
+          if (current) {
+            hero.setAttribute('href', `/grammar/${current.level}/${current.slug}`);
+            eyebrow.textContent = completedCount > 0 ? 'Continue where you left off' : 'Start with the basics';
+            title.textContent = `${current.level.toUpperCase()} · Topic ${current.n}: ${current.title}`;
+            sub.textContent = completedCount > 0
+              ? `You've completed ${completedCount} of ${totalTopics} topics — keep the streak going.`
+              : `64 topics from complete beginner to upper-intermediate.`;
+            if (btnLabel) btnLabel.textContent = completedCount > 0 ? 'Resume' : 'Start learning';
+            if (icon) icon.textContent = completedCount > 0 ? '▶️' : '📖';
+          } else {
+            // Everything completed.
+            eyebrow.textContent = 'Every topic complete';
+            title.textContent = `You've finished all ${totalTopics} grammar topics 🎉`;
+            sub.textContent = 'Revisit any topic below to keep it sharp.';
+            if (btnLabel) btnLabel.textContent = 'Review';
+            if (icon) icon.textContent = '🏆';
+            hero.setAttribute('href', `/grammar/${ordered[0].level}/${ordered[0].slug}`);
+          }
+        }
+
+        // 2. Per-level progress bars
+        const perLevel = {};
+        ordered.forEach((t) => {
+          perLevel[t.level] = perLevel[t.level] || { total: 0, done: 0 };
+          perLevel[t.level].total += 1;
+          if (completed.has(t.id)) perLevel[t.level].done += 1;
+        });
+        document.querySelectorAll('[data-level-bar]').forEach((el) => {
+          const lvl = el.getAttribute('data-level-bar');
+          const s = perLevel[lvl];
+          if (!s) return;
+          el.classList.remove('hidden');
+          el.classList.add('flex');
+          const fill = el.querySelector('[data-level-bar-fill]');
+          const text = el.querySelector('[data-level-bar-text]');
+          if (fill) fill.style.width = `${Math.round((s.done / s.total) * 100)}%`;
+          if (text) text.textContent = `${s.done}/${s.total}`;
+        });
+
+        // 3. Topic cards — checks + current highlight
+        document.querySelectorAll('[data-topic-card]').forEach((card) => {
+          const id = card.getAttribute('data-topic-id');
+          if (completed.has(id)) {
+            const num = card.querySelector('[data-topic-num]');
+            const check = card.querySelector('[data-topic-check]');
+            if (num) num.classList.add('hidden');
+            if (check) { check.classList.remove('hidden'); check.classList.add('inline-flex'); }
+            card.classList.add('ring-1', 'ring-emerald-300');
+          } else if (current && id === current.id) {
+            card.classList.add('ring-2', 'ring-indigo-400', 'shadow-md');
+          }
+        });
+      } catch (e) {
+        console.warn('[grammar] enhancer failed', e);
+      }
+    })();
+  </script>
 </Layout>

@@ -521,9 +521,12 @@ export async function loadUserGrammarProgress(userId) {
       // Cache UUID while we're at it
       uuidCache.set(`${appLevel}:${slug}`, row.topic_id);
 
+      // The column is `is_completed` (not `completed`); reading the wrong name
+      // left every topic looking incomplete, which pinned the dashboard's
+      // "continue where you left off" to topic 1 regardless of real progress.
       progressMap[legacyId] = {
-        completed: row.completed,
-        progress: row.completed ? 100 : Math.round(((row.current_stage - 1) / 5) * 100),
+        completed: row.is_completed,
+        progress: row.is_completed ? 100 : Math.round(((row.current_stage - 1) / 5) * 100),
         currentStage: row.current_stage,
         score: row.score || 0,
         completedAt: row.completed_at,
@@ -545,7 +548,9 @@ export async function saveUserGrammarProgress(userId, topicUUID, progressData) {
       user_id: userId,
       topic_id: topicUUID,
       current_stage: progressData.currentStage || 1,
-      completed: progressData.completed || false,
+      // Column is `is_completed`; writing `completed` silently failed (no such
+      // column), so this table write never persisted from this path.
+      is_completed: progressData.completed || false,
       score: progressData.score || 0,
       last_accessed: new Date().toISOString(),
     };
