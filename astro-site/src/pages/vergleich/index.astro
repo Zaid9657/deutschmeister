@@ -1,0 +1,60 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import competitorComparisons from '../../data/competitorComparisons.js';
+import '../../styles/global.css';
+
+const competitors = Object.values(competitorComparisons);
+
+const title = 'Vergleich — Deutschmeister vs Babbel, Duolingo, Lingoda | DeutschMeister';
+const description = 'Wie schneidet Deutschmeister im Vergleich ab? Ehrliche Vergleiche mit Babbel, Duolingo und Lingoda — Features, Preise, Sprechtraining. Du entscheidest.';
+const keywords = 'Deutschmeister Vergleich, Babbel Alternative, Duolingo Alternative, Lingoda Alternative, Deutsch lernen Vergleich';
+
+const ICON = { babbel: '🌐', duolingo: '🎮', lingoda: '👥' };
+const COLOR = { babbel: 'from-orange-400 to-red-500', duolingo: 'from-green-400 to-emerald-500', lingoda: 'from-blue-400 to-indigo-500' };
+---
+
+<Layout title={title} description={description} keywords={keywords} canonical="https://deutsch-meister.de/vergleich/">
+  <div class="bg-gradient-to-br from-slate-50 via-white to-slate-100">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 pt-12 pb-20">
+      <div class="text-center mb-16">
+        <h1 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-800 mb-4">
+          Wie schneidet Deutschmeister im Vergleich ab?
+        </h1>
+        <p class="text-lg text-slate-600 max-w-xl mx-auto">
+          Wir vergleichen uns fair mit den größten Namen. Du entscheidest.
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-3 gap-6">
+        {competitors.map((comp) => (
+          <a
+            href={`/vergleich/${comp.slug}/`}
+            class="block bg-white rounded-2xl border border-slate-100 p-6 shadow-sm hover:shadow-md hover:border-slate-200 transition-all group h-full"
+          >
+            <div class={`w-14 h-14 rounded-xl bg-gradient-to-br ${COLOR[comp.slug] ?? 'from-slate-400 to-slate-500'} flex items-center justify-center mb-5 shadow-lg text-2xl`}>
+              <span aria-hidden="true">{ICON[comp.slug] ?? '🌐'}</span>
+            </div>
+            <h2 class="font-display text-xl font-bold text-slate-800 mb-2">
+              DeutschMeister vs {comp.displayName}
+            </h2>
+            <p class="text-sm text-slate-500 mb-4 leading-relaxed">{comp.positioning}</p>
+            <p class="text-xs text-slate-400 mb-5">{comp.priceRange}</p>
+            <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-600 group-hover:text-amber-700 transition-colors">
+              Vergleichen <span aria-hidden="true">→</span>
+            </span>
+          </a>
+        ))}
+      </div>
+
+      <div class="mt-16 text-center">
+        <p class="text-slate-500 mb-4">Noch nicht überzeugt?</p>
+        <a
+          href="https://deutsch-meister.de/signup"
+          class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-xl shadow-lg shadow-rose-500/25 hover:from-amber-600 hover:to-rose-600 transition-all"
+        >
+          Einfach kostenlos ausprobieren <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>
