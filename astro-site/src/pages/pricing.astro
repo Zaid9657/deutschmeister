@@ -1,0 +1,237 @@
+---
+import Layout from '../layouts/Layout.astro';
+import '../styles/global.css';
+
+const title = 'Pricing — Free Trial & Pro Plans | DeutschMeister';
+const description = 'Start free, upgrade when ready. DeutschMeister Pro unlocks all 64 German grammar topics, AI speaking practice, and listening exercises.';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: 'DeutschMeister Pro',
+  description: 'Full access to all 64 German grammar topics, AI speaking practice, native-speaker listening exercises, podcasts, and unlimited Sentence X-Ray analysis.',
+  brand: { '@type': 'Brand', name: 'DeutschMeister' },
+  offers: [
+    { '@type': 'Offer', name: 'Pro Monthly', price: '9.99', priceCurrency: 'EUR', url: 'https://deutsch-meister.de/pricing/', availability: 'https://schema.org/InStock' },
+    { '@type': 'Offer', name: 'Pro Yearly', price: '79.99', priceCurrency: 'EUR', url: 'https://deutsch-meister.de/pricing/', availability: 'https://schema.org/InStock' },
+  ],
+};
+
+const PRO_FEATURES = [
+  'All 64 grammar topics — A1.1 to B2.2',
+  'Interactive exercises that explain WHY answers are correct',
+  'Native-speaker listening exercises at your level',
+  'Grammar podcasts and video explanations',
+  'AI speaking practice — 30 sessions/month',
+  'Unlimited Sentence X-Ray analysis',
+  'Progress tracking + cancel anytime',
+];
+const FREE_FEATURES = [
+  'Full A1.1 level — no signup required',
+  '1 Sentence X-Ray analysis per day',
+  'Free level test',
+  '2 free AI speaking sessions',
+];
+const OBJECTIONS = [
+  { q: 'Another grammar website?', qde: 'Noch eine Grammatik-Webseite?', a: 'DeutschMeister explains grammar in English first, then shows you how German does it. No jargon, no tables without context.' },
+  { q: 'Can AI really help me learn German?', qde: 'Kann KI wirklich beim Deutschlernen helfen?', a: 'Our Sentence X-Ray analyzes any German sentence and shows you cases, roles, and structure — instantly. No other tool does this.' },
+  { q: 'Is it worth it when free alternatives exist?', qde: 'Lohnt sich das, wenn es kostenlose Alternativen gibt?', a: 'Free resources explain WHAT. We explain WHY. That difference is what makes grammar stick.' },
+];
+const FAQS = [
+  { q: 'Can I try before buying?', qde: 'Kann ich vor dem Kauf testen?', a: 'Yes! A1.1 is completely free, no signup needed. Try Sentence X-Ray and 2 free speaking sessions too.', ade: 'Ja! A1.1 ist komplett kostenlos, ohne Anmeldung. Teste auch den Sentence X-Ray und 2 kostenlose Sprechübungen.' },
+  { q: 'What happens after the trial?', qde: 'Was passiert nach der Testphase?', a: 'You keep access to all free content. Only premium features like speaking practice and extended analyses require a subscription.', ade: 'Du behältst Zugang zu allen kostenlosen Inhalten. Nur Premium-Features wie Sprechübungen und erweiterte Analysen erfordern ein Abo.' },
+  { q: 'Can I cancel anytime?', qde: 'Kann ich jederzeit kündigen?', a: 'Yes, anytime. No questions asked, no hidden fees.', ade: 'Ja, jederzeit. Keine Fragen, keine versteckten Kosten.' },
+];
+---
+
+<Layout title={title} description={description} canonical="https://deutsch-meister.de/pricing/" jsonLd={jsonLd}>
+  <div class="bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 px-4 pt-8 pb-16">
+    <div class="max-w-4xl mx-auto">
+      <!-- Header -->
+      <div class="text-center mb-4">
+        <h1 class="text-2xl md:text-3xl font-bold text-white mb-3">Choose Your Plan</h1>
+      </div>
+
+      <!-- Billing Toggle -->
+      <div class="flex justify-center mb-6">
+        <div class="inline-flex items-center bg-gray-800/80 rounded-full p-1 border border-gray-700">
+          <button id="toggle-monthly" type="button" class="px-5 py-2 rounded-full text-sm font-medium transition-all bg-white text-gray-900 shadow">Monthly</button>
+          <button id="toggle-yearly" type="button" class="px-5 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-1.5 text-gray-400 hover:text-white">
+            Yearly
+            <span class="text-[10px] font-bold bg-green-500 text-white px-1.5 py-0.5 rounded-full leading-none">-33%</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Pricing Cards -->
+      <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+        <!-- Free -->
+        <div class="relative bg-gray-800/50 backdrop-blur border border-gray-700 rounded-2xl p-5">
+          <div class="flex items-center gap-2 mb-3"><h2 class="text-xl font-bold text-white">Free</h2></div>
+          <div class="mb-3"><span class="text-4xl font-bold text-white">€0</span><span class="text-gray-400">/forever</span></div>
+          <p class="text-gray-400 text-sm mb-4">Start learning with no commitment</p>
+          <ul class="space-y-2 mb-5">
+            {FREE_FEATURES.map((f) => (
+              <li class="flex items-start gap-2.5 text-sm text-gray-300"><span class="text-green-400 mt-0.5 flex-shrink-0" aria-hidden="true">✓</span><span>{f}</span></li>
+            ))}
+          </ul>
+          <a id="free-btn" href="https://deutsch-meister.de/signup" class="w-full py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 bg-gray-600 hover:bg-gray-500 text-white">Get Started Free</a>
+        </div>
+
+        <!-- Pro -->
+        <div class="relative bg-gradient-to-b from-blue-500/10 to-gray-800/50 backdrop-blur rounded-2xl p-5 border-2 border-blue-500/50">
+          <div class="absolute -top-4 left-1/2 -translate-x-1/2">
+            <span id="pro-badge" class="bg-blue-600 text-white font-bold px-4 py-1 rounded-full text-sm flex items-center gap-1.5">
+              <span aria-hidden="true">⚡</span> MOST POPULAR
+            </span>
+          </div>
+          <div class="flex items-center gap-2 mb-3 mt-2"><span class="text-blue-400" aria-hidden="true">⚡</span><h2 class="text-xl font-bold text-white">Pro</h2></div>
+          <div class="mb-1">
+            <span class="text-4xl font-bold text-white">€<span id="pro-price">9.99</span></span>
+            <span class="text-gray-400">/<span id="pro-period">month</span></span>
+          </div>
+          <p id="pro-subline" class="text-gray-400 text-xs mb-3">Less than €0.33/day — cheaper than a coffee</p>
+          <p class="text-gray-400 text-sm mb-4">Full access to everything</p>
+          <ul class="space-y-2 mb-5">
+            {PRO_FEATURES.map((f) => (
+              <li class="flex items-start gap-2.5 text-sm text-gray-300"><span class="text-blue-400 mt-0.5 flex-shrink-0" aria-hidden="true">✓</span><span>{f}</span></li>
+            ))}
+          </ul>
+          <button id="pro-btn" type="button" class="w-full py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white">Jetzt starten</button>
+        </div>
+      </div>
+
+      <!-- Free trial + trust -->
+      <div class="text-center mt-6 text-gray-400 text-sm">
+        <p>Pro includes a <strong class="text-white">7-day free trial</strong> — cancel anytime.</p>
+      </div>
+      <div class="flex flex-wrap justify-center gap-8 mt-6 text-gray-500 text-sm">
+        <div class="flex items-center gap-2"><span class="text-green-500" aria-hidden="true">✓</span><span>Secure Payment</span></div>
+        <div class="flex items-center gap-2"><span class="text-green-500" aria-hidden="true">✓</span><span>Cancel Anytime</span></div>
+        <div class="flex items-center gap-2"><span class="text-green-500" aria-hidden="true">✓</span><span>7-Day Money Back</span></div>
+      </div>
+
+      <!-- Objections -->
+      <div class="mt-20">
+        <h2 class="text-2xl font-bold text-white text-center mb-2">Du fragst dich vielleicht…</h2>
+        <p class="text-gray-500 text-center text-sm mb-10">You might be wondering…</p>
+        <div class="grid md:grid-cols-3 gap-4">
+          {OBJECTIONS.map((item) => (
+            <div class="bg-gray-800/50 border border-gray-700 rounded-2xl p-6">
+              <p class="font-semibold text-white mb-1">{item.q}</p>
+              <p class="text-xs text-gray-500 mb-4">{item.qde}</p>
+              <p class="text-gray-300 text-sm leading-relaxed">{item.a}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="mt-16">
+        <h2 class="text-2xl font-bold text-white text-center mb-2">Häufige Fragen</h2>
+        <p class="text-gray-500 text-center text-sm mb-10">Common Questions</p>
+        <div class="max-w-2xl mx-auto space-y-3">
+          {FAQS.map((item) => (
+            <details class="border border-gray-700 rounded-xl overflow-hidden group">
+              <summary class="w-full flex items-center justify-between px-6 py-4 text-left text-white font-medium hover:bg-gray-800/60 transition-colors cursor-pointer list-none">
+                <span>{item.q} <span class="text-gray-500 font-normal text-sm">/ {item.qde}</span></span>
+                <span class="text-gray-400 flex-shrink-0 ml-4 transition-transform group-open:rotate-180" aria-hidden="true">▾</span>
+              </summary>
+              <div class="px-6 pb-5 text-gray-300 text-sm leading-relaxed border-t border-gray-700/60 pt-4">
+                <p>{item.a}</p>
+                <p class="mt-2 text-gray-500">{item.ade}</p>
+              </div>
+            </details>
+          ))}
+        </div>
+        <div class="text-center mt-8 space-y-3">
+          <a href="https://deutsch-meister.de/faq" class="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors">Alle häufigen Fragen ansehen <span aria-hidden="true">→</span></a>
+          <br />
+          <a href="/vergleich/" class="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors">Sieh dir den Vergleich an <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  // Pricing interactivity — billing toggle + auth-aware LemonSqueezy checkout.
+  // Mirrors src/pages/PricingPage.jsx: hosted checkout opened in a new tab,
+  // passing the same user context (checkout[email], checkout[custom][user_id]).
+  const PLANS = {
+    monthly: {
+      variant: 'dfc81ca3-78f5-4bab-9d62-dca75b3f7e21',
+      price: '9.99', period: 'month',
+      subline: 'Less than €0.33/day — cheaper than a coffee', sublineClass: 'text-gray-400 text-xs mb-3',
+      badgeHtml: '<span aria-hidden="true">⚡</span> MOST POPULAR', badgeClass: 'bg-blue-600 text-white font-bold px-4 py-1 rounded-full text-sm flex items-center gap-1.5',
+    },
+    yearly: {
+      variant: 'd58c1838-d935-4c59-a0ac-0bfce8ec9c3b',
+      price: '79.99', period: 'year',
+      subline: "That's only €6.67/month — less than €0.22/day", sublineClass: 'text-green-400 text-xs mb-3',
+      badgeHtml: '<span aria-hidden="true">✨</span> Beliebteste Wahl', badgeClass: 'bg-green-500 text-white font-bold px-4 py-1 rounded-full text-sm flex items-center gap-1.5',
+    },
+  };
+
+  let cycle = 'monthly';
+
+  const $ = (id) => document.getElementById(id);
+
+  function applyCycle() {
+    const p = PLANS[cycle];
+    $('pro-price').textContent = p.price;
+    $('pro-period').textContent = p.period;
+    const sub = $('pro-subline');
+    sub.textContent = p.subline;
+    sub.className = p.sublineClass;
+    const badge = $('pro-badge');
+    badge.innerHTML = p.badgeHtml;
+    badge.className = p.badgeClass;
+    const active = 'px-5 py-2 rounded-full text-sm font-medium transition-all bg-white text-gray-900 shadow';
+    const inactive = 'px-5 py-2 rounded-full text-sm font-medium transition-all text-gray-400 hover:text-white';
+    $('toggle-monthly').className = cycle === 'monthly' ? active : inactive;
+    $('toggle-yearly').className = (cycle === 'yearly' ? active : inactive) + ' flex items-center gap-1.5';
+  }
+
+  function currentUser() {
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && /^sb-.*-auth-token$/.test(k)) {
+          const v = JSON.parse(localStorage.getItem(k) || 'null');
+          const u = (v && (v.user || (v.currentSession && v.currentSession.user))) || null;
+          if (u && u.id) return { email: u.email || '', id: u.id };
+        }
+      }
+    } catch (e) { /* ignore */ }
+    return null;
+  }
+
+  function checkoutUrl(variant, email, id) {
+    const params = new URLSearchParams({ 'checkout[email]': email || '', 'checkout[custom][user_id]': id || '' });
+    return 'https://deutsch-meister.lemonsqueezy.com/checkout/buy/' + variant + '?' + params.toString();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    applyCycle();
+    $('toggle-monthly').addEventListener('click', () => { cycle = 'monthly'; applyCycle(); });
+    $('toggle-yearly').addEventListener('click', () => { cycle = 'yearly'; applyCycle(); });
+
+    // Pro checkout — same behaviour as the SPA: not logged in → signup; else open hosted checkout.
+    $('pro-btn').addEventListener('click', () => {
+      const u = currentUser();
+      if (!u) { window.location.href = 'https://deutsch-meister.de/signup'; return; }
+      window.open(checkoutUrl(PLANS[cycle].variant, u.email, u.id), '_blank');
+    });
+
+    // Free plan button: logged-in users already have it → "Current Plan" (disabled), like the SPA.
+    const u = currentUser();
+    if (u) {
+      const free = $('free-btn');
+      free.textContent = 'Current Plan';
+      free.removeAttribute('href');
+      free.setAttribute('aria-disabled', 'true');
+      free.className = 'w-full py-3 px-6 rounded-xl flex items-center justify-center gap-2 bg-gray-700 text-gray-400 cursor-not-allowed';
+    }
+  });
+</script>

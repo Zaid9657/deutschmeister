@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Homepage -->
-  <url>
-    <loc>https://deutsch-meister.de/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
+  <!-- NOTE: the homepage (/) and /pricing are now statically rendered by Astro
+       and live in the static sitemap (sitemap-0.xml), not here. -->
 
   <!-- Main Sections -->
   <url>
