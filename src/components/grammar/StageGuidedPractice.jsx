@@ -1,3 +1,4 @@
+import { answerMatches } from '../../utils/answerMatch';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle, XCircle, ArrowRight, RotateCcw, Lightbulb, PenTool } from 'lucide-react';
@@ -31,10 +32,7 @@ const StageGuidedPractice = ({ content, isGerman, theme, onComplete }) => {
     if (currentExercise.type === 'multiple-choice') {
       correct = selectedAnswer === currentExercise.correct;
     } else if (currentExercise.type === 'fill-blank') {
-      const userAnswer = textAnswer.trim().toLowerCase();
-      correct = currentExercise.acceptableAnswers.some(
-        ans => ans.toLowerCase() === userAnswer
-      );
+      correct = answerMatches(textAnswer, currentExercise.acceptableAnswers);
     }
 
     setIsCorrect(correct);

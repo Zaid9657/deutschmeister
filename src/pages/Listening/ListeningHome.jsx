@@ -2,18 +2,19 @@ import { motion } from 'framer-motion';
 import { Headphones } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useListeningLevels } from '../../hooks/useListening';
+import DataState from '../../components/DataState';
 import ListeningLevelCard from '../../components/listening/ListeningLevelCard';
 import SEO from '../../components/SEO';
 
 const ListeningHome = () => {
   const { t, i18n } = useTranslation();
-  const { levels, loading } = useListeningLevels();
+  const { levels, loading, error, retry } = useListeningLevels();
   const isGerman = i18n.language === 'de';
 
-  if (loading) {
+  if (loading || error) {
     return (
-      <div className="min-h-screen pt-24 flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full" />
+      <div className="min-h-screen pt-24">
+        <DataState loading={loading} error={error} onRetry={retry} />
       </div>
     );
   }

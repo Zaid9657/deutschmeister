@@ -9,7 +9,7 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Product',
   name: 'DeutschMeister Pro',
-  description: 'Full access to all 64 German grammar topics, AI speaking practice, native-speaker listening exercises, podcasts, and unlimited Sentence X-Ray analysis.',
+  description: 'Full access to all 64 German grammar topics, AI speaking practice, native-speaker listening exercises, podcasts, and 50 Sentence X-Ray analyses per day.',
   brand: { '@type': 'Brand', name: 'DeutschMeister' },
   offers: [
     { '@type': 'Offer', name: 'Pro Monthly', price: '9.99', priceCurrency: 'EUR', url: 'https://deutsch-meister.de/pricing/', availability: 'https://schema.org/InStock' },
@@ -23,7 +23,7 @@ const PRO_FEATURES = [
   'Native-speaker listening exercises at your level',
   'Grammar podcasts and video explanations',
   'AI speaking practice — 30 sessions/month',
-  'Unlimited Sentence X-Ray analysis',
+  '50 Sentence X-Ray analyses per day',
   'Progress tracking + cancel anytime',
 ];
 const FREE_FEATURES = [
@@ -58,7 +58,7 @@ const FAQS = [
           <button id="toggle-monthly" type="button" class="px-5 py-2 rounded-full text-sm font-medium transition-all bg-white text-gray-900 shadow">Monthly</button>
           <button id="toggle-yearly" type="button" class="px-5 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-1.5 text-gray-400 hover:text-white">
             Yearly
-            <span class="text-[10px] font-bold bg-green-500 text-white px-1.5 py-0.5 rounded-full leading-none">-33%</span>
+            <span class="text-[10px] font-bold bg-green-700 text-white px-1.5 py-0.5 rounded-full leading-none">-33%</span>
           </button>
         </div>
       </div>
@@ -97,7 +97,7 @@ const FAQS = [
               <li class="flex items-start gap-2.5 text-sm text-gray-300"><span class="text-blue-400 mt-0.5 flex-shrink-0" aria-hidden="true">✓</span><span>{f}</span></li>
             ))}
           </ul>
-          <button id="pro-btn" type="button" class="w-full py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white">Jetzt starten</button>
+          <button id="pro-btn" type="button" class="w-full py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white">Get started</button>
         </div>
       </div>
 
@@ -169,7 +169,7 @@ const FAQS = [
       variant: 'd58c1838-d935-4c59-a0ac-0bfce8ec9c3b',
       price: '79.99', period: 'year',
       subline: "That's only €6.67/month — less than €0.22/day", sublineClass: 'text-green-400 text-xs mb-3',
-      badgeHtml: '<span aria-hidden="true">✨</span> Beliebteste Wahl', badgeClass: 'bg-green-500 text-white font-bold px-4 py-1 rounded-full text-sm flex items-center gap-1.5',
+      badgeHtml: '<span aria-hidden="true">✨</span> Beliebteste Wahl', badgeClass: 'bg-green-700 text-white font-bold px-4 py-1 rounded-full text-sm flex items-center gap-1.5',
     },
   };
 

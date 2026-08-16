@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Headphones } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useLevelExercises } from '../../hooks/useListening';
+import DataState from '../../components/DataState';
 import { getLevelTheme, getLevelSubtitle } from '../../utils/listeningHelpers';
 import ExerciseCard from '../../components/listening/ExerciseCard';
 import SEO from '../../components/SEO';
@@ -11,15 +12,15 @@ const LevelExercises = () => {
   const { level } = useParams();
   const navigate = useNavigate();
   const { i18n } = useTranslation();
-  const { exercises, loading } = useLevelExercises(level);
+  const { exercises, loading, error, retry } = useLevelExercises(level);
   const theme = getLevelTheme(level);
   const subtitle = getLevelSubtitle(level, i18n.language);
   const isGerman = i18n.language === 'de';
 
-  if (loading) {
+  if (loading || error) {
     return (
-      <div className="min-h-screen pt-24 flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full" />
+      <div className="min-h-screen pt-24">
+        <DataState loading={loading} error={error} onRetry={retry} />
       </div>
     );
   }

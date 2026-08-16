@@ -123,8 +123,8 @@ const ProfilePage = () => {
                 </p>
               </div>
             </div>
-            <Link
-              to="/pricing"
+            <a
+              href="/pricing/"
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${
                 isSubscribed
                   ? 'bg-slate-100 text-slate-700 hover:bg-slate-200'
@@ -133,7 +133,7 @@ const ProfilePage = () => {
             >
               {isSubscribed ? 'Abo verwalten' : 'Upgraden'}
               <ArrowRight className="w-4 h-4" />
-            </Link>
+            </a>
           </div>
         </motion.div>
 

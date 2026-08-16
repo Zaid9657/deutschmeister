@@ -62,7 +62,9 @@ export function getLevelSubtitle(level, lang = 'en') {
 }
 
 export function getAudioUrl(level, exerciseNumber) {
-  return `https://omqyueddktqeyrrqvnyq.supabase.co/storage/v1/object/public/audio/listening/${level}/exercise${exerciseNumber}.mp3`;
+  // Storage folders are uppercase (audio/listening/A1.1/…) while routes use
+  // lowercase levels — storage paths are case-sensitive, so normalize here.
+  return `https://omqyueddktqeyrrqvnyq.supabase.co/storage/v1/object/public/audio/listening/${(level || '').toUpperCase()}/exercise${exerciseNumber}.mp3`;
 }
 
 export function allQuestionsAnswered(questions, answers) {

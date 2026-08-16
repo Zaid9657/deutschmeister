@@ -1,0 +1,326 @@
+[
+ {
+  "page": "home (Astro)",
+  "path": "/",
+  "preset": "mobile",
+  "scores": {
+   "performance": 100,
+   "accessibility": 96,
+   "best-practices": 96,
+   "seo": 92,
+   "agentic-browsing": 67
+  },
+  "metrics": {
+   "fcp": "1.1 s",
+   "lcp": "1.2 s",
+   "tbt": "0 ms",
+   "cls": "0",
+   "transfer": "Total size was 84 KiB"
+  },
+  "flagged": [
+   "errors-in-console",
+   "color-contrast",
+   "unused-css-rules (Est savings of 26 KiB)",
+   "link-text (1 link found)",
+   "llms-txt",
+   "cache-insight (Est savings of 50 KiB)"
+  ]
+ },
+ {
+  "page": "home (Astro)",
+  "path": "/",
+  "preset": "desktop",
+  "scores": {
+   "performance": 100,
+   "accessibility": 96,
+   "best-practices": 96,
+   "seo": 92,
+   "agentic-browsing": 67
+  },
+  "metrics": {
+   "fcp": "0.3 s",
+   "lcp": "0.3 s",
+   "tbt": "0 ms",
+   "cls": "0",
+   "transfer": "Total size was 84 KiB"
+  },
+  "flagged": [
+   "errors-in-console",
+   "color-contrast",
+   "unused-css-rules (Est savings of 25 KiB)",
+   "link-text (1 link found)",
+   "llms-txt",
+   "cache-insight (Est savings of 50 KiB)"
+  ]
+ },
+ {
+  "page": "pricing (Astro)",
+  "path": "/pricing/",
+  "preset": "mobile",
+  "scores": {
+   "performance": 100,
+   "accessibility": 100,
+   "best-practices": 96,
+   "seo": 92,
+   "agentic-browsing": 67
+  },
+  "metrics": {
+   "fcp": "1.1 s",
+   "lcp": "1.4 s",
+   "tbt": "0 ms",
+   "cls": "0",
+   "transfer": "Total size was 74 KiB"
+  },
+  "flagged": [
+   "errors-in-console",
+   "unused-css-rules (Est savings of 34 KiB)",
+   "link-text (1 link found)",
+   "llms-txt",
+   "cache-insight (Est savings of 50 KiB)",
+   "document-latency-insight (Est savings of 15 KiB)"
+  ]
+ },
+ {
+  "page": "pricing (Astro)",
+  "path": "/pricing/",
+  "preset": "desktop",
+  "scores": {
+   "performance": 100,
+   "accessibility": 96,
+   "best-practices": 96,
+   "seo": 92,
+   "agentic-browsing": 67
+  },
+  "metrics": {
+   "fcp": "0.3 s",
+   "lcp": "0.3 s",
+   "tbt": "0 ms",
+   "cls": "0",
+   "transfer": "Total size was 74 KiB"
+  },
+  "flagged": [
+   "errors-in-console",
+   "color-contrast",
+   "unused-css-rules (Est savings of 33 KiB)",
+   "link-text (1 link found)",
+   "llms-txt",
+   "cache-insight (Est savings of 50 KiB)"
+  ]
+ },
+ {
+  "page": "grammar hub (Astro)",
+  "path": "/grammar/",
+  "preset": "mobile",
+  "scores": {
+   "performance": 100,
+   "accessibility": 96,
+   "best-practices": 96,
+   "seo": 100,
+   "agentic-browsing": 67
+  },
+  "metrics": {
+   "fcp": "1.2 s",
+   "lcp": "1.5 s",
+   "tbt": "0 ms",
+   "cls": "0",
+   "transfer": "Total size was 96 KiB"
+  },
+  "flagged": [
+   "errors-in-console",
+   "color-contrast",
+   "unused-css-rules (Est savings of 31 KiB)",
+   "llms-txt",
+   "cache-insight (Est savings of 50 KiB)",
+   "document-latency-insight (Est savings of 30 KiB)"
+  ]
+ },
+ {
+  "page": "grammar hub (Astro)",
+  "path": "/grammar/",
+  "preset": "desktop",
+  "scores": {
+   "performance": 100,
+   "accessibility": 96,
+   "best-practices": 96,
+   "seo": 100,
+   "agentic-browsing": 67
+  },
+  "metrics": {
+   "fcp": "0.3 s",
+   "lcp": "0.4 s",
+   "tbt": "0 ms",
+   "cls": "0",
+   "transfer": "Total size was 96 KiB"
+  },
+  "flagged": [
+   "errors-in-console",
+   "color-contrast",
+   "unused-css-rules (Est savings of 30 KiB)",
+   "llms-txt",
+   "cache-insight (Est savings of 50 KiB)",
+   "document-latency-insight (Est savings of 30 KiB)"
+  ]
+ },
+ {
+  "page": "grammar topic (Astro)",
+  "path": "/grammar/a1.1/nouns-gender/",
+  "preset": "mobile",
+  "scores": {
+   "performance": 99,
+   "accessibility": 100,
+   "best-practices": 96,
+   "seo": 92,
+   "agentic-browsing": 67
+  },
+  "metrics": {
+   "fcp": "1.5 s",
+   "lcp": "1.8 s",
+   "tbt": "20 ms",
+   "cls": "0",
+   "transfer": "Total size was 164 KiB"
+  },
+  "flagged": [
+   "errors-in-console",
+   "unused-css-rules (Est savings of 32 KiB)",
+   "link-text (1 link found)",
+   "llms-txt",
+   "cache-insight (Est savings of 50 KiB)",
+   "document-latency-insight (Est savings of 76 KiB)"
+  ]
+ },
+ {
+  "page": "grammar topic (Astro)",
+  "path": "/grammar/a1.1/nouns-gender/",
+  "preset": "desktop",
+  "scores": {
+   "performance": 100,
+   "accessibility": 96,
+   "best-practices": 96,
+   "seo": 92,
+   "agentic-browsing": 67
+  },
+  "metrics": {
+   "fcp": "0.3 s",
+   "lcp": "0.4 s",
+   "tbt": "0 ms",
+   "cls": "0",
+   "transfer": "Total size was 164 KiB"
+  },
+  "flagged": [
+   "errors-in-console",
+   "color-contrast",
+   "unused-css-rules (Est savings of 31 KiB)",
+   "link-text (1 link found)",
+   "llms-txt",
+   "cache-insight (Est savings of 50 KiB)"
+  ]
+ },
+ {
+  "page": "telc-B1 guide (Astro)",
+  "path": "/leitfaden/telc-b1/",
+  "preset": "mobile",
+  "scores": {
+   "performance": 100,
+   "accessibility": 96,
+   "best-practices": 96,
+   "seo": 100,
+   "agentic-browsing": 67
+  },
+  "metrics": {
+   "fcp": "1.2 s",
+   "lcp": "1.4 s",
+   "tbt": "0 ms",
+   "cls": "0",
+   "transfer": "Total size was 103 KiB"
+  },
+  "flagged": [
+   "errors-in-console",
+   "color-contrast",
+   "unused-css-rules (Est savings of 34 KiB)",
+   "llms-txt",
+   "cache-insight (Est savings of 50 KiB)",
+   "document-latency-insight (Est savings of 35 KiB)"
+  ]
+ },
+ {
+  "page": "telc-B1 guide (Astro)",
+  "path": "/leitfaden/telc-b1/",
+  "preset": "desktop",
+  "scores": {
+   "performance": 100,
+   "accessibility": 96,
+   "best-practices": 96,
+   "seo": 100,
+   "agentic-browsing": 67
+  },
+  "metrics": {
+   "fcp": "0.3 s",
+   "lcp": "0.4 s",
+   "tbt": "0 ms",
+   "cls": "0",
+   "transfer": "Total size was 103 KiB"
+  },
+  "flagged": [
+   "errors-in-console",
+   "color-contrast",
+   "unused-css-rules (Est savings of 33 KiB)",
+   "llms-txt",
+   "cache-insight (Est savings of 50 KiB)",
+   "document-latency-insight (Est savings of 35 KiB)"
+  ]
+ },
+ {
+  "page": "level test (SPA shell)",
+  "path": "/level-test",
+  "preset": "mobile",
+  "scores": {
+   "performance": 62,
+   "accessibility": 96,
+   "best-practices": 96,
+   "seo": 100,
+   "agentic-browsing": 67
+  },
+  "metrics": {
+   "fcp": "5.7 s",
+   "lcp": "6.9 s",
+   "tbt": "90 ms",
+   "cls": "0",
+   "transfer": "Total size was 1,046 KiB"
+  },
+  "flagged": [
+   "errors-in-console",
+   "color-contrast",
+   "unminified-javascript (Est savings of 18 KiB)",
+   "unused-css-rules (Est savings of 94 KiB)",
+   "unused-javascript (Est savings of 477 KiB)",
+   "llms-txt"
+  ]
+ },
+ {
+  "page": "level test (SPA shell)",
+  "path": "/level-test",
+  "preset": "desktop",
+  "scores": {
+   "performance": 95,
+   "accessibility": 96,
+   "best-practices": 96,
+   "seo": 100,
+   "agentic-browsing": 67
+  },
+  "metrics": {
+   "fcp": "1.1 s",
+   "lcp": "1.3 s",
+   "tbt": "0 ms",
+   "cls": "0",
+   "transfer": "Total size was 1,046 KiB"
+  },
+  "flagged": [
+   "errors-in-console",
+   "color-contrast",
+   "unminified-javascript (Est savings of 18 KiB)",
+   "unused-css-rules (Est savings of 94 KiB)",
+   "unused-javascript (Est savings of 477 KiB)",
+   "llms-txt"
+  ]
+ }
+]

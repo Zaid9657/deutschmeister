@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { useAuth } from './AuthContext';
 import { getAuthHeaders } from '../utils/supabase';
+import { withTimeout } from '../utils/withTimeout';
 import {
   getSubscription,
   getUserProfile,
@@ -48,10 +49,15 @@ export const SubscriptionProvider = ({ children }) => {
     setLoading(true);
 
     try {
-      const [sub, prof] = await Promise.all([
-        getSubscription(user.id),
-        getUserProfile(user.id),
-      ]);
+      // Timeout so a hung network resolves to the logged-in-but-unverified
+      // state instead of an infinite loading spinner on every guarded page.
+      const [sub, prof] = await withTimeout(
+        Promise.all([
+          getSubscription(user.id),
+          getUserProfile(user.id),
+        ]),
+        10000
+      );
 
       setSubscription(sub);
 

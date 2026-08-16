@@ -1,0 +1,1280 @@
+[
+ {
+  "path": "/",
+  "name": "home",
+  "kind": "astro",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "Learn German Online - Free Lessons A1 to B2 | DeutschMeister",
+    "description": "Master German with free interactive lessons. Grammar, vocabulary, listening exercises, and podcasts for English speakers. CEFR levels A1.1 to B2.2.",
+    "h1": "The Fastest Way to Speak German. Period.",
+    "lang": "en",
+    "textSample": "Skip to content M DeutschMeister Grammar Videos Podcasts X-Ray Level Test Get started Log in The Fastest Way to Speak German. Period. AI-powered speaking practice at your exact CEFR level. Real conversations. Real feedback. Real results — for less than a coffee a day. Find Your Level — Free Test → Try Speaking Practice → ✓ No credit card required ✓ 7-day free Pro trial ✓ Cancel anytime ☀️ A1 Begin",
+    "textLength": 3764,
+    "screenshot": "screenshots/home-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "Learn German Online - Free Lessons A1 to B2 | DeutschMeister",
+    "description": "Master German with free interactive lessons. Grammar, vocabulary, listening exercises, and podcasts for English speakers. CEFR levels A1.1 to B2.2.",
+    "h1": "The Fastest Way to Speak German. Period.",
+    "lang": "en",
+    "textSample": "Skip to content M Start The Fastest Way to Speak German. Period. AI-powered speaking practice at your exact CEFR level. Real conversations. Real feedback. Real results — for less than a coffee a day. Find Your Level — Free Test → Try Speaking Practice → ✓ No credit card required ✓ 7-day free Pro trial ✓ Cancel anytime ☀️ A1 Beginner 🌲 A2 Elementary 🌊 B1 Intermediate 🌙 B2 Upper Intermediate LEAR",
+    "textLength": 3695,
+    "screenshot": "screenshots/home-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/pricing/",
+  "name": "pricing",
+  "kind": "astro",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "Pricing — Free Trial & Pro Plans | DeutschMeister",
+    "description": "Start free, upgrade when ready. DeutschMeister Pro unlocks all 64 German grammar topics, AI speaking practice, and listening exercises.",
+    "h1": "Choose Your Plan",
+    "lang": "en",
+    "textSample": "Skip to content M DeutschMeister Grammar Videos Podcasts X-Ray Level Test Get started Log in Choose Your Plan Monthly Yearly -33% Free €0/forever Start learning with no commitment ✓ Full A1.1 level — no signup required ✓ 1 Sentence X-Ray analysis per day ✓ Free level test ✓ 2 free AI speaking sessions Get Started Free ⚡ MOST POPULAR ⚡ Pro €9.99 /month Less than €0.33/day — cheaper than a coffee Fu",
+    "textLength": 2238,
+    "screenshot": "screenshots/pricing-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "Pricing — Free Trial & Pro Plans | DeutschMeister",
+    "description": "Start free, upgrade when ready. DeutschMeister Pro unlocks all 64 German grammar topics, AI speaking practice, and listening exercises.",
+    "h1": "Choose Your Plan",
+    "lang": "en",
+    "textSample": "Skip to content M Start Choose Your Plan Monthly Yearly -33% Free €0/forever Start learning with no commitment ✓ Full A1.1 level — no signup required ✓ 1 Sentence X-Ray analysis per day ✓ Free level test ✓ 2 free AI speaking sessions Get Started Free ⚡ MOST POPULAR ⚡ Pro €9.99 /month Less than €0.33/day — cheaper than a coffee Full access to everything ✓ All 64 grammar topics — A1.1 to B2.2 ✓ Inte",
+    "textLength": 2169,
+    "screenshot": "screenshots/pricing-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/grammar/",
+  "name": "grammar-hub",
+  "kind": "astro",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "Deutsche Grammatik A1–B2 | DeutschMeister",
+    "description": "64 Grammatikthemen von A1.1 bis B2.2. Artikel, Kasus, Konjunktiv und mehr — mit Erklärungen, Beispielen und interaktiven Übungen.",
+    "h1": "Deutsche Grammatik",
+    "lang": "de",
+    "textSample": "Skip to content M DeutschMeister Grammar Videos Podcasts X-Ray Level Test Get started Log in Deutsche Grammatik 64 Themen von A1.1 bis B2.2 — mit Regeln, Beispielen und interaktiven Übungen. Jedes Thema einzeln erklärbar. New to German? Start with German noun genders (der, die, das) — the first A1.1 topic. A1.1 A1.2 A2.1 A2.2 B1.1 B1.2 B2.1 B2.2 A1.1 A1.1 — Sunrise Warmth I #1 Alphabet & Pronuncia",
+    "textLength": 5465,
+    "screenshot": "screenshots/grammar-hub-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "Deutsche Grammatik A1–B2 | DeutschMeister",
+    "description": "64 Grammatikthemen von A1.1 bis B2.2. Artikel, Kasus, Konjunktiv und mehr — mit Erklärungen, Beispielen und interaktiven Übungen.",
+    "h1": "Deutsche Grammatik",
+    "lang": "de",
+    "textSample": "Skip to content M Start Deutsche Grammatik 64 Themen von A1.1 bis B2.2 — mit Regeln, Beispielen und interaktiven Übungen. Jedes Thema einzeln erklärbar. New to German? Start with German noun genders (der, die, das) — the first A1.1 topic. A1.1 A1.2 A2.1 A2.2 B1.1 B1.2 B2.1 B2.2 A1.1 A1.1 — Sunrise Warmth I #1 Alphabet & Pronunciation Learn the German alphabet special characters and basic pronuncia",
+    "textLength": 5396,
+    "screenshot": "screenshots/grammar-hub-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/grammar/a1.1/",
+  "name": "grammar-a1.1",
+  "kind": "astro",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "A1.1 Grammatik — 8 Themen | DeutschMeister",
+    "description": "Alle 8 Grammatikthemen für A1.1: Alphabet & Pronunciation, Nouns & Gender, Definite Articles, Indefinite Articles und mehr. Mit Regeln, Beispielen und Übungen.",
+    "h1": "A1.1 Grammatik",
+    "lang": "de",
+    "textSample": "Skip to content M DeutschMeister Grammar Videos Podcasts X-Ray Level Test Get started Log in Home / Grammatik / A1.1 A1.1 Sunrise Warmth I A1.1 Grammatik 8 Themen mit Erklärungen, Beispielen und interaktiven Übungen. 1 Alphabet & Pronunciation Alphabet und Aussprache Learn the German alphabet special characters and basic pronunciation rules 2 Nouns & Gender Nomen und Genus Understand grammatical g",
+    "textLength": 1437,
+    "screenshot": "screenshots/grammar-a1.1-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "A1.1 Grammatik — 8 Themen | DeutschMeister",
+    "description": "Alle 8 Grammatikthemen für A1.1: Alphabet & Pronunciation, Nouns & Gender, Definite Articles, Indefinite Articles und mehr. Mit Regeln, Beispielen und Übungen.",
+    "h1": "A1.1 Grammatik",
+    "lang": "de",
+    "textSample": "Skip to content M Start Home / Grammatik / A1.1 A1.1 Sunrise Warmth I A1.1 Grammatik 8 Themen mit Erklärungen, Beispielen und interaktiven Übungen. 1 Alphabet & Pronunciation Alphabet und Aussprache Learn the German alphabet special characters and basic pronunciation rules 2 Nouns & Gender Nomen und Genus Understand grammatical gender (der die das) and noun patterns 3 Definite Articles Bestimmte A",
+    "textLength": 1368,
+    "screenshot": "screenshots/grammar-a1.1-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/grammar/a2.1/",
+  "name": "grammar-a2.1",
+  "kind": "astro",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "A2.1 Grammatik — 8 Themen | DeutschMeister",
+    "description": "Alle 8 Grammatikthemen für A2.1: Dative Case, Prepositions with Dative, Two-Way Prepositions, Possessive Pronouns und mehr. Mit Regeln, Beispielen und Übungen.",
+    "h1": "A2.1 Grammatik",
+    "lang": "de",
+    "textSample": "Skip to content M DeutschMeister Grammar Videos Podcasts X-Ray Level Test Get started Log in Home / Grammatik / A2.1 A2.1 Forest Calm I A2.1 Grammatik 8 Themen mit Erklärungen, Beispielen und interaktiven Übungen. 1 Dative Case Dativ Learn indirect objects and article changes 2 Prepositions with Dative Präpositionen mit Dativ Master aus bei mit nach seit von zu 3 Two-Way Prepositions Wechselpräpos",
+    "textLength": 1369,
+    "screenshot": "screenshots/grammar-a2.1-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "A2.1 Grammatik — 8 Themen | DeutschMeister",
+    "description": "Alle 8 Grammatikthemen für A2.1: Dative Case, Prepositions with Dative, Two-Way Prepositions, Possessive Pronouns und mehr. Mit Regeln, Beispielen und Übungen.",
+    "h1": "A2.1 Grammatik",
+    "lang": "de",
+    "textSample": "Skip to content M Start Home / Grammatik / A2.1 A2.1 Forest Calm I A2.1 Grammatik 8 Themen mit Erklärungen, Beispielen und interaktiven Übungen. 1 Dative Case Dativ Learn indirect objects and article changes 2 Prepositions with Dative Präpositionen mit Dativ Master aus bei mit nach seit von zu 3 Two-Way Prepositions Wechselpräpositionen Learn prepositions with accusative or dative 4 Possessive Pro",
+    "textLength": 1300,
+    "screenshot": "screenshots/grammar-a2.1-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/grammar/b1.1/",
+  "name": "grammar-b1.1",
+  "kind": "astro",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "B1.1 Grammatik — 8 Themen | DeutschMeister",
+    "description": "Alle 8 Grammatikthemen für B1.1: Genitive Case, Genitive Prepositions, Relative Clauses Nominative Accusative, Relative Clauses Dative Genitive und mehr. Mit Regeln, Beispielen und Übungen.",
+    "h1": "B1.1 Grammatik",
+    "lang": "de",
+    "textSample": "Skip to content M DeutschMeister Grammar Videos Podcasts X-Ray Level Test Get started Log in Home / Grammatik / B1.1 B1.1 Ocean Depth I B1.1 Grammatik 8 Themen mit Erklärungen, Beispielen und interaktiven Übungen. 1 Genitive Case Genitiv Express possession and use genitive endings 2 Genitive Prepositions Genitivpräpositionen Master wegen trotz während statt 3 Relative Clauses Nominative Accusative",
+    "textLength": 1364,
+    "screenshot": "screenshots/grammar-b1.1-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "B1.1 Grammatik — 8 Themen | DeutschMeister",
+    "description": "Alle 8 Grammatikthemen für B1.1: Genitive Case, Genitive Prepositions, Relative Clauses Nominative Accusative, Relative Clauses Dative Genitive und mehr. Mit Regeln, Beispielen und Übungen.",
+    "h1": "B1.1 Grammatik",
+    "lang": "de",
+    "textSample": "Skip to content M Start Home / Grammatik / B1.1 B1.1 Ocean Depth I B1.1 Grammatik 8 Themen mit Erklärungen, Beispielen und interaktiven Übungen. 1 Genitive Case Genitiv Express possession and use genitive endings 2 Genitive Prepositions Genitivpräpositionen Master wegen trotz während statt 3 Relative Clauses Nominative Accusative Relativsätze Nominativ Akkusativ Use der die das as relative pronoun",
+    "textLength": 1295,
+    "screenshot": "screenshots/grammar-b1.1-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/grammar/b2.2/",
+  "name": "grammar-b2.2",
+  "kind": "astro",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "B2.2 Grammatik — 8 Themen | DeutschMeister",
+    "description": "Alle 8 Grammatikthemen für B2.2: Advanced Conjunctions, Modal Particles, Functional Verb Structures, Subjunctive Fixed Expressions und mehr. Mit Regeln, Beispielen und Übungen.",
+    "h1": "B2.2 Grammatik",
+    "lang": "de",
+    "textSample": "Skip to content M DeutschMeister Grammar Videos Podcasts X-Ray Level Test Get started Log in Home / Grammatik / B2.2 B2.2 Twilight Elegance II B2.2 Grammatik 8 Themen mit Erklärungen, Beispielen und interaktiven Übungen. 1 Advanced Conjunctions Erweiterte Konjunktionen Master je desto sowohl als auch etc 2 Modal Particles Modalpartikeln Use doch mal ja halt eben naturally 3 Functional Verb Structu",
+    "textLength": 1403,
+    "screenshot": "screenshots/grammar-b2.2-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "B2.2 Grammatik — 8 Themen | DeutschMeister",
+    "description": "Alle 8 Grammatikthemen für B2.2: Advanced Conjunctions, Modal Particles, Functional Verb Structures, Subjunctive Fixed Expressions und mehr. Mit Regeln, Beispielen und Übungen.",
+    "h1": "B2.2 Grammatik",
+    "lang": "de",
+    "textSample": "Skip to content M Start Home / Grammatik / B2.2 B2.2 Twilight Elegance II B2.2 Grammatik 8 Themen mit Erklärungen, Beispielen und interaktiven Übungen. 1 Advanced Conjunctions Erweiterte Konjunktionen Master je desto sowohl als auch etc 2 Modal Particles Modalpartikeln Use doch mal ja halt eben naturally 3 Functional Verb Structures Funktionsverbgefüge Learn zur Verfügung stellen etc 4 Subjunctive",
+    "textLength": 1334,
+    "screenshot": "screenshots/grammar-b2.2-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/grammar/a1.1/nouns-gender/",
+  "name": "topic-nouns-gender",
+  "kind": "astro",
+  "fullPage": true,
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "German Nouns & Gender Explained in English | A1.1 Grammar Guide",
+    "description": "Understand grammatical gender (der die das) and noun patterns Includes rules, examples, and practice exercises for A1.1 German learners.",
+    "h1": "Nouns & Gender",
+    "lang": "en",
+    "textSample": "Skip to content M DeutschMeister Grammar Videos Podcasts X-Ray Level Test Get started Log in Home / Grammar / A1.1 / Nouns & Gender A1.1 · Sunrise Warmth I Nouns & Gender Nomen und Genus German has three grammatical genders: masculine (der), feminine (die), and neuter (das). Every noun in the German language has one of these genders — not just people, but also objects and ideas — and it decides wh",
+    "textLength": 15536,
+    "screenshot": "screenshots/topic-nouns-gender-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "German Nouns & Gender Explained in English | A1.1 Grammar Guide",
+    "description": "Understand grammatical gender (der die das) and noun patterns Includes rules, examples, and practice exercises for A1.1 German learners.",
+    "h1": "Nouns & Gender",
+    "lang": "en",
+    "textSample": "Skip to content M Start Home / Grammar / A1.1 / Nouns & Gender A1.1 · Sunrise Warmth I Nouns & Gender Nomen und Genus German has three grammatical genders: masculine (der), feminine (die), and neuter (das). Every noun in the German language has one of these genders — not just people, but also objects and ideas — and it decides which article and endings you use. Understand grammatical gender (der d",
+    "textLength": 15467,
+    "screenshot": "screenshots/topic-nouns-gender-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/grammar/a2.1/dative-case/",
+  "name": "topic-dative-case",
+  "kind": "astro",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "German Dative Case Explained in English | A2.1 Grammar Guide",
+    "description": "Learn indirect objects and article changes Includes rules, examples, and practice exercises for A2.1 German learners.",
+    "h1": "Dative Case",
+    "lang": "en",
+    "textSample": "Skip to content M DeutschMeister Grammar Videos Podcasts X-Ray Level Test Get started Log in Home / Grammar / A2.1 / Dative Case A2.1 · Forest Calm I Dative Case Dativ Learn indirect objects and article changes Rules & Explanations The Dative Case Der Dativ Welcome to the dative case — the case of the indirect object. While accusative marks what you give, dative marks who you give it to. 'I give t",
+    "textLength": 12956,
+    "screenshot": "screenshots/topic-dative-case-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "German Dative Case Explained in English | A2.1 Grammar Guide",
+    "description": "Learn indirect objects and article changes Includes rules, examples, and practice exercises for A2.1 German learners.",
+    "h1": "Dative Case",
+    "lang": "en",
+    "textSample": "Skip to content M Start Home / Grammar / A2.1 / Dative Case A2.1 · Forest Calm I Dative Case Dativ Learn indirect objects and article changes Rules & Explanations The Dative Case Der Dativ Welcome to the dative case — the case of the indirect object. While accusative marks what you give, dative marks who you give it to. 'I give the book (accusative) to my friend (dative).' This is also where all g",
+    "textLength": 12887,
+    "screenshot": "screenshots/topic-dative-case-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/grammar/b1.1/konjunktiv-ii-wurde/",
+  "name": "topic-konjunktiv-ii-wurde",
+  "kind": "astro",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "German Konjunktiv II würde Explained in English | B1.1 Grammar Guide",
+    "description": "Make polite requests and conditionals Includes rules, examples, and practice exercises for B1.1 German learners.",
+    "h1": "Konjunktiv II würde",
+    "lang": "en",
+    "textSample": "Skip to content M DeutschMeister Grammar Videos Podcasts X-Ray Level Test Get started Log in Home / Grammar / B1.1 / Konjunktiv II würde B1.1 · Ocean Depth I Konjunktiv II würde Make polite requests and conditionals Rules & Explanations Konjunktiv II: The Subjunctive Mood Konjunktiv II: Der Konjunktiv What would you do if you won the lottery? How would life be different if you lived in Germany? Th",
+    "textLength": 14798,
+    "screenshot": "screenshots/topic-konjunktiv-ii-wurde-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "German Konjunktiv II würde Explained in English | B1.1 Grammar Guide",
+    "description": "Make polite requests and conditionals Includes rules, examples, and practice exercises for B1.1 German learners.",
+    "h1": "Konjunktiv II würde",
+    "lang": "en",
+    "textSample": "Skip to content M Start Home / Grammar / B1.1 / Konjunktiv II würde B1.1 · Ocean Depth I Konjunktiv II würde Make polite requests and conditionals Rules & Explanations Konjunktiv II: The Subjunctive Mood Konjunktiv II: Der Konjunktiv What would you do if you won the lottery? How would life be different if you lived in Germany? The Konjunktiv II lets you talk about hypothetical situations, wishes, ",
+    "textLength": 14729,
+    "screenshot": "screenshots/topic-konjunktiv-ii-wurde-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/grammar/b2.2/modal-particles/",
+  "name": "topic-modal-particles",
+  "kind": "astro",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "German Modal Particles Explained in English | B2.2 Grammar Guide",
+    "description": "Use doch mal ja halt eben naturally Includes rules, examples, and practice exercises for B2.2 German learners.",
+    "h1": "Modal Particles",
+    "lang": "en",
+    "textSample": "Skip to content M DeutschMeister Grammar Videos Podcasts X-Ray Level Test Get started Log in Home / Grammar / B2.2 / Modal Particles B2.2 · Twilight Elegance II Modal Particles Modalpartikeln Use doch mal ja halt eben naturally Rules & Explanations Modal Particles: The Soul of German Modalpartikeln: Die Seele des Deutschen Want to sound truly German? Learn modal particles! These little words — doc",
+    "textLength": 15335,
+    "screenshot": "screenshots/topic-modal-particles-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "German Modal Particles Explained in English | B2.2 Grammar Guide",
+    "description": "Use doch mal ja halt eben naturally Includes rules, examples, and practice exercises for B2.2 German learners.",
+    "h1": "Modal Particles",
+    "lang": "en",
+    "textSample": "Skip to content M Start Home / Grammar / B2.2 / Modal Particles B2.2 · Twilight Elegance II Modal Particles Modalpartikeln Use doch mal ja halt eben naturally Rules & Explanations Modal Particles: The Soul of German Modalpartikeln: Die Seele des Deutschen Want to sound truly German? Learn modal particles! These little words — doch, mal, ja, halt, eben, schon, wohl, eigentlich — add emotion, attitu",
+    "textLength": 15266,
+    "screenshot": "screenshots/topic-modal-particles-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/vergleich/",
+  "name": "vergleich-hub",
+  "kind": "astro",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "Vergleich — Deutschmeister vs Babbel, Duolingo, Lingoda | DeutschMeister",
+    "description": "Wie schneidet Deutschmeister im Vergleich ab? Ehrliche Vergleiche mit Babbel, Duolingo und Lingoda — Features, Preise, Sprechtraining. Du entscheidest.",
+    "h1": "Wie schneidet Deutschmeister im Vergleich ab?",
+    "lang": "de",
+    "textSample": "Skip to content M DeutschMeister Grammar Videos Podcasts X-Ray Level Test Get started Log in Wie schneidet Deutschmeister im Vergleich ab? Wir vergleichen uns fair mit den größten Namen. Du entscheidest. 🌐 DeutschMeister vs Babbel Strukturiertes Vokabel- und Grammatik-Training auf Abo-Basis. €6,99 – €12,99/Monat (Stand: Mai 2026) Vergleichen → 🎮 DeutschMeister vs Duolingo Gamifiziertes Sprachler",
+    "textLength": 1202,
+    "screenshot": "screenshots/vergleich-hub-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "Vergleich — Deutschmeister vs Babbel, Duolingo, Lingoda | DeutschMeister",
+    "description": "Wie schneidet Deutschmeister im Vergleich ab? Ehrliche Vergleiche mit Babbel, Duolingo und Lingoda — Features, Preise, Sprechtraining. Du entscheidest.",
+    "h1": "Wie schneidet Deutschmeister im Vergleich ab?",
+    "lang": "de",
+    "textSample": "Skip to content M Start Wie schneidet Deutschmeister im Vergleich ab? Wir vergleichen uns fair mit den größten Namen. Du entscheidest. 🌐 DeutschMeister vs Babbel Strukturiertes Vokabel- und Grammatik-Training auf Abo-Basis. €6,99 – €12,99/Monat (Stand: Mai 2026) Vergleichen → 🎮 DeutschMeister vs Duolingo Gamifiziertes Sprachlern-Spiel mit kostenloser Stufe. Kostenlos / Super: ab €6,99/Monat im J",
+    "textLength": 1133,
+    "screenshot": "screenshots/vergleich-hub-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/vergleich/duolingo/",
+  "name": "vergleich-duolingo",
+  "kind": "astro",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "Deutschmeister vs Duolingo — Vergleich | DeutschMeister",
+    "description": "Duolingo macht Spaß. Deutschmeister bringt dich durch die Prüfung. Vergleiche Deutschmeister und Duolingo: Features, Preise, Sprechtraining, Prüfungsvorbereitung. Ehrlich und fair.",
+    "h1": "Duolingo macht Spaß. Deutschmeister bringt dich durch die Prüfung.",
+    "lang": "de",
+    "textSample": "Skip to content M DeutschMeister Grammar Videos Podcasts X-Ray Level Test Get started Log in Vergleich Duolingo macht Spaß. Deutschmeister bringt dich durch die Prüfung. Duolingo motiviert mit Streaks und Punkten. Aber wenn du Deutsch für Prüfungen, Arbeit oder das echte Leben brauchst — reicht das? Kostenlos testen → Preise ansehen Feature-Vergleich Feature DeutschMeister Duolingo KI-Sprechtraini",
+    "textLength": 3773,
+    "screenshot": "screenshots/vergleich-duolingo-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "Deutschmeister vs Duolingo — Vergleich | DeutschMeister",
+    "description": "Duolingo macht Spaß. Deutschmeister bringt dich durch die Prüfung. Vergleiche Deutschmeister und Duolingo: Features, Preise, Sprechtraining, Prüfungsvorbereitung. Ehrlich und fair.",
+    "h1": "Duolingo macht Spaß. Deutschmeister bringt dich durch die Prüfung.",
+    "lang": "de",
+    "textSample": "Skip to content M Start Vergleich Duolingo macht Spaß. Deutschmeister bringt dich durch die Prüfung. Duolingo motiviert mit Streaks und Punkten. Aber wenn du Deutsch für Prüfungen, Arbeit oder das echte Leben brauchst — reicht das? Kostenlos testen → Preise ansehen Feature-Vergleich KI-Sprechtraining mit Live-Feedback DM ✓ Freie Gespräche mit KI, sofortiges Feedback zu Grammatik und Ausdruck DU ○ ",
+    "textLength": 3768,
+    "screenshot": "screenshots/vergleich-duolingo-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/leitfaden/telc-b1/",
+  "name": "leitfaden-telc-b1",
+  "kind": "astro",
+  "fullPage": true,
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "telc B1 Vorbereitung: Leitfaden 2026 | DeutschMeister",
+    "description": "telc Deutsch B1 Vorbereitung: 8-Wochen-Lernplan, Prüfungsaufbau, häufige Fehler und Tipps. Alles, was du zum Bestehen brauchst.",
+    "h1": "telc Deutsch B1: Der komplette Leitfaden zur Vorbereitung (2026)",
+    "lang": "de",
+    "textSample": "Skip to content M DeutschMeister Grammar Videos Podcasts X-Ray Level Test Get started Log in 📖 Leitfaden telc Deutsch B1: Der komplette Leitfaden zur Vorbereitung (2026) Du bereitest dich auf die telc Deutsch B1 Prüfung vor? Egal ob für den Aufenthaltstitel, die Einbürgerung oder den Beruf — dieser Leitfaden gibt dir alles, was du brauchst. Du erfährst, wie die Prüfung aufgebaut ist, was du Woche",
+    "textLength": 12621,
+    "screenshot": "screenshots/leitfaden-telc-b1-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "telc B1 Vorbereitung: Leitfaden 2026 | DeutschMeister",
+    "description": "telc Deutsch B1 Vorbereitung: 8-Wochen-Lernplan, Prüfungsaufbau, häufige Fehler und Tipps. Alles, was du zum Bestehen brauchst.",
+    "h1": "telc Deutsch B1: Der komplette Leitfaden zur Vorbereitung (2026)",
+    "lang": "de",
+    "textSample": "Skip to content M Start 📖 Leitfaden telc Deutsch B1: Der komplette Leitfaden zur Vorbereitung (2026) Du bereitest dich auf die telc Deutsch B1 Prüfung vor? Egal ob für den Aufenthaltstitel, die Einbürgerung oder den Beruf — dieser Leitfaden gibt dir alles, was du brauchst. Du erfährst, wie die Prüfung aufgebaut ist, was du Woche für Woche lernen solltest, und welche Fehler du vermeiden musst. Kei",
+    "textLength": 12552,
+    "screenshot": "screenshots/leitfaden-telc-b1-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/privacy/",
+  "name": "privacy",
+  "kind": "astro",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "Privacy Policy — DeutschMeister",
+    "description": "How DeutschMeister handles your data: accounts, analytics cookies, payments, and emails.",
+    "h1": "Privacy Policy",
+    "lang": "en",
+    "textSample": "Skip to content M DeutschMeister Grammar Videos Podcasts X-Ray Level Test Get started Log in Start Draft: this policy is a factual summary of the services this site uses and is pending legal review. Contact us with any questions. Privacy Policy Last updated: August 2026 · Applies to deutsch-meister.de Who we are DeutschMeister is an online German-learning platform at deutsch-meister.de. For any pr",
+    "textLength": 2704,
+    "screenshot": "screenshots/privacy-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "Privacy Policy — DeutschMeister",
+    "description": "How DeutschMeister handles your data: accounts, analytics cookies, payments, and emails.",
+    "h1": "Privacy Policy",
+    "lang": "en",
+    "textSample": "Skip to content M DeutschMeister Grammar Videos Podcasts X-Ray Level Test Get started Log in Start Draft: this policy is a factual summary of the services this site uses and is pending legal review. Contact us with any questions. Privacy Policy Last updated: August 2026 · Applies to deutsch-meister.de Who we are DeutschMeister is an online German-learning platform at deutsch-meister.de. For any pr",
+    "textLength": 2704,
+    "screenshot": "screenshots/privacy-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/impressum/",
+  "name": "impressum",
+  "kind": "astro",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "Impressum — DeutschMeister",
+    "description": "Impressum und Anbieterkennzeichnung für deutsch-meister.de.",
+    "h1": "Impressum",
+    "lang": "de",
+    "textSample": "Skip to content M DeutschMeister Grammar Videos Podcasts X-Ray Level Test Get started Log in Start Entwurf: Die mit [ ] markierten Angaben müssen vor Veröffentlichung vom Betreiber ergänzt werden. Impressum Angaben gemäß § 5 DDG [Vollständiger Name des Betreibers] [Straße und Hausnummer] [PLZ und Ort] [Land] Kontakt E-Mail: zaid@deutsch-meister.de Verantwortlich für den Inhalt [Name, Anschrift wie",
+    "textLength": 1031,
+    "screenshot": "screenshots/impressum-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "Impressum — DeutschMeister",
+    "description": "Impressum und Anbieterkennzeichnung für deutsch-meister.de.",
+    "h1": "Impressum",
+    "lang": "de",
+    "textSample": "Skip to content M DeutschMeister Grammar Videos Podcasts X-Ray Level Test Get started Log in Start Entwurf: Die mit [ ] markierten Angaben müssen vor Veröffentlichung vom Betreiber ergänzt werden. Impressum Angaben gemäß § 5 DDG [Vollständiger Name des Betreibers] [Straße und Hausnummer] [PLZ und Ort] [Land] Kontakt E-Mail: zaid@deutsch-meister.de Verantwortlich für den Inhalt [Name, Anschrift wie",
+    "textLength": 1031,
+    "screenshot": "screenshots/impressum-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/definitely-not-a-page",
+  "name": "404",
+  "kind": "astro",
+  "viewports": {
+   "desktop": {
+    "status": 404,
+    "title": "Page Not Found (404) | DeutschMeister",
+    "description": "This page doesn't exist or has moved. Explore German grammar lessons from A1 to B2 on DeutschMeister.",
+    "h1": "404",
+    "lang": "en",
+    "textSample": "Skip to content M DeutschMeister Grammar Videos Podcasts X-Ray Level Test Get started Log in ? 404 Page Not Found The page you're looking for doesn't exist or has been moved. Go home Browse grammar M DeutschMeister Learn German with AI — from A1.1 to B2.2. Grammar, speaking, listening, and reading. Grammar A1.1 Grammar A1.2 Grammar A2.1 Grammar B1.1 Grammar All levels → Learn AI Speaking Practice ",
+    "textLength": 670,
+    "screenshot": "screenshots/404-desktop.jpg"
+   },
+   "mobile": {
+    "status": 404,
+    "title": "Page Not Found (404) | DeutschMeister",
+    "description": "This page doesn't exist or has moved. Explore German grammar lessons from A1 to B2 on DeutschMeister.",
+    "h1": "404",
+    "lang": "en",
+    "textSample": "Skip to content M Start ? 404 Page Not Found The page you're looking for doesn't exist or has been moved. Go home Browse grammar M DeutschMeister Learn German with AI — from A1.1 to B2.2. Grammar, speaking, listening, and reading. Grammar A1.1 Grammar A1.2 Grammar A2.1 Grammar B1.1 Grammar All levels → Learn AI Speaking Practice Sentence X-Ray Level Test Pricing Privacy Policy · Impressum © 2026 D",
+    "textLength": 601,
+    "screenshot": "screenshots/404-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: the server responded with a status of 404 (Not Found)",
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/speaking",
+  "name": "speaking",
+  "kind": "spa",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "German Speaking Practice with an AI Partner | DeutschMeister",
+    "description": "Practice speaking German with an AI conversation partner: guided missions or free conversation, with instant feedback. Levels A1 to B2.",
+    "h1": null,
+    "lang": "en",
+    "textSample": "M DeutschMeister Grammar Videos Podcasts Level Test X-Ray Pricing A1.1 Free Login Sign Up Watch Intro We use analytics cookies (Google Analytics, PostHog) to understand how the site is used. They load only if you accept. See our Privacy Policy. Decline Accept",
+    "textLength": 261,
+    "screenshot": "screenshots/speaking-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "German Speaking Practice with an AI Partner | DeutschMeister",
+    "description": "Practice speaking German with an AI conversation partner: guided missions or free conversation, with instant feedback. Levels A1 to B2.",
+    "h1": null,
+    "lang": "en",
+    "textSample": "M DeutschMeister Watch Intro We use analytics cookies (Google Analytics, PostHog) to understand how the site is used. They load only if you accept. See our Privacy Policy. Decline Accept",
+    "textLength": 188,
+    "screenshot": "screenshots/speaking-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/level-test",
+  "name": "level-test",
+  "kind": "spa",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "Free German Level Test | Find Your CEFR Level (A1-B2) | DeutschMeister | DeutschMeister",
+    "description": "Take our free German level test to discover your CEFR level. Test your reading, listening, and speaking skills in 15 minutes. Instant results with personalized learning recommendations.",
+    "h1": "Discover Your German Level",
+    "lang": "en",
+    "textSample": "M DeutschMeister Grammar Videos Podcasts Level Test X-Ray Pricing A1.1 Free Login Sign Up Watch Intro FREE ASSESSMENT Discover Your German Level Take our comprehensive placement test and get personalized recommendations for your learning journey 15-20 MINUTES 3 SECTIONS A1-B2 LEVELS How it works 1 Written Test 40 multiple choice questions on grammar, vocabulary & reading ~12 min 2 Listening Audio ",
+    "textLength": 1079,
+    "screenshot": "screenshots/level-test-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "Free German Level Test | Find Your CEFR Level (A1-B2) | DeutschMeister | DeutschMeister",
+    "description": "Take our free German level test to discover your CEFR level. Test your reading, listening, and speaking skills in 15 minutes. Instant results with personalized learning recommendations.",
+    "h1": "Discover Your German Level",
+    "lang": "en",
+    "textSample": "M DeutschMeister Watch Intro FREE ASSESSMENT Discover Your German Level Take our comprehensive placement test and get personalized recommendations for your learning journey 15-20 MINUTES 3 SECTIONS A1-B2 LEVELS How it works 1 Written Test 40 multiple choice questions on grammar, vocabulary & reading ~12 min 2 Listening Audio exercises with comprehension questions at your level ~5 min 3 Speaking Sh",
+    "textLength": 1006,
+    "screenshot": "screenshots/level-test-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/analyze",
+  "name": "analyze",
+  "kind": "spa",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "Sentence X-Ray — Analyze Any German Sentence | DeutschMeister",
+    "description": "Paste any German sentence and instantly see the grammatical breakdown. Color-coded cases, word roles, and explanations for why each word works the way it does.",
+    "h1": "Sentence X-Ray",
+    "lang": "en",
+    "textSample": "M DeutschMeister Grammar Videos Podcasts Level Test X-Ray Pricing A1.1 Free Login Sign Up Watch Intro Sentence X-Ray Paste any German sentence and see exactly how it works — cases, roles, and why. 0/500 Analyze 1. Paste any German sentence 2. AI analyzes grammar instantly 3. See cases, roles, and why EXAMPLE RESULT Try it yourself ↑ \"Ich gebe dir das Buch.\" — I give you the book. Ich I gebe give d",
+    "textLength": 812,
+    "screenshot": "screenshots/analyze-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "Sentence X-Ray — Analyze Any German Sentence | DeutschMeister",
+    "description": "Paste any German sentence and instantly see the grammatical breakdown. Color-coded cases, word roles, and explanations for why each word works the way it does.",
+    "h1": "Sentence X-Ray",
+    "lang": "en",
+    "textSample": "M DeutschMeister Watch Intro Sentence X-Ray Paste any German sentence and see exactly how it works — cases, roles, and why. 0/500 Analyze 1. Paste any German sentence 2. AI analyzes grammar instantly 3. See cases, roles, and why EXAMPLE RESULT Try it yourself ↑ \"Ich gebe dir das Buch.\" — I give you the book. Ich I gebe give dir to you das Buch the book OR TRY AN EXAMPLE Die Mutter gibt dem Kind ei",
+    "textLength": 739,
+    "screenshot": "screenshots/analyze-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/podcasts",
+  "name": "podcasts",
+  "kind": "spa",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "German Podcasts for Beginners | Learn German A1-B2 | DeutschMeister | DeutschMeister",
+    "description": "Free German podcasts designed for learners. 24 episodes with native speaker audio and transcripts for levels A1 to B2. Improve your German listening skills while commuting or relaxing.",
+    "h1": "German Podcasts for Learners",
+    "lang": "en",
+    "textSample": "M DeutschMeister Grammar Videos Podcasts Level Test X-Ray Pricing A1.1 Free Login Sign Up Watch Intro 0 Episodes Available German Podcasts for Learners Native speaker audio with transcripts • Levels A1 to B2 Listen to authentic German conversations designed for language learners. Each episode comes with full transcripts and vocabulary explanations. A1.1 FREE Complete Beginner 0 episodes New episod",
+    "textLength": 1848,
+    "screenshot": "screenshots/podcasts-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "German Podcasts for Beginners | Learn German A1-B2 | DeutschMeister | DeutschMeister",
+    "description": "Free German podcasts designed for learners. 24 episodes with native speaker audio and transcripts for levels A1 to B2. Improve your German listening skills while commuting or relaxing.",
+    "h1": "German Podcasts for Learners",
+    "lang": "en",
+    "textSample": "M DeutschMeister Watch Intro 0 Episodes Available German Podcasts for Learners Native speaker audio with transcripts • Levels A1 to B2 Listen to authentic German conversations designed for language learners. Each episode comes with full transcripts and vocabulary explanations. A1.1 FREE Complete Beginner 0 episodes New episodes coming soon! A1.2 Pro Elementary 0 episodes New episodes coming soon! ",
+    "textLength": 1775,
+    "screenshot": "screenshots/podcasts-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "omqyueddktqeyrrqvnyq.supabase.co/rest/v1/podcasts",
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/listening",
+  "name": "listening-hub",
+  "kind": "spa",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "German Listening Practice | 480 Audio Exercises A1-B2 | DeutschMeister",
+    "description": "Improve your German listening comprehension with 480 native speaker dialogues across all CEFR levels. Interactive exercises with questions and instant feedback.",
+    "h1": null,
+    "lang": "en",
+    "textSample": "M DeutschMeister Grammar Videos Podcasts Level Test X-Ray Pricing A1.1 Free Login Sign Up Watch Intro Couldn't load this page Please check your connection and try again. Try again We use analytics cookies (Google Analytics, PostHog) to understand how the site is used. They load only if you accept. See our Privacy Policy. Decline Accept",
+    "textLength": 341,
+    "screenshot": "screenshots/listening-hub-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "German Listening Practice | 480 Audio Exercises A1-B2 | DeutschMeister",
+    "description": "Improve your German listening comprehension with 480 native speaker dialogues across all CEFR levels. Interactive exercises with questions and instant feedback.",
+    "h1": null,
+    "lang": "en",
+    "textSample": "M DeutschMeister Watch Intro Couldn't load this page Please check your connection and try again. Try again We use analytics cookies (Google Analytics, PostHog) to understand how the site is used. They load only if you accept. See our Privacy Policy. Decline Accept",
+    "textLength": 268,
+    "screenshot": "screenshots/listening-hub-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "omqyueddktqeyrrqvnyq.supabase.co/rest/v1/listening_exercises",
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/reading",
+  "name": "reading-hub",
+  "kind": "spa",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "German Reading Practice | 52 Lessons A1-B2 | DeutschMeister | DeutschMeister",
+    "description": "Improve your German reading comprehension with 52 leveled reading passages. Authentic texts with comprehension questions for all CEFR levels from A1 to B2.",
+    "h1": "Reading",
+    "lang": "en",
+    "textSample": "M DeutschMeister Grammar Videos Podcasts Level Test X-Ray Pricing A1.1 Free Login Sign Up Watch Intro Reading Improve your reading comprehension step by step 52 Total Lessons 8 Levels 0 Completed 0% Progress Overall Reading Progress 0% 🌅 A1 - Sunrise Warmth 7 reading lessons A1.1 Part 1 FREE 3 lessons 0/3 0% A1.2 Part 2 4 lessons 0/4 0% 🌿 A2 - Forest Calm 11 reading lessons A2.1 Part 1 5 lessons",
+    "textLength": 967,
+    "screenshot": "screenshots/reading-hub-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "German Reading Practice | 52 Lessons A1-B2 | DeutschMeister | DeutschMeister",
+    "description": "Improve your German reading comprehension with 52 leveled reading passages. Authentic texts with comprehension questions for all CEFR levels from A1 to B2.",
+    "h1": "Reading",
+    "lang": "en",
+    "textSample": "M DeutschMeister Watch Intro Reading Improve your reading comprehension step by step 52 Total Lessons 8 Levels 0 Completed 0% Progress Overall Reading Progress 0% 🌅 A1 - Sunrise Warmth 7 reading lessons A1.1 Part 1 FREE 3 lessons 0/3 0% A1.2 Part 2 4 lessons 0/4 0% 🌿 A2 - Forest Calm 11 reading lessons A2.1 Part 1 5 lessons 0/5 0% A2.2 Part 2 6 lessons 0/6 0% 🌊 B1 - Ocean Depth 15 reading lesso",
+    "textLength": 894,
+    "screenshot": "screenshots/reading-hub-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+   "[readingService] getReadingLessonsByLevel ERROR: {message: TypeError: Failed to fetch, details: TypeError: Failed to fetch\n    at http://localhost…4179/assets/ReadingSectionPage-CgxBA7ma.js:1:1188, hint: , code: }",
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "omqyueddktqeyrrqvnyq.supabase.co/rest/v1/reading_lessons",
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/intro",
+  "name": "intro",
+  "kind": "spa",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "Welcome to DeutschMeister | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Welcome to DeutschMeister",
+    "lang": "en",
+    "textSample": "M DeutschMeister Grammar Videos Podcasts Level Test X-Ray Pricing A1.1 Free Login Sign Up D Welcome to DeutschMeister Watch our introduction video to learn how DeutschMeister can help you master German 🇬🇧 English 🇸🇦 العربية 🇪🇸 Español 🇷🇺 Русский 🇮🇳 हिन्दी 🇨🇳 中文 Ready to start your German journey? Join thousands of learners mastering German with structured lessons, interactive exercises",
+    "textLength": 642,
+    "screenshot": "screenshots/intro-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "Welcome to DeutschMeister | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Welcome to DeutschMeister",
+    "lang": "en",
+    "textSample": "M DeutschMeister D Welcome to DeutschMeister Watch our introduction video to learn how DeutschMeister can help you master German 🇬🇧 English 🇸🇦 العربية 🇪🇸 Español 🇷🇺 Русский 🇮🇳 हिन्दी 🇨🇳 中文 Ready to start your German journey? Join thousands of learners mastering German with structured lessons, interactive exercises, and AI-powered speaking practice. Start Learning Free Explore Grammar T",
+    "textLength": 569,
+    "screenshot": "screenshots/intro-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "omqyueddktqeyrrqvnyq.supabase.co/storage/v1/object/public/video-library/intro/Master_German.mp4",
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/login",
+  "name": "login",
+  "kind": "spa",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "Log In | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Welcome Back",
+    "lang": "en",
+    "textSample": "M DeutschMeister Grammar Videos Podcasts Level Test X-Ray Pricing A1.1 Free Login Sign Up Watch Intro D Welcome Back Login to continue your German journey Email Password Forgot Password? Login Don't have an account? Sign Up We use analytics cookies (Google Analytics, PostHog) to understand how the site is used. They load only if you accept. See our Privacy Policy. Decline Accept",
+    "textLength": 386,
+    "screenshot": "screenshots/login-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "Log In | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Welcome Back",
+    "lang": "en",
+    "textSample": "M DeutschMeister Watch Intro D Welcome Back Login to continue your German journey Email Password Forgot Password? Login Don't have an account? Sign Up We use analytics cookies (Google Analytics, PostHog) to understand how the site is used. They load only if you accept. See our Privacy Policy. Decline Accept",
+    "textLength": 313,
+    "screenshot": "screenshots/login-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/signup",
+  "name": "signup",
+  "kind": "spa",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "Sign Up Free | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Start for free",
+    "lang": "en",
+    "textSample": "M DeutschMeister Grammar Videos Podcasts Level Test X-Ray Pricing A1.1 Free Login Sign Up Watch Intro D Start for free Create an account and get instant access to: All A1.1 lessons — no restrictions 2 free AI speaking sessions 10 Sentence X-Ray analyses per day during your trial 7-day Pro trial included Email Password Confirm Password Sign Up Keine Kreditkarte erforderlich · Jederzeit kündbar Alre",
+    "textLength": 590,
+    "screenshot": "screenshots/signup-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "Sign Up Free | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Start for free",
+    "lang": "en",
+    "textSample": "M DeutschMeister Watch Intro D Start for free Create an account and get instant access to: All A1.1 lessons — no restrictions 2 free AI speaking sessions 10 Sentence X-Ray analyses per day during your trial 7-day Pro trial included Email Password Confirm Password Sign Up Keine Kreditkarte erforderlich · Jederzeit kündbar Already have an account? Login We use analytics cookies (Google Analytics, Po",
+    "textLength": 517,
+    "screenshot": "screenshots/signup-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/reset-password",
+  "name": "reset-password",
+  "kind": "spa",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "Reset Password | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Reset Password",
+    "lang": "en",
+    "textSample": "M DeutschMeister Grammar Videos Podcasts Level Test X-Ray Pricing A1.1 Free Login Sign Up Watch Intro D Reset Password Enter your email to receive a reset link Email Send Reset Link Back to Login We use analytics cookies (Google Analytics, PostHog) to understand how the site is used. They load only if you accept. See our Privacy Policy. Decline Accept",
+    "textLength": 358,
+    "screenshot": "screenshots/reset-password-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "Reset Password | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Reset Password",
+    "lang": "en",
+    "textSample": "M DeutschMeister Watch Intro D Reset Password Enter your email to receive a reset link Email Send Reset Link Back to Login We use analytics cookies (Google Analytics, PostHog) to understand how the site is used. They load only if you accept. See our Privacy Policy. Decline Accept",
+    "textLength": 285,
+    "screenshot": "screenshots/reset-password-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/faq",
+  "name": "faq",
+  "kind": "spa",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "Häufige Fragen | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Häufige Fragen",
+    "lang": "de",
+    "textSample": "M DeutschMeister Grammar Videos Podcasts Level Test X-Ray Pricing A1.1 Free Login Sign Up Watch Intro Häufige Fragen Alles, was du über Deutschmeister wissen musst — kurz und ehrlich. Über Deutschmeister Was ist Deutschmeister? Für wen ist diese Plattform gedacht? Wer steht hinter Deutschmeister? Welche Niveaus deckt ihr ab? Lernen & Inhalte Wie unterscheidet sich Deutschmeister von Duolingo / Bab",
+    "textLength": 1347,
+    "screenshot": "screenshots/faq-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "Häufige Fragen | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Häufige Fragen",
+    "lang": "de",
+    "textSample": "M DeutschMeister Watch Intro Häufige Fragen Alles, was du über Deutschmeister wissen musst — kurz und ehrlich. Über Deutschmeister Was ist Deutschmeister? Für wen ist diese Plattform gedacht? Wer steht hinter Deutschmeister? Welche Niveaus deckt ihr ab? Lernen & Inhalte Wie unterscheidet sich Deutschmeister von Duolingo / Babbel? Bekomme ich echtes Sprechtraining oder nur Übungen? Wie funktioniert",
+    "textLength": 1274,
+    "screenshot": "screenshots/faq-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/ueber-uns",
+  "name": "ueber-uns",
+  "kind": "spa",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "Über uns | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Deutsch lernen sollte nicht dein Albtraum sein.",
+    "lang": "de",
+    "textSample": "M DeutschMeister Grammar Videos Podcasts Level Test X-Ray Pricing A1.1 Free Login Sign Up Watch Intro Deutsch lernen sollte nicht dein Albtraum sein. Die meisten Apps machen Sprachenlernen zum Spiel — und umgehen dabei das Schwere: echtes Sprechen, echte Grammatik, echte Prüfungsvorbereitung. Deutschmeister macht das Gegenteil. Gebaut von einem Arzt Für ernsthafte Lerner DSGVO-konform – Server in ",
+    "textLength": 2274,
+    "screenshot": "screenshots/ueber-uns-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "Über uns | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Deutsch lernen sollte nicht dein Albtraum sein.",
+    "lang": "de",
+    "textSample": "M DeutschMeister Watch Intro Deutsch lernen sollte nicht dein Albtraum sein. Die meisten Apps machen Sprachenlernen zum Spiel — und umgehen dabei das Schwere: echtes Sprechen, echte Grammatik, echte Prüfungsvorbereitung. Deutschmeister macht das Gegenteil. Gebaut von einem Arzt Für ernsthafte Lerner DSGVO-konform – Server in der EU Wer steckt dahinter Ich bin Zaid. Arzt, Blue Card, Deutschland. Ic",
+    "textLength": 2201,
+    "screenshot": "screenshots/ueber-uns-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/vocabulary",
+  "name": "vocabulary",
+  "kind": "spa",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "German Vocabulary by Level | A1-B2 Word Lists | DeutschMeister | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Vocabulary",
+    "lang": "en",
+    "textSample": "M DeutschMeister Grammar Videos Podcasts Level Test X-Ray Pricing A1.1 Free Login Sign Up Watch Intro Vocabulary Loading... across 8 levels Build your German vocabulary with curated word lists for each CEFR level. Each word includes pronunciation, example sentences, and category tags. 🌅 Level A1 Sunrise Warmth A1.1 Free Sunrise Warmth I Loading... A1.2 Sunrise Warmth II Loading... Sign in to acce",
+    "textLength": 889,
+    "screenshot": "screenshots/vocabulary-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "German Vocabulary by Level | A1-B2 Word Lists | DeutschMeister | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Vocabulary",
+    "lang": "en",
+    "textSample": "M DeutschMeister Watch Intro Vocabulary Loading... across 8 levels Build your German vocabulary with curated word lists for each CEFR level. Each word includes pronunciation, example sentences, and category tags. 🌅 Level A1 Sunrise Warmth A1.1 Free Sunrise Warmth I Loading... A1.2 Sunrise Warmth II Loading... Sign in to access 🌿 Level A2 Forest Calm 🌊 Level B1 Ocean Depth 🌙 Level B2 Twilight E",
+    "textLength": 816,
+    "screenshot": "screenshots/vocabulary-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+   "[vocabularyService] fetchWordsForLevel ERROR: {message: TypeError: Failed to fetch, details: TypeError: Failed to fetch\n    at http://localhost…9/assets/VocabularySectionPage-lVPMZxpe.js:1:1008, hint: , code: }",
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "omqyueddktqeyrrqvnyq.supabase.co/rest/v1/words",
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/video-library",
+  "name": "video-library",
+  "kind": "spa",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "DeutschMeister - Learn German Grammar from A1 to B2 | 64 Topics",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": null,
+    "lang": "en",
+    "textSample": "M DeutschMeister Grammar Videos Podcasts Level Test X-Ray Pricing A1.1 Free Login Sign Up Watch Intro Couldn't load this page Please check your connection and try again. Try again We use analytics cookies (Google Analytics, PostHog) to understand how the site is used. They load only if you accept. See our Privacy Policy. Decline Accept",
+    "textLength": 341,
+    "screenshot": "screenshots/video-library-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "DeutschMeister - Learn German Grammar from A1 to B2 | 64 Topics",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": null,
+    "lang": "en",
+    "textSample": "M DeutschMeister Watch Intro Couldn't load this page Please check your connection and try again. Try again We use analytics cookies (Google Analytics, PostHog) to understand how the site is used. They load only if you accept. See our Privacy Policy. Decline Accept",
+    "textLength": 268,
+    "screenshot": "screenshots/video-library-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+   "Error fetching videos: {message: TypeError: Failed to fetch, details: TypeError: Failed to fetch\n    at http://localhost…:4179/assets/VideoLibraryPage-D7bCsQJo.js:1:3279), hint: , code: }",
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "omqyueddktqeyrrqvnyq.supabase.co/rest/v1/video_library",
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/listening/a1.1",
+  "name": "listening-a1.1-lowercase",
+  "kind": "spa",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "DeutschMeister - Learn German Grammar from A1 to B2 | 64 Topics",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": null,
+    "lang": "en",
+    "textSample": "M DeutschMeister Grammar Videos Podcasts Level Test X-Ray Pricing A1.1 Free Login Sign Up Watch Intro We use analytics cookies (Google Analytics, PostHog) to understand how the site is used. They load only if you accept. See our Privacy Policy. Decline Accept",
+    "textLength": 261,
+    "screenshot": "screenshots/listening-a1.1-lowercase-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "DeutschMeister - Learn German Grammar from A1 to B2 | 64 Topics",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": null,
+    "lang": "en",
+    "textSample": "M DeutschMeister Watch Intro We use analytics cookies (Google Analytics, PostHog) to understand how the site is used. They load only if you accept. See our Privacy Policy. Decline Accept",
+    "textLength": 188,
+    "screenshot": "screenshots/listening-a1.1-lowercase-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/listening/A1.1",
+  "name": "listening-A1.1-uppercase",
+  "kind": "spa",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "DeutschMeister - Learn German Grammar from A1 to B2 | 64 Topics",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": null,
+    "lang": "en",
+    "textSample": "M DeutschMeister Grammar Videos Podcasts Level Test X-Ray Pricing A1.1 Free Login Sign Up Watch Intro We use analytics cookies (Google Analytics, PostHog) to understand how the site is used. They load only if you accept. See our Privacy Policy. Decline Accept",
+    "textLength": 261,
+    "screenshot": "screenshots/listening-A1.1-uppercase-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "DeutschMeister - Learn German Grammar from A1 to B2 | 64 Topics",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": null,
+    "lang": "en",
+    "textSample": "M DeutschMeister Watch Intro We use analytics cookies (Google Analytics, PostHog) to understand how the site is used. They load only if you accept. See our Privacy Policy. Decline Accept",
+    "textLength": 188,
+    "screenshot": "screenshots/listening-A1.1-uppercase-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/dashboard",
+  "name": "dashboard-loggedout",
+  "kind": "spa",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "Log In | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Welcome Back",
+    "lang": "en",
+    "textSample": "M DeutschMeister Grammar Videos Podcasts Level Test X-Ray Pricing A1.1 Free Login Sign Up Watch Intro D Welcome Back Login to continue your German journey Email Password Forgot Password? Login Don't have an account? Sign Up We use analytics cookies (Google Analytics, PostHog) to understand how the site is used. They load only if you accept. See our Privacy Policy. Decline Accept",
+    "textLength": 386,
+    "screenshot": "screenshots/dashboard-loggedout-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "Log In | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Welcome Back",
+    "lang": "en",
+    "textSample": "M DeutschMeister Watch Intro D Welcome Back Login to continue your German journey Email Password Forgot Password? Login Don't have an account? Sign Up We use analytics cookies (Google Analytics, PostHog) to understand how the site is used. They load only if you accept. See our Privacy Policy. Decline Accept",
+    "textLength": 313,
+    "screenshot": "screenshots/dashboard-loggedout-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "app.lemonsqueezy.com/js/lemon.js",
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/profile",
+  "name": "profile-loggedout",
+  "kind": "spa",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "Log In | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Welcome Back",
+    "lang": "en",
+    "textSample": "M DeutschMeister Grammar Videos Podcasts Level Test X-Ray Pricing A1.1 Free Login Sign Up Watch Intro D Welcome Back Login to continue your German journey Email Password Forgot Password? Login Don't have an account? Sign Up We use analytics cookies (Google Analytics, PostHog) to understand how the site is used. They load only if you accept. See our Privacy Policy. Decline Accept",
+    "textLength": 386,
+    "screenshot": "screenshots/profile-loggedout-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "Log In | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Welcome Back",
+    "lang": "en",
+    "textSample": "M DeutschMeister Watch Intro D Welcome Back Login to continue your German journey Email Password Forgot Password? Login Don't have an account? Sign Up We use analytics cookies (Google Analytics, PostHog) to understand how the site is used. They load only if you accept. See our Privacy Policy. Decline Accept",
+    "textLength": 313,
+    "screenshot": "screenshots/profile-loggedout-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "app.lemonsqueezy.com/js/lemon.js",
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/subscription",
+  "name": "subscription-loggedout",
+  "kind": "spa",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "Log In | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Welcome Back",
+    "lang": "en",
+    "textSample": "M DeutschMeister Grammar Videos Podcasts Level Test X-Ray Pricing A1.1 Free Login Sign Up Watch Intro D Welcome Back Login to continue your German journey Email Password Forgot Password? Login Don't have an account? Sign Up We use analytics cookies (Google Analytics, PostHog) to understand how the site is used. They load only if you accept. See our Privacy Policy. Decline Accept",
+    "textLength": 386,
+    "screenshot": "screenshots/subscription-loggedout-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "Log In | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Welcome Back",
+    "lang": "en",
+    "textSample": "M DeutschMeister Watch Intro D Welcome Back Login to continue your German journey Email Password Forgot Password? Login Don't have an account? Sign Up We use analytics cookies (Google Analytics, PostHog) to understand how the site is used. They load only if you accept. See our Privacy Policy. Decline Accept",
+    "textLength": 313,
+    "screenshot": "screenshots/subscription-loggedout-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "app.lemonsqueezy.com/js/lemon.js",
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/onboarding",
+  "name": "onboarding-loggedout",
+  "kind": "spa",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "Log In | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Welcome Back",
+    "lang": "en",
+    "textSample": "M DeutschMeister Grammar Videos Podcasts Level Test X-Ray Pricing A1.1 Free Login Sign Up Watch Intro D Welcome Back Login to continue your German journey Email Password Forgot Password? Login Don't have an account? Sign Up We use analytics cookies (Google Analytics, PostHog) to understand how the site is used. They load only if you accept. See our Privacy Policy. Decline Accept",
+    "textLength": 386,
+    "screenshot": "screenshots/onboarding-loggedout-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "Log In | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Welcome Back",
+    "lang": "en",
+    "textSample": "M DeutschMeister Watch Intro D Welcome Back Login to continue your German journey Email Password Forgot Password? Login Don't have an account? Sign Up We use analytics cookies (Google Analytics, PostHog) to understand how the site is used. They load only if you accept. See our Privacy Policy. Decline Accept",
+    "textLength": 313,
+    "screenshot": "screenshots/onboarding-loggedout-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ },
+ {
+  "path": "/vergleich/unknown-app",
+  "name": "vergleich-unknown-slug",
+  "kind": "spa",
+  "viewports": {
+   "desktop": {
+    "status": 200,
+    "title": "Vergleich — Deutschmeister vs Babbel, Duolingo, Lingoda | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Wie schneidet Deutschmeister im Vergleich ab?",
+    "lang": "en",
+    "textSample": "M DeutschMeister Grammar Videos Podcasts Level Test X-Ray Pricing A1.1 Free Login Sign Up Watch Intro Wie schneidet Deutschmeister im Vergleich ab? Wir vergleichen uns fair mit den größten Namen. Du entscheidest. DeutschMeister vs Babbel Strukturiertes Vokabel- und Grammatik-Training auf Abo-Basis. €6,99 – €12,99/Monat (Stand: Mai 2026) Vergleichen DeutschMeister vs Duolingo Gamifiziertes Sprachle",
+    "textLength": 883,
+    "screenshot": "screenshots/vergleich-unknown-slug-desktop.jpg"
+   },
+   "mobile": {
+    "status": 200,
+    "title": "Vergleich — Deutschmeister vs Babbel, Duolingo, Lingoda | DeutschMeister",
+    "description": "Master German grammar with 64 topics from A1.1 to B2.2. Clear English explanations, audio examples, interactive exercises, and video podcasts. Start learning today.",
+    "h1": "Wie schneidet Deutschmeister im Vergleich ab?",
+    "lang": "en",
+    "textSample": "M DeutschMeister Watch Intro Wie schneidet Deutschmeister im Vergleich ab? Wir vergleichen uns fair mit den größten Namen. Du entscheidest. DeutschMeister vs Babbel Strukturiertes Vokabel- und Grammatik-Training auf Abo-Basis. €6,99 – €12,99/Monat (Stand: Mai 2026) Vergleichen DeutschMeister vs Duolingo Gamifiziertes Sprachlern-Spiel mit kostenloser Stufe. Kostenlos / Super: ab €6,99/Monat im Jahr",
+    "textLength": 810,
+    "screenshot": "screenshots/vergleich-unknown-slug-mobile.jpg"
+   }
+  },
+  "consoleErrors": [
+   "Failed to load resource: net::ERR_CONNECTION_RESET"
+  ],
+  "failedRequests": [
+   "fonts.googleapis.com/css2"
+  ]
+ }
+]

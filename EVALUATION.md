@@ -1,198 +1,295 @@
-# DeutschMeister — Repo & Website Evaluation
+# DeutschMeister — Full Site & Repo Evaluation (v2)
 
-**Date:** 2026-08-16 · **Scope:** full repository + the deutsch-meister.de site it produces
-(hybrid Vite/React SPA + Astro 5 static site, 15 Netlify functions, Supabase, Lemon Squeezy).
+**Date:** 2026-08-16 · **Site:** deutsch-meister.de · **Repo:** Zaid9657/deutschmeister
 
-Statuses reference the enhancement PR this file ships in. **Before** scores describe the repo
-as found; **after** scores assume this PR is merged *and* the manual steps below are done.
+**v2 is evidence-based, not code-reading.** What was actually done:
 
----
+| Method | Coverage | Artifacts |
+|---|---|---|
+| Headless rendering of **38 routes** (desktop 1440px + mobile 390px) | Every public Astro page + every SPA route, incl. logged-out views of gated areas | 76 screenshots in `docs/evaluation/screenshots/`, `docs/evaluation/walkthrough.json` |
+| **12 Lighthouse runs** (6 pages × mobile/desktop) against the full merged build | Homepage, pricing, grammar hub, grammar topic, telc-B1 guide, SPA shell | `docs/evaluation/lighthouse.json` |
+| **Production database audit** (read-only SQL, aggregates only) | All 41 tables: coverage per level, data quality, exercise sanity, engagement funnel | queries in Appendix |
+| Full local production build | SPA + all 83 Astro pages via the new `GRAMMAR_CONTENT_CACHE` (real content, offline) | reproducible: see Appendix |
 
-## 🔴 Do this first: rotate the Supabase service-role key
-
-`PUBLIC_SUPABASE_ANON_KEY` in Netlify held the **service-role key** — byte-identical to
-`SUPABASE_SERVICE_ROLE_KEY`. That key bypasses every RLS policy in the database.
-`PUBLIC_*` variables are compiled into client output by Astro, so it sat one client-side
-import away from being published to every visitor, and its prefix was printed into build
-logs. It has been corrected to the real anon key (verified: the value now carries
-`"role":"anon"`), but **the key must be assumed compromised and rotated**:
-
-Supabase Dashboard → Project Settings → API → *Rotate* the `service_role` key, then update
-`SUPABASE_SERVICE_ROLE_KEY` in Netlify. Nothing else needs the old value.
-
-## ✅ Already done (applied and verified against production)
-
-- **RLS hardening applied** to project `omqyueddktqeyrrqvnyq` — both files in `migrations/`
-  are a record of changes that are already live, not a to-do.
-- **Netlify config fixed**: `PUBLIC_SUPABASE_ANON_KEY` corrected; `CAMPAIGN_SECRET` created
-  (it did not exist, so `/api/send-campaign` returned 500); `VITE_POSTHOG_HOST` corrected
-  from a dashboard URL (`us.posthog.com/project/443299/home`) to the ingest host
-  `https://us.i.posthog.com`, which is why PostHog was not receiving events.
-- `UNSUB_SECRET` confirmed present, so the fail-closed email changes are safe to deploy.
-
-Verified as the `anon` role after the changes: `subscriptions`, `webhook_logs`,
-`xray_usage`, `payment_failures` and `mastery_*` all return **0 rows**; paid
-reading/listening return 0 while free-tier (a1.1) still works; grammar still returns all
-**64 topics** so the Astro build is unaffected; `DELETE`/`UPDATE` against the catalogue now
-affect **0 rows**. A simulated self-grant-Pro attack left `is_subscribed = false`,
-`subscription_tier = 'free'` and 0 subscription rows. The service role can still write, so
-the Lemon Squeezy webhook keeps working. Supabase security advisor: **21 ERROR-level
-findings → 0**.
-
-## ⚠️ Still requires a human
-
-1. **Rotate the service-role key** (above) — the only urgent item.
-2. **Review the draft `/privacy/` and `/impressum/` pages**, fill in the Impressum address
-   placeholders (§5 DDG), then remove `noindex` and the draft banners.
-3. **Watch CSP reports** for a couple of weeks, then promote
-   `Content-Security-Policy-Report-Only` to enforcing in `netlify.toml`.
-4. **Mark secrets as secret** in Netlify: `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`,
-   `RESEND_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `LEMONSQUEEZY_WEBHOOK_SECRET`,
-   `GEMINI_API_KEY`, `UNSUB_SECRET` are all stored unmasked (`is_secret: false`).
-5. **Enable leaked-password protection** (Supabase Auth → Passwords) — currently off.
-6. Re-test the flows in `migrations/README.md` (signup, purchase, anonymous grammar,
-   a1.1 reading/listening, X-Ray, speaking).
+The live site is egress-blocked from this sandbox, so rendering used the local merged
+build (identical output to Netlify's). Lighthouse numbers are local — absolute values
+flatter (no real network), but bundle weight, contrast, and structural findings transfer.
 
 ---
 
-## Scores
+## Executive summary — what v2 found that v1 missed
 
-| Category | Before | After | Rationale |
-|---|---:|---:|---|
-| Architecture | 7/10 | 7/10 | The SPA+Astro merge is genuinely clever and well-commented, and the static takeover of SEO routes is the right call. Cost: a 600-char build one-liner, a manually-synced route allow-list in three places, and two React runtimes shipped. Unchanged by this PR (documented in README instead). |
-| Security | 2/10 | 8/10 | Worse than first assessed: a service-role key stored under a `PUBLIC_` name, RLS disabled outright on 13 tables (catalogue publicly deletable), two unauthenticated email endpoints, self-grantable Pro, forgeable AI evaluations, `'changeme'` HMAC fallback, no CSP. All now fixed and verified in production (advisor: 21 errors → 0). Remaining: rotate the exposed key, no rate limiting, anon X-Ray quota still client-keyed. |
-| SEO | 5/10 | 8/10 | Strong foundations (static pages, sitemaps, JSON-LD, IndexNow, llms.txt) undermined by a broken og:image on every static page, 301 hops on internal links, wrong `lang`, self-conflicting hreflang, a 404ing sitemap entry, and an indexable duplicate shell. All fixed. Remaining: FAQ/snippet enrichment covers 1 of 64 grammar topics. |
-| Performance | 6/10 | 7/10 | Grammar pages ship one small React island — excellent. Astro pages had render-blocking fonts (fixed). Remaining: no image pipeline/dimensions in Astro, two full vendor bundles across SPA+islands, `getAllTopics()` refetched per page at build. |
-| Accessibility | 4/10 | 7/10 | Mobile visitors had **no navigation at all** on static pages; no skip link, no focus styles, colour-only exercise feedback. All fixed. Remaining: low-contrast slate-400 text, modal focus traps in the SPA, icon-only buttons. |
-| Legal/compliance | 2/10 | 6/10 | Cookie banner linked to a nonexistent privacy policy; no Impressum (§5 DDG) for a German-market commercial site; PostHog ran without consent while GA waited for it; campaign emails ignored opt-outs and lacked unsubscribe links. Drafts + consent gating + opt-outs shipped; owner legal review still required. |
-| Code quality | 5/10 | 6/10 | Clean, well-commented code in places (webhook, auth helper, ErrorBoundary) but 1500-line pages, duplicated renderers/data/templates/CORS preambles, dead files, and zero typing. This PR adds lint + drift checks and removes dead code; the refactors are roadmap. |
-| Content | 8/10 | 8/10 | 64 DB-backed grammar topics, a genuinely strong telc-B1 guide, comparisons, podcasts. The DB data is messy enough to need four renderer-side normalizers — fixing data beats maintaining them. |
-| DevOps | 2/10 | 6/10 | No README, no CI, no tests, no lint, loose SQL contradicting `.gitignore`. This PR adds README, CI (lint + function syntax + SPA build), lint config, `.env.example`, and a migrations convention. Tests remain zero. |
-| **Overall** | **4.3/10** | **7.1/10** | Weighted toward security, SEO, and legal — the categories that gate a commercial launch. |
+> **Remediation status:** every code-level finding below (items 1–5, 7) has since been
+> fixed on this branch — see "Bugs found by this audit" for the fix-by-fix record.
+> Items 6 and 8 are engagement/content findings that need product work, not bug fixes.
 
----
-
-## Issues found
-
-Severity: 🔴 Critical · 🟠 High · 🟡 Medium · ⚪ Low
-Status: ✅ fixed in this PR · 🔶 migration/manual step provided · 🗺 roadmap
-
-### Security
-
-| ID | Sev | Issue | Where | Status |
-|---|---|---|---|---|
-| S-00 | 🔴 | **`PUBLIC_SUPABASE_ANON_KEY` held the service-role key** (identical to `SUPABASE_SERVICE_ROLE_KEY`), which bypasses all RLS. `PUBLIC_*` vars are compiled into Astro client output, and the prefix was logged during builds | Netlify env vars, `astro-site/src/lib/supabase.js` | ✅ corrected to the anon key — **but rotate the old key** |
-| S-0A | 🔴 | **RLS was disabled entirely on 13 tables** while `anon` held INSERT/UPDATE/DELETE — the whole course catalogue was publicly destroyable, and `payment_failures` / `mastery_purchases` publicly readable | `grammar*`, `sentences`, `words`, `mastery_*`, `payment_failures` | ✅ applied + verified |
-| S-0B | 🟠 | `debit_speaking_wallet` (SECURITY DEFINER, moves wallet balances) was callable by anon/authenticated over `/rest/v1/rpc/`, bypassing server-side pricing | Supabase RPC | ✅ EXECUTE revoked |
-| S-01 | 🔴 | `/api/send-daily-test?email=X` was an unauthenticated open relay sending DeutschMeister-branded mail (own DKIM) to any address | `netlify/functions/send-daily-test.mjs` | ✅ secret-gated; owner-only without secret |
-| S-02 | 🔴 | `/api/daily-sentence` publicly triggerable send-to-ALL-users blast; `?secret=` documented but never checked | `netlify/functions/daily-sentence.mjs` | ✅ scheduler-marker or secret required; 401 otherwise |
-| S-03 | 🔴 | RLS lets any user INSERT/UPDATE their own `subscriptions` row and `profiles.is_subscribed` → self-grant Pro from the browser console | `supabase-subscription-schema.sql:21-46` | 🔶 `migrations/2026-08-16-fix-rls-security.sql` |
-| S-04 | 🔴 | `evaluate-speaking` graded a client-supplied transcript though the authentic one exists in `speaking_messages` → score forgery + prompt injection into the grader | `netlify/functions/evaluate-speaking.mjs` | ✅ transcript loaded server-side; client only as fallback |
-| S-05 | 🟠 | `speaking-turn` accepted unbounded `audioBase64` and arbitrary client `history` straight into the LLM | `netlify/functions/speaking-turn.mjs` | ✅ 10 MB cap; history truncated 40×5000 |
-| S-06 | 🟠 | `'changeme'` fallback HMAC secret made unsubscribe tokens forgeable if env unset | `unsubscribe.mjs`, `daily-sentence.mjs`, `send-daily-test.mjs` | ✅ fail closed |
-| S-07 | 🟠 | All paid reading/listening content SELECT-open to `anon`; paywall client-side only | `fix-anon-access-free-tier.sql` | 🔶 anon narrowed to a1.1 in migration (grammar stays public by design — Astro build + SEO pages) |
-| S-08 | 🟠 | `webhook_logs` RLS `USING (true) WITH CHECK (true)` exposed raw Lemon Squeezy payloads (emails, order data) to any client | `fix-subscription-schema.sql:39` | 🔶 deny-all in migration |
-| S-09 | 🟠 | `xray_usage` readable/insertable for all anonymous rows incl. submitted sentences | `create-xray-usage-table.sql` | 🔶 own-rows-only in migration |
-| S-10 | 🟠 | `send-campaign` ignored opt-outs and sent without unsubscribe links (GDPR/CAN-SPAM) | `netlify/functions/send-campaign.mjs` | ✅ opt-out filter + HMAC unsubscribe footer |
-| S-11 | 🟠 | No Content-Security-Policy at all | `netlify.toml` | ✅ Report-Only added; 🗺 promote to enforcing |
-| S-12 | 🟡 | `error.message` leaked to clients in three functions | `analyze-sentence`, `check-speaking-usage`, `evaluate-speaking` | ✅ generic bodies |
-| S-13 | 🟡 | Anonymous X-Ray quota keyed on client-generated `anonymousId` — trivially reset for unmetered Claude spend | `analyze-sentence.mjs` | 🗺 needs IP-hash secondary key (privacy/proxy design) |
-| S-14 | 🟡 | No rate limiting on any endpoint | all functions | 🗺 |
-| S-15 | 🟡 | Supabase anon key + admin email hardcoded in source; client-side admin check | `src/utils/supabase.js`, `AdminVideosPage.jsx` | 🗺 env-drive the key; server-side admin role |
-
-### SEO
-
-| ID | Sev | Issue | Where | Status |
-|---|---|---|---|---|
-| SEO-01 | 🔴 | Default og:image `/og-default.png` does not exist → broken social preview on **every** static page | `Layout.astro:16` | ✅ real `/og-image.png` + dimensions |
-| SEO-02 | 🟠 | `trailingSlash: 'always'` but internal links slash-less → 301 hop on nearly every in-site link | Astro pages/layout | ✅ |
-| SEO-03 | 🟠 | `lang="en"` hardcoded on German pages; hreflang self-referential/conflicting; `og:locale` malformed | `Layout.astro`, `SEO.jsx` | ✅ lang prop, hreflang removed, en_US/de_DE |
-| SEO-04 | 🟠 | `/app.html` (raw SPA shell) indexable duplicate of every prerendered route | build output | ✅ robots.txt + X-Robots-Tag |
-| SEO-05 | 🟡 | `sitemap-spa.xml` listed 404ing `/sentences` and duplicated `/pricing/` | `public/sitemap-spa.xml` | ✅ |
-| SEO-06 | 🟡 | Homepage `SearchAction` schema targeted nonexistent `/search` | `index.astro` | ✅ removed |
-| SEO-07 | 🟡 | www/apex split: IndexNow pinged `www.` while canonicals are apex; no www redirect | `ping-indexnow.mjs`, `netlify.toml` | ✅ apex everywhere + forced 301 |
-| SEO-08 | 🟡 | FAQ/snippet enrichment (`topicSeo.js`) covers 1 of 64 grammar topics | `astro-site/src/lib/topicSeo.js` | 🗺 highest-leverage content task |
-| SEO-09 | ⚪ | No `lastmod` in sitemaps; stale hardcoded `datePublished` on vergleich/leitfaden; no Course/LearningResource schema | various | 🗺 |
-| SEO-10 | ⚪ | Prerendered SPA copy is hand-mirrored from React components — drift risk | `scripts/prerender-spa-routes.mjs` | 🗺 (documented in README) |
-
-### Performance
-
-| ID | Sev | Issue | Where | Status |
-|---|---|---|---|---|
-| P-01 | 🟠 | Render-blocking Google Fonts stylesheet on all Astro pages (SPA had the preload pattern) | `Layout.astro` | ✅ preload pattern |
-| P-02 | 🟡 | No image pipeline in Astro; no width/height/lazy anywhere in the Astro tree | `astro-site/` | 🗺 |
-| P-03 | 🟡 | `getAllTopics()` re-fetched inside each of 64 topic-page builds; build hard-fails on any Supabase hiccup | `astro-site/src/lib/grammar.js` | 🗺 build-time cache |
-| P-04 | ⚪ | Two React runtimes ship (SPA vendor bundle + Astro islands); no HTML cache header | build | 🗺 |
-
-### Accessibility
-
-| ID | Sev | Issue | Where | Status |
-|---|---|---|---|---|
-| A-01 | 🔴 | Mobile nav on all static pages contained **zero navigation links** (only Log in/Start) | `Layout.astro` | ✅ pure-HTML `<details>` menu |
-| A-02 | 🟠 | No skip link, no `:focus-visible` styles anywhere | `Layout.astro` | ✅ |
-| A-03 | 🟠 | Exercise feedback colour-only; no live region, no pressed state | `ExercisePlayer.jsx` | ✅ aria-live + aria-pressed + sr-only text |
-| A-04 | 🟡 | Low-contrast slate-400/500 body text; icon-only buttons; modals without focus traps; consent dialog doesn't move focus | SPA + Astro | 🗺 |
-
-### Functional / revenue
-
-| ID | Sev | Issue | Where | Status |
-|---|---|---|---|---|
-| F-01 | 🔴 | **`/payment/:planType` was a live fake checkout.** It collected card number, expiry and CVC, validated them client-side only, waited 1500 ms to "simulate payment processing", then granted a real subscription — no money taken. Nothing in the UI linked to it (the real flow opens Lemon Squeezy), but the route was served by `netlify.toml` and `App.jsx`, so anyone reaching the URL got Pro free. | `src/pages/PaymentPage.jsx`, `netlify.toml`, `App.jsx` | ✅ removed (page, route, redirect rule) along with the now-orphaned client-side `createSubscription()` grant path |
-| F-02 | 🟡 | `VITE_POSTHOG_HOST` pointed at a dashboard URL, not the ingest host, so product analytics were silently not recording | Netlify env vars | ✅ corrected |
-| F-03 | 🟡 | `CAMPAIGN_SECRET` was never set, so `/api/send-campaign` always returned 500 | Netlify env vars | ✅ created |
-
-### Legal / compliance
-
-| ID | Sev | Issue | Where | Status |
-|---|---|---|---|---|
-| L-01 | 🔴 | Cookie banner linked to `/privacy` — a 404. No privacy policy existed at all | `public/consent.js` | ✅ draft `/privacy/` page (owner review required) |
-| L-02 | 🔴 | No Impressum — §5 DDG obligation for a commercial German-market site | — | ✅ draft `/impressum/` with placeholders (owner must complete) |
-| L-03 | 🟠 | PostHog initialized without consent while GA was consent-gated | `src/lib/analytics.js` | ✅ same consent gate + banner text updated |
-| L-04 | 🟠 | Campaign emails without opt-out honoring or unsubscribe link | `send-campaign.mjs` | ✅ (see S-10) |
-
-### Code quality / DevOps
-
-| ID | Sev | Issue | Where | Status |
-|---|---|---|---|---|
-| Q-01 | 🟠 | No README, no CI, no tests, no lint config, no root `.env.example` | repo | ✅ all but tests; 🗺 tests |
-| Q-02 | 🟡 | `.gitignore` listed `*.sql` while 11 SQL files were tracked; no migrations convention | repo root | ✅ + `migrations/` |
-| Q-03 | 🟡 | Byte-identical `competitorComparisons.js` in SPA and Astro with nothing preventing drift | `src/data/`, `astro-site/src/data/` | ✅ CI drift check (single-source is 🗺) |
-| Q-04 | 🟡 | Dead code: unreferenced `daily-sentences.json` in src; `getSubscriptionTier()` ignores its argument | various | ✅ file removed; 🗺 webhook cleanup |
-| Q-05 | 🟡 | ~20-line CORS/preflight preamble copy-pasted into 13 functions; Supabase init duplicated 8× | `netlify/functions/` | 🗺 consolidation refactor |
-| Q-06 | 🟡 | 1502-line `GrammarLessonPage.jsx`, 761-line `LandingPage.jsx`; grammar rule rendering implemented twice (SPA + Astro) | `src/pages/`, `astro-site/` | 🗺 |
-| Q-07 | ⚪ | Dormant `de` i18n bundle pinned to `lng: 'en'`; React 18 with `@astrojs/react` v4 (expects 19) version skew; stray `ansi-regex` direct dep | various | 🗺 |
-| Q-08 | ⚪ | DB data quality forces four renderer-side normalizers (ALL-CAPS, word order, option shapes, breakdown shapes); `related_slugs` column empty, graph lives in code | DB + renderers | 🗺 fix data at source |
+1. **Fill-in-the-blank exercises on all 64 static grammar pages were unanswerable.**
+   The exercise player showed only the English translation ("That is the man's car.")
+   and asked for a German word (`des`) — the German cloze sentence
+   ("Das ist das Auto ___ Mannes.") was never displayed. **Fixed in this PR.**
+2. **`/listening/a1.1` (the sitemap's own URL format) rendered an empty exercise list.**
+   Queries matched the lowercase URL level against uppercase DB values (`A1.1`) with
+   `.eq`. Audio URLs had the same case bug against case-sensitive Storage folders.
+   **Fixed in this PR.**
+3. **The site has two brand identities.** Static pages: pink-gradient "D" mark,
+   serif Cormorant headings, amber/rose CTAs. The app: teal/gold **"M" monogram**,
+   different wordmark, different nav (see `speaking-desktop.jpg` vs `home-desktop.jpg`).
+   A visitor who clicks from the homepage into any app page watches the brand change
+   in front of them. In-app clicks on the logo or "Pricing" render *React* versions of
+   the homepage/pricing — different design and copy from the Astro versions that
+   full page loads serve. Two homepages, two pricing pages, two brands.
+4. **The app shell is 1,045 KiB and scores Lighthouse perf 62 on mobile**
+   (FCP 5.8s, LCP 6.9s, 477 KiB unused JS) while every Astro page scores 99–100
+   (72–162 KiB, LCP ≤1.8s). Feature pages (level test, speaking, X-Ray — the
+   conversion surfaces) all pay the SPA tax.
+5. **When the network fails, `/speaking` is an infinite spinner and several pages go
+   blank** — no error state, no retry, no timeout (`speaking-desktop.jpg`). A learner
+   on a flaky connection sees a broken product.
+6. **The funnel leaks in the middle.** Production data: 1,449 signups (172 in the last
+   30 days) → **23 weekly-active** → 153 users have ever done a grammar lesson →
+   **0 users have ever completed a listening or reading exercise** → 10 subscriptions
+   ever, 4 active (≈0.3% conversion). Signup works; activation and engagement don't.
+7. **Marketing claims disagree with each other and with the code.** X-Ray allowance:
+   free-plan card says 1/day, the signup page promises 5/day, the code grants 10/day
+   (trial) and 50/day (pro). The pricing CTA is German ("Jetzt starten") on an English
+   page; the signup page is fully German while login is English.
+8. **Content is strong but unevenly finished**: grammar is complete and consistent
+   (64 topics, 8 per level — sampled German is correct and natural), but reading
+   ranges from **1 lesson (B2.1)** to 16 (B1.2); rich "introduction" content exists
+   for exactly 1 of 64 topics in its dedicated table; 49% of rules still contain
+   ALL-CAPS shouting that a renderer has to suppress; all 433 fill-blank exercises
+   accept exactly one spelling (no `acceptable_answers` anywhere).
 
 ---
 
-## Roadmap (deliberately not in this PR)
+## Scorecard
 
-Ordered by value-for-effort:
+Measured = from this audit's instruments; scores assume this PR's fixes are deployed.
 
-1. **Grammar FAQ/snippet enrichment for the remaining 63 topics** (`topicSeo.js`) — the
-   proven pattern exists for `a1.1/nouns-gender`; this is the biggest organic-traffic lever.
-2. **Rate limiting** (Netlify rate-limit rules or an edge function) for the AI endpoints,
-   plus an IP-hash secondary key on the anonymous X-Ray quota (S-13/S-14).
-3. **Tests**: start with the pure logic — quota math in `_shared/speakingUsage.mjs`,
-   webhook event handling, exercise-option normalization in `lib/grammar.js`.
-4. **Server-side speaking history**: rebuild the conversation from `speaking_messages`
-   in `speaking-turn` instead of trusting the client copy.
-5. **Shared function helpers**: one CORS/preflight helper + one Supabase init in
-   `_shared/`, adopted function-by-function as they're touched.
-6. **Promote CSP to enforcing** after a clean report-only period; drop `X-XSS-Protection`
-   (obsolete) at the same time.
-7. **Astro image pipeline** (`astro:assets`) + build-time topic cache; single-source the
-   comparison data.
-8. **Subscription-aware RLS** for reading/listening beyond the anon/free-tier split.
-9. **Fix DB content at the source** (caps, word order, option shapes) and retire the
-   four renderer-side normalizers; populate `related_slugs` and drop `relatedTopics.js`.
-10. **Refactor `GrammarLessonPage.jsx`** into stage components; decide the fate of the
-    dormant i18n `de` bundle (ship a switcher or delete it).
+| Category | Score | Measured evidence |
+|---|---:|---|
+| Static site (Astro) quality | **9/10** | Lighthouse 99–100 perf / 96 a11y / 96 bp, 72–162 KiB pages, CLS 0. Grammar topic pages render 12–15K chars of real content. Weak spots: `lang="en"` on the German-labelled grammar hub pages, `color-contrast` flagged on every page. |
+| App (SPA) quality | **5/10** | 1,045 KiB shell, mobile perf 62, FCP 5.8s; infinite-spinner/blank failure states; brand split vs static site; lemon.js loaded on every page. Solid: routing guards, error boundary, clean console in normal operation. |
+| Content — grammar | **8/10** | 64/64 topics complete & evenly distributed (49–67 rules/level); exercises structurally perfect (0 missing answers, 0 dupes); sampled German correct. Deductions: caps in 222/453 rules, 1/64 rich intros, exact-match-only fill-blanks. |
+| Content — other skills | **5/10** | Listening: 48 exercises + 480 dialogues + audio present, but **zero completions ever** (and lowercase URLs were broken). Reading: 52 lessons, 1–16 per level. Vocab 1,982 words, sentences 945, podcasts 24, videos 11. `scripts` table: dead (0 rows). |
+| UX / design | **5/10** | Two brands, two homepages, two pricing pages; DE/EN mixing at high-intent moments (signup German, login English, German CTA on English pricing); pricing page switches to a dark theme no other page uses; good: clean layouts, mobile nav (fixed in v1), readable typography. |
+| Conversion funnel | **4/10** | 0.3% all-time paid conversion; 23 WAU on 1,449 accounts; inconsistent feature claims; free tier generous (full A1.1 without signup) but the path from free → habit → paywall is unmanaged (no email nurture beyond one daily sentence; features that build habit — listening/reading — have zero usage). |
+| Security | **8/10** | v1 remediation applied & verified in production (advisor 21 errors → 0). Remaining: rotate the exposed service-role key (**still open**), no rate limiting, anon X-Ray quota client-keyed. |
+| SEO | **8/10** | v1 fixes live (og:image, slashes, hreflang, www, sitemap). Measured SEO 92–100. Remaining: grammar-hub `lang`, snippet/FAQ enrichment on 1/64 topics, SPA feature pages rank-limited by prerender-only content. |
+| DevOps / repeatability | **7/10** | CI (lint, functions, SPA build) + this PR adds offline Astro builds via content cache and repeatable audit scripts. Still zero tests. |
+| **Overall** | **6.3/10** | The static/SEO layer is now excellent; the product core (app UX, engagement loop, funnel coherence) is where the site actually loses users. |
 
 ---
 
-*Generated as part of the evaluation-and-enhancement PR on branch
-`claude/deutschmeister-eval-enhance-uc8d35`. Method: full repo exploration (all source,
-functions, SQL, build scripts), local SPA build + lint verification, and a compile-level
-Astro build check. The live site was not reachable from the sandbox; all site-level
-findings derive from the code that produces it.*
+## Route-by-route (38 routes rendered)
+
+Every route was loaded at two viewports; numbers from `walkthrough.json`. "Text" =
+visible characters (a proxy for real content). Console errors from blocked external
+hosts (fonts/analytics — sandbox artifacts) are excluded here.
+
+### Static (Astro) pages — all healthy
+
+| Route | Status | Text | Verdict |
+|---|---|---:|---|
+| `/` | 200 | 3.8K | Strong hero + clear CTAs; stats band is German on an English page; social-proof numbers hardcoded ("Stand: Mai 2026") |
+| `/pricing/` | 200 | 2.2K | Sudden dark theme (only page); German CTA "Jetzt starten" on English page; claims vs code mismatch (X-Ray 1/day vs 50/day pro) |
+| `/grammar/` | 200 | 5.5K | Good hub; German H1 ("Deutsche Grammatik") under `lang="en"` |
+| `/grammar/{a1.1,a2.1,b1.1,b2.2}/` | 200 | ~1.4K | Clean level pages; same `lang` issue; descriptions truncate on cards |
+| `/grammar/a1.1/nouns-gender/` | 200 | 15.5K | Flagship page: intro, tables, examples with word-breakdowns, exercises, FAQ — genuinely good |
+| `/grammar/a2.1/dative-case/` | 200 | 12.9K | Same quality; "WHY YOU NEED THIS" callouts work well |
+| `/grammar/b1.1/konjunktiv-ii-wurde/` | 200 | 14.8K | ✓ |
+| `/grammar/b2.2/modal-particles/` | 200 | 15.3K | ✓ |
+| `/vergleich/` + `/vergleich/duolingo/` | 200 | 1.2–3.8K | Solid German comparison content, correct `lang="de"` |
+| `/leitfaden/telc-b1/` | 200 | 12.6K | Best top-of-funnel asset on the site; SEO 100 |
+| `/privacy/`, `/impressum/` | 200 | 2.7K/1K | Drafts render correctly (noindex); Impressum placeholders pending |
+| `/definitely-not-a-page` | **404** | 0.7K | Real 404 with recovery links ✓ |
+
+### SPA routes — where the problems live
+
+| Route | Renders (logged-out, network ok/fail) | Verdict |
+|---|---|---|
+| `/speaking` | **Infinite spinner on network failure; no error state** | Conversion feature with a blank failure mode |
+| `/level-test` | Hero + CTA render statically ✓ | Good prerender; the 1 MiB shell drags mobile perf to 62 |
+| `/analyze` | X-Ray hero renders ✓ | ✓ |
+| `/podcasts` | List renders from prerender ✓ | ✓ |
+| `/listening`, `/reading`, `/vocabulary`, `/video-library` | Hubs render; content areas empty/blank on fetch failure with no message | Resilience gap on all four |
+| `/listening/a1.1` (lowercase, sitemap format) | **Empty exercise list** (case bug — fixed this PR) | Was silently broken for every deep-link visitor |
+| `/intro` | Renders ✓ | Orphaned page — nothing links to it |
+| `/login` | "Welcome Back" (EN) ✓ | English |
+| `/signup` | "Kostenlos starten" (DE) ✓ | German — same flow, opposite language; **navbar shows the "M" logo while the form shows the "D" logo on one screen** |
+| `/faq`, `/ueber-uns` | German content under `lang="en"` | Language signal mismatch |
+| `/dashboard` `/profile` `/subscription` `/onboarding` | Redirect to login ✓ | Correct gating |
+| `/vergleich/unknown-app` | Redirects to hub ✓ | Correct fallback |
+
+---
+
+## Measured performance (Lighthouse, local build)
+
+| Page | Preset | Perf | A11y | BP | SEO | FCP | LCP | Transfer |
+|---|---|---:|---:|---:|---:|---|---|---|
+| `/` (Astro) | mobile | 100 | 96 | 96 | 92 | 1.1s | 1.4s | 82 KiB |
+| `/pricing/` | mobile | 100 | 96 | 96 | 92 | 1.1s | 1.4s | 72 KiB |
+| `/grammar/` | mobile | 100 | 96 | 96 | 92 | 1.2s | 1.5s | 94 KiB |
+| `/grammar/a1.1/nouns-gender/` | mobile | 99 | 96 | 96 | 92 | 1.5s | 1.8s | 162 KiB |
+| `/leitfaden/telc-b1/` | mobile | 100 | 96 | 96 | 100 | 1.2s | 1.5s | 101 KiB |
+| **`/level-test` (SPA shell)** | **mobile** | **62** | 96 | 96 | 100 | **5.8s** | **6.9s** | **1,045 KiB** |
+| `/level-test` (SPA shell) | desktop | 95 | 96 | 96 | 100 | 1.0s | 1.3s | 1,045 KiB |
+
+Consistent flags across pages: `color-contrast` (the slate-400/500 text), ~30 KiB
+unused CSS per page, and on the SPA shell **477 KiB unused JavaScript**. The SPA loads
+`lemon.js` (Lemon Squeezy) on every page including non-commerce ones.
+
+**Biggest wins, in order:** (1) route-level code-splitting already exists — the shell
+still pulls 372 KiB `index.js` + all three vendor chunks up front; audit what's in the
+entry. (2) Load lemon.js only on pricing/subscription surfaces. (3) Fix contrast
+tokens once in Tailwind config (slate-400 → slate-500/600 on white).
+
+---
+
+## Content audit (production data)
+
+### Coverage
+
+| Level | Grammar topics | Rules | Examples | Exercises | Reading | Listening | Words | Sentences |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| A1.1 | 8 | 49 | 78 | 77 | 3 | 6 | 232 | 120 |
+| A1.2 | 8 | 65 | 99 | 99 | 4 | 6 | 250 | 120 |
+| A2.1 | 8 | 67 | 99 | 99 | 5 | 6 | 250 | 120 |
+| A2.2 | 8 | 53 | 78 | 78 | 6 | 6 | 250 | 120 |
+| B1.1 | 8 | 57 | 85 | 85 | 7 | 6 | 250 | 120 |
+| B1.2 | 8 | 57 | 85 | 85 | **16** | 6 | 250 | 120 |
+| B2.1 | 8 | 54 | 78 | 78 | **1** | 6 | 250 | 120 |
+| B2.2 | 8 | 51 | 71 | 71 | 10 | 6 | 250 | 105 |
+| **Σ** | **64** | **453** | **673** | **672** | **52** | **48** | **1,982** | **945** |
+
+Plus: 480 listening dialogues (audio confirmed in Storage), 24 podcasts (all with
+audio), 11 videos, 8 speaking missions, 80 paragraphs. `scripts` table: 0 rows (dead).
+
+### Quality findings
+
+| Finding | Number | Impact |
+|---|---|---|
+| Rules containing ALL-CAPS runs | **222 / 453 (49%)** | Source data shouts; `RichText.astro` suppresses it at render time — fix the data, retire the normalizer |
+| Topics with rich intro content (`grammar_introductions`) | **1 / 64** | The SPA's 5-stage lesson intro stage starves for 63 topics; a full intro block *does* exist inside `rules` (rule_type `introduction`, 64/64) — two competing systems |
+| `related_slugs` populated | **0 / 64** | Relationship graph lives only in `astro-site/src/lib/relatedTopics.js` |
+| Fill-blank exercises with `acceptable_answers` | **0 / 433** | One exact spelling accepted; "dem Mann" vs "dem  Mann" or missing capital = wrong |
+| MC exercises with structural defects | **0 / 239** | Answers always in options, no dupes, ≥2 options — clean |
+| Examples with `word_breakdown` | 673/673 | ✓ complete |
+| Examples with audio | **0 / 673** | `audio_url` column entirely unused — grammar examples are silent |
+| Sampled German (8 examples + 5 exercises) | 0 errors | Correct, natural, level-appropriate |
+| Rule structure | 12 rule_types; tables 176, tips 60, memory tricks 176 | Well-structured pedagogy in the data model |
+
+### Engagement (the numbers that matter)
+
+| Metric | Value |
+|---|---|
+| Accounts all-time / confirmed | 1,449 / 1,003 |
+| Signups last 30 days | 172 |
+| **Active last 7 days** | **23 (1.6% of accounts)** |
+| Users who ever did a grammar lesson | 153 (571 progress rows) |
+| Users who ever completed a listening exercise | **0** |
+| Users who ever completed a reading lesson | **0** |
+| Speaking sessions / evaluations | 18 / 162 |
+| X-Ray analyses | 323 |
+| Subscriptions all-time / active | 10 / **4** |
+
+**Reading of the funnel:** acquisition works (172 signups/mo with 8 grammar topics free),
+but ~85% of signups never touch a lesson, two of the four skill pillars have literally
+zero usage, and week-1 retention is the cliff. The daily-sentence email is the only
+retention mechanism. Priorities this suggests: onboarding into a first lesson
+(not a dashboard), surfacing listening/reading (now that lowercase URLs work),
+and a real activation email sequence — before any more acquisition spend.
+
+---
+
+## Bugs found by this audit — all remediated
+
+| # | Bug | Status |
+|---|---|---|
+| B-01 | Static grammar pages: exercises showed `question_en` only — fill-blanks lacked the German sentence containing the blank | **Fixed** (`astro-site/src/components/ExercisePlayer.jsx`) |
+| B-02 | `/listening/<lowercase-level>` → empty list (`.eq` vs uppercase DB); audio URL case vs Storage | **Fixed** (`src/hooks/useListening.js`, `src/utils/listeningHelpers.js`) |
+| B-03 | `/speaking` infinite spinner / feature pages blank on network failure | **Fixed at the root**: `supabase.auth.getSession()` could hang forever, freezing every guarded route — now timeboxed in `AuthContext`/`SubscriptionContext` (`src/utils/withTimeout.js`), plus a shared `DataState` error/retry card wired into the listening, reading, and video pages |
+| B-04 | Two brands (M vs D), two homepages, two pricing pages depending on navigation type | **Fixed** (owner chose the M-seal): the seal + teal/gold accents now render in the Astro nav/footer; in-app logo and every pricing link are full-page loads to the static pages, so the divergent SPA homepage/pricing are no longer reachable (`LandingPage.jsx`/`PricingPage.jsx` deletable later) |
+| B-05 | Claim inconsistencies: X-Ray 1 vs 5 vs "unlimited" vs 10/50 per day; DE/EN mixing in auth + pricing CTA | **Fixed**: all copy now matches `DAILY_LIMITS` in `analyze-sentence.mjs` (free 1/day, trial 10/day, pro 50/day — "unlimited" removed); homepage speaking claim now "30 sessions/mo" matching `PRO_MONTHLY_LIMIT`; signup page + pricing CTA + homepage stats band now English (stats refreshed to real August 2026 numbers); `lang="de"` set on the German FAQ/Über-uns pages |
+| B-06 | `lang="en"` on German-labelled grammar hub/level pages | **Fixed** (both Astro files; grammar hub SEO score 92 → 100) |
+| B-07 | `/intro` orphaned; `scripts` table dead | **Corrected**: `/intro` is actually linked (FloatingIntroButton + landing) — audit error, no change needed. `scripts` table (0 rows) noted for cleanup |
+| B-08 | lemon.js injected on every SPA page | **Fixed**: loads only on commerce routes (`LemonSqueezyProvider.jsx`) |
+
+Additional fixes shipped with this round:
+- **Forgiving answer checking**: typed answers now tolerate case, extra whitespace, and
+  umlaut/ß ASCII spellings (`wäre` ↔ `waere`) in both exercise players
+  (`src/utils/answerMatch.js`, mirrored in the Astro island) — compensates for the
+  0/433 `acceptable_answers` data gap at render time.
+- **Contrast pass**: low-contrast text and badges bumped to AA across the Astro pages
+  (`slate-400/500` → `slate-500/600`, white-on-amber/green badges darkened) —
+  pricing and grammar topic pages now measure **Lighthouse a11y 100** (mobile).
+
+---
+
+## Previously found & fixed (v1, merged in PR #13)
+
+Kept for the record; full details in that PR. Function security (open email relay,
+public all-users blast, transcript forgery, fail-closed secrets, opt-outs), database
+security applied & verified in production (RLS on 13 unprotected tables, self-grant-Pro
+closed, `webhook_logs`/`xray_usage` locked, wallet RPC revoked — Supabase advisor
+21 errors → 0), the mock-checkout route removal, Netlify env fixes (service-role key
+mis-stored under a `PUBLIC_` name — corrected; **rotation still pending, do it**),
+consent-gated PostHog, report-only CSP, og:image/hreflang/slashes/www SEO fixes,
+mobile nav, skip link, draft legal pages.
+
+**Still requires a human:** rotate the service-role key · fill Impressum placeholders
+and de-noindex legal pages after review · promote CSP after a clean report window ·
+mark Netlify secrets as secret values · enable Supabase leaked-password protection.
+
+---
+
+## Roadmap — what remains after the remediation round
+
+Items 1–3 of the original ranking (error states, brand/claims unification, lemon.js
+deferral) are **done** — see the bugs table above. What's left is content and product
+work, not code defects:
+
+1. **Activation & retention loop** (funnel data): onboarding that lands users in
+   lesson 1 of their level, not a dashboard; an activation email sequence (day 1/3/7)
+   on top of the daily sentence; surface listening/reading on the dashboard and in the
+   grammar flow ("practice this topic by ear") — they're built and stocked
+   (480 dialogues with audio) but have zero usage.
+2. **SPA bundle diet** (perf 62 → 85+ mobile): the 372 KiB entry chunk + three vendor
+   chunks load up front (477 KiB measured unused) — needs a real entry-chunk audit,
+   e.g. deferring vendor-supabase for anonymous visitors and posthog until consent.
+3. **Content completion**: reading for B2.1/A1.x (1–4 lessons vs 16 at B1.2);
+   de-CAPS the 222 rules at the source (RichText normalizer still compensates);
+   pick ONE intro system (populate `grammar_introductions` or drop the table);
+   populate `related_slugs`; real `acceptable_answers` for genuine synonym variants
+   (the umlaut/case tolerance is now handled in code).
+4. **Audio for grammar examples** (0/673): the TTS pipeline already exists for
+   speaking; batch-generate example audio into Storage and fill `audio_url`.
+5. **SEO content**: extend `topicSeo.js` FAQ/snippet enrichment from 1 → 64 topics;
+   more `leitfaden/` guides (the telc-B1 pattern measurably works — SEO 100).
+6. Still open from v1: rate limiting, tests, CORS consolidation,
+   subscription-aware RLS, promote CSP, delete the now-unreachable
+   `LandingPage.jsx`/`PricingPage.jsx`, drop the dead `scripts` table.
+
+---
+
+## Appendix — reproduce this audit
+
+```bash
+# Full offline build (content cache produced via scripts/dump-grammar-cache.mjs
+# or any Supabase-reachable environment):
+npm run build
+cd astro-site && GRAMMAR_CONTENT_CACHE=../.cache/grammar-content-cache.json npm run build && cd ..
+# …then the netlify.toml copy steps (see README), then:
+
+npm i --no-save playwright
+node scripts/evaluate-site.mjs          # 38 routes → screenshots + walkthrough.json
+CHROME_PATH=… node scripts/lighthouse-batch.mjs   # 12 runs → lighthouse.json
+```
+
+Content-audit SQL (read-only, aggregates): per-level `count(*)` joins over
+`grammar_topics/rules/examples/exercises`, `reading_lessons`, `listening_exercises`,
+`words`, `sentences`; quality probes: `content::text ~ '[A-ZÄÖÜ]{4,}'`,
+`options @> to_jsonb(correct_answer)`, `jsonb_array_length(options) < 2`,
+`acceptable_answers IS NULL`, `word_breakdown IS NULL`; engagement:
+`auth.users` counts, `user_*_progress` distinct users, `subscriptions` by status;
+storage check: `storage.objects WHERE bucket_id='audio'`.

@@ -366,11 +366,11 @@ const DashboardPage = () => {
                 <p className="text-[12px]" style={{ color: '#B45309' }}>Keep your streak and unlock unlimited speaking</p>
               </div>
             </div>
-            <Link to="/pricing"
+            <a href="/pricing/"
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-[14px] text-white whitespace-nowrap"
                   style={{ background: 'linear-gradient(135deg,#F59E0B,#FB923C)' }}>
               <Crown className="w-4 h-4" /> Upgrade to Pro
-            </Link>
+            </a>
           </motion.div>
         )}
 

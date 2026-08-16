@@ -86,19 +86,19 @@ const SignupPage = () => {
           </Link>
           <h1 className="font-display text-3xl font-bold text-slate-800 mb-2">
             {/* EN: Start Free */}
-            Kostenlos starten
+            Start for free
           </h1>
           <p className="text-slate-600 mb-4">
-            {/* EN: Create an account and get instant access to: */}
-            Erstelle ein Konto und erhalte sofort Zugang zu:
+            Create an account and get instant access to:
           </p>
           {/* Free tier value list */}
           <ul className="text-left inline-block space-y-1 mb-2">
             {[
-              'Alle A1.1-Lektionen — ohne Einschränkung', // EN: All A1.1 lessons — no restrictions
-              '2 kostenlose KI-Sprechübungen',             // EN: 2 free AI speaking sessions
-              '5 Sentence X-Ray Analysen pro Tag',         // EN: 5 Sentence X-Ray analyses per day
-              '7 Tage Pro-Testversion inklusive',          // EN: 7-day Pro trial included
+              'All A1.1 lessons — no restrictions',
+              '2 free AI speaking sessions',
+              // Matches DAILY_LIMITS.free_trial in netlify/functions/analyze-sentence.mjs
+              '10 Sentence X-Ray analyses per day during your trial',
+              '7-day Pro trial included'
             ].map((item) => (
               <li key={item} className="flex items-center gap-2 text-sm text-slate-600">
                 <Check className="w-4 h-4 text-emerald-500 flex-shrink-0" />

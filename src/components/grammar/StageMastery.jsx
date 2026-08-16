@@ -1,3 +1,4 @@
+import { answerMatches } from '../../utils/answerMatch';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -70,10 +71,7 @@ const StageMastery = ({ content, isGerman, theme, onComplete }) => {
       correct = selectedWords.length === currentExercise.correctOrder.length &&
         selectedWords.every((word, i) => word === currentExercise.correctOrder[i]);
     } else if (currentExercise.type === 'translation') {
-      const userAnswer = textAnswer.trim().toLowerCase();
-      correct = currentExercise.acceptableAnswers.some(
-        ans => ans.toLowerCase() === userAnswer
-      );
+      correct = answerMatches(textAnswer, currentExercise.acceptableAnswers);
     }
 
     setIsCorrect(correct);

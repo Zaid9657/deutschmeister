@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import DataState from '../components/DataState';
+import { withTimeout } from '../utils/withTimeout';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -89,6 +91,7 @@ const VideoLibraryPage = () => {
 
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [levelFilter, setLevelFilter] = useState('all');
 
   useEffect(() => {
@@ -96,18 +99,24 @@ const VideoLibraryPage = () => {
   }, []);
 
   const fetchVideos = async () => {
-    const { data, error } = await supabase
-      .from('video_library')
-      .select('*')
-      .eq('published', true)
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('Error fetching videos:', error);
-    } else {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data, error: fetchError } = await withTimeout(
+        supabase
+          .from('video_library')
+          .select('*')
+          .eq('published', true)
+          .order('created_at', { ascending: false })
+      );
+      if (fetchError) throw fetchError;
       setVideos(data || []);
+    } catch (err) {
+      console.error('Error fetching videos:', err);
+      setError(err.message || 'Failed to load');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const levelCounts = {};
@@ -128,10 +137,10 @@ const VideoLibraryPage = () => {
     return level.toUpperCase().substring(0, 2);
   };
 
-  if (loading) {
+  if (loading || error) {
     return (
-      <div className="min-h-screen pt-24 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-slate-400" />
+      <div className="min-h-screen pt-24">
+        <DataState loading={loading} error={error} onRetry={fetchVideos} />
       </div>
     );
   }

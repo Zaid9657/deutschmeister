@@ -134,7 +134,7 @@ if (seoExtra?.faqs?.length) {
   <div class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
 
     <!-- Breadcrumb -->
-    <nav class="flex items-center gap-2 text-sm text-slate-500 mb-8 flex-wrap" aria-label="Breadcrumb">
+    <nav class="flex items-center gap-2 text-sm text-slate-600 mb-8 flex-wrap" aria-label="Breadcrumb">
       <a href="https://deutsch-meister.de/" class="hover:text-slate-700 transition-colors">Home</a>
       <span>/</span>
       <a href="/grammar/" class="hover:text-slate-700 transition-colors">Grammar</a>
@@ -208,7 +208,7 @@ if (seoExtra?.faqs?.length) {
                 <div class={`px-5 py-4 ${meta.bg}`}>
                   <h3 class="font-display text-lg font-bold text-slate-800"><RichText text={rule.title_en} /></h3>
                   {rule.title_de && rule.title_de !== rule.title_en && (
-                    <p class="text-sm text-slate-500 mt-0.5"><RichText text={rule.title_de} /></p>
+                    <p class="text-sm text-slate-600 mt-0.5"><RichText text={rule.title_de} /></p>
                   )}
                 </div>
 
@@ -236,7 +236,7 @@ if (seoExtra?.faqs?.length) {
                         <div class="p-3 rounded-lg border border-slate-200 bg-white">
                           <p class="font-display text-lg font-bold text-slate-900">{content.preview_example_de}</p>
                           {content.preview_example_en && (
-                            <p class="text-sm text-slate-500 italic mt-0.5">{content.preview_example_en}</p>
+                            <p class="text-sm text-slate-600 italic mt-0.5">{content.preview_example_en}</p>
                           )}
                           {content.preview_note_en && (
                             <p class="text-xs text-amber-700 mt-2 bg-amber-50 px-2 py-1 rounded"><RichText text={content.preview_note_en} /></p>
@@ -292,7 +292,7 @@ if (seoExtra?.faqs?.length) {
                                 {m.wrong && (
                                   <p class="flex items-start gap-2">
                                     <span class="flex-shrink-0 font-bold text-red-600">✗</span>
-                                    <span class="line-through text-red-600">{m.wrong}</span>
+                                    <span class="line-through text-red-700">{m.wrong}</span>
                                   </p>
                                 )}
                                 {m.correct && (
@@ -406,7 +406,7 @@ if (seoExtra?.faqs?.length) {
     {exercises.length > 0 && (
       <section class="mb-10">
         <h2 class="font-display text-2xl font-bold text-slate-800 mb-2">Practice Exercises</h2>
-        <p class="text-slate-500 text-sm mb-5">{exercises.length} interactive {exercises.length === 1 ? 'exercise' : 'exercises'}</p>
+        <p class="text-slate-600 text-sm mb-5">{exercises.length} interactive {exercises.length === 1 ? 'exercise' : 'exercises'}</p>
         <div class="rounded-2xl border-2 border-indigo-100 bg-white p-6">
           <ExercisePlayer exercises={exercises} client:visible />
         </div>
@@ -466,7 +466,7 @@ if (seoExtra?.faqs?.length) {
             <details class="rounded-2xl border border-slate-200 bg-white overflow-hidden group">
               <summary class="flex items-center justify-between gap-3 px-5 py-4 cursor-pointer list-none font-semibold text-slate-800 hover:bg-slate-50 transition-colors">
                 <span>{q}</span>
-                <span class="text-slate-400 flex-shrink-0 transition-transform group-open:rotate-180" aria-hidden="true">▾</span>
+                <span class="text-slate-500 flex-shrink-0 transition-transform group-open:rotate-180" aria-hidden="true">▾</span>
               </summary>
               <p class="px-5 pb-5 pt-1 text-sm text-slate-600 leading-relaxed">{a}</p>
             </details>
@@ -482,11 +482,11 @@ if (seoExtra?.faqs?.length) {
           href={`/grammar/${level}/${prev.slug}/`}
           class="flex items-center gap-2 px-4 py-3 rounded-xl border border-slate-200 bg-white hover:shadow-md transition-all group max-w-[45%]"
         >
-          <svg class="w-4 h-4 text-slate-400 group-hover:-translate-x-0.5 transition-transform flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="w-4 h-4 text-slate-500 group-hover:-translate-x-0.5 transition-transform flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
           <div class="min-w-0">
-            <p class="text-xs text-slate-400 mb-0.5">Previous</p>
+            <p class="text-xs text-slate-500 mb-0.5">Previous</p>
             <p class="text-sm font-semibold text-slate-700 truncate">{prev?.title_en ?? prev?.slug}</p>
           </div>
         </a>
@@ -500,10 +500,10 @@ if (seoExtra?.faqs?.length) {
           class="flex items-center gap-2 px-4 py-3 rounded-xl border border-slate-200 bg-white hover:shadow-md transition-all group max-w-[45%] text-right ml-auto"
         >
           <div class="min-w-0">
-            <p class="text-xs text-slate-400 mb-0.5">Next</p>
+            <p class="text-xs text-slate-500 mb-0.5">Next</p>
             <p class="text-sm font-semibold text-slate-700 truncate">{next?.title_en ?? next?.slug}</p>
           </div>
-          <svg class="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="w-4 h-4 text-slate-500 group-hover:translate-x-0.5 transition-transform flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
         </a>
@@ -514,7 +514,7 @@ if (seoExtra?.faqs?.length) {
 
     <!-- All topics in this level -->
     <div class="mt-8 pt-6 border-t border-slate-200">
-      <a href={`/grammar/${level}/`} class="text-sm text-slate-500 hover:text-slate-700 transition-colors">
+      <a href={`/grammar/${level}/`} class="text-sm text-slate-600 hover:text-slate-700 transition-colors">
         ← All {meta.label} topics
       </a>
     </div>

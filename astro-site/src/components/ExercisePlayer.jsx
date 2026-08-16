@@ -56,6 +56,26 @@ function MultipleChoice({ exercise, onAnswer, answered }) {
   );
 }
 
+// Forgiving comparison: case, whitespace, and umlaut/ß ASCII spellings
+// (ä↔ae …) are equivalent. Mirrors src/utils/answerMatch.js in the SPA.
+function normalizeAnswer(text) {
+  return String(text ?? '')
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .replace(/ä/g, 'ae')
+    .replace(/ö/g, 'oe')
+    .replace(/ü/g, 'ue')
+    .replace(/ß/g, 'ss');
+}
+
+function answerMatches(userInput, exercise) {
+  const user = normalizeAnswer(userInput);
+  if (!user) return false;
+  const accepted = [exercise.correct_answer, ...(exercise.acceptable_answers ?? [])];
+  return accepted.some((a) => normalizeAnswer(a) === user);
+}
+
 function FillBlank({ exercise, onAnswer, answered }) {
   const [value, setValue] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -63,10 +83,10 @@ function FillBlank({ exercise, onAnswer, answered }) {
   const submit = () => {
     if (!value.trim() || submitted) return;
     setSubmitted(true);
-    onAnswer(value.trim().toLowerCase() === exercise.correct_answer.toLowerCase());
+    onAnswer(answerMatches(value, exercise));
   };
 
-  const isCorrect = value.trim().toLowerCase() === exercise.correct_answer.toLowerCase();
+  const isCorrect = answerMatches(value, exercise);
 
   return (
     <div className="flex gap-2">
@@ -182,8 +202,16 @@ export default function ExercisePlayer({ exercises }) {
         </div>
       </div>
 
-      {/* Question */}
-      <p className="font-semibold text-slate-800 mb-4 text-base">{exercise.question_en}</p>
+      {/* Question — the German sentence (with the blank) is the task; the
+          English is the translation aid. Matches the SPA (GrammarLessonPage)
+          which also prefers question_de. */}
+      <p className="font-semibold text-slate-800 mb-1 text-base" lang="de">
+        {exercise.question_de || exercise.question_en}
+      </p>
+      {exercise.question_de && exercise.question_en && (
+        <p className="text-sm text-slate-500 mb-4 italic">{exercise.question_en}</p>
+      )}
+      {!(exercise.question_de && exercise.question_en) && <div className="mb-3" />}
 
       {/* Input */}
       {exercise.exercise_type === 'multiple_choice' ? (

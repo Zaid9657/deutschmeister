@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import DataState from '../components/DataState';
+import { withTimeout } from '../utils/withTimeout';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -20,6 +22,8 @@ const ReadingLessonsPage = () => {
 
   const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [attempt, setAttempt] = useState(0);
 
   const theme = getThemeForLevel(level);
   const levelInfo = contentLevelThemes[level] || {};
@@ -40,17 +44,21 @@ const ReadingLessonsPage = () => {
     let cancelled = false;
     const load = async () => {
       setLoading(true);
-      const fetched = await getReadingLessonsByLevel(level);
-      if (!cancelled) {
-        setLessons(fetched);
-        setLoading(false);
+      setError(null);
+      try {
+        const fetched = await withTimeout(getReadingLessonsByLevel(level));
+        if (!cancelled) setLessons(fetched);
+      } catch (err) {
+        if (!cancelled) setError(err.message || 'Failed to load');
+      } finally {
+        if (!cancelled) setLoading(false);
       }
     };
     if (levels.includes(level)) {
       load();
     }
     return () => { cancelled = true; };
-  }, [level]);
+  }, [level, attempt]);
 
   const completedCount = lessons.filter((l) =>
     isItemLearned(level, 'readingLessons', l.id)
@@ -169,6 +177,9 @@ const ReadingLessonsPage = () => {
             </div>
           </div>
 
+          {error && !loading && (
+            <DataState loading={false} error={error} onRetry={() => setAttempt((a) => a + 1)} />
+          )}
           {loading && (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="w-8 h-8 text-slate-400 animate-spin" />
