@@ -1297,9 +1297,9 @@ export default function GrammarLessonPage() {
                       <p style={{ fontSize: 13, color: "#78716C", margin: "0 0 12px", lineHeight: 1.5 }}>
                         Subscribe to keep learning after your trial ends.
                       </p>
-                      <Link to="/pricing" style={{ display: "inline-block", padding: "8px 20px", borderRadius: 8, background: "linear-gradient(to right, #F59E0B, #EA580C)", color: "#fff", fontSize: 13, fontWeight: 600, textDecoration: "none" }}>
+                      <a href="/pricing/" style={{ display: "inline-block", padding: "8px 20px", borderRadius: 8, background: "linear-gradient(to right, #F59E0B, #EA580C)", color: "#fff", fontSize: 13, fontWeight: 600, textDecoration: "none" }}>
                         Upgrade to Pro
-                      </Link>
+                      </a>
                     </div>
                   )}
                 </div>

@@ -12,6 +12,7 @@ const SEO = ({
   structuredData,
   extraStructuredData,
   noindex = false,
+  lang, // set 'de' on German-language pages (FAQ, Über uns) — default keeps index.html's en
 }) => {
   const siteTitle = 'DeutschMeister';
   const fullTitle = title ? `${title} | ${siteTitle}` : `${siteTitle} - Learn German`;
@@ -21,7 +22,7 @@ const SEO = ({
   const structuredDataArray = Array.isArray(structuredData) ? structuredData : structuredData ? [structuredData] : [];
 
   return (
-    <Helmet>
+    <Helmet {...(lang ? { htmlAttributes: { lang } } : {})}>
       {/* Page content is English (explanations for English speakers learning
           German) — must match index.html's lang="en" to avoid conflicting
           language signals. */}

@@ -114,7 +114,7 @@ const PricingPage = () => {
 
   const proButton = (() => {
     if (isOnPro) return { label: 'Aktuelles Abo', disabled: true, style: 'current' };
-    return { label: 'Jetzt starten', disabled: false, style: 'pro' };
+    return { label: 'Get started', disabled: false, style: 'pro' };
   })();
 
   const getButtonClasses = (style) => {
@@ -320,7 +320,7 @@ const PricingPage = () => {
               </li>
               <li className="flex items-start gap-2.5 text-sm text-gray-300">
                 <Check className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
-                <span>Unlimited Sentence X-Ray analysis</span>
+                <span>50 Sentence X-Ray analyses per day</span>
               </li>
               <li className="flex items-start gap-2.5 text-sm text-gray-300">
                 <Check className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />

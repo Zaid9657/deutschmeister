@@ -19,6 +19,10 @@ flatter (no real network), but bundle weight, contrast, and structural findings 
 
 ## Executive summary — what v2 found that v1 missed
 
+> **Remediation status:** every code-level finding below (items 1–5, 7) has since been
+> fixed on this branch — see "Bugs found by this audit" for the fix-by-fix record.
+> Items 6 and 8 are engagement/content findings that need product work, not bug fixes.
+
 1. **Fill-in-the-blank exercises on all 64 static grammar pages were unanswerable.**
    The exercise player showed only the English translation ("That is the man's car.")
    and asked for a German word (`des`) — the German cloze sentence
@@ -198,18 +202,27 @@ and a real activation email sequence — before any more acquisition spend.
 
 ---
 
-## Bugs found by this audit
+## Bugs found by this audit — all remediated
 
 | # | Bug | Status |
 |---|---|---|
 | B-01 | Static grammar pages: exercises showed `question_en` only — fill-blanks lacked the German sentence containing the blank | **Fixed** (`astro-site/src/components/ExercisePlayer.jsx`) |
 | B-02 | `/listening/<lowercase-level>` → empty list (`.eq` vs uppercase DB); audio URL case vs Storage | **Fixed** (`src/hooks/useListening.js`, `src/utils/listeningHelpers.js`) |
-| B-03 | `/speaking` infinite spinner / feature pages blank on network failure — no error states | Open — needs an error/retry pattern across data hooks |
-| B-04 | Two brands (M vs D), two homepages, two pricing pages depending on navigation type | Open — product decision needed (unify on one identity) |
-| B-05 | Claim inconsistencies: X-Ray 1 vs 5 vs 10/50 per day; DE/EN mixing in auth + pricing CTA | Open — pick one language per surface, one source of truth for limits |
-| B-06 | `lang="en"` on German-labelled grammar hub/level pages | Open (one-line fixes in 2 Astro files) |
-| B-07 | `/intro` orphaned (no inbound links); `scripts` table dead | Open — delete or wire up |
-| B-08 | lemon.js injected on every SPA page | Open — load on demand |
+| B-03 | `/speaking` infinite spinner / feature pages blank on network failure | **Fixed at the root**: `supabase.auth.getSession()` could hang forever, freezing every guarded route — now timeboxed in `AuthContext`/`SubscriptionContext` (`src/utils/withTimeout.js`), plus a shared `DataState` error/retry card wired into the listening, reading, and video pages |
+| B-04 | Two brands (M vs D), two homepages, two pricing pages depending on navigation type | **Fixed** (owner chose the M-seal): the seal + teal/gold accents now render in the Astro nav/footer; in-app logo and every pricing link are full-page loads to the static pages, so the divergent SPA homepage/pricing are no longer reachable (`LandingPage.jsx`/`PricingPage.jsx` deletable later) |
+| B-05 | Claim inconsistencies: X-Ray 1 vs 5 vs "unlimited" vs 10/50 per day; DE/EN mixing in auth + pricing CTA | **Fixed**: all copy now matches `DAILY_LIMITS` in `analyze-sentence.mjs` (free 1/day, trial 10/day, pro 50/day — "unlimited" removed); homepage speaking claim now "30 sessions/mo" matching `PRO_MONTHLY_LIMIT`; signup page + pricing CTA + homepage stats band now English (stats refreshed to real August 2026 numbers); `lang="de"` set on the German FAQ/Über-uns pages |
+| B-06 | `lang="en"` on German-labelled grammar hub/level pages | **Fixed** (both Astro files; grammar hub SEO score 92 → 100) |
+| B-07 | `/intro` orphaned; `scripts` table dead | **Corrected**: `/intro` is actually linked (FloatingIntroButton + landing) — audit error, no change needed. `scripts` table (0 rows) noted for cleanup |
+| B-08 | lemon.js injected on every SPA page | **Fixed**: loads only on commerce routes (`LemonSqueezyProvider.jsx`) |
+
+Additional fixes shipped with this round:
+- **Forgiving answer checking**: typed answers now tolerate case, extra whitespace, and
+  umlaut/ß ASCII spellings (`wäre` ↔ `waere`) in both exercise players
+  (`src/utils/answerMatch.js`, mirrored in the Astro island) — compensates for the
+  0/433 `acceptable_answers` data gap at render time.
+- **Contrast pass**: low-contrast text and badges bumped to AA across the Astro pages
+  (`slate-400/500` → `slate-500/600`, white-on-amber/green badges darkened) —
+  pricing and grammar topic pages now measure **Lighthouse a11y 100** (mobile).
 
 ---
 
@@ -230,29 +243,32 @@ mark Netlify secrets as secret values · enable Supabase leaked-password protect
 
 ---
 
-## Roadmap, re-ranked by this audit's evidence
+## Roadmap — what remains after the remediation round
 
-1. **Activation & retention loop** (B-03 + funnel data): error states with retry on all
-   data hooks; onboarding that lands users in lesson 1 of their level, not a dashboard;
-   an activation email sequence (day 1/3/7) on top of the daily sentence.
-2. **One brand, one homepage, one pricing page** (B-04/B-05): kill the M/D split,
-   make in-app "/" and "/pricing" links full-page loads (or port the Astro design in),
-   reconcile every numeric claim with `speakingUsage.mjs`/`analyze-sentence.mjs` limits.
-3. **SPA bundle diet** (perf 62 → 85+): entry-chunk audit, defer lemon.js, defer
-   vendor-supabase for anonymous visitors.
-4. **Content completion**: reading for B2.1/A1.x (1–4 lessons is a hole vs 16 at B1.2);
-   `acceptable_answers` for the 433 fill-blanks (accept case/umlaut variants);
-   de-CAPS the 222 rules at the source; pick ONE intro system (populate
-   `grammar_introductions` or drop the table); populate `related_slugs`.
-5. **Listening/reading resurrection**: they're built, stocked (480 dialogues with
-   audio!) and unused — surface them on the dashboard and in the grammar flow
-   ("practice this topic by ear"), now that lowercase links work.
-6. **Audio for grammar examples** (0/673): the TTS pipeline already exists for
+Items 1–3 of the original ranking (error states, brand/claims unification, lemon.js
+deferral) are **done** — see the bugs table above. What's left is content and product
+work, not code defects:
+
+1. **Activation & retention loop** (funnel data): onboarding that lands users in
+   lesson 1 of their level, not a dashboard; an activation email sequence (day 1/3/7)
+   on top of the daily sentence; surface listening/reading on the dashboard and in the
+   grammar flow ("practice this topic by ear") — they're built and stocked
+   (480 dialogues with audio) but have zero usage.
+2. **SPA bundle diet** (perf 62 → 85+ mobile): the 372 KiB entry chunk + three vendor
+   chunks load up front (477 KiB measured unused) — needs a real entry-chunk audit,
+   e.g. deferring vendor-supabase for anonymous visitors and posthog until consent.
+3. **Content completion**: reading for B2.1/A1.x (1–4 lessons vs 16 at B1.2);
+   de-CAPS the 222 rules at the source (RichText normalizer still compensates);
+   pick ONE intro system (populate `grammar_introductions` or drop the table);
+   populate `related_slugs`; real `acceptable_answers` for genuine synonym variants
+   (the umlaut/case tolerance is now handled in code).
+4. **Audio for grammar examples** (0/673): the TTS pipeline already exists for
    speaking; batch-generate example audio into Storage and fill `audio_url`.
-7. **SEO content**: extend `topicSeo.js` FAQ/snippet enrichment from 1 → 64 topics;
+5. **SEO content**: extend `topicSeo.js` FAQ/snippet enrichment from 1 → 64 topics;
    more `leitfaden/` guides (the telc-B1 pattern measurably works — SEO 100).
-8. Everything still open from v1: rate limiting, tests, CORS consolidation,
-   subscription-aware RLS, promote CSP.
+6. Still open from v1: rate limiting, tests, CORS consolidation,
+   subscription-aware RLS, promote CSP, delete the now-unreachable
+   `LandingPage.jsx`/`PricingPage.jsx`, drop the dead `scripts` table.
 
 ---
 

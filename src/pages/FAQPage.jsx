@@ -159,6 +159,7 @@ const FAQPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
       <SEO
+        lang="de"
         title="Häufige Fragen"
         description="Häufige Fragen zu Deutschmeister — Preise, Prüfungsvorbereitung (Goethe, telc, TestDaF, DTZ), KI-Sprechtraining, Sentence X-Ray und mehr. Deutsch lernen von A1 bis B2."
         keywords="Deutschmeister FAQ, Deutsch lernen, Goethe Prüfung, telc Prüfung, TestDaF, DTZ, KI Sprechtraining, Sentence X-Ray, Deutsch Grammatik"

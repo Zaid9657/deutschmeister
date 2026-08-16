@@ -77,13 +77,13 @@ const TrialBanner = () => {
         </div>
 
         <div className="flex items-center gap-3 flex-shrink-0">
-          <Link
-            to="/pricing"
+          <a
+            href="/pricing/"
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap ${btnClass}`}
           >
             <Zap className="w-3 h-3" />
             Upgrade to Pro
-          </Link>
+          </a>
           <button
             onClick={handleDismiss}
             aria-label="Dismiss"

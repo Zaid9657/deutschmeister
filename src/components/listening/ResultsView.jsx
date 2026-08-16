@@ -150,12 +150,12 @@ const ResultsView = ({ exercise, questions, answers, score, dialogues, playsUsed
               ? 'Abonniere, um nach deinem Test weiter zu lernen.'
               : 'Subscribe to keep learning after your trial ends.'}
           </p>
-          <Link
-            to="/pricing"
+          <a
+            href="/pricing/"
             className="inline-flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-semibold rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all"
           >
             {isGerman ? 'Jetzt upgraden' : 'Upgrade to Pro'}
-          </Link>
+          </a>
         </motion.div>
       )}
     </div>

@@ -1,92 +1,113 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { withTimeout } from '../utils/withTimeout';
 
 const LEVEL_ORDER = ['A1.1', 'A1.2', 'A2.1', 'A2.2', 'B1.1', 'B1.2', 'B2.1', 'B2.2'];
 
 export function useListeningLevels() {
   const [levels, setLevels] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [attempt, setAttempt] = useState(0);
   const { user } = useAuth();
+  const retry = useCallback(() => { setLoading(true); setError(null); setAttempt((a) => a + 1); }, []);
 
   useEffect(() => {
     let cancelled = false;
     async function fetchLevels() {
-      const { data: exercises } = await supabase
-        .from('listening_exercises')
-        .select('id, level, exercise_number')
-        .order('level')
-        .order('exercise_number');
+      try {
+        const { data: exercises, error: exError } = await withTimeout(
+          supabase
+            .from('listening_exercises')
+            .select('id, level, exercise_number')
+            .order('level')
+            .order('exercise_number')
+        );
+        if (exError) throw exError;
 
-      let progressMap = {};
-      if (user) {
-        const { data: progress } = await supabase
-          .from('user_listening_progress')
-          .select('exercise_id, completed, score')
-          .eq('user_id', user.id);
-        progress?.forEach((p) => { progressMap[p.exercise_id] = p; });
-      }
-
-      const levelData = {};
-      LEVEL_ORDER.forEach((level) => {
-        levelData[level] = { level, totalExercises: 0, completedExercises: 0 };
-      });
-
-      exercises?.forEach((ex) => {
-        if (levelData[ex.level]) {
-          levelData[ex.level].totalExercises++;
-          if (progressMap[ex.id]?.completed) levelData[ex.level].completedExercises++;
+        let progressMap = {};
+        if (user) {
+          const { data: progress } = await supabase
+            .from('user_listening_progress')
+            .select('exercise_id, completed, score')
+            .eq('user_id', user.id);
+          progress?.forEach((p) => { progressMap[p.exercise_id] = p; });
         }
-      });
 
-      if (!cancelled) {
-        setLevels(Object.values(levelData));
-        setLoading(false);
+        const levelData = {};
+        LEVEL_ORDER.forEach((level) => {
+          levelData[level] = { level, totalExercises: 0, completedExercises: 0 };
+        });
+
+        exercises?.forEach((ex) => {
+          if (levelData[ex.level]) {
+            levelData[ex.level].totalExercises++;
+            if (progressMap[ex.id]?.completed) levelData[ex.level].completedExercises++;
+          }
+        });
+
+        if (!cancelled) setLevels(Object.values(levelData));
+      } catch (err) {
+        if (!cancelled) setError(err.message || 'Failed to load');
+      } finally {
+        if (!cancelled) setLoading(false);
       }
     }
     fetchLevels();
     return () => { cancelled = true; };
-  }, [user]);
+  }, [user, attempt]);
 
-  return { levels, loading };
+  return { levels, loading, error, retry };
 }
 
 export function useLevelExercises(level) {
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [attempt, setAttempt] = useState(0);
   const { user } = useAuth();
+  const retry = useCallback(() => { setLoading(true); setError(null); setAttempt((a) => a + 1); }, []);
 
   useEffect(() => {
     let cancelled = false;
     async function fetchExercises() {
-      const { data: exerciseData } = await supabase
-        .from('listening_exercises')
-        .select('*')
-        .ilike('level', level)
-        .order('exercise_number');
-
-      let progressMap = {};
-      if (user && exerciseData?.length) {
-        const { data: progress } = await supabase
-          .from('user_listening_progress')
-          .select('*')
-          .eq('user_id', user.id)
-          .in('exercise_id', exerciseData.map((e) => e.id));
-        progress?.forEach((p) => { progressMap[p.exercise_id] = p; });
-      }
-
-      if (!cancelled) {
-        setExercises(
-          (exerciseData || []).map((ex) => ({ ...ex, progress: progressMap[ex.id] || null }))
+      try {
+        const { data: exerciseData, error: exError } = await withTimeout(
+          supabase
+            .from('listening_exercises')
+            .select('*')
+            .ilike('level', level)
+            .order('exercise_number')
         );
-        setLoading(false);
+        if (exError) throw exError;
+
+        let progressMap = {};
+        if (user && exerciseData?.length) {
+          const { data: progress } = await supabase
+            .from('user_listening_progress')
+            .select('*')
+            .eq('user_id', user.id)
+            .in('exercise_id', exerciseData.map((e) => e.id));
+          progress?.forEach((p) => { progressMap[p.exercise_id] = p; });
+        }
+
+        if (!cancelled) {
+          setExercises(
+            (exerciseData || []).map((ex) => ({ ...ex, progress: progressMap[ex.id] || null }))
+          );
+        }
+      } catch (err) {
+        if (!cancelled) setError(err.message || 'Failed to load');
+      } finally {
+        if (!cancelled) setLoading(false);
       }
     }
     if (level) fetchExercises();
     return () => { cancelled = true; };
-  }, [level, user]);
+  }, [level, user, attempt]);
 
-  return { exercises, loading };
+  return { exercises, loading, error, retry };
 }
 
 export function useExerciseDetails(level, exerciseNumber) {
@@ -95,17 +116,21 @@ export function useExerciseDetails(level, exerciseNumber) {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [attempt, setAttempt] = useState(0);
+  const retry = useCallback(() => { setLoading(true); setError(null); setAttempt((a) => a + 1); }, []);
 
   useEffect(() => {
     let cancelled = false;
     async function fetchDetails() {
       try {
-        const { data: exerciseData, error: exError } = await supabase
-          .from('listening_exercises')
-          .select('*')
-          .ilike('level', level)
-          .eq('exercise_number', parseInt(exerciseNumber))
-          .single();
+        const { data: exerciseData, error: exError } = await withTimeout(
+          supabase
+            .from('listening_exercises')
+            .select('*')
+            .ilike('level', level)
+            .eq('exercise_number', parseInt(exerciseNumber))
+            .single()
+        );
         if (exError) throw exError;
 
         const [dialogueRes, questionRes] = await Promise.all([
@@ -126,9 +151,9 @@ export function useExerciseDetails(level, exerciseNumber) {
     }
     if (level && exerciseNumber) fetchDetails();
     return () => { cancelled = true; };
-  }, [level, exerciseNumber]);
+  }, [level, exerciseNumber, attempt]);
 
-  return { exercise, dialogues, questions, loading, error };
+  return { exercise, dialogues, questions, loading, error, retry };
 }
 
 export function useSaveProgress() {

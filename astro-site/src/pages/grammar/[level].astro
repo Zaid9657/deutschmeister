@@ -34,7 +34,7 @@ const jsonLd = {
 <Layout title={title} description={description} canonical={`https://deutsch-meister.de/grammar/${level}/`} jsonLd={jsonLd} lang="de">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 py-10">
     <!-- Breadcrumb -->
-    <nav class="flex items-center gap-2 text-sm text-slate-500 mb-8" aria-label="Breadcrumb">
+    <nav class="flex items-center gap-2 text-sm text-slate-600 mb-8" aria-label="Breadcrumb">
       <a href="https://deutsch-meister.de/" class="hover:text-slate-700 transition-colors">Home</a>
       <span>/</span>
       <a href="/grammar/" class="hover:text-slate-700 transition-colors">Grammatik</a>
@@ -73,10 +73,10 @@ const jsonLd = {
               {topic.title_en}
             </p>
             {topic.title_de && topic.title_de !== topic.title_en && (
-              <p class="text-sm text-slate-500 mt-0.5">{topic.title_de}</p>
+              <p class="text-sm text-slate-600 mt-0.5">{topic.title_de}</p>
             )}
             {topic.description_en && (
-              <p class="text-sm text-slate-500 mt-1 line-clamp-1">{topic.description_en}</p>
+              <p class="text-sm text-slate-600 mt-1 line-clamp-1">{topic.description_en}</p>
             )}
           </div>
           <svg class="w-5 h-5 text-slate-300 group-hover:text-slate-500 group-hover:translate-x-0.5 transition-all flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -88,7 +88,7 @@ const jsonLd = {
 
     <!-- Level navigation -->
     <div class="mt-10 pt-8 border-t border-slate-200">
-      <p class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Andere Niveaus</p>
+      <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Andere Niveaus</p>
       <div class="flex flex-wrap gap-2">
         {SUB_LEVELS.filter(l => l !== level).map((l) => (
           <a

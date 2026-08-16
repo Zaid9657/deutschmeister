@@ -460,12 +460,12 @@ const LandingPage = () => {
                   You have <span className="text-amber-600 font-bold">{trialDays} day{trialDays !== 1 ? 's' : ''}</span> left in your free trial
                 </p>
               </div>
-              <Link
-                to="/pricing"
+              <a
+                href="/pricing/"
                 className="px-6 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all shadow-md shadow-amber-200 text-sm"
               >
                 Upgrade to Pro
-              </Link>
+              </a>
             </div>
           </div>
         </section>

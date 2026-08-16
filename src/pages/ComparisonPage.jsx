@@ -125,13 +125,13 @@ export default function ComparisonPage() {
                 Kostenlos testen
                 <ArrowRight className="w-4 h-4" />
               </Link>
-              <Link
-                to="/pricing"
+              <a
+                href="/pricing/"
                 onClick={() => trackComparisonCtaClicked(data.displayName, 'hero-pricing')}
                 className="inline-flex items-center gap-2 px-6 py-3 border border-slate-200 text-slate-700 font-medium rounded-xl hover:bg-slate-50 transition-colors"
               >
                 Preise ansehen
-              </Link>
+              </a>
             </div>
           </motion.div>
         </div>
@@ -302,13 +302,13 @@ export default function ComparisonPage() {
                 Kostenlos starten
                 <ArrowRight className="w-4 h-4" />
               </Link>
-              <Link
-                to="/pricing"
+              <a
+                href="/pricing/"
                 onClick={() => trackComparisonCtaClicked(data.displayName, 'bottom-pricing')}
                 className="inline-flex items-center gap-2 px-6 py-3 border border-slate-600 text-slate-300 font-medium rounded-xl hover:bg-slate-700 transition-colors"
               >
                 Preise ansehen
-              </Link>
+              </a>
             </div>
           </motion.div>
         </div>

@@ -486,7 +486,7 @@ export default function TelcB1Page() {
             </div>
 
             <p>
-              Dazu kommt: Ein <Link to="/level-test" className="text-amber-600 hover:text-amber-700 font-medium">kostenloser Einstufungstest</Link>, der dir in 5 Minuten zeigt, wo du stehst. <Link to="/grammar/b1.2" className="text-amber-600 hover:text-amber-700 font-medium">Grammatik-Lektionen bis B2</Link> mit Erklärungen auf Englisch. Und <Link to="/pricing" className="text-amber-600 hover:text-amber-700 font-medium">Preise</Link>, die deutlich unter einer Sprachschule liegen. Neugierig, wie Deutschmeister im Vergleich zu anderen Plattformen abschneidet? Schau dir den <Link to="/vergleich" className="text-amber-600 hover:text-amber-700 font-medium">ehrlichen Vergleich</Link> an.
+              Dazu kommt: Ein <Link to="/level-test" className="text-amber-600 hover:text-amber-700 font-medium">kostenloser Einstufungstest</Link>, der dir in 5 Minuten zeigt, wo du stehst. <Link to="/grammar/b1.2" className="text-amber-600 hover:text-amber-700 font-medium">Grammatik-Lektionen bis B2</Link> mit Erklärungen auf Englisch. Und <a href="/pricing/" className="text-amber-600 hover:text-amber-700 font-medium">Preise</a>, die deutlich unter einer Sprachschule liegen. Neugierig, wie Deutschmeister im Vergleich zu anderen Plattformen abschneidet? Schau dir den <Link to="/vergleich" className="text-amber-600 hover:text-amber-700 font-medium">ehrlichen Vergleich</Link> an.
             </p>
           </div>
         </section>

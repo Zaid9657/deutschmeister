@@ -86,9 +86,9 @@ const Navbar = () => {
               {isGerman ? 'Satz-Analyse' : 'X-Ray'}
             </Link>
             {!user && (
-              <Link to="/pricing" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+              <a href="/pricing/" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
                 {isGerman ? 'Preise' : 'Pricing'}
-              </Link>
+              </a>
             )}
             {user && (
               <Link to="/dashboard" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
@@ -120,24 +120,24 @@ const Navbar = () => {
               </span>
             )}
             {user && inTrial && !isSubscribed && (
-              <Link
-                to="/pricing"
+              <a
+                href="/pricing/"
                 className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-100 to-orange-100 text-amber-700 text-xs font-bold hover:from-amber-200 hover:to-orange-200 transition-all border border-amber-200"
               >
                 <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping opacity-75" />
                 <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-400" />
                 <Sparkles size={12} />
                 {trialDays}d {isGerman ? 'Test' : 'trial'}
-              </Link>
+              </a>
             )}
             {user && !inTrial && !isSubscribed && (
-              <Link
-                to="/pricing"
+              <a
+                href="/pricing/"
                 className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-semibold hover:from-amber-600 hover:to-orange-600 transition-all"
               >
                 <Crown size={12} />
                 {isGerman ? 'Upgrade' : 'Upgrade'}
-              </Link>
+              </a>
             )}
 
             {/* Language Toggle — icon only */}
@@ -179,14 +179,14 @@ const Navbar = () => {
                         <User size={16} />
                         {t('nav.profile')}
                       </Link>
-                      <Link
-                        to="/pricing"
+                      <a
+                        href="/pricing/"
                         onClick={() => setUserMenuOpen(false)}
                         className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
                       >
                         <Crown size={16} />
                         {isGerman ? 'Preise' : 'Pricing'}
-                      </Link>
+                      </a>
                       {isAdmin && (
                         <Link
                           to="/admin/videos"
@@ -338,8 +338,8 @@ const Navbar = () => {
               {/* Subscription status for logged-in users */}
               {user && !isSubscribed && (
                 <div className="border-t border-slate-100 mt-2 pt-2">
-                  <Link
-                    to="/pricing"
+                  <a
+                    href="/pricing/"
                     onClick={() => setIsOpen(false)}
                     className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 text-amber-700 border border-amber-200"
                   >
@@ -356,7 +356,7 @@ const Navbar = () => {
                         <p className="text-xs text-amber-500">{isGerman ? 'Jetzt upgraden' : 'Upgrade now'}</p>
                       )}
                     </div>
-                  </Link>
+                  </a>
                 </div>
               )}
               {user && isSubscribed && (

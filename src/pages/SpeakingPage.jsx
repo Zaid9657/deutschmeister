@@ -454,9 +454,9 @@ const SpeakingPage = () => {
 
         {/* Start / upgrade */}
         {missionLocked ? (
-          <Link to="/pricing" className="flex items-center justify-center gap-2 w-full py-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold rounded-2xl shadow-md shadow-amber-200 transition-all">
+          <a href="/pricing/" className="flex items-center justify-center gap-2 w-full py-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold rounded-2xl shadow-md shadow-amber-200 transition-all">
             <Crown className="w-5 h-5" /> Unlock with Pro
-          </Link>
+          </a>
         ) : (
           <button
             onClick={handleStart}

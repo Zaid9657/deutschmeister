@@ -45,6 +45,7 @@ const UeberUnsPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
       <SEO
+        lang="de"
         title="Über uns"
         description="Deutschmeister wurde von Zaid gegründet — Arzt mit Blue Card in Deutschland. Mission: Das beste Werkzeug für alle, die Deutsch wirklich brauchen. KI-Sprechtraining, Sentence X-Ray, Prüfungsvorbereitung von A1 bis B2."
         keywords="Deutschmeister, Über uns, Deutsch lernen, Arzt, Blue Card, KI Sprechtraining, Goethe Prüfung, telc, TestDaF"
@@ -242,13 +243,13 @@ const UeberUnsPage = () => {
                 Kostenlos testen
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
-              <Link
-                to="/pricing"
+              <a
+                href="/pricing/"
                 className="group w-full sm:w-auto px-8 py-4 border-2 border-white/40 text-white font-semibold rounded-2xl hover:border-white/70 hover:bg-white/10 transition-all flex items-center justify-center gap-2"
               >
                 Preise ansehen
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
+              </a>
             </div>
           </motion.div>
         </div>

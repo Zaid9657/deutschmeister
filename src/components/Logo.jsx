@@ -1,14 +1,16 @@
-import { Link } from 'react-router-dom';
-
 /**
  * DeutschMeister brand mark — the Meister-Siegel seal + two-tone wordmark.
  * Extracted from the approved dashboard design so the dashboard top bar and
- * the site nav share one source of truth.
+ * the site nav share one source of truth. The same seal is inlined in the
+ * static site chrome (astro-site/src/layouts/Layout.astro) — keep them in sync.
  *
  * Props:
  *   size        — seal diameter in px (default 38); wordmark scales with it
  *   showWordmark — render the "DeutschMeister" wordmark beside the seal (default true)
- *   to          — wrap in a Link to this path (default '/'); pass null for a bare mark
+ *   to          — wrap in a link to this path (default '/'); pass null for a bare mark.
+ *                 Renders a full-page <a>, not a router Link: "/" and "/pricing" are
+ *                 served by the static Astro pages, which client-side routing would
+ *                 bypass (showing the divergent SPA versions instead).
  *   className   — extra classes on the wrapper
  */
 export default function Logo({ size = 38, showWordmark = true, to = '/', className = '' }) {
@@ -67,8 +69,8 @@ export default function Logo({ size = 38, showWordmark = true, to = '/', classNa
 
   if (to === null) return mark;
   return (
-    <Link to={to} className="inline-flex items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2">
+    <a href={to} className="inline-flex items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2">
       {mark}
-    </Link>
+    </a>
   );
 }

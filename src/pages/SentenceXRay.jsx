@@ -300,14 +300,14 @@ function LimitReachedBanner({ tier, limit, isLoggedIn }) {
             'Erstelle ein kostenloses Konto für 5 Analysen pro Tag — oder teste Pro mit 50 Analysen täglich.'}
       </h3>
       <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mt-4">
-        <Link
-          to="/pricing"
+        <a
+          href="/pricing/"
           className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-semibold rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all shadow-sm"
         >
           <Crown size={14} />
           {/* EN: Upgrade to Pro now — 50 analyses per day */}
           {isLoggedIn ? 'Jetzt auf Pro upgraden — 50 Analysen pro Tag' : 'Pro testen — 50 Analysen täglich'}
-        </Link>
+        </a>
         {!isLoggedIn && (
           <Link
             to="/signup"

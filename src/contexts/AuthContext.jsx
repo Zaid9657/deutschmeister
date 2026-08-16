@@ -3,6 +3,7 @@ import { supabase } from '../utils/supabase';
 import { identify, resetAnalytics } from '../lib/analytics';
 import { trackSignupCompleted } from '../lib/funnelTracking';
 import { logAuditEvent, AUDIT_EVENTS } from '../lib/auditLogger';
+import { withTimeout } from '../utils/withTimeout';
 
 const AuthContext = createContext({});
 
@@ -13,11 +14,19 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
+    // Get initial session. getSession() can hang on a dead/slow network (the
+    // client may try to refresh an expired token) — without a timeout every
+    // guarded route spins forever. Resolve to logged-out instead.
     const getSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user ?? null);
-      setLoading(false);
+      try {
+        const { data: { session } } = await withTimeout(supabase.auth.getSession(), 8000);
+        setUser(session?.user ?? null);
+      } catch (err) {
+        console.error('Auth session load failed:', err.message);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
     };
 
     getSession();
