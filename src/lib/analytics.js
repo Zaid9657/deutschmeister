@@ -5,8 +5,19 @@ const host = import.meta.env.VITE_POSTHOG_HOST;
 
 let initialized = false;
 
+// Same consent flag the cookie banner (public/consent.js) writes for GA —
+// PostHog must not start before the visitor accepts analytics cookies.
+function hasConsent() {
+  try {
+    return window.localStorage.getItem('dm_cookie_consent') === 'accepted';
+  } catch {
+    return false;
+  }
+}
+
 export function initAnalytics() {
   if (typeof window === 'undefined' || !key || initialized) return;
+  if (!hasConsent()) return;
   posthog.init(key, {
     api_host: host || 'https://us.i.posthog.com',
     capture_pageview: true,

@@ -1,6 +1,6 @@
 import { readFileSync, existsSync } from 'node:fs';
 
-const HOST = 'www.deutsch-meister.de';
+const HOST = 'deutsch-meister.de';
 const BATCH_SIZE = 10_000;
 const INDEXNOW_API = 'https://api.indexnow.org/IndexNow';
 

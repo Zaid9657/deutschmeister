@@ -5,7 +5,6 @@ import {
   getSubscription,
   getUserProfile,
   startFreeTrial,
-  createSubscription as createSub,
   checkTrialStatus,
   checkSubscriptionStatus,
 } from '../services/subscriptionService';
@@ -126,17 +125,10 @@ export const SubscriptionProvider = ({ children }) => {
 
   const hasAccess = isInFreeTrial() || hasActiveSubscription();
 
-  const createSubscription = async (planType, pricePaid) => {
-    if (!user) return null;
-    const sub = await createSub(user.id, planType, pricePaid);
-    if (sub) {
-      setSubscription(sub);
-      // Refresh profile
-      const updatedProfile = await getUserProfile(user.id);
-      setProfile(updatedProfile);
-    }
-    return sub;
-  };
+  // NOTE: there is deliberately no client-side createSubscription here.
+  // Paid access is granted server-side only, by the Lemon Squeezy webhook
+  // (netlify/functions/lemonsqueezy-webhook.mjs) using the service role.
+  // RLS blocks clients from writing subscriptions/profiles.is_subscribed.
 
   const refreshSubscription = async () => {
     await loadSubscriptionData();
@@ -171,7 +163,6 @@ export const SubscriptionProvider = ({ children }) => {
     isInFreeTrial,
     getTrialDaysRemaining,
     hasActiveSubscription,
-    createSubscription,
     refreshSubscription,
     verifySubscription,
   };

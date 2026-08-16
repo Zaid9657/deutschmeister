@@ -137,9 +137,9 @@ if (seoExtra?.faqs?.length) {
     <nav class="flex items-center gap-2 text-sm text-slate-500 mb-8 flex-wrap" aria-label="Breadcrumb">
       <a href="https://deutsch-meister.de/" class="hover:text-slate-700 transition-colors">Home</a>
       <span>/</span>
-      <a href="/grammar" class="hover:text-slate-700 transition-colors">Grammar</a>
+      <a href="/grammar/" class="hover:text-slate-700 transition-colors">Grammar</a>
       <span>/</span>
-      <a href={`/grammar/${level}`} class="hover:text-slate-700 transition-colors">{meta.label}</a>
+      <a href={`/grammar/${level}/`} class="hover:text-slate-700 transition-colors">{meta.label}</a>
       <span>/</span>
       <span class="text-slate-800 font-medium">{topic.title_en}</span>
     </nav>
@@ -438,7 +438,7 @@ if (seoExtra?.faqs?.length) {
             const rmeta = LEVEL_META[rt.sub_level] ?? meta;
             return (
               <a
-                href={`/grammar/${rt.sub_level}/${rt.slug}`}
+                href={`/grammar/${rt.sub_level}/${rt.slug}/`}
                 class="flex items-start gap-3 p-4 rounded-xl border border-slate-200 bg-white hover:shadow-md hover:border-slate-300 transition-all group"
               >
                 <span class={`flex-shrink-0 mt-0.5 px-2 py-0.5 rounded-full text-[10px] font-bold ${rmeta.badge}`}>
@@ -479,7 +479,7 @@ if (seoExtra?.faqs?.length) {
     <nav class="flex items-center justify-between gap-4 pt-6 border-t border-slate-200">
       {prev ? (
         <a
-          href={`/grammar/${level}/${prev.slug}`}
+          href={`/grammar/${level}/${prev.slug}/`}
           class="flex items-center gap-2 px-4 py-3 rounded-xl border border-slate-200 bg-white hover:shadow-md transition-all group max-w-[45%]"
         >
           <svg class="w-4 h-4 text-slate-400 group-hover:-translate-x-0.5 transition-transform flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -496,7 +496,7 @@ if (seoExtra?.faqs?.length) {
 
       {next ? (
         <a
-          href={`/grammar/${level}/${next.slug}`}
+          href={`/grammar/${level}/${next.slug}/`}
           class="flex items-center gap-2 px-4 py-3 rounded-xl border border-slate-200 bg-white hover:shadow-md transition-all group max-w-[45%] text-right ml-auto"
         >
           <div class="min-w-0">
@@ -514,7 +514,7 @@ if (seoExtra?.faqs?.length) {
 
     <!-- All topics in this level -->
     <div class="mt-8 pt-6 border-t border-slate-200">
-      <a href={`/grammar/${level}`} class="text-sm text-slate-500 hover:text-slate-700 transition-colors">
+      <a href={`/grammar/${level}/`} class="text-sm text-slate-500 hover:text-slate-700 transition-colors">
         ← All {meta.label} topics
       </a>
     </div>

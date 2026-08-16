@@ -1,0 +1,56 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// DRAFT Impressum — §5 TMG/DDG requires the operator's full name and a
+// ladungsfähige Anschrift (street address). The owner must fill in the
+// placeholders below before removing the noindex flag.
+---
+
+<Layout
+  title="Impressum — DeutschMeister"
+  description="Impressum und Anbieterkennzeichnung für deutsch-meister.de."
+  canonical="https://deutsch-meister.de/impressum/"
+  noindex={true}
+  lang="de"
+>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+    <p class="mb-8 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+      <strong>Entwurf:</strong> Die mit [&nbsp;] markierten Angaben müssen vor
+      Veröffentlichung vom Betreiber ergänzt werden.
+    </p>
+
+    <h1 class="font-display text-3xl font-bold text-slate-900 mb-6">Impressum</h1>
+
+    <div class="space-y-8 text-slate-700 leading-relaxed">
+      <section>
+        <h2 class="font-display text-xl font-semibold text-slate-900 mb-2">Angaben gemäß § 5 DDG</h2>
+        <p>
+          [Vollständiger Name des Betreibers]<br />
+          [Straße und Hausnummer]<br />
+          [PLZ und Ort]<br />
+          [Land]
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-xl font-semibold text-slate-900 mb-2">Kontakt</h2>
+        <p>
+          E-Mail: <a href="mailto:zaid@deutsch-meister.de" class="text-purple-700 underline">zaid@deutsch-meister.de</a>
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-xl font-semibold text-slate-900 mb-2">Verantwortlich für den Inhalt</h2>
+        <p>[Name, Anschrift wie oben]</p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-xl font-semibold text-slate-900 mb-2">Streitschlichtung</h2>
+        <p>
+          Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor
+          einer Verbraucherschlichtungsstelle teilzunehmen.
+        </p>
+      </section>
+    </div>
+  </div>
+</Layout>

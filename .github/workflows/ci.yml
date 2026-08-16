@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check duplicated data files stay in sync
+        run: node scripts/check-duplicates.mjs
+
+      - name: Syntax-check Netlify functions
+        run: |
+          for f in netlify/functions/*.mjs netlify/functions/*.js netlify/functions/_shared/*.mjs; do
+            node --check "$f"
+          done
+
+      - name: Build SPA
+        run: npm run build
+
+      # The Astro site is NOT built here: its getStaticPaths fetches grammar
+      # content from Supabase at build time, which needs PUBLIC_SUPABASE_URL /
+      # PUBLIC_SUPABASE_ANON_KEY secrets and network egress. Netlify's deploy
+      # build remains the gate for the Astro half. If you add those secrets to
+      # the repo, append:
+      #   cd astro-site && npm ci && npm run build

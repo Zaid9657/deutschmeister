@@ -13,11 +13,6 @@ const jsonLd = [
     url: 'https://deutsch-meister.de/',
     description: 'Free German language learning platform for English speakers',
     inLanguage: ['de', 'en'],
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: 'https://deutsch-meister.de/search?q={search_term_string}',
-      'query-input': 'required name=search_term_string',
-    },
   },
   {
     '@context': 'https://schema.org',
@@ -321,7 +316,7 @@ const XRAY_CHIPS = [
         ))}
       </div>
       <div class="text-center">
-        <a href="/grammar" class="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-700 hover:text-amber-900 transition-colors">
+        <a href="/grammar/" class="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-700 hover:text-amber-900 transition-colors">
           Browse all 64 grammar topics <span aria-hidden="true">→</span>
         </a>
       </div>

@@ -47,6 +47,21 @@ export const handler = async (event) => {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'sessionToken und audioBase64 sind erforderlich', stage: 'input' }) };
     }
 
+    // ~7.5 MB of audio — far above any single tap-to-speak turn, but a hard
+    // ceiling against oversized payloads being fed into the STT provider.
+    if (typeof audioBase64 !== 'string' || audioBase64.length > 10_000_000) {
+      return { statusCode: 413, headers, body: JSON.stringify({ error: 'Audio zu groß', stage: 'input' }) };
+    }
+
+    // The conversation history is client-supplied context for the teacher
+    // model; truncate rather than trust it as an unbounded prompt surface.
+    const boundedHistory = (Array.isArray(history) ? history : [])
+      .slice(-40)
+      .map((m) => ({
+        role: m?.role === 'assistant' ? 'assistant' : 'user',
+        content: String(m?.content ?? '').slice(0, 5000),
+      }));
+
     // 1. The session must exist, belong to the caller, and be active.
     const { data: session, error: sessionError } = await supabase
       .from('speaking_sessions')
@@ -102,7 +117,7 @@ export const handler = async (event) => {
       const userText = userTranscript || '(Der Schüler hat nichts Verständliches gesagt — bitte freundlich um Wiederholung.)';
       replyText = await teacherReply({
         system,
-        history: Array.isArray(history) ? history : [],
+        history: boundedHistory,
         userText,
         maxTokens: 120,
       });

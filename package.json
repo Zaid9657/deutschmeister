@@ -10,9 +10,12 @@
     "lighthouse": "node scripts/lighthouse-audit.js --url=http://localhost:4173",
     "lighthouse:mobile": "node scripts/lighthouse-audit.js --url=http://localhost:4173 --preset=mobile",
     "lighthouse:desktop": "node scripts/lighthouse-audit.js --url=http://localhost:4173 --preset=desktop",
-    "lighthouse:prod": "node scripts/lighthouse-audit.js --url=https://www.deutsch-meister.de --preset=mobile",
+    "lighthouse:prod": "node scripts/lighthouse-audit.js --url=https://deutsch-meister.de --preset=mobile",
     "indexnow": "node scripts/ping-indexnow.mjs",
-    "optimize:images": "node scripts/optimize-images.cjs"
+    "optimize:images": "node scripts/optimize-images.cjs",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "check:duplicates": "node scripts/check-duplicates.mjs"
   },
   "dependencies": {
     "@netlify/functions": "^5.1.5",
@@ -33,6 +36,10 @@
     "@vitejs/plugin-react": "^4.2.0",
     "autoprefixer": "^10.4.16",
     "chrome-launcher": "^1.2.1",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "globals": "^17.11.0",
     "lighthouse": "^13.3.0",
     "postcss": "^8.4.32",
     "sharp": "^0.34.5",

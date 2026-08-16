@@ -30,8 +30,8 @@ const SEO = ({
       {keywords && <meta name="keywords" content={keywords} />}
       {noindex && <meta name="robots" content="noindex, nofollow" />}
       <link rel="canonical" href={url} />
-      <link rel="alternate" hrefLang="en" href={url} />
-      <link rel="alternate" hrefLang="de" href={url} />
+      {/* No hreflang: there is only one URL per page (no language variants).
+          Emitting en+de pointing at the same URL sends conflicting signals. */}
 
       {/* Open Graph */}
       <meta property="og:type" content={type} />
