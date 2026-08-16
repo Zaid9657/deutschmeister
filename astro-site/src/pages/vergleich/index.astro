@@ -1,19 +1,48 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import competitorComparisons from '../../data/competitorComparisons.js';
+import { BUILD_DATE, ORGANIZATION } from '../../lib/siteMeta.js';
 import '../../styles/global.css';
 
 const competitors = Object.values(competitorComparisons);
 
-const title = 'Vergleich — Deutschmeister vs Babbel, Duolingo, Lingoda | DeutschMeister';
+const title = 'Deutschmeister vs Babbel, Duolingo & Lingoda | Vergleich';
 const description = 'Wie schneidet Deutschmeister im Vergleich ab? Ehrliche Vergleiche mit Babbel, Duolingo und Lingoda — Features, Preise, Sprechtraining. Du entscheidest.';
 const keywords = 'Deutschmeister Vergleich, Babbel Alternative, Duolingo Alternative, Lingoda Alternative, Deutsch lernen Vergleich';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: title,
+  description,
+  url: 'https://deutsch-meister.de/vergleich/',
+  inLanguage: 'de',
+  dateModified: BUILD_DATE,
+  publisher: ORGANIZATION,
+  mainEntity: {
+    '@type': 'ItemList',
+    numberOfItems: competitors.length,
+    itemListElement: competitors.map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: `Deutschmeister vs ${c.displayName}`,
+      url: `https://deutsch-meister.de/vergleich/${c.slug}/`,
+    })),
+  },
+  breadcrumb: {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de/' },
+      { '@type': 'ListItem', position: 2, name: 'Vergleich', item: 'https://deutsch-meister.de/vergleich/' },
+    ],
+  },
+};
 
 const ICON = { babbel: '🌐', duolingo: '🎮', lingoda: '👥' };
 const COLOR = { babbel: 'from-orange-400 to-red-500', duolingo: 'from-green-400 to-emerald-500', lingoda: 'from-blue-400 to-indigo-500' };
 ---
 
-<Layout title={title} description={description} keywords={keywords} canonical="https://deutsch-meister.de/vergleich/" lang="de">
+<Layout title={title} description={description} keywords={keywords} canonical="https://deutsch-meister.de/vergleich/" jsonLd={jsonLd} lang="de">
   <div class="bg-gradient-to-br from-slate-50 via-white to-slate-100">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 pt-12 pb-20">
       <div class="text-center mb-16">

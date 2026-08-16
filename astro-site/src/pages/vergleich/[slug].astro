@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import competitorComparisons from '../../data/competitorComparisons.js';
+import { BUILD_DATE } from '../../lib/siteMeta.js';
 import '../../styles/global.css';
 
 export function getStaticPaths() {
@@ -11,7 +12,11 @@ const { slug } = Astro.params;
 const data = competitorComparisons[slug];
 
 const title = `Deutschmeister vs ${data.displayName} — Vergleich | DeutschMeister`;
-const description = `${data.heroHeadline} Vergleiche Deutschmeister und ${data.displayName}: Features, Preise, Sprechtraining, Prüfungsvorbereitung. Ehrlich und fair.`;
+// Keep under 160 chars — the hero headline varies in length per competitor.
+const descRaw = `${data.heroHeadline} Vergleich: Features, Preise und Sprechtraining von Deutschmeister und ${data.displayName} — ehrlich und fair.`;
+const description = descRaw.length <= 158
+  ? descRaw
+  : `Deutschmeister vs ${data.displayName}: Features, Preise, KI-Sprechtraining und Prüfungsvorbereitung im ehrlichen Vergleich.`;
 const keywords = `Deutschmeister vs ${data.displayName}, ${data.displayName} Alternative, Deutsch lernen Vergleich, ${data.displayName} Erfahrungen`;
 const canonical = `https://deutsch-meister.de/vergleich/${data.slug}/`;
 
@@ -23,7 +28,7 @@ const jsonLd = {
   author: { '@type': 'Organization', name: 'DeutschMeister' },
   publisher: { '@type': 'Organization', name: 'DeutschMeister' },
   datePublished: '2026-05-28',
-  dateModified: '2026-05-28',
+  dateModified: BUILD_DATE,
 };
 
 // ✓ / ✗ / ○ status prefixes → colour + stripped text (matches the SPA's StatusIcon).
