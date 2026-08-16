@@ -174,6 +174,28 @@ export const handler = async (event) => {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'messages payload too large' }) };
     }
 
+    // Grade the transcript stored server-side by save-speaking-message, not the
+    // client-supplied one — a forged payload could otherwise mint arbitrary
+    // scores or inject instructions into the grading prompt. The client
+    // transcript is only a fallback for sessions where saving failed entirely.
+    let transcript = messages;
+    const { data: storedMessages, error: transcriptError } = await supabase
+      .from('speaking_messages')
+      .select('role, content')
+      .eq('session_token', session_token)
+      .eq('user_id', user_id)
+      .order('created_at', { ascending: true })
+      .limit(200);
+    if (transcriptError) {
+      console.error('Error loading stored transcript:', JSON.stringify(transcriptError));
+    }
+    if (storedMessages && storedMessages.length > 0) {
+      transcript = storedMessages;
+      console.log(`Using stored transcript (${storedMessages.length} messages)`);
+    } else {
+      console.warn('No stored transcript for session — falling back to client-supplied messages');
+    }
+
     // Mission sessions carry a mission_id in speaking_sessions; when present we
     // fold the mission's pass_criteria into the evaluation and record pass/fail.
     let missionPassCriteria = null;
@@ -204,8 +226,8 @@ export const handler = async (event) => {
     }
 
     const evaluationPrompt = isPlacement
-      ? buildPlacementPrompt(messages)
-      : buildEvaluationPrompt(level, messages, missionPassCriteria);
+      ? buildPlacementPrompt(transcript)
+      : buildEvaluationPrompt(level, transcript, missionPassCriteria);
 
     async function callClaude(prompt) {
       const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -263,7 +285,7 @@ export const handler = async (event) => {
     // A level-up recommendation needs enough evidence: short sessions with few
     // student turns can score high without demonstrating sustained ability.
     const MIN_USER_TURNS_FOR_LEVEL_UP = 5;
-    const userTurns = messages.filter(m => m.role === 'user').length;
+    const userTurns = transcript.filter(m => m.role === 'user').length;
     if (evaluation.recommendation === 'HÖHER' && userTurns < MIN_USER_TURNS_FOR_LEVEL_UP) {
       console.log(`Downgrading HÖHER to GLEICH: only ${userTurns} user turns`);
       evaluation.recommendation = 'GLEICH';
@@ -294,7 +316,7 @@ export const handler = async (event) => {
         strengths:            evaluation.strengths,
         improvements:         evaluation.improvements,
         recommendation:       evaluation.recommendation,
-        message_count:        messages.length,
+        message_count:        transcript.length,
         created_at:           new Date().toISOString(),
       })
       .select()
@@ -330,6 +352,6 @@ export const handler = async (event) => {
     };
   } catch (error) {
     console.error('evaluate-speaking error:', error.message, error.stack);
-    return { statusCode: 500, headers, body: JSON.stringify({ error: error.message }) };
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Internal error' }) };
   }
 };

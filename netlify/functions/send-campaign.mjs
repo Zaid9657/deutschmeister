@@ -1,7 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
+import { createHmac } from 'crypto';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const UNSUB_SECRET = process.env.UNSUB_SECRET || process.env.CAMPAIGN_SECRET;
+const BASE_URL = 'https://deutsch-meister.de';
 
 let supabase;
 try {
@@ -34,9 +37,22 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function unsubscribeUrl(userId) {
+  const token = createHmac('sha256', UNSUB_SECRET).update(userId).digest('hex');
+  return `${BASE_URL}/unsubscribe?uid=${userId}&token=${token}`;
+}
+
+function unsubscribeFooter(userId) {
+  return `
+<p style="margin:24px 0 0;font-size:12px;color:#94a3b8;text-align:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+  You're receiving this because you signed up at <a href="${BASE_URL}" style="color:#94a3b8;">deutsch-meister.de</a>.<br>
+  <a href="${unsubscribeUrl(userId)}" style="color:#94a3b8;">Unsubscribe from DeutschMeister emails</a>
+</p>`;
+}
+
 async function fetchAllUserEmails() {
   // auth.admin.listUsers paginates — fetch all pages
-  const emails = [];
+  const users = [];
   let page = 1;
   const perPage = 1000;
 
@@ -47,7 +63,7 @@ async function fetchAllUserEmails() {
     for (const user of data.users) {
       const email = user.email?.trim().toLowerCase();
       if (email && !isBlockedEmail(email)) {
-        emails.push(email);
+        users.push({ id: user.id, email });
       }
     }
 
@@ -56,7 +72,26 @@ async function fetchAllUserEmails() {
     page++;
   }
 
-  return emails;
+  if (users.length === 0) return [];
+
+  // Honor opt-outs. profiles.email_daily_sentence currently doubles as the
+  // global email opt-out flag (a dedicated marketing flag is on the roadmap);
+  // if the column doesn't exist yet, log and treat everyone as opted in.
+  const { data: profiles, error: profErr } = await supabase
+    .from('profiles')
+    .select('id, email_daily_sentence')
+    .in('id', users.map((u) => u.id));
+
+  if (profErr) {
+    console.warn('profiles opt-out query error (column may not exist yet):', profErr.message);
+    return users;
+  }
+
+  const optedOut = new Set(
+    (profiles || []).filter((p) => p.email_daily_sentence === false).map((p) => p.id)
+  );
+
+  return users.filter((u) => !optedOut.has(u.id));
 }
 
 async function sendEmail(resendKey, to, subject, htmlBody) {
@@ -127,10 +162,14 @@ export const handler = async (event) => {
     return { statusCode: 400, headers, body: JSON.stringify({ error: 'body is required' }) };
   }
 
+  if (!UNSUB_SECRET) {
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'UNSUB_SECRET / CAMPAIGN_SECRET not set' }) };
+  }
+
   // --- Determine recipient list ---
   let recipients;
   if (testMode) {
-    recipients = [TEST_EMAIL];
+    recipients = [{ id: 'test-user', email: TEST_EMAIL }];
     console.log('Test mode: sending only to', TEST_EMAIL);
   } else {
     try {
@@ -151,9 +190,10 @@ export const handler = async (event) => {
   let failed = 0;
   const errors = [];
 
-  for (const email of recipients) {
+  for (const recipient of recipients) {
+    const { id, email } = recipient;
     try {
-      await sendEmail(resendKey, email, subject.trim(), body.trim());
+      await sendEmail(resendKey, email, subject.trim(), body.trim() + unsubscribeFooter(id));
       sent++;
       console.log(`Sent to ${email} (${sent}/${recipients.length})`);
     } catch (err) {

@@ -4,7 +4,8 @@ import sentences from './data/daily-sentences.json' with { type: 'json' };
 const FROM_ADDRESS   = 'DeutschMeister <zaid@deutsch-meister.de>';
 const DEFAULT_EMAIL  = 'zaid199660@gmail.com';
 const BASE_URL     = 'https://deutsch-meister.de';
-const UNSUB_SECRET = process.env.UNSUB_SECRET || process.env.CAMPAIGN_SECRET || 'changeme';
+const UNSUB_SECRET = process.env.UNSUB_SECRET || process.env.CAMPAIGN_SECRET;
+const CAMPAIGN_SECRET = process.env.CAMPAIGN_SECRET;
 
 function todaysSentence() {
   const now   = new Date();
@@ -98,8 +99,22 @@ export const handler = async (event) => {
   if (!resendKey) {
     return { statusCode: 500, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'RESEND_API_KEY not set' }) };
   }
+  if (!UNSUB_SECRET) {
+    return { statusCode: 500, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'UNSUB_SECRET / CAMPAIGN_SECRET not set' }) };
+  }
 
-  const to = event?.queryStringParameters?.email || DEFAULT_EMAIL;
+  // Without a valid x-campaign-secret header this endpoint only ever sends to
+  // the hardcoded owner address — an ?email= param from an unauthenticated
+  // caller is rejected instead of turning this into an open relay.
+  const requestedEmail = event?.queryStringParameters?.email;
+  const headerSecret = event?.headers?.['x-campaign-secret'];
+  const secretOk = Boolean(CAMPAIGN_SECRET) && headerSecret === CAMPAIGN_SECRET;
+
+  if (requestedEmail && requestedEmail !== DEFAULT_EMAIL && !secretOk) {
+    return { statusCode: 401, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'Unauthorized' }) };
+  }
+
+  const to = requestedEmail || DEFAULT_EMAIL;
 
   const sentence = todaysSentence();
   const html     = buildEmail(sentence);

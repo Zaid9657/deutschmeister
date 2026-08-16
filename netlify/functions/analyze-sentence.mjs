@@ -218,6 +218,6 @@ export const handler = async (event) => {
     };
   } catch (error) {
     console.error('analyze-sentence error:', error.message, error.stack);
-    return { statusCode: 500, headers, body: JSON.stringify({ error: error.message }) };
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Internal error' }) };
   }
 };

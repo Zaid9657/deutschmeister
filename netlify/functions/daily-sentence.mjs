@@ -11,8 +11,10 @@ const FROM_ADDRESS = 'DeutschMeister <zaid@deutsch-meister.de>';
 const BASE_URL = 'https://deutsch-meister.de';
 const TEST_EMAIL = 'zaid199660@gmail.com';
 
-// Secret used to sign unsubscribe tokens — keep in env vars
-const UNSUB_SECRET = process.env.UNSUB_SECRET || process.env.CAMPAIGN_SECRET || 'changeme';
+// Secret used to sign unsubscribe tokens — must be set in env vars.
+// No fallback: the handler refuses to run without it (fail closed).
+const UNSUB_SECRET = process.env.UNSUB_SECRET || process.env.CAMPAIGN_SECRET;
+const CAMPAIGN_SECRET = process.env.CAMPAIGN_SECRET;
 
 let supabase;
 try {
@@ -197,17 +199,27 @@ const innerHandler = async (event) => {
   const resendKey = process.env.RESEND_API_KEY;
   if (!resendKey)    return { statusCode: 500, body: 'RESEND_API_KEY not set' };
   if (!supabaseKey)  return { statusCode: 500, body: 'SUPABASE_SERVICE_ROLE_KEY not set' };
+  if (!UNSUB_SECRET) return { statusCode: 500, body: 'UNSUB_SECRET / CAMPAIGN_SECRET not set' };
 
-  // Mode detection:
-  // - Scheduler invocations and unguarded HTTP calls both run in PRODUCTION mode (send to all users).
-  // - Pass ?test=true or {"test":true} in the body to send only to TEST_EMAIL.
-  // - Pass ?secret=<CAMPAIGN_SECRET> to also force production mode from an HTTP trigger (optional, kept for compatibility).
+  // Mode + auth detection:
+  // - Scheduler invocations carry {"next_run": ...} in the body → LIVE send.
+  // - HTTP calls need ?secret=<CAMPAIGN_SECRET> to run a LIVE send.
+  // - ?test=true (or {"test":true}) sends only to the hardcoded TEST_EMAIL and
+  //   is allowed without the secret (bounded, owner-only).
+  // - Anything else is rejected — the /api/daily-sentence redirect is public.
   const qs = event.queryStringParameters || {};
 
   let bodyPayload = {};
   try { bodyPayload = JSON.parse(event.body || '{}'); } catch { /* ignore */ }
 
   const isTest = qs.test === 'true' || bodyPayload.test === true;
+  const isScheduled = typeof bodyPayload.next_run === 'string';
+  const secretOk = Boolean(CAMPAIGN_SECRET) && qs.secret === CAMPAIGN_SECRET;
+
+  if (!isTest && !isScheduled && !secretOk) {
+    console.warn('Rejected unauthenticated live-send attempt');
+    return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
+  }
 
   const sentence = todaysSentence();
   console.log(`Daily sentence [${isTest ? 'TEST MODE' : 'LIVE'}]: "${sentence.sentence_de}" [${sentence.level}]`);

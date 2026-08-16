@@ -3,7 +3,9 @@ import { createHmac, timingSafeEqual } from 'crypto';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const UNSUB_SECRET = process.env.UNSUB_SECRET || process.env.CAMPAIGN_SECRET || 'changeme';
+// Fail closed: without the secret, no token can be verified (rather than
+// silently verifying against a well-known 'changeme' fallback).
+const UNSUB_SECRET = process.env.UNSUB_SECRET || process.env.CAMPAIGN_SECRET;
 
 let supabase;
 try {
@@ -13,7 +15,7 @@ try {
 }
 
 function verifyToken(userId, token) {
-  if (!userId || !token) return false;
+  if (!UNSUB_SECRET || !userId || !token) return false;
   const expected = createHmac('sha256', UNSUB_SECRET).update(userId).digest('hex');
   try {
     return timingSafeEqual(Buffer.from(token, 'hex'), Buffer.from(expected, 'hex'));
