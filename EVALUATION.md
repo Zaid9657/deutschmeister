@@ -243,6 +243,20 @@ mark Netlify secrets as secret values · enable Supabase leaked-password protect
 
 ---
 
+## Webhook deep-dive (2026-08-16) — every integration verified against production
+
+A dedicated pass over every webhook path: live DB data, actual trigger definitions,
+wrapper library source, and handler code — not assumptions.
+
+| # | Finding | Status |
+|---|---|---|
+| W-01 | **Welcome email never sent — the webhook didn't exist.** `send-welcome-email.mjs` shipped at launch but nothing called it: no database webhook, no `pg_net`, and the only `auth.users` trigger just creates the profile row. 1,449 signups, zero welcome emails. `WEBHOOK_SECRET` wasn't even set in Netlify (the function 500s without it). | **Fixed live**: `pg_net` enabled + `AFTER INSERT` trigger on `auth.users` POSTs the Supabase-envelope payload with the Bearer secret (created in Netlify env). Async, fail-open — a down email service can't block signups. Recorded in `migrations/2026-08-16-welcome-email-webhook.sql`. Verify: `SELECT status_code FROM net._http_response ORDER BY id DESC LIMIT 5;` after the next signup (≈172/mo) |
+| W-02 | **Payment failures outnumber successes 35:11 and nothing happened.** `webhook_logs` shows the Lemon Squeezy webhook itself is healthy (159 events, 0 unprocessed, HMAC verified), but `subscription_payment_failed` = 35 events across 9 subscriptions and `handlePaymentFailed` only inserted a `payment_failures` row — no dunning email, no owner alert. Silent revenue leak. | **Fixed in this PR**: `handlePaymentFailed` now emails the customer (card-update link from the payload's signed `urls.update_payment_method`), rate-limited to the first failure per subscription per 7 days via `payment_failures.failed_at` recency, plus a one-line owner alert. Fail-open: email errors log but the webhook still 200s (otherwise Lemon Squeezy retries and double-logs). Fixture-tested: send / rate-limit / Resend-down paths |
+| W-03 | **Daily-sentence scheduler gate — verified at wrapper source.** The `next_run` body marker the auth gate keys on is Netlify's own scheduled-invocation payload; `@netlify/functions`' `schedule()` is a pure pass-through, so scheduled runs reach the handler verbatim. | Sound. First live scheduled run under the gate: next 07:00 UTC — a 401 there would appear in Netlify function logs |
+| W-04 | Healthy as found: Lemon Squeezy HMAC verification, created/updated/expired/cancelled handlers, `/unsubscribe` HMAC flow, IndexNow post-deploy ping (which only now actually fires — `INDEXNOW_KEY` was missing from the env and was created this round). | No change needed |
+
+---
+
 ## Roadmap — what remains after the remediation round
 
 Items 1–3 of the original ranking (error states, brand/claims unification, lemon.js
