@@ -44,15 +44,13 @@ findings → 0**.
 1. **Rotate the service-role key** (above) — the only urgent item.
 2. **Review the draft `/privacy/` and `/impressum/` pages**, fill in the Impressum address
    placeholders (§5 DDG), then remove `noindex` and the draft banners.
-3. **Decide what to do about `/payment/:planType`** — see F-01 below. It is a live fake
-   checkout that collects card details.
-4. **Watch CSP reports** for a couple of weeks, then promote
+3. **Watch CSP reports** for a couple of weeks, then promote
    `Content-Security-Policy-Report-Only` to enforcing in `netlify.toml`.
-5. **Mark secrets as secret** in Netlify: `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`,
+4. **Mark secrets as secret** in Netlify: `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`,
    `RESEND_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `LEMONSQUEEZY_WEBHOOK_SECRET`,
    `GEMINI_API_KEY`, `UNSUB_SECRET` are all stored unmasked (`is_secret: false`).
-6. **Enable leaked-password protection** (Supabase Auth → Passwords) — currently off.
-7. Re-test the flows in `migrations/README.md` (signup, purchase, anonymous grammar,
+5. **Enable leaked-password protection** (Supabase Auth → Passwords) — currently off.
+6. Re-test the flows in `migrations/README.md` (signup, purchase, anonymous grammar,
    a1.1 reading/listening, X-Ray, speaking).
 
 ---
@@ -139,7 +137,7 @@ Status: ✅ fixed in this PR · 🔶 migration/manual step provided · 🗺 road
 
 | ID | Sev | Issue | Where | Status |
 |---|---|---|---|---|
-| F-01 | 🔴 | **`/payment/:planType` is a live fake checkout.** It collects card number, expiry and CVC, validates them client-side only, waits 1500 ms to "simulate payment processing", then grants a real subscription — no money is taken. Nothing in the UI links to it (the real flow opens Lemon Squeezy), but the route is served by `netlify.toml` and `App.jsx`, so anyone reaching the URL got Pro free. It also collects card data into a form that discards it. | `src/pages/PaymentPage.jsx`, `netlify.toml` | ⚠️ **grant path is now dead** (RLS blocks the write), but the card form is still live — **owner decision needed: delete the route or point it at Lemon Squeezy** |
+| F-01 | 🔴 | **`/payment/:planType` was a live fake checkout.** It collected card number, expiry and CVC, validated them client-side only, waited 1500 ms to "simulate payment processing", then granted a real subscription — no money taken. Nothing in the UI linked to it (the real flow opens Lemon Squeezy), but the route was served by `netlify.toml` and `App.jsx`, so anyone reaching the URL got Pro free. | `src/pages/PaymentPage.jsx`, `netlify.toml`, `App.jsx` | ✅ removed (page, route, redirect rule) along with the now-orphaned client-side `createSubscription()` grant path |
 | F-02 | 🟡 | `VITE_POSTHOG_HOST` pointed at a dashboard URL, not the ingest host, so product analytics were silently not recording | Netlify env vars | ✅ corrected |
 | F-03 | 🟡 | `CAMPAIGN_SECRET` was never set, so `/api/send-campaign` always returned 500 | Netlify env vars | ✅ created |
 

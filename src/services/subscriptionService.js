@@ -85,49 +85,13 @@ export const startFreeTrial = async (userId) => {
   return insertData?.[0] || null;
 };
 
-// Create a new subscription
-export const createSubscription = async (userId, planType, pricePaid) => {
-  const now = new Date();
-  const subscriptionEnd = new Date(now);
-
-  if (planType === 'monthly') {
-    subscriptionEnd.setMonth(subscriptionEnd.getMonth() + 1);
-  } else if (planType === 'yearly') {
-    subscriptionEnd.setFullYear(subscriptionEnd.getFullYear() + 1);
-  } else if (planType === 'quarterly') {
-    subscriptionEnd.setMonth(subscriptionEnd.getMonth() + 3);
-  }
-
-  // Create subscription record
-  const { data: subData, error: subError } = await supabase
-    .from('subscriptions')
-    .insert({
-      user_id: userId,
-      plan_type: planType,
-      status: 'active',
-      subscription_start: now.toISOString(),
-      subscription_end: subscriptionEnd.toISOString(),
-      price_paid: pricePaid,
-    })
-    .select()
-    .single();
-
-  if (subError) {
-    console.error('Error creating subscription:', subError);
-    return null;
-  }
-
-  // Update profile to mark as subscribed
-  await supabase
-    .from('profiles')
-    .upsert({
-      id: userId,
-      is_subscribed: true,
-      updated_at: now.toISOString(),
-    });
-
-  return subData;
-};
+// NOTE: subscriptions are created SERVER-SIDE ONLY, by the Lemon Squeezy
+// webhook (netlify/functions/lemonsqueezy-webhook.mjs) using the service role.
+// The former client-side createSubscription() was removed: it wrote the
+// subscriptions row and profiles.is_subscribed directly from the browser,
+// which RLS now blocks. Anything that needs to grant access must go through
+// the webhook, or /.netlify/functions/verify-subscription to recover a missed
+// one.
 
 // Check trial status from profile data
 export const checkTrialStatus = (profile) => {

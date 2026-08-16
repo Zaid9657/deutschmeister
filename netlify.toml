@@ -224,10 +224,6 @@
   from = "/subscription/*"
   to = "/app.html"
   status = 200
-[[redirects]]
-  from = "/payment/*"
-  to = "/app.html"
-  status = 200
 # /vergleich (hub), /vergleich/babbel|duolingo|lingoda and /leitfaden/telc-b1 are
 # now static Astro files in dist/ — Netlify serves those real files before these
 # non-forced rewrites. These remain only as the SPA fallback for any OTHER

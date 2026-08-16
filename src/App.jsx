@@ -31,7 +31,6 @@ const ReadingLessonPage = lazy(() => import('./pages/ReadingLessonPage'));
 const SubscriptionPage = lazy(() => import('./pages/SubscriptionPage'));
 const PricingPage = lazy(() => import('./pages/PricingPage'));
 const SubscriptionSuccessPage = lazy(() => import('./pages/SubscriptionSuccessPage'));
-const PaymentPage = lazy(() => import('./pages/PaymentPage'));
 const ExercisePlayer = lazy(() => import('./pages/Listening/ExercisePlayer'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 const GrammarSectionPage = lazy(() => import('./pages/GrammarSectionPage'));
@@ -135,18 +134,6 @@ function App() {
                           <EmailVerificationGate>
                             <OnboardingGate>
                               <SubscriptionSuccessPage />
-                            </OnboardingGate>
-                          </EmailVerificationGate>
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route
-                      path="/payment/:planType"
-                      element={
-                        <ProtectedRoute>
-                          <EmailVerificationGate>
-                            <OnboardingGate>
-                              <PaymentPage />
                             </OnboardingGate>
                           </EmailVerificationGate>
                         </ProtectedRoute>
