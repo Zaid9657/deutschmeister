@@ -41,9 +41,10 @@ There are no tests yet. CI (`.github/workflows/ci.yml`) runs lint + duplicate ch
 - **JS only** (no TypeScript; `Layout.astro` frontmatter uses TS-syntax Props interface —
   that's Astro-normal). ESLint stylistic rules are off; match surrounding style.
 - **Levels are lowercase in URLs and code** (`a1.1`…`b2.2`), but **UPPERCASE in the DB**
-  (`sub_level = 'A1.1'`) and in Supabase Storage folders (`audio/listening/A1.1/…`).
+  (`sub_level = 'A1.1'`) and in Supabase Storage folders (`audio/listening/A1.1/…`) —
+  EXCEPT `reading_lessons.level`, which a check constraint forces to **lowercase**.
   Normalize at boundaries; queries use `ilike`/`lower()`. Mixed-case bugs are a recurring
-  source of empty pages.
+  source of empty pages and failed inserts.
 - **Astro URLs always end in `/`** (`trailingSlash: 'always'`); SPA routes never do.
   Internal links must match or they 301-hop.
 - **Duplicated on purpose** (until refactor): `competitorComparisons.js` (SPA+Astro,

@@ -31,11 +31,14 @@ for (const l of lessons) {
 
 let inserted = 0;
 let skipped = 0;
-for (const l of lessons) {
+for (const raw of lessons) {
+  // reading_lessons stores LOWERCASE levels (check constraint) — unlike
+  // listening/grammar, which store uppercase. Normalize at the boundary.
+  const l = { ...raw, level: raw.level.toLowerCase() };
   const { data: existing } = await supabase
     .from('reading_lessons')
     .select('id')
-    .eq('level', l.level)
+    .ilike('level', l.level)
     .eq('title_de', l.title_de)
     .maybeSingle();
   if (existing) { skipped++; continue; }
