@@ -31,11 +31,23 @@ function MultipleChoice({ exercise, onAnswer, answered }) {
         }
 
         return (
-          <button key={opt} onClick={() => choose(opt)} className={cls} disabled={answered}>
+          <button
+            key={opt}
+            onClick={() => choose(opt)}
+            className={cls}
+            disabled={answered}
+            aria-pressed={isSelected}
+          >
             <span className="flex items-center gap-3">
-              {answered && isCorrect && <span className="text-emerald-500 font-bold">{ICONS.correct}</span>}
-              {answered && isSelected && !isCorrect && <span className="text-red-500 font-bold">{ICONS.wrong}</span>}
+              {answered && isCorrect && (
+                <span className="text-emerald-500 font-bold" aria-hidden="true">{ICONS.correct}</span>
+              )}
+              {answered && isSelected && !isCorrect && (
+                <span className="text-red-500 font-bold" aria-hidden="true">{ICONS.wrong}</span>
+              )}
               {opt}
+              {answered && isCorrect && <span className="sr-only">(correct answer)</span>}
+              {answered && isSelected && !isCorrect && <span className="sr-only">(your answer, incorrect)</span>}
             </span>
           </button>
         );
@@ -180,12 +192,20 @@ export default function ExercisePlayer({ exercises }) {
         <FillBlank exercise={exercise} onAnswer={handleAnswer} answered={answered} />
       )}
 
-      {/* Explanation */}
-      {showExplanation && exercise.explanation_en && (
-        <div className="mt-4 p-4 rounded-xl bg-blue-50 border border-blue-200 text-sm text-blue-800">
-          <strong>Explanation:</strong> {exercise.explanation_en}
-        </div>
-      )}
+      {/* Feedback — aria-live so screen readers hear the result, which is
+          otherwise conveyed by colour alone */}
+      <div aria-live="polite">
+        {answered && (
+          <p className="sr-only">
+            {results[results.length - 1] ? 'Correct.' : `Incorrect. The correct answer is ${exercise.correct_answer}.`}
+          </p>
+        )}
+        {showExplanation && exercise.explanation_en && (
+          <div className="mt-4 p-4 rounded-xl bg-blue-50 border border-blue-200 text-sm text-blue-800">
+            <strong>Explanation:</strong> {exercise.explanation_en}
+          </div>
+        )}
+      </div>
 
       {/* Next */}
       {answered && (

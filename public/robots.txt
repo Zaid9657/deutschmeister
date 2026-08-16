@@ -31,5 +31,7 @@ Allow: /
 Disallow: /auth/
 Disallow: /admin/
 Disallow: /api/
+# SPA shell — duplicate of the prerendered routes, never index directly
+Disallow: /app.html
 
 Sitemap: https://deutsch-meister.de/sitemap.xml

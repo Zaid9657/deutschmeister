@@ -37,7 +37,7 @@ const jsonLd = {
     <nav class="flex items-center gap-2 text-sm text-slate-500 mb-8" aria-label="Breadcrumb">
       <a href="https://deutsch-meister.de/" class="hover:text-slate-700 transition-colors">Home</a>
       <span>/</span>
-      <a href="/grammar" class="hover:text-slate-700 transition-colors">Grammatik</a>
+      <a href="/grammar/" class="hover:text-slate-700 transition-colors">Grammatik</a>
       <span>/</span>
       <span class="text-slate-800 font-medium">{meta.label}</span>
     </nav>
@@ -62,7 +62,7 @@ const jsonLd = {
     <div class="space-y-3">
       {topics.map((topic, i) => (
         <a
-          href={`/grammar/${level}/${topic.slug}`}
+          href={`/grammar/${level}/${topic.slug}/`}
           class={`flex items-center gap-4 p-5 rounded-xl border ${meta.border} bg-white hover:shadow-md hover:-translate-y-0.5 transition-all group`}
         >
           <span class={`w-8 h-8 rounded-lg ${meta.bg} ${meta.badge} flex items-center justify-center text-sm font-bold flex-shrink-0`}>
@@ -92,7 +92,7 @@ const jsonLd = {
       <div class="flex flex-wrap gap-2">
         {SUB_LEVELS.filter(l => l !== level).map((l) => (
           <a
-            href={`/grammar/${l}`}
+            href={`/grammar/${l}/`}
             class={`px-3 py-1.5 rounded-full text-sm font-semibold ${LEVEL_META[l].badge} hover:scale-105 transition-transform`}
           >
             {LEVEL_META[l].label}

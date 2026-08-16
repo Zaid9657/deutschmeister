@@ -7,16 +7,18 @@ export interface Props {
   jsonLd?: object | object[];
   noindex?: boolean;
   keywords?: string;
+  lang?: string;
 }
 
 const {
   title,
   description,
   canonical,
-  ogImage = 'https://deutsch-meister.de/og-default.png',
+  ogImage = 'https://deutsch-meister.de/og-image.png',
   jsonLd,
   noindex = false,
   keywords,
+  lang = 'en',
 } = Astro.props;
 
 const canonicalUrl = canonical ?? Astro.url.href;
@@ -24,12 +26,12 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Analytics is loaded only after cookie consent — see /consent.js -->
     <script src="/consent.js" defer></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <!-- Primary Meta -->
@@ -37,9 +39,8 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     <meta name="description" content={description} />
     {keywords && <meta name="keywords" content={keywords} />}
     <link rel="canonical" href={canonicalUrl} />
-    <link rel="alternate" hreflang="en" href={canonicalUrl} />
-    <link rel="alternate" hreflang="x-default" href={canonicalUrl} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="theme-color" content="#0f172a" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -47,9 +48,11 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:site_name" content="DeutschMeister" />
-    <meta property="og:locale" content="en" />
-    <meta property="og:locale:alternate" content="de" />
+    <meta property="og:locale" content={lang === 'de' ? 'de_DE' : 'en_US'} />
+    <meta property="og:locale:alternate" content={lang === 'de' ? 'en_US' : 'de_DE'} />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -59,22 +62,44 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/logo.png" />
 
-    <!-- Fonts -->
+    <!-- Fonts: preload pattern (non-render-blocking), mirrors the SPA shell -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
+      rel="preload"
+      as="style"
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Nunito+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
-      rel="stylesheet"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Nunito+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
 
     <!-- JSON-LD Structured Data -->
     {jsonLdArray.map((schema) => (
       <script type="application/ld+json" set:html={JSON.stringify(schema)} />
     ))}
+
+    <style is:global>
+      :focus-visible {
+        outline: 2px solid #7c3aed;
+        outline-offset: 2px;
+      }
+    </style>
   </head>
 
   <body class="font-body bg-slate-50 text-slate-800 antialiased">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[60] focus:bg-white focus:px-4 focus:py-2 focus:rounded-lg focus:shadow"
+    >
+      Skip to content
+    </a>
     <!-- Navbar -->
     <nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -91,7 +116,7 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 
           <!-- Desktop nav -->
           <div class="hidden md:flex items-center gap-1">
-            <a href="/grammar" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+            <a href="/grammar/" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
               Grammar
             </a>
             <a href="https://deutsch-meister.de/video-library" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
@@ -122,21 +147,38 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
             </a>
           </div>
 
-          <!-- Mobile: just login + signup -->
+          <!-- Mobile: CTA + full menu (pure HTML disclosure, no client JS) -->
           <div class="md:hidden flex items-center gap-2">
-            <a href="https://deutsch-meister.de/login" class="px-3 py-1.5 text-sm font-medium text-slate-600">
-              Log in
-            </a>
             <a href="https://deutsch-meister.de/signup" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-rose-500 text-white text-sm font-semibold">
               Start
             </a>
+            <details class="relative">
+              <summary
+                class="list-none cursor-pointer p-2 rounded-lg hover:bg-slate-100 flex items-center [&::-webkit-details-marker]:hidden"
+                aria-label="Menu"
+              >
+                <svg class="w-6 h-6 text-slate-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </summary>
+              <div class="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl border border-slate-200 shadow-lg py-2 z-50">
+                <a href="/grammar/" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">Grammar</a>
+                <a href="https://deutsch-meister.de/video-library" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">Videos</a>
+                <a href="https://deutsch-meister.de/podcasts" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">Podcasts</a>
+                <a href="https://deutsch-meister.de/analyze" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">X-Ray</a>
+                <a href="https://deutsch-meister.de/level-test" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">Level Test</a>
+                <div class="my-2 border-t border-slate-100"></div>
+                <a href="https://deutsch-meister.de/login" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">Log in</a>
+                <a href="https://deutsch-meister.de/signup" class="block px-4 py-2 text-sm font-semibold text-rose-600 hover:bg-slate-50">Get started</a>
+              </div>
+            </details>
           </div>
         </div>
       </div>
     </nav>
 
     <!-- Page content -->
-    <main class="pt-16">
+    <main id="main" class="pt-16">
       <slot />
     </main>
 
@@ -162,7 +204,7 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
               <li><a href="/grammar/a1.2/" class="hover:text-white transition-colors">A1.2 Grammar</a></li>
               <li><a href="/grammar/a2.1/" class="hover:text-white transition-colors">A2.1 Grammar</a></li>
               <li><a href="/grammar/b1.1/" class="hover:text-white transition-colors">B1.1 Grammar</a></li>
-              <li><a href="/grammar" class="hover:text-white transition-colors">All levels →</a></li>
+              <li><a href="/grammar/" class="hover:text-white transition-colors">All levels →</a></li>
             </ul>
           </div>
           <div>
@@ -176,6 +218,11 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
           </div>
         </div>
         <div class="border-t border-slate-800 pt-6 text-center text-xs">
+          <p class="mb-2">
+            <a href="/privacy/" class="hover:text-white transition-colors">Privacy Policy</a>
+            <span class="mx-2">·</span>
+            <a href="/impressum/" class="hover:text-white transition-colors">Impressum</a>
+          </p>
           © {new Date().getFullYear()} DeutschMeister · All rights reserved
         </div>
       </div>
