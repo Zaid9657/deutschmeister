@@ -28,7 +28,7 @@ if (!cachePath || !outDir) {
 }
 mkdirSync(outDir, { recursive: true });
 
-const TOKEN = /[A-ZÄÖÜ][A-ZÄÖÜ'’\-]*[A-ZÄÖÜ]/gu;
+const TOKEN = /[A-ZÄÖÜ][A-ZÄÖÜ'’-]*[A-ZÄÖÜ]/gu;
 const ROMAN = new Set(['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII']);
 const CAPS_OVERRIDE = new Map([
   ['BLOSS', 'bloß'],
@@ -61,11 +61,11 @@ const DETERMINERS = new Set(
 
 let CASE_FREQ = new Map(); // wordform → count (only non-shouted forms)
 function buildCorpus(cache) {
-  const WORD = /[\p{L}][\p{L}'’\-]*[\p{L}]/gu;
+  const WORD = /[\p{L}][\p{L}'’-]*[\p{L}]/gu;
   const count = (s) => {
     for (const m of String(s).matchAll(WORD)) {
       const w = m[0];
-      if (/^[A-ZÄÖÜ'’\-]+$/u.test(w)) continue; // skip shouted forms themselves
+      if (/^[A-ZÄÖÜ'’-]+$/u.test(w)) continue; // skip shouted forms themselves
       CASE_FREQ.set(w, (CASE_FREQ.get(w) ?? 0) + 1);
     }
   };
@@ -86,7 +86,7 @@ function chooseCasing(tok, before) {
   const fTitle = CASE_FREQ.get(title) ?? 0;
   if (fLower || fTitle) return fTitle > fLower ? title : lower;
   // Unseen word: a determiner immediately before marks a German noun.
-  const prevWord = (before.match(/([\p{L}'’\-]+)[^\S\n]+$/u) || [])[1];
+  const prevWord = (before.match(/([\p{L}'’-]+)[^\S\n]+$/u) || [])[1];
   if (prevWord && DETERMINERS.has(prevWord.toLowerCase())) return title;
   return lower;
 }
