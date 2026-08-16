@@ -1,0 +1,536 @@
+[
+  {
+    "level": "A2.1",
+    "title_de": "Ein Umzug nach Hamburg",
+    "title_en": "A Move to Hamburg",
+    "topic": "Moving House",
+    "content_de": "Familie Weber hat zehn Jahre in Stuttgart gewohnt. Im März hat Frau Weber eine neue Stelle bei einer Reederei in Hamburg bekommen. Deshalb ist die Familie im Sommer nach Norddeutschland umgezogen.\n\nDer Umzug hat viel Arbeit gemacht. Zuerst haben die Webers eine Wohnung gesucht. Das war nicht leicht, denn in Hamburg sind die Mieten hoch. Nach sechs Wochen haben sie eine helle Dreizimmerwohnung im Stadtteil Eimsbüttel gefunden. Die Wohnung liegt im dritten Stock, und es gibt keinen Aufzug.\n\nDann haben alle geholfen: Herr Weber hat fünfzig Kartons gepackt, die Kinder haben ihre Bücher und Spielsachen eingepackt, und die Großeltern haben auf den Hund aufgepasst. Eine Umzugsfirma hat die Möbel getragen. Am Umzugstag ist der Lastwagen schon um sieben Uhr losgefahren, und die Familie ist mit dem Auto hinterhergefahren.\n\nIn der neuen Wohnung hat Frau Weber die Küche eingeräumt, und Herr Weber hat die Lampen aufgehängt. Die Nachbarn waren sehr freundlich. Frau Schmidt aus dem zweiten Stock hat der Familie einen Kuchen geschenkt und gesagt: „Kommen Sie einfach vorbei, wenn Sie Hilfe brauchen!“\n\nNach dem Umzug hat die Familie noch viel erledigt. Sie haben sich beim Bürgeramt angemeldet – das muss man in Deutschland innerhalb von zwei Wochen machen. Die Kinder haben eine neue Schule gefunden, und Herr Weber hat einen Job in einem Café gesucht. Nach einem Monat hat sich die Familie schon zu Hause gefühlt. Nur der Hund vermisst den alten Garten.",
+    "content_en": "The Weber family lived in Stuttgart for ten years. In March, Mrs. Weber got a new job at a shipping company in Hamburg. That is why the family moved to northern Germany in the summer.\n\nThe move was a lot of work. First, the Webers looked for an apartment. That was not easy, because rents in Hamburg are high. After six weeks they found a bright three-room apartment in the Eimsbüttel district. The apartment is on the third floor, and there is no elevator.\n\nThen everyone helped: Mr. Weber packed fifty boxes, the children packed up their books and toys, and the grandparents looked after the dog. A moving company carried the furniture. On moving day, the truck set off at seven o'clock, and the family drove behind it in the car.\n\nIn the new apartment, Mrs. Weber put things away in the kitchen, and Mr. Weber hung up the lamps. The neighbors were very friendly. Mrs. Schmidt from the second floor gave the family a cake and said: \"Just come by if you need help!\"\n\nAfter the move, the family still had a lot to take care of. They registered at the citizens' office – in Germany you have to do that within two weeks. The children found a new school, and Mr. Weber looked for a job in a café. After a month, the family already felt at home. Only the dog misses the old garden.",
+    "key_vocabulary": [
+      {
+        "de": "der Umzug, ¨-e",
+        "en": "move, relocation"
+      },
+      {
+        "de": "umziehen",
+        "en": "to move (house)"
+      },
+      {
+        "de": "die Stelle, -n",
+        "en": "job, position"
+      },
+      {
+        "de": "die Miete, -n",
+        "en": "rent"
+      },
+      {
+        "de": "der Stadtteil, -e",
+        "en": "district, part of town"
+      },
+      {
+        "de": "der Aufzug, ¨-e",
+        "en": "elevator"
+      },
+      {
+        "de": "der Karton, -s",
+        "en": "cardboard box"
+      },
+      {
+        "de": "einpacken",
+        "en": "to pack (up)"
+      },
+      {
+        "de": "aufpassen (auf + Akk.)",
+        "en": "to look after, keep an eye on"
+      },
+      {
+        "de": "der Lastwagen, -",
+        "en": "truck"
+      },
+      {
+        "de": "einräumen",
+        "en": "to put away, unpack (into cupboards)"
+      },
+      {
+        "de": "der Nachbar, -n",
+        "en": "neighbor"
+      },
+      {
+        "de": "sich anmelden",
+        "en": "to register"
+      },
+      {
+        "de": "das Bürgeramt, ¨-er",
+        "en": "citizens' registration office"
+      }
+    ],
+    "questions": [
+      {
+        "question_de": "Warum ist Familie Weber nach Hamburg umgezogen?",
+        "question_en": "Why did the Weber family move to Hamburg?",
+        "answer_de": "Frau Weber hat eine neue Stelle bei einer Reederei in Hamburg bekommen, deshalb ist die Familie umgezogen.",
+        "answer_en": "Mrs. Weber got a new job at a shipping company in Hamburg, so the family moved."
+      },
+      {
+        "question_de": "Warum war die Wohnungssuche nicht leicht?",
+        "question_en": "Why was the apartment search not easy?",
+        "answer_de": "Die Wohnungssuche war nicht leicht, denn in Hamburg sind die Mieten hoch.",
+        "answer_en": "The apartment search was not easy, because rents in Hamburg are high."
+      },
+      {
+        "question_de": "Was haben die Großeltern beim Umzug gemacht?",
+        "question_en": "What did the grandparents do during the move?",
+        "answer_de": "Die Großeltern haben auf den Hund aufgepasst.",
+        "answer_en": "The grandparents looked after the dog."
+      },
+      {
+        "question_de": "Was hat Frau Schmidt der Familie geschenkt?",
+        "question_en": "What did Mrs. Schmidt give the family?",
+        "answer_de": "Frau Schmidt hat der Familie einen Kuchen geschenkt.",
+        "answer_en": "Mrs. Schmidt gave the family a cake."
+      },
+      {
+        "question_de": "Was muss man in Deutschland nach einem Umzug innerhalb von zwei Wochen machen?",
+        "question_en": "What do you have to do in Germany within two weeks after a move?",
+        "answer_de": "Man muss sich beim Bürgeramt anmelden.",
+        "answer_en": "You have to register at the citizens' office."
+      }
+    ],
+    "word_count": 233,
+    "difficulty": 1,
+    "estimated_reading_time": 4,
+    "order_index": 6
+  },
+  {
+    "level": "A2.1",
+    "title_de": "Der Sportverein",
+    "title_en": "The Sports Club",
+    "topic": "Sports & Clubs",
+    "content_de": "In Deutschland gibt es mehr als 86.000 Sportvereine mit über 27 Millionen Mitgliedern. Fast jedes Dorf hat einen Verein. Dort treiben die Menschen Sport, aber sie treffen auch Freunde und feiern Feste zusammen.\n\nLena ist vor einem Jahr aus Spanien nach Köln gekommen. Am Anfang hat sie niemanden gekannt. Eine Kollegin hat ihr einen guten Tipp gegeben: „Melde dich in einem Sportverein an! Dort findest du schnell Freunde.“ Lena hat im Internet gesucht und einen Volleyballverein in ihrem Stadtteil gefunden.\n\nZuerst hat sie an einem Probetraining teilgenommen. Das ist bei fast allen Vereinen kostenlos. Das Training hat ihr sofort gefallen. Danach hat sie ein Formular ausgefüllt und ist Mitglied geworden. Der Beitrag kostet nur zwölf Euro im Monat – Sport im Verein ist in Deutschland ziemlich günstig.\n\nJetzt trainiert Lena zweimal pro Woche, dienstags und donnerstags von 19 bis 21 Uhr. Am Wochenende spielt ihre Mannschaft manchmal gegen Teams aus anderen Städten. Nach dem Training gehen die Spielerinnen oft noch zusammen in eine Kneipe. Im Sommer hat der Verein ein großes Grillfest gemacht, und im Dezember hat Lena bei der Weihnachtsfeier geholfen.\n\nIm Verein ist vieles ehrenamtlich: Die Trainerin bekommt kein Geld für ihre Arbeit, und die Mitglieder helfen bei den Festen mit. Lena sagt: „Der Verein ist wie eine zweite Familie für mich. Mein Deutsch ist auch viel besser geworden.“ Ihr Rat für alle neuen Leute in Deutschland: Probieren Sie es aus und machen Sie mit!",
+    "content_en": "In Germany there are more than 86,000 sports clubs with over 27 million members. Almost every village has a club. People do sports there, but they also meet friends and celebrate festivals together.\n\nLena came to Cologne from Spain a year ago. At the beginning she did not know anyone. A colleague gave her a good tip: \"Sign up at a sports club! You'll find friends there quickly.\" Lena searched on the internet and found a volleyball club in her part of town.\n\nFirst she took part in a trial training session. That is free at almost all clubs. She immediately liked the training. Afterwards she filled out a form and became a member. The fee costs only twelve euros a month – club sport is quite inexpensive in Germany.\n\nNow Lena trains twice a week, on Tuesdays and Thursdays from 7 to 9 p.m. On weekends her team sometimes plays against teams from other cities. After training, the players often go to a pub together. In the summer the club had a big barbecue party, and in December Lena helped at the Christmas party.\n\nA lot of the club's work is voluntary: the coach gets no money for her work, and the members help out at the festivals. Lena says: \"The club is like a second family for me. My German has also become much better.\" Her advice for all newcomers in Germany: try it out and join in!",
+    "key_vocabulary": [
+      {
+        "de": "der Verein, -e",
+        "en": "club, association"
+      },
+      {
+        "de": "das Mitglied, -er",
+        "en": "member"
+      },
+      {
+        "de": "Sport treiben",
+        "en": "to do sports"
+      },
+      {
+        "de": "der Tipp, -s",
+        "en": "tip, piece of advice"
+      },
+      {
+        "de": "sich anmelden",
+        "en": "to sign up, register"
+      },
+      {
+        "de": "das Probetraining, -s",
+        "en": "trial training session"
+      },
+      {
+        "de": "teilnehmen (an + Dat.)",
+        "en": "to take part (in)"
+      },
+      {
+        "de": "kostenlos",
+        "en": "free of charge"
+      },
+      {
+        "de": "das Formular, -e",
+        "en": "form"
+      },
+      {
+        "de": "ausfüllen",
+        "en": "to fill out"
+      },
+      {
+        "de": "der Beitrag, ¨-e",
+        "en": "(membership) fee"
+      },
+      {
+        "de": "die Mannschaft, -en",
+        "en": "team"
+      },
+      {
+        "de": "die Kneipe, -n",
+        "en": "pub"
+      },
+      {
+        "de": "ehrenamtlich",
+        "en": "voluntary, unpaid"
+      },
+      {
+        "de": "mitmachen",
+        "en": "to join in, participate"
+      }
+    ],
+    "questions": [
+      {
+        "question_de": "Wie viele Sportvereine gibt es in Deutschland?",
+        "question_en": "How many sports clubs are there in Germany?",
+        "answer_de": "In Deutschland gibt es mehr als 86.000 Sportvereine mit über 27 Millionen Mitgliedern.",
+        "answer_en": "In Germany there are more than 86,000 sports clubs with over 27 million members."
+      },
+      {
+        "question_de": "Welchen Tipp hat die Kollegin Lena gegeben?",
+        "question_en": "What tip did the colleague give Lena?",
+        "answer_de": "Die Kollegin hat gesagt: „Melde dich in einem Sportverein an! Dort findest du schnell Freunde.“",
+        "answer_en": "The colleague said: \"Sign up at a sports club! You'll find friends there quickly.\""
+      },
+      {
+        "question_de": "Was hat Lena zuerst gemacht und was hat das gekostet?",
+        "question_en": "What did Lena do first, and what did it cost?",
+        "answer_de": "Sie hat zuerst an einem Probetraining teilgenommen. Das war kostenlos.",
+        "answer_en": "She first took part in a trial training session. It was free of charge."
+      },
+      {
+        "question_de": "Wann trainiert Lena?",
+        "question_en": "When does Lena train?",
+        "answer_de": "Sie trainiert zweimal pro Woche, dienstags und donnerstags von 19 bis 21 Uhr.",
+        "answer_en": "She trains twice a week, on Tuesdays and Thursdays from 7 to 9 p.m."
+      },
+      {
+        "question_de": "Warum bekommt die Trainerin kein Geld?",
+        "question_en": "Why does the coach not get any money?",
+        "answer_de": "Im Verein ist vieles ehrenamtlich, deshalb bekommt die Trainerin kein Geld für ihre Arbeit.",
+        "answer_en": "A lot of the club's work is voluntary, so the coach gets no money for her work."
+      }
+    ],
+    "word_count": 237,
+    "difficulty": 2,
+    "estimated_reading_time": 4,
+    "order_index": 7
+  },
+  {
+    "level": "A2.1",
+    "title_de": "Ein Besuch auf dem Wochenmarkt",
+    "title_en": "A Visit to the Weekly Market",
+    "topic": "Market & Fresh Food",
+    "content_de": "Samstagmorgen in Freiburg: Auf dem Platz vor dem Münster ist Wochenmarkt. Seit über 500 Jahren verkaufen Händler hier ihre Waren. Der Markt beginnt früh – die ersten Stände öffnen schon um halb acht.\n\nJonas geht fast jeden Samstag mit seiner Tochter Emma zum Markt. Sie fahren mit der Straßenbahn in die Stadt, denn Parkplätze sind dort teuer. Heute haben sie eine lange Einkaufsliste dabei.\n\nZuerst gehen sie zu einem Gemüsestand. Der Bauer kommt aus einem Dorf bei Freiburg. „Was darf es sein?“, fragt er. Jonas kauft ein Kilo Tomaten, einen Salat und frische Kartoffeln. Am Obststand nebenan probiert Emma eine Erdbeere. „Greifen Sie zu, die sind süß!“, sagt die Verkäuferin. Nach dem Obst kaufen die beiden noch Eier von einem Bauernhof aus der Region und ein Brot aus einer kleinen Bäckerei.\n\nAuf dem Markt bezahlt man oft bar, denn viele Stände nehmen keine Karte. Die Preise sind manchmal höher als im Supermarkt, aber die Ware kommt direkt vom Bauern und schmeckt frischer.\n\nGegen elf Uhr wird es voll. Viele Leute stehen mit einem Kaffee zwischen den Ständen und reden mit ihren Nachbarn. Für viele Deutsche ist der Markt nicht nur zum Einkaufen da – er ist auch ein Treffpunkt.\n\nZum Schluss kauft Jonas seiner Tochter eine Brezel. Dann fahren die beiden mit vollen Taschen nach Hause und kochen zusammen das Mittagessen: Salat mit Tomaten und Bratkartoffeln.",
+    "content_en": "Saturday morning in Freiburg: on the square in front of the cathedral there is a weekly market. For over 500 years, traders have been selling their goods here. The market starts early – the first stalls open at half past seven.\n\nJonas goes to the market with his daughter Emma almost every Saturday. They take the tram into town, because parking spaces there are expensive. Today they have a long shopping list with them.\n\nFirst they go to a vegetable stall. The farmer comes from a village near Freiburg. \"What can I get you?\" he asks. Jonas buys a kilo of tomatoes, a lettuce, and fresh potatoes. At the fruit stall next door, Emma tries a strawberry. \"Help yourself, they're sweet!\" says the saleswoman. After the fruit, the two of them also buy eggs from a farm in the region and a loaf of bread from a small bakery.\n\nAt the market you often pay in cash, because many stalls do not take cards. The prices are sometimes higher than in the supermarket, but the goods come directly from the farmer and taste fresher.\n\nAround eleven o'clock it gets crowded. Many people stand with a coffee between the stalls and talk with their neighbors. For many Germans, the market is not only there for shopping – it is also a meeting place.\n\nAt the end, Jonas buys his daughter a pretzel. Then the two of them go home with full bags and cook lunch together: salad with tomatoes and fried potatoes.",
+    "key_vocabulary": [
+      {
+        "de": "der Wochenmarkt, ¨-e",
+        "en": "weekly market"
+      },
+      {
+        "de": "der Händler, -",
+        "en": "trader, vendor"
+      },
+      {
+        "de": "die Ware, -n",
+        "en": "goods, merchandise"
+      },
+      {
+        "de": "der Stand, ¨-e",
+        "en": "stall, stand"
+      },
+      {
+        "de": "die Straßenbahn, -en",
+        "en": "tram"
+      },
+      {
+        "de": "die Einkaufsliste, -n",
+        "en": "shopping list"
+      },
+      {
+        "de": "der Bauer, -n",
+        "en": "farmer"
+      },
+      {
+        "de": "probieren",
+        "en": "to try, to taste"
+      },
+      {
+        "de": "zugreifen",
+        "en": "to help oneself"
+      },
+      {
+        "de": "der Bauernhof, ¨-e",
+        "en": "farm"
+      },
+      {
+        "de": "bar bezahlen",
+        "en": "to pay in cash"
+      },
+      {
+        "de": "die Region, -en",
+        "en": "region"
+      },
+      {
+        "de": "der Treffpunkt, -e",
+        "en": "meeting place"
+      },
+      {
+        "de": "die Brezel, -n",
+        "en": "pretzel"
+      }
+    ],
+    "questions": [
+      {
+        "question_de": "Wo und seit wann gibt es den Wochenmarkt in Freiburg?",
+        "question_en": "Where is the weekly market in Freiburg, and how long has it existed?",
+        "answer_de": "Der Wochenmarkt ist auf dem Platz vor dem Münster. Seit über 500 Jahren verkaufen Händler dort ihre Waren.",
+        "answer_en": "The weekly market is on the square in front of the cathedral. Traders have been selling their goods there for over 500 years."
+      },
+      {
+        "question_de": "Warum fahren Jonas und Emma mit der Straßenbahn in die Stadt?",
+        "question_en": "Why do Jonas and Emma take the tram into town?",
+        "answer_de": "Sie fahren mit der Straßenbahn, denn Parkplätze sind in der Stadt teuer.",
+        "answer_en": "They take the tram because parking spaces in town are expensive."
+      },
+      {
+        "question_de": "Was kauft Jonas am Gemüsestand?",
+        "question_en": "What does Jonas buy at the vegetable stall?",
+        "answer_de": "Er kauft ein Kilo Tomaten, einen Salat und frische Kartoffeln.",
+        "answer_en": "He buys a kilo of tomatoes, a lettuce, and fresh potatoes."
+      },
+      {
+        "question_de": "Wie bezahlt man auf dem Markt oft und warum?",
+        "question_en": "How do people often pay at the market, and why?",
+        "answer_de": "Man bezahlt oft bar, denn viele Stände nehmen keine Karte.",
+        "answer_en": "People often pay in cash, because many stalls do not take cards."
+      },
+      {
+        "question_de": "Warum ist der Markt für viele Deutsche mehr als ein Ort zum Einkaufen?",
+        "question_en": "Why is the market more than a place to shop for many Germans?",
+        "answer_de": "Der Markt ist auch ein Treffpunkt: Viele Leute stehen mit einem Kaffee zwischen den Ständen und reden mit ihren Nachbarn.",
+        "answer_en": "The market is also a meeting place: many people stand with a coffee between the stalls and talk with their neighbors."
+      }
+    ],
+    "word_count": 226,
+    "difficulty": 2,
+    "estimated_reading_time": 4,
+    "order_index": 8
+  },
+  {
+    "level": "A2.2",
+    "title_de": "Feste und Feiertage in Deutschland",
+    "title_en": "Festivals and Holidays in Germany",
+    "topic": "Holidays & Festivals",
+    "content_de": "Deutschland feiert gern, und jede Jahreszeit hat ihre Höhepunkte. Wer die deutsche Kultur verstehen will, sollte die wichtigsten Feste kennen.\n\nIm Winter beginnt für viele Deutsche die schönste Zeit des Jahres: die Adventszeit. Ab Ende November öffnen überall die Weihnachtsmärkte. Der Nürnberger Christkindlesmarkt ist einer der ältesten und bekanntesten – er existiert seit dem 16. Jahrhundert. Auf dem Markt trinkt man Glühwein, isst gebrannte Mandeln und kauft kleine Geschenke aus Holz. Viele Familien gehen jedes Jahr hin, weil der Besuch für sie eine feste Tradition ist. Weihnachten selbst feiert man im Kreis der Familie: Die Geschenke gibt es am Heiligabend, also schon am 24. Dezember, nicht erst am Morgen des 25.\n\nIm Februar wird es lauter: Dann beginnt der Karneval. Am stärksten feiert man ihn im Rheinland, besonders in Köln, Düsseldorf und Mainz. Am Rosenmontag ziehen riesige Umzüge durch die Städte. Hunderttausende Menschen stehen verkleidet an der Straße und rufen „Kamelle!“, wenn die Wagen Süßigkeiten in die Menge werfen. Viele Kölner sagen, dass der Karneval für sie die fünfte Jahreszeit ist.\n\nDer wichtigste politische Feiertag ist der 3. Oktober, der Tag der Deutschen Einheit. An diesem Tag erinnert sich das Land an die Wiedervereinigung von 1990, als aus zwei deutschen Staaten wieder einer wurde. Jedes Jahr richtet eine andere Stadt das offizielle Bürgerfest aus. Interessant ist: Der 3. Oktober ist der einzige Feiertag, der im ganzen Land gilt. Viele andere Feiertage gibt es nur in bestimmten Bundesländern – in Bayern hat man zum Beispiel mehr freie Tage als in Berlin.\n\nWenn Sie in Deutschland leben, werden Sie schnell merken: Feste sind hier wichtig, weil sie Menschen zusammenbringen. Am besten probieren Sie alles einmal aus – den Glühwein im Dezember, ein Kostüm im Februar und ein Straßenfest im Sommer.",
+    "content_en": "Germany loves to celebrate, and every season has its highlights. Anyone who wants to understand German culture should know the most important festivals.\n\nIn winter, the most beautiful time of the year begins for many Germans: the Advent season. From the end of November, Christmas markets open everywhere. The Nuremberg Christkindlesmarkt is one of the oldest and best known – it has existed since the 16th century. At the market, people drink mulled wine, eat roasted almonds, and buy small wooden presents. Many families go every year, because the visit is a firm tradition for them. Christmas itself is celebrated within the family: the presents are given on Christmas Eve, that is, already on December 24th, not on the morning of the 25th.\n\nIn February it gets louder: that is when Carnival begins. It is celebrated most intensely in the Rhineland, especially in Cologne, Düsseldorf, and Mainz. On Rose Monday, huge parades move through the cities. Hundreds of thousands of people stand along the street in costume and shout \"Kamelle!\" when the floats throw sweets into the crowd. Many Cologne locals say that Carnival is the fifth season for them.\n\nThe most important political holiday is October 3rd, the Day of German Unity. On this day the country remembers the reunification of 1990, when two German states became one again. Every year a different city hosts the official public festival. Interestingly, October 3rd is the only holiday that applies in the whole country. Many other holidays exist only in certain federal states – in Bavaria, for example, people have more days off than in Berlin.\n\nIf you live in Germany, you will quickly notice: festivals are important here because they bring people together. It is best to try everything once – the mulled wine in December, a costume in February, and a street festival in summer.",
+    "key_vocabulary": [
+      {
+        "de": "das Fest, -e",
+        "en": "festival, celebration"
+      },
+      {
+        "de": "der Feiertag, -e",
+        "en": "public holiday"
+      },
+      {
+        "de": "die Jahreszeit, -en",
+        "en": "season"
+      },
+      {
+        "de": "der Weihnachtsmarkt, ¨-e",
+        "en": "Christmas market"
+      },
+      {
+        "de": "der Glühwein (nur Sg.)",
+        "en": "mulled wine"
+      },
+      {
+        "de": "das Geschenk, -e",
+        "en": "present, gift"
+      },
+      {
+        "de": "der Heiligabend, -e",
+        "en": "Christmas Eve"
+      },
+      {
+        "de": "der Umzug, ¨-e",
+        "en": "parade, procession"
+      },
+      {
+        "de": "sich verkleiden",
+        "en": "to dress up (in costume)"
+      },
+      {
+        "de": "die Süßigkeit, -en",
+        "en": "sweets, candy"
+      },
+      {
+        "de": "die Wiedervereinigung (nur Sg.)",
+        "en": "reunification"
+      },
+      {
+        "de": "das Bundesland, ¨-er",
+        "en": "federal state"
+      },
+      {
+        "de": "gelten",
+        "en": "to be valid, to apply"
+      },
+      {
+        "de": "ausrichten",
+        "en": "to host, to organize"
+      },
+      {
+        "de": "zusammenbringen",
+        "en": "to bring together"
+      }
+    ],
+    "questions": [
+      {
+        "question_de": "Seit wann existiert der Nürnberger Christkindlesmarkt?",
+        "question_en": "Since when has the Nuremberg Christkindlesmarkt existed?",
+        "answer_de": "Der Nürnberger Christkindlesmarkt existiert seit dem 16. Jahrhundert.",
+        "answer_en": "The Nuremberg Christkindlesmarkt has existed since the 16th century."
+      },
+      {
+        "question_de": "Wann bekommen die Familien in Deutschland ihre Weihnachtsgeschenke?",
+        "question_en": "When do families in Germany get their Christmas presents?",
+        "answer_de": "Die Geschenke gibt es am Heiligabend, also schon am 24. Dezember, nicht erst am Morgen des 25.",
+        "answer_en": "The presents are given on Christmas Eve, that is, already on December 24th, not on the morning of the 25th."
+      },
+      {
+        "question_de": "Wo feiert man den Karneval am stärksten?",
+        "question_en": "Where is Carnival celebrated most intensely?",
+        "answer_de": "Man feiert ihn am stärksten im Rheinland, besonders in Köln, Düsseldorf und Mainz.",
+        "answer_en": "It is celebrated most intensely in the Rhineland, especially in Cologne, Düsseldorf, and Mainz."
+      },
+      {
+        "question_de": "Was passiert am Rosenmontag?",
+        "question_en": "What happens on Rose Monday?",
+        "answer_de": "Am Rosenmontag ziehen riesige Umzüge durch die Städte, und die Wagen werfen Süßigkeiten in die Menge.",
+        "answer_en": "On Rose Monday, huge parades move through the cities, and the floats throw sweets into the crowd."
+      },
+      {
+        "question_de": "Warum ist der 3. Oktober ein besonderer Feiertag?",
+        "question_en": "Why is October 3rd a special holiday?",
+        "answer_de": "An diesem Tag erinnert sich das Land an die Wiedervereinigung von 1990, und er ist der einzige Feiertag, der im ganzen Land gilt.",
+        "answer_en": "On this day the country remembers the reunification of 1990, and it is the only holiday that applies in the whole country."
+      },
+      {
+        "question_de": "Warum sind Feste in Deutschland wichtig?",
+        "question_en": "Why are festivals important in Germany?",
+        "answer_de": "Feste sind wichtig, weil sie Menschen zusammenbringen.",
+        "answer_en": "Festivals are important because they bring people together."
+      }
+    ],
+    "word_count": 288,
+    "difficulty": 3,
+    "estimated_reading_time": 5,
+    "order_index": 7
+  },
+  {
+    "level": "A2.2",
+    "title_de": "Gesund leben",
+    "title_en": "Living Healthily",
+    "topic": "Healthy Living",
+    "content_de": "Am ersten Januar haben viele Deutsche gute Vorsätze: Sie wollen mehr Sport machen, sich gesünder ernähren und weniger Zeit am Handy verbringen. Aber Studien zeigen, dass die meisten Menschen ihre Vorsätze schon im Februar vergessen. Warum ist das so, und wie schafft man es besser?\n\nTim, 34, aus Leipzig hat es geschafft. Vor zwei Jahren hat er sich oft müde und gestresst gefühlt. Er hat den ganzen Tag im Büro gesessen, sich wenig bewegt und fast jeden Abend Fast Food gegessen. Sein Arzt hat ihm klar gesagt, dass er sich mehr bewegen muss, weil sein Blutdruck zu hoch war.\n\nTim hat klein angefangen. Zuerst hat er sich ein einfaches Ziel gesetzt: dreimal pro Woche eine halbe Stunde spazieren gehen. Das klingt leicht, aber genau das funktioniert besser als ein großer Plan. Wenn man sich zu viel vornimmt, gibt man schneller auf. Nach einem Monat ist Tim zum ersten Mal gejoggt. Heute läuft er zehn Kilometer ohne Pause und fühlt sich fitter als mit 25.\n\nAuch beim Essen hat er vieles geändert. Er kocht jetzt fast immer selbst, weil frisches Essen gesünder und billiger ist als Fertiggerichte. Am wichtigsten ist für ihn das Frühstück: Haferflocken mit Obst statt Brötchen mit Schokocreme. Süßigkeiten isst er noch, aber viel seltener als früher.\n\nDas dritte Thema ist der Schlaf. Tim geht jetzt früher ins Bett und legt das Handy eine Stunde vor dem Schlafen weg. Er sagt: „Wenn ich acht Stunden schlafe, konzentriere ich mich am nächsten Tag viel besser.“\n\nSein Plan für das nächste Jahr steht auch schon fest: Er wird an einem Halbmarathon in Leipzig teilnehmen. Er ist sicher, dass er es schafft. Sein Tipp für alle: „Ärgern Sie sich nicht über schlechte Tage. Morgen ist ein neuer Tag – fangen Sie einfach wieder an.“",
+    "content_en": "On the first of January, many Germans make good resolutions: they want to do more sport, eat more healthily, and spend less time on their phones. But studies show that most people forget their resolutions as early as February. Why is that, and how can you manage it better?\n\nTim, 34, from Leipzig managed it. Two years ago he often felt tired and stressed. He sat in the office all day, exercised very little, and ate fast food almost every evening. His doctor told him clearly that he had to move more, because his blood pressure was too high.\n\nTim started small. First he set himself a simple goal: going for a half-hour walk three times a week. That sounds easy, but exactly that works better than a big plan. If you take on too much, you give up more quickly. After a month, Tim went jogging for the first time. Today he runs ten kilometers without a break and feels fitter than he did at 25.\n\nHe also changed a lot about his eating. He now almost always cooks for himself, because fresh food is healthier and cheaper than ready meals. Breakfast is the most important thing for him: oats with fruit instead of rolls with chocolate spread. He still eats sweets, but much less often than before.\n\nThe third topic is sleep. Tim now goes to bed earlier and puts his phone away an hour before sleeping. He says: \"When I sleep eight hours, I concentrate much better the next day.\"\n\nHis plan for next year is already set: he will take part in a half marathon in Leipzig. He is sure that he will manage it. His tip for everyone: \"Don't get annoyed about bad days. Tomorrow is a new day – just start again.\"",
+    "key_vocabulary": [
+      {
+        "de": "der Vorsatz, ¨-e",
+        "en": "(New Year's) resolution"
+      },
+      {
+        "de": "sich ernähren",
+        "en": "to eat, to nourish oneself"
+      },
+      {
+        "de": "sich bewegen",
+        "en": "to move, to get exercise"
+      },
+      {
+        "de": "sich fühlen",
+        "en": "to feel"
+      },
+      {
+        "de": "gestresst",
+        "en": "stressed"
+      },
+      {
+        "de": "der Blutdruck (nur Sg.)",
+        "en": "blood pressure"
+      },
+      {
+        "de": "sich ein Ziel setzen",
+        "en": "to set oneself a goal"
+      },
+      {
+        "de": "sich etwas vornehmen",
+        "en": "to resolve to do something"
+      },
+      {
+        "de": "aufgeben",
+        "en": "to give up"
+      },
+      {
+        "de": "das Fertiggericht, -e",
+        "en": "ready meal"
+      },
+      {
+        "de": "die Haferflocken (Pl.)",
+        "en": "oats, oat flakes"
+      },
+      {
+        "de": "der Schlaf (nur Sg.)",
+        "en": "sleep"
+      },
+      {
+        "de": "sich konzentrieren",
+        "en": "to concentrate"
+      },
+      {
+        "de": "der Halbmarathon, -s",
+        "en": "half marathon"
+      },
+      {
+        "de": "sich ärgern (über + Akk.)",
+        "en": "to get annoyed (about)"
+      }
+    ],
+    "questions": [
+      {
+        "question_de": "Was zeigen Studien über gute Vorsätze?",
+        "question_en": "What do studies show about good resolutions?",
+        "answer_de": "Studien zeigen, dass die meisten Menschen ihre Vorsätze schon im Februar vergessen.",
+        "answer_en": "Studies show that most people forget their resolutions as early as February."
+      },
+      {
+        "question_de": "Warum hat Tims Arzt gesagt, dass Tim sich mehr bewegen muss?",
+        "question_en": "Why did Tim's doctor say that Tim has to move more?",
+        "answer_de": "Der Arzt hat das gesagt, weil Tims Blutdruck zu hoch war.",
+        "answer_en": "The doctor said that because Tim's blood pressure was too high."
+      },
+      {
+        "question_de": "Welches Ziel hat sich Tim zuerst gesetzt?",
+        "question_en": "What goal did Tim set himself first?",
+        "answer_de": "Er hat sich das Ziel gesetzt, dreimal pro Woche eine halbe Stunde spazieren zu gehen.",
+        "answer_en": "He set himself the goal of going for a half-hour walk three times a week."
+      },
+      {
+        "question_de": "Warum kocht Tim jetzt fast immer selbst?",
+        "question_en": "Why does Tim now almost always cook for himself?",
+        "answer_de": "Er kocht selbst, weil frisches Essen gesünder und billiger ist als Fertiggerichte.",
+        "answer_en": "He cooks for himself because fresh food is healthier and cheaper than ready meals."
+      },
+      {
+        "question_de": "Was macht Tim vor dem Schlafen?",
+        "question_en": "What does Tim do before sleeping?",
+        "answer_de": "Er legt das Handy eine Stunde vor dem Schlafen weg und geht früher ins Bett.",
+        "answer_en": "He puts his phone away an hour before sleeping and goes to bed earlier."
+      },
+      {
+        "question_de": "Was wird Tim nächstes Jahr machen?",
+        "question_en": "What will Tim do next year?",
+        "answer_de": "Er wird an einem Halbmarathon in Leipzig teilnehmen.",
+        "answer_en": "He will take part in a half marathon in Leipzig."
+      }
+    ],
+    "word_count": 293,
+    "difficulty": 3,
+    "estimated_reading_time": 5,
+    "order_index": 8
+  }
+]

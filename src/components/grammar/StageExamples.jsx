@@ -16,7 +16,24 @@ const StageExamples = ({ content, isGerman, theme }) => {
 
   const { title, examples } = content;
 
-  const handleSpeak = (text, index) => {
+  const handleSpeak = (text, index, audioUrl) => {
+    // Prefer real recorded audio (grammar_examples.audio_url → audioUrl, via
+    // scripts/generate-example-audio.mjs) over the browser's synthetic voice.
+    if (audioUrl) {
+      const audio = new Audio(audioUrl);
+      audio.onplay = () => setPlayingIndex(index);
+      audio.onended = () => setPlayingIndex(null);
+      audio.onerror = () => {
+        // Fall back to speech synthesis if the file is missing/unreachable.
+        speakWithSynthesis(text, index);
+      };
+      audio.play().catch(() => speakWithSynthesis(text, index));
+      return;
+    }
+    speakWithSynthesis(text, index);
+  };
+
+  const speakWithSynthesis = (text, index) => {
     if ('speechSynthesis' in window) {
       // Cancel any ongoing speech
       speechSynthesis.cancel();
@@ -102,7 +119,7 @@ const StageExamples = ({ content, isGerman, theme }) => {
                 <div className="flex items-start gap-4">
                   {/* Audio Button */}
                   <button
-                    onClick={() => handleSpeak(example.german, index)}
+                    onClick={() => handleSpeak(example.german, index, example.audioUrl)}
                     className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center transition-all ${
                       playingIndex === index
                         ? `bg-gradient-to-br ${theme.gradient} text-white shadow-lg scale-105`
