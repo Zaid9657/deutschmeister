@@ -8,7 +8,12 @@ runner in the build. Apply each file by hand in the Supabase SQL editor
 
 | File | What it does | Status |
 |---|---|---|
-| `2026-08-16-fix-rls-security.sql` | Closes the self-grant-Pro RLS hole on `subscriptions`/`profiles`, locks down `webhook_logs` and `xray_usage`, narrows anonymous access to paid reading/listening content to the free tier (a1.1). | **Apply before merging the security PR is considered complete.** |
+| `2026-08-16-fix-rls-security.sql` | Closes the self-grant-Pro RLS hole on `subscriptions`/`profiles`, locks down `webhook_logs` and `xray_usage`, narrows anonymous access to paid reading/listening content to the free tier (a1.1). | ✅ **Applied 2026-08-16** |
+| `2026-08-16-enable-rls-on-unprotected-tables.sql` | Enables RLS on 13 tables that had it switched off entirely (the whole course catalogue was publicly deletable via the anon key), and revokes public EXECUTE on `debit_speaking_wallet`. | ✅ **Applied 2026-08-16** |
+
+Both files record changes that are **already live** on project `omqyueddktqeyrrqvnyq`.
+They are idempotent, so re-running them is safe and is how you would reproduce the same
+state on a branch or fresh database.
 
 ## Conventions
 

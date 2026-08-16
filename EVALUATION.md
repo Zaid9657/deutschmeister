@@ -8,21 +8,52 @@ as found; **after** scores assume this PR is merged *and* the manual steps below
 
 ---
 
-## ⚠️ Required manual steps (the PR alone does not finish these)
+## 🔴 Do this first: rotate the Supabase service-role key
 
-1. **Apply `migrations/2026-08-16-fix-rls-security.sql`** in the Supabase SQL editor.
-   Until then, any logged-in user can still self-grant Pro from the browser console
-   (issue S-03) and payment webhook payloads remain world-readable (S-08).
-2. **Confirm `CAMPAIGN_SECRET` and `UNSUB_SECRET` are set in Netlify env vars.**
-   The email functions now **fail closed** — if these are missing in production,
-   the daily sentence and unsubscribe links stop working (by design).
-3. **Review the draft `/privacy/` and `/impressum/` pages** (ideally with legal counsel),
-   fill in the Impressum placeholders, then remove `noindex` and the draft banners.
-4. **Watch CSP reports** (browser console violations on the live site) for a couple of
-   weeks, then promote `Content-Security-Policy-Report-Only` to enforcing in netlify.toml.
-5. After the RLS migration: re-test signup, a test purchase, grammar as an anonymous
-   visitor, reading/listening a1.1 anonymous, X-Ray, and a speaking session
-   (checklist in `migrations/README.md`).
+`PUBLIC_SUPABASE_ANON_KEY` in Netlify held the **service-role key** — byte-identical to
+`SUPABASE_SERVICE_ROLE_KEY`. That key bypasses every RLS policy in the database.
+`PUBLIC_*` variables are compiled into client output by Astro, so it sat one client-side
+import away from being published to every visitor, and its prefix was printed into build
+logs. It has been corrected to the real anon key (verified: the value now carries
+`"role":"anon"`), but **the key must be assumed compromised and rotated**:
+
+Supabase Dashboard → Project Settings → API → *Rotate* the `service_role` key, then update
+`SUPABASE_SERVICE_ROLE_KEY` in Netlify. Nothing else needs the old value.
+
+## ✅ Already done (applied and verified against production)
+
+- **RLS hardening applied** to project `omqyueddktqeyrrqvnyq` — both files in `migrations/`
+  are a record of changes that are already live, not a to-do.
+- **Netlify config fixed**: `PUBLIC_SUPABASE_ANON_KEY` corrected; `CAMPAIGN_SECRET` created
+  (it did not exist, so `/api/send-campaign` returned 500); `VITE_POSTHOG_HOST` corrected
+  from a dashboard URL (`us.posthog.com/project/443299/home`) to the ingest host
+  `https://us.i.posthog.com`, which is why PostHog was not receiving events.
+- `UNSUB_SECRET` confirmed present, so the fail-closed email changes are safe to deploy.
+
+Verified as the `anon` role after the changes: `subscriptions`, `webhook_logs`,
+`xray_usage`, `payment_failures` and `mastery_*` all return **0 rows**; paid
+reading/listening return 0 while free-tier (a1.1) still works; grammar still returns all
+**64 topics** so the Astro build is unaffected; `DELETE`/`UPDATE` against the catalogue now
+affect **0 rows**. A simulated self-grant-Pro attack left `is_subscribed = false`,
+`subscription_tier = 'free'` and 0 subscription rows. The service role can still write, so
+the Lemon Squeezy webhook keeps working. Supabase security advisor: **21 ERROR-level
+findings → 0**.
+
+## ⚠️ Still requires a human
+
+1. **Rotate the service-role key** (above) — the only urgent item.
+2. **Review the draft `/privacy/` and `/impressum/` pages**, fill in the Impressum address
+   placeholders (§5 DDG), then remove `noindex` and the draft banners.
+3. **Decide what to do about `/payment/:planType`** — see F-01 below. It is a live fake
+   checkout that collects card details.
+4. **Watch CSP reports** for a couple of weeks, then promote
+   `Content-Security-Policy-Report-Only` to enforcing in `netlify.toml`.
+5. **Mark secrets as secret** in Netlify: `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`,
+   `RESEND_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `LEMONSQUEEZY_WEBHOOK_SECRET`,
+   `GEMINI_API_KEY`, `UNSUB_SECRET` are all stored unmasked (`is_secret: false`).
+6. **Enable leaked-password protection** (Supabase Auth → Passwords) — currently off.
+7. Re-test the flows in `migrations/README.md` (signup, purchase, anonymous grammar,
+   a1.1 reading/listening, X-Ray, speaking).
 
 ---
 
@@ -31,7 +62,7 @@ as found; **after** scores assume this PR is merged *and* the manual steps below
 | Category | Before | After | Rationale |
 |---|---:|---:|---|
 | Architecture | 7/10 | 7/10 | The SPA+Astro merge is genuinely clever and well-commented, and the static takeover of SEO routes is the right call. Cost: a 600-char build one-liner, a manually-synced route allow-list in three places, and two React runtimes shipped. Unchanged by this PR (documented in README instead). |
-| Security | 3/10 | 7/10 | Two unauthenticated email endpoints (open relay + all-users blast), self-grantable Pro via RLS, forgeable AI evaluations, `'changeme'` HMAC fallback, no CSP. This PR fixes the function layer and ships the RLS migration; remaining gap: no rate limiting, anon X-Ray quota still client-keyed. |
+| Security | 2/10 | 8/10 | Worse than first assessed: a service-role key stored under a `PUBLIC_` name, RLS disabled outright on 13 tables (catalogue publicly deletable), two unauthenticated email endpoints, self-grantable Pro, forgeable AI evaluations, `'changeme'` HMAC fallback, no CSP. All now fixed and verified in production (advisor: 21 errors → 0). Remaining: rotate the exposed key, no rate limiting, anon X-Ray quota still client-keyed. |
 | SEO | 5/10 | 8/10 | Strong foundations (static pages, sitemaps, JSON-LD, IndexNow, llms.txt) undermined by a broken og:image on every static page, 301 hops on internal links, wrong `lang`, self-conflicting hreflang, a 404ing sitemap entry, and an indexable duplicate shell. All fixed. Remaining: FAQ/snippet enrichment covers 1 of 64 grammar topics. |
 | Performance | 6/10 | 7/10 | Grammar pages ship one small React island — excellent. Astro pages had render-blocking fonts (fixed). Remaining: no image pipeline/dimensions in Astro, two full vendor bundles across SPA+islands, `getAllTopics()` refetched per page at build. |
 | Accessibility | 4/10 | 7/10 | Mobile visitors had **no navigation at all** on static pages; no skip link, no focus styles, colour-only exercise feedback. All fixed. Remaining: low-contrast slate-400 text, modal focus traps in the SPA, icon-only buttons. |
@@ -39,7 +70,7 @@ as found; **after** scores assume this PR is merged *and* the manual steps below
 | Code quality | 5/10 | 6/10 | Clean, well-commented code in places (webhook, auth helper, ErrorBoundary) but 1500-line pages, duplicated renderers/data/templates/CORS preambles, dead files, and zero typing. This PR adds lint + drift checks and removes dead code; the refactors are roadmap. |
 | Content | 8/10 | 8/10 | 64 DB-backed grammar topics, a genuinely strong telc-B1 guide, comparisons, podcasts. The DB data is messy enough to need four renderer-side normalizers — fixing data beats maintaining them. |
 | DevOps | 2/10 | 6/10 | No README, no CI, no tests, no lint, loose SQL contradicting `.gitignore`. This PR adds README, CI (lint + function syntax + SPA build), lint config, `.env.example`, and a migrations convention. Tests remain zero. |
-| **Overall** | **4.7/10** | **6.9/10** | Weighted toward security, SEO, and legal — the categories that gate a commercial launch. |
+| **Overall** | **4.3/10** | **7.1/10** | Weighted toward security, SEO, and legal — the categories that gate a commercial launch. |
 
 ---
 
@@ -52,6 +83,9 @@ Status: ✅ fixed in this PR · 🔶 migration/manual step provided · 🗺 road
 
 | ID | Sev | Issue | Where | Status |
 |---|---|---|---|---|
+| S-00 | 🔴 | **`PUBLIC_SUPABASE_ANON_KEY` held the service-role key** (identical to `SUPABASE_SERVICE_ROLE_KEY`), which bypasses all RLS. `PUBLIC_*` vars are compiled into Astro client output, and the prefix was logged during builds | Netlify env vars, `astro-site/src/lib/supabase.js` | ✅ corrected to the anon key — **but rotate the old key** |
+| S-0A | 🔴 | **RLS was disabled entirely on 13 tables** while `anon` held INSERT/UPDATE/DELETE — the whole course catalogue was publicly destroyable, and `payment_failures` / `mastery_purchases` publicly readable | `grammar*`, `sentences`, `words`, `mastery_*`, `payment_failures` | ✅ applied + verified |
+| S-0B | 🟠 | `debit_speaking_wallet` (SECURITY DEFINER, moves wallet balances) was callable by anon/authenticated over `/rest/v1/rpc/`, bypassing server-side pricing | Supabase RPC | ✅ EXECUTE revoked |
 | S-01 | 🔴 | `/api/send-daily-test?email=X` was an unauthenticated open relay sending DeutschMeister-branded mail (own DKIM) to any address | `netlify/functions/send-daily-test.mjs` | ✅ secret-gated; owner-only without secret |
 | S-02 | 🔴 | `/api/daily-sentence` publicly triggerable send-to-ALL-users blast; `?secret=` documented but never checked | `netlify/functions/daily-sentence.mjs` | ✅ scheduler-marker or secret required; 401 otherwise |
 | S-03 | 🔴 | RLS lets any user INSERT/UPDATE their own `subscriptions` row and `profiles.is_subscribed` → self-grant Pro from the browser console | `supabase-subscription-schema.sql:21-46` | 🔶 `migrations/2026-08-16-fix-rls-security.sql` |
@@ -100,6 +134,14 @@ Status: ✅ fixed in this PR · 🔶 migration/manual step provided · 🗺 road
 | A-02 | 🟠 | No skip link, no `:focus-visible` styles anywhere | `Layout.astro` | ✅ |
 | A-03 | 🟠 | Exercise feedback colour-only; no live region, no pressed state | `ExercisePlayer.jsx` | ✅ aria-live + aria-pressed + sr-only text |
 | A-04 | 🟡 | Low-contrast slate-400/500 body text; icon-only buttons; modals without focus traps; consent dialog doesn't move focus | SPA + Astro | 🗺 |
+
+### Functional / revenue
+
+| ID | Sev | Issue | Where | Status |
+|---|---|---|---|---|
+| F-01 | 🔴 | **`/payment/:planType` is a live fake checkout.** It collects card number, expiry and CVC, validates them client-side only, waits 1500 ms to "simulate payment processing", then grants a real subscription — no money is taken. Nothing in the UI links to it (the real flow opens Lemon Squeezy), but the route is served by `netlify.toml` and `App.jsx`, so anyone reaching the URL got Pro free. It also collects card data into a form that discards it. | `src/pages/PaymentPage.jsx`, `netlify.toml` | ⚠️ **grant path is now dead** (RLS blocks the write), but the card form is still live — **owner decision needed: delete the route or point it at Lemon Squeezy** |
+| F-02 | 🟡 | `VITE_POSTHOG_HOST` pointed at a dashboard URL, not the ingest host, so product analytics were silently not recording | Netlify env vars | ✅ corrected |
+| F-03 | 🟡 | `CAMPAIGN_SECRET` was never set, so `/api/send-campaign` always returned 500 | Netlify env vars | ✅ created |
 
 ### Legal / compliance
 
