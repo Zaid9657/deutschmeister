@@ -182,8 +182,16 @@ export default function ExercisePlayer({ exercises }) {
         </div>
       </div>
 
-      {/* Question */}
-      <p className="font-semibold text-slate-800 mb-4 text-base">{exercise.question_en}</p>
+      {/* Question — the German sentence (with the blank) is the task; the
+          English is the translation aid. Matches the SPA (GrammarLessonPage)
+          which also prefers question_de. */}
+      <p className="font-semibold text-slate-800 mb-1 text-base" lang="de">
+        {exercise.question_de || exercise.question_en}
+      </p>
+      {exercise.question_de && exercise.question_en && (
+        <p className="text-sm text-slate-500 mb-4 italic">{exercise.question_en}</p>
+      )}
+      {!(exercise.question_de && exercise.question_en) && <div className="mb-3" />}
 
       {/* Input */}
       {exercise.exercise_type === 'multiple_choice' ? (

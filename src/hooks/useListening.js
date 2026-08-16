@@ -62,7 +62,7 @@ export function useLevelExercises(level) {
       const { data: exerciseData } = await supabase
         .from('listening_exercises')
         .select('*')
-        .eq('level', level)
+        .ilike('level', level)
         .order('exercise_number');
 
       let progressMap = {};
@@ -103,7 +103,7 @@ export function useExerciseDetails(level, exerciseNumber) {
         const { data: exerciseData, error: exError } = await supabase
           .from('listening_exercises')
           .select('*')
-          .eq('level', level)
+          .ilike('level', level)
           .eq('exercise_number', parseInt(exerciseNumber))
           .single();
         if (exError) throw exError;
