@@ -1,0 +1,103 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// DRAFT legal page — replaces the 404 the cookie banner used to link to.
+// The owner must review this text (ideally with legal counsel) before
+// removing the noindex flag and the draft notice below.
+---
+
+<Layout
+  title="Privacy Policy — DeutschMeister"
+  description="How DeutschMeister handles your data: accounts, analytics cookies, payments, and emails."
+  canonical="https://deutsch-meister.de/privacy/"
+  noindex={true}
+>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+    <p class="mb-8 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+      <strong>Draft:</strong> this policy is a factual summary of the services this
+      site uses and is pending legal review. Contact us with any questions.
+    </p>
+
+    <h1 class="font-display text-3xl font-bold text-slate-900 mb-6">Privacy Policy</h1>
+    <p class="text-slate-600 mb-8">Last updated: August 2026 · Applies to deutsch-meister.de</p>
+
+    <div class="space-y-8 text-slate-700 leading-relaxed">
+      <section>
+        <h2 class="font-display text-xl font-semibold text-slate-900 mb-2">Who we are</h2>
+        <p>
+          DeutschMeister is an online German-learning platform at
+          <a href="https://deutsch-meister.de/" class="text-purple-700 underline">deutsch-meister.de</a>.
+          For any privacy request (access, correction, deletion), email
+          <a href="mailto:zaid@deutsch-meister.de" class="text-purple-700 underline">zaid@deutsch-meister.de</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-xl font-semibold text-slate-900 mb-2">What we store when you create an account</h2>
+        <p>
+          Accounts, learning progress, speaking-practice transcripts and evaluations,
+          and subscription status are stored with
+          <a href="https://supabase.com/privacy" class="text-purple-700 underline" rel="noopener">Supabase</a>
+          (our database and authentication provider). We store your email address,
+          the learning data you generate, and — if you use the AI speaking practice —
+          text transcripts of your practice conversations. Audio recordings are
+          processed to generate those transcripts and are not kept.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-xl font-semibold text-slate-900 mb-2">AI features</h2>
+        <p>
+          The speaking practice and Sentence X-Ray features send your input
+          (speech transcripts or sentences you type) to AI providers —
+          Anthropic (Claude) and OpenAI (speech-to-text and text-to-speech) —
+          to generate responses and feedback. These requests are made from our
+          servers; your account password and payment details are never shared
+          with AI providers.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-xl font-semibold text-slate-900 mb-2">Cookies and analytics</h2>
+        <p>
+          Analytics cookies load <strong>only after you accept</strong> the cookie
+          banner. We use Google Analytics 4 and PostHog to understand how the site
+          is used. If you decline, no analytics scripts are loaded. You can change
+          your choice at any time — declining or clearing your browser storage
+          resets the banner.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-xl font-semibold text-slate-900 mb-2">Payments</h2>
+        <p>
+          Subscriptions are processed by
+          <a href="https://www.lemonsqueezy.com/privacy" class="text-purple-700 underline" rel="noopener">Lemon Squeezy</a>
+          as merchant of record. We never see or store your card details; we
+          receive your subscription status and order metadata to unlock your access.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-xl font-semibold text-slate-900 mb-2">Emails</h2>
+        <p>
+          We send account emails and, if you opted in, a daily practice sentence via
+          <a href="https://resend.com/legal/privacy-policy" class="text-purple-700 underline" rel="noopener">Resend</a>.
+          Every non-essential email contains an unsubscribe link, and you can opt
+          out at any time from your profile.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-xl font-semibold text-slate-900 mb-2">Your rights</h2>
+        <p>
+          Under the GDPR you can request access to, correction of, or deletion of
+          your personal data, and you can withdraw consent for analytics at any
+          time. Email
+          <a href="mailto:zaid@deutsch-meister.de" class="text-purple-700 underline">zaid@deutsch-meister.de</a>
+          and we will respond within 30 days.
+        </p>
+      </section>
+    </div>
+  </div>
+</Layout>

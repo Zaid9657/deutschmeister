@@ -23,8 +23,10 @@
     try { window.localStorage.removeItem(STORAGE_KEY); } catch (e) { /* ignore */ }
   }
 
-  // Inject GA4 exactly once.
+  // Inject GA4 exactly once. Also notifies the SPA (dm-consent-accepted) so
+  // consent-gated tools like PostHog can start without a page reload.
   function loadAnalytics() {
+    try { window.dispatchEvent(new CustomEvent('dm-consent-accepted')); } catch (e) { /* ignore */ }
     if (window.__dmGaLoaded) return;
     window.__dmGaLoaded = true;
     var s = document.createElement('script');
@@ -63,7 +65,7 @@
 
     var msg = document.createElement('p');
     msg.style.cssText = 'margin:0;flex:1 1 320px';
-    msg.innerHTML = 'We use analytics cookies (Google Analytics) to understand how the site ' +
+    msg.innerHTML = 'We use analytics cookies (Google Analytics, PostHog) to understand how the site ' +
       'is used. They load only if you accept. See our ' +
       '<a href="/privacy" style="color:#fbbf24;text-decoration:underline">Privacy Policy</a>.';
 
