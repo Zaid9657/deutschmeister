@@ -6,6 +6,7 @@ import RichText from '../../../components/RichText.astro';
 import { getAllTopicPaths, getTopicFull, getAllTopics, SUB_LEVELS, LEVEL_META } from '../../../lib/grammar.js';
 import { RELATED_TOPICS } from '../../../lib/relatedTopics.js';
 import { TOPIC_SEO } from '../../../lib/topicSeo.js';
+import { SITE_PUBLISHED, BUILD_DATE } from '../../../lib/siteMeta.js';
 import '../../../styles/global.css';
 
 // True when a rule's JSONB content (object, array, or plain string) holds
@@ -86,10 +87,24 @@ const canonicalUrl = `https://deutsch-meister.de/grammar/${level}/${slug}`;
 // canonical/og:url must match the final URL (and the sitemap) exactly.
 const canonicalUrlSlash = `${canonicalUrl}/`;
 
-const pageTitle = `German ${topicTitle} Explained in English | ${meta.label} Grammar Guide`;
-const pageDesc = topic?.description_en
-  ? `${topic.description_en} Includes rules, examples, and practice exercises for ${meta.label} German learners.`.slice(0, 160)
-  : `Learn German ${topicTitle} explained in English with clear rules, real examples, and interactive exercises. ${meta.label} level.`.slice(0, 160);
+// Titles must stay under ~60 chars or Google truncates them; drop the brand
+// suffix on long topic names rather than losing the level label.
+const titleCore = `German ${topicTitle} — ${meta.label} Grammar`;
+const pageTitle = titleCore.length <= 43
+  ? `${titleCore} | DeutschMeister`
+  : titleCore;
+
+// Join the DB description (which has no trailing punctuation) into a real
+// sentence, then clamp on a word boundary so descriptions never end mid-word.
+function clamp(text, max = 155) {
+  const t = text.replace(/\s+/g, ' ').trim();
+  if (t.length <= max) return t;
+  return `${t.slice(0, t.lastIndexOf(' ', max - 1))}…`;
+}
+const descBase = topic?.description_en
+  ? `${topic.description_en.replace(/[.\s]+$/, '')}. Clear rules, real examples, and practice exercises for ${meta.label} German learners.`
+  : `Learn German ${topicTitle} explained in English, with clear rules, real examples, and interactive exercises at ${meta.label} level.`;
+const pageDesc = clamp(descBase);
 
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
@@ -102,16 +117,34 @@ const breadcrumbSchema = {
   ],
 };
 
+// Article + LearningResource: these pages are lessons, and the educational
+// properties are what AI answer engines and Google's learning surfaces read.
+const publisher = {
+  '@type': 'Organization',
+  name: 'DeutschMeister',
+  url: 'https://deutsch-meister.de',
+  logo: 'https://deutsch-meister.de/logo.png',
+};
 const articleSchema = {
   '@context': 'https://schema.org',
-  '@type': 'Article',
+  '@type': ['Article', 'LearningResource'],
   headline: pageTitle,
+  name: `German ${topicTitle}`,
   description: pageDesc,
   url: canonicalUrlSlash,
   inLanguage: 'en',
-  publisher: { '@type': 'Organization', name: 'DeutschMeister', url: 'https://deutsch-meister.de' },
-  educationalLevel: meta.label,
+  publisher,
+  author: publisher,
+  datePublished: SITE_PUBLISHED,
+  dateModified: BUILD_DATE,
+  educationalLevel: `CEFR ${meta.label}`,
+  learningResourceType: 'Lesson',
+  educationalUse: 'self-study',
+  typicalAgeRange: '16-',
+  isAccessibleForFree: level === 'a1.1',
+  teaches: topic?.title_de ? `${topicTitle} (${topic.title_de})` : topicTitle,
   about: { '@type': 'Thing', name: `German grammar: ${topicTitle}` },
+  ...(exercises.length ? { hasPart: { '@type': 'Quiz', name: `${topicTitle} practice exercises`, educationalLevel: `CEFR ${meta.label}` } } : {}),
 };
 
 // Per-topic SEO enrichment (snippet intro + FAQ section + FAQPage schema).

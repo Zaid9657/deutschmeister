@@ -5,7 +5,7 @@ import '../styles/global.css';
 const title = 'Pricing — Free Trial & Pro Plans | DeutschMeister';
 const description = 'Start free, upgrade when ready. DeutschMeister Pro unlocks all 64 German grammar topics, AI speaking practice, and listening exercises.';
 
-const jsonLd = {
+const productSchema = {
   '@context': 'https://schema.org',
   '@type': 'Product',
   name: 'DeutschMeister Pro',
@@ -42,6 +42,19 @@ const FAQS = [
   { q: 'What happens after the trial?', qde: 'Was passiert nach der Testphase?', a: 'You keep access to all free content. Only premium features like speaking practice and extended analyses require a subscription.', ade: 'Du behältst Zugang zu allen kostenlosen Inhalten. Nur Premium-Features wie Sprechübungen und erweiterte Analysen erfordern ein Abo.' },
   { q: 'Can I cancel anytime?', qde: 'Kann ich jederzeit kündigen?', a: 'Yes, anytime. No questions asked, no hidden fees.', ade: 'Ja, jederzeit. Keine Fragen, keine versteckten Kosten.' },
 ];
+
+// The pricing FAQs are already on the page — expose them as FAQPage schema so
+// they can win rich results and be cited by AI answer engines.
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQS.map(({ q, a }) => ({
+    '@type': 'Question',
+    name: q,
+    acceptedAnswer: { '@type': 'Answer', text: a },
+  })),
+};
+const jsonLd = [productSchema, faqSchema];
 ---
 
 <Layout title={title} description={description} canonical="https://deutsch-meister.de/pricing/" jsonLd={jsonLd}>

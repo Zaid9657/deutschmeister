@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { BUILD_DATE } from '../../lib/siteMeta.js';
 import '../../styles/global.css';
 
 const FAQ_ITEMS = [
@@ -66,7 +67,7 @@ const jsonLd = [
     author: { '@type': 'Organization', name: 'DeutschMeister' },
     publisher: { '@type': 'Organization', name: 'DeutschMeister' },
     datePublished: '2026-05-28',
-    dateModified: '2026-05-28',
+    dateModified: BUILD_DATE,
     description: 'Kompletter Leitfaden zur telc Deutsch B1 Vorbereitung mit 8-Wochen-Lernplan, Prüfungsaufbau, Tipps und häufigen Fehlern.',
   },
   {

@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getTopicsForLevel, SUB_LEVELS, LEVEL_META } from '../../lib/grammar.js';
+import { BUILD_DATE, ORGANIZATION } from '../../lib/siteMeta.js';
 import '../../styles/global.css';
 
 export async function getStaticPaths() {
@@ -12,20 +13,38 @@ const meta = LEVEL_META[level];
 const topics = await getTopicsForLevel(level);
 
 const title = `${meta.label} Grammatik — ${topics.length} Themen | DeutschMeister`;
-const description = `Alle ${topics.length} Grammatikthemen für ${meta.label}: ${topics.slice(0, 4).map(t => t.title_en).join(', ')} und mehr. Mit Regeln, Beispielen und Übungen.`;
+// Keep under 160 chars: list two topic titles, not four.
+const description = `Alle ${topics.length} Grammatikthemen für ${meta.label}: ${topics.slice(0, 2).map(t => t.title_en).join(', ')} und mehr — mit Regeln, Beispielen und Übungen.`;
 
+const levelUrl = `https://deutsch-meister.de/grammar/${level}/`;
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'CollectionPage',
+  '@type': ['CollectionPage', 'LearningResource'],
   name: title,
   description,
-  url: `https://deutsch-meister.de/grammar/${level}/`,
+  url: levelUrl,
+  inLanguage: 'de',
+  educationalLevel: `CEFR ${meta.label}`,
+  learningResourceType: 'Course module',
+  isAccessibleForFree: level === 'a1.1',
+  dateModified: BUILD_DATE,
+  publisher: ORGANIZATION,
+  mainEntity: {
+    '@type': 'ItemList',
+    numberOfItems: topics.length,
+    itemListElement: topics.map((t, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: t.title_en,
+      url: `https://deutsch-meister.de/grammar/${level}/${t.slug}/`,
+    })),
+  },
   breadcrumb: {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de/' },
       { '@type': 'ListItem', position: 2, name: 'Grammatik', item: 'https://deutsch-meister.de/grammar/' },
-      { '@type': 'ListItem', position: 3, name: meta.label, item: `https://deutsch-meister.de/grammar/${level}/` },
+      { '@type': 'ListItem', position: 3, name: meta.label, item: levelUrl },
     ],
   },
 };
