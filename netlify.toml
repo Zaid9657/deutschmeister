@@ -13,6 +13,12 @@
 [functions."daily-sentence"]
   schedule = "0 7 * * *"
 
+# Trial lifecycle (day 3 / day 6 / day-after). An hour after the daily sentence
+# so the two jobs never overlap. The schedule() wrapper in the function is the
+# authoritative declaration; this mirrors it.
+[functions."trial-lifecycle"]
+  schedule = "0 8 * * *"
+
 # Security headers for all pages
 [[headers]]
   for = "/*"
@@ -123,10 +129,31 @@
   to = "/.netlify/functions/podcast-feed"
   status = 200
 
-# Speaking API proxy
+# Speaking API proxy — enumerated, not a wildcard.
+# `/api/speaking/*` -> `/.netlify/functions/:splat` proxied EVERY function under a
+# path whose name implies a narrow scope: /api/speaking/lemonsqueezy-webhook,
+# /api/speaking/send-campaign and /api/speaking/unsubscribe all resolved. Each
+# target has its own auth so nothing was directly exploitable, but it silently
+# re-exposed every current and future function. Only the four the SPA calls are
+# routed here.
 [[redirects]]
-  from = "/api/speaking/*"
-  to = "/.netlify/functions/:splat"
+  from = "/api/speaking/speaking-session"
+  to = "/.netlify/functions/speaking-session"
+  status = 200
+
+[[redirects]]
+  from = "/api/speaking/speaking-turn"
+  to = "/.netlify/functions/speaking-turn"
+  status = 200
+
+[[redirects]]
+  from = "/api/speaking/evaluate-speaking"
+  to = "/.netlify/functions/evaluate-speaking"
+  status = 200
+
+[[redirects]]
+  from = "/api/speaking/check-speaking-usage"
+  to = "/.netlify/functions/check-speaking-usage"
   status = 200
 
 # Unsubscribe handler

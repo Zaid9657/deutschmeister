@@ -33,10 +33,6 @@ function isBlockedEmail(email) {
   return BLOCKED_DOMAINS.has(domain);
 }
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 function unsubscribeUrl(userId) {
   const token = createHmac('sha256', UNSUB_SECRET).update(userId).digest('hex');
   return `${BASE_URL}/unsubscribe?uid=${userId}&token=${token}`;
@@ -62,7 +58,9 @@ async function fetchAllUserEmails() {
 
     for (const user of data.users) {
       const email = user.email?.trim().toLowerCase();
-      if (email && !isBlockedEmail(email)) {
+      // Confirmed addresses only — unverified ones are disproportionately
+      // typos and spam traps, and bounces cost the sending domain dearly.
+      if (email && user.email_confirmed_at && !isBlockedEmail(email)) {
         users.push({ id: user.id, email });
       }
     }
@@ -94,27 +92,25 @@ async function fetchAllUserEmails() {
   return users.filter((u) => !optedOut.has(u.id));
 }
 
-async function sendEmail(resendKey, to, subject, htmlBody) {
-  const res = await fetch('https://api.resend.com/emails', {
+const BATCH_SIZE = 100;
+
+// Resend's batch endpoint: ~1,000 recipients in ~10 requests instead of ~1,000
+// requests spaced a second apart, which never finished inside the function
+// budget and left the operator with no idea who had received the campaign.
+async function sendBatch(resendKey, items) {
+  const res = await fetch('https://api.resend.com/emails/batch', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${resendKey}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      from:    FROM_ADDRESS,
-      to:      [to],
-      subject,
-      html:    htmlBody,
-    }),
+    body: JSON.stringify(items),
   });
 
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`Resend ${res.status}: ${text}`);
+    throw new Error(`Resend batch ${res.status}: ${text.slice(0, 300)}`);
   }
-
-  return res.json();
 }
 
 export const handler = async (event) => {
@@ -177,7 +173,8 @@ export const handler = async (event) => {
       console.log(`Fetched ${recipients.length} eligible recipients`);
     } catch (err) {
       console.error('Failed to fetch recipients:', err.message);
-      return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
+      console.error('send-campaign: recipient fetch failed:', err.message);
+      return { statusCode: 500, headers, body: JSON.stringify({ error: 'Internal error' }) };
     }
   }
 
@@ -190,21 +187,22 @@ export const handler = async (event) => {
   let failed = 0;
   const errors = [];
 
-  for (const recipient of recipients) {
-    const { id, email } = recipient;
+  for (let i = 0; i < recipients.length; i += BATCH_SIZE) {
+    const slice = recipients.slice(i, i + BATCH_SIZE);
+    const items = slice.map(({ id, email }) => ({
+      from: FROM_ADDRESS,
+      to: [email],
+      subject: subject.trim(),
+      html: body.trim() + unsubscribeFooter(id),
+    }));
     try {
-      await sendEmail(resendKey, email, subject.trim(), body.trim() + unsubscribeFooter(id));
-      sent++;
-      console.log(`Sent to ${email} (${sent}/${recipients.length})`);
+      await sendBatch(resendKey, items);
+      sent += slice.length;
+      console.log(`Batch ${Math.floor(i / BATCH_SIZE) + 1}: ${sent}/${recipients.length}`);
     } catch (err) {
-      failed++;
-      errors.push({ email, error: err.message });
-      console.error(`Failed to send to ${email}:`, err.message);
-    }
-
-    // 1 second delay between sends (skip after the last one)
-    if (sent + failed < recipients.length) {
-      await sleep(1000);
+      failed += slice.length;
+      errors.push({ batch: Math.floor(i / BATCH_SIZE) + 1, error: err.message });
+      console.error(`Batch ${Math.floor(i / BATCH_SIZE) + 1} failed:`, err.message);
     }
   }
 

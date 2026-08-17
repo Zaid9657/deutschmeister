@@ -1,10 +1,12 @@
 const { createClient } = require('@supabase/supabase-js');
 
 exports.handler = async (event) => {
-  // Use env vars if available, otherwise use the same public values as the frontend
-  // These are safe to hardcode since podcasts are public data and the anon key is already in the frontend bundle
-  const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
-  const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9tcXl1ZWRka3RxZXlycnF2bnlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwMzQyMjIsImV4cCI6MjA4NDYxMDIyMn0.1QAEt_aDNH-aT1464lhDeKFWTliVKbuv74up5RvtcVo';
+  // No hardcoded key fallback. The literal that used to live here was a valid
+  // anon JWT good until 2084 — not a disclosure (the same key ships in the SPA
+  // bundle), but it silently defeated key rotation: rotating the anon key would
+  // have left this one function still presenting the old one.
+  const supabaseUrl = process.env.SUPABASE_URL || process.env.PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.PUBLIC_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseKey) {
     console.error('Missing Supabase credentials:', {
@@ -37,10 +39,14 @@ exports.handler = async (event) => {
   const baseUrl = 'https://deutsch-meister.de';
   const storageBaseUrl = 'https://omqyueddktqeyrrqvnyq.supabase.co/storage/v1/object/public';
 
-  const items = podcasts.map((ep, index) => {
+  const items = podcasts
+    .filter((ep) => ep.audio_url && String(ep.audio_url).trim())
+    .map((ep, index) => {
     // Construct audio URL
-    let audioUrl = ep.audio_url;
-    if (!audioUrl.startsWith('http')) {
+    // A published episode with a null audio_url used to throw here, taking the
+    // whole feed down with a raw 502 (no try/catch anywhere in this file).
+    let audioUrl = ep.audio_url || '';
+    if (audioUrl && !audioUrl.startsWith('http')) {
       audioUrl = `${storageBaseUrl}/video-library/${audioUrl}`;
     }
 
