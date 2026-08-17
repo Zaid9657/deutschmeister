@@ -3,10 +3,10 @@ import { motion, useInView } from 'framer-motion';
 
 // Last updated: 2026-05-27 — refresh monthly
 const STATS = [
-  { value: '959', label: 'Lernende' },
+  { value: '1.400+', label: 'Lernende' },
   { value: '2.488', label: 'KI-Sprechübungen' },
-  { value: '350', label: 'Neue Lernende diesen Monat' },
-  { value: '154', label: 'Sätze röntgen-analysiert' },
+  { value: '170+', label: 'Neue Lernende pro Monat' },
+  { value: '480', label: 'Dialoge mit Muttersprachlern' },
 ];
 
 function parseGermanNumber(str) {
@@ -68,7 +68,7 @@ const StatsBar = () => {
         </div>
 
         <p className="text-center text-xs text-slate-400 mt-8">
-          Stand: Mai 2026
+          Stand: August 2026
         </p>
       </div>
     </section>

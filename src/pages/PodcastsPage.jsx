@@ -7,6 +7,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { isLevelFree } from '../config/freeTier';
 import SEO from '../components/SEO';
+import DataState from '../components/DataState';
 
 const LEVEL_INFO = {
   'A1.1': { name: 'Complete Beginner', color: 'from-emerald-400 to-teal-400', textColor: 'text-emerald-700', bgColor: 'bg-emerald-50', borderColor: 'border-emerald-200' },
@@ -31,6 +32,7 @@ function formatTime(seconds) {
 const PodcastsPage = () => {
   const [podcastsByLevel, setPodcastsByLevel] = useState({});
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const [totalCount, setTotalCount] = useState(0);
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -42,13 +44,23 @@ const PodcastsPage = () => {
 
   const fetchAllPodcasts = async () => {
     setLoading(true);
+    setLoadError(null);
     const { data, error } = await supabase
       .from('podcasts')
       .select('*')
       .eq('is_published', true)
       .order('podcast_order');
 
-    if (!error && data) {
+    // A failed fetch used to fall through silently, so every level rendered
+    // "New episodes coming soon!" — indistinguishable from an empty catalogue.
+    if (error) {
+      console.error('[PodcastsPage] fetch failed:', error.message);
+      setLoadError(error);
+      setLoading(false);
+      return;
+    }
+
+    if (data) {
       // Group by level
       const grouped = {};
       LEVEL_ORDER.forEach(level => {
@@ -156,6 +168,8 @@ const PodcastsPage = () => {
           <div className="flex items-center justify-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
           </div>
+        ) : loadError ? (
+          <DataState error={loadError} onRetry={fetchAllPodcasts}>{null}</DataState>
         ) : (
           <div className="space-y-8 mb-16">
             {LEVEL_ORDER.map((level, index) => {

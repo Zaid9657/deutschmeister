@@ -1,5 +1,4 @@
 import { supabase } from '../utils/supabase';
-import { getTopicContent as getStaticContent } from '../data/grammarContent';
 
 // ==========================================
 // Helpers
@@ -86,6 +85,16 @@ function mapExerciseType(dbType) {
 }
 
 /** Transform a grammar_exercises DB row into the app exercise format */
+// `[]` is truthy in JavaScript, so `acceptable_answers || [correct_answer]`
+// would pass an empty array straight through and reject every typed answer.
+// The correct answer is always accepted, whatever the column happens to hold.
+// (The Astro island spreads onto correct_answer instead — same guarantee,
+// reached differently; keep both in step.)
+function buildAcceptableAnswers(dbRow) {
+  const extra = Array.isArray(dbRow.acceptable_answers) ? dbRow.acceptable_answers : [];
+  return Array.from(new Set([dbRow.correct_answer, ...extra])).filter(Boolean);
+}
+
 function mapDbExerciseToApp(dbRow) {
   const exercise = {
     type: mapExerciseType(dbRow.exercise_type),
@@ -115,17 +124,17 @@ function mapDbExerciseToApp(dbRow) {
     }
   } else if (dbRow.exercise_type === 'fill_blank' || dbRow.exercise_type === 'translation') {
     exercise.answer = dbRow.correct_answer;
-    exercise.acceptableAnswers = dbRow.acceptable_answers || [dbRow.correct_answer];
+    exercise.acceptableAnswers = buildAcceptableAnswers(dbRow);
   } else if (dbRow.exercise_type === 'reorder' || dbRow.exercise_type === 'sentence_building') {
     exercise.words = dbRow.options || [];
     exercise.correctOrder = dbRow.acceptable_answers || [];
   } else if (dbRow.exercise_type === 'matching') {
     exercise.options = dbRow.options || [];
     exercise.answer = dbRow.correct_answer;
-    exercise.acceptableAnswers = dbRow.acceptable_answers || [dbRow.correct_answer];
+    exercise.acceptableAnswers = buildAcceptableAnswers(dbRow);
   } else {
     exercise.answer = dbRow.correct_answer;
-    exercise.acceptableAnswers = dbRow.acceptable_answers || [dbRow.correct_answer];
+    exercise.acceptableAnswers = buildAcceptableAnswers(dbRow);
   }
 
   if (dbRow.hint) {
@@ -305,190 +314,6 @@ export async function fetchTopicsForLevel(level) {
   return data.map(mapDbTopicToApp);
 }
 
-/**
- * Fetch a single topic by slug from Supabase only.
- * Returns null if not found.
- */
-export async function fetchTopicBySlug(level, slug) {
-  const dbLevel = toDbLevel(level);
-
-  const { data, error } = await supabase
-    .from('grammar_topics')
-    .select('*')
-    .eq('sub_level', dbLevel)
-    .eq('slug', slug)
-    .single();
-
-
-  if (error) {
-    console.error(`[grammarService] fetchTopicBySlug ERROR:`, error);
-    return null;
-  }
-
-  if (!data) {
-    console.warn(`[grammarService] fetchTopicBySlug: NOT FOUND in Supabase`);
-    return null;
-  }
-
-  uuidCache.set(`${level}:${slug}`, data.id);
-  return mapDbTopicToApp(data);
-}
-
-/**
- * Fetch full content for a topic (all 5 stages) from Supabase only.
- * Returns null if topic not found or content tables empty.
- */
-export async function fetchTopicContent(level, slug) {
-
-  // Step 1: Get topic data (including UUID)
-  const topicData = await fetchTopicBySlug(level, slug);
-  if (!topicData || !topicData.uuid) {
-    console.error(`[grammarService] fetchTopicContent: NO topic found for "${level}/${slug}"`);
-    return null;
-  }
-
-  const topicUUID = topicData.uuid;
-
-  // Step 2: Parallel fetch from content tables (NO grammar_introductions - using grammar_rules instead)
-  const [examplesRes, rulesRes, exercisesRes] = await Promise.all([
-    supabase
-      .from('grammar_examples')
-      .select('*')
-      .eq('topic_id', topicUUID)
-      .order('difficulty', { ascending: true })  // Order by difficulty (1=easy, 3=hard)
-      .order('order_index'),
-    supabase
-      .from('grammar_rules')
-      .select('*')
-      .eq('topic_id', topicUUID)
-      .order('order_index'),
-    supabase
-      .from('grammar_exercises')
-      .select('*')
-      .eq('topic_id', topicUUID)
-      .order('order_index'),
-  ]);
-
-  // Log errors explicitly
-  if (examplesRes.error) console.error(`[grammarService] grammar_examples ERROR:`, examplesRes.error);
-  if (rulesRes.error) console.error(`[grammarService] grammar_rules ERROR:`, rulesRes.error);
-  if (exercisesRes.error) console.error(`[grammarService] grammar_exercises ERROR:`, exercisesRes.error);
-
-  const examples = examplesRes.data || [];
-  const allRules = rulesRes.data || [];
-  const exercises = exercisesRes.data || [];
-
-  // Separate introduction rule from regular rules (use first introduction found, filter out all)
-  const introRule = allRules.find(rule => rule.rule_type === 'introduction');
-  const rules = allRules.filter(rule => rule.rule_type !== 'introduction');
-
-
-  if (examples.length === 0 && rules.length === 0 && exercises.length === 0) {
-    console.warn(`[grammarService] fetchTopicContent: ALL content tables returned 0 rows for UUID="${topicUUID}". Will show introduction only. Check RLS policies or add content.`);
-    // Continue anyway - we'll show at least the introduction stage
-  }
-
-  // Step 3: Transform
-  const dbStage2 = buildStage2(examples);
-  const dbStage3 = buildStage3(rules);
-  const { stage4: dbStage4, stage5: dbStage5 } = buildExerciseStages(exercises);
-
-  // Stage 1 (Introduction) - priority: grammar_rules introduction > grammar_topics fields > static file > generated defaults
-  const staticContent = getStaticContent(level, slug);
-  let stage1Content = null;
-
-  // Priority 1: Check if topic has rich introduction in grammar_rules (NEW FORMAT)
-  if (introRule && introRule.content && introRule.content.hook_en) {
-    const content = introRule.content;
-    stage1Content = {
-      title: {
-        en: topicData.titleEn,
-        de: topicData.titleDe,
-      },
-      // New rich format from grammar_rules content JSONB
-      hook: {
-        en: content.hook_en,
-        de: content.hook_de || content.hook_en,
-      },
-      englishComparison: {
-        en: content.english_comparison_en,
-        de: content.english_comparison_de || content.english_comparison_en,
-      },
-      germanDifference: {
-        en: content.german_difference_en,
-        de: content.german_difference_de || content.german_difference_en,
-      },
-      previewExample: content.preview_example_de ? {
-        german: content.preview_example_de,
-        english: content.preview_example_en,
-        highlight: content.preview_highlight,
-      } : null,
-      scenario: {
-        en: content.scenario_en,
-        de: content.scenario_de || content.scenario_en,
-      },
-      whyItMatters: {
-        en: content.why_it_matters_en,
-        de: content.why_it_matters_de || content.why_it_matters_en,
-      },
-    };
-  }
-  // Priority 2: Check if topic has introduction in grammar_topics table (OLD ENRICHED FORMAT)
-  else if (topicData.introductionEn || topicData.introductionDe) {
-    stage1Content = {
-      title: {
-        en: topicData.titleEn,
-        de: topicData.titleDe,
-      },
-      introduction: {
-        en: topicData.introductionEn || topicData.descriptionEn || `Learn about ${topicData.titleEn}.`,
-        de: topicData.introductionDe || topicData.descriptionDe || `Lerne über ${topicData.titleDe}.`,
-      },
-      keyPoints: topicData.keyPoints || [],
-    };
-  }
-  // Priority 3: Use static content if available
-  else if (staticContent?.stage1) {
-    stage1Content = staticContent.stage1;
-  }
-  // Priority 4: Generate default from basic topic data
-  else {
-    stage1Content = {
-      title: {
-        en: topicData.titleEn,
-        de: topicData.titleDe,
-      },
-      introduction: {
-        en: topicData.descriptionEn || `Learn about ${topicData.titleEn} in German grammar.`,
-        de: topicData.descriptionDe || `Lerne über ${topicData.titleDe} in der deutschen Grammatik.`,
-      },
-      keyPoints: [
-        {
-          en: `Understand the concept of ${topicData.titleEn}`,
-          de: `Verstehe das Konzept von ${topicData.titleDe}`,
-        },
-        {
-          en: 'Learn when and how to use it correctly',
-          de: 'Lerne, wann und wie man es richtig verwendet',
-        },
-        {
-          en: 'Practice with real examples',
-          de: 'Übe mit echten Beispielen',
-        },
-      ],
-    };
-  }
-
-  const result = {
-    stage1: stage1Content,
-    stage2: dbStage2,
-    stage3: dbStage3,
-    stage4: dbStage4,
-    stage5: dbStage5,
-  };
-
-  return result;
-}
 
 // ==========================================
 // Progress Management

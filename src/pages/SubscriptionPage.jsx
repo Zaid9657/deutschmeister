@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
 import SEO from '../components/SEO';
+import { openCheckout } from '../utils/openCheckout';
 
 const SubscriptionPage = () => {
   const { i18n } = useTranslation();
@@ -63,7 +64,7 @@ const SubscriptionPage = () => {
       user?.email || '',
       user?.id || ''
     );
-    window.open(checkoutUrl, '_blank');
+    openCheckout(checkoutUrl);
 
     // Start polling: first poll Supabase, then call verify as fallback
     setVerifying(true);

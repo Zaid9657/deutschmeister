@@ -15,7 +15,10 @@ const ExercisePlayer = () => {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
   const isGerman = i18n.language === 'de';
-  const theme = getLevelTheme(level);
+  // The route level is lowercase (/listening/a1.1/…); the theme table is keyed
+  // on the DB's uppercase form — normalize before every lookup / display.
+  const levelKey = (level || '').toUpperCase();
+  const theme = getLevelTheme(levelKey);
 
   const { exercise, dialogues, questions, loading, error } = useExerciseDetails(level, exerciseNumber);
   const { saveProgress } = useSaveProgress();
@@ -71,7 +74,7 @@ const ExercisePlayer = () => {
         <div className="max-w-3xl mx-auto text-center py-16">
           <p className="text-slate-500 mb-4">{error || (isGerman ? 'Übung nicht gefunden.' : 'Exercise not found.')}</p>
           <button
-            onClick={() => navigate(`/listening/${level}`)}
+            onClick={() => navigate(`/listening/${(level || '').toLowerCase()}`)}
             className="text-indigo-500 hover:underline"
           >
             {isGerman ? 'Zurück zu den Übungen' : 'Back to exercises'}
@@ -87,20 +90,20 @@ const ExercisePlayer = () => {
   return (
     <div className="min-h-screen pt-24 pb-12 px-4 sm:px-6 lg:px-8">
       <SEO
-        title={`Listening Exercise ${exerciseNumber} - German ${level}`}
-        description={`German listening comprehension exercise ${exerciseNumber} for level ${level}. Listen to native speaker dialogues and answer questions.`}
-        path={`/listening/${level}/${exerciseNumber}`}
+        title={`Listening Exercise ${exerciseNumber} - German ${levelKey}`}
+        description={`German listening comprehension exercise ${exerciseNumber} for level ${levelKey}. Listen to native speaker dialogues and answer questions.`}
+        path={`/listening/${(level || '').toLowerCase()}/${exerciseNumber}`}
       />
       <div className="max-w-3xl mx-auto">
         {/* Back button */}
         <motion.button
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
-          onClick={() => navigate(`/listening/${level}`)}
+          onClick={() => navigate(`/listening/${(level || '').toLowerCase()}`)}
           className="flex items-center gap-2 text-slate-500 hover:text-slate-700 transition-colors mb-6"
         >
           <ArrowLeft size={18} />
-          {level} - {isGerman ? 'Übungen' : 'Exercises'}
+          {levelKey} - {isGerman ? 'Übungen' : 'Exercises'}
         </motion.button>
 
         {/* If submitted, show results */}

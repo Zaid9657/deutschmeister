@@ -23,7 +23,7 @@ const jsonLd = {
   name: title,
   description,
   url: levelUrl,
-  inLanguage: 'de',
+  inLanguage: 'en',
   educationalLevel: `CEFR ${meta.label}`,
   learningResourceType: 'Course module',
   isAccessibleForFree: level === 'a1.1',
@@ -50,13 +50,13 @@ const jsonLd = {
 };
 ---
 
-<Layout title={title} description={description} canonical={`https://deutsch-meister.de/grammar/${level}/`} jsonLd={jsonLd} lang="de">
+<Layout title={title} description={description} canonical={`https://deutsch-meister.de/grammar/${level}/`} jsonLd={jsonLd} lang="en">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 py-10">
     <!-- Breadcrumb -->
     <nav class="flex items-center gap-2 text-sm text-slate-600 mb-8" aria-label="Breadcrumb">
       <a href="https://deutsch-meister.de/" class="hover:text-slate-700 transition-colors">Home</a>
       <span>/</span>
-      <a href="/grammar/" class="hover:text-slate-700 transition-colors">Grammatik</a>
+      <a href="/grammar/" class="hover:text-slate-700 transition-colors" lang="de">Grammatik</a>
       <span>/</span>
       <span class="text-slate-800 font-medium">{meta.label}</span>
     </nav>
@@ -70,9 +70,9 @@ const jsonLd = {
         <span class="font-semibold text-slate-700">{meta.name}</span>
       </div>
       <h1 class="font-display text-4xl font-bold text-slate-900 mb-3">
-        {meta.label} Grammatik
+        <span lang="de">{meta.label} Grammatik</span>
       </h1>
-      <p class="text-slate-600 text-lg">
+      <p class="text-slate-600 text-lg" lang="de">
         {topics.length} Themen mit Erklärungen, Beispielen und interaktiven Übungen.
       </p>
     </div>
@@ -88,11 +88,14 @@ const jsonLd = {
             {i + 1}
           </span>
           <div class="flex-1 min-w-0">
-            <p class="font-semibold text-slate-800 group-hover:text-slate-900 transition-colors">
+            <!-- Heading, not styling: font-body + text-base reproduce the
+                 previous paragraph rendering exactly, while the h2 removes the
+                 h1-to-h3 skip in the outline. -->
+            <h2 class="font-body text-base font-semibold text-slate-800 group-hover:text-slate-900 transition-colors">
               {topic.title_en}
-            </p>
+            </h2>
             {topic.title_de && topic.title_de !== topic.title_en && (
-              <p class="text-sm text-slate-600 mt-0.5">{topic.title_de}</p>
+              <p class="text-sm text-slate-600 mt-0.5" lang="de">{topic.title_de}</p>
             )}
             {topic.description_en && (
               <p class="text-sm text-slate-600 mt-1 line-clamp-1">{topic.description_en}</p>
@@ -107,7 +110,7 @@ const jsonLd = {
 
     <!-- Level navigation -->
     <div class="mt-10 pt-8 border-t border-slate-200">
-      <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Andere Niveaus</p>
+      <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4" lang="de">Andere Niveaus</p>
       <div class="flex flex-wrap gap-2">
         {SUB_LEVELS.filter(l => l !== level).map((l) => (
           <a

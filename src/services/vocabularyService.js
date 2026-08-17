@@ -49,6 +49,27 @@ function mapDbSentenceToApp(dbRow, index) {
  * Fetch vocabulary words for a level from Supabase only.
  * Returns empty array if nothing found or on error.
  */
+/**
+ * Count words for a level without downloading them.
+ *
+ * The vocabulary overview only needs eight numbers, but used to fetch every
+ * row of all eight levels (~2,000 records) just to read `.length`.
+ */
+export async function countWordsForLevel(level) {
+  const dbLevel = toDbLevel(level);
+
+  const { count, error } = await supabase
+    .from('words')
+    .select('id', { count: 'exact', head: true })
+    .eq('level', dbLevel);
+
+  if (error) {
+    console.error('[vocabularyService] countWordsForLevel ERROR:', error.message);
+    return 0;
+  }
+  return count ?? 0;
+}
+
 export async function fetchWordsForLevel(level) {
   const dbLevel = toDbLevel(level);
 

@@ -22,8 +22,8 @@ const ListeningHome = () => {
   return (
     <>
       <SEO
-        title="German Listening Practice | 480 Audio Exercises A1-B2 | DeutschMeister"
-        description="Improve your German listening comprehension with 480 native speaker dialogues across all CEFR levels. Interactive exercises with questions and instant feedback."
+        title="German Listening Practice | 48 Exercises, 480 Dialogues | DeutschMeister"
+        description="Improve your German listening comprehension with 48 exercises built from 480 native-speaker dialogue lines, across all CEFR levels. Questions and instant feedback."
         keywords="German listening practice, German audio exercises, German listening comprehension, learn German listening, German dialogues"
         path="/listening/"
         structuredData={{

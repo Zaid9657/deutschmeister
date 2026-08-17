@@ -59,6 +59,55 @@ const readingCards = Object.entries(READING_LESSON_COUNTS).map(([lvl, count]) =>
         <p class="text-xs text-slate-500">${count} reading lessons</p>
       </a>`).join('');
 
+// FAQ content is defined once and used for BOTH the FAQPage JSON-LD and the
+// visible <section> injected into #root — Google requires that structured-data
+// questions/answers are visible on the page, so the two must never diverge.
+const LEVEL_TEST_FAQS = [
+  { q: 'How long does the German level test take?', a: 'The complete test takes approximately 15-20 minutes, including written, listening, and speaking sections.' },
+  { q: 'Is the German level test free?', a: "Yes, the German level test is completely free. You'll receive instant results showing your CEFR level from A1 to B2." },
+  { q: 'What does the German level test include?', a: 'The test includes three sections: written comprehension (grammar and vocabulary), listening comprehension with native speaker audio, and speaking assessment with AI feedback.' },
+  { q: 'What CEFR levels does the test cover?', a: 'The test assesses levels from complete beginner (A1) to upper intermediate (B2), following the Common European Framework of Reference for Languages.' },
+];
+
+const PODCAST_FAQS = [
+  { q: 'What level are the German podcasts?', a: 'We have 24 podcast episodes covering all levels from A1 (complete beginner) to B2 (upper intermediate). Each episode is labeled with its CEFR level so you can find content that matches your skills.' },
+  { q: 'Are the German podcasts free?', a: 'Yes, all podcasts are free to listen to. A1.1 content is available without signup, while other levels require a free account.' },
+  { q: 'Do the podcasts have transcripts?', a: 'Yes, every podcast episode includes a full transcript in German with translations. This helps you follow along and learn new vocabulary in context.' },
+  { q: 'How many podcast episodes are there?', a: 'We have 24 episodes total — 3 episodes for each of the 8 CEFR levels (A1.1, A1.2, A2.1, A2.2, B1.1, B1.2, B2.1, B2.2). New episodes are added regularly.' },
+];
+
+const faqPageSchema = (faqs) => ({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(({ q, a }) => ({
+    '@type': 'Question',
+    name: q,
+    acceptedAnswer: { '@type': 'Answer', text: a },
+  })),
+});
+
+// Visible FAQ markup, in each page's own visual language.
+const faqSectionTailwind = (faqs) => `
+  <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 sm:p-10 mb-12">
+    <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-800 mb-6">Frequently Asked Questions</h2>
+    <div class="space-y-6">${faqs.map(({ q, a }) => `
+      <div>
+        <h3 class="text-lg font-bold text-slate-800 mb-2">${q}</h3>
+        <p class="text-slate-600 leading-relaxed">${a}</p>
+      </div>`).join('')}
+    </div>
+  </div>`;
+
+// Reuses the level-test page's own .test-structure / .structure-step classes
+// (src/styles/LevelTest.css) so the FAQ block matches the sections around it.
+const faqSectionPlain = (faqs) => `
+  <div class="test-structure">
+    <h2>Frequently Asked Questions</h2>
+    <div class="structure-steps">${faqs.map(({ q, a }) => `
+      <div class="structure-step"><div class="step-content"><h3>${q}</h3><p>${a}</p></div></div>`).join('')}
+    </div>
+  </div>`;
+
 const xrayExamples = [
   'Die Mutter gibt dem Kind einen Apfel.',
   'Wegen des Wetters bleiben wir heute zu Hause.',
@@ -111,16 +160,7 @@ const ROUTES = [
         isAccessibleForFree: true,
         provider: { '@type': 'Organization', name: 'DeutschMeister', url: 'https://deutsch-meister.de' },
       },
-      {
-        '@context': 'https://schema.org',
-        '@type': 'FAQPage',
-        mainEntity: [
-          { '@type': 'Question', name: 'How long does the German level test take?', acceptedAnswer: { '@type': 'Answer', text: 'The complete test takes approximately 15-20 minutes, including written, listening, and speaking sections.' } },
-          { '@type': 'Question', name: 'Is the German level test free?', acceptedAnswer: { '@type': 'Answer', text: "Yes, the German level test is completely free. You'll receive instant results showing your CEFR level from A1 to B2." } },
-          { '@type': 'Question', name: 'What does the German level test include?', acceptedAnswer: { '@type': 'Answer', text: 'The test includes three sections: written comprehension (grammar and vocabulary), listening comprehension with native speaker audio, and speaking assessment with AI feedback.' } },
-          { '@type': 'Question', name: 'What CEFR levels does the test cover?', acceptedAnswer: { '@type': 'Answer', text: 'The test assesses levels from complete beginner (A1) to upper intermediate (B2), following the Common European Framework of Reference for Languages.' } },
-        ],
-      },
+      faqPageSchema(LEVEL_TEST_FAQS),
       {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
@@ -163,6 +203,7 @@ const ROUTES = [
     <p class="start-test-btn enhanced">Start the Test</p>
     <p class="cta-note">No account required • Results are instant • 100% free</p>
   </div>
+${faqSectionPlain(LEVEL_TEST_FAQS)}
 </div></div></div>`,
   },
   {
@@ -229,16 +270,7 @@ const ROUTES = [
         author: { '@type': 'Organization', name: 'DeutschMeister', url: 'https://deutsch-meister.de' },
         isAccessibleForFree: true,
       },
-      {
-        '@context': 'https://schema.org',
-        '@type': 'FAQPage',
-        mainEntity: [
-          { '@type': 'Question', name: 'What level are the German podcasts?', acceptedAnswer: { '@type': 'Answer', text: 'We have 24 podcast episodes covering all levels from A1 (complete beginner) to B2 (upper intermediate). Each episode is labeled with its CEFR level so you can find content that matches your skills.' } },
-          { '@type': 'Question', name: 'Are the German podcasts free?', acceptedAnswer: { '@type': 'Answer', text: 'Yes, all podcasts are free to listen to. A1.1 content is available without signup, while other levels require a free account.' } },
-          { '@type': 'Question', name: 'Do the podcasts have transcripts?', acceptedAnswer: { '@type': 'Answer', text: 'Yes, every podcast episode includes a full transcript in German with translations. This helps you follow along and learn new vocabulary in context.' } },
-          { '@type': 'Question', name: 'How many podcast episodes are there?', acceptedAnswer: { '@type': 'Answer', text: 'We have 24 episodes total — 3 episodes for each of the 8 CEFR levels (A1.1, A1.2, A2.1, A2.2, B1.1, B1.2, B2.1, B2.2). New episodes are added regularly.' } },
-        ],
-      },
+      faqPageSchema(PODCAST_FAQS),
       {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
@@ -274,6 +306,7 @@ const ROUTES = [
       <a href="/signup" class="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-slate-200 text-slate-700 font-semibold rounded-2xl">Sign Up Free</a>
     </div>
   </div>
+${faqSectionTailwind(PODCAST_FAQS)}
 </div></div>`,
   },
   {
@@ -336,9 +369,14 @@ const ROUTES = [
 ];
 
 function mustReplace(html, pattern, replacement, label, route) {
-  const out = html.replace(pattern, replacement);
-  if (out === html) throw new Error(`prerender-spa-routes: marker "${label}" not found in shell for ${route}`);
-  return out;
+  // Assert on the MARKER, not on the diff. Comparing before/after treats a
+  // no-op replacement as a missing marker, which breaks the moment the shell
+  // already holds the target value (e.g. og:locale=en_US in index.html).
+  const re = pattern instanceof RegExp ? pattern : new RegExp(pattern);
+  if (!re.test(html)) {
+    throw new Error(`prerender-spa-routes: marker "${label}" not found in shell for ${route}`);
+  }
+  return html.replace(pattern, replacement);
 }
 
 let summary = [];
@@ -358,6 +396,12 @@ for (const route of ROUTES) {
   html = mustReplace(html, /(<meta name="twitter:title" content=")[^"]*(")/, `$1${esc(route.title)}$2`, 'twitter:title', route.path);
   html = mustReplace(html, /(<meta name="twitter:description" content=")[^"]*(")/, `$1${esc(route.description)}$2`, 'twitter:description', route.path);
   html = mustReplace(html, /(<link rel="canonical" href=")[^"]*(")/, `$1${url}$2`, 'canonical', route.path);
+  // The shell inherits og:locale=de_DE from index.html, but every prerendered
+  // route is <html lang="en"> with English copy — set the locale per route.
+  const locale = route.ogLocale ?? 'en_US';
+  const localeAlt = locale === 'de_DE' ? 'en_US' : 'de_DE';
+  html = mustReplace(html, /(<meta property="og:locale" content=")[^"]*(")/, `$1${locale}$2`, 'og:locale', route.path);
+  html = mustReplace(html, /(<meta property="og:locale:alternate" content=")[^"]*(")/, `$1${localeAlt}$2`, 'og:locale:alternate', route.path);
 
   // Drop head JSON-LD blocks that are homepage-specific (the FAQPage about the
   // homepage). WebSite/Organization schemas stay — they are site-wide.
@@ -386,5 +430,13 @@ for (const route of ROUTES) {
   const words = route.content.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
   summary.push(`  ${route.path.padEnd(12)} → ${route.dir}/index.html (${words} visible words in #root)`);
 }
+
+// The SPA shell itself (dist/app.html, served for every non-prerendered app
+// route) is <html lang="en"> with English copy but inherits og:locale=de_DE
+// from the source index.html — correct it in the built artifact too.
+let shellOut = mustReplace(shell, /(<meta property="og:locale" content=")[^"]*(")/, '$1en_US$2', 'og:locale', 'app.html');
+shellOut = mustReplace(shellOut, /(<meta property="og:locale:alternate" content=")[^"]*(")/, '$1de_DE$2', 'og:locale:alternate', 'app.html');
+writeFileSync(SHELL, shellOut);
+summary.push('  app.html      → og:locale=en_US');
 
 console.log(`prerender-spa-routes: wrote ${ROUTES.length} routes:\n${summary.join('\n')}`);

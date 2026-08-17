@@ -6,6 +6,7 @@ import SEO from '../components/SEO';
 import { useAuth } from '../contexts/AuthContext';
 import { getAuthHeaders } from '../utils/supabase';
 import { TRIAL_DAILY_LIMIT, PRO_DAILY_LIMIT } from '../config/limits';
+import { withTimeout } from '../utils/withTimeout';
 
 // ─── constants ───────────────────────────────────────────────────────────────
 
@@ -358,14 +359,20 @@ const SentenceXRay = () => {
     if (text) setSentence(text);
 
     try {
-      const res = await fetch('/.netlify/functions/analyze-sentence', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
-        body: JSON.stringify({
-          sentence:    trimmed,
-          anonymousId: user?.id ? null : anonId,
+      // Timeboxed: an LLM call that never resolves used to leave "Analyzing…"
+      // spinning forever with no way out.
+      const res = await withTimeout(
+        fetch('/.netlify/functions/analyze-sentence', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
+          body: JSON.stringify({
+            sentence:    trimmed,
+            anonymousId: user?.id ? null : anonId,
+          }),
         }),
-      });
+        45000,
+        'The analysis is taking longer than expected. Please try again.'
+      );
 
       const data = await res.json();
 

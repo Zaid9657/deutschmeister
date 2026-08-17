@@ -234,7 +234,15 @@ const jsonLd = [productSchema, faqSchema];
     $('pro-btn').addEventListener('click', () => {
       const u = currentUser();
       if (!u) { window.location.href = 'https://deutsch-meister.de/signup'; return; }
-      window.open(checkoutUrl(PLANS[cycle].variant, u.email, u.id), '_blank');
+      const url = checkoutUrl(PLANS[cycle].variant, u.email, u.id);
+      // Never a new tab: iOS Safari blocks the popup and in-app browsers
+      // swallow it, so the customer sees nothing happen. Prefer the
+      // LemonSqueezy overlay, fall back to same-tab navigation.
+      if (window.LemonSqueezy && window.LemonSqueezy.Url && window.LemonSqueezy.Url.Open) {
+        window.LemonSqueezy.Url.Open(url);
+      } else {
+        window.location.href = url;
+      }
     });
 
     // Free plan button: logged-in users already have it → "Current Plan" (disabled), like the SPA.

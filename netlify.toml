@@ -39,6 +39,30 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
+# Unhashed root assets. These have stable filenames, so they cannot be
+# "immutable", but they were falling through to Netlify's default of
+# max-age=0 — meaning a revalidation round trip for consent.js on every one of
+# the ~90 pages that defer-load it in the head.
+[[headers]]
+  for = "/consent.js"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/logo.png"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/og-image.png"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/favicon.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
 # The raw SPA shell is a duplicate of every prerendered route — never index it
 [[headers]]
   for = "/app.html"

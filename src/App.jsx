@@ -29,7 +29,6 @@ const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const GrammarLessonPage = lazy(() => import('./pages/GrammarLessonPage'));
 const ReadingLessonPage = lazy(() => import('./pages/ReadingLessonPage'));
 const SubscriptionPage = lazy(() => import('./pages/SubscriptionPage'));
-const PricingPage = lazy(() => import('./pages/PricingPage'));
 const SubscriptionSuccessPage = lazy(() => import('./pages/SubscriptionSuccessPage'));
 const ExercisePlayer = lazy(() => import('./pages/Listening/ExercisePlayer'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
@@ -126,7 +125,6 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
-                    <Route path="/pricing" element={<PricingPage />} />
                     <Route path="/faq" element={<FAQPage />} />
                     <Route path="/ueber-uns" element={<UeberUnsPage />} />
                     <Route path="/vergleich" element={<VergleichHubPage />} />

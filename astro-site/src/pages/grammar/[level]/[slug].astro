@@ -187,7 +187,7 @@ if (seoExtra?.faqs?.length) {
       {topicTitle}
     </h1>
     {topic?.title_de && topic.title_de !== topicTitle && (
-      <p class="text-xl text-slate-500 mb-6 font-display">{topic.title_de}</p>
+      <p class="text-xl text-slate-500 mb-6 font-display" lang="de">{topic.title_de}</p>
     )}
 
     {seoExtra?.snippetIntro && (
@@ -241,7 +241,7 @@ if (seoExtra?.faqs?.length) {
                 <div class={`px-5 py-4 ${meta.bg}`}>
                   <h3 class="font-display text-lg font-bold text-slate-800"><RichText text={rule.title_en} /></h3>
                   {rule.title_de && rule.title_de !== rule.title_en && (
-                    <p class="text-sm text-slate-600 mt-0.5"><RichText text={rule.title_de} /></p>
+                    <p class="text-sm text-slate-600 mt-0.5" lang="de"><RichText text={rule.title_de} /></p>
                   )}
                 </div>
 
@@ -267,7 +267,7 @@ if (seoExtra?.faqs?.length) {
                       )}
                       {content.preview_example_de && (
                         <div class="p-3 rounded-lg border border-slate-200 bg-white">
-                          <p class="font-display text-lg font-bold text-slate-900">{content.preview_example_de}</p>
+                          <p class="font-display text-lg font-bold text-slate-900" lang="de">{content.preview_example_de}</p>
                           {content.preview_example_en && (
                             <p class="text-sm text-slate-600 italic mt-0.5">{content.preview_example_en}</p>
                           )}
@@ -325,13 +325,13 @@ if (seoExtra?.faqs?.length) {
                                 {m.wrong && (
                                   <p class="flex items-start gap-2">
                                     <span class="flex-shrink-0 font-bold text-red-600">✗</span>
-                                    <span class="line-through text-red-700">{m.wrong}</span>
+                                    <span class="line-through text-red-700" lang="de">{m.wrong}</span>
                                   </p>
                                 )}
                                 {m.correct && (
                                   <p class="flex items-start gap-2">
                                     <span class="flex-shrink-0 font-bold text-emerald-600">✓</span>
-                                    <span class="text-emerald-700 font-medium">{m.correct}</span>
+                                    <span class="text-emerald-700 font-medium" lang="de">{m.correct}</span>
                                   </p>
                                 )}
                                 {m.explanation_en && (
@@ -387,7 +387,7 @@ if (seoExtra?.faqs?.length) {
             return (
               <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden">
                 <div class="px-5 py-4">
-                  <p class="font-display text-xl font-bold text-slate-900 mb-1">{ex.sentence_de}</p>
+                  <p class="font-display text-xl font-bold text-slate-900 mb-1" lang="de">{ex.sentence_de}</p>
                   <p class="text-slate-500 italic text-sm mb-2">{ex.sentence_en}</p>
 
                   {ex.grammar_highlight && (
@@ -416,7 +416,7 @@ if (seoExtra?.faqs?.length) {
                         <tbody>
                           {breakdownRows.map((w, i) => (
                             <tr class={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                              <td class="px-3 py-2 border border-slate-200 font-accent font-medium">{w.word}</td>
+                              <td class="px-3 py-2 border border-slate-200 font-accent font-medium" lang="de">{w.word}</td>
                               <td class="px-3 py-2 border border-slate-200 text-slate-600 italic">{w.meaning}</td>
                               {breakdownRows.some((r) => r.role) && (
                                 <td class="px-3 py-2 border border-slate-200 text-slate-500">{w.role ?? '—'}</td>

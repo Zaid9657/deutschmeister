@@ -7,6 +7,7 @@
 //
 // Output: docs/evaluation/lighthouse.json
 import { createServer } from 'node:http';
+import { gzipSync } from 'node:zlib';
 import { readFileSync, existsSync, statSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join, extname } from 'node:path';
 import { launch } from 'chrome-launcher';
@@ -31,8 +32,22 @@ const server = createServer((req, res) => {
   for (const c of [clean, `${clean}/index.html`, `${clean}index.html`]) {
     const p = join(DIST, c);
     if (p.startsWith(DIST) && existsSync(p) && statSync(p).isFile()) {
-      res.writeHead(200, { 'Content-Type': MIME[extname(p)] ?? 'application/octet-stream' });
-      res.end(readFileSync(p));
+      const type = MIME[extname(p)] ?? 'application/octet-stream';
+      const body = readFileSync(p);
+      // Netlify serves text assets compressed. Serving them raw here made
+      // Lighthouse score ~30 points lower than production on the SPA pages —
+      // a harness artifact that sent a previous audit chasing a phantom
+      // 477 KiB of "unused JS".
+      const compressible = /^(text\/|application\/(javascript|json)|image\/svg)/.test(type);
+      const acceptsGzip = (req.headers['accept-encoding'] || '').includes('gzip');
+      if (compressible && acceptsGzip) {
+        const gz = gzipSync(body);
+        res.writeHead(200, { 'Content-Type': type, 'Content-Encoding': 'gzip', 'Content-Length': gz.length });
+        res.end(gz);
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': type, 'Content-Length': body.length });
+      res.end(body);
       return;
     }
   }

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import {
   Flame, Mic, ScanSearch, RotateCcw, Crown, Clock,
   ArrowRight, Check, Lock, Trophy, BookOpen, Sparkles,
+  Headphones, FileText,
 } from 'lucide-react';
 import { useProgress } from '../contexts/ProgressContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -152,6 +153,12 @@ const DashboardPage = () => {
   const practice = [
     { title: 'Speaking', en: 'Say a few lines with your AI partner', Icon: Mic, tint: '#0D9488', to: '/speaking' },
     { title: 'Sentence X-Ray', en: 'X-ray any German sentence', Icon: ScanSearch, tint: '#0891B2', to: '/analyze' },
+    // Listening and Reading are stocked (480 dialogues, 66 lessons) but had no
+    // entry point once a user signed in — the only link lived in the logged-out nav.
+    { title: 'Listening', en: 'A short dialogue at your level', Icon: Headphones, tint: '#7C3AED',
+      to: `/listening/${cur.level}` },
+    { title: 'Reading', en: 'A short story with vocabulary help', Icon: FileText, tint: '#DB2777',
+      to: `/reading/${cur.level}` },
     // No spaced-repetition flow exists yet → route Review to the next topic to revisit.
     { title: 'Review', en: 'Revisit your current grammar topic', Icon: RotateCcw, tint: '#F59E0B',
       to: cur.nextTopic ? `/grammar/${cur.level}/${cur.nextTopic.slug}` : '/grammar' },
