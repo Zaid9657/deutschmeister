@@ -133,6 +133,32 @@ SQL is recorded in `migrations/2026-08-17-audit-remediation.sql`.
 - Internal error text is no longer returned to clients from five handlers, and
   two orphaned functions were deleted.
 
+## Fourth pass (2026-08-17) — placement, anon content leak
+
+- **The placement test was decorative.** `LevelTest.jsx` computed a sub-level,
+  displayed it, and never wrote it: `profiles.current_level` was the string
+  `'a1'` for all 1,455 accounts — a single distinct value across the table — and
+  `SpeakingPage`, its only reader, coerced that back to `A1.1`. Someone placed
+  at B1.2 was still handed A1.1 content. Now persisted for signed-in users;
+  anonymous testers are unaffected, since the landing page promises no account
+  is required. Confirmed first that the profiles UPDATE policy permits own-row
+  writes and that `protect_profile_privileged_columns` pins only
+  `is_subscribed`, `subscription_tier` and the trial dates.
+- **A-09 closed.** `words`, `sentences` and `paragraphs` were fully readable
+  with the anon key that ships in the SPA bundle — every level's vocabulary and
+  sentence bank one request away, with only client-side gating in front of it.
+  Each table carried 2–4 overlapping permissive read policies, and because
+  policies are OR'd, all had to go before the narrow ones could bite. Anon now
+  sees only the a1.1 free tier; authenticated keeps full read.
+  Verified by impersonating the anon role **server-side** (a REST check from
+  this sandbox proves nothing — supabase.co egress is blocked, so every request
+  fails identically whether the policy is right or wrong): a1.1 → 225 words /
+  120 sentences, b2.2 → 0 across all three, podcasts still 24, grammar 64.
+  `podcasts` deliberately untouched — `podcast-feed.js` builds the public RSS
+  feed with the anon key.
+- Filled the last 3 empty `prerequisite_slugs`; `alphabet-pronunciation` stays
+  empty because it is the first topic in the course. No dangling references.
+
 ## Still open — needs the owner
 
 1. **The upstream bounce job.** Suppression stops the damage, but something in the MedMeister automation still tries to mail `a831969a52@emailinbo.live` every 15 minutes. Fix it at source.
