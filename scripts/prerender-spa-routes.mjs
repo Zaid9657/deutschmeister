@@ -120,7 +120,7 @@ const ROUTES = [
   {
     path: '/speaking',
     dir: 'speaking',
-    title: 'German Speaking Practice with an AI Partner | DeutschMeister',
+    title: 'German Speaking Practice with AI | DeutschMeister',
     description: 'Practice speaking German with an AI conversation partner: guided missions or free conversation, with instant feedback. Levels A1 to B2.',
     jsonLd: [],
     content: `
@@ -145,8 +145,8 @@ const ROUTES = [
   {
     path: '/level-test',
     dir: 'level-test',
-    title: 'Free German Level Test | Find Your CEFR Level (A1-B2) | DeutschMeister',
-    description: 'Take our free German level test to discover your CEFR level. Test your reading, listening, and speaking skills in 15 minutes. Instant results with personalized learning recommendations.',
+    title: 'Free German Level Test (A1–B2) | DeutschMeister',
+    description: 'Free German level test: find your CEFR level in 15 minutes. Reading, listening and speaking, with instant results and a personalised next step.',
     keywords: 'German level test, CEFR test, German placement test, what level is my German, German proficiency test, free German test',
     jsonLd: [
       {
@@ -209,7 +209,7 @@ ${faqSectionPlain(LEVEL_TEST_FAQS)}
   {
     path: '/analyze',
     dir: 'analyze',
-    title: 'Sentence X-Ray — Analyze Any German Sentence | DeutschMeister',
+    title: 'Sentence X-Ray — Analyze German Sentences | DeutschMeister',
     description: 'Paste any German sentence and instantly see the grammatical breakdown. Color-coded cases, word roles, and explanations for why each word works the way it does.',
     keywords: 'German grammar analyzer, German sentence analysis, German cases, nominative accusative dative genitive, learn German grammar',
     jsonLd: [
@@ -254,15 +254,15 @@ ${faqSectionPlain(LEVEL_TEST_FAQS)}
   {
     path: '/podcasts',
     dir: 'podcasts',
-    title: 'German Podcasts for Beginners | Learn German A1-B2 | DeutschMeister',
-    description: 'Free German podcasts designed for learners. 24 episodes with native speaker audio and transcripts for levels A1 to B2. Improve your German listening skills while commuting or relaxing.',
+    title: 'German Podcasts for Learners A1–B2 | DeutschMeister',
+    description: 'Free German podcasts for learners: 24 episodes of native-speaker audio graded A1 to B2. Build listening skills while you commute or relax.',
     keywords: 'German podcast for beginners, learn German podcast, German listening practice, German audio lessons, German podcast with transcript',
     jsonLd: [
       {
         '@context': 'https://schema.org',
         '@type': 'PodcastSeries',
         name: 'DeutschMeister German Learning Podcast',
-        description: 'German language learning podcast with 24 episodes covering levels A1 to B2. Each episode features native speaker conversations with transcripts and vocabulary explanations.',
+        description: 'German learning podcast: 24 episodes from A1 to B2, each a natural native-speaker conversation graded to a CEFR level.',
         webFeed: 'https://deutsch-meister.de/podcasts/',
         inLanguage: ['de', 'en'],
         numberOfEpisodes: 24,
@@ -312,7 +312,7 @@ ${faqSectionTailwind(PODCAST_FAQS)}
   {
     path: '/listening',
     dir: 'listening',
-    title: 'German Listening Practice | 480 Audio Exercises A1-B2 | DeutschMeister',
+    title: 'German Listening Practice A1–B2 | DeutschMeister',
     description: 'Improve your German listening comprehension with 480 native speaker dialogues across all CEFR levels. Interactive exercises with questions and instant feedback.',
     keywords: 'German listening practice, German audio exercises, German listening comprehension, learn German listening, German dialogues',
     jsonLd: [
@@ -338,7 +338,7 @@ ${faqSectionTailwind(PODCAST_FAQS)}
   {
     path: '/reading',
     dir: 'reading',
-    title: 'German Reading Practice | 52 Lessons A1-B2 | DeutschMeister',
+    title: 'German Reading Practice A1–B2 | DeutschMeister',
     description: 'Improve your German reading comprehension with 52 leveled reading passages. Authentic texts with comprehension questions for all CEFR levels from A1 to B2.',
     keywords: 'German reading practice, German reading comprehension, learn German reading, German texts for learners, CEFR reading exercises',
     jsonLd: [
