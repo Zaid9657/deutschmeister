@@ -88,9 +88,19 @@ function FillBlank({ exercise, onAnswer, answered }) {
 
   const isCorrect = answerMatches(value, exercise);
 
+  // Placeholder-only labelling fails WCAG 3.3.2 (the label vanishes on input)
+  // and leaves screen-reader users with an unnamed field. The exercise prompt
+  // is the field's real label, so name the input from it.
+  const inputId = `fill-blank-${exercise.id}`;
+  const promptText = exercise.question_de || exercise.question_en || 'your answer';
+
   return (
     <div className="flex gap-2">
+      <label htmlFor={inputId} className="sr-only">
+        {promptText}
+      </label>
       <input
+        id={inputId}
         type="text"
         value={value}
         onChange={(e) => setValue(e.target.value)}

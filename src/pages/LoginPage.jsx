@@ -86,12 +86,13 @@ const LoginPage = () => {
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="login-email" className="block text-sm font-medium text-slate-700 mb-2">
                 {t('auth.email')}
               </label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
+                  id="login-email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -104,12 +105,13 @@ const LoginPage = () => {
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="login-password" className="block text-sm font-medium text-slate-700 mb-2">
                 {t('auth.password')}
               </label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
+                  id="login-password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

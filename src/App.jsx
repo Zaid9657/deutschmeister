@@ -79,10 +79,19 @@ function App() {
           <ThemeProvider>
             <ProgressProvider>
               <div className="min-h-screen bg-slate-50">
+                {/* Keyboard users land here first and can jump the nav. The SPA
+                    had no skip link and no <main> landmark at all. */}
+                <a
+                  href="#main"
+                  className="sr-only focus:not-sr-only focus:absolute focus:z-[200] focus:top-3 focus:left-3 focus:px-4 focus:py-2 focus:rounded-lg focus:bg-white focus:text-slate-900 focus:shadow-lg focus:ring-2 focus:ring-amber-500"
+                >
+                  Skip to content
+                </a>
                 <Navbar />
                 <TrialBanner />
                 <FloatingIntroButton />
                 <SessionTimeoutWrapper />
+                <main id="main">
                 <Suspense fallback={<PageLoader />}>
                   <Routes>
                     {/* Public routes */}
@@ -287,6 +296,7 @@ function App() {
                     <Route path="*" element={<NotFoundPage />} />
                   </Routes>
                 </Suspense>
+                </main>
               </div>
             </ProgressProvider>
           </ThemeProvider>
