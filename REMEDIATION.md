@@ -50,12 +50,56 @@ SQL is recorded in `migrations/2026-08-17-audit-remediation.sql`.
 - **Homepage**: the stats band said "1,400+ Learners" while the closing CTA said "350+"; both now derive from one constant. "323 Sentences X-Ray analyzed" (a total-ever count that reads as *nobody uses this*) became "480 Native-speaker dialogues". Fixed "German German Noun Genders".
 - **Speaking missions (B-12)** existed only for A1.1, leaving 7 of 8 levels with an empty Speaking tab. 56 new missions were authored and seeded, so all 8 levels now have 8 published missions, each linked to the grammar topic at the same position in its level and drilling that topic's structures. Difficulty is graded: survival tasks at A1.2, past-tense narration at A2.x, opinions and complaints at B1.x, counterfactuals and formal register at B2.x. Recorded in `migrations/2026-08-17-speaking-missions.md`.
 
+## P2/P3 backlog — also fixed (2026-08-17, second pass)
+
+- **Data quality.** `acceptable_answers` on all 433 fill-blanks (7 have a real
+  second answer; the rest test one form), plurals resolved for all 101 nouns
+  (98 are mass nouns — the table already had a `'null'` convention), 47
+  duplicate vocabulary rows removed with conflicting glosses merged rather than
+  dropped, reading-lesson CRLF and broken `-̈e` plural markers repaired,
+  `word_count`/`estimated_reading_time` recomputed against a *derived* 57 wpm,
+  and `prerequisite_slugs` populated for 60 of 64 topics.
+- **Three unanswerable exercises.** Their correct answer was `(complete)` or
+  `(nothing needed)` — a stage direction no learner can type. Rewritten so the
+  blank falls on the noun of the Funktionsverbgefüge being taught.
+- **~8,300 lines of dead code deleted** — `PricingPage` (unreachable: every
+  pricing link is a hard nav to the Astro page), the five `Stage*.jsx`
+  components, `grammarContent.js`, `paragraphService`, six unused components
+  and two dead service exports. Importers were re-checked immediately before
+  each delete.
+- **Dashboard** gained Listening and Reading cards, and reading now counts
+  toward the streak — a learner finishing a lesson every day previously still
+  showed a 0-day streak.
+- **Checkout** no longer opens a new tab (iOS Safari blocks the popup and
+  in-app browsers swallow it): it prefers the LemonSqueezy overlay and falls
+  back to same-tab navigation.
+- **Vocabulary page**: progress bars were hard-coded to `0`, the card component
+  was redefined inside render (remounting all eight on every update), and the
+  counts came from eight sequential full-table fetches. All three fixed.
+- **Robustness**: the X-Ray call is timeboxed, the podcasts page has a real
+  error+retry state instead of silently showing "coming soon", and the grammar
+  lesson fetch got the stale-response guard every other data page already had.
+- **Perf**: Fira Code dropped from the SPA (only the Astro pages use
+  `font-accent`), the two Google Fonts requests merged into one, cache headers
+  added for unhashed root assets, and 48 KB of unreferenced files deleted.
+- **SEO/a11y**: per-route `og:locale`, the `/level-test/` and `/podcasts/` FAQ
+  markup now backed by visible content, `h2`s on the level hubs, `lang`
+  corrected on 9 majority-English pages with the German headings marked,
+  1,223 German table cells tagged `lang="de"`, 11 JS-only URLs dropped from the
+  sitemap, and the listening level pages fixed (case, per-level canonicals,
+  de-noindexed).
+- **Two tooling traps closed**: `lighthouse-batch.mjs` now serves gzip (it was
+  measuring uncompressed bytes, which produced a phantom 30-point deficit), and
+  `mustReplace` in the prerender script asserts on marker *presence* rather
+  than diffing, so a no-op replacement is no longer reported as a missing
+  marker.
+
 ## Still open — needs the owner
 
 1. **The upstream bounce job.** Suppression stops the damage, but something in the MedMeister automation still tries to mail `a831969a52@emailinbo.live` every 15 minutes. Fix it at source.
 2. **Impressum.** Ships with "Entwurf" and `[Vollständiger Name des Betreibers]` placeholders. Legally required, and I will not invent operator details.
 3. **Rotate the Supabase service-role key** and enable leaked-password protection.
 4. **Take a card at trial start.** The trial requires no card and the only checkout path is a new-tab `window.open`, which iOS Safari and in-app browsers block. Until that changes, passive conversion is structurally 0% — this is a Lemon Squeezy product decision, not a code change.
-5. **Grammar topic *titles*** are punctuation-stripped in the DB the same way descriptions were ("Adjective Declension Weak Mixed" vs "Adjective Declension (Weak/Mixed)"). Restoring them changes 64 indexed H1s, so it is your call.
+5. **Grammar topic *titles*** are punctuation-stripped in the DB the same way descriptions were ("Adjective Declension Weak Mixed" vs "Adjective Declension (Weak/Mixed)"). Restoring them changes 64 indexed H1s and page titles, so it stays your call — it is one `UPDATE`, reversible.
 6. **Run `scripts/generate-example-audio.mjs`** with an OpenAI key — 0 of 673 grammar examples have audio.
 7. **`pg_net` lives in the `public` schema**; moving it needs a coordinated trigger update.
