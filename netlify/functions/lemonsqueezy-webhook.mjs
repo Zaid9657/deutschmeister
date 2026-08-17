@@ -375,6 +375,31 @@ async function handleSubscriptionUpdated(data, meta) {
     throw new Error(`subscription update failed: ${error.message}`);
   }
 
+  // Entitlement follows status. Only the subscription_expired handler used to
+  // clear profiles.is_subscribed, so an account that went past_due/unpaid — or
+  // whose status moved to expired via this event rather than its own — kept full
+  // Pro access indefinitely. 'cancelled' deliberately keeps access: the customer
+  // has paid through the end of the period and expiry revokes it later.
+  const revokedStatuses = ['expired', 'unpaid', 'past_due'];
+  if (updated && updated.length > 0 && revokedStatuses.includes(attributes.status)) {
+    const { data: sub } = await supabase
+      .from('subscriptions')
+      .select('user_id')
+      .eq('lemonsqueezy_subscription_id', subscriptionId)
+      .maybeSingle();
+    if (sub?.user_id) {
+      const { error: revokeError } = await supabase
+        .from('profiles')
+        .update({ is_subscribed: false, subscription_tier: 'free', updated_at: new Date().toISOString() })
+        .eq('id', sub.user_id);
+      if (revokeError) {
+        console.error('subscription_updated: failed to revoke entitlement:', JSON.stringify(revokeError));
+      } else {
+        console.log(`subscription_updated: entitlement revoked for ${sub.user_id} (status ${attributes.status})`);
+      }
+    }
+  }
+
   // If no rows matched (subscription_updated arrived before subscription_created),
   // create the subscription if we can resolve a user. custom_data.user_id may be
   // absent, so fall back to matching on lemonsqueezy_subscription_id / user_email.
@@ -559,12 +584,17 @@ async function handlePaymentFailed(data, meta, payload) {
     console.error('payment_failed: recency check threw (skipping dunning):', e.message);
   }
 
-  const { error } = await supabase.from('payment_failures').insert({
-    user_id: userId,
-    lemonsqueezy_subscription_id: String(subscriptionId),
-    lemonsqueezy_event_id: String(eventId),
-    raw_payload: payload
-  });
+  // lemonsqueezy_event_id is unique — a retried delivery of the same event must
+  // not create a second row (retries previously duplicated events up to 5x).
+  const { error } = await supabase.from('payment_failures').upsert(
+    {
+      user_id: userId,
+      lemonsqueezy_subscription_id: String(subscriptionId),
+      lemonsqueezy_event_id: String(eventId),
+      raw_payload: payload
+    },
+    { onConflict: 'lemonsqueezy_event_id', ignoreDuplicates: true }
+  );
 
   if (error) {
     console.error('Failed to log payment failure:', error);

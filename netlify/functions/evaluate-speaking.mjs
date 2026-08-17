@@ -4,6 +4,10 @@ import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+// Each evaluation is a large Sonnet call that retries once on a bad response.
+// Well above any genuine day's practice, low enough to bound abuse.
+const MAX_EVALUATIONS_PER_DAY = 20;
+
 let supabase;
 try {
   supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
@@ -174,11 +178,30 @@ export const handler = async (event) => {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'messages payload too large' }) };
     }
 
-    // Grade the transcript stored server-side by save-speaking-message, not the
-    // client-supplied one — a forged payload could otherwise mint arbitrary
-    // scores or inject instructions into the grading prompt. The client
-    // transcript is only a fallback for sessions where saving failed entirely.
-    let transcript = messages;
+    // Per-user daily cap. Each evaluation is a large Sonnet call (and retries
+    // once on a malformed response), so an uncapped loop is the most expensive
+    // endpoint on the site.
+    const startOfDay = new Date();
+    startOfDay.setUTCHours(0, 0, 0, 0);
+    const { count: evaluationsToday } = await supabase
+      .from('speaking_evaluations')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user_id)
+      .gte('created_at', startOfDay.toISOString());
+    if ((evaluationsToday ?? 0) >= MAX_EVALUATIONS_PER_DAY) {
+      return {
+        statusCode: 429,
+        headers,
+        body: JSON.stringify({ error: 'limit_reached', limit: MAX_EVALUATIONS_PER_DAY }),
+      };
+    }
+
+    // Grade only the transcript stored server-side by the speaking functions.
+    // The client-supplied `messages` array is never graded: it is attacker
+    // controlled, so accepting it let anyone invent a session_token, submit a
+    // fabricated conversation, and both mint arbitrary scores and inject
+    // instructions into the grading prompt. No stored transcript means there is
+    // nothing legitimate to grade.
     const { data: storedMessages, error: transcriptError } = await supabase
       .from('speaking_messages')
       .select('role, content')
@@ -188,13 +211,17 @@ export const handler = async (event) => {
       .limit(200);
     if (transcriptError) {
       console.error('Error loading stored transcript:', JSON.stringify(transcriptError));
+      return { statusCode: 500, headers, body: JSON.stringify({ error: 'Internal error' }) };
     }
-    if (storedMessages && storedMessages.length > 0) {
-      transcript = storedMessages;
-      console.log(`Using stored transcript (${storedMessages.length} messages)`);
-    } else {
-      console.warn('No stored transcript for session — falling back to client-supplied messages');
+    if (!storedMessages || storedMessages.length === 0) {
+      console.warn(`evaluate-speaking: no stored transcript for session ${session_token} (user ${user_id})`);
+      return {
+        statusCode: 404,
+        headers,
+        body: JSON.stringify({ error: 'No transcript found for this session' }),
+      };
     }
+    const transcript = storedMessages;
 
     // Mission sessions carry a mission_id in speaking_sessions; when present we
     // fold the mission's pass_criteria into the evaluation and record pass/fail.

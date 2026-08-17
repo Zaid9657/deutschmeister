@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, BookOpen, BookMarked, MessageSquare, Headphones, Radio, Sun, TreePine, Waves, Moon, Loader2, Filter, FileText } from 'lucide-react';
@@ -17,6 +17,7 @@ import PodcastsTab from '../components/level/PodcastsTab';
 import { useLevelExercises } from '../hooks/useListening';
 import ExerciseCard from '../components/listening/ExerciseCard';
 import SEO from '../components/SEO';
+import EmptyState from '../components/EmptyState';
 
 const iconMap = {
   'a1.1': Sun,
@@ -36,7 +37,33 @@ const LevelPage = () => {
   const { setCurrentLevel, getThemeForLevel } = useTheme();
   const { getLevelProgress, registerLevelItemCounts, getGrammarTopicProgress, isItemLearned } = useProgress();
 
-  const [activeTab, setActiveTab] = useState('vocabulary');
+  // Deep links carry the tab in the query string — PodcastsPage sends users to
+  // ?tab=podcasts, the prerendered "Start Listening" CTA to ?tab=listening, and
+  // the level test to ?tab=vocabulary. Without this they all landed on the
+  // default tab instead.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const TAB_IDS = ['vocabulary', 'sentences', 'grammar', 'reading', 'listening', 'podcasts'];
+  const requestedTab = searchParams.get('tab');
+  const [activeTab, setActiveTab] = useState(
+    TAB_IDS.includes(requestedTab) ? requestedTab : 'vocabulary'
+  );
+
+  // Keep the URL in sync so the tab survives a refresh or a shared link.
+  const selectTab = (tabId) => {
+    setActiveTab(tabId);
+    const next = new URLSearchParams(searchParams);
+    if (tabId === 'vocabulary') next.delete('tab');
+    else next.set('tab', tabId);
+    setSearchParams(next, { replace: true });
+  };
+
+  // Respond to in-app navigation that only changes the query string.
+  useEffect(() => {
+    if (requestedTab && TAB_IDS.includes(requestedTab) && requestedTab !== activeTab) {
+      setActiveTab(requestedTab);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [requestedTab]);
   const [levelVocabulary, setLevelVocabulary] = useState([]);
   const [levelSentences, setLevelSentences] = useState([]);
   const [grammarTopics, setGrammarTopics] = useState([]);
@@ -281,7 +308,7 @@ const LevelPage = () => {
             {tabs.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => selectTab(tab.id)}
                 className={`flex items-center gap-2 px-4 py-3 rounded-xl font-medium whitespace-nowrap transition-all ${
                   activeTab === tab.id
                     ? `bg-gradient-to-r ${theme.gradient} text-white shadow-lg`
@@ -355,15 +382,19 @@ const LevelPage = () => {
                         <WordCard key={word.id} word={word} level={level} />
                       ))}
                       {levelVocabulary.length === 0 && (
-                        <div className="col-span-full bg-white rounded-xl border border-rose-200 p-6">
-                          <h3 className="text-lg font-bold text-rose-700 mb-2">No vocabulary from Supabase</h3>
-                          <div className="text-sm font-mono bg-rose-50 rounded-lg p-3 text-rose-800 mb-3">
-                            <p><strong>Level queried:</strong> {level.toLowerCase()}</p>
-                            <p><strong>Table:</strong> words WHERE level = '{level.toLowerCase()}'</p>
-                          </div>
-                          <p className="text-slate-600 text-sm">
-                            Check browser console for [vocabularyService] logs. Possible causes: missing RLS SELECT policy, no data for this level, or column name mismatch.
-                          </p>
+                        <div className="col-span-full">
+                          <EmptyState
+                            title="No vocabulary here yet"
+                            message="This level's word list isn't available right now. The other tabs still work — try Reading or Listening."
+                          />
+                        </div>
+                      )}
+                      {levelVocabulary.length > 0 && filteredVocabulary.length === 0 && (
+                        <div className="col-span-full">
+                          <EmptyState
+                            title="No words in this category"
+                            message="Nothing matches the filter you picked. Choose a different category to see more."
+                          />
                         </div>
                       )}
                     </div>
@@ -386,15 +417,11 @@ const LevelPage = () => {
                       <SentenceCard key={sentence.id} sentence={sentence} level={level} />
                     ))}
                     {levelSentences.length === 0 && (
-                      <div className="col-span-full bg-white rounded-xl border border-rose-200 p-6">
-                        <h3 className="text-lg font-bold text-rose-700 mb-2">No sentences from Supabase</h3>
-                        <div className="text-sm font-mono bg-rose-50 rounded-lg p-3 text-rose-800 mb-3">
-                          <p><strong>Level queried:</strong> {level.toLowerCase()}</p>
-                          <p><strong>Table:</strong> sentences WHERE level = '{level.toLowerCase()}'</p>
-                        </div>
-                        <p className="text-slate-600 text-sm">
-                          Check browser console for [vocabularyService] logs. Possible causes: missing RLS SELECT policy, no data for this level, or column name mismatch.
-                        </p>
+                      <div className="col-span-full">
+                        <EmptyState
+                          title="No sentences here yet"
+                          message="This level's sentence set isn't available right now. Try the Grammar or Reading tab in the meantime."
+                        />
                       </div>
                     )}
                   </div>

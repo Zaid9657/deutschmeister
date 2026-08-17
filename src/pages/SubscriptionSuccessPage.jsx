@@ -7,40 +7,44 @@ import SEO from '../components/SEO';
 
 const SubscriptionSuccessPage = () => {
   const navigate = useNavigate();
-  const { refreshSubscription, hasActiveSubscription } = useSubscription();
-  const [loading, setLoading] = useState(true);
-  const [verified, setVerified] = useState(false);
+  const { refreshSubscription, hasActiveSubscription, subscription } = useSubscription();
+  const [polling, setPolling] = useState(true);
+
+  // Derive verification from context state on every render. The previous version
+  // captured hasActiveSubscription in a [] effect, so it kept reading the
+  // mount-time `subscription = null` no matter how many refreshes succeeded —
+  // every paying customer fell through to the "may take a moment" branch.
+  const verified = hasActiveSubscription();
+
+  useEffect(() => {
+    if (verified) setPolling(false);
+  }, [verified]);
 
   useEffect(() => {
     let cancelled = false;
 
     const verifySubscription = async () => {
-      // Poll up to 5 times, 3 seconds apart, waiting for webhook to process
+      // Poll while the Lemon Squeezy webhook lands. `subscription` updating
+      // flips `verified` above, which ends the polling state.
       const maxAttempts = 5;
       const delayMs = 3000;
 
       for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
         if (cancelled) return;
-
-        await new Promise(resolve => setTimeout(resolve, delayMs));
         await refreshSubscription();
-
-        if (hasActiveSubscription()) {
-          setVerified(true);
-          setLoading(false);
-          return;
-        }
-
       }
 
-      // After all attempts, stop loading even if not verified
-      setLoading(false);
+      if (!cancelled) setPolling(false);
     };
 
     verifySubscription();
 
     return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const loading = polling && !verified;
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
@@ -101,11 +105,24 @@ const SubscriptionSuccessPage = () => {
             </h1>
 
             <p className="text-gray-300 mb-4">
-              Your payment was successful. Your subscription may take a moment to activate.
+              Your payment went through. Activation is taking longer than usual — this
+              is normally a short delay on the payment provider's side, not a problem
+              with your order.
             </p>
-            <p className="text-gray-400 text-sm mb-8">
-              If your Pro status doesn't appear right away, try refreshing the page in a minute.
+            <p className="text-gray-400 text-sm mb-6">
+              Check again in a minute. If Pro still isn't showing, email{' '}
+              <a href="mailto:zaid@deutsch-meister.de" className="text-blue-300 underline">
+                zaid@deutsch-meister.de
+              </a>{' '}
+              and it'll be sorted manually — your payment is already recorded.
             </p>
+
+            <button
+              onClick={() => { setPolling(true); refreshSubscription().finally(() => setPolling(false)); }}
+              className="inline-flex items-center gap-2 mb-6 bg-slate-700 hover:bg-slate-600 text-white text-sm font-semibold py-2 px-5 rounded-lg transition-colors"
+            >
+              Check again
+            </button>
 
             <button
               onClick={() => navigate('/dashboard')}

@@ -177,6 +177,17 @@ export const handler = async (event) => {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'level is required' }) };
     }
 
+    // Validate the level up front. The teacher reply and the TTS render below
+    // both cost money and happen before the session row is written, so a level
+    // the speaking_sessions check constraint would reject must be caught here —
+    // otherwise every such attempt pays for an AI call and then 500s. ('placement'
+    // was exactly this bug until it was added to the constraint.)
+    const ALLOWED_LEVELS = ['A1.1', 'A1.2', 'A2.1', 'A2.2', 'B1.1', 'B1.2', 'B2.1', 'B2.2', 'placement'];
+    if (!ALLOWED_LEVELS.includes(effectiveLevel)) {
+      console.warn(`[speaking-session] rejected unsupported level: ${effectiveLevel}`);
+      return { statusCode: 400, headers, body: JSON.stringify({ error: 'Unsupported level' }) };
+    }
+
     // Planned minutes: placement is a short quota-exempt test; practice sessions
     // must pick one of the allowed durations.
     let plannedMinutes;
