@@ -14,10 +14,13 @@ runner in the build. Apply each file by hand in the Supabase SQL editor
 | `2026-08-16-reading-lessons.md` (note) | 22 new reading lessons inserted (every level now ≥8) — source of truth lives in `content/reading/*.json` in the repo; re-seed with `scripts/seed-reading-lessons.mjs`. | ✅ **Applied 2026-08-16** |
 | `2026-08-16-welcome-email-webhook.sql` | Wires the never-called `send-welcome-email` function: `pg_net` + an `AFTER INSERT` trigger on `auth.users` POSTing to the Netlify function with the `WEBHOOK_SECRET` bearer. The repo copy redacts the secret — the live function body embeds it (rotate both together). | ✅ **Applied 2026-08-16** |
 | `2026-08-17-audit-remediation.sql` | Remediates `AUDIT-2026-08-16.md`: drops the PUBLIC/ALL policy on `speaking_usage` and the client write policies on the other speaking tables; allows `'placement'` in `speaking_sessions_level_check` (restoring the level test); dedupes b1.2 reading lessons and `payment_failures` (+ unique indexes); reconciles `profiles.is_subscribed`; reshuffles the skewed answer-option positions; adds `xray_usage.ip_hash` for per-IP metering. | ✅ **Applied 2026-08-17** |
+| `2026-08-17-speaking-missions.md` (note) | 56 speaking missions inserted for A1.2–B2.2 (the table previously held only A1.1, so 7 of 8 levels showed an empty Speaking tab). Data-only; ordering column is `mission_order`. | ✅ **Applied 2026-08-17** |
 
-Both files record changes that are **already live** on project `omqyueddktqeyrrqvnyq`.
-They are idempotent, so re-running them is safe and is how you would reproduce the same
-state on a branch or fresh database.
+Every file above records a change that is **already live** on project
+`omqyueddktqeyrrqvnyq`. They are idempotent, so re-running one is safe and is how you
+would reproduce the same state on a branch or fresh database — with one exception, called
+out in its own header: the answer-option reshuffle in `2026-08-17-audit-remediation.sql`
+picks new positions each run (meaning is preserved; positions are not).
 
 ## Conventions
 
