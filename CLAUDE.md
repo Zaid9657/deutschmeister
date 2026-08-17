@@ -45,8 +45,14 @@ There are no tests yet. CI (`.github/workflows/ci.yml`) runs lint + duplicate ch
   EXCEPT `reading_lessons.level`, which a check constraint forces to **lowercase**.
   Normalize at boundaries; queries use `ilike`/`lower()`. Mixed-case bugs are a recurring
   source of empty pages and failed inserts.
-- **Astro URLs always end in `/`** (`trailingSlash: 'always'`); SPA routes never do.
-  Internal links must match or they 301-hop.
+- **Trailing slashes** — three cases, get them right or every link 301-hops:
+  1. **Astro pages** always end in `/` (`trailingSlash: 'always'`).
+  2. **Prerendered SPA routes** (`/analyze`, `/level-test`, `/speaking`, `/podcasts`,
+     `/listening`, `/reading`) also end in `/`. `scripts/prerender-spa-routes.mjs`
+     writes `dist/<route>/index.html` and canonicalises to the slash form, and
+     `public/sitemap-spa.xml` matches — so links to them must carry the slash too.
+  3. **Every other SPA route** (`/faq`, `/ueber-uns`, `/dashboard`, `/level/:level`…)
+     has **no** slash; it is served by a `netlify.toml` rewrite to `/app.html`.
 - **Duplicated on purpose** (until refactor): `competitorComparisons.js` (SPA+Astro,
   CI-guarded), grammar rule rendering (SPA stages vs `RuleContent.astro`), pricing and
   comparison pages. Change both sides or the drift check fails.

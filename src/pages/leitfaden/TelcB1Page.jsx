@@ -72,6 +72,7 @@ export default function TelcB1Page() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
       <SEO
+        lang="de"
         title="telc B1 Vorbereitung: Leitfaden 2026"
         description="telc Deutsch B1 Vorbereitung: 8-Wochen-Lernplan, Prüfungsaufbau, häufige Fehler und Tipps. Alles, was du zum Bestehen brauchst."
         keywords="telc Deutsch B1 Vorbereitung, telc B1 bestehen, telc B1 Prüfung Ablauf, telc B1 Lernplan, Deutsch B1 Prüfung"

@@ -68,7 +68,7 @@ const LoginPage = () => {
         <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-8">
           {timedOut && (
             <div className="mb-6 p-4 bg-amber-50 border border-amber-100 rounded-xl text-amber-700 text-sm">
-              Du wurdest wegen Inaktivität abgemeldet.
+              You were signed out because you were inactive.
             </div>
           )}
 

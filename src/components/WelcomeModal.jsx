@@ -9,28 +9,22 @@ const ACTIONS = [
   {
     icon: Sparkles,
     gradient: 'from-amber-400 to-orange-500',
-    title: 'Sentence X-Ray ausprobieren',
-    // EN: Try Sentence X-Ray
-    description: 'Füge einen deutschen Satz ein und sieh sofort Fälle, Rollen und Struktur.',
-    // EN: Paste a German sentence and instantly see cases, roles, and structure.
+    title: 'Try Sentence X-Ray',
+    description: 'Paste a German sentence and instantly see cases, roles, and structure.',
     to: '/analyze',
   },
   {
     icon: Mic,
     gradient: 'from-teal-400 to-cyan-500',
-    title: 'Erste Sprechübung starten',
-    // EN: Start your first speaking session
-    description: 'Übe Deutsch sprechen mit KI — dein persönlicher Gesprächspartner.',
-    // EN: Practice speaking German with AI — your personal conversation partner.
+    title: 'Start your first speaking session',
+    description: 'Practice speaking German with AI — your personal conversation partner.',
     to: '/speaking',
   },
   {
     icon: BookOpen,
     gradient: 'from-blue-400 to-indigo-500',
-    title: 'A1.1 Grammatik beginnen',
-    // EN: Start A1.1 Grammar
-    description: 'Starte mit den Grundlagen — Artikel, Pronomen und erste Sätze.',
-    // EN: Start with the basics — articles, pronouns, and first sentences.
+    title: 'Start A1.1 Grammar',
+    description: 'Start with the basics — articles, pronouns, and first sentences.',
     to: '/level/a1.1',
   },
 ];
@@ -68,7 +62,7 @@ const WelcomeModal = ({ onDismiss }) => {
             <button
               onClick={dismiss}
               className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
-              aria-label="Schließen"
+              aria-label="Close"
             >
               <X className="w-5 h-5" />
             </button>
@@ -79,12 +73,10 @@ const WelcomeModal = ({ onDismiss }) => {
             </div>
 
             <h2 className="font-display text-2xl font-bold text-slate-800 mb-1">
-              {/* EN: Welcome to DeutschMeister! */}
-              Willkommen bei DeutschMeister!
+              Welcome to DeutschMeister!
             </h2>
             <p className="text-slate-500 text-sm leading-relaxed">
-              {/* EN: Your 7-day Pro trial is active. Here are three ways to start right now: */}
-              Deine 7-tägige Pro-Testversion ist aktiv. Hier sind drei Wege, sofort loszulegen:
+              Your 7-day Pro trial is active. Here are three ways to start right now:
             </p>
           </div>
 
@@ -114,8 +106,7 @@ const WelcomeModal = ({ onDismiss }) => {
               onClick={dismiss}
               className="text-sm text-slate-400 hover:text-slate-600 transition-colors"
             >
-              {/* EN: Explore later */}
-              Später erkunden
+              Explore later
             </button>
           </div>
         </motion.div>

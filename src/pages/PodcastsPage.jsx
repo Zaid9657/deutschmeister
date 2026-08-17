@@ -68,15 +68,15 @@ const PodcastsPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-20 pb-16">
       <SEO
         title="German Podcasts for Beginners | Learn German A1-B2 | DeutschMeister"
-        description="Free German podcasts designed for learners. 24 episodes with native speaker audio and transcripts for levels A1 to B2. Improve your German listening skills while commuting or relaxing."
-        keywords="German podcast for beginners, learn German podcast, German listening practice, German audio lessons, German podcast with transcript"
+        description="Free German podcasts designed for learners. 24 episodes of native-speaker audio for levels A1 to B2. Improve your German listening skills while commuting or relaxing."
+        keywords="German podcast for beginners, learn German podcast, German listening practice, German audio lessons"
         path="/podcasts/"
         structuredData={[
           {
             "@context": "https://schema.org",
             "@type": "PodcastSeries",
             "name": "DeutschMeister German Learning Podcast",
-            "description": "German language learning podcast with 24 episodes covering levels A1 to B2. Each episode features native speaker conversations with transcripts and vocabulary explanations.",
+            "description": "German language learning podcast with 24 episodes covering levels A1 to B2. Each episode features native speaker conversations at a defined CEFR level.",
             "webFeed": "https://deutsch-meister.de/podcasts/",
             "inLanguage": ["de", "en"],
             "numberOfEpisodes": 24,
@@ -106,14 +106,6 @@ const PodcastsPage = () => {
                 "acceptedAnswer": {
                   "@type": "Answer",
                   "text": "Yes, all podcasts are free to listen to. A1.1 content is available without signup, while other levels require a free account."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Do the podcasts have transcripts?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Yes, every podcast episode includes a full transcript in German with translations. This helps you follow along and learn new vocabulary in context."
                 }
               },
               {
@@ -152,10 +144,10 @@ const PodcastsPage = () => {
             German Podcasts for Learners
           </h1>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-2">
-            Native speaker audio with transcripts • Levels A1 to B2
+            Native speaker audio • Levels A1 to B2
           </p>
           <p className="text-slate-500 max-w-xl mx-auto">
-            Listen to authentic German conversations designed for language learners. Each episode comes with full transcripts and vocabulary explanations.
+            Listen to authentic German conversations designed for language learners, graded by level so you always understand most of what you hear.
           </p>
         </motion.div>
 
@@ -295,7 +287,7 @@ const PodcastsPage = () => {
           </h2>
           <div className="prose prose-slate max-w-none">
             <p className="text-slate-600 leading-relaxed mb-4">
-              Our German podcasts are designed specifically for language learners. Each episode features native speakers in natural conversations, with full transcripts and vocabulary explanations to help you follow along.
+              Our German podcasts are designed specifically for language learners. Each episode features native speakers in natural conversations, graded by CEFR level so the vocabulary stays within reach.
             </p>
 
             <h3 className="text-xl font-bold text-slate-800 mt-6 mb-3">Why learn with podcasts?</h3>
@@ -314,7 +306,7 @@ const PodcastsPage = () => {
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-orange-500 mt-1">•</span>
-                <span>Full transcripts help you catch every word</span>
+                <span>Graded by level, so you understand most of what you hear</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-orange-500 mt-1">•</span>

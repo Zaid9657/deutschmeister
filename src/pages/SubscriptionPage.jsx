@@ -169,12 +169,10 @@ const SubscriptionPage = () => {
             <Crown className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-2">
-            {/* EN: Pick up where you left off */}
-            Mach weiter, wo du aufgehört hast
+            Pick up where you left off
           </h1>
           <p className="text-slate-600 max-w-lg mx-auto">
-            {/* EN: Your trial is over, but your progress stays. Choose a plan and keep learning without limits. */}
-            Deine Testphase ist vorbei, aber dein Fortschritt bleibt. Wähle einen Plan und lerne ohne Limits weiter.
+            Your trial is over, but your progress stays. Choose a plan and keep learning without limits.
           </p>
         </motion.div>
 

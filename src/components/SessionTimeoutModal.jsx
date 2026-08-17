@@ -21,16 +21,16 @@ export default function SessionTimeoutModal({ show, onStay }) {
               <Clock className="w-6 h-6 text-amber-600" />
             </div>
             <h2 className="font-display text-lg font-bold text-slate-800 mb-2">
-              Sitzung läuft ab
+              Your session is about to end
             </h2>
             <p className="text-sm text-slate-600 mb-6">
-              Du wirst in 2 Minuten automatisch abgemeldet.
+              You'll be signed out automatically in 2 minutes.
             </p>
             <button
               onClick={onStay}
               className="w-full py-3 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-rose-600 transition-all shadow-lg shadow-rose-500/25"
             >
-              Angemeldet bleiben
+              Stay signed in
             </button>
           </motion.div>
         </motion.div>

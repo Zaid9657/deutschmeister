@@ -2,30 +2,30 @@ import { Trophy, ArrowRight, RotateCcw, ArrowLeft, Star, TrendingUp, CheckCircle
 
 const SCORE_LABELS = {
   // True acoustic pronunciation scoring planned — requires audio analysis pipeline
-  intelligibility: 'Verständlichkeit',
-  grammar: 'Grammatik',
-  vocabulary: 'Wortschatz',
-  fluency: 'Flüssigkeit',
-  comprehension: 'Verständnis',
+  intelligibility: 'Intelligibility',
+  grammar: 'Grammar',
+  vocabulary: 'Vocabulary',
+  fluency: 'Fluency',
+  comprehension: 'Comprehension',
 };
 
 const RECOMMENDATION_CONFIG = {
   'HÖHER': {
-    label: 'Bereit für das nächste Niveau!',
+    label: 'Ready for the next level!',
     bg: 'bg-green-100',
     text: 'text-green-700',
     border: 'border-green-200',
     Icon: TrendingUp,
   },
   'GLEICH': {
-    label: 'Weiter üben auf diesem Niveau',
+    label: 'Keep practicing at this level',
     bg: 'bg-amber-100',
     text: 'text-amber-700',
     border: 'border-amber-200',
     Icon: Star,
   },
   'WIEDERHOLEN': {
-    label: 'Lektion wiederholen empfohlen',
+    label: 'Worth repeating this lesson',
     bg: 'bg-red-100',
     text: 'text-red-700',
     border: 'border-red-200',
@@ -81,7 +81,7 @@ const SpeakingEvaluationResults = ({ level, evaluation, onRetry, onNextLevel, on
           <span className="px-3 py-1 rounded-full bg-teal-100 text-teal-700 text-sm font-bold">
             {level}
           </span>
-          <span className="text-sm text-slate-500">Sprechübung abgeschlossen</span>
+          <span className="text-sm text-slate-500">Speaking session complete</span>
         </div>
       </div>
 
@@ -125,7 +125,7 @@ const SpeakingEvaluationResults = ({ level, evaluation, onRetry, onNextLevel, on
       <div className="bg-white rounded-xl border border-slate-200 p-5 mb-4">
         <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
           <Trophy className="w-4 h-4 text-teal-500" />
-          Bewertung im Detail
+          Score breakdown
         </h3>
         <div className="space-y-3">
           {Object.entries(SCORE_LABELS).map(([key, label]) => {
@@ -162,7 +162,7 @@ const SpeakingEvaluationResults = ({ level, evaluation, onRetry, onNextLevel, on
           <div className="bg-green-50 rounded-xl border border-green-200 p-4">
             <h4 className="text-sm font-semibold text-green-700 mb-2 flex items-center gap-1.5">
               <CheckCircle className="w-4 h-4" />
-              Stärken
+              Strengths
             </h4>
             <ul className="space-y-1">
               {strengths.map((s, i) => (
@@ -175,7 +175,7 @@ const SpeakingEvaluationResults = ({ level, evaluation, onRetry, onNextLevel, on
           <div className="bg-amber-50 rounded-xl border border-amber-200 p-4">
             <h4 className="text-sm font-semibold text-amber-700 mb-2 flex items-center gap-1.5">
               <TrendingUp className="w-4 h-4" />
-              Verbesserungen
+              To work on
             </h4>
             <ul className="space-y-1">
               {improvements.map((imp, i) => (
@@ -194,7 +194,7 @@ const SpeakingEvaluationResults = ({ level, evaluation, onRetry, onNextLevel, on
             className="flex items-center justify-center gap-2 w-full py-3.5 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-xl transition-colors shadow-md shadow-teal-200"
           >
             <ArrowRight className="w-5 h-5" />
-            Nächstes Niveau starten
+            Start the next level
           </button>
         )}
 
@@ -207,7 +207,7 @@ const SpeakingEvaluationResults = ({ level, evaluation, onRetry, onNextLevel, on
           }`}
         >
           <RotateCcw className="w-5 h-5" />
-          {recommendation === 'WIEDERHOLEN' ? 'Lektion wiederholen' : 'Nochmal üben'}
+          {recommendation === 'WIEDERHOLEN' ? 'Repeat the lesson' : 'Practice again'}
         </button>
 
         <button
@@ -215,7 +215,7 @@ const SpeakingEvaluationResults = ({ level, evaluation, onRetry, onNextLevel, on
           className="flex items-center justify-center gap-1 text-sm text-slate-400 hover:text-slate-600 transition-colors py-2"
         >
           <ArrowLeft className="w-4 h-4" />
-          Zurück zur Übersicht
+          Back to overview
         </button>
       </div>
     </div>
