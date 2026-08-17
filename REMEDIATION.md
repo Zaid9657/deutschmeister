@@ -94,12 +94,50 @@ SQL is recorded in `migrations/2026-08-17-audit-remediation.sql`.
   than diffing, so a no-op replacement is no longer reported as a missing
   marker.
 
+## Third pass (2026-08-17) — email scale, activation loop, remaining function audit
+
+- **Both bulk mailers could not finish.** `daily-sentence` sent one request per
+  recipient with a 300 ms sleep — over five minutes of sleeping alone for 1,004
+  confirmed users, well past the function budget, so a killed run mailed the
+  same prefix of the list every morning and the rest never heard from it. Now
+  Resend's batch endpoint: **11 requests, 504 ms**, measured on a 1,004-recipient
+  fixture, with each recipient keeping their own unsubscribe token.
+  `send-campaign` had the same shape (1 s between sends) and additionally
+  targeted all 1,450 accounts — including the 446 that never confirmed. Batched,
+  and confirmed-only.
+- **Trial lifecycle emails** (`netlify/functions/trial-lifecycle.mjs`, daily at
+  08:00 UTC). Day 3 "what you haven't tried", day 6 "ends tomorrow", day 8
+  "your progress is saved". The only mail a learner previously received was the
+  welcome and the daily sentence — nothing ever announced that the trial was
+  ending, which is a large part of how 1,450 signups became 4 subscriptions.
+  Idempotent by construction: the `lifecycle_emails` row is claimed *before* the
+  send under `UNIQUE(user_id, kind)`, so a crash can drop a message but never
+  duplicate one. **Nothing sends until this PR is merged** — the copy is in the
+  diff for review.
+- **Listening progress finally persists.** `useListening.js` has always upserted
+  `answers` and `plays_used` into `user_listening_progress`, but the live table
+  lacked both columns, so every completed exercise was silently discarded.
+  Columns added; listening now feeds the streak alongside reading.
+- **Grammar topic titles restored** — the same punctuation-stripping the
+  descriptions had. "Adjective Declension Weak Mixed" is again "Adjective
+  Declension (Weak/Mixed)". 64 rows, one reversible UPDATE set.
+- **`verify-subscription`** filtered webhook_logs *after* fetching a global
+  newest-10 page, so a paying user's recovery silently failed whenever ten other
+  customers' events sat ahead of theirs — exactly the backlog condition the
+  recovery path exists for. The user filter is now in the query.
+- **`/api/speaking/*`** was a wildcard proxying *every* function under a path
+  whose name implies a narrow scope. Replaced with the four routes the SPA calls.
+- **`podcast-feed`** lost its hardcoded anon-key fallback (a valid JWT good to
+  2084 that silently defeated key rotation) and no longer takes the whole feed
+  down on an episode with a null `audio_url`.
+- Internal error text is no longer returned to clients from five handlers, and
+  two orphaned functions were deleted.
+
 ## Still open — needs the owner
 
 1. **The upstream bounce job.** Suppression stops the damage, but something in the MedMeister automation still tries to mail `a831969a52@emailinbo.live` every 15 minutes. Fix it at source.
 2. **Impressum.** Ships with "Entwurf" and `[Vollständiger Name des Betreibers]` placeholders. Legally required, and I will not invent operator details.
 3. **Rotate the Supabase service-role key** and enable leaked-password protection.
 4. **Take a card at trial start.** The trial requires no card and the only checkout path is a new-tab `window.open`, which iOS Safari and in-app browsers block. Until that changes, passive conversion is structurally 0% — this is a Lemon Squeezy product decision, not a code change.
-5. **Grammar topic *titles*** are punctuation-stripped in the DB the same way descriptions were ("Adjective Declension Weak Mixed" vs "Adjective Declension (Weak/Mixed)"). Restoring them changes 64 indexed H1s and page titles, so it stays your call — it is one `UPDATE`, reversible.
 6. **Run `scripts/generate-example-audio.mjs`** with an OpenAI key — 0 of 673 grammar examples have audio.
 7. **`pg_net` lives in the `public` schema**; moving it needs a coordinated trigger update.
