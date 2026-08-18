@@ -1,5 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { safeGet, safeSet } from './safeStorage';
 
 const resources = {
   en: {
@@ -340,13 +341,32 @@ const resources = {
   },
 };
 
+// The chosen language was never stored: init hardcoded `lng: 'en'` and the
+// navbar toggle only called changeLanguage(), so every full page load — and
+// every crossing into the static Astro pages — silently reverted to English.
+// `dm_lang` is the shared key; the Astro shell reads the same value.
+export const LANG_STORAGE_KEY = 'dm_lang';
+
+const storedLang = safeGet(LANG_STORAGE_KEY);
+const initialLang = storedLang === 'de' || storedLang === 'en' ? storedLang : 'en';
+
 i18n.use(initReactI18next).init({
   resources,
-  lng: 'en',
+  lng: initialLang,
   fallbackLng: 'en',
   interpolation: {
     escapeValue: false,
   },
 });
+
+// Persist centrally rather than in the toggle, so every caller of
+// changeLanguage() is covered, and keep <html lang> honest for screen readers
+// and search engines.
+i18n.on('languageChanged', (lng) => {
+  safeSet(LANG_STORAGE_KEY, lng);
+  if (typeof document !== 'undefined') document.documentElement.lang = lng;
+});
+
+if (typeof document !== 'undefined') document.documentElement.lang = initialLang;
 
 export default i18n;

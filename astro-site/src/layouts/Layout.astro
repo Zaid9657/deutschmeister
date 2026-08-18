@@ -257,5 +257,22 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
         </div>
       </div>
     </footer>
+    <!-- Language: the SPA navbar's EN/DE toggle stores `dm_lang`, but these
+         static pages are prerendered in German and used to ignore it entirely,
+         so an English speaker following the "Grammar" nav link landed on an
+         all-German page. German stays the default (it is what crawlers index
+         and what these pages rank for); elements carrying data-en swap to
+         English when the visitor has chosen it. -->
+    <script is:inline>
+      (function () {
+        try {
+          if (localStorage.getItem('dm_lang') !== 'en') return;
+          document.documentElement.lang = 'en';
+          document.querySelectorAll('[data-en]').forEach(function (el) {
+            el.textContent = el.getAttribute('data-en');
+          });
+        } catch (e) { /* storage blocked — keep the German default */ }
+      })();
+    </script>
   </body>
 </html>
