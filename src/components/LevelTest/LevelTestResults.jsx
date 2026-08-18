@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Trophy, Target, BookOpen, RefreshCw, Headphones, Mic, PenTool, CheckCircle2, XCircle } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { stepDownSublevel, bandOf } from '../../config/levels';
 
 const LevelTestResults = ({
   answers,
@@ -9,7 +10,6 @@ const LevelTestResults = ({
   questions,
   listeningScore,
   speakingScore,
-  determinedLevel,
   determinedSublevel,
   onRetake
 }) => {
@@ -68,33 +68,34 @@ const LevelTestResults = ({
   // Speaking scores breakdown
   const speakingPercentage = speakingScore?.score || speakingScore?.total_score || 0;
 
-  // Calculate final adjusted level based on all sections
+  // Calculate final adjusted level based on all sections.
+  //
+  // The demotion used to be `finalSublevel.replace('.2', '.1')`, which is a
+  // no-op on any sub-level already ending in '.1'. So a strong written score
+  // with a failed listening section produced e.g. B2.1 and stayed B2.1 — the
+  // rule fired and changed nothing. Stepping down the shared ladder handles
+  // band boundaries too (B2.1 → B1.2).
   const calculateFinalLevel = () => {
-    let finalLevel = determinedLevel || 'A1';
     let finalSublevel = determinedSublevel || 'A1.1';
+    const demotions = [];
 
-    // Adjust based on listening (if taken)
-    if (listeningScore != null) {
-      if (listeningScore < 50 && writtenPercentage >= 70) {
-        if (finalSublevel.endsWith('.2')) {
-          finalSublevel = finalSublevel.replace('.2', '.1');
-        }
-      }
+    if (listeningScore != null && listeningScore < 50 && writtenPercentage >= 70) {
+      demotions.push('listening');
+    }
+    if (speakingPercentage > 0 && speakingPercentage < 50 && writtenPercentage >= 70) {
+      demotions.push('speaking');
     }
 
-    // Adjust based on speaking (if taken)
-    if (speakingPercentage > 0) {
-      if (speakingPercentage < 50 && writtenPercentage >= 70) {
-        if (finalSublevel.endsWith('.2')) {
-          finalSublevel = finalSublevel.replace('.2', '.1');
-        }
-      }
+    if (demotions.length) {
+      finalSublevel = stepDownSublevel(finalSublevel, demotions.length);
     }
 
-    return { level: finalLevel, sublevel: finalSublevel };
+    // Keep the band label consistent with the (possibly demoted) sub-level
+    // rather than reporting the pre-adjustment band.
+    return { level: bandOf(finalSublevel), sublevel: finalSublevel, demotions };
   };
 
-  const { level: finalLevel, sublevel: finalSublevel } = calculateFinalLevel();
+  const { level: finalLevel, sublevel: finalSublevel, demotions } = calculateFinalLevel();
 
   const { user } = useAuth();
 
@@ -139,6 +140,15 @@ const LevelTestResults = ({
           <div className={`result-level-badge level-${finalLevel.toLowerCase()}`}>
             {finalSublevel}
           </div>
+          {demotions.length > 0 && (
+            // Say why the level moved. A silently lowered result reads as a
+            // bug to the person who just scored well on the written section.
+            <p style={{ marginTop: 10, fontSize: 14, opacity: 0.85 }}>
+              Adjusted down one sub-level for your{' '}
+              {demotions.join(' and ')} {demotions.length > 1 ? 'sections' : 'section'} —
+              your written score alone would have placed you higher.
+            </p>
+          )}
         </div>
 
         {/* Signup CTA for guests */}

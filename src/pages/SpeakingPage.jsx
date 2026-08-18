@@ -12,8 +12,8 @@ import { getConfigForLevel } from '../constants/speakingPrompts';
 import { checkSpeakingSupport } from '../components/speaking/mediaSupport';
 import SpeakingSession from '../components/speaking/SpeakingSession';
 import SpeakingEvaluationResults from '../components/SpeakingEvaluationResults';
+import { LEVEL_ORDER } from '../config/levels';
 
-const LEVEL_ORDER = ['A1.1', 'A1.2', 'A2.1', 'A2.2', 'B1.1', 'B1.2', 'B2.1', 'B2.2'];
 // English display names for the level picker (the German names in
 // speakingPrompts.js are shared with the AI prompt config and stay unchanged).
 const LEVEL_NAMES_EN = {
