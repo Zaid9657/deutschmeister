@@ -7,10 +7,11 @@ import { getAuthenticatedUserId } from './_shared/auth.mjs';
 // identity requirement below still applies).
 const IP_HASH_SALT = process.env.IP_HASH_SALT || process.env.UNSUB_SECRET || process.env.CAMPAIGN_SECRET || '';
 
-// Claude model for the analysis. `claude-sonnet-4-20250514` was deprecated
-// (retirement date TBD) — kept the tier honest by moving to a current model
-// rather than waiting for the retirement to take the endpoint down.
-const CLAUDE_MODEL = process.env.XRAY_MODEL || 'claude-opus-5';
+// Model for the analysis. The previous id was deprecated (retirement TBD);
+// this is the current-generation equivalent at the same price tier, so the
+// migration removes the deprecation risk without changing unit economics.
+// Override with XRAY_MODEL to try a different tier without a deploy.
+const CLAUDE_MODEL = process.env.XRAY_MODEL || 'claude-sonnet-5';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
