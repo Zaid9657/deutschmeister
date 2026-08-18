@@ -8,7 +8,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { isLevelFree } from '../config/freeTier';
 import { mainLevels, getSubLevels, levelThemes as contentLevelThemes } from '../data/content';
-import { fetchWordsForLevel } from '../services/vocabularyService';
+import { countWordsForLevel } from '../services/vocabularyService';
 import SEO from '../components/SEO';
 
 const mainLevelInfo = {
@@ -25,14 +25,116 @@ const iconMap = {
   'b2.1': Moon, 'b2.2': Moon,
 };
 
+// Defined at module scope on purpose. It used to be declared inside the page
+// component, which makes a NEW component type on every render — React then
+// unmounts and remounts all eight cards, discarding their DOM and animations.
+function VocabularyLevelCard({
+  level, getThemeForLevel, iconMap, contentLevelThemes, wordCounts, countsLoaded,
+  getCompletedCount, isLevelFree, user, hasAccess, navigate,
+}) {
+  const theme = getThemeForLevel(level);
+  const Icon = iconMap[level] || Sun;
+  const levelInfo = contentLevelThemes[level] || {};
+
+  const wordCount = wordCounts[level] || 0;
+  const completedCount = getCompletedCount(level);
+  const progressPercent = wordCount > 0 ? Math.round((completedCount / wordCount) * 100) : 0;
+
+  const isFree = isLevelFree(level);
+  const canAccess = isFree || (user && hasAccess);
+
+  const handleClick = () => {
+    if (canAccess) {
+      navigate(`/level/${level}?tab=vocabulary`);
+    } else {
+      navigate('/subscription');
+    }
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className={`relative bg-white rounded-xl border-2 ${
+        canAccess ? 'border-slate-200 hover:border-slate-300 cursor-pointer' : 'border-slate-100'
+      } overflow-hidden transition-all group`}
+      onClick={handleClick}
+    >
+      <div className="p-5">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-3">
+            <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${theme.gradient} flex items-center justify-center shadow-md`}>
+              <Icon className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="font-bold text-slate-800">{level.toUpperCase()}</h3>
+                {isFree && (
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-medium">
+                    Free
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-slate-500">{levelInfo.name}</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="text-right">
+              <div className="text-sm font-semibold text-slate-700">
+                {wordCount > 0 ? `${wordCount} words` : countsLoaded ? 'No words yet' : 'Loading…'}
+              </div>
+            </div>
+            {!canAccess ? (
+              <Lock className="w-5 h-5 text-slate-400" />
+            ) : progressPercent === 100 && completedCount > 0 ? (
+              <CheckCircle className="w-5 h-5 text-emerald-500" />
+            ) : (
+              <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition-colors" />
+            )}
+          </div>
+        </div>
+
+        {/* Progress bar (if started) */}
+        {progressPercent > 0 && progressPercent < 100 && (
+          <div className="mt-3 pt-3 border-t border-slate-100">
+            <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${progressPercent}%` }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
+                className={`h-full bg-gradient-to-r ${theme.gradient} rounded-full`}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Lock overlay */}
+      {!canAccess && (
+        <div className="absolute inset-0 bg-slate-50/80 backdrop-blur-[2px] flex items-center justify-center">
+          <div className="text-center px-4">
+            <Lock className="w-8 h-8 text-slate-400 mx-auto mb-2" />
+            <p className="text-xs text-slate-600 font-medium">
+              {user ? 'Subscribe to unlock' : 'Sign in to access'}
+            </p>
+          </div>
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
 const VocabularySectionPage = () => {
   const navigate = useNavigate();
-  const { isItemLearned } = useProgress();
+  const { progress } = useProgress();
   const { getThemeForLevel } = useTheme();
   const { user } = useAuth();
   const { hasAccess } = useSubscription();
 
   const [wordCounts, setWordCounts] = useState({});
+  const [countsLoaded, setCountsLoaded] = useState(false);
   const [expandedLevel, setExpandedLevel] = useState('A1');
 
   // Fetch word counts from DB
@@ -40,18 +142,16 @@ const VocabularySectionPage = () => {
     let cancelled = false;
 
     const loadCounts = async () => {
-      const counts = {};
-      for (const mainLevel of mainLevels) {
-        const subLevels = getSubLevels(mainLevel);
-        for (const level of subLevels) {
-          const words = await fetchWordsForLevel(level);
-          if (!cancelled) {
-            counts[level] = words.length;
-          }
-        }
-      }
+      // All levels at once, and only the counts — this used to run eight
+      // sequential queries that each downloaded every word row just to read
+      // `.length`, so the page showed 0s until the last one resolved.
+      const levels = mainLevels.flatMap((mainLevel) => getSubLevels(mainLevel));
+      const results = await Promise.all(
+        levels.map((level) => countWordsForLevel(level).then((n) => [level, n]))
+      );
       if (!cancelled) {
-        setWordCounts(counts);
+        setWordCounts(Object.fromEntries(results));
+        setCountsLoaded(true);
       }
     };
 
@@ -63,108 +163,10 @@ const VocabularySectionPage = () => {
   const totalWords = Object.values(wordCounts).reduce((sum, count) => sum + count, 0);
 
   // Calculate completed words for a level (from progress tracking)
-  const getCompletedCount = (level) => {
-    const words = wordCounts[level] || 0;
-    // For simplicity, if user has accessed the level's vocabulary, we can track individual word progress
-    // For now, we'll return 0 since word-level progress tracking might not be implemented
-    return 0;
-  };
+  // Learned word ids live in progress[level].vocabulary. This returned a hard 0,
+  // so every progress bar on the page sat at 0% no matter how much was learned.
+  const getCompletedCount = (level) => progress?.[level]?.vocabulary?.length ?? 0;
 
-  // Vocabulary level card
-  const VocabularyLevelCard = ({ level }) => {
-    const theme = getThemeForLevel(level);
-    const Icon = iconMap[level] || Sun;
-    const levelInfo = contentLevelThemes[level] || {};
-
-    const wordCount = wordCounts[level] || 0;
-    const completedCount = getCompletedCount(level);
-    const progressPercent = wordCount > 0 ? Math.round((completedCount / wordCount) * 100) : 0;
-
-    const isFree = isLevelFree(level);
-    const canAccess = isFree || (user && hasAccess);
-
-    const handleClick = () => {
-      if (canAccess) {
-        navigate(`/level/${level}?tab=vocabulary`);
-      } else {
-        navigate('/subscription');
-      }
-    };
-
-    return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className={`relative bg-white rounded-xl border-2 ${
-          canAccess ? 'border-slate-200 hover:border-slate-300 cursor-pointer' : 'border-slate-100'
-        } overflow-hidden transition-all group`}
-        onClick={handleClick}
-      >
-        <div className="p-5">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${theme.gradient} flex items-center justify-center shadow-md`}>
-                <Icon className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="font-bold text-slate-800">{level.toUpperCase()}</h3>
-                  {isFree && (
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-medium">
-                      Free
-                    </span>
-                  )}
-                </div>
-                <p className="text-xs text-slate-500">{levelInfo.name}</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <div className="text-right">
-                <div className="text-sm font-semibold text-slate-700">
-                  {wordCount > 0 ? `${wordCount} words` : 'Loading...'}
-                </div>
-              </div>
-              {!canAccess ? (
-                <Lock className="w-5 h-5 text-slate-400" />
-              ) : progressPercent === 100 && completedCount > 0 ? (
-                <CheckCircle className="w-5 h-5 text-emerald-500" />
-              ) : (
-                <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition-colors" />
-              )}
-            </div>
-          </div>
-
-          {/* Progress bar (if started) */}
-          {progressPercent > 0 && progressPercent < 100 && (
-            <div className="mt-3 pt-3 border-t border-slate-100">
-              <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${progressPercent}%` }}
-                  transition={{ duration: 0.5, ease: 'easeOut' }}
-                  className={`h-full bg-gradient-to-r ${theme.gradient} rounded-full`}
-                />
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Lock overlay */}
-        {!canAccess && (
-          <div className="absolute inset-0 bg-slate-50/80 backdrop-blur-[2px] flex items-center justify-center">
-            <div className="text-center px-4">
-              <Lock className="w-8 h-8 text-slate-400 mx-auto mb-2" />
-              <p className="text-xs text-slate-600 font-medium">
-                {user ? 'Subscribe to unlock' : 'Sign in to access'}
-              </p>
-            </div>
-          </div>
-        )}
-      </motion.div>
-    );
-  };
 
   return (
     <>
@@ -254,7 +256,20 @@ const VocabularySectionPage = () => {
                         className="grid gap-4 sm:grid-cols-2 mb-4"
                       >
                         {subLevels.map((level) => (
-                          <VocabularyLevelCard key={level} level={level} />
+                          <VocabularyLevelCard
+                            key={level}
+                            level={level}
+                            getThemeForLevel={getThemeForLevel}
+                            iconMap={iconMap}
+                            contentLevelThemes={contentLevelThemes}
+                            wordCounts={wordCounts}
+                            countsLoaded={countsLoaded}
+                            getCompletedCount={getCompletedCount}
+                            isLevelFree={isLevelFree}
+                            user={user}
+                            hasAccess={hasAccess}
+                            navigate={navigate}
+                          />
                         ))}
                       </motion.div>
                     )}
@@ -264,7 +279,20 @@ const VocabularySectionPage = () => {
                   {!isExpanded && mainLevel === 'A1' && (
                     <div className="grid gap-4 sm:grid-cols-2 mb-4">
                       {subLevels.map((level) => (
-                        <VocabularyLevelCard key={level} level={level} />
+                        <VocabularyLevelCard
+                            key={level}
+                            level={level}
+                            getThemeForLevel={getThemeForLevel}
+                            iconMap={iconMap}
+                            contentLevelThemes={contentLevelThemes}
+                            wordCounts={wordCounts}
+                            countsLoaded={countsLoaded}
+                            getCompletedCount={getCompletedCount}
+                            isLevelFree={isLevelFree}
+                            user={user}
+                            hasAccess={hasAccess}
+                            navigate={navigate}
+                          />
                       ))}
                     </div>
                   )}

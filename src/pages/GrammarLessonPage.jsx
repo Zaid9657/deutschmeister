@@ -675,10 +675,13 @@ export default function GrammarLessonPage() {
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
-    fetchTopicContent();
+    let cancelled = false;
+    fetchTopicContent(() => cancelled);
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [level, slug]);
 
-  const fetchTopicContent = async () => {
+  const fetchTopicContent = async (isCancelled = () => false) => {
     try {
       setLoading(true);
 
@@ -689,6 +692,8 @@ export default function GrammarLessonPage() {
         .eq('sub_level', level.toUpperCase())
         .eq('slug', slug)
         .single();
+
+      if (isCancelled()) return;
 
       if (topicError || !topicData) {
         console.error('Topic not found:', topicError);
@@ -747,6 +752,10 @@ export default function GrammarLessonPage() {
         }
       });
 
+      // Second checkpoint: the content queries above are the slow ones, so a
+      // newer navigation can easily land while they are still in flight.
+      if (isCancelled()) return;
+
       setContent({
         introduction: introductionRule?.content || null,
         tables,
@@ -790,6 +799,7 @@ export default function GrammarLessonPage() {
 
       setLoading(false);
     } catch (error) {
+      if (isCancelled()) return;
       console.error('Error fetching content:', error);
       setLoading(false);
     }
@@ -805,19 +815,27 @@ export default function GrammarLessonPage() {
       const percentage = Math.round((score / content.exercises.length) * 100);
       const completed = percentage >= 70;
 
-      // Save progress to user_grammar_progress
+      // Save progress to user_grammar_progress.
+      // onConflict is required: without it PostgREST upserts on the primary key,
+      // which isn't supplied, so the second attempt at the same topic violates
+      // UNIQUE(user_id, topic_id) and the write is silently lost. supabase-js
+      // resolves rather than throws, so the error has to be read off the result.
       try {
-        await supabase
+        const { error } = await supabase
           .from('user_grammar_progress')
-          .upsert({
-            user_id: user.id,
-            topic_id: topic.id,
-            current_stage: 1, // Single page = stage 1
-            is_completed: completed,
-            score: percentage,
-            last_accessed: new Date().toISOString(),
-            ...(completed && { completed_at: new Date().toISOString() }),
-          });
+          .upsert(
+            {
+              user_id: user.id,
+              topic_id: topic.id,
+              current_stage: 1, // Single page = stage 1
+              is_completed: completed,
+              score: percentage,
+              last_accessed: new Date().toISOString(),
+              ...(completed && { completed_at: new Date().toISOString() }),
+            },
+            { onConflict: 'user_id,topic_id' }
+          );
+        if (error) console.error('Error saving progress:', error.message);
       } catch (error) {
         console.error('Error saving progress:', error);
       }

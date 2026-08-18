@@ -13,8 +13,12 @@ const LevelExercises = () => {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
   const { exercises, loading, error, retry } = useLevelExercises(level);
-  const theme = getLevelTheme(level);
-  const subtitle = getLevelSubtitle(level, i18n.language);
+  // Routes carry the level lowercase (/listening/a1.1) while the theme/subtitle
+  // tables are keyed on the DB's uppercase form ("A1.1") — normalize here or
+  // every level silently falls back to the A1.1 theme and the raw slug.
+  const levelKey = (level || '').toUpperCase();
+  const theme = getLevelTheme(levelKey);
+  const subtitle = getLevelSubtitle(levelKey, i18n.language);
   const isGerman = i18n.language === 'de';
 
   if (loading || error) {
@@ -27,7 +31,11 @@ const LevelExercises = () => {
 
   return (
     <div className="min-h-screen pt-24 pb-12 px-4 sm:px-6 lg:px-8">
-      <SEO title="German Listening Exercises" description="Practice German listening comprehension with level-appropriate audio exercises." path="/listening" noindex />
+      <SEO
+        title={`German Listening Exercises ${levelKey}`}
+        description={`Practice German listening comprehension at level ${levelKey} with native speaker audio exercises and comprehension questions.`}
+        path={`/listening/${(level || '').toLowerCase()}`}
+      />
       <div className="max-w-3xl mx-auto">
         {/* Back button */}
         <motion.button
@@ -53,7 +61,7 @@ const LevelExercises = () => {
             <Headphones size={28} style={{ color: theme.primary }} />
           </div>
           <div>
-            <h1 className="text-2xl font-display font-bold text-slate-800">{level}</h1>
+            <h1 className="text-2xl font-display font-bold text-slate-800">{levelKey}</h1>
             <p className="text-slate-500">{subtitle}</p>
           </div>
         </motion.div>

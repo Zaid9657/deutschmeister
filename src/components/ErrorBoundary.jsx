@@ -1,5 +1,6 @@
 import React from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import { safeGet, safeSet } from '../utils/safeStorage';
 
 function isChunkLoadError(error) {
   if (!error) return false;
@@ -29,11 +30,11 @@ class ErrorBoundary extends React.Component {
     // Auto-reload once for stale chunk errors (new deploy invalidated old assets)
     if (isChunkLoadError(error)) {
       const key = 'chunk_reload_ts';
-      const last = sessionStorage.getItem(key);
+      const last = safeGet(key, { session: true });
       const now = Date.now();
       // Only auto-reload if we haven't done so in the last 10 seconds (prevent loop)
       if (!last || now - Number(last) > 10000) {
-        sessionStorage.setItem(key, String(now));
+        safeSet(key, String(now), { session: true });
         window.location.reload();
         return;
       }

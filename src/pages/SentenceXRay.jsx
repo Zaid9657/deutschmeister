@@ -5,6 +5,8 @@ import { Scan, ArrowRight, Loader2, AlertCircle, ChevronDown, ChevronUp, Type, S
 import SEO from '../components/SEO';
 import { useAuth } from '../contexts/AuthContext';
 import { getAuthHeaders } from '../utils/supabase';
+import { TRIAL_DAILY_LIMIT, PRO_DAILY_LIMIT } from '../config/limits';
+import { withTimeout } from '../utils/withTimeout';
 
 // ─── constants ───────────────────────────────────────────────────────────────
 
@@ -294,10 +296,8 @@ function LimitReachedBanner({ tier, limit, isLoggedIn }) {
       </div>
       <h3 className="font-display font-bold text-slate-800 text-base mb-1">
         {isLoggedIn
-          ? /* EN: You've used all {limit} analyses today — back tomorrow, or: */
-            `Du hast heute alle ${limit} Analysen genutzt — morgen geht's weiter, oder:`
-          : /* EN: Create a free account for 5 analyses per day — or try Pro with 50 analyses daily. */
-            'Erstelle ein kostenloses Konto für 5 Analysen pro Tag — oder teste Pro mit 50 Analysen täglich.'}
+          ? `That's all ${limit} of today's analyses. More tomorrow — or:`
+          : `That's your free analysis for today. A free account gives you ${TRIAL_DAILY_LIMIT} a day for your first week.`}
       </h3>
       <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mt-4">
         <a
@@ -305,15 +305,16 @@ function LimitReachedBanner({ tier, limit, isLoggedIn }) {
           className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-semibold rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all shadow-sm"
         >
           <Crown size={14} />
-          {/* EN: Upgrade to Pro now — 50 analyses per day */}
-          {isLoggedIn ? 'Jetzt auf Pro upgraden — 50 Analysen pro Tag' : 'Pro testen — 50 Analysen täglich'}
+          {isLoggedIn
+            ? `Upgrade to Pro — ${PRO_DAILY_LIMIT} analyses a day`
+            : `Try Pro — ${PRO_DAILY_LIMIT} analyses a day`}
         </a>
         {!isLoggedIn && (
           <Link
             to="/signup"
             className="inline-flex items-center gap-2 px-5 py-2.5 border border-slate-300 text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-50 transition-colors"
           >
-            Kostenlos registrieren
+            Create a free account
           </Link>
         )}
       </div>
@@ -358,14 +359,20 @@ const SentenceXRay = () => {
     if (text) setSentence(text);
 
     try {
-      const res = await fetch('/.netlify/functions/analyze-sentence', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
-        body: JSON.stringify({
-          sentence:    trimmed,
-          anonymousId: user?.id ? null : anonId,
+      // Timeboxed: an LLM call that never resolves used to leave "Analyzing…"
+      // spinning forever with no way out.
+      const res = await withTimeout(
+        fetch('/.netlify/functions/analyze-sentence', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
+          body: JSON.stringify({
+            sentence:    trimmed,
+            anonymousId: user?.id ? null : anonId,
+          }),
         }),
-      });
+        45000,
+        'The analysis is taking longer than expected. Please try again.'
+      );
 
       const data = await res.json();
 

@@ -375,6 +375,31 @@ async function handleSubscriptionUpdated(data, meta) {
     throw new Error(`subscription update failed: ${error.message}`);
   }
 
+  // Entitlement follows status. Only the subscription_expired handler used to
+  // clear profiles.is_subscribed, so an account that went past_due/unpaid — or
+  // whose status moved to expired via this event rather than its own — kept full
+  // Pro access indefinitely. 'cancelled' deliberately keeps access: the customer
+  // has paid through the end of the period and expiry revokes it later.
+  const revokedStatuses = ['expired', 'unpaid', 'past_due'];
+  if (updated && updated.length > 0 && revokedStatuses.includes(attributes.status)) {
+    const { data: sub } = await supabase
+      .from('subscriptions')
+      .select('user_id')
+      .eq('lemonsqueezy_subscription_id', subscriptionId)
+      .maybeSingle();
+    if (sub?.user_id) {
+      const { error: revokeError } = await supabase
+        .from('profiles')
+        .update({ is_subscribed: false, subscription_tier: 'free', updated_at: new Date().toISOString() })
+        .eq('id', sub.user_id);
+      if (revokeError) {
+        console.error('subscription_updated: failed to revoke entitlement:', JSON.stringify(revokeError));
+      } else {
+        console.log(`subscription_updated: entitlement revoked for ${sub.user_id} (status ${attributes.status})`);
+      }
+    }
+  }
+
   // If no rows matched (subscription_updated arrived before subscription_created),
   // create the subscription if we can resolve a user. custom_data.user_id may be
   // absent, so fall back to matching on lemonsqueezy_subscription_id / user_email.
@@ -525,21 +550,181 @@ async function handleSubscriptionExpired(data, meta) {
   console.log('Subscription expired:', subscriptionId, 'User:', subscription.user_id);
 }
 
+// subscription_payment_failed: data is a subscription-invoice.
+// attributes.user_email is the customer, attributes.urls.update_payment_method
+// is a signed Lemon Squeezy link to fix the card. Everything beyond the
+// payment_failures insert is fail-open: an email error must never 500 the
+// webhook (Lemon Squeezy would retry and we'd double-log).
 async function handlePaymentFailed(data, meta, payload) {
   const userId = meta?.custom_data?.user_id;
-  const subscriptionId = data?.attributes?.subscription_id || data?.id;
+  const attributes = data?.attributes || {};
+  const subscriptionId = attributes.subscription_id || data?.id;
   const eventId = data?.id;
 
   console.log(`Payment failed — user: ${userId} sub: ${subscriptionId}`);
 
-  const { error } = await supabase.from('payment_failures').insert({
-    user_id: userId,
-    lemonsqueezy_subscription_id: String(subscriptionId),
-    lemonsqueezy_event_id: String(eventId),
-    raw_payload: payload
-  });
+  // Dunning rate limit: only email on the FIRST failure per subscription per
+  // 7 days. Lemon Squeezy retries failed renewals several times; the customer
+  // needs one nudge, not one per retry. Checked BEFORE inserting this event.
+  let firstRecentFailure = false;
+  try {
+    const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+    const { data: recent, error: recentError } = await supabase
+      .from('payment_failures')
+      .select('id')
+      .eq('lemonsqueezy_subscription_id', String(subscriptionId))
+      .gte('failed_at', since)
+      .limit(1);
+    if (recentError) {
+      console.error('payment_failed: recency check error (skipping dunning):', JSON.stringify(recentError));
+    } else {
+      firstRecentFailure = !recent || recent.length === 0;
+    }
+  } catch (e) {
+    console.error('payment_failed: recency check threw (skipping dunning):', e.message);
+  }
+
+  // lemonsqueezy_event_id is unique — a retried delivery of the same event must
+  // not create a second row (retries previously duplicated events up to 5x).
+  const { error } = await supabase.from('payment_failures').upsert(
+    {
+      user_id: userId,
+      lemonsqueezy_subscription_id: String(subscriptionId),
+      lemonsqueezy_event_id: String(eventId),
+      raw_payload: payload
+    },
+    { onConflict: 'lemonsqueezy_event_id', ignoreDuplicates: true }
+  );
 
   if (error) {
     console.error('Failed to log payment failure:', error);
   }
+
+  if (!firstRecentFailure) {
+    console.log(`payment_failed: sub ${subscriptionId} already emailed within 7 days — not re-sending`);
+    return;
+  }
+
+  const resendKey = process.env.RESEND_API_KEY;
+  if (!resendKey) {
+    console.error('payment_failed: RESEND_API_KEY not set — dunning email skipped');
+    return;
+  }
+
+  const customerEmail = attributes.user_email;
+  const updateUrl = attributes.urls?.update_payment_method || 'https://deutsch-meister.de/dashboard';
+
+  // 1) Dunning email to the customer.
+  if (customerEmail && customerEmail.includes('@')) {
+    try {
+      const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from: 'Zaid from DeutschMeister <zaid@deutsch-meister.de>',
+          to: [customerEmail],
+          subject: 'Your DeutschMeister payment didn’t go through',
+          html: DUNNING_HTML(updateUrl),
+        }),
+      });
+      if (!res.ok) {
+        console.error(`payment_failed: Resend dunning error ${res.status}:`, (await res.text()).slice(0, 300));
+      } else {
+        console.log(`payment_failed: dunning email sent to customer for sub ${subscriptionId}`);
+      }
+    } catch (e) {
+      console.error('payment_failed: dunning email threw:', e.message);
+    }
+  } else {
+    console.warn(`payment_failed: no user_email in payload for sub ${subscriptionId} — customer not emailed`);
+  }
+
+  // 2) One-line alert to the owner.
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: 'DeutschMeister Alerts <zaid@deutsch-meister.de>',
+        to: ['zaid@deutsch-meister.de'],
+        subject: `Payment failed — subscription ${subscriptionId}`,
+        text: `Renewal payment failed.\n\nSubscription: ${subscriptionId}\nCustomer: ${customerEmail || 'unknown'}\nUser ID: ${userId || 'unknown'}\nInvoice/event: ${eventId}\n\nThe customer ${customerEmail ? 'was' : 'could NOT be'} sent a dunning email (rate-limited to one per subscription per 7 days).`,
+      }),
+    });
+    if (!res.ok) {
+      console.error(`payment_failed: Resend owner alert error ${res.status}:`, (await res.text()).slice(0, 300));
+    }
+  } catch (e) {
+    console.error('payment_failed: owner alert threw:', e.message);
+  }
 }
+
+const DUNNING_HTML = (updateUrl) => `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment failed</title>
+</head>
+<body style="margin:0;padding:0;background:#f8fafc;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;padding:40px 16px;">
+    <tr>
+      <td align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e2e8f0;">
+
+          <tr>
+            <td style="background:linear-gradient(135deg,#f59e0b,#f43f5e);padding:32px;text-align:center;">
+              <div style="display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:14px;background:rgba(255,255,255,0.2);margin-bottom:12px;">
+                <span style="color:#ffffff;font-size:28px;font-weight:800;">D</span>
+              </div>
+              <p style="margin:0;color:#ffffff;font-size:20px;font-weight:700;letter-spacing:-0.3px;">DeutschMeister</p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:36px 32px 28px;">
+              <p style="margin:0 0 16px;font-size:16px;color:#1e293b;line-height:1.6;">Hey!</p>
+
+              <p style="margin:0 0 16px;font-size:16px;color:#475569;line-height:1.6;">
+                Quick heads-up: the renewal payment for your DeutschMeister Pro subscription didn’t go through. This usually just means a card expired or the bank declined the charge.
+              </p>
+
+              <p style="margin:0 0 16px;font-size:16px;color:#475569;line-height:1.6;">
+                Updating your payment details takes about a minute, and your access continues without interruption:
+              </p>
+
+              <table cellpadding="0" cellspacing="0" style="margin:28px 0;">
+                <tr>
+                  <td style="border-radius:10px;background:linear-gradient(135deg,#7c3aed,#4f46e5);">
+                    <a href="${updateUrl}"
+                       style="display:inline-block;padding:14px 28px;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;letter-spacing:-0.2px;">
+                      Update payment method →
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:0 0 16px;font-size:16px;color:#475569;line-height:1.6;">
+                We’ll automatically retry the payment over the next few days. If nothing changes, the subscription will lapse on its own — no action needed if you meant to cancel.
+              </p>
+
+              <p style="margin:0;font-size:16px;color:#1e293b;line-height:1.6;">
+                — Zaid
+              </p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:20px 32px;border-top:1px solid #f1f5f9;text-align:center;">
+              <p style="margin:0;font-size:12px;color:#94a3b8;line-height:1.6;">
+                DeutschMeister · <a href="https://deutsch-meister.de" style="color:#94a3b8;">deutsch-meister.de</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;

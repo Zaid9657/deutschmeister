@@ -84,21 +84,21 @@ const VerifyEmailPage = () => {
           </div>
 
           <h1 className="font-display text-2xl font-bold text-slate-800 mb-3">
-            Bestätige deine E-Mail
+            Confirm your email
           </h1>
 
           <p className="text-slate-600 mb-2">
-            Wir haben dir eine Bestätigungs-E-Mail geschickt an:
+            We sent a confirmation email to:
           </p>
           <p className="text-amber-600 font-semibold mb-6">{user.email}</p>
 
           <p className="text-sm text-slate-500 mb-6">
-            Klicke auf den Link in der E-Mail, um dein Konto zu aktivieren. Diese Seite aktualisiert sich automatisch.
+            Click the link in that email to activate your account. This page updates automatically.
           </p>
 
           <div className="flex items-center justify-center gap-2 text-xs text-slate-400 mb-6">
             <Loader2 className="w-3.5 h-3.5 animate-spin" />
-            Warte auf Bestätigung…
+            Waiting for confirmation…
           </div>
 
           {resent && (
@@ -108,7 +108,7 @@ const VerifyEmailPage = () => {
               className="mb-4 p-3 bg-green-50 border border-green-100 rounded-xl flex items-center justify-center gap-2 text-green-700 text-sm"
             >
               <CheckCircle2 className="w-4 h-4" />
-              E-Mail wurde erneut gesendet.
+              Email sent again.
             </motion.div>
           )}
 
@@ -133,7 +133,7 @@ const VerifyEmailPage = () => {
               ) : (
                 <RefreshCw className="w-5 h-5" />
               )}
-              E-Mail erneut senden
+              Resend email
             </button>
 
             <button
@@ -141,12 +141,12 @@ const VerifyEmailPage = () => {
               className="w-full py-3 px-6 rounded-xl border-2 border-slate-200 text-slate-700 font-semibold hover:border-slate-300 hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
             >
               <LogOut className="w-4 h-4" />
-              Abmelden und mit anderer E-Mail registrieren
+              Sign out and use a different email
             </button>
           </div>
 
           <p className="mt-6 text-xs text-slate-400">
-            Tipp: Schau auch in deinem Spam-Ordner nach.
+            Tip: check your spam folder too.
           </p>
         </div>
       </motion.div>

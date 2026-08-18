@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth } from './AuthContext';
 import { supabase } from '../utils/supabase';
+import { safeGetJSON, safeSetJSON } from '../utils/safeStorage';
 import { vocabulary, sentences, grammar, levels } from '../data/content';
 import { getTopicsForLevel } from '../data/grammarTopics';
 import {
@@ -42,15 +43,10 @@ export const ProgressProvider = ({ children }) => {
       loadProgress();
     } else {
       // Load from localStorage for non-authenticated users
-      const stored = localStorage.getItem('deutschmeister_progress');
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored);
-          // Merge with initial progress to ensure all levels exist
-          setProgress({ ...getInitialProgress(), ...parsed });
-        } catch {
-          setProgress(getInitialProgress());
-        }
+      const parsed = safeGetJSON('deutschmeister_progress', null);
+      if (parsed) {
+        // Merge with initial progress to ensure all levels exist
+        setProgress({ ...getInitialProgress(), ...parsed });
       }
       setLoading(false);
     }
@@ -148,7 +144,7 @@ export const ProgressProvider = ({ children }) => {
 
   const saveProgressToDb = async (newProgress) => {
     if (!user) {
-      localStorage.setItem('deutschmeister_progress', JSON.stringify(newProgress));
+      safeSetJSON('deutschmeister_progress', newProgress);
       return;
     }
 

@@ -13,7 +13,7 @@ function formatTime(seconds) {
 // Turn-based tap-to-speak session. Started by the caller (speaking-session
 // action 'start'); this component only drives the conversation loop:
 //   tap → record → speaking-turn (STT → teacher → TTS) → play + transcript
-// then "Beenden & Auswerten" (or the timer) → action 'end' → evaluation.
+// then "Finish & get feedback" (or the timer) → action 'end' → evaluation.
 //
 // Shared by the /speaking flow and the placement test (evalMode='placement').
 const SpeakingSession = ({
@@ -29,7 +29,7 @@ const SpeakingSession = ({
   const isPlacement = evalMode === 'placement';
   const config = getConfigForLevel(level);
   const hintWords = Array.isArray(mission?.hint_words) ? mission.hint_words : [];
-  const assistantLabel = isPlacement ? 'Frau Schmidt' : 'Lehrerin';
+  const assistantLabel = isPlacement ? 'Frau Schmidt' : 'Teacher';
 
   const [messages, setMessages] = useState(
     opening?.text ? [{ role: 'assistant', content: opening.text }] : [],
@@ -186,7 +186,7 @@ const SpeakingSession = ({
           return;
         }
         setTurnError({
-          message: data.error || 'Etwas ist schiefgelaufen.',
+          message: data.error || 'Something went wrong.',
           stage: data.stage || 'unknown',
           retryable: true,
         });
@@ -210,7 +210,7 @@ const SpeakingSession = ({
       setRecordState('idle');
     } catch (err) {
       console.error('speaking-turn error:', err);
-      setTurnError({ message: 'Netzwerkfehler — bitte erneut versuchen.', stage: 'network', retryable: true });
+      setTurnError({ message: 'Network error — please try again.', stage: 'network', retryable: true });
       setRecordState('idle');
     }
   }, [sessionToken, endSession, playAudio]);
@@ -272,19 +272,19 @@ const SpeakingSession = ({
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center px-6">
         <Loader2 className="w-10 h-10 text-teal-500 animate-spin mb-5" />
-        <h3 className="text-lg font-semibold text-slate-800 mb-1">Auswertung läuft…</h3>
-        <p className="text-sm text-slate-500">Dein Gespräch wird analysiert</p>
+        <h3 className="text-lg font-semibold text-slate-800 mb-1">Scoring your session…</h3>
+        <p className="text-sm text-slate-500">We're going through your conversation</p>
       </div>
     );
   }
 
   const isLowTime = timeRemaining <= 30;
-  const title = isPlacement ? 'Einstufungstest' : (mission ? (mission.title_de || mission.title_en) : config.name);
+  const title = isPlacement ? 'Placement test' : (mission ? (mission.title_de || mission.title_en) : config.name);
 
-  let statusText = 'Tippen und sprechen';
-  if (recordState === 'recording') statusText = 'Aufnahme… tippen zum Senden';
-  else if (recordState === 'processing') statusText = 'Denkt nach…';
-  else if (isPlaying) statusText = `${assistantLabel} spricht — tippen zum Antworten`;
+  let statusText = 'Tap and speak';
+  if (recordState === 'recording') statusText = 'Recording… tap to send';
+  else if (recordState === 'processing') statusText = 'Thinking…';
+  else if (isPlaying) statusText = `${assistantLabel} is speaking — tap to reply`;
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col pt-16">
@@ -304,7 +304,7 @@ const SpeakingSession = ({
         </div>
         {isLowTime && (
           <div className="bg-rose-50 text-rose-600 text-xs text-center py-1 font-medium">
-            Weniger als 30 Sekunden — gleich ist die Zeit um.
+            Less than 30 seconds left — time is nearly up.
           </div>
         )}
       </div>
@@ -313,7 +313,7 @@ const SpeakingSession = ({
       {mission && hintWords.length > 0 && (
         <div className="flex-shrink-0 bg-white/60 border-b border-slate-100 px-4 py-2">
           <div className="max-w-lg mx-auto flex items-center gap-2 flex-wrap justify-center">
-            <span className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Hilfswörter</span>
+            <span className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Helper words</span>
             {hintWords.map((w, i) => (
               <span key={i} className="px-2.5 py-1 rounded-full bg-teal-50 border border-teal-100 text-teal-700 text-xs font-medium">{w}</span>
             ))}
@@ -332,7 +332,7 @@ const SpeakingSession = ({
                   : 'bg-white border border-slate-200 text-slate-700 rounded-bl-sm'
               }`}>
                 <span className={`block text-[10px] uppercase tracking-wider font-semibold mb-0.5 ${msg.role === 'user' ? 'text-teal-100' : 'text-slate-400'}`}>
-                  {msg.role === 'user' ? 'Du' : assistantLabel}
+                  {msg.role === 'user' ? 'You' : assistantLabel}
                 </span>
                 {msg.content}
               </div>
@@ -357,7 +357,7 @@ const SpeakingSession = ({
       <div className="max-w-lg mx-auto w-full px-4">
         {ttsWarning && (
           <div className="mb-3 p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-700 text-center">
-            Sprachausgabe momentan nicht verfügbar — lies die Antwort oben.
+            Audio isn't available right now — read the reply above.
           </div>
         )}
         {turnError && (
@@ -368,7 +368,7 @@ const SpeakingSession = ({
                 <p>{turnError.message}</p>
                 {turnError.retryable && lastRecordingRef.current && (
                   <button onClick={retryTurn} className="mt-2 inline-flex items-center gap-1.5 text-rose-700 font-semibold hover:text-rose-800">
-                    <RotateCcw className="w-3.5 h-3.5" /> Erneut senden
+                    <RotateCcw className="w-3.5 h-3.5" /> Send again
                   </button>
                 )}
               </div>
@@ -411,14 +411,14 @@ const SpeakingSession = ({
                 onClick={() => playAudio(lastReplyAudioRef.current)}
                 className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-600 py-2"
               >
-                <Volume2 className="w-3.5 h-3.5" /> Erneut anhören
+                <Volume2 className="w-3.5 h-3.5" /> Play again
               </button>
             )}
             <button
               onClick={endSession}
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold transition-colors"
             >
-              <PhoneOff className="w-4 h-4" /> Beenden & Auswerten
+              <PhoneOff className="w-4 h-4" /> Finish &amp; get feedback
             </button>
           </div>
 
@@ -426,7 +426,7 @@ const SpeakingSession = ({
             onClick={() => { cleanup(); onCancel?.(); }}
             className="mt-3 inline-flex items-center gap-1.5 text-xs text-slate-300 hover:text-slate-500 py-1"
           >
-            <X className="w-3 h-3" /> Abbrechen
+            <X className="w-3 h-3" /> Cancel
           </button>
         </div>
       </div>

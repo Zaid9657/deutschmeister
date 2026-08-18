@@ -10,10 +10,20 @@ runner in the build. Apply each file by hand in the Supabase SQL editor
 |---|---|---|
 | `2026-08-16-fix-rls-security.sql` | Closes the self-grant-Pro RLS hole on `subscriptions`/`profiles`, locks down `webhook_logs` and `xray_usage`, narrows anonymous access to paid reading/listening content to the free tier (a1.1). | ✅ **Applied 2026-08-16** |
 | `2026-08-16-enable-rls-on-unprotected-tables.sql` | Enables RLS on 13 tables that had it switched off entirely (the whole course catalogue was publicly deletable via the anon key), and revokes public EXECUTE on `debit_speaking_wallet`. | ✅ **Applied 2026-08-16** |
+| `2026-08-16-content-cleanup.sql` | De-CAPS of 270 shouting `grammar_rules` rows (892 edits, correct German orthography restored); `related_slugs` populated for all 64 topics; documents the dead `grammar_introductions` table (commented DROP, owner's call). | ✅ **Applied 2026-08-16** |
+| `2026-08-16-reading-lessons.md` (note) | 22 new reading lessons inserted (every level now ≥8) — source of truth lives in `content/reading/*.json` in the repo; re-seed with `scripts/seed-reading-lessons.mjs`. | ✅ **Applied 2026-08-16** |
+| `2026-08-16-welcome-email-webhook.sql` | Wires the never-called `send-welcome-email` function: `pg_net` + an `AFTER INSERT` trigger on `auth.users` POSTing to the Netlify function with the `WEBHOOK_SECRET` bearer. The repo copy redacts the secret — the live function body embeds it (rotate both together). | ✅ **Applied 2026-08-16** |
+| `2026-08-17-audit-remediation.sql` | Remediates `AUDIT-2026-08-16.md`: drops the PUBLIC/ALL policy on `speaking_usage` and the client write policies on the other speaking tables; allows `'placement'` in `speaking_sessions_level_check` (restoring the level test); dedupes b1.2 reading lessons and `payment_failures` (+ unique indexes); reconciles `profiles.is_subscribed`; reshuffles the skewed answer-option positions; adds `xray_usage.ip_hash` for per-IP metering. | ✅ **Applied 2026-08-17** |
+| `2026-08-17-speaking-missions.md` (note) | 56 speaking missions inserted for A1.2–B2.2 (the table previously held only A1.1, so 7 of 8 levels showed an empty Speaking tab). Data-only; ordering column is `mission_order`. | ✅ **Applied 2026-08-17** |
+| `2026-08-17-content-backfill.md` (note) | Six data migrations: `acceptable_answers` for all 433 fill-blanks (only 7 have real variants; `[]` would have broken every one — see the note), plurals resolved for 101 nouns (98 are mass nouns marked `'null'`), 47 duplicate vocabulary rows removed, reading-lesson CRLF/plural-marker/`word_count`/`estimated_reading_time` hygiene, `prerequisite_slugs` for 60 topics, and 3 unanswerable exercises rewritten. | ✅ **Applied 2026-08-17** |
+| `2026-08-17-lifecycle-and-listening.sql` | `lifecycle_emails` ledger for the new trial lifecycle job (UNIQUE(user_id, kind) is what makes the daily cron safe to re-run); adds the `answers`/`plays_used` columns the SPA has always written to `user_listening_progress`, so listening completions finally persist and can feed the streak; consolidates that table's overlapping policies; and records the 64-title restore. | ✅ **Applied 2026-08-17** |
+| `2026-08-17-narrow-anon-content.sql` | Closes audit A-09: `words`, `sentences` and `paragraphs` were fully readable with the anon key that ships in the SPA bundle. Anon now sees only the a1.1 free tier; authenticated keeps full read. `podcasts` deliberately untouched (the public RSS feed uses the anon key). Also fills the last 3 empty `prerequisite_slugs`. | ✅ **Applied 2026-08-17** |
 
-Both files record changes that are **already live** on project `omqyueddktqeyrrqvnyq`.
-They are idempotent, so re-running them is safe and is how you would reproduce the same
-state on a branch or fresh database.
+Every file above records a change that is **already live** on project
+`omqyueddktqeyrrqvnyq`. They are idempotent, so re-running one is safe and is how you
+would reproduce the same state on a branch or fresh database — with one exception, called
+out in its own header: the answer-option reshuffle in `2026-08-17-audit-remediation.sql`
+picks new positions each run (meaning is preserved; positions are not).
 
 ## Conventions
 

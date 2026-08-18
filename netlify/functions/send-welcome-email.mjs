@@ -150,6 +150,6 @@ export const handler = async (event) => {
 
   } catch (err) {
     console.error(`send-welcome-email: unexpected error for ${email}:`, err.message);
-    return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Internal error' }) };
   }
 };

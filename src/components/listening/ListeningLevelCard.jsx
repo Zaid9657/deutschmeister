@@ -14,6 +14,9 @@ const ListeningLevelCard = ({ level, totalExercises, completedExercises, index }
   const { hasAccess } = useSubscription();
   const theme = getLevelTheme(level);
   const subtitle = getLevelSubtitle(level, i18n.language);
+  // `level` is the DB value ("A1.1") but routes are lowercase — lowercase it so
+  // there is exactly one URL per level page.
+  const levelPath = `/listening/${String(level ?? '').toLowerCase()}`;
   const free = isLevelFree(level);
   const locked = !free && !(user && hasAccess);
   const progress = totalExercises > 0 ? Math.round((completedExercises / totalExercises) * 100) : 0;
@@ -25,7 +28,7 @@ const ListeningLevelCard = ({ level, totalExercises, completedExercises, index }
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
       whileHover={{ scale: 1.02, y: -4 }}
-      onClick={() => navigate(`/listening/${level}`)}
+      onClick={() => navigate(levelPath)}
       className="relative cursor-pointer rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
     >
       {/* Top accent bar */}

@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { X, Zap, AlertTriangle, Clock } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
+import { safeGet, safeSet } from '../utils/safeStorage';
 
 const DISMISS_KEY = 'dm_trial_banner_dismissed';
 
@@ -11,7 +12,7 @@ const TrialBanner = () => {
   const { profile, loading } = useSubscription();
   const location = useLocation();
   const [dismissed, setDismissed] = useState(
-    () => sessionStorage.getItem(DISMISS_KEY) === '1'
+    () => safeGet(DISMISS_KEY, { session: true }) === '1'
   );
 
   if (loading || !user || dismissed) return null;
@@ -33,7 +34,7 @@ const TrialBanner = () => {
   const under24h = msRemaining < 24 * 60 * 60 * 1000;
 
   const handleDismiss = () => {
-    sessionStorage.setItem(DISMISS_KEY, '1');
+    safeSet(DISMISS_KEY, '1', { session: true });
     setDismissed(true);
   };
 

@@ -124,12 +124,13 @@ const SignupPage = () => {
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="signup-field-1" className="block text-sm font-medium text-slate-700 mb-2">
                 {t('auth.email')}
               </label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
+                  id="signup-field-1"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -142,12 +143,13 @@ const SignupPage = () => {
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="signup-field-2" className="block text-sm font-medium text-slate-700 mb-2">
                 {t('auth.password')}
               </label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
+                  id="signup-field-2"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -168,12 +170,13 @@ const SignupPage = () => {
 
             {/* Confirm Password */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="signup-field-3" className="block text-sm font-medium text-slate-700 mb-2">
                 {t('auth.confirmPassword')}
               </label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
+                  id="signup-field-3"
                   type={showPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}

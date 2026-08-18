@@ -1,5 +1,7 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import SEO from '../components/SEO';
+import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../utils/supabase';
 import LevelTestLanding from '../components/LevelTest/LevelTestLanding';
 import LevelTestQuestion from '../components/LevelTest/LevelTestQuestion';
 import LevelTestListening from '../components/LevelTest/LevelTestListening';
@@ -9,6 +11,7 @@ import questionData from '../data/levelTestQuestions.json';
 import '../styles/LevelTest.css';
 
 const LevelTest = () => {
+  const { user } = useAuth();
   const [testState, setTestState] = useState('landing');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState([]);
@@ -138,6 +141,29 @@ const LevelTest = () => {
     setListeningAnswers([]);
     setSpeakingScore(null);
   };
+
+  // Persist the placement result. Without this the whole test was decorative:
+  // profiles.current_level stayed at its 'a1' default for every account, and
+  // SpeakingPage — the only reader — coerced that back to A1.1, so a learner
+  // placed at B1.2 was still handed A1.1 content. Anonymous testers keep their
+  // result in component state only; the landing page promises no account is
+  // required, so there is no signup gate here.
+  useEffect(() => {
+    if (testState !== 'results' || !user || !determinedSublevel) return;
+    let cancelled = false;
+    (async () => {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ current_level: determinedSublevel, updated_at: new Date().toISOString() })
+        .eq('id', user.id);
+      // supabase-js resolves rather than throws, so the error has to be read
+      // off the result or a failed write looks identical to a successful one.
+      if (!cancelled && error) {
+        console.error('Failed to save placement level:', error.message);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [testState, user, determinedSublevel]);
 
   return (
     <>

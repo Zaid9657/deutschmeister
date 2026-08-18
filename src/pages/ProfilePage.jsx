@@ -112,14 +112,14 @@ const ProfilePage = () => {
               </div>
               <div>
                 <h3 className="font-semibold text-slate-800">
-                  {isSubscribed ? 'Aktives Abo' : inTrial ? 'Testversion' : 'Kein Abo'}
+                  {isSubscribed ? 'Active plan' : inTrial ? 'Free trial' : 'No plan'}
                 </h3>
                 <p className="text-sm text-slate-500">
                   {isSubscribed
-                    ? 'Du hast vollen Zugang zu allen Features.'
+                    ? 'You have full access to everything.'
                     : inTrial
-                      ? `Noch ${trialDays} Tage in deiner Testversion.`
-                      : 'Upgrade für vollen Zugang zu allen Features.'}
+                      ? `${trialDays} days left in your free trial.`
+                      : 'Upgrade for full access to everything.'}
                 </p>
               </div>
             </div>
@@ -131,7 +131,7 @@ const ProfilePage = () => {
                   : 'bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600'
               }`}
             >
-              {isSubscribed ? 'Abo verwalten' : 'Upgraden'}
+              {isSubscribed ? 'Manage plan' : 'Upgrade'}
               <ArrowRight className="w-4 h-4" />
             </a>
           </div>

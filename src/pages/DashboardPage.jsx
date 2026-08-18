@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import {
   Flame, Mic, ScanSearch, RotateCcw, Crown, Clock,
   ArrowRight, Check, Lock, Trophy, BookOpen, Sparkles,
+  Headphones, FileText,
 } from 'lucide-react';
 import { useProgress } from '../contexts/ProgressContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -32,15 +33,15 @@ const firstName = (user) => {
   const meta = user?.user_metadata || {};
   const raw = meta.full_name || meta.name || user?.email || '';
   const name = String(raw).split('@')[0].split(' ')[0].trim();
-  if (!name) return 'zusammen';
+  if (!name) return 'there';
   return name.charAt(0).toUpperCase() + name.slice(1);
 };
 
 const greetingWord = () => {
   const h = new Date().getHours();
-  if (h < 11) return 'Guten Morgen';
-  if (h < 18) return 'Hallo';
-  return 'Guten Abend';
+  if (h < 11) return 'Good morning';
+  if (h < 18) return 'Hello';
+  return 'Good evening';
 };
 
 // Is a specific topic completed, per useProgress state?
@@ -150,10 +151,16 @@ const DashboardPage = () => {
   }, [cur, progress, band]);
 
   const practice = [
-    { title: 'Sprechen', en: 'Say a few lines with your AI partner', Icon: Mic, tint: '#0D9488', to: '/speaking' },
-    { title: 'Satz-Röntgen', en: 'X-ray any German sentence', Icon: ScanSearch, tint: '#0891B2', to: '/analyze' },
+    { title: 'Speaking', en: 'Say a few lines with your AI partner', Icon: Mic, tint: '#0D9488', to: '/speaking' },
+    { title: 'Sentence X-Ray', en: 'X-ray any German sentence', Icon: ScanSearch, tint: '#0891B2', to: '/analyze' },
+    // Listening and Reading are stocked (480 dialogues, 66 lessons) but had no
+    // entry point once a user signed in — the only link lived in the logged-out nav.
+    { title: 'Listening', en: 'A short dialogue at your level', Icon: Headphones, tint: '#7C3AED',
+      to: `/listening/${cur.level}` },
+    { title: 'Reading', en: 'A short story with vocabulary help', Icon: FileText, tint: '#DB2777',
+      to: `/reading/${cur.level}` },
     // No spaced-repetition flow exists yet → route Review to the next topic to revisit.
-    { title: 'Wiederholen', en: 'Revisit your current grammar topic', Icon: RotateCcw, tint: '#F59E0B',
+    { title: 'Review', en: 'Revisit your current grammar topic', Icon: RotateCcw, tint: '#F59E0B',
       to: cur.nextTopic ? `/grammar/${cur.level}/${cur.nextTopic.slug}` : '/grammar' },
   ];
 
@@ -161,12 +168,12 @@ const DashboardPage = () => {
     { label: 'Day streak', value: stats?.streak ?? 0, Icon: Flame, from: '#F59E0B', to: '#FB923C' },
     { label: 'Topics mastered', value: completedInLevel + otherLevelsCompleted(progress, cur.level), Icon: Trophy, from: '#0F766E', to: '#14B8A6' },
     { label: 'Speaking sessions', value: stats?.speakingSessions ?? 0, Icon: Mic, from: '#0891B2', to: '#22D3EE' },
-    { label: 'Satz-Röntgen', value: stats?.xrayChecks ?? 0, Icon: ScanSearch, from: '#0D9488', to: '#06B6D4' },
+    { label: 'Sentence X-Ray', value: stats?.xrayChecks ?? 0, Icon: ScanSearch, from: '#0D9488', to: '#06B6D4' },
   ];
 
   const heroHref = cur.nextTopic ? `/grammar/${cur.level}/${cur.nextTopic.slug}` : '/grammar';
-  const heroTitle = cur.allDone ? 'Alles geschafft!' : (cur.nextTopic?.titleEn || 'Start here');
-  const heroDe = cur.allDone ? 'Du hast alle Themen abgeschlossen.' : (cur.nextTopic?.titleDe || '');
+  const heroTitle = cur.allDone ? 'All done!' : (cur.nextTopic?.titleEn || 'Start here');
+  const heroDe = cur.allDone ? "You've finished every topic." : (cur.nextTopic?.titleDe || '');
   const heroMinutes = cur.nextTopic?.estimatedTime || 15;
   const heroProgress = cur.nextTopic ? topicPercent(progress, cur.level, cur.nextTopic.id) : 100;
   const isBrandNew = !loading && stats && stats.streak === 0 && completedInLevel === 0
@@ -263,7 +270,7 @@ const DashboardPage = () => {
                 <Link to={heroHref}
                       className="group shrink-0 inline-flex items-center gap-2 rounded-2xl px-6 py-4 font-semibold text-[15px] transition-transform hover:-translate-y-0.5"
                       style={{ background: '#FFFFFF', color: '#0F766E', boxShadow: '0 10px 24px -8px rgba(0,0,0,.35)' }}>
-                  {isBrandNew ? 'Jetzt starten' : cur.allDone ? 'Themen ansehen' : 'Weiterlernen'}
+                  {isBrandNew ? 'Start now' : cur.allDone ? 'Browse topics' : 'Keep learning'}
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
                 </Link>
               </div>
@@ -271,11 +278,11 @@ const DashboardPage = () => {
           )}
         </motion.div>
 
-        {/* ── Dein Weg (the learning path) ── */}
+        {/* ── Your path (the learning path) ── */}
         <motion.div {...fade(0.12)} className="mb-8 rounded-3xl bg-white p-6 sm:p-7"
                     style={{ border: '1px solid #E5EEEE', boxShadow: '0 12px 30px -22px rgba(12,42,51,.4)' }}>
           <div className="flex items-center justify-between mb-1">
-            <h3 className="dm-display text-xl font-semibold">Dein Weg</h3>
+            <h3 className="dm-display text-xl font-semibold">Your path</h3>
             <span className="text-[11px] font-semibold uppercase tracking-widest" style={{ color: '#94A3B8' }}>
               {levelLabel} · {BAND_NAME[band]}
             </span>
@@ -314,9 +321,9 @@ const DashboardPage = () => {
           </div>
         </motion.div>
 
-        {/* ── Heute üben ── */}
+        {/* ── Practice today ── */}
         <motion.div {...fade(0.18)} className="mb-8">
-          <h3 className="dm-display text-xl font-semibold mb-3">Heute üben</h3>
+          <h3 className="dm-display text-xl font-semibold mb-3">Practice today</h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {practice.map((p) => (
               <Link key={p.title} to={p.to}

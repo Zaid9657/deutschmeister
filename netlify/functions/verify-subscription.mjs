@@ -66,12 +66,18 @@ export const handler = async (event) => {
       return { statusCode: 200, headers, body: JSON.stringify({ status: 'active', source: 'existing' }) };
     }
 
-    // Step 2: Search webhook_logs for unprocessed subscription events for this user
+    // Step 2: Search webhook_logs for unprocessed subscription events for THIS user.
+    // The user filter has to be in the query, not applied afterwards: this used
+    // to take the 10 newest unprocessed events globally and then discard the ones
+    // belonging to other customers, so a paying user's recovery silently failed
+    // whenever 10+ other events sat ahead of theirs — precisely the backlog
+    // condition this recovery path exists for.
     const { data: logs, error: logsError } = await supabase
       .from('webhook_logs')
       .select('id, event_type, payload')
       .in('event_type', ['subscription_created', 'subscription_updated'])
       .eq('processed', false)
+      .filter('payload->meta->custom_data->>user_id', 'eq', user_id)
       .order('created_at', { ascending: false })
       .limit(10);
 
@@ -162,6 +168,6 @@ export const handler = async (event) => {
 
   } catch (error) {
     console.error('verify-subscription error:', error.message, error.stack);
-    return { statusCode: 500, headers, body: JSON.stringify({ error: error.message }) };
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Internal error' }) };
   }
 };

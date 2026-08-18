@@ -68,7 +68,7 @@ const LoginPage = () => {
         <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-8">
           {timedOut && (
             <div className="mb-6 p-4 bg-amber-50 border border-amber-100 rounded-xl text-amber-700 text-sm">
-              Du wurdest wegen Inaktivität abgemeldet.
+              You were signed out because you were inactive.
             </div>
           )}
 
@@ -86,12 +86,13 @@ const LoginPage = () => {
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="login-email" className="block text-sm font-medium text-slate-700 mb-2">
                 {t('auth.email')}
               </label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
+                  id="login-email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -104,12 +105,13 @@ const LoginPage = () => {
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="login-password" className="block text-sm font-medium text-slate-700 mb-2">
                 {t('auth.password')}
               </label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                 <input
+                  id="login-password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

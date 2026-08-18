@@ -72,14 +72,14 @@ export function micErrorMessage(err) {
   const msg = (err?.message || err?.name || '').toLowerCase();
   if (msg.includes('not allowed') || msg.includes('permission') || err?.name === 'NotAllowedError') {
     return isIOS()
-      ? 'Mikrofon-Zugriff verweigert. Gehe zu Einstellungen → Safari → Mikrofon und erlaube den Zugriff.'
-      : 'Mikrofon-Zugriff verweigert. Bitte erlaube den Zugriff in deinen Browser-Einstellungen.';
+      ? 'Microphone access denied. Go to Settings → Safari → Microphone and allow access.'
+      : 'Microphone access denied. Please allow access in your browser settings.';
   }
   if (msg.includes('not found') || err?.name === 'NotFoundError') {
-    return 'Kein Mikrofon gefunden. Bitte schließe ein Mikrofon an und versuche es erneut.';
+    return 'No microphone found. Please connect one and try again.';
   }
   if (msg.includes('not readable') || err?.name === 'NotReadableError') {
-    return 'Das Mikrofon konnte nicht geöffnet werden. Möglicherweise wird es von einer anderen App verwendet.';
+    return "We couldn't open your microphone. Another app may be using it.";
   }
-  return 'Mikrofon konnte nicht gestartet werden. Bitte versuche es erneut.';
+  return "We couldn't start your microphone. Please try again.";
 }

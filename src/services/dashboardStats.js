@@ -22,7 +22,7 @@ const dayKey = (ts) => {
 
 /** Gather every activity timestamp for a user across the three activity tables. */
 async function fetchActivityTimestamps(userId) {
-  const [grammar, xray, speaking] = await Promise.all([
+  const [grammar, xray, speaking, reading, listening] = await Promise.all([
     supabase
       .from('user_grammar_progress')
       .select('last_accessed, completed_at')
@@ -35,6 +35,20 @@ async function fetchActivityTimestamps(userId) {
       .from('speaking_evaluations')
       .select('created_at')
       .eq('user_id', userId),
+    // Reading and listening both counted for nothing before this: a learner
+    // could finish a lesson or a dialogue every day and still show a 0-day
+    // streak. (user_listening_progress did not even exist, so the SPA's writes
+    // to it were being discarded silently.)
+    supabase
+      .from('user_reading_progress')
+      .select('completed_at')
+      .eq('user_id', userId)
+      .eq('completed', true),
+    supabase
+      .from('user_listening_progress')
+      .select('completed_at')
+      .eq('user_id', userId)
+      .eq('completed', true),
   ]);
 
   const stamps = [];
@@ -44,6 +58,8 @@ async function fetchActivityTimestamps(userId) {
   });
   (xray.data || []).forEach((r) => r.used_at && stamps.push(r.used_at));
   (speaking.data || []).forEach((r) => r.created_at && stamps.push(r.created_at));
+  (reading.data || []).forEach((r) => r.completed_at && stamps.push(r.completed_at));
+  (listening.data || []).forEach((r) => r.completed_at && stamps.push(r.completed_at));
   return stamps;
 }
 

@@ -27,15 +27,15 @@ const jsonLd = {
   description="64 Grammatikthemen von A1.1 bis B2.2. Artikel, Kasus, Konjunktiv und mehr — mit Erklärungen, Beispielen und interaktiven Übungen."
   canonical="https://deutsch-meister.de/grammar/"
   jsonLd={jsonLd}
-  lang="de"
+  lang="en"
 >
   <div class="max-w-5xl mx-auto px-4 sm:px-6 py-12">
     <!-- Header -->
     <div class="text-center mb-12">
       <h1 class="font-display text-4xl sm:text-5xl font-bold text-slate-900 mb-4">
-        Deutsche Grammatik
+        <span lang="de">Deutsche Grammatik</span>
       </h1>
-      <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+      <p class="text-lg text-slate-600 max-w-2xl mx-auto" lang="de">
         64 Themen von A1.1 bis B2.2 — mit Regeln, Beispielen und interaktiven Übungen. Jedes Thema einzeln erklärbar.
       </p>
       <p class="mt-3 text-sm text-slate-600">
@@ -85,7 +85,7 @@ const jsonLd = {
             ))}
           </div>
 
-          <a href={`/grammar/${level}/`} class="inline-flex items-center gap-1 mt-3 text-sm text-slate-600 hover:text-slate-700 transition-colors">
+          <a href={`/grammar/${level}/`} class="inline-flex items-center gap-1 mt-3 text-sm text-slate-600 hover:text-slate-700 transition-colors" lang="de">
             Alle {meta.label}-Themen ansehen →
           </a>
         </section>
@@ -94,15 +94,15 @@ const jsonLd = {
 
     <!-- CTA -->
     <div class="mt-16 text-center p-8 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200">
-      <h2 class="font-display text-2xl font-bold text-slate-800 mb-2">Grammatik allein reicht nicht</h2>
-      <p class="text-slate-600 mb-6 max-w-md mx-auto">
+      <h2 class="font-display text-2xl font-bold text-slate-800 mb-2" lang="de">Grammatik allein reicht nicht</h2>
+      <p class="text-slate-600 mb-6 max-w-md mx-auto" lang="de">
         Übe das Gelernte mit KI-Sprechübungen, Lesestücken und interaktiven Aufgaben.
       </p>
       <a
         href="https://deutsch-meister.de/signup"
         class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold hover:from-amber-600 hover:to-rose-600 transition-all shadow-lg shadow-amber-200"
       >
-        Kostenlos starten — 7 Tage Pro inklusive
+        <span lang="de">Kostenlos starten — 7 Tage Pro inklusive</span>
       </a>
     </div>
   </div>

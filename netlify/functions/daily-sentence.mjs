@@ -174,23 +174,26 @@ function buildEmail({ sentence, recipient }) {
 </html>`;
 }
 
-async function sendEmail(resendKey, to, subject, html) {
-  const res = await fetch('https://api.resend.com/emails', {
+// Send in batches of 100 via Resend's batch endpoint. The old one-request-per-
+// recipient loop with a 300 ms sleep needed 6-8 minutes for ~1,000 confirmed
+// users — far beyond the synchronous function budget, so a killed run silently
+// mailed only a prefix of the list. ~1,000 recipients is now ~10 requests.
+// Each batch item carries its own per-recipient HTML (unsubscribe link).
+const BATCH_SIZE = 100;
+
+async function sendBatch(resendKey, items) {
+  const res = await fetch('https://api.resend.com/emails/batch', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${resendKey}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ from: FROM_ADDRESS, to: [to], reply_to: 'zaid199660@gmail.com', subject, html }),
+    body: JSON.stringify(items),
   });
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`Resend ${res.status}: ${text}`);
+    throw new Error(`Resend batch ${res.status}: ${text.slice(0, 300)}`);
   }
-}
-
-function sleep(ms) {
-  return new Promise((r) => setTimeout(r, ms));
 }
 
 // ─── handler ─────────────────────────────────────────────────────────────────
@@ -237,21 +240,27 @@ const innerHandler = async (event) => {
     }
   }
 
-  console.log(`Sending to ${recipients.length} recipients`);
+  console.log(`Sending to ${recipients.length} recipients in batches of ${BATCH_SIZE}`);
 
   const subject = `🇩🇪 ${sentence.sentence_de}`;
   let sent = 0, failed = 0;
 
-  for (const recipient of recipients) {
+  for (let i = 0; i < recipients.length; i += BATCH_SIZE) {
+    const slice = recipients.slice(i, i + BATCH_SIZE);
+    const items = slice.map((recipient) => ({
+      from: FROM_ADDRESS,
+      to: [recipient.email],
+      reply_to: 'zaid@deutsch-meister.de',
+      subject,
+      html: buildEmail({ sentence, recipient }),
+    }));
     try {
-      const html = buildEmail({ sentence, recipient });
-      await sendEmail(resendKey, recipient.email, subject, html);
-      sent++;
+      await sendBatch(resendKey, items);
+      sent += slice.length;
     } catch (err) {
-      failed++;
-      console.error(`Failed to send to ${recipient.email}:`, err.message);
+      failed += slice.length;
+      console.error(`Batch ${i / BATCH_SIZE + 1} failed:`, err.message);
     }
-    if (sent + failed < recipients.length) await sleep(300);
   }
 
   console.log(`Done — sent: ${sent}, failed: ${failed}`);

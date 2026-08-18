@@ -19,7 +19,8 @@ const LESSON_COUNTS = {
   'b2.1': 9, 'b2.2': 10,
 };
 
-const TOTAL_LESSONS = 52;
+// Fallback only — the real count comes from the DB (see dbLessonCounts).
+const TOTAL_LESSONS = 66;
 
 const mainLevelInfo = {
   A1: { name: 'Sunrise Warmth', icon: '🌅', color: 'from-amber-400 to-orange-400' },
@@ -191,8 +192,8 @@ const ReadingSectionPage = () => {
   return (
     <>
       <SEO
-        title="German Reading Practice | 52 Lessons A1-B2 | DeutschMeister"
-        description="Improve your German reading comprehension with 52 leveled reading passages. Authentic texts with comprehension questions for all CEFR levels from A1 to B2."
+        title="German Reading Practice | Graded Lessons A1-B2 | DeutschMeister"
+        description="Improve your German reading comprehension with leveled reading passages. Authentic texts with comprehension questions for all CEFR levels from A1 to B2."
         keywords="German reading practice, German reading comprehension, learn German reading, German texts for learners, CEFR reading exercises"
         path="/reading/"
         structuredData={{

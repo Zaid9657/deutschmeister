@@ -12,24 +12,24 @@ const SLIDES = [
   {
     icon: Sparkles,
     color: 'from-amber-400 to-rose-500',
-    headline: 'Schön, dass du da bist.',
-    body: 'Hier lernst du Deutsch wie ein Mensch — nicht wie ein Spielzeug. Wir zeigen dir in 30 Sekunden, was du als nächstes tun kannst.',
+    headline: "Glad you're here.",
+    body: 'Here you learn German like a person, not like a toy. In 30 seconds we\'ll show you what to do next.',
   },
   {
     icon: ListChecks,
     color: 'from-teal-400 to-emerald-500',
-    headline: 'Dein Start in den ersten Tag.',
+    headline: 'Your first day, step by step.',
     checklist: [
-      'Mach den Einstufungstest (5 Min — wir finden dein Niveau)',
-      'Probiere das Sprechtraining mit der KI',
-      'Analysiere deinen ersten deutschen Satz mit X-Ray',
+      'Take the placement test (5 min — we find your level)',
+      'Try a speaking session with the AI',
+      'Break down your first German sentence with X-Ray',
     ],
   },
   {
     icon: Rocket,
     color: 'from-violet-400 to-indigo-500',
-    headline: "Los geht's mit dem Einstufungstest.",
-    body: 'In 5 Minuten weißt du genau, auf welcher Stufe du startest. Spar dir Wochen auf der falschen Stufe.',
+    headline: "Let's start with the placement test.",
+    body: "In 5 minutes you'll know exactly which level to start at. No weeks wasted on the wrong one.",
     isFinal: true,
   },
 ];
@@ -125,13 +125,13 @@ export default function IntroSlides() {
                   onClick={() => completeOnboarding('level-test')}
                   className="w-full py-3.5 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-xl shadow-lg shadow-rose-500/25 hover:from-amber-600 hover:to-rose-600 transition-all"
                 >
-                  Einstufungstest starten
+                  Start the placement test
                 </motion.button>
                 <button
                   onClick={handleSkip}
                   className="text-sm text-slate-500 hover:text-slate-700 transition-colors"
                 >
-                  Lieber später, direkt zum Dashboard →
+                  Maybe later, take me to the dashboard →
                 </button>
               </div>
             )}

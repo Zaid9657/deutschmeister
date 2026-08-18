@@ -1,5 +1,11 @@
 import { createClient } from '@supabase/supabase-js';
+import { createHash } from 'crypto';
 import { getAuthenticatedUserId } from './_shared/auth.mjs';
+
+// Salt for the per-IP rate-limit key. Reuses an existing secret so no new env
+// var is required; if none is configured the IP ceiling is skipped (the
+// identity requirement below still applies).
+const IP_HASH_SALT = process.env.IP_HASH_SALT || process.env.UNSUB_SECRET || process.env.CAMPAIGN_SECRET || '';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -76,6 +82,9 @@ async function getUserTier(userId) {
 }
 
 // Returns how many times this user/anon has analyzed today (UTC day).
+// Callers must pass an identity: a verified user id, or an anonymous key. An
+// absent key used to return 0, which made the gate unreachable — omitting
+// anonymousId turned this into an unauthenticated, unmetered Claude endpoint.
 async function countTodayUsage(userId, anonymousId) {
   if (!supabase) return 0;
 
@@ -92,18 +101,51 @@ async function countTodayUsage(userId, anonymousId) {
   } else if (anonymousId) {
     query = query.eq('anonymous_id', anonymousId).is('user_id', null);
   } else {
-    return 0;
+    // No identity at all — treat as over quota rather than under it.
+    return Number.MAX_SAFE_INTEGER;
   }
 
   const { count } = await query;
   return count ?? 0;
 }
 
-async function recordUsage(userId, anonymousId, sentence) {
+// Per-IP ceiling, independent of the client-supplied anonymous id (which the
+// caller can regenerate at will). Anonymous traffic from one address cannot
+// exceed this many analyses per UTC day regardless of how many ids it invents.
+const ANON_IP_DAILY_CEILING = 12;
+
+function clientIp(event) {
+  const raw =
+    event.headers?.['x-nf-client-connection-ip'] ||
+    event.headers?.['client-ip'] ||
+    (event.headers?.['x-forwarded-for'] || '').split(',')[0].trim();
+  return raw || null;
+}
+
+// The IP is hashed before storage so the usage table never holds a raw address.
+function hashIp(ip) {
+  return 'ip_' + createHash('sha256').update(`${ip}|${IP_HASH_SALT}`).digest('hex').slice(0, 32);
+}
+
+async function countTodayUsageByIp(ipKey) {
+  if (!supabase || !ipKey) return 0;
+  const startOfDay = new Date();
+  startOfDay.setUTCHours(0, 0, 0, 0);
+  const { count } = await supabase
+    .from('xray_usage')
+    .select('id', { count: 'exact', head: true })
+    .gte('used_at', startOfDay.toISOString())
+    .is('user_id', null)
+    .eq('ip_hash', ipKey);
+  return count ?? 0;
+}
+
+async function recordUsage(userId, anonymousId, sentence, ipKey) {
   if (!supabase) return;
   await supabase.from('xray_usage').insert({
     user_id:      userId || null,
     anonymous_id: userId ? null : (anonymousId || null),
+    ip_hash:      userId ? null : (ipKey || null),
     sentence:     sentence?.slice(0, 500) || null,
   });
 }
@@ -151,9 +193,35 @@ export const handler = async (event) => {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'Sentence too long (max 500 characters)' }) };
     }
 
+    // --- Identity gate ---
+    // Anonymous callers must supply an anonymousId. Without one there is nothing
+    // to meter against, and the daily limit below can never trigger.
+    if (!userId && (typeof anonymousId !== 'string' || anonymousId.trim().length < 8)) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: 'anonymousId is required for anonymous requests' }),
+      };
+    }
+
     // --- Usage gate ---
     const { tier, limit } = await getUserTier(userId || null);
     const usedToday = await countTodayUsage(userId || null, anonymousId || null);
+
+    // Per-IP ceiling for anonymous traffic — the anonymousId is client-generated
+    // and can be regenerated, so it cannot be the only thing standing between an
+    // attacker and an unmetered paid model.
+    const ipKey = !userId && IP_HASH_SALT ? hashIp(clientIp(event) || 'unknown') : null;
+    if (ipKey) {
+      const ipUsedToday = await countTodayUsageByIp(ipKey);
+      if (ipUsedToday >= ANON_IP_DAILY_CEILING) {
+        return {
+          statusCode: 429,
+          headers,
+          body: JSON.stringify({ error: 'limit_reached', tier, limit, usedToday: ipUsedToday, remaining: 0 }),
+        };
+      }
+    }
 
     if (limit !== Infinity && usedToday >= limit) {
       return {
@@ -170,7 +238,7 @@ export const handler = async (event) => {
     }
 
     // --- Record usage before calling Claude (counts even on API error) ---
-    await recordUsage(userId || null, anonymousId || null, sentence.trim());
+    await recordUsage(userId || null, anonymousId || null, sentence.trim(), ipKey);
 
     // --- Call Claude ---
     const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {

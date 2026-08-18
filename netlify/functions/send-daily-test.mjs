@@ -103,14 +103,16 @@ export const handler = async (event) => {
     return { statusCode: 500, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'UNSUB_SECRET / CAMPAIGN_SECRET not set' }) };
   }
 
-  // Without a valid x-campaign-secret header this endpoint only ever sends to
-  // the hardcoded owner address — an ?email= param from an unauthenticated
-  // caller is rejected instead of turning this into an open relay.
+  // Every invocation requires x-campaign-secret. Previously only the ?email=
+  // case was gated, so the no-parameter case was a public trigger: an
+  // unauthenticated loop could mail the owner address indefinitely, burning the
+  // Resend quota and the sending domain's reputation along with it.
   const requestedEmail = event?.queryStringParameters?.email;
   const headerSecret = event?.headers?.['x-campaign-secret'];
   const secretOk = Boolean(CAMPAIGN_SECRET) && headerSecret === CAMPAIGN_SECRET;
 
-  if (requestedEmail && requestedEmail !== DEFAULT_EMAIL && !secretOk) {
+  if (!secretOk) {
+    console.warn('send-daily-test: rejected request without a valid campaign secret');
     return { statusCode: 401, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'Unauthorized' }) };
   }
 
