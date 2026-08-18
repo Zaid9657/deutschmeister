@@ -18,7 +18,7 @@ const ExerciseCard = ({ exercise, index }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
       whileHover={{ scale: 1.01, y: -2 }}
-      onClick={() => navigate(`/listening/${exercise.level}/${exercise.exercise_number}`)}
+      onClick={() => navigate(`/listening/${String(exercise.level ?? '').toLowerCase()}/${exercise.exercise_number}`)}
       className={`relative cursor-pointer rounded-xl border p-4 shadow-sm hover:shadow-md transition-all ${
         isCompleted ? 'border-emerald-200 bg-emerald-50/30' : 'border-slate-200 bg-white'
       }`}

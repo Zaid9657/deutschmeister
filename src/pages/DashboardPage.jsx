@@ -156,7 +156,7 @@ const DashboardPage = () => {
     // Listening and Reading are stocked (480 dialogues, 66 lessons) but had no
     // entry point once a user signed in — the only link lived in the logged-out nav.
     { title: 'Listening', en: 'A short dialogue at your level', Icon: Headphones, tint: '#7C3AED',
-      to: `/listening/${cur.level}` },
+      to: `/listening/${String(cur.level ?? '').toLowerCase()}` },
     { title: 'Reading', en: 'A short story with vocabulary help', Icon: FileText, tint: '#DB2777',
       to: `/reading/${cur.level}` },
     // No spaced-repetition flow exists yet → route Review to the next topic to revisit.

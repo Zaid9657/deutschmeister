@@ -115,7 +115,7 @@ const ResultsView = ({ exercise, questions, answers, score, dialogues, playsUsed
       {/* Action buttons */}
       <div className="flex gap-3">
         <button
-          onClick={() => navigate(`/listening/${exercise.level}`)}
+          onClick={() => navigate(`/listening/${String(exercise.level ?? '').toLowerCase()}`)}
           className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors"
         >
           <ArrowLeft size={18} />
