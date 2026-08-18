@@ -347,6 +347,18 @@ const SentenceXRay = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Every non-200 gets a message a learner can act on. Upstream failures are
+  // ours, not theirs, and must not read like the sentence was rejected.
+  const failureMessage = (status, data) => {
+    if (data?.code?.startsWith('upstream_')) {
+      return 'Sentence X-Ray is temporarily unavailable — this one is on us, not your sentence. Please try again in a few minutes.';
+    }
+    if (status >= 500) {
+      return 'Sentence X-Ray is temporarily unavailable. Please try again in a few minutes.';
+    }
+    return data?.error || 'Analysis failed. Please try again.';
+  };
+
   const analyze = async (text) => {
     const trimmed = (text || sentence).trim();
     if (!trimmed) return;
@@ -374,7 +386,10 @@ const SentenceXRay = () => {
         'The analysis is taking longer than expected. Please try again.'
       );
 
-      const data = await res.json();
+      // A platform-level 502/504 (function crash or cold-start timeout) returns
+      // an HTML error page, not JSON. Letting res.json() throw surfaced
+      // "Unexpected token '<'" to the user instead of a real message.
+      const data = await res.json().catch(() => ({}));
 
       if (res.status === 429) {
         setLimitReached({ tier: data.tier, limit: data.limit });
@@ -383,7 +398,7 @@ const SentenceXRay = () => {
       }
 
       if (!res.ok) {
-        throw new Error(data.error || 'Analysis failed');
+        throw new Error(failureMessage(res.status, data));
       }
 
       setResult(data);
