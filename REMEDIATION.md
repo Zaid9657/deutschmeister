@@ -159,6 +159,43 @@ SQL is recorded in `migrations/2026-08-17-audit-remediation.sql`.
 - Filled the last 3 empty `prerequisite_slugs`; `alphabet-pronunciation` stays
   empty because it is the first topic in the course. No dangling references.
 
+## Merged to production (2026-08-18)
+
+Both open pull requests are merged and live; the repository has no open PRs.
+
+- **#16 — the audit remediation** (17 commits, 103 files) squash-merged as
+  `d066e7f`. Production deploy `ready` at 14:27 UTC. Everything in it had been
+  sitting unmerged, so until now the free-tier spinner, the unmetered
+  `analyze-sentence` endpoint and the discarded placement results were all
+  still live-broken on `8b2f9d4`.
+  - `trial-lifecycle` now registers in Netlify's schedules (`0 8 * * *`,
+    alongside `daily-sentence` at `0 7 * * *`).
+  - **The welcome-email webhook works.** It had returned 500 "Server
+    misconfigured" twice this morning because `WEBHOOK_SECRET` never persisted
+    when it was first created as a secret-typed variable. Probed it through
+    `pg_net` with the trigger's own bearer and a deliberately email-less body:
+    it now returns **400 "Valid email is required"**, i.e. it clears both the
+    shared-secret and `RESEND_API_KEY` checks and fails only on the missing
+    field — proof without mailing anyone.
+- **#10 — grammar momentum** (opened 2026-07-18, based on a month-old main)
+  rebased onto the new main and squash-merged as `70fb969`. Three conflicts,
+  all in the same shape: #16 had added Astro's required trailing slashes to the
+  grammar links that #10 was decorating with `data-topic-*` attributes. Kept
+  both, and gave #10's five newly added grammar links the trailing slash too,
+  so none of them 301-hops. Verified on the rebased tree: lint 0 errors, SPA
+  build, duplicate check, 83 Astro pages, 64 topic cards on the hub, the
+  cross-level "Next up" bridging `a1.1/present-tense-regular/` →
+  `a1.2/basic-sentence-structure/`, and the code-split intact — the hub's eager
+  script is 2.4 KB with zero Supabase references, loading the progress chunk
+  only behind the `sb-*-auth-token` localStorage gate.
+  - It also carried a real live bug fix of its own: `grammarService` read and
+    wrote a `completed` column that does not exist on `user_grammar_progress`
+    (it is `is_completed`), so the dashboard's grammar continue-state was
+    pinned to topic 1 for everyone and its saves were silently dropped.
+- Small: the welcome email's "Try Sentence X-Ray" button pointed at
+  `/analyze`, which 301s to `/analyze/`. Now correct — it is the one email
+  template that links a prerendered SPA route.
+
 ## Still open — needs the owner
 
 1. **The upstream bounce job.** Suppression stops the damage, but something in the MedMeister automation still tries to mail `a831969a52@emailinbo.live` every 15 minutes. Fix it at source.

@@ -38,7 +38,7 @@ const WELCOME_HTML = (email) => `<!DOCTYPE html>
               <table cellpadding="0" cellspacing="0" style="margin:28px 0;">
                 <tr>
                   <td style="border-radius:10px;background:linear-gradient(135deg,#7c3aed,#4f46e5);">
-                    <a href="https://deutsch-meister.de/analyze"
+                    <a href="https://deutsch-meister.de/analyze/"
                        style="display:inline-block;padding:14px 28px;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;letter-spacing:-0.2px;">
                       Try Sentence X-Ray →
                     </a>
