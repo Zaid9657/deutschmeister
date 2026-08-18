@@ -171,7 +171,7 @@ const VocabularySectionPage = () => {
   return (
     <>
       <SEO
-        title="German Vocabulary by Level | A1-B2 Word Lists | DeutschMeister"
+        title="German Vocabulary by Level | A1-B2 Word Lists"
         description="Build your German vocabulary with organized word lists for levels A1 to B2. Learn essential words with audio pronunciation and example sentences."
         keywords="German vocabulary, German word lists, learn German words, German vocabulary by level, CEFR vocabulary, German nouns, German verbs"
         path="/vocabulary"

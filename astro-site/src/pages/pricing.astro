@@ -116,7 +116,7 @@ const jsonLd = [productSchema, faqSchema];
 
       <!-- Free trial + trust -->
       <div class="text-center mt-6 text-gray-400 text-sm">
-        <p>Pro includes a <strong class="text-white">7-day free trial</strong> — cancel anytime.</p>
+        <p id="plan-note">Pro includes a <strong class="text-white">7-day free trial</strong> — cancel anytime.</p>
       </div>
       <div class="flex flex-wrap justify-center gap-8 mt-6 text-gray-500 text-sm">
         <div class="flex items-center gap-2"><span class="text-green-500" aria-hidden="true">✓</span><span>Secure Payment</span></div>
@@ -245,14 +245,57 @@ const jsonLd = [productSchema, faqSchema];
       }
     });
 
-    // Free plan button: logged-in users already have it → "Current Plan" (disabled), like the SPA.
+    // Plan state. A signed-in visitor was previously shown the same page as a
+    // stranger: "Current Plan" on Free and a bare "Get started" on Pro, even
+    // mid-trial or already subscribed. The real state needs the profile row, so
+    // it is fetched lazily and only when a session exists — the logged-out path
+    // (the reason this page is static and crawlable) loads no extra JS.
     const u = currentUser();
-    if (u) {
-      const free = $('free-btn');
+    if (!u) return;
+
+    const disabled = 'w-full py-3 px-6 rounded-xl flex items-center justify-center gap-2 bg-gray-700 text-gray-400 cursor-not-allowed';
+    const free = $('free-btn');
+    const pro  = $('pro-btn');
+
+    const markFreeAsCurrent = () => {
       free.textContent = 'Current Plan';
       free.removeAttribute('href');
       free.setAttribute('aria-disabled', 'true');
-      free.className = 'w-full py-3 px-6 rounded-xl flex items-center justify-center gap-2 bg-gray-700 text-gray-400 cursor-not-allowed';
-    }
+      free.className = disabled;
+    };
+
+    // Optimistic default matches the old behaviour, so a failed lookup degrades
+    // to what shipped before rather than to a blank card.
+    markFreeAsCurrent();
+
+    import('../lib/planState.js')
+      .then((m) => m.getPlanState())
+      .then((plan) => {
+        if (!plan) return;
+
+        if (plan.state === 'subscribed') {
+          free.textContent = 'Included in Pro';
+          pro.textContent = 'Current plan';
+          pro.setAttribute('aria-disabled', 'true');
+          pro.disabled = true;
+          pro.className = disabled;
+          const note = $('plan-note');
+          if (note) {
+            note.innerHTML = 'You are on <strong class="text-white">Pro</strong>. <a class="underline hover:text-white" href="https://deutsch-meister.de/profile">Manage your plan</a>.';
+          }
+          return;
+        }
+
+        if (plan.state === 'trial') {
+          const d = plan.trialDaysLeft;
+          pro.textContent = 'Upgrade to Pro';
+          const note = $('plan-note');
+          if (note) {
+            note.innerHTML = 'You have <strong class="text-white">' + d + ' day' + (d === 1 ? '' : 's') +
+              '</strong> left in your Pro trial — upgrade any time to keep access.';
+          }
+        }
+      })
+      .catch(() => { /* keep the optimistic default */ });
   });
 </script>

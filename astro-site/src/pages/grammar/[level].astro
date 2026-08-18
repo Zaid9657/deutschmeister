@@ -75,7 +75,7 @@ const jsonLd = {
         <span lang="de">{meta.label} Grammatik</span>
       </h1>
       <p class="text-slate-600 text-lg" lang="de">
-        {topics.length} Themen mit Erklärungen, Beispielen und interaktiven Übungen.
+        <span data-en={`${topics.length} topics with explanations, examples and interactive exercises.`}>{topics.length} Themen mit Erklärungen, Beispielen und interaktiven Übungen.</span>
       </p>
       <!-- Per-level progress — hidden until the client fills it for a signed-in user. -->
       <div data-level-bar class="hidden items-center gap-3 mt-4 max-w-sm">

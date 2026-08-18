@@ -100,7 +100,10 @@ const WordCard = ({ word, level }) => {
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-2xl font-display font-semibold text-slate-800">
                 {word.article && !word.word.toLowerCase().startsWith(word.article.toLowerCase()) && (
-                  <span className="text-slate-400 mr-1">{word.article}</span>
+                  // The separating space must be a real text node: `mr-1` alone
+                  // looked right but made the word one string ("dieFrau") for
+                  // copy-paste and screen readers.
+                  <><span className="text-slate-400">{word.article}</span>{' '}</>
                 )}
                 {word.word}
               </h3>

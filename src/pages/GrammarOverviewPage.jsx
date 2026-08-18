@@ -56,7 +56,7 @@ const GrammarOverviewPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-20 pb-16">
       <SEO
-        title="Complete German Grammar Guide: 64 Topics A1-B2 | DeutschMeister"
+        title="Complete German Grammar Guide: 64 Topics A1-B2"
         description="Master German grammar with our complete guide covering all 64 topics from A1 to B2. Organized by CEFR level with clear explanations and examples. The definitive German grammar reference."
         keywords="German grammar guide, German grammar topics, CEFR grammar, German cases, German verb conjugation, learn German grammar, complete German grammar"
         path="/grammar/overview"

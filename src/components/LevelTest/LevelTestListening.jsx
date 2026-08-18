@@ -315,6 +315,9 @@ const LevelTestListening = ({ onComplete, onSkip }) => {
               className={`play-button ${playCount >= maxPlays ? 'disabled' : ''}`}
               onClick={togglePlay}
               disabled={playCount >= maxPlays}
+              // Icon-only control: without a label a screen reader announced
+              // just "button". The /listening/ player already does this.
+              aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
             >
               {isPlaying ? <Pause size={24} /> : <Play size={24} />}
             </button>

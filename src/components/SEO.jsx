@@ -15,7 +15,11 @@ const SEO = ({
   lang, // set 'de' on German-language pages (FAQ, Über uns) — default keeps index.html's en
 }) => {
   const siteTitle = 'DeutschMeister';
-  const fullTitle = title ? `${title} | ${siteTitle}` : `${siteTitle} - Learn German`;
+  // Idempotent: several pages already end their title with the brand, which
+  // produced "… | DeutschMeister | DeutschMeister" in the tab and in og:title.
+  const fullTitle = title
+    ? (title.trim().endsWith(siteTitle) ? title.trim() : `${title} | ${siteTitle}`)
+    : `${siteTitle} - Learn German`;
   const url = `${BASE_URL}${path}`;
 
   // Handle arrays of structured data

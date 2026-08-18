@@ -7,6 +7,12 @@ import { getAuthenticatedUserId } from './_shared/auth.mjs';
 // identity requirement below still applies).
 const IP_HASH_SALT = process.env.IP_HASH_SALT || process.env.UNSUB_SECRET || process.env.CAMPAIGN_SECRET || '';
 
+// Model for the analysis. The previous id was deprecated (retirement TBD);
+// this is the current-generation equivalent at the same price tier, so the
+// migration removes the deprecation risk without changing unit economics.
+// Override with XRAY_MODEL to try a different tier without a deploy.
+const CLAUDE_MODEL = process.env.XRAY_MODEL || 'claude-sonnet-5';
+
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -141,13 +147,29 @@ async function countTodayUsageByIp(ipKey) {
 }
 
 async function recordUsage(userId, anonymousId, sentence, ipKey) {
-  if (!supabase) return;
-  await supabase.from('xray_usage').insert({
+  if (!supabase) return null;
+  // Returns the row id so an upstream failure can refund it. The row is still
+  // written BEFORE the model call, so concurrent requests stay metered.
+  const { data, error } = await supabase.from('xray_usage').insert({
     user_id:      userId || null,
     anonymous_id: userId ? null : (anonymousId || null),
     ip_hash:      userId ? null : (ipKey || null),
     sentence:     sentence?.slice(0, 500) || null,
-  });
+  }).select('id').single();
+  if (error) {
+    console.error('xray_usage insert failed:', error.message);
+    return null;
+  }
+  return data?.id ?? null;
+}
+
+// An outage is not the visitor's fault. The free tier gets ONE analysis a day,
+// so charging it for a 5xx would lock them out of the product's main hook until
+// tomorrow. supabase-js resolves rather than throws, so check `error`.
+async function refundUsage(usageId) {
+  if (!supabase || !usageId) return;
+  const { error } = await supabase.from('xray_usage').delete().eq('id', usageId);
+  if (error) console.error('xray_usage refund failed:', error.message);
 }
 
 export const handler = async (event) => {
@@ -238,7 +260,7 @@ export const handler = async (event) => {
     }
 
     // --- Record usage before calling Claude (counts even on API error) ---
-    await recordUsage(userId || null, anonymousId || null, sentence.trim(), ipKey);
+    const usageId = await recordUsage(userId || null, anonymousId || null, sentence.trim(), ipKey);
 
     // --- Call Claude ---
     const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {
@@ -249,8 +271,15 @@ export const handler = async (event) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1024,
+        model: CLAUDE_MODEL,
+        // Thinking is on by default on this model, and thinking tokens count
+        // against max_tokens — the old 1024 ceiling would truncate mid-answer.
+        max_tokens: 16000,
+        // Low effort: this is a bounded structured-extraction task, not a
+        // reasoning problem. Lowering effort is the documented way to keep cost
+        // and latency down; disabling thinking outright is not (it can leak
+        // reasoning tags into the visible response).
+        output_config: { effort: 'low' },
         system: SYSTEM_PROMPT,
         messages: [
           { role: 'user', content: `Analyze this German sentence: "${sentence.trim()}"` },
@@ -260,12 +289,36 @@ export const handler = async (event) => {
 
     if (!claudeResponse.ok) {
       const errorText = await claudeResponse.text();
-      console.error('Claude API error:', claudeResponse.status, errorText);
-      return { statusCode: 502, headers, body: JSON.stringify({ error: 'Failed to analyze sentence' }) };
+      const upstream = claudeResponse.status;
+      console.error('Claude API error:', upstream, CLAUDE_MODEL, errorText);
+
+      await refundUsage(usageId);
+
+      // Collapsing every upstream failure into one opaque 502 is what made this
+      // outage undiagnosable from the outside. The cause stays server-side; the
+      // response carries just enough to tell the classes apart.
+      let code = 'upstream_error';
+      if (upstream === 429) code = 'upstream_rate_limited';
+      else if (upstream === 401 || upstream === 403) code = 'upstream_auth';
+      else if (upstream === 404) code = 'upstream_model_unavailable';
+      else if (upstream === 400 && /credit balance/i.test(errorText)) code = 'upstream_credit';
+      else if (upstream === 400) code = 'upstream_bad_request';
+
+      return {
+        statusCode: 502,
+        headers,
+        body: JSON.stringify({ error: 'Failed to analyze sentence', code, upstreamStatus: upstream }),
+      };
     }
 
     const claudeData = await claudeResponse.json();
-    const responseText = claudeData.content?.[0]?.text || '';
+    // With thinking enabled the first content block is a thinking block, not
+    // text — indexing [0] would silently yield '' and fail every parse.
+    const responseText = (claudeData.content || [])
+      .filter((b) => b?.type === 'text')
+      .map((b) => b.text || '')
+      .join('\n')
+      .trim();
 
     let analysis;
     try {
@@ -274,6 +327,7 @@ export const handler = async (event) => {
       analysis = JSON.parse(jsonMatch[0]);
     } catch {
       console.error('Failed to parse Claude response:', responseText);
+      await refundUsage(usageId);
       return { statusCode: 500, headers, body: JSON.stringify({ error: 'Failed to parse analysis response' }) };
     }
 
