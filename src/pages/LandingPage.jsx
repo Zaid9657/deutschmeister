@@ -54,7 +54,7 @@ const LandingPage = () => {
               </p>
               <div className="flex items-center gap-2 flex-shrink-0">
                 <Link
-                  to="/analyze"
+                  to="/analyze/"
                   onClick={dismissBanner}
                   className="px-3 py-1.5 rounded-lg bg-[#378ADD] text-white text-xs font-semibold hover:bg-[#2d6db5] transition-colors whitespace-nowrap"
                 >
@@ -132,14 +132,14 @@ const LandingPage = () => {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
               <Link
-                to="/level-test"
+                to="/level-test/"
                 className="group w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-2xl shadow-lg shadow-rose-500/25 hover:shadow-xl hover:shadow-rose-500/30 transition-all flex items-center justify-center gap-2"
               >
                 Find Your Level — Free Test
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
-                to="/speaking"
+                to="/speaking/"
                 className="group w-full sm:w-auto px-8 py-4 border-2 border-slate-300 text-slate-700 font-semibold rounded-2xl hover:border-slate-400 hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
               >
                 Try Speaking Practice
@@ -202,7 +202,7 @@ const LandingPage = () => {
               <span className="text-[#1D9E75] font-medium">✓ Instant results</span>
             </div>
             <Link
-              to="/level-test"
+              to="/level-test/"
               className="inline-block px-8 py-4 bg-[#1D9E75] hover:bg-[#178a66] text-white text-lg font-semibold rounded-xl transition-colors shadow-md shadow-emerald-200"
             >
               Take the Level Test
@@ -230,7 +230,7 @@ const LandingPage = () => {
               </p>
             </div>
             <Link
-              to="/speaking"
+              to="/speaking/"
               className="inline-flex items-center gap-2 px-6 py-3 bg-teal-600 text-white font-semibold rounded-xl hover:bg-teal-700 transition-colors flex-shrink-0"
             >
               Try Speaking
@@ -504,7 +504,7 @@ const LandingPage = () => {
               </div>
 
               <Link
-                to="/analyze"
+                to="/analyze/"
                 className="inline-flex items-center gap-2 px-7 py-3.5 bg-gradient-to-r from-violet-500 to-indigo-600 text-white font-semibold rounded-2xl hover:from-violet-600 hover:to-indigo-700 transition-all shadow-lg shadow-indigo-200 text-base"
               >
                 <Scan size={18} />
@@ -526,7 +526,7 @@ const LandingPage = () => {
                 <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 mb-4">
                   <span className="flex-1 text-sm text-slate-600 font-medium">Der Mann gibt dem Kind einen Apfel.</span>
                   <Link
-                    to="/analyze"
+                    to="/analyze/"
                     className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-violet-500 to-indigo-600 text-white text-xs font-semibold rounded-lg hover:from-violet-600 hover:to-indigo-700 transition-all"
                   >
                     <Scan size={12} />
@@ -736,7 +736,7 @@ const LandingPage = () => {
             </Link>
             <span className="text-slate-600">·</span>
             <Link
-              to="/podcasts"
+              to="/podcasts/"
               className="text-slate-400 hover:text-white transition-colors text-sm"
             >
               Podcasts

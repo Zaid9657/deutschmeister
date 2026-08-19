@@ -436,7 +436,24 @@ for (const route of ROUTES) {
 // from the source index.html — correct it in the built artifact too.
 let shellOut = mustReplace(shell, /(<meta property="og:locale" content=")[^"]*(")/, '$1en_US$2', 'og:locale', 'app.html');
 shellOut = mustReplace(shellOut, /(<meta property="og:locale:alternate" content=")[^"]*(")/, '$1de_DE$2', 'og:locale:alternate', 'app.html');
+
+// index.html hard-codes canonical=https://deutsch-meister.de/ so that the
+// replace above (and the per-route one) has something to target. That is right
+// for the six prerendered routes, which overwrite it — but app.html is also
+// served verbatim for every OTHER SPA route (/faq, /ueber-uns, /vocabulary…),
+// and there it claims each of those pages is the homepage until React hydrates
+// and Helmet corrects it. No canonical at all is strictly better than a wrong
+// one: Google then falls back to the requested URL, and Helmet still supplies
+// the right tag once rendered.
+shellOut = mustReplace(
+  shellOut,
+  /\s*<link rel="canonical" href="[^"]*">/,
+  '',
+  'canonical removal',
+  'app.html',
+);
+
 writeFileSync(SHELL, shellOut);
-summary.push('  app.html      → og:locale=en_US');
+summary.push('  app.html      → og:locale=en_US, canonical removed');
 
 console.log(`prerender-spa-routes: wrote ${ROUTES.length} routes:\n${summary.join('\n')}`);

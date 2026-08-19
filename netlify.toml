@@ -85,42 +85,42 @@
 # Force lowercase grammar level URLs
 [[redirects]]
   from = "/grammar/A1.1"
-  to = "/grammar/a1.1"
+  to = "/grammar/a1.1/"
   status = 301
 
 [[redirects]]
   from = "/grammar/A1.2"
-  to = "/grammar/a1.2"
+  to = "/grammar/a1.2/"
   status = 301
 
 [[redirects]]
   from = "/grammar/A2.1"
-  to = "/grammar/a2.1"
+  to = "/grammar/a2.1/"
   status = 301
 
 [[redirects]]
   from = "/grammar/A2.2"
-  to = "/grammar/a2.2"
+  to = "/grammar/a2.2/"
   status = 301
 
 [[redirects]]
   from = "/grammar/B1.1"
-  to = "/grammar/b1.1"
+  to = "/grammar/b1.1/"
   status = 301
 
 [[redirects]]
   from = "/grammar/B1.2"
-  to = "/grammar/b1.2"
+  to = "/grammar/b1.2/"
   status = 301
 
 [[redirects]]
   from = "/grammar/B2.1"
-  to = "/grammar/b2.1"
+  to = "/grammar/b2.1/"
   status = 301
 
 [[redirects]]
   from = "/grammar/B2.2"
-  to = "/grammar/b2.2"
+  to = "/grammar/b2.2/"
   status = 301
 
 # Podcast RSS Feed
@@ -322,12 +322,18 @@
   to = "/app.html"
   status = 200
 
-# Grammar is served as static Astro files in dist/grammar/ (real files win
-# before this rule). This only catches non-existent grammar sub-paths, which
-# the SPA's /grammar/:level(/:topicSlug) routes render as the app shell — same
-# behaviour as before, so grammar deep-links keep working.
+# Grammar is served as static Astro files in dist/grammar/ — the hub, all 8
+# level pages and all 64 topic pages are real files that win before any rule
+# here. A blanket /grammar/* -> app.html (200) therefore caught ONLY paths that
+# do not exist, and answered them with 200 + the app shell: a textbook soft 404,
+# which is exactly what Google Search Console reported. Verified in production:
+# /grammar/a1.1/nicht-existierendes-thema returned 200 with 14 KB of shell.
+#
+# /grammar/overview is the one genuine SPA route under this prefix with no
+# static equivalent, so it keeps an explicit rule. Everything else now falls
+# through to the 404 catch-all and returns a real 404.
 [[redirects]]
-  from = "/grammar/*"
+  from = "/grammar/overview"
   to = "/app.html"
   status = 200
 

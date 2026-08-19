@@ -241,7 +241,7 @@ export default function TelcB1Page() {
               <strong>Sprachbausteine:</strong> Dieser Teil ist einzigartig für telc. Du bekommst einen Lückentext und musst die richtige Grammatikform oder das richtige Wort aus drei Optionen wählen. Hier zeigt sich, ob du <Link to="/grammar/b1.1" className="text-amber-600 hover:text-amber-700 font-medium">Grammatik auf B1-Niveau</Link> wirklich verstehst — nicht nur auswendig gelernt hast.
             </p>
             <p>
-              <strong>Hörverstehen:</strong> Du hörst Dialoge und Monologe — Alltagsgespräche, Durchsagen am Bahnhof, kurze Radioberichte. Die Aufgabe: Hauptaussagen erfassen und Detailinformationen zuordnen. Das Audio wird zweimal abgespielt. Regelmäßiges <Link to="/listening" className="text-amber-600 hover:text-amber-700 font-medium">Hörtraining</Link> ist hier der Schlüssel.
+              <strong>Hörverstehen:</strong> Du hörst Dialoge und Monologe — Alltagsgespräche, Durchsagen am Bahnhof, kurze Radioberichte. Die Aufgabe: Hauptaussagen erfassen und Detailinformationen zuordnen. Das Audio wird zweimal abgespielt. Regelmäßiges <Link to="/listening/" className="text-amber-600 hover:text-amber-700 font-medium">Hörtraining</Link> ist hier der Schlüssel.
             </p>
             <p>
               <strong>Schriftlicher Ausdruck:</strong> Du schreibst einen Brief oder eine E-Mail zu einem vorgegebenen Thema. Typisch: Antwort auf eine Einladung, Beschwerde, oder Anfrage. Achte auf die richtige Anrede, eine klare Struktur und einen passenden Schluss.
@@ -258,7 +258,7 @@ export default function TelcB1Page() {
               Der Ablauf hat drei Teile: Zuerst stellst du dich kurz vor (Kontaktaufnahme). Dann sprichst du über ein vorgegebenes Thema — zum Beispiel Reisen, Gesundheit oder Medien. Im dritten Teil plant ihr gemeinsam etwas — zum Beispiel ein Fest oder einen Ausflug. Hier geht es nicht um perfekte Grammatik. Es geht darum, dass du kommunizieren kannst, auf deinen Partner eingehst und das Gespräch am Laufen hältst.
             </p>
             <p>
-              Das <Link to="/speaking" className="text-amber-600 hover:text-amber-700 font-medium">KI-Sprechtraining von Deutschmeister</Link> simuliert genau solche Gesprächssituationen. Du übst, frei zu sprechen, und bekommst sofort Feedback zu Grammatik und Ausdruck.
+              Das <Link to="/speaking/" className="text-amber-600 hover:text-amber-700 font-medium">KI-Sprechtraining von Deutschmeister</Link> simuliert genau solche Gesprächssituationen. Du übst, frei zu sprechen, und bekommst sofort Feedback zu Grammatik und Ausdruck.
             </p>
           </div>
         </section>
@@ -300,7 +300,7 @@ export default function TelcB1Page() {
               Dieser Plan geht davon aus, dass du bereits auf A2-Niveau bist und täglich 30–60 Minuten lernst. Wenn du weniger Zeit hast, streck den Plan. Wenn du mehr Zeit hast, mach die Übungen gründlicher — aber überspring keine Woche.
             </p>
             <p className="mb-6">
-              Bevor du loslegst: Mach den <Link to="/level-test" className="text-amber-600 hover:text-amber-700 font-medium">kostenlosen Einstufungstest</Link>. In 5 Minuten weißt du, wo du wirklich stehst. Nicht wo du glaubst zu stehen.
+              Bevor du loslegst: Mach den <Link to="/level-test/" className="text-amber-600 hover:text-amber-700 font-medium">kostenlosen Einstufungstest</Link>. In 5 Minuten weißt du, wo du wirklich stehst. Nicht wo du glaubst zu stehen.
             </p>
 
             {[
@@ -487,7 +487,7 @@ export default function TelcB1Page() {
             </div>
 
             <p>
-              Dazu kommt: Ein <Link to="/level-test" className="text-amber-600 hover:text-amber-700 font-medium">kostenloser Einstufungstest</Link>, der dir in 5 Minuten zeigt, wo du stehst. <Link to="/grammar/b1.2" className="text-amber-600 hover:text-amber-700 font-medium">Grammatik-Lektionen bis B2</Link> mit Erklärungen auf Englisch. Und <a href="/pricing/" className="text-amber-600 hover:text-amber-700 font-medium">Preise</a>, die deutlich unter einer Sprachschule liegen. Neugierig, wie Deutschmeister im Vergleich zu anderen Plattformen abschneidet? Schau dir den <Link to="/vergleich" className="text-amber-600 hover:text-amber-700 font-medium">ehrlichen Vergleich</Link> an.
+              Dazu kommt: Ein <Link to="/level-test/" className="text-amber-600 hover:text-amber-700 font-medium">kostenloser Einstufungstest</Link>, der dir in 5 Minuten zeigt, wo du stehst. <Link to="/grammar/b1.2" className="text-amber-600 hover:text-amber-700 font-medium">Grammatik-Lektionen bis B2</Link> mit Erklärungen auf Englisch. Und <a href="/pricing/" className="text-amber-600 hover:text-amber-700 font-medium">Preise</a>, die deutlich unter einer Sprachschule liegen. Neugierig, wie Deutschmeister im Vergleich zu anderen Plattformen abschneidet? Schau dir den <Link to="/vergleich" className="text-amber-600 hover:text-amber-700 font-medium">ehrlichen Vergleich</Link> an.
             </p>
           </div>
         </section>
@@ -527,7 +527,7 @@ export default function TelcB1Page() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
-              to="/level-test"
+              to="/level-test/"
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-xl shadow-lg shadow-rose-500/25 hover:from-amber-600 hover:to-rose-600 transition-all"
             >
               Einstufungstest starten
