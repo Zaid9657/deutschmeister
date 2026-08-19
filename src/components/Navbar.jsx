@@ -66,17 +66,17 @@ const Navbar = () => {
             <Link to="/video-library" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
               Videos
             </Link>
-            <Link to="/listening" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+            <Link to="/listening/" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
               {isGerman ? 'Hören' : 'Listening'}
             </Link>
-            <Link to="/reading" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+            <Link to="/reading/" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
               {isGerman ? 'Lesen' : 'Reading'}
             </Link>
-            <Link to="/podcasts" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+            <Link to="/podcasts/" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
               Podcasts
             </Link>
             {user && (
-              <Link to="/speaking" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+              <Link to="/speaking/" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
                 {isGerman ? 'Sprechen' : 'Speaking'}
               </Link>
             )}
@@ -84,10 +84,10 @@ const Navbar = () => {
             <NavSeparator />
 
             {/* Tools */}
-            <Link to="/level-test" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+            <Link to="/level-test/" className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
               {isGerman ? 'Einstufungstest' : 'Level Test'}
             </Link>
-            <Link to="/analyze" className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+            <Link to="/analyze/" className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
               <Scan size={14} />
               {isGerman ? 'Satz-Analyse' : 'X-Ray'}
             </Link>
@@ -276,7 +276,7 @@ const Navbar = () => {
                 <span className="text-slate-700 font-medium">Videos</span>
               </Link>
               <Link
-                to="/listening"
+                to="/listening/"
                 onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
               >
@@ -284,7 +284,7 @@ const Navbar = () => {
                 <span className="text-slate-700 font-medium">{isGerman ? 'Hören' : 'Listening'}</span>
               </Link>
               <Link
-                to="/reading"
+                to="/reading/"
                 onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
               >
@@ -292,7 +292,7 @@ const Navbar = () => {
                 <span className="text-slate-700 font-medium">{isGerman ? 'Lesen' : 'Reading'}</span>
               </Link>
               <Link
-                to="/podcasts"
+                to="/podcasts/"
                 onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
               >
@@ -301,7 +301,7 @@ const Navbar = () => {
               </Link>
               {user && (
                 <Link
-                  to="/speaking"
+                  to="/speaking/"
                   onClick={() => setIsOpen(false)}
                   className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
                 >
@@ -316,7 +316,7 @@ const Navbar = () => {
                   {isGerman ? 'Werkzeuge' : 'Tools'}
                 </p>
                 <Link
-                  to="/level-test"
+                  to="/level-test/"
                   onClick={() => setIsOpen(false)}
                   className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
                 >
@@ -324,7 +324,7 @@ const Navbar = () => {
                   <span className="text-slate-700 font-medium">{isGerman ? 'Einstufungstest' : 'Level Test'}</span>
                 </Link>
                 <Link
-                  to="/analyze"
+                  to="/analyze/"
                   onClick={() => setIsOpen(false)}
                   className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-100 transition-colors"
                 >

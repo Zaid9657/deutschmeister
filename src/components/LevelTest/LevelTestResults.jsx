@@ -209,7 +209,7 @@ const LevelTestResults = ({
                       </div>
                     </div>
                     <Link
-                      to="/speaking"
+                      to="/speaking/"
                       style={{
                         display: 'inline-flex',
                         alignItems: 'center',
@@ -388,7 +388,7 @@ const LevelTestResults = ({
         <div className="results-section">
           <h2>Recommended Next Steps</h2>
           <div className="recommendation-cards">
-            <Link to="/speaking" className="recommendation-card">
+            <Link to="/speaking/" className="recommendation-card">
               <div className="rec-icon">🗣️</div>
               <div className="rec-content">
                 <h3>Practice Speaking with AI</h3>
@@ -405,7 +405,7 @@ const LevelTestResults = ({
             </Link>
 
             {listeningScore != null && listeningScore < 70 && (
-              <Link to="/listening" className="recommendation-card">
+              <Link to="/listening/" className="recommendation-card">
                 <div className="rec-icon">🎧</div>
                 <div className="rec-content">
                   <h3>Practice Listening</h3>
@@ -415,7 +415,7 @@ const LevelTestResults = ({
             )}
 
             {speakingScore && speakingPercentage < 70 && (
-              <Link to="/speaking" className="recommendation-card">
+              <Link to="/speaking/" className="recommendation-card">
                 <div className="rec-icon">🗣️</div>
                 <div className="rec-content">
                   <h3>More Speaking Practice</h3>
