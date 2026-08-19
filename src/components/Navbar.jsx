@@ -5,6 +5,7 @@ import { Menu, X, User, LogOut, Globe, LayoutDashboard, Crown, Sparkles, Mic, Cl
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import Logo from './Logo';
+import { useExitTransition } from '../hooks/useExitTransition';
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
@@ -14,6 +15,8 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
+  const userMenu = useExitTransition(userMenuOpen);
+  const mobileMenu = useExitTransition(isOpen);
 
   const toggleLanguage = () => {
     const newLang = i18n.language === 'en' ? 'de' : 'en';
@@ -167,9 +170,10 @@ const Navbar = () => {
                   <ChevronDown size={14} className={`transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
                 </button>
 
-                {userMenuOpen && (
+                {userMenu.mounted && (
                     <div
-                      className="dm-drop-in absolute right-0 mt-1 w-48 bg-white rounded-xl border border-slate-200 shadow-lg py-1 z-50"
+                      ref={userMenu.ref}
+                      className={`${userMenu.closing ? 'dm-drop-out' : 'dm-drop-in'} absolute right-0 mt-1 w-48 bg-white rounded-xl border border-slate-200 shadow-lg py-1 z-50`}
                     >
                       <Link
                         to="/profile"
@@ -239,9 +243,10 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Navigation */}
-      {isOpen && (
+      {mobileMenu.mounted && (
           <div
-            className="dm-fade-in lg:hidden bg-white border-b border-slate-200"
+            ref={mobileMenu.ref}
+            className={`${mobileMenu.closing ? 'dm-fade-out' : 'dm-fade-in'} lg:hidden bg-white border-b border-slate-200`}
           >
             <div className="px-4 py-4 space-y-1">
               {/* Content Section */}

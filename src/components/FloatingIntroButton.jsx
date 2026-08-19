@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Play, X } from 'lucide-react';
+import { useExitTransition } from '../hooks/useExitTransition';
 
 const DISMISS_KEY = 'dm_intro_dismissed';
 const DISMISS_DAYS = 7;
@@ -48,11 +49,15 @@ const FloatingIntroButton = () => {
     navigate('/intro');
   };
 
-  // Don't show on /intro page, if dismissed, or before the scroll trigger.
-  if (dismissed || !visible || location.pathname === '/intro') return null;
+  // Not shown on /intro, once dismissed, or before the scroll trigger. Dismissing
+  // is the case worth animating: the button should drop away, not blink out.
+  const shouldShow = !dismissed && visible && location.pathname !== '/intro';
+  const { mounted, closing, ref } = useExitTransition(shouldShow);
+
+  if (!mounted) return null;
 
   return (
-    <div className="dm-slide-up fixed bottom-24 left-4 z-50 sm:bottom-6 sm:left-6">
+    <div ref={ref} className={`${closing ? 'dm-slide-down' : 'dm-slide-up'} fixed bottom-24 left-4 z-50 sm:bottom-6 sm:left-6`}>
       <div className="relative">
         <button
           onClick={handleClick}

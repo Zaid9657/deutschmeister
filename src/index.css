@@ -214,10 +214,13 @@
  * animation library in the critical path of every route, including /level-test
  * and /speaking, which animate nothing at all.
  *
- * These cover the enter transitions. Exit transitions are deliberately gone:
- * animating an element out requires it to outlive its own unmount, which is the
- * one thing CSS cannot express and the only reason framer-motion was in the
- * shell. Pages that need richer motion still import it — it just loads with
+ * Exit animations are paired with `useExitTransition`, which holds the element
+ * mounted for the length of the animation — CSS alone cannot animate something
+ * that React has already removed, which was the one job framer-motion had here.
+ * That hook unmounts on `animationend`, so these durations are the single source
+ * of truth — no matching constant to keep in step on the JS side.
+ *
+ * Pages that need richer motion still import framer-motion — it just loads with
  * them instead of ahead of everything.
  */
 @keyframes dmFadeIn {
@@ -237,15 +240,49 @@
   to   { opacity: 1; transform: none; }
 }
 
+@keyframes dmFadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+@keyframes dmPopOut {
+  from { opacity: 1; transform: none; }
+  to   { opacity: 0; transform: scale(0.95); }
+}
+@keyframes dmSlideDown {
+  from { opacity: 1; transform: none; }
+  to   { opacity: 0; transform: translateY(80px); }
+}
+@keyframes dmDropOut {
+  from { opacity: 1; transform: none; }
+  to   { opacity: 0; transform: translateY(4px) scale(0.95); }
+}
+
 .dm-fade-in  { animation: dmFadeIn 0.2s ease-out both; }
 .dm-pop-in   { animation: dmPopIn 0.2s cubic-bezier(0.22, 1, 0.36, 1) both; }
 .dm-slide-up { animation: dmSlideUp 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
 .dm-drop-in  { animation: dmDropIn 0.15s ease-out both; }
 
+/* Paired with useExitTransition, which unmounts on `animationend` — so these
+   durations are free to change without touching the JS.
+   An element on its way out must not swallow clicks aimed at what is behind it. */
+.dm-fade-out,
+.dm-pop-out,
+.dm-slide-down,
+.dm-drop-out { pointer-events: none; }
+
+.dm-fade-out   { animation: dmFadeOut 0.2s ease-in both; }
+.dm-pop-out    { animation: dmPopOut 0.2s ease-in both; }
+.dm-slide-down { animation: dmSlideDown 0.25s ease-in both; }
+.dm-drop-out   { animation: dmDropOut 0.15s ease-in both; }
+
 @media (prefers-reduced-motion: reduce) {
   .dm-fade-in,
   .dm-pop-in,
   .dm-slide-up,
-  .dm-drop-in { animation: none; }
+  .dm-drop-in,
+  .dm-fade-out,
+  .dm-pop-out,
+  .dm-slide-down,
+  .dm-drop-out { animation: none; }
 }
 
