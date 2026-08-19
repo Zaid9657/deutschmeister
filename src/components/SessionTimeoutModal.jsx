@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Clock } from 'lucide-react';
 
 export default function SessionTimeoutModal({ show, onStay }) {
@@ -33,44 +32,34 @@ export default function SessionTimeoutModal({ show, onStay }) {
     };
   }, [show, onStay]);
 
+  if (!show) return null;
+
   return (
-    <AnimatePresence>
-      {show && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 px-4"
+    <div className="dm-fade-in fixed inset-0 z-[100] flex items-center justify-center bg-black/40 px-4">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="session-timeout-title"
+        aria-describedby="session-timeout-desc"
+        className="dm-pop-in bg-white rounded-2xl shadow-2xl border border-slate-100 p-6 max-w-sm w-full text-center"
+      >
+        <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-amber-100 flex items-center justify-center">
+          <Clock className="w-6 h-6 text-amber-600" aria-hidden="true" />
+        </div>
+        <h2 id="session-timeout-title" className="font-display text-lg font-bold text-slate-800 mb-2">
+          Your session is about to end
+        </h2>
+        <p id="session-timeout-desc" className="text-sm text-slate-600 mb-6">
+          You'll be signed out automatically in 2 minutes.
+        </p>
+        <button
+          ref={buttonRef}
+          onClick={onStay}
+          className="w-full py-3 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-rose-600 transition-all shadow-lg shadow-rose-500/25"
         >
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="session-timeout-title"
-            aria-describedby="session-timeout-desc"
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.95, opacity: 0 }}
-            className="bg-white rounded-2xl shadow-2xl border border-slate-100 p-6 max-w-sm w-full text-center"
-          >
-            <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-amber-100 flex items-center justify-center">
-              <Clock className="w-6 h-6 text-amber-600" aria-hidden="true" />
-            </div>
-            <h2 id="session-timeout-title" className="font-display text-lg font-bold text-slate-800 mb-2">
-              Your session is about to end
-            </h2>
-            <p id="session-timeout-desc" className="text-sm text-slate-600 mb-6">
-              You'll be signed out automatically in 2 minutes.
-            </p>
-            <button
-              ref={buttonRef}
-              onClick={onStay}
-              className="w-full py-3 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-rose-600 transition-all shadow-lg shadow-rose-500/25"
-            >
-              Stay signed in
-            </button>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+          Stay signed in
+        </button>
+      </div>
+    </div>
   );
 }

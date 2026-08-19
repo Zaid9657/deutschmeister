@@ -207,3 +207,45 @@
   .dm-pulse { animation: none; }
 }
 
+/* Shell enter animations.
+ *
+ * The always-loaded shell — navbar, floating intro button, session-timeout
+ * modal — used framer-motion for a few fades and slides, which put the entire
+ * animation library in the critical path of every route, including /level-test
+ * and /speaking, which animate nothing at all.
+ *
+ * These cover the enter transitions. Exit transitions are deliberately gone:
+ * animating an element out requires it to outlive its own unmount, which is the
+ * one thing CSS cannot express and the only reason framer-motion was in the
+ * shell. Pages that need richer motion still import it — it just loads with
+ * them instead of ahead of everything.
+ */
+@keyframes dmFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes dmPopIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes dmSlideUp {
+  from { opacity: 0; transform: translateY(80px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes dmDropIn {
+  from { opacity: 0; transform: translateY(4px) scale(0.95); }
+  to   { opacity: 1; transform: none; }
+}
+
+.dm-fade-in  { animation: dmFadeIn 0.2s ease-out both; }
+.dm-pop-in   { animation: dmPopIn 0.2s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.dm-slide-up { animation: dmSlideUp 0.35s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.dm-drop-in  { animation: dmDropIn 0.15s ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dm-fade-in,
+  .dm-pop-in,
+  .dm-slide-up,
+  .dm-drop-in { animation: none; }
+}
+
