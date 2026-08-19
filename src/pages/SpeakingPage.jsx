@@ -12,7 +12,7 @@ import { getConfigForLevel } from '../constants/speakingPrompts';
 import { checkSpeakingSupport } from '../components/speaking/mediaSupport';
 import SpeakingSession from '../components/speaking/SpeakingSession';
 import SpeakingEvaluationResults from '../components/SpeakingEvaluationResults';
-import { LEVEL_ORDER } from '../config/levels';
+import { LEVEL_ORDER, normalizePlacementLevel } from '../config/levels';
 
 // English display names for the level picker (the German names in
 // speakingPrompts.js are shared with the AI prompt config and stay unchanged).
@@ -25,14 +25,6 @@ const LEVEL_NAMES_EN = {
 const DURATIONS = [5, 10, 15];
 const PRICE_CENTS = { 5: 100, 10: 200, 15: 300 };
 const SUB_FREE_5MIN_PER_DAY = 2;
-
-function normalizePlacementLevel(raw) {
-  if (!raw) return 'A1.1';
-  const up = String(raw).toUpperCase().replace(/\s+/g, '');
-  if (LEVEL_ORDER.includes(up)) return up;
-  const coarse = (up.match(/^(A1|A2|B1|B2)/) || [])[1];
-  return coarse ? `${coarse}.1` : 'A1.1';
-}
 
 function getNextLevel(current) {
   const idx = LEVEL_ORDER.indexOf(current);

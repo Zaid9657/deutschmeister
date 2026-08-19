@@ -11,6 +11,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { getTopicsForLevel } from '../data/grammarTopics';
 import { levels as ALL_LEVELS } from '../data/content';
+import { deriveCurrent, isTopicCompleted, topicPercent } from '../utils/learningPath';
+import { useApplyPendingPlacement } from '../hooks/useApplyPendingPlacement';
 import { loadDashboardStats, DAILY_GOAL_TARGET } from '../services/dashboardStats';
 import Logo from '../components/Logo';
 import SEO from '../components/SEO';
@@ -44,47 +46,6 @@ const greetingWord = () => {
   return 'Good evening';
 };
 
-// Is a specific topic completed, per useProgress state?
-const isTopicCompleted = (progress, level, topicId) =>
-  !!progress?.[level]?.grammarTopics?.[topicId]?.completed;
-
-// Per-topic in-progress percent (0..100) from currentStage, else 0.
-const topicPercent = (progress, level, topicId) => {
-  const t = progress?.[level]?.grammarTopics?.[topicId];
-  if (!t) return 0;
-  if (t.completed) return 100;
-  return typeof t.progress === 'number' ? t.progress : 0;
-};
-
-/**
- * Find the user's effective current sub-level + next uncompleted topic.
- * Walk levels in order; the first level with an uncompleted topic is "current".
- * If everything done → last level, treat as complete. If nothing started →
- * first level, first topic (brand-new user).
- */
-function deriveCurrent(progress) {
-  for (const level of ALL_LEVELS) {
-    const topics = getTopicsForLevel(level);
-    if (!topics || topics.length === 0) continue;
-    const next = topics.find((t) => !isTopicCompleted(progress, level, t.id));
-    const anyDone = topics.some((t) => isTopicCompleted(progress, level, t.id));
-    if (next) {
-      const idx = topics.findIndex((t) => t.id === next.id);
-      return {
-        level,
-        topics,
-        nextTopic: next,
-        nextIndex: idx,
-        started: anyDone || topicPercent(progress, level, next.id) > 0,
-        allDone: false,
-      };
-    }
-  }
-  // Everything completed — anchor on the last level for a celebratory state.
-  const last = ALL_LEVELS[ALL_LEVELS.length - 1];
-  const topics = getTopicsForLevel(last) || [];
-  return { level: last, topics, nextTopic: null, nextIndex: topics.length, started: true, allDone: true };
-}
 
 // ── skeleton ──────────────────────────────────────────────────
 const Sk = ({ className = '' }) => (
@@ -95,7 +56,11 @@ const Sk = ({ className = '' }) => (
 const DashboardPage = () => {
   const { user } = useAuth();
   const { progress, loading: progressLoading } = useProgress();
-  const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription } = useSubscription();
+  const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription, profile, refreshSubscription } = useSubscription();
+
+  // A placement taken before signup lands here, on the first screen the new
+  // account sees, so the hero below opens at their real level.
+  useApplyPendingPlacement(user, profile, refreshSubscription);
 
   const inTrial = user ? isInFreeTrial() : false;
   const isSubscribed = user ? hasActiveSubscription() : false;
@@ -114,7 +79,10 @@ const DashboardPage = () => {
     return () => { alive = false; };
   }, [user]);
 
-  const cur = useMemo(() => deriveCurrent(progress), [progress]);
+  const cur = useMemo(
+    () => deriveCurrent(progress, profile?.current_level),
+    [progress, profile?.current_level]
+  );
   const completedInLevel = useMemo(
     () => cur.topics.filter((t) => isTopicCompleted(progress, cur.level, t.id)).length,
     [cur, progress]

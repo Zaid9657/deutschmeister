@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
-import { Loader2, ArrowLeft, ArrowRight, Sparkles, BookOpen, ChevronRight } from 'lucide-react';
+import { Loader2, ArrowLeft, ArrowRight, Sparkles, BookOpen, ChevronRight, Headphones, FileText } from 'lucide-react';
 import SEO from '../components/SEO';
 import { grammarTopics } from '../data/grammarTopics';
 
@@ -1481,6 +1481,43 @@ export default function GrammarLessonPage() {
                     <ArrowRight size={16} color="#6b7280" style={{ flexShrink: 0 }} />
                   </Link>
                 )}
+              </div>
+
+              {/* Same level, another skill. Mirrors the block on the Astro
+                  grammar page (which serves /grammar/** in production) so the
+                  two surfaces offer the same next step. Level-matched, not
+                  topic-matched — nothing in the data links a grammar topic to a
+                  listening exercise or reading lesson. */}
+              <div style={{ marginBottom: 28 }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: "#6b7280", marginBottom: 10, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                  Same level, another way in
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10 }}>
+                  {[
+                    { to: `/listening/${level}`, Icon: Headphones, tint: "#7C3AED", title: "Listening",
+                      blurb: "Native-speaker dialogues with transcripts." },
+                    { to: `/reading/${level}`, Icon: FileText, tint: "#DB2777", title: "Reading",
+                      blurb: "Short texts with translation and vocabulary." },
+                  ].map(({ to, Icon, tint, title, blurb }) => (
+                    <Link
+                      key={to}
+                      to={to}
+                      style={{
+                        display: "flex", alignItems: "flex-start", gap: 12, padding: "14px 16px",
+                        border: "1px solid #e5e7eb", borderRadius: 12, textDecoration: "none",
+                        transition: "border-color 0.15s, box-shadow 0.15s",
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.borderColor = tint; e.currentTarget.style.boxShadow = `0 0 0 1px ${tint}`; }}
+                      onMouseLeave={e => { e.currentTarget.style.borderColor = "#e5e7eb"; e.currentTarget.style.boxShadow = "none"; }}
+                    >
+                      <Icon size={18} color={tint} style={{ flexShrink: 0, marginTop: 2 }} />
+                      <div>
+                        <div style={{ fontSize: 14, fontWeight: 600, color: "#1a1a1a", lineHeight: 1.3 }}>{title}</div>
+                        <div style={{ fontSize: 13, color: "#6b7280", marginTop: 2, lineHeight: 1.4 }}>{blurb}</div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
               </div>
 
               {/* More topics from this level */}

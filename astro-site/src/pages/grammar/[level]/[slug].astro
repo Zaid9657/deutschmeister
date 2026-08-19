@@ -502,6 +502,56 @@ if (seoExtra?.faqs?.length) {
       </div>
     </section>
 
+    <!-- Same level, another skill.
+         Listening and reading are fully stocked — 48 exercises, 480 dialogue
+         lines, 66 lessons — and at the last audit not one learner had ever
+         completed a single one of either. The only ways in were the level hubs
+         and a dashboard card, and neither converted. This puts them at the end
+         of a lesson, the one moment we know a learner has just finished
+         something and is choosing what to do next.
+
+         Deliberately level-matched, not topic-matched: there is no link in the
+         data between a grammar topic and a listening exercise or reading
+         lesson, so the copy must not imply one. -->
+    <section class="mb-10">
+      <h2 class="font-display text-xl font-bold text-slate-800 mb-1">Same level, another way in</h2>
+      <p class="text-slate-600 text-sm mb-4">
+        Grammar settles once you meet it in real speech and text. Both of these are graded to {meta.label}.
+      </p>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <a
+          href={`/listening/${level}`}
+          class="flex items-start gap-4 rounded-2xl border border-violet-200 bg-white p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all group"
+        >
+          <span class="flex-shrink-0 w-11 h-11 rounded-xl bg-violet-50 flex items-center justify-center">
+            <svg class="w-5 h-5 text-violet-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 14v-3a9 9 0 0 1 18 0v3"></path>
+              <path d="M21 16a2 2 0 0 1-2 2h-1v-6h1a2 2 0 0 1 2 2zM3 16a2 2 0 0 0 2 2h1v-6H5a2 2 0 0 0-2 2z"></path>
+            </svg>
+          </span>
+          <span class="min-w-0">
+            <span class="block font-display font-bold text-slate-900 group-hover:text-violet-700 transition-colors">Listening</span>
+            <span class="block text-sm text-slate-500 mt-0.5">Native-speaker dialogues with transcripts and questions.</span>
+          </span>
+        </a>
+        <a
+          href={`/reading/${level}`}
+          class="flex items-start gap-4 rounded-2xl border border-pink-200 bg-white p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all group"
+        >
+          <span class="flex-shrink-0 w-11 h-11 rounded-xl bg-pink-50 flex items-center justify-center">
+            <svg class="w-5 h-5 text-pink-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+          </span>
+          <span class="min-w-0">
+            <span class="block font-display font-bold text-slate-900 group-hover:text-pink-700 transition-colors">Reading</span>
+            <span class="block text-sm text-slate-500 mt-0.5">Short texts with a translation toggle and key vocabulary.</span>
+          </span>
+        </a>
+      </div>
+    </section>
+
     <!-- Upgrade CTA -->
     <div class={`rounded-2xl border ${meta.border} ${meta.bg} p-6 mb-10 text-center`}>
       <p class="font-display text-xl font-bold text-slate-800 mb-1">

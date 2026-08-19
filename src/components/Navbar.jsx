@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, User, LogOut, Globe, LayoutDashboard, Crown, Sparkles, Mic, ClipboardCheck, BookOpen, PlayCircle, ChevronDown, Film, Radio, Scan, Headphones, FileText } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import Logo from './Logo';
+import { useExitTransition } from '../hooks/useExitTransition';
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
@@ -15,6 +15,8 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
+  const userMenu = useExitTransition(userMenuOpen);
+  const mobileMenu = useExitTransition(isOpen);
 
   const toggleLanguage = () => {
     const newLang = i18n.language === 'en' ? 'de' : 'en';
@@ -168,14 +170,10 @@ const Navbar = () => {
                   <ChevronDown size={14} className={`transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
                 </button>
 
-                <AnimatePresence>
-                  {userMenuOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 4, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 4, scale: 0.95 }}
-                      transition={{ duration: 0.15 }}
-                      className="absolute right-0 mt-1 w-48 bg-white rounded-xl border border-slate-200 shadow-lg py-1 z-50"
+                {userMenu.mounted && (
+                    <div
+                      ref={userMenu.ref}
+                      className={`${userMenu.closing ? 'dm-drop-out' : 'dm-drop-in'} absolute right-0 mt-1 w-48 bg-white rounded-xl border border-slate-200 shadow-lg py-1 z-50`}
                     >
                       <Link
                         to="/profile"
@@ -211,9 +209,8 @@ const Navbar = () => {
                         <LogOut size={16} />
                         {t('nav.logout')}
                       </button>
-                    </motion.div>
+                    </div>
                   )}
-                </AnimatePresence>
               </div>
             ) : (
               <div className="flex items-center gap-2">
@@ -246,13 +243,10 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Navigation */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-white border-b border-slate-200"
+      {mobileMenu.mounted && (
+          <div
+            ref={mobileMenu.ref}
+            className={`${mobileMenu.closing ? 'dm-fade-out' : 'dm-fade-in'} lg:hidden bg-white border-b border-slate-200`}
           >
             <div className="px-4 py-4 space-y-1">
               {/* Content Section */}
@@ -448,9 +442,8 @@ const Navbar = () => {
                 )}
               </div>
             </div>
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
     </nav>
   );
 };

@@ -1,13 +1,21 @@
-// Trial lifecycle emails — the missing middle of the funnel.
+// Lifecycle emails — the missing middle of the funnel.
 //
-// Until now the only emails a signed-up learner ever received were the welcome
-// mail and the daily sentence. Nothing told them their trial was ending, and
-// nothing brought them back after it lapsed: 1,450 signups produced 4 paying
-// subscriptions. This sends three messages, once each, per user:
+// Until recently the only emails a signed-up learner ever received were the
+// welcome mail and the daily sentence. Nothing told them their trial was
+// ending, and nothing brought them back after it lapsed: 1,450 signups produced
+// 4 paying subscriptions. This sends four messages, once each, per user:
 //
-//   trial_day3   — day 3 of the trial: what you haven't tried yet
-//   trial_day6   — the day before it ends: here's what you keep, or lose
-//   trial_ended  — the day after: your progress is saved, one click restores it
+//   activation_day1 — signed up yesterday and never opened a lesson
+//   trial_day3      — day 3 of the trial: what you haven't tried yet
+//   trial_day6      — the day before it ends: here's what you keep, or lose
+//   trial_ended     — the day after: your progress is saved, one click restores it
+//
+// The three trial messages are selected on trial dates and go out whatever the
+// learner has done. `activation_day1` is the only one selected on *behaviour*,
+// and it exists because the dates were never the problem: 136 of the 152
+// accounts created in the last 30 days (89%) have never completed a single
+// grammar topic. Day 1 is also the emptiest slot in the calendar — the trial
+// mails occupy days 3, 6 and 8 — and the moment intent is highest.
 //
 // Safe to re-run: every send is recorded in `lifecycle_emails` with a
 // UNIQUE(user_id, kind), and the insert happens BEFORE the send, so a crash
@@ -83,6 +91,30 @@ const SHELL = ({ heading, body, ctaHref, ctaLabel, unsubUrl }) => `<!DOCTYPE htm
 
 const P = (text) => `<p style="margin:0 0 16px;font-size:16px;color:#475569;line-height:1.6;">${text}</p>`;
 
+// The activation message is the only one that differs per recipient: it names
+// the lesson the learner is being sent to, and where they go depends on whether
+// they ever sat the placement test. A generic "come back!" is exactly the email
+// these 89% already ignored once.
+const ACTIVATION = {
+  subject: 'Your first German lesson is 15 minutes',
+  placed: ({ levelLabel, topicTitle, href }) => ({
+    ctaHref: href,
+    ctaLabel: `Start ${topicTitle} →`,
+    body:
+      P(`You signed up yesterday and your level is set to <strong style="color:#1e293b;">${levelLabel}</strong> — so your path is already laid out. You just haven't opened the first lesson yet.`) +
+      P(`It's <strong style="color:#1e293b;">${topicTitle}</strong>, and it takes about fifteen minutes: the rule, why it works that way, and a handful of exercises to prove it stuck.`) +
+      P('One lesson is genuinely enough for a first day. The rest of the path waits.'),
+  }),
+  unplaced: ({ href }) => ({
+    ctaHref: href,
+    ctaLabel: 'Take the placement test →',
+    body:
+      P("You signed up yesterday, and I don't want to guess your level — starting someone at the wrong place is how people quit.") +
+      P('The placement test takes about five minutes and puts you on the right rung of the ladder: A1.1 through B2.2, with the grammar path, listening and reading all set to match.') +
+      P("No account juggling, nothing to pay. Then the first lesson is one click away."),
+  }),
+};
+
 const TEMPLATES = {
   trial_day3: {
     subject: 'Three things in your DeutschMeister trial worth 10 minutes',
@@ -116,6 +148,132 @@ const TEMPLATES = {
 
 // ─── selection ───────────────────────────────────────────────────────────────
 
+const ACTIVATION_KINDS = new Set(['activation_day1']);
+
+/**
+ * Resolve confirmed email addresses for a set of user ids.
+ * auth.users is not exposed to PostgREST, so addresses only come from the admin
+ * API — and only confirmed ones are mailable.
+ */
+async function confirmedEmails() {
+  const emails = new Map();
+  let page = 1;
+  while (true) {
+    const { data, error } = await supabase.auth.admin.listUsers({ page, perPage: 1000 });
+    if (error) throw new Error(`listUsers: ${error.message}`);
+    for (const u of data.users) {
+      if (u.email && u.email_confirmed_at) emails.set(u.id, u.email.trim().toLowerCase());
+    }
+    if (data.users.length < 1000) break;
+    page++;
+  }
+  return emails;
+}
+
+/** Drop the users who have already had this message. */
+async function unsent(kind, candidates) {
+  if (candidates.length === 0) return [];
+  const { data: already } = await supabase
+    .from('lifecycle_emails')
+    .select('user_id')
+    .eq('kind', kind)
+    .in('user_id', candidates.map((c) => c.id));
+  const sentAlready = new Set((already || []).map((r) => r.user_id));
+  return candidates.filter((c) => !sentAlready.has(c.id));
+}
+
+/**
+ * The day-1 activation message: signed up yesterday, never opened a lesson.
+ *
+ * Selected on behaviour, not on a trial date — that is the whole point. The
+ * three trial messages go out on days 3, 6 and 8 whatever the learner has done,
+ * so day 1 is both the emptiest slot in the calendar and the moment intent is
+ * highest.
+ */
+async function selectActivationRecipients(kind) {
+  const day = 24 * 60 * 60 * 1000;
+  const now = Date.now();
+  const lower = new Date(now - 2 * day).toISOString();
+  const upper = new Date(now - 1 * day).toISOString();
+
+  const { data: profiles, error } = await supabase
+    .from('profiles')
+    .select('id, email_daily_sentence, is_subscribed, current_level')
+    .gte('created_at', lower)
+    .lt('created_at', upper);
+  if (error) throw new Error(`profiles query failed: ${error.message}`);
+
+  const eligible = (profiles || []).filter(
+    (p) => p.is_subscribed !== true && p.email_daily_sentence !== false
+  );
+  if (eligible.length === 0) return [];
+
+  // "Never started" means no row at all in user_grammar_progress — the table is
+  // written on the first exercise submission on either the SPA or the Astro
+  // lesson page, so its absence is a reliable "never opened a lesson".
+  const { data: started, error: progressError } = await supabase
+    .from('user_grammar_progress')
+    .select('user_id')
+    .in('user_id', eligible.map((p) => p.id));
+  if (progressError) throw new Error(`progress query failed: ${progressError.message}`);
+  const hasStarted = new Set((started || []).map((r) => r.user_id));
+
+  const candidates = eligible.filter((p) => !hasStarted.has(p.id));
+  const fresh = await unsent(kind, candidates);
+  if (fresh.length === 0) return [];
+
+  const emails = await confirmedEmails();
+  const firstTopics = await firstTopicByLevel();
+
+  return fresh
+    .filter((p) => emails.has(p.id))
+    .map((p) => {
+      const level = normalizeLevel(p.current_level);
+      const topic = level ? firstTopics.get(level) : null;
+      return {
+        id: p.id,
+        email: emails.get(p.id),
+        // No usable placement → send them to the test rather than guessing a
+        // level. `current_level` ships as the bare band 'a1', which is not a
+        // placement, so anything that isn't a real sub-level counts as unplaced.
+        variant: topic ? 'placed' : 'unplaced',
+        levelLabel: level ? level.toUpperCase() : null,
+        topicTitle: topic?.title_en ?? null,
+        href: topic
+          ? `${BASE_URL}/grammar/${level}/${topic.slug}/`
+          : `${BASE_URL}/level-test/`,
+      };
+    });
+}
+
+const SUB_LEVELS = ['a1.1', 'a1.2', 'a2.1', 'a2.2', 'b1.1', 'b1.2', 'b2.1', 'b2.2'];
+
+/** A real sub-level in lowercase URL form, or null if the value isn't one. */
+function normalizeLevel(raw) {
+  const low = String(raw || '').trim().toLowerCase();
+  return SUB_LEVELS.includes(low) ? low : null;
+}
+
+/**
+ * First topic of each level, keyed by lowercase sub-level.
+ * grammar_topics stores sub_level uppercase; URLs use lowercase.
+ */
+async function firstTopicByLevel() {
+  const { data, error } = await supabase
+    .from('grammar_topics')
+    .select('slug, title_en, sub_level, topic_order')
+    .eq('is_published', true)
+    .order('topic_order');
+  if (error) throw new Error(`grammar_topics query failed: ${error.message}`);
+
+  const first = new Map();
+  for (const t of data || []) {
+    const level = String(t.sub_level || '').toLowerCase();
+    if (!first.has(level)) first.set(level, t);
+  }
+  return first;
+}
+
 // Users whose trial day matches, who haven't already had this message, aren't
 // paying, and haven't opted out.
 async function selectRecipients(kind) {
@@ -146,29 +304,14 @@ async function selectRecipients(kind) {
   const candidates = (profiles || []).filter((p) => p.is_subscribed !== true && p.email_daily_sentence !== false);
   if (candidates.length === 0) return [];
 
-  const ids = candidates.map((p) => p.id);
-  const { data: already } = await supabase
-    .from('lifecycle_emails')
-    .select('user_id')
-    .eq('kind', kind)
-    .in('user_id', ids);
-  const sentAlready = new Set((already || []).map((r) => r.user_id));
+  const fresh = await unsent(kind, candidates);
+  if (fresh.length === 0) return [];
 
   // Resolve addresses, and only mail confirmed ones.
-  const emails = new Map();
-  let page = 1;
-  while (true) {
-    const { data, error: authError } = await supabase.auth.admin.listUsers({ page, perPage: 1000 });
-    if (authError) throw new Error(`listUsers: ${authError.message}`);
-    for (const u of data.users) {
-      if (u.email && u.email_confirmed_at) emails.set(u.id, u.email.trim().toLowerCase());
-    }
-    if (data.users.length < 1000) break;
-    page++;
-  }
+  const emails = await confirmedEmails();
 
-  return candidates
-    .filter((p) => !sentAlready.has(p.id) && emails.has(p.id))
+  return fresh
+    .filter((p) => emails.has(p.id))
     .map((p) => ({ id: p.id, email: emails.get(p.id) }));
 }
 
@@ -181,11 +324,25 @@ async function sendBatch(resendKey, items) {
   if (!res.ok) throw new Error(`Resend batch ${res.status}: ${(await res.text()).slice(0, 300)}`);
 }
 
+/**
+ * The message for one recipient. Static for the trial mails; per-recipient for
+ * the activation mail, which names the learner's own next lesson.
+ */
+function messageFor(kind, recipient) {
+  if (!ACTIVATION_KINDS.has(kind)) {
+    const tpl = TEMPLATES[kind];
+    return { subject: tpl.subject, ctaHref: tpl.ctaHref, ctaLabel: tpl.ctaLabel, body: tpl.body };
+  }
+  const built = ACTIVATION[recipient.variant](recipient);
+  return { subject: ACTIVATION.subject, ...built };
+}
+
 async function sendKind(resendKey, kind) {
-  const recipients = await selectRecipients(kind);
+  const recipients = ACTIVATION_KINDS.has(kind)
+    ? await selectActivationRecipients(kind)
+    : await selectRecipients(kind);
   if (recipients.length === 0) return { kind, sent: 0, failed: 0 };
 
-  const tpl = TEMPLATES[kind];
   let sent = 0;
   let failed = 0;
 
@@ -203,19 +360,22 @@ async function sendKind(resendKey, kind) {
       continue;
     }
 
-    const items = slice.map((r) => ({
-      from: FROM_ADDRESS,
-      to: [r.email],
-      reply_to: 'zaid@deutsch-meister.de',
-      subject: tpl.subject,
-      html: SHELL({
-        heading: tpl.subject,
-        body: tpl.body,
-        ctaHref: tpl.ctaHref,
-        ctaLabel: tpl.ctaLabel,
-        unsubUrl: unsubscribeUrl(r.id),
-      }),
-    }));
+    const items = slice.map((r) => {
+      const msg = messageFor(kind, r);
+      return {
+        from: FROM_ADDRESS,
+        to: [r.email],
+        reply_to: 'zaid@deutsch-meister.de',
+        subject: msg.subject,
+        html: SHELL({
+          heading: msg.subject,
+          body: msg.body,
+          ctaHref: msg.ctaHref,
+          ctaLabel: msg.ctaLabel,
+          unsubUrl: unsubscribeUrl(r.id),
+        }),
+      };
+    });
 
     try {
       await sendBatch(resendKey, items);
@@ -250,7 +410,7 @@ const innerHandler = async (event) => {
   }
 
   const results = [];
-  for (const kind of ['trial_day3', 'trial_day6', 'trial_ended']) {
+  for (const kind of ['activation_day1', 'trial_day3', 'trial_day6', 'trial_ended']) {
     try {
       results.push(await sendKind(resendKey, kind));
     } catch (err) {
