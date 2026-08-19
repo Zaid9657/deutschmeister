@@ -196,6 +196,24 @@ Both open pull requests are merged and live; the repository has no open PRs.
   `/analyze`, which 301s to `/analyze/`. Now correct — it is the one email
   template that links a prerendered SPA route.
 
+## Podcasts (2026-08-19)
+
+- **10 of 24 podcasts had no audio file.** Storage answers `NoSuchKey` for every
+  episode from B1.1 #3 onward, so B1.2, B2.1 and B2.2 had nothing playable at
+  all. All ten were `is_published = true`, which meant they were listed on the
+  site *and* served to podcast directories through the RSS feed — that feed
+  filters on `is_published` only. Now unpublished; flip the flag back per row as
+  audio lands.
+- **The 14 that work are video, not audio.** `video/mp4`, 117 MB at A1.1 rising
+  to 420 MB for one B1.1 episode, 2.8 GB in total. Every play streams the whole
+  video — brutal on mobile data and billed as Storage egress — to deliver what
+  the product sells as a podcast. `duration_seconds` is placeholder data as well
+  (18 of 24 rows were exactly 180), which is the "card says 3:00, player says
+  5:03" bug. `scripts/reencode-podcast-audio.mjs` fixes both in one pass; it
+  needs ffmpeg and Storage access, so it is run by hand, not in the build.
+- Method note: the first size probes downloaded whole files and cost ~360 MB of
+  egress before switching to `Range: bytes=0-0`. Use the range form.
+
 ## Still open — needs the owner
 
 1. **The upstream bounce job.** Suppression stops the damage, but something in the MedMeister automation still tries to mail `a831969a52@emailinbo.live` every 15 minutes. Fix it at source.
