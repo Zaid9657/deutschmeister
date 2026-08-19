@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Trophy, Target, BookOpen, RefreshCw, Headphones, Mic, PenTool, CheckCircle2, XCircle } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { stepDownSublevel, bandOf } from '../../config/levels';
+import { calculateFinalLevel, writtenPercentageOf, speakingPercentageOf } from './finalLevel';
+import { rememberPendingPlacement } from '../../utils/pendingPlacement';
 
 const LevelTestResults = ({
   answers,
@@ -63,41 +64,26 @@ const LevelTestResults = ({
 
   const totalCorrect = answers.filter(a => a.isCorrect).length;
   const totalAnswered = answers.length;
-  const writtenPercentage = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
+  const writtenPercentage = writtenPercentageOf(answers);
 
   // Speaking scores breakdown
-  const speakingPercentage = speakingScore?.score || speakingScore?.total_score || 0;
+  const speakingPercentage = speakingPercentageOf(speakingScore);
 
-  // Calculate final adjusted level based on all sections.
-  //
-  // The demotion used to be `finalSublevel.replace('.2', '.1')`, which is a
-  // no-op on any sub-level already ending in '.1'. So a strong written score
-  // with a failed listening section produced e.g. B2.1 and stayed B2.1 — the
-  // rule fired and changed nothing. Stepping down the shared ladder handles
-  // band boundaries too (B2.1 → B1.2).
-  const calculateFinalLevel = () => {
-    let finalSublevel = determinedSublevel || 'A1.1';
-    const demotions = [];
-
-    if (listeningScore != null && listeningScore < 50 && writtenPercentage >= 70) {
-      demotions.push('listening');
-    }
-    if (speakingPercentage > 0 && speakingPercentage < 50 && writtenPercentage >= 70) {
-      demotions.push('speaking');
-    }
-
-    if (demotions.length) {
-      finalSublevel = stepDownSublevel(finalSublevel, demotions.length);
-    }
-
-    // Keep the band label consistent with the (possibly demoted) sub-level
-    // rather than reporting the pre-adjustment band.
-    return { level: bandOf(finalSublevel), sublevel: finalSublevel, demotions };
-  };
-
-  const { level: finalLevel, sublevel: finalSublevel, demotions } = calculateFinalLevel();
+  const { level: finalLevel, sublevel: finalSublevel, demotions } = calculateFinalLevel({
+    determinedSublevel,
+    writtenPercentage,
+    listeningScore,
+    speakingPercentage,
+  });
 
   const { user } = useAuth();
+
+  // A guest has no profile to write to, so park the result for the account they
+  // are about to create — this is what makes the signup CTA above ("save your
+  // results and start practicing at {finalSublevel}") actually true.
+  useEffect(() => {
+    if (!user && finalSublevel) rememberPendingPlacement(finalSublevel);
+  }, [user, finalSublevel]);
 
   // Section completion status
   const sections = [

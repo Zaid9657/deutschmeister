@@ -7,6 +7,11 @@ import LevelTestQuestion from '../components/LevelTest/LevelTestQuestion';
 import LevelTestListening from '../components/LevelTest/LevelTestListening';
 import LevelTestSpeaking from '../components/LevelTest/LevelTestSpeaking';
 import LevelTestResults from '../components/LevelTest/LevelTestResults';
+import {
+  calculateFinalLevel,
+  writtenPercentageOf,
+  speakingPercentageOf,
+} from '../components/LevelTest/finalLevel';
 import questionData from '../data/levelTestQuestions.json';
 import '../styles/LevelTest.css';
 
@@ -142,6 +147,21 @@ const LevelTest = () => {
     setSpeakingScore(null);
   };
 
+  // The level the learner is actually shown on the results screen — written
+  // score adjusted by the listening and speaking sections. Saving
+  // `determinedSublevel` instead stored a level the learner was never told
+  // about, so the dashboard and speaking page silently disagreed with the
+  // result page.
+  const placedSublevel = useMemo(
+    () => calculateFinalLevel({
+      determinedSublevel,
+      writtenPercentage: writtenPercentageOf(answers),
+      listeningScore,
+      speakingPercentage: speakingPercentageOf(speakingScore),
+    }).sublevel,
+    [determinedSublevel, answers, listeningScore, speakingScore]
+  );
+
   // Persist the placement result. Without this the whole test was decorative:
   // profiles.current_level stayed at its 'a1' default for every account, and
   // SpeakingPage — the only reader — coerced that back to A1.1, so a learner
@@ -149,12 +169,12 @@ const LevelTest = () => {
   // result in component state only; the landing page promises no account is
   // required, so there is no signup gate here.
   useEffect(() => {
-    if (testState !== 'results' || !user || !determinedSublevel) return;
+    if (testState !== 'results' || !user || !placedSublevel) return;
     let cancelled = false;
     (async () => {
       const { error } = await supabase
         .from('profiles')
-        .update({ current_level: determinedSublevel, updated_at: new Date().toISOString() })
+        .update({ current_level: placedSublevel, updated_at: new Date().toISOString() })
         .eq('id', user.id);
       // supabase-js resolves rather than throws, so the error has to be read
       // off the result or a failed write looks identical to a successful one.
@@ -163,7 +183,7 @@ const LevelTest = () => {
       }
     })();
     return () => { cancelled = true; };
-  }, [testState, user, determinedSublevel]);
+  }, [testState, user, placedSublevel]);
 
   return (
     <>

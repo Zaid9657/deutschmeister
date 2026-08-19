@@ -24,3 +24,29 @@ export function stepDownSublevel(sublevel, steps = 1) {
 export function bandOf(sublevel) {
   return typeof sublevel === 'string' ? sublevel.split('.')[0] : sublevel;
 }
+
+/**
+ * Coerce whatever is sitting in `profiles.current_level` into a real sub-level.
+ * The column has held 'a1' (the old default), 'B1' (a band with no sub-level)
+ * and properly-cased sub-levels at various points, so every reader has to be
+ * tolerant. A band without a sub-level resolves to its first half.
+ * @param {unknown} raw
+ * @returns {string} a member of LEVEL_ORDER, defaulting to 'A1.1'
+ */
+export function normalizePlacementLevel(raw) {
+  if (!raw) return 'A1.1';
+  const up = String(raw).toUpperCase().replace(/\s+/g, '');
+  if (LEVEL_ORDER.includes(up)) return up;
+  const coarse = (up.match(/^(A1|A2|B1|B2)/) || [])[1];
+  return coarse ? `${coarse}.1` : 'A1.1';
+}
+
+/**
+ * Position of a sub-level on the ladder, tolerant of case and of the lowercase
+ * URL form. Returns 0 for anything unrecognised so callers can use it directly
+ * as a start index without a guard.
+ */
+export function sublevelIndex(sublevel) {
+  const i = LEVEL_ORDER.indexOf(normalizePlacementLevel(sublevel));
+  return i < 0 ? 0 : i;
+}

@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { trackSignupStarted } from '../lib/funnelTracking';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Mail, Lock, Eye, EyeOff, AlertCircle, Loader2, Check } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../utils/supabase';
+import { rememberPendingPlacement } from '../utils/pendingPlacement';
 import SEO from '../components/SEO';
 
 const logFailedSignup = (email, error) => {
@@ -28,6 +29,15 @@ const SignupPage = () => {
   const { signUp } = useAuth();
 
   useEffect(() => { trackSignupStarted(); }, []);
+
+  // The level test's guest CTA links here as `/signup?level=B1.2`. Honour it so
+  // the placement survives an arrival from a shared or bookmarked link, not
+  // only from the tab that sat the test.
+  const [searchParams] = useSearchParams();
+  const levelParam = searchParams.get('level');
+  useEffect(() => {
+    if (levelParam) rememberPendingPlacement(levelParam);
+  }, [levelParam]);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
