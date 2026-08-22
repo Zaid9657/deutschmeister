@@ -82,7 +82,7 @@
     accept.type = 'button';
     accept.textContent = 'Accept';
     accept.style.cssText = 'cursor:pointer;padding:8px 16px;border-radius:8px;border:0;' +
-      'background:linear-gradient(90deg,#f59e0b,#f43f5e);color:#fff;font-weight:700;font-size:14px';
+      'background:#0F766E;color:#fff;font-weight:700;font-size:14px';
 
     accept.addEventListener('click', function () { saveChoice('accepted'); loadAnalytics(); removeBanner(); });
     decline.addEventListener('click', function () { saveChoice('declined'); removeBanner(); });

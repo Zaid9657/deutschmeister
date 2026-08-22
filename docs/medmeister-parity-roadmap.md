@@ -265,8 +265,33 @@ bullet lists. Gone: the dark gradient that made this the only dark page on the s
 accent belonging to no system. Kept: every figure derived, and the same-tab checkout (a new tab
 is blocked by iOS Safari).
 
-Still open in Batch B: the landing page rebuild (2.2) and rolling the new tokens onto the email
-templates and cookie banner (2.5), both of which still carry the retired amber-to-rose brand.
+**2.5 done too: the retired brand is out of every customer-facing surface.** The August
+remediation replaced the amber-to-rose "D" identity in the site chrome, but it survived wherever
+nobody looks until a customer receives one — the welcome mail, the trial sequence, the daily
+sentence, the **dunning email**, the owner test send, the unsubscribe page and the cookie banner.
+All seven now carry the Meister-Siegel teal and the "M" mark, via
+`netlify/functions/_shared/brand.mjs` (a synced copy of the tokens, because the functions bundle
+cannot reliably reach `src/` and `consent.js` is served verbatim). `tests/brand.test.mjs` compares
+every value against the tokens and bans the retired hexes on those surfaces — it also bans CSS
+gradients there, since several mail clients drop them and an unpainted gradient leaves white text
+on white.
+
+That ban is deliberately scoped to marketing and transactional surfaces, **not** repo-wide:
+`#f43f5e` is also the B2.1 *level* colour in `src/utils/listeningHelpers.js`, where it means
+something else entirely. A blind sweep would have "fixed" it.
+
+Still open in Batch B: the **landing page rebuild (2.2)**, and the in-app SPA surfaces that still
+carry retired-brand hexes (`components/onboarding/IntroSlides.jsx`,
+`components/LevelTest/LevelTestResults.jsx`, `styles/LevelTest.css`). Those are the in-product
+migration rather than the marketing chrome, and `LevelTest.css` alone is ~1,500 lines, so they are
+their own change.
+
+**A note on the landing rebuild before it starts.** Its current stats band claims "1,400+
+Learners", "170+ New learners this month" and "2,488 AI speaking exercises". The first two are
+traceable to EVALUATION.md's 2026-08-16 database audit (1,449 accounts all-time, 172 signups in 30
+days) but the second is a rolling claim that is stale by construction; the third appears in no
+audit and has **no source at all**. Per the counts rule in `src/data/marketing.js`, a figure with
+no provenance should not survive a rebuild. Re-measure against the live database, or drop it.
 
 ### Suggested implementation batches (each = one follow-up task)
 

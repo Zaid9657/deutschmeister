@@ -36,7 +36,7 @@ function htmlPage(title, message, linkBack = true) {
     .card { max-width: 420px; background: #fff; border-radius: 16px; padding: 40px; border: 1px solid #e2e8f0; text-align: center; }
     h1 { margin: 0 0 12px; font-size: 22px; color: #0f172a; }
     p { margin: 0 0 24px; font-size: 15px; color: #64748b; line-height: 1.6; }
-    a { color: #7c3aed; text-decoration: none; font-weight: 600; }
+    a { color: #0F766E; text-decoration: none; font-weight: 600; }
   </style>
 </head>
 <body>
