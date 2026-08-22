@@ -89,9 +89,14 @@ mode and says so on every run — Netlify's deploy build remains the only gate o
   `*:focus-visible` ring and `::selection` in `src/index.css` are brand surfaces on **every screen**
   — change them and you have changed the whole product — and `tests/brand.test.mjs` bans the retired
   palette outright across the chrome (`src/App.jsx`, the nav, the guards, the overlays, `ui/`, and
-  the five signup screens). The ~10 content screens still carrying a hero gradient are held by a
-  **ratchet**, `MAX_LEGACY_CTA_FILES`: it may only fall, and the suite fails if you migrate a screen
-  without lowering it in the same commit. `src/components/LevelTest/LevelTest.css` is deliberately
+  the five signup screens, and the nine content screens). **Two** ratchets hold the rest and may
+  only fall: `MAX_LEGACY_CTA_FILES` (the exact retired CTA — now 0) and `MAX_RETIRED_STOP_FILES`
+  (**any** retired gradient stop in any pairing — 10, the level/listening components and the
+  account, grammar, X-Ray, subscription and video-library screens). The second exists because the
+  first reached 0 while the palette was still live in other stop combinations; what exposed it was
+  Tailwind still emitting `.from-amber-500` into the built CSS. **Verify a colour sweep against
+  `dist/`, not against a source grep** — and note a doc comment quoting a class is enough to emit
+  it, since the scanner does not parse comments. `src/components/LevelTest/LevelTest.css` is deliberately
   outside all of this — 1,765 class-scoped lines on one route, already mostly token-compatible, and
   a conversion surface that needs a visual check, so it is its own task.
 - **`.mcp.json` is committed and must stay credential-free.** It declares the DataForSEO and Google

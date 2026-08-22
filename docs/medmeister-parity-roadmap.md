@@ -403,8 +403,36 @@ no run either. Every CI run this branch has ever had came from a push while a PR
 The right sequence for the next batch is therefore: rebase onto `main` **first**, then push, then
 open the PR.
 
-Still open after Batch F: roughly ten content screens keep their own hero gradient (held by the
-ratchet), and `src/components/LevelTest/LevelTest.css` is deferred on purpose — see below.
+**Batch F part two: the content screens, and a guard that was quietly lying.** The eight screens
+the ratchet was holding (`FAQ`, `UeberUns`, `Vergleich` hub, `Comparison`, `Intro`, `Speaking`,
+`VideoDetail`, `AdminVideos`) are migrated, so `MAX_LEGACY_CTA_FILES` is **0**. Three patterns
+recurred and are worth naming: a **palette per item** (five FAQ categories, three value cards and
+three competitor tiles each carried their own invented two-stop gradient — categories are
+navigation, not meaning, so they get one mark); **gradient text** in a headline, the
+`.gradient-text` class deleted from `index.css` as dead, re-inlined by hand; and the last
+**dark-on-light panels**, the same outlier `/pricing` lost in Batch B.
+
+`src/pages/leitfaden/TelcB1Page.jsx` was **deleted** with its route — 564 lines of a hand-written
+SPA twin of a static Astro guide, unreachable because Netlify serves the real file before the
+non-forced `/leitfaden/*` rewrite. That is the second "two copies, one dead" pair this repo has
+found, after `LandingPage.jsx`.
+
+**The guard was measuring the wrong thing, and the built artifact is what caught it.** The ratchet
+counted one exact adjacent pairing, `from-amber-500 to-rose-500`. It reached 0 — while
+`from-amber-500 to-orange-500` and `from-amber-400 via-orange-500 to-rose-500` sailed past it. The
+tell was `.from-amber-500` still being emitted into the built CSS after every source grep came back
+clean: Tailwind only emits a class something actually uses, so the artifact knew what the grep did
+not. A second ratchet, `MAX_RETIRED_STOP_FILES`, now matches **any** retired stop in any pairing
+and stands at **10** — the level/listening components and the account, grammar, X-Ray, subscription
+and video-library screens, none of which were ever in scope. The number is in the suite so the
+remaining debt is visible rather than implied.
+
+(A smaller instance of the same thing: `ui/Button.jsx`'s own doc comment quoted the retired CTA
+verbatim, and Tailwind's scanner does not parse comments — so the comment was shipping a live CSS
+rule. Reworded.)
+
+Still open after Batch F: the ten files above, and `src/components/LevelTest/LevelTest.css`,
+deferred on purpose — see below.
 
 **A note on the landing rebuild before it starts.** Its current stats band claims "1,400+
 Learners", "170+ New learners this month" and "2,488 AI speaking exercises". The first two are

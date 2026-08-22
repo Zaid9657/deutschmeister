@@ -53,7 +53,6 @@ const VerifyEmailPage = lazy(() => import('./pages/VerifyEmailPage'));
 const IntroSlides = lazy(() => import('./components/onboarding/IntroSlides'));
 const VergleichHubPage = lazy(() => import('./pages/VergleichHubPage'));
 const ComparisonPage = lazy(() => import('./pages/ComparisonPage'));
-const TelcB1Page = lazy(() => import('./pages/leitfaden/TelcB1Page'));
 
 function PageLoader() {
   return (
@@ -135,7 +134,13 @@ function App() {
                     <Route path="/ueber-uns" element={<UeberUnsPage />} />
                     <Route path="/vergleich" element={<VergleichHubPage />} />
                     <Route path="/vergleich/:slug" element={<ComparisonPage />} />
-                    <Route path="/leitfaden/telc-b1" element={<TelcB1Page />} />
+                    {/* No /leitfaden routes on purpose, for the same reason as "/" above.
+                        A guide is data in astro-site/src/data/guides/ rendered by
+                        pages/leitfaden/[slug].astro, and Netlify serves those real static
+                        files before the non-forced /leitfaden/* rewrite below them. The SPA
+                        carried a hand-written TelcB1Page twin that nothing could reach —
+                        the second "two copies, one dead" pair in this file — so it was
+                        deleted. Add a guide in astro-site, never here. */}
                     <Route path="/video-library" element={<VideoLibraryPage />} />
                     <Route path="/video-library/:id" element={<VideoDetailPage />} />
                     <Route path="/podcasts" element={<PodcastsPage />} />

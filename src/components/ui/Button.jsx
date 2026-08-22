@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
  * The one button in the app.
  *
  * WHY THIS EXISTS. Before it, the primary CTA was the string
- * `bg-gradient-to-r from-amber-500 to-rose-500 …` copy-pasted into twenty-odd
+ * an amber-to-rose `bg-gradient-to-r` copy-pasted into twenty-odd
  * files — the retired brand, unreachable by any single edit. The classes below
  * are the same treatment the rebuilt public pages already use
  * (astro-site/src/pages/pricing.astro), so the app and the marketing site now

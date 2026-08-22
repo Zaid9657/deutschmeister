@@ -111,6 +111,18 @@ const rendered = (src) =>
 /** The retired identity's CTA, verbatim, as it was copy-pasted around the app. */
 const RETIRED_CTA = 'from-amber-500 to-rose-500';
 
+/**
+ * Any retired-brand gradient stop, in any pairing.
+ *
+ * RETIRED_CTA alone was too narrow and briefly made this suite look finished
+ * when it was not: it matches only the adjacent `from-amber-500 to-rose-500`,
+ * so `from-amber-500 to-orange-500` and `from-amber-400 via-orange-500
+ * to-rose-500` sailed past it. Tailwind emitting `.from-amber-500` into the
+ * built CSS is what exposed that — the source of truth was the artifact, not
+ * the grep.
+ */
+const RETIRED_STOP = /\b(?:from|via|to)-(?:amber|rose)-\d{2,3}\b/;
+
 /** Everything rendered around every route, the primitives, and the signup funnel. */
 const APP_CHROME = [
   'src/index.css',
@@ -133,6 +145,16 @@ const APP_CHROME = [
   'src/pages/ResetPasswordPage.jsx',
   'src/pages/UpdatePasswordPage.jsx',
   'src/pages/VerifyEmailPage.jsx',
+  // Content screens, migrated 2026-08-22 once the primitives existed.
+  'src/pages/AdminVideosPage.jsx',
+  'src/pages/ComparisonPage.jsx',
+  'src/pages/FAQPage.jsx',
+  'src/pages/IntroPage.jsx',
+  'src/pages/NotFoundPage.jsx',
+  'src/pages/SpeakingPage.jsx',
+  'src/pages/UeberUnsPage.jsx',
+  'src/pages/VergleichHubPage.jsx',
+  'src/pages/VideoDetailPage.jsx',
 ];
 
 test('the app chrome carries no retired brand', () => {
@@ -162,12 +184,22 @@ test('the chrome uses the shared button, not a copy of its classes', () => {
 
 /**
  * Content screens still carrying the retired CTA. May only go down.
- * 2026-08-22: 20 files → 9. The remainder are content screens, each with its
- * own hero treatment, deliberately left for a follow-up. (NotFoundPage came
- * along too — its "Go Home" was a router <Link to="/">, which client-routes to
- * a route the SPA does not have and lands the visitor back on the 404.)
+ * 2026-08-22: 20 files → 9 (chrome + signup funnel) → **0** (content screens).
+ *
+ * At zero the ratchet becomes a plain ban, which is the point it was built to
+ * reach. Keep it as a ratchet rather than folding it into APP_CHROME: this one
+ * sweeps EVERY .jsx under src/, so it catches the retired CTA appearing in a
+ * file nobody thought to add to a list.
  */
-const MAX_LEGACY_CTA_FILES = 9;
+const MAX_LEGACY_CTA_FILES = 0;
+
+/**
+ * Files still carrying ANY retired-brand gradient stop. May only go down.
+ * 2026-08-22: 10 — the level/listening components and the account, grammar,
+ * X-Ray, subscription and video-library screens. These were never in the
+ * migration's scope; the number is here so that is visible rather than implied.
+ */
+const MAX_RETIRED_STOP_FILES = 10;
 
 test('the retired CTA is receding, never spreading', () => {
   const files = [];
@@ -188,5 +220,26 @@ test('the retired CTA is receding, never spreading', () => {
     MAX_LEGACY_CTA_FILES,
     `${files.length} files left, but the ceiling still says ${MAX_LEGACY_CTA_FILES} — ` +
       'lower MAX_LEGACY_CTA_FILES in the same commit that migrates a screen, or the ratchet stops ratcheting.',
+  );
+});
+
+test('the retired palette is receding everywhere, not just on the one CTA string', () => {
+  const files = [];
+  const walk = (dir) => {
+    for (const entry of readdirSync(join(ROOT, dir), { withFileTypes: true })) {
+      const rel = `${dir}/${entry.name}`;
+      if (entry.isDirectory()) walk(rel);
+      else if (entry.name.endsWith('.jsx') && RETIRED_STOP.test(rendered(read(rel)))) files.push(rel);
+    }
+  };
+  walk('src');
+  assert.ok(
+    files.length <= MAX_RETIRED_STOP_FILES,
+    `retired gradient stops spread to ${files.length} files (ceiling ${MAX_RETIRED_STOP_FILES}):\n  ${files.join('\n  ')}`,
+  );
+  assert.equal(
+    files.length,
+    MAX_RETIRED_STOP_FILES,
+    `${files.length} files left, but the ceiling still says ${MAX_RETIRED_STOP_FILES} — lower it in the same commit that migrates a screen.`,
   );
 });
