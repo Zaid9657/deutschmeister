@@ -235,10 +235,21 @@ retyped, not that they disagreed), and the Tailwind configs cannot be a byte-ide
 ### Suggested implementation batches (each = one follow-up task)
 
 1. ~~**Batch A (foundation):** shared pricing/marketing data + first guard test + built-HTML
-   CI verification.~~ **Done 2026-08-22.** Still open from it: building the Astro half in CI,
-   which needs `PUBLIC_SUPABASE_URL`/`PUBLIC_SUPABASE_ANON_KEY` in the repo secrets (or a
-   committed `GRAMMAR_CONTENT_CACHE`). Until then `check-built-html.mjs` runs `--spa-only` and
-   prints on every run that the static/SEO half went unverified.
+   CI verification.~~ **Done 2026-08-22.** Still open from it: **verifying the Astro half**.
+   `check-built-html.mjs` runs `--spa-only` in CI and prints on every run that the static/SEO
+   pages went unverified. Two ways to close it, either is enough:
+   - **Build Astro in CI** — add `PUBLIC_SUPABASE_URL`/`PUBLIC_SUPABASE_ANON_KEY` to the repo
+     secrets (or commit a `GRAMMAR_CONTENT_CACHE` from `scripts/dump-grammar-cache.mjs`), then
+     append the build + copy steps and drop `--spa-only`. `.github/workflows/ci.yml` carries the
+     exact lines in a comment.
+   - **Run the full check on Netlify** — the deploy build already produces the complete merged
+     `dist/`, so appending `node scripts/check-built-html.mjs dist` to the `netlify.toml` command
+     would verify every page in the manifest, Astro included. Deliberately NOT done in Batch A:
+     the check has never been run against the real Astro output (this sandbox is egress-blocked
+     from both Supabase and the deploy preview), and putting an unverified gate on the production
+     deploy path risks blocking a deploy on a false positive — the checker had one on its first
+     run, an `<html lang>` quoted inside an HTML comment. Run it once against a real full build
+     first, then gate.
 2. **Batch B (design):** 2.1 tokens/primitives → 2.2 landing → 2.3 pricing → 2.5 email skin.
 3. **Batch C (SEO engine):** 1.1 guide infrastructure + first guide; 1.4 schema/internal links.
 4. **Batch D (SEO ops):** 1.2 `.mcp.json` + routines + first keyword-research run; 1.5 decision.
