@@ -19,6 +19,15 @@
 [functions."trial-lifecycle"]
   schedule = "0 8 * * *"
 
+# Activation lifecycle (behavioural: signed up, zero lessons). 90 minutes after
+# trial-lifecycle so the jobs never overlap. SHIPS OFF — the function no-ops
+# unless LIFECYCLE_ACTIVATION_ENABLED=true is set in the Netlify env, and even
+# then cannot send until migrations/2026-08-22-activation-lifecycle.sql is
+# applied. The schedule() wrapper in the function is authoritative; this
+# mirrors it.
+[functions."activation-lifecycle"]
+  schedule = "30 9 * * *"
+
 # Security headers for all pages
 [[headers]]
   for = "/*"

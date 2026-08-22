@@ -117,6 +117,19 @@ mode and says so on every run — Netlify's deploy build remains the only gate o
   against an already-prerendered `dist/` fails; rebuild from scratch.
 - **Secrets fail closed**: email functions 500 without `CAMPAIGN_SECRET`/`UNSUB_SECRET`.
   Never reintroduce fallback secrets. Never widen the send-daily-test/daily-sentence auth.
+- **Lifecycle email is two jobs with one ledger and one rule.** `trial-lifecycle.mjs` is
+  clock-based (days 3/6/8 of the trial); `activation-lifecycle.mjs` is behaviour-based (days 1
+  and 4, ONLY users with zero lesson activity) and **ships off** — it no-ops unless
+  `LIFECYCLE_ACTIVATION_ENABLED=true`, supports `?dry=1` and a `LIFECYCLE_TEST_RECIPIENTS`
+  canary allowlist, and cannot send until `migrations/2026-08-22-activation-lifecycle.sql` is
+  applied (the ledger's CHECK rejects unmigrated kinds, and claim-before-send means no claim →
+  no send). Both jobs claim into `lifecycle_emails` (UNIQUE user_id+kind) BEFORE sending.
+  Funnel status has ONE definition: the `lifecycle_customer_state` view (service-role only) —
+  the mailer, any dashboard, and ad-hoc queries must read it rather than re-deriving status,
+  or the queue shown diverges from the queue mailed. The activation windows are deliberately
+  disjoint from the trial windows and `tests/lifecycle.test.mjs` pins that — move a window in
+  either file and update the test's occupied-days table in the same commit. The rule the
+  re-read defends: never tell someone they have not used a lesson when they have.
 - **DB writes to privileged columns** (`subscriptions`, `profiles.is_subscribed`, trial
   dates) go through the service role only — RLS + a trigger enforce this. Schema changes
   are hand-applied SQL in `migrations/` (see its README); legacy root `*.sql` is history,
@@ -134,12 +147,14 @@ mode and says so on every run — Netlify's deploy build remains the only gate o
 
 - `docs/medmeister-parity-roadmap.md` is the current plan: a comparison against the sibling
   MedMeister project and a tiered roadmap (SEO content engine, design system, lifecycle, tests).
-  Batch A (shared pricing/marketing data layer, claim guards, built-HTML check), most of
-  Batch B (design tokens, `/pricing` and the homepage rebuilt on them, retired brand removed from
-  every customer-facing surface) and Batch C (the Leitfaden content engine, hub + four guides,
-  richer schema on `/vergleich/`) have shipped. Still open: SEO operations (keyword research and
-  GEO measurement via DataForSEO/GSC), education schema on grammar pages, and the in-app SPA
-  brand migration.
+  Batches A–D have shipped (claims data layer + guards, design tokens + rebuilt `/` and
+  `/pricing`, the Leitfaden engine + four guides, SEO-routine machinery), and Batch E adds the
+  activation lifecycle (shipping OFF — owner must apply its migration and set
+  `LIFECYCLE_ACTIVATION_ENABLED=true`). Still open: the SEO connectors (network allowlist +
+  credentials — see `docs/seo-routines/README.md`), the in-app SPA brand migration, and
+  verifying the Astro half in CI. NOTE: grammar pages already carry
+  `['Article','LearningResource']` schema and Related-Topics links — two earlier claims that
+  they were missing were wrong (see the corrections section in the roadmap).
 - **Competitor pricing on `/vergleich/` is stamped "Stand: Mai 2026" and could not be
   re-verified** — every vendor domain is blocked by the agent proxy. Aggregators suggest all
   three have since raised prices, i.e. the stored figures understate them, which is the

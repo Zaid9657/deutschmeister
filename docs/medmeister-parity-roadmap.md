@@ -195,12 +195,35 @@ Give the 6 email functions one shared template module while doing it.
 
 ### Tier 3 — supporting parity (after or alongside)
 
-- **3.1 Activation email journeys — M–L.** The funnel's diagnosed cliff (85 % of signups never
+- **3.1 Activation email journeys — DONE, SHIPPING OFF (Batch E, 2026-08-22).**
+  `activation-lifecycle.mjs`: two behavioural mails (day 1 and day 4, only users with zero
+  lesson activity), windows deliberately disjoint from the trial sequence's days and pinned by
+  `tests/lifecycle.test.mjs`. Selection reads `lifecycle_customer_state` — one view, service-role
+  only, joining the three progress tables and `profiles` into a single funnel status, so the
+  queue mailed and any dashboard read the same definition. Eligibility is re-read immediately
+  before the claim (the rule: never tell someone they have not used a lesson when they have),
+  claim-before-send reuses the existing `lifecycle_emails` unique-key lock, and the job ships
+  fail-closed twice: `LIFECYCLE_ACTIVATION_ENABLED` must be exactly `true`, and an unmigrated
+  database rejects the new kinds at the claim. Canary allowlist + `?dry=1` included. **Owner
+  actions to go live:** apply `migrations/2026-08-22-activation-lifecycle.sql`, dry-run against
+  the canary list, then set the switch. Scaled to the numbers deliberately: two mails, not a
+  six-journey engine — ~170 signups/month justifies exactly this much machinery (the sibling
+  project's own rule: automating a sequence for eight people is machinery where a note does
+  better).
+  What 3.1 originally proposed, for reference: The funnel's diagnosed cliff (85 % of signups never
   open a lesson). Port the journey-registry shape: single sender module + declarative journeys
   (`activation_zero_lesson` day 1/3/7 anchored on registration, `first_to_habit` anchored on
   first lesson), exits re-checked immediately before send, dry-run + canary allowlist + master
   switch shipping off. The existing `lifecycle_emails` unique-index lock stays the one lock.
-- **3.2 Server-side conversion events — M.** Emit signup/trial/checkout/paid events from the
+- **3.2 Server-side funnel state — DONE differently and smaller (Batch E, 2026-08-22).**
+  Checked against the code, the per-feature facts were ALREADY server-side: `xray_usage`,
+  `speaking_usage`/`speaking_sessions`, the three `user_*_progress` tables and `webhook_logs`
+  record every conversion-relevant action at the server. A new event stream would have
+  duplicated them. What was genuinely missing was one place that JOINS them into a funnel
+  status — shipped as the `lifecycle_customer_state` view above (the sibling's
+  `lifecycle_customer_state` pattern, minus the enrolment machinery its volume doesn't yet
+  justify). A weekly read of it belongs to the SEO/ops routines once connectors are live.
+  What 3.2 originally proposed, for reference: Emit signup/trial/checkout/paid events from the
   Netlify functions (webhook + speaking + X-Ray) into a Supabase table or PostHog server-side,
   so the funnel is measured on 100 % of traffic, not the consent-accepting minority. Then
   actually wire a weekly read of it (a Routine, per 1.2's pattern).
