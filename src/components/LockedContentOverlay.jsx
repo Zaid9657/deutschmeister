@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Lock, Sparkles } from 'lucide-react';
 import { trackPaywallShown } from '../lib/funnelTracking';
+import Button from './ui/Button';
 
 const LockedContentOverlay = ({ level }) => {
   const { i18n } = useTranslation();
@@ -11,52 +12,46 @@ const LockedContentOverlay = ({ level }) => {
   const isGerman = i18n.language === 'de';
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100 px-4 py-12">
-      <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-8 max-w-md w-full text-center">
-        <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-amber-400 via-rose-400 to-purple-500 flex items-center justify-center shadow-lg shadow-rose-500/25">
+    <div className="min-h-screen flex items-center justify-center bg-paper px-4 py-12">
+      <div className="bg-white rounded-lg border border-rule shadow-overlay p-8 max-w-md w-full text-center">
+        <div className="w-16 h-16 mx-auto mb-4 rounded-lg bg-siegel flex items-center justify-center">
           <Lock className="w-8 h-8 text-white" />
         </div>
 
         {level && (
-          <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-sm font-medium mb-4">
+          <div className="inline-flex items-center gap-1 px-3 py-1 rounded-pill bg-paper-sunk text-graphite text-sm font-medium mb-4">
             Level {level.toUpperCase()}
           </div>
         )}
 
-        <h2 className="text-2xl font-bold text-slate-800 mb-2">
+        <h2 className="font-display text-2xl font-semibold text-ink mb-2">
           {isGerman ? 'Kostenlos registrieren' : 'Sign Up to Unlock'}
         </h2>
 
-        <p className="text-slate-600 mb-2">
+        <p className="text-graphite mb-2">
           {isGerman
             ? 'Erstelle ein kostenloses Konto, um alle Stufen freizuschalten.'
             : 'Create a free account to unlock all levels beyond A1.1.'}
         </p>
 
-        <p className="text-sm text-slate-500 mb-6">
+        <p className="text-sm text-graphite mb-6">
           {isGerman
             ? '7 Tage kostenlos testen — keine Kreditkarte nötig'
             : '7-day free trial included — no credit card required'}
         </p>
 
         <div className="flex flex-col gap-3">
-          <Link
-            to="/signup"
-            className="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold hover:from-amber-600 hover:to-rose-600 transition-all shadow-lg shadow-rose-500/25"
-          >
+          <Button to="/signup" size="lg" className="w-full">
             {isGerman ? 'Kostenlos registrieren' : 'Sign Up Free'}
-          </Link>
+          </Button>
 
-          <Link
-            to="/login"
-            className="w-full py-3 px-6 rounded-xl border-2 border-slate-200 text-slate-700 font-semibold hover:border-slate-300 hover:bg-slate-50 transition-all"
-          >
+          <Button to="/login" variant="secondary" size="lg" className="w-full">
             {isGerman ? 'Anmelden' : 'Log In'}
-          </Link>
+          </Button>
 
           <Link
             to="/level/a1.1"
-            className="inline-flex items-center justify-center gap-2 text-sm text-emerald-600 hover:text-emerald-700 transition-colors mt-2"
+            className="inline-flex items-center justify-center gap-2 text-sm text-siegel hover:text-siegel-deep transition-colors mt-2"
           >
             <Sparkles size={14} />
             {isGerman ? 'A1.1 kostenlos ausprobieren' : 'Try A1.1 for free'}

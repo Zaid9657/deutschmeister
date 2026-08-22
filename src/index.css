@@ -42,84 +42,6 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
-
-  /* Glass effect */
-  .glass {
-    @apply bg-white/80 backdrop-blur-md;
-  }
-
-  /* Card hover effect */
-  .card-hover {
-    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
-  }
-
-  /* Gradient text */
-  .gradient-text {
-    @apply bg-gradient-to-r from-amber-500 via-rose-500 to-purple-500 bg-clip-text text-transparent;
-  }
-
-  /* Level-specific button styles */
-  .btn-a1-1 {
-    @apply bg-gradient-to-r from-a1-1-primary to-a1-1-secondary text-white;
-  }
-
-  .btn-a1-2 {
-    @apply bg-gradient-to-r from-a1-2-primary to-a1-2-secondary text-white;
-  }
-
-  .btn-a2-1 {
-    @apply bg-gradient-to-r from-a2-1-primary to-a2-1-secondary text-white;
-  }
-
-  .btn-a2-2 {
-    @apply bg-gradient-to-r from-a2-2-primary to-a2-2-secondary text-white;
-  }
-
-  .btn-b1-1 {
-    @apply bg-gradient-to-r from-b1-1-primary to-b1-1-secondary text-white;
-  }
-
-  .btn-b1-2 {
-    @apply bg-gradient-to-r from-b1-2-primary to-b1-2-secondary text-white;
-  }
-
-  .btn-b2-1 {
-    @apply bg-gradient-to-r from-b2-1-primary to-b2-1-secondary text-white;
-  }
-
-  .btn-b2-2 {
-    @apply bg-gradient-to-r from-b2-2-primary to-b2-2-secondary text-white;
-  }
-}
-
-/* Custom utilities */
-@layer utilities {
-  /* Animation delay utilities */
-  .delay-100 {
-    animation-delay: 100ms;
-  }
-
-  .delay-200 {
-    animation-delay: 200ms;
-  }
-
-  .delay-300 {
-    animation-delay: 300ms;
-  }
-
-  /* Safe area padding for mobile */
-  .safe-bottom {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  .safe-top {
-    padding-top: env(safe-area-inset-top);
-  }
-}
-
-/* Framer Motion animation helper */
-.will-change-transform {
-  will-change: transform;
 }
 
 /* Speech synthesis visual feedback */
@@ -163,14 +85,17 @@
   animation: bounce 0.6s ease-in-out infinite;
 }
 
-/* Focus ring styles */
+/* Focus ring — `siegel` is the one interactive colour (design-tokens.js, rule 2).
+   This used to be ring-amber-500/50: the retired brand, on every focusable
+   element on every screen. A scoped .dm-scope copy already shipped the correct
+   teal; that copy is gone now that the global rule is right. */
 *:focus-visible {
-  @apply outline-none ring-2 ring-amber-500/50 ring-offset-2;
+  @apply outline-none ring-2 ring-siegel ring-offset-2 ring-offset-paper;
 }
 
-/* Selection color */
+/* Selection colour — same reason. Was bg-amber-200 / text-amber-900. */
 ::selection {
-  @apply bg-amber-200 text-amber-900;
+  @apply bg-siegel-wash text-ink;
 }
 
 /* Print styles */
@@ -182,19 +107,16 @@
 
 /* ── Dashboard brand type (scoped — does not affect the rest of the site) ── */
 .dm-display {
-  font-family: 'Fraunces', Georgia, serif;
+  @apply font-display;
   letter-spacing: -0.01em;
 }
+/* Was 'Inter'. Inter is not in the token stack — the body face is Nunito Sans
+   (design-tokens.js `font.body`), and @apply keeps that the only place it is
+   written. */
 .dm-body {
-  font-family: 'Inter', system-ui, sans-serif;
+  @apply font-body;
 }
 
-/* Dashboard scope: teal focus ring + restrained "current node" pulse */
-.dm-scope *:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #0d9488;
-  border-radius: 0.5rem;
-}
 @keyframes dmPulse {
   0%, 100% { transform: scale(1); opacity: 0.55; }
   50% { transform: scale(1.35); opacity: 0; }

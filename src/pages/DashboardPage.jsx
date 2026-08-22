@@ -14,6 +14,7 @@ import { levels as ALL_LEVELS } from '../data/content';
 import { loadDashboardStats, DAILY_GOAL_TARGET } from '../services/dashboardStats';
 import Logo from '../components/Logo';
 import SEO from '../components/SEO';
+import { font } from '../data/design-tokens';
 
 const INK = '#0C2A33';
 const fade = (d = 0) => ({
@@ -418,7 +419,7 @@ function Node({ x, y, label, state }) {
       {goal && <Trophy x={x - 9} y={y - 9} width="18" height="18" color="#F59E0B" />}
       {state === 'todo' && <Lock x={x - 8} y={y - 8} width="16" height="16" color="#94A3B8" />}
       <text x={x} y={y + r + 18} textAnchor="middle" fontSize="12"
-            fontFamily="Inter, sans-serif" fontWeight={current ? 700 : 500}
+            fontFamily={font.body} fontWeight={current ? 700 : 500}
             fill={current ? INK : '#64748B'}>{label}</text>
     </g>
   );

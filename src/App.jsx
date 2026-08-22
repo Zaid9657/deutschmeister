@@ -58,7 +58,7 @@ const TelcB1Page = lazy(() => import('./pages/leitfaden/TelcB1Page'));
 function PageLoader() {
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <Loader2 className="w-8 h-8 animate-spin text-slate-400" />
+      <Loader2 className="w-8 h-8 animate-spin text-graphite" />
     </div>
   );
 }
@@ -76,12 +76,12 @@ function App() {
           <LemonSqueezyProvider>
           <ThemeProvider>
             <ProgressProvider>
-              <div className="min-h-screen bg-slate-50">
+              <div className="min-h-screen bg-paper">
                 {/* Keyboard users land here first and can jump the nav. The SPA
                     had no skip link and no <main> landmark at all. */}
                 <a
                   href="#main"
-                  className="sr-only focus:not-sr-only focus:absolute focus:z-[200] focus:top-3 focus:left-3 focus:px-4 focus:py-2 focus:rounded-lg focus:bg-white focus:text-slate-900 focus:shadow-lg focus:ring-2 focus:ring-amber-500"
+                  className="sr-only focus:not-sr-only focus:absolute focus:z-[200] focus:top-3 focus:left-3 focus:px-4 focus:py-2 focus:rounded-lg focus:bg-white focus:text-ink focus:shadow-overlay focus:ring-2 focus:ring-siegel"
                 >
                   Skip to content
                 </a>

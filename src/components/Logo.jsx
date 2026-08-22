@@ -58,7 +58,7 @@ export default function Logo({ size = 38, showWordmark = true, to = '/', classNa
       </svg>
       {showWordmark && (
         <span
-          className="dm-display font-semibold text-slate-800"
+          className="dm-display font-semibold text-ink"
           style={{ fontSize: `${wordSize}px`, letterSpacing: '-0.01em' }}
         >
           Deutsch<span style={{ color: '#0D9488' }}>Meister</span>
@@ -69,7 +69,7 @@ export default function Logo({ size = 38, showWordmark = true, to = '/', classNa
 
   if (to === null) return mark;
   return (
-    <a href={to} className="inline-flex items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2">
+    <a href={to} className="inline-flex items-center rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-siegel focus-visible:ring-offset-2">
       {mark}
     </a>
   );
