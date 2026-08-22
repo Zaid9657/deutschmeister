@@ -3,6 +3,23 @@
     "context7": {
       "command": "npx",
       "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "dataforseo": {
+      "command": "npx",
+      "args": ["-y", "dataforseo-mcp-server"],
+      "env": {
+        "DATAFORSEO_USERNAME": "${DATAFORSEO_USERNAME}",
+        "DATAFORSEO_PASSWORD": "${DATAFORSEO_PASSWORD}",
+        "ENABLED_MODULES": "SERP,KEYWORDS_DATA,DATAFORSEO_LABS,ONPAGE,AI_OPTIMIZATION"
+      }
+    },
+    "gsc": {
+      "command": "uvx",
+      "args": ["mcp-search-console"],
+      "env": {
+        "GSC_CREDENTIALS_PATH": "${HOME}/.gsc-credentials.json",
+        "GSC_SKIP_OAUTH": "true"
+      }
     }
   }
 }

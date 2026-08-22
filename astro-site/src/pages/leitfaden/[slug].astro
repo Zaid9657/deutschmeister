@@ -1,0 +1,249 @@
+---
+// The guide renderer. One page for every Leitfaden — see
+// ../../data/guides/index.js for why guides are data rather than pages.
+//
+// STYLE: design tokens only (src/data/design-tokens.js). The page this replaced
+// used slate/amber and a local <style> block with raw hex, predating the token
+// system. Rule 2 of the tokens file — siegel is the single interactive colour —
+// is why every link and the CTA are teal here. No `kasus-*` colours appear:
+// rule 1 reserves them for places where a grammatical case is actually named,
+// and a guide about exam formats never names one.
+//
+// `set:html` is used for paragraph text because guide copy carries inline <a>
+// and <strong>. The content is authored in this repo, not user input.
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/global.css';
+import { BUILD_DATE, ORGANIZATION } from '../../lib/siteMeta.js';
+import { GUIDES, guideToc, guideJsonLd, guideReadingMinutes, guideUrl } from '../../data/guides/index.js';
+
+export function getStaticPaths() {
+  return GUIDES.map((guide) => ({ params: { slug: guide.slug }, props: { guide } }));
+}
+
+const { guide } = Astro.props;
+const toc = guideToc(guide);
+const minutes = guideReadingMinutes(guide);
+const jsonLd = guideJsonLd(guide, { organization: ORGANIZATION, buildDate: BUILD_DATE });
+
+const de = (iso) => {
+  const [y, m, d] = iso.split('-');
+  return `${d}.${m}.${y}`;
+};
+
+// Other guides, for the cross-links at the foot of every page. Internal linking
+// was 0/64 on the grammar side and one-directional here; this makes every guide
+// a hub for the others.
+const others = GUIDES.filter((g) => g.slug !== guide.slug);
+---
+
+<Layout
+  title={guide.title}
+  description={guide.description}
+  keywords={guide.keywords}
+  canonical={guideUrl(guide)}
+  jsonLd={jsonLd}
+  lang="de"
+>
+  <div class="bg-paper text-ink">
+    <article class="mx-auto max-w-3xl px-5 pb-20 pt-12">
+
+      <!-- Header -->
+      <header class="border-b border-rule pb-8">
+        <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{guide.badge}</p>
+        <h1 class="mt-3 font-display text-[2rem] font-semibold leading-[1.1] tracking-[-0.02em] sm:text-[2.75rem]">
+          {guide.h1}
+        </h1>
+        <p class="mt-5 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.125rem]" set:html={guide.lead} />
+        <p class="mt-5 font-data text-[0.75rem] text-graphite">
+          Lesezeit ca. {minutes} Minuten · Zuletzt aktualisiert: {de(BUILD_DATE)}
+        </p>
+      </header>
+
+      <!-- Contents -->
+      <nav class="mt-10 rounded-lg border border-rule bg-paper-sunk p-5" aria-labelledby="toc-h">
+        <p id="toc-h" class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">Inhalt</p>
+        <ol class="mt-3 space-y-1.5">
+          {toc.map((item, i) => (
+            <li class="text-[0.9375rem]">
+              <span class="font-data text-[0.75rem] text-graphite">{String(i + 1).padStart(2, '0')}</span>
+              <a href={item.href} class="ml-2 text-siegel underline-offset-2 hover:underline">{item.label}</a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+
+      <!-- Sections -->
+      {guide.sections.map((section) => (
+        <section id={section.id} class="mt-14 scroll-mt-24">
+          <h2 class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[1.875rem]">
+            {section.heading}
+          </h2>
+
+          {section.blocks.map((block) => (
+            <Fragment>
+              {block.type === 'p' && (
+                <p class="mt-4 text-[1rem] leading-[1.7] text-graphite [&>a]:text-siegel [&>a]:underline-offset-2 hover:[&>a]:underline [&>strong]:font-semibold [&>strong]:text-ink" set:html={block.text} />
+              )}
+
+              {block.type === 'h3' && (
+                <h3 class="mt-8 font-display text-[1.1875rem] font-semibold text-ink">{block.text}</h3>
+              )}
+
+              {block.type === 'list' && (
+                <ul class="mt-4 space-y-2">
+                  {block.items.map((item) => (
+                    <li class="flex gap-2.5 text-[1rem] leading-[1.7] text-graphite">
+                      <span class="mt-[0.6em] h-1 w-1 flex-shrink-0 rounded-full bg-siegel" aria-hidden="true"></span>
+                      <span set:html={item} />
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {block.type === 'callout' && (
+                <p class="mt-6 border-l-2 border-siegel bg-siegel-wash px-5 py-4 text-[0.9375rem] leading-relaxed text-ink">
+                  {block.text}
+                </p>
+              )}
+
+              {block.type === 'table' && (
+                <div class="mt-6 overflow-x-auto">
+                  <table class="w-full min-w-[32rem] border-collapse text-left">
+                    <thead>
+                      <tr class="border-b border-ink">
+                        {block.head.map((h) => (
+                          <th scope="col" class="py-3 pr-4 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {block.rows.map((row) => (
+                        <tr class="border-b border-rule align-top">
+                          {row.map((cell, ci) => (
+                            <td class={`py-3 pr-4 text-[0.875rem] leading-relaxed ${ci === 0 ? 'font-semibold text-ink' : 'text-graphite'}`}>{cell}</td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              {block.type === 'steps' && (
+                <ol class="mt-6 space-y-4">
+                  {block.items.map((step) => (
+                    <li class="rounded-lg border border-rule p-5">
+                      <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{step.label}</p>
+                      <h3 class="mt-1 font-display text-[1.0625rem] font-semibold text-ink">{step.title}</h3>
+                      <ul class="mt-3 space-y-1.5">
+                        {step.tasks.map((task) => (
+                          <li class="flex gap-2.5 text-[0.9375rem] leading-relaxed text-graphite">
+                            <span class="mt-[0.55em] h-1 w-1 flex-shrink-0 rounded-full bg-siegel" aria-hidden="true"></span>
+                            <span>{task}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      {step.tip && (
+                        <p class="mt-4 border-t border-rule pt-3 text-[0.875rem] leading-relaxed text-graphite">
+                          <span class="font-semibold text-ink">Tipp:</span> {step.tip}
+                        </p>
+                      )}
+                    </li>
+                  ))}
+                </ol>
+              )}
+
+              {block.type === 'warnings' && (
+                <ol class="mt-6 space-y-6">
+                  {block.items.map((item, i) => (
+                    <li>
+                      <h3 class="flex gap-3 font-display text-[1.0625rem] font-semibold text-ink">
+                        <span class="font-data text-[0.875rem] text-siegel" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                        <span>{item.title}</span>
+                      </h3>
+                      <p class="mt-2 pl-8 text-[0.9375rem] leading-[1.7] text-graphite">{item.body}</p>
+                    </li>
+                  ))}
+                </ol>
+              )}
+
+              {block.type === 'cards' && (
+                <div class="mt-6 grid gap-px overflow-hidden rounded-lg border border-rule bg-rule sm:grid-cols-2">
+                  {block.items.map((card) => (
+                    <div class="bg-paper p-5">
+                      <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{card.eyebrow}</p>
+                      <p class="mt-1.5 font-semibold text-ink">{card.title}</p>
+                      <p class="mt-2 text-[0.875rem] leading-relaxed text-graphite">{card.body}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </Fragment>
+          ))}
+        </section>
+      ))}
+
+      <!-- FAQ -->
+      <section id="faq" class="mt-14 scroll-mt-24">
+        <h2 class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[1.875rem]">
+          Häufige Fragen
+        </h2>
+        <dl class="mt-6">
+          {guide.faq.map((item) => (
+            <div class="border-b border-rule py-5">
+              <dt class="text-[0.9375rem] font-semibold text-ink">{item.q}</dt>
+              <dd class="mt-2 text-[0.9375rem] leading-[1.7] text-graphite">{item.a}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <!-- CTA -->
+      <section class="mt-14 rounded-lg border border-rule bg-paper-sunk p-8 text-center">
+        <h2 class="font-display text-[1.375rem] font-semibold text-ink sm:text-[1.625rem]">{guide.cta.heading}</h2>
+        <p class="mx-auto mt-3 max-w-md text-[0.9375rem] leading-relaxed text-graphite">{guide.cta.body}</p>
+        <div class="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a href="/level-test/" class="inline-flex items-center justify-center rounded-md bg-siegel px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-siegel-lift">
+            Einstufungstest starten
+          </a>
+          <a href="/pricing/" class="inline-flex items-center justify-center rounded-md border border-ink px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-paper">
+            Preise ansehen
+          </a>
+        </div>
+      </section>
+
+      <!-- Other guides -->
+      <nav class="mt-14 border-t border-rule pt-8" aria-labelledby="more-h">
+        <p id="more-h" class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">Weitere Leitfäden</p>
+        <ul class="mt-4 space-y-2">
+          {others.map((g) => (
+            <li>
+              <a href={`/leitfaden/${g.slug}/`} class="text-[0.9375rem] text-siegel underline-offset-2 hover:underline">{g.h1}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <!-- Provenance. Rendered, not buried in a comment: a reader and an answer
+           engine can both see when these facts were last checked and against
+           whom. -->
+      <footer class="mt-10 border-t border-rule pt-6">
+        <p class="font-data text-[0.75rem] leading-relaxed text-graphite">
+          Angaben geprüft am {de(guide.factsCheckedOn)} ·
+          Quellen: {guide.sources.map((s, i) => (
+            <Fragment>
+              {i > 0 && ', '}
+              <a href={s.url} rel="nofollow noopener" target="_blank" class="text-siegel underline-offset-2 hover:underline">{s.label}</a>
+            </Fragment>
+          ))}
+        </p>
+        <p class="mt-3 text-[0.75rem] leading-relaxed text-graphite">
+          Dieser Leitfaden dient der allgemeinen Information und ersetzt keine offizielle Prüfungsberatung.
+          Prüfungsformate, Gebühren und Wiederholungsregeln legen die Prüfungszentren fest und können sich ändern —
+          verbindliche Auskünfte bekommst du direkt beim Prüfungsanbieter.
+        </p>
+      </footer>
+
+    </article>
+  </div>
+</Layout>

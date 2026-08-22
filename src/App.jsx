@@ -18,7 +18,6 @@ import { useSessionTimeout } from './hooks/useSessionTimeout';
 import { Loader2 } from 'lucide-react';
 
 // Lazy-loaded page components for code splitting
-const LandingPage = lazy(() => import('./pages/LandingPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const SignupPage = lazy(() => import('./pages/SignupPage'));
 const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'));
@@ -94,7 +93,14 @@ function App() {
                 <Suspense fallback={<PageLoader />}>
                   <Routes>
                     {/* Public routes */}
-                    <Route path="/" element={<LandingPage />} />
+                    {/* No "/" route on purpose. In production netlify.toml serves the
+                        Astro-built homepage (astro-site/src/pages/index.astro) at "/", and
+                        the SPA only ever handles the allow-listed routes below. The SPA
+                        used to carry its own divergent LandingPage here, which no link
+                        could reach after the August remediation made every in-app "/"
+                        link a full page load — two homepages, one of them dead. On the
+                        Vite dev server "/" now falls through to NotFoundPage; open
+                        astro-site to work on the real homepage. */}
                     <Route path="/intro" element={<IntroPage />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/signup" element={<SignupPage />} />

@@ -1,9 +1,51 @@
 ---
+// Homepage — rebuilt 2026-08-22 on src/data/design-tokens.js.
+//
+// THE THESIS. The one thing DeutschMeister does that nothing else does is take
+// a German sentence apart and colour each piece by its case. So the hero opens
+// with exactly that — a real sentence, marked the way Sentence X-Ray marks it —
+// instead of a claim about being fast. The product's own artifact is the
+// argument, and it is static markup, so a crawler and a JS-less visitor both
+// get it.
+//
+// What the previous version did that this one does not: an amber-to-rose
+// gradient hero on the retired brand, blurred gradient blobs, emoji level cards
+// in eight different palettes, a dark "your German won't improve by waiting"
+// urgency block, a full-bleed rainbow CTA, and a stats band claiming figures
+// with no source (see below).
+//
+// CLAIMS. The old stats band read "1,400+ Learners", "170+ New learners this
+// month" and "2,488 AI speaking exercises". The first two trace to
+// EVALUATION.md's 2026-08-16 database audit but "this month" is stale by
+// construction; the third appears in NO audit and has no source at all. Per the
+// counts rule in src/data/marketing.js, this page now shows only figures that
+// are true by construction — what the product CONTAINS, counted against live
+// tables. Nothing here can rot without the database changing.
+//
+// INVARIANTS (do not regress): every figure derives from ../data/*.js; one
+// <h1>; the canonical; real server-rendered body text; case colours ONLY in the
+// sentence demo (rule 1 in the tokens file); prerendered SPA routes linked WITH
+// a trailing slash, /signup without one (CLAUDE.md's three-case rule).
 import Layout from '../layouts/Layout.astro';
 import '../styles/global.css';
+import { PLANS, eur } from '../data/pricing.js';
+import {
+  LEVELS,
+  LEVEL_COUNT,
+  GRAMMAR_TOPIC_COUNT,
+  LISTENING_DIALOGUE_COUNT,
+  PODCAST_EPISODE_COUNT,
+  ANON_DAILY_LIMIT,
+  PRO_DAILY_LIMIT,
+  PRO_SPEAKING_SESSIONS_PER_MONTH,
+  TRIAL_SPEAKING_SESSIONS,
+  TRIAL_DAYS,
+  FREE_LEVEL_LABEL,
+  monthlyPriceLine,
+} from '../data/marketing.js';
 
-const title = 'Learn German Online - Free Lessons A1 to B2 | DeutschMeister';
-const description = 'Master German with free interactive lessons. Grammar, vocabulary, listening exercises, and podcasts for English speakers. CEFR levels A1.1 to B2.2.';
+const title = 'Learn German Online — Free Lessons A1 to B2 | DeutschMeister';
+const description = `Grammar explained in English, with every sentence broken down by case. ${GRAMMAR_TOPIC_COUNT} topics across ${LEVEL_COUNT} CEFR levels, A1.1 to B2.2. ${FREE_LEVEL_LABEL} is free, no account needed.`;
 
 const jsonLd = [
   {
@@ -26,324 +68,274 @@ const jsonLd = [
   },
 ];
 
-const LEVELS = [
-  { level: 'A1', icon: '☀️', color: 'from-[#F4B99A] to-[#D9A8B4]', name: 'Beginner' },
-  { level: 'A2', icon: '🌲', color: 'from-[#7BAF8E] to-[#A8D4AC]', name: 'Elementary' },
-  { level: 'B1', icon: '🌊', color: 'from-[#5A7A9A] to-[#B0D4E8]', name: 'Intermediate' },
-  { level: 'B2', icon: '🌙', color: 'from-[#8A7AAF] to-[#BDB0D9]', name: 'Upper Intermediate' },
+// The hero sentence. Same wording and same case marking as the live analyser
+// (src/pages/SentenceXRay.jsx). Rule 1: this is the ONLY place on the page
+// where the case colours may appear.
+const SENTENCE = [
+  { text: 'Der Mann', kasus: 'nominativ', abbr: 'NOM', role: 'subject', gloss: 'the man' },
+  { text: 'gibt', kasus: null, abbr: 'VERB', role: 'verb', gloss: 'gives' },
+  { text: 'dem Kind', kasus: 'dativ', abbr: 'DAT', role: 'indirect object', gloss: 'to the child' },
+  { text: 'einen Apfel', kasus: 'akkusativ', abbr: 'AKK', role: 'direct object', gloss: 'an apple' },
+];
+const KASUS_CLASS = {
+  nominativ: 'border-kasus-nominativ bg-kasus-nominativ-wash text-kasus-nominativ-ink',
+  dativ: 'border-kasus-dativ bg-kasus-dativ-wash text-kasus-dativ-ink',
+  akkusativ: 'border-kasus-akkusativ bg-kasus-akkusativ-wash text-kasus-akkusativ-ink',
+};
+
+// What the product contains. Every figure is a marketing.js constant counted
+// against a live table — see the claims note in the header.
+const COUNTS = [
+  { value: GRAMMAR_TOPIC_COUNT, label: 'Grammar topics' },
+  { value: LISTENING_DIALOGUE_COUNT, label: 'Native-speaker dialogues' },
+  { value: LEVEL_COUNT, label: 'CEFR levels, A1.1 to B2.2' },
+  { value: PODCAST_EPISODE_COUNT, label: 'Podcast episodes' },
 ];
 
-const STATS = [
-  { value: '1,400+', label: 'Learners' },
-  { value: '2,488', label: 'AI speaking exercises' },
-  { value: '170+', label: 'New learners this month' },
-  { value: '480', label: 'Native-speaker dialogues' },
+const TOOLS = [
+  {
+    name: 'Sentence X-Ray',
+    href: '/analyze/',
+    body: 'Paste any German sentence. It comes back split into cases, roles and parts of speech — the breakdown above, for your own sentences.',
+    free: `${ANON_DAILY_LIMIT} a day free, no account`,
+    pro: `${PRO_DAILY_LIMIT} a day with Pro`,
+  },
+  {
+    name: 'AI speaking practice',
+    href: '/speaking/',
+    body: 'Hold a conversation at your level and get it back marked for grammar, vocabulary and pronunciation.',
+    free: `${TRIAL_SPEAKING_SESSIONS} sessions free`,
+    pro: `${PRO_SPEAKING_SESSIONS_PER_MONTH} a month with Pro`,
+  },
+  {
+    name: 'Level test',
+    href: '/level-test/',
+    body: 'Twenty minutes of grammar, listening and speaking, and you know which of the eight levels to open.',
+    free: 'Free, no account',
+    pro: 'Retake whenever you like',
+  },
 ];
 
-// Comparison table (DeutschMeister vs alternatives).
+// Comparison rows. Our own figures derive; the alternatives' are ranges, not
+// somebody's advertised price, so they stay literal.
 const CMP = [
-  { feature: 'Monthly Cost', dm: ['€9.99', 'pos'], group: ['€150+', 'neg'], tutor: ['€50–100', 'neg'], apps: ['€0–15', 'neu'] },
-  { feature: 'AI Speaking Practice', dm: ['✓ 30 sessions/mo', 'pos'], group: ['5 min/class', 'neg'], tutor: ['✓ 1-on-1', 'pos'], apps: ['✗ None', 'neg'] },
-  { feature: 'Available 24/7', dm: ['✓', 'pos'], group: ['✗ Fixed times', 'neg'], tutor: ['✗ Book ahead', 'neg'], apps: ['✓', 'pos'] },
-  { feature: 'Adapts to your level', dm: ['✓ Automatic', 'pos'], group: ['✗ One pace', 'neg'], tutor: ['✓ Manual', 'pos'], apps: ['✗ Generic', 'neg'] },
-  { feature: 'Grammar A1–B2', dm: ['✓ 64 topics', 'pos'], group: ['Varies', 'neu'], tutor: ['Varies', 'neu'], apps: ['✓ Varies', 'pos'] },
-  { feature: 'Instant feedback', dm: ['✓ AI scoring', 'pos'], group: ['Next class', 'neg'], tutor: ['End of session', 'neg'], apps: ['✗ Basic', 'neg'] },
-  { feature: 'Sentence analysis', dm: ['✓ X-Ray tool', 'pos'], group: ['✗', 'neg'], tutor: ['✗', 'neg'], apps: ['✗', 'neg'] },
-  { feature: 'Free level test', dm: ['✓', 'pos'], group: ['€50+', 'neg'], tutor: ['€30+', 'neg'], apps: ['Basic quiz', 'neu'] },
+  { feature: 'Cost per month', us: eur(PLANS.monthly.price), group: '€150+', tutor: '€50–100', apps: '€0–15' },
+  { feature: 'Speaking practice', us: `${PRO_SPEAKING_SESSIONS_PER_MONTH} sessions a month`, group: 'Minutes per class', tutor: 'One-to-one', apps: 'None' },
+  { feature: 'Available', us: 'Any hour', group: 'Fixed timetable', tutor: 'By appointment', apps: 'Any hour' },
+  { feature: 'Grammar A1–B2', us: `${GRAMMAR_TOPIC_COUNT} topics`, group: 'Varies', tutor: 'Varies', apps: 'Varies' },
+  { feature: 'Sentence analysis', us: 'Built in', group: '—', tutor: '—', apps: '—' },
+  { feature: 'Level test', us: 'Free', group: '€50+', tutor: '€30+', apps: 'Basic quiz' },
 ];
-const cellColor = (k) => (k === 'pos' ? 'text-emerald-700 font-medium' : k === 'neu' ? 'text-slate-500' : 'text-slate-500');
 
 const TOPICS = [
-  { href: '/grammar/a1.1/nouns-gender/', level: 'A1.1', label: 'German Noun Genders (der, die, das)', desc: 'Why every German noun has a gender — and how to learn them' },
-  { href: '/grammar/a1.2/accusative-intro/', level: 'A1.2', label: 'Accusative Case', desc: 'When "der" becomes "den" and why it matters' },
-  { href: '/grammar/a2.1/prepositions-dative/', level: 'A2.1', label: 'Dative Prepositions', desc: 'mit, nach, seit, von, zu, bei, aus, gegenüber' },
-  { href: '/grammar/b1.1/konjunktiv-ii-wurde/', level: 'B1.1', label: 'Konjunktiv II (würde)', desc: 'Express wishes, hypotheticals, and polite requests' },
-];
-
-const XRAY_CHIPS = [
-  { text: 'Der Mann', cls: 'bg-[#E6F1FB] border-[#378ADD] text-[#0C447C]', label: 'Nominative · Subject' },
-  { text: 'gibt', cls: 'bg-slate-100 border-slate-300 text-slate-700', label: 'Verb' },
-  { text: 'dem Kind', cls: 'bg-[#E1F5EE] border-[#1D9E75] text-[#085041]', label: 'Dative · Indirect Obj.' },
-  { text: 'einen Apfel', cls: 'bg-[#FAECE7] border-[#D85A30] text-[#712B13]', label: 'Accusative · Direct Obj.' },
+  { href: '/grammar/a1.1/nouns-gender/', level: 'A1.1', label: 'Noun genders: der, die, das', desc: 'Why every German noun has a gender, and how to stop guessing.' },
+  { href: '/grammar/a1.2/accusative-intro/', level: 'A1.2', label: 'The accusative case', desc: 'When der becomes den, and what changes with it.' },
+  { href: '/grammar/a2.1/prepositions-dative/', level: 'A2.1', label: 'Dative prepositions', desc: 'mit, nach, seit, von, zu, bei, aus, gegenüber.' },
+  { href: '/grammar/b1.1/konjunktiv-ii-wurde/', level: 'B1.1', label: 'Konjunktiv II with würde', desc: 'Wishes, hypotheticals and polite requests.' },
 ];
 ---
 
 <Layout title={title} description={description} canonical="https://deutsch-meister.de/" jsonLd={jsonLd}>
-  <!-- Hero -->
-  <section class="relative flex items-center justify-center overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-slate-100"></div>
-    <div class="absolute inset-0 overflow-hidden" aria-hidden="true">
-      <div class="absolute -top-1/4 -right-1/4 w-1/2 h-1/2 bg-gradient-to-br from-amber-200/30 to-orange-200/30 rounded-full blur-3xl"></div>
-      <div class="absolute -bottom-1/4 -left-1/4 w-1/2 h-1/2 bg-gradient-to-br from-purple-200/30 to-pink-200/30 rounded-full blur-3xl"></div>
-    </div>
-    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-      <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl font-bold text-slate-800 mb-6 leading-tight">
-        The Fastest Way to Speak German.{' '}
-        <span class="bg-gradient-to-r from-amber-500 to-rose-500 bg-clip-text text-transparent">Period.</span>
+  <div class="bg-paper text-ink">
+
+    <!-- Hero: the product's own artifact, not a claim about it -->
+    <section class="mx-auto max-w-5xl px-5 pt-14 pb-12 sm:pt-20">
+      <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">German · A1.1 to B2.2</p>
+      <h1 class="mt-3 max-w-3xl font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] sm:text-[3.25rem]">
+        German grammar you can see.
       </h1>
-      <p class="text-xl sm:text-2xl text-slate-600 max-w-3xl mx-auto mb-10 leading-relaxed">
-        AI-powered speaking practice at your exact CEFR level. Real conversations. Real feedback. Real results — for less than a coffee a day.
+      <p class="mt-5 max-w-2xl text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]">
+        Every rule explained in English, and every sentence taken apart so you can watch the cases move.
+        {FREE_LEVEL_LABEL} is free — no account, no card.
       </p>
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
-        <a href="https://deutsch-meister.de/level-test/" class="group w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-2xl shadow-lg shadow-rose-500/25 hover:shadow-xl transition-all flex items-center justify-center gap-2">
-          Find Your Level — Free Test <span aria-hidden="true">→</span>
-        </a>
-        <a href="https://deutsch-meister.de/speaking/" class="group w-full sm:w-auto px-8 py-4 border-2 border-slate-300 text-slate-700 font-semibold rounded-2xl hover:border-slate-400 hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
-          Try Speaking Practice <span aria-hidden="true">→</span>
-        </a>
-      </div>
-      <p class="text-sm text-slate-600">
-        ✓ No credit card required &nbsp;&nbsp; ✓ 7-day free Pro trial &nbsp;&nbsp; ✓ Cancel anytime
-      </p>
-      <div class="mt-20 flex flex-wrap justify-center gap-4">
-        {LEVELS.map((item) => (
-          <div class={`relative px-6 py-4 rounded-2xl bg-gradient-to-r ${item.color} text-white shadow-lg`}>
-            <div class="flex items-center gap-3">
-              <span class="text-2xl" aria-hidden="true">{item.icon}</span>
-              <div class="text-left">
-                <span class="text-lg font-bold">{item.level}</span>
-                <p class="text-white/80 text-sm">{item.name}</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
 
-  <!-- Stats -->
-  <section class="py-14 bg-white border-b border-slate-100">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6">
-      <p class="text-center text-xs font-semibold uppercase tracking-widest text-slate-500 mb-8">Learners trust DeutschMeister</p>
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-        {STATS.map((s) => (
-          <div class="text-center">
-            <p class="text-4xl sm:text-5xl font-bold text-slate-800 mb-1">{s.value}</p>
-            <p class="text-sm text-slate-600">{s.label}</p>
-          </div>
-        ))}
-      </div>
-      <p class="text-center text-xs text-slate-500 mt-8">As of August 2026</p>
-    </div>
-  </section>
-
-  <!-- Level Test CTA -->
-  <section class="py-16 bg-gradient-to-br from-[#e1f5ee] to-[#e6f1fb]">
-    <div class="max-w-2xl mx-auto px-4 sm:px-6 text-center">
-      <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900 mb-3">Not sure where to start?</h2>
-      <p class="text-lg text-slate-600 mb-6 leading-relaxed">
-        Take our free German level test to find out your CEFR level and get personalized recommendations.
-      </p>
-      <div class="flex flex-wrap justify-center gap-4 sm:gap-6 mb-6">
-        <span class="text-[#1D9E75] font-medium">✓ 40 questions</span>
-        <span class="text-[#1D9E75] font-medium">✓ 15-20 minutes</span>
-        <span class="text-[#1D9E75] font-medium">✓ Instant results</span>
-      </div>
-      <a href="https://deutsch-meister.de/level-test/" class="inline-block px-8 py-4 bg-[#157A5B] hover:bg-[#116349] text-white text-lg font-semibold rounded-xl transition-colors shadow-md shadow-emerald-200">
-        Take the Level Test
-      </a>
-    </div>
-  </section>
-
-  <!-- Speaking Practice CTA -->
-  <section class="py-16 bg-white">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-col md:flex-row items-center gap-8 p-8 rounded-3xl bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-100">
-        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-400 to-emerald-500 flex items-center justify-center flex-shrink-0 text-3xl" aria-hidden="true">💬</div>
-        <div class="flex-1 text-center md:text-left">
-          <h3 class="text-xl font-bold text-slate-800 mb-2">Practice Speaking with AI</h3>
-          <p class="text-slate-600">
-            Have real-time German conversations with an AI teacher. Get feedback on pronunciation, grammar, and vocabulary at your level.
-          </p>
+      <!-- The sentence. Rule 1: the only case colour on this page. -->
+      <figure class="mt-9">
+        <div class="flex flex-wrap items-stretch gap-2">
+          {SENTENCE.map((w) => (
+            <span class={`rounded-md border px-3 py-2.5 ${w.kasus ? KASUS_CLASS[w.kasus] : 'border-rule bg-paper-sunk text-graphite'}`}>
+              <span class="block text-[1.0625rem] font-semibold leading-none">{w.text}</span>
+              <span class="mt-1.5 block font-data text-[0.6875rem] font-bold tracking-[0.13em]">{w.abbr}</span>
+              <span class="mt-1 block text-[0.75rem] leading-tight opacity-80">{w.role}</span>
+              <span class="mt-0.5 block text-[0.75rem] italic leading-tight opacity-70">{w.gloss}</span>
+            </span>
+          ))}
         </div>
-        <a href="https://deutsch-meister.de/speaking/" class="inline-flex items-center gap-2 px-6 py-3 bg-teal-700 text-white font-semibold rounded-xl hover:bg-teal-700 transition-colors flex-shrink-0">
-          Try Speaking <span aria-hidden="true">→</span>
+        <figcaption class="mt-3 font-data text-[0.8125rem] text-graphite">
+          One sentence, four jobs. Colour marks the case, here and in every lesson.
+        </figcaption>
+      </figure>
+
+      <div class="mt-9 flex flex-wrap items-center gap-3">
+        <a href="/level-test/" class="inline-flex items-center justify-center rounded-md bg-siegel px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-siegel-lift">
+          Find your level — free
+        </a>
+        <a href="/grammar/" class="inline-flex items-center justify-center rounded-md border border-ink px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-paper">
+          Browse the grammar
         </a>
       </div>
-    </div>
-  </section>
+      <p class="mt-4 font-data text-[0.8125rem] text-graphite">
+        No card to start · {TRIAL_DAYS}-day Pro trial when you sign up · cancel anytime
+      </p>
+    </section>
 
-  <!-- Comparison Table -->
-  <section class="py-20 bg-white border-b border-slate-100">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-12">
-        <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-3">See Why Learners Switch to DeutschMeister</h2>
+    <!-- What is actually in it -->
+    <section class="border-y border-rule bg-paper-sunk" aria-labelledby="counts-h">
+      <div class="mx-auto max-w-5xl px-5 py-9">
+        <h2 id="counts-h" class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">What is inside</h2>
+        <dl class="mt-5 grid grid-cols-2 gap-6 sm:grid-cols-4">
+          {COUNTS.map((c) => (
+            <div>
+              <dt class="sr-only">{c.label}</dt>
+              <dd>
+                <span class="block font-display text-[2rem] font-semibold leading-none tracking-[-0.015em]">{c.value}</span>
+                <span class="mt-2 block text-[0.8125rem] leading-snug text-graphite">{c.label}</span>
+              </dd>
+            </div>
+          ))}
+        </dl>
       </div>
-      <div class="overflow-x-auto rounded-2xl border border-slate-200 shadow-lg shadow-slate-100">
-        <table class="w-full min-w-[640px] border-collapse text-sm">
-          <thead>
-            <tr class="border-b border-slate-200">
-              <th class="text-left px-5 py-4 text-slate-500 font-medium bg-slate-50 w-[200px]">Feature</th>
-              <th class="px-5 py-4 bg-amber-50 border-x border-amber-200 w-[160px]">
-                <div class="flex flex-col items-center gap-1.5">
-                  <span class="px-2.5 py-0.5 rounded-full bg-amber-800 text-white text-[10px] font-bold tracking-wide uppercase">Best Value</span>
-                  <span class="font-bold text-slate-900 text-base">DeutschMeister</span>
-                </div>
-              </th>
-              <th class="px-5 py-4 text-center text-slate-600 font-semibold bg-slate-50">Group Classes</th>
-              <th class="px-5 py-4 text-center text-slate-600 font-semibold bg-slate-50">Private Tutor</th>
-              <th class="px-5 py-4 text-center text-slate-600 font-semibold bg-slate-50">Grammar Apps</th>
-            </tr>
-          </thead>
-          <tbody>
-            {CMP.map((row, i) => (
-              <tr class={`border-b border-slate-100 ${i % 2 === 1 ? 'bg-slate-50/50' : ''}`}>
-                <td class="px-5 py-3.5 text-slate-700 font-medium">{row.feature}</td>
-                <td class="px-5 py-3.5 text-center bg-amber-50/70 border-x border-amber-100"><span class={cellColor(row.dm[1])}>{row.dm[0]}</span></td>
-                <td class="px-5 py-3.5 text-center"><span class={cellColor(row.group[1])}>{row.group[0]}</span></td>
-                <td class="px-5 py-3.5 text-center"><span class={cellColor(row.tutor[1])}>{row.tutor[0]}</span></td>
-                <td class="px-5 py-3.5 text-center"><span class={cellColor(row.apps[1])}>{row.apps[0]}</span></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div class="text-center mt-10">
-        <a href="https://deutsch-meister.de/signup" class="group inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-2xl shadow-lg shadow-rose-500/25 hover:shadow-xl transition-all">
-          Start Your Free Trial <span aria-hidden="true">→</span>
-        </a>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Urgency / Pain -->
-  <section class="py-20 bg-slate-900">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <h2 class="font-display text-4xl sm:text-5xl font-bold text-white mb-10 leading-tight">
-        Your German Won't Improve<br class="hidden sm:block" /> By Waiting.
+    <!-- The ladder -->
+    <section class="mx-auto max-w-5xl px-5 py-14" aria-labelledby="ladder-h">
+      <h2 id="ladder-h" class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[2rem]">
+        Eight levels, in order
       </h2>
-      <div class="grid sm:grid-cols-3 gap-6 mb-12">
-        {["Every day you delay is another conversation you can't have.", 'Another job opportunity that passes you by.', 'Another moment where you freeze instead of speak.'].map((text) => (
-          <div class="px-5 py-5 rounded-2xl bg-slate-800 border border-slate-700 text-slate-300 text-base leading-relaxed">{text}</div>
-        ))}
-      </div>
-      <p class="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto mb-12 leading-relaxed">
-        Start your free trial today. <span class="text-white font-semibold">7 days of full Pro access.</span> If it's not for you, cancel with one click — no charge, no questions.
+      <p class="mt-3 max-w-prose text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
+        Each level has {GRAMMAR_TOPIC_COUNT / LEVEL_COUNT} grammar topics with exercises, its own listening and reading, and
+        speaking missions built on the same structures. Start at {FREE_LEVEL_LABEL} or test into the right one.
       </p>
-      <div class="grid sm:grid-cols-2 gap-5 max-w-xl mx-auto">
-        <div class="rounded-2xl bg-slate-800 border border-slate-700 p-6 flex flex-col items-center gap-4">
-          <div class="text-center">
-            <p class="text-white font-bold text-lg">Pro Monthly</p>
-            <p class="text-slate-600 text-sm">€9.99 / month</p>
-          </div>
-          <a href="https://deutsch-meister.de/signup" class="group w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-xl shadow-lg transition-all">
-            Start Free Trial <span aria-hidden="true">→</span>
-          </a>
-        </div>
-        <div class="rounded-2xl bg-slate-800 border border-slate-700 p-6 flex flex-col items-center gap-4">
-          <div class="text-center">
-            <div class="inline-flex items-center gap-1.5 mb-1">
-              <p class="text-white font-bold text-lg">Pro Yearly</p>
-              <span class="px-2 py-0.5 rounded-full bg-green-700 text-white text-[10px] font-bold">Save 33%</span>
-            </div>
-            <p class="text-slate-600 text-sm">€79.99 / year</p>
-            <p class="text-green-400 text-xs mt-0.5">That's €0.22/day — less than a coffee</p>
-          </div>
-          <a href="https://deutsch-meister.de/signup" class="group w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-xl shadow-lg transition-all">
-            Start Free Trial <span aria-hidden="true">→</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
+      <ol class="mt-6 grid grid-cols-4 gap-px overflow-hidden rounded-lg border border-rule bg-rule sm:grid-cols-8">
+        {LEVELS.map((lvl, i) => (
+          <li>
+            <a href={`/grammar/${lvl.code.toLowerCase()}/`} class="block bg-paper px-2 py-3 text-center transition-colors hover:bg-siegel-wash">
+              <span class="block font-data text-[0.8125rem] font-semibold tracking-[0.02em] text-ink">{lvl.code}</span>
+              <span class="mt-1 block text-[0.6875rem] leading-tight text-graphite">{lvl.subtitle}</span>
+              {i === 0 && (
+                <span class="mt-1.5 inline-block font-data text-[0.5625rem] font-bold uppercase tracking-[0.13em] text-siegel">Free</span>
+              )}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </section>
 
-  <!-- Sentence X-Ray Feature -->
-  <section class="py-20 bg-gradient-to-b from-slate-50 to-white border-b border-slate-100">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-col lg:flex-row items-center gap-12">
-        <div class="flex-1 text-center lg:text-left">
-          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-100 text-violet-700 text-xs font-semibold mb-4">
-            <span aria-hidden="true">🔍</span> New Tool
-          </div>
-          <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-4 leading-tight">Understand Any German Sentence Instantly</h2>
-          <p class="text-lg text-slate-600 mb-6 leading-relaxed">Paste any sentence. See cases, roles, and why — in seconds.</p>
-          <div class="flex flex-wrap justify-center lg:justify-start gap-x-5 gap-y-2 mb-8">
-            {['Works with any sentence', 'Color-coded cases', 'Explains the WHY'].map((v) => (
-              <span class="flex items-center gap-1.5 text-sm text-slate-600">
-                <span class="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-[10px] font-bold flex-shrink-0">✓</span>{v}
-              </span>
-            ))}
-          </div>
-          <a href="https://deutsch-meister.de/analyze/" class="inline-flex items-center gap-2 px-7 py-3.5 bg-gradient-to-r from-violet-500 to-indigo-600 text-white font-semibold rounded-2xl hover:from-violet-600 hover:to-indigo-700 transition-all shadow-lg shadow-indigo-200 text-base">
-            <span aria-hidden="true">🔍</span> Try Sentence X-Ray <span aria-hidden="true">→</span>
-          </a>
-        </div>
-        <div class="flex-1 w-full max-w-md lg:max-w-none">
-          <div class="bg-white rounded-2xl border border-slate-200 shadow-xl shadow-slate-200/60 p-5">
-            <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 mb-4">
-              <span class="flex-1 text-sm text-slate-600 font-medium">Der Mann gibt dem Kind einen Apfel.</span>
-              <a href="https://deutsch-meister.de/analyze/" class="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-violet-500 to-indigo-600 text-white text-xs font-semibold rounded-lg hover:from-violet-600 hover:to-indigo-700 transition-all">
-                <span aria-hidden="true">🔍</span> Analyze
+    <!-- The three tools -->
+    <section class="border-t border-rule" aria-labelledby="tools-h">
+      <div class="mx-auto max-w-5xl px-5 py-14">
+        <h2 id="tools-h" class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[2rem]">
+          Three things you can try right now
+        </h2>
+        <div class="mt-7 grid gap-px bg-rule sm:grid-cols-3">
+          {TOOLS.map((t) => (
+            <div class="flex flex-col bg-paper p-5">
+              <h3 class="font-display text-[1.125rem] font-semibold">{t.name}</h3>
+              <p class="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-graphite">{t.body}</p>
+              <dl class="mt-4 border-t border-rule pt-3 font-data text-[0.8125rem]">
+                <div class="flex justify-between gap-3 py-0.5">
+                  <dt class="text-graphite">Free</dt><dd class="text-right text-ink">{t.free}</dd>
+                </div>
+                <div class="flex justify-between gap-3 py-0.5">
+                  <dt class="text-graphite">Pro</dt><dd class="text-right text-ink">{t.pro}</dd>
+                </div>
+              </dl>
+              <a href={t.href} class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-siegel transition-colors hover:text-siegel-deep">
+                Open {t.name} <span aria-hidden="true">→</span>
               </a>
             </div>
-            <div class="flex flex-wrap gap-2 mb-4">
-              {XRAY_CHIPS.map((chip) => (
-                <div class="flex flex-col gap-1">
-                  <span class={`px-3 py-1.5 rounded-lg text-sm font-semibold border ${chip.cls}`}>{chip.text}</span>
-                  <span class="text-[10px] text-slate-500 px-1">{chip.label}</span>
-                </div>
-              ))}
-            </div>
-            <div class="p-3 rounded-xl bg-amber-50 border border-amber-200">
-              <p class="text-xs font-semibold text-amber-700 mb-0.5">Key Insight</p>
-              <p class="text-xs text-slate-700 leading-relaxed">
-                Cases tell German who does what — not word order. <span class="font-medium">"dem Kind"</span> is dative because it receives the apple indirectly.
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Grammar Topics -->
-  <section class="py-16 bg-slate-50 border-t border-slate-100">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-8">
-        <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Start with the Most Important Topics</h2>
-        <p class="text-slate-600">Free grammar lessons explained in English — rules, examples, and exercises.</p>
+    <!-- How it compares -->
+    <section class="border-t border-rule" aria-labelledby="cmp-h">
+      <div class="mx-auto max-w-5xl px-5 py-14">
+        <h2 id="cmp-h" class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[2rem]">
+          Next to the alternatives
+        </h2>
+        <div class="mt-6 overflow-x-auto">
+          <table class="w-full min-w-[38rem] border-collapse text-left">
+            <thead>
+              <tr class="border-b border-ink">
+                <th scope="col" class="py-3 pr-4 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">&nbsp;</th>
+                <th scope="col" class="bg-siegel-wash px-4 py-3 font-display text-base font-semibold">DeutschMeister</th>
+                <th scope="col" class="px-4 py-3 text-[0.9375rem] font-normal text-graphite">Group class</th>
+                <th scope="col" class="px-4 py-3 text-[0.9375rem] font-normal text-graphite">Private tutor</th>
+                <th scope="col" class="px-4 py-3 text-[0.9375rem] font-normal text-graphite">Grammar apps</th>
+              </tr>
+            </thead>
+            <tbody>
+              {CMP.map((row) => (
+                <tr class="border-b border-rule">
+                  <th scope="row" class="py-3.5 pr-4 text-sm font-normal text-graphite">{row.feature}</th>
+                  <td class="bg-siegel-wash px-4 py-3.5 font-data text-[0.8125rem] font-semibold text-ink">{row.us}</td>
+                  <td class="px-4 py-3.5 font-data text-[0.8125rem] text-graphite">{row.group}</td>
+                  <td class="px-4 py-3.5 font-data text-[0.8125rem] text-graphite">{row.tutor}</td>
+                  <td class="px-4 py-3.5 font-data text-[0.8125rem] text-graphite">{row.apps}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p class="mt-3 font-data text-[0.8125rem] text-graphite">
+          <a href="/vergleich/" class="text-siegel transition-colors hover:text-siegel-deep">Detailed comparisons against Babbel, Duolingo and Lingoda →</a>
+        </p>
       </div>
-      <div class="grid sm:grid-cols-2 gap-3 mb-6">
-        {TOPICS.map((t) => (
-          <a href={t.href} class="flex items-start gap-4 p-4 bg-white rounded-xl border border-slate-200 hover:border-amber-300 hover:shadow-md transition-all group">
-            <span class="flex-shrink-0 px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 text-xs font-bold mt-0.5">{t.level}</span>
-            <div class="min-w-0">
-              <p class="font-semibold text-slate-800 group-hover:text-amber-700 transition-colors text-sm">{t.label.startsWith('German') ? t.label : `German ${t.label}`} Explained</p>
-              <p class="text-xs text-slate-500 mt-0.5 leading-snug">{t.desc}</p>
-            </div>
-            <span class="text-slate-300 group-hover:text-amber-500 transition-all flex-shrink-0 mt-0.5" aria-hidden="true">→</span>
+    </section>
+
+    <!-- Start here -->
+    <section class="border-t border-rule" aria-labelledby="start-h">
+      <div class="mx-auto max-w-5xl px-5 py-14">
+        <h2 id="start-h" class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[2rem]">
+          Start with these
+        </h2>
+        <p class="mt-3 max-w-prose text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
+          The four topics that unlock the most German for the least effort.
+        </p>
+        <ul class="mt-6 grid gap-px bg-rule sm:grid-cols-2">
+          {TOPICS.map((t) => (
+            <li>
+              <a href={t.href} class="block h-full bg-paper p-5 transition-colors hover:bg-siegel-wash">
+                <span class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{t.level}</span>
+                <span class="mt-1.5 block font-display text-[1.125rem] font-semibold">{t.label}</span>
+                <span class="mt-1.5 block text-[0.9375rem] leading-relaxed text-graphite">{t.desc}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p class="mt-4 font-data text-[0.8125rem]">
+          <a href="/grammar/" class="text-siegel transition-colors hover:text-siegel-deep">All {GRAMMAR_TOPIC_COUNT} topics →</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- Close -->
+    <section class="border-t border-rule" aria-labelledby="close-h">
+      <div class="mx-auto max-w-5xl px-5 py-16">
+        <h2 id="close-h" class="max-w-2xl font-display text-[1.75rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2.25rem]">
+          Open {FREE_LEVEL_LABEL} and see whether it clicks.
+        </h2>
+        <p class="mt-4 max-w-prose text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
+          The whole first level is free and needs no account. If you want the other {LEVEL_COUNT - 1},
+          Pro is {monthlyPriceLine()}.
+        </p>
+        <div class="mt-7 flex flex-wrap items-center gap-3">
+          <a href="/grammar/a1.1/" class="inline-flex items-center justify-center rounded-md bg-siegel px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-siegel-lift">
+            Start {FREE_LEVEL_LABEL} free
           </a>
-        ))}
+          <a href="/pricing/" class="inline-flex items-center justify-center rounded-md border border-ink px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-paper">
+            See what Pro costs
+          </a>
+        </div>
+        <p class="mt-8 border-t border-rule pt-6 text-[0.9375rem] text-graphite">
+          There are German lessons on our
+          <a href="https://www.youtube.com/@deutschmeister_de" target="_blank" rel="noopener noreferrer" class="font-semibold text-siegel transition-colors hover:text-siegel-deep">YouTube channel</a>
+          too — grammar, vocabulary and real conversations.
+        </p>
       </div>
-      <div class="text-center">
-        <a href="/grammar/" class="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-700 hover:text-amber-900 transition-colors">
-          Browse all 64 grammar topics <span aria-hidden="true">→</span>
-        </a>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- CTA -->
-  <section class="py-24 bg-gradient-to-r from-amber-500 via-rose-500 to-purple-500">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <h2 class="font-display text-4xl sm:text-5xl font-bold text-white mb-6">{STATS[0].value} Learners Are Already Practicing. Are You Next?</h2>
-      <a href="https://deutsch-meister.de/signup" class="inline-flex items-center gap-2 px-8 py-4 bg-white text-rose-600 font-semibold rounded-2xl hover:bg-slate-50 transition-colors shadow-lg">
-        Start Your Free 7-Day Trial <span aria-hidden="true">→</span>
-      </a>
-    </div>
-  </section>
-
-  <!-- Learn on YouTube -->
-  <section class="py-16 bg-white">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <div class="w-14 h-14 mx-auto mb-5 rounded-2xl bg-red-600 flex items-center justify-center shadow-lg shadow-red-200 text-2xl" aria-hidden="true">▶</div>
-      <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-800 mb-3">Learn on YouTube</h2>
-      <p class="text-slate-600 text-lg mb-8 max-w-lg mx-auto">
-        Watch our German lessons on YouTube — new videos every week covering grammar, vocabulary, and real conversations.
-      </p>
-      <a href="https://www.youtube.com/@deutschmeister_de" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transition-colors shadow-lg shadow-red-200">
-        Subscribe on YouTube <span aria-hidden="true">↗</span>
-      </a>
-    </div>
-  </section>
+  </div>
 </Layout>

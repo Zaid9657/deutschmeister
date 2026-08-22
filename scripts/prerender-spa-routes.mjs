@@ -72,7 +72,11 @@ const LEVEL_TEST_FAQS = [
 const PODCAST_FAQS = [
   { q: 'What level are the German podcasts?', a: 'We have 24 podcast episodes covering all levels from A1 (complete beginner) to B2 (upper intermediate). Each episode is labeled with its CEFR level so you can find content that matches your skills.' },
   { q: 'Are the German podcasts free?', a: 'Yes, all podcasts are free to listen to. A1.1 content is available without signup, while other levels require a free account.' },
-  { q: 'Do the podcasts have transcripts?', a: 'Yes, every podcast episode includes a full transcript in German with translations. This helps you follow along and learn new vocabulary in context.' },
+  // NOTE: do not reinstate a transcript claim here. All 24 episodes in the
+  // database have empty transcripts. The 2026-08-16 audit (B-04) removed this
+  // claim from src/pages/PodcastsPage.jsx but missed this second, hardcoded
+  // copy, so the indexed FAQPage rich result kept promising transcripts.
+  { q: 'What level are the podcasts?', a: 'Episodes are graded from A1 to B2. Each one is tagged with its level so you can pick something at or just above where you are.' },
   { q: 'How many podcast episodes are there?', a: 'We have 24 episodes total — 3 episodes for each of the 8 CEFR levels (A1.1, A1.2, A2.1, A2.2, B1.1, B1.2, B2.1, B2.2). New episodes are added regularly.' },
 ];
 
@@ -286,11 +290,11 @@ ${faqSectionPlain(LEVEL_TEST_FAQS)}
     <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-50 border border-orange-200 text-orange-700 text-sm font-medium mb-4">24 Episodes Available</div>
     <h1 class="font-display text-4xl sm:text-5xl font-bold text-slate-800 mb-4">German Podcasts for Learners</h1>
     <p class="text-lg text-slate-600 max-w-2xl mx-auto mb-2">Native speaker audio with transcripts • Levels A1 to B2</p>
-    <p class="text-slate-500 max-w-xl mx-auto">Listen to authentic German conversations designed for language learners. Each episode comes with full transcripts and vocabulary explanations.</p>
+    <p class="text-slate-500 max-w-xl mx-auto">Listen to authentic German conversations designed for language learners. Every episode is graded by CEFR level, from A1 to B2.</p>
   </div>
   <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 sm:p-10 mb-12">
     <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-800 mb-6">Learn German with Podcasts</h2>
-    <p class="text-slate-600 leading-relaxed mb-4">Our German podcasts are designed specifically for language learners. Each episode features native speakers in natural conversations, with full transcripts and vocabulary explanations to help you follow along.</p>
+    <p class="text-slate-600 leading-relaxed mb-4">Our German podcasts are designed specifically for language learners. Each episode features native speakers in natural conversations, graded by CEFR level so you can find one that matches where you are.</p>
     <h3 class="text-xl font-bold text-slate-800 mt-6 mb-3">Why learn with podcasts?</h3>
     <ul class="space-y-2 text-slate-600">
       <li>Improve listening comprehension with native speaker audio</li>
@@ -420,6 +424,20 @@ for (const route of ROUTES) {
   // The homepage <noscript> fallback is wrong on these routes and #root now
   // carries real content, so remove it.
   html = html.replace(/<noscript>\s*<div style="max-width:960px[\s\S]*?<\/noscript>/, '');
+
+  // The shell carries a visually-hidden site-identity <h1> ("Learn German with
+  // DeutschMeister") as a fallback for the routes that render client-side only.
+  // Each route below injects its OWN real <h1>, so leaving the shell's in place
+  // gave every prerendered page two — a hidden site-wide heading competing with
+  // the page's actual subject, which is worse than having none. Strip it here;
+  // app.html keeps it, because the non-prerendered routes still need it.
+  html = mustReplace(
+    html,
+    /\s*<h1 style="position:absolute;[^"]*">[\s\S]*?<\/h1>/,
+    '',
+    'shell identity h1',
+    route.path,
+  );
 
   html = mustReplace(html, '<div id="root"></div>', `<div id="root">${route.content}\n    </div>`, 'root div', route.path);
 

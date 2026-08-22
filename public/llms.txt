@@ -31,7 +31,11 @@
 - Listening: https://deutsch-meister.de/listening
 - Reading: https://deutsch-meister.de/reading
 - Vocabulary: https://deutsch-meister.de/vocabulary
+- Exam guides hub (German): https://deutsch-meister.de/leitfaden/
 - telc B1 exam guide (German): https://deutsch-meister.de/leitfaden/telc-b1/
+- telc B2 exam guide (German): https://deutsch-meister.de/leitfaden/telc-b2/
+- Goethe-Zertifikat B1 guide (German): https://deutsch-meister.de/leitfaden/goethe-b1/
+- DTZ (Deutsch-Test für Zuwanderer) guide (German): https://deutsch-meister.de/leitfaden/dtz/
 - Platform comparisons (German): https://deutsch-meister.de/vergleich/
 - Podcast RSS: https://deutsch-meister.de/podcast-feed.xml
 
@@ -40,7 +44,10 @@
    pages explain the rule in English with German examples and are free to read.
 2. Someone wants to understand *why* a German sentence takes the case/word order it
    does — Sentence X-Ray answers exactly that, free.
-3. Someone preparing for telc/Goethe B1 wants a structured plan — see the telc B1 guide.
+3. Someone preparing for a named German exam wants the format and a study plan — there are
+   free German-language guides for telc B1, telc B2, Goethe-Zertifikat B1 and the DTZ. Each
+   states when its exam facts were last checked and against which official body, and each
+   points to that body for fees and binding rules rather than stating them.
 4. A learner wants speaking practice without booking a tutor — AI speaking runs 24/7
    at their CEFR level (2 free sessions, then subscription).
 

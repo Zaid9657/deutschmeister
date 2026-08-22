@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { ChevronDown, ArrowRight, BookOpen, MessageSquare, CreditCard, GraduationCap, Monitor } from 'lucide-react';
 import SEO from '../components/SEO';
 import { trackFAQViewed } from '../lib/funnelTracking';
+import { PLANS, deEur } from '../data/pricing.js';
+import { TRIAL_SPEAKING_SESSIONS, ANON_DAILY_LIMIT, TRIAL_DAYS, FREE_LEVEL_LABEL } from '../data/marketing.js';
 
 const FAQ_DATA = [
   {
@@ -63,11 +65,11 @@ const FAQ_DATA = [
     items: [
       {
         q: 'Was kostet Deutschmeister?',
-        a: 'Pro Monatlich: 9,99 € pro Monat. Pro Jährlich: 79,99 € pro Jahr (das sind 6,67 € pro Monat — weniger als 0,22 € am Tag). Günstiger als ein Kaffee.',
+        a: `Pro Monatlich: ${deEur(PLANS.monthly.price)} pro Monat. Pro Jährlich: ${deEur(PLANS.yearly.price)} pro Jahr (das sind ${deEur(PLANS.yearly.asMonthly)} pro Monat — weniger als ${deEur(PLANS.yearly.perDay)} am Tag). Günstiger als ein Kaffee.`,
       },
       {
         q: 'Gibt es eine kostenlose Version?',
-        a: 'Ja. A1.1 ist komplett kostenlos — ohne Anmeldung. Dazu bekommst du 2 kostenlose KI-Sprechübungen und 1 Sentence X-Ray Analyse pro Tag. Wenn du ein Konto erstellst, gibt es 7 Tage kostenlosen Pro-Zugang obendrauf.',
+        a: `Ja. ${FREE_LEVEL_LABEL} ist komplett kostenlos — ohne Anmeldung. Dazu bekommst du ${TRIAL_SPEAKING_SESSIONS} kostenlose KI-Sprechübungen und ${ANON_DAILY_LIMIT} Sentence X-Ray Analyse pro Tag. Wenn du ein Konto erstellst, gibt es ${TRIAL_DAYS} Tage kostenlosen Pro-Zugang obendrauf.`,
       },
       {
         q: 'Kann ich jederzeit kündigen?',

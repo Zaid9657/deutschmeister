@@ -1,3 +1,5 @@
+import { tailwindColors, tailwindFontFamily } from './src/data/design-tokens.js';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -6,12 +8,12 @@ export default {
   ],
   theme: {
     extend: {
-      fontFamily: {
-        'display': ['Cormorant Garamond', 'serif'],
-        'body': ['Nunito Sans', 'sans-serif'],
-        'accent': ['Fira Code', 'monospace'],
-      },
+      // Faces and palette come from src/data/design-tokens.js — the one place
+      // a hex value or font stack is written. `accent` is kept as an alias of
+      // the data face so the legacy `font-accent` call sites keep working.
+      fontFamily: { ...tailwindFontFamily, accent: tailwindFontFamily.data },
       colors: {
+        ...tailwindColors,
         // A1.1 - Sunrise Warmth I (Lighter)
         'a1-1': {
           primary: '#F4B99A',
