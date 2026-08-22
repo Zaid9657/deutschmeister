@@ -74,6 +74,29 @@ export const PODCAST_EPISODE_COUNT = 24;
 /** Levels readable without paying, and without an account. Source: FREE_LEVELS, src/config/freeTier.js. */
 export const FREE_LEVEL_LABEL = 'A1.1';
 
+/**
+ * The CEFR ladder the product is built on, in order. Codes match the DB's
+ * uppercase `sub_level` values; URLs use the lowercase form (see CLAUDE.md).
+ * Subtitles are the ones already shipped in src/utils/listeningHelpers.js and
+ * scripts/prerender-spa-routes.mjs — one wording, three places.
+ *
+ * Deliberately carries NO exam-requirement or study-duration claims. "B1 is
+ * required for X" is a statement about German law, and "≈8 months at 3h/week"
+ * is a number the product has never measured. The ladder's job is to show
+ * DISTANCE — how much of the product a learner needs — which is true by
+ * construction.
+ */
+export const LEVELS = [
+  { code: 'A1.1', band: 'A1', subtitle: 'Beginner I' },
+  { code: 'A1.2', band: 'A1', subtitle: 'Beginner II' },
+  { code: 'A2.1', band: 'A2', subtitle: 'Elementary I' },
+  { code: 'A2.2', band: 'A2', subtitle: 'Elementary II' },
+  { code: 'B1.1', band: 'B1', subtitle: 'Intermediate I' },
+  { code: 'B1.2', band: 'B1', subtitle: 'Intermediate II' },
+  { code: 'B2.1', band: 'B2', subtitle: 'Upper Intermediate I' },
+  { code: 'B2.2', band: 'B2', subtitle: 'Upper Intermediate II' },
+];
+
 // ---------------------------------------------------------------------------
 // Claim lines — the sanctioned phrasings. Rendering these instead of prose is
 // what keeps a price change from silently falsifying the copy.

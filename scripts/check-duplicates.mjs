@@ -10,6 +10,9 @@ const PAIRS = [
   // same buyer. See the header of src/data/marketing.js.
   ['src/data/pricing.js', 'astro-site/src/data/pricing.js'],
   ['src/data/marketing.js', 'astro-site/src/data/marketing.js'],
+  // The design system. Both tailwind configs import this, so a drift here puts
+  // two different palettes on the two halves of the same site.
+  ['src/data/design-tokens.js', 'astro-site/src/data/design-tokens.js'],
 ];
 
 let failed = false;

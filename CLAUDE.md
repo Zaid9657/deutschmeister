@@ -61,6 +61,15 @@ mode and says so on every run — Netlify's deploy build remains the only gate o
   `marketing.js` under `src/data/` + `astro-site/src/data/` (all byte-identical, CI-guarded by
   `scripts/check-duplicates.mjs`), grammar rule rendering (SPA stages vs `RuleContent.astro`),
   comparison pages. Change both sides or the drift check fails.
+- **Design tokens: `src/data/design-tokens.js` is the only place a hex value or font stack is
+  written.** Both tailwind configs import it (`tailwindColors`, `tailwindFontFamily`), and it is
+  drift-guarded against its `astro-site/src/data/` twin. Three binding rules live in its header:
+  colour means grammatical case (the four `kasus` values may appear only where a case is named,
+  never as decoration or on a CTA), one interactive colour (`siegel` teal), and structure from
+  hairline rules rather than resting shadows. `font-display` resolves to **Fraunces**, not the
+  Cormorant Garamond it used to be — Cormorant stays loaded only because the Meister-Siegel's "M"
+  glyph sets it inline. Tailwind is JIT, so a token class only reaches the CSS once a component
+  uses it; to check the wiring, build and grep the emitted CSS rather than reading the config.
 - **Prices and claims: derive, never retype.** `src/data/pricing.js` is what the checkout
   charges; `src/data/marketing.js` is what the copy claims, and every value there carries its
   provenance inline (the server file it was verified against, and when). `src/config/limits.js`

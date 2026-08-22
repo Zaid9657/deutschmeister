@@ -131,7 +131,7 @@ inherit the current landing/pricing layout; research real references in the lang
 space first. Carry over only invariants: derived figures, legal/copy rules, the Astro/SPA routing
 split, and accessibility fixes already won (contrast AA, skip link).
 
-**2.1 Design tokens + primitives first — M.**
+**2.1 Design tokens — DONE (Batch B, 2026-08-22).**
 One token module (mirrored root + `astro-site/`, guarded by extending
 `scripts/check-duplicates.mjs` — the mechanism already exists):
 - Resolve the four color stories into one: a single DeutschMeister chrome (owner chose the
@@ -152,7 +152,7 @@ or a speaking-evaluation excerpt rendered as a component, one copy reused on lan
 settled-first rendering for anything animated (static HTML must contain the final state).
 Delete the divergent `src/pages/LandingPage.jsx` as part of this.
 
-**2.3 Pricing page rebuild — L.**
+**2.3 Pricing page rebuild — DONE (Batch B, 2026-08-22).**
 Blank sheet; kill the dark-theme outlier. Adopt the v4 *thesis*, adapted: open with the buyer's
 real question ("What's your goal — B1 certificate? When's your exam?") feeding a small pure
 recommendation engine; then one open, transparent price presentation (two plans here, so no
@@ -169,10 +169,13 @@ blanket "unlimited" claims on metered surfaces, and — the check that earns its
 limits out of the Netlify functions that enforce them and compares. What that caught is in
 "Defects found and fixed" below.
 
-NOTE, correcting this document's own earlier claim: the two Tailwind configs are **not**
-byte-identical candidates. `astro-site/tailwind.config.mjs` has different content globs and does
-not carry the eight CEFR level palettes at all, so a drift guard would be wrong. Unifying them
-belongs to 2.1 (design tokens), not to a duplicate check.
+NOTE, correcting this document twice over. It first proposed drift-guarding the two Tailwind
+configs, then claimed the Astro one "does not carry the eight CEFR level palettes at all". Both
+readings came from a truncated diff. Measured: **both configs carry all eight level palettes**
+and are near-identical, differing only in their `content` globs and one extra `glow` animation on
+the SPA side. They still cannot be a byte-identical pair (the globs must differ), which is why
+2.1 solved it the other way — both configs now import `src/data/design-tokens.js`, and *that*
+file is the drift-guarded pair. Verified by building both halves and grepping the emitted CSS.
 
 **2.5 Roll the new brand everywhere it still isn't — S–M.**
 The Aug remediation unified the *logo* but not the palette. Still on the retired amber→rose
@@ -231,6 +234,39 @@ something the audit had already listed.
 Two claims this document made were **retracted on verification**: the €0.33 vs €0.22 day-rates
 are the monthly and yearly rates and were both correct (the real problem was that they were
 retyped, not that they disagreed), and the Tailwind configs cannot be a byte-identical pair.
+
+### Batch B so far (2026-08-22): the design system, and the first surface on it
+
+**The identity is derived from the product, not invented for it.** Sentence X-Ray already colours
+the four German cases — Nominativ `#378ADD`, Akkusativ `#D85A30`, Dativ `#1D9E75`, Genitiv
+`#7F77DD`. `src/data/design-tokens.js` promotes those to the system's accent palette under one
+binding rule: **colour means case**. They may appear only where a grammatical case is named —
+never as a section fill, never on a CTA. The payoff is that the marketing page and the analyser
+teach the same visual language. Two further rules ship in the file header: one interactive colour
+(the Meister-Siegel teal, sampled from the logo the owner chose in August), and structure from
+hairline rules rather than resting shadows, because the declension table is this subject's native
+artifact.
+
+Type: **Fraunces** replaces Cormorant Garamond as the display face — both were already being
+loaded, and Cormorant is the generic "elegant serif" that lands on every project, while Fraunces
+has an optical-size axis and enough spine for long German compounds. Body stays Nunito Sans. A
+mono stack carries *data* — level codes, case labels, prices — because marking figures as data
+rather than prose is information. Named type roles each carry their own mobile step-down, so the
+mobile behaviour travels with the decision instead of being re-guessed per surface.
+
+Both Tailwind configs import the tokens, so no hex or font stack is written anywhere else, and
+the tokens file is drift-guarded like the pricing and marketing data.
+
+**`/pricing` rebuilt on it, blank sheet.** The thesis: a language buyer's real question is "how
+far does this get me", and the product's own eight-level CEFR ladder answers it. Free lights one
+rung, Pro lights all eight — so the ladder *is* the pricing argument, rendered as static markup
+that is true with JavaScript off. The plan comparison is a declension table rather than two
+bullet lists. Gone: the dark gradient that made this the only dark page on the site, and a blue
+accent belonging to no system. Kept: every figure derived, and the same-tab checkout (a new tab
+is blocked by iOS Safari).
+
+Still open in Batch B: the landing page rebuild (2.2) and rolling the new tokens onto the email
+templates and cookie banner (2.5), both of which still carry the retired amber-to-rose brand.
 
 ### Suggested implementation batches (each = one follow-up task)
 
