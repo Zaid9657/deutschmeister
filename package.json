@@ -17,7 +17,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "check:duplicates": "node scripts/check-duplicates.mjs",
-    "test": "node --test \"tests/*.test.mjs\"",
+    "test": "node --test tests/*.test.mjs",
     "check:html": "node scripts/check-built-html.mjs dist"
   },
   "dependencies": {

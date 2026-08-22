@@ -29,6 +29,10 @@ jobs:
       # literals, no "unlimited" claim on a metered plan, and — the one that
       # earns its keep — the limits in src/data/marketing.js parsed out of the
       # Netlify functions that enforce them and compared. See tests/claims.test.mjs.
+      # NOTE: package.json's test script leaves the glob UNQUOTED on purpose, so
+      # the shell expands it to real paths. This job pins Node 20, whose --test
+      # takes file paths rather than glob patterns (glob support landed in Node
+      # 22), and a quoted glob reaches node verbatim and fails to match.
       - name: Claim + pricing guards
         run: npm test
 
