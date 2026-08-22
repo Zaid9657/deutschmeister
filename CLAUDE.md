@@ -13,6 +13,14 @@ over the SPA for those URLs. 15 **Netlify functions** (`netlify/functions/`) pow
 speaking, X-Ray, payments (Lemon Squeezy webhook), and email (Resend). Content lives in
 **Supabase**; the Astro build fetches it at build time. Full details: `README.md`.
 
+## The SPA has no "/" route, on purpose
+
+`/` is served by the Astro build (`astro-site/src/pages/index.astro`) via `netlify.toml`. The SPA
+used to carry its own divergent `LandingPage.jsx` at `/`, unreachable after the August remediation
+made every in-app "/" link a full page load — two homepages, one dead. It was deleted 2026-08-22.
+On the Vite dev server `/` now falls through to `NotFoundPage`; work on the homepage in
+`astro-site/`.
+
 ## The three-place route rule (most common mistake)
 
 Adding a `<Route>` in `src/App.jsx` is not enough. Every public SPA route must ALSO be:
@@ -27,14 +35,18 @@ npm run dev          # SPA dev server
 npm run build        # optimize images + vite build → dist/
 npm run lint         # ESLint 9 flat config — errors fail, legacy warnings tolerated
 npm run check:duplicates  # SPA/Astro shared data files must stay byte-identical
+npm test             # node --test: claim/pricing guards (tests/claims.test.mjs)
+npm run build:verify # build + prerender + check the BUILT html (spa-only mode)
 cd astro-site && npm run build   # needs PUBLIC_SUPABASE_URL/_ANON_KEY — or a cache:
 GRAMMAR_CONTENT_CACHE=path/to/cache.json npx astro build   # offline build (CI/sandbox)
 node scripts/dump-grammar-cache.mjs   # produce that cache (needs Supabase network)
 node scripts/evaluate-site.mjs        # route walkthrough + screenshots (playwright)
 ```
 
-There are no tests yet. CI (`.github/workflows/ci.yml`) runs lint + duplicate check +
-`node --check` on functions + the SPA build.
+CI (`.github/workflows/ci.yml`) runs lint + duplicate check + `npm test` + `node --check` on
+functions + the SPA build + prerender + `check-built-html.mjs --spa-only`. The Astro half is
+still not built in CI (needs Supabase creds/egress), so the built-HTML check runs in `--spa-only`
+mode and says so on every run — Netlify's deploy build remains the only gate on the static pages.
 
 ## Conventions & gotchas
 
@@ -53,9 +65,56 @@ There are no tests yet. CI (`.github/workflows/ci.yml`) runs lint + duplicate ch
      `public/sitemap-spa.xml` matches — so links to them must carry the slash too.
   3. **Every other SPA route** (`/faq`, `/ueber-uns`, `/dashboard`, `/level/:level`…)
      has **no** slash; it is served by a `netlify.toml` rewrite to `/app.html`.
-- **Duplicated on purpose** (until refactor): `competitorComparisons.js` (SPA+Astro,
-  CI-guarded), grammar rule rendering (SPA stages vs `RuleContent.astro`), pricing and
+- **Duplicated on purpose** (until refactor): `competitorComparisons.js`, `pricing.js` and
+  `marketing.js` under `src/data/` + `astro-site/src/data/` (all byte-identical, CI-guarded by
+  `scripts/check-duplicates.mjs`), grammar rule rendering (SPA stages vs `RuleContent.astro`),
   comparison pages. Change both sides or the drift check fails.
+- **Design tokens: `src/data/design-tokens.js` is the only place a hex value or font stack is
+  written.** Both tailwind configs import it (`tailwindColors`, `tailwindFontFamily`), and it is
+  drift-guarded against its `astro-site/src/data/` twin. Three binding rules live in its header:
+  colour means grammatical case (the four `kasus` values may appear only where a case is named,
+  never as decoration or on a CTA), one interactive colour (`siegel` teal), and structure from
+  hairline rules rather than resting shadows. `font-display` resolves to **Fraunces**, not the
+  Cormorant Garamond it used to be — Cormorant stays loaded only because the Meister-Siegel's "M"
+  glyph sets it inline. Tailwind is JIT, so a token class only reaches the CSS once a component
+  uses it; to check the wiring, build and grep the emitted CSS rather than reading the config.
+- **`.mcp.json` is committed and must stay credential-free.** It declares the DataForSEO and Google
+  Search Console MCP servers the SEO Routines depend on (`docs/seo-routines/`). Values are `${VAR}`
+  references Claude Code expands from the environment; the literals belong in the environment's
+  variables, never in the file. `.claude/hooks/session-start.sh` materialises
+  `GSC_SERVICE_ACCOUNT_JSON` to `~/.gsc-credentials.json` (chmod 600) and installs both dependency
+  trees — it skips silently when the secret is unset. **Neither connector works yet, and the
+  DataForSEO blocker is a network policy, not a credential**: `api.dataforseo.com` answers
+  `CONNECT tunnel failed, 403` at the proxy, so credentials alone change nothing until the domain is
+  allowlisted on the environment. Diagnose with
+  `curl -sS "$HTTPS_PROXY/__agentproxy/status"`. GSC's domain *is* reachable. Routine prompts live in
+  `docs/seo-routines/` rather than the Routines UI, because an agent cannot edit a Routine it did not
+  create and a UI-only prompt drifts from the repo silently.
+- **Leitfäden are data, not pages.** A guide lives in
+  `astro-site/src/data/guides/<slug>.js` and is rendered by
+  `pages/leitfaden/[slug].astro`; the hub lists the registry. Adding one is a data module,
+  a line in `GUIDES`, and a line in `scripts/check-built-html.mjs`'s MANIFEST — nothing in
+  `netlify.toml` (the whole `/leitfaden/` directory is already copied) and nothing in the
+  sitemap config (the filter already whitelists the prefix). A new **top-level** segment
+  would need its own `cp -r` step. Guides get **no SPA twin**: Netlify serves the static
+  page, so `src/pages/leitfaden/TelcB1Page.jsx` is dead code on the dev server only.
+  `tests/guides.test.mjs` pins slug/title/description/anchor integrity, the three
+  trailing-slash cases on every internal link, and the ban on outcome promises and fee
+  figures. Exam facts carry `factsCheckedOn` + `sources`, both rendered on the page.
+- **Prices and claims: derive, never retype.** `src/data/pricing.js` is what the checkout
+  charges; `src/data/marketing.js` is what the copy claims, and every value there carries its
+  provenance inline (the server file it was verified against, and when). `src/config/limits.js`
+  is now a thin re-export of the latter. `tests/claims.test.mjs` enforces it three ways: derived
+  figures follow from the prices, no page source contains a price literal, and the limits are
+  parsed out of the Netlify functions that enforce them and compared. That last check is what
+  caught `lemonsqueezy.js` advertising "5 speaking sessions per month" against a server that has
+  always granted 30.
+- **`<head>` and headings must be verified against `dist/`, not the source.** The prerendered SPA
+  routes get their title/canonical/visible copy injected at build time by
+  `scripts/prerender-spa-routes.mjs`, so reading the source tells you what the injector intends,
+  never what a crawler receives. `scripts/check-built-html.mjs` reads the artifact. Note the
+  script is **not idempotent** — it strips the canonical from `app.html` — so a second run
+  against an already-prerendered `dist/` fails; rebuild from scratch.
 - **Secrets fail closed**: email functions 500 without `CAMPAIGN_SECRET`/`UNSUB_SECRET`.
   Never reintroduce fallback secrets. Never widen the send-daily-test/daily-sentence auth.
 - **DB writes to privileged columns** (`subscriptions`, `profiles.is_subscribed`, trial
@@ -73,7 +132,26 @@ There are no tests yet. CI (`.github/workflows/ci.yml`) runs lint + duplicate ch
 
 ## Current state / open threads
 
-- `EVALUATION.md` holds the full audit: scores, issue tables (S-xx/SEO-xx/…), roadmap.
+- `docs/medmeister-parity-roadmap.md` is the current plan: a comparison against the sibling
+  MedMeister project and a tiered roadmap (SEO content engine, design system, lifecycle, tests).
+  Batch A (shared pricing/marketing data layer, claim guards, built-HTML check), most of
+  Batch B (design tokens, `/pricing` and the homepage rebuilt on them, retired brand removed from
+  every customer-facing surface) and Batch C (the Leitfaden content engine, hub + four guides,
+  richer schema on `/vergleich/`) have shipped. Still open: SEO operations (keyword research and
+  GEO measurement via DataForSEO/GSC), education schema on grammar pages, and the in-app SPA
+  brand migration.
+- **Competitor pricing on `/vergleich/` is stamped "Stand: Mai 2026" and could not be
+  re-verified** — every vendor domain is blocked by the agent proxy. Aggregators suggest all
+  three have since raised prices, i.e. the stored figures understate them, which is the
+  conservative direction. Never advance a "Stand:" stamp without checking the vendor's own
+  page: an overstated competitor price is actionable under §6 UWG.
+- **User-facing counts are content counts, never usage counts.** The homepage, `StatsBar.jsx` and
+  the `/vergleich/` pages each used to claim learner/usage figures, and by August 2026 the three
+  disagreed with each other; one ("2,488 AI speaking exercises") had no source in any audit. They
+  now render only `marketing.js` constants counted against live tables. Before adding a usage
+  claim, measure it and record the provenance — see the counts rule in `src/data/marketing.js`.
+- `EVALUATION.md` holds the older full audit: scores, issue tables, roadmap. Read it with
+  `AUDIT-2026-08-16.md` and `REMEDIATION.md`, which supersede much of it.
 - CSP ships as Report-Only — do not promote to enforcing without checking reports.
 - `/privacy/` + `/impressum/` are noindex drafts pending owner legal review.
 - Astro build in CI is possible via `GRAMMAR_CONTENT_CACHE` (see commands above).

@@ -111,7 +111,7 @@ function buildEmail({ sentence, recipient }) {
 
         <!-- Header -->
         <tr>
-          <td style="background:linear-gradient(135deg,#f59e0b,#f43f5e);padding:28px 32px;">
+          <td style="background:#0F766E;padding:28px 32px;">
             <p style="margin:0;color:rgba(255,255,255,0.85);font-size:13px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;">DeutschMeister · Daily Sentence</p>
             <p style="margin:6px 0 0;color:#ffffff;font-size:13px;opacity:0.8;">${new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</p>
           </td>
@@ -142,7 +142,7 @@ function buildEmail({ sentence, recipient }) {
             <!-- CTA button -->
             <table cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
               <tr>
-                <td style="background:linear-gradient(135deg,#7c3aed,#4f46e5);border-radius:10px;">
+                <td style="background:#0F766E;border-radius:10px;">
                   <a href="${ctaUrl}"
                      style="display:inline-block;padding:14px 28px;color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;letter-spacing:0.01em;">
                     See the X-Ray Breakdown →

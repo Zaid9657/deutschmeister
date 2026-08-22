@@ -1,7 +1,13 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import competitorComparisons from '../../data/competitorComparisons.js';
-import { BUILD_DATE } from '../../lib/siteMeta.js';
+import { BUILD_DATE, ORGANIZATION } from '../../lib/siteMeta.js';
+import {
+  GRAMMAR_TOPIC_COUNT,
+  LISTENING_DIALOGUE_COUNT,
+  LEVEL_COUNT,
+  PODCAST_EPISODE_COUNT,
+} from '../../data/marketing.js';
 import '../../styles/global.css';
 
 export function getStaticPaths() {
@@ -20,16 +26,41 @@ const description = descRaw.length <= 158
 const keywords = `Deutschmeister vs ${data.displayName}, ${data.displayName} Alternative, Deutsch lernen Vergleich, ${data.displayName} Erfahrungen`;
 const canonical = `https://deutsch-meister.de/vergleich/${data.slug}/`;
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Article',
-  headline: `Deutschmeister vs ${data.displayName} — Vergleich`,
-  description: data.heroSubheadline,
-  author: { '@type': 'Organization', name: 'DeutschMeister' },
-  publisher: { '@type': 'Organization', name: 'DeutschMeister' },
-  datePublished: '2026-05-28',
-  dateModified: BUILD_DATE,
-};
+// Article + FAQPage + BreadcrumbList. The FAQ below was rendered on the page
+// but emitted no schema, and there was no breadcrumb — the vergleich HUB had
+// both. Same set the Leitfaden pages emit (see data/guides/index.js).
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: `Deutschmeister vs ${data.displayName} — Vergleich`,
+    description: data.heroSubheadline,
+    inLanguage: 'de',
+    author: ORGANIZATION,
+    publisher: ORGANIZATION,
+    datePublished: '2026-05-28',
+    dateModified: BUILD_DATE,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: data.faq.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Start', item: 'https://deutsch-meister.de/' },
+      { '@type': 'ListItem', position: 2, name: 'Vergleich', item: 'https://deutsch-meister.de/vergleich/' },
+      { '@type': 'ListItem', position: 3, name: `Deutschmeister vs ${data.displayName}`, item: canonical },
+    ],
+  },
+];
 
 // ✓ / ✗ / ○ status prefixes → colour + stripped text (matches the SPA's StatusIcon).
 const WHY_ICON = { Mic: '🎤', ScanSearch: '🔍', GraduationCap: '🎓', Brain: '🧠', Clock: '⏰', Wallet: '💰' };
@@ -37,12 +68,20 @@ const statusColor = (t) => (t.startsWith('✓') ? 'text-emerald-500' : t.startsW
 const statusSymbol = (t) => (t.startsWith('✓') ? '✓' : t.startsWith('✗') ? '✗' : t.startsWith('○') ? '○' : '');
 const strip = (t) => t.replace(/^[✓✗○]\s*/, '');
 
-// Static trust stats (SPA StatsBar, last updated 2026-05-27).
+// What the product CONTAINS, from src/data/marketing.js.
+//
+// This block used to carry usage figures — "959 Lernende", "2.488
+// KI-Sprechübungen", "350 Neue Lernende diesen Monat", "154 Sätze
+// röntgen-analysiert" — copied from the SPA StatsBar in May 2026 and never
+// refreshed. By August the same site was claiming 1.400+ learners on the
+// homepage: three surfaces, three different answers, none of them sourced.
+// Counts of what the product contains are true by construction and cannot
+// drift apart like that.
 const STATS = [
-  { value: '959', label: 'Lernende' },
-  { value: '2.488', label: 'KI-Sprechübungen' },
-  { value: '350', label: 'Neue Lernende diesen Monat' },
-  { value: '154', label: 'Sätze röntgen-analysiert' },
+  { value: String(GRAMMAR_TOPIC_COUNT), label: 'Grammatikthemen' },
+  { value: String(LISTENING_DIALOGUE_COUNT), label: 'Dialoge mit Muttersprachlern' },
+  { value: String(LEVEL_COUNT), label: 'Stufen, A1.1 bis B2.2' },
+  { value: String(PODCAST_EPISODE_COUNT), label: 'Podcast-Folgen' },
 ];
 ---
 
@@ -148,7 +187,7 @@ const STATS = [
     <!-- Stats -->
     <section class="py-14 bg-white border-b border-slate-100">
       <div class="max-w-5xl mx-auto px-4 sm:px-6">
-        <p class="text-center text-xs font-semibold uppercase tracking-widest text-slate-500 mb-8">Lernende vertrauen Deutschmeister</p>
+        <p class="text-center text-xs font-semibold uppercase tracking-widest text-slate-500 mb-8">Was drin ist</p>
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {STATS.map((stat) => (
             <div class="text-center">

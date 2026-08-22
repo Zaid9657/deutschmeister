@@ -7,6 +7,8 @@ import { useSubscription } from '../contexts/SubscriptionContext';
 import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
 import SEO from '../components/SEO';
 import { openCheckout } from '../utils/openCheckout';
+import { PLANS, num } from '../data/pricing.js';
+import { LEVEL_COUNT } from '../data/marketing.js';
 
 const SubscriptionPage = () => {
   const { i18n } = useTranslation();
@@ -106,12 +108,12 @@ const SubscriptionPage = () => {
   const plans = [
     {
       id: 'monthly',
-      name: isGerman ? 'Pro Monatlich' : 'Pro Monthly',
-      price: '9.99',
+      name: isGerman ? PLANS.monthly.nameDe : PLANS.monthly.name,
+      price: num(PLANS.monthly.price),
       period: isGerman ? '/Monat' : '/month',
       features: isGerman
         ? [
-            'Zugang zu allen 8 Stufen (A1.1–B2.2)',
+            `Zugang zu allen ${LEVEL_COUNT} Stufen (A1.1–B2.2)`,
             'Alle Grammatiklektionen mit Übungen',
             'Hörverständnisübungen',
             'Podcasts & Video-Inhalte',
@@ -119,7 +121,7 @@ const SubscriptionPage = () => {
             'Jederzeit kündbar',
           ]
         : [
-            'Full access to all 8 levels (A1.1–B2.2)',
+            `Full access to all ${LEVEL_COUNT} levels (A1.1–B2.2)`,
             'All grammar lessons with exercises',
             'Listening comprehension exercises',
             'Podcasts & video content',
@@ -130,15 +132,17 @@ const SubscriptionPage = () => {
     },
     {
       id: 'yearly',
-      name: isGerman ? 'Pro Jährlich' : 'Pro Yearly',
-      price: '79.99',
+      name: isGerman ? PLANS.yearly.nameDe : PLANS.yearly.name,
+      price: num(PLANS.yearly.price),
       period: isGerman ? '/Jahr' : '/year',
-      savings: isGerman ? 'Spare 33%' : 'Save 33%',
-      monthlyEquiv: '6.67',
+      savings: isGerman
+        ? `Spare ${PLANS.yearly.savingPercent}%`
+        : `Save ${PLANS.yearly.savingPercent}%`,
+      monthlyEquiv: num(PLANS.yearly.asMonthly),
       features: isGerman
         ? [
             'Alles im Monatsplan',
-            '33% günstiger als monatlich',
+            `${PLANS.yearly.savingPercent}% günstiger als monatlich`,
             'Prioritäts-Support',
             'Frühzeitiger Zugang zu neuen Inhalten',
             'Fortschrittsverfolgung',
@@ -146,7 +150,7 @@ const SubscriptionPage = () => {
           ]
         : [
             'Everything in Monthly',
-            'Save 33% compared to monthly',
+            `Save ${PLANS.yearly.savingPercent}% compared to monthly`,
             'Priority support',
             'Early access to new content',
             'Progress tracking',

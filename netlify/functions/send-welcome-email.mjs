@@ -13,9 +13,9 @@ const WELCOME_HTML = (email) => `<!DOCTYPE html>
 
           <!-- Header -->
           <tr>
-            <td style="background:linear-gradient(135deg,#f59e0b,#f43f5e);padding:32px;text-align:center;">
+            <td style="background:#0F766E;padding:32px;text-align:center;">
               <div style="display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:14px;background:rgba(255,255,255,0.2);margin-bottom:12px;">
-                <span style="color:#ffffff;font-size:28px;font-weight:800;">D</span>
+                <span style="color:#ffffff;font-size:28px;font-weight:700;font-family:Georgia,'Times New Roman',serif;">M</span>
               </div>
               <p style="margin:0;color:#ffffff;font-size:20px;font-weight:700;letter-spacing:-0.3px;">DeutschMeister</p>
             </td>
@@ -37,7 +37,7 @@ const WELCOME_HTML = (email) => `<!DOCTYPE html>
               <!-- CTA -->
               <table cellpadding="0" cellspacing="0" style="margin:28px 0;">
                 <tr>
-                  <td style="border-radius:10px;background:linear-gradient(135deg,#7c3aed,#4f46e5);">
+                  <td style="border-radius:10px;background:#0F766E;">
                     <a href="https://deutsch-meister.de/analyze/"
                        style="display:inline-block;padding:14px 28px;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;letter-spacing:-0.2px;">
                       Try Sentence X-Ray →

@@ -1,209 +1,299 @@
 ---
+// Pricing — rebuilt 2026-08-22 on src/data/design-tokens.js.
+//
+// THE THESIS. A language learner's real question is not "which tier am I" but
+// "how far does this get me". The product's own structure answers it: eight
+// CEFR sub-levels, A1.1 to B2.2. Free lights one rung, Pro lights all eight —
+// so the ladder IS the pricing argument, not an illustration of it. It is
+// rendered as static markup with no interaction, because the comparison is
+// true whether or not JavaScript runs.
+//
+// What the previous version did that this one does not: a dark gradient (the
+// only dark page on an otherwise light site), a blue accent belonging to no
+// system, and two feature bullet-lists side by side. The plan comparison is now
+// a declension table — rows and aligned columns, the artifact this subject
+// actually uses — per rule 3 in the tokens file.
+//
+// INVARIANTS CARRIED OVER (do not regress):
+//   - every figure derives from ../data/pricing.js and ../data/marketing.js;
+//     tests/claims.test.mjs fails if a price literal reappears here
+//   - checkout never opens a new tab (iOS Safari blocks the popup and in-app
+//     browsers swallow it) — LemonSqueezy overlay, else same-tab navigation
+//   - one <h1>, a canonical, and real server-rendered body text, or
+//     scripts/check-built-html.mjs fails
 import Layout from '../layouts/Layout.astro';
 import '../styles/global.css';
+import { PLANS, CURRENCY, num, eur } from '../data/pricing.js';
+import {
+  GRAMMAR_TOPIC_COUNT,
+  LEVEL_COUNT,
+  LEVELS,
+  XRAY_LINE,
+  TRIAL_DAYS,
+  TRIAL_SPEAKING_SESSIONS,
+  ANON_DAILY_LIMIT,
+  PRO_DAILY_LIMIT,
+  PRO_SPEAKING_SESSIONS_PER_MONTH,
+  FREE_LEVEL_LABEL,
+} from '../data/marketing.js';
 
-const title = 'Pricing — Free Trial & Pro Plans | DeutschMeister';
-const description = 'Start free, upgrade when ready. DeutschMeister Pro unlocks all 64 German grammar topics, AI speaking practice, and listening exercises.';
+const title = 'Pricing — All 8 German Levels | DeutschMeister';
+const description = `${FREE_LEVEL_LABEL} is free forever. Pro opens all ${LEVEL_COUNT} CEFR levels, ${GRAMMAR_TOPIC_COUNT} grammar topics, AI speaking practice and Sentence X-Ray.`;
+
+const TOPICS_PER_LEVEL = GRAMMAR_TOPIC_COUNT / LEVEL_COUNT;
+const FREE_RUNGS = 1; // FREE_LEVEL_LABEL is the first rung of the ladder.
 
 const productSchema = {
   '@context': 'https://schema.org',
   '@type': 'Product',
   name: 'DeutschMeister Pro',
-  description: 'Full access to all 64 German grammar topics, AI speaking practice, native-speaker listening exercises, podcasts, and 50 Sentence X-Ray analyses per day.',
+  description: `Full access to all ${GRAMMAR_TOPIC_COUNT} German grammar topics across ${LEVEL_COUNT} CEFR levels, AI speaking practice, native-speaker listening exercises, podcasts, and ${XRAY_LINE}.`,
   brand: { '@type': 'Brand', name: 'DeutschMeister' },
   offers: [
-    { '@type': 'Offer', name: 'Pro Monthly', price: '9.99', priceCurrency: 'EUR', url: 'https://deutsch-meister.de/pricing/', availability: 'https://schema.org/InStock' },
-    { '@type': 'Offer', name: 'Pro Yearly', price: '79.99', priceCurrency: 'EUR', url: 'https://deutsch-meister.de/pricing/', availability: 'https://schema.org/InStock' },
+    { '@type': 'Offer', name: PLANS.monthly.name, price: num(PLANS.monthly.price), priceCurrency: CURRENCY, url: 'https://deutsch-meister.de/pricing/', availability: 'https://schema.org/InStock' },
+    { '@type': 'Offer', name: PLANS.yearly.name, price: num(PLANS.yearly.price), priceCurrency: CURRENCY, url: 'https://deutsch-meister.de/pricing/', availability: 'https://schema.org/InStock' },
   ],
 };
 
-const PRO_FEATURES = [
-  'All 64 grammar topics — A1.1 to B2.2',
-  'Interactive exercises that explain WHY answers are correct',
-  'Native-speaker listening exercises at your level',
-  'Grammar podcasts and video explanations',
-  'AI speaking practice — 30 sessions/month',
-  '50 Sentence X-Ray analyses per day',
-  'Progress tracking + cancel anytime',
-];
-const FREE_FEATURES = [
-  'Full A1.1 level — no signup required',
-  '1 Sentence X-Ray analysis per day',
-  'Free level test',
-  '2 free AI speaking sessions',
-];
-const OBJECTIONS = [
-  { q: 'Another grammar website?', qde: 'Noch eine Grammatik-Webseite?', a: 'DeutschMeister explains grammar in English first, then shows you how German does it. No jargon, no tables without context.' },
-  { q: 'Can AI really help me learn German?', qde: 'Kann KI wirklich beim Deutschlernen helfen?', a: 'Our Sentence X-Ray analyzes any German sentence and shows you cases, roles, and structure — instantly. No other tool does this.' },
-  { q: 'Is it worth it when free alternatives exist?', qde: 'Lohnt sich das, wenn es kostenlose Alternativen gibt?', a: 'Free resources explain WHAT. We explain WHY. That difference is what makes grammar stick.' },
-];
-const FAQS = [
-  { q: 'Can I try before buying?', qde: 'Kann ich vor dem Kauf testen?', a: 'Yes! A1.1 is completely free, no signup needed. Try Sentence X-Ray and 2 free speaking sessions too.', ade: 'Ja! A1.1 ist komplett kostenlos, ohne Anmeldung. Teste auch den Sentence X-Ray und 2 kostenlose Sprechübungen.' },
-  { q: 'What happens after the trial?', qde: 'Was passiert nach der Testphase?', a: 'You keep access to all free content. Only premium features like speaking practice and extended analyses require a subscription.', ade: 'Du behältst Zugang zu allen kostenlosen Inhalten. Nur Premium-Features wie Sprechübungen und erweiterte Analysen erfordern ein Abo.' },
-  { q: 'Can I cancel anytime?', qde: 'Kann ich jederzeit kündigen?', a: 'Yes, anytime. No questions asked, no hidden fees.', ade: 'Ja, jederzeit. Keine Fragen, keine versteckten Kosten.' },
+// The comparison, as a table. `ladder` marks the one row that renders rungs
+// instead of text.
+const ROWS = [
+  { label: 'Levels', ladder: true, free: `${FREE_RUNGS} of ${LEVEL_COUNT}`, pro: `${LEVEL_COUNT} of ${LEVEL_COUNT}` },
+  { label: 'Grammar topics', free: String(TOPICS_PER_LEVEL), pro: String(GRAMMAR_TOPIC_COUNT) },
+  { label: 'Sentence X-Ray', free: `${ANON_DAILY_LIMIT} a day`, pro: `${PRO_DAILY_LIMIT} a day` },
+  { label: 'AI speaking practice', free: `${TRIAL_SPEAKING_SESSIONS} sessions`, pro: `${PRO_SPEAKING_SESSIONS_PER_MONTH} a month` },
+  { label: 'Listening & reading', free: FREE_LEVEL_LABEL, pro: 'Every level' },
+  { label: 'Podcasts & video', free: '—', pro: 'Included' },
 ];
 
-// The pricing FAQs are already on the page — expose them as FAQPage schema so
-// they can win rich results and be cited by AI answer engines.
+const FAQS = [
+  {
+    q: 'What do I get without paying?',
+    a: `${FREE_LEVEL_LABEL} in full — ${TOPICS_PER_LEVEL} grammar topics with exercises, its listening and reading, and the level test. No account needed. Creating an account adds ${TRIAL_DAYS} days of Pro on top.`,
+  },
+  {
+    q: 'What happens when the trial ends?',
+    a: `You keep ${FREE_LEVEL_LABEL} and everything else that is free. Nothing is deleted, and your progress is still there if you subscribe later.`,
+  },
+  { q: 'Can I cancel anytime?', a: 'Yes, from your account page. You keep Pro until the end of the period you have already paid for.' },
+  {
+    q: 'Monthly or yearly?',
+    a: `Yearly works out ${PLANS.yearly.savingPercent}% cheaper. Monthly is the right choice if you are working towards one specific level and expect to be done inside a few months.`,
+  },
+];
+
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: FAQS.map(({ q, a }) => ({
-    '@type': 'Question',
-    name: q,
-    acceptedAnswer: { '@type': 'Answer', text: a },
-  })),
+  mainEntity: FAQS.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
 };
 const jsonLd = [productSchema, faqSchema];
+
+// Rule 1 in the tokens file: the case colours appear only where a case is
+// named. This is that place — one worked sentence, marked exactly as Sentence
+// X-Ray marks it.
+const DEMO = [
+  { text: 'Ich', kasus: 'nominativ', abbr: 'NOM', gloss: 'I' },
+  { text: 'gebe', kasus: null, abbr: 'VERB', gloss: 'give' },
+  { text: 'dir', kasus: 'dativ', abbr: 'DAT', gloss: 'to you' },
+  { text: 'das Buch', kasus: 'akkusativ', abbr: 'AKK', gloss: 'the book' },
+];
+const KASUS_CLASS = {
+  nominativ: 'border-kasus-nominativ bg-kasus-nominativ-wash text-kasus-nominativ-ink',
+  dativ: 'border-kasus-dativ bg-kasus-dativ-wash text-kasus-dativ-ink',
+  akkusativ: 'border-kasus-akkusativ bg-kasus-akkusativ-wash text-kasus-akkusativ-ink',
+};
 ---
 
 <Layout title={title} description={description} canonical="https://deutsch-meister.de/pricing/" jsonLd={jsonLd}>
-  <div class="bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 px-4 pt-8 pb-16">
-    <div class="max-w-4xl mx-auto">
-      <!-- Header -->
-      <div class="text-center mb-4">
-        <h1 class="text-2xl md:text-3xl font-bold text-white mb-3">Choose Your Plan</h1>
-      </div>
+  <div class="bg-paper text-ink">
+    <div class="mx-auto max-w-5xl px-5 pt-14 pb-20">
 
-      <!-- Billing Toggle -->
-      <div class="flex justify-center mb-6">
-        <div class="inline-flex items-center bg-gray-800/80 rounded-full p-1 border border-gray-700">
-          <button id="toggle-monthly" type="button" class="px-5 py-2 rounded-full text-sm font-medium transition-all bg-white text-gray-900 shadow">Monthly</button>
-          <button id="toggle-yearly" type="button" class="px-5 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-1.5 text-gray-400 hover:text-white">
-            Yearly
-            <span class="text-[10px] font-bold bg-green-700 text-white px-1.5 py-0.5 rounded-full leading-none">-33%</span>
+      <!-- Hero: the thesis, then the ladder that proves it -->
+      <header class="max-w-2xl">
+        <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">Preise · Pricing</p>
+        <h1 class="mt-3 font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] sm:text-[3.25rem]">
+          {LEVEL_COUNT} levels. One price.
+        </h1>
+        <p class="mt-5 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]">
+          DeutschMeister teaches German from your first <span class="font-display italic">der/die/das</span> through to B2.
+          {FREE_LEVEL_LABEL} is free forever. Pro opens the other {LEVEL_COUNT - FREE_RUNGS}.
+        </p>
+      </header>
+
+      <!-- The ladder. Static on purpose: the comparison is true with JS off. -->
+      <section class="mt-10 border-y border-rule py-7" aria-labelledby="ladder-h">
+        <h2 id="ladder-h" class="sr-only">The eight CEFR levels</h2>
+        <ol class="grid grid-cols-4 gap-px overflow-hidden rounded-lg border border-rule bg-rule sm:grid-cols-8">
+          {LEVELS.map((lvl, i) => (
+            <li class={`px-2 py-3 text-center ${i < FREE_RUNGS ? 'bg-paper' : 'bg-siegel-wash'}`}>
+              <span class="block font-data text-[0.8125rem] font-semibold tracking-[0.02em] text-ink">{lvl.code}</span>
+              <span class="mt-1 block text-[0.6875rem] leading-tight text-graphite">{lvl.subtitle}</span>
+              {i < FREE_RUNGS && (
+                <span class="mt-1.5 inline-block font-data text-[0.5625rem] font-bold uppercase tracking-[0.13em] text-siegel">Free</span>
+              )}
+            </li>
+          ))}
+        </ol>
+        <p class="mt-3 font-data text-[0.8125rem] text-graphite">
+          <span class="inline-block h-2 w-2 rounded-full border border-siegel bg-siegel-wash align-middle"></span>
+          <span class="ml-2 align-middle">Opened by Pro</span>
+        </p>
+      </section>
+
+      <!-- Billing toggle -->
+      <div class="mt-10 flex items-center gap-3">
+        <span class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">Billing</span>
+        <div class="inline-flex rounded-pill border border-rule p-0.5" role="group" aria-label="Billing period">
+          <button id="toggle-monthly" type="button" aria-pressed="true" class="rounded-pill bg-ink px-4 py-1.5 text-sm font-semibold text-paper transition-colors">Monthly</button>
+          <button id="toggle-yearly" type="button" aria-pressed="false" class="rounded-pill px-4 py-1.5 text-sm font-semibold text-graphite transition-colors hover:text-ink">
+            Yearly <span class="font-data text-[0.6875rem] tracking-[0.02em]">−{PLANS.yearly.savingPercent}%</span>
           </button>
         </div>
       </div>
 
-      <!-- Pricing Cards -->
-      <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-        <!-- Free -->
-        <div class="relative bg-gray-800/50 backdrop-blur border border-gray-700 rounded-2xl p-5">
-          <div class="flex items-center gap-2 mb-3"><h2 class="text-xl font-bold text-white">Free</h2></div>
-          <div class="mb-3"><span class="text-4xl font-bold text-white">€0</span><span class="text-gray-400">/forever</span></div>
-          <p class="text-gray-400 text-sm mb-4">Start learning with no commitment</p>
-          <ul class="space-y-2 mb-5">
-            {FREE_FEATURES.map((f) => (
-              <li class="flex items-start gap-2.5 text-sm text-gray-300"><span class="text-green-400 mt-0.5 flex-shrink-0" aria-hidden="true">✓</span><span>{f}</span></li>
+      <!-- The comparison, as a declension table -->
+      <section class="mt-6 overflow-x-auto" aria-labelledby="compare-h">
+        <h2 id="compare-h" class="sr-only">Free and Pro compared</h2>
+        <table class="w-full min-w-[34rem] border-collapse text-left">
+          <thead>
+            <tr class="border-b border-ink">
+              <th scope="col" class="w-1/3 py-3 pr-4 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">What you get</th>
+              <th scope="col" class="w-1/3 px-4 py-3 align-bottom">
+                <span class="block font-display text-lg font-semibold">Free</span>
+                <span class="mt-1 block font-data text-[0.8125rem] text-graphite">Forever · no account</span>
+              </th>
+              <th scope="col" class="w-1/3 bg-siegel-wash py-3 pl-4 align-bottom">
+                <span class="flex items-center gap-2">
+                  <span class="font-display text-lg font-semibold">Pro</span>
+                  <span class="inline-block h-1.5 w-1.5 rounded-full bg-gold" aria-hidden="true"></span>
+                </span>
+                <span class="mt-1 block font-data text-[0.8125rem] text-graphite">
+                  <span id="pro-price">{eur(PLANS.monthly.price)}</span> · per <span id="pro-period">{PLANS.monthly.interval}</span>
+                </span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {ROWS.map((row) => (
+              <tr class="border-b border-rule align-top">
+                <th scope="row" class="py-3.5 pr-4 text-sm font-normal text-graphite">{row.label}</th>
+                <td class="px-4 py-3.5">
+                  {row.ladder && (
+                    <span class="flex items-center gap-1" aria-hidden="true">
+                      {LEVELS.map((_, i) => (
+                        <span class={`h-1.5 w-3 rounded-sm ${i < FREE_RUNGS ? 'bg-ink' : 'bg-rule'}`}></span>
+                      ))}
+                    </span>
+                  )}
+                  <span class={`font-data text-[0.8125rem] text-ink ${row.ladder ? 'mt-1.5 block' : ''}`}>{row.free}</span>
+                </td>
+                <td class="bg-siegel-wash py-3.5 pl-4">
+                  {row.ladder && (
+                    <span class="flex items-center gap-1" aria-hidden="true">
+                      {LEVELS.map(() => (
+                        <span class="h-1.5 w-3 rounded-sm bg-siegel"></span>
+                      ))}
+                    </span>
+                  )}
+                  <span class={`font-data text-[0.8125rem] font-semibold text-ink ${row.ladder ? 'mt-1.5 block' : ''}`}>{row.pro}</span>
+                </td>
+              </tr>
             ))}
-          </ul>
-          <a id="free-btn" href="https://deutsch-meister.de/signup" class="w-full py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 bg-gray-600 hover:bg-gray-500 text-white">Get Started Free</a>
-        </div>
+            <tr>
+              <td class="py-5 pr-4"></td>
+              <td class="px-4 py-5">
+                <a href="https://deutsch-meister.de/signup" class="inline-flex w-full items-center justify-center rounded-md border border-ink px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-paper">
+                  Start free
+                </a>
+              </td>
+              <td class="bg-siegel-wash py-5 pl-4">
+                <button id="pro-btn" type="button" class="inline-flex w-full items-center justify-center rounded-md bg-siegel px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-siegel-lift">
+                  Get started
+                </button>
+                <span id="plan-note" class="mt-2 block font-data text-[0.6875rem] leading-snug text-graphite">
+                  {TRIAL_DAYS}-day free trial · cancel anytime
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
 
-        <!-- Pro -->
-        <div class="relative bg-gradient-to-b from-blue-500/10 to-gray-800/50 backdrop-blur rounded-2xl p-5 border-2 border-blue-500/50">
-          <div class="absolute -top-4 left-1/2 -translate-x-1/2">
-            <span id="pro-badge" class="bg-blue-600 text-white font-bold px-4 py-1 rounded-full text-sm flex items-center gap-1.5">
-              <span aria-hidden="true">⚡</span> MOST POPULAR
+      <!-- What Pro actually buys, in the product's own notation.
+           The only place on this page where the case colours are allowed. -->
+      <section class="mt-16 border-t border-rule pt-10" aria-labelledby="demo-h">
+        <h2 id="demo-h" class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[2rem]">
+          Grammar you can see
+        </h2>
+        <p class="mt-3 max-w-prose text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
+          Sentence X-Ray takes a German sentence apart and colours each piece by its case, so the pattern
+          becomes visible instead of memorised. The same colours run through every lesson.
+        </p>
+        <div class="mt-6 flex flex-wrap items-stretch gap-2">
+          {DEMO.map((w) => (
+            <span class={`rounded-md border px-3 py-2 ${w.kasus ? KASUS_CLASS[w.kasus] : 'border-rule bg-paper-sunk text-graphite'}`}>
+              <span class="block text-base font-semibold">{w.text}</span>
+              <span class="mt-0.5 block font-data text-[0.6875rem] font-bold tracking-[0.13em]">{w.abbr}</span>
+              <span class="mt-0.5 block text-[0.75rem] opacity-80">{w.gloss}</span>
             </span>
-          </div>
-          <div class="flex items-center gap-2 mb-3 mt-2"><span class="text-blue-400" aria-hidden="true">⚡</span><h2 class="text-xl font-bold text-white">Pro</h2></div>
-          <div class="mb-1">
-            <span class="text-4xl font-bold text-white">€<span id="pro-price">9.99</span></span>
-            <span class="text-gray-400">/<span id="pro-period">month</span></span>
-          </div>
-          <p id="pro-subline" class="text-gray-400 text-xs mb-3">Less than €0.33/day — cheaper than a coffee</p>
-          <p class="text-gray-400 text-sm mb-4">Full access to everything</p>
-          <ul class="space-y-2 mb-5">
-            {PRO_FEATURES.map((f) => (
-              <li class="flex items-start gap-2.5 text-sm text-gray-300"><span class="text-blue-400 mt-0.5 flex-shrink-0" aria-hidden="true">✓</span><span>{f}</span></li>
-            ))}
-          </ul>
-          <button id="pro-btn" type="button" class="w-full py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white">Get started</button>
-        </div>
-      </div>
-
-      <!-- Free trial + trust -->
-      <div class="text-center mt-6 text-gray-400 text-sm">
-        <p id="plan-note">Pro includes a <strong class="text-white">7-day free trial</strong> — cancel anytime.</p>
-      </div>
-      <div class="flex flex-wrap justify-center gap-8 mt-6 text-gray-500 text-sm">
-        <div class="flex items-center gap-2"><span class="text-green-500" aria-hidden="true">✓</span><span>Secure Payment</span></div>
-        <div class="flex items-center gap-2"><span class="text-green-500" aria-hidden="true">✓</span><span>Cancel Anytime</span></div>
-        <div class="flex items-center gap-2"><span class="text-green-500" aria-hidden="true">✓</span><span>7-Day Money Back</span></div>
-      </div>
-
-      <!-- Objections -->
-      <div class="mt-20">
-        <h2 class="text-2xl font-bold text-white text-center mb-2">Du fragst dich vielleicht…</h2>
-        <p class="text-gray-500 text-center text-sm mb-10">You might be wondering…</p>
-        <div class="grid md:grid-cols-3 gap-4">
-          {OBJECTIONS.map((item) => (
-            <div class="bg-gray-800/50 border border-gray-700 rounded-2xl p-6">
-              <p class="font-semibold text-white mb-1">{item.q}</p>
-              <p class="text-xs text-gray-500 mb-4">{item.qde}</p>
-              <p class="text-gray-300 text-sm leading-relaxed">{item.a}</p>
-            </div>
           ))}
         </div>
-      </div>
+        <p class="mt-3 font-data text-[0.8125rem] text-graphite">
+          Free: {ANON_DAILY_LIMIT} sentence a day. Pro: {PRO_DAILY_LIMIT}.
+        </p>
+      </section>
 
       <!-- FAQ -->
-      <div class="mt-16">
-        <h2 class="text-2xl font-bold text-white text-center mb-2">Häufige Fragen</h2>
-        <p class="text-gray-500 text-center text-sm mb-10">Common Questions</p>
-        <div class="max-w-2xl mx-auto space-y-3">
+      <section class="mt-16 border-t border-rule pt-10" aria-labelledby="faq-h">
+        <h2 id="faq-h" class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[2rem]">
+          Before you decide
+        </h2>
+        <dl class="mt-6 max-w-prose">
           {FAQS.map((item) => (
-            <details class="border border-gray-700 rounded-xl overflow-hidden group">
-              <summary class="w-full flex items-center justify-between px-6 py-4 text-left text-white font-medium hover:bg-gray-800/60 transition-colors cursor-pointer list-none">
-                <span>{item.q} <span class="text-gray-500 font-normal text-sm">/ {item.qde}</span></span>
-                <span class="text-gray-400 flex-shrink-0 ml-4 transition-transform group-open:rotate-180" aria-hidden="true">▾</span>
-              </summary>
-              <div class="px-6 pb-5 text-gray-300 text-sm leading-relaxed border-t border-gray-700/60 pt-4">
-                <p>{item.a}</p>
-                <p class="mt-2 text-gray-500">{item.ade}</p>
-              </div>
-            </details>
+            <div class="border-b border-rule py-5">
+              <dt class="text-[0.9375rem] font-semibold">{item.q}</dt>
+              <dd class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">{item.a}</dd>
+            </div>
           ))}
-        </div>
-        <div class="text-center mt-8 space-y-3">
-          <a href="https://deutsch-meister.de/faq" class="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors">Alle häufigen Fragen ansehen <span aria-hidden="true">→</span></a>
-          <br />
-          <a href="/vergleich/" class="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors">Sieh dir den Vergleich an <span aria-hidden="true">→</span></a>
-        </div>
-      </div>
+        </dl>
+      </section>
+
     </div>
   </div>
 </Layout>
 
 <script>
-  // Pricing interactivity — billing toggle + auth-aware LemonSqueezy checkout.
-  // Mirrors src/pages/PricingPage.jsx: hosted checkout opened in a new tab,
-  // passing the same user context (checkout[email], checkout[custom][user_id]).
-  const PLANS = {
-    monthly: {
-      variant: 'dfc81ca3-78f5-4bab-9d62-dca75b3f7e21',
-      price: '9.99', period: 'month',
-      subline: 'Less than €0.33/day — cheaper than a coffee', sublineClass: 'text-gray-400 text-xs mb-3',
-      badgeHtml: '<span aria-hidden="true">⚡</span> MOST POPULAR', badgeClass: 'bg-blue-600 text-white font-bold px-4 py-1 rounded-full text-sm flex items-center gap-1.5',
-    },
-    yearly: {
-      variant: 'd58c1838-d935-4c59-a0ac-0bfce8ec9c3b',
-      price: '79.99', period: 'year',
-      subline: "That's only €6.67/month — less than €0.22/day", sublineClass: 'text-green-400 text-xs mb-3',
-      badgeHtml: '<span aria-hidden="true">✨</span> Beliebteste Wahl', badgeClass: 'bg-green-700 text-white font-bold px-4 py-1 rounded-full text-sm flex items-center gap-1.5',
-    },
+  // Billing toggle + auth-aware LemonSqueezy checkout.
+  //
+  // Prices derive from ../data/pricing.js — the same module the server-rendered
+  // table above reads, so the toggle cannot show a figure the static HTML
+  // contradicts. Variant IDs stay literal: checkout plumbing, not copy.
+  import { PLANS as DATA, eur as EUR } from '../data/pricing.js';
+
+  const VARIANTS = {
+    monthly: 'dfc81ca3-78f5-4bab-9d62-dca75b3f7e21',
+    yearly: 'd58c1838-d935-4c59-a0ac-0bfce8ec9c3b',
   };
 
   let cycle = 'monthly';
-
   const $ = (id) => document.getElementById(id);
 
   function applyCycle() {
-    const p = PLANS[cycle];
-    $('pro-price').textContent = p.price;
-    $('pro-period').textContent = p.period;
-    const sub = $('pro-subline');
-    sub.textContent = p.subline;
-    sub.className = p.sublineClass;
-    const badge = $('pro-badge');
-    badge.innerHTML = p.badgeHtml;
-    badge.className = p.badgeClass;
-    const active = 'px-5 py-2 rounded-full text-sm font-medium transition-all bg-white text-gray-900 shadow';
-    const inactive = 'px-5 py-2 rounded-full text-sm font-medium transition-all text-gray-400 hover:text-white';
-    $('toggle-monthly').className = cycle === 'monthly' ? active : inactive;
-    $('toggle-yearly').className = (cycle === 'yearly' ? active : inactive) + ' flex items-center gap-1.5';
+    const plan = DATA[cycle];
+    $('pro-price').textContent = EUR(plan.price);
+    $('pro-period').textContent = plan.interval;
+    $('plan-note').textContent =
+      cycle === 'yearly'
+        ? EUR(plan.asMonthly) + ' a month, billed yearly · cancel anytime'
+        : EUR(plan.perDay) + ' a day · cancel anytime';
+
+    const on = 'rounded-pill px-4 py-1.5 text-sm font-semibold transition-colors bg-ink text-paper';
+    const off = 'rounded-pill px-4 py-1.5 text-sm font-semibold transition-colors text-graphite hover:text-ink';
+    $('toggle-monthly').className = cycle === 'monthly' ? on : off;
+    $('toggle-yearly').className = cycle === 'yearly' ? on : off;
+    $('toggle-monthly').setAttribute('aria-pressed', String(cycle === 'monthly'));
+    $('toggle-yearly').setAttribute('aria-pressed', String(cycle === 'yearly'));
   }
 
   function currentUser() {
@@ -216,7 +306,7 @@ const jsonLd = [productSchema, faqSchema];
           if (u && u.id) return { email: u.email || '', id: u.id };
         }
       }
-    } catch (e) { /* ignore */ }
+    } catch (e) { /* private mode — treat as signed out */ }
     return null;
   }
 
@@ -230,11 +320,10 @@ const jsonLd = [productSchema, faqSchema];
     $('toggle-monthly').addEventListener('click', () => { cycle = 'monthly'; applyCycle(); });
     $('toggle-yearly').addEventListener('click', () => { cycle = 'yearly'; applyCycle(); });
 
-    // Pro checkout — same behaviour as the SPA: not logged in → signup; else open hosted checkout.
     $('pro-btn').addEventListener('click', () => {
       const u = currentUser();
       if (!u) { window.location.href = 'https://deutsch-meister.de/signup'; return; }
-      const url = checkoutUrl(PLANS[cycle].variant, u.email, u.id);
+      const url = checkoutUrl(VARIANTS[cycle], u.email, u.id);
       // Never a new tab: iOS Safari blocks the popup and in-app browsers
       // swallow it, so the customer sees nothing happen. Prefer the
       // LemonSqueezy overlay, fall back to same-tab navigation.
@@ -244,58 +333,5 @@ const jsonLd = [productSchema, faqSchema];
         window.location.href = url;
       }
     });
-
-    // Plan state. A signed-in visitor was previously shown the same page as a
-    // stranger: "Current Plan" on Free and a bare "Get started" on Pro, even
-    // mid-trial or already subscribed. The real state needs the profile row, so
-    // it is fetched lazily and only when a session exists — the logged-out path
-    // (the reason this page is static and crawlable) loads no extra JS.
-    const u = currentUser();
-    if (!u) return;
-
-    const disabled = 'w-full py-3 px-6 rounded-xl flex items-center justify-center gap-2 bg-gray-700 text-gray-400 cursor-not-allowed';
-    const free = $('free-btn');
-    const pro  = $('pro-btn');
-
-    const markFreeAsCurrent = () => {
-      free.textContent = 'Current Plan';
-      free.removeAttribute('href');
-      free.setAttribute('aria-disabled', 'true');
-      free.className = disabled;
-    };
-
-    // Optimistic default matches the old behaviour, so a failed lookup degrades
-    // to what shipped before rather than to a blank card.
-    markFreeAsCurrent();
-
-    import('../lib/planState.js')
-      .then((m) => m.getPlanState())
-      .then((plan) => {
-        if (!plan) return;
-
-        if (plan.state === 'subscribed') {
-          free.textContent = 'Included in Pro';
-          pro.textContent = 'Current plan';
-          pro.setAttribute('aria-disabled', 'true');
-          pro.disabled = true;
-          pro.className = disabled;
-          const note = $('plan-note');
-          if (note) {
-            note.innerHTML = 'You are on <strong class="text-white">Pro</strong>. <a class="underline hover:text-white" href="https://deutsch-meister.de/profile">Manage your plan</a>.';
-          }
-          return;
-        }
-
-        if (plan.state === 'trial') {
-          const d = plan.trialDaysLeft;
-          pro.textContent = 'Upgrade to Pro';
-          const note = $('plan-note');
-          if (note) {
-            note.innerHTML = 'You have <strong class="text-white">' + d + ' day' + (d === 1 ? '' : 's') +
-              '</strong> left in your Pro trial — upgrade any time to keep access.';
-          }
-        }
-      })
-      .catch(() => { /* keep the optimistic default */ });
   });
 </script>
