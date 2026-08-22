@@ -47,6 +47,7 @@ test('the email brand copy matches the design tokens', () => {
 const BRANDED_SURFACES = [
   'netlify/functions/send-welcome-email.mjs',
   'netlify/functions/trial-lifecycle.mjs',
+  'netlify/functions/activation-lifecycle.mjs',
   'netlify/functions/daily-sentence.mjs',
   'netlify/functions/lemonsqueezy-webhook.mjs',
   'netlify/functions/send-daily-test.mjs',
