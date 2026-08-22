@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import '../styles/global.css';
+import { PLANS, num, eur } from '../data/pricing.js';
+import { GRAMMAR_TOPIC_COUNT, PRO_SPEAKING_SESSIONS_PER_MONTH, LISTENING_DIALOGUE_COUNT } from '../data/marketing.js';
 
 const title = 'Learn German Online - Free Lessons A1 to B2 | DeutschMeister';
 const description = 'Master German with free interactive lessons. Grammar, vocabulary, listening exercises, and podcasts for English speakers. CEFR levels A1.1 to B2.2.';
@@ -37,16 +39,16 @@ const STATS = [
   { value: '1,400+', label: 'Learners' },
   { value: '2,488', label: 'AI speaking exercises' },
   { value: '170+', label: 'New learners this month' },
-  { value: '480', label: 'Native-speaker dialogues' },
+  { value: String(LISTENING_DIALOGUE_COUNT), label: 'Native-speaker dialogues' },
 ];
 
 // Comparison table (DeutschMeister vs alternatives).
 const CMP = [
-  { feature: 'Monthly Cost', dm: ['€9.99', 'pos'], group: ['€150+', 'neg'], tutor: ['€50–100', 'neg'], apps: ['€0–15', 'neu'] },
-  { feature: 'AI Speaking Practice', dm: ['✓ 30 sessions/mo', 'pos'], group: ['5 min/class', 'neg'], tutor: ['✓ 1-on-1', 'pos'], apps: ['✗ None', 'neg'] },
+  { feature: 'Monthly Cost', dm: [eur(PLANS.monthly.price), 'pos'], group: ['€150+', 'neg'], tutor: ['€50–100', 'neg'], apps: ['€0–15', 'neu'] },
+  { feature: 'AI Speaking Practice', dm: [`✓ ${PRO_SPEAKING_SESSIONS_PER_MONTH} sessions/mo`, 'pos'], group: ['5 min/class', 'neg'], tutor: ['✓ 1-on-1', 'pos'], apps: ['✗ None', 'neg'] },
   { feature: 'Available 24/7', dm: ['✓', 'pos'], group: ['✗ Fixed times', 'neg'], tutor: ['✗ Book ahead', 'neg'], apps: ['✓', 'pos'] },
   { feature: 'Adapts to your level', dm: ['✓ Automatic', 'pos'], group: ['✗ One pace', 'neg'], tutor: ['✓ Manual', 'pos'], apps: ['✗ Generic', 'neg'] },
-  { feature: 'Grammar A1–B2', dm: ['✓ 64 topics', 'pos'], group: ['Varies', 'neu'], tutor: ['Varies', 'neu'], apps: ['✓ Varies', 'pos'] },
+  { feature: 'Grammar A1–B2', dm: [`✓ ${GRAMMAR_TOPIC_COUNT} topics`, 'pos'], group: ['Varies', 'neu'], tutor: ['Varies', 'neu'], apps: ['✓ Varies', 'pos'] },
   { feature: 'Instant feedback', dm: ['✓ AI scoring', 'pos'], group: ['Next class', 'neg'], tutor: ['End of session', 'neg'], apps: ['✗ Basic', 'neg'] },
   { feature: 'Sentence analysis', dm: ['✓ X-Ray tool', 'pos'], group: ['✗', 'neg'], tutor: ['✗', 'neg'], apps: ['✗', 'neg'] },
   { feature: 'Free level test', dm: ['✓', 'pos'], group: ['€50+', 'neg'], tutor: ['€30+', 'neg'], apps: ['Basic quiz', 'neu'] },
@@ -224,7 +226,7 @@ const XRAY_CHIPS = [
         <div class="rounded-2xl bg-slate-800 border border-slate-700 p-6 flex flex-col items-center gap-4">
           <div class="text-center">
             <p class="text-white font-bold text-lg">Pro Monthly</p>
-            <p class="text-slate-600 text-sm">€9.99 / month</p>
+            <p class="text-slate-400 text-sm">{eur(PLANS.monthly.price)} / {PLANS.monthly.interval}</p>
           </div>
           <a href="https://deutsch-meister.de/signup" class="group w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-xl shadow-lg transition-all">
             Start Free Trial <span aria-hidden="true">→</span>
@@ -234,10 +236,10 @@ const XRAY_CHIPS = [
           <div class="text-center">
             <div class="inline-flex items-center gap-1.5 mb-1">
               <p class="text-white font-bold text-lg">Pro Yearly</p>
-              <span class="px-2 py-0.5 rounded-full bg-green-700 text-white text-[10px] font-bold">Save 33%</span>
+              <span class="px-2 py-0.5 rounded-full bg-green-700 text-white text-[10px] font-bold">Save {PLANS.yearly.savingPercent}%</span>
             </div>
-            <p class="text-slate-600 text-sm">€79.99 / year</p>
-            <p class="text-green-400 text-xs mt-0.5">That's €0.22/day — less than a coffee</p>
+            <p class="text-slate-400 text-sm">{eur(PLANS.yearly.price)} / {PLANS.yearly.interval}</p>
+            <p class="text-green-400 text-xs mt-0.5">That's {eur(PLANS.yearly.perDay)}/day — less than a coffee</p>
           </div>
           <a href="https://deutsch-meister.de/signup" class="group w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-xl shadow-lg transition-all">
             Start Free Trial <span aria-hidden="true">→</span>

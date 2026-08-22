@@ -5,6 +5,11 @@ import { readFileSync } from 'node:fs';
 
 const PAIRS = [
   ['src/data/competitorComparisons.js', 'astro-site/src/data/competitorComparisons.js'],
+  // What the checkout charges, and what the copy claims. Both sides render
+  // prices and limits; a drift here puts two different numbers in front of the
+  // same buyer. See the header of src/data/marketing.js.
+  ['src/data/pricing.js', 'astro-site/src/data/pricing.js'],
+  ['src/data/marketing.js', 'astro-site/src/data/marketing.js'],
 ];
 
 let failed = false;

@@ -1,36 +1,53 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import '../styles/global.css';
+import { PLANS, CURRENCY, num, eur } from '../data/pricing.js';
+import {
+  GRAMMAR_TOPIC_COUNT,
+  SPEAKING_LINE,
+  XRAY_LINE,
+  TRIAL_DAYS,
+  TRIAL_SPEAKING_SESSIONS,
+  ANON_DAILY_LIMIT,
+  FREE_LEVEL_LABEL,
+} from '../data/marketing.js';
 
+// Every figure on this page derives from src/data/pricing.js and
+// src/data/marketing.js — see those files for why nothing here is retyped.
 const title = 'Pricing — Free Trial & Pro Plans | DeutschMeister';
-const description = 'Start free, upgrade when ready. DeutschMeister Pro unlocks all 64 German grammar topics, AI speaking practice, and listening exercises.';
+const description = `Start free, upgrade when ready. DeutschMeister Pro unlocks all ${GRAMMAR_TOPIC_COUNT} German grammar topics, AI speaking practice, and listening exercises.`;
 
 const productSchema = {
   '@context': 'https://schema.org',
   '@type': 'Product',
   name: 'DeutschMeister Pro',
-  description: 'Full access to all 64 German grammar topics, AI speaking practice, native-speaker listening exercises, podcasts, and 50 Sentence X-Ray analyses per day.',
+  description: `Full access to all ${GRAMMAR_TOPIC_COUNT} German grammar topics, AI speaking practice, native-speaker listening exercises, podcasts, and ${XRAY_LINE}.`,
   brand: { '@type': 'Brand', name: 'DeutschMeister' },
   offers: [
-    { '@type': 'Offer', name: 'Pro Monthly', price: '9.99', priceCurrency: 'EUR', url: 'https://deutsch-meister.de/pricing/', availability: 'https://schema.org/InStock' },
-    { '@type': 'Offer', name: 'Pro Yearly', price: '79.99', priceCurrency: 'EUR', url: 'https://deutsch-meister.de/pricing/', availability: 'https://schema.org/InStock' },
+    { '@type': 'Offer', name: PLANS.monthly.name, price: num(PLANS.monthly.price), priceCurrency: CURRENCY, url: 'https://deutsch-meister.de/pricing/', availability: 'https://schema.org/InStock' },
+    { '@type': 'Offer', name: PLANS.yearly.name, price: num(PLANS.yearly.price), priceCurrency: CURRENCY, url: 'https://deutsch-meister.de/pricing/', availability: 'https://schema.org/InStock' },
   ],
 };
 
 const PRO_FEATURES = [
-  'All 64 grammar topics — A1.1 to B2.2',
+  `All ${GRAMMAR_TOPIC_COUNT} grammar topics — A1.1 to B2.2`,
   'Interactive exercises that explain WHY answers are correct',
   'Native-speaker listening exercises at your level',
   'Grammar podcasts and video explanations',
-  'AI speaking practice — 30 sessions/month',
-  '50 Sentence X-Ray analyses per day',
+  SPEAKING_LINE,
+  XRAY_LINE,
   'Progress tracking + cancel anytime',
 ];
+
+// Sublines are rendered server-side AND swapped by the billing toggle below.
+// Both read the same derived strings so the two can never disagree.
+const MONTHLY_SUBLINE = `Less than ${eur(PLANS.monthly.perDay)}/day — cheaper than a coffee`;
+const YEARLY_SUBLINE = `That's only ${eur(PLANS.yearly.asMonthly)}/month — less than ${eur(PLANS.yearly.perDay)}/day`;
 const FREE_FEATURES = [
-  'Full A1.1 level — no signup required',
-  '1 Sentence X-Ray analysis per day',
+  `Full ${FREE_LEVEL_LABEL} level — no signup required`,
+  `${ANON_DAILY_LIMIT} Sentence X-Ray analysis per day`,
   'Free level test',
-  '2 free AI speaking sessions',
+  `${TRIAL_SPEAKING_SESSIONS} free AI speaking sessions`,
 ];
 const OBJECTIONS = [
   { q: 'Another grammar website?', qde: 'Noch eine Grammatik-Webseite?', a: 'DeutschMeister explains grammar in English first, then shows you how German does it. No jargon, no tables without context.' },
@@ -38,7 +55,7 @@ const OBJECTIONS = [
   { q: 'Is it worth it when free alternatives exist?', qde: 'Lohnt sich das, wenn es kostenlose Alternativen gibt?', a: 'Free resources explain WHAT. We explain WHY. That difference is what makes grammar stick.' },
 ];
 const FAQS = [
-  { q: 'Can I try before buying?', qde: 'Kann ich vor dem Kauf testen?', a: 'Yes! A1.1 is completely free, no signup needed. Try Sentence X-Ray and 2 free speaking sessions too.', ade: 'Ja! A1.1 ist komplett kostenlos, ohne Anmeldung. Teste auch den Sentence X-Ray und 2 kostenlose Sprechübungen.' },
+  { q: 'Can I try before buying?', qde: 'Kann ich vor dem Kauf testen?', a: `Yes! ${FREE_LEVEL_LABEL} is completely free, no signup needed. Try Sentence X-Ray and ${TRIAL_SPEAKING_SESSIONS} free speaking sessions too.`, ade: `Ja! ${FREE_LEVEL_LABEL} ist komplett kostenlos, ohne Anmeldung. Teste auch den Sentence X-Ray und ${TRIAL_SPEAKING_SESSIONS} kostenlose Sprechübungen.` },
   { q: 'What happens after the trial?', qde: 'Was passiert nach der Testphase?', a: 'You keep access to all free content. Only premium features like speaking practice and extended analyses require a subscription.', ade: 'Du behältst Zugang zu allen kostenlosen Inhalten. Nur Premium-Features wie Sprechübungen und erweiterte Analysen erfordern ein Abo.' },
   { q: 'Can I cancel anytime?', qde: 'Kann ich jederzeit kündigen?', a: 'Yes, anytime. No questions asked, no hidden fees.', ade: 'Ja, jederzeit. Keine Fragen, keine versteckten Kosten.' },
 ];
@@ -71,7 +88,7 @@ const jsonLd = [productSchema, faqSchema];
           <button id="toggle-monthly" type="button" class="px-5 py-2 rounded-full text-sm font-medium transition-all bg-white text-gray-900 shadow">Monthly</button>
           <button id="toggle-yearly" type="button" class="px-5 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-1.5 text-gray-400 hover:text-white">
             Yearly
-            <span class="text-[10px] font-bold bg-green-700 text-white px-1.5 py-0.5 rounded-full leading-none">-33%</span>
+            <span class="text-[10px] font-bold bg-green-700 text-white px-1.5 py-0.5 rounded-full leading-none">-{PLANS.yearly.savingPercent}%</span>
           </button>
         </div>
       </div>
@@ -100,10 +117,10 @@ const jsonLd = [productSchema, faqSchema];
           </div>
           <div class="flex items-center gap-2 mb-3 mt-2"><span class="text-blue-400" aria-hidden="true">⚡</span><h2 class="text-xl font-bold text-white">Pro</h2></div>
           <div class="mb-1">
-            <span class="text-4xl font-bold text-white">€<span id="pro-price">9.99</span></span>
-            <span class="text-gray-400">/<span id="pro-period">month</span></span>
+            <span class="text-4xl font-bold text-white">€<span id="pro-price">{num(PLANS.monthly.price)}</span></span>
+            <span class="text-gray-400">/<span id="pro-period">{PLANS.monthly.interval}</span></span>
           </div>
-          <p id="pro-subline" class="text-gray-400 text-xs mb-3">Less than €0.33/day — cheaper than a coffee</p>
+          <p id="pro-subline" class="text-gray-400 text-xs mb-3">{MONTHLY_SUBLINE}</p>
           <p class="text-gray-400 text-sm mb-4">Full access to everything</p>
           <ul class="space-y-2 mb-5">
             {PRO_FEATURES.map((f) => (
@@ -116,7 +133,7 @@ const jsonLd = [productSchema, faqSchema];
 
       <!-- Free trial + trust -->
       <div class="text-center mt-6 text-gray-400 text-sm">
-        <p id="plan-note">Pro includes a <strong class="text-white">7-day free trial</strong> — cancel anytime.</p>
+        <p id="plan-note">Pro includes a <strong class="text-white">{TRIAL_DAYS}-day free trial</strong> — cancel anytime.</p>
       </div>
       <div class="flex flex-wrap justify-center gap-8 mt-6 text-gray-500 text-sm">
         <div class="flex items-center gap-2"><span class="text-green-500" aria-hidden="true">✓</span><span>Secure Payment</span></div>
@@ -171,18 +188,25 @@ const jsonLd = [productSchema, faqSchema];
   // Pricing interactivity — billing toggle + auth-aware LemonSqueezy checkout.
   // Mirrors src/pages/PricingPage.jsx: hosted checkout opened in a new tab,
   // passing the same user context (checkout[email], checkout[custom][user_id]).
+  import { PLANS as DATA, num as NUM, eur as EUR } from '../data/pricing.js';
+  // Prices and sublines derive from src/data/pricing.js — the same module the
+  // server-rendered markup above reads, so the toggle cannot show a figure the
+  // static HTML contradicts. Variant IDs stay literal: they are checkout
+  // plumbing, not copy, and belong with the store configuration.
   const PLANS = {
     monthly: {
       variant: 'dfc81ca3-78f5-4bab-9d62-dca75b3f7e21',
-      price: '9.99', period: 'month',
-      subline: 'Less than €0.33/day — cheaper than a coffee', sublineClass: 'text-gray-400 text-xs mb-3',
+      price: NUM(DATA.monthly.price), period: DATA.monthly.interval,
+      subline: `Less than ${EUR(DATA.monthly.perDay)}/day — cheaper than a coffee`, sublineClass: 'text-gray-400 text-xs mb-3',
       badgeHtml: '<span aria-hidden="true">⚡</span> MOST POPULAR', badgeClass: 'bg-blue-600 text-white font-bold px-4 py-1 rounded-full text-sm flex items-center gap-1.5',
     },
     yearly: {
       variant: 'd58c1838-d935-4c59-a0ac-0bfce8ec9c3b',
-      price: '79.99', period: 'year',
-      subline: "That's only €6.67/month — less than €0.22/day", sublineClass: 'text-green-400 text-xs mb-3',
-      badgeHtml: '<span aria-hidden="true">✨</span> Beliebteste Wahl', badgeClass: 'bg-green-700 text-white font-bold px-4 py-1 rounded-full text-sm flex items-center gap-1.5',
+      price: NUM(DATA.yearly.price), period: DATA.yearly.interval,
+      subline: `That's only ${EUR(DATA.yearly.asMonthly)}/month — less than ${EUR(DATA.yearly.perDay)}/day`, sublineClass: 'text-green-400 text-xs mb-3',
+      // Was "Beliebteste Wahl" — German on an English page, at the exact moment
+      // the visitor is deciding to pay.
+      badgeHtml: '<span aria-hidden="true">✨</span> BEST VALUE', badgeClass: 'bg-green-700 text-white font-bold px-4 py-1 rounded-full text-sm flex items-center gap-1.5',
     },
   };
 

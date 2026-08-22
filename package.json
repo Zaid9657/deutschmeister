@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "node scripts/optimize-images.cjs && vite build",
+    "build:verify": "npm run build && mv dist/index.html dist/app.html && node scripts/prerender-spa-routes.mjs && node scripts/check-built-html.mjs dist --spa-only",
     "preview": "vite preview",
     "lighthouse": "node scripts/lighthouse-audit.js --url=http://localhost:4173",
     "lighthouse:mobile": "node scripts/lighthouse-audit.js --url=http://localhost:4173 --preset=mobile",
@@ -15,7 +16,9 @@
     "optimize:images": "node scripts/optimize-images.cjs",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "check:duplicates": "node scripts/check-duplicates.mjs"
+    "check:duplicates": "node scripts/check-duplicates.mjs",
+    "test": "node --test \"tests/*.test.mjs\"",
+    "check:html": "node scripts/check-built-html.mjs dist"
   },
   "dependencies": {
     "@netlify/functions": "^5.1.5",

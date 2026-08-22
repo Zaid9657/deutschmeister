@@ -1,29 +1,20 @@
-// Single source of truth for user-facing limit numbers.
+// Re-export of the limit constants from the shared marketing data file.
 //
-// These MUST match the server-side gates, which are the real enforcement:
-//   - X-Ray:    DAILY_LIMITS in netlify/functions/analyze-sentence.mjs
-//   - Speaking: PRO_MONTHLY_LIMIT / TRIAL_TOTAL_LIMIT in the speaking functions
+// The numbers moved to src/data/marketing.js so the Astro site can read them
+// too — it is a separate package and cannot import from src/config/. This file
+// stays as the SPA's import path (src/pages/SentenceXRay.jsx and anything added
+// later) so there is still exactly one place these numbers are defined, and
+// exactly one place their provenance is recorded: marketing.js.
 //
-// Before this file the same numbers were retyped across the SPA, the Astro
-// pricing page and the FAQ, and had drifted: the X-Ray paywall advertised
-// "5 analyses per day", a tier that has never existed in the backend.
+// Do not redeclare a value here. Add it to src/data/marketing.js with its
+// provenance comment, then re-export it below if the SPA wants this path.
 
-/** Anonymous visitor, per UTC day. */
-export const ANON_DAILY_LIMIT = 1;
-
-/** Signed-up account during the 7-day trial, per UTC day. */
-export const TRIAL_DAILY_LIMIT = 10;
-
-/** Signed-up account after the trial ends, per UTC day. */
-export const FREE_DAILY_LIMIT = 1;
-
-/** Pro subscriber, per UTC day. */
-export const PRO_DAILY_LIMIT = 50;
-
-/** Speaking sessions included with Pro, per month. */
-export const PRO_SPEAKING_SESSIONS_PER_MONTH = 30;
-
-/** Free 5-minute speaking sessions available during the trial, in total. */
-export const TRIAL_SPEAKING_SESSIONS = 2;
-
-export const TRIAL_DAYS = 7;
+export {
+  ANON_DAILY_LIMIT,
+  TRIAL_DAILY_LIMIT,
+  FREE_DAILY_LIMIT,
+  PRO_DAILY_LIMIT,
+  PRO_SPEAKING_SESSIONS_PER_MONTH,
+  TRIAL_SPEAKING_SESSIONS,
+  TRIAL_DAYS,
+} from '../data/marketing.js';

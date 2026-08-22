@@ -25,6 +25,13 @@ jobs:
       - name: Check duplicated data files stay in sync
         run: node scripts/check-duplicates.mjs
 
+      # Guards what the buyer is told: derived pricing figures, no retyped price
+      # literals, no "unlimited" claim on a metered plan, and — the one that
+      # earns its keep — the limits in src/data/marketing.js parsed out of the
+      # Netlify functions that enforce them and compared. See tests/claims.test.mjs.
+      - name: Claim + pricing guards
+        run: npm test
+
       - name: Syntax-check Netlify functions
         run: |
           for f in netlify/functions/*.mjs netlify/functions/*.js netlify/functions/_shared/*.mjs; do
@@ -34,9 +41,29 @@ jobs:
       - name: Build SPA
         run: npm run build
 
+      # Verify the BUILT HTML, not the source that produced it. The prerendered
+      # SPA routes get their title/canonical/visible copy injected at build time
+      # (scripts/prerender-spa-routes.mjs), so reviewing the source tells you
+      # what the injector intends, never what a crawler receives. Reproduces the
+      # two Netlify build steps the check needs, then reads dist/.
+      - name: Prerender SPA routes
+        run: |
+          mv dist/index.html dist/app.html
+          node scripts/prerender-spa-routes.mjs
+
+      - name: Verify built HTML
+        run: node scripts/check-built-html.mjs dist --spa-only
+
       # The Astro site is NOT built here: its getStaticPaths fetches grammar
       # content from Supabase at build time, which needs PUBLIC_SUPABASE_URL /
       # PUBLIC_SUPABASE_ANON_KEY secrets and network egress. Netlify's deploy
-      # build remains the gate for the Astro half. If you add those secrets to
-      # the repo, append:
-      #   cd astro-site && npm ci && npm run build
+      # build remains the gate for the Astro half, and the step above therefore
+      # runs in --spa-only mode, which prints on every run that the static/SEO
+      # half went unverified. To close that gap, add the two secrets to the repo
+      # and append here:
+      #   cd astro-site && npm ci && npm run build && cd ..
+      #   <the netlify.toml copy steps>
+      #   node scripts/check-built-html.mjs dist        # no --spa-only
+      # An offline alternative exists if egress is the blocker: commit a cache
+      # produced by scripts/dump-grammar-cache.mjs and build with
+      # GRAMMAR_CONTENT_CACHE=<path> (see CLAUDE.md).

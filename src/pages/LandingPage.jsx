@@ -6,6 +6,8 @@ import { ArrowRight, MessageSquare, Sun, TreePine, Waves, Moon, Clock, Youtube, 
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import SEO from '../components/SEO';
+import { PLANS, eur } from '../data/pricing.js';
+import { GRAMMAR_TOPIC_COUNT, PRO_SPEAKING_SESSIONS_PER_MONTH } from '../data/marketing.js';
 import StatsBar from '../components/StatsBar';
 // Usage: <OptimizedImage src="/hero.png" alt="Hero" width={800} height={600} /> — auto-serves .webp with .png fallback
 
@@ -281,14 +283,14 @@ const LandingPage = () => {
                 {[
                   {
                     feature: 'Monthly Cost',
-                    dm: { text: '€9.99', positive: true },
+                    dm: { text: eur(PLANS.monthly.price), positive: true },
                     group: { text: '€150+', positive: false },
                     tutor: { text: '€50–100', positive: false },
                     apps: { text: '€0–15', neutral: true },
                   },
                   {
                     feature: 'AI Speaking Practice',
-                    dm: { text: '✓ Unlimited', positive: true },
+                    dm: { text: `✓ ${PRO_SPEAKING_SESSIONS_PER_MONTH} sessions/mo`, positive: true },
                     group: { text: '5 min/class', positive: false },
                     tutor: { text: '✓ 1-on-1', positive: true },
                     apps: { text: '✗ None', positive: false },
@@ -309,7 +311,7 @@ const LandingPage = () => {
                   },
                   {
                     feature: 'Grammar A1–B2',
-                    dm: { text: '✓ 64 topics', positive: true },
+                    dm: { text: `✓ ${GRAMMAR_TOPIC_COUNT} topics`, positive: true },
                     group: { text: 'Varies', neutral: true },
                     tutor: { text: 'Varies', neutral: true },
                     apps: { text: '✓ Varies', positive: true },
@@ -413,7 +415,7 @@ const LandingPage = () => {
               <div className="rounded-2xl bg-slate-800 border border-slate-700 p-6 flex flex-col items-center gap-4">
                 <div className="text-center">
                   <p className="text-white font-bold text-lg">Pro Monthly</p>
-                  <p className="text-slate-400 text-sm">€9.99 / month</p>
+                  <p className="text-slate-400 text-sm">{eur(PLANS.monthly.price)} / {PLANS.monthly.interval}</p>
                 </div>
                 <Link
                   to="/signup"
@@ -429,10 +431,10 @@ const LandingPage = () => {
                 <div className="text-center">
                   <div className="inline-flex items-center gap-1.5 mb-1">
                     <p className="text-white font-bold text-lg">Pro Yearly</p>
-                    <span className="px-2 py-0.5 rounded-full bg-green-500 text-white text-[10px] font-bold">Save 33%</span>
+                    <span className="px-2 py-0.5 rounded-full bg-green-500 text-white text-[10px] font-bold">Save {PLANS.yearly.savingPercent}%</span>
                   </div>
-                  <p className="text-slate-400 text-sm">€79.99 / year</p>
-                  <p className="text-green-400 text-xs mt-0.5">That&apos;s €0.22/day — less than a coffee</p>
+                  <p className="text-slate-400 text-sm">{eur(PLANS.yearly.price)} / {PLANS.yearly.interval}</p>
+                  <p className="text-green-400 text-xs mt-0.5">That&apos;s {eur(PLANS.yearly.perDay)}/day — less than a coffee</p>
                 </div>
                 <Link
                   to="/signup"

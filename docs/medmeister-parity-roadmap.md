@@ -47,13 +47,13 @@ tests**, **behavioral lifecycle email**, and **CI that verifies the built output
 |---|---|---|---|
 | **SEO content engine** | Blog system (`content/blog/posts/*.ts`), 3 long Leitfäden (~35 KB each), per-audience landing pages (7 locales), comparison pages, glossary | **1** Leitfaden (`astro-site/src/pages/leitfaden/telc-b1.astro` — measured SEO 100), **3** Vergleich pages stamped "Stand: Mai 2026", no blog infra | **Largest gap.** The winning pattern exists and was never replicated |
 | **SEO operations** | `.mcp.json` (DataForSEO + GSC MCP), repo-hosted routine prompts (`docs/seo-routines/geo-weekly.md`, `measurement-fortnightly.md`), `drafts/geo-tracking.csv` ledger, evidence-ranked fix order | None — no keyword research loop, no rank/GEO measurement, no routines | Whole capability absent |
-| **Built-output CI verification** | `scripts/check-exported-heads.mjs` gates CI: reads `dist/` HTML — unique titles/descriptions, one `<h1>`, one `lang`, min body chars, sitemap integrity, banned-literals list, `THIN_PAGE_DEBT` that fails when paid | CI (`.github/workflows/ci.yml`) runs lint + one duplicate check + `node --check` + SPA build. **The Astro build — the entire SEO surface — is not built in CI**, though `GRAMMAR_CONTENT_CACHE` makes it possible offline | High-value, low-effort port |
+| **Built-output CI verification** | `scripts/check-exported-heads.mjs` gates CI: reads `dist/` HTML — unique titles/descriptions, one `<h1>`, one `lang`, min body chars, sitemap integrity, banned-literals list, `THIN_PAGE_DEBT` that fails when paid | **Batch A:** `scripts/check-built-html.mjs` now gates CI over the built SPA pages (unique title/description, one visible `<h1>`, one `lang`, canonical, min body chars, sitemap integrity, banned literals). **Still open:** the Astro build — the entire static/SEO surface — is not built in CI, so the check runs `--spa-only` and says so every run | Half closed |
 | **Head/route registry** | `constants/seoRoutes.ts` (single registry, `noindex` fallback, `brandedTitle()` ≤60), guarded by `__tests__/constants/seoRoutes.test.ts` (no duplicate title/description/h1) | Per-page manual props into `Layout.astro` + `src/components/SEO.jsx`; good but unguarded — nothing prevents two pages sharing a title | Medium |
 | **Design system** | `theme/tokens.ts` — one file, provenance in header, named type roles with mobile step-downs, 2–3 binding rules, `sectionOrder` as data; primitives module (`components/homepage/v4/primitives.tsx`) as the only home of raw values; versioned page dirs (v1…v4); `content.ts` copy split per page | No system: teal/gold chrome + 8 unused CEFR level palettes + blue **dark** pricing page (the only dark page) + the retired amber→rose gradient still on the primary CTAs of both landing pages *and* in every email template and the cookie banner; logo defined in 3 places; ~109 bespoke card treatments; near-duplicate Tailwind configs (root vs `astro-site/`) unguarded by CI | Large; user wants a fresh identity |
-| **Copy/price discipline** | `constants/marketing.ts` (claims, provenance comments, UWG §5 framing) split from `constants/pricing.ts` (what checkout charges); `__tests__/constants/pricingConsistency.test.ts` (912 ln) reads page *sources* and bans literal claims per file list | Prices hardcoded in 6+ places (`src/config/lemonsqueezy.js`, `pricing.astro`, `SubscriptionPage.jsx`, `LandingPage.jsx`, `FAQPage.jsx`, `competitorComparisons.js` ×2, `llms.txt`); day-rates retyped rather than derived (`€0.33/day` monthly, `€0.22/day` yearly — both correct today, see note); `src/config/limits.js` is a good limits SSOT but Astro can't import it, so `pricing.astro` retypes claims as prose | Medium effort, legally relevant |
+| **Copy/price discipline** | `constants/marketing.ts` (claims, provenance comments, UWG §5 framing) split from `constants/pricing.ts` (what checkout charges); `__tests__/constants/pricingConsistency.test.ts` (912 ln) reads page *sources* and bans literal claims per file list | **Batch A: closed.** `src/data/pricing.js` (what the checkout charges) split from `src/data/marketing.js` (what the copy claims, provenance inline), both mirrored into `astro-site/src/data/` and drift-guarded; every day-rate and saving derives; `tests/claims.test.mjs` bans price literals, bans "unlimited" on metered surfaces, and compares the limits against the servers that enforce them | Closed |
 | **Lifecycle email** | One handler-less sender (`_email-core.js`) + one idempotency lock; declarative journey registry (`_lifecycle-journeys.js`); hourly runner with dry-run, canary allowlist, master switch shipping `paused` | 3 trial-clock emails (`trial-lifecycle.mjs`) + daily sentence (30-item loop) + welcome + dunning; good idempotency (`lifecycle_emails` UNIQUE) but no behavioral journeys, HTML hand-written per function, **wrong (retired) logo** in every template | Medium |
 | **Analytics** | Consent-gated, non-throwing `lib/marketingEvents.ts` (~30 typed GA4 wrappers), CTA-ladder tracking, server-side funnel row per session, guard-event table | GA4 + PostHog consent-gated, 26 funnel events defined in `src/lib/funnelTracking.js` — client-only, and nothing reads them; no server-side events despite 15 functions seeing every conversion | Medium |
-| **Tests** | Jest + Playwright + axe; source-reading guard suites (pricing, Sie-form, SEO registry) | **Zero tests** | Foundational |
+| **Tests** | Jest + Playwright + axe; source-reading guard suites (pricing, Sie-form, SEO registry) | **Batch A:** `node --test` wired as `npm test`, with `tests/claims.test.mjs` as the first suite. No component, route or E2E tests yet | Started |
 | **Repo knowledge discipline** | `CLAUDE.md` trust table + known-traps + working rules + `.claude/JOURNAL.md` correction log | Good `CLAUDE.md` + README; no journal, root littered with historical SQL | Small |
 
 **What DeutschMeister has that MedMeister doesn't** (keep, don't regress): the Astro static-site
@@ -95,7 +95,7 @@ Port the MedMeister pattern wholesale, retargeted to German-learning keywords:
   "Deutsch lernen" queries; target languages include EN (the app is EN-marketed) — decide
   location/language per cluster rather than fixing `Germany/de` globally.
 
-**1.3 Built-HTML verification gating CI — M.**
+**1.3 Built-HTML verification gating CI — DONE for the SPA half (Batch A, 2026-08-22); Astro half still open.**
 Port `check-exported-heads.mjs` conceptually to the merged `dist/`:
 - Assert per page: non-empty unique `<title>` (≤60 soft/70 hard) and meta description, exactly
   one visible `<h1>`, one `<html lang>`, canonical present, min body chars.
@@ -160,16 +160,19 @@ accordion gymnastics — transparency as layout); FAQ close. Every figure derive
 pricing data file (2.4) — no retyped numbers. Fix the `window.open` checkout as part of this
 (iOS Safari blocks it; use same-tab navigation or LemonSqueezy overlay).
 
-**2.4 Shared marketing/pricing data — M (prerequisite for 2.2/2.3, do first).**
-`data/marketing.js` + `data/pricing.js` as byte-identical SPA/Astro pairs (extend
-`check-duplicates.mjs` to guard them), MedMeister-style: pricing = what checkout charges
-(variant IDs, €9.99/€79.99), marketing = what copy claims, each value with an inline provenance
-comment. **Derive** day-rates and savings from the prices rather than retyping them: today
-`€0.33/day` (monthly, 9,99 ÷ 30) and `€0.22/day` (yearly, 79,99 ÷ 365) are both correct, but they
-are typed by hand in four files — a single price change makes every one of them false at once,
-silently. Deriving re-runs the arithmetic; retyping is what rots. Then a small Node test (the
-first test in the repo) that reads page sources and bans the literal price digits everywhere
-outside the data files.
+**2.4 Shared marketing/pricing data — DONE (Batch A, 2026-08-22).**
+Shipped as `src/data/pricing.js` + `src/data/marketing.js`, byte-identical with their
+`astro-site/src/data/` twins and guarded by `scripts/check-duplicates.mjs`. All day-rates,
+monthly-equivalents and the saving percentage now derive; ten surfaces stopped retyping them.
+`tests/claims.test.mjs` (the repo's first test) enforces derivation, bans price literals and
+blanket "unlimited" claims on metered surfaces, and — the check that earns its keep — parses the
+limits out of the Netlify functions that enforce them and compares. What that caught is in
+"Defects found and fixed" below.
+
+NOTE, correcting this document's own earlier claim: the two Tailwind configs are **not**
+byte-identical candidates. `astro-site/tailwind.config.mjs` has different content globs and does
+not carry the eight CEFR level palettes at all, so a drift guard would be wrong. Unifying them
+belongs to 2.1 (design tokens), not to a duplicate check.
 
 **2.5 Roll the new brand everywhere it still isn't — S–M.**
 The Aug remediation unified the *logo* but not the palette. Still on the retired amber→rose
@@ -211,10 +214,31 @@ Give the 6 email functions one shared template module while doing it.
   legal pages; rotate the exposed service-role key; fix the upstream Resend bounce job; decide
   card-at-trial-start (the structural conversion blocker — highest-leverage single decision).
 
+### Defects found and fixed while shipping Batch A
+
+The guards were written first and then run; everything below is something they caught, not
+something the audit had already listed.
+
+| Defect | Where | Why it mattered |
+|---|---|---|
+| Pro advertised as **"5 speaking sessions per month"** | `src/config/lemonsqueezy.js` | The server has always granted **30** (`speakingUsage.mjs`). The checkout config understated the product six-fold. |
+| **Eleven** claims that AI speaking is "unbegrenzt"/"Unlimited" | `competitorComparisons.js` (both copies), `src/pages/LandingPage.jsx` | Speaking is capped at 30/month and X-Ray at 50/day. A blanket "unlimited" beside a price is irreführende Werbung under UWG §5. One sat directly in the Lingoda price row: *"9,99 €/Monat (Pro) — unbegrenzt"*. |
+| Podcast **transcripts promised** in an indexed `FAQPage` rich result and in visible copy | `scripts/prerender-spa-routes.mjs` | All 24 episodes have empty transcripts. The 2026-08-16 audit (B-04) removed this from `PodcastsPage.jsx` but missed this second hardcoded copy, so the claim stayed live. |
+| **Two `<h1>` on every prerendered page** | shell identity `<h1>` + the route's own | A visually-hidden site-wide heading competed with each page's real subject. The prerender script now strips it per route; `app.html` keeps it for client-only routes. |
+| Dark-on-dark price text (`text-slate-600` on `bg-slate-800`) | `astro-site/src/pages/index.astro`, **both** cards | Near-invisible. The earlier audit note caught only the yearly one. |
+| German badge **"Beliebteste Wahl"** on the English pricing page | `pricing.astro` billing toggle | DE/EN mixing at the moment of purchase. |
+
+Two claims this document made were **retracted on verification**: the €0.33 vs €0.22 day-rates
+are the monthly and yearly rates and were both correct (the real problem was that they were
+retyped, not that they disagreed), and the Tailwind configs cannot be a byte-identical pair.
+
 ### Suggested implementation batches (each = one follow-up task)
 
-1. **Batch A (foundation):** 2.4 shared pricing/marketing data + first guard test + 1.3 CI
-   verification (Astro build on + built-HTML checks + banned literals).
+1. ~~**Batch A (foundation):** shared pricing/marketing data + first guard test + built-HTML
+   CI verification.~~ **Done 2026-08-22.** Still open from it: building the Astro half in CI,
+   which needs `PUBLIC_SUPABASE_URL`/`PUBLIC_SUPABASE_ANON_KEY` in the repo secrets (or a
+   committed `GRAMMAR_CONTENT_CACHE`). Until then `check-built-html.mjs` runs `--spa-only` and
+   prints on every run that the static/SEO half went unverified.
 2. **Batch B (design):** 2.1 tokens/primitives → 2.2 landing → 2.3 pricing → 2.5 email skin.
 3. **Batch C (SEO engine):** 1.1 guide infrastructure + first guide; 1.4 schema/internal links.
 4. **Batch D (SEO ops):** 1.2 `.mcp.json` + routines + first keyword-research run; 1.5 decision.
