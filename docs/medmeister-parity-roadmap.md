@@ -380,6 +380,29 @@ the Astro seal *does* carry the dashed inner ring (it differed from the SPA only
 and Inter *was* loaded by `index.html` — `.dm-body` was rendering in Inter, not falling through to
 `system-ui`.
 
+**A process trap this batch hit, which will recur on every future batch on this branch.** The
+repo squash-merges PRs, but the feature branch is long-lived and reused batch after batch. So the
+moment a batch's PR merges, `main` holds that work as a *squash* while the branch still holds the
+original commit — same content, no shared ancestry. The next batch pushed on top makes GitHub
+three-way-merge the previous batch against itself, and the PR goes `mergeable_state: dirty` even
+though nothing genuinely conflicts. It surfaced here as a conflict in the three files both batches
+touched (`CLAUDE.md`, this file, `tests/brand.test.mjs`).
+
+The fix is a rebase, never a merge: `git fetch origin main && git rebase origin/main` drops the
+already-merged commit as patch-equivalent (`warning: skipped previously applied commit …`) and
+replays only the new one, then `git push --force-with-lease`. Verified safe by comparing tree
+SHAs before and after — identical, so history changed and content did not. Merging `main` in
+instead would resolve too, but leaves the duplicated history and a merge commit in a
+squash-merge repo, and the PR diff keeps double-counting the previous batch.
+
+**The same rebase is also how CI gets triggered on this branch.** GitHub Actions created no run at
+all for the first push of this batch: `ci.yml` fires on `push: branches: [main]` and on
+`pull_request`, but the push landed while no PR was open, and opening the PR afterwards produced
+no run either. Every CI run this branch has ever had came from a push while a PR was already open
+— a `synchronize` event. So the force-push that fixes the conflict is also what finally runs CI.
+The right sequence for the next batch is therefore: rebase onto `main` **first**, then push, then
+open the PR.
+
 Still open after Batch F: roughly ten content screens keep their own hero gradient (held by the
 ratchet), and `src/components/LevelTest/LevelTest.css` is deferred on purpose — see below.
 
