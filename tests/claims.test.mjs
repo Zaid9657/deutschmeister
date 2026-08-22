@@ -105,7 +105,8 @@ test('formatters produce the German and English conventions', () => {
  * mode this whole layer exists to prevent.
  */
 const PRICE_FREE_SURFACES = [
-  'src/pages/LandingPage.jsx',
+  // src/pages/LandingPage.jsx was deleted in the 2026-08-22 homepage rebuild —
+  // the SPA no longer has a "/" route; Astro serves the homepage.
   'src/pages/SubscriptionPage.jsx',
   'src/pages/FAQPage.jsx',
   'src/config/lemonsqueezy.js',

@@ -1,12 +1,25 @@
 import { useRef, useEffect, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
+import {
+  GRAMMAR_TOPIC_COUNT,
+  LISTENING_DIALOGUE_COUNT,
+  LEVEL_COUNT,
+  PODCAST_EPISODE_COUNT,
+} from '../data/marketing.js';
 
-// Last updated: 2026-05-27 — refresh monthly
+// What the product CONTAINS, not how many people use it.
+//
+// This bar previously claimed "1.400+ Lernende", "170+ Neue Lernende pro Monat"
+// and "2.488 KI-Sprechübungen". The first two trace to EVALUATION.md's
+// 2026-08-16 database audit, but "pro Monat" is stale the moment the month
+// turns; the third appears in no audit and has no source at all. Per the counts
+// rule in src/data/marketing.js, every figure here is now a constant counted
+// against a live table, so none of it can rot on its own.
 const STATS = [
-  { value: '1.400+', label: 'Lernende' },
-  { value: '2.488', label: 'KI-Sprechübungen' },
-  { value: '170+', label: 'Neue Lernende pro Monat' },
-  { value: '480', label: 'Dialoge mit Muttersprachlern' },
+  { value: formatGermanNumber(GRAMMAR_TOPIC_COUNT), label: 'Grammatikthemen' },
+  { value: formatGermanNumber(LISTENING_DIALOGUE_COUNT), label: 'Dialoge mit Muttersprachlern' },
+  { value: formatGermanNumber(LEVEL_COUNT), label: 'Stufen, A1.1 bis B2.2' },
+  { value: formatGermanNumber(PODCAST_EPISODE_COUNT), label: 'Podcast-Folgen' },
 ];
 
 function parseGermanNumber(str) {
@@ -47,7 +60,7 @@ const StatsBar = () => {
     <section ref={ref} className="py-14 bg-white border-b border-slate-100">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <p className="text-center text-xs font-semibold uppercase tracking-widest text-slate-400 mb-8">
-          Lernende vertrauen Deutschmeister
+          Was drin ist
         </p>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
@@ -67,9 +80,6 @@ const StatsBar = () => {
           ))}
         </div>
 
-        <p className="text-center text-xs text-slate-400 mt-8">
-          Stand: August 2026
-        </p>
       </div>
     </section>
   );

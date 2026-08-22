@@ -13,6 +13,14 @@ over the SPA for those URLs. 15 **Netlify functions** (`netlify/functions/`) pow
 speaking, X-Ray, payments (Lemon Squeezy webhook), and email (Resend). Content lives in
 **Supabase**; the Astro build fetches it at build time. Full details: `README.md`.
 
+## The SPA has no "/" route, on purpose
+
+`/` is served by the Astro build (`astro-site/src/pages/index.astro`) via `netlify.toml`. The SPA
+used to carry its own divergent `LandingPage.jsx` at `/`, unreachable after the August remediation
+made every in-app "/" link a full page load — two homepages, one dead. It was deleted 2026-08-22.
+On the Vite dev server `/` now falls through to `NotFoundPage`; work on the homepage in
+`astro-site/`.
+
 ## The three-place route rule (most common mistake)
 
 Adding a `<Route>` in `src/App.jsx` is not enough. Every public SPA route must ALSO be:
@@ -103,8 +111,14 @@ mode and says so on every run — Netlify's deploy build remains the only gate o
 
 - `docs/medmeister-parity-roadmap.md` is the current plan: a comparison against the sibling
   MedMeister project and a tiered roadmap (SEO content engine, design system, lifecycle, tests).
-  Batch A of it — the shared pricing/marketing data layer, the claim guards and the built-HTML
-  check — has shipped; the rest has not.
+  Batch A (shared pricing/marketing data layer, claim guards, built-HTML check) and most of
+  Batch B (design tokens, `/pricing` and the homepage rebuilt on them, retired brand removed from
+  every customer-facing surface) have shipped; the SEO tiers have not.
+- **User-facing counts are content counts, never usage counts.** The homepage, `StatsBar.jsx` and
+  the `/vergleich/` pages each used to claim learner/usage figures, and by August 2026 the three
+  disagreed with each other; one ("2,488 AI speaking exercises") had no source in any audit. They
+  now render only `marketing.js` constants counted against live tables. Before adding a usage
+  claim, measure it and record the provenance — see the counts rule in `src/data/marketing.js`.
 - `EVALUATION.md` holds the older full audit: scores, issue tables, roadmap. Read it with
   `AUDIT-2026-08-16.md` and `REMEDIATION.md`, which supersede much of it.
 - CSP ships as Report-Only — do not promote to enforcing without checking reports.

@@ -144,7 +144,7 @@ One token module (mirrored root + `astro-site/`, guarded by extending
 - One logo source consumed by SPA, Astro, and email (today: 3 divergent copies —
   `src/components/Logo.jsx` + two inline SVGs in `Layout.astro`).
 
-**2.2 Landing page rebuild — L.**
+**2.2 Landing page rebuild — DONE (Batch B, 2026-08-22).**
 Blank sheet on the new tokens. Structural lessons to carry from MedMeister v4 (not its look):
 `sectionOrder` as data; a `content.ts`-style copy/data split so words aren't buried in markup;
 a reusable proof artifact (the equivalent of `SampleFeedbackReport` — e.g. a real X-Ray analysis
@@ -280,8 +280,27 @@ That ban is deliberately scoped to marketing and transactional surfaces, **not**
 `#f43f5e` is also the B2.1 *level* colour in `src/utils/listeningHelpers.js`, where it means
 something else entirely. A blind sweep would have "fixed" it.
 
-Still open in Batch B: the **landing page rebuild (2.2)**, and the in-app SPA surfaces that still
-carry retired-brand hexes (`components/onboarding/IntroSlides.jsx`,
+**2.2 done: the homepage is rebuilt and the unsourced figures are gone.** Its signature is the
+product's own artifact — a real German sentence marked by case in the hero, exactly as Sentence
+X-Ray marks it, which is the one thing no competitor has. Gone: the amber-to-rose gradient hero,
+the blurred colour blobs, the emoji level cards on eight different palettes, the dark "your German
+won't improve by waiting" urgency block, and the full-bleed rainbow CTA.
+
+The claims decision was the owner's, and it was **content counts only**. The old stats band read
+"1,400+ Learners", "170+ New learners this month" and "2,488 AI speaking exercises": the first two
+trace to the 2026-08-16 database audit but "this month" is stale by construction, and the third
+appears in **no audit and has no source at all**. Chasing it turned up two more surfaces carrying
+the same class of claim, disagreeing with each other and with the homepage — `components/StatsBar.jsx`
+(rendered on the SPA comparison page) repeated the same three figures in German, and
+`vergleich/[slug].astro` carried an *older* set copied in May 2026: 959 learners, 350 a month, 154
+sentences analysed. Three surfaces, three different answers, none sourced. All three now show only
+counts of what the product contains — figures true by construction that cannot drift apart.
+
+`src/pages/LandingPage.jsx` was deleted with its `/` route. It had been unreachable since the
+August remediation made every in-app "/" link a full page load; `src/App.jsx` now carries a comment
+at that spot explaining that Astro serves the homepage, so nobody re-adds it.
+
+Still open in Batch B: the in-app SPA surfaces that still carry retired-brand hexes (`components/onboarding/IntroSlides.jsx`,
 `components/LevelTest/LevelTestResults.jsx`, `styles/LevelTest.css`). Those are the in-product
 migration rather than the marketing chrome, and `LevelTest.css` alone is ~1,500 lines, so they are
 their own change.
