@@ -69,8 +69,18 @@ listening exercises, vocabulary, reading lessons, and a free sentence analyzer
 - URLs: https://deutsch-meister.de/vocabulary · https://deutsch-meister.de/reading
 
 ### Guides & Comparisons (German-language)
-- telc Deutsch B1 exam guide (8-week plan, exam structure, common mistakes):
+Free, no signup. Each guide states the date its exam facts were last checked and names the
+official body they came from, and refers readers to that body for fees and binding rules
+rather than stating them — exam fees are set per test centre and change without notice.
+- All exam guides: https://deutsch-meister.de/leitfaden/
+- telc Deutsch B1 (exam structure, points to pass, 8-week plan, common mistakes):
   https://deutsch-meister.de/leitfaden/telc-b1/
+- telc Deutsch B2 (structure and where the points actually are, 10-week plan from B1):
+  https://deutsch-meister.de/leitfaden/telc-b2/
+- Goethe-Zertifikat B1 (the four modules, why they can be taken and retaken separately):
+  https://deutsch-meister.de/leitfaden/goethe-b1/
+- DTZ / Deutsch-Test für Zuwanderer (why it is scaled A2-B1 rather than pass/fail):
+  https://deutsch-meister.de/leitfaden/dtz/
 - Honest platform comparisons: https://deutsch-meister.de/vergleich/
   (vs Babbel, vs Duolingo, vs Lingoda)
 

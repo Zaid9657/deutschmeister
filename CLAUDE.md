@@ -78,6 +78,18 @@ mode and says so on every run — Netlify's deploy build remains the only gate o
   Cormorant Garamond it used to be — Cormorant stays loaded only because the Meister-Siegel's "M"
   glyph sets it inline. Tailwind is JIT, so a token class only reaches the CSS once a component
   uses it; to check the wiring, build and grep the emitted CSS rather than reading the config.
+- **`.mcp.json` is committed and must stay credential-free.** It declares the DataForSEO and Google
+  Search Console MCP servers the SEO Routines depend on (`docs/seo-routines/`). Values are `${VAR}`
+  references Claude Code expands from the environment; the literals belong in the environment's
+  variables, never in the file. `.claude/hooks/session-start.sh` materialises
+  `GSC_SERVICE_ACCOUNT_JSON` to `~/.gsc-credentials.json` (chmod 600) and installs both dependency
+  trees — it skips silently when the secret is unset. **Neither connector works yet, and the
+  DataForSEO blocker is a network policy, not a credential**: `api.dataforseo.com` answers
+  `CONNECT tunnel failed, 403` at the proxy, so credentials alone change nothing until the domain is
+  allowlisted on the environment. Diagnose with
+  `curl -sS "$HTTPS_PROXY/__agentproxy/status"`. GSC's domain *is* reachable. Routine prompts live in
+  `docs/seo-routines/` rather than the Routines UI, because an agent cannot edit a Routine it did not
+  create and a UI-only prompt drifts from the repo silently.
 - **Leitfäden are data, not pages.** A guide lives in
   `astro-site/src/data/guides/<slug>.js` and is rendered by
   `pages/leitfaden/[slug].astro`; the hub lists the registry. Adding one is a data module,

@@ -46,7 +46,7 @@ tests**, **behavioral lifecycle email**, and **CI that verifies the built output
 | Area | MedMeister has (kp-med refs) | DeutschMeister has (this repo) | Gap |
 |---|---|---|---|
 | **SEO content engine** | Blog system (`content/blog/posts/*.ts`), 3 long Leitfäden (~35 KB each), per-audience landing pages (7 locales), comparison pages, glossary | **Batch C:** a data-driven guide engine (`astro-site/src/data/guides/`), a `/leitfaden/` hub that did not exist, and **4** guides (telc B1 migrated, Goethe B1, telc B2, DTZ) with Article + FAQPage + BreadcrumbList and rendered fact provenance. Still: no per-audience locale pages, no glossary, guides not yet keyword-validated | Largely closed |
-| **SEO operations** | `.mcp.json` (DataForSEO + GSC MCP), repo-hosted routine prompts (`docs/seo-routines/geo-weekly.md`, `measurement-fortnightly.md`), `drafts/geo-tracking.csv` ledger, evidence-ranked fix order | None — no keyword research loop, no rank/GEO measurement, no routines | Whole capability absent |
+| **SEO operations** | `.mcp.json` (DataForSEO + GSC MCP), repo-hosted routine prompts, `drafts/geo-tracking.csv` ledger, evidence-ranked fix order — **though its own DataForSEO connector is blocked by network policy too** | **Batch D:** the same machinery ported and adapted to German-exam search, plus a session hook for the GSC key. **Blocked identically**: `api.dataforseo.com` returns CONNECT 403 here. GSC is reachable and needs only a key | Machinery ready, connectors owner-blocked |
 | **Built-output CI verification** | `scripts/check-exported-heads.mjs` gates CI: reads `dist/` HTML — unique titles/descriptions, one `<h1>`, one `lang`, min body chars, sitemap integrity, banned-literals list, `THIN_PAGE_DEBT` that fails when paid | **Batch A:** `scripts/check-built-html.mjs` now gates CI over the built SPA pages (unique title/description, one visible `<h1>`, one `lang`, canonical, min body chars, sitemap integrity, banned literals). **Still open:** the Astro build — the entire static/SEO surface — is not built in CI, so the check runs `--spa-only` and says so every run | Half closed |
 | **Head/route registry** | `constants/seoRoutes.ts` (single registry, `noindex` fallback, `brandedTitle()` ≤60), guarded by `__tests__/constants/seoRoutes.test.ts` (no duplicate title/description/h1) | Per-page manual props into `Layout.astro` + `src/components/SEO.jsx`; good but unguarded — nothing prevents two pages sharing a title | Medium |
 | **Design system** | `theme/tokens.ts` — one file, provenance in header, named type roles with mobile step-downs, 2–3 binding rules, `sectionOrder` as data; primitives module (`components/homepage/v4/primitives.tsx`) as the only home of raw values; versioned page dirs (v1…v4); `content.ts` copy split per page | No system: teal/gold chrome + 8 unused CEFR level palettes + blue **dark** pricing page (the only dark page) + the retired amber→rose gradient still on the primary CTAs of both landing pages *and* in every email template and the cookie banner; logo defined in 3 places; ~109 bespoke card treatments; near-duplicate Tailwind configs (root vs `astro-site/`) unguarded by CI | Large; user wants a fresh identity |
@@ -82,7 +82,7 @@ its own audit. Replicate deliberately:
 - Refresh the 3 `vergleich/` pages (data stamped "Stand: Mai 2026") and add 2–3 more
   bottom-of-funnel comparisons.
 
-**1.2 SEO operations: keyword research + measurement loop — M setup.**
+**1.2 SEO operations — MACHINERY DONE (Batch D, 2026-08-22); CONNECTORS BLOCKED, owner action.**
 Port the MedMeister pattern wholesale, retargeted to German-learning keywords:
 - `.mcp.json` at repo root declaring DataForSEO + GSC MCP servers via `${VAR}` references
   (kp-med's file is the template; secrets stay in the environment).
@@ -359,6 +359,60 @@ costs us rather than them. The attempt and its findings are recorded in the data
 Still open in Batch C's area: more guides (Goethe B2, TestDaF, a "B1 in drei Monaten" method
 guide), and **keyword validation** — these four were picked on obvious exam-name intent, not on
 measured volume, which arrives with Batch D.
+
+### Batch D so far (2026-08-22): the SEO operations lane
+
+**The machinery is committed; the connectors are not working, and one blocker is a network
+policy rather than a credential.** Measured in this environment:
+
+| Check | Result | Meaning |
+|---|---|---|
+| `api.dataforseo.com` | **`CONNECT tunnel failed, 403`** | The proxy refuses the connection **before any credential is read**. Adding DataForSEO credentials changes nothing until the domain is allowlisted. |
+| `searchconsole.googleapis.com` | `404` (domain answers) | GSC is reachable; it needs only a service-account key. |
+| DataForSEO / GSC MCP tools in session | absent | Neither server is connected. |
+
+This is the identical failure the sibling project documented against its own environment, where
+the "trusted network access" preset does not include the domain. Worth stating plainly: **those
+routines have never actually run there either** — so this is a known-unsolved problem being
+ported with its diagnosis attached, not a working system being copied.
+
+**What shipped:** `.mcp.json` (credential-free, `${VAR}` references), a `SessionStart` hook that
+materialises the GSC key at chmod 600 and installs both dependency trees, `docs/seo-routines/`
+with a setup README and two routine prompts adapted to German-exam search, and `drafts/` seeded
+with the tracking CSV header and an honest `seo-BLOCKED-2026-08-22.md` recording the measurements
+above.
+
+**The rules the prompts encode**, each earned by the sibling project: never fabricate — a missing
+connector writes a BLOCKED report and stops, rather than passing a web search off as a rank
+measurement; two engines × two runs, with one-of-two logged as *unstable* so single-run flicker
+cannot masquerade as movement; fixes ranked by evidence (citable figure > definition-first shaping
+> freshness > schema, which is never the whole week's fix); Class A ships and Class B — anything
+asserting a new fact about an exam, the law or the product — drafts for human review and may never
+self-merge; one fix per cycle; a fixed query set, because changing it makes cycles incomparable.
+Batching is enforced too: DataForSEO bills **per request, not per keyword**, so a per-keyword loop
+costs about a hundred times the batched equivalent for identical output.
+
+**Also shipped, needing no connector:** `llms.txt` and `llms-full.txt` listed only the one old
+guide and were stale the moment Batch C landed — all four guides and the hub are now catalogued,
+with the fact-provenance convention explained for answer engines. `sitemap-spa.xml`'s six
+`lastmod` values were stuck at 2026-08-16 despite the prerendered copy changing in Batch A; they
+now reflect the real change date, with a comment explaining why they are hand-maintained rather
+than build-stamped — auto-stamping every build claims a freshness the content does not have.
+
+**Two more roadmap claims did not survive contact with the code**, which is now the third and
+fourth correction this document has needed:
+
+- **1.4's "no Course/LearningResource schema"** was wrong. `grammar/[level]/[slug].astro` already
+  emits `['Article', 'LearningResource']` with `educationalLevel`, `learningResourceType`,
+  `teaches`, `isAccessibleForFree` and a `Quiz` `hasPart`, plus BreadcrumbList and FAQPage. That is
+  a richer education schema than the item proposed adding.
+- **1.4's "`related_slugs` 0/64, graph only in code"** was misleading. `RELATED_TOPICS` is already
+  imported and rendered as a Related Topics section with correctly-slashed hrefs; the DB column is
+  a *preferred override* that falls back to the code map. Populating the column is an optimisation,
+  not a fix for missing links.
+
+The pattern is worth naming: this roadmap was written from a survey, and four of its claims were
+wrong when checked against the code. Verify before building from any line in it.
 
 ### Suggested implementation batches (each = one follow-up task)
 
