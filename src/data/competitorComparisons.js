@@ -17,6 +17,22 @@
 // re-verified since. The stamp is deliberate — it labels the data as of a date
 // rather than implying it is current. Re-check the three competitors' public
 // pricing before removing or advancing any stamp.
+//
+// RE-VERIFICATION ATTEMPTED 2026-08-22 — NOT COMPLETED, STAMPS LEFT ALONE.
+// babbel.com, goethe.de and the other vendor domains are blocked by this
+// environment's egress proxy, so no figure could be checked at its source.
+// Third-party price aggregators (reachable) suggest all three have RISEN since
+// May: Babbel around 8,99 €/Monat im Jahresabo (was 6,99) and up to 17,99 € im
+// 3-Monats-Abo (was 12,99); Duolingo Super around 7,49 €/Monat im Jahresabo
+// (was 6,99); Lingoda group tiers from about 49,99 € für 4 Stunden.
+//
+// Those numbers are NOT written in below, on purpose. Two reasons: an
+// aggregator is not the vendor, and a comparison that overstates a
+// competitor's price is exactly the kind of claim §6 UWG makes actionable.
+// Note also that the current, lower figures are the CONSERVATIVE direction —
+// they make our own price look less favourable, so leaving them costs us
+// nothing but accuracy owed to the reader. Re-check from a network that can
+// reach the vendors, then update figures and stamps together.
 import { PLANS, deEur } from './pricing.js';
 import { PRO_SPEAKING_SESSIONS_PER_MONTH, PRO_DAILY_LIMIT, LEVEL_COUNT } from './marketing.js';
 

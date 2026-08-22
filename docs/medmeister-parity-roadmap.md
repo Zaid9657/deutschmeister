@@ -45,7 +45,7 @@ tests**, **behavioral lifecycle email**, and **CI that verifies the built output
 
 | Area | MedMeister has (kp-med refs) | DeutschMeister has (this repo) | Gap |
 |---|---|---|---|
-| **SEO content engine** | Blog system (`content/blog/posts/*.ts`), 3 long Leitfäden (~35 KB each), per-audience landing pages (7 locales), comparison pages, glossary | **1** Leitfaden (`astro-site/src/pages/leitfaden/telc-b1.astro` — measured SEO 100), **3** Vergleich pages stamped "Stand: Mai 2026", no blog infra | **Largest gap.** The winning pattern exists and was never replicated |
+| **SEO content engine** | Blog system (`content/blog/posts/*.ts`), 3 long Leitfäden (~35 KB each), per-audience landing pages (7 locales), comparison pages, glossary | **Batch C:** a data-driven guide engine (`astro-site/src/data/guides/`), a `/leitfaden/` hub that did not exist, and **4** guides (telc B1 migrated, Goethe B1, telc B2, DTZ) with Article + FAQPage + BreadcrumbList and rendered fact provenance. Still: no per-audience locale pages, no glossary, guides not yet keyword-validated | Largely closed |
 | **SEO operations** | `.mcp.json` (DataForSEO + GSC MCP), repo-hosted routine prompts (`docs/seo-routines/geo-weekly.md`, `measurement-fortnightly.md`), `drafts/geo-tracking.csv` ledger, evidence-ranked fix order | None — no keyword research loop, no rank/GEO measurement, no routines | Whole capability absent |
 | **Built-output CI verification** | `scripts/check-exported-heads.mjs` gates CI: reads `dist/` HTML — unique titles/descriptions, one `<h1>`, one `lang`, min body chars, sitemap integrity, banned-literals list, `THIN_PAGE_DEBT` that fails when paid | **Batch A:** `scripts/check-built-html.mjs` now gates CI over the built SPA pages (unique title/description, one visible `<h1>`, one `lang`, canonical, min body chars, sitemap integrity, banned literals). **Still open:** the Astro build — the entire static/SEO surface — is not built in CI, so the check runs `--spa-only` and says so every run | Half closed |
 | **Head/route registry** | `constants/seoRoutes.ts` (single registry, `noindex` fallback, `brandedTitle()` ≤60), guarded by `__tests__/constants/seoRoutes.test.ts` (no duplicate title/description/h1) | Per-page manual props into `Layout.astro` + `src/components/SEO.jsx`; good but unguarded — nothing prevents two pages sharing a title | Medium |
@@ -69,7 +69,7 @@ follow-up task prompt on its own.
 
 ### Tier 1 — SEO / organic growth
 
-**1.1 Guide (Leitfaden) content engine — L, then M per guide. The single biggest lever.**
+**1.1 Guide (Leitfaden) content engine — DONE (Batch C, 2026-08-22).**
 `leitfaden/telc-b1.astro` measured SEO 100 and is called the site's best top-of-funnel asset by
 its own audit. Replicate deliberately:
 - Extract the telc-b1 page's structure into a reusable Astro layout/collection (Astro content
@@ -311,6 +311,54 @@ traceable to EVALUATION.md's 2026-08-16 database audit (1,449 accounts all-time,
 days) but the second is a rolling claim that is stale by construction; the third appears in no
 audit and has **no source at all**. Per the counts rule in `src/data/marketing.js`, a figure with
 no provenance should not survive a rebuild. Re-measure against the live database, or drop it.
+
+### Batch C so far (2026-08-22): the content engine, and the first wave on it
+
+**A guide is data now.** `astro-site/src/data/guides/<slug>.js` holds the content;
+`pages/leitfaden/[slug].astro` renders it through typed blocks (`p`, `h3`, `list`, `callout`,
+`table`, `steps`, `warnings`, `cards`). The proven telc-B1 page was ~274 lines of hardcoded
+consts, which is precisely why nobody wrote a second one — copying all of it was the price of
+entry. Adding a guide is now a data module plus one MANIFEST line: `netlify.toml` already copies
+the whole `/leitfaden/` directory and the sitemap filter already whitelists the prefix.
+
+**Four guides ship**, all German, matching the proven page's depth (1,444–1,735 words each):
+`telc-b1` (migrated, URL unchanged), `goethe-b1`, `telc-b2`, `dtz`. Plus `/leitfaden/` itself,
+which **did not exist** — it fell through the SPA rewrite to NotFoundPage, so the one guide the
+site had was an orphan under a 404.
+
+**What the engine fixed while migrating:** the TOC is derived from the sections, so an anchor can
+no longer point at a renamed section (the original kept two hand-synced lists); `/grammar/b1.2`
+was missing its trailing slash and 301-hopped on every click; absolute `https://deutsch-meister.de/…`
+self-links became relative; "Zuletzt aktualisiert: Mai 2026" and "Stand: Mai 2026" were hardcoded
+and already stale, and now derive. The page is on the design tokens — the original was slate/amber
+with a local `<style>` block of raw hex, predating the system. Schema went from Article + FAQPage
+to **Article + FAQPage + BreadcrumbList** with `inLanguage` and a real publisher, matching the
+vergleich hub, which had been richer than the guide it linked to.
+
+**Fact discipline, because these pages state exam rules people plan around.** Every guide carries
+`factsCheckedOn` and a `sources` list, both **rendered on the page** rather than buried in a
+comment — honest, and the kind of verifiable-provenance signal AI answer engines cite. No fees are
+stated (set per centre, change without notice); no pass-rate or outcome promises. `goethe.de`,
+`babbel.com` and the exam-centre mirrors are all blocked by the agent proxy, so official PDFs could
+not be fetched directly — the module structures and pass marks come from search summaries citing
+those PDFs, corroborated across independent centre descriptions, and the DTZ's scaled result is
+explained as a mechanism rather than asserted as a threshold, because secondary sources describe
+that rule inconsistently and a wrong claim there affects somebody's residence paperwork.
+
+`tests/guides.test.mjs` (10 assertions) pins slug/title/description integrity, derived-TOC
+anchors, **the three trailing-slash cases on all 24 internal links**, ISO dates not in the future,
+a source per guide, the ban on outcome promises and fee ranges, and the JSON-LD shape.
+
+**Vergleich:** `/vergleich/<slug>/` rendered an FAQ but emitted no FAQPage schema and no
+breadcrumb — both added. The **stale "Stand: Mai 2026" data was NOT refreshed**: every vendor
+domain is egress-blocked here, aggregators (reachable) indicate all three have raised prices since,
+and writing an aggregator's number for a competitor is both unsourced and, if it overstates them,
+actionable under §6 UWG. The stored figures understate competitors, which is the direction that
+costs us rather than them. The attempt and its findings are recorded in the data file's header.
+
+Still open in Batch C's area: more guides (Goethe B2, TestDaF, a "B1 in drei Monaten" method
+guide), and **keyword validation** — these four were picked on obvious exam-name intent, not on
+measured volume, which arrives with Batch D.
 
 ### Suggested implementation batches (each = one follow-up task)
 

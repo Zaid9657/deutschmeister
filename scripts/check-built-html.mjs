@@ -52,7 +52,11 @@ const MANIFEST = [
   { path: 'pricing/index.html', kind: 'astro' },
   { path: 'grammar/index.html', kind: 'astro' },
   { path: 'vergleich/index.html', kind: 'astro' },
+  { path: 'leitfaden/index.html', kind: 'astro' },
   { path: 'leitfaden/telc-b1/index.html', kind: 'astro' },
+  { path: 'leitfaden/goethe-b1/index.html', kind: 'astro' },
+  { path: 'leitfaden/telc-b2/index.html', kind: 'astro' },
+  { path: 'leitfaden/dtz/index.html', kind: 'astro' },
 ];
 
 /**

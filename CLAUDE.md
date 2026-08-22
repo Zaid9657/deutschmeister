@@ -78,6 +78,17 @@ mode and says so on every run — Netlify's deploy build remains the only gate o
   Cormorant Garamond it used to be — Cormorant stays loaded only because the Meister-Siegel's "M"
   glyph sets it inline. Tailwind is JIT, so a token class only reaches the CSS once a component
   uses it; to check the wiring, build and grep the emitted CSS rather than reading the config.
+- **Leitfäden are data, not pages.** A guide lives in
+  `astro-site/src/data/guides/<slug>.js` and is rendered by
+  `pages/leitfaden/[slug].astro`; the hub lists the registry. Adding one is a data module,
+  a line in `GUIDES`, and a line in `scripts/check-built-html.mjs`'s MANIFEST — nothing in
+  `netlify.toml` (the whole `/leitfaden/` directory is already copied) and nothing in the
+  sitemap config (the filter already whitelists the prefix). A new **top-level** segment
+  would need its own `cp -r` step. Guides get **no SPA twin**: Netlify serves the static
+  page, so `src/pages/leitfaden/TelcB1Page.jsx` is dead code on the dev server only.
+  `tests/guides.test.mjs` pins slug/title/description/anchor integrity, the three
+  trailing-slash cases on every internal link, and the ban on outcome promises and fee
+  figures. Exam facts carry `factsCheckedOn` + `sources`, both rendered on the page.
 - **Prices and claims: derive, never retype.** `src/data/pricing.js` is what the checkout
   charges; `src/data/marketing.js` is what the copy claims, and every value there carries its
   provenance inline (the server file it was verified against, and when). `src/config/limits.js`
@@ -111,9 +122,17 @@ mode and says so on every run — Netlify's deploy build remains the only gate o
 
 - `docs/medmeister-parity-roadmap.md` is the current plan: a comparison against the sibling
   MedMeister project and a tiered roadmap (SEO content engine, design system, lifecycle, tests).
-  Batch A (shared pricing/marketing data layer, claim guards, built-HTML check) and most of
+  Batch A (shared pricing/marketing data layer, claim guards, built-HTML check), most of
   Batch B (design tokens, `/pricing` and the homepage rebuilt on them, retired brand removed from
-  every customer-facing surface) have shipped; the SEO tiers have not.
+  every customer-facing surface) and Batch C (the Leitfaden content engine, hub + four guides,
+  richer schema on `/vergleich/`) have shipped. Still open: SEO operations (keyword research and
+  GEO measurement via DataForSEO/GSC), education schema on grammar pages, and the in-app SPA
+  brand migration.
+- **Competitor pricing on `/vergleich/` is stamped "Stand: Mai 2026" and could not be
+  re-verified** — every vendor domain is blocked by the agent proxy. Aggregators suggest all
+  three have since raised prices, i.e. the stored figures understate them, which is the
+  conservative direction. Never advance a "Stand:" stamp without checking the vendor's own
+  page: an overstated competitor price is actionable under §6 UWG.
 - **User-facing counts are content counts, never usage counts.** The homepage, `StatsBar.jsx` and
   the `/vergleich/` pages each used to claim learner/usage figures, and by August 2026 the three
   disagreed with each other; one ("2,488 AI speaking exercises") had no source in any audit. They

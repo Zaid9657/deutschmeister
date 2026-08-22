@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import competitorComparisons from '../../data/competitorComparisons.js';
-import { BUILD_DATE } from '../../lib/siteMeta.js';
+import { BUILD_DATE, ORGANIZATION } from '../../lib/siteMeta.js';
 import {
   GRAMMAR_TOPIC_COUNT,
   LISTENING_DIALOGUE_COUNT,
@@ -26,16 +26,41 @@ const description = descRaw.length <= 158
 const keywords = `Deutschmeister vs ${data.displayName}, ${data.displayName} Alternative, Deutsch lernen Vergleich, ${data.displayName} Erfahrungen`;
 const canonical = `https://deutsch-meister.de/vergleich/${data.slug}/`;
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Article',
-  headline: `Deutschmeister vs ${data.displayName} — Vergleich`,
-  description: data.heroSubheadline,
-  author: { '@type': 'Organization', name: 'DeutschMeister' },
-  publisher: { '@type': 'Organization', name: 'DeutschMeister' },
-  datePublished: '2026-05-28',
-  dateModified: BUILD_DATE,
-};
+// Article + FAQPage + BreadcrumbList. The FAQ below was rendered on the page
+// but emitted no schema, and there was no breadcrumb — the vergleich HUB had
+// both. Same set the Leitfaden pages emit (see data/guides/index.js).
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: `Deutschmeister vs ${data.displayName} — Vergleich`,
+    description: data.heroSubheadline,
+    inLanguage: 'de',
+    author: ORGANIZATION,
+    publisher: ORGANIZATION,
+    datePublished: '2026-05-28',
+    dateModified: BUILD_DATE,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: data.faq.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Start', item: 'https://deutsch-meister.de/' },
+      { '@type': 'ListItem', position: 2, name: 'Vergleich', item: 'https://deutsch-meister.de/vergleich/' },
+      { '@type': 'ListItem', position: 3, name: `Deutschmeister vs ${data.displayName}`, item: canonical },
+    ],
+  },
+];
 
 // ✓ / ✗ / ○ status prefixes → colour + stripped text (matches the SPA's StatusIcon).
 const WHY_ICON = { Mic: '🎤', ScanSearch: '🔍', GraduationCap: '🎓', Brain: '🧠', Clock: '⏰', Wallet: '💰' };
