@@ -120,8 +120,15 @@ const RETIRED_CTA = 'from-amber-500 to-rose-500';
  * to-rose-500` sailed past it. Tailwind emitting `.from-amber-500` into the
  * built CSS is what exposed that — the source of truth was the artifact, not
  * the grep.
+ *
+ * 2026-08-23: WIDENED from gradient stops to ANY amber/rose utility. The old
+ * pattern required a `from-`/`via-`/`to-` prefix, so a plain border, text or
+ * background in the retired palette was invisible to it — which is how
+ * ProtectedRoute.jsx kept a retired amber border-top through the whole
+ * migration while both ratchets reported clean. Widening the lens moved the
+ * count from 10 files to 22; see MAX_RETIRED_STOP_FILES.
  */
-const RETIRED_STOP = /\b(?:from|via|to)-(?:amber|rose)-\d{2,3}\b/;
+const RETIRED_STOP = /-(?:amber|rose)-\d{2,3}\b/;
 
 /** Everything rendered around every route, the primitives, and the signup funnel. */
 const APP_CHROME = [
@@ -136,6 +143,12 @@ const APP_CHROME = [
   'src/components/LockedContentOverlay.jsx',
   'src/components/SubscriptionGuard.jsx',
   'src/components/LevelSubscriptionGuard.jsx',
+  // The other three gates. CLAUDE.md has always said this ban covers "the
+  // guards", but the list only ever held the two above — so ProtectedRoute
+  // kept a retired-brand spinner, and rendered it on four routes, unseen.
+  'src/components/ProtectedRoute.jsx',
+  'src/components/EmailVerificationGate.jsx',
+  'src/components/onboarding/OnboardingGate.jsx',
   'src/components/ErrorBoundary.jsx',
   'src/components/DataState.jsx',
   'src/components/EmptyState.jsx',
@@ -194,12 +207,20 @@ test('the chrome uses the shared button, not a copy of its classes', () => {
 const MAX_LEGACY_CTA_FILES = 0;
 
 /**
- * Files still carrying ANY retired-brand gradient stop. May only go down.
- * 2026-08-22: 10 — the level/listening components and the account, grammar,
- * X-Ray, subscription and video-library screens. These were never in the
- * migration's scope; the number is here so that is visible rather than implied.
+ * Files still carrying ANY retired-brand colour. May only go down.
+ *
+ * 2026-08-22: 10, under the old gradient-stop-only regex.
+ * 2026-08-23: 21, under the widened regex above. The jump is a WIDER LENS, not
+ * a regression — nothing spread. Two thirds of the retired palette lived in
+ * plain `text-`/`bg-`/`border-` utilities that the old pattern could not see,
+ * so "10" was never the real number. Widening found 22; ProtectedRoute.jsx was
+ * migrated in the same commit, leaving 21.
+ *
+ * 21 is the ceiling now and may only go down: the level/listening components
+ * and the grammar, reading, speaking, account, X-Ray, subscription, vocabulary
+ * and video-library screens. None were in the August migration's scope.
  */
-const MAX_RETIRED_STOP_FILES = 10;
+const MAX_RETIRED_STOP_FILES = 21;
 
 test('the retired CTA is receding, never spreading', () => {
   const files = [];

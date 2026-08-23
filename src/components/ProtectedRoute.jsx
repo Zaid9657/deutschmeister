@@ -8,11 +8,18 @@ const ProtectedRoute = ({ children }) => {
   const { t } = useTranslation();
 
   if (loading) {
+    // Same spinner as SubscriptionGuard, on the same tokens. This one kept a
+    // retired-brand amber border-top long after the migration, because
+    // APP_CHROME never listed this file and RETIRED_STOP only matched gradient
+    // stops, not a border utility. Both gaps are closed in tests/brand.test.mjs;
+    // this is the file they were missing. (The retired class is deliberately
+    // not spelled out here — Tailwind's scanner does not parse comments, so
+    // quoting one is enough to emit it back into the built CSS.)
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="min-h-screen flex items-center justify-center bg-paper">
         <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full border-4 border-slate-200 border-t-amber-500 animate-spin" />
-          <p className="text-slate-600">{t('common.loading')}</p>
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full border-4 border-rule border-t-siegel animate-spin" />
+          <p className="text-graphite">{t('common.loading')}</p>
         </div>
       </div>
     );

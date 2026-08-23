@@ -83,7 +83,16 @@ never reaches `done` and never records at all. The SPA user simply never sees th
 real visitor and crawler: delete the three SPA grammar routes, switch `DashboardPage` and
 `GrammarTopicCard` to a plain `<a href>` full load, delete `GrammarLessonPage.jsx`. That is the
 call this repo already made for `LandingPage.jsx` and `TelcB1Page.jsx`, documented both times in
-`App.jsx`. **Stopgap today:** port the option-less filter into `normalizeExercises`.
+`App.jsx`.
+
+**Stopgap (shipped 2026-08-23).** The first draft of this recommendation said "port the SPA's
+filter into `normalizeExercises`". That would have been a regression: the SPA drops *every*
+option-less exercise only because its `Exercise` component renders nothing but
+`exercise.options.map(...)` — it has no fill-blank renderer. The Astro island does, and
+`FillBlank` is a free-text input that needs no options. Copying the blanket filter would have
+deleted every working fill-blank exercise from the static grammar pages. What shipped drops only
+`multiple_choice` rows with no options — the ones that are genuinely unanswerable in the renderer
+that will handle them.
 
 ## S2 · 03 — The soft-404 fixed for `/grammar/*` is still live on two other prefixes
 
@@ -173,8 +182,15 @@ prefix — verified not to match `border-t-amber-500`. The file also uses `bg-sl
 `text-slate-600` where the tokens say `bg-paper` / `text-graphite`, so adjacent routes show two
 visibly different loading spinners.
 
-**Fix.** Add the three files to `APP_CHROME`; migrate `ProtectedRoute.jsx` onto the tokens; widen
-`RETIRED_STOP` to any `-(amber|rose)-\d{2,3}` utility, not just gradient stops.
+**Fix (shipped 2026-08-23).** Added the three files to `APP_CHROME`, migrated
+`ProtectedRoute.jsx` (and `OnboardingGate`'s spinner) onto the tokens, and widened `RETIRED_STOP`
+to any `-(amber|rose)-\d{2,3}` utility.
+
+**The widening changed the picture.** The ratchet had read 10 for weeks; under the wider lens the
+real number is **22**. Two thirds of the surviving retired palette lived in plain `text-`, `bg-`
+and `border-` utilities that a gradient-stop pattern could not see. `MAX_RETIRED_STOP_FILES` is
+now 21 (22 minus `ProtectedRoute.jsx`, migrated in the same commit) and may only go down. The
+ceiling went up because the lens widened, not because anything spread.
 
 ## S3 · 08 — 602 duplicated lines rest on an assumption nobody has retested
 
@@ -233,12 +249,22 @@ drift check.
 
 ## Roadmap
 
-**Phase 1 — stop the bleeding (~2h).** Each small, independent, and removes a way to ship a broken
-site silently.
-1. Scope the `|| true` to the IndexNow ping (01)
-2. Delete the `/leitfaden/*` and `/vergleich/*` rewrites (03)
-3. Port the option-less exercise filter into `normalizeExercises` (02, stopgap)
-4. Add the three gates to `APP_CHROME`; widen `RETIRED_STOP` (07)
+**Phase 1 — stop the bleeding. SHIPPED 2026-08-23.** Each small, independent, and removes a way to
+ship a broken site silently.
+1. ~~Scope the `|| true` to the IndexNow ping~~ (01) — wrapped in a subshell; a mid-chain failure
+   now exits non-zero, and only the ping is tolerated. Both proven in shell.
+2. ~~Delete the `/leitfaden/*` and `/vergleich/*` rewrites~~ (03) — 29 SPA rewrites → 27. The four
+   guides and four comparison pages are static files and are unaffected; unknown slugs now reach
+   the `/*` catch-all and return a real 404.
+3. ~~Filter unanswerable exercises in `normalizeExercises`~~ (02, stopgap) — see the correction
+   under finding 02: `multiple_choice` with no options only, never the fill-blanks.
+4. ~~Add the three gates to `APP_CHROME`; widen `RETIRED_STOP`~~ (07) — and the widening found
+   more than expected; see finding 07.
+
+Verified: `npm test` 29/29, `npm run lint` 0 errors, `check:duplicates` clean, `node --check` on
+all 15 functions, a full `npm run build` + prerender + `check-built-html --spa-only` (7 pages, 0
+failures), and a grep of the **built CSS** confirming the retired border class is no longer
+emitted while `border-t-siegel` is.
 
 **Phase 2 — put the seam under test before changing it (~1d).**
 1. `tests/access.test.mjs` — the trial/subscription truth table (04)
