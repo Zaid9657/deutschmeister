@@ -2,7 +2,10 @@
   "mcpServers": {
     "dataforseo": {
       "command": "npx",
-      "args": ["-y", "dataforseo-mcp-server"],
+      "args": [
+        "-y",
+        "dataforseo-mcp-server"
+      ],
       "env": {
         "DATAFORSEO_USERNAME": "${DATAFORSEO_USERNAME}",
         "DATAFORSEO_PASSWORD": "${DATAFORSEO_PASSWORD}",
@@ -11,11 +14,20 @@
     },
     "gsc": {
       "command": "uvx",
-      "args": ["mcp-search-console"],
+      "args": [
+        "mcp-search-console"
+      ],
       "env": {
         "GSC_CREDENTIALS_PATH": "${HOME}/.gsc-credentials.json",
         "GSC_SKIP_OAUTH": "true"
       }
+    },
+    "executeautomation-playwright-server": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@executeautomation/playwright-mcp-server"
+      ]
     }
   }
 }
