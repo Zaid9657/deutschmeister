@@ -323,10 +323,116 @@ counts of what the product contains — figures true by construction that cannot
 August remediation made every in-app "/" link a full page load; `src/App.jsx` now carries a comment
 at that spot explaining that Astro serves the homepage, so nobody re-adds it.
 
-Still open in Batch B: the in-app SPA surfaces that still carry retired-brand hexes (`components/onboarding/IntroSlides.jsx`,
-`components/LevelTest/LevelTestResults.jsx`, `styles/LevelTest.css`). Those are the in-product
-migration rather than the marketing chrome, and `LevelTest.css` alone is ~1,500 lines, so they are
-their own change.
+### Batch F (2026-08-22): the in-app brand migration — chrome and shared primitives
+
+Batch B put the *public* surfaces on the tokens and left the SPA alone, so the product had a seam
+exactly where it could least afford one: a visitor read a Fraunces-on-paper homepage with a teal
+`siegel` accent, clicked "Sign up", and landed in an app whose nav, buttons and focus rings were
+still the retired amber-to-rose identity. Batch F closes the crossing, not the whole app.
+
+**What moved.** `src/index.css` first — its global `*:focus-visible` ring and `::selection` rule
+put the retired brand on *every screen in the product* in two declarations, which made them the
+highest-leverage lines in the repo. Then the chrome proper (everything `src/App.jsx` renders around
+every route: the skip link, `Navbar`, `SessionTimeoutModal`, `FloatingIntroButton`,
+`LockedContentOverlay`, the two subscription guards, `ErrorBoundary`, `IntroSlides`), the shared
+`DataState`/`EmptyState`, and the five-screen signup funnel — the literal crossing point, so
+migrating it is the point of the batch rather than scope creep.
+
+**Two primitives now exist that did not.** There was no `src/components/ui/`, no shared Button and
+no shared Card; the primary CTA was the string `bg-gradient-to-r from-amber-500 to-rose-500 …`
+copy-pasted into twenty files, so the brand was unreachable by any single edit. `ui/Button.jsx`
+carries the same treatment the rebuilt Astro pricing page already used, so the app and the
+marketing site now render one button rather than two.
+
+**Dead weight removed with it.** `.gradient-text` (itself an amber→rose→purple gradient), `.glass`,
+`.card-hover`, all eight `.btn-a1-1`…`.btn-b2-2` level-gradient buttons, `.safe-bottom/.safe-top`,
+`.will-change-transform` and the three `.delay-*` utilities were verified to have zero importers and
+deleted — 210 lines of `index.css` down to 131.
+
+**Three defects found while wiring it, none of them in any prior audit:**
+
+1. **`rounded-pill` was never wired.** Neither Tailwind config extended `borderRadius`, so
+   `astro-site/src/pages/pricing.astro`'s billing toggle has been rendering with square corners
+   since it shipped — the class emitted nothing. Both configs now take `pill` from the tokens.
+   Only `pill` is adopted: the token values for `sm`/`md`/`lg` collide with Tailwind's own
+   defaults, and taking those would silently reshape every `rounded-lg` in the app.
+2. **The Astro base layer contradicted the tokens.** `astro-site/src/styles/global.css` set
+   `h1, h2, h3, h4` to Cormorant Garamond — the *retired* display face — so every heading that did
+   not carry an explicit `font-display` class rendered in it. The rebuilt homepage and pricing page
+   did carry it; the guides and grammar pages did not. Both faces now come through `@apply`.
+3. **Two font families were being downloaded for nothing.** Once the seal's "M" moved to Fraunces
+   and `.dm-body` moved to Nunito Sans, Cormorant Garamond was unreferenced on both sides and Inter
+   had three stragglers (`SentenceCard` ×2, a `DashboardPage` SVG label). Both are gone from the
+   critical-path font request on the SPA and the Astro site.
+
+**The guard is two assertions of different kinds, and that is deliberate.**
+`tests/brand.test.mjs` now bans the retired palette absolutely across the chrome list, and pins a
+**ratchet** — `MAX_LEGACY_CTA_FILES` — over the rest. Twenty files carried the retired CTA before
+this batch and ten do now; the ceiling may only fall, and the test fails if you migrate a screen
+without lowering it. An untracked debt is one nobody pays.
+
+All three new assertions were kill-tested: the retired CTA reintroduced into `Navbar.jsx`, a fresh
+file added carrying it, and the amber focus ring restored in `index.css` each turned the suite red,
+and green again on revert.
+
+**Two corrections to claims made while planning this batch**, both caught by reading the files:
+the Astro seal *does* carry the dashed inner ring (it differed from the SPA only in the "M" face),
+and Inter *was* loaded by `index.html` — `.dm-body` was rendering in Inter, not falling through to
+`system-ui`.
+
+**A process trap this batch hit, which will recur on every future batch on this branch.** The
+repo squash-merges PRs, but the feature branch is long-lived and reused batch after batch. So the
+moment a batch's PR merges, `main` holds that work as a *squash* while the branch still holds the
+original commit — same content, no shared ancestry. The next batch pushed on top makes GitHub
+three-way-merge the previous batch against itself, and the PR goes `mergeable_state: dirty` even
+though nothing genuinely conflicts. It surfaced here as a conflict in the three files both batches
+touched (`CLAUDE.md`, this file, `tests/brand.test.mjs`).
+
+The fix is a rebase, never a merge: `git fetch origin main && git rebase origin/main` drops the
+already-merged commit as patch-equivalent (`warning: skipped previously applied commit …`) and
+replays only the new one, then `git push --force-with-lease`. Verified safe by comparing tree
+SHAs before and after — identical, so history changed and content did not. Merging `main` in
+instead would resolve too, but leaves the duplicated history and a merge commit in a
+squash-merge repo, and the PR diff keeps double-counting the previous batch.
+
+**The same rebase is also how CI gets triggered on this branch.** GitHub Actions created no run at
+all for the first push of this batch: `ci.yml` fires on `push: branches: [main]` and on
+`pull_request`, but the push landed while no PR was open, and opening the PR afterwards produced
+no run either. Every CI run this branch has ever had came from a push while a PR was already open
+— a `synchronize` event. So the force-push that fixes the conflict is also what finally runs CI.
+The right sequence for the next batch is therefore: rebase onto `main` **first**, then push, then
+open the PR.
+
+**Batch F part two: the content screens, and a guard that was quietly lying.** The eight screens
+the ratchet was holding (`FAQ`, `UeberUns`, `Vergleich` hub, `Comparison`, `Intro`, `Speaking`,
+`VideoDetail`, `AdminVideos`) are migrated, so `MAX_LEGACY_CTA_FILES` is **0**. Three patterns
+recurred and are worth naming: a **palette per item** (five FAQ categories, three value cards and
+three competitor tiles each carried their own invented two-stop gradient — categories are
+navigation, not meaning, so they get one mark); **gradient text** in a headline, the
+`.gradient-text` class deleted from `index.css` as dead, re-inlined by hand; and the last
+**dark-on-light panels**, the same outlier `/pricing` lost in Batch B.
+
+`src/pages/leitfaden/TelcB1Page.jsx` was **deleted** with its route — 564 lines of a hand-written
+SPA twin of a static Astro guide, unreachable because Netlify serves the real file before the
+non-forced `/leitfaden/*` rewrite. That is the second "two copies, one dead" pair this repo has
+found, after `LandingPage.jsx`.
+
+**The guard was measuring the wrong thing, and the built artifact is what caught it.** The ratchet
+counted one exact adjacent pairing, `from-amber-500 to-rose-500`. It reached 0 — while
+`from-amber-500 to-orange-500` and `from-amber-400 via-orange-500 to-rose-500` sailed past it. The
+tell was `.from-amber-500` still being emitted into the built CSS after every source grep came back
+clean: Tailwind only emits a class something actually uses, so the artifact knew what the grep did
+not. A second ratchet, `MAX_RETIRED_STOP_FILES`, now matches **any** retired stop in any pairing
+and stands at **10** — the level/listening components and the account, grammar, X-Ray, subscription
+and video-library screens, none of which were ever in scope. The number is in the suite so the
+remaining debt is visible rather than implied.
+
+(A smaller instance of the same thing: `ui/Button.jsx`'s own doc comment quoted the retired CTA
+verbatim, and Tailwind's scanner does not parse comments — so the comment was shipping a live CSS
+rule. Reworded.)
+
+Still open after Batch F: the ten files above, and `src/components/LevelTest/LevelTest.css`,
+deferred on purpose — see below.
 
 **A note on the landing rebuild before it starts.** Its current stats band claims "1,400+
 Learners", "170+ New learners this month" and "2,488 AI speaking exercises". The first two are
@@ -459,3 +565,11 @@ wrong when checked against the code. Verify before building from any line in it.
 3. **Batch C (SEO engine):** 1.1 guide infrastructure + first guide; 1.4 schema/internal links.
 4. **Batch D (SEO ops):** 1.2 `.mcp.json` + routines + first keyword-research run; 1.5 decision.
 5. **Batch E (growth loop):** 3.1 activation journeys + 3.2 server-side events.
+6. **Batch F (in-app brand):** `index.css` globals → chrome → `ui/` primitives → signup funnel.
+   **Done 2026-08-22.** Deferred from it, as its own task:
+   `src/components/LevelTest/LevelTest.css` — 1,765 lines and ~220 colour declarations, but fully
+   class-scoped (it leaks nothing into the rest of the app), imported by exactly one place
+   (`src/pages/LevelTest.jsx:11`), and its dominant colours are already token-compatible
+   (`#1d9e75` = `kasus.dativ.line`, `#e1f5ee` = its wash, `#378add` = nominativ). It is also a
+   conversion surface, and no agent session can visually verify it. Migrating it blind risks
+   breaking a funnel step to fix a seam that does not bleed; it needs a visual check alongside.

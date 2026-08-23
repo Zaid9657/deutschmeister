@@ -13,6 +13,7 @@ import { checkSpeakingSupport } from '../components/speaking/mediaSupport';
 import SpeakingSession from '../components/speaking/SpeakingSession';
 import SpeakingEvaluationResults from '../components/SpeakingEvaluationResults';
 import { LEVEL_ORDER } from '../config/levels';
+import Button from '../components/ui/Button';
 
 // English display names for the level picker (the German names in
 // speakingPrompts.js are shared with the AI prompt config and stay unchanged).
@@ -57,24 +58,24 @@ function BrowserUnsupportedBanner({ browserSupport }) {
     catch { window.prompt('Copy URL:', window.location.href); }
   };
   return (
-    <div className="max-w-lg mx-auto mb-6 bg-white rounded-2xl border border-amber-200 p-6 text-center">
-      <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-amber-50 flex items-center justify-center">
-        <AlertTriangle className="w-7 h-7 text-amber-500" />
+    <div className="max-w-lg mx-auto mb-6 bg-white rounded-2xl border border-siegel/25 p-6 text-center">
+      <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-siegel-wash flex items-center justify-center">
+        <AlertTriangle className="w-7 h-7 text-siegel" />
       </div>
-      <h3 className="font-bold text-slate-800 mb-2">
+      <h3 className="font-bold text-ink mb-2">
         {isInApp ? 'In-app browser detected' : 'Browser not supported'}
       </h3>
-      <p className="text-sm text-slate-500 mb-4">
+      <p className="text-sm text-graphite mb-4">
         {isInApp
           ? "Please open this page in Safari or Chrome. In-app browsers don't support the microphone."
           : "Your browser doesn't support the required audio features."}
       </p>
       {isInApp ? (
-        <button onClick={handleCopy} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-semibold text-sm transition-colors">
+        <button onClick={handleCopy} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-siegel hover:bg-siegel-lift text-white font-semibold text-sm transition-colors">
           Copy URL
         </button>
       ) : (
-        <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-600">
+        <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-paper border border-rule text-sm text-graphite">
           <Monitor className="w-4 h-4" /> Please use <strong>Chrome</strong>, <strong>Edge</strong> or <strong>Safari</strong>
         </div>
       )}
@@ -85,15 +86,15 @@ function BrowserUnsupportedBanner({ browserSupport }) {
 function MissionResultBanner({ passed }) {
   const isPassed = passed === true;
   return (
-    <div className={`max-w-lg mx-auto mb-6 rounded-2xl border p-5 flex items-center gap-4 ${isPassed ? 'bg-green-50 border-green-200' : 'bg-amber-50 border-amber-200'}`}>
-      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 ${isPassed ? 'bg-green-100' : 'bg-amber-100'}`}>
-        {isPassed ? <CheckCircle2 className="w-6 h-6 text-green-600" /> : <RotateCcw className="w-6 h-6 text-amber-600" />}
+    <div className={`max-w-lg mx-auto mb-6 rounded-2xl border p-5 flex items-center gap-4 ${isPassed ? 'bg-green-50 border-green-200' : 'bg-siegel-wash border-siegel/25'}`}>
+      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 ${isPassed ? 'bg-green-100' : 'bg-paper-sunk'}`}>
+        {isPassed ? <CheckCircle2 className="w-6 h-6 text-green-600" /> : <RotateCcw className="w-6 h-6 text-siegel" />}
       </div>
       <div>
-        <h3 className={`font-bold ${isPassed ? 'text-green-700' : 'text-amber-700'}`}>
+        <h3 className={`font-bold ${isPassed ? 'text-green-700' : 'text-siegel-deep'}`}>
           {isPassed ? 'Mission complete!' : 'Almost there'}
         </h3>
-        <p className={`text-sm ${isPassed ? 'text-green-600' : 'text-amber-600'}`}>
+        <p className={`text-sm ${isPassed ? 'text-green-600' : 'text-siegel'}`}>
           {isPassed ? 'You reached the mission goal. Keep it up!' : "You didn't quite reach the goal — give it another try."}
         </p>
       </div>
@@ -253,20 +254,20 @@ const SpeakingPage = () => {
   // ---- guest gate ----
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white flex items-center justify-center px-4 pt-20 pb-12">
+      <div className="min-h-screen bg-paper flex items-center justify-center px-4 pt-20 pb-12">
         <div className="max-w-lg w-full text-center">
-          <div className="w-20 h-20 mx-auto mb-6 rounded-3xl bg-gradient-to-br from-teal-400 to-emerald-500 flex items-center justify-center shadow-xl shadow-teal-200">
+          <div className="w-20 h-20 mx-auto mb-6 rounded-lg bg-siegel flex items-center justify-center shadow-xl">
             <Mic className="w-10 h-10 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-slate-900 mb-3">German Speaking Practice</h1>
-          <p className="text-slate-500 mb-8">
+          <h1 className="text-3xl font-bold text-ink mb-3">German Speaking Practice</h1>
+          <p className="text-graphite mb-8">
             Sign in to practice speaking German with your AI conversation partner — with instant feedback.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link to="/signup" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-2xl shadow-lg shadow-rose-200 hover:shadow-xl transition-all">
+            <Button to="/signup" size="lg">
               Sign up free <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link to="/login" className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-slate-200 text-slate-700 font-semibold rounded-2xl hover:border-slate-300 hover:bg-slate-50 transition-all">
+            </Button>
+            <Link to="/login" className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-rule text-ink font-semibold rounded-2xl hover:border-rule hover:bg-siegel-wash transition-all">
               Log in
             </Link>
           </div>
@@ -293,14 +294,14 @@ const SpeakingPage = () => {
   // ---- evaluation failed ----
   if (phase === 'eval_failed') {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white flex items-center justify-center px-4 pt-20 pb-12">
+      <div className="min-h-screen bg-paper flex items-center justify-center px-4 pt-20 pb-12">
         <div className="max-w-md w-full text-center">
-          <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center">
-            <AlertTriangle className="w-8 h-8 text-amber-500" />
+          <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-siegel-wash border border-siegel/25 flex items-center justify-center">
+            <AlertTriangle className="w-8 h-8 text-siegel" />
           </div>
-          <h2 className="text-xl font-bold text-slate-800 mb-2">Evaluation failed</h2>
-          <p className="text-sm text-slate-500 mb-6">{evaluation?.message || 'The evaluation could not be created.'}</p>
-          <button onClick={backToSetup} className="w-full py-3.5 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-xl transition-colors">
+          <h2 className="text-xl font-bold text-ink mb-2">Evaluation failed</h2>
+          <p className="text-sm text-graphite mb-6">{evaluation?.message || 'The evaluation could not be created.'}</p>
+          <button onClick={backToSetup} className="w-full py-3.5 bg-siegel hover:bg-siegel-lift text-white font-semibold rounded-xl transition-colors">
             Back to overview
           </button>
         </div>
@@ -312,7 +313,7 @@ const SpeakingPage = () => {
   if (phase === 'results' && evaluation) {
     const isMissionResult = !!session?.mission;
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white pt-20 pb-12 px-4">
+      <div className="min-h-screen bg-paper pt-20 pb-12 px-4">
         {isMissionResult && <MissionResultBanner passed={evaluation.passed} />}
         <SpeakingEvaluationResults
           level={session?.level || selectedLevel}
@@ -329,7 +330,7 @@ const SpeakingPage = () => {
   const levelConfig = getConfigForLevel(selectedLevel);
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-16">
+    <div className="min-h-screen bg-paper pt-16">
       <SEO
         title="German Speaking Practice with an AI Partner"
         description="Practice speaking German with an AI conversation partner: guided missions or free conversation, with instant feedback. Levels A1 to B2."
@@ -340,13 +341,13 @@ const SpeakingPage = () => {
         {/* Header + wallet */}
         <div className="flex items-start justify-between mb-6">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-teal-100/80 text-teal-700 text-[11px] font-semibold mb-2 tracking-wide uppercase">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-siegel-wash text-siegel-deep text-[11px] font-semibold mb-2 tracking-wide uppercase">
               <Mic className="w-3 h-3" /> AI Speaking Practice
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">German Speaking Practice</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-ink tracking-tight">German Speaking Practice</h1>
           </div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-sm font-semibold text-slate-700 shadow-sm">
-            <Wallet className="w-4 h-4 text-teal-500" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-rule text-sm font-semibold text-ink shadow-sm">
+            <Wallet className="w-4 h-4 text-siegel" />
             {metaLoading ? '…' : euros(walletCents)}
           </div>
         </div>
@@ -354,7 +355,7 @@ const SpeakingPage = () => {
         {!browserSupport.supported && <BrowserUnsupportedBanner browserSupport={browserSupport} />}
 
         {/* Level */}
-        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Level</label>
+        <label className="block text-xs font-semibold uppercase tracking-wider text-graphite mb-2">Level</label>
         <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 mb-1">
           {LEVEL_ORDER.map((lvl) => (
             <button
@@ -362,41 +363,41 @@ const SpeakingPage = () => {
               onClick={() => { levelInitRef.current = true; setSelectedLevel(lvl); }}
               className={`flex-shrink-0 px-4 py-2 rounded-xl text-sm font-bold transition-all ${
                 lvl === selectedLevel
-                  ? 'bg-teal-500 text-white shadow-md shadow-teal-200'
-                  : 'bg-white text-slate-600 border border-slate-200 hover:border-teal-300 hover:text-teal-600'
+                  ? 'bg-siegel text-white'
+                  : 'bg-white text-graphite border border-rule hover:border-siegel hover:text-siegel'
               }`}
             >
               {lvl}
             </button>
           ))}
         </div>
-        <p className="text-sm text-slate-500 mb-6">{LEVEL_NAMES_EN[selectedLevel] || levelConfig.name}</p>
+        <p className="text-sm text-graphite mb-6">{LEVEL_NAMES_EN[selectedLevel] || levelConfig.name}</p>
 
         {/* Duration */}
-        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Duration</label>
+        <label className="block text-xs font-semibold uppercase tracking-wider text-graphite mb-2">Duration</label>
         <div className="relative mb-6">
           <select
             value={selectedMinutes}
             onChange={(e) => setSelectedMinutes(Number(e.target.value))}
-            className="w-full appearance-none bg-white border border-slate-200 rounded-2xl px-4 py-3.5 pr-10 text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-teal-400 focus:border-teal-400"
+            className="w-full appearance-none bg-white border border-rule rounded-2xl px-4 py-3.5 pr-10 text-ink font-medium focus:outline-none focus:ring-2 focus:ring-siegel focus:border-siegel"
           >
             {DURATIONS.map((m) => (
               <option key={m} value={m}>{durationLabel(m)}</option>
             ))}
           </select>
-          <Clock className="w-4 h-4 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Clock className="w-4 h-4 text-graphite absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
         </div>
 
         {/* Missions */}
-        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Mission (optional)</label>
+        <label className="block text-xs font-semibold uppercase tracking-wider text-graphite mb-2">Mission (optional)</label>
         {missionsLoading ? (
-          <div className="flex items-center gap-2 text-slate-400 text-sm py-3"><Loader2 className="w-4 h-4 animate-spin" /> Loading missions…</div>
+          <div className="flex items-center gap-2 text-graphite text-sm py-3"><Loader2 className="w-4 h-4 animate-spin" /> Loading missions…</div>
         ) : (
           <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 mb-2">
             <button
               onClick={() => setSelectedMissionId(null)}
               className={`flex-shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all ${
-                selectedMissionId === null ? 'bg-slate-800 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
+                selectedMissionId === null ? 'bg-ink text-paper' : 'bg-white text-graphite border border-rule hover:border-rule'
               }`}
             >
               <MessageCircle className="w-3.5 h-3.5" /> Free Conversation
@@ -409,10 +410,10 @@ const SpeakingPage = () => {
                   key={m.id}
                   onClick={() => setSelectedMissionId(selected ? null : m.id)}
                   className={`flex-shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all ${
-                    selected ? 'bg-teal-500 text-white shadow-md shadow-teal-200' : 'bg-white text-slate-600 border border-slate-200 hover:border-teal-300'
+                    selected ? 'bg-siegel text-white' : 'bg-white text-graphite border border-rule hover:border-siegel'
                   }`}
                 >
-                  <span className={`text-[11px] font-bold ${selected ? 'text-teal-100' : 'text-slate-400'}`}>{m.mission_order}</span>
+                  <span className={`text-[11px] font-bold ${selected ? 'text-siegel-wash' : 'text-graphite'}`}>{m.mission_order}</span>
                   <span className="truncate max-w-[9rem]">{m.title_en || m.title_de}</span>
                   {m.is_free ? null : locked ? <Lock className="w-3 h-3" /> : null}
                 </button>
@@ -423,12 +424,12 @@ const SpeakingPage = () => {
 
         {/* Selected mission preview */}
         {activeMission && (
-          <div className="bg-white rounded-2xl border border-slate-200 p-4 mb-5">
-            <p className="text-sm text-slate-600 leading-relaxed">{activeMission.scenario_de}</p>
+          <div className="bg-white rounded-2xl border border-rule p-4 mb-5">
+            <p className="text-sm text-graphite leading-relaxed">{activeMission.scenario_de}</p>
             {Array.isArray(activeMission.hint_words) && activeMission.hint_words.length > 0 && (
               <div className="flex flex-wrap gap-1.5 mt-3">
                 {activeMission.hint_words.map((w, i) => (
-                  <span key={i} className="px-2.5 py-1 rounded-full bg-teal-50 border border-teal-100 text-teal-700 text-xs font-medium">{w}</span>
+                  <span key={i} className="px-2.5 py-1 rounded-full bg-siegel-wash border border-siegel/25 text-siegel-deep text-xs font-medium">{w}</span>
                 ))}
               </div>
             )}
@@ -437,37 +438,37 @@ const SpeakingPage = () => {
 
         {/* Start error / notices */}
         {startError?.type === 'funds' && (
-          <div className="mb-4 p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-sm text-amber-700 text-center">
+          <div className="mb-4 p-3.5 rounded-2xl bg-siegel-wash border border-siegel/25 text-sm text-siegel-deep text-center">
             Not enough credit — top-ups are coming soon.
           </div>
         )}
         {startError?.type === 'error' && (
-          <div className="mb-4 p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-sm text-rose-700 text-center">
+          <div className="mb-4 p-3.5 rounded-md bg-red-50 border border-red-200 text-sm text-red-700 text-center">
             {startError.message}
           </div>
         )}
         {!canAfford && !startError && (
-          <div className="mb-4 p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-sm text-amber-700 text-center">
+          <div className="mb-4 p-3.5 rounded-2xl bg-siegel-wash border border-siegel/25 text-sm text-siegel-deep text-center">
             Not enough credit — top-ups are coming soon.
           </div>
         )}
 
         {/* Start / upgrade */}
         {missionLocked ? (
-          <a href="/pricing/" className="flex items-center justify-center gap-2 w-full py-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold rounded-2xl shadow-md shadow-amber-200 transition-all">
+          <a href="/pricing/" className="flex items-center justify-center gap-2 w-full py-4 bg-siegel hover:bg-siegel-lift text-white font-bold rounded-2xl shadow-md transition-all">
             <Crown className="w-5 h-5" /> Unlock with Pro
           </a>
         ) : (
           <button
             onClick={handleStart}
             disabled={startDisabled}
-            className="flex items-center justify-center gap-2 w-full py-4 bg-teal-500 hover:bg-teal-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl shadow-md shadow-teal-200 transition-all active:scale-[0.99]"
+            className="flex items-center justify-center gap-2 w-full py-4 bg-siegel hover:bg-siegel-lift disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl transition-all active:scale-[0.99]"
           >
             {starting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Play className="w-5 h-5" />}
             {selectedCost > 0 ? `Start · ${euros(selectedCost)}` : 'Start'}
           </button>
         )}
-        <p className="text-center text-xs text-slate-400 mt-3">
+        <p className="text-center text-xs text-graphite mt-3">
           {activeMission ? 'Guided mission' : 'Free conversation'} · {selectedMinutes} minutes
         </p>
       </div>

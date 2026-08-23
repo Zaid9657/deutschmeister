@@ -74,19 +74,19 @@ const VideoDetailPage = () => {
   const handleCanPlay = () => setVideoLoading(false);
 
   const getLevelColor = (level) => {
-    if (!level) return 'bg-slate-100 text-slate-600';
+    if (!level) return 'bg-paper-sunk text-graphite';
     const l = level.toUpperCase();
-    if (l.startsWith('A1')) return 'bg-emerald-100 text-emerald-700';
-    if (l.startsWith('A2')) return 'bg-sky-100 text-sky-700';
-    if (l.startsWith('B1')) return 'bg-amber-100 text-amber-700';
-    if (l.startsWith('B2')) return 'bg-purple-100 text-purple-700';
-    return 'bg-slate-100 text-slate-600';
+    if (l.startsWith('A1')) return 'bg-a1-1-background text-ink border border-a1-1-primary';
+    if (l.startsWith('A2')) return 'bg-a2-1-background text-ink border border-a2-1-primary';
+    if (l.startsWith('B1')) return 'bg-b1-1-background text-ink border border-b1-1-primary';
+    if (l.startsWith('B2')) return 'bg-b2-1-background text-ink border border-b2-1-primary';
+    return 'bg-paper-sunk text-graphite';
   };
 
   if (loading) {
     return (
       <div className="min-h-screen pt-24 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-slate-400" />
+        <Loader2 className="w-8 h-8 animate-spin text-graphite" />
       </div>
     );
   }
@@ -95,10 +95,10 @@ const VideoDetailPage = () => {
     return (
       <div className="min-h-screen pt-24 px-4">
         <div className="max-w-3xl mx-auto text-center py-16">
-          <p className="text-slate-500 mb-4">{error}</p>
+          <p className="text-graphite mb-4">{error}</p>
           <button
             onClick={() => navigate('/video-library')}
-            className="text-rose-500 hover:underline"
+            className="text-siegel hover:underline"
           >
             {isGerman ? 'Zurück zur Videothek' : 'Back to Video Library'}
           </button>
@@ -108,7 +108,7 @@ const VideoDetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-20 pb-12">
+    <div className="min-h-screen bg-paper pt-20 pb-12">
       <SEO
         title={video.title}
         description={video.description || `German learning video: ${video.title}`}
@@ -120,7 +120,7 @@ const VideoDetailPage = () => {
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           onClick={() => navigate('/video-library')}
-          className="flex items-center gap-2 text-slate-500 hover:text-slate-700 transition-colors mb-6"
+          className="flex items-center gap-2 text-graphite hover:text-ink transition-colors mb-6"
         >
           <ArrowLeft size={18} />
           {isGerman ? 'Zurück zur Videothek' : 'Back to Video Library'}
@@ -133,7 +133,7 @@ const VideoDetailPage = () => {
           className="mb-6"
         >
           <div className="flex items-center gap-3 mb-2">
-            <h1 className="font-display text-2xl sm:text-3xl font-bold text-slate-800">
+            <h1 className="font-display text-2xl sm:text-3xl font-bold text-ink">
               {video.title}
             </h1>
             {video.level && (
@@ -143,7 +143,7 @@ const VideoDetailPage = () => {
             )}
           </div>
           {video.description && (
-            <p className="text-slate-600 leading-relaxed">{video.description}</p>
+            <p className="text-graphite leading-relaxed">{video.description}</p>
           )}
         </motion.div>
 
@@ -159,8 +159,8 @@ const VideoDetailPage = () => {
               onClick={() => switchLang('en')}
               className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
                 lang === 'en'
-                  ? 'bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-md'
-                  : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-300 hover:shadow-sm'
+                  ? 'bg-siegel text-white'
+                  : 'bg-white border border-rule text-graphite hover:border-siegel hover:shadow-sm'
               }`}
             >
               🇬🇧 English
@@ -169,8 +169,8 @@ const VideoDetailPage = () => {
               onClick={() => switchLang('ar')}
               className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
                 lang === 'ar'
-                  ? 'bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow-md'
-                  : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-300 hover:shadow-sm'
+                  ? 'bg-siegel text-white'
+                  : 'bg-white border border-rule text-graphite hover:border-siegel hover:shadow-sm'
               }`}
             >
               🇸🇦 العربية
@@ -185,7 +185,7 @@ const VideoDetailPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
           >
-            <div className="relative bg-black rounded-2xl overflow-hidden shadow-xl">
+            <div className="relative bg-black rounded-2xl overflow-hidden">
               {videoLoading && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black/60 z-10">
                   <Loader2 className="w-10 h-10 animate-spin text-white" />

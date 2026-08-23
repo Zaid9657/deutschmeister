@@ -7,6 +7,8 @@ import { Mail, Lock, Eye, EyeOff, AlertCircle, Loader2, Check } from 'lucide-rea
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../utils/supabase';
 import SEO from '../components/SEO';
+import Button from '../components/ui/Button';
+import Logo from '../components/Logo';
 
 const logFailedSignup = (email, error) => {
   supabase
@@ -70,7 +72,7 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-paper px-4 py-12">
       <SEO title="Sign Up Free" description="Create a free DeutschMeister account and start mastering German grammar with clear English explanations." path="/signup" />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -79,16 +81,17 @@ const SignupPage = () => {
       >
         {/* Header */}
         <div className="text-center mb-8">
-          <Link to="/" className="inline-block mb-6">
-            <div className="mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 via-rose-400 to-purple-500 flex items-center justify-center shadow-lg shadow-rose-500/25">
-              <span className="text-white font-display font-bold text-3xl">D</span>
-            </div>
-          </Link>
-          <h1 className="font-display text-3xl font-bold text-slate-800 mb-2">
+          {/* The Meister-Siegel, not a "D" tile: the D was the retired identity, and
+              a second mark beside the seal in the nav reads as two products. Logo
+              renders a plain <a>, which matters — "/" is served by the Astro build,
+              so a router <Link to="/"> client-routes to a route the SPA does not
+              have and lands the user on NotFoundPage. */}
+          <Logo size={64} showWordmark={false} className="mb-6" />
+          <h1 className="font-display text-3xl font-semibold text-ink mb-2">
             {/* EN: Start Free */}
             Start for free
           </h1>
-          <p className="text-slate-600 mb-4">
+          <p className="text-graphite mb-4">
             Create an account and get instant access to:
           </p>
           {/* Free tier value list */}
@@ -100,8 +103,8 @@ const SignupPage = () => {
               '10 Sentence X-Ray analyses per day during your trial',
               '7-day Pro trial included'
             ].map((item) => (
-              <li key={item} className="flex items-center gap-2 text-sm text-slate-600">
-                <Check className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+              <li key={item} className="flex items-center gap-2 text-sm text-graphite">
+                <Check className="w-4 h-4 text-siegel flex-shrink-0" />
                 {item}
               </li>
             ))}
@@ -109,12 +112,12 @@ const SignupPage = () => {
         </div>
 
         {/* Form */}
-        <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-8">
+        <div className="bg-white rounded-lg border border-rule shadow-overlay p-8">
           {error && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl flex items-center gap-3 text-red-600"
+              className="mb-6 p-4 bg-red-50 border border-red-100 rounded-lg flex items-center gap-3 text-red-600"
             >
               <AlertCircle className="w-5 h-5 flex-shrink-0" />
               <p className="text-sm">{error}</p>
@@ -124,18 +127,18 @@ const SignupPage = () => {
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <div>
-              <label htmlFor="signup-field-1" className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="signup-field-1" className="block text-sm font-medium text-ink mb-2">
                 {t('auth.email')}
               </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-graphite" />
                 <input
                   id="signup-field-1"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 transition-all"
+                  className="w-full pl-12 pr-4 py-3 bg-paper border border-rule rounded-md focus:outline-none focus:ring-2 focus:ring-siegel focus:border-siegel transition-colors"
                   placeholder="you@example.com"
                 />
               </div>
@@ -143,11 +146,11 @@ const SignupPage = () => {
 
             {/* Password */}
             <div>
-              <label htmlFor="signup-field-2" className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="signup-field-2" className="block text-sm font-medium text-ink mb-2">
                 {t('auth.password')}
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-graphite" />
                 <input
                   id="signup-field-2"
                   type={showPassword ? 'text' : 'password'}
@@ -155,13 +158,13 @@ const SignupPage = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   minLength={6}
-                  className="w-full pl-12 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 transition-all"
+                  className="w-full pl-12 pr-12 py-3 bg-paper border border-rule rounded-md focus:outline-none focus:ring-2 focus:ring-siegel focus:border-siegel transition-colors"
                   placeholder="At least 6 characters"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-graphite hover:text-ink"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -170,29 +173,25 @@ const SignupPage = () => {
 
             {/* Confirm Password */}
             <div>
-              <label htmlFor="signup-field-3" className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="signup-field-3" className="block text-sm font-medium text-ink mb-2">
                 {t('auth.confirmPassword')}
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-graphite" />
                 <input
                   id="signup-field-3"
                   type={showPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
-                  className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 transition-all"
+                  className="w-full pl-12 pr-4 py-3 bg-paper border border-rule rounded-md focus:outline-none focus:ring-2 focus:ring-siegel focus:border-siegel transition-colors"
                   placeholder="Confirm your password"
                 />
               </div>
             </div>
 
             {/* Submit */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-xl hover:from-amber-600 hover:to-rose-600 transition-all shadow-lg shadow-rose-500/25 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
+            <Button type="submit" disabled={loading} size="lg" className="w-full">
               {loading ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -201,19 +200,19 @@ const SignupPage = () => {
               ) : (
                 t('auth.signup')
               )}
-            </button>
+            </Button>
           </form>
 
           {/* Trust line */}
           {/* EN: No credit card required · Cancel anytime */}
-          <p className="mt-3 text-center text-xs text-slate-400">
+          <p className="mt-3 text-center text-xs text-graphite">
             Keine Kreditkarte erforderlich · Jederzeit kündbar
           </p>
 
           {/* Login link */}
-          <p className="mt-5 text-center text-slate-600">
+          <p className="mt-5 text-center text-graphite">
             {t('auth.hasAccount')}{' '}
-            <Link to="/login" className="text-amber-600 hover:text-amber-700 font-medium">
+            <Link to="/login" className="text-siegel hover:text-siegel-deep font-medium">
               {t('auth.login')}
             </Link>
           </p>

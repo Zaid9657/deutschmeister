@@ -7,17 +7,17 @@ import {
   trackOnboardingSlideViewed,
   trackOnboardingSkipped,
 } from '../../lib/funnelTracking';
+import { color } from '../../data/design-tokens';
+import Button from '../ui/Button';
 
 const SLIDES = [
   {
     icon: Sparkles,
-    color: 'from-amber-400 to-rose-500',
     headline: "Glad you're here.",
     body: 'Here you learn German like a person, not like a toy. In 30 seconds we\'ll show you what to do next.',
   },
   {
     icon: ListChecks,
-    color: 'from-teal-400 to-emerald-500',
     headline: 'Your first day, step by step.',
     checklist: [
       'Take the placement test (5 min — we find your level)',
@@ -27,7 +27,6 @@ const SLIDES = [
   },
   {
     icon: Rocket,
-    color: 'from-violet-400 to-indigo-500',
     headline: "Let's start with the placement test.",
     body: "In 5 minutes you'll know exactly which level to start at. No weeks wasted on the wrong one.",
     isFinal: true,
@@ -69,7 +68,7 @@ export default function IntroSlides() {
   const slide = SLIDES[currentStep];
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100 px-4 py-12 relative">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-paper px-4 py-12 relative">
       {import.meta.env.DEV && (
         <button
           onClick={handleSkip}
@@ -90,28 +89,28 @@ export default function IntroSlides() {
             animate="center"
             exit="exit"
             transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="bg-white rounded-3xl shadow-xl border border-slate-100 p-8 text-center"
+            className="bg-white rounded-lg border border-rule shadow-overlay p-8 text-center"
           >
-            <div className={`w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br ${slide.color} flex items-center justify-center shadow-lg`}>
+            <div className="w-16 h-16 mx-auto mb-6 rounded-lg bg-siegel flex items-center justify-center">
               <slide.icon className="w-8 h-8 text-white" />
             </div>
 
-            <h2 className="font-display text-2xl font-bold text-slate-800 mb-4">
+            <h2 className="font-display text-2xl font-semibold text-ink mb-4">
               {slide.headline}
             </h2>
 
             {slide.body && (
-              <p className="text-slate-600 leading-relaxed mb-6">{slide.body}</p>
+              <p className="text-graphite leading-relaxed mb-6">{slide.body}</p>
             )}
 
             {slide.checklist && (
               <ul className="text-left space-y-3 mb-6 mx-auto max-w-xs">
                 {slide.checklist.map((item) => (
                   <li key={item} className="flex items-start gap-3">
-                    <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-emerald-600" />
+                    <div className="w-5 h-5 rounded-full bg-siegel-wash flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Check className="w-3 h-3 text-siegel" />
                     </div>
-                    <span className="text-sm text-slate-700 leading-snug">{item}</span>
+                    <span className="text-sm text-ink leading-snug">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -119,17 +118,12 @@ export default function IntroSlides() {
 
             {slide.isFinal && (
               <div className="flex flex-col gap-3 mt-2">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => completeOnboarding('level-test')}
-                  className="w-full py-3.5 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-xl shadow-lg shadow-rose-500/25 hover:from-amber-600 hover:to-rose-600 transition-all"
-                >
+                <Button onClick={() => completeOnboarding('level-test')} size="lg" className="w-full">
                   Start the placement test
-                </motion.button>
+                </Button>
                 <button
                   onClick={handleSkip}
-                  className="text-sm text-slate-500 hover:text-slate-700 transition-colors"
+                  className="text-sm text-graphite hover:text-ink transition-colors"
                 >
                   Maybe later, take me to the dashboard →
                 </button>
@@ -143,7 +137,7 @@ export default function IntroSlides() {
           <button
             onClick={goPrev}
             disabled={currentStep === 0}
-            className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-600 hover:border-slate-300 transition-all disabled:opacity-0 disabled:pointer-events-none"
+            className="w-10 h-10 rounded-full border border-rule flex items-center justify-center text-graphite hover:text-ink hover:border-siegel transition-colors disabled:opacity-0 disabled:pointer-events-none"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
@@ -155,7 +149,7 @@ export default function IntroSlides() {
                 key={i}
                 animate={{
                   width: i === currentStep ? 24 : 8,
-                  backgroundColor: i === currentStep ? '#f59e0b' : '#cbd5e1',
+                  backgroundColor: i === currentStep ? color.siegel : color.rule,
                 }}
                 transition={{ duration: 0.2 }}
                 className="h-2 rounded-full"
@@ -166,7 +160,7 @@ export default function IntroSlides() {
           {currentStep < SLIDES.length - 1 ? (
             <button
               onClick={goNext}
-              className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-600 hover:border-slate-300 transition-all"
+              className="w-10 h-10 rounded-full border border-rule flex items-center justify-center text-graphite hover:text-ink hover:border-siegel transition-colors"
             >
               <ChevronRight className="w-5 h-5" />
             </button>

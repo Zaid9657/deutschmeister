@@ -6,6 +6,7 @@ import { useProgress } from '../contexts/ProgressContext';
 import { useTheme } from '../contexts/ThemeContext';
 import resolveConfig from 'tailwindcss/resolveConfig';
 import tailwindConfig from '../../tailwind.config.js';
+import { font } from '../data/design-tokens';
 
 const fullConfig = resolveConfig(tailwindConfig);
 const twColors = fullConfig.theme.colors;
@@ -87,7 +88,7 @@ const SentenceCard = ({ sentence, level }) => {
             <p
               className="text-slate-800"
               style={{
-                fontFamily: "'Inter', 'Segoe UI', system-ui, sans-serif",
+                fontFamily: font.body,
                 fontSize: 19,
                 lineHeight: 1.7,
                 fontWeight: 500,
@@ -135,7 +136,7 @@ const SentenceCard = ({ sentence, level }) => {
             <p
               className="pt-2 text-slate-600"
               style={{
-                fontFamily: "'Inter', 'Segoe UI', system-ui, sans-serif",
+                fontFamily: font.body,
                 fontSize: 16,
                 lineHeight: 1.6,
               }}

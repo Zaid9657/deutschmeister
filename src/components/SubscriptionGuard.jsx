@@ -19,10 +19,10 @@ const SubscriptionGuard = ({ children }) => {
 
   if (authLoading || subLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="min-h-screen flex items-center justify-center bg-paper">
         <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full border-4 border-slate-200 border-t-amber-500 animate-spin" />
-          <p className="text-slate-600">{t('common.loading')}</p>
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full border-4 border-rule border-t-siegel animate-spin" />
+          <p className="text-graphite">{t('common.loading')}</p>
         </div>
       </div>
     );

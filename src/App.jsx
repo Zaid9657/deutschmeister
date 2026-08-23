@@ -53,12 +53,11 @@ const VerifyEmailPage = lazy(() => import('./pages/VerifyEmailPage'));
 const IntroSlides = lazy(() => import('./components/onboarding/IntroSlides'));
 const VergleichHubPage = lazy(() => import('./pages/VergleichHubPage'));
 const ComparisonPage = lazy(() => import('./pages/ComparisonPage'));
-const TelcB1Page = lazy(() => import('./pages/leitfaden/TelcB1Page'));
 
 function PageLoader() {
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <Loader2 className="w-8 h-8 animate-spin text-slate-400" />
+      <Loader2 className="w-8 h-8 animate-spin text-graphite" />
     </div>
   );
 }
@@ -76,12 +75,12 @@ function App() {
           <LemonSqueezyProvider>
           <ThemeProvider>
             <ProgressProvider>
-              <div className="min-h-screen bg-slate-50">
+              <div className="min-h-screen bg-paper">
                 {/* Keyboard users land here first and can jump the nav. The SPA
                     had no skip link and no <main> landmark at all. */}
                 <a
                   href="#main"
-                  className="sr-only focus:not-sr-only focus:absolute focus:z-[200] focus:top-3 focus:left-3 focus:px-4 focus:py-2 focus:rounded-lg focus:bg-white focus:text-slate-900 focus:shadow-lg focus:ring-2 focus:ring-amber-500"
+                  className="sr-only focus:not-sr-only focus:absolute focus:z-[200] focus:top-3 focus:left-3 focus:px-4 focus:py-2 focus:rounded-lg focus:bg-white focus:text-ink focus:shadow-overlay focus:ring-2 focus:ring-siegel"
                 >
                   Skip to content
                 </a>
@@ -135,7 +134,13 @@ function App() {
                     <Route path="/ueber-uns" element={<UeberUnsPage />} />
                     <Route path="/vergleich" element={<VergleichHubPage />} />
                     <Route path="/vergleich/:slug" element={<ComparisonPage />} />
-                    <Route path="/leitfaden/telc-b1" element={<TelcB1Page />} />
+                    {/* No /leitfaden routes on purpose, for the same reason as "/" above.
+                        A guide is data in astro-site/src/data/guides/ rendered by
+                        pages/leitfaden/[slug].astro, and Netlify serves those real static
+                        files before the non-forced /leitfaden/* rewrite below them. The SPA
+                        carried a hand-written TelcB1Page twin that nothing could reach —
+                        the second "two copies, one dead" pair in this file — so it was
+                        deleted. Add a guide in astro-site, never here. */}
                     <Route path="/video-library" element={<VideoLibraryPage />} />
                     <Route path="/video-library/:id" element={<VideoDetailPage />} />
                     <Route path="/podcasts" element={<PodcastsPage />} />

@@ -6,10 +6,14 @@
   html {
     scroll-behavior: smooth;
   }
+  /* Faces come from src/data/design-tokens.js — the one place a font stack is
+     written. These used to name 'Nunito Sans' and 'Cormorant Garamond'
+     directly; Cormorant is the retired display face, so every heading that did
+     not carry an explicit font-display class rendered in it. */
   body {
-    font-family: 'Nunito Sans', sans-serif;
+    @apply font-body;
   }
   h1, h2, h3, h4 {
-    font-family: 'Cormorant Garamond', serif;
+    @apply font-display;
   }
 }

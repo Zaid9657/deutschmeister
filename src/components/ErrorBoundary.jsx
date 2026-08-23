@@ -1,6 +1,7 @@
 import React from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import { safeGet, safeSet } from '../utils/safeStorage';
+import Button from './ui/Button';
 
 function isChunkLoadError(error) {
   if (!error) return false;
@@ -52,34 +53,28 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
-          <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8 text-center">
+        <div className="min-h-screen bg-paper flex items-center justify-center px-4">
+          <div className="max-w-md w-full bg-white rounded-lg border border-rule shadow-overlay p-8 text-center">
             <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-6">
               <AlertTriangle className="w-8 h-8 text-red-500" />
             </div>
-            <h1 className="text-2xl font-bold text-slate-800 mb-2">
+            <h1 className="font-display text-2xl font-semibold text-ink mb-2">
               Something went wrong
             </h1>
-            <p className="text-slate-500 mb-8">
+            <p className="text-graphite mb-8">
               {isChunkLoadError(this.state.error)
                 ? 'A new version is available. Please refresh the page.'
                 : 'An unexpected error occurred. Please try refreshing the page.'}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <button
-                onClick={this.handleReload}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-amber-500 text-white font-semibold rounded-xl hover:bg-amber-600 transition-colors"
-              >
+              <Button onClick={this.handleReload} size="lg">
                 <RefreshCw className="w-4 h-4" />
                 Refresh Page
-              </button>
-              <button
-                onClick={this.handleGoHome}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 border-2 border-slate-200 text-slate-700 font-semibold rounded-xl hover:bg-slate-50 transition-colors"
-              >
+              </Button>
+              <Button onClick={this.handleGoHome} variant="secondary" size="lg">
                 <Home className="w-4 h-4" />
                 Go Home
-              </button>
+              </Button>
             </div>
           </div>
         </div>

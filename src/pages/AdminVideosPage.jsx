@@ -7,6 +7,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 const ADMIN_EMAIL = 'zaid199660@gmail.com';
 import SEO from '../components/SEO';
+import Button from '../components/ui/Button';
 
 const LEVELS = ['A1', 'A2', 'B1', 'B2'];
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
@@ -144,32 +145,29 @@ const AdminVideosPage = () => {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-20 pb-16 flex items-center justify-center">
+      <div className="min-h-screen bg-paper pt-20 pb-16 flex items-center justify-center">
         <div className="text-center px-4">
           <div className="mx-auto mb-6 w-16 h-16 rounded-2xl bg-red-100 flex items-center justify-center">
             <ShieldX className="w-8 h-8 text-red-500" />
           </div>
-          <h1 className="font-display text-2xl font-bold text-slate-800 mb-2">Access Denied</h1>
-          <p className="text-slate-500 mb-6">You don't have permission to access this page.</p>
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold shadow-lg shadow-rose-500/25 hover:shadow-xl transition-all"
-          >
+          <h1 className="font-display text-2xl font-bold text-ink mb-2">Access Denied</h1>
+          <p className="text-graphite mb-6">You don't have permission to access this page.</p>
+          <Button to="/">
             Go to Homepage
-          </Link>
+          </Button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-20 pb-16">
+    <div className="min-h-screen bg-paper pt-20 pb-16">
       <SEO title="Admin: Add Video" path="/admin/videos" />
       <div className="max-w-2xl mx-auto px-4 sm:px-6">
         {/* Back */}
         <Link
           to="/video-library"
-          className="inline-flex items-center gap-2 text-slate-500 hover:text-slate-700 transition-colors mb-6"
+          className="inline-flex items-center gap-2 text-graphite hover:text-ink transition-colors mb-6"
         >
           <ArrowLeft size={18} />
           Back to Video Library
@@ -182,14 +180,14 @@ const AdminVideosPage = () => {
           className="mb-8"
         >
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 via-rose-400 to-purple-500 flex items-center justify-center shadow-lg shadow-rose-500/20">
+            <div className="w-12 h-12 rounded-md bg-siegel flex items-center justify-center">
               <Film className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="font-display text-2xl sm:text-3xl font-bold text-slate-800">
+              <h1 className="font-display text-2xl sm:text-3xl font-bold text-ink">
                 Add New Video
               </h1>
-              <p className="text-sm text-slate-500">Upload a video to the library</p>
+              <p className="text-sm text-graphite">Upload a video to the library</p>
             </div>
           </div>
         </motion.div>
@@ -250,12 +248,12 @@ const AdminVideosPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           onSubmit={handleSubmit}
-          className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden"
+          className="bg-white rounded-2xl border border-rule shadow-sm overflow-hidden"
         >
           <div className="p-6 sm:p-8 space-y-6">
             {/* Title */}
             <div>
-              <label htmlFor="title" className="block text-sm font-semibold text-slate-700 mb-2">
+              <label htmlFor="title" className="block text-sm font-semibold text-ink mb-2">
                 Title <span className="text-red-400">*</span>
               </label>
               <input
@@ -265,10 +263,10 @@ const AdminVideosPage = () => {
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. German Alphabet & Rules"
                 disabled={uploading}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-400 transition-all disabled:opacity-50"
+                className="w-full px-4 py-3 rounded-xl border border-rule bg-paper text-ink placeholder-graphite focus:outline-none focus:ring-2 focus:ring-siegel/20 focus:border-siegel transition-all disabled:opacity-50"
               />
               {title.trim() && (
-                <p className="mt-1.5 text-xs text-slate-400">
+                <p className="mt-1.5 text-xs text-graphite">
                   Folder: <span className="font-mono">{slugify(title.trim()) || '—'}</span>
                 </p>
               )}
@@ -276,7 +274,7 @@ const AdminVideosPage = () => {
 
             {/* Description */}
             <div>
-              <label htmlFor="description" className="block text-sm font-semibold text-slate-700 mb-2">
+              <label htmlFor="description" className="block text-sm font-semibold text-ink mb-2">
                 Description <span className="text-red-400">*</span>
               </label>
               <textarea
@@ -286,13 +284,13 @@ const AdminVideosPage = () => {
                 placeholder="e.g. Learn the German alphabet and pronunciation rules"
                 rows={3}
                 disabled={uploading}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-400 transition-all resize-none disabled:opacity-50"
+                className="w-full px-4 py-3 rounded-xl border border-rule bg-paper text-ink placeholder-graphite focus:outline-none focus:ring-2 focus:ring-siegel/20 focus:border-siegel transition-all resize-none disabled:opacity-50"
               />
             </div>
 
             {/* Level */}
             <div>
-              <label htmlFor="level" className="block text-sm font-semibold text-slate-700 mb-2">
+              <label htmlFor="level" className="block text-sm font-semibold text-ink mb-2">
                 Level <span className="text-red-400">*</span>
               </label>
               <select
@@ -300,7 +298,7 @@ const AdminVideosPage = () => {
                 value={level}
                 onChange={(e) => setLevel(e.target.value)}
                 disabled={uploading}
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-400 transition-all disabled:opacity-50"
+                className="w-full px-4 py-3 rounded-xl border border-rule bg-paper text-ink focus:outline-none focus:ring-2 focus:ring-siegel/20 focus:border-siegel transition-all disabled:opacity-50"
               >
                 <option value="">Select a level</option>
                 {LEVELS.map((l) => (
@@ -311,7 +309,7 @@ const AdminVideosPage = () => {
 
             {/* English Video */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
+              <label className="block text-sm font-semibold text-ink mb-2">
                 English Video <span className="text-red-400">*</span>
               </label>
               <div
@@ -319,7 +317,7 @@ const AdminVideosPage = () => {
                 className={`relative border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
                   enFile
                     ? 'border-green-300 bg-green-50'
-                    : 'border-slate-200 bg-slate-50 hover:border-rose-300 hover:bg-rose-50/50'
+                    : 'border-rule bg-paper hover:border-siegel hover:bg-siegel-wash'
                 } ${uploading ? 'pointer-events-none opacity-50' : ''}`}
               >
                 <input
@@ -337,36 +335,36 @@ const AdminVideosPage = () => {
                   </div>
                 ) : (
                   <>
-                    <Upload className="w-8 h-8 text-slate-400 mx-auto mb-2" />
-                    <p className="text-sm text-slate-500">Click to select English video (.mp4)</p>
-                    <p className="text-xs text-slate-400 mt-1">Max 100MB</p>
+                    <Upload className="w-8 h-8 text-graphite mx-auto mb-2" />
+                    <p className="text-sm text-graphite">Click to select English video (.mp4)</p>
+                    <p className="text-xs text-graphite mt-1">Max 100MB</p>
                   </>
                 )}
               </div>
               {uploading && enProgress > 0 && (
                 <div className="mt-2">
-                  <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-paper-sunk rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-amber-500 to-rose-500 rounded-full transition-all duration-500"
+                      className="h-full bg-siegel rounded-full transition-all duration-500"
                       style={{ width: `${enProgress}%` }}
                     />
                   </div>
-                  <p className="text-xs text-slate-400 mt-1">{enProgress < 100 ? 'Uploading...' : 'Done'}</p>
+                  <p className="text-xs text-graphite mt-1">{enProgress < 100 ? 'Uploading...' : 'Done'}</p>
                 </div>
               )}
             </div>
 
             {/* Arabic Video */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
-                Arabic Video <span className="text-slate-400 font-normal">(optional)</span>
+              <label className="block text-sm font-semibold text-ink mb-2">
+                Arabic Video <span className="text-graphite font-normal">(optional)</span>
               </label>
               <div
                 onClick={() => !uploading && arInputRef.current?.click()}
                 className={`relative border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
                   arFile
                     ? 'border-green-300 bg-green-50'
-                    : 'border-slate-200 bg-slate-50 hover:border-rose-300 hover:bg-rose-50/50'
+                    : 'border-rule bg-paper hover:border-siegel hover:bg-siegel-wash'
                 } ${uploading ? 'pointer-events-none opacity-50' : ''}`}
               >
                 <input
@@ -384,33 +382,29 @@ const AdminVideosPage = () => {
                   </div>
                 ) : (
                   <>
-                    <Upload className="w-8 h-8 text-slate-400 mx-auto mb-2" />
-                    <p className="text-sm text-slate-500">Click to select Arabic video (.mp4)</p>
-                    <p className="text-xs text-slate-400 mt-1">Max 100MB</p>
+                    <Upload className="w-8 h-8 text-graphite mx-auto mb-2" />
+                    <p className="text-sm text-graphite">Click to select Arabic video (.mp4)</p>
+                    <p className="text-xs text-graphite mt-1">Max 100MB</p>
                   </>
                 )}
               </div>
               {uploading && arFile && arProgress > 0 && (
                 <div className="mt-2">
-                  <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-paper-sunk rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-amber-500 to-rose-500 rounded-full transition-all duration-500"
+                      className="h-full bg-siegel rounded-full transition-all duration-500"
                       style={{ width: `${arProgress}%` }}
                     />
                   </div>
-                  <p className="text-xs text-slate-400 mt-1">{arProgress < 100 ? 'Uploading...' : 'Done'}</p>
+                  <p className="text-xs text-graphite mt-1">{arProgress < 100 ? 'Uploading...' : 'Done'}</p>
                 </div>
               )}
             </div>
           </div>
 
           {/* Submit */}
-          <div className="px-6 sm:px-8 py-5 bg-slate-50 border-t border-slate-100">
-            <button
-              type="submit"
-              disabled={uploading}
-              className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold shadow-lg shadow-rose-500/25 hover:shadow-xl hover:shadow-rose-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            >
+          <div className="px-6 sm:px-8 py-5 bg-paper border-t border-rule">
+            <Button type="submit" disabled={uploading} size="lg" className="w-full">
               {uploading ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -422,7 +416,7 @@ const AdminVideosPage = () => {
                   Add Video
                 </>
               )}
-            </button>
+            </Button>
           </div>
         </motion.form>
       </div>

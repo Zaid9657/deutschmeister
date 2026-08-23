@@ -11,6 +11,7 @@ import {
 } from '../lib/funnelTracking';
 import { logAuditEvent, AUDIT_EVENTS } from '../lib/auditLogger';
 import SEO from '../components/SEO';
+import Button from '../components/ui/Button';
 
 const VerifyEmailPage = () => {
   const navigate = useNavigate();
@@ -71,32 +72,32 @@ const VerifyEmailPage = () => {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-slate-100 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-paper px-4 py-12">
       <SEO title="Verify Your Email" description="Confirm your email address to activate your DeutschMeister account." path="/verify-email" noindex />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md text-center"
       >
-        <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-8">
-          <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-amber-100 flex items-center justify-center">
-            <Mail className="w-8 h-8 text-amber-600" />
+        <div className="bg-white rounded-lg border border-rule shadow-overlay p-8">
+          <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-siegel-wash flex items-center justify-center">
+            <Mail className="w-8 h-8 text-siegel" />
           </div>
 
-          <h1 className="font-display text-2xl font-bold text-slate-800 mb-3">
+          <h1 className="font-display text-2xl font-semibold text-ink mb-3">
             Confirm your email
           </h1>
 
-          <p className="text-slate-600 mb-2">
+          <p className="text-graphite mb-2">
             We sent a confirmation email to:
           </p>
-          <p className="text-amber-600 font-semibold mb-6">{user.email}</p>
+          <p className="text-siegel font-semibold mb-6">{user.email}</p>
 
-          <p className="text-sm text-slate-500 mb-6">
+          <p className="text-sm text-graphite mb-6">
             Click the link in that email to activate your account. This page updates automatically.
           </p>
 
-          <div className="flex items-center justify-center gap-2 text-xs text-slate-400 mb-6">
+          <div className="flex items-center justify-center gap-2 text-xs text-graphite mb-6">
             <Loader2 className="w-3.5 h-3.5 animate-spin" />
             Waiting for confirmation…
           </div>
@@ -116,36 +117,32 @@ const VerifyEmailPage = () => {
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-4 p-3 bg-red-50 border border-red-100 rounded-xl text-red-600 text-sm"
+              className="mb-4 p-3 bg-red-50 border border-red-100 rounded-lg text-red-600 text-sm"
             >
               {error}
             </motion.div>
           )}
 
           <div className="flex flex-col gap-3">
-            <button
-              onClick={handleResend}
-              disabled={resending}
-              className="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold hover:from-amber-600 hover:to-rose-600 transition-all shadow-lg shadow-rose-500/25 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
+            <Button onClick={handleResend} disabled={resending} size="lg" className="w-full">
               {resending ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
                 <RefreshCw className="w-5 h-5" />
               )}
               Resend email
-            </button>
+            </Button>
 
             <button
               onClick={handleSignOut}
-              className="w-full py-3 px-6 rounded-xl border-2 border-slate-200 text-slate-700 font-semibold hover:border-slate-300 hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
+              className="w-full py-3 px-6 rounded-md border border-ink text-ink font-semibold hover:bg-ink hover:text-paper transition-colors flex items-center justify-center gap-2"
             >
               <LogOut className="w-4 h-4" />
               Sign out and use a different email
             </button>
           </div>
 
-          <p className="mt-6 text-xs text-slate-400">
+          <p className="mt-6 text-xs text-graphite">
             Tip: check your spam folder too.
           </p>
         </div>

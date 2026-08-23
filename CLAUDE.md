@@ -35,7 +35,7 @@ npm run dev          # SPA dev server
 npm run build        # optimize images + vite build → dist/
 npm run lint         # ESLint 9 flat config — errors fail, legacy warnings tolerated
 npm run check:duplicates  # SPA/Astro shared data files must stay byte-identical
-npm test             # node --test: claim/pricing guards (tests/claims.test.mjs)
+npm test             # node --test: claim/pricing, brand, guide and lifecycle guard suites
 npm run build:verify # build + prerender + check the BUILT html (spa-only mode)
 cd astro-site && npm run build   # needs PUBLIC_SUPABASE_URL/_ANON_KEY — or a cache:
 GRAMMAR_CONTENT_CACHE=path/to/cache.json npx astro build   # offline build (CI/sandbox)
@@ -75,9 +75,30 @@ mode and says so on every run — Netlify's deploy build remains the only gate o
   colour means grammatical case (the four `kasus` values may appear only where a case is named,
   never as decoration or on a CTA), one interactive colour (`siegel` teal), and structure from
   hairline rules rather than resting shadows. `font-display` resolves to **Fraunces**, not the
-  Cormorant Garamond it used to be — Cormorant stays loaded only because the Meister-Siegel's "M"
-  glyph sets it inline. Tailwind is JIT, so a token class only reaches the CSS once a component
+  Cormorant Garamond it used to be — and Cormorant is now gone from both front ends entirely, along
+  with Inter. Tailwind is JIT, so a token class only reaches the CSS once a component
   uses it; to check the wiring, build and grep the emitted CSS rather than reading the config.
+  **That is not a style preference — `rounded-pill` was called on the Astro pricing page for weeks
+  against a config that never extended `borderRadius`, so the billing toggle rendered square and
+  nothing said so.** Only `pill` is wired: the token `sm`/`md`/`lg` values collide with Tailwind's
+  own defaults and adopting them would reshape every `rounded-lg` in the app.
+- **The app has one button and one card: `src/components/ui/`.** Before them the primary CTA was
+  `bg-gradient-to-r from-amber-500 to-rose-500 …` copy-pasted into twenty files, which is why the
+  retired brand outlived its own retirement. `Button.jsx` carries the same treatment as the Astro
+  pricing page, so both front ends render one button. Two rules travel with it: the global
+  `*:focus-visible` ring and `::selection` in `src/index.css` are brand surfaces on **every screen**
+  — change them and you have changed the whole product — and `tests/brand.test.mjs` bans the retired
+  palette outright across the chrome (`src/App.jsx`, the nav, the guards, the overlays, `ui/`, and
+  the five signup screens, and the nine content screens). **Two** ratchets hold the rest and may
+  only fall: `MAX_LEGACY_CTA_FILES` (the exact retired CTA — now 0) and `MAX_RETIRED_STOP_FILES`
+  (**any** retired gradient stop in any pairing — 10, the level/listening components and the
+  account, grammar, X-Ray, subscription and video-library screens). The second exists because the
+  first reached 0 while the palette was still live in other stop combinations; what exposed it was
+  Tailwind still emitting `.from-amber-500` into the built CSS. **Verify a colour sweep against
+  `dist/`, not against a source grep** — and note a doc comment quoting a class is enough to emit
+  it, since the scanner does not parse comments. `src/components/LevelTest/LevelTest.css` is deliberately
+  outside all of this — 1,765 class-scoped lines on one route, already mostly token-compatible, and
+  a conversion surface that needs a visual check, so it is its own task.
 - **`.mcp.json` is committed and must stay credential-free.** It declares the DataForSEO and Google
   Search Console MCP servers the SEO Routines depend on (`docs/seo-routines/`). Values are `${VAR}`
   references Claude Code expands from the environment; the literals belong in the environment's
@@ -150,9 +171,10 @@ mode and says so on every run — Netlify's deploy build remains the only gate o
   Batches A–D have shipped (claims data layer + guards, design tokens + rebuilt `/` and
   `/pricing`, the Leitfaden engine + four guides, SEO-routine machinery), and Batch E adds the
   activation lifecycle (shipping OFF — owner must apply its migration and set
-  `LIFECYCLE_ACTIVATION_ENABLED=true`). Still open: the SEO connectors (network allowlist +
-  credentials — see `docs/seo-routines/README.md`), the in-app SPA brand migration, and
-  verifying the Astro half in CI. NOTE: grammar pages already carry
+  `LIFECYCLE_ACTIVATION_ENABLED=true`), and Batch F migrated the in-app chrome and shared
+  primitives onto the tokens. Still open: the SEO connectors (network allowlist + credentials —
+  see `docs/seo-routines/README.md`), the ~10 content screens the brand ratchet still counts,
+  `LevelTest.css`, and verifying the Astro half in CI. NOTE: grammar pages already carry
   `['Article','LearningResource']` schema and Related-Topics links — two earlier claims that
   they were missing were wrong (see the corrections section in the roadmap).
 - **Competitor pricing on `/vergleich/` is stamped "Stand: Mai 2026" and could not be
