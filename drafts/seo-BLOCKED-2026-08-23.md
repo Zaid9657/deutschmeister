@@ -55,3 +55,30 @@ today and will run unchanged.
 No keyword volumes, ranks, difficulties or SERP claims were produced by other means. A web search
 can be dressed up as a rank measurement; doing so would poison every future comparison. The
 tracking CSV still holds only its header.
+
+## Fresh-container probe (2026-08-23, later the same day)
+
+A child session was spawned into a **fresh container** on the "Zaid57" environment specifically to
+test whether environment variables and network policy saved on the environment — which the
+long-running parent container cannot see — would unblock the direct API route. They do not.
+Measured from the fresh container:
+
+| Check | Result |
+|---|---|
+| `DATAFORSEO_USERNAME` env var | **not set** |
+| `DATAFORSEO_PASSWORD` env var | **not set** |
+| `DATAFORSEO_LOGIN` env var (MCP fallback name) | **not set** |
+| `curl -u … https://api.dataforseo.com/v3/appendix/user_data` (30s timeout) | **`curl: (56) CONNECT tunnel failed, response 403`**, HTTP status `000` (no HTTP response — the tunnel never opened) |
+| Agent-proxy status log | `"kind": "connect_rejected", "detail": "gateway answered 403 to CONNECT (policy denial or upstream failure)", "host": "api.dataforseo.com:443"` |
+
+So a fresh container changes nothing: **both** halves of the direct route are still missing —
+the credentials are not in the environment's variables, and even if they were, the proxy still
+refuses the CONNECT to `api.dataforseo.com:443`. This confirms the 08-22/08-23 diagnosis at the
+environment level, not just the container level: the network allowlist has not been updated, and
+no DataForSEO credentials have been added to the "Zaid57" environment.
+
+Owner actions remain exactly as listed above (Zapier reconnect/top-up), **plus**, if the direct
+API/MCP route is wanted: allowlist `api.dataforseo.com` on the environment's network policy and
+set `DATAFORSEO_USERNAME`/`DATAFORSEO_PASSWORD` in its environment variables. The four-call
+measurement plan in `measurement-fortnightly.md` was loaded and ready in this probe session and
+was not run — zero billed calls were made, and no figures were produced by other means.
