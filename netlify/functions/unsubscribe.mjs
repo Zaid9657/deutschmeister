@@ -1,18 +1,9 @@
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from './_shared/supabase.mjs';
 import { createHmac, timingSafeEqual } from 'crypto';
 
-const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 // Fail closed: without the secret, no token can be verified (rather than
 // silently verifying against a well-known 'changeme' fallback).
 const UNSUB_SECRET = process.env.UNSUB_SECRET || process.env.CAMPAIGN_SECRET;
-
-let supabase;
-try {
-  supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
-} catch (e) {
-  console.error('Supabase init error:', e.message);
-}
 
 function verifyToken(userId, token) {
   if (!UNSUB_SECRET || !userId || !token) return false;

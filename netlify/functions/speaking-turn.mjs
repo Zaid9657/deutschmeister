@@ -1,3 +1,4 @@
+import { corsHeaders, guardMethod } from './_shared/http.mjs';
 import { supabase, supabaseKey } from './_shared/supabase.mjs';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 import {
@@ -11,25 +12,11 @@ import {
 const GRACE_MINUTES = 2;
 
 export const handler = async (event) => {
-  const allowedOrigins = [
-    'https://deutsch-meister.de',
-    'https://www.deutsch-meister.de',
-  ];
-  const origin = event.headers?.origin || '';
-  const corsOrigin = allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
+  const headers = corsHeaders(event);
 
-  const headers = {
-    'Access-Control-Allow-Origin': corsOrigin,
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  };
+  const gate = guardMethod(event, headers);
+  if (gate) return gate;
 
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers, body: '' };
-  }
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
-  }
   if (!supabaseKey || !supabase) {
     console.error('SUPABASE_SERVICE_ROLE_KEY is not set');
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'Server misconfigured' }) };

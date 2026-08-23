@@ -11,13 +11,13 @@ one `dist/`.** Both critical findings and the top high-severity one live there.
 
 | Sev | Finding | Area |
 |---|---|---|
-| S1 | Build command's `\|\| true` swallows every failure | Deploy |
+| S1 | ~~Build command's `\|\| true` swallows every failure~~ — fixed | Deploy |
 | S1 | One grammar URL renders two divergent lessons | Routing · Data |
-| S2 | `/leitfaden/*` and `/vergleich/*` return 200 for missing pages | Routing · SEO |
-| S2 | Test suite guards the copy, never the product | Testing |
-| S2 | `_shared/` exists but 10 of 15 functions bypass it | Functions |
+| S2 | ~~`/leitfaden/*` and `/vergleich/*` return 200 for missing pages~~ — fixed | Routing · SEO |
+| S2 | ~~Test suite guards the copy, never the product~~ — fixed | Testing |
+| S2 | ~~`_shared/` exists but 10 of 15 functions bypass it~~ — fixed | Functions |
 | S3 | Route protection hand-composed 31 times | SPA |
-| S3 | Brand ratchet blind to three of five guards | Design system |
+| S3 | ~~Brand ratchet blind to three of five guards~~ — fixed | Design system |
 | S3 | 602 duplicated lines rest on an untested assumption | Packaging |
 | S4 | Eight round-trips where one query would do | Performance |
 | S4 | Abandoned 5-stage model still half-wired | Data model |
@@ -266,11 +266,44 @@ all 15 functions, a full `npm run build` + prerender + `check-built-html --spa-o
 failures), and a grep of the **built CSS** confirming the retired border class is no longer
 emitted while `border-t-siegel` is.
 
-**Phase 2 — put the seam under test before changing it (~1d).**
-1. `tests/access.test.mjs` — the trial/subscription truth table (04)
-2. `tests/webhook.test.mjs` — signature rejection and each event type (04)
-3. `scripts/build-site.mjs` with real post-conditions on `dist/` (01)
-4. `_shared/http.mjs`; route all functions through `_shared/supabase.mjs` (05)
+**Phase 2 — put the seam under test before changing it. SHIPPED 2026-08-23.**
+1. ~~`tests/access.test.mjs`~~ (04) — 9 tests over the trial/subscription truth table. Required
+   extracting the two pure predicates into `src/services/accessRules.js`, a module with no imports,
+   because `subscriptionService.js` loads the Supabase client at module scope and nothing in it can
+   be reached from `node --test`. `subscriptionService.js` re-exports both names, so no call site
+   changed.
+2. ~~`tests/webhook.test.mjs`~~ (04) — 8 tests over the gate: method handling, unsigned, wrong-length
+   and right-length-wrong-value signatures, a signature taken from a different body, a missing
+   secret failing closed, and the ack-vs-retry contract. Hermetic: `SUPABASE_URL` points at a closed
+   local port, so no network leaves the machine.
+3. ~~`scripts/build-site.mjs`~~ (01) — the 18-step chain is now a script that throws on any failed
+   step and asserts 27 structural facts about `dist/` before the deploy may stand.
+   `--verify-only` re-runs just those assertions against an existing `dist/`.
+4. ~~`_shared/http.mjs`; route functions through `_shared/supabase.mjs`~~ (05) — 7 CORS preambles
+   and 9 client bootstraps collapsed. The hardcoded project URL went from 11 copies in the function
+   directory to 1.
+
+**Both suites were mutation-tested**, because a test that passes against broken code is worse than
+no test. Eleven deliberate regressions were introduced one at a time — reinstating the
+`is_subscribed` fallback, granting access on the status string instead of the paid period, skipping
+signature verification when the secret is missing, accepting any request carrying a signature
+header, verifying the secret instead of the body, dropping the `subscription_created` arm, swallowing
+handler errors — and every one was caught. The `dist/` post-conditions were tested the same way
+against eight half-finished builds, including the exact one from finding 01.
+
+**Two things were deliberately left undone**, both recorded in the code:
+- `podcast-feed.js` is NOT routed through `_shared/supabase.mjs`. It is CommonJS, builds its client
+  inside the handler, and uses the **anon** key — the feed is public and has no business holding the
+  service role. Folding it in would have silently escalated its privileges.
+- The hardcoded project-URL fallback still exists, now in one place instead of eleven. Dropping it
+  is right, and would 500 every function if `SUPABASE_URL` turns out not to be set in the Netlify
+  environment — which cannot be checked from here. See the note in `_shared/supabase.mjs`.
+
+`check-built-html.mjs` now also runs in the deploy build, where the Astro output actually exists —
+**advisory on the first pass**, because promoting a never-observed check straight to fatal is how a
+deploy pipeline gets bricked. Set `STRICT_HTML_CHECK=1` in the Netlify environment after one green
+run to make it a hard gate. That is the smallest real step toward the "Astro half unverified in CI"
+gap this repo has carried since the beginning.
 
 **Phase 3 — retire the second copy (~2d).**
 1. Delete the three SPA grammar routes and `GrammarLessonPage.jsx`; switch in-app links to full

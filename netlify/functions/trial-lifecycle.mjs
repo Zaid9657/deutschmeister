@@ -13,24 +13,15 @@
 // UNIQUE(user_id, kind), and the insert happens BEFORE the send, so a crash
 // mid-run can drop a message but can never duplicate one. Opted-out users
 // (profiles.email_daily_sentence = false) are skipped entirely.
+import { supabase, supabaseKey } from './_shared/supabase.mjs';
 import { schedule } from '@netlify/functions';
-import { createClient } from '@supabase/supabase-js';
 import { createHmac } from 'crypto';
 
-const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const FROM_ADDRESS = 'Zaid from DeutschMeister <zaid@deutsch-meister.de>';
 const BASE_URL = 'https://deutsch-meister.de';
 const UNSUB_SECRET = process.env.UNSUB_SECRET || process.env.CAMPAIGN_SECRET;
 const CAMPAIGN_SECRET = process.env.CAMPAIGN_SECRET;
 const BATCH_SIZE = 100;
-
-let supabase;
-try {
-  supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
-} catch (e) {
-  console.error('Supabase init error:', e.message);
-}
 
 function unsubscribeUrl(userId) {
   const token = createHmac('sha256', UNSUB_SECRET).update(userId).digest('hex');

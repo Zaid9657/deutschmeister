@@ -1,17 +1,24 @@
 [build]
-  # The `|| true` is wrapped in a subshell ON PURPOSE. Bare, it binds to the
-  # WHOLE `&&` chain — `(step1 && ... && step18) || true` — so any step could
-  # fail and the command still exited 0. A failed Astro build meant the
-  # `mv dist/index.html dist/app.html` below never ran, so Netlify published a
-  # dist/ with no app.html: every SPA rewrite pointed at a missing file and "/"
-  # served the SPA shell (which has no "/" route). A site-wide outage, deployed
-  # green. Only the IndexNow ping is allowed to fail, so only it is wrapped.
-  # CI runs check-built-html in --spa-only mode, which makes this deploy build
-  # the only gate on the static pages — it has to be able to fail.
-  # Build order: SPA first (creates dist/), then Astro, then merge Astro output
-  # into the SPA dist/ so grammar files aren't wiped by the Vite build.
-  # _astro/ contains Astro's JS/CSS chunks; grammar/ contains the HTML pages.
-  command = "npm run build && cd astro-site && npm install && npm run build && cd .. && cp -r astro-site/dist/grammar dist/grammar && cp -r astro-site/dist/vergleich dist/vergleich && cp -r astro-site/dist/leitfaden dist/leitfaden && cp -r astro-site/dist/pricing dist/pricing && cp -r astro-site/dist/privacy dist/privacy && cp -r astro-site/dist/impressum dist/impressum && mkdir -p dist/_astro && cp -r astro-site/dist/_astro/. dist/_astro/ && cp astro-site/dist/404.html dist/404.html && mv dist/index.html dist/app.html && cp astro-site/dist/index.html dist/index.html && cp astro-site/dist/sitemap-0.xml dist/ && node scripts/prerender-spa-routes.mjs && (node scripts/ping-indexnow.mjs || true)"
+  # The whole deploy build lives in scripts/build-site.mjs. It used to be an
+  # 18-step `&&` chain in this string ending in `|| true` — and shell precedence
+  # applied that `|| true` to the WHOLE chain, so any step could fail and the
+  # command still exited 0. A failed Astro build meant the dist/index.html →
+  # dist/app.html rename never ran, so Netlify published a dist/ with no
+  # app.html: every SPA rewrite below pointed at a missing file and "/" served
+  # the SPA shell, which has no "/" route. A site-wide outage, published green.
+  #
+  # The script throws on any failed step, then asserts 27 structural facts about
+  # dist/ before it will let the deploy stand — including that app.html exists
+  # and that index.html is the Astro homepage rather than the shell. Only the
+  # IndexNow ping is allowed to fail. Run `node scripts/build-site.mjs
+  # --verify-only` to re-run just those assertions against an existing dist/.
+  #
+  # CI runs check-built-html in --spa-only mode because the Astro half needs
+  # Supabase credentials, which makes THIS build the only gate on the static
+  # pages. The script also runs the full check-built-html here, advisory for now;
+  # set STRICT_HTML_CHECK=1 in the Netlify environment after one green run to
+  # promote it to a hard gate.
+  command = "node scripts/build-site.mjs"
   publish = "dist"
   functions = "netlify/functions"
 

@@ -1,16 +1,8 @@
-import { createClient } from '@supabase/supabase-js';
+import { corsHeaders, guardMethod } from './_shared/http.mjs';
+import { supabase, supabaseKey } from './_shared/supabase.mjs';
 import crypto from 'crypto';
 
 // Initialize Supabase with service role key (bypasses RLS)
-const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-let supabase;
-try {
-  supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
-} catch (e) {
-  console.error('Failed to initialize Supabase client:', e.message);
-}
 
 // Verify webhook signature
 function verifySignature(payload, signature, secret) {
@@ -44,26 +36,10 @@ async function logWebhookEvent(eventType, payload, processed, errorMsg) {
 }
 
 export const handler = async (event) => {
-  const allowedOrigins = [
-    'https://deutsch-meister.de',
-    'https://www.deutsch-meister.de',
-  ];
-  const origin = event.headers?.origin || '';
-  const corsOrigin = allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
+  const headers = corsHeaders(event, { allowHeaders: 'Content-Type, X-Signature' });
 
-  const headers = {
-    'Access-Control-Allow-Origin': corsOrigin,
-    'Access-Control-Allow-Headers': 'Content-Type, X-Signature',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  };
-
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers, body: '' };
-  }
-
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers, body: 'Method Not Allowed' };
-  }
+  const gate = guardMethod(event, headers);
+  if (gate) return gate;
 
   // Pre-flight check: is service role key configured?
   if (!supabaseKey || !supabase) {
