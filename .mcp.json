@@ -1,5 +1,9 @@
 {
   "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    },
     "dataforseo": {
       "command": "npx",
       "args": ["-y", "dataforseo-mcp-server"],
