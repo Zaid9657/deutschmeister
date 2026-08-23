@@ -284,8 +284,25 @@ emitted while `border-t-siegel` is.
 - **No Supabase access.** Finding 02's dead-end depends on `multiple_choice` rows with empty
   `options` existing in live data. The SPA's `BUG 1` filter is strong evidence they did; it is not
   a query.
-- **No production HTTP.** The routing conclusions in 02 and 03 are derived from `netlify.toml` rule
-  order and Netlify's static-file-wins-first semantics, not observed responses. A `curl -I` against
-  a deploy preview settles both in a minute.
+- **No production HTTP — and no deploy-preview HTTP either.** The routing conclusions in 02 and 03
+  are derived from `netlify.toml` rule order and Netlify's static-file-wins-first semantics, not
+  observed responses. Probing the PR's deploy preview was tried on 2026-08-23 and is blocked at the
+  agent proxy: `*.netlify.app` answers `CONNECT tunnel failed, 403`, a network-policy denial like
+  the `api.dataforseo.com` one in CLAUDE.md, not a credential problem. Diagnose with
+  `curl -sS "$HTTPS_PROXY/__agentproxy/status"`.
+
+  **This one is cheap for a human to close.** From an ordinary browser or shell, against the deploy
+  preview or production:
+
+  ```
+  curl -sI <base>/leitfaden/does-not-exist   # expect 404 (was 200 + app shell)
+  curl -sI <base>/vergleich/does-not-exist   # expect 404 (was 200 + app shell)
+  curl -sI <base>/leitfaden/telc-b1/         # expect 200 — the real guides must be unaffected
+  curl -sI <base>/vergleich/babbel/          # expect 200
+  ```
+
+  What *is* verified: Netlify's deploy build succeeded on the Phase 1 commit, and its "Redirect
+  rules" check passed — so the edited `netlify.toml` parses, and the whole build chain (Astro half
+  included) still runs green under the subshell-wrapped `|| true`.
 - **The Astro build was not run.** It needs Supabase credentials or a `GRAMMAR_CONTENT_CACHE` dump
   — the same gap CI reports on every run.
