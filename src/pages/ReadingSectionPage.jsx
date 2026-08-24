@@ -21,7 +21,7 @@ const LESSON_COUNTS = READING_LESSON_COUNTS_BY_LEVEL;
 const TOTAL_LESSONS = 66;
 
 const mainLevelInfo = {
-  A1: { name: 'Sunrise Warmth', icon: '🌅', color: 'from-amber-400 to-orange-400' },
+  A1: { name: 'Sunrise Warmth', icon: '🌅', color: 'from-orange-400 to-orange-500' },
   A2: { name: 'Forest Calm', icon: '🌿', color: 'from-emerald-400 to-teal-400' },
   B1: { name: 'Ocean Depth', icon: '🌊', color: 'from-blue-400 to-indigo-400' },
   B2: { name: 'Twilight Elegance', icon: '🌙', color: 'from-purple-400 to-pink-400' },

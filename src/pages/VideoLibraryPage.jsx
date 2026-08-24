@@ -19,11 +19,11 @@ const LEVEL_COLORS = {
 };
 
 const THUMBNAIL_GRADIENTS = [
-  'from-rose-400 via-pink-500 to-purple-500',
-  'from-amber-400 via-orange-500 to-rose-500',
+  'from-indigo-400 via-purple-500 to-purple-600',
+  'from-orange-400 via-orange-500 to-red-500',
   'from-emerald-400 via-teal-500 to-cyan-500',
   'from-blue-400 via-indigo-500 to-purple-500',
-  'from-pink-400 via-rose-500 to-red-500',
+  'from-sky-400 via-blue-500 to-indigo-500',
   'from-teal-400 via-cyan-500 to-blue-500',
 ];
 
@@ -160,7 +160,7 @@ const VideoLibraryPage = () => {
           className="mb-8"
         >
           <div className="flex items-center gap-4 mb-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center shadow-lg shadow-rose-500/25">
+            <div className="w-14 h-14 rounded-2xl bg-siegel flex items-center justify-center">
               <PlayCircle className="w-7 h-7 text-white" />
             </div>
             <div>
