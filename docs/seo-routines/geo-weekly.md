@@ -15,17 +15,27 @@ ship must plausibly move a reader toward the level test, a free A1.1 lesson, or 
 
 ## Phase 0 — preflight (never skip)
 
-1. Confirm both connectors actually answer. **A tool appearing in your tool list proves nothing** — both
+1. Confirm each connector actually answers. **A tool appearing in your tool list proves nothing** — both
    servers start and list tools with empty credentials.
    - GSC: `list_properties` must return the deutsch-meister.de property.
    - DataForSEO: one cheap call (search volume, one keyword, Germany/de) must return data.
-2. If either fails, run `curl -sS -o /dev/null -w "%{http_code}" https://api.dataforseo.com/v3/appendix/user_data`.
-   A `CONNECT tunnel failed, 403` means the environment's network policy blocks the domain — a credential
-   cannot fix it. See `docs/seo-routines/README.md`.
-3. **If a connector is unavailable: write `drafts/seo-BLOCKED-<date>.md`** naming exactly which one, the
-   evidence (the status code or error), and what the owner must do. Then **stop**. Do not substitute a
-   web search for a rank measurement, and do not report an estimate as a measurement. A blocked run that
-   says so is useful; a run that invents numbers poisons every comparison that follows.
+2. If DataForSEO fails, run `curl -sS -o /dev/null -w "%{http_code}" https://api.dataforseo.com/v3/appendix/user_data`.
+   `401` means the API answered and the credential is wrong. `CONNECT tunnel failed, 403` means the
+   environment's network policy blocks the domain — a credential cannot fix that. See
+   `docs/seo-routines/README.md`.
+3. **Degrade per connector; do not halt the whole run for one.** Known state as of 2026-08-24:
+   DataForSEO works and is in credit; **GSC returns only `https://medmeister.eu/`, so the
+   deutsch-meister.de property does not exist on the authorised account** and the GSC gate can never
+   pass as written. Therefore:
+   - **GSC unavailable** → skip §1d and every GSC-derived number, note it inline in the report, and
+     **continue** with the DataForSEO and AI-citation halves. Halting instead would mean this routine
+     never runs again, which is worse than running it partially and saying so.
+   - **DataForSEO unavailable** → the rank/volume half cannot run; do the AI-citation half only.
+   - **Both unavailable** → write the BLOCKED report and stop.
+   Whatever is skipped, write `drafts/seo-BLOCKED-<date>.md` naming exactly which connector, the
+   evidence (status code or error), and the owner action. Never substitute a web search for a rank
+   measurement, and never report an estimate as a measurement. A partial run that labels its gaps is
+   useful; a run that invents numbers poisons every comparison that follows.
 
 ---
 

@@ -9,21 +9,33 @@ three-line bootstrap that tells the agent to read and execute the file here.
 | GEO weekly              | [`geo-weekly.md`](./geo-weekly.md)                           | `0 7 * * 1` (Mon)        | Measure AI-search + organic visibility, then ship the top fix   |
 | Fortnightly measurement | [`measurement-fortnightly.md`](./measurement-fortnightly.md) | `0 9 1,15 * *`           | Rank/keyword measurement → a report and prioritised content briefs |
 
-## ⚠️ Status: the machinery is here, the connectors are NOT working yet
+## ⚠️ Status: DataForSEO works. GSC does not — and the reason is not what this file used to say.
 
-**Nothing below runs until an owner does the setup, and one prerequisite is a network policy,
-not a credential.** Measured in this repo's environment on **2026-08-22**:
+Re-measured in this repo's environment on **2026-08-24**, superseding the 2026-08-22 table:
 
-| Check                                                     | Result                                  | Meaning                                                                 |
-| --------------------------------------------------------- | --------------------------------------- | ------------------------------------------------------------------------- |
-| `curl https://api.dataforseo.com/v3/appendix/user_data`    | **`CONNECT tunnel failed, response 403`** | The proxy refuses the connection **before any credential is consulted**. |
-| `curl https://searchconsole.googleapis.com/`               | `404`                                   | Domain reachable — the API answered. GSC can work once it has a key.     |
-| DataForSEO / GSC MCP tools present in an agent session     | **No**                                  | Neither server is connected yet.                                        |
+| Check                                                     | Result                | Meaning                                                                      |
+| --------------------------------------------------------- | --------------------- | ---------------------------------------------------------------------------- |
+| `curl https://api.dataforseo.com/v3/appendix/user_data`    | **`401`**             | Network allowlist **fixed**. By this file's own rule below, 401 is the good answer. |
+| `DATAFORSEO_USERNAME` / `DATAFORSEO_PASSWORD`             | both **set**          | The `${VAR}` references in `.mcp.json` resolve.                              |
+| Live batched `keywords_data/google_ads/search_volume`      | **real volumes**      | Authenticated **and in credit**. The connector is usable today.              |
+| `mcp__gsc__list_properties`                                | `https://medmeister.eu/` **only** | **`deutsch-meister.de` is not a verified GSC property.**          |
 
-So: **perfect DataForSEO credentials will still fail today.** `api.dataforseo.com` has to be added
-to the environment's network allowlist first. This is not a guess — it is the same failure the
-sibling MedMeister project hit and documented, where the environment's "trusted network access"
-preset does not include the domain and the gateway answers 403 to the CONNECT itself.
+**The DataForSEO network blocker described here previously is gone.** The 2026-08-22 diagnosis
+(proxy refuses CONNECT before any credential is consulted) was correct when written; the allowlist
+has since been fixed. Do not skip the connector on the strength of the old text.
+
+**The blocker now is GSC, and it is neither network nor credential.** `searchconsole.googleapis.com`
+is reachable and the service account is materialised by `.claude/hooks/session-start.sh` — but the
+property simply does not exist on the authorised account. Consequences: **no impressions, clicks,
+average position, URL Inspection, Indexing API, sitemap-submission status or CrUX field data for
+this site.** That disables every GSC step in both Routines — `geo-weekly.md` §1d and
+`measurement-fortnightly.md` §1a in particular — and those runs must write a BLOCKED report for the
+GSC half rather than substituting another source.
+
+The verification files are already committed (`public/google4d10fa3ea1dd99b5.html`,
+`public/BingSiteAuth.xml`), so the property may well exist under a **different Google account** than
+the one this connector is authorised for. The owner action is to confirm which account owns it and
+grant the service account access there — not to verify from scratch.
 
 Diagnose at any time with:
 
@@ -68,10 +80,17 @@ reaches them. `.mcp.json` at the repo root declares both servers project-scoped 
 committed and **must stay credential-free**: the values are `${VAR}` references that Claude Code
 expands from the environment.
 
-**Step 1 — network policy (do this first, it is the blocker).** Add `api.dataforseo.com` to the
-outbound allowlist of the Claude Code environment this repo runs in (claude.ai → Code → the
-environment → network settings). Verify with the curl above; you want a status code, not a tunnel
-error.
+**Step 1 — GSC property verification (do this first; it is the blocker as of 2026-08-24).**
+`deutsch-meister.de` is not a verified property on the account the connector is authorised for —
+`list_properties` returns only `https://medmeister.eu/`. Check whether the property already exists
+under a different Google account (the verification file `public/google4d10fa3ea1dd99b5.html` is
+already committed and deployed, so it may). Then grant the service account access to it in Search
+Console → Settings → Users and permissions. Until that is done there is no impressions, clicks,
+position, URL Inspection, Indexing API or CrUX data for this site, and the GSC half of both Routines
+writes a BLOCKED note.
+
+*(The former Step 1 — adding `api.dataforseo.com` to the environment's outbound allowlist — is
+**done**. It is no longer a blocker; see the status table above.)*
 
 **Step 2 — environment variables.** Set these on the environment, never in a committed file:
 
@@ -79,7 +98,7 @@ error.
 | -------------------------- | ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | `DATAFORSEO_USERNAME`      | DataForSEO **API login**                        | dataforseo.com → Settings → API Access                                                                                       |
 | `DATAFORSEO_PASSWORD`      | DataForSEO **API password**                     | the same page. This is a **separate credential from the dashboard login password** — the most common setup mistake.          |
-| `GSC_SERVICE_ACCOUNT_JSON` | full JSON of a Google service-account key       | Google Cloud → enable the Search Console API → create a service account → JSON key → grant it access to the deutsch-meister.de Search Console property |
+| `GSC_SERVICE_ACCOUNT_JSON` | full JSON of a Google service-account key       | Google Cloud → enable the Search Console API → create a service account → JSON key → grant it access to the deutsch-meister.de Search Console property. **Already set in this environment — but see Step 1: the property itself does not exist on the authorised account, so the key currently resolves to nothing for this site.** |
 
 `.claude/hooks/session-start.sh` writes `GSC_SERVICE_ACCOUNT_JSON` to `$HOME/.gsc-credentials.json`
 (chmod 600) at session start, and `.mcp.json` points the GSC server there. When the variable is

@@ -104,11 +104,21 @@ mode and says so on every run — Netlify's deploy build remains the only gate o
   references Claude Code expands from the environment; the literals belong in the environment's
   variables, never in the file. `.claude/hooks/session-start.sh` materialises
   `GSC_SERVICE_ACCOUNT_JSON` to `~/.gsc-credentials.json` (chmod 600) and installs both dependency
-  trees — it skips silently when the secret is unset. **Neither connector works yet, and the
-  DataForSEO blocker is a network policy, not a credential**: `api.dataforseo.com` answers
-  `CONNECT tunnel failed, 403` at the proxy, so credentials alone change nothing until the domain is
-  allowlisted on the environment. Diagnose with
-  `curl -sS "$HTTPS_PROXY/__agentproxy/status"`. GSC's domain *is* reachable. Routine prompts live in
+  trees — it skips silently when the secret is unset. **DataForSEO now works; GSC does not, and the
+  reason changed.** Measured 2026-08-24: the network allowlist that used to answer
+  `CONNECT tunnel failed, 403` for `api.dataforseo.com` has been fixed — a bare curl now returns
+  `401` (the API answering, per the diagnostic in `docs/seo-routines/README.md`), both
+  `DATAFORSEO_USERNAME` and `DATAFORSEO_PASSWORD` are set, and a live batched
+  `keywords_data/google_ads/search_volume` call returned real German volumes. The connector is
+  usable and has credit. **GSC is the blocker now, and it is not a network or credential problem:
+  `deutsch-meister.de` is not a verified Search Console property at all** — `list_properties`
+  returns only `https://medmeister.eu/`. So there is no impressions/clicks/position data, no URL
+  Inspection, no Indexing API and no CrUX field data for this site, which disables the GSC half of
+  both Routines. The verification files are already committed (`public/google4d10fa3ea1dd99b5.html`,
+  `public/BingSiteAuth.xml`), so the property may exist under a different Google account than the
+  one this connector is authorised for — the owner action is "confirm which account owns it", not
+  "start from zero". Diagnose with
+  `curl -sS "$HTTPS_PROXY/__agentproxy/status"`. Routine prompts live in
   `docs/seo-routines/` rather than the Routines UI, because an agent cannot edit a Routine it did not
   create and a UI-only prompt drifts from the repo silently.
 - **Leitfäden are data, not pages.** A guide lives in
@@ -172,9 +182,9 @@ mode and says so on every run — Netlify's deploy build remains the only gate o
   `/pricing`, the Leitfaden engine + four guides, SEO-routine machinery), and Batch E adds the
   activation lifecycle (shipping OFF — owner must apply its migration and set
   `LIFECYCLE_ACTIVATION_ENABLED=true`), and Batch F migrated the in-app chrome and shared
-  primitives onto the tokens. Still open: the SEO connectors (network allowlist + credentials —
-  see `docs/seo-routines/README.md`), the ~10 content screens the brand ratchet still counts,
-  `LevelTest.css`, and verifying the Astro half in CI. NOTE: grammar pages already carry
+  primitives onto the tokens. Still open: GSC property verification for `deutsch-meister.de` (see
+  `docs/seo-routines/README.md` — DataForSEO is working as of 2026-08-24), the ~10 content screens
+  the brand ratchet still counts, `LevelTest.css`, and verifying the Astro half in CI. NOTE: grammar pages already carry
   `['Article','LearningResource']` schema and Related-Topics links — two earlier claims that
   they were missing were wrong (see the corrections section in the roadmap).
 - **Competitor pricing on `/vergleich/` is stamped "Stand: Mai 2026" and could not be
