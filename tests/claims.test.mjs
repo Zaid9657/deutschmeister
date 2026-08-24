@@ -49,6 +49,7 @@ import {
   PRO_DAILY_LIMIT,
   PRO_SPEAKING_SESSIONS_PER_MONTH,
   TRIAL_SPEAKING_SESSIONS,
+  READING_LESSON_COUNT,
 } from '../src/data/marketing.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -231,6 +232,46 @@ test('llms.txt files quote the current prices and allowances', () => {
     assert.ok(
       body.includes(String(PRO_DAILY_LIMIT)),
       `${file} does not quote the ${PRO_DAILY_LIMIT}/day X-Ray allowance`,
+    );
+  }
+});
+
+test('llms.txt files do not claim podcast transcripts', () => {
+  // Every episode's transcript column is empty. This claim has now been removed
+  // three times — from the homepage FAQPage (2026-08-16), from /podcasts/
+  // (2026-08-24), and from these two files, which no guard covered until now.
+  // They are the worst surface to leave it on: they exist to be quoted verbatim.
+  for (const file of ['public/llms.txt', 'public/llms-full.txt']) {
+    const body = read(file).toLowerCase();
+    for (const banned of ['transcript', 'transkript']) {
+      assert.ok(!body.includes(banned), `${file} claims podcast transcripts; every transcript is empty`);
+    }
+  }
+});
+
+test('llms.txt files quote the measured content counts', () => {
+  // Counts here drifted unguarded: 1,982 vocabulary words against a real 1,935,
+  // and 52 reading passages against a real 66. Both are now measured constants.
+  for (const file of ['public/llms.txt', 'public/llms-full.txt']) {
+    const body = read(file);
+    for (const stale of ['1,982', '52 leveled']) {
+      assert.ok(!body.includes(stale), `${file} still carries the stale count "${stale}"`);
+    }
+  }
+  assert.ok(
+    read('public/llms-full.txt').includes(String(READING_LESSON_COUNT)),
+    `llms-full.txt does not quote the measured ${READING_LESSON_COUNT} reading lessons`,
+  );
+});
+
+test('llms.txt links carry the trailing slash the prerendered routes canonicalise to', () => {
+  // CLAUDE.md trailing-slash case 2. The slashless form 301s, so every AI crawler
+  // following this file took a redirect on six of its product URLs.
+  const body = read('public/llms.txt');
+  for (const route of ['level-test', 'speaking', 'analyze', 'podcasts', 'listening', 'reading']) {
+    assert.ok(
+      !new RegExp(`https://deutsch-meister\\.de/${route}(?![/\\w-])`).test(body),
+      `llms.txt links /${route} without the trailing slash, which 301s`,
     );
   }
 });

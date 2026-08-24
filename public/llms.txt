@@ -7,8 +7,8 @@
 - 64 grammar topics across 8 CEFR sub-levels (A1.1 to B2.2), 8 topics per level
 - Every grammar lesson: rules, worked examples with word-by-word breakdowns, and interactive exercises
 - 48 listening exercises containing 480 native-speaker dialogue lines
-- 24 podcast episodes with transcripts
-- 1,982 vocabulary words and 945 example sentences
+- 24 podcast episodes with native-speaker audio
+- 1,935 vocabulary words and 945 example sentences
 - Free CEFR level test (~15 min, speaking included)
 - Sentence X-Ray: paste any German sentence, get case/role/structure analysis
 - All grammar explanations are in English; the German content is authentic
@@ -24,13 +24,12 @@
 - Grammar hub (all 64 topics): https://deutsch-meister.de/grammar/
 - Level hubs: https://deutsch-meister.de/grammar/a1.1/ … /b2.2/
 - Pricing: https://deutsch-meister.de/pricing/
-- Level test: https://deutsch-meister.de/level-test
-- AI speaking practice: https://deutsch-meister.de/speaking
-- Sentence X-Ray: https://deutsch-meister.de/analyze
-- Podcasts: https://deutsch-meister.de/podcasts
-- Listening: https://deutsch-meister.de/listening
-- Reading: https://deutsch-meister.de/reading
-- Vocabulary: https://deutsch-meister.de/vocabulary
+- Level test: https://deutsch-meister.de/level-test/
+- AI speaking practice: https://deutsch-meister.de/speaking/
+- Sentence X-Ray: https://deutsch-meister.de/analyze/
+- Podcasts: https://deutsch-meister.de/podcasts/
+- Listening: https://deutsch-meister.de/listening/
+- Reading: https://deutsch-meister.de/reading/
 - Exam guides hub (German): https://deutsch-meister.de/leitfaden/
 - telc B1 exam guide (German): https://deutsch-meister.de/leitfaden/telc-b1/
 - telc B2 exam guide (German): https://deutsch-meister.de/leitfaden/telc-b2/

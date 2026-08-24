@@ -11,13 +11,11 @@ import { isLevelFree } from '../config/freeTier';
 import { mainLevels, getSubLevels, levelThemes as contentLevelThemes } from '../data/content';
 import { getReadingLessonCounts, getReadingLessonsByLevel } from '../services/readingService';
 import SEO from '../components/SEO';
+import { READING_LESSON_COUNTS_BY_LEVEL } from '../data/marketing';
 
-const LESSON_COUNTS = {
-  'a1.1': 3, 'a1.2': 4,
-  'a2.1': 5, 'a2.2': 6,
-  'b1.1': 7, 'b1.2': 8,
-  'b2.1': 9, 'b2.2': 10,
-};
+// Measured against reading_lessons (2026-08-24), not interpolated — the old
+// 3,4,5,6,7,8,9,10 ramp here matched no measurement. See src/data/marketing.js.
+const LESSON_COUNTS = READING_LESSON_COUNTS_BY_LEVEL;
 
 // Fallback only — the real count comes from the DB (see dbLessonCounts).
 const TOTAL_LESSONS = 66;

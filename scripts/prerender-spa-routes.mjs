@@ -20,6 +20,13 @@
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
+// Counts come from the claims data layer, never retyped here. The ramp that used
+// to live in this file was invented — see rule 2 in src/data/marketing.js.
+import {
+  READING_LESSON_COUNT,
+  READING_LESSON_COUNTS_BY_LEVEL,
+  LEVEL_COUNT,
+} from '../src/data/marketing.js';
 
 const DIST = process.argv[2] || 'dist';
 const SHELL = join(DIST, 'app.html');
@@ -41,19 +48,13 @@ const LEVEL_SUBTITLES = {
   'B1.1': 'Intermediate I', 'B1.2': 'Intermediate II',
   'B2.1': 'Upper Intermediate I', 'B2.2': 'Upper Intermediate II',
 };
-// src/pages/ReadingSectionPage.jsx LESSON_COUNTS
-const READING_LESSON_COUNTS = {
-  'a1.1': 3, 'a1.2': 4, 'a2.1': 5, 'a2.2': 6,
-  'b1.1': 7, 'b1.2': 8, 'b2.1': 9, 'b2.2': 10,
-};
-
 const listeningCards = LEVELS.map((lvl) => `
       <a href="/listening/${lvl.toLowerCase()}" class="block relative rounded-2xl border border-slate-200 bg-white p-5 shadow-sm overflow-hidden">
         <h3 class="font-display font-semibold text-lg text-slate-800">${lvl}</h3>
         <p class="text-sm text-slate-500">${LEVEL_SUBTITLES[lvl]}</p>
       </a>`).join('');
 
-const readingCards = Object.entries(READING_LESSON_COUNTS).map(([lvl, count]) => `
+const readingCards = Object.entries(READING_LESSON_COUNTS_BY_LEVEL).map(([lvl, count]) => `
       <a href="/reading/${lvl}" class="block bg-white rounded-xl p-4 shadow-sm border border-slate-100">
         <h3 class="font-semibold text-slate-800">${lvl.toUpperCase()}</h3>
         <p class="text-xs text-slate-500">${count} reading lessons</p>
@@ -342,7 +343,7 @@ ${faqSectionTailwind(PODCAST_FAQS)}
     path: '/reading',
     dir: 'reading',
     title: 'German Reading Practice A1–B2 | DeutschMeister',
-    description: 'Improve your German reading comprehension with 52 leveled reading passages. Authentic texts with comprehension questions for all CEFR levels from A1 to B2.',
+    description: `Improve your German reading comprehension with ${READING_LESSON_COUNT} leveled reading passages. Authentic texts with comprehension questions for all CEFR levels from A1 to B2.`,
     keywords: 'German reading practice, German reading comprehension, learn German reading, German texts for learners, CEFR reading exercises',
     jsonLd: [
       {
@@ -361,8 +362,8 @@ ${faqSectionTailwind(PODCAST_FAQS)}
     <p class="text-slate-600">Improve your reading comprehension step by step</p>
   </div>
   <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-    <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100"><p class="text-2xl font-bold text-slate-800">52</p><p class="text-sm text-slate-500">Total Lessons</p></div>
-    <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100"><p class="text-2xl font-bold text-slate-800">8</p><p class="text-sm text-slate-500">Levels</p></div>
+    <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100"><p class="text-2xl font-bold text-slate-800">${READING_LESSON_COUNT}</p><p class="text-sm text-slate-500">Total Lessons</p></div>
+    <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100"><p class="text-2xl font-bold text-slate-800">${LEVEL_COUNT}</p><p class="text-sm text-slate-500">Levels</p></div>
   </div>
   <h2 class="font-semibold text-slate-800 mb-3">Overall Reading Progress</h2>
   <div class="grid gap-4 sm:grid-cols-2">${readingCards}
