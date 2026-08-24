@@ -82,3 +82,24 @@ API/MCP route is wanted: allowlist `api.dataforseo.com` on the environment's net
 set `DATAFORSEO_USERNAME`/`DATAFORSEO_PASSWORD` in its environment variables. The four-call
 measurement plan in `measurement-fortnightly.md` was loaded and ready in this probe session and
 was not run — zero billed calls were made, and no figures were produced by other means.
+
+## Addendum: fresh-container probe (2026-08-24)
+
+Re-probed from a new fresh container on the "Zaid57" environment. Two of the three checks are
+byte-identical to yesterday; one thing has changed, and it narrows the diagnosis without opening
+the route:
+
+| Check | Result |
+|---|---|
+| `DATAFORSEO_USERNAME` / `DATAFORSEO_PASSWORD` / `DATAFORSEO_LOGIN` env vars | still **not set** |
+| `curl -u … https://api.dataforseo.com/v3/appendix/user_data` (30s timeout) | still **`curl: (56) CONNECT tunnel failed, response 403`**, HTTP `000` |
+| DataForSEO MCP server (`.mcp.json`) | **CHANGED: now connects** — its tools (`api_request`, `docs_*`) loaded in-session for the first time, where the 08-23 probe recorded them "still absent" |
+| `api_request GET /v3/appendix/user_data` through that MCP server | refused before any HTTP left the box: **`Host not in allowlist: api.dataforseo.com. Add this host to your network egress settings to allow access.`** |
+
+So the MCP server process itself now starts (its dependency tree is installed and the session
+loads it), but its outbound call dies on the same egress policy as curl — and the MCP error
+string names the fix verbatim: the host is missing from the environment's network **allowlist**.
+This confirms cleanly that the remaining blockers for the direct route are exactly the two
+already listed — (1) allowlist `api.dataforseo.com` on the "Zaid57" environment's network
+settings, (2) set `DATAFORSEO_USERNAME`/`DATAFORSEO_PASSWORD` in its environment variables —
+and nothing else. Zero billed calls were made today; no figures were produced by other means.
