@@ -26,6 +26,7 @@ import {
   READING_LESSON_COUNT,
   READING_LESSON_COUNTS_BY_LEVEL,
   LEVEL_COUNT,
+  TRIAL_SPEAKING_SESSIONS,
 } from '../src/data/marketing.js';
 // Head fields come from the one registry both this script and the <SEO> calls
 // consume — src/data/seoRoutes.js. The route objects below carry only what is
@@ -151,23 +152,29 @@ const ROUTES = [
         ],
       },
     ],
+    // Mirrors the guest branch of src/pages/SpeakingPage.jsx — the page an
+    // anonymous visitor actually gets. The old mirror showed the logged-in
+    // setup screen, which no anonymous user could ever reach.
     content: `
-<div class="min-h-screen bg-slate-50 pt-16"><div class="max-w-lg mx-auto px-4 sm:px-6 py-6 sm:py-10">
-  <div class="mb-6">
-    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-teal-100/80 text-teal-700 text-[11px] font-semibold mb-2 tracking-wide uppercase">AI Speaking Practice</div>
-    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">German Speaking Practice</h1>
+<div class="min-h-screen bg-paper px-4 pt-24 pb-16"><div class="max-w-2xl mx-auto text-center">
+  <h1 class="text-3xl sm:text-4xl font-bold text-ink mb-3">German Speaking Practice</h1>
+  <p class="text-lg text-graphite mb-8 max-w-xl mx-auto">Speak German out loud with an AI conversation partner that listens, answers at your level, and tells you afterwards what was right, what to fix, and what a native speaker would have said instead.</p>
+  <div class="grid sm:grid-cols-3 gap-4 text-left mb-8">
+    <div class="bg-white rounded-xl border border-rule p-5">
+      <h2 class="font-semibold text-ink text-sm mb-1.5">Every level, A1 to B2</h2>
+      <p class="text-sm text-graphite leading-relaxed">The partner adapts its vocabulary and pace to your CEFR level — from first sentences at A1.1 to open discussion at B2.2.</p>
+    </div>
+    <div class="bg-white rounded-xl border border-rule p-5">
+      <h2 class="font-semibold text-ink text-sm mb-1.5">Missions or free talk</h2>
+      <p class="text-sm text-graphite leading-relaxed">Guided scenarios — ordering, appointments, small talk — or open conversation. Sessions run 5, 10 or 15 minutes.</p>
+    </div>
+    <div class="bg-white rounded-xl border border-rule p-5">
+      <h2 class="font-semibold text-ink text-sm mb-1.5">Feedback you can use</h2>
+      <p class="text-sm text-graphite leading-relaxed">After each session: grammar, vocabulary and pronunciation, with concrete corrections — like a patient tutor with unlimited time.</p>
+    </div>
   </div>
-  <p class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Level</p>
-  <div class="flex gap-2 overflow-x-auto pb-2 mb-1">
-    ${LEVELS.map((l) => `<span class="flex-shrink-0 px-4 py-2 rounded-xl text-sm font-bold bg-white text-slate-600 border border-slate-200">${l}</span>`).join('\n    ')}
-  </div>
-  <p class="text-sm text-slate-500 mb-6">Beginner 1</p>
-  <p class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Duration</p>
-  <p class="text-slate-800 font-medium mb-6">5, 10 or 15 minutes</p>
-  <p class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Mission (optional)</p>
-  <p class="text-slate-600 text-sm mb-6">Free conversation or guided missions with instant feedback — levels A1 to B2.</p>
-  <p class="flex items-center justify-center gap-2 w-full py-4 bg-teal-500 text-white font-bold rounded-2xl shadow-md shadow-teal-200 text-center">Start</p>
-  <p class="text-center text-xs text-slate-400 mt-3">Free conversation · 5 minutes</p>
+  <p><a href="/signup" class="inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 text-base font-semibold bg-siegel text-white">Sign up free</a></p>
+  <p class="text-sm text-graphite mt-4">A free account includes ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions — no card needed. Levels: ${LEVELS.join(', ')}.</p>
 </div></div>`,
   },
   {
@@ -275,6 +282,15 @@ ${faqSectionPlain(LEVEL_TEST_FAQS)}
     <div class="rounded-2xl border border-dashed border-slate-300 bg-white/60 p-4">
       <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Example result</p>
       <p class="text-sm font-medium text-slate-500 italic mb-3">"Ich gebe dir das Buch." — <span class="not-italic">I give you the book.</span></p>
+      <!-- The word-by-word breakdown IS the product; mirrored from PreviewExample
+           in src/pages/SentenceXRay.jsx, case colours from the kasus tokens. -->
+      <ul class="flex flex-wrap gap-2 list-none">
+        <li class="flex flex-col items-center gap-1"><span class="px-3 py-1.5 rounded-lg text-sm font-semibold border bg-[#E6F1FB] border-[#378ADD] text-[#0C447C]">Ich</span><span class="text-xs text-slate-400 italic">I — subject, Nominative</span></li>
+        <li class="flex flex-col items-center gap-1"><span class="px-3 py-1.5 rounded-lg text-sm font-semibold border bg-slate-100 border-slate-300 text-slate-700">gebe</span><span class="text-xs text-slate-400 italic">give — verb</span></li>
+        <li class="flex flex-col items-center gap-1"><span class="px-3 py-1.5 rounded-lg text-sm font-semibold border bg-[#E1F5EE] border-[#1D9E75] text-[#085041]">dir</span><span class="text-xs text-slate-400 italic">to you — indirect object, Dative</span></li>
+        <li class="flex flex-col items-center gap-1"><span class="px-3 py-1.5 rounded-lg text-sm font-semibold border bg-[#FAECE7] border-[#D85A30] text-[#712B13]">das Buch</span><span class="text-xs text-slate-400 italic">the book — direct object, Accusative</span></li>
+      </ul>
+      <p class="text-sm text-slate-600 mt-3 leading-relaxed"><span class="font-semibold">Why "dir" and not "dich"?</span> "geben" takes the thing given in the Accusative (das Buch) and the receiver in the Dative (dir). The X-Ray labels every word with its case, its role in the sentence, and the reason — for any sentence you paste.</p>
     </div>
     <div>
       <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-1">Or try an example</p>

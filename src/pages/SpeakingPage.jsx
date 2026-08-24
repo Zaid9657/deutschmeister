@@ -9,6 +9,7 @@ import { useSubscription } from '../contexts/SubscriptionContext';
 import { supabase, getAuthHeaders } from '../utils/supabase';
 import SEO from '../components/SEO';
 import { seoProps } from '../data/seoRoutes.js';
+import { TRIAL_SPEAKING_SESSIONS } from '../data/marketing.js';
 import { getConfigForLevel } from '../constants/speakingPrompts';
 import { checkSpeakingSupport } from '../components/speaking/mediaSupport';
 import SpeakingSession from '../components/speaking/SpeakingSession';
@@ -253,17 +254,47 @@ const SpeakingPage = () => {
   const retrySession = () => { setEvaluation(null); setPhase('setup'); };
 
   // ---- guest gate ----
+  // Not just a sign-in wall: this is the page an anonymous visitor (and the
+  // crawler) actually gets, so it carries the real feature copy — mirrored into
+  // scripts/prerender-spa-routes.mjs, keep the two in sync. Facts only, all of
+  // them already true in this file (levels, durations, feedback dimensions);
+  // the free-session count derives from marketing.js.
   if (!user) {
     return (
-      <div className="min-h-screen bg-paper flex items-center justify-center px-4 pt-20 pb-12">
-        <div className="max-w-lg w-full text-center">
-          <div className="w-20 h-20 mx-auto mb-6 rounded-lg bg-siegel flex items-center justify-center shadow-xl">
+      <div className="min-h-screen bg-paper px-4 pt-24 pb-16">
+        <div className="max-w-2xl mx-auto text-center">
+          <div className="w-20 h-20 mx-auto mb-6 rounded-lg bg-siegel flex items-center justify-center">
             <Mic className="w-10 h-10 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-ink mb-3">German Speaking Practice</h1>
-          <p className="text-graphite mb-8">
-            Sign in to practice speaking German with your AI conversation partner — with instant feedback.
+          <h1 className="text-3xl sm:text-4xl font-bold text-ink mb-3">German Speaking Practice</h1>
+          <p className="text-lg text-graphite mb-8 max-w-xl mx-auto">
+            Speak German out loud with an AI conversation partner that listens, answers
+            at your level, and tells you afterwards what was right, what to fix, and
+            what a native speaker would have said instead.
           </p>
+          <div className="grid sm:grid-cols-3 gap-4 text-left mb-8">
+            <div className="bg-white rounded-xl border border-rule p-5">
+              <h2 className="font-semibold text-ink text-sm mb-1.5">Every level, A1 to B2</h2>
+              <p className="text-sm text-graphite leading-relaxed">
+                The partner adapts its vocabulary and pace to your CEFR level — from
+                first sentences at A1.1 to open discussion at B2.2.
+              </p>
+            </div>
+            <div className="bg-white rounded-xl border border-rule p-5">
+              <h2 className="font-semibold text-ink text-sm mb-1.5">Missions or free talk</h2>
+              <p className="text-sm text-graphite leading-relaxed">
+                Guided scenarios — ordering, appointments, small talk — or open
+                conversation. Sessions run 5, 10 or 15 minutes.
+              </p>
+            </div>
+            <div className="bg-white rounded-xl border border-rule p-5">
+              <h2 className="font-semibold text-ink text-sm mb-1.5">Feedback you can use</h2>
+              <p className="text-sm text-graphite leading-relaxed">
+                After each session: grammar, vocabulary and pronunciation, with
+                concrete corrections — like a patient tutor with unlimited time.
+              </p>
+            </div>
+          </div>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button to="/signup" size="lg">
               Sign up free <ArrowRight className="w-5 h-5" />
@@ -272,6 +303,9 @@ const SpeakingPage = () => {
               Log in
             </Link>
           </div>
+          <p className="text-sm text-graphite mt-4">
+            A free account includes {TRIAL_SPEAKING_SESSIONS} AI speaking sessions — no card needed.
+          </p>
         </div>
       </div>
     );
