@@ -222,7 +222,7 @@ const LevelPage = () => {
           "@type": "Course",
           "name": seo.title,
           "description": seo.desc,
-          "provider": { "@type": "Organization", "name": "DeutschMeister", "url": "https://deutsch-meister.de/" },
+          "provider": { "@type": "Organization", "@id": "https://deutsch-meister.de/#organization", "name": "DeutschMeister", "url": "https://deutsch-meister.de" },
           "educationalLevel": seoEducationalLevel,
           "inLanguage": "de",
           "isAccessibleForFree": true

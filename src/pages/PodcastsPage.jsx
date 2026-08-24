@@ -93,6 +93,7 @@ const PodcastsPage = () => {
             "genre": ["Education", "Language Learning"],
             "author": {
               "@type": "Organization",
+              "@id": "https://deutsch-meister.de/#organization",
               "name": "DeutschMeister",
               "url": "https://deutsch-meister.de"
             },

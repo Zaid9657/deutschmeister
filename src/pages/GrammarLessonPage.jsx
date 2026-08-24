@@ -891,8 +891,8 @@ export default function GrammarLessonPage() {
           "@type": "Article",
           "headline": topic.title_en,
           "description": `Learn ${topic.title_en} in German with examples and exercises`,
-          "author": { "@type": "Organization", "name": "DeutschMeister" },
-          "publisher": { "@type": "Organization", "name": "DeutschMeister" },
+          "author": { "@type": "Organization", "@id": "https://deutsch-meister.de/#organization", "name": "DeutschMeister" },
+          "publisher": { "@type": "Organization", "@id": "https://deutsch-meister.de/#organization", "name": "DeutschMeister" },
           "mainEntityOfPage": `https://deutsch-meister.de${canonicalPath}`,
           "educationalLevel": levelUpper,
           "inLanguage": ["de", "en"]

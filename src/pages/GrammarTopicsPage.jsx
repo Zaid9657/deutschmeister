@@ -96,8 +96,9 @@ const GrammarTopicsPage = () => {
           description: levelSeoDescriptions[level],
           provider: {
             '@type': 'Organization',
+            '@id': 'https://deutsch-meister.de/#organization',
             name: 'DeutschMeister',
-            sameAs: 'https://deutsch-meister.de',
+            url: 'https://deutsch-meister.de',
           },
           educationalLevel: level.toUpperCase().split('.')[0],
           inLanguage: 'de',

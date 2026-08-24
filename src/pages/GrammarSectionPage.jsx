@@ -224,6 +224,7 @@ const GrammarSectionPage = () => {
             "description": "Master German grammar with 64 topics covering CEFR levels A1 to B2. Clear English explanations, examples with translations, and interactive exercises.",
             "provider": {
               "@type": "Organization",
+              "@id": "https://deutsch-meister.de/#organization",
               "name": "DeutschMeister",
               "sameAs": "https://deutsch-meister.de"
             },

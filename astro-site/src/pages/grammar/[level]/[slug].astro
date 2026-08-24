@@ -6,7 +6,7 @@ import RichText from '../../../components/RichText.astro';
 import { getAllTopicPaths, getTopicFull, getAllTopics, SUB_LEVELS, LEVEL_META } from '../../../lib/grammar.js';
 import { RELATED_TOPICS } from '../../../lib/relatedTopics.js';
 import { TOPIC_SEO } from '../../../lib/topicSeo.js';
-import { SITE_PUBLISHED, BUILD_DATE } from '../../../lib/siteMeta.js';
+import { ORGANIZATION, SITE_PUBLISHED, BUILD_DATE } from '../../../lib/siteMeta.js';
 import '../../../styles/global.css';
 
 // True when a rule's JSONB content (object, array, or plain string) holds
@@ -126,12 +126,8 @@ const breadcrumbSchema = {
 
 // Article + LearningResource: these pages are lessons, and the educational
 // properties are what AI answer engines and Google's learning surfaces read.
-const publisher = {
-  '@type': 'Organization',
-  name: 'DeutschMeister',
-  url: 'https://deutsch-meister.de',
-  logo: 'https://deutsch-meister.de/logo.png',
-};
+// One entity, one @id — the local re-declaration is gone.
+const publisher = ORGANIZATION;
 const articleSchema = {
   '@context': 'https://schema.org',
   '@type': ['Article', 'LearningResource'],

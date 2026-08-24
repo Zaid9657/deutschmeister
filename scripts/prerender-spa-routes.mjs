@@ -33,6 +33,7 @@ import {
 // genuinely per-surface: the JSON-LD (deliberately diverged from the client
 // blocks) and the static #root copy.
 import { SEO_ROUTES, fullTitle } from '../src/data/seoRoutes.js';
+import { ORG_REF, ORG_ID } from '../src/data/organization.js';
 import { FAQ_CATEGORIES, faqPageJsonLd } from '../src/data/faqContent.js';
 
 const head = (route) => {
@@ -191,7 +192,7 @@ const ROUTES = [
         learningResourceType: 'Assessment',
         inLanguage: ['en', 'de'],
         isAccessibleForFree: true,
-        provider: { '@type': 'Organization', name: 'DeutschMeister', url: 'https://deutsch-meister.de' },
+        provider: ORG_REF,
       },
       faqPageSchema(LEVEL_TEST_FAQS),
       {
@@ -255,7 +256,7 @@ ${faqSectionPlain(LEVEL_TEST_FAQS)}
         // No `offers`: X-Ray is metered at ANON_DAILY_LIMIT/day, so a bare price:0
         // is the same 'unlimited beside a price' shape marketing.js exists to stop.
         // WebApplication earns no rich result without an aggregateRating anyway.
-        provider: { '@type': 'Organization', name: 'DeutschMeister', url: 'https://deutsch-meister.de' },
+        provider: ORG_REF,
       },
       {
         '@context': 'https://schema.org',
@@ -318,7 +319,7 @@ ${faqSectionPlain(LEVEL_TEST_FAQS)}
         inLanguage: ['de', 'en'],
         numberOfEpisodes: 24,
         genre: ['Education', 'Language Learning'],
-        author: { '@type': 'Organization', name: 'DeutschMeister', url: 'https://deutsch-meister.de' },
+        author: ORG_REF,
         isAccessibleForFree: true,
       },
       faqPageSchema(PODCAST_FAQS),
@@ -465,6 +466,7 @@ ${faqSectionTailwind(PODCAST_FAQS)}
       {
         '@context': 'https://schema.org',
         '@type': 'Organization',
+        '@id': ORG_ID,
         name: 'DeutschMeister',
         url: 'https://deutsch-meister.de',
         founder: { '@type': 'Person', name: 'Zaid', jobTitle: 'Arzt & Gründer' },
