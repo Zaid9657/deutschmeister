@@ -260,7 +260,7 @@ ${faqSectionPlain(LEVEL_TEST_FAQS)}
     dir: 'podcasts',
     title: 'German Podcasts for Learners A1–B2 | DeutschMeister',
     description: 'Free German podcasts for learners: 24 episodes of native-speaker audio graded A1 to B2. Build listening skills while you commute or relax.',
-    keywords: 'German podcast for beginners, learn German podcast, German listening practice, German audio lessons, German podcast with transcript',
+    keywords: 'German podcast for beginners, learn German podcast, German listening practice, German audio lessons, German podcast by CEFR level',
     jsonLd: [
       {
         '@context': 'https://schema.org',
@@ -289,7 +289,7 @@ ${faqSectionPlain(LEVEL_TEST_FAQS)}
   <div class="text-center mb-12">
     <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-50 border border-orange-200 text-orange-700 text-sm font-medium mb-4">24 Episodes Available</div>
     <h1 class="font-display text-4xl sm:text-5xl font-bold text-slate-800 mb-4">German Podcasts for Learners</h1>
-    <p class="text-lg text-slate-600 max-w-2xl mx-auto mb-2">Native speaker audio with transcripts • Levels A1 to B2</p>
+    <p class="text-lg text-slate-600 max-w-2xl mx-auto mb-2">Native speaker audio, graded by CEFR level • A1 to B2</p>
     <p class="text-slate-500 max-w-xl mx-auto">Listen to authentic German conversations designed for language learners. Every episode is graded by CEFR level, from A1 to B2.</p>
   </div>
   <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 sm:p-10 mb-12">
@@ -300,7 +300,6 @@ ${faqSectionPlain(LEVEL_TEST_FAQS)}
       <li>Improve listening comprehension with native speaker audio</li>
       <li>Learn natural speech patterns and pronunciation</li>
       <li>Study anywhere — while commuting, exercising, or relaxing</li>
-      <li>Full transcripts help you catch every word</li>
       <li>Vocabulary highlights teach you new words in context</li>
     </ul>
     <h3 class="text-xl font-bold text-slate-800 mt-6 mb-3">Podcasts for every level</h3>

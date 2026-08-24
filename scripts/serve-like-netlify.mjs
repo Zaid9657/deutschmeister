@@ -80,9 +80,10 @@ createServer((req, res) => {
     const body = file ? readFileSync(file) : Buffer.from('');
     const headers = { 'Content-Type': MIME[extname(file ?? '')] ?? 'application/octet-stream', ...extra };
     for (const h of HEADERS) if (globToRe(h.for).test(pathname)) Object.assign(headers, h.values);
-    // Netlify applies header rules to the REQUEST path; app.html's noindex is
-    // keyed to the served file, so re-apply it when a rewrite landed there.
-    if (file && file.endsWith('/app.html')) headers['X-Robots-Tag'] = 'noindex';
+    // Deliberately NOT re-applied on rewrite: Netlify matches header rules on the
+    // REQUEST path, so `for = "/app.html"` does not cover /faq, /dashboard, … even
+    // though they are 200-rewritten to that file. Faking it here would hide the
+    // fact that the shell's markup ships on ~29 indexable URLs without noindex.
     res.writeHead(status, headers);
     res.end(body);
   };

@@ -79,6 +79,10 @@ const BANNED_LITERALS = [
   // Every podcast transcript in the database is empty; an indexed FAQPage rich
   // result claimed otherwise until the 2026-08-16 audit.
   'full transcript',
+  // The same claim in its other shapes — 'full transcript' alone missed all three
+  // occurrences that shipped on /podcasts/.
+  'with transcript',
+  'audio with transcripts',
 ];
 
 const fail = [];
@@ -199,7 +203,10 @@ for (const entry of MANIFEST) {
 
   // --- banned literals ------------------------------------------------------
   for (const literal of BANNED_LITERALS) {
-    if (html.includes(literal)) note(fail, page, `contains banned literal "${literal}"`);
+    // Case-insensitive: the page said "Full transcripts" while the ban listed
+    // 'full transcript', so the claim walked straight back in under a comment
+    // forbidding it. A claim is a claim whatever its capitalisation.
+    if (html.toLowerCase().includes(literal.toLowerCase())) note(fail, page, `contains banned literal "${literal}"`);
   }
 }
 
