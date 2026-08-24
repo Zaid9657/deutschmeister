@@ -129,8 +129,12 @@ export const guideJsonLd = (guide, { organization, buildDate }) => [
     inLanguage: 'de',
     author: organization,
     publisher: organization,
+    image: 'https://deutsch-meister.de/og-image.png',
     datePublished: guide.datePublished,
-    dateModified: buildDate,
+    // The checked date, not the build date: stamping every deploy claims a
+    // freshness the content does not have, which teaches crawlers to discount
+    // the field. sitemap-spa.xml makes the same argument about lastmod.
+    dateModified: guide.factsCheckedOn ?? guide.datePublished,
     mainEntityOfPage: { '@type': 'WebPage', '@id': guideUrl(guide) },
   },
   {

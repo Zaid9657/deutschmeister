@@ -139,6 +139,7 @@ const articleSchema = {
   name: `German ${topicTitle}`,
   description: pageDesc,
   url: canonicalUrlSlash,
+  image: 'https://deutsch-meister.de/og-image.png',
   inLanguage: 'en',
   publisher,
   author: publisher,
@@ -170,7 +171,7 @@ if (seoExtra?.faqs?.length) {
 }
 ---
 
-<Layout title={pageTitle} description={pageDesc} canonical={canonicalUrlSlash} jsonLd={jsonLdSchemas}>
+<Layout title={pageTitle} description={pageDesc} canonical={canonicalUrlSlash} jsonLd={jsonLdSchemas} ogType="article">
   <div class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
 
     <!-- Breadcrumb -->

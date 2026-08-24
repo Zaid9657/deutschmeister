@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getAllTopics, SUB_LEVELS, LEVEL_META } from '../../lib/grammar.js';
+import { ORGANIZATION } from '../../lib/siteMeta.js';
 import '../../styles/global.css';
 
 const allTopics = await getAllTopics();
@@ -20,14 +21,38 @@ const orderedPath = byLevel.flatMap(({ level, topics }) =>
 const firstTopic = orderedPath[0];
 const totalTopics = orderedPath.length;
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'CollectionPage',
-  name: 'Deutsche Grammatik A1–B2 | DeutschMeister',
-  description: 'Alle 64 Grammatikthemen von A1.1 bis B2.2 — kostenlos, mit Erklärungen, Beispielen und Übungen.',
-  url: 'https://deutsch-meister.de/grammar/',
-  provider: { '@type': 'Organization', name: 'DeutschMeister', url: 'https://deutsch-meister.de' },
-};
+// The site's most-linked hub had a bare CollectionPage: no breadcrumb (the only
+// Astro hub without one) and no ItemList, while rendering 8 level links and 64
+// topic links. Both restate what the page already shows.
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Deutsche Grammatik A1–B2 | DeutschMeister',
+    description: 'Alle 64 Grammatikthemen von A1.1 bis B2.2 — kostenlos, mit Erklärungen, Beispielen und Übungen.',
+    url: 'https://deutsch-meister.de/grammar/',
+    inLanguage: 'de',
+    provider: ORGANIZATION,
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: byLevel.length,
+      itemListElement: byLevel.map(({ level, meta }, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: `${meta.label} Grammatik`,
+        item: `https://deutsch-meister.de/grammar/${level}/`,
+      })),
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Start', item: 'https://deutsch-meister.de/' },
+      { '@type': 'ListItem', position: 2, name: 'Grammatik', item: 'https://deutsch-meister.de/grammar/' },
+    ],
+  },
+];
 ---
 
 <Layout

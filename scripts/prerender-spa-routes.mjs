@@ -77,7 +77,6 @@ const PODCAST_FAQS = [
   // database have empty transcripts. The 2026-08-16 audit (B-04) removed this
   // claim from src/pages/PodcastsPage.jsx but missed this second, hardcoded
   // copy, so the indexed FAQPage rich result kept promising transcripts.
-  { q: 'What level are the podcasts?', a: 'Episodes are graded from A1 to B2. Each one is tagged with its level so you can pick something at or just above where you are.' },
   { q: 'How many podcast episodes are there?', a: 'We have 24 episodes total — 3 episodes for each of the 8 CEFR levels (A1.1, A1.2, A2.1, A2.2, B1.1, B1.2, B2.1, B2.2). New episodes are added regularly.' },
 ];
 
@@ -127,7 +126,16 @@ const ROUTES = [
     dir: 'speaking',
     title: 'German Speaking Practice with AI | DeutschMeister',
     description: 'Practice speaking German with an AI conversation partner: guided missions or free conversation, with instant feedback. Levels A1 to B2.',
-    jsonLd: [],
+    jsonLd: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de/' },
+          { '@type': 'ListItem', position: 2, name: 'Speaking Practice', item: 'https://deutsch-meister.de/speaking/' },
+        ],
+      },
+    ],
     content: `
 <div class="min-h-screen bg-slate-50 pt-16"><div class="max-w-lg mx-auto px-4 sm:px-6 py-6 sm:py-10">
   <div class="mb-6">
@@ -170,7 +178,7 @@ const ROUTES = [
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de' },
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de/' },
           { '@type': 'ListItem', position: 2, name: 'Level Test', item: 'https://deutsch-meister.de/level-test/' },
         ],
       },
@@ -226,8 +234,18 @@ ${faqSectionPlain(LEVEL_TEST_FAQS)}
         url: 'https://deutsch-meister.de/analyze/',
         applicationCategory: 'EducationalApplication',
         operatingSystem: 'Any',
-        offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+        // No `offers`: X-Ray is metered at ANON_DAILY_LIMIT/day, so a bare price:0
+        // is the same 'unlimited beside a price' shape marketing.js exists to stop.
+        // WebApplication earns no rich result without an aggregateRating anyway.
         provider: { '@type': 'Organization', name: 'DeutschMeister', url: 'https://deutsch-meister.de' },
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de/' },
+          { '@type': 'ListItem', position: 2, name: 'Sentence X-Ray', item: 'https://deutsch-meister.de/analyze/' },
+        ],
       },
     ],
     content: `
@@ -268,7 +286,10 @@ ${faqSectionPlain(LEVEL_TEST_FAQS)}
         '@type': 'PodcastSeries',
         name: 'DeutschMeister German Learning Podcast',
         description: 'German learning podcast: 24 episodes from A1 to B2, each a natural native-speaker conversation graded to a CEFR level.',
-        webFeed: 'https://deutsch-meister.de/podcasts/',
+        url: 'https://deutsch-meister.de/podcasts/',
+        // webFeed must be an RSS/Atom feed, not the HTML page. The feed is served
+        // by netlify/functions/podcast-feed.js via the netlify.toml rewrite.
+        webFeed: 'https://deutsch-meister.de/podcast-feed.xml',
         inLanguage: ['de', 'en'],
         numberOfEpisodes: 24,
         genre: ['Education', 'Language Learning'],
@@ -280,7 +301,7 @@ ${faqSectionPlain(LEVEL_TEST_FAQS)}
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de' },
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de/' },
           { '@type': 'ListItem', position: 2, name: 'Podcasts', item: 'https://deutsch-meister.de/podcasts/' },
         ],
       },
@@ -324,7 +345,7 @@ ${faqSectionTailwind(PODCAST_FAQS)}
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de' },
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de/' },
           { '@type': 'ListItem', position: 2, name: 'Listening', item: 'https://deutsch-meister.de/listening/' },
         ],
       },
@@ -350,7 +371,7 @@ ${faqSectionTailwind(PODCAST_FAQS)}
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de' },
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de/' },
           { '@type': 'ListItem', position: 2, name: 'Reading', item: 'https://deutsch-meister.de/reading/' },
         ],
       },

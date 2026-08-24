@@ -3,6 +3,7 @@ export interface Props {
   title: string;
   description: string;
   canonical?: string;
+  ogType?: string;
   ogImage?: string;
   jsonLd?: object | object[];
   noindex?: boolean;
@@ -14,6 +15,7 @@ const {
   title,
   description,
   canonical,
+  ogType = 'website',
   ogImage = 'https://deutsch-meister.de/og-image.png',
   jsonLd,
   noindex = false,
@@ -43,7 +45,7 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     <meta name="theme-color" content="#0f172a" />
 
     <!-- Open Graph -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
