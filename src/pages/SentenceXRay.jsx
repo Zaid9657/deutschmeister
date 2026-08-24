@@ -429,7 +429,7 @@ const SentenceXRay = () => {
   return (
     <div className="min-h-screen bg-slate-50 pt-20 pb-16">
       <SEO
-        title="Sentence X-Ray — Analyze Any German Sentence"
+        title="Sentence X-Ray — Analyze German Sentences"
         description="Paste any German sentence and instantly see the grammatical breakdown. Color-coded cases, word roles, and explanations for why each word works the way it does."
         path="/analyze/"
         keywords="German grammar analyzer, German sentence analysis, German cases, nominative accusative dative genitive, learn German grammar"

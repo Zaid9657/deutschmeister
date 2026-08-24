@@ -275,3 +275,33 @@ test('llms.txt links carry the trailing slash the prerendered routes canonicalis
     );
   }
 });
+
+
+// ---------------------------------------------------------------------------
+// 5. The two head registries must not drift
+// ---------------------------------------------------------------------------
+
+test('prerendered titles match the titles React renders', () => {
+  // scripts/prerender-spa-routes.mjs and src/pages/*.jsx each own a copy of the
+  // same six titles. All six had drifted: the crawler got one title from the
+  // prerendered HTML and Google's renderer got another from Helmet. Nothing
+  // compared them, and check-built-html.mjs only ever sees the prerendered side.
+  const SUFFIX = ' | DeutschMeister';
+  const COMPONENTS = {
+    '/speaking': 'src/pages/SpeakingPage.jsx',
+    '/level-test': 'src/pages/LevelTest.jsx',
+    '/analyze': 'src/pages/SentenceXRay.jsx',
+    '/podcasts': 'src/pages/PodcastsPage.jsx',
+    '/listening': 'src/pages/Listening/ListeningHome.jsx',
+    '/reading': 'src/pages/ReadingSectionPage.jsx',
+  };
+  const prerender = read('scripts/prerender-spa-routes.mjs');
+  const failures = [];
+  for (const [route, file] of Object.entries(COMPONENTS)) {
+    const block = prerender.slice(prerender.indexOf(`path: '${route}'`));
+    const expected = block.match(/title: '([^']+)'/)[1].replace(SUFFIX, '');
+    const actual = read(file).match(/title="([^"]+)"/)[1];
+    if (actual !== expected) failures.push(`${route}: prerender "${expected}" vs component "${actual}"`);
+  }
+  assert.deepEqual(failures, []);
+});

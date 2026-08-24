@@ -168,7 +168,7 @@ const LevelTest = () => {
   return (
     <>
       <SEO
-        title="Free German Level Test | Find Your CEFR Level (A1-B2)"
+        title="Free German Level Test (A1–B2)"
         description="Take our free German level test to discover your CEFR level. Test your reading, listening, and speaking skills in 15 minutes. Instant results with personalized learning recommendations."
         keywords="German level test, CEFR test, German placement test, what level is my German, German proficiency test, free German test"
         path="/level-test/"

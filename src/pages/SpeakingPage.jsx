@@ -332,7 +332,7 @@ const SpeakingPage = () => {
   return (
     <div className="min-h-screen bg-paper pt-16">
       <SEO
-        title="German Speaking Practice with an AI Partner"
+        title="German Speaking Practice with AI"
         description="Practice speaking German with an AI conversation partner: guided missions or free conversation, with instant feedback. Levels A1 to B2."
         path="/speaking/"
       />

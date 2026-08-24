@@ -4,12 +4,16 @@ import '../styles/global.css';
 
 // Astro always emits src/pages/404.astro as /404.html (even with
 // build.format: 'directory'), which Netlify serves for the 404 fallback.
+//
+// No canonical: it used to point at the homepage, which contradicts the noindex
+// on the same page and, if honoured, would consolidate every 404 onto '/'.
+// The noindex alone is the correct and sufficient signal.
 ---
 
 <Layout
   title="Page Not Found (404) | DeutschMeister"
   description="This page doesn't exist or has moved. Explore German grammar lessons from A1 to B2 on DeutschMeister."
-  canonical="https://deutsch-meister.de/"
+  canonical={null}
   noindex={true}
 >
   <div class="min-h-[60vh] flex items-center justify-center px-4 py-20">

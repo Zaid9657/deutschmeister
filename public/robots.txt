@@ -5,47 +5,14 @@
 # llms.txt: https://deutsch-meister.de/llms.txt
 # llms-full.txt: https://deutsch-meister.de/llms-full.txt
 
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: GPTBot
-Allow: /
-
-User-agent: ChatGPT-User
-Allow: /
-
-User-agent: Claude-Web
-Allow: /
-
-User-agent: anthropic-ai
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
-
-User-agent: OAI-SearchBot
-Allow: /
-
-User-agent: Applebot-Extended
-Allow: /
-
-User-agent: CCBot
-Allow: /
-
-User-agent: meta-externalagent
-Allow: /
-
-User-agent: Bytespider
-Allow: /
-
-User-agent: cohere-ai
-Allow: /
+# AI and search crawlers are all welcome — Googlebot, Bingbot, GPTBot,
+# ChatGPT-User, Claude-Web, anthropic-ai, PerplexityBot, Google-Extended,
+# OAI-SearchBot, Applebot-Extended, CCBot, meta-externalagent, Bytespider and
+# cohere-ai included. They used to be listed as 14 separate groups, each with a
+# bare "Allow: /". Per RFC 9309 a crawler obeys ONLY the most specific group that
+# matches it and ignores all others — so every one of those agents matched its own
+# group and never saw the Disallow lines below. The single group grants exactly
+# the same access and makes the exclusions actually bind.
 
 User-agent: *
 Allow: /

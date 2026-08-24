@@ -20,7 +20,7 @@
 //
 // Usage: node scripts/check-built-html.mjs [dist] [--spa-only]
 
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 const args = process.argv.slice(2);
@@ -40,24 +40,63 @@ const MIN_BODY_CHARS = 250; // Below this a page has no reason to be indexed.
  * missing entry is how a page ships unverified, and a missing FILE is how a
  * broken build step ships silently, which is the failure this list catches.
  */
-const MANIFEST = [
-  { path: 'app.html', kind: 'spa', shell: true },
-  { path: 'speaking/index.html', kind: 'spa' },
-  { path: 'level-test/index.html', kind: 'spa' },
-  { path: 'analyze/index.html', kind: 'spa' },
-  { path: 'podcasts/index.html', kind: 'spa' },
-  { path: 'listening/index.html', kind: 'spa' },
-  { path: 'reading/index.html', kind: 'spa' },
-  { path: 'index.html', kind: 'astro' },
-  { path: 'pricing/index.html', kind: 'astro' },
-  { path: 'grammar/index.html', kind: 'astro' },
-  { path: 'vergleich/index.html', kind: 'astro' },
-  { path: 'leitfaden/index.html', kind: 'astro' },
-  { path: 'leitfaden/telc-b1/index.html', kind: 'astro' },
-  { path: 'leitfaden/goethe-b1/index.html', kind: 'astro' },
-  { path: 'leitfaden/telc-b2/index.html', kind: 'astro' },
-  { path: 'leitfaden/dtz/index.html', kind: 'astro' },
+// The six prerendered SPA routes. Everything else built by Astro is discovered.
+const SPA_ROUTES = ['speaking', 'level-test', 'analyze', 'podcasts', 'listening', 'reading'];
+
+/**
+ * Every built page, discovered rather than hand-listed.
+ *
+ * This used to be a 16-entry hand-list, which left the 64 grammar topic pages,
+ * the 8 level hubs and the 3 comparison pages — 75 of the 90 indexable URLs, and
+ * the entire SEO core — unchecked. A hand-list also fails open: forget to add a
+ * route and it ships unverified, silently, which is the opposite of what this
+ * file is for.
+ *
+ * Discovery inverts that. A new page is checked the moment it is built, and the
+ * uniqueness checks below now see the whole site, so two grammar topics can no
+ * longer ship the same <title>.
+ */
+// Discovery alone would fail OPEN: a broken Astro build produces no pages, and a
+// check that only looks at what exists would pass. These must be present in full
+// mode, so a missing build step still fails loudly — the property the old
+// hand-list had and the reason it is kept alongside discovery.
+const REQUIRED = [
+  'app.html',
+  'index.html',
+  'pricing/index.html',
+  'grammar/index.html',
+  'vergleich/index.html',
+  'leitfaden/index.html',
+  'leitfaden/telc-b1/index.html',
+  'leitfaden/goethe-b1/index.html',
+  'leitfaden/telc-b2/index.html',
+  'leitfaden/dtz/index.html',
+  ...SPA_ROUTES.map((r) => `${r}/index.html`),
 ];
+
+function buildManifest() {
+  const entries = [];
+  if (existsSync(join(DIST, 'app.html'))) {
+    entries.push({ path: 'app.html', kind: 'spa', shell: true });
+  }
+  const walk = (dir) => {
+    for (const item of readdirSync(join(DIST, dir), { withFileTypes: true })) {
+      const rel = dir ? `${dir}/${item.name}` : item.name;
+      if (item.isDirectory()) {
+        // _astro/ and assets/ hold build output, not pages
+        if (rel === '_astro' || rel === 'assets') continue;
+        walk(rel);
+      } else if (item.name === 'index.html') {
+        const route = dir.split('/')[0];
+        entries.push({ path: rel, kind: SPA_ROUTES.includes(route) ? 'spa' : 'astro' });
+      }
+    }
+  };
+  walk('');
+  return entries;
+}
+
+const MANIFEST = buildManifest();
 
 /**
  * Strings that must appear on NO page, including noindexed ones.
@@ -128,6 +167,15 @@ const titles = new Map();
 const descriptions = new Map();
 let checked = 0;
 let skipped = 0;
+
+const found = new Set(MANIFEST.map((e) => e.path));
+for (const path of REQUIRED) {
+  if (found.has(path)) continue;
+  // In --spa-only the Astro half is genuinely absent; everything else is a real gap.
+  const isAstro = !path.endsWith('app.html') && !SPA_ROUTES.some((r) => path.startsWith(`${r}/`));
+  if (SPA_ONLY && isAstro) continue;
+  note(fail, path, 'required page is missing from the build');
+}
 
 for (const entry of MANIFEST) {
   const file = join(DIST, entry.path);

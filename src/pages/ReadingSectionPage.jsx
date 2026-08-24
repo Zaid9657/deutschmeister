@@ -190,7 +190,7 @@ const ReadingSectionPage = () => {
   return (
     <>
       <SEO
-        title="German Reading Practice | Graded Lessons A1-B2"
+        title="German Reading Practice A1–B2"
         description="Improve your German reading comprehension with leveled reading passages. Authentic texts with comprehension questions for all CEFR levels from A1 to B2."
         keywords="German reading practice, German reading comprehension, learn German reading, German texts for learners, CEFR reading exercises"
         path="/reading/"

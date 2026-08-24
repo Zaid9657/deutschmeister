@@ -23,7 +23,11 @@ const {
   lang = 'en',
 } = Astro.props;
 
-const canonicalUrl = canonical ?? Astro.url.href;
+// `canonical={null}` means emit none. Only 404.html uses it: the page is served
+// at /404.html and as the fallback body for arbitrary unknown paths, so there is
+// no URL it could honestly point at — it previously claimed the homepage, and
+// self-referencing would claim a /404/ route that does not exist.
+const canonicalUrl = canonical === null ? null : (canonical ?? Astro.url.href);
 const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 ---
 
@@ -40,13 +44,13 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     <title>{title}</title>
     <meta name="description" content={description} />
     {keywords && <meta name="keywords" content={keywords} />}
-    <link rel="canonical" href={canonicalUrl} />
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <meta name="theme-color" content="#0f172a" />
 
     <!-- Open Graph -->
     <meta property="og:type" content={ogType} />
-    <meta property="og:url" content={canonicalUrl} />
+    {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
@@ -162,7 +166,7 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
           <!-- Mobile: CTA + full menu (pure HTML disclosure, no client JS) -->
           <div class="md:hidden flex items-center gap-2">
             <a href="https://deutsch-meister.de/signup" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-teal-600 to-teal-500 text-white text-sm font-semibold">
-              Start
+              Get started
             </a>
             <details class="relative">
               <summary
