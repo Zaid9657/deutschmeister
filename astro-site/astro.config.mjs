@@ -22,9 +22,13 @@ export default defineConfig({
         page.includes('/grammar/') ||
         page.includes('/vergleich') ||
         page.includes('/leitfaden/'),
-      // Freshness signal: every page redeploys with the content it was built
-      // from, so the build date is the honest lastmod.
-      serialize: (item) => ({ ...item, lastmod: new Date().toISOString() }),
+      // No lastmod, deliberately. This used to stamp the BUILD time on every
+      // URL, so each deploy told crawlers all ~85 pages changed — the exact
+      // failure public/sitemap-spa.xml's header argues against ("the fastest
+      // way to teach a crawler to ignore the field"). The honest per-page date
+      // now lives in each page's dateModified schema (from the DB's
+      // updated_at); a sitemap without lastmod is valid and Google discounts
+      // an inaccurate one anyway. Reinstate only with a real per-URL date map.
     }),
   ],
   build: {

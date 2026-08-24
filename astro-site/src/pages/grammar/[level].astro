@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getTopicsForLevel, SUB_LEVELS, LEVEL_META } from '../../lib/grammar.js';
-import { BUILD_DATE, ORGANIZATION } from '../../lib/siteMeta.js';
+import { ORGANIZATION, SITE_PUBLISHED } from '../../lib/siteMeta.js';
 import '../../styles/global.css';
 
 export async function getStaticPaths() {
@@ -29,7 +29,12 @@ const jsonLd = {
   educationalLevel: `CEFR ${meta.label}`,
   learningResourceType: 'Course module',
   isAccessibleForFree: level === 'a1.1',
-  dateModified: BUILD_DATE,
+  // Newest updated_at among the topics this hub lists — the page changes
+  // when its content does, not when the site redeploys.
+  dateModified: topics.reduce((acc, t) => {
+    const d = t.updated_at?.slice(0, 10);
+    return d && d > acc ? d : acc;
+  }, SITE_PUBLISHED),
   publisher: ORGANIZATION,
   mainEntity: {
     '@type': 'ItemList',

@@ -6,7 +6,7 @@ import RichText from '../../../components/RichText.astro';
 import { getAllTopicPaths, getTopicFull, getAllTopics, SUB_LEVELS, LEVEL_META } from '../../../lib/grammar.js';
 import { RELATED_TOPICS } from '../../../lib/relatedTopics.js';
 import { TOPIC_SEO } from '../../../lib/topicSeo.js';
-import { ORGANIZATION, SITE_PUBLISHED, BUILD_DATE } from '../../../lib/siteMeta.js';
+import { ORGANIZATION, SITE_PUBLISHED } from '../../../lib/siteMeta.js';
 import '../../../styles/global.css';
 
 // True when a rule's JSONB content (object, array, or plain string) holds
@@ -140,7 +140,10 @@ const articleSchema = {
   publisher,
   author: publisher,
   datePublished: SITE_PUBLISHED,
-  dateModified: BUILD_DATE,
+  // The topic's own DB timestamp, not the build date: stamping every deploy
+  // claims a freshness the content does not have (see sitemap-spa.xml's
+  // lastmod argument). Falls back to launch for rows without one.
+  dateModified: topic.updated_at?.slice(0, 10) ?? SITE_PUBLISHED,
   educationalLevel: `CEFR ${meta.label}`,
   learningResourceType: 'Lesson',
   educationalUse: 'self-study',
