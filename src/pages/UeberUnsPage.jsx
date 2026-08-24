@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Stethoscope, Target, ShieldCheck, Mic, ScanSearch, Heart, Rocket, Users, BookOpen, Briefcase } from 'lucide-react';
+import { ArrowRight, Stethoscope, Target, ShieldCheck, Mic, ScanSearch, Heart, Users, BookOpen, Briefcase } from 'lucide-react';
 import SEO from '../components/SEO';
 import { trackAboutViewed } from '../lib/funnelTracking';
 import { seoProps } from '../data/seoRoutes.js';

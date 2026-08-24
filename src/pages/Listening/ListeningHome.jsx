@@ -8,7 +8,7 @@ import SEO from '../../components/SEO';
 import { seoProps } from '../../data/seoRoutes.js';
 
 const ListeningHome = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const { levels, loading, error, retry } = useListeningLevels();
   const isGerman = i18n.language === 'de';
 

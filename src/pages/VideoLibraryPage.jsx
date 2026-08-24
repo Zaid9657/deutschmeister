@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import DataState from '../components/DataState';
 import { withTimeout } from '../utils/withTimeout';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { PlayCircle, Play, Loader2, Video } from 'lucide-react';
+import { PlayCircle, Play, Video } from 'lucide-react';
 import { supabase } from '../utils/supabase';
 import { generateThumbnail, getCachedThumbnail } from '../utils/videoThumbnail';
 import SEO from '../components/SEO';

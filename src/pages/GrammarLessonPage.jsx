@@ -779,7 +779,7 @@ export default function GrammarLessonPage() {
             } else if (typeof ex.options === 'string') {
               try {
                 options = JSON.parse(ex.options);
-              } catch (e) {
+              } catch {
                 console.warn('Failed to parse options:', ex.options);
               }
             }

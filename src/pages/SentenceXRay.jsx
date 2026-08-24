@@ -79,12 +79,6 @@ const PREVIEW_WORDS = [
   { text: 'das Buch', case: 'accusative', role: 'direct_object',   translation: 'the book' },
 ];
 
-const TIER_LABELS = {
-  anonymous: 'visitor',
-  free:      'free account',
-  pro:       'Pro',
-};
-
 const ANON_ID_KEY = 'dm_xray_anon_id';
 
 function getOrCreateAnonId() {
@@ -260,7 +254,7 @@ function PreviewExample({ onTryIt }) {
 function UsageBar({ usage, isLoggedIn }) {
   if (!usage || usage.remaining === null) return null;
 
-  const { limit, usedToday, remaining, tier } = usage;
+  const { limit, usedToday, remaining } = usage;
   const pct = Math.min(100, (usedToday / limit) * 100);
   const isLow = remaining <= 1;
 
@@ -284,8 +278,7 @@ function UsageBar({ usage, isLoggedIn }) {
   );
 }
 
-function LimitReachedBanner({ tier, limit, isLoggedIn }) {
-  const tierLabel = TIER_LABELS[tier] || tier;
+function LimitReachedBanner({ limit, isLoggedIn }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: -8 }}
@@ -575,7 +568,6 @@ const SentenceXRay = () => {
               className="mb-6"
             >
               <LimitReachedBanner
-                tier={limitReached.tier}
                 limit={limitReached.limit}
                 isLoggedIn={!!user}
               />

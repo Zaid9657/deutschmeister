@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Trophy, RotateCcw, ArrowLeft, CheckCircle, XCircle, Sparkles } from 'lucide-react';
 import { getPerformanceMessage, getLevelTheme, getAnswerKey } from '../../utils/listeningHelpers';
 import { useTranslation } from 'react-i18next';

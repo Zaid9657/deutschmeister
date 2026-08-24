@@ -1,12 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Trophy, Target, BookOpen, RefreshCw, Headphones, Mic, PenTool, CheckCircle2, XCircle } from 'lucide-react';
+import { Trophy, BookOpen, RefreshCw, Headphones, Mic, PenTool, CheckCircle2, XCircle } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { stepDownSublevel, bandOf } from '../../config/levels';
 
 const LevelTestResults = ({
   answers,
-  skipped,
   questions,
   listeningScore,
   speakingScore,

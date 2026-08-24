@@ -37,11 +37,9 @@ function normalizePlacementLevel(raw) {
   return coarse ? `${coarse}.1` : 'A1.1';
 }
 
-function getNextLevel(current) {
-  const idx = LEVEL_ORDER.indexOf(current);
-  if (idx === -1 || idx >= LEVEL_ORDER.length - 1) return null;
-  return LEVEL_ORDER[idx + 1];
-}
+// The next-level suggestion is deliberately disabled (onNextLevel={undefined}
+// below). Its helper lived here unused; reinstate from git history with the
+// feature itself rather than keeping dead code that lint flags forever.
 
 function euros(cents) {
   if (!cents) return '€0';

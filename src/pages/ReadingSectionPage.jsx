@@ -36,7 +36,7 @@ const iconMap = {
 };
 
 const ReadingSectionPage = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const navigate = useNavigate();
   const { isItemLearned } = useProgress();
   const { getThemeForLevel } = useTheme();

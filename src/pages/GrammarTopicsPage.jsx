@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { ArrowLeft, BookMarked, CheckCircle, Sun, TreePine, Waves, Moon, Loader2 } from 'lucide-react';
+import { ArrowLeft, BookMarked, CheckCircle, Loader2 } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useProgress } from '../contexts/ProgressContext';
 import { levels, levelThemes as contentLevelThemes } from '../data/content';
@@ -21,34 +21,20 @@ const levelSeoDescriptions = {
   'b2.2': 'Advanced German B2.2 grammar: modal particles, functional verb structures, complex sentences, and academic style. 8 free lessons.',
 };
 
-const iconMap = {
-  'a1.1': Sun,
-  'a1.2': Sun,
-  'a2.1': TreePine,
-  'a2.2': TreePine,
-  'b1.1': Waves,
-  'b1.2': Waves,
-  'b2.1': Moon,
-  'b2.2': Moon,
-};
-
 const GrammarTopicsPage = () => {
   const { level } = useParams();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const { setCurrentLevel, getThemeForLevel } = useTheme();
-  const { getGrammarTopicProgress, getGrammarSectionProgress } = useProgress();
+  const { getGrammarTopicProgress } = useProgress();
 
   const [topics, setTopics] = useState([]);
   const [topicsLoading, setTopicsLoading] = useState(true);
 
   const theme = getThemeForLevel(level);
-  const Icon = iconMap[level] || Sun;
   const levelInfo = contentLevelThemes[level] || {};
   const isGerman = i18n.language === 'de';
 
-  // Calculate section progress
-  const sectionProgress = getGrammarSectionProgress ? getGrammarSectionProgress(level) : 0;
   const completedTopics = topics.filter((topic) => {
     const progress = getGrammarTopicProgress ? getGrammarTopicProgress(level, topic.id) : { completed: false };
     return progress.completed;

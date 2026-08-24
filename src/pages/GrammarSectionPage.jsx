@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookMarked, ChevronRight, CheckCircle, Sun, TreePine, Waves, Moon, ChevronDown, Lock, Sparkles } from 'lucide-react';
+import { BookMarked, ChevronRight, CheckCircle, Sun, TreePine, Waves, Moon, ChevronDown, Lock } from 'lucide-react';
 import { useProgress } from '../contexts/ProgressContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -54,9 +54,9 @@ const iconMap = {
 };
 
 const GrammarSectionPage = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const navigate = useNavigate();
-  const { getGrammarSectionProgress, getGrammarTopicProgress } = useProgress();
+  const { getGrammarTopicProgress } = useProgress();
   const { getThemeForLevel } = useTheme();
 
   const isGerman = i18n.language === 'de';

@@ -33,7 +33,7 @@ Adding a `<Route>` in `src/App.jsx` is not enough. Every public SPA route must A
 ```bash
 npm run dev          # SPA dev server
 npm run build        # optimize images + vite build → dist/
-npm run lint         # ESLint 9 flat config — errors fail, legacy warnings tolerated
+npm run lint         # ESLint 9 flat config — zero tolerance: errors AND warnings fail (ratcheted to 0 on 2026-08-24)
 npm run check:duplicates  # SPA/Astro shared data files must stay byte-identical
 npm test             # node --test: claim/pricing, brand, guide and lifecycle guard suites
 npm run build:verify # build + prerender + check the BUILT html (spa-only mode)

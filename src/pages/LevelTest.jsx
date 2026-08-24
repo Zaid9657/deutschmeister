@@ -20,7 +20,7 @@ const LevelTest = () => {
   const [determinedLevel, setDeterminedLevel] = useState('A1');
   const [determinedSublevel, setDeterminedSublevel] = useState('A1.1');
   const [listeningScore, setListeningScore] = useState(null);
-  const [listeningAnswers, setListeningAnswers] = useState([]);
+  const [, setListeningAnswers] = useState([]);
   const [speakingScore, setSpeakingScore] = useState(null);
 
   // Shuffle questions within each level for variety

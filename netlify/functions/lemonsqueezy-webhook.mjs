@@ -243,7 +243,7 @@ function getSubscriptionTier(_variantId) {
 // subscription_payment_success: data is a subscription-invoice, so data.id is the
 // invoice id — the subscription row is keyed by attributes.subscription_id.
 // total is integer cents.
-async function handleSubscriptionPaymentSuccess(data, meta) {
+async function handleSubscriptionPaymentSuccess(data, _meta) {
   const attributes = data?.attributes || {};
   const subscriptionId = String(attributes.subscription_id || '');
 
@@ -461,7 +461,7 @@ async function handleSubscriptionUpdated(data, meta) {
   console.log('Subscription updated:', subscriptionId);
 }
 
-async function handleSubscriptionCancelled(data, meta) {
+async function handleSubscriptionCancelled(data, _meta) {
   const subscriptionId = String(data.id);
   const attributes = data?.attributes || {};
 
@@ -504,7 +504,7 @@ async function handleSubscriptionCancelled(data, meta) {
   console.log('Subscription cancelled:', subscriptionId);
 }
 
-async function handleSubscriptionExpired(data, meta) {
+async function handleSubscriptionExpired(data, _meta) {
   const subscriptionId = String(data.id);
 
   const { data: subscription, error: findError } = await supabase

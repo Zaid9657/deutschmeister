@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import { User, Calendar, BookOpen, MessageSquare, Award, Globe, Trash2, AlertTriangle, Crown, ArrowRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
@@ -144,7 +143,7 @@ const ProfilePage = () => {
           transition={{ delay: 0.2 }}
           className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8"
         >
-          {statCards.map((stat, index) => (
+          {statCards.map((stat) => (
             <div
               key={stat.label}
               className="bg-white rounded-2xl shadow-lg border border-slate-100 p-6"

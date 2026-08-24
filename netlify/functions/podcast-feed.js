@@ -1,6 +1,6 @@
 const { createClient } = require('@supabase/supabase-js');
 
-exports.handler = async (event) => {
+exports.handler = async (_event) => {
   // No hardcoded key fallback. The literal that used to live here was a valid
   // anon JWT good until 2084 — not a disclosure (the same key ships in the SPA
   // bundle), but it silently defeated key rotation: rotating the anon key would

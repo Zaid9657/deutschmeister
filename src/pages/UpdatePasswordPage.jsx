@@ -46,7 +46,7 @@ const UpdatePasswordPage = () => {
         setSuccess(true);
         setTimeout(() => navigate('/login'), 2000);
       }
-    } catch (err) {
+    } catch {
       setError('An unexpected error occurred');
     } finally {
       setLoading(false);

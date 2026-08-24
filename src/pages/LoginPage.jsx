@@ -36,7 +36,7 @@ const LoginPage = () => {
       } else {
         navigate(from, { replace: true });
       }
-    } catch (err) {
+    } catch {
       setError('An unexpected error occurred');
     } finally {
       setLoading(false);

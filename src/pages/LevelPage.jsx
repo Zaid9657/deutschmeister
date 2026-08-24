@@ -110,6 +110,10 @@ const LevelPage = () => {
       load();
     }
     return () => { cancelled = true; };
+    // registerLevelItemCounts comes from ProgressContext and is not memoised
+    // there; depending on it would re-fetch vocab on every provider render.
+    // The effect's real input is `level`.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [level]);
 
   // Fetch grammar topics from Supabase

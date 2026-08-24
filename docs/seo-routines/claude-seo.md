@@ -122,15 +122,15 @@ node scripts/prerender-spa-routes.mjs
 
 Result: 92 `index.html` files + `app.html` + `404.html`.
 
-This also unlocks the check CI has never been able to run:
+Then run the full built-HTML check:
 
 ```bash
 node scripts/check-built-html.mjs dist        # note: NO --spa-only
 ```
 
-CI runs it `--spa-only` because the Astro half needs Supabase egress, so those 9 Astro MANIFEST
-entries are otherwise gated only by the Netlify deploy build. Baseline as of 2026-08-24: **16/16
-pass, 0 warnings.**
+(As of 2026-08-24 CI itself runs this full check on every PR, building the Astro half from the
+committed cache — see `.github/workflows/ci.yml`. The manifest is discovered from `dist/`, ~95
+pages.)
 
 ## Serving it faithfully
 
