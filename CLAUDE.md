@@ -44,9 +44,12 @@ node scripts/evaluate-site.mjs        # route walkthrough + screenshots (playwri
 ```
 
 CI (`.github/workflows/ci.yml`) runs lint + duplicate check + `npm test` + `node --check` on
-functions + the SPA build + prerender + `check-built-html.mjs --spa-only`. The Astro half is
-still not built in CI (needs Supabase creds/egress), so the built-HTML check runs in `--spa-only`
-mode and says so on every run — Netlify's deploy build remains the only gate on the static pages.
+functions + the SPA build + **the Astro build, offline, from the committed
+`grammar-content-cache.json`** + the netlify.toml merge + prerender +
+`check-built-html.mjs` with **no** `--spa-only` — all ~95 pages, closed 2026-08-24. The cache
+carries a `dumpedAt` stamp and CI warns when it is >30 days old; refresh with
+`node scripts/dump-grammar-cache.mjs grammar-content-cache.json` (needs Supabase network). A stale
+cache means CI verifies a snapshot, not the database — the warning exists so that is visible.
 
 ## Conventions & gotchas
 
@@ -186,7 +189,7 @@ mode and says so on every run — Netlify's deploy build remains the only gate o
   `LIFECYCLE_ACTIVATION_ENABLED=true`), and Batch F migrated the in-app chrome and shared
   primitives onto the tokens. Still open: GSC property verification for `deutsch-meister.de` (see
   `docs/seo-routines/README.md` — DataForSEO is working as of 2026-08-24), the ~10 content screens
-  the brand ratchet still counts, `LevelTest.css`, and verifying the Astro half in CI. NOTE: grammar pages already carry
+  the brand ratchet still counts, `LevelTest.css`. (Astro-in-CI closed 2026-08-24 via the committed grammar cache.) NOTE: grammar pages already carry
   `['Article','LearningResource']` schema and Related-Topics links — two earlier claims that
   they were missing were wrong (see the corrections section in the roadmap).
 - **Competitor pricing on `/vergleich/` is stamped "Stand: Mai 2026" and could not be
@@ -203,4 +206,4 @@ mode and says so on every run — Netlify's deploy build remains the only gate o
   `AUDIT-2026-08-16.md` and `REMEDIATION.md`, which supersede much of it.
 - CSP ships as Report-Only — do not promote to enforcing without checking reports.
 - `/privacy/` + `/impressum/` are noindex drafts pending owner legal review.
-- Astro build in CI is possible via `GRAMMAR_CONTENT_CACHE` (see commands above).
+- Astro build in CI runs via the committed `grammar-content-cache.json` (see the CI section above).

@@ -90,6 +90,11 @@ the `.netlify.app` host alike). There is no crawling production from here at all
 `fetch`) cannot run either. The `mcp__Supabase__*` MCP **does** work, so extract the cache through
 it.
 
+**Update 2026-08-24: the cache is now COMMITTED as `grammar-content-cache.json`** (with a
+`dumpedAt` stamp CI reads), so a future session can usually skip the extraction below entirely —
+check its age first, and refresh with `node scripts/dump-grammar-cache.mjs grammar-content-cache.json`
+when Supabase is reachable, or via the MCP extraction below when it is not.
+
 Volume: 1,862 rows / ~1.5 MB across `grammar_topics` (64), `grammar_rules` (453),
 `grammar_examples` (673), `grammar_exercises` (672). That is far too much for one agent context —
 **delegate it to subagents**, one table each, paged into chunk files, then merge. Two things worth
