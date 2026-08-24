@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import SEO from '../components/SEO';
+import { seoProps } from '../data/seoRoutes.js';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../utils/supabase';
 import LevelTestLanding from '../components/LevelTest/LevelTestLanding';
@@ -168,10 +169,7 @@ const LevelTest = () => {
   return (
     <>
       <SEO
-        title="Free German Level Test (A1–B2)"
-        description="Take our free German level test to discover your CEFR level. Test your reading, listening, and speaking skills in 15 minutes. Instant results with personalized learning recommendations."
-        keywords="German level test, CEFR test, German placement test, what level is my German, German proficiency test, free German test"
-        path="/level-test/"
+        {...seoProps('/level-test')}
         structuredData={[
           {
             "@context": "https://schema.org",

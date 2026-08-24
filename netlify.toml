@@ -248,14 +248,9 @@
   status = 200
 # /pricing is now a static Astro file in dist/pricing/ — Netlify serves that
 # real file before any non-forced rewrite, so no SPA rule is needed for it.
-[[redirects]]
-  from = "/faq"
-  to = "/app.html"
-  status = 200
-[[redirects]]
-  from = "/ueber-uns"
-  to = "/app.html"
-  status = 200
+# /faq and /ueber-uns are prerendered static files now (dist/faq/index.html,
+# dist/ueber-uns/index.html) — Netlify serves the real file before any unforced
+# rewrite and 301s the slash-less form, same as /pricing. No SPA rule needed.
 [[redirects]]
   from = "/podcasts"
   to = "/app.html"

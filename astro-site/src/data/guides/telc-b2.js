@@ -217,7 +217,7 @@ export const telcB2 = {
       blocks: [
         {
           type: 'p',
-          text: 'B2 verlangt Menge und Regelmäßigkeit — vor allem beim Hören und Sprechen. Dafür ist die Plattform gebaut:',
+          text: 'B2 verlangt Menge und Regelmäßigkeit — vor allem beim Hören und Sprechen. Deutschmeister wurde von einem Team von Ärzten in Deutschland gebaut, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind — und dafür ist die Plattform gebaut:',
         },
         {
           type: 'cards',

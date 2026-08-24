@@ -221,7 +221,7 @@ export const goetheB1 = {
       blocks: [
         {
           type: 'p',
-          text: 'Weil die Module einzeln bestanden werden müssen, braucht die Vorbereitung eine Diagnose und dann gezieltes Training pro Fertigkeit. Genau so ist die Plattform aufgebaut:',
+          text: 'Weil die Module einzeln bestanden werden müssen, braucht die Vorbereitung eine Diagnose und dann gezieltes Training pro Fertigkeit. Genau so ist Deutschmeister aufgebaut — von einem Team von Ärzten in Deutschland, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind:',
         },
         {
           type: 'cards',

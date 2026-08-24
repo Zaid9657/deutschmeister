@@ -238,7 +238,7 @@ export const telcB1 = {
       blocks: [
         {
           type: 'p',
-          text: 'Deutschmeister wurde von einem Arzt in Deutschland gebaut, der selbst Sprachprüfungen bestehen musste. Die Plattform ist kein Spiel — sie ist ein Werkzeug für Leute, die eine Prüfung bestehen müssen. So passt sie zur telc B1 Vorbereitung:',
+          text: 'Deutschmeister wurde von einem Team von Ärzten in Deutschland gebaut, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind. Die Plattform ist kein Spiel — sie ist ein Werkzeug für Leute, die eine Prüfung bestehen müssen. So passt sie zur telc B1 Vorbereitung:',
         },
         {
           type: 'cards',

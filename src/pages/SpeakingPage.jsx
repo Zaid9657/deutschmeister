@@ -8,6 +8,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { supabase, getAuthHeaders } from '../utils/supabase';
 import SEO from '../components/SEO';
+import { seoProps } from '../data/seoRoutes.js';
 import { getConfigForLevel } from '../constants/speakingPrompts';
 import { checkSpeakingSupport } from '../components/speaking/mediaSupport';
 import SpeakingSession from '../components/speaking/SpeakingSession';
@@ -332,9 +333,7 @@ const SpeakingPage = () => {
   return (
     <div className="min-h-screen bg-paper pt-16">
       <SEO
-        title="German Speaking Practice with AI"
-        description="Practice speaking German with an AI conversation partner: guided missions or free conversation, with instant feedback. Levels A1 to B2."
-        path="/speaking/"
+        {...seoProps('/speaking')}
       />
 
       <div className="max-w-lg mx-auto px-4 sm:px-6 py-6 sm:py-10">

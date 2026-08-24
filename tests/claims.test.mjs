@@ -268,7 +268,7 @@ test('llms.txt links carry the trailing slash the prerendered routes canonicalis
   // CLAUDE.md trailing-slash case 2. The slashless form 301s, so every AI crawler
   // following this file took a redirect on six of its product URLs.
   const body = read('public/llms.txt');
-  for (const route of ['level-test', 'speaking', 'analyze', 'podcasts', 'listening', 'reading']) {
+  for (const route of ['level-test', 'speaking', 'analyze', 'podcasts', 'listening', 'reading', 'faq', 'ueber-uns']) {
     assert.ok(
       !new RegExp(`https://deutsch-meister\\.de/${route}(?![/\\w-])`).test(body),
       `llms.txt links /${route} without the trailing slash, which 301s`,
@@ -281,12 +281,13 @@ test('llms.txt links carry the trailing slash the prerendered routes canonicalis
 // 5. The two head registries must not drift
 // ---------------------------------------------------------------------------
 
-test('prerendered titles match the titles React renders', () => {
-  // scripts/prerender-spa-routes.mjs and src/pages/*.jsx each own a copy of the
-  // same six titles. All six had drifted: the crawler got one title from the
-  // prerendered HTML and Google's renderer got another from Helmet. Nothing
-  // compared them, and check-built-html.mjs only ever sees the prerendered side.
-  const SUFFIX = ' | DeutschMeister';
+test('both head consumers read from the one registry', () => {
+  // src/data/seoRoutes.js is the single source for per-route titles and
+  // descriptions. Before it existed the prerender script and the <SEO> calls
+  // each held a copy: all six titles drifted, and when a title guard landed,
+  // four descriptions were still drifting underneath it. This asserts the
+  // pattern, not the strings: each consumer must reference the registry and
+  // must not re-declare the fields it covers.
   const COMPONENTS = {
     '/speaking': 'src/pages/SpeakingPage.jsx',
     '/level-test': 'src/pages/LevelTest.jsx',
@@ -294,14 +295,20 @@ test('prerendered titles match the titles React renders', () => {
     '/podcasts': 'src/pages/PodcastsPage.jsx',
     '/listening': 'src/pages/Listening/ListeningHome.jsx',
     '/reading': 'src/pages/ReadingSectionPage.jsx',
+    '/faq': 'src/pages/FAQPage.jsx',
+    '/ueber-uns': 'src/pages/UeberUnsPage.jsx',
   };
-  const prerender = read('scripts/prerender-spa-routes.mjs');
   const failures = [];
   for (const [route, file] of Object.entries(COMPONENTS)) {
-    const block = prerender.slice(prerender.indexOf(`path: '${route}'`));
-    const expected = block.match(/title: '([^']+)'/)[1].replace(SUFFIX, '');
-    const actual = read(file).match(/title="([^"]+)"/)[1];
-    if (actual !== expected) failures.push(`${route}: prerender "${expected}" vs component "${actual}"`);
+    const src = read(file);
+    if (!src.includes(`seoProps('${route}')`)) failures.push(`${file}: does not spread seoProps('${route}')`);
+    if (/<SEO[^>]*\stitle="/.test(src)) failures.push(`${file}: re-declares a literal title on <SEO>`);
+    if (/<SEO[\s\S]{0,400}?\sdescription="/.test(src)) failures.push(`${file}: re-declares a literal description on <SEO>`);
   }
+  const prerender = read('scripts/prerender-spa-routes.mjs');
+  for (const route of Object.keys(COMPONENTS)) {
+    if (!prerender.includes(`...head('${route}')`)) failures.push(`prerender-spa-routes.mjs: route ${route} does not spread head()`);
+  }
+  if (/\n\s{4}title: '/.test(prerender)) failures.push('prerender-spa-routes.mjs: a route re-declares a literal title');
   assert.deepEqual(failures, []);
 });

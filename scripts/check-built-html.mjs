@@ -41,7 +41,7 @@ const MIN_BODY_CHARS = 250; // Below this a page has no reason to be indexed.
  * broken build step ships silently, which is the failure this list catches.
  */
 // The six prerendered SPA routes. Everything else built by Astro is discovered.
-const SPA_ROUTES = ['speaking', 'level-test', 'analyze', 'podcasts', 'listening', 'reading'];
+const SPA_ROUTES = ['speaking', 'level-test', 'analyze', 'podcasts', 'listening', 'reading', 'faq', 'ueber-uns'];
 
 /**
  * Every built page, discovered rather than hand-listed.

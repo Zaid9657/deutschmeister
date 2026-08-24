@@ -229,7 +229,7 @@ export const dtz = {
       blocks: [
         {
           type: 'p',
-          text: 'Der DTZ prüft Alltagssprache in vier Bereichen, die einzeln bewertet werden. Genau dafür lässt sich gezielt üben:',
+          text: 'Der DTZ prüft Alltagssprache in vier Bereichen, die einzeln bewertet werden. Genau dafür lässt sich gezielt üben — mit einer Plattform, die von einem Team von Ärzten in Deutschland gebaut wurde, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind:',
         },
         {
           type: 'cards',

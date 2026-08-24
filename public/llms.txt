@@ -30,6 +30,8 @@
 - Podcasts: https://deutsch-meister.de/podcasts/
 - Listening: https://deutsch-meister.de/listening/
 - Reading: https://deutsch-meister.de/reading/
+- FAQ (German): https://deutsch-meister.de/faq/
+- About (German): https://deutsch-meister.de/ueber-uns/
 - Exam guides hub (German): https://deutsch-meister.de/leitfaden/
 - telc B1 exam guide (German): https://deutsch-meister.de/leitfaden/telc-b1/
 - telc B2 exam guide (German): https://deutsch-meister.de/leitfaden/telc-b2/

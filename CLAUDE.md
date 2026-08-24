@@ -60,11 +60,13 @@ mode and says so on every run — Netlify's deploy build remains the only gate o
 - **Trailing slashes** — three cases, get them right or every link 301-hops:
   1. **Astro pages** always end in `/` (`trailingSlash: 'always'`).
   2. **Prerendered SPA routes** (`/analyze`, `/level-test`, `/speaking`, `/podcasts`,
-     `/listening`, `/reading`) also end in `/`. `scripts/prerender-spa-routes.mjs`
+     `/listening`, `/reading`, `/faq`, `/ueber-uns`) also end in `/`. `scripts/prerender-spa-routes.mjs`
      writes `dist/<route>/index.html` and canonicalises to the slash form, and
      `public/sitemap-spa.xml` matches — so links to them must carry the slash too.
-  3. **Every other SPA route** (`/faq`, `/ueber-uns`, `/dashboard`, `/level/:level`…)
+  3. **Every other SPA route** (`/dashboard`, `/profile`, `/level/:level`…)
      has **no** slash; it is served by a `netlify.toml` rewrite to `/app.html`.
+     (`/faq` and `/ueber-uns` moved to case 2 on 2026-08-24 when they were
+     prerendered.)
 - **Duplicated on purpose** (until refactor): `competitorComparisons.js`, `pricing.js` and
   `marketing.js` under `src/data/` + `astro-site/src/data/` (all byte-identical, CI-guarded by
   `scripts/check-duplicates.mjs`), grammar rule rendering (SPA stages vs `RuleContent.astro`),

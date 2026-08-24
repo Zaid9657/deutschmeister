@@ -63,4 +63,16 @@
        belong here. /intro, /video-library, /vocabulary and the /listening/<level>
        pages were removed — they ship an empty #root to crawlers, so listing them
        submitted blank pages to Google. Re-add a URL only once it is prerendered. -->
+  <url>
+    <loc>https://deutsch-meister.de/faq/</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://deutsch-meister.de/ueber-uns/</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
 </urlset>

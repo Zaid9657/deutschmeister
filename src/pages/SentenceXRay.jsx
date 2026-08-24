@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Scan, ArrowRight, Loader2, AlertCircle, ChevronDown, ChevronUp, Type, Sparkles, Eye, Crown } from 'lucide-react';
 import SEO from '../components/SEO';
+import { seoProps } from '../data/seoRoutes.js';
 import { useAuth } from '../contexts/AuthContext';
 import { getAuthHeaders } from '../utils/supabase';
 import { TRIAL_DAILY_LIMIT, PRO_DAILY_LIMIT } from '../config/limits';
@@ -429,10 +430,7 @@ const SentenceXRay = () => {
   return (
     <div className="min-h-screen bg-slate-50 pt-20 pb-16">
       <SEO
-        title="Sentence X-Ray — Analyze German Sentences"
-        description="Paste any German sentence and instantly see the grammatical breakdown. Color-coded cases, word roles, and explanations for why each word works the way it does."
-        path="/analyze/"
-        keywords="German grammar analyzer, German sentence analysis, German cases, nominative accusative dative genitive, learn German grammar"
+        {...seoProps('/analyze')}
         structuredData={{
           "@context": "https://schema.org",
           "@type": "WebApplication",

@@ -7,6 +7,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { isLevelFree } from '../config/freeTier';
 import SEO from '../components/SEO';
+import { seoProps } from '../data/seoRoutes.js';
 import DataState from '../components/DataState';
 
 const LEVEL_INFO = {
@@ -79,10 +80,7 @@ const PodcastsPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-20 pb-16">
       <SEO
-        title="German Podcasts for Learners A1–B2"
-        description="Free German podcasts designed for learners. 24 episodes of native-speaker audio for levels A1 to B2. Improve your German listening skills while commuting or relaxing."
-        keywords="German podcast for beginners, learn German podcast, German listening practice, German audio lessons"
-        path="/podcasts/"
+        {...seoProps('/podcasts')}
         structuredData={[
           {
             "@context": "https://schema.org",

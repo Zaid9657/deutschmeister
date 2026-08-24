@@ -11,6 +11,7 @@ import { isLevelFree } from '../config/freeTier';
 import { mainLevels, getSubLevels, levelThemes as contentLevelThemes } from '../data/content';
 import { getReadingLessonCounts, getReadingLessonsByLevel } from '../services/readingService';
 import SEO from '../components/SEO';
+import { seoProps } from '../data/seoRoutes.js';
 import { READING_LESSON_COUNTS_BY_LEVEL } from '../data/marketing';
 
 // Measured against reading_lessons (2026-08-24), not interpolated — the old
@@ -190,10 +191,7 @@ const ReadingSectionPage = () => {
   return (
     <>
       <SEO
-        title="German Reading Practice A1–B2"
-        description="Improve your German reading comprehension with leveled reading passages. Authentic texts with comprehension questions for all CEFR levels from A1 to B2."
-        keywords="German reading practice, German reading comprehension, learn German reading, German texts for learners, CEFR reading exercises"
-        path="/reading/"
+        {...seoProps('/reading')}
         structuredData={{
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
