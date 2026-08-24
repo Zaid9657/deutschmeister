@@ -24,6 +24,8 @@ export const goetheB1 = {
   lead:
     'Das <strong>Goethe-Zertifikat B1</strong> hat eine Eigenschaft, die keine andere große B1-Prüfung so bietet: Du kannst die vier Module einzeln ablegen und einzeln wiederholen. Das ändert die Vorbereitung grundlegend — richtig genutzt, ist es der größte strategische Vorteil dieser Prüfung. Dieser Leitfaden zeigt dir den Aufbau, die Punktegrenzen und einen Lernplan, der die Modulstruktur ausnutzt.',
   datePublished: '2026-08-22',
+  answer:
+    'Das Goethe-Zertifikat B1 besteht aus vier Modulen: Lesen, Hören, Schreiben und Sprechen. In jedem Modul sind maximal 100 Punkte erreichbar, bestanden ist ein Modul ab 60 Punkten, also 60 %. Die Module lassen sich einzeln ablegen und einzeln wiederholen, und zwischen ihnen wird nicht verrechnet: 95 Punkte im Lesen retten kein Schreiben mit 55 Punkten.',
   factsCheckedOn: '2026-08-22',
   sources: [{ label: 'Goethe-Institut', url: 'https://www.goethe.de/de/spr/prf/gzb1.html' }],
 

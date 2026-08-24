@@ -55,8 +55,13 @@ const others = GUIDES.filter((g) => g.slug !== guide.slug);
           {guide.h1}
         </h1>
         <p class="mt-5 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.125rem]" set:html={guide.lead} />
+        {guide.answer && (
+          <div class="mt-6 rounded-lg border border-rule bg-paper-sunk p-5">
+            <p class="text-[1.0625rem] leading-relaxed text-ink">{guide.answer}</p>
+          </div>
+        )}
         <p class="mt-5 font-data text-[0.75rem] text-graphite">
-          Lesezeit ca. {minutes} Minuten · Zuletzt aktualisiert: {de(BUILD_DATE)}
+          Lesezeit ca. {minutes} Minuten · Fakten geprüft am {de(guide.factsCheckedOn)}
         </p>
       </header>
 
