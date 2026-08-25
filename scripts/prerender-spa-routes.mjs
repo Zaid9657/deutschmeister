@@ -33,7 +33,7 @@ import {
 // genuinely per-surface: the JSON-LD (deliberately diverged from the client
 // blocks) and the static #root copy.
 import { SEO_ROUTES, fullTitle } from '../src/data/seoRoutes.js';
-import { ORG_REF, ORG_ID } from '../src/data/organization.js';
+import { ORG_REF, ORGANIZATION_FULL } from '../src/data/organization.js';
 import { FAQ_CATEGORIES, faqPageJsonLd } from '../src/data/faqContent.js';
 
 const head = (route) => {
@@ -463,16 +463,11 @@ ${faqSectionTailwind(PODCAST_FAQS)}
     dir: 'ueber-uns',
     ...head('/ueber-uns'),
     jsonLd: [
-      {
-        '@context': 'https://schema.org',
-        '@type': 'Organization',
-        '@id': ORG_ID,
-        name: 'DeutschMeister',
-        url: 'https://deutsch-meister.de',
-        founder: { '@type': 'Person', name: 'Zaid', jobTitle: 'Arzt & Gründer' },
-        foundingDate: '2024',
-        description: 'KI-gestützte Plattform zum Deutschlernen — Sprechtraining, Grammatik und Prüfungsvorbereitung von A1 bis B2. Entwickelt von einem Team von Ärzten in Deutschland.',
-      },
+      // organization.js says the entity is introduced on the homepage and here,
+      // so emit the shared node verbatim rather than a near-copy: UeberUnsPage
+      // renders the same constant, which keeps the prerendered node and the
+      // hydrated one one entity instead of two descriptions of one org.
+      { '@context': 'https://schema.org', ...ORGANIZATION_FULL },
       {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
@@ -633,7 +628,7 @@ shellOut = mustReplace(shellOut, /(<meta property="og:locale:alternate" content=
 // the right tag once rendered.
 shellOut = mustReplace(
   shellOut,
-  /\s*<link rel="canonical" href="[^"]*">/,
+  /\s*<link rel="canonical" href="[^"]*"(?: data-rh="true")?>/,
   '',
   'canonical removal',
   'app.html',

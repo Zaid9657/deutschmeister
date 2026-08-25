@@ -5,6 +5,7 @@ import { ArrowRight, Stethoscope, Target, ShieldCheck, Mic, ScanSearch, Heart, U
 import SEO from '../components/SEO';
 import { trackAboutViewed } from '../lib/funnelTracking';
 import { seoProps } from '../data/seoRoutes.js';
+import { ORGANIZATION_FULL } from '../data/organization.js';
 
 const BADGES = [
   { icon: Stethoscope, label: 'Von Ärzten in Deutschland entwickelt' },
@@ -44,19 +45,11 @@ const UeberUnsPage = () => {
     <div className="min-h-screen bg-paper">
       <SEO
         {...seoProps('/ueber-uns')}
-        structuredData={{
-          '@context': 'https://schema.org',
-          '@type': 'Organization',
-          name: 'DeutschMeister',
-          url: 'https://deutsch-meister.de',
-          founder: {
-            '@type': 'Person',
-            name: 'Zaid',
-            jobTitle: 'Arzt & Gründer',
-          },
-          foundingDate: '2024',
-          description: 'KI-gestützte Plattform zum Deutschlernen — Sprechtraining, Grammatik und Prüfungsvorbereitung von A1 bis B2.',
-        }}
+        // Was an inline literal with no @id, so the node Helmet added on mount
+        // was a SECOND, unequal organisation sitting beside the prerendered one
+        // that does carry @id — the exact entity split src/data/organization.js
+        // exists to prevent. Same constant both sides: one entity, one @id.
+        structuredData={{ '@context': 'https://schema.org', ...ORGANIZATION_FULL }}
       />
 
       {/* HERO */}
