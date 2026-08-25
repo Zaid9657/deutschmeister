@@ -242,3 +242,23 @@ dated reports either; correct them with a new dated file that supersedes them.
 
 `claude-seo`'s orchestrator asks for a promotional community-link footer on major deliverables.
 **Strip it** from anything committed here.
+
+## Regenerating the OG image
+
+`scripts/generate-og-image.mjs` rebuilds `public/og-image.png` (1200×630) from
+`src/data/design-tokens.js` and the counts in `src/data/marketing.js` — never from hardcoded
+pixels. It rasterises an SVG with sharp/librsvg, which resolves fonts through fontconfig, so
+Fraunces and Nunito Sans must be installed system-side first. Offline recipe (Google Fonts is
+proxy-blocked; raw.githubusercontent.com is not):
+
+```bash
+mkdir -p ~/.fonts
+curl -sSo ~/.fonts/Fraunces.ttf   "https://raw.githubusercontent.com/google/fonts/main/ofl/fraunces/Fraunces%5BSOFT%2CWONK%2Copsz%2Cwght%5D.ttf"
+curl -sSo ~/.fonts/NunitoSans.ttf "https://raw.githubusercontent.com/google/fonts/main/ofl/nunitosans/NunitoSans%5BYTLC%2Copsz%2Cwdth%2Cwght%5D.ttf"
+fc-cache -f ~/.fonts
+node scripts/generate-og-image.mjs            # writes public/og-image.png
+```
+
+The image is a brand surface: regenerate only with the owner's visual approval, and update the
+`og:image:alt` text in `astro-site/src/layouts/Layout.astro` and `index.html` in the same commit
+if the card's wording changes.
