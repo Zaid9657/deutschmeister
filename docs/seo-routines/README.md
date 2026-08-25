@@ -163,3 +163,21 @@ date,query,source,ai_answer_present,deutschmeister_cited,position,cited_competit
 Reports land beside it as `drafts/geo-report-<date>.md`, and blocked runs as
 `drafts/seo-BLOCKED-<date>.md`. Never rewrite history in the CSV — a wrong past row is corrected by
 a new row plus a note in that run's report, so the trend stays auditable.
+
+## The Zapier route (discovered 2026-08-23)
+
+There are not two routes to DataForSEO but three, and the third is the only one that has ever
+produced real data in this account's history: **the "DataForSEO" Zapier app**, reachable from any
+agent session with the Zapier MCP connected. The sibling MedMeister repo's README says it
+outright — its `.mcp.json` MCP route never worked, and *"every cycle that produced real DataForSEO
+data got it through a Zapier connection instead."*
+
+| Route | State for this repo (2026-08-23) |
+|---|---|
+| `.mcp.json` MCP server | dead — `api.dataforseo.com` still 403s at the proxy |
+| Direct HTTPS | dead — same policy |
+| **Zapier app "DataForSEO"** | **connected** (25 actions: search volume, keyword suggestions/difficulty, parsed SERP, ranked keywords, domain rank, backlinks, LLM-mentions) — but calls currently fail with `insufficient tasks on account`; see `drafts/seo-BLOCKED-2026-08-23.md` for the diagnosis and the owner fix |
+
+When running these routines, check the Zapier route FIRST (`inspect_zapier_actions` → app
+"DataForSEO"), and treat `insufficient tasks on account` as a connection-identity question before
+a billing one — that string has already mis-diagnosed itself once in the sibling repo.
