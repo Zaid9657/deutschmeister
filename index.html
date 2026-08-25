@@ -13,27 +13,43 @@
          byte-identical duplicates with no robots signal at all. The prerender
          strips this tag from the routes that ARE meant to be indexed. -->
     <meta name="robots" content="noindex">
-    <meta name="description" content="Master German grammar across 64 topics, A1.1 to B2.2. Clear English explanations, audio examples and interactive exercises.">
-    <meta name="keywords" content="learn German, German grammar, German vocabulary, German lessons, German for beginners, CEFR German, German cases, German verbs">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://deutsch-meister.de/">
-    <meta property="og:title" content="DeutschMeister - Learn German Grammar from A1 to B2 | 64 Topics">
-    <meta property="og:description" content="Master German grammar across 64 topics, A1.1 to B2.2. Clear English explanations, audio examples and interactive exercises.">
-    <meta property="og:image" content="https://deutsch-meister.de/og-image.png">
+    <!-- data-rh="true" on the tags below is load-bearing, not decoration.
+         react-helmet-async (3.0.0) only reconciles head tags carrying its own
+         marker: on mount it collects meta[data-rh], keeps the ones isEqualNode
+         matches, removes the rest, and appends whatever is left over. Static
+         tags without the marker are invisible to it, so it APPENDED its copy
+         beside each of these and every hydrated route shipped two
+         <meta name="description">, two twitter:card, and so on. Measured live
+         on 2026-08-25 via DataForSEO: /faq/ carried six duplicated tags.
+         Stamp exactly the set src/components/SEO.jsx re-renders. Three
+         deliberate exclusions, each of which would DELETE a live tag:
+           robots                    — conditional in SEO.jsx, so on the many
+                                       routes that never pass noindex Helmet
+                                       would strip the shell's noindex below;
+           og:image:width/height/alt — SEO.jsx never emits them;
+           the ld+json blocks        — WebSite/Organization are not re-rendered.
+         Adding a tag to SEO.jsx means stamping its twin here. -->
+    <meta name="description" content="Master German grammar across 64 topics, A1.1 to B2.2. Clear English explanations, audio examples and interactive exercises." data-rh="true">
+    <meta name="keywords" content="learn German, German grammar, German vocabulary, German lessons, German for beginners, CEFR German, German cases, German verbs" data-rh="true">
+    <meta property="og:type" content="website" data-rh="true">
+    <meta property="og:url" content="https://deutsch-meister.de/" data-rh="true">
+    <meta property="og:title" content="DeutschMeister - Learn German Grammar from A1 to B2 | 64 Topics" data-rh="true">
+    <meta property="og:description" content="Master German grammar across 64 topics, A1.1 to B2.2. Clear English explanations, audio examples and interactive exercises." data-rh="true">
+    <meta property="og:image" content="https://deutsch-meister.de/og-image.png" data-rh="true">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="The Meister-Siegel seal beside the words “Learn German grammar, listening and speaking — A1 to B2”">
-    <meta property="og:site_name" content="DeutschMeister">
+    <meta property="og:site_name" content="DeutschMeister" data-rh="true">
     <!-- The SPA shell and every prerendered route render English (<html lang="en">).
          The prerender script also rewrites these per route, but the source should
          match so dev and preview agree with production. -->
-    <meta property="og:locale" content="en_US">
-    <meta property="og:locale:alternate" content="de_DE">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="DeutschMeister - Learn German Grammar from A1 to B2 | 64 Topics">
-    <meta name="twitter:description" content="Master German grammar across 64 topics, A1.1 to B2.2. Clear English explanations, audio examples and interactive exercises.">
-    <meta name="twitter:image" content="https://deutsch-meister.de/og-image.png">
-    <link rel="canonical" href="https://deutsch-meister.de/">
+    <meta property="og:locale" content="en_US" data-rh="true">
+    <meta property="og:locale:alternate" content="de_DE" data-rh="true">
+    <meta name="twitter:card" content="summary_large_image" data-rh="true">
+    <meta name="twitter:title" content="DeutschMeister - Learn German Grammar from A1 to B2 | 64 Topics" data-rh="true">
+    <meta name="twitter:description" content="Master German grammar across 64 topics, A1.1 to B2.2. Clear English explanations, audio examples and interactive exercises." data-rh="true">
+    <meta name="twitter:image" content="https://deutsch-meister.de/og-image.png" data-rh="true">
+    <link rel="canonical" href="https://deutsch-meister.de/" data-rh="true">
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",

@@ -145,6 +145,15 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   parsed out of the Netlify functions that enforce them and compared. That last check is what
   caught `lemonsqueezy.js` advertising "5 speaking sessions per month" against a server that has
   always granted 30.
+- **Static head tags need `data-rh="true"` or Helmet duplicates them.** react-helmet-async
+  only reconciles tags carrying its marker; an unstamped static tag is invisible to it, so on
+  mount it appends its own copy and the hydrated page ships two. `index.html` stamps exactly
+  the set `src/components/SEO.jsx` re-renders. The inverse is the dangerous half: stamping a
+  tag SEO.jsx does NOT render makes Helmet **delete** it — which is why `robots` (conditional,
+  so most routes would strip the shell's noindex), `og:image:width/height/alt` and the
+  WebSite/Organization JSON-LD are deliberately unstamped. `tests/head-tags.test.mjs` pins both
+  directions. Note this is only observable AFTER hydration — the served HTML is clean, so a
+  `dist/` grep cannot see it; check with a browser.
 - **`<head>` and headings must be verified against `dist/`, not the source.** The prerendered SPA
   routes get their title/canonical/visible copy injected at build time by
   `scripts/prerender-spa-routes.mjs`, so reading the source tells you what the injector intends,
