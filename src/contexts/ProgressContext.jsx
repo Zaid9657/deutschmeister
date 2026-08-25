@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth } from './AuthContext';
-import { supabase } from '../utils/supabase';
 import { safeGetJSON, safeSetJSON } from '../utils/safeStorage';
 import { vocabulary, sentences, grammar, levels } from '../data/content';
 import { getTopicsForLevel } from '../data/grammarTopics';
@@ -50,6 +49,10 @@ export const ProgressProvider = ({ children }) => {
       }
       setLoading(false);
     }
+    // loadProgress is intentionally not a dependency: it is re-created every
+    // render (not memoised) and closes only over `user`, which IS the
+    // dependency — adding the function would re-run the fetch on every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const loadProgress = async () => {

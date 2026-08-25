@@ -120,13 +120,6 @@ const RETIRED_CTA = 'from-amber-500 to-rose-500';
  * to-rose-500` sailed past it. Tailwind emitting `.from-amber-500` into the
  * built CSS is what exposed that — the source of truth was the artifact, not
  * the grep.
- *
- * 2026-08-23: WIDENED from gradient stops to ANY amber/rose utility. The old
- * pattern required a `from-`/`via-`/`to-` prefix, so a plain border, text or
- * background in the retired palette was invisible to it — which is how
- * ProtectedRoute.jsx kept a retired amber border-top through the whole
- * migration while both ratchets reported clean. Widening the lens moved the
- * count from 10 files to 22; see MAX_RETIRED_STOP_FILES.
  */
 const RETIRED_STOP = /-(?:amber|rose)-\d{2,3}\b/;
 
@@ -144,8 +137,9 @@ const APP_CHROME = [
   'src/components/SubscriptionGuard.jsx',
   'src/components/LevelSubscriptionGuard.jsx',
   // The other three gates. CLAUDE.md has always said this ban covers "the
-  // guards", but the list only ever held the two above — so ProtectedRoute
-  // kept a retired-brand spinner, and rendered it on four routes, unseen.
+  // guards", but the list only ever held the two above — which is how
+  // ProtectedRoute kept a retired-brand spinner, rendered on four routes,
+  // while both ratchets reported clean.
   'src/components/ProtectedRoute.jsx',
   'src/components/EmailVerificationGate.jsx',
   'src/components/onboarding/OnboardingGate.jsx',
@@ -210,17 +204,24 @@ const MAX_LEGACY_CTA_FILES = 0;
  * Files still carrying ANY retired-brand colour. May only go down.
  *
  * 2026-08-22: 10, under the old gradient-stop-only regex.
- * 2026-08-23: 21, under the widened regex above. The jump is a WIDER LENS, not
- * a regression — nothing spread. Two thirds of the retired palette lived in
- * plain `text-`/`bg-`/`border-` utilities that the old pattern could not see,
- * so "10" was never the real number. Widening found 22; ProtectedRoute.jsx was
- * migrated in the same commit, leaving 21.
+ * 2026-08-24: 0 — those ten migrated onto the tokens (flat siegel CTAs,
+ *   siegel-wash cards, no resting shadows; A1's level ramp off its amber stop).
+ *   Real work, and it is why the number below is 16 rather than 22.
+ * 2026-08-25: 16, under the WIDENED regex above.
  *
- * 21 is the ceiling now and may only go down: the level/listening components
- * and the grammar, reading, speaking, account, X-Ray, subscription, vocabulary
- * and video-library screens. None were in the August migration's scope.
+ * That 0 was zero under a lens that could not see the thing it was measuring.
+ * The old pattern required a `from-`/`via-`/`to-` prefix, so a plain `text-`,
+ * `bg-` or `border-` utility in the retired palette was invisible to it — which
+ * is how ProtectedRoute.jsx kept a retired amber border-top, rendered on four
+ * routes, while the ratchet read 0 and APP_CHROME (which never listed the file)
+ * agreed. That file is migrated now and is in the list above.
+ *
+ * So 16 is not a regression against 0; it is the first honest count. Nothing
+ * spread — the lens widened. 16 is the ceiling and may only go down: the
+ * level/listening components and the grammar, reading, speaking, account,
+ * X-Ray, subscription and video-library screens.
  */
-const MAX_RETIRED_STOP_FILES = 21;
+const MAX_RETIRED_STOP_FILES = 16;
 
 test('the retired CTA is receding, never spreading', () => {
   const files = [];

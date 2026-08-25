@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Scan, ArrowRight, Loader2, AlertCircle, ChevronDown, ChevronUp, Type, Sparkles, Eye, Crown } from 'lucide-react';
 import SEO from '../components/SEO';
+import { seoProps } from '../data/seoRoutes.js';
 import { useAuth } from '../contexts/AuthContext';
 import { getAuthHeaders } from '../utils/supabase';
 import { TRIAL_DAILY_LIMIT, PRO_DAILY_LIMIT } from '../config/limits';
@@ -77,12 +78,6 @@ const PREVIEW_WORDS = [
   { text: 'dir',      case: 'dative',     role: 'indirect_object', translation: 'to you' },
   { text: 'das Buch', case: 'accusative', role: 'direct_object',   translation: 'the book' },
 ];
-
-const TIER_LABELS = {
-  anonymous: 'visitor',
-  free:      'free account',
-  pro:       'Pro',
-};
 
 const ANON_ID_KEY = 'dm_xray_anon_id';
 
@@ -259,7 +254,7 @@ function PreviewExample({ onTryIt }) {
 function UsageBar({ usage, isLoggedIn }) {
   if (!usage || usage.remaining === null) return null;
 
-  const { limit, usedToday, remaining, tier } = usage;
+  const { limit, usedToday, remaining } = usage;
   const pct = Math.min(100, (usedToday / limit) * 100);
   const isLow = remaining <= 1;
 
@@ -283,16 +278,15 @@ function UsageBar({ usage, isLoggedIn }) {
   );
 }
 
-function LimitReachedBanner({ tier, limit, isLoggedIn }) {
-  const tierLabel = TIER_LABELS[tier] || tier;
+function LimitReachedBanner({ limit, isLoggedIn }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 p-5 text-center"
+      className="rounded-2xl border border-siegel/25 bg-siegel-wash p-5 text-center"
     >
-      <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-amber-100 mb-3">
-        <Crown size={20} className="text-amber-600" />
+      <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white mb-3">
+        <Crown size={20} className="text-siegel-deep" />
       </div>
       <h3 className="font-display font-bold text-slate-800 text-base mb-1">
         {isLoggedIn
@@ -302,7 +296,7 @@ function LimitReachedBanner({ tier, limit, isLoggedIn }) {
       <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mt-4">
         <a
           href="/pricing/"
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-semibold rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all shadow-sm"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-siegel text-white text-sm font-semibold hover:bg-siegel-lift active:bg-siegel-deep transition-colors"
         >
           <Crown size={14} />
           {isLoggedIn
@@ -429,10 +423,7 @@ const SentenceXRay = () => {
   return (
     <div className="min-h-screen bg-slate-50 pt-20 pb-16">
       <SEO
-        title="Sentence X-Ray — Analyze Any German Sentence"
-        description="Paste any German sentence and instantly see the grammatical breakdown. Color-coded cases, word roles, and explanations for why each word works the way it does."
-        path="/analyze/"
-        keywords="German grammar analyzer, German sentence analysis, German cases, nominative accusative dative genitive, learn German grammar"
+        {...seoProps('/analyze')}
         structuredData={{
           "@context": "https://schema.org",
           "@type": "WebApplication",
@@ -448,6 +439,7 @@ const SentenceXRay = () => {
           },
           "provider": {
             "@type": "Organization",
+            "@id": "https://deutsch-meister.de/#organization",
             "name": "DeutschMeister",
             "url": "https://deutsch-meister.de"
           }
@@ -576,7 +568,6 @@ const SentenceXRay = () => {
               className="mb-6"
             >
               <LimitReachedBanner
-                tier={limitReached.tier}
                 limit={limitReached.limit}
                 isLoggedIn={!!user}
               />
@@ -628,9 +619,9 @@ const SentenceXRay = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: result.words.length * 0.06 + 0.1 }}
-                  className="p-5 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 mb-6"
+                  className="p-5 rounded-2xl bg-siegel-wash border border-siegel/25 mb-6"
                 >
-                  <p className="text-xs font-semibold text-amber-600 uppercase tracking-wider mb-1">
+                  <p className="text-xs font-semibold text-siegel-deep uppercase tracking-wider mb-1">
                     Key Insight
                   </p>
                   <h3 className="font-display font-bold text-slate-800 text-base mb-2">

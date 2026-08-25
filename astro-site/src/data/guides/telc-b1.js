@@ -19,6 +19,8 @@ export const telcB1 = {
   lead:
     'Du bereitest dich auf die <strong>telc Deutsch B1 Prüfung</strong> vor? Egal ob für den Aufenthaltstitel, die Einbürgerung oder den Beruf — dieser Leitfaden gibt dir alles, was du brauchst. Du erfährst, wie die Prüfung aufgebaut ist, was du Woche für Woche lernen solltest, und welche Fehler du vermeiden musst. Keine Theorie, keine Umwege.',
   datePublished: '2026-05-28',
+  answer:
+    'Die telc Deutsch B1 Prüfung besteht aus einem schriftlichen Teil (maximal 225 Punkte) und einer mündlichen Paarprüfung (maximal 75 Punkte), zusammen 300. Bestanden ist sie mit mindestens 60 % in beiden Teilen getrennt — also 135 der 225 Punkte schriftlich und 45 der 75 mündlich. Zwischen den Teilen wird nicht verrechnet, und wer einen Teil nicht besteht, kann ihn in der Regel allein wiederholen. Die genauen Wiederholungsregeln legt das Prüfungszentrum fest.',
   factsCheckedOn: '2026-08-22',
   sources: [{ label: 'telc gGmbH', url: 'https://www.telc.net/' }],
 
@@ -236,7 +238,7 @@ export const telcB1 = {
       blocks: [
         {
           type: 'p',
-          text: 'Deutschmeister wurde von einem Arzt in Deutschland gebaut, der selbst Sprachprüfungen bestehen musste. Die Plattform ist kein Spiel — sie ist ein Werkzeug für Leute, die eine Prüfung bestehen müssen. So passt sie zur telc B1 Vorbereitung:',
+          text: 'Deutschmeister wurde von einem Team von Ärzten in Deutschland gebaut, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind. Die Plattform ist kein Spiel — sie ist ein Werkzeug für Leute, die eine Prüfung bestehen müssen. So passt sie zur telc B1 Vorbereitung:',
         },
         {
           type: 'cards',

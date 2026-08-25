@@ -50,6 +50,9 @@ import { telcB2 } from './telc-b2.js';
  * @property {string}  keywords
  * @property {string}  badge           small label above the h1
  * @property {string}  lead            hero paragraph
+ * @property {string}  answer          definition-first answer, 45–120 words, rendered
+ *                                     in the top third. Restates figures already in
+ *                                     `sections` — it must never introduce a new fact.
  * @property {string}  datePublished   ISO date, used for Article schema
  * @property {string}  factsCheckedOn  ISO date the exam facts were last verified
  * @property {{label:string, url:string}[]} sources  official bodies the facts came from
@@ -129,8 +132,12 @@ export const guideJsonLd = (guide, { organization, buildDate }) => [
     inLanguage: 'de',
     author: organization,
     publisher: organization,
+    image: 'https://deutsch-meister.de/og-image.png',
     datePublished: guide.datePublished,
-    dateModified: buildDate,
+    // The checked date, not the build date: stamping every deploy claims a
+    // freshness the content does not have, which teaches crawlers to discount
+    // the field. sitemap-spa.xml makes the same argument about lastmod.
+    dateModified: guide.factsCheckedOn ?? guide.datePublished,
     mainEntityOfPage: { '@type': 'WebPage', '@id': guideUrl(guide) },
   },
   {

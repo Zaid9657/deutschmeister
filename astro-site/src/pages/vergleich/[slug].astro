@@ -36,6 +36,7 @@ const jsonLd = [
     headline: `Deutschmeister vs ${data.displayName} — Vergleich`,
     description: data.heroSubheadline,
     inLanguage: 'de',
+    image: 'https://deutsch-meister.de/og-image.png',
     author: ORGANIZATION,
     publisher: ORGANIZATION,
     datePublished: '2026-05-28',
@@ -85,7 +86,7 @@ const STATS = [
 ];
 ---
 
-<Layout title={title} description={description} keywords={keywords} canonical={canonical} jsonLd={jsonLd} lang="de">
+<Layout title={title} description={description} keywords={keywords} canonical={canonical} jsonLd={jsonLd} lang="de" ogType="article">
   <div class="bg-gradient-to-br from-slate-50 via-white to-slate-100">
     <!-- Hero -->
     <section class="pt-12 pb-16 px-4 sm:px-6">

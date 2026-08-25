@@ -5,9 +5,10 @@ import { useListeningLevels } from '../../hooks/useListening';
 import DataState from '../../components/DataState';
 import ListeningLevelCard from '../../components/listening/ListeningLevelCard';
 import SEO from '../../components/SEO';
+import { seoProps } from '../../data/seoRoutes.js';
 
 const ListeningHome = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const { levels, loading, error, retry } = useListeningLevels();
   const isGerman = i18n.language === 'de';
 
@@ -22,10 +23,7 @@ const ListeningHome = () => {
   return (
     <>
       <SEO
-        title="German Listening Practice | 48 Exercises, 480 Dialogues"
-        description="Improve your German listening comprehension with 48 exercises built from 480 native-speaker dialogue lines, across all CEFR levels. Questions and instant feedback."
-        keywords="German listening practice, German audio exercises, German listening comprehension, learn German listening, German dialogues"
-        path="/listening/"
+        {...seoProps('/listening')}
         structuredData={{
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",

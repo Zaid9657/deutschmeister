@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getTopicsForLevel, SUB_LEVELS, LEVEL_META } from '../../lib/grammar.js';
-import { BUILD_DATE, ORGANIZATION } from '../../lib/siteMeta.js';
+import { ORGANIZATION, SITE_PUBLISHED } from '../../lib/siteMeta.js';
 import '../../styles/global.css';
 
 export async function getStaticPaths() {
@@ -25,11 +25,16 @@ const jsonLd = {
   name: title,
   description,
   url: levelUrl,
-  inLanguage: 'en',
+  inLanguage: 'de',
   educationalLevel: `CEFR ${meta.label}`,
   learningResourceType: 'Course module',
   isAccessibleForFree: level === 'a1.1',
-  dateModified: BUILD_DATE,
+  // Newest updated_at among the topics this hub lists — the page changes
+  // when its content does, not when the site redeploys.
+  dateModified: topics.reduce((acc, t) => {
+    const d = t.updated_at?.slice(0, 10);
+    return d && d > acc ? d : acc;
+  }, SITE_PUBLISHED),
   publisher: ORGANIZATION,
   mainEntity: {
     '@type': 'ItemList',
@@ -52,7 +57,7 @@ const jsonLd = {
 };
 ---
 
-<Layout title={title} description={description} canonical={`https://deutsch-meister.de/grammar/${level}/`} jsonLd={jsonLd} lang="en">
+<Layout title={title} description={description} canonical={`https://deutsch-meister.de/grammar/${level}/`} jsonLd={jsonLd} lang="de">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 py-10">
     <!-- Breadcrumb -->
     <nav class="flex items-center gap-2 text-sm text-slate-600 mb-8" aria-label="Breadcrumb">
@@ -69,7 +74,7 @@ const jsonLd = {
         <div class={`w-8 h-8 rounded-lg bg-gradient-to-r ${meta.color} flex items-center justify-center`}>
           <span class="text-white font-display font-bold text-xs">{meta.label}</span>
         </div>
-        <span class="font-semibold text-slate-700">{meta.name}</span>
+        <span class="font-semibold text-slate-700" lang="en">{meta.name}</span>
       </div>
       <h1 class="font-display text-4xl font-bold text-slate-900 mb-3">
         <span lang="de">{meta.label} Grammatik</span>
@@ -102,14 +107,14 @@ const jsonLd = {
             <!-- Heading, not styling: font-body + text-base reproduce the
                  previous paragraph rendering exactly, while the h2 removes the
                  h1-to-h3 skip in the outline. -->
-            <h2 class="font-body text-base font-semibold text-slate-800 group-hover:text-slate-900 transition-colors">
+            <h2 class="font-body text-base font-semibold text-slate-800 group-hover:text-slate-900 transition-colors" lang="en">
               {topic.title_en}
             </h2>
             {topic.title_de && topic.title_de !== topic.title_en && (
               <p class="text-sm text-slate-600 mt-0.5" lang="de">{topic.title_de}</p>
             )}
             {topic.description_en && (
-              <p class="text-sm text-slate-600 mt-1 line-clamp-1">{topic.description_en}</p>
+              <p class="text-sm text-slate-600 mt-1 line-clamp-1" lang="en">{topic.description_en}</p>
             )}
           </div>
           <svg class="w-5 h-5 text-slate-300 group-hover:text-slate-500 group-hover:translate-x-0.5 transition-all flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">

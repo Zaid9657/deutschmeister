@@ -1,5 +1,32 @@
 # Architecture review — 2026-08-23
 
+> **Postscript, 2026-08-25 — read this first.** `main` has moved since this review
+> was written (PR #28, "SEO: claude-seo audit, full backlog pass, brand ratchet to
+> zero"), and it independently reached two of the same conclusions and invalidated
+> three statements below. Corrected in place where the text is now wrong; recorded
+> here so the record is not read as still-current:
+>
+> - **Finding 01 and 03 were fixed on `main` too, independently.** PR #28 scoped the
+>   `|| true` to the IndexNow ping and deleted the `/vergleich/*` and `/leitfaden/*`
+>   rewrites, with the same reasoning. This branch keeps its own version because
+>   `scripts/build-site.mjs` is a superset — scoping plus post-conditions.
+> - **The "Astro half unverified in CI" gap is CLOSED.** CI now builds the Astro site
+>   offline from a committed `grammar-content-cache.json` and runs
+>   `check-built-html.mjs` over all ~95 pages with no `--spa-only`. Every sentence
+>   below that describes CI as unable to check the static pages is out of date, and
+>   `check-built-html` is now a hard gate in the deploy build rather than advisory.
+> - **The lint baseline is gone.** `npm run lint` is now `eslint . --max-warnings=0`
+>   and passes at zero; the "44 warnings" baseline quoted below no longer exists.
+>   The dead `buildStage2`/`buildStage3`/`buildExerciseStages` from finding 10 were
+>   deleted on `main` (201 lines out of `grammarService.js`).
+> - **Finding 07 survived PR #28, and is now better evidenced.** That PR took
+>   `MAX_RETIRED_STOP_FILES` to 0 by migrating ten files — real work — but kept the
+>   gradient-stop-only regex, so the count reached zero while
+>   `ProtectedRoute.jsx:14` still shipped `border-t-amber-500`, unseen. Under the
+>   widened regex the honest count on the merged tree is **16**, down from 22 thanks
+>   to those migrations. See finding 07.
+
+
 **Scope:** whole repo (SPA + Astro site + Netlify functions + build choreography).
 **Method:** source and config read directly; `npm test` (29 pass), `npm run lint`
 (0 errors / 44 warnings), a dependency-cycle scan over `src/`, and a shell-precedence
@@ -189,8 +216,14 @@ to any `-(amber|rose)-\d{2,3}` utility.
 **The widening changed the picture.** The ratchet had read 10 for weeks; under the wider lens the
 real number is **22**. Two thirds of the surviving retired palette lived in plain `text-`, `bg-`
 and `border-` utilities that a gradient-stop pattern could not see. `MAX_RETIRED_STOP_FILES` is
-now 21 (22 minus `ProtectedRoute.jsx`, migrated in the same commit) and may only go down. The
-ceiling went up because the lens widened, not because anything spread.
+now **16** and may only go down.
+
+**Updated 2026-08-25.** PR #28 migrated ten of those files and set the ceiling to 0 — but kept the
+gradient-stop-only regex, so it read zero while `ProtectedRoute.jsx:14` still carried
+`border-t-amber-500`, which that pattern cannot see. Merging both: the migrations are real and cut
+the widened count from 22 to 16; the widened lens and the three missing `APP_CHROME` entries stay.
+16 is the first honest number, and the ceiling went up against 0 because the lens widened, not
+because anything spread.
 
 ## S3 · 08 — 602 duplicated lines rest on an assumption nobody has retested
 
@@ -262,8 +295,8 @@ ship a broken site silently.
    more than expected; see finding 07.
 
 Verified: `npm test` 29/29, `npm run lint` 0 errors, `check:duplicates` clean, `node --check` on
-all 15 functions, a full `npm run build` + prerender + `check-built-html --spa-only` (7 pages, 0
-failures), and a grep of the **built CSS** confirming the retired border class is no longer
+all 15 functions, a full `npm run build` + prerender + `check-built-html` (originally 7 pages in
+`--spa-only`; re-run after merging `main` over the complete build, **95 pages, 0 failures**), and a grep of the **built CSS** confirming the retired border class is no longer
 emitted while `border-t-siegel` is.
 
 **Phase 2 — put the seam under test before changing it. SHIPPED 2026-08-23.**
@@ -299,11 +332,12 @@ against eight half-finished builds, including the exact one from finding 01.
   is right, and would 500 every function if `SUPABASE_URL` turns out not to be set in the Netlify
   environment — which cannot be checked from here. See the note in `_shared/supabase.mjs`.
 
-`check-built-html.mjs` now also runs in the deploy build, where the Astro output actually exists —
-**advisory on the first pass**, because promoting a never-observed check straight to fatal is how a
-deploy pipeline gets bricked. Set `STRICT_HTML_CHECK=1` in the Netlify environment after one green
-run to make it a hard gate. That is the smallest real step toward the "Astro half unverified in CI"
-gap this repo has carried since the beginning.
+`check-built-html.mjs` now also runs in the deploy build, where the Astro output exists. It shipped
+**advisory**, because promoting a never-observed check straight to fatal is how a deploy pipeline
+gets bricked — and was **promoted to a hard gate on 2026-08-25**, once CI (PR #28) began checking all
+~95 pages offline and the same full run was reproduced locally against this script's own `dist/`.
+`STRICT_HTML_CHECK=0` is the emergency override. The "Astro half unverified in CI" gap this repo
+carried from the beginning is closed.
 
 **Phase 3 — retire the second copy (~2d).**
 1. Delete the three SPA grammar routes and `GrammarLessonPage.jsx`; switch in-app links to full
@@ -337,5 +371,7 @@ gap this repo has carried since the beginning.
   What *is* verified: Netlify's deploy build succeeded on the Phase 1 commit, and its "Redirect
   rules" check passed — so the edited `netlify.toml` parses, and the whole build chain (Astro half
   included) still runs green under the subshell-wrapped `|| true`.
-- **The Astro build was not run.** It needs Supabase credentials or a `GRAMMAR_CONTENT_CACHE` dump
-  — the same gap CI reports on every run.
+- ~~**The Astro build was not run.**~~ **Closed 2026-08-25.** PR #28 committed
+  `grammar-content-cache.json`, so the Astro half now builds offline. The full deploy build has been
+  run end to end here via `scripts/build-site.mjs`: 87 Astro pages built, all structural
+  post-conditions passed, and `check-built-html` checked 95 pages with 0 failures.

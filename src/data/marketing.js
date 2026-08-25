@@ -20,12 +20,16 @@
 //      actually unlimited, or name the metered figure.
 //
 //   2. A COUNT THAT READS PLAUSIBLE IS THE ONE THAT ROTS. Only counts verified
-//      against a live table appear below. Reading-lesson totals are deliberately
-//      ABSENT: the three audit documents disagree (52 / 66 / 74) and the per-level
-//      figures hardcoded in scripts/prerender-spa-routes.mjs and
-//      src/pages/ReadingSectionPage.jsx are a smooth 3,4,5,6,7,8,9,10 ramp that
-//      matches no measurement — EVALUATION.md's DB audit found B1.2 at 16 and
-//      B2.1 at 1. Re-count against reading_lessons before adding one here.
+//      against a live table appear below. Reading-lesson totals used to be
+//      deliberately ABSENT here because the three audit documents disagreed
+//      (52 / 66 / 74) while the per-level figures hardcoded in
+//      scripts/prerender-spa-routes.mjs and src/pages/ReadingSectionPage.jsx were
+//      a smooth 3,4,5,6,7,8,9,10 ramp matching no measurement. That re-count has
+//      now been done (2026-08-24, see READING_LESSON_COUNT): the true total is 66
+//      and the true shape is flat — 8 per level, 10 at B2.2. Every one of the
+//      three audited totals was wrong, and so was the ramp; /reading/ had been
+//      publishing "52 Total Lessons" and "3 reading lessons" for A1.1, which
+//      actually holds 8.
 
 import { MONTHLY_PRICE_EUR, YEARLY_PRICE_EUR, deEur, eur } from './pricing.js';
 
@@ -70,6 +74,39 @@ export const LISTENING_DIALOGUE_COUNT = 480;
 
 /** Podcast episodes, all with audio. Source: EVALUATION.md content audit (2026-08-16). NOTE: transcripts are empty — never claim transcripts. */
 export const PODCAST_EPISODE_COUNT = 24;
+
+/** Grammar rule explanations across all 64 topics. Source: grammar_rules count via Supabase (2026-08-24). */
+export const GRAMMAR_RULE_COUNT = 453;
+
+/** Worked examples across all 64 topics. Source: grammar_examples count via Supabase (2026-08-24). */
+export const GRAMMAR_EXAMPLE_COUNT = 673;
+
+/** Interactive exercises across all 64 topics. Source: grammar_exercises count via Supabase (2026-08-24). */
+export const GRAMMAR_EXERCISE_COUNT = 672;
+
+/** Listening exercises, 6 per CEFR level. Source: listening_exercises count via Supabase (2026-08-24). */
+export const LISTENING_EXERCISE_COUNT = 48;
+
+/** Vocabulary words, every one carrying a level. Source: words count via Supabase (2026-08-24).
+ *  NOTE: llms.txt and llms-full.txt claimed 1,982 until 2026-08-24 — overstated by 47. */
+export const VOCAB_WORD_COUNT = 1935;
+
+/** Vocabulary example sentences. Source: sentences count via Supabase (2026-08-24). */
+export const VOCAB_SENTENCE_COUNT = 945;
+
+/**
+ * Reading lessons per level, and the total. Source: reading_lessons count via
+ * Supabase (2026-08-24) — `select level, count(*) group by level`.
+ *
+ * This replaces the 3,4,5,6,7,8,9,10 ramp that rule 2 above disowned. The real
+ * distribution is flat, so a rising ramp was never a rounding error — it was
+ * invented. Re-measure before changing; do not interpolate.
+ */
+export const READING_LESSON_COUNTS_BY_LEVEL = {
+  'a1.1': 8, 'a1.2': 8, 'a2.1': 8, 'a2.2': 8,
+  'b1.1': 8, 'b1.2': 8, 'b2.1': 8, 'b2.2': 10,
+};
+export const READING_LESSON_COUNT = 66;
 
 /** Levels readable without paying, and without an account. Source: FREE_LEVELS, src/config/freeTier.js. */
 export const FREE_LEVEL_LABEL = 'A1.1';

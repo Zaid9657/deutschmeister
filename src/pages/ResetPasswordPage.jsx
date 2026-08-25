@@ -31,7 +31,7 @@ const ResetPasswordPage = () => {
         logAuditEvent(AUDIT_EVENTS.PASSWORD_RESET_REQUESTED, { email });
         setSuccess(true);
       }
-    } catch (err) {
+    } catch {
       setError('An unexpected error occurred');
     } finally {
       setLoading(false);

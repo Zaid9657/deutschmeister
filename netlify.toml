@@ -1,23 +1,30 @@
 [build]
-  # The whole deploy build lives in scripts/build-site.mjs. It used to be an
-  # 18-step `&&` chain in this string ending in `|| true` — and shell precedence
-  # applied that `|| true` to the WHOLE chain, so any step could fail and the
-  # command still exited 0. A failed Astro build meant the dist/index.html →
-  # dist/app.html rename never ran, so Netlify published a dist/ with no
-  # app.html: every SPA rewrite below pointed at a missing file and "/" served
-  # the SPA shell, which has no "/" route. A site-wide outage, published green.
+  # The whole deploy build lives in scripts/build-site.mjs.
   #
-  # The script throws on any failed step, then asserts 27 structural facts about
-  # dist/ before it will let the deploy stand — including that app.html exists
-  # and that index.html is the Astro homepage rather than the shell. Only the
-  # IndexNow ping is allowed to fail. Run `node scripts/build-site.mjs
+  # This string used to be an 18-step `&&` chain ending in a bare `|| true`,
+  # which shell precedence applied to the WHOLE chain: any step could fail and
+  # the command still exited 0. A failed Astro build meant the dist/index.html →
+  # dist/app.html rename never ran, so Netlify published a dist/ with no
+  # app.html — every SPA rewrite below pointing at a missing file, "/" serving
+  # the SPA shell (which has no "/" route). A site-wide outage, published green.
+  # Scoping the `|| true` to the IndexNow ping fixed that, and the script keeps
+  # it scoped; the script adds what scoping alone cannot give:
+  #
+  # every step throws, and afterwards it asserts a set of structural facts about
+  # dist/ before the deploy may stand — app.html exists, index.html is the Astro
+  # homepage and not the shell, all eight CEFR level pages landed, _astro/ is
+  # non-empty, and every route the prerenderer claims to write is present (that
+  # last set is read out of prerender-spa-routes.mjs, so the two cannot drift).
+  # It prints the count it checked. Run `node scripts/build-site.mjs
   # --verify-only` to re-run just those assertions against an existing dist/.
   #
-  # CI runs check-built-html in --spa-only mode because the Astro half needs
-  # Supabase credentials, which makes THIS build the only gate on the static
-  # pages. The script also runs the full check-built-html here, advisory for now;
-  # set STRICT_HTML_CHECK=1 in the Netlify environment after one green run to
-  # promote it to a hard gate.
+  # The script also runs check-built-html over the whole dist/, and FAILS on it.
+  # That check used to be advisory here, on the grounds that CI could only run
+  # it in --spa-only mode and this was its first outing. CI now builds the Astro
+  # half offline from grammar-content-cache.json and checks all ~95 pages, so
+  # the check is observed-green and CI already fails on it; a deploy gate weaker
+  # than the CI gate protects nothing. STRICT_HTML_CHECK=0 overrides it for an
+  # emergency deploy.
   command = "node scripts/build-site.mjs"
   publish = "dist"
   functions = "netlify/functions"
@@ -86,6 +93,16 @@
 
 [[headers]]
   for = "/og-image.png"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/logo.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/og-image.webp"
   [headers.values]
     Cache-Control = "public, max-age=604800"
 
@@ -254,14 +271,9 @@
   status = 200
 # /pricing is now a static Astro file in dist/pricing/ — Netlify serves that
 # real file before any non-forced rewrite, so no SPA rule is needed for it.
-[[redirects]]
-  from = "/faq"
-  to = "/app.html"
-  status = 200
-[[redirects]]
-  from = "/ueber-uns"
-  to = "/app.html"
-  status = 200
+# /faq and /ueber-uns are prerendered static files now (dist/faq/index.html,
+# dist/ueber-uns/index.html) — Netlify serves the real file before any unforced
+# rewrite and 301s the slash-less form, same as /pricing. No SPA rule needed.
 [[redirects]]
   from = "/podcasts"
   to = "/app.html"
@@ -300,21 +312,12 @@
   from = "/subscription/*"
   to = "/app.html"
   status = 200
-# /vergleich/** and /leitfaden/** have NO rules here, for exactly the reason
-# /grammar/* has none (see the long note further down). The hub, the four
-# comparison pages and the four guides are real static Astro files in dist/,
-# and Netlify serves a real file before any non-forced rewrite — so a
-# /vergleich/* or /leitfaden/* rewrite could only ever catch a path that does
-# NOT exist, and answered it with 200 + the app shell. A textbook soft 404,
-# the same one Search Console reported for /grammar/*.
-#
-# /leitfaden/* was the worse of the two: the SPA has no /leitfaden route at all
-# (the hand-written TelcB1Page twin was deleted), so every unknown guide slug
-# got 200 + shell + NotFoundPage. /vergleich/* sent unknown slugs to the SPA
-# ComparisonPage, which client-side redirects to the hub — still a 200 for a
-# URL that should be a 404.
-#
-# Both now fall through to the /* catch-all at the bottom and return a real 404.
+# /vergleich/* and /leitfaden/* had wildcard rewrites here. They were the same
+# soft-404 the blanket /grammar/* rule caused — any invented slug answered 200 with
+# the app shell, which GSC reports as a soft 404. Every real URL under both prefixes
+# is a static Astro file that wins before any unforced rewrite, and src/App.jsx has
+# no /leitfaden routes at all, so nothing is lost. Unknown slugs now fall through to
+# the /* -> /404.html catch-all and return a true 404.
 [[redirects]]
   from = "/video-library"
   to = "/app.html"

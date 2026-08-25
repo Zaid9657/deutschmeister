@@ -110,6 +110,10 @@ const LevelPage = () => {
       load();
     }
     return () => { cancelled = true; };
+    // registerLevelItemCounts comes from ProgressContext and is not memoised
+    // there; depending on it would re-fetch vocab on every provider render.
+    // The effect's real input is `level`.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [level]);
 
   // Fetch grammar topics from Supabase
@@ -222,7 +226,7 @@ const LevelPage = () => {
           "@type": "Course",
           "name": seo.title,
           "description": seo.desc,
-          "provider": { "@type": "Organization", "name": "DeutschMeister", "url": "https://deutsch-meister.de/" },
+          "provider": { "@type": "Organization", "@id": "https://deutsch-meister.de/#organization", "name": "DeutschMeister", "url": "https://deutsch-meister.de" },
           "educationalLevel": seoEducationalLevel,
           "inLanguage": "de",
           "isAccessibleForFree": true

@@ -109,7 +109,7 @@ export async function getTopicsForLevel(subLevel) {
   // Query using ilike so it matches regardless of case stored in DB
   const { data, error } = await supabase
     .from('grammar_topics')
-    .select('id, slug, title_en, title_de, description_en, description_de, topic_order')
+    .select('id, slug, title_en, title_de, description_en, description_de, topic_order, updated_at')
     .ilike('sub_level', subLevel)
     .order('topic_order');
 
@@ -127,7 +127,7 @@ export async function getAllTopics() {
   }
   const { data, error } = await supabase
     .from('grammar_topics')
-    .select('id, slug, title_en, title_de, description_en, sub_level, topic_order')
+    .select('id, slug, title_en, title_de, description_en, sub_level, topic_order, updated_at')
     .order('sub_level')
     .order('topic_order');
 

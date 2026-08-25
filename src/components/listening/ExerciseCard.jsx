@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Headphones, CheckCircle, ChevronRight, Clock } from 'lucide-react';
+import { CheckCircle, ChevronRight, Clock } from 'lucide-react';
 import { getLevelTheme, formatDuration } from '../../utils/listeningHelpers';
 import { useTranslation } from 'react-i18next';
 

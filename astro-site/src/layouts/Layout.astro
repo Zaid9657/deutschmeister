@@ -3,6 +3,7 @@ export interface Props {
   title: string;
   description: string;
   canonical?: string;
+  ogType?: string;
   ogImage?: string;
   jsonLd?: object | object[];
   noindex?: boolean;
@@ -14,6 +15,7 @@ const {
   title,
   description,
   canonical,
+  ogType = 'website',
   ogImage = 'https://deutsch-meister.de/og-image.png',
   jsonLd,
   noindex = false,
@@ -21,7 +23,11 @@ const {
   lang = 'en',
 } = Astro.props;
 
-const canonicalUrl = canonical ?? Astro.url.href;
+// `canonical={null}` means emit none. Only 404.html uses it: the page is served
+// at /404.html and as the fallback body for arbitrary unknown paths, so there is
+// no URL it could honestly point at — it previously claimed the homepage, and
+// self-referencing would claim a /404/ route that does not exist.
+const canonicalUrl = canonical === null ? null : (canonical ?? Astro.url.href);
 const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 ---
 
@@ -38,18 +44,19 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     <title>{title}</title>
     <meta name="description" content={description} />
     {keywords && <meta name="keywords" content={keywords} />}
-    <link rel="canonical" href={canonicalUrl} />
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <meta name="theme-color" content="#0f172a" />
 
     <!-- Open Graph -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:type" content={ogType} />
+    {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The Meister-Siegel seal beside the words “Learn German grammar, listening and speaking — A1 to B2”" />
     <meta property="og:site_name" content="DeutschMeister" />
     <meta property="og:locale" content={lang === 'de' ? 'de_DE' : 'en_US'} />
     <meta property="og:locale:alternate" content={lang === 'de' ? 'en_US' : 'de_DE'} />
@@ -159,7 +166,7 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
           <!-- Mobile: CTA + full menu (pure HTML disclosure, no client JS) -->
           <div class="md:hidden flex items-center gap-2">
             <a href="https://deutsch-meister.de/signup" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-teal-600 to-teal-500 text-white text-sm font-semibold">
-              Start
+              Get started
             </a>
             <details class="relative">
               <summary
@@ -246,8 +253,8 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
               <li><a href="/leitfaden/telc-b2/" class="hover:text-white transition-colors">telc B2</a></li>
               <li><a href="/leitfaden/dtz/" class="hover:text-white transition-colors">DTZ</a></li>
               <li><a href="/vergleich/" class="hover:text-white transition-colors">Plattform-Vergleich</a></li>
-              <li><a href="https://deutsch-meister.de/faq" class="hover:text-white transition-colors">FAQ</a></li>
-              <li><a href="https://deutsch-meister.de/ueber-uns" class="hover:text-white transition-colors">Über uns</a></li>
+              <li><a href="https://deutsch-meister.de/faq/" class="hover:text-white transition-colors">FAQ</a></li>
+              <li><a href="https://deutsch-meister.de/ueber-uns/" class="hover:text-white transition-colors">Über uns</a></li>
             </ul>
           </div>
         </div>

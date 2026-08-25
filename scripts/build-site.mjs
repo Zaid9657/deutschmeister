@@ -129,7 +129,14 @@ check('dist/_astro/ is empty — the Astro islands have no code',
   exists('_astro') && readdirSync(join(DIST, '_astro')).length > 0);
 
 // 6. The prerendered SPA routes, which is what crawlers get for those URLs.
-for (const r of ['speaking', 'level-test', 'analyze', 'podcasts', 'listening', 'reading']) {
+//    Derived from the prerenderer's own route table rather than hard-coded: this
+//    list was written with six routes and prerender-spa-routes.mjs later grew to
+//    eight (/faq, /ueber-uns), so a hard-coded copy silently stopped covering
+//    the new ones. Reading the source keeps the two in step by construction.
+const prerenderSrc = readFileSync(join(ROOT, 'scripts', 'prerender-spa-routes.mjs'), 'utf8');
+const prerendered = [...prerenderSrc.matchAll(/^\s*path: '\/([a-z0-9-]+)',/gm)].map((m) => m[1]);
+check('could not read any route out of prerender-spa-routes.mjs', prerendered.length > 0);
+for (const r of prerendered) {
   check(`dist/${r}/index.html is missing — prerender did not run`, exists(`${r}/index.html`));
 }
 
@@ -141,27 +148,34 @@ if (failures.length) {
 }
 console.log(`✓ dist/ passed all ${checked} structural post-conditions`);
 
-// --- content check (staged) ---------------------------------------------------
-// check-built-html.mjs is the repo's real HTML gate, but CI can only run it in
-// --spa-only mode: the Astro half needs Supabase credentials it does not have.
-// This build DOES have the Astro output, so it is the only place the full check
-// can run. It runs advisory-first on purpose — turning an unobserved check
-// fatal is how you brick a deploy pipeline. After one green run, set
-// STRICT_HTML_CHECK=1 in the Netlify environment and it becomes a hard gate.
-const strict = process.env.STRICT_HTML_CHECK === '1';
+// --- content check -------------------------------------------------------------
+// check-built-html.mjs is the repo's real HTML gate, and it is FATAL here.
+//
+// It was introduced as advisory-only, because at the time CI could run it only
+// in --spa-only mode (the Astro half needed Supabase credentials) and a check
+// that has never run should not be able to brick a deploy. Both halves of that
+// changed: CI now builds the Astro site offline from the committed
+// grammar-content-cache.json and runs this check over all ~95 pages, and the
+// same full run has been reproduced against this script's own dist/. It is
+// observed-green, and CI already fails on it — a deploy gate weaker than the CI
+// gate protects nothing.
+//
+// STRICT_HTML_CHECK=0 is the escape hatch for an emergency deploy. It should be
+// a deliberate, temporary act, not a default.
+const strict = process.env.STRICT_HTML_CHECK !== '0';
 if (!VERIFY_ONLY) {
   try {
     execFileSync('node', ['scripts/check-built-html.mjs', 'dist'], { cwd: ROOT, stdio: 'inherit' });
   } catch {
     if (strict) {
-      console.error('\n✗ check-built-html failed and STRICT_HTML_CHECK=1 — failing the build.');
+      console.error(
+        '\n✗ check-built-html failed — refusing to publish.\n' +
+        '  Fix what it reported above. STRICT_HTML_CHECK=0 overrides this, for an\n' +
+        '  emergency deploy only.',
+      );
       process.exit(1);
     }
-    console.error(
-      '\n⚠ check-built-html reported failures. NOT failing the build: this check has never run\n' +
-      '  against the Astro half before, so it is advisory for now. Read the output above, fix\n' +
-      '  what it found, then set STRICT_HTML_CHECK=1 in the Netlify environment to make it a gate.',
-    );
+    console.error('\n⚠ check-built-html failed but STRICT_HTML_CHECK=0 — publishing anyway.');
   }
 }
 

@@ -61,7 +61,7 @@ const Navbar = () => {
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">
             {/* Content Links */}
-            <Link to="/grammar" className="px-3 py-2 rounded-lg text-sm font-medium text-graphite hover:text-ink hover:bg-siegel-wash transition-colors">
+            <Link to="/grammar/" className="px-3 py-2 rounded-lg text-sm font-medium text-graphite hover:text-ink hover:bg-siegel-wash transition-colors">
               {isGerman ? 'Grammatik' : 'Grammar'}
             </Link>
             <Link to="/video-library" className="px-3 py-2 rounded-lg text-sm font-medium text-graphite hover:text-ink hover:bg-siegel-wash transition-colors">
@@ -258,7 +258,7 @@ const Navbar = () => {
                 {isGerman ? 'Lernen' : 'Learn'}
               </p>
               <Link
-                to="/grammar"
+                to="/grammar/"
                 onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-siegel-wash transition-colors"
               >

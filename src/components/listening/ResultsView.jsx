@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Trophy, RotateCcw, ArrowLeft, CheckCircle, XCircle, Sparkles } from 'lucide-react';
 import { getPerformanceMessage, getLevelTheme, getAnswerKey } from '../../utils/listeningHelpers';
 import { useTranslation } from 'react-i18next';
@@ -137,22 +137,22 @@ const ResultsView = ({ exercise, questions, answers, score, dialogues, playsUsed
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5 }}
-          className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border border-amber-200 p-5 text-center"
+          className="bg-siegel-wash rounded-2xl border border-siegel/25 p-5 text-center"
         >
           <div className="flex items-center justify-center gap-2 mb-2">
-            <Sparkles size={16} className="text-amber-500" />
-            <span className="font-semibold text-amber-800 text-sm">
+            <Sparkles size={16} className="text-siegel" />
+            <span className="font-semibold text-siegel-deep text-sm">
               {isGerman ? 'DeutschMeister gefällt dir?' : 'Enjoying DeutschMeister?'}
             </span>
           </div>
-          <p className="text-xs text-amber-600 mb-3">
+          <p className="text-xs text-siegel-deep/80 mb-3">
             {isGerman
               ? 'Abonniere, um nach deinem Test weiter zu lernen.'
               : 'Subscribe to keep learning after your trial ends.'}
           </p>
           <a
             href="/pricing/"
-            className="inline-flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-semibold rounded-xl hover:from-amber-600 hover:to-orange-600 transition-all"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-md bg-siegel text-white text-sm font-semibold hover:bg-siegel-lift active:bg-siegel-deep transition-colors"
           >
             {isGerman ? 'Jetzt upgraden' : 'Upgrade to Pro'}
           </a>

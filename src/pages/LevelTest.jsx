@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import SEO from '../components/SEO';
+import { seoProps } from '../data/seoRoutes.js';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../utils/supabase';
 import LevelTestLanding from '../components/LevelTest/LevelTestLanding';
@@ -19,7 +20,7 @@ const LevelTest = () => {
   const [determinedLevel, setDeterminedLevel] = useState('A1');
   const [determinedSublevel, setDeterminedSublevel] = useState('A1.1');
   const [listeningScore, setListeningScore] = useState(null);
-  const [listeningAnswers, setListeningAnswers] = useState([]);
+  const [, setListeningAnswers] = useState([]);
   const [speakingScore, setSpeakingScore] = useState(null);
 
   // Shuffle questions within each level for variety
@@ -168,10 +169,7 @@ const LevelTest = () => {
   return (
     <>
       <SEO
-        title="Free German Level Test | Find Your CEFR Level (A1-B2)"
-        description="Take our free German level test to discover your CEFR level. Test your reading, listening, and speaking skills in 15 minutes. Instant results with personalized learning recommendations."
-        keywords="German level test, CEFR test, German placement test, what level is my German, German proficiency test, free German test"
-        path="/level-test/"
+        {...seoProps('/level-test')}
         structuredData={[
           {
             "@context": "https://schema.org",
@@ -184,6 +182,7 @@ const LevelTest = () => {
             "isAccessibleForFree": true,
             "provider": {
               "@type": "Organization",
+              "@id": "https://deutsch-meister.de/#organization",
               "name": "DeutschMeister",
               "url": "https://deutsch-meister.de"
             }

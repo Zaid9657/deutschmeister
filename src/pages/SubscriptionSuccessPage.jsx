@@ -7,7 +7,7 @@ import SEO from '../components/SEO';
 
 const SubscriptionSuccessPage = () => {
   const navigate = useNavigate();
-  const { refreshSubscription, hasActiveSubscription, subscription } = useSubscription();
+  const { refreshSubscription, hasActiveSubscription } = useSubscription();
   const [polling, setPolling] = useState(true);
 
   // Derive verification from context state on every render. The previous version

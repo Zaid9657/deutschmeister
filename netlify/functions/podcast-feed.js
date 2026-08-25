@@ -1,6 +1,6 @@
 const { createClient } = require('@supabase/supabase-js');
 
-exports.handler = async (event) => {
+exports.handler = async (_event) => {
   // No hardcoded key fallback. The literal that used to live here was a valid
   // anon JWT good until 2084 — not a disclosure (the same key ships in the SPA
   // bundle), but it silently defeated key rotation: rotating the anon key would
@@ -95,9 +95,9 @@ exports.handler = async (event) => {
     <link>${baseUrl}/podcasts</link>
     <language>de</language>
     <copyright>© ${new Date().getFullYear()} DeutschMeister</copyright>
-    <description>German language learning podcast for levels A1 to B2. 24 episodes featuring native speaker conversations with full transcripts. Perfect for improving your German listening skills.</description>
+    <description>German language learning podcast for levels A1 to B2. 24 episodes featuring native speaker conversations, graded by CEFR level. Perfect for improving your German listening skills.</description>
     <itunes:author>DeutschMeister</itunes:author>
-    <itunes:summary>German language learning podcast for levels A1 to B2. 24 episodes featuring native speaker conversations with full transcripts. Perfect for improving your German listening skills.</itunes:summary>
+    <itunes:summary>German language learning podcast for levels A1 to B2. 24 episodes featuring native speaker conversations, graded by CEFR level. Perfect for improving your German listening skills.</itunes:summary>
     <itunes:owner>
       <itunes:name>DeutschMeister</itunes:name>
       <itunes:email>contact@deutsch-meister.de</itunes:email>

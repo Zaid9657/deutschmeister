@@ -56,7 +56,7 @@ const competitorComparisons = {
       { feature: 'Einstufungstest', us: '✓ Kostenloser CEFR-Einstufungstest in 5 Minuten', them: '✓ Einstufungstest beim Kursstart' },
       { feature: 'Kostenlose Inhalte', us: '✓ A1.1 komplett kostenlos + 7 Tage Pro-Testphase', them: '○ Erste Lektion kostenlos, danach Abo nötig' },
       { feature: 'Preis (monatlich, Stand: Mai 2026)', us: `${PRO_MONTHLY} (Pro)`, them: 'ab 6,99 €/Monat (12-Monats-Abo) – 12,99 €/Monat (3-Monats-Abo)' },
-      { feature: 'Von Muttersprachlern entwickelt', us: '✓ Gegründet von einem Arzt in Deutschland — kennt den Lernweg aus Erfahrung', them: '✓ Team aus Sprachwissenschaftlern in Berlin' },
+      { feature: 'Von Muttersprachlern entwickelt', us: '✓ Von Ärzten in Deutschland entwickelt — sie kennen den Lernweg aus eigener Erfahrung', them: '✓ Team aus Sprachwissenschaftlern in Berlin' },
       { feature: 'Hörübungen mit Alltagsdialogen', us: '✓ Hörverständnis auf jedem Niveau mit authentischen Dialogen', them: '✓ Dialoge und Hörübungen in jeder Lektion' },
       { feature: 'Werbung in der kostenlosen Version', us: '✗ Keine Werbung — auch nicht in der Gratisversion', them: '✗ Keine Werbung (reines Abo-Modell)' },
     ],
@@ -74,7 +74,7 @@ const competitorComparisons = {
       {
         icon: 'GraduationCap',
         title: 'Prüfungsfokus, nicht nur Vokabeltraining',
-        body: 'Deutschmeister wurde von einem Arzt gebaut, der selbst Sprachprüfungen bestehen musste. Die Inhalte sind auf Goethe, telc und TestDaF abgestimmt — nicht auf allgemeines Sprachgefühl.',
+        body: 'Deutschmeister wurde von einem Team von Ärzten in Deutschland gebaut, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind. Die Inhalte sind auf Goethe, telc und TestDaF abgestimmt — nicht auf allgemeines Sprachgefühl.',
       },
     ],
     faq: [

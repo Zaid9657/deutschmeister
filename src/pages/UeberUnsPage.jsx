@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Stethoscope, Target, ShieldCheck, Mic, ScanSearch, Heart, Rocket, Users, BookOpen, Briefcase } from 'lucide-react';
+import { ArrowRight, Stethoscope, Target, ShieldCheck, Mic, ScanSearch, Heart, Users, BookOpen, Briefcase } from 'lucide-react';
 import SEO from '../components/SEO';
 import { trackAboutViewed } from '../lib/funnelTracking';
+import { seoProps } from '../data/seoRoutes.js';
 
 const BADGES = [
-  { icon: Stethoscope, label: 'Gebaut von einem Arzt' },
+  { icon: Stethoscope, label: 'Von Ärzten in Deutschland entwickelt' },
   { icon: Target, label: 'Für ernsthafte Lerner' },
   { icon: ShieldCheck, label: 'DSGVO-konform – Server in der EU' },
 ];
@@ -24,8 +25,8 @@ const DIFFERENTIATORS = [
   },
   {
     icon: Heart,
-    title: 'Gebaut von jemandem, der’s selbst durchgemacht hat',
-    body: 'Kein Konzern. Ein Arzt, ein Coder, der weiß wie es ist, wenn die Sprache zwischen dir und deinem Leben steht.',
+    title: 'Gebaut von Leuten, die’s selbst durchgemacht haben',
+    body: 'Kein Konzern. Ein Team von Ärzten in Deutschland, das weiß, wie es ist, wenn die Sprache zwischen dir und deinem Leben steht.',
   },
 ];
 
@@ -42,11 +43,7 @@ const UeberUnsPage = () => {
   return (
     <div className="min-h-screen bg-paper">
       <SEO
-        lang="de"
-        title="Über uns"
-        description="Deutschmeister wurde von Zaid gegründet — Arzt mit Blue Card in Deutschland. Mission: Das beste Werkzeug für alle, die Deutsch wirklich brauchen. KI-Sprechtraining, Sentence X-Ray, Prüfungsvorbereitung von A1 bis B2."
-        keywords="Deutschmeister, Über uns, Deutsch lernen, Arzt, Blue Card, KI Sprechtraining, Goethe Prüfung, telc, TestDaF"
-        path="/ueber-uns"
+        {...seoProps('/ueber-uns')}
         structuredData={{
           '@context': 'https://schema.org',
           '@type': 'Organization',
@@ -117,6 +114,9 @@ const UeberUnsPage = () => {
               </p>
               <p>
                 Zuerst habe ich MedMeister gebaut — eine Plattform speziell für Ärzte, die sich auf die Kenntnisprüfung vorbereiten. Dann habe ich gemerkt: Das gleiche Problem trifft jeden, der Deutsch unter Druck lernt. Nicht nur Mediziner. Pflegekräfte, Ingenieure, Studenten, Familien.
+              </p>
+              <p>
+                Heute steht hinter Deutschmeister ein Team von Ärzten in Deutschland — Leute, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind und die Plattform weiterentwickeln.
               </p>
               <p className="font-medium text-ink">
                 Deutschmeister ist diese Idee — für alle geöffnet.

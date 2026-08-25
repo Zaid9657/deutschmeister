@@ -170,7 +170,7 @@ const SubscriptionPage = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-10"
         >
-          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-amber-400 via-orange-500 to-rose-500 flex items-center justify-center shadow-lg shadow-amber-500/25">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-siegel flex items-center justify-center">
             <Crown className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-2">
@@ -313,7 +313,7 @@ const SubscriptionPage = () => {
             >
               {plan.highlight && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                  <span className="bg-siegel text-white text-xs font-bold px-3 py-1 rounded-full">
                     {isGerman ? 'Bester Wert' : 'Best Value'}
                   </span>
                 </div>
@@ -355,7 +355,7 @@ const SubscriptionPage = () => {
                   isSubscribed
                     ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
                     : plan.highlight
-                    ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600 shadow-lg shadow-amber-500/25'
+                    ? 'bg-siegel text-white hover:bg-siegel-lift active:bg-siegel-deep'
                     : 'bg-slate-800 text-white hover:bg-slate-700'
                 }`}
               >

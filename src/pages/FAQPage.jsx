@@ -3,126 +3,21 @@ import { motion } from 'framer-motion';
 import { ChevronDown, ArrowRight, BookOpen, MessageSquare, CreditCard, GraduationCap, Monitor } from 'lucide-react';
 import SEO from '../components/SEO';
 import { trackFAQViewed } from '../lib/funnelTracking';
-import { PLANS, deEur } from '../data/pricing.js';
-import { TRIAL_SPEAKING_SESSIONS, ANON_DAILY_LIMIT, TRIAL_DAYS, FREE_LEVEL_LABEL } from '../data/marketing.js';
+import { FAQ_CATEGORIES, faqPageJsonLd } from '../data/faqContent.js';
+import { seoProps } from '../data/seoRoutes.js';
 import Button from '../components/ui/Button';
 
-const FAQ_DATA = [
-  {
-    title: 'Über Deutschmeister',
-    icon: BookOpen,
-    items: [
-      {
-        q: 'Was ist Deutschmeister?',
-        a: 'Deutschmeister ist eine Online-Plattform, die dir hilft, Deutsch zu lernen — mit Grammatik-Erklärungen auf Englisch, KI-Sprechtraining und dem Sentence X-Ray Tool. Alles an einem Ort, von A1 bis B2.',
-      },
-      {
-        q: 'Für wen ist diese Plattform gedacht?',
-        a: 'Für alle, die Deutsch wirklich sprechen wollen. Besonders für Migranten, Fachkräfte und Studierende, die sich auf Goethe, telc, TestDaF oder DTZ vorbereiten. Wenn du unter Zeitdruck lernst und keine Lust auf Spielchen hast — bist du hier richtig.',
-      },
-      {
-        q: 'Wer steht hinter Deutschmeister?',
-        a: 'Zaid — Arzt aus Deutschland. Er kennt das Problem aus erster Hand: eine neue Sprache lernen, während der Alltag weiterläuft. Prüfungsdruck, wenig Zeit, hohe Erwartungen. Deutschmeister ist aus genau dieser Erfahrung entstanden.',
-      },
-      {
-        q: 'Welche Niveaus deckt ihr ab?',
-        a: 'A1.1 bis B2.2 — also vom absoluten Anfänger bis zur gehobenen Mittelstufe. 64 Grammatik-Themen, Hörübungen, Lesetexte und Sprechtraining auf jedem Niveau.',
-      },
-    ],
-  },
-  {
-    title: 'Lernen & Inhalte',
-    icon: MessageSquare,
-    items: [
-      {
-        q: 'Wie unterscheidet sich Deutschmeister von Duolingo / Babbel?',
-        a: 'Duolingo macht Spaß, bringt dir aber nicht bei, einen ganzen Satz zu bilden. Babbel ist solide, aber ohne echtes Sprechtraining. Deutschmeister erklärt dir das WARUM hinter der Grammatik — auf Englisch — und lässt dich dann mit KI sprechen üben. Das ist der Unterschied.',
-      },
-      {
-        q: 'Bekomme ich echtes Sprechtraining oder nur Übungen?',
-        a: 'Echtes Sprechtraining. Du sprichst mit einer KI, die auf dein Niveau abgestimmt ist. Du bekommst sofort Feedback zu Grammatik, Wortschatz und Aussprache. Kein Nachsprechen von Sätzen — echte Gespräche.',
-      },
-      {
-        q: 'Wie funktioniert die KI-Auswertung beim Sprechen?',
-        a: 'Du sprichst, die KI hört zu und analysiert deinen Satz in Echtzeit. Du siehst sofort: Was war richtig? Was kannst du verbessern? Welche Alternative wäre natürlicher? Wie ein geduldiger Lehrer, der immer Zeit hat.',
-      },
-      {
-        q: 'Was ist das Sentence X-Ray Tool?',
-        a: 'Du gibst einen deutschen Satz ein — egal welchen. Das Tool zerlegt ihn: Fälle, Satzglieder, Wortarten. Farbcodiert und erklärt. Du verstehst endlich, warum „dem" und nicht „den" steht. Kein anderes Tool kann das so.',
-      },
-      {
-        q: 'Wie viel Zeit brauche ich pro Tag?',
-        a: '15–20 Minuten reichen. Eine Grammatik-Lektion, ein paar Übungen, eine kurze Sprechübung. Jeden Tag ein bisschen ist besser als einmal pro Woche drei Stunden.',
-      },
-    ],
-  },
-  {
-    title: 'Preise & Abo',
-    icon: CreditCard,
-    items: [
-      {
-        q: 'Was kostet Deutschmeister?',
-        a: `Pro Monatlich: ${deEur(PLANS.monthly.price)} pro Monat. Pro Jährlich: ${deEur(PLANS.yearly.price)} pro Jahr (das sind ${deEur(PLANS.yearly.asMonthly)} pro Monat — weniger als ${deEur(PLANS.yearly.perDay)} am Tag). Günstiger als ein Kaffee.`,
-      },
-      {
-        q: 'Gibt es eine kostenlose Version?',
-        a: `Ja. ${FREE_LEVEL_LABEL} ist komplett kostenlos — ohne Anmeldung. Dazu bekommst du ${TRIAL_SPEAKING_SESSIONS} kostenlose KI-Sprechübungen und ${ANON_DAILY_LIMIT} Sentence X-Ray Analyse pro Tag. Wenn du ein Konto erstellst, gibt es ${TRIAL_DAYS} Tage kostenlosen Pro-Zugang obendrauf.`,
-      },
-      {
-        q: 'Kann ich jederzeit kündigen?',
-        a: 'Ja. Ein Klick, fertig. Keine Fragen, keine versteckten Kosten, keine Kündigungsfrist. Du behältst den Zugang bis zum Ende der bezahlten Periode.',
-      },
-      {
-        q: 'Bekomme ich eine Rückerstattung, wenn ich nicht zufrieden bin?',
-        a: '7 Tage Geld-zurück-Garantie. Kein Risiko. Wenn es nichts für dich ist, bekommst du dein Geld zurück.',
-      },
-      {
-        q: 'Welche Zahlungsarten akzeptiert ihr?',
-        a: 'Kreditkarte (Visa, Mastercard, AMEX), PayPal und Apple Pay. Alles über LemonSqueezy — sicher und verschlüsselt.',
-      },
-    ],
-  },
-  {
-    title: 'Prüfungsvorbereitung',
-    icon: GraduationCap,
-    items: [
-      {
-        q: 'Bereitet Deutschmeister auf Goethe / telc / TestDaF / DTZ vor?',
-        a: 'Ja. Die Grammatik und der Wortschatz decken genau die Themen ab, die in diesen Prüfungen vorkommen. Das Sprechtraining simuliert mündliche Prüfungssituationen. Für den DTZ (Deutsch-Test für Zuwanderer) ist besonders das B1-Material relevant.',
-      },
-      {
-        q: 'Ist das genug für die B1-/B2-Prüfung?',
-        a: 'Deutschmeister gibt dir eine solide Grundlage — Grammatik, Hörverständnis, Sprechen. Für die Prüfung selbst empfehle ich zusätzlich: offizielle Modellsätze vom Goethe-Institut oder telc durcharbeiten. Deutschmeister + Modellsätze = eine starke Kombination.',
-      },
-      {
-        q: 'Wie viele Wochen vor der Prüfung sollte ich anfangen?',
-        a: 'Mindestens 8–12 Wochen bei täglichem Lernen. Je früher, desto besser. Grammatik braucht Zeit zum Setzen. Das Sprechtraining hilft dir, sicherer zu werden — aber Sicherheit kommt nicht über Nacht.',
-      },
-      {
-        q: 'Gibt es Probeprüfungen?',
-        a: 'Noch nicht — aber das ist geplant. Aktuell kannst du mit den Übungen auf jedem Niveau testen, wo du stehst. Der kostenlose Einstufungstest zeigt dir sofort dein CEFR-Level.',
-      },
-    ],
-  },
-  {
-    title: 'Technisches',
-    icon: Monitor,
-    items: [
-      {
-        q: 'Funktioniert das auf dem Handy?',
-        a: 'Ja. Deutschmeister läuft im Browser — Desktop, Tablet, Handy. Keine App nötig. Einfach deutsch-meister.de öffnen und loslegen.',
-      },
-      {
-        q: 'Brauche ich ein Mikrofon für das Sprechtraining?',
-        a: 'Ja, aber jedes eingebaute Mikrofon reicht. Laptop, Handy, Tablet — alles funktioniert. Externe Mikrofone sind nicht nötig.',
-      },
-      {
-        q: 'Wo werden meine Daten gespeichert?',
-        a: 'Server in der EU (Supabase). DSGVO-konform. Deine Daten werden nicht verkauft, nicht weitergegeben, nicht für Werbung genutzt. Punkt.',
-      },
-    ],
-  },
-];
+// Content lives in src/data/faqContent.js so the prerender renders the same 21
+// answers a crawler needs — the accordion only shows an answer on click, which
+// used to leave the FAQPage JSON-LD promising text no crawler could see.
+// Icons stay here: lucide components don't belong in a data module.
+const CATEGORY_ICONS = {
+  'Über Deutschmeister': BookOpen,
+  'Lernen & Inhalte': MessageSquare,
+  'Preise & Abo': CreditCard,
+  'Prüfungsvorbereitung': GraduationCap,
+  'Technisches': Monitor,
+};
 
 function AccordionItem({ q, a }) {
   const [open, setOpen] = useState(false);
@@ -155,27 +50,7 @@ const FAQPage = () => {
 
   return (
     <div className="min-h-screen bg-paper">
-      <SEO
-        lang="de"
-        title="Häufige Fragen"
-        description="Häufige Fragen zu Deutschmeister — Preise, Prüfungsvorbereitung (Goethe, telc, TestDaF, DTZ), KI-Sprechtraining, Sentence X-Ray und mehr. Deutsch lernen von A1 bis B2."
-        keywords="Deutschmeister FAQ, Deutsch lernen, Goethe Prüfung, telc Prüfung, TestDaF, DTZ, KI Sprechtraining, Sentence X-Ray, Deutsch Grammatik"
-        path="/faq"
-        structuredData={{
-          '@context': 'https://schema.org',
-          '@type': 'FAQPage',
-          mainEntity: FAQ_DATA.flatMap((cat) =>
-            cat.items.map((item) => ({
-              '@type': 'Question',
-              name: item.q,
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: item.a,
-              },
-            }))
-          ),
-        }}
-      />
+      <SEO {...seoProps('/faq')} structuredData={faqPageJsonLd()} />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-24 pb-20">
         <motion.div
@@ -192,7 +67,9 @@ const FAQPage = () => {
         </motion.div>
 
         <div className="space-y-12">
-          {FAQ_DATA.map((category, catIdx) => (
+          {FAQ_CATEGORIES.map((category, catIdx) => {
+            const Icon = CATEGORY_ICONS[category.title] ?? BookOpen;
+            return (
             <motion.section
               key={category.title}
               initial={{ opacity: 0, y: 20 }}
@@ -201,7 +78,7 @@ const FAQPage = () => {
             >
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-10 h-10 rounded-md bg-siegel flex items-center justify-center flex-shrink-0">
-                  <category.icon className="w-5 h-5 text-white" />
+                  <Icon className="w-5 h-5 text-white" />
                 </div>
                 <h2 className="font-display text-xl font-bold text-ink">
                   {category.title}
@@ -213,7 +90,8 @@ const FAQPage = () => {
                 ))}
               </div>
             </motion.section>
-          ))}
+            );
+          })}
         </div>
 
         <motion.div

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import { User, Calendar, BookOpen, MessageSquare, Award, Globe, Trash2, AlertTriangle, Crown, ArrowRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
@@ -79,7 +78,7 @@ const ProfilePage = () => {
           className="bg-white rounded-2xl shadow-lg border border-slate-100 p-8 mb-8"
         >
           <div className="flex flex-col sm:flex-row items-center gap-6">
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-amber-400 via-rose-400 to-purple-500 flex items-center justify-center">
+            <div className="w-24 h-24 rounded-full bg-siegel flex items-center justify-center">
               <User className="w-12 h-12 text-white" />
             </div>
             <div className="text-center sm:text-left">
@@ -105,7 +104,7 @@ const ProfilePage = () => {
             <div className="flex items-center gap-4">
               <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
                 isSubscribed
-                  ? 'bg-gradient-to-br from-amber-400 to-orange-500'
+                  ? 'bg-siegel'
                   : 'bg-slate-100'
               }`}>
                 <Crown className={`w-6 h-6 ${isSubscribed ? 'text-white' : 'text-slate-400'}`} />
@@ -128,7 +127,7 @@ const ProfilePage = () => {
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${
                 isSubscribed
                   ? 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                  : 'bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600'
+                  : 'bg-siegel text-white hover:bg-siegel-lift active:bg-siegel-deep'
               }`}
             >
               {isSubscribed ? 'Manage plan' : 'Upgrade'}
@@ -144,7 +143,7 @@ const ProfilePage = () => {
           transition={{ delay: 0.2 }}
           className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8"
         >
-          {statCards.map((stat, index) => (
+          {statCards.map((stat) => (
             <div
               key={stat.label}
               className="bg-white rounded-2xl shadow-lg border border-slate-100 p-6"
@@ -205,7 +204,7 @@ const ProfilePage = () => {
                 initial={{ width: 0 }}
                 animate={{ width: `${overallProgress}%` }}
                 transition={{ duration: 1, ease: 'easeOut' }}
-                className="h-full bg-gradient-to-r from-amber-500 via-rose-500 to-purple-500 rounded-full"
+                className="h-full bg-siegel rounded-full"
               />
             </div>
           </div>

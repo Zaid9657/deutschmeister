@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookMarked, ChevronRight, CheckCircle, Sun, TreePine, Waves, Moon, ChevronDown, Lock, Sparkles } from 'lucide-react';
+import { BookMarked, ChevronRight, CheckCircle, Sun, TreePine, Waves, Moon, ChevronDown, Lock } from 'lucide-react';
 import { useProgress } from '../contexts/ProgressContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -36,7 +36,7 @@ const faqItems = [
 ];
 
 const mainLevelInfo = {
-  A1: { name: 'Sunrise Warmth', icon: '🌅', color: 'from-amber-400 to-orange-400' },
+  A1: { name: 'Sunrise Warmth', icon: '🌅', color: 'from-orange-400 to-orange-500' },
   A2: { name: 'Forest Calm', icon: '🌿', color: 'from-emerald-400 to-teal-400' },
   B1: { name: 'Ocean Depth', icon: '🌊', color: 'from-blue-400 to-indigo-400' },
   B2: { name: 'Twilight Elegance', icon: '🌙', color: 'from-purple-400 to-pink-400' },
@@ -54,9 +54,9 @@ const iconMap = {
 };
 
 const GrammarSectionPage = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const navigate = useNavigate();
-  const { getGrammarSectionProgress, getGrammarTopicProgress } = useProgress();
+  const { getGrammarTopicProgress } = useProgress();
   const { getThemeForLevel } = useTheme();
 
   const isGerman = i18n.language === 'de';
@@ -224,6 +224,7 @@ const GrammarSectionPage = () => {
             "description": "Master German grammar with 64 topics covering CEFR levels A1 to B2. Clear English explanations, examples with translations, and interactive exercises.",
             "provider": {
               "@type": "Organization",
+              "@id": "https://deutsch-meister.de/#organization",
               "name": "DeutschMeister",
               "sameAs": "https://deutsch-meister.de"
             },

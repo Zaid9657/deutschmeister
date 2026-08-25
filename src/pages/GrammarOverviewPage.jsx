@@ -185,7 +185,7 @@ const GrammarOverviewPage = () => {
 
           {/* German Cases */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-6">
+            <div className="bg-siegel p-6">
               <h3 className="text-2xl font-bold text-white">German Cases Overview</h3>
               <p className="text-white/90 text-sm mt-1">The four grammatical cases and their functions</p>
             </div>
