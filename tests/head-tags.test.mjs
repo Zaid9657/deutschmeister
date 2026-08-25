@@ -77,3 +77,16 @@ test('canonical is stamped, and ld+json is not', () => {
       'shell JSON-LD must stay unstamped — SEO.jsx does not re-render WebSite/Organization, so Helmet would delete them');
   }
 });
+
+// The og:locale pair is the one stamped tag whose value is route-dependent. While
+// Helmet only appended, a hardcoded en_US was harmless — the prerendered de_DE sat
+// in front of it. Reconciliation made it authoritative, so /faq/ and /ueber-uns/
+// hydrated to <html lang="de"> beside og:locale=en_US. SEO.jsx must derive it.
+test('SEO.jsx derives og:locale from lang rather than hardcoding it', () => {
+  assert.doesNotMatch(seo, /<meta property="og:locale" content="en_US"/,
+    'og:locale is hardcoded again — German routes will hydrate to the wrong locale');
+  assert.doesNotMatch(seo, /<meta property="og:locale:alternate" content="de_DE"/,
+    'og:locale:alternate is hardcoded again');
+  assert.match(seo, /const ogLocale = lang === 'de' \? 'de_DE' : 'en_US';/,
+    'og:locale must follow the same rule as scripts/prerender-spa-routes.mjs');
+});
