@@ -52,7 +52,7 @@ const PodcastsTab = ({ subLevel }) => {
     return (
       <div className="flex items-center justify-center py-16">
         <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-10 max-w-md w-full text-center">
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-orange-400 to-rose-500 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-orange-200">
+          <div className="w-20 h-20 rounded-2xl bg-siegel flex items-center justify-center mx-auto mb-6">
             <Radio className="w-10 h-10 text-white" />
           </div>
           <h3 className="text-xl font-bold text-slate-800 mb-2">

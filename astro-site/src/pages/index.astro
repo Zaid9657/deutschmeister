@@ -26,6 +26,7 @@
 // <h1>; the canonical; real server-rendered body text; case colours ONLY in the
 // sentence demo (rule 1 in the tokens file); prerendered SPA routes linked WITH
 // a trailing slash, /signup without one (CLAUDE.md's three-case rule).
+import { ORGANIZATION_FULL } from '../data/organization.js';
 import Layout from '../layouts/Layout.astro';
 import '../styles/global.css';
 import { PLANS, eur } from '../data/pricing.js';
@@ -53,19 +54,10 @@ const jsonLd = [
     '@type': 'WebSite',
     name: 'DeutschMeister',
     url: 'https://deutsch-meister.de/',
-    description: 'Free German language learning platform for English speakers',
+    description: 'German grammar, listening and speaking practice for English speakers, CEFR levels A1.1 to B2.2 — A1.1 free, no account needed.',
     inLanguage: ['de', 'en'],
   },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: 'DeutschMeister',
-    url: 'https://deutsch-meister.de',
-    logo: 'https://deutsch-meister.de/logo.png',
-    description: 'A German language learning platform covering CEFR levels A1.1 to B2.2',
-    sameAs: ['https://www.youtube.com/@deutschmeister_de'],
-    contactPoint: { '@type': 'ContactPoint', email: 'zaid@deutsch-meister.de', contactType: 'customer service', availableLanguage: ['en', 'de'] },
-  },
+  { '@context': 'https://schema.org', ...ORGANIZATION_FULL },
 ];
 
 // The hero sentence. Same wording and same case marking as the live analyser

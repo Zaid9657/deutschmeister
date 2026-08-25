@@ -40,5 +40,7 @@ const [topics, rules, examples, exercises] = await Promise.all([
   fetchAll('grammar_exercises'),
 ]);
 
-writeFileSync(out, JSON.stringify({ topics, rules, examples, exercises }));
+// dumpedAt lets CI warn when the committed cache goes stale; the loader in
+// astro-site/src/lib/grammar.js ignores unknown keys.
+writeFileSync(out, JSON.stringify({ dumpedAt: new Date().toISOString().slice(0, 10), topics, rules, examples, exercises }));
 console.log(`Wrote ${out}`);

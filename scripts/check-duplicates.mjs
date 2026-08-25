@@ -13,6 +13,8 @@ const PAIRS = [
   // The design system. Both tailwind configs import this, so a drift here puts
   // two different palettes on the two halves of the same site.
   ['src/data/design-tokens.js', 'astro-site/src/data/design-tokens.js'],
+  // One Organization entity, one @id — both trees must agree on who publishes.
+  ['src/data/organization.js', 'astro-site/src/data/organization.js'],
 ];
 
 let failed = false;

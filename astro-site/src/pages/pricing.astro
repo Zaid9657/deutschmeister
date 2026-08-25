@@ -21,6 +21,7 @@
 //     browsers swallow it) — LemonSqueezy overlay, else same-tab navigation
 //   - one <h1>, a canonical, and real server-rendered body text, or
 //     scripts/check-built-html.mjs fails
+import { ORGANIZATION } from '../lib/siteMeta.js';
 import Layout from '../layouts/Layout.astro';
 import '../styles/global.css';
 import { PLANS, CURRENCY, num, eur } from '../data/pricing.js';
@@ -49,10 +50,25 @@ const productSchema = {
   name: 'DeutschMeister Pro',
   description: `Full access to all ${GRAMMAR_TOPIC_COUNT} German grammar topics across ${LEVEL_COUNT} CEFR levels, AI speaking practice, native-speaker listening exercises, podcasts, and ${XRAY_LINE}.`,
   brand: { '@type': 'Brand', name: 'DeutschMeister' },
-  offers: [
-    { '@type': 'Offer', name: PLANS.monthly.name, price: num(PLANS.monthly.price), priceCurrency: CURRENCY, url: 'https://deutsch-meister.de/pricing/', availability: 'https://schema.org/InStock' },
-    { '@type': 'Offer', name: PLANS.yearly.name, price: num(PLANS.yearly.price), priceCurrency: CURRENCY, url: 'https://deutsch-meister.de/pricing/', availability: 'https://schema.org/InStock' },
-  ],
+  // Everything derives from PLANS/CURRENCY — no literal enters the page source.
+  // UnitPriceSpecification says the price RECURS (per month / per year); a bare
+  // Offer read as a one-time €9.99 for a subscription. seller ties both offers
+  // to the one Organization entity by @id.
+  offers: [PLANS.monthly, PLANS.yearly].map((plan) => ({
+    '@type': 'Offer',
+    name: plan.name,
+    price: num(plan.price),
+    priceCurrency: CURRENCY,
+    url: 'https://deutsch-meister.de/pricing/',
+    availability: 'https://schema.org/InStock',
+    seller: ORGANIZATION,
+    priceSpecification: {
+      '@type': 'UnitPriceSpecification',
+      price: num(plan.price),
+      priceCurrency: CURRENCY,
+      referenceQuantity: { '@type': 'QuantitativeValue', value: 1, unitCode: plan.interval === 'year' ? 'ANN' : 'MON' },
+    },
+  })),
 };
 
 // The comparison, as a table. `ladder` marks the one row that renders rungs

@@ -27,6 +27,9 @@ const VideoDetailPage = () => {
 
   useEffect(() => {
     fetchVideo();
+    // fetchVideo is re-created every render and closes over `id`, which IS the
+    // dependency; depending on the function would refetch on every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const fetchVideo = async () => {

@@ -74,6 +74,23 @@ test('every guide has enough substance to be worth indexing', () => {
   assert.deepEqual(failures, [], `thin guides:\n  ${failures.join('\n  ')}`);
 });
 
+test('every guide leads with a definition-first answer of citable length', () => {
+  // GEO fix, geo-weekly.md fix type 2: an answer an engine can lift from the top
+  // third. telc-b1 is the highest-volume page on the site and used to bury its
+  // pass marks at 37% depth behind a lead containing no extractable fact.
+  //
+  // The band is a citation-shape constraint, not a style rule: below ~45 words an
+  // answer omits the mechanism, above ~120 it stops being liftable as one passage.
+  const failures = [];
+  for (const g of GUIDES) {
+    if (!g.answer) { failures.push(`${g.slug}: no answer block`); continue; }
+    const words = g.answer.trim().split(/\s+/).length;
+    if (words < 45 || words > 120) failures.push(`${g.slug}: answer is ${words} words (want 45-120)`);
+    if (/<[a-z]/i.test(g.answer)) failures.push(`${g.slug}: answer contains markup; it is rendered as text`);
+  }
+  assert.deepEqual(failures, []);
+});
+
 test('section ids are unique within a guide and match their TOC anchors', () => {
   const failures = [];
   for (const g of GUIDES) {

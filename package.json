@@ -14,7 +14,7 @@
     "lighthouse:prod": "node scripts/lighthouse-audit.js --url=https://deutsch-meister.de --preset=mobile",
     "indexnow": "node scripts/ping-indexnow.mjs",
     "optimize:images": "node scripts/optimize-images.cjs",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings=0",
     "lint:fix": "eslint . --fix",
     "check:duplicates": "node scripts/check-duplicates.mjs",
     "test": "node --test tests/*.test.mjs",

@@ -17,37 +17,37 @@
   <!-- Main Sections -->
   <url>
     <loc>https://deutsch-meister.de/level-test/</loc>
-    <lastmod>2026-08-22</lastmod>
+    <lastmod>2026-08-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://deutsch-meister.de/speaking/</loc>
-    <lastmod>2026-08-22</lastmod>
+    <lastmod>2026-08-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://deutsch-meister.de/analyze/</loc>
-    <lastmod>2026-08-22</lastmod>
+    <lastmod>2026-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://deutsch-meister.de/listening/</loc>
-    <lastmod>2026-08-22</lastmod>
+    <lastmod>2026-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://deutsch-meister.de/podcasts/</loc>
-    <lastmod>2026-08-22</lastmod>
+    <lastmod>2026-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://deutsch-meister.de/reading/</loc>
-    <lastmod>2026-08-22</lastmod>
+    <lastmod>2026-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -63,4 +63,16 @@
        belong here. /intro, /video-library, /vocabulary and the /listening/<level>
        pages were removed — they ship an empty #root to crawlers, so listing them
        submitted blank pages to Google. Re-add a URL only once it is prerendered. -->
+  <url>
+    <loc>https://deutsch-meister.de/faq/</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://deutsch-meister.de/ueber-uns/</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
 </urlset>

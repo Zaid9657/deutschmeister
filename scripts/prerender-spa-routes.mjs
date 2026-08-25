@@ -20,6 +20,31 @@
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
+// Counts come from the claims data layer, never retyped here. The ramp that used
+// to live in this file was invented — see rule 2 in src/data/marketing.js.
+import {
+  READING_LESSON_COUNT,
+  READING_LESSON_COUNTS_BY_LEVEL,
+  LEVEL_COUNT,
+  TRIAL_SPEAKING_SESSIONS,
+} from '../src/data/marketing.js';
+// Head fields come from the one registry both this script and the <SEO> calls
+// consume — src/data/seoRoutes.js. The route objects below carry only what is
+// genuinely per-surface: the JSON-LD (deliberately diverged from the client
+// blocks) and the static #root copy.
+import { SEO_ROUTES, fullTitle } from '../src/data/seoRoutes.js';
+import { ORG_REF, ORG_ID } from '../src/data/organization.js';
+import { FAQ_CATEGORIES, faqPageJsonLd } from '../src/data/faqContent.js';
+
+const head = (route) => {
+  const e = SEO_ROUTES[route];
+  return {
+    title: fullTitle(e.title),
+    description: e.description,
+    ...(e.keywords ? { keywords: e.keywords } : {}),
+    ...(e.lang === 'de' ? { ogLocale: 'de_DE', htmlLang: 'de' } : {}),
+  };
+};
 
 const DIST = process.argv[2] || 'dist';
 const SHELL = join(DIST, 'app.html');
@@ -41,19 +66,13 @@ const LEVEL_SUBTITLES = {
   'B1.1': 'Intermediate I', 'B1.2': 'Intermediate II',
   'B2.1': 'Upper Intermediate I', 'B2.2': 'Upper Intermediate II',
 };
-// src/pages/ReadingSectionPage.jsx LESSON_COUNTS
-const READING_LESSON_COUNTS = {
-  'a1.1': 3, 'a1.2': 4, 'a2.1': 5, 'a2.2': 6,
-  'b1.1': 7, 'b1.2': 8, 'b2.1': 9, 'b2.2': 10,
-};
-
 const listeningCards = LEVELS.map((lvl) => `
       <a href="/listening/${lvl.toLowerCase()}" class="block relative rounded-2xl border border-slate-200 bg-white p-5 shadow-sm overflow-hidden">
         <h3 class="font-display font-semibold text-lg text-slate-800">${lvl}</h3>
         <p class="text-sm text-slate-500">${LEVEL_SUBTITLES[lvl]}</p>
       </a>`).join('');
 
-const readingCards = Object.entries(READING_LESSON_COUNTS).map(([lvl, count]) => `
+const readingCards = Object.entries(READING_LESSON_COUNTS_BY_LEVEL).map(([lvl, count]) => `
       <a href="/reading/${lvl}" class="block bg-white rounded-xl p-4 shadow-sm border border-slate-100">
         <h3 class="font-semibold text-slate-800">${lvl.toUpperCase()}</h3>
         <p class="text-xs text-slate-500">${count} reading lessons</p>
@@ -76,7 +95,6 @@ const PODCAST_FAQS = [
   // database have empty transcripts. The 2026-08-16 audit (B-04) removed this
   // claim from src/pages/PodcastsPage.jsx but missed this second, hardcoded
   // copy, so the indexed FAQPage rich result kept promising transcripts.
-  { q: 'What level are the podcasts?', a: 'Episodes are graded from A1 to B2. Each one is tagged with its level so you can pick something at or just above where you are.' },
   { q: 'How many podcast episodes are there?', a: 'We have 24 episodes total — 3 episodes for each of the 8 CEFR levels (A1.1, A1.2, A2.1, A2.2, B1.1, B1.2, B2.1, B2.2). New episodes are added regularly.' },
 ];
 
@@ -124,34 +142,46 @@ const ROUTES = [
   {
     path: '/speaking',
     dir: 'speaking',
-    title: 'German Speaking Practice with AI | DeutschMeister',
-    description: 'Practice speaking German with an AI conversation partner: guided missions or free conversation, with instant feedback. Levels A1 to B2.',
-    jsonLd: [],
+    ...head('/speaking'),
+    jsonLd: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de/' },
+          { '@type': 'ListItem', position: 2, name: 'Speaking Practice', item: 'https://deutsch-meister.de/speaking/' },
+        ],
+      },
+    ],
+    // Mirrors the guest branch of src/pages/SpeakingPage.jsx — the page an
+    // anonymous visitor actually gets. The old mirror showed the logged-in
+    // setup screen, which no anonymous user could ever reach.
     content: `
-<div class="min-h-screen bg-slate-50 pt-16"><div class="max-w-lg mx-auto px-4 sm:px-6 py-6 sm:py-10">
-  <div class="mb-6">
-    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-teal-100/80 text-teal-700 text-[11px] font-semibold mb-2 tracking-wide uppercase">AI Speaking Practice</div>
-    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">German Speaking Practice</h1>
+<div class="min-h-screen bg-paper px-4 pt-24 pb-16"><div class="max-w-2xl mx-auto text-center">
+  <h1 class="text-3xl sm:text-4xl font-bold text-ink mb-3">German Speaking Practice</h1>
+  <p class="text-lg text-graphite mb-8 max-w-xl mx-auto">Speak German out loud with an AI conversation partner that listens, answers at your level, and tells you afterwards what was right, what to fix, and what a native speaker would have said instead.</p>
+  <div class="grid sm:grid-cols-3 gap-4 text-left mb-8">
+    <div class="bg-white rounded-xl border border-rule p-5">
+      <h2 class="font-semibold text-ink text-sm mb-1.5">Every level, A1 to B2</h2>
+      <p class="text-sm text-graphite leading-relaxed">The partner adapts its vocabulary and pace to your CEFR level — from first sentences at A1.1 to open discussion at B2.2.</p>
+    </div>
+    <div class="bg-white rounded-xl border border-rule p-5">
+      <h2 class="font-semibold text-ink text-sm mb-1.5">Missions or free talk</h2>
+      <p class="text-sm text-graphite leading-relaxed">Guided scenarios — ordering, appointments, small talk — or open conversation. Sessions run 5, 10 or 15 minutes.</p>
+    </div>
+    <div class="bg-white rounded-xl border border-rule p-5">
+      <h2 class="font-semibold text-ink text-sm mb-1.5">Feedback you can use</h2>
+      <p class="text-sm text-graphite leading-relaxed">After each session: grammar, vocabulary and pronunciation, with concrete corrections — like a patient tutor with unlimited time.</p>
+    </div>
   </div>
-  <p class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Level</p>
-  <div class="flex gap-2 overflow-x-auto pb-2 mb-1">
-    ${LEVELS.map((l) => `<span class="flex-shrink-0 px-4 py-2 rounded-xl text-sm font-bold bg-white text-slate-600 border border-slate-200">${l}</span>`).join('\n    ')}
-  </div>
-  <p class="text-sm text-slate-500 mb-6">Beginner 1</p>
-  <p class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Duration</p>
-  <p class="text-slate-800 font-medium mb-6">5, 10 or 15 minutes</p>
-  <p class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Mission (optional)</p>
-  <p class="text-slate-600 text-sm mb-6">Free conversation or guided missions with instant feedback — levels A1 to B2.</p>
-  <p class="flex items-center justify-center gap-2 w-full py-4 bg-teal-500 text-white font-bold rounded-2xl shadow-md shadow-teal-200 text-center">Start</p>
-  <p class="text-center text-xs text-slate-400 mt-3">Free conversation · 5 minutes</p>
+  <p><a href="/signup" class="inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 text-base font-semibold bg-siegel text-white">Sign up free</a></p>
+  <p class="text-sm text-graphite mt-4">A free account includes ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions — no card needed. Levels: ${LEVELS.join(', ')}.</p>
 </div></div>`,
   },
   {
     path: '/level-test',
     dir: 'level-test',
-    title: 'Free German Level Test (A1–B2) | DeutschMeister',
-    description: 'Free German level test: find your CEFR level in 15 minutes. Reading, listening and speaking, with instant results and a personalised next step.',
-    keywords: 'German level test, CEFR test, German placement test, what level is my German, German proficiency test, free German test',
+    ...head('/level-test'),
     jsonLd: [
       {
         '@context': 'https://schema.org',
@@ -162,14 +192,14 @@ const ROUTES = [
         learningResourceType: 'Assessment',
         inLanguage: ['en', 'de'],
         isAccessibleForFree: true,
-        provider: { '@type': 'Organization', name: 'DeutschMeister', url: 'https://deutsch-meister.de' },
+        provider: ORG_REF,
       },
       faqPageSchema(LEVEL_TEST_FAQS),
       {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de' },
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de/' },
           { '@type': 'ListItem', position: 2, name: 'Level Test', item: 'https://deutsch-meister.de/level-test/' },
         ],
       },
@@ -213,9 +243,7 @@ ${faqSectionPlain(LEVEL_TEST_FAQS)}
   {
     path: '/analyze',
     dir: 'analyze',
-    title: 'Sentence X-Ray — Analyze German Sentences | DeutschMeister',
-    description: 'Paste any German sentence and instantly see the grammatical breakdown. Color-coded cases, word roles, and explanations for why each word works the way it does.',
-    keywords: 'German grammar analyzer, German sentence analysis, German cases, nominative accusative dative genitive, learn German grammar',
+    ...head('/analyze'),
     jsonLd: [
       {
         '@context': 'https://schema.org',
@@ -225,8 +253,18 @@ ${faqSectionPlain(LEVEL_TEST_FAQS)}
         url: 'https://deutsch-meister.de/analyze/',
         applicationCategory: 'EducationalApplication',
         operatingSystem: 'Any',
-        offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-        provider: { '@type': 'Organization', name: 'DeutschMeister', url: 'https://deutsch-meister.de' },
+        // No `offers`: X-Ray is metered at ANON_DAILY_LIMIT/day, so a bare price:0
+        // is the same 'unlimited beside a price' shape marketing.js exists to stop.
+        // WebApplication earns no rich result without an aggregateRating anyway.
+        provider: ORG_REF,
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de/' },
+          { '@type': 'ListItem', position: 2, name: 'Sentence X-Ray', item: 'https://deutsch-meister.de/analyze/' },
+        ],
       },
     ],
     content: `
@@ -245,6 +283,15 @@ ${faqSectionPlain(LEVEL_TEST_FAQS)}
     <div class="rounded-2xl border border-dashed border-slate-300 bg-white/60 p-4">
       <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Example result</p>
       <p class="text-sm font-medium text-slate-500 italic mb-3">"Ich gebe dir das Buch." — <span class="not-italic">I give you the book.</span></p>
+      <!-- The word-by-word breakdown IS the product; mirrored from PreviewExample
+           in src/pages/SentenceXRay.jsx, case colours from the kasus tokens. -->
+      <ul class="flex flex-wrap gap-2 list-none">
+        <li class="flex flex-col items-center gap-1"><span class="px-3 py-1.5 rounded-lg text-sm font-semibold border bg-[#E6F1FB] border-[#378ADD] text-[#0C447C]">Ich</span><span class="text-xs text-slate-400 italic">I — subject, Nominative</span></li>
+        <li class="flex flex-col items-center gap-1"><span class="px-3 py-1.5 rounded-lg text-sm font-semibold border bg-slate-100 border-slate-300 text-slate-700">gebe</span><span class="text-xs text-slate-400 italic">give — verb</span></li>
+        <li class="flex flex-col items-center gap-1"><span class="px-3 py-1.5 rounded-lg text-sm font-semibold border bg-[#E1F5EE] border-[#1D9E75] text-[#085041]">dir</span><span class="text-xs text-slate-400 italic">to you — indirect object, Dative</span></li>
+        <li class="flex flex-col items-center gap-1"><span class="px-3 py-1.5 rounded-lg text-sm font-semibold border bg-[#FAECE7] border-[#D85A30] text-[#712B13]">das Buch</span><span class="text-xs text-slate-400 italic">the book — direct object, Accusative</span></li>
+      </ul>
+      <p class="text-sm text-slate-600 mt-3 leading-relaxed"><span class="font-semibold">Why "dir" and not "dich"?</span> "geben" takes the thing given in the Accusative (das Buch) and the receiver in the Dative (dir). The X-Ray labels every word with its case, its role in the sentence, and the reason — for any sentence you paste.</p>
     </div>
     <div>
       <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-1">Or try an example</p>
@@ -258,20 +305,21 @@ ${faqSectionPlain(LEVEL_TEST_FAQS)}
   {
     path: '/podcasts',
     dir: 'podcasts',
-    title: 'German Podcasts for Learners A1–B2 | DeutschMeister',
-    description: 'Free German podcasts for learners: 24 episodes of native-speaker audio graded A1 to B2. Build listening skills while you commute or relax.',
-    keywords: 'German podcast for beginners, learn German podcast, German listening practice, German audio lessons, German podcast with transcript',
+    ...head('/podcasts'),
     jsonLd: [
       {
         '@context': 'https://schema.org',
         '@type': 'PodcastSeries',
         name: 'DeutschMeister German Learning Podcast',
         description: 'German learning podcast: 24 episodes from A1 to B2, each a natural native-speaker conversation graded to a CEFR level.',
-        webFeed: 'https://deutsch-meister.de/podcasts/',
+        url: 'https://deutsch-meister.de/podcasts/',
+        // webFeed must be an RSS/Atom feed, not the HTML page. The feed is served
+        // by netlify/functions/podcast-feed.js via the netlify.toml rewrite.
+        webFeed: 'https://deutsch-meister.de/podcast-feed.xml',
         inLanguage: ['de', 'en'],
         numberOfEpisodes: 24,
         genre: ['Education', 'Language Learning'],
-        author: { '@type': 'Organization', name: 'DeutschMeister', url: 'https://deutsch-meister.de' },
+        author: ORG_REF,
         isAccessibleForFree: true,
       },
       faqPageSchema(PODCAST_FAQS),
@@ -279,7 +327,7 @@ ${faqSectionPlain(LEVEL_TEST_FAQS)}
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de' },
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de/' },
           { '@type': 'ListItem', position: 2, name: 'Podcasts', item: 'https://deutsch-meister.de/podcasts/' },
         ],
       },
@@ -289,7 +337,7 @@ ${faqSectionPlain(LEVEL_TEST_FAQS)}
   <div class="text-center mb-12">
     <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-50 border border-orange-200 text-orange-700 text-sm font-medium mb-4">24 Episodes Available</div>
     <h1 class="font-display text-4xl sm:text-5xl font-bold text-slate-800 mb-4">German Podcasts for Learners</h1>
-    <p class="text-lg text-slate-600 max-w-2xl mx-auto mb-2">Native speaker audio with transcripts • Levels A1 to B2</p>
+    <p class="text-lg text-slate-600 max-w-2xl mx-auto mb-2">Native speaker audio, graded by CEFR level • A1 to B2</p>
     <p class="text-slate-500 max-w-xl mx-auto">Listen to authentic German conversations designed for language learners. Every episode is graded by CEFR level, from A1 to B2.</p>
   </div>
   <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 sm:p-10 mb-12">
@@ -300,7 +348,6 @@ ${faqSectionPlain(LEVEL_TEST_FAQS)}
       <li>Improve listening comprehension with native speaker audio</li>
       <li>Learn natural speech patterns and pronunciation</li>
       <li>Study anywhere — while commuting, exercising, or relaxing</li>
-      <li>Full transcripts help you catch every word</li>
       <li>Vocabulary highlights teach you new words in context</li>
     </ul>
     <h3 class="text-xl font-bold text-slate-800 mt-6 mb-3">Podcasts for every level</h3>
@@ -316,15 +363,13 @@ ${faqSectionTailwind(PODCAST_FAQS)}
   {
     path: '/listening',
     dir: 'listening',
-    title: 'German Listening Practice A1–B2 | DeutschMeister',
-    description: 'Improve your German listening comprehension with 480 native speaker dialogues across all CEFR levels. Interactive exercises with questions and instant feedback.',
-    keywords: 'German listening practice, German audio exercises, German listening comprehension, learn German listening, German dialogues',
+    ...head('/listening'),
     jsonLd: [
       {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de' },
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de/' },
           { '@type': 'ListItem', position: 2, name: 'Listening', item: 'https://deutsch-meister.de/listening/' },
         ],
       },
@@ -342,15 +387,13 @@ ${faqSectionTailwind(PODCAST_FAQS)}
   {
     path: '/reading',
     dir: 'reading',
-    title: 'German Reading Practice A1–B2 | DeutschMeister',
-    description: 'Improve your German reading comprehension with 52 leveled reading passages. Authentic texts with comprehension questions for all CEFR levels from A1 to B2.',
-    keywords: 'German reading practice, German reading comprehension, learn German reading, German texts for learners, CEFR reading exercises',
+    ...head('/reading'),
     jsonLd: [
       {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de' },
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de/' },
           { '@type': 'ListItem', position: 2, name: 'Reading', item: 'https://deutsch-meister.de/reading/' },
         ],
       },
@@ -362,13 +405,131 @@ ${faqSectionTailwind(PODCAST_FAQS)}
     <p class="text-slate-600">Improve your reading comprehension step by step</p>
   </div>
   <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-    <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100"><p class="text-2xl font-bold text-slate-800">52</p><p class="text-sm text-slate-500">Total Lessons</p></div>
-    <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100"><p class="text-2xl font-bold text-slate-800">8</p><p class="text-sm text-slate-500">Levels</p></div>
+    <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100"><p class="text-2xl font-bold text-slate-800">${READING_LESSON_COUNT}</p><p class="text-sm text-slate-500">Total Lessons</p></div>
+    <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100"><p class="text-2xl font-bold text-slate-800">${LEVEL_COUNT}</p><p class="text-sm text-slate-500">Levels</p></div>
   </div>
   <h2 class="font-semibold text-slate-800 mb-3">Overall Reading Progress</h2>
   <div class="grid gap-4 sm:grid-cols-2">${readingCards}
   </div>
 </div></div>`,
+  },
+  {
+    // German content page. Was a bare SPA rewrite serving the empty shell —
+    // footer-linked from every static page, invisible to every crawler, while
+    // its FAQPage JSON-LD promised 21 answers the accordion only shows on
+    // click. The answers here come from the same src/data/faqContent.js the
+    // React page renders, so the two cannot drift.
+    path: '/faq',
+    dir: 'faq',
+    ...head('/faq'),
+    jsonLd: [
+      faqPageJsonLd(),
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Start', item: 'https://deutsch-meister.de/' },
+          { '@type': 'ListItem', position: 2, name: 'Häufige Fragen', item: 'https://deutsch-meister.de/faq/' },
+        ],
+      },
+    ],
+    content: `
+<div class="min-h-screen bg-paper"><div class="max-w-3xl mx-auto px-4 sm:px-6 pt-24 pb-20">
+  <div class="text-center mb-16">
+    <h1 class="font-display text-4xl sm:text-5xl font-bold text-ink mb-4">Häufige Fragen</h1>
+    <p class="text-lg text-graphite max-w-xl mx-auto">Alles, was du über Deutschmeister wissen musst — kurz und ehrlich.</p>
+  </div>
+  <div class="space-y-12">${FAQ_CATEGORIES.map((cat) => `
+    <section>
+      <h2 class="font-display text-xl font-bold text-ink mb-5">${cat.title}</h2>
+      <div class="space-y-3">${cat.items.map((item) => `
+        <div class="border border-rule rounded-xl px-5 py-4">
+          <h3 class="font-medium text-ink mb-2">${item.q}</h3>
+          <p class="text-graphite text-sm leading-relaxed">${item.a}</p>
+        </div>`).join('')}
+      </div>
+    </section>`).join('')}
+  </div>
+  <div class="mt-16 text-center">
+    <p class="text-graphite mb-4">Noch Fragen? Einfach loslegen — A1.1 ist komplett kostenlos.</p>
+    <a href="/signup" class="inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 text-base font-semibold bg-siegel text-white">Kostenlos starten</a>
+  </div>
+</div></div>`,
+  },
+  {
+    // Mirrored from src/pages/UeberUnsPage.jsx — keep in sync. The site's one
+    // E-E-A-T page (founder, team, mission) was invisible to crawlers.
+    path: '/ueber-uns',
+    dir: 'ueber-uns',
+    ...head('/ueber-uns'),
+    jsonLd: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        '@id': ORG_ID,
+        name: 'DeutschMeister',
+        url: 'https://deutsch-meister.de',
+        founder: { '@type': 'Person', name: 'Zaid', jobTitle: 'Arzt & Gründer' },
+        foundingDate: '2024',
+        description: 'KI-gestützte Plattform zum Deutschlernen — Sprechtraining, Grammatik und Prüfungsvorbereitung von A1 bis B2. Entwickelt von einem Team von Ärzten in Deutschland.',
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Start', item: 'https://deutsch-meister.de/' },
+          { '@type': 'ListItem', position: 2, name: 'Über uns', item: 'https://deutsch-meister.de/ueber-uns/' },
+        ],
+      },
+    ],
+    content: `
+<div class="min-h-screen bg-paper">
+  <section class="pt-28 pb-20"><div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+    <h1 class="font-display text-4xl sm:text-5xl font-bold text-ink mb-6 leading-tight">Deutsch lernen sollte nicht dein Albtraum sein.</h1>
+    <p class="text-lg sm:text-xl text-graphite max-w-2xl mx-auto mb-10 leading-relaxed">Die meisten Apps machen Sprachenlernen zum Spiel — und umgehen dabei das Schwere: echtes Sprechen, echte Grammatik, echte Prüfungsvorbereitung. Deutschmeister macht das Gegenteil.</p>
+    <ul class="flex flex-wrap justify-center gap-3 list-none">
+      <li class="inline-flex items-center px-4 py-2 rounded-full bg-white border border-rule text-sm text-ink font-medium">Von Ärzten in Deutschland entwickelt</li>
+      <li class="inline-flex items-center px-4 py-2 rounded-full bg-white border border-rule text-sm text-ink font-medium">Für ernsthafte Lerner</li>
+      <li class="inline-flex items-center px-4 py-2 rounded-full bg-white border border-rule text-sm text-ink font-medium">DSGVO-konform – Server in der EU</li>
+    </ul>
+  </div></section>
+  <section class="py-20 bg-white border-y border-rule"><div class="max-w-2xl mx-auto px-4 sm:px-6">
+    <h2 class="font-display text-2xl sm:text-3xl font-bold text-ink mb-6">Wer steckt dahinter</h2>
+    <div class="text-graphite leading-relaxed space-y-4">
+      <p>Ich bin Zaid. Arzt, Blue Card, Deutschland. Ich bin von außen gekommen und habe mich durch die Sprachbarriere gekämpft — jeden Tag, jede Prüfung, jedes Gespräch, bei dem mir die Worte fehlten.</p>
+      <p>Ich habe Kollegen scheitern sehen. Nicht, weil sie dumm waren. Sondern weil ihr Deutsch nicht gut genug war. Brillante Ärzte, die an der Fachsprachprüfung hängengeblieben sind. Das hat mich nicht losgelassen.</p>
+      <p>Zuerst habe ich MedMeister gebaut — eine Plattform speziell für Ärzte, die sich auf die Kenntnisprüfung vorbereiten. Dann habe ich gemerkt: Das gleiche Problem trifft jeden, der Deutsch unter Druck lernt. Nicht nur Mediziner. Pflegekräfte, Ingenieure, Studenten, Familien.</p>
+      <p>Heute steht hinter Deutschmeister ein Team von Ärzten in Deutschland — Leute, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind und die Plattform weiterentwickeln.</p>
+      <p class="font-medium text-ink">Deutschmeister ist diese Idee — für alle geöffnet.</p>
+    </div>
+  </div></section>
+  <section class="py-20"><div class="max-w-4xl mx-auto px-4 sm:px-6">
+    <h2 class="font-display text-2xl sm:text-3xl font-bold text-ink text-center mb-12">Warum Deutschmeister anders ist</h2>
+    <div class="grid sm:grid-cols-3 gap-6">
+      <div class="bg-white rounded-2xl border border-rule p-6"><h3 class="font-bold text-ink mb-2">Echtes Sprechen, nicht nur Klicken</h3><p class="text-sm text-graphite leading-relaxed">KI bewertet deine Aussprache, Grammatik und Wortschatz wie ein echter Prüfer. Keine Multiple-Choice-Show.</p></div>
+      <div class="bg-white rounded-2xl border border-rule p-6"><h3 class="font-bold text-ink mb-2">Grammatik, die haftet</h3><p class="text-sm text-graphite leading-relaxed">Sentence X-Ray seziert echte Sätze. Du verstehst das Wieso, nicht nur das Was.</p></div>
+      <div class="bg-white rounded-2xl border border-rule p-6"><h3 class="font-bold text-ink mb-2">Gebaut von Leuten, die’s selbst durchgemacht haben</h3><p class="text-sm text-graphite leading-relaxed">Kein Konzern. Ein Team von Ärzten in Deutschland, das weiß, wie es ist, wenn die Sprache zwischen dir und deinem Leben steht.</p></div>
+    </div>
+  </div></section>
+  <section class="py-20 bg-ink"><div class="max-w-2xl mx-auto px-4 sm:px-6 text-center">
+    <h2 class="font-display text-2xl sm:text-3xl font-bold text-white mb-6">Unsere Mission</h2>
+    <p class="text-lg text-rule leading-relaxed">Den Menschen, die wirklich Deutsch brauchen — Migranten, Ärzte, Pflegekräfte, Studenten — das Werkzeug geben, das sie verdienen. Nicht das günstigste. Das beste. Weil ihre Zukunft davon abhängt, ob sie verstanden werden.</p>
+  </div></section>
+  <section class="py-20"><div class="max-w-2xl mx-auto px-4 sm:px-6">
+    <h2 class="font-display text-2xl sm:text-3xl font-bold text-ink mb-8 text-center">Was kommt als Nächstes</h2>
+    <ul class="space-y-4 list-none">
+      <li class="p-4 bg-white rounded-xl border border-rule text-ink font-medium">Mehr Sprachstufen — C1 und darüber hinaus</li>
+      <li class="p-4 bg-white rounded-xl border border-rule text-ink font-medium">Live-Prüfungssimulationen für Goethe / telc / TestDaF</li>
+      <li class="p-4 bg-white rounded-xl border border-rule text-ink font-medium">Spezialisierte Module: Pflegedeutsch, Wirtschaftsdeutsch</li>
+      <li class="p-4 bg-white rounded-xl border border-rule text-ink font-medium">Community — lerne mit anderen, nicht allein</li>
+    </ul>
+  </div></section>
+  <section class="py-24 bg-ink"><div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+    <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mb-8">Bereit anzufangen?</h2>
+    <p><a href="/signup" class="inline-flex items-center justify-center px-8 py-4 bg-paper text-ink font-semibold rounded-md">Kostenlos testen</a>
+    <a href="/pricing/" class="inline-flex items-center justify-center px-8 py-4 border-2 border-white/40 text-white font-semibold rounded-2xl">Preise ansehen</a></p>
+  </div></section>
+</div>`,
   },
 ];
 
@@ -390,6 +551,13 @@ for (const route of ROUTES) {
   const url = `${BASE}${route.path}/`;
   let html = shell;
   html = mustReplace(html, /<title>[\s\S]*?<\/title>/, `<title>${route.title}</title>`, 'title', route.path);
+  // The shell ships noindex (it is a duplicate on every rewrite URL); the
+  // prerendered routes are the indexable ones, so the tag must come out here.
+  html = mustReplace(html, /\s*<meta name="robots" content="noindex">/, '', 'robots removal', route.path);
+  if (route.htmlLang && route.htmlLang !== 'en') {
+    // German pages (/faq/, /ueber-uns/) must not ship the shell's lang="en".
+    html = mustReplace(html, /(<html[^>]*\blang=")[^"]*(")/, `$1${route.htmlLang}$2`, 'html lang', route.path);
+  }
   html = mustReplace(html, /(<meta name="description" content=")[^"]*(")/, `$1${esc(route.description)}$2`, 'description', route.path);
   if (route.keywords) {
     html = mustReplace(html, /(<meta name="keywords" content=")[^"]*(")/, `$1${esc(route.keywords)}$2`, 'keywords', route.path);

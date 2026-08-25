@@ -11,19 +11,18 @@ import { isLevelFree } from '../config/freeTier';
 import { mainLevels, getSubLevels, levelThemes as contentLevelThemes } from '../data/content';
 import { getReadingLessonCounts, getReadingLessonsByLevel } from '../services/readingService';
 import SEO from '../components/SEO';
+import { seoProps } from '../data/seoRoutes.js';
+import { READING_LESSON_COUNTS_BY_LEVEL } from '../data/marketing';
 
-const LESSON_COUNTS = {
-  'a1.1': 3, 'a1.2': 4,
-  'a2.1': 5, 'a2.2': 6,
-  'b1.1': 7, 'b1.2': 8,
-  'b2.1': 9, 'b2.2': 10,
-};
+// Measured against reading_lessons (2026-08-24), not interpolated — the old
+// 3,4,5,6,7,8,9,10 ramp here matched no measurement. See src/data/marketing.js.
+const LESSON_COUNTS = READING_LESSON_COUNTS_BY_LEVEL;
 
 // Fallback only — the real count comes from the DB (see dbLessonCounts).
 const TOTAL_LESSONS = 66;
 
 const mainLevelInfo = {
-  A1: { name: 'Sunrise Warmth', icon: '🌅', color: 'from-amber-400 to-orange-400' },
+  A1: { name: 'Sunrise Warmth', icon: '🌅', color: 'from-orange-400 to-orange-500' },
   A2: { name: 'Forest Calm', icon: '🌿', color: 'from-emerald-400 to-teal-400' },
   B1: { name: 'Ocean Depth', icon: '🌊', color: 'from-blue-400 to-indigo-400' },
   B2: { name: 'Twilight Elegance', icon: '🌙', color: 'from-purple-400 to-pink-400' },
@@ -37,7 +36,7 @@ const iconMap = {
 };
 
 const ReadingSectionPage = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const navigate = useNavigate();
   const { isItemLearned } = useProgress();
   const { getThemeForLevel } = useTheme();
@@ -192,10 +191,7 @@ const ReadingSectionPage = () => {
   return (
     <>
       <SEO
-        title="German Reading Practice | Graded Lessons A1-B2"
-        description="Improve your German reading comprehension with leveled reading passages. Authentic texts with comprehension questions for all CEFR levels from A1 to B2."
-        keywords="German reading practice, German reading comprehension, learn German reading, German texts for learners, CEFR reading exercises"
-        path="/reading/"
+        {...seoProps('/reading')}
         structuredData={{
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",

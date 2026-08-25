@@ -14,19 +14,19 @@
   var GA_ID = 'G-RXNM5897FC';
 
   function readChoice() {
-    try { return window.localStorage.getItem(STORAGE_KEY); } catch (e) { return null; }
+    try { return window.localStorage.getItem(STORAGE_KEY); } catch { return null; }
   }
   function saveChoice(value) {
-    try { window.localStorage.setItem(STORAGE_KEY, value); } catch (e) { /* ignore */ }
+    try { window.localStorage.setItem(STORAGE_KEY, value); } catch { /* ignore */ }
   }
   function clearChoice() {
-    try { window.localStorage.removeItem(STORAGE_KEY); } catch (e) { /* ignore */ }
+    try { window.localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
   }
 
   // Inject GA4 exactly once. Also notifies the SPA (dm-consent-accepted) so
   // consent-gated tools like PostHog can start without a page reload.
   function loadAnalytics() {
-    try { window.dispatchEvent(new CustomEvent('dm-consent-accepted')); } catch (e) { /* ignore */ }
+    try { window.dispatchEvent(new CustomEvent('dm-consent-accepted')); } catch { /* ignore */ }
     if (window.__dmGaLoaded) return;
     window.__dmGaLoaded = true;
     var s = document.createElement('script');

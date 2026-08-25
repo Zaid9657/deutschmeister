@@ -1,4 +1,4 @@
-const WELCOME_HTML = (email) => `<!DOCTYPE html>
+const WELCOME_HTML = (_email) => `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />

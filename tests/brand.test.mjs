@@ -196,10 +196,13 @@ const MAX_LEGACY_CTA_FILES = 0;
 /**
  * Files still carrying ANY retired-brand gradient stop. May only go down.
  * 2026-08-22: 10 — the level/listening components and the account, grammar,
- * X-Ray, subscription and video-library screens. These were never in the
- * migration's scope; the number is here so that is visible rather than implied.
+ * X-Ray, subscription and video-library screens, left out of the migration's
+ * scope at the time. 2026-08-24: 0 — those ten migrated onto the tokens
+ * (flat siegel CTAs, siegel-wash cards, no resting shadows; A1's level ramp
+ * moved off its amber stop). At zero this too is a plain ban, like
+ * MAX_LEGACY_CTA_FILES above — which is the point a ratchet exists to reach.
  */
-const MAX_RETIRED_STOP_FILES = 10;
+const MAX_RETIRED_STOP_FILES = 0;
 
 test('the retired CTA is receding, never spreading', () => {
   const files = [];

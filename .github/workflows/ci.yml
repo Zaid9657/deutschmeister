@@ -50,24 +50,51 @@ jobs:
       # (scripts/prerender-spa-routes.mjs), so reviewing the source tells you
       # what the injector intends, never what a crawler receives. Reproduces the
       # two Netlify build steps the check needs, then reads dist/.
-      - name: Prerender SPA routes
+      - name: Carve the SPA shell out of dist
+        run: mv dist/index.html dist/app.html
+
+      # The Astro half builds OFFLINE from the committed grammar cache — the
+      # egress-free path the comment below always described. Order matters: the
+      # SPA build made dist/, app.html was carved out above, and the copy steps
+      # mirror netlify.toml's build command so the verify step sees the same
+      # dist/ a deploy produces.
+      - name: Guard the grammar cache freshness
         run: |
-          mv dist/index.html dist/app.html
-          node scripts/prerender-spa-routes.mjs
+          node -e "
+            const c = require('./grammar-content-cache.json');
+            const days = Math.floor((Date.now() - new Date(c.dumpedAt)) / 86400000);
+            console.log('grammar-content-cache.json dumped ' + c.dumpedAt + ' (' + days + ' days ago): ' +
+              c.topics.length + ' topics, ' + c.rules.length + ' rules, ' + c.examples.length + ' examples, ' + c.exercises.length + ' exercises');
+            if (days > 30) console.log('::warning title=Stale grammar cache::grammar-content-cache.json is ' + days +
+              ' days old. CI is verifying against a snapshot, not the database — refresh with: node scripts/dump-grammar-cache.mjs grammar-content-cache.json');
+          "
 
+      - name: Build Astro site (offline, from the committed cache)
+        run: |
+          npm --prefix astro-site ci
+          GRAMMAR_CONTENT_CACHE="$PWD/grammar-content-cache.json" npm --prefix astro-site run build | tee /tmp/astro-build.log
+          # The cache loader fails OPEN: a corrupt cache silently falls back to a
+          # live Supabase fetch, which dies much later with a misleading error.
+          grep -q 'Using content cache' /tmp/astro-build.log
+
+      - name: Merge Astro output into dist (mirrors netlify.toml)
+        run: |
+          cp -r astro-site/dist/grammar dist/grammar
+          cp -r astro-site/dist/vergleich dist/vergleich
+          cp -r astro-site/dist/leitfaden dist/leitfaden
+          cp -r astro-site/dist/pricing dist/pricing
+          cp -r astro-site/dist/privacy dist/privacy
+          cp -r astro-site/dist/impressum dist/impressum
+          mkdir -p dist/_astro && cp -r astro-site/dist/_astro/. dist/_astro/
+          cp astro-site/dist/404.html dist/404.html
+          cp astro-site/dist/index.html dist/index.html
+          cp astro-site/dist/sitemap-0.xml dist/
+
+      - name: Prerender SPA routes
+        run: node scripts/prerender-spa-routes.mjs
+
+      # No --spa-only: with the Astro half built above, all ~95 pages are
+      # checked — previously only the Netlify deploy build ever saw them.
       - name: Verify built HTML
-        run: node scripts/check-built-html.mjs dist --spa-only
+        run: node scripts/check-built-html.mjs dist
 
-      # The Astro site is NOT built here: its getStaticPaths fetches grammar
-      # content from Supabase at build time, which needs PUBLIC_SUPABASE_URL /
-      # PUBLIC_SUPABASE_ANON_KEY secrets and network egress. Netlify's deploy
-      # build remains the gate for the Astro half, and the step above therefore
-      # runs in --spa-only mode, which prints on every run that the static/SEO
-      # half went unverified. To close that gap, add the two secrets to the repo
-      # and append here:
-      #   cd astro-site && npm ci && npm run build && cd ..
-      #   <the netlify.toml copy steps>
-      #   node scripts/check-built-html.mjs dist        # no --spa-only
-      # An offline alternative exists if egress is the blocker: commit a cache
-      # produced by scripts/dump-grammar-cache.mjs and build with
-      # GRAMMAR_CONTENT_CACHE=<path> (see CLAUDE.md).

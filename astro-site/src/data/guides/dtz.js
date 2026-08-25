@@ -25,6 +25,8 @@ export const dtz = {
   lead:
     'Der <strong>Deutsch-Test für Zuwanderer</strong> ist die Abschlussprüfung des Integrationskurses — und funktioniert anders als telc oder Goethe. Er ist <strong>skaliert</strong>: Du bestehst ihn nicht einfach oder fällst durch, sondern bekommst pro Prüfungsteil ein Ergebnis auf A2- oder B1-Niveau. Dieser Leitfaden erklärt, was das praktisch heißt, wie die Prüfung abläuft und wie du dich gezielt vorbereitest.',
   datePublished: '2026-08-22',
+  answer:
+    'Der Deutsch-Test für Zuwanderer (DTZ) ist skaliert: Er prüft A2 und B1 gleichzeitig und weist für jeden Prüfungsteil einzeln aus, welches Niveau du erreicht hast. Ein Bestehen oder Durchfallen im üblichen Sinn gibt es deshalb nicht. Der schriftliche Teil dauert insgesamt rund 100 Minuten, die mündliche Prüfung wird als Paarprüfung abgenommen und dauert etwa 16 Minuten.',
   factsCheckedOn: '2026-08-22',
   sources: [
     { label: 'BAMF — Integrationskurse', url: 'https://www.bamf.de/' },
@@ -227,7 +229,7 @@ export const dtz = {
       blocks: [
         {
           type: 'p',
-          text: 'Der DTZ prüft Alltagssprache in vier Bereichen, die einzeln bewertet werden. Genau dafür lässt sich gezielt üben:',
+          text: 'Der DTZ prüft Alltagssprache in vier Bereichen, die einzeln bewertet werden. Genau dafür lässt sich gezielt üben — mit einer Plattform, die von einem Team von Ärzten in Deutschland gebaut wurde, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind:',
         },
         {
           type: 'cards',

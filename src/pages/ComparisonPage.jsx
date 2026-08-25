@@ -94,8 +94,8 @@ export default function ComparisonPage() {
           '@type': 'Article',
           headline: `Deutschmeister vs ${data.displayName} — Vergleich`,
           description: data.heroSubheadline,
-          author: { '@type': 'Organization', name: 'DeutschMeister' },
-          publisher: { '@type': 'Organization', name: 'DeutschMeister' },
+          author: { '@type': 'Organization', '@id': 'https://deutsch-meister.de/#organization', name: 'DeutschMeister' },
+          publisher: { '@type': 'Organization', '@id': 'https://deutsch-meister.de/#organization', name: 'DeutschMeister' },
           datePublished: '2026-05-28',
           dateModified: '2026-05-28',
         }}

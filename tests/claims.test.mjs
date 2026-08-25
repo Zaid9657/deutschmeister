@@ -49,6 +49,7 @@ import {
   PRO_DAILY_LIMIT,
   PRO_SPEAKING_SESSIONS_PER_MONTH,
   TRIAL_SPEAKING_SESSIONS,
+  READING_LESSON_COUNT,
 } from '../src/data/marketing.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -233,4 +234,81 @@ test('llms.txt files quote the current prices and allowances', () => {
       `${file} does not quote the ${PRO_DAILY_LIMIT}/day X-Ray allowance`,
     );
   }
+});
+
+test('llms.txt files do not claim podcast transcripts', () => {
+  // Every episode's transcript column is empty. This claim has now been removed
+  // three times — from the homepage FAQPage (2026-08-16), from /podcasts/
+  // (2026-08-24), and from these two files, which no guard covered until now.
+  // They are the worst surface to leave it on: they exist to be quoted verbatim.
+  for (const file of ['public/llms.txt', 'public/llms-full.txt']) {
+    const body = read(file).toLowerCase();
+    for (const banned of ['transcript', 'transkript']) {
+      assert.ok(!body.includes(banned), `${file} claims podcast transcripts; every transcript is empty`);
+    }
+  }
+});
+
+test('llms.txt files quote the measured content counts', () => {
+  // Counts here drifted unguarded: 1,982 vocabulary words against a real 1,935,
+  // and 52 reading passages against a real 66. Both are now measured constants.
+  for (const file of ['public/llms.txt', 'public/llms-full.txt']) {
+    const body = read(file);
+    for (const stale of ['1,982', '52 leveled']) {
+      assert.ok(!body.includes(stale), `${file} still carries the stale count "${stale}"`);
+    }
+  }
+  assert.ok(
+    read('public/llms-full.txt').includes(String(READING_LESSON_COUNT)),
+    `llms-full.txt does not quote the measured ${READING_LESSON_COUNT} reading lessons`,
+  );
+});
+
+test('llms.txt links carry the trailing slash the prerendered routes canonicalise to', () => {
+  // CLAUDE.md trailing-slash case 2. The slashless form 301s, so every AI crawler
+  // following this file took a redirect on six of its product URLs.
+  const body = read('public/llms.txt');
+  for (const route of ['level-test', 'speaking', 'analyze', 'podcasts', 'listening', 'reading', 'faq', 'ueber-uns']) {
+    assert.ok(
+      !new RegExp(`https://deutsch-meister\\.de/${route}(?![/\\w-])`).test(body),
+      `llms.txt links /${route} without the trailing slash, which 301s`,
+    );
+  }
+});
+
+
+// ---------------------------------------------------------------------------
+// 5. The two head registries must not drift
+// ---------------------------------------------------------------------------
+
+test('both head consumers read from the one registry', () => {
+  // src/data/seoRoutes.js is the single source for per-route titles and
+  // descriptions. Before it existed the prerender script and the <SEO> calls
+  // each held a copy: all six titles drifted, and when a title guard landed,
+  // four descriptions were still drifting underneath it. This asserts the
+  // pattern, not the strings: each consumer must reference the registry and
+  // must not re-declare the fields it covers.
+  const COMPONENTS = {
+    '/speaking': 'src/pages/SpeakingPage.jsx',
+    '/level-test': 'src/pages/LevelTest.jsx',
+    '/analyze': 'src/pages/SentenceXRay.jsx',
+    '/podcasts': 'src/pages/PodcastsPage.jsx',
+    '/listening': 'src/pages/Listening/ListeningHome.jsx',
+    '/reading': 'src/pages/ReadingSectionPage.jsx',
+    '/faq': 'src/pages/FAQPage.jsx',
+    '/ueber-uns': 'src/pages/UeberUnsPage.jsx',
+  };
+  const failures = [];
+  for (const [route, file] of Object.entries(COMPONENTS)) {
+    const src = read(file);
+    if (!src.includes(`seoProps('${route}')`)) failures.push(`${file}: does not spread seoProps('${route}')`);
+    if (/<SEO[^>]*\stitle="/.test(src)) failures.push(`${file}: re-declares a literal title on <SEO>`);
+    if (/<SEO[\s\S]{0,400}?\sdescription="/.test(src)) failures.push(`${file}: re-declares a literal description on <SEO>`);
+  }
+  const prerender = read('scripts/prerender-spa-routes.mjs');
+  for (const route of Object.keys(COMPONENTS)) {
+    if (!prerender.includes(`...head('${route}')`)) failures.push(`prerender-spa-routes.mjs: route ${route} does not spread head()`);
+  }
+  if (/\n\s{4}title: '/.test(prerender)) failures.push('prerender-spa-routes.mjs: a route re-declares a literal title');
+  assert.deepEqual(failures, []);
 });

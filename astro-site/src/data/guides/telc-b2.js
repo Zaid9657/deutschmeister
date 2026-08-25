@@ -19,6 +19,8 @@ export const telcB2 = {
   lead:
     'B2 ist kein größeres B1. Auf B1 zeigst du, dass du dich verständigen kannst; auf B2 sollst du <strong>argumentieren, abwägen und zusammenhängend darstellen</strong> — und das unter deutlich mehr Zeitdruck. Dieser Leitfaden zeigt den Aufbau der telc Deutsch B2 Prüfung, wo die Punkte liegen und wie sich der Sprung von B1 planen lässt.',
   datePublished: '2026-08-22',
+  answer:
+    'Die telc Deutsch B2 Prüfung besteht aus einem schriftlichen Teil (maximal 225 Punkte) und einer mündlichen Paarprüfung (maximal 75 Punkte). Zum Bestehen brauchst du mindestens 60 % in beiden Teilen getrennt: 135 der 225 Punkte schriftlich und 45 der 75 mündlich. Lesen und Hören bringen zusammen 150 der 225 schriftlichen Punkte, die Sprachbausteine nur 30 — der kleinste Posten der Prüfung.',
   factsCheckedOn: '2026-08-22',
   sources: [{ label: 'telc gGmbH', url: 'https://www.telc.net/' }],
 
@@ -215,7 +217,7 @@ export const telcB2 = {
       blocks: [
         {
           type: 'p',
-          text: 'B2 verlangt Menge und Regelmäßigkeit — vor allem beim Hören und Sprechen. Dafür ist die Plattform gebaut:',
+          text: 'B2 verlangt Menge und Regelmäßigkeit — vor allem beim Hören und Sprechen. Deutschmeister wurde von einem Team von Ärzten in Deutschland gebaut, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind — und dafür ist die Plattform gebaut:',
         },
         {
           type: 'cards',
