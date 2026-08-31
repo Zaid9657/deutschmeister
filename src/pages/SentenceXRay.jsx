@@ -166,13 +166,13 @@ function WordCard({ word, index }) {
                 {word.explanation}
               </p>
               {word.grammarTopic && (
-                <Link
-                  to={`/grammar/a1.1/${word.grammarTopic}/`}
+                <a
+                  href={`/grammar/a1.1/${word.grammarTopic}/`}
                   className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-blue-600 hover:text-blue-800 transition-colors"
                 >
                   Learn more: {word.grammarTopic.replace(/-/g, ' ')}
                   <ArrowRight size={11} />
-                </Link>
+                </a>
               )}
             </motion.div>
           )}

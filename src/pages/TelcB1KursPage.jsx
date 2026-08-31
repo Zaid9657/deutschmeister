@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Headphones, Mic, PenTool, Search, Target, ClipboardCheck, ExternalLink } from 'lucide-react';
+import { BookOpen, Headphones, Mic, PenTool, Search, Target, ClipboardCheck } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { PROGRAM, PROGRAM_KEY, allItemIds } from '../data/programs/telcB1Komplett';
 import { getProgramProgress, setProgramItemDone } from '../services/programProgress';
@@ -98,7 +98,6 @@ const TelcB1KursPage = () => {
                               className={`flex-1 text-ink hover:text-siegel ${isDone ? 'line-through text-graphite' : ''}`}
                             >
                               {item.title}
-                              <ExternalLink size={12} className="inline ml-1 align-baseline" aria-hidden="true" />
                             </a>
                           ) : (
                             <Link

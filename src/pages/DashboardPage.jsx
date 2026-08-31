@@ -13,7 +13,6 @@ import { getTopicsForLevel } from '../data/grammarTopics';
 import { levels as ALL_LEVELS } from '../data/content';
 import { deriveCurrent, isTopicCompleted, topicPercent } from '../services/currentPosition';
 import { loadDashboardStats, DAILY_GOAL_TARGET } from '../services/dashboardStats';
-import Logo from '../components/Logo';
 import SEO from '../components/SEO';
 import { font } from '../data/design-tokens';
 
@@ -55,7 +54,7 @@ const Sk = ({ className = '' }) => (
 const DashboardPage = () => {
   const { user } = useAuth();
   const { progress, loading: progressLoading } = useProgress();
-  const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription, profile } = useSubscription();
+  const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription, hasProduct, profile } = useSubscription();
 
   const inTrial = user ? isInFreeTrial() : false;
   const isSubscribed = user ? hasActiveSubscription() : false;
@@ -138,10 +137,19 @@ const DashboardPage = () => {
       to: `/listening/${String(cur.level ?? '').toLowerCase()}` },
     { title: 'Reading', en: 'A short story with vocabulary help', Icon: FileText, tint: '#DB2777',
       to: `/reading/${cur.level}` },
-    // No spaced-repetition flow exists yet → route Review to the next topic to revisit.
+    // No spaced-repetition flow exists yet → route Review to the next topic to
+    // revisit. Grammar is Astro-served, so this card is a full-load link.
     { title: 'Review', en: 'Revisit your current grammar topic', Icon: RotateCcw, tint: '#F59E0B',
-      to: cur.nextTopic ? `/grammar/${cur.level}/${cur.nextTopic.slug}` : '/grammar' },
+      to: cur.nextTopic ? `/grammar/${cur.level}/${cur.nextTopic.slug}/` : '/grammar/', fullLoad: true },
+    // The level hub (vocab/sentences/grammar/reading/listening/podcast tabs)
+    // was unreachable for logged-in users — nothing in the app linked it.
+    { title: 'Your level', en: `Everything in ${cur.level.toUpperCase()} — words, texts, audio`, Icon: BookOpen, tint: '#334155',
+      to: `/level/${cur.level}` },
   ];
+
+  // Course owners get their course back: /telc-b1-kurs previously had ONE
+  // inbound link, buried on the /subscription account page.
+  const ownsCourse = user ? hasProduct('telc_b1_komplett') : false;
 
   const statTiles = [
     { label: 'Day streak', value: stats?.streak ?? 0, Icon: Flame, from: '#F59E0B', to: '#FB923C' },
@@ -150,7 +158,8 @@ const DashboardPage = () => {
     { label: 'Sentence X-Ray', value: stats?.xrayChecks ?? 0, Icon: ScanSearch, from: '#0D9488', to: '#06B6D4' },
   ];
 
-  const heroHref = cur.nextTopic ? `/grammar/${cur.level}/${cur.nextTopic.slug}` : '/grammar';
+  // Grammar lessons are Astro-served — the hero is a full-load <a>, trailing-slash class.
+  const heroHref = cur.nextTopic ? `/grammar/${cur.level}/${cur.nextTopic.slug}/` : '/grammar/';
   const heroTitle = cur.allDone ? 'All done!' : (cur.nextTopic?.titleEn || 'Start here');
   const heroDe = cur.allDone ? "You've finished every topic." : (cur.nextTopic?.titleDe || '');
   const heroMinutes = cur.nextTopic?.estimatedTime || 15;
@@ -167,10 +176,28 @@ const DashboardPage = () => {
       />
       <div className="dm-body max-w-6xl mx-auto px-5 sm:px-8 pt-20 pb-12">
 
-        {/* ── Top bar ── */}
-        <div className="flex items-center justify-between mb-10">
-          <Logo size={38} showWordmark to="/" />
-          <div className="flex items-center gap-3 sm:gap-4">
+        {/* ── Greeting + today's momentum ──
+            The dashboard used to render its own logo/avatar bar UNDER the
+            global Navbar — two logos, two avatars on one screen. The global
+            nav is the one header; the streak and goal ring live here now. */}
+        <motion.div {...fade(0)} className="mb-7 flex items-start justify-between gap-4">
+          <div>
+            <h1 className="dm-display text-3xl sm:text-[2.6rem] leading-tight font-semibold">
+              {greetingWord()}, {firstName(user)}
+            </h1>
+            <p className="mt-1.5 text-[15px]" style={{ color: '#5B6B72' }}>
+              {loading ? (
+                'Loading your path…'
+              ) : cur.allDone ? (
+                <>You've completed every topic — <span style={{ color: INK, fontWeight: 600 }}>Meisterhaft.</span></>
+              ) : isBrandNew ? (
+                <>Welcome to your German journey — let's take the <span style={{ color: INK, fontWeight: 600 }}>first step</span>.</>
+              ) : (
+                <>Keep it going — <span style={{ color: INK, fontWeight: 600 }}>{remainingInLevel} topic{remainingInLevel !== 1 ? 's' : ''} left</span> in {levelLabel}.</>
+              )}
+            </p>
+          </div>
+          <div className="flex items-center gap-3 shrink-0 pt-2">
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full"
                  style={{ background: '#FFF7ED', border: '1px solid #FED7AA' }}
                  title={`${stats?.streak ?? 0}-day streak`}>
@@ -178,30 +205,7 @@ const DashboardPage = () => {
               <span className="text-sm font-semibold" style={{ color: '#B45309' }}>{stats?.streak ?? 0}</span>
             </div>
             <GoalRing done={stats?.activitiesToday ?? 0} total={DAILY_GOAL_TARGET} />
-            <div className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-semibold"
-                 style={{ background: 'linear-gradient(135deg,#334155,#0F766E)' }}
-                 aria-hidden="true">
-              {firstName(user).charAt(0)}
-            </div>
           </div>
-        </div>
-
-        {/* ── Greeting ── */}
-        <motion.div {...fade(0)} className="mb-7">
-          <h1 className="dm-display text-3xl sm:text-[2.6rem] leading-tight font-semibold">
-            {greetingWord()}, {firstName(user)}
-          </h1>
-          <p className="mt-1.5 text-[15px]" style={{ color: '#5B6B72' }}>
-            {loading ? (
-              'Loading your path…'
-            ) : cur.allDone ? (
-              <>You've completed every topic — <span style={{ color: INK, fontWeight: 600 }}>Meisterhaft.</span></>
-            ) : isBrandNew ? (
-              <>Welcome to your German journey — let's take the <span style={{ color: INK, fontWeight: 600 }}>first step</span>.</>
-            ) : (
-              <>Keep it going — <span style={{ color: INK, fontWeight: 600 }}>{remainingInLevel} topic{remainingInLevel !== 1 ? 's' : ''} left</span> in {levelLabel}.</>
-            )}
-          </p>
         </motion.div>
 
         {/* ── Hero: next action ── */}
@@ -246,12 +250,12 @@ const DashboardPage = () => {
                     </>
                   )}
                 </div>
-                <Link to={heroHref}
+                <a href={heroHref}
                       className="group shrink-0 inline-flex items-center gap-2 rounded-2xl px-6 py-4 font-semibold text-[15px] transition-transform hover:-translate-y-0.5"
                       style={{ background: '#FFFFFF', color: '#0F766E', boxShadow: '0 10px 24px -8px rgba(0,0,0,.35)' }}>
                   {isBrandNew ? 'Start now' : cur.allDone ? 'Browse topics' : 'Keep learning'}
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-                </Link>
+                </a>
               </div>
             </div>
           )}
@@ -304,18 +308,25 @@ const DashboardPage = () => {
         <motion.div {...fade(0.18)} className="mb-8">
           <h3 className="dm-display text-xl font-semibold mb-3">Practice today</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {practice.map((p) => (
-              <Link key={p.title} to={p.to}
-                    className="text-left rounded-2xl bg-white p-5 transition-transform hover:-translate-y-0.5 block"
-                    style={{ border: '1px solid #E5EEEE', boxShadow: '0 10px 24px -20px rgba(12,42,51,.5)' }}>
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-3"
-                     style={{ background: `${p.tint}14` }}>
-                  <p.Icon className="w-5 h-5" style={{ color: p.tint }} />
-                </div>
-                <div className="dm-display font-semibold text-[17px]">{p.title}</div>
-                <div className="text-[13px] mt-0.5" style={{ color: '#5B6B72' }}>{p.en}</div>
-              </Link>
-            ))}
+            {practice.map((p) => {
+              const cardClass = 'text-left rounded-2xl bg-white p-5 transition-transform hover:-translate-y-0.5 block';
+              const cardStyle = { border: '1px solid #E5EEEE', boxShadow: '0 10px 24px -20px rgba(12,42,51,.5)' };
+              const inner = (
+                <>
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-3"
+                       style={{ background: `${p.tint}14` }}>
+                    <p.Icon className="w-5 h-5" style={{ color: p.tint }} />
+                  </div>
+                  <div className="dm-display font-semibold text-[17px]">{p.title}</div>
+                  <div className="text-[13px] mt-0.5" style={{ color: '#5B6B72' }}>{p.en}</div>
+                </>
+              );
+              return p.fullLoad ? (
+                <a key={p.title} href={p.to} className={cardClass} style={cardStyle}>{inner}</a>
+              ) : (
+                <Link key={p.title} to={p.to} className={cardClass} style={cardStyle}>{inner}</Link>
+              );
+            })}
           </div>
         </motion.div>
 
@@ -334,6 +345,27 @@ const DashboardPage = () => {
                 </div>
               ))}
         </motion.div>
+
+        {/* ── Course strip (owners only) ── */}
+        {ownsCourse && (
+          <motion.div {...fade(0.27)} className="mb-4">
+            <Link to="/telc-b1-kurs"
+                  className="flex items-center justify-between gap-3 rounded-2xl px-5 py-4 bg-white transition-transform hover:-translate-y-0.5"
+                  style={{ border: '1px solid #E5EEEE', boxShadow: '0 10px 24px -20px rgba(12,42,51,.5)' }}>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center"
+                     style={{ background: 'linear-gradient(135deg,#0F766E,#0D9488)' }}>
+                  <Trophy className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="font-semibold text-[14px]">telc B1 Komplettvorbereitung</p>
+                  <p className="text-[12px]" style={{ color: '#5B6B72' }}>Continue your 4-week exam plan</p>
+                </div>
+              </div>
+              <ArrowRight className="w-4 h-4" style={{ color: '#0F766E' }} />
+            </Link>
+          </motion.div>
+        )}
 
         {/* ── Trial strip (hidden when subscribed) ── */}
         {inTrial && !isSubscribed && (
@@ -360,11 +392,11 @@ const DashboardPage = () => {
           </motion.div>
         )}
 
-        <Link to="/grammar"
+        <a href="/grammar/"
               className="block w-full text-center text-[13px] py-3 rounded-xl transition-colors hover:bg-white/60"
               style={{ color: '#64748B' }}>
           Browse all 64 grammar topics →
-        </Link>
+        </a>
       </div>
     </div>
   );

@@ -348,13 +348,13 @@
 # which is exactly what Google Search Console reported. Verified in production:
 # /grammar/a1.1/nicht-existierendes-thema returned 200 with 14 KB of shell.
 #
-# /grammar/overview is the one genuine SPA route under this prefix with no
-# static equivalent, so it keeps an explicit rule. Everything else now falls
-# through to the 404 catch-all and returns a real 404.
+# /grammar/overview was the one SPA route under this prefix — an orphan with
+# zero inbound links, deleted in the renovation. 301 to the hub so any old
+# bookmark or index entry lands somewhere real.
 [[redirects]]
   from = "/grammar/overview"
-  to = "/app.html"
-  status = 200
+  to = "/grammar/"
+  status = 301
 
 # ---------------------------------------------------------------------------
 # Real 404 — final catch-all. Any request that is neither a static file nor a

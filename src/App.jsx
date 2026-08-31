@@ -5,6 +5,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { ProgressProvider } from './contexts/ProgressContext';
 import { SubscriptionProvider } from './contexts/SubscriptionContext';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import LemonSqueezyProvider from './components/LemonSqueezyProvider';
 import ProtectedRoute from './components/ProtectedRoute';
 import SubscriptionGuard from './components/SubscriptionGuard';
@@ -26,14 +27,11 @@ const UpdatePasswordPage = lazy(() => import('./pages/UpdatePasswordPage'));
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const LevelPage = lazy(() => import('./pages/LevelPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
-const GrammarLessonPage = lazy(() => import('./pages/GrammarLessonPage'));
 const ReadingLessonPage = lazy(() => import('./pages/ReadingLessonPage'));
 const SubscriptionPage = lazy(() => import('./pages/SubscriptionPage'));
 const SubscriptionSuccessPage = lazy(() => import('./pages/SubscriptionSuccessPage'));
 const ExercisePlayer = lazy(() => import('./pages/Listening/ExercisePlayer'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
-const GrammarSectionPage = lazy(() => import('./pages/GrammarSectionPage'));
-const GrammarTopicsPage = lazy(() => import('./pages/GrammarTopicsPage'));
 const ReadingSectionPage = lazy(() => import('./pages/ReadingSectionPage'));
 const ReadingLessonsPage = lazy(() => import('./pages/ReadingLessonsPage'));
 const ListeningHome = lazy(() => import('./pages/Listening/ListeningHome'));
@@ -45,15 +43,12 @@ const VideoDetailPage = lazy(() => import('./pages/VideoDetailPage'));
 const IntroPage = lazy(() => import('./pages/IntroPage'));
 const AdminVideosPage = lazy(() => import('./pages/AdminVideosPage'));
 const PodcastsPage = lazy(() => import('./pages/PodcastsPage'));
-const GrammarOverviewPage = lazy(() => import('./pages/GrammarOverviewPage'));
 const VocabularySectionPage = lazy(() => import('./pages/VocabularySectionPage'));
 const SentenceXRay = lazy(() => import('./pages/SentenceXRay'));
 const FAQPage = lazy(() => import('./pages/FAQPage'));
 const UeberUnsPage = lazy(() => import('./pages/UeberUnsPage'));
 const VerifyEmailPage = lazy(() => import('./pages/VerifyEmailPage'));
 const IntroSlides = lazy(() => import('./components/onboarding/IntroSlides'));
-const VergleichHubPage = lazy(() => import('./pages/VergleichHubPage'));
-const ComparisonPage = lazy(() => import('./pages/ComparisonPage'));
 const TelcB1KursPage = lazy(() => import('./pages/TelcB1KursPage'));
 
 function PageLoader() {
@@ -134,8 +129,10 @@ function App() {
                     />
                     <Route path="/faq" element={<FAQPage />} />
                     <Route path="/ueber-uns" element={<UeberUnsPage />} />
-                    <Route path="/vergleich" element={<VergleichHubPage />} />
-                    <Route path="/vergleich/:slug" element={<ComparisonPage />} />
+                    {/* No /vergleich routes — the Astro-built comparison pages
+                        (astro-site/src/pages/vergleich/) win in production and the
+                        SPA rewrites were deliberately removed; the SPA twins were
+                        dead code and got deleted in the renovation. */}
                     {/* No /leitfaden routes on purpose, for the same reason as "/" above.
                         A guide is data in astro-site/src/data/guides/ rendered by
                         pages/leitfaden/[slug].astro, and Netlify serves those real static
@@ -214,22 +211,14 @@ function App() {
                       }
                     />
 
-                    {/* Grammar — section & topic list are public, lessons are level-gated */}
-                    <Route path="/grammar" element={<GrammarSectionPage />} />
-                    <Route path="/grammar/overview" element={<GrammarOverviewPage />} />
-                    <Route path="/grammar/:level" element={<GrammarTopicsPage />} />
-                    <Route
-                      path="/grammar/:level/:topicSlug"
-                      element={
-                        <LevelSubscriptionGuard>
-                          <EmailVerificationGate>
-                            <OnboardingGate>
-                              <GrammarLessonPage />
-                            </OnboardingGate>
-                          </EmailVerificationGate>
-                        </LevelSubscriptionGuard>
-                      }
-                    />
+                    {/* No /grammar routes — grammar is served ENTIRELY by the Astro
+                        build (hub, level lists, and the full interactive lesson with
+                        its user_grammar_progress write via
+                        astro-site/src/lib/grammarProgress.js). The SPA used to carry a
+                        second 1,500-line lesson implementation reachable only via
+                        in-app <Link>s — two different lessons on one URL, decided by
+                        how you arrived. All in-app grammar links are full-load <a>
+                        tags now (trailing-slash class). Deleted in the renovation. */}
 
                     {/* Reading — section overview is public, level pages are level-gated */}
                     <Route path="/reading" element={<ReadingSectionPage />} />
@@ -322,6 +311,7 @@ function App() {
                   </Routes>
                 </Suspense>
                 </main>
+                <Footer />
               </div>
             </ProgressProvider>
           </ThemeProvider>

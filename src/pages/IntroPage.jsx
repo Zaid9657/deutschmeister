@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, BookOpen, Loader2 } from 'lucide-react';
 import SEO from '../components/SEO';
@@ -145,13 +144,13 @@ const IntroPage = () => {
               Start Learning Free
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
-            <Link
-              to="/grammar"
+            <a
+              href="/grammar/"
               className="inline-flex items-center gap-2 px-6 py-4 border-2 border-rule text-ink font-semibold rounded-2xl hover:border-siegel hover:bg-siegel-wash transition-all"
             >
               <BookOpen className="w-5 h-5" />
               Explore Grammar Topics
-            </Link>
+            </a>
           </div>
         </motion.div>
       </div>

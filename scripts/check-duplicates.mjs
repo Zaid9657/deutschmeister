@@ -15,6 +15,9 @@ const PAIRS = [
   ['src/data/design-tokens.js', 'astro-site/src/data/design-tokens.js'],
   // One Organization entity, one @id — both trees must agree on who publishes.
   ['src/data/organization.js', 'astro-site/src/data/organization.js'],
+  // THE navigation registry — every nav/footer link on both front ends. A
+  // drift here recreates the three-navs-three-worlds problem this file fixed.
+  ['src/data/navigation.js', 'astro-site/src/data/navigation.js'],
 ];
 
 let failed = false;
