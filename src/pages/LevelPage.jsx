@@ -35,7 +35,7 @@ const LevelPage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { setCurrentLevel, getThemeForLevel } = useTheme();
-  const { getLevelProgress, registerLevelItemCounts, getGrammarTopicProgress, isItemLearned } = useProgress();
+  const { getLevelProgress, getGrammarTopicProgress, isItemLearned } = useProgress();
 
   // Deep links carry the tab in the query string — PodcastsPage sends users to
   // ?tab=podcasts, the prerendered "Start Listening" CTA to ?tab=listening, and
@@ -102,7 +102,6 @@ const LevelPage = () => {
       if (!cancelled) {
         setLevelVocabulary(words);
         setLevelSentences(sents);
-        registerLevelItemCounts(level, words.length, sents.length);
         setVocabLoading(false);
       }
     };
@@ -110,10 +109,6 @@ const LevelPage = () => {
       load();
     }
     return () => { cancelled = true; };
-    // registerLevelItemCounts comes from ProgressContext and is not memoised
-    // there; depending on it would re-fetch vocab on every provider render.
-    // The effect's real input is `level`.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [level]);
 
   // Fetch grammar topics from Supabase
@@ -288,7 +283,8 @@ const LevelPage = () => {
                     cx="48"
                     cy="48"
                     r="40"
-                    className={`fill-none stroke-current text-${theme.primary}`}
+                    className="fill-none"
+                    stroke="#0D9488"
                     strokeWidth="8"
                     strokeLinecap="round"
                     initial={{ strokeDasharray: '0 251.2' }}

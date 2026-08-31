@@ -11,6 +11,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { getTopicsForLevel } from '../data/grammarTopics';
 import { levels as ALL_LEVELS } from '../data/content';
+import { deriveCurrent, isTopicCompleted, topicPercent } from '../services/currentPosition';
 import { loadDashboardStats, DAILY_GOAL_TARGET } from '../services/dashboardStats';
 import Logo from '../components/Logo';
 import SEO from '../components/SEO';
@@ -45,48 +46,6 @@ const greetingWord = () => {
   return 'Good evening';
 };
 
-// Is a specific topic completed, per useProgress state?
-const isTopicCompleted = (progress, level, topicId) =>
-  !!progress?.[level]?.grammarTopics?.[topicId]?.completed;
-
-// Per-topic in-progress percent (0..100) from currentStage, else 0.
-const topicPercent = (progress, level, topicId) => {
-  const t = progress?.[level]?.grammarTopics?.[topicId];
-  if (!t) return 0;
-  if (t.completed) return 100;
-  return typeof t.progress === 'number' ? t.progress : 0;
-};
-
-/**
- * Find the user's effective current sub-level + next uncompleted topic.
- * Walk levels in order; the first level with an uncompleted topic is "current".
- * If everything done → last level, treat as complete. If nothing started →
- * first level, first topic (brand-new user).
- */
-function deriveCurrent(progress) {
-  for (const level of ALL_LEVELS) {
-    const topics = getTopicsForLevel(level);
-    if (!topics || topics.length === 0) continue;
-    const next = topics.find((t) => !isTopicCompleted(progress, level, t.id));
-    const anyDone = topics.some((t) => isTopicCompleted(progress, level, t.id));
-    if (next) {
-      const idx = topics.findIndex((t) => t.id === next.id);
-      return {
-        level,
-        topics,
-        nextTopic: next,
-        nextIndex: idx,
-        started: anyDone || topicPercent(progress, level, next.id) > 0,
-        allDone: false,
-      };
-    }
-  }
-  // Everything completed — anchor on the last level for a celebratory state.
-  const last = ALL_LEVELS[ALL_LEVELS.length - 1];
-  const topics = getTopicsForLevel(last) || [];
-  return { level: last, topics, nextTopic: null, nextIndex: topics.length, started: true, allDone: true };
-}
-
 // ── skeleton ──────────────────────────────────────────────────
 const Sk = ({ className = '' }) => (
   <div className={`animate-pulse rounded-2xl bg-slate-200/70 ${className}`} />
@@ -96,7 +55,7 @@ const Sk = ({ className = '' }) => (
 const DashboardPage = () => {
   const { user } = useAuth();
   const { progress, loading: progressLoading } = useProgress();
-  const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription } = useSubscription();
+  const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription, profile } = useSubscription();
 
   const inTrial = user ? isInFreeTrial() : false;
   const isSubscribed = user ? hasActiveSubscription() : false;
@@ -115,7 +74,12 @@ const DashboardPage = () => {
     return () => { alive = false; };
   }, [user]);
 
-  const cur = useMemo(() => deriveCurrent(progress), [progress]);
+  // The level test writes profiles.current_level; the walk floors there so a
+  // B1 placer is never routed back to a1.1 topic 1 (see currentPosition.js).
+  const cur = useMemo(
+    () => deriveCurrent(progress, profile?.current_level),
+    [progress, profile?.current_level]
+  );
   const completedInLevel = useMemo(
     () => cur.topics.filter((t) => isTopicCompleted(progress, cur.level, t.id)).length,
     [cur, progress]
@@ -128,7 +92,7 @@ const DashboardPage = () => {
 
   // ── path nodes: up to 5 topics around the current one + a "goal" node ──
   const pathNodes = useMemo(() => {
-    if (!cur.topics.length) return [];
+    if (!cur.topics.length) return { nodes: [], doneSegments: 0 };
     const WINDOW = 5;
     let start = Math.max(0, cur.nextIndex - 2);
     start = Math.min(start, Math.max(0, cur.topics.length - WINDOW));
@@ -148,8 +112,22 @@ const DashboardPage = () => {
     // goal node → next band
     const nextBand = { A1: 'A2', A2: 'B1', B1: 'B2', B2: 'B2' }[band];
     nodes.push({ x: 806, y: 96, label: nextBand, state: 'goal' });
-    return nodes;
+    // Completed stroke covers exactly the leading run of done nodes — the
+    // green line and the checkmarks can never disagree again.
+    let doneSegments = 0;
+    while (doneSegments < slice.length && nodes[doneSegments].state === 'done') doneSegments += 1;
+    return { nodes, doneSegments };
   }, [cur, progress, band]);
+
+  // The dotted spine, split at each node so the completed portion can be
+  // stroked truthfully (segment i connects node i to node i+1).
+  const PATH_SEGMENTS = [
+    'M70,150 C130,150 160,92 215,92',
+    'M215,92 C275,92 300,150 360,150',
+    'M360,150 C420,150 450,92 505,92',
+    'M505,92 C565,92 590,150 650,150',
+    'M650,150 C715,150 750,92 806,96',
+  ];
 
   const practice = [
     { title: 'Speaking', en: 'Say a few lines with your AI partner', Icon: Mic, tint: '#0D9488', to: '/speaking' },
@@ -299,15 +277,15 @@ const DashboardPage = () => {
           {loading ? (
             <Sk className="h-40 w-full" />
           ) : (
-            <div className="w-full overflow-x-auto">
-              <svg viewBox="0 0 880 210" className="w-full min-w-[560px]" style={{ height: 'auto' }}
+            <div className="w-full">
+              <svg viewBox="0 0 880 210" className="w-full" style={{ height: 'auto' }}
                    role="img" aria-label={`Learning path for ${levelLabel}`}>
                 <path d="M70,150 C130,150 160,92 215,92 C275,92 300,150 360,150 C420,150 450,92 505,92 C565,92 590,150 650,150 C715,150 750,92 806,96"
                       fill="none" stroke="#E2E8F0" strokeWidth="5" strokeLinecap="round" strokeDasharray="2 12" />
-                {completedInLevel > 0 && (
-                  <path d="M70,150 C130,150 160,92 215,92" fill="none" stroke="#0D9488" strokeWidth="5" strokeLinecap="round" />
-                )}
-                {pathNodes.map((n, i) => <Node key={i} {...n} />)}
+                {PATH_SEGMENTS.slice(0, pathNodes.doneSegments).map((d) => (
+                  <path key={d} d={d} fill="none" stroke="#0D9488" strokeWidth="5" strokeLinecap="round" />
+                ))}
+                {pathNodes.nodes.map((n, i) => <Node key={i} {...n} />)}
               </svg>
             </div>
           )}
@@ -325,7 +303,7 @@ const DashboardPage = () => {
         {/* ── Practice today ── */}
         <motion.div {...fade(0.18)} className="mb-8">
           <h3 className="dm-display text-xl font-semibold mb-3">Practice today</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {practice.map((p) => (
               <Link key={p.title} to={p.to}
                     className="text-left rounded-2xl bg-white p-5 transition-transform hover:-translate-y-0.5 block"

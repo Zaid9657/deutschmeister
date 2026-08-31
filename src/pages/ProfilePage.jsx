@@ -30,24 +30,27 @@ const ProfilePage = () => {
       })
     : 'N/A';
 
+  // Persisted completions only (see ProgressContext) — the old
+  // words/sentences counters read arrays that were never written to the
+  // database for logged-in users, so every card was a permanent 0.
   const statCards = [
     {
+      icon: Award,
+      label: 'Grammar topics completed',
+      value: stats.grammarTopics,
+      iconClasses: 'bg-teal-50 text-teal-700',
+    },
+    {
       icon: BookOpen,
-      label: t('profile.wordsLearned'),
-      value: stats.vocabulary,
-      color: 'amber',
+      label: 'Reading lessons finished',
+      value: stats.readingLessons,
+      iconClasses: 'bg-amber-50 text-amber-700',
     },
     {
       icon: MessageSquare,
-      label: t('profile.sentencesLearned'),
-      value: stats.sentences,
-      color: 'emerald',
-    },
-    {
-      icon: Award,
-      label: t('profile.grammarLearned'),
-      value: stats.grammar,
-      color: 'blue',
+      label: 'Listening exercises done',
+      value: stats.listening,
+      iconClasses: 'bg-sky-50 text-sky-700',
     },
   ];
 
@@ -148,8 +151,8 @@ const ProfilePage = () => {
               key={stat.label}
               className="bg-white rounded-2xl shadow-lg border border-slate-100 p-6"
             >
-              <div className={`w-12 h-12 rounded-xl bg-${stat.color}-100 flex items-center justify-center mb-4`}>
-                <stat.icon className={`w-6 h-6 text-${stat.color}-600`} />
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${stat.iconClasses}`}>
+                <stat.icon className="w-6 h-6" />
               </div>
               <p className="text-3xl font-bold text-slate-800 mb-1">{stat.value}</p>
               <p className="text-sm text-slate-500">{stat.label}</p>
@@ -168,12 +171,22 @@ const ProfilePage = () => {
           <div className="space-y-4">
             {levels.map((level) => {
               const progress = getLevelProgress(level);
+              // The config's level colours are keyed 'a1-1'…'b2-2' (see
+              // tailwind.config.js); the old map indexed with 'a1.1' AND named
+              // tokens that don't exist, so every bar rendered
+              // `bg-gradient-to-r undefined`. Full literal strings so the
+              // Tailwind JIT scanner emits them.
               const gradients = {
-                a1: 'from-a1-primary to-a1-secondary',
-                a2: 'from-a2-primary to-a2-secondary',
-                b1: 'from-b1-primary to-b1-secondary',
-                b2: 'from-b2-primary to-b2-secondary',
+                'a1.1': 'from-a1-1-primary to-a1-1-secondary',
+                'a1.2': 'from-a1-2-primary to-a1-2-secondary',
+                'a2.1': 'from-a2-1-primary to-a2-1-secondary',
+                'a2.2': 'from-a2-2-primary to-a2-2-secondary',
+                'b1.1': 'from-b1-1-primary to-b1-1-secondary',
+                'b1.2': 'from-b1-2-primary to-b1-2-secondary',
+                'b2.1': 'from-b2-1-primary to-b2-1-secondary',
+                'b2.2': 'from-b2-2-primary to-b2-2-secondary',
               };
+              const gradient = gradients[level] || 'from-siegel to-siegel';
               return (
                 <div key={level}>
                   <div className="flex items-center justify-between mb-2">
@@ -185,7 +198,7 @@ const ProfilePage = () => {
                       initial={{ width: 0 }}
                       animate={{ width: `${progress}%` }}
                       transition={{ duration: 0.8, ease: 'easeOut' }}
-                      className={`h-full bg-gradient-to-r ${gradients[level]} rounded-full`}
+                      className={`h-full bg-gradient-to-r ${gradient} rounded-full`}
                     />
                   </div>
                 </div>
