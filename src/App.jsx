@@ -6,6 +6,7 @@ import { ProgressProvider } from './contexts/ProgressContext';
 import { SubscriptionProvider } from './contexts/SubscriptionContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import BottomNav from './components/BottomNav';
 import LemonSqueezyProvider from './components/LemonSqueezyProvider';
 import ProtectedRoute from './components/ProtectedRoute';
 import SubscriptionGuard from './components/SubscriptionGuard';
@@ -312,6 +313,9 @@ function App() {
                 </Suspense>
                 </main>
                 <Footer />
+                {/* Mobile app tabs (signed-in only); pb clearance lives on the
+                    wrapper so the fixed bar never covers page-end content. */}
+                <BottomNav />
               </div>
             </ProgressProvider>
           </ThemeProvider>

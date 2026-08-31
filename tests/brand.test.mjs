@@ -145,9 +145,11 @@ const APP_CHROME = [
   'src/pages/ResetPasswordPage.jsx',
   'src/pages/UpdatePasswordPage.jsx',
   'src/pages/VerifyEmailPage.jsx',
-  // The app-wide footer, added in the renovation (renders the shared
-  // navigation registry) — chrome on every screen, so it lives in this list.
+  // Renovation chrome: the app-wide footer, the mobile bottom nav, and the
+  // shared completion moment — all on many/every screen, so they live here.
   'src/components/Footer.jsx',
+  'src/components/BottomNav.jsx',
+  'src/components/CompletionMoment.jsx',
   // Content screens, migrated 2026-08-22 once the primitives existed.
   // (ComparisonPage/VergleichHubPage were deleted 2026-08-31: dead SPA twins
   // of the Astro-built /vergleich pages.)

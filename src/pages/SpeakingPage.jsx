@@ -37,9 +37,12 @@ function normalizePlacementLevel(raw) {
   return coarse ? `${coarse}.1` : 'A1.1';
 }
 
-// The next-level suggestion is deliberately disabled (onNextLevel={undefined}
-// below). Its helper lived here unused; reinstate from git history with the
-// feature itself rather than keeping dead code that lint flags forever.
+// Next-level suggestion (re-enabled in renovation Phase 4b): when the
+// evaluation recommends HÖHER, the results screen offers the next sublevel.
+function nextSpeakingLevel(level) {
+  const idx = LEVEL_ORDER.indexOf(String(level || '').toUpperCase());
+  return idx >= 0 && idx < LEVEL_ORDER.length - 1 ? LEVEL_ORDER[idx + 1] : null;
+}
 
 function euros(cents) {
   if (!cents) return '€0';
@@ -345,14 +348,23 @@ const SpeakingPage = () => {
   // ---- results ----
   if (phase === 'results' && evaluation) {
     const isMissionResult = !!session?.mission;
+    const resultLevel = session?.level || selectedLevel;
+    const nextLevel = nextSpeakingLevel(resultLevel);
     return (
       <div className="min-h-screen bg-paper pt-20 pb-12 px-4">
         {isMissionResult && <MissionResultBanner passed={evaluation.passed} />}
         <SpeakingEvaluationResults
-          level={session?.level || selectedLevel}
+          level={resultLevel}
           evaluation={evaluation}
           onRetry={retrySession}
-          onNextLevel={undefined}
+          onNextLevel={
+            nextLevel
+              ? () => {
+                  setSelectedLevel(nextLevel);
+                  backToSetup();
+                }
+              : undefined
+          }
           onBack={backToSetup}
         />
       </div>

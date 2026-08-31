@@ -24,6 +24,7 @@ import {
 } from '../services/readingService';
 import VocabularyList from '../components/VocabularyList';
 import ComprehensionQuestions from '../components/ComprehensionQuestions';
+import CompletionMoment from '../components/CompletionMoment';
 import SEO from '../components/SEO';
 
 const ReadingLessonPage = () => {
@@ -306,11 +307,23 @@ const ReadingLessonPage = () => {
                 {isGerman ? 'Als abgeschlossen markieren' : 'Mark as Complete'}
               </button>
             ) : (
-              <div className="flex items-center justify-center gap-3 px-6 py-3 rounded-xl bg-emerald-50 border border-emerald-200 mb-4">
-                <CheckCircle className="w-5 h-5 text-emerald-500" />
-                <span className="font-semibold text-emerald-700">
-                  {isGerman ? 'Lektion abgeschlossen' : 'Lesson Completed'}
-                </span>
+              <div className="mb-4">
+                <CompletionMoment
+                  headline={isGerman ? 'Lektion abgeschlossen!' : 'Lesson complete!'}
+                  detail={
+                    isGerman
+                      ? 'Das zählt für deinen Streak und dein Tagesziel.'
+                      : 'That counts toward your streak and daily goal.'
+                  }
+                  nextLabel={
+                    nextLesson
+                      ? (isGerman ? 'Nächste Lektion' : 'Next lesson')
+                      : (isGerman ? 'Alle Lektionen' : 'All lessons')
+                  }
+                  onNext={() =>
+                    nextLesson ? handleNavigateLesson(nextLesson) : navigate(`/reading/${level}`)
+                  }
+                />
               </div>
             )}
 
