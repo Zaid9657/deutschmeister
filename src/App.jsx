@@ -55,6 +55,7 @@ const ModelltestHub = lazy(() => import('./pages/Modelltest/ModelltestHub'));
 const ModelltestOverview = lazy(() => import('./pages/Modelltest/ModelltestOverview'));
 const ModelltestRun = lazy(() => import('./pages/Modelltest/ModelltestRun'));
 const ModelltestResult = lazy(() => import('./pages/Modelltest/ModelltestResult'));
+const SchreibenPage = lazy(() => import('./pages/SchreibenPage'));
 
 function PageLoader() {
   return (
@@ -332,6 +333,34 @@ function App() {
                             </OnboardingGate>
                           </EmailVerificationGate>
                         </SubscriptionGuard>
+                      }
+                    />
+
+                    {/* Writing — same posture as speaking: the page renders for
+                        signed-in users, the AI cost is gated server-side in
+                        evaluate-writing.mjs (JWT identity + per-tier limits). */}
+                    <Route
+                      path="/schreiben"
+                      element={
+                        <ProtectedRoute>
+                          <EmailVerificationGate>
+                            <OnboardingGate>
+                              <SchreibenPage />
+                            </OnboardingGate>
+                          </EmailVerificationGate>
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/schreiben/:examSlug"
+                      element={
+                        <ProtectedRoute>
+                          <EmailVerificationGate>
+                            <OnboardingGate>
+                              <SchreibenPage />
+                            </OnboardingGate>
+                          </EmailVerificationGate>
+                        </ProtectedRoute>
                       }
                     />
 

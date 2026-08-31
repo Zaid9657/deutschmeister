@@ -21,6 +21,10 @@ const PAIRS = [
   // THE exam-track registry — /pruefung/ hubs, dashboard exam goal, and the
   // mock-exam/writing keys all resolve exams through this one module.
   ['src/data/examTracks.js', 'astro-site/src/data/examTracks.js'],
+  // Writing task bank: the SPA renders tasks, the grading function validates
+  // keys and derives the rubric — grading a task the UI doesn't show (or vice
+  // versa) is exactly the drift this pair-check exists for.
+  ['src/data/writingTasks.js', 'netlify/functions/_shared/writingTasks.mjs'],
 ];
 
 let failed = false;

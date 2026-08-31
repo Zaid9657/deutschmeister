@@ -265,6 +265,15 @@
   from = "/modelltest/*"
   to = "/app.html"
   status = 200
+# Writing practice (AI-graded, server-gated in evaluate-writing.mjs).
+[[redirects]]
+  from = "/schreiben"
+  to = "/app.html"
+  status = 200
+[[redirects]]
+  from = "/schreiben/*"
+  to = "/app.html"
+  status = 200
 # /pricing is now a static Astro file in dist/pricing/ — Netlify serves that
 # real file before any non-forced rewrite, so no SPA rule is needed for it.
 # /faq and /ueber-uns are prerendered static files now (dist/faq/index.html,

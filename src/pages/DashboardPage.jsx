@@ -242,6 +242,11 @@ const DashboardPage = () => {
                   style={{ background: '#FFFFFF', border: '1px solid #C6DEDD', color: '#0F766E' }}>
               Practice test
             </Link>
+            <Link to={`/schreiben/${examTrack.slug}`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold transition-colors"
+                  style={{ background: '#FFFFFF', border: '1px solid #C6DEDD', color: '#0F766E' }}>
+              Writing feedback
+            </Link>
             <span className="text-[13px]" style={{ color: '#5B6B72' }}>
               Your level: {levelLabel}
             </span>
