@@ -23,6 +23,14 @@
 
 export const NAV_GROUPS = [
   {
+    key: 'exams',
+    labelEn: 'Exams',
+    labelDe: 'Prüfungen',
+    items: [
+      { key: 'pruefung', labelEn: 'Exam Prep', labelDe: 'Prüfungen', href: '/pruefung/', kind: 'static', auth: 'any' },
+    ],
+  },
+  {
     key: 'learn',
     labelEn: 'Learn',
     labelDe: 'Lernen',
@@ -79,9 +87,11 @@ export const FOOTER_GROUPS = [
   },
   {
     key: 'guides',
-    titleEn: 'Guides',
-    titleDe: 'Leitfäden',
+    titleEn: 'Exams & Guides',
+    titleDe: 'Prüfungen & Leitfäden',
     items: [
+      { labelEn: 'Prüfungsvorbereitung', labelDe: 'Prüfungsvorbereitung', href: '/pruefung/', kind: 'static' },
+      { labelEn: 'telc B1 Vorbereitung', labelDe: 'telc B1 Vorbereitung', href: '/pruefung/telc-b1/', kind: 'static' },
       { labelEn: 'Alle Prüfungsleitfäden', labelDe: 'Alle Prüfungsleitfäden', href: '/leitfaden/', kind: 'static' },
       { labelEn: 'telc B1', labelDe: 'telc B1', href: '/leitfaden/telc-b1/', kind: 'static' },
       { labelEn: 'Goethe-Zertifikat B1', labelDe: 'Goethe-Zertifikat B1', href: '/leitfaden/goethe-b1/', kind: 'static' },

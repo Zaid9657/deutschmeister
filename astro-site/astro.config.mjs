@@ -22,6 +22,7 @@ export default defineConfig({
         page.includes('/grammar/') ||
         page.includes('/vergleich') ||
         page.includes('/leitfaden/') ||
+        page.includes('/pruefung/') ||
         page.includes('/telc-b1-komplettvorbereitung'),
       // No lastmod, deliberately. This used to stamp the BUILD time on every
       // URL, so each deploy told crawlers all ~85 pages changed — the exact

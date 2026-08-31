@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, LogOut, Globe, LayoutDashboard, Crown, Sparkles, Mic, ClipboardCheck, BookOpen, BookMarked, ChevronDown, Film, Radio, Scan, Headphones, FileText, PlayCircle } from 'lucide-react';
+import { Menu, X, User, LogOut, Globe, LayoutDashboard, Crown, Sparkles, Mic, ClipboardCheck, BookOpen, BookMarked, ChevronDown, Film, Radio, Scan, Headphones, FileText, PlayCircle, GraduationCap } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { NAV_GROUPS } from '../data/navigation';
@@ -13,6 +13,7 @@ import Button from './ui/Button';
 // byte-identical with the Astro layout); this file only decides how the app
 // renders them. Icons are presentation, so they live here, keyed by item key.
 const NAV_ICONS = {
+  pruefung: GraduationCap,
   grammar: BookOpen,
   videos: PlayCircle,
   listening: Headphones,

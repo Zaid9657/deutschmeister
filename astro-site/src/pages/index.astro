@@ -29,6 +29,7 @@
 import { ORGANIZATION_FULL } from '../data/organization.js';
 import Layout from '../layouts/Layout.astro';
 import '../styles/global.css';
+import { EXAM_TRACKS } from '../data/examTracks.js';
 import { PLANS, eur } from '../data/pricing.js';
 import {
   LEVELS,
@@ -169,6 +170,33 @@ const TOPICS = [
       <p class="mt-4 font-data text-[0.8125rem] text-graphite">
         No card to start · {TRIAL_DAYS}-day Pro trial when you sign up · cancel anytime
       </p>
+    </section>
+
+    <!-- Exam-first: most buyers arrive with an exam date, not a hobby.
+         The four tracks come from the shared examTracks registry. -->
+    <section class="border-t border-rule" aria-labelledby="exams-h">
+      <div class="mx-auto max-w-5xl px-5 py-14">
+        <h2 id="exams-h" class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[2rem]">
+          Preparing for a German exam?
+        </h2>
+        <p class="mt-3 max-w-prose text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
+          Each exam has its own format — and its own preparation path through the library.
+        </p>
+        <ul class="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-rule bg-rule sm:grid-cols-4">
+          {EXAM_TRACKS.map((track) => (
+            <li>
+              <a href={`/pruefung/${track.slug}/`} class="block h-full bg-paper px-4 py-5 transition-colors hover:bg-siegel-wash">
+                <span class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{track.level}</span>
+                <span class="mt-1.5 block font-display text-[1rem] font-semibold leading-snug">{track.nameDe}</span>
+                <span class="mt-2 inline-block text-[0.8125rem] font-semibold text-siegel">Your path →</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p class="mt-4 font-data text-[0.8125rem] text-graphite">
+          No exam date? <a href="/grammar/a1.1/" class="text-siegel transition-colors hover:text-siegel-deep">Start {FREE_LEVEL_LABEL} free</a> — no account needed.
+        </p>
+      </div>
     </section>
 
     <!-- What is actually in it -->

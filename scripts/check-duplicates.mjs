@@ -18,6 +18,9 @@ const PAIRS = [
   // THE navigation registry — every nav/footer link on both front ends. A
   // drift here recreates the three-navs-three-worlds problem this file fixed.
   ['src/data/navigation.js', 'astro-site/src/data/navigation.js'],
+  // THE exam-track registry — /pruefung/ hubs, dashboard exam goal, and the
+  // mock-exam/writing keys all resolve exams through this one module.
+  ['src/data/examTracks.js', 'astro-site/src/data/examTracks.js'],
 ];
 
 let failed = false;
