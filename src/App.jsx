@@ -51,6 +51,10 @@ const UeberUnsPage = lazy(() => import('./pages/UeberUnsPage'));
 const VerifyEmailPage = lazy(() => import('./pages/VerifyEmailPage'));
 const IntroSlides = lazy(() => import('./components/onboarding/IntroSlides'));
 const TelcB1KursPage = lazy(() => import('./pages/TelcB1KursPage'));
+const ModelltestHub = lazy(() => import('./pages/Modelltest/ModelltestHub'));
+const ModelltestOverview = lazy(() => import('./pages/Modelltest/ModelltestOverview'));
+const ModelltestRun = lazy(() => import('./pages/Modelltest/ModelltestRun'));
+const ModelltestResult = lazy(() => import('./pages/Modelltest/ModelltestResult'));
 
 function PageLoader() {
   return (
@@ -275,6 +279,59 @@ function App() {
                             </OnboardingGate>
                           </EmailVerificationGate>
                         </LevelSubscriptionGuard>
+                      }
+                    />
+
+                    {/* Mock exams — timed practice tests behind the subscription
+                        (part of the paid value; A1.1-free stays free elsewhere).
+                        Also in netlify.toml's SPA allow-list; noindex via the
+                        app shell like /telc-b1-kurs. */}
+                    <Route
+                      path="/modelltest"
+                      element={
+                        <SubscriptionGuard>
+                          <EmailVerificationGate>
+                            <OnboardingGate>
+                              <ModelltestHub />
+                            </OnboardingGate>
+                          </EmailVerificationGate>
+                        </SubscriptionGuard>
+                      }
+                    />
+                    <Route
+                      path="/modelltest/:examSlug"
+                      element={
+                        <SubscriptionGuard>
+                          <EmailVerificationGate>
+                            <OnboardingGate>
+                              <ModelltestOverview />
+                            </OnboardingGate>
+                          </EmailVerificationGate>
+                        </SubscriptionGuard>
+                      }
+                    />
+                    <Route
+                      path="/modelltest/:examSlug/run"
+                      element={
+                        <SubscriptionGuard>
+                          <EmailVerificationGate>
+                            <OnboardingGate>
+                              <ModelltestRun />
+                            </OnboardingGate>
+                          </EmailVerificationGate>
+                        </SubscriptionGuard>
+                      }
+                    />
+                    <Route
+                      path="/modelltest/:examSlug/result/:attemptId"
+                      element={
+                        <SubscriptionGuard>
+                          <EmailVerificationGate>
+                            <OnboardingGate>
+                              <ModelltestResult />
+                            </OnboardingGate>
+                          </EmailVerificationGate>
+                        </SubscriptionGuard>
                       }
                     />
 

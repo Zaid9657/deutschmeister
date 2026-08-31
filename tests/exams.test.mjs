@@ -111,7 +111,86 @@ test('/pruefung is copied, sitemapped and required in the built-HTML check', () 
   }
 });
 
-// ── 5. hub provenance renders ────────────────────────────────────────────
+// ── 5. mock content integrity (Phase 5a) ─────────────────────────────────
+
+test('every mock exam is internally consistent', async () => {
+  const { MOCK_EXAMS, countScorableItems } = await import('../src/data/mockExams/index.js');
+  const { scoreObjectiveSections } = await import('../src/services/examScoring.js');
+
+  for (const [examKey, mock] of Object.entries(MOCK_EXAMS)) {
+    assert.ok(examTrackByKey(examKey), `mock keyed to unknown exam ${examKey}`);
+    assert.match(mock.title, /Kurzversion/, `${examKey}: shortened sets must say so in the title`);
+    assert.ok(mock.passPercent >= 50 && mock.passPercent <= 100);
+
+    // Build the perfect answer sheet and require a perfect score from the
+    // scorer — this catches an answer key referencing a missing id/option.
+    const perfect = {};
+    for (const section of mock.sections) {
+      for (const part of section.parts) {
+        if (part.type === 'matching') {
+          const optionKeys = new Set(part.options.map((o) => o.key));
+          for (const t of part.texts) {
+            const ans = part.answers[t.id];
+            assert.ok(optionKeys.has(ans), `${part.key}: answer for ${t.id} is not an option`);
+            perfect[`${part.key}:${t.id}`] = ans;
+          }
+          // Distractors must exist (otherwise matching is process of elimination)
+          assert.ok(part.options.length > part.texts.length, `${part.key}: no distractor headings`);
+        } else if (part.type === 'mc-group') {
+          for (const item of part.items) {
+            assert.ok(item.options.some((o) => o.key === item.answer), `${item.id}: answer not among options`);
+            perfect[item.id] = item.answer;
+          }
+        } else if (part.type === 'cloze') {
+          const gapIds = new Set(part.gaps.map((g) => g.id));
+          for (const piece of part.gapsText) {
+            if (piece.gap) assert.ok(gapIds.has(piece.gap), `${part.key}: text references unknown gap ${piece.gap}`);
+          }
+          for (const gap of part.gaps) {
+            assert.ok(gap.options.some((o) => o.key === gap.answer), `${gap.id}: answer not among options`);
+            perfect[gap.id] = gap.answer;
+          }
+        } else if (part.type === 'listening') {
+          assert.ok(/^[AB][12]\.[12]$/.test(part.level), `${part.key}: listening level must be the DB uppercase form`);
+          assert.ok(Number.isInteger(part.exerciseNumber) && part.exerciseNumber >= 1 && part.exerciseNumber <= 6);
+        } else if (part.type === 'writing') {
+          assert.ok(part.task && part.criteria?.length >= 3, `${part.key}: writing needs a task + criteria`);
+        } else {
+          assert.fail(`${part.key}: unknown part type ${part.type}`);
+        }
+      }
+    }
+    const result = scoreObjectiveSections(mock, perfect);
+    assert.equal(result.score, result.maxScore, `${examKey}: perfect sheet does not score 100%`);
+    assert.equal(result.maxScore, countScorableItems(mock), `${examKey}: scorer and counter disagree`);
+    // And an empty sheet scores zero
+    assert.equal(scoreObjectiveSections(mock, {}).score, 0);
+  }
+});
+
+test('the mock surfaces render the disclaimer and the Richtwert label', () => {
+  for (const file of [
+    'src/pages/Modelltest/ModelltestHub.jsx',
+    'src/pages/Modelltest/ModelltestOverview.jsx',
+    'src/pages/Modelltest/ModelltestRun.jsx',
+    'src/pages/Modelltest/ModelltestResult.jsx',
+  ]) {
+    const body = readFileSync(join(root, file), 'utf8');
+    assert.ok(body.includes('MOCK_DISCLAIMER_DE'), `${file} does not render the disclaimer`);
+  }
+  const result = readFileSync(join(root, 'src/pages/Modelltest/ModelltestResult.jsx'), 'utf8');
+  assert.match(result, /Richtwert — keine offizielle Bewertung/);
+});
+
+test('the /modelltest routes follow the three-place rule', () => {
+  const appSrc = readFileSync(join(root, 'src/App.jsx'), 'utf8');
+  assert.ok(appSrc.includes('path="/modelltest"'), 'hub route missing');
+  assert.ok(appSrc.includes('path="/modelltest/:examSlug/result/:attemptId"'), 'result route missing');
+  assert.ok(netlifyToml.includes('from = "/modelltest"'), 'netlify.toml allow-list missing /modelltest');
+  assert.ok(netlifyToml.includes('from = "/modelltest/*"'), 'netlify.toml allow-list missing /modelltest/*');
+});
+
+// ── 6. hub provenance renders ────────────────────────────────────────────
 
 test('the hub renderer shows factsCheckedOn, sources and the non-affiliation line', () => {
   assert.match(hubRenderer, /factsCheckedOn/);

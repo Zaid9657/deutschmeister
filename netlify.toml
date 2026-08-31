@@ -253,6 +253,18 @@
   from = "/telc-b1-kurs"
   to = "/app.html"
   status = 200
+# Mock exams (subscription-gated practice tests). Same posture as the course
+# area: not prerendered, not in the sitemap; the wildcard is safe here because
+# there is no static /modelltest directory for it to shadow, and unknown slugs
+# render the SPA's own guarded not-found state.
+[[redirects]]
+  from = "/modelltest"
+  to = "/app.html"
+  status = 200
+[[redirects]]
+  from = "/modelltest/*"
+  to = "/app.html"
+  status = 200
 # /pricing is now a static Astro file in dist/pricing/ — Netlify serves that
 # real file before any non-forced rewrite, so no SPA rule is needed for it.
 # /faq and /ueber-uns are prerendered static files now (dist/faq/index.html,
