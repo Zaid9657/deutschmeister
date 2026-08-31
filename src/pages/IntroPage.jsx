@@ -138,7 +138,7 @@ const IntroPage = () => {
             Ready to start your German journey?
           </h2>
           <p className="text-graphite mb-8 max-w-lg mx-auto">
-            Join thousands of learners mastering German with structured lessons, interactive exercises, and AI-powered speaking practice.
+            Structured lessons across 8 CEFR levels, interactive exercises, and AI-powered speaking practice — and A1.1 is free forever.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button to="/signup" size="lg" className="group">
