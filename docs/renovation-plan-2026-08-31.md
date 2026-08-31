@@ -1,5 +1,15 @@
 # RENOVATION PLAN — deutsch-meister.de rebuilt exam-first (2026-08-31)
 
+> **EXECUTION STATUS (2026-08-31, same day):** all six phases BUILT and pushed
+> on the renovation branch (PR #31), all four migrations APPLIED live and
+> verified (exam-profile, exam-attempts, writing-submissions, vocab-srs),
+> 86 tests green, SPA + Astro (93 pages) + build:verify + duplicate pairs all
+> clean. Ships on merge. Still open after merge: walkthrough on the deploy
+> preview with a real account (dashboard/mock/writing/SRS need auth), mocks
+> for the other three exams (pure data on the same rails), telc-b1 hub CTAs
+> for Modelltest/Schreiben, and the Phase-4 dashboard reorg's library-first
+> variant polish.
+
 ## Context
 
 The owner ordered a full re-evaluation "without holding back": is the current
