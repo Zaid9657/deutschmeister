@@ -5,6 +5,7 @@ import { withTimeout } from '../utils/withTimeout';
 import {
   getSubscription,
   getUserProfile,
+  getPurchases,
   startFreeTrial,
   checkTrialStatus,
   checkSubscriptionStatus,
@@ -18,6 +19,7 @@ export const SubscriptionProvider = ({ children }) => {
   const { user, loading: authLoading } = useAuth();
   const [subscription, setSubscription] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [purchases, setPurchases] = useState([]);
   const [loading, setLoading] = useState(true);
   const lastRefreshRef = useRef(0);
   const prevUserIdRef = useRef(null);
@@ -42,6 +44,7 @@ export const SubscriptionProvider = ({ children }) => {
     if (!user) {
       setSubscription(null);
       setProfile(null);
+      setPurchases([]);
       setLoading(false);
       return;
     }
@@ -51,15 +54,17 @@ export const SubscriptionProvider = ({ children }) => {
     try {
       // Timeout so a hung network resolves to the logged-in-but-unverified
       // state instead of an infinite loading spinner on every guarded page.
-      const [sub, prof] = await withTimeout(
+      const [sub, prof, bought] = await withTimeout(
         Promise.all([
           getSubscription(user.id),
           getUserProfile(user.id),
+          getPurchases(user.id),
         ]),
         10000
       );
 
       setSubscription(sub);
+      setPurchases(bought);
 
       // Auto-start free trial for new users
       let currentProfile = prof;
@@ -131,6 +136,11 @@ export const SubscriptionProvider = ({ children }) => {
 
   const hasAccess = isInFreeTrial() || hasActiveSubscription();
 
+  // One-time product entitlements (course areas). Distinct from hasAccess on
+  // purpose: a course is lifetime while its included Pro window can expire, so
+  // PurchaseGuard reads this and the level guards keep reading hasAccess.
+  const hasProduct = (productKey) => purchases.some((p) => p.product_key === productKey);
+
   // NOTE: there is deliberately no client-side createSubscription here.
   // Paid access is granted server-side only, by the Lemon Squeezy webhook
   // (netlify/functions/lemonsqueezy-webhook.mjs) using the service role.
@@ -164,6 +174,8 @@ export const SubscriptionProvider = ({ children }) => {
   const value = {
     subscription,
     profile,
+    purchases,
+    hasProduct,
     loading,
     hasAccess,
     isInFreeTrial,

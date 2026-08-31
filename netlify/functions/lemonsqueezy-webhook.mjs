@@ -110,6 +110,9 @@ export const handler = async (event) => {
         case 'order_created':
           await handleOrderCreated(data, payload.meta);
           break;
+        case 'order_refunded':
+          await handleOrderRefunded(data, payload.meta);
+          break;
         case 'subscription_created':
           await handleSubscriptionCreated(data, payload.meta);
           break;
@@ -208,6 +211,21 @@ async function resolveUserId(customData, attributes, lemonsqueezySubscriptionId)
   return null;
 }
 
+// One-time products, keyed by Lemon Squeezy variant id. Env-configured so a
+// missing variable simply means "no course routing" — subscription orders are
+// untouched either way. proDays is the included Pro window ("3 Monate
+// Pro-Zugang inklusive"); the course area itself never expires.
+function courseForVariant(variantId) {
+  const map = {};
+  if (process.env.LEMONSQUEEZY_TELC_B1_VARIANT_ID) {
+    map[String(process.env.LEMONSQUEEZY_TELC_B1_VARIANT_ID)] = {
+      productKey: 'telc_b1_komplett',
+      proDays: 90,
+    };
+  }
+  return variantId ? map[String(variantId)] || null : null;
+}
+
 async function handleOrderCreated(data, meta) {
   const customData = meta?.custom_data || {};
   const attributes = data?.attributes || {};
@@ -215,6 +233,15 @@ async function handleOrderCreated(data, meta) {
   const userId = customData.user_id;
 
   console.log('Order created for user:', userId, 'Order ID:', orderId);
+
+  // One-time course order? Route it to the purchases path and stop — there is
+  // no subscription row to backfill for a one-time product.
+  const orderVariantId = String(attributes.first_order_item?.variant_id || '');
+  const course = courseForVariant(orderVariantId);
+  if (course) {
+    await handleCourseOrder({ course, orderId, customData, attributes });
+    return;
+  }
 
   // total is integer cents; write the real amount to the matching subscription row.
   if (attributes.total != null && orderId) {
@@ -234,6 +261,173 @@ async function handleOrderCreated(data, meta) {
       console.log('order_created: price_paid', pricePaid, 'set for order', orderId);
     }
   }
+}
+
+// Course purchase: record the entitlement, then grant the included Pro window
+// unless a real subscription already covers the user. Idempotent on the LS
+// order id, so webhook retries can never double-grant.
+async function handleCourseOrder({ course, orderId, customData, attributes }) {
+  const userId = await resolveUserId(customData, attributes, null);
+  if (!userId) {
+    // A paying customer we cannot attach is a loud failure, not a warning:
+    // throwing 500s the webhook so Lemon Squeezy retries (the buyer may be
+    // mid-signup) and the failure lands in webhook_logs for follow-up.
+    throw new Error(
+      `course order ${orderId} (${course.productKey}) has no resolvable user — email: ${attributes?.user_email || 'none'}`
+    );
+  }
+
+  const now = new Date();
+  const pricePaid = attributes.total != null ? Number(attributes.total) / 100 : null;
+
+  // Does a live subscription already cover the Pro window?
+  const { data: existingSub, error: subLookupError } = await supabase
+    .from('subscriptions')
+    .select('plan_type, subscription_end')
+    .eq('user_id', userId)
+    .maybeSingle();
+  if (subLookupError) {
+    console.error('course order: subscription lookup error:', JSON.stringify(subLookupError));
+    throw new Error(`course order subscription lookup failed: ${subLookupError.message}`);
+  }
+  const hasLiveRealSub =
+    existingSub &&
+    existingSub.plan_type !== 'course' &&
+    existingSub.subscription_end &&
+    new Date(existingSub.subscription_end) > now;
+
+  const accessUntil = hasLiveRealSub
+    ? null // course content is lifetime; Pro is already covered by the real sub
+    : new Date(now.getTime() + course.proDays * 24 * 60 * 60 * 1000).toISOString();
+
+  const { error: purchaseError } = await supabase
+    .from('purchases')
+    .upsert(
+      {
+        user_id: userId,
+        product_key: course.productKey,
+        lemonsqueezy_order_id: orderId,
+        price_paid: pricePaid,
+        status: 'active',
+        access_until: accessUntil,
+        updated_at: now.toISOString(),
+      },
+      { onConflict: 'lemonsqueezy_order_id' }
+    );
+  if (purchaseError) {
+    console.error('course order: purchases upsert error:', JSON.stringify(purchaseError));
+    throw new Error(`purchases upsert failed: ${purchaseError.message} (code: ${purchaseError.code})`);
+  }
+
+  if (!hasLiveRealSub) {
+    // Included Pro window: the user's one subscriptions row becomes a 'course'
+    // row. A later real subscription_created upserts over it (real sub wins);
+    // expiry of course rows is swept by the daily trial-lifecycle run.
+    const { error: subError } = await supabase
+      .from('subscriptions')
+      .upsert(
+        {
+          user_id: userId,
+          plan_type: 'course',
+          status: 'active',
+          subscription_start: now.toISOString(),
+          subscription_end: accessUntil,
+          lemonsqueezy_order_id: orderId,
+          lemonsqueezy_customer_id: String(attributes.customer_id || ''),
+          lemonsqueezy_product_id: String(attributes.first_order_item?.product_id || ''),
+          lemonsqueezy_variant_id: String(attributes.first_order_item?.variant_id || ''),
+          price_paid: pricePaid,
+          updated_at: now.toISOString(),
+        },
+        { onConflict: 'user_id' }
+      );
+    if (subError) {
+      console.error('course order: subscriptions upsert error:', JSON.stringify(subError));
+      throw new Error(`course subscriptions upsert failed: ${subError.message} (code: ${subError.code})`);
+    }
+
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .upsert(
+        { id: userId, is_subscribed: true, subscription_tier: 'pro', updated_at: now.toISOString() },
+        { onConflict: 'id' }
+      );
+    if (profileError) {
+      console.error('course order: profiles upsert error:', JSON.stringify(profileError));
+      throw new Error(`course profiles upsert failed: ${profileError.message} (code: ${profileError.code})`);
+    }
+  }
+
+  console.log(
+    'SUCCESS: course purchase recorded:', course.productKey, 'user:', userId,
+    'order:', orderId, 'included Pro until:', accessUntil || 'n/a (real sub live)'
+  );
+}
+
+// order_refunded: revoke the purchase, and the included Pro window with it if
+// that is where the user's access came from. A refund of a subscription order
+// is not handled here — Lemon Squeezy follows those with subscription_* events.
+async function handleOrderRefunded(data, _meta) {
+  const orderId = String(data?.id || '');
+  if (!orderId) return;
+
+  const { data: purchase, error: findError } = await supabase
+    .from('purchases')
+    .select('user_id, product_key')
+    .eq('lemonsqueezy_order_id', orderId)
+    .maybeSingle();
+  if (findError) {
+    console.error('order_refunded: purchases lookup error:', JSON.stringify(findError));
+    throw findError;
+  }
+  if (!purchase) {
+    console.log('order_refunded: no purchases row for order', orderId, '— not a course order, ignoring');
+    return;
+  }
+
+  const nowIso = new Date().toISOString();
+  const { error: updateError } = await supabase
+    .from('purchases')
+    .update({ status: 'refunded', access_until: nowIso, updated_at: nowIso })
+    .eq('lemonsqueezy_order_id', orderId);
+  if (updateError) {
+    console.error('order_refunded: purchases update error:', JSON.stringify(updateError));
+    throw updateError;
+  }
+
+  // Revoke the included Pro window only if it came from THIS order — a real
+  // subscription row (different plan_type or order id) is left alone.
+  const { data: courseSub, error: subFindError } = await supabase
+    .from('subscriptions')
+    .select('id')
+    .eq('user_id', purchase.user_id)
+    .eq('plan_type', 'course')
+    .eq('lemonsqueezy_order_id', orderId)
+    .maybeSingle();
+  if (subFindError) {
+    console.error('order_refunded: subscriptions lookup error:', JSON.stringify(subFindError));
+    throw subFindError;
+  }
+  if (courseSub) {
+    const { error: subError } = await supabase
+      .from('subscriptions')
+      .update({ status: 'expired', subscription_end: nowIso, updated_at: nowIso })
+      .eq('id', courseSub.id);
+    if (subError) {
+      console.error('order_refunded: subscriptions update error:', JSON.stringify(subError));
+      throw subError;
+    }
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .update({ is_subscribed: false, subscription_tier: 'free', updated_at: nowIso })
+      .eq('id', purchase.user_id);
+    if (profileError) {
+      console.error('order_refunded: profile update error:', JSON.stringify(profileError));
+      throw profileError;
+    }
+  }
+
+  console.log('order_refunded: purchase', orderId, `(${purchase.product_key})`, 'revoked for user', purchase.user_id);
 }
 
 function getSubscriptionTier(_variantId) {

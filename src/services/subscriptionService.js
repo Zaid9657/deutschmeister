@@ -20,6 +20,24 @@ export const getSubscription = async (userId) => {
   return data;
 };
 
+// Fetch the user's one-time product purchases (course entitlements).
+// RLS lets a user read only their own rows; writes are webhook/service-role
+// only (netlify/functions/lemonsqueezy-webhook.mjs). Refunded rows are
+// excluded here because a refunded course is no longer an entitlement.
+export const getPurchases = async (userId) => {
+  const { data, error } = await supabase
+    .from('purchases')
+    .select('product_key, status, access_until, created_at')
+    .eq('user_id', userId)
+    .eq('status', 'active');
+
+  if (error) {
+    console.error('Error fetching purchases:', error);
+    return [];
+  }
+  return data || [];
+};
+
 // Fetch user profile (for trial info)
 export const getUserProfile = async (userId) => {
   const { data, error } = await supabase

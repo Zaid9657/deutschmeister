@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Trophy, BookOpen, RefreshCw, Headphones, Mic, PenTool, CheckCircle2, XCircle } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { stepDownSublevel, bandOf } from '../../config/levels';
+import { getTopicsForLevel } from '../../data/grammarTopics';
 
 const LevelTestResults = ({
   answers,
@@ -97,6 +98,14 @@ const LevelTestResults = ({
   const { level: finalLevel, sublevel: finalSublevel, demotions } = calculateFinalLevel();
 
   const { user } = useAuth();
+
+  // Deep link into the first lesson of the placed level (client-side route →
+  // the interactive GrammarLessonPage). Falls back to the hub if the topic
+  // list ever comes back empty for a level.
+  const firstTopic = getTopicsForLevel(finalSublevel.toLowerCase())[0];
+  const firstLessonHref = firstTopic
+    ? `/grammar/${finalSublevel.toLowerCase()}/${firstTopic.slug}`
+    : '/grammar';
 
   // Section completion status
   const sections = [
@@ -435,14 +444,16 @@ const LevelTestResults = ({
           </div>
         </div>
 
-        {/* Actions */}
+        {/* Actions — the primary CTA lands the learner in their actual first
+            lesson, not a hub. 85% of signups never opened a lesson while this
+            button pointed at the grammar hub. */}
         <div className="results-actions">
           <button className="retake-btn" onClick={onRetake}>
             <RefreshCw size={18} />
             Retake Test
           </button>
-          <Link to="/grammar" className="start-learning-btn">
-            Start Learning
+          <Link to={firstLessonHref} className="start-learning-btn">
+            Start your first lesson
           </Link>
         </div>
       </div>

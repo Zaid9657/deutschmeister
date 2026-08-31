@@ -1,0 +1,224 @@
+---
+// Sales page for the telc B1 Komplettvorbereitung — the one-time course from
+// docs/revenue-plan-2026-08-31.md, Lane 2.
+//
+// CLAIMS DISCIPLINE (binding, same as the guides):
+//   - every figure derives from ../data/pricing.js / ../data/marketing.js;
+//     tests/claims.test.mjs bans the price literals from this file
+//   - no outcome promise ("bestehst du garantiert"), no telc exam fee, no
+//     invented learner counts or testimonials — there are none yet, so none
+//     appear. Real specifics only.
+//   - no fabricated scarcity: launch pricing is an expiring Lemon Squeezy
+//     discount code shown at checkout, never a fake struck-through price here.
+//   - the market-anchor sentence ("mehrere hundert Euro") is deliberately
+//     vendor-less and order-of-magnitude only. Basis, checked 2026-08-31:
+//     DeutschAkademie telc-B1 Vorbereitungskurse €89–249, Sprachschule Aktiv
+//     München 4-Wochen-Intensiv €499 (their own public course pages, via
+//     search). Never name a vendor price here — §6-UWG territory and the
+//     vendor domains are unverifiable from agent sessions.
+//
+// CHECKOUT: the CTA opens the Lemon Squeezy hosted checkout (merchant of
+// record) only when PUBLIC_LEMONSQUEEZY_TELC_B1_VARIANT_ID is set at build
+// time. Until the owner creates the product, the CTA degrades to the free
+// funnel instead of a dead checkout. Guest checkout is supported — the webhook
+// resolves the buyer by e-mail — hence the "gleiche E-Mail" note by the button.
+import Layout from '../layouts/Layout.astro';
+import '../styles/global.css';
+import { ORGANIZATION } from '../lib/siteMeta.js';
+import { COURSES, CURRENCY, num, deEur } from '../data/pricing.js';
+import { GRAMMAR_TOPIC_COUNT, LEVEL_COUNT, TRIAL_DAYS } from '../data/marketing.js';
+
+const course = COURSES.telc_b1_komplett;
+const TOPICS_PER_LEVEL = GRAMMAR_TOPIC_COUNT / LEVEL_COUNT;
+// The plan covers both B1 sub-levels of the library.
+const B1_TOPIC_COUNT = TOPICS_PER_LEVEL * 2;
+const PLAN_DAYS = 20; // 4 weeks × 5 study days — mirrors src/data/programs/telcB1Komplett.js
+
+const variantId = import.meta.env.PUBLIC_LEMONSQUEEZY_TELC_B1_VARIANT_ID || '';
+const checkoutUrl = variantId
+  ? `https://deutsch-meister.lemonsqueezy.com/checkout/buy/${variantId}`
+  : '';
+
+const title = `telc B1 Komplettvorbereitung: 4-Wochen-Plan | DeutschMeister`;
+const description = `Ein fester ${PLAN_DAYS}-Tage-Plan bis zur telc B1-Prüfung: jeden Tag eine Aufgabe aus Grammatik, Hören, Lesen und KI-Sprechtraining — mit ${course.proMonths} Monaten Pro-Zugang inklusive.`;
+const canonical = 'https://deutsch-meister.de/telc-b1-komplettvorbereitung/';
+
+const FAQS = [
+  {
+    q: 'Was ist der Unterschied zum Pro-Abo?',
+    a: `Pro ist die Bibliothek: alle ${LEVEL_COUNT} Niveaustufen, alle ${GRAMMAR_TOPIC_COUNT} Grammatikthemen, Hören, Lesen, Sprechen. Der Kurs ist der Plan darüber: eine feste Reihenfolge von ${PLAN_DAYS} Tagesaufgaben, die auf die telc B1-Prüfung zuläuft — und ${course.proMonths} Monate Pro sind schon enthalten.`,
+  },
+  {
+    q: 'Brauche ich zusätzlich ein Abo?',
+    a: `Nein. Im Kurs stecken ${course.proMonths} Monate voller Pro-Zugang. Danach bleibt dir der Kursbereich mit deinem Plan und deinem Fortschritt dauerhaft erhalten; nur die Pro-Inhalte brauchen dann wieder ein Abo.`,
+  },
+  {
+    q: 'Wie lange habe ich Zugriff?',
+    a: `Auf den Kursbereich: dauerhaft, ohne Verlängerung und ohne Abo. Der enthaltene Pro-Zugang läuft ${course.proMonths} Monate ab Kauf — genug für den Plan und die Wochen bis zu deinem Prüfungstermin.`,
+  },
+  {
+    q: 'Für wen ist der Kurs nichts?',
+    a: `Wenn du noch am Anfang stehst (unter A2), ist der Plan zu früh für dich. Mach zuerst den kostenlosen Einstufungstest — er sagt dir ehrlich, wo du stehst, und A1.1 ist bei uns komplett gratis.`,
+  },
+  {
+    q: 'Meldet mich der Kurs zur Prüfung an?',
+    a: 'Nein. Die Anmeldung läuft über ein telc-Prüfungszentrum in deiner Nähe. Was in der Prüfung drankommt, wie sie bewertet wird und wie du dich anmeldest, steht in unserem kostenlosen telc B1-Leitfaden.',
+  },
+];
+
+const productSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: `DeutschMeister ${course.name}`,
+  description,
+  brand: { '@type': 'Brand', name: 'DeutschMeister' },
+  offers: {
+    '@type': 'Offer',
+    name: course.name,
+    price: num(course.price),
+    priceCurrency: CURRENCY,
+    url: canonical,
+    availability: 'https://schema.org/InStock',
+    seller: ORGANIZATION,
+  },
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQS.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+};
+const jsonLd = [productSchema, faqSchema];
+
+const WEEKS = [
+  { name: 'Woche 1', focus: 'Das B1.1-Fundament: ein Grammatikthema pro Tag, dazu Hören und der erste Satz im Satz-Röntgen.' },
+  { name: 'Woche 2', focus: 'Die schwere Hälfte von B1.1 — und dein erstes Sprechtraining mit der KI, gegen die Sprechangst vor dem Prüfungstag.' },
+  { name: 'Woche 3', focus: 'B1.2: die Strukturen, auf die Prüfer achten. Konjunktiv, Nebensätze, Verbindungswörter.' },
+  { name: 'Woche 4', focus: 'Prüfungswoche: Format und Bewertung verstehen, unter Zeitdruck sprechen, die schwächsten Themen gezielt schließen.' },
+];
+---
+
+<Layout title={title} description={description} canonical={canonical} jsonLd={jsonLd} lang="de" ogType="product">
+  <div class="bg-paper text-ink">
+    <div class="mx-auto max-w-3xl px-5 pt-14 pb-20">
+
+      <!-- Hero -->
+      <header class="border-b border-rule pb-10">
+        <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">telc B1 · Komplettvorbereitung</p>
+        <h1 class="mt-3 font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] sm:text-[3rem]">
+          Du weißt, dass du üben musst.<br />Der Plan sagt dir, was.
+        </h1>
+        <p class="mt-5 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]">
+          Die meisten fallen nicht durch, weil ihnen Grammatik fehlt. Sie fallen durch, weil sie drei
+          Wochen vor der Prüfung irgendwas üben — und am Prüfungstag genau das fehlt, was drankommt.
+          Die Komplettvorbereitung ist ein fester {PLAN_DAYS}-Tage-Plan: jeden Tag eine Aufgabe,
+          in der Reihenfolge, die zur telc B1-Prüfung führt.
+        </p>
+
+        <div class="mt-8 flex flex-wrap items-center gap-4">
+          {checkoutUrl ? (
+            <a
+              href={checkoutUrl}
+              class="inline-flex items-center justify-center rounded-md bg-siegel px-6 py-3 text-[0.9375rem] font-semibold text-white transition-colors hover:bg-siegel-lift"
+              data-checkout="telc-b1-komplett"
+            >
+              Ja, ich will den Plan — {deEur(course.price)} einmalig
+            </a>
+          ) : (
+            <a
+              href="/signup"
+              class="inline-flex items-center justify-center rounded-md bg-siegel px-6 py-3 text-[0.9375rem] font-semibold text-white transition-colors hover:bg-siegel-lift"
+            >
+              Der Kurs startet in Kürze — Gratis-Konto sichern
+            </a>
+          )}
+          <a href="/leitfaden/telc-b1/" class="text-[0.9375rem] font-semibold text-siegel underline underline-offset-2">
+            Erst den kostenlosen Leitfaden lesen
+          </a>
+        </div>
+        {checkoutUrl && (
+          <p class="mt-3 font-data text-[0.75rem] text-graphite">
+            Einmalzahlung · kein Abo · {course.proMonths} Monate Pro-Zugang inklusive · beim Kauf die E-Mail deines
+            DeutschMeister-Kontos verwenden (oder danach eins mit derselben E-Mail anlegen)
+          </p>
+        )}
+      </header>
+
+      <!-- The four weeks -->
+      <section class="border-b border-rule py-10">
+        <h2 class="font-display text-[1.5rem] font-semibold tracking-[-0.01em]">Vier Wochen, ein Weg</h2>
+        <p class="mt-3 leading-relaxed text-graphite">
+          {PLAN_DAYS} Tagesaufgaben über die komplette DeutschMeister-Bibliothek: {B1_TOPIC_COUNT} Grammatik-Lektionen
+          auf B1-Niveau, Hör- und Lesetraining mit Muttersprachler-Dialogen, Satz-Röntgen und KI-Sprechtraining —
+          jede Aufgabe abhakbar, dein Fortschritt bleibt gespeichert.
+        </p>
+        <ol class="mt-6 space-y-4">
+          {WEEKS.map((w) => (
+            <li class="rounded-lg border border-rule bg-white p-5">
+              <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{w.name}</p>
+              <p class="mt-2 leading-relaxed text-ink">{w.focus}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <!-- Who built it -->
+      <section class="border-b border-rule py-10">
+        <h2 class="font-display text-[1.5rem] font-semibold tracking-[-0.01em]">Von jemandem, der es selbst musste</h2>
+        <p class="mt-3 leading-relaxed text-graphite">
+          DeutschMeister wurde von einem Arzt in Deutschland gebaut, der selbst Sprachprüfungen bestehen
+          musste. Die Plattform ist kein Spiel — sie ist ein Werkzeug für Leute, die eine Prüfung bestehen
+          müssen. Der Kurs ist die Reihenfolge, die er sich damals selbst gewünscht hätte.
+        </p>
+      </section>
+
+      <!-- Price -->
+      <section class="border-b border-rule py-10">
+        <h2 class="font-display text-[1.5rem] font-semibold tracking-[-0.01em]">Was er kostet</h2>
+        <p class="mt-3 leading-relaxed text-graphite">
+          Präsenz-Vorbereitungskurse kosten üblicherweise mehrere hundert Euro — und richten sich nach dem
+          Stundenplan der Sprachschule, nicht nach deinem.
+        </p>
+        <div class="mt-6 rounded-lg border border-rule bg-white p-6">
+          <p class="font-display text-[2.25rem] font-semibold tracking-[-0.02em]">{deEur(course.price)}</p>
+          <p class="font-data text-[0.75rem] uppercase tracking-[0.13em] text-graphite">einmalig · kein Abo · keine Verlängerung</p>
+          <ul class="mt-5 space-y-2 text-[0.9375rem] leading-relaxed">
+            <li>✓ Der komplette {PLAN_DAYS}-Tage-Plan mit Fortschritts-Checkliste — dauerhaft deiner</li>
+            <li>✓ {course.proMonths} Monate voller Pro-Zugang: alle {GRAMMAR_TOPIC_COUNT} Grammatikthemen, Hören, Lesen, KI-Sprechen, Satz-Röntgen</li>
+            <li>✓ Prüfungswoche mit Format, Bewertung und Selbsttest</li>
+          </ul>
+          {checkoutUrl && (
+            <a
+              href={checkoutUrl}
+              class="mt-6 inline-flex items-center justify-center rounded-md bg-siegel px-6 py-3 text-[0.9375rem] font-semibold text-white transition-colors hover:bg-siegel-lift"
+              data-checkout="telc-b1-komplett"
+            >
+              Ja, ich will den Plan — {deEur(course.price)}
+            </a>
+          )}
+        </div>
+        <p class="mt-4 text-[0.875rem] leading-relaxed text-graphite">
+          Noch unsicher, wo du stehst? Der <a href="/level-test/" class="font-semibold text-siegel underline underline-offset-2">Einstufungstest ist kostenlos</a> —
+          und ein Konto bringt dir {TRIAL_DAYS} Tage Pro zum Ausprobieren, bevor du irgendetwas kaufst.
+        </p>
+      </section>
+
+      <!-- FAQ -->
+      <section class="py-10">
+        <h2 class="font-display text-[1.5rem] font-semibold tracking-[-0.01em]">Ehrliche Antworten</h2>
+        <dl class="mt-6 space-y-6">
+          {FAQS.map(({ q, a }) => (
+            <div class="rounded-lg border border-rule bg-white p-5">
+              <dt class="font-semibold text-ink">{q}</dt>
+              <dd class="mt-2 leading-relaxed text-graphite">{a}</dd>
+            </div>
+          ))}
+        </dl>
+        <p class="mt-8 text-[0.875rem] leading-relaxed text-graphite">
+          Alles zur Prüfung selbst — Teile, Dauer, Bewertung, Anmeldung — steht im kostenlosen
+          <a href="/leitfaden/telc-b1/" class="font-semibold text-siegel underline underline-offset-2">telc B1-Leitfaden</a>.
+        </p>
+      </section>
+
+    </div>
+  </div>
+</Layout>

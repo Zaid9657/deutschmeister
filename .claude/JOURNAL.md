@@ -1,0 +1,26 @@
+# Correction journal
+
+Append-only log of claims that later verification overturned — the journal the parity
+roadmap's item 3.5 adopted from the sibling project. **Rules:** one row per correction
+event; log it in the same commit as the fix; never edit or delete a row (a wrong row is
+corrected by a new row). Dated reports themselves stay frozen — this file is where the
+correction chain is traceable.
+
+Seeded 2026-08-31 from every correction already documented in the report corpus
+(each row names where the correction is recorded).
+
+| Date | Wrong claim (where it was made) | Correction (where recorded) |
+|---|---|---|
+| 2026-08-16 | `/intro` is orphaned; nothing links to it (EVALUATION v2, item B-07) | It is linked from `FloatingIntroButton` + the landing page — audit error, no change needed (EVALUATION §Bugs table) |
+| 2026-08-16 | SPA mobile perf 62, 477 KiB unused JS, FCP 5.8s (EVALUATION v2 scorecard + Lighthouse table) | Measurement artifact: the harness served `dist/` without gzip. Real: `/app.html` 94, `/level-test` 92 mobile (AUDIT-2026-08-16 §P3; harness fixed) |
+| 2026-08-16 | Daily-sentence blast truncated at 30 s; key-vocab/lesson-text gap (draft findings during the audit) | Both retracted during verification — Resend showed ≥102 sends over 40 s; the vocab gap was a stem-match artifact on plural suffixes (AUDIT §Checked and cleared) |
+| 2026-08-17 | The trailing-slash rule as previously documented in the agent instructions was wrong and contradicted the built output (852 links 301-hopped) | Rewritten as the three-case rule (REMEDIATION B-15) |
+| 2026-08-22 | €0.33 vs €0.22 day-rates "disagree" ; the two Tailwind configs can be drift-guarded as a byte-identical pair (parity roadmap, first draft) | Both retracted: the rates were monthly vs yearly and both correct (the defect was retyping); the configs' `content` globs must differ, so the tokens file became the guarded pair instead (roadmap §2.4 NOTE) |
+| 2026-08-22 | The Astro one of the two Tailwind configs "does not carry the eight CEFR level palettes at all" (roadmap, second draft) | Both configs carry all eight; the reading came from a truncated diff (roadmap §2.4 NOTE — same note, second correction) |
+| 2026-08-22 | Grammar pages lack `Course`/`LearningResource` schema; `related_slugs` 0/64 means the relationship graph "lives only in code" with no rendered links (roadmap §1.4) | Pages already emit `['Article','LearningResource']` with `teaches`/`educationalLevel`/Quiz `hasPart`; Related-Topics links already render from the code map, the DB column being a preferred override (roadmap, Batch D corrections) |
+| 2026-08-22 | The Astro seal lacks the dashed inner ring; `.dm-body` falls through to `system-ui` (Batch F planning notes) | The seal carries the ring (only the "M" face differed); Inter was loaded by `index.html` and `.dm-body` rendered in it (roadmap, Batch F corrections) |
+| 2026-08-22 | Brand ratchet at 0 means the retired CTA palette is gone (implicit in `MAX_LEGACY_CTA_FILES` reaching 0) | The ratchet matched one exact stop pairing; other pairings (`from-amber-500 to-orange-500`, …) sailed past while `dist/` CSS still emitted `.from-amber-500`. Second ratchet `MAX_RETIRED_STOP_FILES` added at 10 (roadmap, Batch F part two) |
+| 2026-08-24 | DataForSEO is blocked at the network layer; adding credentials changes nothing (drafts/seo-BLOCKED-2026-08-22.md; docs/seo-routines/README.md as then written) | Correct when written; the allowlist was since fixed — 401 from the API, credentials set, live call returned data. GSC reclassified as the blocker: `deutsch-meister.de` is not a verified property on the authorised account (drafts/seo-CORRECTION-2026-08-24.md) |
+| 2026-08-24 | Reading catalogue: 52 lessons / "1–16 per level" (EVALUATION); also 74 (AUDIT, pre-dedup) and a 3→10 per-level ramp (an early `/reading/` page) | Re-measured: 66 total, flat 8 per level + 10 at B2.2. All three prior figures wrong as distributions. Vocabulary likewise 1,935, not 1,982 (drafts/seo-audit-2026-08-24.md) |
+| 2026-08-24 | The transcript claim removed by the 08-16 audit (B-04) was gone | It returned via a second hardcoded copy in `prerender-spa-routes.mjs`, the RSS feed and both `llms.txt` files, because the banned-literal guard compared case-sensitively (`'full transcript'` vs "Full transcripts") and had never fired. Guard made case-insensitive and widened (drafts/seo-audit-2026-08-24.md) |
+| 2026-08-31 | Roadmap §3.4 lists "de-CAPS the 222 rules at source" as open, while `migrations/README.md` records the de-CAPS applied 2026-08-16 (270 rows) — likewise `related_slugs` "0/64" vs "populated for all 64" | **Unresolved discrepancy, flagged not fixed** — needs a live DB read; tracked as V-1/V-2 in `docs/open-actions.md` (this assessment) |
