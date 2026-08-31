@@ -16,6 +16,7 @@
 import { schedule } from '@netlify/functions';
 import { createClient } from '@supabase/supabase-js';
 import { createHmac } from 'crypto';
+import { MONTHLY_PRICE_EUR, eur } from './_shared/pricing.mjs';
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -97,10 +98,10 @@ const TEMPLATES = {
   trial_day6: {
     subject: 'Your DeutschMeister trial ends tomorrow',
     ctaHref: `${BASE_URL}/pricing/`,
-    ctaLabel: 'Keep Pro — €9.99/month →',
+    ctaLabel: `Keep Pro — ${eur(MONTHLY_PRICE_EUR)}/month →`,
     body:
       P('Quick heads-up: your Pro trial ends tomorrow.') +
-      P('If you keep it, you stay on 50 sentence analyses a day, the full grammar library through B2, listening, reading, and AI speaking practice. That\'s €9.99 a month — less than one hour with a tutor.') +
+      P(`If you keep it, you stay on 50 sentence analyses a day, the full grammar library through B2, listening, reading, and AI speaking practice. That's ${eur(MONTHLY_PRICE_EUR)} a month — less than one hour with a tutor.`) +
       P('If you don\'t, nothing dramatic happens: your account stays, your progress stays, and you drop to the free tier. You can come back whenever.'),
   },
   trial_ended: {

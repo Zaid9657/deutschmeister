@@ -9,6 +9,8 @@ Two companion files exist so nothing has to be hunted across five documents agai
 
 - [`open-actions.md`](./open-actions.md) — every still-open item, owner action, and
   pending decision, consolidated with its source and date.
+- [`revenue-plan-2026-08-31.md`](./revenue-plan-2026-08-31.md) — the adopted
+  €10k/month growth plan (lanes, 12-week schedule, gates, weekly log). **Live.**
 - [`../.claude/JOURNAL.md`](../.claude/JOURNAL.md) — the correction log: every claim a
   report made that later verification overturned.
 

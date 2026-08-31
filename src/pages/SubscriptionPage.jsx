@@ -7,6 +7,7 @@ import { useSubscription } from '../contexts/SubscriptionContext';
 import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
 import SEO from '../components/SEO';
 import { openCheckout } from '../utils/openCheckout';
+import { markCheckoutStarted, consumeCheckoutSuccess } from '../lib/funnelTracking';
 import { PLANS, num } from '../data/pricing.js';
 import { LEVEL_COUNT } from '../data/marketing.js';
 
@@ -49,6 +50,10 @@ const SubscriptionPage = () => {
         clearInterval(pollRef.current);
         pollRef.current = null;
       }
+      // Same-tab checkout path: access flipping to active while we were
+      // polling is the purchase signal (the overlay path reports via
+      // Checkout.Success in LemonSqueezyProvider; the flag is consumed once).
+      consumeCheckoutSuccess();
     }
   }, [isSubscribed, verifying]);
 
@@ -66,6 +71,7 @@ const SubscriptionPage = () => {
       user?.email || '',
       user?.id || ''
     );
+    markCheckoutStarted(planType, PLANS[planType]?.price);
     openCheckout(checkoutUrl);
 
     // Start polling: first poll Supabase, then call verify as fallback

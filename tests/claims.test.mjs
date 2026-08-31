@@ -115,6 +115,10 @@ const PRICE_FREE_SURFACES = [
   'astro-site/src/data/competitorComparisons.js',
   'astro-site/src/pages/pricing.astro',
   'astro-site/src/pages/index.astro',
+  // The day-6 trial email carried a hardcoded €9.99 twice; it now derives from
+  // the functions' synced pricing copy (guarded below), so a retyped digit here
+  // is a regression.
+  'netlify/functions/trial-lifecycle.mjs',
 ];
 
 test('no page source retypes a price literal', () => {
@@ -196,6 +200,15 @@ test('speaking limits match the server that enforces them', () => {
     serverConst(src, 'TRIAL_TOTAL_LIMIT'),
     'marketing claims a different trial speaking allowance than the server grants',
   );
+});
+
+test('the functions\' synced pricing copy matches the data layer', async () => {
+  // netlify/functions/_shared/pricing.mjs is a SYNCED COPY (same doctrine as
+  // _shared/brand.mjs): the functions bundle cannot reliably import src/, so
+  // the literal lives there and this comparison is what keeps it honest.
+  const shared = await import('../netlify/functions/_shared/pricing.mjs');
+  assert.equal(shared.MONTHLY_PRICE_EUR, MONTHLY_PRICE_EUR, 'functions pricing copy drifted from src/data/pricing.js');
+  assert.equal(shared.eur(shared.MONTHLY_PRICE_EUR), eur(MONTHLY_PRICE_EUR), 'functions eur() formats differently than the data layer');
 });
 
 test('X-Ray limits match the server that enforces them', () => {
