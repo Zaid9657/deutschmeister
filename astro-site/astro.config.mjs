@@ -21,7 +21,8 @@ export default defineConfig({
         page === 'https://deutsch-meister.de/pricing/' ||
         page.includes('/grammar/') ||
         page.includes('/vergleich') ||
-        page.includes('/leitfaden/'),
+        page.includes('/leitfaden/') ||
+        page.includes('/telc-b1-komplettvorbereitung'),
       // No lastmod, deliberately. This used to stamp the BUILD time on every
       // URL, so each deploy told crawlers all ~85 pages changed — the exact
       // failure public/sitemap-spa.xml's header argues against ("the fastest

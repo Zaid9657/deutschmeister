@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Crown, Check, Clock, Shield, Zap, Loader2, RefreshCw } from 'lucide-react';
@@ -9,7 +10,7 @@ import SEO from '../components/SEO';
 import { openCheckout } from '../utils/openCheckout';
 import { markCheckoutStarted, consumeCheckoutSuccess } from '../lib/funnelTracking';
 import { PLANS, num } from '../data/pricing.js';
-import { LEVEL_COUNT } from '../data/marketing.js';
+import { LEVEL_COUNT, READING_LESSON_COUNT } from '../data/marketing.js';
 
 const SubscriptionPage = () => {
   const { i18n } = useTranslation();
@@ -18,6 +19,7 @@ const SubscriptionPage = () => {
     isInFreeTrial,
     getTrialDaysRemaining,
     hasActiveSubscription,
+    hasProduct,
     subscription,
     refreshSubscription,
     verifySubscription,
@@ -88,6 +90,34 @@ const SubscriptionPage = () => {
       }
 
       // Stop after 20 attempts (60s)
+      if (count >= 20) {
+        clearInterval(pollRef.current);
+        pollRef.current = null;
+        setVerifying(false);
+      }
+    }, 3000);
+  };
+
+  // One-time course (docs/revenue-plan-2026-08-31.md Lane 2). The card renders
+  // only when the LS product exists (variantId set) or the user already owns
+  // the course; access lands via the webhook, observed by the same poll.
+  const course = LEMONSQUEEZY_CONFIG.courses.telc_b1_komplett;
+  const ownsCourse = hasProduct('telc_b1_komplett');
+  const handleBuyCourse = () => {
+    const checkoutUrl = LEMONSQUEEZY_CONFIG.getCheckoutUrl(
+      course.variantId,
+      user?.email || '',
+      user?.id || ''
+    );
+    markCheckoutStarted('telc_b1_komplett', course.price);
+    openCheckout(checkoutUrl);
+
+    setVerifying(true);
+    setVerifyMessage('');
+    let count = 0;
+    pollRef.current = setInterval(async () => {
+      count += 1;
+      await refreshSubscription(); // reloads subscription AND purchases
       if (count >= 20) {
         clearInterval(pollRef.current);
         pollRef.current = null;
@@ -385,6 +415,63 @@ const SubscriptionPage = () => {
             : 'All plans include a 7-day free trial. Cancel anytime.'}
         </motion.p>
 
+        {/* One-time course — rendered only when the buyer owns it (link to the
+            course area) or the LS product exists (variantId configured), so an
+            unset env var can never open a dead checkout. */}
+        {(ownsCourse || course.variantId) && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45 }}
+            className="mb-12 p-6 rounded-2xl bg-white border border-slate-200 max-w-2xl mx-auto"
+          >
+            <p className="text-xs font-semibold uppercase tracking-widest text-siegel mb-1">
+              {isGerman ? 'Einmalkauf · kein Abo' : 'One-time purchase · not a subscription'}
+            </p>
+            <h2 className="text-xl font-bold text-slate-800">{course.name}</h2>
+            {ownsCourse ? (
+              <>
+                <p className="text-sm text-slate-500 mt-2">
+                  {isGerman
+                    ? 'Du hast den Kurs. Dein 4-Wochen-Plan wartet.'
+                    : 'You own this course. Your 4-week plan is waiting.'}
+                </p>
+                <Link
+                  to="/telc-b1-kurs"
+                  className="mt-4 inline-block py-3 px-6 rounded-xl font-semibold bg-siegel text-white hover:bg-siegel-lift"
+                >
+                  {isGerman ? 'Zum Kurs →' : 'Open the course →'}
+                </Link>
+              </>
+            ) : (
+              <>
+                <p className="text-sm text-slate-500 mt-2">
+                  {isGerman
+                    ? `Der feste 4-Wochen-Plan zur telc B1-Prüfung — mit ${course.proMonths} Monaten Pro-Zugang inklusive.`
+                    : `The fixed 4-week plan for the telc B1 exam — with ${course.proMonths} months of Pro access included.`}
+                </p>
+                <p className="mt-3 text-2xl font-bold text-slate-800">
+                  €{num(course.price)}
+                  <span className="text-sm font-normal text-slate-500">
+                    {' '}{isGerman ? 'einmalig' : 'one time'}
+                  </span>
+                </p>
+                <button
+                  onClick={handleBuyCourse}
+                  className="mt-4 w-full sm:w-auto py-3 px-6 rounded-xl font-semibold bg-siegel text-white hover:bg-siegel-lift active:bg-siegel-deep"
+                >
+                  {isGerman ? 'Kurs kaufen' : 'Buy the course'}
+                </button>
+                <p className="mt-2 text-xs text-slate-500">
+                  <a href="/telc-b1-komplettvorbereitung/" className="underline">
+                    {isGerman ? 'Was genau drin ist →' : 'See what exactly is inside →'}
+                  </a>
+                </p>
+              </>
+            )}
+          </motion.div>
+        )}
+
         {/* Features grid */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -405,7 +492,8 @@ const SubscriptionPage = () => {
               {
                 icon: '📖',
                 title: isGerman ? 'Leseübungen' : 'Reading Lessons',
-                desc: isGerman ? '52+ Lesetexte' : '52+ reading texts',
+                // Was a hardcoded "52+" against a measured 66 (2026-08-24 audit).
+                desc: isGerman ? `${READING_LESSON_COUNT} Lesetexte` : `${READING_LESSON_COUNT} reading texts`,
               },
               {
                 icon: '🗣️',

@@ -4,7 +4,7 @@
 // come from src/data/marketing.js. Only the variant IDs and the checkout URL
 // live here — those are checkout plumbing, not shared copy, and the Astro site
 // has no use for them.
-import { PLANS, CURRENCY } from '../data/pricing.js';
+import { PLANS, COURSES, CURRENCY } from '../data/pricing.js';
 import { LEVEL_COUNT, SPEAKING_LINE, XRAY_LINE } from '../data/marketing.js';
 
 export const LEMONSQUEEZY_CONFIG = {
@@ -46,6 +46,19 @@ export const LEMONSQUEEZY_CONFIG = {
         'Early access to new content',
       ],
       savings: `${PLANS.yearly.savingPercent}%`,
+    },
+  },
+
+  // One-time products. Unlike the plans there is NO hardcoded fallback id:
+  // an unset variant means the product does not exist in the store yet, and
+  // every purchase surface must hide rather than open a dead checkout.
+  courses: {
+    telc_b1_komplett: {
+      name: COURSES.telc_b1_komplett.name,
+      price: COURSES.telc_b1_komplett.price,
+      currency: CURRENCY,
+      proMonths: COURSES.telc_b1_komplett.proMonths,
+      variantId: import.meta.env.VITE_LEMONSQUEEZY_TELC_B1_VARIANT_ID || '',
     },
   },
 

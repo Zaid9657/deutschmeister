@@ -37,6 +37,9 @@ import {
   MONTHLY_PER_DAY_EUR,
   YEARLY_PER_DAY_EUR,
   YEARLY_SAVING_PERCENT,
+  COURSE_TELC_B1_PRICE_EUR,
+  COURSE_PRO_DAYS,
+  COURSES,
   num,
   deNum,
   eur,
@@ -119,6 +122,11 @@ const PRICE_FREE_SURFACES = [
   // the functions' synced pricing copy (guarded below), so a retyped digit here
   // is a regression.
   'netlify/functions/trial-lifecycle.mjs',
+  // Course surfaces (docs/revenue-plan-2026-08-31.md Lane 2): the sales page
+  // and the in-app course area must derive the course price like everything
+  // else.
+  'astro-site/src/pages/telc-b1-komplettvorbereitung.astro',
+  'src/pages/TelcB1KursPage.jsx',
 ];
 
 test('no page source retypes a price literal', () => {
@@ -133,6 +141,8 @@ test('no page source retypes a price literal', () => {
     num(YEARLY_PER_DAY_EUR), // 0.22
     deNum(MONTHLY_PER_DAY_EUR), // 0,33
     deNum(YEARLY_PER_DAY_EUR), // 0,22
+    num(COURSE_TELC_B1_PRICE_EUR), // 89.00
+    deNum(COURSE_TELC_B1_PRICE_EUR), // 89,00
   ];
 
   const failures = [];
@@ -200,6 +210,21 @@ test('speaking limits match the server that enforces them', () => {
     serverConst(src, 'TRIAL_TOTAL_LIMIT'),
     'marketing claims a different trial speaking allowance than the server grants',
   );
+});
+
+test('the course copy claims the Pro window the webhook actually grants', () => {
+  // "X Monate Pro-Zugang inklusive" derives from COURSE_PRO_DAYS; the webhook
+  // grants proDays from its own courseForVariant map. If they diverge, the
+  // sales page promises a window the server does not grant.
+  const webhook = read('netlify/functions/lemonsqueezy-webhook.mjs');
+  const granted = webhook.match(/proDays:\s*(\d+)/);
+  assert.ok(granted, 'courseForVariant proDays not found in the webhook');
+  assert.equal(
+    Number(granted[1]),
+    COURSE_PRO_DAYS,
+    'the webhook grants a different Pro window than the pricing data claims',
+  );
+  assert.equal(COURSES.telc_b1_komplett.proMonths, Math.floor(COURSE_PRO_DAYS / 30));
 });
 
 test('the functions\' synced pricing copy matches the data layer', async () => {
