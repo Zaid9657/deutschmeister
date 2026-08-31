@@ -82,6 +82,7 @@ jobs:
           cp -r astro-site/dist/grammar dist/grammar
           cp -r astro-site/dist/vergleich dist/vergleich
           cp -r astro-site/dist/leitfaden dist/leitfaden
+          cp -r astro-site/dist/pruefung dist/pruefung
           cp -r astro-site/dist/telc-b1-komplettvorbereitung dist/telc-b1-komplettvorbereitung
           cp -r astro-site/dist/pricing dist/pricing
           cp -r astro-site/dist/privacy dist/privacy

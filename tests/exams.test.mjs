@@ -95,9 +95,17 @@ test('the mock disclaimer says what it must', () => {
 // ── 4. three-place rule for the new segment ──────────────────────────────
 
 test('/pruefung is copied, sitemapped and required in the built-HTML check', () => {
+  // BOTH merge sites: netlify.toml's build command (production) AND the CI
+  // workflow's own copy of the same steps. Adding the step in only one place
+  // is exactly how the /pruefung pages passed locally and failed in CI.
   assert.ok(
     netlifyToml.includes('cp -r astro-site/dist/pruefung dist/pruefung'),
     'netlify.toml build command must copy the pruefung directory into dist/'
+  );
+  const ciWorkflow = readFileSync(join(root, '.github/workflows/ci.yml'), 'utf8');
+  assert.ok(
+    ciWorkflow.includes('cp -r astro-site/dist/pruefung dist/pruefung'),
+    'ci.yml must copy the pruefung directory into dist/ too'
   );
   assert.ok(
     astroConfig.includes("page.includes('/pruefung/')"),
