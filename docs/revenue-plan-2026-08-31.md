@@ -178,3 +178,4 @@ speaking wallet.
 |---|---|---|---|---|---|
 | 2026-08-31 | ~40 (baseline ≈172/mo) | 4 | — (no product yet) | ≈€40/mo | Plan adopted; baseline from Aug audits |
 | 2026-08-31 (live) | **48** (≈206/mo pace) | **9** live paid periods | — | ≈€75–90/mo | Measured via Supabase connector: subs more than doubled since the Aug-16 audit with zero marketing — the passive-value thesis holds. Activation emails switched ON this day (migration + env flag; selection dry-checked: 1,371 new / 159 activated / 7 subscribed profiles, next run mails 6+10) |
+| 2026-08-31 (evening) | — | — | **product live** | — | LS product created (variant 2077984 / UUID 0875bbbb…), all 8 webhook events on, three Netlify variant env vars set (numeric→functions, UUID→builds). Course sellable on next production deploy (PR #30 merge). Open: START49 discount unfinished in LS dashboard; tax category at store default |
