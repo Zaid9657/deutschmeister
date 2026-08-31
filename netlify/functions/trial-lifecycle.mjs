@@ -230,6 +230,36 @@ async function sendKind(resendKey, kind) {
   return { kind, sent, failed };
 }
 
+// ─── course-window expiry sweep ──────────────────────────────────────────────
+
+// A course purchase grants an included Pro window as a subscriptions row with
+// plan_type 'course' (see lemonsqueezy-webhook.mjs handleCourseOrder). Lemon
+// Squeezy never emits a subscription_expired for it — one-time orders have no
+// subscription — so this daily run sweeps the expired ones. A user who later
+// bought a real subscription no longer has a 'course' row (subscription_created
+// upserts over it on user_id), so the sweep can never touch a paying subscriber.
+async function expireCourseWindows() {
+  const nowIso = new Date().toISOString();
+  const { data: expired, error } = await supabase
+    .from('subscriptions')
+    .update({ status: 'expired', updated_at: nowIso })
+    .eq('plan_type', 'course')
+    .eq('status', 'active')
+    .lt('subscription_end', nowIso)
+    .select('user_id');
+  if (error) throw new Error(`course-window sweep failed: ${error.message}`);
+  for (const row of expired || []) {
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .update({ is_subscribed: false, subscription_tier: 'free', updated_at: nowIso })
+      .eq('id', row.user_id);
+    if (profileError) {
+      console.error('[trial-lifecycle] course-window profile reset failed for', row.user_id, profileError.message);
+    }
+  }
+  return { swept: expired?.length || 0 };
+}
+
 // ─── handler ─────────────────────────────────────────────────────────────────
 
 const innerHandler = async (event) => {
@@ -260,8 +290,16 @@ const innerHandler = async (event) => {
     }
   }
 
-  console.log('[trial-lifecycle]', JSON.stringify(results));
-  return { statusCode: 200, body: JSON.stringify({ results }) };
+  let courseSweep = null;
+  try {
+    courseSweep = await expireCourseWindows();
+  } catch (err) {
+    console.error('[trial-lifecycle] course-window sweep failed:', err.message);
+    courseSweep = { error: err.message };
+  }
+
+  console.log('[trial-lifecycle]', JSON.stringify({ results, courseSweep }));
+  return { statusCode: 200, body: JSON.stringify({ results, courseSweep }) };
 };
 
 // 08:00 UTC — an hour after the daily sentence, so the two never collide.
