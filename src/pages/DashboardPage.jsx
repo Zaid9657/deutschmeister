@@ -12,6 +12,7 @@ import { useSubscription } from '../contexts/SubscriptionContext';
 import { getTopicsForLevel } from '../data/grammarTopics';
 import { levels as ALL_LEVELS } from '../data/content';
 import { deriveCurrent, isTopicCompleted, topicPercent } from '../services/currentPosition';
+import { examTrackByKey } from '../data/examTracks';
 import { loadDashboardStats, DAILY_GOAL_TARGET } from '../services/dashboardStats';
 import SEO from '../components/SEO';
 import { font } from '../data/design-tokens';
@@ -86,6 +87,18 @@ const DashboardPage = () => {
   const remainingInLevel = cur.topics.length - completedInLevel;
   const band = bandOf(cur.level);
   const levelLabel = cur.level.toUpperCase();
+
+  // Exam identity (profiles.exam_track/exam_date, renovation Phase 4a).
+  // 'none' and unset both mean the library-first layout.
+  const examTrack = profile?.exam_track && profile.exam_track !== 'none'
+    ? examTrackByKey(profile.exam_track)
+    : null;
+  const examDaysLeft = (() => {
+    if (!examTrack || !profile?.exam_date) return null;
+    const days = Math.ceil((new Date(profile.exam_date) - Date.now()) / 86400000);
+    return days >= 0 ? days : null;
+  })();
+  const goalTarget = profile?.daily_goal_target || DAILY_GOAL_TARGET;
 
   const loading = progressLoading || statsLoading;
 
@@ -204,9 +217,31 @@ const DashboardPage = () => {
               <Flame className="w-4 h-4" style={{ color: '#F59E0B' }} />
               <span className="text-sm font-semibold" style={{ color: '#B45309' }}>{stats?.streak ?? 0}</span>
             </div>
-            <GoalRing done={stats?.activitiesToday ?? 0} total={DAILY_GOAL_TARGET} />
+            <GoalRing done={stats?.activitiesToday ?? 0} total={goalTarget} />
           </div>
         </motion.div>
+
+        {/* ── Exam goal strip (exam-first hierarchy) ── */}
+        {examTrack && (
+          <motion.div {...fade(0.03)} className="mb-6 flex flex-wrap items-center gap-3">
+            <a href={`/pruefung/${examTrack.slug}/`}
+               className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-colors"
+               style={{ background: '#0F766E', color: '#FFFFFF' }}>
+              <Trophy className="w-4 h-4" />
+              Your goal: {examTrack.nameDe}
+            </a>
+            {examDaysLeft !== null && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold"
+                    style={{ background: '#FFF7ED', border: '1px solid #FED7AA', color: '#B45309' }}>
+                <Clock className="w-4 h-4" />
+                {examDaysLeft === 0 ? 'Exam day is today' : `${examDaysLeft} day${examDaysLeft !== 1 ? 's' : ''} to your exam`}
+              </span>
+            )}
+            <span className="text-[13px]" style={{ color: '#5B6B72' }}>
+              Your level: {levelLabel}
+            </span>
+          </motion.div>
+        )}
 
         {/* ── Hero: next action ── */}
         <motion.div {...fade(0.06)} className="mb-8">

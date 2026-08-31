@@ -1,18 +1,32 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { User, Calendar, BookOpen, MessageSquare, Award, Globe, Trash2, AlertTriangle, Crown, ArrowRight } from 'lucide-react';
+import { User, Calendar, BookOpen, MessageSquare, Award, Globe, Trash2, AlertTriangle, Crown, ArrowRight, GraduationCap, Target } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { useProgress } from '../contexts/ProgressContext';
 import { levels } from '../data/content';
+import { EXAM_TRACKS } from '../data/examTracks';
+import { supabase } from '../utils/supabase';
 import SEO from '../components/SEO';
 
 const ProfilePage = () => {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
-  const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription } = useSubscription();
+  const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription, profile, refreshSubscription } = useSubscription();
   const { getTotalStats, getOverallProgress, getLevelProgress } = useProgress();
+
+  // Exam goal settings (profiles.exam_track/exam_date/daily_goal_target —
+  // client-writable preferences, renovation Phase 4a).
+  const [savingGoal, setSavingGoal] = useState(false);
+  const saveGoalField = async (fields) => {
+    if (!user) return;
+    setSavingGoal(true);
+    const { error } = await supabase.from('profiles').update(fields).eq('id', user.id);
+    if (error) console.error('goal save failed:', error.message);
+    await refreshSubscription();
+    setSavingGoal(false);
+  };
   const isSubscribed = user ? hasActiveSubscription() : false;
   const inTrial = user ? isInFreeTrial() : false;
   const trialDays = user ? getTrialDaysRemaining() : 0;
@@ -231,6 +245,60 @@ const ProfilePage = () => {
           className="bg-white rounded-2xl shadow-lg border border-slate-100 p-8"
         >
           <h3 className="font-semibold text-slate-800 mb-6">{t('profile.settings')}</h3>
+
+          {/* Exam goal */}
+          <div className="py-4 border-b border-slate-100">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+                <GraduationCap className="w-5 h-5 text-slate-600" />
+              </div>
+              <span className="font-medium text-slate-700">Exam goal</span>
+              {savingGoal && <span className="text-xs text-slate-400">Saving…</span>}
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <label className="block">
+                <span className="block text-xs text-slate-500 mb-1">Which exam?</span>
+                <select
+                  value={profile?.exam_track || 'none'}
+                  onChange={(e) => saveGoalField({ exam_track: e.target.value })}
+                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 bg-white"
+                >
+                  <option value="none">Just learning — no exam</option>
+                  {EXAM_TRACKS.map((track) => (
+                    <option key={track.key} value={track.key}>{track.nameDe}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="block">
+                <span className="block text-xs text-slate-500 mb-1">Exam date (optional)</span>
+                <input
+                  type="date"
+                  value={profile?.exam_date || ''}
+                  onChange={(e) => saveGoalField({ exam_date: e.target.value || null })}
+                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 bg-white"
+                />
+              </label>
+            </div>
+          </div>
+
+          {/* Daily goal */}
+          <div className="flex items-center justify-between py-4 border-b border-slate-100">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+                <Target className="w-5 h-5 text-slate-600" />
+              </div>
+              <span className="font-medium text-slate-700">Daily goal</span>
+            </div>
+            <select
+              value={profile?.daily_goal_target || 3}
+              onChange={(e) => saveGoalField({ daily_goal_target: Number(e.target.value) })}
+              className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 bg-white"
+            >
+              {[1, 2, 3, 4, 5, 6, 8, 10].map((n) => (
+                <option key={n} value={n}>{n} activit{n === 1 ? 'y' : 'ies'} a day</option>
+              ))}
+            </select>
+          </div>
 
           {/* Language Setting */}
           <div className="flex items-center justify-between py-4 border-b border-slate-100">
