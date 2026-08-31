@@ -17,6 +17,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
 import { deriveCurrent } from '../src/services/currentPosition.js';
+import { review, GRADES } from '../src/services/srsScheduler.js';
 import {
   grammarRowStamps,
   computeStreak,
@@ -130,4 +131,44 @@ test('computeStreak is 0 with no recent activity', () => {
 
 test('computeActivitiesToday counts only today', () => {
   assert.equal(computeActivitiesToday([iso(0), iso(0), iso(1)]), 2);
+});
+
+// ── 4. SRS scheduler (SM-2-lite) ─────────────────────────────────────────
+
+const newCard = () => ({ ease: 2.5, interval_days: 0, reps: 0, lapses: 0 });
+
+test('a new card graded GOOD comes back tomorrow, then in ~3 days, then ease-spaced', () => {
+  const now = new Date('2026-08-31T12:00:00Z');
+  const r1 = review(newCard(), GRADES.GOOD, now);
+  assert.equal(r1.interval_days, 1);
+  const r2 = review({ ...newCard(), ...r1 }, GRADES.GOOD, now);
+  assert.equal(r2.interval_days, 3);
+  const r3 = review({ ...newCard(), ...r2 }, GRADES.GOOD, now);
+  assert.ok(r3.interval_days >= 7, `third GOOD interval too short: ${r3.interval_days}`);
+});
+
+test('AGAIN lapses the card back to the start and drops ease', () => {
+  const mature = { ease: 2.5, interval_days: 30, reps: 5, lapses: 0 };
+  const r = review(mature, GRADES.AGAIN);
+  assert.equal(r.interval_days, 0);
+  assert.equal(r.lapses, 1);
+  assert.ok(r.ease < 2.5);
+  // "again" resurfaces within the session, not tomorrow
+  assert.ok(new Date(r.due_at) - Date.now() < 60 * 60 * 1000);
+});
+
+test('ease is clamped to the SM-2 floor and ceiling', () => {
+  let card = { ease: 1.35, interval_days: 1, reps: 1, lapses: 0 };
+  card = { ...card, ...review(card, GRADES.AGAIN) };
+  assert.ok(card.ease >= 1.3);
+  let easyCard = { ease: 2.95, interval_days: 10, reps: 5, lapses: 0 };
+  easyCard = { ...easyCard, ...review(easyCard, GRADES.EASY) };
+  assert.ok(easyCard.ease <= 3.0);
+});
+
+test('EASY grows the interval faster than GOOD', () => {
+  const card = { ease: 2.5, interval_days: 10, reps: 3, lapses: 0 };
+  const good = review(card, GRADES.GOOD);
+  const easy = review(card, GRADES.EASY);
+  assert.ok(easy.interval_days > good.interval_days);
 });

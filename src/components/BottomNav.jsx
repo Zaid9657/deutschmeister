@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Headphones, GraduationCap, BookMarked, User } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { fetchDeckCounts } from '../services/srsService';
 
 // Mobile bottom navigation (renovation Phase 4b) — the app previously offered
 // phones only a hamburger accordion of 12+ links. Five thumb-reach tabs for
@@ -17,6 +19,15 @@ const TABS = [
 const BottomNav = () => {
   const { user } = useAuth();
   const { pathname } = useLocation();
+  const [dueCount, setDueCount] = useState(0);
+
+  // Due-card badge on the Wörter tab — the in-app reason to come back today.
+  useEffect(() => {
+    if (!user) return;
+    let alive = true;
+    fetchDeckCounts(user.id).then(({ due }) => { if (alive) setDueCount(due); });
+    return () => { alive = false; };
+  }, [user, pathname]);
 
   if (!user) return null;
 
@@ -36,7 +47,14 @@ const BottomNav = () => {
           }`;
           const inner = (
             <>
-              <tab.Icon size={20} strokeWidth={active ? 2.4 : 2} />
+              <span className="relative">
+                <tab.Icon size={20} strokeWidth={active ? 2.4 : 2} />
+                {tab.key === 'words' && dueCount > 0 && (
+                  <span className="absolute -top-1.5 -right-2.5 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-siegel text-white text-[0.625rem] font-bold flex items-center justify-center">
+                    {dueCount > 99 ? '99+' : dueCount}
+                  </span>
+                )}
+              </span>
               {tab.label}
             </>
           );

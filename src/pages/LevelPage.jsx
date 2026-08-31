@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, BookOpen, BookMarked, MessageSquare, Headphones, Radio, Sun, TreePine, Waves, Moon, Loader2, Filter, FileText } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useProgress } from '../contexts/ProgressContext';
+import { useAuth } from '../contexts/AuthContext';
+import { enqueueWords } from '../services/srsService';
 import { levels, levelThemes as contentLevelThemes } from '../data/content';
 import { fetchWordsForLevel, fetchSentencesForLevel } from '../services/vocabularyService';
 import { fetchTopicsForLevel } from '../services/grammarService';
@@ -36,6 +38,19 @@ const LevelPage = () => {
   const { t } = useTranslation();
   const { setCurrentLevel, getThemeForLevel } = useTheme();
   const { getLevelProgress, getGrammarTopicProgress, isItemLearned } = useProgress();
+  const { user } = useAuth();
+
+  // "In den Trainer": enqueue the visible words as SRS cards (idempotent).
+  const [trainerAddState, setTrainerAddState] = useState('idle');
+  const handleAddToTrainer = async () => {
+    if (!user || trainerAddState === 'adding') return;
+    setTrainerAddState('adding');
+    // Only real DB ids — the mapper falls back to `word-${index}` when a row
+    // has none, and those can't reference public.words.
+    const ids = filteredVocabulary.map((w) => w.id).filter((id) => /^[0-9a-f-]{36}$/.test(String(id)));
+    await enqueueWords(user.id, ids);
+    setTrainerAddState('added');
+  };
 
   // Deep links carry the tab in the query string — PodcastsPage sends users to
   // ?tab=podcasts, the prerendered "Start Listening" CTA to ?tab=listening, and
@@ -341,6 +356,28 @@ const LevelPage = () => {
                 )}
                 {!vocabLoading && (
                   <>
+                    {/* Into the trainer — the persisted replacement for the old
+                        "Mark learned" checkbox, which was never saved for
+                        logged-in users. Adds the (filtered) words as SRS cards. */}
+                    {user && filteredVocabulary.length > 0 && (
+                      <div className="mb-5 flex items-center justify-between gap-3 rounded-xl border border-siegel/25 bg-siegel-wash px-4 py-3">
+                        <p className="text-sm text-siegel-deep">
+                          Diese Wörter in wachsenden Abständen üben, statt sie nur zu lesen?
+                        </p>
+                        <button
+                          onClick={handleAddToTrainer}
+                          disabled={trainerAddState === 'adding'}
+                          className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-siegel text-white text-sm font-semibold hover:bg-siegel-lift transition-colors disabled:opacity-60"
+                        >
+                          {trainerAddState === 'added'
+                            ? 'Im Trainer ✓'
+                            : trainerAddState === 'adding'
+                              ? 'Wird hinzugefügt…'
+                              : 'In den Trainer'}
+                        </button>
+                      </div>
+                    )}
+
                     {/* Category filter */}
                     {categories.length > 1 && (
                       <div className="mb-6">

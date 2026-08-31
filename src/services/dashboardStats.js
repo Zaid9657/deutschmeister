@@ -37,9 +37,9 @@ export function grammarRowStamps(row) {
   return stamps;
 }
 
-/** Gather every activity timestamp for a user across the three activity tables. */
+/** Gather every activity timestamp for a user across the activity tables. */
 async function fetchActivityTimestamps(userId) {
-  const [grammar, xray, speaking, reading, listening] = await Promise.all([
+  const [grammar, xray, speaking, reading, listening, srs, writing, exams] = await Promise.all([
     supabase
       .from('user_grammar_progress')
       .select('last_accessed, completed_at')
@@ -66,6 +66,22 @@ async function fetchActivityTimestamps(userId) {
       .select('completed_at')
       .eq('user_id', userId)
       .eq('completed', true),
+    // Renovation Phase 6: SRS reviews, writing evaluations and completed
+    // practice exams are real daily work and feed the streak + goal too.
+    supabase
+      .from('vocab_srs_cards')
+      .select('last_reviewed_at')
+      .eq('user_id', userId)
+      .not('last_reviewed_at', 'is', null),
+    supabase
+      .from('writing_submissions')
+      .select('created_at')
+      .eq('user_id', userId),
+    supabase
+      .from('exam_attempts')
+      .select('completed_at')
+      .eq('user_id', userId)
+      .eq('status', 'completed'),
   ]);
 
   const stamps = [];
@@ -74,6 +90,9 @@ async function fetchActivityTimestamps(userId) {
   (speaking.data || []).forEach((r) => r.created_at && stamps.push(r.created_at));
   (reading.data || []).forEach((r) => r.completed_at && stamps.push(r.completed_at));
   (listening.data || []).forEach((r) => r.completed_at && stamps.push(r.completed_at));
+  (srs.data || []).forEach((r) => r.last_reviewed_at && stamps.push(r.last_reviewed_at));
+  (writing.data || []).forEach((r) => r.created_at && stamps.push(r.created_at));
+  (exams.data || []).forEach((r) => r.completed_at && stamps.push(r.completed_at));
   return stamps;
 }
 
