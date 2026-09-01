@@ -39,6 +39,11 @@ const ReadingLessonPage = () => {
   const [allLessons, setAllLessons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showTranslation, setShowTranslation] = useState(false);
+  // Completing the lesson is the earned moment; RE-OPENING a finished one is
+  // not. `isCompleted` comes from persisted progress, so the celebration has
+  // to key off this session's click instead (docs/design/playbook.md: pass =
+  // celebrate, and only once).
+  const [justCompleted, setJustCompleted] = useState(false);
 
   const theme = getThemeForLevel(level);
   const isGerman = i18n.language === 'de';
@@ -83,6 +88,7 @@ const ReadingLessonPage = () => {
   const handleMarkComplete = async () => {
     if (!lesson) return;
     await markAsLearned(level, 'readingLessons', lesson.id);
+    setJustCompleted(true);
     if (user) {
       markLessonComplete(user.id, lesson.id);
     }
@@ -309,6 +315,7 @@ const ReadingLessonPage = () => {
             ) : (
               <div className="mb-4">
                 <CompletionMoment
+                  celebrate={justCompleted}
                   headline={isGerman ? 'Lektion abgeschlossen!' : 'Lesson complete!'}
                   detail={
                     isGerman

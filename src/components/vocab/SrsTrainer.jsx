@@ -1,22 +1,34 @@
 import { useEffect, useState, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Brain, Loader2, RotateCcw } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { fetchDueCards, fetchDeckCounts, recordReview } from '../../services/srsService';
 import { GRADES } from '../../services/srsScheduler';
 import CompletionMoment from '../CompletionMoment';
+import Button from '../ui/Button.jsx';
+import Card from '../ui/Card.jsx';
+import Chip from '../ui/Chip.jsx';
+import Stat from '../ui/Stat.jsx';
 
 // The vocabulary trainer (renovation Phase 6) — the persisted practice mode
 // the 1,935-word list never had. Flashcards over the user's own deck
 // (vocab_srs_cards): German side first, reveal, grade, and the SM-2-lite
 // scheduler decides when the word comes back. No audio dependence by design
 // (0/1,935 words have audio files).
+//
+// Grades are pressable raised chips in the accent tones (tokens rule 2:
+// accents are energy, never a CTA) — again → himbeer, hard → aprikose,
+// good → limette, easy → the siegel-wash label.
 const GRADE_BUTTONS = [
-  { grade: GRADES.AGAIN, label: 'Nochmal', hint: 'gleich wieder', classes: 'border-red-200 text-red-700 hover:bg-red-50' },
-  { grade: GRADES.HARD, label: 'Schwer', hint: 'kurzer Abstand', classes: 'border-amber-200 text-amber-700 hover:bg-amber-50' },
-  { grade: GRADES.GOOD, label: 'Gut', hint: 'normaler Abstand', classes: 'border-rule text-ink hover:bg-siegel-wash' },
-  { grade: GRADES.EASY, label: 'Leicht', hint: 'langer Abstand', classes: 'border-siegel/40 text-siegel-deep hover:bg-siegel-wash' },
+  { grade: GRADES.AGAIN, label: 'Nochmal', hint: 'gleich wieder', tone: 'himbeer' },
+  { grade: GRADES.HARD, label: 'Schwer', hint: 'kurzer Abstand', tone: 'aprikose' },
+  { grade: GRADES.GOOD, label: 'Gut', hint: 'normaler Abstand', tone: 'limette' },
+  { grade: GRADES.EASY, label: 'Leicht', hint: 'langer Abstand', tone: 'label' },
 ];
+
+// The two faces of the flashcard share one grid cell so the card is as tall
+// as its taller side; the flip is a pure CSS 3D rotate (reduced motion
+// collapses the transition to an instant swap via the global gate).
+const FACE = 'col-start-1 row-start-1 flex flex-col items-center justify-center px-4 py-8 text-center [backface-visibility:hidden]';
 
 const SrsTrainer = () => {
   const { user } = useAuth();
@@ -64,18 +76,18 @@ const SrsTrainer = () => {
   // Empty deck → invite; nothing due → status line
   if (loading) {
     return (
-      <div className="rounded-2xl border border-rule bg-white p-6 flex items-center gap-2 text-sm text-graphite">
+      <Card className="p-6 flex items-center gap-2 text-sm text-graphite">
         <Loader2 className="w-4 h-4 animate-spin" /> Dein Wörter-Deck wird geladen…
-      </div>
+      </Card>
     );
   }
 
   if (counts.total === 0) {
     return (
-      <div className="rounded-2xl border border-rule bg-white p-6">
+      <Card className="p-6">
         <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-xl bg-siegel flex items-center justify-center">
-            <Brain className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 rounded-clay bg-siegel-wash text-siegel flex items-center justify-center">
+            <Brain className="w-5 h-5" />
           </div>
           <p className="font-display font-semibold text-ink">Dein Wörter-Trainer</p>
         </div>
@@ -83,7 +95,7 @@ const SrsTrainer = () => {
           Füg unten Wörter aus einem Niveau hinzu — der Trainer fragt sie dann in wachsenden
           Abständen ab, kurz bevor du sie vergessen würdest.
         </p>
-      </div>
+      </Card>
     );
   }
 
@@ -94,82 +106,90 @@ const SrsTrainer = () => {
         detail={`Dein Deck: ${counts.total} Wörter. Nichts mehr fällig — komm morgen wieder, dann warten die nächsten.`}
         nextLabel="Zum Dashboard"
         nextHref="/dashboard"
+        celebrate={reviewedCount > 0}
       />
     );
   }
 
   if (!card) {
     return (
-      <div className="rounded-2xl border border-rule bg-white p-6 flex items-center justify-between">
+      <Card className="p-6 flex items-center justify-between gap-3">
         <p className="text-sm text-graphite">
           {counts.due} Wörter fällig · Deck: {counts.total}
         </p>
-        <button onClick={reload} className="inline-flex items-center gap-1.5 text-sm font-semibold text-siegel">
+        <Button variant="ghost" size="sm" onClick={reload}>
           <RotateCcw className="w-4 h-4" /> Laden
-        </button>
-      </div>
+        </Button>
+      </Card>
     );
   }
 
   return (
-    <div className="rounded-2xl border border-rule bg-white p-6">
+    <Card raised className="p-6">
       <div className="flex items-center justify-between mb-4">
-        <p className="flex items-center gap-2 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">
-          <Brain className="w-3.5 h-3.5" /> Heute üben
-        </p>
-        <p className="font-data text-[0.8125rem] text-graphite">
+        <div>
+          <p className="flex items-center gap-2 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">
+            <Brain className="w-3.5 h-3.5" /> Heute üben
+          </p>
+          <Stat value={counts.due} label="fällig" size="sm" className="mt-2" />
+        </div>
+        <Chip tone="quiet" className="font-data tabular-nums">
           Noch {queue.length} fällig
-        </p>
+        </Chip>
       </div>
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={`${card.word_id}-${revealed}`}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.15 }}
-          className="text-center py-6"
+      {/* The flashcard: front = German, back = meaning. Flips on reveal. */}
+      <div key={card.word_id} className="animate-pop-in [perspective:1000px]">
+        <div
+          className={`grid transition-transform duration-500 ease-snap [transform-style:preserve-3d] ${revealed ? '[transform:rotateY(180deg)]' : ''}`}
+          aria-live="polite"
         >
-          <p className="font-display text-3xl font-semibold text-ink">
-            {word.article ? `${word.article} ` : ''}{word.german}
-          </p>
-          {revealed && (
-            <div className="mt-4">
-              <p className="text-lg text-graphite">{word.english}</p>
-              {word.example_sentence && (
-                <p className="mt-2 text-sm text-graphite italic">{word.example_sentence}</p>
-              )}
-              {word.plural && word.plural !== 'null' && (
-                <p className="mt-1 font-data text-[0.8125rem] text-graphite">Plural: {word.plural}</p>
-              )}
-            </div>
-          )}
-        </motion.div>
-      </AnimatePresence>
-
-      {!revealed ? (
-        <button
-          onClick={() => setRevealed(true)}
-          className="w-full py-3 rounded-xl bg-siegel text-white font-semibold hover:bg-siegel-lift transition-colors"
-        >
-          Aufdecken
-        </button>
-      ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {GRADE_BUTTONS.map((b) => (
-            <button
-              key={b.grade}
-              onClick={() => grade(b.grade)}
-              className={`py-2.5 rounded-xl border font-semibold text-sm transition-colors ${b.classes}`}
-            >
-              {b.label}
-              <span className="block font-normal text-[0.6875rem] opacity-70">{b.hint}</span>
-            </button>
-          ))}
+          <Card tone="sunk" className={FACE} aria-hidden={revealed}>
+            <p className="font-display text-3xl font-semibold text-ink">
+              {word.article ? `${word.article} ` : ''}{word.german}
+            </p>
+          </Card>
+          <Card tone="wash" className={`${FACE} [transform:rotateY(180deg)]`} aria-hidden={!revealed}>
+            <p className="font-display text-2xl font-semibold text-ink">
+              {word.article ? `${word.article} ` : ''}{word.german}
+            </p>
+            <p className="mt-3 text-lg text-graphite">{word.english}</p>
+            {word.example_sentence && (
+              <p className="mt-2 text-sm text-graphite italic">{word.example_sentence}</p>
+            )}
+            {word.plural && word.plural !== 'null' && (
+              <p className="mt-1 font-data text-[0.8125rem] text-graphite">Plural: {word.plural}</p>
+            )}
+          </Card>
         </div>
-      )}
-    </div>
+      </div>
+
+      <div className="mt-5">
+        {!revealed ? (
+          <Button size="lg" className="w-full" onClick={() => setRevealed(true)}>
+            Aufdecken
+          </Button>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            {GRADE_BUTTONS.map((b) => (
+              <Chip
+                key={b.grade}
+                raised
+                size="md"
+                tone={b.tone}
+                className="w-full justify-center py-2.5"
+                onClick={() => grade(b.grade)}
+              >
+                <span className="flex flex-col items-center leading-tight">
+                  {b.label}
+                  <span className="font-normal text-[0.6875rem] opacity-70">{b.hint}</span>
+                </span>
+              </Chip>
+            ))}
+          </div>
+        )}
+      </div>
+    </Card>
   );
 };
 

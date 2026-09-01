@@ -1,4 +1,11 @@
+import { useEffect } from 'react';
 import { Trophy, ArrowRight, RotateCcw, ArrowLeft, Star, TrendingUp, CheckCircle, AlertTriangle } from 'lucide-react';
+import Button from './ui/Button.jsx';
+import Card from './ui/Card.jsx';
+import Chip from './ui/Chip.jsx';
+import Stat from './ui/Stat.jsx';
+import Reveal from './ui/Reveal.jsx';
+import confettiBurst from '../lib/confetti.js';
 
 const SCORE_LABELS = {
   // True acoustic pronunciation scoring planned — requires audio analysis pipeline
@@ -9,58 +16,55 @@ const SCORE_LABELS = {
   comprehension: 'Comprehension',
 };
 
+// Semantic tones only (playbook §1): success = limette, attention = aprikose,
+// the neutral "keep going" verdict sits on the siegel wash. The words carry the
+// verdict; the colour never does it alone.
 const RECOMMENDATION_CONFIG = {
   'HÖHER': {
     label: 'Ready for the next level!',
-    bg: 'bg-green-100',
-    text: 'text-green-700',
-    border: 'border-green-200',
+    tone: 'limette',
     Icon: TrendingUp,
   },
   'GLEICH': {
     label: 'Keep practicing at this level',
-    bg: 'bg-amber-100',
-    text: 'text-amber-700',
-    border: 'border-amber-200',
+    tone: 'label',
     Icon: Star,
   },
   'WIEDERHOLEN': {
     label: 'Worth repeating this lesson',
-    bg: 'bg-red-100',
-    text: 'text-red-700',
-    border: 'border-red-200',
+    tone: 'aprikose',
     Icon: AlertTriangle,
   },
 };
 
 function getScoreColor(score) {
-  if (score >= 16) return 'bg-green-500';
-  if (score >= 12) return 'bg-teal-500';
-  if (score >= 8) return 'bg-amber-500';
-  return 'bg-red-500';
-}
-
-function getTotalColor(total) {
-  if (total >= 80) return 'text-green-600';
-  if (total >= 60) return 'text-teal-600';
-  if (total >= 40) return 'text-amber-600';
-  return 'text-red-600';
+  if (score >= 16) return 'bg-accent-limette';
+  if (score >= 12) return 'bg-siegel';
+  if (score >= 8) return 'bg-accent-aprikose';
+  return 'bg-accent-himbeer';
 }
 
 function getRingColor(total) {
-  if (total >= 80) return 'stroke-green-500';
-  if (total >= 60) return 'stroke-teal-500';
-  if (total >= 40) return 'stroke-amber-500';
-  return 'stroke-red-500';
+  if (total >= 80) return 'stroke-accent-limette';
+  if (total >= 60) return 'stroke-siegel';
+  if (total >= 40) return 'stroke-accent-aprikose';
+  return 'stroke-accent-himbeer';
 }
 
 const SpeakingEvaluationResults = ({ level, evaluation, onRetry, onNextLevel, onBack }) => {
+  const recommendation = evaluation?.recommendation;
+
+  // HÖHER is the one earned moment on this screen (playbook §0: pass =
+  // celebrate, fail = calm). GLEICH and WIEDERHOLEN get no confetti.
+  useEffect(() => {
+    if (recommendation === 'HÖHER') confettiBurst();
+  }, [recommendation]);
+
   if (!evaluation) return null;
 
   const {
     total_score,
     scores = {},
-    recommendation,
     feedback,
     strengths = [],
     improvements = [],
@@ -78,10 +82,8 @@ const SpeakingEvaluationResults = ({ level, evaluation, onRetry, onNextLevel, on
       {/* Header */}
       <div className="text-center mb-6">
         <div className="flex items-center justify-center gap-2 mb-2">
-          <span className="px-3 py-1 rounded-full bg-teal-100 text-teal-700 text-sm font-bold">
-            {level}
-          </span>
-          <span className="text-sm text-slate-500">Speaking session complete</span>
+          <Chip tone="label">{level}</Chip>
+          <span className="text-sm text-graphite">Speaking session complete</span>
         </div>
       </div>
 
@@ -92,7 +94,7 @@ const SpeakingEvaluationResults = ({ level, evaluation, onRetry, onNextLevel, on
             <circle
               cx="60" cy="60" r="54"
               fill="none"
-              stroke="#e2e8f0"
+              className="stroke-rule"
               strokeWidth="8"
             />
             <circle
@@ -107,42 +109,39 @@ const SpeakingEvaluationResults = ({ level, evaluation, onRetry, onNextLevel, on
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className={`text-3xl font-bold ${getTotalColor(total_score)}`}>
-              {total_score}
-            </span>
-            <span className="text-xs text-slate-400">/ 100</span>
+            <Stat value={total_score} size="lg" className="text-center" />
+            <span className="font-data text-[0.75rem] text-graphite">/ 100</span>
           </div>
         </div>
 
         {/* Recommendation Badge */}
-        <div className={`mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full border ${recConfig.bg} ${recConfig.text} ${recConfig.border} text-sm font-medium`}>
+        <Chip tone={recConfig.tone} size="md" className="mt-4">
           <RecIcon className="w-4 h-4" />
           {recConfig.label}
-        </div>
+        </Chip>
       </div>
 
-      {/* Score Breakdown */}
-      <div className="bg-white rounded-xl border border-slate-200 p-5 mb-4">
-        <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
-          <Trophy className="w-4 h-4 text-teal-500" />
+      {/* Score Breakdown — each figure counts up in its own raised card */}
+      <div className="mb-4">
+        <h3 className="text-sm font-bold text-ink mb-3 flex items-center gap-2">
+          <Trophy className="w-4 h-4 text-siegel" />
           Score breakdown
         </h3>
-        <div className="space-y-3">
-          {Object.entries(SCORE_LABELS).map(([key, label]) => {
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {Object.entries(SCORE_LABELS).map(([key, label], i) => {
             const score = scores[key] ?? 0;
             return (
-              <div key={key}>
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm text-slate-600">{label}</span>
-                  <span className="text-sm font-semibold text-slate-700">{score}/20</span>
-                </div>
-                <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <div
-                    className={`h-full rounded-full ${getScoreColor(score)}`}
-                    style={{ width: `${(score / 20) * 100}%`, transition: 'width 0.8s ease-out' }}
-                  />
-                </div>
-              </div>
+              <Reveal key={key} delay={i * 80}>
+                <Card raised className="p-4 h-full">
+                  <Stat value={score} suffix="/20" size="sm" label={label} />
+                  <div className="w-full h-2 mt-3 bg-paper-sunk rounded-pill overflow-hidden">
+                    <div
+                      className={`h-full rounded-pill ${getScoreColor(score)}`}
+                      style={{ width: `${(score / 20) * 100}%`, transition: 'width 0.8s ease-out' }}
+                    />
+                  </div>
+                </Card>
+              </Reveal>
             );
           })}
         </div>
@@ -150,73 +149,66 @@ const SpeakingEvaluationResults = ({ level, evaluation, onRetry, onNextLevel, on
 
       {/* Feedback */}
       {feedback && (
-        <div className="bg-slate-50 rounded-xl border border-slate-200 p-5 mb-4">
-          <h3 className="text-sm font-semibold text-slate-700 mb-2">Feedback</h3>
-          <p className="text-sm text-slate-600 leading-relaxed">{feedback}</p>
-        </div>
+        <Card tone="sunk" className="p-5 mb-4">
+          <h3 className="text-sm font-bold text-ink mb-2">Feedback</h3>
+          <p className="text-sm text-graphite leading-relaxed">{feedback}</p>
+        </Card>
       )}
 
       {/* Strengths & Improvements */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         {strengths.length > 0 && (
-          <div className="bg-green-50 rounded-xl border border-green-200 p-4">
-            <h4 className="text-sm font-semibold text-green-700 mb-2 flex items-center gap-1.5">
+          <Card className="p-4">
+            <h4 className="text-sm font-bold text-accent-limette-ink mb-2 flex items-center gap-1.5">
               <CheckCircle className="w-4 h-4" />
               Strengths
             </h4>
-            <ul className="space-y-1">
+            <ul className="flex flex-wrap gap-1.5">
               {strengths.map((s, i) => (
-                <li key={i} className="text-sm text-green-700">{s}</li>
+                <li key={i}><Chip tone="limette" size="md" className="text-left">{s}</Chip></li>
               ))}
             </ul>
-          </div>
+          </Card>
         )}
         {improvements.length > 0 && (
-          <div className="bg-amber-50 rounded-xl border border-amber-200 p-4">
-            <h4 className="text-sm font-semibold text-amber-700 mb-2 flex items-center gap-1.5">
+          <Card className="p-4">
+            <h4 className="text-sm font-bold text-accent-aprikose-ink mb-2 flex items-center gap-1.5">
               <TrendingUp className="w-4 h-4" />
               To work on
             </h4>
-            <ul className="space-y-1">
+            <ul className="flex flex-wrap gap-1.5">
               {improvements.map((imp, i) => (
-                <li key={i} className="text-sm text-amber-700">{imp}</li>
+                <li key={i}><Chip tone="aprikose" size="md" className="text-left">{imp}</Chip></li>
               ))}
             </ul>
-          </div>
+          </Card>
         )}
       </div>
 
       {/* Action Buttons */}
       <div className="flex flex-col gap-3">
         {recommendation === 'HÖHER' && onNextLevel && (
-          <button
-            onClick={onNextLevel}
-            className="flex items-center justify-center gap-2 w-full py-3.5 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-xl transition-colors shadow-md shadow-teal-200"
-          >
+          <Button size="lg" shimmer className="w-full" onClick={onNextLevel}>
             <ArrowRight className="w-5 h-5" />
             Start the next level
-          </button>
+          </Button>
         )}
 
-        <button
+        <Button
+          size="lg"
+          variant={recommendation === 'HÖHER' ? 'secondary' : 'primary'}
+          shimmer={recommendation !== 'HÖHER'}
+          className="w-full"
           onClick={onRetry}
-          className={`flex items-center justify-center gap-2 w-full py-3.5 font-semibold rounded-xl transition-colors ${
-            recommendation === 'HÖHER'
-              ? 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-              : 'bg-teal-500 hover:bg-teal-600 text-white shadow-md shadow-teal-200'
-          }`}
         >
           <RotateCcw className="w-5 h-5" />
           {recommendation === 'WIEDERHOLEN' ? 'Repeat the lesson' : 'Practice again'}
-        </button>
+        </Button>
 
-        <button
-          onClick={onBack}
-          className="flex items-center justify-center gap-1 text-sm text-slate-400 hover:text-slate-600 transition-colors py-2"
-        >
+        <Button variant="ghost" size="sm" onClick={onBack}>
           <ArrowLeft className="w-4 h-4" />
           Back to overview
-        </button>
+        </Button>
       </div>
     </div>
   );

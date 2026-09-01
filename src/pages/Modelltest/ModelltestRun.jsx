@@ -15,6 +15,9 @@ import { scoreObjectiveSections, mergeListeningResult } from '../../services/exa
 import { useExerciseDetails } from '../../hooks/useListening';
 import { getAudioUrl } from '../../utils/listeningHelpers';
 import SEO from '../../components/SEO';
+import Button from '../../components/ui/Button.jsx';
+import Card from '../../components/ui/Card.jsx';
+import Chip from '../../components/ui/Chip.jsx';
 
 // /modelltest/:examSlug/run — the timed runner (renovation Phase 5a).
 //
@@ -24,8 +27,21 @@ import SEO from '../../components/SEO';
 // resume lands on the right section. Listening parts load their questions
 // from the existing listening_exercises rows at runtime and register their
 // answer keys for the final scoring pass.
+//
+// Styling is deliberately calm (docs/design/playbook.md): this is exam
+// stress. Pressable answers are raised, reference text is flat, and nothing
+// celebrates — that happens on the result screen, and only for a pass.
 
 const PLAYS_ALLOWED = 2;
+
+// A radio answer as a pressable raised option (rule 3: you can press this).
+// The native radio stays inside for keyboard and screen-reader semantics.
+const optionClass = (selected) =>
+  `flex items-start gap-2.5 rounded-clay border bg-white px-3.5 py-2.5 text-sm cursor-pointer select-none ` +
+  `shadow-raise transition-all duration-100 ease-snap active:translate-y-1 active:shadow-none ` +
+  (selected ? 'border-siegel bg-siegel-wash text-ink' : 'border-rule text-graphite hover:border-siegel');
+
+const FIELD = 'rounded-clay border border-rule bg-white text-ink placeholder:text-graphite focus:border-siegel focus:outline-none';
 
 function MockListeningPart({ part, answers, onAnswer, registerKey }) {
   const { exercise, questions, loading } = useExerciseDetails(part.level, String(part.exerciseNumber));
@@ -57,8 +73,9 @@ function MockListeningPart({ part, answers, onAnswer, registerKey }) {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center gap-3 rounded-xl border border-rule bg-paper-sunk px-4 py-3">
-        <button
+      <Card tone="sunk" className="flex flex-wrap items-center gap-3 px-4 py-3">
+        <Button
+          size="sm"
           onClick={() => {
             if (!canPlay || !audioRef.current) return;
             audioRef.current.currentTime = 0;
@@ -66,17 +83,16 @@ function MockListeningPart({ part, answers, onAnswer, registerKey }) {
             setPlays((p) => p + 1);
           }}
           disabled={!canPlay}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-siegel text-white text-sm font-semibold disabled:opacity-50"
         >
           <Volume2 className="w-4 h-4" /> Abspielen
-        </button>
+        </Button>
         <span className="font-data text-[0.8125rem] text-graphite">
           {canPlay
             ? `Noch ${PLAYS_ALLOWED - plays}× abspielbar (wie in der Prüfung begrenzt)`
             : 'Keine Wiedergabe mehr — beantworte die Fragen'}
         </span>
         <audio ref={audioRef} src={audioUrl} preload="none" />
-      </div>
+      </Card>
       {questions.map((q) => {
         const qid = q.id || q.question_number;
         const key = `listening:${part.key}:${qid}`;
@@ -88,11 +104,11 @@ function MockListeningPart({ part, answers, onAnswer, registerKey }) {
           return { key: m ? m[1] : label, label };
         });
         return (
-          <fieldset key={qid} className="rounded-xl border border-rule bg-white p-4">
-            <legend className="px-1 text-sm font-semibold text-ink">{q.question_text}</legend>
-            <div className="mt-2 space-y-1.5">
+          <Card as="fieldset" key={qid} className="p-4">
+            <legend className="px-1 text-sm font-bold text-ink">{q.question_text}</legend>
+            <div className="mt-2 space-y-2">
               {opts.map((o) => (
-                <label key={o.key} className="flex items-start gap-2.5 text-sm text-graphite cursor-pointer">
+                <label key={o.key} className={optionClass(answers[key] === o.key)}>
                   <input
                     type="radio"
                     name={key}
@@ -104,7 +120,7 @@ function MockListeningPart({ part, answers, onAnswer, registerKey }) {
                 </label>
               ))}
             </div>
-          </fieldset>
+          </Card>
         );
       })}
     </div>
@@ -243,24 +259,40 @@ const ModelltestRun = () => {
   const mm = remaining != null ? String(Math.floor(remaining / 60)).padStart(2, '0') : '--';
   const ss = remaining != null ? String(remaining % 60).padStart(2, '0') : '--';
   const low = remaining != null && remaining < 120;
+  // The section deadline as a bar: how much of this section's time is left.
+  const sectionSeconds = section.minutes * 60;
+  const timePct = remaining != null ? Math.max(0, Math.min(100, (remaining / sectionSeconds) * 100)) : 100;
 
   return (
-    <div className="min-h-screen bg-paper pt-20 pb-16 px-4">
+    <div className="min-h-screen bg-paper text-ink pt-20 pb-16 px-4">
       <SEO title={`${section.title} — ${mock.title}`} description="Übungstest läuft." path={`/modelltest/${examSlug}/run`} noindex />
       <div className="max-w-2xl mx-auto">
 
         {/* Section header + timer */}
-        <div className="sticky top-16 z-40 -mx-4 px-4 py-3 bg-paper/95 backdrop-blur-md border-b border-rule flex items-center justify-between">
-          <div>
-            <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
-              Teil {sectionIndex + 1} von {mock.sections.length}
-            </p>
-            <h1 className="font-display text-lg font-semibold text-ink">{section.title}</h1>
+        <div className="sticky top-16 z-40 -mx-4 px-4 pt-3 bg-paper/95 backdrop-blur-md border-b border-rule">
+          <div className="flex items-center justify-between gap-3 pb-3">
+            <div>
+              <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
+                Teil {sectionIndex + 1} von {mock.sections.length}
+              </p>
+              <h1 className="font-display text-lg font-semibold text-ink">{section.title}</h1>
+            </div>
+            <Chip
+              tone={low ? 'himbeer' : 'quiet'}
+              size="md"
+              className="font-data tabular-nums"
+              role="timer"
+              aria-live={low ? 'polite' : 'off'}
+              aria-label={`Verbleibende Zeit ${mm}:${ss}`}
+            >
+              <Clock className="w-4 h-4" /> {mm}:{ss}
+            </Chip>
           </div>
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full font-data text-sm font-bold ${
-            low ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-paper-sunk text-ink border border-rule'
-          }`}>
-            <Clock className="w-4 h-4" /> {mm}:{ss}
+          <div className="h-1 w-full overflow-hidden rounded-pill bg-paper-sunk -mb-px" aria-hidden="true">
+            <div
+              className={`h-full rounded-pill transition-[width] duration-1000 ease-linear ${low ? 'bg-accent-himbeer' : 'bg-siegel'}`}
+              style={{ width: `${timePct}%` }}
+            />
           </div>
         </div>
 
@@ -275,37 +307,37 @@ const ModelltestRun = () => {
 
               {part.type === 'matching' && (
                 <div className="space-y-4">
-                  <ol className="rounded-xl border border-rule bg-paper-sunk p-4 space-y-1">
+                  <Card as="ol" tone="sunk" className="p-4 space-y-1">
                     {part.options.map((o) => (
                       <li key={o.key} className="text-sm text-ink">
                         <span className="font-data font-bold uppercase mr-2">{o.key}</span>{o.label}
                       </li>
                     ))}
-                  </ol>
+                  </Card>
                   {part.texts.map((t, ti) => {
                     const key = `${part.key}:${t.id}`;
                     return (
-                      <div key={t.id} className="rounded-xl border border-rule bg-white p-4">
+                      <Card key={t.id} className="p-4">
                         <p className="text-sm text-graphite leading-relaxed">
-                          <span className="font-semibold text-ink mr-1">Text {ti + 1}.</span>
+                          <span className="font-bold text-ink mr-1">Text {ti + 1}.</span>
                           {t.text}
                         </p>
-                        <div className="mt-3 flex flex-wrap gap-1.5">
+                        <div className="mt-3 flex flex-wrap gap-2">
                           {part.options.map((o) => (
-                            <button
+                            <Chip
                               key={o.key}
+                              raised
+                              size="md"
+                              tone={answers[key] === o.key ? 'label' : 'quiet'}
+                              aria-pressed={answers[key] === o.key}
+                              className="min-w-[2.5rem] justify-center font-data uppercase"
                               onClick={() => setAnswer(key, o.key)}
-                              className={`w-9 h-9 rounded-lg border font-data font-bold uppercase text-sm transition-colors ${
-                                answers[key] === o.key
-                                  ? 'border-siegel bg-siegel text-white'
-                                  : 'border-rule text-graphite hover:border-siegel'
-                              }`}
                             >
                               {o.key}
-                            </button>
+                            </Chip>
                           ))}
                         </div>
-                      </div>
+                      </Card>
                     );
                   })}
                 </div>
@@ -314,16 +346,16 @@ const ModelltestRun = () => {
               {part.type === 'mc-group' && (
                 <div className="space-y-4">
                   {part.text && (
-                    <div className="rounded-xl border border-rule bg-paper-sunk p-4 text-sm text-ink leading-relaxed whitespace-pre-line">
+                    <Card tone="sunk" className="p-4 text-sm text-ink leading-relaxed whitespace-pre-line">
                       {part.text}
-                    </div>
+                    </Card>
                   )}
                   {part.items.map((item) => (
-                    <fieldset key={item.id} className="rounded-xl border border-rule bg-white p-4">
-                      <legend className="px-1 text-sm font-semibold text-ink">{item.prompt}</legend>
-                      <div className="mt-2 space-y-1.5">
+                    <Card as="fieldset" key={item.id} className="p-4">
+                      <legend className="px-1 text-sm font-bold text-ink">{item.prompt}</legend>
+                      <div className="mt-2 space-y-2">
                         {item.options.map((o) => (
-                          <label key={o.key} className="flex items-start gap-2.5 text-sm text-graphite cursor-pointer">
+                          <label key={o.key} className={optionClass(answers[item.id] === o.key)}>
                             <input
                               type="radio"
                               name={item.id}
@@ -335,13 +367,13 @@ const ModelltestRun = () => {
                           </label>
                         ))}
                       </div>
-                    </fieldset>
+                    </Card>
                   ))}
                 </div>
               )}
 
               {part.type === 'cloze' && (
-                <div className="rounded-xl border border-rule bg-white p-5">
+                <Card className="p-5">
                   {part.textBefore && <p className="text-sm text-ink mb-2">{part.textBefore}</p>}
                   <p className="text-sm text-ink leading-[2.1] whitespace-pre-line">
                     {part.gapsText.map((piece, i) => {
@@ -352,7 +384,7 @@ const ModelltestRun = () => {
                           key={i}
                           value={answers[gap.id] || ''}
                           onChange={(e) => setAnswer(gap.id, e.target.value)}
-                          className={`mx-1 rounded-md border px-2 py-1 text-sm font-semibold bg-white ${
+                          className={`mx-1 rounded-md border bg-white px-2 py-1 text-sm font-bold focus:border-siegel focus:outline-none ${
                             answers[gap.id] ? 'border-siegel text-ink' : 'border-rule text-graphite'
                           }`}
                         >
@@ -364,7 +396,7 @@ const ModelltestRun = () => {
                       );
                     })}
                   </p>
-                </div>
+                </Card>
               )}
 
               {part.type === 'listening' && (
@@ -378,38 +410,34 @@ const ModelltestRun = () => {
 
               {part.type === 'writing' && (
                 <div className="space-y-4">
-                  <div className="rounded-xl border border-rule bg-paper-sunk p-4 text-sm text-ink leading-relaxed">
+                  <Card tone="sunk" className="p-4 text-sm text-ink leading-relaxed">
                     {part.task}
-                  </div>
+                  </Card>
                   <textarea
                     value={answers[`writing:${part.key}`] || ''}
                     onChange={(e) => setAnswer(`writing:${part.key}`, e.target.value)}
                     rows={10}
                     placeholder="Schreib deine E-Mail hier…"
-                    className="w-full rounded-xl border border-rule bg-white p-4 text-sm text-ink leading-relaxed focus:border-siegel focus:outline-none"
+                    className={`w-full p-4 text-sm leading-relaxed ${FIELD}`}
                   />
-                  <div className="rounded-xl border border-rule bg-white p-4">
-                    <p className="text-sm font-semibold text-ink mb-2">Selbstcheck (wird nicht automatisch bewertet):</p>
+                  <Card className="p-4">
+                    <p className="text-sm font-bold text-ink mb-2">Selbstcheck (wird nicht automatisch bewertet):</p>
                     <ul className="space-y-1.5">
                       {part.criteria.map((c) => (
                         <li key={c} className="text-sm text-graphite">· {c}</li>
                       ))}
                     </ul>
-                  </div>
+                  </Card>
                 </div>
               )}
             </div>
           ))}
         </div>
 
-        <button
-          onClick={nextSection}
-          disabled={finishing}
-          className="mt-8 w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-siegel text-white font-semibold hover:bg-siegel-lift transition-colors disabled:opacity-60"
-        >
+        <Button size="lg" className="mt-8 w-full" onClick={nextSection} disabled={finishing}>
           {finishing ? 'Wird ausgewertet…' : isLast ? 'Test abschließen' : `Weiter zu: ${mock.sections[sectionIndex + 1].title}`}
           <ChevronRight className="w-4 h-4" />
-        </button>
+        </Button>
 
         <p className="mt-6 font-data text-[0.75rem] leading-relaxed text-graphite">
           {MOCK_DISCLAIMER_DE}

@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Clock } from 'lucide-react';
 import Button from './ui/Button';
+import Card from './ui/Card.jsx';
 
 export default function SessionTimeoutModal({ show, onStay }) {
   const buttonRef = useRef(null);
@@ -41,9 +42,12 @@ export default function SessionTimeoutModal({ show, onStay }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 px-4"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/40 px-4"
         >
-          <motion.div
+          {/* A clay card that floats above the page: modals lift (`shadow-overlay`)
+              rather than rest on an edge, because nothing here is pressed. */}
+          <Card
+            as={motion.div}
             role="dialog"
             aria-modal="true"
             aria-labelledby="session-timeout-title"
@@ -51,12 +55,12 @@ export default function SessionTimeoutModal({ show, onStay }) {
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
-            className="bg-white rounded-lg shadow-overlay border border-rule p-6 max-w-sm w-full text-center"
+            className="shadow-overlay p-6 max-w-sm w-full text-center"
           >
             <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-siegel-wash flex items-center justify-center">
               <Clock className="w-6 h-6 text-siegel" aria-hidden="true" />
             </div>
-            <h2 id="session-timeout-title" className="font-display text-lg font-semibold text-ink mb-2">
+            <h2 id="session-timeout-title" className="font-display text-[1.125rem] font-semibold leading-tight tracking-[-0.018em] text-ink mb-2">
               Your session is about to end
             </h2>
             <p id="session-timeout-desc" className="text-sm text-graphite mb-6">
@@ -65,7 +69,7 @@ export default function SessionTimeoutModal({ show, onStay }) {
             <Button ref={buttonRef} onClick={onStay} size="lg" className="w-full">
               Stay signed in
             </Button>
-          </motion.div>
+          </Card>
         </motion.div>
       )}
     </AnimatePresence>

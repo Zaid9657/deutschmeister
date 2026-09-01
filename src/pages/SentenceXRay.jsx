@@ -8,6 +8,12 @@ import { useAuth } from '../contexts/AuthContext';
 import { getAuthHeaders } from '../utils/supabase';
 import { TRIAL_DAILY_LIMIT, PRO_DAILY_LIMIT } from '../config/limits';
 import { withTimeout } from '../utils/withTimeout';
+import Button from '../components/ui/Button.jsx';
+import Card from '../components/ui/Card.jsx';
+import Chip from '../components/ui/Chip.jsx';
+import SectionHeading from '../components/ui/SectionHeading.jsx';
+import Reveal from '../components/ui/Reveal.jsx';
+import Aurora from '../components/ui/Aurora.jsx';
 
 // ─── constants ───────────────────────────────────────────────────────────────
 
@@ -24,37 +30,48 @@ const ROLE_LABELS = {
   other:              'Other',
 };
 
+// The four cases on the kasus tokens (design-tokens.js rule 1). This is the
+// one screen where case colour is legitimately everywhere: every chip below
+// names its case. `chip` is the same class string as the homepage's living
+// X-Ray demo (astro-site/src/pages/index.astro, KASUS_CLASS), so a learner
+// meets one colour language on both sides of the sign-up.
 const CASE_STYLES = {
   nominative: {
-    chip:  'bg-[#E6F1FB] border border-[#378ADD] text-[#0C447C]',
-    badge: 'bg-[#378ADD] text-white',
-    card:  'border-[#378ADD] bg-[#E6F1FB]/40',
+    tone:  'nominativ',
+    chip:  'border-kasus-nominativ bg-kasus-nominativ-wash text-kasus-nominativ-ink',
+    edge:  'border-l-kasus-nominativ',
+    abbr:  'NOM',
     label: 'Nominative',
   },
   accusative: {
-    chip:  'bg-[#FAECE7] border border-[#D85A30] text-[#712B13]',
-    badge: 'bg-[#D85A30] text-white',
-    card:  'border-[#D85A30] bg-[#FAECE7]/40',
+    tone:  'akkusativ',
+    chip:  'border-kasus-akkusativ bg-kasus-akkusativ-wash text-kasus-akkusativ-ink',
+    edge:  'border-l-kasus-akkusativ',
+    abbr:  'AKK',
     label: 'Accusative',
   },
   dative: {
-    chip:  'bg-[#E1F5EE] border border-[#1D9E75] text-[#085041]',
-    badge: 'bg-[#1D9E75] text-white',
-    card:  'border-[#1D9E75] bg-[#E1F5EE]/40',
+    tone:  'dativ',
+    chip:  'border-kasus-dativ bg-kasus-dativ-wash text-kasus-dativ-ink',
+    edge:  'border-l-kasus-dativ',
+    abbr:  'DAT',
     label: 'Dative',
   },
   genitive: {
-    chip:  'bg-[#EEEDFE] border border-[#7F77DD] text-[#3C3489]',
-    badge: 'bg-[#7F77DD] text-white',
-    card:  'border-[#7F77DD] bg-[#EEEDFE]/40',
+    tone:  'genitiv',
+    chip:  'border-kasus-genitiv bg-kasus-genitiv-wash text-kasus-genitiv-ink',
+    edge:  'border-l-kasus-genitiv',
+    abbr:  'GEN',
     label: 'Genitive',
   },
 };
 
+// Plain words (verbs, adverbs, particles…) — the homepage's PLAIN_CHIP.
 const DEFAULT_STYLE = {
-  chip:  'bg-slate-100 border border-slate-300 text-slate-700',
-  badge: 'bg-slate-500 text-white',
-  card:  'border-slate-200 bg-slate-50',
+  tone:  null,
+  chip:  'border-rule bg-paper-sunk text-graphite',
+  edge:  'border-l-edge',
+  abbr:  null,
   label: null,
 };
 
@@ -81,6 +98,11 @@ const PREVIEW_WORDS = [
 
 const ANON_ID_KEY = 'dm_xray_anon_id';
 
+const EYEBROW = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em]';
+const XR_CHIP = 'rounded-md border px-3 py-2 text-left';
+const XR_WORD = 'block text-[1.0625rem] font-semibold leading-none';
+const XR_ABBR = 'mt-1.5 block font-data text-[0.625rem] font-bold tracking-[0.13em]';
+
 function getOrCreateAnonId() {
   try {
     let id = localStorage.getItem(ANON_ID_KEY);
@@ -98,19 +120,35 @@ function getStyle(caseVal) {
   return CASE_STYLES[caseVal] || DEFAULT_STYLE;
 }
 
+// The small line under the word on an X-Ray chip: the case abbreviation when
+// there is one, otherwise the role — so a plain chip still says what it is.
+function chipAbbr(word) {
+  const style = getStyle(word.case);
+  if (style.abbr) return style.abbr;
+  const role = ROLE_LABELS[word.role] || word.role || '';
+  return String(role).toUpperCase();
+}
+
 // ─── sub-components ───────────────────────────────────────────────────────────
 
-function WordChip({ word, isSelected, onClick }) {
+// One word on the X-Ray stage. The outer span carries the pop (index.css
+// .xr-chip, fill-mode both — which is why the pressable button lives INSIDE
+// it: a filled animation would pin the transform and swallow the press).
+function WordChip({ word, index, isSelected, onClick }) {
   const style = getStyle(word.case);
   return (
-    <button
-      onClick={onClick}
-      className={`px-3 py-1.5 rounded-lg text-sm font-semibold border transition-all duration-150 ${style.chip} ${
-        isSelected ? 'ring-2 ring-offset-1 ring-slate-400 scale-105' : 'hover:scale-105'
-      }`}
-    >
-      {word.text}
-    </button>
+    <span className="xr-chip inline-block" style={{ animationDelay: `${index * 70}ms` }}>
+      <button
+        type="button"
+        onClick={onClick}
+        className={`${XR_CHIP} ${style.chip} shadow-raise transition-all duration-100 ease-snap hover:-translate-y-0.5 active:translate-y-1 active:shadow-none ${
+          isSelected ? 'ring-[3px] ring-siegel ring-offset-2 ring-offset-paper' : ''
+        }`}
+      >
+        <span className={XR_WORD}>{word.text}</span>
+        <span className={XR_ABBR}>{chipAbbr(word)}</span>
+      </button>
+    </span>
   );
 }
 
@@ -120,79 +158,71 @@ function WordCard({ word, index }) {
   const roleLabel = ROLE_LABELS[word.role] || word.role;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.06 }}
-      className={`rounded-xl border-2 ${style.card} overflow-hidden`}
-    >
-      <div className="p-4">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap mb-1">
-              <span className="font-display font-bold text-lg text-slate-900">{word.text}</span>
-              <span className="text-slate-400 text-sm">→</span>
-              <span className="text-slate-600 text-sm italic">{word.translation}</span>
+    <Reveal delay={index * 60}>
+      <Card className={`overflow-hidden border-l-4 ${style.edge}`}>
+        <div className="p-4">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap mb-1.5">
+                <span className="font-display font-semibold text-lg text-ink">{word.text}</span>
+                <span className="text-graphite text-sm">→</span>
+                <span className="text-graphite text-sm italic">{word.translation}</span>
+              </div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <Chip tone="quiet">{roleLabel}</Chip>
+                {word.case && (
+                  <Chip tone={style.tone}>{style.label || word.case}</Chip>
+                )}
+              </div>
             </div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-slate-200 text-slate-600">
-                {roleLabel}
-              </span>
-              {word.case && (
-                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${style.badge}`}>
-                  {style.label || word.case}
-                </span>
-              )}
-            </div>
-          </div>
-          <button
-            onClick={() => setExpanded(!expanded)}
-            className="flex-shrink-0 p-1.5 rounded-lg hover:bg-white/60 transition-colors text-slate-500"
-          >
-            {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-          </button>
-        </div>
-
-        <AnimatePresence>
-          {expanded && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="overflow-hidden"
+            <button
+              type="button"
+              onClick={() => setExpanded(!expanded)}
+              className="flex-shrink-0 p-1.5 rounded-md text-graphite hover:bg-paper-sunk hover:text-ink transition-colors"
             >
-              <p className="mt-3 text-sm text-slate-700 leading-relaxed border-t border-black/10 pt-3">
-                {word.explanation}
-              </p>
-              {word.grammarTopic && (
-                <a
-                  href={`/grammar/a1.1/${word.grammarTopic}/`}
-                  className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-blue-600 hover:text-blue-800 transition-colors"
-                >
-                  Learn more: {word.grammarTopic.replace(/-/g, ' ')}
-                  <ArrowRight size={11} />
-                </a>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </motion.div>
+              {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+            </button>
+          </div>
+
+          <AnimatePresence>
+            {expanded && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden"
+              >
+                <p className="mt-3 text-sm text-graphite leading-relaxed border-t border-rule pt-3">
+                  {word.explanation}
+                </p>
+                {word.grammarTopic && (
+                  <a
+                    href={`/grammar/a1.1/${word.grammarTopic}/`}
+                    className="inline-flex items-center gap-1 mt-2 text-xs font-bold text-siegel hover:text-siegel-deep transition-colors"
+                  >
+                    Learn more: {word.grammarTopic.replace(/-/g, ' ')}
+                    <ArrowRight size={11} />
+                  </a>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </Card>
+    </Reveal>
   );
 }
 
 function CaseLegend() {
   return (
-    <div className="flex flex-wrap gap-2 text-xs">
+    <div className="flex flex-wrap gap-2">
       {Object.entries(CASE_STYLES).map(([key, style]) => (
-        <span key={key} className={`px-2.5 py-1 rounded-full border font-medium ${style.chip}`}>
+        <Chip key={key} tone={style.tone} size="md">
           {style.label}
-        </span>
+        </Chip>
       ))}
-      <span className="px-2.5 py-1 rounded-full border font-medium bg-slate-100 border-slate-300 text-slate-600">
-        Verb / Other
-      </span>
+      <Chip tone="quiet" size="md">Verb / Other</Chip>
     </div>
   );
 }
@@ -202,14 +232,14 @@ function HowItWorks() {
     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-0 py-4">
       {HOW_IT_WORKS.map(({ icon: Icon, step, label }, i) => (
         <div key={step} className="flex sm:flex-1 items-center gap-2 sm:justify-center">
-          <div className="flex-shrink-0 w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center">
-            <Icon size={14} className="text-slate-500" />
+          <div className="flex-shrink-0 w-7 h-7 rounded-pill bg-siegel-wash flex items-center justify-center">
+            <Icon size={14} className="text-siegel-deep" />
           </div>
-          <span className="text-sm text-slate-500">
-            <span className="font-semibold text-slate-600">{step}.</span> {label}
+          <span className="text-sm text-graphite">
+            <span className="font-bold text-ink">{step}.</span> {label}
           </span>
           {i < HOW_IT_WORKS.length - 1 && (
-            <ArrowRight size={14} className="hidden sm:block text-slate-300 ml-2 flex-shrink-0" />
+            <ArrowRight size={14} className="hidden sm:block text-edge ml-2 flex-shrink-0" />
           )}
         </div>
       ))}
@@ -219,19 +249,20 @@ function HowItWorks() {
 
 function PreviewExample({ onTryIt }) {
   return (
-    <div className="rounded-2xl border border-dashed border-slate-300 bg-white/60 p-4">
+    <Card tone="sunk" className="border-dashed p-4">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+        <span className={`${EYEBROW} text-siegel`}>
           Example result
         </span>
         <button
+          type="button"
           onClick={onTryIt}
-          className="text-xs text-indigo-500 hover:text-indigo-700 font-medium transition-colors"
+          className="text-xs font-bold text-siegel hover:text-siegel-deep transition-colors"
         >
           Try it yourself ↑
         </button>
       </div>
-      <p className="text-sm font-medium text-slate-500 italic mb-3">
+      <p className="text-sm font-medium text-graphite italic mb-3">
         "Ich gebe dir das Buch." — <span className="not-italic">I give you the book.</span>
       </p>
       <div className="flex flex-wrap gap-2">
@@ -239,15 +270,16 @@ function PreviewExample({ onTryIt }) {
           const style = getStyle(word.case);
           return (
             <div key={word.text} className="flex flex-col items-center gap-1">
-              <span className={`px-3 py-1.5 rounded-lg text-sm font-semibold border opacity-80 ${style.chip}`}>
-                {word.text}
+              <span className={`${XR_CHIP} ${style.chip}`}>
+                <span className={XR_WORD}>{word.text}</span>
+                <span className={XR_ABBR}>{chipAbbr(word)}</span>
               </span>
-              <span className="text-xs text-slate-400 italic">{word.translation}</span>
+              <span className="font-data text-[0.6875rem] text-graphite italic">{word.translation}</span>
             </div>
           );
         })}
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -260,16 +292,16 @@ function UsageBar({ usage, isLoggedIn }) {
 
   return (
     <div className="flex items-center gap-3">
-      <div className="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+      <div className="flex-1 h-1.5 bg-paper-sunk rounded-pill overflow-hidden">
         <div
-          className={`h-full rounded-full transition-all duration-500 ${isLow ? 'bg-amber-400' : 'bg-indigo-400'}`}
+          className={`h-full rounded-pill transition-all duration-500 ${isLow ? 'bg-accent-aprikose' : 'bg-siegel'}`}
           style={{ width: `${pct}%` }}
         />
       </div>
-      <span className={`text-xs font-medium whitespace-nowrap ${isLow ? 'text-amber-600' : 'text-slate-500'}`}>
+      <span className={`font-data text-[0.75rem] font-medium whitespace-nowrap ${isLow ? 'text-accent-aprikose-ink' : 'text-graphite'}`}>
         {remaining} of {limit} left today
         {!isLoggedIn && (
-          <Link to="/signup" className="ml-1.5 text-indigo-500 hover:text-indigo-700 underline underline-offset-2">
+          <Link to="/signup" className="ml-1.5 font-bold text-siegel hover:text-siegel-deep underline underline-offset-2">
             Sign up for more
           </Link>
         )}
@@ -278,40 +310,37 @@ function UsageBar({ usage, isLoggedIn }) {
   );
 }
 
+// The daily-limit prompt: an aprikose attention card (warning tone, tokens
+// rule 2) with the one interactive colour on its CTA.
 function LimitReachedBanner({ limit, isLoggedIn }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl border border-siegel/25 bg-siegel-wash p-5 text-center"
     >
-      <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white mb-3">
-        <Crown size={20} className="text-siegel-deep" />
-      </div>
-      <h3 className="font-display font-bold text-slate-800 text-base mb-1">
-        {isLoggedIn
-          ? `That's all ${limit} of today's analyses. More tomorrow — or:`
-          : `That's your free analysis for today. A free account gives you ${TRIAL_DAILY_LIMIT} a day for your first week.`}
-      </h3>
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mt-4">
-        <a
-          href="/pricing/"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-siegel text-white text-sm font-semibold hover:bg-siegel-lift active:bg-siegel-deep transition-colors"
-        >
-          <Crown size={14} />
+      <Card raised tone="aprikose" edge="aprikose" className="p-5 text-center">
+        <div className="inline-flex items-center justify-center w-10 h-10 rounded-clay bg-white mb-3">
+          <Crown size={20} className="text-accent-aprikose-ink" />
+        </div>
+        <h3 className="font-display font-semibold text-ink text-base mb-1">
           {isLoggedIn
-            ? `Upgrade to Pro — ${PRO_DAILY_LIMIT} analyses a day`
-            : `Try Pro — ${PRO_DAILY_LIMIT} analyses a day`}
-        </a>
-        {!isLoggedIn && (
-          <Link
-            to="/signup"
-            className="inline-flex items-center gap-2 px-5 py-2.5 border border-slate-300 text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-50 transition-colors"
-          >
-            Create a free account
-          </Link>
-        )}
-      </div>
+            ? `That's all ${limit} of today's analyses. More tomorrow — or:`
+            : `That's your free analysis for today. A free account gives you ${TRIAL_DAILY_LIMIT} a day for your first week.`}
+        </h3>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mt-4">
+          <Button href="/pricing/">
+            <Crown size={14} />
+            {isLoggedIn
+              ? `Upgrade to Pro — ${PRO_DAILY_LIMIT} analyses a day`
+              : `Try Pro — ${PRO_DAILY_LIMIT} analyses a day`}
+          </Button>
+          {!isLoggedIn && (
+            <Button variant="secondary" to="/signup">
+              Create a free account
+            </Button>
+          )}
+        </div>
+      </Card>
     </motion.div>
   );
 }
@@ -421,7 +450,7 @@ const SentenceXRay = () => {
   const showIntro = !result && !loading && !limitReached;
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-20 pb-16">
+    <div className="min-h-screen bg-paper text-ink pt-20 pb-16 relative overflow-hidden">
       <SEO
         {...seoProps('/analyze')}
         structuredData={{
@@ -446,66 +475,63 @@ const SentenceXRay = () => {
         }}
       />
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-10"
-        >
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 shadow-lg shadow-indigo-200 mb-4">
-            <Scan className="w-7 h-7 text-white" />
-          </div>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-2">
-            Sentence X-Ray
-          </h1>
-          <p className="text-slate-600 text-lg max-w-lg mx-auto">
-            Paste any German sentence and see exactly how it works — cases, roles, and why.
-          </p>
-        </motion.div>
+      <Aurora />
 
-        {/* Input */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 mb-4"
-        >
-          <textarea
-            value={sentence}
-            onChange={(e) => setSentence(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Type or paste a German sentence… e.g. Die Mutter gibt dem Kind einen Apfel."
-            rows={2}
-            className="w-full resize-none text-slate-800 text-base placeholder:text-slate-400 focus:outline-none leading-relaxed"
-          />
-          <div className="flex items-center justify-between gap-3 pt-2 border-t border-slate-100">
-            <div className="flex-1 min-w-0">
-              {usage ? (
-                <UsageBar usage={usage} isLoggedIn={!!user} />
-              ) : (
-                <span className="text-xs text-slate-400">{sentence.length}/500</span>
-              )}
-            </div>
-            <button
-              onClick={() => analyze()}
-              disabled={loading || !sentence.trim() || !!limitReached}
-              className="flex-shrink-0 flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-violet-500 to-indigo-600 text-white text-sm font-semibold rounded-xl hover:from-violet-600 hover:to-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
-            >
-              {loading ? (
-                <>
-                  <Loader2 size={15} className="animate-spin" />
-                  Analyzing…
-                </>
-              ) : (
-                <>
-                  <Scan size={15} />
-                  Analyze
-                </>
-              )}
-            </button>
+      <div className="relative max-w-3xl mx-auto px-4 sm:px-6">
+        {/* Header */}
+        <div className="text-center mb-10">
+          <div className="hero-line inline-flex items-center justify-center w-14 h-14 rounded-clay bg-siegel-wash text-siegel-deep mb-4" style={{ '--d': '0ms' }}>
+            <Scan className="w-7 h-7" />
           </div>
-        </motion.div>
+          <SectionHeading
+            level={1}
+            size="page"
+            align="center"
+            title="Sentence X-Ray"
+            lead="Paste any German sentence and see exactly how it works — cases, roles, and why."
+          />
+        </div>
+
+        {/* Input — the big raised clay card */}
+        <div className="hero-line mb-4" style={{ '--d': '160ms' }}>
+          <Card raised className="p-4 sm:p-5">
+            <textarea
+              value={sentence}
+              onChange={(e) => setSentence(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Type or paste a German sentence… e.g. Die Mutter gibt dem Kind einen Apfel."
+              rows={2}
+              className="w-full resize-none rounded-clay border border-rule bg-paper px-4 py-3 text-base leading-relaxed text-ink placeholder:text-graphite focus:border-siegel"
+            />
+            <div className="flex items-center justify-between gap-3 pt-3">
+              <div className="flex-1 min-w-0">
+                {usage ? (
+                  <UsageBar usage={usage} isLoggedIn={!!user} />
+                ) : (
+                  <span className="font-data text-[0.75rem] text-graphite">{sentence.length}/500</span>
+                )}
+              </div>
+              <Button
+                shimmer
+                onClick={() => analyze()}
+                disabled={loading || !sentence.trim() || !!limitReached}
+                className="flex-shrink-0"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 size={15} className="animate-spin" />
+                    Analyzing…
+                  </>
+                ) : (
+                  <>
+                    <Scan size={15} />
+                    Analyze
+                  </>
+                )}
+              </Button>
+            </div>
+          </Card>
+        </div>
 
         {/* Intro: how it works + preview + examples */}
         <AnimatePresence>
@@ -517,25 +543,21 @@ const SentenceXRay = () => {
               transition={{ delay: 0.15 }}
               className="mb-6 space-y-4"
             >
-              <div className="bg-white rounded-2xl border border-slate-200 px-4 divide-y divide-slate-100 sm:divide-y-0">
+              <Card className="px-4">
                 <HowItWorks />
-              </div>
+              </Card>
 
               <PreviewExample onTryIt={() => document.querySelector('textarea')?.focus()} />
 
               <div>
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-1">
+                <p className={`${EYEBROW} text-siegel mb-2 px-1`}>
                   Or try an example
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {EXAMPLES.map((ex) => (
-                    <button
-                      key={ex}
-                      onClick={() => analyze(ex)}
-                      className="text-sm px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-700 hover:bg-indigo-50 transition-colors"
-                    >
+                    <Chip key={ex} tone="quiet" size="md" raised onClick={() => analyze(ex)}>
                       {ex}
-                    </button>
+                    </Chip>
                   ))}
                 </div>
               </div>
@@ -550,7 +572,7 @@ const SentenceXRay = () => {
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="flex items-start gap-3 p-4 mb-6 rounded-xl bg-red-50 border border-red-200 text-red-700"
+              className="flex items-start gap-3 p-4 mb-6 rounded-clay border border-accent-himbeer/30 bg-accent-himbeer-wash text-accent-himbeer-ink"
             >
               <AlertCircle size={18} className="flex-shrink-0 mt-0.5" />
               <p className="text-sm">{error}</p>
@@ -584,8 +606,8 @@ const SentenceXRay = () => {
               exit={{ opacity: 0 }}
             >
               {/* Full translation */}
-              <div className="mb-5 px-4 py-3 rounded-xl bg-slate-800 text-white text-sm">
-                <span className="text-slate-400 text-xs font-medium uppercase tracking-wider mr-2">Translation</span>
+              <div className="mb-5 px-4 py-3 rounded-clay bg-ink text-paper text-sm">
+                <span className={`${EYEBROW} text-paper/60 mr-2`}>Translation</span>
                 <span className="font-medium">{result.fullTranslation}</span>
               </div>
 
@@ -594,17 +616,28 @@ const SentenceXRay = () => {
                 <CaseLegend />
               </div>
 
-              {/* Word chips */}
-              <div className="flex flex-wrap gap-2 mb-6 p-4 bg-white rounded-2xl border border-slate-200 shadow-sm">
-                {result.words.map((word, i) => (
-                  <WordChip
-                    key={i}
-                    word={word}
-                    isSelected={selectedWord === i}
-                    onClick={() => setSelectedWord(selectedWord === i ? null : i)}
-                  />
-                ))}
-              </div>
+              {/* Word chips — the X-Ray stage */}
+              <Card raised className="mb-6 p-4 sm:p-5">
+                <div className="flex items-center justify-between gap-3 mb-4">
+                  <p className={`${EYEBROW} text-siegel`}>Sentence X-Ray</p>
+                  <span className="flex gap-1.5" aria-hidden="true">
+                    <span className="h-2.5 w-2.5 rounded-pill bg-accent-himbeer" />
+                    <span className="h-2.5 w-2.5 rounded-pill bg-accent-aprikose" />
+                    <span className="h-2.5 w-2.5 rounded-pill bg-accent-limette" />
+                  </span>
+                </div>
+                <div className="flex flex-wrap content-start items-start gap-2">
+                  {result.words.map((word, i) => (
+                    <WordChip
+                      key={i}
+                      word={word}
+                      index={i}
+                      isSelected={selectedWord === i}
+                      onClick={() => setSelectedWord(selectedWord === i ? null : i)}
+                    />
+                  ))}
+                </div>
+              </Card>
 
               {/* Word detail cards */}
               <div className="space-y-3 mb-6">
@@ -619,28 +652,27 @@ const SentenceXRay = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: result.words.length * 0.06 + 0.1 }}
-                  className="p-5 rounded-2xl bg-siegel-wash border border-siegel/25 mb-6"
+                  className="mb-6"
                 >
-                  <p className="text-xs font-semibold text-siegel-deep uppercase tracking-wider mb-1">
-                    Key Insight
-                  </p>
-                  <h3 className="font-display font-bold text-slate-800 text-base mb-2">
-                    {result.insight.title}
-                  </h3>
-                  <p className="text-sm text-slate-700 leading-relaxed">
-                    {result.insight.explanation}
-                  </p>
+                  <Card tone="wash" className="p-5">
+                    <p className={`${EYEBROW} text-siegel-deep mb-1`}>
+                      Key Insight
+                    </p>
+                    <h3 className="font-display font-semibold text-ink text-base mb-2">
+                      {result.insight.title}
+                    </h3>
+                    <p className="text-sm text-graphite leading-relaxed">
+                      {result.insight.explanation}
+                    </p>
+                  </Card>
                 </motion.div>
               )}
 
               {/* Analyze another */}
               <div className="text-center">
-                <button
-                  onClick={reset}
-                  className="text-sm text-slate-500 hover:text-slate-700 transition-colors underline underline-offset-2"
-                >
+                <Button variant="ghost" onClick={reset}>
                   Analyze another sentence
-                </button>
+                </Button>
               </div>
             </motion.div>
           )}

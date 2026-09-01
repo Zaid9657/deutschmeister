@@ -4,6 +4,7 @@ import { X, Zap, AlertTriangle, Clock } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { safeGet, safeSet } from '../utils/safeStorage';
+import Button from './ui/Button.jsx';
 
 const DISMISS_KEY = 'dm_trial_banner_dismissed';
 
@@ -38,57 +39,49 @@ const TrialBanner = () => {
     setDismissed(true);
   };
 
-  let urgency, icon, message, bgClass, textClass, borderClass, btnClass, dismissClass;
+  // Attention = aprikose wash/ink (playbook §1). The three urgencies keep their
+  // own icon and copy; the band deepens from a quiet siegel wash (plenty of
+  // time) to the aprikose attention band, with a bright aprikose rule once the
+  // trial ends today. Never colour alone — the icon and the words carry it.
+  let urgency, icon, message, bandClass, dismissClass;
 
   if (under24h) {
     urgency = 'critical';
-    icon = <Clock className="w-4 h-4 flex-shrink-0" />;
+    icon = <Clock className="w-4 h-4 flex-shrink-0" aria-hidden="true" />;
     message = 'Your trial ends today!';
-    bgClass = 'bg-red-600';
-    textClass = 'text-white';
-    borderClass = '';
-    btnClass = 'bg-white text-red-700 hover:bg-red-50';
-    dismissClass = 'text-white/70 hover:text-white hover:bg-white/20';
+    bandClass = 'bg-accent-aprikose-wash text-accent-aprikose-ink border-b-2 border-accent-aprikose';
+    dismissClass = 'text-accent-aprikose-ink hover:bg-accent-aprikose/20';
   } else if (daysRemaining <= 3) {
     urgency = 'urgent';
-    icon = <AlertTriangle className="w-4 h-4 flex-shrink-0" />;
+    icon = <AlertTriangle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />;
     message = `Only ${daysRemaining} ${daysRemaining === 1 ? 'day' : 'days'} left! Don't lose access to all features.`;
-    bgClass = 'bg-orange-500';
-    textClass = 'text-white';
-    borderClass = '';
-    btnClass = 'bg-white text-orange-700 hover:bg-orange-50';
-    dismissClass = 'text-white/70 hover:text-white hover:bg-white/20';
+    bandClass = 'bg-accent-aprikose-wash text-accent-aprikose-ink border-b border-accent-aprikose/40';
+    dismissClass = 'text-accent-aprikose-ink hover:bg-accent-aprikose/20';
   } else {
     urgency = 'normal';
-    icon = <Zap className="w-4 h-4 flex-shrink-0 text-blue-500" />;
+    icon = <Zap className="w-4 h-4 flex-shrink-0 text-siegel" aria-hidden="true" />;
     message = `You have ${daysRemaining} days of full access remaining.`;
-    bgClass = 'bg-[#E6F1FB]';
-    textClass = 'text-slate-800';
-    borderClass = 'border-b border-blue-200';
-    btnClass = 'bg-blue-600 text-white hover:bg-blue-700';
-    dismissClass = 'text-slate-500 hover:text-slate-700 hover:bg-blue-100';
+    bandClass = 'bg-siegel-wash text-siegel-deep border-b border-rule';
+    dismissClass = 'text-siegel-deep hover:bg-siegel/10';
   }
 
   return (
-    <div className={`sticky top-0 z-40 w-full ${bgClass} ${borderClass}`} data-urgency={urgency}>
+    <div className={`sticky top-0 z-40 w-full ${bandClass}`} data-urgency={urgency}>
       <div className="max-w-5xl mx-auto px-4 py-2.5 flex items-center justify-between gap-4">
-        <div className={`flex items-center gap-2 text-sm font-medium ${textClass} min-w-0`}>
+        <div className="flex items-center gap-2 text-sm font-semibold min-w-0">
           {icon}
           <span className="truncate">{message}</span>
         </div>
 
         <div className="flex items-center gap-3 flex-shrink-0">
-          <a
-            href="/pricing/"
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors whitespace-nowrap ${btnClass}`}
-          >
-            <Zap className="w-3 h-3" />
+          <Button href="/pricing/" size="sm" className="whitespace-nowrap">
+            <Zap className="w-3 h-3" aria-hidden="true" />
             Upgrade to Pro
-          </a>
+          </Button>
           <button
             onClick={handleDismiss}
             aria-label="Dismiss"
-            className={`p-1 rounded transition-colors ${dismissClass}`}
+            className={`p-1 rounded-md transition-colors ${dismissClass}`}
           >
             <X className="w-4 h-4" />
           </button>

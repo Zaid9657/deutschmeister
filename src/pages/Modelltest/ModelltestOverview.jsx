@@ -6,6 +6,11 @@ import { examTrackBySlug, MOCK_DISCLAIMER_DE } from '../../data/examTracks';
 import { mockForExamKey } from '../../data/mockExams';
 import { createAttempt, findResumableAttempt, listAttempts } from '../../services/examService';
 import SEO from '../../components/SEO';
+import Button from '../../components/ui/Button.jsx';
+import Card from '../../components/ui/Card.jsx';
+import Chip from '../../components/ui/Chip.jsx';
+import SectionHeading from '../../components/ui/SectionHeading.jsx';
+import Reveal from '../../components/ui/Reveal.jsx';
 
 // /modelltest/:examSlug — what's in the test, start or resume, past attempts.
 const ModelltestOverview = () => {
@@ -38,7 +43,7 @@ const ModelltestOverview = () => {
     return (
       <div className="min-h-screen bg-paper pt-24 px-4 text-center">
         <p className="text-graphite">Für diese Prüfung gibt es noch keinen Übungstest.</p>
-        <Link to="/modelltest" className="text-siegel font-semibold">Zur Übersicht</Link>
+        <Link to="/modelltest" className="font-bold text-siegel transition-colors hover:text-siegel-deep">Zur Übersicht</Link>
       </div>
     );
   }
@@ -54,70 +59,71 @@ const ModelltestOverview = () => {
   };
 
   return (
-    <div className="min-h-screen bg-paper pt-24 pb-12 px-4">
+    <div className="min-h-screen bg-paper text-ink pt-24 pb-12 px-4">
       <SEO title={mock.title} description="Übungstest mit Zeitlimit und Auswertung." path={`/modelltest/${examSlug}`} noindex />
       <div className="max-w-2xl mx-auto">
-        <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{track.nameDe}</p>
-        <h1 className="mt-2 font-display text-3xl font-semibold text-ink">{mock.title}</h1>
-        <p className="mt-3 text-graphite leading-relaxed">{mock.intro}</p>
+        <SectionHeading size="page" level={1} eyebrow={track.nameDe} title={mock.title} lead={mock.intro} />
 
-        <div className="mt-6 rounded-2xl border border-rule bg-white overflow-hidden">
-          {mock.sections.map((s) => (
-            <div key={s.key} className="flex items-center justify-between px-5 py-3.5 border-b border-rule last:border-b-0">
-              <span className="font-semibold text-ink text-sm">{s.title}</span>
-              <span className="flex items-center gap-1.5 font-data text-[0.8125rem] text-graphite">
-                <Clock className="w-3.5 h-3.5" /> {s.minutes} Min.
-              </span>
+        {/* Reference material — what is in the test — stays flat. */}
+        <Reveal delay={180} className="mt-6">
+          <Card className="overflow-hidden">
+            {mock.sections.map((s) => (
+              <div key={s.key} className="flex items-center justify-between px-5 py-3.5 border-b border-rule last:border-b-0">
+                <span className="font-bold text-ink text-sm">{s.title}</span>
+                <span className="flex items-center gap-1.5 font-data text-[0.8125rem] text-graphite">
+                  <Clock className="w-3.5 h-3.5" /> {s.minutes} Min.
+                </span>
+              </div>
+            ))}
+            <div className="flex items-center justify-between px-5 py-3.5 bg-paper-sunk">
+              <span className="font-bold text-ink text-sm">Gesamt</span>
+              <span className="font-data text-[0.8125rem] font-bold text-ink">~{totalMinutes} Min.</span>
             </div>
-          ))}
-          <div className="flex items-center justify-between px-5 py-3.5 bg-paper-sunk">
-            <span className="font-semibold text-ink text-sm">Gesamt</span>
-            <span className="font-data text-[0.8125rem] font-semibold text-ink">~{totalMinutes} Min.</span>
-          </div>
-        </div>
+          </Card>
+        </Reveal>
 
-        <div className="mt-6 flex flex-col sm:flex-row gap-3">
+        <Reveal delay={260} className="mt-6 flex flex-col sm:flex-row gap-3">
           {resumable ? (
-            <button
+            <Button
+              size="lg"
+              shimmer
+              className="flex-1"
               onClick={() => navigate(`/modelltest/${examSlug}/run`, { state: { attemptId: resumable.id } })}
-              className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-siegel text-white font-semibold hover:bg-siegel-lift transition-colors"
             >
               <RotateCcw className="w-4 h-4" /> Angefangenen Test fortsetzen
-            </button>
+            </Button>
           ) : (
-            <button
-              onClick={handleStart}
-              disabled={starting}
-              className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-siegel text-white font-semibold hover:bg-siegel-lift transition-colors disabled:opacity-60"
-            >
+            <Button size="lg" shimmer className="flex-1" onClick={handleStart} disabled={starting}>
               <Play className="w-4 h-4" /> {starting ? 'Wird gestartet…' : 'Test starten'}
-            </button>
+            </Button>
           )}
-        </div>
+        </Reveal>
 
         {history.length > 0 && (
-          <div className="mt-8">
+          <Reveal className="mt-8">
             <p className="flex items-center gap-2 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
               <History className="w-3.5 h-3.5" /> Deine Versuche
             </p>
             <ul className="mt-3 space-y-2">
               {history.map((a) => (
                 <li key={a.id}>
-                  <Link
+                  <Card
+                    interactive
+                    as={Link}
                     to={`/modelltest/${examSlug}/result/${a.id}`}
-                    className="flex items-center justify-between rounded-xl border border-rule bg-white px-4 py-3 text-sm hover:border-siegel transition-colors"
+                    className="flex items-center justify-between px-4 py-3 text-sm"
                   >
                     <span className="text-graphite">
                       {new Date(a.completed_at || a.started_at).toLocaleDateString('de-DE')}
                     </span>
-                    <span className="font-data font-semibold text-ink">
+                    <Chip tone="label">
                       {a.max_score ? `${Math.round((a.score / a.max_score) * 100)} %` : '—'}
-                    </span>
-                  </Link>
+                    </Chip>
+                  </Card>
                 </li>
               ))}
             </ul>
-          </div>
+          </Reveal>
         )}
 
         <p className="mt-8 font-data text-[0.75rem] leading-relaxed text-graphite">

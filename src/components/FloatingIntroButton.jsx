@@ -65,7 +65,7 @@ const FloatingIntroButton = () => {
           <div className="relative">
             <button
               onClick={handleClick}
-              className="flex items-center gap-2.5 pl-4 pr-5 py-3 rounded-pill bg-siegel text-white font-semibold shadow-hover hover:bg-siegel-lift transition-colors duration-200"
+              className="flex items-center gap-2.5 pl-4 pr-5 py-3 rounded-pill bg-siegel text-white font-bold shadow-raise-siegel hover:bg-siegel-lift transition-all duration-100 ease-snap active:translate-y-1 active:shadow-none"
             >
               <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
                 <Play size={16} className="ml-0.5" fill="white" />
@@ -76,7 +76,7 @@ const FloatingIntroButton = () => {
             {/* Dismiss button */}
             <button
               onClick={handleDismiss}
-              className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-ink text-paper flex items-center justify-center shadow-hover hover:bg-graphite transition-colors"
+              className="absolute -top-2 -right-2 w-6 h-6 rounded-pill bg-ink text-paper flex items-center justify-center hover:bg-graphite transition-colors"
               aria-label="Dismiss"
             >
               <X size={12} />

@@ -19,14 +19,14 @@ const Footer = () => {
   const isGerman = i18n.language === 'de';
 
   return (
-    <footer className="bg-ink text-slate-400 mt-20">
+    <footer className="bg-ink text-paper/70 mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Logo size={32} />
               <span className="font-display font-semibold text-white">
-                Deutsch<span className="text-teal-400">Meister</span>
+                Deutsch<span className="text-siegel-lift">Meister</span>
               </span>
             </div>
             <p className="text-sm leading-relaxed">
@@ -37,7 +37,7 @@ const Footer = () => {
           </div>
           {FOOTER_GROUPS.map((group) => (
             <div key={group.key}>
-              <h3 className="text-white font-semibold text-sm mb-3">
+              <h3 className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-white mb-3">
                 {isGerman ? group.titleDe : group.titleEn}
               </h3>
               <ul className="space-y-2 text-sm">
@@ -52,7 +52,7 @@ const Footer = () => {
             </div>
           ))}
         </div>
-        <div className="border-t border-slate-800 pt-6 text-center text-xs">
+        <div className="border-t border-white/10 pt-6 text-center text-xs">
           <p className="mb-2">
             {LEGAL_LINKS.map((item, i) => (
               <span key={item.href}>
