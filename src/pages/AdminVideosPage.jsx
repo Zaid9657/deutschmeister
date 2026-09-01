@@ -1,13 +1,14 @@
 import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { Upload, CheckCircle, AlertTriangle, Film, Plus, ArrowLeft, Loader2, X, ShieldX } from 'lucide-react';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
 
 const ADMIN_EMAIL = 'zaid199660@gmail.com';
 import SEO from '../components/SEO';
-import Button from '../components/ui/Button';
+import Button from '../components/ui/Button.jsx';
+import Card from '../components/ui/Card.jsx';
+import Reveal from '../components/ui/Reveal.jsx';
 
 const LEVELS = ['A1', 'A2', 'B1', 'B2'];
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
@@ -147,8 +148,8 @@ const AdminVideosPage = () => {
     return (
       <div className="min-h-screen bg-paper pt-20 pb-16 flex items-center justify-center">
         <div className="text-center px-4">
-          <div className="mx-auto mb-6 w-16 h-16 rounded-2xl bg-red-100 flex items-center justify-center">
-            <ShieldX className="w-8 h-8 text-red-500" />
+          <div className="mx-auto mb-6 w-16 h-16 rounded-clay bg-accent-himbeer-wash flex items-center justify-center">
+            <ShieldX className="w-8 h-8 text-accent-himbeer-ink" />
           </div>
           <h1 className="font-display text-2xl font-bold text-ink mb-2">Access Denied</h1>
           <p className="text-graphite mb-6">You don't have permission to access this page.</p>
@@ -174,87 +175,75 @@ const AdminVideosPage = () => {
         </Link>
 
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
+        <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-12 h-12 rounded-md bg-siegel flex items-center justify-center">
+            <div className="w-12 h-12 rounded-clay bg-siegel flex items-center justify-center">
               <Film className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="font-display text-2xl sm:text-3xl font-bold text-ink">
+              <Reveal
+                as="h1"
+                className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink sm:text-[2.125rem]"
+              >
                 Add New Video
-              </h1>
+              </Reveal>
               <p className="text-sm text-graphite">Upload a video to the library</p>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Success Message */}
         {success && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-6 bg-green-50 border border-green-200 rounded-2xl p-5"
-          >
+          <Card tone="limette" className="mb-6 p-5 animate-pop-in">
             <div className="flex items-start gap-3">
-              <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+              <CheckCircle className="w-5 h-5 text-accent-limette-ink mt-0.5 flex-shrink-0" />
               <div>
-                <p className="font-semibold text-green-800">Video uploaded successfully!</p>
-                <p className="text-sm text-green-700 mt-1">"{success.title}" is now live in the video library.</p>
+                <p className="font-semibold text-accent-limette-ink">Video uploaded successfully!</p>
+                <p className="text-sm text-accent-limette-ink mt-1">"{success.title}" is now live in the video library.</p>
                 <div className="flex gap-3 mt-3">
                   <Link
                     to={`/video-library/${success.id}`}
-                    className="text-sm font-semibold text-green-700 hover:text-green-800 underline underline-offset-2"
+                    className="text-sm font-bold text-siegel transition-colors hover:text-siegel-deep underline underline-offset-2"
                   >
                     View Video
                   </Link>
                   <button
                     onClick={() => setSuccess(null)}
-                    className="text-sm font-semibold text-green-700 hover:text-green-800 underline underline-offset-2"
+                    className="text-sm font-bold text-siegel transition-colors hover:text-siegel-deep underline underline-offset-2"
                   >
                     Add Another Video
                   </button>
                 </div>
               </div>
             </div>
-          </motion.div>
+          </Card>
         )}
 
         {/* Error Message */}
         {error && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-6 bg-red-50 border border-red-200 rounded-2xl p-5"
-          >
+          <Card tone="himbeer" className="mb-6 p-5 animate-pop-in">
             <div className="flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+              <AlertTriangle className="w-5 h-5 text-accent-himbeer-ink mt-0.5 flex-shrink-0" />
               <div className="flex-1">
-                <p className="text-sm text-red-800">{error}</p>
+                <p className="text-sm text-accent-himbeer-ink">{error}</p>
               </div>
-              <button onClick={() => setError(null)} className="text-red-400 hover:text-red-600">
+              <button onClick={() => setError(null)} className="text-accent-himbeer-ink opacity-70 hover:opacity-100">
                 <X size={16} />
               </button>
             </div>
-          </motion.div>
+          </Card>
         )}
 
         {/* Form */}
-        <motion.form
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+        <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-2xl border border-rule shadow-sm overflow-hidden"
+          className="bg-white rounded-clay border border-rule overflow-hidden"
         >
           <div className="p-6 sm:p-8 space-y-6">
             {/* Title */}
             <div>
               <label htmlFor="title" className="block text-sm font-semibold text-ink mb-2">
-                Title <span className="text-red-400">*</span>
+                Title <span className="text-accent-himbeer-ink">*</span>
               </label>
               <input
                 id="title"
@@ -263,7 +252,7 @@ const AdminVideosPage = () => {
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. German Alphabet & Rules"
                 disabled={uploading}
-                className="w-full px-4 py-3 rounded-xl border border-rule bg-paper text-ink placeholder-graphite focus:outline-none focus:ring-2 focus:ring-siegel/20 focus:border-siegel transition-all disabled:opacity-50"
+                className="w-full px-4 py-3 rounded-clay border border-rule bg-paper text-ink placeholder-graphite focus:outline-none focus:ring-2 focus:ring-siegel/20 focus:border-siegel transition-all disabled:opacity-50"
               />
               {title.trim() && (
                 <p className="mt-1.5 text-xs text-graphite">
@@ -275,7 +264,7 @@ const AdminVideosPage = () => {
             {/* Description */}
             <div>
               <label htmlFor="description" className="block text-sm font-semibold text-ink mb-2">
-                Description <span className="text-red-400">*</span>
+                Description <span className="text-accent-himbeer-ink">*</span>
               </label>
               <textarea
                 id="description"
@@ -284,21 +273,21 @@ const AdminVideosPage = () => {
                 placeholder="e.g. Learn the German alphabet and pronunciation rules"
                 rows={3}
                 disabled={uploading}
-                className="w-full px-4 py-3 rounded-xl border border-rule bg-paper text-ink placeholder-graphite focus:outline-none focus:ring-2 focus:ring-siegel/20 focus:border-siegel transition-all resize-none disabled:opacity-50"
+                className="w-full px-4 py-3 rounded-clay border border-rule bg-paper text-ink placeholder-graphite focus:outline-none focus:ring-2 focus:ring-siegel/20 focus:border-siegel transition-all resize-none disabled:opacity-50"
               />
             </div>
 
             {/* Level */}
             <div>
               <label htmlFor="level" className="block text-sm font-semibold text-ink mb-2">
-                Level <span className="text-red-400">*</span>
+                Level <span className="text-accent-himbeer-ink">*</span>
               </label>
               <select
                 id="level"
                 value={level}
                 onChange={(e) => setLevel(e.target.value)}
                 disabled={uploading}
-                className="w-full px-4 py-3 rounded-xl border border-rule bg-paper text-ink focus:outline-none focus:ring-2 focus:ring-siegel/20 focus:border-siegel transition-all disabled:opacity-50"
+                className="w-full px-4 py-3 rounded-clay border border-rule bg-paper text-ink focus:outline-none focus:ring-2 focus:ring-siegel/20 focus:border-siegel transition-all disabled:opacity-50"
               >
                 <option value="">Select a level</option>
                 {LEVELS.map((l) => (
@@ -310,13 +299,13 @@ const AdminVideosPage = () => {
             {/* English Video */}
             <div>
               <label className="block text-sm font-semibold text-ink mb-2">
-                English Video <span className="text-red-400">*</span>
+                English Video <span className="text-accent-himbeer-ink">*</span>
               </label>
               <div
                 onClick={() => !uploading && enInputRef.current?.click()}
-                className={`relative border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
+                className={`relative border-2 border-dashed rounded-clay p-6 text-center cursor-pointer transition-all ${
                   enFile
-                    ? 'border-green-300 bg-green-50'
+                    ? 'border-accent-limette bg-accent-limette-wash'
                     : 'border-rule bg-paper hover:border-siegel hover:bg-siegel-wash'
                 } ${uploading ? 'pointer-events-none opacity-50' : ''}`}
               >
@@ -329,9 +318,9 @@ const AdminVideosPage = () => {
                 />
                 {enFile ? (
                   <div className="flex items-center justify-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-600" />
-                    <span className="text-sm font-medium text-green-800">{enFile.name}</span>
-                    <span className="text-xs text-green-600">({(enFile.size / 1024 / 1024).toFixed(1)}MB)</span>
+                    <CheckCircle className="w-5 h-5 text-accent-limette-ink" />
+                    <span className="text-sm font-medium text-accent-limette-ink">{enFile.name}</span>
+                    <span className="font-data text-[0.8125rem] text-accent-limette-ink">({(enFile.size / 1024 / 1024).toFixed(1)}MB)</span>
                   </div>
                 ) : (
                   <>
@@ -343,9 +332,9 @@ const AdminVideosPage = () => {
               </div>
               {uploading && enProgress > 0 && (
                 <div className="mt-2">
-                  <div className="h-1.5 bg-paper-sunk rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-paper-sunk rounded-pill overflow-hidden">
                     <div
-                      className="h-full bg-siegel rounded-full transition-all duration-500"
+                      className="h-full bg-siegel rounded-pill transition-all duration-500"
                       style={{ width: `${enProgress}%` }}
                     />
                   </div>
@@ -361,9 +350,9 @@ const AdminVideosPage = () => {
               </label>
               <div
                 onClick={() => !uploading && arInputRef.current?.click()}
-                className={`relative border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
+                className={`relative border-2 border-dashed rounded-clay p-6 text-center cursor-pointer transition-all ${
                   arFile
-                    ? 'border-green-300 bg-green-50'
+                    ? 'border-accent-limette bg-accent-limette-wash'
                     : 'border-rule bg-paper hover:border-siegel hover:bg-siegel-wash'
                 } ${uploading ? 'pointer-events-none opacity-50' : ''}`}
               >
@@ -376,9 +365,9 @@ const AdminVideosPage = () => {
                 />
                 {arFile ? (
                   <div className="flex items-center justify-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-600" />
-                    <span className="text-sm font-medium text-green-800">{arFile.name}</span>
-                    <span className="text-xs text-green-600">({(arFile.size / 1024 / 1024).toFixed(1)}MB)</span>
+                    <CheckCircle className="w-5 h-5 text-accent-limette-ink" />
+                    <span className="text-sm font-medium text-accent-limette-ink">{arFile.name}</span>
+                    <span className="font-data text-[0.8125rem] text-accent-limette-ink">({(arFile.size / 1024 / 1024).toFixed(1)}MB)</span>
                   </div>
                 ) : (
                   <>
@@ -390,9 +379,9 @@ const AdminVideosPage = () => {
               </div>
               {uploading && arFile && arProgress > 0 && (
                 <div className="mt-2">
-                  <div className="h-1.5 bg-paper-sunk rounded-full overflow-hidden">
+                  <div className="h-1.5 bg-paper-sunk rounded-pill overflow-hidden">
                     <div
-                      className="h-full bg-siegel rounded-full transition-all duration-500"
+                      className="h-full bg-siegel rounded-pill transition-all duration-500"
                       style={{ width: `${arProgress}%` }}
                     />
                   </div>
@@ -418,7 +407,7 @@ const AdminVideosPage = () => {
               )}
             </Button>
           </div>
-        </motion.form>
+        </form>
       </div>
     </div>
   );

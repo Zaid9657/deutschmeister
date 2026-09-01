@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
 import {
   ArrowLeft,
   ChevronLeft,
@@ -10,7 +9,6 @@ import {
   Eye,
   EyeOff,
   CheckCircle,
-  Loader2,
   Clock,
 } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
@@ -26,12 +24,16 @@ import VocabularyList from '../components/VocabularyList';
 import ComprehensionQuestions from '../components/ComprehensionQuestions';
 import CompletionMoment from '../components/CompletionMoment';
 import SEO from '../components/SEO';
+import Button from '../components/ui/Button.jsx';
+import Card from '../components/ui/Card.jsx';
+import Chip from '../components/ui/Chip.jsx';
+import Reveal from '../components/ui/Reveal.jsx';
 
 const ReadingLessonPage = () => {
   const { level, lessonId } = useParams();
   const navigate = useNavigate();
   const { i18n, t } = useTranslation();
-  const { getThemeForLevel, setCurrentLevel } = useTheme();
+  const { setCurrentLevel } = useTheme();
   const { isItemLearned, markAsLearned } = useProgress();
   const { user } = useAuth();
 
@@ -45,7 +47,6 @@ const ReadingLessonPage = () => {
   // celebrate, and only once).
   const [justCompleted, setJustCompleted] = useState(false);
 
-  const theme = getThemeForLevel(level);
   const isGerman = i18n.language === 'de';
   const isCompleted = lesson ? isItemLearned(level, 'readingLessons', lesson.id) : false;
 
@@ -103,33 +104,32 @@ const ReadingLessonPage = () => {
   if (loading) {
     return (
       <div
-        className={`min-h-screen bg-gradient-to-br ${theme.bgGradient} pt-20 flex items-center justify-center`}
+        className="min-h-screen bg-paper pt-20 flex items-center justify-center"
+        role="status"
+        aria-label="Loading"
       >
-        <Loader2 className="w-10 h-10 text-slate-400 animate-spin" />
+        <div className="animate-spin w-10 h-10 border-4 border-rule border-t-siegel rounded-full" aria-hidden="true" />
       </div>
     );
   }
 
   if (!lesson) {
     return (
-      <div className="min-h-screen bg-slate-50 pt-20 pb-12">
+      <div className="min-h-screen bg-paper pt-20 pb-12">
         <div className="max-w-2xl mx-auto px-4 pt-12">
-          <div className="bg-white rounded-2xl shadow-lg border border-rose-200 p-8">
-            <h2 className="text-xl font-bold text-rose-700 mb-4">
+          <Card className="p-8">
+            <h2 className="font-display text-xl font-semibold text-accent-himbeer-ink mb-4">
               {isGerman ? 'Lektion nicht gefunden' : 'Lesson not found'}
             </h2>
-            <p className="text-slate-600 text-sm mb-6">
+            <p className="text-sm text-graphite mb-6">
               {isGerman
                 ? 'Diese Lektion konnte nicht in der Datenbank gefunden werden.'
                 : 'This lesson could not be found in the database.'}
             </p>
-            <button
-              onClick={() => navigate(`/level/${level}`)}
-              className="px-4 py-2 bg-slate-800 text-white rounded-lg"
-            >
+            <Button onClick={() => navigate(`/level/${level}`)}>
               {t('common.back')}
-            </button>
-          </div>
+            </Button>
+          </Card>
         </div>
       </div>
     );
@@ -144,7 +144,7 @@ const ReadingLessonPage = () => {
     : [];
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br ${theme.bgGradient} pt-20 pb-12`}>
+    <div className="min-h-screen bg-paper font-body text-ink pt-20 pb-12">
       <SEO
         title={lesson ? `${lesson.title_en || lesson.title} - German Reading ${level.toUpperCase()}` : `German Reading Practice ${level.toUpperCase()}`}
         description={lesson ? `Read and understand: ${lesson.title_en || lesson.title}. German reading practice for ${level.toUpperCase()} with vocabulary and comprehension questions.` : `German reading exercises for level ${level.toUpperCase()}.`}
@@ -152,97 +152,73 @@ const ReadingLessonPage = () => {
       />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6"
-        >
-          <button
-            onClick={() => navigate(`/level/${level}`)}
-            className="flex items-center gap-2 text-slate-600 hover:text-slate-800 mb-4 transition-colors"
-          >
+        <div className="mb-6">
+          <Button variant="ghost" size="sm" onClick={() => navigate(`/level/${level}`)} className="mb-3 -ml-3">
             <ArrowLeft className="w-5 h-5" />
             {t('common.back')}
-          </button>
+          </Button>
 
           {/* Lesson Title Card */}
-          <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-6">
+          <Card raised edge={isCompleted ? 'limette' : 'siegel'} className="p-6">
             <div className="flex items-center gap-4">
-              <div
-                className={`w-14 h-14 rounded-xl bg-gradient-to-br ${theme.gradient} flex items-center justify-center shadow-lg`}
-              >
-                <BookOpen className="w-7 h-7 text-white" />
+              <div className="w-14 h-14 rounded-clay bg-siegel text-white shadow-raise-siegel flex items-center justify-center flex-shrink-0">
+                <BookOpen className="w-7 h-7" />
               </div>
-              <div className="flex-1">
-                <h1 className="font-display text-xl sm:text-2xl font-bold text-slate-800">
+              <div className="flex-1 min-w-0">
+                <h1 className="font-display text-xl sm:text-[1.75rem] font-semibold leading-tight tracking-[-0.018em] text-ink">
                   {isGerman ? lesson.titleDe : lesson.titleEn}
                 </h1>
-                <div className="flex items-center gap-4 mt-1">
-                  <span className="text-sm text-slate-600">
-                    {level.toUpperCase()}
-                  </span>
-                  {lesson.topic && (
-                    <span className="px-2 py-0.5 bg-slate-100 rounded-full text-xs text-slate-600">
-                      {lesson.topic}
-                    </span>
-                  )}
-                  <div className="flex items-center gap-1 text-xs text-slate-500">
+                <div className="flex flex-wrap items-center gap-3 mt-2">
+                  <Chip tone="label">{level.toUpperCase()}</Chip>
+                  {lesson.topic && <Chip tone="quiet">{lesson.topic}</Chip>}
+                  <span className="flex items-center gap-1 font-data text-[0.6875rem] text-graphite">
                     <BookOpen className="w-3.5 h-3.5" />
-                    <span>{lesson.wordCount} {isGerman ? 'Wörter' : 'words'}</span>
-                  </div>
-                  <div className="flex items-center gap-1 text-xs text-slate-500">
+                    {lesson.wordCount} {isGerman ? 'Wörter' : 'words'}
+                  </span>
+                  <span className="flex items-center gap-1 font-data text-[0.6875rem] text-graphite">
                     <Clock className="w-3.5 h-3.5" />
-                    <span>{lesson.estimatedReadingTime} min</span>
-                  </div>
+                    {lesson.estimatedReadingTime} min
+                  </span>
                 </div>
               </div>
               {isCompleted && (
-                <CheckCircle className="w-6 h-6 text-emerald-500 flex-shrink-0" />
+                <CheckCircle className="w-6 h-6 text-accent-limette-ink flex-shrink-0" />
               )}
             </div>
-          </div>
-        </motion.div>
+          </Card>
+        </div>
 
-        {/* Reading Content */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-6"
-        >
-          <div className="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+        {/* Reading Content — reference material, so it stays FLAT: hairlines,
+            generous line height, nothing floating (design-tokens.js rule 3). */}
+        <Reveal className="mb-6">
+          <Card className="overflow-hidden">
             {/* Content Header */}
-            <div className={`bg-gradient-to-r ${theme.gradient} px-6 py-4`}>
-              <div className="flex items-center justify-between">
-                <h2 className="font-semibold text-white">
-                  {isGerman ? 'Lesetext' : 'Reading Text'}
-                </h2>
-                <button
-                  onClick={() => setShowTranslation(!showTranslation)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 text-white text-sm transition-colors"
-                >
-                  {showTranslation ? (
-                    <>
-                      <EyeOff className="w-4 h-4" />
-                      {isGerman ? 'Übersetzung verbergen' : 'Hide translation'}
-                    </>
-                  ) : (
-                    <>
-                      <Eye className="w-4 h-4" />
-                      {isGerman ? 'Übersetzung zeigen' : 'Show translation'}
-                    </>
-                  )}
-                </button>
-              </div>
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-rule bg-paper-sunk px-6 py-4">
+              <h2 className="font-display text-[1.0625rem] font-semibold text-ink">
+                {isGerman ? 'Lesetext' : 'Reading Text'}
+              </h2>
+              <Button variant="secondary" size="sm" onClick={() => setShowTranslation(!showTranslation)}>
+                {showTranslation ? (
+                  <>
+                    <EyeOff className="w-4 h-4" />
+                    {isGerman ? 'Übersetzung verbergen' : 'Hide translation'}
+                  </>
+                ) : (
+                  <>
+                    <Eye className="w-4 h-4" />
+                    {isGerman ? 'Übersetzung zeigen' : 'Show translation'}
+                  </>
+                )}
+              </Button>
             </div>
 
             {/* German Text */}
             <div className="p-6">
-              <div className="prose prose-slate max-w-none">
+              <div className="max-w-prose">
                 {germanParagraphs.map((paragraph, index) => (
                   <p
                     key={index}
-                    className="text-slate-800 leading-relaxed mb-4 last:mb-0 font-body text-base sm:text-lg"
+                    className="text-ink leading-[1.8] mb-5 last:mb-0 font-body text-base sm:text-lg"
                   >
                     {paragraph}
                   </p>
@@ -251,67 +227,45 @@ const ReadingLessonPage = () => {
 
               {/* English Translation */}
               {showTranslation && englishParagraphs.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="mt-6 pt-6 border-t border-slate-200"
-                >
-                  <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">
+                <div className="mt-6 pt-6 border-t border-rule animate-pop-in">
+                  <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel mb-3">
                     {isGerman ? 'Englische Übersetzung' : 'English Translation'}
-                  </h3>
-                  <div className="prose prose-slate max-w-none">
+                  </p>
+                  <div className="max-w-prose">
                     {englishParagraphs.map((paragraph, index) => (
                       <p
                         key={index}
-                        className="text-slate-600 leading-relaxed mb-4 last:mb-0 text-base italic"
+                        className="text-graphite leading-[1.8] mb-5 last:mb-0 text-base italic"
                       >
                         {paragraph}
                       </p>
                     ))}
                   </div>
-                </motion.div>
+                </div>
               )}
             </div>
-          </div>
-        </motion.div>
+          </Card>
+        </Reveal>
 
         {/* Key Vocabulary */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-6"
-        >
-          <VocabularyList vocabulary={lesson.keyVocabulary} theme={theme} />
-        </motion.div>
+        <Reveal delay={80} className="mb-6">
+          <VocabularyList vocabulary={lesson.keyVocabulary} />
+        </Reveal>
 
         {/* Comprehension Questions */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="mb-6"
-        >
-          <ComprehensionQuestions questions={lesson.questions} theme={theme} />
-        </motion.div>
+        <Reveal delay={160} className="mb-6">
+          <ComprehensionQuestions questions={lesson.questions} />
+        </Reveal>
 
         {/* Mark Complete / Navigation */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-6">
-            {/* Mark as Complete */}
+        <Reveal delay={240}>
+          <Card className="p-6">
+            {/* Mark as Complete — the one primary action on this screen */}
             {!isCompleted ? (
-              <button
-                onClick={handleMarkComplete}
-                className={`w-full flex items-center justify-center gap-3 px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r ${theme.gradient} hover:shadow-lg transition-all mb-4`}
-              >
+              <Button size="lg" shimmer onClick={handleMarkComplete} className="w-full mb-4">
                 <CheckCircle className="w-5 h-5" />
                 {isGerman ? 'Als abgeschlossen markieren' : 'Mark as Complete'}
-              </button>
+              </Button>
             ) : (
               <div className="mb-4">
                 <CompletionMoment
@@ -335,39 +289,33 @@ const ReadingLessonPage = () => {
             )}
 
             {/* Previous / Next Navigation */}
-            <div className="flex items-center justify-between">
-              <button
+            <div className="flex items-center justify-between gap-3">
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => handleNavigateLesson(previousLesson)}
                 disabled={!previousLesson}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                  previousLesson
-                    ? 'text-slate-600 hover:bg-slate-100'
-                    : 'text-slate-300 cursor-not-allowed'
-                }`}
               >
                 <ChevronLeft className="w-5 h-5" />
                 {isGerman ? 'Vorherige' : 'Previous'}
-              </button>
+              </Button>
 
-              <span className="text-sm text-slate-500">
+              <span className="font-data text-[0.75rem] text-graphite">
                 {currentIndex >= 0 ? `${currentIndex + 1} / ${allLessons.length}` : ''}
               </span>
 
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => handleNavigateLesson(nextLesson)}
                 disabled={!nextLesson}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                  nextLesson
-                    ? 'text-slate-600 hover:bg-slate-100'
-                    : 'text-slate-300 cursor-not-allowed'
-                }`}
               >
                 {isGerman ? 'Nächste' : 'Next'}
                 <ChevronRight className="w-5 h-5" />
-              </button>
+              </Button>
             </div>
-          </div>
-        </motion.div>
+          </Card>
+        </Reveal>
       </div>
     </div>
   );

@@ -1,18 +1,17 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { ChevronRight, Clock, CheckCircle, Circle, Lock } from 'lucide-react';
-import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { isLevelFree } from '../config/freeTier';
+import Card from './ui/Card.jsx';
+import Chip from './ui/Chip.jsx';
 
 const GrammarTopicCard = ({ topic, level, isCompleted, progress = 0 }) => {
   const { i18n } = useTranslation();
-  const { getThemeForLevel } = useTheme();
 
   const { user } = useAuth();
   const { hasAccess } = useSubscription();
-  const theme = getThemeForLevel(level);
   const isGerman = i18n.language === 'de';
   const free = isLevelFree(level);
   const locked = !free && !(user && hasAccess);
@@ -23,15 +22,16 @@ const GrammarTopicCard = ({ topic, level, isCompleted, progress = 0 }) => {
     window.location.assign(`/grammar/${level}/${topic.slug}/`);
   };
 
-  // Determine status icon and colors
+  // Status marks: limette for "done" (the success token), aprikose for
+  // "in progress" (attention). Never a level colour — colour means case.
   const getStatusIcon = () => {
     if (isCompleted) {
-      return <CheckCircle className="w-5 h-5 text-emerald-500" />;
+      return <CheckCircle className="w-5 h-5 text-accent-limette" />;
     }
     if (progress > 0) {
-      return <Circle className="w-5 h-5 text-amber-500" style={{ strokeDasharray: '100', strokeDashoffset: 100 - progress }} />;
+      return <Circle className="w-5 h-5 text-accent-aprikose" style={{ strokeDasharray: '100', strokeDashoffset: 100 - progress }} />;
     }
-    return <Circle className="w-5 h-5 text-slate-300" />;
+    return <Circle className="w-5 h-5 text-rule" />;
   };
 
   const getStatusText = () => {
@@ -41,28 +41,19 @@ const GrammarTopicCard = ({ topic, level, isCompleted, progress = 0 }) => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ scale: 1.01, y: -2 }}
-      transition={{ duration: 0.2 }}
+    <Card
+      interactive
+      edge={isCompleted ? 'limette' : 'paper'}
       onClick={handleClick}
-      className={`relative bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md ${
-        isCompleted ? 'border-emerald-200' : 'border-slate-200'
-      }`}
+      className="relative overflow-hidden cursor-pointer"
     >
-      {/* Completed indicator bar */}
-      {isCompleted && (
-        <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${theme.gradient}`} />
-      )}
-
       <div className="p-4">
         <div className="flex items-start gap-4">
           {/* Order number with status */}
-          <div className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center ${
+          <div className={`flex-shrink-0 w-10 h-10 rounded-clay flex items-center justify-center font-data ${
             isCompleted
-              ? `bg-gradient-to-br ${theme.gradient} text-white`
-              : 'bg-slate-100 text-slate-600'
+              ? 'bg-accent-limette-wash text-accent-limette-ink'
+              : 'bg-paper-sunk text-graphite'
           }`}>
             <span className="font-bold">{topic.order}</span>
           </div>
@@ -70,30 +61,28 @@ const GrammarTopicCard = ({ topic, level, isCompleted, progress = 0 }) => {
           {/* Content */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <h3 className="font-semibold truncate text-slate-800">
+              <h3 className="font-semibold truncate text-ink">
                 {isGerman ? topic.titleDe : topic.titleEn}
               </h3>
-              {locked && <Lock className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />}
+              {locked && <Lock className="w-3.5 h-3.5 text-graphite flex-shrink-0" />}
               {free && !isCompleted && (
-                <span className="px-1.5 py-0.5 rounded text-[10px] bg-emerald-100 text-emerald-700 font-semibold flex-shrink-0">
-                  FREE
-                </span>
+                <Chip tone="limette" className="flex-shrink-0">FREE</Chip>
               )}
             </div>
 
-            <p className="text-sm line-clamp-2 text-slate-600">
+            <p className="text-sm line-clamp-2 text-graphite">
               {isGerman ? topic.descriptionDe : topic.descriptionEn}
             </p>
 
             {/* Meta info */}
             <div className="flex items-center gap-4 mt-3">
-              <div className="flex items-center gap-1 text-xs text-slate-500">
+              <div className="flex items-center gap-1 font-data text-[0.8125rem] text-graphite">
                 <Clock className="w-3.5 h-3.5" />
                 <span>{topic.estimatedTime} min</span>
               </div>
-              <div className="flex items-center gap-1 text-xs">
+              <div className="flex items-center gap-1.5 text-[0.8125rem]">
                 {getStatusIcon()}
-                <span className={isCompleted ? 'text-emerald-600' : 'text-slate-500'}>
+                <span className={isCompleted ? 'text-accent-limette-ink' : 'text-graphite'}>
                   {getStatusText()}
                 </span>
               </div>
@@ -106,30 +95,30 @@ const GrammarTopicCard = ({ topic, level, isCompleted, progress = 0 }) => {
               whileHover={{ x: 4 }}
               className="flex-shrink-0 self-center"
             >
-              <ChevronRight className="w-5 h-5 text-slate-400" />
+              <ChevronRight className="w-5 h-5 text-siegel" />
             </motion.div>
           )}
         </div>
 
         {/* Progress bar for in-progress topics */}
         {progress > 0 && !isCompleted && (
-          <div className="mt-3 pt-3 border-t border-slate-100">
-            <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+          <div className="mt-3 pt-3 border-t border-rule">
+            <div className="flex items-center justify-between font-data text-[0.8125rem] text-graphite mb-1">
               <span>{isGerman ? 'Fortschritt' : 'Progress'}</span>
               <span>{Math.round(progress)}%</span>
             </div>
-            <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+            <div className="h-1.5 bg-paper-sunk rounded-pill overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
                 transition={{ duration: 0.5, ease: 'easeOut' }}
-                className={`h-full bg-gradient-to-r ${theme.gradient} rounded-full`}
+                className="h-full bg-siegel rounded-pill"
               />
             </div>
           </div>
         )}
       </div>
-    </motion.div>
+    </Card>
   );
 };
 

@@ -1,11 +1,15 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { ArrowRight, Stethoscope, Target, ShieldCheck, Mic, ScanSearch, Heart, Users, BookOpen, Briefcase } from 'lucide-react';
 import SEO from '../components/SEO';
 import { trackAboutViewed } from '../lib/funnelTracking';
 import { seoProps } from '../data/seoRoutes.js';
 import { ORGANIZATION_FULL } from '../data/organization.js';
+import Button from '../components/ui/Button.jsx';
+import Card from '../components/ui/Card.jsx';
+import Chip from '../components/ui/Chip.jsx';
+import SectionHeading from '../components/ui/SectionHeading.jsx';
+import Reveal from '../components/ui/Reveal.jsx';
+import Aurora from '../components/ui/Aurora.jsx';
 
 const BADGES = [
   { icon: Stethoscope, label: 'Von Ärzten in Deutschland entwickelt' },
@@ -42,7 +46,7 @@ const UeberUnsPage = () => {
   useEffect(() => { trackAboutViewed(); }, []);
 
   return (
-    <div className="min-h-screen bg-paper">
+    <div className="min-h-screen bg-paper font-body text-ink">
       <SEO
         {...seoProps('/ueber-uns')}
         // Was an inline literal with no @id, so the node Helmet added on mount
@@ -54,101 +58,76 @@ const UeberUnsPage = () => {
 
       {/* HERO */}
       <section className="relative pt-28 pb-20 overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden">
-        </div>
+        <Aurora />
 
         <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+          <h1 className="hero-line font-display text-[2.25rem] font-semibold leading-[1.02] tracking-[-0.025em] text-ink mb-6 sm:text-[3rem] lg:text-[3.5rem]">
+            Deutsch lernen sollte nicht{' '}
+            <span className="text-siegel">dein Albtraum</span>{' '}
+            sein.
+          </h1>
+          <p
+            className="hero-line text-[1.0625rem] leading-relaxed text-graphite max-w-2xl mx-auto mb-10 sm:text-[1.1875rem]"
+            style={{ '--d': '120ms' }}
           >
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-ink mb-6 leading-tight">
-              Deutsch lernen sollte nicht{' '}
-              <span className="text-siegel">dein Albtraum</span>{' '}
-              sein.
-            </h1>
-            <p className="text-lg sm:text-xl text-graphite max-w-2xl mx-auto mb-10 leading-relaxed">
-              Die meisten Apps machen Sprachenlernen zum Spiel — und umgehen dabei das Schwere: echtes Sprechen, echte Grammatik, echte Prüfungsvorbereitung. Deutschmeister macht das Gegenteil.
-            </p>
+            Die meisten Apps machen Sprachenlernen zum Spiel — und umgehen dabei das Schwere: echtes Sprechen, echte Grammatik, echte Prüfungsvorbereitung. Deutschmeister macht das Gegenteil.
+          </p>
 
-            <div className="flex flex-wrap justify-center gap-3">
-              {BADGES.map((badge) => (
-                <div
-                  key={badge.label}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-rule shadow-sm text-sm text-ink font-medium"
-                >
-                  <badge.icon className="w-4 h-4 text-siegel flex-shrink-0" />
-                  {badge.label}
-                </div>
-              ))}
-            </div>
-          </motion.div>
+          <div className="hero-line flex flex-wrap justify-center gap-3" style={{ '--d': '240ms' }}>
+            {BADGES.map((badge) => (
+              <Chip key={badge.label} tone="quiet" size="md">
+                <badge.icon className="w-4 h-4 text-siegel flex-shrink-0" />
+                {badge.label}
+              </Chip>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* FOUNDER */}
       <section className="py-20 bg-white border-y border-rule">
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ink mb-6">
-              Wer steckt dahinter
-            </h2>
-            <div className="text-graphite leading-relaxed space-y-4">
-              <p>
-                Ich bin Zaid. Arzt, Blue Card, Deutschland. Ich bin von außen gekommen und habe mich durch die Sprachbarriere gekämpft — jeden Tag, jede Prüfung, jedes Gespräch, bei dem mir die Worte fehlten.
-              </p>
-              <p>
-                Ich habe Kollegen scheitern sehen. Nicht, weil sie dumm waren. Sondern weil ihr Deutsch nicht gut genug war. Brillante Ärzte, die an der Fachsprachprüfung hängengeblieben sind. Das hat mich nicht losgelassen.
-              </p>
-              <p>
-                Zuerst habe ich MedMeister gebaut — eine Plattform speziell für Ärzte, die sich auf die Kenntnisprüfung vorbereiten. Dann habe ich gemerkt: Das gleiche Problem trifft jeden, der Deutsch unter Druck lernt. Nicht nur Mediziner. Pflegekräfte, Ingenieure, Studenten, Familien.
-              </p>
-              <p>
-                Heute steht hinter Deutschmeister ein Team von Ärzten in Deutschland — Leute, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind und die Plattform weiterentwickeln.
-              </p>
-              <p className="font-medium text-ink">
-                Deutschmeister ist diese Idee — für alle geöffnet.
-              </p>
-            </div>
-          </motion.div>
+          <SectionHeading title="Wer steckt dahinter" className="mb-6" />
+          <div className="text-[0.9375rem] leading-relaxed text-graphite space-y-4 sm:text-base">
+            <Reveal as="p" delay={80}>
+              Ich bin Zaid. Arzt, Blue Card, Deutschland. Ich bin von außen gekommen und habe mich durch die Sprachbarriere gekämpft — jeden Tag, jede Prüfung, jedes Gespräch, bei dem mir die Worte fehlten.
+            </Reveal>
+            <Reveal as="p" delay={160}>
+              Ich habe Kollegen scheitern sehen. Nicht, weil sie dumm waren. Sondern weil ihr Deutsch nicht gut genug war. Brillante Ärzte, die an der Fachsprachprüfung hängengeblieben sind. Das hat mich nicht losgelassen.
+            </Reveal>
+            <Reveal as="p" delay={240}>
+              Zuerst habe ich MedMeister gebaut — eine Plattform speziell für Ärzte, die sich auf die Kenntnisprüfung vorbereiten. Dann habe ich gemerkt: Das gleiche Problem trifft jeden, der Deutsch unter Druck lernt. Nicht nur Mediziner. Pflegekräfte, Ingenieure, Studenten, Familien.
+            </Reveal>
+            <Reveal as="p" delay={320}>
+              Heute steht hinter Deutschmeister ein Team von Ärzten in Deutschland — Leute, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind und die Plattform weiterentwickeln.
+            </Reveal>
+            <Reveal as="p" delay={400} className="font-medium text-ink">
+              Deutschmeister ist diese Idee — für alle geöffnet.
+            </Reveal>
+          </div>
         </div>
       </section>
 
       {/* DIFFERENTIATORS */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ink">
-              Warum Deutschmeister anders ist
-            </h2>
-          </motion.div>
+          <SectionHeading
+            title="Warum Deutschmeister anders ist"
+            align="center"
+            className="mb-12"
+          />
 
           <div className="grid sm:grid-cols-3 gap-6">
             {DIFFERENTIATORS.map((card, i) => (
-              <motion.div
-                key={card.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 * i }}
-                className="bg-white rounded-2xl border border-rule p-6 shadow-sm hover:shadow-md transition-shadow"
-              >
-                <div className="w-12 h-12 rounded-md bg-siegel flex items-center justify-center mb-4">
-                  <card.icon className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="font-bold text-ink mb-2">{card.title}</h3>
-                <p className="text-sm text-graphite leading-relaxed">{card.body}</p>
-              </motion.div>
+              <Reveal key={card.title} delay={90 * i}>
+                <Card raised className="h-full p-6">
+                  <div className="w-12 h-12 rounded-clay bg-siegel flex items-center justify-center mb-4">
+                    <card.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="font-bold text-ink mb-2">{card.title}</h3>
+                  <p className="text-sm text-graphite leading-relaxed">{card.body}</p>
+                </Card>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -157,81 +136,56 @@ const UeberUnsPage = () => {
       {/* MISSION */}
       <section className="py-20 bg-ink">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-white mb-6">
-              Unsere Mission
-            </h2>
-            <p className="text-lg text-rule leading-relaxed">
-              Den Menschen, die wirklich Deutsch brauchen — Migranten, Ärzte, Pflegekräfte, Studenten — das Werkzeug geben, das sie verdienen. Nicht das günstigste. Das beste. Weil ihre Zukunft davon abhängt, ob sie verstanden werden.
-            </p>
-          </motion.div>
+          <Reveal as="h2" className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-white mb-6 sm:text-[2.125rem]">
+            Unsere Mission
+          </Reveal>
+          <Reveal as="p" delay={80} className="text-[1.0625rem] leading-relaxed text-rule sm:text-[1.1875rem]">
+            Den Menschen, die wirklich Deutsch brauchen — Migranten, Ärzte, Pflegekräfte, Studenten — das Werkzeug geben, das sie verdienen. Nicht das günstigste. Das beste. Weil ihre Zukunft davon abhängt, ob sie verstanden werden.
+          </Reveal>
         </div>
       </section>
 
       {/* ROADMAP */}
       <section className="py-20">
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-ink mb-8 text-center">
-              Was kommt als Nächstes
-            </h2>
-            <div className="space-y-4">
-              {ROADMAP.map((item, i) => (
-                <motion.div
-                  key={item.text}
-                  initial={{ opacity: 0, x: -12 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.08 * i }}
-                  className="flex items-start gap-4 p-4 bg-white rounded-xl border border-rule"
-                >
-                  <div className="w-10 h-10 rounded-md bg-siegel-wash flex items-center justify-center flex-shrink-0">
+          <SectionHeading
+            title="Was kommt als Nächstes"
+            align="center"
+            className="mb-8"
+          />
+          <div className="space-y-4">
+            {ROADMAP.map((item, i) => (
+              <Reveal key={item.text} delay={90 * i}>
+                {/* Reference list, not a control: flat hairline card (rule 3). */}
+                <Card className="flex items-start gap-4 p-4">
+                  <div className="w-10 h-10 rounded-clay bg-siegel-wash flex items-center justify-center flex-shrink-0">
                     <item.icon className="w-5 h-5 text-siegel" />
                   </div>
                   <p className="text-ink font-medium pt-2">{item.text}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+                </Card>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* CTA */}
       <section className="py-24 bg-ink">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="font-display text-3xl sm:text-4xl font-bold text-white mb-8">
-              Bereit anzufangen?
-            </h2>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link
-                to="/signup"
-                className="group w-full sm:w-auto px-8 py-4 bg-paper text-ink font-semibold rounded-md hover:bg-siegel-wash transition-colors flex items-center justify-center gap-2"
-              >
-                Kostenlos testen
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <a
-                href="/pricing/"
-                className="group w-full sm:w-auto px-8 py-4 border-2 border-white/40 text-white font-semibold rounded-2xl hover:border-white/70 hover:bg-white/10 transition-all flex items-center justify-center gap-2"
-              >
-                Preise ansehen
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </a>
-            </div>
-          </motion.div>
+          <Reveal as="h2" className="font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] text-white mb-8 sm:text-[3rem]">
+            Bereit anzufangen?
+          </Reveal>
+          <Reveal delay={80} className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            {/* The one primary action on this screen — the only shimmer. */}
+            <Button to="/signup" size="lg" shimmer className="group w-full sm:w-auto">
+              Kostenlos testen
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+            <Button href="/pricing/" size="lg" variant="secondary" className="group w-full sm:w-auto">
+              Preise ansehen
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </Reveal>
         </div>
       </section>
     </div>
