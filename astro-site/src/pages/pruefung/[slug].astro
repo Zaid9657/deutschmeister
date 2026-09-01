@@ -4,9 +4,13 @@
 // (/leitfaden/<slug>/) explains the exam itself. Data:
 // ../../data/exams/index.js, identity from the shared examTracks registry.
 //
-// STYLE: design tokens only, same rules as the Leitfaden renderer — siegel is
-// the single interactive colour, no kasus colours (no case is named here).
+// STYLE (Playful Depth, docs/design/playbook.md): aurora header with the
+// hero entrance; the exam definition stays a flat reference panel; the path
+// is numbered accent steps on raised clay cards (the homepage's plan
+// pattern); the course card is the one 3D scene; siegel is the single
+// interactive colour, no kasus colours (no case is named here).
 import Layout from '../../layouts/Layout.astro';
+import Aurora from '../../components/Aurora.astro';
 import '../../styles/global.css';
 import { ORGANIZATION } from '../../lib/siteMeta.js';
 import { EXAM_HUBS, examHubUrl } from '../../data/exams/index.js';
@@ -23,6 +27,10 @@ const de = (iso) => {
 };
 
 const others = EXAM_HUBS.filter((h) => h.slug !== hub.slug);
+
+// Step badges rotate through the accents (energy, never meaning — rule 2);
+// the last step lands on siegel like the homepage's "rehearse" step.
+const ACCENTS = ['bg-accent-himbeer', 'bg-accent-aprikose', 'bg-accent-limette', 'bg-siegel'];
 
 const jsonLd = [
   {
@@ -44,6 +52,11 @@ const jsonLd = [
     ],
   },
 ];
+
+const BTN =
+  'inline-flex items-center justify-center gap-2 rounded-clay text-sm font-bold transition-all duration-100 ease-snap select-none';
+const BTN_PRIMARY = `${BTN} bg-siegel px-6 py-3.5 text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`;
+const BTN_SECONDARY = `${BTN} border border-rule bg-white px-6 py-3.5 text-ink shadow-raise hover:border-siegel hover:text-siegel-deep active:translate-y-1 active:shadow-none`;
 ---
 
 <Layout
@@ -53,114 +66,130 @@ const jsonLd = [
   jsonLd={jsonLd}
   lang="de"
 >
-  <div class="bg-paper text-ink">
-    <article class="mx-auto max-w-3xl px-5 pb-20 pt-12">
+  <div class="overflow-x-clip bg-paper text-ink">
+    <article>
 
       <!-- Header -->
-      <header class="border-b border-rule pb-8">
-        <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">
-          Prüfungsvorbereitung · {hub.level}
-        </p>
-        <h1 class="mt-3 font-display text-[2rem] font-semibold leading-[1.1] tracking-[-0.02em] sm:text-[2.75rem]">
-          {hub.h1}
-        </h1>
-        <p class="mt-5 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.125rem]">{hub.intro}</p>
-        <!-- The exam in one paragraph — imported from the guide (one source of truth) -->
-        <div class="mt-6 rounded-lg border border-rule bg-paper-sunk p-5">
-          <p class="text-[1.0625rem] leading-relaxed text-ink">{hub.answer}</p>
+      <header class="relative">
+        <Aurora />
+        <div class="relative mx-auto max-w-3xl px-5 pb-10 pt-12 sm:pt-16">
+          <p class="hero-line font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel" style="--d:0ms">
+            Prüfungsvorbereitung · {hub.level}
+          </p>
+          <h1 class="hero-line mt-3 font-display text-[2rem] font-semibold leading-[1.1] tracking-[-0.02em] sm:text-[2.75rem]" style="--d:80ms">
+            {hub.h1}
+          </h1>
+          <p class="hero-line mt-5 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.125rem]" style="--d:200ms">{hub.intro}</p>
+          <!-- The exam in one paragraph — imported from the guide (one source of truth). Reference material: flat. -->
+          <div class="hero-line mt-6 rounded-clay border border-rule bg-white p-5" style="--d:320ms">
+            <p class="text-[1.0625rem] leading-relaxed text-ink">{hub.answer}</p>
+          </div>
         </div>
       </header>
 
-      <!-- What decides this exam -->
-      <section class="mt-10">
-        <p class="border-l-2 border-siegel bg-siegel-wash px-5 py-4 text-[0.9375rem] leading-relaxed text-ink">
-          {hub.focus}
-        </p>
-      </section>
+      <div class="mx-auto max-w-3xl px-5 pb-20">
 
-      <!-- The path -->
-      <section class="mt-12">
-        <h2 class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[1.875rem]">
-          Dein Weg zur Prüfung
-        </h2>
-        <ol class="mt-6 space-y-4">
-          {hub.path.map((step) => (
-            <li class="rounded-lg border border-rule p-5">
-              <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{step.eyebrow}</p>
-              <h3 class="mt-1 font-display text-[1.0625rem] font-semibold text-ink">{step.title}</h3>
-              <p class="mt-2 text-[0.9375rem] leading-[1.7] text-graphite [&>a]:text-siegel [&>a]:underline-offset-2 hover:[&>a]:underline" set:html={step.body} />
-              <a href={step.href} class="mt-3 inline-block text-[0.875rem] font-semibold text-siegel underline-offset-2 hover:underline">
-                {step.linkLabel} →
-              </a>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      {hub.courseHref && (
-        <section class="mt-12 rounded-lg border border-rule bg-paper-sunk p-8">
-          <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">Kompletter Fahrplan</p>
-          <h2 class="mt-2 font-display text-[1.375rem] font-semibold text-ink">
-            Lieber einen fertigen Plan statt eigener Planung?
-          </h2>
-          <p class="mt-3 text-[0.9375rem] leading-relaxed text-graphite">
-            Die Komplettvorbereitung ist ein fester 4-Wochen-Plan über genau diese Bibliothek:
-            jeden Tag eine Aufgabe, in der Reihenfolge, die zur Prüfung führt.
+        <!-- What decides this exam -->
+        <section class="reveal mt-2">
+          <p class="rounded-clay border-l-4 border-siegel bg-siegel-wash px-5 py-4 text-[0.9375rem] leading-relaxed text-ink">
+            {hub.focus}
           </p>
-          <a href={hub.courseHref} class="mt-5 inline-flex items-center justify-center rounded-md bg-siegel px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-siegel-lift">
-            Zum 4-Wochen-Plan
-          </a>
         </section>
-      )}
 
-      <!-- CTA -->
-      <section class="mt-12 rounded-lg border border-rule p-8 text-center">
-        <h2 class="font-display text-[1.375rem] font-semibold text-ink sm:text-[1.625rem]">
-          Fang dort an, wo du stehst
-        </h2>
-        <p class="mx-auto mt-3 max-w-md text-[0.9375rem] leading-relaxed text-graphite">
-          Der Einstufungstest ist kostenlos — und A1.1 bleibt es für immer.
-        </p>
-        <div class="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <a href="/level-test/" class="inline-flex items-center justify-center rounded-md bg-siegel px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-siegel-lift">
-            Einstufungstest starten
-          </a>
-          <a href={`/leitfaden/${hub.guideSlug}/`} class="inline-flex items-center justify-center rounded-md border border-ink px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-paper">
-            Zum {hub.nameDe} Leitfaden
-          </a>
-        </div>
-      </section>
+        <!-- The path -->
+        <section class="mt-14">
+          <h2 class="reveal font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2rem]">
+            Dein Weg zur Prüfung
+          </h2>
+          <ol class="mt-10 space-y-8">
+            {hub.path.map((step, i) => (
+              <li class="reveal relative rounded-clay border border-rule bg-white p-6 shadow-raise" style={`--rd:${Math.min(i, 3) * 90}ms`}>
+                <span class={`absolute -top-4 left-6 flex h-9 w-9 items-center justify-center rounded-pill ${ACCENTS[i % ACCENTS.length]} font-data text-sm font-bold text-white shadow-raise`} aria-hidden="true">{i + 1}</span>
+                <p class="mt-3 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{step.eyebrow}</p>
+                <h3 class="mt-1 font-display text-[1.125rem] font-semibold text-ink">{step.title}</h3>
+                <p class="mt-2 text-[0.9375rem] leading-[1.7] text-graphite [&>a]:font-bold [&>a]:text-siegel hover:[&>a]:text-siegel-deep" set:html={step.body} />
+                <a href={step.href} class="mt-4 inline-flex items-center gap-1.5 text-[0.875rem] font-bold text-siegel transition-colors hover:text-siegel-deep">
+                  {step.linkLabel} <span aria-hidden="true">→</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </section>
 
-      <!-- Other exams -->
-      <nav class="mt-14 border-t border-rule pt-8" aria-labelledby="more-exams-h">
-        <p id="more-exams-h" class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">Andere Prüfungen</p>
-        <ul class="mt-4 space-y-2">
-          {others.map((h) => (
-            <li>
-              <a href={`/pruefung/${h.slug}/`} class="text-[0.9375rem] text-siegel underline-offset-2 hover:underline">{h.nameDe}</a>
-            </li>
-          ))}
-        </ul>
-      </nav>
+        {hub.courseHref && (
+          <section class="reveal mt-14">
+            <div class="atropos" data-atropos-card>
+              <div class="atropos-scale"><div class="atropos-rotate"><div class="atropos-inner !overflow-visible">
+                <div class="rounded-clay border border-rule bg-white p-7 shadow-raise-siegel sm:p-8">
+                  <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel" data-atropos-offset="4">Kompletter Fahrplan</p>
+                  <h2 class="mt-2 font-display text-[1.375rem] font-semibold text-ink sm:text-[1.625rem]" data-atropos-offset="3">
+                    Lieber einen fertigen Plan statt eigener Planung?
+                  </h2>
+                  <p class="mt-3 text-[0.9375rem] leading-relaxed text-graphite" data-atropos-offset="2">
+                    Die Komplettvorbereitung ist ein fester 4-Wochen-Plan über genau diese Bibliothek:
+                    jeden Tag eine Aufgabe, in der Reihenfolge, die zur Prüfung führt.
+                  </p>
+                  <a href={hub.courseHref} class={`${BTN_PRIMARY} mt-5`} data-atropos-offset="6">
+                    Zum 4-Wochen-Plan
+                  </a>
+                </div>
+              </div></div></div>
+            </div>
+          </section>
+        )}
 
-      <!-- Provenance — same rendered discipline as the guides -->
-      <footer class="mt-10 border-t border-rule pt-6">
-        <p class="font-data text-[0.75rem] leading-relaxed text-graphite">
-          Prüfungsfakten geprüft am {de(hub.factsCheckedOn)} ·
-          Quellen: {hub.sources.map((s, i) => (
-            <Fragment>
-              {i > 0 && ', '}
-              <a href={s.url} rel="nofollow noopener" target="_blank" class="text-siegel underline-offset-2 hover:underline">{s.label}</a>
-            </Fragment>
-          ))}
-        </p>
-        <p class="mt-3 text-[0.75rem] leading-relaxed text-graphite">
-          DeutschMeister bereitet auf diese Prüfung vor, ist aber kein Prüfungsanbieter.
-          Formate, Gebühren und Anmeldung regeln die Prüfungszentren; verbindliche Auskünfte
-          bekommst du direkt beim Anbieter.
-        </p>
-      </footer>
+        <!-- CTA -->
+        <section class="reveal mt-14 rounded-clay border border-rule bg-paper-sunk p-8 text-center">
+          <h2 class="font-display text-[1.375rem] font-semibold text-ink sm:text-[1.625rem]">
+            Fang dort an, wo du stehst
+          </h2>
+          <p class="mx-auto mt-3 max-w-md text-[0.9375rem] leading-relaxed text-graphite">
+            Der Einstufungstest ist kostenlos — und A1.1 bleibt es für immer.
+          </p>
+          <div class="mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <a href="/level-test/" class={`${BTN_PRIMARY} btn-shimmer relative overflow-hidden`}>
+              <span class="relative z-10">Einstufungstest starten</span>
+            </a>
+            <a href={`/leitfaden/${hub.guideSlug}/`} class={BTN_SECONDARY}>
+              Zum {hub.nameDe} Leitfaden
+            </a>
+          </div>
+        </section>
 
+        <!-- Other exams -->
+        <nav class="reveal mt-14 border-t border-rule pt-8" aria-labelledby="more-exams-h">
+          <p id="more-exams-h" class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">Andere Prüfungen</p>
+          <ul class="mt-4 flex flex-wrap gap-3">
+            {others.map((h) => (
+              <li>
+                <a href={`/pruefung/${h.slug}/`} class="inline-flex items-center gap-2 rounded-pill border border-rule bg-white px-4 py-2 text-[0.9375rem] font-semibold text-ink shadow-raise transition-all duration-100 ease-snap hover:border-siegel hover:text-siegel-deep active:translate-y-1 active:shadow-none">
+                  <span class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{h.level}</span>
+                  {h.nameDe}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <!-- Provenance — same rendered discipline as the guides (flat) -->
+        <footer class="mt-10 border-t border-rule pt-6">
+          <p class="font-data text-[0.75rem] leading-relaxed text-graphite">
+            Prüfungsfakten geprüft am {de(hub.factsCheckedOn)} ·
+            Quellen: {hub.sources.map((s, i) => (
+              <Fragment>
+                {i > 0 && ', '}
+                <a href={s.url} rel="nofollow noopener" target="_blank" class="text-siegel underline-offset-2 hover:underline">{s.label}</a>
+              </Fragment>
+            ))}
+          </p>
+          <p class="mt-3 text-[0.75rem] leading-relaxed text-graphite">
+            DeutschMeister bereitet auf diese Prüfung vor, ist aber kein Prüfungsanbieter.
+            Formate, Gebühren und Anmeldung regeln die Prüfungszentren; verbindliche Auskünfte
+            bekommst du direkt beim Anbieter.
+          </p>
+        </footer>
+
+      </div>
     </article>
   </div>
 </Layout>
