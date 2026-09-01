@@ -21,7 +21,11 @@ const lesson = (level, topic) => ({
   type: 'lesson',
   title: topic.titleEn,
   minutes: topic.estimatedTime || 20,
-  href: `/grammar/${level}/${topic.slug}`,
+  // Grammar lessons are served by the Astro build (trailing-slash class) —
+  // `external` makes the course page render a full-load <a>, since the SPA
+  // no longer carries a lesson route of its own.
+  href: `/grammar/${level}/${topic.slug}/`,
+  external: true,
 });
 
 const b11 = getTopicsForLevel('b1.1');

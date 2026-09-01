@@ -7,8 +7,9 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useSubscription } from '../../contexts/SubscriptionContext';
 import QuestionCard from './QuestionCard';
 import DialogueTranscript from './DialogueTranscript';
+import CompletionMoment from '../CompletionMoment';
 
-const ResultsView = ({ exercise, questions, answers, score, dialogues, playsUsed, onRetry }) => {
+const ResultsView = ({ exercise, questions, answers, score, dialogues, playsUsed, onRetry, nextExerciseHref }) => {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
   const isGerman = i18n.language === 'de';
@@ -90,6 +91,22 @@ const ResultsView = ({ exercise, questions, answers, score, dialogues, playsUsed
           )}
         </motion.div>
       </motion.div>
+
+      {/* Forward motion first — the loop used to end at "Back / Try Again" */}
+      <CompletionMoment
+        headline={isGerman ? 'Übung abgeschlossen!' : 'Exercise complete!'}
+        detail={
+          isGerman
+            ? 'Das zählt für deinen Streak und dein Tagesziel.'
+            : 'That counts toward your streak and daily goal.'
+        }
+        nextLabel={
+          nextExerciseHref
+            ? (isGerman ? 'Nächste Übung' : 'Next exercise')
+            : (isGerman ? 'Alle Übungen' : 'All exercises')
+        }
+        nextHref={nextExerciseHref || `/listening/${String(exercise.level ?? '').toLowerCase()}`}
+      />
 
       {/* Transcript */}
       {dialogues && dialogues.length > 0 && (

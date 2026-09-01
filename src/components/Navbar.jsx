@@ -2,11 +2,42 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, LogOut, Globe, LayoutDashboard, Crown, Sparkles, Mic, ClipboardCheck, BookOpen, PlayCircle, ChevronDown, Film, Radio, Scan, Headphones, FileText } from 'lucide-react';
+import { Menu, X, User, LogOut, Globe, LayoutDashboard, Crown, Sparkles, Mic, ClipboardCheck, BookOpen, BookMarked, ChevronDown, Film, Radio, Scan, Headphones, FileText, PlayCircle, GraduationCap } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
+import { NAV_GROUPS } from '../data/navigation';
 import Logo from './Logo';
 import Button from './ui/Button';
+
+// Links come from THE navigation registry (src/data/navigation.js — shared
+// byte-identical with the Astro layout); this file only decides how the app
+// renders them. Icons are presentation, so they live here, keyed by item key.
+const NAV_ICONS = {
+  pruefung: GraduationCap,
+  grammar: BookOpen,
+  videos: PlayCircle,
+  listening: Headphones,
+  reading: FileText,
+  vocabulary: BookMarked,
+  podcasts: Radio,
+  speaking: Mic,
+  'level-test': ClipboardCheck,
+  xray: Scan,
+  pricing: Crown,
+  dashboard: LayoutDashboard,
+};
+
+const isVisible = (item, user) =>
+  item.auth === 'any' || (user ? item.auth === 'authed' : item.auth === 'anon');
+
+// kind 'static' pages are served by the Astro build — an in-app <Link> would
+// render a dead or shadowed SPA twin, so they must be full page loads.
+const NavItem = ({ item, className, children, onClick }) =>
+  item.kind === 'static' ? (
+    <a href={item.href} className={className} onClick={onClick}>{children}</a>
+  ) : (
+    <Link to={item.href} className={className} onClick={onClick}>{children}</Link>
+  );
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
@@ -46,6 +77,12 @@ const Navbar = () => {
   const trialDays = user ? getTrialDaysRemaining() : 0;
   const isAdmin = user?.email === 'zaid199660@gmail.com';
 
+  const label = (item) => (isGerman ? item.labelDe : item.labelEn);
+  const visibleGroups = NAV_GROUPS.map((g) => ({
+    ...g,
+    items: g.items.filter((item) => isVisible(item, user)),
+  }));
+
   const NavSeparator = () => (
     <div className="w-px h-5 bg-rule" />
   );
@@ -57,51 +94,22 @@ const Navbar = () => {
           {/* Logo */}
           <Logo size={40} showWordmark to="/" />
 
-
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">
-            {/* Content Links */}
-            <Link to="/grammar/" className="px-3 py-2 rounded-lg text-sm font-medium text-graphite hover:text-ink hover:bg-siegel-wash transition-colors">
-              {isGerman ? 'Grammatik' : 'Grammar'}
-            </Link>
-            <Link to="/video-library" className="px-3 py-2 rounded-lg text-sm font-medium text-graphite hover:text-ink hover:bg-siegel-wash transition-colors">
-              Videos
-            </Link>
-            <Link to="/listening/" className="px-3 py-2 rounded-lg text-sm font-medium text-graphite hover:text-ink hover:bg-siegel-wash transition-colors">
-              {isGerman ? 'Hören' : 'Listening'}
-            </Link>
-            <Link to="/reading/" className="px-3 py-2 rounded-lg text-sm font-medium text-graphite hover:text-ink hover:bg-siegel-wash transition-colors">
-              {isGerman ? 'Lesen' : 'Reading'}
-            </Link>
-            <Link to="/podcasts/" className="px-3 py-2 rounded-lg text-sm font-medium text-graphite hover:text-ink hover:bg-siegel-wash transition-colors">
-              Podcasts
-            </Link>
-            {user && (
-              <Link to="/speaking/" className="px-3 py-2 rounded-lg text-sm font-medium text-graphite hover:text-ink hover:bg-siegel-wash transition-colors">
-                {isGerman ? 'Sprechen' : 'Speaking'}
-              </Link>
-            )}
-
-            <NavSeparator />
-
-            {/* Tools */}
-            <Link to="/level-test/" className="px-3 py-2 rounded-lg text-sm font-medium text-graphite hover:text-ink hover:bg-siegel-wash transition-colors">
-              {isGerman ? 'Einstufungstest' : 'Level Test'}
-            </Link>
-            <Link to="/analyze/" className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-graphite hover:text-ink hover:bg-siegel-wash transition-colors">
-              <Scan size={14} />
-              {isGerman ? 'Satz-Analyse' : 'X-Ray'}
-            </Link>
-            {!user && (
-              <a href="/pricing/" className="px-3 py-2 rounded-lg text-sm font-medium text-graphite hover:text-ink hover:bg-siegel-wash transition-colors">
-                {isGerman ? 'Preise' : 'Pricing'}
-              </a>
-            )}
-            {user && (
-              <Link to="/dashboard" className="px-3 py-2 rounded-lg text-sm font-medium text-graphite hover:text-ink hover:bg-siegel-wash transition-colors">
-                Dashboard
-              </Link>
-            )}
+            {visibleGroups.map((group, gi) => (
+              <div key={group.key} className="flex items-center gap-1">
+                {gi > 0 && <NavSeparator />}
+                {group.items.map((item) => (
+                  <NavItem
+                    key={item.key}
+                    item={item}
+                    className="px-3 py-2 rounded-lg text-sm font-medium text-graphite hover:text-ink hover:bg-siegel-wash transition-colors"
+                  >
+                    {label(item)}
+                  </NavItem>
+                ))}
+              </div>
+            ))}
 
             {/* Free CTA for anonymous users */}
             {!user && (
@@ -253,93 +261,27 @@ const Navbar = () => {
             className="lg:hidden bg-paper border-b border-rule"
           >
             <div className="px-4 py-4 space-y-1">
-              {/* Content Section */}
-              <p className="px-4 py-2 font-data text-[0.6875rem] font-bold text-graphite uppercase tracking-[0.13em]">
-                {isGerman ? 'Lernen' : 'Learn'}
-              </p>
-              <Link
-                to="/grammar/"
-                onClick={() => setIsOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-siegel-wash transition-colors"
-              >
-                <BookOpen size={20} className="text-graphite" />
-                <span className="text-ink font-medium">{isGerman ? 'Grammatik' : 'Grammar'}</span>
-              </Link>
-              <Link
-                to="/video-library"
-                onClick={() => setIsOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-siegel-wash transition-colors"
-              >
-                <PlayCircle size={20} className="text-graphite" />
-                <span className="text-ink font-medium">Videos</span>
-              </Link>
-              <Link
-                to="/listening/"
-                onClick={() => setIsOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-siegel-wash transition-colors"
-              >
-                <Headphones size={20} className="text-graphite" />
-                <span className="text-ink font-medium">{isGerman ? 'Hören' : 'Listening'}</span>
-              </Link>
-              <Link
-                to="/reading/"
-                onClick={() => setIsOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-siegel-wash transition-colors"
-              >
-                <FileText size={20} className="text-graphite" />
-                <span className="text-ink font-medium">{isGerman ? 'Lesen' : 'Reading'}</span>
-              </Link>
-              <Link
-                to="/podcasts/"
-                onClick={() => setIsOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-siegel-wash transition-colors"
-              >
-                <Radio size={20} className="text-graphite" />
-                <span className="text-ink font-medium">Podcasts</span>
-              </Link>
-              {user && (
-                <Link
-                  to="/speaking/"
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-siegel-wash transition-colors"
-                >
-                  <Mic size={20} className="text-graphite" />
-                  <span className="text-ink font-medium">{isGerman ? 'Sprechen' : 'Speaking'}</span>
-                </Link>
-              )}
-
-              {/* Tools Section */}
-              <div className="border-t border-rule mt-2 pt-2">
-                <p className="px-4 py-2 font-data text-[0.6875rem] font-bold text-graphite uppercase tracking-[0.13em]">
-                  {isGerman ? 'Werkzeuge' : 'Tools'}
-                </p>
-                <Link
-                  to="/level-test/"
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-siegel-wash transition-colors"
-                >
-                  <ClipboardCheck size={20} className="text-graphite" />
-                  <span className="text-ink font-medium">{isGerman ? 'Einstufungstest' : 'Level Test'}</span>
-                </Link>
-                <Link
-                  to="/analyze/"
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-siegel-wash transition-colors"
-                >
-                  <Scan size={20} className="text-graphite" />
-                  <span className="text-ink font-medium">{isGerman ? 'Satz-Analyse' : 'Sentence X-Ray'}</span>
-                </Link>
-                {user && (
-                  <Link
-                    to="/dashboard"
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-siegel-wash transition-colors"
-                  >
-                    <LayoutDashboard size={20} className="text-graphite" />
-                    <span className="text-ink font-medium">Dashboard</span>
-                  </Link>
-                )}
-              </div>
+              {visibleGroups.map((group, gi) => (
+                <div key={group.key} className={gi > 0 ? 'border-t border-rule mt-2 pt-2' : ''}>
+                  <p className="px-4 py-2 font-data text-[0.6875rem] font-bold text-graphite uppercase tracking-[0.13em]">
+                    {isGerman ? group.labelDe : group.labelEn}
+                  </p>
+                  {group.items.map((item) => {
+                    const ItemIcon = NAV_ICONS[item.key] || BookOpen;
+                    return (
+                      <NavItem
+                        key={item.key}
+                        item={item}
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-siegel-wash transition-colors"
+                      >
+                        <ItemIcon size={20} className="text-graphite" />
+                        <span className="text-ink font-medium">{label(item)}</span>
+                      </NavItem>
+                    );
+                  })}
+                </div>
+              ))}
 
               {/* Free CTA for anonymous users */}
               {!user && (

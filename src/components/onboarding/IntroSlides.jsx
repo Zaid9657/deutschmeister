@@ -1,7 +1,10 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, ListChecks, Rocket, ChevronLeft, ChevronRight, Check, Bug } from 'lucide-react';
+import { Sparkles, ListChecks, Rocket, ChevronLeft, ChevronRight, Check, Bug, GraduationCap } from 'lucide-react';
 import { useOnboarding } from '../../hooks/useOnboarding';
+import { useAuth } from '../../contexts/AuthContext';
+import { supabase } from '../../utils/supabase';
+import { EXAM_TRACKS } from '../../data/examTracks';
 import {
   trackOnboardingStarted,
   trackOnboardingSlideViewed,
@@ -15,6 +18,14 @@ const SLIDES = [
     icon: Sparkles,
     headline: "Glad you're here.",
     body: 'Here you learn German like a person, not like a toy. In 30 seconds we\'ll show you what to do next.',
+  },
+  {
+    // The exam-first question. The answer (profiles.exam_track) shapes the
+    // dashboard: exam goal header, countdown, exam tools. Skippable — 'none'
+    // gets the library-first layout.
+    icon: GraduationCap,
+    headline: 'Are you preparing for an exam?',
+    isExamPicker: true,
   },
   {
     icon: ListChecks,
@@ -41,6 +52,21 @@ const slideVariants = {
 
 export default function IntroSlides() {
   const { currentStep, setCurrentStep, completeOnboarding, needsOnboarding } = useOnboarding();
+  const { user } = useAuth();
+  const [examTrack, setExamTrack] = useState(null);
+
+  // Persist the choice immediately (client-writable preference, like
+  // current_level); onboarding completion must never wait on it.
+  const chooseExam = (key) => {
+    setExamTrack(key);
+    if (user) {
+      supabase.from('profiles').update({ exam_track: key }).eq('id', user.id)
+        .then(({ error }) => {
+          if (error) console.error('exam_track save failed:', error.message);
+        });
+    }
+    setCurrentStep((s) => s + 1);
+  };
 
   useEffect(() => {
     if (needsOnboarding) trackOnboardingStarted();
@@ -101,6 +127,31 @@ export default function IntroSlides() {
 
             {slide.body && (
               <p className="text-graphite leading-relaxed mb-6">{slide.body}</p>
+            )}
+
+            {slide.isExamPicker && (
+              <div className="flex flex-col gap-2 mb-2">
+                {EXAM_TRACKS.map((track) => (
+                  <button
+                    key={track.key}
+                    onClick={() => chooseExam(track.key)}
+                    className={`flex items-center justify-between px-4 py-3 rounded-lg border text-left transition-colors ${
+                      examTrack === track.key
+                        ? 'border-siegel bg-siegel-wash text-ink'
+                        : 'border-rule text-ink hover:border-siegel hover:bg-siegel-wash'
+                    }`}
+                  >
+                    <span className="text-sm font-semibold">{track.nameDe}</span>
+                    <span className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{track.level}</span>
+                  </button>
+                ))}
+                <button
+                  onClick={() => chooseExam('none')}
+                  className="mt-1 text-sm text-graphite hover:text-ink transition-colors"
+                >
+                  I'm just learning German — no exam →
+                </button>
+              </div>
             )}
 
             {slide.checklist && (

@@ -1,17 +1,26 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth } from './AuthContext';
+import { supabase } from '../utils/supabase';
 import { safeGetJSON, safeSetJSON } from '../utils/safeStorage';
-import { vocabulary, sentences, grammar, levels } from '../data/content';
+import { levels } from '../data/content';
 import { getTopicsForLevel } from '../data/grammarTopics';
-import {
-  loadUserGrammarProgress,
-  saveUserGrammarProgress,
-  lookupTopicUUID,
-} from '../services/grammarService';
+import { loadUserGrammarProgress } from '../services/grammarService';
 import {
   loadUserReadingProgress,
   getReadingLessonsByLevel,
 } from '../services/readingService';
+
+// ──────────────────────────────────────────────────────────────
+// Progress = persisted signals only. Every percentage this context
+// hands out is computed from rows that exist in Supabase
+// (user_grammar_progress, user_reading_progress,
+// user_listening_progress) — never from the in-memory
+// vocabulary/sentences arrays, which were never written to the
+// database for logged-in users and pinned the LevelPage ring, the
+// ProfilePage totals and the dashboard hero bar at a permanent 0%.
+// The localStorage marking survives for anonymous visitors only
+// (their A1.1 browsing UX), and is excluded from all percentages.
+// ──────────────────────────────────────────────────────────────
 
 const ProgressContext = createContext({});
 
@@ -33,8 +42,11 @@ export const ProgressProvider = ({ children }) => {
   const { user } = useAuth();
   const [progress, setProgress] = useState(getInitialProgress());
   const [loading, setLoading] = useState(true);
-  // Actual item counts per level from Supabase (overrides static content.js counts)
-  const [levelItemCounts, setLevelItemCounts] = useState({});
+  // Per-level totals for the persisted signals, filled as they are fetched.
+  // { 'b1.1': n } — reading lessons that exist per level
+  const [readingTotals, setReadingTotals] = useState({});
+  // { 'b1.1': { total, completed } } — listening exercises per level
+  const [listeningSummary, setListeningSummary] = useState({});
 
   // Load progress from Supabase when user logs in
   useEffect(() => {
@@ -57,87 +69,44 @@ export const ProgressProvider = ({ children }) => {
 
   const loadProgress = async () => {
     try {
-      // OLD SYSTEM COMMENTED OUT - user_progress table doesn't exist
-      // Load JSON blob progress (existing system)
-      // const { data, error } = await supabase
-      //   .from('user_progress')
-      //   .select('*')
-      //   .eq('user_id', user.id)
-      //   .single();
+      const baseProgress = getInitialProgress();
 
-      // if (error && error.code !== 'PGRST116') {
-      //   console.error('Error loading progress:', error);
-      // }
+      const [supabaseGrammarProgress, completedLessonIds, listening] = await Promise.all([
+        loadUserGrammarProgress(user.id),
+        loadUserReadingProgress(user.id),
+        loadListeningSummary(user.id),
+      ]);
 
-      let baseProgress = getInitialProgress();
-      // if (data) {
-      //   baseProgress = { ...baseProgress, ...data.progress };
-      // }
+      setListeningSummary(listening);
 
-      // Also load from user_grammar_progress table (new system)
-      const supabaseGrammarProgress = await loadUserGrammarProgress(user.id);
+      // supabaseGrammarProgress keys are like "a1.1-gt1"
+      Object.entries(supabaseGrammarProgress).forEach(([topicId, topicProgress]) => {
+        // topicId format: "a1.1-gt1" → level is everything before the last "-gt"
+        const levelMatch = topicId.match(/^(.+)-gt\d+$/);
+        if (levelMatch && baseProgress[levelMatch[1]]) {
+          baseProgress[levelMatch[1]].grammarTopics[topicId] = { ...topicProgress };
+        }
+      });
 
-      // Merge: Supabase grammar progress takes precedence over JSON blob
-      if (Object.keys(supabaseGrammarProgress).length > 0) {
-        levels.forEach(level => {
-          if (!baseProgress[level]) {
-            baseProgress[level] = { vocabulary: [], sentences: [], grammar: [], paragraphs: [], readingLessons: [], grammarTopics: {} };
-          }
-          if (!baseProgress[level].grammarTopics) {
-            baseProgress[level].grammarTopics = {};
-          }
-        });
-
-        // supabaseGrammarProgress keys are like "a1.1-gt1"
-        // We need to figure out which level they belong to and merge
-        Object.entries(supabaseGrammarProgress).forEach(([topicId, topicProgress]) => {
-          // topicId format: "a1.1-gt1" → level is everything before the last "-gt"
-          const levelMatch = topicId.match(/^(.+)-gt\d+$/);
-          if (levelMatch) {
-            const level = levelMatch[1];
-            if (baseProgress[level]) {
-              // Supabase data takes precedence
-              baseProgress[level].grammarTopics[topicId] = {
-                ...baseProgress[level].grammarTopics[topicId],
-                ...topicProgress,
-              };
-            }
-          }
-        });
-      }
-
-      // Also load from user_reading_progress table
-      const completedLessonIds = await loadUserReadingProgress(user.id);
+      // Map completed reading lesson ids to their levels, and keep the totals
+      // so getLevelProgress has a real denominator.
       if (completedLessonIds.size > 0) {
-        // Fetch reading lessons per level to map lesson IDs to levels
-        const levelLessonsPromises = levels.map(async (level) => {
-          const lessons = await getReadingLessonsByLevel(level);
-          return { level, lessons };
-        });
-        const allLevelLessons = await Promise.all(levelLessonsPromises);
-
+        const allLevelLessons = await Promise.all(
+          levels.map(async (level) => ({ level, lessons: await getReadingLessonsByLevel(level) }))
+        );
+        const totals = {};
         allLevelLessons.forEach(({ level, lessons }) => {
-          if (!baseProgress[level]) {
-            baseProgress[level] = { vocabulary: [], sentences: [], grammar: [], paragraphs: [], readingLessons: [], grammarTopics: {} };
-          }
-          if (!baseProgress[level].readingLessons) {
-            baseProgress[level].readingLessons = [];
-          }
+          totals[level] = lessons.length;
           lessons.forEach((lesson) => {
             if (completedLessonIds.has(lesson.id) && !baseProgress[level].readingLessons.includes(lesson.id)) {
               baseProgress[level].readingLessons.push(lesson.id);
             }
           });
         });
+        setReadingTotals(totals);
       }
 
       setProgress(baseProgress);
-
-      // OLD SYSTEM COMMENTED OUT - no longer saving to user_progress table
-      // if (!data) {
-      //   // Initialize progress in database
-      //   await saveProgressToDb(baseProgress);
-      // }
     } catch (error) {
       console.error('Error loading progress:', error);
     } finally {
@@ -145,56 +114,45 @@ export const ProgressProvider = ({ children }) => {
     }
   };
 
-  const saveProgressToDb = async (newProgress) => {
-    if (!user) {
-      safeSetJSON('deutschmeister_progress', newProgress);
-      return;
+  // Per-level listening totals + completions in two small queries.
+  // listening_exercises.level is UPPERCASE in the DB; keys here are lowercase
+  // (the URL/progress form) — normalize at this boundary.
+  const loadListeningSummary = async (userId) => {
+    try {
+      const [exercises, done] = await Promise.all([
+        supabase.from('listening_exercises').select('id, level'),
+        supabase
+          .from('user_listening_progress')
+          .select('exercise_id')
+          .eq('user_id', userId)
+          .eq('completed', true),
+      ]);
+      const doneIds = new Set((done.data || []).map((r) => r.exercise_id));
+      const summary = {};
+      (exercises.data || []).forEach((ex) => {
+        const level = String(ex.level || '').toLowerCase();
+        if (!summary[level]) summary[level] = { total: 0, completed: 0 };
+        summary[level].total += 1;
+        if (doneIds.has(ex.id)) summary[level].completed += 1;
+      });
+      return summary;
+    } catch (error) {
+      console.error('Error loading listening summary:', error);
+      return {};
     }
-
-    // OLD SYSTEM COMMENTED OUT - user_progress table doesn't exist
-    // Progress is now saved via user_grammar_progress table in saveToGrammarProgressTable
-    // try {
-    //   const { error } = await supabase
-    //     .from('user_progress')
-    //     .upsert({
-    //       user_id: user.id,
-    //       progress: newProgress,
-    //       updated_at: new Date().toISOString(),
-    //     });
-
-    //   if (error) {
-    //     console.error('Error saving progress:', error);
-    //   }
-    // } catch (error) {
-    //   console.error('Error saving progress:', error);
-    // }
   };
 
-  // Helper: resolve topic slug from topicId (e.g. "a1.1-gt1" → slug)
-  const resolveSlugFromTopicId = (level, topicId) => {
-    const topics = getTopicsForLevel(level);
-    const topic = topics.find(t => t.id === topicId);
-    return topic?.slug || null;
+  // Anonymous visitors keep their marks across reloads via localStorage;
+  // logged-in users' real progress lives in the per-feature tables.
+  const persistLocalProgress = (newProgress) => {
+    if (!user) safeSetJSON('deutschmeister_progress', newProgress);
   };
 
-  // Helper: save progress to user_grammar_progress table (fire-and-forget)
-  const saveToGrammarProgressTable = async (level, topicId, progressData) => {
-    if (!user) return;
-
-    const slug = resolveSlugFromTopicId(level, topicId);
-    if (!slug) return;
-
-    const topicUUID = await lookupTopicUUID(level, slug);
-    if (!topicUUID) return; // grammar_topics table is empty, skip
-
-    await saveUserGrammarProgress(user.id, topicUUID, progressData);
-  };
-
-  // Mark an item as learned
+  // Mark an item as learned (in-memory + localStorage for anon)
   const markAsLearned = async (level, category, itemId) => {
     const newProgress = { ...progress };
     if (!newProgress[level]) {
-      newProgress[level] = { vocabulary: [], sentences: [], grammar: [], paragraphs: [] };
+      newProgress[level] = { vocabulary: [], sentences: [], grammar: [], paragraphs: [], readingLessons: [], grammarTopics: {} };
     }
     if (!newProgress[level][category]) {
       newProgress[level][category] = [];
@@ -202,7 +160,7 @@ export const ProgressProvider = ({ children }) => {
     if (!newProgress[level][category].includes(itemId)) {
       newProgress[level][category] = [...newProgress[level][category], itemId];
       setProgress(newProgress);
-      await saveProgressToDb(newProgress);
+      persistLocalProgress(newProgress);
     }
   };
 
@@ -214,7 +172,7 @@ export const ProgressProvider = ({ children }) => {
         (id) => id !== itemId
       );
       setProgress(newProgress);
-      await saveProgressToDb(newProgress);
+      persistLocalProgress(newProgress);
     }
   };
 
@@ -223,84 +181,73 @@ export const ProgressProvider = ({ children }) => {
     return progress[level]?.[category]?.includes(itemId) || false;
   };
 
-  // Register actual item counts fetched from Supabase for a level
-  const registerLevelItemCounts = (level, vocabCount, sentenceCount, paragraphCount = 0) => {
-    setLevelItemCounts(prev => {
-      const existing = prev[level];
-      if (existing && existing.vocabulary === vocabCount && existing.sentences === sentenceCount && existing.paragraphs === paragraphCount) {
-        return prev;
-      }
-      return { ...prev, [level]: { vocabulary: vocabCount, sentences: sentenceCount, paragraphs: paragraphCount } };
-    });
+  // The persisted parts of a level: [{ done, total }] for each signal that
+  // has a known denominator. Grammar always has one (the topic registry);
+  // reading/listening join in once their totals have been fetched.
+  const levelParts = (level) => {
+    const parts = [];
+    const topics = getTopicsForLevel(level) || [];
+    if (topics.length > 0) {
+      const done = topics.filter(
+        (t) => progress[level]?.grammarTopics?.[t.id]?.completed
+      ).length;
+      parts.push({ done, total: topics.length });
+    }
+    const readingTotal = readingTotals[level] || 0;
+    if (readingTotal > 0) {
+      parts.push({ done: progress[level]?.readingLessons?.length || 0, total: readingTotal });
+    }
+    const listening = listeningSummary[level];
+    if (listening?.total > 0) {
+      parts.push({ done: listening.completed, total: listening.total });
+    }
+    return parts;
   };
 
-  // Calculate progress percentage for a level
+  // Calculate progress percentage for a level — persisted signals only.
   const getLevelProgress = (level) => {
-    const levelProgress = progress[level];
-    if (!levelProgress) return 0;
-
-    // Prefer actual Supabase counts over static content.js counts
-    const counts = levelItemCounts[level];
-    const totalVocab = counts?.vocabulary ?? (vocabulary[level]?.length || 0);
-    const totalSentences = counts?.sentences ?? (sentences[level]?.length || 0);
-    const totalGrammar = grammar[level]?.length || 0;
-    const totalParagraphs = counts?.paragraphs ?? 0;
-    const total = totalVocab + totalSentences + totalGrammar + totalParagraphs;
-
+    const parts = levelParts(level);
+    const total = parts.reduce((sum, p) => sum + p.total, 0);
     if (total === 0) return 0;
-
-    const learnedVocab = levelProgress.vocabulary?.length || 0;
-    const learnedSentences = levelProgress.sentences?.length || 0;
-    const learnedGrammar = levelProgress.grammar?.length || 0;
-    const learnedParagraphs = levelProgress.paragraphs?.length || 0;
-    const learned = learnedVocab + learnedSentences + learnedGrammar + learnedParagraphs;
-
-    return Math.round((learned / total) * 100);
+    const done = parts.reduce((sum, p) => sum + p.done, 0);
+    return Math.round((done / total) * 100);
   };
 
-  // Get total stats across all levels
+  // Persisted completion counts across all levels (for the profile stats).
   const getTotalStats = () => {
-    let totalVocab = 0;
-    let totalSentences = 0;
-    let totalGrammar = 0;
-    let totalParagraphs = 0;
+    let grammarTopics = 0;
+    let readingLessons = 0;
+    let listening = 0;
 
     levels.forEach((level) => {
-      totalVocab += progress[level]?.vocabulary?.length || 0;
-      totalSentences += progress[level]?.sentences?.length || 0;
-      totalGrammar += progress[level]?.grammar?.length || 0;
-      totalParagraphs += progress[level]?.paragraphs?.length || 0;
+      const topics = getTopicsForLevel(level) || [];
+      grammarTopics += topics.filter(
+        (t) => progress[level]?.grammarTopics?.[t.id]?.completed
+      ).length;
+      readingLessons += progress[level]?.readingLessons?.length || 0;
+      listening += listeningSummary[level]?.completed || 0;
     });
 
     return {
-      vocabulary: totalVocab,
-      sentences: totalSentences,
-      grammar: totalGrammar,
-      paragraphs: totalParagraphs,
-      total: totalVocab + totalSentences + totalGrammar + totalParagraphs,
+      grammarTopics,
+      readingLessons,
+      listening,
+      total: grammarTopics + readingLessons + listening,
     };
   };
 
-  // Get overall progress across all levels
+  // Get overall progress across all levels — persisted signals only.
   const getOverallProgress = () => {
     let totalItems = 0;
-    let learnedItems = 0;
-
+    let doneItems = 0;
     levels.forEach((level) => {
-      const counts = levelItemCounts[level];
-      totalItems += counts?.vocabulary ?? (vocabulary[level]?.length || 0);
-      totalItems += counts?.sentences ?? (sentences[level]?.length || 0);
-      totalItems += (grammar[level]?.length || 0);
-      totalItems += counts?.paragraphs ?? 0;
-
-      learnedItems += progress[level]?.vocabulary?.length || 0;
-      learnedItems += progress[level]?.sentences?.length || 0;
-      learnedItems += progress[level]?.grammar?.length || 0;
-      learnedItems += progress[level]?.paragraphs?.length || 0;
+      levelParts(level).forEach((p) => {
+        totalItems += p.total;
+        doneItems += p.done;
+      });
     });
-
     if (totalItems === 0) return 0;
-    return Math.round((learnedItems / totalItems) * 100);
+    return Math.round((doneItems / totalItems) * 100);
   };
 
   // ==========================================
@@ -330,41 +277,6 @@ export const ProgressProvider = ({ children }) => {
     return Math.round((completedCount / topics.length) * 100);
   };
 
-  // Update grammar topic progress (dual-save: JSON blob + user_grammar_progress table)
-  const updateGrammarTopicProgress = async (level, topicId, progressData) => {
-    const newProgress = { ...progress };
-    if (!newProgress[level]) {
-      newProgress[level] = { vocabulary: [], sentences: [], grammar: [], paragraphs: [], readingLessons: [], grammarTopics: {} };
-    }
-    if (!newProgress[level].grammarTopics) {
-      newProgress[level].grammarTopics = {};
-    }
-
-    const mergedData = {
-      ...newProgress[level].grammarTopics[topicId],
-      ...progressData,
-    };
-
-    newProgress[level].grammarTopics[topicId] = mergedData;
-
-    setProgress(newProgress);
-    await saveProgressToDb(newProgress);
-
-    // Also save to user_grammar_progress table (fire-and-forget)
-    saveToGrammarProgressTable(level, topicId, mergedData);
-  };
-
-  // Mark grammar topic as completed (dual-save)
-  const completeGrammarTopic = async (level, topicId, score = 100) => {
-    await updateGrammarTopicProgress(level, topicId, {
-      completed: true,
-      progress: 100,
-      currentStage: 5,
-      score,
-      completedAt: new Date().toISOString(),
-    });
-  };
-
   const value = {
     progress,
     loading,
@@ -372,14 +284,11 @@ export const ProgressProvider = ({ children }) => {
     unmarkAsLearned,
     isItemLearned,
     getLevelProgress,
-    registerLevelItemCounts,
     getTotalStats,
     getOverallProgress,
     // Grammar topics
     getGrammarTopicProgress,
     getGrammarSectionProgress,
-    updateGrammarTopicProgress,
-    completeGrammarTopic,
   };
 
   return (

@@ -9,6 +9,7 @@ import { useSubscription } from '../contexts/SubscriptionContext';
 import { isLevelFree } from '../config/freeTier';
 import { mainLevels, getSubLevels, levelThemes as contentLevelThemes } from '../data/content';
 import { countWordsForLevel } from '../services/vocabularyService';
+import SrsTrainer from '../components/vocab/SrsTrainer';
 import SEO from '../components/SEO';
 
 const mainLevelInfo = {
@@ -210,6 +211,13 @@ const VocabularySectionPage = () => {
               Each word includes pronunciation, example sentences, and category tags.
             </p>
           </motion.div>
+
+          {/* The trainer — the persisted practice mode over the user's own deck */}
+          {user && (
+            <div className="mb-8">
+              <SrsTrainer />
+            </div>
+          )}
 
           {/* Level Groups */}
           <div className="space-y-8">

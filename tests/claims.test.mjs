@@ -52,6 +52,8 @@ import {
   PRO_DAILY_LIMIT,
   PRO_SPEAKING_SESSIONS_PER_MONTH,
   TRIAL_SPEAKING_SESSIONS,
+  PRO_WRITING_EVALUATIONS_PER_MONTH,
+  TRIAL_WRITING_EVALUATIONS,
   READING_LESSON_COUNT,
 } from '../src/data/marketing.js';
 
@@ -234,6 +236,20 @@ test('the functions\' synced pricing copy matches the data layer', async () => {
   const shared = await import('../netlify/functions/_shared/pricing.mjs');
   assert.equal(shared.MONTHLY_PRICE_EUR, MONTHLY_PRICE_EUR, 'functions pricing copy drifted from src/data/pricing.js');
   assert.equal(shared.eur(shared.MONTHLY_PRICE_EUR), eur(MONTHLY_PRICE_EUR), 'functions eur() formats differently than the data layer');
+});
+
+test('writing limits match the server that enforces them', () => {
+  const src = read('netlify/functions/evaluate-writing.mjs');
+  const block = src.match(/const WRITING_LIMITS\s*=\s*\{([\s\S]*?)\}/);
+  assert.ok(block, 'WRITING_LIMITS not found in evaluate-writing.mjs');
+  const tier = (name) => {
+    const m = block[1].match(new RegExp(`${name}\\s*:\\s*(\\d+)`));
+    assert.ok(m, `tier ${name} missing from WRITING_LIMITS`);
+    return Number(m[1]);
+  };
+  assert.equal(PRO_WRITING_EVALUATIONS_PER_MONTH, tier('pro'));
+  assert.equal(TRIAL_WRITING_EVALUATIONS, tier('free_trial'));
+  assert.equal(tier('free_expired'), 0, 'expired users must get zero AI-cost evaluations');
 });
 
 test('X-Ray limits match the server that enforces them', () => {
