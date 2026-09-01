@@ -72,6 +72,11 @@ const REQUIRED = [
   'leitfaden/telc-b2/index.html',
   'leitfaden/dtz/index.html',
   'telc-b1-komplettvorbereitung/index.html',
+  'pruefung/index.html',
+  'pruefung/telc-b1/index.html',
+  'pruefung/goethe-b1/index.html',
+  'pruefung/dtz/index.html',
+  'pruefung/telc-b2/index.html',
   ...SPA_ROUTES.map((r) => `${r}/index.html`),
 ];
 

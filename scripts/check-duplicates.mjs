@@ -15,6 +15,16 @@ const PAIRS = [
   ['src/data/design-tokens.js', 'astro-site/src/data/design-tokens.js'],
   // One Organization entity, one @id — both trees must agree on who publishes.
   ['src/data/organization.js', 'astro-site/src/data/organization.js'],
+  // THE navigation registry — every nav/footer link on both front ends. A
+  // drift here recreates the three-navs-three-worlds problem this file fixed.
+  ['src/data/navigation.js', 'astro-site/src/data/navigation.js'],
+  // THE exam-track registry — /pruefung/ hubs, dashboard exam goal, and the
+  // mock-exam/writing keys all resolve exams through this one module.
+  ['src/data/examTracks.js', 'astro-site/src/data/examTracks.js'],
+  // Writing task bank: the SPA renders tasks, the grading function validates
+  // keys and derives the rubric — grading a task the UI doesn't show (or vice
+  // versa) is exactly the drift this pair-check exists for.
+  ['src/data/writingTasks.js', 'netlify/functions/_shared/writingTasks.mjs'],
 ];
 
 let failed = false;

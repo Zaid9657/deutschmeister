@@ -37,7 +37,11 @@ const LevelTestResults = ({
         } else {
           weakTopics.push({
             topic: question.topicDisplayName,
-            url: question.relatedTopicUrl,
+            // Grammar lessons are Astro-served — canonical trailing-slash form,
+            // rendered as full-load <a> tags below.
+            url: question.relatedTopicUrl.endsWith('/')
+              ? question.relatedTopicUrl
+              : `${question.relatedTopicUrl}/`,
             wrong: 1,
             level: answer.level
           });
@@ -99,13 +103,14 @@ const LevelTestResults = ({
 
   const { user } = useAuth();
 
-  // Deep link into the first lesson of the placed level (client-side route →
-  // the interactive GrammarLessonPage). Falls back to the hub if the topic
-  // list ever comes back empty for a level.
+  // Deep link into the first lesson of the placed level. Grammar lessons are
+  // served by the Astro build, so this must be rendered as a full-load <a>
+  // (trailing-slash class). Falls back to the hub if the topic list ever
+  // comes back empty for a level.
   const firstTopic = getTopicsForLevel(finalSublevel.toLowerCase())[0];
   const firstLessonHref = firstTopic
-    ? `/grammar/${finalSublevel.toLowerCase()}/${firstTopic.slug}`
-    : '/grammar';
+    ? `/grammar/${finalSublevel.toLowerCase()}/${firstTopic.slug}/`
+    : '/grammar/';
 
   // Section completion status
   const sections = [
@@ -380,13 +385,13 @@ const LevelTestResults = ({
             </h2>
             <div className="weak-topics">
               {topWeakTopics.map((topic, index) => (
-                <Link
+                <a
                   key={index}
-                  to={topic.url}
+                  href={topic.url}
                   className="weak-topic-tag"
                 >
                   {topic.topic}
-                </Link>
+                </a>
               ))}
             </div>
           </div>
@@ -404,13 +409,13 @@ const LevelTestResults = ({
               </div>
             </Link>
 
-            <Link to={`/grammar/${finalSublevel.toLowerCase()}/`} className="recommendation-card">
+            <a href={`/grammar/${finalSublevel.toLowerCase()}/`} className="recommendation-card">
               <div className="rec-icon">📚</div>
               <div className="rec-content">
                 <h3>Start {finalSublevel} Grammar</h3>
                 <p>Begin with grammar topics at your level</p>
               </div>
-            </Link>
+            </a>
 
             {listeningScore != null && listeningScore < 70 && (
               <Link to="/listening/" className="recommendation-card">
@@ -433,13 +438,13 @@ const LevelTestResults = ({
             )}
 
             {topWeakTopics[0] && (
-              <Link to={topWeakTopics[0].url} className="recommendation-card">
+              <a href={topWeakTopics[0].url} className="recommendation-card">
                 <div className="rec-icon">🎯</div>
                 <div className="rec-content">
                   <h3>Review {topWeakTopics[0].topic}</h3>
                   <p>Strengthen your weakest area</p>
                 </div>
-              </Link>
+              </a>
             )}
           </div>
         </div>
@@ -452,9 +457,9 @@ const LevelTestResults = ({
             <RefreshCw size={18} />
             Retake Test
           </button>
-          <Link to={firstLessonHref} className="start-learning-btn">
+          <a href={firstLessonHref} className="start-learning-btn">
             Start your first lesson
-          </Link>
+          </a>
         </div>
       </div>
     </div>

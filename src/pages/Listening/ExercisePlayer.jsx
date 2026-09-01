@@ -116,6 +116,13 @@ const ExercisePlayer = () => {
             dialogues={dialogues}
             playsUsed={playsUsed}
             onRetry={handleRetry}
+            nextExerciseHref={
+              // 6 exercises per level (listening_exercises, marketing.js);
+              // after the last one the results CTA falls back to the list.
+              Number(exerciseNumber) < 6
+                ? `/listening/${(level || '').toLowerCase()}/${Number(exerciseNumber) + 1}`
+                : null
+            }
           />
         ) : (
           <div className="space-y-6">

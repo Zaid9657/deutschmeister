@@ -20,6 +20,7 @@ import { execFileSync } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, renameSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { astroRoutes } from './astro-routes.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = join(ROOT, 'dist');
@@ -46,22 +47,16 @@ const copyDir = (label, from, to) => {
 // exercised without Supabase credentials, so they are reachable on their own.
 const VERIFY_ONLY = process.argv.includes('--verify-only');
 
-// The top-level directories the Astro build emits, read out of its own pages/
-// directory rather than listed here. `trailingSlash: 'always'` means every
-// top-level page becomes `<name>/index.html`, so a sub-directory (grammar/,
-// leitfaden/, vergleich/) or a bare `.astro` file (pricing, privacy, impressum,
-// telc-b1-komplettvorbereitung) each maps to one output directory. index.astro
-// and 404.astro are the two exceptions — they emit files at the root, and are
-// copied and asserted separately below.
+// The top-level Astro output directories, derived from astro-site/src/pages/
+// rather than listed here — see scripts/astro-routes.mjs for why, and for the
+// mapping rule. The copy loop below and post-condition 3 walk this same list,
+// so a new Astro page is copied AND asserted without either being edited.
 //
-// Derived rather than hard-coded because a hard-coded copy of this list is
-// exactly how the prerendered-route assertions further down silently stopped
-// covering /faq and /ueber-uns. main has since added the telc-b1 landing page
-// as a new top-level Astro route; this list picked it up without being edited.
-const ASTRO_ROUTES = readdirSync(join(ROOT, 'astro-site', 'src', 'pages'), { withFileTypes: true })
-  .filter((e) => e.isDirectory() || (e.name.endsWith('.astro') && !['index.astro', '404.astro'].includes(e.name)))
-  .map((e) => e.name.replace(/\.astro$/, ''))
-  .sort();
+// Hard-coding it is what let main's /telc-b1-komplettvorbereitung/ and then its
+// /pruefung/ family arrive as new top-level routes this build would have
+// silently stopped publishing — the same drift that had already cost the
+// prerendered-route assertions /faq and /ueber-uns.
+const ASTRO_ROUTES = astroRoutes(ROOT);
 
 if (ASTRO_ROUTES.length === 0) {
   throw new Error('could not read any top-level route out of astro-site/src/pages');

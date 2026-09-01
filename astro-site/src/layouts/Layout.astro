@@ -1,4 +1,6 @@
 ---
+import { NAV_GROUPS, FOOTER_GROUPS, LEGAL_LINKS } from '../data/navigation.js';
+
 export interface Props {
   title: string;
   description: string;
@@ -29,6 +31,23 @@ const {
 // self-referencing would claim a /404/ route that does not exist.
 const canonicalUrl = canonical === null ? null : (canonical ?? Astro.url.href);
 const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+
+// Nav links come from THE navigation registry (src/data/navigation.js — the
+// byte-identical twin of the SPA's copy; scripts/check-duplicates.mjs guards
+// the pair). Root-relative hrefs so deploy previews and local serving work;
+// the old absolute https://deutsch-meister.de/... links broke both.
+// auth visibility: items marked 'authed' start hidden and an inline script
+// below reveals them (and hides 'anon' items) when a Supabase session token
+// exists — crawlers and logged-out visitors see the logged-out nav.
+// Inline display:none (not the `hidden` attribute) — Tailwind's `.block`
+// utility outranks the UA/preflight [hidden] rule in the cascade.
+const navItems = NAV_GROUPS.flatMap((g) => g.items);
+const authAttrs = (item) =>
+  item.auth === 'authed'
+    ? { 'data-auth-only': '', style: 'display:none' }
+    : item.auth === 'anon'
+      ? { 'data-anon-only': '' }
+      : {};
 ---
 
 <!doctype html>
@@ -69,7 +88,8 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
 
     <!-- Fonts: preload pattern (non-render-blocking), mirrors the SPA shell -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -130,33 +150,33 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
             </span>
           </a>
 
-          <!-- Desktop nav -->
+          <!-- Desktop nav — rendered from the shared navigation registry -->
           <div class="hidden md:flex items-center gap-1">
-            <a href="/grammar/" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
-              Grammar
-            </a>
-            <a href="https://deutsch-meister.de/video-library" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
-              Videos
-            </a>
-            <a href="https://deutsch-meister.de/podcasts/" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
-              Podcasts
-            </a>
-            <div class="w-px h-5 bg-slate-200 mx-1"></div>
-            <a href="https://deutsch-meister.de/analyze/" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
-              X-Ray
-            </a>
-            <a href="https://deutsch-meister.de/level-test/" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors">
-              Level Test
-            </a>
+            {NAV_GROUPS.map((group, gi) => (
+              <>
+                {gi > 0 && <div class="w-px h-5 bg-slate-200 mx-1"></div>}
+                {group.items.map((item) => (
+                  <a
+                    href={item.href}
+                    {...authAttrs(item)}
+                    class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors"
+                  >
+                    {item.labelEn}
+                  </a>
+                ))}
+              </>
+            ))}
             <div class="w-px h-5 bg-slate-200 mx-1"></div>
             <a
-              href="https://deutsch-meister.de/signup"
+              href="/signup"
+              data-anon-only
               class="px-4 py-2 rounded-lg bg-gradient-to-r from-teal-600 to-teal-500 text-white text-sm font-semibold hover:from-teal-700 hover:to-teal-600 transition-all"
             >
               Get started
             </a>
             <a
-              href="https://deutsch-meister.de/login"
+              href="/login"
+              data-anon-only
               class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
             >
               Log in
@@ -165,8 +185,11 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 
           <!-- Mobile: CTA + full menu (pure HTML disclosure, no client JS) -->
           <div class="md:hidden flex items-center gap-2">
-            <a href="https://deutsch-meister.de/signup" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-teal-600 to-teal-500 text-white text-sm font-semibold">
+            <a href="/signup" data-anon-only class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-teal-600 to-teal-500 text-white text-sm font-semibold">
               Get started
+            </a>
+            <a href="/dashboard" data-auth-only style="display:none" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-teal-600 to-teal-500 text-white text-sm font-semibold">
+              Dashboard
             </a>
             <details class="relative">
               <summary
@@ -178,14 +201,18 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
                 </svg>
               </summary>
               <div class="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl border border-slate-200 shadow-lg py-2 z-50">
-                <a href="/grammar/" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">Grammar</a>
-                <a href="https://deutsch-meister.de/video-library" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">Videos</a>
-                <a href="https://deutsch-meister.de/podcasts/" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">Podcasts</a>
-                <a href="https://deutsch-meister.de/analyze/" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">X-Ray</a>
-                <a href="https://deutsch-meister.de/level-test/" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">Level Test</a>
+                {navItems.map((item) => (
+                  <a
+                    href={item.href}
+                    {...authAttrs(item)}
+                    class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                  >
+                    {item.labelEn}
+                  </a>
+                ))}
                 <div class="my-2 border-t border-slate-100"></div>
-                <a href="https://deutsch-meister.de/login" class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">Log in</a>
-                <a href="https://deutsch-meister.de/signup" class="block px-4 py-2 text-sm font-semibold text-rose-600 hover:bg-slate-50">Get started</a>
+                <a href="/login" data-anon-only class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">Log in</a>
+                <a href="/signup" data-anon-only class="block px-4 py-2 text-sm font-semibold text-siegel-deep hover:bg-slate-50">Get started</a>
               </div>
             </details>
           </div>
@@ -222,47 +249,25 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
               Learn German with AI — from A1.1 to B2.2. Grammar, speaking, listening, and reading.
             </p>
           </div>
-          <div>
-            <h3 class="text-white font-semibold text-sm mb-3">Grammar</h3>
-            <ul class="space-y-2 text-sm">
-              <li><a href="/grammar/a1.1/" class="hover:text-white transition-colors">A1.1 Grammar</a></li>
-              <li><a href="/grammar/a1.2/" class="hover:text-white transition-colors">A1.2 Grammar</a></li>
-              <li><a href="/grammar/a2.1/" class="hover:text-white transition-colors">A2.1 Grammar</a></li>
-              <li><a href="/grammar/b1.1/" class="hover:text-white transition-colors">B1.1 Grammar</a></li>
-              <li><a href="/grammar/" class="hover:text-white transition-colors">All levels →</a></li>
-            </ul>
-          </div>
-          <div>
-            <h3 class="text-white font-semibold text-sm mb-3">Learn</h3>
-            <ul class="space-y-2 text-sm">
-              <li><a href="https://deutsch-meister.de/speaking/" class="hover:text-white transition-colors">AI Speaking Practice</a></li>
-              <li><a href="https://deutsch-meister.de/analyze/" class="hover:text-white transition-colors">Sentence X-Ray</a></li>
-              <li><a href="https://deutsch-meister.de/listening/" class="hover:text-white transition-colors">Listening Practice</a></li>
-              <li><a href="https://deutsch-meister.de/reading/" class="hover:text-white transition-colors">Reading Lessons</a></li>
-              <li><a href="https://deutsch-meister.de/podcasts/" class="hover:text-white transition-colors">Podcasts</a></li>
-              <li><a href="https://deutsch-meister.de/level-test/" class="hover:text-white transition-colors">Level Test</a></li>
-              <li><a href="https://deutsch-meister.de/pricing/" class="hover:text-white transition-colors">Pricing</a></li>
-            </ul>
-          </div>
-          <div>
-            <h3 class="text-white font-semibold text-sm mb-3">Guides</h3>
-            <ul class="space-y-2 text-sm">
-              <li><a href="/leitfaden/" class="hover:text-white transition-colors">Alle Prüfungsleitfäden</a></li>
-              <li><a href="/leitfaden/telc-b1/" class="hover:text-white transition-colors">telc B1</a></li>
-              <li><a href="/leitfaden/goethe-b1/" class="hover:text-white transition-colors">Goethe-Zertifikat B1</a></li>
-              <li><a href="/leitfaden/telc-b2/" class="hover:text-white transition-colors">telc B2</a></li>
-              <li><a href="/leitfaden/dtz/" class="hover:text-white transition-colors">DTZ</a></li>
-              <li><a href="/vergleich/" class="hover:text-white transition-colors">Plattform-Vergleich</a></li>
-              <li><a href="https://deutsch-meister.de/faq/" class="hover:text-white transition-colors">FAQ</a></li>
-              <li><a href="https://deutsch-meister.de/ueber-uns/" class="hover:text-white transition-colors">Über uns</a></li>
-            </ul>
-          </div>
+          {FOOTER_GROUPS.map((group) => (
+            <div>
+              <h3 class="text-white font-semibold text-sm mb-3">{group.titleEn}</h3>
+              <ul class="space-y-2 text-sm">
+                {group.items.map((item) => (
+                  <li><a href={item.href} class="hover:text-white transition-colors">{item.labelEn}</a></li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
         <div class="border-t border-slate-800 pt-6 text-center text-xs">
           <p class="mb-2">
-            <a href="/privacy/" class="hover:text-white transition-colors">Privacy Policy</a>
-            <span class="mx-2">·</span>
-            <a href="/impressum/" class="hover:text-white transition-colors">Impressum</a>
+            {LEGAL_LINKS.map((item, i) => (
+              <>
+                {i > 0 && <span class="mx-2">·</span>}
+                <a href={item.href} class="hover:text-white transition-colors">{item.labelEn}</a>
+              </>
+            ))}
           </p>
           © {new Date().getFullYear()} DeutschMeister · All rights reserved
         </div>
@@ -283,6 +288,30 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
             el.textContent = el.getAttribute('data-en');
           });
         } catch (e) { /* storage blocked — keep the German default */ }
+      })();
+    </script>
+    <!-- Auth-aware nav: these static pages used to greet a LOGGED-IN user with
+         "Get started / Log in" — the app identity vanished on ~75 of ~93 pages.
+         Same cheap sb-*-auth-token check as src/lib/grammarProgress.js: when a
+         Supabase session token exists, reveal [data-auth-only] links (Speaking,
+         Dashboard) and hide [data-anon-only] ones (Get started, Log in,
+         Pricing). Crawlers and logged-out visitors see the logged-out nav. -->
+    <script is:inline>
+      (function () {
+        try {
+          var authed = false;
+          for (var i = 0; i < localStorage.length; i++) {
+            var k = localStorage.key(i);
+            if (k && /^sb-.*-auth-token$/.test(k)) { authed = true; break; }
+          }
+          if (!authed) return;
+          document.querySelectorAll('[data-auth-only]').forEach(function (el) {
+            el.style.display = '';
+          });
+          document.querySelectorAll('[data-anon-only]').forEach(function (el) {
+            el.style.display = 'none';
+          });
+        } catch (e) { /* storage blocked — keep the logged-out default */ }
       })();
     </script>
   </body>

@@ -1,4 +1,6 @@
-import { supabase } from '../utils/supabase';
+// Explicit .js extension so node --test can import this module's pure
+// functions (grammarRowStamps, computeStreak, computeActivitiesToday).
+import { supabase } from '../utils/supabase.js';
 
 // ──────────────────────────────────────────────────────────────
 // Dashboard stats — Supabase-backed metrics for the dashboard.
@@ -14,15 +16,30 @@ import { supabase } from '../utils/supabase';
 // ──────────────────────────────────────────────────────────────
 
 /** Local YYYY-MM-DD key for a timestamp (day-streak is per calendar day, local time). */
-const dayKey = (ts) => {
+export const dayKey = (ts) => {
   const d = new Date(ts);
   if (Number.isNaN(d.getTime())) return null;
   return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
 };
 
-/** Gather every activity timestamp for a user across the three activity tables. */
+/**
+ * Activity stamps for one user_grammar_progress row. Completing a lesson also
+ * touches last_accessed, and pushing both stamps made a single lesson fill 2
+ * of the 3 daily-goal slots. Same-day stamps collapse to one; a completion and
+ * a later re-visit on different days are both real activity days and both count.
+ */
+export function grammarRowStamps(row) {
+  const stamps = [];
+  if (row.completed_at) stamps.push(row.completed_at);
+  if (row.last_accessed && dayKey(row.last_accessed) !== dayKey(row.completed_at)) {
+    stamps.push(row.last_accessed);
+  }
+  return stamps;
+}
+
+/** Gather every activity timestamp for a user across the activity tables. */
 async function fetchActivityTimestamps(userId) {
-  const [grammar, xray, speaking, reading, listening] = await Promise.all([
+  const [grammar, xray, speaking, reading, listening, srs, writing, exams] = await Promise.all([
     supabase
       .from('user_grammar_progress')
       .select('last_accessed, completed_at')
@@ -49,17 +66,33 @@ async function fetchActivityTimestamps(userId) {
       .select('completed_at')
       .eq('user_id', userId)
       .eq('completed', true),
+    // Renovation Phase 6: SRS reviews, writing evaluations and completed
+    // practice exams are real daily work and feed the streak + goal too.
+    supabase
+      .from('vocab_srs_cards')
+      .select('last_reviewed_at')
+      .eq('user_id', userId)
+      .not('last_reviewed_at', 'is', null),
+    supabase
+      .from('writing_submissions')
+      .select('created_at')
+      .eq('user_id', userId),
+    supabase
+      .from('exam_attempts')
+      .select('completed_at')
+      .eq('user_id', userId)
+      .eq('status', 'completed'),
   ]);
 
   const stamps = [];
-  (grammar.data || []).forEach((r) => {
-    if (r.last_accessed) stamps.push(r.last_accessed);
-    if (r.completed_at) stamps.push(r.completed_at);
-  });
+  (grammar.data || []).forEach((r) => stamps.push(...grammarRowStamps(r)));
   (xray.data || []).forEach((r) => r.used_at && stamps.push(r.used_at));
   (speaking.data || []).forEach((r) => r.created_at && stamps.push(r.created_at));
   (reading.data || []).forEach((r) => r.completed_at && stamps.push(r.completed_at));
   (listening.data || []).forEach((r) => r.completed_at && stamps.push(r.completed_at));
+  (srs.data || []).forEach((r) => r.last_reviewed_at && stamps.push(r.last_reviewed_at));
+  (writing.data || []).forEach((r) => r.created_at && stamps.push(r.created_at));
+  (exams.data || []).forEach((r) => r.completed_at && stamps.push(r.completed_at));
   return stamps;
 }
 
@@ -67,7 +100,7 @@ async function fetchActivityTimestamps(userId) {
  * Consecutive-day streak ending today (or yesterday, so a streak isn't lost
  * before the user has acted today). Derived entirely from activity timestamps.
  */
-function computeStreak(timestamps) {
+export function computeStreak(timestamps) {
   const days = new Set(timestamps.map(dayKey).filter(Boolean));
   if (days.size === 0) return 0;
 
@@ -89,7 +122,7 @@ function computeStreak(timestamps) {
 }
 
 /** Count of distinct activities done TODAY — feeds the daily-goal ring (target 3). */
-function computeActivitiesToday(timestamps) {
+export function computeActivitiesToday(timestamps) {
   const today = new Date();
   const todayKey = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
   let n = 0;

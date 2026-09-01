@@ -1,0 +1,166 @@
+---
+// Exam hub renderer — one page per exam track (renovation Phase 3).
+// A hub maps the preparation path through DeutschMeister; the guide
+// (/leitfaden/<slug>/) explains the exam itself. Data:
+// ../../data/exams/index.js, identity from the shared examTracks registry.
+//
+// STYLE: design tokens only, same rules as the Leitfaden renderer — siegel is
+// the single interactive colour, no kasus colours (no case is named here).
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/global.css';
+import { ORGANIZATION } from '../../lib/siteMeta.js';
+import { EXAM_HUBS, examHubUrl } from '../../data/exams/index.js';
+
+export function getStaticPaths() {
+  return EXAM_HUBS.map((hub) => ({ params: { slug: hub.slug }, props: { hub } }));
+}
+
+const { hub } = Astro.props;
+
+const de = (iso) => {
+  const [y, m, d] = iso.split('-');
+  return `${d}.${m}.${y}`;
+};
+
+const others = EXAM_HUBS.filter((h) => h.slug !== hub.slug);
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: hub.h1,
+    description: hub.description,
+    url: examHubUrl(hub),
+    inLanguage: 'de',
+    publisher: ORGANIZATION,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Start', item: 'https://deutsch-meister.de/' },
+      { '@type': 'ListItem', position: 2, name: 'Prüfungen', item: 'https://deutsch-meister.de/pruefung/' },
+      { '@type': 'ListItem', position: 3, name: hub.nameDe, item: examHubUrl(hub) },
+    ],
+  },
+];
+---
+
+<Layout
+  title={hub.title}
+  description={hub.description}
+  canonical={examHubUrl(hub)}
+  jsonLd={jsonLd}
+  lang="de"
+>
+  <div class="bg-paper text-ink">
+    <article class="mx-auto max-w-3xl px-5 pb-20 pt-12">
+
+      <!-- Header -->
+      <header class="border-b border-rule pb-8">
+        <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">
+          Prüfungsvorbereitung · {hub.level}
+        </p>
+        <h1 class="mt-3 font-display text-[2rem] font-semibold leading-[1.1] tracking-[-0.02em] sm:text-[2.75rem]">
+          {hub.h1}
+        </h1>
+        <p class="mt-5 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.125rem]">{hub.intro}</p>
+        <!-- The exam in one paragraph — imported from the guide (one source of truth) -->
+        <div class="mt-6 rounded-lg border border-rule bg-paper-sunk p-5">
+          <p class="text-[1.0625rem] leading-relaxed text-ink">{hub.answer}</p>
+        </div>
+      </header>
+
+      <!-- What decides this exam -->
+      <section class="mt-10">
+        <p class="border-l-2 border-siegel bg-siegel-wash px-5 py-4 text-[0.9375rem] leading-relaxed text-ink">
+          {hub.focus}
+        </p>
+      </section>
+
+      <!-- The path -->
+      <section class="mt-12">
+        <h2 class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[1.875rem]">
+          Dein Weg zur Prüfung
+        </h2>
+        <ol class="mt-6 space-y-4">
+          {hub.path.map((step) => (
+            <li class="rounded-lg border border-rule p-5">
+              <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{step.eyebrow}</p>
+              <h3 class="mt-1 font-display text-[1.0625rem] font-semibold text-ink">{step.title}</h3>
+              <p class="mt-2 text-[0.9375rem] leading-[1.7] text-graphite [&>a]:text-siegel [&>a]:underline-offset-2 hover:[&>a]:underline" set:html={step.body} />
+              <a href={step.href} class="mt-3 inline-block text-[0.875rem] font-semibold text-siegel underline-offset-2 hover:underline">
+                {step.linkLabel} →
+              </a>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      {hub.courseHref && (
+        <section class="mt-12 rounded-lg border border-rule bg-paper-sunk p-8">
+          <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">Kompletter Fahrplan</p>
+          <h2 class="mt-2 font-display text-[1.375rem] font-semibold text-ink">
+            Lieber einen fertigen Plan statt eigener Planung?
+          </h2>
+          <p class="mt-3 text-[0.9375rem] leading-relaxed text-graphite">
+            Die Komplettvorbereitung ist ein fester 4-Wochen-Plan über genau diese Bibliothek:
+            jeden Tag eine Aufgabe, in der Reihenfolge, die zur Prüfung führt.
+          </p>
+          <a href={hub.courseHref} class="mt-5 inline-flex items-center justify-center rounded-md bg-siegel px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-siegel-lift">
+            Zum 4-Wochen-Plan
+          </a>
+        </section>
+      )}
+
+      <!-- CTA -->
+      <section class="mt-12 rounded-lg border border-rule p-8 text-center">
+        <h2 class="font-display text-[1.375rem] font-semibold text-ink sm:text-[1.625rem]">
+          Fang dort an, wo du stehst
+        </h2>
+        <p class="mx-auto mt-3 max-w-md text-[0.9375rem] leading-relaxed text-graphite">
+          Der Einstufungstest ist kostenlos — und A1.1 bleibt es für immer.
+        </p>
+        <div class="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a href="/level-test/" class="inline-flex items-center justify-center rounded-md bg-siegel px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-siegel-lift">
+            Einstufungstest starten
+          </a>
+          <a href={`/leitfaden/${hub.guideSlug}/`} class="inline-flex items-center justify-center rounded-md border border-ink px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-paper">
+            Zum {hub.nameDe} Leitfaden
+          </a>
+        </div>
+      </section>
+
+      <!-- Other exams -->
+      <nav class="mt-14 border-t border-rule pt-8" aria-labelledby="more-exams-h">
+        <p id="more-exams-h" class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">Andere Prüfungen</p>
+        <ul class="mt-4 space-y-2">
+          {others.map((h) => (
+            <li>
+              <a href={`/pruefung/${h.slug}/`} class="text-[0.9375rem] text-siegel underline-offset-2 hover:underline">{h.nameDe}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <!-- Provenance — same rendered discipline as the guides -->
+      <footer class="mt-10 border-t border-rule pt-6">
+        <p class="font-data text-[0.75rem] leading-relaxed text-graphite">
+          Prüfungsfakten geprüft am {de(hub.factsCheckedOn)} ·
+          Quellen: {hub.sources.map((s, i) => (
+            <Fragment>
+              {i > 0 && ', '}
+              <a href={s.url} rel="nofollow noopener" target="_blank" class="text-siegel underline-offset-2 hover:underline">{s.label}</a>
+            </Fragment>
+          ))}
+        </p>
+        <p class="mt-3 text-[0.75rem] leading-relaxed text-graphite">
+          DeutschMeister bereitet auf diese Prüfung vor, ist aber kein Prüfungsanbieter.
+          Formate, Gebühren und Anmeldung regeln die Prüfungszentren; verbindliche Auskünfte
+          bekommst du direkt beim Anbieter.
+        </p>
+      </footer>
+
+    </article>
+  </div>
+</Layout>

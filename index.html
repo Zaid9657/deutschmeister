@@ -5,6 +5,11 @@
     <!-- Analytics is loaded only after cookie consent — see /consent.js -->
     <script src="/consent.js" defer></script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- PWA manifest — deliberately UNstamped (no data-rh): SEO.jsx does not
+         render a manifest link, and stamping a tag Helmet doesn't re-render
+         makes Helmet delete it on hydration (see tests/head-tags.test.mjs). -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Learn German Grammar A1–B2 | DeutschMeister</title>
     <!-- The raw shell is served, without this file's X-Robots-Tag protection, on

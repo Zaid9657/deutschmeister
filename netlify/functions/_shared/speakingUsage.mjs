@@ -8,7 +8,9 @@ import { supabase } from './supabase.mjs';
 const PRO_MONTHLY_LIMIT  = 30;
 const TRIAL_TOTAL_LIMIT  = 2;
 
-async function getTier(userId) {
+// Exported: evaluate-writing.mjs reuses the same tier resolution so speaking
+// and writing can never disagree about who is pro/trial/expired.
+export async function getTier(userId) {
   const { data: profile } = await supabase
     .from('profiles')
     .select('subscription_tier, is_subscribed, trial_ends_at')

@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { ChevronRight, Clock, CheckCircle, Circle, Lock } from 'lucide-react';
@@ -9,7 +8,6 @@ import { isLevelFree } from '../config/freeTier';
 
 const GrammarTopicCard = ({ topic, level, isCompleted, progress = 0 }) => {
   const { i18n } = useTranslation();
-  const navigate = useNavigate();
   const { getThemeForLevel } = useTheme();
 
   const { user } = useAuth();
@@ -20,7 +18,9 @@ const GrammarTopicCard = ({ topic, level, isCompleted, progress = 0 }) => {
   const locked = !free && !(user && hasAccess);
 
   const handleClick = () => {
-    navigate(`/grammar/${level}/${topic.slug}`);
+    // The lesson is served by the Astro build (one lesson, one URL) — a
+    // client-side navigate would hit a route the SPA no longer carries.
+    window.location.assign(`/grammar/${level}/${topic.slug}/`);
   };
 
   // Determine status icon and colors

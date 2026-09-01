@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, BookOpen, Loader2 } from 'lucide-react';
 import SEO from '../components/SEO';
@@ -138,20 +137,20 @@ const IntroPage = () => {
             Ready to start your German journey?
           </h2>
           <p className="text-graphite mb-8 max-w-lg mx-auto">
-            Join thousands of learners mastering German with structured lessons, interactive exercises, and AI-powered speaking practice.
+            Structured lessons across 8 CEFR levels, interactive exercises, and AI-powered speaking practice — and A1.1 is free forever.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button to="/signup" size="lg" className="group">
               Start Learning Free
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
-            <Link
-              to="/grammar"
+            <a
+              href="/grammar/"
               className="inline-flex items-center gap-2 px-6 py-4 border-2 border-rule text-ink font-semibold rounded-2xl hover:border-siegel hover:bg-siegel-wash transition-all"
             >
               <BookOpen className="w-5 h-5" />
               Explore Grammar Topics
-            </Link>
+            </a>
           </div>
         </motion.div>
       </div>

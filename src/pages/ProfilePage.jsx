@@ -1,18 +1,32 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { User, Calendar, BookOpen, MessageSquare, Award, Globe, Trash2, AlertTriangle, Crown, ArrowRight } from 'lucide-react';
+import { User, Calendar, BookOpen, MessageSquare, Award, Globe, Trash2, AlertTriangle, Crown, ArrowRight, GraduationCap, Target } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { useProgress } from '../contexts/ProgressContext';
 import { levels } from '../data/content';
+import { EXAM_TRACKS } from '../data/examTracks';
+import { supabase } from '../utils/supabase';
 import SEO from '../components/SEO';
 
 const ProfilePage = () => {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
-  const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription } = useSubscription();
+  const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription, profile, refreshSubscription } = useSubscription();
   const { getTotalStats, getOverallProgress, getLevelProgress } = useProgress();
+
+  // Exam goal settings (profiles.exam_track/exam_date/daily_goal_target —
+  // client-writable preferences, renovation Phase 4a).
+  const [savingGoal, setSavingGoal] = useState(false);
+  const saveGoalField = async (fields) => {
+    if (!user) return;
+    setSavingGoal(true);
+    const { error } = await supabase.from('profiles').update(fields).eq('id', user.id);
+    if (error) console.error('goal save failed:', error.message);
+    await refreshSubscription();
+    setSavingGoal(false);
+  };
   const isSubscribed = user ? hasActiveSubscription() : false;
   const inTrial = user ? isInFreeTrial() : false;
   const trialDays = user ? getTrialDaysRemaining() : 0;
@@ -30,24 +44,27 @@ const ProfilePage = () => {
       })
     : 'N/A';
 
+  // Persisted completions only (see ProgressContext) — the old
+  // words/sentences counters read arrays that were never written to the
+  // database for logged-in users, so every card was a permanent 0.
   const statCards = [
     {
+      icon: Award,
+      label: 'Grammar topics completed',
+      value: stats.grammarTopics,
+      iconClasses: 'bg-teal-50 text-teal-700',
+    },
+    {
       icon: BookOpen,
-      label: t('profile.wordsLearned'),
-      value: stats.vocabulary,
-      color: 'amber',
+      label: 'Reading lessons finished',
+      value: stats.readingLessons,
+      iconClasses: 'bg-amber-50 text-amber-700',
     },
     {
       icon: MessageSquare,
-      label: t('profile.sentencesLearned'),
-      value: stats.sentences,
-      color: 'emerald',
-    },
-    {
-      icon: Award,
-      label: t('profile.grammarLearned'),
-      value: stats.grammar,
-      color: 'blue',
+      label: 'Listening exercises done',
+      value: stats.listening,
+      iconClasses: 'bg-sky-50 text-sky-700',
     },
   ];
 
@@ -148,8 +165,8 @@ const ProfilePage = () => {
               key={stat.label}
               className="bg-white rounded-2xl shadow-lg border border-slate-100 p-6"
             >
-              <div className={`w-12 h-12 rounded-xl bg-${stat.color}-100 flex items-center justify-center mb-4`}>
-                <stat.icon className={`w-6 h-6 text-${stat.color}-600`} />
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${stat.iconClasses}`}>
+                <stat.icon className="w-6 h-6" />
               </div>
               <p className="text-3xl font-bold text-slate-800 mb-1">{stat.value}</p>
               <p className="text-sm text-slate-500">{stat.label}</p>
@@ -168,12 +185,22 @@ const ProfilePage = () => {
           <div className="space-y-4">
             {levels.map((level) => {
               const progress = getLevelProgress(level);
+              // The config's level colours are keyed 'a1-1'…'b2-2' (see
+              // tailwind.config.js); the old map indexed with 'a1.1' AND named
+              // tokens that don't exist, so every bar rendered
+              // `bg-gradient-to-r undefined`. Full literal strings so the
+              // Tailwind JIT scanner emits them.
               const gradients = {
-                a1: 'from-a1-primary to-a1-secondary',
-                a2: 'from-a2-primary to-a2-secondary',
-                b1: 'from-b1-primary to-b1-secondary',
-                b2: 'from-b2-primary to-b2-secondary',
+                'a1.1': 'from-a1-1-primary to-a1-1-secondary',
+                'a1.2': 'from-a1-2-primary to-a1-2-secondary',
+                'a2.1': 'from-a2-1-primary to-a2-1-secondary',
+                'a2.2': 'from-a2-2-primary to-a2-2-secondary',
+                'b1.1': 'from-b1-1-primary to-b1-1-secondary',
+                'b1.2': 'from-b1-2-primary to-b1-2-secondary',
+                'b2.1': 'from-b2-1-primary to-b2-1-secondary',
+                'b2.2': 'from-b2-2-primary to-b2-2-secondary',
               };
+              const gradient = gradients[level] || 'from-siegel to-siegel';
               return (
                 <div key={level}>
                   <div className="flex items-center justify-between mb-2">
@@ -185,7 +212,7 @@ const ProfilePage = () => {
                       initial={{ width: 0 }}
                       animate={{ width: `${progress}%` }}
                       transition={{ duration: 0.8, ease: 'easeOut' }}
-                      className={`h-full bg-gradient-to-r ${gradients[level]} rounded-full`}
+                      className={`h-full bg-gradient-to-r ${gradient} rounded-full`}
                     />
                   </div>
                 </div>
@@ -218,6 +245,60 @@ const ProfilePage = () => {
           className="bg-white rounded-2xl shadow-lg border border-slate-100 p-8"
         >
           <h3 className="font-semibold text-slate-800 mb-6">{t('profile.settings')}</h3>
+
+          {/* Exam goal */}
+          <div className="py-4 border-b border-slate-100">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+                <GraduationCap className="w-5 h-5 text-slate-600" />
+              </div>
+              <span className="font-medium text-slate-700">Exam goal</span>
+              {savingGoal && <span className="text-xs text-slate-400">Saving…</span>}
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <label className="block">
+                <span className="block text-xs text-slate-500 mb-1">Which exam?</span>
+                <select
+                  value={profile?.exam_track || 'none'}
+                  onChange={(e) => saveGoalField({ exam_track: e.target.value })}
+                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 bg-white"
+                >
+                  <option value="none">Just learning — no exam</option>
+                  {EXAM_TRACKS.map((track) => (
+                    <option key={track.key} value={track.key}>{track.nameDe}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="block">
+                <span className="block text-xs text-slate-500 mb-1">Exam date (optional)</span>
+                <input
+                  type="date"
+                  value={profile?.exam_date || ''}
+                  onChange={(e) => saveGoalField({ exam_date: e.target.value || null })}
+                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 bg-white"
+                />
+              </label>
+            </div>
+          </div>
+
+          {/* Daily goal */}
+          <div className="flex items-center justify-between py-4 border-b border-slate-100">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+                <Target className="w-5 h-5 text-slate-600" />
+              </div>
+              <span className="font-medium text-slate-700">Daily goal</span>
+            </div>
+            <select
+              value={profile?.daily_goal_target || 3}
+              onChange={(e) => saveGoalField({ daily_goal_target: Number(e.target.value) })}
+              className="rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 bg-white"
+            >
+              {[1, 2, 3, 4, 5, 6, 8, 10].map((n) => (
+                <option key={n} value={n}>{n} activit{n === 1 ? 'y' : 'ies'} a day</option>
+              ))}
+            </select>
+          </div>
 
           {/* Language Setting */}
           <div className="flex items-center justify-between py-4 border-b border-slate-100">

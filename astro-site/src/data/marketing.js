@@ -56,6 +56,12 @@ export const PRO_SPEAKING_SESSIONS_PER_MONTH = 30;
 /** Free speaking sessions during the trial, in TOTAL (not per month). Source: TRIAL_TOTAL_LIMIT, speakingUsage.mjs:9 (2026-08-22). */
 export const TRIAL_SPEAKING_SESSIONS = 2;
 
+/** AI writing evaluations included with Pro, per month. Source: WRITING_LIMITS.pro, netlify/functions/evaluate-writing.mjs (2026-08-31). */
+export const PRO_WRITING_EVALUATIONS_PER_MONTH = 20;
+
+/** Free writing evaluations during the trial, in TOTAL (not per month). Source: WRITING_LIMITS.free_trial, evaluate-writing.mjs (2026-08-31). */
+export const TRIAL_WRITING_EVALUATIONS = 2;
+
 /** Length of the free trial. Source: src/config/limits.js, unchanged since launch. */
 export const TRIAL_DAYS = 7;
 
