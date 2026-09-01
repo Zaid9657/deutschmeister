@@ -110,6 +110,7 @@ after each wave:
 | Wave | Date | SPA css legacy selectors | Astro css legacy selectors |
 |---|---|---|---|
 | baseline (post #33, Wave 0 kit) | 2026-09-01 | **175** | **115** |
+| Wave 1 (public Astro pages) | 2026-09-01 | 175 | **0** |
 
 Measure with (from the repo root, after a full CI-mirror build):
 

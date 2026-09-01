@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import Aurora from '../../components/Aurora.astro';
 import { getTopicsForLevel, SUB_LEVELS, LEVEL_META } from '../../lib/grammar.js';
 import { ORGANIZATION, SITE_PUBLISHED } from '../../lib/siteMeta.js';
 import '../../styles/global.css';
@@ -55,87 +56,99 @@ const jsonLd = {
     ],
   },
 };
+
+// Playful Depth vocabulary (docs/design/playbook.md). The level code is data →
+// `label` chip; never a level colour (rule 1).
+const LEVEL_CHIP =
+  'rounded-pill bg-siegel-wash px-2.5 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep';
+const CARD_INTERACTIVE =
+  'rounded-clay border border-rule bg-white shadow-raise transition-all duration-150 ease-snap hover:-translate-y-0.5 hover:shadow-raise-lg active:translate-y-1 active:shadow-none';
+const CHIP_PRESSABLE =
+  'rounded-pill border border-rule bg-white px-3 py-1.5 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep shadow-raise transition-all duration-100 ease-snap hover:border-siegel active:translate-y-1 active:shadow-none';
 ---
 
 <Layout title={title} description={description} canonical={`https://deutsch-meister.de/grammar/${level}/`} jsonLd={jsonLd} lang="de">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-10">
-    <!-- Breadcrumb -->
-    <nav class="flex items-center gap-2 text-sm text-slate-600 mb-8" aria-label="Breadcrumb">
-      <a href="https://deutsch-meister.de/" class="hover:text-slate-700 transition-colors">Home</a>
-      <span>/</span>
-      <a href="/grammar/" class="hover:text-slate-700 transition-colors" lang="de">Grammatik</a>
-      <span>/</span>
-      <span class="text-slate-800 font-medium">{meta.label}</span>
-    </nav>
+  <div class="overflow-x-clip bg-paper text-ink">
 
-    <!-- Header -->
-    <div class="mb-10">
-      <div class={`inline-flex items-center gap-3 px-4 py-2 rounded-xl ${meta.bg} ${meta.border} border mb-4`}>
-        <div class={`w-8 h-8 rounded-lg bg-gradient-to-r ${meta.color} flex items-center justify-center`}>
-          <span class="text-white font-display font-bold text-xs">{meta.label}</span>
-        </div>
-        <span class="font-semibold text-slate-700" lang="en">{meta.name}</span>
-      </div>
-      <h1 class="font-display text-4xl font-bold text-slate-900 mb-3">
-        <span lang="de">{meta.label} Grammatik</span>
-      </h1>
-      <p class="text-slate-600 text-lg" lang="de">
-        <span data-en={`${topics.length} topics with explanations, examples and interactive exercises.`}>{topics.length} Themen mit Erklärungen, Beispielen und interaktiven Übungen.</span>
-      </p>
-      <!-- Per-level progress — hidden until the client fills it for a signed-in user. -->
-      <div data-level-bar class="hidden items-center gap-3 mt-4 max-w-sm">
-        <div class="flex-1 h-2 rounded-full bg-slate-100 overflow-hidden">
-          <div data-level-bar-fill class={`h-full rounded-full bg-gradient-to-r ${meta.color} transition-all`} style="width:0%"></div>
-        </div>
-        <span data-level-bar-text class="text-sm font-semibold text-slate-500 whitespace-nowrap">0/{topics.length}</span>
-      </div>
-    </div>
+    <!-- ═══ HERO ═══ -->
+    <section class="relative" aria-labelledby="level-h">
+      <Aurora />
+      <div class="relative mx-auto max-w-4xl px-5 pt-10 pb-10 sm:pt-14">
+        <!-- Breadcrumb -->
+        <nav class="hero-line mb-8 flex items-center gap-2 font-data text-[0.8125rem] text-graphite" aria-label="Breadcrumb" style="--d:0ms">
+          <a href="https://deutsch-meister.de/" class="transition-colors hover:text-siegel-deep">Home</a>
+          <span>/</span>
+          <a href="/grammar/" class="transition-colors hover:text-siegel-deep" lang="de">Grammatik</a>
+          <span>/</span>
+          <span class="font-semibold text-ink">{meta.label}</span>
+        </nav>
 
-    <!-- Topic list -->
-    <div class="space-y-3">
-      {topics.map((topic, i) => (
-        <a
-          href={`/grammar/${level}/${topic.slug}/`}
-          data-topic-card
-          data-topic-id={topic.id}
-          class={`flex items-center gap-4 p-5 rounded-xl border ${meta.border} bg-white hover:shadow-md hover:-translate-y-0.5 transition-all group`}
-        >
-          <span data-topic-badge class={`w-8 h-8 rounded-lg ${meta.bg} ${meta.badge} flex items-center justify-center text-sm font-bold flex-shrink-0`}>
-            <span data-topic-num>{i + 1}</span>
-          </span>
-          <div class="flex-1 min-w-0">
-            <!-- Heading, not styling: font-body + text-base reproduce the
-                 previous paragraph rendering exactly, while the h2 removes the
-                 h1-to-h3 skip in the outline. -->
-            <h2 class="font-body text-base font-semibold text-slate-800 group-hover:text-slate-900 transition-colors" lang="en">
-              {topic.title_en}
-            </h2>
-            {topic.title_de && topic.title_de !== topic.title_en && (
-              <p class="text-sm text-slate-600 mt-0.5" lang="de">{topic.title_de}</p>
-            )}
-            {topic.description_en && (
-              <p class="text-sm text-slate-600 mt-1 line-clamp-1" lang="en">{topic.description_en}</p>
-            )}
+        <!-- Header -->
+        <div class="hero-line mb-4 inline-flex items-center gap-3" style="--d:60ms">
+          <span class={LEVEL_CHIP}>{meta.label}</span>
+          <span class="text-[0.9375rem] font-semibold text-graphite" lang="en">{meta.name}</span>
+        </div>
+        <h1 id="level-h" class="hero-line font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.025em] sm:text-[3rem]" style="--d:140ms">
+          <span lang="de">{meta.label} Grammatik</span>
+        </h1>
+        <p class="hero-line mt-4 max-w-xl text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]" lang="de" style="--d:260ms">
+          <span data-en={`${topics.length} topics with explanations, examples and interactive exercises.`}>{topics.length} Themen mit Erklärungen, Beispielen und interaktiven Übungen.</span>
+        </p>
+        <!-- Per-level progress — hidden until the client fills it for a signed-in user. -->
+        <div data-level-bar class="mt-5 hidden max-w-sm items-center gap-3">
+          <div class="h-2 flex-1 overflow-hidden rounded-pill bg-paper-sunk">
+            <div data-level-bar-fill class="h-full rounded-pill bg-siegel transition-all" style="width:0%"></div>
           </div>
-          <svg class="w-5 h-5 text-slate-300 group-hover:text-slate-500 group-hover:translate-x-0.5 transition-all flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-          </svg>
-        </a>
-      ))}
-    </div>
+          <span data-level-bar-text class="whitespace-nowrap font-data text-[0.8125rem] font-semibold text-graphite">0/{topics.length}</span>
+        </div>
+      </div>
+    </section>
 
-    <!-- Level navigation -->
-    <div class="mt-10 pt-8 border-t border-slate-200">
-      <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4" lang="de">Andere Niveaus</p>
-      <div class="flex flex-wrap gap-2">
-        {SUB_LEVELS.filter(l => l !== level).map((l) => (
+    <div class="mx-auto max-w-4xl px-5 pb-14">
+      <!-- Topic list: pressable clay cards -->
+      <div class="space-y-4">
+        {topics.map((topic, i) => (
           <a
-            href={`/grammar/${l}/`}
-            class={`px-3 py-1.5 rounded-full text-sm font-semibold ${LEVEL_META[l].badge} hover:scale-105 transition-transform`}
+            href={`/grammar/${level}/${topic.slug}/`}
+            data-topic-card
+            data-topic-id={topic.id}
+            class={`reveal group flex items-center gap-4 p-5 ${CARD_INTERACTIVE}`}
+            style={`--rd:${(i % 5) * 80}ms`}
           >
-            {LEVEL_META[l].label}
+            <span data-topic-badge class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-pill bg-paper-sunk font-data text-[0.8125rem] font-bold text-ink">
+              <span data-topic-num>{i + 1}</span>
+            </span>
+            <div class="min-w-0 flex-1">
+              <!-- Heading, not styling: font-body + text-base reproduce the
+                   previous paragraph rendering exactly, while the h2 removes the
+                   h1-to-h3 skip in the outline. -->
+              <h2 class="font-body text-base font-bold text-ink transition-colors group-hover:text-siegel-deep" lang="en">
+                {topic.title_en}
+              </h2>
+              {topic.title_de && topic.title_de !== topic.title_en && (
+                <p class="mt-0.5 text-sm text-graphite" lang="de">{topic.title_de}</p>
+              )}
+              {topic.description_en && (
+                <p class="mt-1 line-clamp-1 text-sm text-graphite" lang="en">{topic.description_en}</p>
+              )}
+            </div>
+            <svg class="h-5 w-5 flex-shrink-0 text-edge transition-all group-hover:translate-x-0.5 group-hover:text-siegel" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
           </a>
         ))}
+      </div>
+
+      <!-- Level navigation -->
+      <div class="reveal mt-12 border-t border-rule pt-8">
+        <p class="mb-4 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel" lang="de">Andere Niveaus</p>
+        <div class="flex flex-wrap gap-2.5">
+          {SUB_LEVELS.filter(l => l !== level).map((l) => (
+            <a href={`/grammar/${l}/`} class={CHIP_PRESSABLE}>
+              {LEVEL_META[l].label}
+            </a>
+          ))}
+        </div>
       </div>
     </div>
   </div>
@@ -179,17 +192,17 @@ const jsonLd = {
           if (text) text.textContent = `${completed.size}/${path.length}`;
         }
 
-        // Rows — checks + current highlight
+        // Rows — checks + current highlight (success = limette, selected = siegel)
         document.querySelectorAll('[data-topic-card]').forEach((card) => {
           const id = card.getAttribute('data-topic-id');
           const badge = card.querySelector('[data-topic-badge]');
           const num = card.querySelector('[data-topic-num]');
           if (completed.has(id)) {
             if (num) num.textContent = '✓';
-            if (badge) { badge.classList.add('bg-emerald-500', 'text-white'); }
-            card.classList.add('ring-1', 'ring-emerald-300');
+            if (badge) { badge.classList.remove('bg-paper-sunk', 'text-ink'); badge.classList.add('bg-accent-limette', 'text-white'); }
+            card.classList.add('ring-1', 'ring-accent-limette');
           } else if (current && id === current.id) {
-            card.classList.add('ring-2', 'ring-indigo-400', 'shadow-md');
+            card.classList.add('ring-2', 'ring-siegel', 'shadow-raise-lg');
           }
         });
       } catch (e) {

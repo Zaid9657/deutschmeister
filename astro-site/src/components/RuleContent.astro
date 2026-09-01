@@ -133,9 +133,13 @@ const parsed = kindOf === 'object' ? toUnits(node) : null;
 
 const headingSize = depth === 0 ? 'text-base' : 'text-sm';
 ---
+{/* Everything below is reference material — FLAT by rule 3 (docs/design/playbook.md):
+    hairline `border-rule`, `bg-paper-sunk` for recessed panels/table heads, no shadow.
+    The `meta` prop is still threaded through for callers; level colours are gone. */}
+
 {/* --- Scalar --- */}
 {kindOf === 'scalar' && nonEmpty(node) && (
-  <p class="text-slate-700 leading-relaxed whitespace-pre-line"><RichText text={String(node)} /></p>
+  <p class="whitespace-pre-line leading-relaxed text-ink"><RichText text={String(node)} /></p>
 )}
 
 {/* --- Table (nested or top-level) --- */}
@@ -143,34 +147,34 @@ const headingSize = depth === 0 ? 'text-base' : 'text-sm';
   <div class="space-y-2">
     {(node.title_en || node.title) && (
       <div>
-        <h4 class={`font-display ${headingSize} font-bold text-slate-800`}><RichText text={String(node.title_en ?? node.title)} /></h4>
+        <h4 class={`font-display ${headingSize} font-semibold text-ink`}><RichText text={String(node.title_en ?? node.title)} /></h4>
         {node.title_de && node.title_de !== (node.title_en ?? node.title) && (
-          <p class="text-xs text-slate-500" lang="de"><RichText text={String(node.title_de)} /></p>
+          <p class="text-xs text-graphite" lang="de"><RichText text={String(node.title_de)} /></p>
         )}
       </div>
     )}
     {(node.description_en || node.description_de) && (
-      <div class="text-sm text-slate-600 mb-1">
+      <div class="mb-1 text-sm text-graphite">
         <p class="whitespace-pre-line"><RichText text={String(node.description_en ?? node.description_de)} /></p>
         {node.description_en && node.description_de && (
-          <p class="mt-0.5 text-slate-500 whitespace-pre-line" lang="de"><RichText text={String(node.description_de)} /></p>
+          <p class="mt-0.5 whitespace-pre-line text-graphite" lang="de"><RichText text={String(node.description_de)} /></p>
         )}
       </div>
     )}
     <div class="overflow-x-auto">
-      <table class="w-full text-sm border-collapse">
+      <table class="w-full border-collapse text-left text-sm">
         <thead>
-          <tr class={meta.bg}>
+          <tr class="border-b border-ink bg-paper-sunk">
             {node.headers.map((h) => (
-              <th class="px-4 py-2 text-left font-semibold text-slate-700 border border-slate-200">{String(h)}</th>
+              <th class="px-4 py-2 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">{String(h)}</th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {node.rows.map((row, i) => (
-            <tr class={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+          {node.rows.map((row) => (
+            <tr class="border-b border-rule">
               {(Array.isArray(row) ? row : [row]).map((c) => (
-                <td class="px-4 py-2.5 border border-slate-200 text-slate-700 font-accent">{cell(c)}</td>
+                <td class="px-4 py-2.5 font-accent text-ink">{cell(c)}</td>
               ))}
             </tr>
           ))}
@@ -184,8 +188,8 @@ const headingSize = depth === 0 ? 'text-base' : 'text-sm';
 {kindOf === 'array' && arrType === 'strings' && (
   <ul class="space-y-1.5">
     {node.filter(nonEmpty).map((item) => (
-      <li class="flex items-start gap-2 text-slate-700 text-sm">
-        <span class="text-indigo-400 mt-1 flex-shrink-0">▸</span>
+      <li class="flex items-start gap-2 text-sm text-ink">
+        <span class="mt-1 flex-shrink-0 text-siegel" aria-hidden="true">▸</span>
         <span class="whitespace-pre-line">{isScalar(item) ? <RichText text={String(item)} /> : JSON.stringify(item)}</span>
       </li>
     ))}
@@ -194,31 +198,31 @@ const headingSize = depth === 0 ? 'text-base' : 'text-sm';
 
 {/* --- Array of "mistakes" (wrong / correct / explanation) --- */}
 {kindOf === 'array' && arrType === 'mistakes' && (
-  <div class="p-3 rounded-xl bg-red-50 border border-red-200">
+  <div class="rounded-md border border-rule bg-accent-himbeer-wash p-3">
     <ul class="space-y-3">
       {node.map((m) => (
-        <li class="text-sm text-red-800">
+        <li class="text-sm text-ink">
           <div class="space-y-0.5">
             {m.wrong && (
               <p class="flex items-start gap-2">
-                <span class="flex-shrink-0 font-bold text-red-600">✗</span>
-                <span class="line-through text-red-700" lang="de">{String(m.wrong)}</span>
+                <span class="flex-shrink-0 font-bold text-accent-himbeer-ink">✗</span>
+                <span class="text-accent-himbeer-ink line-through" lang="de">{String(m.wrong)}</span>
               </p>
             )}
             {m.correct && (
               <p class="flex items-start gap-2">
-                <span class="flex-shrink-0 font-bold text-emerald-600">✓</span>
-                <span class="text-emerald-700 font-medium" lang="de">{String(m.correct)}</span>
+                <span class="flex-shrink-0 font-bold text-accent-limette-ink">✓</span>
+                <span class="font-medium text-accent-limette-ink" lang="de">{String(m.correct)}</span>
               </p>
             )}
             {(m.explanation_en || m.explanation_de) && (
-              <p class="text-xs text-slate-600 pl-5"><RichText text={m.explanation_en ?? m.explanation_de} /></p>
+              <p class="pl-5 text-xs text-graphite"><RichText text={m.explanation_en ?? m.explanation_de} /></p>
             )}
             {m.explanation_en && m.explanation_de && (
-              <p class="text-xs text-slate-500 pl-5" lang="de"><RichText text={m.explanation_de} /></p>
+              <p class="pl-5 text-xs text-graphite" lang="de"><RichText text={m.explanation_de} /></p>
             )}
             {m.memory_trick_en && (
-              <p class="text-xs text-purple-700 pl-5">🧠 <RichText text={m.memory_trick_en} /></p>
+              <p class="pl-5 text-xs text-siegel-deep">🧠 <RichText text={m.memory_trick_en} /></p>
             )}
           </div>
         </li>
@@ -231,18 +235,18 @@ const headingSize = depth === 0 ? 'text-base' : 'text-sm';
 {kindOf === 'array' && arrType === 'dialogue' && (
   <div class="space-y-2">
     {node.map((line) => (
-      <div class="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+      <div class="rounded-md border border-rule bg-paper-sunk px-3 py-2">
         {line.speaker && (
-          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">{String(line.speaker)}</p>
+          <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">{String(line.speaker)}</p>
         )}
         {(line.text_de ?? line.de) && (
-          <p class="font-display text-slate-900" lang="de">{String(line.text_de ?? line.de)}</p>
+          <p class="font-display text-ink" lang="de">{String(line.text_de ?? line.de)}</p>
         )}
         {(line.text_en ?? line.en) && (
-          <p class="text-sm text-slate-600 italic">{String(line.text_en ?? line.en)}</p>
+          <p class="text-sm italic text-graphite">{String(line.text_en ?? line.en)}</p>
         )}
         {(line.grammar_note ?? line.highlight) && (
-          <p class="text-xs text-indigo-600 mt-1">{String(line.grammar_note ?? line.highlight)}</p>
+          <p class="mt-1 text-xs text-siegel-deep">{String(line.grammar_note ?? line.highlight)}</p>
         )}
       </div>
     ))}
@@ -254,21 +258,21 @@ const headingSize = depth === 0 ? 'text-base' : 'text-sm';
   <ol class="space-y-3">
     {node.map((s, i) => (
       <li class="flex items-start gap-3">
-        <span class={`flex-shrink-0 w-6 h-6 rounded-full ${meta.badge} text-xs font-bold flex items-center justify-center`}>
+        <span class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-pill bg-siegel-wash font-data text-xs font-bold text-siegel-deep">
           {s.step ?? i + 1}
         </span>
         <div class="min-w-0">
           {(s.title_en ?? s.title) && (
-            <p class="font-semibold text-slate-800 text-sm">{String(s.title_en ?? s.title)}</p>
+            <p class="text-sm font-semibold text-ink">{String(s.title_en ?? s.title)}</p>
           )}
           {s.title_de && s.title_de !== (s.title_en ?? s.title) && (
-            <p class="text-xs text-slate-500" lang="de">{String(s.title_de)}</p>
+            <p class="text-xs text-graphite" lang="de">{String(s.title_de)}</p>
           )}
           {(s.detail_en ?? s.detail) && (
-            <p class="text-sm text-slate-600 leading-relaxed whitespace-pre-line mt-0.5"><RichText text={String(s.detail_en ?? s.detail)} /></p>
+            <p class="mt-0.5 whitespace-pre-line text-sm leading-relaxed text-graphite"><RichText text={String(s.detail_en ?? s.detail)} /></p>
           )}
           {s.detail_de && (
-            <p class="text-xs text-slate-500 whitespace-pre-line" lang="de"><RichText text={String(s.detail_de)} /></p>
+            <p class="whitespace-pre-line text-xs text-graphite" lang="de"><RichText text={String(s.detail_de)} /></p>
           )}
         </div>
       </li>
@@ -280,7 +284,7 @@ const headingSize = depth === 0 ? 'text-base' : 'text-sm';
 {kindOf === 'array' && arrType === 'sections' && (
   <div class="space-y-4">
     {node.map((sec) => (
-      <div class="rounded-xl border border-slate-200 bg-white px-4 py-3">
+      <div class="rounded-md border border-rule bg-white px-4 py-3">
         <Self node={sec} meta={meta} depth={depth + 1} />
       </div>
     ))}
@@ -290,19 +294,19 @@ const headingSize = depth === 0 ? 'text-base' : 'text-sm';
 {/* --- Array of flat objects → table --- */}
 {kindOf === 'array' && arrType === 'objtable' && (
   <div class="overflow-x-auto">
-    <table class="w-full text-sm border-collapse">
+    <table class="w-full border-collapse text-left text-sm">
       <thead>
-        <tr class={meta.bg}>
+        <tr class="border-b border-ink bg-paper-sunk">
           {objtableCols.map((c) => (
-            <th class="px-3 py-2 text-left font-semibold text-slate-700 border border-slate-200">{humanize(c)}</th>
+            <th class="px-3 py-2 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">{humanize(c)}</th>
           ))}
         </tr>
       </thead>
       <tbody>
-        {node.map((o, i) => (
-          <tr class={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+        {node.map((o) => (
+          <tr class="border-b border-rule">
             {objtableCols.map((c) => (
-              <td class="px-3 py-2 border border-slate-200 text-slate-700 font-accent" lang={cellLang(c)}>{cell(o[c])}</td>
+              <td class="px-3 py-2 font-accent text-ink" lang={cellLang(c)}>{cell(o[c])}</td>
             ))}
           </tr>
         ))}
@@ -315,7 +319,7 @@ const headingSize = depth === 0 ? 'text-base' : 'text-sm';
 {kindOf === 'array' && arrType === 'blocks' && (
   <div class="space-y-3">
     {node.filter(nonEmpty).map((item) => (
-      <div class="rounded-xl border border-slate-200 bg-white px-4 py-3">
+      <div class="rounded-md border border-rule bg-white px-4 py-3">
         <Self node={item} meta={meta} depth={depth + 1} />
       </div>
     ))}
@@ -327,37 +331,37 @@ const headingSize = depth === 0 ? 'text-base' : 'text-sm';
   <div class="space-y-3">
     {parsed.title.en && (
       <div>
-        <h4 class={`font-display ${headingSize} font-bold text-slate-800`}><RichText text={parsed.title.en} /></h4>
-        {parsed.title.de && <p class="text-xs text-slate-500" lang="de"><RichText text={parsed.title.de} /></p>}
+        <h4 class={`font-display ${headingSize} font-semibold text-ink`}><RichText text={parsed.title.en} /></h4>
+        {parsed.title.de && <p class="text-xs text-graphite" lang="de"><RichText text={parsed.title.de} /></p>}
       </div>
     )}
     {parsed.units.map((u) => (
       <div>
         {u.kind === 'text' && u.b === 'key_insight' && (
-          <div class="flex items-start gap-3 p-3 rounded-xl bg-amber-50 border border-amber-200">
-            <span class="text-amber-500 text-lg flex-shrink-0">💡</span>
+          <div class="flex items-start gap-3 rounded-md border border-rule bg-accent-aprikose-wash p-3">
+            <span class="flex-shrink-0 text-lg" aria-hidden="true">💡</span>
             <div>
-              <p class="text-sm text-amber-900 font-medium whitespace-pre-line"><RichText text={u.en} /></p>
-              {u.de && <p class="text-xs text-amber-700/70 mt-1 whitespace-pre-line" lang="de"><RichText text={u.de} /></p>}
+              <p class="whitespace-pre-line text-sm font-medium text-accent-aprikose-ink"><RichText text={u.en} /></p>
+              {u.de && <p class="mt-1 whitespace-pre-line text-xs text-accent-aprikose-ink/70" lang="de"><RichText text={u.de} /></p>}
             </div>
           </div>
         )}
         {u.kind === 'text' && u.b === 'memory_trick' && (
-          <div class="flex items-start gap-3 p-3 rounded-xl bg-purple-50 border border-purple-200">
-            <span class="text-purple-500 text-lg flex-shrink-0">🧠</span>
+          <div class="flex items-start gap-3 rounded-md border border-rule bg-siegel-wash p-3">
+            <span class="flex-shrink-0 text-lg" aria-hidden="true">🧠</span>
             <div>
-              <p class="text-sm text-purple-900 whitespace-pre-line"><RichText text={u.en} /></p>
-              {u.de && <p class="text-xs text-purple-700/70 mt-1 whitespace-pre-line" lang="de"><RichText text={u.de} /></p>}
+              <p class="whitespace-pre-line text-sm text-siegel-deep"><RichText text={u.en} /></p>
+              {u.de && <p class="mt-1 whitespace-pre-line text-xs text-siegel-deep/70" lang="de"><RichText text={u.de} /></p>}
             </div>
           </div>
         )}
         {u.kind === 'text' && u.b !== 'key_insight' && u.b !== 'memory_trick' && (
           <div>
             {!NO_LABEL.has(u.b) && (
-              <span class="text-xs font-semibold text-slate-600 uppercase tracking-wider block mb-1">{humanize(u.b)}</span>
+              <span class="mb-1 block font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">{humanize(u.b)}</span>
             )}
-            {u.en && <p class="text-slate-700 leading-relaxed whitespace-pre-line"><RichText text={u.en} /></p>}
-            {u.de && <p class="text-sm text-slate-500 leading-relaxed whitespace-pre-line mt-0.5" lang="de"><RichText text={u.de} /></p>}
+            {u.en && <p class="whitespace-pre-line leading-relaxed text-ink"><RichText text={u.en} /></p>}
+            {u.de && <p class="mt-0.5 whitespace-pre-line text-sm leading-relaxed text-graphite" lang="de"><RichText text={u.de} /></p>}
           </div>
         )}
         {/* Container units (tables, arrays, nested objects) render their own
