@@ -16,24 +16,39 @@ const TONES = {
   paper: 'bg-white',
   sunk: 'bg-paper-sunk',
   wash: 'bg-siegel-wash',
+  himbeer: 'bg-accent-himbeer-wash',
+  aprikose: 'bg-accent-aprikose-wash',
+  limette: 'bg-accent-limette-wash',
+};
+
+// `edge` colours the raised bottom edge: an accent for energy (a streak
+// card, a due-count card), siegel for the one featured card on a screen.
+const EDGES = {
+  paper: 'shadow-raise',
+  siegel: 'shadow-raise-siegel',
+  himbeer: 'shadow-raise-himbeer',
+  aprikose: 'shadow-raise-aprikose',
+  limette: 'shadow-raise-limette',
 };
 
 export default function Card({
   as: Tag = 'div',
   tone = 'paper',
+  edge = 'paper',
   interactive = false,
   raised = false,
   className = '',
   children,
   ...rest
 }) {
+  const raise = EDGES[edge] ?? EDGES.paper;
   const classes = [
     'rounded-clay border border-rule',
     TONES[tone] ?? TONES.paper,
     interactive
-      ? 'shadow-raise transition-all duration-150 ease-snap hover:-translate-y-0.5 hover:shadow-raise-lg active:translate-y-1 active:shadow-none'
+      ? `${raise} transition-all duration-150 ease-snap hover:-translate-y-0.5 hover:shadow-raise-lg active:translate-y-1 active:shadow-none`
       : raised
-        ? 'shadow-raise'
+        ? raise
         : '',
     className,
   ]

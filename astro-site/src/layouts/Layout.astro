@@ -1,5 +1,8 @@
 ---
 import { NAV_GROUPS, FOOTER_GROUPS, LEGAL_LINKS } from '../data/navigation.js';
+import Showtime from '../components/Showtime.astro';
+import 'atropos/css';
+import '../styles/showtime.css';
 
 export interface Props {
   title: string;
@@ -55,6 +58,9 @@ const authAttrs = (item) =>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Stamped before first paint: the .reveal hidden state (showtime.css)
+         exists only under html.js, so no-JS visitors and crawlers see everything. -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
     <!-- Analytics is loaded only after cookie consent — see /consent.js -->
     <script src="/consent.js" defer></script>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -314,5 +320,6 @@ const authAttrs = (item) =>
         } catch (e) { /* storage blocked — keep the logged-out default */ }
       })();
     </script>
+    <Showtime />
   </body>
 </html>

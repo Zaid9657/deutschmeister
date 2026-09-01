@@ -1,0 +1,96 @@
+---
+// Showtime — the shared behaviour half of the Playful Depth motion layer
+// (styles: ../styles/showtime.css; vocabulary: docs/design/playbook.md).
+// Included once by Layout.astro, so any static page gets:
+//   [data-atropos-card]  → Atropos 3D parallax scene (layers via data-atropos-offset)
+//   .reveal              → blur-fade entrance when scrolled into view (stagger: --rd)
+//   .path-connector      → SVG path draws in when revealed
+//   .countup[data-count] → number ticks up from 0 when it enters the viewport
+// Reduced motion: count-ups and reveals resolve instantly; tilt stays (it is
+// a direct pointer response, not an animation). No-JS: the reveal-hidden
+// state only exists under html.js, stamped in Layout.astro's <head>.
+---
+
+<script>
+  import Atropos from 'atropos';
+  
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  
+  // ── Atropos 3D scenes ──────────────────────────────────────────────────
+  document.querySelectorAll('[data-atropos-card]').forEach((el) => {
+    Atropos({ el, activeOffset: 30, rotateXMax: 9, rotateYMax: 9, shadow: false, highlight: true, duration: 250 });
+  });
+  
+  // ── Scroll reveals ─────────────────────────────────────────────────────
+  // IntersectionObserver first; plus a throttled scroll/resize fallback that
+  // reveals anything already in the viewport — IO callbacks can lag on weak
+  // (software-rendered) devices during fast scrolling, and a card that stays
+  // invisible is worse than one that skips its entrance.
+  const revealables = new Set(document.querySelectorAll('.reveal, .path-connector'));
+  const show = (el) => {
+    el.classList.add('is-visible');
+    revealables.delete(el);
+    io.unobserve(el);
+  };
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) if (e.isIntersecting) show(e.target);
+    },
+    { threshold: 0.15, rootMargin: '0px 0px -8% 0px' },
+  );
+  revealables.forEach((el) => io.observe(el));
+  // Track the deepest viewport-bottom the visitor has reached: on a starved
+  // main thread the queued sweeps can all fire late, after the position has
+  // changed again, so the sweep must judge against where the visitor HAS
+  // been, not where they happen to be when the timer runs.
+  let deepest = 0;
+  let sweepQueued = false;
+  const sweep = () => {
+    sweepQueued = false;
+    for (const el of [...revealables]) {
+      const docTop = el.getBoundingClientRect().top + window.scrollY;
+      if (docTop < deepest - window.innerHeight * 0.05) show(el);
+    }
+    if (revealables.size === 0) {
+      window.removeEventListener('scroll', queueSweep);
+      window.removeEventListener('resize', queueSweep);
+    }
+  };
+  const queueSweep = () => {
+    deepest = Math.max(deepest, window.scrollY + window.innerHeight);
+    if (!sweepQueued) {
+      sweepQueued = true;
+      setTimeout(sweep, 150);
+    }
+  };
+  window.addEventListener('scroll', queueSweep, { passive: true });
+  window.addEventListener('resize', queueSweep);
+  queueSweep();
+  
+  // ── Count-ups (Magic UI number-ticker pattern) ─────────────────────────
+  if (!reduced) {
+    const fmt = new Intl.NumberFormat('en-US');
+    const cio = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          cio.unobserve(e.target);
+          const el = e.target;
+          const target = Number(el.dataset.count);
+          const t0 = performance.now();
+          const dur = 1100;
+          const tick = (t) => {
+            const p = Math.min(1, (t - t0) / dur);
+            const eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = fmt.format(Math.round(target * eased));
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        }
+      },
+      { threshold: 0.6 },
+    );
+    document.querySelectorAll('.countup').forEach((el) => cio.observe(el));
+  }
+  
+</script>
