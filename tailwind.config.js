@@ -5,6 +5,12 @@ export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
+    // This script emits real user-facing HTML (the 8 prerendered SPA routes —
+    // the first paint and the only thing a crawler sees), so its classes must
+    // be scanned like any component's. Until it was listed here its styling
+    // survived purely by coincidence — every class it used happened to also be
+    // used somewhere under src/ — and the design sweep ended the coincidence.
+    "./scripts/prerender-spa-routes.mjs",
   ],
   theme: {
     extend: {
