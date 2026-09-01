@@ -90,12 +90,30 @@
    element on every screen. A scoped .dm-scope copy already shipped the correct
    teal; that copy is gone now that the global rule is right. */
 *:focus-visible {
-  @apply outline-none ring-2 ring-siegel ring-offset-2 ring-offset-paper;
+  @apply outline-none ring-[3px] ring-siegel ring-offset-2 ring-offset-paper;
 }
 
 /* Selection colour — same reason. Was bg-amber-200 / text-amber-900. */
 ::selection {
   @apply bg-siegel-wash text-ink;
+}
+
+/* Motion gate — the whole Playful Depth motion system (springs, pops,
+   confetti, hover lifts) collapses to near-instant for anyone who asked their
+   OS for reduced motion. An exam-stressed learner gets stillness with one
+   setting; press feedback (a direct pointer response) survives because 0.01ms
+   still lands the pressed state. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 /* Print styles */
