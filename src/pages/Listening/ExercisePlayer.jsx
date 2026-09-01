@@ -1,24 +1,27 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { ArrowLeft, Send } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useExerciseDetails, useSaveProgress } from '../../hooks/useListening';
-import { calculateScore, allQuestionsAnswered, getAudioUrl, getLevelTheme } from '../../utils/listeningHelpers';
+import { calculateScore, allQuestionsAnswered, getAudioUrl } from '../../utils/listeningHelpers';
 import AudioPlayer from '../../components/listening/AudioPlayer';
 import QuestionCard from '../../components/listening/QuestionCard';
 import ResultsView from '../../components/listening/ResultsView';
 import SEO from '../../components/SEO';
+import Button from '../../components/ui/Button.jsx';
+import Card from '../../components/ui/Card.jsx';
+import Chip from '../../components/ui/Chip.jsx';
+import SectionHeading from '../../components/ui/SectionHeading.jsx';
+import Reveal from '../../components/ui/Reveal.jsx';
 
 const ExercisePlayer = () => {
   const { level, exerciseNumber } = useParams();
   const navigate = useNavigate();
   const { i18n } = useTranslation();
   const isGerman = i18n.language === 'de';
-  // The route level is lowercase (/listening/a1.1/…); the theme table is keyed
-  // on the DB's uppercase form — normalize before every lookup / display.
+  // The route level is lowercase (/listening/a1.1/…); the DB and the storage
+  // folders use the uppercase form — normalize before every display.
   const levelKey = (level || '').toUpperCase();
-  const theme = getLevelTheme(levelKey);
 
   const { exercise, dialogues, questions, loading, error } = useExerciseDetails(level, exerciseNumber);
   const { saveProgress } = useSaveProgress();
@@ -62,23 +65,22 @@ const ExercisePlayer = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-24 flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full" />
+      <div className="min-h-screen bg-paper pt-24 flex items-center justify-center" role="status" aria-label="Loading">
+        <div className="animate-spin w-8 h-8 border-4 border-rule border-t-siegel rounded-full" aria-hidden="true" />
       </div>
     );
   }
 
   if (error || !exercise) {
     return (
-      <div className="min-h-screen pt-24 px-4">
-        <div className="max-w-3xl mx-auto text-center py-16">
-          <p className="text-slate-500 mb-4">{error || (isGerman ? 'Übung nicht gefunden.' : 'Exercise not found.')}</p>
-          <button
-            onClick={() => navigate(`/listening/${(level || '').toLowerCase()}`)}
-            className="text-indigo-500 hover:underline"
-          >
-            {isGerman ? 'Zurück zu den Übungen' : 'Back to exercises'}
-          </button>
+      <div className="min-h-screen bg-paper pt-24 px-4">
+        <div className="max-w-3xl mx-auto py-16">
+          <Card className="p-8 text-center">
+            <p className="text-graphite mb-6">{error || (isGerman ? 'Übung nicht gefunden.' : 'Exercise not found.')}</p>
+            <Button onClick={() => navigate(`/listening/${(level || '').toLowerCase()}`)}>
+              {isGerman ? 'Zurück zu den Übungen' : 'Back to exercises'}
+            </Button>
+          </Card>
         </div>
       </div>
     );
@@ -88,7 +90,7 @@ const ExercisePlayer = () => {
   const allAnswered = allQuestionsAnswered(questions, answers);
 
   return (
-    <div className="min-h-screen pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-paper font-body text-ink pt-24 pb-12 px-4 sm:px-6 lg:px-8">
       <SEO
         title={`Listening Exercise ${exerciseNumber} - German ${levelKey}`}
         description={`German listening comprehension exercise ${exerciseNumber} for level ${levelKey}. Listen to native speaker dialogues and answer questions.`}
@@ -96,15 +98,15 @@ const ExercisePlayer = () => {
       />
       <div className="max-w-3xl mx-auto">
         {/* Back button */}
-        <motion.button
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={() => navigate(`/listening/${(level || '').toLowerCase()}`)}
-          className="flex items-center gap-2 text-slate-500 hover:text-slate-700 transition-colors mb-6"
+          className="mb-4 -ml-3"
         >
           <ArrowLeft size={18} />
           {levelKey} - {isGerman ? 'Übungen' : 'Exercises'}
-        </motion.button>
+        </Button>
 
         {/* If submitted, show results */}
         {submitted ? (
@@ -127,38 +129,31 @@ const ExercisePlayer = () => {
         ) : (
           <div className="space-y-6">
             {/* Exercise header */}
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <h1 className="text-2xl font-display font-bold text-slate-800 mb-1">
-                {exercise.title || `${isGerman ? 'Übung' : 'Exercise'} ${exerciseNumber}`}
-              </h1>
-              {exercise.description && (
-                <p className="text-slate-500">{exercise.description}</p>
-              )}
-            </motion.div>
+            <div>
+              <Chip tone="label" className="mb-3">{levelKey}</Chip>
+              <SectionHeading
+                level={1}
+                title={exercise.title || `${isGerman ? 'Übung' : 'Exercise'} ${exerciseNumber}`}
+                lead={exercise.description || undefined}
+              />
+            </div>
 
             {/* Audio player */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-            >
+            <Reveal delay={80}>
               <AudioPlayer
                 src={audioUrl}
                 onPlayCountChange={setPlaysUsed}
               />
-              <p className="text-xs text-slate-400 mt-2 text-center">
+              <p className="font-data text-[0.6875rem] text-graphite mt-2 text-center">
                 {isGerman
                   ? 'Höre dir den Dialog an und beantworte die Fragen unten.'
                   : 'Listen to the dialogue and answer the questions below.'}
               </p>
-            </motion.div>
+            </Reveal>
 
             {/* Questions */}
             <div className="space-y-4">
-              <h3 className="font-display font-semibold text-slate-700">
+              <h3 className="font-display text-[1.0625rem] font-semibold text-ink">
                 {isGerman ? 'Fragen' : 'Questions'} ({Object.keys(answers).length}/{questions.length})
               </h3>
               {questions.map((q, i) => (
@@ -172,23 +167,19 @@ const ExercisePlayer = () => {
               ))}
             </div>
 
-            {/* Submit button */}
-            <motion.button
-              whileTap={{ scale: 0.98 }}
+            {/* Submit button — the one primary action on this screen */}
+            <Button
+              size="lg"
+              shimmer
               onClick={handleSubmit}
               disabled={!allAnswered || saving}
-              className={`w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold text-white transition-all ${
-                allAnswered
-                  ? 'hover:opacity-90 shadow-lg'
-                  : 'opacity-50 cursor-not-allowed'
-              }`}
-              style={{ backgroundColor: allAnswered ? theme.primary : '#94a3b8' }}
+              className="w-full"
             >
               <Send size={18} />
               {saving
                 ? (isGerman ? 'Wird gespeichert...' : 'Saving...')
                 : (isGerman ? 'Antworten abgeben' : 'Submit Answers')}
-            </motion.button>
+            </Button>
           </div>
         )}
       </div>

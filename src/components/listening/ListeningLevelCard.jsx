@@ -1,18 +1,24 @@
-import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Headphones, CheckCircle, ChevronRight, Lock } from 'lucide-react';
-import { getLevelTheme, getLevelSubtitle } from '../../utils/listeningHelpers';
+import { getLevelSubtitle } from '../../utils/listeningHelpers';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 import { useSubscription } from '../../contexts/SubscriptionContext';
 import { isLevelFree } from '../../config/freeTier';
+import Card from '../ui/Card.jsx';
+import Chip from '../ui/Chip.jsx';
 
-const ListeningLevelCard = ({ level, totalExercises, completedExercises, index }) => {
+// One level in the /listening picker: an interactive clay card.
+//
+// The per-level hue this card used to paint (getLevelTheme's eight-colour CEFR
+// ramp) is gone: design-tokens.js rule 1 reserves colour for case, so the
+// level is carried by a `<Chip tone="label">` code on a neutral surface, and
+// progress rides the one interactive colour.
+const ListeningLevelCard = ({ level, totalExercises, completedExercises }) => {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
   const { user } = useAuth();
   const { hasAccess } = useSubscription();
-  const theme = getLevelTheme(level);
   const subtitle = getLevelSubtitle(level, i18n.language);
   // `level` is the DB value ("A1.1") but routes are lowercase — lowercase it so
   // there is exactly one URL per level page.
@@ -23,61 +29,50 @@ const ListeningLevelCard = ({ level, totalExercises, completedExercises, index }
   const isComplete = totalExercises > 0 && completedExercises === totalExercises;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05 }}
-      whileHover={{ scale: 1.02, y: -4 }}
+    <Card
+      interactive
+      as="button"
+      type="button"
+      edge={isComplete ? 'limette' : 'paper'}
       onClick={() => navigate(levelPath)}
-      className="relative cursor-pointer rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+      className="block w-full h-full p-5 text-left"
     >
-      {/* Top accent bar */}
-      <div
-        className="absolute top-0 left-0 right-0 h-1"
-        style={{ backgroundColor: theme.primary }}
-      />
-
       <div className="flex items-start gap-4">
         {/* Icon */}
         <div
-          className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ backgroundColor: `${theme.primary}15` }}
+          className="w-12 h-12 rounded-clay bg-siegel-wash text-siegel flex items-center justify-center flex-shrink-0"
+          data-atropos-offset="6"
         >
-          <Headphones size={24} style={{ color: theme.primary }} />
+          <Headphones size={24} />
         </div>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <h3 className="font-display font-semibold text-lg text-slate-800">{level}</h3>
-            {free && (
-              <span className="px-2 py-0.5 rounded-full text-[10px] bg-emerald-100 text-emerald-700 font-semibold">FREE</span>
-            )}
-            {locked && <Lock size={14} className="text-slate-400" />}
-            {isComplete && <CheckCircle size={16} className="text-emerald-500" />}
+            <h3 className="font-display font-semibold text-[1.0625rem] text-ink">{level}</h3>
+            {free && <Chip tone="limette">FREE</Chip>}
+            {locked && <Lock size={14} className="text-graphite" />}
+            {isComplete && <CheckCircle size={16} className="text-accent-limette-ink" />}
           </div>
-          <p className="text-sm text-slate-500 mb-3">{subtitle}</p>
+          <p className="text-sm text-graphite mb-3">{subtitle}</p>
 
           {/* Progress bar */}
-          <div className="w-full bg-slate-100 rounded-full h-2 mb-1.5">
-            <motion.div
-              className="h-2 rounded-full"
-              style={{ backgroundColor: theme.primary }}
-              initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.8, ease: 'easeOut' }}
+          <div className="w-full h-2 mb-1.5 overflow-hidden rounded-pill bg-paper-sunk">
+            <div
+              className={`h-full rounded-pill ${isComplete ? 'bg-accent-limette' : 'bg-siegel'}`}
+              style={{ width: `${progress}%` }}
             />
           </div>
-          <div className="flex justify-between text-xs text-slate-400">
+          <div className="flex justify-between font-data text-[0.6875rem] text-graphite">
             <span>{completedExercises}/{totalExercises} exercises</span>
             <span>{progress}%</span>
           </div>
         </div>
 
         {/* Arrow */}
-        <ChevronRight size={20} className="text-slate-300 flex-shrink-0 mt-1" />
+        <ChevronRight size={20} className="text-graphite flex-shrink-0 mt-1" />
       </div>
-    </motion.div>
+    </Card>
   );
 };
 
