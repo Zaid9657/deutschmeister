@@ -5,6 +5,12 @@ per the revenue plan's P0 (docs/revenue-plan-2026-08-31.md). Audience: the
 ~1,003 confirmed-email accounts, in English (every existing transactional email
 is English; the German sales page is fine for actual B1-level buyers).
 
+**Refreshed 2026-09-01 after the renovation shipped:** the included Pro window
+now also covers the timed telc B1 practice exam and the AI writing feedback
+(both live in production; course buyers get pro tier via the webhook —
+verified in `lemonsqueezy-webhook.mjs`). Emails 1 and 3 sell them; every
+figure still derives (writing quota = `PRO_WRITING_EVALUATIONS_PER_MONTH`).
+
 **Claims discipline applied:** €89 list and €49 with START49 match the Lemon
 Squeezy product + the €40 fixed code; the code expiry (2026-09-14) is real —
 **do not send email 4 unless the code genuinely expires that day**; no outcome
@@ -49,6 +55,8 @@ Checkout with code prefilled:
 
 <p>The <strong>telc B1 Komplettvorbereitung</strong> is a fixed 4-week plan over everything DeutschMeister already has: 20 daily tasks, in the order that leads to the exam. Grammar lesson by lesson, listening, reading, AI speaking practice — each day one tick-off task, ending with a full exam-orientation week. Three months of full Pro access are included, so there's nothing extra to subscribe to.</p>
 
+<p>And since this week, Pro includes two things built exactly for exam candidates: a <strong>timed telc-style practice test</strong> that scores you against the documented pass threshold, and <strong>AI feedback on your exam letters</strong> — graded on the same four criteria the examiners use, with concrete corrections. Your exam week in the plan uses both.</p>
+
 <p>It's a one-time purchase: <strong>€89</strong>. And because you were here before this existed, the launch code <strong>START49</strong> takes it to <strong>€49</strong> until September 14.</p>
 
 <p><a href="https://deutsch-meister.de/telc-b1-komplettvorbereitung/"><strong>See exactly what's in the 4 weeks →</strong></a></p>
@@ -91,7 +99,7 @@ Checkout with code prefilled:
 
 <p>A few of you asked good questions about the telc B1 Komplettvorbereitung. Short and honest:</p>
 
-<p><strong>"What do I actually get?"</strong> A fixed 20-day plan over the DeutschMeister library — the sequence, not a pile of material. Each day one task: which grammar topic, which listening set, when to do your first timed speaking. Plus 3 months of full Pro access included, and the course area stays yours permanently.</p>
+<p><strong>"What do I actually get?"</strong> A fixed 20-day plan over the DeutschMeister library — the sequence, not a pile of material. Each day one task: which grammar topic, which listening set, when to do your first timed speaking. Plus 3 months of full Pro access included — which now also covers the timed telc-style practice test with automatic scoring and the AI writing feedback on exam letters — and the course area stays yours permanently.</p>
 
 <p><strong>"I already have Pro — does this make sense?"</strong> Only if the plan itself is worth €49 to you. Pro gives you the library; the course tells you what to do with it, day by day, until the exam. If you're self-directed and on track, you don't need it.</p>
 

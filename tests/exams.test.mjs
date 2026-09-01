@@ -55,6 +55,23 @@ test('every exam track is well-formed and resolvable', () => {
   }
 });
 
+test('hasMock/hasWriting flags match the actual content modules', async () => {
+  const { MOCK_EXAMS } = await import('../src/data/mockExams/index.js');
+  const { WRITING_TASKS } = await import('../src/data/writingTasks.js');
+  for (const t of EXAM_TRACKS) {
+    assert.equal(
+      !!t.hasMock,
+      !!MOCK_EXAMS[t.key],
+      `${t.key}: hasMock=${t.hasMock} but mock content ${MOCK_EXAMS[t.key] ? 'exists' : 'does not exist'} — the hub would advertise a tool that ${t.hasMock ? "isn't there" : 'exists unlinked'}`
+    );
+    assert.equal(
+      !!t.hasWriting,
+      WRITING_TASKS.some((w) => w.examKey === t.key),
+      `${t.key}: hasWriting flag drifted from the writing task bank`
+    );
+  }
+});
+
 test('every track has a hub copy entry in the exams data module', () => {
   for (const t of EXAM_TRACKS) {
     assert.ok(hubsSrc.includes(`${t.key}:`), `HUB_COPY missing for ${t.key}`);

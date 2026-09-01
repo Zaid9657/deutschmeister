@@ -74,6 +74,9 @@ const HUB_COPY = {
 };
 
 // The preparation path, derived from the track's library sublevels + counts.
+// The two exam tools appear only where their content exists (hasMock /
+// hasWriting on the shared registry, drift-pinned by tests/exams.test.mjs).
+// Both are SPA routes behind a login — full-load links, no trailing slash.
 function buildPath(track) {
   const levelLinks = track.sublevels
     .map((s) => `<a href="/grammar/${s}/">${s.toUpperCase()}</a>`)
@@ -107,8 +110,26 @@ function buildPath(track) {
       href: '/speaking/',
       linkLabel: 'Sprechtraining öffnen',
     },
+    ...(track.hasWriting
+      ? [{
+          eyebrow: 'Schritt 5 · Schreiben',
+          title: 'Der Brief, den die Prüfung will',
+          body: 'Schreib die Prüfungsaufgabe (Brief/E-Mail mit Leitpunkten) und die KI bewertet nach den vier Kriterien — Aufgabe, Aufbau, Korrektheit, Wortschatz — mit konkreten Korrekturen.',
+          href: '/schreiben',
+          linkLabel: 'Schreibtraining öffnen',
+        }]
+      : []),
+    ...(track.hasMock
+      ? [{
+          eyebrow: 'Ernstfall-Check',
+          title: 'Der Ernstfall vor dem Ernstfall',
+          body: 'Ein Übungstest im Stil der Prüfung, mit Zeitlimit und automatischer Auswertung gegen die dokumentierte Bestehensgrenze — damit dein erster Testlauf nicht der Prüfungstag ist.',
+          href: '/modelltest',
+          linkLabel: 'Übungstest starten',
+        }]
+      : []),
     {
-      eyebrow: 'Schritt 5 · Format',
+      eyebrow: 'Format verstehen',
       title: 'Die Prüfung selbst verstehen',
       body: 'Aufbau, Punkte, Bestehensgrenzen und die häufigsten Fehler — im kostenlosen Leitfaden, mit geprüften Fakten und Quellen.',
       href: `/leitfaden/${track.guideSlug}/`,

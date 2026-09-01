@@ -26,6 +26,11 @@ export const EXAM_TRACKS = [
     guideSlug: 'telc-b1',
     // The one exam with a purchasable course today (see src/data/pricing.js COURSES)
     courseHref: '/telc-b1-komplettvorbereitung/',
+    // Which exam tools have content for this track. Pinned against the actual
+    // content modules by tests/exams.test.mjs — a flag here can never drift
+    // from src/data/mockExams / src/data/writingTasks.
+    hasMock: true,
+    hasWriting: true,
   },
   {
     key: 'goethe_b1',
@@ -35,6 +40,8 @@ export const EXAM_TRACKS = [
     sublevels: ['b1.1', 'b1.2'],
     guideSlug: 'goethe-b1',
     courseHref: null,
+    hasMock: false,
+    hasWriting: false,
   },
   {
     key: 'dtz',
@@ -44,6 +51,8 @@ export const EXAM_TRACKS = [
     sublevels: ['a2.2', 'b1.1'],
     guideSlug: 'dtz',
     courseHref: null,
+    hasMock: false,
+    hasWriting: false,
   },
   {
     key: 'telc_b2',
@@ -53,6 +62,8 @@ export const EXAM_TRACKS = [
     sublevels: ['b2.1', 'b2.2'],
     guideSlug: 'telc-b2',
     courseHref: null,
+    hasMock: false,
+    hasWriting: true,
   },
 ];
 

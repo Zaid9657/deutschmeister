@@ -46,7 +46,7 @@ const canonical = 'https://deutsch-meister.de/telc-b1-komplettvorbereitung/';
 const FAQS = [
   {
     q: 'Was ist der Unterschied zum Pro-Abo?',
-    a: `Pro ist die Bibliothek: alle ${LEVEL_COUNT} Niveaustufen, alle ${GRAMMAR_TOPIC_COUNT} Grammatikthemen, Hören, Lesen, Sprechen. Der Kurs ist der Plan darüber: eine feste Reihenfolge von ${PLAN_DAYS} Tagesaufgaben, die auf die telc B1-Prüfung zuläuft — und ${course.proMonths} Monate Pro sind schon enthalten.`,
+    a: `Pro ist die Bibliothek: alle ${LEVEL_COUNT} Niveaustufen, alle ${GRAMMAR_TOPIC_COUNT} Grammatikthemen, Hören, Lesen, Sprechen — plus der telc B1 Übungstest und das KI-Schreibtraining. Der Kurs ist der Plan darüber: eine feste Reihenfolge von ${PLAN_DAYS} Tagesaufgaben, die auf die telc B1-Prüfung zuläuft — und ${course.proMonths} Monate Pro sind schon enthalten.`,
   },
   {
     q: 'Brauche ich zusätzlich ein Abo?',
@@ -184,6 +184,7 @@ const WEEKS = [
           <ul class="mt-5 space-y-2 text-[0.9375rem] leading-relaxed">
             <li>✓ Der komplette {PLAN_DAYS}-Tage-Plan mit Fortschritts-Checkliste — dauerhaft deiner</li>
             <li>✓ {course.proMonths} Monate voller Pro-Zugang: alle {GRAMMAR_TOPIC_COUNT} Grammatikthemen, Hören, Lesen, KI-Sprechen, Satz-Röntgen</li>
+            <li>✓ Der telc B1 Übungstest mit Zeitlimit und Auswertung — und das KI-Schreibtraining nach den Prüfungskriterien (im Pro-Zugang enthalten)</li>
             <li>✓ Prüfungswoche mit Format, Bewertung und Selbsttest</li>
           </ul>
           {checkoutUrl && (
