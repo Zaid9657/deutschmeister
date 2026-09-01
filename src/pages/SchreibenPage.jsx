@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { PenTool, Loader2, CheckCircle, XCircle, Sparkles } from 'lucide-react';
+import { PenTool, Loader2, CheckCircle, XCircle, Sparkles, AlertTriangle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { supabase, getAuthHeaders } from '../utils/supabase';
@@ -8,6 +8,17 @@ import { EXAM_TRACKS, examTrackBySlug, MOCK_DISCLAIMER_DE } from '../data/examTr
 import { WRITING_TASKS, writingTasksForExam, MAX_WRITING_POINTS } from '../data/writingTasks';
 import CompletionMoment from '../components/CompletionMoment';
 import SEO from '../components/SEO';
+import Button from '../components/ui/Button.jsx';
+import Card from '../components/ui/Card.jsx';
+import Chip from '../components/ui/Chip.jsx';
+import SectionHeading from '../components/ui/SectionHeading.jsx';
+import Reveal from '../components/ui/Reveal.jsx';
+import Stat from '../components/ui/Stat.jsx';
+
+const FIELD = 'w-full rounded-clay border border-rule bg-white px-4 py-3 text-sm text-ink placeholder:text-graphite focus:border-siegel focus:outline-none';
+const CRITERIA = [['task', 'Aufgabe'], ['structure', 'Aufbau'], ['accuracy', 'Korrektheit'], ['vocabulary', 'Wortschatz']];
+// Each criterion carries an equal share of the server's maximum (derive, never retype).
+const CRITERION_MAX = MAX_WRITING_POINTS / CRITERIA.length;
 
 // /schreiben — exam-style writing with AI feedback (renovation Phase 5b).
 // The grading happens server-side (netlify/functions/evaluate-writing.mjs,
@@ -90,50 +101,71 @@ const SchreibenPage = () => {
     setText('');
   };
 
+  const inRange = activeTask ? wordCount >= activeTask.minWords && wordCount <= activeTask.maxWords : false;
+
   return (
-    <div className="min-h-screen bg-paper pt-24 pb-12 px-4">
+    <div className="min-h-screen bg-paper text-ink pt-24 pb-12 px-4">
       <SEO title="Schreibtraining" description="Exam-style German writing with AI feedback." path="/schreiben" noindex />
       <div className="max-w-2xl mx-auto">
-        <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">Schreibtraining</p>
-        <h1 className="mt-2 font-display text-3xl font-semibold text-ink">
-          Der Brief, den die Prüfung von dir will
-        </h1>
-        <p className="mt-3 text-graphite leading-relaxed">
-          Schreib die Aufgabe unter echten Bedingungen, und die KI bewertet nach den vier
-          dokumentierten Kriterien: Aufgabe, Aufbau, Korrektheit, Wortschatz — mit konkreten Korrekturen.
-        </p>
+        <SectionHeading
+          size="page"
+          level={1}
+          eyebrow="Schreibtraining"
+          title="Der Brief, den die Prüfung von dir will"
+          lead="Schreib die Aufgabe unter echten Bedingungen, und die KI bewertet nach den vier dokumentierten Kriterien: Aufgabe, Aufbau, Korrektheit, Wortschatz — mit konkreten Korrekturen."
+        />
 
-        {/* Exam + task pickers */}
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
-          <label className="block">
+        {/* Exam picker */}
+        <Reveal delay={180} className="mt-6">
+          <label className="block sm:max-w-xs">
             <span className="block text-xs text-graphite mb-1">Prüfung</span>
             <select
               value={examKey}
               onChange={(e) => { setExamKey(e.target.value); setTaskKey(null); setResult(null); }}
-              className="w-full rounded-xl border border-rule bg-white px-3 py-2.5 text-sm text-ink"
+              className={FIELD}
             >
               {EXAM_TRACKS.filter((t) => WRITING_TASKS.some((w) => w.examKey === t.key)).map((t) => (
                 <option key={t.key} value={t.key}>{t.nameDe}</option>
               ))}
             </select>
           </label>
-          <label className="block">
-            <span className="block text-xs text-graphite mb-1">Aufgabe</span>
-            <select
-              value={activeTask?.taskKey || ''}
-              onChange={(e) => { setTaskKey(e.target.value); setResult(null); }}
-              className="w-full rounded-xl border border-rule bg-white px-3 py-2.5 text-sm text-ink"
-            >
-              {tasks.map((t) => (
-                <option key={t.taskKey} value={t.taskKey}>{t.title}</option>
-              ))}
-            </select>
-          </label>
-        </div>
+        </Reveal>
+
+        {/* Task picker — the cards a learner chooses from, so they press */}
+        {tasks.length > 0 && (
+          <div className="mt-4" role="radiogroup" aria-label="Aufgabe">
+            <span className="block text-xs text-graphite mb-2">Aufgabe</span>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {tasks.map((t, i) => {
+                const selected = activeTask?.taskKey === t.taskKey;
+                return (
+                  <Reveal key={t.taskKey} delay={80 * i}>
+                    <Card
+                      interactive
+                      as="button"
+                      type="button"
+                      role="radio"
+                      aria-checked={selected}
+                      edge={selected ? 'siegel' : 'paper'}
+                      tone={selected ? 'wash' : 'paper'}
+                      className={`w-full h-full p-4 text-left ${selected ? 'border-siegel' : ''}`}
+                      onClick={() => { setTaskKey(t.taskKey); setResult(null); }}
+                    >
+                      <span className="block font-bold text-ink">{t.title}</span>
+                      <span className="mt-1 block font-data text-[0.75rem] text-graphite">
+                        {t.register} · {t.minWords}–{t.maxWords} Wörter
+                      </span>
+                    </Card>
+                  </Reveal>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {activeTask && !result && (
           <>
-            <div className="mt-5 rounded-xl border border-rule bg-paper-sunk p-4">
+            <Card tone="sunk" className="mt-5 p-4">
               <p className="text-sm text-ink leading-relaxed">{activeTask.task}</p>
               <ul className="mt-2 space-y-1">
                 {activeTask.leitpunkte.map((p) => (
@@ -143,7 +175,7 @@ const SchreibenPage = () => {
               <p className="mt-2 font-data text-[0.75rem] text-graphite">
                 Register: {activeTask.register} · {activeTask.minWords}–{activeTask.maxWords} Wörter
               </p>
-            </div>
+            </Card>
 
             <div className="mt-4">
               <textarea
@@ -151,108 +183,126 @@ const SchreibenPage = () => {
                 onChange={(e) => setText(e.target.value)}
                 rows={12}
                 placeholder="Schreib deinen Text hier…"
-                className="w-full rounded-xl border border-rule bg-white p-4 text-sm text-ink leading-relaxed focus:border-siegel focus:outline-none"
+                className={`${FIELD} p-4 leading-relaxed`}
               />
-              <div className="mt-1.5 flex items-center justify-between">
-                <span className={`font-data text-[0.8125rem] ${
-                  wordCount >= activeTask.minWords && wordCount <= activeTask.maxWords
-                    ? 'text-siegel' : 'text-graphite'
-                }`}>
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                <Chip tone={inRange ? 'limette' : 'quiet'} size="md" className="font-data tabular-nums">
                   {wordCount} Wörter
-                </span>
-                <button
-                  onClick={submit}
-                  disabled={submitting || wordCount < 10}
-                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-siegel text-white text-sm font-semibold hover:bg-siegel-lift transition-colors disabled:opacity-50"
-                >
+                </Chip>
+                <Button shimmer onClick={submit} disabled={submitting || wordCount < 10}>
                   {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <PenTool className="w-4 h-4" />}
                   {submitting ? 'Wird bewertet…' : 'Bewerten lassen'}
-                </button>
+                </Button>
               </div>
             </div>
           </>
         )}
 
         {errorMsg && (
-          <p className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{errorMsg}</p>
+          <Card tone="himbeer" className="mt-4 flex items-start gap-2.5 border-accent-himbeer-ink/30 px-4 py-3 text-sm text-accent-himbeer-ink" role="alert">
+            <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
+            <span>{errorMsg}</span>
+          </Card>
         )}
 
         {result && (
           <div className="mt-6 space-y-5">
-            <div className="rounded-2xl border border-rule bg-white p-6 text-center">
-              <p className="font-display text-4xl font-semibold text-ink">
-                {result.total_score}<span className="text-xl text-graphite"> / {MAX_WRITING_POINTS}</span>
-              </p>
-              <p className="mt-2 text-sm text-graphite leading-relaxed">{result.feedback}</p>
-              <p className="mt-3 font-data text-[0.75rem] text-graphite">
-                Einschätzung nach Prüfungskriterien — keine offizielle Bewertung und keine Vorhersage deines Ergebnisses.
-              </p>
-            </div>
+            {/* Feedback — the readout is reference material, flat */}
+            <Reveal>
+              <Card className="p-6 text-center">
+                <div className="flex items-end justify-center gap-1">
+                  <Stat value={result.total_score} size="lg" />
+                  <span className="pb-1 font-display text-xl text-graphite">/ {MAX_WRITING_POINTS}</span>
+                </div>
+                <p className="mt-3 text-sm text-graphite leading-relaxed">{result.feedback}</p>
+                <p className="mt-3 font-data text-[0.75rem] text-graphite">
+                  Einschätzung nach Prüfungskriterien — keine offizielle Bewertung und keine Vorhersage deines Ergebnisses.
+                </p>
+              </Card>
+            </Reveal>
 
-            <div className="rounded-2xl border border-rule bg-white p-5">
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {[['task', 'Aufgabe'], ['structure', 'Aufbau'], ['accuracy', 'Korrektheit'], ['vocabulary', 'Wortschatz']].map(([key, label]) => (
-                  <div key={key} className="text-center">
-                    <p className="font-display text-xl font-semibold text-ink">{result.scores?.[key] ?? '–'}<span className="text-sm text-graphite">/5</span></p>
-                    <p className="text-[0.75rem] text-graphite mt-0.5">{label}</p>
-                  </div>
-                ))}
-              </div>
-              {Array.isArray(result.leitpunkt_check) && activeTask && (
-                <ul className="mt-4 border-t border-rule pt-3 space-y-1.5">
-                  {activeTask.leitpunkte.map((p, i) => (
-                    <li key={p} className="flex items-start gap-2 text-sm">
-                      {result.leitpunkt_check[i]
-                        ? <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
-                        : <XCircle className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />}
-                      <span className="text-graphite">{p}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+            {/* The four criteria as reference rows with siegel progress */}
+            <Reveal delay={90}>
+              <Card className="overflow-hidden">
+                {CRITERIA.map(([key, label]) => {
+                  const score = result.scores?.[key];
+                  const pct = typeof score === 'number' ? Math.max(0, Math.min(100, (score / CRITERION_MAX) * 100)) : 0;
+                  return (
+                    <div key={key} className="px-5 py-3.5 border-b border-rule last:border-b-0">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-sm font-bold text-ink">{label}</span>
+                        <span className="font-data text-[0.8125rem] text-graphite">{score ?? '–'}/{CRITERION_MAX}</span>
+                      </div>
+                      <div className="h-2 rounded-pill bg-paper-sunk overflow-hidden">
+                        <div className="h-full rounded-pill bg-siegel" style={{ width: `${pct}%` }} />
+                      </div>
+                    </div>
+                  );
+                })}
+                {Array.isArray(result.leitpunkt_check) && activeTask && (
+                  <ul className="px-5 py-4 bg-paper-sunk space-y-1.5">
+                    {activeTask.leitpunkte.map((p, i) => (
+                      <li key={p} className="flex items-start gap-2 text-sm">
+                        {result.leitpunkt_check[i]
+                          ? <CheckCircle className="w-4 h-4 text-accent-limette-ink mt-0.5 shrink-0" />
+                          : <XCircle className="w-4 h-4 text-accent-himbeer-ink mt-0.5 shrink-0" />}
+                        <span className="text-graphite">{p}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </Card>
+            </Reveal>
 
             {Array.isArray(result.corrections) && result.corrections.length > 0 && (
-              <div className="rounded-2xl border border-rule bg-white p-5">
-                <p className="text-sm font-semibold text-ink mb-3">Korrekturen</p>
-                <ul className="space-y-3">
-                  {result.corrections.map((c, i) => (
-                    <li key={i} className="text-sm leading-relaxed">
-                      <span className="text-red-600 line-through">{c.original}</span>
-                      {' → '}
-                      <span className="text-emerald-700 font-medium">{c.corrected}</span>
-                      {c.note && <span className="block text-graphite text-[0.8125rem] mt-0.5">{c.note}</span>}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <Reveal delay={180}>
+                <Card className="p-5">
+                  <p className="text-sm font-bold text-ink mb-3">Korrekturen</p>
+                  <ul className="space-y-3">
+                    {result.corrections.map((c, i) => (
+                      <li key={i} className="text-sm leading-relaxed">
+                        <span className="text-accent-himbeer-ink line-through">{c.original}</span>
+                        {' → '}
+                        <span className="text-accent-limette-ink font-bold">{c.corrected}</span>
+                        {c.note && <span className="block text-graphite text-[0.8125rem] mt-0.5">{c.note}</span>}
+                      </li>
+                    ))}
+                  </ul>
+                </Card>
+              </Reveal>
             )}
 
-            <CompletionMoment
-              headline="Text bewertet!"
-              detail={`Noch ${Math.max(0, (result.limit ?? 0) - (result.used ?? 0))} Bewertung(en) in deinem Kontingent.`}
-              nextLabel="Nächste Aufgabe schreiben"
-              onNext={reset}
-            />
+            <Reveal delay={270}>
+              <CompletionMoment
+                headline="Text bewertet!"
+                detail={(
+                  <span className="font-data text-[0.8125rem]">
+                    {`Noch ${Math.max(0, (result.limit ?? 0) - (result.used ?? 0))} Bewertung(en) in deinem Kontingent.`}
+                  </span>
+                )}
+                nextLabel="Nächste Aufgabe schreiben"
+                onNext={reset}
+              />
+            </Reveal>
           </div>
         )}
 
         {history.length > 0 && !result && (
-          <div className="mt-10">
+          <Reveal className="mt-10">
             <p className="flex items-center gap-2 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
               <Sparkles className="w-3.5 h-3.5" /> Deine letzten Texte
             </p>
             <ul className="mt-3 space-y-2">
               {history.map((h) => (
-                <li key={h.id} className="flex items-center justify-between rounded-xl border border-rule bg-white px-4 py-3 text-sm">
+                <Card as="li" key={h.id} className="flex items-center justify-between px-4 py-3 text-sm">
                   <span className="text-graphite">
                     {new Date(h.created_at).toLocaleDateString('de-DE')} · {h.task_key}
                   </span>
-                  <span className="font-data font-semibold text-ink">{h.total_score}/{h.max_score}</span>
-                </li>
+                  <span className="font-data font-bold text-ink">{h.total_score}/{h.max_score}</span>
+                </Card>
               ))}
             </ul>
-          </div>
+          </Reveal>
         )}
 
         <p className="mt-10 font-data text-[0.75rem] leading-relaxed text-graphite">
