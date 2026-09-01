@@ -1,8 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { ArrowRight, BookOpen, Loader2 } from 'lucide-react';
 import SEO from '../components/SEO';
-import Button from '../components/ui/Button';
+import Button from '../components/ui/Button.jsx';
+import Card from '../components/ui/Card.jsx';
+import Chip from '../components/ui/Chip.jsx';
+import Reveal from '../components/ui/Reveal.jsx';
+import Aurora from '../components/ui/Aurora.jsx';
 
 const STORAGE_KEY = 'dm_intro_lang';
 const BASE_URL = 'https://omqyueddktqeyrrqvnyq.supabase.co/storage/v1/object/public/video-library/intro';
@@ -47,7 +50,7 @@ const IntroPage = () => {
   const handleCanPlay = () => setLoading(false);
 
   return (
-    <div className="min-h-screen bg-paper pt-20 pb-16">
+    <div className="min-h-screen bg-paper font-body text-ink pt-20 pb-16">
       <SEO
         title="Welcome to DeutschMeister"
         description="Watch our introduction video to learn how DeutschMeister helps you master German with grammar lessons, listening exercises, and AI speaking practice."
@@ -55,59 +58,46 @@ const IntroPage = () => {
       />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-8"
-        >
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="mx-auto mb-6 w-20 h-20 rounded-lg bg-siegel flex items-center justify-center"
-          >
-            <span className="text-white font-display font-bold text-4xl">D</span>
-          </motion.div>
-          <h1 className="font-display text-3xl sm:text-4xl font-bold text-ink mb-3">
-            Welcome to DeutschMeister
-          </h1>
-          <p className="text-lg text-graphite max-w-xl mx-auto">
-            Watch our introduction video to learn how DeutschMeister can help you master German
-          </p>
-        </motion.div>
+        <div className="relative overflow-hidden rounded-clay text-center mb-8 py-4">
+          <Aurora />
+          <div className="relative">
+            <div className="mx-auto mb-6 w-20 h-20 rounded-clay bg-siegel flex items-center justify-center animate-pop-in">
+              <span className="text-white font-display font-bold text-4xl">D</span>
+            </div>
+            <h1 className="hero-line font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] text-ink mb-3 sm:text-[3rem]">
+              Welcome to DeutschMeister
+            </h1>
+            <p
+              className="hero-line text-[1.0625rem] leading-relaxed text-graphite max-w-xl mx-auto sm:text-[1.1875rem]"
+              style={{ '--d': '120ms' }}
+            >
+              Watch our introduction video to learn how DeutschMeister can help you master German
+            </p>
+          </div>
+        </div>
 
-        {/* Language Selector */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-          className="flex flex-wrap justify-center gap-2 mb-6"
-        >
+        {/* Language Selector — pressable chips */}
+        <div className="flex flex-wrap justify-center gap-2 mb-6">
           {LANGUAGES.map(({ code, flag, label }) => (
-            <button
+            <Chip
               key={code}
+              size="md"
+              raised
+              tone={lang === code ? 'ink' : 'quiet'}
               onClick={() => switchLang(code)}
-              className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
-                lang === code
-                  ? 'bg-siegel text-white'
-                  : 'bg-white border border-rule text-graphite hover:border-siegel hover:shadow-sm'
-              }`}
+              aria-pressed={lang === code}
+              className="px-5 py-2.5"
             >
               {flag} {label}
-            </button>
+            </Chip>
           ))}
-        </motion.div>
+        </div>
 
-        {/* Video Player */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-10"
-        >
-          <div className="relative bg-black rounded-2xl overflow-hidden">
+        {/* Video Player — player chrome on ink, controls on siegel elsewhere */}
+        <Reveal className="mb-10">
+          <div className="relative bg-ink rounded-clay overflow-hidden border border-rule">
             {loading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/60 z-10">
+              <div className="absolute inset-0 flex items-center justify-center bg-ink/60 z-10">
                 <Loader2 className="w-10 h-10 animate-spin text-white" />
               </div>
             )}
@@ -124,35 +114,30 @@ const IntroPage = () => {
               Your browser does not support video.
             </video>
           </div>
-        </motion.div>
+        </Reveal>
 
         {/* CTA Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="bg-white rounded-3xl border border-rule p-8 sm:p-10 text-center"
-        >
-          <h2 className="font-display text-2xl sm:text-3xl font-bold text-ink mb-3">
-            Ready to start your German journey?
-          </h2>
-          <p className="text-graphite mb-8 max-w-lg mx-auto">
-            Structured lessons across 8 CEFR levels, interactive exercises, and AI-powered speaking practice — and A1.1 is free forever.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button to="/signup" size="lg" className="group">
-              Start Learning Free
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <a
-              href="/grammar/"
-              className="inline-flex items-center gap-2 px-6 py-4 border-2 border-rule text-ink font-semibold rounded-2xl hover:border-siegel hover:bg-siegel-wash transition-all"
-            >
-              <BookOpen className="w-5 h-5" />
-              Explore Grammar Topics
-            </a>
-          </div>
-        </motion.div>
+        <Reveal delay={90}>
+          <Card raised edge="siegel" className="p-8 sm:p-10 text-center">
+            <h2 className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink mb-3 sm:text-[2.125rem]">
+              Ready to start your German journey?
+            </h2>
+            <p className="text-[0.9375rem] leading-relaxed text-graphite mb-8 max-w-lg mx-auto sm:text-base">
+              Structured lessons across 8 CEFR levels, interactive exercises, and AI-powered speaking practice — and A1.1 is free forever.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              {/* The one primary action on this screen — the only shimmer. */}
+              <Button to="/signup" size="lg" shimmer className="group">
+                Start Learning Free
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+              <Button href="/grammar/" size="lg" variant="secondary">
+                <BookOpen className="w-5 h-5" />
+                Explore Grammar Topics
+              </Button>
+            </div>
+          </Card>
+        </Reveal>
       </div>
     </div>
   );

@@ -3,32 +3,28 @@ import DataState from '../components/DataState';
 import { withTimeout } from '../utils/withTimeout';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
 import { PlayCircle, Play, Video } from 'lucide-react';
 import { supabase } from '../utils/supabase';
 import { generateThumbnail, getCachedThumbnail } from '../utils/videoThumbnail';
 import SEO from '../components/SEO';
+import Button from '../components/ui/Button.jsx';
+import Card from '../components/ui/Card.jsx';
+import Chip from '../components/ui/Chip.jsx';
+import Reveal from '../components/ui/Reveal.jsx';
+import Aurora from '../components/ui/Aurora.jsx';
+import Tilt from '../components/ui/Tilt.jsx';
 
 const STORAGE_BASE = 'https://omqyueddktqeyrrqvnyq.supabase.co/storage/v1/object/public/video-library/';
 
-const LEVEL_COLORS = {
-  A1: { bg: 'bg-emerald-500', text: 'text-white', pillActive: 'bg-emerald-600 text-white' },
-  A2: { bg: 'bg-sky-500', text: 'text-white', pillActive: 'bg-sky-600 text-white' },
-  B1: { bg: 'bg-amber-500', text: 'text-white', pillActive: 'bg-amber-600 text-white' },
-  B2: { bg: 'bg-purple-500', text: 'text-white', pillActive: 'bg-purple-600 text-white' },
-};
-
-const THUMBNAIL_GRADIENTS = [
-  'from-indigo-400 via-purple-500 to-purple-600',
-  'from-orange-400 via-orange-500 to-red-500',
-  'from-emerald-400 via-teal-500 to-cyan-500',
-  'from-blue-400 via-indigo-500 to-purple-500',
-  'from-sky-400 via-blue-500 to-indigo-500',
-  'from-teal-400 via-cyan-500 to-blue-500',
-];
+// The main bands, in the order the filter pills render them. This used to be a
+// colour map (a fill and an active-pill colour per band) and the placeholder
+// thumbnails cycled six gradients — a level is not a grammatical case, and
+// colour means case (design-tokens.js rule 1). The band is a chip now and the
+// placeholder is one neutral siegel plate.
+const LEVEL_BANDS = ['A1', 'A2', 'B1', 'B2'];
 
 // Lazy thumbnail component — generates on intersection
-const VideoThumbnail = ({ videoId, audioUrl, index }) => {
+const VideoThumbnail = ({ videoId, audioUrl }) => {
   const [thumbnail, setThumbnail] = useState(() => getCachedThumbnail(videoId));
   const [loading, setLoading] = useState(false);
   const ref = useRef(null);
@@ -57,10 +53,8 @@ const VideoThumbnail = ({ videoId, audioUrl, index }) => {
     return () => observer.disconnect();
   }, [videoId, audioUrl, thumbnail]);
 
-  const gradient = THUMBNAIL_GRADIENTS[index % THUMBNAIL_GRADIENTS.length];
-
   return (
-    <div ref={ref} className={`relative aspect-video flex items-center justify-center overflow-hidden ${!thumbnail ? `bg-gradient-to-br ${gradient}` : 'bg-black'}`}>
+    <div ref={ref} className={`relative aspect-video flex items-center justify-center overflow-hidden ${thumbnail ? 'bg-ink' : 'bg-siegel'}`}>
       {thumbnail ? (
         <img
           src={thumbnail}
@@ -69,14 +63,14 @@ const VideoThumbnail = ({ videoId, audioUrl, index }) => {
         />
       ) : loading ? (
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-8 h-8 border-2 border-white/30 border-t-white/80 rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-white/30 border-t-white/80 rounded-pill animate-spin" />
         </div>
       ) : null}
 
       {/* Play button overlay — always visible */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${
-          thumbnail ? 'bg-black/40 group-hover:bg-black/60' : 'bg-white/40 group-hover:bg-white/70'
+        <div className={`w-14 h-14 rounded-pill flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${
+          thumbnail ? 'bg-ink/40 group-hover:bg-ink/60' : 'bg-white/40 group-hover:bg-white/70'
         }`}>
           <Play size={24} className="text-white ml-0.5" fill="white" />
         </div>
@@ -126,16 +120,11 @@ const VideoLibraryPage = () => {
       levelCounts[main] = (levelCounts[main] || 0) + 1;
     }
   });
-  const filterLevels = ['all', ...Object.keys(LEVEL_COLORS).filter(l => levelCounts[l])];
+  const filterLevels = ['all', ...LEVEL_BANDS.filter(l => levelCounts[l])];
 
   const filteredVideos = levelFilter === 'all'
     ? videos
     : videos.filter(v => v.level?.toUpperCase().startsWith(levelFilter));
-
-  const getLevelKey = (level) => {
-    if (!level) return null;
-    return level.toUpperCase().substring(0, 2);
-  };
 
   if (loading || error) {
     return (
@@ -146,7 +135,7 @@ const VideoLibraryPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-20 pb-12">
+    <div className="min-h-screen bg-paper font-body text-ink pt-20 pb-12">
       <SEO
         title="German Video Library"
         description="Watch free German learning videos with downloadable slides. Grammar explanations, vocabulary lessons, and topic summaries for all CEFR levels."
@@ -154,82 +143,70 @@ const VideoLibraryPage = () => {
       />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-14 h-14 rounded-2xl bg-siegel flex items-center justify-center">
-              <PlayCircle className="w-7 h-7 text-white" />
+        <div className="relative overflow-hidden rounded-clay mb-8 -mx-2 px-2 py-4 sm:-mx-4 sm:px-4">
+          <Aurora />
+          <div className="relative">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-14 h-14 rounded-clay bg-siegel flex items-center justify-center shrink-0">
+                <PlayCircle className="w-7 h-7 text-white" />
+              </div>
+              <div>
+                <Reveal
+                  as="h1"
+                  className="font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] sm:text-[3rem]"
+                >
+                  {isGerman ? 'Videothek' : 'Video Library'}
+                </Reveal>
+                <Reveal as="p" delay={60} className="mt-2 text-[0.9375rem] text-graphite">
+                  {isGerman
+                    ? 'Lerne Deutsch mit Videozusammenfassungen und Folien'
+                    : 'Learn German with video summaries and slides'}
+                </Reveal>
+              </div>
             </div>
-            <div>
-              <h1 className="font-display text-3xl sm:text-4xl font-bold text-slate-800">
-                {isGerman ? 'Videothek' : 'Video Library'}
-              </h1>
-              <p className="text-slate-600">
-                {isGerman
-                  ? 'Lerne Deutsch mit Videozusammenfassungen und Folien'
-                  : 'Learn German with video summaries and slides'}
-              </p>
-            </div>
+            <Reveal as="p" delay={120} className="max-w-2xl text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
+              {isGerman
+                ? 'Jedes Video fasst ein Grammatik- oder Vokabelthema zusammen. Schau dir das Video an, lade die Folien herunter und lerne in deinem eigenen Tempo.'
+                : 'Each video summarizes a grammar or vocabulary topic. Watch the video, download the slides, and learn at your own pace.'}
+            </Reveal>
           </div>
-          <p className="text-slate-500 max-w-2xl leading-relaxed">
-            {isGerman
-              ? 'Jedes Video fasst ein Grammatik- oder Vokabelthema zusammen. Schau dir das Video an, lade die Folien herunter und lerne in deinem eigenen Tempo.'
-              : 'Each video summarizes a grammar or vocabulary topic. Watch the video, download the slides, and learn at your own pace.'}
-          </p>
-        </motion.div>
+        </div>
 
-        {/* Filter Pills */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-8"
-        >
+        {/* Filter Pills — pressable chips */}
+        <div className="mb-8">
           <div className="flex flex-wrap gap-2">
             {filterLevels.map(level => {
               const isActive = levelFilter === level;
               const count = level === 'all' ? videos.length : (levelCounts[level] || 0);
-              const colors = LEVEL_COLORS[level];
 
               return (
-                <button
+                <Chip
                   key={level}
+                  raised
+                  tone={isActive ? 'ink' : 'quiet'}
                   onClick={() => setLevelFilter(level)}
-                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
-                    isActive
-                      ? level === 'all'
-                        ? 'bg-slate-800 text-white shadow-md'
-                        : `${colors?.pillActive || 'bg-slate-800 text-white'} shadow-md`
-                      : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-300 hover:shadow-sm'
-                  }`}
+                  aria-pressed={isActive}
                 >
                   {level === 'all' ? (isGerman ? 'Alle' : 'All') : level}
-                  <span className={`ml-1.5 ${isActive ? 'opacity-80' : 'opacity-50'}`}>
+                  <span className={isActive ? 'opacity-80' : 'opacity-60'}>
                     ({count})
                   </span>
-                </button>
+                </Chip>
               );
             })}
           </div>
-        </motion.div>
+        </div>
 
         {/* Video Grid */}
         {filteredVideos.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center py-20"
-          >
-            <div className="w-20 h-20 mx-auto mb-5 rounded-2xl bg-slate-100 flex items-center justify-center">
-              <Video size={36} className="text-slate-300" />
+          <Reveal className="text-center py-20">
+            <div className="w-20 h-20 mx-auto mb-5 rounded-clay bg-paper-sunk flex items-center justify-center">
+              <Video size={36} className="text-graphite/60" />
             </div>
-            <h3 className="text-lg font-semibold text-slate-700 mb-2">
+            <h3 className="font-display text-lg font-semibold text-ink mb-2">
               {isGerman ? 'Keine Videos gefunden' : 'No videos found'}
             </h3>
-            <p className="text-slate-500 max-w-sm mx-auto">
+            <p className="text-graphite max-w-sm mx-auto">
               {levelFilter !== 'all'
                 ? (isGerman
                   ? `Noch keine Videos für ${levelFilter} verfügbar. Schau dir die anderen Stufen an!`
@@ -239,60 +216,56 @@ const VideoLibraryPage = () => {
                   : 'New videos will be added soon.')}
             </p>
             {levelFilter !== 'all' && (
-              <button
-                onClick={() => setLevelFilter('all')}
-                className="mt-4 px-5 py-2 rounded-full bg-slate-100 text-slate-700 text-sm font-medium hover:bg-slate-200 transition-colors"
-              >
+              <Button variant="secondary" size="sm" className="mt-4" onClick={() => setLevelFilter('all')}>
                 {isGerman ? 'Alle anzeigen' : 'Show all'}
-              </button>
+              </Button>
             )}
-          </motion.div>
+          </Reveal>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredVideos.map((video, index) => {
-              const levelKey = getLevelKey(video.level);
-              const levelColors = LEVEL_COLORS[levelKey];
+              const card = (
+                <Card
+                  interactive
+                  as={Link}
+                  to={`/video-library/${video.id}`}
+                  className="group block h-full overflow-hidden"
+                >
+                  {/* Thumbnail */}
+                  <div className="relative">
+                    <VideoThumbnail
+                      videoId={video.id}
+                      audioUrl={video.audio_url}
+                    />
+
+                    {/* Level badge — top right */}
+                    {video.level && (
+                      <Chip tone="ink" className="absolute top-3 right-3 z-10">
+                        {video.level}
+                      </Chip>
+                    )}
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-5">
+                    <h3 className="font-semibold text-ink line-clamp-2 mb-2 transition-colors group-hover:text-siegel-deep text-[0.9375rem] leading-snug">
+                      {video.title}
+                    </h3>
+                    {video.description && (
+                      <p className="text-sm text-graphite line-clamp-2 leading-relaxed">
+                        {video.description}
+                      </p>
+                    )}
+                  </div>
+                </Card>
+              );
 
               return (
-                <motion.div
-                  key={video.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 + index * 0.05 }}
-                >
-                  <Link
-                    to={`/video-library/${video.id}`}
-                    className="group block bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1"
-                  >
-                    {/* Thumbnail */}
-                    <div className="relative">
-                      <VideoThumbnail
-                        videoId={video.id}
-                        audioUrl={video.audio_url}
-                        index={index}
-                      />
-
-                      {/* Level badge — top right */}
-                      {video.level && levelColors && (
-                        <span className={`absolute top-3 right-3 px-2.5 py-1 rounded-lg text-xs font-bold ${levelColors.bg} ${levelColors.text} shadow-sm z-10`}>
-                          {video.level}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-5">
-                      <h3 className="font-semibold text-slate-800 line-clamp-2 mb-2 group-hover:text-rose-600 transition-colors text-[15px] leading-snug">
-                        {video.title}
-                      </h3>
-                      {video.description && (
-                        <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed">
-                          {video.description}
-                        </p>
-                      )}
-                    </div>
-                  </Link>
-                </motion.div>
+                <Reveal key={video.id} delay={Math.min(index, 8) * 80}>
+                  {/* Tilt on the featured (first) card only — the playbook
+                      keeps it off ordinary grids. */}
+                  {index === 0 ? <Tilt className="h-full">{card}</Tilt> : card}
+                </Reveal>
               );
             })}
           </div>
