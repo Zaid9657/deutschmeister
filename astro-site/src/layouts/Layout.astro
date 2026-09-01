@@ -65,7 +65,7 @@ const authAttrs = (item) =>
     {keywords && <meta name="keywords" content={keywords} />}
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
     {noindex && <meta name="robots" content="noindex, nofollow" />}
-    <meta name="theme-color" content="#0f172a" />
+    <meta name="theme-color" content="#0F766E" />
 
     <!-- Open Graph -->
     <meta property="og:type" content={ogType} />
@@ -114,13 +114,13 @@ const authAttrs = (item) =>
 
     <style is:global>
       :focus-visible {
-        outline: 2px solid #0d9488;
+        outline: 3px solid #0f766e;
         outline-offset: 2px;
       }
     </style>
   </head>
 
-  <body class="font-body bg-slate-50 text-slate-800 antialiased">
+  <body class="font-body bg-paper text-ink antialiased">
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[60] focus:bg-white focus:px-4 focus:py-2 focus:rounded-lg focus:shadow"
@@ -128,7 +128,7 @@ const authAttrs = (item) =>
       Skip to content
     </a>
     <!-- Navbar -->
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-paper/90 backdrop-blur-md border-b border-rule">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
           <!-- Logo — the Meister-Siegel seal, same mark as the app (src/components/Logo.jsx) -->
@@ -154,30 +154,30 @@ const authAttrs = (item) =>
           <div class="hidden md:flex items-center gap-1">
             {NAV_GROUPS.map((group, gi) => (
               <>
-                {gi > 0 && <div class="w-px h-5 bg-slate-200 mx-1"></div>}
+                {gi > 0 && <div class="w-px h-5 bg-rule mx-1"></div>}
                 {group.items.map((item) => (
                   <a
                     href={item.href}
                     {...authAttrs(item)}
-                    class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors"
+                    class="px-3 py-2 rounded-lg text-sm font-semibold text-graphite hover:text-siegel-deep hover:bg-siegel-wash transition-colors"
                   >
                     {item.labelEn}
                   </a>
                 ))}
               </>
             ))}
-            <div class="w-px h-5 bg-slate-200 mx-1"></div>
+            <div class="w-px h-5 bg-rule mx-1"></div>
             <a
               href="/signup"
               data-anon-only
-              class="px-4 py-2 rounded-lg bg-gradient-to-r from-teal-600 to-teal-500 text-white text-sm font-semibold hover:from-teal-700 hover:to-teal-600 transition-all"
+              class="px-4 py-2 rounded-clay bg-siegel text-white text-sm font-bold shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none transition-all duration-100 ease-snap select-none"
             >
               Get started
             </a>
             <a
               href="/login"
               data-anon-only
-              class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+              class="px-3 py-2 text-sm font-semibold text-graphite hover:text-ink transition-colors"
             >
               Log in
             </a>
@@ -185,34 +185,34 @@ const authAttrs = (item) =>
 
           <!-- Mobile: CTA + full menu (pure HTML disclosure, no client JS) -->
           <div class="md:hidden flex items-center gap-2">
-            <a href="/signup" data-anon-only class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-teal-600 to-teal-500 text-white text-sm font-semibold">
+            <a href="/signup" data-anon-only class="px-3 py-1.5 rounded-clay bg-siegel text-white text-sm font-bold shadow-raise-siegel active:translate-y-1 active:shadow-none transition-all duration-100 ease-snap select-none">
               Get started
             </a>
-            <a href="/dashboard" data-auth-only style="display:none" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-teal-600 to-teal-500 text-white text-sm font-semibold">
+            <a href="/dashboard" data-auth-only style="display:none" class="px-3 py-1.5 rounded-clay bg-siegel text-white text-sm font-bold shadow-raise-siegel active:translate-y-1 active:shadow-none transition-all duration-100 ease-snap select-none">
               Dashboard
             </a>
             <details class="relative">
               <summary
-                class="list-none cursor-pointer p-2 rounded-lg hover:bg-slate-100 flex items-center [&::-webkit-details-marker]:hidden"
+                class="list-none cursor-pointer p-2 rounded-lg hover:bg-siegel-wash flex items-center [&::-webkit-details-marker]:hidden"
                 aria-label="Menu"
               >
-                <svg class="w-6 h-6 text-slate-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <svg class="w-6 h-6 text-ink" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </summary>
-              <div class="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl border border-slate-200 shadow-lg py-2 z-50">
+              <div class="absolute right-0 top-full mt-2 w-56 bg-white rounded-clay border border-rule shadow-overlay py-2 z-50">
                 {navItems.map((item) => (
                   <a
                     href={item.href}
                     {...authAttrs(item)}
-                    class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                    class="block px-4 py-2 text-sm font-semibold text-graphite hover:bg-siegel-wash hover:text-siegel-deep"
                   >
                     {item.labelEn}
                   </a>
                 ))}
-                <div class="my-2 border-t border-slate-100"></div>
-                <a href="/login" data-anon-only class="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">Log in</a>
-                <a href="/signup" data-anon-only class="block px-4 py-2 text-sm font-semibold text-siegel-deep hover:bg-slate-50">Get started</a>
+                <div class="my-2 border-t border-rule"></div>
+                <a href="/login" data-anon-only class="block px-4 py-2 text-sm font-semibold text-graphite hover:bg-siegel-wash">Log in</a>
+                <a href="/signup" data-anon-only class="block px-4 py-2 text-sm font-bold text-siegel-deep hover:bg-siegel-wash">Get started</a>
               </div>
             </details>
           </div>
@@ -226,7 +226,7 @@ const authAttrs = (item) =>
     </main>
 
     <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 mt-20">
+    <footer class="bg-ink text-paper/60 mt-20">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 mb-8">
           <div>
@@ -243,7 +243,7 @@ const authAttrs = (item) =>
                 <circle cx="32" cy="8.5" r="3.4" fill="#FBBF24" />
                 <text x="32" y="45" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="700" font-size="34" fill="#fff">M</text>
               </svg>
-              <span class="font-display font-semibold text-white">Deutsch<span class="text-teal-400">Meister</span></span>
+              <span class="font-display font-semibold text-white">Deutsch<span class="text-siegel-lift">Meister</span></span>
             </div>
             <p class="text-sm leading-relaxed">
               Learn German with AI — from A1.1 to B2.2. Grammar, speaking, listening, and reading.
@@ -260,7 +260,7 @@ const authAttrs = (item) =>
             </div>
           ))}
         </div>
-        <div class="border-t border-slate-800 pt-6 text-center text-xs">
+        <div class="border-t border-white/10 pt-6 text-center text-xs">
           <p class="mb-2">
             {LEGAL_LINKS.map((item, i) => (
               <>

@@ -17,3 +17,27 @@
     @apply font-display;
   }
 }
+
+/* Motion gate — same rule as the SPA's src/index.css: the Playful Depth
+   motion system collapses to near-instant under prefers-reduced-motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Focus ring — siegel, and chunky like everything else that can be pressed. */
+*:focus-visible {
+  @apply outline-none ring-[3px] ring-siegel ring-offset-2 ring-offset-paper;
+}
+
+::selection {
+  @apply bg-siegel-wash text-ink;
+}
