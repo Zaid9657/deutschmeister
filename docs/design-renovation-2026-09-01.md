@@ -48,6 +48,32 @@ faces (Fraunces/Nunito Sans/mono). The accent names are German on purpose —
 - Focus ring thickened to 3px (both sides) — still siegel, still on every
   focusable element; it and `::selection` remain whole-product brand surfaces.
 
+## v3 (same day): "we can do a lot better" — the research pass
+
+The owner rejected the v2 homepage: technically clean, but no theatre. A
+research sweep over the open-source design landscape produced the v3 rebuild.
+What was adopted and from where:
+
+| Source (all MIT/open) | Adopted |
+|---|---|
+| **Atropos** (nolimits4web) — vanilla 3D parallax, ~10KB, no deps | The hero X-Ray card and the four exam cards are true multi-layer 3D scenes (`data-atropos-offset` layers) that tilt toward the pointer. This is the "make it 3D" ask done with craft instead of drop shadows. |
+| **Magic UI** patterns | Marquee band with edge-fade mask; blur-fade scroll reveals (IntersectionObserver); number-ticker count-ups; shimmer-sweep primary CTA — all ported to vanilla CSS/JS (no React in the Astro site). |
+| **react-bits** (DavidHDev) | Staggered hero entrance (rise + unblur per line); the general "animated backgrounds + text" playbook. React originals remain candidates for the SPA waves, where React exists. |
+| **Aceternity UI** patterns | The aurora treatment: blurred drifting colour fields (token washes only) behind hero and close. |
+| Considered, skipped | tailwindcss-motion / midudev animations (our keyframes already live with the tokens); three.js/WebGL (weight ≫ payoff at this stage); React islands in Astro (Atropos covers it vanilla). |
+
+**The centrepiece is ours, not a library's**: the hero is a *living Sentence
+X-Ray* — sentences pop in word by word, then each word receives its case
+colour and label in sequence, cycling three real exam-context sentences
+(NOM/AKK/DAT/GEN all appear). Server renders the first sentence fully
+coloured; the script only enhances; reduced-motion and no-JS visitors keep
+the static coloured state. Rule 1 is satisfied everywhere the case colours
+move: every coloured chip names its case.
+
+Safety details worth keeping: the reveal-hidden state is gated behind an
+`html.js` stamp (crawlers/no-JS never see hidden content), and every new
+animation collapses under the global `prefers-reduced-motion` gate.
+
 ## Copy doctrine for the sweep
 
 Every rewritten surface speaks to the exam-deadline learner as person → pain →
