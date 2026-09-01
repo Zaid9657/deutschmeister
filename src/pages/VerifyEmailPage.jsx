@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Mail, RefreshCw, LogOut, CheckCircle2, Loader2 } from 'lucide-react';
+import { Mail, RefreshCw, LogOut, CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../utils/supabase';
 import {
@@ -12,6 +12,8 @@ import {
 import { logAuditEvent, AUDIT_EVENTS } from '../lib/auditLogger';
 import SEO from '../components/SEO';
 import Button from '../components/ui/Button';
+import Card from '../components/ui/Card.jsx';
+import Aurora from '../components/ui/Aurora.jsx';
 
 const VerifyEmailPage = () => {
   const navigate = useNavigate();
@@ -72,33 +74,34 @@ const VerifyEmailPage = () => {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-paper px-4 py-12">
+    <div className="relative min-h-screen overflow-hidden flex items-center justify-center bg-paper px-4 py-12">
       <SEO title="Verify Your Email" description="Confirm your email address to activate your DeutschMeister account." path="/verify-email" noindex />
+      <Aurora />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md text-center"
+        className="relative w-full max-w-md text-center"
       >
-        <div className="bg-white rounded-lg border border-rule shadow-overlay p-8">
+        <Card raised className="p-8">
           <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-siegel-wash flex items-center justify-center">
-            <Mail className="w-8 h-8 text-siegel" />
+            <Mail className="w-8 h-8 text-siegel" aria-hidden="true" />
           </div>
 
-          <h1 className="font-display text-2xl font-semibold text-ink mb-3">
+          <h1 className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink mb-3">
             Confirm your email
           </h1>
 
           <p className="text-graphite mb-2">
             We sent a confirmation email to:
           </p>
-          <p className="text-siegel font-semibold mb-6">{user.email}</p>
+          <p className="font-data text-[0.8125rem] font-semibold text-siegel-deep mb-6">{user.email}</p>
 
           <p className="text-sm text-graphite mb-6">
             Click the link in that email to activate your account. This page updates automatically.
           </p>
 
-          <div className="flex items-center justify-center gap-2 text-xs text-graphite mb-6">
-            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+          <div className="flex items-center justify-center gap-2 font-data text-[0.6875rem] uppercase tracking-[0.13em] text-graphite mb-6">
+            <Loader2 className="w-3.5 h-3.5 animate-spin text-siegel" aria-hidden="true" />
             Waiting for confirmation…
           </div>
 
@@ -106,9 +109,9 @@ const VerifyEmailPage = () => {
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-4 p-3 bg-green-50 border border-green-100 rounded-xl flex items-center justify-center gap-2 text-green-700 text-sm"
+              className="mb-4 flex items-center justify-center gap-2 rounded-clay bg-accent-limette-wash px-4 py-3 text-sm font-semibold text-accent-limette-ink"
             >
-              <CheckCircle2 className="w-4 h-4" />
+              <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
               Email sent again.
             </motion.div>
           )}
@@ -117,14 +120,16 @@ const VerifyEmailPage = () => {
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-4 p-3 bg-red-50 border border-red-100 rounded-lg text-red-600 text-sm"
+              className="mb-4 flex items-center justify-center gap-2 rounded-clay bg-accent-himbeer-wash px-4 py-3 text-sm font-semibold text-accent-himbeer-ink"
             >
+              <AlertCircle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
               {error}
             </motion.div>
           )}
 
           <div className="flex flex-col gap-3">
-            <Button onClick={handleResend} disabled={resending} size="lg" className="w-full">
+            {/* Resend is the one primary action on this screen */}
+            <Button onClick={handleResend} shimmer disabled={resending} size="lg" className="w-full">
               {resending ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
@@ -133,19 +138,16 @@ const VerifyEmailPage = () => {
               Resend email
             </Button>
 
-            <button
-              onClick={handleSignOut}
-              className="w-full py-3 px-6 rounded-md border border-ink text-ink font-semibold hover:bg-ink hover:text-paper transition-colors flex items-center justify-center gap-2"
-            >
+            <Button onClick={handleSignOut} variant="secondary" size="lg" className="w-full">
               <LogOut className="w-4 h-4" />
               Sign out and use a different email
-            </button>
+            </Button>
           </div>
 
           <p className="mt-6 text-xs text-graphite">
             Tip: check your spam folder too.
           </p>
-        </div>
+        </Card>
       </motion.div>
     </div>
   );

@@ -10,8 +10,8 @@ import { Loader2 } from 'lucide-react';
 const IntroSlides = lazy(() => import('./IntroSlides'));
 
 const Spinner = () => (
-  <div className="min-h-screen flex items-center justify-center bg-slate-50">
-    <Loader2 className="w-8 h-8 animate-spin text-slate-400" />
+  <div className="min-h-screen flex items-center justify-center bg-paper" role="status" aria-label="Loading">
+    <Loader2 className="w-8 h-8 animate-spin text-siegel" aria-hidden="true" />
   </div>
 );
 

@@ -1,11 +1,11 @@
-import { useRef, useEffect, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
 import {
   GRAMMAR_TOPIC_COUNT,
   LISTENING_DIALOGUE_COUNT,
   LEVEL_COUNT,
   PODCAST_EPISODE_COUNT,
 } from '../data/marketing.js';
+import Stat from './ui/Stat.jsx';
+import Reveal from './ui/Reveal.jsx';
 
 // What the product CONTAINS, not how many people use it.
 //
@@ -15,74 +15,34 @@ import {
 // turns; the third appears in no audit and has no source at all. Per the counts
 // rule in src/data/marketing.js, every figure here is now a constant counted
 // against a live table, so none of it can rot on its own.
+//
+// The count-up itself is the shared <Stat> (src/lib/motion.js useCountUp), so
+// this bar ticks the same way the homepage does. Every count here is below
+// 1.000, so the en-US grouping <Stat> applies renders the same digits the
+// German formatter used to.
 const STATS = [
-  { value: formatGermanNumber(GRAMMAR_TOPIC_COUNT), label: 'Grammatikthemen' },
-  { value: formatGermanNumber(LISTENING_DIALOGUE_COUNT), label: 'Dialoge mit Muttersprachlern' },
-  { value: formatGermanNumber(LEVEL_COUNT), label: 'Stufen, A1.1 bis B2.2' },
-  { value: formatGermanNumber(PODCAST_EPISODE_COUNT), label: 'Podcast-Folgen' },
+  { value: GRAMMAR_TOPIC_COUNT, label: 'Grammatikthemen' },
+  { value: LISTENING_DIALOGUE_COUNT, label: 'Dialoge mit Muttersprachlern' },
+  { value: LEVEL_COUNT, label: 'Stufen, A1.1 bis B2.2' },
+  { value: PODCAST_EPISODE_COUNT, label: 'Podcast-Folgen' },
 ];
 
-function parseGermanNumber(str) {
-  return parseInt(str.replace(/\./g, ''), 10);
-}
+const StatsBar = () => (
+  <section className="py-14 bg-white border-b border-rule">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6">
+      <Reveal as="p" className="text-center font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel mb-8">
+        Was drin ist
+      </Reveal>
 
-function formatGermanNumber(n) {
-  return n.toLocaleString('de-DE');
-}
-
-function AnimatedNumber({ value, inView }) {
-  const target = parseGermanNumber(value);
-  const [display, setDisplay] = useState(0);
-
-  useEffect(() => {
-    if (!inView) return;
-    const duration = 1200;
-    const start = performance.now();
-    let raf;
-    const tick = (now) => {
-      const progress = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplay(Math.round(eased * target));
-      if (progress < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [inView, target]);
-
-  return <>{formatGermanNumber(display)}</>;
-}
-
-const StatsBar = () => {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-50px' });
-
-  return (
-    <section ref={ref} className="py-14 bg-white border-b border-slate-100">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6">
-        <p className="text-center text-xs font-semibold uppercase tracking-widest text-slate-400 mb-8">
-          Was drin ist
-        </p>
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-          {STATS.map((stat, i) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 16 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.1 * i }}
-              className="text-center"
-            >
-              <p className="text-4xl sm:text-5xl font-bold text-slate-800 mb-1">
-                <AnimatedNumber value={stat.value} inView={inView} />
-              </p>
-              <p className="text-sm text-slate-500">{stat.label}</p>
-            </motion.div>
-          ))}
-        </div>
-
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+        {STATS.map((stat, i) => (
+          <Reveal key={stat.label} delay={90 * i}>
+            <Stat value={stat.value} label={stat.label} size="lg" className="text-center" />
+          </Reveal>
+        ))}
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
 export default StatsBar;
