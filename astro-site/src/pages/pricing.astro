@@ -24,7 +24,7 @@
 import { ORGANIZATION } from '../lib/siteMeta.js';
 import Layout from '../layouts/Layout.astro';
 import '../styles/global.css';
-import { PLANS, CURRENCY, num, eur } from '../data/pricing.js';
+import { PLANS, CURRENCY, num, eur, COURSE_TELC_B1_PRICE_EUR, COURSE_PRO_MONTHS } from '../data/pricing.js';
 import {
   GRAMMAR_TOPIC_COUNT,
   LEVEL_COUNT,
@@ -35,6 +35,8 @@ import {
   ANON_DAILY_LIMIT,
   PRO_DAILY_LIMIT,
   PRO_SPEAKING_SESSIONS_PER_MONTH,
+  TRIAL_WRITING_EVALUATIONS,
+  PRO_WRITING_EVALUATIONS_PER_MONTH,
   FREE_LEVEL_LABEL,
 } from '../data/marketing.js';
 
@@ -78,6 +80,14 @@ const ROWS = [
   { label: 'Grammar topics', free: String(TOPICS_PER_LEVEL), pro: String(GRAMMAR_TOPIC_COUNT) },
   { label: 'Sentence X-Ray', free: `${ANON_DAILY_LIMIT} a day`, pro: `${PRO_DAILY_LIMIT} a day` },
   { label: 'AI speaking practice', free: `${TRIAL_SPEAKING_SESSIONS} sessions`, pro: `${PRO_SPEAKING_SESSIONS_PER_MONTH} a month` },
+  // Renovation additions (2026-09-01): the two exam tools shipped with the
+  // exam-first rebuild. Figures derive from marketing.js like every row here.
+  { label: 'AI writing feedback', free: `${TRIAL_WRITING_EVALUATIONS} evaluations`, pro: `${PRO_WRITING_EVALUATIONS_PER_MONTH} a month` },
+  // Free column: what you get without paying — the practice exam opens during
+  // the trial (SubscriptionGuard passes trial), the SRS trainer needs only an
+  // account. Claiming Pro-only here would overstate the paywall.
+  { label: 'Timed practice exam', free: 'During trial', pro: 'telc B1' },
+  { label: 'Vocabulary trainer (spaced repetition)', free: 'With account', pro: 'Included' },
   { label: 'Listening & reading', free: FREE_LEVEL_LABEL, pro: 'Every level' },
   { label: 'Podcasts & video', free: '—', pro: 'Included' },
 ];
@@ -92,6 +102,10 @@ const FAQS = [
     a: `You keep ${FREE_LEVEL_LABEL} and everything else that is free. Nothing is deleted, and your progress is still there if you subscribe later.`,
   },
   { q: 'Can I cancel anytime?', a: 'Yes, from your account page. You keep Pro until the end of the period you have already paid for.' },
+  {
+    q: 'Is there a one-time option instead of a subscription?',
+    a: `Yes — the telc B1 Komplettvorbereitung (${eur(COURSE_TELC_B1_PRICE_EUR)} one-time) is a fixed 4-week exam plan with ${COURSE_PRO_MONTHS} months of full Pro included and permanent access to the course area. It exists for one job: your telc B1 date.`,
+  },
   {
     q: 'Monthly or yearly?',
     a: `Yearly works out ${PLANS.yearly.savingPercent}% cheaper. Monthly is the right choice if you are working towards one specific level and expect to be done inside a few months.`,
@@ -234,6 +248,34 @@ const KASUS_CLASS = {
             </tr>
           </tbody>
         </table>
+      </section>
+
+      <!-- The one-time course — the highest-ticket product was invisible on
+           the money page until 2026-09-01. Price derives from pricing.js
+           (COURSE_TELC_B1_PRICE_EUR); no literal enters the source. -->
+      <section class="mt-12 rounded-lg border border-rule bg-paper-sunk p-6 sm:p-8" aria-labelledby="course-h">
+        <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div class="max-w-xl">
+            <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">
+              Preparing for telc B1?
+            </p>
+            <h2 id="course-h" class="mt-2 font-display text-[1.375rem] font-semibold text-ink sm:text-[1.625rem]">
+              telc B1 Komplettvorbereitung
+            </h2>
+            <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
+              A fixed 4-week exam plan over the whole library — one task a day, in the order that
+              leads to the exam. One-time purchase, {COURSE_PRO_MONTHS} months of full Pro included,
+              the course area stays yours permanently.
+            </p>
+          </div>
+          <div class="shrink-0 text-left sm:text-right">
+            <p class="font-display text-[2rem] font-semibold leading-none text-ink">{eur(COURSE_TELC_B1_PRICE_EUR)}</p>
+            <p class="mt-1 font-data text-[0.75rem] text-graphite">one-time · no subscription</p>
+            <a href="/telc-b1-komplettvorbereitung/" class="mt-4 inline-flex items-center justify-center rounded-md border border-ink px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-paper">
+              See the 4-week plan
+            </a>
+          </div>
+        </div>
       </section>
 
       <!-- What Pro actually buys, in the product's own notation.
