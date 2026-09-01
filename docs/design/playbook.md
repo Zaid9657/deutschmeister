@@ -111,6 +111,14 @@ after each wave:
 |---|---|---|---|
 | baseline (post #33, Wave 0 kit) | 2026-09-01 | **175** | **115** |
 | Wave 1 (public Astro pages) | 2026-09-01 | 175 | **0** |
+| Wave 2 (app core loop) | 2026-09-01 | 122 | 0 |
+| Wave 3 (content screens) | 2026-09-01 | **0** | 0 |
+
+Wave 3 reached the goal a wave early. Two sources had to die for it: the
+level-colour system in `src/contexts/ThemeContext.jsx` (dead code that still
+forced Tailwind to emit the eight CEFR palettes) and a doc comment in
+`ui/Button.jsx` that quoted the retired gradient class — the scanner does not
+parse comments, so naming a class in prose is enough to ship it.
 
 Measure with (from the repo root, after a full CI-mirror build):
 

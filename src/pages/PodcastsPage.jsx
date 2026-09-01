@@ -278,9 +278,10 @@ const PodcastsPage = () => {
                                 <ChevronRight className="w-5 h-5 text-siegel transition-transform group-hover:translate-x-0.5 flex-shrink-0 mt-1" />
                               </Card>
                             );
-                            // Tilt goes on the featured (first) episode only —
-                            // the playbook keeps it off ordinary list rows.
-                            return podcastIndex === 0 ? (
+                            // Tilt goes on the ONE featured episode — the very
+                            // first row of the first level. The playbook keeps
+                            // it off ordinary list rows.
+                            return index === 0 && podcastIndex === 0 ? (
                               <Tilt key={podcast.id}>{row}</Tilt>
                             ) : (
                               <div key={podcast.id}>{row}</div>

@@ -33,7 +33,7 @@ const ReadingLessonPage = () => {
   const { level, lessonId } = useParams();
   const navigate = useNavigate();
   const { i18n, t } = useTranslation();
-  const { getThemeForLevel, setCurrentLevel } = useTheme();
+  const { setCurrentLevel } = useTheme();
   const { isItemLearned, markAsLearned } = useProgress();
   const { user } = useAuth();
 
@@ -47,9 +47,6 @@ const ReadingLessonPage = () => {
   // celebrate, and only once).
   const [justCompleted, setJustCompleted] = useState(false);
 
-  // VocabularyList still takes the level theme; nothing on THIS page paints
-  // with it any more (design-tokens.js rule 1 — a level is not a colour).
-  const theme = getThemeForLevel(level);
   const isGerman = i18n.language === 'de';
   const isCompleted = lesson ? isItemLearned(level, 'readingLessons', lesson.id) : false;
 
@@ -252,7 +249,7 @@ const ReadingLessonPage = () => {
 
         {/* Key Vocabulary */}
         <Reveal delay={80} className="mb-6">
-          <VocabularyList vocabulary={lesson.keyVocabulary} theme={theme} />
+          <VocabularyList vocabulary={lesson.keyVocabulary} />
         </Reveal>
 
         {/* Comprehension Questions */}

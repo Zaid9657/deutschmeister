@@ -4,9 +4,11 @@ import { Link } from 'react-router-dom';
 /**
  * The one button in the app.
  *
- * WHY THIS EXISTS. Before it, the primary CTA was an amber-to-rose
- * `bg-gradient-to-r` copy-pasted into twenty-odd files — the retired brand,
- * unreachable by any single edit. v2 ("Playful Depth", design-tokens.js rule 3)
+ * WHY THIS EXISTS. Before it, the primary CTA was a left-to-right amber-to-rose
+ * gradient copy-pasted into twenty-odd files — the retired brand, unreachable
+ * by any single edit. (The class name is spelled out nowhere in this file on
+ * purpose: Tailwind's scanner does not parse comments, so quoting it here was
+ * enough to keep emitting the rule into the built CSS.) v2 ("Playful Depth", design-tokens.js rule 3)
  * makes it PHYSICAL: the face rests on a hard 4px edge (`shadow-raise-*`) and
  * pressing translates it down onto that edge, like a key on a keyboard. The
  * press is a direct response to the pointer, not an animation, so it is not
