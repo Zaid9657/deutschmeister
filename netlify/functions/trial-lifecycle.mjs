@@ -16,6 +16,7 @@
 import { supabase, supabaseKey } from './_shared/supabase.mjs';
 import { schedule } from '@netlify/functions';
 import { createHmac } from 'crypto';
+import { MONTHLY_PRICE_EUR, eur } from './_shared/pricing.mjs';
 
 const FROM_ADDRESS = 'Zaid from DeutschMeister <zaid@deutsch-meister.de>';
 const BASE_URL = 'https://deutsch-meister.de';
@@ -88,10 +89,10 @@ const TEMPLATES = {
   trial_day6: {
     subject: 'Your DeutschMeister trial ends tomorrow',
     ctaHref: `${BASE_URL}/pricing/`,
-    ctaLabel: 'Keep Pro — €9.99/month →',
+    ctaLabel: `Keep Pro — ${eur(MONTHLY_PRICE_EUR)}/month →`,
     body:
       P('Quick heads-up: your Pro trial ends tomorrow.') +
-      P('If you keep it, you stay on 50 sentence analyses a day, the full grammar library through B2, listening, reading, and AI speaking practice. That\'s €9.99 a month — less than one hour with a tutor.') +
+      P(`If you keep it, you stay on 50 sentence analyses a day, the full grammar library through B2, listening, reading, and AI speaking practice. That's ${eur(MONTHLY_PRICE_EUR)} a month — less than one hour with a tutor.`) +
       P('If you don\'t, nothing dramatic happens: your account stays, your progress stays, and you drop to the free tier. You can come back whenever.'),
   },
   trial_ended: {
@@ -220,6 +221,36 @@ async function sendKind(resendKey, kind) {
   return { kind, sent, failed };
 }
 
+// ─── course-window expiry sweep ──────────────────────────────────────────────
+
+// A course purchase grants an included Pro window as a subscriptions row with
+// plan_type 'course' (see lemonsqueezy-webhook.mjs handleCourseOrder). Lemon
+// Squeezy never emits a subscription_expired for it — one-time orders have no
+// subscription — so this daily run sweeps the expired ones. A user who later
+// bought a real subscription no longer has a 'course' row (subscription_created
+// upserts over it on user_id), so the sweep can never touch a paying subscriber.
+async function expireCourseWindows() {
+  const nowIso = new Date().toISOString();
+  const { data: expired, error } = await supabase
+    .from('subscriptions')
+    .update({ status: 'expired', updated_at: nowIso })
+    .eq('plan_type', 'course')
+    .eq('status', 'active')
+    .lt('subscription_end', nowIso)
+    .select('user_id');
+  if (error) throw new Error(`course-window sweep failed: ${error.message}`);
+  for (const row of expired || []) {
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .update({ is_subscribed: false, subscription_tier: 'free', updated_at: nowIso })
+      .eq('id', row.user_id);
+    if (profileError) {
+      console.error('[trial-lifecycle] course-window profile reset failed for', row.user_id, profileError.message);
+    }
+  }
+  return { swept: expired?.length || 0 };
+}
+
 // ─── handler ─────────────────────────────────────────────────────────────────
 
 const innerHandler = async (event) => {
@@ -250,8 +281,16 @@ const innerHandler = async (event) => {
     }
   }
 
-  console.log('[trial-lifecycle]', JSON.stringify(results));
-  return { statusCode: 200, body: JSON.stringify({ results }) };
+  let courseSweep = null;
+  try {
+    courseSweep = await expireCourseWindows();
+  } catch (err) {
+    console.error('[trial-lifecycle] course-window sweep failed:', err.message);
+    courseSweep = { error: err.message };
+  }
+
+  console.log('[trial-lifecycle]', JSON.stringify({ results, courseSweep }));
+  return { statusCode: 200, body: JSON.stringify({ results, courseSweep }) };
 };
 
 // 08:00 UTC — an hour after the daily sentence, so the two never collide.

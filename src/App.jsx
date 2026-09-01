@@ -8,6 +8,7 @@ import Navbar from './components/Navbar';
 import LemonSqueezyProvider from './components/LemonSqueezyProvider';
 import ProtectedRoute from './components/ProtectedRoute';
 import SubscriptionGuard from './components/SubscriptionGuard';
+import PurchaseGuard from './components/PurchaseGuard';
 import LevelSubscriptionGuard from './components/LevelSubscriptionGuard';
 import EmailVerificationGate from './components/EmailVerificationGate';
 import OnboardingGate from './components/onboarding/OnboardingGate';
@@ -53,6 +54,7 @@ const VerifyEmailPage = lazy(() => import('./pages/VerifyEmailPage'));
 const IntroSlides = lazy(() => import('./components/onboarding/IntroSlides'));
 const VergleichHubPage = lazy(() => import('./pages/VergleichHubPage'));
 const ComparisonPage = lazy(() => import('./pages/ComparisonPage'));
+const TelcB1KursPage = lazy(() => import('./pages/TelcB1KursPage'));
 
 function PageLoader() {
   return (
@@ -152,6 +154,20 @@ function App() {
                     <Route path="/video-library/:id" element={<VideoDetailPage />} />
                     <Route path="/podcasts" element={<PodcastsPage />} />
                     <Route path="/level-test" element={<LevelTest />} />
+                    {/* Course areas — one-time product entitlements, gated by
+                        PurchaseGuard (purchases table), not the subscription:
+                        a bought course stays reachable after its included Pro
+                        window expires. Also in netlify.toml's SPA allow-list. */}
+                    <Route
+                      path="/telc-b1-kurs"
+                      element={
+                        <PurchaseGuard productKey="telc_b1_komplett">
+                          <EmailVerificationGate>
+                            <TelcB1KursPage />
+                          </EmailVerificationGate>
+                        </PurchaseGuard>
+                      }
+                    />
                     <Route
                       path="/subscription/success"
                       element={

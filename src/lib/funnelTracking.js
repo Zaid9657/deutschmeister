@@ -1,4 +1,12 @@
 import { track } from './analytics';
+import { safeGetJSON, safeSetJSON, safeRemove } from '../utils/safeStorage';
+
+// Checkout completion is observed from two independent places — the Lemon
+// Squeezy overlay's Checkout.Success event, and the subscription poller seeing
+// access flip to active after a same-tab checkout. A sessionStorage flag set at
+// checkout start is consumed exactly once, so whichever observer fires first
+// wins and an ordinary page load never reports a phantom purchase.
+const CHECKOUT_FLAG = 'dm_checkout_pending';
 
 export const trackLandingView = () => track('landing_viewed');
 
@@ -19,6 +27,21 @@ export const trackSpeakingSessionCompleted = (score) => track('speaking_session_
 export const trackPricingViewed = () => track('pricing_viewed');
 export const trackCheckoutStarted = () => track('checkout_started');
 export const trackCheckoutCompleted = (plan, amount) => track('checkout_completed', { plan, amount });
+
+/** Call when a checkout is opened: tracks the start and arms the completion flag. */
+export const markCheckoutStarted = (plan, amount) => {
+  trackCheckoutStarted();
+  safeSetJSON(CHECKOUT_FLAG, { plan, amount }, { session: true });
+};
+
+/** Call from any observer of a successful purchase; consumes the flag once. */
+export const consumeCheckoutSuccess = () => {
+  const pending = safeGetJSON(CHECKOUT_FLAG, null, { session: true });
+  if (!pending) return false;
+  safeRemove(CHECKOUT_FLAG, { session: true });
+  trackCheckoutCompleted(pending.plan, pending.amount);
+  return true;
+};
 
 export const trackPaywallShown = (feature) => track('paywall_shown', { feature });
 export const trackPaywallDismissed = (feature) => track('paywall_dismissed', { feature });

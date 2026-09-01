@@ -120,6 +120,12 @@ test('unknown events are acked; known events that fail are left for retry', asyn
   const known = payload('subscription_created');
   assert.equal((await handler(post(known, sign(known)))).statusCode, 500,
     'a handled event whose write fails must return non-2xx so it is retried');
+
+  // The revocation direction matters more than the granting one: a refund whose
+  // write is swallowed leaves the buyer holding a course they were paid back for.
+  const refund = payload('order_refunded');
+  assert.equal((await handler(post(refund, sign(refund)))).statusCode, 500,
+    'a refund whose write fails must be retried, never acked');
 });
 
 test('the dispatch covers every Lemon Squeezy event the integration relies on', async () => {
@@ -132,6 +138,7 @@ test('the dispatch covers every Lemon Squeezy event the integration relies on', 
 
   assert.deepEqual(handled, [
     'order_created',
+    'order_refunded',
     'subscription_cancelled',
     'subscription_created',
     'subscription_expired',

@@ -37,6 +37,42 @@ function unsubscribeFooter(userId) {
 </p>`;
 }
 
+// Optional audience exclusions, so a launch sequence never mails "last chance"
+// to someone who already bought on day 1. Supported values in the request
+// body's `exclude` array:
+//   'subscribed' — users with a live paid period (subscription_end > now)
+//   'purchased'  — users with any active one-time purchase (purchases table);
+//                  'purchased:<product_key>' narrows to one product
+async function excludedUserIds(exclude) {
+  const out = new Set();
+  if (!Array.isArray(exclude) || exclude.length === 0) return out;
+
+  if (exclude.includes('subscribed')) {
+    const { data, error } = await supabase
+      .from('subscriptions')
+      .select('user_id')
+      .gt('subscription_end', new Date().toISOString());
+    if (error) throw new Error(`exclude subscribed query failed: ${error.message}`);
+    for (const row of data || []) out.add(row.user_id);
+  }
+
+  const purchasedRules = exclude.filter((e) => typeof e === 'string' && e.startsWith('purchased'));
+  if (purchasedRules.length > 0) {
+    let q = supabase.from('purchases').select('user_id, product_key').eq('status', 'active');
+    const keys = purchasedRules
+      .map((r) => r.split(':')[1])
+      .filter(Boolean);
+    if (keys.length > 0 && !purchasedRules.includes('purchased')) {
+      q = q.in('product_key', keys);
+    }
+    const { data, error } = await q;
+    if (error) throw new Error(`exclude purchased query failed: ${error.message}`);
+    for (const row of data || []) out.add(row.user_id);
+  }
+
+  return out;
+}
+
 async function fetchAllUserEmails() {
   // auth.admin.listUsers paginates — fetch all pages
   const users = [];
@@ -135,9 +171,9 @@ export const handler = async (event) => {
   }
 
   // --- Parse body ---
-  let subject, body, testMode;
+  let subject, body, testMode, exclude;
   try {
-    ({ subject, body, testMode = false } = JSON.parse(event.body || '{}'));
+    ({ subject, body, testMode = false, exclude = [] } = JSON.parse(event.body || '{}'));
   } catch {
     return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid JSON body' }) };
   }
@@ -161,6 +197,12 @@ export const handler = async (event) => {
   } else {
     try {
       recipients = await fetchAllUserEmails();
+      const excluded = await excludedUserIds(exclude);
+      if (excluded.size > 0) {
+        const before = recipients.length;
+        recipients = recipients.filter((r) => !excluded.has(r.id));
+        console.log(`Excluded ${before - recipients.length} recipients (${JSON.stringify(exclude)})`);
+      }
       console.log(`Fetched ${recipients.length} eligible recipients`);
     } catch (err) {
       console.error('Failed to fetch recipients:', err.message);

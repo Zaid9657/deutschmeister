@@ -269,6 +269,13 @@
   from = "/onboarding"
   to = "/app.html"
   status = 200
+# Course area (one-time product entitlement, PurchaseGuard-gated in the SPA).
+# Deliberately NOT prerendered and NOT in the sitemap: it is paid content
+# behind a login, so the crawlable three-place treatment does not apply.
+[[redirects]]
+  from = "/telc-b1-kurs"
+  to = "/app.html"
+  status = 200
 # /pricing is now a static Astro file in dist/pricing/ — Netlify serves that
 # real file before any non-forced rewrite, so no SPA rule is needed for it.
 # /faq and /ueber-uns are prerendered static files now (dist/faq/index.html,

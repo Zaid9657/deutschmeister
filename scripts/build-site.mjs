@@ -7,10 +7,11 @@
 // `dist/index.html` → `dist/app.html` rename never ran, so Netlify published a
 // dist/ with no app.html: every SPA rewrite pointed at a missing file and "/"
 // served the SPA shell, which has no "/" route. A site-wide outage, published
-// green. CI runs check-built-html in --spa-only mode because the Astro half
-// needs Supabase credentials, which makes this deploy build the only gate on
-// the static pages — so it has to be able to fail, and it has to check what it
-// produced rather than assume it.
+// green. CI does now build the Astro half offline from grammar-content-cache.json
+// and checks all ~95 pages, so this is no longer the only gate on the static
+// pages — but it is the only one that sees the LIVE database, so it still has to
+// be able to fail, and it still has to check what it produced rather than
+// assume it.
 //
 // Every step here throws on a non-zero exit. Only the IndexNow ping is allowed
 // to fail, and it says so when it does.
@@ -45,6 +46,27 @@ const copyDir = (label, from, to) => {
 // exercised without Supabase credentials, so they are reachable on their own.
 const VERIFY_ONLY = process.argv.includes('--verify-only');
 
+// The top-level directories the Astro build emits, read out of its own pages/
+// directory rather than listed here. `trailingSlash: 'always'` means every
+// top-level page becomes `<name>/index.html`, so a sub-directory (grammar/,
+// leitfaden/, vergleich/) or a bare `.astro` file (pricing, privacy, impressum,
+// telc-b1-komplettvorbereitung) each maps to one output directory. index.astro
+// and 404.astro are the two exceptions — they emit files at the root, and are
+// copied and asserted separately below.
+//
+// Derived rather than hard-coded because a hard-coded copy of this list is
+// exactly how the prerendered-route assertions further down silently stopped
+// covering /faq and /ueber-uns. main has since added the telc-b1 landing page
+// as a new top-level Astro route; this list picked it up without being edited.
+const ASTRO_ROUTES = readdirSync(join(ROOT, 'astro-site', 'src', 'pages'), { withFileTypes: true })
+  .filter((e) => e.isDirectory() || (e.name.endsWith('.astro') && !['index.astro', '404.astro'].includes(e.name)))
+  .map((e) => e.name.replace(/\.astro$/, ''))
+  .sort();
+
+if (ASTRO_ROUTES.length === 0) {
+  throw new Error('could not read any top-level route out of astro-site/src/pages');
+}
+
 // --- build ------------------------------------------------------------------
 
 if (!VERIFY_ONLY) {
@@ -55,7 +77,7 @@ run('Astro: build', 'npm', ['run', 'build'], { cwd: join(ROOT, 'astro-site') });
 // --- merge Astro output into dist/ -------------------------------------------
 // Order matters: the SPA build above empties dist/, so every copy happens after it.
 
-for (const dir of ['grammar', 'vergleich', 'leitfaden', 'pricing', 'privacy', 'impressum']) {
+for (const dir of ASTRO_ROUTES) {
   copyDir(`astro ${dir}/`, join(ASTRO_DIST, dir), join(DIST, dir));
 }
 
@@ -111,11 +133,10 @@ if (exists('index.html') && exists('app.html')) {
   );
 }
 
-// 3. Every top-level Astro route the netlify.toml comments promise is static.
-for (const p of [
-  'grammar/index.html', 'pricing/index.html', 'vergleich/index.html',
-  'leitfaden/index.html', 'privacy/index.html', 'impressum/index.html', '404.html',
-]) {
+// 3. Every top-level Astro route landed as a real static file — the same list
+//    the copy loop above walked, so a new Astro page is copied AND asserted
+//    without either being edited.
+for (const p of [...ASTRO_ROUTES.map((r) => `${r}/index.html`), '404.html']) {
   check(`dist/${p} is missing`, exists(p));
 }
 

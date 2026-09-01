@@ -71,6 +71,7 @@ const REQUIRED = [
   'leitfaden/goethe-b1/index.html',
   'leitfaden/telc-b2/index.html',
   'leitfaden/dtz/index.html',
+  'telc-b1-komplettvorbereitung/index.html',
   ...SPA_ROUTES.map((r) => `${r}/index.html`),
 ];
 

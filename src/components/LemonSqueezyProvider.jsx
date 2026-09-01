@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { consumeCheckoutSuccess } from '../lib/funnelTracking';
 
 // Routes that can actually open a Lemon Squeezy checkout. Everywhere else the
 // script is dead weight (it used to load on every page of the app).
@@ -20,6 +21,20 @@ const LemonSqueezyProvider = ({ children }) => {
     const script = document.createElement('script');
     script.src = 'https://app.lemonsqueezy.com/js/lemon.js';
     script.defer = true;
+    // Overlay checkout path: report the purchase the moment Lemon Squeezy
+    // says so. Tracking only — a failure here must never break checkout.
+    script.onload = () => {
+      try {
+        window.createLemonSqueezy?.();
+        window.LemonSqueezy?.Setup?.({
+          eventHandler: (evt) => {
+            if (evt?.event === 'Checkout.Success') consumeCheckoutSuccess();
+          },
+        });
+      } catch {
+        /* analytics only */
+      }
+    };
     document.head.appendChild(script);
   }, [needed]);
 

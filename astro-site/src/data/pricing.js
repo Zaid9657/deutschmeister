@@ -70,6 +70,30 @@ export const YEARLY_SAVING_PERCENT = Math.floor(
   ((MONTHLY_PRICE_EUR * MONTHS_PER_YEAR - YEARLY_PRICE_EUR) / (MONTHLY_PRICE_EUR * MONTHS_PER_YEAR)) * 100,
 );
 
+/**
+ * One-time exam-prep courses. Same discipline as the subscription prices:
+ * these are what the Lemon Squeezy checkout charges (store 309512), every
+ * user-facing figure derives, and tests/claims.test.mjs bans the literals
+ * from page sources. `proDays` mirrors the included Pro window the webhook
+ * grants (netlify/functions/lemonsqueezy-webhook.mjs courseForVariant) —
+ * change both together or the copy claims a window the server doesn't grant.
+ */
+export const COURSE_TELC_B1_PRICE_EUR = 89;
+export const COURSE_PRO_DAYS = 90;
+
+/** The included-Pro-window claim in months — "3 Monate Pro-Zugang inklusive". */
+export const COURSE_PRO_MONTHS = Math.floor(COURSE_PRO_DAYS / DAYS_PER_MONTH);
+
+export const COURSES = {
+  telc_b1_komplett: {
+    key: 'telc_b1_komplett',
+    name: 'telc B1 Komplettvorbereitung',
+    price: COURSE_TELC_B1_PRICE_EUR,
+    proDays: COURSE_PRO_DAYS,
+    proMonths: COURSE_PRO_MONTHS,
+  },
+};
+
 export const PLANS = {
   monthly: {
     key: 'monthly',
