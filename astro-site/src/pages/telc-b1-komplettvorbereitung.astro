@@ -1,6 +1,8 @@
 ---
 // Sales page for the telc B1 Komplettvorbereitung — the one-time course from
-// docs/revenue-plan-2026-08-31.md, Lane 2.
+// docs/revenue-plan-2026-08-31.md, Lane 2. Reskinned 2026-09-01 onto the
+// Playful Depth system (docs/design/playbook.md): aurora hero, the four weeks
+// as numbered accent steps, the price as a 3D card with the one shimmer CTA.
 //
 // CLAIMS DISCIPLINE (binding, same as the guides):
 //   - every figure derives from ../data/pricing.js / ../data/marketing.js;
@@ -23,6 +25,7 @@
 // funnel instead of a dead checkout. Guest checkout is supported — the webhook
 // resolves the buyer by e-mail — hence the "gleiche E-Mail" note by the button.
 import Layout from '../layouts/Layout.astro';
+import Aurora from '../components/Aurora.astro';
 import '../styles/global.css';
 import { ORGANIZATION } from '../lib/siteMeta.js';
 import { COURSES, CURRENCY, num, deEur } from '../data/pricing.js';
@@ -89,72 +92,77 @@ const faqSchema = {
 };
 const jsonLd = [productSchema, faqSchema];
 
+// The four weeks as numbered steps — accent badges rotate (energy, never
+// meaning: tokens rule 2).
 const WEEKS = [
-  { name: 'Woche 1', focus: 'Das B1.1-Fundament: ein Grammatikthema pro Tag, dazu Hören und der erste Satz im Satz-Röntgen.' },
-  { name: 'Woche 2', focus: 'Die schwere Hälfte von B1.1 — und dein erstes Sprechtraining mit der KI, gegen die Sprechangst vor dem Prüfungstag.' },
-  { name: 'Woche 3', focus: 'B1.2: die Strukturen, auf die Prüfer achten. Konjunktiv, Nebensätze, Verbindungswörter.' },
-  { name: 'Woche 4', focus: 'Prüfungswoche: Format und Bewertung verstehen, unter Zeitdruck sprechen, die schwächsten Themen gezielt schließen.' },
+  { n: '1', accent: 'bg-accent-himbeer', name: 'Woche 1', focus: 'Das B1.1-Fundament: ein Grammatikthema pro Tag, dazu Hören und der erste Satz im Satz-Röntgen.' },
+  { n: '2', accent: 'bg-accent-aprikose', name: 'Woche 2', focus: 'Die schwere Hälfte von B1.1 — und dein erstes Sprechtraining mit der KI, gegen die Sprechangst vor dem Prüfungstag.' },
+  { n: '3', accent: 'bg-accent-limette', name: 'Woche 3', focus: 'B1.2: die Strukturen, auf die Prüfer achten. Konjunktiv, Nebensätze, Verbindungswörter.' },
+  { n: '4', accent: 'bg-siegel', name: 'Woche 4', focus: 'Prüfungswoche: Format und Bewertung verstehen, unter Zeitdruck sprechen, die schwächsten Themen gezielt schließen.' },
 ];
+
+const BTN =
+  'inline-flex items-center justify-center gap-2 rounded-clay text-[0.9375rem] font-bold transition-all duration-100 ease-snap select-none';
+const BTN_PRIMARY = `${BTN} bg-siegel px-6 py-3.5 text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`;
+const BTN_SECONDARY = `${BTN} border border-rule bg-white px-6 py-3.5 text-ink shadow-raise hover:border-siegel hover:text-siegel-deep active:translate-y-1 active:shadow-none`;
 ---
 
 <Layout title={title} description={description} canonical={canonical} jsonLd={jsonLd} lang="de" ogType="product">
-  <div class="bg-paper text-ink">
-    <div class="mx-auto max-w-3xl px-5 pt-14 pb-20">
+  <div class="overflow-x-clip bg-paper text-ink">
 
-      <!-- Hero -->
-      <header class="border-b border-rule pb-10">
-        <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">telc B1 · Komplettvorbereitung</p>
-        <h1 class="mt-3 font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] sm:text-[3rem]">
+    <!-- Hero: the person three weeks out, the pain, the plan -->
+    <section class="relative">
+      <Aurora />
+      <div class="relative mx-auto max-w-3xl px-5 pt-14 pb-12 sm:pt-20">
+        <p class="hero-line font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel" style="--d:0ms">telc B1 · Komplettvorbereitung</p>
+        <h1 class="hero-line mt-3 font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] sm:text-[3rem]" style="--d:80ms">
           Du weißt, dass du üben musst.<br />Der Plan sagt dir, was.
         </h1>
-        <p class="mt-5 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]">
+        <p class="hero-line mt-5 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]" style="--d:200ms">
           Die meisten fallen nicht durch, weil ihnen Grammatik fehlt. Sie fallen durch, weil sie drei
           Wochen vor der Prüfung irgendwas üben — und am Prüfungstag genau das fehlt, was drankommt.
           Die Komplettvorbereitung ist ein fester {PLAN_DAYS}-Tage-Plan: jeden Tag eine Aufgabe,
           in der Reihenfolge, die zur telc B1-Prüfung führt.
         </p>
 
-        <div class="mt-8 flex flex-wrap items-center gap-4">
+        <div class="hero-line mt-8 flex flex-wrap items-center gap-4" style="--d:320ms">
           {checkoutUrl ? (
-            <a
-              href={checkoutUrl}
-              class="inline-flex items-center justify-center rounded-md bg-siegel px-6 py-3 text-[0.9375rem] font-semibold text-white transition-colors hover:bg-siegel-lift"
-              data-checkout="telc-b1-komplett"
-            >
-              Ja, ich will den Plan — {deEur(course.price)} einmalig
+            <a href={checkoutUrl} class={`${BTN_PRIMARY} btn-shimmer relative overflow-hidden`} data-checkout="telc-b1-komplett">
+              <span class="relative z-10">Ja, ich will den Plan — {deEur(course.price)} einmalig</span>
             </a>
           ) : (
-            <a
-              href="/signup"
-              class="inline-flex items-center justify-center rounded-md bg-siegel px-6 py-3 text-[0.9375rem] font-semibold text-white transition-colors hover:bg-siegel-lift"
-            >
-              Der Kurs startet in Kürze — Gratis-Konto sichern
+            <a href="/signup" class={`${BTN_PRIMARY} btn-shimmer relative overflow-hidden`}>
+              <span class="relative z-10">Der Kurs startet in Kürze — Gratis-Konto sichern</span>
             </a>
           )}
-          <a href="/leitfaden/telc-b1/" class="text-[0.9375rem] font-semibold text-siegel underline underline-offset-2">
+          <a href="/leitfaden/telc-b1/" class={BTN_SECONDARY}>
             Erst den kostenlosen Leitfaden lesen
           </a>
         </div>
         {checkoutUrl && (
-          <p class="mt-3 font-data text-[0.75rem] text-graphite">
+          <p class="hero-line mt-4 font-data text-[0.75rem] text-graphite" style="--d:420ms">
             Einmalzahlung · kein Abo · {course.proMonths} Monate Pro-Zugang inklusive · beim Kauf die E-Mail deines
             DeutschMeister-Kontos verwenden (oder danach eins mit derselben E-Mail anlegen)
           </p>
         )}
-      </header>
+      </div>
+    </section>
+
+    <div class="mx-auto max-w-3xl px-5 pb-20">
 
       <!-- The four weeks -->
-      <section class="border-b border-rule py-10">
-        <h2 class="font-display text-[1.5rem] font-semibold tracking-[-0.01em]">Vier Wochen, ein Weg</h2>
-        <p class="mt-3 leading-relaxed text-graphite">
+      <section class="border-t border-rule py-12">
+        <h2 class="reveal font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2rem]">Vier Wochen, ein Weg</h2>
+        <p class="reveal mt-3 leading-relaxed text-graphite" style="--rd:80ms">
           {PLAN_DAYS} Tagesaufgaben über die komplette DeutschMeister-Bibliothek: {B1_TOPIC_COUNT} Grammatik-Lektionen
           auf B1-Niveau, Hör- und Lesetraining mit Muttersprachler-Dialogen, Satz-Röntgen und KI-Sprechtraining —
           jede Aufgabe abhakbar, dein Fortschritt bleibt gespeichert.
         </p>
-        <ol class="mt-6 space-y-4">
-          {WEEKS.map((w) => (
-            <li class="rounded-lg border border-rule bg-white p-5">
-              <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{w.name}</p>
+        <ol class="mt-10 grid gap-8 sm:grid-cols-2 sm:gap-5">
+          {WEEKS.map((w, i) => (
+            <li class="reveal relative rounded-clay border border-rule bg-white p-6 shadow-raise" style={`--rd:${i * 100}ms`}>
+              <span class={`absolute -top-4 left-6 flex h-9 w-9 items-center justify-center rounded-pill ${w.accent} font-data text-sm font-bold text-white shadow-raise`} aria-hidden="true">{w.n}</span>
+              <p class="mt-3 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{w.name}</p>
               <p class="mt-2 leading-relaxed text-ink">{w.focus}</p>
             </li>
           ))}
@@ -162,61 +170,65 @@ const WEEKS = [
       </section>
 
       <!-- Who built it -->
-      <section class="border-b border-rule py-10">
-        <h2 class="font-display text-[1.5rem] font-semibold tracking-[-0.01em]">Von jemandem, der es selbst musste</h2>
-        <p class="mt-3 leading-relaxed text-graphite">
-          DeutschMeister wurde von einem Arzt in Deutschland gebaut, der selbst Sprachprüfungen bestehen
-          musste. Die Plattform ist kein Spiel — sie ist ein Werkzeug für Leute, die eine Prüfung bestehen
-          müssen. Der Kurs ist die Reihenfolge, die er sich damals selbst gewünscht hätte.
-        </p>
+      <section class="border-t border-rule py-12">
+        <div class="reveal rounded-clay border border-rule bg-paper-sunk p-6 sm:p-8">
+          <h2 class="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2rem]">Von jemandem, der es selbst musste</h2>
+          <p class="mt-3 leading-relaxed text-graphite">
+            DeutschMeister wurde von einem Arzt in Deutschland gebaut, der selbst Sprachprüfungen bestehen
+            musste. Die Plattform ist kein Spiel — sie ist ein Werkzeug für Leute, die eine Prüfung bestehen
+            müssen. Der Kurs ist die Reihenfolge, die er sich damals selbst gewünscht hätte.
+          </p>
+        </div>
       </section>
 
-      <!-- Price -->
-      <section class="border-b border-rule py-10">
-        <h2 class="font-display text-[1.5rem] font-semibold tracking-[-0.01em]">Was er kostet</h2>
-        <p class="mt-3 leading-relaxed text-graphite">
+      <!-- Price: the one 3D card on the page, with the one shimmer CTA -->
+      <section class="border-t border-rule py-12">
+        <h2 class="reveal font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2rem]">Was er kostet</h2>
+        <p class="reveal mt-3 leading-relaxed text-graphite" style="--rd:80ms">
           Präsenz-Vorbereitungskurse kosten üblicherweise mehrere hundert Euro — und richten sich nach dem
           Stundenplan der Sprachschule, nicht nach deinem.
         </p>
-        <div class="mt-6 rounded-lg border border-rule bg-white p-6">
-          <p class="font-display text-[2.25rem] font-semibold tracking-[-0.02em]">{deEur(course.price)}</p>
-          <p class="font-data text-[0.75rem] uppercase tracking-[0.13em] text-graphite">einmalig · kein Abo · keine Verlängerung</p>
-          <ul class="mt-5 space-y-2 text-[0.9375rem] leading-relaxed">
-            <li>✓ Der komplette {PLAN_DAYS}-Tage-Plan mit Fortschritts-Checkliste — dauerhaft deiner</li>
-            <li>✓ {course.proMonths} Monate voller Pro-Zugang: alle {GRAMMAR_TOPIC_COUNT} Grammatikthemen, Hören, Lesen, KI-Sprechen, Satz-Röntgen</li>
-            <li>✓ Der telc B1 Übungstest mit Zeitlimit und Auswertung — und das KI-Schreibtraining nach den Prüfungskriterien (im Pro-Zugang enthalten)</li>
-            <li>✓ Prüfungswoche mit Format, Bewertung und Selbsttest</li>
-          </ul>
-          {checkoutUrl && (
-            <a
-              href={checkoutUrl}
-              class="mt-6 inline-flex items-center justify-center rounded-md bg-siegel px-6 py-3 text-[0.9375rem] font-semibold text-white transition-colors hover:bg-siegel-lift"
-              data-checkout="telc-b1-komplett"
-            >
-              Ja, ich will den Plan — {deEur(course.price)}
-            </a>
-          )}
+        <div class="reveal mt-8" style="--rd:160ms">
+          <div class="atropos" data-atropos-card>
+            <div class="atropos-scale"><div class="atropos-rotate"><div class="atropos-inner !overflow-visible">
+              <div class="rounded-clay border border-rule bg-white p-6 shadow-raise-siegel sm:p-8">
+                <p class="font-display text-[2.5rem] font-semibold leading-none tracking-[-0.02em]" data-atropos-offset="5">{deEur(course.price)}</p>
+                <p class="mt-2 font-data text-[0.75rem] uppercase tracking-[0.13em] text-graphite" data-atropos-offset="4">einmalig · kein Abo · keine Verlängerung</p>
+                <ul class="mt-5 space-y-2.5 text-[0.9375rem] leading-relaxed" data-atropos-offset="2">
+                  <li class="flex gap-2.5"><span class="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-pill bg-accent-limette-wash font-data text-[0.6875rem] font-bold text-accent-limette-ink" aria-hidden="true">✓</span><span>Der komplette {PLAN_DAYS}-Tage-Plan mit Fortschritts-Checkliste — dauerhaft deiner</span></li>
+                  <li class="flex gap-2.5"><span class="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-pill bg-accent-limette-wash font-data text-[0.6875rem] font-bold text-accent-limette-ink" aria-hidden="true">✓</span><span>{course.proMonths} Monate voller Pro-Zugang: alle {GRAMMAR_TOPIC_COUNT} Grammatikthemen, Hören, Lesen, KI-Sprechen, Satz-Röntgen</span></li>
+                  <li class="flex gap-2.5"><span class="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-pill bg-accent-limette-wash font-data text-[0.6875rem] font-bold text-accent-limette-ink" aria-hidden="true">✓</span><span>Der telc B1 Übungstest mit Zeitlimit und Auswertung — und das KI-Schreibtraining nach den Prüfungskriterien (im Pro-Zugang enthalten)</span></li>
+                  <li class="flex gap-2.5"><span class="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-pill bg-accent-limette-wash font-data text-[0.6875rem] font-bold text-accent-limette-ink" aria-hidden="true">✓</span><span>Prüfungswoche mit Format, Bewertung und Selbsttest</span></li>
+                </ul>
+                {checkoutUrl && (
+                  <a href={checkoutUrl} class={`${BTN_PRIMARY} mt-7`} data-checkout="telc-b1-komplett" data-atropos-offset="6">
+                    Ja, ich will den Plan — {deEur(course.price)}
+                  </a>
+                )}
+              </div>
+            </div></div></div>
+          </div>
         </div>
-        <p class="mt-4 text-[0.875rem] leading-relaxed text-graphite">
-          Noch unsicher, wo du stehst? Der <a href="/level-test/" class="font-semibold text-siegel underline underline-offset-2">Einstufungstest ist kostenlos</a> —
+        <p class="reveal mt-5 text-[0.875rem] leading-relaxed text-graphite" style="--rd:220ms">
+          Noch unsicher, wo du stehst? Der <a href="/level-test/" class="font-bold text-siegel transition-colors hover:text-siegel-deep">Einstufungstest ist kostenlos</a> —
           und ein Konto bringt dir {TRIAL_DAYS} Tage Pro zum Ausprobieren, bevor du irgendetwas kaufst.
         </p>
       </section>
 
       <!-- FAQ -->
-      <section class="py-10">
-        <h2 class="font-display text-[1.5rem] font-semibold tracking-[-0.01em]">Ehrliche Antworten</h2>
-        <dl class="mt-6 space-y-6">
-          {FAQS.map(({ q, a }) => (
-            <div class="rounded-lg border border-rule bg-white p-5">
+      <section class="border-t border-rule py-12">
+        <h2 class="reveal font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2rem]">Ehrliche Antworten</h2>
+        <dl class="mt-6 space-y-4">
+          {FAQS.map(({ q, a }, i) => (
+            <div class="reveal rounded-clay border border-rule bg-white p-5" style={`--rd:${i * 70}ms`}>
               <dt class="font-semibold text-ink">{q}</dt>
               <dd class="mt-2 leading-relaxed text-graphite">{a}</dd>
             </div>
           ))}
         </dl>
-        <p class="mt-8 text-[0.875rem] leading-relaxed text-graphite">
+        <p class="reveal mt-8 text-[0.875rem] leading-relaxed text-graphite">
           Alles zur Prüfung selbst — Teile, Dauer, Bewertung, Anmeldung — steht im kostenlosen
-          <a href="/leitfaden/telc-b1/" class="font-semibold text-siegel underline underline-offset-2">telc B1-Leitfaden</a>.
+          <a href="/leitfaden/telc-b1/" class="font-bold text-siegel transition-colors hover:text-siegel-deep">telc B1-Leitfaden</a>.
         </p>
       </section>
 

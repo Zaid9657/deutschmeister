@@ -1,5 +1,7 @@
 ---
-// Pricing — rebuilt 2026-08-22 on src/data/design-tokens.js.
+// Pricing — rebuilt 2026-08-22 on src/data/design-tokens.js; reskinned
+// 2026-09-01 onto the Playful Depth system (docs/design/playbook.md) with the
+// exam-deadline learner's voice.
 //
 // THE THESIS. A language learner's real question is not "which tier am I" but
 // "how far does this get me". The product's own structure answers it: eight
@@ -8,11 +10,10 @@
 // rendered as static markup with no interaction, because the comparison is
 // true whether or not JavaScript runs.
 //
-// What the previous version did that this one does not: a dark gradient (the
-// only dark page on an otherwise light site), a blue accent belonging to no
-// system, and two feature bullet-lists side by side. The plan comparison is now
-// a declension table — rows and aligned columns, the artifact this subject
-// actually uses — per rule 3 in the tokens file.
+// The plan comparison is a declension table — rows and aligned columns, the
+// artifact this subject actually uses — and stays FLAT (reference material,
+// tokens rule 3). The things you can press (the toggle, the CTAs, the course
+// card) are the things that are raised.
 //
 // INVARIANTS CARRIED OVER (do not regress):
 //   - every figure derives from ../data/pricing.js and ../data/marketing.js;
@@ -23,6 +24,7 @@
 //     scripts/check-built-html.mjs fails
 import { ORGANIZATION } from '../lib/siteMeta.js';
 import Layout from '../layouts/Layout.astro';
+import Aurora from '../components/Aurora.astro';
 import '../styles/global.css';
 import { PLANS, CURRENCY, num, eur, COURSE_TELC_B1_PRICE_EUR, COURSE_PRO_MONTHS } from '../data/pricing.js';
 import {
@@ -133,57 +135,71 @@ const KASUS_CLASS = {
   dativ: 'border-kasus-dativ bg-kasus-dativ-wash text-kasus-dativ-ink',
   akkusativ: 'border-kasus-akkusativ bg-kasus-akkusativ-wash text-kasus-akkusativ-ink',
 };
+
+// The depth grammar as class strings (playbook §1).
+const BTN =
+  'inline-flex items-center justify-center gap-2 rounded-clay text-sm font-bold transition-all duration-100 ease-snap select-none';
+const BTN_PRIMARY = `${BTN} bg-siegel px-5 py-3 text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`;
+const BTN_SECONDARY = `${BTN} border border-rule bg-white px-5 py-3 text-ink shadow-raise hover:border-siegel hover:text-siegel-deep active:translate-y-1 active:shadow-none`;
 ---
 
 <Layout title={title} description={description} canonical="https://deutsch-meister.de/pricing/" jsonLd={jsonLd}>
-  <div class="bg-paper text-ink">
-    <div class="mx-auto max-w-5xl px-5 pt-14 pb-20">
+  <div class="overflow-x-clip bg-paper text-ink">
 
-      <!-- Hero: the thesis, then the ladder that proves it -->
-      <header class="max-w-2xl">
-        <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">Preise · Pricing</p>
-        <h1 class="mt-3 font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] sm:text-[3.25rem]">
-          {LEVEL_COUNT} levels. One price.
-        </h1>
-        <p class="mt-5 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]">
-          DeutschMeister teaches German from your first <span class="font-display italic">der/die/das</span> through to B2.
-          {FREE_LEVEL_LABEL} is free forever. Pro opens the other {LEVEL_COUNT - FREE_RUNGS}.
-        </p>
-      </header>
+    <!-- Hero: the person with a date, the promise, the ladder that proves it -->
+    <section class="relative">
+      <Aurora />
+      <div class="relative mx-auto max-w-5xl px-5 pt-14 pb-10 sm:pt-20">
+        <header class="max-w-2xl">
+          <p class="hero-line font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel" style="--d:0ms">Preise · Pricing</p>
+          <h1 class="hero-line mt-3 font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] sm:text-[3.25rem]" style="--d:80ms">
+            Everything the exam tests.<br />One price.
+          </h1>
+          <p class="hero-line mt-5 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]" style="--d:200ms">
+            You have a date on the calendar and a level to reach — the month before it is not the
+            month to be locked out of B1. {FREE_LEVEL_LABEL} is free forever. Pro opens the other
+            {LEVEL_COUNT - FREE_RUNGS} levels, the speaking coach, the writing feedback and the timed
+            practice test, for {eur(PLANS.monthly.perDay)} a day.
+          </p>
+        </header>
 
-      <!-- The ladder. Static on purpose: the comparison is true with JS off. -->
-      <section class="mt-10 border-y border-rule py-7" aria-labelledby="ladder-h">
-        <h2 id="ladder-h" class="sr-only">The eight CEFR levels</h2>
-        <ol class="grid grid-cols-4 gap-px overflow-hidden rounded-lg border border-rule bg-rule sm:grid-cols-8">
-          {LEVELS.map((lvl, i) => (
-            <li class={`px-2 py-3 text-center ${i < FREE_RUNGS ? 'bg-paper' : 'bg-siegel-wash'}`}>
-              <span class="block font-data text-[0.8125rem] font-semibold tracking-[0.02em] text-ink">{lvl.code}</span>
-              <span class="mt-1 block text-[0.6875rem] leading-tight text-graphite">{lvl.subtitle}</span>
-              {i < FREE_RUNGS && (
-                <span class="mt-1.5 inline-block font-data text-[0.5625rem] font-bold uppercase tracking-[0.13em] text-siegel">Free</span>
-              )}
-            </li>
-          ))}
-        </ol>
-        <p class="mt-3 font-data text-[0.8125rem] text-graphite">
-          <span class="inline-block h-2 w-2 rounded-full border border-siegel bg-siegel-wash align-middle"></span>
-          <span class="ml-2 align-middle">Opened by Pro</span>
-        </p>
-      </section>
+        <!-- The ladder. Static on purpose: the comparison is true with JS off. -->
+        <section class="hero-line mt-10" style="--d:320ms" aria-labelledby="ladder-h">
+          <h2 id="ladder-h" class="sr-only">The eight CEFR levels</h2>
+          <ol class="grid grid-cols-4 gap-2 sm:grid-cols-8">
+            {LEVELS.map((lvl, i) => (
+              <li class={`rounded-clay border px-2 py-3 text-center ${i < FREE_RUNGS ? 'border-rule bg-white shadow-raise' : 'border-siegel/30 bg-siegel-wash'}`}>
+                <span class="block font-data text-[0.8125rem] font-semibold tracking-[0.02em] text-ink">{lvl.code}</span>
+                <span class="mt-1 block text-[0.6875rem] leading-tight text-graphite">{lvl.subtitle}</span>
+                {i < FREE_RUNGS && (
+                  <span class="mt-1.5 inline-block rounded-pill bg-accent-limette-wash px-1.5 py-0.5 font-data text-[0.5625rem] font-bold uppercase tracking-[0.13em] text-accent-limette-ink">Free</span>
+                )}
+              </li>
+            ))}
+          </ol>
+          <p class="mt-3 font-data text-[0.8125rem] text-graphite">
+            <span class="inline-block h-2 w-2 rounded-full border border-siegel bg-siegel-wash align-middle"></span>
+            <span class="ml-2 align-middle">Opened by Pro</span>
+          </p>
+        </section>
+      </div>
+    </section>
 
-      <!-- Billing toggle -->
-      <div class="mt-10 flex items-center gap-3">
+    <div class="mx-auto max-w-5xl px-5 pb-20">
+
+      <!-- Billing toggle: chunky, pressable -->
+      <div class="reveal mt-4 flex items-center gap-3">
         <span class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">Billing</span>
-        <div class="inline-flex rounded-pill border border-rule p-0.5" role="group" aria-label="Billing period">
-          <button id="toggle-monthly" type="button" aria-pressed="true" class="rounded-pill bg-ink px-4 py-1.5 text-sm font-semibold text-paper transition-colors">Monthly</button>
-          <button id="toggle-yearly" type="button" aria-pressed="false" class="rounded-pill px-4 py-1.5 text-sm font-semibold text-graphite transition-colors hover:text-ink">
+        <div class="inline-flex rounded-pill border border-rule bg-white p-1 shadow-raise" role="group" aria-label="Billing period">
+          <button id="toggle-monthly" type="button" aria-pressed="true" class="rounded-pill bg-ink px-4 py-1.5 text-sm font-bold text-paper transition-colors">Monthly</button>
+          <button id="toggle-yearly" type="button" aria-pressed="false" class="rounded-pill px-4 py-1.5 text-sm font-bold text-graphite transition-colors hover:text-ink">
             Yearly <span class="font-data text-[0.6875rem] tracking-[0.02em]">−{PLANS.yearly.savingPercent}%</span>
           </button>
         </div>
       </div>
 
-      <!-- The comparison, as a declension table -->
-      <section class="mt-6 overflow-x-auto" aria-labelledby="compare-h">
+      <!-- The comparison, as a declension table — flat, reference material -->
+      <section class="reveal mt-6 overflow-x-auto" style="--rd:80ms" aria-labelledby="compare-h">
         <h2 id="compare-h" class="sr-only">Free and Pro compared</h2>
         <table class="w-full min-w-[34rem] border-collapse text-left">
           <thead>
@@ -233,13 +249,13 @@ const KASUS_CLASS = {
             <tr>
               <td class="py-5 pr-4"></td>
               <td class="px-4 py-5">
-                <a href="https://deutsch-meister.de/signup" class="inline-flex w-full items-center justify-center rounded-md border border-ink px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-paper">
+                <a href="https://deutsch-meister.de/signup" class={`${BTN_SECONDARY} w-full`}>
                   Start free
                 </a>
               </td>
               <td class="bg-siegel-wash py-5 pl-4">
-                <button id="pro-btn" type="button" class="inline-flex w-full items-center justify-center rounded-md bg-siegel px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-siegel-lift">
-                  Get started
+                <button id="pro-btn" type="button" class={`${BTN_PRIMARY} btn-shimmer relative w-full overflow-hidden`}>
+                  <span class="relative z-10">Get started</span>
                 </button>
                 <span id="plan-note" class="mt-2 block font-data text-[0.6875rem] leading-snug text-graphite">
                   {TRIAL_DAYS}-day free trial · cancel anytime
@@ -250,45 +266,50 @@ const KASUS_CLASS = {
         </table>
       </section>
 
-      <!-- The one-time course — the highest-ticket product was invisible on
-           the money page until 2026-09-01. Price derives from pricing.js
-           (COURSE_TELC_B1_PRICE_EUR); no literal enters the source. -->
-      <section class="mt-12 rounded-lg border border-rule bg-paper-sunk p-6 sm:p-8" aria-labelledby="course-h">
-        <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-          <div class="max-w-xl">
-            <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">
-              Preparing for telc B1?
-            </p>
-            <h2 id="course-h" class="mt-2 font-display text-[1.375rem] font-semibold text-ink sm:text-[1.625rem]">
-              telc B1 Komplettvorbereitung
-            </h2>
-            <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">
-              A fixed 4-week exam plan over the whole library — one task a day, in the order that
-              leads to the exam. One-time purchase, {COURSE_PRO_MONTHS} months of full Pro included,
-              the course area stays yours permanently.
-            </p>
-          </div>
-          <div class="shrink-0 text-left sm:text-right">
-            <p class="font-display text-[2rem] font-semibold leading-none text-ink">{eur(COURSE_TELC_B1_PRICE_EUR)}</p>
-            <p class="mt-1 font-data text-[0.75rem] text-graphite">one-time · no subscription</p>
-            <a href="/telc-b1-komplettvorbereitung/" class="mt-4 inline-flex items-center justify-center rounded-md border border-ink px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-paper">
-              See the 4-week plan
-            </a>
-          </div>
+      <!-- The one-time course — the highest-ticket product, as a 3D card.
+           Price derives from pricing.js (COURSE_TELC_B1_PRICE_EUR). -->
+      <section class="reveal mt-14" style="--rd:80ms" aria-labelledby="course-h">
+        <div class="atropos" data-atropos-card>
+          <div class="atropos-scale"><div class="atropos-rotate"><div class="atropos-inner !overflow-visible">
+            <div class="rounded-clay border border-rule bg-white p-6 shadow-raise-siegel sm:p-8">
+              <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+                <div class="max-w-xl">
+                  <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel" data-atropos-offset="4">
+                    Preparing for telc B1?
+                  </p>
+                  <h2 id="course-h" class="mt-2 font-display text-[1.375rem] font-semibold text-ink sm:text-[1.625rem]" data-atropos-offset="3">
+                    telc B1 Komplettvorbereitung
+                  </h2>
+                  <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite" data-atropos-offset="2">
+                    A fixed 4-week exam plan over the whole library — one task a day, in the order that
+                    leads to the exam. One-time purchase, {COURSE_PRO_MONTHS} months of full Pro included,
+                    the course area stays yours permanently.
+                  </p>
+                </div>
+                <div class="shrink-0 text-left sm:text-right" data-atropos-offset="6">
+                  <p class="font-display text-[2rem] font-semibold leading-none text-ink">{eur(COURSE_TELC_B1_PRICE_EUR)}</p>
+                  <p class="mt-1 font-data text-[0.75rem] text-graphite">one-time · no subscription</p>
+                  <a href="/telc-b1-komplettvorbereitung/" class={`${BTN_SECONDARY} mt-4`}>
+                    See the 4-week plan
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div></div></div>
         </div>
       </section>
 
       <!-- What Pro actually buys, in the product's own notation.
            The only place on this page where the case colours are allowed. -->
       <section class="mt-16 border-t border-rule pt-10" aria-labelledby="demo-h">
-        <h2 id="demo-h" class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[2rem]">
+        <h2 id="demo-h" class="reveal font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[2rem]">
           Grammar you can see
         </h2>
-        <p class="mt-3 max-w-prose text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
+        <p class="reveal mt-3 max-w-prose text-[0.9375rem] leading-relaxed text-graphite sm:text-base" style="--rd:80ms">
           Sentence X-Ray takes a German sentence apart and colours each piece by its case, so the pattern
           becomes visible instead of memorised. The same colours run through every lesson.
         </p>
-        <div class="mt-6 flex flex-wrap items-stretch gap-2">
+        <div class="reveal mt-6 flex flex-wrap items-stretch gap-2" style="--rd:160ms">
           {DEMO.map((w) => (
             <span class={`rounded-md border px-3 py-2 ${w.kasus ? KASUS_CLASS[w.kasus] : 'border-rule bg-paper-sunk text-graphite'}`}>
               <span class="block text-base font-semibold">{w.text}</span>
@@ -297,19 +318,19 @@ const KASUS_CLASS = {
             </span>
           ))}
         </div>
-        <p class="mt-3 font-data text-[0.8125rem] text-graphite">
+        <p class="reveal mt-3 font-data text-[0.8125rem] text-graphite" style="--rd:220ms">
           Free: {ANON_DAILY_LIMIT} sentence a day. Pro: {PRO_DAILY_LIMIT}.
         </p>
       </section>
 
       <!-- FAQ -->
       <section class="mt-16 border-t border-rule pt-10" aria-labelledby="faq-h">
-        <h2 id="faq-h" class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[2rem]">
+        <h2 id="faq-h" class="reveal font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[2rem]">
           Before you decide
         </h2>
         <dl class="mt-6 max-w-prose">
-          {FAQS.map((item) => (
-            <div class="border-b border-rule py-5">
+          {FAQS.map((item, i) => (
+            <div class="reveal border-b border-rule py-5" style={`--rd:${i * 70}ms`}>
               <dt class="text-[0.9375rem] font-semibold">{item.q}</dt>
               <dd class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">{item.a}</dd>
             </div>
@@ -346,8 +367,8 @@ const KASUS_CLASS = {
         ? EUR(plan.asMonthly) + ' a month, billed yearly · cancel anytime'
         : EUR(plan.perDay) + ' a day · cancel anytime';
 
-    const on = 'rounded-pill px-4 py-1.5 text-sm font-semibold transition-colors bg-ink text-paper';
-    const off = 'rounded-pill px-4 py-1.5 text-sm font-semibold transition-colors text-graphite hover:text-ink';
+    const on = 'rounded-pill px-4 py-1.5 text-sm font-bold transition-colors bg-ink text-paper';
+    const off = 'rounded-pill px-4 py-1.5 text-sm font-bold transition-colors text-graphite hover:text-ink';
     $('toggle-monthly').className = cycle === 'monthly' ? on : off;
     $('toggle-yearly').className = cycle === 'yearly' ? on : off;
     $('toggle-monthly').setAttribute('aria-pressed', String(cycle === 'monthly'));
