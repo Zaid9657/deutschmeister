@@ -1,0 +1,20 @@
+---
+// Aurora — drifting, blurred colour fields behind a hero or close section.
+// Token washes only (siegel / himbeer / aprikose), never a case colour.
+// Parent must be `relative` + `overflow-hidden`; put content in a `relative`
+// sibling so it paints above. `variant="close"` = one blob, lower-right.
+interface Props { variant?: 'hero' | 'close'; class?: string }
+const { variant = 'hero', class: className = '' } = Astro.props;
+---
+
+<div class={`aurora pointer-events-none absolute inset-0 overflow-hidden ${className}`} aria-hidden="true">
+  {variant === 'hero' ? (
+    <>
+      <div class="aurora-blob aurora-a"></div>
+      <div class="aurora-blob aurora-b"></div>
+      <div class="aurora-blob aurora-c"></div>
+    </>
+  ) : (
+    <div class="aurora-blob aurora-b" style="left:60%;top:-30%"></div>
+  )}
+</div>

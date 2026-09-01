@@ -47,10 +47,18 @@ const SIZES = {
 };
 
 const Button = forwardRef(function Button(
-  { variant = 'primary', size = 'md', to, href, type = 'button', className = '', children, ...rest },
+  { variant = 'primary', size = 'md', shimmer = false, to, href, type = 'button', className = '', children, ...rest },
   ref,
 ) {
-  const classes = [BASE, VARIANTS[variant] ?? VARIANTS.primary, SIZES[size] ?? '', className]
+  // `shimmer`: the periodic highlight sweep (index.css .btn-shimmer) — for
+  // the ONE primary action on a screen, never on every button.
+  const classes = [
+    BASE,
+    VARIANTS[variant] ?? VARIANTS.primary,
+    SIZES[size] ?? '',
+    shimmer ? 'btn-shimmer relative overflow-hidden' : '',
+    className,
+  ]
     .filter(Boolean)
     .join(' ');
 
