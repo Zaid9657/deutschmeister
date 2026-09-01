@@ -38,7 +38,7 @@ const HUB_COPY = {
   telc_b1: {
     title: 'telc B1 Vorbereitung online | DeutschMeister',
     description:
-      'Bereite dich online auf telc Deutsch B1 vor: Grammatik B1.1–B1.2, Hörtraining, Lesetexte, KI-Sprechtraining für die Paarprüfung — und ein kostenloser Einstufungstest.',
+      'Online auf telc Deutsch B1 vorbereiten: Grammatik B1.1–B1.2, Hörtraining, Lesetexte, KI-Sprechtraining für die Paarprüfung — plus kostenloser Einstufungstest.',
     intro:
       'Die telc B1 Prüfung testet vier Fertigkeiten — und die meisten fallen nicht durch, weil ihnen Deutsch fehlt, sondern weil sie die falschen Dinge geübt haben. Hier ist der Weg durch DeutschMeister, der zu dieser Prüfung führt.',
     focus:

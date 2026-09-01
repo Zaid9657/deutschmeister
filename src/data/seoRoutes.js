@@ -86,7 +86,7 @@ export const SEO_ROUTES = {
   '/faq': {
     title: 'Häufige Fragen',
     description:
-      'Häufige Fragen zu Deutschmeister — Preise, Prüfungsvorbereitung (Goethe, telc, TestDaF, DTZ), KI-Sprechtraining, Sentence X-Ray und mehr. Deutsch lernen von A1 bis B2.',
+      'Häufige Fragen zu Deutschmeister: Preise, Prüfungsvorbereitung (Goethe, telc, TestDaF, DTZ), KI-Sprechtraining und Sentence X-Ray. Deutsch lernen von A1 bis B2.',
     keywords:
       'Deutschmeister FAQ, Deutsch lernen, Goethe Prüfung, telc Prüfung, TestDaF, DTZ, KI Sprechtraining, Sentence X-Ray, Deutsch Grammatik',
     lang: 'de',
@@ -94,7 +94,7 @@ export const SEO_ROUTES = {
   '/ueber-uns': {
     title: 'Über uns',
     description:
-      'Deutschmeister wurde von Zaid gegründet — Arzt mit Blue Card in Deutschland — und wird von einem Team von Ärzten in Deutschland entwickelt. KI-Sprechtraining, Sentence X-Ray, Prüfungsvorbereitung von A1 bis B2.',
+      'Gegründet von Zaid, Arzt mit Blue Card in Deutschland, entwickelt von Ärzten: KI-Sprechtraining, Sentence X-Ray und Prüfungsvorbereitung von A1 bis B2.',
     keywords:
       'Deutschmeister, Über uns, Deutsch lernen, Ärzte, Blue Card, KI Sprechtraining, Goethe Prüfung, telc, TestDaF',
     lang: 'de',

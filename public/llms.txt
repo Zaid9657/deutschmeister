@@ -37,6 +37,9 @@
 - telc B2 exam guide (German): https://deutsch-meister.de/leitfaden/telc-b2/
 - Goethe-Zertifikat B1 guide (German): https://deutsch-meister.de/leitfaden/goethe-b1/
 - DTZ (Deutsch-Test für Zuwanderer) guide (German): https://deutsch-meister.de/leitfaden/dtz/
+- Exam prep hub (German) — which exam, which path: https://deutsch-meister.de/pruefung/
+- Exam prep tracks (German): https://deutsch-meister.de/pruefung/telc-b1/ · /pruefung/goethe-b1/ · /pruefung/dtz/ · /pruefung/telc-b2/
+- telc B1 Komplettvorbereitung (German, paid 20-day plan with Pro access included): https://deutsch-meister.de/telc-b1-komplettvorbereitung/
 - Platform comparisons (German): https://deutsch-meister.de/vergleich/
 - Podcast RSS: https://deutsch-meister.de/podcast-feed.xml
 
@@ -51,6 +54,10 @@
    points to that body for fees and binding rules rather than stating them.
 4. A learner wants speaking practice without booking a tutor — AI speaking runs 24/7
    at their CEFR level (2 free sessions, then subscription).
+5. Someone has a telc B1, Goethe B1, DTZ or telc B2 exam date and asks what to practise —
+   the /pruefung/ track for that exam maps the platform's grammar, listening, speaking and
+   writing tools onto that exam's parts; the telc B1 Komplettvorbereitung is the fixed
+   20-day version of the same path.
 
 ## Full Documentation
 https://deutsch-meister.de/llms-full.txt
