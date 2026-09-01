@@ -1,8 +1,16 @@
 ---
 // The exam hub index — "which exam are you preparing for?" as a page.
 // Lists the four tracks from the shared registry; each card leads to its hub.
+//
+// v3 (Playful Depth, docs/design/playbook.md): aurora hero with hero-line
+// entrance, and the four cards are Atropos tilt scenes — the same exam picker
+// as the homepage, because a visitor CHOOSES from this grid (rule 3: depth is
+// an affordance). Reveals stagger on the section rhythm; Layout.astro already
+// loads showtime.css + Showtime.astro, so nothing is imported here beyond
+// <Aurora />. Copy, hrefs and the single <h1> are unchanged.
 import Layout from '../../layouts/Layout.astro';
 import '../../styles/global.css';
+import Aurora from '../../components/Aurora.astro';
 import { ORGANIZATION } from '../../lib/siteMeta.js';
 import { EXAM_HUBS } from '../../data/exams/index.js';
 
@@ -29,36 +37,48 @@ const jsonLd = {
   jsonLd={jsonLd}
   lang="de"
 >
-  <div class="bg-paper text-ink">
-    <div class="mx-auto max-w-3xl px-5 pb-20 pt-12">
-      <header class="border-b border-rule pb-8">
-        <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">Prüfungsvorbereitung</p>
-        <h1 class="mt-3 font-display text-[2rem] font-semibold leading-[1.1] tracking-[-0.02em] sm:text-[2.75rem]">
-          Auf welche Prüfung bereitest du dich vor?
-        </h1>
-        <p class="mt-5 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.125rem]">
-          Jede Prüfung hat ihr eigenes Format — und ihren eigenen Vorbereitungsweg durch die
-          DeutschMeister-Bibliothek. Wähl deine Prüfung; wenn du dein Niveau noch nicht kennst,
-          starte mit dem <a href="/level-test/" class="text-siegel underline-offset-2 hover:underline">kostenlosen Einstufungstest</a>.
-        </p>
-      </header>
+  <div class="overflow-x-clip bg-paper text-ink">
 
-      <ul class="mt-10 grid gap-4 sm:grid-cols-2">
-        {EXAM_HUBS.map((hub) => (
-          <li>
-            <a href={`/pruefung/${hub.slug}/`} class="block h-full rounded-lg border border-rule p-6 transition-colors hover:border-siegel">
-              <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{hub.level}</p>
-              <h2 class="mt-2 font-display text-[1.25rem] font-semibold text-ink">{hub.nameDe}</h2>
-              <p class="mt-2 text-[0.875rem] leading-relaxed text-graphite">{hub.focus}</p>
-              <span class="mt-4 inline-block text-[0.875rem] font-semibold text-siegel">Vorbereitung ansehen →</span>
-            </a>
+    <!-- ═══ Hero ═══ -->
+    <section class="relative" aria-labelledby="hero-h">
+      <Aurora />
+      <div class="relative mx-auto max-w-3xl px-5 pb-10 pt-14 sm:pt-20">
+        <header>
+          <p class="hero-line font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel" style="--d:0ms">Prüfungsvorbereitung</p>
+          <h1 id="hero-h" class="hero-line mt-3 font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.025em] sm:text-[3rem]" style="--d:80ms">
+            Auf welche Prüfung bereitest du dich vor?
+          </h1>
+          <p class="hero-line mt-5 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]" style="--d:220ms">
+            Jede Prüfung hat ihr eigenes Format — und ihren eigenen Vorbereitungsweg durch die
+            DeutschMeister-Bibliothek. Wähl deine Prüfung; wenn du dein Niveau noch nicht kennst,
+            starte mit dem <a href="/level-test/" class="font-bold text-siegel transition-colors hover:text-siegel-deep">kostenlosen Einstufungstest</a>.
+          </p>
+        </header>
+      </div>
+    </section>
+
+    <!-- ═══ Exam picker: four 3D cards ═══ -->
+    <div class="mx-auto max-w-3xl px-5 pb-20">
+      <ul class="grid gap-6 sm:grid-cols-2">
+        {EXAM_HUBS.map((hub, i) => (
+          <li class="reveal" style={`--rd:${i * 90}ms`}>
+            <div class="atropos h-full" data-atropos-card>
+              <div class="atropos-scale h-full"><div class="atropos-rotate h-full"><div class="atropos-inner h-full !overflow-visible">
+                <a href={`/pruefung/${hub.slug}/`} class="flex h-full flex-col rounded-clay border border-rule bg-white p-6 shadow-raise transition-shadow hover:shadow-raise-lg">
+                  <p class="self-start rounded-pill bg-siegel-wash px-2.5 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep" data-atropos-offset="8">{hub.level}</p>
+                  <h2 class="mt-3 font-display text-[1.25rem] font-semibold leading-snug text-ink" data-atropos-offset="4">{hub.nameDe}</h2>
+                  <p class="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-graphite" data-atropos-offset="2">{hub.focus}</p>
+                  <span class="mt-4 inline-block text-sm font-bold text-siegel" data-atropos-offset="6">Vorbereitung ansehen →</span>
+                </a>
+              </div></div></div>
+            </div>
           </li>
         ))}
       </ul>
 
-      <p class="mt-10 text-[0.875rem] leading-relaxed text-graphite">
+      <p class="reveal mt-10 border-t border-rule pt-6 text-[0.9375rem] leading-relaxed text-graphite" style="--rd:200ms">
         Du lernst ohne Prüfungstermin? Dann führt dein Weg über die
-        <a href="/grammar/" class="text-siegel underline-offset-2 hover:underline">Grammatik-Bibliothek</a> —
+        <a href="/grammar/" class="font-bold text-siegel transition-colors hover:text-siegel-deep">Grammatik-Bibliothek</a> —
         A1.1 ist komplett kostenlos, ohne Konto.
       </p>
     </div>

@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import {
   Mic, Crown, ArrowRight, Loader2, AlertTriangle, Monitor, Lock, Play,
   Wallet, MessageCircle, CheckCircle2, RotateCcw, Clock,
@@ -15,7 +14,13 @@ import { checkSpeakingSupport } from '../components/speaking/mediaSupport';
 import SpeakingSession from '../components/speaking/SpeakingSession';
 import SpeakingEvaluationResults from '../components/SpeakingEvaluationResults';
 import { LEVEL_ORDER } from '../config/levels';
-import Button from '../components/ui/Button';
+import Button from '../components/ui/Button.jsx';
+import Card from '../components/ui/Card.jsx';
+import Chip from '../components/ui/Chip.jsx';
+import SectionHeading from '../components/ui/SectionHeading.jsx';
+import Reveal from '../components/ui/Reveal.jsx';
+import Aurora from '../components/ui/Aurora.jsx';
+import Tilt from '../components/ui/Tilt.jsx';
 
 // English display names for the level picker (the German names in
 // speakingPrompts.js are shared with the AI prompt config and stay unchanged).
@@ -28,6 +33,9 @@ const LEVEL_NAMES_EN = {
 const DURATIONS = [5, 10, 15];
 const PRICE_CENTS = { 5: 100, 10: 200, 15: 300 };
 const SUB_FREE_5MIN_PER_DAY = 2;
+
+const FIELD_LABEL = 'block font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel mb-2';
+const PRESS = 'transition-all duration-100 ease-snap active:translate-y-1 active:shadow-none';
 
 function normalizePlacementLevel(raw) {
   if (!raw) return 'A1.1';
@@ -61,9 +69,9 @@ function BrowserUnsupportedBanner({ browserSupport }) {
     catch { window.prompt('Copy URL:', window.location.href); }
   };
   return (
-    <div className="max-w-lg mx-auto mb-6 bg-white rounded-2xl border border-siegel/25 p-6 text-center">
-      <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-siegel-wash flex items-center justify-center">
-        <AlertTriangle className="w-7 h-7 text-siegel" />
+    <Card tone="aprikose" className="max-w-lg mx-auto mb-6 p-6 text-center">
+      <div className="w-14 h-14 mx-auto mb-4 rounded-clay bg-white flex items-center justify-center">
+        <AlertTriangle className="w-7 h-7 text-accent-aprikose-ink" />
       </div>
       <h3 className="font-bold text-ink mb-2">
         {isInApp ? 'In-app browser detected' : 'Browser not supported'}
@@ -74,34 +82,36 @@ function BrowserUnsupportedBanner({ browserSupport }) {
           : "Your browser doesn't support the required audio features."}
       </p>
       {isInApp ? (
-        <button onClick={handleCopy} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-siegel hover:bg-siegel-lift text-white font-semibold text-sm transition-colors">
+        <Button onClick={handleCopy}>
           Copy URL
-        </button>
+        </Button>
       ) : (
-        <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-paper border border-rule text-sm text-graphite">
+        <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-clay bg-white border border-rule text-sm text-graphite">
           <Monitor className="w-4 h-4" /> Please use <strong>Chrome</strong>, <strong>Edge</strong> or <strong>Safari</strong>
         </div>
       )}
-    </div>
+    </Card>
   );
 }
 
+// Pass = limette (success), miss = a calm siegel wash — never colour alone,
+// the heading carries the verdict.
 function MissionResultBanner({ passed }) {
   const isPassed = passed === true;
   return (
-    <div className={`max-w-lg mx-auto mb-6 rounded-2xl border p-5 flex items-center gap-4 ${isPassed ? 'bg-green-50 border-green-200' : 'bg-siegel-wash border-siegel/25'}`}>
-      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 ${isPassed ? 'bg-green-100' : 'bg-paper-sunk'}`}>
-        {isPassed ? <CheckCircle2 className="w-6 h-6 text-green-600" /> : <RotateCcw className="w-6 h-6 text-siegel" />}
+    <Card tone={isPassed ? 'limette' : 'wash'} className="max-w-lg mx-auto mb-6 p-5 flex items-center gap-4">
+      <div className="w-12 h-12 rounded-clay bg-white flex items-center justify-center flex-shrink-0">
+        {isPassed ? <CheckCircle2 className="w-6 h-6 text-accent-limette-ink" /> : <RotateCcw className="w-6 h-6 text-siegel" />}
       </div>
       <div>
-        <h3 className={`font-bold ${isPassed ? 'text-green-700' : 'text-siegel-deep'}`}>
+        <h3 className={`font-bold ${isPassed ? 'text-accent-limette-ink' : 'text-siegel-deep'}`}>
           {isPassed ? 'Mission complete!' : 'Almost there'}
         </h3>
-        <p className={`text-sm ${isPassed ? 'text-green-600' : 'text-siegel'}`}>
+        <p className="text-sm text-graphite">
           {isPassed ? 'You reached the mission goal. Keep it up!' : "You didn't quite reach the goal — give it another try."}
         </p>
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -262,48 +272,57 @@ const SpeakingPage = () => {
   // the free-session count derives from marketing.js.
   if (!user) {
     return (
-      <div className="min-h-screen bg-paper px-4 pt-24 pb-16">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="w-20 h-20 mx-auto mb-6 rounded-lg bg-siegel flex items-center justify-center">
+      <div className="min-h-screen bg-paper text-ink px-4 pt-24 pb-16 relative overflow-hidden">
+        <Aurora />
+        <div className="relative max-w-2xl mx-auto text-center">
+          <div className="hero-line w-20 h-20 mx-auto mb-6 rounded-clay bg-siegel shadow-raise-siegel flex items-center justify-center" style={{ '--d': '0ms' }}>
             <Mic className="w-10 h-10 text-white" />
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-ink mb-3">German Speaking Practice</h1>
-          <p className="text-lg text-graphite mb-8 max-w-xl mx-auto">
-            Speak German out loud with an AI conversation partner that listens, answers
-            at your level, and tells you afterwards what was right, what to fix, and
-            what a native speaker would have said instead.
-          </p>
+          <SectionHeading
+            level={1}
+            size="page"
+            align="center"
+            title="German Speaking Practice"
+            lead="Speak German out loud with an AI conversation partner that listens, answers at your level, and tells you afterwards what was right, what to fix, and what a native speaker would have said instead."
+            className="mb-8"
+          />
           <div className="grid sm:grid-cols-3 gap-4 text-left mb-8">
-            <div className="bg-white rounded-xl border border-rule p-5">
-              <h2 className="font-semibold text-ink text-sm mb-1.5">Every level, A1 to B2</h2>
-              <p className="text-sm text-graphite leading-relaxed">
-                The partner adapts its vocabulary and pace to your CEFR level — from
-                first sentences at A1.1 to open discussion at B2.2.
-              </p>
-            </div>
-            <div className="bg-white rounded-xl border border-rule p-5">
-              <h2 className="font-semibold text-ink text-sm mb-1.5">Missions or free talk</h2>
-              <p className="text-sm text-graphite leading-relaxed">
-                Guided scenarios — ordering, appointments, small talk — or open
-                conversation. Sessions run 5, 10 or 15 minutes.
-              </p>
-            </div>
-            <div className="bg-white rounded-xl border border-rule p-5">
-              <h2 className="font-semibold text-ink text-sm mb-1.5">Feedback you can use</h2>
-              <p className="text-sm text-graphite leading-relaxed">
-                After each session: grammar, vocabulary and pronunciation, with
-                concrete corrections — like a patient tutor with unlimited time.
-              </p>
-            </div>
+            <Reveal delay={0}>
+              <Card className="p-5 h-full">
+                <h2 className="font-semibold text-ink text-sm mb-1.5">Every level, A1 to B2</h2>
+                <p className="text-sm text-graphite leading-relaxed">
+                  The partner adapts its vocabulary and pace to your CEFR level — from
+                  first sentences at A1.1 to open discussion at B2.2.
+                </p>
+              </Card>
+            </Reveal>
+            <Reveal delay={90}>
+              <Card className="p-5 h-full">
+                <h2 className="font-semibold text-ink text-sm mb-1.5">Missions or free talk</h2>
+                <p className="text-sm text-graphite leading-relaxed">
+                  Guided scenarios — ordering, appointments, small talk — or open
+                  conversation. Sessions run 5, 10 or 15 minutes.
+                </p>
+              </Card>
+            </Reveal>
+            <Reveal delay={180}>
+              <Card className="p-5 h-full">
+                <h2 className="font-semibold text-ink text-sm mb-1.5">Feedback you can use</h2>
+                <p className="text-sm text-graphite leading-relaxed">
+                  After each session: grammar, vocabulary and pronunciation, with
+                  concrete corrections — like a patient tutor with unlimited time.
+                </p>
+              </Card>
+            </Reveal>
           </div>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button to="/signup" size="lg">
+          <Reveal delay={240} className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Button to="/signup" size="lg" shimmer>
               Sign up free <ArrowRight className="w-5 h-5" />
             </Button>
-            <Link to="/login" className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-rule text-ink font-semibold rounded-2xl hover:border-rule hover:bg-siegel-wash transition-all">
+            <Button to="/login" size="lg" variant="secondary">
               Log in
-            </Link>
-          </div>
+            </Button>
+          </Reveal>
           <p className="text-sm text-graphite mt-4">
             A free account includes {TRIAL_SPEAKING_SESSIONS} AI speaking sessions — no card needed.
           </p>
@@ -330,17 +349,17 @@ const SpeakingPage = () => {
   // ---- evaluation failed ----
   if (phase === 'eval_failed') {
     return (
-      <div className="min-h-screen bg-paper flex items-center justify-center px-4 pt-20 pb-12">
-        <div className="max-w-md w-full text-center">
-          <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-siegel-wash border border-siegel/25 flex items-center justify-center">
-            <AlertTriangle className="w-8 h-8 text-siegel" />
+      <div className="min-h-screen bg-paper text-ink flex items-center justify-center px-4 pt-20 pb-12">
+        <Card className="max-w-md w-full p-6 text-center">
+          <div className="w-16 h-16 mx-auto mb-5 rounded-clay bg-accent-aprikose-wash flex items-center justify-center">
+            <AlertTriangle className="w-8 h-8 text-accent-aprikose-ink" />
           </div>
-          <h2 className="text-xl font-bold text-ink mb-2">Evaluation failed</h2>
+          <h2 className="font-display text-xl font-semibold text-ink mb-2">Evaluation failed</h2>
           <p className="text-sm text-graphite mb-6">{evaluation?.message || 'The evaluation could not be created.'}</p>
-          <button onClick={backToSetup} className="w-full py-3.5 bg-siegel hover:bg-siegel-lift text-white font-semibold rounded-xl transition-colors">
+          <Button onClick={backToSetup} size="lg" className="w-full">
             Back to overview
-          </button>
-        </div>
+          </Button>
+        </Card>
       </div>
     );
   }
@@ -351,7 +370,7 @@ const SpeakingPage = () => {
     const resultLevel = session?.level || selectedLevel;
     const nextLevel = nextSpeakingLevel(resultLevel);
     return (
-      <div className="min-h-screen bg-paper pt-20 pb-12 px-4">
+      <div className="min-h-screen bg-paper text-ink pt-20 pb-12 px-4">
         {isMissionResult && <MissionResultBanner passed={evaluation.passed} />}
         <SpeakingEvaluationResults
           level={resultLevel}
@@ -375,143 +394,166 @@ const SpeakingPage = () => {
   const levelConfig = getConfigForLevel(selectedLevel);
 
   return (
-    <div className="min-h-screen bg-paper pt-16">
+    <div className="min-h-screen bg-paper text-ink pt-16">
       <SEO
         {...seoProps('/speaking')}
       />
 
-      <div className="max-w-lg mx-auto px-4 sm:px-6 py-6 sm:py-10">
-        {/* Header + wallet */}
-        <div className="flex items-start justify-between mb-6">
-          <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-siegel-wash text-siegel-deep text-[11px] font-semibold mb-2 tracking-wide uppercase">
-              <Mic className="w-3 h-3" /> AI Speaking Practice
+      {/* Hero strip */}
+      <div className="relative overflow-hidden">
+        <Aurora />
+        <div className="relative max-w-lg mx-auto px-4 sm:px-6 pt-6 sm:pt-10 pb-2">
+          <div className="flex items-start justify-between gap-3">
+            <div className="hero-line" style={{ '--d': '0ms' }}>
+              <Chip tone="label" className="mb-2">
+                <Mic className="w-3 h-3" /> AI Speaking Practice
+              </Chip>
+              <h1 className="font-display text-[1.75rem] sm:text-[2.125rem] font-semibold leading-tight tracking-[-0.018em] text-ink">German Speaking Practice</h1>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-ink tracking-tight">German Speaking Practice</h1>
-          </div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-rule text-sm font-semibold text-ink shadow-sm">
-            <Wallet className="w-4 h-4 text-siegel" />
-            {metaLoading ? '…' : euros(walletCents)}
+            <span className="hero-line inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white border border-rule font-data text-[0.8125rem] font-bold text-ink shadow-raise" style={{ '--d': '120ms' }}>
+              <Wallet className="w-4 h-4 text-siegel" />
+              {metaLoading ? '…' : euros(walletCents)}
+            </span>
           </div>
         </div>
+      </div>
 
+      <div className="max-w-lg mx-auto px-4 sm:px-6 pt-4 pb-6 sm:pb-10">
         {!browserSupport.supported && <BrowserUnsupportedBanner browserSupport={browserSupport} />}
 
         {/* Level */}
-        <label className="block text-xs font-semibold uppercase tracking-wider text-graphite mb-2">Level</label>
-        <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 mb-1">
-          {LEVEL_ORDER.map((lvl) => (
-            <button
-              key={lvl}
-              onClick={() => { levelInitRef.current = true; setSelectedLevel(lvl); }}
-              className={`flex-shrink-0 px-4 py-2 rounded-xl text-sm font-bold transition-all ${
-                lvl === selectedLevel
-                  ? 'bg-siegel text-white'
-                  : 'bg-white text-graphite border border-rule hover:border-siegel hover:text-siegel'
-              }`}
-            >
-              {lvl}
-            </button>
-          ))}
-        </div>
-        <p className="text-sm text-graphite mb-6">{LEVEL_NAMES_EN[selectedLevel] || levelConfig.name}</p>
+        <Reveal>
+          <label className={FIELD_LABEL}>Level</label>
+          <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 mb-1">
+            {LEVEL_ORDER.map((lvl) => (
+              <button
+                key={lvl}
+                type="button"
+                onClick={() => { levelInitRef.current = true; setSelectedLevel(lvl); }}
+                className={`flex-shrink-0 px-4 py-2 rounded-clay font-data text-sm font-bold ${PRESS} ${
+                  lvl === selectedLevel
+                    ? 'bg-siegel text-white shadow-raise-siegel'
+                    : 'bg-white text-graphite border border-rule shadow-raise hover:border-siegel hover:text-siegel-deep'
+                }`}
+              >
+                {lvl}
+              </button>
+            ))}
+          </div>
+          <p className="text-sm text-graphite mb-6">{LEVEL_NAMES_EN[selectedLevel] || levelConfig.name}</p>
+        </Reveal>
 
         {/* Duration */}
-        <label className="block text-xs font-semibold uppercase tracking-wider text-graphite mb-2">Duration</label>
-        <div className="relative mb-6">
-          <select
-            value={selectedMinutes}
-            onChange={(e) => setSelectedMinutes(Number(e.target.value))}
-            className="w-full appearance-none bg-white border border-rule rounded-2xl px-4 py-3.5 pr-10 text-ink font-medium focus:outline-none focus:ring-2 focus:ring-siegel focus:border-siegel"
-          >
-            {DURATIONS.map((m) => (
-              <option key={m} value={m}>{durationLabel(m)}</option>
-            ))}
-          </select>
-          <Clock className="w-4 h-4 text-graphite absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
-        </div>
-
-        {/* Missions */}
-        <label className="block text-xs font-semibold uppercase tracking-wider text-graphite mb-2">Mission (optional)</label>
-        {missionsLoading ? (
-          <div className="flex items-center gap-2 text-graphite text-sm py-3"><Loader2 className="w-4 h-4 animate-spin" /> Loading missions…</div>
-        ) : (
-          <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 mb-2">
-            <button
-              onClick={() => setSelectedMissionId(null)}
-              className={`flex-shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all ${
-                selectedMissionId === null ? 'bg-ink text-paper' : 'bg-white text-graphite border border-rule hover:border-rule'
-              }`}
+        <Reveal delay={90}>
+          <label className={FIELD_LABEL}>Duration</label>
+          <div className="relative mb-6">
+            <select
+              value={selectedMinutes}
+              onChange={(e) => setSelectedMinutes(Number(e.target.value))}
+              className="w-full appearance-none rounded-clay border border-rule bg-white px-4 py-3.5 pr-10 text-ink font-medium focus:border-siegel"
             >
-              <MessageCircle className="w-3.5 h-3.5" /> Free Conversation
-            </button>
-            {missions.map((m) => {
-              const locked = !m.is_free && !hasAccess;
-              const selected = selectedMissionId === m.id;
-              return (
-                <button
-                  key={m.id}
-                  onClick={() => setSelectedMissionId(selected ? null : m.id)}
-                  className={`flex-shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all ${
-                    selected ? 'bg-siegel text-white' : 'bg-white text-graphite border border-rule hover:border-siegel'
-                  }`}
-                >
-                  <span className={`text-[11px] font-bold ${selected ? 'text-siegel-wash' : 'text-graphite'}`}>{m.mission_order}</span>
-                  <span className="truncate max-w-[9rem]">{m.title_en || m.title_de}</span>
-                  {m.is_free ? null : locked ? <Lock className="w-3 h-3" /> : null}
-                </button>
-              );
-            })}
+              {DURATIONS.map((m) => (
+                <option key={m} value={m}>{durationLabel(m)}</option>
+              ))}
+            </select>
+            <Clock className="w-4 h-4 text-graphite absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
-        )}
+        </Reveal>
+
+        {/* Missions — clay cards the learner chooses from; the first mission of
+            the level is the natural next one and gets the tilt. */}
+        <Reveal delay={180}>
+          <label className={FIELD_LABEL}>Mission (optional)</label>
+          {missionsLoading ? (
+            <div className="flex items-center gap-2 text-graphite text-sm py-3"><Loader2 className="w-4 h-4 animate-spin" /> Loading missions…</div>
+          ) : (
+            <div className="grid grid-cols-2 gap-3 mb-3">
+              <Card
+                as="button"
+                type="button"
+                interactive
+                tone={selectedMissionId === null ? 'wash' : 'paper'}
+                onClick={() => setSelectedMissionId(null)}
+                className={`p-3.5 text-left ${selectedMissionId === null ? 'ring-2 ring-siegel ring-offset-2 ring-offset-paper' : ''}`}
+              >
+                <MessageCircle className={`w-4 h-4 mb-2 ${selectedMissionId === null ? 'text-siegel-deep' : 'text-graphite'}`} />
+                <span className="block text-sm font-bold text-ink">Free Conversation</span>
+              </Card>
+              {missions.map((m, i) => {
+                const locked = !m.is_free && !hasAccess;
+                const selected = selectedMissionId === m.id;
+                const card = (
+                  <Card
+                    as="button"
+                    type="button"
+                    interactive
+                    tone={selected ? 'wash' : 'paper'}
+                    onClick={() => setSelectedMissionId(selected ? null : m.id)}
+                    className={`w-full h-full p-3.5 text-left ${selected ? 'ring-2 ring-siegel ring-offset-2 ring-offset-paper' : ''}`}
+                  >
+                    <span className="flex items-center justify-between gap-2 mb-2">
+                      <span className={`font-data text-[0.6875rem] font-bold tracking-[0.13em] ${selected ? 'text-siegel-deep' : 'text-graphite'}`}>{m.mission_order}</span>
+                      {m.is_free ? null : locked ? <Lock className="w-3.5 h-3.5 text-graphite" /> : null}
+                    </span>
+                    <span className="block text-sm font-bold text-ink leading-snug">{m.title_en || m.title_de}</span>
+                  </Card>
+                );
+                return i === 0 ? <Tilt key={m.id}>{card}</Tilt> : <div key={m.id}>{card}</div>;
+              })}
+            </div>
+          )}
+        </Reveal>
 
         {/* Selected mission preview */}
         {activeMission && (
-          <div className="bg-white rounded-2xl border border-rule p-4 mb-5">
+          <Card className="p-4 mb-5">
             <p className="text-sm text-graphite leading-relaxed">{activeMission.scenario_de}</p>
             {Array.isArray(activeMission.hint_words) && activeMission.hint_words.length > 0 && (
               <div className="flex flex-wrap gap-1.5 mt-3">
                 {activeMission.hint_words.map((w, i) => (
-                  <span key={i} className="px-2.5 py-1 rounded-full bg-siegel-wash border border-siegel/25 text-siegel-deep text-xs font-medium">{w}</span>
+                  <Chip key={i} tone="label" size="md">{w}</Chip>
                 ))}
               </div>
             )}
-          </div>
+          </Card>
         )}
 
         {/* Start error / notices */}
         {startError?.type === 'funds' && (
-          <div className="mb-4 p-3.5 rounded-2xl bg-siegel-wash border border-siegel/25 text-sm text-siegel-deep text-center">
+          <Card tone="wash" className="mb-4 p-3.5 text-sm text-siegel-deep text-center">
             Not enough credit — top-ups are coming soon.
-          </div>
+          </Card>
         )}
         {startError?.type === 'error' && (
-          <div className="mb-4 p-3.5 rounded-md bg-red-50 border border-red-200 text-sm text-red-700 text-center">
-            {startError.message}
+          <div className="mb-4 p-3.5 rounded-clay border border-accent-himbeer/30 bg-accent-himbeer-wash text-sm text-accent-himbeer-ink flex items-start justify-center gap-2">
+            <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+            <span>{startError.message}</span>
           </div>
         )}
         {!canAfford && !startError && (
-          <div className="mb-4 p-3.5 rounded-2xl bg-siegel-wash border border-siegel/25 text-sm text-siegel-deep text-center">
+          <Card tone="wash" className="mb-4 p-3.5 text-sm text-siegel-deep text-center">
             Not enough credit — top-ups are coming soon.
-          </div>
+          </Card>
         )}
 
         {/* Start / upgrade */}
         {missionLocked ? (
-          <a href="/pricing/" className="flex items-center justify-center gap-2 w-full py-4 bg-siegel hover:bg-siegel-lift text-white font-bold rounded-2xl shadow-md transition-all">
+          <Button href="/pricing/" size="lg" className="w-full">
             <Crown className="w-5 h-5" /> Unlock with Pro
-          </a>
+          </Button>
         ) : (
-          <button
+          <Button
+            shimmer
+            size="lg"
             onClick={handleStart}
             disabled={startDisabled}
-            className="flex items-center justify-center gap-2 w-full py-4 bg-siegel hover:bg-siegel-lift disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl transition-all active:scale-[0.99]"
+            className="w-full"
           >
             {starting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Play className="w-5 h-5" />}
             {selectedCost > 0 ? `Start · ${euros(selectedCost)}` : 'Start'}
-          </button>
+          </Button>
         )}
-        <p className="text-center text-xs text-graphite mt-3">
+        <p className="text-center font-data text-[0.75rem] text-graphite mt-3">
           {activeMission ? 'Guided mission' : 'Free conversation'} · {selectedMinutes} minutes
         </p>
       </div>

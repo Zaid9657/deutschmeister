@@ -3,31 +3,24 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Volume2, Check, BookOpen } from 'lucide-react';
 import { useProgress } from '../contexts/ProgressContext';
-import { useTheme } from '../contexts/ThemeContext';
-import resolveConfig from 'tailwindcss/resolveConfig';
-import tailwindConfig from '../../tailwind.config.js';
+import Button from './ui/Button.jsx';
+import Card from './ui/Card.jsx';
+import Chip from './ui/Chip.jsx';
 
-const fullConfig = resolveConfig(tailwindConfig);
-const twColors = fullConfig.theme.colors;
-
-/** Look up the hex value for a theme color token like 'a1-1-primary' */
-function getHex(token) {
-  if (!token) return undefined;
-  const parts = token.split('-');
-  // e.g. 'a1-1-primary' → group='a1-1', shade='primary'
-  const shade = parts.pop();
-  const group = parts.join('-');
-  return twColors?.[group]?.[shade];
-}
-
+/**
+ * A vocabulary word as a clay card.
+ *
+ * It used to tint its border, badge, category chip and speaker icon with the
+ * LEVEL's colour, resolved out of the Tailwind config at runtime. Colour means
+ * grammatical CASE (design-tokens.js rule 1) and a level is not a case, so the
+ * card is neutral: the "learned" state is carried by the limette success token
+ * and a check, never by a level hue.
+ */
 const WordCard = ({ word, level }) => {
   const { t } = useTranslation();
   const { isItemLearned, markAsLearned, unmarkAsLearned } = useProgress();
-  const { getThemeForLevel } = useTheme();
   const [showExample, setShowExample] = useState(false);
 
-  const theme = getThemeForLevel(level);
-  const primaryHex = getHex(theme.primary);
   const learned = isItemLearned(level, 'vocabulary', word.id);
 
   const handleSpeak = (text) => {
@@ -65,18 +58,12 @@ const WordCard = ({ word, level }) => {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      className="relative"
+      className="relative h-full"
     >
-      <div
-        className="relative bg-white rounded-2xl shadow-lg border-2 transition-colors"
-        style={{ borderColor: learned ? primaryHex : '#f1f5f9' }}
-      >
+      <Card raised edge={learned ? 'limette' : 'paper'} className="relative h-full">
         {/* Learned badge */}
         {learned && (
-          <div
-            className="absolute -top-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
-            style={{ backgroundColor: primaryHex }}
-          >
+          <div className="absolute -top-2 -right-2 w-8 h-8 rounded-pill bg-accent-limette flex items-center justify-center shadow-raise-limette">
             <Check className="w-5 h-5 text-white" />
           </div>
         )}
@@ -86,36 +73,31 @@ const WordCard = ({ word, level }) => {
           {/* Category tag */}
           {word.category && (
             <div className="mb-4">
-              <span
-                className="inline-block px-3 py-1 text-xs font-medium rounded-full"
-                style={{ backgroundColor: primaryHex + '1A', color: primaryHex }}
-              >
-                {word.category}
-              </span>
+              <Chip tone="quiet">{word.category}</Chip>
             </div>
           )}
 
           {/* Main word */}
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-2xl font-display font-semibold text-slate-800">
+              <h3 className="text-2xl font-display font-semibold text-ink">
                 {word.article && !word.word.toLowerCase().startsWith(word.article.toLowerCase()) && (
                   // The separating space must be a real text node: `mr-1` alone
                   // looked right but made the word one string ("dieFrau") for
                   // copy-paste and screen readers.
-                  <><span className="text-slate-400">{word.article}</span>{' '}</>
+                  <><span className="text-graphite">{word.article}</span>{' '}</>
                 )}
                 {word.word}
               </h3>
               <button
                 onClick={() => handleSpeak(word.word)}
-                className="p-2 rounded-full hover:bg-slate-100 transition-colors"
+                className="p-2 rounded-pill text-siegel hover:bg-siegel-wash transition-colors"
                 title={t('levelPage.listenPronunciation')}
               >
-                <Volume2 className="w-5 h-5" style={{ color: primaryHex }} />
+                <Volume2 className="w-5 h-5" />
               </button>
             </div>
-            <p className="text-slate-600">{word.translation}</p>
+            <p className="text-graphite">{word.translation}</p>
           </div>
 
           {/* Example section */}
@@ -125,15 +107,15 @@ const WordCard = ({ word, level }) => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="mb-4 p-4 bg-slate-50 rounded-xl"
+                className="mb-4 p-4 bg-paper-sunk rounded-clay"
               >
                 <div className="flex items-start justify-between">
-                  <p className="text-slate-800 font-medium">{word.example}</p>
+                  <p className="text-ink font-medium">{word.example}</p>
                   <button
                     onClick={() => handleSpeak(word.example)}
-                    className="p-1 hover:bg-slate-200 rounded-full transition-colors flex-shrink-0 ml-2"
+                    className="p-1 text-graphite hover:bg-siegel-wash hover:text-siegel-deep rounded-pill transition-colors flex-shrink-0 ml-2"
                   >
-                    <Volume2 className="w-4 h-4 text-slate-600" />
+                    <Volume2 className="w-4 h-4" />
                   </button>
                 </div>
               </motion.div>
@@ -142,37 +124,29 @@ const WordCard = ({ word, level }) => {
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            <button
+            <Button
+              variant="secondary"
               onClick={() => setShowExample(!showExample)}
-              className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors"
+              aria-expanded={showExample}
+              className="flex-1"
             >
               <BookOpen className="w-4 h-4" />
-              <span className="text-sm">{t('levelPage.example')}</span>
-            </button>
-            <button
+              <span>{t('levelPage.example')}</span>
+            </Button>
+            {/* Not a candy CTA (tokens rule 2): the button stays secondary and
+                the limette success token rides the label, beside a check. */}
+            <Button
+              variant="secondary"
               onClick={toggleLearned}
-              className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-xl transition-colors border"
-              style={
-                learned
-                  ? { backgroundColor: primaryHex, color: '#fff', borderColor: primaryHex }
-                  : { borderColor: '#e2e8f0', color: '#334155' }
-              }
+              aria-pressed={learned}
+              className={`flex-1 ${learned ? 'text-accent-limette-ink' : ''}`}
             >
-              {learned ? (
-                <>
-                  <Check className="w-4 h-4" />
-                  <span className="text-sm">{t('levelPage.learned')}</span>
-                </>
-              ) : (
-                <>
-                  <Check className="w-4 h-4" />
-                  <span className="text-sm">{t('levelPage.markLearned')}</span>
-                </>
-              )}
-            </button>
+              <Check className="w-4 h-4" />
+              <span>{learned ? t('levelPage.learned') : t('levelPage.markLearned')}</span>
+            </Button>
           </div>
         </div>
-      </div>
+      </Card>
     </motion.div>
   );
 };

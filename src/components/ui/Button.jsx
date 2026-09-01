@@ -4,9 +4,11 @@ import { Link } from 'react-router-dom';
 /**
  * The one button in the app.
  *
- * WHY THIS EXISTS. Before it, the primary CTA was an amber-to-rose
- * `bg-gradient-to-r` copy-pasted into twenty-odd files — the retired brand,
- * unreachable by any single edit. v2 ("Playful Depth", design-tokens.js rule 3)
+ * WHY THIS EXISTS. Before it, the primary CTA was a left-to-right amber-to-rose
+ * gradient copy-pasted into twenty-odd files — the retired brand, unreachable
+ * by any single edit. (The class name is spelled out nowhere in this file on
+ * purpose: Tailwind's scanner does not parse comments, so quoting it here was
+ * enough to keep emitting the rule into the built CSS.) v2 ("Playful Depth", design-tokens.js rule 3)
  * makes it PHYSICAL: the face rests on a hard 4px edge (`shadow-raise-*`) and
  * pressing translates it down onto that edge, like a key on a keyboard. The
  * press is a direct response to the pointer, not an animation, so it is not
@@ -47,10 +49,18 @@ const SIZES = {
 };
 
 const Button = forwardRef(function Button(
-  { variant = 'primary', size = 'md', to, href, type = 'button', className = '', children, ...rest },
+  { variant = 'primary', size = 'md', shimmer = false, to, href, type = 'button', className = '', children, ...rest },
   ref,
 ) {
-  const classes = [BASE, VARIANTS[variant] ?? VARIANTS.primary, SIZES[size] ?? '', className]
+  // `shimmer`: the periodic highlight sweep (index.css .btn-shimmer) — for
+  // the ONE primary action on a screen, never on every button.
+  const classes = [
+    BASE,
+    VARIANTS[variant] ?? VARIANTS.primary,
+    SIZES[size] ?? '',
+    shimmer ? 'btn-shimmer relative overflow-hidden' : '',
+    className,
+  ]
     .filter(Boolean)
     .join(' ');
 

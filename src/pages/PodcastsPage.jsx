@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { Headphones, Clock, Play, ChevronRight, Radio, Sparkles, Lock } from 'lucide-react';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
@@ -9,19 +8,32 @@ import { isLevelFree } from '../config/freeTier';
 import SEO from '../components/SEO';
 import { seoProps } from '../data/seoRoutes.js';
 import DataState from '../components/DataState';
+import Button from '../components/ui/Button.jsx';
+import Card from '../components/ui/Card.jsx';
+import Chip from '../components/ui/Chip.jsx';
+import Reveal from '../components/ui/Reveal.jsx';
+import Aurora from '../components/ui/Aurora.jsx';
+import Tilt from '../components/ui/Tilt.jsx';
 
+// Level name only. Each entry used to carry four colour fields (a gradient, a
+// text, a background and a border) so every band had its own hue — colour means
+// grammatical CASE (design-tokens.js rule 1), never a level. The band is a chip
+// on a neutral surface now.
 const LEVEL_INFO = {
-  'A1.1': { name: 'Complete Beginner', color: 'from-emerald-400 to-teal-400', textColor: 'text-emerald-700', bgColor: 'bg-emerald-50', borderColor: 'border-emerald-200' },
-  'A1.2': { name: 'Elementary', color: 'from-emerald-500 to-teal-500', textColor: 'text-emerald-700', bgColor: 'bg-emerald-50', borderColor: 'border-emerald-200' },
-  'A2.1': { name: 'Pre-Intermediate', color: 'from-teal-400 to-cyan-400', textColor: 'text-teal-700', bgColor: 'bg-teal-50', borderColor: 'border-teal-200' },
-  'A2.2': { name: 'Intermediate Foundations', color: 'from-teal-500 to-cyan-500', textColor: 'text-teal-700', bgColor: 'bg-teal-50', borderColor: 'border-teal-200' },
-  'B1.1': { name: 'Lower Intermediate', color: 'from-blue-400 to-indigo-400', textColor: 'text-blue-700', bgColor: 'bg-blue-50', borderColor: 'border-blue-200' },
-  'B1.2': { name: 'Intermediate', color: 'from-blue-500 to-indigo-500', textColor: 'text-blue-700', bgColor: 'bg-blue-50', borderColor: 'border-blue-200' },
-  'B2.1': { name: 'Upper Intermediate', color: 'from-indigo-400 to-purple-400', textColor: 'text-indigo-700', bgColor: 'bg-indigo-50', borderColor: 'border-indigo-200' },
-  'B2.2': { name: 'Advanced Foundations', color: 'from-indigo-500 to-purple-500', textColor: 'text-indigo-700', bgColor: 'bg-indigo-50', borderColor: 'border-indigo-200' },
+  'A1.1': { name: 'Complete Beginner' },
+  'A1.2': { name: 'Elementary' },
+  'A2.1': { name: 'Pre-Intermediate' },
+  'A2.2': { name: 'Intermediate Foundations' },
+  'B1.1': { name: 'Lower Intermediate' },
+  'B1.2': { name: 'Intermediate' },
+  'B2.1': { name: 'Upper Intermediate' },
+  'B2.2': { name: 'Advanced Foundations' },
 };
 
 const LEVEL_ORDER = ['A1.1', 'A1.2', 'A2.1', 'A2.2', 'B1.1', 'B1.2', 'B2.1', 'B2.2'];
+
+// Difficulty is a content label, not a case — accent tones only.
+const DIFFICULTY_TONE = { easy: 'limette', normal: 'aprikose', challenging: 'himbeer' };
 
 function formatTime(seconds) {
   if (!seconds || isNaN(seconds)) return '0:00';
@@ -78,7 +90,7 @@ const PodcastsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-20 pb-16">
+    <div className="min-h-screen bg-paper font-body text-ink pt-20 pb-16">
       <SEO
         {...seoProps('/podcasts')}
         structuredData={[
@@ -142,30 +154,35 @@ const PodcastsPage = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Hero Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-50 border border-orange-200 text-orange-700 text-sm font-medium mb-4">
-            <Radio className="w-4 h-4" />
-            {totalCount} Episodes Available
+        <div className="relative overflow-hidden rounded-clay text-center mb-12 py-6">
+          <Aurora />
+          <div className="relative">
+            <Reveal as="div">
+              <Chip tone="aprikose" size="md">
+                <Radio className="w-4 h-4" />
+                {totalCount} Episodes Available
+              </Chip>
+            </Reveal>
+            <Reveal
+              as="h1"
+              delay={60}
+              className="mt-4 font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] sm:text-[3.5rem]"
+            >
+              German Podcasts for Learners
+            </Reveal>
+            <Reveal as="p" delay={120} className="mt-4 mx-auto max-w-2xl text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]">
+              Native speaker audio • Levels A1 to B2
+            </Reveal>
+            <Reveal as="p" delay={180} className="mt-2 mx-auto max-w-xl text-[0.9375rem] leading-relaxed text-graphite">
+              Listen to authentic German conversations designed for language learners, graded by level so you always understand most of what you hear.
+            </Reveal>
           </div>
-          <h1 className="font-display text-4xl sm:text-5xl font-bold text-slate-800 mb-4">
-            German Podcasts for Learners
-          </h1>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-2">
-            Native speaker audio • Levels A1 to B2
-          </p>
-          <p className="text-slate-500 max-w-xl mx-auto">
-            Listen to authentic German conversations designed for language learners, graded by level so you always understand most of what you hear.
-          </p>
-        </motion.div>
+        </div>
 
         {/* Podcast Grid by Level */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+            <div className="animate-spin rounded-pill h-12 w-12 border-b-2 border-siegel"></div>
           </div>
         ) : loadError ? (
           <DataState error={loadError} onRetry={fetchAllPodcasts}>{null}</DataState>
@@ -178,179 +195,173 @@ const PodcastsPage = () => {
               const isFree = isLevelFree(level);
 
               return (
-                <motion.div
-                  key={level}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden"
-                >
-                  {/* Level Header */}
-                  <div className={`bg-gradient-to-r ${levelInfo.color} p-6`}>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="flex items-center gap-3 mb-1">
-                          <span className="text-2xl font-bold text-white">{level}</span>
-                          {isFree && (
-                            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-white/20 text-white text-xs font-semibold">
-                              <Sparkles className="w-3 h-3" />
-                              FREE
-                            </span>
-                          )}
-                          {!accessible && (
-                            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-black/20 text-white text-xs font-semibold">
-                              <Lock className="w-3 h-3" />
-                              Pro
-                            </span>
-                          )}
+                <Reveal key={level} delay={Math.min(index, 8) * 80}>
+                  <Card className="overflow-hidden">
+                    {/* Level Header */}
+                    <div className="bg-paper-sunk border-b border-rule p-6">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                          <div className="flex items-center gap-3 mb-1">
+                            <span className="font-data text-2xl font-bold text-ink">{level}</span>
+                            {isFree && (
+                              <Chip tone="limette">
+                                <Sparkles className="w-3 h-3" />
+                                FREE
+                              </Chip>
+                            )}
+                            {!accessible && (
+                              <Chip tone="quiet">
+                                <Lock className="w-3 h-3" />
+                                Pro
+                              </Chip>
+                            )}
+                          </div>
+                          <p className="text-sm text-graphite">{levelInfo.name}</p>
                         </div>
-                        <p className="text-white/90 text-sm">{levelInfo.name}</p>
-                      </div>
-                      <div className="text-white/80 text-sm">
-                        {podcasts.length} episode{podcasts.length !== 1 ? 's' : ''}
+                        <div className="font-data text-[0.8125rem] text-graphite">
+                          {podcasts.length} episode{podcasts.length !== 1 ? 's' : ''}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Podcast List */}
-                  <div className="p-6">
-                    {podcasts.length === 0 ? (
-                      <p className="text-slate-400 text-center py-8">
-                        New episodes coming soon!
-                      </p>
-                    ) : (
-                      <div className="space-y-3">
-                        {podcasts.map((podcast) => (
-                          <div
-                            key={podcast.id}
-                            className="group flex items-start gap-4 p-4 rounded-xl border-2 border-slate-100 hover:border-orange-300 hover:bg-orange-50/50 transition-all cursor-pointer"
-                            onClick={() => navigate(`/level/${level.toLowerCase()}?tab=podcasts`)}
-                          >
-                            {/* Thumbnail */}
-                            <div className="flex-shrink-0 w-16 h-16 rounded-lg bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center relative overflow-hidden">
-                              <Headphones className="w-8 h-8 text-white/80" />
-                              <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/20 transition-colors">
-                                <div className="w-8 h-8 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                  <Play className="w-4 h-4 text-orange-500 ml-0.5" />
+                    {/* Podcast List */}
+                    <div className="p-6">
+                      {podcasts.length === 0 ? (
+                        <p className="text-graphite text-center py-8">
+                          New episodes coming soon!
+                        </p>
+                      ) : (
+                        <div className="space-y-3">
+                          {podcasts.map((podcast, podcastIndex) => {
+                            const row = (
+                              <Card
+                                interactive
+                                className="group flex items-start gap-4 p-4 cursor-pointer"
+                                onClick={() => navigate(`/level/${level.toLowerCase()}?tab=podcasts`)}
+                              >
+                                {/* Thumbnail */}
+                                <div className="flex-shrink-0 w-16 h-16 rounded-clay bg-siegel flex items-center justify-center relative overflow-hidden" data-atropos-offset="6">
+                                  <Headphones className="w-8 h-8 text-white/80" />
+                                  <div className="absolute inset-0 flex items-center justify-center transition-colors group-hover:bg-ink/20">
+                                    <div className="w-8 h-8 rounded-pill bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                      <Play className="w-4 h-4 text-siegel ml-0.5" />
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
-                            </div>
 
-                            {/* Content */}
-                            <div className="flex-1 min-w-0">
-                              <h3 className="font-semibold text-slate-800 mb-1 group-hover:text-orange-600 transition-colors">
-                                {podcast.title_en}
-                              </h3>
-                              {podcast.description_en && (
-                                <p className="text-sm text-slate-500 line-clamp-2 mb-2">
-                                  {podcast.description_en}
-                                </p>
-                              )}
-                              <div className="flex items-center gap-3 text-xs text-slate-400">
-                                {podcast.duration_seconds && (
-                                  <span className="flex items-center gap-1">
-                                    <Clock className="w-3 h-3" />
-                                    {formatTime(podcast.duration_seconds)}
-                                  </span>
-                                )}
-                                {podcast.difficulty && (
-                                  <span className={`px-2 py-0.5 rounded-full capitalize font-medium
-                                    ${podcast.difficulty === 'easy' ? 'bg-green-100 text-green-700' : ''}
-                                    ${podcast.difficulty === 'normal' ? 'bg-yellow-100 text-yellow-700' : ''}
-                                    ${podcast.difficulty === 'challenging' ? 'bg-red-100 text-red-700' : ''}`}>
-                                    {podcast.difficulty}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
+                                {/* Content */}
+                                <div className="flex-1 min-w-0">
+                                  <h3 className="font-semibold text-ink mb-1 transition-colors group-hover:text-siegel-deep">
+                                    {podcast.title_en}
+                                  </h3>
+                                  {podcast.description_en && (
+                                    <p className="text-sm text-graphite line-clamp-2 mb-2">
+                                      {podcast.description_en}
+                                    </p>
+                                  )}
+                                  <div className="flex items-center gap-3 font-data text-[0.8125rem] text-graphite">
+                                    {podcast.duration_seconds && (
+                                      <span className="flex items-center gap-1">
+                                        <Clock className="w-3 h-3" />
+                                        {formatTime(podcast.duration_seconds)}
+                                      </span>
+                                    )}
+                                    {podcast.difficulty && (
+                                      <Chip tone={DIFFICULTY_TONE[podcast.difficulty] || 'quiet'}>
+                                        {podcast.difficulty}
+                                      </Chip>
+                                    )}
+                                  </div>
+                                </div>
 
-                            {/* Arrow */}
-                            <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-orange-500 transition-colors flex-shrink-0 mt-1" />
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                                {/* Arrow */}
+                                <ChevronRight className="w-5 h-5 text-siegel transition-transform group-hover:translate-x-0.5 flex-shrink-0 mt-1" />
+                              </Card>
+                            );
+                            // Tilt goes on the ONE featured episode — the very
+                            // first row of the first level. The playbook keeps
+                            // it off ordinary list rows.
+                            return index === 0 && podcastIndex === 0 ? (
+                              <Tilt key={podcast.id}>{row}</Tilt>
+                            ) : (
+                              <div key={podcast.id}>{row}</div>
+                            );
+                          })}
+                        </div>
+                      )}
 
-                    {/* View All Link */}
-                    {podcasts.length > 0 && (
-                      <Link
-                        to={`/level/${level.toLowerCase()}?tab=podcasts`}
-                        className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-orange-600 hover:text-orange-700 transition-colors"
-                      >
-                        View all {level} podcasts
-                        <ChevronRight className="w-4 h-4" />
-                      </Link>
-                    )}
-                  </div>
-                </motion.div>
+                      {/* View All Link */}
+                      {podcasts.length > 0 && (
+                        <Link
+                          to={`/level/${level.toLowerCase()}?tab=podcasts`}
+                          className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-siegel transition-colors hover:text-siegel-deep"
+                        >
+                          View all {level} podcasts
+                          <ChevronRight className="w-4 h-4" />
+                        </Link>
+                      )}
+                    </div>
+                  </Card>
+                </Reveal>
               );
             })}
           </div>
         )}
 
-        {/* SEO Content Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 sm:p-10 mb-12"
-        >
-          <h2 className="font-display text-2xl sm:text-3xl font-bold text-slate-800 mb-6">
-            Learn German with Podcasts
-          </h2>
-          <div className="prose prose-slate max-w-none">
-            <p className="text-slate-600 leading-relaxed mb-4">
-              Our German podcasts are designed specifically for language learners. Each episode features native speakers in natural conversations, graded by CEFR level so the vocabulary stays within reach.
-            </p>
+        {/* SEO Content Section — reference prose, so it stays flat (rule 3). */}
+        <Reveal delay={120}>
+          <Card className="p-8 sm:p-10 mb-12">
+            <h2 className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2.125rem] mb-6">
+              Learn German with Podcasts
+            </h2>
+            <div className="max-w-none">
+              <p className="text-[0.9375rem] leading-relaxed text-graphite mb-4 sm:text-base">
+                Our German podcasts are designed specifically for language learners. Each episode features native speakers in natural conversations, graded by CEFR level so the vocabulary stays within reach.
+              </p>
 
-            <h3 className="text-xl font-bold text-slate-800 mt-6 mb-3">Why learn with podcasts?</h3>
-            <ul className="space-y-2 text-slate-600">
-              <li className="flex items-start gap-2">
-                <span className="text-orange-500 mt-1">•</span>
-                <span>Improve listening comprehension with native speaker audio</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-orange-500 mt-1">•</span>
-                <span>Learn natural speech patterns and pronunciation</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-orange-500 mt-1">•</span>
-                <span>Study anywhere — while commuting, exercising, or relaxing</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-orange-500 mt-1">•</span>
-                <span>Graded by level, so you understand most of what you hear</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-orange-500 mt-1">•</span>
-                <span>Vocabulary highlights teach you new words in context</span>
-              </li>
-            </ul>
+              <h3 className="font-display text-xl font-semibold text-ink mt-6 mb-3">Why learn with podcasts?</h3>
+              <ul className="space-y-2 text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
+                <li className="flex items-start gap-2">
+                  <span className="text-siegel mt-1">•</span>
+                  <span>Improve listening comprehension with native speaker audio</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-siegel mt-1">•</span>
+                  <span>Learn natural speech patterns and pronunciation</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-siegel mt-1">•</span>
+                  <span>Study anywhere — while commuting, exercising, or relaxing</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-siegel mt-1">•</span>
+                  <span>Graded by level, so you understand most of what you hear</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-siegel mt-1">•</span>
+                  <span>Vocabulary highlights teach you new words in context</span>
+                </li>
+              </ul>
 
-            <h3 className="text-xl font-bold text-slate-800 mt-6 mb-3">Podcasts for every level</h3>
-            <p className="text-slate-600 leading-relaxed">
-              Whether you're just starting with German (A1) or working toward fluency (B2), we have 24 episodes across all 8 CEFR levels. Each podcast is labeled with its level so you always know it's right for you.
-            </p>
-          </div>
+              <h3 className="font-display text-xl font-semibold text-ink mt-6 mb-3">Podcasts for every level</h3>
+              <p className="text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
+                Whether you're just starting with German (A1) or working toward fluency (B2), we have 24 episodes across all 8 CEFR levels. Each podcast is labeled with its level so you always know it's right for you.
+              </p>
+            </div>
 
-          {/* CTA */}
-          <div className="mt-8 flex flex-col sm:flex-row gap-4">
-            <Link
-              to="/level/a1.1?tab=podcasts"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-orange-500 to-pink-500 text-white font-semibold rounded-2xl shadow-lg shadow-orange-500/25 hover:shadow-xl hover:shadow-orange-500/30 transition-all"
-            >
-              Start Listening
-              <Play className="w-5 h-5" />
-            </Link>
-            <Link
-              to="/signup"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-slate-200 text-slate-700 font-semibold rounded-2xl hover:border-slate-300 hover:bg-slate-50 transition-all"
-            >
-              Sign Up Free
-              <ChevronRight className="w-5 h-5" />
-            </Link>
-          </div>
-        </motion.div>
+            {/* CTA */}
+            <div className="mt-8 flex flex-col sm:flex-row gap-4">
+              <Button to="/level/a1.1?tab=podcasts" size="lg" shimmer>
+                Start Listening
+                <Play className="w-5 h-5" />
+              </Button>
+              <Button to="/signup" size="lg" variant="secondary">
+                Sign Up Free
+                <ChevronRight className="w-5 h-5" />
+              </Button>
+            </div>
+          </Card>
+        </Reveal>
       </div>
     </div>
   );

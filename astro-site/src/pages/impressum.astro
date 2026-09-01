@@ -5,6 +5,10 @@ import '../styles/global.css';
 // DRAFT Impressum — §5 TMG/DDG requires the operator's full name and a
 // ladungsfähige Anschrift (street address). The owner must fill in the
 // placeholders below before removing the noindex flag.
+//
+// Prose page on the Playful Depth system: flat, calm, token typography.
+const LINK = 'font-bold text-siegel underline decoration-siegel/40 underline-offset-2 transition-colors hover:text-siegel-deep';
+const H2 = 'mb-2 font-display text-[1.25rem] font-semibold leading-snug text-ink';
 ---
 
 <Layout
@@ -14,44 +18,48 @@ import '../styles/global.css';
   noindex={true}
   lang="de"
 >
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
-    <p class="mb-8 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-      <strong>Entwurf:</strong> Die mit [&nbsp;] markierten Angaben müssen vor
-      Veröffentlichung vom Betreiber ergänzt werden.
-    </p>
+  <div class="bg-paper text-ink">
+    <div class="mx-auto max-w-prose px-5 py-12 sm:py-16">
+      <p class="mb-8 rounded-clay border border-accent-aprikose-edge bg-accent-aprikose-wash px-4 py-3 text-sm leading-relaxed text-accent-aprikose-ink">
+        <strong>Entwurf:</strong> Die mit [&nbsp;] markierten Angaben müssen vor
+        Veröffentlichung vom Betreiber ergänzt werden.
+      </p>
 
-    <h1 class="font-display text-3xl font-bold text-slate-900 mb-6">Impressum</h1>
+      <header class="reveal mb-8">
+        <h1 class="font-display text-[2.125rem] font-semibold leading-tight tracking-[-0.018em] text-ink sm:text-[2.5rem]">Impressum</h1>
+      </header>
 
-    <div class="space-y-8 text-slate-700 leading-relaxed">
-      <section>
-        <h2 class="font-display text-xl font-semibold text-slate-900 mb-2">Angaben gemäß § 5 DDG</h2>
-        <p>
-          [Vollständiger Name des Betreibers]<br />
-          [Straße und Hausnummer]<br />
-          [PLZ und Ort]<br />
-          [Land]
-        </p>
-      </section>
+      <div class="space-y-8 text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
+        <section>
+          <h2 class={H2}>Angaben gemäß § 5 DDG</h2>
+          <p>
+            [Vollständiger Name des Betreibers]<br />
+            [Straße und Hausnummer]<br />
+            [PLZ und Ort]<br />
+            [Land]
+          </p>
+        </section>
 
-      <section>
-        <h2 class="font-display text-xl font-semibold text-slate-900 mb-2">Kontakt</h2>
-        <p>
-          E-Mail: <a href="mailto:zaid@deutsch-meister.de" class="text-purple-700 underline">zaid@deutsch-meister.de</a>
-        </p>
-      </section>
+        <section>
+          <h2 class={H2}>Kontakt</h2>
+          <p>
+            E-Mail: <a href="mailto:zaid@deutsch-meister.de" class={LINK}>zaid@deutsch-meister.de</a>
+          </p>
+        </section>
 
-      <section>
-        <h2 class="font-display text-xl font-semibold text-slate-900 mb-2">Verantwortlich für den Inhalt</h2>
-        <p>[Name, Anschrift wie oben]</p>
-      </section>
+        <section>
+          <h2 class={H2}>Verantwortlich für den Inhalt</h2>
+          <p>[Name, Anschrift wie oben]</p>
+        </section>
 
-      <section>
-        <h2 class="font-display text-xl font-semibold text-slate-900 mb-2">Streitschlichtung</h2>
-        <p>
-          Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor
-          einer Verbraucherschlichtungsstelle teilzunehmen.
-        </p>
-      </section>
+        <section>
+          <h2 class={H2}>Streitschlichtung</h2>
+          <p>
+            Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor
+            einer Verbraucherschlichtungsstelle teilzunehmen.
+          </p>
+        </section>
+      </div>
     </div>
   </div>
 </Layout>

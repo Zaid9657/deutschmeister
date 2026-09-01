@@ -81,3 +81,37 @@ promise, inside the existing truth bans: no outcome promises (OUTCOME regex in
 tests/exams.test.mjs), no official-material claims, no invented counts, no
 price literals off the pricing modules, disclaimers untouched. If copy fights
 a ban, the copy is wrong.
+
+## The sweep, as shipped (2026-09-01)
+
+Six stages, each its own PR, each merged green:
+
+| Wave | Scope | Result |
+|---|---|---|
+| 0 | Shared kit: `showtime.css`, `Showtime.astro`, `Aurora`, and the SPA primitives (`Chip`, `SectionHeading`, `Tilt`, `Reveal`, `Stat`, `motion.js`) + `docs/design/playbook.md` | one vocabulary for both front ends |
+| 1 | All 19 public Astro pages | Astro legacy CSS 115 → 0 |
+| 2 | App core loop, 17 screens | SPA legacy CSS 175 → 122 |
+| 3 | Content screens, 30 files | SPA legacy CSS → **0** |
+| 4 | The level test; `src/styles/LevelTest.css` (1,765 lines, 211 hexes) deleted | last hand-written stylesheet gone |
+| 5 | `docs/design/higgsfield-art-specs.md` | artwork is optional, and specified |
+
+Three defects were found by verifying rather than by reading, and each is
+worth remembering:
+
+1. **Confetti on re-entry.** `ReadingLessonPage` renders its completion card
+   from persisted progress, so the new celebration would have fired every time
+   a learner re-opened a finished lesson. Fixed by celebrating only the
+   completion that happens in the session (`justCompleted`).
+2. **A doc comment shipping CSS.** `ui/Button.jsx` quoted the retired gradient
+   class in prose. Tailwind's scanner does not parse comments, so naming the
+   class kept emitting the rule into production CSS long after the last real
+   use was gone.
+3. **The prerender coupling.** `scripts/prerender-spa-routes.mjs` writes the
+   static HTML for eight crawlable routes but was never in Tailwind's content
+   globs; its styling survived only because `src/` happened to use the same
+   classes. The sweep ended that coincidence and unstyled the crawler view of
+   those pages until the script was both scanned and converted.
+
+The through-line: **the built artifact is the source of truth.** All three
+were invisible in the source and obvious in `dist/` or in a browser with
+JavaScript disabled.

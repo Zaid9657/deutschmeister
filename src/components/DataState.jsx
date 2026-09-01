@@ -14,7 +14,7 @@ export default function DataState({ loading, error, onRetry, children }) {
   if (loading) {
     return (
       <div className="min-h-[40vh] flex items-center justify-center" role="status" aria-label="Loading">
-        <div className="animate-spin w-8 h-8 border-4 border-siegel border-t-transparent rounded-full" />
+        <div className="animate-spin w-8 h-8 border-4 border-rule border-t-siegel rounded-full" aria-hidden="true" />
       </div>
     );
   }

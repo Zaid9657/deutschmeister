@@ -20,7 +20,14 @@ import { useLevelExercises } from '../hooks/useListening';
 import ExerciseCard from '../components/listening/ExerciseCard';
 import SEO from '../components/SEO';
 import EmptyState from '../components/EmptyState';
+import Button from '../components/ui/Button.jsx';
+import Card from '../components/ui/Card.jsx';
+import Chip from '../components/ui/Chip.jsx';
+import Reveal from '../components/ui/Reveal.jsx';
+import Aurora from '../components/ui/Aurora.jsx';
 
+// The level icon is a shape cue only. It carries no colour: a level is not a
+// case, and tokens rule 1 reserves colour for grammatical case (design-tokens.js).
 const iconMap = {
   'a1.1': Sun,
   'a1.2': Sun,
@@ -36,7 +43,7 @@ const LevelPage = () => {
   const { level } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { setCurrentLevel, getThemeForLevel } = useTheme();
+  const { setCurrentLevel } = useTheme();
   const { getLevelProgress, getGrammarTopicProgress, isItemLearned } = useProgress();
   const { user } = useAuth();
 
@@ -91,7 +98,6 @@ const LevelPage = () => {
   // Listening exercises for this level
   const { exercises: listeningExercises, loading: listeningLoading } = useLevelExercises(level.toUpperCase());
 
-  const theme = getThemeForLevel(level);
   const progress = getLevelProgress(level);
   const Icon = iconMap[level] || Sun;
   const levelInfo = contentLevelThemes[level] || {};
@@ -226,7 +232,7 @@ const LevelPage = () => {
   }, [level]);
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br ${theme.bgGradient} pt-20 pb-12`}>
+    <div className="min-h-screen bg-paper font-body text-ink pt-20 pb-12">
       <SEO
         title={seo.title}
         description={seo.desc}
@@ -243,99 +249,95 @@ const LevelPage = () => {
         }}
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="flex items-center gap-2 text-slate-600 hover:text-slate-800 mb-6 transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            {t('common.back')}
-          </button>
+        {/* Header — aurora hero. The level is a CHIP, never a colour: colour
+            means grammatical case (design-tokens.js rule 1). */}
+        <div className="relative overflow-hidden rounded-clay mb-8 -mx-2 px-2 py-4 sm:-mx-4 sm:px-4">
+          <Aurora />
+          <div className="relative">
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="flex items-center gap-2 text-graphite hover:text-siegel-deep mb-6 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              {t('common.back')}
+            </button>
 
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div
-                className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${theme.gradient} flex items-center justify-center shadow-lg`}
-              >
-                <Icon className="w-8 h-8 text-white" />
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-clay bg-siegel-wash text-siegel flex items-center justify-center shrink-0">
+                  <Icon className="w-8 h-8" />
+                </div>
+                <div>
+                  <Reveal as="div" className="flex flex-wrap items-center gap-2">
+                    <Chip tone="label">{displayLevel}</Chip>
+                    {levelInfo.part && <Chip tone="quiet">Part {levelInfo.part} of 2</Chip>}
+                  </Reveal>
+                  <Reveal
+                    as="h1"
+                    delay={60}
+                    className="mt-3 font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] sm:text-[3rem]"
+                  >
+                    {t(`levels.${level}.name`, { defaultValue: displayLevel })}
+                  </Reveal>
+                  <Reveal as="p" delay={120} className="mt-2 text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
+                    {t(`levels.${level}.theme`, { defaultValue: levelInfo.name || '' })}
+                  </Reveal>
+                </div>
               </div>
-              <div>
-                <h1 className="font-display text-3xl sm:text-4xl font-bold text-slate-800">
-                  {t(`levels.${level}.name`, { defaultValue: displayLevel })}
-                </h1>
-                <p className="text-slate-600">
-                  {t(`levels.${level}.theme`, { defaultValue: levelInfo.name || '' })}
-                </p>
-                {levelInfo.part && (
-                  <span className="inline-block mt-1 px-2 py-0.5 bg-slate-100 rounded-full text-xs text-slate-600">
-                    Part {levelInfo.part} of 2
-                  </span>
-                )}
-              </div>
-            </div>
 
-            {/* Progress */}
-            <div className="flex items-center gap-4">
-              <div className="text-right">
-                <p className="text-sm text-slate-500">{t('dashboard.progress')}</p>
-                <p className="text-2xl font-bold text-slate-800">{progress}%</p>
-              </div>
-              <div className="w-24 h-24 relative">
-                <svg className="w-full h-full -rotate-90">
-                  <circle
-                    cx="48"
-                    cy="48"
-                    r="40"
-                    className="fill-none stroke-slate-200"
-                    strokeWidth="8"
-                  />
-                  <motion.circle
-                    cx="48"
-                    cy="48"
-                    r="40"
-                    className="fill-none"
-                    stroke="#0D9488"
-                    strokeWidth="8"
-                    strokeLinecap="round"
-                    initial={{ strokeDasharray: '0 251.2' }}
-                    animate={{ strokeDasharray: `${(progress / 100) * 251.2} 251.2` }}
-                    transition={{ duration: 1, ease: 'easeOut' }}
-                  />
-                </svg>
+              {/* Progress */}
+              <div className="flex items-center gap-4">
+                <div className="text-right">
+                  <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{t('dashboard.progress')}</p>
+                  <p className="font-display text-[1.75rem] font-semibold leading-none tracking-[-0.02em] text-ink">{progress}%</p>
+                </div>
+                <div className="w-24 h-24 relative">
+                  <svg className="w-full h-full -rotate-90">
+                    <circle
+                      cx="48"
+                      cy="48"
+                      r="40"
+                      className="fill-none stroke-rule"
+                      strokeWidth="8"
+                    />
+                    <motion.circle
+                      cx="48"
+                      cy="48"
+                      r="40"
+                      className="fill-none stroke-siegel-lift"
+                      strokeWidth="8"
+                      strokeLinecap="round"
+                      initial={{ strokeDasharray: '0 251.2' }}
+                      animate={{ strokeDasharray: `${(progress / 100) * 251.2} 251.2` }}
+                      transition={{ duration: 1, ease: 'easeOut' }}
+                    />
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
 
-        {/* Tabs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-8"
-        >
+        {/* Tabs — pressable chips; the selected one takes the ink tone
+            (siegel stays the one interactive colour, tokens rule 2). */}
+        <div className="mb-8">
           <div className="flex overflow-x-auto gap-2 pb-2 scrollbar-hide">
             {tabs.map((tab) => (
-              <button
+              <Chip
                 key={tab.id}
+                size="md"
+                raised
+                tone={activeTab === tab.id ? 'ink' : 'quiet'}
                 onClick={() => selectTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-3 rounded-xl font-medium whitespace-nowrap transition-all ${
-                  activeTab === tab.id
-                    ? `bg-gradient-to-r ${theme.gradient} text-white shadow-lg`
-                    : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
-                }`}
+                aria-pressed={activeTab === tab.id}
+                className="whitespace-nowrap"
               >
-                <tab.icon className="w-5 h-5" />
+                <tab.icon className="w-4 h-4" />
                 {tab.label}
-              </button>
+              </Chip>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* Content */}
         <AnimatePresence mode="wait">
@@ -351,7 +353,7 @@ const LevelPage = () => {
               <div>
                 {vocabLoading && (
                   <div className="flex items-center justify-center py-12">
-                    <Loader2 className="w-8 h-8 text-slate-400 animate-spin" />
+                    <Loader2 className="w-8 h-8 text-graphite animate-spin" />
                   </div>
                 )}
                 {!vocabLoading && (
@@ -360,54 +362,51 @@ const LevelPage = () => {
                         "Mark learned" checkbox, which was never saved for
                         logged-in users. Adds the (filtered) words as SRS cards. */}
                     {user && filteredVocabulary.length > 0 && (
-                      <div className="mb-5 flex items-center justify-between gap-3 rounded-xl border border-siegel/25 bg-siegel-wash px-4 py-3">
+                      <Card raised edge="siegel" tone="wash" className="mb-5 flex flex-wrap items-center justify-between gap-3 px-4 py-3">
                         <p className="text-sm text-siegel-deep">
                           Diese Wörter in wachsenden Abständen üben, statt sie nur zu lesen?
                         </p>
-                        <button
+                        <Button
+                          size="sm"
                           onClick={handleAddToTrainer}
                           disabled={trainerAddState === 'adding'}
-                          className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-siegel text-white text-sm font-semibold hover:bg-siegel-lift transition-colors disabled:opacity-60"
+                          className="shrink-0"
                         >
                           {trainerAddState === 'added'
                             ? 'Im Trainer ✓'
                             : trainerAddState === 'adding'
                               ? 'Wird hinzugefügt…'
                               : 'In den Trainer'}
-                        </button>
-                      </div>
+                        </Button>
+                      </Card>
                     )}
 
                     {/* Category filter */}
                     {categories.length > 1 && (
                       <div className="mb-6">
                         <div className="flex items-center gap-2 mb-3">
-                          <Filter className="w-4 h-4 text-slate-500" />
-                          <span className="text-sm font-medium text-slate-600">Category</span>
+                          <Filter className="w-4 h-4 text-siegel" />
+                          <span className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">Category</span>
                         </div>
                         <div className="flex flex-wrap gap-2">
-                          <button
+                          <Chip
+                            raised
+                            tone={selectedCategory === 'all' ? 'ink' : 'quiet'}
                             onClick={() => setSelectedCategory('all')}
-                            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                              selectedCategory === 'all'
-                                ? 'bg-slate-800 text-white'
-                                : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
-                            }`}
+                            aria-pressed={selectedCategory === 'all'}
                           >
                             All ({levelVocabulary.length})
-                          </button>
+                          </Chip>
                           {categories.map((cat) => (
-                            <button
+                            <Chip
                               key={cat}
+                              raised
+                              tone={selectedCategory === cat ? 'ink' : 'quiet'}
                               onClick={() => setSelectedCategory(cat)}
-                              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                                selectedCategory === cat
-                                  ? 'bg-slate-800 text-white'
-                                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
-                              }`}
+                              aria-pressed={selectedCategory === cat}
                             >
                               {cat} ({levelVocabulary.filter((w) => w.category === cat).length})
-                            </button>
+                            </Chip>
                           ))}
                         </div>
                       </div>
@@ -415,8 +414,10 @@ const LevelPage = () => {
 
                     {/* Word cards */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {filteredVocabulary.map((word) => (
-                        <WordCard key={word.id} word={word} level={level} />
+                      {filteredVocabulary.map((word, index) => (
+                        <Reveal key={word.id} delay={Math.min(index, 8) * 70}>
+                          <WordCard word={word} level={level} />
+                        </Reveal>
                       ))}
                       {levelVocabulary.length === 0 && (
                         <div className="col-span-full">
@@ -445,13 +446,15 @@ const LevelPage = () => {
               <div>
                 {vocabLoading && (
                   <div className="flex items-center justify-center py-12">
-                    <Loader2 className="w-8 h-8 text-slate-400 animate-spin" />
+                    <Loader2 className="w-8 h-8 text-graphite animate-spin" />
                   </div>
                 )}
                 {!vocabLoading && (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {levelSentences.map((sentence) => (
-                      <SentenceCard key={sentence.id} sentence={sentence} level={level} />
+                    {levelSentences.map((sentence, index) => (
+                      <Reveal key={sentence.id} delay={Math.min(index, 8) * 70}>
+                        <SentenceCard sentence={sentence} level={level} />
+                      </Reveal>
                     ))}
                     {levelSentences.length === 0 && (
                       <div className="col-span-full">
@@ -471,7 +474,7 @@ const LevelPage = () => {
               <div>
                 {grammarLoading && (
                   <div className="flex items-center justify-center py-12">
-                    <Loader2 className="w-8 h-8 text-slate-400 animate-spin" />
+                    <Loader2 className="w-8 h-8 text-graphite animate-spin" />
                   </div>
                 )}
                 {!grammarLoading && grammarTopics.length > 0 && (
@@ -479,27 +482,22 @@ const LevelPage = () => {
                     {grammarTopics.map((topic, index) => {
                       const topicProgress = getGrammarTopicProgress(level, topic.id);
                       return (
-                        <motion.div
-                          key={topic.id}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: index * 0.05 }}
-                        >
+                        <Reveal key={topic.id} delay={Math.min(index, 8) * 90}>
                           <GrammarTopicCard
                             topic={topic}
                             level={level}
                             isCompleted={topicProgress.completed}
                             progress={topicProgress.progress || 0}
                           />
-                        </motion.div>
+                        </Reveal>
                       );
                     })}
                   </div>
                 )}
                 {!grammarLoading && grammarTopics.length === 0 && (
-                  <div className="col-span-full bg-white rounded-xl border border-slate-200 p-6 text-center">
-                    <p className="text-slate-500">No grammar topics available for this level yet.</p>
-                  </div>
+                  <Card className="col-span-full p-6 text-center">
+                    <p className="text-graphite">No grammar topics available for this level yet.</p>
+                  </Card>
                 )}
               </div>
             )}
@@ -509,32 +507,27 @@ const LevelPage = () => {
               <div>
                 {readingLoading && (
                   <div className="flex items-center justify-center py-12">
-                    <Loader2 className="w-8 h-8 text-slate-400 animate-spin" />
+                    <Loader2 className="w-8 h-8 text-graphite animate-spin" />
                   </div>
                 )}
                 {!readingLoading && readingLessons.length > 0 && (
                   <div className="space-y-3">
                     {readingLessons.map((lesson, index) => (
-                      <motion.div
-                        key={lesson.id}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                      >
+                      <Reveal key={lesson.id} delay={Math.min(index, 8) * 90}>
                         <ReadingLessonCard
                           lesson={lesson}
                           level={level}
                           index={index}
                           isCompleted={isItemLearned(level, 'readingLessons', lesson.id)}
                         />
-                      </motion.div>
+                      </Reveal>
                     ))}
                   </div>
                 )}
                 {!readingLoading && readingLessons.length === 0 && (
-                  <div className="bg-white rounded-xl border border-slate-200 p-6 text-center">
-                    <p className="text-slate-500">No reading lessons available for this level yet.</p>
-                  </div>
+                  <Card className="p-6 text-center">
+                    <p className="text-graphite">No reading lessons available for this level yet.</p>
+                  </Card>
                 )}
               </div>
             )}
@@ -544,7 +537,7 @@ const LevelPage = () => {
               <div>
                 {listeningLoading && (
                   <div className="flex items-center justify-center py-12">
-                    <Loader2 className="w-8 h-8 text-slate-400 animate-spin" />
+                    <Loader2 className="w-8 h-8 text-graphite animate-spin" />
                   </div>
                 )}
                 {!listeningLoading && listeningExercises.length > 0 && (
@@ -555,10 +548,10 @@ const LevelPage = () => {
                   </div>
                 )}
                 {!listeningLoading && listeningExercises.length === 0 && (
-                  <div className="bg-white rounded-xl border border-slate-200 p-6 text-center">
-                    <Headphones size={48} className="mx-auto mb-4 text-slate-300" />
-                    <p className="text-slate-500">{t('levelPage.noListening', 'No listening exercises available for this level yet.')}</p>
-                  </div>
+                  <Card className="p-6 text-center">
+                    <Headphones size={48} className="mx-auto mb-4 text-graphite/50" />
+                    <p className="text-graphite">{t('levelPage.noListening', 'No listening exercises available for this level yet.')}</p>
+                  </Card>
                 )}
               </div>
             )}

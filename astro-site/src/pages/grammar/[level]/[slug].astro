@@ -3,6 +3,7 @@ import Layout from '../../../layouts/Layout.astro';
 import ExercisePlayer from '../../../components/ExercisePlayer.jsx';
 import RuleContent from '../../../components/RuleContent.astro';
 import RichText from '../../../components/RichText.astro';
+import Aurora from '../../../components/Aurora.astro';
 import { getAllTopicPaths, getTopicFull, getAllTopics, SUB_LEVELS, LEVEL_META } from '../../../lib/grammar.js';
 import { RELATED_TOPICS } from '../../../lib/relatedTopics.js';
 import { TOPIC_SEO } from '../../../lib/topicSeo.js';
@@ -168,61 +169,83 @@ if (seoExtra?.faqs?.length) {
     })),
   });
 }
+
+// Playful Depth vocabulary (docs/design/playbook.md). Rule 3 governs this page:
+// the lesson — rules, tables, examples — is reference material and stays FLAT
+// (hairline `border-rule`, no shadow); only things you can press are raised.
+// The level code is data → `label` chip, never a level colour (rule 1).
+const H2 = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2.125rem]';
+const LEVEL_CHIP =
+  'rounded-pill bg-siegel-wash px-2.5 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep';
+const CARD_FLAT = 'rounded-clay border border-rule bg-white';
+const CARD_INTERACTIVE =
+  'rounded-clay border border-rule bg-white shadow-raise transition-all duration-150 ease-snap hover:-translate-y-0.5 hover:shadow-raise-lg active:translate-y-1 active:shadow-none';
+const BTN_PRIMARY =
+  'btn-shimmer relative inline-flex select-none items-center justify-center gap-2 overflow-hidden rounded-clay bg-siegel px-7 py-3.5 text-base font-bold text-white shadow-raise-siegel transition-all duration-100 ease-snap hover:bg-siegel-lift active:translate-y-1 active:shadow-none';
+const CALLOUT_LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em]';
 ---
 
 <Layout title={pageTitle} description={pageDesc} canonical={canonicalUrlSlash} jsonLd={jsonLdSchemas} ogType="article">
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+  <div class="overflow-x-clip bg-paper text-ink">
 
-    <!-- Breadcrumb -->
-    <nav class="flex items-center gap-2 text-sm text-slate-600 mb-8 flex-wrap" aria-label="Breadcrumb">
-      <a href="https://deutsch-meister.de/" class="hover:text-slate-700 transition-colors">Home</a>
-      <span>/</span>
-      <a href="/grammar/" class="hover:text-slate-700 transition-colors">Grammar</a>
-      <span>/</span>
-      <a href={`/grammar/${level}/`} class="hover:text-slate-700 transition-colors">{meta.label}</a>
-      <span>/</span>
-      <span class="text-slate-800 font-medium">{topic.title_en}</span>
-    </nav>
+    <!-- ═══ Lesson header ═══ -->
+    <header class="relative">
+      <Aurora />
+      <div class="relative mx-auto max-w-3xl px-5 pt-10 pb-8 sm:pt-14">
+        <!-- Breadcrumb -->
+        <nav class="hero-line mb-8 flex flex-wrap items-center gap-2 font-data text-[0.8125rem] text-graphite" aria-label="Breadcrumb" style="--d:0ms">
+          <a href="https://deutsch-meister.de/" class="transition-colors hover:text-siegel-deep">Home</a>
+          <span>/</span>
+          <a href="/grammar/" class="transition-colors hover:text-siegel-deep">Grammar</a>
+          <span>/</span>
+          <a href={`/grammar/${level}/`} class="transition-colors hover:text-siegel-deep">{meta.label}</a>
+          <span>/</span>
+          <span class="font-semibold text-ink">{topic.title_en}</span>
+        </nav>
 
-    <!-- Level badge -->
-    <div class={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold ${meta.badge} mb-4`}>
-      {meta.label} · {meta.name}
-    </div>
+        <!-- Level badge -->
+        <div class="hero-line mb-4 inline-flex items-center gap-2" style="--d:60ms">
+          <span class={LEVEL_CHIP}>{meta.label} · {meta.name}</span>
+        </div>
 
-    <!-- Title -->
-    <h1 class="font-display text-4xl sm:text-5xl font-bold text-slate-900 mb-2 leading-tight">
-      {topicTitle}
-    </h1>
-    {topic?.title_de && topic.title_de !== topicTitle && (
-      <p class="text-xl text-slate-500 mb-6 font-display" lang="de">{topic.title_de}</p>
-    )}
+        <!-- Title -->
+        <h1 class="hero-line font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.025em] sm:text-[3rem]" style="--d:140ms">
+          {topicTitle}
+        </h1>
+        {topic?.title_de && topic.title_de !== topicTitle && (
+          <p class="hero-line mt-2 font-display text-xl text-graphite" lang="de" style="--d:220ms">{topic.title_de}</p>
+        )}
 
-    {seoExtra?.snippetIntro && (
-      <p class="text-lg text-slate-700 leading-relaxed mb-4">
-        {seoExtra.snippetIntro}
-      </p>
-    )}
+        {seoExtra?.snippetIntro && (
+          <p class="hero-line mt-6 text-[1.0625rem] leading-relaxed text-ink sm:text-[1.1875rem]" style="--d:300ms">
+            {seoExtra.snippetIntro}
+          </p>
+        )}
 
-    {topic?.description_en && (
-      <p class="text-lg text-slate-600 leading-relaxed mb-8 border-l-4 border-slate-200 pl-4">
-        {topic.description_en}
-      </p>
-    )}
+        {topic?.description_en && (
+          <p class="hero-line mt-5 border-l-4 border-siegel pl-4 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]" style="--d:380ms">
+            {topic.description_en}
+          </p>
+        )}
+      </div>
+    </header>
+
+    <div class="mx-auto max-w-3xl px-5 pb-10">
 
     <!-- Introduction -->
     {topic?.introduction_en && (
-      <section class="mb-10 prose prose-slate max-w-none">
-        <h2 class="font-display text-2xl font-bold text-slate-800 mb-3">Introduction</h2>
-        <div class="text-slate-700 leading-relaxed whitespace-pre-line">{topic.introduction_en}</div>
+      <section class="reveal mb-12">
+        <h2 class={`${H2} mb-4`}>Introduction</h2>
+        <div class="whitespace-pre-line text-[0.9375rem] leading-relaxed text-ink sm:text-base">{topic.introduction_en}</div>
       </section>
     )}
 
     <!-- Rules -->
     {rules.length > 0 && (
-      <section class="mb-10">
-        <h2 class="font-display text-2xl font-bold text-slate-800 mb-5">Rules & Explanations</h2>
+      <section class="mb-12">
+        <h2 class={`reveal ${H2} mb-6`}>Rules & Explanations</h2>
         <div class="space-y-6">
-          {rules.map((rule) => {
+          {rules.map((rule, ri) => {
             // content may be a plain string, a parsed object, an array, or null
             const raw = rule.content;
             const content = (raw && typeof raw === 'object' && !Array.isArray(raw)) ? raw : null;
@@ -244,49 +267,49 @@ if (seoExtra?.faqs?.length) {
               || showColKeyInsight || showColMemoryTrick || mistakes.length > 0;
 
             return (
-              <div class={`rounded-2xl border-2 ${meta.border} overflow-hidden`}>
-                <div class={`px-5 py-4 ${meta.bg}`}>
-                  <h3 class="font-display text-lg font-bold text-slate-800"><RichText text={rule.title_en} /></h3>
+              <div class={`reveal overflow-hidden ${CARD_FLAT}`} style={`--rd:${(ri % 3) * 90}ms`}>
+                <div class="border-b border-rule bg-paper-sunk px-5 py-4">
+                  <h3 class="font-display text-[1.125rem] font-semibold leading-snug"><RichText text={rule.title_en} /></h3>
                   {rule.title_de && rule.title_de !== rule.title_en && (
-                    <p class="text-sm text-slate-600 mt-0.5" lang="de"><RichText text={rule.title_de} /></p>
+                    <p class="mt-0.5 text-sm text-graphite" lang="de"><RichText text={rule.title_de} /></p>
                   )}
                 </div>
 
                 {showBody && (
-                <div class="px-5 py-4 bg-white">
+                <div class="bg-white px-5 py-4">
                   {/* Introduction rule type — custom rich content fields */}
                   {isIntro && content && (
                     <div class="space-y-4">
                       {content.hook_en && (
-                        <p class="text-base font-semibold text-slate-800"><RichText text={content.hook_en} /></p>
+                        <p class="text-base font-semibold text-ink"><RichText text={content.hook_en} /></p>
                       )}
                       {content.german_difference_en && (
-                        <p class="text-sm text-slate-700 leading-relaxed"><RichText text={content.german_difference_en} /></p>
+                        <p class="text-sm leading-relaxed text-ink"><RichText text={content.german_difference_en} /></p>
                       )}
                       {content.english_comparison_en && (
-                        <p class="text-sm text-slate-600 leading-relaxed"><RichText text={content.english_comparison_en} /></p>
+                        <p class="text-sm leading-relaxed text-graphite"><RichText text={content.english_comparison_en} /></p>
                       )}
                       {content.scenario_en && (
-                        <div class="p-3 rounded-lg bg-slate-50 border border-slate-200 text-sm text-slate-700">
-                          <span class="font-semibold text-slate-500 text-xs uppercase tracking-wider block mb-1">Why you need this</span>
+                        <div class="rounded-md border border-rule bg-paper-sunk p-3 text-sm text-ink">
+                          <span class={`${CALLOUT_LABEL} mb-1 block text-graphite`}>Why you need this</span>
                           <RichText text={content.scenario_en} />
                         </div>
                       )}
                       {content.preview_example_de && (
-                        <div class="p-3 rounded-lg border border-slate-200 bg-white">
-                          <p class="font-display text-lg font-bold text-slate-900" lang="de">{content.preview_example_de}</p>
+                        <div class="rounded-md border border-rule bg-white p-3">
+                          <p class="font-display text-lg font-semibold text-ink" lang="de">{content.preview_example_de}</p>
                           {content.preview_example_en && (
-                            <p class="text-sm text-slate-600 italic mt-0.5">{content.preview_example_en}</p>
+                            <p class="mt-0.5 text-sm italic text-graphite">{content.preview_example_en}</p>
                           )}
                           {content.preview_note_en && (
-                            <p class="text-xs text-amber-700 mt-2 bg-amber-50 px-2 py-1 rounded"><RichText text={content.preview_note_en} /></p>
+                            <p class="mt-2 rounded-md bg-accent-aprikose-wash px-2 py-1 text-xs text-accent-aprikose-ink"><RichText text={content.preview_note_en} /></p>
                           )}
                         </div>
                       )}
                       {content.why_it_matters_en && (
-                        <div class="flex items-start gap-3 p-3 rounded-xl bg-amber-50 border border-amber-200">
-                          <span class="text-amber-500 text-lg flex-shrink-0">💡</span>
-                          <p class="text-sm text-amber-900"><RichText text={content.why_it_matters_en} /></p>
+                        <div class="flex items-start gap-3 rounded-md border border-rule bg-accent-aprikose-wash p-3">
+                          <span class="flex-shrink-0 text-lg" aria-hidden="true">💡</span>
+                          <p class="text-sm text-accent-aprikose-ink"><RichText text={content.why_it_matters_en} /></p>
                         </div>
                       )}
                     </div>
@@ -301,48 +324,48 @@ if (seoExtra?.faqs?.length) {
 
                   {/* Key insight (column) */}
                   {showColKeyInsight && (
-                    <div class="mt-4 flex items-start gap-3 p-3 rounded-xl bg-amber-50 border border-amber-200">
-                      <span class="text-amber-500 text-lg flex-shrink-0">💡</span>
-                      <p class="text-sm text-amber-900 font-medium"><RichText text={rule.key_insight_en} /></p>
+                    <div class="mt-4 flex items-start gap-3 rounded-md border border-rule bg-accent-aprikose-wash p-3">
+                      <span class="flex-shrink-0 text-lg" aria-hidden="true">💡</span>
+                      <p class="text-sm font-medium text-accent-aprikose-ink"><RichText text={rule.key_insight_en} /></p>
                     </div>
                   )}
 
                   {/* Memory trick (column) */}
                   {showColMemoryTrick && (
-                    <div class="mt-3 flex items-start gap-3 p-3 rounded-xl bg-purple-50 border border-purple-200">
-                      <span class="text-purple-500 text-lg flex-shrink-0">🧠</span>
-                      <p class="text-sm text-purple-900"><RichText text={rule.memory_trick_en} /></p>
+                    <div class="mt-3 flex items-start gap-3 rounded-md border border-rule bg-siegel-wash p-3">
+                      <span class="flex-shrink-0 text-lg" aria-hidden="true">🧠</span>
+                      <p class="text-sm text-siegel-deep"><RichText text={rule.memory_trick_en} /></p>
                     </div>
                   )}
 
                   {/* Common mistakes — shape: {wrong, correct, explanation_en} or plain string */}
                   {mistakes.length > 0 && (
-                    <div class="mt-3 p-3 rounded-xl bg-red-50 border border-red-200">
-                      <p class="text-xs font-bold text-red-700 uppercase tracking-wider mb-2">Common Mistakes</p>
+                    <div class="mt-3 rounded-md border border-rule bg-accent-himbeer-wash p-3">
+                      <p class={`${CALLOUT_LABEL} mb-2 text-accent-himbeer-ink`}>Common Mistakes</p>
                       <ul class="space-y-3">
                         {mistakes.map((m) => (
-                          <li class="text-sm text-red-800">
+                          <li class="text-sm text-ink">
                             {typeof m === 'string' ? (
                               <span class="flex items-start gap-2">
-                                <span class="flex-shrink-0 mt-0.5">✗</span>
+                                <span class="mt-0.5 flex-shrink-0 font-bold text-accent-himbeer-ink">✗</span>
                                 <span>{m}</span>
                               </span>
                             ) : (
                               <div class="space-y-0.5">
                                 {m.wrong && (
                                   <p class="flex items-start gap-2">
-                                    <span class="flex-shrink-0 font-bold text-red-600">✗</span>
-                                    <span class="line-through text-red-700" lang="de">{m.wrong}</span>
+                                    <span class="flex-shrink-0 font-bold text-accent-himbeer-ink">✗</span>
+                                    <span class="text-accent-himbeer-ink line-through" lang="de">{m.wrong}</span>
                                   </p>
                                 )}
                                 {m.correct && (
                                   <p class="flex items-start gap-2">
-                                    <span class="flex-shrink-0 font-bold text-emerald-600">✓</span>
-                                    <span class="text-emerald-700 font-medium" lang="de">{m.correct}</span>
+                                    <span class="flex-shrink-0 font-bold text-accent-limette-ink">✓</span>
+                                    <span class="font-medium text-accent-limette-ink" lang="de">{m.correct}</span>
                                   </p>
                                 )}
                                 {m.explanation_en && (
-                                  <p class="text-xs text-slate-600 pl-5"><RichText text={m.explanation_en} /></p>
+                                  <p class="pl-5 text-xs text-graphite"><RichText text={m.explanation_en} /></p>
                                 )}
                               </div>
                             )}
@@ -362,10 +385,10 @@ if (seoExtra?.faqs?.length) {
 
     <!-- Examples -->
     {examples.length > 0 && (
-      <section class="mb-10">
-        <h2 class="font-display text-2xl font-bold text-slate-800 mb-5">Examples</h2>
+      <section class="mb-12">
+        <h2 class={`reveal ${H2} mb-6`}>Examples</h2>
         <div class="space-y-4">
-          {examples.map((ex) => {
+          {examples.map((ex, ei) => {
             // word_breakdown can be:
             //   - null / undefined
             //   - a plain object: { "Wie": "how/what", "du": "you" }  ← actual shape
@@ -392,41 +415,41 @@ if (seoExtra?.faqs?.length) {
             if (breakdownRows) breakdownRows = orderBySentence(breakdownRows, ex.sentence_de);
 
             return (
-              <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+              <div class={`reveal overflow-hidden ${CARD_FLAT}`} style={`--rd:${(ei % 3) * 90}ms`}>
                 <div class="px-5 py-4">
-                  <p class="font-display text-xl font-bold text-slate-900 mb-1" lang="de">{ex.sentence_de}</p>
-                  <p class="text-slate-500 italic text-sm mb-2">{ex.sentence_en}</p>
+                  <p class="mb-1 font-display text-xl font-semibold text-ink" lang="de">{ex.sentence_de}</p>
+                  <p class="mb-2 text-sm italic text-graphite">{ex.sentence_en}</p>
 
                   {ex.grammar_highlight && (
-                    <span class={`inline-block text-xs font-semibold px-2 py-0.5 rounded-full ${meta.badge}`}>
+                    <span class={`inline-block ${LEVEL_CHIP}`}>
                       {ex.grammar_highlight}
                     </span>
                   )}
 
                   {ex.explanation_en && (
-                    <p class="mt-3 text-sm text-slate-600 leading-relaxed">{ex.explanation_en}</p>
+                    <p class="mt-3 text-sm leading-relaxed text-graphite">{ex.explanation_en}</p>
                   )}
 
-                  {/* Word breakdown table */}
+                  {/* Word breakdown table — flat (rule 3) */}
                   {breakdownRows && breakdownRows.length > 0 && (
                     <div class="mt-4 overflow-x-auto">
-                      <table class="w-full text-xs border-collapse">
+                      <table class="w-full border-collapse text-left text-xs">
                         <thead>
-                          <tr class="bg-slate-50">
-                            <th class="px-3 py-2 text-left font-semibold text-slate-600 border border-slate-200">Word</th>
-                            <th class="px-3 py-2 text-left font-semibold text-slate-600 border border-slate-200">Meaning</th>
+                          <tr class="border-b border-ink bg-paper-sunk">
+                            <th class={`px-3 py-2 ${CALLOUT_LABEL} text-graphite`}>Word</th>
+                            <th class={`px-3 py-2 ${CALLOUT_LABEL} text-graphite`}>Meaning</th>
                             {breakdownRows.some((r) => r.role) && (
-                              <th class="px-3 py-2 text-left font-semibold text-slate-600 border border-slate-200">Function</th>
+                              <th class={`px-3 py-2 ${CALLOUT_LABEL} text-graphite`}>Function</th>
                             )}
                           </tr>
                         </thead>
                         <tbody>
-                          {breakdownRows.map((w, i) => (
-                            <tr class={i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                              <td class="px-3 py-2 border border-slate-200 font-accent font-medium" lang="de">{w.word}</td>
-                              <td class="px-3 py-2 border border-slate-200 text-slate-600 italic">{w.meaning}</td>
+                          {breakdownRows.map((w) => (
+                            <tr class="border-b border-rule">
+                              <td class="px-3 py-2 font-accent font-medium text-ink" lang="de">{w.word}</td>
+                              <td class="px-3 py-2 italic text-graphite">{w.meaning}</td>
                               {breakdownRows.some((r) => r.role) && (
-                                <td class="px-3 py-2 border border-slate-200 text-slate-500">{w.role ?? '—'}</td>
+                                <td class="px-3 py-2 text-graphite">{w.role ?? '—'}</td>
                               )}
                             </tr>
                           ))}
@@ -444,10 +467,10 @@ if (seoExtra?.faqs?.length) {
 
     <!-- Exercises (React island — lazy loaded on scroll into view) -->
     {exercises.length > 0 && (
-      <section class="mb-10">
-        <h2 class="font-display text-2xl font-bold text-slate-800 mb-2">Practice Exercises</h2>
-        <p class="text-slate-600 text-sm mb-5">{exercises.length} interactive {exercises.length === 1 ? 'exercise' : 'exercises'}</p>
-        <div class="rounded-2xl border-2 border-indigo-100 bg-white p-6">
+      <section class="mb-12">
+        <h2 class={`reveal ${H2} mb-2`}>Practice Exercises</h2>
+        <p class="reveal mb-5 font-data text-[0.8125rem] text-graphite" style="--rd:80ms">{exercises.length} interactive {exercises.length === 1 ? 'exercise' : 'exercises'}</p>
+        <div class={`reveal p-6 ${CARD_FLAT}`} style="--rd:160ms">
           <ExercisePlayer exercises={exercises} topicId={topic.id} client:visible />
         </div>
       </section>
@@ -456,87 +479,95 @@ if (seoExtra?.faqs?.length) {
     <!-- Momentum block — keep learners moving to the next topic. The next-up card
          is static (order is known at build); the score line is filled client-side
          after the exercises are finished. -->
-    <section class="mb-10">
-      <!-- Score recap (revealed once the exercises are completed) -->
-      <div id="momentum-score" class="hidden mb-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-center">
-        <p class="text-sm font-semibold text-emerald-800">
-          You got <span id="momentum-score-val" class="font-bold"></span> on this topic's exercises.
+    <section class="mb-12">
+      <!-- Score recap (revealed once the exercises are completed; the script adds
+           the limette pass tone or the aprikose "keep going" tone — never colour alone) -->
+      <div id="momentum-score" class="mb-4 hidden rounded-clay border border-rule bg-paper-sunk px-5 py-4 text-center">
+        <p class="text-sm font-semibold">
+          You got <span id="momentum-score-val" class="font-data font-bold"></span> on this topic's exercises.
         </p>
-        <p id="momentum-score-note" class="text-xs text-emerald-700 mt-0.5"></p>
+        <p id="momentum-score-note" class="mt-0.5 text-xs"></p>
       </div>
 
       {nextGlobal ? (
-        <a
-          href={`/grammar/${nextGlobal.sub_level}/${nextGlobal.slug}/`}
-          class="block rounded-2xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all group"
-        >
-          <p class="text-xs font-bold uppercase tracking-wider text-indigo-500 mb-2">Next up</p>
-          <div class="flex items-center gap-4">
-            <div class="min-w-0 flex-1">
-              <p class="font-display text-xl sm:text-2xl font-bold text-slate-900 leading-snug group-hover:text-indigo-700 transition-colors">
-                {nextGlobal.title_en}
-              </p>
-              {nextGlobal.description_en && (
-                <p class="text-sm text-slate-500 mt-1 line-clamp-2">{nextGlobal.description_en}</p>
-              )}
-              <span class={`inline-block mt-2 text-[10px] font-bold px-2 py-0.5 rounded-full ${(LEVEL_META[nextGlobal.sub_level] ?? meta).badge}`}>
-                {(LEVEL_META[nextGlobal.sub_level] ?? meta).label}
-              </span>
-            </div>
-            <span class="flex-shrink-0 w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xl group-hover:bg-indigo-700 group-hover:translate-x-0.5 transition-all">
-              →
-            </span>
+        <div class="reveal">
+          <div class="atropos" data-atropos-card>
+            <div class="atropos-scale"><div class="atropos-rotate"><div class="atropos-inner !overflow-visible">
+              <a
+                href={`/grammar/${nextGlobal.sub_level}/${nextGlobal.slug}/`}
+                class={`group block p-6 ${CARD_INTERACTIVE}`}
+              >
+                <p class="mb-2 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel" data-atropos-offset="3">Next up</p>
+                <div class="flex items-center gap-4">
+                  <div class="min-w-0 flex-1">
+                    <p class="font-display text-xl font-semibold leading-snug text-ink transition-colors group-hover:text-siegel-deep sm:text-2xl" data-atropos-offset="5">
+                      {nextGlobal.title_en}
+                    </p>
+                    {nextGlobal.description_en && (
+                      <p class="mt-1 line-clamp-2 text-sm text-graphite" data-atropos-offset="2">{nextGlobal.description_en}</p>
+                    )}
+                    <span class={`mt-3 inline-block ${LEVEL_CHIP}`} data-atropos-offset="6">
+                      {(LEVEL_META[nextGlobal.sub_level] ?? meta).label}
+                    </span>
+                  </div>
+                  <span class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-pill bg-siegel text-xl text-white shadow-raise-siegel transition-all group-hover:bg-siegel-lift group-hover:translate-x-0.5" data-atropos-offset="9" aria-hidden="true">
+                    →
+                  </span>
+                </div>
+              </a>
+            </div></div></div>
           </div>
-        </a>
+        </div>
       ) : (
-        <div class="rounded-2xl border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-6 text-center">
-          <p class="font-display text-xl font-bold text-slate-900">🏆 That's the last topic — you've reached the end of the path.</p>
-          <p class="text-sm text-slate-500 mt-1">Revisit any topic to keep it sharp.</p>
+        <div class="reveal rounded-clay border border-rule bg-accent-limette-wash p-6 text-center">
+          <p class="font-display text-xl font-semibold text-ink">🏆 That's the last topic — you've reached the end of the path.</p>
+          <p class="mt-1 text-sm text-graphite">Revisit any topic to keep it sharp.</p>
         </div>
       )}
 
-      <div class="mt-3 text-center">
-        <a href={`/grammar/${level}/`} class="text-sm text-slate-500 hover:text-slate-700 transition-colors">
+      <div class="mt-4 text-center">
+        <a href={`/grammar/${level}/`} class="text-sm font-bold text-siegel transition-colors hover:text-siegel-deep">
           ← Back to {meta.label} overview
         </a>
       </div>
     </section>
 
-    <!-- Upgrade CTA -->
-    <div class={`rounded-2xl border ${meta.border} ${meta.bg} p-6 mb-10 text-center`}>
-      <p class="font-display text-xl font-bold text-slate-800 mb-1">
-        Grammar is just the beginning
-      </p>
-      <p class="text-slate-600 text-sm mb-4">
-        Practice {topicTitle} in real conversations with your AI language partner.
-      </p>
-      <a
-        href="https://deutsch-meister.de/signup"
-        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold text-sm hover:from-amber-600 hover:to-rose-600 transition-all shadow-md shadow-amber-200"
-      >
-        Get started free — 7 days of Pro included
-      </a>
-    </div>
+    <!-- Upgrade CTA — the page's one primary (shimmer) action -->
+    <section class="reveal relative mb-12 overflow-hidden rounded-clay border border-rule bg-paper-sunk p-6 text-center sm:p-8">
+      <Aurora variant="close" />
+      <div class="relative">
+        <p class="font-display text-[1.375rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[1.75rem]">
+          Grammar is just the beginning
+        </p>
+        <p class="mx-auto mt-2 mb-6 max-w-md text-[0.9375rem] leading-relaxed text-graphite">
+          Practice {topicTitle} in real conversations with your AI language partner.
+        </p>
+        <a href="https://deutsch-meister.de/signup" class={BTN_PRIMARY}>
+          <span class="relative z-10">Get started free — 7 days of Pro included</span>
+        </a>
+      </div>
+    </section>
 
     <!-- Related Topics -->
     {relatedTopics.length > 0 && (
-      <section class="mb-10">
-        <h2 class="font-display text-2xl font-bold text-slate-800 mb-5">Related Topics</h2>
-        <div class="grid sm:grid-cols-2 gap-3">
-          {relatedTopics.map((rt) => {
+      <section class="mb-12">
+        <h2 class={`reveal ${H2} mb-6`}>Related Topics</h2>
+        <div class="grid gap-4 sm:grid-cols-2">
+          {relatedTopics.map((rt, i) => {
             const rmeta = LEVEL_META[rt.sub_level] ?? meta;
             return (
               <a
                 href={`/grammar/${rt.sub_level}/${rt.slug}/`}
-                class="flex items-start gap-3 p-4 rounded-xl border border-slate-200 bg-white hover:shadow-md hover:border-slate-300 transition-all group"
+                class={`reveal group flex items-start gap-3 p-4 ${CARD_INTERACTIVE}`}
+                style={`--rd:${(i % 4) * 80}ms`}
               >
-                <span class={`flex-shrink-0 mt-0.5 px-2 py-0.5 rounded-full text-[10px] font-bold ${rmeta.badge}`}>
+                <span class={`mt-0.5 flex-shrink-0 ${LEVEL_CHIP}`}>
                   {rmeta.label}
                 </span>
                 <div class="min-w-0">
-                  <p class="text-sm font-semibold text-slate-800 group-hover:text-slate-900">{rt.title_en}</p>
+                  <p class="text-sm font-bold text-ink transition-colors group-hover:text-siegel-deep">{rt.title_en}</p>
                   {rt.description_en && (
-                    <p class="text-xs text-slate-500 leading-snug mt-0.5 line-clamp-2">{rt.description_en}</p>
+                    <p class="mt-0.5 line-clamp-2 text-xs leading-snug text-graphite">{rt.description_en}</p>
                   )}
                 </div>
               </a>
@@ -546,37 +577,37 @@ if (seoExtra?.faqs?.length) {
       </section>
     )}
 
-    <!-- Per-topic FAQ (see src/lib/topicSeo.js) -->
+    <!-- Per-topic FAQ (see src/lib/topicSeo.js) — reference, flat -->
     {seoExtra?.faqs?.length > 0 && (
-      <section class="mb-10">
-        <h2 class="font-display text-2xl font-bold text-slate-800 mb-5">{seoExtra.faqHeading ?? 'Common questions'}</h2>
+      <section class="mb-12">
+        <h2 class={`reveal ${H2} mb-6`}>{seoExtra.faqHeading ?? 'Common questions'}</h2>
         <div class="space-y-3">
-          {seoExtra.faqs.map(({ q, a }) => (
-            <details class="rounded-2xl border border-slate-200 bg-white overflow-hidden group">
-              <summary class="flex items-center justify-between gap-3 px-5 py-4 cursor-pointer list-none font-semibold text-slate-800 hover:bg-slate-50 transition-colors">
+          {seoExtra.faqs.map(({ q, a }, i) => (
+            <details class={`reveal group overflow-hidden ${CARD_FLAT}`} style={`--rd:${(i % 4) * 70}ms`}>
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 font-semibold text-ink transition-colors hover:bg-paper-sunk">
                 <span>{q}</span>
-                <span class="text-slate-500 flex-shrink-0 transition-transform group-open:rotate-180" aria-hidden="true">▾</span>
+                <span class="flex-shrink-0 text-siegel transition-transform group-open:rotate-180" aria-hidden="true">▾</span>
               </summary>
-              <p class="px-5 pb-5 pt-1 text-sm text-slate-600 leading-relaxed">{a}</p>
+              <p class="px-5 pb-5 pt-1 text-sm leading-relaxed text-graphite">{a}</p>
             </details>
           ))}
         </div>
       </section>
     )}
 
-    <!-- Prev / Next navigation -->
-    <nav class="flex items-center justify-between gap-4 pt-6 border-t border-slate-200">
+    <!-- Prev / Next navigation — pressable -->
+    <nav class="reveal flex items-center justify-between gap-4 border-t border-rule pt-6">
       {prev ? (
         <a
           href={`/grammar/${level}/${prev.slug}/`}
-          class="flex items-center gap-2 px-4 py-3 rounded-xl border border-slate-200 bg-white hover:shadow-md transition-all group max-w-[45%]"
+          class={`group flex max-w-[45%] items-center gap-2 px-4 py-3 ${CARD_INTERACTIVE}`}
         >
-          <svg class="w-4 h-4 text-slate-500 group-hover:-translate-x-0.5 transition-transform flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="h-4 w-4 flex-shrink-0 text-siegel transition-transform group-hover:-translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
           <div class="min-w-0">
-            <p class="text-xs text-slate-500 mb-0.5">Previous</p>
-            <p class="text-sm font-semibold text-slate-700 truncate">{prev?.title_en ?? prev?.slug}</p>
+            <p class="mb-0.5 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">Previous</p>
+            <p class="truncate text-sm font-bold text-ink">{prev?.title_en ?? prev?.slug}</p>
           </div>
         </a>
       ) : (
@@ -586,13 +617,13 @@ if (seoExtra?.faqs?.length) {
       {next ? (
         <a
           href={`/grammar/${level}/${next.slug}/`}
-          class="flex items-center gap-2 px-4 py-3 rounded-xl border border-slate-200 bg-white hover:shadow-md transition-all group max-w-[45%] text-right ml-auto"
+          class={`group ml-auto flex max-w-[45%] items-center gap-2 px-4 py-3 text-right ${CARD_INTERACTIVE}`}
         >
           <div class="min-w-0">
-            <p class="text-xs text-slate-500 mb-0.5">Next</p>
-            <p class="text-sm font-semibold text-slate-700 truncate">{next?.title_en ?? next?.slug}</p>
+            <p class="mb-0.5 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">Next</p>
+            <p class="truncate text-sm font-bold text-ink">{next?.title_en ?? next?.slug}</p>
           </div>
-          <svg class="w-4 h-4 text-slate-500 group-hover:translate-x-0.5 transition-transform flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="h-4 w-4 flex-shrink-0 text-siegel transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
         </a>
@@ -602,12 +633,13 @@ if (seoExtra?.faqs?.length) {
     </nav>
 
     <!-- All topics in this level -->
-    <div class="mt-8 pt-6 border-t border-slate-200">
-      <a href={`/grammar/${level}/`} class="text-sm text-slate-600 hover:text-slate-700 transition-colors">
+    <div class="mt-8 border-t border-rule pt-6">
+      <a href={`/grammar/${level}/`} class="text-sm font-bold text-siegel transition-colors hover:text-siegel-deep">
         ← All {meta.label} topics
       </a>
     </div>
 
+    </div>
   </div>
 
   <!-- Fill the momentum score recap once the exercises are finished. The
@@ -621,11 +653,15 @@ if (seoExtra?.faqs?.length) {
       var note = document.getElementById('momentum-score-note');
       if (!box || !val) return;
       val.textContent = d.score + '/' + d.total + ' (' + d.pct + '%)';
+      var pass = d.pct >= 70;
       if (note) {
-        note.textContent = d.pct >= 70
+        note.textContent = pass
           ? "Nice — that's a pass. Keep the momentum going below."
           : 'Review the rules above, then try again anytime. Next topic is ready when you are.';
       }
+      // Pass = limette, keep-going = aprikose (semantic tokens; the words above carry the meaning)
+      box.classList.remove('bg-paper-sunk');
+      box.classList.add(pass ? 'bg-accent-limette-wash' : 'bg-accent-aprikose-wash', pass ? 'text-accent-limette-ink' : 'text-accent-aprikose-ink');
       box.classList.remove('hidden');
     });
   </script>

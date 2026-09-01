@@ -146,13 +146,10 @@ const Navbar = () => {
               </a>
             )}
             {user && !inTrial && !isSubscribed && (
-              <a
-                href="/pricing/"
-                className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-siegel text-white text-xs font-semibold hover:bg-siegel-lift transition-colors"
-              >
+              <Button href="/pricing/" size="sm" className="rounded-pill">
                 <Crown size={12} />
                 {isGerman ? 'Upgrade' : 'Upgrade'}
-              </a>
+              </Button>
             )}
 
             {/* Language Toggle — icon only */}
@@ -362,7 +359,7 @@ const Navbar = () => {
                     )}
                     <button
                       onClick={handleSignOut}
-                      className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
+                      className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-accent-himbeer-ink hover:bg-accent-himbeer-wash transition-colors"
                     >
                       <LogOut size={20} />
                       <span className="font-medium">{t('nav.logout')}</span>
