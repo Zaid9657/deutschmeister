@@ -61,6 +61,18 @@ const CompletionMoment = ({ headline, detail, nextLabel, nextHref, onNext, fullL
       </div>
       {detail && <p className="text-sm text-graphite mb-3">{detail}</p>}
       <div className={detail ? '' : 'mt-3'}>{action}</div>
+      {celebrate && (
+        // The honest-testimonial pipeline starts here: the site shows no
+        // reviews until real learners write them (the counts rule in
+        // src/data/marketing.js), so the one place we ask is an earned win.
+        // A quiet line, never a modal — the moment belongs to the learner.
+        <a
+          href="mailto:zaid@deutsch-meister.de?subject=My%20DeutschMeister%20experience"
+          className="mt-3 block font-data text-[0.6875rem] text-graphite transition-colors hover:text-siegel-deep"
+        >
+          Enjoying DeutschMeister? Tell us in two sentences →
+        </a>
+      )}
     </Card>
   );
 };
