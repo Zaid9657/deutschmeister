@@ -25,6 +25,9 @@ import Stat from '../../components/ui/Stat.jsx';
 // documented line the CompletionMoment fires its one confetti burst and the
 // single `celebrate` button; under it the same strip renders on siegel with
 // no confetti — a Standortbestimmung, not a party and not a verdict.
+// A mock module may override this wording via `verdictCopyDe` (same keys) —
+// the DTZ needs it: that exam is scaled (levels per section, no pass mark),
+// so "dokumentierte 60%-Grenze" would claim a rule that does not exist there.
 const VERDICT_COPY = {
   solide: {
     title: 'Über der Bestehensgrenze — mit Puffer',
@@ -81,7 +84,7 @@ const ModelltestResult = () => {
   const percent = Math.round((attempt.score / attempt.max_score) * 100);
   const verdict = verdictFor(percent, mock.passPercent);
   const passed = verdict !== 'nicht-bereit';
-  const copy = VERDICT_COPY[verdict];
+  const copy = mock.verdictCopyDe?.[verdict] || VERDICT_COPY[verdict];
   const sections = attempt.section_scores || {};
   const weakest = Object.entries(sections)
     .map(([key, s]) => ({ key, pct: s.max ? s.score / s.max : 1 }))
