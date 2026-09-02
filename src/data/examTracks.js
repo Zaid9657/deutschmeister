@@ -40,7 +40,7 @@ export const EXAM_TRACKS = [
     sublevels: ['b1.1', 'b1.2'],
     guideSlug: 'goethe-b1',
     courseHref: null,
-    hasMock: false,
+    hasMock: true,
     hasWriting: false,
   },
   {
@@ -51,7 +51,7 @@ export const EXAM_TRACKS = [
     sublevels: ['a2.2', 'b1.1'],
     guideSlug: 'dtz',
     courseHref: null,
-    hasMock: false,
+    hasMock: true,
     hasWriting: false,
   },
   {
@@ -62,7 +62,7 @@ export const EXAM_TRACKS = [
     sublevels: ['b2.1', 'b2.2'],
     guideSlug: 'telc-b2',
     courseHref: null,
-    hasMock: false,
+    hasMock: true,
     hasWriting: true,
   },
 ];
