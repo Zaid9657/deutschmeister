@@ -43,7 +43,10 @@ export function useOnboarding() {
     profileLoaded && !!user && isEmailVerified && onboardingCompletedAt === null;
 
   const completeOnboarding = useCallback(
-    async (exitPath = 'dashboard') => {
+    // `href` is for full-load destinations outside the SPA (the grammar
+    // lessons are served by the Astro build) — the completion is persisted
+    // FIRST, so the page unload cannot lose it.
+    async (exitPath = 'dashboard', { href } = {}) => {
       const dest = exitPath === 'level-test' ? '/level-test' : '/dashboard';
 
       if (user) {
@@ -59,6 +62,10 @@ export function useOnboarding() {
 
       setOnboardingCompletedAt(new Date().toISOString());
       trackOnboardingCompleted(exitPath);
+      if (href) {
+        window.location.assign(href);
+        return;
+      }
       navigate(dest, { replace: true });
     },
     [user, navigate],
