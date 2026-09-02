@@ -108,6 +108,31 @@ const UeberUnsPage = () => {
         </div>
       </section>
 
+      {/* FACT DISCIPLINE — the "How" of E-E-A-T, and it happens to be true:
+          provenance renders on every guide, counts are measured, and there
+          are no reviews on this site until real learners write them.
+          Mirrored in scripts/prerender-spa-routes.mjs — keep in sync. */}
+      <section className="py-20 bg-paper-sunk">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6">
+          <SectionHeading title="Wie wir mit Fakten umgehen" className="mb-6" />
+          <div className="text-[0.9375rem] leading-relaxed text-graphite space-y-4 sm:text-base">
+            <Reveal as="p" delay={80}>
+              Prüfungsfakten tragen bei uns ein sichtbares Prüfdatum und ihre Quellen — auf der Seite selbst,
+              nicht im Kleingedruckten. Ändert ein Prüfungsanbieter etwas, siehst du, wann wir zuletzt
+              nachgesehen haben.
+            </Reveal>
+            <Reveal as="p" delay={160}>
+              Jede Zahl über unsere Inhalte ist gegen die Datenbank gemessen, nie geschätzt. Wo wir nicht
+              gemessen haben, steht keine Zahl.
+            </Reveal>
+            <Reveal as="p" delay={240}>
+              Und keine erfundenen Bewertungen: Erfahrungsberichte erscheinen hier erst, wenn echte Lernende
+              sie uns schreiben.
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
       {/* DIFFERENTIATORS */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">

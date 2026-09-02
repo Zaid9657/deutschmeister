@@ -16,22 +16,8 @@ try {
 const FROM_ADDRESS = 'DeutschMeister <zaid@deutsch-meister.de>';
 const TEST_EMAIL   = 'zaid199660@gmail.com';
 
-// Common disposable/throwaway domains to exclude
-const BLOCKED_DOMAINS = new Set([
-  'example.com', 'mailinator.com', 'guerrillamail.com', 'tempmail.com',
-  'throwaway.email', 'sharklasers.com', 'guerrillamailblock.com',
-  'grr.la', 'guerrillamail.info', 'spam4.me', 'trashmail.com',
-  'trashmail.me', 'trashmail.net', 'yopmail.com', 'dispostable.com',
-  'maildrop.cc', 'mailnull.com', 'spamgourmet.com', 'spamgourmet.net',
-  'spamgourmet.org', 'spamtrap.ro', 'tempr.email', 'fakeinbox.com',
-  'getairmail.com', 'filzmail.com', '33mail.com', 'spamfree24.org',
-]);
-
-function isBlockedEmail(email) {
-  if (!email || !email.includes('@')) return true;
-  const domain = email.split('@')[1].toLowerCase();
-  return BLOCKED_DOMAINS.has(domain);
-}
+// Disposable-domain hygiene — shared with confirmation-nudge.mjs.
+import { isBlockedEmail } from './_shared/emailHygiene.mjs';
 
 function unsubscribeUrl(userId) {
   const token = createHmac('sha256', UNSUB_SECRET).update(userId).digest('hex');

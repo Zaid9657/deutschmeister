@@ -164,6 +164,18 @@ export const FREE_OFFER_LINE = `${FREE_LEVEL_LABEL} free, no account needed`;
 export const FREE_OFFER_LINE_DE = `${FREE_LEVEL_LABEL} komplett kostenlos, ohne Konto`;
 
 /**
+ * The founder-experience line — the site's "Who", told anonymously. It asserts
+ * facts about a real person, so ONLY this sanctioned wording may render (the
+ * full first-person story lives on /ueber-uns/, which the line should link to).
+ * Shipped on /vergleich/babbel/ and /leitfaden/telc-b1/ since launch
+ * (drafts/eeat-author-identity.md measured it present on 2 of 92 pages);
+ * exported here so every guide, exam hub and comparison renders it identically.
+ * Owner decision 2026-09-02: stays anonymous — no name, no Person schema.
+ */
+export const FOUNDER_LINE_DE =
+  'Gegründet von einem Arzt in Deutschland — kennt den Lernweg aus eigener Erfahrung.';
+
+/**
  * Price + what it buys, in one string, so the two can never be separated by a
  * later edit. This is the MedMeister `priceLine()` pattern: quoting the price
  * alone is not something an edit can do by accident.
