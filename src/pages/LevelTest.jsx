@@ -9,7 +9,6 @@ import LevelTestListening from '../components/LevelTest/LevelTestListening';
 import LevelTestSpeaking from '../components/LevelTest/LevelTestSpeaking';
 import LevelTestResults from '../components/LevelTest/LevelTestResults';
 import questionData from '../data/levelTestQuestions.json';
-import '../styles/LevelTest.css';
 
 const LevelTest = () => {
   const { user } = useAuth();
@@ -236,7 +235,10 @@ const LevelTest = () => {
         ]}
       />
 
-      <div className="level-test-page">
+      {/* The ground only. Each step owns its own gutter and rhythm — the
+          speaking step hands the screen to SpeakingSession, which is a
+          full-height layout of its own and must not sit in a padded box. */}
+      <div className="min-h-screen bg-paper text-ink">
         {testState === 'landing' && (
           <LevelTestLanding onStart={startTest} />
         )}

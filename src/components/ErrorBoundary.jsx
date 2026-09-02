@@ -2,6 +2,7 @@ import React from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import { safeGet, safeSet } from '../utils/safeStorage';
 import Button from './ui/Button';
+import Card from './ui/Card.jsx';
 
 function isChunkLoadError(error) {
   if (!error) return false;
@@ -54,14 +55,15 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       return (
         <div className="min-h-screen bg-paper flex items-center justify-center px-4">
-          <div className="max-w-md w-full bg-white rounded-lg border border-rule shadow-overlay p-8 text-center">
-            <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-6">
-              <AlertTriangle className="w-8 h-8 text-red-500" />
+          <Card raised className="max-w-md w-full p-8 text-center">
+            {/* Error state: himbeer wash/ink with an icon AND the words (playbook §1). */}
+            <div className="w-16 h-16 rounded-full bg-accent-himbeer-wash flex items-center justify-center mx-auto mb-6">
+              <AlertTriangle className="w-8 h-8 text-accent-himbeer-ink" aria-hidden="true" />
             </div>
-            <h1 className="font-display text-2xl font-semibold text-ink mb-2">
+            <h1 className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink mb-2">
               Something went wrong
             </h1>
-            <p className="text-graphite mb-8">
+            <p className="text-[0.9375rem] leading-relaxed text-graphite sm:text-base mb-8">
               {isChunkLoadError(this.state.error)
                 ? 'A new version is available. Please refresh the page.'
                 : 'An unexpected error occurred. Please try refreshing the page.'}
@@ -76,7 +78,7 @@ class ErrorBoundary extends React.Component {
                 Go Home
               </Button>
             </div>
-          </div>
+          </Card>
         </div>
       );
     }

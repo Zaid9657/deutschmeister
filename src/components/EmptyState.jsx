@@ -10,8 +10,8 @@ import Card from './ui/Card';
  */
 export default function EmptyState({ title, message, action = null }) {
   return (
-    <Card className="p-8 text-center">
-      <Inbox className="w-10 h-10 text-rule mx-auto mb-4" aria-hidden="true" />
+    <Card tone="sunk" className="p-8 text-center">
+      <Inbox className="w-10 h-10 text-graphite/60 mx-auto mb-4" aria-hidden="true" />
       <h3 className="font-display text-lg font-semibold text-ink mb-2">{title}</h3>
       {message && <p className="text-sm text-graphite max-w-md mx-auto">{message}</p>}
       {action && <div className="mt-6">{action}</div>}

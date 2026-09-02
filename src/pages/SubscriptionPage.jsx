@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
-import { Crown, Check, Clock, Shield, Zap, Loader2, RefreshCw } from 'lucide-react';
+import { Crown, Check, Clock, Shield, Zap, Loader2, RefreshCw, AlertCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
@@ -11,6 +9,13 @@ import { openCheckout } from '../utils/openCheckout';
 import { markCheckoutStarted, consumeCheckoutSuccess } from '../lib/funnelTracking';
 import { PLANS, num } from '../data/pricing.js';
 import { LEVEL_COUNT, READING_LESSON_COUNT } from '../data/marketing.js';
+import Button from '../components/ui/Button.jsx';
+import Card from '../components/ui/Card.jsx';
+import Chip from '../components/ui/Chip.jsx';
+import Reveal from '../components/ui/Reveal.jsx';
+import Aurora from '../components/ui/Aurora.jsx';
+import Tilt from '../components/ui/Tilt.jsx';
+import SectionHeading from '../components/ui/SectionHeading.jsx';
 
 const SubscriptionPage = () => {
   const { i18n } = useTranslation();
@@ -197,70 +202,55 @@ const SubscriptionPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-24 pb-12 px-4">
+    <div className="relative min-h-screen overflow-hidden bg-paper pt-24 pb-12 px-4">
       <SEO title="Subscription" description="Manage your DeutschMeister subscription." path="/subscription" noindex />
-      <div className="max-w-4xl mx-auto">
+      <Aurora />
+      <div className="relative max-w-4xl mx-auto">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-10"
-        >
-          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-siegel flex items-center justify-center">
-            <Crown className="w-8 h-8 text-white" />
+        <div className="text-center mb-10">
+          <div className="hero-line w-16 h-16 mx-auto mb-4 rounded-clay bg-siegel shadow-raise-siegel flex items-center justify-center" style={{ '--d': '0ms' }}>
+            <Crown className="w-8 h-8 text-white" aria-hidden="true" />
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-2">
-            Pick up where you left off
-          </h1>
-          <p className="text-slate-600 max-w-lg mx-auto">
-            Your trial is over, but your progress stays. Choose a plan and keep learning without limits.
-          </p>
-        </motion.div>
+          <SectionHeading
+            level={1}
+            size="page"
+            align="center"
+            title="Pick up where you left off"
+            lead="Your trial is over, but your progress stays. Choose a plan and keep learning without limits."
+          />
+        </div>
 
         {/* Payment verification */}
         {verifying && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8 p-4 rounded-xl border bg-blue-50 border-blue-200"
-          >
+          <Card tone="wash" className="mb-8 p-4 animate-pop-in">
             <div className="flex items-center gap-3">
-              <Loader2 className="w-5 h-5 text-blue-600 animate-spin" />
+              <Loader2 className="w-5 h-5 text-siegel animate-spin flex-shrink-0" aria-hidden="true" />
               <div>
-                <p className="font-semibold text-blue-800">
+                <p className="font-bold text-siegel-deep">
                   {isGerman ? 'Zahlung wird bestätigt...' : 'Verifying your payment...'}
                 </p>
-                <p className="text-sm text-blue-600">
+                <p className="text-sm text-siegel-deep">
                   {isGerman
                     ? 'Dies kann einige Sekunden dauern. Bitte schließen Sie diese Seite nicht.'
                     : 'This may take a few seconds. Please do not close this page.'}
                 </p>
               </div>
             </div>
-          </motion.div>
+          </Card>
         )}
 
-        {/* Status Card */}
+        {/* Status Card — success = limette, attention = aprikose (playbook §1) */}
         {(inTrial || isSubscribed) && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className={`mb-8 p-4 rounded-xl border ${
-              isSubscribed
-                ? 'bg-emerald-50 border-emerald-200'
-                : 'bg-amber-50 border-amber-200'
-            }`}
-          >
+          <Card tone={isSubscribed ? 'limette' : 'aprikose'} className="mb-8 p-4 animate-pop-in">
             <div className="flex items-center gap-3">
               {isSubscribed ? (
                 <>
-                  <Shield className="w-5 h-5 text-emerald-600" />
+                  <Shield className="w-5 h-5 text-accent-limette-ink flex-shrink-0" aria-hidden="true" />
                   <div>
-                    <p className="font-semibold text-emerald-800">
+                    <p className="font-bold text-accent-limette-ink">
                       {isGerman ? 'Aktives Abonnement' : 'Active Subscription'}
                     </p>
-                    <p className="text-sm text-emerald-600">
+                    <p className="text-sm text-accent-limette-ink">
                       {subscription?.plan_type === 'yearly'
                         ? isGerman ? 'Jahresplan' : 'Yearly Plan'
                         : isGerman ? 'Monatsplan' : 'Monthly Plan'}
@@ -276,12 +266,12 @@ const SubscriptionPage = () => {
                 </>
               ) : (
                 <>
-                  <Clock className="w-5 h-5 text-amber-600" />
+                  <Clock className="w-5 h-5 text-accent-aprikose-ink flex-shrink-0" aria-hidden="true" />
                   <div>
-                    <p className="font-semibold text-amber-800">
+                    <p className="font-bold text-accent-aprikose-ink">
                       {isGerman ? 'Kostenlose Testphase' : 'Free Trial'}
                     </p>
-                    <p className="text-sm text-amber-600">
+                    <p className="text-sm text-accent-aprikose-ink">
                       {daysLeft} {daysLeft === 1
                         ? isGerman ? 'Tag verbleibend' : 'day remaining'
                         : isGerman ? 'Tage verbleibend' : 'days remaining'}
@@ -290,198 +280,175 @@ const SubscriptionPage = () => {
                 </>
               )}
             </div>
-          </motion.div>
+          </Card>
         )}
 
         {/* Expired notice */}
         {!inTrial && !isSubscribed && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="mb-8 p-4 rounded-xl border bg-red-50 border-red-200"
-          >
+          <Card tone="himbeer" className="mb-8 p-4 animate-pop-in">
             <div className="flex items-center gap-3">
-              <Zap className="w-5 h-5 text-red-600" />
+              <Zap className="w-5 h-5 text-accent-himbeer-ink flex-shrink-0" aria-hidden="true" />
               <div>
-                <p className="font-semibold text-red-800">
+                <p className="font-bold text-accent-himbeer-ink">
                   {isGerman ? 'Testphase abgelaufen' : 'Trial Expired'}
                 </p>
-                <p className="text-sm text-red-600">
+                <p className="text-sm text-accent-himbeer-ink">
                   {isGerman
                     ? 'Abonniere jetzt, um weiter auf alle Inhalte zuzugreifen.'
                     : 'Subscribe now to continue accessing all content.'}
                 </p>
               </div>
             </div>
-          </motion.div>
+          </Card>
         )}
 
         {/* Already paid? Verify button */}
         {!isSubscribed && !verifying && (
           <div className="mb-8 text-center">
             <button
+              type="button"
               onClick={handleManualVerify}
-              className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 underline underline-offset-2 transition-colors"
+              className="inline-flex items-center gap-2 text-sm font-bold text-siegel transition-colors hover:text-siegel-deep"
             >
-              <RefreshCw className="w-3.5 h-3.5" />
+              <RefreshCw className="w-3.5 h-3.5" aria-hidden="true" />
               {isGerman ? 'Bereits bezahlt? Abonnement überprüfen' : 'Already paid? Verify my subscription'}
             </button>
             {verifyMessage && (
-              <p className="mt-2 text-sm text-red-500">{verifyMessage}</p>
+              <p className="mt-2 inline-flex items-center justify-center gap-2 rounded-clay bg-accent-himbeer-wash px-3 py-2 text-sm font-semibold text-accent-himbeer-ink">
+                <AlertCircle className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+                {verifyMessage}
+              </p>
             )}
           </div>
         )}
 
-        {/* Plan Cards */}
-        <div className="grid md:grid-cols-2 gap-6 mb-12">
+        {/* Plan Cards — the grid a learner chooses from, so they tilt. The
+            featured plan rests on a siegel edge and carries the page's one
+            gold marker (design-tokens.js rule 2). */}
+        <div className="grid md:grid-cols-2 gap-6 mb-12 pt-3">
           {plans.map((plan, index) => (
-            <motion.div
-              key={plan.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + index * 0.1 }}
-              className={`relative rounded-2xl border-2 p-6 ${
-                plan.highlight
-                  ? 'border-amber-400 bg-white shadow-xl shadow-amber-500/10'
-                  : 'border-slate-200 bg-white'
-              }`}
-            >
-              {plan.highlight && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="bg-siegel text-white text-xs font-bold px-3 py-1 rounded-full">
-                    {isGerman ? 'Bester Wert' : 'Best Value'}
-                  </span>
-                </div>
-              )}
+            <Reveal key={plan.id} delay={90 * index} className="h-full">
+              <Tilt className="h-full">
+                <Card
+                  raised
+                  edge={plan.highlight ? 'siegel' : 'paper'}
+                  className="relative flex h-full flex-col p-6"
+                >
+                  {plan.highlight && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2" data-atropos-offset="6">
+                      <span className="inline-flex items-center rounded-pill bg-gold px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-ink shadow-raise">
+                        {isGerman ? 'Bester Wert' : 'Best Value'}
+                      </span>
+                    </div>
+                  )}
 
-              <div className="text-center mb-6">
-                <h3 className="text-lg font-semibold text-slate-800 mb-1">
-                  {plan.name}
-                </h3>
-                <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-4xl font-bold text-slate-900">€{plan.price}</span>
-                  <span className="text-slate-500">{plan.period}</span>
-                </div>
-                {plan.savings && (
-                  <span className="inline-block mt-2 text-sm font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
-                    {plan.savings}
-                  </span>
-                )}
-                {plan.monthlyEquiv && (
-                  <p className="mt-1 text-xs text-slate-500">
-                    {isGerman ? `Nur €${plan.monthlyEquiv}/Monat` : `Only €${plan.monthlyEquiv}/month`}
-                  </p>
-                )}
-              </div>
+                  <div className="text-center mb-6">
+                    <h3 className="text-[1.125rem] font-bold text-ink mb-1">
+                      {plan.name}
+                    </h3>
+                    <div className="flex items-baseline justify-center gap-1" data-atropos-offset="4">
+                      <span className="font-display text-[2.75rem] font-semibold leading-none tracking-[-0.02em] text-ink">€{plan.price}</span>
+                      <span className="text-graphite">{plan.period}</span>
+                    </div>
+                    {plan.savings && (
+                      <Chip tone="limette" className="mt-3">
+                        {plan.savings}
+                      </Chip>
+                    )}
+                    {plan.monthlyEquiv && (
+                      <p className="mt-2 font-data text-[0.8125rem] text-graphite">
+                        {isGerman ? `Nur €${plan.monthlyEquiv}/Monat` : `Only €${plan.monthlyEquiv}/month`}
+                      </p>
+                    )}
+                  </div>
 
-              <ul className="space-y-3 mb-6">
-                {plan.features.map((feature, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <Check className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-slate-700">{feature}</span>
-                  </li>
-                ))}
-              </ul>
+                  <ul className="space-y-3 mb-6">
+                    {plan.features.map((feature, i) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <Check className="w-5 h-5 text-siegel flex-shrink-0 mt-0.5" aria-hidden="true" />
+                        <span className="text-sm text-ink">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
 
-              <button
-                onClick={() => handleSubscribe(plan.id)}
-                disabled={isSubscribed}
-                className={`w-full py-3 rounded-xl font-semibold transition-all ${
-                  isSubscribed
-                    ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                    : plan.highlight
-                    ? 'bg-siegel text-white hover:bg-siegel-lift active:bg-siegel-deep'
-                    : 'bg-slate-800 text-white hover:bg-slate-700'
-                }`}
-              >
-                {isSubscribed
-                  ? isGerman ? 'Bereits abonniert' : 'Already Subscribed'
-                  : isGerman ? 'Jetzt abonnieren' : 'Subscribe Now'}
-              </button>
-            </motion.div>
+                  <Button
+                    onClick={() => handleSubscribe(plan.id)}
+                    disabled={isSubscribed}
+                    variant={plan.highlight ? 'primary' : 'secondary'}
+                    shimmer={plan.highlight && !isSubscribed}
+                    size="lg"
+                    className="mt-auto w-full"
+                  >
+                    {isSubscribed
+                      ? isGerman ? 'Bereits abonniert' : 'Already Subscribed'
+                      : isGerman ? 'Jetzt abonnieren' : 'Subscribe Now'}
+                  </Button>
+                </Card>
+              </Tilt>
+            </Reveal>
           ))}
         </div>
 
         {/* Trial info */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="text-center text-sm text-slate-500 mb-8"
-        >
+        <Reveal as="p" className="text-center text-sm text-graphite mb-8">
           {isGerman
             ? 'Alle Pläne beinhalten eine 7-tägige kostenlose Testphase. Jederzeit kündbar.'
             : 'All plans include a 7-day free trial. Cancel anytime.'}
-        </motion.p>
+        </Reveal>
 
         {/* One-time course — rendered only when the buyer owns it (link to the
             course area) or the LS product exists (variantId configured), so an
             unset env var can never open a dead checkout. */}
         {(ownsCourse || course.variantId) && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45 }}
-            className="mb-12 p-6 rounded-2xl bg-white border border-slate-200 max-w-2xl mx-auto"
-          >
-            <p className="text-xs font-semibold uppercase tracking-widest text-siegel mb-1">
-              {isGerman ? 'Einmalkauf · kein Abo' : 'One-time purchase · not a subscription'}
-            </p>
-            <h2 className="text-xl font-bold text-slate-800">{course.name}</h2>
-            {ownsCourse ? (
-              <>
-                <p className="text-sm text-slate-500 mt-2">
-                  {isGerman
-                    ? 'Du hast den Kurs. Dein 4-Wochen-Plan wartet.'
-                    : 'You own this course. Your 4-week plan is waiting.'}
-                </p>
-                <Link
-                  to="/telc-b1-kurs"
-                  className="mt-4 inline-block py-3 px-6 rounded-xl font-semibold bg-siegel text-white hover:bg-siegel-lift"
-                >
-                  {isGerman ? 'Zum Kurs →' : 'Open the course →'}
-                </Link>
-              </>
-            ) : (
-              <>
-                <p className="text-sm text-slate-500 mt-2">
-                  {isGerman
-                    ? `Der feste 4-Wochen-Plan zur telc B1-Prüfung — mit ${course.proMonths} Monaten Pro-Zugang inklusive.`
-                    : `The fixed 4-week plan for the telc B1 exam — with ${course.proMonths} months of Pro access included.`}
-                </p>
-                <p className="mt-3 text-2xl font-bold text-slate-800">
-                  €{num(course.price)}
-                  <span className="text-sm font-normal text-slate-500">
-                    {' '}{isGerman ? 'einmalig' : 'one time'}
-                  </span>
-                </p>
-                <button
-                  onClick={handleBuyCourse}
-                  className="mt-4 w-full sm:w-auto py-3 px-6 rounded-xl font-semibold bg-siegel text-white hover:bg-siegel-lift active:bg-siegel-deep"
-                >
-                  {isGerman ? 'Kurs kaufen' : 'Buy the course'}
-                </button>
-                <p className="mt-2 text-xs text-slate-500">
-                  <a href="/telc-b1-komplettvorbereitung/" className="underline">
-                    {isGerman ? 'Was genau drin ist →' : 'See what exactly is inside →'}
-                  </a>
-                </p>
-              </>
-            )}
-          </motion.div>
+          <Reveal className="mb-12 max-w-2xl mx-auto">
+            <Card raised className="p-6">
+              <Chip tone="label" className="mb-3">
+                {isGerman ? 'Einmalkauf · kein Abo' : 'One-time purchase · not a subscription'}
+              </Chip>
+              <h2 className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink">{course.name}</h2>
+              {ownsCourse ? (
+                <>
+                  <p className="text-sm text-graphite mt-2">
+                    {isGerman
+                      ? 'Du hast den Kurs. Dein 4-Wochen-Plan wartet.'
+                      : 'You own this course. Your 4-week plan is waiting.'}
+                  </p>
+                  <Button to="/telc-b1-kurs" size="lg" className="mt-4">
+                    {isGerman ? 'Zum Kurs →' : 'Open the course →'}
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <p className="text-sm text-graphite mt-2">
+                    {isGerman
+                      ? `Der feste 4-Wochen-Plan zur telc B1-Prüfung — mit ${course.proMonths} Monaten Pro-Zugang inklusive.`
+                      : `The fixed 4-week plan for the telc B1 exam — with ${course.proMonths} months of Pro access included.`}
+                  </p>
+                  <p className="mt-3 font-display text-[2rem] font-semibold leading-none tracking-[-0.02em] text-ink">
+                    €{num(course.price)}
+                    <span className="ml-1 text-sm font-normal font-body tracking-normal text-graphite">
+                      {isGerman ? 'einmalig' : 'one time'}
+                    </span>
+                  </p>
+                  <Button onClick={handleBuyCourse} variant="secondary" size="lg" className="mt-4 w-full sm:w-auto">
+                    {isGerman ? 'Kurs kaufen' : 'Buy the course'}
+                  </Button>
+                  <p className="mt-3 text-xs">
+                    <a href="/telc-b1-komplettvorbereitung/" className="font-bold text-siegel transition-colors hover:text-siegel-deep">
+                      {isGerman ? 'Was genau drin ist →' : 'See what exactly is inside →'}
+                    </a>
+                  </p>
+                </>
+              )}
+            </Card>
+          </Reveal>
         )}
 
-        {/* Features grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="text-center"
-        >
-          <h2 className="text-xl font-bold text-slate-800 mb-6">
+        {/* Features grid — reference cards, flat */}
+        <div className="text-center">
+          <Reveal as="h2" className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink mb-6">
             {isGerman ? 'Was du bekommst' : 'What You Get'}
-          </h2>
+          </Reveal>
           <div className="grid sm:grid-cols-3 gap-4">
             {[
               {
@@ -501,14 +468,16 @@ const SubscriptionPage = () => {
                 desc: isGerman ? 'Konversation üben' : 'Practice conversation',
               },
             ].map((item, i) => (
-              <div key={i} className="p-4 rounded-xl bg-white border border-slate-200">
-                <div className="text-2xl mb-2">{item.icon}</div>
-                <h3 className="font-semibold text-slate-800">{item.title}</h3>
-                <p className="text-sm text-slate-500">{item.desc}</p>
-              </div>
+              <Reveal key={i} delay={90 * i}>
+                <Card className="p-4 h-full">
+                  <div className="text-2xl mb-2" aria-hidden="true">{item.icon}</div>
+                  <h3 className="font-bold text-ink">{item.title}</h3>
+                  <p className="text-sm text-graphite">{item.desc}</p>
+                </Card>
+              </Reveal>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );

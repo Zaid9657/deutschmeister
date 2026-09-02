@@ -1,18 +1,22 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
 import { BookOpen, ChevronRight, CheckCircle, Sun, TreePine, Waves, Moon, Lock } from 'lucide-react';
 import { useProgress } from '../contexts/ProgressContext';
-import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { isLevelFree } from '../config/freeTier';
-import { mainLevels, getSubLevels, levelThemes as contentLevelThemes } from '../data/content';
+import { levels as ALL_LEVELS, mainLevels, getSubLevels, levelThemes as contentLevelThemes } from '../data/content';
 import { getReadingLessonCounts, getReadingLessonsByLevel } from '../services/readingService';
 import SEO from '../components/SEO';
 import { seoProps } from '../data/seoRoutes.js';
 import { READING_LESSON_COUNTS_BY_LEVEL } from '../data/marketing';
+import Card from '../components/ui/Card.jsx';
+import Chip from '../components/ui/Chip.jsx';
+import SectionHeading from '../components/ui/SectionHeading.jsx';
+import Reveal from '../components/ui/Reveal.jsx';
+import Aurora from '../components/ui/Aurora.jsx';
+import Stat from '../components/ui/Stat.jsx';
 
 // Measured against reading_lessons (2026-08-24), not interpolated — the old
 // 3,4,5,6,7,8,9,10 ramp here matched no measurement. See src/data/marketing.js.
@@ -21,11 +25,16 @@ const LESSON_COUNTS = READING_LESSON_COUNTS_BY_LEVEL;
 // Fallback only — the real count comes from the DB (see dbLessonCounts).
 const TOTAL_LESSONS = 66;
 
+// The per-band identity is a NAME and an icon, never a colour: design-tokens.js
+// rule 1 keeps hue for grammatical case, so the retired per-band gradient ramps
+// are gone and every band sits on the same neutral surface. (Quoting the old
+// classes here would be enough for Tailwind to emit them — the scanner does not
+// parse comments — so they are described, not named.)
 const mainLevelInfo = {
-  A1: { name: 'Sunrise Warmth', icon: '🌅', color: 'from-orange-400 to-orange-500' },
-  A2: { name: 'Forest Calm', icon: '🌿', color: 'from-emerald-400 to-teal-400' },
-  B1: { name: 'Ocean Depth', icon: '🌊', color: 'from-blue-400 to-indigo-400' },
-  B2: { name: 'Twilight Elegance', icon: '🌙', color: 'from-purple-400 to-pink-400' },
+  A1: { name: 'Sunrise Warmth', icon: '🌅' },
+  A2: { name: 'Forest Calm', icon: '🌿' },
+  B1: { name: 'Ocean Depth', icon: '🌊' },
+  B2: { name: 'Twilight Elegance', icon: '🌙' },
 };
 
 const iconMap = {
@@ -39,7 +48,6 @@ const ReadingSectionPage = () => {
   const { i18n } = useTranslation();
   const navigate = useNavigate();
   const { isItemLearned } = useProgress();
-  const { getThemeForLevel } = useTheme();
   const { user } = useAuth();
   const { hasAccess } = useSubscription();
 
@@ -96,7 +104,6 @@ const ReadingSectionPage = () => {
 
   // Reading level card
   const ReadingLevelCard = ({ level }) => {
-    const theme = getThemeForLevel(level);
     const Icon = iconMap[level] || Sun;
     const levelInfo = contentLevelThemes[level] || {};
 
@@ -110,81 +117,66 @@ const ReadingSectionPage = () => {
 
     const displayLevel = level.toUpperCase();
     const part = levelInfo.part || (level.endsWith('.1') ? 1 : 2);
+    const done = progressPercent === 100 && completedCount > 0;
 
     return (
-      <motion.div
-        whileHover={{ scale: 1.02, y: -2 }}
-        transition={{ duration: 0.2 }}
+      <Card
+        interactive
+        as="button"
+        type="button"
+        edge={done ? 'limette' : 'paper'}
         onClick={handleClick}
-        className={`relative bg-white rounded-xl border shadow-sm overflow-hidden cursor-pointer hover:shadow-md ${
-          progressPercent === 100 && completedCount > 0 ? 'border-emerald-200' : 'border-slate-200'
-        }`}
+        className="block w-full h-full p-4 text-left"
       >
-        {progressPercent === 100 && completedCount > 0 && (
-          <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${theme.gradient}`} />
-        )}
-
-        <div className="p-4">
-          <div className="flex items-center gap-4">
-            <div
-              className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br ${theme.gradient}`}
-            >
-              <Icon className="w-6 h-6 text-white" />
-            </div>
-
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <h3 className="font-semibold text-slate-800">
-                  {displayLevel}
-                </h3>
-                <span className="px-2 py-0.5 rounded-full text-xs bg-slate-100 text-slate-600">
-                  Part {part}
-                </span>
-                {isLevelFree(level) && (
-                  <span className="px-2 py-0.5 rounded-full text-xs bg-emerald-100 text-emerald-700 font-semibold">FREE</span>
-                )}
-                {!isLevelFree(level) && !(user && hasAccess) && (
-                  <Lock className="w-3.5 h-3.5 text-slate-400" />
-                )}
-              </div>
-              <p className="text-sm text-slate-600">
-                {lessonCount} {isGerman ? 'Lektionen' : 'lessons'}
-              </p>
-            </div>
-
-            <div className="flex-shrink-0 flex items-center gap-3">
-              <div className="text-right">
-                <p
-                  className={`text-sm font-medium ${
-                    progressPercent === 100 && completedCount > 0 ? 'text-emerald-600' : 'text-slate-700'
-                  }`}
-                >
-                  {completedCount}/{lessonCount}
-                </p>
-                <p className="text-xs text-slate-400">{progressPercent}%</p>
-              </div>
-              {progressPercent === 100 && completedCount > 0 ? (
-                <CheckCircle className="w-5 h-5 text-emerald-500" />
-              ) : (
-                <ChevronRight className="w-5 h-5 text-slate-400" />
-              )}
-            </div>
+        <div className="flex items-center gap-4">
+          <div
+            className={`flex-shrink-0 w-12 h-12 rounded-clay flex items-center justify-center ${
+              done ? 'bg-accent-limette-wash text-accent-limette-ink' : 'bg-siegel-wash text-siegel'
+            }`}
+          >
+            <Icon className="w-6 h-6" />
           </div>
 
-          {progressPercent > 0 && progressPercent < 100 && (
-            <div className="mt-3 pt-3 border-t border-slate-100">
-              <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${progressPercent}%` }}
-                  transition={{ duration: 0.5, ease: 'easeOut' }}
-                  className={`h-full bg-gradient-to-r ${theme.gradient} rounded-full`}
-                />
-              </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-wrap items-center gap-2 mb-1">
+              <Chip tone="label">{displayLevel}</Chip>
+              <Chip tone="quiet">Part {part}</Chip>
+              {isLevelFree(level) && <Chip tone="limette">FREE</Chip>}
+              {!isLevelFree(level) && !(user && hasAccess) && (
+                <Lock className="w-3.5 h-3.5 text-graphite" />
+              )}
             </div>
-          )}
+            <p className="text-sm text-graphite">
+              {lessonCount} {isGerman ? 'Lektionen' : 'lessons'}
+            </p>
+          </div>
+
+          <div className="flex-shrink-0 flex items-center gap-3">
+            <div className="text-right">
+              <p className={`font-data text-sm font-bold ${done ? 'text-accent-limette-ink' : 'text-ink'}`}>
+                {completedCount}/{lessonCount}
+              </p>
+              <p className="font-data text-[0.6875rem] text-graphite">{progressPercent}%</p>
+            </div>
+            {done ? (
+              <CheckCircle className="w-5 h-5 text-accent-limette-ink" />
+            ) : (
+              <ChevronRight className="w-5 h-5 text-graphite" />
+            )}
+          </div>
         </div>
-      </motion.div>
+
+        {progressPercent > 0 && progressPercent < 100 && (
+          <div className="mt-3 pt-3 border-t border-rule">
+            <div className="h-1.5 overflow-hidden rounded-pill bg-paper-sunk">
+              <div
+                className="h-full rounded-pill bg-siegel"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
+          </div>
+        )}
+      </Card>
     );
   };
 
@@ -201,90 +193,66 @@ const ReadingSectionPage = () => {
           ]
         }}
       />
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-20 pb-12">
+      <div className="min-h-screen bg-paper font-body text-ink pt-20 pb-12">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <div className="flex items-center gap-4 mb-3">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center shadow-lg">
-              <BookOpen className="w-7 h-7 text-white" />
+        <div className="relative overflow-hidden rounded-clay mb-8 -mx-2 px-2 py-6 sm:-mx-4 sm:px-4">
+          <Aurora />
+          <div className="relative flex items-center gap-4">
+            <div
+              className="hero-line w-14 h-14 rounded-clay bg-siegel text-white shadow-raise-siegel flex items-center justify-center flex-shrink-0"
+              style={{ '--d': '60ms' }}
+            >
+              <BookOpen className="w-7 h-7" />
             </div>
-            <div>
-              <h1 className="font-display text-3xl sm:text-4xl font-bold text-slate-800">
-                {isGerman ? 'Lesen' : 'Reading'}
-              </h1>
-              <p className="text-slate-600">
-                {isGerman
-                  ? 'Verbessere dein Leseverständnis Schritt für Schritt'
-                  : 'Improve your reading comprehension step by step'}
-              </p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Stats Overview */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8"
-        >
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
-            <p className="text-2xl font-bold text-slate-800">{overallTotal}</p>
-            <p className="text-sm text-slate-500">
-              {isGerman ? 'Lektionen gesamt' : 'Total Lessons'}
-            </p>
-          </div>
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
-            <p className="text-2xl font-bold text-slate-800">8</p>
-            <p className="text-sm text-slate-500">{isGerman ? 'Stufen' : 'Levels'}</p>
-          </div>
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
-            <p className="text-2xl font-bold text-slate-800">{overallCompleted}</p>
-            <p className="text-sm text-slate-500">
-              {isGerman ? 'Abgeschlossen' : 'Completed'}
-            </p>
-          </div>
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
-            <p className="text-2xl font-bold text-emerald-600">{overallProgress}%</p>
-            <p className="text-sm text-slate-500">{isGerman ? 'Fortschritt' : 'Progress'}</p>
-          </div>
-        </motion.div>
-
-        {/* Overall Progress Bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="bg-white rounded-xl p-5 shadow-sm border border-slate-100 mb-8"
-        >
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-semibold text-slate-800">
-              {isGerman ? 'Gesamtfortschritt Lesen' : 'Overall Reading Progress'}
-            </h2>
-            <span className="text-lg font-bold text-slate-800">{overallProgress}%</span>
-          </div>
-          <div className="h-3 bg-slate-100 rounded-full overflow-hidden">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${overallProgress}%` }}
-              transition={{ duration: 1, ease: 'easeOut' }}
-              className="h-full bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500 rounded-full"
+            <SectionHeading
+              level={1}
+              size="page"
+              title={isGerman ? 'Lesen' : 'Reading'}
+              lead={isGerman
+                ? 'Verbessere dein Leseverständnis Schritt für Schritt'
+                : 'Improve your reading comprehension step by step'}
             />
           </div>
-        </motion.div>
+        </div>
+
+        {/* Stats Overview */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+          {[
+            { key: 'total', value: overallTotal, label: isGerman ? 'Lektionen gesamt' : 'Total Lessons' },
+            // Never a typed figure: the level count is the content module's own.
+            { key: 'levels', value: ALL_LEVELS.length, label: isGerman ? 'Stufen' : 'Levels' },
+            { key: 'done', value: overallCompleted, label: isGerman ? 'Abgeschlossen' : 'Completed' },
+            { key: 'pct', value: overallProgress, suffix: '%', label: isGerman ? 'Fortschritt' : 'Progress' },
+          ].map((tile, i) => (
+            <Reveal key={tile.key} delay={80 * i}>
+              <Card raised edge={tile.key === 'pct' ? 'limette' : 'paper'} className="p-4">
+                <Stat value={tile.value} suffix={tile.suffix || ''} label={tile.label} size="sm" />
+              </Card>
+            </Reveal>
+          ))}
+        </div>
+
+        {/* Overall Progress Bar */}
+        <Reveal delay={120} className="mb-8">
+          <Card raised edge="siegel" className="p-5">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="font-display text-[1.0625rem] font-semibold text-ink">
+                {isGerman ? 'Gesamtfortschritt Lesen' : 'Overall Reading Progress'}
+              </h2>
+              <span className="font-data text-base font-bold text-ink">{overallProgress}%</span>
+            </div>
+            <div className="h-3 overflow-hidden rounded-pill bg-paper-sunk">
+              <div
+                className="h-full rounded-pill bg-siegel transition-all duration-500 ease-snap"
+                style={{ width: `${overallProgress}%` }}
+              />
+            </div>
+          </Card>
+        </Reveal>
 
         {/* Level Groups */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="space-y-6"
-        >
+        <div className="space-y-6">
           {mainLevels.map((mainLevel, groupIndex) => {
             const info = mainLevelInfo[mainLevel];
             const subLevels = getSubLevels(mainLevel);
@@ -294,59 +262,43 @@ const ReadingSectionPage = () => {
             );
 
             return (
-              <motion.div
-                key={mainLevel}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 + groupIndex * 0.1 }}
-                className="bg-white rounded-2xl p-5 shadow-lg border border-slate-100"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div
-                    className={`w-10 h-10 rounded-xl bg-gradient-to-r ${info.color} flex items-center justify-center`}
-                  >
-                    <span className="text-xl">{info.icon}</span>
+              <Reveal key={mainLevel} delay={90 * groupIndex}>
+                <Card className="p-5">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-clay bg-paper-sunk border border-rule flex items-center justify-center">
+                      <span className="text-xl">{info.icon}</span>
+                    </div>
+                    <div>
+                      <h3 className="font-display text-lg font-semibold text-ink">
+                        {mainLevel} - {info.name}
+                      </h3>
+                      <p className="font-data text-[0.6875rem] text-graphite">
+                        {groupLessonCount} {isGerman ? 'Leselektionen' : 'reading lessons'}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-display text-lg font-bold text-slate-800">
-                      {mainLevel} - {info.name}
-                    </h3>
-                    <p className="text-xs text-slate-500">
-                      {groupLessonCount} {isGerman ? 'Leselektionen' : 'reading lessons'}
-                    </p>
-                  </div>
-                </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {subLevels.map((level, index) => (
-                    <motion.div
-                      key={level}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.5 + groupIndex * 0.1 + index * 0.05 }}
-                    >
-                      <ReadingLevelCard level={level} />
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {subLevels.map((level) => (
+                      <ReadingLevelCard key={level} level={level} />
+                    ))}
+                  </div>
+                </Card>
+              </Reveal>
             );
           })}
-        </motion.div>
+        </div>
 
         {/* Info note */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          className="mt-8 p-4 bg-teal-50 rounded-xl border border-teal-100"
-        >
-          <p className="text-sm text-teal-700 text-center">
-            {isGerman
-              ? 'Leselektionen werden mit steigendem Niveau länger. Jede enthält Schlüsselvokabular und Verständnisfragen.'
-              : 'Reading lessons get progressively longer as levels increase. Each includes key vocabulary and comprehension questions.'}
-          </p>
-        </motion.div>
+        <Reveal delay={120}>
+          <Card tone="sunk" className="mt-8 p-4">
+            <p className="text-sm text-graphite text-center">
+              {isGerman
+                ? 'Leselektionen werden mit steigendem Niveau länger. Jede enthält Schlüsselvokabular und Verständnisfragen.'
+                : 'Reading lessons get progressively longer as levels increase. Each includes key vocabulary and comprehension questions.'}
+            </p>
+          </Card>
+        </Reveal>
       </div>
     </div>
     </>

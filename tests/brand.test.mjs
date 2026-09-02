@@ -129,6 +129,15 @@ const APP_CHROME = [
   'src/App.jsx',
   'src/components/ui/Button.jsx',
   'src/components/ui/Card.jsx',
+  // The Playful Depth kit (2026-09-01): every screen composes these.
+  'src/components/ui/Chip.jsx',
+  'src/components/ui/SectionHeading.jsx',
+  'src/components/ui/Tilt.jsx',
+  'src/components/ui/Aurora.jsx',
+  'src/components/ui/Reveal.jsx',
+  'src/components/ui/Stat.jsx',
+  'src/lib/motion.js',
+  'src/lib/confetti.js',
   'src/components/Navbar.jsx',
   'src/components/Logo.jsx',
   'src/components/SessionTimeoutModal.jsx',
@@ -221,12 +230,22 @@ const MAX_LEGACY_CTA_FILES = 0;
  * routes, while the ratchet read 0 and APP_CHROME (which never listed the file)
  * agreed. That file is migrated now and is in the list above.
  *
- * So 16 is not a regression against 0; it is the first honest count. Nothing
- * spread — the lens widened. 16 is the ceiling and may only go down: the
- * level/listening components and the grammar, reading, speaking, account,
- * X-Ray, subscription and video-library screens.
+ * So 16 was not a regression against 0; it was the first honest count. Nothing
+ * spread — the lens widened.
+ *
+ * 2026-09-02: 0 again — and this time under the widened lens, which is the
+ *   number that means something. The "Playful Depth" design sweep (PRs #33–#39)
+ *   migrated all sixteen: the level/listening components and the grammar,
+ *   reading, speaking, account, X-Ray, subscription and video-library screens,
+ *   plus src/styles/LevelTest.css, the 1,766-line stylesheet that had been
+ *   carved out of every one of these checks as its own task. It is deleted.
+ *   The ratchet is what surfaced this: the sweep landed, the count fell, and the
+ *   equality assertion refused to let the ceiling sit stale at 16.
+ *
+ * There is no legacy palette left to recede. Both ceilings are 0, so from here
+ * the two tests are pure regression guards: any reappearance is new, not residue.
  */
-const MAX_RETIRED_STOP_FILES = 16;
+const MAX_RETIRED_STOP_FILES = 0;
 
 test('the retired CTA is receding, never spreading', () => {
   const files = [];

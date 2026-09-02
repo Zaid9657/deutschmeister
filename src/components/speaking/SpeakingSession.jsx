@@ -3,12 +3,19 @@ import { Mic, Square, Loader2, Volume2, PhoneOff, X, AlertCircle, RotateCcw } fr
 import { getConfigForLevel } from '../../constants/speakingPrompts';
 import { getAuthHeaders } from '../../utils/supabase';
 import { pickAudioMimeType, blobToBase64, micErrorMessage } from './mediaSupport';
+import Button from '../ui/Button.jsx';
+import Card from '../ui/Card.jsx';
+import Chip from '../ui/Chip.jsx';
 
 function formatTime(seconds) {
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
+
+const EYEBROW = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em]';
+const STATUS_CHIP = 'inline-flex items-center gap-1.5 rounded-pill border border-rule bg-white px-3 py-1 font-data text-[0.75rem] text-graphite';
+const EQ_BARS = [0, 1, 2, 3, 4, 5, 6];
 
 // Turn-based tap-to-speak session. Started by the caller (speaking-session
 // action 'start'); this component only drives the conversation loop:
@@ -270,15 +277,17 @@ const SpeakingSession = ({
   // ---- evaluating screen ----
   if (evaluating) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center px-6">
-        <Loader2 className="w-10 h-10 text-teal-500 animate-spin mb-5" />
-        <h3 className="text-lg font-semibold text-slate-800 mb-1">Scoring your session…</h3>
-        <p className="text-sm text-slate-500">We're going through your conversation</p>
+      <div className="min-h-screen bg-paper text-ink flex flex-col items-center justify-center px-6">
+        <Loader2 className="w-10 h-10 text-siegel animate-spin mb-5" />
+        <h3 className="font-display text-lg font-semibold text-ink mb-1">Scoring your session…</h3>
+        <p className="text-sm text-graphite">We're going through your conversation</p>
       </div>
     );
   }
 
   const isLowTime = timeRemaining <= 30;
+  const isRecording = recordState === 'recording';
+  const isProcessing = recordState === 'processing';
   const title = isPlacement ? 'Placement test' : (mission ? (mission.title_de || mission.title_en) : config.name);
 
   let statusText = 'Tap and speak';
@@ -287,23 +296,23 @@ const SpeakingSession = ({
   else if (isPlaying) statusText = `${assistantLabel} is speaking — tap to reply`;
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col pt-16">
+    <div className="min-h-screen bg-paper text-ink flex flex-col pt-16">
       {/* Header: title + countdown */}
-      <div className="flex-shrink-0 border-b border-slate-200 bg-white">
-        <div className="max-w-lg mx-auto px-4 py-3 flex items-center justify-between">
+      <div className="flex-shrink-0 border-b border-rule bg-white">
+        <div className="max-w-lg mx-auto px-4 py-3 flex items-center justify-between gap-3">
           <div className="min-w-0 flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded-lg bg-teal-50 text-teal-700 text-xs font-bold flex-shrink-0">
+            <Chip tone="label" className="flex-shrink-0">
               {isPlacement ? 'A1–B2' : config.level}
-            </span>
-            <span className="text-sm font-medium text-slate-600 truncate">{title}</span>
+            </Chip>
+            <span className="text-sm font-medium text-graphite truncate">{title}</span>
           </div>
-          <div className={`flex items-center gap-1.5 text-sm font-bold tabular-nums ${isLowTime ? 'text-rose-500' : 'text-slate-500'}`}>
-            <span className={`w-2 h-2 rounded-full ${isLowTime ? 'bg-rose-500 animate-pulse' : 'bg-slate-300'}`} />
+          <Chip tone={isLowTime ? 'himbeer' : 'quiet'} className="tabular-nums flex-shrink-0">
+            <span className={`w-2 h-2 rounded-pill ${isLowTime ? 'bg-accent-himbeer animate-pulse' : 'bg-edge'}`} />
             {formatTime(timeRemaining)}
-          </div>
+          </Chip>
         </div>
         {isLowTime && (
-          <div className="bg-rose-50 text-rose-600 text-xs text-center py-1 font-medium">
+          <div className="bg-accent-himbeer-wash text-accent-himbeer-ink text-xs text-center py-1 font-medium">
             Less than 30 seconds left — time is nearly up.
           </div>
         )}
@@ -311,42 +320,43 @@ const SpeakingSession = ({
 
       {/* Hint words (missions) */}
       {mission && hintWords.length > 0 && (
-        <div className="flex-shrink-0 bg-white/60 border-b border-slate-100 px-4 py-2">
+        <div className="flex-shrink-0 bg-paper-sunk border-b border-rule px-4 py-2">
           <div className="max-w-lg mx-auto flex items-center gap-2 flex-wrap justify-center">
-            <span className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Helper words</span>
+            <span className={`${EYEBROW} text-graphite`}>Helper words</span>
             {hintWords.map((w, i) => (
-              <span key={i} className="px-2.5 py-1 rounded-full bg-teal-50 border border-teal-100 text-teal-700 text-xs font-medium">{w}</span>
+              <Chip key={i} tone="label" size="md">{w}</Chip>
             ))}
           </div>
         </div>
       )}
 
-      {/* Transcript */}
+      {/* Transcript — flat cards: you on the siegel wash, the coach on white */}
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-lg mx-auto px-4 py-5 space-y-3">
           {messages.map((msg, i) => (
             <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
-                msg.role === 'user'
-                  ? 'bg-teal-500 text-white rounded-br-sm'
-                  : 'bg-white border border-slate-200 text-slate-700 rounded-bl-sm'
-              }`}>
-                <span className={`block text-[10px] uppercase tracking-wider font-semibold mb-0.5 ${msg.role === 'user' ? 'text-teal-100' : 'text-slate-400'}`}>
+              <Card
+                tone={msg.role === 'user' ? 'wash' : 'paper'}
+                className={`max-w-[80%] px-4 py-2.5 text-sm leading-relaxed text-ink ${
+                  msg.role === 'user' ? 'rounded-br-md' : 'rounded-bl-md'
+                }`}
+              >
+                <span className={`block ${EYEBROW} mb-0.5 ${msg.role === 'user' ? 'text-siegel-deep' : 'text-graphite'}`}>
                   {msg.role === 'user' ? 'You' : assistantLabel}
                 </span>
                 {msg.content}
-              </div>
+              </Card>
             </div>
           ))}
           {recordState === 'processing' && (
             <div className="flex justify-start">
-              <div className="rounded-2xl rounded-bl-sm bg-white border border-slate-200 px-4 py-3 text-slate-400">
+              <Card className="rounded-bl-md px-4 py-3 text-graphite">
                 <span className="inline-flex gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-300 animate-bounce" style={{ animationDelay: '300ms' }} />
+                  <span className="w-1.5 h-1.5 rounded-pill bg-edge animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <span className="w-1.5 h-1.5 rounded-pill bg-edge animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <span className="w-1.5 h-1.5 rounded-pill bg-edge animate-bounce" style={{ animationDelay: '300ms' }} />
                 </span>
-              </div>
+              </Card>
             </div>
           )}
           <div ref={transcriptEndRef} />
@@ -356,18 +366,18 @@ const SpeakingSession = ({
       {/* Notices */}
       <div className="max-w-lg mx-auto w-full px-4">
         {ttsWarning && (
-          <div className="mb-3 p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-700 text-center">
+          <div className="mb-3 p-2.5 rounded-clay border border-accent-aprikose/30 bg-accent-aprikose-wash text-xs text-accent-aprikose-ink text-center">
             Audio isn't available right now — read the reply above.
           </div>
         )}
         {turnError && (
-          <div className="mb-3 p-3 rounded-xl bg-rose-50 border border-rose-200 text-sm text-rose-700">
+          <div className="mb-3 p-3 rounded-clay border border-accent-himbeer/30 bg-accent-himbeer-wash text-sm text-accent-himbeer-ink">
             <div className="flex items-start gap-2">
               <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
               <div className="flex-1">
                 <p>{turnError.message}</p>
                 {turnError.retryable && lastRecordingRef.current && (
-                  <button onClick={retryTurn} className="mt-2 inline-flex items-center gap-1.5 text-rose-700 font-semibold hover:text-rose-800">
+                  <button type="button" onClick={retryTurn} className="mt-2 inline-flex items-center gap-1.5 font-bold text-accent-himbeer-ink hover:underline underline-offset-2">
                     <RotateCcw className="w-3.5 h-3.5" /> Send again
                   </button>
                 )}
@@ -378,56 +388,61 @@ const SpeakingSession = ({
       </div>
 
       {/* Control bar */}
-      <div className="flex-shrink-0 bg-white border-t border-slate-200 pb-[env(safe-area-inset-bottom)]">
+      <div className="flex-shrink-0 bg-white border-t border-rule pb-[env(safe-area-inset-bottom)]">
         <div className="max-w-lg mx-auto px-4 py-5 flex flex-col items-center">
-          <button
-            onClick={handleTapButton}
-            disabled={recordState === 'processing'}
-            className={`relative w-20 h-20 rounded-full flex items-center justify-center transition-all duration-200 active:scale-95 shadow-lg disabled:cursor-not-allowed ${
-              recordState === 'recording'
-                ? 'bg-rose-500 text-white shadow-rose-500/30'
-                : recordState === 'processing'
-                  ? 'bg-slate-200 text-slate-400'
-                  : 'bg-teal-500 hover:bg-teal-600 text-white shadow-teal-500/30'
-            }`}
-          >
-            {recordState === 'recording' && (
-              <span className="absolute inset-0 rounded-full bg-rose-400/40 animate-ping" />
+          {/* Level meter: live bars while recording, a calm resting row otherwise */}
+          <div className="h-8 mb-4 flex items-end justify-center gap-1" aria-hidden="true">
+            {isRecording ? (
+              <div className="equalizer flex h-full items-end gap-1">
+                {EQ_BARS.map((n) => <span key={n} className="block" />)}
+              </div>
+            ) : (
+              EQ_BARS.map((n) => (
+                <span key={n} className={`block w-[5px] h-1.5 rounded-pill ${isPlaying ? 'bg-siegel/40' : 'bg-edge'}`} />
+              ))
             )}
-            {recordState === 'processing'
-              ? <Loader2 className="w-8 h-8 animate-spin" />
-              : recordState === 'recording'
-                ? <Square className="w-7 h-7" fill="currentColor" />
-                : <Mic className="w-8 h-8" />}
-          </button>
-          <p className="text-xs text-slate-500 mt-3 font-medium h-4 flex items-center gap-1.5">
-            {isPlaying && recordState === 'idle' && <Volume2 className="w-3.5 h-3.5 text-indigo-400" />}
-            {statusText}
-          </p>
-
-          <div className="flex items-center gap-4 mt-4">
-            {lastReplyAudioRef.current && recordState === 'idle' && (
-              <button
-                onClick={() => playAudio(lastReplyAudioRef.current)}
-                className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-600 py-2"
-              >
-                <Volume2 className="w-3.5 h-3.5" /> Play again
-              </button>
-            )}
-            <button
-              onClick={endSession}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold transition-colors"
-            >
-              <PhoneOff className="w-4 h-4" /> Finish &amp; get feedback
-            </button>
           </div>
 
           <button
-            onClick={() => { cleanup(); onCancel?.(); }}
-            className="mt-3 inline-flex items-center gap-1.5 text-xs text-slate-300 hover:text-slate-500 py-1"
+            type="button"
+            onClick={handleTapButton}
+            disabled={recordState === 'processing'}
+            className={`relative w-20 h-20 rounded-pill flex items-center justify-center select-none transition-all duration-100 ease-snap disabled:cursor-not-allowed ${
+              isProcessing
+                ? 'bg-paper-sunk text-graphite border border-rule'
+                : `text-white shadow-raise-siegel active:translate-y-1 active:shadow-none ${isRecording ? 'bg-siegel-deep' : 'bg-siegel hover:bg-siegel-lift'}`
+            }`}
           >
-            <X className="w-3 h-3" /> Cancel
+            {isRecording && (
+              <span className="absolute inset-0 rounded-pill bg-siegel/30 animate-ping" />
+            )}
+            {isProcessing
+              ? <Loader2 className="w-8 h-8 animate-spin" />
+              : isRecording
+                ? <Square className="w-7 h-7" fill="currentColor" />
+                : <Mic className="w-8 h-8" />}
           </button>
+          <p className="mt-3 h-7 flex items-center">
+            <span className={STATUS_CHIP}>
+              {isPlaying && recordState === 'idle' && <Volume2 className="w-3.5 h-3.5 text-siegel" />}
+              {statusText}
+            </span>
+          </p>
+
+          <div className="flex items-center gap-3 mt-4">
+            {lastReplyAudioRef.current && recordState === 'idle' && (
+              <Button variant="ghost" size="sm" onClick={() => playAudio(lastReplyAudioRef.current)}>
+                <Volume2 className="w-3.5 h-3.5" /> Play again
+              </Button>
+            )}
+            <Button variant="secondary" onClick={endSession}>
+              <PhoneOff className="w-4 h-4" /> Finish &amp; get feedback
+            </Button>
+          </div>
+
+          <Button variant="ghost" size="sm" className="mt-3" onClick={() => { cleanup(); onCancel?.(); }}>
+            <X className="w-3 h-3" /> Cancel
+          </Button>
         </div>
       </div>
     </div>

@@ -1,31 +1,55 @@
 /**
  * The one card in the app.
  *
- * Rule 3 of src/data/design-tokens.js: structure comes from hairline rules and
- * alignment, not from resting shadows — German grammar's native artifact is the
- * declension table. So a card is paper, a `rule` border, and nothing else at
- * rest. `interactive` adds the hover lift; `tone="sunk"` is the recessed panel
- * used for quiet secondary content.
+ * Rule 3 of src/data/design-tokens.js (v2): depth is an affordance.
+ *   - `interactive` — a clickable clay card: rests raised on its edge
+ *     (`shadow-raise`), floats up a little on hover, and physically depresses
+ *     on press, same grammar as the Button.
+ *   - `raised` — featured but not clickable: rests raised, does not respond.
+ *     Use sparingly; a raised card that ignores the pointer is almost a lie.
+ *   - default — reference material: paper, a `rule` hairline, FLAT. The
+ *     declension table's native form. Tables and prose stay here.
+ * `tone="sunk"` is the recessed panel for quiet secondary content.
  */
 
 const TONES = {
   paper: 'bg-white',
   sunk: 'bg-paper-sunk',
   wash: 'bg-siegel-wash',
+  himbeer: 'bg-accent-himbeer-wash',
+  aprikose: 'bg-accent-aprikose-wash',
+  limette: 'bg-accent-limette-wash',
+};
+
+// `edge` colours the raised bottom edge: an accent for energy (a streak
+// card, a due-count card), siegel for the one featured card on a screen.
+const EDGES = {
+  paper: 'shadow-raise',
+  siegel: 'shadow-raise-siegel',
+  himbeer: 'shadow-raise-himbeer',
+  aprikose: 'shadow-raise-aprikose',
+  limette: 'shadow-raise-limette',
 };
 
 export default function Card({
   as: Tag = 'div',
   tone = 'paper',
+  edge = 'paper',
   interactive = false,
+  raised = false,
   className = '',
   children,
   ...rest
 }) {
+  const raise = EDGES[edge] ?? EDGES.paper;
   const classes = [
-    'rounded-lg border border-rule',
+    'rounded-clay border border-rule',
     TONES[tone] ?? TONES.paper,
-    interactive ? 'transition-shadow hover:shadow-hover' : '',
+    interactive
+      ? `${raise} transition-all duration-150 ease-snap hover:-translate-y-0.5 hover:shadow-raise-lg active:translate-y-1 active:shadow-none`
+      : raised
+        ? raise
+        : '',
     className,
   ]
     .filter(Boolean)

@@ -1,9 +1,15 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
 import { Play, Pause, RotateCcw } from 'lucide-react';
 import { formatDuration } from '../../utils/listeningHelpers';
+import Card from '../ui/Card.jsx';
 
+// The listening transport. Playful Depth (docs/design/playbook.md): the panel
+// itself is flat reference furniture, the two controls on it are raised and
+// physically depress, and the equalizer bars run in siegel only while audio is
+// actually playing — paused is seven calm, static dots, so motion always means
+// "sound is coming out of this".
 const MAX_PLAYS = 3;
+const BARS = [1, 2, 3, 4, 5, 6, 7];
 
 const AudioPlayer = ({ src, onPlayCountChange, disabled = false }) => {
   const audioRef = useRef(null);
@@ -85,68 +91,83 @@ const AudioPlayer = ({ src, onPlayCountChange, disabled = false }) => {
   };
 
   const progressPct = duration > 0 ? (currentTime / duration) * 100 : 0;
+  const playDisabled = disabled || (!isPlaying && !canPlay);
+  const restartDisabled = disabled || !canPlay;
 
   return (
-    <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+    <Card className="p-4">
       <audio ref={audioRef} src={src} preload="metadata" />
 
       <div className="flex items-center gap-3">
         {/* Play/Pause button */}
-        <motion.button
-          whileTap={{ scale: 0.9 }}
+        <button
+          type="button"
           onClick={togglePlay}
-          disabled={disabled || (!isPlaying && !canPlay)}
-          className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${
-            disabled || (!isPlaying && !canPlay)
-              ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
-              : 'bg-indigo-500 text-white hover:bg-indigo-600'
+          disabled={playDisabled}
+          className={`w-14 h-14 rounded-pill flex items-center justify-center flex-shrink-0 select-none transition-all duration-100 ease-snap ${
+            playDisabled
+              ? 'bg-paper-sunk text-graphite cursor-not-allowed'
+              : 'bg-siegel text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none'
           }`}
           aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
         >
-          {isPlaying ? <Pause size={20} /> : <Play size={20} className="ml-0.5" />}
-        </motion.button>
+          {isPlaying ? <Pause size={22} /> : <Play size={22} className="ml-0.5" />}
+        </button>
+
+        {/* Level meter: animated only while audio is running */}
+        {isPlaying ? (
+          <div className="equalizer hidden sm:flex h-8 items-end gap-[3px] flex-shrink-0" aria-hidden="true">
+            {BARS.map((bar) => <span key={bar} />)}
+          </div>
+        ) : (
+          <div className="hidden sm:flex h-8 items-center gap-[3px] flex-shrink-0" aria-hidden="true">
+            {BARS.map((bar) => (
+              <span key={bar} className="block h-[5px] w-[5px] rounded-pill bg-rule" />
+            ))}
+          </div>
+        )}
 
         {/* Progress area */}
         <div className="flex-1 min-w-0">
           {/* Progress bar */}
           <div
-            className="w-full h-2 bg-slate-200 rounded-full cursor-pointer mb-1.5"
+            className="w-full h-2 bg-paper-sunk rounded-pill cursor-pointer mb-1.5 overflow-hidden"
             onClick={handleSeek}
           >
             <div
-              className="h-2 bg-indigo-500 rounded-full transition-all"
+              className="h-2 bg-siegel rounded-pill transition-all"
               style={{ width: `${progressPct}%` }}
             />
           </div>
 
           {/* Time & play count */}
-          <div className="flex justify-between text-xs text-slate-400">
+          <div className="flex justify-between font-data text-[0.6875rem] text-graphite">
             <span>
               {formatDuration(currentTime)} / {formatDuration(duration)}
             </span>
-            <span className={!canPlay ? 'text-rose-400 font-medium' : ''}>
+            <span className={!canPlay ? 'font-bold text-accent-himbeer-ink' : ''}>
               {playCount}/{MAX_PLAYS} plays
             </span>
           </div>
         </div>
 
         {/* Restart button */}
-        <motion.button
-          whileTap={{ scale: 0.9 }}
+        <button
+          type="button"
           onClick={restart}
-          disabled={disabled || !canPlay}
-          className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${
-            disabled || !canPlay
-              ? 'bg-slate-100 text-slate-300 cursor-not-allowed'
-              : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+          disabled={restartDisabled}
+          className={`w-10 h-10 rounded-clay border flex items-center justify-center flex-shrink-0 select-none transition-all duration-100 ease-snap ${
+            restartDisabled
+              ? 'border-rule bg-paper-sunk text-graphite cursor-not-allowed'
+              : 'border-rule bg-white text-graphite shadow-raise hover:border-siegel hover:text-siegel-deep active:translate-y-1 active:shadow-none'
           }`}
           title="Restart audio"
           aria-label="Restart audio"
         >
           <RotateCcw size={16} />
-        </motion.button>
+        </button>
       </div>
-    </div>
+    </Card>
   );
 };
 

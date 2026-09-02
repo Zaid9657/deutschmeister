@@ -1,9 +1,28 @@
-import React from 'react';
+import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Trophy, BookOpen, RefreshCw, Headphones, Mic, PenTool, CheckCircle2, XCircle } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { stepDownSublevel, bandOf } from '../../config/levels';
 import { getTopicsForLevel } from '../../data/grammarTopics';
+import Button from '../ui/Button.jsx';
+import Card from '../ui/Card.jsx';
+import Chip from '../ui/Chip.jsx';
+import Reveal from '../ui/Reveal.jsx';
+import Aurora from '../ui/Aurora.jsx';
+import confettiBurst from '../../lib/confetti.js';
+
+// The earned moment (docs/design/playbook.md). Finishing the placement test IS
+// a win — one confetti burst, one `celebrate` action — and that is true at
+// every level, so nothing on this screen frames the result as a pass or a
+// fail. The level is a starting line, not a grade.
+//
+// Where the old screen leaned on green/orange/red bars, the readout now names
+// what it means: every score sits in a chip whose tone follows the SAME
+// thresholds the colours used to (limette for strong, aprikose for the gaps),
+// and the figure itself is always in the chip — colour never carries a meaning
+// on its own.
+
+const scoreTone = (value, strong, fair) => (value >= strong ? 'limette' : value >= fair ? 'quiet' : 'aprikose');
 
 const LevelTestResults = ({
   answers,
@@ -13,6 +32,17 @@ const LevelTestResults = ({
   determinedSublevel,
   onRetake
 }) => {
+  const { user } = useAuth();
+
+  // One burst per mount — the ref guards StrictMode's double effect and every
+  // later re-render, so the celebration can never repeat itself.
+  const celebratedRef = useRef(false);
+  useEffect(() => {
+    if (celebratedRef.current) return;
+    celebratedRef.current = true;
+    confettiBurst();
+  }, []);
+
   // Calculate written test scores
   const calculateWrittenResults = () => {
     const typeScores = {
@@ -99,9 +129,7 @@ const LevelTestResults = ({
     return { level: bandOf(finalSublevel), sublevel: finalSublevel, demotions };
   };
 
-  const { level: finalLevel, sublevel: finalSublevel, demotions } = calculateFinalLevel();
-
-  const { user } = useAuth();
+  const { sublevel: finalSublevel, demotions } = calculateFinalLevel();
 
   // Deep link into the first lesson of the placed level. Grammar lessons are
   // served by the Astro build, so this must be rendered as a full-load <a>
@@ -141,327 +169,303 @@ const LevelTestResults = ({
   const speakingScoresObj = speakingScore?.scores || null;
   const speakingFeedback = speakingScore?.feedback || null;
 
+  const writtenSkills = [
+    { key: 'grammar', label: 'Grammar' },
+    { key: 'vocabulary', label: 'Vocabulary' },
+    { key: 'reading', label: 'Reading' },
+  ];
+
   return (
-    <div className="level-test-container">
-      <div className="results-card">
-        {/* Header */}
-        <div className="results-header">
-          <div className="results-icon">
-            <Trophy size={40} />
-          </div>
-          <h1>Your German Level</h1>
-          <div className={`result-level-badge level-${finalLevel.toLowerCase()}`}>
+    <div className="mx-auto max-w-2xl px-4 pt-16 pb-16 sm:pt-20">
+      {/* Header */}
+      <section className="relative -mx-2 overflow-hidden rounded-clay px-2 py-6 text-center sm:-mx-4 sm:px-4 sm:py-8">
+        <Aurora />
+        <div className="hero-line relative">
+          <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-pill bg-accent-limette-wash text-accent-limette-ink">
+            <Trophy size={34} />
+          </span>
+          <h1 className="mt-4 font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink sm:text-[1.75rem]">
+            Your German Level
+          </h1>
+        </div>
+      </section>
+
+      {/* The figure — the one featured card on the screen */}
+      <Reveal delay={80} className="mt-3">
+        <Card raised edge="siegel" className="p-6 text-center">
+          <p className="font-display text-[3.25rem] font-semibold leading-none tracking-[-0.02em] text-ink">
             {finalSublevel}
-          </div>
+          </p>
           {demotions.length > 0 && (
             // Say why the level moved. A silently lowered result reads as a
             // bug to the person who just scored well on the written section.
-            <p style={{ marginTop: 10, fontSize: 14, opacity: 0.85 }}>
+            <p className="mx-auto mt-4 max-w-prose text-[0.875rem] leading-relaxed text-graphite">
               Adjusted down one sub-level for your{' '}
               {demotions.join(' and ')} {demotions.length > 1 ? 'sections' : 'section'} —
               your written score alone would have placed you higher.
             </p>
           )}
-        </div>
+        </Card>
+      </Reveal>
 
-        {/* Signup CTA for guests */}
-        {!user && (
-          <div style={{
-            margin: '0 0 24px',
-            padding: '20px 24px',
-            background: 'linear-gradient(135deg, #fef3c7 0%, #fce7f3 100%)',
-            borderRadius: '16px',
-            border: '1px solid #fbbf24',
-            textAlign: 'center',
-          }}>
-            <p style={{ fontWeight: 700, fontSize: '1.1rem', color: '#1e293b', marginBottom: '6px' }}>
+      {/* Signup CTA for guests */}
+      {!user && (
+        <Reveal delay={140} className="mt-4">
+          <Card raised edge="siegel" className="p-5 text-center sm:p-6">
+            <p className="font-display text-[1.0625rem] font-semibold leading-snug text-ink sm:text-[1.125rem]">
               Save your results and start practicing at {finalSublevel}
             </p>
-            <p style={{ color: '#475569', fontSize: '0.9rem', marginBottom: '16px' }}>
+            <p className="mx-auto mt-2 max-w-prose text-[0.9375rem] leading-relaxed text-graphite">
               Create a free account to track your progress, unlock your level, and get 2 free AI speaking sessions.
             </p>
-            <Link
-              to={`/signup?level=${finalSublevel}`}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '12px 28px',
-                background: 'linear-gradient(to right, #f59e0b, #f43f5e)',
-                color: '#fff',
-                fontWeight: 600,
-                borderRadius: '12px',
-                textDecoration: 'none',
-                fontSize: '1rem',
-                boxShadow: '0 4px 14px rgba(244,63,94,0.3)',
-              }}
-            >
+            <Button className="mt-4" to={`/signup?level=${finalSublevel}`}>
               Sign up free — save my results
-            </Link>
-          </div>
-        )}
+            </Button>
+          </Card>
+        </Reveal>
+      )}
 
-        {/* Section Summary */}
-        <div className="results-section">
-          <h2>Test Summary</h2>
-          <div className="section-summary">
-            {sections.map((section, index) => {
-              // Special treatment: speaking row for logged-out users who skipped it
-              if (section.name === 'Speaking' && !section.completed && !user) {
-                return (
-                  <div key={index} className="section-item skipped" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '10px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%' }}>
-                      <div className="section-icon-wrapper">
-                        <Mic size={20} />
-                      </div>
-                      <div className="section-info" style={{ flex: 1 }}>
-                        <span className="section-name">Speaking</span>
-                        <span className="section-detail" style={{ color: '#f59e0b', fontWeight: 600 }}>
-                          Not tested yet — try a free session
-                        </span>
-                      </div>
-                    </div>
-                    <Link
-                      to="/speaking/"
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        padding: '8px 16px',
-                        background: 'linear-gradient(to right, #14b8a6, #10b981)',
-                        color: '#fff',
-                        fontWeight: 600,
-                        borderRadius: '10px',
-                        textDecoration: 'none',
-                        fontSize: '0.85rem',
-                        marginLeft: '44px',
-                      }}
-                    >
-                      <Mic size={14} />
-                      Try a free AI speaking session at {finalSublevel}
-                    </Link>
-                  </div>
-                );
-              }
-
+      {/* Section Summary — reference rows, flat */}
+      <Reveal delay={180} className="mt-8">
+        <h2 className="font-display text-[1.25rem] font-semibold tracking-[-0.01em] text-ink">Test Summary</h2>
+        <Card className="mt-3 overflow-hidden">
+          {sections.map((section, index) => {
+            // Special treatment: speaking row for logged-out users who skipped it
+            if (section.name === 'Speaking' && !section.completed && !user) {
               return (
-                <div key={index} className={`section-item ${section.completed ? 'completed' : 'skipped'}`}>
-                  <div className="section-icon-wrapper">
-                    <section.icon size={20} />
+                <div key={index} className="border-b border-rule px-4 py-3.5 last:border-b-0">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-pill bg-accent-aprikose-wash text-accent-aprikose-ink">
+                      <Mic size={20} />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <span className="block text-[0.9375rem] font-bold text-ink">Speaking</span>
+                      <span className="block text-[0.8125rem] font-bold text-accent-aprikose-ink">
+                        Not tested yet — try a free session
+                      </span>
+                    </div>
                   </div>
-                  <div className="section-info">
-                    <span className="section-name">{section.name}</span>
-                    <span className="section-detail">{section.detail}</span>
-                  </div>
-                  <div className="section-status">
-                    {section.completed ? (
-                      <CheckCircle2 size={20} className="status-completed" />
-                    ) : (
-                      <XCircle size={20} className="status-skipped" />
-                    )}
-                  </div>
+                  <Button variant="secondary" size="sm" to="/speaking/" className="ml-0 mt-3 sm:ml-[3.25rem]">
+                    <Mic size={14} />
+                    Try a free AI speaking session at {finalSublevel}
+                  </Button>
                 </div>
               );
-            })}
-          </div>
-        </div>
+            }
 
-        {/* Written Test Breakdown */}
-        <div className="results-section">
-          <h2>
-            <PenTool size={20} />
-            Written Test Breakdown
+            const Icon = section.icon;
+            return (
+              <div key={index} className="flex items-center gap-3 border-b border-rule px-4 py-3.5 last:border-b-0">
+                <span
+                  className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-pill ${
+                    section.completed ? 'bg-siegel-wash text-siegel' : 'bg-paper-sunk text-graphite'
+                  }`}
+                >
+                  <Icon size={20} />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <span className="block text-[0.9375rem] font-bold text-ink">{section.name}</span>
+                  <span className="block font-data text-[0.75rem] text-graphite">{section.detail}</span>
+                </div>
+                {section.completed ? (
+                  <CheckCircle2 size={20} className="flex-shrink-0 text-accent-limette-ink" aria-hidden="true" />
+                ) : (
+                  <XCircle size={20} className="flex-shrink-0 text-graphite" aria-hidden="true" />
+                )}
+              </div>
+            );
+          })}
+        </Card>
+      </Reveal>
+
+      {/* Written Test Breakdown */}
+      <Reveal delay={220} className="mt-8">
+        <h2 className="flex items-center gap-2 font-display text-[1.25rem] font-semibold tracking-[-0.01em] text-ink">
+          <PenTool size={20} className="text-siegel" aria-hidden="true" />
+          Written Test Breakdown
+        </h2>
+        <Card className="mt-3 overflow-hidden">
+          {writtenSkills.map((skill) => {
+            const pct = getTypePercentage(skill.key);
+            return (
+              <div key={skill.key} className="border-b border-rule px-5 py-4 last:border-b-0">
+                <div className="mb-1.5 flex items-center justify-between gap-3">
+                  <span className="text-[0.875rem] font-bold text-ink">{skill.label}</span>
+                  <Chip tone={scoreTone(pct, 70, 50)}>{pct}%</Chip>
+                </div>
+                <div className="h-2 overflow-hidden rounded-pill bg-paper-sunk" aria-hidden="true">
+                  {/* Dynamic: the measured share for this skill. */}
+                  <div className="h-full rounded-pill bg-siegel" style={{ width: `${pct}%` }} />
+                </div>
+              </div>
+            );
+          })}
+        </Card>
+      </Reveal>
+
+      {/* Listening Score (if taken) */}
+      {listeningScore != null && (
+        <Reveal delay={260} className="mt-8">
+          <h2 className="flex items-center gap-2 font-display text-[1.25rem] font-semibold tracking-[-0.01em] text-ink">
+            <Headphones size={20} className="text-siegel" aria-hidden="true" />
+            Listening Comprehension
           </h2>
-          <div className="skill-bars">
-            <div className="skill-row">
-              <span className="skill-label">Grammar</span>
-              <div className="skill-bar-container">
-                <div
-                  className={`skill-bar-fill ${getTypePercentage('grammar') >= 70 ? 'good' : getTypePercentage('grammar') >= 50 ? 'medium' : 'weak'}`}
-                  style={{ width: `${getTypePercentage('grammar')}%` }}
-                />
-              </div>
-              <span className="skill-percentage">{getTypePercentage('grammar')}%</span>
-            </div>
-            <div className="skill-row">
-              <span className="skill-label">Vocabulary</span>
-              <div className="skill-bar-container">
-                <div
-                  className={`skill-bar-fill ${getTypePercentage('vocabulary') >= 70 ? 'good' : getTypePercentage('vocabulary') >= 50 ? 'medium' : 'weak'}`}
-                  style={{ width: `${getTypePercentage('vocabulary')}%` }}
-                />
-              </div>
-              <span className="skill-percentage">{getTypePercentage('vocabulary')}%</span>
-            </div>
-            <div className="skill-row">
-              <span className="skill-label">Reading</span>
-              <div className="skill-bar-container">
-                <div
-                  className={`skill-bar-fill ${getTypePercentage('reading') >= 70 ? 'good' : getTypePercentage('reading') >= 50 ? 'medium' : 'weak'}`}
-                  style={{ width: `${getTypePercentage('reading')}%` }}
-                />
-              </div>
-              <span className="skill-percentage">{getTypePercentage('reading')}%</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Listening Score (if taken) */}
-        {listeningScore != null && (
-          <div className="results-section">
-            <h2>
-              <Headphones size={20} />
-              Listening Comprehension
-            </h2>
-            <div className="single-score-display">
-              <div className={`score-circle ${listeningScore >= 70 ? 'good' : listeningScore >= 50 ? 'medium' : 'weak'}`}>
+          <Card className="mt-3 p-5">
+            <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
+              <p className="font-display text-[2.25rem] font-semibold leading-none tracking-[-0.02em] text-ink">
                 {listeningScore}%
-              </div>
-              <p className="score-description">
+              </p>
+              <p className="flex-1 text-[0.9375rem] leading-relaxed text-graphite">
                 {listeningScore >= 70 && 'Strong listening comprehension at this level'}
                 {listeningScore >= 50 && listeningScore < 70 && 'Good foundation, some practice recommended'}
                 {listeningScore < 50 && 'Focus on listening exercises to improve'}
               </p>
             </div>
-          </div>
-        )}
+            <div className="mt-4 h-2 overflow-hidden rounded-pill bg-paper-sunk" aria-hidden="true">
+              {/* Dynamic: the measured listening share. */}
+              <div className="h-full rounded-pill bg-siegel" style={{ width: `${listeningScore}%` }} />
+            </div>
+          </Card>
+        </Reveal>
+      )}
 
-        {/* Speaking Score (if taken) */}
-        {speakingScore && (
-          <div className="results-section">
-            <h2>
-              <Mic size={20} />
-              Speaking Evaluation
-            </h2>
-            <div className="speaking-scores">
-              <div className="speaking-total">
-                <div className={`score-circle large ${speakingPercentage >= 70 ? 'good' : speakingPercentage >= 50 ? 'medium' : 'weak'}`}>
-                  {speakingPercentage}
-                </div>
-                <span className="score-label">Overall Score</span>
-              </div>
+      {/* Speaking Score (if taken) */}
+      {speakingScore && (
+        <Reveal delay={300} className="mt-8">
+          <h2 className="flex items-center gap-2 font-display text-[1.25rem] font-semibold tracking-[-0.01em] text-ink">
+            <Mic size={20} className="text-siegel" aria-hidden="true" />
+            Speaking Evaluation
+          </h2>
+          <Card className="mt-3 p-5">
+            <div className="flex flex-col items-center gap-1 border-b border-rule pb-4">
+              <p className="font-display text-[2.75rem] font-semibold leading-none tracking-[-0.02em] text-ink">
+                {speakingPercentage}
+              </p>
+              <span className="text-[0.875rem] text-graphite">Overall Score</span>
+            </div>
 
-              {speakingScoresObj && (
-                <div className="speaking-breakdown">
-                  {Object.entries(speakingScoresObj).map(([key, value]) => {
-                    const labels = {
-                      pronunciation: 'Aussprache',
-                      grammar: 'Grammatik',
-                      vocabulary: 'Wortschatz',
-                      fluency: 'Flüssigkeit',
-                      comprehension: 'Verständnis'
-                    };
-                    return (
-                      <div key={key} className="speaking-score-row">
-                        <span className="speaking-score-label">{labels[key] || key}</span>
-                        <div className="speaking-score-bar">
-                          <div
-                            className={`speaking-score-fill ${value >= 16 ? 'good' : value >= 12 ? 'medium' : 'weak'}`}
-                            style={{ width: `${(value / 20) * 100}%` }}
-                          />
-                        </div>
-                        <span className="speaking-score-value">{value}/20</span>
+            {speakingScoresObj && (
+              <div className="mt-4 flex flex-col gap-3">
+                {Object.entries(speakingScoresObj).map(([key, value]) => {
+                  const labels = {
+                    pronunciation: 'Aussprache',
+                    grammar: 'Grammatik',
+                    vocabulary: 'Wortschatz',
+                    fluency: 'Flüssigkeit',
+                    comprehension: 'Verständnis'
+                  };
+                  return (
+                    <div key={key}>
+                      <div className="mb-1.5 flex items-center justify-between gap-3">
+                        <span className="text-[0.875rem] font-bold text-ink">{labels[key] || key}</span>
+                        <Chip tone={scoreTone(value, 16, 12)}>{value}/20</Chip>
                       </div>
-                    );
-                  })}
-                </div>
-              )}
-
-              {speakingFeedback && (
-                <div className="speaking-feedback">
-                  <p>{speakingFeedback}</p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Weak Areas */}
-        {topWeakTopics.length > 0 && (
-          <div className="results-section">
-            <h2>
-              <BookOpen size={20} />
-              Areas to Focus On
-            </h2>
-            <div className="weak-topics">
-              {topWeakTopics.map((topic, index) => (
-                <a
-                  key={index}
-                  href={topic.url}
-                  className="weak-topic-tag"
-                >
-                  {topic.topic}
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Recommendations */}
-        <div className="results-section">
-          <h2>Recommended Next Steps</h2>
-          <div className="recommendation-cards">
-            <Link to="/speaking/" className="recommendation-card">
-              <div className="rec-icon">🗣️</div>
-              <div className="rec-content">
-                <h3>Practice Speaking with AI</h3>
-                <p>Have a real conversation at your {finalSublevel} level and get instant feedback on pronunciation, grammar, and vocabulary.</p>
+                      <div className="h-2 overflow-hidden rounded-pill bg-paper-sunk" aria-hidden="true">
+                        {/* Dynamic: this criterion's share of its 20 points. */}
+                        <div className="h-full rounded-pill bg-siegel" style={{ width: `${(value / 20) * 100}%` }} />
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-            </Link>
-
-            <a href={`/grammar/${finalSublevel.toLowerCase()}/`} className="recommendation-card">
-              <div className="rec-icon">📚</div>
-              <div className="rec-content">
-                <h3>Start {finalSublevel} Grammar</h3>
-                <p>Begin with grammar topics at your level</p>
-              </div>
-            </a>
-
-            {listeningScore != null && listeningScore < 70 && (
-              <Link to="/listening/" className="recommendation-card">
-                <div className="rec-icon">🎧</div>
-                <div className="rec-content">
-                  <h3>Practice Listening</h3>
-                  <p>Improve your comprehension skills</p>
-                </div>
-              </Link>
             )}
 
-            {speakingScore && speakingPercentage < 70 && (
-              <Link to="/speaking/" className="recommendation-card">
-                <div className="rec-icon">🗣️</div>
-                <div className="rec-content">
-                  <h3>More Speaking Practice</h3>
-                  <p>Build confidence with AI conversations</p>
-                </div>
-              </Link>
+            {speakingFeedback && (
+              <Card tone="sunk" className="mt-4 p-4">
+                <p className="text-[0.9375rem] leading-relaxed text-graphite">{speakingFeedback}</p>
+              </Card>
             )}
+          </Card>
+        </Reveal>
+      )}
 
-            {topWeakTopics[0] && (
-              <a href={topWeakTopics[0].url} className="recommendation-card">
-                <div className="rec-icon">🎯</div>
-                <div className="rec-content">
-                  <h3>Review {topWeakTopics[0].topic}</h3>
-                  <p>Strengthen your weakest area</p>
-                </div>
+      {/* Weak Areas — the gaps, on aprikose, under a heading that says so */}
+      {topWeakTopics.length > 0 && (
+        <Reveal delay={340} className="mt-8">
+          <h2 className="flex items-center gap-2 font-display text-[1.25rem] font-semibold tracking-[-0.01em] text-ink">
+            <BookOpen size={20} className="text-siegel" aria-hidden="true" />
+            Areas to Focus On
+          </h2>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {topWeakTopics.map((topic, index) => (
+              <a
+                key={index}
+                href={topic.url}
+                className="inline-flex items-center rounded-pill bg-accent-aprikose-wash px-3.5 py-1.5 text-sm font-bold text-accent-aprikose-ink shadow-raise-aprikose transition-all duration-100 ease-snap select-none active:translate-y-1 active:shadow-none"
+              >
+                {topic.topic}
               </a>
-            )}
+            ))}
           </div>
-        </div>
+        </Reveal>
+      )}
 
-        {/* Actions — the primary CTA lands the learner in their actual first
-            lesson, not a hub. 85% of signups never opened a lesson while this
-            button pointed at the grammar hub. */}
-        <div className="results-actions">
-          <button className="retake-btn" onClick={onRetake}>
-            <RefreshCw size={18} />
-            Retake Test
-          </button>
-          <a href={firstLessonHref} className="start-learning-btn">
-            Start your first lesson
-          </a>
+      {/* Recommendations */}
+      <Reveal delay={380} className="mt-8">
+        <h2 className="font-display text-[1.25rem] font-semibold tracking-[-0.01em] text-ink">Recommended Next Steps</h2>
+        <div className="mt-3 flex flex-col gap-3">
+          <Card interactive as={Link} to="/speaking/" className="flex items-center gap-4 p-4">
+            <span className="text-2xl" aria-hidden="true">🗣️</span>
+            <span className="min-w-0">
+              <span className="block text-[0.9375rem] font-bold text-ink">Practice Speaking with AI</span>
+              <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">
+                Have a real conversation at your {finalSublevel} level and get instant feedback on pronunciation, grammar, and vocabulary.
+              </span>
+            </span>
+          </Card>
+
+          <Card interactive as="a" href={`/grammar/${finalSublevel.toLowerCase()}/`} className="flex items-center gap-4 p-4">
+            <span className="text-2xl" aria-hidden="true">📚</span>
+            <span className="min-w-0">
+              <span className="block text-[0.9375rem] font-bold text-ink">Start {finalSublevel} Grammar</span>
+              <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">Begin with grammar topics at your level</span>
+            </span>
+          </Card>
+
+          {listeningScore != null && listeningScore < 70 && (
+            <Card interactive as={Link} to="/listening/" className="flex items-center gap-4 p-4">
+              <span className="text-2xl" aria-hidden="true">🎧</span>
+              <span className="min-w-0">
+                <span className="block text-[0.9375rem] font-bold text-ink">Practice Listening</span>
+                <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">Improve your comprehension skills</span>
+              </span>
+            </Card>
+          )}
+
+          {speakingScore && speakingPercentage < 70 && (
+            <Card interactive as={Link} to="/speaking/" className="flex items-center gap-4 p-4">
+              <span className="text-2xl" aria-hidden="true">🗣️</span>
+              <span className="min-w-0">
+                <span className="block text-[0.9375rem] font-bold text-ink">More Speaking Practice</span>
+                <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">Build confidence with AI conversations</span>
+              </span>
+            </Card>
+          )}
+
+          {topWeakTopics[0] && (
+            <Card interactive as="a" href={topWeakTopics[0].url} className="flex items-center gap-4 p-4">
+              <span className="text-2xl" aria-hidden="true">🎯</span>
+              <span className="min-w-0">
+                <span className="block text-[0.9375rem] font-bold text-ink">Review {topWeakTopics[0].topic}</span>
+                <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">Strengthen your weakest area</span>
+              </span>
+            </Card>
+          )}
         </div>
-      </div>
+      </Reveal>
+
+      {/* Actions — the primary CTA lands the learner in their actual first
+          lesson, not a hub. 85% of signups never opened a lesson while this
+          button pointed at the grammar hub. */}
+      <Reveal delay={420} className="mt-8 flex flex-col-reverse gap-3 border-t border-rule pt-6 sm:flex-row">
+        <Button variant="secondary" onClick={onRetake}>
+          <RefreshCw size={18} />
+          Retake Test
+        </Button>
+        <Button variant="celebrate" size="lg" href={firstLessonHref} className="flex-1">
+          Start your first lesson
+        </Button>
+      </Reveal>
     </div>
   );
 };

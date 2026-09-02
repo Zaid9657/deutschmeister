@@ -8,7 +8,15 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../utils/supabase';
 import SEO from '../components/SEO';
 import Button from '../components/ui/Button';
+import Card from '../components/ui/Card.jsx';
+import Aurora from '../components/ui/Aurora.jsx';
 import Logo from '../components/Logo';
+
+// The playbook form field (docs/design/playbook.md §1), with room for the
+// leading icon. The focus ring comes from the global *:focus-visible rule.
+const FIELD =
+  'w-full rounded-clay border border-rule bg-white py-3 pl-12 pr-4 text-ink placeholder:text-graphite focus:border-siegel transition-colors';
+const TEXT_LINK = 'font-bold text-siegel transition-colors hover:text-siegel-deep';
 
 const logFailedSignup = (email, error) => {
   supabase
@@ -72,12 +80,13 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-paper px-4 py-12">
+    <div className="relative min-h-screen overflow-hidden flex items-center justify-center bg-paper px-4 py-12">
       <SEO title="Sign Up Free" description="Create a free DeutschMeister account and start mastering German grammar with clear English explanations." path="/signup" />
+      <Aurora />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md"
+        className="relative w-full max-w-md"
       >
         {/* Header */}
         <div className="text-center mb-8">
@@ -87,15 +96,18 @@ const SignupPage = () => {
               so a router <Link to="/"> client-routes to a route the SPA does not
               have and lands the user on NotFoundPage. */}
           <Logo size={64} showWordmark={false} className="mb-6" />
-          <h1 className="font-display text-3xl font-semibold text-ink mb-2">
+          <h1
+            className="hero-line font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] text-ink mb-2"
+            style={{ '--d': '120ms' }}
+          >
             {/* EN: Start Free */}
             Start for free
           </h1>
-          <p className="text-graphite mb-4">
+          <p className="hero-line text-[0.9375rem] leading-relaxed text-graphite sm:text-base mb-4" style={{ '--d': '220ms' }}>
             Create an account and get instant access to:
           </p>
           {/* Free tier value list */}
-          <ul className="text-left inline-block space-y-1 mb-2">
+          <ul className="hero-line text-left inline-block space-y-1 mb-2" style={{ '--d': '320ms' }}>
             {[
               'All A1.1 lessons — no restrictions',
               '2 free AI speaking sessions',
@@ -104,7 +116,7 @@ const SignupPage = () => {
               '7-day Pro trial included'
             ].map((item) => (
               <li key={item} className="flex items-center gap-2 text-sm text-graphite">
-                <Check className="w-4 h-4 text-siegel flex-shrink-0" />
+                <Check className="w-4 h-4 text-siegel flex-shrink-0" aria-hidden="true" />
                 {item}
               </li>
             ))}
@@ -112,33 +124,33 @@ const SignupPage = () => {
         </div>
 
         {/* Form */}
-        <div className="bg-white rounded-lg border border-rule shadow-overlay p-8">
+        <Card raised className="p-8">
           {error && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-6 p-4 bg-red-50 border border-red-100 rounded-lg flex items-center gap-3 text-red-600"
+              className="mb-6 flex items-center gap-3 rounded-clay bg-accent-himbeer-wash px-4 py-3 text-accent-himbeer-ink"
             >
-              <AlertCircle className="w-5 h-5 flex-shrink-0" />
-              <p className="text-sm">{error}</p>
+              <AlertCircle className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
+              <p className="text-sm font-semibold">{error}</p>
             </motion.div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <div>
-              <label htmlFor="signup-field-1" className="block text-sm font-medium text-ink mb-2">
+              <label htmlFor="signup-field-1" className="block text-sm font-bold text-ink mb-2">
                 {t('auth.email')}
               </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-graphite" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-graphite" aria-hidden="true" />
                 <input
                   id="signup-field-1"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full pl-12 pr-4 py-3 bg-paper border border-rule rounded-md focus:outline-none focus:ring-2 focus:ring-siegel focus:border-siegel transition-colors"
+                  className={FIELD}
                   placeholder="you@example.com"
                 />
               </div>
@@ -146,11 +158,11 @@ const SignupPage = () => {
 
             {/* Password */}
             <div>
-              <label htmlFor="signup-field-2" className="block text-sm font-medium text-ink mb-2">
+              <label htmlFor="signup-field-2" className="block text-sm font-bold text-ink mb-2">
                 {t('auth.password')}
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-graphite" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-graphite" aria-hidden="true" />
                 <input
                   id="signup-field-2"
                   type={showPassword ? 'text' : 'password'}
@@ -158,13 +170,13 @@ const SignupPage = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   minLength={6}
-                  className="w-full pl-12 pr-12 py-3 bg-paper border border-rule rounded-md focus:outline-none focus:ring-2 focus:ring-siegel focus:border-siegel transition-colors"
+                  className={`${FIELD} pr-12`}
                   placeholder="At least 6 characters"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-graphite hover:text-ink"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 rounded-md text-graphite transition-colors hover:text-siegel-deep"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -173,25 +185,25 @@ const SignupPage = () => {
 
             {/* Confirm Password */}
             <div>
-              <label htmlFor="signup-field-3" className="block text-sm font-medium text-ink mb-2">
+              <label htmlFor="signup-field-3" className="block text-sm font-bold text-ink mb-2">
                 {t('auth.confirmPassword')}
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-graphite" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-graphite" aria-hidden="true" />
                 <input
                   id="signup-field-3"
                   type={showPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
-                  className="w-full pl-12 pr-4 py-3 bg-paper border border-rule rounded-md focus:outline-none focus:ring-2 focus:ring-siegel focus:border-siegel transition-colors"
+                  className={FIELD}
                   placeholder="Confirm your password"
                 />
               </div>
             </div>
 
-            {/* Submit */}
-            <Button type="submit" disabled={loading} size="lg" className="w-full">
+            {/* Submit — the one primary action on the screen */}
+            <Button type="submit" shimmer disabled={loading} size="lg" className="w-full">
               {loading ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -205,18 +217,18 @@ const SignupPage = () => {
 
           {/* Trust line */}
           {/* EN: No credit card required · Cancel anytime */}
-          <p className="mt-3 text-center text-xs text-graphite">
+          <p className="mt-3 text-center font-data text-[0.6875rem] tracking-[0.02em] text-graphite">
             Keine Kreditkarte erforderlich · Jederzeit kündbar
           </p>
 
           {/* Login link */}
           <p className="mt-5 text-center text-graphite">
             {t('auth.hasAccount')}{' '}
-            <Link to="/login" className="text-siegel hover:text-siegel-deep font-medium">
+            <Link to="/login" className={TEXT_LINK}>
               {t('auth.login')}
             </Link>
           </p>
-        </div>
+        </Card>
       </motion.div>
     </div>
   );

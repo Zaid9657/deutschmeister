@@ -1,4 +1,4 @@
-import { tailwindColors, tailwindFontFamily, radius } from './src/data/design-tokens.js';
+import { tailwindColors, tailwindFontFamily, tailwindBoxShadow, tailwindEasing, radius } from './src/data/design-tokens.js';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -22,22 +22,29 @@ export default {
         'b2-1': { primary: '#8A7AAF', secondary: '#BDB0D9', accent: '#E8B4BC', background: '#F9F7FB', surface: '#FFFFFF', text: '#2D2640', muted: '#7A6F8F' },
         'b2-2': { primary: '#6B5B95', secondary: '#9D8EC1', accent: '#E8B4BC', background: '#F8F6FA', surface: '#FFFFFF', text: '#2D2640', muted: '#7A6F8F' },
       },
-      // `pill` only. The rest of `radius` deliberately stays unwired: the token
-      // values for sm/md/lg collide with Tailwind's own defaults, and adopting
-      // them would silently reshape every `rounded-lg` in the app. `pill` has
-      // no default to collide with — and astro-site/src/pages/pricing.astro was
-      // already calling `rounded-pill` against a config that never defined it,
-      // so its billing toggle has been rendering square since it shipped.
-      borderRadius: { pill: radius.pill },
+      // `pill` + `clay` only. The rest of `radius` deliberately stays unwired:
+      // the token values for sm/md/lg collide with Tailwind's own defaults, and
+      // adopting them would silently reshape every `rounded-lg` in the app.
+      // Neither `pill` nor `clay` has a default to collide with — and
+      // astro-site/src/pages/pricing.astro was already calling `rounded-pill`
+      // against a config that never defined it, so its billing toggle rendered
+      // square since it shipped.
+      borderRadius: { pill: radius.pill, clay: radius.clay },
+      boxShadow: { ...tailwindBoxShadow },
+      transitionTimingFunction: { ...tailwindEasing },
       animation: {
         'float': 'float 6s ease-in-out infinite',
         'slide-up': 'slideUp 0.6s ease-out',
         'fade-in': 'fadeIn 0.8s ease-out',
+        'pop-in': 'popIn 0.26s cubic-bezier(0.34, 1.56, 0.64, 1) both',
+        'wiggle': 'wiggle 0.5s ease-in-out',
       },
       keyframes: {
         float: { '0%, 100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-10px)' } },
         slideUp: { '0%': { transform: 'translateY(30px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
         fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+        popIn: { '0%': { transform: 'scale(0.9)', opacity: '0' }, '100%': { transform: 'scale(1)', opacity: '1' } },
+        wiggle: { '0%, 100%': { transform: 'rotate(0deg)' }, '25%': { transform: 'rotate(-4deg)' }, '75%': { transform: 'rotate(4deg)' } },
       },
     },
   },

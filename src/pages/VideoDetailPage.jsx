@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { supabase } from '../utils/supabase';
 import SEO from '../components/SEO';
+import Chip from '../components/ui/Chip.jsx';
+import Reveal from '../components/ui/Reveal.jsx';
 
 const STORAGE_BASE = 'https://omqyueddktqeyrrqvnyq.supabase.co/storage/v1/object/public/video-library/';
 const LANG_KEY = 'dm_video_lang';
@@ -76,16 +77,6 @@ const VideoDetailPage = () => {
 
   const handleCanPlay = () => setVideoLoading(false);
 
-  const getLevelColor = (level) => {
-    if (!level) return 'bg-paper-sunk text-graphite';
-    const l = level.toUpperCase();
-    if (l.startsWith('A1')) return 'bg-a1-1-background text-ink border border-a1-1-primary';
-    if (l.startsWith('A2')) return 'bg-a2-1-background text-ink border border-a2-1-primary';
-    if (l.startsWith('B1')) return 'bg-b1-1-background text-ink border border-b1-1-primary';
-    if (l.startsWith('B2')) return 'bg-b2-1-background text-ink border border-b2-1-primary';
-    return 'bg-paper-sunk text-graphite';
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen pt-24 flex items-center justify-center">
@@ -101,7 +92,7 @@ const VideoDetailPage = () => {
           <p className="text-graphite mb-4">{error}</p>
           <button
             onClick={() => navigate('/video-library')}
-            className="text-siegel hover:underline"
+            className="font-bold text-siegel transition-colors hover:text-siegel-deep"
           >
             {isGerman ? 'Zurück zur Videothek' : 'Back to Video Library'}
           </button>
@@ -111,7 +102,7 @@ const VideoDetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-paper pt-20 pb-12">
+    <div className="min-h-screen bg-paper font-body text-ink pt-20 pb-12">
       <SEO
         title={video.title}
         description={video.description || `German learning video: ${video.title}`}
@@ -119,97 +110,85 @@ const VideoDetailPage = () => {
       />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back button */}
-        <motion.button
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
+        <button
           onClick={() => navigate('/video-library')}
-          className="flex items-center gap-2 text-graphite hover:text-ink transition-colors mb-6"
+          className="flex items-center gap-2 text-graphite hover:text-siegel-deep transition-colors mb-6"
         >
           <ArrowLeft size={18} />
           {isGerman ? 'Zurück zur Videothek' : 'Back to Video Library'}
-        </motion.button>
+        </button>
 
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6"
-        >
-          <div className="flex items-center gap-3 mb-2">
-            <h1 className="font-display text-2xl sm:text-3xl font-bold text-ink">
+        {/* Header — the level rides a neutral chip. It used to pick one of four
+            per-band palettes, and colour means grammatical case (tokens rule 1). */}
+        <div className="mb-6">
+          <div className="flex flex-wrap items-center gap-3 mb-2">
+            <Reveal
+              as="h1"
+              className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink sm:text-[2.125rem]"
+            >
               {video.title}
-            </h1>
+            </Reveal>
             {video.level && (
-              <span className={`flex-shrink-0 px-3 py-1 rounded-full text-sm font-semibold ${getLevelColor(video.level)}`}>
-                {video.level}
-              </span>
+              <Chip tone="label" className="flex-shrink-0">{video.level}</Chip>
             )}
           </div>
           {video.description && (
-            <p className="text-graphite leading-relaxed">{video.description}</p>
+            <Reveal as="p" delay={60} className="text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
+              {video.description}
+            </Reveal>
           )}
-        </motion.div>
+        </div>
 
-        {/* Language Toggle — only if Arabic version exists */}
+        {/* Language Toggle — only if Arabic version exists. Player chrome sits
+            on siegel, the one interactive colour (tokens rule 2). */}
         {hasArabic && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.05 }}
-            className="flex gap-2 mb-4"
-          >
-            <button
+          <div className="flex gap-2 mb-4">
+            <Chip
+              size="md"
+              raised
+              tone={lang === 'en' ? 'ink' : 'quiet'}
               onClick={() => switchLang('en')}
-              className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
-                lang === 'en'
-                  ? 'bg-siegel text-white'
-                  : 'bg-white border border-rule text-graphite hover:border-siegel hover:shadow-sm'
-              }`}
+              aria-pressed={lang === 'en'}
+              className="px-5 py-2.5"
             >
               🇬🇧 English
-            </button>
-            <button
+            </Chip>
+            <Chip
+              size="md"
+              raised
+              tone={lang === 'ar' ? 'ink' : 'quiet'}
               onClick={() => switchLang('ar')}
-              className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
-                lang === 'ar'
-                  ? 'bg-siegel text-white'
-                  : 'bg-white border border-rule text-graphite hover:border-siegel hover:shadow-sm'
-              }`}
+              aria-pressed={lang === 'ar'}
+              className="px-5 py-2.5"
             >
               🇸🇦 العربية
-            </button>
-          </motion.div>
+            </Chip>
+          </div>
         )}
 
         {/* Video Player */}
         {activeUrl && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            <div className="relative bg-black rounded-2xl overflow-hidden">
-              {videoLoading && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/60 z-10">
-                  <Loader2 className="w-10 h-10 animate-spin text-white" />
-                </div>
-              )}
-              <video
-                ref={videoRef}
-                controls
-                className="w-full aspect-video"
-                preload="metadata"
-                key={`${id}-${lang}`}
-                onCanPlay={handleCanPlay}
-                onLoadedData={handleCanPlay}
-              >
-                <source src={activeUrl} type="video/mp4" />
-                {isGerman
-                  ? 'Dein Browser unterstützt kein Video.'
-                  : 'Your browser does not support video.'}
-              </video>
-            </div>
-          </motion.div>
+          <div className="relative bg-ink rounded-clay overflow-hidden border border-rule">
+            {videoLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-ink/60 z-10">
+                <Loader2 className="w-10 h-10 animate-spin text-white" />
+              </div>
+            )}
+            <video
+              ref={videoRef}
+              controls
+              className="w-full aspect-video"
+              preload="metadata"
+              key={`${id}-${lang}`}
+              onCanPlay={handleCanPlay}
+              onLoadedData={handleCanPlay}
+            >
+              <source src={activeUrl} type="video/mp4" />
+              {isGerman
+                ? 'Dein Browser unterstützt kein Video.'
+                : 'Your browser does not support video.'}
+            </video>
+          </div>
         )}
       </div>
     </div>

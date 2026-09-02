@@ -38,14 +38,14 @@ function getCache() {
 const byOrder = (key) => (a, b) => (a[key] ?? 0) - (b[key] ?? 0);
 
 export const LEVEL_META = {
-  'a1.1': { label: 'A1.1', name: 'Sunrise Warmth I',     color: 'from-amber-400 to-orange-400',  bg: 'bg-amber-50',   border: 'border-amber-200',  badge: 'bg-amber-100 text-amber-800' },
-  'a1.2': { label: 'A1.2', name: 'Sunrise Warmth II',    color: 'from-amber-500 to-rose-400',    bg: 'bg-rose-50',    border: 'border-rose-200',   badge: 'bg-rose-100 text-rose-800'   },
-  'a2.1': { label: 'A2.1', name: 'Forest Calm I',        color: 'from-emerald-400 to-teal-400',  bg: 'bg-emerald-50', border: 'border-emerald-200',badge: 'bg-emerald-100 text-emerald-800' },
-  'a2.2': { label: 'A2.2', name: 'Forest Calm II',       color: 'from-emerald-500 to-green-500', bg: 'bg-green-50',   border: 'border-green-200',  badge: 'bg-green-100 text-green-800' },
-  'b1.1': { label: 'B1.1', name: 'Ocean Depth I',        color: 'from-blue-400 to-indigo-400',   bg: 'bg-blue-50',    border: 'border-blue-200',   badge: 'bg-blue-100 text-blue-800'   },
-  'b1.2': { label: 'B1.2', name: 'Ocean Depth II',       color: 'from-blue-500 to-indigo-600',   bg: 'bg-indigo-50',  border: 'border-indigo-200', badge: 'bg-indigo-100 text-indigo-800'},
-  'b2.1': { label: 'B2.1', name: 'Twilight Elegance I',  color: 'from-purple-400 to-pink-400',   bg: 'bg-purple-50',  border: 'border-purple-200', badge: 'bg-purple-100 text-purple-800'},
-  'b2.2': { label: 'B2.2', name: 'Twilight Elegance II', color: 'from-purple-600 to-indigo-600', bg: 'bg-violet-50',  border: 'border-violet-200', badge: 'bg-violet-100 text-violet-800'},
+  'a1.1': { label: 'A1.1', name: 'Sunrise Warmth I' },
+  'a1.2': { label: 'A1.2', name: 'Sunrise Warmth II'   },
+  'a2.1': { label: 'A2.1', name: 'Forest Calm I' },
+  'a2.2': { label: 'A2.2', name: 'Forest Calm II' },
+  'b1.1': { label: 'B1.1', name: 'Ocean Depth I'   },
+  'b1.2': { label: 'B1.2', name: 'Ocean Depth II'},
+  'b2.1': { label: 'B2.1', name: 'Twilight Elegance I'},
+  'b2.2': { label: 'B2.2', name: 'Twilight Elegance II'},
 };
 
 // Supabase stores sub_level as "A1.1" (uppercase). All our routing and

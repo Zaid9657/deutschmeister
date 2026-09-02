@@ -1,53 +1,55 @@
 ---
-// Homepage — rebuilt 2026-08-22 on src/data/design-tokens.js.
+// Homepage v3 — rebuilt 2026-09-01 after the owner's "we can do a lot better"
+// verdict on v2. Research pass over the open-source design landscape
+// (react-bits, Magic UI, Aceternity patterns, Atropos) — the findings and the
+// adopt/skip table live in docs/design-renovation-2026-09-01.md.
 //
-// THE THESIS. The one thing DeutschMeister does that nothing else does is take
-// a German sentence apart and colour each piece by its case. So the hero opens
-// with exactly that — a real sentence, marked the way Sentence X-Ray marks it —
-// instead of a claim about being fast. The product's own artifact is the
-// argument, and it is static markup, so a crawler and a JS-less visitor both
-// get it.
+// WHAT v3 ADDS OVER v2 (same tokens, same copy voice, same IA):
+//   - THE LIVING X-RAY HERO: German sentences type themselves out, then each
+//     word's case chip pops in and colours it, cycling 3 real sentences. The
+//     product's unique artifact, performing itself. Server renders sentence 1
+//     fully coloured (SEO / no-JS / reduced-motion state); the script only
+//     enhances.
+//   - Atropos 3D parallax (MIT, ~10KB, vanilla) on the hero card and the four
+//     exam cards — layered scenes that tilt toward the pointer.
+//   - Aurora background, blur-fade scroll reveals, a case-chip marquee band,
+//     count-up stats, a shimmer sweep on the primary CTA (Magic UI patterns,
+//     ported to vanilla CSS/JS).
+//   - A bento "what's inside" grid replacing the flat counts band + tools grid.
 //
-// What the previous version did that this one does not: an amber-to-rose
-// gradient hero on the retired brand, blurred gradient blobs, emoji level cards
-// in eight different palettes, a dark "your German won't improve by waiting"
-// urgency block, a full-bleed rainbow CTA, and a stats band claiming figures
-// with no source (see below).
+// MOTION DISCIPLINE: everything rides the global prefers-reduced-motion gate
+// (global.css collapses animations/transitions); scripts additionally check
+// the media query and leave the static SSR state alone.
 //
-// CLAIMS. The old stats band read "1,400+ Learners", "170+ New learners this
-// month" and "2,488 AI speaking exercises". The first two trace to
-// EVALUATION.md's 2026-08-16 database audit but "this month" is stale by
-// construction; the third appears in NO audit and has no source at all. Per the
-// counts rule in src/data/marketing.js, this page now shows only figures that
-// are true by construction — what the product CONTAINS, counted against live
-// tables. Nothing here can rot without the database changing.
-//
-// INVARIANTS (do not regress): every figure derives from ../data/*.js; one
-// <h1>; the canonical; real server-rendered body text; case colours ONLY in the
-// sentence demo (rule 1 in the tokens file); prerendered SPA routes linked WITH
-// a trailing slash, /signup without one (CLAUDE.md's three-case rule).
+// CLAIMS. Every figure derives from ../data/*.js (counts rule in marketing.js).
+// Rule 1 (colour means case): case colours appear only on chips that NAME
+// their case — the hero demo, the legend, the marquee phrases. INVARIANTS:
+// one <h1>; canonical; real server-rendered body text; prerendered SPA routes
+// linked WITH trailing slash, /signup and /modelltest without.
 import { ORGANIZATION_FULL } from '../data/organization.js';
 import Layout from '../layouts/Layout.astro';
 import '../styles/global.css';
+import Aurora from '../components/Aurora.astro';
 import { EXAM_TRACKS } from '../data/examTracks.js';
 import { PLANS, eur } from '../data/pricing.js';
 import {
-  LEVELS,
   LEVEL_COUNT,
   GRAMMAR_TOPIC_COUNT,
   LISTENING_DIALOGUE_COUNT,
-  PODCAST_EPISODE_COUNT,
+  READING_LESSON_COUNT,
+  VOCAB_WORD_COUNT,
   ANON_DAILY_LIMIT,
   PRO_DAILY_LIMIT,
   PRO_SPEAKING_SESSIONS_PER_MONTH,
-  TRIAL_SPEAKING_SESSIONS,
+  PRO_WRITING_EVALUATIONS_PER_MONTH,
   TRIAL_DAYS,
   FREE_LEVEL_LABEL,
   monthlyPriceLine,
 } from '../data/marketing.js';
 
-const title = 'Learn German Online — Free Lessons A1 to B2 | DeutschMeister';
-const description = `Grammar explained in English, with every sentence broken down by case. ${GRAMMAR_TOPIC_COUNT} topics across ${LEVEL_COUNT} CEFR levels, A1.1 to B2.2. ${FREE_LEVEL_LABEL} is free, no account needed.`;
+// 54 chars — the built-HTML check warns above 60 (Google truncates).
+const title = 'German Exam Prep — telc, Goethe & DTZ | DeutschMeister';
+const description = `Your German exam has a date. Find your level in 20 minutes, train what the exam actually tests — grammar, listening, speaking, writing — and rehearse with a timed practice test. ${FREE_LEVEL_LABEL} free, no account.`;
 
 const jsonLd = [
   {
@@ -55,227 +57,325 @@ const jsonLd = [
     '@type': 'WebSite',
     name: 'DeutschMeister',
     url: 'https://deutsch-meister.de/',
-    description: 'German grammar, listening and speaking practice for English speakers, CEFR levels A1.1 to B2.2 — A1.1 free, no account needed.',
+    description:
+      'German exam preparation for telc, Goethe and DTZ — grammar, listening, speaking and writing practice for English speakers, CEFR levels A1.1 to B2.2.',
     inLanguage: ['de', 'en'],
   },
   { '@context': 'https://schema.org', ...ORGANIZATION_FULL },
 ];
 
-// The hero sentence. Same wording and same case marking as the live analyser
-// (src/pages/SentenceXRay.jsx). Rule 1: this is the ONLY place on the page
-// where the case colours may appear.
+const BTN =
+  'inline-flex items-center justify-center gap-2 rounded-clay text-base font-bold transition-all duration-100 ease-snap select-none';
+const BTN_PRIMARY = `${BTN} btn-shimmer relative overflow-hidden bg-siegel px-7 py-3.5 text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`;
+const BTN_SECONDARY = `${BTN} border border-rule bg-white px-7 py-3.5 text-ink shadow-raise hover:border-siegel hover:text-siegel-deep active:translate-y-1 active:shadow-none`;
+
+// One English line per exam track — the stake, not the format.
+const TRACK_LINES = {
+  telc_b1: 'The B1 most people need for permanent residence — and the one with the partner speaking test.',
+  goethe_b1: 'Four separate modules. Train the one that wobbles instead of re-taking all four.',
+  dtz: 'The integration-course exam. Everyday German, two levels graded at once.',
+  telc_b2: 'The jump from "getting by" to arguing a position — what employers ask for.',
+};
+
+// The plan steps. Accent badges rotate through the candy palette (rule 2:
+// energy, never meaning).
+const STEPS = [
+  {
+    n: '1',
+    accent: 'bg-accent-himbeer',
+    title: 'Find out where you actually stand',
+    body: `A free 20-minute level test — written, listening and speaking — tells you which of the ${LEVEL_COUNT} levels to train at. No more studying B1 material with an A2 gap underneath it.`,
+    href: '/level-test/',
+    linkLabel: 'Take the level test',
+  },
+  {
+    n: '2',
+    accent: 'bg-accent-aprikose',
+    title: 'Train at your level, not around it',
+    body: `${GRAMMAR_TOPIC_COUNT} grammar topics with exercises, ${LISTENING_DIALOGUE_COUNT} native-speaker dialogues, ${READING_LESSON_COUNT} reading lessons and ${VOCAB_WORD_COUNT} words in a spaced-repetition trainer — organised by level, so every session lands where your exam needs it.`,
+    href: '/grammar/',
+    linkLabel: 'Browse the library',
+  },
+  {
+    n: '3',
+    accent: 'bg-accent-limette',
+    title: 'Speak and write before it counts',
+    body: `The speaking test is the part nobody can cram. Practise conversations with the AI coach (${PRO_SPEAKING_SESSIONS_PER_MONTH} sessions a month on Pro) and get exam letters marked against the publicly documented criteria (${PRO_WRITING_EVALUATIONS_PER_MONTH} a month on Pro).`,
+    href: '/speaking/',
+    linkLabel: 'Try a speaking session',
+  },
+  {
+    n: '4',
+    accent: 'bg-siegel',
+    title: 'Rehearse the real thing',
+    body: 'A timed practice test in the exam’s style (telc B1 today), scored against the documented pass mark — so your first run under exam conditions is not the exam.',
+    href: '/modelltest',
+    linkLabel: 'See the practice test',
+  },
+];
+
+// The hero demo's first sentence, server-rendered fully coloured. The script
+// cycles this and two more (see XR_SENTENCES in the script below — keep in
+// sync). Same wording + case marking as the live analyser.
 const SENTENCE = [
-  { text: 'Der Mann', kasus: 'nominativ', abbr: 'NOM', role: 'subject', gloss: 'the man' },
-  { text: 'gibt', kasus: null, abbr: 'VERB', role: 'verb', gloss: 'gives' },
-  { text: 'dem Kind', kasus: 'dativ', abbr: 'DAT', role: 'indirect object', gloss: 'to the child' },
-  { text: 'einen Apfel', kasus: 'akkusativ', abbr: 'AKK', role: 'direct object', gloss: 'an apple' },
+  { text: 'Der Mann', kasus: 'nominativ', abbr: 'NOM' },
+  { text: 'gibt', kasus: null, abbr: 'VERB' },
+  { text: 'dem Kind', kasus: 'dativ', abbr: 'DAT' },
+  { text: 'einen Apfel', kasus: 'akkusativ', abbr: 'AKK' },
 ];
 const KASUS_CLASS = {
   nominativ: 'border-kasus-nominativ bg-kasus-nominativ-wash text-kasus-nominativ-ink',
-  dativ: 'border-kasus-dativ bg-kasus-dativ-wash text-kasus-dativ-ink',
   akkusativ: 'border-kasus-akkusativ bg-kasus-akkusativ-wash text-kasus-akkusativ-ink',
+  dativ: 'border-kasus-dativ bg-kasus-dativ-wash text-kasus-dativ-ink',
+  genitiv: 'border-kasus-genitiv bg-kasus-genitiv-wash text-kasus-genitiv-ink',
 };
+const PLAIN_CHIP = 'border-rule bg-paper-sunk text-graphite';
 
-// What the product contains. Every figure is a marketing.js constant counted
-// against a live table — see the claims note in the header.
-const COUNTS = [
-  { value: GRAMMAR_TOPIC_COUNT, label: 'Grammar topics' },
-  { value: LISTENING_DIALOGUE_COUNT, label: 'Native-speaker dialogues' },
-  { value: LEVEL_COUNT, label: 'CEFR levels, A1.1 to B2.2' },
-  { value: PODCAST_EPISODE_COUNT, label: 'Podcast episodes' },
+// Marquee phrases — each names/demonstrates its case (rule 1) or is a verb.
+const MARQUEE = [
+  { t: 'der Termin', k: 'nominativ', a: 'NOM' },
+  { t: 'für die Prüfung', k: 'akkusativ', a: 'AKK' },
+  { t: 'mit dem Bus', k: 'dativ', a: 'DAT' },
+  { t: 'wegen des Visums', k: 'genitiv', a: 'GEN' },
+  { t: 'die Antwort', k: 'nominativ', a: 'NOM' },
+  { t: 'ohne einen Fehler', k: 'akkusativ', a: 'AKK' },
+  { t: 'aus dem Kurs', k: 'dativ', a: 'DAT' },
+  { t: 'trotz des Regens', k: 'genitiv', a: 'GEN' },
 ];
 
-const TOOLS = [
-  {
-    name: 'Sentence X-Ray',
-    href: '/analyze/',
-    body: 'Paste any German sentence. It comes back split into cases, roles and parts of speech — the breakdown above, for your own sentences.',
-    free: `${ANON_DAILY_LIMIT} a day free, no account`,
-    pro: `${PRO_DAILY_LIMIT} a day with Pro`,
-  },
-  {
-    name: 'AI speaking practice',
-    href: '/speaking/',
-    body: 'Hold a conversation at your level and get it back marked for grammar, vocabulary and pronunciation.',
-    free: `${TRIAL_SPEAKING_SESSIONS} sessions free`,
-    pro: `${PRO_SPEAKING_SESSIONS_PER_MONTH} a month with Pro`,
-  },
-  {
-    name: 'Level test',
-    href: '/level-test/',
-    body: 'Twenty minutes of grammar, listening and speaking, and you know which of the eight levels to open.',
-    free: 'Free, no account',
-    pro: 'Retake whenever you like',
-  },
-];
-
-// Comparison rows. Our own figures derive; the alternatives' are ranges, not
-// somebody's advertised price, so they stay literal.
-const CMP = [
-  { feature: 'Cost per month', us: eur(PLANS.monthly.price), group: '€150+', tutor: '€50–100', apps: '€0–15' },
-  { feature: 'Speaking practice', us: `${PRO_SPEAKING_SESSIONS_PER_MONTH} sessions a month`, group: 'Minutes per class', tutor: 'One-to-one', apps: 'None' },
-  { feature: 'Available', us: 'Any hour', group: 'Fixed timetable', tutor: 'By appointment', apps: 'Any hour' },
-  { feature: 'Grammar A1–B2', us: `${GRAMMAR_TOPIC_COUNT} topics`, group: 'Varies', tutor: 'Varies', apps: 'Varies' },
-  { feature: 'Sentence analysis', us: 'Built in', group: '—', tutor: '—', apps: '—' },
-  { feature: 'Level test', us: 'Free', group: '€50+', tutor: '€30+', apps: 'Basic quiz' },
-];
-
-const TOPICS = [
-  { href: '/grammar/a1.1/nouns-gender/', level: 'A1.1', label: 'Noun genders: der, die, das', desc: 'Why every German noun has a gender, and how to stop guessing.' },
-  { href: '/grammar/a1.2/accusative-intro/', level: 'A1.2', label: 'The accusative case', desc: 'When der becomes den, and what changes with it.' },
-  { href: '/grammar/a2.1/prepositions-dative/', level: 'A2.1', label: 'Dative prepositions', desc: 'mit, nach, seit, von, zu, bei, aus, gegenüber.' },
-  { href: '/grammar/b1.1/konjunktiv-ii-wurde/', level: 'B1.1', label: 'Konjunktiv II with würde', desc: 'Wishes, hypotheticals and polite requests.' },
-];
+// Bento tiles: counts + the try-now tools, one grid. Figures derive.
+const nf = (n) => n.toLocaleString('en-US');
 ---
 
 <Layout title={title} description={description} canonical="https://deutsch-meister.de/" jsonLd={jsonLd}>
-  <div class="bg-paper text-ink">
+  <div class="overflow-x-clip bg-paper text-ink">
 
-    <!-- Hero: the product's own artifact, not a claim about it -->
-    <section class="mx-auto max-w-5xl px-5 pt-14 pb-12 sm:pt-20">
-      <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">German · A1.1 to B2.2</p>
-      <h1 class="mt-3 max-w-3xl font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] sm:text-[3.25rem]">
-        German grammar you can see.
-      </h1>
-      <p class="mt-5 max-w-2xl text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]">
-        Every rule explained in English, and every sentence taken apart so you can watch the cases move.
-        {FREE_LEVEL_LABEL} is free — no account, no card.
-      </p>
+    <!-- ═══ HERO: the person, the pain — and the product performing itself ═══ -->
+    <section class="relative" aria-labelledby="hero-h">
+      <Aurora />
 
-      <!-- The sentence. Rule 1: the only case colour on this page. -->
-      <figure class="mt-9">
-        <div class="flex flex-wrap items-stretch gap-2">
-          {SENTENCE.map((w) => (
-            <span class={`rounded-md border px-3 py-2.5 ${w.kasus ? KASUS_CLASS[w.kasus] : 'border-rule bg-paper-sunk text-graphite'}`}>
-              <span class="block text-[1.0625rem] font-semibold leading-none">{w.text}</span>
-              <span class="mt-1.5 block font-data text-[0.6875rem] font-bold tracking-[0.13em]">{w.abbr}</span>
-              <span class="mt-1 block text-[0.75rem] leading-tight opacity-80">{w.role}</span>
-              <span class="mt-0.5 block text-[0.75rem] italic leading-tight opacity-70">{w.gloss}</span>
-            </span>
-          ))}
+      <div class="relative mx-auto max-w-6xl px-5 pt-14 pb-16 sm:pt-20">
+        <div class="grid items-center gap-12 lg:grid-cols-[1.1fr_1fr]">
+          <div>
+            <p class="hero-line font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel" style="--d:0ms">
+              telc · Goethe · DTZ · A1–B2
+            </p>
+            <h1 id="hero-h" class="mt-3 font-display text-[2.375rem] font-semibold leading-[1.02] tracking-[-0.025em] sm:text-[3.5rem]">
+              <span class="hero-line block" style="--d:60ms">Your exam has a date.</span>
+              <span class="hero-line block" style="--d:180ms">Your German needs <span class="relative inline-block">a plan.<svg class="underline-swash absolute -bottom-2 left-0 w-full" viewBox="0 0 220 12" fill="none" aria-hidden="true"><path d="M3 9 C60 3, 160 3, 217 8" stroke="#0F766E" stroke-width="5" stroke-linecap="round"/></svg></span></span>
+            </h1>
+            <p class="hero-line mt-6 max-w-xl text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]" style="--d:320ms">
+              You can study every evening and still walk in unsure — because working hard isn't the
+              same as working on what the exam actually tests. DeutschMeister shows you where you
+              stand, trains exactly what your exam wants, and lets you rehearse the real thing
+              before it counts.
+            </p>
+            <div class="hero-line mt-8 flex flex-wrap items-center gap-4" style="--d:460ms">
+              <a href="/level-test/" class={BTN_PRIMARY}><span class="relative z-10">Find your level — free</span></a>
+              <a href="#exams" class={BTN_SECONDARY}>Pick your exam</a>
+            </div>
+            <p class="hero-line mt-5 font-data text-[0.8125rem] text-graphite" style="--d:560ms">
+              {FREE_LEVEL_LABEL} free, no account · {TRIAL_DAYS}-day Pro trial · cancel anytime
+            </p>
+          </div>
+
+          <!-- The living X-Ray. Atropos scene; SSR shows sentence 1 coloured. -->
+          <div class="hero-line" style="--d:380ms">
+            <div class="atropos" data-atropos-card>
+              <div class="atropos-scale"><div class="atropos-rotate"><div class="atropos-inner !overflow-visible">
+                <div class="rounded-clay border border-rule bg-white p-6 shadow-raise-lg sm:p-7">
+                  <div class="flex items-center justify-between gap-3" data-atropos-offset="3">
+                    <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">Sentence X-Ray</p>
+                    <span class="flex gap-1.5" aria-hidden="true">
+                      <span class="h-2.5 w-2.5 rounded-full bg-accent-himbeer"></span>
+                      <span class="h-2.5 w-2.5 rounded-full bg-accent-aprikose"></span>
+                      <span class="h-2.5 w-2.5 rounded-full bg-accent-limette"></span>
+                    </span>
+                  </div>
+                  <div id="xr-stage" class="mt-5 flex min-h-[8.5rem] flex-wrap content-start items-start gap-2" data-atropos-offset="6">
+                    {SENTENCE.map((w) => (
+                      <span class={`xr-chip rounded-md border px-3 py-2 ${w.kasus ? KASUS_CLASS[w.kasus] : PLAIN_CHIP}`}>
+                        <span class="block text-[1.0625rem] font-semibold leading-none">{w.text}</span>
+                        <span class="mt-1.5 block font-data text-[0.625rem] font-bold tracking-[0.13em]">{w.abbr}</span>
+                      </span>
+                    ))}
+                  </div>
+                  <p id="xr-gloss" class="mt-4 border-t border-rule pt-3 font-data text-[0.8125rem] text-graphite" data-atropos-offset="2">
+                    “The man gives the child an apple.”
+                  </p>
+                </div>
+                <!-- Floating legend, above the card plane -->
+                <div class="absolute -bottom-4 -left-3 flex gap-1.5 rounded-pill border border-rule bg-white px-3 py-2 shadow-raise" data-atropos-offset="9" aria-hidden="true">
+                  <span class="rounded-pill bg-kasus-nominativ-wash px-2 py-0.5 font-data text-[0.625rem] font-bold text-kasus-nominativ-ink">NOM</span>
+                  <span class="rounded-pill bg-kasus-akkusativ-wash px-2 py-0.5 font-data text-[0.625rem] font-bold text-kasus-akkusativ-ink">AKK</span>
+                  <span class="rounded-pill bg-kasus-dativ-wash px-2 py-0.5 font-data text-[0.625rem] font-bold text-kasus-dativ-ink">DAT</span>
+                  <span class="rounded-pill bg-kasus-genitiv-wash px-2 py-0.5 font-data text-[0.625rem] font-bold text-kasus-genitiv-ink">GEN</span>
+                </div>
+              </div></div></div>
+            </div>
+            <p class="mt-7 text-center font-data text-[0.8125rem] text-graphite">
+              Every sentence, in every lesson, taken apart like this —
+              <a href="/analyze/" class="font-bold text-siegel transition-colors hover:text-siegel-deep">try your own →</a>
+            </p>
+          </div>
         </div>
-        <figcaption class="mt-3 font-data text-[0.8125rem] text-graphite">
-          One sentence, four jobs. Colour marks the case, here and in every lesson.
-        </figcaption>
-      </figure>
-
-      <div class="mt-9 flex flex-wrap items-center gap-3">
-        <a href="/level-test/" class="inline-flex items-center justify-center rounded-md bg-siegel px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-siegel-lift">
-          Find your level — free
-        </a>
-        <a href="/grammar/" class="inline-flex items-center justify-center rounded-md border border-ink px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-paper">
-          Browse the grammar
-        </a>
       </div>
-      <p class="mt-4 font-data text-[0.8125rem] text-graphite">
-        No card to start · {TRIAL_DAYS}-day Pro trial when you sign up · cancel anytime
-      </p>
     </section>
 
-    <!-- Exam-first: most buyers arrive with an exam date, not a hobby.
-         The four tracks come from the shared examTracks registry. -->
-    <section class="border-t border-rule" aria-labelledby="exams-h">
-      <div class="mx-auto max-w-5xl px-5 py-14">
-        <h2 id="exams-h" class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[2rem]">
-          Preparing for a German exam?
+    <!-- ═══ Marquee: the language, moving ═══ -->
+    <div class="marquee border-y border-rule bg-white py-3.5" aria-hidden="true">
+      <div class="marquee-track">
+        {[0, 1].map(() => (
+          <div class="flex shrink-0 items-center gap-3 pr-3">
+            {MARQUEE.map((m) => (
+              <span class={`flex items-center gap-2 whitespace-nowrap rounded-pill border px-3.5 py-1.5 text-[0.9375rem] font-semibold ${KASUS_CLASS[m.k]}`}>
+                {m.t}
+                <span class="font-data text-[0.625rem] font-bold tracking-[0.13em] opacity-70">{m.a}</span>
+              </span>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- ═══ Exam picker: four 3D cards ═══ -->
+    <section id="exams" class="bg-paper-sunk" aria-labelledby="exams-h">
+      <div class="mx-auto max-w-6xl px-5 py-16">
+        <h2 id="exams-h" class="reveal font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2.125rem]">
+          Which exam is on your calendar?
         </h2>
-        <p class="mt-3 max-w-prose text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
-          Each exam has its own format — and its own preparation path through the library.
+        <p class="reveal mt-3 max-w-prose text-[0.9375rem] leading-relaxed text-graphite sm:text-base" style="--rd:80ms">
+          Each one tests different things — so each one gets its own preparation path.
         </p>
-        <ul class="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-rule bg-rule sm:grid-cols-4">
-          {EXAM_TRACKS.map((track) => (
-            <li>
-              <a href={`/pruefung/${track.slug}/`} class="block h-full bg-paper px-4 py-5 transition-colors hover:bg-siegel-wash">
-                <span class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{track.level}</span>
-                <span class="mt-1.5 block font-display text-[1rem] font-semibold leading-snug">{track.nameDe}</span>
-                <span class="mt-2 inline-block text-[0.8125rem] font-semibold text-siegel">Your path →</span>
-              </a>
+        <ul class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {EXAM_TRACKS.map((track, i) => (
+            <li class="reveal" style={`--rd:${i * 90}ms`}>
+              <div class="atropos h-full" data-atropos-card>
+                <div class="atropos-scale h-full"><div class="atropos-rotate h-full"><div class="atropos-inner h-full !overflow-visible">
+                  <a href={`/pruefung/${track.slug}/`} class="flex h-full flex-col rounded-clay border border-rule bg-white p-6 shadow-raise transition-shadow hover:shadow-raise-lg">
+                    <span class="self-start rounded-pill bg-siegel-wash px-2.5 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep" data-atropos-offset="8">{track.level}</span>
+                    <span class="mt-3 block font-display text-[1.1875rem] font-semibold leading-snug" data-atropos-offset="4">{track.nameDe}</span>
+                    <span class="mt-2 block flex-1 text-[0.9375rem] leading-relaxed text-graphite" data-atropos-offset="2">{TRACK_LINES[track.key]}</span>
+                    <span class="mt-4 inline-block text-sm font-bold text-siegel" data-atropos-offset="6">See your path →</span>
+                  </a>
+                </div></div></div>
+              </div>
             </li>
           ))}
         </ul>
-        <p class="mt-4 font-data text-[0.8125rem] text-graphite">
-          No exam date? <a href="/grammar/a1.1/" class="text-siegel transition-colors hover:text-siegel-deep">Start {FREE_LEVEL_LABEL} free</a> — no account needed.
+        <p class="reveal mt-7 font-data text-[0.8125rem] text-graphite" style="--rd:200ms">
+          No exam date? <a href="/grammar/a1.1/" class="font-bold text-siegel transition-colors hover:text-siegel-deep">Start {FREE_LEVEL_LABEL} free</a> — no account needed.
         </p>
       </div>
     </section>
 
-    <!-- What is actually in it -->
-    <section class="border-y border-rule bg-paper-sunk" aria-labelledby="counts-h">
-      <div class="mx-auto max-w-5xl px-5 py-9">
-        <h2 id="counts-h" class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">What is inside</h2>
-        <dl class="mt-5 grid grid-cols-2 gap-6 sm:grid-cols-4">
-          {COUNTS.map((c) => (
-            <div>
-              <dt class="sr-only">{c.label}</dt>
-              <dd>
-                <span class="block font-display text-[2rem] font-semibold leading-none tracking-[-0.015em]">{c.value}</span>
-                <span class="mt-2 block text-[0.8125rem] leading-snug text-graphite">{c.label}</span>
-              </dd>
-            </div>
+    <!-- ═══ The plan: four connected steps ═══ -->
+    <section class="mx-auto max-w-6xl px-5 py-16" aria-labelledby="plan-h">
+      <h2 id="plan-h" class="reveal font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2.125rem]">
+        Four steps between today and exam day
+      </h2>
+      <p class="reveal mt-3 max-w-prose text-[0.9375rem] leading-relaxed text-graphite sm:text-base" style="--rd:80ms">
+        Not more studying — the right studying, in the right order.
+      </p>
+      <div class="relative mt-10">
+        <!-- The connector: draws itself in when the section reveals -->
+        <svg class="path-connector absolute -top-5 left-0 hidden w-full lg:block" viewBox="0 0 1200 40" fill="none" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M75 30 C 250 -10, 380 50, 525 22 S 850 0, 1125 26" stroke="#0F766E" stroke-opacity="0.35" stroke-width="3" stroke-dasharray="10 10" stroke-linecap="round" pathLength="100" />
+        </svg>
+        <ol class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+          {STEPS.map((s, i) => (
+            <li class="reveal relative rounded-clay border border-rule bg-white p-6 shadow-raise" style={`--rd:${i * 110}ms`}>
+              <span class={`absolute -top-4 left-6 flex h-9 w-9 items-center justify-center rounded-pill ${s.accent} font-data text-sm font-bold text-white shadow-raise`} aria-hidden="true">{s.n}</span>
+              <h3 class="mt-3 font-display text-[1.125rem] font-semibold">{s.title}</h3>
+              <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">{s.body}</p>
+              <a href={s.href} class="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-siegel transition-colors hover:text-siegel-deep">
+                {s.linkLabel} <span aria-hidden="true">→</span>
+              </a>
+            </li>
           ))}
-        </dl>
+        </ol>
       </div>
     </section>
 
-    <!-- The ladder -->
-    <section class="mx-auto max-w-5xl px-5 py-14" aria-labelledby="ladder-h">
-      <h2 id="ladder-h" class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[2rem]">
-        Eight levels, in order
-      </h2>
-      <p class="mt-3 max-w-prose text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
-        Each level has {GRAMMAR_TOPIC_COUNT / LEVEL_COUNT} grammar topics with exercises, its own listening and reading, and
-        speaking missions built on the same structures. Start at {FREE_LEVEL_LABEL} or test into the right one.
-      </p>
-      <ol class="mt-6 grid grid-cols-4 gap-px overflow-hidden rounded-lg border border-rule bg-rule sm:grid-cols-8">
-        {LEVELS.map((lvl, i) => (
-          <li>
-            <a href={`/grammar/${lvl.code.toLowerCase()}/`} class="block bg-paper px-2 py-3 text-center transition-colors hover:bg-siegel-wash">
-              <span class="block font-data text-[0.8125rem] font-semibold tracking-[0.02em] text-ink">{lvl.code}</span>
-              <span class="mt-1 block text-[0.6875rem] leading-tight text-graphite">{lvl.subtitle}</span>
-              {i === 0 && (
-                <span class="mt-1.5 inline-block font-data text-[0.5625rem] font-bold uppercase tracking-[0.13em] text-siegel">Free</span>
-              )}
-            </a>
-          </li>
-        ))}
-      </ol>
-    </section>
-
-    <!-- The three tools -->
-    <section class="border-t border-rule" aria-labelledby="tools-h">
-      <div class="mx-auto max-w-5xl px-5 py-14">
-        <h2 id="tools-h" class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[2rem]">
-          Three things you can try right now
+    <!-- ═══ Bento: what you train with ═══ -->
+    <section class="border-t border-rule bg-paper-sunk" aria-labelledby="bento-h">
+      <div class="mx-auto max-w-6xl px-5 py-16">
+        <h2 id="bento-h" class="reveal font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2.125rem]">
+          What's waiting inside
         </h2>
-        <div class="mt-7 grid gap-px bg-rule sm:grid-cols-3">
-          {TOOLS.map((t) => (
-            <div class="flex flex-col bg-paper p-5">
-              <h3 class="font-display text-[1.125rem] font-semibold">{t.name}</h3>
-              <p class="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-graphite">{t.body}</p>
-              <dl class="mt-4 border-t border-rule pt-3 font-data text-[0.8125rem]">
-                <div class="flex justify-between gap-3 py-0.5">
-                  <dt class="text-graphite">Free</dt><dd class="text-right text-ink">{t.free}</dd>
-                </div>
-                <div class="flex justify-between gap-3 py-0.5">
-                  <dt class="text-graphite">Pro</dt><dd class="text-right text-ink">{t.pro}</dd>
-                </div>
-              </dl>
-              <a href={t.href} class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-siegel transition-colors hover:text-siegel-deep">
-                Open {t.name} <span aria-hidden="true">→</span>
-              </a>
+        <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+
+          <!-- Grammar: the big tile -->
+          <a href="/grammar/" class="reveal group flex flex-col justify-between rounded-clay border border-rule bg-white p-6 shadow-raise transition-all duration-150 ease-snap hover:-translate-y-0.5 hover:shadow-raise-lg sm:col-span-2 sm:row-span-2">
+            <div>
+              <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">Grammar, made visible</p>
+              <p class="mt-3 font-display text-[3.25rem] font-semibold leading-none tracking-[-0.02em]"><span class="countup" data-count={GRAMMAR_TOPIC_COUNT}>{GRAMMAR_TOPIC_COUNT}</span> topics</p>
+              <p class="mt-3 max-w-md text-[0.9375rem] leading-relaxed text-graphite">
+                Every topic from {FREE_LEVEL_LABEL} to B2.2 with explanations in English, examples
+                taken apart by case, and exercises that check themselves.
+              </p>
             </div>
-          ))}
+            <div class="mt-6">
+              <div class="grid max-w-xs grid-cols-4 gap-1.5" aria-hidden="true">
+                <span class="rounded-md bg-kasus-nominativ-wash px-2 py-1.5 text-center font-data text-[0.625rem] font-bold text-kasus-nominativ-ink">NOM</span>
+                <span class="rounded-md bg-kasus-akkusativ-wash px-2 py-1.5 text-center font-data text-[0.625rem] font-bold text-kasus-akkusativ-ink">AKK</span>
+                <span class="rounded-md bg-kasus-dativ-wash px-2 py-1.5 text-center font-data text-[0.625rem] font-bold text-kasus-dativ-ink">DAT</span>
+                <span class="rounded-md bg-kasus-genitiv-wash px-2 py-1.5 text-center font-data text-[0.625rem] font-bold text-kasus-genitiv-ink">GEN</span>
+              </div>
+              <span class="mt-5 inline-block text-sm font-bold text-siegel">Browse the library →</span>
+            </div>
+          </a>
+
+          <!-- Listening -->
+          <a href="/listening/" class="reveal flex flex-col rounded-clay border border-rule bg-white p-6 shadow-raise transition-all duration-150 ease-snap hover:-translate-y-0.5 hover:shadow-raise-lg" style="--rd:90ms">
+            <div class="equalizer flex h-8 items-end gap-1" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <p class="mt-4 font-display text-[1.75rem] font-semibold leading-none"><span class="countup" data-count={LISTENING_DIALOGUE_COUNT}>{nf(LISTENING_DIALOGUE_COUNT)}</span></p>
+            <p class="mt-1.5 text-[0.875rem] leading-snug text-graphite">native-speaker dialogues, levelled {FREE_LEVEL_LABEL}–B2.2</p>
+          </a>
+
+          <!-- Vocab -->
+          <a href="/dashboard" class="reveal flex flex-col rounded-clay border border-rule bg-white p-6 shadow-raise transition-all duration-150 ease-snap hover:-translate-y-0.5 hover:shadow-raise-lg" style="--rd:180ms">
+            <span class="inline-flex h-8 w-11 items-center justify-center self-start rounded-md bg-accent-limette-wash font-data text-[0.6875rem] font-bold text-accent-limette-ink" aria-hidden="true">SRS</span>
+            <p class="mt-4 font-display text-[1.75rem] font-semibold leading-none"><span class="countup" data-count={VOCAB_WORD_COUNT}>{nf(VOCAB_WORD_COUNT)}</span></p>
+            <p class="mt-1.5 text-[0.875rem] leading-snug text-graphite">words in the spaced-repetition trainer</p>
+          </a>
+
+          <!-- Reading -->
+          <a href="/reading/" class="reveal flex flex-col rounded-clay border border-rule bg-white p-6 shadow-raise transition-all duration-150 ease-snap hover:-translate-y-0.5 hover:shadow-raise-lg" style="--rd:270ms">
+            <span class="inline-flex h-8 w-11 items-center justify-center self-start rounded-md bg-accent-aprikose-wash font-data text-[0.6875rem] font-bold text-accent-aprikose-ink" aria-hidden="true">Aa</span>
+            <p class="mt-4 font-display text-[1.75rem] font-semibold leading-none"><span class="countup" data-count={READING_LESSON_COUNT}>{READING_LESSON_COUNT}</span></p>
+            <p class="mt-1.5 text-[0.875rem] leading-snug text-graphite">reading lessons with comprehension checks</p>
+          </a>
+
+          <!-- Speaking coach -->
+          <a href="/speaking/" class="reveal flex flex-col rounded-clay border border-rule bg-white p-6 shadow-raise transition-all duration-150 ease-snap hover:-translate-y-0.5 hover:shadow-raise-lg" style="--rd:360ms">
+            <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">AI speaking coach</p>
+            <p class="mt-3 flex-1 text-[0.875rem] leading-relaxed text-graphite">Hold a conversation at your level; get it back marked for grammar, vocabulary and pronunciation.</p>
+            <p class="mt-3 font-data text-[0.75rem] text-graphite">{PRO_SPEAKING_SESSIONS_PER_MONTH} sessions/month on Pro</p>
+          </a>
+
+          <!-- X-Ray: the wide bottom tile -->
+          <a href="/analyze/" class="reveal flex flex-col gap-2 rounded-clay border border-rule bg-white p-6 shadow-raise transition-all duration-150 ease-snap hover:-translate-y-0.5 hover:shadow-raise-lg sm:col-span-2 sm:flex-row sm:items-center sm:justify-between lg:col-span-4" style="--rd:450ms">
+            <div>
+              <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">Sentence X-Ray</p>
+              <p class="mt-2 max-w-2xl text-[0.875rem] leading-relaxed text-graphite">Paste any German sentence — from a textbook or a letter from the Amt — and watch it come apart into cases and roles.</p>
+            </div>
+            <p class="shrink-0 font-data text-[0.75rem] text-graphite">{ANON_DAILY_LIMIT}/day free · {PRO_DAILY_LIMIT}/day on Pro <span class="ml-2 font-bold text-siegel">Try it →</span></p>
+          </a>
+
         </div>
       </div>
     </section>
 
-    <!-- How it compares -->
+    <!-- ═══ How it compares — reference material, flat (rule 3) ═══ -->
     <section class="border-t border-rule" aria-labelledby="cmp-h">
-      <div class="mx-auto max-w-5xl px-5 py-14">
-        <h2 id="cmp-h" class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[2rem]">
+      <div class="mx-auto max-w-6xl px-5 py-16">
+        <h2 id="cmp-h" class="reveal font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2.125rem]">
           Next to the alternatives
         </h2>
-        <div class="mt-6 overflow-x-auto">
+        <div class="reveal mt-6 overflow-x-auto" style="--rd:100ms">
           <table class="w-full min-w-[38rem] border-collapse text-left">
             <thead>
               <tr class="border-b border-ink">
@@ -287,7 +387,14 @@ const TOPICS = [
               </tr>
             </thead>
             <tbody>
-              {CMP.map((row) => (
+              {[
+                { feature: 'Cost per month', us: eur(PLANS.monthly.price), group: '€150+', tutor: '€50–100', apps: '€0–15' },
+                { feature: 'Speaking practice', us: `${PRO_SPEAKING_SESSIONS_PER_MONTH} sessions a month`, group: 'Minutes per class', tutor: 'One-to-one', apps: 'None' },
+                { feature: 'Exam writing feedback', us: `${PRO_WRITING_EVALUATIONS_PER_MONTH} letters a month`, group: 'Teacher-dependent', tutor: 'By arrangement', apps: '—' },
+                { feature: 'Timed practice test', us: 'Built in (telc B1)', group: 'Sometimes', tutor: 'Rarely', apps: '—' },
+                { feature: 'Available', us: 'Any hour', group: 'Fixed timetable', tutor: 'By appointment', apps: 'Any hour' },
+                { feature: 'Level test', us: 'Free', group: '€50+', tutor: '€30+', apps: 'Basic quiz' },
+              ].map((row) => (
                 <tr class="border-b border-rule">
                   <th scope="row" class="py-3.5 pr-4 text-sm font-normal text-graphite">{row.feature}</th>
                   <td class="bg-siegel-wash px-4 py-3.5 font-data text-[0.8125rem] font-semibold text-ink">{row.us}</td>
@@ -299,59 +406,31 @@ const TOPICS = [
             </tbody>
           </table>
         </div>
-        <p class="mt-3 font-data text-[0.8125rem] text-graphite">
+        <p class="reveal mt-3 font-data text-[0.8125rem] text-graphite" style="--rd:160ms">
           <a href="/vergleich/" class="text-siegel transition-colors hover:text-siegel-deep">Detailed comparisons against Babbel, Duolingo and Lingoda →</a>
         </p>
       </div>
     </section>
 
-    <!-- Start here -->
-    <section class="border-t border-rule" aria-labelledby="start-h">
-      <div class="mx-auto max-w-5xl px-5 py-14">
-        <h2 id="start-h" class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[2rem]">
-          Start with these
+    <!-- ═══ Close: the loss, then the door ═══ -->
+    <section class="relative overflow-hidden border-t border-rule bg-paper-sunk" aria-labelledby="close-h">
+      <Aurora variant="close" />
+      <div class="relative mx-auto max-w-6xl px-5 py-16">
+        <h2 id="close-h" class="reveal max-w-2xl font-display text-[1.75rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2.25rem]">
+          The exam date doesn't move. The guessing can stop today.
         </h2>
-        <p class="mt-3 max-w-prose text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
-          The four topics that unlock the most German for the least effort.
+        <p class="reveal mt-4 max-w-prose text-[0.9375rem] leading-relaxed text-graphite sm:text-base" style="--rd:80ms">
+          Twenty minutes from now you can know your level and your next lesson.
+          {FREE_LEVEL_LABEL} is free with no account; the other {LEVEL_COUNT - 1} levels are
+          {monthlyPriceLine()}.
         </p>
-        <ul class="mt-6 grid gap-px bg-rule sm:grid-cols-2">
-          {TOPICS.map((t) => (
-            <li>
-              <a href={t.href} class="block h-full bg-paper p-5 transition-colors hover:bg-siegel-wash">
-                <span class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{t.level}</span>
-                <span class="mt-1.5 block font-display text-[1.125rem] font-semibold">{t.label}</span>
-                <span class="mt-1.5 block text-[0.9375rem] leading-relaxed text-graphite">{t.desc}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-        <p class="mt-4 font-data text-[0.8125rem]">
-          <a href="/grammar/" class="text-siegel transition-colors hover:text-siegel-deep">All {GRAMMAR_TOPIC_COUNT} topics →</a>
-        </p>
-      </div>
-    </section>
-
-    <!-- Close -->
-    <section class="border-t border-rule" aria-labelledby="close-h">
-      <div class="mx-auto max-w-5xl px-5 py-16">
-        <h2 id="close-h" class="max-w-2xl font-display text-[1.75rem] font-semibold leading-tight tracking-[-0.018em] sm:text-[2.25rem]">
-          Open {FREE_LEVEL_LABEL} and see whether it clicks.
-        </h2>
-        <p class="mt-4 max-w-prose text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
-          The whole first level is free and needs no account. If you want the other {LEVEL_COUNT - 1},
-          Pro is {monthlyPriceLine()}.
-        </p>
-        <div class="mt-7 flex flex-wrap items-center gap-3">
-          <a href="/grammar/a1.1/" class="inline-flex items-center justify-center rounded-md bg-siegel px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-siegel-lift">
-            Start {FREE_LEVEL_LABEL} free
-          </a>
-          <a href="/pricing/" class="inline-flex items-center justify-center rounded-md border border-ink px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-paper">
-            See what Pro costs
-          </a>
+        <div class="reveal mt-8 flex flex-wrap items-center gap-4" style="--rd:160ms">
+          <a href="/level-test/" class={BTN_PRIMARY}><span class="relative z-10">Find your level — free</span></a>
+          <a href="/pricing/" class={BTN_SECONDARY}>See what Pro costs</a>
         </div>
-        <p class="mt-8 border-t border-rule pt-6 text-[0.9375rem] text-graphite">
+        <p class="reveal mt-10 border-t border-rule pt-6 text-[0.9375rem] text-graphite" style="--rd:220ms">
           There are German lessons on our
-          <a href="https://www.youtube.com/@deutschmeister_de" target="_blank" rel="noopener noreferrer" class="font-semibold text-siegel transition-colors hover:text-siegel-deep">YouTube channel</a>
+          <a href="https://www.youtube.com/@deutschmeister_de" target="_blank" rel="noopener noreferrer" class="font-bold text-siegel transition-colors hover:text-siegel-deep">YouTube channel</a>
           too — grammar, vocabulary and real conversations.
         </p>
       </div>
@@ -359,3 +438,98 @@ const TOPICS = [
 
   </div>
 </Layout>
+
+<script>
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ── The living X-Ray hero ──────────────────────────────────────────────
+  // Cycle 3 sentences: words pop in plain, then get coloured one by one,
+  // hold, fade, next. SSR already shows sentence 1 coloured — the script
+  // waits a beat, then takes over. Skipped entirely under reduced motion.
+  const stage = document.getElementById('xr-stage');
+  const gloss = document.getElementById('xr-gloss');
+  if (stage && gloss && !reduced) {
+    const KASUS = {
+      nominativ: 'border-kasus-nominativ bg-kasus-nominativ-wash text-kasus-nominativ-ink',
+      akkusativ: 'border-kasus-akkusativ bg-kasus-akkusativ-wash text-kasus-akkusativ-ink',
+      dativ: 'border-kasus-dativ bg-kasus-dativ-wash text-kasus-dativ-ink',
+      genitiv: 'border-kasus-genitiv bg-kasus-genitiv-wash text-kasus-genitiv-ink',
+    };
+    const PLAIN = 'border-rule bg-paper-sunk text-graphite';
+    const XR_SENTENCES = [
+      {
+        gloss: '“The man gives the child an apple.”',
+        words: [
+          { t: 'Der Mann', k: 'nominativ', a: 'NOM' },
+          { t: 'gibt', k: null, a: 'VERB' },
+          { t: 'dem Kind', k: 'dativ', a: 'DAT' },
+          { t: 'einen Apfel', k: 'akkusativ', a: 'AKK' },
+        ],
+      },
+      {
+        gloss: '“I am sending the office a letter.”',
+        words: [
+          { t: 'Ich', k: 'nominativ', a: 'NOM' },
+          { t: 'schicke', k: null, a: 'VERB' },
+          { t: 'dem Amt', k: 'dativ', a: 'DAT' },
+          { t: 'einen Brief', k: 'akkusativ', a: 'AKK' },
+        ],
+      },
+      {
+        gloss: '“Despite the stress, she passes the exam.”',
+        words: [
+          { t: 'Trotz des Stresses', k: 'genitiv', a: 'GEN' },
+          { t: 'besteht', k: null, a: 'VERB' },
+          { t: 'sie', k: 'nominativ', a: 'NOM' },
+          { t: 'die Prüfung', k: 'akkusativ', a: 'AKK' },
+        ],
+      },
+    ];
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    const chip = (w) => {
+      const s = document.createElement('span');
+      s.className = `xr-chip rounded-md border px-3 py-2 ${PLAIN}`;
+      s.innerHTML =
+        `<span class="block text-[1.0625rem] font-semibold leading-none"></span>` +
+        `<span class="mt-1.5 block font-data text-[0.625rem] font-bold tracking-[0.13em] opacity-0">${w.a}</span>`;
+      s.firstChild.textContent = w.t;
+      return s;
+    };
+    (async () => {
+      await sleep(2600); // let the SSR state land first
+      let i = 1; // SSR showed sentence 0
+      // eslint-disable-next-line no-constant-condition
+      while (true) {
+        const s = XR_SENTENCES[i % XR_SENTENCES.length];
+        gloss.style.opacity = '0';
+        stage.style.transition = 'opacity 0.28s ease';
+        stage.style.opacity = '0';
+        await sleep(300);
+        stage.replaceChildren();
+        stage.style.opacity = '1';
+        // 1. words pop in, plain
+        const chips = s.words.map(chip);
+        for (const c of chips) {
+          stage.appendChild(c);
+          await sleep(150);
+        }
+        await sleep(350);
+        // 2. the x-ray: each word gets its case
+        for (let j = 0; j < chips.length; j++) {
+          const w = s.words[j];
+          const c = chips[j];
+          c.className = `xr-chip rounded-md border px-3 py-2 ${w.k ? KASUS[w.k] : PLAIN}`;
+          c.style.animation = 'none';
+          void c.offsetWidth;
+          c.style.animation = '';
+          c.lastChild.classList.remove('opacity-0');
+          await sleep(260);
+        }
+        gloss.textContent = s.gloss;
+        gloss.style.opacity = '1';
+        await sleep(3000);
+        i++;
+      }
+    })();
+  }
+</script>

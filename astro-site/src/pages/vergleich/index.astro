@@ -1,5 +1,9 @@
 ---
+// Vergleich hub — reskinned onto the Playful Depth system (docs/design/playbook.md).
+// Copy, links, structured data and the competitor figures are untouched; the
+// three comparison cards are the grid a visitor CHOOSES from, so they tilt.
 import Layout from '../../layouts/Layout.astro';
+import Aurora from '../../components/Aurora.astro';
 import competitorComparisons from '../../data/competitorComparisons.js';
 import { BUILD_DATE, ORGANIZATION } from '../../lib/siteMeta.js';
 import '../../styles/global.css';
@@ -38,52 +42,73 @@ const jsonLd = {
   },
 };
 
+const BTN =
+  'inline-flex items-center justify-center gap-2 rounded-clay text-base font-bold transition-all duration-100 ease-snap select-none';
+const BTN_PRIMARY = `${BTN} btn-shimmer relative overflow-hidden bg-siegel px-7 py-3.5 text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`;
+
 const ICON = { babbel: '🌐', duolingo: '🎮', lingoda: '👥' };
-const COLOR = { babbel: 'from-orange-400 to-red-500', duolingo: 'from-green-400 to-emerald-500', lingoda: 'from-blue-400 to-indigo-500' };
+// Accent tiles rotate through the candy palette (rule 2: energy, never meaning).
+const TILE = {
+  babbel: 'bg-accent-aprikose-wash text-accent-aprikose-ink',
+  duolingo: 'bg-accent-limette-wash text-accent-limette-ink',
+  lingoda: 'bg-accent-himbeer-wash text-accent-himbeer-ink',
+};
 ---
 
 <Layout title={title} description={description} keywords={keywords} canonical="https://deutsch-meister.de/vergleich/" jsonLd={jsonLd} lang="de">
-  <div class="bg-gradient-to-br from-slate-50 via-white to-slate-100">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 pt-12 pb-20">
-      <div class="text-center mb-16">
-        <h1 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-800 mb-4">
+  <div class="overflow-x-clip bg-paper text-ink">
+
+    <!-- Hero -->
+    <section class="relative overflow-hidden" aria-labelledby="vgl-h">
+      <Aurora />
+      <div class="relative mx-auto max-w-4xl px-5 pt-14 pb-10 text-center sm:pt-20">
+        <p class="hero-line font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel" style="--d:0ms">
+          Vergleich
+        </p>
+        <h1 id="vgl-h" class="hero-line mt-3 font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.025em] sm:text-[3rem]" style="--d:80ms">
           Wie schneidet Deutschmeister im Vergleich ab?
         </h1>
-        <p class="text-lg text-slate-600 max-w-xl mx-auto">
+        <p class="hero-line mx-auto mt-5 max-w-xl text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]" style="--d:220ms">
           Wir vergleichen uns fair mit den größten Namen. Du entscheidest.
         </p>
       </div>
+    </section>
 
-      <div class="grid sm:grid-cols-3 gap-6">
-        {competitors.map((comp) => (
-          <a
-            href={`/vergleich/${comp.slug}/`}
-            class="block bg-white rounded-2xl border border-slate-100 p-6 shadow-sm hover:shadow-md hover:border-slate-200 transition-all group h-full"
-          >
-            <div class={`w-14 h-14 rounded-xl bg-gradient-to-br ${COLOR[comp.slug] ?? 'from-slate-400 to-slate-500'} flex items-center justify-center mb-5 shadow-lg text-2xl`}>
-              <span aria-hidden="true">{ICON[comp.slug] ?? '🌐'}</span>
+    <!-- The three comparisons: a grid the visitor chooses from -->
+    <section class="mx-auto max-w-4xl px-5 pb-16 pt-4">
+      <div class="grid gap-6 sm:grid-cols-3">
+        {competitors.map((comp, i) => (
+          <div class="reveal h-full" style={`--rd:${i * 90}ms`}>
+            <div class="atropos h-full" data-atropos-card>
+              <div class="atropos-scale h-full"><div class="atropos-rotate h-full"><div class="atropos-inner h-full !overflow-visible">
+                <a
+                  href={`/vergleich/${comp.slug}/`}
+                  class="group flex h-full flex-col rounded-clay border border-rule bg-white p-6 shadow-raise transition-all duration-150 ease-snap hover:-translate-y-0.5 hover:shadow-raise-lg active:translate-y-1 active:shadow-none"
+                >
+                  <div class={`mb-5 flex h-14 w-14 items-center justify-center rounded-clay text-2xl ${TILE[comp.slug] ?? 'bg-paper-sunk text-graphite'}`} data-atropos-offset="8">
+                    <span aria-hidden="true">{ICON[comp.slug] ?? '🌐'}</span>
+                  </div>
+                  <h2 class="mb-2 font-display text-[1.1875rem] font-semibold leading-snug" data-atropos-offset="4">
+                    DeutschMeister vs {comp.displayName}
+                  </h2>
+                  <p class="mb-4 text-[0.9375rem] leading-relaxed text-graphite" data-atropos-offset="2">{comp.positioning}</p>
+                  <p class="mb-5 flex-1 font-data text-[0.75rem] text-graphite" data-atropos-offset="2">{comp.priceRange}</p>
+                  <span class="inline-flex items-center gap-1.5 text-sm font-bold text-siegel transition-colors group-hover:text-siegel-deep" data-atropos-offset="6">
+                    Vergleichen <span aria-hidden="true">→</span>
+                  </span>
+                </a>
+              </div></div></div>
             </div>
-            <h2 class="font-display text-xl font-bold text-slate-800 mb-2">
-              DeutschMeister vs {comp.displayName}
-            </h2>
-            <p class="text-sm text-slate-600 mb-4 leading-relaxed">{comp.positioning}</p>
-            <p class="text-xs text-slate-500 mb-5">{comp.priceRange}</p>
-            <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-600 group-hover:text-amber-700 transition-colors">
-              Vergleichen <span aria-hidden="true">→</span>
-            </span>
-          </a>
+          </div>
         ))}
       </div>
 
-      <div class="mt-16 text-center">
-        <p class="text-slate-500 mb-4">Noch nicht überzeugt?</p>
-        <a
-          href="https://deutsch-meister.de/signup"
-          class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 to-rose-500 text-white font-semibold rounded-xl shadow-lg shadow-rose-500/25 hover:from-amber-600 hover:to-rose-600 transition-all"
-        >
-          Einfach kostenlos ausprobieren <span aria-hidden="true">→</span>
+      <div class="reveal mt-16 text-center" style="--rd:120ms">
+        <p class="mb-4 text-[0.9375rem] text-graphite">Noch nicht überzeugt?</p>
+        <a href="https://deutsch-meister.de/signup" class={BTN_PRIMARY}>
+          <span class="relative z-10 inline-flex items-center gap-2">Einfach kostenlos ausprobieren <span aria-hidden="true">→</span></span>
         </a>
       </div>
-    </div>
+    </section>
   </div>
 </Layout>

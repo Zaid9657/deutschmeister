@@ -19,15 +19,15 @@
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-slate-100;
+    @apply bg-paper-sunk;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-slate-300 rounded-full;
+    @apply bg-rule rounded-full;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-slate-400;
+    @apply bg-edge;
   }
 }
 
@@ -90,12 +90,30 @@
    element on every screen. A scoped .dm-scope copy already shipped the correct
    teal; that copy is gone now that the global rule is right. */
 *:focus-visible {
-  @apply outline-none ring-2 ring-siegel ring-offset-2 ring-offset-paper;
+  @apply outline-none ring-[3px] ring-siegel ring-offset-2 ring-offset-paper;
 }
 
 /* Selection colour — same reason. Was bg-amber-200 / text-amber-900. */
 ::selection {
   @apply bg-siegel-wash text-ink;
+}
+
+/* Motion gate — the whole Playful Depth motion system (springs, pops,
+   confetti, hover lifts) collapses to near-instant for anyone who asked their
+   OS for reduced motion. An exam-stressed learner gets stillness with one
+   setting; press feedback (a direct pointer response) survives because 0.01ms
+   still lands the pressed state. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 /* Print styles */
@@ -129,3 +147,109 @@
   .dm-pulse { animation: none; }
 }
 
+
+/* ── Showtime: the shared motion layer (SPA twin of astro-site/src/styles/showtime.css).
+   Vocabulary + usage: docs/design/playbook.md. Everything collapses under the
+   prefers-reduced-motion gate above; the hooks in src/lib/motion.js no-op too.
+   The .reveal hidden state needs no html.js gate here — React only renders it
+   while it is running. ───────────────────────────────────────────────── */
+
+/* Hero entrance: staggered rise-and-settle */
+.hero-line {
+  animation: dmRise 0.7s cubic-bezier(0.2, 1, 0.36, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes dmRise {
+  from { opacity: 0; transform: translateY(18px); filter: blur(4px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+.underline-swash path {
+  stroke-dasharray: 230;
+  stroke-dashoffset: 230;
+  animation: dmDraw 0.7s ease-out 0.9s forwards;
+}
+@keyframes dmDraw { to { stroke-dashoffset: 0; } }
+
+/* Aurora background */
+.aurora-blob {
+  position: absolute;
+  width: 34rem;
+  height: 34rem;
+  border-radius: 9999px;
+  filter: blur(70px);
+  opacity: 0.55;
+  will-change: transform;
+  animation: dmDrift 18s ease-in-out infinite alternate;
+}
+.aurora-a { left: -10%; top: -20%; background: #e6f2f0; } /* siegel wash */
+.aurora-b { right: -12%; top: -10%; background: #fdecf3; animation-delay: -6s; } /* himbeer wash */
+.aurora-c { left: 35%; bottom: -55%; background: #fff0e4; animation-delay: -12s; } /* aprikose wash */
+@keyframes dmDrift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(4rem, 2.5rem, 0) scale(1.15); }
+}
+
+/* Scroll reveals (Magic UI BlurFade pattern, vanilla). The hidden state
+   exists ONLY once JS has stamped html.js — no-JS visitors and crawlers see
+   everything; reduced-motion gets the same escape hatch. */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  filter: blur(5px);
+  transition:
+    opacity 0.65s cubic-bezier(0.2, 1, 0.36, 1) var(--rd, 0ms),
+    transform 0.65s cubic-bezier(0.2, 1, 0.36, 1) var(--rd, 0ms),
+    filter 0.65s cubic-bezier(0.2, 1, 0.36, 1) var(--rd, 0ms);
+}
+.reveal.is-visible { opacity: 1; transform: translateY(0); filter: blur(0); }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; filter: none; }
+}
+
+/* Marquee */
+.marquee { overflow: hidden; -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent); mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent); }
+.marquee-track { display: flex; width: max-content; animation: dmMarquee 36s linear infinite; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+@keyframes dmMarquee { to { transform: translateX(-50%); } }
+
+/* Shimmer sweep on the primary CTA */
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%);
+  transform: translateX(-100%);
+  animation: dmShimmer 4.5s ease-in-out infinite;
+}
+@keyframes dmShimmer {
+  0%, 60% { transform: translateX(-100%); }
+  80%, 100% { transform: translateX(100%); }
+}
+
+/* Step connector draws in */
+.path-connector path { stroke-dashoffset: 100; transition: stroke-dashoffset 1.4s ease-out 0.3s; }
+.path-connector.is-visible path { stroke-dashoffset: 0; }
+
+/* Listening equalizer */
+.equalizer span {
+  width: 5px;
+  border-radius: 999px;
+  background: #0d9488; /* siegel lift */
+  animation: dmEq 1.1s ease-in-out infinite alternate;
+}
+.equalizer span:nth-child(1) { height: 40%; animation-delay: 0s; }
+.equalizer span:nth-child(2) { height: 75%; animation-delay: 0.12s; }
+.equalizer span:nth-child(3) { height: 55%; animation-delay: 0.24s; }
+.equalizer span:nth-child(4) { height: 95%; animation-delay: 0.36s; }
+.equalizer span:nth-child(5) { height: 60%; animation-delay: 0.48s; }
+.equalizer span:nth-child(6) { height: 85%; animation-delay: 0.6s; }
+.equalizer span:nth-child(7) { height: 45%; animation-delay: 0.72s; }
+@keyframes dmEq { to { transform: scaleY(0.45); } }
+
+/* X-Ray demo chip pop */
+.xr-chip { animation: dmPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+@keyframes dmPop {
+  from { opacity: 0; transform: scale(0.7) translateY(6px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+#xr-gloss { transition: opacity 0.3s ease; }

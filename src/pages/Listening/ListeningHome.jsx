@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { Headphones } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useListeningLevels } from '../../hooks/useListening';
@@ -6,7 +5,13 @@ import DataState from '../../components/DataState';
 import ListeningLevelCard from '../../components/listening/ListeningLevelCard';
 import SEO from '../../components/SEO';
 import { seoProps } from '../../data/seoRoutes.js';
+import SectionHeading from '../../components/ui/SectionHeading.jsx';
+import Reveal from '../../components/ui/Reveal.jsx';
+import Aurora from '../../components/ui/Aurora.jsx';
+import Tilt from '../../components/ui/Tilt.jsx';
 
+// /listening — the level picker. Playful Depth (docs/design/playbook.md): one
+// aurora hero, and the grid a visitor CHOOSES from gets the tilt.
 const ListeningHome = () => {
   const { i18n } = useTranslation();
   const { levels, loading, error, retry } = useListeningLevels();
@@ -14,7 +19,7 @@ const ListeningHome = () => {
 
   if (loading || error) {
     return (
-      <div className="min-h-screen pt-24">
+      <div className="min-h-screen bg-paper pt-24">
         <DataState loading={loading} error={error} onRetry={retry} />
       </div>
     );
@@ -33,37 +38,42 @@ const ListeningHome = () => {
           ]
         }}
       />
-      <div className="min-h-screen pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-paper font-body text-ink pt-24 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-10"
-        >
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center mx-auto mb-4">
-            <Headphones size={32} className="text-white" />
+        <div className="relative overflow-hidden rounded-clay mb-10 -mx-2 px-2 py-6 sm:-mx-4 sm:px-4">
+          <Aurora />
+          <div className="relative text-center">
+            <div
+              className="hero-line mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-clay bg-siegel text-white shadow-raise-siegel"
+              style={{ '--d': '60ms' }}
+            >
+              <Headphones size={32} />
+            </div>
+            <SectionHeading
+              level={1}
+              size="page"
+              align="center"
+              title={isGerman ? 'Hörverständnis' : 'Listening Comprehension'}
+              lead={isGerman
+                ? 'Verbessere dein Hörverständnis mit authentischen Dialogen und Übungen.'
+                : 'Improve your listening skills with authentic dialogues and exercises.'}
+            />
           </div>
-          <h1 className="text-3xl font-display font-bold text-slate-800 mb-2">
-            {isGerman ? 'Hörverständnis' : 'Listening Comprehension'}
-          </h1>
-          <p className="text-slate-500 max-w-lg mx-auto">
-            {isGerman
-              ? 'Verbessere dein Hörverständnis mit authentischen Dialogen und Übungen.'
-              : 'Improve your listening skills with authentic dialogues and exercises.'}
-          </p>
-        </motion.div>
+        </div>
 
         {/* Level grid */}
         <div className="grid gap-4 sm:grid-cols-2">
           {levels.map((level, index) => (
-            <ListeningLevelCard
-              key={level.level}
-              level={level.level}
-              totalExercises={level.totalExercises}
-              completedExercises={level.completedExercises}
-              index={index}
-            />
+            <Reveal key={level.level} delay={90 * index} className="h-full">
+              <Tilt className="h-full">
+                <ListeningLevelCard
+                  level={level.level}
+                  totalExercises={level.totalExercises}
+                  completedExercises={level.completedExercises}
+                />
+              </Tilt>
+            </Reveal>
           ))}
         </div>
       </div>

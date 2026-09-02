@@ -17,8 +17,8 @@ const ProtectedRoute = ({ children }) => {
     // quoting one is enough to emit it back into the built CSS.)
     return (
       <div className="min-h-screen flex items-center justify-center bg-paper">
-        <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full border-4 border-rule border-t-siegel animate-spin" />
+        <div className="text-center" role="status">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full border-4 border-rule border-t-siegel animate-spin" aria-hidden="true" />
           <p className="text-graphite">{t('common.loading')}</p>
         </div>
       </div>

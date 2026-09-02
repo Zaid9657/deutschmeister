@@ -58,6 +58,60 @@ const shell = readFileSync(SHELL, 'utf8');
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+// ─── the class vocabulary ────────────────────────────────────────────────────
+//
+// DESIGN TOKENS ONLY (docs/design/playbook.md §1). Every string below is a
+// playbook role, not an improvisation, and every class in it must survive the
+// built CSS — which it now does because tailwind.config.js scans THIS FILE.
+// It did not before, and the markup here styled itself only by accident: each
+// class it used happened to be used by some component under src/ too. The
+// design sweep moved those components onto tokens, the accidental coupling
+// broke, and all eight prerendered pages started serving raw document flow to
+// their first paint and to every crawler. Naming the roles here is what keeps
+// the next sweep from doing it again: a class that goes out of system in the
+// app goes out of system here, visibly, in one place.
+//
+// No JS runs on this markup — React replaces it on hydrate — so nothing here
+// may use `reveal`/`hero-line` (their resting state is hidden until a script
+// lifts it) or Atropos scaffolding. Static, styled, immediately visible.
+const H_PAGE = 'font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] text-ink sm:text-[3rem]';
+const H_HERO = 'font-display text-[2.25rem] font-semibold leading-[1.02] tracking-[-0.025em] text-ink sm:text-[3.5rem]';
+const H_SECTION = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink sm:text-[2.125rem]';
+// The section role at its mobile step — for sub-sections inside a page.
+const H_SUB = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink';
+const H_CARD = 'font-display text-[1.0625rem] font-semibold leading-snug tracking-[-0.005em] text-ink sm:text-[1.125rem]';
+const EYEBROW = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em]';
+const LEAD = 'text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]';
+const BODY = 'text-[0.9375rem] leading-relaxed text-graphite sm:text-base';
+const SMALL = 'text-[0.875rem] leading-relaxed text-graphite';
+const DATA_NOTE = 'font-data text-[0.8125rem] text-graphite';
+
+// Cards: pressable things rest raised, reference material stays flat (rule 3).
+const CARD_FLAT = 'rounded-clay border border-rule bg-white';
+const CARD_SUNK = 'rounded-clay border border-rule bg-paper-sunk';
+const CARD_RAISED = 'rounded-clay border border-rule bg-white shadow-raise';
+
+// Buttons: one interactive colour (rule 2). The press/hover halves of the
+// playbook string are dropped — this markup is gone the moment React mounts,
+// and a hover state on a placeholder is a promise it cannot keep.
+const BTN = 'inline-flex items-center justify-center gap-2 rounded-clay px-7 py-3.5 text-base font-bold';
+const BTN_PRIMARY = `${BTN} bg-siegel text-white shadow-raise-siegel`;
+const BTN_SECONDARY = `${BTN} border border-rule bg-white text-ink shadow-raise`;
+
+const CHIP = `inline-flex items-center rounded-pill px-2.5 py-1 ${EYEBROW} font-bold`;
+const CHIP_LABEL = `${CHIP} bg-siegel-wash text-siegel-deep`;
+const CHIP_QUIET = `${CHIP} border border-rule bg-white text-graphite`;
+
+// Rule 1: the four case colours may appear ONLY where a case is named. They are
+// used once below, on /analyze, where every chip is labelled with its case.
+const KASUS_CHIP = {
+  nominativ: 'border-kasus-nominativ bg-kasus-nominativ-wash text-kasus-nominativ-ink',
+  akkusativ: 'border-kasus-akkusativ bg-kasus-akkusativ-wash text-kasus-akkusativ-ink',
+  dativ: 'border-kasus-dativ bg-kasus-dativ-wash text-kasus-dativ-ink',
+  genitiv: 'border-kasus-genitiv bg-kasus-genitiv-wash text-kasus-genitiv-ink',
+  plain: 'border-rule bg-paper-sunk text-graphite',
+};
+
 const LEVELS = ['A1.1', 'A1.2', 'A2.1', 'A2.2', 'B1.1', 'B1.2', 'B2.1', 'B2.2'];
 // src/utils/listeningHelpers.js subtitles (en)
 const LEVEL_SUBTITLES = {
@@ -66,16 +120,18 @@ const LEVEL_SUBTITLES = {
   'B1.1': 'Intermediate I', 'B1.2': 'Intermediate II',
   'B2.1': 'Upper Intermediate I', 'B2.2': 'Upper Intermediate II',
 };
+// Both grids are links, so their cards rest raised (rule 3) and their level
+// codes take the data face — a level is a figure, not prose.
 const listeningCards = LEVELS.map((lvl) => `
-      <a href="/listening/${lvl.toLowerCase()}" class="block relative rounded-2xl border border-slate-200 bg-white p-5 shadow-sm overflow-hidden">
-        <h3 class="font-display font-semibold text-lg text-slate-800">${lvl}</h3>
-        <p class="text-sm text-slate-500">${LEVEL_SUBTITLES[lvl]}</p>
+      <a href="/listening/${lvl.toLowerCase()}" class="block ${CARD_RAISED} p-5">
+        <h3 class="font-data text-[1.25rem] font-bold text-ink">${lvl}</h3>
+        <p class="mt-1 ${SMALL}">${LEVEL_SUBTITLES[lvl]}</p>
       </a>`).join('');
 
 const readingCards = Object.entries(READING_LESSON_COUNTS_BY_LEVEL).map(([lvl, count]) => `
-      <a href="/reading/${lvl}" class="block bg-white rounded-xl p-4 shadow-sm border border-slate-100">
-        <h3 class="font-semibold text-slate-800">${lvl.toUpperCase()}</h3>
-        <p class="text-xs text-slate-500">${count} reading lessons</p>
+      <a href="/reading/${lvl}" class="block ${CARD_RAISED} p-4">
+        <h3 class="font-data text-[1.0625rem] font-bold text-ink">${lvl.toUpperCase()}</h3>
+        <p class="mt-1 font-data text-[0.75rem] text-graphite">${count} reading lessons</p>
       </a>`).join('');
 
 // FAQ content is defined once and used for BOTH the FAQPage JSON-LD and the
@@ -108,27 +164,28 @@ const faqPageSchema = (faqs) => ({
   })),
 });
 
-// Visible FAQ markup, in each page's own visual language.
-const faqSectionTailwind = (faqs) => `
-  <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 sm:p-10 mb-12">
-    <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-800 mb-6">Frequently Asked Questions</h2>
-    <div class="space-y-6">${faqs.map(({ q, a }) => `
-      <div>
-        <h3 class="text-lg font-bold text-slate-800 mb-2">${q}</h3>
-        <p class="text-slate-600 leading-relaxed">${a}</p>
+/**
+ * Visible FAQ markup.
+ *
+ * There used to be two of these — `faqSectionTailwind` for /podcasts/ and
+ * `faqSectionPlain` for /level-test/, the latter borrowing the level-test
+ * page's own hand-written `.test-structure`/`.structure-step` rules so it
+ * matched the sections around it. That stylesheet is gone and both pages now
+ * speak the same token vocabulary, so the two helpers converted to identical
+ * markup and are one helper again.
+ *
+ * An FAQ is reference material, so the card is FLAT (rule 3) — no shadow.
+ */
+const faqSection = (faqs) => `
+  <section class="mt-12 ${CARD_FLAT} p-6 sm:p-8">
+    <h2 class="${H_SUB}">Frequently Asked Questions</h2>
+    <div class="mt-6 flex flex-col gap-5">${faqs.map(({ q, a }) => `
+      <div class="border-t border-rule pt-5 first:border-t-0 first:pt-0">
+        <h3 class="${H_CARD}">${q}</h3>
+        <p class="mt-2 ${BODY}">${a}</p>
       </div>`).join('')}
     </div>
-  </div>`;
-
-// Reuses the level-test page's own .test-structure / .structure-step classes
-// (src/styles/LevelTest.css) so the FAQ block matches the sections around it.
-const faqSectionPlain = (faqs) => `
-  <div class="test-structure">
-    <h2>Frequently Asked Questions</h2>
-    <div class="structure-steps">${faqs.map(({ q, a }) => `
-      <div class="structure-step"><div class="step-content"><h3>${q}</h3><p>${a}</p></div></div>`).join('')}
-    </div>
-  </div>`;
+  </section>`;
 
 const xrayExamples = [
   'Die Mutter gibt dem Kind einen Apfel.',
@@ -136,7 +193,7 @@ const xrayExamples = [
   'Er hat das Buch seinem Freund gegeben.',
   'Trotz des Regens ging sie spazieren.',
   'Ich kaufe meiner Schwester ein Geschenk.',
-].map((ex) => `<span class="text-sm px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-600">${ex}</span>`).join('\n          ');
+].map((ex) => `<span class="inline-flex items-center rounded-md border border-rule bg-white px-3 py-1.5 text-[0.875rem] text-graphite">${ex}</span>`).join('\n          ');
 
 const ROUTES = [
   {
@@ -157,25 +214,25 @@ const ROUTES = [
     // anonymous visitor actually gets. The old mirror showed the logged-in
     // setup screen, which no anonymous user could ever reach.
     content: `
-<div class="min-h-screen bg-paper px-4 pt-24 pb-16"><div class="max-w-2xl mx-auto text-center">
-  <h1 class="text-3xl sm:text-4xl font-bold text-ink mb-3">German Speaking Practice</h1>
-  <p class="text-lg text-graphite mb-8 max-w-xl mx-auto">Speak German out loud with an AI conversation partner that listens, answers at your level, and tells you afterwards what was right, what to fix, and what a native speaker would have said instead.</p>
-  <div class="grid sm:grid-cols-3 gap-4 text-left mb-8">
-    <div class="bg-white rounded-xl border border-rule p-5">
-      <h2 class="font-semibold text-ink text-sm mb-1.5">Every level, A1 to B2</h2>
-      <p class="text-sm text-graphite leading-relaxed">The partner adapts its vocabulary and pace to your CEFR level — from first sentences at A1.1 to open discussion at B2.2.</p>
+<div class="min-h-screen bg-paper px-4 pt-24 pb-16"><div class="mx-auto max-w-2xl text-center">
+  <h1 class="${H_PAGE}">German Speaking Practice</h1>
+  <p class="mx-auto mt-4 max-w-xl ${LEAD}">Speak German out loud with an AI conversation partner that listens, answers at your level, and tells you afterwards what was right, what to fix, and what a native speaker would have said instead.</p>
+  <div class="mt-10 grid gap-4 text-left sm:grid-cols-3">
+    <div class="${CARD_FLAT} p-5">
+      <h2 class="${H_CARD}">Every level, A1 to B2</h2>
+      <p class="mt-2 ${SMALL}">The partner adapts its vocabulary and pace to your CEFR level — from first sentences at A1.1 to open discussion at B2.2.</p>
     </div>
-    <div class="bg-white rounded-xl border border-rule p-5">
-      <h2 class="font-semibold text-ink text-sm mb-1.5">Missions or free talk</h2>
-      <p class="text-sm text-graphite leading-relaxed">Guided scenarios — ordering, appointments, small talk — or open conversation. Sessions run 5, 10 or 15 minutes.</p>
+    <div class="${CARD_FLAT} p-5">
+      <h2 class="${H_CARD}">Missions or free talk</h2>
+      <p class="mt-2 ${SMALL}">Guided scenarios — ordering, appointments, small talk — or open conversation. Sessions run 5, 10 or 15 minutes.</p>
     </div>
-    <div class="bg-white rounded-xl border border-rule p-5">
-      <h2 class="font-semibold text-ink text-sm mb-1.5">Feedback you can use</h2>
-      <p class="text-sm text-graphite leading-relaxed">After each session: grammar, vocabulary and pronunciation, with concrete corrections — like a patient tutor with unlimited time.</p>
+    <div class="${CARD_FLAT} p-5">
+      <h2 class="${H_CARD}">Feedback you can use</h2>
+      <p class="mt-2 ${SMALL}">After each session: grammar, vocabulary and pronunciation, with concrete corrections — like a patient tutor with unlimited time.</p>
     </div>
   </div>
-  <p><a href="/signup" class="inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 text-base font-semibold bg-siegel text-white">Sign up free</a></p>
-  <p class="text-sm text-graphite mt-4">A free account includes ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions — no card needed. Levels: ${LEVELS.join(', ')}.</p>
+  <p class="mt-10"><a href="/signup" class="${BTN_PRIMARY}">Sign up free</a></p>
+  <p class="mt-4 ${DATA_NOTE}">A free account includes ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions — no card needed. Levels: ${LEVELS.join(', ')}.</p>
 </div></div>`,
   },
   {
@@ -204,41 +261,46 @@ const ROUTES = [
         ],
       },
     ],
+    // The static twin of src/components/LevelTest/LevelTestLanding.jsx — same
+    // rhythm and the same depth reading (the three steps are what you are about
+    // to DO, so they rest on accent edges; "what you'll receive" is reference
+    // material and stays flat; the pro tip is a caution and says so in words as
+    // well as colour), minus everything that needs JS to become visible.
     content: `
-<div class="level-test-page"><div class="level-test-container"><div class="level-test-landing enhanced">
-  <div class="landing-hero">
-    <div class="hero-badge">Free Assessment</div>
-    <h1>Discover Your German Level</h1>
-    <p class="hero-subtitle">Take our comprehensive placement test and get personalized recommendations for your learning journey</p>
+<div class="min-h-screen bg-paper"><div class="mx-auto max-w-2xl px-4 pt-24 pb-16">
+  <div class="text-center">
+    <div class="${CHIP_LABEL}">Free Assessment</div>
+    <h1 class="mt-3 ${H_PAGE}">Discover Your German Level</h1>
+    <p class="mx-auto mt-4 max-w-prose ${LEAD}">Take our comprehensive placement test and get personalized recommendations for your learning journey</p>
   </div>
-  <div class="landing-stats enhanced">
-    <div class="stat-item"><div class="stat-content"><span class="stat-value">15-20</span> <span class="stat-label">Minutes</span></div></div>
-    <div class="stat-item"><div class="stat-content"><span class="stat-value">3</span> <span class="stat-label">Sections</span></div></div>
-    <div class="stat-item"><div class="stat-content"><span class="stat-value">A1-B2</span> <span class="stat-label">Levels</span></div></div>
+  <div class="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+    <div class="${CARD_SUNK} px-4 py-3 text-center"><div><span class="block font-display text-[1.125rem] font-semibold leading-tight text-ink">15-20</span> <span class="block ${EYEBROW} text-graphite">Minutes</span></div></div>
+    <div class="${CARD_SUNK} px-4 py-3 text-center"><div><span class="block font-display text-[1.125rem] font-semibold leading-tight text-ink">3</span> <span class="block ${EYEBROW} text-graphite">Sections</span></div></div>
+    <div class="${CARD_SUNK} px-4 py-3 text-center"><div><span class="block font-display text-[1.125rem] font-semibold leading-tight text-ink">A1-B2</span> <span class="block ${EYEBROW} text-graphite">Levels</span></div></div>
   </div>
-  <div class="test-structure">
-    <h2>How it works</h2>
-    <div class="structure-steps">
-      <div class="structure-step"><div class="step-number">1</div><div class="step-content"><h3>Written Test</h3><p>40 multiple choice questions on grammar, vocabulary &amp; reading</p></div><div class="step-time">~12 min</div></div>
-      <div class="structure-step"><div class="step-number">2</div><div class="step-content"><h3>Listening</h3><p>Audio exercises with comprehension questions at your level</p></div><div class="step-time">~5 min</div></div>
-      <div class="structure-step"><div class="step-number">3</div><div class="step-content"><h3>Speaking</h3><p>Short AI conversation to assess your speaking skills</p></div><div class="step-time">~3 min</div></div>
+  <div class="mt-12">
+    <h2 class="text-center ${H_SECTION}">How it works</h2>
+    <div class="mt-5 flex flex-col gap-3">
+      <div class="rounded-clay border border-rule bg-white p-4 shadow-raise-limette flex flex-wrap items-center gap-3 sm:flex-nowrap sm:gap-4"><div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-pill bg-accent-limette-wash font-data text-[0.8125rem] font-bold text-accent-limette-ink">1</div><div class="min-w-0 flex-1"><h3 class="${H_CARD}">Written Test</h3><p class="mt-1 ${SMALL}">40 multiple choice questions on grammar, vocabulary &amp; reading</p></div><div class="ml-auto flex-shrink-0 ${CHIP_QUIET}">~12 min</div></div>
+      <div class="rounded-clay border border-rule bg-white p-4 shadow-raise-aprikose flex flex-wrap items-center gap-3 sm:flex-nowrap sm:gap-4"><div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-pill bg-accent-aprikose-wash font-data text-[0.8125rem] font-bold text-accent-aprikose-ink">2</div><div class="min-w-0 flex-1"><h3 class="${H_CARD}">Listening</h3><p class="mt-1 ${SMALL}">Audio exercises with comprehension questions at your level</p></div><div class="ml-auto flex-shrink-0 ${CHIP_QUIET}">~5 min</div></div>
+      <div class="rounded-clay border border-rule bg-white p-4 shadow-raise-himbeer flex flex-wrap items-center gap-3 sm:flex-nowrap sm:gap-4"><div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-pill bg-accent-himbeer-wash font-data text-[0.8125rem] font-bold text-accent-himbeer-ink">3</div><div class="min-w-0 flex-1"><h3 class="${H_CARD}">Speaking</h3><p class="mt-1 ${SMALL}">Short AI conversation to assess your speaking skills</p></div><div class="ml-auto flex-shrink-0 ${CHIP_QUIET}">~3 min</div></div>
     </div>
   </div>
-  <div class="what-you-get">
-    <h2>What you'll receive</h2>
-    <div class="benefits-grid">
-      <div class="benefit-item"><div class="benefit-text"><strong>Your CEFR Level</strong> <span>Precise placement from A1.1 to B2.2</span></div></div>
-      <div class="benefit-item"><div class="benefit-text"><strong>Skill Breakdown</strong> <span>See strengths &amp; weaknesses</span></div></div>
-      <div class="benefit-item"><div class="benefit-text"><strong>Personalized Path</strong> <span>Topics to focus on first</span></div></div>
+  <div class="mt-12">
+    <h2 class="text-center ${H_SECTION}">What you'll receive</h2>
+    <div class="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <div class="${CARD_FLAT} p-4 text-left sm:text-center"><div><strong class="block text-[0.9375rem] font-bold leading-tight text-ink">Your CEFR Level</strong> <span class="mt-1 block text-[0.8125rem] leading-snug text-graphite">Precise placement from A1.1 to B2.2</span></div></div>
+      <div class="${CARD_FLAT} p-4 text-left sm:text-center"><div><strong class="block text-[0.9375rem] font-bold leading-tight text-ink">Skill Breakdown</strong> <span class="mt-1 block text-[0.8125rem] leading-snug text-graphite">See strengths &amp; weaknesses</span></div></div>
+      <div class="${CARD_FLAT} p-4 text-left sm:text-center"><div><strong class="block text-[0.9375rem] font-bold leading-tight text-ink">Personalized Path</strong> <span class="mt-1 block text-[0.8125rem] leading-snug text-graphite">Topics to focus on first</span></div></div>
     </div>
   </div>
-  <div class="landing-tip enhanced"><div><strong>Pro tip:</strong> Answer honestly and skip questions you're unsure about. This helps us place you accurately — guessing can lead to content that's too difficult.</div></div>
-  <div class="cta-section">
-    <p class="start-test-btn enhanced">Start the Test</p>
-    <p class="cta-note">No account required • Results are instant • 100% free</p>
+  <div class="mt-8 rounded-clay border border-rule border-l-4 border-l-accent-aprikose bg-accent-aprikose-wash p-4"><div class="text-[0.9375rem] leading-relaxed text-accent-aprikose-ink"><strong>Pro tip:</strong> Answer honestly and skip questions you're unsure about. This helps us place you accurately — guessing can lead to content that's too difficult.</div></div>
+  <div class="mt-8 text-center">
+    <p class="${BTN_PRIMARY}">Start the Test</p>
+    <p class="mt-4 font-data text-[0.75rem] text-graphite">No account required • Results are instant • 100% free</p>
   </div>
-${faqSectionPlain(LEVEL_TEST_FAQS)}
-</div></div></div>`,
+${faqSection(LEVEL_TEST_FAQS)}
+</div></div>`,
   },
   {
     path: '/analyze',
@@ -268,33 +330,34 @@ ${faqSectionPlain(LEVEL_TEST_FAQS)}
       },
     ],
     content: `
-<div class="min-h-screen bg-slate-50 pt-20 pb-16"><div class="max-w-3xl mx-auto px-4 sm:px-6">
-  <div class="text-center mb-10">
-    <h1 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-2">Sentence X-Ray</h1>
-    <p class="text-slate-600 text-lg max-w-lg mx-auto">Paste any German sentence and see exactly how it works — cases, roles, and why.</p>
+<div class="min-h-screen bg-paper pt-24 pb-16"><div class="mx-auto max-w-3xl px-4 sm:px-6">
+  <div class="mb-10 text-center">
+    <h1 class="${H_PAGE}">Sentence X-Ray</h1>
+    <p class="mx-auto mt-4 max-w-lg ${LEAD}">Paste any German sentence and see exactly how it works — cases, roles, and why.</p>
   </div>
-  <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 mb-4">
-    <p class="text-slate-400 text-base leading-relaxed">Type or paste a German sentence… e.g. Die Mutter gibt dem Kind einen Apfel.</p>
+  <div class="mb-4 ${CARD_FLAT} p-4">
+    <p class="text-[1rem] leading-relaxed text-graphite">Type or paste a German sentence… e.g. Die Mutter gibt dem Kind einen Apfel.</p>
   </div>
-  <div class="mb-6 space-y-4">
-    <div class="bg-white rounded-2xl border border-slate-200 px-4 py-4">
-      <p class="text-sm text-slate-500"><span class="font-semibold text-slate-600">1.</span> Paste any German sentence <span class="font-semibold text-slate-600">2.</span> AI analyzes grammar instantly <span class="font-semibold text-slate-600">3.</span> See cases, roles, and why</p>
+  <div class="mb-6 flex flex-col gap-4">
+    <div class="${CARD_FLAT} px-4 py-4">
+      <p class="${SMALL}"><span class="font-bold text-ink">1.</span> Paste any German sentence <span class="font-bold text-ink">2.</span> AI analyzes grammar instantly <span class="font-bold text-ink">3.</span> See cases, roles, and why</p>
     </div>
-    <div class="rounded-2xl border border-dashed border-slate-300 bg-white/60 p-4">
-      <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Example result</p>
-      <p class="text-sm font-medium text-slate-500 italic mb-3">"Ich gebe dir das Buch." — <span class="not-italic">I give you the book.</span></p>
+    <div class="rounded-clay border border-dashed border-rule bg-paper-sunk p-4">
+      <p class="mb-3 ${EYEBROW} text-siegel">Example result</p>
+      <p class="mb-3 text-[0.875rem] font-medium italic text-graphite">"Ich gebe dir das Buch." — <span class="not-italic">I give you the book.</span></p>
       <!-- The word-by-word breakdown IS the product; mirrored from PreviewExample
-           in src/pages/SentenceXRay.jsx, case colours from the kasus tokens. -->
-      <ul class="flex flex-wrap gap-2 list-none">
-        <li class="flex flex-col items-center gap-1"><span class="px-3 py-1.5 rounded-lg text-sm font-semibold border bg-[#E6F1FB] border-[#378ADD] text-[#0C447C]">Ich</span><span class="text-xs text-slate-400 italic">I — subject, Nominative</span></li>
-        <li class="flex flex-col items-center gap-1"><span class="px-3 py-1.5 rounded-lg text-sm font-semibold border bg-slate-100 border-slate-300 text-slate-700">gebe</span><span class="text-xs text-slate-400 italic">give — verb</span></li>
-        <li class="flex flex-col items-center gap-1"><span class="px-3 py-1.5 rounded-lg text-sm font-semibold border bg-[#E1F5EE] border-[#1D9E75] text-[#085041]">dir</span><span class="text-xs text-slate-400 italic">to you — indirect object, Dative</span></li>
-        <li class="flex flex-col items-center gap-1"><span class="px-3 py-1.5 rounded-lg text-sm font-semibold border bg-[#FAECE7] border-[#D85A30] text-[#712B13]">das Buch</span><span class="text-xs text-slate-400 italic">the book — direct object, Accusative</span></li>
+           in src/pages/SentenceXRay.jsx, case colours from the kasus tokens.
+           Rule 1 holds here because every chip below names its own case. -->
+      <ul class="flex list-none flex-wrap gap-2">
+        <li class="flex flex-col items-center gap-1"><span class="rounded-md border px-3 py-1.5 text-[0.875rem] font-semibold ${KASUS_CHIP.nominativ}">Ich</span><span class="text-[0.75rem] italic text-graphite">I — subject, Nominative</span></li>
+        <li class="flex flex-col items-center gap-1"><span class="rounded-md border px-3 py-1.5 text-[0.875rem] font-semibold ${KASUS_CHIP.plain}">gebe</span><span class="text-[0.75rem] italic text-graphite">give — verb</span></li>
+        <li class="flex flex-col items-center gap-1"><span class="rounded-md border px-3 py-1.5 text-[0.875rem] font-semibold ${KASUS_CHIP.dativ}">dir</span><span class="text-[0.75rem] italic text-graphite">to you — indirect object, Dative</span></li>
+        <li class="flex flex-col items-center gap-1"><span class="rounded-md border px-3 py-1.5 text-[0.875rem] font-semibold ${KASUS_CHIP.akkusativ}">das Buch</span><span class="text-[0.75rem] italic text-graphite">the book — direct object, Accusative</span></li>
       </ul>
-      <p class="text-sm text-slate-600 mt-3 leading-relaxed"><span class="font-semibold">Why "dir" and not "dich"?</span> "geben" takes the thing given in the Accusative (das Buch) and the receiver in the Dative (dir). The X-Ray labels every word with its case, its role in the sentence, and the reason — for any sentence you paste.</p>
+      <p class="mt-3 ${BODY}"><span class="font-bold text-ink">Why "dir" and not "dich"?</span> "geben" takes the thing given in the Accusative (das Buch) and the receiver in the Dative (dir). The X-Ray labels every word with its case, its role in the sentence, and the reason — for any sentence you paste.</p>
     </div>
     <div>
-      <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-1">Or try an example</p>
+      <p class="mb-2 px-1 ${EYEBROW} text-siegel">Or try an example</p>
       <div class="flex flex-wrap gap-2">
           ${xrayExamples}
       </div>
@@ -333,31 +396,31 @@ ${faqSectionPlain(LEVEL_TEST_FAQS)}
       },
     ],
     content: `
-<div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-20 pb-16"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-  <div class="text-center mb-12">
-    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-50 border border-orange-200 text-orange-700 text-sm font-medium mb-4">24 Episodes Available</div>
-    <h1 class="font-display text-4xl sm:text-5xl font-bold text-slate-800 mb-4">German Podcasts for Learners</h1>
-    <p class="text-lg text-slate-600 max-w-2xl mx-auto mb-2">Native speaker audio, graded by CEFR level • A1 to B2</p>
-    <p class="text-slate-500 max-w-xl mx-auto">Listen to authentic German conversations designed for language learners. Every episode is graded by CEFR level, from A1 to B2.</p>
+<div class="min-h-screen bg-paper pt-24 pb-16"><div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+  <div class="mb-12 text-center">
+    <div class="${CHIP} bg-accent-aprikose-wash text-accent-aprikose-ink">24 Episodes Available</div>
+    <h1 class="mt-4 ${H_PAGE}">German Podcasts for Learners</h1>
+    <p class="mx-auto mt-4 max-w-2xl ${LEAD}">Native speaker audio, graded by CEFR level • A1 to B2</p>
+    <p class="mx-auto mt-2 max-w-xl ${BODY}">Listen to authentic German conversations designed for language learners. Every episode is graded by CEFR level, from A1 to B2.</p>
   </div>
-  <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 sm:p-10 mb-12">
-    <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-800 mb-6">Learn German with Podcasts</h2>
-    <p class="text-slate-600 leading-relaxed mb-4">Our German podcasts are designed specifically for language learners. Each episode features native speakers in natural conversations, graded by CEFR level so you can find one that matches where you are.</p>
-    <h3 class="text-xl font-bold text-slate-800 mt-6 mb-3">Why learn with podcasts?</h3>
-    <ul class="space-y-2 text-slate-600">
-      <li>Improve listening comprehension with native speaker audio</li>
-      <li>Learn natural speech patterns and pronunciation</li>
-      <li>Study anywhere — while commuting, exercising, or relaxing</li>
-      <li>Vocabulary highlights teach you new words in context</li>
+  <div class="${CARD_FLAT} p-6 sm:p-8">
+    <h2 class="${H_SUB}">Learn German with Podcasts</h2>
+    <p class="mt-6 ${BODY}">Our German podcasts are designed specifically for language learners. Each episode features native speakers in natural conversations, graded by CEFR level so you can find one that matches where you are.</p>
+    <h3 class="mt-8 ${H_CARD}">Why learn with podcasts?</h3>
+    <ul class="mt-3 flex list-none flex-col gap-2 ${BODY}">
+      <li class="border-l-2 border-siegel pl-3">Improve listening comprehension with native speaker audio</li>
+      <li class="border-l-2 border-siegel pl-3">Learn natural speech patterns and pronunciation</li>
+      <li class="border-l-2 border-siegel pl-3">Study anywhere — while commuting, exercising, or relaxing</li>
+      <li class="border-l-2 border-siegel pl-3">Vocabulary highlights teach you new words in context</li>
     </ul>
-    <h3 class="text-xl font-bold text-slate-800 mt-6 mb-3">Podcasts for every level</h3>
-    <p class="text-slate-600 leading-relaxed">Whether you're just starting with German (A1) or working toward fluency (B2), we have 24 episodes across all 8 CEFR levels. Each podcast is labeled with its level so you always know it's right for you.</p>
-    <div class="mt-8 flex flex-col sm:flex-row gap-4">
-      <a href="/level/a1.1?tab=podcasts" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-orange-500 to-pink-500 text-white font-semibold rounded-2xl">Start Listening</a>
-      <a href="/signup" class="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-slate-200 text-slate-700 font-semibold rounded-2xl">Sign Up Free</a>
+    <h3 class="mt-8 ${H_CARD}">Podcasts for every level</h3>
+    <p class="mt-3 ${BODY}">Whether you're just starting with German (A1) or working toward fluency (B2), we have 24 episodes across all 8 CEFR levels. Each podcast is labeled with its level so you always know it's right for you.</p>
+    <div class="mt-8 flex flex-col gap-4 sm:flex-row">
+      <a href="/level/a1.1?tab=podcasts" class="${BTN_PRIMARY}">Start Listening</a>
+      <a href="/signup" class="${BTN_SECONDARY}">Sign Up Free</a>
     </div>
   </div>
-${faqSectionTailwind(PODCAST_FAQS)}
+${faqSection(PODCAST_FAQS)}
 </div></div>`,
   },
   {
@@ -375,10 +438,10 @@ ${faqSectionTailwind(PODCAST_FAQS)}
       },
     ],
     content: `
-<div class="min-h-screen pt-24 pb-12 px-4 sm:px-6 lg:px-8"><div class="max-w-4xl mx-auto">
-  <div class="text-center mb-10">
-    <h1 class="text-3xl font-display font-bold text-slate-800 mb-2">Listening Comprehension</h1>
-    <p class="text-slate-500 max-w-lg mx-auto">Improve your listening skills with authentic dialogues and exercises.</p>
+<div class="min-h-screen bg-paper px-4 pt-24 pb-12 sm:px-6 lg:px-8"><div class="mx-auto max-w-4xl">
+  <div class="mb-10 text-center">
+    <h1 class="${H_PAGE}">Listening Comprehension</h1>
+    <p class="mx-auto mt-4 max-w-lg ${LEAD}">Improve your listening skills with authentic dialogues and exercises.</p>
   </div>
   <div class="grid gap-4 sm:grid-cols-2">${listeningCards}
   </div>
@@ -399,16 +462,16 @@ ${faqSectionTailwind(PODCAST_FAQS)}
       },
     ],
     content: `
-<div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 pt-20 pb-12"><div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen bg-paper pt-24 pb-12"><div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
   <div class="mb-8">
-    <h1 class="font-display text-3xl sm:text-4xl font-bold text-slate-800">Reading</h1>
-    <p class="text-slate-600">Improve your reading comprehension step by step</p>
+    <h1 class="${H_PAGE}">Reading</h1>
+    <p class="mt-4 ${LEAD}">Improve your reading comprehension step by step</p>
   </div>
-  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-    <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100"><p class="text-2xl font-bold text-slate-800">${READING_LESSON_COUNT}</p><p class="text-sm text-slate-500">Total Lessons</p></div>
-    <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100"><p class="text-2xl font-bold text-slate-800">${LEVEL_COUNT}</p><p class="text-sm text-slate-500">Levels</p></div>
+  <div class="mb-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
+    <div class="${CARD_SUNK} p-4"><p class="font-data text-[1.5rem] font-bold leading-none text-ink">${READING_LESSON_COUNT}</p><p class="mt-2 ${EYEBROW} text-graphite">Total Lessons</p></div>
+    <div class="${CARD_SUNK} p-4"><p class="font-data text-[1.5rem] font-bold leading-none text-ink">${LEVEL_COUNT}</p><p class="mt-2 ${EYEBROW} text-graphite">Levels</p></div>
   </div>
-  <h2 class="font-semibold text-slate-800 mb-3">Overall Reading Progress</h2>
+  <h2 class="mb-5 ${H_SUB}">Overall Reading Progress</h2>
   <div class="grid gap-4 sm:grid-cols-2">${readingCards}
   </div>
 </div></div>`,
@@ -434,25 +497,25 @@ ${faqSectionTailwind(PODCAST_FAQS)}
       },
     ],
     content: `
-<div class="min-h-screen bg-paper"><div class="max-w-3xl mx-auto px-4 sm:px-6 pt-24 pb-20">
-  <div class="text-center mb-16">
-    <h1 class="font-display text-4xl sm:text-5xl font-bold text-ink mb-4">Häufige Fragen</h1>
-    <p class="text-lg text-graphite max-w-xl mx-auto">Alles, was du über Deutschmeister wissen musst — kurz und ehrlich.</p>
+<div class="min-h-screen bg-paper"><div class="mx-auto max-w-3xl px-4 pt-24 pb-20 sm:px-6">
+  <div class="mb-16 text-center">
+    <h1 class="${H_HERO}">Häufige Fragen</h1>
+    <p class="mx-auto mt-4 max-w-xl ${LEAD}">Alles, was du über Deutschmeister wissen musst — kurz und ehrlich.</p>
   </div>
-  <div class="space-y-12">${FAQ_CATEGORIES.map((cat) => `
+  <div class="flex flex-col gap-12">${FAQ_CATEGORIES.map((cat) => `
     <section>
-      <h2 class="font-display text-xl font-bold text-ink mb-5">${cat.title}</h2>
-      <div class="space-y-3">${cat.items.map((item) => `
-        <div class="border border-rule rounded-xl px-5 py-4">
-          <h3 class="font-medium text-ink mb-2">${item.q}</h3>
-          <p class="text-graphite text-sm leading-relaxed">${item.a}</p>
+      <h2 class="${H_SUB}">${cat.title}</h2>
+      <div class="mt-5 flex flex-col gap-3">${cat.items.map((item) => `
+        <div class="${CARD_FLAT} px-5 py-4">
+          <h3 class="${H_CARD}">${item.q}</h3>
+          <p class="mt-2 ${SMALL}">${item.a}</p>
         </div>`).join('')}
       </div>
     </section>`).join('')}
   </div>
   <div class="mt-16 text-center">
-    <p class="text-graphite mb-4">Noch Fragen? Einfach loslegen — A1.1 ist komplett kostenlos.</p>
-    <a href="/signup" class="inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 text-base font-semibold bg-siegel text-white">Kostenlos starten</a>
+    <p class="mb-6 ${BODY}">Noch Fragen? Einfach loslegen — A1.1 ist komplett kostenlos.</p>
+    <a href="/signup" class="${BTN_PRIMARY}">Kostenlos starten</a>
   </div>
 </div></div>`,
   },
@@ -479,50 +542,50 @@ ${faqSectionTailwind(PODCAST_FAQS)}
     ],
     content: `
 <div class="min-h-screen bg-paper">
-  <section class="pt-28 pb-20"><div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-    <h1 class="font-display text-4xl sm:text-5xl font-bold text-ink mb-6 leading-tight">Deutsch lernen sollte nicht dein Albtraum sein.</h1>
-    <p class="text-lg sm:text-xl text-graphite max-w-2xl mx-auto mb-10 leading-relaxed">Die meisten Apps machen Sprachenlernen zum Spiel — und umgehen dabei das Schwere: echtes Sprechen, echte Grammatik, echte Prüfungsvorbereitung. Deutschmeister macht das Gegenteil.</p>
-    <ul class="flex flex-wrap justify-center gap-3 list-none">
-      <li class="inline-flex items-center px-4 py-2 rounded-full bg-white border border-rule text-sm text-ink font-medium">Von Ärzten in Deutschland entwickelt</li>
-      <li class="inline-flex items-center px-4 py-2 rounded-full bg-white border border-rule text-sm text-ink font-medium">Für ernsthafte Lerner</li>
-      <li class="inline-flex items-center px-4 py-2 rounded-full bg-white border border-rule text-sm text-ink font-medium">DSGVO-konform – Server in der EU</li>
+  <section class="pt-28 pb-20"><div class="mx-auto max-w-3xl px-4 text-center sm:px-6">
+    <h1 class="${H_HERO}">Deutsch lernen sollte nicht dein Albtraum sein.</h1>
+    <p class="mx-auto mt-6 mb-10 max-w-2xl ${LEAD}">Die meisten Apps machen Sprachenlernen zum Spiel — und umgehen dabei das Schwere: echtes Sprechen, echte Grammatik, echte Prüfungsvorbereitung. Deutschmeister macht das Gegenteil.</p>
+    <ul class="flex list-none flex-wrap justify-center gap-3">
+      <li class="inline-flex items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-ink shadow-raise">Von Ärzten in Deutschland entwickelt</li>
+      <li class="inline-flex items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-ink shadow-raise">Für ernsthafte Lerner</li>
+      <li class="inline-flex items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-ink shadow-raise">DSGVO-konform – Server in der EU</li>
     </ul>
   </div></section>
-  <section class="py-20 bg-white border-y border-rule"><div class="max-w-2xl mx-auto px-4 sm:px-6">
-    <h2 class="font-display text-2xl sm:text-3xl font-bold text-ink mb-6">Wer steckt dahinter</h2>
-    <div class="text-graphite leading-relaxed space-y-4">
+  <section class="border-y border-rule bg-white py-20"><div class="mx-auto max-w-2xl px-4 sm:px-6">
+    <h2 class="${H_SECTION}">Wer steckt dahinter</h2>
+    <div class="mt-6 flex flex-col gap-4 ${BODY}">
       <p>Ich bin Zaid. Arzt, Blue Card, Deutschland. Ich bin von außen gekommen und habe mich durch die Sprachbarriere gekämpft — jeden Tag, jede Prüfung, jedes Gespräch, bei dem mir die Worte fehlten.</p>
       <p>Ich habe Kollegen scheitern sehen. Nicht, weil sie dumm waren. Sondern weil ihr Deutsch nicht gut genug war. Brillante Ärzte, die an der Fachsprachprüfung hängengeblieben sind. Das hat mich nicht losgelassen.</p>
       <p>Zuerst habe ich MedMeister gebaut — eine Plattform speziell für Ärzte, die sich auf die Kenntnisprüfung vorbereiten. Dann habe ich gemerkt: Das gleiche Problem trifft jeden, der Deutsch unter Druck lernt. Nicht nur Mediziner. Pflegekräfte, Ingenieure, Studenten, Familien.</p>
       <p>Heute steht hinter Deutschmeister ein Team von Ärzten in Deutschland — Leute, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind und die Plattform weiterentwickeln.</p>
-      <p class="font-medium text-ink">Deutschmeister ist diese Idee — für alle geöffnet.</p>
+      <p class="font-bold text-ink">Deutschmeister ist diese Idee — für alle geöffnet.</p>
     </div>
   </div></section>
-  <section class="py-20"><div class="max-w-4xl mx-auto px-4 sm:px-6">
-    <h2 class="font-display text-2xl sm:text-3xl font-bold text-ink text-center mb-12">Warum Deutschmeister anders ist</h2>
-    <div class="grid sm:grid-cols-3 gap-6">
-      <div class="bg-white rounded-2xl border border-rule p-6"><h3 class="font-bold text-ink mb-2">Echtes Sprechen, nicht nur Klicken</h3><p class="text-sm text-graphite leading-relaxed">KI bewertet deine Aussprache, Grammatik und Wortschatz wie ein echter Prüfer. Keine Multiple-Choice-Show.</p></div>
-      <div class="bg-white rounded-2xl border border-rule p-6"><h3 class="font-bold text-ink mb-2">Grammatik, die haftet</h3><p class="text-sm text-graphite leading-relaxed">Sentence X-Ray seziert echte Sätze. Du verstehst das Wieso, nicht nur das Was.</p></div>
-      <div class="bg-white rounded-2xl border border-rule p-6"><h3 class="font-bold text-ink mb-2">Gebaut von Leuten, die’s selbst durchgemacht haben</h3><p class="text-sm text-graphite leading-relaxed">Kein Konzern. Ein Team von Ärzten in Deutschland, das weiß, wie es ist, wenn die Sprache zwischen dir und deinem Leben steht.</p></div>
+  <section class="py-20"><div class="mx-auto max-w-4xl px-4 sm:px-6">
+    <h2 class="text-center ${H_SECTION}">Warum Deutschmeister anders ist</h2>
+    <div class="mt-12 grid gap-6 sm:grid-cols-3">
+      <div class="${CARD_FLAT} p-6"><h3 class="${H_CARD}">Echtes Sprechen, nicht nur Klicken</h3><p class="mt-2 ${SMALL}">KI bewertet deine Aussprache, Grammatik und Wortschatz wie ein echter Prüfer. Keine Multiple-Choice-Show.</p></div>
+      <div class="${CARD_FLAT} p-6"><h3 class="${H_CARD}">Grammatik, die haftet</h3><p class="mt-2 ${SMALL}">Sentence X-Ray seziert echte Sätze. Du verstehst das Wieso, nicht nur das Was.</p></div>
+      <div class="${CARD_FLAT} p-6"><h3 class="${H_CARD}">Gebaut von Leuten, die’s selbst durchgemacht haben</h3><p class="mt-2 ${SMALL}">Kein Konzern. Ein Team von Ärzten in Deutschland, das weiß, wie es ist, wenn die Sprache zwischen dir und deinem Leben steht.</p></div>
     </div>
   </div></section>
-  <section class="py-20 bg-ink"><div class="max-w-2xl mx-auto px-4 sm:px-6 text-center">
-    <h2 class="font-display text-2xl sm:text-3xl font-bold text-white mb-6">Unsere Mission</h2>
-    <p class="text-lg text-rule leading-relaxed">Den Menschen, die wirklich Deutsch brauchen — Migranten, Ärzte, Pflegekräfte, Studenten — das Werkzeug geben, das sie verdienen. Nicht das günstigste. Das beste. Weil ihre Zukunft davon abhängt, ob sie verstanden werden.</p>
+  <section class="bg-ink py-20"><div class="mx-auto max-w-2xl px-4 text-center sm:px-6">
+    <h2 class="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-white sm:text-[2.125rem]">Unsere Mission</h2>
+    <p class="mt-6 text-[1.0625rem] leading-relaxed text-rule sm:text-[1.1875rem]">Den Menschen, die wirklich Deutsch brauchen — Migranten, Ärzte, Pflegekräfte, Studenten — das Werkzeug geben, das sie verdienen. Nicht das günstigste. Das beste. Weil ihre Zukunft davon abhängt, ob sie verstanden werden.</p>
   </div></section>
-  <section class="py-20"><div class="max-w-2xl mx-auto px-4 sm:px-6">
-    <h2 class="font-display text-2xl sm:text-3xl font-bold text-ink mb-8 text-center">Was kommt als Nächstes</h2>
-    <ul class="space-y-4 list-none">
-      <li class="p-4 bg-white rounded-xl border border-rule text-ink font-medium">Mehr Sprachstufen — C1 und darüber hinaus</li>
-      <li class="p-4 bg-white rounded-xl border border-rule text-ink font-medium">Live-Prüfungssimulationen für Goethe / telc / TestDaF</li>
-      <li class="p-4 bg-white rounded-xl border border-rule text-ink font-medium">Spezialisierte Module: Pflegedeutsch, Wirtschaftsdeutsch</li>
-      <li class="p-4 bg-white rounded-xl border border-rule text-ink font-medium">Community — lerne mit anderen, nicht allein</li>
+  <section class="py-20"><div class="mx-auto max-w-2xl px-4 sm:px-6">
+    <h2 class="text-center ${H_SECTION}">Was kommt als Nächstes</h2>
+    <ul class="mt-8 flex list-none flex-col gap-4">
+      <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">Mehr Sprachstufen — C1 und darüber hinaus</li>
+      <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">Live-Prüfungssimulationen für Goethe / telc / TestDaF</li>
+      <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">Spezialisierte Module: Pflegedeutsch, Wirtschaftsdeutsch</li>
+      <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">Community — lerne mit anderen, nicht allein</li>
     </ul>
   </div></section>
-  <section class="py-24 bg-ink"><div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-    <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mb-8">Bereit anzufangen?</h2>
-    <p><a href="/signup" class="inline-flex items-center justify-center px-8 py-4 bg-paper text-ink font-semibold rounded-md">Kostenlos testen</a>
-    <a href="/pricing/" class="inline-flex items-center justify-center px-8 py-4 border-2 border-white/40 text-white font-semibold rounded-2xl">Preise ansehen</a></p>
+  <section class="bg-ink py-24"><div class="mx-auto max-w-3xl px-4 text-center sm:px-6">
+    <h2 class="font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] text-white sm:text-[3rem]">Bereit anzufangen?</h2>
+    <p class="mt-8 flex flex-wrap justify-center gap-4"><a href="/signup" class="${BTN} bg-white text-ink shadow-raise">Kostenlos testen</a>
+    <a href="/pricing/" class="${BTN} border border-white/40 text-white">Preise ansehen</a></p>
   </div></section>
 </div>`,
   },
