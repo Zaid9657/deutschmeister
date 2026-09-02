@@ -108,6 +108,80 @@ test('the migration admits the new kinds and defines the view', () => {
 // 3. Copy bans
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// 4. Confirmation nudge (the third job — unconfirmed accounts only)
+// ---------------------------------------------------------------------------
+//
+// Its audience is the mirror image of the other two: trial and activation
+// mail ONLY confirmed users; the nudge mails ONLY unconfirmed ones. That
+// disjointness replaces window arithmetic, and it is what these pins defend.
+
+test('the nudge ships off, claims before sending, and mails only unconfirmed accounts', () => {
+  const src = read('netlify/functions/confirmation-nudge.mjs');
+
+  assert.ok(
+    src.includes(`process.env.CONFIRM_NUDGE_ENABLED !== 'true'`),
+    'master switch gate missing — the nudge would run by default',
+  );
+
+  // Audience disjointness: selection keeps only users WITHOUT a confirmation
+  // timestamp, while both other jobs filter the opposite way.
+  assert.ok(src.includes('!u.email_confirmed_at'), 'selection must keep only unconfirmed users');
+  for (const other of ['netlify/functions/trial-lifecycle.mjs', 'netlify/functions/activation-lifecycle.mjs']) {
+    assert.ok(
+      read(other).includes('u.email_confirmed_at)'),
+      `${other} no longer filters to confirmed users — the audiences would overlap`,
+    );
+  }
+
+  // Claim-before-send with the shared unique key, and the claim precedes the
+  // Resend call in source order.
+  assert.ok(src.includes(`onConflict: 'user_id,kind'`), 'claim must use the lifecycle_emails unique key');
+  assert.ok(src.indexOf('.upsert(') < src.indexOf('await sendBatch(resendKey'), 'claim must come BEFORE the send');
+
+  // Hygiene: disposable domains and opted-out profiles are excluded, the
+  // per-run cap exists, and the copy's "only reminder" promise is structural.
+  assert.ok(src.includes('isBlockedEmail'), 'disposable-domain hygiene missing');
+  assert.ok(src.includes(`eq('email_daily_sentence', false)`), 'opt-out exclusion missing');
+  assert.ok(/PER_RUN\s*=\s*\d+/.test(src), 'per-run send cap missing');
+});
+
+test('nudge copy keeps its promises and carries no figures', async () => {
+  const { bodyHtml, MIN_AGE_DAYS, MAX_AGE_DAYS, PER_RUN } = await import('../netlify/functions/confirmation-nudge.mjs');
+  const html = bodyHtml('https://deutsch-meister.de/.netlify/functions/confirm-continue?uid=x&exp=1&token=y');
+  // "It's the only reminder we'll send" is made true by the ledger; the copy
+  // must keep saying it as long as the ledger enforces it (and vice versa).
+  assert.ok(/only reminder/.test(html), 'the one-shot promise left the copy — re-check it against the ledger');
+  assert.ok(!/€\s?\d|\d+[.,]\d\d\s?€/.test(html), 'price figure in nudge copy');
+  assert.ok(!/\b(unbegrenzt\w*|unlimited)\b/i.test(html), 'unlimited claim in nudge copy');
+  assert.ok(MIN_AGE_DAYS >= 1, 'nudging within a day of signup races the normal confirmation email');
+  assert.ok(MAX_AGE_DAYS <= 90, 'mailing addresses older than 90 days is a deliverability risk');
+  assert.ok(PER_RUN <= 100, 'per-run cap too high for a cold-ish list');
+});
+
+test('confirm-continue verifies an expiring token and never links confirmed accounts', () => {
+  const src = read('netlify/functions/confirm-continue.mjs');
+  // exp is part of the signed string AND checked against the clock.
+  assert.ok(src.includes('`confirm:${userId}:${expEpochSeconds}`'), 'exp must be inside the HMAC input');
+  assert.ok(src.includes('expNum * 1000 < Date.now()'), 'token expiry check missing');
+  assert.ok(src.includes('timingSafeEqual'), 'token comparison must be constant-time');
+  // Already-confirmed users get the login page, not a fresh session link.
+  assert.ok(src.indexOf('email_confirmed_at) return redirect') !== -1, 'confirmed accounts must not be re-linked');
+});
+
+test('the nudge migration admits the confirm_nudge kind', () => {
+  const sql = read('migrations/2026-09-02-confirmation-nudge.sql');
+  assert.ok(sql.includes(`'confirm_nudge'`), 'migration does not admit confirm_nudge');
+  // And it must keep admitting every kind the other jobs still use.
+  for (const kind of ['trial_day3', 'trial_day6', 'trial_ended', 'activation_d1', 'activation_d4']) {
+    assert.ok(sql.includes(`'${kind}'`), `migration dropped kind ${kind} — existing jobs would fail to claim`);
+  }
+});
+
+// ---------------------------------------------------------------------------
+// 5. Copy bans (activation)
+// ---------------------------------------------------------------------------
+
 test('activation copy carries no figures, no unlimited claims, and slashed CTAs', () => {
   assert.ok(Object.keys(TEMPLATES).length >= 2, 'templates missing');
   for (const [kind, tpl] of Object.entries(TEMPLATES)) {
