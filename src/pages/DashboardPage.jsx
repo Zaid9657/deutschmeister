@@ -12,6 +12,7 @@ import { getTopicsForLevel } from '../data/grammarTopics';
 import { levels as ALL_LEVELS } from '../data/content';
 import { deriveCurrent, isTopicCompleted, topicPercent } from '../services/currentPosition';
 import { examTrackByKey } from '../data/examTracks';
+import { LEVEL_COURSES } from '../data/pricing.js';
 import { loadDashboardStats, DAILY_GOAL_TARGET } from '../services/dashboardStats';
 import SEO from '../components/SEO';
 import Button from '../components/ui/Button.jsx';
@@ -54,7 +55,7 @@ const Sk = ({ className = '' }) => (
 const DashboardPage = () => {
   const { user } = useAuth();
   const { progress, loading: progressLoading } = useProgress();
-  const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription, hasProduct, profile } = useSubscription();
+  const { isInFreeTrial, getTrialDaysRemaining, hasActiveSubscription, hasProduct, purchases, profile } = useSubscription();
 
   const inTrial = user ? isInFreeTrial() : false;
   const isSubscribed = user ? hasActiveSubscription() : false;
@@ -174,6 +175,12 @@ const DashboardPage = () => {
   // Course owners get their course back: /telc-b1-kurs previously had ONE
   // inbound link, buried on the /subscription account page.
   const ownsCourse = user ? hasProduct('telc_b1_komplett') : false;
+  // Level courses the user owns — each gets its own strip straight into the
+  // level, so a buyer never has to find their purchase through the paywalled
+  // ladder. The bundle collapses to one strip.
+  const ownedLevelCourses = user
+    ? purchases.map((p) => LEVEL_COURSES[p.product_key]).filter(Boolean)
+    : [];
 
   const statTiles = [
     { label: 'Day streak', value: stats?.streak ?? 0, Icon: Flame, edge: 'aprikose', iconClass: 'bg-accent-aprikose-wash text-accent-aprikose-ink' },
@@ -413,6 +420,25 @@ const DashboardPage = () => {
             </Card>
           </Reveal>
         )}
+
+        {ownedLevelCourses.map((c) => (
+          <Reveal key={c.key} className="mb-4">
+            <Card interactive as={Link} to={`/level/${c.levels[0]}`} className="flex items-center justify-between gap-3 px-5 py-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-clay bg-siegel text-white flex items-center justify-center">
+                  <BookOpen className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="font-bold text-[0.875rem] text-ink">{c.name}</p>
+                  <p className="text-[0.75rem] text-graphite">
+                    Yours for life · {c.key === 'course_alle' ? 'all 8 levels' : c.levels.map((l) => l.toUpperCase()).join(' + ')}
+                  </p>
+                </div>
+              </div>
+              <ArrowRight className="w-4 h-4 text-siegel" />
+            </Card>
+          </Reveal>
+        ))}
 
         {/* ── Trial strip (hidden when subscribed) ── */}
         {inTrial && !isSubscribed && (

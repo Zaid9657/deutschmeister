@@ -503,9 +503,16 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-5 py-3 text-ink sha
     // Never a new tab: iOS Safari blocks the popup and in-app browsers
     // swallow it, so the customer sees nothing happen. Prefer the
     // LemonSqueezy overlay, fall back to same-tab navigation.
-    function open(variant) {
+    // Signed-out click: remember WHAT they wanted before the signup detour.
+    // The SPA reads dm_buy_intent after email verification / login and lands
+    // on /subscription?buy=<key>, which opens this exact checkout once.
+    function open(variant, intentKey) {
       const u = currentUser();
-      if (!u) { window.location.href = 'https://deutsch-meister.de/signup'; return; }
+      if (!u) {
+        try { localStorage.setItem('dm_buy_intent', intentKey); } catch (e) { /* private mode */ }
+        window.location.href = 'https://deutsch-meister.de/signup';
+        return;
+      }
       const url = checkoutUrl(variant, u.email, u.id);
       if (window.LemonSqueezy && window.LemonSqueezy.Url && window.LemonSqueezy.Url.Open) {
         window.LemonSqueezy.Url.Open(url);
@@ -514,11 +521,36 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-5 py-3 text-ink sha
       }
     }
 
-    $('pro-btn').addEventListener('click', () => open(VARIANTS[cycle]));
+    // Overlay checkout for signed-in visitors, so a purchase ends on OUR
+    // success page instead of Lemon Squeezy's receipt with no way back. Loaded
+    // only when a session exists; if it has not loaded by click time the
+    // same-tab fallback above still works (the product's redirect URL covers it).
+    if (currentUser() && !document.querySelector('script[src*="lemon.js"]')) {
+      const s = document.createElement('script');
+      s.src = 'https://app.lemonsqueezy.com/js/lemon.js';
+      s.defer = true;
+      s.onload = () => {
+        try {
+          window.createLemonSqueezy && window.createLemonSqueezy();
+          window.LemonSqueezy && window.LemonSqueezy.Setup && window.LemonSqueezy.Setup({
+            eventHandler: (evt) => {
+              if (evt && evt.event === 'Checkout.Success') {
+                window.location.href = 'https://deutsch-meister.de/subscription/success';
+              }
+            },
+          });
+        } catch (e) { /* overlay optional */ }
+      };
+      document.head.appendChild(s);
+    }
+
+    $('pro-btn').addEventListener('click', () => open(VARIANTS[cycle], cycle));
 
     // Level-course buttons carry their own checkout id (build-time env).
     document.querySelectorAll('[data-course-variant]').forEach((btn) => {
-      btn.addEventListener('click', () => open(btn.getAttribute('data-course-variant')));
+      btn.addEventListener('click', () =>
+        open(btn.getAttribute('data-course-variant'), btn.getAttribute('data-course-key')),
+      );
     });
   });
 </script>

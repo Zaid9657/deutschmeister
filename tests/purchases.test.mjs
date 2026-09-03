@@ -86,6 +86,23 @@ test('every level course has a webhook route and the level surfaces read the ent
   }
 });
 
+test('a checkout interrupted by signup resumes, and a purchase lands on our success page', () => {
+  // /pricing/ stores the clicked product before the signup detour; every
+  // post-auth redirect consults it; /subscription opens it once.
+  const pricing = read('astro-site/src/pages/pricing.astro');
+  assert.ok(pricing.includes("localStorage.setItem('dm_buy_intent'"), 'pricing.astro must store the buy intent before redirecting to signup');
+  assert.ok(pricing.includes("'Checkout.Success'"), 'pricing.astro must route the overlay success to /subscription/success');
+  for (const file of ['src/pages/VerifyEmailPage.jsx', 'src/pages/LoginPage.jsx']) {
+    assert.ok(read(file).includes('postAuthPath()'), `${file} must send authenticated users to the pending checkout`);
+  }
+  const sub = read('src/pages/SubscriptionPage.jsx');
+  assert.ok(sub.includes("searchParams.get('buy')"), '/subscription must honour ?buy=<key>');
+  assert.ok(sub.includes('clearBuyIntent()'), 'the intent must be cleared once consumed, or it re-opens forever');
+  // The success page and dashboard must know a level course exists.
+  assert.ok(read('src/pages/SubscriptionSuccessPage.jsx').includes('LEVEL_COURSES'), 'success page is subscription-only');
+  assert.ok(read('src/pages/DashboardPage.jsx').includes('LEVEL_COURSES'), 'dashboard has no way into a bought level');
+});
+
 test('the daily sweep expires only active course windows', () => {
   const src = read('netlify/functions/trial-lifecycle.mjs');
   assert.ok(src.includes('expireCourseWindows'), 'course-window sweep missing from the daily run');

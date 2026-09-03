@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { postAuthPath } from '../lib/buyIntent';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, RefreshCw, LogOut, CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
@@ -30,7 +31,7 @@ const VerifyEmailPage = () => {
       return;
     }
     if (isEmailVerified) {
-      navigate('/dashboard', { replace: true });
+      navigate(postAuthPath(), { replace: true });
     }
   }, [user, isEmailVerified, navigate]);
 
@@ -42,7 +43,7 @@ const VerifyEmailPage = () => {
         trackEmailVerified();
         logAuditEvent(AUDIT_EVENTS.EMAIL_VERIFIED);
         clearInterval(interval);
-        navigate('/dashboard', { replace: true });
+        navigate(postAuthPath(), { replace: true });
       }
     }, 5000);
     return () => clearInterval(interval);
