@@ -1,17 +1,8 @@
-import { createClient } from '@supabase/supabase-js';
+import { supabase, supabaseKey } from './_shared/supabase.mjs';
 import { createHmac } from 'crypto';
 
-const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const UNSUB_SECRET = process.env.UNSUB_SECRET || process.env.CAMPAIGN_SECRET;
 const BASE_URL = 'https://deutsch-meister.de';
-
-let supabase;
-try {
-  supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
-} catch (e) {
-  console.error('Failed to initialize Supabase client:', e.message);
-}
 
 const FROM_ADDRESS = 'DeutschMeister <zaid@deutsch-meister.de>';
 const TEST_EMAIL   = 'zaid199660@gmail.com';

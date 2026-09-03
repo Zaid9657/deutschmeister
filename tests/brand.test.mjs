@@ -121,7 +121,7 @@ const RETIRED_CTA = 'from-amber-500 to-rose-500';
  * built CSS is what exposed that — the source of truth was the artifact, not
  * the grep.
  */
-const RETIRED_STOP = /\b(?:from|via|to)-(?:amber|rose)-\d{2,3}\b/;
+const RETIRED_STOP = /-(?:amber|rose)-\d{2,3}\b/;
 
 /** Everything rendered around every route, the primitives, and the signup funnel. */
 const APP_CHROME = [
@@ -145,6 +145,13 @@ const APP_CHROME = [
   'src/components/LockedContentOverlay.jsx',
   'src/components/SubscriptionGuard.jsx',
   'src/components/LevelSubscriptionGuard.jsx',
+  // The other three gates. CLAUDE.md has always said this ban covers "the
+  // guards", but the list only ever held the two above — which is how
+  // ProtectedRoute kept a retired-brand spinner, rendered on four routes,
+  // while both ratchets reported clean.
+  'src/components/ProtectedRoute.jsx',
+  'src/components/EmailVerificationGate.jsx',
+  'src/components/onboarding/OnboardingGate.jsx',
   'src/components/ErrorBoundary.jsx',
   'src/components/DataState.jsx',
   'src/components/EmptyState.jsx',
@@ -208,13 +215,35 @@ test('the chrome uses the shared button, not a copy of its classes', () => {
 const MAX_LEGACY_CTA_FILES = 0;
 
 /**
- * Files still carrying ANY retired-brand gradient stop. May only go down.
- * 2026-08-22: 10 — the level/listening components and the account, grammar,
- * X-Ray, subscription and video-library screens, left out of the migration's
- * scope at the time. 2026-08-24: 0 — those ten migrated onto the tokens
- * (flat siegel CTAs, siegel-wash cards, no resting shadows; A1's level ramp
- * moved off its amber stop). At zero this too is a plain ban, like
- * MAX_LEGACY_CTA_FILES above — which is the point a ratchet exists to reach.
+ * Files still carrying ANY retired-brand colour. May only go down.
+ *
+ * 2026-08-22: 10, under the old gradient-stop-only regex.
+ * 2026-08-24: 0 — those ten migrated onto the tokens (flat siegel CTAs,
+ *   siegel-wash cards, no resting shadows; A1's level ramp off its amber stop).
+ *   Real work, and it is why the number below is 16 rather than 22.
+ * 2026-08-25: 16, under the WIDENED regex above.
+ *
+ * That 0 was zero under a lens that could not see the thing it was measuring.
+ * The old pattern required a `from-`/`via-`/`to-` prefix, so a plain `text-`,
+ * `bg-` or `border-` utility in the retired palette was invisible to it — which
+ * is how ProtectedRoute.jsx kept a retired amber border-top, rendered on four
+ * routes, while the ratchet read 0 and APP_CHROME (which never listed the file)
+ * agreed. That file is migrated now and is in the list above.
+ *
+ * So 16 was not a regression against 0; it was the first honest count. Nothing
+ * spread — the lens widened.
+ *
+ * 2026-09-02: 0 again — and this time under the widened lens, which is the
+ *   number that means something. The "Playful Depth" design sweep (PRs #33–#39)
+ *   migrated all sixteen: the level/listening components and the grammar,
+ *   reading, speaking, account, X-Ray, subscription and video-library screens,
+ *   plus src/styles/LevelTest.css, the 1,766-line stylesheet that had been
+ *   carved out of every one of these checks as its own task. It is deleted.
+ *   The ratchet is what surfaced this: the sweep landed, the count fell, and the
+ *   equality assertion refused to let the ceiling sit stale at 16.
+ *
+ * There is no legacy palette left to recede. Both ceilings are 0, so from here
+ * the two tests are pure regression guards: any reappearance is new, not residue.
  */
 const MAX_RETIRED_STOP_FILES = 0;
 

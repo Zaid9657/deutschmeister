@@ -142,10 +142,17 @@ function App() {
                     {/* No /leitfaden routes on purpose, for the same reason as "/" above.
                         A guide is data in astro-site/src/data/guides/ rendered by
                         pages/leitfaden/[slug].astro, and Netlify serves those real static
-                        files before the non-forced /leitfaden/* rewrite below them. The SPA
-                        carried a hand-written TelcB1Page twin that nothing could reach —
-                        the second "two copies, one dead" pair in this file — so it was
-                        deleted. Add a guide in astro-site, never here. */}
+                        files. The SPA carried a hand-written TelcB1Page twin that nothing
+                        could reach — the second "two copies, one dead" pair in this file —
+                        so it was deleted. Add a guide in astro-site, never here.
+
+                        There is no /leitfaden/* rewrite in netlify.toml any more either:
+                        static files already win, so the rule could only ever catch a slug
+                        that does not exist, and answered it 200 + shell + NotFoundPage.
+                        Unknown guide slugs now reach the /* catch-all and return a real
+                        404. The two /vergleich routes above are in the same position —
+                        Astro owns those URLs; the components are only reachable via
+                        client-side navigation and are queued for deletion. */}
                     <Route path="/video-library" element={<VideoLibraryPage />} />
                     <Route path="/video-library/:id" element={<VideoDetailPage />} />
                     <Route path="/podcasts" element={<PodcastsPage />} />

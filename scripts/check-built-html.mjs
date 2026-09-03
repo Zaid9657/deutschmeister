@@ -73,6 +73,7 @@ const REQUIRED = [
   'leitfaden/dtz/index.html',
   'leitfaden/brief-schreiben-b1/index.html',
   'leitfaden/modelltest-deutsch-b1/index.html',
+  'telc-b1-komplettvorbereitung/index.html',
   'pruefung/index.html',
   'pruefung/telc-b1/index.html',
   'pruefung/goethe-b1/index.html',

@@ -1,28 +1,13 @@
+import { corsHeaders, guardMethod } from './_shared/http.mjs';
 import { supabaseKey, supabase } from './_shared/supabase.mjs';
 import { checkUsage } from './_shared/speakingUsage.mjs';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 
 export const handler = async (event) => {
-  const allowedOrigins = [
-    'https://deutsch-meister.de',
-    'https://www.deutsch-meister.de',
-  ];
-  const origin = event.headers?.origin || '';
-  const corsOrigin = allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
+  const headers = corsHeaders(event);
 
-  const headers = {
-    'Access-Control-Allow-Origin': corsOrigin,
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  };
-
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers, body: '' };
-  }
-
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
-  }
+  const gate = guardMethod(event, headers);
+  if (gate) return gate;
 
   if (!supabaseKey || !supabase) {
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'Server misconfigured' }) };

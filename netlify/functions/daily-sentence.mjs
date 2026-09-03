@@ -1,12 +1,10 @@
+import { supabase, supabaseKey } from './_shared/supabase.mjs';
 import { schedule } from '@netlify/functions';
-import { createClient } from '@supabase/supabase-js';
 import { createHmac } from 'crypto';
 import sentences from './data/daily-sentences.json' with { type: 'json' };
 
 // ─── config ──────────────────────────────────────────────────────────────────
 
-const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const FROM_ADDRESS = 'DeutschMeister <zaid@deutsch-meister.de>';
 const BASE_URL = 'https://deutsch-meister.de';
 const TEST_EMAIL = 'zaid199660@gmail.com';
@@ -15,13 +13,6 @@ const TEST_EMAIL = 'zaid199660@gmail.com';
 // No fallback: the handler refuses to run without it (fail closed).
 const UNSUB_SECRET = process.env.UNSUB_SECRET || process.env.CAMPAIGN_SECRET;
 const CAMPAIGN_SECRET = process.env.CAMPAIGN_SECRET;
-
-let supabase;
-try {
-  supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
-} catch (e) {
-  console.error('Supabase init error:', e.message);
-}
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 

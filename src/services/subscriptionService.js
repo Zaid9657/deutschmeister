@@ -111,50 +111,8 @@ export const startFreeTrial = async (userId) => {
 // the webhook, or /.netlify/functions/verify-subscription to recover a missed
 // one.
 
-// Check trial status from profile data
-export const checkTrialStatus = (profile) => {
-  if (!profile || !profile.trial_started_at || !profile.trial_ends_at) {
-    return { isInTrial: false, daysRemaining: 0, hasTrialStarted: false };
-  }
-
-  // If user is subscribed, they're no longer in trial
-  if (profile.is_subscribed) {
-    return { isInTrial: false, daysRemaining: 0, hasTrialStarted: true };
-  }
-
-  const now = new Date();
-  const trialEnd = new Date(profile.trial_ends_at);
-  const diffMs = trialEnd - now;
-  const daysRemaining = Math.max(0, Math.ceil(diffMs / (1000 * 60 * 60 * 24)));
-
-  return {
-    isInTrial: diffMs > 0,
-    daysRemaining,
-    hasTrialStarted: true,
-  };
-};
-
-// Single source of truth for paid access: a subscription grants access iff its
-// PAID PERIOD is still live (subscription_end > now), regardless of status.
-//   - 'cancelled' with a future end → renewal off but paid through period → access
-//   - 'past_due'  with a future end → failed-renewal grace period → access
-//   - end <= now, or missing/unparseable end, or no row → no access
-export const checkSubscriptionStatus = (subscription) => {
-  if (!subscription || !subscription.subscription_end) {
-    return { isActive: false, expiresAt: null };
-  }
-
-  const endDate = new Date(subscription.subscription_end);
-  // Guard against an unparseable date — never crash, treat as no access.
-  if (Number.isNaN(endDate.getTime())) {
-    return { isActive: false, expiresAt: null };
-  }
-
-  const isActive = endDate > new Date();
-
-  return {
-    isActive,
-    expiresAt: subscription.subscription_end,
-    planType: subscription.plan_type,
-  };
-};
+// The two access predicates moved to ./accessRules.js — a module with no
+// imports, so tests/access.test.mjs can exercise them without loading the
+// Supabase client this file pulls in at module load. Re-exported here so every
+// existing import path (SubscriptionContext) keeps working unchanged.
+export { checkTrialStatus, checkSubscriptionStatus, hasAccess } from './accessRules.js';

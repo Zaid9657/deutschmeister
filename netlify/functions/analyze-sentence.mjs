@@ -1,4 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
+import { corsHeaders, guardMethod } from './_shared/http.mjs';
+import { supabase } from './_shared/supabase.mjs';
 import { createHash } from 'crypto';
 import { getAuthenticatedUserId } from './_shared/auth.mjs';
 
@@ -12,16 +13,6 @@ const IP_HASH_SALT = process.env.IP_HASH_SALT || process.env.UNSUB_SECRET || pro
 // migration removes the deprecation risk without changing unit economics.
 // Override with XRAY_MODEL to try a different tier without a deploy.
 const CLAUDE_MODEL = process.env.XRAY_MODEL || 'claude-sonnet-5';
-
-const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-let supabase;
-try {
-  supabase = supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
-} catch (e) {
-  console.error('Failed to initialize Supabase client:', e.message);
-}
 
 // Tiers: anonymous | free_expired | free_trial | pro
 const DAILY_LIMITS = {
@@ -173,26 +164,10 @@ async function refundUsage(usageId) {
 }
 
 export const handler = async (event) => {
-  const allowedOrigins = [
-    'https://deutsch-meister.de',
-    'https://www.deutsch-meister.de',
-  ];
-  const origin = event.headers?.origin || '';
-  const corsOrigin = allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
+  const headers = corsHeaders(event);
 
-  const headers = {
-    'Access-Control-Allow-Origin': corsOrigin,
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  };
-
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers, body: '' };
-  }
-
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
-  }
+  const gate = guardMethod(event, headers);
+  if (gate) return gate;
 
   const anthropicKey = process.env.ANTHROPIC_API_KEY;
   if (!anthropicKey) {

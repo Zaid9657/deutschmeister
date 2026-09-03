@@ -138,15 +138,30 @@ export async function getAllTopics() {
 // Options/correct_answer may arrive as JSON strings or {label,value} objects;
 // flatten to plain string arrays (shared by the network and cache paths).
 function normalizeExercises(list) {
-  return (list ?? []).map((ex) => {
-    let options = ex.options;
-    if (typeof options === 'string') {
-      try { options = JSON.parse(options); } catch { options = []; }
-    }
-    if (!Array.isArray(options)) options = [];
-    options = options.map((o) => (typeof o === 'string' ? o : (o?.label ?? o?.value ?? String(o))));
-    return { ...ex, options, correct_answer: ex.correct_answer ?? '' };
-  });
+  return (list ?? [])
+    .map((ex) => {
+      let options = ex.options;
+      if (typeof options === 'string') {
+        try { options = JSON.parse(options); } catch { options = []; }
+      }
+      if (!Array.isArray(options)) options = [];
+      options = options.map((o) => (typeof o === 'string' ? o : (o?.label ?? o?.value ?? String(o))));
+      return { ...ex, options, correct_answer: ex.correct_answer ?? '' };
+    })
+    // Drop multiple-choice rows with no options: ExercisePlayer renders them as
+    // `options.map(...)` — zero options means zero buttons — and its "Next"
+    // control only appears once `answered` is true. One such row therefore DEAD
+    // ENDS the whole sequence: the learner can never reach the end, so the run
+    // is never recorded to user_grammar_progress. The count printed above the
+    // player ("N interactive exercises") reads this same list, so filtering
+    // here also stops it promising an exercise nobody can answer.
+    //
+    // Only multiple_choice is dropped. Anything else falls through to the
+    // FillBlank renderer, which is a free-text input and needs no options — the
+    // SPA's GrammarLessonPage filters those out too, but only because it has no
+    // fill-blank renderer at all. Copying its blanket filter here would delete
+    // every working fill-blank exercise from the static grammar pages.
+    .filter((ex) => ex.exercise_type !== 'multiple_choice' || ex.options.length > 0);
 }
 
 /** Fetch full topic data including rules, examples, exercises */

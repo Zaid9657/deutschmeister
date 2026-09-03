@@ -21,6 +21,7 @@ import { dirname, join } from 'node:path';
 
 import { EXAM_TRACKS, examTrackByKey, examTrackBySlug, MOCK_DISCLAIMER_DE } from '../src/data/examTracks.js';
 import { levels as ALL_LEVELS } from '../src/data/content.js';
+import { astroRoutes } from '../scripts/astro-routes.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const netlifyToml = readFileSync(join(root, 'netlify.toml'), 'utf8');
@@ -112,12 +113,18 @@ test('the mock disclaimer says what it must', () => {
 // ── 4. three-place rule for the new segment ──────────────────────────────
 
 test('/pruefung is copied, sitemapped and required in the built-HTML check', () => {
-  // BOTH merge sites: netlify.toml's build command (production) AND the CI
-  // workflow's own copy of the same steps. Adding the step in only one place
-  // is exactly how the /pruefung pages passed locally and failed in CI.
+  // BOTH merge sites: the production deploy build AND the CI workflow's own
+  // copy of the same steps. Adding the step in only one place is exactly how
+  // the /pruefung pages passed locally and failed in CI.
+  //
+  // The production side no longer has a `cp -r …` literal to match: netlify.toml's
+  // command is `node scripts/build-site.mjs`, which DERIVES the directories it
+  // copies (and asserts) from astro-site/src/pages/. So this asserts the real
+  // property through the same function the build uses, rather than a string that
+  // would now be checking a chain nothing runs.
   assert.ok(
-    netlifyToml.includes('cp -r astro-site/dist/pruefung dist/pruefung'),
-    'netlify.toml build command must copy the pruefung directory into dist/'
+    astroRoutes(root).includes('pruefung'),
+    'the deploy build must derive pruefung as a top-level Astro route to copy into dist/'
   );
   const ciWorkflow = readFileSync(join(root, '.github/workflows/ci.yml'), 'utf8');
   assert.ok(
