@@ -40,6 +40,13 @@ import {
   COURSE_TELC_B1_PRICE_EUR,
   COURSE_PRO_DAYS,
   COURSES,
+  COURSE_LEVEL_PRICE_EUR,
+  COURSE_BUNDLE_PRICE_EUR,
+  BUNDLE_SAVING_PERCENT,
+  LEVEL_COURSES,
+  ALL_LEVELS,
+  levelsForProduct,
+  bandCourseForLevel,
   num,
   deNum,
   eur,
@@ -90,6 +97,36 @@ test('derived figures follow from the prices', () => {
   // The yearly plan must actually be cheaper per day than the monthly one, or
   // every "save with yearly" line on the site is backwards.
   assert.ok(YEARLY_PER_DAY_EUR < MONTHLY_PER_DAY_EUR);
+});
+
+test('level courses cover the ladder exactly once and the bundle saving is honest', () => {
+  // The bundle must be cheaper than four bands, and the floored percentage
+  // must never overstate it.
+  assert.ok(COURSE_BUNDLE_PRICE_EUR < COURSE_LEVEL_PRICE_EUR * 4, 'the bundle is not a saving');
+  const real = ((COURSE_LEVEL_PRICE_EUR * 4 - COURSE_BUNDLE_PRICE_EUR) / (COURSE_LEVEL_PRICE_EUR * 4)) * 100;
+  assert.ok(BUNDLE_SAVING_PERCENT <= real && BUNDLE_SAVING_PERCENT > real - 1);
+  assert.equal(LEVEL_COURSES.course_alle.savingPercent, BUNDLE_SAVING_PERCENT);
+
+  // Every sub-level belongs to exactly one band, and the bundle is all of them —
+  // a gap here is a level nobody can buy, an overlap is a level sold twice.
+  const bands = Object.values(LEVEL_COURSES).filter((c) => c.key !== 'course_alle');
+  const covered = bands.flatMap((c) => c.levels);
+  assert.deepEqual([...covered].sort(), [...ALL_LEVELS].sort());
+  assert.equal(new Set(covered).size, ALL_LEVELS.length);
+  assert.deepEqual(LEVEL_COURSES.course_alle.levels, ALL_LEVELS);
+  for (const c of bands) assert.equal(c.price, COURSE_LEVEL_PRICE_EUR);
+  assert.equal(LEVEL_COURSES.course_alle.price, COURSE_BUNDLE_PRICE_EUR);
+
+  // Resolution helpers are what the level guard reads.
+  assert.deepEqual(levelsForProduct('course_b1'), ['b1.1', 'b1.2']);
+  assert.deepEqual(levelsForProduct('course_alle'), ALL_LEVELS);
+  assert.deepEqual(levelsForProduct('telc_b1_komplett'), [], 'the telc plan is not a level entitlement');
+  assert.deepEqual(levelsForProduct('nope'), []);
+  assert.equal(bandCourseForLevel('B2.1').key, 'course_b2', 'case-insensitive: the DB is uppercase');
+  assert.equal(bandCourseForLevel('zz'), null);
+
+  // Every course grants the same Pro window the webhook grants.
+  for (const c of Object.values(LEVEL_COURSES)) assert.equal(c.proDays, COURSE_PRO_DAYS);
 });
 
 test('formatters produce the German and English conventions', () => {
@@ -145,6 +182,10 @@ test('no page source retypes a price literal', () => {
     deNum(YEARLY_PER_DAY_EUR), // 0,22
     num(COURSE_TELC_B1_PRICE_EUR), // 89.00
     deNum(COURSE_TELC_B1_PRICE_EUR), // 89,00
+    num(COURSE_LEVEL_PRICE_EUR), // 49.00
+    deNum(COURSE_LEVEL_PRICE_EUR), // 49,00
+    num(COURSE_BUNDLE_PRICE_EUR), // 129.00
+    deNum(COURSE_BUNDLE_PRICE_EUR), // 129,00
   ];
 
   const failures = [];

@@ -49,7 +49,7 @@ const PodcastsPage = () => {
   const [totalCount, setTotalCount] = useState(0);
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { hasAccess } = useSubscription();
+  const { hasLevelAccess } = useSubscription();
 
   useEffect(() => {
     fetchAllPodcasts();
@@ -86,7 +86,7 @@ const PodcastsPage = () => {
   };
 
   const canAccessLevel = (level) => {
-    return isLevelFree(level) || (user && hasAccess);
+    return isLevelFree(level) || (user && hasLevelAccess(level));
   };
 
   return (

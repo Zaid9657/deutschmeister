@@ -23,6 +23,7 @@ import { dirname, join } from 'node:path';
 
 import { PROGRAM, PROGRAM_KEY, allItemIds } from '../src/data/programs/telcB1Komplett.js';
 import { getTopicsForLevel } from '../src/data/grammarTopics.js';
+import { LEVEL_COURSES } from '../src/data/pricing.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -52,6 +53,37 @@ test('the webhook routes course orders idempotently and handles refunds', () => 
     /no resolvable user/.test(src),
     'unattachable course orders must throw, not warn — a paying customer would silently get nothing',
   );
+});
+
+test('every level course has a webhook route and the level surfaces read the entitlement', () => {
+  // A product key in pricing.js with no env-var route in the webhook is a
+  // product that can be bought and never delivered.
+  const webhook = read('netlify/functions/lemonsqueezy-webhook.mjs');
+  for (const key of Object.keys(LEVEL_COURSES)) {
+    const env = `LEMONSQUEEZY_${key.toUpperCase()}_VARIANT_ID`;
+    assert.ok(webhook.includes(`${env}: '${key}'`), `webhook does not route ${env} → ${key}`);
+  }
+  // The client config must read the matching VITE_ var per product (Vite only
+  // inlines statically-named env reads, so this cannot be a loop there).
+  const client = read('src/config/lemonsqueezy.js');
+  for (const key of Object.keys(LEVEL_COURSES)) {
+    assert.ok(client.includes(`VITE_LEMONSQUEEZY_${key.toUpperCase()}_VARIANT_ID`), `lemonsqueezy.js has no checkout id for ${key}`);
+  }
+  // Every surface that decides whether a level is locked must ask
+  // hasLevelAccess(level); reading hasAccess alone shows a lock on a level
+  // the user has paid for once its included Pro window lapses.
+  for (const file of [
+    'src/components/LevelSubscriptionGuard.jsx',
+    'src/components/GrammarTopicCard.jsx',
+    'src/components/listening/ListeningLevelCard.jsx',
+    'src/pages/PodcastsPage.jsx',
+    'src/pages/ReadingSectionPage.jsx',
+    'src/pages/VocabularySectionPage.jsx',
+  ]) {
+    const src = read(file);
+    assert.ok(src.includes('hasLevelAccess('), `${file} does not gate on hasLevelAccess(level)`);
+    assert.ok(!/\bhasAccess\b/.test(src), `${file} still reads the subscription-only hasAccess`);
+  }
 });
 
 test('the daily sweep expires only active course windows', () => {

@@ -49,7 +49,7 @@ const ReadingSectionPage = () => {
   const navigate = useNavigate();
   const { isItemLearned } = useProgress();
   const { user } = useAuth();
-  const { hasAccess } = useSubscription();
+  const { hasLevelAccess } = useSubscription();
 
   const [dbLessonCounts, setDbLessonCounts] = useState({});
   const [levelLessons, setLevelLessons] = useState({});
@@ -142,7 +142,7 @@ const ReadingSectionPage = () => {
               <Chip tone="label">{displayLevel}</Chip>
               <Chip tone="quiet">Part {part}</Chip>
               {isLevelFree(level) && <Chip tone="limette">FREE</Chip>}
-              {!isLevelFree(level) && !(user && hasAccess) && (
+              {!isLevelFree(level) && !(user && hasLevelAccess(level)) && (
                 <Lock className="w-3.5 h-3.5 text-graphite" />
               )}
             </div>

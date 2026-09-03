@@ -215,13 +215,23 @@ async function resolveUserId(customData, attributes, lemonsqueezySubscriptionId)
 // missing variable simply means "no course routing" — subscription orders are
 // untouched either way. proDays is the included Pro window ("3 Monate
 // Pro-Zugang inklusive"); the course area itself never expires.
+//
+// Product keys must match src/data/pricing.js (COURSES + LEVEL_COURSES): the
+// client resolves which levels a purchases row unlocks from that key alone.
+const COURSE_VARIANT_ENV = {
+  LEMONSQUEEZY_TELC_B1_VARIANT_ID: 'telc_b1_komplett',
+  LEMONSQUEEZY_COURSE_A1_VARIANT_ID: 'course_a1',
+  LEMONSQUEEZY_COURSE_A2_VARIANT_ID: 'course_a2',
+  LEMONSQUEEZY_COURSE_B1_VARIANT_ID: 'course_b1',
+  LEMONSQUEEZY_COURSE_B2_VARIANT_ID: 'course_b2',
+  LEMONSQUEEZY_COURSE_ALLE_VARIANT_ID: 'course_alle',
+};
+
 function courseForVariant(variantId) {
   const map = {};
-  if (process.env.LEMONSQUEEZY_TELC_B1_VARIANT_ID) {
-    map[String(process.env.LEMONSQUEEZY_TELC_B1_VARIANT_ID)] = {
-      productKey: 'telc_b1_komplett',
-      proDays: 90,
-    };
+  for (const [envName, productKey] of Object.entries(COURSE_VARIANT_ENV)) {
+    const id = process.env[envName];
+    if (id) map[String(id)] = { productKey, proDays: 90 };
   }
   return variantId ? map[String(variantId)] || null : null;
 }

@@ -18,13 +18,13 @@ const ListeningLevelCard = ({ level, totalExercises, completedExercises }) => {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
   const { user } = useAuth();
-  const { hasAccess } = useSubscription();
+  const { hasLevelAccess } = useSubscription();
   const subtitle = getLevelSubtitle(level, i18n.language);
   // `level` is the DB value ("A1.1") but routes are lowercase — lowercase it so
   // there is exactly one URL per level page.
   const levelPath = `/listening/${String(level ?? '').toLowerCase()}`;
   const free = isLevelFree(level);
-  const locked = !free && !(user && hasAccess);
+  const locked = !free && !(user && hasLevelAccess(level));
   const progress = totalExercises > 0 ? Math.round((completedExercises / totalExercises) * 100) : 0;
   const isComplete = totalExercises > 0 && completedExercises === totalExercises;
 

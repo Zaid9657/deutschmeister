@@ -2,6 +2,8 @@ import { createContext, useContext, useEffect, useState, useCallback, useRef } f
 import { useAuth } from './AuthContext';
 import { getAuthHeaders } from '../utils/supabase';
 import { withTimeout } from '../utils/withTimeout';
+import { isLevelFree } from '../config/freeTier';
+import { levelsForProduct } from '../data/pricing.js';
 import {
   getSubscription,
   getUserProfile,
@@ -141,6 +143,18 @@ export const SubscriptionProvider = ({ children }) => {
   // PurchaseGuard reads this and the level guards keep reading hasAccess.
   const hasProduct = (productKey) => purchases.some((p) => p.product_key === productKey);
 
+  // Level entitlement — the one question every level surface asks. A level is
+  // open if it is free, if the trial/subscription is live, or if a bought
+  // level course covers it (lifetime, independent of the Pro window). Guards
+  // and lock badges read THIS, never hasAccess alone, or a paid-for course
+  // shows a lock the day its included Pro expires.
+  const hasLevelAccess = (level) => {
+    if (isLevelFree(level)) return true;
+    if (hasAccess) return true;
+    const l = (level || '').toLowerCase();
+    return purchases.some((p) => levelsForProduct(p.product_key).includes(l));
+  };
+
   // NOTE: there is deliberately no client-side createSubscription here.
   // Paid access is granted server-side only, by the Lemon Squeezy webhook
   // (netlify/functions/lemonsqueezy-webhook.mjs) using the service role.
@@ -176,6 +190,7 @@ export const SubscriptionProvider = ({ children }) => {
     profile,
     purchases,
     hasProduct,
+    hasLevelAccess,
     loading,
     hasAccess,
     isInFreeTrial,
