@@ -5,6 +5,12 @@ what each file is, whether it is still live, and in what order to read them.
 Created 2026-08-31 by the reports-structure assessment
 ([`reports-assessment-2026-08-31.md`](./reports-assessment-2026-08-31.md)).
 
+**START HERE if you are a fresh session:**
+[`HANDOFF-2026-09-03.md`](./HANDOFF-2026-09-03.md) — current state, measured
+revenue, what the renovation actually finished, the open decisions, and the
+environment gotchas. It supersedes the "still open" lists in the roadmap and in
+`open-actions.md`, both of which are stale about work that has since shipped.
+
 Two companion files exist so nothing has to be hunted across five documents again:
 
 - [`open-actions.md`](./open-actions.md) — every still-open item, owner action, and
