@@ -94,16 +94,16 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   `*:focus-visible` ring and `::selection` in `src/index.css` are brand surfaces on **every screen**
   — change them and you have changed the whole product — and `tests/brand.test.mjs` bans the retired
   palette outright across the chrome (`src/App.jsx`, the nav, the guards, the overlays, `ui/`, and
-  the five signup screens, and the nine content screens). **Two** ratchets hold the rest and may
-  only fall: `MAX_LEGACY_CTA_FILES` (the exact retired CTA — now 0) and `MAX_RETIRED_STOP_FILES`
-  (**any** retired gradient stop in any pairing — 10, the level/listening components and the
-  account, grammar, X-Ray, subscription and video-library screens). The second exists because the
-  first reached 0 while the palette was still live in other stop combinations; what exposed it was
-  Tailwind still emitting `.from-amber-500` into the built CSS. **Verify a colour sweep against
-  `dist/`, not against a source grep** — and note a doc comment quoting a class is enough to emit
-  it, since the scanner does not parse comments. `src/components/LevelTest/LevelTest.css` is deliberately
-  outside all of this — 1,765 class-scoped lines on one route, already mostly token-compatible, and
-  a conversion surface that needs a visual check, so it is its own task.
+  the five signup screens, and the nine content screens). **Two** ratchets hold the rest and both
+  have reached their floor: `MAX_LEGACY_CTA_FILES` (the exact retired CTA) and
+  `MAX_RETIRED_STOP_FILES` (**any** retired gradient stop in any pairing) are **both 0** — the
+  migration is complete and any reappearance of the retired palette fails the suite. The second
+  ratchet exists because the first reached 0 while the palette was still live in other stop
+  combinations; what exposed it was Tailwind still emitting `.from-amber-500` into the built CSS.
+  **Verify a colour sweep against `dist/`, not against a source grep** — and note a doc comment
+  quoting a class is enough to emit it, since the scanner does not parse comments.
+  `src/components/LevelTest/LevelTest.css` has been **deleted** (token migration done); `src/index.css`
+  is the only stylesheet left in the SPA.
 - **`.mcp.json` is committed and must stay credential-free.** It declares the DataForSEO and Google
   Search Console MCP servers the SEO Routines depend on (`docs/seo-routines/`). Values are `${VAR}`
   references Claude Code expands from the environment; the literals belong in the environment's
@@ -190,15 +190,17 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
 
 ## Current state / open threads
 
-- `docs/medmeister-parity-roadmap.md` is the current plan: a comparison against the sibling
-  MedMeister project and a tiered roadmap (SEO content engine, design system, lifecycle, tests).
-  Batches A–D have shipped (claims data layer + guards, design tokens + rebuilt `/` and
-  `/pricing`, the Leitfaden engine + four guides, SEO-routine machinery), and Batch E adds the
-  activation lifecycle (shipping OFF — owner must apply its migration and set
-  `LIFECYCLE_ACTIVATION_ENABLED=true`), and Batch F migrated the in-app chrome and shared
-  primitives onto the tokens. Still open: GSC property verification for `deutsch-meister.de` (see
-  `docs/seo-routines/README.md` — DataForSEO is working as of 2026-08-24), the ~10 content screens
-  the brand ratchet still counts, `LevelTest.css`. (Astro-in-CI closed 2026-08-24 via the committed grammar cache.) NOTE: grammar pages already carry
+- **Read `docs/HANDOFF-2026-09-03.md` first** — current state, measured revenue, the monetization
+  decision that blocks money-side builds, and the open first-lesson-leak question.
+- `docs/medmeister-parity-roadmap.md` was the plan and has **fully shipped** (Batches A–F: claims
+  data layer + guards, design tokens + rebuilt `/` and `/pricing`, the Leitfaden engine + guides,
+  SEO-routine machinery, the activation lifecycle — migration applied and
+  `LIFECYCLE_ACTIVATION_ENABLED=true` set 2026-08-31 — and the full token migration, brand
+  ratchets at 0 and `LevelTest.css` deleted). Also since shipped: the exam-first renovation
+  (`docs/renovation-plan-2026-08-31.md`, PR #31), the design renovation Waves 0–5
+  (`docs/design-renovation-2026-09-01.md`, PRs #33–39), and mock exams for Goethe B1, DTZ and
+  telc B2 (PR #40). Still open: GSC property verification for `deutsch-meister.de` (see
+  `docs/seo-routines/README.md` — DataForSEO is working as of 2026-08-24). NOTE: grammar pages already carry
   `['Article','LearningResource']` schema and Related-Topics links — two earlier claims that
   they were missing were wrong (see the corrections section in the roadmap).
 - **Competitor pricing on `/vergleich/` is stamped "Stand: Mai 2026" and could not be

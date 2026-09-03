@@ -8,7 +8,8 @@ Rule: any commit that closes, obsoletes, or reclassifies an item here updates th
 in the same commit. Last full reconciliation: **2026-08-31** (from `REMEDIATION.md`,
 `docs/medmeister-parity-roadmap.md`, `docs/seo-routines/README.md`,
 `drafts/seo-CORRECTION-2026-08-24.md`, `drafts/seo-audit-2026-08-24.md`, the two Class-B
-drafts, and `migrations/README.md`).
+drafts, and `migrations/README.md`). Partial reconciliation 2026-09-03 against the code (E-6, E-7 closed) —
+see `docs/HANDOFF-2026-09-03.md` for measured state.
 
 ## 1 · Owner-only (not code)
 
@@ -49,8 +50,8 @@ drafts, and `migrations/README.md`).
 | E-3 | Remove the SPA's dead second grammar corpus: `src/App.jsx` still routes `/grammar/:level/:topicSlug` to SPA components Netlify never serves (same "two copies, one dead" shape as the deleted `LandingPage.jsx` and `TelcB1Page.jsx`) | same, §Roadmap 3 | 2026-08-24 |
 | E-4 | Accurate `lastmod`/`dateModified` for the 64 grammar pages (all claim the build date; needs `updated_at` selected in `grammar.js`) | same, §Roadmap 4 | 2026-08-24 |
 | E-5 | The **Modelltest cluster** content (≈5,830/mo, competition median ~8; extend the existing guides; Class B; order: telc-b1 → telc-b2 → goethe-b1 → dtz) — after O-13 | `drafts/brief-modelltest.md` | 2026-08-24 |
-| E-6 | Brand ratchet remainder: `MAX_RETIRED_STOP_FILES` = **10** files (level/listening components; account, grammar, X-Ray, subscription, video-library screens) — lower the ceiling with each migration | `tests/brand.test.mjs`; roadmap Batch F | 2026-08-22 |
-| E-7 | `src/components/LevelTest/LevelTest.css` token migration — 1,765 class-scoped lines on one conversion route; **needs a visual check alongside**, deliberately deferred as its own task | roadmap Batch F close | 2026-08-22 |
+| E-6 | ~~Brand ratchet remainder~~ — **DONE**: `MAX_RETIRED_STOP_FILES` and `MAX_LEGACY_CTA_FILES` are both **0** in `tests/brand.test.mjs`; the retired palette is fully migrated | `tests/brand.test.mjs`; roadmap Batch F | closed by 2026-09-03 |
+| E-7 | ~~`LevelTest.css` token migration~~ — **DONE**: the file is deleted; `src/index.css` is the SPA's only stylesheet | roadmap Batch F close | closed by 2026-09-03 |
 | E-8 | Thin prerendered SPA routes (37–297 body words) — `/analyze/` first (the unique asset) | `drafts/seo-audit-2026-08-24.md` §Roadmap 7 | 2026-08-24 |
 | E-9 | More guides (Goethe B2, TestDaF, "B1 in drei Monaten") — now keyword-validatable via DataForSEO before writing | roadmap Batch C close; `seo-CORRECTION-2026-08-24.md` | 2026-08-22 |
 | E-10 | Content completion: reading depth beyond 8/level where warranted; pick ONE grammar-intro system (`grammar_introductions` table vs `rules` introduction type); real `acceptable_answers` for genuine synonyms | `EVALUATION.md` roadmap; roadmap §3.4 | 2026-08-16 |
