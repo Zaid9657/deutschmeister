@@ -117,6 +117,13 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   Lemon Squeezy products, discounts and redirect URLs are **dashboard-only** (API read-only);
   paste-ready owner prompts are in `docs/owner-prompts.md`; ids in
   `docs/monetization-2026-09-03.md`.
+- **Measure before you claim: read `weekly_metrics` first.** `netlify/functions/weekly-truth.mjs`
+  runs every Monday 06:00 UTC, calls `public.weekly_truth_metrics()` (one SQL pass: users,
+  paying subs + MRR, course sales, grammar activity and one-and-done rate, AI usage, lifecycle
+  sends, failed webhooks), stores the JSON in `weekly_metrics` and emails the owner the deltas.
+  A session that needs a revenue or usage figure reads the latest row (or calls the function via
+  the Supabase connector) instead of re-deriving it — the handoff had to correct a stale
+  "9 subs, €75–90/mo" claim once already. `tests/weekly-truth.test.mjs` pins store-before-email.
 - **Agent environment.** Cloud sessions cannot reach `deutsch-meister.de`, `*.netlify.app`,
   `supabase.co`, or `app.lemonsqueezy.com` (egress proxy) — use the Netlify, Supabase and
   GitHub connectors instead; the Claude in Chrome MCP exists only in local sessions. PR
