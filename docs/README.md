@@ -13,6 +13,9 @@ environment gotchas. It supersedes the "still open" lists in the roadmap and in
 
 Two companion files exist so nothing has to be hunted across five documents again:
 
+- [`course-research-2026-09-03.md`](./course-research-2026-09-03.md) — the course research
+  synthesis (A1 first): market, buyer, pricing/law, and the honest audit of our own A1
+  content, with the proposed build sequence. Full track reports in [`research/`](./research/).
 - [`owner-prompts.md`](./owner-prompts.md) — paste-ready Claude in Chrome prompts for the
   steps only the owner's browser can do (Lemon Squeezy products, discounts, redirects, test buys).
 - [`monetization-2026-09-03.md`](./monetization-2026-09-03.md) — the monetization decision
