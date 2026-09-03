@@ -104,6 +104,23 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   quoting a class is enough to emit it, since the scanner does not parse comments.
   `src/components/LevelTest/LevelTest.css` has been **deleted** (token migration done); `src/index.css`
   is the only stylesheet left in the SPA.
+- **The money path (one-time courses).** Product keys live in `src/data/pricing.js`
+  (`COURSES` + `LEVEL_COURSES`); the webhook maps `LEMONSQUEEZY_<KEY>_VARIANT_ID` env vars
+  (numeric variant ids, functions scope) to those keys and upserts `purchases` keyed on the LS
+  order id; the client opens checkouts from `VITE_`/`PUBLIC_LEMONSQUEEZY_<KEY>_VARIANT_ID`
+  (checkout UUIDs, builds scope) and **hides any card whose id is unset** — never a dead
+  checkout. Entitlement is `hasLevelAccess(level)` in `SubscriptionContext` (free ∨ trial/sub ∨
+  bought course); every level lock must read it, and `tests/purchases.test.mjs` pins the list.
+  A signed-out Buy click stores `dm_buy_intent` and resumes at `/subscription?buy=<key>`.
+  **Grammar lessons on the Astro side are ungated at every level** — the SPA lock is cosmetic;
+  see the open decision in `docs/HANDOFF-2026-09-03.md` §11 before selling grammar access.
+  Lemon Squeezy products, discounts and redirect URLs are **dashboard-only** (API read-only);
+  paste-ready owner prompts are in `docs/owner-prompts.md`; ids in
+  `docs/monetization-2026-09-03.md`.
+- **Agent environment.** Cloud sessions cannot reach `deutsch-meister.de`, `*.netlify.app`,
+  `supabase.co`, or `app.lemonsqueezy.com` (egress proxy) — use the Netlify, Supabase and
+  GitHub connectors instead; the Claude in Chrome MCP exists only in local sessions. PR
+  conventions (squash, gates, the lockfile trap) are in `.claude/skills/steward/SKILL.md`.
 - **`.mcp.json` is committed and must stay credential-free.** It declares the DataForSEO and Google
   Search Console MCP servers the SEO Routines depend on (`docs/seo-routines/`). Values are `${VAR}`
   references Claude Code expands from the environment; the literals belong in the environment's
