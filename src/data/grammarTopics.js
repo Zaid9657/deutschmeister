@@ -4,19 +4,8 @@
 export const grammarTopics = {
   'a1.1': [
     {
-      id: 'a1.1-gt1',
-      order: 1,
-      slug: 'alphabet-pronunciation',
-      titleEn: 'Alphabet & Pronunciation',
-      titleDe: 'Alphabet und Aussprache',
-      descriptionEn: 'Learn the German alphabet, special characters, and basic pronunciation rules.',
-      descriptionDe: 'Lerne das deutsche Alphabet, Sonderzeichen und grundlegende Ausspracheregeln.',
-      icon: 'abc',
-      estimatedTime: 15,
-    },
-    {
       id: 'a1.1-gt2',
-      order: 2,
+      order: 1,
       slug: 'nouns-gender',
       titleEn: 'Nouns & Gender',
       titleDe: 'Nomen und Genus',
@@ -27,7 +16,7 @@ export const grammarTopics = {
     },
     {
       id: 'a1.1-gt3',
-      order: 3,
+      order: 2,
       slug: 'definite-articles',
       titleEn: 'Definite Articles',
       titleDe: 'Bestimmte Artikel',
@@ -37,19 +26,8 @@ export const grammarTopics = {
       estimatedTime: 15,
     },
     {
-      id: 'a1.1-gt4',
-      order: 4,
-      slug: 'indefinite-articles',
-      titleEn: 'Indefinite Articles',
-      titleDe: 'Unbestimmte Artikel',
-      descriptionEn: 'Learn ein, eine, and the negation kein.',
-      descriptionDe: 'Lerne ein, eine und die Verneinung kein.',
-      icon: 'circle-dot',
-      estimatedTime: 15,
-    },
-    {
       id: 'a1.1-gt5',
-      order: 5,
+      order: 3,
       slug: 'personal-pronouns',
       titleEn: 'Personal Pronouns',
       titleDe: 'Personalpronomen',
@@ -60,7 +38,7 @@ export const grammarTopics = {
     },
     {
       id: 'a1.1-gt6',
-      order: 6,
+      order: 4,
       slug: 'verb-sein',
       titleEn: 'Verb "sein" (to be)',
       titleDe: 'Das Verb "sein"',
@@ -70,8 +48,19 @@ export const grammarTopics = {
       estimatedTime: 20,
     },
     {
+      id: 'a1.1-gt1',
+      order: 5,
+      slug: 'alphabet-pronunciation',
+      titleEn: 'Alphabet & Pronunciation',
+      titleDe: 'Alphabet und Aussprache',
+      descriptionEn: 'Learn the German alphabet, special characters, and basic pronunciation rules.',
+      descriptionDe: 'Lerne das deutsche Alphabet, Sonderzeichen und grundlegende Ausspracheregeln.',
+      icon: 'abc',
+      estimatedTime: 15,
+    },
+    {
       id: 'a1.1-gt7',
-      order: 7,
+      order: 6,
       slug: 'verb-haben',
       titleEn: 'Verb "haben" (to have)',
       titleDe: 'Das Verb "haben"',
@@ -79,6 +68,17 @@ export const grammarTopics = {
       descriptionDe: 'Konjugiere und verwende haben im Alltag.',
       icon: 'hand',
       estimatedTime: 20,
+    },
+    {
+      id: 'a1.1-gt4',
+      order: 7,
+      slug: 'indefinite-articles',
+      titleEn: 'Indefinite Articles',
+      titleDe: 'Unbestimmte Artikel',
+      descriptionEn: 'Learn ein, eine, and the negation kein.',
+      descriptionDe: 'Lerne ein, eine und die Verneinung kein.',
+      icon: 'circle-dot',
+      estimatedTime: 15,
     },
     {
       id: 'a1.1-gt8',
@@ -96,7 +96,7 @@ export const grammarTopics = {
     {
       id: 'a1.2-gt1',
       order: 1,
-      slug: 'sentence-structure',
+      slug: 'basic-sentence-structure',
       titleEn: 'Basic Sentence Structure',
       titleDe: 'Grundlegende Satzstruktur',
       descriptionEn: 'Understand German word order and verb position.',
@@ -263,7 +263,7 @@ export const grammarTopics = {
     {
       id: 'a2.1-gt8',
       order: 8,
-      slug: 'imperative',
+      slug: 'imperative-mood',
       titleEn: 'Imperative Mood',
       titleDe: 'Imperativ',
       descriptionEn: 'Give commands and make requests in German.',
@@ -456,7 +456,7 @@ export const grammarTopics = {
     {
       id: 'b1.2-gt1',
       order: 1,
-      slug: 'passive-present',
+      slug: 'passive-voice-present',
       titleEn: 'Passive Voice (Present)',
       titleDe: 'Passiv (Präsens)',
       descriptionEn: 'Form passive with werden + past participle.',
@@ -467,7 +467,7 @@ export const grammarTopics = {
     {
       id: 'b1.2-gt2',
       order: 2,
-      slug: 'passive-past',
+      slug: 'passive-voice-past',
       titleEn: 'Passive Voice (Past)',
       titleDe: 'Passiv (Vergangenheit)',
       descriptionEn: 'Use wurde + past participle for past passive.',
@@ -500,7 +500,7 @@ export const grammarTopics = {
     {
       id: 'b1.2-gt5',
       order: 5,
-      slug: 'adjective-declension-weak',
+      slug: 'adjective-declension-weak-mixed',
       titleEn: 'Adjective Declension (Weak/Mixed)',
       titleDe: 'Adjektivdeklination (schwach/gemischt)',
       descriptionEn: 'Decline adjectives with definite/indefinite articles.',
@@ -557,7 +557,7 @@ export const grammarTopics = {
     {
       id: 'b2.1-gt2',
       order: 2,
-      slug: 'konjunktiv-i',
+      slug: 'konjunktiv-i-reported-speech',
       titleEn: 'Konjunktiv I (Reported Speech)',
       titleDe: 'Konjunktiv I (Indirekte Rede)',
       descriptionEn: 'Report speech formally with er sei, er habe.',
@@ -669,7 +669,7 @@ export const grammarTopics = {
     {
       id: 'b2.2-gt4',
       order: 4,
-      slug: 'subjunctive-expressions',
+      slug: 'subjunctive-fixed-expressions',
       titleEn: 'Subjunctive in Fixed Expressions',
       titleDe: 'Konjunktiv in festen Wendungen',
       descriptionEn: 'Learn Sei es..., Wie dem auch sei.',
@@ -680,7 +680,7 @@ export const grammarTopics = {
     {
       id: 'b2.2-gt5',
       order: 5,
-      slug: 'complex-sentences',
+      slug: 'complex-sentence-building',
       titleEn: 'Complex Sentence Building',
       titleDe: 'Komplexer Satzbau',
       descriptionEn: 'Construct nested and multi-clause sentences.',
