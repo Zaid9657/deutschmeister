@@ -32,8 +32,15 @@ with AI correction"**, never "a German course" — the commoditised framing is t
 
 ## Lemon Squeezy products to create (owner / Claude in Chrome)
 
-Store 309512. Create **five one-time products**, single variant each, EUR, no
-subscription:
+Store 309512. **This is the one step no agent can do**: the Lemon Squeezy API and every
+connector (Zapier's Lemon Squeezy app has 14 read actions and 0 write) are read-only for
+products — creation is dashboard-only. Everything after it is automated.
+
+**Fastest route (one product, five variants):** create ONE one-time product
+"DeutschMeister — German Level Course" and add five variants named exactly `A1`, `A2`,
+`B1`, `B2`, `Complete A1–B2` at €49/€49/€49/€49/€129. Each variant gets its own numeric id
+and its own share link (`/checkout/buy/<uuid>`) — those are the two ids per row below.
+Five separate products (the table) work identically; pick whichever is fewer clicks.
 
 | # | Product name (as shown at checkout) | Price | Env key stem |
 |---|---|---|---|
