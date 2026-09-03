@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { postAuthPath } from '../lib/buyIntent';
 import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -36,7 +37,8 @@ const LoginPage = () => {
   const [unconfirmed, setUnconfirmed] = useState(false);
   const [resendState, setResendState] = useState('idle');
 
-  const from = location.state?.from?.pathname || '/dashboard';
+  // A pending checkout (set on /pricing/ before the signup detour) beats the dashboard.
+  const from = location.state?.from?.pathname || postAuthPath();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

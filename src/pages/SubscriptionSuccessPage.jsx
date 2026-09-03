@@ -8,18 +8,36 @@ import Button from '../components/ui/Button.jsx';
 import Card from '../components/ui/Card.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
 import confettiBurst from '../lib/confetti.js';
+import { LEVEL_COURSES } from '../data/pricing.js';
 
 const SubscriptionSuccessPage = () => {
   const navigate = useNavigate();
-  const { refreshSubscription, hasActiveSubscription } = useSubscription();
+  const { refreshSubscription, hasActiveSubscription, purchases } = useSubscription();
   const [polling, setPolling] = useState(true);
   const celebratedRef = useRef(false);
+
+  // A one-time course purchase lands here too (the Lemon Squeezy redirect and
+  // the overlay's Checkout.Success both point at this page). The most recent
+  // purchase, if it is minutes old, is what was just bought — so the page
+  // celebrates the level course rather than a subscription the buyer may not
+  // have. An older purchase on the account is not "just bought" and falls
+  // through to the Pro copy.
+  const RECENT_MS = 30 * 60 * 1000;
+  const latestPurchase = [...purchases].sort(
+    (a, b) => new Date(b.created_at) - new Date(a.created_at),
+  )[0];
+  const justBought =
+    latestPurchase && Date.now() - new Date(latestPurchase.created_at).getTime() < RECENT_MS
+      ? latestPurchase
+      : null;
+  const courseBought = justBought ? LEVEL_COURSES[justBought.product_key] || null : null;
+  const telcBought = justBought?.product_key === 'telc_b1_komplett';
 
   // Derive verification from context state on every render. The previous version
   // captured hasActiveSubscription in a [] effect, so it kept reading the
   // mount-time `subscription = null` no matter how many refreshes succeeded —
   // every paying customer fell through to the "may take a moment" branch.
-  const verified = hasActiveSubscription();
+  const verified = hasActiveSubscription() || Boolean(justBought);
 
   useEffect(() => {
     if (verified) setPolling(false);
@@ -93,16 +111,30 @@ const SubscriptionSuccessPage = () => {
               </motion.div>
 
               <h1 className="font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] text-ink mb-4">
-                Welcome to Pro!
+                {courseBought
+                  ? `Your ${courseBought.code} course is yours`
+                  : telcBought
+                    ? 'Your telc B1 plan is ready'
+                    : 'Welcome to Pro!'}
               </h1>
 
               <p className="text-[0.9375rem] leading-relaxed text-graphite sm:text-base mb-8">
-                Your subscription is now active. You have full access to all German lessons, grammar exercises, listening practice, and more.
+                {courseBought
+                  ? `Lifetime access to ${courseBought.levels.map((l) => l.toUpperCase()).join(' and ')} — every grammar topic, reading text, listening exercise and vocabulary list — plus ${courseBought.proMonths} months of Pro for the AI tools.`
+                  : telcBought
+                    ? `Your 4-week exam plan is unlocked, with ${LEVEL_COURSES.course_a1.proMonths} months of Pro included.`
+                    : 'Your subscription is now active. You have full access to all German lessons, grammar exercises, listening practice, and more.'}
               </p>
 
               {/* The one `celebrate` button in the app: a completed purchase has earned it. */}
-              <Button variant="celebrate" size="lg" onClick={() => navigate('/dashboard')}>
-                Start Learning
+              <Button
+                variant="celebrate"
+                size="lg"
+                onClick={() =>
+                  navigate(courseBought ? `/level/${courseBought.levels[0]}` : telcBought ? '/telc-b1-kurs' : '/dashboard')
+                }
+              >
+                {courseBought ? `Start ${courseBought.levels[0].toUpperCase()}` : telcBought ? 'Open the plan' : 'Start Learning'}
                 <ArrowRight className="w-5 h-5" aria-hidden="true" />
               </Button>
             </>

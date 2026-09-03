@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Crown, Check, Clock, Shield, Zap, Loader2, RefreshCw, AlertCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -6,6 +7,7 @@ import { useSubscription } from '../contexts/SubscriptionContext';
 import { LEMONSQUEEZY_CONFIG } from '../config/lemonsqueezy';
 import SEO from '../components/SEO';
 import { openCheckout } from '../utils/openCheckout';
+import { clearBuyIntent } from '../lib/buyIntent';
 import { markCheckoutStarted, consumeCheckoutSuccess } from '../lib/funnelTracking';
 import { PLANS, num } from '../data/pricing.js';
 import { LEVEL_COUNT, READING_LESSON_COUNT } from '../data/marketing.js';
@@ -28,7 +30,10 @@ const SubscriptionPage = () => {
     subscription,
     refreshSubscription,
     verifySubscription,
+    loading: subLoading,
   } = useSubscription();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const autoBuyRef = useRef(false);
   const [verifying, setVerifying] = useState(false);
   const [verifyMessage, setVerifyMessage] = useState('');
   const pollRef = useRef(null);
@@ -140,6 +145,26 @@ const SubscriptionPage = () => {
   };
   const handleBuyCourse = () => startPurchase('telc_b1_komplett', course.variantId, course.price);
 
+  // Resume a checkout that signup interrupted: /pricing/ stored the product
+  // key before sending the visitor to /signup, and every post-auth redirect
+  // lands here with ?buy=<key>. Opens exactly once, after entitlements have
+  // loaded (so an already-owned product never re-opens its checkout), then
+  // clears both the query and the stored intent.
+  useEffect(() => {
+    const key = searchParams.get('buy');
+    if (!key || autoBuyRef.current || subLoading || !user) return;
+    autoBuyRef.current = true;
+    clearBuyIntent();
+    setSearchParams({}, { replace: true });
+    if (key === 'monthly' || key === 'yearly') {
+      if (!isSubscribed) handleSubscribe(key);
+      return;
+    }
+    const target = key === 'telc_b1_komplett' ? course : LEMONSQUEEZY_CONFIG.levelCourses[key];
+    if (target?.variantId && !hasProduct(key)) startPurchase(key, target.variantId, target.price);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, subLoading, user]);
+
   // Manual "Verify my subscription" button handler
   const handleManualVerify = async () => {
     setVerifying(true);
@@ -224,8 +249,14 @@ const SubscriptionPage = () => {
             level={1}
             size="page"
             align="center"
-            title="Pick up where you left off"
-            lead="Your trial is over, but your progress stays. Choose a plan and keep learning without limits."
+            title={isSubscribed ? 'Your plan' : inTrial ? 'Choose how you want to keep going' : 'Pick up where you left off'}
+            lead={
+              isSubscribed
+                ? 'Pro is active. You can also add a level course — it stays yours for life, whatever happens to the subscription.'
+                : inTrial
+                  ? `Your free trial is running (${daysLeft} ${daysLeft === 1 ? 'day' : 'days'} left). Buy the level you need once and keep it, or go Pro for the AI tools every month.`
+                  : 'Your trial is over, but your progress stays. Choose a plan and keep learning without limits.'
+            }
           />
         </div>
 
