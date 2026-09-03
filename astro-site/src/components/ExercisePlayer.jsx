@@ -28,6 +28,9 @@ const BTN =
 const BTN_PRIMARY = `${BTN} bg-siegel px-5 py-2.5 text-sm text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`;
 const BTN_PRIMARY_LG = `${BTN} bg-siegel px-7 py-3.5 text-base text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`;
 const BTN_CELEBRATE = `${BTN} bg-accent-himbeer px-7 py-3.5 text-base text-white shadow-raise-himbeer hover:bg-accent-himbeer-edge active:translate-y-1 active:shadow-none`;
+// Secondary action on the results card. Flat by rule 3 (nothing to press home)
+// and siegel-on-paper by rule 2, so the forward action keeps the only raised button.
+const BTN_QUIET = `${BTN} px-5 py-2.5 text-sm text-siegel hover:text-siegel-deep`;
 
 const OPTION_BASE =
   'w-full rounded-clay border px-4 py-3 text-left text-[0.9375rem] font-semibold transition-all duration-100 ease-snap';
@@ -171,7 +174,7 @@ function FillBlank({ exercise, onAnswer, answered }) {
   );
 }
 
-export default function ExercisePlayer({ exercises, topicId }) {
+export default function ExercisePlayer({ exercises, topicId, nextHref, nextTitle }) {
   const [current, setCurrent] = useState(0);
   const [results, setResults] = useState([]); // array of booleans
   const [answered, setAnswered] = useState(false);
@@ -248,9 +251,35 @@ export default function ExercisePlayer({ exercises, topicId }) {
         <p className="mx-auto mt-4 mb-6 max-w-sm text-[0.9375rem] leading-relaxed text-graphite">
           {pct >= 70 ? "Excellent! You've got a good grasp of this topic." : pct >= 40 ? 'Good start — review the rules and try again.' : 'No problem — grammar takes practice. Start over!'}
         </p>
-        <button onClick={restart} className={perfect ? BTN_CELEBRATE : BTN_PRIMARY_LG}>
-          Practice again
-        </button>
+        {/* Forward motion is the primary action. 89% of learners reach this screen
+            and the only button used to be "Practice again", which asks the one
+            person who just succeeded to repeat themselves. The next topic is the
+            raised button; practising again stays available, quietly. */}
+        {/* Which action is primary follows the score, so the button agrees with
+            the sentence above it: a weak run is told to practise again and was
+            being handed a "Next" button, which is the opposite advice. 70% is
+            the same threshold recordAttempt uses to mark a topic completed. */}
+        {nextHref && pct >= 70 ? (
+          <div className="flex flex-col items-center gap-1">
+            <a href={nextHref} className={perfect ? BTN_CELEBRATE : BTN_PRIMARY_LG}>
+              {nextTitle ? `Next: ${nextTitle}` : 'Next topic'} →
+            </a>
+            <button onClick={restart} className={BTN_QUIET}>
+              Practice again
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-1">
+            <button onClick={restart} className={BTN_PRIMARY_LG}>
+              Practice again
+            </button>
+            {nextHref && (
+              <a href={nextHref} className={BTN_QUIET}>
+                {nextTitle ? `Skip to ${nextTitle}` : 'Skip to next topic'} →
+              </a>
+            )}
+          </div>
+        )}
       </div>
     );
   }
@@ -280,10 +309,19 @@ export default function ExercisePlayer({ exercises, topicId }) {
       {!(exercise.question_de && exercise.question_en) && <div className="mb-3" />}
 
       {/* Input */}
+      {/* `key` is load-bearing, not decoration. Both inputs keep local state
+          (FillBlank's `submitted`/`value`, MultipleChoice's `selected`), and
+          without a key React reuses the same instance when one question is
+          followed by another of the SAME type. FillBlank then stays `submitted`
+          into the next question: the field is disabled, holds the previous
+          answer, is marked wrong against a prompt the learner never saw, and
+          renders no Check button — while the parent has reset `answered`, so
+          there is no Next button either. The lesson dead-ends with no control
+          on screen. Keying by exercise id remounts per question. */}
       {exercise.exercise_type === 'multiple_choice' ? (
-        <MultipleChoice exercise={exercise} onAnswer={handleAnswer} answered={answered} />
+        <MultipleChoice key={exercise.id ?? current} exercise={exercise} onAnswer={handleAnswer} answered={answered} />
       ) : (
-        <FillBlank exercise={exercise} onAnswer={handleAnswer} answered={answered} />
+        <FillBlank key={exercise.id ?? current} exercise={exercise} onAnswer={handleAnswer} answered={answered} />
       )}
 
       {/* Feedback — aria-live so screen readers hear the result, which is

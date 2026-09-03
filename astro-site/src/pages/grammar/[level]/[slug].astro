@@ -471,7 +471,13 @@ const CALLOUT_LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[
         <h2 class={`reveal ${H2} mb-2`}>Practice Exercises</h2>
         <p class="reveal mb-5 font-data text-[0.8125rem] text-graphite" style="--rd:80ms">{exercises.length} interactive {exercises.length === 1 ? 'exercise' : 'exercises'}</p>
         <div class={`reveal p-6 ${CARD_FLAT}`} style="--rd:160ms">
-          <ExercisePlayer exercises={exercises} topicId={topic.id} client:visible />
+          <ExercisePlayer
+            exercises={exercises}
+            topicId={topic.id}
+            nextHref={nextGlobal ? `/grammar/${nextGlobal.sub_level}/${nextGlobal.slug}/` : undefined}
+            nextTitle={nextGlobal?.title_en}
+            client:visible
+          />
         </div>
       </section>
     )}
