@@ -47,7 +47,7 @@ export function renderSummary(m, prev) {
   }
   lines.push(`DeutschMeister weekly truth — ${date}`);
   lines.push('');
-  lines.push(`Revenue: MRR ${delta(m.subscriptions?.mrr, p.subscriptions?.mrr, eur)} from ${m.subscriptions?.paying} paying subs`);
+  lines.push(`Revenue: MRR ${delta(m.subscriptions?.mrr, p.subscriptions?.mrr, eur)} from ${m.subscriptions?.paying} renewing subs; ${m.subscriptions?.at_risk ?? 0} paid-but-not-renewing (cancelled/unpaid grace)`);
   lines.push(`Courses: ${m.purchases?.sales_7d} sold this week (${eur(m.purchases?.revenue_7d)}); lifetime ${m.purchases?.sales_all} for ${eur(m.purchases?.revenue_all)}; by product: ${JSON.stringify(m.purchases?.by_product_7d || {})}`);
   lines.push(`Users: ${delta(m.users?.total, p.users?.total)} total, ${m.users?.signups_7d} new this week, ${m.users?.confirmed} confirmed (${pct(m.users?.confirmed, m.users?.total)})`);
   lines.push(`Learning: ${m.grammar?.active_users_7d} users did grammar this week; new cohort (14d) ${m.grammar?.new_cohort_14d}, one-and-done ${m.grammar?.one_and_done_14d} (${pct(m.grammar?.one_and_done_14d, m.grammar?.new_cohort_14d)})`);

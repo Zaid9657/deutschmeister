@@ -39,11 +39,16 @@ AS $$
            count(*) FILTER (WHERE created_at > now() - interval '30 days') AS signups_30d
     FROM auth.users
   ),
+  -- "paying" = a live paid period that is still renewing: status active,
+  -- price > 0. Cancelled-but-paid-through and unpaid/past_due grace periods
+  -- still have access (checkSubscriptionStatus) but are not MRR — they are
+  -- counted separately as at_risk so a churn wave is visible a week early.
   s AS (
-    SELECT count(*) FILTER (WHERE subscription_end > now() AND plan_type IN ('monthly','yearly','quarterly') AND coalesce(price_paid,0) > 0) AS paying,
+    SELECT count(*) FILTER (WHERE subscription_end > now() AND plan_type IN ('monthly','yearly','quarterly') AND coalesce(price_paid,0) > 0 AND status = 'active') AS paying,
+           count(*) FILTER (WHERE subscription_end > now() AND plan_type IN ('monthly','yearly','quarterly') AND coalesce(price_paid,0) > 0 AND status <> 'active') AS at_risk,
            count(*) FILTER (WHERE subscription_end > now() AND plan_type IN ('monthly','yearly','quarterly')) AS live_any,
            count(*) FILTER (WHERE subscription_end > now() AND plan_type = 'course') AS course_pro_windows,
-           round(coalesce(sum(CASE WHEN subscription_end > now() AND coalesce(price_paid,0) > 0 THEN
+           round(coalesce(sum(CASE WHEN subscription_end > now() AND coalesce(price_paid,0) > 0 AND status = 'active' THEN
              CASE plan_type WHEN 'yearly' THEN price_paid/12 WHEN 'quarterly' THEN price_paid/3 WHEN 'monthly' THEN price_paid ELSE 0 END END), 0), 2) AS mrr
     FROM public.subscriptions
   ),
