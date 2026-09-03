@@ -13,6 +13,10 @@ environment gotchas. It supersedes the "still open" lists in the roadmap and in
 
 Two companion files exist so nothing has to be hunted across five documents again:
 
+- [`owner-prompts.md`](./owner-prompts.md) — paste-ready Claude in Chrome prompts for the
+  steps only the owner's browser can do (Lemon Squeezy products, discounts, redirects, test buys).
+- [`monetization-2026-09-03.md`](./monetization-2026-09-03.md) — the monetization decision
+  (courses as the product), the live product/variant ids, and the launch gate.
 - [`open-actions.md`](./open-actions.md) — every still-open item, owner action, and
   pending decision, consolidated with its source and date.
 - [`revenue-plan-2026-08-31.md`](./revenue-plan-2026-08-31.md) — the adopted
