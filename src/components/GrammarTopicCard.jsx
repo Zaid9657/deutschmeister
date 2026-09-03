@@ -11,10 +11,10 @@ const GrammarTopicCard = ({ topic, level, isCompleted, progress = 0 }) => {
   const { i18n } = useTranslation();
 
   const { user } = useAuth();
-  const { hasAccess } = useSubscription();
+  const { hasLevelAccess } = useSubscription();
   const isGerman = i18n.language === 'de';
   const free = isLevelFree(level);
-  const locked = !free && !(user && hasAccess);
+  const locked = !free && !(user && hasLevelAccess(level));
 
   const handleClick = () => {
     // The lesson is served by the Astro build (one lesson, one URL) — a

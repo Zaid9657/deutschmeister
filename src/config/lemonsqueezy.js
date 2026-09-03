@@ -4,7 +4,7 @@
 // come from src/data/marketing.js. Only the variant IDs and the checkout URL
 // live here — those are checkout plumbing, not shared copy, and the Astro site
 // has no use for them.
-import { PLANS, COURSES, CURRENCY } from '../data/pricing.js';
+import { PLANS, COURSES, LEVEL_COURSES, CURRENCY } from '../data/pricing.js';
 import { LEVEL_COUNT, SPEAKING_LINE, XRAY_LINE } from '../data/marketing.js';
 
 export const LEMONSQUEEZY_CONFIG = {
@@ -60,6 +60,17 @@ export const LEMONSQUEEZY_CONFIG = {
       proMonths: COURSES.telc_b1_komplett.proMonths,
       variantId: import.meta.env.VITE_LEMONSQUEEZY_TELC_B1_VARIANT_ID || '',
     },
+  },
+
+  // Level courses (the product since 2026-09-03). Same no-fallback rule: an
+  // unset variant hides the card. Vite only inlines statically-named env
+  // reads, so each one is spelled out rather than looked up by key.
+  levelCourses: {
+    course_a1: { ...LEVEL_COURSES.course_a1, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_A1_VARIANT_ID || '' },
+    course_a2: { ...LEVEL_COURSES.course_a2, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_A2_VARIANT_ID || '' },
+    course_b1: { ...LEVEL_COURSES.course_b1, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_B1_VARIANT_ID || '' },
+    course_b2: { ...LEVEL_COURSES.course_b2, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_B2_VARIANT_ID || '' },
+    course_alle: { ...LEVEL_COURSES.course_alle, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_ALLE_VARIANT_ID || '' },
   },
 
   // Generate checkout URL with user info

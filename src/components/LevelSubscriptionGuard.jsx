@@ -8,7 +8,7 @@ import LockedContentOverlay from './LockedContentOverlay';
 const LevelSubscriptionGuard = ({ children }) => {
   const { level } = useParams();
   const { user, loading: authLoading } = useAuth();
-  const { hasAccess, loading: subLoading } = useSubscription();
+  const { hasLevelAccess, loading: subLoading } = useSubscription();
   const location = useLocation();
   const { t } = useTranslation();
 
@@ -34,8 +34,8 @@ const LevelSubscriptionGuard = ({ children }) => {
     return <LockedContentOverlay level={level} />;
   }
 
-  // Logged in but no subscription/trial
-  if (!hasAccess) {
+  // Logged in but neither subscription/trial nor a level course covering it
+  if (!hasLevelAccess(level)) {
     return <Navigate to="/subscription" state={{ from: location }} replace />;
   }
 

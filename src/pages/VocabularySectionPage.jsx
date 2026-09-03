@@ -41,7 +41,7 @@ const iconMap = {
 // unmounts and remounts all eight cards, discarding their DOM and animations.
 function VocabularyLevelCard({
   level, iconMap, contentLevelThemes, wordCounts, countsLoaded,
-  getCompletedCount, isLevelFree, user, hasAccess, navigate,
+  getCompletedCount, isLevelFree, user, hasLevelAccess, navigate,
 }) {
   const Icon = iconMap[level] || Sun;
   const levelInfo = contentLevelThemes[level] || {};
@@ -51,7 +51,7 @@ function VocabularyLevelCard({
   const progressPercent = wordCount > 0 ? Math.round((completedCount / wordCount) * 100) : 0;
 
   const isFree = isLevelFree(level);
-  const canAccess = isFree || (user && hasAccess);
+  const canAccess = isFree || (user && hasLevelAccess(level));
 
   const handleClick = () => {
     if (canAccess) {
@@ -135,7 +135,7 @@ const VocabularySectionPage = () => {
   const navigate = useNavigate();
   const { progress } = useProgress();
   const { user } = useAuth();
-  const { hasAccess } = useSubscription();
+  const { hasLevelAccess } = useSubscription();
 
   const [wordCounts, setWordCounts] = useState({});
   const [countsLoaded, setCountsLoaded] = useState(false);
@@ -282,7 +282,7 @@ const VocabularySectionPage = () => {
                             getCompletedCount={getCompletedCount}
                             isLevelFree={isLevelFree}
                             user={user}
-                            hasAccess={hasAccess}
+                            hasLevelAccess={hasLevelAccess}
                             navigate={navigate}
                           />
                         ))}
@@ -304,7 +304,7 @@ const VocabularySectionPage = () => {
                             getCompletedCount={getCompletedCount}
                             isLevelFree={isLevelFree}
                             user={user}
-                            hasAccess={hasAccess}
+                            hasLevelAccess={hasLevelAccess}
                             navigate={navigate}
                           />
                       ))}

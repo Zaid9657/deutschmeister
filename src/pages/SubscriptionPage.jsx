@@ -108,13 +108,21 @@ const SubscriptionPage = () => {
   // the course; access lands via the webhook, observed by the same poll.
   const course = LEMONSQUEEZY_CONFIG.courses.telc_b1_komplett;
   const ownsCourse = hasProduct('telc_b1_komplett');
-  const handleBuyCourse = () => {
+
+  // Level courses (the product since 2026-09-03): one-time, lifetime access
+  // to a CEFR band. Same render rule as the telc card — an unset variant
+  // hides the card — and the same poll observes the webhook landing.
+  const levelCourses = Object.values(LEMONSQUEEZY_CONFIG.levelCourses);
+  const ownsBundle = hasProduct('course_alle');
+  const visibleLevelCourses = levelCourses.filter((c) => c.variantId || hasProduct(c.key));
+
+  const startPurchase = (productKey, variantId, price) => {
     const checkoutUrl = LEMONSQUEEZY_CONFIG.getCheckoutUrl(
-      course.variantId,
+      variantId,
       user?.email || '',
       user?.id || ''
     );
-    markCheckoutStarted('telc_b1_komplett', course.price);
+    markCheckoutStarted(productKey, price);
     openCheckout(checkoutUrl);
 
     setVerifying(true);
@@ -130,6 +138,7 @@ const SubscriptionPage = () => {
       }
     }, 3000);
   };
+  const handleBuyCourse = () => startPurchase('telc_b1_komplett', course.variantId, course.price);
 
   // Manual "Verify my subscription" button handler
   const handleManualVerify = async () => {
@@ -395,6 +404,73 @@ const SubscriptionPage = () => {
             ? 'Alle Pläne beinhalten eine 7-tägige kostenlose Testphase. Jederzeit kündbar.'
             : 'All plans include a 7-day free trial. Cancel anytime.'}
         </Reveal>
+
+        {/* Level courses — buy a band once, keep it. The bundle is the
+            featured card. Rendered only when the LS products exist (variant
+            configured) or the buyer already owns one. */}
+        {visibleLevelCourses.length > 0 && (
+          <Reveal className="mb-12">
+            <SectionHeading
+              level={2}
+              align="center"
+              title={isGerman ? 'Oder: eine Stufe kaufen und behalten' : 'Or: buy a level and keep it'}
+              lead={isGerman
+                ? `Einmal zahlen, für immer lernen — beide Teilstufen, plus ${course.proMonths} Monate Pro (KI-Sprechen, Schreibkorrektur, Satz-Röntgen) inklusive.`
+                : `Pay once, learn forever — both sub-levels, plus ${course.proMonths} months of Pro (AI speaking, writing feedback, Sentence X-Ray) included.`}
+            />
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+              {visibleLevelCourses.map((c) => {
+                const isBundle = c.key === 'course_alle';
+                const owned = hasProduct(c.key) || (ownsBundle && !isBundle);
+                const firstLevel = c.levels[0];
+                return (
+                  <Card
+                    key={c.key}
+                    raised
+                    edge={isBundle ? 'siegel' : 'paper'}
+                    className={`relative flex flex-col p-5 ${isBundle ? 'sm:col-span-2 lg:col-span-1' : ''}`}
+                  >
+                    {isBundle && (
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                        <span className="inline-flex items-center rounded-pill bg-gold px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-ink shadow-raise">
+                          {isGerman ? `Spare ${c.savingPercent}%` : `Save ${c.savingPercent}%`}
+                        </span>
+                      </div>
+                    )}
+                    <Chip tone="label" className="mb-2 self-start">{c.code}</Chip>
+                    <h3 className="text-[1.0625rem] font-bold leading-tight text-ink">{isGerman ? c.nameDe : c.name}</h3>
+                    <p className="mt-2 font-display text-[1.75rem] font-semibold leading-none tracking-[-0.02em] text-ink">
+                      €{num(c.price)}
+                      <span className="ml-1 font-body text-xs font-normal tracking-normal text-graphite">
+                        {isGerman ? 'einmalig' : 'one time'}
+                      </span>
+                    </p>
+                    <p className="mt-2 text-xs text-graphite">
+                      {isBundle
+                        ? (isGerman ? `Alle ${c.levels.length} Stufen, A1.1–B2.2` : `All ${c.levels.length} levels, A1.1–B2.2`)
+                        : (isGerman ? `${c.levels[0].toUpperCase()} + ${c.levels[1].toUpperCase()} · lebenslang` : `${c.levels[0].toUpperCase()} + ${c.levels[1].toUpperCase()} · lifetime`)}
+                    </p>
+                    {owned ? (
+                      <Button to={`/level/${firstLevel}`} variant="secondary" size="md" className="mt-4 w-full">
+                        {isGerman ? 'Gekauft · öffnen →' : 'Owned · open →'}
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() => startPurchase(c.key, c.variantId, c.price)}
+                        variant={isBundle ? 'primary' : 'secondary'}
+                        shimmer={isBundle}
+                        size="md"
+                        className="mt-4 w-full"
+                      >
+                        {isGerman ? 'Kaufen' : 'Buy'}
+                      </Button>
+                    )}
+                  </Card>
+                );
+              })}
+            </div>
+          </Reveal>
+        )}
 
         {/* One-time course — rendered only when the buyer owns it (link to the
             course area) or the LS product exists (variantId configured), so an

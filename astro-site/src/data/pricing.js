@@ -94,6 +94,64 @@ export const COURSES = {
   },
 };
 
+/**
+ * Level courses — the product, decided 2026-09-03 (docs/monetization-2026-09-03.md).
+ * One-time, lifetime access to a CEFR band (both sub-levels), plus the same
+ * included Pro window as the telc course. The bundle is every band at once.
+ * A band is the unit because that is what a learner means by "A2": nobody
+ * shops for "A2.1". The subscription stays as the AI add-on and is untouched.
+ *
+ * `levels` is what the entitlement unlocks (src/contexts/SubscriptionContext.jsx
+ * hasLevelAccess) — lowercase URL form, same as FREE_LEVELS.
+ */
+export const COURSE_LEVEL_PRICE_EUR = 49;
+export const COURSE_BUNDLE_PRICE_EUR = 129;
+
+export const ALL_LEVELS = ['a1.1', 'a1.2', 'a2.1', 'a2.2', 'b1.1', 'b1.2', 'b2.1', 'b2.2'];
+
+/** Whole-percent saving of the bundle over four single bands — floored, never up. */
+export const BUNDLE_SAVING_PERCENT = Math.floor(
+  ((COURSE_LEVEL_PRICE_EUR * 4 - COURSE_BUNDLE_PRICE_EUR) / (COURSE_LEVEL_PRICE_EUR * 4)) * 100,
+);
+
+const band = (key, code, name, nameDe, levels) => ({
+  key,
+  code,
+  name,
+  nameDe,
+  price: COURSE_LEVEL_PRICE_EUR,
+  proDays: COURSE_PRO_DAYS,
+  proMonths: COURSE_PRO_MONTHS,
+  levels,
+});
+
+export const LEVEL_COURSES = {
+  course_a1: band('course_a1', 'A1', 'German A1 Course', 'Deutsch A1 Kurs', ['a1.1', 'a1.2']),
+  course_a2: band('course_a2', 'A2', 'German A2 Course', 'Deutsch A2 Kurs', ['a2.1', 'a2.2']),
+  course_b1: band('course_b1', 'B1', 'German B1 Course', 'Deutsch B1 Kurs', ['b1.1', 'b1.2']),
+  course_b2: band('course_b2', 'B2', 'German B2 Course', 'Deutsch B2 Kurs', ['b2.1', 'b2.2']),
+  course_alle: {
+    key: 'course_alle',
+    code: 'A1–B2',
+    name: 'German Complete Course (A1–B2)',
+    nameDe: 'Deutsch Komplettkurs (A1–B2)',
+    price: COURSE_BUNDLE_PRICE_EUR,
+    proDays: COURSE_PRO_DAYS,
+    proMonths: COURSE_PRO_MONTHS,
+    levels: ALL_LEVELS,
+    savingPercent: BUNDLE_SAVING_PERCENT,
+  },
+};
+
+/** Levels a product key unlocks — [] for unknown keys and for the telc course. */
+export const levelsForProduct = (productKey) => LEVEL_COURSES[productKey]?.levels || [];
+
+/** The single-band course that contains a level (lowercase), or null. */
+export const bandCourseForLevel = (level) => {
+  const l = (level || '').toLowerCase();
+  return Object.values(LEVEL_COURSES).find((c) => c.key !== 'course_alle' && c.levels.includes(l)) || null;
+};
+
 export const PLANS = {
   monthly: {
     key: 'monthly',
