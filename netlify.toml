@@ -28,6 +28,12 @@
 [functions."activation-lifecycle"]
   schedule = "30 9 * * *"
 
+# Weekly truth run (Monday 06:00 UTC): measures revenue/users/learning into
+# weekly_metrics and emails the owner the deltas. The schedule() wrapper in
+# the function is authoritative; this mirrors it.
+[functions."weekly-truth"]
+  schedule = "0 6 * * 1"
+
 # Security headers for all pages
 [[headers]]
   for = "/*"
