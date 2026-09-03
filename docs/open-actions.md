@@ -40,7 +40,7 @@ see `docs/HANDOFF-2026-09-03.md` for measured state.
 | D-2 | `/speaking/` renders a sign-in wall to anonymous visitors (~25 words of unique content at sitemap priority 0.9) — needs real above-the-gate copy like `/analyze/` has | same, §Class B | 2026-08-24 |
 | D-3 | `Offer.priceValidUntil` on `/pricing/` — a pricing commitment through a date; owner's call | same | 2026-08-24 |
 | D-4 | Bilingual URL strategy (one language per page vs `/en/` split with reciprocal hreflang) — gates whether future guides are written once or twice | roadmap §1.5 | 2026-08-22 |
-| D-6 | **Grammar gating**: Astro grammar lessons are public at every level (no gate); the level-course offer says it opens grammar. Gate the exercises above A1.1 behind trial/Pro/course (recommended) or reword the offer | `docs/HANDOFF-2026-09-03.md` §11 | 2026-09-03 |
+| D-6 | ~~Grammar gating~~ — **DECIDED + DONE 2026-09-03**: rule text stays public, exercises above A1.1 need trial / Pro / course (`astro-site/src/lib/levelAccess.js`, `ExercisePlayer.jsx`) | `docs/HANDOFF-2026-09-03.md` §11 | closed 2026-09-03 |
 | D-5 | Promote CSP from Report-Only to enforcing — only after a clean report window review | `EVALUATION.md`; standing note | 2026-08-16 |
 
 ## 3 · Engineering backlog (no decision blocking)

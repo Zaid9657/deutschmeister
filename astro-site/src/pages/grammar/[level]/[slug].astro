@@ -474,6 +474,7 @@ const CALLOUT_LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[
           <ExercisePlayer
             exercises={exercises}
             topicId={topic.id}
+            level={level}
             nextHref={nextGlobal ? `/grammar/${nextGlobal.sub_level}/${nextGlobal.slug}/` : undefined}
             nextTitle={nextGlobal?.title_en}
             client:visible

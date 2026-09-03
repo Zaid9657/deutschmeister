@@ -166,6 +166,8 @@ const PRICE_FREE_SURFACES = [
   // else.
   'astro-site/src/pages/telc-b1-komplettvorbereitung.astro',
   'src/pages/TelcB1KursPage.jsx',
+  // The exercise paywall quotes the course and Pro prices on every gated lesson.
+  'astro-site/src/components/ExercisePlayer.jsx',
 ];
 
 test('no page source retypes a price literal', () => {
