@@ -63,6 +63,20 @@ For each product, two ids are needed (same as the telc course, see `open-actions
 O-15): the **numeric variant id** (LS dashboard → product → variant, or the API) and the
 **checkout UUID** (the `/checkout/buy/<uuid>` share link). Send both per product.
 
+## Created 2026-09-03 — product 1336941 (one product, five variants)
+
+| Variant | Price | Numeric variant id | Checkout UUID |
+|---|---|---|---|
+| A1 | €49 | 2088862 | 1f1d7ab4-435d-4c35-a427-94aeec7ea831 |
+| A2 | €49 | 2088867 | 90e2000d-5804-4bc3-90c9-e934bd92f0be |
+| B1 | €49 | 2088868 | 12793913-0c06-48be-b8fc-248b71a5c684 |
+| B2 | €49 | 2088869 | 60446546-e1db-4057-9eca-dd8ec6ee9dc9 |
+| Complete A1–B2 | €129 | 2088871 | 79fc6a8b-06a7-4b1f-9e84-1b755238832f |
+
+Tax category "SaaS – personal use". LS auto-created a hidden "Default" variant (2088893,
+pending, invisible to customers) — harmless; no env var points at it. All ten env vars
+below were set via the Netlify connector on 2026-09-03.
+
 ## Env vars to set (agent, via the Netlify connector, once the ids exist)
 
 Functions scope, numeric: `LEMONSQUEEZY_COURSE_A1_VARIANT_ID` … `_B2_` and
