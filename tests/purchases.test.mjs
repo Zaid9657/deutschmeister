@@ -103,6 +103,19 @@ test('a checkout interrupted by signup resumes, and a purchase lands on our succ
   assert.ok(read('src/pages/DashboardPage.jsx').includes('LEVEL_COURSES'), 'dashboard has no way into a bought level');
 });
 
+test('grammar exercises above the free level are gated on the same three doors as the SPA', () => {
+  // Decision 2026-09-03: rule text public, exercises need trial / Pro / course.
+  const player = read('astro-site/src/components/ExercisePlayer.jsx');
+  assert.ok(player.includes("import('../lib/levelAccess.js')"), 'ExercisePlayer must consult levelAccess');
+  assert.ok(player.includes('FREE_LEVEL_LABEL'), 'the free level must derive from marketing.js, never a literal');
+  assert.ok(!/['"]a1\.1['"]/.test(player), 'no hardcoded free level in the player');
+  const access = read('astro-site/src/lib/levelAccess.js');
+  for (const door of ['is_subscribed', 'trial_ends_at', 'levelsForProduct']) {
+    assert.ok(access.includes(door), `levelAccess.js is missing the ${door} door`);
+  }
+  assert.ok(read('astro-site/src/pages/grammar/[level]/[slug].astro').includes('level={level}'), 'the lesson page must pass the level to the player');
+});
+
 test('the daily sweep expires only active course windows', () => {
   const src = read('netlify/functions/trial-lifecycle.mjs');
   assert.ok(src.includes('expireCourseWindows'), 'course-window sweep missing from the daily run');

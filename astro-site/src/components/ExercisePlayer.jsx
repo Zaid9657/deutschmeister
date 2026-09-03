@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { bandCourseForLevel, eur, PLANS } from '../data/pricing.js';
+import { FREE_LEVEL_LABEL, TRIAL_DAYS } from '../data/marketing.js';
 
 // Cheap synchronous check for a stored Supabase session, so the logged-out
 // majority never fetches the Supabase client chunk.
@@ -174,7 +176,94 @@ function FillBlank({ exercise, onAnswer, answered }) {
   );
 }
 
-export default function ExercisePlayer({ exercises, topicId, nextHref, nextTitle }) {
+// The paywall, decided 2026-09-03 (docs/HANDOFF-2026-09-03.md §11): the rule
+// text of every lesson stays public (the SEO asset), the EXERCISES above the
+// free level need a live trial, Pro, or a bought level course — the same
+// three doors as the SPA's hasLevelAccess. Signed-out visitors see the
+// signup door first (7 days of Pro), signed-in ones the course they are
+// missing. Prices derive from pricing.js; nothing here is retyped.
+function LockedExercises({ level, signedIn, count }) {
+  const band = bandCourseForLevel(level);
+  const code = band?.code || level.toUpperCase();
+  const BTN = 'inline-flex select-none items-center justify-center gap-2 rounded-clay font-bold transition-all duration-100 ease-snap';
+  const primary = `${BTN} bg-siegel px-6 py-3 text-sm text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`;
+  const secondary = `${BTN} border border-rule bg-white px-6 py-3 text-sm text-ink shadow-raise hover:border-siegel hover:text-siegel-deep active:translate-y-1 active:shadow-none`;
+  return (
+    <div className="text-center">
+      <span className="inline-block rounded-pill bg-paper-sunk px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
+        {code} · {count} {count === 1 ? 'exercise' : 'exercises'}
+      </span>
+      <p className="mt-4 font-display text-[1.375rem] font-semibold leading-tight tracking-[-0.018em] text-ink">
+        The rules are free. The practice is part of {code}.
+      </p>
+      <p className="mx-auto mt-2 max-w-md text-[0.9375rem] leading-relaxed text-graphite">
+        {signedIn
+          ? `Your account does not include ${code} yet. Buy the ${code} course once and keep it, or go Pro for every level and the AI tools.`
+          : `${FREE_LEVEL_LABEL} is free with no account. A free account adds ${TRIAL_DAYS} days of Pro — every level, every exercise — before you decide.`}
+      </p>
+      <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        {signedIn ? (
+          <>
+            {band && (
+              <a href="/pricing/" className={primary}>
+                Buy the {code} course — {eur(band.price)} once
+              </a>
+            )}
+            <a href="/pricing/" className={secondary}>
+              Go Pro — {eur(PLANS.monthly.price)}/month
+            </a>
+          </>
+        ) : (
+          <>
+            <a href="https://deutsch-meister.de/signup" className={primary}>
+              Start free — {TRIAL_DAYS} days of Pro included
+            </a>
+            <a href="https://deutsch-meister.de/login" className={secondary}>
+              Log in
+            </a>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default function ExercisePlayer({ exercises, topicId, level, nextHref, nextTitle }) {
+  const isFreeLevel = !level || level.toLowerCase() === FREE_LEVEL_LABEL.toLowerCase();
+  // 'open' | 'checking' | 'locked'
+  const [access, setAccess] = useState(() => {
+    if (isFreeLevel) return 'open';
+    return hasStoredSession() ? 'checking' : 'locked';
+  });
+  const [signedIn, setSignedIn] = useState(() => !isFreeLevel && hasStoredSession());
+
+  useEffect(() => {
+    if (access !== 'checking') return;
+    let cancelled = false;
+    import('../lib/levelAccess.js')
+      .then((m) => m.getLevelAccess(level))
+      .then((r) => {
+        if (cancelled) return;
+        setSignedIn(r.signedIn);
+        setAccess(r.open ? 'open' : 'locked');
+      })
+      .catch(() => {
+        if (!cancelled) setAccess('locked');
+      });
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [access]);
+
+  if (access === 'checking') {
+    return <p className="text-sm italic text-graphite">Checking your access…</p>;
+  }
+  if (access === 'locked') {
+    return <LockedExercises level={level} signedIn={signedIn} count={exercises?.length || 0} />;
+  }
+  return <ExerciseRun exercises={exercises} topicId={topicId} nextHref={nextHref} nextTitle={nextTitle} />;
+}
+
+function ExerciseRun({ exercises, topicId, nextHref, nextTitle }) {
   const [current, setCurrent] = useState(0);
   const [results, setResults] = useState([]); // array of booleans
   const [answered, setAnswered] = useState(false);
