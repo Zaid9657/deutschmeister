@@ -561,6 +561,14 @@ ${faqSection(PODCAST_FAQS)}
       <p class="font-bold text-ink">Deutschmeister ist diese Idee — für alle geöffnet.</p>
     </div>
   </div></section>
+  <section class="bg-paper-sunk py-20"><div class="mx-auto max-w-2xl px-4 sm:px-6">
+    <h2 class="${H_SECTION}">Wie wir mit Fakten umgehen</h2>
+    <div class="mt-6 flex flex-col gap-4 ${BODY}">
+      <p>Prüfungsfakten tragen bei uns ein sichtbares Prüfdatum und ihre Quellen — auf der Seite selbst, nicht im Kleingedruckten. Ändert ein Prüfungsanbieter etwas, siehst du, wann wir zuletzt nachgesehen haben.</p>
+      <p>Jede Zahl über unsere Inhalte ist gegen die Datenbank gemessen, nie geschätzt. Wo wir nicht gemessen haben, steht keine Zahl.</p>
+      <p>Und keine erfundenen Bewertungen: Erfahrungsberichte erscheinen hier erst, wenn echte Lernende sie uns schreiben.</p>
+    </div>
+  </div></section>
   <section class="py-20"><div class="mx-auto max-w-4xl px-4 sm:px-6">
     <h2 class="text-center ${H_SECTION}">Warum Deutschmeister anders ist</h2>
     <div class="mt-12 grid gap-6 sm:grid-cols-3">

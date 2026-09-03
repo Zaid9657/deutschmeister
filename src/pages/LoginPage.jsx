@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Eye, EyeOff, AlertCircle, Loader2 } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, AlertCircle, Loader2, RefreshCw, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../utils/supabase';
+import { trackVerificationEmailResent } from '../lib/funnelTracking';
 import SEO from '../components/SEO';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card.jsx';
@@ -30,18 +32,32 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  // 'idle' | 'sending' | 'sent' — the unconfirmed-account rescue path below.
+  const [unconfirmed, setUnconfirmed] = useState(false);
+  const [resendState, setResendState] = useState('idle');
 
   const from = location.state?.from?.pathname || '/dashboard';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setUnconfirmed(false);
+    setResendState('idle');
     setLoading(true);
 
     try {
       const { error } = await signIn(email, password);
       if (error) {
-        setError(error.message);
+        // An unconfirmed account CANNOT reach /verify-email (that page needs a
+        // session, and this login just refused to create one), so the rescue
+        // has to live right here. Observed 2026-09-02: a real user hit this
+        // wall nine times, re-signed-up, tried other passwords, and left —
+        // the raw "Email not confirmed" string gave them nothing to do.
+        if (error.code === 'email_not_confirmed' || /email not confirmed/i.test(error.message || '')) {
+          setUnconfirmed(true);
+        } else {
+          setError(error.message);
+        }
       } else {
         navigate(from, { replace: true });
       }
@@ -49,6 +65,20 @@ const LoginPage = () => {
       setError('An unexpected error occurred');
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Session-less resend — supabase.auth.resend only needs the email address.
+  const handleResend = async () => {
+    if (!email || resendState === 'sending') return;
+    setResendState('sending');
+    const { error: resendError } = await supabase.auth.resend({ type: 'signup', email });
+    if (resendError) {
+      setError(resendError.message);
+      setResendState('idle');
+    } else {
+      trackVerificationEmailResent();
+      setResendState('sent');
     }
   };
 
@@ -87,6 +117,48 @@ const LoginPage = () => {
               <AlertCircle className="w-5 h-5 flex-shrink-0" aria-hidden="true" />
               You were signed out because you were inactive.
             </div>
+          )}
+
+          {unconfirmed && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 rounded-clay bg-accent-aprikose-wash px-4 py-4 text-accent-aprikose-ink"
+            >
+              <div className="flex items-start gap-3">
+                <Mail className="mt-0.5 w-5 h-5 flex-shrink-0" aria-hidden="true" />
+                <div className="text-sm">
+                  <p className="font-bold">Your account exists — it just isn't activated yet.</p>
+                  <p className="mt-1">
+                    Look for an email with the subject{' '}
+                    <span className="font-semibold">&ldquo;Confirm your DeutschMeister account&rdquo;</span> and click
+                    the link in the newest one. Check your spam folder too.
+                  </p>
+                </div>
+              </div>
+              {resendState === 'sent' ? (
+                <p className="mt-3 flex items-center gap-2 text-sm font-semibold">
+                  <CheckCircle2 className="w-4 h-4" aria-hidden="true" />
+                  Sent to {email} — click the link in that email, then log in here.
+                </p>
+              ) : (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  className="mt-3"
+                  onClick={handleResend}
+                  disabled={resendState === 'sending'}
+                >
+                  {resendState === 'sending' ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <RefreshCw className="w-4 h-4" />
+                  )}
+                  Send me a fresh confirmation email
+                </Button>
+              )}
+            </motion.div>
           )}
 
           {error && (

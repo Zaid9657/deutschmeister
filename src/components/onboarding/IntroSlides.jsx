@@ -4,7 +4,8 @@ import { Sparkles, ListChecks, Rocket, ChevronLeft, ChevronRight, Check, Bug, Gr
 import { useOnboarding } from '../../hooks/useOnboarding';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../utils/supabase';
-import { EXAM_TRACKS } from '../../data/examTracks';
+import { EXAM_TRACKS, examTrackByKey } from '../../data/examTracks';
+import { getTopicsForLevel } from '../../data/grammarTopics';
 import {
   trackOnboardingStarted,
   trackOnboardingSlideViewed,
@@ -33,16 +34,21 @@ const SLIDES = [
   {
     icon: ListChecks,
     headline: 'Your first day, step by step.',
+    // Honest time: the test's own landing page says 15–20 minutes. The old
+    // "5 min" here broke the promise at exactly the moment 3 of 4 confirmed
+    // signups were dropping out (measured 2026-09-02: 271 finished these
+    // slides in 90 days, only 73 ever started a lesson).
     checklist: [
-      'Take the placement test (5 min — we find your level)',
+      'Take the placement test (15–20 min — we find your exact level)',
       'Try a speaking session with the AI',
       'Break down your first German sentence with X-Ray',
     ],
   },
   {
     icon: Rocket,
-    headline: "Let's start with the placement test.",
-    body: "In 5 minutes you'll know exactly which level to start at. No weeks wasted on the wrong one.",
+    headline: 'How do you want to start?',
+    body:
+      'The placement test takes 15–20 minutes across reading, listening and speaking — and ends with the exact lesson to start at. Short on time? Jump into a first lesson now and place yourself properly later.',
     isFinal: true,
   },
 ];
@@ -95,6 +101,20 @@ export default function IntroSlides() {
   const handleSkip = () => {
     trackOnboardingSkipped();
     completeOnboarding('dashboard');
+  };
+
+  // The fast lane out of the final slide: straight into a real lesson instead
+  // of a zeroed dashboard (where, measured, most first sessions used to end).
+  // Exam track chosen → that track's first library sublevel; otherwise the
+  // very beginning. Grammar is served by the Astro build → full-load href.
+  const fastLaneLevel =
+    (examTrack && examTrack !== 'none' && examTrackByKey(examTrack)?.sublevels[0]) || 'a1.1';
+  const fastLaneTopic = getTopicsForLevel(fastLaneLevel)[0];
+  const fastLaneHref = fastLaneTopic
+    ? `/grammar/${fastLaneLevel}/${fastLaneTopic.slug}/`
+    : `/grammar/${fastLaneLevel}/`;
+  const handleFirstLesson = () => {
+    completeOnboarding('first-lesson', { href: fastLaneHref });
   };
 
   const slide = SLIDES[currentStep];
@@ -180,11 +200,14 @@ export default function IntroSlides() {
                   <Button onClick={() => completeOnboarding('level-test')} shimmer size="lg" className="w-full">
                     Start the placement test
                   </Button>
+                  <Button onClick={handleFirstLesson} variant="secondary" size="lg" className="w-full">
+                    Start my first lesson at {fastLaneLevel.toUpperCase()} →
+                  </Button>
                   <button
                     onClick={handleSkip}
-                    className="text-sm font-bold text-siegel transition-colors hover:text-siegel-deep"
+                    className="text-sm font-bold text-graphite transition-colors hover:text-siegel-deep"
                   >
-                    Maybe later, take me to the dashboard →
+                    Just show me around first →
                   </button>
                 </div>
               )}
