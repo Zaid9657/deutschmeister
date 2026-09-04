@@ -54,21 +54,55 @@ Each band (A1 = A1.1+A1.2, etc.) is an exam-first course, not a content pile:
   pace + visible progress + variety of exercise types (typed production, ordering,
   dictation — not another multiple choice), never clutter.
 
-## Worker doctrine
+## Worker doctrine — the mechanics
 
-Delegate through the Agent tool; run independent workers in parallel, one owner per
-surface so edits never conflict.
+Workers are spawned with the **Agent tool**; the model per worker is set with its
+`model` parameter (`"opus"`, `"sonnet"`, `"haiku"`; omit to inherit your own model).
+`subagent_type: "general-purpose"` for anything that writes files or queries Supabase;
+`Explore` (read-only) for reconnaissance.
 
-- **Opus-class workers**: course architecture, lesson design review, adversarial German
-  review, final acceptance review of a wave.
-- **Sonnet-class workers**: content production (rules, exercises, tasks, readings,
-  dialogues), data entry via migrations, test writing, screenshots.
-- Every production worker's prompt must contain: the exact files/tables it owns, the
-  quality bar for its piece (from the research doc), the German-level constraint
-  (A1 content uses A1 German), and what "done" looks like.
-- Every content batch goes to a **separate reviewer worker** that did not write it, with
-  instructions to find errors, out-of-level language, and false exam mapping. Findings
-  are fixed, not argued with.
+**Which model for which job:**
+- `model: "opus"` — course architecture, lesson design review, **adversarial German
+  review**, final acceptance review of a wave. Expensive judgment, few calls.
+- `model: "sonnet"` — content production (rules, exercises, tasks, readings, dialogues),
+  migration writing, test writing, screenshot runs. High volume, clear spec.
+- `model: "haiku"` — mechanical transforms only (reformatting a JSON batch, counting,
+  list diffs). Never for German content.
+
+**How to run a wave, concretely:**
+1. Spawn the wave's independent production workers **in one message, multiple Agent
+   calls, `run_in_background: true`** — they run in parallel and each completion arrives
+   as a task notification. Never spawn two workers that touch the same file or table.
+2. While they run, do orchestrator work: read ground truth, prepare the next spec,
+   handle notifications. Never idle-poll a worker.
+3. When a production worker reports, spawn its **reviewer** (a fresh `model: "opus"`
+   agent that did not write the content) with the output and the instruction to find
+   German errors, out-of-level language, and false exam mapping. Findings are fixed —
+   by the original worker via **SendMessage** (its agent id keeps its context) — never
+   argued with. Re-review only the changed items.
+4. A worker that returns thin, wrong, or off-spec output twice is **replaced**: spawn a
+   fresh one with a tightened spec that names the failure ("your predecessor produced
+   English meta-quizzes; every exercise must require producing German"). Do not keep
+   nursing a weak worker — its transcript is poisoned by its own mistakes.
+5. You merge, workers never do: collect their diffs, run the gates yourself, commit on
+   the designated branch, one PR per sequencing step, squash-merge.
+
+**Every production worker's prompt must contain** (template):
+- ROLE + the one deliverable, e.g. "You write the 6 Formular writing tasks for A1."
+- OWNS: the exact files/tables it may touch — and nothing else.
+- SPEC: the quality bar for its piece, quoted from `docs/course-research-2026-09-03.md`
+  (not "see the doc" — paste the relevant lines; workers don't inherit your context).
+- LEVEL CONSTRAINT: A1 content uses A1 German (name the banned structures: Perfekt,
+  Nebensätze, etc. per level).
+- FORMAT: the exact JSON/SQL/JS shape of the output, with one worked example.
+- DONE: measurable ("6 tasks, each with rubric fields X/Y/Z, valid against
+  `tests/<suite>`"), and the instruction to write output to its scratchpad file and
+  report the path — never to commit.
+
+**Context discipline:** you read worker REPORTS, not worker transcripts. If a report is
+too long to act on, that is the worker's failure — ask it (SendMessage) for the
+10-line version with file paths. Your context is the scarcest resource in the wave;
+spend it on review verdicts and sequencing, not on re-reading content you delegated.
 
 ## Acceptance gates (what "done" means — all of them, every PR)
 
