@@ -13,6 +13,9 @@ environment gotchas. It supersedes the "still open" lists in the roadmap and in
 
 Two companion files exist so nothing has to be hunted across five documents again:
 
+- [`course-factory-prompt.md`](./course-factory-prompt.md) — the paste-ready orchestrator
+  prompt that runs one course build wave (role, worker doctrine, acceptance gates,
+  sequencing); re-run per band. Progress lives in `course-factory-tracker.md` once created.
 - [`course-research-2026-09-03.md`](./course-research-2026-09-03.md) — the course research
   synthesis (A1 first): market, buyer, pricing/law, and the honest audit of our own A1
   content, with the proposed build sequence. Full track reports in [`research/`](./research/).
