@@ -71,6 +71,7 @@ const REQUIRED = [
   'leitfaden/goethe-b1/index.html',
   'leitfaden/telc-b2/index.html',
   'leitfaden/dtz/index.html',
+  'leitfaden/start-deutsch-1/index.html',
   'leitfaden/brief-schreiben-b1/index.html',
   'leitfaden/modelltest-deutsch-b1/index.html',
   'pruefung/index.html',
@@ -78,6 +79,7 @@ const REQUIRED = [
   'pruefung/goethe-b1/index.html',
   'pruefung/dtz/index.html',
   'pruefung/telc-b2/index.html',
+  'pruefung/start-deutsch-1/index.html',
   ...SPA_ROUTES.map((r) => `${r}/index.html`),
 ];
 

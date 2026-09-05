@@ -32,6 +32,7 @@ import { dtz } from './dtz.js';
 import { telcB2 } from './telc-b2.js';
 import { briefSchreibenB1 } from './brief-schreiben-b1.js';
 import { modelltestDeutschB1 } from './modelltest-deutsch-b1.js';
+import { startDeutsch1 } from './start-deutsch-1.js';
 
 /**
  * @typedef {{type:'p', text:string}} BlockP            paragraph; may carry inline <a>/<strong>
@@ -64,7 +65,7 @@ import { modelltestDeutschB1 } from './modelltest-deutsch-b1.js';
  */
 
 /** Every guide, in the order the hub lists them. */
-export const GUIDES = [telcB1, goetheB1, telcB2, dtz, briefSchreibenB1, modelltestDeutschB1];
+export const GUIDES = [telcB1, goetheB1, telcB2, dtz, startDeutsch1, briefSchreibenB1, modelltestDeutschB1];
 
 export const getGuide = (slug) => GUIDES.find((g) => g.slug === slug);
 
