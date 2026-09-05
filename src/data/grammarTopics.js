@@ -262,7 +262,7 @@ export const grammarTopics = {
       id: 'a1.2-gt12',
       order: 12,
       slug: 'dative-prepositions-intro',
-      titleEn: 'Dative prepositions: aus, bei, mit, nach, von, zu, seit',
+      titleEn: 'Dative prepositions: aus, bei, mit, nach, zu',
       titleDe: 'Präpositionen mit Dativ: aus, bei, mit, nach, von, zu, seit',
       descriptionEn: 'Learn the seven prepositions that always take Dativ, the contractions zum/zur/beim/vom, and how to say where you come from, live and travel.',
       descriptionDe: 'Lerne die sieben Präpositionen mit Dativ. Lerne auch die Kurzformen zum, zur, beim und vom.',
