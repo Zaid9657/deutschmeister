@@ -60,7 +60,7 @@ where the 28-day A1.1 plan ends. Gate: Monday's weekly-truth one-and-done rate f
 
 | # | Step | Status | PR |
 |---|---|---|---|
-| B | A1.2 share of the Wortliste: 166 additions in 8 categories, 54 fixes incl. three repurposed rows and month plurals | PR open | — |
+| B | A1.2 share of the Wortliste: 166 additions in 8 categories, 54 fixes incl. three repurposed rows and month plurals | merged, DB migrated 2026-09-05 (413 A1.2 words live, 2215 total) | #73 |
 
 ## Measured baseline (do not re-derive)
 
