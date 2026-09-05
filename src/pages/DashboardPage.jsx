@@ -15,6 +15,8 @@ import { examTrackByKey } from '../data/examTracks';
 import { LEVEL_COURSES } from '../data/pricing.js';
 import { loadDashboardStats, DAILY_GOAL_TARGET } from '../services/dashboardStats';
 import { GRAMMAR_TOPIC_COUNT } from '../data/marketing.js';
+import { listAttempts } from '../services/examService';
+import { readinessFromAttempts } from '../services/readiness';
 import SEO from '../components/SEO';
 import Button from '../components/ui/Button.jsx';
 import Card from '../components/ui/Card.jsx';
@@ -100,6 +102,23 @@ const DashboardPage = () => {
     return days >= 0 ? days : null;
   })();
   const goalTarget = profile?.daily_goal_target || DAILY_GOAL_TARGET;
+
+  // Exam goal card readiness — the same "Du bist bereit" trend line
+  // ModelltestResult.jsx renders, read once here for whichever exam track
+  // the learner set (src/services/readiness.js). Only shown once at least
+  // one completed attempt exists — no line at all otherwise, never a
+  // fabricated 0%.
+  const [examReadiness, setExamReadiness] = useState(null);
+  useEffect(() => {
+    let alive = true;
+    if (!user || !examTrack) { setExamReadiness(null); return; }
+    listAttempts(user.id, examTrack.key).then((attempts) => {
+      if (!alive) return;
+      const completed = attempts.filter((a) => a.status === 'completed');
+      setExamReadiness(completed.length > 0 ? readinessFromAttempts(attempts) : null);
+    });
+    return () => { alive = false; };
+  }, [user, examTrack]);
 
   const loading = progressLoading || statsLoading;
 
@@ -266,6 +285,17 @@ const DashboardPage = () => {
               <span className="font-data text-[0.8125rem] text-graphite">
                 Your level: {levelLabel}
               </span>
+              {examReadiness && examReadiness.lastTwo.length > 0 && (
+                <span className="flex items-center gap-2 font-data text-[0.8125rem] text-graphite">
+                  Bereitschaft: letzte zwei Übungstests{' '}
+                  {examReadiness.lastTwo.length === 2
+                    ? `${examReadiness.lastTwo[1].pct} % / ${examReadiness.lastTwo[0].pct} %`
+                    : `${examReadiness.lastTwo[0].pct} %`}
+                  <Chip tone={examReadiness.ready ? 'limette' : 'quiet'} size="sm">
+                    {examReadiness.ready ? 'Bereit' : 'Noch nicht'}
+                  </Chip>
+                </span>
+              )}
             </Card>
           </Reveal>
         )}

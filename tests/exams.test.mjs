@@ -222,3 +222,84 @@ test('the hub renderer shows factsCheckedOn, sources and the non-affiliation lin
   assert.match(hubRenderer, /sources\.map/);
   assert.match(hubRenderer, /kein Prüfungsanbieter/);
 });
+
+// ── 7. course tests (Course Factory Wave 2 PR D) ─────────────────────────
+//
+// A course test (src/data/courseTests) is our OWN end-of-course checkpoint,
+// written in an exam's STYLE but never a new exam track of its own — these
+// pins keep that boundary real: `key` must never collide with an EXAM_TRACKS
+// key (a course test writing into the wrong identity space), and `formatOf`
+// must always resolve to a real one (the style it borrows must exist).
+
+test('every course test is well-formed, distinct from EXAM_TRACKS, and shape-valid', async () => {
+  const { COURSE_TESTS } = await import('../src/data/courseTests/index.js');
+  const { countScorableItems } = await import('../src/data/mockExams/index.js');
+  const { scoreObjectiveSections } = await import('../src/services/examScoring.js');
+  const migrationText = readFileSync(join(root, 'migrations/2026-09-05-a1-1-abschlusstest.sql'), 'utf8');
+
+  assert.ok(COURSE_TESTS.length >= 1, 'at least the A1.1 Abschlusstest must exist');
+  const examKeys = new Set(EXAM_TRACKS.map((t) => t.key));
+  const seenKeys = new Set();
+  const seenSlugs = new Set();
+
+  for (const ct of COURSE_TESTS) {
+    assert.ok(!examKeys.has(ct.key), `course test key ${ct.key} collides with an EXAM_TRACKS key`);
+    assert.ok(examKeys.has(ct.formatOf), `${ct.key}: formatOf (${ct.formatOf}) is not a real EXAM_TRACKS key`);
+    assert.match(ct.level, /^[ab][12]\.[12]$/, `${ct.key}: level must be a lowercase sublevel`);
+    assert.ok(!seenKeys.has(ct.key) && !seenSlugs.has(ct.slug), `duplicate course test: ${ct.key}`);
+    seenKeys.add(ct.key);
+    seenSlugs.add(ct.slug);
+    assert.ok(
+      migrationText.includes(ct.key),
+      `migrations/2026-09-05-a1-1-abschlusstest.sql must widen exam_attempts_exam_key_check to include ${ct.key}`
+    );
+
+    const mock = ct.mock;
+    assert.equal(mock.examKey, ct.key);
+    assert.match(mock.title, /Kurzversion/, `${ct.key}: shortened sets must say so in the title`);
+    assert.ok(mock.passPercent >= 50 && mock.passPercent <= 100);
+
+    const perfect = {};
+    for (const section of mock.sections) {
+      for (const part of section.parts) {
+        if (part.type === 'mc-group') {
+          for (const item of part.items) {
+            assert.ok(item.options.some((o) => o.key === item.answer), `${item.id}: answer not among options`);
+            perfect[item.id] = item.answer;
+          }
+        } else if (part.type === 'listening') {
+          assert.match(part.level, /^[AB][12]\.[12]$/, `${part.key}: listening level must be the DB uppercase form`);
+          assert.ok(Number.isInteger(part.exerciseNumber) && part.exerciseNumber >= 1 && part.exerciseNumber <= 6);
+        } else if (part.type === 'writing') {
+          assert.ok(part.task && part.criteria?.length >= 3, `${part.key}: writing needs a task + criteria`);
+        } else {
+          assert.fail(`${part.key}: unexpected part type ${part.type} for a course test`);
+        }
+      }
+    }
+    const result = scoreObjectiveSections(mock, perfect);
+    assert.equal(result.score, result.maxScore, `${ct.key}: perfect sheet does not score 100%`);
+    assert.equal(result.maxScore, countScorableItems(mock), `${ct.key}: scorer and counter disagree`);
+    assert.equal(scoreObjectiveSections(mock, {}).score, 0);
+  }
+});
+
+test('the resolver serves both registries and the guard reads its gateLevel', async () => {
+  const { resolveModelltest } = await import('../src/data/modelltest.js');
+  const { courseTestBySlug } = await import('../src/data/courseTests/index.js');
+
+  const ct = courseTestBySlug('abschlusstest-a1-1');
+  const resolvedCourse = resolveModelltest('abschlusstest-a1-1');
+  assert.equal(resolvedCourse.kind, 'course');
+  assert.equal(resolvedCourse.key, ct.key);
+  assert.equal(resolvedCourse.gateLevel, 'a1.1', 'a course test gates on its own level, never the exam-track top sublevel');
+
+  const resolvedExam = resolveModelltest('start-deutsch-1');
+  assert.equal(resolvedExam.kind, 'exam');
+  assert.equal(resolvedExam.gateLevel, 'a1.2', 'an exam track still gates on its band-top sublevel');
+
+  assert.equal(resolveModelltest('no-such-slug'), null);
+
+  const guardSrc = readFileSync(join(root, 'src/components/ExamSubscriptionGuard.jsx'), 'utf8');
+  assert.match(guardSrc, /resolveModelltest/, 'ExamSubscriptionGuard must resolve through the shared registry');
+});

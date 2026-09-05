@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, BookOpen, BookMarked, MessageSquare, Headphones, Radio, Sun, TreePine, Waves, Moon, Loader2, Filter, FileText } from 'lucide-react';
+import { ArrowLeft, BookOpen, BookMarked, MessageSquare, Headphones, Radio, Sun, TreePine, Waves, Moon, Loader2, Filter, FileText, ClipboardCheck, ArrowRight } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useProgress } from '../contexts/ProgressContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -317,6 +317,26 @@ const LevelPage = () => {
             </div>
           </div>
         </div>
+
+        {/* A1.1-Phase — the 28-day plan to the Abschlusstest A1.1 (Course
+            Factory Wave 2 PR D). a1.1-only: A1.2 gets its own course area
+            link from the "Für die Prüfung" strip elsewhere on this page. */}
+        {level === 'a1.1' && (
+          <Reveal className="mb-8">
+            <Card interactive as={Link} to="/a1-1-phase" className="flex items-center justify-between gap-4 p-5">
+              <div className="flex items-center gap-4">
+                <div className="w-11 h-11 rounded-clay bg-siegel-wash text-siegel flex items-center justify-center shrink-0">
+                  <ClipboardCheck className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="font-bold text-ink">A1.1-Phase: 28 Tage bis zum Abschlusstest</p>
+                  <p className="text-sm text-graphite">Dein Plan durch alle Themen dieser Stufe, Tag für Tag.</p>
+                </div>
+              </div>
+              <ArrowRight className="w-4 h-4 text-siegel shrink-0" />
+            </Card>
+          </Reveal>
+        )}
 
         {/* Tabs — pressable chips; the selected one takes the ink tone
             (siegel stays the one interactive colour, tokens rule 2). */}

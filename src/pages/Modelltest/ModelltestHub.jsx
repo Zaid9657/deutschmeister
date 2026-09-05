@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
-import { GraduationCap, ArrowRight } from 'lucide-react';
+import { GraduationCap, ArrowRight, ClipboardCheck } from 'lucide-react';
 import { EXAM_TRACKS, MOCK_DISCLAIMER_DE } from '../../data/examTracks';
 import { MOCK_EXAMS } from '../../data/mockExams';
+import { COURSE_TESTS } from '../../data/courseTests';
 import SEO from '../../components/SEO';
 import Card from '../../components/ui/Card.jsx';
 import Chip from '../../components/ui/Chip.jsx';
@@ -67,6 +68,54 @@ const ModelltestHub = () => {
             </Reveal>
           ))}
         </ul>
+
+        {/* Kurstests — our own end-of-course checkpoints (src/data/courseTests),
+            not another exam track. The A1.1 Abschlusstest is open to every
+            logged-in user (a1.1 is a free level; see ExamSubscriptionGuard's
+            header) — the same disclaimer applies here as above. */}
+        {COURSE_TESTS.length > 0 && (
+          <div className="mt-10">
+            <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite mb-3">
+              Kurstests
+            </p>
+            <ul className="grid gap-4 sm:grid-cols-2">
+              {COURSE_TESTS.map((ct, i) => {
+                const minutes = ct.mock.sections.reduce((sum, s) => sum + s.minutes, 0);
+                return (
+                  <Reveal as="li" key={ct.key} delay={90 * (tracksWithMocks.length + tracksComing.length + i)} className="h-full">
+                    <Tilt className="h-full">
+                      <Card interactive as={Link} to={`/modelltest/${ct.slug}`} className="flex h-full flex-col p-6">
+                        <div className="flex items-center justify-between gap-3" data-atropos-offset="6">
+                          <div className="w-11 h-11 rounded-clay bg-siegel text-white flex items-center justify-center shadow-raise-siegel">
+                            <ClipboardCheck className="w-5 h-5" />
+                          </div>
+                          <Chip tone="label">{ct.level}</Chip>
+                        </div>
+                        <p className="mt-4 font-display text-[1.1875rem] font-semibold leading-snug text-ink" data-atropos-offset="4">
+                          {ct.mock.title}
+                        </p>
+                        <p className="mt-1 flex-1 text-sm text-graphite" data-atropos-offset="2">
+                          {ct.nameDe} — Kurzversion im Start-Deutsch-1-Format · {ct.level} · {minutes} Min.
+                        </p>
+                        <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-siegel" data-atropos-offset="6">
+                          <ArrowRight className="w-4 h-4" />
+                        </span>
+                      </Card>
+                    </Tilt>
+                    {ct.level === 'a1.1' && (
+                      <Link
+                        to="/a1-1-phase"
+                        className="mt-2 inline-flex items-center gap-1 text-sm font-bold text-siegel transition-colors hover:text-siegel-deep"
+                      >
+                        Zum 28-Tage-Plan <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
+                    )}
+                  </Reveal>
+                );
+              })}
+            </ul>
+          </div>
+        )}
 
         <p className="mt-8 font-data text-[0.75rem] leading-relaxed text-graphite">
           {MOCK_DISCLAIMER_DE}

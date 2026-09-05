@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Loader2, RotateCcw } from 'lucide-react';
-import { examTrackBySlug, MOCK_DISCLAIMER_DE } from '../../data/examTracks';
-import { mockForExamKey } from '../../data/mockExams';
+import { useAuth } from '../../contexts/AuthContext';
+import { MOCK_DISCLAIMER_DE } from '../../data/examTracks';
+import { resolveModelltest } from '../../data/modelltest';
 import { verdictFor } from '../../services/examScoring';
-import { loadAttempt } from '../../services/examService';
+import { loadAttempt, listAttempts } from '../../services/examService';
+import { readinessFromAttempts } from '../../services/readiness';
+import confettiBurst from '../../lib/confetti.js';
 import CompletionMoment from '../../components/CompletionMoment';
 import SEO from '../../components/SEO';
 import Button from '../../components/ui/Button.jsx';
@@ -49,13 +52,31 @@ const SECTION_HINTS = {
   hoeren: { label: 'Hörverstehen', href: '/listening/b1.1', linkLabel: 'Hörtraining öffnen' },
 };
 
+// "Du bist bereit" — a trend, not a verdict: readiness reads the last two
+// COMPLETED attempts for this key (see src/services/readiness.js), never
+// this one attempt alone. Body copy differs by resolveModelltest() kind —
+// a course test's next step is the next course level, an exam track's is
+// the real exam — but both say "Richtwert" exactly once, matching the
+// runner's own disclaimer discipline; this is a trend line, never a promise.
+const readyBody = (resolved, lastTwo) => {
+  const [recent, prior] = lastTwo; // lastTwo[0] is most recent
+  const pctLine = `${prior.pct} % und ${recent.pct} %`;
+  if (resolved.kind === 'course') {
+    return `Deine letzten zwei Abschlusstests liegen bei ${pctLine}. Nächster Schritt: A1.2 — die zweite Hälfte bis Start Deutsch 1. (Richtwert, keine offizielle Bewertung.)`;
+  }
+  return `Deine letzten zwei Übungstests liegen bei ${pctLine}. Melde dich zur Prüfung an und übe mit einem offiziellen Modellsatz. (Richtwert, keine offizielle Bewertung.)`;
+};
+
 const ModelltestResult = () => {
   const { examSlug, attemptId } = useParams();
-  const track = examTrackBySlug(examSlug);
-  const mock = track ? mockForExamKey(track.key) : null;
+  const { user } = useAuth();
+  const resolved = resolveModelltest(examSlug);
+  const mock = resolved?.mock;
 
   const [attempt, setAttempt] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [readiness, setReadiness] = useState(null);
+  const readinessConfettiFired = useRef(false);
 
   useEffect(() => {
     let alive = true;
@@ -65,6 +86,29 @@ const ModelltestResult = () => {
     return () => { alive = false; };
   }, [attemptId]);
 
+  // Readiness reads the learner's whole attempt history for this key, not
+  // just the attempt just completed — fired once the result itself is in,
+  // so a fresh completion is already reflected in the history it reads.
+  useEffect(() => {
+    if (!user || !resolved || !attempt) return;
+    let alive = true;
+    listAttempts(user.id, resolved.key).then((attempts) => {
+      if (!alive) return;
+      setReadiness(readinessFromAttempts(attempts));
+    });
+    return () => { alive = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, resolved?.key, attempt?.id]);
+
+  // The one confetti burst for the readiness moment — separate from, and
+  // never doubling, the pass-moment burst CompletionMoment fires below.
+  useEffect(() => {
+    if (readiness?.ready && !readinessConfettiFired.current) {
+      readinessConfettiFired.current = true;
+      confettiBurst();
+    }
+  }, [readiness?.ready]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-paper pt-24 flex justify-center">
@@ -72,7 +116,7 @@ const ModelltestResult = () => {
       </div>
     );
   }
-  if (!attempt || !mock || attempt.status !== 'completed' || !attempt.max_score) {
+  if (!attempt || !resolved || attempt.status !== 'completed' || !attempt.max_score) {
     return (
       <div className="min-h-screen bg-paper pt-24 px-4 text-center">
         <p className="text-graphite mb-3">Dieses Ergebnis konnte nicht geladen werden.</p>
@@ -146,6 +190,39 @@ const ModelltestResult = () => {
               fullLoad={SECTION_HINTS[weakest.key].fullLoad}
               celebrate={passed}
             />
+          </Reveal>
+        )}
+
+        {/* Readiness — a trend over the last two completed attempts, never
+            this one result alone (src/services/readiness.js). Ready = a
+            candy button and one confetti burst (an earned moment, distinct
+            from the pass-moment burst above); not ready = a calm line, no
+            button, no confetti — never a pass promise. */}
+        {readiness && readiness.lastTwo.length > 0 && (
+          <Reveal delay={310} className="mt-6">
+            {readiness.ready ? (
+              <Card raised edge="limette" className="p-6 text-center">
+                <Chip tone="limette">Bereit</Chip>
+                <h2 className="mt-3 font-display text-xl font-semibold text-ink">Du bist bereit</h2>
+                <p className="mt-2 text-sm text-graphite leading-relaxed">{readyBody(resolved, readiness.lastTwo)}</p>
+                <div className="mt-5 flex flex-col sm:flex-row gap-3 justify-center">
+                  {resolved.kind === 'course' ? (
+                    <>
+                      <Button variant="celebrate" to="/level/a1.2">Weiter zu A1.2</Button>
+                      <Button variant="secondary" to="/start-deutsch-1-kurs">Zum 30-Tage-Plan</Button>
+                    </>
+                  ) : (
+                    <Button variant="celebrate" href={`/pruefung/${resolved.slug}/`}>Zur Prüfung anmelden</Button>
+                  )}
+                </div>
+              </Card>
+            ) : (
+              <Card className="p-5 text-center">
+                <p className="text-sm text-graphite">
+                  Noch nicht ganz: zwei Tests in Folge mit mindestens 70 % — dann bist du bereit.
+                </p>
+              </Card>
+            )}
           </Reveal>
         )}
 

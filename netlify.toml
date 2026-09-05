@@ -266,6 +266,14 @@
   from = "/start-deutsch-1-kurs"
   to = "/app.html"
   status = 200
+# The A1.1-Phase 28-day plan (Course Factory Wave 2 PR D) — gated on
+# LevelSubscriptionGuard(level="a1.1"), a free level, so open to every
+# logged-in user. Still not prerendered and not in the sitemap: it is a
+# behind-login course area like the two above, not a crawlable landing page.
+[[redirects]]
+  from = "/a1-1-phase"
+  to = "/app.html"
+  status = 200
 # Mock exams (subscription-gated practice tests). Same posture as the course
 # area: not prerendered, not in the sitemap; the wildcard is safe here because
 # there is no static /modelltest directory for it to shadow, and unknown slugs

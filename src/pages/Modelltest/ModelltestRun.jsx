@@ -2,8 +2,8 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Clock, ChevronRight, Volume2, Loader2 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { examTrackBySlug, MOCK_DISCLAIMER_DE } from '../../data/examTracks';
-import { mockForExamKey } from '../../data/mockExams';
+import { MOCK_DISCLAIMER_DE } from '../../data/examTracks';
+import { resolveModelltest } from '../../data/modelltest';
 import {
   findResumableAttempt,
   loadAttempt,
@@ -133,8 +133,8 @@ const ModelltestRun = () => {
   const location = useLocation();
   const { user } = useAuth();
 
-  const track = examTrackBySlug(examSlug);
-  const mock = track ? mockForExamKey(track.key) : null;
+  const resolved = resolveModelltest(examSlug);
+  const mock = resolved?.mock;
 
   const [attempt, setAttempt] = useState(null);
   const [answers, setAnswers] = useState({});
@@ -152,11 +152,11 @@ const ModelltestRun = () => {
 
   // Load or resume the attempt
   useEffect(() => {
-    if (!user || !track || !mock) return;
+    if (!user || !resolved) return;
     let alive = true;
     const load = async () => {
       const id = location.state?.attemptId;
-      const a = id ? await loadAttempt(id) : await findResumableAttempt(user.id, track.key);
+      const a = id ? await loadAttempt(id) : await findResumableAttempt(user.id, resolved.key);
       if (!alive) return;
       if (!a || a.status !== 'in_progress') {
         navigate(`/modelltest/${examSlug}`, { replace: true });
@@ -172,7 +172,7 @@ const ModelltestRun = () => {
     load();
     return () => { alive = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, track?.key]);
+  }, [user, resolved?.key]);
 
   // Countdown
   useEffect(() => {
@@ -247,7 +247,7 @@ const ModelltestRun = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [remaining]);
 
-  if (!track || !mock) return null;
+  if (!resolved) return null;
   if (loading) {
     return (
       <div className="min-h-screen bg-paper pt-24 flex justify-center">

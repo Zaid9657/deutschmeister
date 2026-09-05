@@ -27,8 +27,14 @@ import {
   PROGRAM_KEY as SD1_PROGRAM_KEY,
   allItemIds as sd1AllItemIds,
 } from '../src/data/programs/startDeutsch1.js';
+import {
+  PROGRAM as A11_PROGRAM,
+  PROGRAM_KEY as A11_PROGRAM_KEY,
+  allItemIds as a11AllItemIds,
+} from '../src/data/programs/a11Phase.js';
 import { getTopicsForLevel } from '../src/data/grammarTopics.js';
 import { LEVEL_COURSES } from '../src/data/pricing.js';
+import { readinessFromAttempts } from '../src/services/readiness.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -234,4 +240,53 @@ test('the sd1_30_tage course route exists in both App.jsx and the netlify.toml a
     'netlify.toml allow-list entry missing — the route would 404 in production');
   assert.ok(read('src/App.jsx').includes('<LevelSubscriptionGuard level="a1.2">'),
     'the A1 plan must gate on LevelSubscriptionGuard (Pro/trial or the A1 course), not PurchaseGuard');
+});
+
+// ---------------------------------------------------------------------------
+// 6. "A1.1-Phase: 28 Tage bis zum Abschlusstest" (a11_phase) — Course Factory
+//    Wave 2 PR D. Same program-integrity and route-rule pins as sd1_30_tage
+//    above, for the FIRST half of the A1 band. Gated on LevelSubscriptionGuard
+//    (level="a1.1", a FREE level, so open to every logged-in user) — still not
+//    PurchaseGuard, so no webhook/product-key assertions apply here either.
+// ---------------------------------------------------------------------------
+
+test('a11_phase program item ids are unique and grammar hrefs resolve to real a1.1 topics', () => {
+  const ids = a11AllItemIds();
+  assert.equal(new Set(ids).size, ids.length, 'duplicate item ids — progress checkboxes would collide');
+
+  const a11Slugs = new Set(getTopicsForLevel('a1.1').map((t) => t.slug));
+  for (const week of A11_PROGRAM.weeks) {
+    for (const day of week.days) {
+      for (const item of day.items) {
+        assert.ok(item.id && item.title && item.href, `item missing fields in ${day.label}`);
+        const m = item.href.match(/^\/grammar\/(a1\.1)\/([a-z0-9-]+)\/$/);
+        if (m) {
+          assert.ok(a11Slugs.has(m[2]), `${item.href} does not match a real a1.1 topic slug`);
+        }
+      }
+    }
+  }
+  assert.equal(A11_PROGRAM.key, A11_PROGRAM_KEY);
+  assert.equal(A11_PROGRAM.weeks.length, 4, 'the plan promises 4 study weeks (28 days)');
+});
+
+test('the a11_phase course route exists in both App.jsx and the netlify.toml allow-list', () => {
+  assert.ok(read('src/App.jsx').includes('path="/a1-1-phase"'), 'SPA route missing');
+  assert.ok(/from = "\/a1-1-phase"/.test(read('netlify.toml')),
+    'netlify.toml allow-list entry missing — the route would 404 in production');
+  assert.ok(read('src/App.jsx').includes('<LevelSubscriptionGuard level="a1.1">'),
+    'the A1.1 plan must gate on LevelSubscriptionGuard(level="a1.1"), the free-level branch');
+});
+
+test('the readiness service backs both the result screen and the dashboard exam goal card', () => {
+  const resultSrc = read('src/pages/Modelltest/ModelltestResult.jsx');
+  const dashboardSrc = read('src/pages/DashboardPage.jsx');
+  assert.match(resultSrc, /readinessFromAttempts/, 'ModelltestResult must read readiness from the shared service');
+  assert.match(dashboardSrc, /readinessFromAttempts/, 'DashboardPage exam goal card must read readiness from the shared service');
+  // A quick end-to-end sanity check on the function both pages call.
+  const ready = readinessFromAttempts([
+    { status: 'completed', score: 80, max_score: 100, completed_at: '2026-09-01' },
+    { status: 'completed', score: 75, max_score: 100, completed_at: '2026-09-03' },
+  ]);
+  assert.equal(ready.ready, true);
 });
