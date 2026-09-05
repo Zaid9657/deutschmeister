@@ -59,8 +59,8 @@
 --      level for A1 -- replaced with the present-tense V2 item "Heute ___
 --      wir ins Kino." -> gehen. The typed answer was still under-determined
 --      (fahren/sind are also defensible), so question_en now names the verb
---      ("Today we ___ (gehen) to the cinema.") and a hint ('gehen') was
---      added; acceptable_answers stays ["gehen"].
+--      ("Today we ___ (gehen) to the cinema."); hint stays NULL (no
+--      component renders it) and acceptable_answers stays ["gehen"].
 --   6. nominative-case exercise b0f26ae2-fc72-471b-a52a-b4be8b9f1490 mixed English
 --      words ("Both", "Neither") into an otherwise German multiple-choice
 --      list -- replaced with "Beide" / "Keines" (das Subjekt is neuter, so
