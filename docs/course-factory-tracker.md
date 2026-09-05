@@ -13,8 +13,21 @@ Sequence (research doc §5, steps 1–5; owner approved by invoking the factory 
 | 1 | Fix wrong/contradictory A1 grammar (stem changes, es-pronoun garble, job-article contradiction, out-of-level exercise items) | merged (PR #63, DB migrated 2026-09-05) | #63 |
 | 2 | A1 writing strand: 6 Formular + 6 Mitteilung on the AI-writing runner, Goethe criteria in rubric | merged (PR #64, constraints migrated) | #64 |
 | 3 | Start Deutsch 1 mock on the mock runner + the 3 official free sets linked | merged (PR #65) | #65 |
-| 4 | "30 Tage bis Start Deutsch 1" plan on the telc-B1-plan rails | in review | — |
-| 5 | Sprechen Teil 1–3 missions (full self-intro, word cards, Bitten) | pending | — |
+| 4 | "30 Tage bis Start Deutsch 1" plan on the telc-B1-plan rails | merged (PR #66) | #66 |
+| 5 | Sprechen Teil 1–3 missions (full self-intro, word cards, Bitten) | merged (PR #67, rows live: A1.2 missions 9–12) | #67 |
+
+**Wave 1 status: COMPLETE (2026-09-05).** All five steps merged and live; every content
+piece passed an independent adversarial German review before merge (two rounds where
+needed). €49 A1 is now backed by: corrected grammar, a real writing strand with AI
+grading on the SD1 criteria, an SD1 mock (Kurzversion) with the 60/100 rule, a 30-day
+Prüfungsphase plan, and Sprechen Teil 1–3 missions.
+
+## Wave 2 — A1 complete (next)
+
+Per research doc §5 steps 6–9: missing grammar topics (possessives, separable verbs,
+Ja/Nein-Fragen, imperative, Uhrzeit), Wortliste completion (+250 words, "null" plurals)
++ SRS wiring, reading rewrites (7 texts ≤120 words, Anzeigen/Schilder sets), listening
+question depth, typed-production exercises. Audio remains owner-gated (below).
 
 ## Measured baseline (do not re-derive)
 
