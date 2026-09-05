@@ -11,12 +11,14 @@ import { telcB1Mock } from './telcB1.js';
 import { goetheB1Mock } from './goetheB1.js';
 import { dtzMock } from './dtz.js';
 import { telcB2Mock } from './telcB2.js';
+import { goetheA1Mock } from './goetheA1.js';
 
 export const MOCK_EXAMS = {
   telc_b1: telcB1Mock,
   goethe_b1: goetheB1Mock,
   dtz: dtzMock,
   telc_b2: telcB2Mock,
+  goethe_a1: goetheA1Mock,
 };
 
 export const mockForExamKey = (examKey) => MOCK_EXAMS[examKey] || null;

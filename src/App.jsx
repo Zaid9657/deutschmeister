@@ -10,6 +10,7 @@ import BottomNav from './components/BottomNav';
 import LemonSqueezyProvider from './components/LemonSqueezyProvider';
 import ProtectedRoute from './components/ProtectedRoute';
 import SubscriptionGuard from './components/SubscriptionGuard';
+import ExamSubscriptionGuard from './components/ExamSubscriptionGuard';
 import PurchaseGuard from './components/PurchaseGuard';
 import LevelSubscriptionGuard from './components/LevelSubscriptionGuard';
 import EmailVerificationGate from './components/EmailVerificationGate';
@@ -285,6 +286,11 @@ function App() {
 
                     {/* Mock exams — timed practice tests behind the subscription
                         (part of the paid value; A1.1-free stays free elsewhere).
+                        The hub stays Pro/trial-only (SubscriptionGuard, unchanged);
+                        the three exam-specific routes below use
+                        ExamSubscriptionGuard, which additionally admits a
+                        band-course buyer for their own band's mock (gated on
+                        the band's top sublevel — see that component's header).
                         Also in netlify.toml's SPA allow-list; noindex via the
                         app shell like /telc-b1-kurs. */}
                     <Route
@@ -302,37 +308,37 @@ function App() {
                     <Route
                       path="/modelltest/:examSlug"
                       element={
-                        <SubscriptionGuard>
+                        <ExamSubscriptionGuard>
                           <EmailVerificationGate>
                             <OnboardingGate>
                               <ModelltestOverview />
                             </OnboardingGate>
                           </EmailVerificationGate>
-                        </SubscriptionGuard>
+                        </ExamSubscriptionGuard>
                       }
                     />
                     <Route
                       path="/modelltest/:examSlug/run"
                       element={
-                        <SubscriptionGuard>
+                        <ExamSubscriptionGuard>
                           <EmailVerificationGate>
                             <OnboardingGate>
                               <ModelltestRun />
                             </OnboardingGate>
                           </EmailVerificationGate>
-                        </SubscriptionGuard>
+                        </ExamSubscriptionGuard>
                       }
                     />
                     <Route
                       path="/modelltest/:examSlug/result/:attemptId"
                       element={
-                        <SubscriptionGuard>
+                        <ExamSubscriptionGuard>
                           <EmailVerificationGate>
                             <OnboardingGate>
                               <ModelltestResult />
                             </OnboardingGate>
                           </EmailVerificationGate>
-                        </SubscriptionGuard>
+                        </ExamSubscriptionGuard>
                       }
                     />
 
