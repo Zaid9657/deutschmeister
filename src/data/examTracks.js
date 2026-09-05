@@ -28,8 +28,7 @@ export const EXAM_TRACKS = [
     // page of its own, unlike telc_b1_komplett) — null, same as every other
     // non-telc-b1 track.
     courseHref: null,
-    // The mock lands in the next PR (docs/course-factory-tracker.md step 3).
-    hasMock: false,
+    hasMock: true,
     hasWriting: true,
   },
   {
