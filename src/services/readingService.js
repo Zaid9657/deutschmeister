@@ -21,6 +21,7 @@ function mapDbLessonToApp(dbRow) {
     contentEn: dbRow.content_en || '',
     keyVocabulary: dbRow.key_vocabulary || [],
     questions: dbRow.questions || [],
+    checks: dbRow.checks || [],
     wordCount: dbRow.word_count || 0,
     difficulty: dbRow.difficulty || 1,
     estimatedReadingTime: dbRow.estimated_reading_time || 5,

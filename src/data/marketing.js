@@ -112,10 +112,12 @@ export const VOCAB_SENTENCE_COUNT = 945;
  * invented. Re-measure before changing; do not interpolate.
  */
 export const READING_LESSON_COUNTS_BY_LEVEL = {
-  'a1.1': 8, 'a1.2': 8, 'a2.1': 8, 'a2.2': 8,
+  'a1.1': 10, 'a1.2': 8, 'a2.1': 8, 'a2.2': 8,
   'b1.1': 8, 'b1.2': 8, 'b2.1': 8, 'b2.2': 10,
 };
-export const READING_LESSON_COUNT = 66;
+/** a1.1 went 8 → 10 with the exam-format lessons added 2026-09-05 (Course
+ *  Factory Wave 2, PR C: migrations/2026-09-05-a1-1-reading.sql). */
+export const READING_LESSON_COUNT = 68;
 
 /** Levels readable without paying, and without an account. Source: FREE_LEVELS, src/config/freeTier.js. */
 export const FREE_LEVEL_LABEL = 'A1.1';

@@ -1,3 +1,5 @@
+import { dictationMatches } from './dictationMatch.js';
+
 // Extract answer key from option string: "a) 2,50 €" → "a", "Richtig" → "Richtig"
 export function getAnswerKey(option) {
   if (!option) return option;
@@ -5,13 +7,23 @@ export function getAnswerKey(option) {
   return match ? match[1] : option;
 }
 
+/** True when a user's answer to ONE question is correct — the one place that
+ *  branches on question_type, so dictation (typed, forgiving-matched) and
+ *  multiple_choice/richtig_falsch (option-key, exact) share one definition of
+ *  "correct" across score, "all answered", and the results review. */
+export function isQuestionCorrect(question, userAnswer) {
+  if (question.question_type === 'dictation') {
+    return dictationMatches(userAnswer, question.correct_answer, question.acceptable_answers);
+  }
+  return getAnswerKey(userAnswer) === question.correct_answer;
+}
+
 export function calculateScore(questions, answers) {
   if (!questions || questions.length === 0) return 0;
   let correct = 0;
   questions.forEach((q) => {
     const key = q.id || q.question_number;
-    const selectedKey = getAnswerKey(answers[key]);
-    if (selectedKey === q.correct_answer) correct++;
+    if (isQuestionCorrect(q, answers[key])) correct++;
   });
   return Math.round((correct / questions.length) * 100);
 }
