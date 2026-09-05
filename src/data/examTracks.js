@@ -18,6 +18,21 @@
 
 export const EXAM_TRACKS = [
   {
+    key: 'goethe_a1',
+    slug: 'start-deutsch-1',
+    nameDe: 'Start Deutsch 1 (Goethe-Zertifikat A1)',
+    level: 'A1',
+    sublevels: ['a1.1', 'a1.2'],
+    guideSlug: 'start-deutsch-1',
+    // No dedicated landing page yet (course_a1 in src/data/pricing.js has no
+    // page of its own, unlike telc_b1_komplett) — null, same as every other
+    // non-telc-b1 track.
+    courseHref: null,
+    // The mock lands in the next PR (docs/course-factory-tracker.md step 3).
+    hasMock: false,
+    hasWriting: true,
+  },
+  {
     key: 'telc_b1',
     slug: 'telc-b1',
     nameDe: 'telc Deutsch B1',

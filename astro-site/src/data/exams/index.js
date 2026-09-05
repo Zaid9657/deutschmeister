@@ -20,6 +20,7 @@ import { telcB1 } from '../guides/telc-b1.js';
 import { goetheB1 } from '../guides/goethe-b1.js';
 import { dtz } from '../guides/dtz.js';
 import { telcB2 } from '../guides/telc-b2.js';
+import { startDeutsch1 } from '../guides/start-deutsch-1.js';
 import {
   GRAMMAR_TOPIC_COUNT,
   LISTENING_EXERCISE_COUNT,
@@ -31,10 +32,20 @@ const GUIDES_BY_SLUG = {
   'goethe-b1': goetheB1,
   dtz,
   'telc-b2': telcB2,
+  'start-deutsch-1': startDeutsch1,
 };
 
 // Per-exam positioning copy — the only authored content in this module.
 const HUB_COPY = {
+  goethe_a1: {
+    title: 'Start Deutsch 1 (A1) Vorbereitung online | DeutschMeister',
+    description:
+      'Start Deutsch 1 / Goethe-Zertifikat A1 online vorbereiten: Formular und Mitteilung schreiben, Grundwortschatz, KI-Sprechtraining — Einstufungstest kostenlos.',
+    intro:
+      'Start Deutsch 1 prüft vier feste Aufgabentypen, keine freie Deutschkonversation — wer Formular, Mitteilung, Wortkarten und Bildkarten im Original geübt hat, verliert dort keine Punkte durch Überraschung. Hier ist der Weg durch DeutschMeister, der zu dieser Prüfung führt.',
+    focus:
+      'Es gibt keine Module, aber auch keine Mindestpunktzahl pro Teil: 60 von 100 Punkten insgesamt entscheiden. Schreiben lohnt sich besonders, weil dort Anrede, Leitpunkte und Register über mehr Punkte entscheiden als einzelne Grammatikfehler.',
+  },
   telc_b1: {
     title: 'telc B1 Vorbereitung online | DeutschMeister',
     description:

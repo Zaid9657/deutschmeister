@@ -175,6 +175,9 @@ const SchreibenPage = () => {
               <p className="mt-2 font-data text-[0.75rem] text-graphite">
                 Register: {activeTask.register} · {activeTask.minWords}–{activeTask.maxWords} Wörter
               </p>
+              {activeTask.pointsNote && (
+                <p className="mt-2 text-sm text-graphite leading-relaxed">{activeTask.pointsNote}</p>
+              )}
             </Card>
 
             <div className="mt-4">

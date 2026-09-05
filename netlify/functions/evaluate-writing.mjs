@@ -34,6 +34,17 @@ try {
 
 function buildWritingPrompt(task, submission) {
   const leitpunkte = task.leitpunkte.map((p, i) => `${i + 1}. ${p}`).join('\n');
+  // N booleans, not a fixed 3 — src/pages/SchreibenPage.jsx indexes
+  // leitpunkt_check by the task's own leitpunkte position, so this must match
+  // task.leitpunkte.length exactly (5 for the Formular tasks, 3 elsewhere).
+  const leitpunktCheckSlots = task.leitpunkte.map(() => '<true|false>').join(', ');
+  // A filled-out form has no Anrede/Schluss by nature and must not be marked
+  // down for lacking them — register:'formular' (the 6 Goethe A1 Teil-1
+  // tasks) gets its own wording for criterion 2, same 0–5 scale/output shape.
+  const structureCriterion =
+    task.register === 'formular'
+      ? '2. **Kommunikative Gestaltung** (structure) – Sind alle Formularfelder ausgefüllt, mit passenden und korrekten Angaben? (Kein Abzug für fehlende Anrede/Schluss — ein Formular hat keine.)'
+      : `2. **Kommunikative Gestaltung** (structure) – Textsorte, Anrede/Schluss, Register (${task.register}), Aufbau, Verknüpfungen.`;
   return `Du bist ein erfahrener Prüfer für Deutsch als Fremdsprache und bewertest den schriftlichen Ausdruck nach den öffentlich dokumentierten Kriterien der Prüfung (${task.examKey.replace('_', ' ').toUpperCase()}-Stil). Dies ist eine ÜBUNGSBEWERTUNG (Richtwert), keine offizielle Bewertung.
 
 AUFGABE, die der Schüler bekommen hat (Register: ${task.register}, ${task.minWords}–${task.maxWords} Wörter):
@@ -49,7 +60,7 @@ ${submission}
 
 Bewerte in 4 Kriterien (jeweils 0–5 Punkte, zusammen maximal ${MAX_WRITING_POINTS}):
 1. **Aufgabenbewältigung** (task) – Sind alle Leitpunkte behandelt? Passt der Inhalt zur Aufgabe?
-2. **Kommunikative Gestaltung** (structure) – Textsorte, Anrede/Schluss, Register (${task.register}), Aufbau, Verknüpfungen.
+${structureCriterion}
 3. **Korrektheit** (accuracy) – Grammatik: Satzbau, Konjugation, Kasus, Orthografie.
 4. **Wortschatz** (vocabulary) – Angemessenheit und Vielfalt für das Niveau.
 
@@ -58,7 +69,7 @@ Antworte NUR mit einem JSON-Objekt in diesem Format (keine Erklärung davor oder
   "scores": { "task": <0-5>, "structure": <0-5>, "accuracy": <0-5>, "vocabulary": <0-5> },
   "total_score": <0-${MAX_WRITING_POINTS}>,
   "feedback": "<3-4 Sätze Feedback auf Deutsch: was gut war, was fehlt>",
-  "leitpunkt_check": [<true|false>, <true|false>, <true|false>],
+  "leitpunkt_check": [${leitpunktCheckSlots}],
   "corrections": [
     { "original": "<fehlerhafte Stelle aus dem Text>", "corrected": "<korrigierte Version>", "note": "<kurze Erklärung>" }
   ],
