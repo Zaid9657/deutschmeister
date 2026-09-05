@@ -5,8 +5,12 @@ import { isLevelFree } from '../config/freeTier';
 import { useTranslation } from 'react-i18next';
 import LockedContentOverlay from './LockedContentOverlay';
 
-const LevelSubscriptionGuard = ({ children }) => {
-  const { level } = useParams();
+const LevelSubscriptionGuard = ({ children, level: levelProp }) => {
+  const { level: levelParam } = useParams();
+  // `level` is normally a route param (/level/:level, /reading/:level, …); a
+  // route with no such param (e.g. /start-deutsch-1-kurs, gated on the A1
+  // band's top sublevel) passes it as a prop instead.
+  const level = levelProp || levelParam;
   const { user, loading: authLoading } = useAuth();
   const { hasLevelAccess, loading: subLoading } = useSubscription();
   const location = useLocation();
