@@ -1,17 +1,25 @@
 #!/usr/bin/env node
-// A1.1 Wortliste: turn the author's addition/fix JSON into an idempotent SQL
-// migration against public.words (Course Factory Wave 2, PR B).
+// Wortliste: turn the author's addition/fix JSON into an idempotent SQL
+// migration against public.words (Course Factory). The level a migration
+// targets is derived from the additions file, not hardcoded — this script
+// wrote the A1.1 Wortliste (Wave 2, PR B) first and the A1.2 Wortliste
+// (Wave 3, PR B) second, using the same code path both times.
 //
-// Inputs (see tests/a1-1-wortliste.test.mjs for the shape this script and the
-// migration it writes are pinned against):
-//   --additions <file>  JSON array of {german, english, article, plural,
-//                        category, example_sentence, level} — new rows.
-//   --fixes <file>       JSON array of {id, field, old, new, reason} — one
-//                        guarded UPDATE per entry against a live row by id.
-//   --out <file>         where to write the .sql migration.
+// Inputs (see tests/a1-1-wortliste.test.mjs and tests/a1-2-wortliste.test.mjs
+// for the shape this script and the migrations it writes are pinned
+// against):
+//   --additions <file>   JSON array of {german, english, article, plural,
+//                         category, example_sentence, level} — new rows, all
+//                         sharing one level (e.g. all "a1.1" or all "a1.2").
+//   --fixes <file>        JSON array of {id, field, old, new, reason} — one
+//                         guarded UPDATE per entry against a live row by id.
+//   --out <file>          where to write the .sql migration.
+//   --wave-label <text>   optional; parenthesised after the migration's
+//                         title line (e.g. "Course Factory Wave 3, PR B").
+//                         Omit to leave that line unqualified.
 //
 // Usage:
-//   node scripts/words-from-json.mjs --additions <additions.json> --fixes <fixes.json> --out <migration.sql>
+//   node scripts/words-from-json.mjs --additions <additions.json> --fixes <fixes.json> --out <migration.sql> [--wave-label <text>]
 //
 // Re-run contract: every INSERT is guarded by
 //   WHERE NOT EXISTS (SELECT 1 FROM public.words WHERE german = ... AND level = ... AND category = ...)
@@ -39,6 +47,7 @@ function parseArgs(argv) {
     if (a === '--additions') args.additions = argv[++i];
     else if (a === '--fixes') args.fixes = argv[++i];
     else if (a === '--out') args.out = argv[++i];
+    else if (a === '--wave-label') args.waveLabel = argv[++i];
     else throw new Error(`Unknown argument: ${a}`);
   }
   if (!args.additions || !args.fixes || !args.out) {
@@ -72,10 +81,15 @@ function main() {
 
   if (!Array.isArray(additions)) throw new Error(`${args.additions}: expected a JSON array`);
   if (!Array.isArray(fixes)) throw new Error(`${args.fixes}: expected a JSON array`);
+  if (additions.length === 0) throw new Error(`${args.additions}: expected at least one addition (to derive the level from)`);
 
+  // The level is derived from the additions themselves (not hardcoded), so
+  // this script runs unchanged for any level's Wortliste batch — but every
+  // addition in one batch must agree on it.
+  const level = additions[0].level;
   for (const row of additions) {
-    if (row.level !== 'a1.1') {
-      throw new Error(`Addition "${row.german}" has level "${row.level}", expected "a1.1"`);
+    if (row.level !== level) {
+      throw new Error(`Addition "${row.german}" has level "${row.level}", expected "${level}" (from the first row)`);
     }
     if (row.plural === 'null') {
       throw new Error(`Addition "${row.german}" has plural literal string "null" — use JSON null instead`);
@@ -90,35 +104,30 @@ function main() {
     }
   }
 
+  const levelUpper = level.toUpperCase();
+
   const perCategory = new Map();
   for (const row of additions) perCategory.set(row.category, (perCategory.get(row.category) || 0) + 1);
 
+  const perFixField = new Map();
+  for (const fix of fixes) perFixField.set(fix.field, (perFixField.get(fix.field) || 0) + 1);
+
   const generatedAt = new Date().toISOString();
+  const titleSuffix = args.waveLabel ? ` (${args.waveLabel})` : '';
   const parts = [];
-  parts.push(`-- A1.1 Wortliste: adds ${additions.length} new vocabulary rows and fixes ${fixes.length}
--- defective live rows (Course Factory Wave 2, PR B).
+  parts.push(`-- ${levelUpper} Wortliste: adds ${additions.length} new vocabulary rows and fixes ${fixes.length}
+-- defective live rows${titleSuffix}.
 --
 -- What:
---   1. ${additions.length} INSERTs into public.words at level 'a1.1' across
+--   1. ${additions.length} INSERTs into public.words at level '${level}' across
 --      ${perCategory.size} categories: ${[...perCategory.entries()].map(([c, n]) => `${c} (${n})`).join(', ')}.
---      Fills vocabulary gaps identified in review: countries/languages,
---      professions, registration-form words, drinks, and time/appointment
---      words — see scratchpad vocab/notes.md for the per-category rationale
---      and the pre-existing dupes deliberately skipped.
---   2. ${fixes.length} guarded UPDATEs against live a1.1 rows, three defect
---      classes: (a) the article baked into \`german\` on top of the already-
---      correct \`article\` column (e.g. "der Tag" instead of "Tag") — this is
---      what SrsTrainer.jsx used to render as "der der Tag" because it
---      prepended word.article unconditionally (WordCard.jsx already guarded
---      against it; see src/utils/wordDisplay.js, added alongside this
---      migration); (b) \`plural\` holding the literal string "null" instead of
---      SQL NULL, which vocabularyService.js's \`plural || ''\` let through as
---      the word "null" on other surfaces; and (c) content fixes surfaced by
---      the adversarial review (Regenbogen's plural missing its umlaut,
---      "Mach's gut"'s missing apostrophe, silber/gold as predicate
---      adjectives, an out-of-level example, an uncountable noun's plural, and
---      stripping the article prefix from plural values for consistency with
---      the bare-form convention used by the majority of live a1.1 plurals).
+--      See the source additions JSON and scratchpad vocab/notes.md for the
+--      per-category rationale and the pre-existing dupes deliberately
+--      skipped.
+--   2. ${fixes.length} guarded UPDATEs against live ${level} rows, touching
+--      ${[...perFixField.entries()].map(([f, n]) => `${f} (${n})`).join(', ')}
+--      — see the reason recorded against each id in the source fixes JSON
+--      and (for each individual UPDATE) inline below.
 --
 -- Re-run contract: every INSERT is guarded by
 --   WHERE NOT EXISTS (SELECT 1 FROM public.words WHERE german = ... AND level = ... AND category = ...)
@@ -133,7 +142,7 @@ function main() {
 --
 -- Rollback: fixes — re-run each UPDATE with SET and the guard value swapped
 -- (old value in SET, new value in the IS NOT DISTINCT FROM guard) — the old
--- value for every fix is quoted verbatim in words-a1.1-fixes.json. Additions —
+-- value for every fix is quoted verbatim in the source fixes JSON. Additions —
 -- there is no id to key a rollback DELETE on before this runs; once applied,
 -- words.id may already be referenced by vocab_srs_cards.word_id, so prefer
 -- leaving additions in place over deleting by (german, level, category).
@@ -143,7 +152,7 @@ function main() {
 BEGIN;
 
 -- ===========================================================================
--- Additions: ${additions.length} new a1.1 words
+-- Additions: ${additions.length} new ${level} words
 -- ===========================================================================
 
 ${additions.map(additionInsertSql).join('\n\n')}
@@ -161,13 +170,13 @@ COMMIT;
 ${[...perCategory.entries()]
   .map(
     ([cat]) =>
-      `--   SELECT count(*) FROM public.words WHERE level = 'a1.1' AND category = ${sqlStr(cat)}; -- expect >= ${perCategory.get(cat)}`,
+      `--   SELECT count(*) FROM public.words WHERE level = '${level}' AND category = ${sqlStr(cat)}; -- expect >= ${perCategory.get(cat)}`,
   )
   .join('\n')}
--- Literal-string "null" plurals at a1.1 (expect 0):
---   SELECT count(*) FROM public.words WHERE level = 'a1.1' AND plural = 'null';
--- Article baked into the german column at a1.1 (expect 0):
---   SELECT count(*) FROM public.words WHERE level = 'a1.1' AND (german LIKE 'der %' OR german LIKE 'die %' OR german LIKE 'das %');
+-- Literal-string "null" plurals at ${level} (expect 0):
+--   SELECT count(*) FROM public.words WHERE level = '${level}' AND plural = 'null';
+-- Article baked into the german column at ${level} (expect 0):
+--   SELECT count(*) FROM public.words WHERE level = '${level}' AND (german LIKE 'der %' OR german LIKE 'die %' OR german LIKE 'das %');
 `);
 
   writeFileSync(resolve(args.out), parts.join('\n'));
