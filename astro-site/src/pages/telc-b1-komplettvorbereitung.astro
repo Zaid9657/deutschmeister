@@ -28,13 +28,17 @@ import Layout from '../layouts/Layout.astro';
 import Aurora from '../components/Aurora.astro';
 import '../styles/global.css';
 import { ORGANIZATION } from '../lib/siteMeta.js';
+import { getTopicsForLevel } from '../lib/grammar.js';
 import { COURSES, CURRENCY, num, deEur } from '../data/pricing.js';
 import { GRAMMAR_TOPIC_COUNT, LEVEL_COUNT, TRIAL_DAYS } from '../data/marketing.js';
 
 const course = COURSES.telc_b1_komplett;
-const TOPICS_PER_LEVEL = GRAMMAR_TOPIC_COUNT / LEVEL_COUNT;
-// The plan covers both B1 sub-levels of the library.
-const B1_TOPIC_COUNT = TOPICS_PER_LEVEL * 2;
+// The plan covers both B1 sub-levels of the library. Counted from the topics
+// actually fetched for each sub-level rather than GRAMMAR_TOPIC_COUNT / LEVEL_COUNT
+// — that average only held while every level had the same topic count, which
+// stopped being true once A1.1 grew past 8 (see marketing.js GRAMMAR_TOPIC_COUNT).
+const [b11Topics, b12Topics] = await Promise.all([getTopicsForLevel('b1.1'), getTopicsForLevel('b1.2')]);
+const B1_TOPIC_COUNT = b11Topics.length + b12Topics.length;
 const PLAN_DAYS = 20; // 4 weeks × 5 study days — mirrors src/data/programs/telcB1Komplett.js
 
 const variantId = import.meta.env.PUBLIC_LEMONSQUEEZY_TELC_B1_VARIANT_ID || '';

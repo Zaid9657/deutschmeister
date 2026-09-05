@@ -8,8 +8,9 @@
 // - faqHeading + faqs: rendered as an FAQ section near the end of the page and
 //   emitted as FAQPage JSON-LD alongside the existing schemas.
 //
-// All 64 topics are covered. Answers are grounded in each lesson's own rules
-// and examples — when lesson content changes materially, update these too.
+// Not every topic has an entry (new topics start without one); a missing entry
+// just skips the FAQ/snippet sections. Answers are grounded in each lesson's own
+// rules and examples — when lesson content changes materially, update these too.
 export const TOPIC_SEO = {
   "a1.1/alphabet-pronunciation": {
     "snippetIntro": "The German alphabet has the same 26 letters as English plus four extra characters: ä, ö, ü and ß. The letters look familiar but several sound different — W is pronounced like an English V (Wasser), V like an F (Vater), J like a Y (ja) and Z like TS (zehn).",

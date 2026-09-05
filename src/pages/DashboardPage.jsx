@@ -14,6 +14,7 @@ import { deriveCurrent, isTopicCompleted, topicPercent } from '../services/curre
 import { examTrackByKey } from '../data/examTracks';
 import { LEVEL_COURSES } from '../data/pricing.js';
 import { loadDashboardStats, DAILY_GOAL_TARGET } from '../services/dashboardStats';
+import { GRAMMAR_TOPIC_COUNT } from '../data/marketing.js';
 import SEO from '../components/SEO';
 import Button from '../components/ui/Button.jsx';
 import Card from '../components/ui/Card.jsx';
@@ -464,7 +465,7 @@ const DashboardPage = () => {
 
         <a href="/grammar/"
            className="block w-full text-center text-[0.8125rem] py-3 font-bold text-siegel transition-colors hover:text-siegel-deep">
-          Browse all 64 grammar topics →
+          Browse all {GRAMMAR_TOPIC_COUNT} grammar topics →
         </a>
       </div>
     </div>

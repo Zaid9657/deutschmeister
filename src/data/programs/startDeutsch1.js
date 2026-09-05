@@ -159,7 +159,7 @@ export const PROGRAM = {
     {
       title: 'Woche 1 — Fundament',
       intro:
-        'Die acht A1.1-Grammatikthemen, dazu deine ersten Hör- und Leseübungen. Du bist bereit für Woche 2, ' +
+        'Die ersten acht A1.1-Grammatikthemen, dazu deine ersten Hör- und Leseübungen. Du bist bereit für Woche 2, ' +
         'wenn dir alle acht Themen vertraut vorkommen — nicht perfekt, nur vertraut.',
       days: [
         { label: 'Tag 1', items: [lesson('a1.1', a11[0]), listening('a1.1', 1), reading('d1-reading', 'a1.1')] },

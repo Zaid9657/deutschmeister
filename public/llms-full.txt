@@ -8,13 +8,13 @@
 
 DeutschMeister (https://deutsch-meister.de/) teaches German to English speakers.
 Grammar is explained in English first, then shown in authentic German. The platform
-covers 64 grammar topics, AI speaking practice, a free CEFR level test, podcasts,
+covers 68 grammar topics, AI speaking practice, a free CEFR level test, podcasts,
 listening exercises, vocabulary, reading lessons, and a free sentence analyzer
 (Sentence X-Ray).
 
 ## Access Model (exact)
 
-- **A1.1: free forever, no signup required** — all 8 A1.1 grammar topics readable by anyone
+- **A1.1: free forever, no signup required** — all 12 A1.1 grammar topics readable by anyone
 - **Anonymous visitors:** 1 Sentence X-Ray analysis per day
 - **Free account:** 7-day Pro trial; 2 AI speaking sessions total; 10 Sentence X-Ray analyses/day
 - **Pro — €9.99/month or €79.99/year:** all 8 levels, 30 AI speaking sessions/month,
@@ -23,9 +23,9 @@ listening exercises, vocabulary, reading lessons, and a free sentence analyzer
 
 ## Features
 
-### Grammar (64 topics)
-- 8 CEFR sub-levels (A1.1 … B2.2), 8 topics per level
-- 453 rule explanations, 673 worked examples, 672 interactive exercises in total
+### Grammar (68 topics)
+- 8 CEFR sub-levels (A1.1 … B2.2) — 12 in A1.1, 8 per level elsewhere
+- 485 rule explanations, 713 worked examples, 778 interactive exercises in total
 - Every example includes a word-by-word breakdown showing case and grammatical role
 - English explanations with authentic German examples
 - In the app: 5-stage lessons (introduction → examples → rule breakdown → guided practice → mastery)
