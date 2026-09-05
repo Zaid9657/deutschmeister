@@ -29,7 +29,7 @@ Prompt v2 re-scoped Wave 2 from "A1 complete" to **A1.1 as a complete, standalon
 
 | # | Step | Status | PR |
 |---|---|---|---|
-| A | Four new A1.1 grammar topics (Possessivartikel, trennbare Verben, Ja/Nein-Fragen, Uhrzeit/Datum), 26 exercises each, ≥16 typed; `topic_order` CHECK widened to 12; counts re-derived | PR open | #TBD-A |
+| A | Four new A1.1 grammar topics (Possessivartikel, trennbare Verben, Ja/Nein-Fragen, Uhrzeit/Datum), 26 exercises each, ≥16 typed; `topic_order` CHECK widened to 12; counts re-derived | PR #68 | #68 |
 | B | A1.1 share of the Wortliste (+114 words: Länder/Sprachen, Beruf, Formular, Getränke, Uhrzeit/Termine, formal Sie) + 51 fixes to live rows ("null" plurals, article-in-word, above-level examples) | reviewed, integrating | — |
 | C | 8 A1.1 reading texts rewritten to ≤110 words with auto-checkable richtig/falsch items; 2 exam-format lessons (Anzeigen Teil 2, Schilder Teil 3); +60 listening questions + 18 number/time dictation items on the existing audio | in review | — |
 | D | Abschlusstest A1.1 (SD1 format, half length) on the mock runner via a course-test registry; 28-day A1.1 plan page; "Du bist bereit" readiness screen | in review | — |
