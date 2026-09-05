@@ -117,21 +117,21 @@ SELECT
   'warning',
   'Three Small Exceptions',
   'Drei kleine Ausnahmen',
-  '{"type":"steps","description_de":"Drei kleine Ausnahmen, die du beim Sprechen brauchst.","description_en":"Three small exceptions you''ll run into right away. The pattern from this lesson still applies — these just adjust it slightly.","steps":[{"step":1,"title_de":"Stamm endet auf -t, -d oder Konsonant + m/n: extra -e-","title_en":"Stem ends in -t, -d, or a consonant + m/n: add an extra -e-","detail_de":"arbeiten → du arbeitest, er arbeitet (nicht ''du arbeitst''); öffnen → du öffnest (nicht ''du öffnst''). Das -e- macht die Endung aussprechbar.","detail_en":"arbeiten (stem arbeit-) → du arbeitest, er arbeitet — not ''du arbeitst''. An extra -e- goes in before -st and -t so the ending stays pronounceable. Same for reden → du redest, er redet, and for a stem ending in a consonant + m/n: öffnen (stem öffn-) → du öffnest, er öffnet — not ''du öffnst''."},{"step":2,"title_de":"Stamm endet auf -s, -ß, -z: die du-Form bekommt nur -t","title_en":"Stem ends in -s, -ß, -z: du takes just -t","detail_de":"heißen → du heißt (nicht ''du heißst''); reisen → du reist (nicht ''du reisst'').","detail_en":"heißen (stem heiß-) → du heißt, not ''du heißst''; reisen (stem reis-) → du reist, not ''du reisst''. The stem''s own -s/-ß/-z and the -st ending would collide, so du drops to just -t."},{"step":3,"title_de":"Manche Verben ändern den Stammvokal (kommt in einer späteren Lektion)","title_en":"Some verbs change their stem vowel (a later lesson covers this properly)","detail_de":"sprechen → du sprichst, er spricht; essen → du isst; fahren → du fährst; lesen → du liest; schlafen → du schläfst; nehmen → du nimmst.","detail_en":"A group of common verbs change their vowel, but only in the du and er/sie/es forms: sprechen → du sprichst, er spricht; essen → du isst, er isst; fahren → du fährst, er fährt; lesen → du liest, er liest; schlafen → du schläfst, er schläft; nehmen → du nimmst, er nimmt. ich, wir, ihr and sie/Sie still use the regular pattern from this lesson. You will drill this group properly in a later lesson — for now just recognize that these du/er forms look different."}]}'::jsonb
+  '{"type":"steps","description_de":"Drei kleine Ausnahmen, die du beim Sprechen brauchst.","description_en":"Three small exceptions you''ll run into right away. The pattern from this lesson still applies — these just adjust it slightly.","steps":[{"step":1,"title_de":"Stamm endet auf -t, -d oder -m/-n nach Konsonant (außer l, r, h): extra -e-","title_en":"Stem ends in -t, -d, or -m/-n after another consonant (except l, r, h): add an extra -e-","detail_de":"arbeiten → du arbeitest, er arbeitet (nicht ''du arbeitst''); öffnen → du öffnest (nicht ''du öffnst''). Aber: lernen → du lernst, wohnen → du wohnst. Das -e- macht die Endung aussprechbar.","detail_en":"arbeiten (stem arbeit-) → du arbeitest, er arbeitet — not ''du arbeitst''. An extra -e- goes in before -st and -t so the ending stays pronounceable. Same for reden → du redest, er redet, and for a stem ending in -m/-n after another consonant: öffnen (stem öffn-) → du öffnest, er öffnet — not ''du öffnst''. But lernen → du lernst and wohnen → du wohnst: after l, r, h or a vowel, no extra -e- is needed."},{"step":2,"title_de":"Stamm endet auf -s, -ß, -z: die du-Form bekommt nur -t","title_en":"Stem ends in -s, -ß, -z: du takes just -t","detail_de":"heißen → du heißt (nicht ''du heißst''); reisen → du reist (nicht ''du reisst'').","detail_en":"heißen (stem heiß-) → du heißt, not ''du heißst''; reisen (stem reis-) → du reist, not ''du reisst''. The stem''s own -s/-ß/-z and the -st ending would collide, so du drops to just -t."},{"step":3,"title_de":"Manche Verben ändern den Stammvokal (kommt in einer späteren Lektion)","title_en":"Some verbs change their stem vowel (a later lesson covers this properly)","detail_de":"sprechen → du sprichst, er spricht; essen → du isst; fahren → du fährst; lesen → du liest; schlafen → du schläfst; nehmen → du nimmst.","detail_en":"A group of common verbs change their vowel, but only in the du and er/sie/es forms: sprechen → du sprichst, er spricht; essen → du isst, er isst; fahren → du fährst, er fährt; lesen → du liest, er liest; schlafen → du schläfst, er schläft; nehmen → du nimmst, er nimmt. ich, wir, ihr and sie/Sie still use the regular pattern from this lesson. You will drill this group properly in a later lesson — for now just recognize that these du/er forms look different."}]}'::jsonb
 WHERE NOT EXISTS (
   SELECT 1 FROM public.grammar_rules
   WHERE topic_id = 'c1af3357-5fe4-4226-9a2a-1f6c98df13f2'::uuid AND title_en = 'Three Small Exceptions'
 );
 
 UPDATE public.grammar_rules
-SET content = jsonb_set(content, '{points}', '["Most German verbs are regular and follow the same pattern","Step 1: Remove -en from infinitive → stem. Step 2: Add ending.","Endings: ich=-e, du=-st, er/sie/es=-t, wir=-en, ihr=-t, sie/Sie=-en","Stems ending in -t, -d, or consonant + m/n insert an extra -e- before -st/-t: arbeiten → du arbeitest; öffnen → du öffnest","wir and sie/Sie forms always look like the infinitive (spielen → wir spielen)","er/sie/es and ihr both use -t (er spielt, ihr spielt)"]'::jsonb)
+SET content = jsonb_set(content, '{points}', '["Most German verbs are regular and follow the same pattern","Step 1: Remove -en from infinitive → stem. Step 2: Add ending.","Endings: ich=-e, du=-st, er/sie/es=-t, wir=-en, ihr=-t, sie/Sie=-en","Stems ending in -t, -d, or -m/-n after another consonant insert an extra -e- before -st/-t: arbeiten → du arbeitest; öffnen → du öffnest (but lernen → du lernst)","wir and sie/Sie forms always look like the infinitive (spielen → wir spielen)","er/sie/es and ihr both use -t (er spielt, ihr spielt)"]'::jsonb)
 WHERE id = 'c6fd72b0-c07e-44fc-8829-58228144df68'::uuid
   AND content->'points' = '["Most German verbs are regular and follow the same pattern","Step 1: Remove -en from infinitive → stem. Step 2: Add ending.","Endings: ich=-e, du=-st, er/sie/es=-t, wir=-en, ihr=-t, sie/Sie=-en","wir and sie/Sie forms always look like the infinitive (spielen → wir spielen)","er/sie/es and ihr both use -t (er spielt, ihr spielt)"]'::jsonb;
 
 INSERT INTO public.grammar_exercises (id, topic_id, stage, order_index, exercise_type, question_en, question_de, options, correct_answer, acceptable_answers, explanation_en, explanation_de, why_correct_en, why_correct_de)
 SELECT
   '58dd25ce-36c5-4e52-a4cc-8ebddbdd8da0'::uuid, 'c1af3357-5fe4-4226-9a2a-1f6c98df13f2'::uuid, 4, 9,
-  'fill_blank', 'Du ___ viel. (arbeiten)', 'Du ___ viel.',
+  'fill_blank', 'You ___ a lot. (arbeiten)', 'Du ___ viel.',
   '["arbeitst","arbeite","arbeitest","arbeiten"]'::jsonb, 'arbeitest', '["arbeitest"]'::jsonb,
   'Stem ends in -t, so insert -e- before -st: arbeitest.', 'Stamm endet auf -t, deshalb -e- einfügen: arbeitest.', 'arbeiten (stem arbeit-) ends in -t, so du gets the extra -e-: arbeit + e + st = arbeitest.', 'arbeiten (Stamm arbeit-) endet auf -t, deshalb extra -e-: arbeit + e + st = arbeitest.'
 WHERE NOT EXISTS (
@@ -141,7 +141,7 @@ WHERE NOT EXISTS (
 INSERT INTO public.grammar_exercises (id, topic_id, stage, order_index, exercise_type, question_en, question_de, options, correct_answer, acceptable_answers, explanation_en, explanation_de, why_correct_en, why_correct_de)
 SELECT
   '23cda354-67fa-4f71-8753-af3b48d540ed'::uuid, 'c1af3357-5fe4-4226-9a2a-1f6c98df13f2'::uuid, 4, 10,
-  'fill_blank', 'Wie ___ du? (heißen)', 'Wie ___ du?',
+  'fill_blank', 'What ___ your name? (heißen)', 'Wie ___ du?',
   '["heißst","heißest","heißt","heißen"]'::jsonb, 'heißt', '["heißt"]'::jsonb,
   'Stem ends in -ß, so du takes just -t: heißt.', 'Stamm endet auf -ß, deshalb bekommt die du-Form nur -t: heißt.', 'heißen (stem heiß-) already ends in -ß, so du takes just -t instead of -st: heißt, not heißst.', 'heißen (Stamm heiß-) endet auf -ß, deshalb bekommt die du-Form nur -t statt -st: heißt, nicht heißst.'
 WHERE NOT EXISTS (
@@ -295,7 +295,7 @@ SET question_de = 'Heute ___ wir ins Kino.',
     options = '["gehen","geht","gehst","ging"]'::jsonb,
     correct_answer = 'gehen',
     acceptable_answers = '["gehen"]'::jsonb,
-    hint = 'gehen',
+    hint = NULL,
     explanation_en = 'Time first → verb second. "Heute gehen wir..."',
     explanation_de = 'Verb an zweiter Stelle, wenn zuerst die Zeit steht: "Heute gehen wir..."',
     why_correct_en = 'With "Heute" in position 1, the verb "gehen" must come in position 2, followed by subject "wir".',
