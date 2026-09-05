@@ -4,7 +4,7 @@
  * The DB has a `related_slugs` column but it is empty for every topic, so we
  * derive relationships here from obvious grammatical connections — cases ↔
  * prepositions ↔ articles, verb topics ↔ tenses, clauses ↔ conjunctions, and so
- * on. Each of the 64 topics lists 3–5 related slugs. Unknown slugs are ignored
+ * on. Each topic here lists 3–5 related slugs. Unknown slugs are ignored
  * at render time, so the lists are safe to hand-edit.
  *
  * If `related_slugs` is ever populated in the DB, the page prefers it over this

@@ -23,6 +23,7 @@
 //   - one <h1>, a canonical, and real server-rendered body text, or
 //     scripts/check-built-html.mjs fails
 import { ORGANIZATION } from '../lib/siteMeta.js';
+import { getTopicsForLevel } from '../lib/grammar.js';
 import Layout from '../layouts/Layout.astro';
 import Aurora from '../components/Aurora.astro';
 import '../styles/global.css';
@@ -56,7 +57,11 @@ import {
 const title = 'Pricing — All 8 German Levels | DeutschMeister';
 const description = `${FREE_LEVEL_LABEL} is free forever. Pro opens all ${LEVEL_COUNT} CEFR levels, ${GRAMMAR_TOPIC_COUNT} grammar topics, AI speaking practice and Sentence X-Ray.`;
 
-const TOPICS_PER_LEVEL = GRAMMAR_TOPIC_COUNT / LEVEL_COUNT;
+// Counted from the topics actually fetched for the free level rather than
+// GRAMMAR_TOPIC_COUNT / LEVEL_COUNT — that average only held while every level
+// had the same topic count, which stopped being true once A1.1 grew past 8
+// (see marketing.js GRAMMAR_TOPIC_COUNT).
+const TOPICS_PER_LEVEL = (await getTopicsForLevel(FREE_LEVEL_LABEL.toLowerCase())).length;
 const FREE_RUNGS = 1; // FREE_LEVEL_LABEL is the first rung of the ladder.
 
 // Level courses (the product since 2026-09-03, docs/monetization-2026-09-03.md).

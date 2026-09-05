@@ -23,14 +23,14 @@ const firstTopic = orderedPath[0];
 const totalTopics = orderedPath.length;
 
 // The site's most-linked hub had a bare CollectionPage: no breadcrumb (the only
-// Astro hub without one) and no ItemList, while rendering 8 level links and 64
-// topic links. Both restate what the page already shows.
+// Astro hub without one) and no ItemList, while rendering 8 level links and a
+// topic link per topic actually fetched. Both restate what the page already shows.
 const jsonLd = [
   {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: 'Deutsche Grammatik A1–B2 | DeutschMeister',
-    description: 'Alle 64 Grammatikthemen von A1.1 bis B2.2 — kostenlos, mit Erklärungen, Beispielen und Übungen.',
+    description: `Alle ${totalTopics} Grammatikthemen von A1.1 bis B2.2 — kostenlos, mit Erklärungen, Beispielen und Übungen.`,
     url: 'https://deutsch-meister.de/grammar/',
     inLanguage: 'de',
     provider: ORGANIZATION,
@@ -69,7 +69,7 @@ const H2 = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[
 
 <Layout
   title="Deutsche Grammatik A1–B2 | DeutschMeister"
-  description="64 Grammatikthemen von A1.1 bis B2.2. Artikel, Kasus, Konjunktiv und mehr — mit Erklärungen, Beispielen und interaktiven Übungen."
+  description={`${totalTopics} Grammatikthemen von A1.1 bis B2.2. Artikel, Kasus, Konjunktiv und mehr — mit Erklärungen, Beispielen und interaktiven Übungen.`}
   canonical="https://deutsch-meister.de/grammar/"
   jsonLd={jsonLd}
   lang="de"
@@ -85,7 +85,7 @@ const H2 = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[
             <span lang="de" data-en="German Grammar">Deutsche Grammatik</span>
           </h1>
           <p class="hero-line mx-auto mt-6 max-w-2xl text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]" lang="de" style="--d:200ms">
-            <span data-en="64 topics from A1.1 to B2.2 — with rules, examples and interactive exercises. Every topic explained on its own.">64 Themen von A1.1 bis B2.2 — mit Regeln, Beispielen und interaktiven Übungen. Jedes Thema einzeln erklärbar.</span>
+            <span data-en={`${totalTopics} topics from A1.1 to B2.2 — with rules, examples and interactive exercises. Every topic explained on its own.`}>{totalTopics} Themen von A1.1 bis B2.2 — mit Regeln, Beispielen und interaktiven Übungen. Jedes Thema einzeln erklärbar.</span>
           </p>
           <p class="hero-line mt-4 text-[0.9375rem] text-graphite" lang="en" style="--d:320ms">
             New to German? Start with <a href="/grammar/a1.1/nouns-gender/" class="font-bold text-siegel transition-colors hover:text-siegel-deep">German noun genders (der, die, das)</a> — the first A1.1 topic.
@@ -132,7 +132,7 @@ const H2 = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[
                         A1.1 · Topic 1: {firstTopic.title}
                       </p>
                       <p id="gm-hero-sub" class="mt-0.5 text-sm text-graphite" data-atropos-offset="2">
-                        64 topics from complete beginner to upper-intermediate.
+                        {totalTopics} topics from complete beginner to upper-intermediate.
                       </p>
                     </div>
                     <span
@@ -263,7 +263,7 @@ const H2 = 'font-display text-[1.5625rem] font-semibold leading-tight tracking-[
             title.textContent = `${current.level.toUpperCase()} · Topic ${current.n}: ${current.title}`;
             sub.textContent = completedCount > 0
               ? `You've completed ${completedCount} of ${totalTopics} topics — keep the streak going.`
-              : `64 topics from complete beginner to upper-intermediate.`;
+              : `${totalTopics} topics from complete beginner to upper-intermediate.`;
             if (btnLabel) btnLabel.textContent = completedCount > 0 ? 'Resume' : 'Start learning';
             if (icon) icon.textContent = completedCount > 0 ? '▶️' : '📖';
           } else {
