@@ -53,6 +53,7 @@ const VerifyEmailPage = lazy(() => import('./pages/VerifyEmailPage'));
 const IntroSlides = lazy(() => import('./components/onboarding/IntroSlides'));
 const TelcB1KursPage = lazy(() => import('./pages/TelcB1KursPage'));
 const StartDeutsch1KursPage = lazy(() => import('./pages/StartDeutsch1KursPage'));
+const A11PhasePage = lazy(() => import('./pages/A11PhasePage'));
 const ModelltestHub = lazy(() => import('./pages/Modelltest/ModelltestHub'));
 const ModelltestOverview = lazy(() => import('./pages/Modelltest/ModelltestOverview'));
 const ModelltestRun = lazy(() => import('./pages/Modelltest/ModelltestRun'));
@@ -177,6 +178,22 @@ function App() {
                         <LevelSubscriptionGuard level="a1.2">
                           <EmailVerificationGate>
                             <StartDeutsch1KursPage />
+                          </EmailVerificationGate>
+                        </LevelSubscriptionGuard>
+                      }
+                    />
+                    {/* The A1.1-Phase 28-day plan (Course Factory Wave 2 PR D) —
+                        a1.1 is a free level, so this gates on
+                        LevelSubscriptionGuard's a1.1 branch, which is open to
+                        every logged-in user (isLevelFree short-circuits the
+                        subscription check but the route still sits below
+                        EmailVerificationGate like every other course area). */}
+                    <Route
+                      path="/a1-1-phase"
+                      element={
+                        <LevelSubscriptionGuard level="a1.1">
+                          <EmailVerificationGate>
+                            <A11PhasePage />
                           </EmailVerificationGate>
                         </LevelSubscriptionGuard>
                       }

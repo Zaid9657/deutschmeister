@@ -4,19 +4,26 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { useTranslation } from 'react-i18next';
 import { trackPaywallShown } from '../lib/funnelTracking';
-import { examTrackBySlug } from '../data/examTracks';
+import { resolveModelltest } from '../data/modelltest';
 
 // Same brand-new-user race as SubscriptionGuard (see there for the full note).
 const NEW_USER_WINDOW_MS = 10 * 60 * 1000;
 
-// Guards the /modelltest/:examSlug* routes. Pro/trial keeps the exact access
+// Guards the /modelltest/:examSlug* routes for BOTH registries the resolver
+// covers. For an exam track, Pro/trial keeps the exact access
 // SubscriptionGuard already gave it; on top of that, a band-course buyer
 // unlocks their own band's mock — the €49 course is sold on including it
-// (docs/course-research-2026-09-03.md §4). Gate on the band's TOP sublevel
-// (EXAM_TRACKS[].sublevels, last entry), never the first: hasLevelAccess()
-// treats FREE_LEVELS (a1.1) as always-open, so gating on a1.1 would make the
-// A1 mock free for everyone — a1.2 is never free, so it opens only via
-// Pro/trial or an actual course purchase.
+// (docs/course-research-2026-09-03.md §4). gateLevel there is the band's TOP
+// sublevel (EXAM_TRACKS[].sublevels, last entry), never the first:
+// hasLevelAccess() treats FREE_LEVELS (a1.1) as always-open, so gating on
+// a1.1 would make the A1 mock free for everyone — a1.2 is never free, so it
+// opens only via Pro/trial or an actual course purchase.
+//
+// For a COURSE test, gateLevel is the course's own level. a1.1 is a free
+// level, so hasLevelAccess('a1.1') is always true — the Abschlusstest A1.1
+// opens to every signed-in user. That is the recorded decision (Course
+// Factory Wave 2 PR D), not a gap: this guard still requires `user` below
+// like every other guarded route, so an anonymous visitor still hits /login.
 const ExamSubscriptionGuard = ({ children }) => {
   const { examSlug } = useParams();
   const { user, loading: authLoading } = useAuth();
@@ -26,9 +33,8 @@ const ExamSubscriptionGuard = ({ children }) => {
   const [retrying, setRetrying] = useState(false);
   const retriedRef = useRef(false);
 
-  const track = examTrackBySlug(examSlug);
-  const topSublevel = track?.sublevels?.[track.sublevels.length - 1];
-  const examAccess = hasAccess || (topSublevel ? hasLevelAccess(topSublevel) : false);
+  const resolved = resolveModelltest(examSlug);
+  const examAccess = hasAccess || (resolved?.gateLevel ? hasLevelAccess(resolved.gateLevel) : false);
 
   const isBrandNew =
     user?.created_at && Date.now() - new Date(user.created_at).getTime() < NEW_USER_WINDOW_MS;

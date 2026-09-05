@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Clock, Play, RotateCcw, History } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { examTrackBySlug, MOCK_DISCLAIMER_DE } from '../../data/examTracks';
-import { mockForExamKey } from '../../data/mockExams';
+import { MOCK_DISCLAIMER_DE } from '../../data/examTracks';
+import { resolveModelltest } from '../../data/modelltest';
 import { createAttempt, findResumableAttempt, listAttempts } from '../../services/examService';
 import SEO from '../../components/SEO';
 import Button from '../../components/ui/Button.jsx';
@@ -18,28 +18,29 @@ const ModelltestOverview = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const track = examTrackBySlug(examSlug);
-  const mock = track ? mockForExamKey(track.key) : null;
+  const resolved = resolveModelltest(examSlug);
+  const mock = resolved?.mock;
 
   const [resumable, setResumable] = useState(null);
   const [history, setHistory] = useState([]);
   const [starting, setStarting] = useState(false);
 
   useEffect(() => {
-    if (!user || !track || !mock) return;
+    if (!user || !resolved) return;
     let alive = true;
     Promise.all([
-      findResumableAttempt(user.id, track.key),
-      listAttempts(user.id, track.key),
+      findResumableAttempt(user.id, resolved.key),
+      listAttempts(user.id, resolved.key),
     ]).then(([resume, attempts]) => {
       if (!alive) return;
       setResumable(resume);
       setHistory(attempts.filter((a) => a.status === 'completed'));
     });
     return () => { alive = false; };
-  }, [user, track, mock]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, resolved?.key]);
 
-  if (!track || !mock) {
+  if (!resolved) {
     return (
       <div className="min-h-screen bg-paper pt-24 px-4 text-center">
         <p className="text-graphite">Für diese Prüfung gibt es noch keinen Übungstest.</p>
@@ -53,7 +54,7 @@ const ModelltestOverview = () => {
   const handleStart = async () => {
     if (!user || starting) return;
     setStarting(true);
-    const attempt = await createAttempt(user.id, track.key, mock.sections[0].minutes);
+    const attempt = await createAttempt(user.id, resolved.key, mock.sections[0].minutes);
     setStarting(false);
     if (attempt) navigate(`/modelltest/${examSlug}/run`, { state: { attemptId: attempt.id } });
   };
@@ -62,7 +63,7 @@ const ModelltestOverview = () => {
     <div className="min-h-screen bg-paper text-ink pt-24 pb-12 px-4">
       <SEO title={mock.title} description="Übungstest mit Zeitlimit und Auswertung." path={`/modelltest/${examSlug}`} noindex />
       <div className="max-w-2xl mx-auto">
-        <SectionHeading size="page" level={1} eyebrow={track.nameDe} title={mock.title} lead={mock.intro} />
+        <SectionHeading size="page" level={1} eyebrow={resolved.nameDe} title={mock.title} lead={mock.intro} />
 
         {/* Reference material — what is in the test — stays flat. */}
         <Reveal delay={180} className="mt-6">
