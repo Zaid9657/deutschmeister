@@ -61,6 +61,7 @@ where the 28-day A1.1 plan ends. Gate: Monday's weekly-truth one-and-done rate f
 | # | Step | Status | PR |
 |---|---|---|---|
 | A | Four new A1.2 grammar topics (stem-changing-verbs, imperative, perfekt-intro, dative-prepositions-intro) at topic_order 9–12, 104 exercises total, ≥16 typed each; stem-changing precedes imperative by decision | PR open | — |
+| A2 | Typed production for the 16 pre-existing A1.1/A1.2 grammar topics (163 exercises: 79 A1.1 + 84 A1.2), plus the `numbers-counting` upgrade (100–1000, prices, ordinal numbers: +4 rules, +4 examples, topic_patch, one guarded rule content patch) via a new EXTEND mode in `scripts/grammar-topics-from-json.mjs` | PR open | — |
 | B | A1.2 share of the Wortliste: 166 additions in 8 categories, 54 fixes incl. three repurposed rows and month plurals | merged, DB migrated 2026-09-05 (413 A1.2 words live, 2215 total) | #73 |
 
 ## Measured baseline (do not re-derive)
