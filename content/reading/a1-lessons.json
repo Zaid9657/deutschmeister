@@ -514,32 +514,28 @@
     "title_de": "Eine E-Mail an eine Freundin",
     "title_en": "An Email to a Friend",
     "topic": "Writing & Communication",
-    "content_de": "Liebe Julia,\n\nwie geht es dir? Mir geht es sehr gut, denn ich habe tolle Neuigkeiten: Ich habe endlich eine Wohnung in Köln! Sie ist klein, aber schön und hell. Ich wohne jetzt in der Südstadt. Das Viertel ist super, denn es gibt hier viele Cafés und einen schönen Park.\n\nKöln ist groß, und ich kenne noch niemanden. Aber das ist kein Problem. Ich mache einen Tanzkurs, denn dort kann ich Leute kennenlernen. Ich habe auch schon einen Job! Ich arbeite in einer Buchhandlung im Zentrum. Die Arbeit ist interessant, aber die Tage sind lang. Am Abend bin ich oft müde. Die Kollegen sind sehr nett, und ich kann jeden Tag neue Bücher sehen.\n\nUnd jetzt meine Frage: Möchtest du mich besuchen? Du kannst am Wochenende kommen. Wir können zusammen die Stadt besichtigen und den Dom sehen. Du musst auch den Rhein sehen! Wann hast du Zeit? Schreib mir bald!\n\nViele Grüße und bis bald\ndeine Emma",
-    "content_en": "Dear Julia,\n\nHow are you? I am doing very well, because I have great news: I finally have an apartment in Cologne! It is small, but nice and bright. I now live in the Südstadt. The neighborhood is great, because there are lots of cafés here and a beautiful park.\n\nCologne is big, and I don't know anyone yet. But that is no problem. I am taking a dance class, because I can meet people there. I also already have a job! I work in a bookshop in the city center. The work is interesting, but the days are long. In the evening I am often tired. My colleagues are very nice, and I get to see new books every day.\n\nAnd now my question: Would you like to visit me? You can come on the weekend. We can see the city together and visit the cathedral. You also have to see the Rhine! When do you have time? Write to me soon!\n\nBest wishes and see you soon,\nyour Emma",
+    "content_de": "Liebe Julia,\n\nwie geht es dir? Mir geht es sehr gut, denn ich habe eine Wohnung in Köln! Sie ist klein, aber schön und hell. Das Viertel heißt Südstadt. Es gibt hier viele Cafés und einen Park.\n\nKöln ist groß, und ich kenne noch niemanden. Ich mache einen Tanzkurs. Dort kann ich Leute treffen. Ich habe auch schon einen Job! Ich arbeite bei Buchhandlung Lang. Die Arbeit ist interessant, aber die Tage sind lang. Die Kollegen sind sehr nett.\n\nUnd jetzt meine Frage: Möchtest du mich besuchen? Du kannst am Wochenende kommen. Wir können zusammen die Stadt und den Dom sehen. Wann hast du Zeit? Schreib bald!\n\nViele Grüße\ndeine Emma",
+    "content_en": "Dear Julia,\n\nHow are you? I am doing very well, because I have an apartment in Cologne! It is small, but nice and bright. The neighborhood is called Südstadt. There are lots of cafés here and a park.\n\nCologne is big, and I don't know anyone yet. I am taking a dance class. There I can meet people. I also already have a job! I work at Buchhandlung Lang. The work is interesting, but the days are long. My colleagues are very nice.\n\nAnd now my question: Would you like to visit me? You can come on the weekend. We can see the city and the cathedral together. When do you have time? Write soon!\n\nBest wishes\nyour Emma",
     "key_vocabulary": [
       {
-        "de": "die Neuigkeit, -en",
-        "en": "piece of news"
-      },
-      {
         "de": "die Wohnung, -en",
-        "en": "apartment, flat"
+        "en": "apartment"
       },
       {
         "de": "hell",
-        "en": "bright, light"
+        "en": "bright"
       },
       {
         "de": "das Viertel, -",
-        "en": "neighborhood, quarter"
+        "en": "neighborhood"
       },
       {
         "de": "der Tanzkurs, -e",
         "en": "dance class"
       },
       {
-        "de": "kennenlernen",
-        "en": "to get to know, to meet"
+        "de": "treffen",
+        "en": "to meet"
       },
       {
         "de": "der Job, -s",
@@ -550,20 +546,8 @@
         "en": "bookshop"
       },
       {
-        "de": "die Arbeit, -en",
-        "en": "work"
-      },
-      {
-        "de": "müde",
-        "en": "tired"
-      },
-      {
         "de": "besuchen",
-        "en": "to visit (a person)"
-      },
-      {
-        "de": "besichtigen",
-        "en": "to see, to tour (sights)"
+        "en": "to visit"
       },
       {
         "de": "der Dom, -e",
@@ -572,61 +556,101 @@
       {
         "de": "schreiben",
         "en": "to write"
-      },
-      {
-        "de": "der Gruß, Grüße",
-        "en": "greeting (Viele Grüße = best wishes)"
       }
     ],
     "questions": [
       {
         "question_de": "Warum geht es Emma sehr gut?",
         "question_en": "Why is Emma doing very well?",
-        "answer_de": "Es geht ihr sehr gut, denn sie hat endlich eine Wohnung in Köln.",
-        "answer_en": "She is doing very well because she finally has an apartment in Cologne."
+        "answer_de": "Sie hat jetzt eine Wohnung in Köln.",
+        "answer_en": "She now has an apartment in Cologne."
       },
       {
         "question_de": "Wie ist Emmas Wohnung?",
         "question_en": "What is Emma's apartment like?",
-        "answer_de": "Ihre Wohnung ist klein, aber schön und hell.",
-        "answer_en": "Her apartment is small, but nice and bright."
+        "answer_de": "Die Wohnung ist klein, aber schön und hell.",
+        "answer_en": "The apartment is small, but nice and bright."
       },
       {
-        "question_de": "Warum macht Emma einen Tanzkurs?",
-        "question_en": "Why is Emma taking a dance class?",
-        "answer_de": "Sie macht einen Tanzkurs, denn dort kann sie Leute kennenlernen.",
-        "answer_en": "She is taking a dance class because she can meet people there."
+        "question_de": "Was macht Emma in Köln?",
+        "question_en": "What is Emma doing in Cologne?",
+        "answer_de": "Sie macht einen Tanzkurs.",
+        "answer_en": "She is taking a dance class."
       },
       {
         "question_de": "Wo arbeitet Emma?",
         "question_en": "Where does Emma work?",
-        "answer_de": "Emma arbeitet in einer Buchhandlung im Zentrum.",
-        "answer_en": "Emma works in a bookshop in the city center."
+        "answer_de": "Emma arbeitet bei Buchhandlung Lang.",
+        "answer_en": "Emma works at Buchhandlung Lang."
       },
       {
         "question_de": "Was können Emma und Julia am Wochenende machen?",
         "question_en": "What can Emma and Julia do on the weekend?",
-        "answer_de": "Sie können zusammen die Stadt besichtigen und den Dom sehen.",
-        "answer_en": "They can see the city together and visit the cathedral."
+        "answer_de": "Sie können die Stadt und den Dom sehen.",
+        "answer_en": "They can see the city and the cathedral."
       }
     ],
-    "word_count": 157,
+    "word_count": 111,
     "difficulty": 2,
     "estimated_reading_time": 3,
-    "order_index": 5
+    "order_index": 5,
+    "checks": [
+      {
+        "type": "rf",
+        "statement_de": "Emma hat jetzt eine Wohnung in Köln.",
+        "statement_en": "Emma now has an apartment in Cologne.",
+        "answer": "richtig",
+        "explanation_de": "Der Text sagt: Ich habe eine Wohnung in Köln."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Emma arbeitet bei Buchhandlung Lang.",
+        "statement_en": "Emma works at Buchhandlung Lang.",
+        "answer": "richtig",
+        "explanation_de": "Der Text sagt: Ich arbeite bei Buchhandlung Lang."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Emmas Viertel heißt Nordstadt.",
+        "statement_en": "Emma's neighborhood is called Nordstadt.",
+        "answer": "falsch",
+        "explanation_de": "Das Viertel heißt Südstadt, nicht Nordstadt."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Julia kann am Wochenende kommen.",
+        "statement_en": "Julia can come on the weekend.",
+        "answer": "richtig",
+        "explanation_de": "Der Text sagt: Du kannst am Wochenende kommen."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Emma kennt schon viele Leute in Köln.",
+        "statement_en": "Emma already knows many people in Cologne.",
+        "answer": "falsch",
+        "explanation_de": "Emma kennt noch niemanden in Köln."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Was möchte Emma mit Julia machen?",
+        "statement_en": "What does Emma want to do with Julia?",
+        "options": [
+          "die Stadt und den Dom sehen",
+          "am Wochenende arbeiten"
+        ],
+        "answer": "die Stadt und den Dom sehen",
+        "explanation_de": "Der Text sagt: Wir können zusammen die Stadt und den Dom sehen."
+      }
+    ]
   },
   {
     "level": "A1.2",
     "title_de": "Am Wochenende",
     "title_en": "On the Weekend",
     "topic": "Weekend Activities",
-    "content_de": "Endlich Freitag! Max und Sara sitzen in der Küche und planen das Wochenende. Sie haben viele Ideen. Am Samstagmorgen möchte Max lange schlafen. Aber Sara sagt: „Wir müssen früh aufstehen, denn der Markt beginnt um acht Uhr.“ Auf dem Markt möchten sie Gemüse, Obst und Blumen kaufen. Danach können sie in ihrem Lieblingscafé frühstücken. Am Nachmittag möchte Max Fußball spielen. Sein Verein hat ein Spiel. Sara möchte nicht zuschauen. Sie möchte lieber schwimmen oder ein Buch lesen. Am Abend haben beide einen Plan: Sie möchten einen Film sehen. Max möchte einen Actionfilm sehen, aber Sara möchte eine Komödie sehen. Wer gewinnt? Vielleicht sehen sie einfach beide Filme! Am Sonntag müssen Max und Sara auch arbeiten. Max muss die Wohnung putzen, und Sara muss Wäsche waschen. Danach können sie eine Radtour machen. Hoffentlich ist das Wetter schön! Um sechs Uhr kommen Freunde zum Abendessen. Sara möchte Lasagne kochen. Das Wochenende ist kurz, aber Max und Sara können viel machen!",
-    "content_en": "Finally Friday! Max and Sara are sitting in the kitchen planning the weekend. They have lots of ideas. On Saturday morning Max would like to sleep in. But Sara says: \"We have to get up early, because the market starts at eight o'clock.\" At the market they want to buy vegetables, fruit and flowers. Afterwards they can have breakfast at their favorite café. In the afternoon Max wants to play football. His club has a match. Sara does not want to watch. She would rather swim or read a book. In the evening they both have a plan: they want to watch a film. Max wants to see an action film, but Sara wants to see a comedy. Who wins? Maybe they will simply watch both films! On Sunday Max and Sara also have to work. Max has to clean the apartment, and Sara has to do the laundry. Afterwards they can go on a bike tour. Hopefully the weather will be nice! At six o'clock friends are coming for dinner. Sara wants to cook lasagna. The weekend is short, but Max and Sara can do a lot!",
+    "content_de": "Endlich Freitag! Max und Sara planen das Wochenende. Am Samstagmorgen möchte Max lange schlafen. Aber Sara sagt: „Wir müssen früh aufstehen.“ Der Wochenmarkt beginnt um acht Uhr. Sie möchten Gemüse, Obst und Blumen kaufen.\n\nAm Nachmittag möchte Max Fußball spielen. Sara möchte lieber schwimmen. Am Abend möchten beide einen Film sehen. Max möchte einen Actionfilm, aber Sara möchte eine Komödie. Vielleicht sehen sie beide Filme!\n\nAm Sonntag müssen Max und Sara zu Hause viel machen. Max muss die Wohnung putzen, und Sara muss Wäsche waschen. Danach machen sie vielleicht eine Radtour. Um sechs Uhr kommen Freunde zum Abendessen. Sara möchte Lasagne kochen. Das Wochenende ist kurz, aber sie können viel machen!",
+    "content_en": "Finally Friday! Max and Sara are planning the weekend. On Saturday morning Max would like to sleep in. But Sara says: \"We have to get up early.\" The weekly market starts at eight o'clock. They want to buy vegetables, fruit and flowers.\n\nIn the afternoon Max wants to play football. Sara would rather swim. In the evening they both want to watch a film. Max wants an action film, but Sara wants a comedy. Maybe they will watch both films!\n\nOn Sunday Max and Sara have a lot to do at home. Max has to clean the apartment, and Sara has to do the laundry. Afterwards they will maybe go on a bike tour. At six o'clock friends are coming for dinner. Sara wants to cook lasagna. The weekend is short, but they can do a lot!",
     "key_vocabulary": [
-      {
-        "de": "das Wochenende, -n",
-        "en": "weekend"
-      },
       {
         "de": "planen",
         "en": "to plan"
@@ -640,12 +664,8 @@
         "en": "early"
       },
       {
-        "de": "der Verein, -e",
-        "en": "club (sports club)"
-      },
-      {
-        "de": "zuschauen",
-        "en": "to watch, to look on"
+        "de": "der Film, -e",
+        "en": "film"
       },
       {
         "de": "die Komödie, -n",
@@ -656,7 +676,7 @@
         "en": "to clean"
       },
       {
-        "de": "die Wäsche (nur Sg.)",
+        "de": "die Wäsche",
         "en": "laundry"
       },
       {
@@ -668,52 +688,34 @@
         "en": "bike tour"
       },
       {
-        "de": "das Abendessen, -",
-        "en": "dinner"
-      },
-      {
         "de": "kochen",
         "en": "to cook"
-      },
-      {
-        "de": "müssen",
-        "en": "must, to have to"
-      },
-      {
-        "de": "möchten",
-        "en": "would like to"
       }
     ],
     "questions": [
       {
-        "question_de": "Warum müssen Max und Sara am Samstag früh aufstehen?",
-        "question_en": "Why do Max and Sara have to get up early on Saturday?",
-        "answer_de": "Sie müssen früh aufstehen, denn der Markt beginnt um acht Uhr.",
-        "answer_en": "They have to get up early because the market starts at eight o'clock."
-      },
-      {
-        "question_de": "Was möchten sie auf dem Markt kaufen?",
-        "question_en": "What do they want to buy at the market?",
-        "answer_de": "Sie möchten Gemüse, Obst und Blumen kaufen.",
-        "answer_en": "They want to buy vegetables, fruit and flowers."
+        "question_de": "Wann beginnt der Wochenmarkt am Samstag?",
+        "question_en": "When does the weekly market start on Saturday?",
+        "answer_de": "Der Wochenmarkt beginnt um acht Uhr.",
+        "answer_en": "The weekly market starts at eight o'clock."
       },
       {
         "question_de": "Was möchte Max am Nachmittag machen?",
         "question_en": "What does Max want to do in the afternoon?",
-        "answer_de": "Am Nachmittag möchte Max Fußball spielen.",
-        "answer_en": "In the afternoon Max wants to play football."
+        "answer_de": "Er möchte Fußball spielen.",
+        "answer_en": "He wants to play football."
       },
       {
         "question_de": "Welchen Film möchte Sara sehen?",
         "question_en": "Which film does Sara want to see?",
-        "answer_de": "Sara möchte eine Komödie sehen.",
-        "answer_en": "Sara wants to see a comedy."
+        "answer_de": "Sie möchte eine Komödie sehen.",
+        "answer_en": "She wants to see a comedy."
       },
       {
         "question_de": "Was muss Max am Sonntag machen?",
         "question_en": "What does Max have to do on Sunday?",
-        "answer_de": "Max muss die Wohnung putzen.",
-        "answer_en": "Max has to clean the apartment."
+        "answer_de": "Er muss die Wohnung putzen.",
+        "answer_en": "He has to clean the apartment."
       },
       {
         "question_de": "Wer kommt am Sonntag um sechs Uhr?",
@@ -722,34 +724,74 @@
         "answer_en": "At six o'clock friends are coming for dinner."
       }
     ],
-    "word_count": 158,
+    "word_count": 111,
     "difficulty": 2,
     "estimated_reading_time": 3,
-    "order_index": 6
+    "order_index": 6,
+    "checks": [
+      {
+        "type": "rf",
+        "statement_de": "Der Wochenmarkt beginnt um acht Uhr.",
+        "statement_en": "The weekly market starts at eight o'clock.",
+        "answer": "richtig",
+        "explanation_de": "Der Text sagt: Der Wochenmarkt beginnt um acht Uhr."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Max möchte am Nachmittag schwimmen.",
+        "statement_en": "Max wants to swim in the afternoon.",
+        "answer": "falsch",
+        "explanation_de": "Max möchte Fußball spielen; Sara möchte schwimmen."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Max muss am Sonntag die Wohnung putzen.",
+        "statement_en": "Max has to clean the apartment on Sunday.",
+        "answer": "richtig",
+        "explanation_de": "Der Text sagt: Max muss die Wohnung putzen."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Am Sonntagabend kommen Freunde zu Besuch.",
+        "statement_en": "On Sunday evening friends are coming to visit.",
+        "answer": "richtig",
+        "explanation_de": "Der Text sagt: Um sechs Uhr kommen Freunde zum Abendessen."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Sara möchte einen Actionfilm sehen.",
+        "statement_en": "Sara wants to see an action film.",
+        "answer": "falsch",
+        "explanation_de": "Sara möchte eine Komödie sehen; Max möchte den Actionfilm."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Was möchte Sara zum Abendessen kochen?",
+        "statement_en": "What does Sara want to cook for dinner?",
+        "options": [
+          "Schnitzel",
+          "Lasagne"
+        ],
+        "answer": "Lasagne",
+        "explanation_de": "Der Text sagt: Sara möchte Lasagne kochen."
+      }
+    ]
   },
   {
     "level": "A1.2",
     "title_de": "Mit dem Zug durch Deutschland",
     "title_en": "Through Germany by Train",
     "topic": "Train Travel",
-    "content_de": "Tom möchte seine Schwester in München besuchen. Er wohnt in Hamburg, und die Reise ist weit: fast 800 Kilometer. Aber Tom fliegt nicht gern. Er möchte mit dem Zug fahren, denn im Zug kann er lesen und arbeiten. Am Hamburger Hauptbahnhof kauft Tom eine Fahrkarte am Automaten. Die Fahrt mit dem ICE kostet 89 Euro. Das ist teuer! Aber Tom hat eine BahnCard, und mit der BahnCard bekommt er 25 Prozent Rabatt. Er reserviert auch einen Sitzplatz am Fenster. Die Reservierung kostet noch einmal 5,50 Euro. Auf der Anzeigetafel sucht Tom seinen Zug: ICE 787 nach München, Abfahrt 10:28 Uhr, Gleis 14. Aber dann kommt eine Durchsage: „Der ICE 787 hat heute circa 20 Minuten Verspätung.“ Typisch! Tom kauft einen Kaffee und wartet. Endlich kommt der Zug. Tom findet seinen Platz in Wagen 23. Die Fahrt dauert sechs Stunden. Tom sieht Städte, Felder und Berge. Um 17 Uhr ist er in München. Seine Schwester wartet am Gleis. „Willkommen in München!“, sagt sie.",
-    "content_en": "Tom wants to visit his sister in Munich. He lives in Hamburg, and the journey is long: almost 800 kilometers. But Tom does not like flying. He wants to go by train, because on the train he can read and work. At Hamburg central station, Tom buys a ticket at the machine. The trip on the ICE costs 89 euros. That is expensive! But Tom has a BahnCard, and with the BahnCard he gets a 25 percent discount. He also reserves a window seat. The reservation costs another 5.50 euros. On the departure board Tom looks for his train: ICE 787 to Munich, departure 10:28, platform 14. But then there is an announcement: \"The ICE 787 is delayed by about 20 minutes today.\" Typical! Tom buys a coffee and waits. Finally the train arrives. Tom finds his seat in carriage 23. The journey takes six hours. Tom sees cities, fields and mountains. At 5 p.m. he is in Munich. His sister is waiting on the platform. \"Welcome to Munich!\", she says.",
+    "content_de": "Tom möchte seine Schwester in München besuchen. Er wohnt in Hamburg. Die Reise ist lang: fast 800 Kilometer. Aber Tom fliegt nicht gern. Er fährt lieber mit dem Zug. Er kann dann lesen und arbeiten.\n\nTom kauft eine Fahrkarte. Die Fahrt mit dem ICE kostet 89 Euro. Das ist teuer! Aber Tom hat eine BahnCard. Mit der BahnCard bekommt er 25 Prozent Rabatt.\n\nTom sucht seinen Zug: ICE 787 nach München. Abfahrt ist um 10:40 Uhr, Gleis 14. Dann kommt eine Durchsage: „Der ICE 787 hat 20 Minuten Verspätung.“\n\nDie Fahrt dauert sechs Stunden. Tom sieht Städte, Felder und Berge. Um 17 Uhr ist er in München. Seine Schwester wartet dort. „Willkommen in München!“, sagt sie.",
+    "content_en": "Tom wants to visit his sister in Munich. He lives in Hamburg. The journey is long: almost 800 kilometers. But Tom does not like flying. He prefers going by train. He can then read and work.\n\nTom buys a ticket. The trip on the ICE costs 89 euros. That is expensive! But Tom has a BahnCard. With the BahnCard he gets a 25 percent discount.\n\nTom looks for his train: ICE 787 to Munich. Departure is at 10:40, platform 14. Then an announcement comes: \"The ICE 787 is delayed by 20 minutes.\"\n\nThe journey takes six hours. Tom sees cities, fields and mountains. At 5 p.m. he is in Munich. His sister is waiting there. \"Welcome to Munich!\", she says.",
     "key_vocabulary": [
       {
         "de": "die Reise, -n",
-        "en": "trip, journey"
-      },
-      {
-        "de": "der Hauptbahnhof, -höfe",
-        "en": "central station"
+        "en": "trip"
       },
       {
         "de": "die Fahrkarte, -n",
         "en": "ticket"
-      },
-      {
-        "de": "der Automat, -en",
-        "en": "ticket machine"
       },
       {
         "de": "teuer",
@@ -760,24 +802,12 @@
         "en": "discount"
       },
       {
-        "de": "reservieren",
-        "en": "to reserve"
-      },
-      {
-        "de": "der Sitzplatz, -plätze",
-        "en": "seat"
-      },
-      {
-        "de": "die Anzeigetafel, -n",
-        "en": "departure board"
-      },
-      {
         "de": "die Abfahrt, -en",
         "en": "departure"
       },
       {
         "de": "das Gleis, -e",
-        "en": "platform, track"
+        "en": "platform"
       },
       {
         "de": "die Durchsage, -n",
@@ -788,44 +818,38 @@
         "en": "delay"
       },
       {
-        "de": "der Wagen, -",
-        "en": "carriage, car"
+        "de": "die Fahrt, -en",
+        "en": "journey"
       },
       {
-        "de": "die Fahrt, -en",
-        "en": "trip, ride"
+        "de": "besuchen",
+        "en": "to visit"
       }
     ],
     "questions": [
       {
-        "question_de": "Warum möchte Tom mit dem Zug fahren?",
-        "question_en": "Why does Tom want to go by train?",
-        "answer_de": "Er möchte mit dem Zug fahren, denn im Zug kann er lesen und arbeiten.",
-        "answer_en": "He wants to go by train because on the train he can read and work."
+        "question_de": "Warum fährt Tom lieber mit dem Zug?",
+        "question_en": "Why does Tom prefer to go by train?",
+        "answer_de": "Er kann dann lesen und arbeiten.",
+        "answer_en": "He can then read and work."
       },
       {
         "question_de": "Was kostet die Fahrt mit dem ICE?",
         "question_en": "How much does the trip on the ICE cost?",
-        "answer_de": "Die Fahrt mit dem ICE kostet 89 Euro.",
-        "answer_en": "The trip on the ICE costs 89 euros."
+        "answer_de": "Die Fahrt kostet 89 Euro.",
+        "answer_en": "The trip costs 89 euros."
       },
       {
         "question_de": "Wie viel Rabatt bekommt Tom mit der BahnCard?",
-        "question_en": "How much of a discount does Tom get with the BahnCard?",
-        "answer_de": "Mit der BahnCard bekommt er 25 Prozent Rabatt.",
-        "answer_en": "With the BahnCard he gets a 25 percent discount."
-      },
-      {
-        "question_de": "Von welchem Gleis fährt der Zug ab?",
-        "question_en": "From which platform does the train leave?",
-        "answer_de": "Der Zug fährt von Gleis 14 ab.",
-        "answer_en": "The train leaves from platform 14."
+        "question_en": "How much discount does Tom get with the BahnCard?",
+        "answer_de": "Er bekommt 25 Prozent Rabatt.",
+        "answer_en": "He gets a 25 percent discount."
       },
       {
         "question_de": "Wie viel Verspätung hat der ICE 787?",
         "question_en": "How delayed is the ICE 787?",
-        "answer_de": "Der ICE 787 hat circa 20 Minuten Verspätung.",
-        "answer_en": "The ICE 787 is delayed by about 20 minutes."
+        "answer_de": "Der Zug hat 20 Minuten Verspätung.",
+        "answer_en": "The train is delayed by 20 minutes."
       },
       {
         "question_de": "Wie lange dauert die Fahrt nach München?",
@@ -834,54 +858,78 @@
         "answer_en": "The journey takes six hours."
       }
     ],
-    "word_count": 162,
+    "word_count": 116,
     "difficulty": 3,
     "estimated_reading_time": 3,
-    "order_index": 7
+    "order_index": 7,
+    "checks": [
+      {
+        "type": "rf",
+        "statement_de": "Die Fahrt mit dem ICE kostet 89 Euro.",
+        "statement_en": "The trip on the ICE costs 89 euros.",
+        "answer": "richtig",
+        "explanation_de": "Der Text sagt: Die Fahrt mit dem ICE kostet 89 Euro."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Der Zug fährt von Gleis 14.",
+        "statement_en": "The train leaves from platform 14.",
+        "answer": "richtig",
+        "explanation_de": "Der Text sagt: Gleis 14."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Tom fährt mit dem Bus nach München.",
+        "statement_en": "Tom travels to Munich by bus.",
+        "answer": "falsch",
+        "explanation_de": "Tom fährt mit dem Zug, nicht mit dem Bus."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Mit der BahnCard bekommt Tom 50 Prozent Rabatt.",
+        "statement_en": "With the BahnCard Tom gets a 50 percent discount.",
+        "answer": "falsch",
+        "explanation_de": "Tom bekommt 25 Prozent Rabatt, nicht 50."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Tom ist am Nachmittag in München.",
+        "statement_en": "Tom is in Munich in the afternoon.",
+        "answer": "richtig",
+        "explanation_de": "Der Text sagt: Um 17 Uhr ist er in München."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Was braucht Tom für den Rabatt?",
+        "statement_en": "What does Tom need for the discount?",
+        "options": [
+          "eine BahnCard",
+          "eine Fahrkarte"
+        ],
+        "answer": "eine BahnCard",
+        "explanation_de": "Der Text sagt: Tom hat eine BahnCard. Mit der BahnCard bekommt er Rabatt."
+      }
+    ]
   },
   {
     "level": "A1.2",
     "title_de": "Beim Bäcker",
     "title_en": "At the Bakery",
     "topic": "At the Bakery",
-    "content_de": "Es ist Samstagmorgen, halb neun. Frau Schmidt geht zum Bäcker an der Ecke. Beim Bäcker Lang ist am Samstag immer viel los. Frau Schmidt muss ein paar Minuten warten. Dann ist sie dran. Die Verkäuferin lächelt: „Guten Morgen! Was darf es sein?“ „Guten Morgen! Ich möchte sechs Brötchen, bitte“, sagt Frau Schmidt. „Normale oder Körnerbrötchen?“ „Vier normale und zwei Körnerbrötchen, bitte. Und ich brauche noch ein Bauernbrot.“ Die Verkäuferin fragt: „Ganz oder geschnitten?“ „Geschnitten, bitte.“ Frau Schmidt sieht die Kuchen in der Theke. Der Apfelkuchen sieht lecker aus. „Und zwei Stück Apfelkuchen, bitte. Was kostet ein Stück?“ „Ein Stück kostet 3,20 Euro.“ „Gut, dann bitte zwei Stück.“ „Sonst noch etwas?“ „Nein, danke. Das ist alles.“ Die Verkäuferin rechnet: „Das macht zusammen 13,40 Euro.“ Frau Schmidt bezahlt bar. Sie gibt 15 Euro und bekommt 1,60 Euro zurück. „Schönes Wetter heute!“, sagt die Verkäuferin. „Ja, endlich Sonne! Schönes Wochenende!“ „Danke, gleichfalls!“ Zu Hause wartet schon die Familie. Frische Brötchen am Samstag – das ist in Deutschland Tradition.",
-    "content_en": "It is Saturday morning, half past eight. Mrs. Schmidt goes to the bakery on the corner. At Lang's bakery there is always a lot going on on Saturdays. Mrs. Schmidt has to wait a few minutes. Then it is her turn. The saleswoman smiles: \"Good morning! What can I get you?\" \"Good morning! I would like six bread rolls, please,\" says Mrs. Schmidt. \"Plain rolls or multigrain rolls?\" \"Four plain and two multigrain rolls, please. And I also need a farmhouse loaf.\" The saleswoman asks: \"Whole or sliced?\" \"Sliced, please.\" Mrs. Schmidt sees the cakes in the display counter. The apple cake looks delicious. \"And two slices of apple cake, please. How much is one slice?\" \"One slice costs 3.20 euros.\" \"Good, then two slices, please.\" \"Anything else?\" \"No, thank you. That is all.\" The saleswoman adds it up: \"That comes to 13.40 euros altogether.\" Mrs. Schmidt pays in cash. She gives 15 euros and gets 1.60 euros back. \"Lovely weather today!\", says the saleswoman. \"Yes, finally some sun! Have a nice weekend!\" \"Thanks, you too!\" At home the family is already waiting. Fresh rolls on Saturday — that is a tradition in Germany.",
+    "content_de": "Es ist Samstagmorgen, halb neun. Frau Schmidt geht zum Bäcker. Beim Bäcker Lang ist immer viel los. Sie wartet kurz.\n\nDie Verkäuferin lächelt: „Guten Morgen! Was darf es sein?“ „Ich möchte sechs Brötchen, bitte“, sagt Frau Schmidt. „Mit Körnern oder ohne?“ „Vier ohne Körner und zwei mit Körnern, bitte.“\n\nDer Apfelkuchen ist lecker. „Was kostet ein Stück Apfelkuchen?“ „Ein Stück kostet 3,20 Euro.“ „Gut, dann zwei Stück, bitte.“\n\nDie Verkäuferin rechnet: „Sechs Brötchen kosten 3,60 Euro. Das macht zusammen 10,00 Euro.“ Frau Schmidt bezahlt bar. Sie gibt 15 Euro und bekommt 5,00 Euro Wechselgeld. „Schönes Wochenende!“, sagt die Verkäuferin. „Danke, gleichfalls!“\n\nZu Hause wartet schon die Familie. Brötchen am Samstag, das ist in Deutschland Tradition.",
+    "content_en": "It is Saturday morning, half past eight. Mrs. Schmidt goes to the bakery. At Lang's bakery there is always a lot going on. She waits briefly.\n\nThe saleswoman smiles: \"Good morning! What can I get you?\" \"I would like six rolls, please,\" says Mrs. Schmidt. \"With grains or without?\" \"Four without grains and two with grains, please.\"\n\nThe apple cake is delicious. \"How much is one slice of apple cake?\" \"One slice costs 3.20 euros.\" \"Good, then two slices, please.\"\n\nThe saleswoman adds it up: \"Six rolls cost 3.60 euros. That comes to 10.00 euros altogether.\" Mrs. Schmidt pays in cash. She gives 15 euros and gets 5.00 euros change. \"Have a nice weekend!\" says the saleswoman. \"Thanks, you too!\"\n\nAt home the family is already waiting. Rolls on Saturday, that is a tradition in Germany.",
     "key_vocabulary": [
       {
         "de": "der Bäcker, -",
         "en": "baker, bakery"
       },
       {
-        "de": "die Ecke, -n",
-        "en": "corner"
-      },
-      {
         "de": "die Verkäuferin, -nen",
         "en": "saleswoman"
       },
       {
-        "de": "dran sein",
-        "en": "to be next, to be one's turn"
-      },
-      {
         "de": "lächeln",
         "en": "to smile"
-      },
-      {
-        "de": "das Körnerbrötchen, -",
-        "en": "multigrain roll"
-      },
-      {
-        "de": "das Bauernbrot, -e",
-        "en": "farmhouse bread"
-      },
-      {
-        "de": "geschnitten",
-        "en": "sliced"
-      },
-      {
-        "de": "die Theke, -n",
-        "en": "counter, display counter"
       },
       {
         "de": "der Apfelkuchen, -",
@@ -893,57 +941,105 @@
       },
       {
         "de": "bar",
-        "en": "in cash"
+        "en": "cash"
       },
       {
-        "de": "zurückbekommen",
-        "en": "to get back (change)"
-      },
-      {
-        "de": "gleichfalls",
-        "en": "likewise, you too"
+        "de": "das Wechselgeld",
+        "en": "change (money)"
       },
       {
         "de": "die Tradition, -en",
         "en": "tradition"
+      },
+      {
+        "de": "das Brötchen, -",
+        "en": "bread roll"
       }
     ],
     "questions": [
       {
         "question_de": "Wann geht Frau Schmidt zum Bäcker?",
         "question_en": "When does Mrs. Schmidt go to the bakery?",
-        "answer_de": "Sie geht am Samstagmorgen um halb neun zum Bäcker.",
-        "answer_en": "She goes to the bakery on Saturday morning at half past eight."
+        "answer_de": "Sie geht am Samstagmorgen um halb neun.",
+        "answer_en": "She goes on Saturday morning at half past eight."
       },
       {
         "question_de": "Wie viele Brötchen möchte Frau Schmidt?",
         "question_en": "How many rolls does Mrs. Schmidt want?",
-        "answer_de": "Sie möchte sechs Brötchen: vier normale und zwei Körnerbrötchen.",
-        "answer_en": "She wants six rolls: four plain and two multigrain rolls."
+        "answer_de": "Sie möchte sechs Brötchen.",
+        "answer_en": "She wants six rolls."
       },
       {
         "question_de": "Was kostet ein Stück Apfelkuchen?",
         "question_en": "How much does a slice of apple cake cost?",
-        "answer_de": "Ein Stück Apfelkuchen kostet 3,20 Euro.",
-        "answer_en": "A slice of apple cake costs 3.20 euros."
+        "answer_de": "Ein Stück kostet 3,20 Euro.",
+        "answer_en": "A slice costs 3.20 euros."
       },
       {
         "question_de": "Wie bezahlt Frau Schmidt?",
         "question_en": "How does Mrs. Schmidt pay?",
-        "answer_de": "Frau Schmidt bezahlt bar.",
-        "answer_en": "Mrs. Schmidt pays in cash."
+        "answer_de": "Sie bezahlt bar.",
+        "answer_en": "She pays in cash."
       },
       {
-        "question_de": "Wie viel Geld bekommt Frau Schmidt zurück?",
-        "question_en": "How much money does Mrs. Schmidt get back?",
-        "answer_de": "Sie bekommt 1,60 Euro zurück.",
-        "answer_en": "She gets 1.60 euros back."
+        "question_de": "Wie viel Wechselgeld bekommt Frau Schmidt?",
+        "question_en": "How much change does Mrs. Schmidt get?",
+        "answer_de": "Sie bekommt 5,00 Euro Wechselgeld.",
+        "answer_en": "She gets 5.00 euros change."
       }
     ],
-    "word_count": 165,
+    "word_count": 115,
     "difficulty": 3,
     "estimated_reading_time": 3,
-    "order_index": 8
+    "order_index": 8,
+    "checks": [
+      {
+        "type": "rf",
+        "statement_de": "Frau Schmidt geht am Samstagmorgen zum Bäcker.",
+        "statement_en": "Mrs. Schmidt goes to the bakery on Saturday morning.",
+        "answer": "richtig",
+        "explanation_de": "Der Text sagt: Es ist Samstagmorgen. Frau Schmidt geht zum Bäcker."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Frau Schmidt möchte acht Brötchen.",
+        "statement_en": "Mrs. Schmidt wants eight rolls.",
+        "answer": "falsch",
+        "explanation_de": "Frau Schmidt möchte sechs Brötchen, nicht acht."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Frau Schmidt bezahlt mit Karte.",
+        "statement_en": "Mrs. Schmidt pays by card.",
+        "answer": "falsch",
+        "explanation_de": "Frau Schmidt bezahlt bar, nicht mit Karte."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Ein Stück Apfelkuchen kostet 3,20 Euro.",
+        "statement_en": "A slice of apple cake costs 3.20 euros.",
+        "answer": "richtig",
+        "explanation_de": "Der Text sagt: Ein Stück kostet 3,20 Euro."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Frau Schmidt bezahlt zusammen 10,00 Euro.",
+        "statement_en": "Mrs. Schmidt pays 10.00 euros altogether.",
+        "answer": "richtig",
+        "explanation_de": "Der Text sagt: Das macht zusammen 10,00 Euro."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Wie viele Brötchen ohne Körner kauft Frau Schmidt?",
+        "statement_en": "How many rolls without grains does Mrs. Schmidt buy?",
+        "options": [
+          "zwei",
+          "vier"
+        ],
+        "answer": "vier",
+        "explanation_de": "Der Text sagt: Vier ohne Körner und zwei mit Körnern, bitte."
+      }
+    ]
   },
   {
     "level": "A1.1",
@@ -1131,6 +1227,221 @@
     "word_count": 90,
     "difficulty": 1,
     "estimated_reading_time": 2,
+    "order_index": 10
+  },
+  {
+    "level": "A1.2",
+    "title_de": "Zwei kurze E-Mails (wie in der Prüfung, Teil 1)",
+    "title_en": "Two short emails (exam-style, part 1)",
+    "topic": "Prüfungsformat",
+    "content_de": "Lies die zwei E-Mails. Sind die Sätze richtig oder falsch?\n\nE-Mail 1\n\nHallo Lisa,\n\nwie geht's? Am Samstag mache ich eine Grillparty. Kommst du mit? Die Party beginnt um 16 Uhr. Meine Adresse ist Gartenstraße 5. Bring bitte einen Salat mit! Meine Schwester kommt auch. Wir spielen vielleicht Fußball. Das ist bestimmt lustig!\n\nSchreib bald!\n\nLiebe Grüße\nAnna\n\nE-Mail 2\n\nSehr geehrter Herr Bauer,\n\nmeine Heizung funktioniert nicht. Es ist sehr kalt. Können Sie das bitte reparieren? Ich bin diese Woche jeden Tag zu Hause. Sie können auch am Wochenende kommen. Meine Wohnung hat die Nummer 12. Bitte rufen Sie mich an. Meine Telefonnummer ist 030 5566778. Vielen Dank für Ihre Hilfe.\n\nMit freundlichen Grüßen\nSabine Kern",
+    "content_en": "Read the two emails. Are the sentences true or false?\n\nEmail 1\n\nHi Lisa,\n\nhow are you? On Saturday I'm having a barbecue party. Are you coming? The party starts at 4 p.m. My address is Gartenstraße 5. Please bring a salad! My sister is coming too. We might play football. That is bound to be fun!\n\nWrite soon!\n\nBest wishes\nAnna\n\nEmail 2\n\nDear Mr. Bauer,\n\nmy heating is not working. It is very cold. Could you please repair it? I am at home every day this week. You can also come on the weekend. My apartment is number 12. Please call me. My phone number is 030 5566778. Thank you very much for your help.\n\nKind regards\nSabine Kern",
+    "key_vocabulary": [
+      {
+        "de": "die Grillparty, -s",
+        "en": "barbecue party"
+      },
+      {
+        "de": "mitbringen",
+        "en": "to bring along"
+      },
+      {
+        "de": "die Adresse, -n",
+        "en": "address"
+      },
+      {
+        "de": "der Salat, -e",
+        "en": "salad"
+      },
+      {
+        "de": "die Heizung, -en",
+        "en": "heating"
+      },
+      {
+        "de": "kalt",
+        "en": "cold"
+      },
+      {
+        "de": "funktionieren",
+        "en": "to function, work"
+      },
+      {
+        "de": "reparieren",
+        "en": "to repair"
+      },
+      {
+        "de": "die Telefonnummer, -n",
+        "en": "phone number"
+      },
+      {
+        "de": "sehr geehrter / sehr geehrte",
+        "en": "dear (formal salutation)"
+      },
+      {
+        "de": "mit freundlichen Grüßen",
+        "en": "kind regards (formal closing)"
+      }
+    ],
+    "questions": [],
+    "checks": [
+      {
+        "type": "rf",
+        "statement_de": "Anna feiert am Samstag.",
+        "statement_en": "Anna is celebrating on Saturday.",
+        "answer": "richtig",
+        "explanation_de": "Anna schreibt: Am Samstag mache ich eine Grillparty."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Die Party beginnt um 18 Uhr.",
+        "statement_en": "The party starts at 6 p.m.",
+        "answer": "falsch",
+        "explanation_de": "Die Party beginnt um 16 Uhr, nicht um 18 Uhr."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Lisa soll einen Kuchen mitbringen.",
+        "statement_en": "Lisa should bring a cake.",
+        "answer": "falsch",
+        "explanation_de": "Anna bittet um einen Salat, nicht um einen Kuchen."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Frau Kern hat diese Woche viel Zeit zu Hause.",
+        "statement_en": "Mrs. Kern has a lot of time at home this week.",
+        "answer": "richtig",
+        "explanation_de": "Frau Kern schreibt: Ich bin diese Woche jeden Tag zu Hause. Sie können auch am Wochenende kommen."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Frau Kerns Wohnung hat die Nummer 12.",
+        "statement_en": "Mrs. Kern's apartment is number 12.",
+        "answer": "richtig",
+        "explanation_de": "Frau Kern schreibt: Meine Wohnung hat die Nummer 12."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Frau Kern hat es zu warm.",
+        "statement_en": "Mrs. Kern's place is too warm.",
+        "answer": "falsch",
+        "explanation_de": "Frau Kern schreibt: Es ist sehr kalt, nicht zu warm."
+      }
+    ],
+    "word_count": 117,
+    "difficulty": 2,
+    "estimated_reading_time": 3,
+    "order_index": 9
+  },
+  {
+    "level": "A1.2",
+    "title_de": "Anzeigen zu Wohnen und Arbeit (wie in der Prüfung, Teil 2)",
+    "title_en": "Ads about housing and work (exam-style, part 2)",
+    "topic": "Prüfungsformat",
+    "content_de": "Lies die Situation und die zwei Anzeigen. Welche Anzeige passt: a oder b?\n\nSituation 1: Du suchst eine Wohnung in Rostock für unter 500 Euro.\n\n(a) Wohnung in Rostock, 50 m², 620 Euro warm, frei ab 15. Januar. Telefon: 0381 774411.\n\n(b) Wohnung in Rostock, 45 m², 480 Euro warm, frei ab 15. Januar. Telefon: 0381 774422.\n\nSituation 2: Du suchst eine Stelle als Verkäufer/in. Du kannst nur vormittags arbeiten.\n\n(a) Buchladen sucht Aushilfe: Montag bis Freitag, 8 bis 13 Uhr, 10 Euro pro Stunde. Telefon: 0521 663344.\n\n(b) Buchladen sucht Aushilfe: Montag bis Freitag, 14 bis 19 Uhr, 10 Euro pro Stunde. Telefon: 0521 663345.\n\nSituation 3: Du suchst Mathe-Nachhilfe für deine Tochter.\n\n(a) Nachhilfe Mathematik: Frau Weber, Erfahrung mit Kindern, 15 Euro pro Stunde. Telefon: 0711 445566.\n\n(b) Nachhilfe Englisch: Herr Fischer, Erfahrung mit Erwachsenen, 20 Euro pro Stunde. Telefon: 0711 778899.\n\nSituation 4: Du arbeitest tagsüber. Du suchst einen Deutschkurs am Abend.\n\n(a) Deutschkurs, Dienstag und Freitag, 8 bis 10 Uhr, Sprachschule Süd. Anmeldung: 089 221144.\n\n(b) Deutschkurs, Dienstag und Freitag, 19 bis 21 Uhr, Sprachschule Süd. Anmeldung: 089 221144.\n\nSituation 5: Du fährst jeden Tag von Bremen nach Hamburg zur Arbeit.\n\n(a) Fahrgemeinschaft gesucht: Bremen–Hamburg, täglich, Abfahrt 7 Uhr. Kontakt: 0421 665511.\n\n(b) Fahrgemeinschaft gesucht: Hannover–Hamburg, täglich, Abfahrt 7 Uhr. Kontakt: 0511 665511.",
+    "content_en": "Read the situation and the two ads. Which ad fits: a or b?\n\nSituation 1: You are looking for an apartment in Rostock for under 500 euros.\n\n(a) Apartment in Rostock, 50 m², 620 euros warm rent, available from January 15th. Phone: 0381 774411.\n\n(b) Apartment in Rostock, 45 m², 480 euros warm rent, available from January 15th. Phone: 0381 774422.\n\nSituation 2: You are looking for a position as a sales assistant. You can only work mornings.\n\n(a) Bookshop looking for help: Monday to Friday, 8 a.m. to 1 p.m., 10 euros per hour. Phone: 0521 663344.\n\n(b) Bookshop looking for help: Monday to Friday, 2 p.m. to 7 p.m., 10 euros per hour. Phone: 0521 663345.\n\nSituation 3: You are looking for math tutoring for your daughter.\n\n(a) Math tutoring: Mrs. Weber, experience with children, 15 euros per hour. Phone: 0711 445566.\n\n(b) English tutoring: Mr. Fischer, experience with adults, 20 euros per hour. Phone: 0711 778899.\n\nSituation 4: You work during the day. You are looking for a German course in the evening.\n\n(a) German course, Tuesday and Friday, 8 to 10 a.m., Sprachschule Süd. Registration: 089 221144.\n\n(b) German course, Tuesday and Friday, 7 to 9 p.m., Sprachschule Süd. Registration: 089 221144.\n\nSituation 5: You drive from Bremen to Hamburg for work every day.\n\n(a) Carpool wanted: Bremen–Hamburg, daily, departure 7 a.m. Contact: 0421 665511.\n\n(b) Carpool wanted: Hannover–Hamburg, daily, departure 7 a.m. Contact: 0511 665511.",
+    "key_vocabulary": [
+      {
+        "de": "die Wohnung, -en",
+        "en": "apartment"
+      },
+      {
+        "de": "die Aushilfe, -n",
+        "en": "part-time helper"
+      },
+      {
+        "de": "die Stelle, -n",
+        "en": "position, job"
+      },
+      {
+        "de": "vormittags",
+        "en": "in the mornings"
+      },
+      {
+        "de": "die Nachhilfe",
+        "en": "tutoring"
+      },
+      {
+        "de": "die Erfahrung, -en",
+        "en": "experience"
+      },
+      {
+        "de": "die Sprachschule, -n",
+        "en": "language school"
+      },
+      {
+        "de": "die Anmeldung, -en",
+        "en": "registration"
+      },
+      {
+        "de": "die Fahrgemeinschaft, -en",
+        "en": "carpool"
+      },
+      {
+        "de": "täglich",
+        "en": "daily"
+      }
+    ],
+    "questions": [],
+    "checks": [
+      {
+        "type": "choice",
+        "statement_de": "Situation 1: Wohnung in Rostock — welche Anzeige passt?",
+        "statement_en": "Situation 1: Apartment in Rostock — which ad fits?",
+        "options": [
+          "a",
+          "b"
+        ],
+        "answer": "b",
+        "explanation_de": "Anzeige b kostet 480 Euro, unter 500 Euro. Anzeige a kostet 620 Euro."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Situation 2: Stelle am Vormittag — welche Anzeige passt?",
+        "statement_en": "Situation 2: Position in the morning — which ad fits?",
+        "options": [
+          "a",
+          "b"
+        ],
+        "answer": "a",
+        "explanation_de": "Anzeige a ist am Vormittag. Anzeige b ist am Nachmittag und Abend."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Situation 3: Mathe-Nachhilfe — welche Anzeige passt?",
+        "statement_en": "Situation 3: Math tutoring — which ad fits?",
+        "options": [
+          "a",
+          "b"
+        ],
+        "answer": "a",
+        "explanation_de": "Anzeige a ist für Mathematik. Anzeige b ist für Englisch."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Situation 4: Deutschkurs am Abend — welche Anzeige passt?",
+        "statement_en": "Situation 4: German course in the evening — which ad fits?",
+        "options": [
+          "a",
+          "b"
+        ],
+        "answer": "b",
+        "explanation_de": "Anzeige b ist von 19 bis 21 Uhr. Anzeige a ist von 8 bis 10 Uhr."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Situation 5: Fahrgemeinschaft von Bremen — welche Anzeige passt?",
+        "statement_en": "Situation 5: Carpool from Bremen — which ad fits?",
+        "options": [
+          "a",
+          "b"
+        ],
+        "answer": "a",
+        "explanation_de": "Anzeige a fährt von Bremen nach Hamburg. Anzeige b fährt von Hannover nach Hamburg."
+      }
+    ],
+    "word_count": 217,
+    "difficulty": 2,
+    "estimated_reading_time": 3,
     "order_index": 10
   }
 ]

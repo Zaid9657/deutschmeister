@@ -60,9 +60,10 @@ where the 28-day A1.1 plan ends. Gate: Monday's weekly-truth one-and-done rate f
 
 | # | Step | Status | PR |
 |---|---|---|---|
-| A | Four new A1.2 grammar topics (stem-changing-verbs, imperative, perfekt-intro, dative-prepositions-intro) at topic_order 9–12, 104 exercises total, ≥16 typed each; stem-changing precedes imperative by decision | PR open | — |
-| A2 | Typed production for the 16 pre-existing A1.1/A1.2 grammar topics (163 exercises: 79 A1.1 + 84 A1.2), plus the `numbers-counting` upgrade (100–1000, prices, ordinal numbers: +4 rules, +4 examples, topic_patch, one guarded rule content patch) via a new EXTEND mode in `scripts/grammar-topics-from-json.mjs` | PR open | — |
+| A | Four new A1.2 grammar topics (stem-changing-verbs, imperative, perfekt-intro, dative-prepositions-intro) at topic_order 9–12, 104 exercises total, ≥16 typed each; stem-changing precedes imperative by decision | merged, DB migrated 2026-09-05 (12 A1.2 topics live; 33 rules / 40 examples / 104 exercises verified byte-identical to the cache) | #74 |
+| A2 | Typed production for the 16 pre-existing A1.1/A1.2 grammar topics (163 exercises: 79 A1.1 + 84 A1.2), plus the `numbers-counting` upgrade (100–1000, prices, ordinal numbers: +4 rules, +4 examples, topic_patch, one guarded rule content patch) via a new EXTEND mode in `scripts/grammar-topics-from-json.mjs` | merged, DB migrated 2026-09-05 (every A1 topic ≥8 typed; live totals 72 topics / 522 rules / 757 examples / 1045 exercises = cache and `marketing.js`) | #75 |
 | B | A1.2 share of the Wortliste: 166 additions in 8 categories, 54 fixes incl. three repurposed rows and month plurals | merged, DB migrated 2026-09-05 (413 A1.2 words live, 2215 total) | #73 |
+| C | 8 A1.2 reading texts rewritten to ≤120 words with 5 richtig/falsch + 1 exam-style choice check each; 2 exam-format lessons (Teil 1 E-Mails, Teil 2 Anzeigen) at order_index 9/10; +78 listening questions (13 per exercise) incl. 18 number/time/price/phone dictation items on the existing audio; 2 existing-row option edits | PR open | — |
 
 ## Measured baseline (do not re-derive)
 
