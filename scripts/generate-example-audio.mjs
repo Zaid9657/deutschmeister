@@ -102,14 +102,25 @@ const JOBS = {
   },
 };
 
+// PostgREST caps a single select at 1000 rows (the project default), so page
+// through in 1000-row windows until a short page comes back. All pages are
+// fetched before any synthesis starts, so setting audio_url mid-run cannot
+// shift the offsets.
+const PAGE = 1000;
 async function fetchMissing(job) {
-  const { data, error } = await supabase
-    .from(job.table)
-    .select(job.select)
-    .or('audio_url.is.null,audio_url.eq.')
-    .order('id');
-  if (error) throw error;
-  return data.filter((row) => job.text(row));
+  const rows = [];
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await supabase
+      .from(job.table)
+      .select(job.select)
+      .or('audio_url.is.null,audio_url.eq.')
+      .order('id')
+      .range(from, from + PAGE - 1);
+    if (error) throw error;
+    rows.push(...data);
+    if (data.length < PAGE) break;
+  }
+  return rows.filter((row) => job.text(row));
 }
 
 async function run(jobName) {
