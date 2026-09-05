@@ -60,7 +60,8 @@ where the 28-day A1.1 plan ends. Gate: Monday's weekly-truth one-and-done rate f
 
 | # | Step | Status | PR |
 |---|---|---|---|
-| B | A1.2 share of the Wortliste: 166 additions in 8 categories, 54 fixes incl. three repurposed rows and month plurals | PR open | — |
+| A | Four new A1.2 grammar topics (stem-changing-verbs, imperative, perfekt-intro, dative-prepositions-intro) at topic_order 9–12, 104 exercises total, ≥16 typed each; stem-changing precedes imperative by decision | PR open | — |
+| B | A1.2 share of the Wortliste: 166 additions in 8 categories, 54 fixes incl. three repurposed rows and month plurals | merged, DB migrated 2026-09-05 (413 A1.2 words live, 2215 total) | #73 |
 
 ## Measured baseline (do not re-derive)
 
@@ -83,6 +84,11 @@ where the 28-day A1.1 plan ends. Gate: Monday's weekly-truth one-and-done rate f
 
 ## Decisions log
 
+- 2026-09-05 (Wave 3): the four new A1.2 topics are appended at topic_order 9–12 in the
+  order stem-changing-verbs, imperative, perfekt-intro, dative-prepositions-intro — the
+  reviewer showed the du-imperative of e→i/ie verbs depends on the stem change, so
+  Vokalwechsel precedes Imperativ; gefallen was dropped from the stem-changer list (it
+  governs the dative, topic 12).
 - 2026-09-05 (Wave 2): scope = A1.1 as a complete course per prompt v2; A1.2 follows in Wave 3.
 - 2026-09-05: the four new A1.1 topics are APPENDED at topic_order 9–12 (no reorder of the
   existing eight — `currentPosition` and progress rows key on order); the A1.1 plan sequences

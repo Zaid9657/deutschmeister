@@ -30,6 +30,10 @@ export const RELATED_TOPICS = {
   'negation': ['basic-sentence-structure', 'question-words', 'indefinite-articles', 'modal-verbs-intro'],
   'modal-verbs-intro': ['present-tense-regular', 'separable-verbs', 'imperative-mood', 'double-infinitive', 'verb-haben'],
   'prepositions-accusative': ['accusative-intro', 'prepositions-dative', 'two-way-prepositions', 'dative-case'],
+  'stem-changing-verbs': ['present-tense-regular', 'separable-verbs-intro', 'imperative', 'modal-verbs-intro', 'negation'],
+  'imperative': ['stem-changing-verbs', 'separable-verbs-intro', 'modal-verbs-intro', 'present-tense-regular'],
+  'perfekt-intro': ['perfect-tense-haben', 'perfect-tense-sein', 'simple-past-sein-haben', 'separable-verbs-intro', 'dative-prepositions-intro'],
+  'dative-prepositions-intro': ['prepositions-accusative', 'prepositions-dative', 'dative-case', 'perfekt-intro', 'possessive-articles'],
 
   // ---- A2.1 ----
   'dative-case': ['accusative-intro', 'nominative-case', 'genitive-case', 'prepositions-dative', 'two-way-prepositions'],

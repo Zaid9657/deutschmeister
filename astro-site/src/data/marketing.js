@@ -72,8 +72,8 @@ export const TRIAL_DAYS = 7;
 /** CEFR sub-levels shipped, a1.1 through b2.2. Source: grammar_topics distinct level (2026-08-16 audit). */
 export const LEVEL_COUNT = 8;
 
-/** Grammar topics (A1.1 has 12; every other level has 8). Source: counted against grammar-content-cache.json on 2026-09-05. */
-export const GRAMMAR_TOPIC_COUNT = 68;
+/** Grammar topics (A1.1 and A1.2 have 12; every other level has 8). Source: counted against grammar-content-cache.json on 2026-09-05. */
+export const GRAMMAR_TOPIC_COUNT = 72;
 
 /** Native-speaker listening dialogue lines, audio confirmed in Storage. Source: EVALUATION.md content audit (2026-08-16). */
 export const LISTENING_DIALOGUE_COUNT = 480;
@@ -81,14 +81,14 @@ export const LISTENING_DIALOGUE_COUNT = 480;
 /** Podcast episodes, all with audio. Source: EVALUATION.md content audit (2026-08-16). NOTE: transcripts are empty — never claim transcripts. */
 export const PODCAST_EPISODE_COUNT = 24;
 
-/** Grammar rule explanations across all 68 topics. Source: counted against grammar-content-cache.json on 2026-09-05. */
-export const GRAMMAR_RULE_COUNT = 485;
+/** Grammar rule explanations across all 72 topics. Source: counted against grammar-content-cache.json on 2026-09-05. */
+export const GRAMMAR_RULE_COUNT = 518;
 
-/** Worked examples across all 68 topics. Source: counted against grammar-content-cache.json on 2026-09-05. */
-export const GRAMMAR_EXAMPLE_COUNT = 713;
+/** Worked examples across all 72 topics. Source: counted against grammar-content-cache.json on 2026-09-05. */
+export const GRAMMAR_EXAMPLE_COUNT = 753;
 
-/** Interactive exercises across all 68 topics. Source: counted against grammar-content-cache.json on 2026-09-05. */
-export const GRAMMAR_EXERCISE_COUNT = 778;
+/** Interactive exercises across all 72 topics. Source: counted against grammar-content-cache.json on 2026-09-05. */
+export const GRAMMAR_EXERCISE_COUNT = 882;
 
 /** Listening exercises, 6 per CEFR level. Source: listening_exercises count via Supabase (2026-08-24). */
 export const LISTENING_EXERCISE_COUNT = 48;
