@@ -174,8 +174,8 @@ export const PROGRAM = {
     {
       title: 'Woche 2 — Struktur und Wortschatz',
       intro:
-        'Die acht A1.2-Themen — Satzbau, Akkusativ, Verneinung, Modalverben. Du bist bereit für Woche 3, ' +
-        'wenn du alle 16 A1-Themen einmal durchgearbeitet hast.',
+        'Die ersten acht A1.2-Themen — Satzbau, Akkusativ, Verneinung, Modalverben. Du bist bereit für Woche 3, ' +
+        'wenn du alle 16 Themen aus Woche 1 und 2 einmal durchgearbeitet hast.',
       days: [
         { label: 'Tag 8', items: [lesson('a1.2', a12[0]), listening('a1.1', 6), reading('d8-reading', 'a1.2')] },
         { label: 'Tag 9', items: [lesson('a1.2', a12[1]), listening('a1.2', 1), xray('d9-xray', 15)] },
