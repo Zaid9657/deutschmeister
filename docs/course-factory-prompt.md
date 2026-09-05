@@ -127,7 +127,7 @@ Wave 1 (A1, "make €49 honest"): fix wrong/contradictory grammar → A1 writing
 runner → 30-day plan on the telc-B1-plan rails → Sprechen Teil 1–3 missions.
 Wave 2 (A1 complete): missing topics (possessives, separable verbs, Ja/Nein-Fragen,
 imperative, Uhrzeit), Wortliste completion + SRS wiring, reading rewrites, listening
-depth, typed-production exercises. Audio needs the owner's OpenAI-key run
+depth, typed-production exercises. Audio needs the owner's Azure-Speech-key run
 (`scripts/generate-example-audio.mjs`) — request it, don't block on it.
 Waves 3–5: apply the proven template to A2, B1 (add telc/DTZ mapping), B2.
 
