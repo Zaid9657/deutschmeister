@@ -6,6 +6,7 @@ import { useProgress } from '../contexts/ProgressContext';
 import Button from './ui/Button.jsx';
 import Card from './ui/Card.jsx';
 import Chip from './ui/Chip.jsx';
+import { hasArticlePrefix } from '../utils/wordDisplay';
 
 /**
  * A vocabulary word as a clay card.
@@ -81,7 +82,7 @@ const WordCard = ({ word, level }) => {
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-2xl font-display font-semibold text-ink">
-                {word.article && !word.word.toLowerCase().startsWith(word.article.toLowerCase()) && (
+                {word.article && !hasArticlePrefix(word.article, word.word) && (
                   // The separating space must be a real text node: `mr-1` alone
                   // looked right but made the word one string ("dieFrau") for
                   // copy-paste and screen readers.

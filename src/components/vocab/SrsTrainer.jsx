@@ -3,6 +3,7 @@ import { Brain, Loader2, RotateCcw } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { fetchDueCards, fetchDeckCounts, recordReview } from '../../services/srsService';
 import { GRADES } from '../../services/srsScheduler';
+import { displayGerman } from '../../utils/wordDisplay';
 import CompletionMoment from '../CompletionMoment';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
@@ -146,12 +147,12 @@ const SrsTrainer = () => {
         >
           <Card tone="sunk" className={FACE} aria-hidden={revealed}>
             <p className="font-display text-3xl font-semibold text-ink">
-              {word.article ? `${word.article} ` : ''}{word.german}
+              {displayGerman(word.article, word.german)}
             </p>
           </Card>
           <Card tone="wash" className={`${FACE} [transform:rotateY(180deg)]`} aria-hidden={!revealed}>
             <p className="font-display text-2xl font-semibold text-ink">
-              {word.article ? `${word.article} ` : ''}{word.german}
+              {displayGerman(word.article, word.german)}
             </p>
             <p className="mt-3 text-lg text-graphite">{word.english}</p>
             {word.example_sentence && (

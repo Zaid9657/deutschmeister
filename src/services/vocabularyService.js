@@ -23,7 +23,10 @@ function mapDbWordToApp(dbRow, index) {
     example: dbRow.example_sentence || '',
     category: dbRow.category || '',
     article: dbRow.article || '',
-    plural: dbRow.plural || '',
+    // Some rows still carry the literal string "null" instead of SQL NULL
+    // (see migrations/2026-09-05-a1-1-wortliste.sql) — treat both the same
+    // as "no plural" rather than rendering the word "null" on the card.
+    plural: dbRow.plural && dbRow.plural !== 'null' ? dbRow.plural : '',
     audioUrl: dbRow.audio_url || '',
   };
 }

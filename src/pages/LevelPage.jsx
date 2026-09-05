@@ -376,7 +376,9 @@ const LevelPage = () => {
                             ? 'Im Trainer ✓'
                             : trainerAddState === 'adding'
                               ? 'Wird hinzugefügt…'
-                              : 'In den Trainer'}
+                              : selectedCategory === 'all'
+                                ? 'In den Trainer'
+                                : `${selectedCategory} in den Trainer`}
                         </Button>
                       </Card>
                     )}
