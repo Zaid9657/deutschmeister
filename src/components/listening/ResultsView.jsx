@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Trophy, RotateCcw, ArrowLeft, CheckCircle, XCircle, Sparkles } from 'lucide-react';
-import { getPerformanceMessage, getAnswerKey } from '../../utils/listeningHelpers';
+import { getPerformanceMessage, isQuestionCorrect } from '../../utils/listeningHelpers';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 import { useSubscription } from '../../contexts/SubscriptionContext';
@@ -26,7 +26,7 @@ const ResultsView = ({ exercise, questions, answers, score, dialogues, playsUsed
   const { isInFreeTrial, hasActiveSubscription } = useSubscription();
   const showUpgradeCta = user && isInFreeTrial() && !hasActiveSubscription();
   const message = getPerformanceMessage(score);
-  const correctCount = questions.filter((q) => getAnswerKey(answers[q.id || q.question_number]) === q.correct_answer).length;
+  const correctCount = questions.filter((q) => isQuestionCorrect(q, answers[q.id || q.question_number])).length;
   const passed = score >= PASS_SCORE;
 
   return (

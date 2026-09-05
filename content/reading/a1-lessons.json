@@ -4,8 +4,8 @@
     "title_de": "Im Supermarkt",
     "title_en": "At the Supermarket",
     "topic": "Shopping Basics",
-    "content_de": "Samstag ist Einkaufstag. Anna ist im Supermarkt. Sie hat eine Liste und einen Einkaufswagen. Zuerst kauft sie Obst und Gemüse. Die Äpfel sind heute im Angebot. Ein Kilo kostet nur zwei Euro. Das ist billig! Anna kauft auch Bananen, Tomaten und einen Salat. Dann braucht sie Milch, Butter und Käse. Die Milchprodukte sind hinten links. Das Brot ist ganz frisch. Es riecht so gut! Anna kauft zwei Brötchen und ein Brot. Sie sucht noch Nudeln, Reis und Eier. Das Wasser ist schwer. Der Einkaufswagen ist jetzt voll. An der Kasse wartet eine kleine Schlange. Anna wartet fünf Minuten. Die Kassiererin ist freundlich. Sie sagt: „Das macht 23 Euro und 40 Cent, bitte.“ Anna bezahlt mit Karte. Sie packt alles in die Tasche. Dann sagt sie: „Danke, schönen Tag noch!“ Der Einkauf ist fertig, und Anna ist zufrieden.",
-    "content_en": "Saturday is shopping day. Anna is at the supermarket. She has a list and a shopping cart. First she buys fruit and vegetables. The apples are on special offer today. One kilo costs only two euros. That is cheap! Anna also buys bananas, tomatoes and a lettuce. Then she needs milk, butter and cheese. The dairy products are at the back on the left. The bread is completely fresh. It smells so good! Anna buys two rolls and one loaf of bread. She also looks for pasta, rice and eggs. The water is heavy. The shopping cart is full now. At the checkout a small queue is waiting. Anna waits five minutes. The cashier is friendly. She says: \"That comes to 23 euros and 40 cents, please.\" Anna pays by card. She packs everything into her bag. Then she says: \"Thank you, have a nice day!\" The shopping is done, and Anna is satisfied.",
+    "content_de": "Samstag ist Einkaufstag. Anna ist im Supermarkt. Sie hat eine Liste und einen Einkaufswagen.\n\nZuerst kauft sie Obst und Gemüse. Die Äpfel sind heute im Angebot. Ein Kilo kostet nur zwei Euro. Anna kauft auch Bananen und Tomaten.\n\nDann braucht sie Milch, Butter und Käse. Das Brot ist ganz frisch. Anna kauft zwei Brötchen und ein Brot. Sie sucht noch Nudeln, Reis und Eier.\n\nDer Einkaufswagen ist jetzt voll. An der Kasse ist eine kleine Schlange. Anna wartet fünf Minuten. Die Kassiererin ist freundlich. Sie sagt: „Das macht 23,40 Euro, bitte.“\n\nAnna bezahlt mit Karte. Sie packt alles in die Tasche. Der Einkauf ist fertig.",
+    "content_en": "Saturday is shopping day. Anna is at the supermarket. She has a list and a shopping cart.\n\nFirst she buys fruit and vegetables. The apples are on special offer today. One kilo costs only two euros. Anna also buys bananas and tomatoes.\n\nThen she needs milk, butter and cheese. The bread is completely fresh. Anna buys two rolls and one loaf. She also looks for pasta, rice and eggs.\n\nThe shopping cart is full now. At the checkout there is a small queue. Anna waits five minutes. The cashier is friendly. She says: \"That comes to 23.40 euros, please.\"\n\nAnna pays by card. She packs everything into her bag. The shopping is done.",
     "key_vocabulary": [
       {
         "de": "der Supermarkt, -märkte",
@@ -33,39 +33,11 @@
       },
       {
         "de": "das Angebot, -e",
-        "en": "offer, special (im Angebot = on sale)"
-      },
-      {
-        "de": "das Brötchen, -",
-        "en": "bread roll"
+        "en": "offer"
       },
       {
         "de": "die Kasse, -n",
-        "en": "checkout, cash register"
-      },
-      {
-        "de": "die Schlange, -n",
-        "en": "queue, line"
-      },
-      {
-        "de": "die Kassiererin, -nen",
-        "en": "cashier (female)"
-      },
-      {
-        "de": "kaufen",
-        "en": "to buy"
-      },
-      {
-        "de": "bezahlen",
-        "en": "to pay"
-      },
-      {
-        "de": "billig",
-        "en": "cheap"
-      },
-      {
-        "de": "zufrieden",
-        "en": "satisfied, content"
+        "en": "checkout"
       }
     ],
     "questions": [
@@ -76,22 +48,16 @@
         "answer_en": "Saturday is shopping day."
       },
       {
-        "question_de": "Was kostet ein Kilo Äpfel heute?",
-        "question_en": "What does a kilo of apples cost today?",
-        "answer_de": "Ein Kilo Äpfel kostet heute nur zwei Euro.",
-        "answer_en": "A kilo of apples costs only two euros today."
-      },
-      {
-        "question_de": "Wo sind die Milchprodukte?",
-        "question_en": "Where are the dairy products?",
-        "answer_de": "Die Milchprodukte sind hinten links.",
-        "answer_en": "The dairy products are at the back on the left."
+        "question_de": "Was kostet ein Kilo Äpfel?",
+        "question_en": "What does a kilo of apples cost?",
+        "answer_de": "Ein Kilo Äpfel kostet nur zwei Euro.",
+        "answer_en": "A kilo of apples costs only two euros."
       },
       {
         "question_de": "Wie lange wartet Anna an der Kasse?",
         "question_en": "How long does Anna wait at the checkout?",
-        "answer_de": "Anna wartet fünf Minuten an der Kasse.",
-        "answer_en": "Anna waits five minutes at the checkout."
+        "answer_de": "Anna wartet fünf Minuten.",
+        "answer_en": "Anna waits five minutes."
       },
       {
         "question_de": "Wie bezahlt Anna?",
@@ -100,18 +66,48 @@
         "answer_en": "Anna pays by card."
       }
     ],
-    "word_count": 137,
+    "word_count": 105,
     "difficulty": 1,
     "estimated_reading_time": 2,
-    "order_index": 4
+    "order_index": 4,
+    "checks": [
+      {
+        "type": "rf",
+        "statement_de": "Samstag ist Einkaufstag.",
+        "statement_en": "Saturday is shopping day.",
+        "answer": "richtig",
+        "explanation_de": "Der Text beginnt genau damit."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Anna bezahlt mit Karte.",
+        "statement_en": "Anna pays by card.",
+        "answer": "richtig",
+        "explanation_de": "Der Text sagt das direkt."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Ein Kilo Äpfel kostet zehn Euro.",
+        "statement_en": "A kilo of apples costs ten euros.",
+        "answer": "falsch",
+        "explanation_de": "Ein Kilo kostet nur zwei Euro."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Anna wartet zwanzig Minuten an der Kasse.",
+        "statement_en": "Anna waits twenty minutes at the checkout.",
+        "answer": "falsch",
+        "explanation_de": "Anna wartet nur fünf Minuten."
+      }
+    ]
   },
   {
     "level": "A1.1",
     "title_de": "Das Wetter heute",
     "title_en": "The Weather Today",
     "topic": "Weather",
-    "content_de": "Heute ist Montag, und das Wetter ist schön. Die Sonne scheint, und der Himmel ist blau. Es ist warm, fast 25 Grad. Viele Leute sind im Park. Aber das Wetter in Deutschland ist oft anders. Im Frühling regnet es viel. Dann brauchen alle einen Regenschirm. Der Frühling ist trotzdem schön. Alles ist grün, und die Blumen blühen. Der Sommer ist heiß. Manchmal sind es über 30 Grad. Dann schwimmen die Kinder im See. Im Herbst ist es windig und kühl. Die Blätter sind gelb, rot und braun. Es regnet oft, und der Himmel ist grau. Der Winter ist kalt. Manchmal schneit es. Der Schnee ist weiß und wunderschön. Die Kinder spielen im Schnee. Und heute? Heute ist das Wetter einfach perfekt. Anna und Tom machen ein Picknick im Park. Sie haben Glück!",
-    "content_en": "Today is Monday, and the weather is beautiful. The sun is shining, and the sky is blue. It is warm, almost 25 degrees. Many people are in the park. But the weather in Germany is often different. In spring it rains a lot. Then everyone needs an umbrella. Spring is beautiful anyway. Everything is green, and the flowers are blooming. Summer is hot. Sometimes it is over 30 degrees. Then the children swim in the lake. In autumn it is windy and cool. The leaves are yellow, red and brown. It often rains, and the sky is grey. Winter is cold. Sometimes it snows. The snow is white and wonderful. The children play in the snow. And today? Today the weather is simply perfect. Anna and Tom are having a picnic in the park. They are lucky!",
+    "content_de": "Heute ist Montag. Das Wetter ist schön. Die Sonne scheint. Der Himmel ist blau. Es ist warm, fast 25 Grad. Viele Leute sind im Park.\n\nIm Frühling regnet es oft. Dann brauchen alle einen Regenschirm. Alles ist grün, und die Blumen blühen.\n\nDer Sommer ist heiß. Manchmal sind es über 30 Grad. Dann schwimmen die Kinder im See.\n\nIm Herbst ist es windig und kühl. Die Blätter sind gelb, rot und braun.\n\nDer Winter ist kalt. Manchmal schneit es. Der Schnee ist weiß. Die Kinder spielen im Schnee.\n\nUnd heute? Heute ist das Wetter perfekt. Anna und Tom machen ein Picknick im Park. Sie haben Glück!",
+    "content_en": "Today is Monday. The weather is beautiful. The sun is shining. The sky is blue. It is warm, almost 25 degrees. Many people are in the park.\n\nIn spring it often rains. Then everyone needs an umbrella. Everything is green, and the flowers are blooming.\n\nSummer is hot. Sometimes it is over 30 degrees. Then the children swim in the lake.\n\nIn autumn it is windy and cool. The leaves are yellow, red and brown.\n\nWinter is cold. Sometimes it snows. The snow is white. The children play in the snow.\n\nAnd today? Today the weather is perfect. Anna and Tom are having a picnic in the park. They are lucky!",
     "key_vocabulary": [
       {
         "de": "das Wetter (nur Sg.)",
@@ -124,10 +120,6 @@
       {
         "de": "der Himmel (nur Sg.)",
         "en": "sky"
-      },
-      {
-        "de": "der Grad, -e",
-        "en": "degree"
       },
       {
         "de": "der Frühling, -e",
@@ -143,43 +135,19 @@
       },
       {
         "de": "der Herbst, -e",
-        "en": "autumn, fall"
-      },
-      {
-        "de": "das Blatt, Blätter",
-        "en": "leaf"
+        "en": "autumn"
       },
       {
         "de": "der Winter, -",
         "en": "winter"
-      },
-      {
-        "de": "der Schnee (nur Sg.)",
-        "en": "snow"
-      },
-      {
-        "de": "regnen",
-        "en": "to rain"
-      },
-      {
-        "de": "schneien",
-        "en": "to snow"
-      },
-      {
-        "de": "warm",
-        "en": "warm"
-      },
-      {
-        "de": "windig",
-        "en": "windy"
       }
     ],
     "questions": [
       {
         "question_de": "Wie ist das Wetter heute?",
         "question_en": "What is the weather like today?",
-        "answer_de": "Das Wetter ist schön. Die Sonne scheint, und es ist warm.",
-        "answer_en": "The weather is beautiful. The sun is shining, and it is warm."
+        "answer_de": "Das Wetter ist heute schön und warm.",
+        "answer_en": "The weather is beautiful and warm today."
       },
       {
         "question_de": "Was brauchen die Leute im Frühling?",
@@ -188,16 +156,10 @@
         "answer_en": "In spring everyone needs an umbrella."
       },
       {
-        "question_de": "Was machen die Kinder im Sommer?",
-        "question_en": "What do the children do in summer?",
-        "answer_de": "Im Sommer schwimmen die Kinder im See.",
-        "answer_en": "In summer the children swim in the lake."
-      },
-      {
-        "question_de": "Welche Farben haben die Blätter im Herbst?",
-        "question_en": "What colors are the leaves in autumn?",
-        "answer_de": "Die Blätter sind gelb, rot und braun.",
-        "answer_en": "The leaves are yellow, red and brown."
+        "question_de": "Wie ist der Winter?",
+        "question_en": "What is winter like?",
+        "answer_de": "Der Winter ist kalt.",
+        "answer_en": "Winter is cold."
       },
       {
         "question_de": "Was machen Anna und Tom heute?",
@@ -206,18 +168,48 @@
         "answer_en": "Anna and Tom are having a picnic in the park."
       }
     ],
-    "word_count": 132,
+    "word_count": 106,
     "difficulty": 1,
     "estimated_reading_time": 2,
-    "order_index": 5
+    "order_index": 5,
+    "checks": [
+      {
+        "type": "rf",
+        "statement_de": "Heute scheint die Sonne.",
+        "statement_en": "The sun is shining today.",
+        "answer": "richtig",
+        "explanation_de": "Der Text sagt: \"Die Sonne scheint.\""
+      },
+      {
+        "type": "rf",
+        "statement_de": "Im Winter ist es heiß.",
+        "statement_en": "It is hot in winter.",
+        "answer": "falsch",
+        "explanation_de": "Der Winter ist kalt, nicht heiß."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Anna und Tom sind heute zu Hause.",
+        "statement_en": "Anna and Tom are at home today.",
+        "answer": "falsch",
+        "explanation_de": "Sie machen ein Picknick im Park, sie sind nicht zu Hause."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Im Herbst sind die Blätter gelb, rot und braun.",
+        "statement_en": "In autumn the leaves are yellow, red and brown.",
+        "answer": "richtig",
+        "explanation_de": "Der Text sagt das direkt."
+      }
+    ]
   },
   {
     "level": "A1.1",
     "title_de": "Meine Stadt",
     "title_en": "My Town",
     "topic": "My City",
-    "content_de": "Ich heiße Lena, und ich wohne in Bad Ems. Bad Ems ist eine kleine Stadt am Fluss. Nur 9.000 Menschen wohnen hier. Die Stadt ist alt und sehr schön. Im Zentrum ist der Marktplatz. Dort ist jeden Mittwoch ein Markt. Die Leute kaufen dort Obst, Gemüse und Blumen. Am Marktplatz sind auch viele Geschäfte: eine Bäckerei, eine Apotheke und ein kleiner Buchladen. Die Hauptstraße heißt Römerstraße. Dort sind ein Café und zwei Restaurants. Der Kuchen im Café ist sehr lecker. Mein Lieblingsort ist der Park. Er ist groß und grün. Dort sind viele Bäume und Blumen. Die Kinder spielen auf dem Spielplatz. Die alten Leute füttern die Enten. Wir haben auch ein Rathaus und eine alte Kirche. Die Kirche ist über 500 Jahre alt. Der Bahnhof ist klein. Busse fahren von hier in die nächste Stadt. Meine Stadt ist nicht groß, aber ich liebe sie.",
-    "content_en": "My name is Lena, and I live in Bad Ems. Bad Ems is a small town on the river. Only 9,000 people live here. The town is old and very beautiful. In the center is the market square. There is a market there every Wednesday. People buy fruit, vegetables and flowers there. On the market square there are also many shops: a bakery, a pharmacy and a small bookshop. The main street is called Römerstraße. There are a café and two restaurants there. The cake at the café is very tasty. My favorite place is the park. It is big and green. There are many trees and flowers there. The children play on the playground. The old people feed the ducks. We also have a town hall and an old church. The church is over 500 years old. The train station is small. Buses go from here to the next town. My town is not big, but I love it.",
+    "content_de": "Ich heiße Lena. Ich wohne in Bad Ems. Bad Ems ist eine kleine Stadt am Fluss. Nur 9.000 Menschen wohnen hier. Im Zentrum ist der Marktplatz. Dort ist jeden Mittwoch ein Markt. Die Leute kaufen dort Obst und Gemüse. Am Marktplatz sind eine Bäckerei und eine Apotheke.\n\nMein Lieblingsort ist der Park. Er ist groß und grün. Dort sind viele Bäume und Blumen. Die Kinder spielen dort gern. Wir haben auch ein Rathaus und eine Kirche. Die Kirche ist sehr alt. Der Bahnhof ist klein. Meine Stadt ist klein, aber schön.",
+    "content_en": "My name is Lena. I live in Bad Ems. Bad Ems is a small town on the river. Only 9,000 people live here. In the center is the market square. There is a market there every Wednesday. People buy fruit and vegetables there. On the market square there are a bakery and a pharmacy.\n\nMy favorite place is the park. It is big and green. There are many trees and flowers there. The children like playing there. We also have a town hall and a church. The church is very old. The train station is small. My town is small, but beautiful.",
     "key_vocabulary": [
       {
         "de": "die Stadt, Städte",
@@ -232,14 +224,6 @@
         "en": "market square"
       },
       {
-        "de": "der Markt, Märkte",
-        "en": "market"
-      },
-      {
-        "de": "das Geschäft, -e",
-        "en": "shop, store"
-      },
-      {
         "de": "die Bäckerei, -en",
         "en": "bakery"
       },
@@ -248,28 +232,8 @@
         "en": "pharmacy"
       },
       {
-        "de": "der Buchladen, -läden",
-        "en": "bookshop"
-      },
-      {
-        "de": "die Hauptstraße, -n",
-        "en": "main street"
-      },
-      {
-        "de": "das Café, -s",
-        "en": "café"
-      },
-      {
         "de": "der Park, -s",
         "en": "park"
-      },
-      {
-        "de": "der Spielplatz, -plätze",
-        "en": "playground"
-      },
-      {
-        "de": "das Rathaus, -häuser",
-        "en": "town hall"
       },
       {
         "de": "die Kirche, -n",
@@ -290,46 +254,64 @@
       {
         "question_de": "Wie viele Menschen wohnen in Bad Ems?",
         "question_en": "How many people live in Bad Ems?",
-        "answer_de": "Nur 9.000 Menschen wohnen in Bad Ems.",
-        "answer_en": "Only 9,000 people live in Bad Ems."
+        "answer_de": "Nur 9.000 Menschen wohnen dort.",
+        "answer_en": "Only 9,000 people live there."
       },
       {
-        "question_de": "Wann ist der Markt auf dem Marktplatz?",
-        "question_en": "When is the market on the market square?",
+        "question_de": "Wann ist der Markt?",
+        "question_en": "When is the market?",
         "answer_de": "Der Markt ist jeden Mittwoch.",
         "answer_en": "The market is every Wednesday."
-      },
-      {
-        "question_de": "Welche Geschäfte sind am Marktplatz?",
-        "question_en": "Which shops are on the market square?",
-        "answer_de": "Am Marktplatz sind eine Bäckerei, eine Apotheke und ein kleiner Buchladen.",
-        "answer_en": "On the market square there are a bakery, a pharmacy and a small bookshop."
       },
       {
         "question_de": "Was ist Lenas Lieblingsort?",
         "question_en": "What is Lena's favorite place?",
         "answer_de": "Ihr Lieblingsort ist der Park.",
         "answer_en": "Her favorite place is the park."
-      },
-      {
-        "question_de": "Wie alt ist die Kirche?",
-        "question_en": "How old is the church?",
-        "answer_de": "Die Kirche ist über 500 Jahre alt.",
-        "answer_en": "The church is over 500 years old."
       }
     ],
-    "word_count": 145,
+    "word_count": 91,
     "difficulty": 2,
     "estimated_reading_time": 2,
-    "order_index": 6
+    "order_index": 6,
+    "checks": [
+      {
+        "type": "rf",
+        "statement_de": "Lena wohnt in Bad Ems.",
+        "statement_en": "Lena lives in Bad Ems.",
+        "answer": "richtig",
+        "explanation_de": "Lena sagt: \"Ich wohne in Bad Ems.\""
+      },
+      {
+        "type": "rf",
+        "statement_de": "In Bad Ems wohnen 90.000 Menschen.",
+        "statement_en": "90,000 people live in Bad Ems.",
+        "answer": "falsch",
+        "explanation_de": "Im Text stehen nur 9.000 Menschen, nicht 90.000."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Lenas Lieblingsort ist die Kirche.",
+        "statement_en": "Lena's favorite place is the church.",
+        "answer": "falsch",
+        "explanation_de": "Lenas Lieblingsort ist der Park, nicht die Kirche."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Der Markt ist jeden Mittwoch.",
+        "statement_en": "The market is every Wednesday.",
+        "answer": "richtig",
+        "explanation_de": "Der Text sagt: \"Dort ist jeden Mittwoch ein Markt.\""
+      }
+    ]
   },
   {
     "level": "A1.1",
     "title_de": "Farben und Kleidung",
     "title_en": "Colors and Clothes",
     "topic": "Clothes & Colors",
-    "content_de": "Heute ist Sonntag. Familie Weber macht ein Familienfoto. Alle tragen ihre Lieblingskleidung. Papa trägt ein Hemd und eine Hose. Das Hemd ist weiß, und die Hose ist blau. Mama liebt ihr Kleid. Das Kleid ist rot und sehr elegant. Ihre Schuhe sind auch rot. Tim ist acht Jahre alt. Er trägt ein T-Shirt, Jeans und eine Jacke. Sein T-Shirt ist grün, und seine Jacke ist gelb. Die Farben sind bunt wie ein Regenbogen. Lisa liebt Schwarz. Ihr Pullover ist schwarz, ihre Hose ist schwarz, und ihre Mütze ist auch schwarz. Mama fragt: „Ist Schwarz nicht langweilig?“ Lisa sagt: „Nein, Schwarz ist cool!“ Und Oma? Oma trägt eine Bluse und einen Rock. Die Bluse ist lila, und der Rock ist grau. Opa trägt einen Mantel und einen Hut. Alle lachen, und der Fotograf macht das Foto. Das Familienfoto ist bunt und schön.",
-    "content_en": "Today is Sunday. The Weber family is taking a family photo. Everyone is wearing their favorite clothes. Dad is wearing a shirt and trousers. The shirt is white, and the trousers are blue. Mom loves her dress. The dress is red and very elegant. Her shoes are red too. Tim is eight years old. He is wearing a T-shirt, jeans and a jacket. His T-shirt is green, and his jacket is yellow. The colors are as colorful as a rainbow. Lisa loves black. Her sweater is black, her trousers are black, and her beanie is black too. Mom asks: \"Isn't black boring?\" Lisa says: \"No, black is cool!\" And Grandma? Grandma is wearing a blouse and a skirt. The blouse is purple, and the skirt is grey. Grandpa is wearing a coat and a hat. Everyone laughs, and the photographer takes the photo. The family photo is colorful and beautiful.",
+    "content_de": "Heute ist Sonntag. Familie Weber macht ein Foto. Papa trägt ein Hemd und eine Hose. Das Hemd ist weiß, die Hose ist blau.\n\nMama hat ein rotes Kleid. Ihre Schuhe sind auch rot.\n\nTim ist acht Jahre alt. Er hat ein T-Shirt und eine Jacke. Sein T-Shirt ist grün, seine Jacke ist gelb.\n\nLisa liebt Schwarz. Ihr Pullover ist schwarz. Ihre Mütze ist auch schwarz. Mama fragt: „Ist Schwarz nicht langweilig?“ Lisa sagt: „Nein, Schwarz ist cool!“\n\nOma hat eine Bluse und einen Rock. Die Bluse ist lila, der Rock ist grau. Opa hat einen Mantel und einen Hut.\n\nAlle lachen. Das Foto ist bunt und schön.",
+    "content_en": "Today is Sunday. The Weber family takes a photo. Dad wears a shirt and trousers. The shirt is white, the trousers are blue.\n\nMom has a red dress. Her shoes are red too.\n\nTim is eight years old. He has a T-shirt and a jacket. His T-shirt is green, his jacket is yellow.\n\nLisa loves black. Her sweater is black. Her beanie is black too. Mom asks: \"Isn't black boring?\" Lisa says: \"No, black is cool!\"\n\nGrandma has a blouse and a skirt. The blouse is purple, the skirt is grey. Grandpa has a coat and a hat.\n\nEveryone laughs. The photo is colorful and beautiful.",
     "key_vocabulary": [
       {
         "de": "tragen",
@@ -348,68 +330,28 @@
         "en": "dress"
       },
       {
-        "de": "der Schuh, -e",
-        "en": "shoe"
-      },
-      {
-        "de": "das T-Shirt, -s",
-        "en": "T-shirt"
-      },
-      {
         "de": "die Jacke, -n",
         "en": "jacket"
       },
       {
         "de": "der Pullover, -",
-        "en": "sweater, jumper"
-      },
-      {
-        "de": "die Mütze, -n",
-        "en": "beanie, cap"
+        "en": "sweater"
       },
       {
         "de": "die Bluse, -n",
         "en": "blouse"
       },
       {
-        "de": "der Rock, Röcke",
-        "en": "skirt"
-      },
-      {
         "de": "der Mantel, Mäntel",
         "en": "coat"
-      },
-      {
-        "de": "der Hut, Hüte",
-        "en": "hat"
-      },
-      {
-        "de": "bunt",
-        "en": "colorful"
-      },
-      {
-        "de": "der Regenbogen, -bögen",
-        "en": "rainbow"
       }
     ],
     "questions": [
       {
-        "question_de": "Was macht Familie Weber heute?",
-        "question_en": "What is the Weber family doing today?",
-        "answer_de": "Familie Weber macht ein Familienfoto.",
-        "answer_en": "The Weber family is taking a family photo."
-      },
-      {
         "question_de": "Welche Farbe hat Mamas Kleid?",
         "question_en": "What color is Mom's dress?",
-        "answer_de": "Ihr Kleid ist rot.",
-        "answer_en": "Her dress is red."
-      },
-      {
-        "question_de": "Was trägt Tim?",
-        "question_en": "What is Tim wearing?",
-        "answer_de": "Tim trägt ein T-Shirt, Jeans und eine Jacke.",
-        "answer_en": "Tim is wearing a T-shirt, jeans and a jacket."
+        "answer_de": "Mamas Kleid ist rot.",
+        "answer_en": "Mom's dress is red."
       },
       {
         "question_de": "Welche Farbe liebt Lisa?",
@@ -418,93 +360,95 @@
         "answer_en": "Lisa loves black."
       },
       {
-        "question_de": "Was trägt Opa?",
-        "question_en": "What is Grandpa wearing?",
-        "answer_de": "Opa trägt einen Mantel und einen Hut.",
-        "answer_en": "Grandpa is wearing a coat and a hat."
+        "question_de": "Was hat Opa?",
+        "question_en": "What does Grandpa have?",
+        "answer_de": "Opa hat einen Mantel und einen Hut.",
+        "answer_en": "Grandpa has a coat and a hat."
+      },
+      {
+        "question_de": "Wie alt ist Tim?",
+        "question_en": "How old is Tim?",
+        "answer_de": "Tim ist acht Jahre alt.",
+        "answer_en": "Tim is eight years old."
       }
     ],
-    "word_count": 141,
+    "word_count": 107,
     "difficulty": 2,
     "estimated_reading_time": 2,
-    "order_index": 7
+    "order_index": 7,
+    "checks": [
+      {
+        "type": "rf",
+        "statement_de": "Lisa liebt die Farbe Weiß.",
+        "statement_en": "Lisa loves the color white.",
+        "answer": "falsch",
+        "explanation_de": "Lisa liebt Schwarz, nicht Weiß."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Mamas Kleid ist rot.",
+        "statement_en": "Mom's dress is red.",
+        "answer": "richtig",
+        "explanation_de": "Der Text sagt: \"Mama hat ein rotes Kleid.\""
+      },
+      {
+        "type": "rf",
+        "statement_de": "Tims Jacke ist blau.",
+        "statement_en": "Tim's jacket is blue.",
+        "answer": "falsch",
+        "explanation_de": "Tims Jacke ist gelb, nicht blau."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Opa hat einen Mantel und einen Hut.",
+        "statement_en": "Grandpa has a coat and a hat.",
+        "answer": "richtig",
+        "explanation_de": "Der Text sagt das direkt."
+      }
+    ]
   },
   {
     "level": "A1.1",
     "title_de": "Das Frühstück",
     "title_en": "Breakfast",
     "topic": "Breakfast",
-    "content_de": "Es ist Sonntagmorgen, acht Uhr. Familie Krüger frühstückt zusammen. Der Tisch ist schon fertig. In Deutschland ist das Frühstück wichtig. Auf dem Tisch sind frische Brötchen. Sie sind noch warm. Es gibt auch Butter, Marmelade und Honig. Käse und Wurst sind auch da. Papa isst ein Brötchen mit Käse. Mama liebt Marmelade. Erdbeermarmelade ist ihre Lieblingsmarmelade. Die Kinder essen Müsli mit Joghurt und Obst. Emma isst auch ein Ei. Das Ei kocht fünf Minuten. Papa trinkt Kaffee, viel Kaffee! Mama trinkt Tee mit Zitrone. Die Kinder trinken Kakao und Orangensaft. Alle reden und lachen. Das Sonntagsfrühstück dauert lange, manchmal zwei Stunden. Am Montag ist das Frühstück schnell: nur ein Toast und ein Kaffee. Aber heute ist Sonntag. Heute haben alle Zeit. Guten Appetit!",
-    "content_en": "It is Sunday morning, eight o'clock. The Krüger family is having breakfast together. The table is already set. In Germany, breakfast is important. On the table there are fresh bread rolls. They are still warm. There are also butter, jam and honey. Cheese and cold cuts are there too. Dad eats a roll with cheese. Mom loves jam. Strawberry jam is her favorite jam. The children eat muesli with yogurt and fruit. Emma also eats an egg. The egg boils for five minutes. Dad drinks coffee, a lot of coffee! Mom drinks tea with lemon. The children drink cocoa and orange juice. Everyone talks and laughs. The Sunday breakfast takes a long time, sometimes two hours. On Monday, breakfast is quick: just a piece of toast and a coffee. But today is Sunday. Today everyone has time. Enjoy your meal!",
+    "content_de": "Es ist Sonntagmorgen, acht Uhr. Familie Krüger frühstückt zusammen. Auf dem Tisch sind frische Brötchen. Sie sind noch warm. Es gibt auch Butter, Marmelade und Honig. Käse und Wurst sind auch da.\n\nPapa isst ein Brötchen mit Käse. Mama liebt Marmelade. Erdbeermarmelade ist ihre Lieblingsmarmelade. Die Kinder Emma und Paul essen Müsli mit Joghurt. Emma bekommt auch ein Ei.\n\nPapa trinkt Kaffee, viel Kaffee! Mama trinkt Tee mit Zitrone. Die Kinder trinken Kakao und Orangensaft. Alle reden und lachen.\n\nDas Sonntagsfrühstück dauert lange. Am Montag ist das Frühstück schnell. Aber heute ist Sonntag. Guten Appetit!",
+    "content_en": "It is Sunday morning, eight o'clock. The Krüger family has breakfast together. On the table there are fresh bread rolls. They are still warm. There are also butter, jam and honey. Cheese and cold cuts are there too.\n\nDad eats a roll with cheese. Mom loves jam. Strawberry jam is her favorite jam. The children Emma and Paul eat muesli with yogurt. Emma also gets an egg.\n\nDad drinks coffee, a lot of coffee! Mom drinks tea with lemon. The children drink cocoa and orange juice. Everyone talks and laughs.\n\nThe Sunday breakfast takes a long time. On Monday breakfast is quick. But today is Sunday. Enjoy your meal!",
     "key_vocabulary": [
       {
-        "de": "das Frühstück, -e",
+        "de": "das Frühstück",
         "en": "breakfast"
       },
       {
-        "de": "frühstücken",
-        "en": "to have breakfast"
-      },
-      {
-        "de": "das Brötchen, -",
+        "de": "das Brötchen",
         "en": "bread roll"
       },
       {
-        "de": "die Butter (nur Sg.)",
-        "en": "butter"
-      },
-      {
-        "de": "die Marmelade, -n",
+        "de": "die Marmelade",
         "en": "jam"
       },
       {
-        "de": "der Honig (nur Sg.)",
+        "de": "der Honig",
         "en": "honey"
       },
       {
-        "de": "der Käse (nur Sg.)",
+        "de": "der Käse",
         "en": "cheese"
       },
       {
-        "de": "die Wurst, Würste",
-        "en": "sausage, cold cuts"
-      },
-      {
-        "de": "das Müsli, -s",
-        "en": "muesli, cereal"
-      },
-      {
-        "de": "das Ei, -er",
+        "de": "das Ei",
         "en": "egg"
       },
       {
-        "de": "der Kaffee, -s",
+        "de": "der Kaffee",
         "en": "coffee"
       },
       {
-        "de": "der Tee, -s",
+        "de": "der Tee",
         "en": "tea"
-      },
-      {
-        "de": "der Kakao (nur Sg.)",
-        "en": "cocoa, hot chocolate"
-      },
-      {
-        "de": "trinken",
-        "en": "to drink"
-      },
-      {
-        "de": "dauern",
-        "en": "to last, to take (time)"
       }
     ],
     "questions": [
-      {
-        "question_de": "Wann frühstückt Familie Krüger zusammen?",
-        "question_en": "When does the Krüger family have breakfast together?",
-        "answer_de": "Familie Krüger frühstückt am Sonntagmorgen um acht Uhr zusammen.",
-        "answer_en": "The Krüger family has breakfast together on Sunday morning at eight o'clock."
-      },
       {
         "question_de": "Was isst Papa?",
         "question_en": "What does Dad eat?",
@@ -518,22 +462,52 @@
         "answer_en": "The children drink cocoa and orange juice."
       },
       {
-        "question_de": "Wie lange dauert das Sonntagsfrühstück?",
-        "question_en": "How long does the Sunday breakfast last?",
-        "answer_de": "Das Sonntagsfrühstück dauert lange, manchmal zwei Stunden.",
-        "answer_en": "The Sunday breakfast lasts a long time, sometimes two hours."
-      },
-      {
         "question_de": "Wie ist das Frühstück am Montag?",
         "question_en": "What is breakfast like on Monday?",
-        "answer_de": "Am Montag ist das Frühstück schnell: nur ein Toast und ein Kaffee.",
-        "answer_en": "On Monday breakfast is quick: just a piece of toast and a coffee."
+        "answer_de": "Am Montag ist das Frühstück schnell.",
+        "answer_en": "On Monday breakfast is quick."
+      },
+      {
+        "question_de": "Was liebt Mama?",
+        "question_en": "What does Mom love?",
+        "answer_de": "Mama liebt Marmelade.",
+        "answer_en": "Mom loves jam."
       }
     ],
-    "word_count": 123,
+    "word_count": 95,
     "difficulty": 1,
     "estimated_reading_time": 2,
-    "order_index": 8
+    "order_index": 8,
+    "checks": [
+      {
+        "type": "rf",
+        "statement_de": "Mama trinkt Kaffee.",
+        "statement_en": "Mom drinks coffee.",
+        "answer": "falsch",
+        "explanation_de": "Mama trinkt Tee, Papa trinkt viel Kaffee."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Die Kinder trinken Kaffee.",
+        "statement_en": "The children drink coffee.",
+        "answer": "falsch",
+        "explanation_de": "Die Kinder trinken Kakao und Orangensaft, keinen Kaffee."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Familie Krüger frühstückt am Sonntagmorgen.",
+        "statement_en": "The Krüger family has breakfast on Sunday morning.",
+        "answer": "richtig",
+        "explanation_de": "Der Text beginnt: \"Es ist Sonntagmorgen ... Familie Krüger frühstückt zusammen.\""
+      },
+      {
+        "type": "rf",
+        "statement_de": "Am Montag ist das Frühstück schnell.",
+        "statement_en": "On Monday breakfast is quick.",
+        "answer": "richtig",
+        "explanation_de": "Der Text sagt das direkt am Ende."
+      }
+    ]
   },
   {
     "level": "A1.2",
@@ -970,5 +944,193 @@
     "difficulty": 3,
     "estimated_reading_time": 3,
     "order_index": 8
+  },
+  {
+    "level": "A1.1",
+    "title_de": "Anzeigen lesen (wie in der Prüfung, Teil 2)",
+    "title_en": "Reading small ads (exam-style, part 2)",
+    "topic": "Prüfungsformat",
+    "content_de": "Lies die Situation und die zwei Anzeigen. Welche Anzeige passt: a oder b?\n\nSituation 1: Du suchst eine Wohnung in Berlin.\n\n(a) Wohnung in Potsdam, 3 Zimmer, 80 m², 900 Euro warm, frei ab 1. Oktober. Garten. Telefon: 0331 22334.\n\n(b) Wohnung in Berlin-Mitte, 2 Zimmer, 55 m², 650 Euro warm, ab sofort frei. Balkon und Küche. Telefon: 030 456789.\n\nSituation 2: Deine Muttersprache ist Englisch. Du suchst einen Tandempartner für Deutsch.\n\n(a) Deutsch-Tandem: Annas Muttersprache ist Deutsch. Sie lernt Englisch. Treffen: Café Mitte, Mittwoch 17 Uhr.\n\n(b) Deutsch-Tandem: Saras Muttersprache ist Deutsch. Sie lernt Spanisch. Treffen: Bibliothek, Donnerstag 19 Uhr.\n\nSituation 3: Du suchst eine Stelle als Kellner/Kellnerin am Wochenende.\n\n(a) Kellner/in gesucht, Café Sonne, Samstag und Sonntag, 12 Euro pro Stunde, ab sofort. Telefon: 040 998877.\n\n(b) Kellner/in gesucht, Café Sonne, Montag bis Freitag, Vollzeit, 13 Euro pro Stunde. Telefon: 040 998877.\n\nSituation 4: Du suchst ein gebrauchtes Fahrrad für unter 150 Euro.\n\n(a) Fahrrad zu verkaufen: neu, 220 Euro, Lieferung möglich. Telefon: 0176 5544332.\n\n(b) Fahrrad zu verkaufen: gebraucht, gute Bremsen, 70 Euro, Abholung möglich. Telefon: 0176 5544332.\n\nSituation 5: Du möchtest als Babysitterin arbeiten. Du hast am Samstagvormittag Zeit.\n\n(a) Babysitterin gesucht, Freitagabend, ein Kind, 11 Euro pro Stunde. Telefon: 0151 7788990.\n\n(b) Babysitterin gesucht, Samstagvormittag, ein Kind, 11 Euro pro Stunde. Telefon: 0151 7788990.",
+    "content_en": "Read the situation and the two ads. Which ad fits: a or b?\n\nSituation 1: You are looking for an apartment in Berlin.\n\n(a) Apartment in Potsdam, 3 rooms, 80 m², 900 euros warm rent, available from October 1st. Garden. Phone: 0331 22334.\n\n(b) Apartment in Berlin-Mitte, 2 rooms, 55 m², 650 euros warm rent, available immediately. Balcony and kitchen. Phone: 030 456789.\n\nSituation 2: Your native language is English. You are looking for a German tandem partner.\n\n(a) German tandem: Anna's native language is German. She is learning English. Meet: Café Mitte, Wednesday 17:00.\n\n(b) German tandem: Sara's native language is German. She is learning Spanish. Meet: library, Thursday 19:00.\n\nSituation 3: You are looking for a job as a waiter/waitress on the weekend.\n\n(a) Waiter/waitress wanted, Café Sonne, Saturday and Sunday, 12 euros per hour, starting immediately. Phone: 040 998877.\n\n(b) Waiter/waitress wanted, Café Sonne, Monday to Friday, full-time, 13 euros per hour. Phone: 040 998877.\n\nSituation 4: You are looking for a used bicycle for under 150 euros.\n\n(a) Bicycle for sale: new, 220 euros, delivery possible. Phone: 0176 5544332.\n\n(b) Bicycle for sale: used, good brakes, 70 euros, pickup possible. Phone: 0176 5544332.\n\nSituation 5: You would like to work as a babysitter. You have time on Saturday morning.\n\n(a) Babysitter wanted, Friday evening, one child, 11 euros per hour. Phone: 0151 7788990.\n\n(b) Babysitter wanted, Saturday morning, one child, 11 euros per hour. Phone: 0151 7788990.",
+    "key_vocabulary": [
+      {
+        "de": "die Wohnung, -en",
+        "en": "apartment"
+      },
+      {
+        "de": "das Zimmer, -",
+        "en": "room"
+      },
+      {
+        "de": "der Tandempartner, -",
+        "en": "tandem partner"
+      },
+      {
+        "de": "der Kellner, -",
+        "en": "waiter"
+      },
+      {
+        "de": "die Kellnerin, -nen",
+        "en": "waitress"
+      },
+      {
+        "de": "das Fahrrad, -räder",
+        "en": "bicycle"
+      },
+      {
+        "de": "die Babysitterin, -nen",
+        "en": "babysitter (female)"
+      },
+      {
+        "de": "ab sofort",
+        "en": "starting immediately"
+      }
+    ],
+    "questions": [],
+    "checks": [
+      {
+        "type": "choice",
+        "statement_de": "Situation 1: Wohnung in Berlin — welche Anzeige passt?",
+        "statement_en": "Situation 1: Apartment in Berlin — which ad fits?",
+        "options": [
+          "a",
+          "b"
+        ],
+        "answer": "b",
+        "explanation_de": "Anzeige b ist in Berlin; Anzeige a ist in Potsdam."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Situation 2: Deutsch-Tandem — welche Anzeige passt?",
+        "statement_en": "Situation 2: German tandem — which ad fits?",
+        "options": [
+          "a",
+          "b"
+        ],
+        "answer": "a",
+        "explanation_de": "Anna lernt Englisch (Anzeige a). Sara lernt Spanisch (Anzeige b)."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Situation 3: Stelle als Kellner/in — welche Anzeige passt?",
+        "statement_en": "Situation 3: Job as a waiter/waitress — which ad fits?",
+        "options": [
+          "a",
+          "b"
+        ],
+        "answer": "a",
+        "explanation_de": "Anzeige a ist am Wochenende (Samstag und Sonntag); Anzeige b ist Montag bis Freitag."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Situation 4: Fahrrad kaufen — welche Anzeige passt?",
+        "statement_en": "Situation 4: Buying a bicycle — which ad fits?",
+        "options": [
+          "a",
+          "b"
+        ],
+        "answer": "b",
+        "explanation_de": "Anzeige b kostet 70 Euro (unter 150 Euro); Anzeige a kostet 220 Euro (über 150 Euro)."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Situation 5: Babysitterin — welche Anzeige passt?",
+        "statement_en": "Situation 5: Babysitter — which ad fits?",
+        "options": [
+          "a",
+          "b"
+        ],
+        "answer": "b",
+        "explanation_de": "Anzeige b ist am Samstagvormittag; Anzeige a ist am Freitagabend."
+      }
+    ],
+    "word_count": 219,
+    "difficulty": 1,
+    "estimated_reading_time": 3,
+    "order_index": 9
+  },
+  {
+    "level": "A1.1",
+    "title_de": "Schilder und Aushänge (wie in der Prüfung, Teil 3)",
+    "title_en": "Signs and notices (exam-style, part 3)",
+    "topic": "Prüfungsformat",
+    "content_de": "Schild 1 — An der Arztpraxis: Öffnungszeiten: Montag bis Freitag 8–12 Uhr und 15–18 Uhr. Samstag und Sonntag geschlossen.\n\nSchild 2 — Im Supermarkt: Achtung: Der Supermarkt hat am Sonntag geschlossen. Bitte am Samstag einkaufen.\n\nSchild 3 — An der Tür: Bitte die Schuhe im Haus ausziehen. Vielen Dank für Ihr Verständnis!\n\nSchild 4 — Am Bahnhof: Zug nach München: Abfahrt 9:15 Uhr, Gleis 3. Der Zug fährt sonntags nicht.\n\nSchild 5 — In der Schule: Der Deutschkurs beginnt um 9 Uhr. Bitte pünktlich kommen. Handys sind im Kurs verboten.",
+    "content_en": "Sign 1 — At the doctor's practice: Opening hours: Monday to Friday 8–12 and 15–18. Saturday and Sunday closed.\n\nSign 2 — At the supermarket: Notice: The supermarket is closed on Sunday. Please shop on Saturday.\n\nSign 3 — At the door: Please take off your shoes inside the house. Thank you for your understanding!\n\nSign 4 — At the train station: Train to Munich: departure 9:15, platform 3. The train does not run on Sundays.\n\nSign 5 — At the school: The German course starts at 9 o'clock. Please arrive on time. Phones are forbidden in the course.",
+    "key_vocabulary": [
+      {
+        "de": "die Öffnungszeiten (nur Pl.)",
+        "en": "opening hours"
+      },
+      {
+        "de": "geschlossen",
+        "en": "closed"
+      },
+      {
+        "de": "der Schuh, -e",
+        "en": "shoe"
+      },
+      {
+        "de": "der Zug, Züge",
+        "en": "train"
+      },
+      {
+        "de": "das Gleis, -e",
+        "en": "platform, track"
+      },
+      {
+        "de": "der Deutschkurs, -e",
+        "en": "German course"
+      },
+      {
+        "de": "pünktlich",
+        "en": "on time"
+      },
+      {
+        "de": "verboten",
+        "en": "forbidden"
+      }
+    ],
+    "questions": [],
+    "checks": [
+      {
+        "type": "rf",
+        "statement_de": "Am Samstag ist die Praxis offen.",
+        "statement_en": "The practice is open on Saturday.",
+        "answer": "falsch",
+        "explanation_de": "Die Praxis ist Montag bis Freitag offen."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Der Sonntag ist kein Einkaufstag.",
+        "statement_en": "Sunday is not a shopping day.",
+        "answer": "richtig",
+        "explanation_de": "Das Schild sagt: Der Supermarkt ist am Sonntag geschlossen."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Im Haus trägt man Schuhe.",
+        "statement_en": "You wear shoes inside the house.",
+        "answer": "falsch",
+        "explanation_de": "Das Schild sagt: Bitte die Schuhe ausziehen."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Der Zug nach München fährt jeden Tag.",
+        "statement_en": "The train to Munich runs every day.",
+        "answer": "falsch",
+        "explanation_de": "Das Schild sagt: Der Zug fährt sonntags nicht."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Der Kurs beginnt am Morgen.",
+        "statement_en": "The course starts in the morning.",
+        "answer": "richtig",
+        "explanation_de": "9 Uhr ist am Morgen."
+      }
+    ],
+    "word_count": 90,
+    "difficulty": 1,
+    "estimated_reading_time": 2,
+    "order_index": 10
   }
 ]

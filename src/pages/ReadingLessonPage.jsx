@@ -21,6 +21,7 @@ import {
   markLessonComplete,
 } from '../services/readingService';
 import VocabularyList from '../components/VocabularyList';
+import ReadingChecks from '../components/ReadingChecks';
 import ComprehensionQuestions from '../components/ComprehensionQuestions';
 import CompletionMoment from '../components/CompletionMoment';
 import SEO from '../components/SEO';
@@ -93,6 +94,13 @@ const ReadingLessonPage = () => {
     if (user) {
       markLessonComplete(user.id, lesson.id);
     }
+  };
+
+  // Finishing every "Richtig oder falsch?" check is itself a completion
+  // signal — fire the same flow the "Mark as Complete" button uses, but only
+  // once and only if the lesson isn't already marked (do not double-mark).
+  const handleChecksComplete = () => {
+    if (!isCompleted) handleMarkComplete();
   };
 
   const handleNavigateLesson = (targetLesson) => {
@@ -251,6 +259,13 @@ const ReadingLessonPage = () => {
         <Reveal delay={80} className="mb-6">
           <VocabularyList vocabulary={lesson.keyVocabulary} />
         </Reveal>
+
+        {/* Auto-checkable Richtig/Falsch and exam-style choice items */}
+        {lesson.checks?.length > 0 && (
+          <Reveal delay={120} className="mb-6">
+            <ReadingChecks key={lesson.id} checks={lesson.checks} onAllAnswered={handleChecksComplete} />
+          </Reveal>
+        )}
 
         {/* Comprehension Questions */}
         <Reveal delay={160} className="mb-6">

@@ -65,7 +65,7 @@ listening exercises, vocabulary, reading lessons, and a free sentence analyzer
 
 ### Vocabulary & Reading
 - 2,049 vocabulary words organised by level, each with an example sentence
-- 945 example sentences; 66 leveled reading passages with comprehension questions
+- 945 example sentences; 68 leveled reading passages with comprehension questions
 - URLs: https://deutsch-meister.de/vocabulary · https://deutsch-meister.de/reading/
 
 ### Guides & Comparisons (German-language)
