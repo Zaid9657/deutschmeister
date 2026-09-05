@@ -15,7 +15,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -235,9 +235,25 @@ test('every course test is well-formed, distinct from EXAM_TRACKS, and shape-val
   const { COURSE_TESTS } = await import('../src/data/courseTests/index.js');
   const { countScorableItems } = await import('../src/data/mockExams/index.js');
   const { scoreObjectiveSections } = await import('../src/services/examScoring.js');
-  const migrationText = readFileSync(join(root, 'migrations/2026-09-05-a1-1-abschlusstest.sql'), 'utf8');
 
-  assert.ok(COURSE_TESTS.length >= 1, 'at least the A1.1 Abschlusstest must exist');
+  // Each course test ships its own migrations/*abschlusstest*.sql that
+  // re-creates exam_attempts_exam_key_check with the FULL list — so the
+  // newest file (by name; the files are date-prefixed) must carry every
+  // COURSE_TESTS key, or a later migration silently narrowed the CHECK
+  // back and the earlier test's attempts would start failing to insert.
+  const abschlussMigrations = readdirSync(join(root, 'migrations'))
+    .filter((f) => /abschlusstest.*\.sql$/.test(f))
+    .sort();
+  assert.ok(abschlussMigrations.length >= 2, 'expected the A1.1 and A1.2 Abschlusstest migrations');
+  const newestMigration = readFileSync(join(root, 'migrations', abschlussMigrations.at(-1)), 'utf8');
+  const checkList = newestMigration.match(/ADD CONSTRAINT exam_attempts_exam_key_check\s+CHECK \(exam_key IN \(([^)]*)\)\)/);
+  assert.ok(checkList, `${abschlussMigrations.at(-1)} must re-create exam_attempts_exam_key_check with an IN (...) list`);
+  const admittedKeys = new Set([...checkList[1].matchAll(/'([a-z0-9_]+)'/g)].map((m) => m[1]));
+  for (const t of EXAM_TRACKS) {
+    assert.ok(admittedKeys.has(t.key), `${abschlussMigrations.at(-1)} dropped exam-track key ${t.key} from the CHECK`);
+  }
+
+  assert.ok(COURSE_TESTS.length >= 2, 'the A1.1 and A1.2 Abschlusstests must both exist');
   const examKeys = new Set(EXAM_TRACKS.map((t) => t.key));
   const seenKeys = new Set();
   const seenSlugs = new Set();
@@ -250,8 +266,8 @@ test('every course test is well-formed, distinct from EXAM_TRACKS, and shape-val
     seenKeys.add(ct.key);
     seenSlugs.add(ct.slug);
     assert.ok(
-      migrationText.includes(ct.key),
-      `migrations/2026-09-05-a1-1-abschlusstest.sql must widen exam_attempts_exam_key_check to include ${ct.key}`
+      admittedKeys.has(ct.key),
+      `${abschlussMigrations.at(-1)} must list ${ct.key} in exam_attempts_exam_key_check (the newest migration re-creates the full list)`
     );
 
     const mock = ct.mock;
@@ -270,6 +286,13 @@ test('every course test is well-formed, distinct from EXAM_TRACKS, and shape-val
         } else if (part.type === 'listening') {
           assert.match(part.level, /^[AB][12]\.[12]$/, `${part.key}: listening level must be the DB uppercase form`);
           assert.ok(Number.isInteger(part.exerciseNumber) && part.exerciseNumber >= 1 && part.exerciseNumber <= 6);
+          // Every A1 listening exercise carries 23 questions since Wave 2/3;
+          // a course test's Hören part must cap what the runner renders and
+          // scores, or the 10 : 8 Hören/Lesen weighting silently becomes 23 : 8.
+          assert.ok(
+            Number.isInteger(part.questionMax) && part.questionMax > 0,
+            `${ct.key}/${part.key}: a course-test listening part needs a numeric questionMax`
+          );
         } else if (part.type === 'writing') {
           assert.ok(part.task && part.criteria?.length >= 3, `${part.key}: writing needs a task + criteria`);
         } else {
@@ -294,6 +317,11 @@ test('the resolver serves both registries and the guard reads its gateLevel', as
   assert.equal(resolvedCourse.key, ct.key);
   assert.equal(resolvedCourse.gateLevel, 'a1.1', 'a course test gates on its own level, never the exam-track top sublevel');
 
+  const resolvedA12 = resolveModelltest('abschlusstest-a1-2');
+  assert.equal(resolvedA12.kind, 'course');
+  assert.equal(resolvedA12.key, 'a1_2_abschluss');
+  assert.equal(resolvedA12.gateLevel, 'a1.2', 'the A1.2 Abschlusstest gates on a1.2 — a paid level, never free');
+
   const resolvedExam = resolveModelltest('start-deutsch-1');
   assert.equal(resolvedExam.kind, 'exam');
   assert.equal(resolvedExam.gateLevel, 'a1.2', 'an exam track still gates on its band-top sublevel');
@@ -302,4 +330,45 @@ test('the resolver serves both registries and the guard reads its gateLevel', as
 
   const guardSrc = readFileSync(join(root, 'src/components/ExamSubscriptionGuard.jsx'), 'utf8');
   assert.match(guardSrc, /resolveModelltest/, 'ExamSubscriptionGuard must resolve through the shared registry');
+});
+
+// ── 8. questionMax — the runner's listening-question cap (Wave 3 PR D) ────
+//
+// useExerciseDetails() returns every question of an exercise; the pure
+// helper decides which ones a part renders AND registers for scoring. The
+// runner must go through it (a `questionMax` field the runner ignores is a
+// silent no-op — exactly the 23-vs-8 defect this exists to prevent).
+
+test('selectListeningQuestions caps at questionMax, orders by question_number, and is a no-op without a cap', async () => {
+  const { selectListeningQuestions } = await import('../src/data/courseTests/listeningQuestions.js');
+  const qs = Array.from({ length: 23 }, (_, i) => ({ id: `q${23 - i}`, question_number: 23 - i, correct_answer: 'a' }));
+  const original = qs.map((q) => q.question_number);
+
+  const capped = selectListeningQuestions(qs, { questionMax: 10 });
+  assert.equal(capped.length, 10);
+  assert.deepEqual(capped.map((q) => q.question_number), [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  assert.deepEqual(qs.map((q) => q.question_number), original, 'input must not be mutated');
+
+  const all = selectListeningQuestions(qs, {});
+  assert.equal(all.length, 23);
+  assert.deepEqual(all.map((q) => q.question_number), Array.from({ length: 23 }, (_, i) => i + 1));
+  assert.equal(selectListeningQuestions(qs, { questionMax: 0 }).length, 23, 'a zero cap means no cap');
+  assert.equal(selectListeningQuestions(qs, { questionMax: '10' }).length, 23, 'a non-numeric cap means no cap');
+  assert.equal(selectListeningQuestions(qs, { questionMax: 50 }).length, 23, 'a cap above the count keeps everything');
+  assert.deepEqual(selectListeningQuestions(undefined, { questionMax: 10 }), []);
+
+  // Rows without a question_number cannot be placed against a cap and are dropped only when one is set.
+  const mixed = [{ id: 'x' }, { id: 'y', question_number: 2 }, { id: 'z', question_number: 1 }];
+  assert.deepEqual(selectListeningQuestions(mixed, { questionMax: 5 }).map((q) => q.id), ['z', 'y']);
+  assert.deepEqual(selectListeningQuestions(mixed, {}).map((q) => q.id), ['z', 'y', 'x']);
+});
+
+test('the runner renders and scores listening parts through selectListeningQuestions', () => {
+  const runSrc = readFileSync(join(root, 'src/pages/Modelltest/ModelltestRun.jsx'), 'utf8');
+  assert.match(runSrc, /selectListeningQuestions\(allQuestions, part\)/, 'MockListeningPart must filter through the shared helper');
+  // The registration for scoring and the rendering map must both read the
+  // filtered `questions`, never the hook's raw list.
+  assert.match(runSrc, /registerKey\(\s*part\.key,\s*questions\.map/);
+  assert.match(runSrc, /\{questions\.map\(\(q\) =>/);
+  assert.ok(!/allQuestions\.map/.test(runSrc), 'nothing may render or score the unfiltered list');
 });

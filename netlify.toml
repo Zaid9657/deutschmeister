@@ -274,6 +274,13 @@
   from = "/a1-1-phase"
   to = "/app.html"
   status = 200
+# The A1.2-Phase 28-day plan (Course Factory Wave 3 PR D) — gated on
+# LevelSubscriptionGuard(level="a1.2"), a PAID level (Pro/trial or the A1
+# course). Same posture as /a1-1-phase: not prerendered, not in the sitemap.
+[[redirects]]
+  from = "/a1-2-phase"
+  to = "/app.html"
+  status = 200
 # Mock exams (subscription-gated practice tests). Same posture as the course
 # area: not prerendered, not in the sitemap; the wildcard is safe here because
 # there is no static /modelltest directory for it to shadow, and unknown slugs

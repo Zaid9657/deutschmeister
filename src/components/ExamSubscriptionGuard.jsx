@@ -24,6 +24,8 @@ const NEW_USER_WINDOW_MS = 10 * 60 * 1000;
 // opens to every signed-in user. That is the recorded decision (Course
 // Factory Wave 2 PR D), not a gap: this guard still requires `user` below
 // like every other guarded route, so an anonymous visitor still hits /login.
+// The Abschlusstest A1.2 (Wave 3 PR D) gates on 'a1.2' — NOT free — so it
+// opens only via Pro/trial or the A1 course, exactly like /level/a1.2.
 const ExamSubscriptionGuard = ({ children }) => {
   const { examSlug } = useParams();
   const { user, loading: authLoading } = useAuth();
