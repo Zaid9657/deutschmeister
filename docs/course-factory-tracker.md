@@ -50,13 +50,17 @@ Not done this wave (carried): typed-production upgrades for the eight pre-existi
 grammar topics (only the four new ones ship ≥16 typed items); audio for the new grammar
 examples, vocabulary and dictation prompts (`audio_url` is null on every new example row).
 
-## Wave 3 — A1.2 as a complete course (next)
+## Wave 3 — A1.2 as a complete course (started 2026-09-05)
 
 Same shape as Wave 2, for A1.2: Imperativ (missing), the A1.2 share of the Wortliste plus
 the article-in-word / "null"-plural fixes on the live A1.2 rows, the `numbers-counting`
 upgrade (100–1000, prices, ordinals in general), A1.2 reading/listening depth, typed
 production for the eight old A1.1 topics, and a re-cut of the 30-day SD1 plan so it starts
 where the 28-day A1.1 plan ends. Gate: Monday's weekly-truth one-and-done rate for A1.1.
+
+| # | Step | Status | PR |
+|---|---|---|---|
+| B | A1.2 share of the Wortliste: 166 additions in 8 categories, 54 fixes incl. three repurposed rows and month plurals | PR open | — |
 
 ## Measured baseline (do not re-derive)
 
