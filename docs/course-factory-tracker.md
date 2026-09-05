@@ -101,7 +101,7 @@ A1 one-and-done rate and whether any A1 course sold.
 
 ## Open questions / owner asks
 
-- Audio (vocab, grammar examples, SD1 Hören): needs the owner's OpenAI-key run of
+- Audio (vocab, grammar examples, SD1 Hören): needs the owner's Azure-Speech-key run (decision 2026-09-05, was OpenAI) of
   `scripts/generate-example-audio.mjs` — requested, not blocking; Hören ships with
   transcript-mode fallback until audio lands.
 - Wave 2 added 40 grammar examples (four new A1.1 topics) and 114 words with no audio;
