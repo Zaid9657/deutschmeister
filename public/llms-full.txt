@@ -25,7 +25,7 @@ listening exercises, vocabulary, reading lessons, and a free sentence analyzer
 
 ### Grammar (72 topics)
 - 8 CEFR sub-levels (A1.1 … B2.2) — 12 in A1.1 and A1.2, 8 per level elsewhere
-- 518 rule explanations, 753 worked examples, 882 interactive exercises in total
+- 522 rule explanations, 757 worked examples, 1045 interactive exercises in total
 - Every example includes a word-by-word breakdown showing case and grammatical role
 - English explanations with authentic German examples
 - In the app: 5-stage lessons (introduction → examples → rule breakdown → guided practice → mastery)
