@@ -11,6 +11,7 @@
 // ESM, same as src/data/mockExams/index.js.
 
 import { abschlusstestA11 } from './abschlusstestA11.js';
+import { abschlusstestA12 } from './abschlusstestA12.js';
 
 export const COURSE_TESTS = [
   {
@@ -20,6 +21,17 @@ export const COURSE_TESTS = [
     level: 'a1.1',
     formatOf: 'goethe_a1',
     mock: abschlusstestA11,
+  },
+  // A1.2 is NOT a free level (src/config/freeTier.js), so resolveModelltest's
+  // gateLevel = 'a1.2' makes ExamSubscriptionGuard require Pro/trial or the
+  // A1 course purchase — the same gate the A1.2 level and /a1-2-phase use.
+  {
+    key: 'a1_2_abschluss',
+    slug: 'abschlusstest-a1-2',
+    nameDe: 'Abschlusstest A1.2',
+    level: 'a1.2',
+    formatOf: 'goethe_a1',
+    mock: abschlusstestA12,
   },
 ];
 

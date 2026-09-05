@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Clock, ChevronRight, Volume2, Loader2 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
@@ -13,6 +13,7 @@ import {
 } from '../../services/examService';
 import { scoreObjectiveSections, mergeListeningResult } from '../../services/examScoring';
 import { useExerciseDetails } from '../../hooks/useListening';
+import { selectListeningQuestions } from '../../data/courseTests/listeningQuestions.js';
 import { getAudioUrl } from '../../utils/listeningHelpers';
 import SEO from '../../components/SEO';
 import Button from '../../components/ui/Button.jsx';
@@ -44,9 +45,18 @@ const optionClass = (selected) =>
 const FIELD = 'rounded-clay border border-rule bg-white text-ink placeholder:text-graphite focus:border-siegel focus:outline-none';
 
 function MockListeningPart({ part, answers, onAnswer, registerKey }) {
-  const { exercise, questions, loading } = useExerciseDetails(part.level, String(part.exerciseNumber));
+  const { exercise, questions: allQuestions, loading } = useExerciseDetails(part.level, String(part.exerciseNumber));
   const [plays, setPlays] = useState(0);
   const audioRef = useRef(null);
+
+  // The hook returns EVERY question of the exercise (23 per A1 exercise since
+  // Wave 2/3). A part may cap that with `questionMax` — rendering below and
+  // the scoring registration here read the same filtered list, so the items
+  // the learner sees are exactly the items that count.
+  const questions = useMemo(
+    () => selectListeningQuestions(allQuestions, part),
+    [allQuestions, part]
+  );
 
   useEffect(() => {
     if (questions?.length) {

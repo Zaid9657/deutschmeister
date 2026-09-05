@@ -7,7 +7,13 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 import { readinessFromAttempts } from '../src/services/readiness.js';
+import { COURSE_TESTS } from '../src/data/courseTests/index.js';
+
+const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 const attempt = (score, maxScore, completedAt, status = 'completed') => ({
   status,
@@ -77,4 +83,31 @@ test('a custom threshold is respected', () => {
     0.5
   );
   assert.equal(result.ready, true);
+});
+
+test('readiness is per exam key — an A1.2 Abschlusstest history is judged on its own rows', () => {
+  // listAttempts(user, key) hands the function ONE key's rows; the same rule
+  // applies unchanged to 'a1_2_abschluss' (Wave 3 PR D) — nothing in the
+  // verdict is keyed on the level, so a1.2 cannot drift from a1.1.
+  const a12 = [
+    { ...attempt(13, 18, '2026-09-10'), exam_key: 'a1_2_abschluss' }, // 72 %
+    { ...attempt(14, 18, '2026-09-12'), exam_key: 'a1_2_abschluss' }, // 78 %
+  ];
+  const result = readinessFromAttempts(a12);
+  assert.equal(result.ready, true);
+  assert.deepEqual(result.lastTwo.map((a) => a.pct), [78, 72]);
+  assert.equal(result.trend, 'up');
+});
+
+test('the result screen names a next step for every course-test level', () => {
+  // ModelltestResult keys "what comes after" on resolved.gateLevel; a course
+  // test whose level is missing there would fall back to the generic hub
+  // button, which is never what the earned "Du bist bereit" moment should show.
+  const resultSrc = readFileSync(join(root, 'src/pages/Modelltest/ModelltestResult.jsx'), 'utf8');
+  const block = resultSrc.slice(resultSrc.indexOf('const COURSE_NEXT = {'), resultSrc.indexOf('const courseNext'));
+  for (const ct of COURSE_TESTS) {
+    assert.ok(block.includes(`'${ct.level}': {`), `COURSE_NEXT has no entry for ${ct.level} (${ct.key})`);
+  }
+  assert.match(block, /'a1\.1': \{[^}]*primary: \{ to: '\/a1-2-phase'/s, 'after A1.1 the next step is the A1.2 plan');
+  assert.match(block, /'a1\.2': \{[^}]*primary: \{ to: '\/modelltest\/start-deutsch-1'/s, 'after A1.2 the next step is the full SD1 mock');
 });

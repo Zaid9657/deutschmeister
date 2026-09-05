@@ -10,7 +10,8 @@
 //     written in an exam's style but not that exam. Gate = the course's own
 //     level. a1.1 is a free level (src/config/freeTier.js), so the A1.1
 //     Abschlusstest opens to every logged-in user — a recorded decision,
-//     not an oversight; see ExamSubscriptionGuard.jsx.
+//     not an oversight; see ExamSubscriptionGuard.jsx. a1.2 is not free,
+//     so the A1.2 Abschlusstest needs Pro/trial or the A1 course.
 //
 // A slug matching neither registry resolves to null; every caller already
 // renders the same "kein Übungstest" fallback for that case.

@@ -39,6 +39,13 @@ const iconMap = {
   'b2.2': Moon,
 };
 
+// Per-level 28-day plan routes (src/data/programs/a11Phase.js, a12Phase.js);
+// a level without an entry renders no plan card.
+const PHASE_PLAN = {
+  'a1.1': { href: '/a1-1-phase', title: 'A1.1-Phase: 28 Tage bis zum Abschlusstest' },
+  'a1.2': { href: '/a1-2-phase', title: 'A1.2-Phase: 28 Tage bis zum Abschlusstest' },
+};
+
 const LevelPage = () => {
   const { level } = useParams();
   const navigate = useNavigate();
@@ -318,18 +325,19 @@ const LevelPage = () => {
           </div>
         </div>
 
-        {/* A1.1-Phase — the 28-day plan to the Abschlusstest A1.1 (Course
-            Factory Wave 2 PR D). a1.1-only: A1.2 gets its own course area
-            link from the "Für die Prüfung" strip elsewhere on this page. */}
-        {level === 'a1.1' && (
+        {/* The 28-day plan to this level's Abschlusstest — A1.1-Phase (Course
+            Factory Wave 2 PR D) and A1.2-Phase (Wave 3 PR D). Both routes sit
+            behind LevelSubscriptionGuard for their own level, so the card
+            shows the same gate this page already passed. */}
+        {PHASE_PLAN[level] && (
           <Reveal className="mb-8">
-            <Card interactive as={Link} to="/a1-1-phase" className="flex items-center justify-between gap-4 p-5">
+            <Card interactive as={Link} to={PHASE_PLAN[level].href} className="flex items-center justify-between gap-4 p-5">
               <div className="flex items-center gap-4">
                 <div className="w-11 h-11 rounded-clay bg-siegel-wash text-siegel flex items-center justify-center shrink-0">
                   <ClipboardCheck className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="font-bold text-ink">A1.1-Phase: 28 Tage bis zum Abschlusstest</p>
+                  <p className="font-bold text-ink">{PHASE_PLAN[level].title}</p>
                   <p className="text-sm text-graphite">Dein Plan durch alle Themen dieser Stufe, Tag für Tag.</p>
                 </div>
               </div>

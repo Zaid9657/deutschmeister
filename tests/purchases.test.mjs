@@ -17,7 +17,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -32,8 +32,14 @@ import {
   PROGRAM_KEY as A11_PROGRAM_KEY,
   allItemIds as a11AllItemIds,
 } from '../src/data/programs/a11Phase.js';
+import {
+  PROGRAM as A12_PROGRAM,
+  PROGRAM_KEY as A12_PROGRAM_KEY,
+  allItemIds as a12AllItemIds,
+} from '../src/data/programs/a12Phase.js';
 import { getTopicsForLevel } from '../src/data/grammarTopics.js';
 import { LEVEL_COURSES } from '../src/data/pricing.js';
+import { FREE_LEVELS } from '../src/config/freeTier.js';
 import { readinessFromAttempts } from '../src/services/readiness.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -289,4 +295,87 @@ test('the readiness service backs both the result screen and the dashboard exam 
     { status: 'completed', score: 75, max_score: 100, completed_at: '2026-09-03' },
   ]);
   assert.equal(ready.ready, true);
+});
+
+// ---------------------------------------------------------------------------
+// 7. "A1.2-Phase: 28 Tage bis zum Abschlusstest" (a12_phase) — Course Factory
+//    Wave 3 PR D. Same pins as the a11_phase block above, for the SECOND half
+//    of the A1 band — with one difference that matters: a1.2 is NOT a free
+//    level, so LevelSubscriptionGuard(level="a1.2") is a real paid gate
+//    (Pro/trial or the A1 course, via hasLevelAccess), the same one
+//    /level/a1.2 and /start-deutsch-1-kurs already use. Still not
+//    PurchaseGuard, so no webhook/product-key assertions apply here either.
+// ---------------------------------------------------------------------------
+
+// Every internal href a plan item may carry, by route class — an item
+// pointing anywhere else is a dead link on the course page.
+const KNOWN_SPA_ROUTES = [
+  /^\/vocabulary$/, /^\/level\/[ab][12]\.[12]$/, /^\/reading\/[ab][12]\.[12]$/,
+  /^\/listening\/[ab][12]\.[12]\/[1-6]$/, /^\/schreiben\/[a-z0-9-]+$/, /^\/modelltest\/[a-z0-9-]+$/,
+  /^\/start-deutsch-1-kurs$/, /^\/a1-[12]-phase$/,
+];
+const KNOWN_SLASH_ROUTES = [/^\/speaking\/$/, /^\/analyze\/$/]; // prerendered SPA routes (case 2)
+const KNOWN_ASTRO = [/^\/grammar\/[ab][12]\.[12]\/(?:[a-z0-9-]+\/)?$/, /^\/leitfaden\/[a-z0-9-]+\/$/]; // case 1
+
+test('a12_phase program item ids are unique and grammar hrefs resolve to real a1.2 topics', () => {
+  const ids = a12AllItemIds();
+  assert.equal(new Set(ids).size, ids.length, 'duplicate item ids — progress checkboxes would collide');
+
+  const a12Slugs = new Set(getTopicsForLevel('a1.2').map((t) => t.slug));
+  for (const week of A12_PROGRAM.weeks) {
+    for (const day of week.days) {
+      for (const item of day.items) {
+        assert.ok(item.id && item.title && item.href, `item missing fields in ${day.label}`);
+        const m = item.href.match(/^\/grammar\/(a1\.2)\/([a-z0-9-]+)\/$/);
+        if (m) {
+          assert.ok(a12Slugs.has(m[2]), `${item.href} does not match a real a1.2 topic slug`);
+        }
+      }
+    }
+  }
+  assert.equal(A12_PROGRAM.key, A12_PROGRAM_KEY);
+  assert.equal(A12_PROGRAM.weeks.length, 4, 'the plan promises 4 study weeks (28 days)');
+  assert.equal(A12_PROGRAM.weeks.reduce((n, w) => n + w.days.length, 0), 28);
+});
+
+test('every a11_phase and a12_phase href resolves to a known SPA route or Astro page', () => {
+  const appSrc = read('src/App.jsx');
+  const guideSlugs = readdirSync(join(ROOT, 'astro-site/src/data/guides')).map((f) => f.replace(/\.js$/, ''));
+  for (const program of [A11_PROGRAM, A12_PROGRAM]) {
+    for (const week of program.weeks) {
+      for (const day of week.days) {
+        for (const item of day.items) {
+          const h = item.href;
+          const astro = KNOWN_ASTRO.some((re) => re.test(h));
+          const spa = KNOWN_SPA_ROUTES.some((re) => re.test(h));
+          const slashSpa = KNOWN_SLASH_ROUTES.some((re) => re.test(h));
+          assert.ok(astro || spa || slashSpa, `${program.key} ${day.label}: unknown href ${h}`);
+          assert.equal(!!item.external, astro, `${program.key} ${h}: external must be set exactly for Astro-served pages`);
+          const guide = h.match(/^\/leitfaden\/([a-z0-9-]+)\/$/);
+          if (guide) assert.ok(guideSlugs.includes(guide[1]), `${h}: no such guide`);
+          const exact = h.match(/^(\/[a-z0-9-]+)$/);
+          if (exact) assert.ok(appSrc.includes(`path="${exact[1]}"`), `${h}: no exact SPA route in App.jsx`);
+        }
+      }
+    }
+  }
+  // The A1.1 plan hands off to the A1.2 plan, and the A1.2 plan to the 30-day SD1 plan.
+  const lastA11 = A11_PROGRAM.weeks.at(-1).days.at(-1).items.at(-1);
+  const lastA12 = A12_PROGRAM.weeks.at(-1).days.at(-1).items.at(-1);
+  assert.equal(lastA11.href, '/a1-2-phase');
+  assert.equal(lastA12.href, '/start-deutsch-1-kurs');
+});
+
+test('the a12_phase course route exists in both App.jsx and the netlify.toml allow-list, behind the paid a1.2 gate', () => {
+  const appSrc = read('src/App.jsx');
+  assert.ok(appSrc.includes('path="/a1-2-phase"'), 'SPA route missing');
+  assert.ok(/from = "\/a1-2-phase"/.test(read('netlify.toml')),
+    'netlify.toml allow-list entry missing — the route would 404 in production');
+  const routeBlock = appSrc.slice(appSrc.indexOf('path="/a1-2-phase"'), appSrc.indexOf('path="/a1-2-phase"') + 400);
+  assert.match(routeBlock, /<LevelSubscriptionGuard level="a1\.2">\s*<EmailVerificationGate>\s*<A12PhasePage \/>/,
+    'the A1.2 plan must gate on LevelSubscriptionGuard(level="a1.2") — a paid level, unlike a1.1');
+  assert.ok(!FREE_LEVELS.includes('a1.2'), 'a1.2 must stay a paid level for that gate to mean anything');
+  const pageSrc = read('src/pages/A12PhasePage.jsx');
+  assert.match(pageSrc, /programs\/a12Phase/);
+  assert.match(pageSrc, /\/modelltest\/abschlusstest-a1-2/);
 });

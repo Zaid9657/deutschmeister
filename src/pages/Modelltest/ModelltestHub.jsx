@@ -12,6 +12,9 @@ import Tilt from '../../components/ui/Tilt.jsx';
 
 // /modelltest — which practice exams exist. Auth-gated (SubscriptionGuard in
 // App.jsx); noindex like every app screen behind the shell.
+// Each course test's 28-day plan route, by course level (Wave 2/3 PR D).
+const PHASE_PLAN_BY_LEVEL = { 'a1.1': '/a1-1-phase', 'a1.2': '/a1-2-phase' };
+
 const ModelltestHub = () => {
   const tracksWithMocks = EXAM_TRACKS.filter((t) => MOCK_EXAMS[t.key]);
   const tracksComing = EXAM_TRACKS.filter((t) => !MOCK_EXAMS[t.key]);
@@ -72,7 +75,8 @@ const ModelltestHub = () => {
         {/* Kurstests — our own end-of-course checkpoints (src/data/courseTests),
             not another exam track. The A1.1 Abschlusstest is open to every
             logged-in user (a1.1 is a free level; see ExamSubscriptionGuard's
-            header) — the same disclaimer applies here as above. */}
+            header); the A1.2 one gates on A1.2 access like its level — the
+            same disclaimer applies here as above. */}
         {COURSE_TESTS.length > 0 && (
           <div className="mt-10">
             <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite mb-3">
@@ -102,9 +106,9 @@ const ModelltestHub = () => {
                         </span>
                       </Card>
                     </Tilt>
-                    {ct.level === 'a1.1' && (
+                    {PHASE_PLAN_BY_LEVEL[ct.level] && (
                       <Link
-                        to="/a1-1-phase"
+                        to={PHASE_PLAN_BY_LEVEL[ct.level]}
                         className="mt-2 inline-flex items-center gap-1 text-sm font-bold text-siegel transition-colors hover:text-siegel-deep"
                       >
                         Zum 28-Tage-Plan <ArrowRight className="w-3.5 h-3.5" />

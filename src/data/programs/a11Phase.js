@@ -337,6 +337,21 @@ const modelltest = (id, title, minutes) => ({
   href: '/modelltest/abschlusstest-a1-1',
 });
 
+// Hand-off to the next course, Tag 28 only — a real, clickable exit rather
+// than only plain-text prose (the Woche-4 `intro` renders inside a bare
+// `<p>` and cannot itself carry an href). Points at the A1.2-Phase plan
+// (/a1-2-phase, A12PhasePage.jsx via App.jsx + the netlify.toml allow-list —
+// an exact-match SPA route, no trailing slash, case 3, so `external` is
+// correctly omitted), not straight at the 30-day Start-Deutsch-1 plan: that
+// one starts where A1.2 ends (see a12Phase.js's own `nextCourse`).
+const nextCourse = (id, minutes = 5) => ({
+  id,
+  type: 'exam',
+  title: 'Weiter mit A1.2: die zweite Phase bis zum Abschlusstest A1.2',
+  minutes,
+  href: '/a1-2-phase',
+});
+
 // -----------------------------------------------------------------------
 // The plan
 // -----------------------------------------------------------------------
@@ -483,7 +498,7 @@ const WEEKS = [
       'tatsächlich stellt (Anzeigen, Schilder), die Hörübungen 4–6 noch einmal mit Zahlen und Uhrzeiten, zwei ' +
       'deiner Sprechmissionen noch einmal, deine dritte Schreibaufgabe, ein Probe-Abschlusstest und zuletzt der ' +
       'gewertete Abschlusstest A1.1. Fertig, wenn der Abschlusstest absolviert ist. Dein Ergebnis zeigt dir, ' +
-      'welche Themen du vor A1.2 noch einmal ansehen solltest.',
+      'welche Themen du vor A1.2 noch einmal ansehen solltest. Weiter geht es mit der A1.2-Phase.',
     days: [
       {
         label: 'Tag 22',
@@ -514,6 +529,7 @@ const WEEKS = [
         items: [
           xray('d28-xray', 20, 'X-Ray: letztes Aufwärmen vor der Prüfung'),
           modelltest('d28-abschlusstest', 'Abschlusstest A1.1 (gewertet, halbe Länge, Start-Deutsch-1-Format)', 50),
+          nextCourse('d28-next'),
         ],
       },
     ],
@@ -525,7 +541,8 @@ const WEEKS = [
 // number it derives — read PROGRAM_MINUTES itself for the current, always-
 // accurate figure rather than trusting a number retyped into this comment.
 // Last checked 2026-09-05 against the real, complete grammarTopics.js (all
-// 12 a1.1 slugs live): 1795 minutes = 29.92 h → rounds to "ca. 30 Stunden",
+// 12 a1.1 slugs live): 1795 minutes = 29.92 h, plus the 5-minute Tag-28
+// hand-off item added in Wave 3 PR D = 1800 → rounds to "ca. 30 Stunden",
 // inside the 28–32 h band and the 30–40 h A1.1 budget the A1-guide's
 // 60–80-h-to-A1 total implies. Every day is 55–75 min except the two
 // Puffertage (Tag 14: 35 min, Tag 27: 40 min) — see a11Phase.notes.md for the

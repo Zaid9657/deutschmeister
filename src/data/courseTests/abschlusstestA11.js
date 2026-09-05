@@ -71,6 +71,12 @@ export const abschlusstestA11 = {
           label: 'Hörtext · Am Bahnhof',
           level: 'A1.1',
           exerciseNumber: 3,
+          // Written when the exercise had 10 questions; since Wave 2 PR C it
+          // carries 23 (+13 incl. dictation). The runner keeps only
+          // question_number <= questionMax (src/data/courseTests/
+          // listeningQuestions.js), so the 10 : 8 Hören/Lesen weighting the
+          // header argues for stays true.
+          questionMax: 10,
         },
       ],
     },

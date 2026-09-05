@@ -58,11 +58,35 @@ const SECTION_HINTS = {
 // a course test's next step is the next course level, an exam track's is
 // the real exam — but both say "Richtwert" exactly once, matching the
 // runner's own disclaimer discipline; this is a trend line, never a promise.
+//
+// What comes after a course test is keyed by its level (resolved.gateLevel):
+// after A1.1 the A1.2-Phase plan; after A1.2 the full Start-Deutsch-1-format
+// mock and the 30-day plan in front of the real exam. A course level without
+// an entry falls back to its level hub, never to a dead button.
+const COURSE_NEXT = {
+  'a1.1': {
+    body: 'Nächster Schritt: A1.2 — die zweite Hälfte bis Start Deutsch 1.',
+    primary: { to: '/a1-2-phase', label: 'Weiter mit A1.2' },
+    secondary: { to: '/level/a1.2', label: 'Zur Stufe A1.2' },
+  },
+  'a1.2': {
+    body: 'Nächster Schritt: die vollständige Übungsprüfung im Start-Deutsch-1-Format und die 30-Tage-Prüfungsphase.',
+    primary: { to: '/modelltest/start-deutsch-1', label: 'Zur Übungsprüfung Start Deutsch 1' },
+    secondary: { to: '/start-deutsch-1-kurs', label: 'Zum 30-Tage-Plan' },
+  },
+};
+const courseNext = (resolved) =>
+  COURSE_NEXT[resolved.gateLevel] || {
+    body: 'Nächster Schritt: die nächste Stufe.',
+    primary: { to: `/level/${resolved.gateLevel}`, label: 'Zur Stufe' },
+    secondary: null,
+  };
+
 const readyBody = (resolved, lastTwo) => {
   const [recent, prior] = lastTwo; // lastTwo[0] is most recent
   const pctLine = `${prior.pct} % und ${recent.pct} %`;
   if (resolved.kind === 'course') {
-    return `Deine letzten zwei Abschlusstests liegen bei ${pctLine}. Nächster Schritt: A1.2 — die zweite Hälfte bis Start Deutsch 1. (Richtwert, keine offizielle Bewertung.)`;
+    return `Deine letzten zwei Abschlusstests liegen bei ${pctLine}. ${courseNext(resolved).body} (Richtwert, keine offizielle Bewertung.)`;
   }
   return `Deine letzten zwei Übungstests liegen bei ${pctLine}. Melde dich zur Prüfung an und übe mit einem offiziellen Modellsatz. (Richtwert, keine offizielle Bewertung.)`;
 };
@@ -208,8 +232,10 @@ const ModelltestResult = () => {
                 <div className="mt-5 flex flex-col sm:flex-row gap-3 justify-center">
                   {resolved.kind === 'course' ? (
                     <>
-                      <Button variant="celebrate" to="/level/a1.2">Weiter zu A1.2</Button>
-                      <Button variant="secondary" to="/start-deutsch-1-kurs">Zum 30-Tage-Plan</Button>
+                      <Button variant="celebrate" to={courseNext(resolved).primary.to}>{courseNext(resolved).primary.label}</Button>
+                      {courseNext(resolved).secondary && (
+                        <Button variant="secondary" to={courseNext(resolved).secondary.to}>{courseNext(resolved).secondary.label}</Button>
+                      )}
                     </>
                   ) : (
                     <Button variant="celebrate" href={`/pruefung/${resolved.slug}/`}>Zur Prüfung anmelden</Button>
