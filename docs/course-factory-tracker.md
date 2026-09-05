@@ -47,8 +47,8 @@ with typed production, its Wortliste share in the SRS, exam-format reading, list
 number dictation, a dated 28-day plan, and an Abschlusstest that ends in a readiness verdict.
 
 Not done this wave (carried): typed-production upgrades for the eight pre-existing A1.1
-grammar topics (only the four new ones ship ≥16 typed items); audio for the new grammar
-examples, vocabulary and dictation prompts (`audio_url` is null on every new example row).
+grammar topics (only the four new ones ship ≥16 typed items) — closed by Wave 3 PR A2 (#75);
+audio for the new grammar examples and words — closed 2026-09-05 (see owner asks).
 
 ## Wave 3 — A1.2 as a complete course (started 2026-09-05)
 
@@ -80,9 +80,7 @@ A1.1 plan and result screen now hand off to A1.2. Bug fixed on the way: course-t
 parts declare `questionMax` so they stay at 10 items after Wave 2/3 grew every exercise to
 23 questions (the A1.1 test was silently presenting 23).
 
-Not done this wave (carried): audio for the new A1.2 grammar examples, vocabulary and
-dictation prompts (`audio_url` is null on every new example row; dictation reuses the
-existing A1.2 audio); the older 16 topics keep their global exercise `order_index` while
+Not done this wave (carried): the older 16 topics keep their global exercise `order_index` while
 the eight Wave 2/3 topics number per stage (the validator accepts both, nothing renders
 differently); a full re-cut of the 30-day SD1 plan (only its week-2 intro was re-worded —
 it still walks a12[0..7], not the four new A1.2 topics).
@@ -101,15 +99,12 @@ A1 one-and-done rate and whether any A1 course sold.
 
 ## Open questions / owner asks
 
-- Audio (vocab, grammar examples, SD1 Hören): needs the owner's Azure-Speech-key run (decision 2026-09-05, was OpenAI) of
-  `scripts/generate-example-audio.mjs` — requested, not blocking; Hören ships with
-  transcript-mode fallback until audio lands.
-- Wave 2 added 40 grammar examples (four new A1.1 topics) and 114 words with no audio;
-  the number-dictation items reuse the existing A1.1 listening audio, so they are not
-  affected. Same owner run covers it.
-- Wave 3 added 40 grammar examples (four new A1.2 topics), 4 numbers-counting examples and
-  166 words with no audio; the A1.2 dictation items reuse the existing A1.2 listening audio.
-  Same owner run (`scripts/generate-example-audio.mjs`) covers it.
+- Audio: **DONE 2026-09-05.** The owner ran `scripts/generate-example-audio.mjs` (Azure Neural
+  TTS, de-DE-KatjaNeural, #79/#80) — every grammar example (757/757) and every word
+  (2215/2215) now has an `audio_url`; verified by SELECT and by counting the MP3 objects in
+  the `audio` bucket (757 under `examples/`, 2215 under `words/`, smallest 16 KB). SD1 Hören
+  and the dictation items reuse the existing listening audio. Any future content row
+  starts with `audio_url` null and the same resumable run fills it.
 - The Abschlusstest is free by decision (see log); if A1.1 is ever sold, the gate is one
   line in `src/data/courseTests/abschlusstestA11.js` (`gateLevel`).
 
