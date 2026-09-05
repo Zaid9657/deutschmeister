@@ -259,6 +259,13 @@
   from = "/telc-b1-kurs"
   to = "/app.html"
   status = 200
+# Same posture: the A1 band's 30-day plan, gated on LevelSubscriptionGuard
+# (Pro/trial or the A1 course) rather than PurchaseGuard, but still paid
+# content behind a login — not prerendered, not in the sitemap.
+[[redirects]]
+  from = "/start-deutsch-1-kurs"
+  to = "/app.html"
+  status = 200
 # Mock exams (subscription-gated practice tests). Same posture as the course
 # area: not prerendered, not in the sitemap; the wildcard is safe here because
 # there is no static /modelltest directory for it to shadow, and unknown slugs

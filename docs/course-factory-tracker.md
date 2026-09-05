@@ -12,8 +12,8 @@ Sequence (research doc §5, steps 1–5; owner approved by invoking the factory 
 |---|---|---|---|
 | 1 | Fix wrong/contradictory A1 grammar (stem changes, es-pronoun garble, job-article contradiction, out-of-level exercise items) | merged (PR #63, DB migrated 2026-09-05) | #63 |
 | 2 | A1 writing strand: 6 Formular + 6 Mitteilung on the AI-writing runner, Goethe criteria in rubric | merged (PR #64, constraints migrated) | #64 |
-| 3 | Start Deutsch 1 mock on the mock runner + the 3 official free sets linked | in review | — |
-| 4 | "30 Tage bis Start Deutsch 1" plan on the telc-B1-plan rails | pending | — |
+| 3 | Start Deutsch 1 mock on the mock runner + the 3 official free sets linked | merged (PR #65) | #65 |
+| 4 | "30 Tage bis Start Deutsch 1" plan on the telc-B1-plan rails | in review | — |
 | 5 | Sprechen Teil 1–3 missions (full self-intro, word cards, Bitten) | pending | — |
 
 ## Measured baseline (do not re-derive)

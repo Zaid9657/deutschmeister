@@ -52,6 +52,7 @@ const UeberUnsPage = lazy(() => import('./pages/UeberUnsPage'));
 const VerifyEmailPage = lazy(() => import('./pages/VerifyEmailPage'));
 const IntroSlides = lazy(() => import('./components/onboarding/IntroSlides'));
 const TelcB1KursPage = lazy(() => import('./pages/TelcB1KursPage'));
+const StartDeutsch1KursPage = lazy(() => import('./pages/StartDeutsch1KursPage'));
 const ModelltestHub = lazy(() => import('./pages/Modelltest/ModelltestHub'));
 const ModelltestOverview = lazy(() => import('./pages/Modelltest/ModelltestOverview'));
 const ModelltestRun = lazy(() => import('./pages/Modelltest/ModelltestRun'));
@@ -163,6 +164,21 @@ function App() {
                             <TelcB1KursPage />
                           </EmailVerificationGate>
                         </PurchaseGuard>
+                      }
+                    />
+                    {/* Same course-area posture, but the A1 band has no
+                        standalone one-time product — the plan is included
+                        with Pro/trial or the A1 course, so this gates on
+                        LevelSubscriptionGuard's band-top-sublevel access
+                        (a1.2), not PurchaseGuard. */}
+                    <Route
+                      path="/start-deutsch-1-kurs"
+                      element={
+                        <LevelSubscriptionGuard level="a1.2">
+                          <EmailVerificationGate>
+                            <StartDeutsch1KursPage />
+                          </EmailVerificationGate>
+                        </LevelSubscriptionGuard>
                       }
                     />
                     <Route

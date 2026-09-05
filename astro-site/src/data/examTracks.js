@@ -24,10 +24,10 @@ export const EXAM_TRACKS = [
     level: 'A1',
     sublevels: ['a1.1', 'a1.2'],
     guideSlug: 'start-deutsch-1',
-    // No dedicated landing page yet (course_a1 in src/data/pricing.js has no
-    // page of its own, unlike telc_b1_komplett) — null, same as every other
-    // non-telc-b1 track.
-    courseHref: null,
+    // The 30-day plan course area (SPA route, not an Astro landing page like
+    // telc_b1_komplett's — no trailing slash; the hub's <a> is a plain full
+    // page load either way, so the SPA form resolves fine).
+    courseHref: '/start-deutsch-1-kurs',
     hasMock: true,
     hasWriting: true,
   },

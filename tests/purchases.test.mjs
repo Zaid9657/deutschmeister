@@ -22,6 +22,11 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 import { PROGRAM, PROGRAM_KEY, allItemIds } from '../src/data/programs/telcB1Komplett.js';
+import {
+  PROGRAM as SD1_PROGRAM,
+  PROGRAM_KEY as SD1_PROGRAM_KEY,
+  allItemIds as sd1AllItemIds,
+} from '../src/data/programs/startDeutsch1.js';
 import { getTopicsForLevel } from '../src/data/grammarTopics.js';
 import { LEVEL_COURSES } from '../src/data/pricing.js';
 
@@ -189,4 +194,44 @@ test('the course route exists in both App.jsx and the netlify.toml allow-list', 
   assert.ok(read('src/App.jsx').includes('path="/telc-b1-kurs"'), 'SPA route missing');
   assert.ok(/from = "\/telc-b1-kurs"/.test(read('netlify.toml')),
     'netlify.toml allow-list entry missing — the route would 404 in production');
+});
+
+// ---------------------------------------------------------------------------
+// 5. "Start Deutsch 1: die 30-Tage-Prüfungsphase" (sd1_30_tage) — same
+//    program-integrity and route-rule pins as telc_b1_komplett above, for the
+//    A1-band plan. Gated on LevelSubscriptionGuard (Pro/trial or the A1
+//    course), not PurchaseGuard, so no webhook/product-key assertions apply.
+// ---------------------------------------------------------------------------
+
+test('sd1_30_tage program item ids are unique and grammar hrefs resolve to real topics', () => {
+  const ids = sd1AllItemIds();
+  assert.equal(new Set(ids).size, ids.length, 'duplicate item ids — progress checkboxes would collide');
+
+  const slugs = {
+    'a1.1': new Set(getTopicsForLevel('a1.1').map((t) => t.slug)),
+    'a1.2': new Set(getTopicsForLevel('a1.2').map((t) => t.slug)),
+  };
+  for (const week of SD1_PROGRAM.weeks) {
+    for (const day of week.days) {
+      for (const item of day.items) {
+        assert.ok(item.id && item.title && item.href, `item missing fields in ${day.label}`);
+        // Per-topic lesson links only (`/grammar/<level>/<slug>/`) — the hub
+        // link a review item uses (`/grammar/a1.2/`) is not a topic href.
+        const m = item.href.match(/^\/grammar\/(a1\.[12])\/([a-z0-9-]+)\/$/);
+        if (m) {
+          assert.ok(slugs[m[1]].has(m[2]), `${item.href} does not match a real ${m[1]} topic slug`);
+        }
+      }
+    }
+  }
+  assert.equal(SD1_PROGRAM.key, SD1_PROGRAM_KEY);
+  assert.equal(SD1_PROGRAM.weeks.length, 5, 'the plan promises 4 study weeks + a buffer week (30 days)');
+});
+
+test('the sd1_30_tage course route exists in both App.jsx and the netlify.toml allow-list', () => {
+  assert.ok(read('src/App.jsx').includes('path="/start-deutsch-1-kurs"'), 'SPA route missing');
+  assert.ok(/from = "\/start-deutsch-1-kurs"/.test(read('netlify.toml')),
+    'netlify.toml allow-list entry missing — the route would 404 in production');
+  assert.ok(read('src/App.jsx').includes('<LevelSubscriptionGuard level="a1.2">'),
+    'the A1 plan must gate on LevelSubscriptionGuard (Pro/trial or the A1 course), not PurchaseGuard');
 });
