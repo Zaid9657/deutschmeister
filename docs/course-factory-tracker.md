@@ -32,12 +32,31 @@ Prompt v2 re-scoped Wave 2 from "A1 complete" to **A1.1 as a complete, standalon
 | A | Four new A1.1 grammar topics (Possessivartikel, trennbare Verben, Ja/Nein-Fragen, Uhrzeit/Datum), 26 exercises each, ≥16 typed; `topic_order` CHECK widened to 12; counts re-derived | merged, DB migrated 2026-09-05 (12 A1.1 topics live) | #68 |
 | B | A1.1 share of the Wortliste (+114 words: Länder/Sprachen, Beruf, Formular, Getränke, Uhrzeit/Termine, formal Sie) + 51 fixes to live rows ("null" plurals, article-in-word, above-level examples) | merged, DB migrated 2026-09-05 (339 A1.1 words live) | #69 |
 | C | 8 A1.1 reading texts rewritten to ≤110 words with auto-checkable richtig/falsch items; 2 exam-format lessons (Anzeigen Teil 2, Schilder Teil 3); +60 listening questions + 18 number/time dictation items on the existing audio | merged, DB migrated 2026-09-05 (10 A1.1 reading lessons with checks; 6×23 listening questions) | #70 |
-| D | Abschlusstest A1.1 (SD1 format, half length) on the mock runner via a course-test registry; 28-day A1.1 plan page; "Du bist bereit" readiness screen | PR open | — |
+| D | Abschlusstest A1.1 (SD1 format, half length) on the mock runner via a course-test registry; 28-day A1.1 plan page (`/a1-1-phase`); "Du bist bereit" readiness screen on the dashboard and the hub | merged, DB migrated 2026-09-05 (`exam_attempts` CHECK admits `a1_1_abschluss`) | #71 |
 
 Every content piece passes an independent adversarial review (Opus) plus a delta re-review
 of the fixes before integration; the A1.1 typed items are generated from JSON by
 `scripts/grammar-topics-from-json.mjs` (deterministic UUID v5 ids, migration + cache patch
 from one source).
+
+**Wave 2 status: COMPLETE (2026-09-05).** All four steps merged and live, every migration
+applied by hand and verified by SELECT (12 A1.1 topics byte-identical to the cache; 339
+A1.1 words; 10 A1.1 reading lessons with checks; 6×13 new listening rows incl. 18 dictation;
+the widened `exam_attempts` CHECK). A1.1 is now a standalone course: 12 grammar topics
+with typed production, its Wortliste share in the SRS, exam-format reading, listening with
+number dictation, a dated 28-day plan, and an Abschlusstest that ends in a readiness verdict.
+
+Not done this wave (carried): typed-production upgrades for the eight pre-existing A1.1
+grammar topics (only the four new ones ship ≥16 typed items); audio for the new grammar
+examples, vocabulary and dictation prompts (`audio_url` is null on every new example row).
+
+## Wave 3 — A1.2 as a complete course (next)
+
+Same shape as Wave 2, for A1.2: Imperativ (missing), the A1.2 share of the Wortliste plus
+the article-in-word / "null"-plural fixes on the live A1.2 rows, the `numbers-counting`
+upgrade (100–1000, prices, ordinals in general), A1.2 reading/listening depth, typed
+production for the eight old A1.1 topics, and a re-cut of the 30-day SD1 plan so it starts
+where the 28-day A1.1 plan ends. Gate: Monday's weekly-truth one-and-done rate for A1.1.
 
 ## Measured baseline (do not re-derive)
 
@@ -52,6 +71,11 @@ from one source).
 - Audio (vocab, grammar examples, SD1 Hören): needs the owner's OpenAI-key run of
   `scripts/generate-example-audio.mjs` — requested, not blocking; Hören ships with
   transcript-mode fallback until audio lands.
+- Wave 2 added 40 grammar examples (four new A1.1 topics) and 114 words with no audio;
+  the number-dictation items reuse the existing A1.1 listening audio, so they are not
+  affected. Same owner run covers it.
+- The Abschlusstest is free by decision (see log); if A1.1 is ever sold, the gate is one
+  line in `src/data/courseTests/abschlusstestA11.js` (`gateLevel`).
 
 ## Decisions log
 
