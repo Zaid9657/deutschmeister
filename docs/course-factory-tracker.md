@@ -143,8 +143,8 @@ table), not the "Teil 4 ja/nein" the start prompt guessed.
 |---|---|---|---|
 | A | Four new A2.2 grammar topics (konjunktiv-ii-polite, verbs-with-prepositions-intro, indirect-questions-intro, infinitive-with-zu-intro) at topic_order 9–12, 26 exercises each, 20–22 typed; `level-a2.2.md` committed | merged, DB migrated 2026-09-06 (12 A2.2 topics live; 36 rules / 40 examples / 104 exercises verified byte-identical to the cache; totals 80/603/849/1350 = cache = `marketing.js`) | #93 |
 | A2 | Typed production for the 8 live A2.2 topics (10 typed each, 80 exercises) + depth patch (+3 rules, +4 examples) for reflexive-verbs, simple-past-sein-haben, coordinating-conjunctions, comparative, superlative, future-tense | merged, DB migrated 2026-09-06 (80 exercises / 18 rules / 24 examples verified byte-identical to the cache; every A2.2 topic ≥10 typed and ≥8 rules; live totals 80/621/873/1430 = cache = `marketing.js`) | #94 |
-| B | A2.2 share of the Wortliste (171 words, 8 new categories) + 271 guarded fixes on 177 live A2.2 rows (152 article-in-headword, 60 article-in-plural, 15 "null" plurals + 1, 44 sentences rewritten inside the level) | in review (#95): gates green, live apply after merge | #95 |
-| C | 8 A2.2 reading texts rewritten to ≤150 words with 5 rf + 1 a/b/c; 2 exam-format lessons (Lesen Teil 2 Informationstafel a/b/c, Teil 4 Anzeigen-Zuordnung); +78 listening questions incl. 18 dictation | planned | — |
+| B | A2.2 share of the Wortliste (171 words, 8 new categories) + 271 guarded fixes on 177 live A2.2 rows (152 article-in-headword, 60 article-in-plural, 15 "null" plurals + 1, 44 sentences rewritten inside the level) | merged, DB migrated 2026-09-06 (418 A2.2 words, 0 defects of any class at a2.2, 2561 total; the 171 new rows await the owner's Azure audio run) | #95 |
+| C | 8 A2.2 reading texts rewritten to ≤150 words with 5 rf + 1 a/b/c; 2 exam-format lessons (Lesen Teil 2 Informationstafel a/b/c, Teil 4 Anzeigen-Zuordnung a–f + x); +78 listening questions incl. 18 dictation | in progress (draft) | #96 |
 | D1 | Goethe A2 Kurzversion mock (`MOCK_EXAMS.goethe_a2`, all four Lesen Teile, Teil 4 as `matching`, two Hören parts with `questionMax`, SMS + E-Mail), `hasMock: true` in both twins | planned | — |
 | D2 | Abschlusstest A2.2 (`a2_2_abschluss`, Goethe A2 format, Kurzversion) + 28-day plan `/a2-2-phase` + hand-offs (A2.1 → `/a2-2-phase`, A2.2 → `/modelltest/goethe-a2`) + `exam_attempts` CHECK with ten keys | planned | — |
 | E | Goethe-A2 30-day exam plan (mirror of `/start-deutsch-1-kurs`) — only if the wave's budget remains | optional | — |
@@ -181,7 +181,9 @@ table), not the "Teil 4 ja/nein" the start prompt guessed.
   a2.2/b1.x/b2.x still carry the article baked into the headword or the literal string
   `"null"` as a plural (the same two defect classes fixed at a1.1/a1.2/a2.1 in Waves 2–4). Each
   later wave's PR B fixes its own level; nothing user-facing changes until then except the
-  `"der der Bahnhof"` display bug on those decks.
+  `"der der Bahnhof"` display bug on those decks. Wave 5 PR B (#95) closed a2.2 (227 rows + 1 own find);
+  measured 2026-09-06 after it: 536 rows at b1.x/b2.x still carry an article in the headword or plural or
+  the literal "null" plural.
 
 ## Decisions log
 
