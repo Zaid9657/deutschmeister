@@ -128,6 +128,27 @@ exercise 1 q9 wording, speaker labels, the "Letzer Aufruf" typo in a transcript)
 the `Perfekt mit "haben"` / `"sein"` `titleDe` values; audio for the 175 new A2.1 words and 52 new
 examples (owner's Azure run, see owner asks).
 
+## Wave 5 — A2.2 as a complete course + the Goethe A2 mock (started 2026-09-06)
+
+Same shape as Wave 4, for A2.2 (the second half of the €49 A2 course), plus the band's mock. Start
+prompt: `docs/course-factory/wave5-prompt.md` (#92); worker briefs and the binding A2.2 level
+constraint: `docs/course-factory/wave5/`. Recon (2026-09-06, read-only) confirmed the measured
+baseline exactly (8 A2.2 topics with 0 typed exercises; 247 words with 227 defect rows; 8 reading
+lessons with 0 checks at 288–350 words; 0 dictation) and two facts the plan rests on: the mock runner
+already renders Zuordnung (`matching`), so the Goethe A2 mock needs no new renderer; and the
+Goethe-A2 Erwachsene Lesen formats are Teil 1–3 a/b/c and **Teil 4 Zuordnen** (Modellsatz overview
+table), not the "Teil 4 ja/nein" the start prompt guessed.
+
+| # | Step | Status | PR |
+|---|---|---|---|
+| A | Four new A2.2 grammar topics (konjunktiv-ii-polite, verbs-with-prepositions-intro, indirect-questions-intro, infinitive-with-zu-intro) at topic_order 9–12, 26 exercises each, ≥16 typed; `level-a2.2.md` committed | in progress | — |
+| A2 | Typed production for the 8 live A2.2 topics (≥10 typed each) + depth patch for the 5–6-rule topics | planned | — |
+| B | A2.2 share of the Wortliste (~170 words, ~8 categories) + guarded fixes for the 227 defect rows (152/60/15) | planned | — |
+| C | 8 A2.2 reading texts rewritten to ≤150 words with 5 rf + 1 a/b/c; 2 exam-format lessons (Lesen Teil 2 Informationstafel a/b/c, Teil 4 Anzeigen-Zuordnung); +78 listening questions incl. 18 dictation | planned | — |
+| D1 | Goethe A2 Kurzversion mock (`MOCK_EXAMS.goethe_a2`, all four Lesen Teile, Teil 4 as `matching`, two Hören parts with `questionMax`, SMS + E-Mail), `hasMock: true` in both twins | planned | — |
+| D2 | Abschlusstest A2.2 (`a2_2_abschluss`, Goethe A2 format, Kurzversion) + 28-day plan `/a2-2-phase` + hand-offs (A2.1 → `/a2-2-phase`, A2.2 → `/modelltest/goethe-a2`) + `exam_attempts` CHECK with ten keys | planned | — |
+| E | Goethe-A2 30-day exam plan (mirror of `/start-deutsch-1-kurs`) — only if the wave's budget remains | optional | — |
+
 ## Measured baseline (do not re-derive)
 
 - `weekly_metrics` is **empty** as of 2026-09-04 — the Monday 06:00 UTC job has not
@@ -163,6 +184,31 @@ examples (owner's Azure run, see owner asks).
   `"der der Bahnhof"` display bug on those decks.
 
 ## Decisions log
+
+- 2026-09-06 (Wave 5, recon): the four new A2.2 topics are `konjunktiv-ii-polite` (würde/könnte/hätte/wäre
+  as fixed polite forms — Sprechen Teil 3 planning, Schreiben Teil 2), `verbs-with-prepositions-intro`
+  (fixed prepositions + case, wo(r)-/da(r)- forms — the cleanest gap: nothing below B1.2 teaches it),
+  `indirect-questions-intro` (ob + W-Wort with the request frames — the `ob` half is reinforced from
+  subordinating-conjunctions, the W-word half is new below B1.2) and `infinitive-with-zu-intro`
+  (Lust/Zeit haben … zu, es ist wichtig … zu, separable verbs — SMS invitations and Absagen). Each is the
+  A2 slice of a fuller B1 topic (konjunktiv-ii-wurde/-ware-hatte, verbs-with-prepositions,
+  indirect-questions, infinitive-with-zu), the `adjective-endings-intro` precedent from Wave 4; slugs
+  are globally UNIQUE so the `-intro`/`-polite` suffixes are required. Not chosen: Passiv Präsens (B1
+  productive; receptive only at A2 → reading-exposure rule), Genitiv bei Namen + von (one rule, not a
+  topic — it lives in the level file's frozen chunks), Nullartikel adjective endings (A2.1's declared
+  exclusion, B1.2 owns it). Order 9→12 = morphologically simplest first, then the three syntax topics
+  in rising complexity; appended at topic_order 9–12 as in Waves 2–4.
+- 2026-09-06 (Wave 5, recon): Goethe-A2 Lesen formats per the Modellsatz Erwachsene overview table
+  (Teil 1 Medientext a/b/c ×5, Teil 2 Informationstafeln/Programme a/b/c ×5, Teil 3 Korrespondenz
+  a/b/c ×5, Teil 4 Anzeigen Zuordnen ×5; Hören Teil 2 Zuordnen Bild/Text, Teil 4 richtig/falsch). The
+  mock covers all four Lesen Teile; the Abschlusstest A2.2 takes Teil 2 + Teil 4 so the two A2 course
+  tests together rehearse all four. In `reading_lessons.checks` (rf/choice only) the Teil-4 lesson
+  renders Zuordnung as choice items over the Anzeige letters; the real `matching` part lives in the
+  mock and the Abschlusstest. Mock and Abschlusstest use distinct A2.2 listening exercises.
+- 2026-09-06 (Wave 5, level constraint): A2.2 allows all A1 + all twelve A2.1 + the eight live A2.2
+  topics productively (the A2.1 reflexive ban is lifted), the sentence cap is 16 words, and B1 forms
+  (relative clause, Passiv Präsens, Präteritum of a full verb) may appear receptively at most twice per
+  text in total, never as a check target — `docs/course-factory/wave5/level-a2.2.md`.
 
 - 2026-09-06 (Wave 4, PR D2): the Abschlusstest A2.1 result screen and the plan's Tag 28 hand off to
   `/level/a2.2` — no A2.2 plan exists, and inventing `/a2-2-phase` would ship a link to a 404. The

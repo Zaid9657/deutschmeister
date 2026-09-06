@@ -58,6 +58,10 @@ export const RELATED_TOPICS = {
   'comparative': ['superlative', 'participial-adjectives', 'adjective-declension-strong', 'numbers-counting'],
   'superlative': ['comparative', 'adjective-declension-strong', 'participial-adjectives', 'adjective-declension-weak-mixed'],
   'future-tense': ['future-perfect', 'perfect-tense-haben', 'konjunktiv-ii-wurde', 'present-tense-regular'],
+  'konjunktiv-ii-polite': ['modal-verbs-past', 'simple-past-sein-haben', 'konjunktiv-ii-wurde', 'konjunktiv-ii-ware-hatte', 'modal-verbs-intro'],
+  'verbs-with-prepositions-intro': ['reflexive-verbs', 'two-way-prepositions', 'prepositions-dative', 'pronouns-accusative-dative', 'verbs-with-prepositions'],
+  'indirect-questions-intro': ['subordinating-conjunctions', 'subordinate-word-order', 'question-words', 'yes-no-questions', 'indirect-questions'],
+  'infinitive-with-zu-intro': ['subordinate-word-order', 'separable-verbs', 'modal-verbs-intro', 'infinitive-with-zu', 'um-zu-ohne-zu'],
 
   // ---- B1.1 ----
   'genitive-case': ['dative-case', 'accusative-intro', 'nominative-case', 'genitive-prepositions', 'n-declension'],
