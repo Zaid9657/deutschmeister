@@ -147,9 +147,10 @@ examples (owner's Azure run, see owner asks).
 - The Abschlusstest is free by decision (see log); if A1.1 is ever sold, the gate is one
   line in `src/data/courseTests/abschlusstestA11.js` (`gateLevel`).
 
-- **Wave 4 owner asks (2026-09-06).** (1) Run `node scripts/generate-example-audio.mjs --table words`
-  (the 175 new A2.1 words have `audio_url` null) and `--table examples` (the 52 new A2.1 examples from
-  PRs A/A2). (2) Rotate the Azure Speech key that was pasted through chat earlier in the wave.
+- **Wave 4 owner asks (2026-09-06).** (1) Audio — **DONE 2026-09-06.** The owner ran
+  `scripts/generate-example-audio.mjs --table words` (175 generated, 0 failed) and `--table examples`
+  (52 generated, 0 failed); verified by SELECT: 2390/2390 words and 809/809 examples carry a bucket
+  `audio_url`. (2) Rotate the Azure Speech key that was pasted through chat earlier in the wave.
   (3) `curl -I` the five goethe.de URLs in `astro-site/src/data/guides/goethe-a2.js` `sources[]` from an
   unrestricted network — the sandbox could not open any of them; `sources[4]`
   (`…/ins/de/de/prf/prf/gzsd2/wi2.html`) has the `…/ins/de/de/m/prf/prf/gzsd2/wi2.html` fallback if it
