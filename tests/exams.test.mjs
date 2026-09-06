@@ -328,7 +328,19 @@ test('every course test is well-formed, distinct from EXAM_TRACKS, and shape-val
     const perfect = {};
     for (const section of mock.sections) {
       for (const part of section.parts) {
-        if (part.type === 'mc-group') {
+        if (part.type === 'matching') {
+          // Same branch as the MOCK_EXAMS loop above (Wave 5 PR D2: the
+          // Abschlusstest A2.2 rehearses Lesen Teil 4 as Zuordnung) — the
+          // perfect sheet needs the `${part.key}:${text.id}` entries, or the
+          // scorer counts the texts into maxScore and the 100 % check fails.
+          const optionKeys = new Set(part.options.map((o) => o.key));
+          for (const t of part.texts) {
+            const ans = part.answers[t.id];
+            assert.ok(optionKeys.has(ans), `${part.key}: answer for ${t.id} is not an option`);
+            perfect[`${part.key}:${t.id}`] = ans;
+          }
+          assert.ok(part.options.length > part.texts.length, `${part.key}: no distractor headings`);
+        } else if (part.type === 'mc-group') {
           for (const item of part.items) {
             assert.ok(item.options.some((o) => o.key === item.answer), `${item.id}: answer not among options`);
             perfect[item.id] = item.answer;

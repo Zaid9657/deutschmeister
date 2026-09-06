@@ -13,7 +13,7 @@ import Tilt from '../../components/ui/Tilt.jsx';
 // /modelltest — which practice exams exist. Auth-gated (SubscriptionGuard in
 // App.jsx); noindex like every app screen behind the shell.
 // Each course test's 28-day plan route, by course level (Wave 2/3 PR D).
-const PHASE_PLAN_BY_LEVEL = { 'a1.1': '/a1-1-phase', 'a1.2': '/a1-2-phase', 'a2.1': '/a2-1-phase' };
+const PHASE_PLAN_BY_LEVEL = { 'a1.1': '/a1-1-phase', 'a1.2': '/a1-2-phase', 'a2.1': '/a2-1-phase', 'a2.2': '/a2-2-phase' };
 
 const ModelltestHub = () => {
   const tracksWithMocks = EXAM_TRACKS.filter((t) => MOCK_EXAMS[t.key]);

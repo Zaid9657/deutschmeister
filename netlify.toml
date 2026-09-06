@@ -288,6 +288,12 @@
   from = "/a2-1-phase"
   to = "/app.html"
   status = 200
+# The A2.2-Phase 28-day plan (Course Factory Wave 5 PR D2) — same posture,
+# gated on LevelSubscriptionGuard(level="a2.2").
+[[redirects]]
+  from = "/a2-2-phase"
+  to = "/app.html"
+  status = 200
 # Mock exams (subscription-gated practice tests). Same posture as the course
 # area: not prerendered, not in the sitemap; the wildcard is safe here because
 # there is no static /modelltest directory for it to shadow, and unknown slugs
