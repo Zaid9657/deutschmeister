@@ -182,6 +182,26 @@ and numerals must not count as determiners in the null-article check; `bis`/`sei
 their own rule; a deliverable is frozen while a review is open and generated repo artefacts are diffed
 against the reviewed JSON before the PR flips to ready.
 
+## Wave 6 — A2.2 legacy re-cut + the Goethe-A2 30-day exam plan (started 2026-09-06)
+
+Two carried items from Wave 5, in the order the owner chose ("re-cut first, then PR E"): the LIVE A2.2
+rows the waves never touched still taught B1 material inside a paid A2.2 course, and the Goethe-A2 track
+had no 30-day exam plan while Goethe-A1 has one. Worker briefs and recipes: `docs/course-factory/wave6/`
+(at close); the binding level file stays `docs/course-factory/wave5/level-a2.2.md`. Recon (2026-09-06,
+read-only) inventoried the offenders from the cache (= live): `subordinating-conjunctions` 6 rules /
+7 examples / 2 exercises, `subordinate-word-order` 4 rules / 5 examples / 3 exercises, `superlative`
+1 example, plus one Präteritum in `comparative` and two meta-Genitiv explanations in the new topics
+found by the sweep; the A2.2 Wortliste's "Prepositions" (25 rows, 18 B1/B2) and "Animals" (25 rows,
+mostly outside the Goethe A2 list). The pins in `tests/a2-2-typed-production.test.mjs` (≥10 typed per
+topic, contiguous exercise order_index, ≥12 examples on superlative) mean a re-cut may only EDIT IN
+PLACE — never delete or add — which is the shape the migration takes.
+
+| # | Step | Status | PR |
+|---|---|---|---|
+| A | A2.2 legacy re-cut: guarded in-place UPDATEs on every out-of-level string in the live A2.2 grammar rows (B1 subordinators, als + Präteritum, Plusquamperfekt, Genitiv), the same edit in the cache, a re-level of the B1/B2 "Prepositions" and out-of-list "Animals" rows to b1.x/b2.1, a shared A2.2 ban battery (`tests/helpers/a2Bans.mjs`) and a guard suite that sweeps every German field of every A2.2 grammar row in the cache | in progress | — |
+| B | Goethe-A2 30-day exam plan (`/goethe-a2-kurs`, PROGRAM_KEY `goethe_a2_30_tage`, mirror of `/start-deutsch-1-kurs`), `goethe_a2.courseHref` → the plan in both twins, A2.2's Tag-28 hand-off and the result screen → the plan | planned | — |
+| C | Speaking missions for the four new A2.1 + four new A2.2 topics — only if the wave's budget remains | optional | — |
+
 ## Measured baseline (do not re-derive)
 
 - `weekly_metrics` is **empty** as of 2026-09-04 — the Monday 06:00 UTC job has not
@@ -229,6 +249,15 @@ against the reviewed JSON before the PR flips to ready.
   only screenshot the auth guard.
 
 ## Decisions log
+
+- 2026-09-06 (Wave 6, PR A): the legacy re-cut edits in place and never deletes — every banned string is
+  replaced by an in-level equivalent that keeps the row's teaching job (the B1 subordinators leave the
+  lists and tables, `als` material becomes `wenn`, the "Als"-key exercise becomes a wenn/ob/weil/dass
+  item, Plusquamperfekt → Perfekt, "des Jahres"/"des Satzes" → "im Jahr"/"im Satz"), because
+  `tests/a2-2-typed-production.test.mjs` pins per-topic counts and the contiguous exercise order_index.
+  Out-of-Wortliste words are RE-LEVELLED (guarded on id + old level), not deleted, so `VOCAB_WORD_COUNT`
+  and the audio rows are untouched. A shared ban battery now sweeps every German field of every A2.2
+  grammar row in the cache on every test run — the class is closed, not just the instances.
 
 - 2026-09-06 (Wave 5, recon): the four new A2.2 topics are `konjunktiv-ii-polite` (würde/könnte/hätte/wäre
   as fixed polite forms — Sprechen Teil 3 planning, Schreiben Teil 2), `verbs-with-prepositions-intro`

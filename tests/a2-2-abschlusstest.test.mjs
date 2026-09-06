@@ -35,6 +35,7 @@ import { selectListeningQuestions } from '../src/data/courseTests/listeningQuest
 import { isLevelFree } from '../src/config/freeTier.js';
 import { bandCourseForLevel } from '../src/data/pricing.js';
 import { abschlusstestA22 } from '../src/data/courseTests/abschlusstestA22.js';
+import { A2_GRAMMAR_BANS } from './helpers/a2Bans.mjs';
 
 const mock = abschlusstestA22;
 const ct = {
@@ -343,31 +344,7 @@ test('no sentence in any German string exceeds 16 words', () => {
 
 test('no banned A2.2 grammar in any authored string', () => {
   const BANS = [
-    // Genitiv beyond von+Dativ and the name-s exception — same regexes as
-    // abschlusstestA21.js's harness; A2.2 grants no wider Genitiv carve-out.
-    [/\b(des|eines)\s+\p{Lu}/u, 'Genitiv (des/eines + noun) — use von + Dativ'],
-    [/\b(des|eines|deines|meines|seines|ihres|unseres|eures|dessen|deren)\b/, 'Genitiv determiner — use von + Dativ'],
-    [/\b(Prozent|Hälfte|Anfang|Ende|Beginn|Teil|Teile|Rest)\s+(der|des)\b/, 'partitive Genitiv — use von + Dativ'],
-    [/\b(Aufbau|Ergebnis|Länge|Preis|Name|Titel|Adresse|Nummer)\s+(der|des)\b/, 'Genitiv after a head noun — use von + Dativ'],
-    [/\p{Lu}[\p{L}-]*(?:kurs|test|jahr|tag)es\b/u, '-es Genitiv of a masculine/neuter noun'],
-    // Präteritum of a FULL verb only — war/hatte/modals/es gab are allowed at
-    // A2.2 and are deliberately absent from this list.
-    [/\b(ging|kam|sagte|machte|fuhr|sah|fand|nahm|blieb|stand|kaufte|arbeitete)\b/, 'Präteritum of a full verb'],
-    // Passiv heuristic: a werden-auxiliary followed within the same clause by
-    // a ge-...-t/en participle. Deliberately NOT a blanket werden ban — A2.2
-    // productively allows future tense (werden + bare Infinitiv).
-    [/\b(wird|werden|wurde|wurden)\b[^.?!]{0,40}\bge\p{Ll}+(t|en)\b/u, 'Passiv (werden + Partizip II)'],
-    [/,\s*(der|die|das|welcher|welche|welches)\s/, 'relative clause'],
-    [/\bum\s+[^.?!]{0,60}\szu\s+\p{Ll}+en\b/u, 'um ... zu'],
-    [/\bohne\s+[^.?!]{0,60}\szu\s+\p{Ll}+en\b/u, 'ohne ... zu'],
-    [/\bstatt\s+[^.?!]{0,60}\szu\s+\p{Ll}+en\b/u, 'statt ... zu'],
-    // B1 subordinators — weil/dass/wenn/ob are the A2.2-allowed set and are
-    // deliberately absent from this list.
-    [/\b(obwohl|damit|bevor|nachdem|während|falls|sodass)\b/, 'B1 subordinating conjunction'],
-    // Konjunktiv II beyond würde/könnte/hätte/wäre/möchte.
-    [/\b(müsste|müssten|sollte|sollten|dürfte|dürften|wüsste|wüssten)\b/, 'Konjunktiv II beyond the allowed chunks'],
-    [/\bwenn\b[^.?!]{0,60}\b(wäre|hätte|würde)\b/i, 'irrealer Bedingungssatz (wenn ... wäre/hätte/würde)'],
-    [/\blassen\s+Sie\s+mich\b|\bließ(?:e|en)?\s+\p{Ll}+\s+\p{Ll}+en\b/u, 'lassen + Infinitiv'],
+    ...A2_GRAMMAR_BANS,
     [/[şıçğăâîĭ]/i, 'character not on a German keyboard'],
     [/\b(the|and|your|please|week|month|room)\b/i, 'English inside a German field'],
     [/Das Tool prüft|automatisch bewertet|automatisch korrigiert/, 'claims an automated check that does not exist'],
