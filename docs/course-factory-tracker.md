@@ -154,8 +154,8 @@ examples (owner's Azure run, see owner asks).
   (3) `curl -I` the five goethe.de URLs in `astro-site/src/data/guides/goethe-a2.js` `sources[]` from an
   unrestricted network — the sandbox could not open any of them; `sources[4]`
   (`…/ins/de/de/prf/prf/gzsd2/wi2.html`) has the `…/ins/de/de/m/prf/prf/gzsd2/wi2.html` fallback if it
-  404s. (4) Confirm the `/pruefung/goethe-a2/` course button may keep linking the paid `/a2-1-phase`
-  (shipped as the brief's default).
+  404s. (4) The `/pruefung/goethe-a2/` course button — **confirmed 2026-09-06 by the owner**: it keeps
+  linking the paid `/a2-1-phase`, as shipped.
 - **Wortliste defects outside A2.1 (carried).** Measured 2026-09-06 after PR B: 688 rows at
   a2.2/b1.x/b2.x still carry the article baked into the headword or the literal string
   `"null"` as a plural (the same two defect classes fixed at a1.1/a1.2/a2.1 in Waves 2–4). Each
@@ -166,8 +166,8 @@ examples (owner's Azure run, see owner asks).
 
 - 2026-09-06 (Wave 4, PR D2): the Abschlusstest A2.1 result screen and the plan's Tag 28 hand off to
   `/level/a2.2` — no A2.2 plan exists, and inventing `/a2-2-phase` would ship a link to a 404. The
-  `/pruefung/goethe-a2/` course button links the paid `/a2-1-phase` (the brief's default; owner to
-  confirm). The Hören part plays once (`playsAllowed: 1`, resolved per part by the runner) because
+  `/pruefung/goethe-a2/` course button links the paid `/a2-1-phase` (the brief's default; owner
+  confirmed 2026-09-06). The Hören part plays once (`playsAllowed: 1`, resolved per part by the runner) because
   8:38 of audio does not fit two plays in the 15-minute section; `questionMax: 10` keeps the 10 : 10
   Hören/Lesen weighting now that every A2.1 exercise carries 23 questions.
 - 2026-09-06 (Wave 4, PR D1): `tests/exams.test.mjs`'s "the newest Abschlusstest migration carries every
