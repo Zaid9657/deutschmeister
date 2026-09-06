@@ -725,172 +725,187 @@
     "title_de": "Feste und Feiertage in Deutschland",
     "title_en": "Festivals and Holidays in Germany",
     "topic": "Holidays & Festivals",
-    "content_de": "Deutschland feiert gern, und jede Jahreszeit hat ihre Höhepunkte. Wer die deutsche Kultur verstehen will, sollte die wichtigsten Feste kennen.\n\nIm Winter beginnt für viele Deutsche die schönste Zeit des Jahres: die Adventszeit. Ab Ende November öffnen überall die Weihnachtsmärkte. Der Nürnberger Christkindlesmarkt ist einer der ältesten und bekanntesten – er existiert seit dem 16. Jahrhundert. Auf dem Markt trinkt man Glühwein, isst gebrannte Mandeln und kauft kleine Geschenke aus Holz. Viele Familien gehen jedes Jahr hin, weil der Besuch für sie eine feste Tradition ist. Weihnachten selbst feiert man im Kreis der Familie: Die Geschenke gibt es am Heiligabend, also schon am 24. Dezember, nicht erst am Morgen des 25.\n\nIm Februar wird es lauter: Dann beginnt der Karneval. Am stärksten feiert man ihn im Rheinland, besonders in Köln, Düsseldorf und Mainz. Am Rosenmontag ziehen riesige Umzüge durch die Städte. Hunderttausende Menschen stehen verkleidet an der Straße und rufen „Kamelle!“, wenn die Wagen Süßigkeiten in die Menge werfen. Viele Kölner sagen, dass der Karneval für sie die fünfte Jahreszeit ist.\n\nDer wichtigste politische Feiertag ist der 3. Oktober, der Tag der Deutschen Einheit. An diesem Tag erinnert sich das Land an die Wiedervereinigung von 1990, als aus zwei deutschen Staaten wieder einer wurde. Jedes Jahr richtet eine andere Stadt das offizielle Bürgerfest aus. Interessant ist: Der 3. Oktober ist der einzige Feiertag, der im ganzen Land gilt. Viele andere Feiertage gibt es nur in bestimmten Bundesländern – in Bayern hat man zum Beispiel mehr freie Tage als in Berlin.\n\nWenn Sie in Deutschland leben, werden Sie schnell merken: Feste sind hier wichtig, weil sie Menschen zusammenbringen. Am besten probieren Sie alles einmal aus – den Glühwein im Dezember, ein Kostüm im Februar und ein Straßenfest im Sommer.",
-    "content_en": "Germany loves to celebrate, and every season has its highlights. Anyone who wants to understand German culture should know the most important festivals.\n\nIn winter, the most beautiful time of the year begins for many Germans: the Advent season. From the end of November, Christmas markets open everywhere. The Nuremberg Christkindlesmarkt is one of the oldest and best known – it has existed since the 16th century. At the market, people drink mulled wine, eat roasted almonds, and buy small wooden presents. Many families go every year, because the visit is a firm tradition for them. Christmas itself is celebrated within the family: the presents are given on Christmas Eve, that is, already on December 24th, not on the morning of the 25th.\n\nIn February it gets louder: that is when Carnival begins. It is celebrated most intensely in the Rhineland, especially in Cologne, Düsseldorf, and Mainz. On Rose Monday, huge parades move through the cities. Hundreds of thousands of people stand along the street in costume and shout \"Kamelle!\" when the floats throw sweets into the crowd. Many Cologne locals say that Carnival is the fifth season for them.\n\nThe most important political holiday is October 3rd, the Day of German Unity. On this day the country remembers the reunification of 1990, when two German states became one again. Every year a different city hosts the official public festival. Interestingly, October 3rd is the only holiday that applies in the whole country. Many other holidays exist only in certain federal states – in Bavaria, for example, people have more days off than in Berlin.\n\nIf you live in Germany, you will quickly notice: festivals are important here because they bring people together. It is best to try everything once – the mulled wine in December, a costume in February, and a street festival in summer.",
+    "content_de": "Deutschland feiert gern, und jede Jahreszeit hat ihre Höhepunkte. Wenn man die deutsche Kultur verstehen möchte, muss man die wichtigsten Feste kennen.\n\nIm Winter beginnt die Adventszeit. Ab Ende November öffnen überall die Weihnachtsmärkte. Der Nürnberger Christkindlesmarkt ist sehr bekannt und sehr alt. Er existiert schon seit vielen Jahrhunderten.\n\nAuf dem Markt trinkt man Glühwein und isst süße Mandeln. Weihnachten selbst feiert man am 24. Dezember mit der ganzen Familie.\n\nIm Februar beginnt der Karneval. Am stärksten feiert man ihn im Rheinland, besonders in Köln. Am Rosenmontag ziehen große Umzüge durch die Stadt, und die Menschen rufen „Kamelle!“.\n\nDer wichtigste politische Feiertag ist der 3. Oktober. An diesem Tag feiert man die deutsche Einheit von 1990. Dieser Feiertag gilt im ganzen Land.\n\nWenn Sie in Deutschland leben, werden Sie diese Feste sicher gern miterleben. Probieren Sie am besten alles einmal aus!",
+    "content_en": "Germany likes to celebrate, and every season has its highlights. If you want to understand German culture, you have to know the most important festivals.\n\nWinter begins the Advent season. From late November, Christmas markets open everywhere. The Nuremberg Christkindlesmarkt is very well known and very old. It has existed for many centuries.\n\nAt the market people drink Glühwein and eat sweet almonds. Christmas itself is celebrated on December 24th with the whole family.\n\nIn February, Carnival begins. It is celebrated most strongly in the Rhineland, especially in Cologne. On Rosenmontag, big parades move through the city, and people shout \"Kamelle!\" (sweets!)\n\nThe most important political holiday is October 3rd. On this day Germany celebrates its reunification from 1990. This holiday applies throughout the whole country.\n\nIf you live in Germany, you will surely enjoy experiencing these festivals. Best of all, try everything once!",
     "key_vocabulary": [
-      {
-        "de": "das Fest, -e",
-        "en": "festival, celebration"
-      },
-      {
-        "de": "der Feiertag, -e",
-        "en": "public holiday"
-      },
       {
         "de": "die Jahreszeit, -en",
         "en": "season"
+      },
+      {
+        "de": "die Adventszeit",
+        "en": "Advent season"
       },
       {
         "de": "der Weihnachtsmarkt, ¨-e",
         "en": "Christmas market"
       },
       {
-        "de": "der Glühwein (nur Sg.)",
+        "de": "der Glühwein",
         "en": "mulled wine"
       },
       {
-        "de": "das Geschenk, -e",
-        "en": "present, gift"
-      },
-      {
-        "de": "der Heiligabend, -e",
-        "en": "Christmas Eve"
+        "de": "die Mandel, -n",
+        "en": "almond"
       },
       {
         "de": "der Umzug, ¨-e",
-        "en": "parade, procession"
+        "en": "parade"
       },
       {
-        "de": "sich verkleiden",
-        "en": "to dress up (in costume)"
+        "de": "rufen",
+        "en": "to shout"
       },
       {
-        "de": "die Süßigkeit, -en",
-        "en": "sweets, candy"
+        "de": "der Feiertag, -e",
+        "en": "public holiday"
       },
       {
-        "de": "die Wiedervereinigung (nur Sg.)",
-        "en": "reunification"
+        "de": "die Einheit",
+        "en": "unity"
       },
       {
-        "de": "das Bundesland, ¨-er",
-        "en": "federal state"
+        "de": "gelten (als)",
+        "en": "to apply, to count (as)"
       },
       {
-        "de": "gelten",
-        "en": "to be valid, to apply"
-      },
-      {
-        "de": "ausrichten",
-        "en": "to host, to organize"
-      },
-      {
-        "de": "zusammenbringen",
-        "en": "to bring together"
+        "de": "miterleben",
+        "en": "to experience, to witness"
       }
     ],
     "questions": [
       {
-        "question_de": "Seit wann existiert der Nürnberger Christkindlesmarkt?",
-        "question_en": "Since when has the Nuremberg Christkindlesmarkt existed?",
-        "answer_de": "Der Nürnberger Christkindlesmarkt existiert seit dem 16. Jahrhundert.",
-        "answer_en": "The Nuremberg Christkindlesmarkt has existed since the 16th century."
+        "question_de": "Wann öffnen die Weihnachtsmärkte?",
+        "question_en": "When do the Christmas markets open?",
+        "answer_de": "Sie öffnen ab Ende November.",
+        "answer_en": "They open from late November."
       },
       {
-        "question_de": "Wann bekommen die Familien in Deutschland ihre Weihnachtsgeschenke?",
-        "question_en": "When do families in Germany get their Christmas presents?",
-        "answer_de": "Die Geschenke gibt es am Heiligabend, also schon am 24. Dezember, nicht erst am Morgen des 25.",
-        "answer_en": "The presents are given on Christmas Eve, that is, already on December 24th, not on the morning of the 25th."
+        "question_de": "Was trinkt und isst man auf dem Weihnachtsmarkt?",
+        "question_en": "What do people drink and eat at the Christmas market?",
+        "answer_de": "Man trinkt Glühwein und isst die süßen Mandeln.",
+        "answer_en": "People drink Glühwein and eat sweet almonds."
       },
       {
-        "question_de": "Wo feiert man den Karneval am stärksten?",
-        "question_en": "Where is Carnival celebrated most intensely?",
-        "answer_de": "Man feiert ihn am stärksten im Rheinland, besonders in Köln, Düsseldorf und Mainz.",
-        "answer_en": "It is celebrated most intensely in the Rhineland, especially in Cologne, Düsseldorf, and Mainz."
+        "question_de": "Wo feiert man Karneval am stärksten?",
+        "question_en": "Where is Carnival celebrated most strongly?",
+        "answer_de": "Man feiert ihn am stärksten im Rheinland, besonders in Köln.",
+        "answer_en": "It is celebrated most strongly in the Rhineland, especially in Cologne."
       },
       {
-        "question_de": "Was passiert am Rosenmontag?",
-        "question_en": "What happens on Rose Monday?",
-        "answer_de": "Am Rosenmontag ziehen riesige Umzüge durch die Städte, und die Wagen werfen Süßigkeiten in die Menge.",
-        "answer_en": "On Rose Monday, huge parades move through the cities, and the floats throw sweets into the crowd."
+        "question_de": "Welches Datum ist der wichtigste politische Feiertag?",
+        "question_en": "What date is the most important political holiday?",
+        "answer_de": "Es ist der 3. Oktober.",
+        "answer_en": "It is October 3rd."
       },
       {
-        "question_de": "Warum ist der 3. Oktober ein besonderer Feiertag?",
-        "question_en": "Why is October 3rd a special holiday?",
-        "answer_de": "An diesem Tag erinnert sich das Land an die Wiedervereinigung von 1990, und er ist der einzige Feiertag, der im ganzen Land gilt.",
-        "answer_en": "On this day the country remembers the reunification of 1990, and it is the only holiday that applies in the whole country."
-      },
-      {
-        "question_de": "Warum sind Feste in Deutschland wichtig?",
-        "question_en": "Why are festivals important in Germany?",
-        "answer_de": "Feste sind wichtig, weil sie Menschen zusammenbringen.",
-        "answer_en": "Festivals are important because they bring people together."
+        "question_de": "Was feiert man am 3. Oktober?",
+        "question_en": "What is celebrated on October 3rd?",
+        "answer_de": "Man feiert die deutsche Einheit von 1990.",
+        "answer_en": "German reunification from 1990 is celebrated."
       }
     ],
-    "word_count": 288,
+    "word_count": 141,
     "difficulty": 3,
-    "estimated_reading_time": 5,
-    "order_index": 7
+    "estimated_reading_time": 2,
+    "order_index": 7,
+    "checks": [
+      {
+        "type": "rf",
+        "answer": "richtig",
+        "statement_de": "Der Nürnberger Christkindlesmarkt ist sehr alt.",
+        "statement_en": "The Nuremberg Christkindlesmarkt is very old.",
+        "explanation_de": "Im Text steht: Der Nürnberger Christkindlesmarkt ist sehr bekannt und sehr alt."
+      },
+      {
+        "type": "rf",
+        "answer": "falsch",
+        "statement_de": "Weihnachten feiert man in Deutschland am 25. Dezember.",
+        "statement_en": "Christmas is celebrated in Germany on December 25th.",
+        "explanation_de": "Im Text steht: Weihnachten selbst feiert man am 24. Dezember."
+      },
+      {
+        "type": "rf",
+        "answer": "richtig",
+        "statement_de": "Am Rosenmontag ziehen die großen Umzüge durch die Stadt.",
+        "statement_en": "On Rosenmontag, big parades move through the city.",
+        "explanation_de": "Im Text steht: Am Rosenmontag ziehen die großen Umzüge durch die Stadt."
+      },
+      {
+        "type": "rf",
+        "answer": "falsch",
+        "statement_de": "Der 3. Oktober gilt nur in einem Bundesland.",
+        "statement_en": "October 3rd applies only in one federal state.",
+        "explanation_de": "Im Text steht: Dieser Feiertag gilt im ganzen Land."
+      },
+      {
+        "type": "rf",
+        "answer": "falsch",
+        "statement_de": "Am 3. Oktober feiert man den Beginn vom Karneval.",
+        "statement_en": "October 3rd celebrates the beginning of Carnival.",
+        "explanation_de": "Im Text steht: An diesem Tag feiert man die deutsche Einheit von 1990."
+      },
+      {
+        "type": "choice",
+        "answer": "b",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "statement_de": "Was rufen die Menschen beim Karneval, wenn die Wagen Süßigkeiten werfen? a) Helau! b) Kamelle! c) Alaaf!",
+        "statement_en": "What do people shout at Carnival when the floats throw sweets? a) Helau! b) Kamelle! c) Alaaf!",
+        "explanation_de": "Im Text steht: Die Menschen rufen „Kamelle!“."
+      }
+    ]
   },
   {
     "level": "A2.2",
     "title_de": "Gesund leben",
     "title_en": "Living Healthily",
     "topic": "Healthy Living",
-    "content_de": "Am ersten Januar haben viele Deutsche gute Vorsätze: Sie wollen mehr Sport machen, sich gesünder ernähren und weniger Zeit am Handy verbringen. Aber Studien zeigen, dass die meisten Menschen ihre Vorsätze schon im Februar vergessen. Warum ist das so, und wie schafft man es besser?\n\nTim, 34, aus Leipzig hat es geschafft. Vor zwei Jahren hat er sich oft müde und gestresst gefühlt. Er hat den ganzen Tag im Büro gesessen, sich wenig bewegt und fast jeden Abend Fast Food gegessen. Sein Arzt hat ihm klar gesagt, dass er sich mehr bewegen muss, weil sein Blutdruck zu hoch war.\n\nTim hat klein angefangen. Zuerst hat er sich ein einfaches Ziel gesetzt: dreimal pro Woche eine halbe Stunde spazieren gehen. Das klingt leicht, aber genau das funktioniert besser als ein großer Plan. Wenn man sich zu viel vornimmt, gibt man schneller auf. Nach einem Monat ist Tim zum ersten Mal gejoggt. Heute läuft er zehn Kilometer ohne Pause und fühlt sich fitter als mit 25.\n\nAuch beim Essen hat er vieles geändert. Er kocht jetzt fast immer selbst, weil frisches Essen gesünder und billiger ist als Fertiggerichte. Am wichtigsten ist für ihn das Frühstück: Haferflocken mit Obst statt Brötchen mit Schokocreme. Süßigkeiten isst er noch, aber viel seltener als früher.\n\nDas dritte Thema ist der Schlaf. Tim geht jetzt früher ins Bett und legt das Handy eine Stunde vor dem Schlafen weg. Er sagt: „Wenn ich acht Stunden schlafe, konzentriere ich mich am nächsten Tag viel besser.“\n\nSein Plan für das nächste Jahr steht auch schon fest: Er wird an einem Halbmarathon in Leipzig teilnehmen. Er ist sicher, dass er es schafft. Sein Tipp für alle: „Ärgern Sie sich nicht über schlechte Tage. Morgen ist ein neuer Tag – fangen Sie einfach wieder an.“",
-    "content_en": "On the first of January, many Germans make good resolutions: they want to do more sport, eat more healthily, and spend less time on their phones. But studies show that most people forget their resolutions as early as February. Why is that, and how can you manage it better?\n\nTim, 34, from Leipzig managed it. Two years ago he often felt tired and stressed. He sat in the office all day, exercised very little, and ate fast food almost every evening. His doctor told him clearly that he had to move more, because his blood pressure was too high.\n\nTim started small. First he set himself a simple goal: going for a half-hour walk three times a week. That sounds easy, but exactly that works better than a big plan. If you take on too much, you give up more quickly. After a month, Tim went jogging for the first time. Today he runs ten kilometers without a break and feels fitter than he did at 25.\n\nHe also changed a lot about his eating. He now almost always cooks for himself, because fresh food is healthier and cheaper than ready meals. Breakfast is the most important thing for him: oats with fruit instead of rolls with chocolate spread. He still eats sweets, but much less often than before.\n\nThe third topic is sleep. Tim now goes to bed earlier and puts his phone away an hour before sleeping. He says: \"When I sleep eight hours, I concentrate much better the next day.\"\n\nHis plan for next year is already set: he will take part in a half marathon in Leipzig. He is sure that he will manage it. His tip for everyone: \"Don't get annoyed about bad days. Tomorrow is a new day – just start again.\"",
+    "content_de": "Am 1. Januar haben viele Deutsche gute Vorsätze. Aber die meisten vergessen ihre Vorsätze schon im Februar.\n\nTim, 34, aus Leipzig hat es geschafft. Vor zwei Jahren hat er sich oft müde gefühlt. Sein Arzt hat ihm gesagt, dass er sich mehr bewegen muss.\n\nTim hat klein angefangen. Zuerst hat er sich ein einfaches Ziel gesetzt: dreimal pro Woche spazieren gehen. Nach einem Monat ist er zum ersten Mal gejoggt.\n\nHeute läuft er zehn Kilometer ohne Pause. Er kocht jetzt fast immer selbst, weil das frische Essen gesünder ist.\n\nTim geht jetzt auch früher ins Bett. Er legt sein Handy eine Stunde vor dem Schlafen weg. Er sagt, dass er sich danach viel besser fühlt.\n\nSein Plan für nächstes Jahr steht schon fest. Er hat vor, einen Halbmarathon in Leipzig zu laufen. Sein Tipp: Ärgern Sie sich nicht über einen schlechten Tag!",
+    "content_en": "On January 1st, many Germans make good resolutions. But most people forget their resolutions by February.\n\nTim, 34, from Leipzig has managed it. Two years ago he often felt tired. His doctor told him that he needs to exercise more.\n\nTim started small. First he set himself a simple goal: to go for a walk three times a week. After a month he jogged for the first time.\n\nToday he runs ten kilometers without a break. He now almost always cooks for himself, because the fresh food is healthier.\n\nTim also goes to bed earlier now. He puts his phone away an hour before sleeping. He says that he feels much better afterward.\n\nHis plan for next year is already set. He plans to run a half marathon in Leipzig. His tip: don't be annoyed about a bad day!",
     "key_vocabulary": [
       {
         "de": "der Vorsatz, ¨-e",
-        "en": "(New Year's) resolution"
+        "en": "New Year's resolution"
       },
       {
-        "de": "sich ernähren",
-        "en": "to eat, to nourish oneself"
+        "de": "müde",
+        "en": "tired"
+      },
+      {
+        "de": "der Arzt, ¨-e",
+        "en": "doctor"
       },
       {
         "de": "sich bewegen",
-        "en": "to move, to get exercise"
+        "en": "to exercise, to move"
       },
       {
-        "de": "sich fühlen",
-        "en": "to feel"
+        "de": "das Ziel, -e",
+        "en": "goal"
       },
       {
-        "de": "gestresst",
-        "en": "stressed"
+        "de": "spazieren gehen",
+        "en": "to go for a walk"
       },
       {
-        "de": "der Blutdruck (nur Sg.)",
-        "en": "blood pressure"
+        "de": "joggen",
+        "en": "to jog"
       },
       {
-        "de": "sich ein Ziel setzen",
-        "en": "to set oneself a goal"
+        "de": "die Pause, -n",
+        "en": "break, pause"
       },
       {
-        "de": "sich etwas vornehmen",
-        "en": "to resolve to do something"
+        "de": "gesund",
+        "en": "healthy"
       },
       {
-        "de": "aufgeben",
-        "en": "to give up"
-      },
-      {
-        "de": "das Fertiggericht, -e",
-        "en": "ready meal"
-      },
-      {
-        "de": "die Haferflocken (Pl.)",
-        "en": "oats, oat flakes"
-      },
-      {
-        "de": "der Schlaf (nur Sg.)",
-        "en": "sleep"
-      },
-      {
-        "de": "sich konzentrieren",
-        "en": "to concentrate"
+        "de": "das Handy, -s",
+        "en": "mobile phone"
       },
       {
         "de": "der Halbmarathon, -s",
@@ -898,50 +913,381 @@
       },
       {
         "de": "sich ärgern (über + Akk.)",
-        "en": "to get annoyed (about)"
+        "en": "to be annoyed (about)"
       }
     ],
     "questions": [
       {
-        "question_de": "Was zeigen Studien über gute Vorsätze?",
-        "question_en": "What do studies show about good resolutions?",
-        "answer_de": "Studien zeigen, dass die meisten Menschen ihre Vorsätze schon im Februar vergessen.",
-        "answer_en": "Studies show that most people forget their resolutions as early as February."
+        "question_de": "Was haben viele Deutsche am 1. Januar?",
+        "question_en": "What do many Germans have on January 1st?",
+        "answer_de": "Sie haben ihre guten Vorsätze.",
+        "answer_en": "They have their good resolutions."
       },
       {
-        "question_de": "Warum hat Tims Arzt gesagt, dass Tim sich mehr bewegen muss?",
-        "question_en": "Why did Tim's doctor say that Tim has to move more?",
-        "answer_de": "Der Arzt hat das gesagt, weil Tims Blutdruck zu hoch war.",
-        "answer_en": "The doctor said that because Tim's blood pressure was too high."
+        "question_de": "Was hat Tims Arzt ihm gesagt?",
+        "question_en": "What did Tim's doctor tell him?",
+        "answer_de": "Dass er sich mehr bewegen muss.",
+        "answer_en": "That he needs to exercise more."
       },
       {
-        "question_de": "Welches Ziel hat sich Tim zuerst gesetzt?",
-        "question_en": "What goal did Tim set himself first?",
-        "answer_de": "Er hat sich das Ziel gesetzt, dreimal pro Woche eine halbe Stunde spazieren zu gehen.",
-        "answer_en": "He set himself the goal of going for a half-hour walk three times a week."
+        "question_de": "Was war Tims erstes einfaches Ziel?",
+        "question_en": "What was Tim's first simple goal?",
+        "answer_de": "Dreimal pro Woche spazieren zu gehen.",
+        "answer_en": "To go for a walk three times a week."
       },
       {
-        "question_de": "Warum kocht Tim jetzt fast immer selbst?",
-        "question_en": "Why does Tim now almost always cook for himself?",
-        "answer_de": "Er kocht selbst, weil frisches Essen gesünder und billiger ist als Fertiggerichte.",
-        "answer_en": "He cooks for himself because fresh food is healthier and cheaper than ready meals."
+        "question_de": "Wie weit läuft Tim heute?",
+        "question_en": "How far does Tim run today?",
+        "answer_de": "Er läuft heute zehn Kilometer ohne Pause.",
+        "answer_en": "Today he runs ten kilometers without a break."
       },
       {
-        "question_de": "Was macht Tim vor dem Schlafen?",
-        "question_en": "What does Tim do before sleeping?",
-        "answer_de": "Er legt das Handy eine Stunde vor dem Schlafen weg und geht früher ins Bett.",
-        "answer_en": "He puts his phone away an hour before sleeping and goes to bed earlier."
-      },
-      {
-        "question_de": "Was wird Tim nächstes Jahr machen?",
-        "question_en": "What will Tim do next year?",
-        "answer_de": "Er wird an einem Halbmarathon in Leipzig teilnehmen.",
-        "answer_en": "He will take part in a half marathon in Leipzig."
+        "question_de": "Was hat Tim für nächstes Jahr vor?",
+        "question_en": "What does Tim plan for next year?",
+        "answer_de": "Er hat vor, einen Halbmarathon in Leipzig zu laufen.",
+        "answer_en": "He plans to run a half marathon in Leipzig."
       }
     ],
-    "word_count": 293,
+    "word_count": 142,
     "difficulty": 3,
-    "estimated_reading_time": 5,
-    "order_index": 8
+    "estimated_reading_time": 2,
+    "order_index": 8,
+    "checks": [
+      {
+        "type": "rf",
+        "answer": "richtig",
+        "statement_de": "Die meisten Menschen vergessen ihre guten Vorsätze schon im Februar.",
+        "statement_en": "Most people already forget their good resolutions by February.",
+        "explanation_de": "Im Text steht: Aber die meisten vergessen ihre Vorsätze schon im Februar."
+      },
+      {
+        "type": "rf",
+        "answer": "falsch",
+        "statement_de": "Tims Arzt hat gesagt, dass alles in Ordnung ist.",
+        "statement_en": "Tim's doctor said everything was fine.",
+        "explanation_de": "Im Text steht: Sein Arzt hat ihm gesagt, dass er sich mehr bewegen muss."
+      },
+      {
+        "type": "rf",
+        "answer": "falsch",
+        "statement_de": "Tims erstes Ziel war ein großer Trainingsplan.",
+        "statement_en": "Tim's first goal was a big training plan.",
+        "explanation_de": "Im Text steht: Zuerst hat er sich ein einfaches Ziel gesetzt: dreimal pro Woche spazieren gehen."
+      },
+      {
+        "type": "rf",
+        "answer": "richtig",
+        "statement_de": "Tim kocht jetzt fast immer selbst.",
+        "statement_en": "Tim now almost always cooks for himself.",
+        "explanation_de": "Im Text steht: Er kocht jetzt fast immer selbst, weil das frische Essen gesünder ist."
+      },
+      {
+        "type": "rf",
+        "answer": "falsch",
+        "statement_de": "Tim geht jetzt später ins Bett als früher.",
+        "statement_en": "Tim now goes to bed later than before.",
+        "explanation_de": "Im Text steht: Tim geht jetzt auch früher ins Bett."
+      },
+      {
+        "type": "choice",
+        "answer": "b",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "statement_de": "Wie lange vor dem Schlafen legt Tim sein Handy weg? a) eine halbe Stunde b) eine Stunde c) zwei Stunden",
+        "statement_en": "How long before sleeping does Tim put his phone away? a) half an hour b) one hour c) two hours",
+        "explanation_de": "Im Text steht: Er legt sein Handy eine Stunde vor dem Schlafen weg."
+      }
+    ]
+  },
+  {
+    "level": "a2.2",
+    "title_de": "Lesen Teil 2: Eine Informationstafel (wie in der Prüfung)",
+    "title_en": "Reading Part 2: An information board (exam-style)",
+    "topic": "Prüfungsformat",
+    "content_de": "Lies die Informationstafel. Wähle die richtige Antwort: a, b oder c.\n\nVolkshochschule Sonnenberg – Kursprogramm Herbst\n\nErdgeschoss:\nRaum 5: Deutschkurs A1, montags und mittwochs, 18–20 Uhr\nRaum 8: Yoga für Anfänger, dienstags, 9–10 Uhr\n\n1. Stock:\nRaum 12: Spanischkurs A2, donnerstags, 19–21 Uhr\nRaum 15: Fotokurs, samstags, 10–13 Uhr\n\n2. Stock:\nRaum 20: Kochkurs „Italienische Küche“, freitags, 18–21 Uhr\nRaum 22: Malkurs, mittwochs, 17–19 Uhr\n\n3. Stock:\nRaum 31: Computerkurs für Senioren, montags, 10–12 Uhr\n\nDie Anmeldung ist online oder an der Information im Erdgeschoss möglich. Bitte bringen Sie zum ersten Kurstag Ihren Ausweis mit. Kurse mit weniger als sechs Personen finden leider nicht statt.",
+    "content_en": "Read the information board. Choose the correct answer: a, b or c.\n\nSonnenberg Adult Education Center – Autumn Course Programme\n\nGround floor:\nRoom 5: German course A1, Mondays and Wednesdays, 6–8 p.m.\nRoom 8: Yoga for beginners, Tuesdays, 9–10 a.m.\n\n1st floor:\nRoom 12: Spanish course A2, Thursdays, 7–9 p.m.\nRoom 15: Photography course, Saturdays, 10 a.m.–1 p.m.\n\n2nd floor:\nRoom 20: Cooking course „Italian Cuisine\", Fridays, 6–9 p.m.\nRoom 22: Painting course, Wednesdays, 5–7 p.m.\n\n3rd floor:\nRoom 31: Computer course for seniors, Mondays, 10 a.m.–12 p.m.\n\nRegistration is possible online or at the information desk on the ground floor. Please bring your ID card on the first day of the course. Courses with fewer than six people unfortunately will not take place.",
+    "key_vocabulary": [
+      {
+        "de": "die Volkshochschule, -n",
+        "en": "adult education center"
+      },
+      {
+        "de": "das Kursprogramm, -e",
+        "en": "course programme"
+      },
+      {
+        "de": "das Erdgeschoss, -e",
+        "en": "ground floor"
+      },
+      {
+        "de": "der Stock, Stockwerke",
+        "en": "floor, storey"
+      },
+      {
+        "de": "der Anfänger, -",
+        "en": "beginner"
+      },
+      {
+        "de": "die Anmeldung, -en",
+        "en": "registration"
+      },
+      {
+        "de": "der Ausweis, -e",
+        "en": "ID card"
+      },
+      {
+        "de": "mitbringen",
+        "en": "to bring along"
+      },
+      {
+        "de": "stattfinden",
+        "en": "to take place"
+      }
+    ],
+    "questions": [
+      {
+        "question_de": "In welchem Raum ist der Deutschkurs A1?",
+        "question_en": "Which room is the German course A1 in?",
+        "answer_de": "Er ist in Raum 5.",
+        "answer_en": "It is in room 5."
+      },
+      {
+        "question_de": "Wann ist der Fotokurs?",
+        "question_en": "When is the photography course?",
+        "answer_de": "Er ist samstags von 10 bis 13 Uhr.",
+        "answer_en": "It is Saturdays from 10 a.m. to 1 p.m."
+      },
+      {
+        "question_de": "Was muss man zum ersten Kurstag mitbringen?",
+        "question_en": "What must you bring on the first day of the course?",
+        "answer_de": "Man muss seinen Ausweis mitbringen.",
+        "answer_en": "You must bring your ID card."
+      }
+    ],
+    "checks": [
+      {
+        "type": "choice",
+        "answer": "a",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "statement_de": "Du möchtest einen Spanischkurs machen. Wohin gehst du? a) Raum 12 b) Raum 20 c) Raum 31",
+        "statement_en": "You want to take a Spanish course. Where do you go? a) room 12 b) room 20 c) room 31",
+        "explanation_de": "Auf der Tafel steht: Raum 12: Spanischkurs A2."
+      },
+      {
+        "type": "choice",
+        "answer": "b",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "statement_de": "Du interessierst dich für Yoga. Wann ist der Kurs? a) montags b) dienstags c) mittwochs",
+        "statement_en": "You are interested in yoga. When is the course? a) Mondays b) Tuesdays c) Wednesdays",
+        "explanation_de": "Auf der Tafel steht: Raum 8: Yoga für Anfänger, dienstags, 9–10 Uhr."
+      },
+      {
+        "type": "choice",
+        "answer": "c",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "statement_de": "Du möchtest kochen lernen. In welchem Stock ist der Kochkurs? a) im Erdgeschoss b) im 1. Stock c) im 2. Stock",
+        "statement_en": "You want to learn to cook. Which floor is the cooking course on? a) ground floor b) 1st floor c) 2nd floor",
+        "explanation_de": "Auf der Tafel steht: 2. Stock, Raum 20: Kochkurs Italienische Küche."
+      },
+      {
+        "type": "choice",
+        "answer": "a",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "statement_de": "Du bist 70 Jahre alt und möchtest einen Computerkurs machen. Wann ist der Kurs? a) montags, 10–12 Uhr b) donnerstags, 19–21 Uhr c) samstags, 10–13 Uhr",
+        "statement_en": "You are 70 years old and want to take a computer course. When is the course? a) Mondays, 10 a.m.–12 p.m. b) Thursdays, 7–9 p.m. c) Saturdays, 10 a.m.–1 p.m.",
+        "explanation_de": "Auf der Tafel steht: Raum 31: Computerkurs für Senioren, montags, 10–12 Uhr."
+      },
+      {
+        "type": "choice",
+        "answer": "b",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "statement_de": "Du willst dich für einen Kurs anmelden. Wie kannst du das machen? a) nur per E-Mail b) online oder an der Information c) nur telefonisch",
+        "statement_en": "You want to register for a course. How can you do that? a) only by email b) online or at the information desk c) only by phone",
+        "explanation_de": "Auf der Tafel steht: Die Anmeldung ist online oder an der Information im Erdgeschoss möglich."
+      }
+    ],
+    "word_count": 105,
+    "difficulty": 2,
+    "estimated_reading_time": 3,
+    "order_index": 9
+  },
+  {
+    "level": "a2.2",
+    "title_de": "Lesen Teil 4: Anzeigen zuordnen (wie in der Prüfung)",
+    "title_en": "Reading Part 4: Matching ads (exam-style)",
+    "topic": "Prüfungsformat",
+    "content_de": "Lies die Anzeigen a bis f. Welche Anzeige passt zu welcher Person? Für eine Person passt keine Anzeige: x.\n\na) Wir vermieten eine schöne 2-Zimmer-Wohnung in Leipzig-Süd, 55 m², mit Balkon. Die Lage ist ruhig. Miete: 480 Euro warm. Einzug ist ab sofort möglich. Bitte nur ernsthafte Interessenten melden.\n\nb) Café am Markt sucht eine Aushilfe für Wochenenden. Du arbeitest gern mit Menschen und bist zuverlässig. Bezahlung: 13 Euro pro Stunde. Bewirb dich per E-Mail.\n\nc) Deutschkurs für Anfänger startet im Januar. Unterricht ist dienstags und donnerstags, 18 bis 20 Uhr, in kleinen Gruppen. Kurspreis: 150 Euro. Anmeldung online oder telefonisch.\n\nd) Verkaufe mein Fahrrad, weil ich ein neues gekauft habe. Es ist zwei Jahre alt und in einem sehr guten Zustand. Preis: 90 Euro, VB, Abholung in Leipzig-West.\n\ne) Nachhilfe in Mathematik für Schüler von Klasse 5 bis 10. Ich bin Studentin und habe schon viel Erfahrung mit Nachhilfe. Preis: 15 Euro pro Stunde, auch online möglich.\n\nf) Am Samstag ist ein großer Flohmarkt auf dem Stadtplatz, von 9 bis 15 Uhr. Es gibt Kleidung, Bücher, Spielzeug und vieles mehr. Der Eintritt ist kostenlos für alle.",
+    "content_en": "Read ads a to f. Which ad fits which person? For one person, no ad fits: x.\n\na) We are renting out a nice 2-room apartment in Leipzig-Süd, 55 m², with a balcony. The location is quiet. Rent: 480 euros, all bills included. Move-in possible immediately. Serious applicants only, please.\n\nb) Café am Markt is looking for weekend help. You like working with people and are reliable. Pay: 13 euros per hour. Apply by email.\n\nc) German course for beginners starts in January. Classes are Tuesdays and Thursdays, 6 to 8 p.m., in small groups. Course fee: 150 euros. Register online or by phone.\n\nd) Selling my bike because I bought a new one. It is two years old and in very good condition. Price: 90 euros, negotiable, pickup in Leipzig-West.\n\ne) Tutoring in math for students from grade 5 to 10. I am a student with a lot of tutoring experience already. Price: 15 euros per hour, also available online.\n\nf) On Saturday there is a big flea market at the town square, 9 a.m. to 3 p.m. There is clothing, books, toys and much more. Admission is free for everyone.",
+    "key_vocabulary": [
+      {
+        "de": "vermieten",
+        "en": "to rent out"
+      },
+      {
+        "de": "der Balkon, -s",
+        "en": "balcony"
+      },
+      {
+        "de": "m² (der Quadratmeter, -)",
+        "en": "square meter(s)"
+      },
+      {
+        "de": "die Aushilfe, -n",
+        "en": "temp worker, helper"
+      },
+      {
+        "de": "zuverlässig",
+        "en": "reliable"
+      },
+      {
+        "de": "der Zustand, ¨-e",
+        "en": "condition"
+      },
+      {
+        "de": "VB (Verhandlungsbasis)",
+        "en": "or best offer (price negotiable)"
+      },
+      {
+        "de": "die Abholung",
+        "en": "pickup"
+      },
+      {
+        "de": "die Nachhilfe",
+        "en": "tutoring"
+      },
+      {
+        "de": "der Flohmarkt, ¨-e",
+        "en": "flea market"
+      }
+    ],
+    "questions": [
+      {
+        "question_de": "Wie groß ist die Wohnung in Anzeige a?",
+        "question_en": "How big is the apartment in ad a?",
+        "answer_de": "Sie ist 55 Quadratmeter groß.",
+        "answer_en": "It is 55 square meters."
+      },
+      {
+        "question_de": "Was verdient man im Café pro Stunde?",
+        "question_en": "How much do you earn per hour at the café?",
+        "answer_de": "Man verdient 13 Euro pro Stunde.",
+        "answer_en": "You earn 13 euros per hour."
+      },
+      {
+        "question_de": "Wann ist der Flohmarkt?",
+        "question_en": "When is the flea market?",
+        "answer_de": "Er ist am Samstag von 9 bis 15 Uhr.",
+        "answer_en": "It is on Saturday from 9 a.m. to 3 p.m."
+      }
+    ],
+    "checks": [
+      {
+        "type": "choice",
+        "answer": "a",
+        "options": [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e",
+          "f",
+          "x"
+        ],
+        "statement_de": "Lena sucht eine Wohnung mit zwei Zimmern und einem Balkon in Leipzig.",
+        "statement_en": "Lena is looking for a two-room apartment with a balcony in Leipzig.",
+        "explanation_de": "Anzeige a passt: Wir vermieten eine schöne 2-Zimmer-Wohnung in Leipzig-Süd mit Balkon."
+      },
+      {
+        "type": "choice",
+        "answer": "b",
+        "options": [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e",
+          "f",
+          "x"
+        ],
+        "statement_de": "Paul möchte am Wochenende ein bisschen Geld verdienen und mag Kundenkontakt.",
+        "statement_en": "Paul wants to earn some money on weekends and likes contact with customers.",
+        "explanation_de": "Anzeige b passt: Café am Markt sucht eine Aushilfe für Wochenenden, arbeitest gern mit Menschen."
+      },
+      {
+        "type": "choice",
+        "answer": "d",
+        "options": [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e",
+          "f",
+          "x"
+        ],
+        "statement_de": "Mia braucht ein günstiges, altes Fahrrad für den Weg zur Arbeit.",
+        "statement_en": "Mia needs an affordable, old bike for the way to work.",
+        "explanation_de": "Anzeige d passt: Verkaufe mein Fahrrad, zwei Jahre alt, in einem guten Zustand, Preis 90 Euro."
+      },
+      {
+        "type": "choice",
+        "answer": "e",
+        "options": [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e",
+          "f",
+          "x"
+        ],
+        "statement_de": "Tom ist in der 7. Klasse und braucht Hilfe in Mathematik.",
+        "statement_en": "Tom is in 7th grade and needs help in math.",
+        "explanation_de": "Anzeige e passt: Nachhilfe in Mathematik für Schüler von Klasse 5 bis 10."
+      },
+      {
+        "type": "choice",
+        "answer": "x",
+        "options": [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e",
+          "f",
+          "x"
+        ],
+        "statement_de": "Ben sucht einen Deutschkurs am Wochenende für Fortgeschrittene.",
+        "statement_en": "Ben is looking for a German course on weekends for advanced learners.",
+        "explanation_de": "Der Deutschkurs in Anzeige c ist für Anfänger und ist dienstags und donnerstags, nicht am Wochenende. Keine Anzeige passt für Ben."
+      }
+    ],
+    "word_count": 187,
+    "difficulty": 2,
+    "estimated_reading_time": 3,
+    "order_index": 10
   }
 ]
