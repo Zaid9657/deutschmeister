@@ -106,6 +106,13 @@ article beyond the frozen chunks (kalter Kaffee ✗ — "der kalte Kaffee"); las
 Partizip as adjective (die geöffnete Tür ✗); sentences over 16 words in learner-facing German;
 vocabulary outside the Goethe A2 Wortliste (when in doubt, choose the more basic word).
 
+## Ruling 2026-09-06 (Wave 5 PR C review): indefinite-plural adjectives in reading texts
+An adjective before an article-less PLURAL noun (nette Leute, frische Brötchen, alte Freunde) is allowed as
+RECEPTIVE exposure inside reading and listening texts only — it is ordinary A2 reading reality and Goethe A2
+texts carry it. It stays banned in check statements, questions, explanations, key_vocabulary examples,
+exercises, rule text and every production task; the SINGULAR null-article pattern (kalter Kaffee, hohes
+Fieber) stays banned everywhere except the frozen chunks.
+
 ## Wortliste exception (carried from Wave 4, ruling 2026-09-06)
 Words from the Goethe A2 Wortliste may exist as RECEPTIVE vocabulary headwords with an example
 sentence that shows the chunk even where the grammar is above the level (e.g. a Passiv chunk in an
