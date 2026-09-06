@@ -98,9 +98,11 @@ export const LISTENING_EXERCISE_COUNT = 48;
  *  exactly, so that value plus the 114 rows of migrations/2026-09-05-a1-1-wortliste.sql
  *  (A1.1 Wortliste, Course Factory Wave 2 PR B) gave 2049. Counted: live 2049 + 166 A1.2
  *  additions in migrations/2026-09-05-a1-2-wortliste.sql (A1.2 Wortliste, Course Factory
- *  Wave 3 PR B) = 2215 (2026-09-05).
+ *  Wave 3 PR B) = 2215 (2026-09-05). Counted: live 2215 + 175 A2.1 additions in
+ *  migrations/2026-09-06-a2-1-wortliste.sql (A2.1 Wortliste, Course Factory Wave 4 PR B)
+ *  = 2390 (2026-09-06).
  *  NOTE: llms.txt and llms-full.txt claimed 1,982 until 2026-08-24 — overstated by 47. */
-export const VOCAB_WORD_COUNT = 2215;
+export const VOCAB_WORD_COUNT = 2390;
 
 /** Vocabulary example sentences. Source: sentences count via Supabase (2026-08-24). */
 export const VOCAB_SENTENCE_COUNT = 945;
