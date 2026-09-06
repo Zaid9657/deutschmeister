@@ -1,0 +1,1144 @@
+{
+ "topic": {
+  "sub_level": "A2.1",
+  "topic_order": 9,
+  "title_en": "Adjective Endings (Basics)",
+  "title_de": "Adjektivendungen nach der und ein",
+  "slug": "adjective-endings-intro",
+  "description_en": "Give adjectives the right ending after der/die/das and after ein/kein/mein in Nominativ, Akkusativ and Dativ. You need them to describe a flat, a job or a person in Goethe A2 Schreiben Teil 2 (E-Mail) and Sprechen Teil 2. After sein the adjective keeps no ending at all: Der Kaffee ist gut.",
+  "description_de": "Lerne die Endungen nach der, die, das und nach ein, kein, mein. Du brauchst sie im Schreiben Teil 2 und im Sprechen Teil 2. Nach ist bleibt das Adjektiv ohne Endung.",
+  "estimated_time": 25,
+  "icon": "book",
+  "is_published": true,
+  "prerequisite_slugs": [
+   "dative-case",
+   "possessive-pronouns"
+  ],
+  "related_slugs": [
+   "accusative-intro",
+   "adjective-declension-weak-mixed"
+  ]
+ },
+ "rules": [
+  {
+   "rule_type": "introduction",
+   "title_en": "Adjective Endings Introduction",
+   "title_de": "Einführung: Adjektivendungen",
+   "content": {
+    "hook_de": "Der Kaffee ist gut. Das ist ein guter Kaffee. Vor dem Nomen bekommt das Adjektiv eine Endung.",
+    "hook_en": "Der Kaffee ist gut. Das ist ein guter Kaffee. Before a noun the German adjective takes an ending; after the verb it takes none.",
+    "scenario_en": "You need the endings every time the adjective stands in front of the noun: den neuen Job, eine kleine Wohnung, mit dem alten Auto.",
+    "preview_note_en": "Two positions, two rules: after the verb no ending, before the noun an ending.",
+    "preview_highlight": "Der Kaffee ist gut. → der gute Kaffee",
+    "why_it_matters_en": "Goethe A2 Schreiben Teil 2 (E-Mail) and Sprechen Teil 2 ask you to describe things: a small flat, a new job, a friendly colleague. Without endings the description sounds wrong from the first word.",
+    "preview_example_de": "gut → der gute Kaffee, ein guter Kaffee, mit dem guten Kaffee",
+    "preview_example_en": "good → the good coffee, a good coffee, with the good coffee",
+    "german_difference_en": "English never changes the adjective: good coffee, a good coffee, with the good coffee. German changes the ending three times, because the ending carries gender, case and number.",
+    "english_comparison_en": "English marks nothing on the adjective, German marks a lot. The good news: after der/die/das there are only two endings in the whole system, -e and -en."
+   },
+   "order_index": -1,
+   "common_mistakes": null,
+   "memory_trick_en": null,
+   "memory_trick_de": null,
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": null,
+   "key_insight_de": null
+  },
+  {
+   "rule_type": "explanation_core",
+   "title_en": "Two Positions, Two Rules",
+   "title_de": "Zwei Positionen, zwei Regeln",
+   "content": {
+    "content_de": "Das Adjektiv steht nach dem Verb: Der Kaffee ist gut. Dann hat es keine Endung. Das Adjektiv steht vor dem Nomen: der gute Kaffee. Dann hat es eine Endung. Prüfe also immer zuerst: vor dem Nomen oder nach dem Verb?",
+    "content_en": "Slot A — after the verb (predicative): Der Kaffee ist gut. Die Wohnung ist klein. Die Kinder sind laut. No ending, ever, in any gender or number. Slot B — in front of the noun (attributive): der gute Kaffee, die kleine Wohnung, die lauten Kinder. Here an ending is obligatory. So always check the slot first, and only then the table. (\"Position 1\" is kept for its usual meaning, the first slot in the sentence — see basic-sentence-structure.)"
+   },
+   "order_index": 1,
+   "common_mistakes": null,
+   "memory_trick_en": "Before the noun: ending. After the verb: no ending.",
+   "memory_trick_de": "Vor dem Nomen: Endung. Nach dem Verb: keine Endung.",
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": "After forms of sein (ist, sind, war) the adjective never takes an ending. This is the one place where German is simpler than the table suggests.",
+   "key_insight_de": "Nach ist, sind und war hat das Adjektiv nie eine Endung. Das ist der einfache Teil vom Thema."
+  },
+  {
+   "rule_type": "table",
+   "title_en": "After der/die/das: only -e or -en",
+   "title_de": "Nach der, die, das: nur -e oder -en",
+   "content": {
+    "type": "case_table",
+    "headers": [
+     "Fall",
+     "maskulin",
+     "feminin",
+     "neutrum",
+     "Plural"
+    ],
+    "rows": [
+     [
+      "Nominativ",
+      "der gute Mann",
+      "die gute Frau",
+      "das gute Kind",
+      "die guten Kinder"
+     ],
+     [
+      "Akkusativ",
+      "den guten Mann",
+      "die gute Frau",
+      "das gute Kind",
+      "die guten Kinder"
+     ],
+     [
+      "Dativ",
+      "dem guten Mann",
+      "der guten Frau",
+      "dem guten Kind",
+      "den guten Kindern"
+     ]
+    ],
+    "highlight_row": -1,
+    "description_de": "Nach der, die, das gibt es nur zwei Endungen: -e und -en. Im Dativ steht immer -en. Im Plural steht auch immer -en.",
+    "description_en": "After der/die/das there are only two endings in the whole table: -e and -en. The dative row is -en everywhere, and the plural column is -en everywhere. Note the dative plural also keeps the noun's -n: den guten Kindern (you know that -n from dative-case)."
+   },
+   "order_index": 2,
+   "common_mistakes": null,
+   "memory_trick_en": "Dative is easy: always -en. Plural too: always -en.",
+   "memory_trick_de": "Dativ ist einfach: immer -en. Plural auch: immer -en.",
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": "Only five cells take -e: the three nominative singulars plus accusative feminine and neuter. Every other cell in the table is -en.",
+   "key_insight_de": "Nur fünf Felder haben -e: Nominativ Singular und Akkusativ feminin und neutrum. Alle anderen Felder haben -en."
+  },
+  {
+   "rule_type": "table",
+   "title_en": "After ein/kein/mein: -er and -es appear",
+   "title_de": "Nach ein, kein, mein: die Endungen -er und -es",
+   "content": {
+    "type": "case_table",
+    "headers": [
+     "Fall",
+     "maskulin",
+     "feminin",
+     "neutrum",
+     "Plural (kein, mein)"
+    ],
+    "rows": [
+     [
+      "Nominativ",
+      "ein guter Mann",
+      "eine gute Frau",
+      "ein gutes Kind",
+      "meine guten Kinder"
+     ],
+     [
+      "Akkusativ",
+      "einen guten Mann",
+      "eine gute Frau",
+      "ein gutes Kind",
+      "meine guten Kinder"
+     ],
+     [
+      "Dativ",
+      "einem guten Mann",
+      "einer guten Frau",
+      "einem guten Kind",
+      "meinen guten Kindern"
+     ]
+    ],
+    "highlight_row": -1,
+    "description_de": "ein und kein haben zwei Formen ohne Endung: ein Mann, ein Kind. Dort bekommt das Adjektiv -er oder -es. Alle anderen Endungen sind wie nach der, die, das. kein geht auch im Plural: Das sind keine guten Ideen.",
+    "description_en": "ein and kein carry no ending of their own in the masculine nominative (ein Mann) and in the neuter (ein Kind, nominative and accusative alike). There the adjective steps in and shows the gender instead: ein guter Mann (like der), ein gutes Kind (like das). That is two new endings, -er and -es, in three cells; everywhere else the endings are identical to the der/die/das table."
+   },
+   "order_index": 3,
+   "common_mistakes": null,
+   "memory_trick_en": "No ending on the article? Then the adjective supplies it: guter (like der), gutes (like das).",
+   "memory_trick_de": "ein und kein zeigen nicht immer den Fall. Dann hilft das Adjektiv: guter, gutes.",
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": "ein has no plural form. In the plural use kein, mein or dein — and there the adjective always ends in -en.",
+   "key_insight_de": "ein hat keinen Plural. Im Plural nimmst du kein oder mein. Die Endung ist dort immer -en: keine guten Ideen."
+  },
+  {
+   "rule_type": "pattern",
+   "title_en": "Find the Ending in Three Steps",
+   "title_de": "So findest du die Endung: drei Schritte",
+   "content": {
+    "type": "steps",
+    "steps": [
+     {
+      "step": 1,
+      "title_de": "Steht das Adjektiv vor dem Nomen?",
+      "title_en": "Does the adjective stand in front of the noun?",
+      "detail_de": "Nein? Dann kommt keine Endung. Der Kaffee ist gut. Ja? Dann geh zu Schritt 2.",
+      "detail_en": "No — it stands after ist/sind/war? Then there is no ending: Der Kaffee ist gut. Yes — it stands in front of a noun? Then go on to step 2."
+     },
+     {
+      "step": 2,
+      "title_de": "Welcher Artikel steht davor?",
+      "title_en": "Which article stands in front of it?",
+      "detail_de": "der, die, das oder den, dem → Tabelle 1. ein, kein, mein → Tabelle 2.",
+      "detail_en": "der, die, das, den, dem → use table 1 (only -e and -en). ein, eine, einen, kein, mein, dein → use table 2 (the one with -er and -es)."
+     },
+     {
+      "step": 3,
+      "title_de": "Welcher Fall? Und maskulin, feminin, neutrum oder Plural?",
+      "title_en": "Which case — and which gender, or plural?",
+      "detail_de": "Suche das Feld in der Tabelle. Beispiel: Ich helfe dem ___ Mann. Dativ, maskulin, Artikel dem. Die Endung ist -en: dem alten Mann.",
+      "detail_en": "Look the cell up in the table. Example: Ich helfe dem ___ Mann. The verb helfen takes the dative, the noun is masculine, the article is dem → the cell says -en → dem alten Mann."
+     }
+    ],
+    "description_de": "Drei Fragen, immer in der gleichen Reihenfolge. Dann findest du jede Endung.",
+    "description_en": "Three questions, always in the same order: position, article, cell. Work through them and every ending in this topic falls out."
+   },
+   "order_index": 4,
+   "common_mistakes": null,
+   "memory_trick_en": null,
+   "memory_trick_de": null,
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": "Step 2 is the step learners skip. The article decides which of the two tables you are in, so read the article before you read the noun.",
+   "key_insight_de": "Schritt 2 vergessen viele Lerner. Der Artikel zeigt die richtige Tabelle. Lies also zuerst den Artikel."
+  },
+  {
+   "rule_type": "tip",
+   "title_en": "Fixed Phrases You Already Know",
+   "title_de": "Feste Wendungen mit Endung",
+   "content": {
+    "content_de": "Einige Wendungen sind fest. Du lernst sie ohne Regel. Guten Morgen! Guten Tag! Guten Abend! Guten Appetit! Schönes Wochenende! Liebe Grüße. Viele Grüße. Diese Wendungen brauchst du in der E-Mail und in der SMS.",
+    "content_en": "A handful of everyday phrases carry an ending with no article in front: Guten Morgen! Guten Tag! Guten Abend! Guten Appetit! Schönes Wochenende! and the two sign-offs Liebe Grüße / Viele Grüße. They follow a third pattern (no article at all) that you meet properly at B1. For A2, learn them whole and use them."
+   },
+   "order_index": 5,
+   "common_mistakes": null,
+   "memory_trick_en": null,
+   "memory_trick_de": null,
+   "formal_note_en": "In Goethe A2 Schreiben Teil 1 (SMS) and Teil 2 (E-Mail) you open with Hallo or Guten Tag and close with Liebe Grüße or Viele Grüße. Both sign-offs carry an adjective ending, so an examiner sees the pattern before reading your first sentence.",
+   "formal_note_de": "Im Schreiben Teil 1 und Teil 2 beginnst du mit Hallo. Am Ende schreibst du Liebe Grüße oder Viele Grüße.",
+   "key_insight_en": "Do not try to derive these from the two tables — they belong to the third (article-less) pattern. Learn each one whole.",
+   "key_insight_de": "Diese Wendungen kommen nicht aus den zwei Tabellen. Lerne sie komplett."
+  },
+  {
+   "rule_type": "dialogue",
+   "title_en": "Dialogue: The New Job",
+   "title_de": "Dialog: der neue Job",
+   "content": {
+    "lines": [
+     {
+      "speaker": "Anna",
+      "de": "Wie ist dein neuer Job?",
+      "en": "How is your new job?",
+      "highlight": "dein neuer — ein-Wort, Nominativ maskulin"
+     },
+     {
+      "speaker": "Ben",
+      "de": "Sehr gut. Die Kollegen sind nett und freundlich.",
+      "en": "Very good. The colleagues are nice and friendly.",
+      "highlight": "nett und freundlich — nach sind, keine Endung"
+     },
+     {
+      "speaker": "Anna",
+      "de": "Und wo arbeitest du jetzt?",
+      "en": "And where do you work now?",
+      "highlight": "kein Adjektiv, nur die Frage mit wo"
+     },
+     {
+      "speaker": "Ben",
+      "de": "Ich arbeite in einem hellen Büro.",
+      "en": "I work in a bright office.",
+      "highlight": "einem hellen — ein-Wort, Dativ neutrum"
+     },
+     {
+      "speaker": "Anna",
+      "de": "Hast du einen langen Weg?",
+      "en": "Do you have a long commute?",
+      "highlight": "einen langen — ein-Wort, Akkusativ maskulin"
+     },
+     {
+      "speaker": "Ben",
+      "de": "Nein. Ich nehme immer die schnelle U-Bahn.",
+      "en": "No. I always take the fast underground.",
+      "highlight": "die schnelle — der-Wort, Akkusativ feminin"
+     }
+    ],
+    "context_de": "Anna fragt Ben. Ben hat einen neuen Job.",
+    "context_en": "Anna asks Ben about his new job — the kind of small talk Sprechen Teil 2 is built on.",
+    "grammar_focus_en": "Six lines, five different cells: dein neuer Job (mixed, nom. masc. -er), nett und freundlich (predicative, no ending), einem hellen Büro (mixed, dat. neut. -en), einen langen Weg (mixed, acc. masc. -en), die schnelle U-Bahn (weak, acc. fem. -e). Notice how only the -er in 'dein neuer' looks new; the rest is -e and -en."
+   },
+   "order_index": 6,
+   "common_mistakes": null,
+   "memory_trick_en": null,
+   "memory_trick_de": null,
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": "In Goethe A2 Sprechen Teil 2 you describe your everyday life to a partner. The adjective endings are what make 'Ich habe einen langen Weg' sound German rather than translated.",
+   "key_insight_de": "Im Sprechen Teil 2 beschreibst du deinen Alltag. Adjektive machen die Antwort interessant."
+  },
+  {
+   "rule_type": "common_mistakes",
+   "title_en": "Five Ending Mistakes",
+   "title_de": "Fünf Fehler mit den Endungen",
+   "content": {
+    "content_de": "Die Endungen sind klar. Trotzdem kommen fünf Fehler sehr oft.",
+    "content_en": "The two tables are short, but five mistakes still come up in almost every A2 class: the missing -er after ein, the -e where -en belongs in the accusative, a bare adjective in the dative, an ending after ist, and -e instead of -es in the neuter."
+   },
+   "order_index": 7,
+   "common_mistakes": [
+    {
+     "wrong": "Das ist ein guten Freund.",
+     "correct": "Das ist ein guter Freund.",
+     "explanation_de": "Nominativ maskulin: ein hat keine Endung. Dann nimmt das Adjektiv -er.",
+     "explanation_en": "Masculine nominative: ein carries no ending, so the adjective has to show the gender with -er."
+    },
+    {
+     "wrong": "Ich kaufe den neue Pullover.",
+     "correct": "Ich kaufe den neuen Pullover.",
+     "explanation_de": "Im Akkusativ maskulin steht immer -en. Der Artikel den zeigt den Fall.",
+     "explanation_en": "Accusative masculine is always -en. The article den already shows the case, and the adjective follows it."
+    },
+    {
+     "wrong": "Ich wohne in einem klein Zimmer.",
+     "correct": "Ich wohne in einem kleinen Zimmer.",
+     "explanation_de": "Im Dativ ist die Endung immer -en. Das gilt für alle Formen.",
+     "explanation_en": "In the dative the ending is always -en, in every gender and in the plural. A bare adjective is never right in front of a noun."
+    },
+    {
+     "wrong": "Der Kaffee ist guter.",
+     "correct": "Der Kaffee ist gut.",
+     "explanation_de": "Nach ist hat das Adjektiv keine Endung. Es steht nicht vor dem Nomen.",
+     "explanation_en": "After ist the adjective is predicative: it does not stand in front of a noun, so it takes no ending."
+    },
+    {
+     "wrong": "Wir haben ein neue Auto.",
+     "correct": "Wir haben ein neues Auto.",
+     "explanation_de": "Neutrum: ein hat keine Endung. Dann nimmt das Adjektiv -es.",
+     "explanation_en": "Neuter: ein carries no ending, so the adjective shows it with -es (like das Auto)."
+    }
+   ],
+   "memory_trick_en": null,
+   "memory_trick_de": null,
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": "Four of the five mistakes come from one habit: reading the noun before the article. The article decides the table.",
+   "key_insight_de": "Vier von fünf Fehlern haben den gleichen Grund. Lerner lesen zuerst das Nomen, nicht den Artikel."
+  },
+  {
+   "rule_type": "summary",
+   "title_en": "Quick Reference",
+   "title_de": "Kurzübersicht",
+   "content": {
+    "points": [
+     "Nach ist, sind, war: keine Endung. Der Kaffee ist gut.",
+     "Vor dem Nomen: immer eine Endung. Der gute Kaffee.",
+     "Nach der, die, das gibt es nur -e und -en.",
+     "-e steht im Nominativ Singular: der gute Mann, das gute Kind.",
+     "-e steht auch im Akkusativ feminin und neutrum: die gute Frau.",
+     "Alle anderen Felder haben -en: den guten Mann, dem guten Kind.",
+     "Im Plural steht immer -en: die guten Kinder.",
+     "Dativ Plural: den guten Kindern. Das Nomen bekommt auch ein -n.",
+     "Nach ein, kein, mein sind zwei Endungen neu: -er und -es.",
+     "-er ist maskulin: ein guter Mann. -es ist neutrum: ein gutes Kind.",
+     "Alle anderen Felder sind wie nach der, die, das.",
+     "ein hat keinen Plural. Nimm kein oder mein: keine guten Ideen.",
+     "Feste Wendungen: Guten Morgen! Guten Appetit! Schönes Wochenende! Liebe Grüße."
+    ]
+   },
+   "order_index": 99,
+   "common_mistakes": null,
+   "memory_trick_en": null,
+   "memory_trick_de": null,
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": null,
+   "key_insight_de": null
+  }
+ ],
+ "examples": [
+  {
+   "sentence_de": "Der neue Lehrer ist sehr nett.",
+   "sentence_en": "The new teacher is very nice.",
+   "grammar_highlight": "Der neue Lehrer",
+   "explanation_en": "der + Nominativ masculine → -e. The second adjective, nett, stands after ist and takes no ending.",
+   "explanation_de": "der + Nominativ maskulin → -e. Das zweite Adjektiv nett steht nach ist und hat keine Endung.",
+   "word_breakdown": {
+    "Der": "the (masculine, nominative)",
+    "neue": "new (weak ending -e)",
+    "Lehrer": "teacher",
+    "ist": "is",
+    "sehr": "very",
+    "nett": "nice (after ist: no ending)"
+   },
+   "difficulty": 1,
+   "category": "basic",
+   "order_index": 1,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Die Wohnung ist neu und hell.",
+   "sentence_en": "The flat is new and bright.",
+   "grammar_highlight": "ist neu und hell",
+   "explanation_en": "Both adjectives stand after ist, so both stay endingless — in every gender.",
+   "explanation_de": "Beide Adjektive stehen nach ist. Sie haben keine Endung.",
+   "word_breakdown": {
+    "Die": "the (feminine, nominative)",
+    "Wohnung": "flat, apartment",
+    "ist": "is",
+    "neu": "new (no ending)",
+    "und": "and",
+    "hell": "bright (no ending)"
+   },
+   "difficulty": 1,
+   "category": "basic",
+   "order_index": 2,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Ich kaufe den grünen Pullover.",
+   "sentence_en": "I am buying the green sweater.",
+   "grammar_highlight": "den grünen Pullover",
+   "explanation_en": "kaufen takes the accusative; der Pullover is masculine, so der becomes den and the adjective takes -en.",
+   "explanation_de": "kaufen steht mit Akkusativ. Aus der Pullover wird den Pullover. Das Adjektiv bekommt -en.",
+   "word_breakdown": {
+    "Ich": "I",
+    "kaufe": "buy, am buying",
+    "den": "the (masculine, accusative)",
+    "grünen": "green (weak ending -en)",
+    "Pullover": "sweater"
+   },
+   "difficulty": 2,
+   "category": "basic",
+   "order_index": 3,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Ich helfe dem alten Mann.",
+   "sentence_en": "I am helping the old man.",
+   "grammar_highlight": "dem alten Mann",
+   "explanation_en": "helfen takes the dative (you know it from dative-case); in the dative the ending is always -en.",
+   "explanation_de": "helfen steht mit Dativ. Im Dativ ist die Endung immer -en.",
+   "word_breakdown": {
+    "Ich": "I",
+    "helfe": "help (helfen + Dativ)",
+    "dem": "the (masculine, dative)",
+    "alten": "old (weak ending -en)",
+    "Mann": "man"
+   },
+   "difficulty": 2,
+   "category": "intermediate",
+   "order_index": 4,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Die neuen Kollegen sind sehr freundlich.",
+   "sentence_en": "The new colleagues are very friendly.",
+   "grammar_highlight": "Die neuen Kollegen",
+   "explanation_en": "Plural after die: always -en. freundlich stands after sind and stays endingless.",
+   "explanation_de": "Plural nach die: immer -en. freundlich steht nach sind und hat keine Endung.",
+   "word_breakdown": {
+    "Die": "the (plural)",
+    "neuen": "new (plural ending -en)",
+    "Kollegen": "colleagues",
+    "sind": "are",
+    "sehr": "very",
+    "freundlich": "friendly (after sind: no ending)"
+   },
+   "difficulty": 2,
+   "category": "basic",
+   "order_index": 5,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Peter ist ein guter Freund.",
+   "sentence_en": "Peter is a good friend.",
+   "grammar_highlight": "ein guter Freund",
+   "explanation_en": "ein carries no ending in the masculine nominative, so the adjective shows the gender with -er.",
+   "explanation_de": "ein hat im Nominativ maskulin keine Endung. Das Adjektiv nimmt -er.",
+   "word_breakdown": {
+    "Peter": "Peter (name)",
+    "ist": "is",
+    "ein": "a (masculine, nominative)",
+    "guter": "good (mixed ending -er)",
+    "Freund": "friend"
+   },
+   "difficulty": 2,
+   "category": "intermediate",
+   "order_index": 6,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Das ist ein gutes Buch.",
+   "sentence_en": "That is a good book.",
+   "grammar_highlight": "ein gutes Buch",
+   "explanation_en": "das Buch is neuter and ein has no ending there, so the adjective takes -es.",
+   "explanation_de": "das Buch ist neutrum. ein hat keine Endung. Das Adjektiv nimmt -es.",
+   "word_breakdown": {
+    "Das": "that",
+    "ist": "is",
+    "ein": "a (neuter)",
+    "gutes": "good (mixed ending -es)",
+    "Buch": "book"
+   },
+   "difficulty": 2,
+   "category": "intermediate",
+   "order_index": 7,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Ich möchte einen warmen Tee trinken.",
+   "sentence_en": "I would like to drink a warm tea.",
+   "grammar_highlight": "einen warmen Tee",
+   "explanation_en": "Accusative masculine after ein: einen + -en. The modal verb möchte sends trinken to the end.",
+   "explanation_de": "Akkusativ maskulin nach ein: einen und -en. Das Modalverb möchte schickt trinken ans Ende.",
+   "word_breakdown": {
+    "Ich": "I",
+    "möchte": "would like to",
+    "einen": "a (masculine, accusative)",
+    "warmen": "warm (mixed ending -en)",
+    "Tee": "tea",
+    "trinken": "to drink"
+   },
+   "difficulty": 3,
+   "category": "intermediate",
+   "order_index": 8,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Ich wohne in einer ruhigen Straße.",
+   "sentence_en": "I live in a quiet street.",
+   "grammar_highlight": "einer ruhigen Straße",
+   "explanation_en": "wo? → in + Dativ. Feminine dative: einer + -en.",
+   "explanation_de": "wo? → in mit Dativ. Feminin im Dativ: einer und -en.",
+   "word_breakdown": {
+    "Ich": "I",
+    "wohne": "live",
+    "in": "in (wo? → Dativ)",
+    "einer": "a (feminine, dative)",
+    "ruhigen": "quiet (mixed ending -en)",
+    "Straße": "street"
+   },
+   "difficulty": 3,
+   "category": "intermediate",
+   "order_index": 9,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Guten Appetit! Die Suppe ist wirklich lecker.",
+   "sentence_en": "Enjoy your meal! The soup is really tasty.",
+   "grammar_highlight": "Guten Appetit",
+   "explanation_en": "Guten Appetit is a fixed phrase with no article — learn it whole. lecker stands after ist and takes no ending.",
+   "explanation_de": "Guten Appetit ist eine feste Wendung ohne Artikel. lecker steht nach ist und hat keine Endung.",
+   "word_breakdown": {
+    "Guten": "good (fixed phrase, no article)",
+    "Appetit": "appetite",
+    "Die": "the (feminine)",
+    "Suppe": "soup",
+    "ist": "is",
+    "wirklich": "really",
+    "lecker": "tasty (after ist: no ending)"
+   },
+   "difficulty": 2,
+   "category": "everyday",
+   "order_index": 10,
+   "audio_url": null
+  }
+ ],
+ "exercises": [
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "Das ist der ___ Computer. (neu)",
+   "question_en": "Write the adjective with the right ending: That is the new computer. (adjective: neu; article: der; Nominativ, masculine)",
+   "options": null,
+   "correct_answer": "neue",
+   "acceptable_answers": [
+    "neue"
+   ],
+   "explanation_en": "der + Nominativ masculine → -e.",
+   "explanation_de": "der + Nominativ maskulin → -e.",
+   "hint": null,
+   "why_correct_en": "Table 1, top-left cell: der gute Mann → der neue Computer.",
+   "why_correct_de": "Tabelle 1, erstes Feld: der gute Mann → der neue Computer.",
+   "difficulty": 1,
+   "stage": 4,
+   "order_index": 1,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "Ich nehme den ___ Kuchen. (frisch)",
+   "question_en": "Write the adjective with the right ending: I am taking the fresh cake. (adjective: frisch; article: den; Akkusativ, masculine)",
+   "options": null,
+   "correct_answer": "frischen",
+   "acceptable_answers": [
+    "frischen"
+   ],
+   "explanation_en": "Accusative masculine after den is always -en.",
+   "explanation_de": "Akkusativ maskulin nach den ist immer -en.",
+   "hint": null,
+   "why_correct_en": "der Kuchen → Akkusativ den Kuchen; the cell says -en → den frischen Kuchen.",
+   "why_correct_de": "der Kuchen → Akkusativ den Kuchen. Das Feld sagt -en: den frischen Kuchen.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 2,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "Ich spreche mit der ___ Ärztin. (nett)",
+   "question_en": "Write the adjective with the right ending: I am speaking with the nice (female) doctor. (adjective: nett; preposition mit + Dativ; article: der; feminine)",
+   "options": null,
+   "correct_answer": "netten",
+   "acceptable_answers": [
+    "netten"
+   ],
+   "explanation_en": "mit always takes the dative; in the dative the ending is always -en.",
+   "explanation_de": "mit steht immer mit Dativ. Im Dativ ist die Endung immer -en.",
+   "hint": null,
+   "why_correct_en": "die Ärztin → Dativ der Ärztin; the dative row is -en → der netten Ärztin.",
+   "why_correct_de": "die Ärztin → Dativ der Ärztin. Die Dativ-Zeile hat -en: der netten Ärztin.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 3,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "Die ___ Kinder sind laut. (klein)",
+   "question_en": "Write the adjective with the right ending: The small children are loud. (adjective: klein; article: die; Nominativ, plural)",
+   "options": null,
+   "correct_answer": "kleinen",
+   "acceptable_answers": [
+    "kleinen"
+   ],
+   "explanation_en": "The plural column is -en everywhere. laut stands after sind and keeps no ending.",
+   "explanation_de": "Die Plural-Spalte hat immer -en. laut steht nach sind und hat keine Endung.",
+   "hint": null,
+   "why_correct_en": "die Kinder is plural → -en → die kleinen Kinder.",
+   "why_correct_de": "die Kinder ist Plural → -en: die kleinen Kinder.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 4,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "Das ist ein ___ Film. (interessant)",
+   "question_en": "Write the adjective with the right ending: That is an interesting film. (adjective: interessant; article: ein; Nominativ, masculine)",
+   "options": null,
+   "correct_answer": "interessanter",
+   "acceptable_answers": [
+    "interessanter"
+   ],
+   "explanation_en": "ein has no ending in the masculine nominative, so the adjective takes -er.",
+   "explanation_de": "ein hat im Nominativ maskulin keine Endung. Das Adjektiv nimmt -er.",
+   "hint": null,
+   "why_correct_en": "der Film is masculine; ein shows nothing, so the adjective does: ein interessanter Film.",
+   "why_correct_de": "der Film ist maskulin. ein zeigt nichts, das Adjektiv zeigt -er: ein interessanter Film.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 5,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "Wir haben ein ___ Auto. (klein)",
+   "question_en": "Write the adjective with the right ending: We have a small car. (adjective: klein; article: ein; Akkusativ, neuter)",
+   "options": null,
+   "correct_answer": "kleines",
+   "acceptable_answers": [
+    "kleines"
+   ],
+   "explanation_en": "Neuter: ein carries no ending, so the adjective takes -es.",
+   "explanation_de": "Neutrum: ein hat keine Endung. Das Adjektiv nimmt -es.",
+   "hint": null,
+   "why_correct_en": "das Auto is neuter, and neuter looks the same in Nominativ and Akkusativ → ein kleines Auto.",
+   "why_correct_de": "das Auto ist neutrum. Nominativ und Akkusativ sind gleich: ein kleines Auto.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 6,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "Ich suche einen ___ Tisch. (billig)",
+   "question_en": "Write the adjective with the right ending: I am looking for a cheap table. (adjective: billig; article: einen; Akkusativ, masculine)",
+   "options": null,
+   "correct_answer": "billigen",
+   "acceptable_answers": [
+    "billigen"
+   ],
+   "explanation_en": "Accusative masculine after ein: einen + -en.",
+   "explanation_de": "Akkusativ maskulin nach ein: einen und -en.",
+   "hint": null,
+   "why_correct_en": "einen already shows the accusative, and the adjective follows with -en: einen billigen Tisch.",
+   "why_correct_de": "einen zeigt den Akkusativ. Das Adjektiv folgt mit -en: einen billigen Tisch.",
+   "difficulty": 3,
+   "stage": 4,
+   "order_index": 7,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "error_correction",
+   "question_de": "Korrigiere den Fehler: Ich fahre mit dem neue Bus.",
+   "question_en": "Correct the mistake and write the whole sentence: I go by the new bus. (mit + Dativ, masculine)",
+   "options": null,
+   "correct_answer": "Ich fahre mit dem neuen Bus.",
+   "acceptable_answers": [
+    "Ich fahre mit dem neuen Bus.",
+    "Ich fahre mit dem neuen Bus",
+    "Ich fahre mit dem neuen Bus!",
+    "ich fahre mit dem neuen Bus.",
+    "ich fahre mit dem neuen Bus",
+    "ich fahre mit dem neuen Bus!"
+   ],
+   "explanation_en": "mit takes the dative and the dative ending is -en, not -e.",
+   "explanation_de": "mit steht mit Dativ. Im Dativ ist die Endung -en, nicht -e.",
+   "hint": null,
+   "why_correct_en": "dem is the dative article, so the adjective must be neuen: mit dem neuen Bus.",
+   "why_correct_de": "dem ist der Dativ-Artikel. Das Adjektiv heißt neuen: mit dem neuen Bus.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 8,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "multiple_choice",
+   "question_de": "Wir suchen ___ Zimmer.",
+   "question_en": "Choose the correct form: We are looking for a quiet room. (Akkusativ, neuter, with ein)",
+   "options": [
+    "ein ruhiger",
+    "ein ruhige",
+    "ein ruhiges",
+    "einen ruhigen"
+   ],
+   "correct_answer": "ein ruhiges",
+   "acceptable_answers": null,
+   "explanation_en": "Neuter with ein: the adjective takes -es.",
+   "explanation_de": "Neutrum mit ein: Das Adjektiv nimmt -es.",
+   "hint": null,
+   "why_correct_en": "das Zimmer is neuter; ein has no ending, so the adjective shows it: ein ruhiges Zimmer.",
+   "why_correct_de": "das Zimmer ist neutrum. ein hat keine Endung, das Adjektiv zeigt -es: ein ruhiges Zimmer.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 9,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "multiple_choice",
+   "question_de": "Ich sehe ___ Hund.",
+   "question_en": "Choose the correct form: I see the small dog. (Akkusativ, masculine, with der)",
+   "options": [
+    "der kleine",
+    "den kleinen",
+    "dem kleinen",
+    "die kleine"
+   ],
+   "correct_answer": "den kleinen",
+   "acceptable_answers": null,
+   "explanation_en": "Accusative masculine: der becomes den and the adjective takes -en.",
+   "explanation_de": "Akkusativ maskulin: Aus der wird den. Das Adjektiv nimmt -en.",
+   "hint": null,
+   "why_correct_en": "sehen takes the accusative; der Hund → den Hund → den kleinen Hund.",
+   "why_correct_de": "sehen steht mit Akkusativ. Aus der Hund wird den Hund: den kleinen Hund.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 10,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "multiple_choice",
+   "question_de": "Wir wohnen in ___ Wohnung.",
+   "question_en": "Choose the correct form: We live in a nice flat. (wo? → in + Dativ, feminine, with ein)",
+   "options": [
+    "eine schöne",
+    "einer schöne",
+    "einer schönen",
+    "einen schönen"
+   ],
+   "correct_answer": "einer schönen",
+   "acceptable_answers": null,
+   "explanation_en": "wo? → in + Dativ. Feminine dative: einer + -en.",
+   "explanation_de": "wo? → in mit Dativ. Feminin im Dativ: einer und -en.",
+   "hint": null,
+   "why_correct_en": "wohnen answers wo?, so in takes the dative: in einer schönen Wohnung.",
+   "why_correct_de": "wohnen antwortet auf wo?. Dann steht in mit Dativ: in einer schönen Wohnung.",
+   "difficulty": 3,
+   "stage": 4,
+   "order_index": 11,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "multiple_choice",
+   "question_de": "Welcher Satz ist richtig?",
+   "question_en": "Which sentence is correct? (the adjective stands after ist)",
+   "options": [
+    "Das Wetter ist schön.",
+    "Das Wetter ist schönes.",
+    "Das Wetter ist schöne.",
+    "Das Wetter ist schönen."
+   ],
+   "correct_answer": "Das Wetter ist schön.",
+   "acceptable_answers": null,
+   "explanation_en": "After ist the adjective takes no ending at all.",
+   "explanation_de": "Nach ist hat das Adjektiv keine Endung.",
+   "hint": null,
+   "why_correct_en": "schön does not stand in front of a noun here, so it stays endingless.",
+   "why_correct_de": "schön steht hier nicht vor einem Nomen. Es bleibt ohne Endung.",
+   "difficulty": 1,
+   "stage": 4,
+   "order_index": 12,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "multiple_choice",
+   "question_de": "Ich fahre mit ___ Freunden.",
+   "question_en": "Choose the correct form: I travel with my good friends. (mit + Dativ, plural, with mein)",
+   "options": [
+    "meine guten",
+    "meiner guten",
+    "meinen gute",
+    "meinen guten"
+   ],
+   "correct_answer": "meinen guten",
+   "acceptable_answers": null,
+   "explanation_en": "Dative plural: meinen + -en (and the noun keeps its -n: Freunden).",
+   "explanation_de": "Dativ Plural: meinen und -en. Das Nomen behält das -n: Freunden.",
+   "hint": null,
+   "why_correct_en": "mit takes the dative, the noun is plural → meinen guten Freunden.",
+   "why_correct_de": "mit steht mit Dativ, das Nomen ist Plural: meinen guten Freunden.",
+   "difficulty": 3,
+   "stage": 4,
+   "order_index": 13,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "Schreib den Satz: [das / sein / kein / gut / Fotos]",
+   "question_en": "Write the sentence: Those are not good photos. (Nominativ, plural, with kein — compare item 6, the singular)",
+   "options": null,
+   "correct_answer": "Das sind keine guten Fotos.",
+   "acceptable_answers": [
+    "Das sind keine guten Fotos.",
+    "Das sind keine guten Fotos",
+    "Das sind keine guten Fotos!",
+    "das sind keine guten Fotos.",
+    "das sind keine guten Fotos",
+    "das sind keine guten Fotos!"
+   ],
+   "explanation_en": "kein has a plural, ein does not. In the plural the ending is always -en.",
+   "explanation_de": "kein hat einen Plural, ein nicht. Im Plural ist die Endung immer -en.",
+   "hint": null,
+   "why_correct_en": "die Fotos is plural, so the verb is sind and the adjective takes -en: keine guten Fotos.",
+   "why_correct_de": "die Fotos ist Plural. Das Verb heißt sind. Das Adjektiv nimmt -en: keine guten Fotos.",
+   "difficulty": 2,
+   "stage": 5,
+   "order_index": 1,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "Schreib den Satz: [ich / kaufen / die / rot / Jacke]",
+   "question_en": "Write the sentence: I am buying the red jacket. (Akkusativ, feminine)",
+   "options": null,
+   "correct_answer": "Ich kaufe die rote Jacke.",
+   "acceptable_answers": [
+    "Ich kaufe die rote Jacke.",
+    "Ich kaufe die rote Jacke",
+    "Ich kaufe die rote Jacke!",
+    "ich kaufe die rote Jacke.",
+    "ich kaufe die rote Jacke",
+    "ich kaufe die rote Jacke!"
+   ],
+   "explanation_en": "Feminine accusative after die: the ending is -e.",
+   "explanation_de": "Akkusativ feminin nach die: Die Endung ist -e.",
+   "hint": null,
+   "why_correct_en": "Feminine looks the same in Nominativ and Akkusativ: die rote Jacke.",
+   "why_correct_de": "Feminin ist im Nominativ und im Akkusativ gleich: die rote Jacke.",
+   "difficulty": 2,
+   "stage": 5,
+   "order_index": 2,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "Schreib den Satz: [wir / arbeiten / in / ein / groß / Büro]",
+   "question_en": "Write the sentence: We work in a big office. (wo? → in + Dativ, neuter; both word orders are accepted)",
+   "options": null,
+   "correct_answer": "Wir arbeiten in einem großen Büro.",
+   "acceptable_answers": [
+    "Wir arbeiten in einem großen Büro.",
+    "Wir arbeiten in einem großen Büro",
+    "Wir arbeiten in einem großen Büro!",
+    "wir arbeiten in einem großen Büro.",
+    "wir arbeiten in einem großen Büro",
+    "wir arbeiten in einem großen Büro!",
+    "In einem großen Büro arbeiten wir.",
+    "In einem großen Büro arbeiten wir",
+    "In einem großen Büro arbeiten wir!",
+    "in einem großen Büro arbeiten wir.",
+    "in einem großen Büro arbeiten wir",
+    "in einem großen Büro arbeiten wir!"
+   ],
+   "explanation_en": "wo? → in + Dativ. Neuter dative: einem + -en.",
+   "explanation_de": "wo? → in mit Dativ. Neutrum im Dativ: einem und -en.",
+   "hint": null,
+   "why_correct_en": "arbeiten answers wo?, so in takes the dative → in einem großen Büro. Both word orders are correct.",
+   "why_correct_de": "arbeiten antwortet auf wo?. Dann steht in mit Dativ: in einem großen Büro.",
+   "difficulty": 3,
+   "stage": 5,
+   "order_index": 3,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "Schreib den Satz: [heute / ich / treffen / ein / alt / Freund]",
+   "question_en": "Write the sentence: Today I am meeting an old friend. (Akkusativ, masculine; both word orders are accepted)",
+   "options": null,
+   "correct_answer": "Heute treffe ich einen alten Freund.",
+   "acceptable_answers": [
+    "Heute treffe ich einen alten Freund.",
+    "Heute treffe ich einen alten Freund",
+    "Heute treffe ich einen alten Freund!",
+    "heute treffe ich einen alten Freund.",
+    "heute treffe ich einen alten Freund",
+    "heute treffe ich einen alten Freund!",
+    "Ich treffe heute einen alten Freund.",
+    "Ich treffe heute einen alten Freund",
+    "Ich treffe heute einen alten Freund!",
+    "ich treffe heute einen alten Freund.",
+    "ich treffe heute einen alten Freund",
+    "ich treffe heute einen alten Freund!"
+   ],
+   "explanation_en": "treffen takes the accusative: einen + -en. heute may stand in position 1 or after the verb.",
+   "explanation_de": "treffen steht mit Akkusativ: einen und -en. heute kann auf Position 1 oder nach dem Verb stehen.",
+   "hint": null,
+   "why_correct_en": "Position 1 is free in German, so both orders are correct; the form stays einen alten Freund.",
+   "why_correct_de": "Position 1 ist frei. Beide Sätze sind richtig. Die Form bleibt: einen alten Freund.",
+   "difficulty": 3,
+   "stage": 5,
+   "order_index": 4,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "Schreib den Satz: [ich / helfen / die / alt / Frau]",
+   "question_en": "Write the sentence: I am helping the old woman. (helfen + Dativ, feminine)",
+   "options": null,
+   "correct_answer": "Ich helfe der alten Frau.",
+   "acceptable_answers": [
+    "Ich helfe der alten Frau.",
+    "Ich helfe der alten Frau",
+    "Ich helfe der alten Frau!",
+    "ich helfe der alten Frau.",
+    "ich helfe der alten Frau",
+    "ich helfe der alten Frau!"
+   ],
+   "explanation_en": "helfen takes the dative; die becomes der and the adjective takes -en.",
+   "explanation_de": "helfen steht mit Dativ. Aus die wird der. Das Adjektiv nimmt -en.",
+   "hint": null,
+   "why_correct_en": "You know helfen + Dativ from dative-case; the dative row is -en → der alten Frau.",
+   "why_correct_de": "helfen mit Dativ kennst du aus dem Dativ-Thema. Die Dativ-Zeile hat -en: der alten Frau.",
+   "difficulty": 3,
+   "stage": 5,
+   "order_index": 5,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "Schreib den Satz: [das / sein / kein / gut / Idee]",
+   "question_en": "Write the sentence: That is not a good idea. (Nominativ, feminine singular, with kein — item 1 was the plural)",
+   "options": null,
+   "correct_answer": "Das ist keine gute Idee.",
+   "acceptable_answers": [
+    "Das ist keine gute Idee.",
+    "Das ist keine gute Idee",
+    "Das ist keine gute Idee!",
+    "das ist keine gute Idee.",
+    "das ist keine gute Idee",
+    "das ist keine gute Idee!"
+   ],
+   "explanation_en": "kein works exactly like ein: feminine nominative keine + -e.",
+   "explanation_de": "kein funktioniert wie ein. Feminin im Nominativ: keine und -e.",
+   "hint": null,
+   "why_correct_en": "die Idee is feminine singular, keine already shows it, so the adjective takes -e — kein takes -en only in the plural (item 1).",
+   "why_correct_de": "die Idee ist feminin, Singular. keine zeigt das schon. Das Adjektiv nimmt -e.",
+   "difficulty": 2,
+   "stage": 5,
+   "order_index": 6,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "Schreib den Satz: [er / bestellen / ein / kalt / Getränk]",
+   "question_en": "Write the sentence: He orders a cold drink. (Akkusativ, neuter)",
+   "options": null,
+   "correct_answer": "Er bestellt ein kaltes Getränk.",
+   "acceptable_answers": [
+    "Er bestellt ein kaltes Getränk.",
+    "Er bestellt ein kaltes Getränk",
+    "Er bestellt ein kaltes Getränk!",
+    "er bestellt ein kaltes Getränk.",
+    "er bestellt ein kaltes Getränk",
+    "er bestellt ein kaltes Getränk!"
+   ],
+   "explanation_en": "Neuter: ein has no ending, so the adjective takes -es — in the accusative too.",
+   "explanation_de": "Neutrum: ein hat keine Endung. Das Adjektiv nimmt -es, auch im Akkusativ.",
+   "hint": null,
+   "why_correct_en": "das Getränk is neuter and neuter is identical in Nominativ and Akkusativ → ein kaltes Getränk.",
+   "why_correct_de": "das Getränk ist neutrum. Nominativ und Akkusativ sind gleich: ein kaltes Getränk.",
+   "difficulty": 3,
+   "stage": 5,
+   "order_index": 7,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "Schreib den Satz: [ich / schreiben / mein / gut / Freunde]",
+   "question_en": "Write the sentence: I write to my good friends. (schreiben + Dativ, plural)",
+   "options": null,
+   "correct_answer": "Ich schreibe meinen guten Freunden.",
+   "acceptable_answers": [
+    "Ich schreibe meinen guten Freunden.",
+    "Ich schreibe meinen guten Freunden",
+    "Ich schreibe meinen guten Freunden!",
+    "ich schreibe meinen guten Freunden.",
+    "ich schreibe meinen guten Freunden",
+    "ich schreibe meinen guten Freunden!"
+   ],
+   "explanation_en": "Dative plural: meinen + -en, and the noun adds -n: Freunden.",
+   "explanation_de": "Dativ Plural: meinen und -en. Das Nomen bekommt ein -n: Freunden.",
+   "hint": null,
+   "why_correct_en": "The person you write to stands in the dative; plural dative always ends -en plus the noun's -n.",
+   "why_correct_de": "Die Person steht im Dativ. Im Dativ Plural steht -en und das Nomen bekommt -n.",
+   "difficulty": 3,
+   "stage": 5,
+   "order_index": 8,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "Schreib den Satz: [ich / wünschen / du / ein / schön / Wochenende]",
+   "question_en": "Write the sentence: I wish you a nice weekend. (dative pronoun dir + Akkusativ, neuter)",
+   "options": null,
+   "correct_answer": "Ich wünsche dir ein schönes Wochenende.",
+   "acceptable_answers": [
+    "Ich wünsche dir ein schönes Wochenende.",
+    "Ich wünsche dir ein schönes Wochenende",
+    "Ich wünsche dir ein schönes Wochenende!",
+    "ich wünsche dir ein schönes Wochenende.",
+    "ich wünsche dir ein schönes Wochenende",
+    "ich wünsche dir ein schönes Wochenende!"
+   ],
+   "explanation_en": "Dativ before Akkusativ: dir first, then ein schönes Wochenende. This closes an A2 e-mail perfectly.",
+   "explanation_de": "Dativ vor Akkusativ: zuerst dir, dann ein schönes Wochenende. So endest du eine E-Mail.",
+   "hint": null,
+   "why_correct_en": "das Wochenende is neuter → ein schönes; du becomes dir because it is the dative object.",
+   "why_correct_de": "das Wochenende ist neutrum: ein schönes. Aus du wird dir. Das ist das Dativ-Objekt.",
+   "difficulty": 2,
+   "stage": 5,
+   "order_index": 9,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "Schreib den Satz: [der / Film / sein / lang / und / interessant]",
+   "question_en": "Write the sentence: The film is long and interesting. (both adjectives stand after ist)",
+   "options": null,
+   "correct_answer": "Der Film ist lang und interessant.",
+   "acceptable_answers": [
+    "Der Film ist lang und interessant.",
+    "Der Film ist lang und interessant",
+    "Der Film ist lang und interessant!",
+    "der Film ist lang und interessant.",
+    "der Film ist lang und interessant",
+    "der Film ist lang und interessant!"
+   ],
+   "explanation_en": "After ist neither adjective takes an ending — compare stage 4 item 5, ein interessanter Film.",
+   "explanation_de": "Nach ist hat kein Adjektiv eine Endung. Vergleiche: ein interessanter Film.",
+   "hint": null,
+   "why_correct_en": "Both adjectives stand after ist, not in front of a noun, so both stay endingless.",
+   "why_correct_de": "Beide Adjektive stehen nach ist. Sie stehen nicht vor einem Nomen. Sie bleiben ohne Endung.",
+   "difficulty": 2,
+   "stage": 5,
+   "order_index": 10,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "Schreib den Satz: [wir / brauchen / ein / gut / Arzt]",
+   "question_en": "Write the sentence: We need a good doctor. (brauchen + Akkusativ, masculine)",
+   "options": null,
+   "correct_answer": "Wir brauchen einen guten Arzt.",
+   "acceptable_answers": [
+    "Wir brauchen einen guten Arzt.",
+    "Wir brauchen einen guten Arzt",
+    "Wir brauchen einen guten Arzt!",
+    "wir brauchen einen guten Arzt.",
+    "wir brauchen einen guten Arzt",
+    "wir brauchen einen guten Arzt!"
+   ],
+   "explanation_en": "Accusative masculine after ein: einen + -en.",
+   "explanation_de": "Akkusativ maskulin nach ein: einen und -en.",
+   "hint": null,
+   "why_correct_en": "brauchen takes the accusative; der Arzt is masculine → einen guten Arzt.",
+   "why_correct_de": "brauchen steht mit Akkusativ. der Arzt ist maskulin: einen guten Arzt.",
+   "difficulty": 2,
+   "stage": 5,
+   "order_index": 11,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "Schreib den Satz: [ich / geben / das / klein / Kind / ein Buch]",
+   "question_en": "Write the sentence: I give the small child a book. (geben + Dativ recipient, neuter; Dativ before Akkusativ)",
+   "options": null,
+   "correct_answer": "Ich gebe dem kleinen Kind ein Buch.",
+   "acceptable_answers": [
+    "Ich gebe dem kleinen Kind ein Buch.",
+    "Ich gebe dem kleinen Kind ein Buch",
+    "Ich gebe dem kleinen Kind ein Buch!",
+    "ich gebe dem kleinen Kind ein Buch.",
+    "ich gebe dem kleinen Kind ein Buch",
+    "ich gebe dem kleinen Kind ein Buch!"
+   ],
+   "explanation_en": "geben takes a dative recipient; neuter dative is dem + -en. The dative noun stands before the accusative noun.",
+   "explanation_de": "geben steht mit Dativ. Neutrum im Dativ: dem und -en. Dativ steht vor Akkusativ.",
+   "hint": null,
+   "why_correct_en": "The child receives the book, so it stands in the dative → dem kleinen Kind, and ein Buch follows.",
+   "why_correct_de": "Das Kind bekommt das Buch. Es steht im Dativ: dem kleinen Kind. Dann kommt ein Buch.",
+   "difficulty": 3,
+   "stage": 5,
+   "order_index": 12,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "Schreib den Satz: [wir / fahren / mit / die / neu / Busse]",
+   "question_en": "Write the sentence: We travel by the new buses. (mit + Dativ, plural, with die; both word orders are accepted)",
+   "options": null,
+   "correct_answer": "Wir fahren mit den neuen Bussen.",
+   "acceptable_answers": [
+    "Wir fahren mit den neuen Bussen.",
+    "Wir fahren mit den neuen Bussen",
+    "Wir fahren mit den neuen Bussen!",
+    "wir fahren mit den neuen Bussen.",
+    "wir fahren mit den neuen Bussen",
+    "wir fahren mit den neuen Bussen!",
+    "Mit den neuen Bussen fahren wir.",
+    "Mit den neuen Bussen fahren wir",
+    "Mit den neuen Bussen fahren wir!",
+    "mit den neuen Bussen fahren wir.",
+    "mit den neuen Bussen fahren wir",
+    "mit den neuen Bussen fahren wir!"
+   ],
+   "explanation_en": "Dative plural after der/die/das: den + -en, and the noun adds -n: Bussen.",
+   "explanation_de": "Dativ Plural nach der, die, das: den und -en. Das Nomen bekommt ein -n: Bussen.",
+   "hint": null,
+   "why_correct_en": "mit takes the dative; die Busse becomes den Bussen and the adjective takes -en. Both word orders are correct.",
+   "why_correct_de": "mit steht mit Dativ. Aus die Busse wird den Bussen. Das Adjektiv nimmt -en. Position 1 ist frei.",
+   "difficulty": 3,
+   "stage": 5,
+   "order_index": 13,
+   "related_rule_title": null
+  }
+ ]
+}

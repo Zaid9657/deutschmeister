@@ -1,0 +1,1233 @@
+{
+ "topic": {
+  "sub_level": "A2.1",
+  "topic_order": 10,
+  "title_en": "Accusative & Dative Pronouns",
+  "title_de": "Pronomen im Akkusativ und Dativ",
+  "slug": "pronouns-accusative-dative",
+  "description_en": "Use mich/dich/ihn and mir/dir/ihm as objects and after prepositions. You need them in Goethe A2 Schreiben Teil 1 (SMS) and Sprechen Teil 3, where you ask for help and make plans together. This topic adds the accusative forms, the object order (Ich gebe es ihm) and the pronoun after für, mit and von.",
+  "description_de": "Lerne mich, dich, ihn und mir, dir, ihm als Objekte. Bei Goethe A2 brauchst du sie in Schreiben Teil 1. In Sprechen Teil 3 fragst du: Kannst du mir helfen?",
+  "estimated_time": 25,
+  "icon": "book",
+  "difficulty": 2,
+  "is_published": true,
+  "prerequisite_slugs": [
+   "dative-case",
+   "prepositions-dative"
+  ],
+  "related_slugs": [
+   "personal-pronouns",
+   "prepositions-accusative",
+   "imperative-mood"
+  ]
+ },
+ "rules": [
+  {
+   "rule_type": "introduction",
+   "title_en": "Object Pronouns Introduction",
+   "title_de": "Einführung: Objektpronomen",
+   "content": {
+    "hook_de": "Kennst du Frau Meier? Ja, ich kenne sie gut. Ich helfe ihr oft.",
+    "hook_en": "Do you know Frau Meier? Yes, I know her well. I often help her. German uses two different words here: sie (accusative) and ihr (dative).",
+    "scenario_en": "As soon as a person or a thing is known, you stop repeating the noun and say ihn, sie, ihm or ihr instead.",
+    "preview_note_en": "The verb or the preposition decides the case: wen? (accusative) or wem? (dative).",
+    "preview_highlight": "Ich kenne sie. Ich helfe ihr.",
+    "why_it_matters_en": "In Goethe A2 Schreiben Teil 1 you write short messages like Kannst du mir helfen? Almost every one of them contains an object pronoun.",
+    "preview_example_de": "Ich rufe dich an. Ich danke dir.",
+    "preview_example_en": "I'll call you. I thank you.",
+    "german_difference_en": "English keeps one form for both cases: help me, call me. German splits them: Hilf mir! but Ruf mich an!",
+    "english_comparison_en": "English me covers mich and mir, and you covers dich, dir, euch, Sie and Ihnen. German picks the form the verb or the preposition needs."
+   },
+   "order_index": -1,
+   "common_mistakes": null,
+   "memory_trick_en": null,
+   "memory_trick_de": null,
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": null,
+   "key_insight_de": null
+  },
+  {
+   "rule_type": "table",
+   "title_en": "Both Cases in One Table",
+   "title_de": "Beide Fälle in einer Tabelle",
+   "content": {
+    "type": "case_table",
+    "headers": [
+     "Nominativ",
+     "Akkusativ (wen?)",
+     "Dativ (wem?)",
+     "Beispiel"
+    ],
+    "rows": [
+     [
+      "ich",
+      "mich",
+      "mir",
+      "Er kennt mich. Er hilft mir."
+     ],
+     [
+      "du",
+      "dich",
+      "dir",
+      "Ich rufe dich an. Ich danke dir."
+     ],
+     [
+      "er",
+      "ihn",
+      "ihm",
+      "Ich frage ihn. Ich schreibe ihm."
+     ],
+     [
+      "sie (eine Frau)",
+      "sie",
+      "ihr",
+      "Ich besuche sie. Das gefällt ihr."
+     ],
+     [
+      "es",
+      "es",
+      "ihm",
+      "Ich nehme es. (das Buch)"
+     ],
+     [
+      "wir",
+      "uns",
+      "uns",
+      "Er besucht uns. Er hilft uns."
+     ],
+     [
+      "ihr",
+      "euch",
+      "euch",
+      "Ich rufe euch an. Ich danke euch."
+     ],
+     [
+      "sie (Plural)",
+      "sie",
+      "ihnen",
+      "Ich kenne sie. Ich helfe ihnen."
+     ],
+     [
+      "Sie (formell)",
+      "Sie",
+      "Ihnen",
+      "Ich rufe Sie an. Ich danke Ihnen."
+     ]
+    ],
+    "highlight_row": -1,
+    "description_de": "Die Formen kennst du schon: mich, dich, ihn und mir, dir, ihm. Neu ist die Frage: Welchen Fall will das Verb? Frage wen? für den Akkusativ und wem? für den Dativ.",
+    "description_en": "Nothing in the grid itself is new: you learnt mich/dich/ihn in Accusative Case Intro and the whole table in Dative Case. What is new is the question it answers — which case does the verb or the preposition want? — and the Beispiel column, which shows each form at work. Note that uns and euch are identical in both cases, and that es as a dative pronoun (ihm) is rare."
+   },
+   "order_index": 1,
+   "common_mistakes": null,
+   "memory_trick_en": "Accusative often ends in -ch or -n: mich, dich, ihn. Dative often ends in -r or -m: mir, dir, ihm (plural ihnen/Ihnen is the exception). And uns/euch are the same in both cases.",
+   "memory_trick_de": "Akkusativ: mich, dich, ihn. Dativ: mir, dir, ihm. Der Dativ endet oft auf -r oder -m. uns und euch sind immer gleich.",
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": "This is a consolidation table: the forms are old, the choice between the two columns is the new skill.",
+   "key_insight_de": "Die Formen sind alt. Neu ist die Wahl: Akkusativ oder Dativ?"
+  },
+  {
+   "rule_type": "explanation_core",
+   "title_en": "The Verb Decides the Case",
+   "title_de": "Das Verb bestimmt den Fall",
+   "content": {
+    "type": "verb_list",
+    "groups": [
+     {
+      "category_en": "Verbs with an accusative object (wen?)",
+      "category_de": "Verben mit Akkusativ (wen?)",
+      "verbs": [
+       {
+        "de": "anrufen",
+        "en": "to call (on the phone)",
+        "example": "Ich rufe dich an."
+       },
+       {
+        "de": "besuchen",
+        "en": "to visit",
+        "example": "Wir besuchen euch."
+       },
+       {
+        "de": "fragen",
+        "en": "to ask",
+        "example": "Frag ihn bitte!"
+       },
+       {
+        "de": "kennen",
+        "en": "to know (a person)",
+        "example": "Ich kenne sie gut."
+       },
+       {
+        "de": "verstehen",
+        "en": "to understand",
+        "example": "Verstehst du mich?"
+       },
+       {
+        "de": "brauchen",
+        "en": "to need",
+        "example": "Ich brauche es heute."
+       },
+       {
+        "de": "abholen",
+        "en": "to pick up",
+        "example": "Ich hole dich ab."
+       }
+      ]
+     },
+     {
+      "category_en": "Verbs with a dative object (wem?)",
+      "category_de": "Verben mit Dativ (wem?)",
+      "verbs": [
+       {
+        "de": "helfen",
+        "en": "to help",
+        "example": "Er hilft mir oft."
+       },
+       {
+        "de": "danken",
+        "en": "to thank",
+        "example": "Ich danke Ihnen."
+       },
+       {
+        "de": "gefallen",
+        "en": "to please, to like",
+        "example": "Die Wohnung gefällt uns."
+       },
+       {
+        "de": "gehören",
+        "en": "to belong to",
+        "example": "Das Fahrrad gehört ihm."
+       },
+       {
+        "de": "schmecken",
+        "en": "to taste good",
+        "example": "Die Suppe schmeckt mir."
+       },
+       {
+        "de": "passen",
+        "en": "to suit, to fit",
+        "example": "Der Termin passt dir nicht."
+       },
+       {
+        "de": "antworten",
+        "en": "to answer (a person)",
+        "example": "Antworte ihr bitte!"
+       }
+      ]
+     }
+    ],
+    "description_en": "Most verbs take an accusative object. A small group takes the dative — you met that group in Dative Case; here each verb comes with a pronoun.",
+    "description_de": "Die meisten Verben nehmen den Akkusativ. Die Dativ-Verben kennst du aus Thema 1. Jetzt steht ein Pronomen dabei."
+   },
+   "order_index": 2,
+   "common_mistakes": null,
+   "memory_trick_en": null,
+   "memory_trick_de": null,
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": "helfen, danken and gefallen always take the dative; anrufen and besuchen always take the accusative. Learn every new verb together with its case.",
+   "key_insight_de": "helfen, danken und gefallen nehmen immer den Dativ. anrufen und besuchen nehmen immer den Akkusativ."
+  },
+  {
+   "rule_type": "pattern",
+   "title_en": "Two Objects: What Comes First?",
+   "title_de": "Zwei Objekte: Was kommt zuerst?",
+   "content": {
+    "type": "steps",
+    "steps": [
+     {
+      "step": 1,
+      "title_de": "Wiederholung: Zwei Nomen, Dativ vor Akkusativ.",
+      "title_en": "Review: two nouns, dative before accusative.",
+      "detail_de": "Das kennst du aus Thema 1: Ich gebe dem Kind das Buch.",
+      "detail_en": "Review from Dative Case, not new material: Ich gebe dem Kind das Buch — the person (dative) before the thing (accusative). Steps 2 and 3 exist in Dative Case too, as one English sentence; what is new here is the German treatment, the split into steps and the practice."
+     },
+     {
+      "step": 2,
+      "title_de": "Ein Pronomen: Das Pronomen steht vorne.",
+      "title_en": "One pronoun: the pronoun goes first.",
+      "detail_de": "Ich gebe ihm das Buch. Ich gebe es dem Kind.",
+      "detail_en": "Ich gebe ihm das Buch. Ich gebe es dem Kind. A pronoun always stands in front of a noun object, whatever its case is."
+     },
+     {
+      "step": 3,
+      "title_de": "Zwei Pronomen: Akkusativ vor Dativ.",
+      "title_en": "Two pronouns: accusative before dative.",
+      "detail_de": "Ich gebe es ihm. Nicht: Ich gebe ihm es.",
+      "detail_en": "Ich gebe es ihm. Not: Ich gebe ihm es. This is the one situation where the order flips."
+     },
+     {
+      "step": 4,
+      "title_de": "Merke: kurz vor lang.",
+      "title_en": "Remember: short before long.",
+      "detail_de": "Pronomen sind kurz. Kurze Wörter stehen vorne. Schritt 3 ist eine Extra-Regel.",
+      "detail_en": "Pronouns are short words, and short words move to the front. That idea covers step 2. Step 3 is a separate fact you have to learn: with two pronouns both words are short, so shortness decides nothing and the accusative simply comes first."
+     }
+    ],
+    "description_en": "Three situations. Pronouns move forward — and when both objects are pronouns, a second rule decides: the accusative comes first.",
+    "description_de": "Drei Situationen. Pronomen stehen vorne. Bei zwei Pronomen kommt der Akkusativ zuerst."
+   },
+   "order_index": 3,
+   "common_mistakes": null,
+   "memory_trick_en": null,
+   "memory_trick_de": null,
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": "Dative before accusative is the noun rule from Dative Case; it flips only when both objects are pronouns: Ich gebe es ihm.",
+   "key_insight_de": "Nur bei zwei Pronomen steht der Akkusativ vorne: Ich gebe es ihm."
+  },
+  {
+   "rule_type": "tip",
+   "title_en": "Pronouns After Prepositions",
+   "title_de": "Pronomen nach Präpositionen",
+   "content": {
+    "content_de": "Hier bestimmt die Präposition den Fall. für, ohne, gegen + Akkusativ: für dich, ohne mich, gegen ihn. mit, bei, von, zu + Dativ: mit ihm, bei uns, von dir.",
+    "content_en": "After a preposition the preposition picks the case, not the verb: für, ohne and gegen take the accusative (für dich, ohne mich, gegen ihn), while mit, bei, von and zu take the dative (mit ihm, bei uns, von dir, zu euch). The prepositions are the ones you already know — only the pronoun form is new."
+   },
+   "order_index": 4,
+   "common_mistakes": null,
+   "memory_trick_en": null,
+   "memory_trick_de": null,
+   "formal_note_en": "After a preposition these pronouns refer to people. For things German uses da-forms (dafür, damit) — that comes later, so stay with people here.",
+   "formal_note_de": "Diese Pronomen stehen für Personen. Für Dinge lernst du später dafür und damit.",
+   "key_insight_en": "mit mir is the most frequent combination of all: Kommst du mit mir?",
+   "key_insight_de": "mit mir hörst du sehr oft. Beispiel: Kommst du mit mir?"
+  },
+  {
+   "rule_type": "dialogue",
+   "title_en": "Dialogue: Help at the Office",
+   "title_de": "Dialog: Hilfe im Büro",
+   "content": {
+    "type": "dialogue",
+    "lines": [
+     {
+      "speaker": "Anna",
+      "de": "Hallo Tom, kannst du mir kurz helfen?",
+      "en": "Hi Tom, can you help me for a moment?",
+      "grammar_note": "helfen + Dativ: mir"
+     },
+     {
+      "speaker": "Tom",
+      "de": "Klar, ich helfe dir gern. Was brauchst du?",
+      "en": "Sure, I'm happy to help you. What do you need?",
+      "grammar_note": "dir (Dativ), brauchen + Akkusativ"
+     },
+     {
+      "speaker": "Anna",
+      "de": "Ich suche den Schlüssel. Hast du ihn?",
+      "en": "I'm looking for the key. Do you have it?",
+      "grammar_note": "ihn = der Schlüssel (Akkusativ)"
+     },
+     {
+      "speaker": "Tom",
+      "de": "Nein, Frau Meier hat ihn. Ruf sie an!",
+      "en": "No, Frau Meier has it. Give her a call!",
+      "grammar_note": "sie = Frau Meier (Akkusativ nach anrufen)"
+     },
+     {
+      "speaker": "Anna",
+      "de": "Gut. Passt dir der Termin am Montag?",
+      "en": "Good. Does the appointment on Monday suit you?",
+      "grammar_note": "passen + Dativ: dir"
+     },
+     {
+      "speaker": "Tom",
+      "de": "Ja, Montag passt mir. Ich schicke dir eine E-Mail.",
+      "en": "Yes, Monday suits me. I'll send you an email.",
+      "grammar_note": "Pronomen (dir) vor Nomen (eine E-Mail)"
+     },
+     {
+      "speaker": "Anna",
+      "de": "Danke, das ist nett von dir.",
+      "en": "Thanks, that's kind of you.",
+      "grammar_note": "von + Dativ: von dir"
+     }
+    ],
+    "description_en": "Seven lines, seven pronouns. This is exactly the register of Sprechen Teil 3, where two people arrange something together.",
+    "description_de": "Sieben Zeilen, sieben Pronomen. So sprichst du auch in Sprechen Teil 3."
+   },
+   "order_index": 5,
+   "common_mistakes": null,
+   "memory_trick_en": null,
+   "memory_trick_de": null,
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": "Notice line 6: the pronoun dir stands before the noun eine E-Mail — that is rule 3, step 2.",
+   "key_insight_de": "Zeile 6 zeigt die Reihenfolge: erst dir, dann eine E-Mail."
+  },
+  {
+   "rule_type": "tip",
+   "title_en": "Pronouns in the Goethe A2 Exam",
+   "title_de": "Pronomen in der Prüfung (Goethe A2)",
+   "content": {
+    "type": "verb_list",
+    "groups": [
+     {
+      "category_en": "Schreiben Teil 1 (short message)",
+      "category_de": "Schreiben Teil 1 (SMS / Mitteilung)",
+      "verbs": [
+       {
+        "de": "Kannst du mir bitte helfen?",
+        "en": "Can you help me, please?",
+        "function": "asking for help"
+       },
+       {
+        "de": "Ich rufe dich heute Abend an.",
+        "en": "I'll call you this evening.",
+        "function": "announcing a call"
+       },
+       {
+        "de": "Ich hole dich um acht ab.",
+        "en": "I'll pick you up at eight.",
+        "function": "arranging to meet"
+       }
+      ]
+     },
+     {
+      "category_en": "Schreiben Teil 2 (formal email)",
+      "category_de": "Schreiben Teil 2 (E-Mail, formell)",
+      "verbs": [
+       {
+        "de": "Ich danke Ihnen für die Einladung.",
+        "en": "Thank you for the invitation.",
+        "function": "thanking (dative)"
+       },
+       {
+        "de": "Der Termin passt mir leider nicht.",
+        "en": "Unfortunately the appointment doesn't suit me.",
+        "function": "turning something down"
+       }
+      ]
+     },
+     {
+      "category_en": "Sprechen Teil 3 (planning together)",
+      "category_de": "Sprechen Teil 3 (zusammen planen)",
+      "verbs": [
+       {
+        "de": "Passt es dir am Samstag?",
+        "en": "Does Saturday suit you?",
+        "function": "making a suggestion"
+       },
+       {
+        "de": "Ich komme gern mit euch.",
+        "en": "I'm happy to come with you.",
+        "function": "agreeing"
+       },
+       {
+        "de": "Kannst du sie auch fragen?",
+        "en": "Can you ask her too?",
+        "function": "asking a question"
+       }
+      ]
+     }
+    ],
+    "description_en": "Eight sentences straight from the exam tasks. Learn them as chunks — each one carries an object pronoun.",
+    "description_de": "Acht Sätze aus den Prüfungsteilen. Lerne sie als feste Chunks."
+   },
+   "order_index": 6,
+   "common_mistakes": null,
+   "memory_trick_en": null,
+   "memory_trick_de": null,
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": "In Hören Teil 1 the pronoun often carries the answer: Ich hole dich ab means the speaker comes to you, not the other way round.",
+   "key_insight_de": "In Hören Teil 1 ist das Pronomen wichtig. Frage dich: Wer holt wen ab?"
+  },
+  {
+   "rule_type": "common_mistakes",
+   "title_en": "Five Common Mistakes",
+   "title_de": "Fünf häufige Fehler",
+   "content": {
+    "content_de": "Diese fünf Fehler kommen oft. Prüfe immer das Verb oder die Präposition.",
+    "content_en": "These five mistakes come up again and again. Check the verb or the preposition first, then pick the pronoun."
+   },
+   "order_index": 7,
+   "common_mistakes": [
+    {
+     "wrong": "Ich helfe dich.",
+     "correct": "Ich helfe dir.",
+     "explanation_de": "helfen steht immer mit Dativ: mir, dir, ihm, uns.",
+     "explanation_en": "helfen always takes the dative: mir, dir, ihm, uns."
+    },
+    {
+     "wrong": "Ich rufe dir an.",
+     "correct": "Ich rufe dich an.",
+     "explanation_de": "anrufen steht mit Akkusativ: mich, dich, ihn, sie.",
+     "explanation_en": "anrufen takes the accusative: mich, dich, ihn, sie — unlike helfen, which takes the dative."
+    },
+    {
+     "wrong": "Ich gebe ihm es.",
+     "correct": "Ich gebe es ihm.",
+     "explanation_de": "Zwei Pronomen: zuerst der Akkusativ, dann der Dativ.",
+     "explanation_en": "With two pronouns the accusative comes first, then the dative."
+    },
+    {
+     "wrong": "Das gefällt mich.",
+     "correct": "Das gefällt mir.",
+     "explanation_de": "gefallen steht mit Dativ. Die Sache ist das Subjekt.",
+     "explanation_en": "gefallen takes the dative; the thing is the subject: Das gefällt mir."
+    },
+    {
+     "wrong": "Ich komme mit du.",
+     "correct": "Ich komme mit dir.",
+     "explanation_de": "Nach mit steht der Dativ. Also: mit dir, mit ihm.",
+     "explanation_en": "After mit you need the dative form: mit dir, mit ihm, mit uns."
+    }
+   ],
+   "memory_trick_en": null,
+   "memory_trick_de": null,
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": null,
+   "key_insight_de": null
+  },
+  {
+   "rule_type": "summary",
+   "title_en": "Quick Reference",
+   "title_de": "Kurzübersicht",
+   "content": {
+    "points": [
+     "Akkusativ: mich, dich, ihn, sie, es, uns, euch, sie, Sie.",
+     "Dativ: mir, dir, ihm, ihr, ihm, uns, euch, ihnen, Ihnen.",
+     "Frage wen? für den Akkusativ. Frage wem? für den Dativ.",
+     "anrufen, besuchen, fragen, kennen, abholen: Akkusativ.",
+     "helfen, danken, gefallen, gehören, passen: Dativ.",
+     "Zwei Nomen: Dativ vor Akkusativ. Ich gebe dem Kind das Buch.",
+     "Pronomen stehen vorne: Ich gebe ihm das Buch.",
+     "Zwei Pronomen: Akkusativ zuerst. Ich gebe es ihm.",
+     "für, ohne, gegen + Akkusativ. mit, bei, von, zu + Dativ.",
+     "uns und euch sind im Akkusativ und im Dativ gleich."
+    ]
+   },
+   "order_index": 99,
+   "common_mistakes": null,
+   "memory_trick_en": null,
+   "memory_trick_de": null,
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": null,
+   "key_insight_de": null
+  }
+ ],
+ "examples": [
+  {
+   "sentence_de": "Verstehst du mich?",
+   "sentence_en": "Do you understand me?",
+   "grammar_highlight": "mich",
+   "explanation_en": "verstehen takes an accusative object, so ich becomes mich.",
+   "explanation_de": "verstehen nimmt den Akkusativ. Aus ich wird mich.",
+   "word_breakdown": {
+    "Verstehst": "do (you) understand (verstehen, du-form)",
+    "du": "you (subject)",
+    "mich": "me (accusative of ich)"
+   },
+   "difficulty": 1,
+   "category": "basic",
+   "order_index": 1,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Kannst du mir bitte helfen?",
+   "sentence_en": "Can you help me, please?",
+   "grammar_highlight": "mir",
+   "explanation_en": "helfen takes the dative, so ich becomes mir. The modal verb sends helfen to the end.",
+   "explanation_de": "helfen nimmt den Dativ. Aus ich wird mir. Das Modalverb schickt helfen ans Ende.",
+   "word_breakdown": {
+    "Kannst": "can (können, du-form)",
+    "du": "you (subject)",
+    "mir": "me (dative of ich)",
+    "bitte": "please",
+    "helfen": "to help (infinitive at the end)"
+   },
+   "difficulty": 1,
+   "category": "exam",
+   "order_index": 2,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Ich danke Ihnen für die E-Mail.",
+   "sentence_en": "Thank you for the email.",
+   "grammar_highlight": "Ihnen",
+   "explanation_en": "danken takes the dative; Ihnen is the formal you. This is standard in Schreiben Teil 2.",
+   "explanation_de": "danken nimmt den Dativ. Ihnen ist die formelle Form. So schreibst du in Schreiben Teil 2.",
+   "word_breakdown": {
+    "Ich": "I (subject)",
+    "danke": "thank (danken, ich-form)",
+    "Ihnen": "you (formal, dative)",
+    "für": "for (+ accusative)",
+    "die": "the (feminine, accusative)",
+    "E-Mail": "email"
+   },
+   "difficulty": 2,
+   "category": "exam",
+   "order_index": 3,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Ich rufe dich heute Abend an.",
+   "sentence_en": "I'll call you this evening.",
+   "grammar_highlight": "dich",
+   "explanation_en": "anrufen takes the accusative, so du becomes dich. The prefix an goes to the end.",
+   "explanation_de": "anrufen nimmt den Akkusativ. Aus du wird dich. Das Präfix an steht am Ende.",
+   "word_breakdown": {
+    "Ich": "I (subject)",
+    "rufe": "call (anrufen, ich-form, verb part)",
+    "dich": "you (accusative of du)",
+    "heute": "today",
+    "Abend": "evening",
+    "an": "separable prefix of anrufen"
+   },
+   "difficulty": 2,
+   "category": "everyday",
+   "order_index": 4,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Ich frage ihn nach dem Weg.",
+   "sentence_en": "I'm asking him for directions.",
+   "grammar_highlight": "ihn",
+   "explanation_en": "fragen takes the accusative: er becomes ihn. nach keeps its dative (dem Weg).",
+   "explanation_de": "fragen nimmt den Akkusativ: aus er wird ihn. Die Präposition nach nimmt den Dativ: dem Weg.",
+   "word_breakdown": {
+    "Ich": "I (subject)",
+    "frage": "ask (fragen, ich-form)",
+    "ihn": "him (accusative of er)",
+    "nach": "for / after (+ dative)",
+    "dem": "the (masculine, dative)",
+    "Weg": "way, directions"
+   },
+   "difficulty": 2,
+   "category": "intermediate",
+   "order_index": 5,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Die Wohnung gefällt ihr sehr.",
+   "sentence_en": "She likes the flat a lot.",
+   "grammar_highlight": "ihr",
+   "explanation_en": "With gefallen the thing is the subject and the person is dative: ihr = to her.",
+   "explanation_de": "Bei gefallen ist die Sache das Subjekt. Die Person steht im Dativ: ihr.",
+   "word_breakdown": {
+    "Die": "the (feminine, nominative)",
+    "Wohnung": "flat, apartment",
+    "gefällt": "pleases (gefallen, er/sie/es-form)",
+    "ihr": "her (dative of sie)",
+    "sehr": "very much"
+   },
+   "difficulty": 2,
+   "category": "intermediate",
+   "order_index": 6,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Ich gebe ihm den Schlüssel.",
+   "sentence_en": "I'm giving him the key.",
+   "grammar_highlight": "ihm den Schlüssel",
+   "explanation_en": "One pronoun and one noun: the pronoun (ihm, dative) comes first.",
+   "explanation_de": "Ein Pronomen und ein Nomen: Das Pronomen (ihm) steht vorne.",
+   "word_breakdown": {
+    "Ich": "I (subject)",
+    "gebe": "give (geben, ich-form)",
+    "ihm": "him (dative of er)",
+    "den": "the (masculine, accusative)",
+    "Schlüssel": "key"
+   },
+   "difficulty": 2,
+   "category": "intermediate",
+   "order_index": 7,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Ich gebe es ihm später.",
+   "sentence_en": "I'll give it to him later.",
+   "grammar_highlight": "es ihm",
+   "explanation_en": "Two pronouns: the accusative (es) comes before the dative (ihm).",
+   "explanation_de": "Zwei Pronomen: Der Akkusativ (es) steht vor dem Dativ (ihm).",
+   "word_breakdown": {
+    "Ich": "I (subject)",
+    "gebe": "give (geben, ich-form)",
+    "es": "it (accusative)",
+    "ihm": "him (dative of er)",
+    "später": "later"
+   },
+   "difficulty": 3,
+   "category": "complex",
+   "order_index": 8,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Das Geschenk ist für dich.",
+   "sentence_en": "The present is for you.",
+   "grammar_highlight": "für dich",
+   "explanation_en": "After für you always need the accusative: für dich, für mich, für ihn.",
+   "explanation_de": "Nach für steht immer der Akkusativ: für dich, für mich, für ihn.",
+   "word_breakdown": {
+    "Das": "the (neuter, nominative)",
+    "Geschenk": "present, gift",
+    "ist": "is (sein)",
+    "für": "for (+ accusative)",
+    "dich": "you (accusative of du)"
+   },
+   "difficulty": 1,
+   "category": "basic",
+   "order_index": 9,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Kommst du morgen mit uns?",
+   "sentence_en": "Are you coming with us tomorrow?",
+   "grammar_highlight": "mit uns",
+   "explanation_en": "After mit you need the dative. uns looks the same in both cases.",
+   "explanation_de": "Nach mit steht der Dativ. uns ist im Akkusativ und Dativ gleich.",
+   "word_breakdown": {
+    "Kommst": "are (you) coming (kommen, du-form)",
+    "du": "you (subject)",
+    "morgen": "tomorrow",
+    "mit": "with (+ dative)",
+    "uns": "us (dative of wir)"
+   },
+   "difficulty": 2,
+   "category": "everyday",
+   "order_index": 10,
+   "audio_url": null
+  }
+ ],
+ "exercises": [
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "Ich kenne ___ nicht. (er, Akkusativ)",
+   "question_en": "Fill in the accusative pronoun for er: I don't know him. (verb: kennen)",
+   "options": null,
+   "correct_answer": "ihn",
+   "acceptable_answers": [
+    "ihn"
+   ],
+   "explanation_en": "kennen takes the accusative, so er becomes ihn.",
+   "explanation_de": "kennen nimmt den Akkusativ. Aus er wird ihn.",
+   "hint": null,
+   "why_correct_en": "er → accusative → ihn: Ich kenne ihn nicht.",
+   "why_correct_de": "er → Akkusativ → ihn: Ich kenne ihn nicht.",
+   "difficulty": 1,
+   "stage": 4,
+   "order_index": 1,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "Wer hilft ___ heute? (ich, Dativ)",
+   "question_en": "Fill in the dative pronoun for ich: Who is helping me today? (verb: helfen)",
+   "options": null,
+   "correct_answer": "mir",
+   "acceptable_answers": [
+    "mir"
+   ],
+   "explanation_en": "helfen is a dative verb, so ich becomes mir.",
+   "explanation_de": "helfen ist ein Dativ-Verb. Aus ich wird mir.",
+   "hint": null,
+   "why_correct_en": "helfen + Dativ → mir, not mich: Wer hilft mir heute?",
+   "why_correct_de": "helfen + Dativ → mir, nicht mich: Wer hilft mir heute?",
+   "difficulty": 1,
+   "stage": 4,
+   "order_index": 2,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "Ich rufe ___ später an. (du, Akkusativ)",
+   "question_en": "Fill in the accusative pronoun for du: I'll call you later. (verb: anrufen)",
+   "options": null,
+   "correct_answer": "dich",
+   "acceptable_answers": [
+    "dich"
+   ],
+   "explanation_en": "anrufen takes the accusative, so du becomes dich.",
+   "explanation_de": "anrufen nimmt den Akkusativ. Aus du wird dich.",
+   "hint": null,
+   "why_correct_en": "anrufen + Akkusativ → dich, not dir: Ich rufe dich später an.",
+   "why_correct_de": "anrufen + Akkusativ → dich, nicht dir: Ich rufe dich später an.",
+   "difficulty": 1,
+   "stage": 4,
+   "order_index": 3,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "Der Film gefällt ___ sehr. (wir, Dativ)",
+   "question_en": "Fill in the dative pronoun for wir: We like the film a lot. (verb: gefallen)",
+   "options": null,
+   "correct_answer": "uns",
+   "acceptable_answers": [
+    "uns"
+   ],
+   "explanation_en": "gefallen takes the dative; wir becomes uns.",
+   "explanation_de": "gefallen nimmt den Dativ. Aus wir wird uns.",
+   "hint": null,
+   "why_correct_en": "The film is the subject, the person is dative: Der Film gefällt uns.",
+   "why_correct_de": "Der Film ist das Subjekt. Die Person steht im Dativ: uns.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 4,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "Ich danke ___ für die Blumen. (Sie, formell, Dativ)",
+   "question_en": "Fill in the formal dative pronoun: I thank you for the flowers. (verb: danken)",
+   "options": null,
+   "correct_answer": "Ihnen",
+   "acceptable_answers": [
+    "Ihnen"
+   ],
+   "explanation_en": "danken takes the dative; the formal Sie becomes Ihnen with a capital I.",
+   "explanation_de": "danken nimmt den Dativ. Aus Sie wird Ihnen, immer mit großem I.",
+   "hint": null,
+   "why_correct_en": "Formal Sie → dative Ihnen: Ich danke Ihnen für die Blumen.",
+   "why_correct_de": "Formelles Sie → Dativ Ihnen: Ich danke Ihnen für die Blumen.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 5,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "Wir besuchen ___ am Samstag. (ihr, Akkusativ)",
+   "question_en": "Fill in the accusative pronoun for ihr (you, plural): We're visiting you on Saturday. (verb: besuchen)",
+   "options": null,
+   "correct_answer": "euch",
+   "acceptable_answers": [
+    "euch"
+   ],
+   "explanation_en": "besuchen takes the accusative; ihr becomes euch.",
+   "explanation_de": "besuchen nimmt den Akkusativ. Aus ihr wird euch.",
+   "hint": null,
+   "why_correct_en": "ihr → accusative → euch (the same form as the dative).",
+   "why_correct_de": "ihr → Akkusativ → euch. Im Dativ ist die Form gleich.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 6,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "multiple_choice",
+   "question_de": "Der Kuchen schmeckt ___ gut. (ich)",
+   "question_en": "Which pronoun fits? schmecken takes the dative, and the person is ich.",
+   "options": [
+    "mich",
+    "mir",
+    "ihn",
+    "dir"
+   ],
+   "correct_answer": "mir",
+   "acceptable_answers": [
+    "mir"
+   ],
+   "explanation_en": "schmecken is a dative verb, like gefallen.",
+   "explanation_de": "schmecken ist ein Dativ-Verb, genau wie gefallen.",
+   "hint": null,
+   "why_correct_en": "schmecken + dative → mir. mich and ihn are accusative forms; dir is dative but the wrong person.",
+   "why_correct_de": "schmecken + Dativ → mir. mich und ihn sind Akkusativ. dir ist nicht ich.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 7,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "multiple_choice",
+   "question_de": "Ich rufe ___ heute Abend an. (die Kollegin)",
+   "question_en": "Which pronoun fits? anrufen takes the accusative, and the person is die Kollegin (one woman).",
+   "options": [
+    "ihr",
+    "ihn",
+    "ihnen",
+    "sie"
+   ],
+   "correct_answer": "sie",
+   "acceptable_answers": [
+    "sie"
+   ],
+   "explanation_en": "die Kollegin is sie (she); anrufen takes the accusative, and the accusative of sie is also sie.",
+   "explanation_de": "anrufen nimmt den Akkusativ. Die Kollegin ist sie. Der Akkusativ ist auch sie.",
+   "hint": null,
+   "why_correct_en": "ihr and ihnen are dative forms and ihn is the accusative of er (a man) — die Kollegin is a woman, so only sie fits.",
+   "why_correct_de": "ihr und ihnen sind Dativ-Formen. ihn ist der Akkusativ von er. Richtig ist sie.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 8,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "error_correction",
+   "question_de": "Korrigiere: Ich helfe dich.",
+   "question_en": "Correct the sentence: helfen takes the dative. Write the whole sentence.",
+   "options": null,
+   "correct_answer": "Ich helfe dir.",
+   "acceptable_answers": [
+    "Ich helfe dir.",
+    "Ich helfe dir",
+    "ich helfe dir."
+   ],
+   "explanation_en": "helfen never takes the accusative, so dich must become dir.",
+   "explanation_de": "helfen nimmt nie den Akkusativ. Aus dich wird dir.",
+   "hint": null,
+   "why_correct_en": "helfen + dative → dir: Ich helfe dir.",
+   "why_correct_de": "helfen + Dativ → dir: Ich helfe dir.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 9,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "error_correction",
+   "question_de": "Korrigiere: Das gefällt mich.",
+   "question_en": "Correct the sentence: gefallen takes the dative. Write the whole sentence.",
+   "options": null,
+   "correct_answer": "Das gefällt mir.",
+   "acceptable_answers": [
+    "Das gefällt mir.",
+    "Das gefällt mir",
+    "das gefällt mir."
+   ],
+   "explanation_en": "With gefallen the thing is the subject and the person stands in the dative.",
+   "explanation_de": "Bei gefallen ist die Sache das Subjekt. Die Person steht im Dativ.",
+   "hint": null,
+   "why_correct_en": "gefallen + dative → mir: Das gefällt mir.",
+   "why_correct_de": "gefallen + Dativ → mir: Das gefällt mir.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 10,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "Der Kaffee ist für ___. (du)",
+   "question_en": "Fill in the pronoun after für: The coffee is for you. (für + accusative)",
+   "options": null,
+   "correct_answer": "dich",
+   "acceptable_answers": [
+    "dich"
+   ],
+   "explanation_en": "für always takes the accusative, so du becomes dich.",
+   "explanation_de": "für nimmt immer den Akkusativ. Aus du wird dich.",
+   "hint": null,
+   "why_correct_en": "für + accusative → für dich, never für dir.",
+   "why_correct_de": "für + Akkusativ → für dich, nie für dir.",
+   "difficulty": 1,
+   "stage": 4,
+   "order_index": 11,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "Ich fahre mit ___ zum Bahnhof. (er)",
+   "question_en": "Fill in the pronoun after mit: I'm going to the station with him. (mit + dative)",
+   "options": null,
+   "correct_answer": "ihm",
+   "acceptable_answers": [
+    "ihm"
+   ],
+   "explanation_en": "mit always takes the dative, so er becomes ihm.",
+   "explanation_de": "mit nimmt immer den Dativ. Aus er wird ihm.",
+   "hint": null,
+   "why_correct_en": "mit + dative → mit ihm, never mit ihn.",
+   "why_correct_de": "mit + Dativ → mit ihm, nie mit ihn.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 12,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "multiple_choice",
+   "question_de": "Zwei Pronomen: Welcher Satz ist richtig?",
+   "question_en": "Two pronouns (es = das Buch, ihm = der Kollege). Which word order is correct?",
+   "options": [
+    "Ich gebe ihm es.",
+    "Ich gebe es ihn.",
+    "Ich gebe es ihm.",
+    "Ich gebe ihm ihn."
+   ],
+   "correct_answer": "Ich gebe es ihm.",
+   "acceptable_answers": [
+    "Ich gebe es ihm."
+   ],
+   "explanation_en": "With two pronouns the accusative comes before the dative.",
+   "explanation_de": "Bei zwei Pronomen steht der Akkusativ vor dem Dativ.",
+   "hint": null,
+   "why_correct_en": "Accusative pronoun (es) first, dative pronoun (ihm) second: Ich gebe es ihm.",
+   "why_correct_de": "Erst das Akkusativ-Pronomen (es), dann das Dativ-Pronomen (ihm).",
+   "difficulty": 3,
+   "stage": 4,
+   "order_index": 13,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "[ich / anrufen / dich / morgen] → Schreib den Satz.",
+   "question_en": "Write the sentence: I'll call you tomorrow. (verb: anrufen, accusative; the time phrase may open the sentence)",
+   "options": null,
+   "correct_answer": "Ich rufe dich morgen an.",
+   "acceptable_answers": [
+    "Ich rufe dich morgen an.",
+    "Ich rufe dich morgen an",
+    "Morgen rufe ich dich an.",
+    "Morgen rufe ich dich an"
+   ],
+   "explanation_en": "anrufen is separable: rufe in position 2, an at the end, dich right after the verb.",
+   "explanation_de": "anrufen ist trennbar: rufe auf Position 2, an am Ende. dich steht nach dem Verb.",
+   "hint": null,
+   "why_correct_en": "anrufen + accusative → dich; the prefix an closes the bracket at the end.",
+   "why_correct_de": "anrufen + Akkusativ → dich. Das Präfix an steht am Ende.",
+   "difficulty": 2,
+   "stage": 5,
+   "order_index": 1,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "[können / ihr / uns / helfen] → Schreib die Frage.",
+   "question_en": "Write the question: Can you (plural) help us? (verb: helfen, dative, start with Könnt)",
+   "options": null,
+   "correct_answer": "Könnt ihr uns helfen?",
+   "acceptable_answers": [
+    "Könnt ihr uns helfen?",
+    "Könnt ihr uns helfen"
+   ],
+   "explanation_en": "In a yes/no question the modal verb comes first and helfen goes to the end.",
+   "explanation_de": "In der Ja/Nein-Frage steht das Modalverb vorne. helfen steht am Ende.",
+   "hint": null,
+   "why_correct_en": "helfen + dative → uns; können opens the bracket, helfen closes it.",
+   "why_correct_de": "helfen + Dativ → uns. können öffnet die Klammer, helfen schließt sie.",
+   "difficulty": 2,
+   "stage": 5,
+   "order_index": 2,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "[ich / bringen / es / euch] → Schreib den Satz.",
+   "question_en": "Write the sentence: I'm bringing it to you (plural). (two pronouns, start with Ich)",
+   "options": null,
+   "correct_answer": "Ich bringe es euch.",
+   "acceptable_answers": [
+    "Ich bringe es euch.",
+    "Ich bringe es euch"
+   ],
+   "explanation_en": "Two pronouns: accusative (es) before dative (euch).",
+   "explanation_de": "Zwei Pronomen: Akkusativ (es) vor Dativ (euch).",
+   "hint": null,
+   "why_correct_en": "Ich bringe euch es. is wrong — with two pronouns the accusative comes first.",
+   "why_correct_de": "Ich bringe euch es. ist falsch. Bei zwei Pronomen kommt der Akkusativ zuerst.",
+   "difficulty": 3,
+   "stage": 5,
+   "order_index": 3,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "[wir / danken / Ihnen / für die Hilfe] → Schreib den Satz.",
+   "question_en": "Write the sentence: We thank you for the help. (formal, verb: danken, start with Wir)",
+   "options": null,
+   "correct_answer": "Wir danken Ihnen für die Hilfe.",
+   "acceptable_answers": [
+    "Wir danken Ihnen für die Hilfe.",
+    "Wir danken Ihnen für die Hilfe"
+   ],
+   "explanation_en": "danken takes the dative; the formal you is Ihnen with a capital I.",
+   "explanation_de": "danken nimmt den Dativ. Die formelle Form ist Ihnen mit großem I.",
+   "hint": null,
+   "why_correct_en": "danken + dative → Ihnen; für keeps its accusative (die Hilfe).",
+   "why_correct_de": "danken + Dativ → Ihnen. Nach für steht der Akkusativ: die Hilfe.",
+   "difficulty": 2,
+   "stage": 5,
+   "order_index": 4,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "[das Buch / gehören / ihr] → Schreib den Satz.",
+   "question_en": "Write the sentence: The book belongs to her. (verb: gehören, dative, start with Das)",
+   "options": null,
+   "correct_answer": "Das Buch gehört ihr.",
+   "acceptable_answers": [
+    "Das Buch gehört ihr.",
+    "Das Buch gehört ihr"
+   ],
+   "explanation_en": "gehören is a dative verb; the dative of sie (she) is ihr.",
+   "explanation_de": "gehören ist ein Dativ-Verb. Der Dativ von sie ist ihr.",
+   "hint": null,
+   "why_correct_en": "The book is the subject, the person is dative: Das Buch gehört ihr.",
+   "why_correct_de": "Das Buch ist das Subjekt. Die Person steht im Dativ: ihr.",
+   "difficulty": 2,
+   "stage": 5,
+   "order_index": 5,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "[ich / besuchen / euch / am Sonntag] → Schreib den Satz.",
+   "question_en": "Write the sentence: I'm visiting you (plural) on Sunday. (verb: besuchen, accusative)",
+   "options": null,
+   "correct_answer": "Ich besuche euch am Sonntag.",
+   "acceptable_answers": [
+    "Ich besuche euch am Sonntag.",
+    "Ich besuche euch am Sonntag",
+    "Am Sonntag besuche ich euch.",
+    "Am Sonntag besuche ich euch"
+   ],
+   "explanation_en": "besuchen takes the accusative; the accusative of ihr is euch.",
+   "explanation_de": "besuchen nimmt den Akkusativ. Der Akkusativ von ihr ist euch.",
+   "hint": null,
+   "why_correct_en": "The time phrase may also stand in position 1: Am Sonntag besuche ich euch.",
+   "why_correct_de": "Die Zeitangabe kann auch vorne stehen. Beispiel: Am Sonntag besuche ich euch.",
+   "difficulty": 2,
+   "stage": 5,
+   "order_index": 6,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "[er / geben / mir / den Schlüssel] → Schreib den Satz.",
+   "question_en": "Write the sentence: He gives me the key. (pronoun + noun object, start with Er)",
+   "options": null,
+   "correct_answer": "Er gibt mir den Schlüssel.",
+   "acceptable_answers": [
+    "Er gibt mir den Schlüssel.",
+    "Er gibt mir den Schlüssel"
+   ],
+   "explanation_en": "One pronoun and one noun: the pronoun comes first. geben has a vowel change: er gibt.",
+   "explanation_de": "Ein Pronomen und ein Nomen: Das Pronomen steht vorne. geben hat e→i: er gibt.",
+   "hint": null,
+   "why_correct_en": "mir (pronoun) before den Schlüssel (noun): Er gibt mir den Schlüssel.",
+   "why_correct_de": "mir (Pronomen) steht vor den Schlüssel (Nomen).",
+   "difficulty": 3,
+   "stage": 5,
+   "order_index": 7,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "[ich / kommen / mit / sie (eine Frau)] → Schreib den Satz.",
+   "question_en": "Write the sentence: I'm coming with her. (mit + dative, start with Ich)",
+   "options": null,
+   "correct_answer": "Ich komme mit ihr.",
+   "acceptable_answers": [
+    "Ich komme mit ihr.",
+    "Ich komme mit ihr"
+   ],
+   "explanation_en": "mit always takes the dative, so sie (she) becomes ihr.",
+   "explanation_de": "mit nimmt immer den Dativ. Aus sie wird ihr.",
+   "hint": null,
+   "why_correct_en": "mit + dative → mit ihr, never mit sie.",
+   "why_correct_de": "mit + Dativ → mit ihr, nie mit sie.",
+   "difficulty": 2,
+   "stage": 5,
+   "order_index": 8,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "error_correction",
+   "question_de": "Korrigiere: Ich rufe dir an.",
+   "question_en": "Correct the sentence: anrufen takes the accusative. Write the whole sentence.",
+   "options": null,
+   "correct_answer": "Ich rufe dich an.",
+   "acceptable_answers": [
+    "Ich rufe dich an.",
+    "Ich rufe dich an",
+    "ich rufe dich an."
+   ],
+   "explanation_en": "anrufen takes an accusative object, so dir must become dich.",
+   "explanation_de": "anrufen nimmt den Akkusativ. Aus dir wird dich.",
+   "hint": null,
+   "why_correct_en": "anrufen + accusative → dich: Ich rufe dich an.",
+   "why_correct_de": "anrufen + Akkusativ → dich: Ich rufe dich an.",
+   "difficulty": 2,
+   "stage": 5,
+   "order_index": 9,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "error_correction",
+   "question_de": "Korrigiere: Ich schicke ihm es.",
+   "question_en": "Correct the word order: two pronouns, accusative first. Write the whole sentence.",
+   "options": null,
+   "correct_answer": "Ich schicke es ihm.",
+   "acceptable_answers": [
+    "Ich schicke es ihm.",
+    "Ich schicke es ihm",
+    "ich schicke es ihm."
+   ],
+   "explanation_en": "With two pronouns the accusative pronoun comes before the dative pronoun.",
+   "explanation_de": "Bei zwei Pronomen steht das Akkusativ-Pronomen vor dem Dativ-Pronomen.",
+   "hint": null,
+   "why_correct_en": "es (accusative) before ihm (dative): Ich schicke es ihm.",
+   "why_correct_de": "es (Akkusativ) steht vor ihm (Dativ): Ich schicke es ihm.",
+   "difficulty": 3,
+   "stage": 5,
+   "order_index": 10,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "[ich / zeigen / es / dem Chef] → Schreib den Satz.",
+   "question_en": "Write the sentence: I'll show it to the boss. (pronoun + noun object, start with Ich)",
+   "options": null,
+   "correct_answer": "Ich zeige es dem Chef.",
+   "acceptable_answers": [
+    "Ich zeige es dem Chef.",
+    "Ich zeige es dem Chef"
+   ],
+   "explanation_en": "A pronoun stands before a noun object, whatever its case: es (accusative) before dem Chef (dative).",
+   "explanation_de": "Ein Pronomen steht vor einem Nomen, egal in welchem Fall.",
+   "hint": null,
+   "why_correct_en": "Ich zeige dem Chef es. is wrong: the pronoun es has to move in front of the noun.",
+   "why_correct_de": "Ich zeige dem Chef es. ist falsch. Das Pronomen es steht vorne.",
+   "difficulty": 3,
+   "stage": 5,
+   "order_index": 11,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "[die Blumen / sein / von / ich] → Schreib den Satz.",
+   "question_en": "Write the sentence: The flowers are from me. (von + dative, start with Die)",
+   "options": null,
+   "correct_answer": "Die Blumen sind von mir.",
+   "acceptable_answers": [
+    "Die Blumen sind von mir.",
+    "Die Blumen sind von mir"
+   ],
+   "explanation_en": "von always takes the dative, so ich becomes mir.",
+   "explanation_de": "von nimmt immer den Dativ. Aus ich wird mir.",
+   "hint": null,
+   "why_correct_en": "von + dative → von mir, never von mich.",
+   "why_correct_de": "von + Dativ → von mir, nie von mich.",
+   "difficulty": 2,
+   "stage": 5,
+   "order_index": 12,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "[ich / helfen / ihnen / gern] → Schreib den Satz.",
+   "question_en": "Write the sentence: I'm happy to help them. (verb: helfen, dative plural, start with Ich)",
+   "options": null,
+   "correct_answer": "Ich helfe ihnen gern.",
+   "acceptable_answers": [
+    "Ich helfe ihnen gern.",
+    "Ich helfe ihnen gern",
+    "Ich helfe ihnen gerne.",
+    "Ich helfe ihnen gerne"
+   ],
+   "explanation_en": "helfen takes the dative; the dative of the plural sie is ihnen (small i).",
+   "explanation_de": "helfen nimmt den Dativ. Der Dativ von sie (Plural) ist ihnen, klein geschrieben.",
+   "hint": null,
+   "why_correct_en": "ihnen = them (dative plural); Ihnen with a capital I would be the formal you.",
+   "why_correct_de": "ihnen ist der Dativ Plural. Ihnen mit großem I ist die formelle Form.",
+   "difficulty": 3,
+   "stage": 5,
+   "order_index": 13,
+   "related_rule_title": null
+  }
+ ]
+}

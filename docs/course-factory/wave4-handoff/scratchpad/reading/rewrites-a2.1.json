@@ -1,0 +1,1174 @@
+[
+  {
+    "id": "a94a8a40-c8a6-4bed-bd79-a8b4dd9e05f8",
+    "title_de": "Meine Reise nach Wien",
+    "title_en": "My Trip to Vienna",
+    "content_de": "Letzten Monat habe ich eine Reise nach Wien gemacht. Wien ist die Hauptstadt von Österreich. Ich bin mit dem Zug gefahren, weil ich gern Zug fahre. Die Fahrt von München nach Wien hat vier Stunden gedauert.\n\nIm Zug hatte ich einen Platz am Fenster. Ich habe ein Buch gelesen und Kaffee getrunken.\n\nIn Wien habe ich in einem kleinen Hotel im Zentrum übernachtet. Das Hotel war nicht teuer. Von dort konnte ich alles zu Fuß erreichen. Am ersten Tag bin ich die Ringstraße entlanggegangen.\n\nAm zweiten Tag habe ich das Schloss Schönbrunn besucht. Der große Garten hat mir sehr gut gefallen.\n\nAm Abend habe ich ein Wiener Schnitzel gegessen. Zum Nachtisch habe ich Sachertorte probiert. In einem Kaffeehaus habe ich noch eine Melange getrunken.\n\nNach vier Tagen bin ich wieder nach Hause gefahren.",
+    "content_en": "Last month I took a trip to Vienna. Vienna is the capital of Austria. I went by train, because I like going by train. The journey from Munich to Vienna took four hours.\n\nOn the train I had a seat by the window. I read a book and drank coffee.\n\nIn Vienna I stayed in a small hotel in the centre. The hotel was not expensive. From there I could reach everything on foot. On the first day I walked along the Ringstraße.\n\nOn the second day I visited Schönbrunn Palace. I liked the big garden very much.\n\nIn the evening I ate a Wiener Schnitzel. For dessert I tried Sachertorte. In a coffee house I also drank a Melange.\n\nAfter four days I travelled back home.",
+    "key_vocabulary": [
+      {
+        "de": "die Reise, -n",
+        "en": "trip, journey"
+      },
+      {
+        "de": "die Hauptstadt, ¨-e",
+        "en": "capital city"
+      },
+      {
+        "de": "der Zug, ¨-e",
+        "en": "train"
+      },
+      {
+        "de": "die Fahrt, -en",
+        "en": "journey, ride"
+      },
+      {
+        "de": "dauern",
+        "en": "to last, to take (time)"
+      },
+      {
+        "de": "der Platz, ¨-e",
+        "en": "seat, place"
+      },
+      {
+        "de": "übernachten",
+        "en": "to stay overnight"
+      },
+      {
+        "de": "das Zentrum, Zentren",
+        "en": "centre"
+      },
+      {
+        "de": "erreichen",
+        "en": "to reach"
+      },
+      {
+        "de": "das Schloss, ¨-er",
+        "en": "palace, castle"
+      },
+      {
+        "de": "der Garten, ¨-",
+        "en": "garden"
+      },
+      {
+        "de": "gefallen (+ Dat.)",
+        "en": "to please, to be liked by"
+      },
+      {
+        "de": "der Nachtisch, -e",
+        "en": "dessert"
+      },
+      {
+        "de": "probieren",
+        "en": "to try, to taste"
+      }
+    ],
+    "questions": [
+      {
+        "question_de": "Wann hat die Person die Reise gemacht?",
+        "question_en": "When did the person take the trip?",
+        "answer_de": "Sie hat die Reise letzten Monat gemacht.",
+        "answer_en": "The person took the trip last month."
+      },
+      {
+        "question_de": "Was hat die Person im Zug gemacht?",
+        "question_en": "What did the person do on the train?",
+        "answer_de": "Sie hat ein Buch gelesen und Kaffee getrunken.",
+        "answer_en": "The person read a book and drank coffee."
+      },
+      {
+        "question_de": "Was hat der Person im Schloss Schönbrunn gut gefallen?",
+        "question_en": "What did the person like at Schönbrunn Palace?",
+        "answer_de": "Der große Garten hat ihr sehr gut gefallen.",
+        "answer_en": "The person liked the big garden very much."
+      },
+      {
+        "question_de": "Was hat die Person am Abend gegessen?",
+        "question_en": "What did the person eat in the evening?",
+        "answer_de": "Sie hat ein Wiener Schnitzel gegessen.",
+        "answer_en": "The person ate a Wiener Schnitzel."
+      },
+      {
+        "question_de": "Wie lange war die Person in Wien?",
+        "question_en": "How long was the person in Vienna?",
+        "answer_de": "Sie war vier Tage in Wien.",
+        "answer_en": "The person was in Vienna for four days."
+      }
+    ],
+    "checks": [
+      {
+        "type": "rf",
+        "statement_de": "Die Person ist mit dem Zug nach Wien gefahren.",
+        "statement_en": "The person went to Vienna by train.",
+        "answer": "richtig",
+        "explanation_de": "Im Text steht: Ich bin mit dem Zug gefahren."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Die Person hat bei Freunden übernachtet.",
+        "statement_en": "The person stayed with friends.",
+        "answer": "falsch",
+        "explanation_de": "Im Text steht: In Wien habe ich in einem kleinen Hotel im Zentrum übernachtet."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Im Zug hatte die Person einen Platz am Gang.",
+        "statement_en": "On the train the person had an aisle seat.",
+        "answer": "falsch",
+        "explanation_de": "Im Text steht: Im Zug hatte ich einen Platz am Fenster."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Die Person konnte alles zu Fuß erreichen.",
+        "statement_en": "The person could reach everything on foot.",
+        "answer": "richtig",
+        "explanation_de": "Im Text steht: Von dort konnte ich alles zu Fuß erreichen."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Die Person hat in einem Kaffeehaus eine Melange getrunken.",
+        "statement_en": "The person drank a Melange in a coffee house.",
+        "answer": "richtig",
+        "explanation_de": "Im Text steht: In einem Kaffeehaus habe ich noch eine Melange getrunken."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Wie lange hat die Fahrt gedauert? a) zwei Stunden b) vier Stunden c) sechs Stunden",
+        "statement_en": "How long did the journey take? a) two hours b) four hours c) six hours",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "answer": "b",
+        "explanation_de": "Im Text steht: Die Fahrt von München nach Wien hat vier Stunden gedauert."
+      }
+    ],
+    "word_count": 133,
+    "estimated_reading_time": 2
+  },
+  {
+    "id": "b3adfa93-d0f8-4c4f-851b-b161875fb5a3",
+    "title_de": "Beim Arzt",
+    "title_en": "At the Doctor",
+    "content_de": "Letzte Woche war ich krank. Ich hatte Kopfschmerzen, Halsschmerzen und Fieber. Nach zwei Tagen bin ich zum Arzt gegangen.\n\nIn der Praxis musste ich zuerst zur Anmeldung gehen. Dort habe ich meine Karte gezeigt. Dann habe ich im Wartezimmer gewartet. Das Wartezimmer war voll. Nach dreißig Minuten konnte ich ins Sprechzimmer gehen.\n\nDie Ärztin war sehr freundlich. Ich habe ihr meine Probleme beschrieben. Sie hat mich untersucht und meine Temperatur gemessen: 38,5 Grad.\n\nDanach hat sie mir die Diagnose erklärt. Ich hatte eine starke Erkältung. Zum Glück war es nicht schlimm.\n\nDie Ärztin hat mir ein Rezept gegeben. Ich soll dreimal am Tag eine Tablette nehmen. Ich soll auch viel Tee trinken. Bis Freitag darf ich nicht arbeiten.\n\nNach dem Termin bin ich in die Apotheke gegangen. Dort habe ich meine Medikamente geholt.",
+    "content_en": "Last week I was ill. I had a headache, a sore throat and a fever. After two days I went to the doctor.\n\nAt the practice I first had to go to the reception. There I showed my card. Then I waited in the waiting room. The waiting room was full. After thirty minutes I could go into the consulting room.\n\nThe doctor was very friendly. I described my problems to her. She examined me and measured my temperature: 38.5 degrees.\n\nAfterwards she explained the diagnosis to me. I had a bad cold. Luckily it was not serious.\n\nThe doctor gave me a prescription. I am supposed to take one tablet three times a day. I am also supposed to drink a lot of tea. Until Friday I am not allowed to work.\n\nAfter the appointment I went to the pharmacy. There I picked up my medicine.",
+    "key_vocabulary": [
+      {
+        "de": "der Arzt, ¨-e / die Ärztin, -nen",
+        "en": "doctor"
+      },
+      {
+        "de": "die Praxis, Praxen",
+        "en": "doctor's practice"
+      },
+      {
+        "de": "die Anmeldung, -en",
+        "en": "reception, registration desk"
+      },
+      {
+        "de": "das Wartezimmer, -",
+        "en": "waiting room"
+      },
+      {
+        "de": "krank",
+        "en": "ill, sick"
+      },
+      {
+        "de": "die Kopfschmerzen (Pl.)",
+        "en": "headache"
+      },
+      {
+        "de": "das Fieber",
+        "en": "fever"
+      },
+      {
+        "de": "untersuchen",
+        "en": "to examine"
+      },
+      {
+        "de": "messen",
+        "en": "to measure"
+      },
+      {
+        "de": "die Erkältung, -en",
+        "en": "cold (illness)"
+      },
+      {
+        "de": "das Rezept, -e",
+        "en": "prescription"
+      },
+      {
+        "de": "die Tablette, -n",
+        "en": "tablet, pill"
+      },
+      {
+        "de": "die Apotheke, -n",
+        "en": "pharmacy"
+      },
+      {
+        "de": "das Medikament, -e",
+        "en": "medicine"
+      }
+    ],
+    "questions": [
+      {
+        "question_de": "Welche Probleme hatte die Person?",
+        "question_en": "What problems did the person have?",
+        "answer_de": "Sie hatte Kopfschmerzen, Halsschmerzen und Fieber.",
+        "answer_en": "The person had a headache, a sore throat and a fever."
+      },
+      {
+        "question_de": "Was hat die Person an der Anmeldung gemacht?",
+        "question_en": "What did the person do at the reception?",
+        "answer_de": "Sie hat dort ihre Karte gezeigt.",
+        "answer_en": "The person showed the card there."
+      },
+      {
+        "question_de": "Wie war die Ärztin?",
+        "question_en": "What was the doctor like?",
+        "answer_de": "Die Ärztin war sehr freundlich.",
+        "answer_en": "The doctor was very friendly."
+      },
+      {
+        "question_de": "Was für eine Krankheit hatte die Person?",
+        "question_en": "What illness did the person have?",
+        "answer_de": "Sie hatte eine starke Erkältung.",
+        "answer_en": "The person had a bad cold."
+      },
+      {
+        "question_de": "Was hat die Ärztin der Person gegeben?",
+        "question_en": "What did the doctor give the person?",
+        "answer_de": "Sie hat ihr ein Rezept gegeben.",
+        "answer_en": "The person gave the person a prescription."
+      }
+    ],
+    "checks": [
+      {
+        "type": "rf",
+        "statement_de": "Die Person ist am ersten Tag zum Arzt gegangen.",
+        "statement_en": "The person went to the doctor on the first day.",
+        "answer": "falsch",
+        "explanation_de": "Im Text steht: Nach zwei Tagen bin ich zum Arzt gegangen."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Die Person hat dreißig Minuten gewartet.",
+        "statement_en": "The person waited for thirty minutes.",
+        "answer": "richtig",
+        "explanation_de": "Im Text steht: Nach dreißig Minuten konnte ich ins Sprechzimmer gehen."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Die Ärztin hat die Temperatur gemessen.",
+        "statement_en": "The doctor measured the temperature.",
+        "answer": "richtig",
+        "explanation_de": "Im Text steht: Sie hat mich untersucht und meine Temperatur gemessen."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Die Person soll viel Tee trinken.",
+        "statement_en": "The person is supposed to drink a lot of tea.",
+        "answer": "richtig",
+        "explanation_de": "Im Text steht: Ich soll auch viel Tee trinken."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Die Person hat die Medikamente im Supermarkt geholt.",
+        "statement_en": "The person picked up the medicine at the supermarket.",
+        "answer": "falsch",
+        "explanation_de": "Im Text steht: Nach dem Termin bin ich in die Apotheke gegangen. Dort habe ich meine Medikamente geholt."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Wie hoch war das Fieber? a) 37,5 Grad b) 38,0 Grad c) 38,5 Grad",
+        "statement_en": "How high was the fever? a) 37.5 degrees b) 38.0 degrees c) 38.5 degrees",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "answer": "c",
+        "explanation_de": "Im Text steht: Sie hat mich untersucht und meine Temperatur gemessen: 38,5 Grad."
+      }
+    ],
+    "word_count": 133,
+    "estimated_reading_time": 2
+  },
+  {
+    "id": "2625a371-4cc2-4a9e-b941-1a75c7eda792",
+    "title_de": "Mein Beruf als Softwareentwickler",
+    "title_en": "My Job as a Software Developer",
+    "content_de": "Ich arbeite als Softwareentwickler bei einer IT-Firma in Hamburg. Schon in der Schule habe ich gern am Computer gearbeitet. Später habe ich Informatik studiert.\n\nMein Arbeitstag beginnt um neun Uhr. Ich fahre mit dem Fahrrad ins Büro. Die Fahrt dauert nur fünfzehn Minuten.\n\nIm Büro sitze ich mit meinem Team in einem großen Raum. Wir sind fünf Entwickler. Jeden Morgen haben wir ein kurzes Meeting. Dort besprechen wir unsere Aufgaben für den Tag.\n\nMeine Hauptaufgabe ist die Arbeit am Code. Ich entwickle Programme für unsere Kunden. Manchmal muss ich ein schwieriges Problem lösen.\n\nVon halb eins bis halb zwei mache ich Mittagspause. Oft gehe ich mit den Kollegen essen.\n\nUm 18 Uhr ist Feierabend. Zweimal pro Woche darf ich von zu Hause arbeiten. Ich bin sehr zufrieden mit meinem Beruf.",
+    "content_en": "I work as a software developer at an IT company in Hamburg. Even at school I liked working at the computer. Later I studied computer science.\n\nMy working day starts at nine o'clock. I ride my bicycle to the office. The ride only takes fifteen minutes.\n\nIn the office I sit with my team in a big room. There are five of us developers. Every morning we have a short meeting. There we discuss our tasks for the day.\n\nMy main task is working on the code. I develop programs for our customers. Sometimes I have to solve a difficult problem.\n\nFrom half past twelve until half past one I take my lunch break. I often go out to eat with my colleagues.\n\nAt six p.m. the working day is over. Twice a week I am allowed to work from home. I am very happy with my job.",
+    "key_vocabulary": [
+      {
+        "de": "der Beruf, -e",
+        "en": "profession, job"
+      },
+      {
+        "de": "die Firma, Firmen",
+        "en": "company"
+      },
+      {
+        "de": "der Arbeitstag, -e",
+        "en": "working day"
+      },
+      {
+        "de": "das Büro, -s",
+        "en": "office"
+      },
+      {
+        "de": "das Team, -s",
+        "en": "team"
+      },
+      {
+        "de": "der Entwickler, -",
+        "en": "developer"
+      },
+      {
+        "de": "das Meeting, -s",
+        "en": "meeting"
+      },
+      {
+        "de": "besprechen",
+        "en": "to discuss"
+      },
+      {
+        "de": "die Aufgabe, -n",
+        "en": "task"
+      },
+      {
+        "de": "der Kunde, -n",
+        "en": "customer"
+      },
+      {
+        "de": "lösen",
+        "en": "to solve"
+      },
+      {
+        "de": "die Mittagspause, -n",
+        "en": "lunch break"
+      },
+      {
+        "de": "der Kollege, -n / die Kollegin, -nen",
+        "en": "colleague"
+      },
+      {
+        "de": "der Feierabend",
+        "en": "end of the working day"
+      }
+    ],
+    "questions": [
+      {
+        "question_de": "Wo arbeitet die Person?",
+        "question_en": "Where does the person work?",
+        "answer_de": "Sie arbeitet bei einer IT-Firma in Hamburg.",
+        "answer_en": "The person works at an IT company in Hamburg."
+      },
+      {
+        "question_de": "Was hat die Person studiert?",
+        "question_en": "What did the person study?",
+        "answer_de": "Sie hat Informatik studiert.",
+        "answer_en": "The person studied computer science."
+      },
+      {
+        "question_de": "Was machen die Kollegen jeden Morgen?",
+        "question_en": "What do the colleagues do every morning?",
+        "answer_de": "Sie haben jeden Morgen ein kurzes Meeting.",
+        "answer_en": "Every morning they have a short meeting."
+      },
+      {
+        "question_de": "Was ist ihre Hauptaufgabe?",
+        "question_en": "What is her main task?",
+        "answer_de": "Ihre Hauptaufgabe ist die Arbeit am Code.",
+        "answer_en": "The main task is working on the code."
+      },
+      {
+        "question_de": "Wann ist Feierabend?",
+        "question_en": "When does the working day end?",
+        "answer_de": "Um 18 Uhr ist Feierabend.",
+        "answer_en": "The working day ends at six p.m."
+      }
+    ],
+    "checks": [
+      {
+        "type": "rf",
+        "statement_de": "Die Fahrt ins Büro dauert fünfzehn Minuten.",
+        "statement_en": "The ride to the office takes fifteen minutes.",
+        "answer": "richtig",
+        "explanation_de": "Im Text steht: Die Fahrt dauert nur fünfzehn Minuten."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Der Arbeitstag beginnt um neun Uhr.",
+        "statement_en": "The working day starts at nine o'clock.",
+        "answer": "richtig",
+        "explanation_de": "Im Text steht: Mein Arbeitstag beginnt um neun Uhr."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Im Team sind acht Entwickler.",
+        "statement_en": "There are eight developers in the team.",
+        "answer": "falsch",
+        "explanation_de": "Im Text steht: Wir sind fünf Entwickler."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Die Mittagspause beginnt um zwölf Uhr.",
+        "statement_en": "The lunch break starts at twelve o'clock.",
+        "answer": "falsch",
+        "explanation_de": "Im Text steht: Von halb eins bis halb zwei mache ich Mittagspause."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Zweimal pro Woche darf die Person zu Hause arbeiten.",
+        "statement_en": "Twice a week the person is allowed to work at home.",
+        "answer": "richtig",
+        "explanation_de": "Im Text steht: Zweimal pro Woche darf ich von zu Hause arbeiten."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Wie kommt die Person ins Büro? a) mit dem Fahrrad b) mit dem Bus c) zu Fuß",
+        "statement_en": "How does the person get to the office? a) by bicycle b) by bus c) on foot",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "answer": "a",
+        "explanation_de": "Im Text steht: Ich fahre mit dem Fahrrad ins Büro."
+      }
+    ],
+    "word_count": 130,
+    "estimated_reading_time": 2
+  },
+  {
+    "id": "a1a4b941-81b1-4e42-b8a7-5afb2863f91a",
+    "title_de": "Unterwegs in der Stadt",
+    "title_en": "Getting Around in the City",
+    "content_de": "Ich wohne seit fünf Jahren in Berlin. Am Anfang musste ich oft nach dem Weg fragen. Hier gibt es viele Verkehrsmittel. Meistens fahre ich mit der U-Bahn.\n\nMein Monatsticket kostet etwa 86 Euro. Damit kann ich jeden Tag fahren. Die U-Bahn ist schnell, denn sie fährt unter der Erde. Die Fahrt zur Arbeit dauert nur zwanzig Minuten. Am Morgen ist die U-Bahn oft sehr voll.\n\nIm Sommer nehme ich oft mein altes Fahrrad. In Berlin gibt es viele Fahrradwege.\n\nManchmal fahre ich auch mit dem Bus. Aus dem Bus kann man die Straßen und die Parks sehen. Bei viel Verkehr ist der Bus aber langsam.\n\nEin Auto habe ich nicht. Parkplätze sind teuer, und es gibt oft Stau. Zum Bäcker und zum Supermarkt gehe ich zu Fuß.\n\nIch bin sehr zufrieden mit den Verkehrsmitteln in Berlin. Man kommt hier überall schnell hin.",
+    "content_en": "I have been living in Berlin for five years. At the beginning I often had to ask for directions. There are many means of transport here. Usually I take the underground.\n\nMy monthly ticket costs about 86 euros. With it I can travel every day. The underground is fast, because it runs below ground. The trip to work only takes twenty minutes. In the morning the underground is often very full.\n\nIn summer I often take my old bicycle. In Berlin there are many cycle paths.\n\nSometimes I also take the bus. From the bus you can see the streets and the parks. But when there is a lot of traffic, the bus is slow.\n\nI do not have a car. Parking spaces are expensive, and there are often traffic jams. To the baker's and to the supermarket I walk.\n\nI am very happy with the means of transport in Berlin. You get everywhere quickly here.",
+    "key_vocabulary": [
+      {
+        "de": "das Verkehrsmittel, -",
+        "en": "means of transport"
+      },
+      {
+        "de": "die U-Bahn, -en",
+        "en": "underground, subway"
+      },
+      {
+        "de": "das Monatsticket, -s",
+        "en": "monthly ticket"
+      },
+      {
+        "de": "die Fahrt, -en",
+        "en": "trip, ride"
+      },
+      {
+        "de": "voll",
+        "en": "full, crowded"
+      },
+      {
+        "de": "das Fahrrad, ¨-er",
+        "en": "bicycle"
+      },
+      {
+        "de": "der Fahrradweg, -e",
+        "en": "cycle path"
+      },
+      {
+        "de": "der Bus, -se",
+        "en": "bus"
+      },
+      {
+        "de": "der Verkehr",
+        "en": "traffic"
+      },
+      {
+        "de": "der Parkplatz, ¨-e",
+        "en": "parking space"
+      },
+      {
+        "de": "der Stau, -s",
+        "en": "traffic jam"
+      },
+      {
+        "de": "zu Fuß gehen",
+        "en": "to walk, to go on foot"
+      },
+      {
+        "de": "zufrieden",
+        "en": "satisfied, happy"
+      }
+    ],
+    "questions": [
+      {
+        "question_de": "Womit fährt die Person meistens?",
+        "question_en": "What does the person usually travel by?",
+        "answer_de": "Sie fährt meistens mit der U-Bahn.",
+        "answer_en": "The person usually travels by underground."
+      },
+      {
+        "question_de": "Wann nimmt die Person oft das Fahrrad?",
+        "question_en": "When does the person often take the bicycle?",
+        "answer_de": "Im Sommer nimmt sie oft ihr Fahrrad.",
+        "answer_en": "In summer the person often takes the bicycle."
+      },
+      {
+        "question_de": "Was kann man aus dem Bus sehen?",
+        "question_en": "What can you see from the bus?",
+        "answer_de": "Man kann die Straßen und die Parks sehen.",
+        "answer_en": "You can see the streets and the parks."
+      },
+      {
+        "question_de": "Wie sind die Parkplätze in Berlin?",
+        "question_en": "What are parking spaces like in Berlin?",
+        "answer_de": "Die Parkplätze sind teuer.",
+        "answer_en": "Parking spaces are expensive."
+      },
+      {
+        "question_de": "Wohin geht die Person zu Fuß?",
+        "question_en": "Where does the person walk to?",
+        "answer_de": "Sie geht zum Bäcker und zum Supermarkt zu Fuß.",
+        "answer_en": "The person walks to the baker's and to the supermarket."
+      }
+    ],
+    "checks": [
+      {
+        "type": "rf",
+        "statement_de": "Die Person wohnt seit zehn Jahren in Berlin.",
+        "statement_en": "The person has been living in Berlin for ten years.",
+        "answer": "falsch",
+        "explanation_de": "Im Text steht: Ich wohne seit fünf Jahren in Berlin."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Die U-Bahn fährt über der Erde.",
+        "statement_en": "The underground runs above ground.",
+        "answer": "falsch",
+        "explanation_de": "Im Text steht: Die U-Bahn ist schnell, denn sie fährt unter der Erde."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Die Fahrt zur Arbeit dauert zwanzig Minuten.",
+        "statement_en": "The trip to work takes twenty minutes.",
+        "answer": "richtig",
+        "explanation_de": "Im Text steht: Die Fahrt zur Arbeit dauert nur zwanzig Minuten."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Die Person hat kein Auto.",
+        "statement_en": "The person does not have a car.",
+        "answer": "richtig",
+        "explanation_de": "Im Text steht: Ein Auto habe ich nicht."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Am Morgen ist die U-Bahn meistens leer.",
+        "statement_en": "In the morning the underground is mostly empty.",
+        "answer": "falsch",
+        "explanation_de": "Im Text steht: Am Morgen ist die U-Bahn oft sehr voll."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Was kostet das Monatsticket ungefähr? a) 68 Euro b) 76 Euro c) 86 Euro",
+        "statement_en": "About what does the monthly ticket cost? a) 68 euros b) 76 euros c) 86 euros",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "answer": "c",
+        "explanation_de": "Im Text steht: Mein Monatsticket kostet etwa 86 Euro."
+      }
+    ],
+    "word_count": 142,
+    "estimated_reading_time": 3
+  },
+  {
+    "id": "bd2adaeb-7f78-4d8c-b3e4-eb3ff231c2ae",
+    "title_de": "Ein Abend im Restaurant",
+    "title_en": "An Evening at the Restaurant",
+    "content_de": "Letzten Samstag habe ich mit meiner Freundin in einem italienischen Restaurant gegessen. Sie hatte Geburtstag. Ich wollte sie zu einem besonderen Abendessen einladen. Ich habe vorher einen Tisch reserviert.\n\nUm sieben Uhr sind wir angekommen. Der Kellner hat uns einen Platz am Fenster gegeben. Die Musik war leise. Auf den Tischen waren Kerzen.\n\nZuerst hat uns der Kellner die Speisekarte gebracht. Ich habe einen Rotwein bestellt, meine Freundin ein Mineralwasser.\n\nAls Vorspeise haben wir Bruschetta gegessen. Danach habe ich Spaghetti bestellt und meine Freundin eine Pizza. Die Portionen waren groß, und alles hat sehr gut geschmeckt.\n\nZum Nachtisch habe ich Tiramisu genommen. Dann haben wir noch einen Espresso getrunken.\n\nDas Essen hat 75 Euro gekostet. Ich habe mit Karte bezahlt und dem Kellner zehn Euro Trinkgeld gegeben. Meine Freundin war sehr glücklich.",
+    "content_en": "Last Saturday I ate with my girlfriend at an Italian restaurant. It was her birthday. I wanted to invite her to a special dinner. I had reserved a table beforehand.\n\nAt seven o'clock we arrived. The waiter gave us a seat by the window. The music was quiet. There were candles on the tables.\n\nFirst the waiter brought us the menu. I ordered a red wine, my girlfriend a mineral water.\n\nAs a starter we ate bruschetta. Then I ordered spaghetti and my girlfriend a pizza. The portions were big, and everything tasted very good.\n\nFor dessert I had tiramisu. Then we also drank an espresso.\n\nThe meal cost 75 euros. I paid by card and gave the waiter ten euros as a tip. My girlfriend was very happy.",
+    "key_vocabulary": [
+      {
+        "de": "das Restaurant, -s",
+        "en": "restaurant"
+      },
+      {
+        "de": "der Kellner, - / die Kellnerin, -nen",
+        "en": "waiter, waitress"
+      },
+      {
+        "de": "reservieren",
+        "en": "to reserve"
+      },
+      {
+        "de": "der Tisch, -e",
+        "en": "table"
+      },
+      {
+        "de": "die Speisekarte, -n",
+        "en": "menu"
+      },
+      {
+        "de": "bestellen",
+        "en": "to order"
+      },
+      {
+        "de": "die Vorspeise, -n",
+        "en": "starter"
+      },
+      {
+        "de": "die Portion, -en",
+        "en": "portion"
+      },
+      {
+        "de": "schmecken",
+        "en": "to taste"
+      },
+      {
+        "de": "der Nachtisch, -e",
+        "en": "dessert"
+      },
+      {
+        "de": "bezahlen",
+        "en": "to pay"
+      },
+      {
+        "de": "das Trinkgeld, -er",
+        "en": "tip"
+      },
+      {
+        "de": "glücklich",
+        "en": "happy"
+      }
+    ],
+    "questions": [
+      {
+        "question_de": "Warum sind die beiden ins Restaurant gegangen?",
+        "question_en": "Why did the two of them go to the restaurant?",
+        "answer_de": "Die Freundin hatte Geburtstag.",
+        "answer_en": "It was the girlfriend's birthday."
+      },
+      {
+        "question_de": "Wann sind die beiden im Restaurant angekommen?",
+        "question_en": "When did the two of them arrive at the restaurant?",
+        "answer_de": "Sie sind um sieben Uhr angekommen.",
+        "answer_en": "They arrived at seven o'clock."
+      },
+      {
+        "question_de": "Was haben die beiden als Vorspeise gegessen?",
+        "question_en": "What did the two of them eat as a starter?",
+        "answer_de": "Sie haben Bruschetta gegessen.",
+        "answer_en": "They ate bruschetta."
+      },
+      {
+        "question_de": "Was hat die Person zum Nachtisch genommen?",
+        "question_en": "What did the person have for dessert?",
+        "answer_de": "Sie hat Tiramisu genommen.",
+        "answer_en": "The person had tiramisu."
+      },
+      {
+        "question_de": "Wie viel Trinkgeld hat die Person gegeben?",
+        "question_en": "How much tip did the person give?",
+        "answer_de": "Sie hat zehn Euro Trinkgeld gegeben.",
+        "answer_en": "The person gave ten euros as a tip."
+      }
+    ],
+    "checks": [
+      {
+        "type": "rf",
+        "statement_de": "Die Person hat vorher einen Tisch reserviert.",
+        "statement_en": "The person had reserved a table beforehand.",
+        "answer": "richtig",
+        "explanation_de": "Im Text steht: Ich habe vorher einen Tisch reserviert."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Die beiden haben in einem griechischen Restaurant gegessen.",
+        "statement_en": "The two of them ate at a Greek restaurant.",
+        "answer": "falsch",
+        "explanation_de": "Im Text steht: Letzten Samstag habe ich mit meiner Freundin in einem italienischen Restaurant gegessen."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Der Kellner hat ihnen einen Platz am Fenster gegeben.",
+        "statement_en": "The waiter gave them a seat by the window.",
+        "answer": "richtig",
+        "explanation_de": "Im Text steht: Der Kellner hat uns einen Platz am Fenster gegeben."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Das Essen hat 75 Euro gekostet.",
+        "statement_en": "The meal cost 75 euros.",
+        "answer": "richtig",
+        "explanation_de": "Im Text steht: Das Essen hat 75 Euro gekostet."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Die Person hat bar bezahlt.",
+        "statement_en": "The person paid in cash.",
+        "answer": "falsch",
+        "explanation_de": "Im Text steht: Ich habe mit Karte bezahlt."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Was hat die Freundin gegessen? a) Spaghetti b) eine Pizza c) einen Salat",
+        "statement_en": "What did the girlfriend eat? a) spaghetti b) a pizza c) a salad",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "answer": "b",
+        "explanation_de": "Im Text steht: Danach habe ich Spaghetti bestellt und meine Freundin eine Pizza."
+      }
+    ],
+    "word_count": 132,
+    "estimated_reading_time": 2
+  },
+  {
+    "id": "41c5fb24-317d-428a-977d-0bc2baba885c",
+    "title_de": "Ein Umzug nach Hamburg",
+    "title_en": "A Move to Hamburg",
+    "content_de": "Familie Weber hat zehn Jahre in Stuttgart gewohnt. Im März hat Frau Weber eine neue Stelle in Hamburg bekommen. Im Sommer ist die Familie umgezogen. Am Anfang wollten die Kinder nicht umziehen.\n\nDer Umzug hat viel Arbeit gemacht. Zuerst haben die Webers eine Wohnung gesucht. Das war nicht leicht, denn in Hamburg sind die Mieten hoch. Nach sechs Wochen haben sie eine helle Wohnung in Eimsbüttel gefunden. Die Wohnung liegt im dritten Stock, und es gibt keinen Aufzug.\n\nDann haben alle geholfen. Herr Weber hat fünfzig Kartons gepackt. Die Kinder haben ihre Bücher eingepackt. Die Großeltern haben auf den Hund aufgepasst. Eine Firma hat die Möbel getragen.\n\nAm Umzugstag ist der Lastwagen um sieben Uhr losgefahren.\n\nIn der neuen Wohnung hat Frau Weber die Küche eingeräumt. Herr Weber hat die Lampen aufgehängt. Die Nachbarn waren nett. Frau Schmidt hat der Familie einen Kuchen geschenkt.",
+    "content_en": "The Weber family lived in Stuttgart for ten years. In March Mrs. Weber got a new job in Hamburg. In the summer the family moved. At first the children did not want to move.\n\nThe move was a lot of work. First the Webers looked for an apartment. That was not easy, because rents in Hamburg are high. After six weeks they found a bright apartment in Eimsbüttel. The apartment is on the third floor, and there is no lift.\n\nThen everybody helped. Mr. Weber packed fifty boxes. The children packed their books. The grandparents looked after the dog. A company carried the furniture.\n\nOn moving day the truck set off at seven o'clock.\n\nIn the new apartment Mrs. Weber put away the kitchen things. Mr. Weber hung up the lamps. The neighbours were nice. Mrs. Schmidt gave the family a cake.",
+    "key_vocabulary": [
+      {
+        "de": "der Umzug, ¨-e",
+        "en": "move, relocation"
+      },
+      {
+        "de": "umziehen",
+        "en": "to move house"
+      },
+      {
+        "de": "die Stelle, -n",
+        "en": "job, position"
+      },
+      {
+        "de": "die Miete, -n",
+        "en": "rent"
+      },
+      {
+        "de": "die Wohnung, -en",
+        "en": "apartment"
+      },
+      {
+        "de": "hell",
+        "en": "bright"
+      },
+      {
+        "de": "der Stock, Stockwerke",
+        "en": "floor, storey"
+      },
+      {
+        "de": "der Aufzug, ¨-e",
+        "en": "lift, elevator"
+      },
+      {
+        "de": "der Karton, -s",
+        "en": "cardboard box"
+      },
+      {
+        "de": "einpacken",
+        "en": "to pack up"
+      },
+      {
+        "de": "aufpassen (auf + Akk.)",
+        "en": "to look after"
+      },
+      {
+        "de": "der Lastwagen, -",
+        "en": "truck"
+      },
+      {
+        "de": "einräumen",
+        "en": "to put away, to tidy in"
+      },
+      {
+        "de": "der Nachbar, -n / die Nachbarin, -nen",
+        "en": "neighbour"
+      }
+    ],
+    "questions": [
+      {
+        "question_de": "Wann hat Frau Weber eine neue Stelle bekommen?",
+        "question_en": "When did Mrs. Weber get a new job?",
+        "answer_de": "Sie hat im März eine neue Stelle bekommen.",
+        "answer_en": "She got a new job in March."
+      },
+      {
+        "question_de": "Warum war die Wohnungssuche nicht leicht?",
+        "question_en": "Why was looking for an apartment not easy?",
+        "answer_de": "In Hamburg sind die Mieten hoch.",
+        "answer_en": "Rents in Hamburg are high."
+      },
+      {
+        "question_de": "Wer hat die Möbel getragen?",
+        "question_en": "Who carried the furniture?",
+        "answer_de": "Eine Firma hat die Möbel getragen.",
+        "answer_en": "A company carried the furniture."
+      },
+      {
+        "question_de": "Was hat Frau Weber in der neuen Wohnung gemacht?",
+        "question_en": "What did Mrs. Weber do in the new apartment?",
+        "answer_de": "Sie hat die Küche eingeräumt.",
+        "answer_en": "She put away the kitchen things."
+      },
+      {
+        "question_de": "Was hat Frau Schmidt der Familie geschenkt?",
+        "question_en": "What did Mrs. Schmidt give the family?",
+        "answer_de": "Sie hat der Familie einen Kuchen geschenkt.",
+        "answer_en": "She gave the family a cake."
+      }
+    ],
+    "checks": [
+      {
+        "type": "rf",
+        "statement_de": "Familie Weber hat zwanzig Jahre in Stuttgart gewohnt.",
+        "statement_en": "The Weber family lived in Stuttgart for twenty years.",
+        "answer": "falsch",
+        "explanation_de": "Im Text steht: Familie Weber hat zehn Jahre in Stuttgart gewohnt."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Die Familie ist im Sommer umgezogen.",
+        "statement_en": "The family moved in the summer.",
+        "answer": "richtig",
+        "explanation_de": "Im Text steht: Im Sommer ist die Familie umgezogen."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Die Familie hat die Wohnung nach zwei Wochen gefunden.",
+        "statement_en": "The family found the apartment after two weeks.",
+        "answer": "falsch",
+        "explanation_de": "Im Text steht: Nach sechs Wochen haben sie eine helle Wohnung in Eimsbüttel gefunden."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Die Wohnung liegt im ersten Stock.",
+        "statement_en": "The apartment is on the first floor.",
+        "answer": "falsch",
+        "explanation_de": "Im Text steht: Die Wohnung liegt im dritten Stock."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Die Großeltern haben auf den Hund aufgepasst.",
+        "statement_en": "The grandparents looked after the dog.",
+        "answer": "richtig",
+        "explanation_de": "Im Text steht: Die Großeltern haben auf den Hund aufgepasst."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Wie viele Kartons hat Herr Weber gepackt? a) fünfzig b) fünfzehn c) fünf",
+        "statement_en": "How many boxes did Mr. Weber pack? a) fifty b) fifteen c) five",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "answer": "a",
+        "explanation_de": "Im Text steht: Herr Weber hat fünfzig Kartons gepackt."
+      }
+    ],
+    "word_count": 144,
+    "estimated_reading_time": 3
+  },
+  {
+    "id": "671fefe0-de8f-4db2-957d-7616be5e35d2",
+    "title_de": "Der Sportverein",
+    "title_en": "The Sports Club",
+    "content_de": "Lena kommt aus Spanien. Vor einem Jahr ist sie nach Köln gezogen. Am Anfang hat sie hier niemanden gekannt. Sie konnte damals auch noch nicht gut Deutsch.\n\nEine Kollegin hat ihr einen guten Tipp gegeben: „Geh zu einem Sportverein! Dort findest du schnell Freunde.“ Lena hat im Internet gesucht und einen Volleyballverein gefunden. Der Verein ist in ihrem Stadtteil.\n\nZuerst hat Lena ein Probetraining gemacht. Das war kostenlos. Das Training hat ihr sofort gefallen. Dann hat sie ein Formular ausgefüllt. Jetzt ist sie Mitglied. Der Beitrag kostet nur zwölf Euro im Monat.\n\nLena trainiert zweimal pro Woche, dienstags und donnerstags von 19 bis 21 Uhr. Am Wochenende spielt ihre Mannschaft manchmal gegen Teams aus der Region.\n\nIm Sommer hat der Verein ein Grillfest gemacht. Die Trainerin bekommt kein Geld für ihre Arbeit. Lena sagt: „Der Verein ist für mich wie eine zweite Familie.“",
+    "content_en": "Lena comes from Spain. A year ago she moved to Cologne. At the beginning she did not know anybody here. Back then her German was not good yet.\n\nA colleague gave her a good tip: \"Go to a sports club! You will find friends there quickly.\" Lena searched on the internet and found a volleyball club. The club is in her district.\n\nFirst Lena did a trial training session. It was free. She liked the training straight away. Then she filled in a form. Now she is a member. The fee is only twelve euros a month.\n\nLena trains twice a week, on Tuesdays and Thursdays from 7 to 9 p.m. At the weekend her team sometimes plays against teams from the region.\n\nIn the summer the club had a barbecue party. The coach does not get any money for her work. Lena says: \"The club is like a second family for me.\"",
+    "key_vocabulary": [
+      {
+        "de": "der Verein, -e",
+        "en": "club, association"
+      },
+      {
+        "de": "das Mitglied, -er",
+        "en": "member"
+      },
+      {
+        "de": "der Tipp, -s",
+        "en": "tip, piece of advice"
+      },
+      {
+        "de": "der Stadtteil, -e",
+        "en": "district"
+      },
+      {
+        "de": "das Probetraining, -s",
+        "en": "trial training session"
+      },
+      {
+        "de": "kostenlos",
+        "en": "free of charge"
+      },
+      {
+        "de": "das Training, -s",
+        "en": "training"
+      },
+      {
+        "de": "das Formular, -e",
+        "en": "form"
+      },
+      {
+        "de": "ausfüllen",
+        "en": "to fill in"
+      },
+      {
+        "de": "der Beitrag, ¨-e",
+        "en": "membership fee"
+      },
+      {
+        "de": "die Mannschaft, -en",
+        "en": "team"
+      },
+      {
+        "de": "die Trainerin, -nen",
+        "en": "coach (female)"
+      },
+      {
+        "de": "das Grillfest, -e",
+        "en": "barbecue party"
+      }
+    ],
+    "questions": [
+      {
+        "question_de": "Woher kommt Lena?",
+        "question_en": "Where does Lena come from?",
+        "answer_de": "Lena kommt aus Spanien.",
+        "answer_en": "Lena comes from Spain."
+      },
+      {
+        "question_de": "Wo hat Lena einen Verein gesucht?",
+        "question_en": "Where did Lena look for a club?",
+        "answer_de": "Sie hat im Internet gesucht.",
+        "answer_en": "She looked on the internet."
+      },
+      {
+        "question_de": "Was hat Lena nach dem Probetraining gemacht?",
+        "question_en": "What did Lena do after the trial training session?",
+        "answer_de": "Sie hat ein Formular ausgefüllt.",
+        "answer_en": "She filled in a form."
+      },
+      {
+        "question_de": "Gegen wen spielt die Mannschaft am Wochenende?",
+        "question_en": "Who does the team play against at the weekend?",
+        "answer_de": "Sie spielt manchmal gegen Teams aus der Region.",
+        "answer_en": "It sometimes plays against teams from the region."
+      },
+      {
+        "question_de": "Bekommt die Trainerin Geld für ihre Arbeit?",
+        "question_en": "Does the coach get money for her work?",
+        "answer_de": "Nein, sie bekommt kein Geld für ihre Arbeit.",
+        "answer_en": "No, the coach does not get any money for her work."
+      }
+    ],
+    "checks": [
+      {
+        "type": "rf",
+        "statement_de": "Lena spielt Volleyball.",
+        "statement_en": "Lena plays volleyball.",
+        "answer": "richtig",
+        "explanation_de": "Im Text steht: Lena hat im Internet gesucht und einen Volleyballverein gefunden. ... Jetzt ist sie Mitglied."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Das Probetraining war kostenlos.",
+        "statement_en": "The trial training session was free.",
+        "answer": "richtig",
+        "explanation_de": "Im Text steht: Zuerst hat Lena ein Probetraining gemacht. Das war kostenlos."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Der Beitrag kostet zwanzig Euro im Monat.",
+        "statement_en": "The fee is twenty euros a month.",
+        "answer": "falsch",
+        "explanation_de": "Im Text steht: Der Beitrag kostet nur zwölf Euro im Monat."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Eine Kollegin hat Lena den Tipp gegeben.",
+        "statement_en": "A colleague gave Lena the tip.",
+        "answer": "richtig",
+        "explanation_de": "Im Text steht: Eine Kollegin hat ihr einen guten Tipp gegeben."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Der Verein hat im Winter ein Grillfest gemacht.",
+        "statement_en": "The club had a barbecue party in winter.",
+        "answer": "falsch",
+        "explanation_de": "Im Text steht: Im Sommer hat der Verein ein Grillfest gemacht."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Wie oft trainiert Lena? a) einmal pro Woche b) dreimal pro Woche c) zweimal pro Woche",
+        "statement_en": "How often does Lena train? a) once a week b) three times a week c) twice a week",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "answer": "c",
+        "explanation_de": "Im Text steht: Lena trainiert zweimal pro Woche, dienstags und donnerstags."
+      }
+    ],
+    "word_count": 143,
+    "estimated_reading_time": 3
+  },
+  {
+    "id": "5fe05477-4bb9-4814-bd73-049713182fbc",
+    "title_de": "Ein Besuch auf dem Wochenmarkt",
+    "title_en": "A Visit to the Weekly Market",
+    "content_de": "Samstagmorgen in Freiburg. Auf dem Platz vor dem Münster ist Wochenmarkt. Die ersten Stände öffnen schon um halb acht.\n\nJonas geht fast jeden Samstag mit seiner Tochter Emma zum Markt. Sie fahren mit der Straßenbahn in die Stadt, denn Parkplätze sind teuer.\n\nZuerst gehen die beiden zu einem Gemüsestand. Der Bauer kommt aus einem Dorf bei Freiburg. „Was darf es sein?“, fragt er. Jonas kauft ein Kilo Tomaten und einen Salat. Am Obststand nebenan probiert Emma eine Erdbeere. Danach kaufen die beiden noch Eier und ein Brot.\n\nAuf dem Markt bezahlt man oft bar, denn viele Stände nehmen keine Karte. Die Preise sind manchmal höher als im Supermarkt. Aber die Waren kommen direkt vom Bauernhof.\n\nZum Schluss kauft Jonas seiner Tochter eine Brezel. Dann fahren die beiden nach Hause und kochen zusammen.",
+    "content_en": "Saturday morning in Freiburg. On the square in front of the cathedral there is a weekly market. The first stalls open as early as half past seven.\n\nAlmost every Saturday Jonas goes to the market with his daughter Emma. They take the tram into town, because parking spaces are expensive.\n\nFirst the two of them go to a vegetable stall. The farmer comes from a village near Freiburg. \"What can I get you?\" he asks. Jonas buys a kilo of tomatoes and a lettuce. At the fruit stall next to it Emma tries a strawberry. After that the two of them also buy eggs and a loaf of bread.\n\nAt the market people often pay in cash, because many stalls do not take cards. The prices are sometimes higher than at the supermarket. But the goods come straight from the farm.\n\nFinally Jonas buys his daughter a pretzel. Then the two of them go home and cook together.",
+    "key_vocabulary": [
+      {
+        "de": "der Wochenmarkt, ¨-e",
+        "en": "weekly market"
+      },
+      {
+        "de": "der Stand, ¨-e",
+        "en": "stall, stand"
+      },
+      {
+        "de": "die Straßenbahn, -en",
+        "en": "tram"
+      },
+      {
+        "de": "der Parkplatz, ¨-e",
+        "en": "parking space"
+      },
+      {
+        "de": "der Gemüsestand, ¨-e",
+        "en": "vegetable stall"
+      },
+      {
+        "de": "der Bauer, -n",
+        "en": "farmer"
+      },
+      {
+        "de": "das Dorf, ¨-er",
+        "en": "village"
+      },
+      {
+        "de": "probieren",
+        "en": "to try, to taste"
+      },
+      {
+        "de": "die Erdbeere, -n",
+        "en": "strawberry"
+      },
+      {
+        "de": "bar bezahlen",
+        "en": "to pay in cash"
+      },
+      {
+        "de": "der Preis, -e",
+        "en": "price"
+      },
+      {
+        "de": "die Ware, -n",
+        "en": "goods"
+      },
+      {
+        "de": "der Bauernhof, ¨-e",
+        "en": "farm"
+      },
+      {
+        "de": "die Brezel, -n",
+        "en": "pretzel"
+      }
+    ],
+    "questions": [
+      {
+        "question_de": "Wie oft geht Jonas zum Markt?",
+        "question_en": "How often does Jonas go to the market?",
+        "answer_de": "Er geht fast jeden Samstag zum Markt.",
+        "answer_en": "He goes to the market almost every Saturday."
+      },
+      {
+        "question_de": "Was kauft Jonas am Gemüsestand?",
+        "question_en": "What does Jonas buy at the vegetable stall?",
+        "answer_de": "Er kauft ein Kilo Tomaten und einen Salat.",
+        "answer_en": "He buys a kilo of tomatoes and a lettuce."
+      },
+      {
+        "question_de": "Was probiert Emma am Obststand?",
+        "question_en": "What does Emma try at the fruit stall?",
+        "answer_de": "Sie probiert eine Erdbeere.",
+        "answer_en": "She tries a strawberry."
+      },
+      {
+        "question_de": "Woher kommen die Waren?",
+        "question_en": "Where do the goods come from?",
+        "answer_de": "Die Waren kommen direkt vom Bauernhof.",
+        "answer_en": "The goods come straight from the farm."
+      },
+      {
+        "question_de": "Was machen Jonas und Emma zu Hause?",
+        "question_en": "What do Jonas and Emma do at home?",
+        "answer_de": "Sie kochen zusammen.",
+        "answer_en": "They cook together."
+      }
+    ],
+    "checks": [
+      {
+        "type": "rf",
+        "statement_de": "Der Markt ist auf dem Platz vor dem Bahnhof.",
+        "statement_en": "The market is on the square in front of the station.",
+        "answer": "falsch",
+        "explanation_de": "Im Text steht: Auf dem Platz vor dem Münster ist Wochenmarkt."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Die ersten Stände öffnen um halb neun.",
+        "statement_en": "The first stalls open at half past eight.",
+        "answer": "falsch",
+        "explanation_de": "Im Text steht: Die ersten Stände öffnen schon um halb acht."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Jonas und Emma fahren mit der Straßenbahn in die Stadt.",
+        "statement_en": "Jonas and Emma take the tram into town.",
+        "answer": "richtig",
+        "explanation_de": "Im Text steht: Sie fahren mit der Straßenbahn in die Stadt."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Auf dem Markt bezahlt man immer mit Karte.",
+        "statement_en": "At the market people always pay by card.",
+        "answer": "falsch",
+        "explanation_de": "Im Text steht: Auf dem Markt bezahlt man oft bar, denn viele Stände nehmen keine Karte."
+      },
+      {
+        "type": "rf",
+        "statement_de": "Der Bauer kommt aus einem Dorf bei Freiburg.",
+        "statement_en": "The farmer comes from a village near Freiburg.",
+        "answer": "richtig",
+        "explanation_de": "Im Text steht: Der Bauer kommt aus einem Dorf bei Freiburg."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Was kauft Jonas zum Schluss für Emma? a) eine Erdbeere b) eine Brezel c) ein Brot",
+        "statement_en": "What does Jonas buy for Emma at the end? a) a strawberry b) a pretzel c) bread",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "answer": "b",
+        "explanation_de": "Im Text steht: Zum Schluss kauft Jonas seiner Tochter eine Brezel."
+      }
+    ],
+    "word_count": 132,
+    "estimated_reading_time": 2
+  }
+]

@@ -1,0 +1,274 @@
+[
+  {
+    "level": "a2.1",
+    "topic": "Prüfungsformat",
+    "difficulty": 2,
+    "order_index": 9,
+    "title_de": "Lesen Teil 1: Ein Zeitungstext (wie in der Prüfung)",
+    "title_en": "Reading Part 1: A newspaper text (exam-style)",
+    "content_de": "Lies den Text. Wähle die richtige Antwort: a, b oder c.\n\nStadtfest in Lindau: drei Tage Musik und Essen\n\nAm Wochenende gibt es wieder das große Stadtfest in Lindau. Es beginnt am Freitag um 16 Uhr und endet am Sonntag um 22 Uhr.\n\nAuf dem Marktplatz spielen zwanzig Bands. Fast alle Konzerte am Abend sind kostenlos. Nur für das Konzert am Samstagabend braucht man eine Karte. Sie kostet acht Euro.\n\nEs gibt auch viele Stände mit Essen und Getränken aus der Region. Das Stadtfest gibt es schon seit dreißig Jahren.\n\nFür die Kinder gibt es einen Platz vor dem Rathaus. Dort können sie von 11 bis 18 Uhr spielen und malen.\n\nAm Wochenende darf man nicht mit dem Auto ins Zentrum fahren. Bitte kommen Sie mit dem Bus. Die Stadt Lindau schreibt: „Kommen Sie vorbei und feiern Sie mit uns!“",
+    "content_en": "Read the text. Choose the correct answer: a, b or c.\n\nTown festival in Lindau: three days of music and food\n\nThis weekend there is the big town festival in Lindau again. It starts on Friday at 4 p.m. and ends on Sunday at 10 p.m.\n\nTwenty bands play on the market square. Almost all evening concerts are free. Only for the concert on Saturday evening do you need a ticket. It costs eight euros.\n\nThere are also many stalls with food and drinks from the region. The town festival has existed for thirty years.\n\nFor the children there is a square in front of the town hall. They can play and paint there from 11 a.m. to 6 p.m.\n\nAt the weekend you are not allowed to drive into the centre by car. Please come by bus. The town of Lindau writes: \"Come along and celebrate with us!\"",
+    "key_vocabulary": [
+      {
+        "de": "das Stadtfest, -e",
+        "en": "town festival"
+      },
+      {
+        "de": "beginnen",
+        "en": "to begin"
+      },
+      {
+        "de": "enden",
+        "en": "to end"
+      },
+      {
+        "de": "der Marktplatz, ¨-e",
+        "en": "market square"
+      },
+      {
+        "de": "das Konzert, -e",
+        "en": "concert"
+      },
+      {
+        "de": "kostenlos",
+        "en": "free of charge"
+      },
+      {
+        "de": "die Karte, -n",
+        "en": "ticket"
+      },
+      {
+        "de": "der Stand, ¨-e",
+        "en": "stall, stand"
+      },
+      {
+        "de": "das Rathaus, ¨-er",
+        "en": "town hall"
+      },
+      {
+        "de": "feiern",
+        "en": "to celebrate"
+      }
+    ],
+    "questions": [
+      {
+        "question_de": "Was gibt es am Wochenende in Lindau?",
+        "question_en": "What is happening in Lindau this weekend?",
+        "answer_de": "In Lindau gibt es das große Stadtfest.",
+        "answer_en": "In Lindau there is the big town festival."
+      },
+      {
+        "question_de": "Was kann man an den Ständen kaufen?",
+        "question_en": "What can you buy at the stalls?",
+        "answer_de": "Man kann Essen und Getränke aus der Region kaufen.",
+        "answer_en": "You can buy food and drinks from the region."
+      },
+      {
+        "question_de": "Wie soll man zum Stadtfest kommen?",
+        "question_en": "How should you come to the town festival?",
+        "answer_de": "Man soll mit dem Bus kommen.",
+        "answer_en": "You should come by bus."
+      }
+    ],
+    "checks": [
+      {
+        "type": "choice",
+        "statement_de": "Wann beginnt das Stadtfest? a) am Freitag b) am Samstag c) am Sonntag",
+        "statement_en": "When does the town festival start? a) on Friday b) on Saturday c) on Sunday",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "answer": "a",
+        "explanation_de": "Im Text steht: Es beginnt am Freitag um 16 Uhr."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Wo spielen die Bands? a) vor dem Rathaus b) auf dem Marktplatz c) am Bahnhof",
+        "statement_en": "Where do the bands play? a) in front of the town hall b) on the market square c) at the station",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "answer": "b",
+        "explanation_de": "Im Text steht: Auf dem Marktplatz spielen zwanzig Bands."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Was kostet die Karte am Samstagabend? a) achtzehn Euro b) nichts c) acht Euro",
+        "statement_en": "What does the ticket for Saturday evening cost? a) eighteen euros b) nothing c) eight euros",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "answer": "c",
+        "explanation_de": "Im Text steht: Sie kostet acht Euro."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Was können die Kinder vor dem Rathaus machen? a) spielen und malen b) Musik machen c) Essen kaufen",
+        "statement_en": "What can the children do in front of the town hall? a) play and paint b) make music c) buy food",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "answer": "a",
+        "explanation_de": "Im Text steht: Dort können sie von 11 bis 18 Uhr spielen und malen."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Wie lange gibt es das Stadtfest schon? a) seit dreizehn Jahren b) seit zwanzig Jahren c) seit dreißig Jahren",
+        "statement_en": "How long has the town festival existed? a) for thirteen years b) for twenty years c) for thirty years",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "answer": "c",
+        "explanation_de": "Im Text steht: Das Stadtfest gibt es schon seit dreißig Jahren."
+      }
+    ],
+    "word_count": 140,
+    "estimated_reading_time": 3
+  },
+  {
+    "level": "a2.1",
+    "topic": "Prüfungsformat",
+    "difficulty": 2,
+    "order_index": 10,
+    "title_de": "Lesen Teil 3: Eine E-Mail (wie in der Prüfung)",
+    "title_en": "Reading Part 3: An email (exam-style)",
+    "content_de": "Lies die E-Mail. Wähle die richtige Antwort: a, b oder c.\n\nVon: m.hoffmann@sprachschule-nord.de\nAn: kurs-a2@sprachschule-nord.de\nBetreff: Ihr Deutschkurs ab Oktober\n\nSehr geehrte Damen und Herren,\n\nIhr Kurs A2.2 beginnt am Dienstag, 6. Oktober. Der Unterricht ist immer dienstags und donnerstags von 18 bis 20 Uhr. Wir arbeiten in Raum 12 im zweiten Stock. Im Kurs sind zwölf Personen.\n\nBitte bringen Sie das Buch „Deutsch im Alltag“ mit. Sie können es in der Schule für 22 Euro kaufen.\n\nAm ersten Abend gibt es einen kleinen Test. Der Test ist nicht schwer. Am 3. November gibt es keinen Unterricht. Bitte kommen Sie immer pünktlich zum Unterricht.\n\nDer Kurs kostet 180 Euro. Bitte bezahlen Sie bis zum 30. September.\n\nHaben Sie noch Fragen? Rufen Sie mich an: 0451 998877.\n\nMit freundlichen Grüßen\nMaria Hoffmann",
+    "content_en": "Read the email. Choose the correct answer: a, b or c.\n\nFrom: m.hoffmann@sprachschule-nord.de\nTo: kurs-a2@sprachschule-nord.de\nSubject: Your German course from October\n\nDear Sir or Madam,\n\nYour course A2.2 starts on Tuesday, 6 October. The lessons are always on Tuesdays and Thursdays from 6 to 8 p.m. We work in room 12 on the second floor. The course has twelve people in it.\n\nPlease bring the book \"Deutsch im Alltag\" with you. You can buy it at the school for 22 euros.\n\nOn the first evening there is a small test. The test is not difficult. On 3 November there are no lessons. Please always come to the lesson on time.\n\nThe course costs 180 euros. Please pay by 30 September.\n\nDo you have any questions? Call me: 0451 998877.\n\nKind regards\nMaria Hoffmann",
+    "key_vocabulary": [
+      {
+        "de": "der Kurs, -e",
+        "en": "course"
+      },
+      {
+        "de": "der Unterricht",
+        "en": "lessons, class"
+      },
+      {
+        "de": "der Raum, ¨-e",
+        "en": "room"
+      },
+      {
+        "de": "der Stock, Stockwerke",
+        "en": "floor, storey"
+      },
+      {
+        "de": "mitbringen",
+        "en": "to bring along"
+      },
+      {
+        "de": "der Deutschkurs, -e",
+        "en": "German course"
+      },
+      {
+        "de": "der Test, -s",
+        "en": "test"
+      },
+      {
+        "de": "bezahlen",
+        "en": "to pay"
+      },
+      {
+        "de": "die Frage, -n",
+        "en": "question"
+      },
+      {
+        "de": "anrufen",
+        "en": "to call, to phone"
+      }
+    ],
+    "questions": [
+      {
+        "question_de": "Was soll man zum Unterricht mitbringen?",
+        "question_en": "What should you bring to the lesson?",
+        "answer_de": "Man soll das Buch „Deutsch im Alltag“ mitbringen.",
+        "answer_en": "You should bring the book \"Deutsch im Alltag\"."
+      },
+      {
+        "question_de": "Was gibt es am ersten Abend?",
+        "question_en": "What is there on the first evening?",
+        "answer_de": "Am ersten Abend gibt es einen kleinen Test.",
+        "answer_en": "On the first evening there is a small test."
+      },
+      {
+        "question_de": "Was kann man bei Fragen machen?",
+        "question_en": "What can you do if you have questions?",
+        "answer_de": "Man kann Frau Hoffmann anrufen.",
+        "answer_en": "You can call Mrs. Hoffmann."
+      }
+    ],
+    "checks": [
+      {
+        "type": "choice",
+        "statement_de": "Wann beginnt der Kurs? a) am Montag b) am Dienstag c) am Donnerstag",
+        "statement_en": "When does the course start? a) on Monday b) on Tuesday c) on Thursday",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "answer": "b",
+        "explanation_de": "In der E-Mail steht: Ihr Kurs A2.2 beginnt am Dienstag, 6. Oktober."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Wann ist der Unterricht? a) 16 bis 18 Uhr b) 17 bis 19 Uhr c) 18 bis 20 Uhr",
+        "statement_en": "When are the lessons? a) 4 to 6 p.m. b) 5 to 7 p.m. c) 6 to 8 p.m.",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "answer": "c",
+        "explanation_de": "In der E-Mail steht: Der Unterricht ist immer dienstags und donnerstags von 18 bis 20 Uhr."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Wo ist der Unterricht? a) in Raum 12 b) in Raum 2 c) im ersten Stock",
+        "statement_en": "Where are the lessons? a) in room 12 b) in room 2 c) on the first floor",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "answer": "a",
+        "explanation_de": "In der E-Mail steht: Wir arbeiten in Raum 12 im zweiten Stock."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Was kostet das Buch? a) 12 Euro b) 22 Euro c) 180 Euro",
+        "statement_en": "What does the book cost? a) 12 euros b) 22 euros c) 180 euros",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "answer": "b",
+        "explanation_de": "In der E-Mail steht: Sie können es in der Schule für 22 Euro kaufen."
+      },
+      {
+        "type": "choice",
+        "statement_de": "Bis wann soll man bezahlen? a) bis zum 30. September b) bis zum 6. Oktober c) bis zum 30. Oktober",
+        "statement_en": "By when should you pay? a) by 30 September b) by 6 October c) by 30 October",
+        "options": [
+          "a",
+          "b",
+          "c"
+        ],
+        "answer": "a",
+        "explanation_de": "In der E-Mail steht: Bitte bezahlen Sie bis zum 30. September."
+      }
+    ],
+    "word_count": 131,
+    "estimated_reading_time": 2
+  }
+]

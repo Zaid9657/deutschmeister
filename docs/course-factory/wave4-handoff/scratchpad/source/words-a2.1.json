@@ -1,0 +1,2234 @@
+[
+ {
+  "id": "2fca3e94-7489-444c-9eab-e21596ea54e0",
+  "german": "abbiegen",
+  "english": "to turn",
+  "article": null,
+  "plural": null,
+  "category": "City & Directions",
+  "example_sentence": "Du musst an der nächsten Straße rechts abbiegen."
+ },
+ {
+  "id": "2aa5a2df-aa6f-40bd-be1a-f9ca38ca07cd",
+  "german": "das Rathaus",
+  "english": "town hall, city hall",
+  "article": "das",
+  "plural": "Rathäuser",
+  "category": "City & Directions",
+  "example_sentence": "Das Rathaus liegt direkt am großen Marktplatz."
+ },
+ {
+  "id": "bbc750ab-6eec-4362-b64f-82c612cde091",
+  "german": "das Viertel",
+  "english": "district, neighborhood",
+  "article": "das",
+  "plural": "Viertel",
+  "category": "City & Directions",
+  "example_sentence": "Dieses Viertel hat viele schöne alte Gebäude."
+ },
+ {
+  "id": "293b544d-ba02-4525-9575-53023024c2b2",
+  "german": "der Ausgang",
+  "english": "exit",
+  "article": "der",
+  "plural": "Ausgänge",
+  "category": "City & Directions",
+  "example_sentence": "Wo ist hier der nächste Ausgang bitte?"
+ },
+ {
+  "id": "23a27646-e5ce-4b91-8fb6-9d020ad813e5",
+  "german": "der Brunnen",
+  "english": "fountain",
+  "article": "der",
+  "plural": "Brunnen",
+  "category": "City & Directions",
+  "example_sentence": "Wir treffen uns am Brunnen auf dem Marktplatz."
+ },
+ {
+  "id": "57cee64f-7d7c-4579-9be4-ff9c0a7d60aa",
+  "german": "der Bürgersteig",
+  "english": "sidewalk, pavement",
+  "article": "der",
+  "plural": "Bürgersteige",
+  "category": "City & Directions",
+  "example_sentence": "Kinder sollten immer auf dem Bürgersteig laufen."
+ },
+ {
+  "id": "093d2ef7-8921-4a97-8c22-6e7226ba37f0",
+  "german": "der Eingang",
+  "english": "entrance",
+  "article": "der",
+  "plural": "Eingänge",
+  "category": "City & Directions",
+  "example_sentence": "Der Eingang zum Museum ist auf der Rückseite."
+ },
+ {
+  "id": "7415452e-1c6e-4d2e-8174-964df41c9eb8",
+  "german": "der Gehweg",
+  "english": "footpath, walkway",
+  "article": "der",
+  "plural": "Gehwege",
+  "category": "City & Directions",
+  "example_sentence": "Fahrräder dürfen nicht auf dem Gehweg fahren."
+ },
+ {
+  "id": "123fc143-8f63-489f-8548-bc4f2ac75df1",
+  "german": "der Parkplatz",
+  "english": "parking lot, car park",
+  "article": "der",
+  "plural": "Parkplätze",
+  "category": "City & Directions",
+  "example_sentence": "Gibt es hier in der Nähe einen Parkplatz?"
+ },
+ {
+  "id": "cc4076ef-e447-4611-ab77-3f2096d66bac",
+  "german": "der Stadtplan",
+  "english": "city map",
+  "article": "der",
+  "plural": "Stadtpläne",
+  "category": "City & Directions",
+  "example_sentence": "Hast du einen Stadtplan von dieser Stadt?"
+ },
+ {
+  "id": "2e49c5bb-afbd-4d3b-b4ef-5d8a871a84a2",
+  "german": "der Wegweiser",
+  "english": "signpost",
+  "article": "der",
+  "plural": "Wegweiser",
+  "category": "City & Directions",
+  "example_sentence": "Der Wegweiser zeigt den Weg zum Bahnhof."
+ },
+ {
+  "id": "b1191336-fad4-4278-9dd7-fc0cb9638058",
+  "german": "der Zebrastreifen",
+  "english": "crosswalk, zebra crossing",
+  "article": "der",
+  "plural": "Zebrastreifen",
+  "category": "City & Directions",
+  "example_sentence": "Bitte überquere die Straße am Zebrastreifen."
+ },
+ {
+  "id": "db0c034e-5944-4bd4-9762-4938ba24f3b0",
+  "german": "die Ampel",
+  "english": "traffic light",
+  "article": "die",
+  "plural": "Ampeln",
+  "category": "City & Directions",
+  "example_sentence": "Warte bitte, bis die Ampel grün wird."
+ },
+ {
+  "id": "de031714-f0d1-4cd3-befc-6613f62bc774",
+  "german": "die Brücke",
+  "english": "bridge",
+  "article": "die",
+  "plural": "Brücken",
+  "category": "City & Directions",
+  "example_sentence": "Nach der Brücke kommt ein großer Park."
+ },
+ {
+  "id": "71a2d471-f553-4756-bd41-ac2e32ed3070",
+  "german": "die Ecke",
+  "english": "corner",
+  "article": "die",
+  "plural": "Ecken",
+  "category": "City & Directions",
+  "example_sentence": "Das Café ist gleich um die Ecke."
+ },
+ {
+  "id": "97c1f49a-3158-4434-a09d-cc0c531c6bb1",
+  "german": "die Fußgängerzone",
+  "english": "pedestrian zone",
+  "article": "die",
+  "plural": "Fußgängerzonen",
+  "category": "City & Directions",
+  "example_sentence": "In der Fußgängerzone darf man nicht fahren."
+ },
+ {
+  "id": "9e236748-ca99-4d25-b6b2-cb2b8c534287",
+  "german": "die Gasse",
+  "english": "alley, lane",
+  "article": "die",
+  "plural": "Gassen",
+  "category": "City & Directions",
+  "example_sentence": "In den kleinen Gassen gibt es viele Geschäfte."
+ },
+ {
+  "id": "e3622c83-81e4-4447-bca1-facfeccb6ff7",
+  "german": "die Haltestelle",
+  "english": "bus/tram stop",
+  "article": "die",
+  "plural": "Haltestellen",
+  "category": "City & Directions",
+  "example_sentence": "Die Haltestelle ist direkt vor dem Supermarkt."
+ },
+ {
+  "id": "75e423f3-739c-45e6-ab7b-a3c2d05724ae",
+  "german": "die Kreuzung",
+  "english": "intersection, crossroads",
+  "article": "die",
+  "plural": "Kreuzungen",
+  "category": "City & Directions",
+  "example_sentence": "An der Kreuzung musst du links abbiegen."
+ },
+ {
+  "id": "7338be7e-ef61-4d3e-944f-f133feb23502",
+  "german": "die Richtung",
+  "english": "direction",
+  "article": "die",
+  "plural": "Richtungen",
+  "category": "City & Directions",
+  "example_sentence": "In welche Richtung muss ich jetzt gehen?"
+ },
+ {
+  "id": "26758a4c-a724-464c-a023-07761be5425c",
+  "german": "die Unterführung",
+  "english": "underpass, subway",
+  "article": "die",
+  "plural": "Unterführungen",
+  "category": "City & Directions",
+  "example_sentence": "Nimm die Unterführung, um die Straße zu überqueren."
+ },
+ {
+  "id": "56976613-14fa-4bc1-b39a-a9f600e885e8",
+  "german": "entlang",
+  "english": "along",
+  "article": null,
+  "plural": null,
+  "category": "City & Directions",
+  "example_sentence": "Gehen Sie diese Straße entlang bis zum Ende."
+ },
+ {
+  "id": "1461f3bd-e75c-4a77-8fa8-069de8d1ed01",
+  "german": "gegenüber",
+  "english": "opposite, across from",
+  "article": null,
+  "plural": null,
+  "category": "City & Directions",
+  "example_sentence": "Die Apotheke ist gegenüber von der Bank."
+ },
+ {
+  "id": "ba7dcd11-d737-44f1-a5ca-19682be5d8cb",
+  "german": "geradeaus",
+  "english": "straight ahead",
+  "article": null,
+  "plural": null,
+  "category": "City & Directions",
+  "example_sentence": "Gehen Sie geradeaus bis zur nächsten Kreuzung."
+ },
+ {
+  "id": "63d53abb-85c5-4e08-9b03-6dd404f89c5e",
+  "german": "überqueren",
+  "english": "to cross",
+  "article": null,
+  "plural": null,
+  "category": "City & Directions",
+  "example_sentence": "Du musst die Straße hier vorsichtig überqueren."
+ },
+ {
+  "id": "803b38c2-a789-432d-bf7f-9eb1cc58ae69",
+  "german": "aufstehen",
+  "english": "to get up",
+  "article": null,
+  "plural": null,
+  "category": "Daily Routine",
+  "example_sentence": "Am Wochenende stehe ich später auf."
+ },
+ {
+  "id": "9c4592a6-2d55-4d3e-87bb-20dacf8571b9",
+  "german": "aufwachen",
+  "english": "to wake up",
+  "article": null,
+  "plural": null,
+  "category": "Daily Routine",
+  "example_sentence": "Ich wache jeden Morgen um sieben Uhr auf."
+ },
+ {
+  "id": "08d7ca06-7fda-4874-ab8c-3bb50b1e1d6f",
+  "german": "das Abendessen",
+  "english": "dinner",
+  "article": "das",
+  "plural": "Abendessen",
+  "category": "Daily Routine",
+  "example_sentence": "Um acht Uhr gibt es bei uns Abendessen."
+ },
+ {
+  "id": "de6952c4-af66-47f1-9a0e-cc4c24d193aa",
+  "german": "das Handtuch",
+  "english": "towel",
+  "article": "das",
+  "plural": "Handtücher",
+  "category": "Daily Routine",
+  "example_sentence": "Ich brauche ein sauberes Handtuch zum Duschen."
+ },
+ {
+  "id": "52d116fa-cfff-41cd-9959-ae0a335a8495",
+  "german": "das Mittagessen",
+  "english": "lunch",
+  "article": "das",
+  "plural": "Mittagessen",
+  "category": "Daily Routine",
+  "example_sentence": "In der Mittagspause esse ich mein Mittagessen."
+ },
+ {
+  "id": "c6af615f-1669-4281-acca-4816a7251aa1",
+  "german": "der Alltag",
+  "english": "everyday life",
+  "article": "der",
+  "plural": "Alltage",
+  "category": "Daily Routine",
+  "example_sentence": "Mein Alltag beginnt immer mit einem Kaffee."
+ },
+ {
+  "id": "eb16cba5-bc12-459e-a443-9d93258d3f9f",
+  "german": "der Feierabend",
+  "english": "end of work",
+  "article": "der",
+  "plural": "Feierabende",
+  "category": "Daily Routine",
+  "example_sentence": "Nach dem Feierabend gehe ich ins Fitnessstudio."
+ },
+ {
+  "id": "c9c70dab-31f1-4857-953b-dfd775ca0655",
+  "german": "der Spiegel",
+  "english": "mirror",
+  "article": "der",
+  "plural": "Spiegel",
+  "category": "Daily Routine",
+  "example_sentence": "Ich schaue jeden Morgen kurz in den Spiegel."
+ },
+ {
+  "id": "2b15792c-9615-41a3-96af-8f4188a5842f",
+  "german": "der Wecker",
+  "english": "alarm clock",
+  "article": "der",
+  "plural": "Wecker",
+  "category": "Daily Routine",
+  "example_sentence": "Mein Wecker klingelt jeden Tag um sechs Uhr."
+ },
+ {
+  "id": "a30c05fd-b5bb-42f6-93cb-db4b4c545696",
+  "german": "die Gewohnheit",
+  "english": "habit",
+  "article": "die",
+  "plural": "Gewohnheiten",
+  "category": "Daily Routine",
+  "example_sentence": "Sport am Morgen ist eine gute Gewohnheit."
+ },
+ {
+  "id": "8ba6116b-f33e-409e-ae25-4bc02d4e6dbd",
+  "german": "die Seife",
+  "english": "soap",
+  "article": "die",
+  "plural": "Seifen",
+  "category": "Daily Routine",
+  "example_sentence": "Im Badezimmer liegt eine neue Seife."
+ },
+ {
+  "id": "7bef06a2-17db-4f2e-8160-5e73cc2c4ef0",
+  "german": "die Zahnbürste",
+  "english": "toothbrush",
+  "article": "die",
+  "plural": "Zahnbürsten",
+  "category": "Daily Routine",
+  "example_sentence": "Meine Zahnbürste steht im Bad neben dem Spiegel."
+ },
+ {
+  "id": "5b1dced9-53a9-420c-b8a9-9f7127d63219",
+  "german": "die Zahnpasta",
+  "english": "toothpaste",
+  "article": "die",
+  "plural": "Zahnpasten",
+  "category": "Daily Routine",
+  "example_sentence": "Die Zahnpasta ist leider fast leer geworden."
+ },
+ {
+  "id": "60ef548d-d7ab-4274-bd5b-ed6eea05c14e",
+  "german": "duschen",
+  "english": "to shower",
+  "article": null,
+  "plural": null,
+  "category": "Daily Routine",
+  "example_sentence": "Nach dem Sport dusche ich immer kalt."
+ },
+ {
+  "id": "43fe35fa-b667-441f-83e2-20f07fcb2029",
+  "german": "einschlafen",
+  "english": "to fall asleep",
+  "article": null,
+  "plural": null,
+  "category": "Daily Routine",
+  "example_sentence": "Ich schlafe meistens vor Mitternacht ein."
+ },
+ {
+  "id": "f9e66eab-2823-48b2-b32f-a921fca16ad6",
+  "german": "frühstücken",
+  "english": "to have breakfast",
+  "article": null,
+  "plural": null,
+  "category": "Daily Routine",
+  "example_sentence": "Wir frühstücken jeden Morgen in der Küche."
+ },
+ {
+  "id": "1f023e98-2f37-4c9c-9aba-b1c74165179b",
+  "german": "ins Bett gehen",
+  "english": "to go to bed",
+  "article": null,
+  "plural": null,
+  "category": "Daily Routine",
+  "example_sentence": "Die Kinder gehen um acht Uhr ins Bett."
+ },
+ {
+  "id": "92e723d9-8ab5-4f35-a1e5-96f4b80d1736",
+  "german": "sich anziehen",
+  "english": "to get dressed",
+  "article": null,
+  "plural": null,
+  "category": "Daily Routine",
+  "example_sentence": "Ich ziehe mich nach dem Frühstück an."
+ },
+ {
+  "id": "3c87e650-a897-453b-bf39-a06a95556635",
+  "german": "sich ausruhen",
+  "english": "to rest",
+  "article": null,
+  "plural": null,
+  "category": "Daily Routine",
+  "example_sentence": "Nach der Arbeit ruhe ich mich aus."
+ },
+ {
+  "id": "f90e61da-a9fd-487d-8f06-1edaa37d4af4",
+  "german": "sich beeilen",
+  "english": "to hurry",
+  "article": null,
+  "plural": null,
+  "category": "Daily Routine",
+  "example_sentence": "Ich muss mich beeilen, der Bus kommt gleich."
+ },
+ {
+  "id": "68779b12-570f-4abe-b92c-d3d930b44127",
+  "german": "sich fertig machen",
+  "english": "to get ready",
+  "article": null,
+  "plural": null,
+  "category": "Daily Routine",
+  "example_sentence": "Ich mache mich schnell für die Arbeit fertig."
+ },
+ {
+  "id": "36a53f1e-90ef-4ad3-82a6-f0e5d9500ebe",
+  "german": "sich kämmen",
+  "english": "to comb one's hair",
+  "article": null,
+  "plural": null,
+  "category": "Daily Routine",
+  "example_sentence": "Sie kämmt sich jeden Morgen vor dem Spiegel."
+ },
+ {
+  "id": "22444fa3-e9ad-4af0-8802-cb37ddd570d4",
+  "german": "sich rasieren",
+  "english": "to shave",
+  "article": null,
+  "plural": null,
+  "category": "Daily Routine",
+  "example_sentence": "Er rasiert sich jeden zweiten Tag im Bad."
+ },
+ {
+  "id": "3808d064-8122-4c15-9f48-f91460dfafe3",
+  "german": "sich schminken",
+  "english": "to put on makeup",
+  "article": null,
+  "plural": null,
+  "category": "Daily Routine",
+  "example_sentence": "Sie schminkt sich jeden Morgen vor der Arbeit."
+ },
+ {
+  "id": "5ab63dfd-3a09-4b90-8469-b2145b8402db",
+  "german": "sich waschen",
+  "english": "to wash oneself",
+  "article": null,
+  "plural": null,
+  "category": "Daily Routine",
+  "example_sentence": "Die Kinder waschen sich vor dem Essen."
+ },
+ {
+  "id": "22e19ed5-7291-4074-91bc-5a3d2820a5b2",
+  "german": "Bank",
+  "english": "bench",
+  "article": "die",
+  "plural": "Bänke",
+  "category": "Furniture",
+  "example_sentence": "Im Flur steht eine kleine Bank aus Holz."
+ },
+ {
+  "id": "1040b0e5-77e8-445f-85bc-3b196b489e02",
+  "german": "Bettgestell",
+  "english": "bed frame",
+  "article": "das",
+  "plural": "Bettgestelle",
+  "category": "Furniture",
+  "example_sentence": "Das Bettgestell ist aus hellem Holz gemacht."
+ },
+ {
+  "id": "dd5fe9b3-002f-4cce-affd-e8a306fb0d4e",
+  "german": "Bücherregal",
+  "english": "bookshelf",
+  "article": "das",
+  "plural": "Bücherregale",
+  "category": "Furniture",
+  "example_sentence": "Das Bücherregal im Wohnzimmer ist sehr voll."
+ },
+ {
+  "id": "17241896-4c15-43dd-9451-6dbf54256d04",
+  "german": "Couchtisch",
+  "english": "coffee table",
+  "article": "der",
+  "plural": "Couchtische",
+  "category": "Furniture",
+  "example_sentence": "Die Fernbedienung liegt auf dem Couchtisch."
+ },
+ {
+  "id": "45a94eff-aa6d-41ef-abb8-9e508a7704ab",
+  "german": "Esstisch",
+  "english": "dining table",
+  "article": "der",
+  "plural": "Esstische",
+  "category": "Furniture",
+  "example_sentence": "Wir essen jeden Abend am Esstisch zusammen."
+ },
+ {
+  "id": "32ae4f22-b89e-4baa-856a-b0fcdb04e091",
+  "german": "Garderobe",
+  "english": "coat rack, hallway wardrobe",
+  "article": "die",
+  "plural": "Garderoben",
+  "category": "Furniture",
+  "example_sentence": "Bitte häng deine Jacke an die Garderobe."
+ },
+ {
+  "id": "9e02c250-53fa-4032-b97e-120602ebe75b",
+  "german": "Hocker",
+  "english": "stool",
+  "article": "der",
+  "plural": "Hocker",
+  "category": "Furniture",
+  "example_sentence": "In der Küche stehen zwei kleine Hocker."
+ },
+ {
+  "id": "b5df4c3e-8af9-4190-9aae-9778b67d8594",
+  "german": "Kissen",
+  "english": "pillow, cushion",
+  "article": "das",
+  "plural": "Kissen",
+  "category": "Furniture",
+  "example_sentence": "Ich schlafe am liebsten mit zwei Kissen."
+ },
+ {
+  "id": "2960b45e-62e1-4cca-b761-913edc9ac5f4",
+  "german": "Kleiderschrank",
+  "english": "wardrobe",
+  "article": "der",
+  "plural": "Kleiderschränke",
+  "category": "Furniture",
+  "example_sentence": "Mein Kleiderschrank ist leider zu klein."
+ },
+ {
+  "id": "a820ba6c-dc1e-44e2-a035-7e24f34e2c59",
+  "german": "Kommode",
+  "english": "dresser, chest of drawers",
+  "article": "die",
+  "plural": "Kommoden",
+  "category": "Furniture",
+  "example_sentence": "Ich lege meine Socken in die Kommode."
+ },
+ {
+  "id": "baaf334c-2fab-4a4a-a455-598be925b679",
+  "german": "Matratze",
+  "english": "mattress",
+  "article": "die",
+  "plural": "Matratzen",
+  "category": "Furniture",
+  "example_sentence": "Wir brauchen eine neue Matratze für das Bett."
+ },
+ {
+  "id": "fc89deef-ac35-48b3-b4f7-95495c650662",
+  "german": "Möbelstück",
+  "english": "piece of furniture",
+  "article": "das",
+  "plural": "Möbelstücke",
+  "category": "Furniture",
+  "example_sentence": "Dieses alte Möbelstück gehörte meiner Großmutter."
+ },
+ {
+  "id": "9055b8ec-f121-42d5-919a-751713957ae2",
+  "german": "Nachttisch",
+  "english": "bedside table, nightstand",
+  "article": "der",
+  "plural": "Nachttische",
+  "category": "Furniture",
+  "example_sentence": "Die Lampe steht auf dem Nachttisch."
+ },
+ {
+  "id": "dad40968-9a51-482f-b844-e1ad9404c514",
+  "german": "Polster",
+  "english": "cushion, upholstery",
+  "article": "das",
+  "plural": "Polster",
+  "category": "Furniture",
+  "example_sentence": "Die Polster auf dem Sofa sind sehr weich."
+ },
+ {
+  "id": "70034c92-9e83-4326-b498-c4e2851db7e5",
+  "german": "Regal",
+  "english": "shelf",
+  "article": "das",
+  "plural": "Regale",
+  "category": "Furniture",
+  "example_sentence": "Die Bücher stehen im Regal im Wohnzimmer."
+ },
+ {
+  "id": "b6e8775a-ad6f-4901-8c05-689678337a9d",
+  "german": "Schrank",
+  "english": "cupboard, cabinet",
+  "article": "der",
+  "plural": "Schränke",
+  "category": "Furniture",
+  "example_sentence": "Im Schrank sind alle meine Kleider."
+ },
+ {
+  "id": "9b57a4b3-a4c5-49c1-b579-9d08b8b7b4ae",
+  "german": "Schreibtisch",
+  "english": "desk",
+  "article": "der",
+  "plural": "Schreibtische",
+  "category": "Furniture",
+  "example_sentence": "Ich arbeite jeden Tag an meinem Schreibtisch."
+ },
+ {
+  "id": "2500e45a-00d2-4fdf-ba76-54566cb7c4c0",
+  "german": "Schublade",
+  "english": "drawer",
+  "article": "die",
+  "plural": "Schubladen",
+  "category": "Furniture",
+  "example_sentence": "Die Schlüssel sind in der oberen Schublade."
+ },
+ {
+  "id": "471d8b85-d729-4897-8215-52b4bdf3322b",
+  "german": "Schuhregal",
+  "english": "shoe rack",
+  "article": "das",
+  "plural": "Schuhregale",
+  "category": "Furniture",
+  "example_sentence": "Das Schuhregal steht neben der Haustür."
+ },
+ {
+  "id": "20dae4c8-8916-433b-9872-3f370357063d",
+  "german": "Sessel",
+  "english": "armchair",
+  "article": "der",
+  "plural": "Sessel",
+  "category": "Furniture",
+  "example_sentence": "Mein Opa sitzt gern in seinem Sessel."
+ },
+ {
+  "id": "0f625c78-5200-411d-b1b9-fc0faeaa5497",
+  "german": "Sideboard",
+  "english": "sideboard",
+  "article": "das",
+  "plural": "Sideboards",
+  "category": "Furniture",
+  "example_sentence": "Das Sideboard im Esszimmer ist sehr modern."
+ },
+ {
+  "id": "b0015f42-b5f7-4b40-b3a6-4a36ceaa85a3",
+  "german": "Sofa",
+  "english": "sofa, couch",
+  "article": "das",
+  "plural": "Sofas",
+  "category": "Furniture",
+  "example_sentence": "Unser neues Sofa ist sehr bequem."
+ },
+ {
+  "id": "343cbbff-360d-4f3b-b674-8cc227246f61",
+  "german": "Spiegel",
+  "english": "mirror",
+  "article": "der",
+  "plural": "Spiegel",
+  "category": "Furniture",
+  "example_sentence": "Im Badezimmer hängt ein großer Spiegel."
+ },
+ {
+  "id": "a32162f4-5a80-43bd-9a90-05d8bfe32e56",
+  "german": "Stuhl",
+  "english": "chair",
+  "article": "der",
+  "plural": "Stühle",
+  "category": "Furniture",
+  "example_sentence": "Kannst du mir bitte einen Stuhl geben?"
+ },
+ {
+  "id": "813ddb55-2476-48f2-b947-e68b42a3dda8",
+  "german": "Vitrine",
+  "english": "display cabinet",
+  "article": "die",
+  "plural": "Vitrinen",
+  "category": "Furniture",
+  "example_sentence": "In der Vitrine stehen schöne alte Gläser."
+ },
+ {
+  "id": "65e8ab7d-e893-4f37-a72e-987e8fd4f5d7",
+  "german": "basteln",
+  "english": "to do crafts",
+  "article": null,
+  "plural": null,
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Die Kinder basteln gerne mit buntem Papier."
+ },
+ {
+  "id": "1b18cfbc-fe08-4477-95ef-cdbded912360",
+  "german": "das Hobby",
+  "english": "hobby",
+  "article": "das",
+  "plural": "Hobbys",
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Mein liebstes Hobby ist das Lesen."
+ },
+ {
+  "id": "8ed2c88a-ac0f-4e2b-a861-bace07238164",
+  "german": "das Instrument",
+  "english": "instrument",
+  "article": "das",
+  "plural": "Instrumente",
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Ich möchte ein neues Instrument lernen."
+ },
+ {
+  "id": "781c193b-9ce8-43e8-97f5-b4bcd8b42b70",
+  "german": "das Klavier",
+  "english": "piano",
+  "article": "das",
+  "plural": "Klaviere",
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Sie übt jeden Tag eine Stunde Klavier."
+ },
+ {
+  "id": "37d8326c-a85a-48d8-a339-b59f76266d0a",
+  "german": "das Mitglied",
+  "english": "member",
+  "article": "das",
+  "plural": "Mitglieder",
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Unser Verein hat über hundert aktive Mitglieder."
+ },
+ {
+  "id": "48f83844-ff59-4272-b9bd-da6eca8a5db1",
+  "german": "das Picknick",
+  "english": "picnic",
+  "article": "das",
+  "plural": "Picknicks",
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Bei gutem Wetter machen wir ein Picknick."
+ },
+ {
+  "id": "79986352-ec2f-47a0-9a97-3dedf12601b4",
+  "german": "das Spiel",
+  "english": "game",
+  "article": "das",
+  "plural": "Spiele",
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Dieses Spiel macht der ganzen Familie Spaß."
+ },
+ {
+  "id": "dace7ca8-f3de-4a0d-8a7a-026425dc9edd",
+  "german": "der Anfänger",
+  "english": "beginner",
+  "article": "der",
+  "plural": "Anfänger",
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Dieser Kurs ist perfekt für alle Anfänger."
+ },
+ {
+  "id": "e205fc7e-0210-4a28-96a6-eea5076a16d3",
+  "german": "der Ausflug",
+  "english": "trip, excursion",
+  "article": "der",
+  "plural": "Ausflüge",
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Am Wochenende machen wir einen schönen Ausflug."
+ },
+ {
+  "id": "b8c5a22e-57c7-4c17-a9d4-1ccc680b14f4",
+  "german": "der Spieler",
+  "english": "player",
+  "article": "der",
+  "plural": "Spieler",
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Jeder Spieler braucht einen eigenen Controller."
+ },
+ {
+  "id": "10088c93-8f15-4565-8647-bd43a710a735",
+  "german": "der Verein",
+  "english": "club, association",
+  "article": "der",
+  "plural": "Vereine",
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Ich bin Mitglied in einem Sportverein."
+ },
+ {
+  "id": "9d224e33-3ad8-4b5b-a067-7c29c15e1731",
+  "german": "die Freizeit",
+  "english": "free time",
+  "article": "die",
+  "plural": "null",
+  "category": "Hobbies & Free Time",
+  "example_sentence": "In meiner Freizeit gehe ich oft spazieren."
+ },
+ {
+  "id": "d3f80e03-427d-4f8e-b0f4-c5751cc46e53",
+  "german": "die Gitarre",
+  "english": "guitar",
+  "article": "die",
+  "plural": "Gitarren",
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Mein Bruder spielt jeden Abend Gitarre."
+ },
+ {
+  "id": "9e271471-0c75-4fb1-90ed-c8d69572c183",
+  "german": "die Leidenschaft",
+  "english": "passion",
+  "article": "die",
+  "plural": "Leidenschaften",
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Kochen ist meine große Leidenschaft geworden."
+ },
+ {
+  "id": "ba507484-4988-42df-8106-87ee0da101dd",
+  "german": "die Mannschaft",
+  "english": "team",
+  "article": "die",
+  "plural": "Mannschaften",
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Unsere Mannschaft hat das Spiel gewonnen."
+ },
+ {
+  "id": "30636726-716d-4db4-959a-ba8a915e8f60",
+  "german": "die Veranstaltung",
+  "english": "event",
+  "article": "die",
+  "plural": "Veranstaltungen",
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Am Samstag gibt es eine tolle Veranstaltung."
+ },
+ {
+  "id": "972bfd26-c31e-43a1-971a-5be45556e356",
+  "german": "entspannen",
+  "english": "to relax",
+  "article": null,
+  "plural": null,
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Nach der Arbeit entspanne ich mich gerne."
+ },
+ {
+  "id": "bc30242c-27c2-4bfd-b643-56fb6d255be4",
+  "german": "gewinnen",
+  "english": "to win",
+  "article": null,
+  "plural": null,
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Ich hoffe, dass wir heute das Spiel gewinnen."
+ },
+ {
+  "id": "1394c174-c1aa-46b0-9f10-c0a7a261b771",
+  "german": "malen",
+  "english": "to paint",
+  "article": null,
+  "plural": null,
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Am Wochenende male ich gerne bunte Bilder."
+ },
+ {
+  "id": "a0ea505d-e636-42ec-bffa-48ab31efb9b7",
+  "german": "sammeln",
+  "english": "to collect",
+  "article": null,
+  "plural": null,
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Meine Schwester sammelt gerne alte Briefmarken."
+ },
+ {
+  "id": "b9b83f5c-9dcd-489f-9dc6-845aeb80d8a9",
+  "german": "trainieren",
+  "english": "to train, to practice",
+  "article": null,
+  "plural": null,
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Wir trainieren zweimal pro Woche im Fitnessstudio."
+ },
+ {
+  "id": "90f38977-27c4-4c22-b70c-52556918519e",
+  "german": "üben",
+  "english": "to practice",
+  "article": null,
+  "plural": null,
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Ich muss jeden Tag Deutsch üben."
+ },
+ {
+  "id": "1f0cc10a-6717-41d0-9252-4679fe069d52",
+  "german": "verlieren",
+  "english": "to lose",
+  "article": null,
+  "plural": null,
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Leider haben wir das letzte Spiel verloren."
+ },
+ {
+  "id": "f8369ef8-401e-4811-aef8-cc8215e77e44",
+  "german": "wandern",
+  "english": "to hike",
+  "article": null,
+  "plural": null,
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Im Sommer wandern wir oft in den Bergen."
+ },
+ {
+  "id": "9c66ec3c-3001-4f9d-94b7-b7bc6553721e",
+  "german": "zeichnen",
+  "english": "to draw",
+  "article": null,
+  "plural": null,
+  "category": "Hobbies & Free Time",
+  "example_sentence": "Er kann sehr gut Tiere und Menschen zeichnen."
+ },
+ {
+  "id": "afcb2d4f-31d5-45e3-bc04-901666869130",
+  "german": "dürfen",
+  "english": "may, to be allowed to",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Hier darf man nicht rauchen."
+ },
+ {
+  "id": "ad19c5d8-a472-4876-b1cb-dbafe9f866d5",
+  "german": "dürfen (Erlaubnis)",
+  "english": "may (permission)",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Darf ich hier sitzen?"
+ },
+ {
+  "id": "05553b3e-978d-448d-af75-ff5224b71a55",
+  "german": "durfte",
+  "english": "was allowed to",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Als Kind durfte ich lange aufbleiben."
+ },
+ {
+  "id": "a3127df9-b182-4074-9f93-3f714b4e3cb1",
+  "german": "gekonnt",
+  "english": "been able to (past participle)",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Ich habe das nicht gekonnt."
+ },
+ {
+  "id": "2098cea5-07c4-4afe-b1da-597702811696",
+  "german": "gemusst",
+  "english": "had to (past participle)",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Wir haben lange warten gemusst."
+ },
+ {
+  "id": "f26164f6-75eb-494b-9c7a-fd91745ced78",
+  "german": "gewollt",
+  "english": "wanted (past participle)",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Sie hat das nicht gewollt."
+ },
+ {
+  "id": "95af0035-8e6f-456b-b77a-6de82b89f12c",
+  "german": "können",
+  "english": "can, to be able to",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Ich kann sehr gut Deutsch sprechen."
+ },
+ {
+  "id": "3b2e6f84-ad4b-437c-9257-014b9059cf36",
+  "german": "können (Erlaubnis)",
+  "english": "can (permission)",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Kann ich bitte das Fenster öffnen?"
+ },
+ {
+  "id": "e3c7cbe1-ad30-4518-a8ed-f89f1445fc18",
+  "german": "können (Fähigkeit)",
+  "english": "can (ability)",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Meine Schwester kann gut kochen."
+ },
+ {
+  "id": "e095efc1-6fb0-4e79-bb03-d0de6a4dfe04",
+  "german": "können (Möglichkeit)",
+  "english": "can (possibility)",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Es kann morgen regnen."
+ },
+ {
+  "id": "4d4a9388-8ad3-481d-a8f1-9b44dea03305",
+  "german": "konnte",
+  "english": "could, was able to",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Er konnte gestern nicht kommen."
+ },
+ {
+  "id": "ff2864f0-3fbb-47f7-bff8-f95802a66f49",
+  "german": "möchten",
+  "english": "would like to",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Ich möchte einen Kaffee bestellen."
+ },
+ {
+  "id": "e14e0beb-f55c-4900-8bc5-21c8507b6980",
+  "german": "möchten (höflich)",
+  "english": "would like (polite)",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Möchten Sie etwas trinken?"
+ },
+ {
+  "id": "582b52d4-8a1e-4736-9ea7-0a79e780b981",
+  "german": "mögen",
+  "english": "to like",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Ich mag diesen Film sehr gern."
+ },
+ {
+  "id": "8909398a-d5dd-4b54-aded-029a2966ae8c",
+  "german": "müssen",
+  "english": "must, to have to",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Wir müssen morgen früh aufstehen."
+ },
+ {
+  "id": "2fa5f2df-2168-46af-8293-bd32a8c386f0",
+  "german": "müssen (Notwendigkeit)",
+  "english": "must (necessity)",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Ich muss heute zum Arzt gehen."
+ },
+ {
+  "id": "fb5e119e-9667-4582-a548-b85bdb08abba",
+  "german": "musste",
+  "english": "had to",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Sie musste lange auf den Bus warten."
+ },
+ {
+  "id": "d7c86c07-334e-40e4-8b76-9292b102d8f6",
+  "german": "nicht dürfen",
+  "english": "must not, not allowed to",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Man darf hier nicht fotografieren."
+ },
+ {
+  "id": "007bbfc1-c7dc-43a4-a30c-98cbf6306a33",
+  "german": "nicht müssen",
+  "english": "don't have to",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Du musst heute nicht arbeiten."
+ },
+ {
+  "id": "708a2d5f-e09d-4bd9-a6a1-cc7e60300ddc",
+  "german": "sollen",
+  "english": "should, to be supposed to",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Du sollst mehr Wasser trinken."
+ },
+ {
+  "id": "2814b5ca-96ff-4659-b748-1f9340e3a7ef",
+  "german": "sollen (Empfehlung)",
+  "english": "should (recommendation)",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Du solltest mehr Sport machen."
+ },
+ {
+  "id": "862b3acd-947e-4c8f-a247-74883a183828",
+  "german": "sollte",
+  "english": "should, was supposed to",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Er sollte um acht Uhr hier sein."
+ },
+ {
+  "id": "f4125999-cf34-4636-b2dc-fac4f5d4d0d3",
+  "german": "wollen",
+  "english": "to want to",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Die Kinder wollen im Park spielen."
+ },
+ {
+  "id": "b6f0e4b4-c8ee-4c15-9246-220807818e99",
+  "german": "wollen (Wunsch)",
+  "english": "want to (wish)",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Wir wollen nächstes Jahr nach Italien fahren."
+ },
+ {
+  "id": "b9ec1e51-7803-44f6-aa6a-e9d4adfea897",
+  "german": "wollte",
+  "english": "wanted to",
+  "article": null,
+  "plural": null,
+  "category": "Modal Verbs",
+  "example_sentence": "Ich wollte dich gestern anrufen."
+ },
+ {
+  "id": "25e59a40-7ecc-4b34-8a4a-e8ff831f91b4",
+  "german": "bestellen",
+  "english": "to order",
+  "article": null,
+  "plural": null,
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Ich möchte gerne ein Schnitzel bestellen."
+ },
+ {
+  "id": "a8e77081-c043-4026-bc72-28f25b95d159",
+  "german": "bezahlen",
+  "english": "to pay",
+  "article": null,
+  "plural": null,
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Kann ich mit Karte bezahlen?"
+ },
+ {
+  "id": "eb2d00e8-8dc4-4174-9671-62b8194a7a38",
+  "german": "das Hauptgericht",
+  "english": "the main course",
+  "article": "das",
+  "plural": "Hauptgerichte",
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Das Hauptgericht kommt in zehn Minuten."
+ },
+ {
+  "id": "f18ada3b-5d66-45ed-aaf0-ec34bd683301",
+  "german": "das Tagesgericht",
+  "english": "the dish of the day",
+  "article": "das",
+  "plural": "Tagesgerichte",
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Das Tagesgericht ist heute Rinderbraten."
+ },
+ {
+  "id": "e9088e55-3408-4571-a9b7-76ed5b9a652d",
+  "german": "das Trinkgeld",
+  "english": "the tip",
+  "article": "das",
+  "plural": "Trinkgelder",
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Ich gebe dem Kellner ein Trinkgeld."
+ },
+ {
+  "id": "5d296fe7-0540-4db4-a004-bddc7a2f01d6",
+  "german": "der Kellner",
+  "english": "the waiter",
+  "article": "der",
+  "plural": "Kellner",
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Der Kellner bringt uns das Essen."
+ },
+ {
+  "id": "da0df037-b032-4b8d-98c2-5f048e6026a5",
+  "german": "die Allergie",
+  "english": "the allergy",
+  "article": "die",
+  "plural": "Allergien",
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Ich habe eine Allergie gegen Nüsse."
+ },
+ {
+  "id": "ac2c91ac-1376-4804-9678-5204c195dfd3",
+  "german": "die Bedienung",
+  "english": "the service/waiter",
+  "article": "die",
+  "plural": "Bedienungen",
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Die Bedienung in diesem Restaurant ist toll."
+ },
+ {
+  "id": "56ca99d7-106a-4797-bd1b-e8d6ef9663a9",
+  "german": "die Beilage",
+  "english": "the side dish",
+  "article": "die",
+  "plural": "Beilagen",
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Welche Beilagen haben Sie zum Fisch?"
+ },
+ {
+  "id": "5528971d-bb98-4437-b44c-69c337fd9e9a",
+  "german": "die Getränkekarte",
+  "english": "the drinks menu",
+  "article": "die",
+  "plural": "Getränkekarten",
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Darf ich bitte die Getränkekarte sehen?"
+ },
+ {
+  "id": "368e939b-6de2-4e48-8703-520b7d526b8c",
+  "german": "die Kellnerin",
+  "english": "the waitress",
+  "article": "die",
+  "plural": "Kellnerinnen",
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Die Kellnerin ist sehr freundlich zu uns."
+ },
+ {
+  "id": "3537e615-4b0e-4f6d-b6f5-90b6060757ab",
+  "german": "die Nachspeise",
+  "english": "the dessert",
+  "article": "die",
+  "plural": "Nachspeisen",
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Möchten Sie noch eine Nachspeise bestellen?"
+ },
+ {
+  "id": "4c1d02fe-4fc0-496a-b1a6-4eaeb0e77585",
+  "german": "die Portion",
+  "english": "the portion",
+  "article": "die",
+  "plural": "Portionen",
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Die Portionen hier sind sehr groß."
+ },
+ {
+  "id": "0c7e0bed-75f5-42e6-93d6-fe898f67262d",
+  "german": "die Rechnung",
+  "english": "the bill",
+  "article": "die",
+  "plural": "Rechnungen",
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Könnte ich bitte die Rechnung haben?"
+ },
+ {
+  "id": "fb31c9f1-88ad-4c53-adf3-209ccac36fbf",
+  "german": "die Reservierung",
+  "english": "the reservation",
+  "article": "die",
+  "plural": "Reservierungen",
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Haben Sie eine Reservierung für heute Abend?"
+ },
+ {
+  "id": "a666d1d1-3164-47d6-bd62-0c3afc2b27a7",
+  "german": "die Speisekarte",
+  "english": "the menu",
+  "article": "die",
+  "plural": "Speisekarten",
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Könnten Sie mir bitte die Speisekarte bringen?"
+ },
+ {
+  "id": "b9f8d6df-f0dc-43f9-8a76-5e15143cefbe",
+  "german": "die Vorspeise",
+  "english": "the starter/appetizer",
+  "article": "die",
+  "plural": "Vorspeisen",
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Als Vorspeise nehme ich die Suppe."
+ },
+ {
+  "id": "f94ff896-3f13-424d-91c6-b3ddb8122288",
+  "german": "empfehlen",
+  "english": "to recommend",
+  "article": null,
+  "plural": null,
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Was können Sie mir heute empfehlen?"
+ },
+ {
+  "id": "1ea28811-b53d-49ec-8872-7efc53675208",
+  "german": "getrennt",
+  "english": "separately",
+  "article": null,
+  "plural": null,
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Wir möchten bitte getrennt bezahlen."
+ },
+ {
+  "id": "5e921de3-2c26-4b91-b50f-698f5b6779f3",
+  "german": "reservieren",
+  "english": "to reserve",
+  "article": null,
+  "plural": null,
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Ich möchte einen Tisch für heute reservieren."
+ },
+ {
+  "id": "c0eb846b-3ce1-48ee-a644-5e0047c8d84c",
+  "german": "satt",
+  "english": "full (not hungry)",
+  "article": null,
+  "plural": null,
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Danke, ich bin jetzt wirklich satt."
+ },
+ {
+  "id": "7148f7e5-1a96-4562-995a-d3493e3a871f",
+  "german": "schmecken",
+  "english": "to taste",
+  "article": null,
+  "plural": null,
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Das Essen schmeckt hier sehr gut."
+ },
+ {
+  "id": "874b6140-8b1f-4809-9850-c851fa154450",
+  "german": "vegetarisch",
+  "english": "vegetarian",
+  "article": null,
+  "plural": null,
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Haben Sie auch vegetarische Gerichte auf der Karte?"
+ },
+ {
+  "id": "0768efa1-4609-4343-abaa-247f31b1ca4d",
+  "german": "warten",
+  "english": "to wait",
+  "article": null,
+  "plural": null,
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Wir müssen noch auf das Essen warten."
+ },
+ {
+  "id": "e4dbc087-0fe2-469b-a090-ff798be10a0c",
+  "german": "zusammen",
+  "english": "together",
+  "article": null,
+  "plural": null,
+  "category": "Restaurant & Ordering",
+  "example_sentence": "Wir bezahlen alles zusammen, bitte."
+ },
+ {
+  "id": "e0631a18-1ec8-4fc4-adab-61c9d438c0e9",
+  "german": "anprobieren",
+  "english": "to try on",
+  "article": null,
+  "plural": null,
+  "category": "Shopping & Stores",
+  "example_sentence": "Darf ich diese Schuhe bitte anprobieren?"
+ },
+ {
+  "id": "a872062e-0672-4b00-9498-56382ddd438d",
+  "german": "ausverkauft",
+  "english": "sold out",
+  "article": null,
+  "plural": null,
+  "category": "Shopping & Stores",
+  "example_sentence": "Leider ist dieser Artikel schon ausverkauft."
+ },
+ {
+  "id": "b0de8379-1878-4dae-b7a7-dd536fbc7813",
+  "german": "bar",
+  "english": "cash (payment)",
+  "article": null,
+  "plural": null,
+  "category": "Shopping & Stores",
+  "example_sentence": "Möchten Sie bar oder mit Karte zahlen?"
+ },
+ {
+  "id": "d3767391-e98f-4ee2-b5eb-3281ee102646",
+  "german": "das Einkaufszentrum",
+  "english": "shopping center",
+  "article": "das",
+  "plural": "Einkaufszentren",
+  "category": "Shopping & Stores",
+  "example_sentence": "Das Einkaufszentrum hat viele verschiedene Geschäfte."
+ },
+ {
+  "id": "d2114ec6-de51-4cbc-b5c6-7ad9177c9196",
+  "german": "das Regal",
+  "english": "shelf",
+  "article": "das",
+  "plural": "Regale",
+  "category": "Shopping & Stores",
+  "example_sentence": "Die Milch steht im Regal ganz hinten."
+ },
+ {
+  "id": "582cbacd-afc4-45df-b2f3-a97782b8bccf",
+  "german": "das Schaufenster",
+  "english": "shop window",
+  "article": "das",
+  "plural": "Schaufenster",
+  "category": "Shopping & Stores",
+  "example_sentence": "Das Kleid im Schaufenster gefällt mir sehr."
+ },
+ {
+  "id": "282bc68f-6d1f-44be-bf37-df04a96c0dda",
+  "german": "das Sonderangebot",
+  "english": "special offer",
+  "article": "das",
+  "plural": "Sonderangebote",
+  "category": "Shopping & Stores",
+  "example_sentence": "Diese Woche gibt es viele tolle Sonderangebote."
+ },
+ {
+  "id": "6882ff91-cdf6-4008-b606-8ff78079f1ad",
+  "german": "der Einkaufswagen",
+  "english": "shopping cart",
+  "article": "der",
+  "plural": "Einkaufswagen",
+  "category": "Shopping & Stores",
+  "example_sentence": "Ich hole schnell einen Einkaufswagen am Eingang."
+ },
+ {
+  "id": "4e50abc6-7cdc-436d-b3b1-ea9856d33182",
+  "german": "der Kassenbon",
+  "english": "receipt",
+  "article": "der",
+  "plural": "Kassenbons",
+  "category": "Shopping & Stores",
+  "example_sentence": "Bitte bewahren Sie den Kassenbon gut auf."
+ },
+ {
+  "id": "a9bb991e-7bbf-4956-81c2-366ff5bb76ff",
+  "german": "der Kundenservice",
+  "english": "customer service",
+  "article": "der",
+  "plural": "Kundenservices",
+  "category": "Shopping & Stores",
+  "example_sentence": "Fragen Sie bitte beim Kundenservice im Erdgeschoss."
+ },
+ {
+  "id": "7ca59b98-6801-49df-a20c-0c221977b4f5",
+  "german": "der Rabatt",
+  "english": "discount",
+  "article": "der",
+  "plural": "Rabatte",
+  "category": "Shopping & Stores",
+  "example_sentence": "Studenten bekommen hier zehn Prozent Rabatt."
+ },
+ {
+  "id": "f6582546-5bcb-4e00-8a2d-04111f48b6b7",
+  "german": "der Schlussverkauf",
+  "english": "clearance sale",
+  "article": "der",
+  "plural": "Schlussverkäufe",
+  "category": "Shopping & Stores",
+  "example_sentence": "Im Schlussverkauf sind die Preise sehr niedrig."
+ },
+ {
+  "id": "49d1eb50-c06d-4613-9e7a-a9e670300c96",
+  "german": "die Garantie",
+  "english": "warranty",
+  "article": "die",
+  "plural": "Garantien",
+  "category": "Shopping & Stores",
+  "example_sentence": "Dieses Gerät hat zwei Jahre Garantie."
+ },
+ {
+  "id": "7f425661-43dd-4fc4-96c3-f31826ddafbe",
+  "german": "die Größe",
+  "english": "size",
+  "article": "die",
+  "plural": "Größen",
+  "category": "Shopping & Stores",
+  "example_sentence": "Haben Sie dieses Hemd in meiner Größe?"
+ },
+ {
+  "id": "9aca40b2-0d95-4b5d-94a6-2751947b7255",
+  "german": "die Kreditkarte",
+  "english": "credit card",
+  "article": "die",
+  "plural": "Kreditkarten",
+  "category": "Shopping & Stores",
+  "example_sentence": "Kann ich hier mit Kreditkarte bezahlen?"
+ },
+ {
+  "id": "e015e41e-37bf-4b30-9d71-bb557660fbde",
+  "german": "die Lieferung",
+  "english": "delivery",
+  "article": "die",
+  "plural": "Lieferungen",
+  "category": "Shopping & Stores",
+  "example_sentence": "Die Lieferung kommt in drei Tagen an."
+ },
+ {
+  "id": "b83d9cfd-6857-4445-84b0-c36b435f0378",
+  "german": "die Marke",
+  "english": "brand",
+  "article": "die",
+  "plural": "Marken",
+  "category": "Shopping & Stores",
+  "example_sentence": "Welche Marke kaufst du am liebsten?"
+ },
+ {
+  "id": "584af275-f68a-44fd-a581-bef4dbcb8ae1",
+  "german": "die Quittung",
+  "english": "receipt",
+  "article": "die",
+  "plural": "Quittungen",
+  "category": "Shopping & Stores",
+  "example_sentence": "Ich brauche die Quittung für meine Firma."
+ },
+ {
+  "id": "6c48453c-7f14-4684-bd40-4ed1d2669e75",
+  "german": "die Tüte",
+  "english": "bag",
+  "article": "die",
+  "plural": "Tüten",
+  "category": "Shopping & Stores",
+  "example_sentence": "Brauchen Sie eine Tüte für Ihren Einkauf?"
+ },
+ {
+  "id": "7148d4d0-bb6c-47eb-bbb0-74669ad0f80a",
+  "german": "die Umkleidekabine",
+  "english": "fitting room",
+  "article": "die",
+  "plural": "Umkleidekabinen",
+  "category": "Shopping & Stores",
+  "example_sentence": "Ich probiere die Hose in der Umkleidekabine."
+ },
+ {
+  "id": "13005f2d-6b9b-4153-9ccb-c0f8534a9b85",
+  "german": "die Ware",
+  "english": "goods, merchandise",
+  "article": "die",
+  "plural": "Waren",
+  "category": "Shopping & Stores",
+  "example_sentence": "Alle Waren in diesem Regal sind reduziert."
+ },
+ {
+  "id": "cd85a792-c3bd-4b3a-9616-8e3fd271b621",
+  "german": "günstig",
+  "english": "cheap, affordable",
+  "article": null,
+  "plural": null,
+  "category": "Shopping & Stores",
+  "example_sentence": "In diesem Laden sind die Preise sehr günstig."
+ },
+ {
+  "id": "3930cb7f-bf9f-4fcd-9358-af58a44cdf3a",
+  "german": "umtauschen",
+  "english": "to exchange",
+  "article": null,
+  "plural": null,
+  "category": "Shopping & Stores",
+  "example_sentence": "Kann ich diese Jacke bitte umtauschen?"
+ },
+ {
+  "id": "acfb3a19-db0b-46d0-a595-5b041a2d98c1",
+  "german": "Abfahrt",
+  "english": "departure",
+  "article": "die",
+  "plural": "Abfahrten",
+  "category": "Transportation",
+  "example_sentence": "Die Abfahrt ist in fünf Minuten."
+ },
+ {
+  "id": "ceaf16d1-6755-4797-b4b9-e21aa7b3e99b",
+  "german": "Ampel",
+  "english": "traffic light",
+  "article": "die",
+  "plural": "Ampeln",
+  "category": "Transportation",
+  "example_sentence": "Bei einer roten Ampel muss man anhalten."
+ },
+ {
+  "id": "71487216-9032-4949-99cd-df896d262f8f",
+  "german": "Ankunft",
+  "english": "arrival",
+  "article": "die",
+  "plural": "Ankünfte",
+  "category": "Transportation",
+  "example_sentence": "Die Ankunft des Zuges ist um acht Uhr."
+ },
+ {
+  "id": "d3d95286-689c-4048-8ad9-7ca95e5543ca",
+  "german": "Autobahn",
+  "english": "highway, motorway",
+  "article": "die",
+  "plural": "Autobahnen",
+  "category": "Transportation",
+  "example_sentence": "Auf der Autobahn darf man schnell fahren."
+ },
+ {
+  "id": "721df7b0-c8bc-4870-aa43-ec7b036710f3",
+  "german": "Bahnsteig",
+  "english": "platform",
+  "article": "der",
+  "plural": "Bahnsteige",
+  "category": "Transportation",
+  "example_sentence": "Der Zug fährt von Bahnsteig drei ab."
+ },
+ {
+  "id": "2c153671-7d72-4f7a-9b34-f9771f258c63",
+  "german": "Fähre",
+  "english": "ferry",
+  "article": "die",
+  "plural": "Fähren",
+  "category": "Transportation",
+  "example_sentence": "Die Fähre bringt uns zur kleinen Insel."
+ },
+ {
+  "id": "2e035290-d0b7-4de7-b6de-7407398c88ad",
+  "german": "Fahrgast",
+  "english": "passenger",
+  "article": "der",
+  "plural": "Fahrgäste",
+  "category": "Transportation",
+  "example_sentence": "Die Fahrgäste warten auf den nächsten Bus."
+ },
+ {
+  "id": "6f42aca8-91eb-48d2-a10c-75d4e67cf861",
+  "german": "Fahrkarte",
+  "english": "ticket",
+  "article": "die",
+  "plural": "Fahrkarten",
+  "category": "Transportation",
+  "example_sentence": "Ich muss eine Fahrkarte am Automaten kaufen."
+ },
+ {
+  "id": "1b2fa8d7-b4cd-4369-9e49-db54bdf0dd59",
+  "german": "Fahrplan",
+  "english": "schedule, timetable",
+  "article": "der",
+  "plural": "Fahrpläne",
+  "category": "Transportation",
+  "example_sentence": "Der Fahrplan hängt an der Haltestelle."
+ },
+ {
+  "id": "34dacf95-a341-46c8-9101-e455837f3e61",
+  "german": "Fahrrad",
+  "english": "bicycle",
+  "article": "das",
+  "plural": "Fahrräder",
+  "category": "Transportation",
+  "example_sentence": "Im Sommer fahre ich oft mit dem Fahrrad."
+ },
+ {
+  "id": "4930145c-d089-450b-88b9-5a66e21b6b00",
+  "german": "Fahrradweg",
+  "english": "bike path",
+  "article": "der",
+  "plural": "Fahrradwege",
+  "category": "Transportation",
+  "example_sentence": "Es gibt einen schönen Fahrradweg am Fluss entlang."
+ },
+ {
+  "id": "e884997f-78fe-42bd-880d-839ef585585a",
+  "german": "Führerschein",
+  "english": "driver's license",
+  "article": "der",
+  "plural": "Führerscheine",
+  "category": "Transportation",
+  "example_sentence": "Ich habe meinen Führerschein letztes Jahr gemacht."
+ },
+ {
+  "id": "8316b03a-cf36-4e50-b82f-fe3351890aac",
+  "german": "Gleis",
+  "english": "track, platform",
+  "article": "das",
+  "plural": "Gleise",
+  "category": "Transportation",
+  "example_sentence": "Der Zug nach Berlin fährt von Gleis sieben."
+ },
+ {
+  "id": "b184d84c-c958-4608-ad22-203cb1daa834",
+  "german": "Haltestelle",
+  "english": "stop (bus/tram)",
+  "article": "die",
+  "plural": "Haltestellen",
+  "category": "Transportation",
+  "example_sentence": "Die Haltestelle ist direkt vor dem Supermarkt."
+ },
+ {
+  "id": "ab7e0bce-5119-47dc-abd2-dd0631b39aa0",
+  "german": "Kreuzung",
+  "english": "intersection, crossing",
+  "article": "die",
+  "plural": "Kreuzungen",
+  "category": "Transportation",
+  "example_sentence": "Biegen Sie an der nächsten Kreuzung rechts ab."
+ },
+ {
+  "id": "e4b4aea8-4c25-464c-8ee7-21ad93f41edc",
+  "german": "Motorrad",
+  "english": "motorcycle",
+  "article": "das",
+  "plural": "Motorräder",
+  "category": "Transportation",
+  "example_sentence": "Mein Bruder fährt gerne mit dem Motorrad."
+ },
+ {
+  "id": "0b47b771-2594-4655-9f3f-911061fd7bc0",
+  "german": "Parkplatz",
+  "english": "parking space",
+  "article": "der",
+  "plural": "Parkplätze",
+  "category": "Transportation",
+  "example_sentence": "Ich suche einen Parkplatz in der Nähe."
+ },
+ {
+  "id": "88de2600-15be-474a-b66e-0e532944db50",
+  "german": "Rückfahrt",
+  "english": "return journey",
+  "article": "die",
+  "plural": "Rückfahrten",
+  "category": "Transportation",
+  "example_sentence": "Die Rückfahrt dauert etwa zwei Stunden mit dem Auto."
+ },
+ {
+  "id": "7cd9a96b-c50f-4c29-84b7-c520f6f05135",
+  "german": "Stau",
+  "english": "traffic jam",
+  "article": "der",
+  "plural": "Staus",
+  "category": "Transportation",
+  "example_sentence": "Auf der Autobahn gibt es einen langen Stau."
+ },
+ {
+  "id": "f9e941a2-03fd-4463-a715-88904760c716",
+  "german": "Straßenbahn",
+  "english": "tram",
+  "article": "die",
+  "plural": "Straßenbahnen",
+  "category": "Transportation",
+  "example_sentence": "Die Straßenbahn fährt alle zehn Minuten ins Zentrum."
+ },
+ {
+  "id": "0bf13b20-1200-4970-a00c-6b8ec5c024e4",
+  "german": "Tankstelle",
+  "english": "gas station",
+  "article": "die",
+  "plural": "Tankstellen",
+  "category": "Transportation",
+  "example_sentence": "Wir müssen an der nächsten Tankstelle anhalten."
+ },
+ {
+  "id": "680d8431-2271-402e-bd15-79b9bc951fb2",
+  "german": "Taxi",
+  "english": "taxi",
+  "article": "das",
+  "plural": "Taxis",
+  "category": "Transportation",
+  "example_sentence": "Wir nehmen ein Taxi zum Flughafen."
+ },
+ {
+  "id": "13a2052f-4d3b-4a88-a749-ca0f514db043",
+  "german": "umsteigen",
+  "english": "to change (trains/buses)",
+  "article": null,
+  "plural": null,
+  "category": "Transportation",
+  "example_sentence": "Sie müssen am Hauptbahnhof in die U-Bahn umsteigen."
+ },
+ {
+  "id": "b74ef804-9e72-4476-9151-ac8056154275",
+  "german": "Verkehr",
+  "english": "traffic",
+  "article": "der",
+  "plural": "null",
+  "category": "Transportation",
+  "example_sentence": "Morgens ist der Verkehr in der Stadt sehr stark."
+ },
+ {
+  "id": "0827aedc-c953-4fef-9d7b-b789ee6b3b04",
+  "german": "Verspätung",
+  "english": "delay",
+  "article": "die",
+  "plural": "Verspätungen",
+  "category": "Transportation",
+  "example_sentence": "Der Bus hat heute zehn Minuten Verspätung."
+ },
+ {
+  "id": "81d99c19-b0af-44d8-9430-c6a458880dea",
+  "german": "bewölkt",
+  "english": "cloudy",
+  "article": null,
+  "plural": null,
+  "category": "Weather",
+  "example_sentence": "Heute ist es leider bewölkt und kühl."
+ },
+ {
+  "id": "e9945e6b-59e8-4781-a7db-a2ebc7b63f97",
+  "german": "das Gewitter",
+  "english": "thunderstorm",
+  "article": "das",
+  "plural": "die Gewitter",
+  "category": "Weather",
+  "example_sentence": "Heute Abend kommt ein starkes Gewitter zu uns."
+ },
+ {
+  "id": "a2c7939a-c12a-4630-9c34-8dda46437bd4",
+  "german": "das Wetter",
+  "english": "weather",
+  "article": "das",
+  "plural": "die Wetter",
+  "category": "Weather",
+  "example_sentence": "Wie ist das Wetter heute bei euch?"
+ },
+ {
+  "id": "059766ff-77a5-4d7e-bdcf-8fbfff9ea283",
+  "german": "der Blitz",
+  "english": "lightning",
+  "article": "der",
+  "plural": "die Blitze",
+  "category": "Weather",
+  "example_sentence": "Bei dem Gewitter gab es viele Blitze."
+ },
+ {
+  "id": "f90ceab9-8034-4535-bb50-77805015fc42",
+  "german": "der Donner",
+  "english": "thunder",
+  "article": "der",
+  "plural": "die Donner",
+  "category": "Weather",
+  "example_sentence": "Der Donner war gestern Nacht sehr laut."
+ },
+ {
+  "id": "b0eba8dc-03dd-45e1-9c8e-c1c741aa846b",
+  "german": "der Grad",
+  "english": "degree",
+  "article": "der",
+  "plural": "die Grade",
+  "category": "Weather",
+  "example_sentence": "Heute haben wir fünfundzwanzig Grad draußen."
+ },
+ {
+  "id": "e65d86f7-3980-46c0-9dd1-045685df5f7f",
+  "german": "der Himmel",
+  "english": "sky",
+  "article": "der",
+  "plural": "die Himmel",
+  "category": "Weather",
+  "example_sentence": "Der Himmel ist heute wunderschön blau und klar."
+ },
+ {
+  "id": "d92c8743-7c60-4160-b19b-e37ac37139d9",
+  "german": "der Nebel",
+  "english": "fog",
+  "article": "der",
+  "plural": "die Nebel",
+  "category": "Weather",
+  "example_sentence": "Am Morgen war dichter Nebel auf der Straße."
+ },
+ {
+  "id": "d4dfd742-9619-4249-a1ce-386fa7ece527",
+  "german": "der Regen",
+  "english": "rain",
+  "article": "der",
+  "plural": "die Regen",
+  "category": "Weather",
+  "example_sentence": "Der Regen hört heute Nachmittag endlich auf."
+ },
+ {
+  "id": "93f72bba-cf9f-4ce5-8008-818f8a0e2913",
+  "german": "der Regenschirm",
+  "english": "umbrella",
+  "article": "der",
+  "plural": "die Regenschirme",
+  "category": "Weather",
+  "example_sentence": "Vergiss deinen Regenschirm heute nicht zu Hause."
+ },
+ {
+  "id": "77ffeb9e-0730-4899-9ebd-f5bf2b0d8a72",
+  "german": "der Schnee",
+  "english": "snow",
+  "article": "der",
+  "plural": "null",
+  "category": "Weather",
+  "example_sentence": "Im Winter fällt hier oft viel Schnee."
+ },
+ {
+  "id": "e08a09aa-7097-4a15-b594-375df4327603",
+  "german": "der Sturm",
+  "english": "storm",
+  "article": "der",
+  "plural": "die Stürme",
+  "category": "Weather",
+  "example_sentence": "Der Sturm hat viele Bäume umgeworfen gestern."
+ },
+ {
+  "id": "60d5ce5a-2fd5-42ed-b31e-ff60a38ad9bd",
+  "german": "der Wind",
+  "english": "wind",
+  "article": "der",
+  "plural": "die Winde",
+  "category": "Weather",
+  "example_sentence": "Der Wind weht heute sehr stark draußen."
+ },
+ {
+  "id": "c358a3d8-c4e5-45a8-9557-23d81c65c2ce",
+  "german": "die Sonne",
+  "english": "sun",
+  "article": "die",
+  "plural": "die Sonnen",
+  "category": "Weather",
+  "example_sentence": "Die Sonne scheint heute den ganzen Tag."
+ },
+ {
+  "id": "f3fd812c-140b-48c2-ab31-51dc9dfd2b8d",
+  "german": "die Temperatur",
+  "english": "temperature",
+  "article": "die",
+  "plural": "die Temperaturen",
+  "category": "Weather",
+  "example_sentence": "Die Temperatur liegt heute bei zwanzig Grad."
+ },
+ {
+  "id": "7e21ff73-c28b-4b08-a727-35f1481fafc8",
+  "german": "die Wettervorhersage",
+  "english": "weather forecast",
+  "article": "die",
+  "plural": "die Wettervorhersagen",
+  "category": "Weather",
+  "example_sentence": "Die Wettervorhersage sagt Regen für morgen an."
+ },
+ {
+  "id": "a3b33d7c-169a-43e3-b1ab-72eb4fa0d6f4",
+  "german": "die Wolke",
+  "english": "cloud",
+  "article": "die",
+  "plural": "die Wolken",
+  "category": "Weather",
+  "example_sentence": "Viele Wolken sind heute am Himmel zu sehen."
+ },
+ {
+  "id": "6317ad88-1a48-4b8d-b367-d58c818cf8d3",
+  "german": "feucht",
+  "english": "humid, damp",
+  "article": null,
+  "plural": null,
+  "category": "Weather",
+  "example_sentence": "Im Herbst ist die Luft oft feucht."
+ },
+ {
+  "id": "79e2009e-b7f6-4072-a55f-bef030d06b71",
+  "german": "kalt",
+  "english": "cold",
+  "article": null,
+  "plural": null,
+  "category": "Weather",
+  "example_sentence": "Im Januar ist es meistens sehr kalt."
+ },
+ {
+  "id": "e591ac8f-5d45-4d57-a215-9632c4bf71a3",
+  "german": "regnen",
+  "english": "to rain",
+  "article": null,
+  "plural": null,
+  "category": "Weather",
+  "example_sentence": "Es wird morgen den ganzen Tag regnen."
+ },
+ {
+  "id": "bdd60acf-2af8-4408-842a-fdbc95ddff2d",
+  "german": "schneien",
+  "english": "to snow",
+  "article": null,
+  "plural": null,
+  "category": "Weather",
+  "example_sentence": "In den Bergen wird es bald wieder schneien."
+ },
+ {
+  "id": "39347187-0019-4f9f-a2c6-bb04c2a56899",
+  "german": "sonnig",
+  "english": "sunny",
+  "article": null,
+  "plural": null,
+  "category": "Weather",
+  "example_sentence": "Das Wochenende wird sonnig und sehr warm."
+ },
+ {
+  "id": "6d98a289-91e4-4b11-8a08-0daa630c44ac",
+  "german": "trocken",
+  "english": "dry",
+  "article": null,
+  "plural": null,
+  "category": "Weather",
+  "example_sentence": "Der Sommer war dieses Jahr sehr trocken."
+ },
+ {
+  "id": "2b14778a-1f19-42a5-9e19-3eb123d20067",
+  "german": "warm",
+  "english": "warm",
+  "article": null,
+  "plural": null,
+  "category": "Weather",
+  "example_sentence": "Im Sommer ist es hier sehr warm."
+ },
+ {
+  "id": "cdb99fdd-3040-4f91-9658-cf0c1950f19e",
+  "german": "windig",
+  "english": "windy",
+  "article": null,
+  "plural": null,
+  "category": "Weather",
+  "example_sentence": "Am Meer ist es oft sehr windig."
+ },
+ {
+  "id": "e80b78b1-ed26-4b13-acf7-adcaccda75a8",
+  "german": "das Gehalt",
+  "english": "salary",
+  "article": "das",
+  "plural": "die Gehälter",
+  "category": "Work & Jobs",
+  "example_sentence": "Das Gehalt kommt am Ende des Monats."
+ },
+ {
+  "id": "fd68a123-c681-45ee-a322-1989828c962c",
+  "german": "das Vorstellungsgespräch",
+  "english": "job interview",
+  "article": "das",
+  "plural": "die Vorstellungsgespräche",
+  "category": "Work & Jobs",
+  "example_sentence": "Morgen habe ich ein wichtiges Vorstellungsgespräch."
+ },
+ {
+  "id": "de552a06-f2bc-43b5-9c9f-82cbf321f9a4",
+  "german": "der Beruf",
+  "english": "profession, job",
+  "article": "der",
+  "plural": "die Berufe",
+  "category": "Work & Jobs",
+  "example_sentence": "Mein Beruf macht mir sehr viel Spaß."
+ },
+ {
+  "id": "079007a8-9140-4300-8f3c-6508945afb04",
+  "german": "der Chef",
+  "english": "boss (male)",
+  "article": "der",
+  "plural": "die Chefs",
+  "category": "Work & Jobs",
+  "example_sentence": "Der Chef ist heute nicht im Büro."
+ },
+ {
+  "id": "5dbaecc7-100f-475e-bf50-3141cd7fa595",
+  "german": "der Kollege",
+  "english": "colleague (male)",
+  "article": "der",
+  "plural": "die Kollegen",
+  "category": "Work & Jobs",
+  "example_sentence": "Mein Kollege hilft mir bei der Arbeit."
+ },
+ {
+  "id": "131242b3-741c-406f-987b-4bcc3a3d5a86",
+  "german": "der Lebenslauf",
+  "english": "CV, resume",
+  "article": "der",
+  "plural": "die Lebensläufe",
+  "category": "Work & Jobs",
+  "example_sentence": "Bitte schicken Sie uns Ihren Lebenslauf zu."
+ },
+ {
+  "id": "3429e5db-c483-4783-82c7-62f30dac9fb3",
+  "german": "der Praktikant",
+  "english": "intern (male)",
+  "article": "der",
+  "plural": "die Praktikanten",
+  "category": "Work & Jobs",
+  "example_sentence": "Der neue Praktikant ist sehr fleißig."
+ },
+ {
+  "id": "b0da6bbf-1caa-47e3-8eca-0a996a1dea70",
+  "german": "der Termin",
+  "english": "appointment",
+  "article": "der",
+  "plural": "die Termine",
+  "category": "Work & Jobs",
+  "example_sentence": "Ich habe heute drei wichtige Termine."
+ },
+ {
+  "id": "5cbef280-3bfc-4ba9-a266-c1b248af2956",
+  "german": "der Urlaub",
+  "english": "vacation, holiday",
+  "article": "der",
+  "plural": "die Urlaube",
+  "category": "Work & Jobs",
+  "example_sentence": "Im Sommer nehme ich zwei Wochen Urlaub."
+ },
+ {
+  "id": "1d6571a9-21ba-4cdd-9ac3-d688fef30c99",
+  "german": "der Vertrag",
+  "english": "contract",
+  "article": "der",
+  "plural": "die Verträge",
+  "category": "Work & Jobs",
+  "example_sentence": "Ich muss den Vertrag noch unterschreiben."
+ },
+ {
+  "id": "a9af016f-1bc1-431c-aea8-8005aa22b0f2",
+  "german": "die Abteilung",
+  "english": "department",
+  "article": "die",
+  "plural": "die Abteilungen",
+  "category": "Work & Jobs",
+  "example_sentence": "In welcher Abteilung arbeiten Sie hier?"
+ },
+ {
+  "id": "161b717e-7148-409f-b84d-46b28e80e503",
+  "german": "die Arbeitszeit",
+  "english": "working hours",
+  "article": "die",
+  "plural": "die Arbeitszeiten",
+  "category": "Work & Jobs",
+  "example_sentence": "Meine Arbeitszeit beginnt um acht Uhr morgens."
+ },
+ {
+  "id": "b312714c-7a3a-4f4c-b961-fbebaaab0889",
+  "german": "die Aufgabe",
+  "english": "task, duty",
+  "article": "die",
+  "plural": "die Aufgaben",
+  "category": "Work & Jobs",
+  "example_sentence": "Das ist eine wichtige Aufgabe für mich."
+ },
+ {
+  "id": "94919639-ace5-4f18-8052-38873619d55d",
+  "german": "die Besprechung",
+  "english": "meeting",
+  "article": "die",
+  "plural": "die Besprechungen",
+  "category": "Work & Jobs",
+  "example_sentence": "Um zehn Uhr haben wir eine Besprechung."
+ },
+ {
+  "id": "b79436fb-2a73-4dd3-8fca-cc1d76a1c25f",
+  "german": "die Bewerbung",
+  "english": "application",
+  "article": "die",
+  "plural": "die Bewerbungen",
+  "category": "Work & Jobs",
+  "example_sentence": "Ich schreibe eine Bewerbung für den Job."
+ },
+ {
+  "id": "5d8c2568-acc8-4bc3-9530-6f32843b35bc",
+  "german": "die Chefin",
+  "english": "boss (female)",
+  "article": "die",
+  "plural": "die Chefinnen",
+  "category": "Work & Jobs",
+  "example_sentence": "Die Chefin hat eine wichtige Besprechung."
+ },
+ {
+  "id": "10865a50-9c3e-40aa-93fd-42b922ce21e6",
+  "german": "die Erfahrung",
+  "english": "experience",
+  "article": "die",
+  "plural": "die Erfahrungen",
+  "category": "Work & Jobs",
+  "example_sentence": "Für diesen Job braucht man viel Erfahrung."
+ },
+ {
+  "id": "a88f5178-fa87-4f83-bc20-436bdbac884c",
+  "german": "die Kollegin",
+  "english": "colleague (female)",
+  "article": "die",
+  "plural": "die Kolleginnen",
+  "category": "Work & Jobs",
+  "example_sentence": "Meine Kollegin arbeitet im selben Büro."
+ },
+ {
+  "id": "a28bd2da-5d15-47f7-be4d-f4c894217817",
+  "german": "die Pause",
+  "english": "break",
+  "article": "die",
+  "plural": "die Pausen",
+  "category": "Work & Jobs",
+  "example_sentence": "Um zwölf Uhr mache ich meine Pause."
+ },
+ {
+  "id": "2e2d25b6-ebcb-481e-ae3b-143baeb77089",
+  "german": "die Teilzeit",
+  "english": "part-time",
+  "article": "die",
+  "plural": "null",
+  "category": "Work & Jobs",
+  "example_sentence": "Sie arbeitet nur in Teilzeit, zwanzig Stunden."
+ },
+ {
+  "id": "48e81d5d-8c46-46d5-96f8-47cad722f02b",
+  "german": "die Überstunde",
+  "english": "overtime",
+  "article": "die",
+  "plural": "die Überstunden",
+  "category": "Work & Jobs",
+  "example_sentence": "Diese Woche habe ich viele Überstunden gemacht."
+ },
+ {
+  "id": "dfac8b88-ff9d-4491-995b-5ad538fc1856",
+  "german": "die Vollzeit",
+  "english": "full-time",
+  "article": "die",
+  "plural": "null",
+  "category": "Work & Jobs",
+  "example_sentence": "Er arbeitet in Vollzeit, vierzig Stunden."
+ },
+ {
+  "id": "312a1a03-ccb6-49d2-951d-f9902daa93f7",
+  "german": "kündigen",
+  "english": "to quit, to resign",
+  "article": null,
+  "plural": null,
+  "category": "Work & Jobs",
+  "example_sentence": "Er möchte seinen Job bald kündigen."
+ },
+ {
+  "id": "9a5b54a7-908c-4faa-ae44-079712e11e7c",
+  "german": "sich bewerben",
+  "english": "to apply",
+  "article": null,
+  "plural": null,
+  "category": "Work & Jobs",
+  "example_sentence": "Ich möchte mich um diese Stelle bewerben."
+ },
+ {
+  "id": "6b625e2d-4e48-48de-96a6-e42cd4ef954d",
+  "german": "verdienen",
+  "english": "to earn",
+  "article": null,
+  "plural": null,
+  "category": "Work & Jobs",
+  "example_sentence": "Wie viel Geld verdienst du im Monat?"
+ }
+]

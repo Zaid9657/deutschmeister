@@ -1,0 +1,1201 @@
+{
+ "topic": {
+  "sub_level": "A2.1",
+  "topic_order": 12,
+  "title_en": "Prepositions of Time",
+  "title_de": "Zeit-Präpositionen: wann und wie lange",
+  "slug": "temporal-prepositions",
+  "description_en": "Learn the time prepositions vor, nach, seit, bis, ab, von … bis, zwischen and gegen, with a quick recap of um, am and im. They answer wann, wie lange, seit wann, bis wann and ab wann. You need them in Goethe A2 Sprechen Teil 3 (planning something together) and in Schreiben Teil 1, the short SMS.",
+  "description_de": "Lerne die Zeit-Präpositionen: vor, nach, seit, bis, ab und zwischen. Dazu kommen gegen und von … bis. Im Sprechen Teil 3 planst du damit einen Termin.",
+  "estimated_time": 25,
+  "icon": "book",
+  "is_published": true,
+  "prerequisite_slugs": [
+   "dative-case",
+   "prepositions-dative"
+  ],
+  "related_slugs": [
+   "time-and-dates",
+   "two-way-prepositions",
+   "modal-verbs-past"
+  ]
+ },
+ "rules": [
+  {
+   "rule_type": "introduction",
+   "title_en": "Prepositions of Time Introduction",
+   "title_de": "Einführung: Zeit-Präpositionen",
+   "content": {
+    "hook_de": "Wann beginnt dein Kurs? Um acht. Wie lange dauert er? Bis zwölf.",
+    "hook_en": "When does your course start? At eight. How long does it run? Until twelve. Every one of these answers starts with a small word for time.",
+    "scenario_en": "You arrange a date, name a working day, say how long you have lived somewhere, or postpone a meeting by an hour.",
+    "preview_note_en": "Eleven small words cover almost every time answer at A2.",
+    "preview_highlight": "um · am · im · vor · nach · seit · bis · ab · von … bis · zwischen · gegen",
+    "why_it_matters_en": "Goethe A2 Sprechen Teil 3 is planning something together — every turn needs a time answer. Schreiben Teil 1 (the SMS) usually names a day and a time too, and Hören Teil 1 gives opening hours and departure times.",
+    "preview_example_de": "Ich arbeite von 9 bis 17 Uhr. Ab Montag habe ich Urlaub.",
+    "preview_example_en": "I work from 9 to 5. From Monday on I'm on holiday.",
+    "german_difference_en": "German marks the case after these words: in time expressions vor, nach, seit, ab and zwischen take the dative (vor einem Jahr, nach der Arbeit), while English simply says 'a year ago', 'after work'. As two-way prepositions, vor and zwischen take the accusative for direction (vor das Haus) — that is the other reading, from the lesson Two-Way Prepositions.",
+    "english_comparison_en": "English 'for two years' becomes seit zwei Jahren — and German keeps the present tense: Ich lerne seit zwei Jahren Deutsch."
+   },
+   "order_index": -1,
+   "common_mistakes": null,
+   "memory_trick_en": null,
+   "memory_trick_de": null,
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": "You already know um, am and im from A1 and seit from Präpositionen mit Dativ. This topic adds the rest and sorts them by question.",
+   "key_insight_de": "um, am und im kennst du aus A1. seit kennst du aus den Dativ-Präpositionen. Hier kommt der Rest."
+  },
+  {
+   "rule_type": "table",
+   "title_en": "Quick Recap: um, am, im",
+   "title_de": "Kurze Wiederholung: um, am, im",
+   "content": {
+    "type": "case_table",
+    "headers": [
+     "Präposition",
+     "Wann?",
+     "Beispiel"
+    ],
+    "rows": [
+     [
+      "um",
+      "Uhrzeit",
+      "um acht Uhr, um halb neun"
+     ],
+     [
+      "am",
+      "Wochentag",
+      "am Montag, am Wochenende"
+     ],
+     [
+      "am",
+      "Datum",
+      "am 3. Mai, am 1. Januar"
+     ],
+     [
+      "am",
+      "Tageszeit",
+      "am Morgen, am Abend"
+     ],
+     [
+      "im",
+      "Monat",
+      "im Juli, im Dezember"
+     ],
+     [
+      "im",
+      "Jahreszeit",
+      "im Sommer, im Winter"
+     ],
+     [
+      "in der",
+      "Ausnahme: Nacht",
+      "Ich arbeite in der Nacht."
+     ],
+     [
+      "ohne Präposition",
+      "heute, morgen, gestern",
+      "Heute habe ich frei."
+     ]
+    ],
+    "highlight_row": -1,
+    "description_de": "Das kennst du aus A1. Nach am und im kommt der Dativ: am Montag, im Juli.",
+    "description_en": "You know these from A1. am and im are already dative forms (an + dem, in + dem). Note the one exception: in der Nacht, not am Nacht."
+   },
+   "order_index": 1,
+   "common_mistakes": null,
+   "memory_trick_en": "Point in the day → um. Day or date → am. Month or season → im.",
+   "memory_trick_de": "Uhrzeit → um. Tag oder Datum → am. Monat oder Jahreszeit → im.",
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": null,
+   "key_insight_de": null
+  },
+  {
+   "rule_type": "table",
+   "title_en": "Eight More Time Prepositions",
+   "title_de": "Acht Präpositionen für die Zeit",
+   "content": {
+    "type": "case_table",
+    "headers": [
+     "Präposition",
+     "Frage",
+     "Kasus",
+     "Beispiel"
+    ],
+    "rows": [
+     [
+      "vor",
+      "Wann?",
+      "Dativ",
+      "vor einem Jahr"
+     ],
+     [
+      "nach",
+      "Wann?",
+      "Dativ",
+      "nach der Arbeit"
+     ],
+     [
+      "seit",
+      "Seit wann?",
+      "Dativ",
+      "seit drei Jahren"
+     ],
+     [
+      "ab",
+      "Ab wann?",
+      "Dativ",
+      "ab Montag, ab dem 1. Mai"
+     ],
+     [
+      "zwischen",
+      "Wann?",
+      "Dativ",
+      "zwischen zwei und drei Uhr"
+     ],
+     [
+      "bis",
+      "Bis wann?",
+      "Akkusativ (meist ohne Artikel)",
+      "bis Freitag, bis morgen"
+     ],
+     [
+      "von … bis",
+      "Wie lange?",
+      "von + Dativ … bis + Akkusativ",
+      "von 9 bis 17 Uhr"
+     ],
+     [
+      "gegen",
+      "Wann? (ungefähr)",
+      "Akkusativ",
+      "gegen acht Uhr"
+     ]
+    ],
+    "highlight_row": -1,
+    "description_de": "Bei Zeitangaben verlangen fünf Präpositionen den Dativ. Das sind vor, nach, seit, ab und zwischen. Du kennst dem, der, einem und einer schon.",
+    "description_en": "In time expressions five of them take the dative you already met in the lesson Dative Case: dem, der, einem, einer, and plural den + -n (vor zwei Jahren). Careful: as two-way prepositions vor and zwischen take the accusative for direction (vor das Haus) — that reading, from the lesson Two-Way Prepositions, is not what this table is about. bis and gegen are accusative and von is dative, but with a bare day or clock time you never see the ending."
+   },
+   "order_index": 2,
+   "common_mistakes": null,
+   "memory_trick_en": null,
+   "memory_trick_de": null,
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": "You already know gegen for an approximate time from the lesson Prepositions + Accusative: um names the exact time, gegen an approximate one. New here is only its place beside um, ab and bis in one system.",
+   "key_insight_de": "gegen für ungefähre Zeit kennst du schon aus A1. Neu ist der Platz neben um, ab und bis."
+  },
+  {
+   "rule_type": "table",
+   "title_en": "Five Questions, Five Answers",
+   "title_de": "Fünf Fragen, fünf Antworten",
+   "content": {
+    "type": "case_table",
+    "headers": [
+     "Frage",
+     "Bedeutung",
+     "Antwort"
+    ],
+    "rows": [
+     [
+      "Wann?",
+      "der Moment",
+      "Um acht Uhr. Am Montag. Im Mai."
+     ],
+     [
+      "Wie lange?",
+      "die Zeit von A bis B",
+      "Von 9 bis 17 Uhr. Zwei Stunden."
+     ],
+     [
+      "Seit wann?",
+      "Start früher, jetzt noch da",
+      "Seit drei Jahren."
+     ],
+     [
+      "Bis wann?",
+      "das Ende",
+      "Bis Freitag."
+     ],
+     [
+      "Ab wann?",
+      "Start morgen oder später",
+      "Ab Montag."
+     ]
+    ],
+    "highlight_row": -1,
+    "description_de": "Höre zuerst die Frage. Die Frage sagt dir die Präposition.",
+    "description_en": "Listen to the question first: it selects the preposition for you. Seit wann? can only be answered with seit, Bis wann? only with bis."
+   },
+   "order_index": 3,
+   "common_mistakes": null,
+   "memory_trick_en": null,
+   "memory_trick_de": null,
+   "formal_note_en": "In Sprechen Teil 3 the partner asks Wann? and Wie lange? in almost every turn. In Hören Teil 1 the announcements answer Ab wann? and Bis wann?",
+   "formal_note_de": "Im Sprechen Teil 3 kommen die Fragen Wann? und Wie lange? fast immer. Im Hören Teil 1 hörst du Ab wann? und Bis wann?",
+   "key_insight_en": null,
+   "key_insight_de": null
+  },
+  {
+   "rule_type": "explanation_comparison",
+   "title_en": "seit or vor?",
+   "title_de": "seit oder vor?",
+   "content": {
+    "type": "case_table",
+    "headers": [
+     "Satz",
+     "Bedeutung",
+     "Zeitform"
+    ],
+    "rows": [
+     [
+      "Ich arbeite seit einem Jahr in Bremen.",
+      "Start früher, jetzt noch da",
+      "Präsens"
+     ],
+     [
+      "Vor einem Jahr habe ich angefangen.",
+      "ein Moment früher, fertig",
+      "Perfekt"
+     ],
+     [
+      "Ich wohne seit Mai in Köln.",
+      "Ich wohne jetzt noch dort.",
+      "Präsens"
+     ],
+     [
+      "Vor einem Monat habe ich die Wohnung gefunden.",
+      "Der Moment ist vorbei.",
+      "Perfekt"
+     ]
+    ],
+    "highlight_row": -1,
+    "description_de": "seit steht mit Präsens. Das kennst du. Neu ist: vor steht meistens mit Perfekt.",
+    "description_en": "You met 'seit + present tense' in Prepositions + Dative. Here is the other half: vor marks a finished point and normally takes the Perfekt. seit = still going, vor = over and done."
+   },
+   "order_index": 4,
+   "common_mistakes": null,
+   "memory_trick_en": "seit = a line up to now. vor = a dot in the past.",
+   "memory_trick_de": "seit ist eine Linie bis jetzt. vor ist ein Punkt früher.",
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": "Both take the dative, so the endings are identical: seit einem Jahr, vor einem Jahr. Only the meaning and the tense differ.",
+   "key_insight_de": "Beide verlangen den Dativ: seit einem Jahr, vor einem Jahr. Nur die Bedeutung ist anders."
+  },
+  {
+   "rule_type": "tip",
+   "title_en": "bis, ab and gegen: Often Without an Article",
+   "title_de": "bis, ab und gegen: oft ohne Artikel",
+   "content": {
+    "content_de": "bis steht meistens ohne Artikel: bis Freitag, bis morgen, bis nächste Woche. Mit Artikel brauchst du zu: bis zum 3. Mai, bis zur Pause. Auch ab kommt oft ohne Artikel: ab Montag, ab morgen. Mit Artikel steht ab mit dem Dativ: ab dem 1. Mai. Für die Dauer nimmst du von … bis: von 9 bis 17 Uhr. gegen sagt ungefähr: gegen acht Uhr.",
+    "content_en": "bis normally stands with no article at all: bis Freitag, bis morgen, bis nächste Woche. When an article is needed, bis borrows zu: bis zum 3. Mai, bis zur Pause (zum/zur are the contractions from Prepositions + Dative). ab is the same for days: ab Montag, ab morgen — but with an article it takes the dative: ab dem 1. Mai. For a stretch of time use von … bis: von 9 bis 17 Uhr (opening hours, working hours). gegen means 'about': gegen acht Uhr is anywhere near eight."
+   },
+   "order_index": 5,
+   "common_mistakes": null,
+   "memory_trick_en": null,
+   "memory_trick_de": null,
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": "ab and von both mark a start. ab looks forward (ab Montag = from Monday on), von … bis frames a finished stretch (von 9 bis 17 Uhr).",
+   "key_insight_de": "ab und von zeigen den Start. ab zeigt nach vorne: ab Montag. von … bis zeigt Anfang und Ende."
+  },
+  {
+   "rule_type": "dialogue",
+   "title_en": "Dialogue: Planning a Meeting (Sprechen Teil 3)",
+   "title_de": "Dialog: einen Termin planen (Sprechen Teil 3)",
+   "content": {
+    "speakers": [
+     "Anna",
+     "Ben"
+    ],
+    "exchanges": [
+     {
+      "speaker": "Anna",
+      "text_de": "Hast du am Samstag Zeit?",
+      "text_en": "Do you have time on Saturday?",
+      "grammar_note": "am Samstag — am + Wochentag (dative)"
+     },
+     {
+      "speaker": "Ben",
+      "text_de": "Am Samstag arbeite ich von 9 bis 14 Uhr.",
+      "text_en": "On Saturday I work from 9 to 2.",
+      "grammar_note": "von … bis — how long, no article"
+     },
+     {
+      "speaker": "Anna",
+      "text_de": "Und danach? Vielleicht gegen vier?",
+      "text_en": "And after that? Around four maybe?",
+      "grammar_note": "gegen vier — about four o'clock"
+     },
+     {
+      "speaker": "Ben",
+      "text_de": "Gut. Ab vier habe ich frei.",
+      "text_en": "Good. From four on I'm free.",
+      "grammar_note": "ab vier — start, looking forward"
+     },
+     {
+      "speaker": "Anna",
+      "text_de": "Super. Dann bis Samstag!",
+      "text_en": "Great. See you on Saturday, then!",
+      "grammar_note": "bis Samstag — end point, no article"
+     }
+    ],
+    "context_de": "Zwei Freunde planen einen Termin.",
+    "context_en": "Two friends arranging when to meet — the Goethe A2 Sprechen Teil 3 task.",
+    "grammar_focus_en": "Five time answers in five turns: am Samstag, von 9 bis 14 Uhr, gegen vier, ab vier, bis Samstag. That is exactly the range Sprechen Teil 3 asks for."
+   },
+   "order_index": 6,
+   "common_mistakes": null,
+   "memory_trick_en": null,
+   "memory_trick_de": null,
+   "formal_note_en": "Bis Samstag! is also the standard goodbye once a date is fixed — useful at the end of Schreiben Teil 1 as well.",
+   "formal_note_de": "Bis Samstag! sagst du am Ende. Das passt auch gut in eine SMS.",
+   "key_insight_en": null,
+   "key_insight_de": null
+  },
+  {
+   "rule_type": "common_mistakes",
+   "title_en": "Six Mistakes with Time Prepositions",
+   "title_de": "Sechs Fehler mit Zeit-Präpositionen",
+   "content": {
+    "content_de": "Diese sechs Fehler kommen oft. Lies sie einmal laut.",
+    "content_en": "These six come up again and again: am for a month, a missing dative -n in the plural, the Perfekt after seit, a missing dative ending after vor and nach, and an article after bis."
+   },
+   "order_index": 7,
+   "common_mistakes": [
+    {
+     "wrong": "Am Juli fahre ich nach Spanien.",
+     "correct": "Im Juli fahre ich nach Spanien.",
+     "explanation_de": "Monate haben im: im Juli, im Dezember. am nimmst du für Tage.",
+     "explanation_en": "Months take im: im Juli, im Dezember. am is for days and dates."
+    },
+    {
+     "wrong": "Ich habe seit drei Tage Urlaub.",
+     "correct": "Ich habe seit drei Tagen Urlaub.",
+     "explanation_de": "seit verlangt den Dativ. Im Plural bekommt das Nomen ein -n: drei Tagen.",
+     "explanation_en": "seit takes the dative, and dative plural adds -n to the noun: drei Tagen, zwei Jahren."
+    },
+    {
+     "wrong": "Ich habe seit vier Jahren Gitarre gespielt.",
+     "correct": "Ich spiele seit vier Jahren Gitarre.",
+     "explanation_de": "seit heißt: Es läuft noch. Darum kein Perfekt, sondern Präsens.",
+     "explanation_en": "seit describes something still going, so German keeps the present tense — English uses 'have been playing'."
+    },
+    {
+     "wrong": "Vor eine Woche war ich krank.",
+     "correct": "Vor einer Woche war ich krank.",
+     "explanation_de": "vor verlangt den Dativ: einer Woche, einem Monat, einem Jahr.",
+     "explanation_en": "vor takes the dative: einer Woche (f.), einem Monat (m.), einem Jahr (n.)."
+    },
+    {
+     "wrong": "Nach die Arbeit gehe ich einkaufen.",
+     "correct": "Nach der Arbeit gehe ich einkaufen.",
+     "explanation_de": "nach verlangt den Dativ: der Arbeit, dem Kurs, dem Essen.",
+     "explanation_en": "nach takes the dative: der Arbeit, dem Kurs, dem Essen."
+    },
+    {
+     "wrong": "Ich bleibe bis dem Freitag.",
+     "correct": "Ich bleibe bis Freitag.",
+     "explanation_de": "bis steht meistens ohne Artikel. Mit Artikel brauchst du zu: bis zum Freitag.",
+     "explanation_en": "bis usually comes with no article (bis Freitag). If you want the article, bis needs zu: bis zum Freitag."
+    }
+   ],
+   "memory_trick_en": null,
+   "memory_trick_de": null,
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": null,
+   "key_insight_de": null
+  },
+  {
+   "rule_type": "summary",
+   "title_en": "Quick Reference: Time Prepositions",
+   "title_de": "Kurzübersicht: Zeit-Präpositionen",
+   "content": {
+    "points": [
+     "um + Uhrzeit, am + Tag, im + Monat. Aber: in der Nacht.",
+     "Bei Zeitangaben verlangen vor, nach, seit, ab und zwischen den Dativ.",
+     "Dativ Plural mit -n: seit zwei Jahren, vor drei Monaten.",
+     "seit: Start früher, jetzt noch da. Das Verb steht im Präsens.",
+     "vor: ein Moment früher. Dazu passt das Perfekt.",
+     "bis steht meistens ohne Artikel: bis Freitag, bis morgen.",
+     "ab ohne Artikel: ab Montag. Mit Artikel: ab dem 1. Mai.",
+     "von … bis zeigt die Dauer: von 9 bis 17 Uhr.",
+     "gegen acht Uhr heißt: ungefähr acht Uhr.",
+     "Fragen: Wann? Wie lange? Seit wann? Bis wann? Ab wann?"
+    ]
+   },
+   "order_index": 99,
+   "common_mistakes": null,
+   "memory_trick_en": null,
+   "memory_trick_de": null,
+   "formal_note_en": null,
+   "formal_note_de": null,
+   "key_insight_en": null,
+   "key_insight_de": null
+  }
+ ],
+ "examples": [
+  {
+   "sentence_de": "Am Montag beginnt mein Kurs um acht Uhr.",
+   "sentence_en": "On Monday my course starts at eight.",
+   "grammar_highlight": "Am Montag",
+   "explanation_en": "am for the weekday, um for the clock time — the two A1 workhorses in one sentence.",
+   "explanation_de": "am steht beim Wochentag, um bei der Uhrzeit.",
+   "word_breakdown": {
+    "Am": "on (am = an + dem, dative)",
+    "Montag": "Monday",
+    "beginnt": "begins (beginnen)",
+    "mein": "my",
+    "Kurs": "course",
+    "um": "at (clock time)",
+    "acht": "eight",
+    "Uhr": "o'clock"
+   },
+   "difficulty": 1,
+   "category": "basic",
+   "order_index": 1,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Im Sommer fahren wir nach Italien.",
+   "sentence_en": "In summer we go to Italy.",
+   "grammar_highlight": "Im Sommer",
+   "explanation_en": "im for seasons and months: im Sommer, im Juli.",
+   "explanation_de": "im steht bei Jahreszeiten und Monaten: im Sommer, im Juli.",
+   "word_breakdown": {
+    "Im": "in (im = in + dem, dative)",
+    "Sommer": "summer",
+    "fahren": "go, travel (fahren)",
+    "wir": "we",
+    "nach": "to (a country/city)",
+    "Italien": "Italy"
+   },
+   "difficulty": 1,
+   "category": "basic",
+   "order_index": 2,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Vor einem Jahr bin ich nach Berlin gekommen.",
+   "sentence_en": "A year ago I came to Berlin.",
+   "grammar_highlight": "Vor einem Jahr",
+   "explanation_en": "vor + dative marks a finished point in the past, so the verb is in the Perfekt.",
+   "explanation_de": "vor verlangt den Dativ: einem Jahr. Der Moment ist vorbei, darum Perfekt.",
+   "word_breakdown": {
+    "Vor": "ago (vor + dative)",
+    "einem": "a (dative, das Jahr)",
+    "Jahr": "year",
+    "bin": "am (sein, auxiliary)",
+    "ich": "I",
+    "nach": "to",
+    "Berlin": "Berlin",
+    "gekommen": "come (Partizip II of kommen)"
+   },
+   "difficulty": 2,
+   "category": "intermediate",
+   "order_index": 3,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Nach der Arbeit gehe ich einkaufen.",
+   "sentence_en": "After work I go shopping.",
+   "grammar_highlight": "Nach der Arbeit",
+   "explanation_en": "nach + dative for 'after': der Arbeit (die Arbeit is feminine).",
+   "explanation_de": "nach verlangt den Dativ. die Arbeit ist feminin: der Arbeit.",
+   "word_breakdown": {
+    "Nach": "after (nach + dative)",
+    "der": "the (dative, die Arbeit)",
+    "Arbeit": "work",
+    "gehe": "go (gehen)",
+    "ich": "I",
+    "einkaufen": "to shop (einkaufen)"
+   },
+   "difficulty": 2,
+   "category": "intermediate",
+   "order_index": 4,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Mein Bruder studiert seit drei Jahren in München.",
+   "sentence_en": "My brother has been studying in Munich for three years.",
+   "grammar_highlight": "seit drei Jahren",
+   "explanation_en": "seit + dative plural adds -n: drei Jahren. German keeps the present tense here.",
+   "explanation_de": "seit verlangt den Dativ. Im Plural kommt ein -n dazu: drei Jahren. Das Verb steht im Präsens.",
+   "word_breakdown": {
+    "Mein": "my",
+    "Bruder": "brother",
+    "studiert": "studies (studieren, present)",
+    "seit": "for, since (seit + dative)",
+    "drei": "three",
+    "Jahren": "years (dative plural, + -n)",
+    "in": "in",
+    "München": "Munich"
+   },
+   "difficulty": 2,
+   "category": "intermediate",
+   "order_index": 5,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Ich bleibe bis Freitag in Hamburg.",
+   "sentence_en": "I'm staying in Hamburg until Friday.",
+   "grammar_highlight": "bis Freitag",
+   "explanation_en": "bis marks the end point and normally takes no article.",
+   "explanation_de": "bis zeigt das Ende. Meistens steht kein Artikel dabei.",
+   "word_breakdown": {
+    "Ich": "I",
+    "bleibe": "stay (bleiben)",
+    "bis": "until",
+    "Freitag": "Friday",
+    "in": "in",
+    "Hamburg": "Hamburg"
+   },
+   "difficulty": 2,
+   "category": "intermediate",
+   "order_index": 6,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Ich arbeite von 9 bis 17 Uhr.",
+   "sentence_en": "I work from 9 to 5.",
+   "grammar_highlight": "von 9 bis 17 Uhr",
+   "explanation_en": "von … bis frames how long something lasts — the standard way to give working or opening hours.",
+   "explanation_de": "von … bis zeigt die Dauer. So sagst du Arbeitszeiten und Öffnungszeiten.",
+   "word_breakdown": {
+    "Ich": "I",
+    "arbeite": "work (arbeiten)",
+    "von": "from",
+    "9": "nine",
+    "bis": "to, until",
+    "17": "seventeen (5 p.m.)",
+    "Uhr": "o'clock"
+   },
+   "difficulty": 2,
+   "category": "intermediate",
+   "order_index": 7,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Ab Montag habe ich Urlaub.",
+   "sentence_en": "From Monday on I'm on holiday.",
+   "grammar_highlight": "Ab Montag",
+   "explanation_en": "ab looks forward from a starting day and stands here without an article.",
+   "explanation_de": "ab zeigt den Start nach vorne. Hier steht kein Artikel.",
+   "word_breakdown": {
+    "Ab": "from … on",
+    "Montag": "Monday",
+    "habe": "have (haben)",
+    "ich": "I",
+    "Urlaub": "holiday, time off"
+   },
+   "difficulty": 2,
+   "category": "intermediate",
+   "order_index": 8,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Ich komme heute erst gegen acht Uhr.",
+   "sentence_en": "Today I won't get there before about eight.",
+   "grammar_highlight": "gegen acht Uhr",
+   "explanation_en": "gegen + clock time means 'around, about' — the classic line in a Schreiben Teil 1 SMS.",
+   "explanation_de": "gegen heißt ungefähr. Das schreibst du oft in einer SMS.",
+   "word_breakdown": {
+    "Ich": "I",
+    "komme": "come (kommen)",
+    "heute": "today",
+    "erst": "only, not before",
+    "gegen": "around, about",
+    "acht": "eight",
+    "Uhr": "o'clock"
+   },
+   "difficulty": 3,
+   "category": "exam",
+   "order_index": 9,
+   "audio_url": null
+  },
+  {
+   "sentence_de": "Zwischen zwei und drei Uhr habe ich Pause.",
+   "sentence_en": "Between two and three I have a break.",
+   "grammar_highlight": "Zwischen zwei und drei Uhr",
+   "explanation_en": "zwischen takes the dative; with bare clock times you cannot see the ending.",
+   "explanation_de": "zwischen verlangt bei der Zeit den Dativ. Bei Uhrzeiten siehst du die Endung nicht.",
+   "word_breakdown": {
+    "Zwischen": "between (zwischen + dative)",
+    "zwei": "two",
+    "und": "and",
+    "drei": "three",
+    "Uhr": "o'clock",
+    "habe": "have (haben)",
+    "ich": "I",
+    "Pause": "break"
+   },
+   "difficulty": 3,
+   "category": "complex",
+   "order_index": 10,
+   "audio_url": null
+  }
+ ],
+ "exercises": [
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "Der Film beginnt ___ acht Uhr.",
+   "question_en": "Fill in the time preposition: The film starts at eight o'clock. (clock time)",
+   "options": null,
+   "correct_answer": "um",
+   "acceptable_answers": [
+    "um"
+   ],
+   "explanation_en": "Clock times take um: um acht Uhr.",
+   "explanation_de": "Bei der Uhrzeit steht um: um acht Uhr.",
+   "hint": null,
+   "why_correct_en": "Question: Wann? Answer: um acht Uhr — um is the preposition for the clock.",
+   "why_correct_de": "Frage: Wann? Antwort: um acht Uhr. um steht bei der Uhrzeit.",
+   "difficulty": 1,
+   "stage": 4,
+   "order_index": 1,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "___ Mittwoch habe ich einen Termin.",
+   "question_en": "Fill in the preposition: On Wednesday I have an appointment. (weekday; the answer starts the sentence)",
+   "options": null,
+   "correct_answer": "Am",
+   "acceptable_answers": [
+    "Am",
+    "am"
+   ],
+   "explanation_en": "Weekdays take am: am Mittwoch.",
+   "explanation_de": "Wochentage haben am: am Mittwoch.",
+   "hint": null,
+   "why_correct_en": "am = an + dem, so the weekday is already in the dative.",
+   "why_correct_de": "am ist an + dem. Der Wochentag steht also im Dativ.",
+   "difficulty": 1,
+   "stage": 4,
+   "order_index": 2,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "Mein Urlaub beginnt ___ Juli.",
+   "question_en": "Fill in the preposition: My holiday starts in July. (month)",
+   "options": null,
+   "correct_answer": "im",
+   "acceptable_answers": [
+    "im"
+   ],
+   "explanation_en": "Months take im: im Juli.",
+   "explanation_de": "Monate haben im: im Juli.",
+   "hint": null,
+   "why_correct_en": "im = in + dem. For days you would say am, for months im.",
+   "why_correct_de": "im ist in + dem. Bei Tagen sagst du am, bei Monaten im.",
+   "difficulty": 1,
+   "stage": 4,
+   "order_index": 3,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "multiple_choice",
+   "question_de": "Ich arbeite ___ zwei Monaten in Berlin.",
+   "question_en": "Choose the preposition: I have been working in Berlin for two months — it started earlier and is still true today. (present tense)",
+   "options": [
+    "seit",
+    "vor",
+    "ab",
+    "bis"
+   ],
+   "correct_answer": "seit",
+   "acceptable_answers": [
+    "seit"
+   ],
+   "explanation_en": "seit marks a stretch that started earlier and is still going, and German keeps the present tense.",
+   "explanation_de": "seit zeigt: Der Start war früher. Jetzt ist es noch so. Das Verb steht im Präsens.",
+   "hint": null,
+   "why_correct_en": "Only seit fits a present-tense sentence about something still true; vor needs the Perfekt, ab looks forward, bis marks an end.",
+   "why_correct_de": "Nur seit passt zum Präsens. vor braucht Perfekt, ab zeigt nach vorne, bis zeigt das Ende.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 4,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "Nach ___ Pause trinke ich einen Kaffee.",
+   "question_en": "Fill in the dative article: After the break I have a coffee. (die Pause, Dativ)",
+   "options": null,
+   "correct_answer": "der",
+   "acceptable_answers": [
+    "der"
+   ],
+   "explanation_en": "nach takes the dative: die Pause becomes der Pause.",
+   "explanation_de": "nach verlangt den Dativ. die Pause ist feminin: der Pause.",
+   "hint": null,
+   "why_correct_en": "Feminine nouns take der in the dative — the same der you know from mit der U-Bahn.",
+   "why_correct_de": "Feminin heißt im Dativ der. Das kennst du von mit der U-Bahn.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 5,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "Vor ___ Monat war ich in Wien.",
+   "question_en": "Fill in the dative form: A month ago I was in Vienna. (ein Monat, Dativ)",
+   "options": null,
+   "correct_answer": "einem",
+   "acceptable_answers": [
+    "einem"
+   ],
+   "explanation_en": "vor takes the dative: ein Monat becomes einem Monat.",
+   "explanation_de": "vor verlangt den Dativ. der Monat ist maskulin: einem Monat.",
+   "hint": null,
+   "why_correct_en": "der Monat is masculine, so the dative is einem — the -m pattern from dative-case.",
+   "why_correct_de": "der Monat ist maskulin. Im Dativ heißt das einem. Das ist das -m-Muster.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 6,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "multiple_choice",
+   "question_de": "___ Sonntag arbeite ich nicht.",
+   "question_en": "Choose the preposition: On Sunday I don't work. (weekday)",
+   "options": [
+    "Im",
+    "Um",
+    "Am",
+    "An"
+   ],
+   "correct_answer": "Am",
+   "acceptable_answers": [
+    "Am"
+   ],
+   "explanation_en": "Weekdays take am, months take im.",
+   "explanation_de": "Wochentage haben am, Monate haben im.",
+   "hint": null,
+   "why_correct_en": "Sonntag is a day, so am is the only fit; Im is for months, Um for clock times, and An can never stand alone before a weekday (an + dem = am).",
+   "why_correct_de": "Sonntag ist ein Tag, also am. An steht nie allein vor dem Tag: an + dem = am.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 7,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "„Wie lange ist das Museum geöffnet?“ — „___ 10 bis 18 Uhr.“",
+   "question_en": "Answer to Wie lange? Fill in the preposition for the starting point: From 10 to 6. (von … bis; the answer opens the sentence)",
+   "options": null,
+   "correct_answer": "Von",
+   "acceptable_answers": [
+    "Von",
+    "von"
+   ],
+   "explanation_en": "Wie lange? is answered with the pair von … bis.",
+   "explanation_de": "Auf Wie lange? antwortest du mit von … bis.",
+   "hint": null,
+   "why_correct_en": "bis is already there and marks the end, so the start needs von.",
+   "why_correct_de": "bis steht schon da und zeigt das Ende. Der Start braucht von.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 8,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "Der Kurs dauert ___ Freitag.",
+   "question_en": "Fill in the preposition for the end point: The course lasts until Friday. (no article)",
+   "options": null,
+   "correct_answer": "bis",
+   "acceptable_answers": [
+    "bis"
+   ],
+   "explanation_en": "bis marks the end point and normally stands without an article.",
+   "explanation_de": "bis zeigt das Ende. Meistens steht kein Artikel dabei.",
+   "hint": null,
+   "why_correct_en": "The answer to Bis wann? is bis + day: bis Freitag.",
+   "why_correct_de": "Die Antwort auf Bis wann? ist bis + Tag: bis Freitag.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 9,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "error_correction",
+   "question_de": "Korrigiere den Fehler: Ich bin seit zwei Tage hier.",
+   "question_en": "Correct the mistake: seit takes the dative, and the dative plural adds -n. Keep the word order.",
+   "options": null,
+   "correct_answer": "Ich bin seit zwei Tagen hier.",
+   "acceptable_answers": [
+    "Ich bin seit zwei Tagen hier.",
+    "Ich bin seit zwei Tagen hier"
+   ],
+   "explanation_en": "Dative plural adds -n to the noun: zwei Tagen.",
+   "explanation_de": "Im Dativ Plural bekommt das Nomen ein -n: zwei Tagen.",
+   "hint": null,
+   "why_correct_en": "seit is a dative preposition, so der Tag gives the dative plural Tagen.",
+   "why_correct_de": "seit verlangt den Dativ. Der Dativ Plural heißt hier zwei Tagen.",
+   "difficulty": 2,
+   "stage": 4,
+   "order_index": 10,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "error_correction",
+   "question_de": "Korrigiere den Fehler: Am Juli fahre ich nach Spanien.",
+   "question_en": "Correct the mistake: months take im, not am. Keep the word order.",
+   "options": null,
+   "correct_answer": "Im Juli fahre ich nach Spanien.",
+   "acceptable_answers": [
+    "Im Juli fahre ich nach Spanien.",
+    "Im Juli fahre ich nach Spanien"
+   ],
+   "explanation_en": "Months take im: im Juli, im Dezember.",
+   "explanation_de": "Monate haben im: im Juli, im Dezember.",
+   "hint": null,
+   "why_correct_en": "am is for days and dates (am Montag, am 3. Mai); Juli is a month.",
+   "why_correct_de": "am nimmst du für Tage: am Montag, am 3. Mai. Juli ist ein Monat.",
+   "difficulty": 3,
+   "stage": 4,
+   "order_index": 11,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "multiple_choice",
+   "question_de": "Ich komme ___ acht Uhr. Vielleicht 7:50, vielleicht 8:10.",
+   "question_en": "Choose the preposition: I'm coming at about eight — not exactly eight. (approximately)",
+   "options": [
+    "um",
+    "seit",
+    "bis",
+    "gegen"
+   ],
+   "correct_answer": "gegen",
+   "acceptable_answers": [
+    "gegen"
+   ],
+   "explanation_en": "gegen + clock time means 'around, about'.",
+   "explanation_de": "gegen bei der Uhrzeit heißt: ungefähr.",
+   "hint": null,
+   "why_correct_en": "The second sentence says the time is not exact, so um (exactly eight) is out; seit and bis answer other questions.",
+   "why_correct_de": "Der zweite Satz sagt: nicht genau. Darum passt um nicht. seit und bis antworten auf andere Fragen.",
+   "difficulty": 3,
+   "stage": 4,
+   "order_index": 12,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "multiple_choice",
+   "question_de": "___ wann arbeitest du heute? — Bis 17 Uhr.",
+   "question_en": "Choose the question word that asks for the end point: Until when are you working today?",
+   "options": [
+    "Seit",
+    "Bis",
+    "Von",
+    "Ab"
+   ],
+   "correct_answer": "Bis",
+   "acceptable_answers": [
+    "Bis"
+   ],
+   "explanation_en": "Bis wann? asks for the end; the answer repeats bis.",
+   "explanation_de": "Bis wann? fragt nach dem Ende. Die Antwort hat auch bis.",
+   "hint": null,
+   "why_correct_en": "The answer Bis 17 Uhr names an end point, so the question must be Bis wann?",
+   "why_correct_de": "Die Antwort Bis 17 Uhr zeigt das Ende. Also fragst du Bis wann?",
+   "difficulty": 3,
+   "stage": 4,
+   "order_index": 13,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "Schreib den Satz: [wir / am Sonntag / ins Kino / gehen]",
+   "question_en": "Write the sentence: On Sunday we go to the cinema. (both word orders are correct)",
+   "options": null,
+   "correct_answer": "Wir gehen am Sonntag ins Kino.",
+   "acceptable_answers": [
+    "Wir gehen am Sonntag ins Kino.",
+    "Wir gehen am Sonntag ins Kino",
+    "Am Sonntag gehen wir ins Kino.",
+    "Am Sonntag gehen wir ins Kino"
+   ],
+   "explanation_en": "am + weekday. The time phrase may stand in position 1 or after the verb.",
+   "explanation_de": "am steht beim Wochentag. Die Zeit kann vorne oder nach dem Verb stehen.",
+   "hint": null,
+   "why_correct_en": "The verb stays in position 2 either way: Wir gehen … / Am Sonntag gehen wir …",
+   "why_correct_de": "Das Verb bleibt auf Position 2. Vorne steht wir oder Am Sonntag.",
+   "difficulty": 2,
+   "stage": 5,
+   "order_index": 1,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "Schreib den Satz: [ich / im Mai / Geburtstag / haben]",
+   "question_en": "Write the sentence: My birthday is in May (literally: I have birthday in May). (both word orders are correct)",
+   "options": null,
+   "correct_answer": "Ich habe im Mai Geburtstag.",
+   "acceptable_answers": [
+    "Ich habe im Mai Geburtstag.",
+    "Ich habe im Mai Geburtstag",
+    "Im Mai habe ich Geburtstag.",
+    "Im Mai habe ich Geburtstag"
+   ],
+   "explanation_en": "im + month. German says Ich habe Geburtstag, with no article.",
+   "explanation_de": "im steht beim Monat. Auf Deutsch sagt man: Ich habe Geburtstag.",
+   "hint": null,
+   "why_correct_en": "Whatever comes first, habe stays in position 2.",
+   "why_correct_de": "Vorne steht ich oder Im Mai. Das Verb habe bleibt auf Position 2.",
+   "difficulty": 2,
+   "stage": 5,
+   "order_index": 2,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "Schreib den Satz: [ich / seit drei Monaten / einen Deutschkurs / besuchen]",
+   "question_en": "Write the sentence: I have been attending a German course for three months. (present tense; both word orders are correct)",
+   "options": null,
+   "correct_answer": "Ich besuche seit drei Monaten einen Deutschkurs.",
+   "acceptable_answers": [
+    "Ich besuche seit drei Monaten einen Deutschkurs.",
+    "Ich besuche seit drei Monaten einen Deutschkurs",
+    "Seit drei Monaten besuche ich einen Deutschkurs.",
+    "Seit drei Monaten besuche ich einen Deutschkurs"
+   ],
+   "explanation_en": "seit + dative plural (drei Monaten) and the present tense besuche.",
+   "explanation_de": "seit verlangt den Dativ Plural: drei Monaten. Das Verb steht im Präsens.",
+   "hint": null,
+   "why_correct_en": "German says 'Ich besuche seit …', never the Perfekt, because the course is still running.",
+   "why_correct_de": "Du besuchst den Kurs jetzt noch. Darum steht besuche im Präsens.",
+   "difficulty": 2,
+   "stage": 5,
+   "order_index": 3,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "Schreib den Satz im Perfekt: [wir / vor zwei Monaten / nach Hamburg / fahren]",
+   "question_en": "Write the sentence in the Perfekt: We went to Hamburg two months ago. (verb: fahren; both word orders are correct)",
+   "options": null,
+   "correct_answer": "Wir sind vor zwei Monaten nach Hamburg gefahren.",
+   "acceptable_answers": [
+    "Wir sind vor zwei Monaten nach Hamburg gefahren.",
+    "Wir sind vor zwei Monaten nach Hamburg gefahren",
+    "Vor zwei Monaten sind wir nach Hamburg gefahren.",
+    "Vor zwei Monaten sind wir nach Hamburg gefahren"
+   ],
+   "explanation_en": "vor + dative plural (zwei Monaten) marks a finished point, so the Perfekt fits.",
+   "explanation_de": "vor verlangt den Dativ Plural: zwei Monaten. Der Moment ist vorbei, darum Perfekt.",
+   "hint": null,
+   "why_correct_en": "fahren is a movement verb, so the Perfekt takes sein: sind gefahren.",
+   "why_correct_de": "fahren ist ein Bewegungsverb. Das Perfekt hat sein: sind gefahren.",
+   "difficulty": 3,
+   "stage": 5,
+   "order_index": 4,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "Schreib den Satz: [ich / nach dem Kurs / nach Hause / fahren]",
+   "question_en": "Write the sentence: After the course I drive home. (both word orders are correct)",
+   "options": null,
+   "correct_answer": "Ich fahre nach dem Kurs nach Hause.",
+   "acceptable_answers": [
+    "Ich fahre nach dem Kurs nach Hause.",
+    "Ich fahre nach dem Kurs nach Hause",
+    "Nach dem Kurs fahre ich nach Hause.",
+    "Nach dem Kurs fahre ich nach Hause"
+   ],
+   "explanation_en": "The first nach is temporal (+ dative), the second is the fixed phrase nach Hause.",
+   "explanation_de": "Das erste nach ist Zeit und verlangt den Dativ. Das zweite nach steht in nach Hause.",
+   "hint": null,
+   "why_correct_en": "der Kurs is masculine, so the dative is dem Kurs.",
+   "why_correct_de": "der Kurs ist maskulin. Im Dativ heißt das dem Kurs.",
+   "difficulty": 2,
+   "stage": 5,
+   "order_index": 5,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "Schreib den Satz: [ich / von Montag bis Freitag / arbeiten]",
+   "question_en": "Write the sentence: I work from Monday to Friday. (both word orders are correct)",
+   "options": null,
+   "correct_answer": "Ich arbeite von Montag bis Freitag.",
+   "acceptable_answers": [
+    "Ich arbeite von Montag bis Freitag.",
+    "Ich arbeite von Montag bis Freitag",
+    "Von Montag bis Freitag arbeite ich.",
+    "Von Montag bis Freitag arbeite ich"
+   ],
+   "explanation_en": "von … bis also works with weekdays, and both parts stay articleless.",
+   "explanation_de": "von … bis geht auch mit Wochentagen. Ein Artikel steht nicht dabei.",
+   "hint": null,
+   "why_correct_en": "The pair answers Wie lange? — von names the start, bis the end.",
+   "why_correct_de": "Das Paar antwortet auf Wie lange? von zeigt den Start, bis das Ende.",
+   "difficulty": 2,
+   "stage": 5,
+   "order_index": 6,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "Antworte auf „Ab wann arbeitest du in Köln?“: [ich / ab dem 1. Mai / in Köln / arbeiten]",
+   "question_en": "Answer the question Ab wann arbeitest du in Köln? — From 1 May on I work in Cologne. (both word orders are correct)",
+   "options": null,
+   "correct_answer": "Ich arbeite ab dem 1. Mai in Köln.",
+   "acceptable_answers": [
+    "Ich arbeite ab dem 1. Mai in Köln.",
+    "Ich arbeite ab dem 1. Mai in Köln",
+    "Ab dem 1. Mai arbeite ich in Köln.",
+    "Ab dem 1. Mai arbeite ich in Köln"
+   ],
+   "explanation_en": "With a date and an article, ab takes the dative: ab dem 1. Mai.",
+   "explanation_de": "Mit Artikel steht ab mit dem Dativ: ab dem 1. Mai.",
+   "hint": null,
+   "why_correct_en": "Ab wann? is answered with ab. Without an article ab needs nothing: ab Montag, ab morgen.",
+   "why_correct_de": "Auf Ab wann? antwortest du mit ab. Ohne Artikel steht ab allein: ab Montag.",
+   "difficulty": 3,
+   "stage": 5,
+   "order_index": 7,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "Schreib den Satz: [wir / bis Samstag / in Wien / bleiben]",
+   "question_en": "Write the sentence: We're staying in Vienna until Saturday. (both word orders are correct)",
+   "options": null,
+   "correct_answer": "Wir bleiben bis Samstag in Wien.",
+   "acceptable_answers": [
+    "Wir bleiben bis Samstag in Wien.",
+    "Wir bleiben bis Samstag in Wien",
+    "Bis Samstag bleiben wir in Wien.",
+    "Bis Samstag bleiben wir in Wien"
+   ],
+   "explanation_en": "bis marks the end point, with no article.",
+   "explanation_de": "bis zeigt das Ende. Ein Artikel steht nicht dabei.",
+   "hint": null,
+   "why_correct_en": "The answer to Bis wann? is bis + day: bis Samstag.",
+   "why_correct_de": "Die Antwort auf Bis wann? ist bis + Tag: bis Samstag.",
+   "difficulty": 3,
+   "stage": 5,
+   "order_index": 8,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "fill_blank",
+   "question_de": "SMS an eine Freundin: Ich bin erst ___ neun Uhr zu Hause.",
+   "question_en": "Fill in the preposition (Schreiben Teil 1, SMS): I won't be home before about nine. (approximate time, not an exact one)",
+   "options": null,
+   "correct_answer": "gegen",
+   "acceptable_answers": [
+    "gegen"
+   ],
+   "explanation_en": "gegen + clock time means 'around' — very common in a short SMS.",
+   "explanation_de": "gegen heißt ungefähr. Das passt gut in eine SMS.",
+   "hint": null,
+   "why_correct_en": "um neun Uhr would name an exact time; the cue asks for an approximate one, so gegen fits.",
+   "why_correct_de": "um neun Uhr heißt genau neun. Mit gegen sagst du: ungefähr neun.",
+   "difficulty": 3,
+   "stage": 5,
+   "order_index": 9,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "error_correction",
+   "question_de": "Korrigiere den Fehler: Ich bleibe bis dem Sonntag.",
+   "question_en": "Correct the mistake: bis + article needs zu. Keep the word order — two repairs are accepted.",
+   "options": null,
+   "correct_answer": "Ich bleibe bis Sonntag.",
+   "acceptable_answers": [
+    "Ich bleibe bis Sonntag.",
+    "Ich bleibe bis Sonntag",
+    "Ich bleibe bis zum Sonntag.",
+    "Ich bleibe bis zum Sonntag"
+   ],
+   "explanation_en": "bis stands with no article (bis Sonntag). With an article it needs zu: bis zum Sonntag. Both repairs count.",
+   "explanation_de": "bis steht meistens ohne Artikel: bis Sonntag. Mit Artikel brauchst du zu: bis zum Sonntag.",
+   "hint": null,
+   "why_correct_en": "bis dem is never possible: either drop the article (bis Sonntag) or add zu (bis zum Sonntag).",
+   "why_correct_de": "bis dem gibt es nicht. Streich den Artikel oder nimm zu: bis zum Sonntag.",
+   "difficulty": 3,
+   "stage": 5,
+   "order_index": 10,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "sentence_building",
+   "question_de": "Schreib den Satz: [wir / zwischen acht und neun Uhr / frühstücken]",
+   "question_en": "Write the sentence: We have breakfast between eight and nine. (both word orders are correct)",
+   "options": null,
+   "correct_answer": "Wir frühstücken zwischen acht und neun Uhr.",
+   "acceptable_answers": [
+    "Wir frühstücken zwischen acht und neun Uhr.",
+    "Wir frühstücken zwischen acht und neun Uhr",
+    "Zwischen acht und neun Uhr frühstücken wir.",
+    "Zwischen acht und neun Uhr frühstücken wir"
+   ],
+   "explanation_en": "zwischen takes the dative; with bare clock times the ending is invisible.",
+   "explanation_de": "zwischen verlangt den Dativ. Bei Uhrzeiten siehst du die Endung nicht.",
+   "hint": null,
+   "why_correct_en": "zwischen names two points, so it needs und between them: zwischen acht und neun Uhr.",
+   "why_correct_de": "zwischen nennt zwei Punkte. Dazwischen steht und: zwischen acht und neun Uhr.",
+   "difficulty": 3,
+   "stage": 5,
+   "order_index": 11,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "multiple_choice",
+   "question_de": "„Wann hast du Zeit?“ — „___ Samstag ab drei.“",
+   "question_en": "Sprechen Teil 3 (planning together): choose the preposition for the weekday.",
+   "options": [
+    "Am",
+    "Im",
+    "Um",
+    "Seit"
+   ],
+   "correct_answer": "Am",
+   "acceptable_answers": [
+    "Am"
+   ],
+   "explanation_en": "Weekdays take am; ab then names the starting hour.",
+   "explanation_de": "Wochentage haben am. ab nennt danach die Startzeit.",
+   "hint": null,
+   "why_correct_en": "Samstag is a day, so Am is the only fit; Im is for months and Um for clock times.",
+   "why_correct_de": "Samstag ist ein Tag, also Am. Im nimmst du für Monate, Um für die Uhrzeit.",
+   "difficulty": 3,
+   "stage": 5,
+   "order_index": 12,
+   "related_rule_title": null
+  },
+  {
+   "exercise_type": "multiple_choice",
+   "question_de": "„Seit wann lernst du Deutsch?“ — „___ einem Jahr.“",
+   "question_en": "Choose the preposition that answers 'Seit wann?': for a year now, still going.",
+   "options": [
+    "Vor",
+    "Bis",
+    "Ab",
+    "Seit"
+   ],
+   "correct_answer": "Seit",
+   "acceptable_answers": [
+    "Seit"
+   ],
+   "explanation_en": "Seit wann? is answered with seit + dative.",
+   "explanation_de": "Auf Seit wann? antwortest du mit seit + Dativ.",
+   "hint": null,
+   "why_correct_en": "Vor einem Jahr would answer Wann? and needs the Perfekt; ab looks forward and bis marks an end.",
+   "why_correct_de": "Vor einem Jahr antwortet auf Wann? und braucht Perfekt. ab zeigt nach vorne, bis das Ende.",
+   "difficulty": 3,
+   "stage": 5,
+   "order_index": 13,
+   "related_rule_title": null
+  }
+ ]
+}

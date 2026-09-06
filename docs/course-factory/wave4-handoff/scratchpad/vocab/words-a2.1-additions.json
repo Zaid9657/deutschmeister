@@ -1,0 +1,1577 @@
+[
+  {
+    "german": "Gesundheit",
+    "english": "health",
+    "article": "die",
+    "plural": null,
+    "category": "Health & Body",
+    "example_sentence": "Meine Gesundheit ist mir sehr wichtig.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Krankheit",
+    "english": "illness, disease",
+    "article": "die",
+    "plural": "Krankheiten",
+    "category": "Health & Body",
+    "example_sentence": "Die Krankheit dauert meistens eine Woche.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Verletzung",
+    "english": "injury",
+    "article": "die",
+    "plural": "Verletzungen",
+    "category": "Health & Body",
+    "example_sentence": "Der Arzt untersucht die Verletzung am Knie.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Wunde",
+    "english": "wound",
+    "article": "die",
+    "plural": "Wunden",
+    "category": "Health & Body",
+    "example_sentence": "Die Wunde am Finger tut noch weh.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Pflaster",
+    "english": "plaster, band-aid",
+    "article": "das",
+    "plural": "Pflaster",
+    "category": "Health & Body",
+    "example_sentence": "Ich klebe ein Pflaster auf die Wunde.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Notfall",
+    "english": "emergency",
+    "article": "der",
+    "plural": "Notfälle",
+    "category": "Health & Body",
+    "example_sentence": "Im Notfall wählst du die Nummer 112.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Patient",
+    "english": "patient (male)",
+    "article": "der",
+    "plural": "Patienten",
+    "category": "Health & Body",
+    "example_sentence": "Der Patient wartet schon eine Stunde.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Kinderarzt",
+    "english": "pediatrician",
+    "article": "der",
+    "plural": "Kinderärzte",
+    "category": "Health & Body",
+    "example_sentence": "Wir gehen mit dem Baby zum Kinderarzt.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Blut",
+    "english": "blood",
+    "article": "das",
+    "plural": null,
+    "category": "Health & Body",
+    "example_sentence": "Der Arzt nimmt mir heute etwas Blut ab.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Operation",
+    "english": "operation, surgery",
+    "article": "die",
+    "plural": "Operationen",
+    "category": "Health & Body",
+    "example_sentence": "Die Operation dauert ungefähr zwei Stunden.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Zahnschmerzen",
+    "english": "toothache (Pl.)",
+    "article": null,
+    "plural": null,
+    "category": "Health & Body",
+    "example_sentence": "Ich habe seit gestern Zahnschmerzen.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Rückenschmerzen",
+    "english": "back pain (Pl.)",
+    "article": null,
+    "plural": null,
+    "category": "Health & Body",
+    "example_sentence": "Mein Vater hat oft Rückenschmerzen.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Tropfen",
+    "english": "drop, drops (medicine)",
+    "article": "der",
+    "plural": "Tropfen",
+    "category": "Health & Body",
+    "example_sentence": "Der Arzt gibt mir Tropfen für die Nase.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Bewegung",
+    "english": "exercise, movement",
+    "article": "die",
+    "plural": "Bewegungen",
+    "category": "Health & Body",
+    "example_sentence": "Bewegung ist gut für den Rücken.",
+    "level": "a2.1"
+  },
+  {
+    "german": "behandeln",
+    "english": "to treat",
+    "article": null,
+    "plural": null,
+    "category": "Health & Body",
+    "example_sentence": "Die Ärztin behandelt meine Erkältung.",
+    "level": "a2.1"
+  },
+  {
+    "german": "heilen",
+    "english": "to heal",
+    "article": null,
+    "plural": null,
+    "category": "Health & Body",
+    "example_sentence": "Die Wunde heilt in ein paar Tagen.",
+    "level": "a2.1"
+  },
+  {
+    "german": "atmen",
+    "english": "to breathe",
+    "article": null,
+    "plural": null,
+    "category": "Health & Body",
+    "example_sentence": "Der Patient atmet ruhig und langsam.",
+    "level": "a2.1"
+  },
+  {
+    "german": "schwitzen",
+    "english": "to sweat",
+    "article": null,
+    "plural": null,
+    "category": "Health & Body",
+    "example_sentence": "Bei Fieber schwitzt man oft in der Nacht.",
+    "level": "a2.1"
+  },
+  {
+    "german": "messen",
+    "english": "to measure (misst)",
+    "article": null,
+    "plural": null,
+    "category": "Health & Body",
+    "example_sentence": "Wir messen das Fieber jeden Morgen.",
+    "level": "a2.1"
+  },
+  {
+    "german": "schwach",
+    "english": "weak",
+    "article": null,
+    "plural": null,
+    "category": "Health & Body",
+    "example_sentence": "Nach der Grippe bin ich noch schwach.",
+    "level": "a2.1"
+  },
+  {
+    "german": "verletzt",
+    "english": "injured, hurt",
+    "article": null,
+    "plural": null,
+    "category": "Health & Body",
+    "example_sentence": "Mein Bruder ist am Arm verletzt.",
+    "level": "a2.1"
+  },
+  {
+    "german": "ungesund",
+    "english": "unhealthy",
+    "article": null,
+    "plural": null,
+    "category": "Health & Body",
+    "example_sentence": "Zu viel Zucker ist sehr ungesund.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Erdgeschoss",
+    "english": "ground floor",
+    "article": "das",
+    "plural": "Erdgeschosse",
+    "category": "Home & Moving",
+    "example_sentence": "Unsere Wohnung liegt im Erdgeschoss.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Dachboden",
+    "english": "attic",
+    "article": "der",
+    "plural": "Dachböden",
+    "category": "Home & Moving",
+    "example_sentence": "Die alten Kartons stehen auf dem Dachboden.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Strom",
+    "english": "electricity",
+    "article": "der",
+    "plural": null,
+    "category": "Home & Moving",
+    "example_sentence": "Der Strom ist bei uns sehr teuer.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Umzugskarton",
+    "english": "moving box",
+    "article": "der",
+    "plural": "Umzugskartons",
+    "category": "Home & Moving",
+    "example_sentence": "Wir brauchen noch zehn Umzugskartons.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Hausordnung",
+    "english": "house rules",
+    "article": "die",
+    "plural": "Hausordnungen",
+    "category": "Home & Moving",
+    "example_sentence": "Die Hausordnung hängt neben dem Briefkasten.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Klingel",
+    "english": "doorbell",
+    "article": "die",
+    "plural": "Klingeln",
+    "category": "Home & Moving",
+    "example_sentence": "Die Klingel an der Haustür geht nicht.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Briefkasten",
+    "english": "mailbox, letterbox",
+    "article": "der",
+    "plural": "Briefkästen",
+    "category": "Home & Moving",
+    "example_sentence": "Mein Name steht unten am Briefkasten.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Treppenhaus",
+    "english": "stairwell",
+    "article": "das",
+    "plural": "Treppenhäuser",
+    "category": "Home & Moving",
+    "example_sentence": "Im Treppenhaus darf man nicht rauchen.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Mülltonne",
+    "english": "rubbish bin",
+    "article": "die",
+    "plural": "Mülltonnen",
+    "category": "Home & Moving",
+    "example_sentence": "Die Mülltonne steht hinter dem Haus.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Schlüssel",
+    "english": "key",
+    "article": "der",
+    "plural": "Schlüssel",
+    "category": "Home & Moving",
+    "example_sentence": "Der Vermieter gibt mir zwei Schlüssel.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Kündigung",
+    "english": "notice, termination",
+    "article": "die",
+    "plural": "Kündigungen",
+    "category": "Home & Moving",
+    "example_sentence": "Die Kündigung für die Wohnung ist fertig.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Haustür",
+    "english": "front door",
+    "article": "die",
+    "plural": "Haustüren",
+    "category": "Home & Moving",
+    "example_sentence": "Bitte mach die Haustür wieder zu.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Nachbarschaft",
+    "english": "neighbourhood",
+    "article": "die",
+    "plural": "Nachbarschaften",
+    "category": "Home & Moving",
+    "example_sentence": "Unsere Nachbarschaft ist ruhig und freundlich.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Wäsche",
+    "english": "laundry, washing",
+    "article": "die",
+    "plural": null,
+    "category": "Home & Moving",
+    "example_sentence": "Die Wäsche hängt schon auf dem Balkon.",
+    "level": "a2.1"
+  },
+  {
+    "german": "mieten",
+    "english": "to rent (from someone)",
+    "article": null,
+    "plural": null,
+    "category": "Home & Moving",
+    "example_sentence": "Wir mieten ab Mai eine neue Wohnung.",
+    "level": "a2.1"
+  },
+  {
+    "german": "vermieten",
+    "english": "to rent out",
+    "article": null,
+    "plural": null,
+    "category": "Home & Moving",
+    "example_sentence": "Meine Tante vermietet zwei Zimmer an Studenten.",
+    "level": "a2.1"
+  },
+  {
+    "german": "streichen",
+    "english": "to paint (a wall) (hat gestrichen)",
+    "article": null,
+    "plural": null,
+    "category": "Home & Moving",
+    "example_sentence": "Wir streichen die Wand im Schlafzimmer weiß.",
+    "level": "a2.1"
+  },
+  {
+    "german": "einrichten",
+    "english": "to furnish, to set up",
+    "article": null,
+    "plural": null,
+    "category": "Home & Moving",
+    "example_sentence": "Wir richten das Kinderzimmer neu ein.",
+    "level": "a2.1"
+  },
+  {
+    "german": "putzen",
+    "english": "to clean",
+    "article": null,
+    "plural": null,
+    "category": "Home & Moving",
+    "example_sentence": "Am Samstag putze ich das Bad.",
+    "level": "a2.1"
+  },
+  {
+    "german": "gemütlich",
+    "english": "cosy, comfortable",
+    "article": null,
+    "plural": null,
+    "category": "Home & Moving",
+    "example_sentence": "Das Wohnzimmer bei euch ist sehr gemütlich.",
+    "level": "a2.1"
+  },
+  {
+    "german": "schmutzig",
+    "english": "dirty",
+    "article": null,
+    "plural": null,
+    "category": "Home & Moving",
+    "example_sentence": "Die Fenster sind nach dem Winter schmutzig.",
+    "level": "a2.1"
+  },
+  {
+    "german": "eng",
+    "english": "narrow, tight",
+    "article": null,
+    "plural": null,
+    "category": "Home & Moving",
+    "example_sentence": "Der Flur in der Wohnung ist eng.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Amt",
+    "english": "public office, authority",
+    "article": "das",
+    "plural": "Ämter",
+    "category": "Offices & Forms",
+    "example_sentence": "Das Amt ist heute bis sechzehn Uhr geöffnet.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Behörde",
+    "english": "authority, public agency",
+    "article": "die",
+    "plural": "Behörden",
+    "category": "Offices & Forms",
+    "example_sentence": "Die Behörde schickt mir einen Brief.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Bürgeramt",
+    "english": "citizens' office",
+    "article": "das",
+    "plural": "Bürgerämter",
+    "category": "Offices & Forms",
+    "example_sentence": "Im Bürgeramt bekommst du deinen Ausweis.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Anmeldung",
+    "english": "registration",
+    "article": "die",
+    "plural": "Anmeldungen",
+    "category": "Offices & Forms",
+    "example_sentence": "Die Anmeldung für die Wohnung dauert zehn Minuten.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Abmeldung",
+    "english": "deregistration",
+    "article": "die",
+    "plural": "Abmeldungen",
+    "category": "Offices & Forms",
+    "example_sentence": "Für die Abmeldung brauchst du den Ausweis.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Antrag",
+    "english": "application (form)",
+    "article": "der",
+    "plural": "Anträge",
+    "category": "Offices & Forms",
+    "example_sentence": "Ich gebe den Antrag morgen im Amt ab.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Stempel",
+    "english": "stamp (official)",
+    "article": "der",
+    "plural": "Stempel",
+    "category": "Offices & Forms",
+    "example_sentence": "Auf dem Formular fehlt noch der Stempel.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Bescheinigung",
+    "english": "certificate, confirmation",
+    "article": "die",
+    "plural": "Bescheinigungen",
+    "category": "Offices & Forms",
+    "example_sentence": "Die Bescheinigung vom Arzt bringe ich mit.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Ausweis",
+    "english": "ID card",
+    "article": "der",
+    "plural": "Ausweise",
+    "category": "Offices & Forms",
+    "example_sentence": "Zeigen Sie mir bitte Ihren Ausweis.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Geburtsurkunde",
+    "english": "birth certificate",
+    "article": "die",
+    "plural": "Geburtsurkunden",
+    "category": "Offices & Forms",
+    "example_sentence": "Die Geburtsurkunde liegt zu Hause im Ordner.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Steuernummer",
+    "english": "tax number",
+    "article": "die",
+    "plural": "Steuernummern",
+    "category": "Offices & Forms",
+    "example_sentence": "Meine Steuernummer steht auf diesem Brief.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Schalter",
+    "english": "counter, service desk",
+    "article": "der",
+    "plural": "Schalter",
+    "category": "Offices & Forms",
+    "example_sentence": "Bitte gehen Sie zum Schalter drei.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Kopie",
+    "english": "copy",
+    "article": "die",
+    "plural": "Kopien",
+    "category": "Offices & Forms",
+    "example_sentence": "Ich mache eine Kopie von meinem Ausweis.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Öffnungszeit",
+    "english": "opening hours",
+    "article": "die",
+    "plural": "Öffnungszeiten",
+    "category": "Offices & Forms",
+    "example_sentence": "Die Öffnungszeiten stehen an der Tür.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Beratung",
+    "english": "advice, consultation",
+    "article": "die",
+    "plural": "Beratungen",
+    "category": "Offices & Forms",
+    "example_sentence": "Die Beratung im Amt war sehr gut.",
+    "level": "a2.1"
+  },
+  {
+    "german": "abgeben",
+    "english": "to hand in (hat abgegeben)",
+    "article": null,
+    "plural": null,
+    "category": "Offices & Forms",
+    "example_sentence": "Du musst das Formular am Schalter abgeben.",
+    "level": "a2.1"
+  },
+  {
+    "german": "anmelden",
+    "english": "to register (something)",
+    "article": null,
+    "plural": null,
+    "category": "Offices & Forms",
+    "example_sentence": "Ich melde mein Auto morgen beim Amt an.",
+    "level": "a2.1"
+  },
+  {
+    "german": "kopieren",
+    "english": "to copy",
+    "article": null,
+    "plural": null,
+    "category": "Offices & Forms",
+    "example_sentence": "Bitte kopieren Sie den Ausweis für uns.",
+    "level": "a2.1"
+  },
+  {
+    "german": "prüfen",
+    "english": "to check, to examine",
+    "article": null,
+    "plural": null,
+    "category": "Offices & Forms",
+    "example_sentence": "Die Behörde prüft meinen Antrag noch.",
+    "level": "a2.1"
+  },
+  {
+    "german": "gültig",
+    "english": "valid",
+    "article": null,
+    "plural": null,
+    "category": "Offices & Forms",
+    "example_sentence": "Mein Ausweis ist noch zwei Jahre gültig.",
+    "level": "a2.1"
+  },
+  {
+    "german": "nötig",
+    "english": "necessary",
+    "article": null,
+    "plural": null,
+    "category": "Offices & Forms",
+    "example_sentence": "Für den Antrag ist ein Foto nötig.",
+    "level": "a2.1"
+  },
+  {
+    "german": "persönlich",
+    "english": "in person, personal",
+    "article": null,
+    "plural": null,
+    "category": "Offices & Forms",
+    "example_sentence": "Sie müssen persönlich zum Amt kommen.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Ferienwohnung",
+    "english": "holiday flat",
+    "article": "die",
+    "plural": "Ferienwohnungen",
+    "category": "Travel & Holidays",
+    "example_sentence": "Wir haben eine Ferienwohnung am Meer gebucht.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Halbpension",
+    "english": "half board",
+    "article": "die",
+    "plural": null,
+    "category": "Travel & Holidays",
+    "example_sentence": "Im Hotel nehmen wir immer Halbpension.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Sonnencreme",
+    "english": "sunscreen",
+    "article": "die",
+    "plural": "Sonnencremes",
+    "category": "Travel & Holidays",
+    "example_sentence": "Die Sonnencreme liegt in meiner Tasche.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Postkarte",
+    "english": "postcard",
+    "article": "die",
+    "plural": "Postkarten",
+    "category": "Travel & Holidays",
+    "example_sentence": "Ich schreibe meiner Mutter eine Postkarte.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Souvenir",
+    "english": "souvenir",
+    "article": "das",
+    "plural": "Souvenirs",
+    "category": "Travel & Holidays",
+    "example_sentence": "Aus Wien bringe ich dir ein Souvenir mit.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Rundfahrt",
+    "english": "sightseeing tour",
+    "article": "die",
+    "plural": "Rundfahrten",
+    "category": "Travel & Holidays",
+    "example_sentence": "Die Rundfahrt durch die Stadt dauert zwei Stunden.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Wanderung",
+    "english": "hike",
+    "article": "die",
+    "plural": "Wanderungen",
+    "category": "Travel & Holidays",
+    "example_sentence": "Am Sonntag machen wir eine kleine Wanderung.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Zelt",
+    "english": "tent",
+    "article": "das",
+    "plural": "Zelte",
+    "category": "Travel & Holidays",
+    "example_sentence": "Unser Zelt steht direkt neben dem See.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Campingplatz",
+    "english": "campsite",
+    "article": "der",
+    "plural": "Campingplätze",
+    "category": "Travel & Holidays",
+    "example_sentence": "Der Campingplatz liegt in der Nähe vom Strand.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Grenze",
+    "english": "border",
+    "article": "die",
+    "plural": "Grenzen",
+    "category": "Travel & Holidays",
+    "example_sentence": "An der Grenze zeigen wir unsere Ausweise.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Ausland",
+    "english": "abroad",
+    "article": "das",
+    "plural": null,
+    "category": "Travel & Holidays",
+    "example_sentence": "Meine Schwester arbeitet seit Mai im Ausland.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Flug",
+    "english": "flight",
+    "article": "der",
+    "plural": "Flüge",
+    "category": "Travel & Holidays",
+    "example_sentence": "Der Flug nach Rom dauert zwei Stunden.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Bordkarte",
+    "english": "boarding pass",
+    "article": "die",
+    "plural": "Bordkarten",
+    "category": "Travel & Holidays",
+    "example_sentence": "Die Bordkarte habe ich auf dem Handy.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Aussicht",
+    "english": "view",
+    "article": "die",
+    "plural": "Aussichten",
+    "category": "Travel & Holidays",
+    "example_sentence": "Vom Balkon haben wir eine schöne Aussicht.",
+    "level": "a2.1"
+  },
+  {
+    "german": "packen",
+    "english": "to pack",
+    "article": null,
+    "plural": null,
+    "category": "Travel & Holidays",
+    "example_sentence": "Ich packe heute Abend meinen Koffer.",
+    "level": "a2.1"
+  },
+  {
+    "german": "verreisen",
+    "english": "to go away, to travel (ist verreist)",
+    "article": null,
+    "plural": null,
+    "category": "Travel & Holidays",
+    "example_sentence": "Im August verreisen wir für zwei Wochen.",
+    "level": "a2.1"
+  },
+  {
+    "german": "abfliegen",
+    "english": "to depart (by plane) (ist abgeflogen)",
+    "article": null,
+    "plural": null,
+    "category": "Travel & Holidays",
+    "example_sentence": "Wir fliegen am Montag um sechs Uhr ab.",
+    "level": "a2.1"
+  },
+  {
+    "german": "landen",
+    "english": "to land (ist gelandet)",
+    "article": null,
+    "plural": null,
+    "category": "Travel & Holidays",
+    "example_sentence": "Das Flugzeug landet in zwanzig Minuten.",
+    "level": "a2.1"
+  },
+  {
+    "german": "mitnehmen",
+    "english": "to take along (hat mitgenommen)",
+    "article": null,
+    "plural": null,
+    "category": "Travel & Holidays",
+    "example_sentence": "Nimm bitte deine Bordkarte mit.",
+    "level": "a2.1"
+  },
+  {
+    "german": "erholsam",
+    "english": "relaxing",
+    "article": null,
+    "plural": null,
+    "category": "Travel & Holidays",
+    "example_sentence": "Der Urlaub am Meer war sehr erholsam.",
+    "level": "a2.1"
+  },
+  {
+    "german": "international",
+    "english": "international",
+    "article": null,
+    "plural": null,
+    "category": "Travel & Holidays",
+    "example_sentence": "Der Flughafen in Frankfurt ist international.",
+    "level": "a2.1"
+  },
+  {
+    "german": "weit",
+    "english": "far",
+    "article": null,
+    "plural": null,
+    "category": "Travel & Holidays",
+    "example_sentence": "Der Weg zum Hotel ist nicht weit.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Anzug",
+    "english": "suit",
+    "article": "der",
+    "plural": "Anzüge",
+    "category": "Clothing & Appearance",
+    "example_sentence": "Zur Hochzeit trägt mein Bruder einen Anzug.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Krawatte",
+    "english": "tie",
+    "article": "die",
+    "plural": "Krawatten",
+    "category": "Clothing & Appearance",
+    "example_sentence": "Die Krawatte passt gut zum Hemd.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Sandale",
+    "english": "sandal",
+    "article": "die",
+    "plural": "Sandalen",
+    "category": "Clothing & Appearance",
+    "example_sentence": "Im Sommer trage ich gerne Sandalen.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Unterwäsche",
+    "english": "underwear",
+    "article": "die",
+    "plural": null,
+    "category": "Clothing & Appearance",
+    "example_sentence": "Die Unterwäsche liegt in der oberen Schublade.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Schmuck",
+    "english": "jewellery",
+    "article": "der",
+    "plural": null,
+    "category": "Clothing & Appearance",
+    "example_sentence": "Meine Mutter trägt fast nie Schmuck.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Ring",
+    "english": "ring",
+    "article": "der",
+    "plural": "Ringe",
+    "category": "Clothing & Appearance",
+    "example_sentence": "Der Ring von meiner Oma ist alt.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Ohrring",
+    "english": "earring",
+    "article": "der",
+    "plural": "Ohrringe",
+    "category": "Clothing & Appearance",
+    "example_sentence": "Ich schenke ihr Ohrringe zum Geburtstag.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Brille",
+    "english": "glasses",
+    "article": "die",
+    "plural": "Brillen",
+    "category": "Clothing & Appearance",
+    "example_sentence": "Ohne Brille kann ich nicht gut lesen.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Frisur",
+    "english": "hairstyle",
+    "article": "die",
+    "plural": "Frisuren",
+    "category": "Clothing & Appearance",
+    "example_sentence": "Deine neue Frisur gefällt mir sehr gut.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Bart",
+    "english": "beard",
+    "article": "der",
+    "plural": "Bärte",
+    "category": "Clothing & Appearance",
+    "example_sentence": "Mein Kollege hat seit Januar einen Bart.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Kleidung",
+    "english": "clothing",
+    "article": "die",
+    "plural": null,
+    "category": "Clothing & Appearance",
+    "example_sentence": "Die Kleidung für den Urlaub liegt bereit.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Stoff",
+    "english": "fabric, material",
+    "article": "der",
+    "plural": "Stoffe",
+    "category": "Clothing & Appearance",
+    "example_sentence": "Der Stoff vom Kleid ist sehr weich.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Handtasche",
+    "english": "handbag",
+    "article": "die",
+    "plural": "Handtaschen",
+    "category": "Clothing & Appearance",
+    "example_sentence": "Der Schlüssel ist in meiner Handtasche.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Knopf",
+    "english": "button",
+    "article": "der",
+    "plural": "Knöpfe",
+    "category": "Clothing & Appearance",
+    "example_sentence": "An der Jacke fehlt ein Knopf.",
+    "level": "a2.1"
+  },
+  {
+    "german": "bügeln",
+    "english": "to iron",
+    "article": null,
+    "plural": null,
+    "category": "Clothing & Appearance",
+    "example_sentence": "Am Abend bügele ich meine Hemden.",
+    "level": "a2.1"
+  },
+  {
+    "german": "nähen",
+    "english": "to sew",
+    "article": null,
+    "plural": null,
+    "category": "Clothing & Appearance",
+    "example_sentence": "Meine Oma näht mir einen Rock.",
+    "level": "a2.1"
+  },
+  {
+    "german": "aussuchen",
+    "english": "to pick out, to choose",
+    "article": null,
+    "plural": null,
+    "category": "Clothing & Appearance",
+    "example_sentence": "Suchen Sie bitte eine Jacke aus.",
+    "level": "a2.1"
+  },
+  {
+    "german": "aussehen",
+    "english": "to look, to appear (sieht aus)",
+    "article": null,
+    "plural": null,
+    "category": "Clothing & Appearance",
+    "example_sentence": "Im blauen Kleid siehst du gut aus.",
+    "level": "a2.1"
+  },
+  {
+    "german": "elegant",
+    "english": "elegant",
+    "article": null,
+    "plural": null,
+    "category": "Clothing & Appearance",
+    "example_sentence": "Der schwarze Anzug ist sehr elegant.",
+    "level": "a2.1"
+  },
+  {
+    "german": "sportlich",
+    "english": "sporty, casual",
+    "article": null,
+    "plural": null,
+    "category": "Clothing & Appearance",
+    "example_sentence": "Meine neuen Schuhe sind sehr sportlich.",
+    "level": "a2.1"
+  },
+  {
+    "german": "hübsch",
+    "english": "pretty",
+    "article": null,
+    "plural": null,
+    "category": "Clothing & Appearance",
+    "example_sentence": "Deine neue Bluse ist wirklich hübsch.",
+    "level": "a2.1"
+  },
+  {
+    "german": "blond",
+    "english": "blond",
+    "article": null,
+    "plural": null,
+    "category": "Clothing & Appearance",
+    "example_sentence": "Meine kleine Schwester ist blond.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Großeltern",
+    "english": "grandparents (Pl.)",
+    "article": null,
+    "plural": null,
+    "category": "Family & Relationships",
+    "example_sentence": "Meine Großeltern wohnen in einem kleinen Dorf.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Enkelkind",
+    "english": "grandchild",
+    "article": "das",
+    "plural": "Enkelkinder",
+    "category": "Family & Relationships",
+    "example_sentence": "Meine Oma hat schon vier Enkelkinder.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Schwiegertochter",
+    "english": "daughter-in-law",
+    "article": "die",
+    "plural": "Schwiegertöchter",
+    "category": "Family & Relationships",
+    "example_sentence": "Seine Schwiegertochter kommt aus Polen.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Schwiegereltern",
+    "english": "parents-in-law (Pl.)",
+    "article": null,
+    "plural": null,
+    "category": "Family & Relationships",
+    "example_sentence": "Meine Schwiegereltern besuchen uns am Wochenende.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Ehepaar",
+    "english": "married couple",
+    "article": "das",
+    "plural": "Ehepaare",
+    "category": "Family & Relationships",
+    "example_sentence": "Das Ehepaar wohnt seit zwanzig Jahren hier.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Liebe",
+    "english": "love",
+    "article": "die",
+    "plural": null,
+    "category": "Family & Relationships",
+    "example_sentence": "Die Liebe zu meiner Familie ist groß.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Scheidung",
+    "english": "divorce",
+    "article": "die",
+    "plural": "Scheidungen",
+    "category": "Family & Relationships",
+    "example_sentence": "Nach der Scheidung lebt er allein.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Rentner",
+    "english": "pensioner (male)",
+    "article": "der",
+    "plural": "Rentner",
+    "category": "Family & Relationships",
+    "example_sentence": "Mein Nachbar ist seit Januar Rentner.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Hochzeitstag",
+    "english": "wedding anniversary",
+    "article": "der",
+    "plural": "Hochzeitstage",
+    "category": "Family & Relationships",
+    "example_sentence": "Meine Eltern haben morgen Hochzeitstag.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Kindheit",
+    "english": "childhood",
+    "article": "die",
+    "plural": null,
+    "category": "Family & Relationships",
+    "example_sentence": "Meine Kindheit war sehr schön.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Partnerin",
+    "english": "partner (female)",
+    "article": "die",
+    "plural": "Partnerinnen",
+    "category": "Family & Relationships",
+    "example_sentence": "Er kommt heute mit seiner Partnerin.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Familienfeier",
+    "english": "family celebration",
+    "article": "die",
+    "plural": "Familienfeiern",
+    "category": "Family & Relationships",
+    "example_sentence": "Am Samstag ist eine große Familienfeier.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Braut",
+    "english": "bride",
+    "article": "die",
+    "plural": "Bräute",
+    "category": "Family & Relationships",
+    "example_sentence": "Die Braut trägt ein weißes Kleid.",
+    "level": "a2.1"
+  },
+  {
+    "german": "heiraten",
+    "english": "to marry",
+    "article": null,
+    "plural": null,
+    "category": "Family & Relationships",
+    "example_sentence": "Meine Schwester heiratet im nächsten Sommer.",
+    "level": "a2.1"
+  },
+  {
+    "german": "streiten",
+    "english": "to argue (hat gestritten)",
+    "article": null,
+    "plural": null,
+    "category": "Family & Relationships",
+    "example_sentence": "Die Kinder streiten oft über das Spielzeug.",
+    "level": "a2.1"
+  },
+  {
+    "german": "aufwachsen",
+    "english": "to grow up (ist aufgewachsen)",
+    "article": null,
+    "plural": null,
+    "category": "Family & Relationships",
+    "example_sentence": "Ich bin in einem kleinen Dorf aufgewachsen.",
+    "level": "a2.1"
+  },
+  {
+    "german": "sorgen",
+    "english": "to take care of (sorgen für + Akk)",
+    "article": null,
+    "plural": null,
+    "category": "Family & Relationships",
+    "example_sentence": "Meine Großeltern sorgen oft für die Enkelkinder.",
+    "level": "a2.1"
+  },
+  {
+    "german": "aufpassen",
+    "english": "to look after, to watch (hat aufgepasst)",
+    "article": null,
+    "plural": null,
+    "category": "Family & Relationships",
+    "example_sentence": "Meine Mutter passt am Nachmittag auf die Kinder auf.",
+    "level": "a2.1"
+  },
+  {
+    "german": "verwandt",
+    "english": "related",
+    "article": null,
+    "plural": null,
+    "category": "Family & Relationships",
+    "example_sentence": "Wir sind mit dieser Familie verwandt.",
+    "level": "a2.1"
+  },
+  {
+    "german": "geschieden",
+    "english": "divorced",
+    "article": null,
+    "plural": null,
+    "category": "Family & Relationships",
+    "example_sentence": "Mein Onkel ist seit drei Jahren geschieden.",
+    "level": "a2.1"
+  },
+  {
+    "german": "schwanger",
+    "english": "pregnant",
+    "article": null,
+    "plural": null,
+    "category": "Family & Relationships",
+    "example_sentence": "Meine Kollegin ist im vierten Monat schwanger.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Anruf",
+    "english": "phone call",
+    "article": "der",
+    "plural": "Anrufe",
+    "category": "Media & Communication",
+    "example_sentence": "Ich bekomme jeden Tag viele Anrufe.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Zeitung",
+    "english": "newspaper",
+    "article": "die",
+    "plural": "Zeitungen",
+    "category": "Media & Communication",
+    "example_sentence": "Mein Vater liest jeden Morgen die Zeitung.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Brief",
+    "english": "letter",
+    "article": "der",
+    "plural": "Briefe",
+    "category": "Media & Communication",
+    "example_sentence": "Der Brief von der Bank kommt heute.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Briefmarke",
+    "english": "stamp (postage)",
+    "article": "die",
+    "plural": "Briefmarken",
+    "category": "Media & Communication",
+    "example_sentence": "Für die Postkarte brauche ich eine Briefmarke.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Umschlag",
+    "english": "envelope",
+    "article": "der",
+    "plural": "Umschläge",
+    "category": "Media & Communication",
+    "example_sentence": "Der Umschlag liegt neben dem Drucker.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Paket",
+    "english": "parcel, package",
+    "article": "das",
+    "plural": "Pakete",
+    "category": "Media & Communication",
+    "example_sentence": "Das Paket kommt morgen mit der Post.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Serie",
+    "english": "series, TV show",
+    "article": "die",
+    "plural": "Serien",
+    "category": "Media & Communication",
+    "example_sentence": "Diese Serie gefällt meiner Frau sehr.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Radio",
+    "english": "radio",
+    "article": "das",
+    "plural": "Radios",
+    "category": "Media & Communication",
+    "example_sentence": "Wir hören im Auto immer Radio.",
+    "level": "a2.1"
+  },
+  {
+    "german": "SMS",
+    "english": "text message",
+    "article": "die",
+    "plural": "SMS",
+    "category": "Media & Communication",
+    "example_sentence": "Ich schicke dir gleich eine SMS.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Video",
+    "english": "video",
+    "article": "das",
+    "plural": "Videos",
+    "category": "Media & Communication",
+    "example_sentence": "Mein Sohn schaut ein Video auf dem Handy.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Kamera",
+    "english": "camera",
+    "article": "die",
+    "plural": "Kameras",
+    "category": "Media & Communication",
+    "example_sentence": "Die Kamera von meinem Handy ist gut.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Absender",
+    "english": "sender",
+    "article": "der",
+    "plural": "Absender",
+    "category": "Media & Communication",
+    "example_sentence": "Auf dem Brief fehlt der Absender.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Empfänger",
+    "english": "recipient",
+    "article": "der",
+    "plural": "Empfänger",
+    "category": "Media & Communication",
+    "example_sentence": "Der Empfänger wohnt nicht mehr hier.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Lautsprecher",
+    "english": "loudspeaker",
+    "article": "der",
+    "plural": "Lautsprecher",
+    "category": "Media & Communication",
+    "example_sentence": "Der Lautsprecher im Zimmer ist sehr laut.",
+    "level": "a2.1"
+  },
+  {
+    "german": "tippen",
+    "english": "to type",
+    "article": null,
+    "plural": null,
+    "category": "Media & Communication",
+    "example_sentence": "Ich tippe die Nummer in mein Handy.",
+    "level": "a2.1"
+  },
+  {
+    "german": "löschen",
+    "english": "to delete",
+    "article": null,
+    "plural": null,
+    "category": "Media & Communication",
+    "example_sentence": "Bitte lösch die alten Fotos vom Handy.",
+    "level": "a2.1"
+  },
+  {
+    "german": "drucken",
+    "english": "to print",
+    "article": null,
+    "plural": null,
+    "category": "Media & Communication",
+    "example_sentence": "Kannst du mir das Formular drucken?",
+    "level": "a2.1"
+  },
+  {
+    "german": "senden",
+    "english": "to send (hat gesendet)",
+    "article": null,
+    "plural": null,
+    "category": "Media & Communication",
+    "example_sentence": "Ich sende Ihnen die Rechnung per Mail.",
+    "level": "a2.1"
+  },
+  {
+    "german": "zurückrufen",
+    "english": "to call back (hat zurückgerufen)",
+    "article": null,
+    "plural": null,
+    "category": "Media & Communication",
+    "example_sentence": "Der Chef ruft dich später zurück.",
+    "level": "a2.1"
+  },
+  {
+    "german": "digital",
+    "english": "digital",
+    "article": null,
+    "plural": null,
+    "category": "Media & Communication",
+    "example_sentence": "Meine Fahrkarte ist nur digital.",
+    "level": "a2.1"
+  },
+  {
+    "german": "kostenlos",
+    "english": "free of charge",
+    "article": null,
+    "plural": null,
+    "category": "Media & Communication",
+    "example_sentence": "Das Internet im Hotel ist kostenlos.",
+    "level": "a2.1"
+  },
+  {
+    "german": "telefonisch",
+    "english": "by phone",
+    "article": null,
+    "plural": null,
+    "category": "Media & Communication",
+    "example_sentence": "Sie erreichen uns telefonisch ab acht Uhr.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Weihnachten",
+    "english": "Christmas (usually without article)",
+    "article": null,
+    "plural": null,
+    "category": "Celebrations & Invitations",
+    "example_sentence": "An Weihnachten sind wir bei meinen Eltern.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Ostern",
+    "english": "Easter (usually without article)",
+    "article": null,
+    "plural": null,
+    "category": "Celebrations & Invitations",
+    "example_sentence": "Zu Ostern besuchen wir meine Großeltern.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Silvester",
+    "english": "New Year's Eve (usually without article)",
+    "article": null,
+    "plural": null,
+    "category": "Celebrations & Invitations",
+    "example_sentence": "An Silvester feiern wir bei Freunden.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Geschenk",
+    "english": "present, gift",
+    "article": "das",
+    "plural": "Geschenke",
+    "category": "Celebrations & Invitations",
+    "example_sentence": "Das Geschenk für Oma liegt im Auto.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Torte",
+    "english": "cake, gateau",
+    "article": "die",
+    "plural": "Torten",
+    "category": "Celebrations & Invitations",
+    "example_sentence": "Meine Mutter backt eine Torte für dich.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Kerze",
+    "english": "candle",
+    "article": "die",
+    "plural": "Kerzen",
+    "category": "Celebrations & Invitations",
+    "example_sentence": "Auf der Torte stehen dreißig Kerzen.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Luftballon",
+    "english": "balloon",
+    "article": "der",
+    "plural": "Luftballons",
+    "category": "Celebrations & Invitations",
+    "example_sentence": "Die Kinder bekommen alle einen Luftballon.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Blumenstrauß",
+    "english": "bunch of flowers",
+    "article": "der",
+    "plural": "Blumensträuße",
+    "category": "Celebrations & Invitations",
+    "example_sentence": "Ich bringe der Gastgeberin einen Blumenstrauß mit.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Glückwunsch",
+    "english": "congratulation",
+    "article": "der",
+    "plural": "Glückwünsche",
+    "category": "Celebrations & Invitations",
+    "example_sentence": "Herzlichen Glückwunsch zum Geburtstag!",
+    "level": "a2.1"
+  },
+  {
+    "german": "Zusage",
+    "english": "acceptance (of an invitation)",
+    "article": "die",
+    "plural": "Zusagen",
+    "category": "Celebrations & Invitations",
+    "example_sentence": "Wir haben schon zwanzig Zusagen bekommen.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Absage",
+    "english": "cancellation, refusal",
+    "article": "die",
+    "plural": "Absagen",
+    "category": "Celebrations & Invitations",
+    "example_sentence": "Leider bekomme ich viele Absagen.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Sekt",
+    "english": "sparkling wine",
+    "article": "der",
+    "plural": null,
+    "category": "Celebrations & Invitations",
+    "example_sentence": "Um Mitternacht trinken wir alle Sekt.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Gastgeberin",
+    "english": "hostess",
+    "article": "die",
+    "plural": "Gastgeberinnen",
+    "category": "Celebrations & Invitations",
+    "example_sentence": "Die Gastgeberin begrüßt alle Gäste an der Tür.",
+    "level": "a2.1"
+  },
+  {
+    "german": "Einladungskarte",
+    "english": "invitation card",
+    "article": "die",
+    "plural": "Einladungskarten",
+    "category": "Celebrations & Invitations",
+    "example_sentence": "Die Einladungskarte kommt morgen mit der Post.",
+    "level": "a2.1"
+  },
+  {
+    "german": "schenken",
+    "english": "to give (a present)",
+    "article": null,
+    "plural": null,
+    "category": "Celebrations & Invitations",
+    "example_sentence": "Ich schenke meinem Bruder ein Buch.",
+    "level": "a2.1"
+  },
+  {
+    "german": "dekorieren",
+    "english": "to decorate",
+    "article": null,
+    "plural": null,
+    "category": "Celebrations & Invitations",
+    "example_sentence": "Wir dekorieren das Zimmer für die Party.",
+    "level": "a2.1"
+  },
+  {
+    "german": "einpacken",
+    "english": "to wrap up (hat eingepackt)",
+    "article": null,
+    "plural": null,
+    "category": "Celebrations & Invitations",
+    "example_sentence": "Ich packe das Geschenk noch schnell ein.",
+    "level": "a2.1"
+  },
+  {
+    "german": "auspacken",
+    "english": "to unwrap (hat ausgepackt)",
+    "article": null,
+    "plural": null,
+    "category": "Celebrations & Invitations",
+    "example_sentence": "Die Kinder packen die Geschenke sofort aus.",
+    "level": "a2.1"
+  },
+  {
+    "german": "begrüßen",
+    "english": "to greet, to welcome",
+    "article": null,
+    "plural": null,
+    "category": "Celebrations & Invitations",
+    "example_sentence": "Der Gastgeber begrüßt uns sehr herzlich.",
+    "level": "a2.1"
+  },
+  {
+    "german": "fröhlich",
+    "english": "cheerful, happy",
+    "article": null,
+    "plural": null,
+    "category": "Celebrations & Invitations",
+    "example_sentence": "Auf der Feier waren alle sehr fröhlich.",
+    "level": "a2.1"
+  },
+  {
+    "german": "herzlich",
+    "english": "warm, cordial",
+    "article": null,
+    "plural": null,
+    "category": "Celebrations & Invitations",
+    "example_sentence": "Wir danken dir herzlich für die Einladung.",
+    "level": "a2.1"
+  },
+  {
+    "german": "lustig",
+    "english": "funny, fun",
+    "article": null,
+    "plural": null,
+    "category": "Celebrations & Invitations",
+    "example_sentence": "Der Abend bei euch war sehr lustig.",
+    "level": "a2.1"
+  }
+]

@@ -1,0 +1,10 @@
+MC key positions: [('s4#07', 2), ('s4#08', 0), ('s4#13', 1), ('s5#12', 3)]
+typed: 22 mc: 4
+title_en len 23 | page title len 45 | German Modal Verbs in the Past — A2.1 Grammar
+rules 9 [-1, 1, 2, 3, 4, 5, 6, 7, 99]
+common_mistakes rules [(7, 6)]
+
+3 issue(s):
+ - BANNED[Konjunktiv II] .rules[7].common_mistakes[0].wrong: …Ich könnte gestern nicht kommen.…
+ - BANNED[Konjunktiv II] .rules[7].common_mistakes[0].explanation_de: …mlaut. Es heißt konnte, nicht könnte.…
+ - BANNED[Konjunktiv II] .exercises[6].why_correct_de: …te. gekonnt ist ein Partizip. könnte hat einen Umlaut.…

@@ -1,0 +1,1185 @@
+{
+  "topic": {
+    "sub_level": "A2.1",
+    "topic_order": 11,
+    "title_en": "Modal Verbs in the Past",
+    "title_de": "Modalverben im Präteritum",
+    "slug": "modal-verbs-past",
+    "description_en": "Say what you could, had to, wanted to or were allowed to do: konnte, musste, wollte, durfte, sollte, mochte. The modal takes position 2 and the infinitive stays at the end. Goethe A2 needs these forms in Schreiben Teil 1 (the SMS apology) and Sprechen Teil 2.",
+    "description_de": "Lerne das Präteritum bei den sechs Modalverben. Das Modalverb steht auf Position 2, der Infinitiv am Ende. Du brauchst das im Goethe A2: Schreiben Teil 1, Sprechen Teil 2.",
+    "estimated_time": 22,
+    "icon": "book",
+    "is_published": true,
+    "prerequisite_slugs": [
+      "modal-verbs-intro",
+      "perfect-tense-haben"
+    ],
+    "related_slugs": [
+      "perfect-tense-sein",
+      "imperative-mood",
+      "temporal-prepositions"
+    ]
+  },
+  "rules": [
+    {
+      "rule_type": "introduction",
+      "title_en": "Modal Verbs in the Past: Introduction",
+      "title_de": "Einführung: Modalverben im Präteritum",
+      "content": {
+        "hook_de": "Ich konnte gestern nicht kommen. Ich musste zum Arzt gehen.",
+        "hook_en": "I couldn't come yesterday. I had to go to the doctor. German says both with one past modal form.",
+        "scenario_en": "Cancelling an appointment, explaining an absence, telling a friend what you had to do.",
+        "preview_note_en": "Six modal verbs, six past forms — and not one umlaut among them.",
+        "preview_highlight": "konnte, musste, wollte, durfte, sollte, mochte",
+        "preview_example_de": "Wir konnten gestern nicht kommen.",
+        "preview_example_en": "We couldn't come yesterday.",
+        "why_it_matters_en": "Goethe A2 Schreiben Teil 1 is often a short SMS: you cancel and say why. Sprechen Teil 2 (telling about yourself) and Hören Teil 1 (phone messages) use the same forms.",
+        "german_difference_en": "German keeps one word where English needs two or three: musste = had to, durfte = was allowed to.",
+        "english_comparison_en": "English swaps the word (can → could, must → had to). German keeps the modal, drops the umlaut and adds -te: können → konnte."
+      },
+      "order_index": -1,
+      "common_mistakes": null,
+      "memory_trick_en": null,
+      "memory_trick_de": null,
+      "formal_note_en": null,
+      "formal_note_de": null,
+      "key_insight_en": null,
+      "key_insight_de": null
+    },
+    {
+      "rule_type": "table",
+      "title_en": "The Six Modal Verbs in the Präteritum",
+      "title_de": "Die sechs Modalverben im Präteritum",
+      "content": {
+        "type": "case_table",
+        "headers": [
+          "Person",
+          "können",
+          "müssen",
+          "wollen",
+          "dürfen",
+          "sollen",
+          "mögen"
+        ],
+        "rows": [
+          [
+            "ich",
+            "konnte",
+            "musste",
+            "wollte",
+            "durfte",
+            "sollte",
+            "mochte"
+          ],
+          [
+            "du",
+            "konntest",
+            "musstest",
+            "wolltest",
+            "durftest",
+            "solltest",
+            "mochtest"
+          ],
+          [
+            "er/sie/es",
+            "konnte",
+            "musste",
+            "wollte",
+            "durfte",
+            "sollte",
+            "mochte"
+          ],
+          [
+            "wir",
+            "konnten",
+            "mussten",
+            "wollten",
+            "durften",
+            "sollten",
+            "mochten"
+          ],
+          [
+            "ihr",
+            "konntet",
+            "musstet",
+            "wolltet",
+            "durftet",
+            "solltet",
+            "mochtet"
+          ],
+          [
+            "sie/Sie",
+            "konnten",
+            "mussten",
+            "wollten",
+            "durften",
+            "sollten",
+            "mochten"
+          ]
+        ],
+        "highlight_row": -1,
+        "description_de": "ich und er/sie/es haben keine Endung. Das kennst du von war und hatte.",
+        "description_en": "ich and er/sie/es share one form, exactly like war and hatte. All six modals lose the umlaut, and mögen also swaps g for ch: mochte."
+      },
+      "order_index": 1,
+      "common_mistakes": null,
+      "memory_trick_en": "No umlaut in the past — that is the fastest check: konnte, musste, durfte, mochte.",
+      "memory_trick_de": "Kein Umlaut im Präteritum: konnte, musste, durfte, mochte.",
+      "formal_note_en": null,
+      "formal_note_de": null,
+      "key_insight_en": "möchte has no past form of its own. Use wollte for it.",
+      "key_insight_de": "möchte hat kein Präteritum. Nimm dafür wollte."
+    },
+    {
+      "rule_type": "pattern",
+      "title_en": "How to Build the Präteritum",
+      "title_de": "So bildest du das Präteritum",
+      "content": {
+        "type": "steps",
+        "steps": [
+          {
+            "step": 1,
+            "title_de": "Nimm den Infinitiv ohne -en.",
+            "title_en": "Take the infinitive without -en.",
+            "detail_de": "können → könn-, müssen → müss-, wollen → woll-.",
+            "detail_en": "Start from the infinitive and cut the -en: können → könn-, müssen → müss-, wollen → woll-."
+          },
+          {
+            "step": 2,
+            "title_de": "Streiche den Umlaut.",
+            "title_en": "Drop the umlaut.",
+            "detail_de": "könn- → konn-, müss- → muss-, dürf- → durf-. wollen und sollen haben keinen Umlaut.",
+            "detail_en": "könn- → konn-, müss- → muss-, dürf- → durf-. wollen and sollen have no umlaut to lose, and mögen goes one step further: mög- → moch-."
+          },
+          {
+            "step": 3,
+            "title_de": "Hänge -te an.",
+            "title_en": "Add -te.",
+            "detail_de": "konn + te = konnte. muss + te = musste. moch + te = mochte.",
+            "detail_en": "konn + te = konnte, muss + te = musste, moch + te = mochte. This -te is the past signal."
+          },
+          {
+            "step": 4,
+            "title_de": "Setze die Endung an.",
+            "title_en": "Add the personal ending.",
+            "detail_de": "ich/er konnte, du konntest, wir/sie konnten, ihr konntet.",
+            "detail_en": "ich/er konnte, du konntest, wir/sie konnten, ihr konntet — the same endings hatte takes."
+          }
+        ],
+        "description_de": "Vier Schritte, immer gleich. Nur mögen ändert g zu ch.",
+        "description_en": "Four steps, always in the same order. Only mögen changes g to ch (mochte)."
+      },
+      "order_index": 2,
+      "common_mistakes": null,
+      "memory_trick_en": null,
+      "memory_trick_de": null,
+      "formal_note_en": null,
+      "formal_note_de": null,
+      "key_insight_en": "hatte is the model: hatte / hattest / hatten / hattet — konnte works identically.",
+      "key_insight_de": "hatte ist das Muster: hatte, hattest, hatten, hattet. konnte funktioniert genauso."
+    },
+    {
+      "rule_type": "table",
+      "title_en": "Präsens and Präteritum: the Satzklammer Stays",
+      "title_de": "Präsens und Präteritum: die Satzklammer bleibt",
+      "content": {
+        "type": "case_table",
+        "headers": [
+          "Präsens",
+          "Präteritum",
+          "English"
+        ],
+        "rows": [
+          [
+            "Ich muss arbeiten.",
+            "Ich musste arbeiten.",
+            "I have to work. / I had to work."
+          ],
+          [
+            "Wir können nicht kommen.",
+            "Wir konnten nicht kommen.",
+            "We can't come. / We couldn't come."
+          ],
+          [
+            "Darfst du mitkommen?",
+            "Durftest du mitkommen?",
+            "Are you allowed to come along? / Were you allowed to come along?"
+          ],
+          [
+            "Ihr sollt hier warten.",
+            "Ihr solltet hier warten.",
+            "You are / were supposed to wait here."
+          ],
+          [
+            "Ich will Deutsch lernen.",
+            "Ich wollte Deutsch lernen.",
+            "I want / wanted to learn German."
+          ],
+          [
+            "Ich möchte einen Termin haben.",
+            "Ich wollte einen Termin haben.",
+            "I would like to have an appointment. / I wanted to have an appointment."
+          ]
+        ],
+        "highlight_row": -1,
+        "description_de": "Nur das Modalverb ändert sich. Der Infinitiv bleibt am Ende.",
+        "description_en": "Only the modal changes shape. Position 2 holds the modal, the infinitive closes the bracket at the end — the same Satzklammer you already use in the present."
+      },
+      "order_index": 3,
+      "common_mistakes": null,
+      "memory_trick_en": null,
+      "memory_trick_de": null,
+      "formal_note_en": null,
+      "formal_note_de": null,
+      "key_insight_en": "A modal can stand without an infinitive when the action is obvious: Ich musste zum Arzt. (gehen is understood.)",
+      "key_insight_de": "Ohne Infinitiv geht auch: Ich musste zum Arzt. Das Verb gehen fehlt hier."
+    },
+    {
+      "rule_type": "explanation_comparison",
+      "title_en": "What Each Past Modal Means",
+      "title_de": "Die Bedeutungen im Präteritum",
+      "content": {
+        "type": "case_table",
+        "headers": [
+          "Form",
+          "English meaning",
+          "Beispiel"
+        ],
+        "rows": [
+          [
+            "konnte",
+            "was able to, could",
+            "Ich konnte gestern nicht arbeiten."
+          ],
+          [
+            "musste",
+            "had to",
+            "Wir mussten lange warten."
+          ],
+          [
+            "durfte",
+            "was allowed to",
+            "Ihr durftet hier nicht parken."
+          ],
+          [
+            "wollte",
+            "wanted to",
+            "Sie wollte nach Hause."
+          ],
+          [
+            "sollte",
+            "was supposed to",
+            "Ich sollte um acht Uhr da sein."
+          ],
+          [
+            "mochte",
+            "liked",
+            "Früher mochte er keinen Käse."
+          ],
+          [
+            "wollte (für möchte)",
+            "wanted (to have)",
+            "Ich wollte einen Termin haben."
+          ]
+        ],
+        "highlight_row": -1,
+        "description_de": "musste: es war nötig. durfte: es war erlaubt. wollte: das war dein Plan.",
+        "description_en": "musste = necessity, durfte = permission, wollte = your own plan, sollte = someone else's instruction, mochte = what you liked."
+      },
+      "order_index": 4,
+      "common_mistakes": null,
+      "memory_trick_en": null,
+      "memory_trick_de": null,
+      "formal_note_en": null,
+      "formal_note_de": null,
+      "key_insight_en": "mochte and möchte look alike but are different tenses: mochte is past, möchte is present.",
+      "key_insight_de": "mochte ist Präteritum. möchte ist Gegenwart. Nur ein Buchstabe, zwei Zeiten."
+    },
+    {
+      "rule_type": "tip",
+      "title_en": "war, hatte and Why Modals Skip the Perfekt",
+      "title_de": "war, hatte und kein Perfekt",
+      "content": {
+        "content_de": "war und hatte kennst du schon. Sie passen gut zu den Modalverben. Ich war krank. Ich konnte nicht arbeiten. Für Modalverben nimmst du im Alltag das Präteritum. Das Perfekt von Modalverben lernst du später.",
+        "content_en": "You already know war and hatte, and they pair naturally with the past modals: Ich war krank. Ich konnte nicht arbeiten. For modal verbs, everyday German uses the Präteritum rather than the Perfekt; the Perfekt form of a modal waits until B1."
+      },
+      "order_index": 5,
+      "common_mistakes": null,
+      "memory_trick_en": null,
+      "memory_trick_de": null,
+      "formal_note_en": "In the Goethe A2 SMS (Schreiben Teil 1) this pair does most of the work: one sentence with war or hatte, one with a past modal.",
+      "formal_note_de": "In einer SMS schreibst du: Ich war krank. Ich konnte nicht kommen.",
+      "key_insight_en": "In everyday German you simply say Ich musste; the Perfekt of a modal waits until B1.",
+      "key_insight_de": "Im Alltag sagst du einfach: Ich musste."
+    },
+    {
+      "rule_type": "dialogue",
+      "title_en": "Dialogue: Calling the Office",
+      "title_de": "Dialog: eine Absage am Telefon",
+      "content": {
+        "speakers": [
+          "Frau Klein",
+          "Herr Bauer"
+        ],
+        "exchanges": [
+          {
+            "speaker": "Frau Klein",
+            "text_de": "Guten Morgen, Herr Bauer. Ich konnte gestern nicht kommen.",
+            "text_en": "Good morning, Herr Bauer. I couldn't come yesterday.",
+            "grammar_note": "konnte — können im Präteritum, Infinitiv am Ende"
+          },
+          {
+            "speaker": "Herr Bauer",
+            "text_de": "Kein Problem. Waren Sie krank?",
+            "text_en": "No problem. Were you ill?",
+            "grammar_note": "waren — sein im Präteritum"
+          },
+          {
+            "speaker": "Frau Klein",
+            "text_de": "Ja, ich hatte Fieber. Ich musste zum Arzt.",
+            "text_en": "Yes, I had a fever. I had to go to the doctor.",
+            "grammar_note": "musste — müssen ohne Infinitiv (gehen fehlt)"
+          },
+          {
+            "speaker": "Herr Bauer",
+            "text_de": "Und der Termin? Sie wollten mit Frau Meier sprechen.",
+            "text_en": "And the appointment? You wanted to speak to Frau Meier.",
+            "grammar_note": "wollten — wollen im Präteritum, Sie-Form"
+          },
+          {
+            "speaker": "Frau Klein",
+            "text_de": "Ja, ich konnte sie leider nicht anrufen.",
+            "text_en": "Yes, unfortunately I couldn't call her.",
+            "grammar_note": "konnte + anrufen: der Infinitiv steht am Ende"
+          },
+          {
+            "speaker": "Herr Bauer",
+            "text_de": "Alles gut. Ich konnte ihr alles sagen.",
+            "text_en": "All fine. I was able to tell her everything.",
+            "grammar_note": "konnte — hier ohne nicht, mit Dativpronomen ihr"
+          }
+        ],
+        "context_de": "Frau Klein ruft im Büro an. Sie war gestern krank.",
+        "context_en": "Frau Klein phones the office. She was ill yesterday.",
+        "grammar_focus_en": "Every past modal here (konnte, musste, wollten) sits in position 2, with the infinitive at the very end — or with no infinitive at all: Ich musste zum Arzt. Hören Teil 1 of the Goethe A2 exam plays exactly this kind of short phone message."
+      },
+      "order_index": 6,
+      "common_mistakes": null,
+      "memory_trick_en": null,
+      "memory_trick_de": null,
+      "formal_note_en": null,
+      "formal_note_de": null,
+      "key_insight_en": "Hören Teil 1 plays short phone messages just like this one; Sprechen Teil 2 asks you to tell the same story yourself.",
+      "key_insight_de": "So klingt Hören Teil 1: eine Nachricht am Telefon."
+    },
+    {
+      "rule_type": "common_mistakes",
+      "title_en": "Six Mistakes to Avoid",
+      "title_de": "Sechs Fehler im Präteritum",
+      "content": {
+        "content_de": "Diese sechs Fehler kommen oft. Lies die Beispiele langsam.",
+        "content_en": "These six come up again and again. Read the pairs slowly and compare them."
+      },
+      "order_index": 7,
+      "common_mistakes": [
+        {
+          "wrong": "Ich könnte gestern nicht kommen.",
+          "correct": "Ich konnte gestern nicht kommen.",
+          "explanation_de": "Das Präteritum hat keinen Umlaut. Es heißt konnte, nicht könnte.",
+          "explanation_en": "The past form has no umlaut: konnte, not könnte."
+        },
+        {
+          "wrong": "Ich musste gestern gearbeitet.",
+          "correct": "Ich musste gestern arbeiten.",
+          "explanation_de": "Nach dem Modalverb steht der Infinitiv. Kein Partizip II.",
+          "explanation_en": "A modal takes an infinitive (arbeiten), never a participle (gearbeitet)."
+        },
+        {
+          "wrong": "Wir wollten gehen nach Hause.",
+          "correct": "Wir wollten nach Hause gehen.",
+          "explanation_de": "Der Infinitiv steht ganz am Ende. Das ist die Satzklammer.",
+          "explanation_en": "The infinitive closes the bracket at the very end of the sentence."
+        },
+        {
+          "wrong": "Du konntst nicht kommen.",
+          "correct": "Du konntest nicht kommen.",
+          "explanation_de": "Bei du kommt nach -te noch ein -st: konntest, musstest.",
+          "explanation_en": "The du-form adds -st after the -te: konntest, musstest, wolltest."
+        },
+        {
+          "wrong": "Ich habe gestern gemusst arbeiten.",
+          "correct": "Ich musste gestern arbeiten.",
+          "explanation_de": "Diese Form gibt es nicht. Nimm das Präteritum: musste.",
+          "explanation_en": "That form does not exist. Use the Präteritum: musste."
+        },
+        {
+          "wrong": "Früher möchte ich keinen Tee.",
+          "correct": "Früher mochte ich keinen Tee.",
+          "explanation_de": "möchte ist Gegenwart. Das Präteritum von mögen ist mochte.",
+          "explanation_en": "möchte is present. The past of mögen is mochte."
+        }
+      ],
+      "memory_trick_en": null,
+      "memory_trick_de": null,
+      "formal_note_en": null,
+      "formal_note_de": null,
+      "key_insight_en": null,
+      "key_insight_de": null
+    },
+    {
+      "rule_type": "summary",
+      "title_en": "Quick Reference",
+      "title_de": "Kurzübersicht",
+      "content": {
+        "points": [
+          "Präteritum: Infinitiv ohne -en, ohne Umlaut, plus -te. können → konnte.",
+          "Endungen: ich/er konnte, du konntest, wir/sie konnten, ihr konntet.",
+          "Die sechs Formen: konnte, musste, wollte, durfte, sollte, mochte.",
+          "mögen ändert g zu ch: mochte.",
+          "möchte hat kein Präteritum. Nimm wollte.",
+          "Das Modalverb steht auf Position 2. Der Infinitiv steht am Ende.",
+          "Ohne Infinitiv geht auch: Ich musste zum Arzt.",
+          "war und hatte passen dazu: Ich war krank. Ich konnte nicht kommen.",
+          "Für Modalverben nimmst du das Präteritum, nicht das Perfekt.",
+          "Prüfung: Schreiben Teil 1 (SMS), Sprechen Teil 2, Hören Teil 1."
+        ]
+      },
+      "order_index": 99,
+      "common_mistakes": null,
+      "memory_trick_en": null,
+      "memory_trick_de": null,
+      "formal_note_en": null,
+      "formal_note_de": null,
+      "key_insight_en": null,
+      "key_insight_de": null
+    }
+  ],
+  "examples": [
+    {
+      "sentence_de": "Ich konnte gestern nicht kommen.",
+      "sentence_en": "I couldn't come yesterday.",
+      "grammar_highlight": "konnte",
+      "explanation_en": "konnte is the Präteritum of können: no umlaut, plus -te. The infinitive kommen closes the sentence.",
+      "explanation_de": "konnte ist das Präteritum von können. Der Infinitiv kommen steht am Ende.",
+      "word_breakdown": {
+        "Ich": "I",
+        "konnte": "could, was able to (können, Präteritum)",
+        "gestern": "yesterday",
+        "nicht": "not",
+        "kommen": "to come (infinitive)"
+      },
+      "difficulty": 1,
+      "category": "basic",
+      "order_index": 1,
+      "audio_url": null
+    },
+    {
+      "sentence_de": "Ich musste zum Arzt gehen.",
+      "sentence_en": "I had to go to the doctor.",
+      "grammar_highlight": "musste",
+      "explanation_en": "musste is the Präteritum of müssen. zum Arzt uses the dative preposition zu you already know.",
+      "explanation_de": "musste ist das Präteritum von müssen. Der Infinitiv gehen steht am Ende.",
+      "word_breakdown": {
+        "Ich": "I",
+        "musste": "had to (müssen, Präteritum)",
+        "zum": "to the (zu + dem)",
+        "Arzt": "doctor",
+        "gehen": "to go (infinitive)"
+      },
+      "difficulty": 1,
+      "category": "basic",
+      "order_index": 2,
+      "audio_url": null
+    },
+    {
+      "sentence_de": "Wir wollten am Samstag Fußball spielen.",
+      "sentence_en": "We wanted to play football on Saturday.",
+      "grammar_highlight": "wollten",
+      "explanation_en": "wollen has no umlaut, so only -te plus the wir-ending -n is added: wollten.",
+      "explanation_de": "wollen hat keinen Umlaut. Du hängst nur -te und die Endung an.",
+      "word_breakdown": {
+        "Wir": "we",
+        "wollten": "wanted to (wollen, Präteritum)",
+        "am": "on (an + dem)",
+        "Samstag": "Saturday",
+        "Fußball": "football, soccer",
+        "spielen": "to play (infinitive)"
+      },
+      "difficulty": 1,
+      "category": "basic",
+      "order_index": 3,
+      "audio_url": null
+    },
+    {
+      "sentence_de": "Durftet ihr im Unterricht telefonieren?",
+      "sentence_en": "Were you allowed to make phone calls in class?",
+      "grammar_highlight": "Durftet",
+      "explanation_en": "In a question the modal comes first: Durftet ihr …? The ihr-ending is -t.",
+      "explanation_de": "In der Frage steht das Modalverb zuerst. Die ihr-Endung ist -t.",
+      "word_breakdown": {
+        "Durftet": "were allowed to (dürfen, Präteritum, ihr)",
+        "ihr": "you (plural)",
+        "im": "in the (in + dem)",
+        "Unterricht": "class, lesson",
+        "telefonieren": "to make a phone call"
+      },
+      "difficulty": 2,
+      "category": "intermediate",
+      "order_index": 4,
+      "audio_url": null
+    },
+    {
+      "sentence_de": "Ich sollte um acht Uhr im Büro sein.",
+      "sentence_en": "I was supposed to be at the office at eight.",
+      "grammar_highlight": "sollte",
+      "explanation_en": "sollte means somebody else set the plan. sein stays as an infinitive at the end.",
+      "explanation_de": "sollte heißt: eine andere Person sagt das. Der Infinitiv sein steht am Ende.",
+      "word_breakdown": {
+        "Ich": "I",
+        "sollte": "was supposed to (sollen, Präteritum)",
+        "um": "at",
+        "acht": "eight",
+        "Uhr": "o'clock",
+        "im": "in the (in + dem)",
+        "Büro": "office",
+        "sein": "to be (infinitive)"
+      },
+      "difficulty": 2,
+      "category": "intermediate",
+      "order_index": 5,
+      "audio_url": null
+    },
+    {
+      "sentence_de": "Früher mochte ich keinen Kaffee.",
+      "sentence_en": "I didn't like coffee back then.",
+      "grammar_highlight": "mochte",
+      "explanation_en": "mögen changes g to ch: mochte. Früher in position 1 pushes ich behind the verb.",
+      "explanation_de": "mögen ändert g zu ch: mochte. Nach Früher steht das Verb, dann ich.",
+      "word_breakdown": {
+        "Früher": "back then, in the past",
+        "mochte": "liked (mögen, Präteritum)",
+        "ich": "I",
+        "keinen": "no, not any (Akkusativ, maskulin)",
+        "Kaffee": "coffee"
+      },
+      "difficulty": 2,
+      "category": "intermediate",
+      "order_index": 6,
+      "audio_url": null
+    },
+    {
+      "sentence_de": "Musstest du gestern lange arbeiten?",
+      "sentence_en": "Did you have to work a long time yesterday?",
+      "grammar_highlight": "Musstest",
+      "explanation_en": "The du-form adds -st after -te: musstest. In a yes/no question the modal opens the sentence.",
+      "explanation_de": "Bei du kommt nach -te noch ein -st: musstest. In der Frage steht das Verb zuerst.",
+      "word_breakdown": {
+        "Musstest": "did you have to (müssen, Präteritum, du)",
+        "du": "you",
+        "gestern": "yesterday",
+        "lange": "for a long time",
+        "arbeiten": "to work (infinitive)"
+      },
+      "difficulty": 2,
+      "category": "intermediate",
+      "order_index": 7,
+      "audio_url": null
+    },
+    {
+      "sentence_de": "Ich hatte keine Zeit. Ich musste arbeiten.",
+      "sentence_en": "I had no time. I had to work.",
+      "grammar_highlight": "musste",
+      "explanation_en": "hatte and a past modal are the standard pair in a Goethe A2 SMS (Schreiben Teil 1).",
+      "explanation_de": "hatte und ein Modalverb im Präteritum passen gut zusammen. Das brauchst du in der SMS.",
+      "word_breakdown": {
+        "Ich": "I",
+        "hatte": "had (haben, Präteritum)",
+        "keine": "no, not any (feminine)",
+        "Zeit": "time",
+        "musste": "had to (müssen, Präteritum)",
+        "arbeiten": "to work (infinitive)"
+      },
+      "difficulty": 2,
+      "category": "exam",
+      "order_index": 8,
+      "audio_url": null
+    },
+    {
+      "sentence_de": "Sie wollte nach Hause.",
+      "sentence_en": "She wanted to go home.",
+      "grammar_highlight": "wollte",
+      "explanation_en": "No infinitive is needed here: gehen is obvious from nach Hause.",
+      "explanation_de": "Hier fehlt der Infinitiv. Bei nach Hause versteht man gehen.",
+      "word_breakdown": {
+        "Sie": "she",
+        "wollte": "wanted to (wollen, Präteritum)",
+        "nach": "to",
+        "Hause": "home (nach Hause = home, with movement)"
+      },
+      "difficulty": 3,
+      "category": "complex",
+      "order_index": 9,
+      "audio_url": null
+    },
+    {
+      "sentence_de": "Wir konnten die Wohnung nicht bezahlen.",
+      "sentence_en": "We couldn't pay for the apartment.",
+      "grammar_highlight": "konnten",
+      "explanation_en": "The wir-form ends in -n: konnten. nicht stands before the infinitive at the end.",
+      "explanation_de": "Die wir-Form endet auf -n: konnten. nicht steht vor dem Infinitiv.",
+      "word_breakdown": {
+        "Wir": "we",
+        "konnten": "could, were able to (können, Präteritum, wir)",
+        "die": "the (feminine)",
+        "Wohnung": "apartment, flat",
+        "nicht": "not",
+        "bezahlen": "to pay (infinitive)"
+      },
+      "difficulty": 3,
+      "category": "complex",
+      "order_index": 10,
+      "audio_url": null
+    }
+  ],
+  "exercises": [
+    {
+      "exercise_type": "fill_blank",
+      "question_de": "Ich ___ dich gestern nicht anrufen. (können, Präteritum, ich)",
+      "question_en": "Fill in the past modal: I couldn't call you yesterday. (verb: können, Präteritum, ich)",
+      "options": null,
+      "correct_answer": "konnte",
+      "acceptable_answers": [
+        "konnte"
+      ],
+      "explanation_en": "können → konn- (no umlaut) + -te → konnte. ich takes no extra ending.",
+      "explanation_de": "können → konn- ohne Umlaut, plus -te: konnte. ich hat keine Endung.",
+      "hint": null,
+      "why_correct_en": "The infinitive of the separable verb anrufen stays whole and closes the sentence.",
+      "why_correct_de": "Der Infinitiv anrufen bleibt ein Wort und steht am Ende.",
+      "difficulty": 1,
+      "stage": 4,
+      "order_index": 1,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "fill_blank",
+      "question_de": "___ du gestern früh aufstehen? (müssen, Präteritum, du)",
+      "question_en": "Fill in the past modal at the start of the question: Did you have to get up early yesterday? (verb: müssen, Präteritum, du)",
+      "options": null,
+      "correct_answer": "Musstest",
+      "acceptable_answers": [
+        "Musstest",
+        "musstest"
+      ],
+      "explanation_en": "müssen → muss- + -te + du-ending -st → musstest. In a question it opens the sentence.",
+      "explanation_de": "müssen → muss- plus -te, dann bei du noch ein -st: musstest.",
+      "hint": null,
+      "why_correct_en": "The du-form is musstest; aufstehen stays an infinitive at the end.",
+      "why_correct_de": "Die du-Form heißt musstest. Der Infinitiv aufstehen steht am Ende.",
+      "difficulty": 1,
+      "stage": 4,
+      "order_index": 2,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "fill_blank",
+      "question_de": "Er ___ am Samstag Fußball spielen. (wollen, Präteritum, er)",
+      "question_en": "Fill in the past modal: He wanted to play football on Saturday. (verb: wollen, Präteritum, er)",
+      "options": null,
+      "correct_answer": "wollte",
+      "acceptable_answers": [
+        "wollte"
+      ],
+      "explanation_en": "wollen has no umlaut: woll- + -te → wollte. er/sie/es takes no extra ending.",
+      "explanation_de": "wollen hat keinen Umlaut: woll- plus -te. er/sie/es hat keine Endung.",
+      "hint": null,
+      "why_correct_en": "The er-form and the ich-form are always identical: wollte.",
+      "why_correct_de": "Die er-Form und die ich-Form sind immer gleich: wollte.",
+      "difficulty": 1,
+      "stage": 4,
+      "order_index": 3,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "fill_blank",
+      "question_de": "Ihr ___ nicht mit dem Auto kommen. (dürfen, Präteritum, ihr)",
+      "question_en": "Fill in the past modal: You were not allowed to come by car. (verb: dürfen, Präteritum, ihr)",
+      "options": null,
+      "correct_answer": "durftet",
+      "acceptable_answers": [
+        "durftet"
+      ],
+      "explanation_en": "dürfen → durf- (umlaut gone) + -te + ihr-ending -t → durftet.",
+      "explanation_de": "dürfen → durf- ohne Umlaut, plus -te und die ihr-Endung -t: durftet.",
+      "hint": null,
+      "why_correct_en": "The ihr-form ends in -t: durftet, konntet, musstet.",
+      "why_correct_de": "Die ihr-Form endet auf -t: durftet, konntet, musstet.",
+      "difficulty": 2,
+      "stage": 4,
+      "order_index": 4,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "fill_blank",
+      "question_de": "Wir ___ um neun Uhr im Kurs sein. (sollen, Präteritum, wir)",
+      "question_en": "Fill in the past modal: We were supposed to be in class at nine. (verb: sollen, Präteritum, wir)",
+      "options": null,
+      "correct_answer": "sollten",
+      "acceptable_answers": [
+        "sollten"
+      ],
+      "explanation_en": "sollen has no umlaut: soll- + -te + -n → sollten. sein stays at the end.",
+      "explanation_de": "sollen hat keinen Umlaut: soll- plus -te und -n. Der Infinitiv sein steht am Ende.",
+      "hint": null,
+      "why_correct_en": "sollten means somebody else set the time — a plan, not your own wish.",
+      "why_correct_de": "sollten heißt: eine andere Person macht den Plan.",
+      "difficulty": 2,
+      "stage": 4,
+      "order_index": 5,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "fill_blank",
+      "question_de": "Wir ___ den Film sehr. (mögen, Präteritum, wir)",
+      "question_en": "Fill in the past modal: We liked the film a lot. (verb: mögen, Präteritum, wir)",
+      "options": null,
+      "correct_answer": "mochten",
+      "acceptable_answers": [
+        "mochten"
+      ],
+      "explanation_en": "mögen is the only modal that swaps a consonant: mög- → moch-, then -te plus the wir-ending -n.",
+      "explanation_de": "Bei mögen wird g zu ch: moch-. Dazu kommen -te und die wir-Endung -n.",
+      "hint": null,
+      "why_correct_en": "mochten needs no infinitive here: mögen takes a plain object, den Film.",
+      "why_correct_de": "mochten braucht hier keinen Infinitiv. mögen nimmt ein Objekt: den Film.",
+      "difficulty": 2,
+      "stage": 4,
+      "order_index": 6,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "multiple_choice",
+      "question_de": "Ich ___ das Fenster nicht öffnen. (können, Präteritum, ich)",
+      "question_en": "Which form is correct? I couldn't open the window. (verb: können, Präteritum, ich)",
+      "options": [
+        "könnte",
+        "konnt",
+        "konnte",
+        "gekonnt"
+      ],
+      "correct_answer": "konnte",
+      "acceptable_answers": null,
+      "explanation_en": "The Präteritum drops the umlaut and adds -te: konnte.",
+      "explanation_de": "Das Präteritum hat keinen Umlaut und endet auf -te: konnte.",
+      "hint": null,
+      "why_correct_en": "konnt is missing the -te, gekonnt is a participle, and könnte carries an umlaut the Präteritum never has.",
+      "why_correct_de": "konnt hat kein -te. gekonnt ist ein Partizip. könnte hat einen Umlaut.",
+      "difficulty": 2,
+      "stage": 4,
+      "order_index": 7,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "multiple_choice",
+      "question_de": "Wann ___ du nach Hause? (müssen, Präteritum, du)",
+      "question_en": "Which form is correct? When did you have to go home? (verb: müssen, Präteritum, du)",
+      "options": [
+        "musstest",
+        "müsstest",
+        "musste",
+        "mustest"
+      ],
+      "correct_answer": "musstest",
+      "acceptable_answers": null,
+      "explanation_en": "The du-form of müssen in the Präteritum is musstest — two s, then -test.",
+      "explanation_de": "Die du-Form von müssen heißt musstest. Zwei s, dann -test.",
+      "hint": null,
+      "why_correct_en": "musste is the ich/er-form, müsstest keeps an umlaut, and mustest is missing an s.",
+      "why_correct_de": "musste ist die ich-Form. müsstest hat einen Umlaut. mustest hat nur ein s.",
+      "difficulty": 2,
+      "stage": 4,
+      "order_index": 8,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "fill_blank",
+      "question_de": "Ich ___ gestern krank. Ich konnte nicht kommen. (sein, Präteritum, ich)",
+      "question_en": "Fill in the past of sein: I was ill yesterday. I couldn't come. (verb: sein, Präteritum, ich)",
+      "options": null,
+      "correct_answer": "war",
+      "acceptable_answers": [
+        "war"
+      ],
+      "explanation_en": "war is the Präteritum of sein and the natural partner of a past modal.",
+      "explanation_de": "war ist das Präteritum von sein. Es passt gut zu einem Modalverb.",
+      "hint": null,
+      "why_correct_en": "Reason first, then the modal: Ich war krank. Ich konnte nicht kommen.",
+      "why_correct_de": "Zuerst der Grund, dann das Modalverb: Ich war krank. Ich konnte nicht kommen.",
+      "difficulty": 1,
+      "stage": 4,
+      "order_index": 9,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "fill_blank",
+      "question_de": "Wir ___ keine Zeit. Wir mussten arbeiten. (haben, Präteritum, wir)",
+      "question_en": "Fill in the past of haben: We had no time. We had to work. (verb: haben, Präteritum, wir)",
+      "options": null,
+      "correct_answer": "hatten",
+      "acceptable_answers": [
+        "hatten"
+      ],
+      "explanation_en": "hatten is the wir-form of the Präteritum of haben — the same endings the modals take.",
+      "explanation_de": "hatten ist die wir-Form von haben im Präteritum. Die Endungen sind gleich.",
+      "hint": null,
+      "why_correct_en": "hatte, hattest, hatten, hattet — konnte follows exactly this pattern.",
+      "why_correct_de": "Die Endungen von hatte und konnte sind gleich.",
+      "difficulty": 2,
+      "stage": 4,
+      "order_index": 10,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "error_correction",
+      "question_de": "Finde den Fehler: Sie musste gestern eingekauft.",
+      "question_en": "Correct the sentence. A modal needs an infinitive, not a participle. (She had to do the shopping yesterday.)",
+      "options": null,
+      "correct_answer": "Sie musste gestern einkaufen.",
+      "acceptable_answers": [
+        "Sie musste gestern einkaufen.",
+        "Sie musste gestern einkaufen",
+        "Gestern musste sie einkaufen.",
+        "Gestern musste sie einkaufen"
+      ],
+      "explanation_en": "After a modal verb German uses the infinitive: einkaufen, not eingekauft.",
+      "explanation_de": "Nach dem Modalverb steht der Infinitiv: einkaufen, nicht eingekauft.",
+      "hint": null,
+      "why_correct_en": "musste + einkaufen builds the bracket; eingekauft belongs to the Perfekt with haben.",
+      "why_correct_de": "musste und einkaufen bilden die Satzklammer. eingekauft gehört zum Perfekt.",
+      "difficulty": 2,
+      "stage": 4,
+      "order_index": 11,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "error_correction",
+      "question_de": "Finde den Fehler: Er musste kaufen eine Fahrkarte.",
+      "question_en": "Correct the word order. Keep the opener Er and move only the infinitive. (He had to buy a ticket.)",
+      "options": null,
+      "correct_answer": "Er musste eine Fahrkarte kaufen.",
+      "acceptable_answers": [
+        "Er musste eine Fahrkarte kaufen.",
+        "Er musste eine Fahrkarte kaufen"
+      ],
+      "explanation_en": "The infinitive stands at the very end: Er musste eine Fahrkarte kaufen.",
+      "explanation_de": "Der Infinitiv steht ganz am Ende: Er musste eine Fahrkarte kaufen.",
+      "hint": null,
+      "why_correct_en": "Only the infinitive moves — the task fixes the opener Er, so no other order is tested here.",
+      "why_correct_de": "Der Satzanfang bleibt gleich. Nur der Infinitiv geht ans Ende.",
+      "difficulty": 3,
+      "stage": 4,
+      "order_index": 12,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "multiple_choice",
+      "question_de": "___ ihr die Wohnung? (mögen, Präteritum, ihr)",
+      "question_en": "Which form is correct? Did you like the apartment? (verb: mögen, Präteritum, ihr)",
+      "options": [
+        "Möchtet",
+        "Mochtet",
+        "Mochtetet",
+        "Gemocht"
+      ],
+      "correct_answer": "Mochtet",
+      "acceptable_answers": null,
+      "explanation_en": "In the Präteritum of mögen, g becomes ch and ihr adds -t: mochtet.",
+      "explanation_de": "Bei mögen wird g zu ch. Die ihr-Endung ist -t: mochtet.",
+      "hint": null,
+      "why_correct_en": "Möchtet is present, Mochtetet does not exist, Gemocht is a participle.",
+      "why_correct_de": "Möchtet ist Gegenwart. Mochtetet gibt es nicht. Gemocht ist ein Partizip.",
+      "difficulty": 2,
+      "stage": 4,
+      "order_index": 13,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "sentence_building",
+      "question_de": "Schreib den Satz: [ich / gestern Abend / nicht kommen / können]",
+      "question_en": "Write the sentence in the Präteritum: I couldn't come yesterday evening. (können, ich; start with Ich or Gestern Abend)",
+      "options": null,
+      "correct_answer": "Ich konnte gestern Abend nicht kommen.",
+      "acceptable_answers": [
+        "Ich konnte gestern Abend nicht kommen.",
+        "Ich konnte gestern Abend nicht kommen",
+        "Gestern Abend konnte ich nicht kommen.",
+        "Gestern Abend konnte ich nicht kommen"
+      ],
+      "explanation_en": "können → konnte in position 2, kommen at the end. Gestern Abend may also open the sentence.",
+      "explanation_de": "Aus können wird konnte. Position 2 für das Modalverb, kommen am Ende.",
+      "hint": null,
+      "why_correct_en": "Both orders are correct: position 1 is free, and the verb keeps position 2.",
+      "why_correct_de": "Beide Sätze sind richtig. Position 1 ist frei, das Verb bleibt auf Position 2.",
+      "difficulty": 2,
+      "stage": 5,
+      "order_index": 1,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "sentence_building",
+      "question_de": "Schreib den Satz: [wir / am Sonntag / ins Kino gehen / wollen]",
+      "question_en": "Write the sentence in the Präteritum: We wanted to go to the cinema on Sunday. (wollen, wir)",
+      "options": null,
+      "correct_answer": "Wir wollten am Sonntag ins Kino gehen.",
+      "acceptable_answers": [
+        "Wir wollten am Sonntag ins Kino gehen.",
+        "Wir wollten am Sonntag ins Kino gehen",
+        "Am Sonntag wollten wir ins Kino gehen.",
+        "Am Sonntag wollten wir ins Kino gehen"
+      ],
+      "explanation_en": "wollen → wollten. The infinitive gehen closes the sentence after ins Kino.",
+      "explanation_de": "Aus wollen wird wollten. Der Infinitiv gehen steht am Ende, nach ins Kino.",
+      "hint": null,
+      "why_correct_en": "Am Sonntag may stand in position 1; then wollten still follows immediately.",
+      "why_correct_de": "Am Sonntag kann auf Position 1 stehen. Dann kommt wollten direkt danach.",
+      "difficulty": 2,
+      "stage": 5,
+      "order_index": 2,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "sentence_building",
+      "question_de": "Schreib die Frage: [du / gestern / zum Arzt gehen / müssen]",
+      "question_en": "Write the yes/no question in the Präteritum: Did you have to go to the doctor yesterday? (müssen, du; start with the verb)",
+      "options": null,
+      "correct_answer": "Musstest du gestern zum Arzt gehen?",
+      "acceptable_answers": [
+        "Musstest du gestern zum Arzt gehen?",
+        "Musstest du gestern zum Arzt gehen"
+      ],
+      "explanation_en": "In a yes/no question the modal opens the sentence: Musstest du …?",
+      "explanation_de": "In der Ja/Nein-Frage steht das Modalverb zuerst: Musstest du …?",
+      "hint": null,
+      "why_correct_en": "The du-form is musstest; gehen still closes the bracket at the end.",
+      "why_correct_de": "Die du-Form heißt musstest. gehen steht am Ende.",
+      "difficulty": 2,
+      "stage": 5,
+      "order_index": 3,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "sentence_building",
+      "question_de": "Schreib die Frage: [ihr / im Museum / fotografieren / dürfen]",
+      "question_en": "Write the yes/no question in the Präteritum: Were you allowed to take photos in the museum? (dürfen, ihr; start with the verb)",
+      "options": null,
+      "correct_answer": "Durftet ihr im Museum fotografieren?",
+      "acceptable_answers": [
+        "Durftet ihr im Museum fotografieren?",
+        "Durftet ihr im Museum fotografieren"
+      ],
+      "explanation_en": "dürfen → durftet for ihr. The question starts with the modal, the infinitive ends it.",
+      "explanation_de": "Aus dürfen wird bei ihr durftet. Die Frage beginnt mit dem Modalverb.",
+      "hint": null,
+      "why_correct_en": "The ihr-ending is -t: durftet — and it is capitalised because it starts the question.",
+      "why_correct_de": "Die ihr-Endung ist -t: durftet. Am Satzanfang schreibst du es groß.",
+      "difficulty": 2,
+      "stage": 5,
+      "order_index": 4,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "sentence_building",
+      "question_de": "Schreib den Satz: [ich / um sieben Uhr / zu Hause sein / sollen]",
+      "question_en": "Write the sentence in the Präteritum: I was supposed to be home at seven. (sollen, ich)",
+      "options": null,
+      "correct_answer": "Ich sollte um sieben Uhr zu Hause sein.",
+      "acceptable_answers": [
+        "Ich sollte um sieben Uhr zu Hause sein.",
+        "Ich sollte um sieben Uhr zu Hause sein",
+        "Um sieben Uhr sollte ich zu Hause sein.",
+        "Um sieben Uhr sollte ich zu Hause sein"
+      ],
+      "explanation_en": "sollen → sollte. sein is an infinitive here and stands at the end.",
+      "explanation_de": "Aus sollen wird sollte. sein ist hier ein Infinitiv und steht am Ende.",
+      "hint": null,
+      "why_correct_en": "Um sieben Uhr may open the sentence; sollte then keeps position 2.",
+      "why_correct_de": "Um sieben Uhr kann auf Position 1 stehen. sollte bleibt auf Position 2.",
+      "difficulty": 3,
+      "stage": 5,
+      "order_index": 5,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "sentence_building",
+      "question_de": "Schreib den Satz: [ich / das Buch / sehr / mögen]",
+      "question_en": "Write the sentence in the Präteritum: I liked the book a lot. (mögen, ich)",
+      "options": null,
+      "correct_answer": "Ich mochte das Buch sehr.",
+      "acceptable_answers": [
+        "Ich mochte das Buch sehr.",
+        "Ich mochte das Buch sehr",
+        "Das Buch mochte ich sehr.",
+        "Das Buch mochte ich sehr"
+      ],
+      "explanation_en": "mögen → mochte. Here mögen takes an object and needs no infinitive.",
+      "explanation_de": "Aus mögen wird mochte. Hier braucht mögen keinen Infinitiv, nur ein Objekt.",
+      "hint": null,
+      "why_correct_en": "The object Das Buch may open the sentence instead of ich; mochte keeps position 2 either way.",
+      "why_correct_de": "Auch Das Buch kann auf Position 1 stehen. mochte bleibt auf Position 2.",
+      "difficulty": 3,
+      "stage": 5,
+      "order_index": 6,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "sentence_building",
+      "question_de": "Schreib den Satz: [wir / das Zimmer / nicht finden / können]",
+      "question_en": "Write the sentence in the Präteritum: We couldn't find the room. (können, wir)",
+      "options": null,
+      "correct_answer": "Wir konnten das Zimmer nicht finden.",
+      "acceptable_answers": [
+        "Wir konnten das Zimmer nicht finden.",
+        "Wir konnten das Zimmer nicht finden",
+        "Das Zimmer konnten wir nicht finden.",
+        "Das Zimmer konnten wir nicht finden"
+      ],
+      "explanation_en": "können → konnten. nicht stands directly before the infinitive finden.",
+      "explanation_de": "Aus können wird konnten. nicht steht direkt vor dem Infinitiv finden.",
+      "hint": null,
+      "why_correct_en": "The object Das Zimmer may also open the sentence; konnten then still holds position 2.",
+      "why_correct_de": "Auch Das Zimmer kann auf Position 1 stehen. konnten bleibt auf Position 2.",
+      "difficulty": 3,
+      "stage": 5,
+      "order_index": 7,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "sentence_building",
+      "question_de": "Schreib im Präteritum: Ich möchte einen Termin haben.",
+      "question_en": "Rewrite in the Präteritum: I would like to have an appointment. → I wanted to have an appointment. (möchte has no past form of its own)",
+      "options": null,
+      "correct_answer": "Ich wollte einen Termin haben.",
+      "acceptable_answers": [
+        "Ich wollte einen Termin haben.",
+        "Ich wollte einen Termin haben",
+        "Ich wollte einen Termin.",
+        "Ich wollte einen Termin"
+      ],
+      "explanation_en": "möchte has no Präteritum, so wollte takes over: Ich wollte einen Termin haben. Dropping haben (Ich wollte einen Termin.) is just as correct.",
+      "explanation_de": "möchte hat kein Präteritum. Dafür nimmst du wollte.",
+      "hint": null,
+      "why_correct_en": "mochte would mean liked; the polite wish möchte becomes wollte in the past. The short form without haben counts too.",
+      "why_correct_de": "mochte heißt: du hattest etwas gern. Aus möchte wird im Präteritum wollte.",
+      "difficulty": 3,
+      "stage": 5,
+      "order_index": 8,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "sentence_building",
+      "question_de": "Schreib im Präteritum: Sie muss lange warten.",
+      "question_en": "Rewrite in the Präteritum: She has to wait a long time. → She had to wait a long time. (müssen, sie)",
+      "options": null,
+      "correct_answer": "Sie musste lange warten.",
+      "acceptable_answers": [
+        "Sie musste lange warten.",
+        "Sie musste lange warten"
+      ],
+      "explanation_en": "muss → musste. Only the modal changes; warten stays at the end.",
+      "explanation_de": "Aus muss wird musste. Nur das Modalverb ändert sich, warten bleibt am Ende.",
+      "hint": null,
+      "why_correct_en": "sie musste has no extra ending — the same form as ich musste.",
+      "why_correct_de": "sie musste hat keine Endung. Die ich-Form ist gleich.",
+      "difficulty": 2,
+      "stage": 5,
+      "order_index": 9,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "sentence_building",
+      "question_de": "Schreib im Präteritum: Wir dürfen hier nicht parken.",
+      "question_en": "Rewrite in the Präteritum: We are not allowed to park here. → We were not allowed to park here. (dürfen, wir)",
+      "options": null,
+      "correct_answer": "Wir durften hier nicht parken.",
+      "acceptable_answers": [
+        "Wir durften hier nicht parken.",
+        "Wir durften hier nicht parken"
+      ],
+      "explanation_en": "dürfen → durften: the umlaut disappears, -te plus -n is added.",
+      "explanation_de": "Aus dürfen wird durften: der Umlaut fällt weg, dann -te und -n.",
+      "hint": null,
+      "why_correct_en": "Word order does not move at all — only dürfen becomes durften.",
+      "why_correct_de": "Der Satz bleibt gleich. Nur aus dürfen wird durften.",
+      "difficulty": 2,
+      "stage": 5,
+      "order_index": 10,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "error_correction",
+      "question_de": "Finde den Fehler: Ihr habt gestern gewollt telefonieren.",
+      "question_en": "Correct the sentence. Modal verbs use the Präteritum, not this form. (You wanted to make a phone call yesterday.)",
+      "options": null,
+      "correct_answer": "Ihr wolltet gestern telefonieren.",
+      "acceptable_answers": [
+        "Ihr wolltet gestern telefonieren.",
+        "Ihr wolltet gestern telefonieren",
+        "Gestern wolltet ihr telefonieren.",
+        "Gestern wolltet ihr telefonieren"
+      ],
+      "explanation_en": "There is no habt gewollt telefonieren. Everyday German uses the Präteritum: Ihr wolltet telefonieren.",
+      "explanation_de": "Die Form habt gewollt telefonieren gibt es nicht. Nimm das Präteritum: Ihr wolltet telefonieren.",
+      "hint": null,
+      "why_correct_en": "One past modal replaces the whole Perfekt here: wolltet in position 2, telefonieren at the end.",
+      "why_correct_de": "Ein Modalverb im Präteritum reicht: wolltet auf Position 2, telefonieren am Ende.",
+      "difficulty": 3,
+      "stage": 5,
+      "order_index": 11,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "multiple_choice",
+      "question_de": "Welcher Satz ist richtig?",
+      "question_en": "Which sentence has the correct word order for: I had to work a long time on Monday.",
+      "options": [
+        "Ich musste lange arbeiten am Montag.",
+        "Ich am Montag musste lange arbeiten.",
+        "Ich musste am Montag arbeiten lange.",
+        "Ich musste am Montag lange arbeiten."
+      ],
+      "correct_answer": "Ich musste am Montag lange arbeiten.",
+      "acceptable_answers": null,
+      "explanation_en": "The modal takes position 2 and the infinitive the very end: Ich musste am Montag lange arbeiten.",
+      "explanation_de": "Das Modalverb steht auf Position 2, der Infinitiv am Ende.",
+      "hint": null,
+      "why_correct_en": "am Montag and lange stand inside the bracket, between musste and arbeiten.",
+      "why_correct_de": "am Montag und lange stehen in der Satzklammer, zwischen musste und arbeiten.",
+      "difficulty": 2,
+      "stage": 5,
+      "order_index": 12,
+      "related_rule_title": null
+    },
+    {
+      "exercise_type": "sentence_building",
+      "question_de": "Schreib eine SMS: [ich / gestern / krank sein] + [ich / nicht zum Kurs kommen können]",
+      "question_en": "Write the two-sentence apology for Schreiben Teil 1: I was ill yesterday. I couldn't come to the class. (sein and können, Präteritum, ich)",
+      "options": null,
+      "correct_answer": "Ich war gestern krank. Ich konnte nicht zum Kurs kommen.",
+      "acceptable_answers": [
+        "Ich war gestern krank. Ich konnte nicht zum Kurs kommen.",
+        "Ich war gestern krank. Ich konnte nicht zum Kurs kommen",
+        "Gestern war ich krank. Ich konnte nicht zum Kurs kommen.",
+        "Gestern war ich krank. Ich konnte nicht zum Kurs kommen"
+      ],
+      "explanation_en": "war gives the reason, the past modal gives the result — the standard SMS pair.",
+      "explanation_de": "war nennt den Grund, das Modalverb die Folge. So schreibst du eine SMS.",
+      "hint": null,
+      "why_correct_en": "Both sentences keep the verb in position 2; gestern may also open the first one.",
+      "why_correct_de": "In beiden Sätzen steht das Verb auf Position 2. gestern kann auch vorn stehen.",
+      "difficulty": 3,
+      "stage": 5,
+      "order_index": 13,
+      "related_rule_title": null
+    }
+  ]
+}

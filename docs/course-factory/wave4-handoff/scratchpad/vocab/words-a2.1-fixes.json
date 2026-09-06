@@ -1,0 +1,1458 @@
+[
+  {
+    "id": "0c7e0bed-75f5-42e6-93d6-fe898f67262d",
+    "field": "english",
+    "old": "the bill",
+    "new": "bill",
+    "reason": "English gloss starts with 'the' while all 233 other A2.1 rows and every A1.1/A1.2 row gloss bare; the flashcard back therefore reads inconsistently inside one and the same deck."
+  },
+  {
+    "id": "3537e615-4b0e-4f6d-b6f5-90b6060757ab",
+    "field": "english",
+    "old": "the dessert",
+    "new": "dessert",
+    "reason": "English gloss starts with 'the' while all 233 other A2.1 rows and every A1.1/A1.2 row gloss bare; the flashcard back therefore reads inconsistently inside one and the same deck."
+  },
+  {
+    "id": "368e939b-6de2-4e48-8703-520b7d526b8c",
+    "field": "english",
+    "old": "the waitress",
+    "new": "waitress",
+    "reason": "English gloss starts with 'the' while all 233 other A2.1 rows and every A1.1/A1.2 row gloss bare; the flashcard back therefore reads inconsistently inside one and the same deck."
+  },
+  {
+    "id": "4c1d02fe-4fc0-496a-b1a6-4eaeb0e77585",
+    "field": "english",
+    "old": "the portion",
+    "new": "portion",
+    "reason": "English gloss starts with 'the' while all 233 other A2.1 rows and every A1.1/A1.2 row gloss bare; the flashcard back therefore reads inconsistently inside one and the same deck."
+  },
+  {
+    "id": "5528971d-bb98-4437-b44c-69c337fd9e9a",
+    "field": "english",
+    "old": "the drinks menu",
+    "new": "drinks menu",
+    "reason": "English gloss starts with 'the' while all 233 other A2.1 rows and every A1.1/A1.2 row gloss bare; the flashcard back therefore reads inconsistently inside one and the same deck."
+  },
+  {
+    "id": "56ca99d7-106a-4797-bd1b-e8d6ef9663a9",
+    "field": "english",
+    "old": "the side dish",
+    "new": "side dish",
+    "reason": "English gloss starts with 'the' while all 233 other A2.1 rows and every A1.1/A1.2 row gloss bare; the flashcard back therefore reads inconsistently inside one and the same deck."
+  },
+  {
+    "id": "5d296fe7-0540-4db4-a004-bddc7a2f01d6",
+    "field": "english",
+    "old": "the waiter",
+    "new": "waiter",
+    "reason": "English gloss starts with 'the' while all 233 other A2.1 rows and every A1.1/A1.2 row gloss bare; the flashcard back therefore reads inconsistently inside one and the same deck."
+  },
+  {
+    "id": "a666d1d1-3164-47d6-bd62-0c3afc2b27a7",
+    "field": "english",
+    "old": "the menu",
+    "new": "menu",
+    "reason": "English gloss starts with 'the' while all 233 other A2.1 rows and every A1.1/A1.2 row gloss bare; the flashcard back therefore reads inconsistently inside one and the same deck."
+  },
+  {
+    "id": "ac2c91ac-1376-4804-9678-5204c195dfd3",
+    "field": "english",
+    "old": "the service/waiter",
+    "new": "service, waiting staff",
+    "reason": "English gloss starts with 'the' while all 233 other A2.1 rows and every A1.1/A1.2 row gloss bare; the flashcard back therefore reads inconsistently inside one and the same deck."
+  },
+  {
+    "id": "b9f8d6df-f0dc-43f9-8a76-5e15143cefbe",
+    "field": "english",
+    "old": "the starter/appetizer",
+    "new": "starter, appetizer",
+    "reason": "English gloss starts with 'the' while all 233 other A2.1 rows and every A1.1/A1.2 row gloss bare; the flashcard back therefore reads inconsistently inside one and the same deck."
+  },
+  {
+    "id": "da0df037-b032-4b8d-98c2-5f048e6026a5",
+    "field": "english",
+    "old": "the allergy",
+    "new": "allergy",
+    "reason": "English gloss starts with 'the' while all 233 other A2.1 rows and every A1.1/A1.2 row gloss bare; the flashcard back therefore reads inconsistently inside one and the same deck."
+  },
+  {
+    "id": "e9088e55-3408-4571-a9b7-76ed5b9a652d",
+    "field": "english",
+    "old": "the tip",
+    "new": "tip",
+    "reason": "English gloss starts with 'the' while all 233 other A2.1 rows and every A1.1/A1.2 row gloss bare; the flashcard back therefore reads inconsistently inside one and the same deck."
+  },
+  {
+    "id": "eb2d00e8-8dc4-4174-9671-62b8194a7a38",
+    "field": "english",
+    "old": "the main course",
+    "new": "main course",
+    "reason": "English gloss starts with 'the' while all 233 other A2.1 rows and every A1.1/A1.2 row gloss bare; the flashcard back therefore reads inconsistently inside one and the same deck."
+  },
+  {
+    "id": "f18ada3b-5d66-45ed-aaf0-ec34bd683301",
+    "field": "english",
+    "old": "the dish of the day",
+    "new": "dish of the day",
+    "reason": "English gloss starts with 'the' while all 233 other A2.1 rows and every A1.1/A1.2 row gloss bare; the flashcard back therefore reads inconsistently inside one and the same deck."
+  },
+  {
+    "id": "fb31c9f1-88ad-4c53-adf3-209ccac36fbf",
+    "field": "english",
+    "old": "the reservation",
+    "new": "reservation",
+    "reason": "English gloss starts with 'the' while all 233 other A2.1 rows and every A1.1/A1.2 row gloss bare; the flashcard back therefore reads inconsistently inside one and the same deck."
+  },
+  {
+    "id": "059766ff-77a5-4d7e-bdcf-8fbfff9ea283",
+    "field": "example_sentence",
+    "old": "Bei dem Gewitter gab es viele Blitze.",
+    "new": "Beim Gewitter sieht man viele Blitze am Himmel.",
+    "reason": "'gab' is the Präteritum of a full verb (geben); Präteritum outside sein/haben and the six modals is B1 and banned at A2.1."
+  },
+  {
+    "id": "0c7e0bed-75f5-42e6-93d6-fe898f67262d",
+    "field": "example_sentence",
+    "old": "Könnte ich bitte die Rechnung haben?",
+    "new": "Können wir bitte die Rechnung haben?",
+    "reason": "level-a2.1.md whitelists only the 'könnten Sie … / würden Sie …' polite chunks; first-person 'Könnte ich …' is outside that list, so the card taught an out-of-level Konjunktiv II. Present-tense 'Können wir …' is the in-level restaurant phrase."
+  },
+  {
+    "id": "10088c93-8f15-4565-8647-bd43a710a735",
+    "field": "example_sentence",
+    "old": "Ich bin Mitglied in einem Sportverein.",
+    "new": "Ich gehe jeden Montag in meinen Verein.",
+    "reason": "the headword only appeared inside the compound 'Sportverein', so the card never showed the headword itself; the old sentence also duplicated the 'Mitglied' card's content."
+  },
+  {
+    "id": "1040b0e5-77e8-445f-85bc-3b196b489e02",
+    "field": "example_sentence",
+    "old": "Das Bettgestell ist aus hellem Holz gemacht.",
+    "new": "Das Bettgestell ist aus Holz.",
+    "reason": "'aus hellem Holz' is a strong (null-article) adjective ending; A2.1 topic 9 covers der- and ein-word declension only and bans null-article endings outside the frozen chunks."
+  },
+  {
+    "id": "1394c174-c1aa-46b0-9f10-c0a7a261b771",
+    "field": "example_sentence",
+    "old": "Am Wochenende male ich gerne bunte Bilder.",
+    "new": "Am Wochenende male ich gerne Bilder.",
+    "reason": "'bunte Bilder' is a strong (null-article) plural adjective ending — banned at A2.1."
+  },
+  {
+    "id": "1b18cfbc-fe08-4477-95ef-cdbded912360",
+    "field": "example_sentence",
+    "old": "Mein liebstes Hobby ist das Lesen.",
+    "new": "Mein Hobby ist Kochen.",
+    "reason": "'liebstes' is a Superlativ; Komparativ/Superlativ are banned in production at A2.1."
+  },
+  {
+    "id": "2098cea5-07c4-4afe-b1da-597702811696",
+    "field": "example_sentence",
+    "old": "Wir haben lange warten gemusst.",
+    "new": "Das hast du wirklich nicht gemusst.",
+    "reason": "'Wir haben lange warten gemusst.' is ungrammatical: with a dependent infinitive German requires the Ersatzinfinitiv ('warten müssen'), never the ge-participle. The participle gemusst is only correct without an infinitive, which the new sentence shows."
+  },
+  {
+    "id": "26758a4c-a724-464c-a023-07761be5425c",
+    "field": "example_sentence",
+    "old": "Nimm die Unterführung, um die Straße zu überqueren.",
+    "new": "Die Unterführung bringt dich sicher auf die andere Seite.",
+    "reason": "'um die Straße zu überqueren' is an um...zu infinitive clause — BANNED at A2.1."
+  },
+  {
+    "id": "282bc68f-6d1f-44be-bf37-df04a96c0dda",
+    "field": "example_sentence",
+    "old": "Diese Woche gibt es viele tolle Sonderangebote.",
+    "new": "Diese Woche gibt es viele Sonderangebote.",
+    "reason": "'viele tolle Sonderangebote' takes strong plural endings after viele — banned at A2.1."
+  },
+  {
+    "id": "37d8326c-a85a-48d8-a339-b59f76266d0a",
+    "field": "example_sentence",
+    "old": "Unser Verein hat über hundert aktive Mitglieder.",
+    "new": "Unser Verein hat über hundert Mitglieder.",
+    "reason": "'hundert aktive Mitglieder' is a strong (null-article) plural adjective ending — banned at A2.1."
+  },
+  {
+    "id": "39347187-0019-4f9f-a2c6-bb04c2a56899",
+    "field": "example_sentence",
+    "old": "Das Wochenende wird sonnig und sehr warm.",
+    "new": "Am Wochenende ist es sonnig und warm.",
+    "reason": "'wird sonnig' uses werden, which is not part of the A2.1 grammar (Futur is banned and werden as a full verb is not introduced); sein + adjective is the in-level form."
+  },
+  {
+    "id": "48f83844-ff59-4272-b9bd-da6eca8a5db1",
+    "field": "example_sentence",
+    "old": "Bei gutem Wetter machen wir ein Picknick.",
+    "new": "Wir machen am Sonntag ein Picknick im Park.",
+    "reason": "'Bei gutem Wetter' is a strong (null-article) dative adjective ending — the same class as 'aus hellem Holz' and 'mit buntem Papier'; banned at A2.1. The row got its german fix in round 1 but its sentence was not audited."
+  },
+  {
+    "id": "65e8ab7d-e893-4f37-a72e-987e8fd4f5d7",
+    "field": "example_sentence",
+    "old": "Die Kinder basteln gerne mit buntem Papier.",
+    "new": "Die Kinder basteln gerne mit Papier.",
+    "reason": "'mit buntem Papier' is a strong (null-article) dative adjective ending — banned at A2.1."
+  },
+  {
+    "id": "71487216-9032-4949-99cd-df896d262f8f",
+    "field": "example_sentence",
+    "old": "Die Ankunft des Zuges ist um acht Uhr.",
+    "new": "Die Ankunft ist heute um acht Uhr.",
+    "reason": "'des Zuges' is a Genitiv; the Genitiv is banned at A2.1 (the level prescribes von + Dativ)."
+  },
+  {
+    "id": "7e21ff73-c28b-4b08-a727-35f1481fafc8",
+    "field": "example_sentence",
+    "old": "Die Wettervorhersage sagt Regen für morgen an.",
+    "new": "Die Wettervorhersage für morgen ist nicht gut.",
+    "reason": "'sagt Regen an' is not idiomatic standard German for a forecast (ansagen is used for announcements, and regionally); the simplest in-level repair drops the verb rather than swapping in another shaky one."
+  },
+  {
+    "id": "813ddb55-2476-48f2-b947-e68b42a3dda8",
+    "field": "example_sentence",
+    "old": "In der Vitrine stehen schöne alte Gläser.",
+    "new": "Die Gläser stehen in der Vitrine.",
+    "reason": "'schöne alte Gläser' is a strong (null-article) plural adjective ending — banned at A2.1."
+  },
+  {
+    "id": "874b6140-8b1f-4809-9850-c851fa154450",
+    "field": "example_sentence",
+    "old": "Haben Sie auch vegetarische Gerichte auf der Karte?",
+    "new": "Ist dieses Gericht hier vegetarisch?",
+    "reason": "'vegetarische Gerichte' is a strong (null-article) plural adjective ending — banned at A2.1; the predicative use is the form topic 9 actually teaches."
+  },
+  {
+    "id": "972bfd26-c31e-43a1-971a-5be45556e356",
+    "field": "example_sentence",
+    "old": "Nach der Arbeit entspanne ich mich gerne.",
+    "new": "Ein Spaziergang entspannt nach der Arbeit.",
+    "reason": "'entspanne ich mich' uses the verb reflexively; reflexive verbs are A2.2 and banned in production at A2.1. The headword is the plain transitive verb, so no reflexive is needed."
+  },
+  {
+    "id": "9e02c250-53fa-4032-b97e-120602ebe75b",
+    "field": "example_sentence",
+    "old": "In der Küche stehen zwei kleine Hocker.",
+    "new": "In der Küche stehen zwei Hocker.",
+    "reason": "'zwei kleine Hocker' is a strong (null-article) plural adjective ending — banned at A2.1."
+  },
+  {
+    "id": "a0ea505d-e636-42ec-bffa-48ab31efb9b7",
+    "field": "example_sentence",
+    "old": "Meine Schwester sammelt gerne alte Briefmarken.",
+    "new": "Meine Schwester sammelt gerne Briefmarken.",
+    "reason": "'alte Briefmarken' is a strong (null-article) plural adjective ending — banned at A2.1."
+  },
+  {
+    "id": "a3b33d7c-169a-43e3-b1ab-72eb4fa0d6f4",
+    "field": "example_sentence",
+    "old": "Viele Wolken sind heute am Himmel zu sehen.",
+    "new": "Heute sind viele Wolken am Himmel.",
+    "reason": "'sind ... zu sehen' is a sein + zu + Infinitiv construction (modal passive); infinitive clauses with zu are banned at A2.1."
+  },
+  {
+    "id": "b0da6bbf-1caa-47e3-8eca-0a996a1dea70",
+    "field": "example_sentence",
+    "old": "Ich habe heute drei wichtige Termine.",
+    "new": "Ich habe heute drei Termine.",
+    "reason": "'drei wichtige Termine' is a strong (null-article) plural adjective ending — banned at A2.1."
+  },
+  {
+    "id": "b184d84c-c958-4608-ad22-203cb1daa834",
+    "field": "example_sentence",
+    "old": "Die Haltestelle ist direkt vor dem Supermarkt.",
+    "new": "Wir warten an der Haltestelle auf den Bus.",
+    "reason": "byte-identical example sentence to the 'die Haltestelle' row in City & Directions; two cards in the same deck showed the same sentence."
+  },
+  {
+    "id": "b8c5a22e-57c7-4c17-a9d4-1ccc680b14f4",
+    "field": "example_sentence",
+    "old": "Jeder Spieler braucht einen eigenen Controller.",
+    "new": "Jeder Spieler bekommt sieben Karten.",
+    "reason": "'Controller' is an English gaming loanword outside the Goethe A2 Wortliste; the level file says to pick the more basic word when in doubt."
+  },
+  {
+    "id": "bbc750ab-6eec-4362-b64f-82c612cde091",
+    "field": "example_sentence",
+    "old": "Dieses Viertel hat viele schöne alte Gebäude.",
+    "new": "In diesem Viertel wohnen viele Familien.",
+    "reason": "'viele schöne alte Gebäude' takes strong plural endings after viele (no article) — banned at A2.1."
+  },
+  {
+    "id": "bc30242c-27c2-4bfd-b643-56fb6d255be4",
+    "field": "example_sentence",
+    "old": "Ich hoffe, dass wir heute das Spiel gewinnen.",
+    "new": "Heute gewinnen wir hoffentlich das Spiel.",
+    "reason": "'Ich hoffe, dass ...' is a dass-Nebensatz with verb-final order — A2.2, banned at A2.1."
+  },
+  {
+    "id": "bdd60acf-2af8-4408-842a-fdbc95ddff2d",
+    "field": "example_sentence",
+    "old": "In den Bergen wird es bald wieder schneien.",
+    "new": "In den Bergen schneit es heute Nacht.",
+    "reason": "'wird ... schneien' is Futur I — banned at A2.1."
+  },
+  {
+    "id": "d3767391-e98f-4ee2-b5eb-3281ee102646",
+    "field": "example_sentence",
+    "old": "Das Einkaufszentrum hat viele verschiedene Geschäfte.",
+    "new": "Das Einkaufszentrum hat sehr viele Geschäfte.",
+    "reason": "'viele verschiedene Geschäfte' takes strong plural endings after viele — banned at A2.1."
+  },
+  {
+    "id": "d92c8743-7c60-4160-b19b-e37ac37139d9",
+    "field": "example_sentence",
+    "old": "Am Morgen war dichter Nebel auf der Straße.",
+    "new": "Am Morgen war der Nebel sehr dicht.",
+    "reason": "'dichter Nebel' is a strong (null-article) adjective ending — banned at A2.1; predicative use is endingless and in-level."
+  },
+  {
+    "id": "db0c034e-5944-4bd4-9762-4938ba24f3b0",
+    "field": "example_sentence",
+    "old": "Warte bitte, bis die Ampel grün wird.",
+    "new": "An der Ampel musst du kurz warten.",
+    "reason": "'bis die Ampel grün wird' is a Nebensatz with verb-final order; subordinate clauses are A2.2 and BANNED in production at A2.1. (It also used werden as a full verb.)"
+  },
+  {
+    "id": "e08a09aa-7097-4a15-b594-375df4327603",
+    "field": "example_sentence",
+    "old": "Der Sturm hat viele Bäume umgeworfen gestern.",
+    "new": "Der Sturm hat gestern viele Bäume umgeworfen.",
+    "reason": "word order: 'gestern' stood behind the Partizip, outside the Satzklammer. The time adverbial belongs in the Mittelfeld — the Satzklammer is A1 material the card was contradicting."
+  },
+  {
+    "id": "e591ac8f-5d45-4d57-a215-9632c4bf71a3",
+    "field": "example_sentence",
+    "old": "Es wird morgen den ganzen Tag regnen.",
+    "new": "Morgen regnet es den ganzen Tag.",
+    "reason": "'Es wird ... regnen' is Futur I; Futur is banned at A2.1 — German uses the present with a time adverbial, which is what the level teaches."
+  },
+  {
+    "id": "e80b78b1-ed26-4b13-acf7-adcaccda75a8",
+    "field": "example_sentence",
+    "old": "Das Gehalt kommt am Ende des Monats.",
+    "new": "Am Ende vom Monat kommt das Gehalt.",
+    "reason": "'am Ende des Monats' is a Genitiv; the Genitiv is banned at A2.1 and the level names von + Dativ as the replacement."
+  },
+  {
+    "id": "fc89deef-ac35-48b3-b4f7-95495c650662",
+    "field": "example_sentence",
+    "old": "Dieses alte Möbelstück gehörte meiner Großmutter.",
+    "new": "Dieses alte Möbelstück gehört meiner Großmutter.",
+    "reason": "'gehörte' is the Präteritum of a full verb (gehören) — B1, banned at A2.1. gehören is itself an allowed A2.1 dative verb, so the present tense repairs the grammar without changing what the card says."
+  },
+  {
+    "id": "059766ff-77a5-4d7e-bdcf-8fbfff9ea283",
+    "field": "german",
+    "old": "der Blitz",
+    "new": "Blitz",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "079007a8-9140-4300-8f3c-6508945afb04",
+    "field": "german",
+    "old": "der Chef",
+    "new": "Chef",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "08d7ca06-7fda-4874-ab8c-3bb50b1e1d6f",
+    "field": "german",
+    "old": "das Abendessen",
+    "new": "Abendessen",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "093d2ef7-8921-4a97-8c22-6e7226ba37f0",
+    "field": "german",
+    "old": "der Eingang",
+    "new": "Eingang",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "0c7e0bed-75f5-42e6-93d6-fe898f67262d",
+    "field": "german",
+    "old": "die Rechnung",
+    "new": "Rechnung",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "10088c93-8f15-4565-8647-bd43a710a735",
+    "field": "german",
+    "old": "der Verein",
+    "new": "Verein",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "10865a50-9c3e-40aa-93fd-42b922ce21e6",
+    "field": "german",
+    "old": "die Erfahrung",
+    "new": "Erfahrung",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "123fc143-8f63-489f-8548-bc4f2ac75df1",
+    "field": "german",
+    "old": "der Parkplatz",
+    "new": "Parkplatz",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "13005f2d-6b9b-4153-9ccb-c0f8534a9b85",
+    "field": "german",
+    "old": "die Ware",
+    "new": "Ware",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "131242b3-741c-406f-987b-4bcc3a3d5a86",
+    "field": "german",
+    "old": "der Lebenslauf",
+    "new": "Lebenslauf",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "161b717e-7148-409f-b84d-46b28e80e503",
+    "field": "german",
+    "old": "die Arbeitszeit",
+    "new": "Arbeitszeit",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "1b18cfbc-fe08-4477-95ef-cdbded912360",
+    "field": "german",
+    "old": "das Hobby",
+    "new": "Hobby",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "1d6571a9-21ba-4cdd-9ac3-d688fef30c99",
+    "field": "german",
+    "old": "der Vertrag",
+    "new": "Vertrag",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "23a27646-e5ce-4b91-8fb6-9d020ad813e5",
+    "field": "german",
+    "old": "der Brunnen",
+    "new": "Brunnen",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "26758a4c-a724-464c-a023-07761be5425c",
+    "field": "german",
+    "old": "die Unterführung",
+    "new": "Unterführung",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "282bc68f-6d1f-44be-bf37-df04a96c0dda",
+    "field": "german",
+    "old": "das Sonderangebot",
+    "new": "Sonderangebot",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "293b544d-ba02-4525-9575-53023024c2b2",
+    "field": "german",
+    "old": "der Ausgang",
+    "new": "Ausgang",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "2aa5a2df-aa6f-40bd-be1a-f9ca38ca07cd",
+    "field": "german",
+    "old": "das Rathaus",
+    "new": "Rathaus",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "2b15792c-9615-41a3-96af-8f4188a5842f",
+    "field": "german",
+    "old": "der Wecker",
+    "new": "Wecker",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "2e2d25b6-ebcb-481e-ae3b-143baeb77089",
+    "field": "german",
+    "old": "die Teilzeit",
+    "new": "Teilzeit",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "2e49c5bb-afbd-4d3b-b4ef-5d8a871a84a2",
+    "field": "german",
+    "old": "der Wegweiser",
+    "new": "Wegweiser",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "30636726-716d-4db4-959a-ba8a915e8f60",
+    "field": "german",
+    "old": "die Veranstaltung",
+    "new": "Veranstaltung",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "3429e5db-c483-4783-82c7-62f30dac9fb3",
+    "field": "german",
+    "old": "der Praktikant",
+    "new": "Praktikant",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "3537e615-4b0e-4f6d-b6f5-90b6060757ab",
+    "field": "german",
+    "old": "die Nachspeise",
+    "new": "Nachspeise",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "368e939b-6de2-4e48-8703-520b7d526b8c",
+    "field": "german",
+    "old": "die Kellnerin",
+    "new": "Kellnerin",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "37d8326c-a85a-48d8-a339-b59f76266d0a",
+    "field": "german",
+    "old": "das Mitglied",
+    "new": "Mitglied",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "48e81d5d-8c46-46d5-96f8-47cad722f02b",
+    "field": "german",
+    "old": "die Überstunde",
+    "new": "Überstunde",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "48f83844-ff59-4272-b9bd-da6eca8a5db1",
+    "field": "german",
+    "old": "das Picknick",
+    "new": "Picknick",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "49d1eb50-c06d-4613-9e7a-a9e670300c96",
+    "field": "german",
+    "old": "die Garantie",
+    "new": "Garantie",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "4c1d02fe-4fc0-496a-b1a6-4eaeb0e77585",
+    "field": "german",
+    "old": "die Portion",
+    "new": "Portion",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "4e50abc6-7cdc-436d-b3b1-ea9856d33182",
+    "field": "german",
+    "old": "der Kassenbon",
+    "new": "Kassenbon",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "52d116fa-cfff-41cd-9959-ae0a335a8495",
+    "field": "german",
+    "old": "das Mittagessen",
+    "new": "Mittagessen",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "5528971d-bb98-4437-b44c-69c337fd9e9a",
+    "field": "german",
+    "old": "die Getränkekarte",
+    "new": "Getränkekarte",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "56ca99d7-106a-4797-bd1b-e8d6ef9663a9",
+    "field": "german",
+    "old": "die Beilage",
+    "new": "Beilage",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "57cee64f-7d7c-4579-9be4-ff9c0a7d60aa",
+    "field": "german",
+    "old": "der Bürgersteig",
+    "new": "Bürgersteig",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "582cbacd-afc4-45df-b2f3-a97782b8bccf",
+    "field": "german",
+    "old": "das Schaufenster",
+    "new": "Schaufenster",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "584af275-f68a-44fd-a581-bef4dbcb8ae1",
+    "field": "german",
+    "old": "die Quittung",
+    "new": "Quittung",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "5b1dced9-53a9-420c-b8a9-9f7127d63219",
+    "field": "german",
+    "old": "die Zahnpasta",
+    "new": "Zahnpasta",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "5cbef280-3bfc-4ba9-a266-c1b248af2956",
+    "field": "german",
+    "old": "der Urlaub",
+    "new": "Urlaub",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "5d296fe7-0540-4db4-a004-bddc7a2f01d6",
+    "field": "german",
+    "old": "der Kellner",
+    "new": "Kellner",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "5d8c2568-acc8-4bc3-9530-6f32843b35bc",
+    "field": "german",
+    "old": "die Chefin",
+    "new": "Chefin",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "5dbaecc7-100f-475e-bf50-3141cd7fa595",
+    "field": "german",
+    "old": "der Kollege",
+    "new": "Kollege",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "60d5ce5a-2fd5-42ed-b31e-ff60a38ad9bd",
+    "field": "german",
+    "old": "der Wind",
+    "new": "Wind",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "6882ff91-cdf6-4008-b606-8ff78079f1ad",
+    "field": "german",
+    "old": "der Einkaufswagen",
+    "new": "Einkaufswagen",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "6c48453c-7f14-4684-bd40-4ed1d2669e75",
+    "field": "german",
+    "old": "die Tüte",
+    "new": "Tüte",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "7148d4d0-bb6c-47eb-bbb0-74669ad0f80a",
+    "field": "german",
+    "old": "die Umkleidekabine",
+    "new": "Umkleidekabine",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "71a2d471-f553-4756-bd41-ac2e32ed3070",
+    "field": "german",
+    "old": "die Ecke",
+    "new": "Ecke",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "7338be7e-ef61-4d3e-944f-f133feb23502",
+    "field": "german",
+    "old": "die Richtung",
+    "new": "Richtung",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "7415452e-1c6e-4d2e-8174-964df41c9eb8",
+    "field": "german",
+    "old": "der Gehweg",
+    "new": "Gehweg",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "75e423f3-739c-45e6-ab7b-a3c2d05724ae",
+    "field": "german",
+    "old": "die Kreuzung",
+    "new": "Kreuzung",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "77ffeb9e-0730-4899-9ebd-f5bf2b0d8a72",
+    "field": "german",
+    "old": "der Schnee",
+    "new": "Schnee",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "781c193b-9ce8-43e8-97f5-b4bcd8b42b70",
+    "field": "german",
+    "old": "das Klavier",
+    "new": "Klavier",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "79986352-ec2f-47a0-9a97-3dedf12601b4",
+    "field": "german",
+    "old": "das Spiel",
+    "new": "Spiel",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "7bef06a2-17db-4f2e-8160-5e73cc2c4ef0",
+    "field": "german",
+    "old": "die Zahnbürste",
+    "new": "Zahnbürste",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "7ca59b98-6801-49df-a20c-0c221977b4f5",
+    "field": "german",
+    "old": "der Rabatt",
+    "new": "Rabatt",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "7e21ff73-c28b-4b08-a727-35f1481fafc8",
+    "field": "german",
+    "old": "die Wettervorhersage",
+    "new": "Wettervorhersage",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "7f425661-43dd-4fc4-96c3-f31826ddafbe",
+    "field": "german",
+    "old": "die Größe",
+    "new": "Größe",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "8ba6116b-f33e-409e-ae25-4bc02d4e6dbd",
+    "field": "german",
+    "old": "die Seife",
+    "new": "Seife",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "8ed2c88a-ac0f-4e2b-a861-bace07238164",
+    "field": "german",
+    "old": "das Instrument",
+    "new": "Instrument",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "93f72bba-cf9f-4ce5-8008-818f8a0e2913",
+    "field": "german",
+    "old": "der Regenschirm",
+    "new": "Regenschirm",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "94919639-ace5-4f18-8052-38873619d55d",
+    "field": "german",
+    "old": "die Besprechung",
+    "new": "Besprechung",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "97c1f49a-3158-4434-a09d-cc0c531c6bb1",
+    "field": "german",
+    "old": "die Fußgängerzone",
+    "new": "Fußgängerzone",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "9aca40b2-0d95-4b5d-94a6-2751947b7255",
+    "field": "german",
+    "old": "die Kreditkarte",
+    "new": "Kreditkarte",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "9d224e33-3ad8-4b5b-a067-7c29c15e1731",
+    "field": "german",
+    "old": "die Freizeit",
+    "new": "Freizeit",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "9e236748-ca99-4d25-b6b2-cb2b8c534287",
+    "field": "german",
+    "old": "die Gasse",
+    "new": "Gasse",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "9e271471-0c75-4fb1-90ed-c8d69572c183",
+    "field": "german",
+    "old": "die Leidenschaft",
+    "new": "Leidenschaft",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "a28bd2da-5d15-47f7-be4d-f4c894217817",
+    "field": "german",
+    "old": "die Pause",
+    "new": "Pause",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "a2c7939a-c12a-4630-9c34-8dda46437bd4",
+    "field": "german",
+    "old": "das Wetter",
+    "new": "Wetter",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "a30c05fd-b5bb-42f6-93cb-db4b4c545696",
+    "field": "german",
+    "old": "die Gewohnheit",
+    "new": "Gewohnheit",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "a3b33d7c-169a-43e3-b1ab-72eb4fa0d6f4",
+    "field": "german",
+    "old": "die Wolke",
+    "new": "Wolke",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "a666d1d1-3164-47d6-bd62-0c3afc2b27a7",
+    "field": "german",
+    "old": "die Speisekarte",
+    "new": "Speisekarte",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "a88f5178-fa87-4f83-bc20-436bdbac884c",
+    "field": "german",
+    "old": "die Kollegin",
+    "new": "Kollegin",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "a9af016f-1bc1-431c-aea8-8005aa22b0f2",
+    "field": "german",
+    "old": "die Abteilung",
+    "new": "Abteilung",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "a9bb991e-7bbf-4956-81c2-366ff5bb76ff",
+    "field": "german",
+    "old": "der Kundenservice",
+    "new": "Kundenservice",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "ac2c91ac-1376-4804-9678-5204c195dfd3",
+    "field": "german",
+    "old": "die Bedienung",
+    "new": "Bedienung",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "b0da6bbf-1caa-47e3-8eca-0a996a1dea70",
+    "field": "german",
+    "old": "der Termin",
+    "new": "Termin",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "b0eba8dc-03dd-45e1-9c8e-c1c741aa846b",
+    "field": "german",
+    "old": "der Grad",
+    "new": "Grad",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "b1191336-fad4-4278-9dd7-fc0cb9638058",
+    "field": "german",
+    "old": "der Zebrastreifen",
+    "new": "Zebrastreifen",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "b312714c-7a3a-4f4c-b961-fbebaaab0889",
+    "field": "german",
+    "old": "die Aufgabe",
+    "new": "Aufgabe",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "b79436fb-2a73-4dd3-8fca-cc1d76a1c25f",
+    "field": "german",
+    "old": "die Bewerbung",
+    "new": "Bewerbung",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "b83d9cfd-6857-4445-84b0-c36b435f0378",
+    "field": "german",
+    "old": "die Marke",
+    "new": "Marke",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "b8c5a22e-57c7-4c17-a9d4-1ccc680b14f4",
+    "field": "german",
+    "old": "der Spieler",
+    "new": "Spieler",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "b9f8d6df-f0dc-43f9-8a76-5e15143cefbe",
+    "field": "german",
+    "old": "die Vorspeise",
+    "new": "Vorspeise",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "ba507484-4988-42df-8106-87ee0da101dd",
+    "field": "german",
+    "old": "die Mannschaft",
+    "new": "Mannschaft",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "bbc750ab-6eec-4362-b64f-82c612cde091",
+    "field": "german",
+    "old": "das Viertel",
+    "new": "Viertel",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "c358a3d8-c4e5-45a8-9557-23d81c65c2ce",
+    "field": "german",
+    "old": "die Sonne",
+    "new": "Sonne",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "c6af615f-1669-4281-acca-4816a7251aa1",
+    "field": "german",
+    "old": "der Alltag",
+    "new": "Alltag",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "c9c70dab-31f1-4857-953b-dfd775ca0655",
+    "field": "german",
+    "old": "der Spiegel",
+    "new": "Spiegel",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "cc4076ef-e447-4611-ab77-3f2096d66bac",
+    "field": "german",
+    "old": "der Stadtplan",
+    "new": "Stadtplan",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "d2114ec6-de51-4cbc-b5c6-7ad9177c9196",
+    "field": "german",
+    "old": "das Regal",
+    "new": "Regal",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "d3767391-e98f-4ee2-b5eb-3281ee102646",
+    "field": "german",
+    "old": "das Einkaufszentrum",
+    "new": "Einkaufszentrum",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "d3f80e03-427d-4f8e-b0f4-c5751cc46e53",
+    "field": "german",
+    "old": "die Gitarre",
+    "new": "Gitarre",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "d4dfd742-9619-4249-a1ce-386fa7ece527",
+    "field": "german",
+    "old": "der Regen",
+    "new": "Regen",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "d92c8743-7c60-4160-b19b-e37ac37139d9",
+    "field": "german",
+    "old": "der Nebel",
+    "new": "Nebel",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "da0df037-b032-4b8d-98c2-5f048e6026a5",
+    "field": "german",
+    "old": "die Allergie",
+    "new": "Allergie",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "dace7ca8-f3de-4a0d-8a7a-026425dc9edd",
+    "field": "german",
+    "old": "der Anfänger",
+    "new": "Anfänger",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "db0c034e-5944-4bd4-9762-4938ba24f3b0",
+    "field": "german",
+    "old": "die Ampel",
+    "new": "Ampel",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "de031714-f0d1-4cd3-befc-6613f62bc774",
+    "field": "german",
+    "old": "die Brücke",
+    "new": "Brücke",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "de552a06-f2bc-43b5-9c9f-82cbf321f9a4",
+    "field": "german",
+    "old": "der Beruf",
+    "new": "Beruf",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "de6952c4-af66-47f1-9a0e-cc4c24d193aa",
+    "field": "german",
+    "old": "das Handtuch",
+    "new": "Handtuch",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "dfac8b88-ff9d-4491-995b-5ad538fc1856",
+    "field": "german",
+    "old": "die Vollzeit",
+    "new": "Vollzeit",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "e015e41e-37bf-4b30-9d71-bb557660fbde",
+    "field": "german",
+    "old": "die Lieferung",
+    "new": "Lieferung",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "e08a09aa-7097-4a15-b594-375df4327603",
+    "field": "german",
+    "old": "der Sturm",
+    "new": "Sturm",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "e205fc7e-0210-4a28-96a6-eea5076a16d3",
+    "field": "german",
+    "old": "der Ausflug",
+    "new": "Ausflug",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "e3622c83-81e4-4447-bca1-facfeccb6ff7",
+    "field": "german",
+    "old": "die Haltestelle",
+    "new": "Haltestelle",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "e65d86f7-3980-46c0-9dd1-045685df5f7f",
+    "field": "german",
+    "old": "der Himmel",
+    "new": "Himmel",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "e80b78b1-ed26-4b13-acf7-adcaccda75a8",
+    "field": "german",
+    "old": "das Gehalt",
+    "new": "Gehalt",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "e9088e55-3408-4571-a9b7-76ed5b9a652d",
+    "field": "german",
+    "old": "das Trinkgeld",
+    "new": "Trinkgeld",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "e9945e6b-59e8-4781-a7db-a2ebc7b63f97",
+    "field": "german",
+    "old": "das Gewitter",
+    "new": "Gewitter",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "eb16cba5-bc12-459e-a443-9d93258d3f9f",
+    "field": "german",
+    "old": "der Feierabend",
+    "new": "Feierabend",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "eb2d00e8-8dc4-4174-9671-62b8194a7a38",
+    "field": "german",
+    "old": "das Hauptgericht",
+    "new": "Hauptgericht",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "f18ada3b-5d66-45ed-aaf0-ec34bd683301",
+    "field": "german",
+    "old": "das Tagesgericht",
+    "new": "Tagesgericht",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "f3fd812c-140b-48c2-ab31-51dc9dfd2b8d",
+    "field": "german",
+    "old": "die Temperatur",
+    "new": "Temperatur",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "f6582546-5bcb-4e00-8a2d-04111f48b6b7",
+    "field": "german",
+    "old": "der Schlussverkauf",
+    "new": "Schlussverkauf",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "f90ceab9-8034-4535-bb50-77805015fc42",
+    "field": "german",
+    "old": "der Donner",
+    "new": "Donner",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "fb31c9f1-88ad-4c53-adf3-209ccac36fbf",
+    "field": "german",
+    "old": "die Reservierung",
+    "new": "Reservierung",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "fd68a123-c681-45ee-a322-1989828c962c",
+    "field": "german",
+    "old": "das Vorstellungsgespräch",
+    "new": "Vorstellungsgespräch",
+    "reason": "german carries the article inside the headword while the article column already holds it ('der' + 'der Bahnhof'). utils/wordDisplay.js only papers over the double article at render time (displayGerman/hasArticlePrefix); the stored headword must be bare, as it already is in the Furniture and Transportation categories and at A1.1/A1.2 — otherwise SRS answer matching, sorting and any future export all see two different headword shapes at the same level."
+  },
+  {
+    "id": "059766ff-77a5-4d7e-bdcf-8fbfff9ea283",
+    "field": "plural",
+    "old": "die Blitze",
+    "new": "Blitze",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "079007a8-9140-4300-8f3c-6508945afb04",
+    "field": "plural",
+    "old": "die Chefs",
+    "new": "Chefs",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "10865a50-9c3e-40aa-93fd-42b922ce21e6",
+    "field": "plural",
+    "old": "die Erfahrungen",
+    "new": "Erfahrungen",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "131242b3-741c-406f-987b-4bcc3a3d5a86",
+    "field": "plural",
+    "old": "die Lebensläufe",
+    "new": "Lebensläufe",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "161b717e-7148-409f-b84d-46b28e80e503",
+    "field": "plural",
+    "old": "die Arbeitszeiten",
+    "new": "Arbeitszeiten",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "1d6571a9-21ba-4cdd-9ac3-d688fef30c99",
+    "field": "plural",
+    "old": "die Verträge",
+    "new": "Verträge",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "2e2d25b6-ebcb-481e-ae3b-143baeb77089",
+    "field": "plural",
+    "old": "null",
+    "new": null,
+    "reason": "plural stores the literal string \"null\" instead of JSON null; vocabularyService.js does `word.plural || ''` and SrsTrainer.jsx guards on `word.plural !== 'null'`, so the string leaks into any consumer that does not repeat that guard — same fix as the nine A1.2 rows in Wave 3. All five are singularia tantum (Freizeit, Verkehr, Schnee, Teilzeit, Vollzeit), so the correct value is null rather than a real plural."
+  },
+  {
+    "id": "3429e5db-c483-4783-82c7-62f30dac9fb3",
+    "field": "plural",
+    "old": "die Praktikanten",
+    "new": "Praktikanten",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "48e81d5d-8c46-46d5-96f8-47cad722f02b",
+    "field": "plural",
+    "old": "die Überstunden",
+    "new": "Überstunden",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "5cbef280-3bfc-4ba9-a266-c1b248af2956",
+    "field": "plural",
+    "old": "die Urlaube",
+    "new": "Urlaube",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "5d8c2568-acc8-4bc3-9530-6f32843b35bc",
+    "field": "plural",
+    "old": "die Chefinnen",
+    "new": "Chefinnen",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "5dbaecc7-100f-475e-bf50-3141cd7fa595",
+    "field": "plural",
+    "old": "die Kollegen",
+    "new": "Kollegen",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "60d5ce5a-2fd5-42ed-b31e-ff60a38ad9bd",
+    "field": "plural",
+    "old": "die Winde",
+    "new": "Winde",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "77ffeb9e-0730-4899-9ebd-f5bf2b0d8a72",
+    "field": "plural",
+    "old": "null",
+    "new": null,
+    "reason": "plural stores the literal string \"null\" instead of JSON null; vocabularyService.js does `word.plural || ''` and SrsTrainer.jsx guards on `word.plural !== 'null'`, so the string leaks into any consumer that does not repeat that guard — same fix as the nine A1.2 rows in Wave 3. All five are singularia tantum (Freizeit, Verkehr, Schnee, Teilzeit, Vollzeit), so the correct value is null rather than a real plural."
+  },
+  {
+    "id": "7e21ff73-c28b-4b08-a727-35f1481fafc8",
+    "field": "plural",
+    "old": "die Wettervorhersagen",
+    "new": "Wettervorhersagen",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "93f72bba-cf9f-4ce5-8008-818f8a0e2913",
+    "field": "plural",
+    "old": "die Regenschirme",
+    "new": "Regenschirme",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "94919639-ace5-4f18-8052-38873619d55d",
+    "field": "plural",
+    "old": "die Besprechungen",
+    "new": "Besprechungen",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "9d224e33-3ad8-4b5b-a067-7c29c15e1731",
+    "field": "plural",
+    "old": "null",
+    "new": null,
+    "reason": "plural stores the literal string \"null\" instead of JSON null; vocabularyService.js does `word.plural || ''` and SrsTrainer.jsx guards on `word.plural !== 'null'`, so the string leaks into any consumer that does not repeat that guard — same fix as the nine A1.2 rows in Wave 3. All five are singularia tantum (Freizeit, Verkehr, Schnee, Teilzeit, Vollzeit), so the correct value is null rather than a real plural."
+  },
+  {
+    "id": "a28bd2da-5d15-47f7-be4d-f4c894217817",
+    "field": "plural",
+    "old": "die Pausen",
+    "new": "Pausen",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "a2c7939a-c12a-4630-9c34-8dda46437bd4",
+    "field": "plural",
+    "old": "die Wetter",
+    "new": null,
+    "reason": "singulare tantum in everyday use: the stored plural is not a form an A2 learner should be drilled on. A1.2 convention (Schokolade/Sonne/Haut/Butter/Milch/Obst, Wave 3) is JSON null, not a dash."
+  },
+  {
+    "id": "a3b33d7c-169a-43e3-b1ab-72eb4fa0d6f4",
+    "field": "plural",
+    "old": "die Wolken",
+    "new": "Wolken",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "a88f5178-fa87-4f83-bc20-436bdbac884c",
+    "field": "plural",
+    "old": "die Kolleginnen",
+    "new": "Kolleginnen",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "a9af016f-1bc1-431c-aea8-8005aa22b0f2",
+    "field": "plural",
+    "old": "die Abteilungen",
+    "new": "Abteilungen",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "a9bb991e-7bbf-4956-81c2-366ff5bb76ff",
+    "field": "plural",
+    "old": "Kundenservices",
+    "new": null,
+    "reason": "singulare tantum in everyday use: the stored plural is not a form an A2 learner should be drilled on. A1.2 convention (Schokolade/Sonne/Haut/Butter/Milch/Obst, Wave 3) is JSON null, not a dash. Kundenservice is uncountable in the 'customer service desk' sense the gloss and example use; 'Kundenservices' would only work for several companies' departments."
+  },
+  {
+    "id": "b0da6bbf-1caa-47e3-8eca-0a996a1dea70",
+    "field": "plural",
+    "old": "die Termine",
+    "new": "Termine",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "b0eba8dc-03dd-45e1-9c8e-c1c741aa846b",
+    "field": "plural",
+    "old": "die Grade",
+    "new": "Grade",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "b312714c-7a3a-4f4c-b961-fbebaaab0889",
+    "field": "plural",
+    "old": "die Aufgaben",
+    "new": "Aufgaben",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "b74ef804-9e72-4476-9151-ac8056154275",
+    "field": "plural",
+    "old": "null",
+    "new": null,
+    "reason": "plural stores the literal string \"null\" instead of JSON null; vocabularyService.js does `word.plural || ''` and SrsTrainer.jsx guards on `word.plural !== 'null'`, so the string leaks into any consumer that does not repeat that guard — same fix as the nine A1.2 rows in Wave 3. All five are singularia tantum (Freizeit, Verkehr, Schnee, Teilzeit, Vollzeit), so the correct value is null rather than a real plural."
+  },
+  {
+    "id": "b79436fb-2a73-4dd3-8fca-cc1d76a1c25f",
+    "field": "plural",
+    "old": "die Bewerbungen",
+    "new": "Bewerbungen",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "c358a3d8-c4e5-45a8-9557-23d81c65c2ce",
+    "field": "plural",
+    "old": "die Sonnen",
+    "new": null,
+    "reason": "singulare tantum in everyday use: the stored plural is not a form an A2 learner should be drilled on. A1.2 convention (Schokolade/Sonne/Haut/Butter/Milch/Obst, Wave 3) is JSON null, not a dash."
+  },
+  {
+    "id": "c6af615f-1669-4281-acca-4816a7251aa1",
+    "field": "plural",
+    "old": "Alltage",
+    "new": null,
+    "reason": "singulare tantum in everyday use: the stored plural is not a form an A2 learner should be drilled on. A1.2 convention (Schokolade/Sonne/Haut/Butter/Milch/Obst, Wave 3) is JSON null, not a dash. 'Alltage' is not used; der Alltag has no everyday plural."
+  },
+  {
+    "id": "d4dfd742-9619-4249-a1ce-386fa7ece527",
+    "field": "plural",
+    "old": "die Regen",
+    "new": null,
+    "reason": "singulare tantum in everyday use: the stored plural is not a form an A2 learner should be drilled on. A1.2 convention (Schokolade/Sonne/Haut/Butter/Milch/Obst, Wave 3) is JSON null, not a dash."
+  },
+  {
+    "id": "d92c8743-7c60-4160-b19b-e37ac37139d9",
+    "field": "plural",
+    "old": "die Nebel",
+    "new": null,
+    "reason": "singulare tantum in everyday use: the stored plural is not a form an A2 learner should be drilled on. A1.2 convention (Schokolade/Sonne/Haut/Butter/Milch/Obst, Wave 3) is JSON null, not a dash."
+  },
+  {
+    "id": "de552a06-f2bc-43b5-9c9f-82cbf321f9a4",
+    "field": "plural",
+    "old": "die Berufe",
+    "new": "Berufe",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "dfac8b88-ff9d-4491-995b-5ad538fc1856",
+    "field": "plural",
+    "old": "null",
+    "new": null,
+    "reason": "plural stores the literal string \"null\" instead of JSON null; vocabularyService.js does `word.plural || ''` and SrsTrainer.jsx guards on `word.plural !== 'null'`, so the string leaks into any consumer that does not repeat that guard — same fix as the nine A1.2 rows in Wave 3. All five are singularia tantum (Freizeit, Verkehr, Schnee, Teilzeit, Vollzeit), so the correct value is null rather than a real plural."
+  },
+  {
+    "id": "e08a09aa-7097-4a15-b594-375df4327603",
+    "field": "plural",
+    "old": "die Stürme",
+    "new": "Stürme",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "e65d86f7-3980-46c0-9dd1-045685df5f7f",
+    "field": "plural",
+    "old": "die Himmel",
+    "new": null,
+    "reason": "singulare tantum in everyday use: the stored plural is not a form an A2 learner should be drilled on. A1.2 convention (Schokolade/Sonne/Haut/Butter/Milch/Obst, Wave 3) is JSON null, not a dash."
+  },
+  {
+    "id": "e80b78b1-ed26-4b13-acf7-adcaccda75a8",
+    "field": "plural",
+    "old": "die Gehälter",
+    "new": "Gehälter",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "e9945e6b-59e8-4781-a7db-a2ebc7b63f97",
+    "field": "plural",
+    "old": "die Gewitter",
+    "new": "Gewitter",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "f3fd812c-140b-48c2-ab31-51dc9dfd2b8d",
+    "field": "plural",
+    "old": "die Temperaturen",
+    "new": "Temperaturen",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  },
+  {
+    "id": "f90ceab9-8034-4535-bb50-77805015fc42",
+    "field": "plural",
+    "old": "die Donner",
+    "new": null,
+    "reason": "singulare tantum in everyday use: the stored plural is not a form an A2 learner should be drilled on. A1.2 convention (Schokolade/Sonne/Haut/Butter/Milch/Obst, Wave 3) is JSON null, not a dash."
+  },
+  {
+    "id": "fd68a123-c681-45ee-a322-1989828c962c",
+    "field": "plural",
+    "old": "die Vorstellungsgespräche",
+    "new": "Vorstellungsgespräche",
+    "reason": "plural carries the definite article ('die Gewitter'); every other category at this level and both A1 levels store the bare plural form, and SrsTrainer.jsx renders it after a literal 'Plural: ' label, so this shows as 'Plural: die Gewitter'."
+  }
+]

@@ -1,0 +1,1291 @@
+[
+  {
+    "exercise_id": "1c6c1cec-b3ef-45cb-a7e6-51b9d16956e0",
+    "exercise_number": 1,
+    "dialogue_number": 1,
+    "question_number": 11,
+    "question_text": "Was verschreibt die Ärztin gegen die Erkältung?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Nasenspray und Schmerztabletten",
+      "b) Ein Antibiotikum",
+      "c) Nasentropfen und Tee"
+    ],
+    "correct_answer": "a",
+    "acceptable_answers": null,
+    "explanation": "Die Ärztin sagt \"Ich verschreibe Ihnen Nasenspray und Schmerztabletten\"."
+  },
+  {
+    "exercise_id": "1c6c1cec-b3ef-45cb-a7e6-51b9d16956e0",
+    "exercise_number": 1,
+    "dialogue_number": 2,
+    "question_number": 12,
+    "question_text": "Der Mann mit den Rückenschmerzen arbeitet am Computer.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Richtig",
+    "acceptable_answers": null,
+    "explanation": "Er sagt \"ich arbeite den ganzen Tag am Computer\"."
+  },
+  {
+    "exercise_id": "1c6c1cec-b3ef-45cb-a7e6-51b9d16956e0",
+    "exercise_number": 1,
+    "dialogue_number": 3,
+    "question_number": 13,
+    "question_text": "Wann niest der Patient besonders oft?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Nur im Winter",
+      "b) Das ganze Jahr",
+      "c) Im Frühling und Sommer"
+    ],
+    "correct_answer": "c",
+    "acceptable_answers": null,
+    "explanation": "Er sagt \"Hauptsächlich im Frühling und Sommer\"."
+  },
+  {
+    "exercise_id": "1c6c1cec-b3ef-45cb-a7e6-51b9d16956e0",
+    "exercise_number": 1,
+    "dialogue_number": 4,
+    "question_number": 14,
+    "question_text": "Der Patient mit dem hohen Blutdruck bekommt sofort Medikamente.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "acceptable_answers": null,
+    "explanation": "Die Ärztin sagt \"Noch nicht\"."
+  },
+  {
+    "exercise_id": "1c6c1cec-b3ef-45cb-a7e6-51b9d16956e0",
+    "exercise_number": 1,
+    "dialogue_number": 5,
+    "question_number": 15,
+    "question_text": "In welchen Arm bekommt der Mann die Impfung?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Ins Bein",
+      "b) In den linken Oberarm",
+      "c) In den rechten Oberarm"
+    ],
+    "correct_answer": "b",
+    "acceptable_answers": null,
+    "explanation": "Die Ärztin sagt \"Die Impfung ist in den linken Oberarm\"."
+  },
+  {
+    "exercise_id": "1c6c1cec-b3ef-45cb-a7e6-51b9d16956e0",
+    "exercise_number": 1,
+    "dialogue_number": 6,
+    "question_number": 16,
+    "question_text": "Die Frau war am Samstag im Restaurant.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "acceptable_answers": null,
+    "explanation": "Sie sagt \"Am Sonntag war ich in einem Restaurant\"."
+  },
+  {
+    "exercise_id": "1c6c1cec-b3ef-45cb-a7e6-51b9d16956e0",
+    "exercise_number": 1,
+    "dialogue_number": 7,
+    "question_number": 17,
+    "question_text": "Wann soll der Mann zur Blutabnahme kommen?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Nächste Woche",
+      "b) Heute",
+      "c) In drei Monaten"
+    ],
+    "correct_answer": "a",
+    "acceptable_answers": null,
+    "explanation": "Die Ärztin sagt \"kommen Sie nächste Woche nüchtern zur Blutabnahme\"."
+  },
+  {
+    "exercise_id": "1c6c1cec-b3ef-45cb-a7e6-51b9d16956e0",
+    "exercise_number": 1,
+    "dialogue_number": 8,
+    "question_number": 18,
+    "question_text": "Der kranke Sohn hat auch Halsschmerzen.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Richtig",
+    "acceptable_answers": null,
+    "explanation": "Die Mutter sagt \"Er hat auch Halsschmerzen\"."
+  },
+  {
+    "exercise_id": "1c6c1cec-b3ef-45cb-a7e6-51b9d16956e0",
+    "exercise_number": 1,
+    "dialogue_number": 9,
+    "question_number": 19,
+    "question_text": "Wo ist die Radiologie?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Im ersten Stock",
+      "b) Im Keller",
+      "c) Im Erdgeschoss"
+    ],
+    "correct_answer": "c",
+    "acceptable_answers": null,
+    "explanation": "Die Ärztin sagt \"Im Erdgeschoss\"."
+  },
+  {
+    "exercise_id": "1c6c1cec-b3ef-45cb-a7e6-51b9d16956e0",
+    "exercise_number": 1,
+    "dialogue_number": 10,
+    "question_number": 20,
+    "question_text": "Die Frau nimmt fast jeden Tag Schmerzmittel.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Richtig",
+    "acceptable_answers": null,
+    "explanation": "Sie sagt \"Ja, fast jeden Tag\"."
+  },
+  {
+    "exercise_id": "1c6c1cec-b3ef-45cb-a7e6-51b9d16956e0",
+    "exercise_number": 1,
+    "dialogue_number": 8,
+    "question_number": 21,
+    "question_text": "Wie hoch ist das Fieber von ihrem Sohn? Schreiben Sie die Zahl.",
+    "question_type": "dictation",
+    "options": null,
+    "correct_answer": "39,8",
+    "acceptable_answers": [
+      "39,8",
+      "39.8",
+      "39,8 Grad",
+      "39.8 Grad",
+      "39,8 °C",
+      "neununddreißig Komma acht",
+      "neununddreißig Komma acht Grad"
+    ],
+    "explanation": "Die Mutter sagt \"Neununddreißig Komma acht\"."
+  },
+  {
+    "exercise_id": "1c6c1cec-b3ef-45cb-a7e6-51b9d16956e0",
+    "exercise_number": 1,
+    "dialogue_number": 2,
+    "question_number": 22,
+    "question_text": "Wie oft darf der Mann die Tabletten pro Tag nehmen?",
+    "question_type": "dictation",
+    "options": null,
+    "correct_answer": "dreimal",
+    "acceptable_answers": [
+      "dreimal",
+      "3",
+      "drei",
+      "3x",
+      "3 x",
+      "3 mal",
+      "3-mal",
+      "drei Mal",
+      "3x täglich",
+      "3 mal täglich",
+      "dreimal täglich",
+      "dreimal am Tag",
+      "maximal dreimal"
+    ],
+    "explanation": "Die Ärztin sagt \"Nehmen Sie diese Tabletten, maximal dreimal täglich\"."
+  },
+  {
+    "exercise_id": "1c6c1cec-b3ef-45cb-a7e6-51b9d16956e0",
+    "exercise_number": 1,
+    "dialogue_number": 4,
+    "question_number": 23,
+    "question_text": "In wie vielen Wochen kommt der Mann zur Kontrolle?",
+    "question_type": "dictation",
+    "options": null,
+    "correct_answer": "4",
+    "acceptable_answers": [
+      "4",
+      "4 Wochen",
+      "vier",
+      "vier Wochen",
+      "in 4 Wochen",
+      "in vier Wochen"
+    ],
+    "explanation": "Die Ärztin sagt \"Kommen Sie in vier Wochen wieder zur Kontrolle\"."
+  },
+  {
+    "exercise_id": "369a41e4-edb8-4f7a-bda8-20a54fcfb11d",
+    "exercise_number": 2,
+    "dialogue_number": 1,
+    "question_number": 11,
+    "question_text": "Für wie viele Personen braucht der Gast einen Tisch?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Für zwei Personen",
+      "b) Für vier Personen",
+      "c) Für sechs Personen"
+    ],
+    "correct_answer": "b",
+    "acceptable_answers": null,
+    "explanation": "Er fragt \"haben Sie einen Tisch für vier Personen?\"."
+  },
+  {
+    "exercise_id": "369a41e4-edb8-4f7a-bda8-20a54fcfb11d",
+    "exercise_number": 2,
+    "dialogue_number": 2,
+    "question_number": 12,
+    "question_text": "Das Tagesgericht ist Hähnchen mit Kartoffeln.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "acceptable_answers": null,
+    "explanation": "Der Kellner sagt \"Heute haben wir Lachsfilet mit Kartoffeln und Gemüse\"."
+  },
+  {
+    "exercise_id": "369a41e4-edb8-4f7a-bda8-20a54fcfb11d",
+    "exercise_number": 2,
+    "dialogue_number": 3,
+    "question_number": 13,
+    "question_text": "Was ist in der Gemüselasagne?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Zucchini, Auberginen und Tomaten",
+      "b) Fleisch und Reis",
+      "c) Kokosmilch und Curry"
+    ],
+    "correct_answer": "a",
+    "acceptable_answers": null,
+    "explanation": "Die Kellnerin sagt \"Mit Zucchini, Auberginen und Tomaten\"."
+  },
+  {
+    "exercise_id": "369a41e4-edb8-4f7a-bda8-20a54fcfb11d",
+    "exercise_number": 2,
+    "dialogue_number": 4,
+    "question_number": 14,
+    "question_text": "Der Kellner notiert die Allergie für die Küche.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Richtig",
+    "acceptable_answers": null,
+    "explanation": "Er sagt \"Ich notiere das für die Küche\"."
+  },
+  {
+    "exercise_id": "369a41e4-edb8-4f7a-bda8-20a54fcfb11d",
+    "exercise_number": 2,
+    "dialogue_number": 5,
+    "question_number": 15,
+    "question_text": "Wie lange muss der Gast auf das Steak warten?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Fünf Minuten",
+      "b) Zwanzig Minuten",
+      "c) Etwa zehn Minuten"
+    ],
+    "correct_answer": "c",
+    "acceptable_answers": null,
+    "explanation": "Die Kellnerin sagt \"Es dauert etwa zehn Minuten\"."
+  },
+  {
+    "exercise_id": "369a41e4-edb8-4f7a-bda8-20a54fcfb11d",
+    "exercise_number": 2,
+    "dialogue_number": 6,
+    "question_number": 16,
+    "question_text": "Der Kellner empfiehlt einen schweren Weißwein.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "acceptable_answers": null,
+    "explanation": "Er sagt \"Dann empfehle ich einen leichten Rotwein\"."
+  },
+  {
+    "exercise_id": "369a41e4-edb8-4f7a-bda8-20a54fcfb11d",
+    "exercise_number": 2,
+    "dialogue_number": 7,
+    "question_number": 17,
+    "question_text": "Was bestellt die Frau für ihren Mann?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Schokoladenkuchen",
+      "b) Tiramisu",
+      "c) Nur einen Espresso"
+    ],
+    "correct_answer": "b",
+    "acceptable_answers": null,
+    "explanation": "Sie sagt \"Und für meinen Mann das Tiramisu\"."
+  },
+  {
+    "exercise_id": "369a41e4-edb8-4f7a-bda8-20a54fcfb11d",
+    "exercise_number": 2,
+    "dialogue_number": 8,
+    "question_number": 18,
+    "question_text": "Der Gast nimmt den Rest nicht mit.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "acceptable_answers": null,
+    "explanation": "Der Kellner sagt \"Ich packe es Ihnen ein\"."
+  },
+  {
+    "exercise_id": "369a41e4-edb8-4f7a-bda8-20a54fcfb11d",
+    "exercise_number": 2,
+    "dialogue_number": 9,
+    "question_number": 19,
+    "question_text": "Wie möchte der zweite Gast bezahlen?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Mit Karte",
+      "b) Bar",
+      "c) Zusammen mit dem Mann"
+    ],
+    "correct_answer": "a",
+    "acceptable_answers": null,
+    "explanation": "Der Gast fragt \"Kann ich mit Karte zahlen?\"."
+  },
+  {
+    "exercise_id": "369a41e4-edb8-4f7a-bda8-20a54fcfb11d",
+    "exercise_number": 2,
+    "dialogue_number": 10,
+    "question_number": 20,
+    "question_text": "Dem Gast hat besonders der Fisch geschmeckt.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Richtig",
+    "acceptable_answers": null,
+    "explanation": "Er sagt \"Besonders der Fisch war perfekt\"."
+  },
+  {
+    "exercise_id": "369a41e4-edb8-4f7a-bda8-20a54fcfb11d",
+    "exercise_number": 2,
+    "dialogue_number": 9,
+    "question_number": 21,
+    "question_text": "Wie viel kostet die Pasta mit dem Wein?",
+    "question_type": "dictation",
+    "options": null,
+    "correct_answer": "22",
+    "acceptable_answers": [
+      "22",
+      "22 €",
+      "22 Euro",
+      "22,00",
+      "22,00 Euro",
+      "zweiundzwanzig",
+      "zweiundzwanzig Euro"
+    ],
+    "explanation": "Die Kellnerin sagt \"Das macht zweiundzwanzig Euro\"."
+  },
+  {
+    "exercise_id": "369a41e4-edb8-4f7a-bda8-20a54fcfb11d",
+    "exercise_number": 2,
+    "dialogue_number": 7,
+    "question_number": 22,
+    "question_text": "Wie viele Espresso bestellt die Frau?",
+    "question_type": "dictation",
+    "options": null,
+    "correct_answer": "2",
+    "acceptable_answers": [
+      "2",
+      "zwei",
+      "2 Espresso",
+      "zwei Espresso",
+      "zwei Stück"
+    ],
+    "explanation": "Sie sagt \"Ja, zwei Espresso bitte\"."
+  },
+  {
+    "exercise_id": "369a41e4-edb8-4f7a-bda8-20a54fcfb11d",
+    "exercise_number": 2,
+    "dialogue_number": 6,
+    "question_number": 23,
+    "question_text": "Wie heißt der Wein aus der Pfalz?",
+    "question_type": "dictation",
+    "options": null,
+    "correct_answer": "Spätburgunder",
+    "acceptable_answers": [
+      "Spätburgunder",
+      "Spaetburgunder",
+      "Der Spätburgunder"
+    ],
+    "explanation": "Der Kellner sagt \"Der Spätburgunder aus der Pfalz ist sehr gut\"."
+  },
+  {
+    "exercise_id": "d1552ee8-0a2e-4bf5-8f18-39da155f42dd",
+    "exercise_number": 3,
+    "dialogue_number": 1,
+    "question_number": 11,
+    "question_text": "Wie viel kostet die Fahrkarte nach Frankfurt?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) 29 Euro",
+      "b) 49 Euro",
+      "c) 39 Euro"
+    ],
+    "correct_answer": "c",
+    "acceptable_answers": null,
+    "explanation": "Die Frau sagt \"Die Fahrkarte kostet neununddreißig Euro\"."
+  },
+  {
+    "exercise_id": "d1552ee8-0a2e-4bf5-8f18-39da155f42dd",
+    "exercise_number": 3,
+    "dialogue_number": 2,
+    "question_number": 12,
+    "question_text": "Der Zug nach München fährt ohne Umsteigen.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Richtig",
+    "acceptable_answers": null,
+    "explanation": "Der Mann sagt \"das ist eine Direktverbindung\"."
+  },
+  {
+    "exercise_id": "d1552ee8-0a2e-4bf5-8f18-39da155f42dd",
+    "exercise_number": 3,
+    "dialogue_number": 3,
+    "question_number": 13,
+    "question_text": "Was kostet ein Koffer extra?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) 23 Euro",
+      "b) 25 Euro",
+      "c) 15 Euro"
+    ],
+    "correct_answer": "b",
+    "acceptable_answers": null,
+    "explanation": "Die Mitarbeiterin sagt \"ein Koffer bis dreiundzwanzig Kilo kostet fünfundzwanzig Euro extra\"."
+  },
+  {
+    "exercise_id": "d1552ee8-0a2e-4bf5-8f18-39da155f42dd",
+    "exercise_number": 3,
+    "dialogue_number": 4,
+    "question_number": 14,
+    "question_text": "Das Servicecenter ist neben dem Kiosk.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "acceptable_answers": null,
+    "explanation": "Die Frau sagt \"Gleich hier vorne links, neben der Buchhandlung\"."
+  },
+  {
+    "exercise_id": "d1552ee8-0a2e-4bf5-8f18-39da155f42dd",
+    "exercise_number": 3,
+    "dialogue_number": 5,
+    "question_number": 15,
+    "question_text": "Für wie viele Tage bekommt Herr Müller das Auto?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Für fünf Tage",
+      "b) Für drei Tage",
+      "c) Für zehn Tage"
+    ],
+    "correct_answer": "a",
+    "acceptable_answers": null,
+    "explanation": "Die Mitarbeiterin sagt \"Ein VW Golf für fünf Tage\"."
+  },
+  {
+    "exercise_id": "d1552ee8-0a2e-4bf5-8f18-39da155f42dd",
+    "exercise_number": 3,
+    "dialogue_number": 6,
+    "question_number": 16,
+    "question_text": "Die Fahrt zum Flughafen dauert etwa vierzig Minuten.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Richtig",
+    "acceptable_answers": null,
+    "explanation": "Der Mann sagt \"Ungefähr vierzig Minuten\"."
+  },
+  {
+    "exercise_id": "d1552ee8-0a2e-4bf5-8f18-39da155f42dd",
+    "exercise_number": 3,
+    "dialogue_number": 7,
+    "question_number": 17,
+    "question_text": "In welchem Wagen reserviert der Mann einen Platz?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Im Abteil",
+      "b) Im Speisewagen",
+      "c) Im Großraumwagen"
+    ],
+    "correct_answer": "c",
+    "acceptable_answers": null,
+    "explanation": "Er sagt \"Großraumwagen ist okay\"."
+  },
+  {
+    "exercise_id": "d1552ee8-0a2e-4bf5-8f18-39da155f42dd",
+    "exercise_number": 3,
+    "dialogue_number": 8,
+    "question_number": 18,
+    "question_text": "Die Frau bekommt einen Platz in Reihe zwanzig.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "acceptable_answers": null,
+    "explanation": "Der Mitarbeiter sagt \"Reihe zwölf ist noch frei\"."
+  },
+  {
+    "exercise_id": "d1552ee8-0a2e-4bf5-8f18-39da155f42dd",
+    "exercise_number": 3,
+    "dialogue_number": 9,
+    "question_number": 19,
+    "question_text": "Wo wartet der Mann auf das Taxi?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Am Hauptbahnhof",
+      "b) Im Hotel Kaiserhof",
+      "c) In der Bahnhofstraße"
+    ],
+    "correct_answer": "b",
+    "acceptable_answers": null,
+    "explanation": "Er sagt \"Hotel Kaiserhof, Berliner Straße fünfzehn\"."
+  },
+  {
+    "exercise_id": "d1552ee8-0a2e-4bf5-8f18-39da155f42dd",
+    "exercise_number": 3,
+    "dialogue_number": 10,
+    "question_number": 20,
+    "question_text": "Der Flug nach Rom dauert zwei Stunden.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "acceptable_answers": null,
+    "explanation": "Die Durchsage sagt \"eine Stunde und fünfundvierzig Minuten\"."
+  },
+  {
+    "exercise_id": "d1552ee8-0a2e-4bf5-8f18-39da155f42dd",
+    "exercise_number": 3,
+    "dialogue_number": 2,
+    "question_number": 21,
+    "question_text": "Wann fährt der erste ICE nach München?",
+    "question_type": "dictation",
+    "options": null,
+    "correct_answer": "5:53",
+    "acceptable_answers": [
+      "5:53",
+      "05:53",
+      "5.53",
+      "5:53 Uhr",
+      "5 Uhr 53",
+      "fünf Uhr dreiundfünfzig",
+      "um fünf Uhr dreiundfünfzig"
+    ],
+    "explanation": "Der Mann sagt \"Der erste ICE fährt um fünf Uhr dreiundfünfzig\"."
+  },
+  {
+    "exercise_id": "d1552ee8-0a2e-4bf5-8f18-39da155f42dd",
+    "exercise_number": 3,
+    "dialogue_number": 7,
+    "question_number": 22,
+    "question_text": "Welchen Platz bekommt der Mann im Zug?",
+    "question_type": "dictation",
+    "options": null,
+    "correct_answer": "42",
+    "acceptable_answers": [
+      "42",
+      "Platz 42",
+      "Sitzplatz 42",
+      "zweiundvierzig",
+      "Platz zweiundvierzig"
+    ],
+    "explanation": "Die Mitarbeiterin sagt \"Ich habe Wagen sieben, Platz zweiundvierzig\"."
+  },
+  {
+    "exercise_id": "d1552ee8-0a2e-4bf5-8f18-39da155f42dd",
+    "exercise_number": 3,
+    "dialogue_number": 3,
+    "question_number": 23,
+    "question_text": "Wann geht der Flug nach Barcelona? Schreiben Sie die Uhrzeit.",
+    "question_type": "dictation",
+    "options": null,
+    "correct_answer": "9:15",
+    "acceptable_answers": [
+      "9:15",
+      "09:15",
+      "9.15",
+      "9:15 Uhr",
+      "9 Uhr 15",
+      "neun Uhr fünfzehn",
+      "um neun Uhr fünfzehn"
+    ],
+    "explanation": "Die Mitarbeiterin sagt \"Ich habe einen Flug um neun Uhr fünfzehn\"."
+  },
+  {
+    "exercise_id": "fbd6e61e-b9a8-4a6d-bdff-ad3366b95a50",
+    "exercise_number": 4,
+    "dialogue_number": 1,
+    "question_number": 11,
+    "question_text": "Wie lange dauert der Haarschnitt für Herren?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Etwa 30 Minuten",
+      "b) Etwa 60 Minuten",
+      "c) Etwa 15 Minuten"
+    ],
+    "correct_answer": "a",
+    "acceptable_answers": null,
+    "explanation": "Die Mitarbeiterin sagt \"Für Herrenschnitt etwa dreißig Minuten\"."
+  },
+  {
+    "exercise_id": "fbd6e61e-b9a8-4a6d-bdff-ad3366b95a50",
+    "exercise_number": 4,
+    "dialogue_number": 2,
+    "question_number": 12,
+    "question_text": "Die Frau mit Zahnschmerzen kommt morgen um sechzehn Uhr.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "acceptable_answers": null,
+    "explanation": "Der Mitarbeiter sagt \"Können Sie heute um sechzehn Uhr kommen?\"."
+  },
+  {
+    "exercise_id": "fbd6e61e-b9a8-4a6d-bdff-ad3366b95a50",
+    "exercise_number": 4,
+    "dialogue_number": 3,
+    "question_number": 13,
+    "question_text": "Warum verschiebt Frau Schmidt den Termin?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Sie ist krank",
+      "b) Sie hat eine Besprechung",
+      "c) Sie ist im Urlaub"
+    ],
+    "correct_answer": "b",
+    "acceptable_answers": null,
+    "explanation": "Sie sagt \"Ich habe eine wichtige Besprechung\"."
+  },
+  {
+    "exercise_id": "fbd6e61e-b9a8-4a6d-bdff-ad3366b95a50",
+    "exercise_number": 4,
+    "dialogue_number": 4,
+    "question_number": 14,
+    "question_text": "Die Freunde gehen am Sonntag ins Museum.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Richtig",
+    "acceptable_answers": null,
+    "explanation": "Sie sagt \"Aber Sonntag geht\" und \"Wir könnten ins Museum gehen\"."
+  },
+  {
+    "exercise_id": "fbd6e61e-b9a8-4a6d-bdff-ad3366b95a50",
+    "exercise_number": 4,
+    "dialogue_number": 5,
+    "question_number": 15,
+    "question_text": "An welchem Tag ist der neue Termin?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Am Montag",
+      "b) Am Freitag",
+      "c) Am Mittwoch"
+    ],
+    "correct_answer": "c",
+    "acceptable_answers": null,
+    "explanation": "Sie sagt \"Mittwoch passt gut\"."
+  },
+  {
+    "exercise_id": "fbd6e61e-b9a8-4a6d-bdff-ad3366b95a50",
+    "exercise_number": 4,
+    "dialogue_number": 6,
+    "question_number": 16,
+    "question_text": "Die Frau kann das Auto nachmittags abholen.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Richtig",
+    "acceptable_answers": null,
+    "explanation": "Der Mitarbeiter sagt \"Sie können das Auto morgens bringen und nachmittags abholen\"."
+  },
+  {
+    "exercise_id": "fbd6e61e-b9a8-4a6d-bdff-ad3366b95a50",
+    "exercise_number": 4,
+    "dialogue_number": 7,
+    "question_number": 17,
+    "question_text": "Wann fängt die Geburtstagsparty an?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Um 20 Uhr",
+      "b) Um 19 Uhr",
+      "c) Um 21 Uhr"
+    ],
+    "correct_answer": "a",
+    "acceptable_answers": null,
+    "explanation": "Sie sagt \"Um zwanzig Uhr. Bei mir zu Hause\"."
+  },
+  {
+    "exercise_id": "fbd6e61e-b9a8-4a6d-bdff-ad3366b95a50",
+    "exercise_number": 4,
+    "dialogue_number": 8,
+    "question_number": 18,
+    "question_text": "Die Frau mit der kaputten Heizung arbeitet zu Hause.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Richtig",
+    "acceptable_answers": null,
+    "explanation": "Sie sagt \"Ich arbeite von zu Hause. Ich bin immer da\"."
+  },
+  {
+    "exercise_id": "fbd6e61e-b9a8-4a6d-bdff-ad3366b95a50",
+    "exercise_number": 4,
+    "dialogue_number": 9,
+    "question_number": 19,
+    "question_text": "Wie lange können die beiden Tennis spielen?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Zwei Stunden",
+      "b) Eine Stunde",
+      "c) Eine halbe Stunde"
+    ],
+    "correct_answer": "b",
+    "acceptable_answers": null,
+    "explanation": "Er sagt \"Eine Stunde. Danach ist der Platz leider besetzt\"."
+  },
+  {
+    "exercise_id": "fbd6e61e-b9a8-4a6d-bdff-ad3366b95a50",
+    "exercise_number": 4,
+    "dialogue_number": 10,
+    "question_number": 20,
+    "question_text": "Der Elternabend ist in der Turnhalle.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "acceptable_answers": null,
+    "explanation": "Sie sagt \"In der Aula\"."
+  },
+  {
+    "exercise_id": "fbd6e61e-b9a8-4a6d-bdff-ad3366b95a50",
+    "exercise_number": 4,
+    "dialogue_number": 10,
+    "question_number": 21,
+    "question_text": "Wann beginnt der Elternabend? Schreiben Sie die Uhrzeit.",
+    "question_type": "dictation",
+    "options": null,
+    "correct_answer": "19:30",
+    "acceptable_answers": [
+      "19:30",
+      "19.30",
+      "19:30 Uhr",
+      "1930",
+      "19 Uhr 30",
+      "neunzehn Uhr dreißig",
+      "um neunzehn Uhr dreißig"
+    ],
+    "explanation": "Sie sagt \"Um neunzehn Uhr dreißig\"."
+  },
+  {
+    "exercise_id": "fbd6e61e-b9a8-4a6d-bdff-ad3366b95a50",
+    "exercise_number": 4,
+    "dialogue_number": 8,
+    "question_number": 22,
+    "question_text": "In welchem Stock wohnt die Frau? Schreiben Sie die Zahl.",
+    "question_type": "dictation",
+    "options": null,
+    "correct_answer": "3",
+    "acceptable_answers": [
+      "3",
+      "3.",
+      "drei",
+      "dritter",
+      "dritten",
+      "3. Stock",
+      "3.Stock",
+      "3 Stock",
+      "im 3. Stock",
+      "dritter Stock",
+      "im dritten Stock"
+    ],
+    "explanation": "Sie sagt \"Bachstraße zwölf, dritter Stock\"."
+  },
+  {
+    "exercise_id": "fbd6e61e-b9a8-4a6d-bdff-ad3366b95a50",
+    "exercise_number": 4,
+    "dialogue_number": 5,
+    "question_number": 23,
+    "question_text": "Um wie viel Uhr ist der Termin mit Peter?",
+    "question_type": "dictation",
+    "options": null,
+    "correct_answer": "18:00",
+    "acceptable_answers": [
+      "18:00",
+      "18.00",
+      "18 Uhr",
+      "18",
+      "um 18 Uhr",
+      "achtzehn",
+      "achtzehn Uhr",
+      "um achtzehn Uhr"
+    ],
+    "explanation": "Er sagt \"Ja, um achtzehn Uhr. Bis dann und alles Gute!\"."
+  },
+  {
+    "exercise_id": "7cb40bfe-01b4-4634-9953-897c0776fd4b",
+    "exercise_number": 5,
+    "dialogue_number": 1,
+    "question_number": 11,
+    "question_text": "Wie möchte der Mann das Brot haben?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Am Stück",
+      "b) Ohne Kruste",
+      "c) Geschnitten"
+    ],
+    "correct_answer": "c",
+    "acceptable_answers": null,
+    "explanation": "Er sagt \"Geschnitten, bitte\"."
+  },
+  {
+    "exercise_id": "7cb40bfe-01b4-4634-9953-897c0776fd4b",
+    "exercise_number": 5,
+    "dialogue_number": 2,
+    "question_number": 12,
+    "question_text": "Die Tomaten kommen aus der Region.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Richtig",
+    "acceptable_answers": null,
+    "explanation": "Die Verkäuferin sagt \"Die sind aus der Region, ganz frisch\"."
+  },
+  {
+    "exercise_id": "7cb40bfe-01b4-4634-9953-897c0776fd4b",
+    "exercise_number": 5,
+    "dialogue_number": 3,
+    "question_number": 13,
+    "question_text": "Wie lange hält der Akku von den Kopfhörern?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Acht Stunden",
+      "b) Zehn Stunden",
+      "c) Vier Stunden"
+    ],
+    "correct_answer": "a",
+    "acceptable_answers": null,
+    "explanation": "Die Verkäuferin sagt \"der Akku hält acht Stunden\"."
+  },
+  {
+    "exercise_id": "7cb40bfe-01b4-4634-9953-897c0776fd4b",
+    "exercise_number": 5,
+    "dialogue_number": 4,
+    "question_number": 14,
+    "question_text": "Der Mann hat die Hose mit Karte bezahlt.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Richtig",
+    "acceptable_answers": null,
+    "explanation": "Er sagt \"Mit Karte\"."
+  },
+  {
+    "exercise_id": "7cb40bfe-01b4-4634-9953-897c0776fd4b",
+    "exercise_number": 5,
+    "dialogue_number": 5,
+    "question_number": 15,
+    "question_text": "Welcher Autor schreibt Thriller aus Berlin?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Sebastian Schmidt",
+      "b) Sebastian Fitzek",
+      "c) Stefan Fitzek"
+    ],
+    "correct_answer": "b",
+    "acceptable_answers": null,
+    "explanation": "Der Verkäufer sagt \"das könnte Sebastian Fitzek sein. Er schreibt Thriller, die in Berlin spielen\"."
+  },
+  {
+    "exercise_id": "7cb40bfe-01b4-4634-9953-897c0776fd4b",
+    "exercise_number": 5,
+    "dialogue_number": 6,
+    "question_number": 16,
+    "question_text": "Die Sonnencreme steht in Gang fünf.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "acceptable_answers": null,
+    "explanation": "Die Verkäuferin sagt \"Die Sonnenpflege ist in Gang drei, links\"."
+  },
+  {
+    "exercise_id": "7cb40bfe-01b4-4634-9953-897c0776fd4b",
+    "exercise_number": 5,
+    "dialogue_number": 7,
+    "question_number": 17,
+    "question_text": "Welche Blumen mag die Mutter am liebsten?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Rosen in Gelb",
+      "b) Rosen in Weiß",
+      "c) Rosen in Rosa"
+    ],
+    "correct_answer": "c",
+    "acceptable_answers": null,
+    "explanation": "Der Sohn sagt \"Sie liebt Rosen. Am liebsten in Rosa\"."
+  },
+  {
+    "exercise_id": "7cb40bfe-01b4-4634-9953-897c0776fd4b",
+    "exercise_number": 5,
+    "dialogue_number": 8,
+    "question_number": 18,
+    "question_text": "Der Mann läuft zwanzig Kilometer pro Woche.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "acceptable_answers": null,
+    "explanation": "Er sagt \"Im Moment etwa vierzig Kilometer\"."
+  },
+  {
+    "exercise_id": "7cb40bfe-01b4-4634-9953-897c0776fd4b",
+    "exercise_number": 5,
+    "dialogue_number": 9,
+    "question_number": 19,
+    "question_text": "Wann hat die Frau den Föhn gekauft?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Vor zwei Wochen",
+      "b) Vor zwei Monaten",
+      "c) Vor einem Jahr"
+    ],
+    "correct_answer": "a",
+    "acceptable_answers": null,
+    "explanation": "Sie sagt \"Ich habe ihn erst vor zwei Wochen gekauft\"."
+  },
+  {
+    "exercise_id": "7cb40bfe-01b4-4634-9953-897c0776fd4b",
+    "exercise_number": 5,
+    "dialogue_number": 10,
+    "question_number": 20,
+    "question_text": "Der Kunde kann die Sachen im Geschäft anprobieren.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Richtig",
+    "acceptable_answers": null,
+    "explanation": "Die Verkäuferin sagt \"Möchten Sie alles anprobieren? Die Kabinen sind dort hinten\"."
+  },
+  {
+    "exercise_id": "7cb40bfe-01b4-4634-9953-897c0776fd4b",
+    "exercise_number": 5,
+    "dialogue_number": 8,
+    "question_number": 21,
+    "question_text": "Welche Schuhgröße hat der Mann? Schreiben Sie die Zahl.",
+    "question_type": "dictation",
+    "options": null,
+    "correct_answer": "43",
+    "acceptable_answers": [
+      "43",
+      "Größe 43",
+      "Schuhgröße 43",
+      "dreiundvierzig",
+      "Größe dreiundvierzig"
+    ],
+    "explanation": "Er sagt \"Dreiundvierzig\"."
+  },
+  {
+    "exercise_id": "7cb40bfe-01b4-4634-9953-897c0776fd4b",
+    "exercise_number": 5,
+    "dialogue_number": 2,
+    "question_number": 22,
+    "question_text": "Wie viel bezahlt der Mann auf dem Wochenmarkt?",
+    "question_type": "dictation",
+    "options": null,
+    "correct_answer": "5,49",
+    "acceptable_answers": [
+      "5,49",
+      "5.49",
+      "5,49 €",
+      "5,49 Euro",
+      "5 Euro 49",
+      "fünf Euro neunundvierzig"
+    ],
+    "explanation": "Die Verkäuferin sagt \"Das macht dann fünf Euro neunundvierzig zusammen\"."
+  },
+  {
+    "exercise_id": "7cb40bfe-01b4-4634-9953-897c0776fd4b",
+    "exercise_number": 5,
+    "dialogue_number": 1,
+    "question_number": 23,
+    "question_text": "Wie viele Brötchen kauft der Mann? Schreiben Sie die Zahl.",
+    "question_type": "dictation",
+    "options": null,
+    "correct_answer": "4",
+    "acceptable_answers": [
+      "4",
+      "vier",
+      "4 Brötchen",
+      "vier Brötchen",
+      "4 Stück",
+      "vier Stück"
+    ],
+    "explanation": "Er sagt \"Ich hätte gerne vier Brötchen und ein Vollkornbrot\"."
+  },
+  {
+    "exercise_id": "e2266843-2135-4a89-ab44-dde935e31595",
+    "exercise_number": 6,
+    "dialogue_number": 1,
+    "question_number": 11,
+    "question_text": "Wie hoch sind die Temperaturen heute?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Zwanzig Grad",
+      "b) Fünfzehn Grad",
+      "c) Zehn Grad"
+    ],
+    "correct_answer": "b",
+    "acceptable_answers": null,
+    "explanation": "Die Sprecherin sagt \"Die Temperaturen liegen bei maximal fünfzehn Grad\"."
+  },
+  {
+    "exercise_id": "e2266843-2135-4a89-ab44-dde935e31595",
+    "exercise_number": 6,
+    "dialogue_number": 2,
+    "question_number": 12,
+    "question_text": "Der Grund für die Verspätung ist ein Unfall.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "acceptable_answers": null,
+    "explanation": "Die Durchsage sagt \"Grund ist eine technische Störung\"."
+  },
+  {
+    "exercise_id": "e2266843-2135-4a89-ab44-dde935e31595",
+    "exercise_number": 6,
+    "dialogue_number": 3,
+    "question_number": 13,
+    "question_text": "Wie viel Rabatt gibt es auf Tiefkühlpizzen?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) 20 Prozent",
+      "b) 30 Prozent",
+      "c) 50 Prozent"
+    ],
+    "correct_answer": "c",
+    "acceptable_answers": null,
+    "explanation": "Der Sprecher sagt \"alle Tiefkühlpizzen sind heute fünfzig Prozent reduziert\"."
+  },
+  {
+    "exercise_id": "e2266843-2135-4a89-ab44-dde935e31595",
+    "exercise_number": 6,
+    "dialogue_number": 4,
+    "question_number": 14,
+    "question_text": "Das Boarding nach Barcelona endet in zehn Minuten.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "acceptable_answers": null,
+    "explanation": "Die Durchsage sagt \"Das Boarding endet in fünf Minuten\"."
+  },
+  {
+    "exercise_id": "e2266843-2135-4a89-ab44-dde935e31595",
+    "exercise_number": 6,
+    "dialogue_number": 5,
+    "question_number": 15,
+    "question_text": "Wie lange dauert die Verzögerung auf der A3?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) 30 Minuten",
+      "b) 15 Minuten",
+      "c) 45 Minuten"
+    ],
+    "correct_answer": "a",
+    "acceptable_answers": null,
+    "explanation": "Der Sprecher sagt \"Autofahrer müssen mit dreißig Minuten Verzögerung rechnen\"."
+  },
+  {
+    "exercise_id": "e2266843-2135-4a89-ab44-dde935e31595",
+    "exercise_number": 6,
+    "dialogue_number": 6,
+    "question_number": 16,
+    "question_text": "Die Führung im Museum kostet nichts.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Richtig",
+    "acceptable_answers": null,
+    "explanation": "Die Durchsage sagt \"in fünfzehn Minuten beginnt unsere kostenlose Führung\"."
+  },
+  {
+    "exercise_id": "e2266843-2135-4a89-ab44-dde935e31595",
+    "exercise_number": 6,
+    "dialogue_number": 3,
+    "question_number": 17,
+    "question_text": "Wie lange gelten die Angebote im Supermarkt?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Bis Freitag",
+      "b) Nur heute",
+      "c) Die ganze Woche"
+    ],
+    "correct_answer": "b",
+    "acceptable_answers": null,
+    "explanation": "Der Sprecher sagt \"Die Angebote gelten nur heute und nur solange der Vorrat reicht\"."
+  },
+  {
+    "exercise_id": "e2266843-2135-4a89-ab44-dde935e31595",
+    "exercise_number": 6,
+    "dialogue_number": 8,
+    "question_number": 18,
+    "question_text": "Im Kino muss man das Handy ausschalten.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Richtig",
+    "acceptable_answers": null,
+    "explanation": "Die Durchsage sagt \"dass während des Films Handys ausgeschaltet sein müssen\"."
+  },
+  {
+    "exercise_id": "e2266843-2135-4a89-ab44-dde935e31595",
+    "exercise_number": 6,
+    "dialogue_number": 9,
+    "question_number": 19,
+    "question_text": "Wer hat das Tor für Dortmund geschossen?",
+    "question_type": "multiple_choice",
+    "options": [
+      "a) Müller",
+      "b) Sané",
+      "c) Reus"
+    ],
+    "correct_answer": "c",
+    "acceptable_answers": null,
+    "explanation": "Der Sprecher sagt \"Dortmund traf in der achtzigsten Minute durch Reus\"."
+  },
+  {
+    "exercise_id": "e2266843-2135-4a89-ab44-dde935e31595",
+    "exercise_number": 6,
+    "dialogue_number": 10,
+    "question_number": 20,
+    "question_text": "Der Eintritt beim Stadtfest kostet zehn Euro.",
+    "question_type": "richtig_falsch",
+    "options": [
+      "Richtig",
+      "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "acceptable_answers": null,
+    "explanation": "Die Sprecherin sagt \"Der Eintritt ist frei\"."
+  },
+  {
+    "exercise_id": "e2266843-2135-4a89-ab44-dde935e31595",
+    "exercise_number": 6,
+    "dialogue_number": 7,
+    "question_number": 21,
+    "question_text": "Wann beginnt die Sprechzeit am Morgen? Schreiben Sie die Uhrzeit.",
+    "question_type": "dictation",
+    "options": null,
+    "correct_answer": "8:00",
+    "acceptable_answers": [
+      "8:00",
+      "08:00",
+      "8.00",
+      "8 Uhr",
+      "8",
+      "um 8 Uhr",
+      "acht",
+      "acht Uhr",
+      "um acht Uhr"
+    ],
+    "explanation": "Die Ansage sagt \"Montag bis Freitag von acht bis zwölf Uhr\"."
+  },
+  {
+    "exercise_id": "e2266843-2135-4a89-ab44-dde935e31595",
+    "exercise_number": 6,
+    "dialogue_number": 7,
+    "question_number": 22,
+    "question_text": "Wann beginnt die Sprechzeit am Nachmittag? Schreiben Sie die Uhrzeit.",
+    "question_type": "dictation",
+    "options": null,
+    "correct_answer": "15:00",
+    "acceptable_answers": [
+      "15:00",
+      "15.00",
+      "15 Uhr",
+      "15",
+      "um 15 Uhr",
+      "fünfzehn",
+      "fünfzehn Uhr",
+      "um fünfzehn Uhr"
+    ],
+    "explanation": "Die Ansage sagt \"zusätzlich von fünfzehn bis achtzehn Uhr\"."
+  },
+  {
+    "exercise_id": "e2266843-2135-4a89-ab44-dde935e31595",
+    "exercise_number": 6,
+    "dialogue_number": 5,
+    "question_number": 23,
+    "question_text": "Auf welcher Autobahn gibt es keinen Stau mehr?",
+    "question_type": "dictation",
+    "options": null,
+    "correct_answer": "A1",
+    "acceptable_answers": [
+      "A1",
+      "A 1",
+      "A-1",
+      "A eins",
+      "Autobahn 1"
+    ],
+    "explanation": "Der Sprecher sagt \"Auf der A eins Richtung Dortmund fließt der Verkehr wieder normal\"."
+  }
+]

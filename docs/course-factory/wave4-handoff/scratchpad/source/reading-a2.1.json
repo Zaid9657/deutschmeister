@@ -1,0 +1,888 @@
+[
+ {
+  "id": "a94a8a40-c8a6-4bed-bd79-a8b4dd9e05f8",
+  "level": "a2.1",
+  "title_de": "Meine Reise nach Wien",
+  "title_en": "My Trip to Vienna",
+  "topic": "Travel",
+  "content_de": "Letzten Monat habe ich eine wunderbare Reise nach Wien gemacht. Wien ist die Hauptstadt von Österreich und eine der schönsten Städte Europas. Ich bin mit dem Zug gefahren, weil ich Zugfahren liebe und es besser für die Umwelt ist.\n\nDie Zugfahrt von München nach Wien hat etwa vier Stunden gedauert. Ich habe einen Fensterplatz gehabt und konnte die schöne Landschaft sehen: Berge, Wälder und kleine Dörfer. Im Zug habe ich ein Buch gelesen und Kaffee getrunken. Die Zeit ist schnell vergangen.\n\nIn Wien habe ich in einem kleinen Hotel im Zentrum übernachtet. Das Hotel war nicht teuer, aber sehr gemütlich. Von dort konnte ich alles zu Fuß erreichen. Am ersten Tag habe ich einen Stadtspaziergang gemacht und die berühmte Ringstraße gesehen.\n\nIch habe viele Sehenswürdigkeiten besucht. Das Schloss Schönbrunn hat mir am besten gefallen. Es ist riesig und wunderschön! Ich bin durch die prächtigen Räume gegangen und habe viel über die Geschichte Österreichs gelernt. Der Garten war auch fantastisch.\n\nNatürlich musste ich auch die Wiener Küche probieren. Ich habe ein originales Wiener Schnitzel gegessen - es war köstlich! Zum Nachtisch habe ich Sachertorte probiert. Das ist ein berühmter Schokoladenkuchen aus Wien. Ich habe auch in einem traditionellen Kaffeehaus gesessen und Melange getrunken.\n\nEines Abends bin ich in die Wiener Staatsoper gegangen. Ich habe eine Aufführung von Mozart gesehen. Die Musik war wunderbar und das Gebäude war beeindruckend. Das war ein unvergessliches Erlebnis!\n\nAm letzten Tag habe ich Souvenirs für meine Familie gekauft. Ich habe Mozartkugeln für meine Eltern gekauft und eine Schneekugel für meine Schwester. Für mich selbst habe ich ein Buch über Wien gekauft.\n\nDie Reise nach Wien war perfekt. Ich habe viel gesehen, gutes Essen gegessen und tolle Erfahrungen gemacht. Wien ist eine Stadt, die ich unbedingt wieder besuchen möchte. Nächstes Mal möchte ich im Sommer fahren und die Donau sehen!",
+  "content_en": "Last month I took a wonderful trip to Vienna. Vienna is the capital of Austria and one of the most beautiful cities in Europe. I went by train because I love train travel and it is better for the environment.\n\nThe train journey from Munich to Vienna took about four hours. I had a window seat and could see the beautiful landscape: mountains, forests and small villages. On the train I read a book and drank coffee. The time passed quickly.\n\nIn Vienna I stayed in a small hotel in the center. The hotel was not expensive but very cozy. From there I could reach everything on foot. On the first day I took a city walk and saw the famous Ringstraße.\n\nI visited many sights. I liked Schönbrunn Palace the best. It is huge and beautiful! I walked through the magnificent rooms and learned a lot about the history of Austria. The garden was also fantastic.\n\nOf course I also had to try Viennese cuisine. I ate an original Wiener Schnitzel - it was delicious! For dessert I tried Sachertorte. That is a famous chocolate cake from Vienna. I also sat in a traditional coffee house and drank Melange.\n\nOne evening I went to the Vienna State Opera. I saw a performance of Mozart. The music was wonderful and the building was impressive. That was an unforgettable experience!\n\nOn the last day I bought souvenirs for my family. I bought Mozart chocolates for my parents and a snow globe for my sister. For myself I bought a book about Vienna.\n\nThe trip to Vienna was perfect. I saw a lot, ate good food and had great experiences. Vienna is a city that I definitely want to visit again. Next time I want to go in summer and see the Danube!",
+  "key_vocabulary": [
+   {
+    "de": "die Reise, -n",
+    "en": "trip/journey"
+   },
+   {
+    "de": "reisen",
+    "en": "to travel"
+   },
+   {
+    "de": "der Zug, Züge",
+    "en": "train"
+   },
+   {
+    "de": "die Zugfahrt, -en",
+    "en": "train journey"
+   },
+   {
+    "de": "übernachten",
+    "en": "to stay overnight"
+   },
+   {
+    "de": "das Hotel, -s",
+    "en": "hotel"
+   },
+   {
+    "de": "die Sehenswürdigkeit, -en",
+    "en": "sight/attraction"
+   },
+   {
+    "de": "besuchen",
+    "en": "to visit"
+   },
+   {
+    "de": "das Schloss, Schlösser",
+    "en": "castle/palace"
+   },
+   {
+    "de": "probieren",
+    "en": "to try"
+   },
+   {
+    "de": "köstlich",
+    "en": "delicious"
+   },
+   {
+    "de": "die Aufführung, -en",
+    "en": "performance"
+   },
+   {
+    "de": "unvergesslich",
+    "en": "unforgettable"
+   },
+   {
+    "de": "das Souvenir, -s",
+    "en": "souvenir"
+   },
+   {
+    "de": "die Erfahrung, -en",
+    "en": "experience"
+   }
+  ],
+  "questions": [
+   {
+    "answer_de": "Die Person ist mit dem Zug gefahren.",
+    "answer_en": "The person went by train.",
+    "question_de": "Wie ist die Person nach Wien gereist?",
+    "question_en": "How did the person travel to Vienna?"
+   },
+   {
+    "answer_de": "Die Zugfahrt hat etwa vier Stunden gedauert.",
+    "answer_en": "The train journey took about four hours.",
+    "question_de": "Wie lange hat die Zugfahrt gedauert?",
+    "question_en": "How long did the train journey take?"
+   },
+   {
+    "answer_de": "Das Schloss Schönbrunn hat der Person am besten gefallen.",
+    "answer_en": "The person liked Schönbrunn Palace the best.",
+    "question_de": "Welche Sehenswürdigkeit hat der Person am besten gefallen?",
+    "question_en": "Which sight did the person like best?"
+   },
+   {
+    "answer_de": "Die Person hat Wiener Schnitzel und Sachertorte gegessen.",
+    "answer_en": "The person ate Wiener Schnitzel and Sachertorte.",
+    "question_de": "Was hat die Person gegessen?",
+    "question_en": "What did the person eat?"
+   },
+   {
+    "answer_de": "Die Person hat eine Aufführung von Mozart gesehen.",
+    "answer_en": "The person saw a performance of Mozart.",
+    "question_de": "Was hat die Person in der Staatsoper gesehen?",
+    "question_en": "What did the person see at the State Opera?"
+   },
+   {
+    "answer_de": "Die Person hat Mozartkugeln für die Eltern gekauft.",
+    "answer_en": "The person bought Mozart chocolates for the parents.",
+    "question_de": "Was hat die Person für ihre Eltern gekauft?",
+    "question_en": "What did the person buy for their parents?"
+   }
+  ],
+  "word_count": 303,
+  "difficulty": 1,
+  "estimated_reading_time": 5,
+  "order_index": 1,
+  "checks": null
+ },
+ {
+  "id": "b3adfa93-d0f8-4c4f-851b-b161875fb5a3",
+  "level": "a2.1",
+  "title_de": "Beim Arzt",
+  "title_en": "At the Doctor",
+  "topic": "Health",
+  "content_de": "Letzte Woche war ich krank. Ich hatte starke Kopfschmerzen und Halsschmerzen. Außerdem hatte ich Fieber und fühlte mich sehr schwach. Nach zwei Tagen bin ich zum Arzt gegangen, weil es nicht besser wurde.\n\nIn der Arztpraxis musste ich zuerst zur Anmeldung gehen. Die Sprechstundenhilfe hat meine Versicherungskarte genommen und mich gefragt, was mir fehlt. Dann musste ich im Wartezimmer warten. Das Wartezimmer war voll und ich habe etwa 30 Minuten gewartet.\n\nEndlich hat die Ärztin mich aufgerufen. Ich bin in ihr Sprechzimmer gegangen. Sie war sehr freundlich und hat mich gefragt, wie es mir geht. Ich habe ihr meine Symptome beschrieben: Kopfschmerzen, Halsschmerzen, Fieber und Müdigkeit.\n\nDie Ärztin hat mich gründlich untersucht. Sie hat meinen Hals angeschaut und meine Ohren kontrolliert. Dann hat sie meine Temperatur gemessen: 38,5 Grad! Sie hat auch meinen Blutdruck gemessen und meine Lunge abgehört.\n\nNach der Untersuchung hat die Ärztin mir die Diagnose erklärt. Ich hatte eine starke Erkältung mit einer leichten Halsentzündung. Zum Glück war es nichts Schlimmes, aber ich musste mich ausruhen.\n\nDie Ärztin hat mir ein Rezept gegeben. Ich soll dreimal am Tag Tabletten gegen die Schmerzen nehmen. Außerdem soll ich viel trinken, am besten Tee mit Honig. Ich darf nicht zur Arbeit gehen, bis das Fieber weg ist. Sie hat mir eine Krankschreibung für eine Woche gegeben.\n\nNach dem Arztbesuch bin ich in die Apotheke gegangen. Dort habe ich meine Medikamente geholt. Die Apothekerin hat mir erklärt, wie ich die Tabletten nehmen soll. Sie hat mir auch Hustenbonbons empfohlen.\n\nZu Hause habe ich mich ins Bett gelegt und viel geschlafen. Ich habe viel Tee getrunken und Suppe gegessen. Nach drei Tagen ging es mir schon viel besser. Nach einer Woche war ich wieder gesund. Ich bin froh, dass ich zum Arzt gegangen bin!",
+  "content_en": "Last week I was sick. I had a strong headache and sore throat. I also had a fever and felt very weak. After two days I went to the doctor because it was not getting better.\n\nAt the doctor's office I first had to go to the reception. The receptionist took my insurance card and asked me what was wrong. Then I had to wait in the waiting room. The waiting room was full and I waited about 30 minutes.\n\nFinally the doctor called me. I went into her consultation room. She was very friendly and asked me how I was doing. I described my symptoms to her: headache, sore throat, fever and tiredness.\n\nThe doctor examined me thoroughly. She looked at my throat and checked my ears. Then she measured my temperature: 38.5 degrees! She also measured my blood pressure and listened to my lungs.\n\nAfter the examination the doctor explained the diagnosis to me. I had a strong cold with a slight throat infection. Fortunately it was nothing serious, but I had to rest.\n\nThe doctor gave me a prescription. I should take tablets against the pain three times a day. I should also drink a lot, preferably tea with honey. I am not allowed to go to work until the fever is gone. She gave me a sick note for one week.\n\nAfter the doctor's visit I went to the pharmacy. There I picked up my medication. The pharmacist explained to me how I should take the tablets. She also recommended cough drops.\n\nAt home I went to bed and slept a lot. I drank a lot of tea and ate soup. After three days I already felt much better. After one week I was healthy again. I am glad that I went to the doctor!",
+  "key_vocabulary": [
+   {
+    "de": "der Arzt, Ärzte / die Ärztin, -nen",
+    "en": "doctor"
+   },
+   {
+    "de": "die Arztpraxis, -praxen",
+    "en": "doctor's office"
+   },
+   {
+    "de": "krank",
+    "en": "sick"
+   },
+   {
+    "de": "die Kopfschmerzen (Pl.)",
+    "en": "headache"
+   },
+   {
+    "de": "die Halsschmerzen (Pl.)",
+    "en": "sore throat"
+   },
+   {
+    "de": "das Fieber",
+    "en": "fever"
+   },
+   {
+    "de": "untersuchen",
+    "en": "to examine"
+   },
+   {
+    "de": "die Untersuchung, -en",
+    "en": "examination"
+   },
+   {
+    "de": "das Rezept, -e",
+    "en": "prescription"
+   },
+   {
+    "de": "die Tablette, -n",
+    "en": "tablet/pill"
+   },
+   {
+    "de": "das Medikament, -e",
+    "en": "medication"
+   },
+   {
+    "de": "die Apotheke, -n",
+    "en": "pharmacy"
+   },
+   {
+    "de": "die Krankschreibung, -en",
+    "en": "sick note"
+   },
+   {
+    "de": "sich ausruhen",
+    "en": "to rest"
+   },
+   {
+    "de": "gesund",
+    "en": "healthy"
+   }
+  ],
+  "questions": [
+   {
+    "answer_de": "Die Person hatte Kopfschmerzen, Halsschmerzen, Fieber und fühlte sich schwach.",
+    "answer_en": "The person had headache, sore throat, fever and felt weak.",
+    "question_de": "Welche Symptome hatte die Person?",
+    "question_en": "What symptoms did the person have?"
+   },
+   {
+    "answer_de": "Die Person musste etwa 30 Minuten warten.",
+    "answer_en": "The person had to wait about 30 minutes.",
+    "question_de": "Wie lange musste die Person im Wartezimmer warten?",
+    "question_en": "How long did the person have to wait in the waiting room?"
+   },
+   {
+    "answer_de": "Das Fieber war 38,5 Grad.",
+    "answer_en": "The fever was 38.5 degrees.",
+    "question_de": "Wie hoch war das Fieber?",
+    "question_en": "How high was the fever?"
+   },
+   {
+    "answer_de": "Die Person hatte eine starke Erkältung mit einer leichten Halsentzündung.",
+    "answer_en": "The person had a strong cold with a slight throat infection.",
+    "question_de": "Was war die Diagnose?",
+    "question_en": "What was the diagnosis?"
+   },
+   {
+    "answer_de": "Die Person soll die Tabletten dreimal am Tag nehmen.",
+    "answer_en": "The person should take the tablets three times a day.",
+    "question_de": "Wie oft soll die Person die Tabletten nehmen?",
+    "question_en": "How often should the person take the tablets?"
+   },
+   {
+    "answer_de": "Die Ärztin hat eine Krankschreibung für eine Woche gegeben.",
+    "answer_en": "The doctor gave a sick note for one week.",
+    "question_de": "Wie lange hat die Ärztin die Person krankgeschrieben?",
+    "question_en": "How long did the doctor give the person sick leave?"
+   }
+  ],
+  "word_count": 292,
+  "difficulty": 1,
+  "estimated_reading_time": 5,
+  "order_index": 2,
+  "checks": null
+ },
+ {
+  "id": "2625a371-4cc2-4a9e-b941-1a75c7eda792",
+  "level": "a2.1",
+  "title_de": "Mein Beruf als Softwareentwickler",
+  "title_en": "My Job as a Software Developer",
+  "topic": "Work & Career",
+  "content_de": "Ich arbeite als Softwareentwickler bei einer IT-Firma in Hamburg. Ich habe diesen Beruf gewählt, weil ich Computer und Technik liebe. Schon als Kind habe ich gern am Computer gespielt und später habe ich Informatik studiert.\n\nMein Arbeitstag beginnt um 9 Uhr. Das ist später als in vielen anderen Berufen, aber in der IT-Branche ist das normal. Ich fahre mit dem Fahrrad ins Büro. Die Fahrt dauert nur 15 Minuten und ich bekomme so etwas Bewegung.\n\nIm Büro arbeite ich in einem großen Raum mit meinem Team. Wir sind fünf Entwickler und arbeiten zusammen an verschiedenen Projekten. Jeden Morgen haben wir ein kurzes Meeting. Dort besprechen wir, was wir am Tag machen wollen und ob es Probleme gibt.\n\nMeine Hauptaufgabe ist das Schreiben von Code. Ich entwickle Programme und Apps für unsere Kunden. Die Arbeit ist sehr abwechslungsreich. Manchmal muss ich komplizierte Probleme lösen und das kann stressig sein. Aber wenn alles funktioniert, bin ich sehr zufrieden.\n\nUm 12:30 Uhr mache ich Mittagspause. In der Nähe vom Büro gibt es viele Restaurants und Imbisse. Manchmal gehe ich mit Kollegen essen, manchmal bringe ich mir auch Essen von zu Hause mit. Die Pause dauert eine Stunde.\n\nNachmittags arbeite ich weiter an meinen Projekten. Manchmal habe ich auch Meetings mit Kunden. Dann muss ich erklären, wie die Software funktioniert. Das kann schwierig sein, weil nicht alle Kunden technisch denken können.\n\nUm 18 Uhr ist normalerweise Feierabend. Manchmal muss ich länger arbeiten, wenn ein Projekt dringend ist. Aber meine Firma achtet auf eine gute Work-Life-Balance. Wir können auch manchmal von zu Hause arbeiten. Das finde ich sehr praktisch.\n\nIch bin zufrieden mit meinem Beruf. Die Arbeit ist interessant und ich lerne ständig etwas Neues. Meine Kollegen sind nett und das Gehalt ist gut. In der IT-Branche gibt es viele Möglichkeiten für die Zukunft. Ich möchte vielleicht später Teamleiter werden.",
+  "content_en": "I work as a software developer at an IT company in Hamburg. I chose this profession because I love computers and technology. Even as a child I liked playing on the computer and later I studied computer science.\n\nMy work day starts at 9 o'clock. That is later than in many other professions, but in the IT industry this is normal. I cycle to the office. The journey only takes 15 minutes and I get some exercise this way.\n\nIn the office I work in a large room with my team. We are five developers and work together on various projects. Every morning we have a short meeting. There we discuss what we want to do during the day and if there are any problems.\n\nMy main task is writing code. I develop programs and apps for our customers. The work is very varied. Sometimes I have to solve complicated problems and that can be stressful. But when everything works, I am very satisfied.\n\nAt 12:30 I take a lunch break. Near the office there are many restaurants and snack bars. Sometimes I go eating with colleagues, sometimes I also bring food from home. The break lasts one hour.\n\nIn the afternoon I continue working on my projects. Sometimes I also have meetings with customers. Then I have to explain how the software works. That can be difficult because not all customers can think technically.\n\nAt 6 PM is usually the end of work. Sometimes I have to work longer when a project is urgent. But my company pays attention to a good work-life balance. We can also sometimes work from home. I find that very practical.\n\nI am satisfied with my profession. The work is interesting and I constantly learn something new. My colleagues are nice and the salary is good. In the IT industry there are many opportunities for the future. Maybe I want to become a team leader later.",
+  "key_vocabulary": [
+   {
+    "de": "der Beruf, -e",
+    "en": "profession/job"
+   },
+   {
+    "de": "arbeiten",
+    "en": "to work"
+   },
+   {
+    "de": "die Firma, Firmen",
+    "en": "company"
+   },
+   {
+    "de": "das Büro, -s",
+    "en": "office"
+   },
+   {
+    "de": "das Team, -s",
+    "en": "team"
+   },
+   {
+    "de": "das Projekt, -e",
+    "en": "project"
+   },
+   {
+    "de": "das Meeting, -s",
+    "en": "meeting"
+   },
+   {
+    "de": "der Kunde, -n",
+    "en": "customer"
+   },
+   {
+    "de": "entwickeln",
+    "en": "to develop"
+   },
+   {
+    "de": "der Feierabend",
+    "en": "end of work"
+   },
+   {
+    "de": "das Gehalt, Gehälter",
+    "en": "salary"
+   },
+   {
+    "de": "der Kollege, -n",
+    "en": "colleague"
+   },
+   {
+    "de": "abwechslungsreich",
+    "en": "varied"
+   },
+   {
+    "de": "zufrieden",
+    "en": "satisfied"
+   },
+   {
+    "de": "die Möglichkeit, -en",
+    "en": "opportunity"
+   }
+  ],
+  "questions": [
+   {
+    "answer_de": "Weil die Person Computer und Technik liebt.",
+    "answer_en": "Because the person loves computers and technology.",
+    "question_de": "Warum hat die Person diesen Beruf gewählt?",
+    "question_en": "Why did the person choose this profession?"
+   },
+   {
+    "answer_de": "Der Arbeitstag beginnt um 9 Uhr.",
+    "answer_en": "The work day starts at 9 o'clock.",
+    "question_de": "Wann beginnt der Arbeitstag?",
+    "question_en": "When does the work day start?"
+   },
+   {
+    "answer_de": "Im Team sind fünf Entwickler.",
+    "answer_en": "There are five developers in the team.",
+    "question_de": "Wie viele Entwickler sind im Team?",
+    "question_en": "How many developers are in the team?"
+   },
+   {
+    "answer_de": "Die Hauptaufgabe ist das Schreiben von Code und das Entwickeln von Programmen und Apps.",
+    "answer_en": "The main task is writing code and developing programs and apps.",
+    "question_de": "Was ist die Hauptaufgabe der Person?",
+    "question_en": "What is the person's main task?"
+   },
+   {
+    "answer_de": "Normalerweise ist um 18 Uhr Feierabend.",
+    "answer_en": "Usually the end of work is at 6 PM.",
+    "question_de": "Wann ist normalerweise Feierabend?",
+    "question_en": "When is the end of work usually?"
+   },
+   {
+    "answer_de": "Die Person möchte vielleicht später Teamleiter werden.",
+    "answer_en": "The person maybe wants to become a team leader later.",
+    "question_de": "Was möchte die Person vielleicht später werden?",
+    "question_en": "What does the person maybe want to become later?"
+   }
+  ],
+  "word_count": 305,
+  "difficulty": 1,
+  "estimated_reading_time": 5,
+  "order_index": 3,
+  "checks": null
+ },
+ {
+  "id": "a1a4b941-81b1-4e42-b8a7-5afb2863f91a",
+  "level": "a2.1",
+  "title_de": "Unterwegs in der Stadt",
+  "title_en": "Getting Around in the City",
+  "topic": "Transport",
+  "content_de": "In einer großen Stadt wie Berlin gibt es viele Möglichkeiten, von A nach B zu kommen. Ich wohne seit fünf Jahren hier und habe alle Verkehrsmittel ausprobiert. Heute erzähle ich euch, wie ich mich in der Stadt bewege.\n\nAm häufigsten benutze ich die öffentlichen Verkehrsmittel. Berlin hat ein ausgezeichnetes Netz von U-Bahnen, S-Bahnen, Straßenbahnen und Bussen. Ich habe ein Monatsticket, das kostet etwa 86 Euro. Damit kann ich so oft fahren, wie ich will. Das lohnt sich für mich.\n\nDie U-Bahn ist am schnellsten. Sie fährt unterirdisch und hat keine Probleme mit dem Verkehr. Ich nehme die U-Bahn jeden Tag zur Arbeit. Die Fahrt dauert nur 20 Minuten. Morgens ist die U-Bahn oft sehr voll, aber abends geht es meistens.\n\nWenn das Wetter schön ist, fahre ich gern mit dem Fahrrad. Berlin ist eine sehr fahrradfreundliche Stadt. Es gibt viele Fahrradwege und man kann fast überall mit dem Rad fahren. Ich habe mein eigenes Fahrrad, aber man kann auch Fahrräder mieten.\n\nManchmal nehme ich auch den Bus. Der Bus ist praktisch, wenn man die Stadt sehen möchte. Man fährt nicht unter der Erde, sondern durch die Straßen. So kann man die Gebäude und Parks sehen. Allerdings ist der Bus manchmal langsam, wenn viel Verkehr ist.\n\nEin Auto habe ich nicht. In Berlin braucht man kein Auto. Parkplätze sind teuer und schwer zu finden. Außerdem gibt es oft Stau. Wenn ich mal ein Auto brauche, zum Beispiel für einen Ausflug, nehme ich ein Carsharing-Auto. Das ist praktisch und nicht so teuer.\n\nFür kurze Strecken gehe ich einfach zu Fuß. Ich wohne zentral und viele Geschäfte und Cafés sind in der Nähe. Zu Fuß gehen ist gesund und man entdeckt oft interessante Dinge in der Stadt.\n\nInsgesamt bin ich sehr zufrieden mit den Verkehrsmitteln in Berlin. Man kommt überall schnell und günstig hin. Ich finde es auch gut für die Umwelt, dass viele Menschen hier kein Auto brauchen. So haben wir weniger Abgase und weniger Lärm in der Stadt.",
+  "content_en": "In a big city like Berlin there are many ways to get from A to B. I have been living here for five years and have tried all means of transport. Today I will tell you how I get around in the city.\n\nMost often I use public transport. Berlin has an excellent network of subways, suburban trains, trams and buses. I have a monthly ticket, that costs about 86 euros. With it I can travel as often as I want. That is worth it for me.\n\nThe subway is the fastest. It goes underground and has no problems with traffic. I take the subway to work every day. The journey only takes 20 minutes. In the morning the subway is often very crowded, but in the evening it is usually okay.\n\nWhen the weather is nice, I like cycling. Berlin is a very bicycle-friendly city. There are many bike paths and you can ride almost everywhere by bike. I have my own bicycle, but you can also rent bicycles.\n\nSometimes I also take the bus. The bus is practical when you want to see the city. You don't travel underground but through the streets. So you can see the buildings and parks. However, the bus is sometimes slow when there is a lot of traffic.\n\nI don't have a car. In Berlin you don't need a car. Parking spaces are expensive and hard to find. Also there is often traffic jam. When I need a car sometimes, for example for a trip, I take a car-sharing car. That is practical and not so expensive.\n\nFor short distances I simply walk. I live centrally and many shops and cafés are nearby. Walking is healthy and you often discover interesting things in the city.\n\nOverall I am very satisfied with the transport in Berlin. You can get everywhere quickly and cheaply. I also think it is good for the environment that many people don't need a car here. This way we have less exhaust fumes and less noise in the city.",
+  "key_vocabulary": [
+   {
+    "de": "das Verkehrsmittel, -",
+    "en": "means of transport"
+   },
+   {
+    "de": "öffentlich",
+    "en": "public"
+   },
+   {
+    "de": "die U-Bahn, -en",
+    "en": "subway"
+   },
+   {
+    "de": "die S-Bahn, -en",
+    "en": "suburban train"
+   },
+   {
+    "de": "die Straßenbahn, -en",
+    "en": "tram"
+   },
+   {
+    "de": "der Bus, -se",
+    "en": "bus"
+   },
+   {
+    "de": "das Fahrrad, -räder",
+    "en": "bicycle"
+   },
+   {
+    "de": "der Fahrradweg, -e",
+    "en": "bike path"
+   },
+   {
+    "de": "das Auto, -s",
+    "en": "car"
+   },
+   {
+    "de": "der Parkplatz, -plätze",
+    "en": "parking space"
+   },
+   {
+    "de": "der Stau, -s",
+    "en": "traffic jam"
+   },
+   {
+    "de": "zu Fuß gehen",
+    "en": "to walk"
+   },
+   {
+    "de": "die Strecke, -n",
+    "en": "distance/route"
+   },
+   {
+    "de": "günstig",
+    "en": "cheap/affordable"
+   },
+   {
+    "de": "die Umwelt",
+    "en": "environment"
+   }
+  ],
+  "questions": [
+   {
+    "answer_de": "Das Monatsticket kostet etwa 86 Euro.",
+    "answer_en": "The monthly ticket costs about 86 euros.",
+    "question_de": "Wie viel kostet das Monatsticket für die öffentlichen Verkehrsmittel?",
+    "question_en": "How much does the monthly ticket for public transport cost?"
+   },
+   {
+    "answer_de": "Weil sie unterirdisch fährt und keine Probleme mit dem Verkehr hat.",
+    "answer_en": "Because it goes underground and has no problems with traffic.",
+    "question_de": "Warum ist die U-Bahn am schnellsten?",
+    "question_en": "Why is the subway the fastest?"
+   },
+   {
+    "answer_de": "Die Fahrt dauert nur 20 Minuten.",
+    "answer_en": "The journey only takes 20 minutes.",
+    "question_de": "Wie lange dauert die Fahrt zur Arbeit mit der U-Bahn?",
+    "question_en": "How long does the journey to work take by subway?"
+   },
+   {
+    "answer_de": "Weil man in Berlin kein Auto braucht, Parkplätze teuer sind und es oft Stau gibt.",
+    "answer_en": "Because you don't need a car in Berlin, parking spaces are expensive and there is often traffic jam.",
+    "question_de": "Warum hat die Person kein Auto?",
+    "question_en": "Why doesn't the person have a car?"
+   },
+   {
+    "answer_de": "Die Person nimmt ein Carsharing-Auto.",
+    "answer_en": "The person takes a car-sharing car.",
+    "question_de": "Was macht die Person, wenn sie ein Auto braucht?",
+    "question_en": "What does the person do when they need a car?"
+   },
+   {
+    "answer_de": "Weil es dann weniger Abgase und weniger Lärm in der Stadt gibt.",
+    "answer_en": "Because then there are less exhaust fumes and less noise in the city.",
+    "question_de": "Warum ist es gut für die Umwelt, dass viele Menschen kein Auto brauchen?",
+    "question_en": "Why is it good for the environment that many people don't need a car?"
+   }
+  ],
+  "word_count": 327,
+  "difficulty": 1,
+  "estimated_reading_time": 6,
+  "order_index": 4,
+  "checks": null
+ },
+ {
+  "id": "bd2adaeb-7f78-4d8c-b3e4-eb3ff231c2ae",
+  "level": "a2.1",
+  "title_de": "Ein Abend im Restaurant",
+  "title_en": "An Evening at the Restaurant",
+  "topic": "Restaurant & Dining",
+  "content_de": "Letzten Samstag habe ich mit meiner Freundin in einem italienischen Restaurant gegessen. Es war ihr Geburtstag und ich wollte sie zu einem besonderen Abendessen einladen. Ich habe vorher einen Tisch reserviert, weil das Restaurant sehr beliebt ist.\n\nUm 19 Uhr sind wir im Restaurant angekommen. Der Kellner hat uns zu unserem Tisch gebracht. Wir hatten einen schönen Platz am Fenster mit Blick auf die Straße. Die Atmosphäre war gemütlich: leise Musik, Kerzen auf den Tischen und freundliches Personal.\n\nZuerst hat der Kellner uns die Speisekarte gebracht. Die Auswahl war groß: verschiedene Vorspeisen, Pasta, Pizza, Fleisch- und Fischgerichte. Alles hat so lecker geklungen! Wir haben auch die Getränkekarte bekommen. Ich habe einen Rotwein bestellt und meine Freundin hat Mineralwasser genommen.\n\nAls Vorspeise haben wir Bruschetta geteilt. Das ist geröstetes Brot mit Tomaten, Knoblauch und Olivenöl. Es war frisch und sehr lecker. Dazu hat der Kellner uns Brot und Olivenöl gebracht.\n\nFür den Hauptgang habe ich Spaghetti Carbonara bestellt. Das ist Pasta mit einer cremigen Soße aus Ei, Käse und Speck. Meine Freundin hat eine Pizza Margherita genommen. Die Portionen waren groß und alles hat fantastisch geschmeckt. Der Koch hat wirklich gute Arbeit gemacht!\n\nNach dem Hauptgang hat der Kellner gefragt, ob wir noch einen Nachtisch möchten. Natürlich wollten wir! Ich habe Tiramisu bestellt und meine Freundin hat Panna Cotta genommen. Der Nachtisch war der perfekte Abschluss des Essens.\n\nZum Schluss haben wir noch einen Espresso getrunken. Dann habe ich die Rechnung verlangt. Das Essen hat insgesamt 75 Euro gekostet. Ich fand das fair für die Qualität und die Menge. Ich habe mit Kreditkarte bezahlt und dem Kellner ein Trinkgeld von 10 Euro gegeben.\n\nEs war ein wunderschöner Abend. Das Essen war ausgezeichnet, der Service war freundlich und schnell, und wir haben uns gut unterhalten. Meine Freundin war sehr glücklich über die Einladung. Ich kann das Restaurant nur empfehlen! Wir werden bestimmt wiederkommen.",
+  "content_en": "Last Saturday I had dinner with my girlfriend at an Italian restaurant. It was her birthday and I wanted to invite her for a special dinner. I reserved a table beforehand because the restaurant is very popular.\n\nAt 7 PM we arrived at the restaurant. The waiter took us to our table. We had a nice spot by the window with a view of the street. The atmosphere was cozy: quiet music, candles on the tables and friendly staff.\n\nFirst the waiter brought us the menu. The selection was big: various starters, pasta, pizza, meat and fish dishes. Everything sounded so delicious! We also got the drinks menu. I ordered a red wine and my girlfriend had mineral water.\n\nAs a starter we shared bruschetta. That is toasted bread with tomatoes, garlic and olive oil. It was fresh and very tasty. The waiter also brought us bread and olive oil.\n\nFor the main course I ordered spaghetti carbonara. That is pasta with a creamy sauce made of egg, cheese and bacon. My girlfriend had a pizza Margherita. The portions were large and everything tasted fantastic. The chef really did good work!\n\nAfter the main course the waiter asked if we would like a dessert. Of course we wanted to! I ordered tiramisu and my girlfriend had panna cotta. The dessert was the perfect conclusion to the meal.\n\nAt the end we drank an espresso. Then I asked for the bill. The meal cost 75 euros in total. I found that fair for the quality and quantity. I paid by credit card and gave the waiter a tip of 10 euros.\n\nIt was a wonderful evening. The food was excellent, the service was friendly and fast, and we had a good conversation. My girlfriend was very happy about the invitation. I can only recommend the restaurant! We will definitely come back.",
+  "key_vocabulary": [
+   {
+    "de": "das Restaurant, -s",
+    "en": "restaurant"
+   },
+   {
+    "de": "der Kellner, - / die Kellnerin, -nen",
+    "en": "waiter/waitress"
+   },
+   {
+    "de": "der Tisch, -e",
+    "en": "table"
+   },
+   {
+    "de": "reservieren",
+    "en": "to reserve"
+   },
+   {
+    "de": "die Speisekarte, -n",
+    "en": "menu"
+   },
+   {
+    "de": "die Vorspeise, -n",
+    "en": "starter"
+   },
+   {
+    "de": "der Hauptgang, -gänge",
+    "en": "main course"
+   },
+   {
+    "de": "der Nachtisch, -e",
+    "en": "dessert"
+   },
+   {
+    "de": "bestellen",
+    "en": "to order"
+   },
+   {
+    "de": "die Rechnung, -en",
+    "en": "bill"
+   },
+   {
+    "de": "das Trinkgeld, -er",
+    "en": "tip"
+   },
+   {
+    "de": "bezahlen",
+    "en": "to pay"
+   },
+   {
+    "de": "schmecken",
+    "en": "to taste"
+   },
+   {
+    "de": "empfehlen",
+    "en": "to recommend"
+   },
+   {
+    "de": "ausgezeichnet",
+    "en": "excellent"
+   }
+  ],
+  "questions": [
+   {
+    "answer_de": "Weil das Restaurant sehr beliebt ist.",
+    "answer_en": "Because the restaurant is very popular.",
+    "question_de": "Warum hat die Person einen Tisch reserviert?",
+    "question_en": "Why did the person reserve a table?"
+   },
+   {
+    "answer_de": "Sie haben Bruschetta geteilt.",
+    "answer_en": "They shared bruschetta.",
+    "question_de": "Was haben sie als Vorspeise gegessen?",
+    "question_en": "What did they eat as a starter?"
+   },
+   {
+    "answer_de": "Die Person hat Spaghetti Carbonara bestellt.",
+    "answer_en": "The person ordered spaghetti carbonara.",
+    "question_de": "Was hat die Person als Hauptgang bestellt?",
+    "question_en": "What did the person order as main course?"
+   },
+   {
+    "answer_de": "Die Freundin hat Panna Cotta gegessen.",
+    "answer_en": "The girlfriend ate panna cotta.",
+    "question_de": "Was hat die Freundin als Nachtisch gegessen?",
+    "question_en": "What did the girlfriend eat for dessert?"
+   },
+   {
+    "answer_de": "Das Essen hat insgesamt 75 Euro gekostet.",
+    "answer_en": "The meal cost 75 euros in total.",
+    "question_de": "Wie viel hat das Essen insgesamt gekostet?",
+    "question_en": "How much did the meal cost in total?"
+   },
+   {
+    "answer_de": "Die Person hat 10 Euro Trinkgeld gegeben.",
+    "answer_en": "The person gave a 10 euro tip.",
+    "question_de": "Wie viel Trinkgeld hat die Person gegeben?",
+    "question_en": "How much tip did the person give?"
+   }
+  ],
+  "word_count": 311,
+  "difficulty": 1,
+  "estimated_reading_time": 5,
+  "order_index": 5,
+  "checks": null
+ },
+ {
+  "id": "41c5fb24-317d-428a-977d-0bc2baba885c",
+  "level": "a2.1",
+  "title_de": "Ein Umzug nach Hamburg",
+  "title_en": "A Move to Hamburg",
+  "topic": "Moving House",
+  "content_de": "Familie Weber hat zehn Jahre in Stuttgart gewohnt. Im März hat Frau Weber eine neue Stelle bei einer Reederei in Hamburg bekommen. Deshalb ist die Familie im Sommer nach Norddeutschland umgezogen.\n\nDer Umzug hat viel Arbeit gemacht. Zuerst haben die Webers eine Wohnung gesucht. Das war nicht leicht, denn in Hamburg sind die Mieten hoch. Nach sechs Wochen haben sie eine helle Dreizimmerwohnung im Stadtteil Eimsbüttel gefunden. Die Wohnung liegt im dritten Stock, und es gibt keinen Aufzug.\n\nDann haben alle geholfen: Herr Weber hat fünfzig Kartons gepackt, die Kinder haben ihre Bücher und Spielsachen eingepackt, und die Großeltern haben auf den Hund aufgepasst. Eine Umzugsfirma hat die Möbel getragen. Am Umzugstag ist der Lastwagen schon um sieben Uhr losgefahren, und die Familie ist mit dem Auto hinterhergefahren.\n\nIn der neuen Wohnung hat Frau Weber die Küche eingeräumt, und Herr Weber hat die Lampen aufgehängt. Die Nachbarn waren sehr freundlich. Frau Schmidt aus dem zweiten Stock hat der Familie einen Kuchen geschenkt und gesagt: „Kommen Sie einfach vorbei, wenn Sie Hilfe brauchen!“\n\nNach dem Umzug hat die Familie noch viel erledigt. Sie haben sich beim Bürgeramt angemeldet – das muss man in Deutschland innerhalb von zwei Wochen machen. Die Kinder haben eine neue Schule gefunden, und Herr Weber hat einen Job in einem Café gesucht. Nach einem Monat hat sich die Familie schon zu Hause gefühlt. Nur der Hund vermisst den alten Garten.",
+  "content_en": "The Weber family lived in Stuttgart for ten years. In March, Mrs. Weber got a new job at a shipping company in Hamburg. That is why the family moved to northern Germany in the summer.\n\nThe move was a lot of work. First, the Webers looked for an apartment. That was not easy, because rents in Hamburg are high. After six weeks they found a bright three-room apartment in the Eimsbüttel district. The apartment is on the third floor, and there is no elevator.\n\nThen everyone helped: Mr. Weber packed fifty boxes, the children packed up their books and toys, and the grandparents looked after the dog. A moving company carried the furniture. On moving day, the truck set off at seven o'clock, and the family drove behind it in the car.\n\nIn the new apartment, Mrs. Weber put things away in the kitchen, and Mr. Weber hung up the lamps. The neighbors were very friendly. Mrs. Schmidt from the second floor gave the family a cake and said: \"Just come by if you need help!\"\n\nAfter the move, the family still had a lot to take care of. They registered at the citizens' office – in Germany you have to do that within two weeks. The children found a new school, and Mr. Weber looked for a job in a café. After a month, the family already felt at home. Only the dog misses the old garden.",
+  "key_vocabulary": [
+   {
+    "de": "der Umzug, ¨-e",
+    "en": "move, relocation"
+   },
+   {
+    "de": "umziehen",
+    "en": "to move (house)"
+   },
+   {
+    "de": "die Stelle, -n",
+    "en": "job, position"
+   },
+   {
+    "de": "die Miete, -n",
+    "en": "rent"
+   },
+   {
+    "de": "der Stadtteil, -e",
+    "en": "district, part of town"
+   },
+   {
+    "de": "der Aufzug, ¨-e",
+    "en": "elevator"
+   },
+   {
+    "de": "der Karton, -s",
+    "en": "cardboard box"
+   },
+   {
+    "de": "einpacken",
+    "en": "to pack (up)"
+   },
+   {
+    "de": "aufpassen (auf + Akk.)",
+    "en": "to look after, keep an eye on"
+   },
+   {
+    "de": "der Lastwagen, -",
+    "en": "truck"
+   },
+   {
+    "de": "einräumen",
+    "en": "to put away, unpack (into cupboards)"
+   },
+   {
+    "de": "der Nachbar, -n",
+    "en": "neighbor"
+   },
+   {
+    "de": "sich anmelden",
+    "en": "to register"
+   },
+   {
+    "de": "das Bürgeramt, ¨-er",
+    "en": "citizens' registration office"
+   }
+  ],
+  "questions": [
+   {
+    "answer_de": "Frau Weber hat eine neue Stelle bei einer Reederei in Hamburg bekommen, deshalb ist die Familie umgezogen.",
+    "answer_en": "Mrs. Weber got a new job at a shipping company in Hamburg, so the family moved.",
+    "question_de": "Warum ist Familie Weber nach Hamburg umgezogen?",
+    "question_en": "Why did the Weber family move to Hamburg?"
+   },
+   {
+    "answer_de": "Die Wohnungssuche war nicht leicht, denn in Hamburg sind die Mieten hoch.",
+    "answer_en": "The apartment search was not easy, because rents in Hamburg are high.",
+    "question_de": "Warum war die Wohnungssuche nicht leicht?",
+    "question_en": "Why was the apartment search not easy?"
+   },
+   {
+    "answer_de": "Die Großeltern haben auf den Hund aufgepasst.",
+    "answer_en": "The grandparents looked after the dog.",
+    "question_de": "Was haben die Großeltern beim Umzug gemacht?",
+    "question_en": "What did the grandparents do during the move?"
+   },
+   {
+    "answer_de": "Frau Schmidt hat der Familie einen Kuchen geschenkt.",
+    "answer_en": "Mrs. Schmidt gave the family a cake.",
+    "question_de": "Was hat Frau Schmidt der Familie geschenkt?",
+    "question_en": "What did Mrs. Schmidt give the family?"
+   },
+   {
+    "answer_de": "Man muss sich beim Bürgeramt anmelden.",
+    "answer_en": "You have to register at the citizens' office.",
+    "question_de": "Was muss man in Deutschland nach einem Umzug innerhalb von zwei Wochen machen?",
+    "question_en": "What do you have to do in Germany within two weeks after a move?"
+   }
+  ],
+  "word_count": 233,
+  "difficulty": 1,
+  "estimated_reading_time": 4,
+  "order_index": 6,
+  "checks": null
+ },
+ {
+  "id": "671fefe0-de8f-4db2-957d-7616be5e35d2",
+  "level": "a2.1",
+  "title_de": "Der Sportverein",
+  "title_en": "The Sports Club",
+  "topic": "Sports & Clubs",
+  "content_de": "In Deutschland gibt es mehr als 86.000 Sportvereine mit über 27 Millionen Mitgliedern. Fast jedes Dorf hat einen Verein. Dort treiben die Menschen Sport, aber sie treffen auch Freunde und feiern Feste zusammen.\n\nLena ist vor einem Jahr aus Spanien nach Köln gekommen. Am Anfang hat sie niemanden gekannt. Eine Kollegin hat ihr einen guten Tipp gegeben: „Melde dich in einem Sportverein an! Dort findest du schnell Freunde.“ Lena hat im Internet gesucht und einen Volleyballverein in ihrem Stadtteil gefunden.\n\nZuerst hat sie an einem Probetraining teilgenommen. Das ist bei fast allen Vereinen kostenlos. Das Training hat ihr sofort gefallen. Danach hat sie ein Formular ausgefüllt und ist Mitglied geworden. Der Beitrag kostet nur zwölf Euro im Monat – Sport im Verein ist in Deutschland ziemlich günstig.\n\nJetzt trainiert Lena zweimal pro Woche, dienstags und donnerstags von 19 bis 21 Uhr. Am Wochenende spielt ihre Mannschaft manchmal gegen Teams aus anderen Städten. Nach dem Training gehen die Spielerinnen oft noch zusammen in eine Kneipe. Im Sommer hat der Verein ein großes Grillfest gemacht, und im Dezember hat Lena bei der Weihnachtsfeier geholfen.\n\nIm Verein ist vieles ehrenamtlich: Die Trainerin bekommt kein Geld für ihre Arbeit, und die Mitglieder helfen bei den Festen mit. Lena sagt: „Der Verein ist wie eine zweite Familie für mich. Mein Deutsch ist auch viel besser geworden.“ Ihr Rat für alle neuen Leute in Deutschland: Probieren Sie es aus und machen Sie mit!",
+  "content_en": "In Germany there are more than 86,000 sports clubs with over 27 million members. Almost every village has a club. People do sports there, but they also meet friends and celebrate festivals together.\n\nLena came to Cologne from Spain a year ago. At the beginning she did not know anyone. A colleague gave her a good tip: \"Sign up at a sports club! You'll find friends there quickly.\" Lena searched on the internet and found a volleyball club in her part of town.\n\nFirst she took part in a trial training session. That is free at almost all clubs. She immediately liked the training. Afterwards she filled out a form and became a member. The fee costs only twelve euros a month – club sport is quite inexpensive in Germany.\n\nNow Lena trains twice a week, on Tuesdays and Thursdays from 7 to 9 p.m. On weekends her team sometimes plays against teams from other cities. After training, the players often go to a pub together. In the summer the club had a big barbecue party, and in December Lena helped at the Christmas party.\n\nA lot of the club's work is voluntary: the coach gets no money for her work, and the members help out at the festivals. Lena says: \"The club is like a second family for me. My German has also become much better.\" Her advice for all newcomers in Germany: try it out and join in!",
+  "key_vocabulary": [
+   {
+    "de": "der Verein, -e",
+    "en": "club, association"
+   },
+   {
+    "de": "das Mitglied, -er",
+    "en": "member"
+   },
+   {
+    "de": "Sport treiben",
+    "en": "to do sports"
+   },
+   {
+    "de": "der Tipp, -s",
+    "en": "tip, piece of advice"
+   },
+   {
+    "de": "sich anmelden",
+    "en": "to sign up, register"
+   },
+   {
+    "de": "das Probetraining, -s",
+    "en": "trial training session"
+   },
+   {
+    "de": "teilnehmen (an + Dat.)",
+    "en": "to take part (in)"
+   },
+   {
+    "de": "kostenlos",
+    "en": "free of charge"
+   },
+   {
+    "de": "das Formular, -e",
+    "en": "form"
+   },
+   {
+    "de": "ausfüllen",
+    "en": "to fill out"
+   },
+   {
+    "de": "der Beitrag, ¨-e",
+    "en": "(membership) fee"
+   },
+   {
+    "de": "die Mannschaft, -en",
+    "en": "team"
+   },
+   {
+    "de": "die Kneipe, -n",
+    "en": "pub"
+   },
+   {
+    "de": "ehrenamtlich",
+    "en": "voluntary, unpaid"
+   },
+   {
+    "de": "mitmachen",
+    "en": "to join in, participate"
+   }
+  ],
+  "questions": [
+   {
+    "answer_de": "In Deutschland gibt es mehr als 86.000 Sportvereine mit über 27 Millionen Mitgliedern.",
+    "answer_en": "In Germany there are more than 86,000 sports clubs with over 27 million members.",
+    "question_de": "Wie viele Sportvereine gibt es in Deutschland?",
+    "question_en": "How many sports clubs are there in Germany?"
+   },
+   {
+    "answer_de": "Die Kollegin hat gesagt: „Melde dich in einem Sportverein an! Dort findest du schnell Freunde.“",
+    "answer_en": "The colleague said: \"Sign up at a sports club! You'll find friends there quickly.\"",
+    "question_de": "Welchen Tipp hat die Kollegin Lena gegeben?",
+    "question_en": "What tip did the colleague give Lena?"
+   },
+   {
+    "answer_de": "Sie hat zuerst an einem Probetraining teilgenommen. Das war kostenlos.",
+    "answer_en": "She first took part in a trial training session. It was free of charge.",
+    "question_de": "Was hat Lena zuerst gemacht und was hat das gekostet?",
+    "question_en": "What did Lena do first, and what did it cost?"
+   },
+   {
+    "answer_de": "Sie trainiert zweimal pro Woche, dienstags und donnerstags von 19 bis 21 Uhr.",
+    "answer_en": "She trains twice a week, on Tuesdays and Thursdays from 7 to 9 p.m.",
+    "question_de": "Wann trainiert Lena?",
+    "question_en": "When does Lena train?"
+   },
+   {
+    "answer_de": "Im Verein ist vieles ehrenamtlich, deshalb bekommt die Trainerin kein Geld für ihre Arbeit.",
+    "answer_en": "A lot of the club's work is voluntary, so the coach gets no money for her work.",
+    "question_de": "Warum bekommt die Trainerin kein Geld?",
+    "question_en": "Why does the coach not get any money?"
+   }
+  ],
+  "word_count": 237,
+  "difficulty": 2,
+  "estimated_reading_time": 4,
+  "order_index": 7,
+  "checks": null
+ },
+ {
+  "id": "5fe05477-4bb9-4814-bd73-049713182fbc",
+  "level": "a2.1",
+  "title_de": "Ein Besuch auf dem Wochenmarkt",
+  "title_en": "A Visit to the Weekly Market",
+  "topic": "Market & Fresh Food",
+  "content_de": "Samstagmorgen in Freiburg: Auf dem Platz vor dem Münster ist Wochenmarkt. Seit über 500 Jahren verkaufen Händler hier ihre Waren. Der Markt beginnt früh – die ersten Stände öffnen schon um halb acht.\n\nJonas geht fast jeden Samstag mit seiner Tochter Emma zum Markt. Sie fahren mit der Straßenbahn in die Stadt, denn Parkplätze sind dort teuer. Heute haben sie eine lange Einkaufsliste dabei.\n\nZuerst gehen sie zu einem Gemüsestand. Der Bauer kommt aus einem Dorf bei Freiburg. „Was darf es sein?“, fragt er. Jonas kauft ein Kilo Tomaten, einen Salat und frische Kartoffeln. Am Obststand nebenan probiert Emma eine Erdbeere. „Greifen Sie zu, die sind süß!“, sagt die Verkäuferin. Nach dem Obst kaufen die beiden noch Eier von einem Bauernhof aus der Region und ein Brot aus einer kleinen Bäckerei.\n\nAuf dem Markt bezahlt man oft bar, denn viele Stände nehmen keine Karte. Die Preise sind manchmal höher als im Supermarkt, aber die Ware kommt direkt vom Bauern und schmeckt frischer.\n\nGegen elf Uhr wird es voll. Viele Leute stehen mit einem Kaffee zwischen den Ständen und reden mit ihren Nachbarn. Für viele Deutsche ist der Markt nicht nur zum Einkaufen da – er ist auch ein Treffpunkt.\n\nZum Schluss kauft Jonas seiner Tochter eine Brezel. Dann fahren die beiden mit vollen Taschen nach Hause und kochen zusammen das Mittagessen: Salat mit Tomaten und Bratkartoffeln.",
+  "content_en": "Saturday morning in Freiburg: on the square in front of the cathedral there is a weekly market. For over 500 years, traders have been selling their goods here. The market starts early – the first stalls open at half past seven.\n\nJonas goes to the market with his daughter Emma almost every Saturday. They take the tram into town, because parking spaces there are expensive. Today they have a long shopping list with them.\n\nFirst they go to a vegetable stall. The farmer comes from a village near Freiburg. \"What can I get you?\" he asks. Jonas buys a kilo of tomatoes, a lettuce, and fresh potatoes. At the fruit stall next door, Emma tries a strawberry. \"Help yourself, they're sweet!\" says the saleswoman. After the fruit, the two of them also buy eggs from a farm in the region and a loaf of bread from a small bakery.\n\nAt the market you often pay in cash, because many stalls do not take cards. The prices are sometimes higher than in the supermarket, but the goods come directly from the farmer and taste fresher.\n\nAround eleven o'clock it gets crowded. Many people stand with a coffee between the stalls and talk with their neighbors. For many Germans, the market is not only there for shopping – it is also a meeting place.\n\nAt the end, Jonas buys his daughter a pretzel. Then the two of them go home with full bags and cook lunch together: salad with tomatoes and fried potatoes.",
+  "key_vocabulary": [
+   {
+    "de": "der Wochenmarkt, ¨-e",
+    "en": "weekly market"
+   },
+   {
+    "de": "der Händler, -",
+    "en": "trader, vendor"
+   },
+   {
+    "de": "die Ware, -n",
+    "en": "goods, merchandise"
+   },
+   {
+    "de": "der Stand, ¨-e",
+    "en": "stall, stand"
+   },
+   {
+    "de": "die Straßenbahn, -en",
+    "en": "tram"
+   },
+   {
+    "de": "die Einkaufsliste, -n",
+    "en": "shopping list"
+   },
+   {
+    "de": "der Bauer, -n",
+    "en": "farmer"
+   },
+   {
+    "de": "probieren",
+    "en": "to try, to taste"
+   },
+   {
+    "de": "zugreifen",
+    "en": "to help oneself"
+   },
+   {
+    "de": "der Bauernhof, ¨-e",
+    "en": "farm"
+   },
+   {
+    "de": "bar bezahlen",
+    "en": "to pay in cash"
+   },
+   {
+    "de": "die Region, -en",
+    "en": "region"
+   },
+   {
+    "de": "der Treffpunkt, -e",
+    "en": "meeting place"
+   },
+   {
+    "de": "die Brezel, -n",
+    "en": "pretzel"
+   }
+  ],
+  "questions": [
+   {
+    "answer_de": "Der Wochenmarkt ist auf dem Platz vor dem Münster. Seit über 500 Jahren verkaufen Händler dort ihre Waren.",
+    "answer_en": "The weekly market is on the square in front of the cathedral. Traders have been selling their goods there for over 500 years.",
+    "question_de": "Wo und seit wann gibt es den Wochenmarkt in Freiburg?",
+    "question_en": "Where is the weekly market in Freiburg, and how long has it existed?"
+   },
+   {
+    "answer_de": "Sie fahren mit der Straßenbahn, denn Parkplätze sind in der Stadt teuer.",
+    "answer_en": "They take the tram because parking spaces in town are expensive.",
+    "question_de": "Warum fahren Jonas und Emma mit der Straßenbahn in die Stadt?",
+    "question_en": "Why do Jonas and Emma take the tram into town?"
+   },
+   {
+    "answer_de": "Er kauft ein Kilo Tomaten, einen Salat und frische Kartoffeln.",
+    "answer_en": "He buys a kilo of tomatoes, a lettuce, and fresh potatoes.",
+    "question_de": "Was kauft Jonas am Gemüsestand?",
+    "question_en": "What does Jonas buy at the vegetable stall?"
+   },
+   {
+    "answer_de": "Man bezahlt oft bar, denn viele Stände nehmen keine Karte.",
+    "answer_en": "People often pay in cash, because many stalls do not take cards.",
+    "question_de": "Wie bezahlt man auf dem Markt oft und warum?",
+    "question_en": "How do people often pay at the market, and why?"
+   },
+   {
+    "answer_de": "Der Markt ist auch ein Treffpunkt: Viele Leute stehen mit einem Kaffee zwischen den Ständen und reden mit ihren Nachbarn.",
+    "answer_en": "The market is also a meeting place: many people stand with a coffee between the stalls and talk with their neighbors.",
+    "question_de": "Warum ist der Markt für viele Deutsche mehr als ein Ort zum Einkaufen?",
+    "question_en": "Why is the market more than a place to shop for many Germans?"
+   }
+  ],
+  "word_count": 226,
+  "difficulty": 2,
+  "estimated_reading_time": 4,
+  "order_index": 8,
+  "checks": null
+ }
+]

@@ -1,0 +1,2982 @@
+[
+ {
+  "id": "1c6c1cec-b3ef-45cb-a7e6-51b9d16956e0",
+  "exercise_number": 1,
+  "title": "Beim Arzt (erweitert)",
+  "description": "Ausführliche Gespräche beim Arzt: Symptome, Diagnose und Behandlung",
+  "exercise_type": "short_dialogues",
+  "total_duration_seconds": 475,
+  "plays_allowed": 2,
+  "dialogues": [
+   {
+    "dialogue_number": 1,
+    "title": "Starke Erkältung",
+    "transcript": [
+     {
+      "text": "Guten Tag, Herr Doktor. Ich fühle mich seit drei Tagen sehr schlecht.",
+      "speaker": "male"
+     },
+     {
+      "text": "Was sind Ihre Symptome?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ich habe Kopfschmerzen, Schnupfen und meine Nase ist verstopft.",
+      "speaker": "male"
+     },
+     {
+      "text": "Haben Sie auch Fieber?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, gestern Abend hatte ich achtunddreißig Komma fünf.",
+      "speaker": "male"
+     },
+     {
+      "text": "Das klingt nach einer starken Erkältung. Ich verschreibe Ihnen Nasenspray und Schmerztabletten.",
+      "speaker": "female"
+     },
+     {
+      "text": "Muss ich im Bett bleiben?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, ruhen Sie sich aus und trinken Sie viel Tee.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 2,
+    "title": "Rückenschmerzen",
+    "transcript": [
+     {
+      "text": "Wo genau tut es weh?",
+      "speaker": "female"
+     },
+     {
+      "text": "Hier im unteren Rücken. Besonders wenn ich mich bücke.",
+      "speaker": "male"
+     },
+     {
+      "text": "Seit wann haben Sie diese Schmerzen?",
+      "speaker": "female"
+     },
+     {
+      "text": "Seit etwa einer Woche. Es wird immer schlimmer.",
+      "speaker": "male"
+     },
+     {
+      "text": "Sitzen Sie viel bei der Arbeit?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, ich arbeite den ganzen Tag am Computer.",
+      "speaker": "male"
+     },
+     {
+      "text": "Ich empfehle Ihnen Physiotherapie. Hier ist eine Überweisung.",
+      "speaker": "female"
+     },
+     {
+      "text": "Und was kann ich gegen die Schmerzen tun?",
+      "speaker": "male"
+     },
+     {
+      "text": "Nehmen Sie diese Tabletten, maximal dreimal täglich.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 3,
+    "title": "Allergietest",
+    "transcript": [
+     {
+      "text": "Ich niese ständig und meine Augen sind rot.",
+      "speaker": "male"
+     },
+     {
+      "text": "Wann passiert das? Das ganze Jahr oder nur im Frühling?",
+      "speaker": "female"
+     },
+     {
+      "text": "Hauptsächlich im Frühling und Sommer.",
+      "speaker": "male"
+     },
+     {
+      "text": "Das könnte eine Pollenallergie sein. Wir machen einen Allergietest.",
+      "speaker": "female"
+     },
+     {
+      "text": "Tut das weh?",
+      "speaker": "male"
+     },
+     {
+      "text": "Nein, wir machen kleine Piekser auf dem Arm. Das dauert nur zehn Minuten.",
+      "speaker": "female"
+     },
+     {
+      "text": "Und wann bekomme ich das Ergebnis?",
+      "speaker": "male"
+     },
+     {
+      "text": "Nach etwa zwanzig Minuten sehen wir das Ergebnis direkt auf Ihrer Haut.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 4,
+    "title": "Blutdruck messen",
+    "transcript": [
+     {
+      "text": "Bitte setzen Sie sich. Ich messe jetzt Ihren Blutdruck.",
+      "speaker": "female"
+     },
+     {
+      "text": "Ist das schlimm? Ich bin etwas nervös.",
+      "speaker": "male"
+     },
+     {
+      "text": "Das ist ganz normal. Entspannen Sie sich und atmen Sie ruhig.",
+      "speaker": "female"
+     },
+     {
+      "text": "Was zeigt das Gerät?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ihr Blutdruck ist einhundertvierzig zu neunzig. Das ist etwas zu hoch.",
+      "speaker": "female"
+     },
+     {
+      "text": "Was bedeutet das?",
+      "speaker": "male"
+     },
+     {
+      "text": "Sie sollten weniger Salz essen und mehr Sport machen.",
+      "speaker": "female"
+     },
+     {
+      "text": "Brauche ich Medikamente?",
+      "speaker": "male"
+     },
+     {
+      "text": "Noch nicht. Kommen Sie in vier Wochen wieder zur Kontrolle.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 5,
+    "title": "Impfung",
+    "transcript": [
+     {
+      "text": "Ich möchte mich gegen Grippe impfen lassen.",
+      "speaker": "male"
+     },
+     {
+      "text": "Das ist eine gute Idee. Haben Sie Allergien?",
+      "speaker": "female"
+     },
+     {
+      "text": "Nein, keine bekannten Allergien.",
+      "speaker": "male"
+     },
+     {
+      "text": "Gut. Die Impfung ist in den linken Oberarm. Bitte machen Sie den Arm frei.",
+      "speaker": "female"
+     },
+     {
+      "text": "Gibt es Nebenwirkungen?",
+      "speaker": "male"
+     },
+     {
+      "text": "Der Arm kann etwas wehtun. Manche Leute fühlen sich auch müde.",
+      "speaker": "female"
+     },
+     {
+      "text": "Wie lange hält der Schutz?",
+      "speaker": "male"
+     },
+     {
+      "text": "Etwa ein Jahr. Sie sollten sich jedes Jahr impfen lassen.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 6,
+    "title": "Magenschmerzen",
+    "transcript": [
+     {
+      "text": "Ich habe seit zwei Tagen Magenschmerzen und mir ist übel.",
+      "speaker": "female"
+     },
+     {
+      "text": "Haben Sie auch Durchfall oder müssen Sie sich übergeben?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, ich hatte gestern Durchfall.",
+      "speaker": "female"
+     },
+     {
+      "text": "Haben Sie etwas Bestimmtes gegessen?",
+      "speaker": "male"
+     },
+     {
+      "text": "Am Sonntag war ich in einem Restaurant. Das Essen war vielleicht nicht frisch.",
+      "speaker": "female"
+     },
+     {
+      "text": "Das klingt nach einer Lebensmittelvergiftung. Trinken Sie viel Wasser und essen Sie nur leichte Kost.",
+      "speaker": "male"
+     },
+     {
+      "text": "Was darf ich essen?",
+      "speaker": "female"
+     },
+     {
+      "text": "Zwieback, Reis und Bananen. Keine Milchprodukte.",
+      "speaker": "male"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 7,
+    "title": "Rezept verlängern",
+    "transcript": [
+     {
+      "text": "Ich brauche ein neues Rezept für meine Blutdruckmedikamente.",
+      "speaker": "male"
+     },
+     {
+      "text": "Wann haben Sie die letzten Tabletten bekommen?",
+      "speaker": "female"
+     },
+     {
+      "text": "Vor drei Monaten. Die Packung ist fast leer.",
+      "speaker": "male"
+     },
+     {
+      "text": "Haben Sie die Tabletten gut vertragen?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, keine Probleme.",
+      "speaker": "male"
+     },
+     {
+      "text": "Gut. Ich schreibe Ihnen ein Rezept für sechs Monate.",
+      "speaker": "female"
+     },
+     {
+      "text": "Vielen Dank. Muss ich noch zur Blutabnahme?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, kommen Sie nächste Woche nüchtern zur Blutabnahme.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 8,
+    "title": "Kind ist krank",
+    "transcript": [
+     {
+      "text": "Mein Sohn hat seit gestern hohes Fieber.",
+      "speaker": "female"
+     },
+     {
+      "text": "Wie hoch ist das Fieber?",
+      "speaker": "male"
+     },
+     {
+      "text": "Neununddreißig Komma acht. Er hat auch Halsschmerzen.",
+      "speaker": "female"
+     },
+     {
+      "text": "Ich schaue mir mal seinen Hals an. Der Hals ist sehr rot. Kann er schlucken?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, aber es tut ihm weh.",
+      "speaker": "female"
+     },
+     {
+      "text": "Das ist wahrscheinlich eine Mandelentzündung. Er braucht ein Antibiotikum.",
+      "speaker": "male"
+     },
+     {
+      "text": "Wie lange muss er zu Hause bleiben?",
+      "speaker": "female"
+     },
+     {
+      "text": "Mindestens eine Woche. Er darf nicht in die Schule gehen.",
+      "speaker": "male"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 9,
+    "title": "Nach dem Unfall",
+    "transcript": [
+     {
+      "text": "Ich bin gestern mit dem Fahrrad gestürzt. Mein Knie tut sehr weh.",
+      "speaker": "male"
+     },
+     {
+      "text": "Lassen Sie mich das Knie ansehen. Können Sie es bewegen?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, aber es ist sehr geschwollen.",
+      "speaker": "male"
+     },
+     {
+      "text": "Wir müssen ein Röntgenbild machen, um sicher zu sein, dass nichts gebrochen ist.",
+      "speaker": "female"
+     },
+     {
+      "text": "Ist das schlimm?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ich glaube nicht, aber wir müssen es überprüfen. Gehen Sie bitte in die Radiologie.",
+      "speaker": "female"
+     },
+     {
+      "text": "Wo ist die Radiologie?",
+      "speaker": "male"
+     },
+     {
+      "text": "Im Erdgeschoss, am Ende des Flurs.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 10,
+    "title": "Überweisung",
+    "transcript": [
+     {
+      "text": "Ich habe immer wieder Kopfschmerzen. Schon seit mehreren Wochen.",
+      "speaker": "female"
+     },
+     {
+      "text": "Nehmen Sie regelmäßig Schmerzmittel?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, fast jeden Tag.",
+      "speaker": "female"
+     },
+     {
+      "text": "Das ist nicht gut. Zu viele Schmerzmittel können selbst Kopfschmerzen verursachen.",
+      "speaker": "male"
+     },
+     {
+      "text": "Was soll ich tun?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ich überweise Sie zu einem Neurologen. Der macht weitere Untersuchungen.",
+      "speaker": "male"
+     },
+     {
+      "text": "Wie lange muss ich auf einen Termin warten?",
+      "speaker": "female"
+     },
+     {
+      "text": "Normalerweise zwei bis drei Wochen. Sagen Sie, es ist dringend.",
+      "speaker": "male"
+     }
+    ]
+   }
+  ],
+  "questions": [
+   {
+    "id": "24a9a0be-2383-4685-a664-eb589a7ba438",
+    "dialogue_number": 1,
+    "question_number": 1,
+    "question_type": "multiple_choice",
+    "question_text": "Wie hoch war das Fieber des Patienten?",
+    "options": [
+     "a) 37,5 Grad",
+     "b) 38,5 Grad",
+     "c) 39,5 Grad"
+    ],
+    "correct_answer": "b",
+    "explanation": "Er sagt \"achtunddreißig Komma fünf\""
+   },
+   {
+    "id": "b388ca12-5b2e-43af-910f-03ab084208c9",
+    "dialogue_number": 2,
+    "question_number": 2,
+    "question_type": "multiple_choice",
+    "question_text": "Was empfiehlt die Ärztin gegen die Rückenschmerzen?",
+    "options": [
+     "a) Physiotherapie",
+     "b) Bettruhe",
+     "c) Operation"
+    ],
+    "correct_answer": "a",
+    "explanation": "Sie sagt \"Ich empfehle Ihnen Physiotherapie\""
+   },
+   {
+    "id": "c50fe3b5-4610-4fc1-b6bf-68eb52b71161",
+    "dialogue_number": 3,
+    "question_number": 3,
+    "question_type": "multiple_choice",
+    "question_text": "Wann bekommt der Patient das Ergebnis des Allergietests?",
+    "options": [
+     "a) Nach 10 Minuten",
+     "b) Nach 20 Minuten",
+     "c) Nach einer Stunde"
+    ],
+    "correct_answer": "b",
+    "explanation": "Die Ärztin sagt \"Nach etwa zwanzig Minuten\""
+   },
+   {
+    "id": "2e986ca9-c9f7-4eed-a136-4ebf3b478011",
+    "dialogue_number": 4,
+    "question_number": 4,
+    "question_type": "multiple_choice",
+    "question_text": "Wie hoch ist der Blutdruck des Patienten?",
+    "options": [
+     "a) 140 zu 90",
+     "b) 120 zu 80",
+     "c) 130 zu 85"
+    ],
+    "correct_answer": "a",
+    "explanation": "Die Ärztin sagt \"einhundertvierzig zu neunzig\""
+   },
+   {
+    "id": "8b772487-e900-4437-8031-373dcce54e46",
+    "dialogue_number": 5,
+    "question_number": 5,
+    "question_type": "richtig_falsch",
+    "question_text": "Der Grippeschutz hält zwei Jahre.",
+    "options": [
+     "Richtig",
+     "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "explanation": "Die Ärztin sagt \"Etwa ein Jahr\""
+   },
+   {
+    "id": "3a49fb69-897c-4537-9aae-122789833e1a",
+    "dialogue_number": 6,
+    "question_number": 6,
+    "question_type": "multiple_choice",
+    "question_text": "Was darf die Patientin essen?",
+    "options": [
+     "a) Fettiges Essen",
+     "b) Milchprodukte",
+     "c) Reis und Bananen"
+    ],
+    "correct_answer": "c",
+    "explanation": "Der Arzt sagt \"Zwieback, Reis und Bananen. Keine Milchprodukte.\""
+   },
+   {
+    "id": "57c22a2c-0c78-4179-8f2e-1ce601e77b71",
+    "dialogue_number": 7,
+    "question_number": 7,
+    "question_type": "multiple_choice",
+    "question_text": "Für wie lange bekommt der Patient ein neues Rezept?",
+    "options": [
+     "a) Drei Monate",
+     "b) Sechs Monate",
+     "c) Ein Jahr"
+    ],
+    "correct_answer": "b",
+    "explanation": "Die Ärztin sagt \"ein Rezept für sechs Monate\""
+   },
+   {
+    "id": "0bb0250e-50bc-4db9-b5c7-f6e91c66f89b",
+    "dialogue_number": 8,
+    "question_number": 8,
+    "question_type": "multiple_choice",
+    "question_text": "Wie lange muss das Kind zu Hause bleiben?",
+    "options": [
+     "a) Zwei Wochen",
+     "b) Drei Tage",
+     "c) Eine Woche"
+    ],
+    "correct_answer": "c",
+    "explanation": "Der Arzt sagt \"Mindestens eine Woche\""
+   },
+   {
+    "id": "631b7341-3ab8-4fc9-af5b-96d857ba868e",
+    "dialogue_number": 9,
+    "question_number": 9,
+    "question_type": "richtig_falsch",
+    "question_text": "Das Knie ist gebrochen.",
+    "options": [
+     "Richtig",
+     "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "explanation": "Die Ärztin sagt \"Ich glaube nicht\" - sie muss es erst überprüfen mit Röntgen"
+   },
+   {
+    "id": "339b4d9d-062e-4e3d-b087-56d4045421fb",
+    "dialogue_number": 10,
+    "question_number": 10,
+    "question_type": "multiple_choice",
+    "question_text": "Wie lange muss die Patientin auf einen Termin beim Neurologen warten?",
+    "options": [
+     "a) Ein Monat",
+     "b) Eine Woche",
+     "c) 2-3 Wochen"
+    ],
+    "correct_answer": "c",
+    "explanation": "Der Arzt sagt \"zwei bis drei Wochen\""
+   }
+  ]
+ },
+ {
+  "id": "369a41e4-edb8-4f7a-bda8-20a54fcfb11d",
+  "exercise_number": 2,
+  "title": "Im Restaurant bestellen",
+  "description": "Ausführliche Gespräche im Restaurant: Bestellen, Beschwerden und Sonderwünsche",
+  "exercise_type": "short_dialogues",
+  "total_duration_seconds": 444,
+  "plays_allowed": 2,
+  "dialogues": [
+   {
+    "dialogue_number": 1,
+    "title": "Tisch reservieren",
+    "transcript": [
+     {
+      "text": "Guten Abend, haben Sie einen Tisch für vier Personen?",
+      "speaker": "male"
+     },
+     {
+      "text": "Haben Sie reserviert?",
+      "speaker": "female"
+     },
+     {
+      "text": "Nein, leider nicht.",
+      "speaker": "male"
+     },
+     {
+      "text": "Einen Moment, ich schaue nach. Ja, wir haben noch einen Tisch frei. Möchten Sie drinnen oder draußen sitzen?",
+      "speaker": "female"
+     },
+     {
+      "text": "Draußen, wenn möglich. Das Wetter ist so schön.",
+      "speaker": "male"
+     },
+     {
+      "text": "Natürlich. Folgen Sie mir bitte.",
+      "speaker": "female"
+     },
+     {
+      "text": "Vielen Dank.",
+      "speaker": "male"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 2,
+    "title": "Speisekarte erklären",
+    "transcript": [
+     {
+      "text": "Entschuldigung, was ist das Tagesgericht?",
+      "speaker": "female"
+     },
+     {
+      "text": "Heute haben wir Lachsfilet mit Kartoffeln und Gemüse.",
+      "speaker": "male"
+     },
+     {
+      "text": "Wie ist der Lachs zubereitet?",
+      "speaker": "female"
+     },
+     {
+      "text": "Er ist gegrillt, mit einer Zitronen-Butter-Soße.",
+      "speaker": "male"
+     },
+     {
+      "text": "Das klingt gut. Ist das Gemüse frisch?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, wir verwenden nur frisches Gemüse aus der Region.",
+      "speaker": "male"
+     },
+     {
+      "text": "Perfekt. Dann nehme ich das Tagesgericht.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 3,
+    "title": "Vegetarische Optionen",
+    "transcript": [
+     {
+      "text": "Haben Sie auch vegetarische Gerichte?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, wir haben mehrere. Auf der Karte sind sie mit einem grünen Blatt markiert.",
+      "speaker": "female"
+     },
+     {
+      "text": "Enthält die Gemüselasagne Fleisch?",
+      "speaker": "male"
+     },
+     {
+      "text": "Nein, die ist komplett vegetarisch. Mit Zucchini, Auberginen und Tomaten.",
+      "speaker": "female"
+     },
+     {
+      "text": "Ist sie auch vegan?",
+      "speaker": "male"
+     },
+     {
+      "text": "Nein, sie enthält Käse und Béchamelsoße mit Milch. Aber wir haben auch vegane Optionen.",
+      "speaker": "female"
+     },
+     {
+      "text": "Welche zum Beispiel?",
+      "speaker": "male"
+     },
+     {
+      "text": "Den Gemüse-Curry mit Kokosmilch und Reis.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 4,
+    "title": "Allergien erfragen",
+    "transcript": [
+     {
+      "text": "Ich habe eine Frage. Ich bin allergisch gegen Nüsse.",
+      "speaker": "female"
+     },
+     {
+      "text": "Danke, dass Sie das sagen. Welches Gericht interessiert Sie?",
+      "speaker": "male"
+     },
+     {
+      "text": "Das Hähnchen mit Salat.",
+      "speaker": "female"
+     },
+     {
+      "text": "Das Salatdressing enthält Walnussöl. Ich kann aber ein anderes Dressing bringen.",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, bitte. Olivenöl wäre gut.",
+      "speaker": "female"
+     },
+     {
+      "text": "Kein Problem. Ich notiere das für die Küche.",
+      "speaker": "male"
+     },
+     {
+      "text": "Vielen Dank, das ist sehr aufmerksam.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 5,
+    "title": "Beschwerde",
+    "transcript": [
+     {
+      "text": "Entschuldigung, mit dem Steak stimmt etwas nicht.",
+      "speaker": "male"
+     },
+     {
+      "text": "Oh, was ist das Problem?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ich habe es medium bestellt, aber es ist fast roh in der Mitte.",
+      "speaker": "male"
+     },
+     {
+      "text": "Das tut mir sehr leid. Ich bringe es sofort in die Küche zurück.",
+      "speaker": "female"
+     },
+     {
+      "text": "Können Sie es bitte gut durchbraten?",
+      "speaker": "male"
+     },
+     {
+      "text": "Natürlich. Es dauert etwa zehn Minuten. Möchten Sie in der Zwischenzeit noch etwas trinken?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, noch ein Glas Wasser bitte.",
+      "speaker": "male"
+     },
+     {
+      "text": "Kommt sofort. Nochmals Entschuldigung.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 6,
+    "title": "Weinempfehlung",
+    "transcript": [
+     {
+      "text": "Können Sie uns einen Wein empfehlen?",
+      "speaker": "female"
+     },
+     {
+      "text": "Gerne. Was essen Sie?",
+      "speaker": "male"
+     },
+     {
+      "text": "Mein Mann nimmt das Steak und ich nehme den Fisch.",
+      "speaker": "female"
+     },
+     {
+      "text": "Dann empfehle ich einen leichten Rotwein, der zu beiden Gerichten passt.",
+      "speaker": "male"
+     },
+     {
+      "text": "Welchen genau?",
+      "speaker": "female"
+     },
+     {
+      "text": "Der Spätburgunder aus der Pfalz ist sehr gut. Nicht zu schwer.",
+      "speaker": "male"
+     },
+     {
+      "text": "Wie viel kostet die Flasche?",
+      "speaker": "female"
+     },
+     {
+      "text": "Achtundzwanzig Euro. Oder möchten Sie lieber zwei Gläser?",
+      "speaker": "male"
+     },
+     {
+      "text": "Nein, wir nehmen die Flasche.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 7,
+    "title": "Nachspeise",
+    "transcript": [
+     {
+      "text": "Möchten Sie noch eine Nachspeise?",
+      "speaker": "male"
+     },
+     {
+      "text": "Was können Sie empfehlen?",
+      "speaker": "female"
+     },
+     {
+      "text": "Unser Schokoladenkuchen ist hausgemacht. Sehr beliebt.",
+      "speaker": "male"
+     },
+     {
+      "text": "Ist er sehr süß?",
+      "speaker": "female"
+     },
+     {
+      "text": "Nein, er ist mit dunkler Schokolade. Nicht zu süß.",
+      "speaker": "male"
+     },
+     {
+      "text": "Das klingt gut. Und für meinen Mann das Tiramisu.",
+      "speaker": "female"
+     },
+     {
+      "text": "Gerne. Möchten Sie Kaffee dazu?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, zwei Espresso bitte.",
+      "speaker": "female"
+     },
+     {
+      "text": "Kommt sofort.",
+      "speaker": "male"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 8,
+    "title": "Essen mitnehmen",
+    "transcript": [
+     {
+      "text": "Das war sehr lecker, aber ich schaffe den Rest nicht.",
+      "speaker": "female"
+     },
+     {
+      "text": "Möchten Sie den Rest mitnehmen?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, das wäre toll. Geht das?",
+      "speaker": "female"
+     },
+     {
+      "text": "Natürlich. Ich packe es Ihnen ein.",
+      "speaker": "male"
+     },
+     {
+      "text": "Wie lange hält es sich?",
+      "speaker": "female"
+     },
+     {
+      "text": "Im Kühlschrank zwei bis drei Tage. Aber am besten morgen aufwärmen.",
+      "speaker": "male"
+     },
+     {
+      "text": "Perfekt, vielen Dank.",
+      "speaker": "female"
+     },
+     {
+      "text": "Gern geschehen. Hier ist die Box.",
+      "speaker": "male"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 9,
+    "title": "Getrennt bezahlen",
+    "transcript": [
+     {
+      "text": "Wir möchten bitte zahlen.",
+      "speaker": "male"
+     },
+     {
+      "text": "Zusammen oder getrennt?",
+      "speaker": "female"
+     },
+     {
+      "text": "Getrennt, bitte. Ich hatte die Pizza und ein Bier.",
+      "speaker": "male"
+     },
+     {
+      "text": "Das macht vierzehn Euro fünfzig.",
+      "speaker": "female"
+     },
+     {
+      "text": "Hier sind fünfzehn. Stimmt so.",
+      "speaker": "male"
+     },
+     {
+      "text": "Vielen Dank. Und Sie hatten die Pasta und zwei Gläser Wein?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, genau.",
+      "speaker": "female"
+     },
+     {
+      "text": "Das macht zweiundzwanzig Euro.",
+      "speaker": "female"
+     },
+     {
+      "text": "Kann ich mit Karte zahlen?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, natürlich.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 10,
+    "title": "Feedback",
+    "transcript": [
+     {
+      "text": "Hat Ihnen das Essen geschmeckt?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, es war ausgezeichnet. Besonders der Fisch war perfekt.",
+      "speaker": "male"
+     },
+     {
+      "text": "Das freut mich sehr zu hören.",
+      "speaker": "female"
+     },
+     {
+      "text": "Die Bedienung war auch sehr freundlich und schnell.",
+      "speaker": "male"
+     },
+     {
+      "text": "Vielen Dank für das Kompliment. Darf ich Ihnen unsere Visitenkarte geben?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, gerne. Wir kommen bestimmt wieder.",
+      "speaker": "male"
+     },
+     {
+      "text": "Das würde uns freuen. Einen schönen Abend noch!",
+      "speaker": "female"
+     },
+     {
+      "text": "Danke, Ihnen auch!",
+      "speaker": "male"
+     }
+    ]
+   }
+  ],
+  "questions": [
+   {
+    "id": "614102b4-a4a8-48d1-8c19-b671caa6063e",
+    "dialogue_number": 1,
+    "question_number": 1,
+    "question_type": "multiple_choice",
+    "question_text": "Wo möchte der Gast sitzen?",
+    "options": [
+     "a) Drinnen",
+     "b) Draußen",
+     "c) Am Fenster"
+    ],
+    "correct_answer": "b",
+    "explanation": "Er sagt \"Draußen, wenn möglich\""
+   },
+   {
+    "id": "63e40c87-1ecc-4442-b4c3-ae2014638171",
+    "dialogue_number": 2,
+    "question_number": 2,
+    "question_type": "multiple_choice",
+    "question_text": "Wie ist der Lachs zubereitet?",
+    "options": [
+     "a) Gekocht",
+     "b) Gegrillt",
+     "c) Gebraten"
+    ],
+    "correct_answer": "b",
+    "explanation": "Der Kellner sagt \"Er ist gegrillt\""
+   },
+   {
+    "id": "61828e73-fb28-4666-882d-a09f0f459767",
+    "dialogue_number": 3,
+    "question_number": 3,
+    "question_type": "richtig_falsch",
+    "question_text": "Die Gemüselasagne ist vegan.",
+    "options": [
+     "Richtig",
+     "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "explanation": "Die Kellnerin sagt \"Nein, sie enthält Käse und Béchamelsoße mit Milch\""
+   },
+   {
+    "id": "b5611467-c74d-4bfa-9e84-d9d76ab1efb8",
+    "dialogue_number": 4,
+    "question_number": 4,
+    "question_type": "multiple_choice",
+    "question_text": "Wogegen ist die Kundin allergisch?",
+    "options": [
+     "a) Nüsse",
+     "b) Gluten",
+     "c) Milch"
+    ],
+    "correct_answer": "a",
+    "explanation": "Sie sagt \"Ich bin allergisch gegen Nüsse\""
+   },
+   {
+    "id": "7830b87e-845c-40d6-8aa7-0e1d7a215ba6",
+    "dialogue_number": 5,
+    "question_number": 5,
+    "question_type": "multiple_choice",
+    "question_text": "Was ist das Problem mit dem Steak?",
+    "options": [
+     "a) Es ist zu zäh",
+     "b) Es ist fast roh",
+     "c) Es ist kalt"
+    ],
+    "correct_answer": "b",
+    "explanation": "Der Gast sagt \"es ist fast roh in der Mitte\""
+   },
+   {
+    "id": "bad78bed-e81d-4004-85f5-2c7641c13c28",
+    "dialogue_number": 6,
+    "question_number": 6,
+    "question_type": "multiple_choice",
+    "question_text": "Wie viel kostet die Flasche Wein?",
+    "options": [
+     "a) 18 Euro",
+     "b) 28 Euro",
+     "c) 38 Euro"
+    ],
+    "correct_answer": "b",
+    "explanation": "Der Kellner sagt \"Achtundzwanzig Euro\""
+   },
+   {
+    "id": "eb148629-eb68-4f31-ba28-0f579b7387b4",
+    "dialogue_number": 7,
+    "question_number": 7,
+    "question_type": "richtig_falsch",
+    "question_text": "Der Schokoladenkuchen ist sehr süß.",
+    "options": [
+     "Richtig",
+     "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "explanation": "Der Kellner sagt \"Nicht zu süß\" - er ist mit dunkler Schokolade"
+   },
+   {
+    "id": "c79c04fb-6d0a-475d-820e-dd84a70baf94",
+    "dialogue_number": 8,
+    "question_number": 8,
+    "question_type": "multiple_choice",
+    "question_text": "Wie lange hält das Essen im Kühlschrank?",
+    "options": [
+     "a) 1 Tag",
+     "b) 2-3 Tage",
+     "c) Eine Woche"
+    ],
+    "correct_answer": "b",
+    "explanation": "Der Kellner sagt \"Im Kühlschrank zwei bis drei Tage\""
+   },
+   {
+    "id": "5fb8a18d-b16b-4712-8e89-c040eae4f1e7",
+    "dialogue_number": 9,
+    "question_number": 9,
+    "question_type": "multiple_choice",
+    "question_text": "Wie viel zahlt der Mann für Pizza und Bier?",
+    "options": [
+     "a) 14,50 Euro",
+     "b) 15,00 Euro",
+     "c) 12,50 Euro"
+    ],
+    "correct_answer": "a",
+    "explanation": "Die Kellnerin sagt \"vierzehn Euro fünfzig\""
+   },
+   {
+    "id": "3bb493d5-98df-4952-b987-227949946f76",
+    "dialogue_number": 10,
+    "question_number": 10,
+    "question_type": "richtig_falsch",
+    "question_text": "Der Gast fand die Bedienung langsam.",
+    "options": [
+     "Richtig",
+     "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "explanation": "Er sagt \"Die Bedienung war auch sehr freundlich und schnell\""
+   }
+  ]
+ },
+ {
+  "id": "d1552ee8-0a2e-4bf5-8f18-39da155f42dd",
+  "exercise_number": 3,
+  "title": "Reisen und Verkehrsmittel",
+  "description": "Züge, Busse, Flüge und Reiseplanung",
+  "exercise_type": "short_dialogues",
+  "total_duration_seconds": 479,
+  "plays_allowed": 2,
+  "dialogues": [
+   {
+    "dialogue_number": 1,
+    "title": "Am Fahrkartenautomaten",
+    "transcript": [
+     {
+      "text": "Entschuldigung, können Sie mir helfen? Ich verstehe diesen Automaten nicht.",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, natürlich. Wohin möchten Sie fahren?",
+      "speaker": "female"
+     },
+     {
+      "text": "Nach Frankfurt. Eine einfache Fahrt.",
+      "speaker": "male"
+     },
+     {
+      "text": "Drücken Sie hier auf Einzelfahrt und dann geben Sie Frankfurt ein.",
+      "speaker": "female"
+     },
+     {
+      "text": "Okay. Und wie bezahle ich?",
+      "speaker": "male"
+     },
+     {
+      "text": "Sie können mit Bargeld oder Karte bezahlen. Die Fahrkarte kostet neununddreißig Euro.",
+      "speaker": "female"
+     },
+     {
+      "text": "Kann ich auch eine BahnCard benutzen?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, drücken Sie zuerst auf BahnCard, dann bekommen Sie fünfundzwanzig Prozent Rabatt.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 2,
+    "title": "Zugverbindung suchen",
+    "transcript": [
+     {
+      "text": "Ich möchte morgen früh nach München fahren. Wann fährt der erste Zug?",
+      "speaker": "female"
+     },
+     {
+      "text": "Der erste ICE fährt um fünf Uhr dreiundfünfzig und kommt um neun Uhr vierzehn an.",
+      "speaker": "male"
+     },
+     {
+      "text": "Das ist sehr früh. Gibt es einen späteren Zug?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, um sieben Uhr zweiundzwanzig. Ankunft um zehn Uhr siebenundvierzig.",
+      "speaker": "male"
+     },
+     {
+      "text": "Muss ich umsteigen?",
+      "speaker": "female"
+     },
+     {
+      "text": "Nein, das ist eine Direktverbindung.",
+      "speaker": "male"
+     },
+     {
+      "text": "Perfekt. Dann nehme ich den um sieben Uhr zweiundzwanzig.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 3,
+    "title": "Flug buchen",
+    "transcript": [
+     {
+      "text": "Ich möchte einen Flug nach Barcelona buchen.",
+      "speaker": "male"
+     },
+     {
+      "text": "Wann möchten Sie fliegen?",
+      "speaker": "female"
+     },
+     {
+      "text": "Am fünfzehnten März hin und am zweiundzwanzigsten zurück.",
+      "speaker": "male"
+     },
+     {
+      "text": "Möchten Sie morgens oder abends fliegen?",
+      "speaker": "female"
+     },
+     {
+      "text": "Am liebsten morgens.",
+      "speaker": "male"
+     },
+     {
+      "text": "Ich habe einen Flug um neun Uhr fünfzehn. Ankunft um elf Uhr fünfzig Ortszeit.",
+      "speaker": "female"
+     },
+     {
+      "text": "Was kostet der Flug?",
+      "speaker": "male"
+     },
+     {
+      "text": "Hin und zurück zweihundertfünfunddreißig Euro, inklusive Handgepäck.",
+      "speaker": "female"
+     },
+     {
+      "text": "Kann ich einen Koffer mitnehmen?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, ein Koffer bis dreiundzwanzig Kilo kostet fünfundzwanzig Euro extra.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 4,
+    "title": "Zugverspätung",
+    "transcript": [
+     {
+      "text": "Achtung auf Gleis drei. Der ICE sieben fünf drei nach Hamburg hat voraussichtlich fünfundvierzig Minuten Verspätung. Grund ist eine Signalstörung. Wir bitten um Entschuldigung.",
+      "speaker": "female"
+     },
+     {
+      "text": "Oh nein! Ich verpasse meinen Anschlusszug.",
+      "speaker": "male"
+     },
+     {
+      "text": "Gehen Sie zum Servicecenter. Dort bekommen Sie Hilfe.",
+      "speaker": "female"
+     },
+     {
+      "text": "Wo ist das?",
+      "speaker": "male"
+     },
+     {
+      "text": "Gleich hier vorne links, neben der Buchhandlung.",
+      "speaker": "female"
+     },
+     {
+      "text": "Kann ich eine Entschädigung bekommen?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, ab sechzig Minuten Verspätung gibt es fünfundzwanzig Prozent zurück.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 5,
+    "title": "Mietwagen abholen",
+    "transcript": [
+     {
+      "text": "Guten Tag, ich habe einen Mietwagen reserviert. Auf den Namen Müller.",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, Herr Müller. Ein VW Golf für fünf Tage, richtig?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, genau.",
+      "speaker": "male"
+     },
+     {
+      "text": "Kann ich Ihren Führerschein und eine Kreditkarte sehen?",
+      "speaker": "female"
+     },
+     {
+      "text": "Hier, bitte.",
+      "speaker": "male"
+     },
+     {
+      "text": "Danke. Möchten Sie eine Vollkaskoversicherung? Dann zahlen Sie bei einem Schaden nichts.",
+      "speaker": "female"
+     },
+     {
+      "text": "Was kostet das?",
+      "speaker": "male"
+     },
+     {
+      "text": "Zwölf Euro pro Tag.",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, das nehme ich. Sicher ist sicher.",
+      "speaker": "male"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 6,
+    "title": "Flughafenbus",
+    "transcript": [
+     {
+      "text": "Fährt dieser Bus zum Flughafen?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, das ist der Airport-Express.",
+      "speaker": "male"
+     },
+     {
+      "text": "Wie lange dauert die Fahrt?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ungefähr vierzig Minuten, je nach Verkehr.",
+      "speaker": "male"
+     },
+     {
+      "text": "Und was kostet eine Fahrkarte?",
+      "speaker": "female"
+     },
+     {
+      "text": "Zehn Euro fünfzig. Hin und zurück fünfzehn Euro.",
+      "speaker": "male"
+     },
+     {
+      "text": "Dann nehme ich hin und zurück. Wie oft fährt der Bus?",
+      "speaker": "female"
+     },
+     {
+      "text": "Alle zwanzig Minuten. Der nächste Bus fährt in fünf Minuten.",
+      "speaker": "male"
+     },
+     {
+      "text": "Super, das schaffe ich noch.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 7,
+    "title": "Sitzplatz reservieren",
+    "transcript": [
+     {
+      "text": "Ich möchte einen Sitzplatz im ICE nach Berlin reservieren.",
+      "speaker": "male"
+     },
+     {
+      "text": "Für welchen Zug?",
+      "speaker": "female"
+     },
+     {
+      "text": "Um vierzehn Uhr dreißig ab Köln.",
+      "speaker": "male"
+     },
+     {
+      "text": "Möchten Sie am Fenster oder am Gang sitzen?",
+      "speaker": "female"
+     },
+     {
+      "text": "Am Fenster, bitte. Und in Fahrtrichtung.",
+      "speaker": "male"
+     },
+     {
+      "text": "Großraumwagen oder Abteil?",
+      "speaker": "female"
+     },
+     {
+      "text": "Großraumwagen ist okay.",
+      "speaker": "male"
+     },
+     {
+      "text": "Ich habe Wagen sieben, Platz zweiundvierzig. Die Reservierung kostet vier Euro fünfzig.",
+      "speaker": "female"
+     },
+     {
+      "text": "Perfekt, das nehme ich.",
+      "speaker": "male"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 8,
+    "title": "Check-in am Flughafen",
+    "transcript": [
+     {
+      "text": "Guten Tag, ich möchte einchecken für den Flug nach London.",
+      "speaker": "female"
+     },
+     {
+      "text": "Ihren Reisepass und die Buchungsbestätigung, bitte.",
+      "speaker": "male"
+     },
+     {
+      "text": "Hier, bitte.",
+      "speaker": "female"
+     },
+     {
+      "text": "Haben Sie Gepäck aufzugeben?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, einen Koffer.",
+      "speaker": "female"
+     },
+     {
+      "text": "Stellen Sie ihn bitte auf das Band. Zweiundzwanzig Kilo, das ist in Ordnung.",
+      "speaker": "male"
+     },
+     {
+      "text": "Kann ich einen Platz am Notausgang haben? Ich habe lange Beine.",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, Reihe zwölf ist noch frei. Hier ist Ihre Bordkarte. Boarding ist um achtzehn Uhr dreißig, Gate B siebzehn.",
+      "speaker": "male"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 9,
+    "title": "Taxi bestellen",
+    "transcript": [
+     {
+      "text": "Guten Tag, ich brauche ein Taxi zum Hauptbahnhof.",
+      "speaker": "male"
+     },
+     {
+      "text": "Von welcher Adresse?",
+      "speaker": "female"
+     },
+     {
+      "text": "Hotel Kaiserhof, Berliner Straße fünfzehn.",
+      "speaker": "male"
+     },
+     {
+      "text": "Wann brauchen Sie das Taxi?",
+      "speaker": "female"
+     },
+     {
+      "text": "Jetzt sofort, bitte. Mein Zug fährt in vierzig Minuten.",
+      "speaker": "male"
+     },
+     {
+      "text": "Ein Taxi ist in etwa acht Minuten bei Ihnen.",
+      "speaker": "female"
+     },
+     {
+      "text": "Wie viel kostet die Fahrt ungefähr?",
+      "speaker": "male"
+     },
+     {
+      "text": "Zum Hauptbahnhof sind es etwa fünfzehn bis achtzehn Euro.",
+      "speaker": "female"
+     },
+     {
+      "text": "Gut, vielen Dank.",
+      "speaker": "male"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 10,
+    "title": "Durchsage im Flugzeug",
+    "transcript": [
+     {
+      "text": "Meine Damen und Herren, willkommen an Bord. Unser Flug nach Rom dauert heute eine Stunde und fünfundvierzig Minuten. Wir fliegen in einer Höhe von zehntausend Metern. Die Temperatur in Rom beträgt achtundzwanzig Grad bei sonnigem Wetter. Bitte schalten Sie jetzt Ihre elektronischen Geräte in den Flugmodus. Wir wünschen Ihnen einen angenehmen Flug.",
+      "speaker": "female"
+     }
+    ]
+   }
+  ],
+  "questions": [
+   {
+    "id": "12a24134-fdbd-411a-9d9f-638a1bc9bcdf",
+    "dialogue_number": 1,
+    "question_number": 1,
+    "question_type": "multiple_choice",
+    "question_text": "Wie viel Rabatt gibt es mit der BahnCard?",
+    "options": [
+     "a) 10 Prozent",
+     "b) 25 Prozent",
+     "c) 50 Prozent"
+    ],
+    "correct_answer": "b",
+    "explanation": "Die Frau sagt \"fünfundzwanzig Prozent Rabatt\""
+   },
+   {
+    "id": "8ad0381a-e6a1-48ad-9214-1b0dc6c76bd4",
+    "dialogue_number": 2,
+    "question_number": 2,
+    "question_type": "multiple_choice",
+    "question_text": "Wann kommt der Zug um 7:22 in München an?",
+    "options": [
+     "a) 10:47",
+     "b) 9:14",
+     "c) 10:22"
+    ],
+    "correct_answer": "a",
+    "explanation": "Der Mann sagt \"Ankunft um zehn Uhr siebenundvierzig\""
+   },
+   {
+    "id": "67993af3-837f-4820-81a9-076446d32720",
+    "dialogue_number": 3,
+    "question_number": 3,
+    "question_type": "multiple_choice",
+    "question_text": "Was kostet der Flug hin und zurück?",
+    "options": [
+     "a) 260 Euro",
+     "b) 195 Euro",
+     "c) 235 Euro"
+    ],
+    "correct_answer": "c",
+    "explanation": "Die Mitarbeiterin sagt \"zweihundertfünfunddreißig Euro\""
+   },
+   {
+    "id": "3e5ea90e-0be4-41cb-9083-911b1acb5a77",
+    "dialogue_number": 4,
+    "question_number": 4,
+    "question_type": "multiple_choice",
+    "question_text": "Wie viel Verspätung hat der Zug?",
+    "options": [
+     "a) 60 Minuten",
+     "b) 30 Minuten",
+     "c) 45 Minuten"
+    ],
+    "correct_answer": "c",
+    "explanation": "Die Durchsage sagt \"fünfundvierzig Minuten Verspätung\""
+   },
+   {
+    "id": "56410162-d13f-43a4-8bdb-8f2121720ac8",
+    "dialogue_number": 5,
+    "question_number": 5,
+    "question_type": "multiple_choice",
+    "question_text": "Was kostet die Vollkaskoversicherung pro Tag?",
+    "options": [
+     "a) 12 Euro",
+     "b) 15 Euro",
+     "c) 8 Euro"
+    ],
+    "correct_answer": "a",
+    "explanation": "Die Mitarbeiterin sagt \"Zwölf Euro pro Tag\""
+   },
+   {
+    "id": "d351e055-b474-4423-a520-d0ee345ea005",
+    "dialogue_number": 6,
+    "question_number": 6,
+    "question_type": "multiple_choice",
+    "question_text": "Wie oft fährt der Flughafenbus?",
+    "options": [
+     "a) Alle 20 Minuten",
+     "b) Alle 30 Minuten",
+     "c) Alle 10 Minuten"
+    ],
+    "correct_answer": "a",
+    "explanation": "Der Fahrer sagt \"Alle zwanzig Minuten\""
+   },
+   {
+    "id": "e8af2d99-63d1-4976-8173-c0040f55c590",
+    "dialogue_number": 7,
+    "question_number": 7,
+    "question_type": "richtig_falsch",
+    "question_text": "Der Mann möchte einen Platz am Gang.",
+    "options": [
+     "Richtig",
+     "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "explanation": "Er sagt \"Am Fenster, bitte\""
+   },
+   {
+    "id": "88c11537-6eed-45f1-aa8d-29e88dcad6f9",
+    "dialogue_number": 8,
+    "question_number": 8,
+    "question_type": "multiple_choice",
+    "question_text": "Um wie viel Uhr ist das Boarding?",
+    "options": [
+     "a) 18:00",
+     "b) 18:30",
+     "c) 17:30"
+    ],
+    "correct_answer": "b",
+    "explanation": "Der Mitarbeiter sagt \"Boarding ist um achtzehn Uhr dreißig\""
+   },
+   {
+    "id": "04ff5834-7eff-4d43-aa92-834ee5e7793f",
+    "dialogue_number": 9,
+    "question_number": 9,
+    "question_type": "multiple_choice",
+    "question_text": "Wie lange dauert es, bis das Taxi kommt?",
+    "options": [
+     "a) 8 Minuten",
+     "b) 15 Minuten",
+     "c) 5 Minuten"
+    ],
+    "correct_answer": "a",
+    "explanation": "Die Mitarbeiterin sagt \"in etwa acht Minuten\""
+   },
+   {
+    "id": "bcd1ef38-bd72-4b3f-960c-f2e47d10729d",
+    "dialogue_number": 10,
+    "question_number": 10,
+    "question_type": "multiple_choice",
+    "question_text": "Wie ist das Wetter in Rom?",
+    "options": [
+     "a) 24 Grad, bewölkt",
+     "b) 28 Grad, sonnig",
+     "c) 30 Grad, windig"
+    ],
+    "correct_answer": "b",
+    "explanation": "Die Durchsage sagt \"achtundzwanzig Grad bei sonnigem Wetter\""
+   }
+  ]
+ },
+ {
+  "id": "fbd6e61e-b9a8-4a6d-bdff-ad3366b95a50",
+  "exercise_number": 4,
+  "title": "Termine und Verabredungen",
+  "description": "Termine vereinbaren, verschieben und absagen",
+  "exercise_type": "short_dialogues",
+  "total_duration_seconds": 518,
+  "plays_allowed": 2,
+  "dialogues": [
+   {
+    "dialogue_number": 1,
+    "title": "Friseurtermin",
+    "transcript": [
+     {
+      "text": "Salon Schön, guten Tag.",
+      "speaker": "female"
+     },
+     {
+      "text": "Guten Tag, ich möchte einen Termin zum Haareschneiden.",
+      "speaker": "male"
+     },
+     {
+      "text": "Wann passt es Ihnen?",
+      "speaker": "female"
+     },
+     {
+      "text": "Am liebsten Samstag Vormittag.",
+      "speaker": "male"
+     },
+     {
+      "text": "Samstag um zehn Uhr hätten wir noch einen Termin frei.",
+      "speaker": "female"
+     },
+     {
+      "text": "Das passt perfekt. Wie lange dauert es ungefähr?",
+      "speaker": "male"
+     },
+     {
+      "text": "Für Herrenschnitt etwa dreißig Minuten.",
+      "speaker": "female"
+     },
+     {
+      "text": "Gut. Mein Name ist Hoffmann.",
+      "speaker": "male"
+     },
+     {
+      "text": "Alles klar, Herr Hoffmann. Bis Samstag um zehn Uhr.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 2,
+    "title": "Zahnarzttermin",
+    "transcript": [
+     {
+      "text": "Praxis Dr. Weiß, guten Tag.",
+      "speaker": "male"
+     },
+     {
+      "text": "Guten Tag, ich brauche dringend einen Termin. Ich habe starke Zahnschmerzen.",
+      "speaker": "female"
+     },
+     {
+      "text": "Oh je. Können Sie heute um sechzehn Uhr kommen?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, das geht. Ich kann früher von der Arbeit gehen.",
+      "speaker": "female"
+     },
+     {
+      "text": "Gut. Sind Sie schon Patientin bei uns?",
+      "speaker": "male"
+     },
+     {
+      "text": "Nein, ich bin neu in der Stadt. Ich bin gerade umgezogen.",
+      "speaker": "female"
+     },
+     {
+      "text": "Dann bringen Sie bitte Ihre Versichertenkarte mit.",
+      "speaker": "male"
+     },
+     {
+      "text": "Mache ich. Vielen Dank!",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 3,
+    "title": "Termin verschieben",
+    "transcript": [
+     {
+      "text": "Guten Tag, hier ist Maria Schmidt. Ich habe morgen um neun Uhr einen Termin.",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, Frau Schmidt, ich sehe den Termin. Was kann ich für Sie tun?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ich muss den Termin leider verschieben. Ich habe eine wichtige Besprechung.",
+      "speaker": "female"
+     },
+     {
+      "text": "Kein Problem. Wann würde es Ihnen passen?",
+      "speaker": "male"
+     },
+     {
+      "text": "Geht es auch übermorgen, am Donnerstag?",
+      "speaker": "female"
+     },
+     {
+      "text": "Am Donnerstag habe ich um elf Uhr oder um fünfzehn Uhr etwas frei.",
+      "speaker": "male"
+     },
+     {
+      "text": "Elf Uhr wäre gut.",
+      "speaker": "female"
+     },
+     {
+      "text": "Perfekt. Ich trage Sie für Donnerstag, elf Uhr ein.",
+      "speaker": "male"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 4,
+    "title": "Treffen planen",
+    "transcript": [
+     {
+      "text": "Hast du am Wochenende Zeit? Wir könnten uns treffen.",
+      "speaker": "male"
+     },
+     {
+      "text": "Am Samstag bin ich leider beschäftigt. Aber Sonntag geht.",
+      "speaker": "female"
+     },
+     {
+      "text": "Sonntag ist gut. Was möchtest du machen?",
+      "speaker": "male"
+     },
+     {
+      "text": "Wir könnten ins Museum gehen. Es gibt eine neue Ausstellung.",
+      "speaker": "female"
+     },
+     {
+      "text": "Gute Idee! Um wie viel Uhr?",
+      "speaker": "male"
+     },
+     {
+      "text": "Wie wäre es um vierzehn Uhr? Dann können wir danach noch einen Kaffee trinken.",
+      "speaker": "female"
+     },
+     {
+      "text": "Perfekt. Wo treffen wir uns?",
+      "speaker": "male"
+     },
+     {
+      "text": "Am Eingang vom Museum?",
+      "speaker": "female"
+     },
+     {
+      "text": "Abgemacht! Bis Sonntag.",
+      "speaker": "male"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 5,
+    "title": "Termin absagen",
+    "transcript": [
+     {
+      "text": "Hallo Peter, hier ist Anna. Ich muss leider absagen.",
+      "speaker": "female"
+     },
+     {
+      "text": "Oh, das ist schade. Was ist passiert?",
+      "speaker": "male"
+     },
+     {
+      "text": "Mein Sohn ist krank. Er hat Fieber und ich muss bei ihm bleiben.",
+      "speaker": "female"
+     },
+     {
+      "text": "Das verstehe ich. Gute Besserung für deinen Sohn!",
+      "speaker": "male"
+     },
+     {
+      "text": "Danke. Können wir nächste Woche einen neuen Termin machen?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, klar. Wie wäre es mit Mittwoch?",
+      "speaker": "male"
+     },
+     {
+      "text": "Mittwoch passt gut. Gleiche Uhrzeit?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, um achtzehn Uhr. Bis dann und alles Gute!",
+      "speaker": "male"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 6,
+    "title": "Autowerkstatt",
+    "transcript": [
+     {
+      "text": "Autowerkstatt Müller, guten Tag.",
+      "speaker": "male"
+     },
+     {
+      "text": "Guten Tag, mein Auto muss zur Inspektion.",
+      "speaker": "female"
+     },
+     {
+      "text": "Um welches Fahrzeug handelt es sich?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ein VW Golf, Baujahr zweitausendneunzehn.",
+      "speaker": "female"
+     },
+     {
+      "text": "Wann soll die Inspektion sein?",
+      "speaker": "male"
+     },
+     {
+      "text": "Nächste Woche, wenn möglich.",
+      "speaker": "female"
+     },
+     {
+      "text": "Dienstag oder Mittwoch hätte ich Zeit.",
+      "speaker": "male"
+     },
+     {
+      "text": "Dienstag wäre gut. Wie lange dauert die Inspektion?",
+      "speaker": "female"
+     },
+     {
+      "text": "Etwa drei bis vier Stunden. Sie können das Auto morgens bringen und nachmittags abholen.",
+      "speaker": "male"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 7,
+    "title": "Einladung zur Party",
+    "transcript": [
+     {
+      "text": "Ich feiere nächsten Samstag meinen Geburtstag. Kommst du?",
+      "speaker": "female"
+     },
+     {
+      "text": "Oh, herzlichen Glückwunsch im Voraus! Wann fängt die Party an?",
+      "speaker": "male"
+     },
+     {
+      "text": "Um zwanzig Uhr. Bei mir zu Hause.",
+      "speaker": "female"
+     },
+     {
+      "text": "Super, ich komme gerne. Soll ich etwas mitbringen?",
+      "speaker": "male"
+     },
+     {
+      "text": "Wenn du möchtest, kannst du einen Salat oder einen Kuchen mitbringen.",
+      "speaker": "female"
+     },
+     {
+      "text": "Ich bringe einen Kuchen mit. Schokolade oder Erdbeere?",
+      "speaker": "male"
+     },
+     {
+      "text": "Schokolade, das liebe ich!",
+      "speaker": "female"
+     },
+     {
+      "text": "Alles klar. Ich freue mich!",
+      "speaker": "male"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 8,
+    "title": "Handwerker bestellen",
+    "transcript": [
+     {
+      "text": "Firma Braun, Sanitär und Heizung.",
+      "speaker": "male"
+     },
+     {
+      "text": "Guten Tag, meine Heizung funktioniert nicht richtig.",
+      "speaker": "female"
+     },
+     {
+      "text": "Was genau ist das Problem?",
+      "speaker": "male"
+     },
+     {
+      "text": "Sie wird nicht richtig warm, obwohl ich sie voll aufgedreht habe.",
+      "speaker": "female"
+     },
+     {
+      "text": "Das sollten wir uns ansehen. Wann sind Sie zu Hause?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ich arbeite von zu Hause. Ich bin immer da.",
+      "speaker": "female"
+     },
+     {
+      "text": "Dann könnte unser Techniker morgen zwischen zehn und zwölf Uhr kommen.",
+      "speaker": "male"
+     },
+     {
+      "text": "Das passt gut. Wie ist Ihre Adresse noch mal?",
+      "speaker": "female"
+     },
+     {
+      "text": "Bachstraße zwölf, dritter Stock.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 9,
+    "title": "Tennismatch",
+    "transcript": [
+     {
+      "text": "Hast du Lust, am Donnerstag Tennis zu spielen?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, gerne! Um welche Uhrzeit?",
+      "speaker": "female"
+     },
+     {
+      "text": "Nach der Arbeit. Um achtzehn Uhr?",
+      "speaker": "male"
+     },
+     {
+      "text": "Das ist etwas früh für mich. Geht auch neunzehn Uhr?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, kein Problem. Ich reserviere den Platz für neunzehn Uhr.",
+      "speaker": "male"
+     },
+     {
+      "text": "Wie lange können wir spielen?",
+      "speaker": "female"
+     },
+     {
+      "text": "Eine Stunde. Danach ist der Platz leider besetzt.",
+      "speaker": "male"
+     },
+     {
+      "text": "Eine Stunde reicht. Bringst du die Bälle mit?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, ich habe neue Bälle gekauft.",
+      "speaker": "male"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 10,
+    "title": "Elternabend",
+    "transcript": [
+     {
+      "text": "Vergiss nicht, nächsten Dienstag ist Elternabend in der Schule.",
+      "speaker": "female"
+     },
+     {
+      "text": "Um wie viel Uhr?",
+      "speaker": "male"
+     },
+     {
+      "text": "Um neunzehn Uhr dreißig. In der Aula.",
+      "speaker": "female"
+     },
+     {
+      "text": "Ich habe an dem Tag ein Meeting bis achtzehn Uhr. Ich schaffe das.",
+      "speaker": "male"
+     },
+     {
+      "text": "Gut. Es ist wichtig, dass wir beide hingehen.",
+      "speaker": "female"
+     },
+     {
+      "text": "Worum geht es bei dem Elternabend?",
+      "speaker": "male"
+     },
+     {
+      "text": "Um die Klassenfahrt im Frühling. Und um die Zeugnisse.",
+      "speaker": "female"
+     },
+     {
+      "text": "Okay. Sollen wir vorher noch schnell etwas essen?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, das ist eine gute Idee. Um achtzehn Uhr dreißig?",
+      "speaker": "female"
+     },
+     {
+      "text": "Perfekt.",
+      "speaker": "male"
+     }
+    ]
+   }
+  ],
+  "questions": [
+   {
+    "id": "1e8e948a-fdd2-499a-9945-bfcf6e6efe48",
+    "dialogue_number": 1,
+    "question_number": 1,
+    "question_type": "multiple_choice",
+    "question_text": "Wann ist der Friseurtermin?",
+    "options": [
+     "a) Samstag um 10 Uhr",
+     "b) Samstag um 11 Uhr",
+     "c) Freitag um 10 Uhr"
+    ],
+    "correct_answer": "a",
+    "explanation": "Die Mitarbeiterin sagt \"Samstag um zehn Uhr\""
+   },
+   {
+    "id": "15dd15e8-39eb-4e2d-bfba-c1bf1359301c",
+    "dialogue_number": 2,
+    "question_number": 2,
+    "question_type": "richtig_falsch",
+    "question_text": "Die Frau ist schon Patientin in der Praxis.",
+    "options": [
+     "Richtig",
+     "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "explanation": "Sie sagt \"Nein, ich bin neu in der Stadt\""
+   },
+   {
+    "id": "f3676574-5804-4191-9bc9-2a66810d0233",
+    "dialogue_number": 3,
+    "question_number": 3,
+    "question_type": "multiple_choice",
+    "question_text": "Wann ist der neue Termin?",
+    "options": [
+     "a) Donnerstag um 11 Uhr",
+     "b) Donnerstag um 15 Uhr",
+     "c) Mittwoch um 11 Uhr"
+    ],
+    "correct_answer": "a",
+    "explanation": "Sie einigen sich auf \"Donnerstag, elf Uhr\""
+   },
+   {
+    "id": "2c638ffa-8f37-4f33-bb8c-985a13f6e5ff",
+    "dialogue_number": 4,
+    "question_number": 4,
+    "question_type": "multiple_choice",
+    "question_text": "Wo treffen sich die Freunde?",
+    "options": [
+     "a) Im Café",
+     "b) Am Bahnhof",
+     "c) Am Eingang vom Museum"
+    ],
+    "correct_answer": "c",
+    "explanation": "Sie sagt \"Am Eingang vom Museum\""
+   },
+   {
+    "id": "7bd4c486-b8b8-4af2-b3b8-0efba3db2efe",
+    "dialogue_number": 5,
+    "question_number": 5,
+    "question_type": "multiple_choice",
+    "question_text": "Warum muss Anna absagen?",
+    "options": [
+     "a) Sie ist selbst krank",
+     "b) Ihr Sohn ist krank",
+     "c) Sie muss arbeiten"
+    ],
+    "correct_answer": "b",
+    "explanation": "Sie sagt \"Mein Sohn ist krank. Er hat Fieber\""
+   },
+   {
+    "id": "93943d42-f38a-4f33-93fb-0d167df05ab0",
+    "dialogue_number": 6,
+    "question_number": 6,
+    "question_type": "multiple_choice",
+    "question_text": "Wie lange dauert die Inspektion?",
+    "options": [
+     "a) Den ganzen Tag",
+     "b) 1-2 Stunden",
+     "c) 3-4 Stunden"
+    ],
+    "correct_answer": "c",
+    "explanation": "Der Mitarbeiter sagt \"Etwa drei bis vier Stunden\""
+   },
+   {
+    "id": "b79ac819-3ac7-4858-b3d0-224959742261",
+    "dialogue_number": 7,
+    "question_number": 7,
+    "question_type": "multiple_choice",
+    "question_text": "Was bringt der Mann zur Party mit?",
+    "options": [
+     "a) Getränke",
+     "b) Einen Schokoladenkuchen",
+     "c) Einen Salat"
+    ],
+    "correct_answer": "b",
+    "explanation": "Er sagt \"Ich bringe einen Kuchen mit\" und sie wählt Schokolade"
+   },
+   {
+    "id": "d02e6b55-b09b-4902-a0ed-c5dc63f0e233",
+    "dialogue_number": 8,
+    "question_number": 8,
+    "question_type": "multiple_choice",
+    "question_text": "Wann kommt der Techniker?",
+    "options": [
+     "a) Heute Nachmittag",
+     "b) Morgen zwischen 10 und 12 Uhr",
+     "c) Übermorgen"
+    ],
+    "correct_answer": "b",
+    "explanation": "Der Mitarbeiter sagt \"morgen zwischen zehn und zwölf Uhr\""
+   },
+   {
+    "id": "c1a520b3-4fdc-4e6d-b07f-fab44c269cb3",
+    "dialogue_number": 9,
+    "question_number": 9,
+    "question_type": "multiple_choice",
+    "question_text": "Um wie viel Uhr spielen sie Tennis?",
+    "options": [
+     "a) 18 Uhr",
+     "b) 19 Uhr",
+     "c) 20 Uhr"
+    ],
+    "correct_answer": "b",
+    "explanation": "Sie einigen sich auf \"neunzehn Uhr\""
+   },
+   {
+    "id": "1c155ac6-f35e-46bb-933b-eb713de4e0c9",
+    "dialogue_number": 10,
+    "question_number": 10,
+    "question_type": "multiple_choice",
+    "question_text": "Worum geht es beim Elternabend?",
+    "options": [
+     "a) Mittagessen und Sport",
+     "b) Klassenfahrt und Zeugnisse",
+     "c) Stundenplan und Hausaufgaben"
+    ],
+    "correct_answer": "b",
+    "explanation": "Sie sagt \"Um die Klassenfahrt im Frühling. Und um die Zeugnisse.\""
+   }
+  ]
+ },
+ {
+  "id": "7cb40bfe-01b4-4634-9953-897c0776fd4b",
+  "exercise_number": 5,
+  "title": "Einkaufen im Alltag",
+  "description": "Einkaufen in verschiedenen Geschäften, Umtausch und Rabatte",
+  "exercise_type": "short_dialogues",
+  "total_duration_seconds": 540,
+  "plays_allowed": 2,
+  "dialogues": [
+   {
+    "dialogue_number": 1,
+    "title": "In der Bäckerei",
+    "transcript": [
+     {
+      "text": "Guten Morgen! Was darf es sein?",
+      "speaker": "female"
+     },
+     {
+      "text": "Guten Morgen. Ich hätte gerne vier Brötchen und ein Vollkornbrot.",
+      "speaker": "male"
+     },
+     {
+      "text": "Gerne. Die Brötchen sind heute frisch aus dem Ofen. Geschnitten oder am Stück?",
+      "speaker": "female"
+     },
+     {
+      "text": "Geschnitten, bitte.",
+      "speaker": "male"
+     },
+     {
+      "text": "Darf es sonst noch etwas sein? Wir haben heute frischen Apfelkuchen.",
+      "speaker": "female"
+     },
+     {
+      "text": "Oh ja, dann nehme ich auch zwei Stück Apfelkuchen.",
+      "speaker": "male"
+     },
+     {
+      "text": "Sehr gerne. Das macht zusammen acht Euro fünfundsiebzig.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 2,
+    "title": "Auf dem Wochenmarkt",
+    "transcript": [
+     {
+      "text": "Guten Tag! Was kosten die Tomaten?",
+      "speaker": "male"
+     },
+     {
+      "text": "Die großen kosten drei Euro neunundneunzig das Kilo, die kleinen Kirschtomaten vier Euro fünfzig.",
+      "speaker": "female"
+     },
+     {
+      "text": "Dann nehme ich ein Kilo von den großen.",
+      "speaker": "male"
+     },
+     {
+      "text": "Gerne. Die sind aus der Region, ganz frisch.",
+      "speaker": "female"
+     },
+     {
+      "text": "Haben Sie auch Basilikum?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, hier. Ein Bund kostet einen Euro fünfzig.",
+      "speaker": "female"
+     },
+     {
+      "text": "Perfekt für Tomaten mit Mozzarella! Ich nehme eins.",
+      "speaker": "male"
+     },
+     {
+      "text": "Sehr gut. Das macht dann fünf Euro neunundvierzig zusammen.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 3,
+    "title": "Elektronikgeschäft",
+    "transcript": [
+     {
+      "text": "Kann ich Ihnen helfen?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, ich suche Kopfhörer für mein Handy.",
+      "speaker": "male"
+     },
+     {
+      "text": "Kabellos oder mit Kabel?",
+      "speaker": "female"
+     },
+     {
+      "text": "Kabellos, bitte. Was können Sie empfehlen?",
+      "speaker": "male"
+     },
+     {
+      "text": "Diese hier sind sehr beliebt. Sie haben eine gute Klangqualität und der Akku hält acht Stunden.",
+      "speaker": "female"
+     },
+     {
+      "text": "Wie viel kosten sie?",
+      "speaker": "male"
+     },
+     {
+      "text": "Neunundsiebzig Euro. Aber diese Woche haben wir zwanzig Prozent Rabatt.",
+      "speaker": "female"
+     },
+     {
+      "text": "Das wären dann etwa dreiundsechzig Euro?",
+      "speaker": "male"
+     },
+     {
+      "text": "Genau, dreiundsechzig Euro zwanzig.",
+      "speaker": "female"
+     },
+     {
+      "text": "Gut, die nehme ich.",
+      "speaker": "male"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 4,
+    "title": "Umtausch",
+    "transcript": [
+     {
+      "text": "Guten Tag, ich möchte diese Hose umtauschen.",
+      "speaker": "male"
+     },
+     {
+      "text": "Was ist das Problem?",
+      "speaker": "female"
+     },
+     {
+      "text": "Sie passt nicht. Sie ist zu eng.",
+      "speaker": "male"
+     },
+     {
+      "text": "Haben Sie den Kassenbon?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, hier. Ich habe sie vor drei Tagen gekauft.",
+      "speaker": "male"
+     },
+     {
+      "text": "Kein Problem. Möchten Sie eine größere Größe oder lieber das Geld zurück?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ich nehme lieber das Geld zurück.",
+      "speaker": "male"
+     },
+     {
+      "text": "In Ordnung. Haben Sie mit Karte oder bar bezahlt?",
+      "speaker": "female"
+     },
+     {
+      "text": "Mit Karte.",
+      "speaker": "male"
+     },
+     {
+      "text": "Dann überweise ich den Betrag auf Ihre Karte zurück.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 5,
+    "title": "Buchhandlung",
+    "transcript": [
+     {
+      "text": "Guten Tag, ich suche ein Buch, aber ich weiß den Titel nicht genau.",
+      "speaker": "female"
+     },
+     {
+      "text": "Kein Problem. Wissen Sie den Autor oder worum es geht?",
+      "speaker": "male"
+     },
+     {
+      "text": "Es ist ein Krimi, der in Berlin spielt. Der Autor ist ein deutscher Name, ich glaube mit S.",
+      "speaker": "female"
+     },
+     {
+      "text": "Hmm, das könnte Sebastian Fitzek sein. Er schreibt Thriller, die in Berlin spielen.",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, genau! Das war der Name.",
+      "speaker": "female"
+     },
+     {
+      "text": "Sein neuestes Buch ist hier. Es ist gerade auf der Bestsellerliste.",
+      "speaker": "male"
+     },
+     {
+      "text": "Wunderbar. Was kostet es?",
+      "speaker": "female"
+     },
+     {
+      "text": "Das Hardcover kostet zweiundzwanzig Euro, das Taschenbuch dreizehn Euro neunzig.",
+      "speaker": "male"
+     },
+     {
+      "text": "Ich nehme das Taschenbuch.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 6,
+    "title": "In der Drogerie",
+    "transcript": [
+     {
+      "text": "Entschuldigung, wo finde ich Sonnencreme?",
+      "speaker": "male"
+     },
+     {
+      "text": "Die Sonnenpflege ist in Gang drei, links.",
+      "speaker": "female"
+     },
+     {
+      "text": "Danke. Und haben Sie auch After-Sun-Lotion?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, die steht direkt daneben.",
+      "speaker": "female"
+     },
+     {
+      "text": "Welchen Lichtschutzfaktor empfehlen Sie für den Urlaub am Meer?",
+      "speaker": "male"
+     },
+     {
+      "text": "Mindestens Faktor fünfzig, besonders wenn Sie sich viel in der Sonne aufhalten.",
+      "speaker": "female"
+     },
+     {
+      "text": "Gut, dann nehme ich die Sonnencreme mit Faktor fünfzig und die After-Sun-Lotion.",
+      "speaker": "male"
+     },
+     {
+      "text": "Diese Marke ist heute im Angebot. Zwei für den Preis von einem.",
+      "speaker": "female"
+     },
+     {
+      "text": "Super, dann nehme ich gleich zwei Sonnencremes.",
+      "speaker": "male"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 7,
+    "title": "Blumengeschäft",
+    "transcript": [
+     {
+      "text": "Guten Tag! Suchen Sie etwas Bestimmtes?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, ich brauche einen Blumenstrauß für meine Mutter. Sie hat morgen Geburtstag.",
+      "speaker": "male"
+     },
+     {
+      "text": "Wie schön! Was für Blumen mag sie?",
+      "speaker": "female"
+     },
+     {
+      "text": "Sie liebt Rosen. Am liebsten in Rosa.",
+      "speaker": "male"
+     },
+     {
+      "text": "Wir haben wunderschöne rosa Rosen. Soll ich einen Strauß binden?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, bitte. Mit ein bisschen Grün dazu.",
+      "speaker": "male"
+     },
+     {
+      "text": "Wie viel möchten Sie ausgeben?",
+      "speaker": "female"
+     },
+     {
+      "text": "Etwa dreißig Euro.",
+      "speaker": "male"
+     },
+     {
+      "text": "Dafür bekomme ich einen schönen Strauß mit zehn Rosen hin.",
+      "speaker": "female"
+     },
+     {
+      "text": "Perfekt!",
+      "speaker": "male"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 8,
+    "title": "Sportgeschäft",
+    "transcript": [
+     {
+      "text": "Ich suche Laufschuhe für den Marathon.",
+      "speaker": "male"
+     },
+     {
+      "text": "Wie viele Kilometer laufen Sie pro Woche?",
+      "speaker": "female"
+     },
+     {
+      "text": "Im Moment etwa vierzig Kilometer.",
+      "speaker": "male"
+     },
+     {
+      "text": "Dann brauchen Sie einen Schuh mit guter Dämpfung. Welche Größe haben Sie?",
+      "speaker": "female"
+     },
+     {
+      "text": "Dreiundvierzig.",
+      "speaker": "male"
+     },
+     {
+      "text": "Dieser Schuh hier ist ideal für lange Strecken. Er ist leicht und bequem.",
+      "speaker": "female"
+     },
+     {
+      "text": "Kann ich ihn anprobieren?",
+      "speaker": "male"
+     },
+     {
+      "text": "Natürlich. Hier ist Größe dreiundvierzig. Probieren Sie am besten beide Schuhe.",
+      "speaker": "female"
+     },
+     {
+      "text": "Die sitzen perfekt! Was kosten sie?",
+      "speaker": "male"
+     },
+     {
+      "text": "Einhundertneununddreißig Euro.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 9,
+    "title": "Reklamation",
+    "transcript": [
+     {
+      "text": "Guten Tag, ich habe ein Problem mit diesem Föhn.",
+      "speaker": "female"
+     },
+     {
+      "text": "Was ist denn passiert?",
+      "speaker": "male"
+     },
+     {
+      "text": "Er funktioniert nicht mehr. Ich habe ihn erst vor zwei Wochen gekauft.",
+      "speaker": "female"
+     },
+     {
+      "text": "Haben Sie den Kassenbon dabei?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, hier. Können Sie ihn reparieren?",
+      "speaker": "female"
+     },
+     {
+      "text": "Lassen Sie mich kurz nachsehen. Tatsächlich, er geht nicht an.",
+      "speaker": "male"
+     },
+     {
+      "text": "Kann ich einen neuen bekommen?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, das Gerät ist noch in der Garantie. Sie bekommen kostenlos ein neues.",
+      "speaker": "male"
+     },
+     {
+      "text": "Das ist gut. Vielen Dank!",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 10,
+    "title": "Click and Collect",
+    "transcript": [
+     {
+      "text": "Guten Tag, ich möchte meine Online-Bestellung abholen.",
+      "speaker": "male"
+     },
+     {
+      "text": "Haben Sie die Bestellbestätigung?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, hier auf meinem Handy.",
+      "speaker": "male"
+     },
+     {
+      "text": "Einen Moment, ich hole Ihr Paket. Das sind drei Artikel: zwei T-Shirts und eine Jeans, richtig?",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, genau.",
+      "speaker": "male"
+     },
+     {
+      "text": "Möchten Sie alles anprobieren? Die Kabinen sind dort hinten.",
+      "speaker": "female"
+     },
+     {
+      "text": "Ja, gerne. Falls etwas nicht passt, kann ich es direkt hier umtauschen?",
+      "speaker": "male"
+     },
+     {
+      "text": "Ja, natürlich. Kein Problem.",
+      "speaker": "female"
+     },
+     {
+      "text": "Sehr praktisch, danke!",
+      "speaker": "male"
+     }
+    ]
+   }
+  ],
+  "questions": [
+   {
+    "id": "12bc7d91-1da3-4a34-834e-1c981027574a",
+    "dialogue_number": 1,
+    "question_number": 1,
+    "question_type": "multiple_choice",
+    "question_text": "Wie viel kostet alles zusammen in der Bäckerei?",
+    "options": [
+     "a) 9,75 €",
+     "b) 7,75 €",
+     "c) 8,75 €"
+    ],
+    "correct_answer": "c",
+    "explanation": "Die Verkäuferin sagt \"acht Euro fünfundsiebzig\""
+   },
+   {
+    "id": "75429692-adcb-44bb-8438-954382d0ab77",
+    "dialogue_number": 2,
+    "question_number": 2,
+    "question_type": "multiple_choice",
+    "question_text": "Was kosten die großen Tomaten pro Kilo?",
+    "options": [
+     "a) 2,99 €",
+     "b) 3,99 €",
+     "c) 4,50 €"
+    ],
+    "correct_answer": "b",
+    "explanation": "Die Verkäuferin sagt \"drei Euro neunundneunzig das Kilo\""
+   },
+   {
+    "id": "2c39de6d-18be-464f-add8-1c25783e2cde",
+    "dialogue_number": 3,
+    "question_number": 3,
+    "question_type": "multiple_choice",
+    "question_text": "Wie viel kosten die Kopfhörer mit Rabatt?",
+    "options": [
+     "a) 79,00 €",
+     "b) 53,20 €",
+     "c) 63,20 €"
+    ],
+    "correct_answer": "c",
+    "explanation": "Die Verkäuferin sagt \"dreiundsechzig Euro zwanzig\""
+   },
+   {
+    "id": "573c7a51-ad51-4d4c-b45d-1cce4b80f481",
+    "dialogue_number": 4,
+    "question_number": 4,
+    "question_type": "richtig_falsch",
+    "question_text": "Der Mann möchte die Hose in einer anderen Größe.",
+    "options": [
+     "Richtig",
+     "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "explanation": "Er sagt \"Ich nehme lieber das Geld zurück\""
+   },
+   {
+    "id": "f1b51161-7322-493e-8702-33c4bbf9c84d",
+    "dialogue_number": 5,
+    "question_number": 5,
+    "question_type": "multiple_choice",
+    "question_text": "Was kostet das Taschenbuch?",
+    "options": [
+     "a) 13,90 €",
+     "b) 22,00 €",
+     "c) 12,90 €"
+    ],
+    "correct_answer": "a",
+    "explanation": "Der Verkäufer sagt \"das Taschenbuch dreizehn Euro neunzig\""
+   },
+   {
+    "id": "c212b378-996f-4d4a-84b9-c2e72071ba6c",
+    "dialogue_number": 6,
+    "question_number": 6,
+    "question_type": "multiple_choice",
+    "question_text": "Welchen Lichtschutzfaktor empfiehlt die Verkäuferin?",
+    "options": [
+     "a) Faktor 50",
+     "b) Faktor 30",
+     "c) Faktor 40"
+    ],
+    "correct_answer": "a",
+    "explanation": "Sie sagt \"Mindestens Faktor fünfzig\""
+   },
+   {
+    "id": "b32496d6-2b39-4fee-9252-739d6568a56d",
+    "dialogue_number": 7,
+    "question_number": 7,
+    "question_type": "multiple_choice",
+    "question_text": "Wie viele Rosen bekommt der Kunde für 30 Euro?",
+    "options": [
+     "a) 12 Rosen",
+     "b) 8 Rosen",
+     "c) 10 Rosen"
+    ],
+    "correct_answer": "c",
+    "explanation": "Die Verkäuferin sagt \"einen schönen Strauß mit zehn Rosen\""
+   },
+   {
+    "id": "5ebe3649-513a-4a61-adab-727164d31071",
+    "dialogue_number": 8,
+    "question_number": 8,
+    "question_type": "multiple_choice",
+    "question_text": "Was kosten die Laufschuhe?",
+    "options": [
+     "a) 129 €",
+     "b) 139 €",
+     "c) 119 €"
+    ],
+    "correct_answer": "b",
+    "explanation": "Die Verkäuferin sagt \"Einhundertneununddreißig Euro\""
+   },
+   {
+    "id": "e162f577-ca7c-4ed5-9124-141fba72a330",
+    "dialogue_number": 9,
+    "question_number": 9,
+    "question_type": "richtig_falsch",
+    "question_text": "Die Kundin muss für den neuen Föhn bezahlen.",
+    "options": [
+     "Richtig",
+     "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "explanation": "Der Verkäufer sagt \"Sie bekommen kostenlos ein neues\""
+   },
+   {
+    "id": "8ad855ab-acf0-4cdc-8ad0-63fab7ea2c38",
+    "dialogue_number": 10,
+    "question_number": 10,
+    "question_type": "multiple_choice",
+    "question_text": "Was hat der Kunde online bestellt?",
+    "options": [
+     "a) Drei T-Shirts",
+     "b) Zwei T-Shirts und eine Jeans",
+     "c) Eine Jacke und Schuhe"
+    ],
+    "correct_answer": "b",
+    "explanation": "Die Verkäuferin sagt \"zwei T-Shirts und eine Jeans\""
+   }
+  ]
+ },
+ {
+  "id": "e2266843-2135-4a89-ab44-dde935e31595",
+  "exercise_number": 6,
+  "title": "Nachrichten und Durchsagen",
+  "description": "Nachrichten, öffentliche Durchsagen und Informationen verstehen",
+  "exercise_type": "announcements",
+  "total_duration_seconds": 309,
+  "plays_allowed": 2,
+  "dialogues": [
+   {
+    "dialogue_number": 1,
+    "title": "Wetternachrichten",
+    "transcript": [
+     {
+      "text": "Und nun das Wetter für die nächsten Tage. Heute Nachmittag ziehen von Westen Wolken auf. Am Abend ist mit Regen zu rechnen. Die Temperaturen liegen bei maximal fünfzehn Grad. Morgen bleibt es bewölkt, aber trocken. Am Wochenende wird es wieder freundlicher mit Sonne und bis zu zwanzig Grad.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 2,
+    "title": "Zugverspätung",
+    "transcript": [
+     {
+      "text": "Achtung, eine Durchsage. Der ICE sieben fünf drei nach München Hauptbahnhof hat voraussichtlich zwanzig Minuten Verspätung. Grund ist eine technische Störung. Wir bitten um Ihr Verständnis. Reisende mit Anschluss nach Salzburg wenden sich bitte an die Information in der Bahnhofshalle.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 3,
+    "title": "Supermarkt Angebot",
+    "transcript": [
+     {
+      "text": "Liebe Kunden, willkommen bei Kaufland. Heute haben wir besondere Angebote für Sie. Frische Erdbeeren aus der Region, nur ein Euro neunundneunzig pro Schale. Deutsche Butter zum Sonderpreis von einem Euro neunundvierzig. Und alle Tiefkühlpizzen sind heute fünfzig Prozent reduziert. Die Angebote gelten nur heute und nur solange der Vorrat reicht.",
+      "speaker": "male"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 4,
+    "title": "Boarding Aufruf",
+    "transcript": [
+     {
+      "text": "Letzer Aufruf für Flug LH vier fünf sechs nach Barcelona. Passagiere Schmidt und Müller werden gebeten, sich sofort zum Gate B zwölf zu begeben. Das Boarding endet in fünf Minuten. Ich wiederhole: Letzer Aufruf für Flug LH vier fünf sechs nach Barcelona, Gate B zwölf.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 5,
+    "title": "Verkehrsmeldung",
+    "transcript": [
+     {
+      "text": "Und nun die Verkehrslage. Auf der A drei Richtung Frankfurt staut es sich zwischen Köln und Leverkusen auf etwa acht Kilometern. Grund ist ein Unfall. Die Polizei ist vor Ort. Autofahrer müssen mit dreißig Minuten Verzögerung rechnen. Auf der A eins Richtung Dortmund fließt der Verkehr wieder normal nach einem früheren Stau.",
+      "speaker": "male"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 6,
+    "title": "Museum Führung",
+    "transcript": [
+     {
+      "text": "Liebe Besucher, in fünfzehn Minuten beginnt unsere kostenlose Führung durch die Sonderausstellung Impressionismus. Treffpunkt ist im Foyer. Die Führung dauert etwa eine Stunde. Bitte beachten Sie, dass Fotografieren in der Ausstellung nicht erlaubt ist. Taschen und Rucksäcke müssen an der Garderobe abgegeben werden.",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 7,
+    "title": "Arztpraxis geschlossen",
+    "transcript": [
+     {
+      "text": "Guten Tag, Sie haben die Praxis Doktor Berger erreicht. Unsere Sprechzeiten sind Montag bis Freitag von acht bis zwölf Uhr und Montag, Dienstag und Donnerstag zusätzlich von fünfzehn bis achtzehn Uhr. Die Praxis ist vom fünfzehnten bis zum dreißigsten August wegen Urlaub geschlossen. In dringenden Fällen wenden Sie sich bitte an die Praxis Doktor Klein, Telefon null zwei eins eins, fünf fünf fünf, drei zwei eins null.",
+      "speaker": "male"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 8,
+    "title": "Kino Vorstellung",
+    "transcript": [
+     {
+      "text": "Liebe Kinobesucher, die Vorstellung von Avatar zwei in Saal drei beginnt in zehn Minuten. Bitte nehmen Sie jetzt Ihre Plätze ein. Getränke und Popcorn erhalten Sie an unseren Snackbars im Foyer. Wir weisen darauf hin, dass während des Films Handys ausgeschaltet sein müssen. Wir wünschen Ihnen viel Vergnügen!",
+      "speaker": "female"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 9,
+    "title": "Sportnachrichten",
+    "transcript": [
+     {
+      "text": "Die Sportnachrichten. In der Fußball-Bundesliga hat Bayern München gestern gegen Borussia Dortmund zwei zu eins gewonnen. Die Tore für Bayern schossen Müller und Sané. Dortmund traf in der achtzigsten Minute durch Reus. Mit diesem Sieg steht Bayern nun auf Platz eins der Tabelle, drei Punkte vor Dortmund. Am nächsten Spieltag trifft Bayern auf Leipzig.",
+      "speaker": "male"
+     }
+    ]
+   },
+   {
+    "dialogue_number": 10,
+    "title": "Stadtfest Ankündigung",
+    "transcript": [
+     {
+      "text": "Liebe Bürgerinnen und Bürger, am kommenden Wochenende findet unser jährliches Stadtfest statt. Von Freitag bis Sonntag gibt es Live-Musik auf dem Marktplatz, Straßenkünstler in der Fußgängerzone und einen Flohmarkt am Fluss. Der Eintritt ist frei. Am Samstag um einundzwanzig Uhr gibt es ein großes Feuerwerk. Bitte beachten Sie, dass die Innenstadt am Samstag und Sonntag für Autos gesperrt ist. Nutzen Sie die kostenlosen Parkplätze am Stadion.",
+      "speaker": "female"
+     }
+    ]
+   }
+  ],
+  "questions": [
+   {
+    "id": "a9525fe2-579f-4700-8735-57ccf699dce4",
+    "dialogue_number": 1,
+    "question_number": 1,
+    "question_type": "multiple_choice",
+    "question_text": "Wie wird das Wetter am Wochenende?",
+    "options": [
+     "a) Sonnig und bis zu 20 Grad",
+     "b) Regen und kalt",
+     "c) Bewölkt und trocken"
+    ],
+    "correct_answer": "a",
+    "explanation": "Die Sprecherin sagt \"Am Wochenende wird es wieder freundlicher mit Sonne und bis zu zwanzig Grad\""
+   },
+   {
+    "id": "3b02d8f9-2a25-47b8-be6b-849adac49204",
+    "dialogue_number": 2,
+    "question_number": 2,
+    "question_type": "multiple_choice",
+    "question_text": "Wie viel Verspätung hat der ICE nach München?",
+    "options": [
+     "a) 10 Minuten",
+     "b) 20 Minuten",
+     "c) 30 Minuten"
+    ],
+    "correct_answer": "b",
+    "explanation": "Die Durchsage sagt \"zwanzig Minuten Verspätung\""
+   },
+   {
+    "id": "a2bbd684-c484-42b1-a374-e111d5deadc0",
+    "dialogue_number": 3,
+    "question_number": 3,
+    "question_type": "multiple_choice",
+    "question_text": "Wie viel kosten die Erdbeeren?",
+    "options": [
+     "a) 0,99 €",
+     "b) 1,49 €",
+     "c) 1,99 €"
+    ],
+    "correct_answer": "c",
+    "explanation": "Der Sprecher sagt \"ein Euro neunundneunzig pro Schale\""
+   },
+   {
+    "id": "6a62cb12-fe34-4353-b1dd-ddc7b700a454",
+    "dialogue_number": 4,
+    "question_number": 4,
+    "question_type": "multiple_choice",
+    "question_text": "Zu welchem Gate sollen die Passagiere gehen?",
+    "options": [
+     "a) Gate A12",
+     "b) Gate B12",
+     "c) Gate C12"
+    ],
+    "correct_answer": "b",
+    "explanation": "Die Durchsage sagt \"Gate B zwölf\""
+   },
+   {
+    "id": "24c8a400-e0f8-4d01-b284-ad308c81d335",
+    "dialogue_number": 5,
+    "question_number": 5,
+    "question_type": "multiple_choice",
+    "question_text": "Wie lange ist der Stau auf der A3?",
+    "options": [
+     "a) 8 Kilometer",
+     "b) 10 Kilometer",
+     "c) 5 Kilometer"
+    ],
+    "correct_answer": "a",
+    "explanation": "Der Sprecher sagt \"auf etwa acht Kilometern\""
+   },
+   {
+    "id": "eb2ac290-b5a8-4827-b84b-a803624b960c",
+    "dialogue_number": 6,
+    "question_number": 6,
+    "question_type": "richtig_falsch",
+    "question_text": "Man darf in der Ausstellung fotografieren.",
+    "options": [
+     "Richtig",
+     "Falsch"
+    ],
+    "correct_answer": "Falsch",
+    "explanation": "Die Durchsage sagt \"Fotografieren in der Ausstellung nicht erlaubt ist\""
+   },
+   {
+    "id": "0c4c4429-d0d5-44e1-96e6-12773ad65b03",
+    "dialogue_number": 7,
+    "question_number": 7,
+    "question_type": "multiple_choice",
+    "question_text": "Wann ist die Praxis wegen Urlaub geschlossen?",
+    "options": [
+     "a) 15. bis 30. August",
+     "b) 1. bis 31. August",
+     "c) 1. bis 15. August"
+    ],
+    "correct_answer": "a",
+    "explanation": "Der Anrufbeantworter sagt \"vom fünfzehnten bis zum dreißigsten August\""
+   },
+   {
+    "id": "530cd675-a317-4813-bd5e-321902384bd6",
+    "dialogue_number": 8,
+    "question_number": 8,
+    "question_type": "multiple_choice",
+    "question_text": "In welchem Saal läuft der Film?",
+    "options": [
+     "a) Saal 3",
+     "b) Saal 1",
+     "c) Saal 2"
+    ],
+    "correct_answer": "a",
+    "explanation": "Die Durchsage sagt \"Avatar zwei in Saal drei\""
+   },
+   {
+    "id": "afeaa053-be67-48ef-bb37-e3c2baac6830",
+    "dialogue_number": 9,
+    "question_number": 9,
+    "question_type": "multiple_choice",
+    "question_text": "Wie ist das Fußballspiel ausgegangen?",
+    "options": [
+     "a) Bayern 2:2 Dortmund",
+     "b) Bayern 1:2 Dortmund",
+     "c) Bayern 2:1 Dortmund"
+    ],
+    "correct_answer": "c",
+    "explanation": "Der Sprecher sagt \"zwei zu eins gewonnen\""
+   },
+   {
+    "id": "c7afee66-57ed-482c-a5c3-7c021cfa4045",
+    "dialogue_number": 10,
+    "question_number": 10,
+    "question_type": "multiple_choice",
+    "question_text": "Wann ist das Feuerwerk?",
+    "options": [
+     "a) Freitag um 21 Uhr",
+     "b) Samstag um 21 Uhr",
+     "c) Sonntag um 21 Uhr"
+    ],
+    "correct_answer": "b",
+    "explanation": "Die Sprecherin sagt \"Am Samstag um einundzwanzig Uhr gibt es ein großes Feuerwerk\""
+   }
+  ]
+ }
+]
