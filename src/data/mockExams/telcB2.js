@@ -172,6 +172,9 @@ export const telcB2Mock = {
           label: 'Hörtext 1',
           level: 'B2.1',
           exerciseNumber: 1,
+          // Cap pinned by tests/exams.test.mjs for every mock listening part —
+          // a no-op today (B2 exercises carry 10 questions), a guard tomorrow.
+          questionMax: 10,
         },
         {
           key: 'hoeren-2',
@@ -179,6 +182,7 @@ export const telcB2Mock = {
           label: 'Hörtext 2',
           level: 'B2.2',
           exerciseNumber: 1,
+          questionMax: 10,
         },
       ],
     },

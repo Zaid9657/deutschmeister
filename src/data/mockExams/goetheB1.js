@@ -123,6 +123,9 @@ export const goetheB1Mock = {
           label: 'Hörtext 1',
           level: 'B1.1',
           exerciseNumber: 3,
+          // Cap pinned by tests/exams.test.mjs for every mock listening part —
+          // a no-op today (B1 exercises carry 10 questions), a guard tomorrow.
+          questionMax: 10,
         },
         {
           key: 'hoeren-2',
@@ -130,6 +133,7 @@ export const goetheB1Mock = {
           label: 'Hörtext 2',
           level: 'B1.2',
           exerciseNumber: 1,
+          questionMax: 10,
         },
       ],
     },

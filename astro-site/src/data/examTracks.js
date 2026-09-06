@@ -40,11 +40,11 @@ export const EXAM_TRACKS = [
     guideSlug: 'goethe-a2',
     // The A2.1 course landing page (SPA route behind the paid a2.1 gate, no
     // trailing slash — the same shape as goethe_a1's). The hub's course button
-    // links it; there is no A2.2 plan yet.
+    // links it; the A2.2 plan lands in Wave 5 PR D2.
     courseHref: '/a2-1-phase',
-    // No MOCK_EXAMS.goethe_a2 yet; tests/exams.test.mjs pins the flag both
-    // ways, so this stays false until an A2 mock set exists.
-    hasMock: false,
+    // MOCK_EXAMS.goethe_a2 (src/data/mockExams/goetheA2.js, Wave 5 PR D1);
+    // tests/exams.test.mjs pins the flag both ways.
+    hasMock: true,
     hasWriting: true,
   },
   {

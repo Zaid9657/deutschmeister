@@ -1,5 +1,5 @@
 // Mock-exam registry — practice sets in exam style, keyed by examTracks keys.
-// All four launch tracks carry a Kurzversion set; the runner and scorer are
+// All four launch tracks plus Goethe A1 and A2 carry a Kurzversion set; the runner and scorer are
 // exam-agnostic, so a set is pure data on these rails.
 //
 // The honesty contract lives in each module's header and in
@@ -12,6 +12,7 @@ import { goetheB1Mock } from './goetheB1.js';
 import { dtzMock } from './dtz.js';
 import { telcB2Mock } from './telcB2.js';
 import { goetheA1Mock } from './goetheA1.js';
+import { goetheA2Mock } from './goetheA2.js';
 
 export const MOCK_EXAMS = {
   telc_b1: telcB1Mock,
@@ -19,6 +20,7 @@ export const MOCK_EXAMS = {
   dtz: dtzMock,
   telc_b2: telcB2Mock,
   goethe_a1: goetheA1Mock,
+  goethe_a2: goetheA2Mock,
 };
 
 export const mockForExamKey = (examKey) => MOCK_EXAMS[examKey] || null;
