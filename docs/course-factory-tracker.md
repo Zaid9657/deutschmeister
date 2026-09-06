@@ -146,8 +146,41 @@ table), not the "Teil 4 ja/nein" the start prompt guessed.
 | B | A2.2 share of the Wortliste (171 words, 8 new categories) + 271 guarded fixes on 177 live A2.2 rows (152 article-in-headword, 60 article-in-plural, 15 "null" plurals + 1, 44 sentences rewritten inside the level) | merged, DB migrated 2026-09-06 (418 A2.2 words, 0 defects of any class at a2.2, 2561 total; the 171 new rows await the owner's Azure audio run) | #95 |
 | C | 8 A2.2 reading texts rewritten to ≤150 words with 5 rf + 1 a/b/c; 2 exam-format lessons (Lesen Teil 2 Informationstafel a/b/c, Teil 4 Anzeigen-Zuordnung a–f + x); +78 listening questions incl. 18 dictation | merged, DB migrated 2026-09-06 (10 A2.2 lessons all with `checks`, the 8 rewrites md5-identical to the reviewed JSON, ≤150 words; 6 × 23 questions incl. 18 dictation) | #96 |
 | D1 | Goethe A2 Kurzversion mock (`MOCK_EXAMS.goethe_a2`: Hören 2 × A2.2 exercises at `questionMax` 5 + `playsAllowed` 1, Lesen all four Teile with Teil 4 as `matching` + distractor, Schreiben SMS + E-Mail), `hasMock: true` in both twins; `questionMax: 10` on every pre-existing mock Hören part + test pin | merged 2026-09-06 (no migration; `/modelltest/goethe-a2` and the Ernstfall step on `/pruefung/goethe-a2/` light up from the registry + flag) | #97 |
-| D2 | Abschlusstest A2.2 (`a2_2_abschluss`, Goethe A2 format, Kurzversion) + 28-day plan `/a2-2-phase` + hand-offs (A2.1 → `/a2-2-phase`, A2.2 → `/modelltest/goethe-a2`) + `exam_attempts` CHECK with ten keys | in progress (draft) | — |
-| E | Goethe-A2 30-day exam plan (mirror of `/start-deutsch-1-kurs`) — only if the wave's budget remains | optional | — |
+| D2 | Abschlusstest A2.2 (`a2_2_abschluss`, Goethe A2 format, Kurzversion) + 28-day plan `/a2-2-phase` + hand-offs (A2.1 → `/a2-2-phase`, A2.2 → `/modelltest/goethe-a2`) + `exam_attempts` CHECK with ten keys | merged, DB migrated 2026-09-06 (`exam_attempts_exam_key_check` lists all ten keys incl. `a2_2_abschluss`; the two `speaking_missions` fixes verified by SELECT) | #98 |
+| E | Goethe-A2 30-day exam plan (mirror of `/start-deutsch-1-kurs`) — only if the wave's budget remains | held for Wave 6 (the owner question "in this wave if budget remains?" went unanswered; the default is to hold) | — |
+
+**Wave 5 status: COMPLETE (2026-09-06).** All six steps merged and live, every migration applied via
+the Supabase connector and verified by SELECT: 12 A2.2 topics (the four new ones byte-identical to the
+cache) plus typed production on the eight older ones; live totals 80 topics / 621 rules / 873 examples /
+1430 exercises = cache = `marketing.js`; 418 A2.2 words (2561 total, 0 defects at a2.2); 10 A2.2 reading
+lessons all with checks (74 total; the 8 rewrites ≤150 words and md5-identical to the reviewed JSON, the
+two exam-format lessons at order 9/10); 6 × 23 A2.2 listening questions incl. 18 dictation; the Goethe A2
+Übungstest (Kurzversion) on the runner (`hasMock` true — `/modelltest/goethe-a2` and the Ernstfall step on
+`/pruefung/goethe-a2/`), `questionMax: 10` on every older mock Hören part; the Abschlusstest A2.2
+(`a2_2_abschluss` admitted by the ten-key `exam_attempts` CHECK) and the 28-day plan at `/a2-2-phase`,
+with the A2.1 plan's Tag 28 now handing off to it and the A2.2 plan handing off to the mock. The €49 A2
+course is complete: two paid halves with typed production, Wortliste shares, exam-format reading,
+listening with dictation, a Leitfaden and writing bank, two dated 28-day plans, two Abschlusstests and
+the band's own timed mock. Netlify deploys of main were green after every merge.
+
+Not done this wave (carried): PR E, the Goethe-A2 30-day exam plan (first item of Wave 6 unless the
+owner says otherwise); an "A2.2 legacy re-cut" PR for out-of-level material in LIVE rows the wave did not
+touch — `subordinating-conjunctions` (obwohl/während/bevor/nachdem/bis/seit in rules oi 0/1/4/8/9 and
+examples oi 5–10; als + Präteritum in rule oi 5, example oi 15 and exercise oi 8 with answer key "Als"),
+`subordinate-word-order` rule oi 4 (nine B1 subordinators + two Präteritum forms), `superlative` example 7
+(Genitiv), the A2.2 Wortliste's eight Genitiv-preposition headwords (aufgrund, diesseits, infolge,
+inmitten, unterhalb, unweit, während, wegen), 18 of the 25 live "Prepositions" rows and most of "Animals"
+(re-level to b1.x/b2.x); the 536 Wortliste defect rows at b1/b2 (each later wave's PR B); listening
+content tickets on the reused A2.2 audio (exercise 3 item 1 needs arithmetic, exercise 4 dialogue 3
+"habe ich mich dreimal vertippen", exercise 5's first five items are digit recognition, eleven
+transcript-level B1 forms; exercise 6 carries four B1 forms in its audio) — audio is not re-recorded;
+speaking missions for the four new A2.1 and four new A2.2 topics; the `grammar-content-cache.json`
+`dumpedAt` stamp (still 2026-08-24; only the owner's dump run refreshes it); audio for the 171 new A2.2
+words and the new examples (owner's Azure run, see owner asks). Verifier lessons worth carrying into the
+Wave 6 briefs: quote frames ("Im Text steht: …") must be substring-checked against the text; quantifiers
+and numerals must not count as determiners in the null-article check; `bis`/`seit` as conjunctions need
+their own rule; a deliverable is frozen while a review is open and generated repo artefacts are diffed
+against the reviewed JSON before the PR flips to ready.
 
 ## Measured baseline (do not re-derive)
 
@@ -184,6 +217,16 @@ table), not the "Teil 4 ja/nein" the start prompt guessed.
   `"der der Bahnhof"` display bug on those decks. Wave 5 PR B (#95) closed a2.2 (227 rows + 1 own find);
   measured 2026-09-06 after it: 536 rows at b1.x/b2.x still carry an article in the headword or plural or
   the literal "null" plural.
+
+- **Wave 5 owner asks (2026-09-06).** (1) Audio — run `scripts/generate-example-audio.mjs --table words`
+  (171 new A2.2 words) and `--table examples` (the new A2.2 examples from PRs A and A2); verify by SELECT
+  that every `words` and `grammar_examples` row carries a bucket `audio_url`. (2) Refresh the grammar cache
+  stamp: `node scripts/dump-grammar-cache.mjs grammar-content-cache.json` from a machine with Supabase
+  network (the generator patched the cache byte-for-byte, but `dumpedAt` still reads 2026-08-24 and CI
+  warns). (3) Decide PR E (Goethe-A2 30-day exam plan): Wave 6 opens with it unless told otherwise.
+  (4) Optional spot-check from a browser: `/modelltest/goethe-a2` end to end once (both Hören parts play
+  once; the section clock never pauses for audio) and `/a2-2-phase` behind the A2 gate — the sandbox can
+  only screenshot the auth guard.
 
 ## Decisions log
 
