@@ -142,7 +142,7 @@ table), not the "Teil 4 ja/nein" the start prompt guessed.
 | # | Step | Status | PR |
 |---|---|---|---|
 | A | Four new A2.2 grammar topics (konjunktiv-ii-polite, verbs-with-prepositions-intro, indirect-questions-intro, infinitive-with-zu-intro) at topic_order 9–12, 26 exercises each, 20–22 typed; `level-a2.2.md` committed | merged, DB migrated 2026-09-06 (12 A2.2 topics live; 36 rules / 40 examples / 104 exercises verified byte-identical to the cache; totals 80/603/849/1350 = cache = `marketing.js`) | #93 |
-| A2 | Typed production for the 8 live A2.2 topics (≥10 typed each) + depth patch for the six 5–6-rule topics | in progress (draft) | #94 |
+| A2 | Typed production for the 8 live A2.2 topics (10 typed each, 80 exercises) + depth patch (+3 rules, +4 examples) for reflexive-verbs, simple-past-sein-haben, coordinating-conjunctions, comparative, superlative, future-tense | in review (#94): gates green, live apply after merge | #94 |
 | B | A2.2 share of the Wortliste (~170 words, ~8 categories) + guarded fixes for the 227 defect rows (152/60/15) | planned | — |
 | C | 8 A2.2 reading texts rewritten to ≤150 words with 5 rf + 1 a/b/c; 2 exam-format lessons (Lesen Teil 2 Informationstafel a/b/c, Teil 4 Anzeigen-Zuordnung); +78 listening questions incl. 18 dictation | planned | — |
 | D1 | Goethe A2 Kurzversion mock (`MOCK_EXAMS.goethe_a2`, all four Lesen Teile, Teil 4 as `matching`, two Hören parts with `questionMax`, SMS + E-Mail), `hasMock: true` in both twins | planned | — |

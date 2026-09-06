@@ -81,14 +81,14 @@ export const LISTENING_DIALOGUE_COUNT = 480;
 /** Podcast episodes, all with audio. Source: EVALUATION.md content audit (2026-08-16). NOTE: transcripts are empty — never claim transcripts. */
 export const PODCAST_EPISODE_COUNT = 24;
 
-/** Grammar rule explanations across all 80 topics. Source: counted against grammar-content-cache.json on 2026-09-06 (Wave 5 PR A). */
-export const GRAMMAR_RULE_COUNT = 603;
+/** Grammar rule explanations across all 80 topics. Source: counted against grammar-content-cache.json on 2026-09-06 (Wave 5 PR A2). */
+export const GRAMMAR_RULE_COUNT = 621;
 
-/** Worked examples across all 80 topics. Source: counted against grammar-content-cache.json on 2026-09-06 (Wave 5 PR A). */
-export const GRAMMAR_EXAMPLE_COUNT = 849;
+/** Worked examples across all 80 topics. Source: counted against grammar-content-cache.json on 2026-09-06 (Wave 5 PR A2). */
+export const GRAMMAR_EXAMPLE_COUNT = 873;
 
-/** Interactive exercises across all 80 topics. Source: counted against grammar-content-cache.json on 2026-09-06 (Wave 5 PR A). */
-export const GRAMMAR_EXERCISE_COUNT = 1350;
+/** Interactive exercises across all 80 topics. Source: counted against grammar-content-cache.json on 2026-09-06 (Wave 5 PR A2). */
+export const GRAMMAR_EXERCISE_COUNT = 1430;
 
 /** Listening exercises, 6 per CEFR level. Source: listening_exercises count via Supabase (2026-08-24). */
 export const LISTENING_EXERCISE_COUNT = 48;
