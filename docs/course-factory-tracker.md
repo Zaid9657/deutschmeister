@@ -202,6 +202,23 @@ PLACE — never delete or add — which is the shape the migration takes.
 | B | Goethe-A2 30-day exam plan (`/goethe-a2-kurs`, PROGRAM_KEY `goethe_a2_30_tage`, mirror of `/start-deutsch-1-kurs`: 5 weeks / 30 days / 77 items / 27 h derived, exam Teile as the spine over existing A2.1 + A2.2 content, both Abschlusstests as Probe, the Kurzversion mock gewertet on Tag 26 and Tag 30, the two official Goethe PDFs), `goethe_a2.courseHref` → the plan in both twins, A2.2's Tag-28 hand-off and the result screen → the plan; A22PhasePage chip fixed | merged (no migration; plan reviewed FAIL → PASS in two rounds + the residual minors applied) | #102 |
 | C | Speaking missions for the four new A2.1 + four new A2.2 topics — only if the wave's budget remains | optional | — |
 
+**Wave 6 status: COMPLETE (2026-09-06).** Both planned steps merged; the one migration applied via the
+Supabase connector and verified by SELECT. Live after #102: md5 over ALL A2.2 grammar rows (107 rules /
+142 examples / 262 exercises) identical to the cache on main (rules `5e96fe92…`, examples `a3b3bcb9…`,
+exercises `0ecdeee8…`, `pgmd5.mjs` recipe over the full level); the shared A2.2 ban battery
+(`tests/helpers/a2Bans.mjs`) sweeps every German field of every A2.2 grammar row in that cache with 0 hits
+(`tests/a2-2-legacy-recut.test.mjs`, green on main); per-topic counts unchanged (25/25/18 exercises,
+15/15/12 examples, 11/9/9 rules on the three re-cut topics); words per level a1.1 339 / a1.2 413 / a2.1 423 /
+a2.2 373 / b1.1 262 / b1.2 261 / b2.1 244 / b2.2 246 (2561 total, none deleted); `/goethe-a2-kurs` behind the
+a2.2 band gate with the hub's course button, the A2.2 plan's Tag 28 and the result screen all pointing at
+it. Production deploy of main at the #102 merge commit: ready (Netlify connector, deploy `6a9dd355…`).
+
+Not done this wave (carried): PR C, speaking missions for the four new A2.1 + four new A2.2 topics (owner
+decision, see owner asks); the same in-place re-cut method for the LIVE A1.1/A1.2/A2.1 rows the earlier
+waves did not touch (unmeasured — run the ban battery per level first); the 536 Wortliste defect rows at
+b1/b2; the A2.1 listening content tickets; the `grammar-content-cache.json` `dumpedAt` stamp (still
+2026-08-24; only the owner's dump run refreshes it); ASCII quotes in two `titleDe` values.
+
 ## Measured baseline (do not re-derive)
 
 - `weekly_metrics` is **empty** as of 2026-09-04 — the Monday 06:00 UTC job has not
@@ -238,6 +255,12 @@ PLACE — never delete or add — which is the shape the migration takes.
   measured 2026-09-06 after it: 536 rows at b1.x/b2.x still carry an article in the headword or plural or
   the literal "null" plural.
 
+- **Wave 6 owner asks (2026-09-06).** (1) No new rows were created this wave, so no audio run is needed
+  beyond the still-open Wave 5 run. (2) Decide PR C (speaking missions for the eight new A2.1/A2.2 topics):
+  the missions are the one A2 surface the new topics do not reach; a Wave 7 opens with it unless told
+  otherwise. (3) Decide whether the in-place re-cut method now goes to A1.1/A1.2/A2.1 (the same class of
+  live rows the waves never touched) or whether B1 content comes first — neither moves reach; both are
+  trust work.
 - **Wave 5 owner asks (2026-09-06).** (1) Audio — run `scripts/generate-example-audio.mjs --table words`
   (171 new A2.2 words) and `--table examples` (the new A2.2 examples from PRs A and A2); verify by SELECT
   that every `words` and `grammar_examples` row carries a bucket `audio_url`. (2) Refresh the grammar cache
