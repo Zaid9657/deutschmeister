@@ -102,6 +102,10 @@ test('every addition category from the source JSON appears in the migration', ()
   }
 });
 
-test('VOCAB_WORD_COUNT is the live 2049 plus this migration\'s 166 additions', () => {
-  assert.equal(VOCAB_WORD_COUNT, 2049 + 166);
+test('VOCAB_WORD_COUNT still counts this migration\'s 166 additions', () => {
+  // The exact pin (2049 + 166 = 2215) moved to tests/a2-1-wortliste.test.mjs
+  // when the A2.1 Wortliste (Wave 4, PR B) raised the total; each later wave
+  // owns the exact figure, earlier waves only guard that it never drops
+  // below their own contribution.
+  assert.ok(VOCAB_WORD_COUNT >= 2049 + 166, `VOCAB_WORD_COUNT ${VOCAB_WORD_COUNT} < 2215`);
 });

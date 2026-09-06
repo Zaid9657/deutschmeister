@@ -101,8 +101,8 @@ listening depth with dictation, and — new this wave — a Goethe-Zertifikat A2
 | # | Step | Status | PR |
 |---|---|---|---|
 | A | Four new A2.1 grammar topics (adjective-endings-intro, pronouns-accusative-dative, modal-verbs-past, temporal-prepositions) at topic_order 9–12, 26 exercises each, 20–23 typed | merged, DB migrated 2026-09-06 (12 A2.1 topics live; 36 rules / 40 examples / 104 exercises verified byte-identical to the cache) | #82 |
-| A2 | Typed production for the 8 live A2.1 topics (≥10 typed each) + depth patch (+3 rules, +4 examples) for possessive-pronouns, perfect-tense-haben, imperative-mood | pending | |
-| B | A2.1 share of the Wortliste (8 new categories) + fixes to the live A2.1 rows (117 article-in-word, 5 null plurals) | pending | |
+| A2 | Typed production for the 8 live A2.1 topics (12–13 typed each) + depth patch (+3 rules, +4 examples) for possessive-pronouns, perfect-tense-haben, imperative-mood | merged, DB migrated 2026-09-06 (97 exercises / 9 rules / 12 examples verified byte-identical to the cache; every A2.1 topic now ≥20 exercises) | #83 |
+| B | A2.1 share of the Wortliste (175 words, 8 new categories) + 208 fixes to the live A2.1 rows (117 article-in-word, 29 article-in-plural, 5 null plurals, 34 above-level sentences) | in PR | |
 | C | 8 A2.1 reading texts rewritten to ≤150 words inside the level with 5 rf + 1 choice check; 2 exam-format lessons (Lesen Teil 1 Zeitungstext, Teil 3 E-Mail) at order 9/10; +78 listening questions incl. 18 dictation | pending | |
 | D1 | `goethe_a2` exam track (no mock yet) + Leitfaden `/leitfaden/goethe-a2/` + hub `/pruefung/goethe-a2/` + 4 Goethe-A2 writing tasks + CHECK widening on profiles/writing_submissions | pending | |
 | D2 | Abschlusstest A2.1 (Goethe A2 format, half length, `questionMax` 10, paid gate) + 28-day A2.1 plan (`/a2-1-phase`) + hand-offs (A2.1 result → `/level/a2.2`) | pending | |
@@ -128,6 +128,13 @@ listening depth with dictation, and — new this wave — a Goethe-Zertifikat A2
 
 ## Decisions log
 
+- 2026-09-06 (Wave 4, PR B review): reflexive verbs from the Goethe A2 Wortliste (sich anziehen,
+  sich bewerben, sich anmelden …) may stand as RECEPTIVE Wortliste headwords with an example
+  sentence that shows the chunk, and stay banned in every exercise, check statement, production
+  task and rule text. The nine live A2.1 reflexive rows are kept on that basis; the level
+  constraint (`S/wave4/level-a2.1.md`, "Wortliste exception") carries the ruling. Singularia
+  tantum keep the live A1.2 convention (`plural` = JSON null, which the SRS trainer renders as no
+  plural line), not the brief's "–".
 - 2026-09-05 (Wave 4): A2.1's target exam is Goethe-Zertifikat A2 (Erwachsene). No A2 exam
   identity existed in code (EXAM_TRACKS had A1, B1 ×2, DTZ, B2), so PR D1 adds a minimal
   `goethe_a2` track — guide + hub + writing tasks, `hasMock: false` — rather than inventing a
