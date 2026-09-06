@@ -5,14 +5,19 @@ vergebene Handle; sonst nimm die erste freie Variante unten und melde sie mir �
 YouTube zieht dann nach.
 
 Voraussetzungen:
-1. Claude in Chrome installiert, in Chrome bei Facebook mit dem Profil
-   angemeldet, das die Seite verwalten soll.
-2. Bilddateien liegen lokal, am einfachsten im Ordner "Downloads":
+1. Claude in Chrome installiert.
+2. Ein persönliches Facebook-Profil, das die Seite verwaltet — Meta vergibt
+   keine Seite ohne Profil dahinter. **Hast du schon eines, melde dich damit an
+   und überspring Schritt 0.** Meta erlaubt pro Person nur EIN persönliches
+   Profil; ein zweites daneben riskiert die Sperre beider Konten, und die Seite
+   fällt mit dem Profil. Nur wenn du noch keines hast, legst du in Schritt 0
+   eines mit kontakt@medmeister.eu an.
+3. Bilddateien liegen lokal, am einfachsten im Ordner "Downloads":
    - `profilbild-1600.png`
    - `facebook-titelbild-1640x624.png`
    Kein Pfad nötig — die Erweiterung hält am Dateiauswahl-Fenster an und du
    wählst die Datei selbst aus.
-3. socialmedia@deutsch-meister.de ist ein Alias des Workspace-Kontos
+4. socialmedia@deutsch-meister.de ist ein Alias des Workspace-Kontos
    kontakt@medmeister.eu. Für Instagram funktioniert die Adresse trotzdem als
    Anmelde-Adresse — der Bestätigungscode landet im Posteingang von kontakt@.
 
@@ -31,6 +36,13 @@ stehen.
 Handle, das überall verwendet wird: `deutschmeister.de`
 (Ist es belegt, nimm `deutschmeister_de`, sonst `deutschmeisterde` — und nimm
 auf beiden Plattformen dieselbe Variante.)
+
+**Schritt 0 — Persönliches Profil (nur falls noch keines existiert)**
+Bin ich noch nicht bei Facebook angemeldet, lege ein persönliches Profil mit
+`kontakt@medmeister.eu` an. Beim Bestätigungscode und bei jeder
+Telefonverifizierung hältst du an, ich übernehme.
+Bin ich bereits angemeldet, überspringe diesen Schritt und sag mir, mit welchem
+Profil ich eingeloggt bin.
 
 **Schritt 1 — Facebook-Seite erstellen**
 Gehe zu facebook.com/pages/create.
