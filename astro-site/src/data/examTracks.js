@@ -32,6 +32,20 @@ export const EXAM_TRACKS = [
     hasWriting: true,
   },
   {
+    key: 'goethe_a2',
+    slug: 'goethe-a2',
+    nameDe: 'Goethe-Zertifikat A2',
+    level: 'A2',
+    sublevels: ['a2.1', 'a2.2'],
+    guideSlug: 'goethe-a2',
+    // PR D2 flips this to the A2.1 course landing page ('/a2-1-phase').
+    courseHref: null,
+    // No MOCK_EXAMS.goethe_a2 yet; tests/exams.test.mjs pins the flag both
+    // ways, so this stays false until an A2 mock set exists.
+    hasMock: false,
+    hasWriting: true,
+  },
+  {
     key: 'telc_b1',
     slug: 'telc-b1',
     nameDe: 'telc Deutsch B1',
