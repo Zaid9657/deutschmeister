@@ -44,6 +44,10 @@ export const RELATED_TOPICS = {
   'perfect-tense-haben': ['perfect-tense-sein', 'verb-haben', 'simple-past-sein-haben', 'present-tense-regular', 'separable-verbs'],
   'perfect-tense-sein': ['perfect-tense-haben', 'verb-sein', 'simple-past-sein-haben', 'future-tense', 'present-tense-regular'],
   'imperative-mood': ['modal-verbs-intro', 'separable-verbs', 'personal-pronouns', 'present-tense-regular'],
+  'adjective-endings-intro': ['dative-case', 'possessive-pronouns', 'definite-articles', 'indefinite-articles', 'comparative'],
+  'pronouns-accusative-dative': ['personal-pronouns', 'dative-case', 'accusative-intro', 'prepositions-dative', 'reflexive-verbs'],
+  'modal-verbs-past': ['modal-verbs-intro', 'simple-past-sein-haben', 'perfect-tense-haben', 'temporal-prepositions', 'subordinating-conjunctions'],
+  'temporal-prepositions': ['prepositions-dative', 'prepositions-accusative', 'two-way-prepositions', 'time-and-dates', 'modal-verbs-past'],
 
   // ---- A2.2 ----
   'reflexive-verbs': ['personal-pronouns', 'possessive-pronouns', 'accusative-intro', 'dative-case', 'verbs-with-prepositions'],

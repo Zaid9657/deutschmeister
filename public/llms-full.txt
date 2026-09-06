@@ -8,7 +8,7 @@
 
 DeutschMeister (https://deutsch-meister.de/) teaches German to English speakers.
 Grammar is explained in English first, then shown in authentic German. The platform
-covers 72 grammar topics, AI speaking practice, a free CEFR level test, podcasts,
+covers 76 grammar topics, AI speaking practice, a free CEFR level test, podcasts,
 listening exercises, vocabulary, reading lessons, and a free sentence analyzer
 (Sentence X-Ray).
 
@@ -23,8 +23,8 @@ listening exercises, vocabulary, reading lessons, and a free sentence analyzer
 
 ## Features
 
-### Grammar (72 topics)
-- 8 CEFR sub-levels (A1.1 … B2.2) — 12 in A1.1 and A1.2, 8 per level elsewhere
+### Grammar (76 topics)
+- 8 CEFR sub-levels (A1.1 … B2.2) — 12 in A1.1, A1.2 and A2.1, 8 per level elsewhere
 - 522 rule explanations, 757 worked examples, 1045 interactive exercises in total
 - Every example includes a word-by-word breakdown showing case and grammatical role
 - English explanations with authentic German examples
