@@ -7,10 +7,11 @@
 // Product framing: A2.2 is sold as a standalone paid course, the second half
 // of the €49 A2 course (a2.1 + a2.2 together). Unlike a21Phase.js — which had
 // no A2.2 plan to hand off to and pointed Tag 28 at the bare level page — this
-// plan is the LAST leg of the whole A1→A2 chain: it ends at its own
-// half-length "Abschlusstest A2.2" and then hands the learner straight to the
-// REAL exam rehearsal, the Goethe A2 Übungstest (Kurzversion mock) at
-// /modelltest/goethe-a2. There is no A2.3; nothing after this course.
+// plan is the LAST teaching leg of the whole A1→A2 chain: it ends at its own
+// half-length "Abschlusstest A2.2" and then hands the learner to the exam
+// rehearsal — since Course Factory Wave 6 PR B the 30-day Goethe-A2 plan at
+// /goethe-a2-kurs (goetheA2Kurs.js), which itself contains the Kurzversion
+// mock (/modelltest/goethe-a2) on its Tage 26 and 30. There is no A2.3.
 //
 // Same-wave forward references this module depends on but does not itself
 // ship (see notes.md for what is verified today vs. still pending):
@@ -33,11 +34,10 @@
 //     /modelltest/:examSlug exists and netlify.toml wildcards "/modelltest/*"
 //     (no trailing slash, case 3), so only the exam DATA behind the slug is
 //     pending;
-//   - (PENDING, PR D1 of this wave) MOCK_EXAMS.goethe_a2 — the Kurzversion
-//     mock exam content behind /modelltest/goethe-a2. src/data/examTracks.js
-//     already declares the goethe_a2 track with `hasMock: false`; the guide
-//     and writing tasks are live, but the mock exam itself is not. Same
-//     URL-shape-safe pattern: only the DATA is pending, not the route.
+//   - (SHIPPED, Wave 5 PR D1, #97) MOCK_EXAMS.goethe_a2 — the Kurzversion
+//     mock exam content behind /modelltest/goethe-a2 (`hasMock: true`).
+//   - (SHIPPED, Wave 6 PR B) /goethe-a2-kurs — the 30-day exam plan the
+//     Tag-28 hand-off below now points at.
 //
 // Speaking coverage decision (fixed by the wave brief, confirmed against the
 // live `speaking_missions` table): A2.2 has 8 published missions, one per OLD
@@ -418,18 +418,18 @@ const modelltest = (id, title, minutes) => ({
 // Hand-off on Tag 28 — a real, clickable exit rather than prose alone (the
 // week `intro` renders inside a bare <p> and cannot carry an href). Unlike
 // a21Phase.js's Tag 28, which pointed at the bare LEVEL page because no A2.2
-// plan existed yet, this is the END of the A2 course chain: it hands the
-// learner straight to the REAL exam rehearsal, the Goethe A2 Übungstest
-// (Kurzversion mock), at /modelltest/goethe-a2. UNVERIFIED DEPENDENCY: the
-// examTracks.js goethe_a2 entry exists today with `hasMock: false` — the mock
-// content behind this slug is PR D1 of this wave (same URL-shape-safe
-// pattern as `modelltest()` above; /modelltest/:examSlug already resolves).
+// plan existed yet, this is the END of the A2 teaching chain: it hands the
+// learner to the 30-day Goethe-A2 exam plan at /goethe-a2-kurs (Wave 6 PR B,
+// goetheA2Kurs.js), which sequences the Kurzversion mock, the official
+// Modellsatz/Übungssatz and the Schreiben/Sprechen rehearsal — the same
+// shape as the A1.2 → /start-deutsch-1-kurs hand-off. tests/purchases.test.mjs
+// pins this href.
 const nextStep = (id, minutes = 5) => ({
   id,
   type: 'exam',
-  title: 'Weiter: Goethe A2 Übungstest',
+  title: 'Weiter: 30-Tage-Prüfungsplan Goethe A2',
   minutes,
-  href: '/modelltest/goethe-a2',
+  href: '/goethe-a2-kurs',
 });
 
 // -----------------------------------------------------------------------

@@ -81,9 +81,9 @@ const COURSE_NEXT = {
     secondary: { to: '/level/a2.2', label: 'Zur Stufe A2.2' },
   },
   'a2.2': {
-    body: 'Nächster Schritt: der Übungstest im Goethe-Zertifikat-A2-Format (Kurzversion).',
-    primary: { to: '/modelltest/goethe-a2', label: 'Zum Übungstest Goethe A2' },
-    secondary: { to: '/a2-2-phase', label: 'Zum 28-Tage-Plan A2.2' },
+    body: 'Nächster Schritt: der 30-Tage-Prüfungsplan zum Goethe-Zertifikat A2 — mit dem Übungstest (Kurzversion) darin.',
+    primary: { to: '/goethe-a2-kurs', label: 'Zum 30-Tage-Prüfungsplan' },
+    secondary: { to: '/modelltest/goethe-a2', label: 'Zum Übungstest Goethe A2' },
   },
 };
 const courseNext = (resolved) =>

@@ -2,24 +2,22 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Headphones, Mic, PenTool, Search, Target, ClipboardCheck } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { PROGRAM, PROGRAM_KEY, allItemIds } from '../data/programs/a22Phase';
+import { PROGRAM, PROGRAM_KEY, allItemIds } from '../data/programs/goetheA2Kurs';
 import { getProgramProgress, setProgramItemDone } from '../services/programProgress';
 import Card from '../components/ui/Card.jsx';
 import Chip from '../components/ui/Chip.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
 
-// The course area for "A2.2-Phase: 28 Tage bis zum Abschlusstest": the
-// 4-week (28-day) plan over the SECOND half of the A2 band, ending at the
-// Abschlusstest A2.2 course test and handing off on Tag 28 to the Goethe-A2
-// Übungstest (Kurzversion) at /modelltest/goethe-a2 (Wave 5 PR D1).
-// Structurally identical to A21PhasePage.jsx / A12PhasePage.jsx — same
-// per-item checkbox persisted to program_progress (generic by program_key),
-// same layout; see StartDeutsch1KursPage's header for the rationale, not
-// repeated here. Reached via LevelSubscriptionGuard (level="a2.2") — A2.2 is
-// a paid level, so this plan opens only with Pro/trial or the A2 course
-// purchase (hasLevelAccess('a2.2')), the same gate the A2.2 level page and
-// the Abschlusstest A2.2 use.
+// The course area for "Goethe-Zertifikat A2: 30 Tage bis zur Prüfung": the
+// 5-week (30-day) exam-rehearsal plan over existing A2.1 + A2.2 content, with
+// a per-item checkbox persisted to program_progress (generic by program_key —
+// same table, same service, no migration). Structurally identical to
+// GoetheA2KursPage.jsx (the A1 twin); see TelcB1KursPage.jsx for the
+// rationale. Reached via LevelSubscriptionGuard (level="a2.2") rather than
+// PurchaseGuard — this plan belongs to the A2 band (Pro/trial OR the A2
+// course), not a standalone one-time product. The header CTA points at the
+// Goethe-A2 Übungstest the plan builds toward (gewertet on Tag 26 and Tag 30).
 
 const TYPE_ICON = {
   lesson: BookOpen,
@@ -31,7 +29,7 @@ const TYPE_ICON = {
   review: Target,
 };
 
-const A22PhasePage = () => {
+const GoetheA2KursPage = () => {
   const { user } = useAuth();
   const [done, setDone] = useState(() => new Set());
   const [loaded, setLoaded] = useState(false);
@@ -68,7 +66,7 @@ const A22PhasePage = () => {
           <Aurora />
           <div className="relative">
             <Reveal as="div">
-              <Chip tone="label">A2.2</Chip>
+              <Chip tone="label">Goethe-Zertifikat A2</Chip>
             </Reveal>
             <Reveal
               as="h1"
@@ -83,10 +81,10 @@ const A22PhasePage = () => {
 
             <Reveal delay={160} className="mt-4">
               <Link
-                to="/modelltest/abschlusstest-a2-2"
+                to="/modelltest/goethe-a2"
                 className="inline-flex items-center gap-1.5 text-sm font-bold text-siegel transition-colors hover:text-siegel-deep"
               >
-                <ClipboardCheck className="w-4 h-4" /> Zum Abschlusstest A2.2
+                <ClipboardCheck className="w-4 h-4" /> Zum Goethe-A2-Übungstest
               </Link>
             </Reveal>
 
@@ -169,4 +167,4 @@ const A22PhasePage = () => {
   );
 };
 
-export default A22PhasePage;
+export default GoetheA2KursPage;

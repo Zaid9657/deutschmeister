@@ -266,6 +266,13 @@
   from = "/start-deutsch-1-kurs"
   to = "/app.html"
   status = 200
+# The A2 band's twin: the Goethe-A2 30-day exam plan (Course Factory Wave 6
+# PR B), gated on LevelSubscriptionGuard(level="a2.2") — paid content behind
+# a login, not prerendered, not in the sitemap.
+[[redirects]]
+  from = "/goethe-a2-kurs"
+  to = "/app.html"
+  status = 200
 # The A1.1-Phase 28-day plan (Course Factory Wave 2 PR D) — gated on
 # LevelSubscriptionGuard(level="a1.1"), a free level, so open to every
 # logged-in user. Still not prerendered and not in the sitemap: it is a
