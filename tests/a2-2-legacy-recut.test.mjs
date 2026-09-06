@@ -34,7 +34,7 @@ const TABLES = { grammar_rules: 'rules', grammar_examples: 'examples', grammar_e
 
 const unq = (s) => s.replace(/''/g, "'");
 // UPDATE public.<table>\nSET <field> = <lit>\nWHERE id = '<uuid>'::uuid\n  AND <guard>;
-const UPDATE_RE = /UPDATE public\.(grammar_rules|grammar_examples|grammar_exercises)\nSET (\w+) = ('((?:[^']|'')*)'(::jsonb)?|NULL)\nWHERE id = '([0-9a-f-]{36})'::uuid\n  AND (\w+) (?:= '(?:[^']|'')*'(?:::jsonb)?|IS NULL);/g;
+const UPDATE_RE = /UPDATE public\.(grammar_rules|grammar_examples|grammar_exercises)\nSET (\w+) = ('((?:[^']|'')*)'(::jsonb)?|NULL)\nWHERE id = '([0-9a-f-]{36})'::uuid\n {2}AND (\w+) (?:= '(?:[^']|'')*'(?:::jsonb)?|IS NULL);/g;
 const WORDS_RE = /UPDATE public\.words\nSET level = '([a-z0-9.]+)'\nWHERE id = '([0-9a-f-]{36})'::uuid AND level = '([a-z0-9.]+)' AND german = '((?:[^']|'')*)';/g;
 
 const grammarUpdates = [...sql.matchAll(UPDATE_RE)].map((m) => ({
@@ -66,6 +66,12 @@ test('per-topic row counts of the three re-cut topics are unchanged (25/25/18 ex
     ['subordinating-conjunctions', 'subordinate-word-order', 'superlative'].map((s) => [count(cache.rules, s), count(cache.examples, s), count(cache.exercises, s)]),
     [[11, 15, 25], [9, 15, 25], [9, 12, 18]]
   );
+  for (const u of grammarUpdates.filter((x) => x.table === 'grammar_examples')) {
+    const row = cache.examples.find((r) => r.id === u.id);
+    if (row.grammar_highlight) {
+      assert.ok(row.sentence_de.includes(row.grammar_highlight), `${u.id}: grammar_highlight "${row.grammar_highlight}" must be a substring of sentence_de`);
+    }
+  }
   for (const u of grammarUpdates.filter((x) => x.table === 'grammar_exercises')) {
     const row = cache.exercises.find((r) => r.id === u.id);
     if (Array.isArray(row.options)) {
@@ -81,6 +87,7 @@ test('per-topic row counts of the three re-cut topics are unchanged (25/25/18 ex
 const ALLOW = new Set([
   'infinitive-with-zu-intro|rules|99|content.points[8]', // names um…zu / ohne…zu as "erst in B1"
   'future-tense|exercises|15|explanation_de', // ", das Dativpronomen dir folgt direkt," — not a relative clause
+  'superlative|rules|0|content.hook_de', // "Der größte, der schnellste, der beste!" — a list, not a relative clause
 ]);
 
 test('no banned A2.2 form in any German field of any A2.2 grammar row (rules, examples, exercises)', () => {

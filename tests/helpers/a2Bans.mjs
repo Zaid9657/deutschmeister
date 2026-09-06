@@ -15,7 +15,7 @@ export const A2_GRAMMAR_BANS = [
   [/\bum\s+[^.?!]{0,60}\szu\s+\p{Ll}+en\b/u, 'um ... zu'],
   [/\bohne\s+[^.?!]{0,60}\szu\s+\p{Ll}+en\b/u, 'ohne ... zu'],
   [/\b(obwohl|damit|bevor|nachdem|während|falls|sodass|seitdem)\b/i, 'B1 subordinating conjunction'],
-  [/(^|[.!?]\s+|,\s*)als\s+(ich|du|er|sie|es|wir|ihr|man|die|der|das)\b/i, 'als as a temporal conjunction'],
+  [/(?<!\p{L}er|mehr|lieber|weniger)(^|[.!?]\s+|,\s*)als\s+(ich|du|er|sie|es|wir|ihr|man|die|der|das)\b/iu, 'als as a temporal conjunction (after a Komparativ it is allowed)'],
   [/\b(bis|seit)\s+(ich|du|er|sie|es|wir|ihr|man|die|der|das|dem|den|ein|eine|einen|meine?|deine?|seine?|ihre?)\s+\S+(?:\s+\S+)*\s+\p{Ll}+(?:t|en|e|st)\s*[,.;:!?]/iu, 'bis/seit as a conjunction'],
   [/\b(müsste|müssten|sollte|sollten|dürfte|dürften|wüsste|wüssten)\b/, 'Konjunktiv II beyond the allowed chunks'],
   [/\bwenn\b[^.?!]{0,60}\b(wäre|hätte|würde)\b/i, 'irrealer Bedingungssatz (wenn ... wäre/hätte/würde)'],

@@ -719,12 +719,12 @@ export const TOPIC_SEO = {
     ]
   },
   "a2.2/subordinating-conjunctions": {
-    "snippetIntro": "German subordinating conjunctions such as dass, weil, wenn, ob and obwohl send the conjugated verb to the end of their clause. That is why Er kommt heute becomes Ich weiß, dass er heute kommt, and Ich bin krank becomes Ich bleibe zu Hause, weil ich krank bin.",
+    "snippetIntro": "German subordinating conjunctions such as dass, weil, wenn and ob send the conjugated verb to the end of their clause. That is why Er kommt heute becomes Ich weiß, dass er heute kommt, and Ich bin krank becomes Ich bleibe zu Hause, weil ich krank bin.",
     "faqHeading": "Common questions about German subordinating conjunctions",
     "faqs": [
       {
         "q": "What are subordinating conjunctions in German?",
-        "a": "They introduce a dependent clause that cannot stand alone, and they force the conjugated verb to the final position. The most common are dass (that), weil (because), wenn (when/if), ob (whether), obwohl (although), während (while), bevor (before) and nachdem (after). Each clause is separated from the main clause by a comma."
+        "a": "They introduce a dependent clause that cannot stand alone, and they force the conjugated verb to the final position. At A2 the four you need are dass (that), weil (because), wenn (when/if) and ob (whether); B1 adds more. Each clause is separated from the main clause by a comma."
       },
       {
         "q": "Why does the verb go to the end after weil?",
@@ -754,7 +754,7 @@ export const TOPIC_SEO = {
       },
       {
         "q": "What triggers verb-final word order in German?",
-        "a": "Subordinating conjunctions such as dass, weil, wenn, ob, obwohl, als, bevor, nachdem and während, plus relative pronouns and indirect questions. Coordinating conjunctions do not: after und, aber, oder, denn and sondern the verb stays in second position. Learning which list a connector belongs to is what makes the order predictable."
+        "a": "Subordinating conjunctions such as dass, weil, wenn and ob, plus indirect questions (B1 adds more conjunctions and relative pronouns). Coordinating conjunctions do not: after und, aber, oder, denn and sondern the verb stays in second position. Learning which list a connector belongs to is what makes the order predictable."
       },
       {
         "q": "What happens to separable verbs in a subordinate clause?",
@@ -766,7 +766,7 @@ export const TOPIC_SEO = {
       },
       {
         "q": "What happens when the subordinate clause comes first?",
-        "a": "The main clause then inverts, because the entire subordinate clause fills the first position. Wenn ich Zeit habe, komme ich zu dir puts komme directly after the comma, ahead of ich. The same applies with obwohl: Obwohl es regnet, gehen wir spazieren. Learners often call this the verb-comma-verb pattern."
+        "a": "The main clause then inverts, because the entire subordinate clause fills the first position. Wenn ich Zeit habe, komme ich zu dir puts komme directly after the comma, ahead of ich. The same applies with weil: Weil es regnet, bleiben wir zu Hause. Learners often call this the verb-comma-verb pattern."
       }
     ]
   },
