@@ -19,31 +19,18 @@ anything: `CLAUDE.md`, `docs/course-factory-prompt.md` (the orchestrator prompt 
 | A | 4 new A2.1 grammar topics (adjective-endings-intro, pronouns-accusative-dative, modal-verbs-past, temporal-prepositions) | merged #82, applied live, md5-verified |
 | A2 | typed production for the 8 live A2.1 topics + depth patch | merged #83, applied live, 118 rows md5-verified (76/567/809/1246 totals = cache) |
 | B | A2.1 Wortliste: 175 additions + 208 fixes | merged #84, applied live, verified (423 a2.1 words, 2390 total, 0 defects at a2.1, additions md5-identical to source) |
-| C | reading rewrites + 2 Goethe-A2-format lessons + 78 listening questions + ReadingChecks heading | **open as draft #85, CI green, NOT merged, NOT applied live** |
+| C | reading rewrites + 2 Goethe-A2-format lessons + 78 listening questions + ReadingChecks heading | merged #85, applied live 2026-09-06, verified (72 lessons; 10 A2.1 lessons all with checks: 6/6/6/6/6/6/6/6/5/5, max 144 words; 6×23 A2.1 questions; 54 dictation rows; option fix live) |
 | D1 | `goethe_a2` exam identity (track + Leitfaden + hub copy + 4 writing tasks + CHECK migration) | content authored, reviewed, accepted — not integrated |
 | D2 | Abschlusstest A2.1 + 28-day plan `/a2-1-phase` + hand-offs | content authored, reviewed, accepted — not integrated |
 
-Work branch: `claude/course-factory-orchestrator-v2-fn364h` (currently = PR #85's head `5757076`).
+Work branch: `claude/course-factory-orchestrator-v2-fn364h` (restarted from main at `7bae3e9`, clean; push with `--force-with-lease` after each restart).
 Supabase project: `omqyueddktqeyrrqvnyq`. The scratchpad this handoff carries used to live at a path
 called `S` in the briefs; it is now `docs/course-factory/wave4-handoff/scratchpad/` — every `S/wave4/...`
 reference in the notes and checklists means that folder. Do NOT integrate the handoff folder into product
 code and do NOT merge the carrier PR; the folder is reference material only. Delete the carrier branch at
 wave close.
 
-**Step 1 — finish PR C (#85).** Mark ready, squash-merge with commit title `<PR title> (#85)`. Then apply
-`migrations/2026-09-06-a2-1-reading.sql` and `migrations/2026-09-06-a2-1-listening.sql` live via the
-Supabase MCP `apply_migration` in ≤27 KB statement-aligned chunks (strip BEGIN/COMMIT and comment lines;
-cut statements at the next line-start keyword, never at `;` — German prose contains semicolons). The chunk
-script used before is `scratchpad/chunk-c.mjs`. Live baseline measured before the apply: 8 A2.1 lessons,
-all `checks IS NULL`, all 8 rewrite ids present (a94a8a40…, b3adfa93…, 2625a371…, a1a4b941…, bd2adaeb…,
-41c5fb24…, 671fefe0…, 5fe05477…); 6 A2.1 listening exercises at 10 questions each; the option-fix row
-`5fb8a18d-b16b-4712-8e89-c040eae4f1e7` still carries `b) 15,00 Euro`; 36 dictation rows total (A1.1+A1.2).
-Verify after: 10 A2.1 lessons all with checks (6 items on the rewrites, 5 on order 9/10), all word_count
-≤150, 72 lessons total = READING_LESSON_COUNT; 6×23 A2.1 questions, 54 dictation rows total, the option
-fix live. Flip both README rows to Applied and the tracker C row to merged+migrated in the PR D1 commit.
-Unsubscribe from #85. Restart the branch: `git fetch origin main && git checkout -B
-claude/course-factory-orchestrator-v2-fn364h origin/main && git push --force-with-lease -u origin
-claude/course-factory-orchestrator-v2-fn364h`.
+**Step 1 — DONE in the previous session.** PR #85 merged (`7bae3e9`), both migrations applied live and verified (numbers in the table above). Two bookkeeping items remain and belong in the PR D1 commit: flip the `2026-09-06-a2-1-reading.sql` and `2026-09-06-a2-1-listening.sql` rows in `migrations/README.md` to **Applied 2026-09-06** (reading: 2 chunks; listening: 2 chunks; the verified counts above), and set the tracker's C row to `merged, DB migrated 2026-09-06 (…) | #85`.
 
 **Step 2 — PR D1** (`scratchpad/integration-checklist.md` § PR D1, `scratchpad/exam/notes.md` §7–9):
 - `scratchpad/exam/examTracks.entry.js` → paste the literal into BOTH `src/data/examTracks.js` and
