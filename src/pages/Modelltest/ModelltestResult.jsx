@@ -61,8 +61,9 @@ const SECTION_HINTS = {
 //
 // What comes after a course test is keyed by its level (resolved.gateLevel):
 // after A1.1 the A1.2-Phase plan; after A1.2 the full Start-Deutsch-1-format
-// mock and the 30-day plan in front of the real exam. A course level without
-// an entry falls back to its level hub, never to a dead button.
+// mock and the 30-day plan in front of the real exam; after A2.1 the A2.2
+// level hub (there is no A2.2 plan yet). A course level without an entry
+// falls back to its level hub, never to a dead button.
 const COURSE_NEXT = {
   'a1.1': {
     body: 'Nächster Schritt: A1.2 — die zweite Hälfte bis Start Deutsch 1.',
@@ -73,6 +74,11 @@ const COURSE_NEXT = {
     body: 'Nächster Schritt: die vollständige Übungsprüfung im Start-Deutsch-1-Format und die 30-Tage-Prüfungsphase.',
     primary: { to: '/modelltest/start-deutsch-1', label: 'Zur Übungsprüfung Start Deutsch 1' },
     secondary: { to: '/start-deutsch-1-kurs', label: 'Zum 30-Tage-Plan' },
+  },
+  'a2.1': {
+    body: 'Nächster Schritt: A2.2 — die zweite Hälfte von A2.',
+    primary: { to: '/level/a2.2', label: 'Weiter mit A2.2' },
+    secondary: { to: '/a2-1-phase', label: 'Zum 28-Tage-Plan A2.1' },
   },
 };
 const courseNext = (resolved) =>

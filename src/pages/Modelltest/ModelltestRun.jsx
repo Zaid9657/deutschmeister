@@ -33,6 +33,9 @@ import Chip from '../../components/ui/Chip.jsx';
 // stress. Pressable answers are raised, reference text is flat, and nothing
 // celebrates — that happens on the result screen, and only for a pass.
 
+// Default plays per listening part. A part may override it with
+// `playsAllowed` (the Abschlusstest A2.1 plays its 8:38 Hören once inside a
+// 15-minute section); MockListeningPart resolves the cap per part below.
 const PLAYS_ALLOWED = 2;
 
 // A radio answer as a pressable raised option (rule 3: you can press this).
@@ -79,7 +82,8 @@ function MockListeningPart({ part, answers, onAnswer, registerKey }) {
   }
 
   const audioUrl = getAudioUrl(part.level.toLowerCase(), part.exerciseNumber);
-  const canPlay = plays < PLAYS_ALLOWED;
+  const playsAllowed = part.playsAllowed ?? PLAYS_ALLOWED;
+  const canPlay = plays < playsAllowed;
 
   return (
     <div className="space-y-5">
@@ -98,7 +102,7 @@ function MockListeningPart({ part, answers, onAnswer, registerKey }) {
         </Button>
         <span className="font-data text-[0.8125rem] text-graphite">
           {canPlay
-            ? `Noch ${PLAYS_ALLOWED - plays}× abspielbar (wie in der Prüfung begrenzt)`
+            ? `Noch ${playsAllowed - plays}× abspielbar (wie in der Prüfung begrenzt)`
             : 'Keine Wiedergabe mehr — beantworte die Fragen'}
         </span>
         <audio ref={audioRef} src={audioUrl} preload="none" />

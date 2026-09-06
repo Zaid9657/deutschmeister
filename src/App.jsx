@@ -55,6 +55,7 @@ const TelcB1KursPage = lazy(() => import('./pages/TelcB1KursPage'));
 const StartDeutsch1KursPage = lazy(() => import('./pages/StartDeutsch1KursPage'));
 const A11PhasePage = lazy(() => import('./pages/A11PhasePage'));
 const A12PhasePage = lazy(() => import('./pages/A12PhasePage'));
+const A21PhasePage = lazy(() => import('./pages/A21PhasePage'));
 const ModelltestHub = lazy(() => import('./pages/Modelltest/ModelltestHub'));
 const ModelltestOverview = lazy(() => import('./pages/Modelltest/ModelltestOverview'));
 const ModelltestRun = lazy(() => import('./pages/Modelltest/ModelltestRun'));
@@ -209,6 +210,20 @@ function App() {
                         <LevelSubscriptionGuard level="a1.2">
                           <EmailVerificationGate>
                             <A12PhasePage />
+                          </EmailVerificationGate>
+                        </LevelSubscriptionGuard>
+                      }
+                    />
+                    {/* The A2.1-Phase 28-day plan (Course Factory Wave 4 PR D2) —
+                        a2.1 is a paid level, so LevelSubscriptionGuard is the
+                        real gate (Pro/trial or the A2 course), the same one
+                        /level/a2.1 and the Abschlusstest A2.1 sit behind. */}
+                    <Route
+                      path="/a2-1-phase"
+                      element={
+                        <LevelSubscriptionGuard level="a2.1">
+                          <EmailVerificationGate>
+                            <A21PhasePage />
                           </EmailVerificationGate>
                         </LevelSubscriptionGuard>
                       }

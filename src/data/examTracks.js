@@ -38,8 +38,10 @@ export const EXAM_TRACKS = [
     level: 'A2',
     sublevels: ['a2.1', 'a2.2'],
     guideSlug: 'goethe-a2',
-    // PR D2 flips this to the A2.1 course landing page ('/a2-1-phase').
-    courseHref: null,
+    // The A2.1 course landing page (SPA route behind the paid a2.1 gate, no
+    // trailing slash — the same shape as goethe_a1's). The hub's course button
+    // links it; there is no A2.2 plan yet.
+    courseHref: '/a2-1-phase',
     // No MOCK_EXAMS.goethe_a2 yet; tests/exams.test.mjs pins the flag both
     // ways, so this stays false until an A2 mock set exists.
     hasMock: false,

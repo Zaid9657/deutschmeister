@@ -328,6 +328,11 @@ test('the resolver serves both registries and the guard reads its gateLevel', as
   assert.equal(resolvedA12.key, 'a1_2_abschluss');
   assert.equal(resolvedA12.gateLevel, 'a1.2', 'the A1.2 Abschlusstest gates on a1.2 — a paid level, never free');
 
+  const resolvedA21 = resolveModelltest('abschlusstest-a2-1');
+  assert.equal(resolvedA21.kind, 'course');
+  assert.equal(resolvedA21.key, 'a2_1_abschluss');
+  assert.equal(resolvedA21.gateLevel, 'a2.1', 'the A2.1 Abschlusstest gates on a2.1 — the paid A2 course');
+
   const resolvedExam = resolveModelltest('start-deutsch-1');
   assert.equal(resolvedExam.kind, 'exam');
   assert.equal(resolvedExam.gateLevel, 'a1.2', 'an exam track still gates on its band-top sublevel');
@@ -377,4 +382,17 @@ test('the runner renders and scores listening parts through selectListeningQuest
   assert.match(runSrc, /registerKey\(\s*part\.key,\s*questions\.map/);
   assert.match(runSrc, /\{questions\.map\(\(q\) =>/);
   assert.ok(!/allQuestions\.map/.test(runSrc), 'nothing may render or score the unfiltered list');
+});
+
+// A listening part may cap its own plays (`playsAllowed`); the Abschlusstest
+// A2.1 plays its 8:38 Hören once inside a 15-minute section. Like questionMax,
+// the field is only real if the runner reads it — pin the resolution line and
+// that nothing reads the module default directly any more.
+test('the runner honours a per-part playsAllowed cap (Wave 4 PR D2)', () => {
+  const runSrc = readFileSync(join(root, 'src/pages/Modelltest/ModelltestRun.jsx'), 'utf8');
+  assert.match(runSrc, /const PLAYS_ALLOWED = 2;/, 'the default stays two plays for every mock that does not set the field');
+  assert.match(runSrc, /const playsAllowed = part\.playsAllowed \?\? PLAYS_ALLOWED;/, 'MockListeningPart must resolve the per-part cap');
+  assert.match(runSrc, /const canPlay = plays < playsAllowed;/, 'the play guard must read the resolved cap');
+  assert.match(runSrc, /Noch \$\{playsAllowed - plays\}× abspielbar/, 'the counter label must read the resolved cap');
+  assert.ok(!/plays < PLAYS_ALLOWED|PLAYS_ALLOWED - plays/.test(runSrc), 'nothing may read the module constant directly once a part can override it');
 });
