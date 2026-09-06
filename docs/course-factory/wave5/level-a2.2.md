@@ -91,7 +91,7 @@ Es geht; Schade!; Mir ist kalt/warm/schlecht; guten Appetit / guten Morgen / sch
 liebe Grüße / viele Grüße / mit freundlichen Grüßen), plus: Ich freue mich (auf …) is now regular
 grammar; Könnten Sie … / Würden Sie … / Ich hätte gern … / Wie wäre es mit … (fixed politeness,
 allowed everywhere even before topic 9 as in A2.1); Keine Ahnung; Das kommt darauf an; Lass uns …;
-Wollen wir …?; Einverstanden; Das geht leider nicht; Ich bin dafür/dagegen; Um wie viel Uhr?;
+Wollen wir …?; Gute Idee!; Einverstanden; Das geht leider nicht; Ich bin dafür/dagegen; Um wie viel Uhr?;
 Herrn (Dat/Akk of Herr in addresses); Peters Auto / Annas Schwester (Genitiv-s bei Namen).
 
 ## BANNED at A2.2 (any occurrence in production, rule text, exercise, check or task is a blocking defect)
