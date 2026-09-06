@@ -33,6 +33,26 @@ Zwei Workspace-Schalter, die vorher stimmen müssen:
 
 ---
 
+## 0b. Angelegte Konten (Stand 2026-09-06)
+
+| Plattform | Adresse | Status |
+|---|---|---|
+| YouTube | https://youtube.com/@medmeisterde | angelegt |
+| Facebook | https://www.facebook.com/deutschmeister.de | angelegt |
+| Instagram | — | offen |
+
+**Offene Frage: die beiden Handles tragen verschiedene Marken.** Facebook läuft
+auf `deutschmeister.de`, YouTube auf `@medmeisterde` — das ist die Marke des
+Schwesterprojekts medmeister.eu (FSP/KP für Ärztinnen und Ärzte), nicht die der
+Sprachlernplattform. Zwei Möglichkeiten, beide vertretbar:
+- **Absicht**: der YouTube-Kanal bespielt die Arzt-Zielgruppe und verlinkt
+  deutsch-meister.de nur als Werkzeug. Dann bleiben die Beschreibungstexte aus
+  Abschnitt 3 so nicht stehen — sie sprechen Deutschlernende allgemein an.
+- **Versehen**: dann jetzt umbenennen, solange der Kanal null Abonnenten hat.
+  YouTube erlaubt eine Handle-Änderung; nach den ersten Videos kostet sie
+  Verlinkungen und Wiedererkennung.
+Das ist zu klären, bevor das erste Video hochgeht.
+
 ## 1. Kontenarchitektur (die Reihenfolge ist nicht beliebig)
 
 Falsche Reihenfolge = später Umzug mit Reichweitenverlust. Richtig:
