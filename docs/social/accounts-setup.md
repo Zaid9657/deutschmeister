@@ -8,19 +8,28 @@ von Hand (Telefonverifizierung + CAPTCHA) — ein Agent kann das nicht.
 
 ---
 
-## 0. Blocker zuerst: die Mailadresse muss EMPFANGEN können
+## 0. Die Mailadresse: ein Alias, kein eigenes Konto
 
-`deutsch-meister.de` ist bei Resend nur zum **Senden** verifiziert
-(`Receiving: disabled`, geprüft 2026-09-06). Meta und Google schicken
-Bestätigungscodes — ohne Posteingang kommt kein Konto zustande.
+Geklärt am 2026-09-06: **socialmedia@deutsch-meister.de ist ein Alias des
+Google-Workspace-Kontos kontakt@medmeister.eu**, kein separates Postfach.
+Empfang ist bestätigt (Resend-Testmail, Status `delivered`).
 
-Günstigster Weg: kostenloses Forwarding auf ein bestehendes Postfach.
-- DNS liegt auf Cloudflare → **Cloudflare Email Routing** (kostenlos, MX in
-  einem Klick gesetzt).
-- Sonst → **ImprovMX** Free (1 Domain, 500 Weiterleitungen/Tag).
+Das hat eine Folge, die die ganze Reihenfolge unten bestimmt: **es lässt sich
+kein eigenes Google-Konto auf dieser Adresse anlegen.** Ein Alias gehört
+bereits zu einem Konto; Google verweigert die Neuanmeldung. Der Kanal wird
+deshalb NICHT unter einer eigenen Google-Identität geführt, sondern als
+**Brand Account unter kontakt@medmeister.eu**. Nach außen heißt der Kanal
+trotzdem nur "Deutsch Meister" — die Workspace-Adresse ist für Zuschauer
+unsichtbar; sichtbar ist nur die Geschäftsadresse, die wir auf
+socialmedia@deutsch-meister.de setzen.
 
-Testkriterium: eine Testmail an socialmedia@deutsch-meister.de kommt an.
-Erst danach Schritt 1.
+Zwei Workspace-Schalter, die vorher stimmen müssen:
+1. Admin-Konsole → Apps → Weitere Google-Dienste → **Brand Accounts** muss
+   auf "AN" stehen, sonst lässt sich gar kein Kanal anlegen.
+2. Bei jungen Workspace-Konten blockt Google YouTube mit "Dieses Konto ist
+   noch nicht berechtigt" — das löst sich nach 30 Tagen Kontoalter oder ab
+   30 USD abgerechnetem Umsatz. medmeister.eu läuft länger, sollte also
+   durch sein; falls die Meldung doch kommt, ist sie die Ursache.
 
 ---
 
@@ -28,11 +37,12 @@ Erst danach Schritt 1.
 
 Falsche Reihenfolge = später Umzug mit Reichweitenverlust. Richtig:
 
-1. **Google-Konto** mit socialmedia@deutsch-meister.de als Login
-   (Google-Konto mit vorhandener Adresse anlegen, kein neues Gmail).
-2. **YouTube-Kanal als Brand Account**, nicht als Personenkanal.
-   Ein Brand Account lässt sich später an mehrere Menschen übergeben; ein
-   Personenkanal klebt an einer Privatperson.
+1. **Anmelden als kontakt@medmeister.eu** (kein neues Google-Konto — siehe
+   Abschnitt 0).
+2. **YouTube-Kanal als Brand Account** namens "Deutsch Meister", nicht als
+   Personenkanal. Ein Brand Account lässt sich später an mehrere Menschen
+   übergeben und trägt einen eigenen Namen; ein Personenkanal klebt am
+   Workspace-Nutzer.
 3. **Facebook-Profil** (persönlich, Pflicht — Meta vergibt keine Seiten ohne
    Profil dahinter), dann **Facebook-Seite "Deutsch Meister"**.
 4. **Instagram-Konto**, direkt beim Anlegen auf **Professional → Creator**

@@ -1,8 +1,11 @@
 # Prompt: YouTube-Kanal komplett aufsetzen (Claude in Chrome)
 
 Voraussetzungen, bevor du das einfügst:
-1. Claude in Chrome ist installiert, du bist in Chrome bei Google mit
-   **socialmedia@deutsch-meister.de** angemeldet.
+1. Claude in Chrome ist installiert und du bist in Chrome bei Google mit
+   **kontakt@medmeister.eu** angemeldet. socialmedia@deutsch-meister.de ist
+   ein Alias dieses Workspace-Kontos, kein eigenes Konto — der Kanal wird
+   deshalb als Brand Account unter kontakt@ geführt und heißt nach außen
+   trotzdem nur "Deutsch Meister".
 2. Die beiden Bilddateien liegen lokal, am einfachsten im Ordner "Downloads":
    - `youtube-profilbild-1600.png`
    - `youtube-banner-2560x1440.png`
@@ -15,7 +18,10 @@ Voraussetzungen, bevor du das einfügst:
 ## Der Prompt (ab hier alles kopieren)
 
 Du richtest den YouTube-Kanal für deutsch-meister.de vollständig ein. Ich bin in
-Chrome bereits mit socialmedia@deutsch-meister.de bei Google angemeldet.
+Chrome bereits mit dem Google-Workspace-Konto kontakt@medmeister.eu angemeldet.
+socialmedia@deutsch-meister.de ist nur ein Alias dieses Kontos — melde dich
+NICHT damit an und lege damit kein neues Google-Konto an. Der Kanal läuft als
+Brand Account unter kontakt@medmeister.eu und heißt nach außen "Deutsch Meister".
 
 Arbeite die Schritte der Reihe nach ab. Halte nur an, wenn eine Telefon- oder
 Identitätsverifizierung verlangt wird oder ein Feld etwas will, das unten nicht
@@ -27,6 +33,11 @@ Gehe zu youtube.com, öffne die Kanalerstellung
 (youtube.com/create_channel oder Einstellungen → Neuen Kanal erstellen).
 Lege einen **Brand Account** an, KEINEN Kanal auf meinem Personennamen.
 Kanalname: `Deutsch Meister`
+
+Kommt "Dieses Konto ist noch nicht berechtigt, YouTube zu nutzen" oder lässt
+sich kein Brand Account anlegen, ist das eine Workspace-Einstellung
+(Admin-Konsole → Apps → Weitere Google-Dienste → Brand Accounts) — halte an
+und sag es mir, statt einen Personenkanal anzulegen.
 
 **Schritt 2 — Handle**
 Setze das Handle auf `@deutschmeister`.
