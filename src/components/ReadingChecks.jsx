@@ -42,9 +42,17 @@ const ReadingChecks = ({ checks, onAllAnswered }) => {
   // five a/b/c items and no Richtig/Falsch at all) must not be headed
   // "Richtig oder falsch?"; a mixed lesson keeps the Richtig/Falsch heading
   // because that is the majority item.
+  // The heading spells out the option set: a Lesen-Teil-1/2/3 lesson offers
+  // a, b, c; the Lesen-Teil-4 (Anzeigen zuordnen) lesson offers a–f plus x.
   const allChoice = checks.every((c) => c.type === 'choice');
+  const optionKeys = allChoice ? (checks[0].options || []) : [];
+  const spell = (keys, orWord) =>
+    keys.length > 1 ? `${keys.slice(0, -1).join(', ')} ${orWord} ${keys[keys.length - 1]}` : keys.join('');
+  const abc = optionKeys.length === 3 && optionKeys.join('') === 'abc';
   const heading = allChoice
-    ? (isGerman ? 'Wähle a, b oder c' : 'Choose a, b or c')
+    ? (abc
+      ? (isGerman ? 'Wähle a, b oder c' : 'Choose a, b or c')
+      : (isGerman ? `Wähle ${spell(optionKeys, 'oder')}` : `Choose ${spell(optionKeys, 'or')}`))
     : (isGerman ? 'Richtig oder falsch?' : 'True or false?');
 
   const selectAnswer = (index, value) => {
