@@ -37,6 +37,16 @@ const ReadingChecks = ({ checks, onAllAnswered }) => {
 
   if (!checks || checks.length === 0) return null;
 
+  // The heading names the answer format. A lesson whose checks are ALL
+  // exam-style choices (the Goethe A2 "Lesen Teil 1/3" format lessons carry
+  // five a/b/c items and no Richtig/Falsch at all) must not be headed
+  // "Richtig oder falsch?"; a mixed lesson keeps the Richtig/Falsch heading
+  // because that is the majority item.
+  const allChoice = checks.every((c) => c.type === 'choice');
+  const heading = allChoice
+    ? (isGerman ? 'Wähle a, b oder c' : 'Choose a, b or c')
+    : (isGerman ? 'Richtig oder falsch?' : 'True or false?');
+
   const selectAnswer = (index, value) => {
     // An answer is locked once given — pressing a different chip after the
     // fact would let a learner "try again until right".
@@ -51,7 +61,7 @@ const ReadingChecks = ({ checks, onAllAnswered }) => {
         </div>
         <div>
           <h3 className="font-display text-[1.0625rem] font-semibold text-ink">
-            {isGerman ? 'Richtig oder falsch?' : 'True or false?'}
+            {heading}
           </h3>
           <p className="font-data text-[0.6875rem] text-graphite">
             {allAnswered
