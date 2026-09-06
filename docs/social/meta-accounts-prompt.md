@@ -6,10 +6,11 @@ entscheidet, welches Handle hier genommen wird.
 Voraussetzungen:
 1. Claude in Chrome installiert, in Chrome bei Facebook mit dem Profil
    angemeldet, das die Seite verwalten soll.
-2. Bilddateien lokal vorhanden:
-   - `docs/social/assets/profilbild-1600.png`
-   - `docs/social/assets/facebook-titelbild-1640x624.png`
-   Ersetze `<PFAD>` unten durch den echten Ordnerpfad.
+2. Bilddateien liegen lokal, am einfachsten im Ordner "Downloads":
+   - `profilbild-1600.png`
+   - `facebook-titelbild-1640x624.png`
+   Kein Pfad nötig — die Erweiterung hält am Dateiauswahl-Fenster an und du
+   wählst die Datei selbst aus.
 3. Trage unten bei "Handle" das ein, was auf YouTube tatsächlich vergeben wurde.
 
 ---
@@ -41,8 +42,10 @@ Aussprache und Schreiben. Die komplette Stufe A1.1 ist kostenlos.
 Seite erstellen.
 
 **Schritt 2 — Facebook-Seite gestalten**
-- Profilbild hochladen: `<PFAD>/profilbild-1600.png`
-- Titelbild hochladen: `<PFAD>/facebook-titelbild-1640x624.png`
+- Profilbild: klicke auf "Hochladen". Öffnet sich das Dateiauswahl-Fenster des
+  Betriebssystems, **halte an und sag mir Bescheid** — ich wähle die Datei
+  (`profilbild-1600.png`) selbst aus.
+- Titelbild: genauso, Datei `facebook-titelbild-1640x624.png`.
   Zuschnitt mittig lassen, den Schriftzug nicht anschneiden.
 - Nutzernamen (facebook.com/…) auf das oben genannte Handle setzen.
 - Unter "Seiteninfos":
@@ -63,7 +66,8 @@ Einstellungen → Kontotyp → **Zu professionellem Konto wechseln** →
 Kategorie `Bildung`, Typ **Creator**.
 
 **Schritt 5 — Instagram-Profil füllen**
-- Profilbild: `<PFAD>/profilbild-1600.png`
+- Profilbild: `profilbild-1600.png` — halte auch hier am
+  Dateiauswahl-Fenster an, ich wähle selbst aus.
 - Biografie (exakt dieser Text):
 
 Deutsch lernen von A1 bis B2 — Grammatik, Hören, Sprechen.

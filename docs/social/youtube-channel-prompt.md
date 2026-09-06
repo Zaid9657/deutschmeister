@@ -3,10 +3,12 @@
 Voraussetzungen, bevor du das einfügst:
 1. Claude in Chrome ist installiert, du bist in Chrome bei Google mit
    **socialmedia@deutsch-meister.de** angemeldet.
-2. Die beiden Bilddateien liegen lokal:
-   - `docs/social/assets/youtube-profilbild-1600.png`
-   - `docs/social/assets/youtube-banner-2560x1440.png`
-   Ersetze im Prompt unten `<PFAD>` durch den echten Ordnerpfad auf deinem Rechner.
+2. Die beiden Bilddateien liegen lokal, am einfachsten im Ordner "Downloads":
+   - `youtube-profilbild-1600.png`
+   - `youtube-banner-2560x1440.png`
+   Du brauchst KEINEN Pfad einzutragen: die Erweiterung kann das
+   Dateiauswahl-Fenster des Betriebssystems nicht bedienen, deshalb hält sie
+   dort an und du wählst die Datei mit zwei Klicks selbst aus.
 
 ---
 
@@ -32,12 +34,13 @@ Ist es belegt, probiere in dieser Reihenfolge: `@deutschmeister_de`,
 `@deutschmeisterde`. Sag mir am Ende, welches du genommen hast — das
 entscheidet auch die Handles auf Instagram und Facebook.
 
-**Schritt 3 — Profilbild und Banner**
-Öffne "Kanal anpassen" → Branding.
-- Profilbild hochladen: `<PFAD>/youtube-profilbild-1600.png`
-- Banner hochladen: `<PFAD>/youtube-banner-2560x1440.png`
-Beim Banner: Zuschnitt so lassen, dass der Schriftzug mittig sichtbar ist,
-nichts abschneiden. Speichern.
+**Schritt 3 — Profilbild und Banner (ich lade selbst hoch)**
+Öffne "Kanal anpassen" → Branding und klicke bei Profilbild auf "Hochladen".
+Sobald sich das Dateiauswahl-Fenster des Betriebssystems öffnet, **hältst du an
+und sagst mir Bescheid** — das Fenster gehört nicht zum Browser, ich wähle die
+Datei selbst aus. Dasselbe beim Banner.
+Nach jedem Upload: Zuschnitt mittig lassen, Schriftzug nicht anschneiden,
+speichern, dann weiter mit Schritt 4.
 
 **Schritt 4 — Kanalbeschreibung**
 "Kanal anpassen" → Basisinfo → Beschreibung. Exakt dieser Text:
