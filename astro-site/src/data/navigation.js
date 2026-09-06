@@ -104,6 +104,27 @@ export const FOOTER_GROUPS = [
   },
 ];
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Off-site channels. The YouTube channel URL used to be retyped at every call
+// site (the Astro homepage, the podcasts tab, two organization.js twins and the
+// index.html JSON-LD) — five literals that could drift apart, and a viewer sent
+// to a dead handle is a subscriber lost. It is written ONCE here; the handle
+// form is what YouTube canonicalises to (channel id UCnBauEHinta8cqDstwxA7RQ),
+// and share links carry a `?si=` tracking suffix that must never be pasted in.
+// kind: 'external' — always a full page load, always target=_blank + noopener.
+// ─────────────────────────────────────────────────────────────────────────────
+export const YOUTUBE_CHANNEL_URL = 'https://www.youtube.com/@deutschmeister_de';
+
+export const SOCIAL_LINKS = [
+  {
+    key: 'youtube',
+    labelEn: 'YouTube',
+    labelDe: 'YouTube',
+    href: YOUTUBE_CHANNEL_URL,
+    kind: 'external',
+  },
+];
+
 export const LEGAL_LINKS = [
   { labelEn: 'Privacy Policy', labelDe: 'Datenschutz', href: '/privacy/', kind: 'static' },
   { labelEn: 'Impressum', labelDe: 'Impressum', href: '/impressum/', kind: 'static' },

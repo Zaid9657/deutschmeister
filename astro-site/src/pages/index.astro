@@ -27,6 +27,7 @@
 // one <h1>; canonical; real server-rendered body text; prerendered SPA routes
 // linked WITH trailing slash, /signup and /modelltest without.
 import { ORGANIZATION_FULL } from '../data/organization.js';
+import { YOUTUBE_CHANNEL_URL } from '../data/navigation.js';
 import Layout from '../layouts/Layout.astro';
 import '../styles/global.css';
 import Aurora from '../components/Aurora.astro';
@@ -430,7 +431,7 @@ const nf = (n) => n.toLocaleString('en-US');
         </div>
         <p class="reveal mt-10 border-t border-rule pt-6 text-[0.9375rem] text-graphite" style="--rd:220ms">
           There are German lessons on our
-          <a href="https://www.youtube.com/@deutschmeister_de" target="_blank" rel="noopener noreferrer" class="font-bold text-siegel transition-colors hover:text-siegel-deep">YouTube channel</a>
+          <a href={YOUTUBE_CHANNEL_URL} target="_blank" rel="noopener noreferrer" class="font-bold text-siegel transition-colors hover:text-siegel-deep">YouTube channel</a>
           too — grammar, vocabulary and real conversations.
         </p>
       </div>

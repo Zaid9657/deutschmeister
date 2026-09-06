@@ -15,11 +15,11 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-import { NAV_GROUPS, FOOTER_GROUPS, LEGAL_LINKS, ALL_NAV_ITEMS } from '../src/data/navigation.js';
+import { NAV_GROUPS, FOOTER_GROUPS, LEGAL_LINKS, ALL_NAV_ITEMS, SOCIAL_LINKS, YOUTUBE_CHANNEL_URL } from '../src/data/navigation.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const appSrc = readFileSync(join(root, 'src/App.jsx'), 'utf8');
@@ -124,4 +124,48 @@ test('vocabulary is in the main nav (1,935 words were orphaned without it)', () 
 test('the SPA carries no grammar or vergleich routes (Astro owns those URLs)', () => {
   assert.ok(!spaRoutes.some((r) => r.startsWith('/grammar')), 'a /grammar route crept back into App.jsx');
   assert.ok(!spaRoutes.some((r) => r.startsWith('/vergleich')), 'a /vergleich route crept back into App.jsx');
+});
+
+// ─── Off-site channels ───────────────────────────────────────────────────────
+// The YouTube URL was retyped at five call sites. A viewer sent to a dead
+// handle is a subscriber lost, so the literal lives in the registry and these
+// checks fail the build if a copy reappears or the URL drifts.
+
+test('the YouTube channel URL is canonical and tracker-free', () => {
+  assert.equal(YOUTUBE_CHANNEL_URL, 'https://www.youtube.com/@deutschmeister_de');
+  assert.ok(!YOUTUBE_CHANNEL_URL.includes('?'), 'share links carry a ?si= tracker — strip it');
+  assert.ok(!YOUTUBE_CHANNEL_URL.endsWith('/'), 'trailing slash makes YouTube 301-hop');
+  const yt = SOCIAL_LINKS.find((i) => i.key === 'youtube');
+  assert.ok(yt, 'SOCIAL_LINKS lost the YouTube channel');
+  assert.equal(yt.href, YOUTUBE_CHANNEL_URL);
+  assert.equal(yt.kind, 'external');
+  assert.ok(yt.labelEn && yt.labelDe, 'YouTube link needs both labels');
+});
+
+test('SOCIAL_LINKS stays out of ALL_NAV_ITEMS (those are root-relative only)', () => {
+  for (const item of ALL_NAV_ITEMS) {
+    assert.ok(item.kind !== 'external', `external link ${item.href} must not be in ALL_NAV_ITEMS`);
+  }
+});
+
+test('both footers render the off-site channels', () => {
+  assert.match(footerSrc, /SOCIAL_LINKS/, 'SPA Footer.jsx must render SOCIAL_LINKS');
+  assert.match(layoutSrc, /SOCIAL_LINKS/, 'Layout.astro must render SOCIAL_LINKS');
+});
+
+test('no source file retypes the YouTube URL (registry + index.html only)', () => {
+  const scan = ['src', 'astro-site/src'];
+  const allowed = new Set(['src/data/navigation.js', 'astro-site/src/data/navigation.js']);
+  const offenders = [];
+  const walk = (dir) => {
+    for (const entry of readdirSync(join(root, dir), { withFileTypes: true })) {
+      const rel = `${dir}/${entry.name}`;
+      if (entry.isDirectory()) { walk(rel); continue; }
+      if (!/\.(js|jsx|astro|mjs|ts)$/.test(entry.name)) continue;
+      if (allowed.has(rel)) continue;
+      if (readFileSync(join(root, rel), 'utf8').includes('youtube.com/@')) offenders.push(rel);
+    }
+  };
+  scan.forEach(walk);
+  assert.deepEqual(offenders, [], `import YOUTUBE_CHANNEL_URL instead of retyping it: ${offenders.join(', ')}`);
 });

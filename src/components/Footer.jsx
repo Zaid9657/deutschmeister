@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { FOOTER_GROUPS, LEGAL_LINKS } from '../data/navigation';
+import { FOOTER_GROUPS, LEGAL_LINKS, SOCIAL_LINKS } from '../data/navigation';
 import Logo from './Logo';
+import { Youtube } from 'lucide-react';
 
 // The app previously had NO footer: the guides, FAQ, Über uns and the
 // comparison pages were linked only from the Astro site's footer, so anyone
@@ -34,6 +35,23 @@ const Footer = () => {
                 ? 'Deutsch lernen mit KI — von A1.1 bis B2.2. Grammatik, Sprechen, Hören und Lesen.'
                 : 'Learn German with AI — from A1.1 to B2.2. Grammar, speaking, listening, and reading.'}
             </p>
+            {/* Off-site channels — the YouTube link lives on EVERY app screen
+                from here, not only the podcasts tab. URL from the registry. */}
+            <ul className="mt-4 flex items-center gap-4 text-sm">
+              {SOCIAL_LINKS.map((item) => (
+                <li key={item.key}>
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 hover:text-white transition-colors"
+                  >
+                    <Youtube className="w-4 h-4" aria-hidden="true" />
+                    {isGerman ? item.labelDe : item.labelEn}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
           {FOOTER_GROUPS.map((group) => (
             <div key={group.key}>

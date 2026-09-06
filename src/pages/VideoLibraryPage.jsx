@@ -3,9 +3,10 @@ import DataState from '../components/DataState';
 import { withTimeout } from '../utils/withTimeout';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { PlayCircle, Play, Video } from 'lucide-react';
+import { PlayCircle, Play, Video, Youtube } from 'lucide-react';
 import { supabase } from '../utils/supabase';
 import { generateThumbnail, getCachedThumbnail } from '../utils/videoThumbnail';
+import { YOUTUBE_CHANNEL_URL } from '../data/navigation';
 import SEO from '../components/SEO';
 import Button from '../components/ui/Button.jsx';
 import Card from '../components/ui/Card.jsx';
@@ -168,6 +169,19 @@ const VideoLibraryPage = () => {
               {isGerman
                 ? 'Jedes Video fasst ein Grammatik- oder Vokabelthema zusammen. Schau dir das Video an, lade die Folien herunter und lerne in deinem eigenen Tempo.'
                 : 'Each video summarizes a grammar or vocabulary topic. Watch the video, download the slides, and learn at your own pace.'}
+            </Reveal>
+            {/* The video surface is where someone looking for more video will
+                look for the channel — URL from the navigation registry. */}
+            <Reveal as="p" delay={180} className="mt-4 text-[0.9375rem] text-graphite">
+              <a
+                href={YOUTUBE_CHANNEL_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 font-bold text-siegel transition-colors hover:text-siegel-deep"
+              >
+                <Youtube className="w-4 h-4" aria-hidden="true" />
+                {isGerman ? 'Mehr Videos auf unserem YouTube-Kanal →' : 'More videos on our YouTube channel →'}
+              </a>
             </Reveal>
           </div>
         </div>
