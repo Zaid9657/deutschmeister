@@ -1,7 +1,8 @@
 # Prompt: Facebook-Seite + Instagram aufsetzen (Claude in Chrome)
 
-Erst ausführen, wenn der YouTube-Kanal steht — das dort vergebene Handle
-entscheidet, welches Handle hier genommen wird.
+Kann unabhängig vom YouTube-Kanal laufen. Steht der Kanal schon, nimm das dort
+vergebene Handle; sonst nimm die erste freie Variante unten und melde sie mir —
+YouTube zieht dann nach.
 
 Voraussetzungen:
 1. Claude in Chrome installiert, in Chrome bei Facebook mit dem Profil
@@ -11,7 +12,9 @@ Voraussetzungen:
    - `facebook-titelbild-1640x624.png`
    Kein Pfad nötig — die Erweiterung hält am Dateiauswahl-Fenster an und du
    wählst die Datei selbst aus.
-3. Trage unten bei "Handle" das ein, was auf YouTube tatsächlich vergeben wurde.
+3. socialmedia@deutsch-meister.de ist ein Alias des Workspace-Kontos
+   kontakt@medmeister.eu. Für Instagram funktioniert die Adresse trotzdem als
+   Anmelde-Adresse — der Bestätigungscode landet im Posteingang von kontakt@.
 
 ---
 
@@ -57,7 +60,9 @@ Seite erstellen.
 
 **Schritt 3 — Instagram-Konto anlegen**
 Gehe zu instagram.com und lege ein neues Konto an mit
-`socialmedia@deutsch-meister.de`. Beim Bestätigungscode hältst du an.
+`socialmedia@deutsch-meister.de`. Das ist ein Alias eines bestehenden
+Google-Workspace-Kontos — das ist für Instagram in Ordnung, der Code kommt an.
+Beim Bestätigungscode hältst du an, ich hole ihn aus dem Postfach.
 - Name: `Deutsch Meister`
 - Benutzername: das oben genannte Handle
 
