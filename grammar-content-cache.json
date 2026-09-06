@@ -62607,7 +62607,7 @@
       "correct_answer": "ob",
       "acceptable_answers": null,
       "explanation_en": "ob = whether (for indirect yes/no questions).",
-      "explanation_de": "ob = ob (für indirekte Ja/Nein-Fragen).",
+      "explanation_de": "ob leitet indirekte Ja/Nein-Fragen ein.",
       "hint": null,
       "order_index": 4,
       "difficulty": 1,
@@ -65335,13 +65335,13 @@
       "options": [
         "Dass",
         "Ob",
-        "Weil",
+        "Aber",
         "Wenn"
       ],
       "correct_answer": "Wenn",
       "acceptable_answers": null,
       "explanation_en": "wenn = if/when for conditions.",
-      "explanation_de": "wenn = wenn für Bedingungen.",
+      "explanation_de": "wenn steht für Bedingungen und Wiederholungen.",
       "hint": null,
       "order_index": 3,
       "difficulty": 1,
@@ -66437,7 +66437,7 @@
       "options": [
         "ist",
         "hat",
-        "war",
+        "seid",
         "sind"
       ],
       "correct_answer": "ist",
@@ -83524,7 +83524,7 @@
       "order_index": 19,
       "difficulty": 2,
       "created_at": "2026-09-05T12:00:00+00:00",
-      "why_correct_en": "Subordinate clause with ob: verb-final, das Geschäft takes öffnet.",
+      "why_correct_en": "Subordinate clause with ob: verb-final; das Geschäft goes with öffnet.",
       "why_correct_de": "Nebensatz mit ob: Verbendstellung. Zu 'das Geschäft' passt 'öffnet'.",
       "related_rule_title": "The Verb-Final Rule"
     },

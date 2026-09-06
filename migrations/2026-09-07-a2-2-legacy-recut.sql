@@ -740,7 +740,7 @@ WHERE id = '06b7121e-dd9d-41ab-8a87-20529645046b'::uuid
   AND why_correct_de = 'ich + haben = habe. Geht ans Ende des wenn-Satzes.';
 
 UPDATE public.grammar_exercises
-SET options = '["ist","hat","war","sind"]'::jsonb
+SET options = '["ist","hat","seid","sind"]'::jsonb
 WHERE id = 'feecbab1-320a-43f0-8294-b7d5a196bbb5'::uuid
   AND options = '["ist","hat","war","wurde"]'::jsonb;
 
@@ -753,6 +753,26 @@ UPDATE public.grammar_rules
 SET content = '{"hook_de":"Der Größte, der Schnellste, der Beste! Der Superlativ ist die höchste Form. Deutsch hat zwei Formen: am schnellsten oder der schnellste.","hook_en":"The biggest, the fastest, the best! The superlative is the maximum form. German has two ways to make it: am + adjective + sten or der/die/das + adjective + ste.","scenario_en":"Records, rankings, favorites: the tallest building, the best restaurant, the coldest day. Superlatives are everywhere!","preview_note_en":"am schnellsten = after verbs. das schnellste = before nouns.","preview_highlight":"am schnellsten, das schnellste","why_it_matters_en":"Knowing both superlative forms lets you describe extremes in any sentence structure.","preview_example_de":"Er ist am schnellsten. / Das ist das schnellste Auto.","preview_example_en":"He is the fastest. / That is the fastest car.","german_difference_en":"German has two superlative forms: am schnellsten (used with verbs, after sein) and der schnellste (used before nouns). Both mean the fastest.","english_comparison_en":"English: fast to fastest, big to biggest, beautiful to most beautiful. Add -est or use most."}'::jsonb
 WHERE id = 'fb5e6345-ff8d-4129-8190-87eb91643cb3'::uuid
   AND content = '{"hook_de":"Der größte, der schnellste, der beste! Der Superlativ ist die höchste Form. Deutsch hat zwei Formen: am schnellsten oder der schnellste.","hook_en":"The biggest, the fastest, the best! The superlative is the maximum form. German has two ways to make it: am + adjective + sten or der/die/das + adjective + ste.","scenario_en":"Records, rankings, favorites: the tallest building, the best restaurant, the coldest day. Superlatives are everywhere!","preview_note_en":"am schnellsten = after verbs. das schnellste = before nouns.","preview_highlight":"am schnellsten, das schnellste","why_it_matters_en":"Knowing both superlative forms lets you describe extremes in any sentence structure.","preview_example_de":"Er ist am schnellsten. / Das ist das schnellste Auto.","preview_example_en":"He is the fastest. / That is the fastest car.","german_difference_en":"German has two superlative forms: am schnellsten (used with verbs, after sein) and der schnellste (used before nouns). Both mean the fastest.","english_comparison_en":"English: fast to fastest, big to biggest, beautiful to most beautiful. Add -est or use most."}'::jsonb;
+
+UPDATE public.grammar_exercises
+SET options = '["Dass","Ob","Aber","Wenn"]'::jsonb
+WHERE id = 'f044f799-e10e-4099-800e-83b907e7fc33'::uuid
+  AND options = '["Dass","Ob","Weil","Wenn"]'::jsonb;
+
+UPDATE public.grammar_exercises
+SET explanation_de = 'wenn steht für Bedingungen und Wiederholungen.'
+WHERE id = 'f044f799-e10e-4099-800e-83b907e7fc33'::uuid
+  AND explanation_de = 'wenn = wenn für Bedingungen.';
+
+UPDATE public.grammar_exercises
+SET explanation_de = 'ob leitet indirekte Ja/Nein-Fragen ein.'
+WHERE id = 'c6ba611f-0ff0-4da4-8728-04d19c71adbb'::uuid
+  AND explanation_de = 'ob = ob (für indirekte Ja/Nein-Fragen).';
+
+UPDATE public.grammar_exercises
+SET why_correct_en = 'Subordinate clause with ob: verb-final; das Geschäft goes with öffnet.'
+WHERE id = '56db7feb-96ec-5a3e-a083-ae5a425217ed'::uuid
+  AND why_correct_en = 'Subordinate clause with ob: verb-final, das Geschäft takes öffnet.';
 
 -- Wortliste re-level
 
