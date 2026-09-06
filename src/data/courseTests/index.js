@@ -12,6 +12,7 @@
 
 import { abschlusstestA11 } from './abschlusstestA11.js';
 import { abschlusstestA12 } from './abschlusstestA12.js';
+import { abschlusstestA21 } from './abschlusstestA21.js';
 
 export const COURSE_TESTS = [
   {
@@ -32,6 +33,18 @@ export const COURSE_TESTS = [
     level: 'a1.2',
     formatOf: 'goethe_a1',
     mock: abschlusstestA12,
+  },
+  // A2.1 is a paid level (the A2 band course): gateLevel 'a2.1' makes
+  // ExamSubscriptionGuard require Pro/trial or the A2 course — the same gate
+  // /level/a2.1 and /a2-1-phase use. Written in the Goethe-Zertifikat A2
+  // style (formatOf goethe_a2, an identity-only track until an A2 mock exists).
+  {
+    key: 'a2_1_abschluss',
+    slug: 'abschlusstest-a2-1',
+    nameDe: 'Abschlusstest A2.1',
+    level: 'a2.1',
+    formatOf: 'goethe_a2',
+    mock: abschlusstestA21,
   },
 ];
 

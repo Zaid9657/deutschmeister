@@ -44,6 +44,7 @@ const iconMap = {
 const PHASE_PLAN = {
   'a1.1': { href: '/a1-1-phase', title: 'A1.1-Phase: 28 Tage bis zum Abschlusstest' },
   'a1.2': { href: '/a1-2-phase', title: 'A1.2-Phase: 28 Tage bis zum Abschlusstest' },
+  'a2.1': { href: '/a2-1-phase', title: 'A2.1-Phase: 28 Tage bis zum Abschlusstest' },
 };
 
 const LevelPage = () => {

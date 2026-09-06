@@ -37,6 +37,11 @@ import {
   PROGRAM_KEY as A12_PROGRAM_KEY,
   allItemIds as a12AllItemIds,
 } from '../src/data/programs/a12Phase.js';
+import {
+  PROGRAM as A21_PROGRAM,
+  PROGRAM_KEY as A21_PROGRAM_KEY,
+  allItemIds as a21AllItemIds,
+} from '../src/data/programs/a21Phase.js';
 import { getTopicsForLevel } from '../src/data/grammarTopics.js';
 import { LEVEL_COURSES } from '../src/data/pricing.js';
 import { FREE_LEVELS } from '../src/config/freeTier.js';
@@ -312,7 +317,7 @@ test('the readiness service backs both the result screen and the dashboard exam 
 const KNOWN_SPA_ROUTES = [
   /^\/vocabulary$/, /^\/level\/[ab][12]\.[12]$/, /^\/reading\/[ab][12]\.[12]$/,
   /^\/listening\/[ab][12]\.[12]\/[1-6]$/, /^\/schreiben\/[a-z0-9-]+$/, /^\/modelltest\/[a-z0-9-]+$/,
-  /^\/start-deutsch-1-kurs$/, /^\/a1-[12]-phase$/,
+  /^\/start-deutsch-1-kurs$/, /^\/a1-[12]-phase$/, /^\/a2-1-phase$/,
 ];
 const KNOWN_SLASH_ROUTES = [/^\/speaking\/$/, /^\/analyze\/$/]; // prerendered SPA routes (case 2)
 const KNOWN_ASTRO = [/^\/grammar\/[ab][12]\.[12]\/(?:[a-z0-9-]+\/)?$/, /^\/leitfaden\/[a-z0-9-]+\/$/]; // case 1
@@ -338,10 +343,10 @@ test('a12_phase program item ids are unique and grammar hrefs resolve to real a1
   assert.equal(A12_PROGRAM.weeks.reduce((n, w) => n + w.days.length, 0), 28);
 });
 
-test('every a11_phase and a12_phase href resolves to a known SPA route or Astro page', () => {
+test('every a11_phase, a12_phase and a21_phase href resolves to a known SPA route or Astro page', () => {
   const appSrc = read('src/App.jsx');
   const guideSlugs = readdirSync(join(ROOT, 'astro-site/src/data/guides')).map((f) => f.replace(/\.js$/, ''));
-  for (const program of [A11_PROGRAM, A12_PROGRAM]) {
+  for (const program of [A11_PROGRAM, A12_PROGRAM, A21_PROGRAM]) {
     for (const week of program.weeks) {
       for (const day of week.days) {
         for (const item of day.items) {
@@ -359,11 +364,15 @@ test('every a11_phase and a12_phase href resolves to a known SPA route or Astro 
       }
     }
   }
-  // The A1.1 plan hands off to the A1.2 plan, and the A1.2 plan to the 30-day SD1 plan.
+  // The A1.1 plan hands off to the A1.2 plan, the A1.2 plan to the 30-day SD1
+  // plan, and the A2.1 plan to the A2.2 level page (no A2.2 plan yet) — never
+  // an A1 learner into A2.1.
   const lastA11 = A11_PROGRAM.weeks.at(-1).days.at(-1).items.at(-1);
   const lastA12 = A12_PROGRAM.weeks.at(-1).days.at(-1).items.at(-1);
+  const lastA21 = A21_PROGRAM.weeks.at(-1).days.at(-1).items.at(-1);
   assert.equal(lastA11.href, '/a1-2-phase');
   assert.equal(lastA12.href, '/start-deutsch-1-kurs');
+  assert.equal(lastA21.href, '/level/a2.2');
 });
 
 test('the a12_phase course route exists in both App.jsx and the netlify.toml allow-list, behind the paid a1.2 gate', () => {
@@ -378,4 +387,54 @@ test('the a12_phase course route exists in both App.jsx and the netlify.toml all
   const pageSrc = read('src/pages/A12PhasePage.jsx');
   assert.match(pageSrc, /programs\/a12Phase/);
   assert.match(pageSrc, /\/modelltest\/abschlusstest-a1-2/);
+});
+
+// ---------------------------------------------------------------------------
+// 8. "A2.1-Phase: 28 Tage bis zum Abschlusstest" (a21_phase) — Course Factory
+//    Wave 4 PR D2. Same pins as the a12_phase block: a2.1 is a paid level, so
+//    LevelSubscriptionGuard(level="a2.1") is the real gate (Pro/trial or the
+//    A2 course via hasLevelAccess). The plan ends at its own course test and
+//    hands off to the A2.2 level page — there is no A2.2 plan yet.
+// ---------------------------------------------------------------------------
+
+test('a21_phase program item ids are unique and grammar hrefs resolve to real a2.1 topics', () => {
+  const ids = a21AllItemIds();
+  assert.equal(new Set(ids).size, ids.length, 'duplicate item ids — progress checkboxes would collide');
+
+  const a21Slugs = new Set(getTopicsForLevel('a2.1').map((t) => t.slug));
+  const lessonSlugs = new Set();
+  for (const week of A21_PROGRAM.weeks) {
+    for (const day of week.days) {
+      for (const item of day.items) {
+        assert.ok(item.id && item.title && item.href, `item missing fields in ${day.label}`);
+        const m = item.href.match(/^\/grammar\/(a2\.1)\/([a-z0-9-]+)\/$/);
+        if (m) {
+          assert.ok(a21Slugs.has(m[2]), `${item.href} does not match a real a2.1 topic slug`);
+          if (item.type === 'lesson') lessonSlugs.add(m[2]);
+        }
+      }
+    }
+  }
+  assert.equal(lessonSlugs.size, 12, 'every one of the 12 a2.1 topics gets a lesson day');
+  assert.equal(A21_PROGRAM.key, A21_PROGRAM_KEY);
+  assert.equal(A21_PROGRAM.weeks.length, 4, 'the plan promises 4 study weeks (28 days)');
+  assert.equal(A21_PROGRAM.weeks.reduce((n, w) => n + w.days.length, 0), 28);
+});
+
+test('the a21_phase course route exists in both App.jsx and the netlify.toml allow-list, behind the paid a2.1 gate', () => {
+  const appSrc = read('src/App.jsx');
+  assert.ok(appSrc.includes('path="/a2-1-phase"'), 'SPA route missing');
+  assert.ok(/from = "\/a2-1-phase"/.test(read('netlify.toml')),
+    'netlify.toml allow-list entry missing — the route would 404 in production');
+  const routeBlock = appSrc.slice(appSrc.indexOf('path="/a2-1-phase"'), appSrc.indexOf('path="/a2-1-phase"') + 400);
+  assert.match(routeBlock, /<LevelSubscriptionGuard level="a2\.1">\s*<EmailVerificationGate>\s*<A21PhasePage \/>/,
+    'the A2.1 plan must gate on LevelSubscriptionGuard(level="a2.1") — a paid level');
+  assert.ok(!FREE_LEVELS.includes('a2.1'), 'a2.1 must stay a paid level for that gate to mean anything');
+  const pageSrc = read('src/pages/A21PhasePage.jsx');
+  assert.match(pageSrc, /programs\/a21Phase/);
+  assert.match(pageSrc, /\/modelltest\/abschlusstest-a2-1/);
+  // The hub, the level page and the result screen all know the plan / the next level.
+  assert.match(read('src/pages/Modelltest/ModelltestHub.jsx'), /'a2\.1': '\/a2-1-phase'/);
+  assert.match(read('src/pages/LevelPage.jsx'), /'a2\.1': \{ href: '\/a2-1-phase'/);
+  assert.match(read('src/pages/Modelltest/ModelltestResult.jsx'), /'a2\.1': \{[\s\S]*?to: '\/level\/a2\.2'/);
 });
