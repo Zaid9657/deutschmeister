@@ -77,12 +77,25 @@ if (missingReviewSlugs.length > 0) {
 // (not only in a comment) so the constraint that chose this topic is visible
 // where it is used; verify.mjs does not check its wording, only that it is a
 // non-empty string, but a reviewer reading the plan sees the "why" inline.
-const gReview = (id, level, slug, examPart, minutes) => {
+// Title shape (plan-brief item shape, ≤10 words): `<Prüfungsteil>: <topic.titleDe>`,
+// where <Prüfungsteil> is only the FIRST exam part named in `examPart` (split
+// on " und ") — a review day drills one topic for its primary Prüfungsteil,
+// the full multi-part rationale still lives in the `examPart` argument at the
+// call site. `topic.titleDe` is truncated at its own first colon where it has
+// one (konjunktiv-ii-polite's titleDe carries a colon-led list of forms) —
+// derive-never-retype still holds: this takes the topic's own name verbatim
+// up to its own punctuation boundary, it does not paraphrase.
+const gReview = (id, level, slug, examPart, minutes, round = 1) => {
   const topic = bySlug(level, slug);
+  const shortTopicTitle = topic.titleDe.split(':')[0].trim();
+  // `examPart` is the call-site rationale (which Prüfungsteil needs this form);
+  // the learner-facing title says what the item IS — a review — and, on a
+  // second pass, that it is one (m2/m3 of the round-2 review).
+  void examPart;
   return {
     id,
     type: 'review',
-    title: `Wiederholen für ${examPart} — ${topic.titleDe}`,
+    title: `Wiederholen: ${shortTopicTitle}${round === 2 ? ' (zweite Runde)' : ''}`,
     minutes: minutes || topic.estimatedTime || 20,
     href: `/grammar/${level}/${topic.slug}/`,
     external: true,
@@ -148,6 +161,13 @@ const readingExamFormat = (id, n, minutes = 20) => {
 // listening_exercises where upper(level)='A2.2') rather than retyped from
 // nothing; the lookup throws on an unknown exercise number, same discipline
 // a22Phase.js applies.
+//
+// Overlap (deliberate, per plan-brief.md): exercise #1 and #6 are also drawn
+// on by the mock (goetheA2Mock, Tag 26/30) and exercise #2 by the Abschlusstest
+// A2.2 (Probe, Tag 12). This plan still schedules all three as ordinary
+// listening practice (#1 on Tag 2 and again on Tag 25; #6 on Tag 16 and again
+// on Tag 28; #2 on Tag 4) — re-hearing an exercise before it resurfaces inside
+// a test is deliberate rehearsal, not a scheduling accident.
 // -----------------------------------------------------------------------
 const A22_LISTENING_TITLES = {
   1: 'Arbeit und Beruf',
@@ -207,14 +227,15 @@ if (A2_SMS_TASKS.length < 2 || A2_EMAIL_TASKS.length < 2) {
       `This program is not importable until they land.`
   );
 }
-const schreiben = (id, kind, taskNumber, minutes) => {
+const schreiben = (id, kind, taskNumber, minutes, round = 1) => {
   const tasks = kind === 'sms' ? A2_SMS_TASKS : A2_EMAIL_TASKS;
   if (taskNumber < 1 || taskNumber > tasks.length) {
     throw new Error(`goetheA2Kurs.js: ${kind} task number ${taskNumber} out of range (1-${tasks.length})`);
   }
   const frame = kind === 'sms' ? 'Schreiben Teil 1: SMS' : 'Schreiben Teil 2: E-Mail';
   const shortTitle = tasks[taskNumber - 1].title.replace(/^(SMS|E-Mail|Nachricht):\s*/, '');
-  return { id, type: 'exam', title: `${frame} — ${shortTitle}`, minutes, href: '/schreiben/goethe-a2' };
+  const marker = round === 2 ? ' (Wiederholung)' : ''; // one word: the 10-word title cap
+  return { id, type: 'exam', title: `${frame} — ${shortTitle}${marker}`, minutes, href: '/schreiben/goethe-a2' };
 };
 
 // -----------------------------------------------------------------------
@@ -233,13 +254,18 @@ const probeAbschlusstest = (id, level, minutes = 55) => ({
   href: `/modelltest/abschlusstest-a2-${level === 'a2.1' ? '1' : '2'}`,
 });
 
-// The GRADED mock, exactly twice (Tag 26 and Tag 30, per plan-brief). It has
-// no Sprechen part — the title says so, never implying the plan itself
+// The GRADED mock, exactly twice (Tag 26 and Tag 30, per plan-brief). Minutes
+// are DERIVED, never retyped: MOCK_EXAMS.goethe_a2 (src/data/mockExams/goetheA2.js)
+// sums its three sections (Hören 20 + Lesen 20 + Schreiben 20) to 60 —
+// verify.mjs imports that module directly and asserts both mock items match
+// its sum. The title uses the artifact's own name, "Übungstest (Kurzversion)"
+// (goetheA2Mock.title), not an invented "Modelltest" label, and says "ohne
+// Sprechen" — the title itself is the honesty check, never implying the plan
 // rehearses Sprechen through this route.
 const mockExam = (id, attempt, minutes) => ({
   id,
   type: 'exam',
-  title: `Modelltest Goethe A2 — Versuch ${attempt}${attempt === 2 ? ' (finaler Check)' : ''} (gewertet, ohne Sprechen)`,
+  title: `Übungstest Goethe A2 — Versuch ${attempt} (Kurzversion, ohne Sprechen)`,
   minutes,
   href: '/modelltest/goethe-a2',
 });
@@ -291,22 +317,21 @@ const goetheMaterial = (id, n, minutes = 50) => ({
 //   Sprechen — /speaking/ rehearsal days naming the Prüfungsteil drilled;
 //              honesty: never graded here, only in a live mission or with a
 //              partner
-// Grammar review is placed ONLY where a Prüfungsteil needs the form (each
-// gReview() call names which): subordinating-conjunctions/subordinate-word-
-// order for Lesen (Nebensatz-lastige Texte), pronouns-accusative-dative/
-// modal-verbs-past/adjective-endings-intro/temporal-... wait, see the actual
-// call sites below for the exact mapping — this header intentionally does not
-// duplicate it twice.
+// Grammar review is placed ONLY where a Prüfungsteil needs the form — each
+// gReview() call below carries its own `examPart` argument, so the mapping is
+// visible at the call site rather than duplicated here.
 // Two Probe course tests (Tag 5 Abschlusstest A2.1, Tag 12 Abschlusstest
-// A2.2), the two official Goethe PDFs on Tage 22–23, the graded mock on Tag
-// 26 (Versuch 1) and Tag 30 (Versuch 2, finaler Check) — nothing after Tag
-// 30; there is no A2.3.
+// A2.2), a Schreiben re-run in Woche 1 (Tag 6) and Woche 4 (Tag 27) so every
+// study week rehearses all four Prüfungsteile, the two official Goethe PDFs
+// on Tage 22–23, the graded mock (Übungstest Kurzversion) on Tag 26
+// (Versuch 1) and Tag 30 (Versuch 2) — nothing after Tag 30; there is no
+// A2.3.
 const WEEKS = [
   {
     title: 'Woche 1 — Ankommen im Prüfungsformat',
     intro:
       'In dieser Woche wiederholst du dein A2-Wissen und lernst das Prüfungsformat kennen. ' +
-      'Am Ende machst du deinen ersten Probe-Abschlusstest.',
+      'An Tag 5 wiederholst du den Abschlusstest A2.1.',
     days: [
       {
         label: 'Tag 1',
@@ -341,6 +366,10 @@ const WEEKS = [
         label: 'Tag 6',
         items: [
           speaking('d6-speaking', 'Sprechen Teil 2: Wortkarten beschreiben'),
+          // Woche 1's first Schreiben touch — a short re-run of the SMS task
+          // already scheduled at full length on Tag 8, so this study week
+          // also rehearses Schreiben (all four Prüfungsteile every week).
+          schreiben('d6-schreiben', 'sms', 1, 15),
           reading('d6-reading', 'a2.2'),
           xray('d6-xray', 15, 'X-Ray: fünf Sätze zu einer Wortkarte'),
         ],
@@ -352,15 +381,15 @@ const WEEKS = [
     ],
   },
   {
-    title: 'Woche 2 — Schreiben Teil 1 und mehr Grammatik',
+    title: 'Woche 2 — Schreiben Teil 1 und Wiederholung',
     intro:
       'Diese Woche übst du die erste Schreibaufgabe und wiederholst wichtige Grammatik. ' +
-      'Am Ende wiederholst du den Abschlusstest A2.2.',
+      'An Tag 12 wiederholst du den Abschlusstest A2.2.',
     days: [
       {
         label: 'Tag 8',
         items: [
-          schreiben('d8-schreiben', 'sms', 1, 20),
+          schreiben('d8-schreiben', 'sms', 1, 20, 2),
           gReview('d8-review', 'a2.1', 'modal-verbs-past', 'Schreiben Teil 1 und Sprechen Teil 2', 22),
           reading('d8-reading', 'a2.1'),
         ],
@@ -400,7 +429,7 @@ const WEEKS = [
     title: 'Woche 3 — Schreiben Teil 2, Hören und Sprechen',
     intro:
       'Diese Woche übst du die zweite Schreibaufgabe und trainierst dein Hörverstehen. ' +
-      'Dazu kommen zwei Sprechrunden ohne Vorbereitungszeit.',
+      'Dazu kommen zwei weitere Sprechübungen.',
     days: [
       {
         label: 'Tag 15',
@@ -449,13 +478,28 @@ const WEEKS = [
     ],
   },
   {
-    title: 'Woche 4 — Modelltest-Woche',
+    title: 'Woche 4 — Übungstest-Woche',
     intro:
       'Diese Woche arbeitest du mit den offiziellen Übungsmaterialien vom Goethe-Institut. ' +
-      'Am Ende machst du deinen ersten gewerteten Modelltest.',
+      'An Tag 26 machst du deinen ersten gewerteten Übungstest.',
     days: [
-      { label: 'Tag 22', items: [goetheMaterial('d22-material', 1)] },
-      { label: 'Tag 23', items: [goetheMaterial('d23-material', 2)] },
+      {
+        label: 'Tag 22',
+        items: [
+          goetheMaterial('d22-material', 1),
+          // Second pass (M10): the hardest of the four NEW A2.2 topics gets a
+          // spaced repeat inside the final week, on top of its single touch
+          // in Woche 2/3.
+          gReview('d22-review-2', 'a2.2', 'verbs-with-prepositions-intro', 'Sprechen Teil 1 bis 3 und Schreiben Teil 2', 20, 2),
+        ],
+      },
+      {
+        label: 'Tag 23',
+        items: [
+          goetheMaterial('d23-material', 2),
+          gReview('d23-review-2', 'a2.2', 'konjunktiv-ii-polite', 'Sprechen Teil 3', 20, 2),
+        ],
+      },
       {
         label: 'Tag 24',
         items: [reading('d24-reading', 'a2.1'), readingExamFormat('d24-reading-exam', 9), xray('d24-xray', 15, 'X-Ray: fünf Sätze aus der Informationstafel')],
@@ -468,10 +512,19 @@ const WEEKS = [
           speaking('d25-speaking', 'Sprechen Teil 2: letzte Wortkarten-Runde'),
         ],
       },
-      { label: 'Tag 26', items: [mockExam('d26-mock-1', 1, 70)] },
+      { label: 'Tag 26', items: [mockExam('d26-mock-1', 1, 60)] },
       {
         label: 'Tag 27',
-        items: [hubReview('d27-review', 'a2.2', 'Wiederholen: deine zwei schwächsten Themen aus dem ersten Modelltest', 20), reading('d27-reading', 'a2.1')],
+        items: [
+          // Weak spots after the first Übungstest can sit in EITHER level —
+          // two hub items, not one A2.2-only review, so an A2.1 gap is not
+          // silently skipped.
+          hubReview('d27-review-a21', 'a2.1', 'Wiederholen: deine schwächsten Themen aus A2.1', 15),
+          hubReview('d27-review-a22', 'a2.2', 'Wiederholen: deine schwächsten Themen aus A2.2', 15),
+          // Woche 4's Schreiben touch (B2) — a re-run of the first E-Mail
+          // task, which also lifts this day out of the sub-45-minute range.
+          schreiben('d27-schreiben', 'email', 1, 20, 2),
+        ],
       },
       {
         label: 'Tag 28',
@@ -487,10 +540,10 @@ const WEEKS = [
     title: 'Pufferzeit',
     intro:
       'Zwei Tage Reserve für Wiederholung und Pause vor der Prüfung. ' +
-      'Am Ende machst du deinen zweiten gewerteten Modelltest.',
+      'Am Ende machst du deinen zweiten gewerteten Übungstest.',
     days: [
       { label: 'Tag 29 — Puffertag', items: [srsReview('d29-srs', 'Woche 4', 25), xray('d29-xray', 15, 'X-Ray: letzte Aufwärmübung vor der Prüfung')] },
-      { label: 'Tag 30', items: [mockExam('d30-mock-2', 2, 70)] },
+      { label: 'Tag 30', items: [mockExam('d30-mock-2', 2, 60)] },
     ],
   },
 ];
@@ -511,9 +564,9 @@ export const PROGRAM = {
   title: PROGRAM_TITLE,
   subtitle:
     `Rund ${PROGRAM_HOURS} Stunden in 30 Tagen bis zur Goethe-Zertifikat-A2-Prüfung. ` +
-    'Vorausgesetzt: A2.1 und A2.2 sind abgeschlossen. ' +
-    'Der Modelltest prüft Lesen, Hören und Schreiben, aber nicht Sprechen. ' +
-    'Sprechen übst du auf /speaking/ oder mit einer Partnerin oder einem Partner.',
+    'Du hast A2.1 und A2.2 schon beendet. ' +
+    'Der Übungstest prüft Lesen, Hören und Schreiben, aber nicht Sprechen. ' +
+    'Sprechen übst du im Sprechen-Bereich oder mit einer Partnerin oder einem Partner.',
   weeks: WEEKS,
 };
 
