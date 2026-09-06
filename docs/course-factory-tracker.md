@@ -141,7 +141,7 @@ table), not the "Teil 4 ja/nein" the start prompt guessed.
 
 | # | Step | Status | PR |
 |---|---|---|---|
-| A | Four new A2.2 grammar topics (konjunktiv-ii-polite, verbs-with-prepositions-intro, indirect-questions-intro, infinitive-with-zu-intro) at topic_order 9–12, 26 exercises each, ≥16 typed; `level-a2.2.md` committed | in progress (draft) | #93 |
+| A | Four new A2.2 grammar topics (konjunktiv-ii-polite, verbs-with-prepositions-intro, indirect-questions-intro, infinitive-with-zu-intro) at topic_order 9–12, 26 exercises each, 20–22 typed; `level-a2.2.md` committed | in review (#93): gates green, live apply after merge | #93 |
 | A2 | Typed production for the 8 live A2.2 topics (≥10 typed each) + depth patch for the 5–6-rule topics | planned | — |
 | B | A2.2 share of the Wortliste (~170 words, ~8 categories) + guarded fixes for the 227 defect rows (152/60/15) | planned | — |
 | C | 8 A2.2 reading texts rewritten to ≤150 words with 5 rf + 1 a/b/c; 2 exam-format lessons (Lesen Teil 2 Informationstafel a/b/c, Teil 4 Anzeigen-Zuordnung); +78 listening questions incl. 18 dictation | planned | — |
