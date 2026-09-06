@@ -311,6 +311,90 @@ export const WRITING_TASKS = [
     pointsNote:
       'Für Teil 2 gibt es 10 Punkte (3 Punkte für die Leitpunkte + Punkte für Anrede, Gruß und Verständlichkeit). Insgesamt braucht man 60 von 100 Punkten, um die Prüfung zu bestehen.',
   },
+  // ---- Goethe-Zertifikat A2 ---------------------------------------------
+  // ---- Teil 1: kurze persönliche Nachricht (SMS), 20–30 Wörter (2) -------
+  {
+    examKey: 'goethe_a2',
+    taskKey: 'sms-einladung-absagen',
+    title: 'SMS: Eine Einladung absagen',
+    register: 'informell',
+    minWords: 20,
+    maxWords: 40,
+    task:
+      'Deine Freundin Nina hat dich zum Essen eingeladen. Du kannst am Samstag nicht kommen. ' +
+      'Schreib Nina eine SMS. Schreib 20 bis 30 Wörter.',
+    leitpunkte: [
+      'Dank für die Einladung',
+      'Grund für die Absage',
+      'Vorschlag für einen neuen Termin',
+    ],
+    pointsNote:
+      'Der Prüfungsteil Schreiben zählt 25 von 100 Punkten. ' +
+      'Bestanden ist die Prüfung ab 60 von 100 Punkten. Dafür brauchst du mindestens 45 von 75 Punkten ' +
+      'im schriftlichen Teil. Im Sprechen brauchst du mindestens 15 von 25 Punkten.',
+  },
+  {
+    examKey: 'goethe_a2',
+    taskKey: 'sms-treffen-verschieben',
+    title: 'SMS: Einen neuen Tag vorschlagen',
+    register: 'informell',
+    minWords: 20,
+    maxWords: 40,
+    task:
+      'Du hast am Dienstag einen Termin mit deinem Freund Jonas. Der Dienstag passt dir nicht mehr. ' +
+      'Schreib Jonas eine SMS. Schreib 20 bis 30 Wörter.',
+    leitpunkte: [
+      'Absage für den Dienstag',
+      'Vorschlag für einen neuen Tag',
+      'Frage nach der Uhrzeit',
+    ],
+    pointsNote:
+      'Der Prüfungsteil Schreiben zählt 25 von 100 Punkten. ' +
+      'Bestanden ist die Prüfung ab 60 von 100 Punkten. Dafür brauchst du mindestens 45 von 75 Punkten ' +
+      'im schriftlichen Teil. Im Sprechen brauchst du mindestens 15 von 25 Punkten.',
+  },
+
+  // ---- Teil 2: halbformelle E-Mail, 30–40 Wörter (2) ---------------------
+  {
+    examKey: 'goethe_a2',
+    taskKey: 'email-kursanmeldung',
+    title: 'E-Mail: Nach einem Deutschkurs fragen',
+    register: 'halbformell',
+    minWords: 30,
+    maxWords: 60,
+    task:
+      'Du möchtest einen Deutschkurs an der Volkshochschule machen. Schreib eine E-Mail an die Volkshochschule. ' +
+      'Schreib 30 bis 40 Wörter. Vergiss die Anrede und den Gruß nicht.',
+    leitpunkte: [
+      'Name und Niveau',
+      'Frage nach einem Kurs für A2',
+      'Frage nach den Terminen und der Anmeldung',
+    ],
+    pointsNote:
+      'Der Prüfungsteil Schreiben zählt 25 von 100 Punkten. ' +
+      'Bestanden ist die Prüfung ab 60 von 100 Punkten. Dafür brauchst du mindestens 45 von 75 Punkten ' +
+      'im schriftlichen Teil. Im Sprechen brauchst du mindestens 15 von 25 Punkten.',
+  },
+  {
+    examKey: 'goethe_a2',
+    taskKey: 'email-termin-beim-amt',
+    title: 'E-Mail: Einen Termin beim Amt ändern',
+    register: 'halbformell',
+    minWords: 30,
+    maxWords: 60,
+    task:
+      'Du hast am Montag einen Termin beim Amt. Du kannst am Montag nicht kommen. ' +
+      'Schreib eine E-Mail an das Amt. Schreib 30 bis 40 Wörter. Vergiss die Anrede und den Gruß nicht.',
+    leitpunkte: [
+      'Termin am Montag',
+      'Absage und Grund',
+      'Frage nach einem neuen Termin',
+    ],
+    pointsNote:
+      'Der Prüfungsteil Schreiben zählt 25 von 100 Punkten. ' +
+      'Bestanden ist die Prüfung ab 60 von 100 Punkten. Dafür brauchst du mindestens 45 von 75 Punkten ' +
+      'im schriftlichen Teil. Im Sprechen brauchst du mindestens 15 von 25 Punkten.',
+  },
 ];
 
 export const MAX_WRITING_POINTS = 20;

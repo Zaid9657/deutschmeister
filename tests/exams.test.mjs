@@ -249,7 +249,13 @@ test('every course test is well-formed, distinct from EXAM_TRACKS, and shape-val
   const checkList = newestMigration.match(/ADD CONSTRAINT exam_attempts_exam_key_check\s+CHECK \(exam_key IN \(([^)]*)\)\)/);
   assert.ok(checkList, `${abschlussMigrations.at(-1)} must re-create exam_attempts_exam_key_check with an IN (...) list`);
   const admittedKeys = new Set([...checkList[1].matchAll(/'([a-z0-9_]+)'/g)].map((m) => m[1]));
-  for (const t of EXAM_TRACKS) {
+  // Only a track WITH a mock ever writes an exam_attempts row under its own
+  // key, so only those keys must survive in the CHECK. A track that is
+  // identity-only for now (guide + hub + writing tasks, hasMock false — e.g.
+  // goethe_a2 in Wave 4 PR D1) gets admitted by the first Abschlusstest
+  // migration that follows it; requiring it here would force every new track
+  // to ship an exam_attempts migration it cannot yet use.
+  for (const t of EXAM_TRACKS.filter((track) => track.hasMock)) {
     assert.ok(admittedKeys.has(t.key), `${abschlussMigrations.at(-1)} dropped exam-track key ${t.key} from the CHECK`);
   }
 

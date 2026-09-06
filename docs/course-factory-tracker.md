@@ -103,8 +103,8 @@ listening depth with dictation, and — new this wave — a Goethe-Zertifikat A2
 | A | Four new A2.1 grammar topics (adjective-endings-intro, pronouns-accusative-dative, modal-verbs-past, temporal-prepositions) at topic_order 9–12, 26 exercises each, 20–23 typed | merged, DB migrated 2026-09-06 (12 A2.1 topics live; 36 rules / 40 examples / 104 exercises verified byte-identical to the cache) | #82 |
 | A2 | Typed production for the 8 live A2.1 topics (12–13 typed each) + depth patch (+3 rules, +4 examples) for possessive-pronouns, perfect-tense-haben, imperative-mood | merged, DB migrated 2026-09-06 (97 exercises / 9 rules / 12 examples verified byte-identical to the cache; every A2.1 topic now ≥20 exercises) | #83 |
 | B | A2.1 share of the Wortliste (175 words, 8 new categories) + 208 fixes to the live A2.1 rows (117 article-in-word, 35 article-in-plural, 5 null plurals, 34 above-level sentences) | merged, DB migrated 2026-09-06 (423 A2.1 words, additions md5-identical to the source, 0 defects of any class at a2.1, 2390 total) — the 175 new rows await the owner's Azure audio run | #84 |
-| C | 8 A2.1 reading texts rewritten to ≤150 words inside the level with 5 rf + 1 a/b/c choice check; 2 exam-format lessons (Lesen Teil 1 Zeitungstext, Teil 3 E-Mail, 5 a/b/c checks each) at order 9/10; +78 listening questions incl. 18 dictation; ReadingChecks heading follows the item type | in PR | |
-| D1 | `goethe_a2` exam track (no mock yet) + Leitfaden `/leitfaden/goethe-a2/` + hub `/pruefung/goethe-a2/` + 4 Goethe-A2 writing tasks + CHECK widening on profiles/writing_submissions | pending | |
+| C | 8 A2.1 reading texts rewritten to ≤150 words inside the level with 5 rf + 1 a/b/c choice check; 2 exam-format lessons (Lesen Teil 1 Zeitungstext, Teil 3 E-Mail, 5 a/b/c checks each) at order 9/10; +78 listening questions incl. 18 dictation; ReadingChecks heading follows the item type | merged, DB migrated 2026-09-06 (72 lessons; 10 A2.1 lessons all with checks 6/6/6/6/6/6/6/6/5/5, max 144 words; 6×23 A2.1 listening questions incl. 18 dictation; option fix live) | #85 |
+| D1 | `goethe_a2` exam track (no mock yet) + Leitfaden `/leitfaden/goethe-a2/` + hub `/pruefung/goethe-a2/` + 4 Goethe-A2 writing tasks + CHECK widening on profiles/writing_submissions | in PR | |
 | D2 | Abschlusstest A2.1 (Goethe A2 format, half length, `questionMax` 10, paid gate) + 28-day A2.1 plan (`/a2-1-phase`) + hand-offs (A2.1 result → `/level/a2.2`) | pending | |
 
 ## Measured baseline (do not re-derive)
@@ -134,6 +134,11 @@ listening depth with dictation, and — new this wave — a Goethe-Zertifikat A2
 
 ## Decisions log
 
+- 2026-09-06 (Wave 4, PR D1): `tests/exams.test.mjs`'s "the newest Abschlusstest migration carries every
+  exam-track key" check is scoped to tracks with a mock. An identity-only track (`goethe_a2`: guide, hub,
+  writing tasks, `hasMock: false`) writes no `exam_attempts` row, so D1 widens only `profiles` and
+  `writing_submissions`; PR D2's Abschlusstest migration re-lists `exam_attempts` with `goethe_a2` and
+  `a2_1_abschluss`. Without the scoping every new track would need an `exam_attempts` migration it cannot use.
 - 2026-09-06 (Wave 4, PR B review): reflexive verbs from the Goethe A2 Wortliste (sich anziehen,
   sich bewerben, sich anmelden …) may stand as RECEPTIVE Wortliste headwords with an example
   sentence that shows the chunk, and stay banned in every exercise, check statement, production

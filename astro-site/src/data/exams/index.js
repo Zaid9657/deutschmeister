@@ -21,6 +21,7 @@ import { goetheB1 } from '../guides/goethe-b1.js';
 import { dtz } from '../guides/dtz.js';
 import { telcB2 } from '../guides/telc-b2.js';
 import { startDeutsch1 } from '../guides/start-deutsch-1.js';
+import { goetheA2 } from '../guides/goethe-a2.js';
 import {
   GRAMMAR_TOPIC_COUNT,
   LISTENING_EXERCISE_COUNT,
@@ -33,6 +34,7 @@ const GUIDES_BY_SLUG = {
   dtz,
   'telc-b2': telcB2,
   'start-deutsch-1': startDeutsch1,
+  'goethe-a2': goetheA2,
 };
 
 // Per-exam positioning copy — the only authored content in this module.
@@ -45,6 +47,15 @@ const HUB_COPY = {
       'Start Deutsch 1 prüft vier feste Aufgabentypen, keine freie Deutschkonversation — wer Formular, Mitteilung, Wortkarten und Bildkarten im Original geübt hat, verliert dort keine Punkte durch Überraschung. Hier ist der Weg durch DeutschMeister, der zu dieser Prüfung führt.',
     focus:
       'Es gibt keine Module, aber auch keine Mindestpunktzahl pro Teil: 60 von 100 Punkten insgesamt entscheiden. Schreiben lohnt sich besonders, weil dort Anrede, Leitpunkte und Register über mehr Punkte entscheiden als einzelne Grammatikfehler.',
+  },
+  goethe_a2: {
+    title: 'Goethe A2 Vorbereitung online | DeutschMeister',
+    description:
+      'Goethe-Zertifikat A2 online vorbereiten: A2.1- und A2.2-Grammatik, Hör- und Lesetraining, SMS und E-Mail üben, KI-Sprechtraining — Einstufungstest kostenlos.',
+    intro:
+      'Auf A2 reicht es nicht mehr, schriftlich gut zu sein: Zwei getrennte Hürden statt einer, und die zweite ist das Sprechen. Hier ist der Weg durch DeutschMeister, der zu dieser Prüfung führt.',
+    focus:
+      'Auf A2 entscheidet der Sprung von einzelnen Sätzen zu zusammenhängendem Alltagsdeutsch: Dativ, Wechselpräpositionen, Perfekt und Objektpronomen müssen sitzen, nicht nur wiedererkannt werden. Den Rest entscheidet freies Sprechen — der Teil, den man nicht anlesen kann.',
   },
   telc_b1: {
     title: 'telc B1 Vorbereitung online | DeutschMeister',

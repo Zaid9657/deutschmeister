@@ -125,7 +125,7 @@ test('internal links follow the three trailing-slash cases', () => {
     '/listening/',
     '/reading/',
   ];
-  const NO_SLASH_ROUTES = ['/faq', '/ueber-uns', '/signup', '/login', '/dashboard', '/schreiben', '/modelltest'];
+  const NO_SLASH_ROUTES = ['/faq', '/ueber-uns', '/signup', '/login', '/dashboard', '/schreiben', '/modelltest', '/level/a2.1'];
 
   const failures = [];
   let linksSeen = 0;
