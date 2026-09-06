@@ -847,14 +847,14 @@
       },
       {
         "type": "choice",
-        "answer": "b",
+        "answer": "c",
         "options": [
           "a",
           "b",
           "c"
         ],
-        "statement_de": "Was rufen die Menschen beim Karneval, wenn die Wagen Süßigkeiten werfen? a) Helau! b) Kamelle! c) Alaaf!",
-        "statement_en": "What do people shout at Carnival when the floats throw sweets? a) Helau! b) Kamelle! c) Alaaf!",
+        "statement_de": "Was rufen die Menschen beim Karneval, wenn die Wagen Süßigkeiten werfen? a) Helau! b) Alaaf! c) Kamelle!",
+        "statement_en": "What do people shout at Carnival when the floats throw sweets? a) Helau! b) Alaaf! c) Kamelle!",
         "explanation_de": "Im Text steht: Die Menschen rufen „Kamelle!“."
       }
     ]
@@ -990,14 +990,14 @@
       },
       {
         "type": "choice",
-        "answer": "b",
+        "answer": "c",
         "options": [
           "a",
           "b",
           "c"
         ],
-        "statement_de": "Wie lange vor dem Schlafen legt Tim sein Handy weg? a) eine halbe Stunde b) eine Stunde c) zwei Stunden",
-        "statement_en": "How long before sleeping does Tim put his phone away? a) half an hour b) one hour c) two hours",
+        "statement_de": "Wie lange vor dem Schlafen legt Tim sein Handy weg? a) eine halbe Stunde b) zwei Stunden c) eine Stunde",
+        "statement_en": "How long before sleeping does Tim put his phone away? a) half an hour b) two hours c) one hour",
         "explanation_de": "Im Text steht: Er legt sein Handy eine Stunde vor dem Schlafen weg."
       }
     ]
