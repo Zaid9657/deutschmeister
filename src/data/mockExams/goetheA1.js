@@ -60,6 +60,9 @@ export const goetheA1Mock = {
           label: 'Hörtext 1 · Im Supermarkt',
           level: 'A1.1',
           exerciseNumber: 1,
+          // Every A1 exercise carries 23 questions since Waves 2/3; without this cap
+          // the runner presented all 46 Hören items (Wave 5 PR D1).
+          questionMax: 10,
         },
         {
           key: 'hoeren-2',
@@ -67,6 +70,7 @@ export const goetheA1Mock = {
           label: 'Hörtext 2 · Nach dem Weg fragen',
           level: 'A1.2',
           exerciseNumber: 2,
+          questionMax: 10,
         },
       ],
     },

@@ -181,6 +181,9 @@ export const telcB1Mock = {
           // the runner loads them at runtime (level is the DB uppercase form).
           level: 'B1.1',
           exerciseNumber: 1,
+          // Cap pinned by tests/exams.test.mjs for every mock listening part —
+          // a no-op today (B1 exercises carry 10 questions), a guard tomorrow.
+          questionMax: 10,
         },
         {
           key: 'hoeren-2',
@@ -188,6 +191,7 @@ export const telcB1Mock = {
           label: 'Hörtext 2',
           level: 'B1.1',
           exerciseNumber: 2,
+          questionMax: 10,
         },
       ],
     },

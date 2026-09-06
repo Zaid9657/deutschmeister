@@ -178,6 +178,13 @@ test('every mock exam is internally consistent', async () => {
         } else if (part.type === 'listening') {
           assert.ok(/^[AB][12]\.[12]$/.test(part.level), `${part.key}: listening level must be the DB uppercase form`);
           assert.ok(Number.isInteger(part.exerciseNumber) && part.exerciseNumber >= 1 && part.exerciseNumber <= 6);
+          // A-level exercises carry 23 questions since Waves 2–5; before Wave 5
+          // PR D1 no mock declared a cap, so goethe_a1 presented 46 Hören items.
+          // Every mock listening part now caps what the runner renders and scores.
+          assert.ok(
+            Number.isInteger(part.questionMax) && part.questionMax > 0,
+            `${examKey}/${part.key}: a mock listening part needs a numeric questionMax`
+          );
         } else if (part.type === 'writing') {
           assert.ok(part.task && part.criteria?.length >= 3, `${part.key}: writing needs a task + criteria`);
         } else {
@@ -191,6 +198,43 @@ test('every mock exam is internally consistent', async () => {
     // And an empty sheet scores zero
     assert.equal(scoreObjectiveSections(mock, {}).score, 0);
   }
+});
+
+// The Goethe A2 Kurzversion (Wave 5 PR D1) is the first mock that rehearses all
+// four Lesen Teile of one exam, incl. Teil 4 as a `matching` part with a
+// distractor, and the first whose Hören plays once (`playsAllowed: 1`) on
+// BOTH parts because the runner's clock never pauses for audio.
+test('the goethe_a2 mock covers all four Lesen Teile, caps and single-plays both Hören parts', async () => {
+  const { MOCK_EXAMS } = await import('../src/data/mockExams/index.js');
+  const mock = MOCK_EXAMS.goethe_a2;
+  assert.ok(mock, 'MOCK_EXAMS.goethe_a2 must exist');
+  const hoeren = mock.sections.find((s) => s.key === 'hoeren');
+  const lesen = mock.sections.find((s) => s.key === 'lesen');
+  const schreiben = mock.sections.find((s) => s.key === 'schreiben');
+  assert.ok(hoeren && lesen && schreiben, 'three sections: hoeren, lesen, schreiben');
+
+  const listening = hoeren.parts.filter((p) => p.type === 'listening');
+  assert.equal(listening.length, 2, 'two Hören parts');
+  for (const p of listening) {
+    assert.equal(p.level, 'A2.2', `${p.key}: the A2 mock listens at A2.2`);
+    assert.equal(p.questionMax, 5, `${p.key}: 5 items per Hören part (10 in total)`);
+    assert.equal(p.playsAllowed, 1, `${p.key}: played once — the section clock never pauses for audio`);
+  }
+  assert.notEqual(listening[0].exerciseNumber, listening[1].exerciseNumber, 'two distinct A2.2 exercises');
+
+  const types = lesen.parts.map((p) => p.type);
+  assert.equal(lesen.parts.length, 4, 'four Lesen Teile');
+  assert.deepEqual(types.slice(0, 3), ['mc-group', 'mc-group', 'mc-group'], 'Teile 1–3 are a/b/c');
+  assert.equal(types[3], 'matching', 'Teil 4 is Zuordnung');
+  const teil4 = lesen.parts[3];
+  assert.ok(teil4.options.length > teil4.texts.length, 'Teil 4 needs a distractor Anzeige');
+  assert.ok(teil4.options.some((o) => o.key === 'x'), 'Teil 4 carries the "keine Anzeige passt" option');
+  const lesenItems = lesen.parts.slice(0, 3).reduce((n, p) => n + p.items.length, 0) + teil4.texts.length;
+  assert.equal(lesenItems, 10, '10 Lesen items');
+
+  const writing = schreiben.parts.filter((p) => p.type === 'writing');
+  assert.equal(writing.length, 2, 'SMS + E-Mail');
+  assert.match(mock.intro, /Sprechen/, 'the intro must say there is no Sprechen');
 });
 
 test('the mock surfaces render the disclaimer and the Richtwert label', () => {

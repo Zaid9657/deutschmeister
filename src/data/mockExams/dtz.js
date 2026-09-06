@@ -150,6 +150,9 @@ export const dtzMock = {
           label: 'Hörtext 1 (A2-Niveau)',
           level: 'A2.2',
           exerciseNumber: 1,
+          // A2.2 exercises carry 23 questions since Wave 5 PR C; cap what the
+          // runner renders and scores (selectListeningQuestions).
+          questionMax: 10,
         },
         {
           key: 'hoeren-2',
@@ -157,6 +160,7 @@ export const dtzMock = {
           label: 'Hörtext 2 (B1-Niveau)',
           level: 'B1.1',
           exerciseNumber: 4,
+          questionMax: 10,
         },
       ],
     },
