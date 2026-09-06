@@ -198,8 +198,8 @@ PLACE — never delete or add — which is the shape the migration takes.
 
 | # | Step | Status | PR |
 |---|---|---|---|
-| A | A2.2 legacy re-cut: guarded in-place UPDATEs on every out-of-level string in the live A2.2 grammar rows (B1 subordinators, als + Präteritum, Plusquamperfekt, Genitiv), the same edit in the cache, a re-level of the B1/B2 "Prepositions" and out-of-list "Animals" rows to b1.x/b2.1, a shared A2.2 ban battery (`tests/helpers/a2Bans.mjs`) and a guard suite that sweeps every German field of every A2.2 grammar row in the cache | in progress | — |
-| B | Goethe-A2 30-day exam plan (`/goethe-a2-kurs`, PROGRAM_KEY `goethe_a2_30_tage`, mirror of `/start-deutsch-1-kurs`), `goethe_a2.courseHref` → the plan in both twins, A2.2's Tag-28 hand-off and the result screen → the plan | planned | — |
+| A | A2.2 legacy re-cut: guarded in-place UPDATEs on every out-of-level string in the live A2.2 grammar rows (B1 subordinators, als + Präteritum, Plusquamperfekt, Genitiv), the same edit in the cache, a re-level of the B1/B2 "Prepositions" and out-of-list "Animals" rows to b1.x/b2.1, a shared A2.2 ban battery (`tests/helpers/a2Bans.mjs`) and a guard suite that sweeps every German field of every A2.2 grammar row in the cache | merged, DB migrated 2026-09-06 (150 grammar fields + 45 word re-levels; md5 over all 107/142/262 A2.2 rows identical to the cache; ban sweep 0; a2.2 words 373) | #100 |
+| B | Goethe-A2 30-day exam plan (`/goethe-a2-kurs`, PROGRAM_KEY `goethe_a2_30_tage`, mirror of `/start-deutsch-1-kurs`: 5 weeks / 30 days / 77 items / 27 h derived, exam Teile as the spine over existing A2.1 + A2.2 content, both Abschlusstests as Probe, the Kurzversion mock gewertet on Tag 26 and Tag 30, the two official Goethe PDFs), `goethe_a2.courseHref` → the plan in both twins, A2.2's Tag-28 hand-off and the result screen → the plan; A22PhasePage chip fixed | merged (no migration; plan reviewed FAIL → PASS in two rounds + the residual minors applied) | #102 |
 | C | Speaking missions for the four new A2.1 + four new A2.2 topics — only if the wave's budget remains | optional | — |
 
 ## Measured baseline (do not re-derive)
@@ -259,6 +259,16 @@ PLACE — never delete or add — which is the shape the migration takes.
   and the audio rows are untouched. A shared ban battery now sweeps every German field of every A2.2
   grammar row in the cache on every test run — the class is closed, not just the instances.
 
+- 2026-09-06 (Wave 6, PR B): the Goethe-A2 exam plan lives at `/goethe-a2-kurs` (case 3, no trailing
+  slash; not prerendered, not sitemapped — like `/start-deutsch-1-kurs`), gated on
+  `LevelSubscriptionGuard level="a2.2"` (the band top: Pro/trial or the A2 course), with its hours DERIVED
+  as `PROGRAM_MINUTES`/`PROGRAM_HOURS` (the a22Phase convention) and the mock's minutes derived from
+  `src/data/mockExams/goetheA2.js` (60, not a retyped 70). It teaches nothing new: every grammar item is a
+  review of an already-taught A2.1/A2.2 topic, titled `Wiederholen: …`. Hand-offs: `goethe_a2.courseHref`
+  in both twins, the A2.2 plan's Tag 28 and the result screen's a2.2 next step all point at the plan; the
+  mock (`/modelltest/goethe-a2`) becomes the secondary link because it sits inside the plan. Exactly two
+  official PDFs (Modellsatz + Übungssatz Erwachsene), pinned by `tests/purchases.test.mjs`, which keeps this
+  plan out of the phase-plan href sweep (external goethe.de hrefs) and gives it its own.
 - 2026-09-06 (Wave 5, recon): the four new A2.2 topics are `konjunktiv-ii-polite` (würde/könnte/hätte/wäre
   as fixed polite forms — Sprechen Teil 3 planning, Schreiben Teil 2), `verbs-with-prepositions-intro`
   (fixed prepositions + case, wo(r)-/da(r)- forms — the cleanest gap: nothing below B1.2 teaches it),

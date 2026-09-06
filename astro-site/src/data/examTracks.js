@@ -38,10 +38,12 @@ export const EXAM_TRACKS = [
     level: 'A2',
     sublevels: ['a2.1', 'a2.2'],
     guideSlug: 'goethe-a2',
-    // The A2.1 course landing page (SPA route behind the paid a2.1 gate, no
-    // trailing slash — the same shape as goethe_a1's). The hub's course button
-    // links it; the A2.2 plan lands in Wave 5 PR D2.
-    courseHref: '/a2-1-phase',
+    // The Goethe-A2 30-day exam plan (SPA route behind the a2.2 band gate, no
+    // trailing slash — the same shape as goethe_a1's /start-deutsch-1-kurs).
+    // The hub's course button links it (Course Factory Wave 6 PR B; before
+    // that it pointed at the A2.1 phase plan, /a2-1-phase, which stays
+    // reachable from the level page and the A1.2 hand-off).
+    courseHref: '/goethe-a2-kurs',
     // MOCK_EXAMS.goethe_a2 (src/data/mockExams/goetheA2.js, Wave 5 PR D1);
     // tests/exams.test.mjs pins the flag both ways.
     hasMock: true,

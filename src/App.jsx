@@ -53,6 +53,7 @@ const VerifyEmailPage = lazy(() => import('./pages/VerifyEmailPage'));
 const IntroSlides = lazy(() => import('./components/onboarding/IntroSlides'));
 const TelcB1KursPage = lazy(() => import('./pages/TelcB1KursPage'));
 const StartDeutsch1KursPage = lazy(() => import('./pages/StartDeutsch1KursPage'));
+const GoetheA2KursPage = lazy(() => import('./pages/GoetheA2KursPage'));
 const A11PhasePage = lazy(() => import('./pages/A11PhasePage'));
 const A12PhasePage = lazy(() => import('./pages/A12PhasePage'));
 const A21PhasePage = lazy(() => import('./pages/A21PhasePage'));
@@ -181,6 +182,20 @@ function App() {
                         <LevelSubscriptionGuard level="a1.2">
                           <EmailVerificationGate>
                             <StartDeutsch1KursPage />
+                          </EmailVerificationGate>
+                        </LevelSubscriptionGuard>
+                      }
+                    />
+                    {/* The A2 band's twin of /start-deutsch-1-kurs: the
+                        Goethe-A2 30-day exam plan (Course Factory Wave 6
+                        PR B), included with Pro/trial or the A2 course, so
+                        gated on the band's top sublevel (a2.2). */}
+                    <Route
+                      path="/goethe-a2-kurs"
+                      element={
+                        <LevelSubscriptionGuard level="a2.2">
+                          <EmailVerificationGate>
+                            <GoetheA2KursPage />
                           </EmailVerificationGate>
                         </LevelSubscriptionGuard>
                       }
