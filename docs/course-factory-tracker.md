@@ -100,7 +100,7 @@ listening depth with dictation, and — new this wave — a Goethe-Zertifikat A2
 
 | # | Step | Status | PR |
 |---|---|---|---|
-| A | Four new A2.1 grammar topics (adjective-endings-intro, pronouns-accusative-dative, modal-verbs-past, temporal-prepositions) at topic_order 9–12, 26 exercises each ≥16 typed | pending | |
+| A | Four new A2.1 grammar topics (adjective-endings-intro, pronouns-accusative-dative, modal-verbs-past, temporal-prepositions) at topic_order 9–12, 26 exercises each, 20–23 typed | merged, DB migrated 2026-09-06 (12 A2.1 topics live; 36 rules / 40 examples / 104 exercises verified byte-identical to the cache) | #82 |
 | A2 | Typed production for the 8 live A2.1 topics (≥10 typed each) + depth patch (+3 rules, +4 examples) for possessive-pronouns, perfect-tense-haben, imperative-mood | pending | |
 | B | A2.1 share of the Wortliste (8 new categories) + fixes to the live A2.1 rows (117 article-in-word, 5 null plurals) | pending | |
 | C | 8 A2.1 reading texts rewritten to ≤150 words inside the level with 5 rf + 1 choice check; 2 exam-format lessons (Lesen Teil 1 Zeitungstext, Teil 3 E-Mail) at order 9/10; +78 listening questions incl. 18 dictation | pending | |

@@ -82,13 +82,13 @@ export const LISTENING_DIALOGUE_COUNT = 480;
 export const PODCAST_EPISODE_COUNT = 24;
 
 /** Grammar rule explanations across all 76 topics. Source: counted against grammar-content-cache.json on 2026-09-06. */
-export const GRAMMAR_RULE_COUNT = 558;
+export const GRAMMAR_RULE_COUNT = 567;
 
 /** Worked examples across all 76 topics. Source: counted against grammar-content-cache.json on 2026-09-06. */
-export const GRAMMAR_EXAMPLE_COUNT = 797;
+export const GRAMMAR_EXAMPLE_COUNT = 809;
 
 /** Interactive exercises across all 76 topics. Source: counted against grammar-content-cache.json on 2026-09-06. */
-export const GRAMMAR_EXERCISE_COUNT = 1149;
+export const GRAMMAR_EXERCISE_COUNT = 1246;
 
 /** Listening exercises, 6 per CEFR level. Source: listening_exercises count via Supabase (2026-08-24). */
 export const LISTENING_EXERCISE_COUNT = 48;
