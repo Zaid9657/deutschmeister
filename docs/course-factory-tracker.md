@@ -105,7 +105,28 @@ listening depth with dictation, and — new this wave — a Goethe-Zertifikat A2
 | B | A2.1 share of the Wortliste (175 words, 8 new categories) + 208 fixes to the live A2.1 rows (117 article-in-word, 35 article-in-plural, 5 null plurals, 34 above-level sentences) | merged, DB migrated 2026-09-06 (423 A2.1 words, additions md5-identical to the source, 0 defects of any class at a2.1, 2390 total) — the 175 new rows await the owner's Azure audio run | #84 |
 | C | 8 A2.1 reading texts rewritten to ≤150 words inside the level with 5 rf + 1 a/b/c choice check; 2 exam-format lessons (Lesen Teil 1 Zeitungstext, Teil 3 E-Mail, 5 a/b/c checks each) at order 9/10; +78 listening questions incl. 18 dictation; ReadingChecks heading follows the item type | merged, DB migrated 2026-09-06 (72 lessons; 10 A2.1 lessons all with checks 6/6/6/6/6/6/6/6/5/5, max 144 words; 6×23 A2.1 listening questions incl. 18 dictation; option fix live) | #85 |
 | D1 | `goethe_a2` exam track (no mock yet) + Leitfaden `/leitfaden/goethe-a2/` + hub `/pruefung/goethe-a2/` + 4 Goethe-A2 writing tasks + CHECK widening on profiles/writing_submissions | merged, DB migrated 2026-09-06 (`profiles_exam_track_check` + `writing_submissions_exam_key_check` list `goethe_a2`; `/leitfaden/goethe-a2/` and `/pruefung/goethe-a2/` live; 4 writing tasks) | #87 |
-| D2 | Abschlusstest A2.1 (Goethe A2 format, half length, `questionMax` 10, paid gate) + 28-day A2.1 plan (`/a2-1-phase`) + hand-offs (A2.1 result → `/level/a2.2`) | in PR | |
+| D2 | Abschlusstest A2.1 (Goethe A2 format, half length, `questionMax` 10, paid gate) + 28-day A2.1 plan (`/a2-1-phase`) + hand-offs (A2.1 result → `/level/a2.2`) | merged, DB migrated 2026-09-06 (`exam_attempts_exam_key_check` lists all nine keys incl. `goethe_a2` and `a2_1_abschluss`) | #88 |
+
+**Wave 4 status: COMPLETE (2026-09-06).** All six steps merged and live, every migration applied via
+the Supabase connector and verified by SELECT: 12 A2.1 topics (the four new ones 36 rules / 40
+examples / 104 exercises byte-identical to the cache) plus typed production on the eight older ones
+(every A2.1 topic ≥20 exercises; live totals 76 topics / 567 rules / 809 examples / 1246 exercises =
+cache = `marketing.js`); 423 A2.1 words (2390 total, 0 defects at a2.1); 10 A2.1 reading lessons all
+with checks (72 total, max 144 words); 6×23 A2.1 listening questions incl. 18 dictation; the
+`goethe_a2` exam identity (`/leitfaden/goethe-a2/`, `/pruefung/goethe-a2/`, 4 writing tasks, the
+`profiles` + `writing_submissions` CHECKs widened); the Abschlusstest A2.1 (Goethe-A2 format,
+Kurzversion, `a2_1_abschluss` admitted by the `exam_attempts` CHECK) and the 28-day plan at
+`/a2-1-phase`. A2.1 is now a standalone paid course: 12 grammar topics with typed production, its
+Wortliste share in the SRS, exam-format reading, listening with dictation, a Goethe-A2 Leitfaden and
+writing bank, a dated 28-day plan, and an Abschlusstest that hands off to A2.2.
+
+Not done this wave (carried): speaking missions for the four new A2.1 topics (the plan drills them
+through the lessons' exercise block + X-Ray); a Goethe A2 Kurzversion mock (`hasMock` stays false —
+A2.2 work); the 688 Wortliste defect rows at a2.2/b1/b2 (each later wave's PR B); content tickets
+from the PR C listening review on the reused A2.1 audio (exercise 1 q1/q3 stems carry a Genitiv,
+exercise 1 q9 wording, speaker labels, the "Letzer Aufruf" typo in a transcript); the ASCII quotes in
+the `Perfekt mit "haben"` / `"sein"` `titleDe` values; audio for the 175 new A2.1 words and 52 new
+examples (owner's Azure run, see owner asks).
 
 ## Measured baseline (do not re-derive)
 
@@ -126,6 +147,14 @@ listening depth with dictation, and — new this wave — a Goethe-Zertifikat A2
 - The Abschlusstest is free by decision (see log); if A1.1 is ever sold, the gate is one
   line in `src/data/courseTests/abschlusstestA11.js` (`gateLevel`).
 
+- **Wave 4 owner asks (2026-09-06).** (1) Run `node scripts/generate-example-audio.mjs --table words`
+  (the 175 new A2.1 words have `audio_url` null) and `--table examples` (the 52 new A2.1 examples from
+  PRs A/A2). (2) Rotate the Azure Speech key that was pasted through chat earlier in the wave.
+  (3) `curl -I` the five goethe.de URLs in `astro-site/src/data/guides/goethe-a2.js` `sources[]` from an
+  unrestricted network — the sandbox could not open any of them; `sources[4]`
+  (`…/ins/de/de/prf/prf/gzsd2/wi2.html`) has the `…/ins/de/de/m/prf/prf/gzsd2/wi2.html` fallback if it
+  404s. (4) Confirm the `/pruefung/goethe-a2/` course button may keep linking the paid `/a2-1-phase`
+  (shipped as the brief's default).
 - **Wortliste defects outside A2.1 (carried).** Measured 2026-09-06 after PR B: 688 rows at
   a2.2/b1.x/b2.x still carry the article baked into the headword or the literal string
   `"null"` as a plural (the same two defect classes fixed at a1.1/a1.2/a2.1 in Waves 2–4). Each
@@ -134,6 +163,12 @@ listening depth with dictation, and — new this wave — a Goethe-Zertifikat A2
 
 ## Decisions log
 
+- 2026-09-06 (Wave 4, PR D2): the Abschlusstest A2.1 result screen and the plan's Tag 28 hand off to
+  `/level/a2.2` — no A2.2 plan exists, and inventing `/a2-2-phase` would ship a link to a 404. The
+  `/pruefung/goethe-a2/` course button links the paid `/a2-1-phase` (the brief's default; owner to
+  confirm). The Hören part plays once (`playsAllowed: 1`, resolved per part by the runner) because
+  8:38 of audio does not fit two plays in the 15-minute section; `questionMax: 10` keeps the 10 : 10
+  Hören/Lesen weighting now that every A2.1 exercise carries 23 questions.
 - 2026-09-06 (Wave 4, PR D1): `tests/exams.test.mjs`'s "the newest Abschlusstest migration carries every
   exam-track key" check is scoped to tracks with a mock. An identity-only track (`goethe_a2`: guide, hub,
   writing tasks, `hasMock: false`) writes no `exam_attempts` row, so D1 widens only `profiles` and
