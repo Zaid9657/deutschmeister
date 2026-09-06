@@ -198,7 +198,7 @@ PLACE — never delete or add — which is the shape the migration takes.
 
 | # | Step | Status | PR |
 |---|---|---|---|
-| A | A2.2 legacy re-cut: guarded in-place UPDATEs on every out-of-level string in the live A2.2 grammar rows (B1 subordinators, als + Präteritum, Plusquamperfekt, Genitiv), the same edit in the cache, a re-level of the B1/B2 "Prepositions" and out-of-list "Animals" rows to b1.x/b2.1, a shared A2.2 ban battery (`tests/helpers/a2Bans.mjs`) and a guard suite that sweeps every German field of every A2.2 grammar row in the cache | in progress | — |
+| A | A2.2 legacy re-cut: guarded in-place UPDATEs on every out-of-level string in the live A2.2 grammar rows (B1 subordinators, als + Präteritum, Plusquamperfekt, Genitiv), the same edit in the cache, a re-level of the B1/B2 "Prepositions" and out-of-list "Animals" rows to b1.x/b2.1, a shared A2.2 ban battery (`tests/helpers/a2Bans.mjs`) and a guard suite that sweeps every German field of every A2.2 grammar row in the cache | merged, DB migrated 2026-09-06 (150 grammar fields + 45 word re-levels; md5 over all 107/142/262 A2.2 rows identical to the cache; ban sweep 0; a2.2 words 373) | #100 |
 | B | Goethe-A2 30-day exam plan (`/goethe-a2-kurs`, PROGRAM_KEY `goethe_a2_30_tage`, mirror of `/start-deutsch-1-kurs`), `goethe_a2.courseHref` → the plan in both twins, A2.2's Tag-28 hand-off and the result screen → the plan | planned | — |
 | C | Speaking missions for the four new A2.1 + four new A2.2 topics — only if the wave's budget remains | optional | — |
 
