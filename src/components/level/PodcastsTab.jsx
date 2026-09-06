@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../../utils/supabase';
 import { useTranslation } from 'react-i18next';
 import { Play, Headphones, Clock, X, Radio, Youtube } from 'lucide-react';
+import { YOUTUBE_CHANNEL_URL } from '../../data/navigation';
 import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
 import Reveal from '../ui/Reveal.jsx';
@@ -139,7 +140,7 @@ const PodcastsTab = ({ subLevel }) => {
             : 'Our videos are also available on YouTube!'}
         </p>
         <a
-          href="https://www.youtube.com/@deutschmeister_de"
+          href={YOUTUBE_CHANNEL_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="text-sm font-bold text-siegel transition-colors hover:text-siegel-deep whitespace-nowrap"

@@ -1,5 +1,5 @@
 ---
-import { NAV_GROUPS, FOOTER_GROUPS, LEGAL_LINKS } from '../data/navigation.js';
+import { NAV_GROUPS, FOOTER_GROUPS, LEGAL_LINKS, SOCIAL_LINKS } from '../data/navigation.js';
 import Showtime from '../components/Showtime.astro';
 import 'atropos/css';
 import '../styles/showtime.css';
@@ -254,6 +254,26 @@ const authAttrs = (item) =>
             <p class="text-sm leading-relaxed">
               Learn German with AI — from A1.1 to B2.2. Grammar, speaking, listening, and reading.
             </p>
+            <!-- Off-site channels. Same registry as the SPA footer, so the
+                 YouTube link is on every static page too, not just the
+                 homepage's closing paragraph. -->
+            <ul class="mt-4 flex items-center gap-4 text-sm">
+              {SOCIAL_LINKS.map((item) => (
+                <li>
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center gap-2 hover:text-white transition-colors"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.2 3.6-6.2 3.6Z" />
+                    </svg>
+                    {item.labelEn}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
           {FOOTER_GROUPS.map((group) => (
             <div>
