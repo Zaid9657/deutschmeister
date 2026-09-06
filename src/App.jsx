@@ -56,6 +56,7 @@ const StartDeutsch1KursPage = lazy(() => import('./pages/StartDeutsch1KursPage')
 const A11PhasePage = lazy(() => import('./pages/A11PhasePage'));
 const A12PhasePage = lazy(() => import('./pages/A12PhasePage'));
 const A21PhasePage = lazy(() => import('./pages/A21PhasePage'));
+const A22PhasePage = lazy(() => import('./pages/A22PhasePage'));
 const ModelltestHub = lazy(() => import('./pages/Modelltest/ModelltestHub'));
 const ModelltestOverview = lazy(() => import('./pages/Modelltest/ModelltestOverview'));
 const ModelltestRun = lazy(() => import('./pages/Modelltest/ModelltestRun'));
@@ -224,6 +225,20 @@ function App() {
                         <LevelSubscriptionGuard level="a2.1">
                           <EmailVerificationGate>
                             <A21PhasePage />
+                          </EmailVerificationGate>
+                        </LevelSubscriptionGuard>
+                      }
+                    />
+                    {/* The A2.2-Phase 28-day plan (Course Factory Wave 5 PR D2) —
+                        the second paid half of the A2 band; same gate shape,
+                        level="a2.2", ending at the Abschlusstest A2.2 and the
+                        Goethe-A2 Übungstest. */}
+                    <Route
+                      path="/a2-2-phase"
+                      element={
+                        <LevelSubscriptionGuard level="a2.2">
+                          <EmailVerificationGate>
+                            <A22PhasePage />
                           </EmailVerificationGate>
                         </LevelSubscriptionGuard>
                       }

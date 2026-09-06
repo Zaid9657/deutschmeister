@@ -145,8 +145,8 @@ table), not the "Teil 4 ja/nein" the start prompt guessed.
 | A2 | Typed production for the 8 live A2.2 topics (10 typed each, 80 exercises) + depth patch (+3 rules, +4 examples) for reflexive-verbs, simple-past-sein-haben, coordinating-conjunctions, comparative, superlative, future-tense | merged, DB migrated 2026-09-06 (80 exercises / 18 rules / 24 examples verified byte-identical to the cache; every A2.2 topic ≥10 typed and ≥8 rules; live totals 80/621/873/1430 = cache = `marketing.js`) | #94 |
 | B | A2.2 share of the Wortliste (171 words, 8 new categories) + 271 guarded fixes on 177 live A2.2 rows (152 article-in-headword, 60 article-in-plural, 15 "null" plurals + 1, 44 sentences rewritten inside the level) | merged, DB migrated 2026-09-06 (418 A2.2 words, 0 defects of any class at a2.2, 2561 total; the 171 new rows await the owner's Azure audio run) | #95 |
 | C | 8 A2.2 reading texts rewritten to ≤150 words with 5 rf + 1 a/b/c; 2 exam-format lessons (Lesen Teil 2 Informationstafel a/b/c, Teil 4 Anzeigen-Zuordnung a–f + x); +78 listening questions incl. 18 dictation | merged, DB migrated 2026-09-06 (10 A2.2 lessons all with `checks`, the 8 rewrites md5-identical to the reviewed JSON, ≤150 words; 6 × 23 questions incl. 18 dictation) | #96 |
-| D1 | Goethe A2 Kurzversion mock (`MOCK_EXAMS.goethe_a2`: Hören 2 × A2.2 exercises at `questionMax` 5 + `playsAllowed` 1, Lesen all four Teile with Teil 4 as `matching` + distractor, Schreiben SMS + E-Mail), `hasMock: true` in both twins; `questionMax: 10` on every pre-existing mock Hören part + test pin | draft #97 (rebased on #96) | #97 |
-| D2 | Abschlusstest A2.2 (`a2_2_abschluss`, Goethe A2 format, Kurzversion) + 28-day plan `/a2-2-phase` + hand-offs (A2.1 → `/a2-2-phase`, A2.2 → `/modelltest/goethe-a2`) + `exam_attempts` CHECK with ten keys | planned | — |
+| D1 | Goethe A2 Kurzversion mock (`MOCK_EXAMS.goethe_a2`: Hören 2 × A2.2 exercises at `questionMax` 5 + `playsAllowed` 1, Lesen all four Teile with Teil 4 as `matching` + distractor, Schreiben SMS + E-Mail), `hasMock: true` in both twins; `questionMax: 10` on every pre-existing mock Hören part + test pin | merged 2026-09-06 (no migration; `/modelltest/goethe-a2` and the Ernstfall step on `/pruefung/goethe-a2/` light up from the registry + flag) | #97 |
+| D2 | Abschlusstest A2.2 (`a2_2_abschluss`, Goethe A2 format, Kurzversion) + 28-day plan `/a2-2-phase` + hand-offs (A2.1 → `/a2-2-phase`, A2.2 → `/modelltest/goethe-a2`) + `exam_attempts` CHECK with ten keys | in progress (draft) | — |
 | E | Goethe-A2 30-day exam plan (mirror of `/start-deutsch-1-kurs`) — only if the wave's budget remains | optional | — |
 
 ## Measured baseline (do not re-derive)
@@ -220,6 +220,12 @@ table), not the "Teil 4 ja/nein" the start prompt guessed.
   questions since Waves 2–5, so `goethe_a1` presented 46 Hören items and `dtz`'s A2.2 part would present 23
   after PR C. Every pre-existing mock Hören part now carries `questionMax: 10` (a no-op at B1/B2, whose
   exercises have 10) and `tests/exams.test.mjs` requires a numeric cap on every mock listening part.
+- 2026-09-06 (Wave 5, PR D2): two live A2.2 `speaking_missions` rows are corrected by guarded UPDATEs in the
+  Abschlusstest migration because the 28-day plan derives mission titles from them and the plan review found
+  banned forms there: "Der Urlaub, der schiefging" → "Ein Urlaub mit Problemen" (relative clause + Präteritum
+  of a full verb) and mission 5's target_structures "combining weil, dass, seitdem" → "… wenn" (B1
+  subordinator). A2.1's Tag-28 hand-off flips from `/level/a2.2` to `/a2-2-phase`; A2.2's ends at
+  `/modelltest/goethe-a2`.
 - 2026-09-06 (Wave 4, PR D2): the Abschlusstest A2.1 result screen and the plan's Tag 28 hand off to
   `/level/a2.2` — no A2.2 plan exists, and inventing `/a2-2-phase` would ship a link to a 404. The
   `/pruefung/goethe-a2/` course button links the paid `/a2-1-phase` (the brief's default; owner

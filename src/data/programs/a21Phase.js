@@ -5,10 +5,10 @@
 //
 // Product framing: A2.1 is sold as a standalone paid course. This plan ends at
 // its own half-length course test — the "Abschlusstest A2.1", in the style of
-// Goethe-Zertifikat A2 — not at the real exam. There is no A2.2 plan yet, so
-// Tag 28's hand-off links the LEVEL page /level/a2.2 rather than inventing a
-// course route (the A1 chain's a12Phase.js keeps its own Start-Deutsch-1
-// hand-off; nothing here redirects A1 learners into A2.1).
+// Goethe-Zertifikat A2 — not at the real exam. Since Wave 5 PR D2 the A2.2
+// plan exists (a22Phase.js, /a2-2-phase), so Tag 28's hand-off links it (the
+// A1 chain's a12Phase.js keeps its own Start-Deutsch-1 hand-off; nothing here
+// redirects A1 learners into A2.1).
 //
 // Same-wave forward references this module depends on but does not itself
 // ship (see notes.md for what is verified today vs. still pending):
@@ -371,16 +371,16 @@ const modelltest = (id, title, minutes) => ({
 });
 
 // Hand-off on Tag 28 — a real, clickable exit rather than prose alone (the
-// week `intro` renders inside a bare <p> and cannot carry an href). There is
-// NO A2.2 course plan yet, so this points at the LEVEL page: /level/:level is
-// an existing SPA route and netlify.toml wildcards "/level/*" (no trailing
-// slash, case 3), so `external` is correctly omitted.
+// week `intro` renders inside a bare <p> and cannot carry an href). Since
+// Wave 5 PR D2 the A2.2 course plan exists, so this points at it: /a2-2-phase
+// is an SPA route in the netlify.toml allow-list (no trailing slash, case 3),
+// so `external` is correctly omitted. tests/purchases.test.mjs pins the href.
 const nextLevel = (id, minutes = 5) => ({
   id,
   type: 'exam',
-  title: 'Weiter: A2.2',
+  title: 'Weiter: A2.2-Phase',
   minutes,
-  href: '/level/a2.2',
+  href: '/a2-2-phase',
 });
 
 // -----------------------------------------------------------------------

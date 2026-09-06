@@ -13,6 +13,7 @@
 import { abschlusstestA11 } from './abschlusstestA11.js';
 import { abschlusstestA12 } from './abschlusstestA12.js';
 import { abschlusstestA21 } from './abschlusstestA21.js';
+import { abschlusstestA22 } from './abschlusstestA22.js';
 
 export const COURSE_TESTS = [
   {
@@ -37,7 +38,7 @@ export const COURSE_TESTS = [
   // A2.1 is a paid level (the A2 band course): gateLevel 'a2.1' makes
   // ExamSubscriptionGuard require Pro/trial or the A2 course — the same gate
   // /level/a2.1 and /a2-1-phase use. Written in the Goethe-Zertifikat A2
-  // style (formatOf goethe_a2, an identity-only track until an A2 mock exists).
+  // style (formatOf goethe_a2; the A2 mock itself landed in Wave 5 PR D1).
   {
     key: 'a2_1_abschluss',
     slug: 'abschlusstest-a2-1',
@@ -45,6 +46,18 @@ export const COURSE_TESTS = [
     level: 'a2.1',
     formatOf: 'goethe_a2',
     mock: abschlusstestA21,
+  },
+  // A2.2 is the second paid half of the A2 band: gateLevel 'a2.2' is the same
+  // gate /level/a2.2 and /a2-2-phase use. Goethe-Zertifikat A2 style
+  // (formatOf goethe_a2 — a track WITH a mock since Wave 5 PR D1, so the plan's
+  // Tag 28 hands off to /modelltest/goethe-a2 after this test).
+  {
+    key: 'a2_2_abschluss',
+    slug: 'abschlusstest-a2-2',
+    nameDe: 'Abschlusstest A2.2',
+    level: 'a2.2',
+    formatOf: 'goethe_a2',
+    mock: abschlusstestA22,
   },
 ];
 
