@@ -1,7 +1,6 @@
 # Wave 7 PR A2 — work in progress (paused 2026-09-07, owner request: resume next week)
 
 State when paused: the eight EXTEND files under `typed-b1.1/` are FINAL — both round-3 delta re-reviews are **PASS (0 blocking)**
-re-reviews failed on one blocking item each, both authors delivered round 3, and the round-3 delta
 (`reviews/extend-E1-review-3.md`, `extend-E2-review-3.md`). Residual one-line minors listed at the end of each round-3 review are still to be applied by the orchestrator before generation (E1: 9, E2: 4).
 
 What is already done in this branch: `tests/helpers/b1Bans.mjs`, `tests/b1-1-typed-production.test.mjs`
