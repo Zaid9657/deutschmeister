@@ -56,10 +56,16 @@ Download: `https://omqyueddktqeyrrqvnyq.supabase.co/storage/v1/object/public/pod
 | B1.1 | 1 | Ueber Nachrichten sprechen ⚠️ Umlaut falsch |
 | B1.1 | 2 | Meinungen ausdruecken ⚠️ Umlaut falsch |
 
-### Fertig, aber nicht freigeschaltet (10)
+### Fertig, aber nicht sichtbar (10) — und der Grund ist NICHT der Schalter
 
-Die Audiodateien liegen im Storage. Es fehlt nur der Schalter
-`is_published = true`.
+Die Dateien liegen im Storage, aber **unter einem anderen Namen, als die
+Datenbank erwartet**. Die Zeile zeigt auf `B1.2/1.mp4`; im Speicher liegt
+`B1.2/1 (2).mp4`. Bei allen zehn Folgen dasselbe: eine Klammer und eine Zahl,
+die beim Hochladen entstanden sind.
+
+`is_published = true` zu setzen würde deshalb zehn kaputte Player erzeugen,
+keine zehn neuen Folgen. Erst muss eines von beiden stimmen — die Dateien
+umbenennen oder die Pfade in der Datenbank korrigieren.
 
 | Stufe | Nr | Titel |
 |---|---|---|
