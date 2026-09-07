@@ -219,6 +219,29 @@ waves did not touch (unmeasured — run the ban battery per level first); the 53
 b1/b2; the A2.1 listening content tickets; the `grammar-content-cache.json` `dumpedAt` stamp (still
 2026-08-24; only the owner's dump run refreshes it); ASCII quotes in two `titleDe` values.
 
+## Wave 7 — B1.1 as a complete course half (started 2026-09-07)
+
+Owner direction 2026-09-07: "the priority is to continue building and finishing all courses" — a recorded
+reorder of the Wave 6 default ("Wave 7 opens with A2 speaking missions unless told otherwise"). `course_b1`
+(€49, b1.1 + b1.2) has been live and buyable since 2026-09-03 while B1.1 sat at the pre-Course-Factory
+generation: 8 topics with 0 typed exercises (85 MC/fill-blank), 262 words with 129 defect rows, 8 reading
+lessons of 356–402 words with 0 checks, 6 × 10 listening questions with 0 dictation, 8 unreviewed speaking
+missions, no plan page, no Abschlusstest. Wave 7 applies the proven five-PR shape to B1.1; Waves 8–10 =
+B1.2 (+ the German telc-B1 30-day plan), B2.1, B2.2 (+ telc-B2 plan). Every B track already has a mock
+(`telcB1`, `goetheB1`, `dtz`, `telcB2`), so no mock PR. Recon (2026-09-07, read-only): the B1 mocks consume
+B1.1 listening exercises 1, 2 (telc), 3 (Goethe) and 4 (DTZ) — 5 and 6 are free for the Abschlusstest; the
+course-test loop in `tests/exams.test.mjs` has no `cloze` branch yet (PR D adds it); the official telc B1
+format is recorded in the decisions log. Briefs: `docs/course-factory/wave7/`; the binding level file
+`docs/course-factory/wave7/level-b1.1.md` (PR A).
+
+| # | Step | Status | PR |
+|---|---|---|---|
+| A | Level constraint `level-b1.1.md` + four new B1.1 topics (topic_order 9–12: temporal-clauses, obwohl-damit-sodass, adverbial-connectors, two-part-connectors), 26 exercises / ≥16 typed each, `tests/b1-1-course.test.mjs`, counts in both `marketing.js` twins, llms 80→84 | in progress | — |
+| A2 | Typed production + depth + legacy pass for the 8 live B1.1 topics (≥10 typed each, ≥8 rules / ≥12 examples on the thin five, English-first rule text re-cut to du-form German), `tests/helpers/b1Bans.mjs` + full-level sweep | planned | — |
+| B | Wortliste B1.1: the 129 defect rows, the 28 re-levelled Prepositions/Animals rows re-categorised, ~150 additions toward the Zertifikat B1 Wortliste | planned | — |
+| C | Reading B1.1 (8 rewrites ≤220 words with checks + telc Lesen Teil 1 / Teil 3 exam-format lessons) + listening B1.1 (+78 questions incl. 18 dictation) | planned | — |
+| D | Abschlusstest B1.1 (telc format: Hören, Lesen Teil 1+2, Sprachbausteine Teil 1, Schreiben) + `/b1-1-phase` 28-day plan + hand-offs + the eleven-key `exam_attempts` CHECK | planned | — |
+
 ## Measured baseline (do not re-derive)
 
 - `weekly_metrics` is **empty** as of 2026-09-04 — the Monday 06:00 UTC job has not
@@ -292,6 +315,33 @@ b1/b2; the A2.1 listening content tickets; the `grammar-content-cache.json` `dum
   mock (`/modelltest/goethe-a2`) becomes the secondary link because it sits inside the plan. Exactly two
   official PDFs (Modellsatz + Übungssatz Erwachsene), pinned by `tests/purchases.test.mjs`, which keeps this
   plan out of the phase-plan href sweep (external goethe.de hrefs) and gives it its own.
+- 2026-09-07 (Wave 7, recon): **the B1 band's course spine is telc Deutsch B1** (the start prompt says "for
+  B1: telc B1/DTZ formats"; telc has the fullest tooling — mock, three writing tasks, the €89 product's exam).
+  Abschlusstest B1.1 is `formatOf: 'telc_b1'`; Goethe B1 and DTZ stay served by their mocks. Official telc B1
+  format (Übungstest 1 overview table, shop.telc.net): Leseverstehen Teil 1 = 5 Zuordnung (Überschriften a–j
+  → Texte 1–5), Teil 2 = 5 MC a/b/c on one text, Teil 3 = 10 Zuordnung (Situationen → Anzeigen a–l, x
+  possible); Sprachbausteine Teil 1 = 10 MC Grammatik, Teil 2 = 10 Zuordnung Lexik; Hörverstehen Teil 1 =
+  5 R/F, Teil 2 = 10 R/F (heard twice), Teil 3 = 5 R/F; Schriftlicher Ausdruck = halbformeller Brief with
+  4 Leitpunkte (45 P.); Mündlich = 3 Teile, Paarprüfung. Points 75/30/75/45/75; pass = 60 % schriftlich
+  (135/225) AND mündlich (45/75) separately. The four B guides carry no Teil-level counts; this table is the
+  source for the wave.
+- 2026-09-07 (Wave 7, PR A): **the four new B1.1 topics (topic_order 9–12)** are the subordinator/connector
+  set Wave 6 cut OUT of A2.2 that no B1.2/B2 slug owns — 9 `temporal-clauses` (als/wenn, bevor, nachdem +
+  Plusquamperfekt as its A-slice, während, bis, seit/seitdem), 10 `obwohl-damit-sodass` (+ falls), 11
+  `adverbial-connectors` (deshalb/trotzdem/außerdem/sonst/dann with inversion), 12 `two-part-connectors`
+  (entweder…oder, nicht nur…sondern auch, sowohl…als auch, weder…noch, zwar…aber; je…desto stays B2). B1.2
+  keeps Passiv, the Präteritum paradigm, indirect questions, n-Deklination and adjective declension; B2.2
+  `advanced-conjunctions` opens "über weil und obwohl hinaus" and `complex-sentence-building` assumes nachdem
+  + Plusquamperfekt — both consistent with B1.1 owning the basics. Order = clause syntax first, then
+  main-clause connectors, then the mixed set.
+- 2026-09-07 (Wave 7, PR A): **level constraint B1.1** (`docs/course-factory/wave7/level-b1.1.md`): all A1 + A2
+  allowed; the 8 live B1.1 topics productive; the 4 new topics only inside/after their lesson; the
+  **Präteritum ruling** — full-verb Präteritum allowed receptively in every text, productively only
+  war/hatte/modals + a named strong-verb list in narration, and no B1.1 exercise key may target a
+  Präteritum form (the paradigm is B1.2 `simple-past-narrative`); banned at B1.1: Passiv, Partizip als
+  Adjektiv, n-Deklination beyond five frozen nouns, null-article adjective endings as a target, Konjunktiv I,
+  Konjunktiv II der Vergangenheit, Passivalternativen, Partizipialattribute, Nominalisierung as a system,
+  je…desto, Futur II, B2 connectors; sentence cap 20 words; vocabulary inside the Zertifikat B1 Wortliste.
 - 2026-09-06 (Wave 5, recon): the four new A2.2 topics are `konjunktiv-ii-polite` (würde/könnte/hätte/wäre
   as fixed polite forms — Sprechen Teil 3 planning, Schreiben Teil 2), `verbs-with-prepositions-intro`
   (fixed prepositions + case, wo(r)-/da(r)- forms — the cleanest gap: nothing below B1.2 teaches it),

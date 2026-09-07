@@ -72,6 +72,11 @@ export const RELATED_TOPICS = {
   'konjunktiv-ii-ware-hatte': ['konjunktiv-ii-wurde', 'konjunktiv-ii-past', 'konjunktiv-i-reported-speech', 'simple-past-sein-haben'],
   'infinitive-with-zu': ['um-zu-ohne-zu', 'modal-verbs-intro', 'double-infinitive', 'verbs-with-prepositions'],
   'um-zu-ohne-zu': ['infinitive-with-zu', 'subordinating-conjunctions', 'modal-verbs-intro', 'double-infinitive'],
+  // Course Factory Wave 7 PR A — the four new B1.1 topics (topic_order 9-12).
+  'temporal-clauses': ['subordinating-conjunctions', 'subordinate-word-order', 'obwohl-damit-sodass', 'simple-past-narrative', 'simple-past-sein-haben'],
+  'obwohl-damit-sodass': ['temporal-clauses', 'um-zu-ohne-zu', 'subordinating-conjunctions', 'adverbial-connectors', 'advanced-conjunctions'],
+  'adverbial-connectors': ['obwohl-damit-sodass', 'coordinating-conjunctions', 'subordinating-conjunctions', 'two-part-connectors', 'advanced-conjunctions'],
+  'two-part-connectors': ['adverbial-connectors', 'coordinating-conjunctions', 'obwohl-damit-sodass', 'advanced-conjunctions', 'subordinate-word-order'],
 
   // ---- B1.2 ----
   'passive-voice-present': ['passive-voice-past', 'passive-alternatives', 'konjunktiv-ii-wurde', 'verbs-with-prepositions'],
