@@ -1,9 +1,8 @@
 # Wave 7 PR A2 — work in progress (paused 2026-09-07, owner request: resume next week)
 
-State when paused: the eight EXTEND files under `typed-b1.1/` are at **round 3**; both round-2
+State when paused: the eight EXTEND files under `typed-b1.1/` are FINAL — both round-3 delta re-reviews are **PASS (0 blocking)**
 re-reviews failed on one blocking item each, both authors delivered round 3, and the round-3 delta
-re-reviews were in flight (E1 by reviewer aa09347, E2 by a4914c5) — their verdicts land in
-`reviews/extend-E1-review-3.md` / `extend-E2-review-3.md` if they finished before the stop.
+(`reviews/extend-E1-review-3.md`, `extend-E2-review-3.md`). Residual one-line minors listed at the end of each round-3 review are still to be applied by the orchestrator before generation (E1: 9, E2: 4).
 
 What is already done in this branch: `tests/helpers/b1Bans.mjs`, `tests/b1-1-typed-production.test.mjs`
 (MIGRATION_SHAPE pinned at 80/15/20/6 from a dry run; re-cut pins included), `scripts/recut-from-json.mjs`
@@ -11,7 +10,7 @@ What is already done in this branch: `tests/helpers/b1Bans.mjs`, `tests/b1-1-typ
 README row for PR A "Applied", tracker row A.
 
 Resume recipe (from the repo root of this branch; S = this directory):
-1. If a round-3 review is missing or FAIL: one more delta round with the author (briefs in `briefs/`).
+1. Apply the residual minors from both round-3 reviews to the JSON files (one-line edits), re-run the validator with --cache.
 2. `node scripts/grammar-topics-from-json.mjs --json docs/course-factory/wave7/wip-a2/typed-b1.1/*.json --migration migrations/2026-09-07-b1-1-typed-production.sql --cache grammar-content-cache.json`
 3. `node scripts/recut-from-json.mjs --patches docs/course-factory/wave7/wip-a2/recut/patches.json --header docs/course-factory/wave7/wip-a2/recut/header.sql --migration migrations/2026-09-07-b1-1-legacy-recut.sql --cache grammar-content-cache.json`
 4. Recount both `marketing.js` twins (expected 84 topics / 672 rules / 933 examples / 1614 exercises), README rows, tracker row A2 + decision 4.
