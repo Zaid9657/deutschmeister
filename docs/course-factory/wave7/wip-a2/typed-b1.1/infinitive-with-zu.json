@@ -1,0 +1,382 @@
+{
+  "extend": {
+    "slug": "infinitive-with-zu",
+    "sub_level": "B1.1"
+  },
+  "rules": [
+    {
+      "rule_type": "table",
+      "title_en": "zu-Infinitive After Nouns and Adjectives",
+      "title_de": "zu-Infinitiv nach Nomen und Adjektiven",
+      "content": {
+        "rows": [
+          ["die Möglichkeit, ... zu", "the chance to", "Ich habe die Möglichkeit, im Ausland zu arbeiten."],
+          ["die Chance, ... zu", "the opportunity to", "Das ist deine Chance, dich zu verbessern."],
+          ["es ist wichtig, ... zu", "it is important to", "Es ist wichtig, den Vertrag zu lesen."],
+          ["keine Zeit, ... zu", "no time to", "Ich habe keine Zeit, das zu erledigen."]
+        ],
+        "headers": ["Ausdruck", "Englisch", "Beispiel"],
+        "description_de": "Nomen und Adjektive stehen oft mit zu + Infinitiv. Ein Komma trennt den Infinitivsatz.",
+        "description_en": "Nouns and adjectives often combine with zu + infinitive. A comma separates the infinitive clause."
+      },
+      "order_index": 6,
+      "common_mistakes": null,
+      "memory_trick_en": "die Möglichkeit/Chance + zu = an opportunity to do. es ist + Adjektiv + zu = an opinion about doing.",
+      "memory_trick_de": "die Möglichkeit/Chance + zu = eine Gelegenheit. es ist + Adjektiv + zu = eine Meinung.",
+      "formal_note_en": null,
+      "formal_note_de": null,
+      "key_insight_en": "Nouns like Möglichkeit, Chance, and Zeit combine with zu + infinitive exactly like the adjective expressions from the earlier table.",
+      "key_insight_de": "Nomen wie Möglichkeit, Chance und Zeit stehen mit zu + Infinitiv, genau wie die Adjektiv-Ausdrücke aus der früheren Tabelle."
+    },
+    {
+      "rule_type": "dialogue",
+      "title_en": "Job Interview and Further Training",
+      "title_de": "Bewerbungsgespräch und Weiterbildung",
+      "content": {
+        "lines": [
+          {
+            "de": "Warum haben Sie sich entschieden, sich bei uns zu bewerben?",
+            "en": "Why did you decide to apply with us?",
+            "speaker": "Frau Berger",
+            "highlight": "sich zu bewerben"
+          },
+          {
+            "de": "Ich habe vor, meine Deutschkenntnisse weiter zu verbessern.",
+            "en": "I plan to improve my German skills further.",
+            "speaker": "Herr Ahmadi",
+            "highlight": "vor, ... zu verbessern"
+          },
+          {
+            "de": "Haben Sie auch Lust, an einer Weiterbildung teilzunehmen?",
+            "en": "Do you also feel like taking part in further training?",
+            "speaker": "Frau Berger",
+            "highlight": "Lust, ... teilzunehmen"
+          },
+          {
+            "de": "Ja, es ist mir wichtig, mich fachlich weiterzuentwickeln.",
+            "en": "Yes, it is important to me to develop professionally.",
+            "speaker": "Herr Ahmadi",
+            "highlight": "wichtig, ... weiterzuentwickeln"
+          },
+          {
+            "de": "Vergessen Sie nicht, uns bis Freitag zu antworten.",
+            "en": "Don't forget to answer us by Friday.",
+            "speaker": "Frau Berger",
+            "highlight": "vergessen, ... zu antworten"
+          },
+          {
+            "de": "Ich hoffe, mich schnell wieder bei Ihnen zu melden.",
+            "en": "I hope to get back in touch with you quickly.",
+            "speaker": "Herr Ahmadi",
+            "highlight": "hoffe, ... zu melden"
+          }
+        ],
+        "context_de": "Ein Vorstellungsgespräch für eine Stelle mit Weiterbildung.",
+        "context_en": "A job interview for a position that includes further training."
+      },
+      "order_index": 7,
+      "common_mistakes": null,
+      "memory_trick_en": null,
+      "memory_trick_de": null,
+      "formal_note_en": null,
+      "formal_note_de": null,
+      "key_insight_en": null,
+      "key_insight_de": null
+    },
+    {
+      "rule_type": "common_mistakes",
+      "title_en": "Common Mistakes with zu + Infinitive",
+      "title_de": "Häufige Fehler mit zu + Infinitiv",
+      "content": {
+        "intro_de": "Diese drei Fehler tauchen oft in Prüfungen auf.",
+        "intro_en": "These three mistakes turn up often in exams.",
+        "mistakes": [
+          {
+            "wrong": "Ich kann zu schwimmen.",
+            "correct": "Ich kann schwimmen.",
+            "explanation_de": "Modalverben stehen ohne zu direkt mit dem Infinitiv.",
+            "explanation_en": "Modal verbs take a plain infinitive, never zu."
+          },
+          {
+            "wrong": "Vergiss nicht, das Zimmer zu aufräumen!",
+            "correct": "Vergiss nicht, das Zimmer aufzuräumen!",
+            "explanation_de": "Bei trennbaren Verben steht zu in der Mitte: aufzuräumen.",
+            "explanation_en": "For separable verbs, zu goes in the middle: aufzuräumen."
+          },
+          {
+            "wrong": "Ich habe keine Zeit Deutsch zu lernen.",
+            "correct": "Ich habe keine Zeit, Deutsch zu lernen.",
+            "explanation_de": "Der Infinitivsatz hängt vom Nomen Zeit ab; hier ist das Komma Pflicht.",
+            "explanation_en": "The infinitive clause depends on the noun Zeit; here the comma is obligatory."
+          }
+        ]
+      },
+      "order_index": 8,
+      "common_mistakes": null,
+      "memory_trick_en": "Modal verbs never take zu. Separable verbs put zu in the middle. In this course we always write the comma before an extended infinitive clause.",
+      "memory_trick_de": "Modalverben nie mit zu. Trennbare Verben: zu in der Mitte. In diesem Kurs schreiben wir das Komma vor dem erweiterten Infinitiv immer.",
+      "formal_note_en": null,
+      "formal_note_de": null,
+      "key_insight_en": null,
+      "key_insight_de": null
+    }
+  ],
+  "examples": [
+    {
+      "sentence_de": "Ich habe vor, meine Deutschkenntnisse zu verbessern.",
+      "sentence_en": "I plan to improve my German skills.",
+      "grammar_highlight": "vor, ... zu verbessern",
+      "audio_url": null,
+      "order_index": 9,
+      "explanation_en": "vorhaben splits (habe vor); comma, then zu + infinitive at the end.",
+      "explanation_de": "vorhaben trennt sich (habe vor); Komma, dann zu + Infinitiv am Ende.",
+      "word_breakdown": {
+        "Ich habe vor": "I plan",
+        "meine Deutschkenntnisse": "my German skills",
+        "zu verbessern": "to improve"
+      },
+      "difficulty": 2,
+      "category": "intermediate"
+    },
+    {
+      "sentence_de": "Es ist mir wichtig, pünktlich zur Arbeit zu kommen.",
+      "sentence_en": "It is important to me to arrive at work on time.",
+      "grammar_highlight": "wichtig, ... zu kommen",
+      "audio_url": null,
+      "order_index": 10,
+      "explanation_en": "es ist wichtig + comma + zu + infinitive at the end.",
+      "explanation_de": "es ist wichtig + Komma + zu + Infinitiv am Ende.",
+      "word_breakdown": {
+        "Es ist mir wichtig": "It is important to me",
+        "pünktlich": "punctually",
+        "zur Arbeit": "to work",
+        "zu kommen": "to come"
+      },
+      "difficulty": 2,
+      "category": "intermediate"
+    },
+    {
+      "sentence_de": "Ich habe keine Zeit, das Formular heute auszufüllen.",
+      "sentence_en": "I have no time to fill out the form today.",
+      "grammar_highlight": "auszufüllen",
+      "audio_url": null,
+      "order_index": 11,
+      "explanation_en": "ausfüllen is separable: aus-zu-füllen.",
+      "explanation_de": "ausfüllen ist trennbar: aus-zu-füllen.",
+      "word_breakdown": {
+        "Ich habe keine Zeit": "I have no time",
+        "das Formular": "the form",
+        "heute": "today",
+        "auszufüllen": "to fill out"
+      },
+      "difficulty": 2,
+      "category": "intermediate"
+    },
+    {
+      "sentence_de": "Vergiss nicht, den Termin abzusagen.",
+      "sentence_en": "Don't forget to cancel the appointment.",
+      "grammar_highlight": "abzusagen",
+      "audio_url": null,
+      "order_index": 12,
+      "explanation_en": "absagen is separable: ab-zu-sagen.",
+      "explanation_de": "absagen ist trennbar: ab-zu-sagen.",
+      "word_breakdown": {
+        "Vergiss nicht": "Don't forget",
+        "den Termin": "the appointment",
+        "abzusagen": "to cancel"
+      },
+      "difficulty": 2,
+      "category": "intermediate"
+    }
+  ],
+  "exercises": [
+    {
+      "stage": 4,
+      "exercise_type": "fill_blank",
+      "question_de": "Ich habe die Möglichkeit, eine Ausbildung ___ beginnen.",
+      "question_en": "I have the chance to start an apprenticeship. die Möglichkeit + zu + infinitive. Base form: zu.",
+      "options": null,
+      "correct_answer": "zu",
+      "acceptable_answers": ["zu"],
+      "explanation_en": "die Möglichkeit + zu + infinitive at the end.",
+      "explanation_de": "die Möglichkeit + zu + Infinitiv am Ende.",
+      "hint": null,
+      "order_index": 9,
+      "difficulty": 1,
+      "why_correct_en": "zu + infinitive after die Möglichkeit.",
+      "why_correct_de": "zu + Infinitiv nach die Möglichkeit.",
+      "related_rule_title": "zu-Infinitive After Nouns and Adjectives"
+    },
+    {
+      "stage": 4,
+      "exercise_type": "fill_blank",
+      "question_de": "Er hat keine Lust, am Wochenende ___ arbeiten.",
+      "question_en": "He doesn't feel like working on the weekend. (keine) Lust + zu + infinitive. Base form: zu.",
+      "options": null,
+      "correct_answer": "zu",
+      "acceptable_answers": ["zu"],
+      "explanation_en": "(keine) Lust + zu + infinitive at the end.",
+      "explanation_de": "(keine) Lust + zu + Infinitiv am Ende.",
+      "hint": null,
+      "order_index": 10,
+      "difficulty": 1,
+      "why_correct_en": "zu + infinitive after (keine) Lust.",
+      "why_correct_de": "zu + Infinitiv nach (keine) Lust.",
+      "related_rule_title": "Expressions with zu + Infinitive"
+    },
+    {
+      "stage": 4,
+      "exercise_type": "fill_blank",
+      "question_de": "Es ist mir wichtig, pünktlich zur Arbeit ___.",
+      "question_en": "It is important to me to arrive at work on time. es ist wichtig + zu + infinitive. Base form: kommen.",
+      "options": null,
+      "correct_answer": "zu kommen",
+      "acceptable_answers": ["zu kommen"],
+      "explanation_en": "es ist wichtig + zu + infinitive at the end.",
+      "explanation_de": "es ist wichtig + zu + Infinitiv am Ende.",
+      "hint": null,
+      "order_index": 11,
+      "difficulty": 1,
+      "why_correct_en": "zu + infinitive after es ist wichtig.",
+      "why_correct_de": "zu + Infinitiv nach es ist wichtig.",
+      "related_rule_title": "zu-Infinitive After Nouns and Adjectives"
+    },
+    {
+      "stage": 4,
+      "exercise_type": "fill_blank",
+      "question_de": "Vergiss nicht, den Termin ___!",
+      "question_en": "Don't forget to cancel the appointment! Separable verb absagen. Base form: absagen.",
+      "options": null,
+      "correct_answer": "abzusagen",
+      "acceptable_answers": ["abzusagen"],
+      "explanation_en": "absagen is separable: ab-zu-sagen.",
+      "explanation_de": "absagen ist trennbar: ab-zu-sagen.",
+      "hint": null,
+      "order_index": 12,
+      "difficulty": 2,
+      "why_correct_en": "Separable: prefix + zu + verb stem = one word.",
+      "why_correct_de": "Trennbar: Präfix + zu + Verbstamm = ein Wort.",
+      "related_rule_title": "Separable Verbs: zu Goes in the Middle!"
+    },
+    {
+      "stage": 5,
+      "exercise_type": "sentence_building",
+      "question_de": "Schreib den Satz: [sie / haben / die Möglichkeit / sich / bei der Krankenkasse / zu / versichern]",
+      "question_en": "Write the sentence: She has the chance to get insured with the health insurance fund. Conjugate 'haben' to 'hat'. Start with 'Sie'.",
+      "options": null,
+      "correct_answer": "Sie hat die Möglichkeit, sich bei der Krankenkasse zu versichern.",
+      "acceptable_answers": [
+        "Sie hat die Möglichkeit, sich bei der Krankenkasse zu versichern.",
+        "Sie hat die Möglichkeit, sich bei der Krankenkasse zu versichern"
+      ],
+      "explanation_en": "haben + die Möglichkeit + comma + zu + infinitive at the end.",
+      "explanation_de": "haben + die Möglichkeit + Komma + zu + Infinitiv am Ende.",
+      "hint": null,
+      "order_index": 13,
+      "difficulty": 3,
+      "why_correct_en": "die Möglichkeit + comma + zu + infinitive, just like vorhaben.",
+      "why_correct_de": "die Möglichkeit + Komma + zu + Infinitiv, wie bei vorhaben.",
+      "related_rule_title": "zu-Infinitive After Nouns and Adjectives"
+    },
+    {
+      "stage": 5,
+      "exercise_type": "sentence_building",
+      "question_de": "Schreib den Satz: [es / sein / wichtig / den Vertrag / genau / zu / lesen]",
+      "question_en": "Write the sentence: It is important to read the contract carefully. Conjugate 'sein' to 'ist'. Start with 'Es'.",
+      "options": null,
+      "correct_answer": "Es ist wichtig, den Vertrag genau zu lesen.",
+      "acceptable_answers": [
+        "Es ist wichtig, den Vertrag genau zu lesen.",
+        "Es ist wichtig, den Vertrag genau zu lesen"
+      ],
+      "explanation_en": "es ist wichtig + comma + object + zu + infinitive at the end.",
+      "explanation_de": "es ist wichtig + Komma + Objekt + zu + Infinitiv am Ende.",
+      "hint": null,
+      "order_index": 14,
+      "difficulty": 2,
+      "why_correct_en": "Comma before the extended infinitive clause; zu right before lesen.",
+      "why_correct_de": "Komma vor dem erweiterten Infinitivsatz; zu direkt vor lesen.",
+      "related_rule_title": "zu-Infinitive After Nouns and Adjectives"
+    },
+    {
+      "stage": 5,
+      "exercise_type": "sentence_building",
+      "question_de": "Schreib den Satz: [sie / haben / Lust / ins Museum / zu / gehen]",
+      "question_en": "Write the sentence: She feels like going to the museum. 'sie' = she; conjugate 'haben' to 'hat'. Start with 'Sie'.",
+      "options": null,
+      "correct_answer": "Sie hat Lust, ins Museum zu gehen.",
+      "acceptable_answers": [
+        "Sie hat Lust, ins Museum zu gehen.",
+        "Sie hat Lust, ins Museum zu gehen"
+      ],
+      "explanation_en": "hat Lust + comma + zu + infinitive at the end.",
+      "explanation_de": "hat Lust + Komma + zu + Infinitiv am Ende.",
+      "hint": null,
+      "order_index": 15,
+      "difficulty": 2,
+      "why_correct_en": "hat Lust, ... zu + infinitive is the standard pattern.",
+      "why_correct_de": "hat Lust, ... zu + Infinitiv ist das Standardmuster.",
+      "related_rule_title": "Expressions with zu + Infinitive"
+    },
+    {
+      "stage": 5,
+      "exercise_type": "error_correction",
+      "question_de": "Finde den Fehler und schreib den Satz richtig: \"Ich muss zu gehen.\"",
+      "question_en": "Find the error and write the sentence correctly: \"Ich muss zu gehen.\" (modal verbs take a plain infinitive)",
+      "options": null,
+      "correct_answer": "Ich muss gehen.",
+      "acceptable_answers": [
+        "Ich muss gehen.",
+        "Ich muss gehen"
+      ],
+      "explanation_en": "Modal verbs like müssen never take zu; the plain infinitive follows directly.",
+      "explanation_de": "Modalverben wie müssen stehen nie mit zu; der reine Infinitiv folgt direkt.",
+      "hint": null,
+      "order_index": 16,
+      "difficulty": 1,
+      "why_correct_en": "müssen + infinitive, no zu.",
+      "why_correct_de": "müssen + Infinitiv, kein zu.",
+      "related_rule_title": "Common Mistakes with zu + Infinitive"
+    },
+    {
+      "stage": 5,
+      "exercise_type": "error_correction",
+      "question_de": "Finde den Fehler und schreib den Satz richtig: \"Vergiss nicht, mich zu abholen!\"",
+      "question_en": "Find the error and write the sentence correctly: \"Vergiss nicht, mich zu abholen!\" (separable verb)",
+      "options": null,
+      "correct_answer": "Vergiss nicht, mich abzuholen!",
+      "acceptable_answers": [
+        "Vergiss nicht, mich abzuholen!",
+        "Vergiss nicht, mich abzuholen"
+      ],
+      "explanation_en": "abholen is separable: zu goes in the middle, abzuholen.",
+      "explanation_de": "abholen ist trennbar: zu in der Mitte, abzuholen.",
+      "hint": null,
+      "order_index": 17,
+      "difficulty": 1,
+      "why_correct_en": "Separable verbs: prefix + zu + verb stem = one word.",
+      "why_correct_de": "Trennbar: Präfix + zu + Verbstamm = ein Wort.",
+      "related_rule_title": "Common Mistakes with zu + Infinitive"
+    },
+    {
+      "stage": 5,
+      "exercise_type": "error_correction",
+      "question_de": "Finde den Fehler und schreib den Satz richtig: \"Sie hat Zeit dir zu helfen.\"",
+      "question_en": "Find the error and write the sentence correctly: \"Sie hat Zeit dir zu helfen.\" (missing comma)",
+      "options": null,
+      "correct_answer": "Sie hat Zeit, dir zu helfen.",
+      "acceptable_answers": [
+        "Sie hat Zeit, dir zu helfen.",
+        "Sie hat Zeit, dir zu helfen"
+      ],
+      "explanation_en": "The infinitive clause depends on the noun Zeit; here the comma is obligatory.",
+      "explanation_de": "Der Infinitivsatz hängt vom Nomen Zeit ab; hier ist das Komma Pflicht.",
+      "hint": null,
+      "order_index": 18,
+      "difficulty": 2,
+      "why_correct_en": "Comma marks the start of the infinitive clause.",
+      "why_correct_de": "Das Komma markiert den Beginn des Infinitivsatzes.",
+      "related_rule_title": "Common Mistakes with zu + Infinitive"
+    }
+  ]
+}

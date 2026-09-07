@@ -1,0 +1,406 @@
+{
+  "extend": {
+    "slug": "um-zu-ohne-zu",
+    "sub_level": "B1.1"
+  },
+  "rule_patches": [
+    {
+      "rule_id": "adba8282-abd7-4646-9c62-dcd80fd440f7",
+      "field": "content",
+      "old": {
+        "text_de": "um/ohne/anstatt ... zu nur wenn Beide Sätze das Gleiche Subjekt haben! Bei verschiedenen Subjekten: damit/ohne dass/anstatt dass.",
+        "text_en": "um/ohne/anstatt ... zu can only be used when both clauses have the same subject! If subjects are different, use damit/ohne dass/anstatt dass instead.",
+        "example_de": "Ich lerne, um zu verstehen. (I learn, I understand = same subject) vs. Ich erkläre es, damit du verstehst. (I explain, you understand = different subjects)",
+        "example_en": "Same subject: um zu. Different subjects: damit + conjugated verb."
+      },
+      "new": {
+        "text_de": "um/ohne/anstatt ... zu gilt nur, wenn beide Sätze das gleiche Subjekt haben! Bei verschiedenen Subjekten brauchst du \"damit\" — das lernst du später im Kurs.",
+        "text_en": "um/ohne/anstatt ... zu only works when both clauses share the same subject! If the subjects are different, you need \"damit\" instead — you will learn that later in the course.",
+        "example_de": "Ich lerne, um zu verstehen. (ich / ich = gleiches Subjekt)",
+        "example_en": "Same subject: um zu."
+      }
+    }
+  ],
+  "rules": [
+    {
+      "rule_type": "table",
+      "title_en": "(an)statt ... zu and the Same-Subject Rule",
+      "title_de": "(an)statt ... zu und die Regel vom gleichen Subjekt",
+      "content": {
+        "rows": [
+          ["Anstatt zu arbeiten, geht er spazieren.", "Instead of working, he goes for a walk.", "gleiches Subjekt: er / er"],
+          ["Ich helfe dir, anstatt selbst zu lernen.", "I help you instead of studying myself.", "gleiches Subjekt: ich / ich"],
+          ["(zwei verschiedene Subjekte)", "(two different subjects)", "kein zu-Satz möglich"]
+        ],
+        "headers": ["Beispiel", "Englisch", "Hinweis"],
+        "description_de": "um, ohne und (an)statt + zu funktionieren nur, wenn beide Satzteile dasselbe Subjekt haben. Bei zwei verschiedenen Subjekten geht das nicht.",
+        "description_en": "um, ohne and (an)statt + zu only work when both parts of the sentence share the same subject. With two different subjects, this construction does not work."
+      },
+      "order_index": 6,
+      "common_mistakes": null,
+      "memory_trick_en": "Same subject twice? Use zu. Two different subjects? Then um/ohne/(an)statt ... zu does not work.",
+      "memory_trick_de": "Zweimal dasselbe Subjekt? zu benutzen. Zwei verschiedene Subjekte? Dann geht um/ohne/(an)statt ... zu nicht.",
+      "formal_note_en": null,
+      "formal_note_de": null,
+      "key_insight_en": "Check the subject of both actions first; only matching subjects allow um/ohne/(an)statt ... zu.",
+      "key_insight_de": "Prüfe zuerst das Subjekt beider Handlungen; nur bei gleichem Subjekt geht um/ohne/(an)statt ... zu."
+    },
+    {
+      "rule_type": "dialogue",
+      "title_en": "Moving and Planning a Trip",
+      "title_de": "Umzug und Reiseplanung",
+      "content": {
+        "lines": [
+          {
+            "de": "Wir packen heute Kisten, um am Wochenende umzuziehen.",
+            "en": "We are packing boxes today in order to move this weekend.",
+            "speaker": "Julia",
+            "highlight": "um ... umzuziehen"
+          },
+          {
+            "de": "Ohne deine Hilfe würde ich das nicht schaffen.",
+            "en": "Without your help I would not manage that.",
+            "speaker": "Mark",
+            "highlight": "Ohne deine Hilfe"
+          },
+          {
+            "de": "Kein Problem! Statt fernzusehen, helfe ich dir lieber.",
+            "en": "No problem! Instead of watching TV, I'd rather help you.",
+            "speaker": "Julia",
+            "highlight": "Statt fernzusehen"
+          },
+          {
+            "de": "Wir planen später die Reise, um uns zu erholen.",
+            "en": "We'll plan the trip later in order to relax.",
+            "speaker": "Mark",
+            "highlight": "um ... zu erholen"
+          },
+          {
+            "de": "Gute Idee. Ich habe keine Lust, den ganzen Tag zu arbeiten.",
+            "en": "Good idea. I don't feel like working all day.",
+            "speaker": "Julia",
+            "highlight": "Lust, ... zu arbeiten"
+          },
+          {
+            "de": "Genau. Anstatt zu arbeiten, sollten wir Pläne machen.",
+            "en": "Exactly. Instead of working, we should make plans.",
+            "speaker": "Mark",
+            "highlight": "Anstatt zu arbeiten"
+          }
+        ],
+        "context_de": "Zwei Freunde sprechen über den Umzug und die nächste Reise.",
+        "context_en": "Two friends talk about the move and the next trip."
+      },
+      "order_index": 7,
+      "common_mistakes": null,
+      "memory_trick_en": null,
+      "memory_trick_de": null,
+      "formal_note_en": null,
+      "formal_note_de": null,
+      "key_insight_en": null,
+      "key_insight_de": null
+    },
+    {
+      "rule_type": "common_mistakes",
+      "title_en": "Common Mistakes with um/ohne/(an)statt ... zu",
+      "title_de": "Häufige Fehler mit um/ohne/(an)statt ... zu",
+      "content": {
+        "intro_de": "Diese drei Fehler tauchen oft in Prüfungen auf.",
+        "intro_en": "These three mistakes turn up often in exams.",
+        "mistakes": [
+          {
+            "wrong": "Ich erkläre es noch einmal, um du es besser verstehst.",
+            "correct": "Hier geht um ... zu nicht — die Subjekte sind verschieden.",
+            "explanation_de": "um ... zu geht nur bei gleichem Subjekt. Für zwei Subjekte brauchst du \"damit\" — das lernst du später im Kurs.",
+            "explanation_en": "um ... zu only works with the same subject. For two subjects you need \"damit\" — you learn that later in the course."
+          },
+          {
+            "wrong": "Sie ruft an, um zu fragen nach den Öffnungszeiten.",
+            "correct": "Sie ruft an, um nach den Öffnungszeiten zu fragen.",
+            "explanation_de": "zu + Infinitiv stehen ganz am Ende; das Objekt (nach den Öffnungszeiten) kommt davor.",
+            "explanation_en": "zu + infinitive go at the very end; the object (nach den Öffnungszeiten) comes before them."
+          },
+          {
+            "wrong": "Sie ging ohne sich zu verabschieden.",
+            "correct": "Sie ging, ohne sich zu verabschieden.",
+            "explanation_de": "Vor ohne ... zu (erweiterter Infinitivsatz) steht ein Komma.",
+            "explanation_en": "A comma comes before ohne ... zu when it introduces an extended infinitive clause."
+          }
+        ]
+      },
+      "order_index": 8,
+      "common_mistakes": null,
+      "memory_trick_en": "um ... zu only works with the same subject. The object comes before zu + infinitive. A comma opens the extended clause.",
+      "memory_trick_de": "um ... zu geht nur bei gleichem Subjekt. Das Objekt steht vor zu + Infinitiv. Ein Komma öffnet den erweiterten Satz.",
+      "formal_note_en": null,
+      "formal_note_de": null,
+      "key_insight_en": null,
+      "key_insight_de": null
+    }
+  ],
+  "examples": [
+    {
+      "sentence_de": "Wir packen die Koffer, um pünktlich am Flughafen zu sein.",
+      "sentence_en": "We are packing the suitcases in order to be at the airport on time.",
+      "grammar_highlight": "um ... zu sein",
+      "audio_url": null,
+      "order_index": 9,
+      "explanation_en": "um ... zu = purpose. Why pack? To be at the airport on time.",
+      "explanation_de": "um ... zu = Zweck. Warum packen? Um pünktlich am Flughafen zu sein.",
+      "word_breakdown": {
+        "Wir packen": "We are packing",
+        "die Koffer": "the suitcases",
+        "um": "in order",
+        "pünktlich": "on time",
+        "am Flughafen": "at the airport",
+        "zu sein": "to be"
+      },
+      "difficulty": 2,
+      "category": "intermediate"
+    },
+    {
+      "sentence_de": "Anstatt zu Hause zu bleiben, gehen wir spazieren.",
+      "sentence_en": "Instead of staying home, we go for a walk.",
+      "grammar_highlight": "Anstatt ... zu bleiben",
+      "audio_url": null,
+      "order_index": 10,
+      "explanation_en": "anstatt ... zu = instead of doing. What we don't do + what we do instead.",
+      "explanation_de": "anstatt ... zu nennt die Handlung, die nicht passiert.",
+      "word_breakdown": {
+        "Anstatt": "Instead of",
+        "zu Hause": "at home",
+        "zu bleiben": "staying",
+        "gehen wir": "we go",
+        "spazieren": "for a walk"
+      },
+      "difficulty": 2,
+      "category": "intermediate"
+    },
+    {
+      "sentence_de": "Er verließ das Büro, ohne die Tür abzuschließen.",
+      "sentence_en": "He left the office without locking the door.",
+      "grammar_highlight": "ohne ... abzuschließen",
+      "audio_url": null,
+      "order_index": 11,
+      "explanation_en": "ohne ... zu with a separable verb: ab-zu-schließen.",
+      "explanation_de": "ohne ... zu mit trennbarem Verb: ab-zu-schließen.",
+      "word_breakdown": {
+        "Er verließ": "He left",
+        "das Büro": "the office",
+        "ohne": "without",
+        "die Tür": "the door",
+        "abzuschließen": "locking"
+      },
+      "difficulty": 2,
+      "category": "intermediate"
+    },
+    {
+      "sentence_de": "Ich schreibe eine Liste, um nichts zu vergessen.",
+      "sentence_en": "I write a list in order to forget nothing.",
+      "grammar_highlight": "um ... zu vergessen",
+      "audio_url": null,
+      "order_index": 12,
+      "explanation_en": "um ... zu = purpose. Why write a list? To forget nothing.",
+      "explanation_de": "um ... zu = Zweck. Warum eine Liste schreiben? Um nichts zu vergessen.",
+      "word_breakdown": {
+        "Ich schreibe": "I write",
+        "eine Liste": "a list",
+        "um": "in order",
+        "nichts": "nothing",
+        "zu vergessen": "to forget"
+      },
+      "difficulty": 1,
+      "category": "basic"
+    }
+  ],
+  "exercises": [
+    {
+      "stage": 4,
+      "exercise_type": "fill_blank",
+      "question_de": "Sie lernt jeden Abend Vokabeln, ___ die Prüfung im Juni zu schaffen.",
+      "question_en": "She studies vocabulary every evening in order to pass the exam in June. Purpose. Base form: um.",
+      "options": null,
+      "correct_answer": "um",
+      "acceptable_answers": ["um"],
+      "explanation_en": "um ... zu expresses purpose: why she studies vocabulary every evening.",
+      "explanation_de": "um ... zu drückt Zweck aus: warum sie jeden Abend Vokabeln lernt.",
+      "hint": null,
+      "order_index": 9,
+      "difficulty": 1,
+      "why_correct_en": "um ... zu = in order to.",
+      "why_correct_de": "um ... zu = Zweck.",
+      "related_rule_title": "um ... zu (in order to)"
+    },
+    {
+      "stage": 4,
+      "exercise_type": "fill_blank",
+      "question_de": "Sie hat die Wohnung verlassen, ___ das Licht auszuschalten, und musste noch einmal zurückgehen.",
+      "question_en": "She left the apartment without turning off the light, and had to go back again. Absence of action. Base form: ohne.",
+      "options": null,
+      "correct_answer": "ohne",
+      "acceptable_answers": ["ohne"],
+      "explanation_en": "ohne ... zu says what she left undone; going back again only makes sense if she forgot.",
+      "explanation_de": "ohne ... zu sagt, was jemand nicht macht.",
+      "hint": null,
+      "order_index": 10,
+      "difficulty": 2,
+      "why_correct_en": "ohne ... zu = without + -ing.",
+      "why_correct_de": "ohne ... zu sagt, was fehlt.",
+      "related_rule_title": "ohne ... zu (without doing)"
+    },
+    {
+      "stage": 4,
+      "exercise_type": "fill_blank",
+      "question_de": "___ Kaffee zu trinken, nimmt er Tee.",
+      "question_en": "Instead of drinking coffee, he has tea. Alternative action, sentence start. Base form: anstatt.",
+      "options": null,
+      "correct_answer": "Anstatt",
+      "acceptable_answers": ["Anstatt", "Statt"],
+      "explanation_en": "anstatt/statt ... zu = instead of doing.",
+      "explanation_de": "anstatt/statt ... zu nennt die Alternative.",
+      "hint": null,
+      "order_index": 11,
+      "difficulty": 1,
+      "why_correct_en": "anstatt/statt ... zu = instead of + -ing.",
+      "why_correct_de": "anstatt/statt ... zu nennt, was stattdessen passiert.",
+      "related_rule_title": "anstatt/statt ... zu (instead of doing)"
+    },
+    {
+      "stage": 4,
+      "exercise_type": "fill_blank",
+      "question_de": "Ich rufe früh an, um einen Termin zu ___.",
+      "question_en": "I call early in order to get an appointment. Infinitive after zu. Base form: bekommen.",
+      "options": null,
+      "correct_answer": "bekommen",
+      "acceptable_answers": ["bekommen"],
+      "explanation_en": "zu + infinitive at the end of the um-clause.",
+      "explanation_de": "zu + Infinitiv am Ende des um-Satzes.",
+      "hint": null,
+      "order_index": 12,
+      "difficulty": 1,
+      "why_correct_en": "After zu comes the plain infinitive.",
+      "why_correct_de": "Nach zu kommt der reine Infinitiv.",
+      "related_rule_title": "um ... zu (in order to)"
+    },
+    {
+      "stage": 5,
+      "exercise_type": "sentence_building",
+      "question_de": "Schreib den Satz: [ich / aufstehen / früh / um / fit / zu / sein]",
+      "question_en": "Write the sentence: I get up early in order to be fit. Conjugate 'aufstehen' for 'ich' (separable: ich stehe ... auf); the um-clause ends in 'zu sein'. Start with 'Ich'.",
+      "options": null,
+      "correct_answer": "Ich stehe früh auf, um fit zu sein.",
+      "acceptable_answers": [
+        "Ich stehe früh auf, um fit zu sein.",
+        "Ich stehe früh auf, um fit zu sein"
+      ],
+      "explanation_en": "Main clause: ich stehe früh auf (separable). um-clause: um fit zu sein, zu + infinitive at the end.",
+      "explanation_de": "Hauptsatz: ich stehe früh auf (trennbar). um-Satz: um fit zu sein, zu + Infinitiv am Ende.",
+      "hint": null,
+      "order_index": 13,
+      "difficulty": 3,
+      "why_correct_en": "Separable auf in the main clause; um ... zu sein as the purpose clause.",
+      "why_correct_de": "Trennbares auf im Hauptsatz; um ... zu sein als Zwecksatz.",
+      "related_rule_title": "um ... zu (in order to)"
+    },
+    {
+      "stage": 5,
+      "exercise_type": "sentence_building",
+      "question_de": "Schreib den Satz: [er / die Party / verlassen / ohne / sich / zu / bedanken]",
+      "question_en": "Write the sentence: He left the party without saying thank you. Use the Perfekt of verlassen: er hat die Party verlassen. ohne ... zu + reflexive verb at the end. Start with 'Er'.",
+      "options": null,
+      "correct_answer": "Er hat die Party verlassen, ohne sich zu bedanken.",
+      "acceptable_answers": [
+        "Er hat die Party verlassen, ohne sich zu bedanken.",
+        "Er hat die Party verlassen, ohne sich zu bedanken"
+      ],
+      "explanation_en": "Perfekt (hat verlassen) + ohne ... zu bedanken as the absence-of-action clause.",
+      "explanation_de": "Perfekt (hat verlassen) + ohne ... zu bedanken als Satz für die fehlende Handlung.",
+      "hint": null,
+      "order_index": 14,
+      "difficulty": 3,
+      "why_correct_en": "hat verlassen (Perfekt) + ohne + reflexive zu-infinitive at the end.",
+      "why_correct_de": "hat verlassen (Perfekt) + ohne + reflexiver zu-Infinitiv am Ende.",
+      "related_rule_title": "ohne ... zu (without doing)"
+    },
+    {
+      "stage": 5,
+      "exercise_type": "sentence_building",
+      "question_de": "Schreib den Satz: [wir / Geld / sparen / anstatt / einkaufen / zu / gehen]",
+      "question_en": "Write the sentence: We save money instead of going shopping. Conjugate 'sparen' for 'wir'. Start with 'Wir'.",
+      "options": null,
+      "correct_answer": "Wir sparen Geld, anstatt einkaufen zu gehen.",
+      "acceptable_answers": [
+        "Wir sparen Geld, anstatt einkaufen zu gehen.",
+        "Wir sparen Geld, anstatt einkaufen zu gehen"
+      ],
+      "explanation_en": "Main clause first, then anstatt ... zu gehen as the alternative-action clause.",
+      "explanation_de": "Zuerst der Hauptsatz, dann anstatt ... zu gehen als Satz für die Alternative.",
+      "hint": null,
+      "order_index": 15,
+      "difficulty": 2,
+      "why_correct_en": "anstatt + einkaufen + zu + gehen: zu sits right before the infinitive gehen.",
+      "why_correct_de": "anstatt + einkaufen + zu + gehen: zu steht direkt vor dem Infinitiv gehen.",
+      "related_rule_title": "anstatt/statt ... zu (instead of doing)"
+    },
+    {
+      "stage": 5,
+      "exercise_type": "error_correction",
+      "question_de": "Finde den Fehler und schreib den Satz richtig: \"Er ging, ohne grüßen.\"",
+      "question_en": "Find the error and write the sentence correctly: \"Er ging, ohne grüßen.\" (ohne needs zu before the infinitive)",
+      "options": null,
+      "correct_answer": "Er ging, ohne zu grüßen.",
+      "acceptable_answers": [
+        "Er ging, ohne zu grüßen.",
+        "Er ging, ohne zu grüßen"
+      ],
+      "explanation_en": "ohne + infinitive always needs zu: ohne zu grüßen.",
+      "explanation_de": "ohne + Infinitiv braucht immer zu: ohne zu grüßen.",
+      "hint": null,
+      "order_index": 16,
+      "difficulty": 1,
+      "why_correct_en": "ohne ... zu + infinitive is the fixed pattern.",
+      "why_correct_de": "ohne ... zu + Infinitiv ist das feste Muster.",
+      "related_rule_title": "Common Mistakes with um/ohne/(an)statt ... zu"
+    },
+    {
+      "stage": 5,
+      "exercise_type": "error_correction",
+      "question_de": "Finde den Fehler und schreib den Satz richtig: \"Anstatt zum Arzt gehen, ruft sie bei der Praxis an.\"",
+      "question_en": "Find the error and write the sentence correctly: \"Anstatt zum Arzt gehen, ruft sie bei der Praxis an.\" (anstatt needs zu before the infinitive)",
+      "options": null,
+      "correct_answer": "Anstatt zum Arzt zu gehen, ruft sie bei der Praxis an.",
+      "acceptable_answers": [
+        "Anstatt zum Arzt zu gehen, ruft sie bei der Praxis an.",
+        "Anstatt zum Arzt zu gehen, ruft sie bei der Praxis an"
+      ],
+      "explanation_en": "anstatt + infinitive needs zu: anstatt zum Arzt zu gehen.",
+      "explanation_de": "anstatt + Infinitiv braucht zu: anstatt zum Arzt zu gehen.",
+      "hint": null,
+      "order_index": 17,
+      "difficulty": 1,
+      "why_correct_en": "anstatt ... zu + infinitive is the fixed pattern.",
+      "why_correct_de": "anstatt ... zu + Infinitiv ist das feste Muster.",
+      "related_rule_title": "Common Mistakes with um/ohne/(an)statt ... zu"
+    },
+    {
+      "stage": 5,
+      "exercise_type": "error_correction",
+      "question_de": "Finde den Fehler und schreib den Satz richtig: \"Sie ruft bei der Krankenkasse an ohne ihre Nummer zu nennen.\"",
+      "question_en": "Find the error and write the sentence correctly: \"Sie ruft bei der Krankenkasse an ohne ihre Nummer zu nennen.\" (missing comma)",
+      "options": null,
+      "correct_answer": "Sie ruft bei der Krankenkasse an, ohne ihre Nummer zu nennen.",
+      "acceptable_answers": [
+        "Sie ruft bei der Krankenkasse an, ohne ihre Nummer zu nennen.",
+        "Sie ruft bei der Krankenkasse an, ohne ihre Nummer zu nennen"
+      ],
+      "explanation_en": "A comma comes before ohne ... zu when it introduces an extended infinitive clause.",
+      "explanation_de": "Vor ohne ... zu (erweiterter Infinitivsatz) steht ein Komma.",
+      "hint": null,
+      "order_index": 18,
+      "difficulty": 2,
+      "why_correct_en": "Comma marks the start of the ohne-clause.",
+      "why_correct_de": "Das Komma markiert den Beginn des ohne-Satzes.",
+      "related_rule_title": "Common Mistakes with um/ohne/(an)statt ... zu"
+    }
+  ]
+}

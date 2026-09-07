@@ -236,7 +236,7 @@ format is recorded in the decisions log. Briefs: `docs/course-factory/wave7/`; t
 
 | # | Step | Status | PR |
 |---|---|---|---|
-| A | Level constraint `level-b1.1.md` + four new B1.1 topics (topic_order 9–12: temporal-clauses, obwohl-damit-sodass, adverbial-connectors, two-part-connectors), 26 exercises / ≥16 typed each, `tests/b1-1-course.test.mjs`, counts in both `marketing.js` twins, llms 80→84 | in progress | — |
+| A | Level constraint `level-b1.1.md` + four new B1.1 topics (topic_order 9–12: temporal-clauses, obwohl-damit-sodass, adverbial-connectors, two-part-connectors), 26 exercises / 20–23 typed each, `tests/b1-1-course.test.mjs`, counts in both `marketing.js` twins, llms 80→84; the cache re-serialised to the single-line dump format (Wave 6's re-cut had written it pretty-printed, which the topic generator refuses) | merged, DB migrated 2026-09-07 (84 topics / 657 / 913 / 1534 = cache; the four topics md5-identical to the cache; reviews FAIL → PASS in 2–3 rounds per topic) | #105 |
 | A2 | Typed production + depth + legacy pass for the 8 live B1.1 topics (≥10 typed each, ≥8 rules / ≥12 examples on the thin five, English-first rule text re-cut to du-form German), `tests/helpers/b1Bans.mjs` + full-level sweep | planned | — |
 | B | Wortliste B1.1: the 129 defect rows, the 28 re-levelled Prepositions/Animals rows re-categorised, ~150 additions toward the Zertifikat B1 Wortliste | planned | — |
 | C | Reading B1.1 (8 rewrites ≤220 words with checks + telc Lesen Teil 1 / Teil 3 exam-format lessons) + listening B1.1 (+78 questions incl. 18 dictation) | planned | — |

@@ -1,0 +1,388 @@
+{
+  "extend": {
+    "slug": "konjunktiv-ii-ware-hatte",
+    "sub_level": "B1.1"
+  },
+  "rules": [
+    {
+      "rule_type": "table",
+      "title_en": "sollte, müsste, dürfte, könnte: Giving Advice Politely",
+      "title_de": "sollte, müsste, dürfte, könnte: höflich raten",
+      "content": {
+        "rows": [
+          ["sollte", "Ratschlag / Empfehlung", "Du solltest das Formular vor dem Termin ausfüllen."],
+          ["müsste", "eigentlich nötig", "Ich müsste eigentlich noch die Anlage schicken."],
+          ["dürfte", "vorsichtige Vermutung", "Das dürfte kein Problem sein."],
+          ["könnte", "höflicher Vorschlag", "Sie könnten sich direkt beim Amt melden."]
+        ],
+        "headers": ["Form", "Funktion", "Beispiel"],
+        "description_de": "Diese Formen wirken höflicher als der Imperativ. Im Sprechen Teil 3 und im halbformellen Brief sind sie sehr üblich.",
+        "description_en": "These forms sound more polite than the imperative. They are common in the Sprechen Teil 3 exam task and in a semi-formal letter."
+      },
+      "order_index": 6,
+      "common_mistakes": null,
+      "memory_trick_en": "sollte = should, müsste = really should, dürfte = probably, könnte = could — all softer than a direct command.",
+      "memory_trick_de": "sollte = ein Rat, müsste = eigentlich nötig, dürfte = eine Vermutung, könnte = ein Vorschlag — alle weicher als ein Befehl.",
+      "formal_note_en": "Sie könnten... and Sie sollten... are the standard polite forms in a formal letter or exam task.",
+      "formal_note_de": "Sie könnten... und Sie sollten... sind die üblichen höflichen Formen im formellen Brief oder in der Prüfung.",
+      "key_insight_en": "sollte, müsste, dürfte, könnte are all Konjunktiv II of modal verbs, used here for advice, not for hypotheticals.",
+      "key_insight_de": "sollte, müsste, dürfte, könnte sind Konjunktiv II von Modalverben, hier für Ratschläge, nicht für Hypothesen."
+    },
+    {
+      "rule_type": "dialogue",
+      "title_en": "Advice Among Colleagues",
+      "title_de": "Ratschläge unter Kollegen",
+      "content": {
+        "lines": [
+          {
+            "de": "Ich hätte gern mehr Zeit für die Weiterbildung, aber der Chef sagt Nein.",
+            "en": "I would like more time for further training, but the boss says no.",
+            "speaker": "Frau Nowak",
+            "highlight": "hätte gern"
+          },
+          {
+            "de": "An deiner Stelle würde ich noch einmal mit ihm sprechen.",
+            "en": "In your place, I would talk to him again.",
+            "speaker": "Herr Keller",
+            "highlight": "würde ich"
+          },
+          {
+            "de": "Meinst du, das würde etwas ändern?",
+            "en": "Do you think that would change something?",
+            "speaker": "Frau Nowak",
+            "highlight": "würde"
+          },
+          {
+            "de": "Du solltest wenigstens fragen. Vielleicht wäre ein Kompromiss möglich.",
+            "en": "You should at least ask. Maybe a compromise would be possible.",
+            "speaker": "Herr Keller",
+            "highlight": "solltest / wäre"
+          },
+          {
+            "de": "Wenn ich mehr Erfahrung hätte, könnte ich auch selbst entscheiden.",
+            "en": "If I had more experience, I could decide myself too.",
+            "speaker": "Frau Nowak",
+            "highlight": "hätte / könnte"
+          },
+          {
+            "de": "Das dürfte bald der Fall sein. Du machst das wirklich gut.",
+            "en": "That should soon be the case. You are doing this really well.",
+            "speaker": "Herr Keller",
+            "highlight": "dürfte"
+          }
+        ],
+        "context_de": "Zwei Kollegen sprechen über eine Weiterbildung.",
+        "context_en": "Two colleagues talk about further training."
+      },
+      "order_index": 7,
+      "common_mistakes": null,
+      "memory_trick_en": null,
+      "memory_trick_de": null,
+      "formal_note_en": null,
+      "formal_note_de": null,
+      "key_insight_en": null,
+      "key_insight_de": null
+    },
+    {
+      "rule_type": "common_mistakes",
+      "title_en": "Common Mistakes with wäre/hätte",
+      "title_de": "Häufige Fehler mit wäre/hätte",
+      "content": {
+        "intro_de": "Diese drei Fehler tauchen oft in Prüfungen auf.",
+        "intro_en": "These three mistakes turn up often in exams.",
+        "mistakes": [
+          {
+            "wrong": "Wenn ich du wärst, würde ich das anders machen.",
+            "correct": "Wenn ich du wäre, würde ich das anders machen.",
+            "explanation_de": "Das Verb richtet sich nach dem Subjekt (ich), nicht nach du: ich wäre, nicht du wärst.",
+            "explanation_en": "The verb agrees with the subject (ich), not with du: ich wäre, not du wärst."
+          },
+          {
+            "wrong": "Könnten Sie mir bitte helfen würden?",
+            "correct": "Könnten Sie mir bitte helfen?",
+            "explanation_de": "könnten ist schon Konjunktiv II; würde daneben ist überflüssig und falsch.",
+            "explanation_en": "könnten is already Konjunktiv II; a würde next to it is redundant and wrong."
+          },
+          {
+            "wrong": "Das wäre nett von du.",
+            "correct": "Das wäre nett von dir.",
+            "explanation_de": "Nach von steht der Dativ: von dir, nicht von du.",
+            "explanation_en": "von takes the dative: von dir, not von du."
+          }
+        ]
+      },
+      "order_index": 8,
+      "common_mistakes": null,
+      "memory_trick_en": "wäre agrees with the subject, not with du. Modal verbs have their own Konjunktiv II forms. von always takes the dative.",
+      "memory_trick_de": "wäre richtet sich nach dem Subjekt, nicht nach du. Modalverben haben eigene Konjunktiv-II-Formen. Nach von steht immer der Dativ.",
+      "formal_note_en": null,
+      "formal_note_de": null,
+      "key_insight_en": null,
+      "key_insight_de": null
+    }
+  ],
+  "examples": [
+    {
+      "sentence_de": "Wenn ich mehr Zeit hätte, könnte ich öfter Sport machen.",
+      "sentence_en": "If I had more time, I could exercise more often.",
+      "grammar_highlight": "hätte ... könnte",
+      "audio_url": null,
+      "order_index": 9,
+      "explanation_en": "wenn-clause with hätte (verb at end), main clause with könnte + infinitive.",
+      "explanation_de": "wenn-Satz mit hätte (Verb am Ende), Hauptsatz mit könnte + Infinitiv.",
+      "word_breakdown": {
+        "Wenn": "if",
+        "ich": "I",
+        "mehr Zeit": "more time",
+        "hätte": "had (Konj. II of haben)",
+        "könnte ich": "I could",
+        "öfter": "more often",
+        "Sport machen": "exercise, do sports"
+      },
+      "difficulty": 2,
+      "category": "intermediate"
+    },
+    {
+      "sentence_de": "Sie hätte gern einen Termin am Montag.",
+      "sentence_en": "She would like an appointment on Monday.",
+      "grammar_highlight": "hätte gern",
+      "audio_url": null,
+      "order_index": 10,
+      "explanation_en": "hätte gern (would like) is very common when arranging appointments.",
+      "explanation_de": "hätte gern ist beim Vereinbaren von Terminen sehr üblich.",
+      "word_breakdown": {
+        "Sie": "She",
+        "hätte gern": "would like",
+        "einen Termin": "an appointment",
+        "am Montag": "on Monday"
+      },
+      "difficulty": 1,
+      "category": "basic"
+    },
+    {
+      "sentence_de": "Wärst du bereit, den Antrag zu unterschreiben?",
+      "sentence_en": "Would you be willing to sign the application?",
+      "grammar_highlight": "Wärst du bereit",
+      "audio_url": null,
+      "order_index": 11,
+      "explanation_en": "Wärst du (would you be) + adjective + zu-infinitive clause.",
+      "explanation_de": "Wärst du + Adjektiv + zu-Infinitivsatz.",
+      "word_breakdown": {
+        "Wärst du": "Would you be",
+        "bereit": "willing",
+        "den Antrag": "the application",
+        "zu unterschreiben": "to sign"
+      },
+      "difficulty": 2,
+      "category": "intermediate"
+    },
+    {
+      "sentence_de": "An ihrer Stelle würde ich zuerst mit der Kollegin sprechen.",
+      "sentence_en": "In her place, I would talk to the colleague first.",
+      "grammar_highlight": "würde ich",
+      "audio_url": null,
+      "order_index": 12,
+      "explanation_en": "An ihrer Stelle + würde ich is a common way to give someone advice.",
+      "explanation_de": "An ihrer Stelle + würde ich gibt einen Rat.",
+      "word_breakdown": {
+        "An ihrer Stelle": "In her place",
+        "würde ich": "I would",
+        "zuerst": "first",
+        "mit der Kollegin": "with the colleague",
+        "sprechen": "talk"
+      },
+      "difficulty": 2,
+      "category": "intermediate"
+    }
+  ],
+  "exercises": [
+    {
+      "stage": 4,
+      "exercise_type": "fill_blank",
+      "question_de": "Ich ___ gern mehr Geduld mit den Kollegen.",
+      "question_en": "I would like to have more patience with my colleagues. ich-form. Base form: haben (hätte).",
+      "options": null,
+      "correct_answer": "hätte",
+      "acceptable_answers": ["hätte"],
+      "explanation_en": "haben becomes hätte in Konjunktiv II, same pattern as 'Ich hätte gern einen Kaffee.'",
+      "explanation_de": "haben wird zu hätte im Konjunktiv II, wie bei 'Ich hätte gern einen Kaffee.'",
+      "hint": null,
+      "order_index": 9,
+      "difficulty": 1,
+      "why_correct_en": "hätte is the ich-form of haben's Konjunktiv II.",
+      "why_correct_de": "hätte ist die ich-Form des Konjunktivs II von haben.",
+      "related_rule_title": "hätte Conjugation (would have)"
+    },
+    {
+      "stage": 4,
+      "exercise_type": "fill_blank",
+      "question_de": "Wenn sie den Termin verschieben könnte, ___ das für alle einfacher.",
+      "question_en": "If she could reschedule the appointment, that would be easier for everyone. Main clause, das-form. Base form: sein (wäre).",
+      "options": null,
+      "correct_answer": "wäre",
+      "acceptable_answers": ["wäre"],
+      "explanation_en": "sein becomes wäre; used here for 'das wäre einfacher' (that would be easier).",
+      "explanation_de": "sein wird zu wäre; hier für 'das wäre einfacher'.",
+      "hint": null,
+      "order_index": 10,
+      "difficulty": 2,
+      "why_correct_en": "das (es-form) takes wäre, like er/sie/es.",
+      "why_correct_de": "das (es-Form) nimmt wäre, wie er/sie/es.",
+      "related_rule_title": "wäre Conjugation (would be)"
+    },
+    {
+      "stage": 4,
+      "exercise_type": "fill_blank",
+      "question_de": "Ihr ___ eigentlich pünktlicher zum Termin kommen.",
+      "question_en": "You (plural) really should arrive at the appointment more punctually. ihr-form. Base form: müssen (müsste).",
+      "options": null,
+      "correct_answer": "müsstet",
+      "acceptable_answers": ["müsstet"],
+      "explanation_en": "müssen becomes müsste, and the ihr-form adds -t: müsstet.",
+      "explanation_de": "müssen wird zu müsste, ihr-Form mit -t: müsstet.",
+      "hint": null,
+      "order_index": 11,
+      "difficulty": 2,
+      "why_correct_en": "ihr müsstet is the plural informal form of müsste.",
+      "why_correct_de": "ihr müsstet ist die Plural-Form von müsste.",
+      "related_rule_title": "Modal Verbs Have Special Forms Too"
+    },
+    {
+      "stage": 4,
+      "exercise_type": "fill_blank",
+      "question_de": "Die Kollegen ___ das wohl verstehen.",
+      "question_en": "The colleagues would probably understand that. Plural subject, cautious guess. Base form: dürfen (dürfte).",
+      "options": null,
+      "correct_answer": "dürften",
+      "acceptable_answers": ["dürften"],
+      "explanation_en": "dürfte expresses a careful guess; the plural form is dürften.",
+      "explanation_de": "dürfte drückt eine vorsichtige Vermutung aus; Plural: dürften.",
+      "hint": null,
+      "order_index": 12,
+      "difficulty": 2,
+      "why_correct_en": "Plural of dürfte is dürften, like wären/hätten.",
+      "why_correct_de": "Plural von dürfte ist dürften, wie wären/hätten.",
+      "related_rule_title": "sollte, müsste, dürfte, könnte: Giving Advice Politely"
+    },
+    {
+      "stage": 5,
+      "exercise_type": "sentence_building",
+      "question_de": "Schreib den Satz: [ich / mehr Geduld / mit ihm / haben]",
+      "question_en": "Write the sentence: I would have more patience with him. Konjunktiv II: conjugate 'haben' to 'hätte'. Start with 'Ich'.",
+      "options": null,
+      "correct_answer": "Ich hätte mehr Geduld mit ihm.",
+      "acceptable_answers": [
+        "Ich hätte mehr Geduld mit ihm.",
+        "Ich hätte mehr Geduld mit ihm"
+      ],
+      "explanation_en": "haben becomes hätte (ich-form); the object and prepositional phrase follow.",
+      "explanation_de": "haben wird zu hätte (ich-Form); Objekt und Präpositionalphrase folgen.",
+      "hint": null,
+      "order_index": 13,
+      "difficulty": 2,
+      "why_correct_en": "hätte + object; no infinitive needed since hätte is itself the Konjunktiv II verb.",
+      "why_correct_de": "hätte + Objekt; kein Infinitiv nötig, da hätte selbst das Konjunktiv-II-Verb ist.",
+      "related_rule_title": "hätte Conjugation (would have)"
+    },
+    {
+      "stage": 5,
+      "exercise_type": "sentence_building",
+      "question_de": "Schreib den Satz: [wenn / der Antrag / fertig / sein / werden / ich / sofort / anrufen]",
+      "question_en": "Write the sentence: If the application were ready, I would call right away. wenn-clause with wäre (sein); main clause with würde (werden) + ich. Start with 'Wenn'.",
+      "options": null,
+      "correct_answer": "Wenn der Antrag fertig wäre, würde ich sofort anrufen.",
+      "acceptable_answers": [
+        "Wenn der Antrag fertig wäre, würde ich sofort anrufen.",
+        "Wenn der Antrag fertig wäre, würde ich sofort anrufen"
+      ],
+      "explanation_en": "wenn-clause: verb (wäre) at the end. Main clause: würde in position 2 (after the comma), then ich, then the infinitive anrufen at the end.",
+      "explanation_de": "wenn-Satz: Verb (wäre) am Ende. Hauptsatz: würde an Position 2 (nach dem Komma), dann ich, dann Infinitiv anrufen am Ende.",
+      "hint": null,
+      "order_index": 14,
+      "difficulty": 3,
+      "why_correct_en": "Two clauses: wenn + wäre (end), then würde + ich + sofort + anrufen.",
+      "why_correct_de": "Zwei Sätze: wenn + wäre (Ende), dann würde + ich + sofort + anrufen.",
+      "related_rule_title": "Wenn-Clauses with wäre/hätte"
+    },
+    {
+      "stage": 5,
+      "exercise_type": "sentence_building",
+      "question_de": "Schreib den Satz: [an seiner Stelle / ich / zuerst / mit dem Chef / sprechen / werden]",
+      "question_en": "Write the sentence: In his place, I would talk to the boss first. Konjunktiv II with würde (werden). Start with 'An seiner Stelle'.",
+      "options": null,
+      "correct_answer": "An seiner Stelle würde ich zuerst mit dem Chef sprechen.",
+      "acceptable_answers": [
+        "An seiner Stelle würde ich zuerst mit dem Chef sprechen.",
+        "An seiner Stelle würde ich zuerst mit dem Chef sprechen"
+      ],
+      "explanation_en": "Adverbial 'An seiner Stelle' in position 1, würde in position 2 (verb-second).",
+      "explanation_de": "Adverbiale 'An seiner Stelle' an Position 1, würde an Position 2.",
+      "hint": null,
+      "order_index": 15,
+      "difficulty": 3,
+      "why_correct_en": "The position-1 phrase pushes würde to position 2; the subject ich follows.",
+      "why_correct_de": "Die Phrase an Position 1 schiebt würde an Position 2; das Subjekt ich folgt.",
+      "related_rule_title": "Advice Among Colleagues"
+    },
+    {
+      "stage": 5,
+      "exercise_type": "error_correction",
+      "question_de": "Finde den Fehler und schreib den Satz richtig: \"Du sollte mehr Geduld haben.\"",
+      "question_en": "Find the error and write the sentence correctly: \"Du sollte mehr Geduld haben.\" (du-form needs the -st ending)",
+      "options": null,
+      "correct_answer": "Du solltest mehr Geduld haben.",
+      "acceptable_answers": [
+        "Du solltest mehr Geduld haben.",
+        "Du solltest mehr Geduld haben"
+      ],
+      "explanation_en": "The du-form needs the -st ending: solltest, not sollte.",
+      "explanation_de": "Die du-Form braucht die Endung -st: solltest, nicht sollte.",
+      "hint": null,
+      "order_index": 16,
+      "difficulty": 2,
+      "why_correct_en": "sollte + du = solltest.",
+      "why_correct_de": "sollte + du = solltest.",
+      "related_rule_title": "Modal Verbs Have Special Forms Too"
+    },
+    {
+      "stage": 5,
+      "exercise_type": "error_correction",
+      "question_de": "Finde den Fehler und schreib den Satz richtig: \"Wenn er mehr Zeit hätte, er würde helfen.\"",
+      "question_en": "Find the error and write the sentence correctly: \"Wenn er mehr Zeit hätte, er würde helfen.\" (verb-second in the main clause)",
+      "options": null,
+      "correct_answer": "Wenn er mehr Zeit hätte, würde er helfen.",
+      "acceptable_answers": [
+        "Wenn er mehr Zeit hätte, würde er helfen.",
+        "Wenn er mehr Zeit hätte, würde er helfen"
+      ],
+      "explanation_en": "After the comma, the main clause starts with the verb (würde), then the subject (er) follows.",
+      "explanation_de": "Nach dem Komma beginnt der Hauptsatz mit dem Verb (würde), dann folgt das Subjekt (er).",
+      "hint": null,
+      "order_index": 17,
+      "difficulty": 3,
+      "why_correct_en": "wenn-clause first counts as position 1, so würde takes position 2.",
+      "why_correct_de": "Der wenn-Satz zählt als Position 1; würde steht dann an Position 2.",
+      "related_rule_title": "Wenn-Clauses with wäre/hätte"
+    },
+    {
+      "stage": 5,
+      "exercise_type": "error_correction",
+      "question_de": "Finde den Fehler und schreib den Satz richtig: \"Ich hätte gern ein Termin.\"",
+      "question_en": "Find the error and write the sentence correctly: \"Ich hätte gern ein Termin.\" (accusative masculine ending)",
+      "options": null,
+      "correct_answer": "Ich hätte gern einen Termin.",
+      "acceptable_answers": [
+        "Ich hätte gern einen Termin.",
+        "Ich hätte gern einen Termin"
+      ],
+      "explanation_en": "Termin is masculine and the accusative object: einen Termin, not ein Termin.",
+      "explanation_de": "Termin ist maskulin und Akkusativobjekt: einen Termin, nicht ein Termin.",
+      "hint": null,
+      "order_index": 18,
+      "difficulty": 2,
+      "why_correct_en": "Masculine accusative takes -en: einen Termin.",
+      "why_correct_de": "Maskulin Akkusativ: -en, also einen Termin.",
+      "related_rule_title": "Common Expressions"
+    }
+  ]
+}
