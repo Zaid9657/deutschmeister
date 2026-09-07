@@ -118,7 +118,9 @@ BEGIN;
 
 `;
 writeFileSync(migrationPath, header + stmts.join('\n\n') + (wordStmts.length ? '\n\n-- Wortliste re-level\n\n' + wordStmts.join('\n\n') : '') + '\n\nCOMMIT;\n');
-writeFileSync(cachePath, JSON.stringify(cache, null, 2) + '\n');
+// Single-line, like scripts/dump-grammar-cache.mjs: grammar-topics-from-json.mjs refuses a cache that
+// does not round-trip through JSON.stringify (Wave 6 wrote it pretty-printed and Wave 7 PR A hit that).
+writeFileSync(cachePath, JSON.stringify(cache));
 const per = {};
 for (const p of patches) per[p.table] = (per[p.table] || 0) + 1;
 console.log(`wrote ${migrationPath}: ${stmts.length} grammar UPDATEs ${JSON.stringify(per)}, ${wordStmts.length} words UPDATEs; cache edits ${cacheEdits}`);
