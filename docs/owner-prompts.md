@@ -60,7 +60,7 @@ BRAND FACTS — use verbatim, invent nothing:
   Instagram's auto-suggested handle.
 - Website: https://deutsch-meister.de/?utm_source=instagram&utm_medium=bio
 - Category: Education (Bildungswebsite)
-- Contact email: zaid@deutsch-meister.de
+- Contact email: socialmedia@deutsch-meister.de
 - Profile picture: download https://deutsch-meister.de/logo.png and upload it,
   centred, nothing cropped off.
 - Bio (German, keep the line breaks exactly):
@@ -72,7 +72,7 @@ BRAND FACTS — use verbatim, invent nothing:
 STEPS
 1. Open instagram.com. If another account is already logged in, use
    "Add account → Create new account" — do not rename or touch that account.
-2. Create the account with email zaid@deutsch-meister.de and the name/username
+2. Create the account with email socialmedia@deutsch-meister.de and the name/username
    above. STOP and hand control back to me at: the password field, the email
    confirmation code, any captcha, any phone or 2FA step. Never guess or reuse
    a password.
