@@ -58,6 +58,17 @@ Die 7 Instagram-Posts sind fertig und warten auf das Konto. Der Prompt zum
 Anlegen liegt in `docs/social/meta-accounts-prompt.md`. Bis dahin läuft die
 Woche auf YouTube und Facebook — die Bilder sind dieselben.
 
+## Zweisprachig, aber nicht übersetzt
+
+Jedes Bild trägt unter der deutschen Überschrift eine kursive englische Zeile —
+nur den Kern, nicht den ganzen Text. Jede Caption endet mit zwei bis drei
+englischen Sätzen. Die Regeln, Beispiele und Tabellen bleiben ausschließlich
+deutsch: Wer Deutsch lernt, soll das Muster im Original sehen. Das Englische
+ist die Brücke hinein, nicht der Ersatz.
+
+Praktisch heißt das: Ein Suchender, der auf Englisch scrollt, versteht in
+zwei Sekunden, worum es geht — und liest die deutsche Regel trotzdem.
+
 ## Bildsprache
 
 Alle Bilder sind aus `src/data/design-tokens.js` gerendert: Fraunces als
