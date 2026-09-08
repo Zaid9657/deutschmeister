@@ -30,7 +30,9 @@ oder den Story-Sticker, nicht in die Caption (Instagram verlinkt sie nicht).
 | 6 | Mo 14.09. | Das Verb haben | German Verb Haben |
 | 7 | Di 15.09. | ein oder eine? | Ein & Eine Explained |
 
-Die genauen Zeiten und Dateizuordnungen stehen in `plan.csv`.
+Die genauen Zeiten und Dateizuordnungen stehen in `plan.csv`. Fertige
+Chrome-Extension-Prompts für jeden einzelnen Beitrag liegen in
+`chrome-prompts/` — siehe die README dort.
 
 ## Warum diese Reihenfolge
 
