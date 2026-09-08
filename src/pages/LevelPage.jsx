@@ -17,6 +17,7 @@ import GrammarTopicCard from '../components/GrammarTopicCard';
 import ReadingLessonCard from '../components/ReadingLessonCard';
 import PodcastsTab from '../components/level/PodcastsTab';
 import { useLevelExercises } from '../hooks/useListening';
+import { courseFor } from '../data/courses/index.js';
 import ExerciseCard from '../components/listening/ExerciseCard';
 import SEO from '../components/SEO';
 import EmptyState from '../components/EmptyState';
@@ -331,7 +332,32 @@ const LevelPage = () => {
             Factory Wave 2 PR D) and A1.2-Phase (Wave 3 PR D). Both routes sit
             behind LevelSubscriptionGuard for their own level, so the card
             shows the same gate this page already passed. */}
-        {PHASE_PLAN[level] && (
+        {/* The guided course is the front door of a level (decision 2026-09-08):
+            one path, one next lesson. This library view stays for browsing
+            and the vocabulary trainer; the plan page remains reachable below. */}
+        {courseFor(level) ? (
+          <Reveal className="mb-8">
+            <Card raised edge="siegel" className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-clay bg-siegel text-white shadow-raise-siegel">
+                  <ClipboardCheck className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="font-bold text-ink">German {level.toUpperCase()} Course · guided path</p>
+                  <p className="text-sm text-graphite">Lesson by lesson, in order, to the final test. Your progress is saved.</p>
+                </div>
+              </div>
+              <div className="flex shrink-0 items-center gap-3">
+                {PHASE_PLAN[level] && (
+                  <Link to={PHASE_PLAN[level].href} className="text-sm font-bold text-siegel transition-colors hover:text-siegel-deep">28-day plan</Link>
+                )}
+                <Link to={`/course/${level}`} className="inline-flex items-center gap-2 rounded-clay bg-siegel px-5 py-3 text-sm font-bold text-white shadow-raise-siegel transition-all hover:bg-siegel-lift active:translate-y-1 active:shadow-none">
+                  Open the course <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </Card>
+          </Reveal>
+        ) : PHASE_PLAN[level] && (
           <Reveal className="mb-8">
             <Card interactive as={Link} to={PHASE_PLAN[level].href} className="flex items-center justify-between gap-4 p-5">
               <div className="flex items-center gap-4">
