@@ -84,6 +84,7 @@ const jsonLd = {
             </p>
           </div>
           <div class="flex flex-col gap-2 sm:items-end">
+            <div data-course-door={level} data-course-code={code} data-course-open-class={BTN_PRIMARY}>
             {isFree ? (
               <a href={`/grammar/${level}/`} class={BTN_PRIMARY}>Start {code} free</a>
             ) : buyable ? (
@@ -91,6 +92,7 @@ const jsonLd = {
             ) : (
               <span class={`${BTN_SECONDARY} cursor-not-allowed opacity-60`} aria-disabled="true">Coming soon</span>
             )}
+            </div>
             {!isFree && (
               <a href="/pricing/" class="text-xs font-bold text-siegel transition-colors hover:text-siegel-deep">
                 or Pro for every level — {eur(PLANS.monthly.price)}/month →
@@ -179,6 +181,7 @@ const jsonLd = {
               {isFree ? `${FREE_LEVEL_LABEL} needs no account. A free account adds a trial of Pro on top.` : course.comingSoon ? 'Pro opens every level today, including this one.' : `Pay once. Nothing renews, nothing expires. ${COURSE_PRO_MONTHS} months of Pro included.`}
             </p>
           </div>
+          <div data-course-door={level} data-course-code={code} data-course-open-class={BTN_PRIMARY}>
           {isFree ? (
             <a href={`/grammar/${level}/`} class={BTN_PRIMARY}>Start {code} free</a>
           ) : buyable ? (
@@ -186,6 +189,7 @@ const jsonLd = {
           ) : (
             <a href="/pricing/" class={BTN_SECONDARY}>See Pro</a>
           )}
+          </div>
         </div>
       </section>
 

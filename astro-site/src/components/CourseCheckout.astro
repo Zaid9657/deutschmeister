@@ -65,5 +65,24 @@
         open(btn.getAttribute('data-course-variant'), btn.getAttribute('data-course-key')),
       );
     });
+
+    // Owner door: a signed-in visitor who already has the level (a bought
+    // course, Pro, or a live trial) gets "Open" instead of "Buy" / "Coming
+    // soon". Lazy so the logged-out majority never loads the Supabase chunk;
+    // the same three doors as the SPA's hasLevelAccess via lib/levelAccess.js.
+    const doors = document.querySelectorAll('[data-course-door]');
+    if (currentUser() && doors.length) {
+      import('../lib/levelAccess.js').then(async ({ getLevelAccess }) => {
+        const levels = [...new Set([...doors].map((d) => d.getAttribute('data-course-door')))];
+        const access = Object.fromEntries(await Promise.all(levels.map(async (l) => [l, await getLevelAccess(l)])));
+        doors.forEach((d) => {
+          const level = d.getAttribute('data-course-door');
+          if (!access[level] || !access[level].open) return;
+          const code = d.getAttribute('data-course-code') || level.toUpperCase();
+          const cls = d.getAttribute('data-course-open-class') || '';
+          d.innerHTML = '<a href="https://deutsch-meister.de/level/' + level + '" class="' + cls + '">Open ' + code + ' \u2192</a>';
+        });
+      }).catch(() => { /* door optional */ });
+    }
   });
 </script>
