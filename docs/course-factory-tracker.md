@@ -237,7 +237,7 @@ format is recorded in the decisions log. Briefs: `docs/course-factory/wave7/`; t
 | # | Step | Status | PR |
 |---|---|---|---|
 | A | Level constraint `level-b1.1.md` + four new B1.1 topics (topic_order 9–12: temporal-clauses, obwohl-damit-sodass, adverbial-connectors, two-part-connectors), 26 exercises / 20–23 typed each, `tests/b1-1-course.test.mjs`, counts in both `marketing.js` twins, llms 80→84; the cache re-serialised to the single-line dump format (Wave 6's re-cut had written it pretty-printed, which the topic generator refuses) | merged, DB migrated 2026-09-07 (84 topics / 657 / 913 / 1534 = cache; the four topics md5-identical to the cache; reviews FAIL → PASS in 2–3 rounds per topic) | #105 |
-| A2 | Typed production + depth + legacy pass for the 8 live B1.1 topics (≥10 typed each, ≥8 rules / ≥12 examples on the thin five, English-first rule text re-cut to du-form German), `tests/helpers/b1Bans.mjs` + full-level sweep | planned | — |
+| A2 | Typed production + depth + legacy pass for the 8 live B1.1 topics: 80 typed exercises (10 per topic, contiguous order_index 16–25 / 9–18), +3 rules / +4 examples on each of the five thin topics (15 rules / 20 examples, every one now ≥8 rules incl. a common_mistakes rule and ≥12 examples), 6 guarded rule patches, the two swapped-field legacy MC exercises re-cut in place (`recut-from-json.mjs --header`), `tests/helpers/b1Bans.mjs` + `tests/b1-1-typed-production.test.mjs` (full-level ban sweep over every German field of every B1.1 row in the cache), counts in both `marketing.js` twins | merged, DB migration pending (cache 84 topics / 672 / 933 / 1614; reviews E1 9 → 1 → 0 and E2 27 findings → 0 blocking over three rounds, both round-3 delta re-reviews PASS) | #106 |
 | B | Wortliste B1.1: the 129 defect rows, the 28 re-levelled Prepositions/Animals rows re-categorised, ~150 additions toward the Zertifikat B1 Wortliste | planned | — |
 | C | Reading B1.1 (8 rewrites ≤220 words with checks + telc Lesen Teil 1 / Teil 3 exam-format lessons) + listening B1.1 (+78 questions incl. 18 dictation) | planned | — |
 | D | Abschlusstest B1.1 (telc format: Hören, Lesen Teil 1+2, Sprachbausteine Teil 1, Schreiben) + `/b1-1-phase` 28-day plan + hand-offs + the eleven-key `exam_attempts` CHECK | planned | — |
@@ -334,6 +334,16 @@ format is recorded in the decisions log. Briefs: `docs/course-factory/wave7/`; t
   `advanced-conjunctions` opens "über weil und obwohl hinaus" and `complex-sentence-building` assumes nachdem
   + Plusquamperfekt — both consistent with B1.1 owning the basics. Order = clause syntax first, then
   main-clause connectors, then the mixed set.
+- 2026-09-08 (Wave 7, PR A2): **the B1.1 ban battery** (`tests/helpers/b1Bans.mjs`) is derived from the A2.2
+  battery by DROPPING what B1.1 now owns (Genitiv, relative clauses, the polite Konjunktiv II set,
+  um/ohne … zu, the B1 subordinators, bis/seit, irreale Bedingungssätze) and ADDING the B1/B2 border
+  (Konjunktiv I, Konjunktiv II der Vergangenheit, je … desto, Futur II, Partizipialattribute, ohne dass,
+  the B2 connectors, lässt sich / sein + zu as Passivalternativen); Passiv and Plusquamperfekt-outside-
+  nachdem stay banned. It is a floor, not a proof: Nominalisierung, the remaining Passivalternativen and the
+  Präteritum-key ruling are reviewer eye-rules, so every content PR at B1.1 keeps the adversarial review
+  and the battery sweeps the whole level in the cache on every CI run. The typed items keep the Wave 3–5
+  shape (4 guided fill_blank + 3 sentence_building + 3 error_correction per topic, English cue pins the
+  key where the German alone is ambiguous) and EXTEND mode continues each topic's own order_index counter.
 - 2026-09-07 (Wave 7, PR A): **level constraint B1.1** (`docs/course-factory/wave7/level-b1.1.md`): all A1 + A2
   allowed; the 8 live B1.1 topics productive; the 4 new topics only inside/after their lesson; the
   **Präteritum ruling** — full-verb Präteritum allowed receptively in every text, productively only
