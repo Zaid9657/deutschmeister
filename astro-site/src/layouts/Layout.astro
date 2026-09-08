@@ -340,6 +340,33 @@ const authAttrs = (item) =>
         } catch (e) { /* storage blocked — keep the logged-out default */ }
       })();
     </script>
+    <!-- Course return bar: when a lesson was opened from a guided course
+         (/course/<level>/<item>, SPA), the lesson page stored a context in
+         sessionStorage; render the same "Done → next" bar the SPA shows, so
+         the learner never has to find the way back. Mirrors
+         src/components/CourseReturnBar.jsx. -->
+    <script is:inline>
+      (function () {
+        try {
+          var raw = sessionStorage.getItem('dm_course_ctx');
+          if (!raw) return;
+          var ctx = JSON.parse(raw);
+          if (!ctx || !ctx.level || !ctx.itemId) return;
+          var bar = document.createElement('div');
+          bar.setAttribute('data-course-return-bar', '');
+          bar.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(255,255,255,.95);border-top:1px solid #D8DFDB;backdrop-filter:blur(6px);';
+          var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+          bar.innerHTML =
+            '<div style="max-width:48rem;margin:0 auto;display:flex;align-items:center;gap:.75rem;padding:.625rem 1rem;font-family:inherit">' +
+            '<a href="/course/' + esc(ctx.level) + '" style="font-weight:700;color:#0F766E;text-decoration:none;font-size:.875rem;white-space:nowrap">&#8592; ' + esc(ctx.code || ctx.level.toUpperCase()) + '</a>' +
+            '<p style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.8125rem;color:#5A6360;margin:0">' + esc(ctx.position) + '/' + esc(ctx.total) + ' &middot; ' + esc(ctx.title || '') + '</p>' +
+            '<a href="/course/' + esc(ctx.level) + '/' + encodeURIComponent(ctx.itemId) + '?done=1" style="background:#0F766E;color:#fff;font-weight:700;font-size:.875rem;padding:.5rem 1rem;border-radius:.75rem;text-decoration:none;box-shadow:0 4px 0 0 #07423D;white-space:nowrap">&#10003; Done &#8594; next</a>' +
+            '</div>';
+          document.body.appendChild(bar);
+          document.body.style.paddingBottom = '4rem';
+        } catch (e) { /* storage blocked — no bar */ }
+      })();
+    </script>
     <Showtime />
   </body>
 </html>

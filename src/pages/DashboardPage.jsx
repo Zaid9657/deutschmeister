@@ -13,6 +13,7 @@ import { levels as ALL_LEVELS } from '../data/content';
 import { deriveCurrent, isTopicCompleted, topicPercent } from '../services/currentPosition';
 import { examTrackByKey } from '../data/examTracks';
 import { courseForProduct } from '../data/pricing.js';
+import { courseFor } from '../data/courses/index.js';
 import { loadDashboardStats, DAILY_GOAL_TARGET } from '../services/dashboardStats';
 import { GRAMMAR_TOPIC_COUNT } from '../data/marketing.js';
 import { listAttempts } from '../services/examService';
@@ -454,7 +455,7 @@ const DashboardPage = () => {
 
         {ownedLevelCourses.map((c) => (
           <Reveal key={c.key} className="mb-4">
-            <Card interactive as={Link} to={`/level/${c.levels[0]}`} className="flex items-center justify-between gap-3 px-5 py-4">
+            <Card interactive as={Link} to={courseFor(c.levels[0]) ? `/course/${c.levels[0]}` : `/level/${c.levels[0]}`} className="flex items-center justify-between gap-3 px-5 py-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-clay bg-siegel text-white flex items-center justify-center">
                   <BookOpen className="w-5 h-5" />

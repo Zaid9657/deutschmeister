@@ -80,7 +80,8 @@
           if (!access[level] || !access[level].open) return;
           const code = d.getAttribute('data-course-code') || level.toUpperCase();
           const cls = d.getAttribute('data-course-open-class') || '';
-          d.innerHTML = '<a href="https://deutsch-meister.de/level/' + level + '" class="' + cls + '">Open ' + code + ' \u2192</a>';
+          const guided = ['a1.1', 'a1.2', 'a2.1', 'a2.2'].includes(level);
+          d.innerHTML = '<a href="https://deutsch-meister.de/' + (guided ? 'course' : 'level') + '/' + level + '" class="' + cls + '">' + (guided ? 'Continue course ' : 'Open ') + code + ' \u2192</a>';
         });
       }).catch(() => { /* door optional */ });
     }

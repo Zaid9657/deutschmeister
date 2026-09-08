@@ -6,6 +6,7 @@ import { ProgressProvider } from './contexts/ProgressContext';
 import { SubscriptionProvider } from './contexts/SubscriptionContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import CourseReturnBar from './components/CourseReturnBar';
 import BottomNav from './components/BottomNav';
 import LemonSqueezyProvider from './components/LemonSqueezyProvider';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -58,6 +59,10 @@ const A11PhasePage = lazy(() => import('./pages/A11PhasePage'));
 const A12PhasePage = lazy(() => import('./pages/A12PhasePage'));
 const A21PhasePage = lazy(() => import('./pages/A21PhasePage'));
 const A22PhasePage = lazy(() => import('./pages/A22PhasePage'));
+const CourseHomePage = lazy(() => import('./pages/CourseHomePage'));
+const CourseLessonPage = lazy(() => import('./pages/CourseLessonPage'));
+const CourseCompletePage = lazy(() => import('./pages/CourseCompletePage'));
+const CourseCertificatePage = lazy(() => import('./pages/CourseCertificatePage'));
 const ModelltestHub = lazy(() => import('./pages/Modelltest/ModelltestHub'));
 const ModelltestOverview = lazy(() => import('./pages/Modelltest/ModelltestOverview'));
 const ModelltestRun = lazy(() => import('./pages/Modelltest/ModelltestRun'));
@@ -297,6 +302,15 @@ function App() {
                       }
                     />
 
+                    {/* The guided courses (decision 2026-09-08): /course/:level is
+                        the course home (unit path), /course/:level/:itemId one
+                        lesson, plus completion and certificate. Same gate as
+                        /level/:level — the guard reads :level from the route. */}
+                    <Route path="/course/:level" element={<LevelSubscriptionGuard><EmailVerificationGate><CourseHomePage /></EmailVerificationGate></LevelSubscriptionGuard>} />
+                    <Route path="/course/:level/complete" element={<LevelSubscriptionGuard><EmailVerificationGate><CourseCompletePage /></EmailVerificationGate></LevelSubscriptionGuard>} />
+                    <Route path="/course/:level/certificate" element={<LevelSubscriptionGuard><EmailVerificationGate><CourseCertificatePage /></EmailVerificationGate></LevelSubscriptionGuard>} />
+                    <Route path="/course/:level/:itemId" element={<LevelSubscriptionGuard><EmailVerificationGate><CourseLessonPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
+
                     {/* Level-aware routes — A1.1 is free, others require auth + email verification + subscription */}
                     <Route
                       path="/level/:level"
@@ -497,6 +511,7 @@ function App() {
                   </Routes>
                 </Suspense>
                 </main>
+                <CourseReturnBar />
                 <Footer />
                 {/* Mobile app tabs (signed-in only); pb clearance lives on the
                     wrapper so the fixed bar never covers page-end content. */}
