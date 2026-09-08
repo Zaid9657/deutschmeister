@@ -386,6 +386,10 @@
   to = "/app.html"
   status = 200
 [[redirects]]
+  from = "/course/*"
+  to = "/app.html"
+  status = 200
+[[redirects]]
   from = "/level/*"
   to = "/app.html"
   status = 200
