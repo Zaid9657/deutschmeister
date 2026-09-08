@@ -1,0 +1,117 @@
+---
+// The Courses hub — the level courses as a product with their own front door
+// (decision 2026-09-08: the courses used to exist only as price cards). Eight
+// rungs A1.1 → B2.2; A1.1 free, each paid sub-level its own one-time course,
+// B1/B2 listed as coming soon. Every figure derives: prices from pricing.js,
+// grammar counts from the content cache, the rest from data/courseContents.js.
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/global.css';
+import Aurora from '../../components/Aurora.astro';
+import CourseCheckout from '../../components/CourseCheckout.astro';
+import { ORGANIZATION } from '../../lib/siteMeta.js';
+import { getTopicsForLevel } from '../../lib/grammar.js';
+import { levelCoursesWithVariants } from '../../lib/courseVariants.js';
+import { ALL_LEVELS, COURSE_PRO_MONTHS, COURSE_FROM_PRICE_EUR, eur, productKeyForLevel } from '../../data/pricing.js';
+import { FREE_LEVEL_LABEL } from '../../data/marketing.js';
+import { COURSE_CONTENTS, LEVEL_OUTCOME_EN, levelToSlug } from '../../data/courseContents.js';
+
+const BTN = 'inline-flex items-center justify-center gap-2 rounded-clay text-sm font-bold transition-all duration-100 ease-snap select-none';
+const BTN_PRIMARY = `${BTN} bg-siegel px-5 py-3 text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`;
+const BTN_SECONDARY = `${BTN} border border-rule bg-white px-5 py-3 text-ink shadow-raise hover:border-siegel hover:text-siegel-deep active:translate-y-1 active:shadow-none`;
+
+const courses = levelCoursesWithVariants();
+const byKey = Object.fromEntries(courses.map((c) => [c.key, c]));
+
+const rungs = await Promise.all(ALL_LEVELS.map(async (level) => {
+  const topics = await getTopicsForLevel(level);
+  const c = byKey[productKeyForLevel(level)] || null; // null for the free level
+  const content = COURSE_CONTENTS[level];
+  return { level, code: level.toUpperCase(), slug: levelToSlug(level), course: c, topics: topics.length, content };
+}));
+
+const title = 'German Courses A1–B2, one level at a time | DeutschMeister';
+const description = `Buy one German level and keep it for life. ${FREE_LEVEL_LABEL} is free; every paid sub-level from ${eur(COURSE_FROM_PRICE_EUR)} once, with ${COURSE_PRO_MONTHS} months of Pro included. B1 and B2 coming soon.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'German Courses',
+  description,
+  url: 'https://deutsch-meister.de/courses/',
+  inLanguage: 'en',
+  publisher: ORGANIZATION,
+};
+---
+
+<Layout title={title} description={description} canonical="https://deutsch-meister.de/courses/" jsonLd={jsonLd} lang="en">
+  <div class="overflow-x-clip bg-paper text-ink">
+    <section class="relative" aria-labelledby="hero-h">
+      <Aurora />
+      <div class="relative mx-auto max-w-3xl px-5 pb-10 pt-14 sm:pt-20">
+        <header>
+          <p class="hero-line font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel" style="--d:0ms">Courses</p>
+          <h1 id="hero-h" class="hero-line mt-3 font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.025em] sm:text-[3rem]" style="--d:80ms">
+            One German level. One payment. Yours for good.
+          </h1>
+          <p class="hero-line mt-5 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]" style="--d:220ms">
+            Each sub-level is a complete course: the grammar with typed practice, reading texts with
+            checks, listening with dictation, the vocabulary list, a final test in the exam format and
+            a 28-day plan. {FREE_LEVEL_LABEL} is free. Not sure where you stand? The
+            <a href="/level-test/" class="font-bold text-siegel transition-colors hover:text-siegel-deep">level test is free</a> and takes ten minutes.
+          </p>
+        </header>
+      </div>
+    </section>
+
+    <div class="mx-auto max-w-3xl px-5 pb-20">
+      <ol class="grid gap-5 sm:grid-cols-2">
+        {rungs.map((r, i) => (
+          <li class="reveal" style={`--rd:${i * 70}ms`}>
+            <article class={`relative flex h-full flex-col rounded-clay border border-rule bg-white p-6 shadow-raise ${r.course?.comingSoon ? 'opacity-85' : ''}`}>
+              {r.course?.comingSoon && (
+                <span class="absolute -top-3 left-6 inline-flex items-center rounded-pill bg-paper-sunk px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite shadow-raise">Coming soon</span>
+              )}
+              {!r.course && (
+                <span class="absolute -top-3 left-6 inline-flex items-center rounded-pill bg-siegel-wash px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep">Free</span>
+              )}
+              <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{r.code}</p>
+              <h2 class="mt-2 font-display text-[1.375rem] font-semibold leading-snug text-ink">
+                <a href={`/courses/${r.slug}/`} class="transition-colors hover:text-siegel-deep">German {r.code} Course</a>
+              </h2>
+              <p class="mt-2 flex-1 text-[0.9375rem] leading-relaxed text-graphite">{LEVEL_OUTCOME_EN[r.level]}</p>
+              <ul class="mt-4 grid grid-cols-2 gap-x-4 gap-y-1 font-data text-[0.75rem] text-graphite">
+                <li>{r.topics} grammar topics</li>
+                <li>{r.content.reading.length} reading texts</li>
+                <li>{r.content.listening.length} listening exercises</li>
+                <li>{r.content.words} words</li>
+              </ul>
+              <div class="mt-5 flex items-end justify-between gap-3">
+                <p class="font-display text-[1.5rem] font-semibold leading-none tracking-[-0.02em] text-ink">
+                  {r.course ? eur(r.course.price) : 'Free'}
+                  {r.course && <span class="ml-1 font-body text-xs font-normal tracking-normal text-graphite">one time</span>}
+                </p>
+                <a href={`/courses/${r.slug}/`} class="text-sm font-bold text-siegel transition-colors hover:text-siegel-deep">What's inside →</a>
+              </div>
+              {r.course ? (
+                r.course.variantId ? (
+                  <button type="button" class={`${BTN_PRIMARY} mt-4 w-full`} data-course-variant={r.course.variantId} data-course-key={r.course.key}>Buy {r.code}</button>
+                ) : (
+                  <span class={`${BTN_SECONDARY} mt-4 w-full cursor-not-allowed opacity-60`} aria-disabled="true">Coming soon</span>
+                )
+              ) : (
+                <a href={`/grammar/${r.level}/`} class={`${BTN_SECONDARY} mt-4 w-full`}>Start free</a>
+              )}
+            </article>
+          </li>
+        ))}
+      </ol>
+
+      <p class="reveal mt-10 border-t border-rule pt-6 text-[0.9375rem] leading-relaxed text-graphite" style="--rd:200ms">
+        Every paid course includes {COURSE_PRO_MONTHS} months of Pro (AI speaking coach, writing feedback,
+        Sentence X-Ray). Prefer everything at once? <a href="/pricing/" class="font-bold text-siegel transition-colors hover:text-siegel-deep">Pro opens all eight levels</a> for a monthly fee.
+        Preparing for a specific exam? <a href="/pruefung/" class="font-bold text-siegel transition-colors hover:text-siegel-deep">See the exam tracks</a>.
+      </p>
+    </div>
+  </div>
+  <CourseCheckout />
+</Layout>

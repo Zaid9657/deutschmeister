@@ -1,0 +1,69 @@
+---
+// The course checkout script, shared by /pricing/ (inline there for historical
+// reasons) and the /courses/ pages. Any element with data-course-variant opens
+// that Lemon Squeezy checkout: overlay for signed-in visitors (so a purchase
+// ends on OUR success page), same-tab navigation as the fallback, and the
+// signup detour with dm_buy_intent for signed-out visitors — identical to the
+// pricing page's behaviour, so the two entry points cannot drift.
+---
+<script>
+  function currentUser() {
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && /^sb-.*-auth-token$/.test(k)) {
+          const v = JSON.parse(localStorage.getItem(k) || 'null');
+          const u = (v && (v.user || (v.currentSession && v.currentSession.user))) || null;
+          if (u && u.id) return { email: u.email || '', id: u.id };
+        }
+      }
+    } catch (e) { /* private mode — treat as signed out */ }
+    return null;
+  }
+
+  function checkoutUrl(variant, email, id) {
+    const params = new URLSearchParams({ 'checkout[email]': email || '', 'checkout[custom][user_id]': id || '' });
+    return 'https://deutsch-meister.lemonsqueezy.com/checkout/buy/' + variant + '?' + params.toString();
+  }
+
+  function open(variant, intentKey) {
+    const u = currentUser();
+    if (!u) {
+      try { localStorage.setItem('dm_buy_intent', intentKey); } catch (e) { /* private mode */ }
+      window.location.href = 'https://deutsch-meister.de/signup';
+      return;
+    }
+    const url = checkoutUrl(variant, u.email, u.id);
+    if (window.LemonSqueezy && window.LemonSqueezy.Url && window.LemonSqueezy.Url.Open) {
+      window.LemonSqueezy.Url.Open(url);
+    } else {
+      window.location.href = url;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (currentUser() && !document.querySelector('script[src*="lemon.js"]')) {
+      const s = document.createElement('script');
+      s.src = 'https://app.lemonsqueezy.com/js/lemon.js';
+      s.defer = true;
+      s.onload = () => {
+        try {
+          window.createLemonSqueezy && window.createLemonSqueezy();
+          window.LemonSqueezy && window.LemonSqueezy.Setup && window.LemonSqueezy.Setup({
+            eventHandler: (evt) => {
+              if (evt && evt.event === 'Checkout.Success') {
+                window.location.href = 'https://deutsch-meister.de/subscription/success';
+              }
+            },
+          });
+        } catch (e) { /* overlay optional */ }
+      };
+      document.head.appendChild(s);
+    }
+    document.querySelectorAll('[data-course-variant]').forEach((btn) => {
+      btn.addEventListener('click', () =>
+        open(btn.getAttribute('data-course-variant'), btn.getAttribute('data-course-key')),
+      );
+    });
+  });
+</script>
