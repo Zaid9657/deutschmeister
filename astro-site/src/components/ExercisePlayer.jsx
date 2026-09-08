@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { bandCourseForLevel, eur, PLANS } from '../data/pricing.js';
+import { courseForLevel, eur, PLANS } from '../data/pricing.js';
 import { FREE_LEVEL_LABEL, TRIAL_DAYS } from '../data/marketing.js';
 
 // Cheap synchronous check for a stored Supabase session, so the logged-out
@@ -183,8 +183,9 @@ function FillBlank({ exercise, onAnswer, answered }) {
 // signup door first (7 days of Pro), signed-in ones the course they are
 // missing. Prices derive from pricing.js; nothing here is retyped.
 function LockedExercises({ level, signedIn, count }) {
-  const band = bandCourseForLevel(level);
-  const code = band?.code || level.toUpperCase();
+  const course = courseForLevel(level);
+  const buyable = Boolean(course) && !course.comingSoon;
+  const code = course?.code || level.toUpperCase();
   const BTN = 'inline-flex select-none items-center justify-center gap-2 rounded-clay font-bold transition-all duration-100 ease-snap';
   const primary = `${BTN} bg-siegel px-6 py-3 text-sm text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`;
   const secondary = `${BTN} border border-rule bg-white px-6 py-3 text-sm text-ink shadow-raise hover:border-siegel hover:text-siegel-deep active:translate-y-1 active:shadow-none`;
@@ -198,18 +199,20 @@ function LockedExercises({ level, signedIn, count }) {
       </p>
       <p className="mx-auto mt-2 max-w-md text-[0.9375rem] leading-relaxed text-graphite">
         {signedIn
-          ? `Your account does not include ${code} yet. Buy the ${code} course once and keep it, or go Pro for every level and the AI tools.`
+          ? buyable
+            ? `Your account does not include ${code} yet. Buy the ${code} course once and keep it, or go Pro for every level and the AI tools.`
+            : `Your account does not include ${code} yet. The ${code} course is coming soon — Pro opens every level and the AI tools today.`
           : `${FREE_LEVEL_LABEL} is free with no account. A free account adds ${TRIAL_DAYS} days of Pro — every level, every exercise — before you decide.`}
       </p>
       <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
         {signedIn ? (
           <>
-            {band && (
+            {buyable && (
               <a href="/pricing/" className={primary}>
-                Buy the {code} course — {eur(band.price)} once
+                Buy the {code} course — {eur(course.price)} once
               </a>
             )}
-            <a href="/pricing/" className={secondary}>
+            <a href="/pricing/" className={buyable ? secondary : primary}>
               Go Pro — {eur(PLANS.monthly.price)}/month
             </a>
           </>

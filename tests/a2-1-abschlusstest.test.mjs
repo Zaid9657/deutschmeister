@@ -137,7 +137,7 @@ test('formatOf goethe_a2 is the PR D1 dependency, not a typo', () => {
 
 test('the gate this file claims in its header is the gate the code computes', () => {
   assert.equal(isLevelFree('a2.1'), false, 'a2.1 must not be a free level, or the gate note is wrong');
-  assert.equal(bandCourseForLevel('a2.1')?.key, 'course_a2', 'the A2 band course must unlock a2.1');
+  assert.equal(bandCourseForLevel('a2.1')?.key, 'course_a2_1', 'the A2.1 course must unlock a2.1');
 });
 
 // ── 2. shape guards from tests/exams.test.mjs ────────────────────────────

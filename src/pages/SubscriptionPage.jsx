@@ -9,7 +9,7 @@ import SEO from '../components/SEO';
 import { openCheckout } from '../utils/openCheckout';
 import { clearBuyIntent } from '../lib/buyIntent';
 import { markCheckoutStarted, consumeCheckoutSuccess } from '../lib/funnelTracking';
-import { PLANS, num } from '../data/pricing.js';
+import { PLANS, num, levelsForProduct } from '../data/pricing.js';
 import { LEVEL_COUNT, READING_LESSON_COUNT } from '../data/marketing.js';
 import Button from '../components/ui/Button.jsx';
 import Card from '../components/ui/Card.jsx';
@@ -27,6 +27,7 @@ const SubscriptionPage = () => {
     getTrialDaysRemaining,
     hasActiveSubscription,
     hasProduct,
+    purchases,
     subscription,
     refreshSubscription,
     verifySubscription,
@@ -119,7 +120,11 @@ const SubscriptionPage = () => {
   // hides the card — and the same poll observes the webhook landing.
   const levelCourses = Object.values(LEMONSQUEEZY_CONFIG.levelCourses);
   const ownsBundle = hasProduct('course_alle');
-  const visibleLevelCourses = levelCourses.filter((c) => c.variantId || hasProduct(c.key));
+  // A retired band row (course_a2) still owns both of its sub-levels.
+  const ownsLevel = (level) => purchases.some((p) => levelsForProduct(p.product_key).includes(level));
+  // A coming-soon course is listed (priced, no checkout) so the ladder reads
+  // complete; a live course needs its checkout id or an existing purchase.
+  const visibleLevelCourses = levelCourses.filter((c) => c.variantId || c.comingSoon || hasProduct(c.key));
 
   const startPurchase = (productKey, variantId, price) => {
     const checkoutUrl = LEMONSQUEEZY_CONFIG.getCheckoutUrl(
@@ -446,25 +451,24 @@ const SubscriptionPage = () => {
               align="center"
               title={isGerman ? 'Oder: eine Stufe kaufen und behalten' : 'Or: buy a level and keep it'}
               lead={isGerman
-                ? `Einmal zahlen, für immer lernen — beide Teilstufen, plus ${course.proMonths} Monate Pro (KI-Sprechen, Schreibkorrektur, Satz-Röntgen) inklusive.`
-                : `Pay once, learn forever — both sub-levels, plus ${course.proMonths} months of Pro (AI speaking, writing feedback, Sentence X-Ray) included.`}
+                ? `Einmal zahlen, für immer lernen — eine Teilstufe, plus ${course.proMonths} Monate Pro (KI-Sprechen, Schreibkorrektur, Satz-Röntgen) inklusive.`
+                : `Pay once, learn forever — one sub-level, plus ${course.proMonths} months of Pro (AI speaking, writing feedback, Sentence X-Ray) included.`}
             />
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {visibleLevelCourses.map((c) => {
-                const isBundle = c.key === 'course_alle';
-                const owned = hasProduct(c.key) || (ownsBundle && !isBundle);
                 const firstLevel = c.levels[0];
+                const owned = hasProduct(c.key) || ownsBundle || ownsLevel(firstLevel);
                 return (
                   <Card
                     key={c.key}
                     raised
-                    edge={isBundle ? 'siegel' : 'paper'}
-                    className={`relative flex flex-col p-5 ${isBundle ? 'sm:col-span-2 lg:col-span-1' : ''}`}
+                    edge="paper"
+                    className={`relative flex flex-col p-5 ${c.comingSoon ? 'opacity-80' : ''}`}
                   >
-                    {isBundle && (
+                    {c.comingSoon && (
                       <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                        <span className="inline-flex items-center rounded-pill bg-gold px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-ink shadow-raise">
-                          {isGerman ? `Spare ${c.savingPercent}%` : `Save ${c.savingPercent}%`}
+                        <span className="inline-flex items-center rounded-pill bg-paper-sunk px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite shadow-raise">
+                          {isGerman ? 'Bald verfügbar' : 'Coming soon'}
                         </span>
                       </div>
                     )}
@@ -477,19 +481,20 @@ const SubscriptionPage = () => {
                       </span>
                     </p>
                     <p className="mt-2 text-xs text-graphite">
-                      {isBundle
-                        ? (isGerman ? `Alle ${c.levels.length} Stufen, A1.1–B2.2` : `All ${c.levels.length} levels, A1.1–B2.2`)
-                        : (isGerman ? `${c.levels[0].toUpperCase()} + ${c.levels[1].toUpperCase()} · lebenslang` : `${c.levels[0].toUpperCase()} + ${c.levels[1].toUpperCase()} · lifetime`)}
+                      {isGerman ? `${c.code} · lebenslang` : `${c.code} · lifetime`}
                     </p>
                     {owned ? (
                       <Button to={`/level/${firstLevel}`} variant="secondary" size="md" className="mt-4 w-full">
                         {isGerman ? 'Gekauft · öffnen →' : 'Owned · open →'}
                       </Button>
+                    ) : c.comingSoon || !c.variantId ? (
+                      <Button variant="secondary" size="md" className="mt-4 w-full" disabled aria-disabled="true">
+                        {isGerman ? 'Bald verfügbar' : 'Coming soon'}
+                      </Button>
                     ) : (
                       <Button
                         onClick={() => startPurchase(c.key, c.variantId, c.price)}
-                        variant={isBundle ? 'primary' : 'secondary'}
-                        shimmer={isBundle}
+                        variant="secondary"
                         size="md"
                         className="mt-4 w-full"
                       >

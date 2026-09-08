@@ -95,62 +95,94 @@ export const COURSES = {
 };
 
 /**
- * Level courses — the product, decided 2026-09-03 (docs/monetization-2026-09-03.md).
- * One-time, lifetime access to a CEFR band (both sub-levels), plus the same
- * included Pro window as the telc course. The bundle is every band at once.
- * A band is the unit because that is what a learner means by "A2": nobody
- * shops for "A2.1". The subscription stays as the AI add-on and is untouched.
+ * Level courses — the product, decided 2026-09-03 (docs/monetization-2026-09-03.md),
+ * re-cut per SUB-LEVEL on 2026-09-08 (owner decision, see the addendum there):
+ * A1.1 stays free, every other sub-level is its own one-time, lifetime product
+ * with its own price, plus the same included Pro window as the telc course.
+ * B1 and B2 are listed but not yet buyable — they render as "Coming soon"
+ * until the Course Factory has rebuilt them (Wave 7 B–D and Waves 8–10); a
+ * coming-soon course has no checkout id and never opens one. The A1–B2 bundle
+ * is parked for the same reason (half of it is coming soon); its legacy key
+ * stays resolvable below so an existing purchase keeps its access.
  *
  * `levels` is what the entitlement unlocks (src/contexts/SubscriptionContext.jsx
  * hasLevelAccess) — lowercase URL form, same as FREE_LEVELS.
  */
-export const COURSE_LEVEL_PRICE_EUR = 49;
-export const COURSE_BUNDLE_PRICE_EUR = 129;
-
 export const ALL_LEVELS = ['a1.1', 'a1.2', 'a2.1', 'a2.2', 'b1.1', 'b1.2', 'b2.1', 'b2.2'];
 
-/** Whole-percent saving of the bundle over four single bands — floored, never up. */
-export const BUNDLE_SAVING_PERCENT = Math.floor(
-  ((COURSE_LEVEL_PRICE_EUR * 4 - COURSE_BUNDLE_PRICE_EUR) / (COURSE_LEVEL_PRICE_EUR * 4)) * 100,
-);
+/** Gross one-time price in EUR per sub-level. A1.1 is free and has no product. */
+export const SUBLEVEL_PRICES_EUR = {
+  'a1.2': 40,
+  'a2.1': 50,
+  'a2.2': 50,
+  'b1.1': 60,
+  'b1.2': 60,
+  'b2.1': 65,
+  'b2.2': 65,
+};
 
-const band = (key, code, name, nameDe, levels) => ({
-  key,
-  code,
-  name,
-  nameDe,
-  price: COURSE_LEVEL_PRICE_EUR,
-  proDays: COURSE_PRO_DAYS,
-  proMonths: COURSE_PRO_MONTHS,
-  levels,
-});
+/** Listed, priced, not yet buyable — rendered as "Coming soon" with no checkout. */
+export const COMING_SOON_LEVELS = ['b1.1', 'b1.2', 'b2.1', 'b2.2'];
 
-export const LEVEL_COURSES = {
-  course_a1: band('course_a1', 'A1', 'German A1 Course', 'Deutsch A1 Kurs', ['a1.1', 'a1.2']),
-  course_a2: band('course_a2', 'A2', 'German A2 Course', 'Deutsch A2 Kurs', ['a2.1', 'a2.2']),
-  course_b1: band('course_b1', 'B1', 'German B1 Course', 'Deutsch B1 Kurs', ['b1.1', 'b1.2']),
-  course_b2: band('course_b2', 'B2', 'German B2 Course', 'Deutsch B2 Kurs', ['b2.1', 'b2.2']),
-  course_alle: {
-    key: 'course_alle',
-    code: 'A1–B2',
-    name: 'German Complete Course (A1–B2)',
-    nameDe: 'Deutsch Komplettkurs (A1–B2)',
-    price: COURSE_BUNDLE_PRICE_EUR,
+/** Sub-levels a visitor can buy today (priced and not coming soon). */
+export const SELLABLE_LEVELS = Object.keys(SUBLEVEL_PRICES_EUR).filter((l) => !COMING_SOON_LEVELS.includes(l));
+
+/** The cheapest buyable course — the "from €…" figure on the pricing page. */
+export const COURSE_FROM_PRICE_EUR = Math.min(...SELLABLE_LEVELS.map((l) => SUBLEVEL_PRICES_EUR[l]));
+
+/** Product key for a sub-level: 'a1.2' → 'course_a1_2' (env vars are COURSE_A1_2). */
+export const productKeyForLevel = (level) => `course_${String(level).toLowerCase().replace('.', '_')}`;
+
+const sublevel = (level) => {
+  const code = level.toUpperCase();
+  return {
+    key: productKeyForLevel(level),
+    code,
+    name: `German ${code} Course`,
+    nameDe: `Deutsch ${code} Kurs`,
+    price: SUBLEVEL_PRICES_EUR[level],
     proDays: COURSE_PRO_DAYS,
     proMonths: COURSE_PRO_MONTHS,
-    levels: ALL_LEVELS,
-    savingPercent: BUNDLE_SAVING_PERCENT,
-  },
+    levels: [level],
+    comingSoon: COMING_SOON_LEVELS.includes(level),
+  };
 };
+
+/** The catalogue: one product per paid sub-level, in ladder order. */
+export const LEVEL_COURSES = Object.fromEntries(
+  Object.keys(SUBLEVEL_PRICES_EUR).map((level) => [productKeyForLevel(level), sublevel(level)]),
+);
+
+/**
+ * Retired products (sold 2026-09-03 → 2026-09-08 as whole bands at €49 and the
+ * A1–B2 bundle at €129). Not on sale and rendered nowhere as an offer; kept so
+ * that levelsForProduct() still honours a purchases row carrying one of these
+ * keys, and so the dashboard can still name what the buyer owns.
+ */
+const LEGACY_BAND_PRICE_EUR = 49;
+const LEGACY_BUNDLE_PRICE_EUR = 129;
+const legacyBand = (key, code, name, nameDe, levels, price = LEGACY_BAND_PRICE_EUR) => ({
+  key, code, name, nameDe, price, proDays: COURSE_PRO_DAYS, proMonths: COURSE_PRO_MONTHS, levels, legacy: true,
+});
+export const LEGACY_LEVEL_COURSES = {
+  course_a1: legacyBand('course_a1', 'A1', 'German A1 Course', 'Deutsch A1 Kurs', ['a1.1', 'a1.2']),
+  course_a2: legacyBand('course_a2', 'A2', 'German A2 Course', 'Deutsch A2 Kurs', ['a2.1', 'a2.2']),
+  course_b1: legacyBand('course_b1', 'B1', 'German B1 Course', 'Deutsch B1 Kurs', ['b1.1', 'b1.2']),
+  course_b2: legacyBand('course_b2', 'B2', 'German B2 Course', 'Deutsch B2 Kurs', ['b2.1', 'b2.2']),
+  course_alle: legacyBand('course_alle', 'A1–B2', 'German Complete Course (A1–B2)', 'Deutsch Komplettkurs (A1–B2)', ALL_LEVELS, LEGACY_BUNDLE_PRICE_EUR),
+};
+
+/** A course (current or legacy) by product key, or null — what a purchases row means. */
+export const courseForProduct = (productKey) => LEVEL_COURSES[productKey] || LEGACY_LEVEL_COURSES[productKey] || null;
 
 /** Levels a product key unlocks — [] for unknown keys and for the telc course. */
-export const levelsForProduct = (productKey) => LEVEL_COURSES[productKey]?.levels || [];
+export const levelsForProduct = (productKey) => courseForProduct(productKey)?.levels || [];
 
-/** The single-band course that contains a level (lowercase), or null. */
-export const bandCourseForLevel = (level) => {
-  const l = (level || '').toLowerCase();
-  return Object.values(LEVEL_COURSES).find((c) => c.key !== 'course_alle' && c.levels.includes(l)) || null;
-};
+/** The buyable-or-coming course for a level (lowercase), or null for the free level. */
+export const courseForLevel = (level) => LEVEL_COURSES[productKeyForLevel(level || '')] || null;
+
+/** @deprecated name from the band era — now resolves to the sub-level course. */
+export const bandCourseForLevel = courseForLevel;
 
 export const PLANS = {
   monthly: {
