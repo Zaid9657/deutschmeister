@@ -130,9 +130,10 @@ test('a checkout interrupted by signup resumes, and a purchase lands on our succ
   const sub = read('src/pages/SubscriptionPage.jsx');
   assert.ok(sub.includes("searchParams.get('buy')"), '/subscription must honour ?buy=<key>');
   assert.ok(sub.includes('clearBuyIntent()'), 'the intent must be cleared once consumed, or it re-opens forever');
-  // The success page and dashboard must know a level course exists.
-  assert.ok(read('src/pages/SubscriptionSuccessPage.jsx').includes('LEVEL_COURSES'), 'success page is subscription-only');
-  assert.ok(read('src/pages/DashboardPage.jsx').includes('LEVEL_COURSES'), 'dashboard has no way into a bought level');
+  // The success page and dashboard must resolve a purchases row to a course —
+  // via courseForProduct, so a retired band key (course_a2) still shows up.
+  assert.ok(read('src/pages/SubscriptionSuccessPage.jsx').includes('courseForProduct('), 'success page is subscription-only');
+  assert.ok(read('src/pages/DashboardPage.jsx').includes('courseForProduct('), 'dashboard has no way into a bought level');
 });
 
 test('grammar exercises above the free level are gated on the same three doors as the SPA', () => {

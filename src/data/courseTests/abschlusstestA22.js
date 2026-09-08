@@ -67,8 +67,9 @@
 // Gate: resolveModelltest() (src/data/modelltest.js) returns gateLevel = the
 // course test's own level, so ExamSubscriptionGuard gates this on 'a2.2'.
 // Verified live against the repo (2026-09-06): 'a2.2' is NOT in FREE_LEVELS
-// (src/config/freeTier.js lists only 'a1.1'), and bandCourseForLevel('a2.2')
-// resolves to LEVEL_COURSES.course_a2 (levels ['a2.1','a2.2']) — so access
+// (src/config/freeTier.js lists only 'a1.1'), and courseForLevel('a2.2')
+// resolves to LEVEL_COURSES.course_a2_2 (a retired course_a2 row still
+// unlocks it via levelsForProduct) — so access
 // needs Pro/trial OR the A2 course purchase, the SAME gate as
 // abschlusstestA21 and the A2.2 level pages themselves.
 //

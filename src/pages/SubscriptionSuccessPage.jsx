@@ -8,7 +8,7 @@ import Button from '../components/ui/Button.jsx';
 import Card from '../components/ui/Card.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
 import confettiBurst from '../lib/confetti.js';
-import { LEVEL_COURSES } from '../data/pricing.js';
+import { COURSE_PRO_MONTHS, courseForProduct } from '../data/pricing.js';
 
 const SubscriptionSuccessPage = () => {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ const SubscriptionSuccessPage = () => {
     latestPurchase && Date.now() - new Date(latestPurchase.created_at).getTime() < RECENT_MS
       ? latestPurchase
       : null;
-  const courseBought = justBought ? LEVEL_COURSES[justBought.product_key] || null : null;
+  const courseBought = justBought ? courseForProduct(justBought.product_key) : null;
   const telcBought = justBought?.product_key === 'telc_b1_komplett';
 
   // Derive verification from context state on every render. The previous version
@@ -122,7 +122,7 @@ const SubscriptionSuccessPage = () => {
                 {courseBought
                   ? `Lifetime access to ${courseBought.levels.map((l) => l.toUpperCase()).join(' and ')} — every grammar topic, reading text, listening exercise and vocabulary list — plus ${courseBought.proMonths} months of Pro for the AI tools.`
                   : telcBought
-                    ? `Your 4-week exam plan is unlocked, with ${LEVEL_COURSES.course_a1.proMonths} months of Pro included.`
+                    ? `Your 4-week exam plan is unlocked, with ${COURSE_PRO_MONTHS} months of Pro included.`
                     : 'Your subscription is now active. You have full access to all German lessons, grammar exercises, listening practice, and more.'}
               </p>
 

@@ -113,7 +113,7 @@ test('formatOf goethe_a2 already resolves live (no ordering dependency left)', (
 
 test('the gate this file claims in its header is the gate the code computes', () => {
   assert.equal(isLevelFree('a2.2'), false, 'a2.2 must not be a free level, or the gate note is wrong');
-  assert.equal(bandCourseForLevel('a2.2')?.key, 'course_a2', 'the A2 band course must unlock a2.2');
+  assert.equal(bandCourseForLevel('a2.2')?.key, 'course_a2_2', 'the A2.2 course must unlock a2.2');
 });
 
 // ── 2. shape guards adapted from tests/exams.test.mjs ────────────────────

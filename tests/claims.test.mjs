@@ -40,9 +40,13 @@ import {
   COURSE_TELC_B1_PRICE_EUR,
   COURSE_PRO_DAYS,
   COURSES,
-  COURSE_LEVEL_PRICE_EUR,
-  COURSE_BUNDLE_PRICE_EUR,
-  BUNDLE_SAVING_PERCENT,
+  SUBLEVEL_PRICES_EUR,
+  COMING_SOON_LEVELS,
+  SELLABLE_LEVELS,
+  COURSE_FROM_PRICE_EUR,
+  LEGACY_LEVEL_COURSES,
+  courseForProduct,
+  productKeyForLevel,
   LEVEL_COURSES,
   ALL_LEVELS,
   levelsForProduct,
@@ -99,34 +103,41 @@ test('derived figures follow from the prices', () => {
   assert.ok(YEARLY_PER_DAY_EUR < MONTHLY_PER_DAY_EUR);
 });
 
-test('level courses cover the ladder exactly once and the bundle saving is honest', () => {
-  // The bundle must be cheaper than four bands, and the floored percentage
-  // must never overstate it.
-  assert.ok(COURSE_BUNDLE_PRICE_EUR < COURSE_LEVEL_PRICE_EUR * 4, 'the bundle is not a saving');
-  const real = ((COURSE_LEVEL_PRICE_EUR * 4 - COURSE_BUNDLE_PRICE_EUR) / (COURSE_LEVEL_PRICE_EUR * 4)) * 100;
-  assert.ok(BUNDLE_SAVING_PERCENT <= real && BUNDLE_SAVING_PERCENT > real - 1);
-  assert.equal(LEVEL_COURSES.course_alle.savingPercent, BUNDLE_SAVING_PERCENT);
-
-  // Every sub-level belongs to exactly one band, and the bundle is all of them —
+test('level courses cover every paid sub-level exactly once, at its own price', () => {
+  // Every level except the free one is a product; the free one never is —
   // a gap here is a level nobody can buy, an overlap is a level sold twice.
-  const bands = Object.values(LEVEL_COURSES).filter((c) => c.key !== 'course_alle');
-  const covered = bands.flatMap((c) => c.levels);
-  assert.deepEqual([...covered].sort(), [...ALL_LEVELS].sort());
-  assert.equal(new Set(covered).size, ALL_LEVELS.length);
-  assert.deepEqual(LEVEL_COURSES.course_alle.levels, ALL_LEVELS);
-  for (const c of bands) assert.equal(c.price, COURSE_LEVEL_PRICE_EUR);
-  assert.equal(LEVEL_COURSES.course_alle.price, COURSE_BUNDLE_PRICE_EUR);
+  const paid = ALL_LEVELS.slice(1);
+  assert.deepEqual(Object.keys(SUBLEVEL_PRICES_EUR), paid);
+  const covered = Object.values(LEVEL_COURSES).flatMap((c) => c.levels);
+  assert.deepEqual(covered, paid);
+  assert.equal(new Set(covered).size, paid.length);
+  for (const c of Object.values(LEVEL_COURSES)) {
+    assert.equal(c.levels.length, 1, `${c.key} must be one sub-level`);
+    assert.equal(c.key, productKeyForLevel(c.levels[0]));
+    assert.equal(c.price, SUBLEVEL_PRICES_EUR[c.levels[0]]);
+    assert.equal(c.comingSoon, COMING_SOON_LEVELS.includes(c.levels[0]));
+    assert.equal(c.proDays, COURSE_PRO_DAYS, 'every course grants the Pro window the webhook grants');
+  }
+  // Prices rise up the ladder, never fall (the owner's 40 / 50 / 60 / 65 map).
+  const prices = paid.map((l) => SUBLEVEL_PRICES_EUR[l]);
+  for (let i = 1; i < prices.length; i += 1) assert.ok(prices[i] >= prices[i - 1], 'a higher level must not be cheaper');
+  assert.equal(COURSE_FROM_PRICE_EUR, Math.min(...SELLABLE_LEVELS.map((l) => SUBLEVEL_PRICES_EUR[l])));
+  assert.ok(SELLABLE_LEVELS.every((l) => !COMING_SOON_LEVELS.includes(l)));
+  assert.ok(SELLABLE_LEVELS.length > 0, 'nothing would be buyable');
 
-  // Resolution helpers are what the level guard reads.
-  assert.deepEqual(levelsForProduct('course_b1'), ['b1.1', 'b1.2']);
-  assert.deepEqual(levelsForProduct('course_alle'), ALL_LEVELS);
+  // Resolution helpers are what the level guard reads — current AND retired keys.
+  assert.deepEqual(levelsForProduct('course_a2_1'), ['a2.1']);
+  assert.deepEqual(levelsForProduct('course_b1'), ['b1.1', 'b1.2'], 'a retired band row keeps its access');
+  assert.deepEqual(levelsForProduct('course_alle'), ALL_LEVELS, 'a retired bundle row keeps its access');
   assert.deepEqual(levelsForProduct('telc_b1_komplett'), [], 'the telc plan is not a level entitlement');
   assert.deepEqual(levelsForProduct('nope'), []);
-  assert.equal(bandCourseForLevel('B2.1').key, 'course_b2', 'case-insensitive: the DB is uppercase');
+  assert.equal(courseForProduct('course_a1').legacy, true);
+  assert.equal(bandCourseForLevel('B2.1').key, 'course_b2_1', 'case-insensitive: the DB is uppercase');
+  assert.equal(bandCourseForLevel('B2.1').comingSoon, true);
+  assert.equal(bandCourseForLevel('a1.1'), null, 'the free level is not a product');
   assert.equal(bandCourseForLevel('zz'), null);
-
-  // Every course grants the same Pro window the webhook grants.
-  for (const c of Object.values(LEVEL_COURSES)) assert.equal(c.proDays, COURSE_PRO_DAYS);
+  // Retired keys never reappear as live products.
+  for (const k of Object.keys(LEGACY_LEVEL_COURSES)) assert.ok(!(k in LEVEL_COURSES), `${k} is retired`);
 });
 
 test('formatters produce the German and English conventions', () => {
@@ -184,10 +195,7 @@ test('no page source retypes a price literal', () => {
     deNum(YEARLY_PER_DAY_EUR), // 0,22
     num(COURSE_TELC_B1_PRICE_EUR), // 89.00
     deNum(COURSE_TELC_B1_PRICE_EUR), // 89,00
-    num(COURSE_LEVEL_PRICE_EUR), // 49.00
-    deNum(COURSE_LEVEL_PRICE_EUR), // 49,00
-    num(COURSE_BUNDLE_PRICE_EUR), // 129.00
-    deNum(COURSE_BUNDLE_PRICE_EUR), // 129,00
+    ...Object.values(SUBLEVEL_PRICES_EUR).flatMap((p) => [num(p), deNum(p)]), // 40.00, 50.00, 60.00, 65.00 and the German forms
   ];
 
   const failures = [];

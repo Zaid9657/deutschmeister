@@ -237,10 +237,10 @@ format is recorded in the decisions log. Briefs: `docs/course-factory/wave7/`; t
 | # | Step | Status | PR |
 |---|---|---|---|
 | A | Level constraint `level-b1.1.md` + four new B1.1 topics (topic_order 9–12: temporal-clauses, obwohl-damit-sodass, adverbial-connectors, two-part-connectors), 26 exercises / 20–23 typed each, `tests/b1-1-course.test.mjs`, counts in both `marketing.js` twins, llms 80→84; the cache re-serialised to the single-line dump format (Wave 6's re-cut had written it pretty-printed, which the topic generator refuses) | merged, DB migrated 2026-09-07 (84 topics / 657 / 913 / 1534 = cache; the four topics md5-identical to the cache; reviews FAIL → PASS in 2–3 rounds per topic) | #105 |
-| A2 | Typed production + depth + legacy pass for the 8 live B1.1 topics: 80 typed exercises (10 per topic, contiguous order_index 16–25 / 9–18), +3 rules / +4 examples on each of the five thin topics (15 rules / 20 examples, every one now ≥8 rules incl. a common_mistakes rule and ≥12 examples), 6 guarded rule patches, the two swapped-field legacy MC exercises re-cut in place (`recut-from-json.mjs --header`), `tests/helpers/b1Bans.mjs` + `tests/b1-1-typed-production.test.mjs` (full-level ban sweep over every German field of every B1.1 row in the cache), counts in both `marketing.js` twins | merged, DB migration pending (cache 84 topics / 672 / 933 / 1614; reviews E1 9 → 1 → 0 and E2 27 findings → 0 blocking over three rounds, both round-3 delta re-reviews PASS) | #106 |
-| B | Wortliste B1.1: the 129 defect rows, the 28 re-levelled Prepositions/Animals rows re-categorised, ~150 additions toward the Zertifikat B1 Wortliste | planned | — |
-| C | Reading B1.1 (8 rewrites ≤220 words with checks + telc Lesen Teil 1 / Teil 3 exam-format lessons) + listening B1.1 (+78 questions incl. 18 dictation) | planned | — |
-| D | Abschlusstest B1.1 (telc format: Hören, Lesen Teil 1+2, Sprachbausteine Teil 1, Schreiben) + `/b1-1-phase` 28-day plan + hand-offs + the eleven-key `exam_attempts` CHECK | planned | — |
+| A2 | Typed production + depth + legacy pass for the 8 live B1.1 topics: 80 typed exercises (10 per topic, contiguous order_index 16–25 / 9–18), +3 rules / +4 examples on each of the five thin topics (15 rules / 20 examples, every one now ≥8 rules incl. a common_mistakes rule and ≥12 examples), 6 guarded rule patches, the two swapped-field legacy MC exercises re-cut in place (`recut-from-json.mjs --header`), `tests/helpers/b1Bans.mjs` + `tests/b1-1-typed-production.test.mjs` (full-level ban sweep over every German field of every B1.1 row in the cache), counts in both `marketing.js` twins | merged, DB migrated 2026-09-08 (7 connector chunks; md5 over ALL B1.1 rules/examples/exercises = cache; every topic ≥10 typed / 9 rules incl. common_mistakes; ban sweep 0; cache 84 topics / 672 / 933 / 1614; reviews E1 9 → 1 → 0 and E2 27 findings → 0 blocking over three rounds, both round-3 delta re-reviews PASS) | #106 |
+| B | Wortliste B1.1: the 129 defect rows, the 28 re-levelled Prepositions/Animals rows re-categorised, ~150 additions toward the Zertifikat B1 Wortliste | **parked 2026-09-08** (owner: stop building, sell what is finished; B1/B2 listed as coming soon) | — |
+| C | Reading B1.1 (8 rewrites ≤220 words with checks + telc Lesen Teil 1 / Teil 3 exam-format lessons) + listening B1.1 (+78 questions incl. 18 dictation) | parked 2026-09-08 | — |
+| D | Abschlusstest B1.1 (telc format: Hören, Lesen Teil 1+2, Sprachbausteine Teil 1, Schreiben) + `/b1-1-phase` 28-day plan + hand-offs + the eleven-key `exam_attempts` CHECK | parked 2026-09-08 | — |
 
 ## Measured baseline (do not re-derive)
 
@@ -295,6 +295,12 @@ format is recorded in the decisions log. Briefs: `docs/course-factory/wave7/`; t
   only screenshot the auth guard.
 
 ## Decisions log
+
+- 2026-09-08 (owner): **stop building, sell what is finished.** Wave 7 pauses after PR A2 (B1.1 grammar
+  complete, live); PRs B–D and Waves 8–10 are parked, not cancelled. The catalogue is re-cut per
+  sub-level — A1.1 free, A1.2 €40, A2.1/A2.2 €50, B1.1/B1.2 €60, B2.1/B2.2 €65 — with B1 and B2
+  listed as "coming soon" (no checkout) until they are rebuilt, and the A1–B2 bundle parked. Details
+  and env-var names in `docs/monetization-2026-09-03.md` (addendum).
 
 - 2026-09-06 (Wave 6, PR A): the legacy re-cut edits in place and never deletes — every banned string is
   replaced by an in-level equivalent that keeps the row's teaching job (the B1 subordinators leave the

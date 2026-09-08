@@ -98,3 +98,37 @@ run for the telc course either.
 2. Launch email for the level courses (drafts exist for the telc course under `drafts/`).
 3. Exam packs as an upsell once 30 days of mock/writing usage exist.
 4. Distribution — still the real bottleneck; unchanged by any of the above.
+
+
+## Addendum 2026-09-08 — per-sub-level pricing, B1/B2 "coming soon", bundle parked
+
+Owner decision (chat, 2026-09-08): stop building the remaining levels for now and sell what is
+finished. Catalogue re-cut in `src/data/pricing.js` (`SUBLEVEL_PRICES_EUR`, `COMING_SOON_LEVELS`):
+
+| Sub-level | Price | Status |
+|---|---|---|
+| A1.1 | free | free tier, no product |
+| A1.2 | €40 | on sale |
+| A2.1 | €50 | on sale |
+| A2.2 | €50 | on sale |
+| B1.1 | €60 | listed, **coming soon** (no checkout) |
+| B1.2 | €60 | listed, **coming soon** |
+| B2.1 | €65 | listed, **coming soon** |
+| B2.2 | €65 | listed, **coming soon** |
+
+- The four €49 band products and the €129 A1–B2 bundle are **retired** (`LEGACY_LEVEL_COURSES`):
+  not rendered as offers anywhere, still resolved by `levelsForProduct()` so the one existing
+  `course_a1` row (the owner's €0 test order) and any cached checkout keep their access. The
+  bundle comes back at ~€249 once B1/B2 ship (agent suggestion, not yet decided).
+- Product keys are `course_<level with . → _>`: `course_a1_2`, `course_a2_1`, `course_a2_2`,
+  `course_b1_1`, `course_b1_2`, `course_b2_1`, `course_b2_2`. Env vars follow the key:
+  `LEMONSQUEEZY_COURSE_A1_2_VARIANT_ID` (functions, numeric),
+  `VITE_LEMONSQUEEZY_COURSE_A1_2_VARIANT_ID` + `PUBLIC_LEMONSQUEEZY_COURSE_A1_2_VARIANT_ID`
+  (builds, checkout UUID) — three products live today, so **nine** values; the B1/B2 vars stay
+  unset until those courses exist (a coming-soon card ignores its var anyway).
+- Lemon Squeezy variants still to create (dashboard-only, owner): A1.2 €40, A2.1 €50, A2.2 €50 on
+  product 1336941. Paste-ready prompt in `docs/owner-prompts.md`. Until their ids are set the
+  A1.2/A2 cards render "Coming soon" too, so the site never opens a dead checkout — set the env
+  vars BEFORE merging the code PR to avoid a window with nothing buyable.
+- Old variants 2088862/2088867/2088868/2088869/2088871 should be archived in the LS dashboard
+  after the new ids are live (owner), so an old share link cannot sell a €49 band.

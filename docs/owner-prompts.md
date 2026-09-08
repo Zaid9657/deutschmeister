@@ -18,6 +18,18 @@ Then paste the ids to the agent: it sets `LEMONSQUEEZY_<KEY>_VARIANT_ID` (numeri
 functions scope) and `VITE_/PUBLIC_LEMONSQUEEZY_<KEY>_VARIANT_ID` (UUID, builds scope)
 via the Netlify connector and redeploys.
 
+**Add the per-sub-level variants** (decision 2026-09-08; product 1336941 already exists):
+```
+In Lemon Squeezy store 309512, on the existing one-time product 1336941, add three variants:
+"German A1.2 Course" = €40, "German A2.1 Course" = €50, "German A2.2 Course" = €50, EUR,
+tax category "SaaS – personal use". Publish them. For each new variant return the numeric
+variant id and the checkout share-link UUID. Do not touch any other product or variant.
+```
+Then paste the three id pairs to the agent: it sets `LEMONSQUEEZY_COURSE_A1_2_VARIANT_ID`,
+`_A2_1_`, `_A2_2_` (numeric, functions scope) and the `VITE_`/`PUBLIC_` twins (UUID, builds
+scope) via the Netlify connector, merges the catalogue PR and redeploys. Afterwards archive the
+five 2026-09-03 variants (2088862, 2088867, 2088868, 2088869, 2088871).
+
 **Set the post-purchase redirect** (so buyers land on our success page, not LS's receipt):
 ```
 In store 309512, set product <id>'s "Redirect after purchase" URL to

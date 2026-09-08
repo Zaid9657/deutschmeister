@@ -62,15 +62,18 @@ export const LEMONSQUEEZY_CONFIG = {
     },
   },
 
-  // Level courses (the product since 2026-09-03). Same no-fallback rule: an
-  // unset variant hides the card. Vite only inlines statically-named env
-  // reads, so each one is spelled out rather than looked up by key.
+  // Level courses, one per paid sub-level (2026-09-08). Same no-fallback rule:
+  // an unset variant hides the buy button (a coming-soon course has none by
+  // design). Vite only inlines statically-named env reads, so each one is
+  // spelled out rather than looked up by key.
   levelCourses: {
-    course_a1: { ...LEVEL_COURSES.course_a1, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_A1_VARIANT_ID || '' },
-    course_a2: { ...LEVEL_COURSES.course_a2, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_A2_VARIANT_ID || '' },
-    course_b1: { ...LEVEL_COURSES.course_b1, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_B1_VARIANT_ID || '' },
-    course_b2: { ...LEVEL_COURSES.course_b2, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_B2_VARIANT_ID || '' },
-    course_alle: { ...LEVEL_COURSES.course_alle, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_ALLE_VARIANT_ID || '' },
+    course_a1_2: { ...LEVEL_COURSES.course_a1_2, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_A1_2_VARIANT_ID || '' },
+    course_a2_1: { ...LEVEL_COURSES.course_a2_1, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_A2_1_VARIANT_ID || '' },
+    course_a2_2: { ...LEVEL_COURSES.course_a2_2, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_A2_2_VARIANT_ID || '' },
+    course_b1_1: { ...LEVEL_COURSES.course_b1_1, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_B1_1_VARIANT_ID || '' },
+    course_b1_2: { ...LEVEL_COURSES.course_b1_2, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_B1_2_VARIANT_ID || '' },
+    course_b2_1: { ...LEVEL_COURSES.course_b2_1, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_B2_1_VARIANT_ID || '' },
+    course_b2_2: { ...LEVEL_COURSES.course_b2_2, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_B2_2_VARIANT_ID || '' },
   },
 
   // Generate checkout URL with user info

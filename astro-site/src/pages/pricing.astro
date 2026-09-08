@@ -34,9 +34,8 @@ import {
   eur,
   COURSE_TELC_B1_PRICE_EUR,
   COURSE_PRO_MONTHS,
-  COURSE_LEVEL_PRICE_EUR,
-  COURSE_BUNDLE_PRICE_EUR,
-  BUNDLE_SAVING_PERCENT,
+  COURSE_FROM_PRICE_EUR,
+  SUBLEVEL_PRICES_EUR,
   LEVEL_COURSES,
 } from '../data/pricing.js';
 import {
@@ -64,19 +63,26 @@ const description = `${FREE_LEVEL_LABEL} is free forever. Pro opens all ${LEVEL_
 const TOPICS_PER_LEVEL = (await getTopicsForLevel(FREE_LEVEL_LABEL.toLowerCase())).length;
 const FREE_RUNGS = 1; // FREE_LEVEL_LABEL is the first rung of the ladder.
 
-// Level courses (the product since 2026-09-03, docs/monetization-2026-09-03.md).
-// Checkout ids are build-time PUBLIC_ env, one per product; a course with no
-// id renders no buy button, and if none is set the whole section stays out —
+// Level courses, one per paid sub-level (2026-09-08, docs/monetization-2026-09-03.md
+// addendum). Checkout ids are build-time PUBLIC_ env, one per product; a course
+// with no id renders "Coming soon" instead of a buy button (B1/B2 are coming
+// soon by design), and if no course is buyable the buy-related copy stays out —
 // the same "never open a dead checkout" rule the SPA follows.
 const LEVEL_COURSE_VARIANTS = {
-  course_a1: import.meta.env.PUBLIC_LEMONSQUEEZY_COURSE_A1_VARIANT_ID || '',
-  course_a2: import.meta.env.PUBLIC_LEMONSQUEEZY_COURSE_A2_VARIANT_ID || '',
-  course_b1: import.meta.env.PUBLIC_LEMONSQUEEZY_COURSE_B1_VARIANT_ID || '',
-  course_b2: import.meta.env.PUBLIC_LEMONSQUEEZY_COURSE_B2_VARIANT_ID || '',
-  course_alle: import.meta.env.PUBLIC_LEMONSQUEEZY_COURSE_ALLE_VARIANT_ID || '',
+  course_a1_2: import.meta.env.PUBLIC_LEMONSQUEEZY_COURSE_A1_2_VARIANT_ID || '',
+  course_a2_1: import.meta.env.PUBLIC_LEMONSQUEEZY_COURSE_A2_1_VARIANT_ID || '',
+  course_a2_2: import.meta.env.PUBLIC_LEMONSQUEEZY_COURSE_A2_2_VARIANT_ID || '',
+  course_b1_1: import.meta.env.PUBLIC_LEMONSQUEEZY_COURSE_B1_1_VARIANT_ID || '',
+  course_b1_2: import.meta.env.PUBLIC_LEMONSQUEEZY_COURSE_B1_2_VARIANT_ID || '',
+  course_b2_1: import.meta.env.PUBLIC_LEMONSQUEEZY_COURSE_B2_1_VARIANT_ID || '',
+  course_b2_2: import.meta.env.PUBLIC_LEMONSQUEEZY_COURSE_B2_2_VARIANT_ID || '',
 };
-const levelCourses = Object.values(LEVEL_COURSES).map((c) => ({ ...c, variantId: LEVEL_COURSE_VARIANTS[c.key] }));
+const levelCourses = Object.values(LEVEL_COURSES).map((c) => ({
+  ...c,
+  variantId: c.comingSoon ? '' : LEVEL_COURSE_VARIANTS[c.key],
+}));
 const showLevelCourses = levelCourses.some((c) => c.variantId);
+const priceList = Object.entries(SUBLEVEL_PRICES_EUR).map(([l, p]) => `${l.toUpperCase()} ${eur(p)}`).join(', ');
 
 const productSchema = {
   '@context': 'https://schema.org',
@@ -151,7 +157,7 @@ const FAQS = [
   {
     q: 'Is there a one-time option instead of a subscription?',
     a: showLevelCourses
-      ? `Yes. Each level course (A1, A2, B1 or B2) is ${eur(COURSE_LEVEL_PRICE_EUR)} once and stays yours: both sub-levels, every grammar topic, reading, listening and vocabulary at that level, plus ${COURSE_PRO_MONTHS} months of Pro included. The complete course, all four levels, is ${eur(COURSE_BUNDLE_PRICE_EUR)} — ${BUNDLE_SAVING_PERCENT}% less than buying them one by one. The telc B1 Komplettvorbereitung (${eur(COURSE_TELC_B1_PRICE_EUR)}) is the fixed 4-week exam plan for one job: your telc B1 date.`
+      ? `Yes. Each sub-level is its own one-time course, from ${eur(COURSE_FROM_PRICE_EUR)} (${priceList}), and stays yours: every grammar topic, reading text, listening exercise and vocabulary list at that sub-level, plus ${COURSE_PRO_MONTHS} months of Pro included. B1 and B2 are listed as coming soon and cannot be bought yet. The telc B1 Komplettvorbereitung (${eur(COURSE_TELC_B1_PRICE_EUR)}) is the fixed 4-week exam plan for one job: your telc B1 date.`
       : `Yes — the telc B1 Komplettvorbereitung (${eur(COURSE_TELC_B1_PRICE_EUR)} one-time) is a fixed 4-week exam plan with ${COURSE_PRO_MONTHS} months of full Pro included and permanent access to the course area. It exists for one job: your telc B1 date.`,
   },
   ...(showLevelCourses
@@ -212,7 +218,7 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-5 py-3 text-ink sha
             month to be locked out of B1. {FREE_LEVEL_LABEL} is free forever. Pro opens the other
             {LEVEL_COUNT - FREE_RUNGS} levels, the speaking coach, the writing feedback and the timed
             practice test, for {eur(PLANS.monthly.perDay)} a day.{showLevelCourses && (
-              <> Or buy the level you need once, from {eur(COURSE_LEVEL_PRICE_EUR)}, and keep it.</>
+              <> Or buy the level you need once, from {eur(COURSE_FROM_PRICE_EUR)}, and keep it.</>
             )}
           </p>
         </header>
@@ -320,57 +326,53 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-5 py-3 text-ink sha
         </table>
       </section>
 
-      <!-- Level courses: buy a band once, keep it. Prices derive from
+      <!-- Level courses: buy a sub-level once, keep it. Prices derive from
            pricing.js; buttons carry their checkout id and the script below
-           opens the overlay (signed-out visitors go to signup first). -->
-      {showLevelCourses && (
-        <section class="reveal mt-14" style="--rd:80ms" aria-labelledby="levels-h">
-          <h2 id="levels-h" class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[2rem]">
-            Or buy a level once, and keep it
-          </h2>
-          <p class="mt-3 max-w-prose text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
-            One payment, no renewal. A level course opens both sub-levels — every grammar topic,
-            reading text, listening exercise and vocabulary list at that level — for good, and
-            includes {COURSE_PRO_MONTHS} months of Pro so the speaking coach, writing feedback and
-            Sentence X-Ray run while you work through it.
-          </p>
-          <ul class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-            {levelCourses.map((c) => {
-              const bundle = c.key === 'course_alle';
-              return (
-                <li class={`relative flex flex-col rounded-clay border bg-white p-5 ${bundle ? 'border-siegel shadow-raise-siegel sm:col-span-2 lg:col-span-1' : 'border-rule shadow-raise'}`}>
-                  {bundle && (
-                    <span class="absolute -top-3 left-1/2 -translate-x-1/2 inline-flex items-center rounded-pill bg-gold px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-ink shadow-raise">
-                      Save {c.savingPercent}%
-                    </span>
-                  )}
-                  <span class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{c.code}</span>
-                  <span class="mt-1 text-[1.0625rem] font-bold leading-tight text-ink">{c.name}</span>
-                  <span class="mt-3 font-display text-[1.75rem] font-semibold leading-none tracking-[-0.02em] text-ink">
-                    {eur(c.price)}
-                    <span class="ml-1 font-body text-xs font-normal tracking-normal text-graphite">one time</span>
-                  </span>
-                  <span class="mt-2 text-xs text-graphite">
-                    {bundle ? `All ${c.levels.length} levels, A1.1–B2.2` : `${c.levels[0].toUpperCase()} + ${c.levels[1].toUpperCase()} · lifetime`}
-                  </span>
-                  {c.variantId ? (
-                    <button
-                      type="button"
-                      class={`${bundle ? BTN_PRIMARY : BTN_SECONDARY} mt-4 w-full`}
-                      data-course-variant={c.variantId}
-                      data-course-key={c.key}
-                    >
-                      Buy {c.code}
-                    </button>
-                  ) : (
-                    <span class="mt-4 font-data text-[0.75rem] text-graphite">Coming soon</span>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      )}
+           opens the overlay (signed-out visitors go to signup first). B1 and
+           B2 are listed as "Coming soon" with no button, by decision 2026-09-08. -->
+      <section class="reveal mt-14" style="--rd:80ms" aria-labelledby="levels-h">
+        <h2 id="levels-h" class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[2rem]">
+          Or buy a level once, and keep it
+        </h2>
+        <p class="mt-3 max-w-prose text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
+          One payment, no renewal. A level course opens one sub-level — every grammar topic,
+          reading text, listening exercise and vocabulary list at that sub-level — for good, and
+          includes {COURSE_PRO_MONTHS} months of Pro so the speaking coach, writing feedback and
+          Sentence X-Ray run while you work through it. {FREE_LEVEL_LABEL} stays free.
+        </p>
+        <ul class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {levelCourses.map((c) => (
+            <li class={`relative flex flex-col rounded-clay border border-rule bg-white p-5 shadow-raise ${c.comingSoon ? 'opacity-80' : ''}`}>
+              {c.comingSoon && (
+                <span class="absolute -top-3 left-1/2 -translate-x-1/2 inline-flex items-center rounded-pill bg-paper-sunk px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite shadow-raise">
+                  Coming soon
+                </span>
+              )}
+              <span class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">{c.code}</span>
+              <span class="mt-1 text-[1.0625rem] font-bold leading-tight text-ink">{c.name}</span>
+              <span class="mt-3 font-display text-[1.75rem] font-semibold leading-none tracking-[-0.02em] text-ink">
+                {eur(c.price)}
+                <span class="ml-1 font-body text-xs font-normal tracking-normal text-graphite">one time</span>
+              </span>
+              <span class="mt-2 text-xs text-graphite">{c.code} · lifetime</span>
+              {c.variantId ? (
+                <button
+                  type="button"
+                  class={`${BTN_SECONDARY} mt-4 w-full`}
+                  data-course-variant={c.variantId}
+                  data-course-key={c.key}
+                >
+                  Buy {c.code}
+                </button>
+              ) : (
+                <span class={`${BTN_SECONDARY} mt-4 w-full cursor-not-allowed opacity-60`} aria-disabled="true">
+                  Coming soon
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
 
       <!-- The one-time course — the highest-ticket product, as a 3D card.
            Price derives from pricing.js (COURSE_TELC_B1_PRICE_EUR). -->

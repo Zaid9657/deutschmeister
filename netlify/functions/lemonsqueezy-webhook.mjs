@@ -220,6 +220,17 @@ async function resolveUserId(customData, attributes, lemonsqueezySubscriptionId)
 // client resolves which levels a purchases row unlocks from that key alone.
 const COURSE_VARIANT_ENV = {
   LEMONSQUEEZY_TELC_B1_VARIANT_ID: 'telc_b1_komplett',
+  // One product per paid sub-level (2026-09-08). B1/B2 vars stay unset while
+  // those courses are "coming soon" — an unset var is simply no route.
+  LEMONSQUEEZY_COURSE_A1_2_VARIANT_ID: 'course_a1_2',
+  LEMONSQUEEZY_COURSE_A2_1_VARIANT_ID: 'course_a2_1',
+  LEMONSQUEEZY_COURSE_A2_2_VARIANT_ID: 'course_a2_2',
+  LEMONSQUEEZY_COURSE_B1_1_VARIANT_ID: 'course_b1_1',
+  LEMONSQUEEZY_COURSE_B1_2_VARIANT_ID: 'course_b1_2',
+  LEMONSQUEEZY_COURSE_B2_1_VARIANT_ID: 'course_b2_1',
+  LEMONSQUEEZY_COURSE_B2_2_VARIANT_ID: 'course_b2_2',
+  // Retired band products (2026-09-03 → 2026-09-08): still routed so an order
+  // from a cached checkout link is delivered, never silently dropped.
   LEMONSQUEEZY_COURSE_A1_VARIANT_ID: 'course_a1',
   LEMONSQUEEZY_COURSE_A2_VARIANT_ID: 'course_a2',
   LEMONSQUEEZY_COURSE_B1_VARIANT_ID: 'course_b1',

@@ -12,7 +12,7 @@ import { getTopicsForLevel } from '../data/grammarTopics';
 import { levels as ALL_LEVELS } from '../data/content';
 import { deriveCurrent, isTopicCompleted, topicPercent } from '../services/currentPosition';
 import { examTrackByKey } from '../data/examTracks';
-import { LEVEL_COURSES } from '../data/pricing.js';
+import { courseForProduct } from '../data/pricing.js';
 import { loadDashboardStats, DAILY_GOAL_TARGET } from '../services/dashboardStats';
 import { GRAMMAR_TOPIC_COUNT } from '../data/marketing.js';
 import { listAttempts } from '../services/examService';
@@ -199,7 +199,7 @@ const DashboardPage = () => {
   // level, so a buyer never has to find their purchase through the paywalled
   // ladder. The bundle collapses to one strip.
   const ownedLevelCourses = user
-    ? purchases.map((p) => LEVEL_COURSES[p.product_key]).filter(Boolean)
+    ? purchases.map((p) => courseForProduct(p.product_key)).filter(Boolean)
     : [];
 
   const statTiles = [
@@ -462,7 +462,7 @@ const DashboardPage = () => {
                 <div>
                   <p className="font-bold text-[0.875rem] text-ink">{c.name}</p>
                   <p className="text-[0.75rem] text-graphite">
-                    Yours for life · {c.key === 'course_alle' ? 'all 8 levels' : c.levels.map((l) => l.toUpperCase()).join(' + ')}
+                    Yours for life · {c.key === 'course_alle' ? `all ${c.levels.length} levels` : c.levels.map((l) => l.toUpperCase()).join(' + ')}
                   </p>
                 </div>
               </div>
