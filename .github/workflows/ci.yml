@@ -85,6 +85,7 @@ jobs:
           cp -r astro-site/dist/pruefung dist/pruefung
           cp -r astro-site/dist/telc-b1-komplettvorbereitung dist/telc-b1-komplettvorbereitung
           cp -r astro-site/dist/pricing dist/pricing
+          cp -r astro-site/dist/courses dist/courses
           cp -r astro-site/dist/privacy dist/privacy
           cp -r astro-site/dist/impressum dist/impressum
           mkdir -p dist/_astro && cp -r astro-site/dist/_astro/. dist/_astro/

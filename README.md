@@ -11,7 +11,7 @@ Two front ends are **merged into one `dist/` at deploy time**:
 | Layer | Tech | Lives in | Serves |
 |---|---|---|---|
 | SPA | Vite 5 + React 18 + react-router | `src/`, `index.html` | The app itself: auth, dashboard, lessons, speaking, X-Ray (`/app.html` shell) |
-| Static site | Astro 5 (SSG) | `astro-site/` | SEO pages: `/`, `/pricing/`, `/grammar/**`, `/vergleich/*`, `/leitfaden/*`, `/privacy/`, `/impressum/`, 404 |
+| Static site | Astro 5 (SSG) | `astro-site/` | SEO pages: `/`, `/pricing/`, `/courses/**`, `/grammar/**`, `/vergleich/*`, `/leitfaden/*`, `/privacy/`, `/impressum/`, 404 |
 | Functions | Netlify Functions | `netlify/functions/` | AI speaking pipeline, X-Ray, Lemon Squeezy webhook, emails, podcast feed |
 | Database | Supabase | schema SQL at root + `migrations/` | Content, auth, progress, subscriptions |
 

@@ -35,6 +35,7 @@ export const NAV_GROUPS = [
     labelEn: 'Learn',
     labelDe: 'Lernen',
     items: [
+      { key: 'courses', labelEn: 'Courses', labelDe: 'Kurse', href: '/courses/', kind: 'static', auth: 'any' },
       { key: 'grammar', labelEn: 'Grammar', labelDe: 'Grammatik', href: '/grammar/', kind: 'static', auth: 'any' },
       { key: 'videos', labelEn: 'Videos', labelDe: 'Videos', href: '/video-library', kind: 'spa', auth: 'any' },
       { key: 'listening', labelEn: 'Listening', labelDe: 'Hören', href: '/listening/', kind: 'spa', auth: 'any' },

@@ -7,7 +7,7 @@ platform: Vite/React SPA + Astro static site + Netlify functions + Supabase).
 
 Two front ends merge into one `dist/` at deploy: the **SPA** (`src/`, Vite+React 18,
 becomes `dist/app.html`) is the app; the **Astro site** (`astro-site/`, separate
-package+lockfile) statically renders the SEO-facing routes (`/`, `/pricing/`,
+package+lockfile) statically renders the SEO-facing routes (`/`, `/pricing/`, `/courses/**`,
 `/grammar/**`, `/vergleich/*`, `/leitfaden/*`, `/privacy/`, `/impressum/`, 404) and wins
 over the SPA for those URLs. 15 **Netlify functions** (`netlify/functions/`) power AI
 speaking, X-Ray, payments (Lemon Squeezy webhook), and email (Resend). Content lives in

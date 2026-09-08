@@ -167,6 +167,9 @@ const PRICE_FREE_SURFACES = [
   'src/data/competitorComparisons.js',
   'astro-site/src/data/competitorComparisons.js',
   'astro-site/src/pages/pricing.astro',
+  'astro-site/src/pages/courses/index.astro',
+  'astro-site/src/pages/courses/[level].astro',
+  'astro-site/src/data/courseContents.js',
   'astro-site/src/pages/index.astro',
   // The day-6 trial email carried a hardcoded €9.99 twice; it now derives from
   // the functions' synced pricing copy (guarded below), so a retyped digit here
