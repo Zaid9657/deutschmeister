@@ -13,8 +13,9 @@
 // the SQL, so a learner who studied today cannot be selected at all; and
 // eligibility is RE-READ immediately before the claim, so a learner who opens
 // a Lektion between selection and send is dropped from that batch. The copy
-// therefore never asserts a gap — it says "vor Kurzem" and nothing sharper,
-// because the window spans two calendar days.
+// then says nothing at all about what the learner did: it names the next
+// Lektion and stops. (Until 2026-09-12 it opened with "du warst vor Kurzem im
+// Kurs", which was exactly the claim the comment below promised not to make.)
 //
 // FREQUENCY. At most 3 reminders per rolling 7 days per learner, counted from
 // the ledger. The per-day claim is `course_reminder_<YYYY-MM-DD>` against
@@ -92,11 +93,22 @@ export function overWeeklyCap(sentAt = [], now = new Date(), max = MAX_PER_7_DAY
 }
 
 // ─── copy ────────────────────────────────────────────────────────────────────
-// German (the course engine's screens are German), short, kind, no pressure:
-// no streak threat, no "nur noch", no figures, no exclamation marks, and no
-// claim about what the learner did or did not do. It names the next Lektion
-// and links to the course home — /course/<level> is an SPA rewrite route, so
-// it carries NO trailing slash (CLAUDE.md's three-slash-case rule, case 3).
+// German, short, kind, no pressure: no streak threat, no "nur noch", no
+// figures, no exclamation mark other than the greeting's, and NO claim about
+// what the learner did or did not do — not even a friendly one. It names the
+// next Lektion and links to the course home — /course/<level> is an SPA rewrite
+// route, so it carries NO trailing slash (CLAUDE.md's three-slash-case rule,
+// case 3).
+//
+// THE LEVEL IS A1, AND SO IS THE GERMAN (owner-approved 2026-09-12, after the
+// DaF review §F). Every recipient is by definition an A1.1 learner somewhere in
+// Lektion 1–12, and the previous copy was idiomatic B1: an ellipsis („Wenn
+// heute nichts geht: auch gut“), a Funktionsverbgefüge and a figurative
+// „nichts geht verloren“ — a course that writes its own screens in controlled
+// A1 must not mail B1. Short main clauses, present tense, words the course has
+// already taught. `vorname` is optional because the selection function carries
+// no name today: with one the greeting is „Hallo <Vorname>,“, without it the
+// bare „Hallo!“ — never „Hallo, du …“, which reads as a vocative.
 //
 // The Lektion titles are copied here because a Netlify function cannot import
 // src/data/curricula/a11.js (a browser module in the SPA bundle). The copy is
@@ -115,7 +127,7 @@ export const LEKTION_TITLES = {
     'Termine und Uhrzeit',
     'Im Café',
     'Am Bahnhof',
-    'Gestern und heute',
+    'Mein Tag',
     'Feste feiern',
   ],
 };
@@ -133,12 +145,18 @@ export function nextLektion(level, nextNr) {
 
 const P = (text) => `<p style="margin:0 0 16px;font-size:16px;color:${BRAND.graphite};line-height:1.6;">${text}</p>`;
 
+/** „Hallo Ana,“ with a first name, „Hallo!“ without one. Nothing in between. */
+export const greeting = (vorname) => {
+  const name = String(vorname || '').trim().split(/\s+/)[0] || '';
+  return name ? `Hallo ${name},` : 'Hallo!';
+};
+
 /**
  * Subject + body + CTA for one learner. `next` may be null (a level whose
  * titles are not in the table yet) — the copy then names no Lektion rather
- * than inventing one.
+ * than inventing one. `vorname` is optional; see the note above.
  */
-export function buildMessage({ level, nextNr }) {
+export function buildMessage({ level, nextNr, vorname = null }) {
   const next = nextLektion(level, nextNr);
   const code = levelCode(level);
   const ctaHref = `${BASE_URL}/course/${String(level).toLowerCase()}`;
@@ -147,11 +165,13 @@ export function buildMessage({ level, nextNr }) {
     ctaHref,
     ctaLabel: next ? `Lektion ${next.nr} öffnen →` : 'Zum Kurs →',
     body:
-      P('Hallo, du warst vor Kurzem im Kurs — genau das ist der Teil, der zählt.') +
+      // „Hallo!“ opens a new sentence, „Hallo Ana,“ continues one — so the
+      // pronoun after it is capitalised in the first case and not in the second.
+      P(`${greeting(vorname)} ${vorname ? 'du' : 'Du'} lernst Deutsch — sehr gut.`) +
       (next
-        ? P(`Als Nächstes wartet <strong style="color:${BRAND.ink};">Lektion ${next.nr}: ${next.title}</strong>. Ein Schritt pro Bildschirm, du kannst jederzeit aufhören.`)
-        : P(`Dein Kurs ${code} steht genau da, wo du aufgehört hast. Ein Schritt pro Bildschirm, du kannst jederzeit aufhören.`)) +
-      P('Wenn heute nichts geht: auch gut. Der Kurs wartet, und nichts geht verloren.'),
+        ? P(`Lektion ${next.nr} heißt <strong style="color:${BRAND.ink};">${next.title}</strong>. Sie ist kurz: ein Schritt pro Bildschirm.`)
+        : P(`Dein Kurs ${code} geht weiter. Die Lektionen sind kurz: ein Schritt pro Bildschirm.`)) +
+      P('Du kannst jederzeit aufhören. Bis bald.'),
   };
 }
 
@@ -243,6 +263,9 @@ async function selectRecipients() {
       level: r.level,
       nextNr: r.next_lektion_nr,
       lastActivityAt: r.last_activity_at,
+      // The selection function returns no name today, so the greeting is the
+      // bare „Hallo!“. If it ever does, the copy picks it up with no edit here.
+      vorname: r.vorname ?? null,
     }));
 }
 
@@ -334,7 +357,7 @@ const innerHandler = async (event) => {
       }
 
       const items = slice.map((r) => {
-        const msg = buildMessage({ level: r.level, nextNr: r.nextNr });
+        const msg = buildMessage({ level: r.level, nextNr: r.nextNr, vorname: r.vorname });
         return {
           from: FROM_ADDRESS,
           to: [r.email],

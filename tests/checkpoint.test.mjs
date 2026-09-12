@@ -293,9 +293,15 @@ test('a mic result is recognised only with the flag AND a numeric percentage', (
 });
 
 test('a one-letter slip on a strict grammar topic is still wrong', () => {
-  const strict = { topic: 'verb-sein', mode: 'typed', accepted: ['du bist'], answer: 'du bist', scored: true };
-  assert.equal(isItemCorrect(strict, 'du bist'), true);
-  assert.equal(isItemCorrect(strict, 'du bistt'), false);
+  // STRICT_TOPIC is the topics where the ending IS the answer — articles,
+  // possessives, pronouns, plural (narrowed by REVIEW #2 §E, which found the old
+  // pattern disabling the typo allowance for whole typed sentences on nine of the
+  // twelve Lektionen). A verb topic now gets the Levenshtein allowance back.
+  const strict = { topic: 'definite-articles', mode: 'typed', accepted: ['die Tür'], answer: 'die Tür', scored: true };
+  assert.equal(isItemCorrect(strict, 'die Tür'), true);
+  assert.equal(isItemCorrect(strict, 'die Türr'), false);
+  const loose = { topic: 'verb-sein', mode: 'typed', accepted: ['du bist'], answer: 'du bist', scored: true };
+  assert.equal(isItemCorrect(loose, 'du bistt'), true, 'one slip in a verb form is spelling');
 });
 
 // ── 4. the 70/30 draw ───────────────────────────────────────────────────────

@@ -320,7 +320,12 @@ export function validateCurriculum(c) {
     const expectedKind = l.nr % 2 === 1 ? 'formular' : 'mitteilung';
     if (w.kind !== expectedKind) fail(`Lektion ${l.nr}: schreiben.kind must alternate (expected ${expectedKind})`);
     if (!w.taskDe) fail(`Lektion ${l.nr}: schreiben needs a taskDe`);
-    if (w.maxWords !== 30) fail(`Lektion ${l.nr}: schreiben.maxWords must be 30`);
+    // One word range per Textsorte, not one constant: a filled five-field Formular is ~10 words and
+    // a complete SD1 Teil 2 Mitteilung (Anrede + 3 Leitpunkte + Gruß) is 35–40, which the old
+    // maxWords 30 cut off. netlify/functions/evaluate-writing.mjs derives its floor from the same
+    // register, so the two halves move together (DaF review #2, §B).
+    const range = w.kind === 'formular' ? [5, 40] : [25, 45];
+    if (w.minWords !== range[0] || w.maxWords !== range[1]) fail(`Lektion ${l.nr}: schreiben word range ${w.minWords}–${w.maxWords}, expected ${range[0]}–${range[1]} for a ${w.kind}`);
     if (words(w.sample || '').length > 30) fail(`Lektion ${l.nr}: schreiben.sample is longer than 30 words`);
     // The Schreiben task is graded by netlify/functions/evaluate-writing.mjs, which
     // looks the prompt up in the task bank by exam_key + task_key and never trusts

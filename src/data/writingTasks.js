@@ -324,16 +324,35 @@ export const WRITING_TASKS = [
   // (COURSE_WRITING_FREE_LIFETIME in src/data/marketing.js) instead of the
   // exam-training allowance. Course tasks are deliberately NOT returned by
   // writingTasksForExam(), so /schreiben keeps showing the exam bank only.
+  //
+  // TWO THINGS THE DaF REVIEW OF 2026-09-12 (§B, fix 8) PUT HERE, AND WHY:
+  //
+  // 1. EVERY Formular CARRIES ITS SOURCE TEXT, IN THE `task` FIELD, exactly as
+  //    the six exam-bank Formular tasks above do — Start Deutsch 1 Teil 1 gives
+  //    the candidate a short text about a person and a form to transfer it into,
+  //    so a form with no text is not the exam task, it is a questionnaire about
+  //    the learner. Five gaps each, also per SD1 Teil 1 (5 Punkte, 1 pro Feld).
+  //
+  // 2. THE WORD RANGES ARE THE ONES THE GRADER CAN ACTUALLY ACCEPT. The twelve
+  //    used to carry `minWords: 0, maxWords: 30`, while
+  //    netlify/functions/evaluate-writing.mjs rejected anything under 30
+  //    CHARACTERS — a correctly filled four-field form („Ana / A1 / Heft /
+  //    grün“, 22 characters) never reached the grader and the learner saw a 400.
+  //    Formular: 5–40 words. Mitteilung: 25–45, because a complete SD1 Teil 2
+  //    answer (Anrede + three Leitpunkte + Gruß) runs 35–40 words and 30 cut it
+  //    off. evaluate-writing.mjs now derives its character floor from
+  //    `register`, so the two halves of this contract move together.
   {
     examKey: 'goethe_a1',
     course: 'a1.1',
     taskKey: 'a11-l01',
     title: 'Lektion 1: Hallo, ich bin …',
     register: 'formular',
-    minWords: 0,
-    maxWords: 30,
+    minWords: 5,
+    maxWords: 40,
     task:
-      'Füllen Sie das Anmeldeformular im Hostel aus.',
+      'Ana Chakiri kommt aus Marokko. Sie spricht Arabisch. Heute Abend kommt sie im Hostel an. ' +
+      'Füllen Sie das Anmeldeformular im Hostel für Ana aus.',
     leitpunkte: [
       'Familienname',
       'Vorname',
@@ -348,8 +367,8 @@ export const WRITING_TASKS = [
     taskKey: 'a11-l02',
     title: 'Lektion 2: Ich bin Studentin',
     register: 'formell',
-    minWords: 0,
-    maxWords: 30,
+    minWords: 25,
+    maxWords: 45,
     task:
       'Schreiben Sie Ihrem neuen Nachbarn eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
     leitpunkte: [
@@ -364,12 +383,14 @@ export const WRITING_TASKS = [
     taskKey: 'a11-l03',
     title: 'Lektion 3: Meine Familie',
     register: 'formular',
-    minWords: 0,
-    maxWords: 30,
+    minWords: 5,
+    maxWords: 40,
     task:
+      'Ana Chakiri ist ledig. Sie kommt aus Marokko und spricht Arabisch und Deutsch. Sie lernt Deutsch in der Sprachschule. ' +
       'Füllen Sie das Formular für den Sprachkurs aus.',
     leitpunkte: [
       'Vorname',
+      'Familienname',
       'Familienstand',
       'Sprachen',
       'Land',
@@ -381,8 +402,8 @@ export const WRITING_TASKS = [
     taskKey: 'a11-l04',
     title: 'Lektion 4: Auf dem Flohmarkt',
     register: 'informell',
-    minWords: 0,
-    maxWords: 30,
+    minWords: 25,
+    maxWords: 45,
     task:
       'Schreiben Sie Ihrer Freundin eine Nachricht über den Flohmarkt. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
     leitpunkte: [
@@ -397,13 +418,15 @@ export const WRITING_TASKS = [
     taskKey: 'a11-l05',
     title: 'Lektion 5: Im Klassenzimmer',
     register: 'formular',
-    minWords: 0,
-    maxWords: 30,
+    minWords: 5,
+    maxWords: 40,
     task:
+      'Lena Brandt ist im Kurs A1. Ihr Kurs ist in Zimmer 12. Auf dem Tisch sind ein Wörterbuch und ein Heft. Das Heft ist grün. ' +
       'Füllen Sie die Liste für das Kursmaterial aus.',
     leitpunkte: [
       'Name',
       'Kurs',
+      'Zimmer',
       'Material',
       'Farbe',
     ],
@@ -414,8 +437,8 @@ export const WRITING_TASKS = [
     taskKey: 'a11-l06',
     title: 'Lektion 6: Der erste Tag im Büro',
     register: 'formell',
-    minWords: 0,
-    maxWords: 30,
+    minWords: 25,
+    maxWords: 45,
     task:
       'Schreiben Sie Ihrer Chefin eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
     leitpunkte: [
@@ -430,14 +453,16 @@ export const WRITING_TASKS = [
     taskKey: 'a11-l07',
     title: 'Lektion 7: Freizeit und Hobbys',
     register: 'formular',
-    minWords: 0,
-    maxWords: 30,
+    minWords: 5,
+    maxWords: 40,
     task:
+      'Lena Brandt ist neu im Sportkurs. Ihr Hobby ist Schwimmen. Der Kurs ist am Samstag. ' +
       'Füllen Sie die Anmeldung für einen Sportkurs aus.',
     leitpunkte: [
       'Vorname',
       'Nachname',
       'Kurs',
+      'Hobby',
       'Tag',
     ],
   },
@@ -447,8 +472,8 @@ export const WRITING_TASKS = [
     taskKey: 'a11-l08',
     title: 'Lektion 8: Termine und Uhrzeit',
     register: 'informell',
-    minWords: 0,
-    maxWords: 30,
+    minWords: 25,
+    maxWords: 45,
     task:
       'Schreiben Sie eine Nachricht und verschieben Sie einen Termin. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
     leitpunkte: [
@@ -463,15 +488,17 @@ export const WRITING_TASKS = [
     taskKey: 'a11-l09',
     title: 'Lektion 9: Im Café',
     register: 'formular',
-    minWords: 0,
-    maxWords: 30,
+    minWords: 5,
+    maxWords: 40,
     task:
-      'Füllen Sie die Reservierungskarte im Café aus.',
+      'Ana Chakiri ist im Café. Sie reserviert einen Tisch am Montag um 15 Uhr, für zwei Personen. ' +
+      'Ihre Telefonnummer ist 0176 22 44 88. Füllen Sie die Reservierungskarte im Café aus.',
     leitpunkte: [
       'Name',
       'Tag',
       'Uhrzeit',
       'Personen',
+      'Telefonnummer',
     ],
   },
   {
@@ -480,8 +507,8 @@ export const WRITING_TASKS = [
     taskKey: 'a11-l10',
     title: 'Lektion 10: Am Bahnhof',
     register: 'informell',
-    minWords: 0,
-    maxWords: 30,
+    minWords: 25,
+    maxWords: 45,
     task:
       'Schreiben Sie Ihrer Kollegin: Sie kommen später. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
     leitpunkte: [
@@ -496,15 +523,17 @@ export const WRITING_TASKS = [
     taskKey: 'a11-l11',
     title: 'Lektion 11: Gestern und heute',
     register: 'formular',
-    minWords: 0,
-    maxWords: 30,
+    minWords: 5,
+    maxWords: 40,
     task:
+      'Tim Berger steht jeden Tag früh auf. Sein Kurs ist am Donnerstag von 9 Uhr bis 12 Uhr, in Zimmer 4. ' +
       'Füllen Sie den Wochenplan für den Kurs aus.',
     leitpunkte: [
       'Name',
       'Tag',
       'Kurs von',
       'Kurs bis',
+      'Zimmer',
     ],
   },
   {
@@ -513,8 +542,8 @@ export const WRITING_TASKS = [
     taskKey: 'a11-l12',
     title: 'Lektion 12: Feste feiern',
     register: 'informell',
-    minWords: 0,
-    maxWords: 30,
+    minWords: 25,
+    maxWords: 45,
     task:
       'Schreiben Sie eine Einladung zu Ihrem Geburtstag. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
     leitpunkte: [

@@ -14,7 +14,7 @@ import { ALL_LEVELS, COURSE_PRO_MONTHS, CURRENCY, PLANS, eur, productKeyForLevel
 import { FREE_LEVEL_LABEL } from '../../data/marketing.js';
 import { COURSE_CONTENTS, LEVEL_OUTCOME_EN, levelToSlug } from '../../data/courseContents.js';
 import { curriculumFor } from '../../data/curricula/index.js';
-import { hasSyllabus, wortfeldRunningTotals, wortlisteTotalFor, checkpointAfter, primaryGrammarTitle, kannBeschreibungenCount, pruefungsteileCoverage, goetheRichtwertFor, LEKTION_ANATOMY } from '../../lib/syllabus.js';
+import { hasSyllabus, wortfeldRunningTotals, wortlisteTotalFor, checkpointAfter, primaryGrammarTitle, kannBeschreibungenCount, pruefungsteileCoverage, goetheRichtwertFor, courseTimeSplit, hoursDe, LEKTION_ANATOMY } from '../../lib/syllabus.js';
 
 export async function getStaticPaths() {
   return ALL_LEVELS.map((level) => ({ params: { level: levelToSlug(level) }, props: { level } }));
@@ -43,6 +43,11 @@ const kannCount = showSyllabus ? kannBeschreibungenCount(curriculum.lektionen) :
 const teileCoverage = showSyllabus ? pruefungsteileCoverage(curriculum.lektionen) : null;
 const richtwert = goetheRichtwertFor(level);
 const wortfeldTotal = wortfeldRows.at(-1)?.running ?? 0;
+// `hoursTotal` is guided lesson time PLUS a budget for the practice material
+// around each Lektion, and only the first half exists as content — the header of
+// data/curricula/a11.js forbids selling the sum as „54 Stunden Kurs“. Both halves
+// are derived from the curriculum's own minutes, never typed in here.
+const time = showSyllabus ? courseTimeSplit(curriculum) : null;
 
 const BTN = 'inline-flex items-center justify-center gap-2 rounded-clay text-sm font-bold transition-all duration-100 ease-snap select-none';
 const BTN_PRIMARY = `${BTN} bg-siegel px-6 py-3 text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`;
@@ -195,8 +200,9 @@ const jsonLd = {
               <dd class="mt-1 font-display text-[1.375rem] font-semibold text-ink">{wortfeldTotal}{wortlisteTotal ? `/${wortlisteTotal}` : ''}</dd>
             </div>
             <div class="rounded-clay border border-rule bg-white p-4">
-              <dt class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-graphite">Stunden</dt>
-              <dd class="mt-1 font-display text-[1.375rem] font-semibold text-ink">{curriculum.hoursTotal}{richtwert ? ` (Goethe: ${richtwert[0]}–${richtwert[1]})` : ''}</dd>
+              <dt class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-graphite">Geführte Lektionszeit</dt>
+              <dd class="mt-1 font-display text-[1.375rem] font-semibold text-ink">{hoursDe(time.guidedHours)} h</dd>
+              <dd class="mt-1 font-data text-[0.6875rem] leading-relaxed text-graphite">+ {hoursDe(time.practiceHours)} h Übungsmaterial</dd>
             </div>
             <div class="rounded-clay border border-rule bg-white p-4">
               <dt class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-graphite">Kann-Beschreibungen</dt>
@@ -209,6 +215,13 @@ const jsonLd = {
           </dl>
 
           <p class="mt-6 text-[0.8125rem] leading-relaxed text-graphite">
+            Die {hoursDe(time.guidedHours)} h sind geführte Lektionszeit, die als Inhalt existiert: {curriculum.lektionen.length} Lektionen,
+            {' '}{curriculum.checkpoints?.length ?? 0} Checkpoints und die Wiederholungen dazwischen. Die weiteren
+            {' '}{hoursDe(time.practiceHours)} h sind Übungsmaterial rund um die Lektionen — Hören, Lesen, Sprechen, Wortschatz und
+            Schreiben; dieses Material ist noch nicht zu jeder Lektion vollständig.{richtwert ? ` Goethe-Richtwert für das ganze Niveau: ${richtwert[0]}–${richtwert[1]} Unterrichtseinheiten.` : ''}
+          </p>
+
+          <p class="mt-3 text-[0.8125rem] leading-relaxed text-graphite">
             Quelle: {curriculum.provenance?.canDo}. Wortliste: {curriculum.provenance?.wortliste}. Themen: {curriculum.provenance?.themen}.
           </p>
 

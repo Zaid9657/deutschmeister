@@ -24,7 +24,25 @@ export function levenshtein(a, b) {
   return prev[n];
 }
 
-const stripPunct = (s) => s.replace(/[.,!?;:"“”„'’]/g, '').replace(/\s+/g, ' ').trim();
+const stripPunct = (s) =>
+  s.replace(/[“”„‟«»‹›]/g, '"').replace(/[‘’‚‛ʼ´`]/g, "'")
+    .replace(/[.,!?;:"']/g, '').replace(/\s+/g, ' ').trim();
+
+/**
+ * Dictation normalisation (REVIEW #2 fix 5). Lektion 6 dictates a phone number,
+ * and "0176 234567" is the same answer as "0176-2345 67": the grouping is a
+ * choice of the writer, not of the speaker, and a dash is unhearable. So for a
+ * dictation — and only there — every dash form becomes a space, the separators
+ * inside a run of digits are removed, and the run is compared as one number.
+ * Typographic quotes are folded by stripPunct above, for every check.
+ */
+export function normalizeDictation(text) {
+  return String(text ?? '')
+    .replace(/[\u2010-\u2015\u2212\uFF0D-]/g, ' ')
+    .replace(/(\d)[\s./]+(?=\d)/g, '$1')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
 
 function endingDiffers(user, expected) {
   const u = user.split(' '); const e = expected.split(' ');
@@ -32,24 +50,50 @@ function endingDiffers(user, expected) {
   return u.some((w, i) => w !== e[i] && w.slice(-1) !== e[i].slice(-1));
 }
 
-/** Topics where a one-letter slip IS the grammar (du arbeitst) — no tolerance. */
-export const STRICT_TOPIC = /verb|sein|haben|present|separable|conjug|plural|article|possessive|pronoun/i;
+/**
+ * Topics where a one-letter slip IS the answer — an article, a possessive, a
+ * pronoun or a plural is nothing but its ending, so there is no typo to forgive.
+ *
+ * NARROWED by REVIEW #2 §E: the old pattern also matched every verb topic, i.e.
+ * nine of the twelve Lektionen, and the engine checks WHOLE TYPED SENTENCES on
+ * those ("Ich brauche ein Handy."). A missing umlaut on a foreign keyboard then
+ * came back as a grammar error with a tagError and a requeue. Verb topics get
+ * the Levenshtein allowance again; the ending topics do not.
+ */
+export const STRICT_TOPIC = /article|possessive|pronoun|plural|kasus|case/i;
 
 /**
- * checkAnswer(userInput, expected: string | string[], { strict }) → { result, expected }
- * result ∈ RESULT. `expected` echoes the best matching accepted answer.
- * strict = true disables the typo allowance (pass STRICT_TOPIC.test(item.topic)).
+ * Strictness is also bounded by the SHAPE of the expected answer: at most one
+ * space. "Der" and "Viertel vor" are an ending and a chunk, and a slip in them
+ * is the mistake the item is about; a full sentence is mostly spelling, and is
+ * always allowed its one typo (REVIEW #2 §E).
  */
-export function checkAnswer(userInput, expected, { strict = false } = {}) {
+export const STRICT_MAX_SPACES = 1;
+
+/** True when `expected` is short enough for strict mode to apply to it. */
+export function strictApplies(expected) {
+  const norm = stripPunct(normalizeAnswer(expected));
+  return (norm.match(/ /g) || []).length <= STRICT_MAX_SPACES;
+}
+
+/**
+ * checkAnswer(userInput, expected: string | string[], { strict, dictation }) →
+ * { result, expected }. result ∈ RESULT, `expected` echoes the best matching
+ * accepted answer. strict = true disables the typo allowance for single-token
+ * answers (pass STRICT_TOPIC.test(item.topic)); dictation = true additionally
+ * folds dashes and digit grouping (see normalizeDictation).
+ */
+export function checkAnswer(userInput, expected, { strict = false, dictation = false } = {}) {
   const accepted = (Array.isArray(expected) ? expected : [expected]).filter(Boolean);
-  const user = stripPunct(normalizeAnswer(userInput));
+  const prepare = (s) => stripPunct(normalizeAnswer(dictation ? normalizeDictation(s) : s));
+  const user = prepare(userInput);
   if (!user) return { result: RESULT.WRONG, expected: accepted[0] || '' };
   for (const a of accepted) {
-    if (stripPunct(normalizeAnswer(a)) === user) return { result: RESULT.CORRECT, expected: a };
+    if (prepare(a) === user) return { result: RESULT.CORRECT, expected: a };
   }
-  if (strict) return { result: RESULT.WRONG, expected: accepted[0] || '' };
   for (const a of accepted) {
-    const norm = stripPunct(normalizeAnswer(a));
+    if (strict && strictApplies(a)) continue;
+    const norm = prepare(a);
     const shortFunctionWord = norm.length <= 4 && !norm.includes(' ');
     if (shortFunctionWord) continue;
     if (norm.length >= 5 && levenshtein(user, norm) === 1 && !endingDiffers(user, norm)) {

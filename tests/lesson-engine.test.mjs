@@ -17,7 +17,7 @@ import { exclusionReason, isUsableItem, filterPool, EXCLUDE_IDS, REASON } from '
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { requeueFor, REQUEUE_CAP } from '../src/lib/lesson/requeue.js';
 import { firstAttemptAccuracy, masteryStatus, masteryLabel, accuracyPercent, GOLD_THRESHOLD, nextReviewDate } from '../src/lib/lesson/mastery.js';
-import { checkAnswer, RESULT, STRICT_TOPIC, tagError } from '../src/lib/lesson/check.js';
+import { checkAnswer, RESULT, STRICT_TOPIC, STRICT_MAX_SPACES, strictApplies, normalizeDictation, tagError } from '../src/lib/lesson/check.js';
 import { scoreWriting, leitpunktKeyword } from '../src/lib/lesson/writing.js';
 import { FIXTURE_LEKTION, FIXTURE_CURRICULUM } from './fixtures/lektion-fixture.js';
 
@@ -145,14 +145,19 @@ test('the English rules read words, not letters — a spelled-out German word st
   assert.equal(exclusionReason({ id: 'd', questionDe: 'Warum kein Artikel?', options: ['You forgot it'], answer: 'You forgot it' }), REASON.ENGLISH_ANSWER);
 });
 
-test('Lektion 1 — the free lesson — is seven German buchstabieren items', () => {
+test('Lektion 1 — the free lesson — is seven German items, mostly buchstabieren', () => {
   const items = planPractice(CURRICULUM_A11, POOL, 1).get(1);
   assert.equal(items.length, PRACTICE_SIZE);
   for (const it of items) {
     assert.equal(it.topic, 'alphabet-pronunciation');
     assert.ok(isUsableItem(it));
-    assert.match(it.questionDe, /Buchstab|Schreibweise/, `${it.id} is not about spelling`);
+    // German prompt, German answer — the point of the round-1 blocker fix. The
+    // hand-authored L1 items also drill the greetings of the Lektion, so the
+    // floor is a majority of spelling items rather than all seven.
+    assert.doesNotMatch(`${it.questionDe} ${it.answer}`, /\b(the|you|your|is|are|sound|like)\b/i, `${it.id} has English in a German field`);
   }
+  const spelling = items.filter((it) => /Buchstab|Schreibweise/.test(it.questionDe));
+  assert.ok(spelling.length >= 4, `only ${spelling.length} of 7 L1 items are about spelling`);
 });
 
 // --- the plan across all twelve Lektionen ---------------------------------
@@ -324,19 +329,56 @@ test('the first review lands one day out (the Babbel ladder starts at 1)', () =>
 
 // --- checkAnswer integration ----------------------------------------------
 
-test('a typo is forgiven on a vocabulary topic and never on a conjugation topic', () => {
-  assert.equal(STRICT_TOPIC.test('verb-sein'), true);
-  assert.equal(STRICT_TOPIC.test('time-and-dates'), false);
+test('a typo is forgiven on a vocabulary topic and never where the ending IS the answer', () => {
+  // REVIEW #2 §E: STRICT_TOPIC is the ending topics only. A verb topic asks for a
+  // whole typed sentence ("Ich brauche ein Handy."), and there a slip is spelling.
+  for (const strictTopic of ['definite-articles', 'indefinite-articles', 'possessive-articles', 'personal-pronouns', 'plural-forms']) {
+    assert.equal(STRICT_TOPIC.test(strictTopic), true, `${strictTopic} should be strict`);
+  }
+  for (const loose of ['verb-sein', 'verb-haben', 'present-tense-regular', 'separable-verbs-intro', 'time-and-dates', 'alphabet-pronunciation']) {
+    assert.equal(STRICT_TOPIC.test(loose), false, `${loose} should not be strict`);
+  }
 
   const loose = checkAnswer('Wasserr', ['Wasser'], { strict: STRICT_TOPIC.test('alphabet-pronunciation') });
   assert.equal(loose.result, RESULT.TYPO);
 
-  const strict = checkAnswer('bini', ['bin'], { strict: STRICT_TOPIC.test('verb-sein') });
-  assert.equal(strict.result, RESULT.WRONG, 'on verb-sein a slip IS the grammar');
-
+  assert.equal(checkAnswer('Dere', ['Der'], { strict: true }).result, RESULT.WRONG, 'an article ending is not a typo');
   assert.equal(checkAnswer('bin', ['bin'], { strict: true }).result, RESULT.CORRECT);
   assert.equal(checkAnswer('waere', ['wäre'], { strict: false }).result, RESULT.CORRECT, 'ae/ä are the same answer');
   assert.equal(checkAnswer('', ['bin'], {}).result, RESULT.WRONG);
+});
+
+test('strict mode stops at the sentence boundary — a full answer always gets its one typo', () => {
+  assert.equal(STRICT_MAX_SPACES, 1);
+  assert.equal(strictApplies('Der'), true);
+  assert.equal(strictApplies('Viertel vor'), true, 'a two-word chunk is still the answer itself');
+  assert.equal(strictApplies('Ich brauche ein Handy.'), false);
+  // The §E case, on a topic that IS strict: the sentence is checked leniently …
+  assert.equal(
+    checkAnswer('Meine Karte ist schoen', ['Meine Karte ist schön'], { strict: true }).result,
+    RESULT.CORRECT,
+  );
+  assert.equal(
+    checkAnswer('Das ist mene Party.', ['Das ist meine Party.'], { strict: true }).result,
+    RESULT.TYPO,
+    'a middle-letter slip in a whole sentence is spelling, not grammar',
+  );
+  // … while the one-word answer of the same topic stays strict.
+  assert.equal(checkAnswer('meinee', ['meine'], { strict: true }).result, RESULT.WRONG);
+});
+
+test('a dictation ignores dashes and digit grouping — REVIEW #2 fix 5', () => {
+  assert.equal(normalizeDictation('0176-2345 67'), '0176234567');
+  assert.equal(normalizeDictation('Tel.: 0176-23 45 67'), 'Tel.: 0176234567');
+  const same = (a, b) => checkAnswer(a, [b], { strict: false, dictation: true }).result;
+  assert.equal(same('0176 234567', '0176-2345 67'), RESULT.CORRECT);
+  assert.equal(same('Meine Nummer ist 0176-23 45 67.', 'Meine Nummer ist 0176 234567.'), RESULT.CORRECT);
+  assert.equal(same('Null eins sieben sechs - drei', 'Null eins sieben sechs – drei'), RESULT.CORRECT);
+  assert.equal(same('Er sagt "Hallo".', 'Er sagt „Hallo“.'), RESULT.CORRECT);
+  // Typographic quotes fold for every check, not only for a dictation.
+  assert.equal(checkAnswer('Er sagt "Hallo".', ['Er sagt „Hallo“.']).result, RESULT.CORRECT);
+  // and a genuinely different number is still wrong
+  assert.equal(same('0176 234568', '0176 234567'), RESULT.WRONG);
 });
 
 test('every pool item this engine can draw is answerable through checkAnswer', () => {

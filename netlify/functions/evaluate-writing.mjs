@@ -57,7 +57,9 @@ function buildWritingPrompt(task, submission) {
   const leitpunkte = task.leitpunkte.map((p, i) => `${i + 1}. ${p}`).join('\n');
   // N booleans, not a fixed 3 — src/pages/SchreibenPage.jsx indexes
   // leitpunkt_check by the task's own leitpunkte position, so this must match
-  // task.leitpunkte.length exactly (5 for the Formular tasks, 3 elsewhere).
+  // task.leitpunkte.length exactly. Do not assume a count: the bank carries 5
+  // fields on every Formular (exam and course alike) and 3 Leitpunkte on the
+  // letters, but the number is the task's to state, not this file's.
   const leitpunktCheckSlots = task.leitpunkte.map(() => '<true|false>').join(', ');
   // A filled-out form has no Anrede/Schluss by nature and must not be marked
   // down for lacking them — register:'formular' (the 6 Goethe A1 Teil-1
@@ -145,7 +147,17 @@ export const handler = async (event) => {
     if (!task) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'unknown task' }) };
     }
-    if (typeof text !== 'string' || text.trim().length < 30) {
+    // MINIMUM LENGTH IS THE TASK'S, NOT A CONSTANT. Counted in CHARACTERS (a
+    // cheap "did anything arrive" floor, not a word count — the word range in
+    // the bank is what the rubric judges). A filled-in Formular is five short
+    // field values („Keller / Anna / 03.05.1991 / Köln / Österreich“ is long,
+    // „Ana / A1 / 12 / Heft / grün“ is 27 characters), so the 30 this used to
+    // apply to every register rejected correct forms with a 400 — the exact
+    // failure the DaF review of 2026-09-12 (§B) measured. 12 characters is
+    // below any plausible correct form and above an empty or one-letter one.
+    const MIN_CHARS = { formular: 12 };
+    const minChars = MIN_CHARS[task.register] ?? 30;
+    if (typeof text !== 'string' || text.trim().length < minChars) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'text too short' }) };
     }
     if (text.length > 6000) {

@@ -9,9 +9,11 @@ import { AudioSourceBadge } from './DialogStage.jsx';
 
 /**
  * The listening item of stage 4: a dialogue line is played, the learner types
- * it. Checked NON-strictly — a dictation tests the ear, and punishing a
- * one-letter slip here would tag a hearing success as a grammar failure. The
- * German text appears with the feedback, so the line is never audio-only.
+ * it. Checked NON-strictly and in dictation mode — a dictation tests the ear, so
+ * punishing a one-letter slip would tag a hearing success as a grammar failure,
+ * and a dash or a digit grouping the learner cannot hear (Lektion 6 dictates a
+ * phone number) may not decide the answer either. The German text appears with
+ * the feedback, so the line is never audio-only.
  *
  * The clip is the recording when the manifest has it (key `line-<i>`, the same
  * key the dialogue screen uses — a dictation line IS a dialogue line) and
@@ -34,7 +36,7 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
 
   const submit = () => {
     if (!value.trim() || state) return;
-    const { result, expected } = checkAnswer(value, [line.de], { strict: false });
+    const { result, expected } = checkAnswer(value, [line.de], { strict: false, dictation: true });
     const correct = result !== RESULT.WRONG;
     setState({ result, expected });
     onResult(

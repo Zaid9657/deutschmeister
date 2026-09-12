@@ -149,7 +149,8 @@ test('rule 7: pretest, Phonetik, Hören, Sprechen, Schreiben and the links', () 
     // bank side; here we only pin that the key exists and resolves.
     assert.equal(w.taskKey, `a11-l${String(l.nr).padStart(2, '0')}`);
     assert.ok(writingTaskByKey('goethe_a1', w.taskKey), `Lektion ${l.nr}: taskKey resolves to no bank task`);
-    assert.equal(w.maxWords, 30);
+    // One range per Textsorte (DaF review #2 §B): the bank and evaluate-writing.mjs moved with it.
+    assert.deepEqual([w.minWords, w.maxWords], w.kind === 'formular' ? [5, 40] : [25, 45], `Lektion ${l.nr}: word range`);
     assert.ok(wordCount(w.sample) <= 30, `Lektion ${l.nr}: sample`);
     if (w.kind === 'formular') {
       assert.ok(w.fields.length >= 3 && w.fields.length <= 5);

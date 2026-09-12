@@ -98,6 +98,60 @@ test('the grader bills course tasks against the free course allowance', () => {
   assert.match(src, /\.like\('task_key', `\$\{COURSE_TASK_KEY_PREFIX\}%`\)/, 'the lifetime count must be scoped to course rows');
 });
 
+test('every course Formular has five gaps and a source text to fill them from', () => {
+  // SD1 Teil 1 hands the candidate a short text about a person and a form to
+  // transfer it into, and scores 5 Punkte, one per field. A form with no source
+  // text is not that task — it is a questionnaire about the learner, which is
+  // what these twelve were until the DaF review of 2026-09-12 (§B, fix 8).
+  const formulare = COURSE.filter((t) => t.register === 'formular');
+  assert.equal(formulare.length, 6, 'the odd-numbered Lektionen are the six Formulare');
+  for (const t of formulare) {
+    assert.equal(t.leitpunkte.length, 5, `${t.taskKey}: SD1 Teil 1 has five gaps, this has ${t.leitpunkte.length}`);
+    // The instruction ("Füllen Sie … aus") is the LAST sentence; everything
+    // before it is the situation. Both halves must be there.
+    const instruction = t.task.match(/Füllen Sie [^.]+\.$/);
+    assert.ok(instruction, `${t.taskKey}: the prompt must end in the Füllen-Sie instruction`);
+    const source = t.task.slice(0, t.task.length - instruction[0].length).trim();
+    assert.ok(source.length > 40, `${t.taskKey}: no source text before the instruction`);
+    assert.ok(/[.!?]$/.test(source), `${t.taskKey}: the source text must be whole sentences`);
+    // The same shape the six exam-bank Formulare carry — one field, one `task`.
+    assert.equal(typeof t.task, 'string');
+  }
+});
+
+test('the word ranges are the ones the grader can accept', () => {
+  // Every course task used to carry minWords 0 / maxWords 30 while
+  // evaluate-writing.mjs rejected anything under 30 CHARACTERS, so a correctly
+  // filled form never reached the grader. Both halves are pinned here.
+  for (const t of COURSE) {
+    if (t.register === 'formular') {
+      assert.equal(t.minWords, 5, `${t.taskKey}: five field values are five words`);
+      assert.equal(t.maxWords, 40, t.taskKey);
+    } else {
+      // Anrede + three Leitpunkte + Gruß is 35–40 words; 30 cut it off.
+      assert.equal(t.minWords, 25, t.taskKey);
+      assert.equal(t.maxWords, 45, t.taskKey);
+      assert.ok(t.maxWords >= 40, `${t.taskKey}: a complete SD1 Teil 2 answer does not fit`);
+    }
+    assert.ok(t.minWords > 0, `${t.taskKey}: a minimum of 0 words tells the learner nothing`);
+  }
+});
+
+test('the grader\'s character floor is bound to the register, not to one constant', () => {
+  const src = readFileSync(join(ROOT, 'netlify/functions/evaluate-writing.mjs'), 'utf8');
+  const table = src.match(/const MIN_CHARS\s*=\s*\{([^}]*)\}/);
+  assert.ok(table, 'MIN_CHARS not found — the floor is a constant again');
+  const formular = Number(table[1].match(/formular\s*:\s*(\d+)/)?.[1]);
+  const fallback = Number(src.match(/MIN_CHARS\[task\.register\]\s*\?\?\s*(\d+)/)?.[1]);
+  assert.equal(formular, 12);
+  assert.equal(fallback, 30);
+  assert.match(src, /text\.trim\(\)\.length < minChars/, 'the floor must be applied to the submission');
+  // The failure this fixes: five short field values, joined as the submission.
+  const shortestRealForm = 'Ana / A1 / 12 / Heft / grün';
+  assert.ok(shortestRealForm.length >= formular, 'a correctly filled form must reach the grader');
+  assert.ok(shortestRealForm.length < fallback, 'and it would not have, at the letter floor');
+});
+
 test('the two writing-task copies are byte-identical', () => {
   assert.equal(
     readFileSync(join(ROOT, 'src/data/writingTasks.js'), 'utf8'),
