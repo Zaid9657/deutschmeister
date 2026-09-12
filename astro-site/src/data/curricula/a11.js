@@ -5,9 +5,13 @@
 //
 // PROVENANCE. Kann-Beschreibungen follow the Goethe-Zertifikat A1 (Start Deutsch 1)
 // Prüfungsziele/Testbeschreibung; the Handlungsfelder follow the BAMF Rahmencurriculum; the
-// Wortfeld is drawn from the live `words` table at sub_level A1.1 (`wordId` = words.id, so the
-// player can fetch audio). Entries with `wordId: null` are the few Goethe A1 Wortliste words the
-// table does not carry yet (at most 5 per Lektion) — seed them into `words` and fill the id in.
+// Wortfeld is drawn from the live `words` table (`wordId` = words.id, so the player can fetch
+// audio — `fetchWordsByIds` looks a word up by id and never filters by level). A1.1 rows where the
+// table has them; where it only carries the same word one level up (kaufen, kosten, Zug, Musik,
+// Bahnhof, die Monate …) the id of that row is used, because a learner with audio beats a learner
+// without. Entries with `wordId: null` are the words the table does not carry at all (at most 5 per
+// Lektion) — seed them into `words` and fill the id in; `heißen`, `das Frühstück`, `mitkommen`,
+// `das Fest` and `die Gäste` are the ones that matter most.
 //
 // ORDER OF THE 12 GRAMMAR TOPICS (`primarySlug`, one per Lektion, and why this order):
 //   1 alphabet-pronunciation  — you must be able to say and spell a name before anything else.
@@ -25,11 +29,25 @@
 // First half: alphabet, sein, pronouns, the three article lessons. Second half: present tense,
 // time, haben, yes/no questions, separable verbs, possessives — exactly what the standard asks for.
 //
+// TWO THINGS THIS ORDER CANNOT CARRY, AND WHERE THEY ARE TAUGHT INSTEAD (DaF review 2026-09-12):
+//   *haben* is needed long before its own Lektion (9): „Hast du Zeit?“ in 8, „Hat der Zug
+//   Verspätung?“ in 10. Pulling verb-haben forward would break the one-primary-slug-per-Lektion
+//   order that scripts/validate-curriculum.mjs pins (PRIMARY_ORDER), so L8's notice teaches
+//   „Ich habe … / Hast du …?“ as a fixed chunk and points forward to L9.
+//   The *Vokalwechsel* (sprechen → spricht, fahren → fährt) has no slug of its own, but the
+//   dialogues use it from L3 on: L3's notice flags it for sprechen, L7's notice states the rule.
+//
 // HOURS. Engine time = 12 Lektionen × 15 min + 4 checkpoints × 12 min + 12 × 10 min spaced review
 // = 180 + 48 + 120 = 348 min ≈ 5.8 h. Linked work (the listening dialogue, the reading text, the
 // speaking mission, the Wortfeld with audio and the writing task around each Lektion) is budgeted
-// at 4 h per Lektion = 48 h. 5.8 + 48 ≈ 54 h → `hoursTotal: 54`, inside the standard's 50–60 h and
-// inside the Goethe guidance of 80–200 UE for the whole A1 level.
+// at 4 h per Lektion = 48 h. 5.8 + 48 ≈ 54 h → `hoursTotal: 54` (the validator derives this number
+// from the minutes, so it is not free to set); inside the standard's 50–60 h.
+// READ THE 54 HONESTLY (DaF review 2026-09-12 §4): only the 5.8 h are guided lesson time that
+// exists as content. The 48 h are a budget for surrounding practice, and that material is not
+// complete — five Lektionen have no linked listening exercise (the level only carries six), three
+// no reading text, four no speaking mission, L2 neither. So a buyer-facing page must show
+// „5,8 h geführte Lektionszeit + Übungsmaterial“ separately and must NOT advertise „54 Stunden
+// Kurs“ as content (`src/data/marketing.js`: measure before you claim).
 //
 // REGISTER. du between learners (Ana, Tim, Lena), Sie with staff and neighbours (Frau Kaya,
 // Herr Weber, Herr Schmidt, Paul). No outcome promises and no exam fees anywhere in this file.
@@ -73,7 +91,7 @@ export const FUNCTION_WORDS = [
 /** Proper nouns and titles that may appear in a dialogue line (people, places, forms of address). */
 export const DIALOG_NAMES = [
   'Ana', 'Tim', 'Lena', 'Paul', 'Herr', 'Frau', 'Weber', 'Kaya', 'Wolf', 'Schmidt', 'Berg',
-  'Ferreira', 'Brandt', 'Berger', 'Bremen', 'Thomas',
+  'Chakiri', 'Brandt', 'Berger', 'Bremen', 'Thomas',
 ];
 
 export const CURRICULUM_A11 = {
@@ -109,7 +127,7 @@ export const CURRICULUM_A11 = {
       wortfeld: [
         { de: 'Hallo', word: 'Hallo', article: null, plural: null, en: 'Hello', wordId: '0b4a5044-cda2-460d-bc9e-4bb4ab18fce7' },
         { de: 'Guten Morgen', word: 'Guten Morgen', article: null, plural: null, en: 'Good morning', wordId: 'e85312e9-0f63-454d-98cf-b1ea207c1a6e' },
-        { de: 'Guten Tag', word: 'Guten Tag', article: null, plural: null, en: 'Good day', wordId: '92c9c069-cc21-451d-a893-b18316e72381' },
+        { de: 'Guten Tag', word: 'Guten Tag', article: null, plural: null, en: 'Good day / Good afternoon', wordId: '92c9c069-cc21-451d-a893-b18316e72381' },
         { de: 'Guten Abend', word: 'Guten Abend', article: null, plural: null, en: 'Good evening', wordId: '3b01f942-7e88-4838-82b4-186eb42d9521' },
         { de: 'Gute Nacht', word: 'Gute Nacht', article: null, plural: null, en: 'Good night', wordId: '5f4171f4-0b78-4999-893c-dc4b11886b40' },
         { de: 'Tschüss', word: 'Tschüss', article: null, plural: null, en: 'Bye', wordId: '55ba3391-5b13-486d-ab68-3beb023c70df' },
@@ -132,10 +150,10 @@ export const CURRICULUM_A11 = {
         title: 'An der Rezeption',
         setting: 'Ana kommt im Hostel an. Frau Kaya arbeitet an der Rezeption.',
         lines: [
-          { speaker: 'Frau Kaya', de: 'Guten Tag und willkommen!', en: 'Good afternoon and welcome!' },
-          { speaker: 'Ana', de: 'Guten Tag. Ich heiße Ana Ferreira.', en: 'Good afternoon. My name is Ana Ferreira.' },
-          { speaker: 'Frau Kaya', de: 'Buchstabieren Sie bitte Ferreira.', en: 'Please spell Ferreira.' },
-          { speaker: 'Ana', de: 'F-E-R-R-E-I-R-A.', en: 'F-E-R-R-E-I-R-A.' },
+          { speaker: 'Frau Kaya', de: 'Guten Tag und willkommen!', en: 'Good day and welcome!' },
+          { speaker: 'Ana', de: 'Guten Tag. Ich heiße Ana Chakiri.', en: 'Good day. My name is Ana Chakiri.' },
+          { speaker: 'Frau Kaya', de: 'Buchstabieren Sie bitte Chakiri.', en: 'Please spell Chakiri.' },
+          { speaker: 'Ana', de: 'C-H-A-K-I-R-I.', en: 'C-H-A-K-I-R-I.' },
           { speaker: 'Frau Kaya', de: 'Danke. Und wie buchstabiert man Ana?', en: 'Thank you. And how do you spell Ana?' },
           { speaker: 'Ana', de: 'A-N-A.', en: 'A-N-A.' },
           { speaker: 'Frau Kaya', de: 'Gut. Wie geht es Ihnen?', en: 'Good. How are you?' },
@@ -152,8 +170,8 @@ export const CURRICULUM_A11 = {
       },
       notice: {
         title: 'Das Alphabet: buchstabieren',
-        bodyDe: 'Beim Buchstabieren sagst du jeden Buchstaben einzeln. Vier Zeichen gibt es nur im Deutschen: **ä, ö, ü** und **ß** (Eszett). Wichtig sind auch drei Buchstaben mit anderem Klang: **e** [e:], **i** [i:], **v** [fau]. Frag einfach: **Wie buchstabiert man das?**',
-        examples: ['Buchstabieren Sie bitte Ferreira.', 'Danke. Und wie buchstabiert man Ana?'],
+        bodyDe: 'Beim Buchstabieren sagst du jeden Buchstaben einzeln. Vorsicht bei drei Paaren: **E** [eː] und **I** [iː], **G** [geː] und **J** [jɔt], **V** [faʊ] und **W** [veː]. **Y** heißt *Ypsilon*, **ß** heißt *Eszett* oder *scharfes S*. Frag im Zweifel: **Wie buchstabiert man das?**',
+        examples: ['Buchstabieren Sie bitte Chakiri.', 'Danke. Und wie buchstabiert man Ana?'],
         ruleSlug: 'alphabet-pronunciation',
       },
       phonetik: { focus: 'Wortakzent auf der ersten Silbe', items: ['HAL-lo', 'DAN-ke', 'A-na'] },
@@ -170,10 +188,10 @@ export const CURRICULUM_A11 = {
       schreiben: {
         kind: 'formular',
         taskDe: 'Füllen Sie das Anmeldeformular im Hostel aus.',
-        fields: ['Familienname', 'Vorname', 'Land'],
+        fields: ['Familienname', 'Vorname', 'Land', 'Sprache', 'Unterschrift'],
         minWords: 0,
         maxWords: 30,
-        sample: 'Familienname: Ferreira / Vorname: Ana / Land: Marokko',
+        sample: 'Familienname: Chakiri / Vorname: Ana / Land: Marokko / Sprache: Arabisch / Unterschrift: A. Chakiri',
       },
       links: { listeningExercise: 6, readingOrder: 1 },
       practiceRule: { topics: ['alphabet-pronunciation'], typedMin: 3 },
@@ -212,29 +230,29 @@ export const CURRICULUM_A11 = {
         { de: 'die Studentin', word: 'Studentin', article: 'die', plural: 'Studentinnen', en: 'student (f)', wordId: '7d778f1a-5ddb-4b60-b46d-0ca2fdb03652' },
         { de: 'der Lehrer', word: 'Lehrer', article: 'der', plural: 'Lehrer', en: 'teacher (m)', wordId: '401b018a-1c7a-48c4-b06b-88cce32fcdcd' },
         { de: 'die Lehrerin', word: 'Lehrerin', article: 'die', plural: 'Lehrerinnen', en: 'teacher (f)', wordId: '1e7ad6c2-37b5-4063-971c-4b2090cafa9e' },
-        { de: 'null', word: 'null', article: null, plural: null, en: 'zero', wordId: '8cf369f0-b2d8-4980-be70-b760323b8cc3' },
-        { de: 'eins', word: 'eins', article: null, plural: null, en: 'one', wordId: '82d3a413-62ac-4171-9c90-f86f34499dd0' },
-        { de: 'zwei', word: 'zwei', article: null, plural: null, en: 'two', wordId: 'b6edc489-45bd-499d-a03d-8f4d0c910e63' },
-        { de: 'drei', word: 'drei', article: null, plural: null, en: 'three', wordId: '2325c79a-7e12-41fe-89ba-cadf5e01e477' },
-        { de: 'vier', word: 'vier', article: null, plural: null, en: 'four', wordId: 'e0b62c2a-982f-463d-a5d3-3782a0f0784f' },
-        { de: 'fünf', word: 'fünf', article: null, plural: null, en: 'five', wordId: '0f719479-abd7-481a-a6a6-f1e78718d91b' },
-        { de: 'sechs', word: 'sechs', article: null, plural: null, en: 'six', wordId: '6f44d531-487c-4245-8f60-d89a435a8063' },
-        { de: 'sieben', word: 'sieben', article: null, plural: null, en: 'seven', wordId: '627511ca-ca92-4fd5-a4a9-cd558901e35d' },
-        { de: 'acht', word: 'acht', article: null, plural: null, en: 'eight', wordId: 'bfe44a22-099e-436f-be1c-aeca929cfd68' },
-        { de: 'neun', word: 'neun', article: null, plural: null, en: 'nine', wordId: 'bf6744d5-00b3-415d-86ba-5b38bf75323c' },
+        // The digits 0–10 are ONE Wortfeld entry, not ten (DaF review: ten of 25 slots were digits,
+        // which inflated the word count and crowded out the Personalien lexis the Handlungsfeld needs).
+        { de: 'die Zahlen 0–10', word: 'Zahlen 0–10', article: 'die', plural: '—', en: 'the numbers 0–10 (null, eins … zehn)', wordId: null },
+        { de: 'wohnen', word: 'wohnen', article: null, plural: null, en: 'to live, to reside', wordId: 'fb025b05-6aa5-4a9e-91a2-52a903032000' },
+        { de: 'das Geburtsdatum', word: 'Geburtsdatum', article: 'das', plural: 'Geburtsdaten', en: 'date of birth', wordId: '4b61db71-3720-4bf4-a936-d75495ebf91a' },
+        { de: 'die Staatsangehörigkeit', word: 'Staatsangehörigkeit', article: 'die', plural: 'Staatsangehörigkeiten', en: 'nationality', wordId: '25aca43e-8b73-4f68-8d8f-aaf629150fb4' },
+        { de: 'der Familienstand', word: 'Familienstand', article: 'der', plural: '—', en: 'marital status', wordId: null },
+        { de: 'das Amt', word: 'Amt', article: 'das', plural: 'Ämter', en: 'public office, authority', wordId: 'b5556cee-448c-47fc-82a7-2a5f9f956c1b' },
+        { de: 'der Schalter', word: 'Schalter', article: 'der', plural: 'Schalter', en: 'counter, service desk', wordId: '04eb49be-3f26-4496-b65d-7fd3e55b2f67' },
+        { de: 'die Post', word: 'Post', article: 'die', plural: '—', en: 'post office', wordId: '1897eb9b-5393-490d-aebf-c52080c2ec7d' },
       ],
       dialog: {
-        title: 'Der neue Nachbar',
-        setting: 'Ana trifft Herrn Weber im Treppenhaus.',
+        title: 'Am Schalter im Bürgerbüro',
+        setting: 'Ana meldet sich im Bürgerbüro an. Herr Weber arbeitet am Schalter.',
         lines: [
-          { speaker: 'Herr Weber', de: 'Guten Abend! Ich bin Thomas Weber.', en: 'Good evening! I am Thomas Weber.' },
+          { speaker: 'Herr Weber', de: 'Guten Tag! Ich bin Thomas Weber.', en: 'Good day! I am Thomas Weber.' },
           { speaker: 'Ana', de: 'Freut mich! Ich bin Ana.', en: 'Nice to meet you! I am Ana.' },
-          { speaker: 'Herr Weber', de: 'Sind Sie Studentin?', en: 'Are you a student?' },
-          { speaker: 'Ana', de: 'Ja, ich bin Studentin. Und Sie?', en: 'Yes, I am a student. And you?' },
-          { speaker: 'Herr Weber', de: 'Ich bin Lehrer von Beruf.', en: 'I am a teacher by profession.' },
+          { speaker: 'Herr Weber', de: 'Bitte füllen Sie das Formular aus.', en: 'Please fill out the form.' },
           { speaker: 'Ana', de: 'Ist das Formular für die Adresse?', en: 'Is that form for the address?' },
           { speaker: 'Herr Weber', de: 'Ja. Vorname, Nachname und Wohnort, bitte.', en: 'Yes. First name, surname and place of residence, please.' },
-          { speaker: 'Ana', de: 'Mein Nachname ist Ferreira, mein Wohnort Bremen.', en: 'My surname is Ferreira, my place of residence Bremen.' },
+          { speaker: 'Ana', de: 'Mein Nachname ist Chakiri. Ich wohne in Bremen.', en: 'My surname is Chakiri. I live in Bremen.' },
+          { speaker: 'Herr Weber', de: 'Was sind Sie von Beruf?', en: 'What is your profession?' },
+          { speaker: 'Ana', de: 'Ich bin Studentin.', en: 'I am a student.' },
           { speaker: 'Herr Weber', de: 'Danke, Ana. Auf Wiedersehen!', en: 'Thank you, Ana. Goodbye!' },
         ],
       },
@@ -247,23 +265,26 @@ export const CURRICULUM_A11 = {
       notice: {
         title: 'sein: ich bin, du bist, Sie sind',
         bodyDe: '**sein** ist das wichtigste Verb im Deutschen. Es ist unregelmäßig: ich **bin**, du **bist**, er/sie/es **ist**, wir **sind**, ihr **seid**, sie/Sie **sind**. Nach sein steht der Beruf ohne Artikel: Ich bin Lehrer. Nicht: Ich bin ein Lehrer.',
-        examples: ['Sind Sie Studentin?', 'Ich bin Lehrer von Beruf.'],
+        examples: ['Was sind Sie von Beruf?', 'Ich bin Studentin.'],
         ruleSlug: 'verb-sein',
       },
       phonetik: { focus: 'Lange und kurze Vokale: bin – bist – sind', items: ['ich BIN', 'du BIST', 'Sie SIND'] },
-      hoeren: { kind: 'dictation', lines: [4, 7] },
+      // Not line 4: an enumeration with three commas is a punctuation test, not a listening test.
+      hoeren: { kind: 'dictation', lines: [7, 3] },
       sprechen: {
-        readAloud: [3, 6],
+        readAloud: [2, 6],
         open: { teil: 'Sprechen Teil 1', promptDe: 'Stellen Sie sich vor: Name, Wohnort, Beruf.', hintWords: ['sein', 'von Beruf', 'Wohnort'], missionOrder: 6 },
       },
       schreiben: {
         kind: 'mitteilung',
-        taskDe: 'Schreiben Sie Ihrem neuen Nachbarn eine kurze Nachricht.',
-        leitpunkte: ['Name', 'Beruf', 'Gruß'],
+        taskDe: 'Schreiben Sie Ihrem neuen Nachbarn eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        leitpunkte: ['Wer Sie sind', 'Was Sie von Beruf sind', 'Wann Sie zu Hause sind'],
         minWords: 0,
         maxWords: 30,
         sample: 'Guten Tag, Herr Weber! Ich bin Ana. Ich bin Studentin. Viele Grüße, Ana',
       },
+      // A1.1 carries six listening exercises and ten reading texts; every one is linked from another
+      // Lektion, so this one honestly has none — the syllabus shows „—“ rather than a repeat.
       links: { listeningExercise: null, readingOrder: null },
       practiceRule: { topics: ['verb-sein', 'alphabet-pronunciation'], typedMin: 3 },
     },
@@ -295,8 +316,8 @@ export const CURRICULUM_A11 = {
         { de: 'der Sohn', word: 'Sohn', article: 'der', plural: 'Söhne', en: 'son', wordId: 'e2600e1e-8a72-42e6-bf30-3ec84d0e8ac5' },
         { de: 'die Tochter', word: 'Tochter', article: 'die', plural: 'Töchter', en: 'daughter', wordId: '4b9c7830-8179-4dfe-900c-5d20300045c5' },
         { de: 'das Kind', word: 'Kind', article: 'das', plural: 'Kinder', en: 'child', wordId: '20a50d1e-4b71-4d3a-8bf1-1b0278d3d445' },
-        { de: 'der Mann', word: 'Mann', article: 'der', plural: 'Männer', en: 'husband', wordId: '9551becf-a28b-4e81-bfb0-ad2e25f0d4b4' },
-        { de: 'die Frau', word: 'Frau', article: 'die', plural: 'Frauen', en: 'wife', wordId: '14664846-bff1-4940-b390-e7486006eed1' },
+        { de: 'der Mann', word: 'Mann', article: 'der', plural: 'Männer', en: 'man; husband', wordId: '9551becf-a28b-4e81-bfb0-ad2e25f0d4b4' },
+        { de: 'die Frau', word: 'Frau', article: 'die', plural: 'Frauen', en: 'woman; wife; Mrs/Ms (Anrede)', wordId: '14664846-bff1-4940-b390-e7486006eed1' },
         { de: 'das Baby', word: 'Baby', article: 'das', plural: 'Babys', en: 'baby', wordId: 'a8ad826c-2216-4527-b344-1cd35778fae7' },
         { de: 'das Einzelkind', word: 'Einzelkind', article: 'das', plural: 'Einzelkinder', en: 'only child', wordId: '4130e54e-fe3d-4e50-b059-d6e1c45777bb' },
         { de: 'jung', word: 'jung', article: null, plural: null, en: 'young', wordId: '84422f10-4718-4f70-a51b-c9e586a0a38b' },
@@ -315,7 +336,7 @@ export const CURRICULUM_A11 = {
         setting: 'Lena sieht ein Foto auf Anas Handy.',
         lines: [
           { speaker: 'Lena', de: 'Ana, ist das deine Familie?', en: 'Ana, is that your family?' },
-          { speaker: 'Ana', de: 'Ja. Das sind meine Eltern und mein Bruder.', en: 'Yes. Those are my parents and my brother.' },
+          { speaker: 'Ana', de: 'Ja. Das sind meine Eltern, mein Bruder und meine Schwester.', en: 'Yes. Those are my parents, my brother and my sister.' },
           { speaker: 'Lena', de: 'Wie alt ist er?', en: 'How old is he?' },
           { speaker: 'Ana', de: 'Er ist zwanzig. Meine Schwester ist noch jung.', en: 'He is twenty. My sister is still young.' },
           { speaker: 'Lena', de: 'Und was sprechen deine Eltern?', en: 'And what do your parents speak?' },
@@ -334,7 +355,7 @@ export const CURRICULUM_A11 = {
       },
       notice: {
         title: 'er, sie, es – die Personalpronomen',
-        bodyDe: 'Das Pronomen richtet sich nach dem Nomen: der Bruder → **er**, die Schwester → **sie**, das Kind → **es**. Für mehrere Personen: **wir**, **ihr**, **sie**. **Sie** mit großem S ist die höfliche Form für eine oder mehrere Personen.',
+        bodyDe: 'Das Pronomen richtet sich nach dem Nomen: der Bruder → **er**, die Schwester → **sie**, das Kind → **es**. Für mehrere Personen: **wir**, **ihr**, **sie**. **Sie** mit großem S ist die höfliche Form. Bei **sprechen** wechselt der Vokal: er **spricht** — mehr dazu in Lektion 7.',
         examples: ['Wie alt ist er?', 'Ja, er spricht Englisch und Deutsch.'],
         ruleSlug: 'personal-pronouns',
       },
@@ -371,7 +392,7 @@ export const CURRICULUM_A11 = {
         'Ich kann fragen, was ein Gegenstand ist.',
         'Ich kann nach dem Preis fragen.',
         'Ich kann Preise bis hundert Euro verstehen.',
-        'Ich kann sagen, was ich kaufen möchte.',
+        'Ich kann sagen, was ich kaufe.',
       ],
       examTeile: ['Lesen Teil 2', 'Sprechen Teil 3', 'Hören Teil 2'],
       grammarSlugs: ['nouns-gender', 'personal-pronouns'],
@@ -393,11 +414,16 @@ export const CURRICULUM_A11 = {
         { de: 'wie viel', word: 'wie viel', article: null, plural: null, en: 'how much', wordId: '80e786f9-8a29-45bd-862b-a498bc184c69' },
         { de: 'wie viele', word: 'wie viele', article: null, plural: null, en: 'how many', wordId: 'c4fad330-3515-46b0-ad99-aa883e0ea764' },
         { de: 'zählen', word: 'zählen', article: null, plural: null, en: 'to count', wordId: '0bf9838a-2535-4035-baad-10646e997a7b' },
-        { de: 'der Euro', word: 'Euro', article: 'der', plural: 'Euro', en: 'euro', wordId: null },
-        { de: 'der Preis', word: 'Preis', article: 'der', plural: 'Preise', en: 'price', wordId: null },
-        { de: 'kosten', word: 'kosten', article: null, plural: null, en: 'to cost', wordId: null },
-        { de: 'kaufen', word: 'kaufen', article: null, plural: null, en: 'to buy', wordId: null },
-        { de: 'teuer', word: 'teuer', article: null, plural: null, en: 'expensive', wordId: null },
+        { de: 'dreißig', word: 'dreißig', article: null, plural: null, en: 'thirty', wordId: 'e479a836-f40d-4d87-812f-8fba64fedb00' },
+        { de: 'vierzig', word: 'vierzig', article: null, plural: null, en: 'forty', wordId: 'bf230020-404d-4ff6-9a90-93b6b788589c' },
+        { de: 'fünfzig', word: 'fünfzig', article: null, plural: null, en: 'fifty', wordId: '15e8cb75-ccac-4f19-857a-e36575ba9365' },
+        { de: 'hundert', word: 'hundert', article: null, plural: null, en: 'hundred', wordId: 'eff90609-67d7-489d-8e78-6a0bf58d9123' },
+        { de: 'der Euro', word: 'Euro', article: 'der', plural: 'Euro', en: 'euro', wordId: '34ee3fee-c37c-4ea0-8bb4-0732575da17b' },
+        { de: 'der Preis', word: 'Preis', article: 'der', plural: 'Preise', en: 'price', wordId: '34254aab-98aa-438b-a0e5-210c77d82596' },
+        { de: 'kosten', word: 'kosten', article: null, plural: null, en: 'to cost', wordId: 'be28d780-b0e6-42c3-ae0f-ce0ff66d4501' },
+        { de: 'kaufen', word: 'kaufen', article: null, plural: null, en: 'to buy', wordId: '40d30139-d09e-418e-bdab-6ddaa59b3e39' },
+        { de: 'teuer', word: 'teuer', article: null, plural: null, en: 'expensive', wordId: 'b544de5a-1302-4af7-bee5-7eff09dadb02' },
+        { de: 'machen', word: 'machen', article: null, plural: null, en: 'to do, to make', wordId: null },
       ],
       dialog: {
         title: 'Am Stand',
@@ -410,7 +436,7 @@ export const CURRICULUM_A11 = {
           { speaker: 'Tim', de: 'Das ist teuer. Und der Stuhl?', en: 'That is expensive. And the chair?' },
           { speaker: 'Frau Wolf', de: 'Der Stuhl kostet zwölf Euro.', en: 'The chair costs twelve euros.' },
           { speaker: 'Tim', de: 'Ich kaufe den Stuhl und die Lampe.', en: 'I will buy the chair and the lamp.' },
-          { speaker: 'Frau Wolf', de: 'Zusammen sind das zwanzig Euro.', en: 'Together that is twenty euros.' },
+          { speaker: 'Frau Wolf', de: 'Das macht zusammen zwanzig Euro.', en: 'That comes to twenty euros altogether.' },
           { speaker: 'Tim', de: 'Danke! Auf Wiedersehen.', en: 'Thank you! Goodbye.' },
         ],
       },
@@ -422,7 +448,7 @@ export const CURRICULUM_A11 = {
       },
       notice: {
         title: 'Jedes Nomen hat ein Genus',
-        bodyDe: 'Jedes Nomen hat ein Genus: **der** Tisch, **die** Lampe, **das** Buch. Das Genus ist Teil des Wortes — lerne es immer mit: nicht Tisch, sondern der Tisch. Im Plural haben alle Nomen **die**: die Tische, die Lampen.',
+        bodyDe: 'Jedes Nomen hat ein Genus: **der** Tisch, **die** Lampe, **das** Buch. Das Genus ist Teil des Wortes — lerne es immer mit: nicht Tisch, sondern der Tisch. Im Plural haben alle Nomen **die**. Nach **kaufen** wird **der** zu **den**: Ich kaufe **den** Stuhl. Das ist hier ein fester Ausdruck; die Regel (Akkusativ) kommt in A1.2.',
         examples: ['Das ist eine Lampe. Sie kostet acht Euro.', 'Der Tisch kostet fünfzehn Euro.'],
         ruleSlug: 'nouns-gender',
       },
@@ -434,8 +460,8 @@ export const CURRICULUM_A11 = {
       },
       schreiben: {
         kind: 'mitteilung',
-        taskDe: 'Schreiben Sie Ihrer Freundin eine Nachricht über den Flohmarkt.',
-        leitpunkte: ['Was Sie kaufen', 'Der Preis', 'Einladung mitzukommen'],
+        taskDe: 'Schreiben Sie Ihrer Freundin eine Nachricht über den Flohmarkt. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        leitpunkte: ['Was Sie kaufen', 'Was es kostet', 'Wann Sie sich treffen'],
         minWords: 0,
         maxWords: 30,
         sample: 'Hallo Lena! Ich kaufe einen Stuhl. Er kostet zwölf Euro. Kommst du mit? Tschüss, Tim',
@@ -452,7 +478,7 @@ export const CURRICULUM_A11 = {
       handlungsfeld: 'Lernen und Bildung: Gegenstände im Kurs benennen',
       canDo: [
         'Ich kann Gegenstände im Kursraum benennen.',
-        'Ich kann fragen, wo etwas ist.',
+        'Ich kann fragen, wo etwas ist, und mit „hier“ oder „da“ antworten.',
         'Ich kann Farben nennen.',
         'Ich kann einfache Fragen im Kurs stellen.',
       ],
@@ -466,17 +492,19 @@ export const CURRICULUM_A11 = {
         { de: 'der Stift', word: 'Stift', article: 'der', plural: 'Stifte', en: 'pen', wordId: 'de4bcb35-dabf-4017-84c9-c6910a82e774' },
         { de: 'der Bleistift', word: 'Bleistift', article: 'der', plural: 'Bleistifte', en: 'pencil', wordId: '857849c9-5da7-411c-bc9c-0b5766694014' },
         { de: 'der Kugelschreiber', word: 'Kugelschreiber', article: 'der', plural: 'Kugelschreiber', en: 'ballpoint pen', wordId: 'd862aa1f-12c2-4ea1-9479-529b82466b82' },
-        { de: 'der Radiergummi', word: 'Radiergummi', article: 'der', plural: 'Radiergummis', en: 'eraser', wordId: '39a2ee3b-6595-4158-aa8d-4cd17304775e' },
         { de: 'das Lineal', word: 'Lineal', article: 'das', plural: 'Lineale', en: 'ruler', wordId: 'bf76aa3d-3725-45de-992a-3a4ec47ef22e' },
         { de: 'die Schere', word: 'Schere', article: 'die', plural: 'Scheren', en: 'scissors', wordId: 'ea766d6a-4335-437e-96fe-7be94fcbbc0b' },
         { de: 'das Papier', word: 'Papier', article: 'das', plural: 'Papiere', en: 'paper', wordId: '1824e1ce-6c7e-4835-b429-744e5190e427' },
         { de: 'die Tafel', word: 'Tafel', article: 'die', plural: 'Tafeln', en: 'blackboard', wordId: 'dac0b162-56bd-430c-aeba-61638d7f5b5c' },
         { de: 'die Tür', word: 'Tür', article: 'die', plural: 'Türen', en: 'door', wordId: '3230fcc5-e7b4-4725-8ad0-82a8b07f513f' },
         { de: 'das Fenster', word: 'Fenster', article: 'das', plural: 'Fenster', en: 'window', wordId: '4ab2f19d-9398-4738-ab8c-0521d9eb9b42' },
-        { de: 'die Kreide', word: 'Kreide', article: 'die', plural: '—', en: 'chalk', wordId: '6964b56e-a4fc-43c5-b441-391d72e6227f' },
         { de: 'das Wörterbuch', word: 'Wörterbuch', article: 'das', plural: 'Wörterbücher', en: 'dictionary', wordId: 'abc566d0-3ab7-4aec-bbc5-8f6b77ad484b' },
-        { de: 'das Mäppchen', word: 'Mäppchen', article: 'das', plural: 'Mäppchen', en: 'pencil case', wordId: '70b5a75c-bc8d-406c-89ee-b882e7b2ee0c' },
-        { de: 'der Spitzer', word: 'Spitzer', article: 'der', plural: 'Spitzer', en: 'sharpener', wordId: '9fc3bb0c-04b8-4790-a2f4-897d16fcba55' },
+        // Grundschulwortschatz (Mäppchen, Spitzer, Radiergummi, Kreide) replaced by the Wohnen lexis
+        // the Goethe A1 Wortliste and SD1 Lesen Teil 2 actually use (DaF review, L5).
+        { de: 'das Zimmer', word: 'Zimmer', article: 'das', plural: 'Zimmer', en: 'room', wordId: '7c015007-2252-43ae-9c30-9ac8a82c9831' },
+        { de: 'die Wohnung', word: 'Wohnung', article: 'die', plural: 'Wohnungen', en: 'flat, apartment', wordId: 'd46d546b-f0f1-4cab-818e-0e99a09b355d' },
+        { de: 'der Schlüssel', word: 'Schlüssel', article: 'der', plural: 'Schlüssel', en: 'key', wordId: '1b3689de-3eee-4947-8ddd-c1b4fcada95b' },
+        { de: 'das Bild', word: 'Bild', article: 'das', plural: 'Bilder', en: 'picture', wordId: null },
         { de: 'die Farbe', word: 'Farbe', article: 'die', plural: 'Farben', en: 'color', wordId: '9a35fe92-fc2d-42af-a718-7c6cf48a9984' },
         { de: 'rot', word: 'rot', article: null, plural: null, en: 'red', wordId: 'fd89afcf-f470-4427-8ab4-d88fb9d35c06' },
         { de: 'blau', word: 'blau', article: null, plural: null, en: 'blue', wordId: 'f5d65f53-08bd-40ec-b859-16ebe6143ba8' },
@@ -491,9 +519,9 @@ export const CURRICULUM_A11 = {
         setting: 'Lena und Tim packen ihre Taschen aus.',
         lines: [
           { speaker: 'Lena', de: 'Tim, wo ist das Wörterbuch?', en: 'Tim, where is the dictionary?' },
-          { speaker: 'Tim', de: 'Das Wörterbuch ist auf dem Tisch.', en: 'The dictionary is on the table.' },
-          { speaker: 'Lena', de: 'Und die Schere? Wo ist sie?', en: 'And the scissors? Where are they?' },
-          { speaker: 'Tim', de: 'Die Schere ist in der Tasche.', en: 'The scissors are in the bag.' },
+          { speaker: 'Tim', de: 'Das Wörterbuch ist hier. Der Stift ist da.', en: 'The dictionary is here. The pen is there.' },
+          { speaker: 'Lena', de: 'Und die Schere? Wo ist sie?', en: 'And the scissors (die Schere, singular)? Where is it?' },
+          { speaker: 'Tim', de: 'Die Schere ist hier. Das Lineal auch.', en: 'The scissors are here. The ruler too.' },
           { speaker: 'Lena', de: 'Ist der Stift blau oder schwarz?', en: 'Is the pen blue or black?' },
           { speaker: 'Tim', de: 'Der Stift ist blau, der Bleistift ist gelb.', en: 'The pen is blue, the pencil is yellow.' },
           { speaker: 'Lena', de: 'Und das Heft? Ist es rot?', en: 'And the notebook? Is it red?' },
@@ -504,11 +532,11 @@ export const CURRICULUM_A11 = {
       pretest: { promptDe: 'Fragen Sie, wo das Buch ist.', promptEn: 'Ask where the book is.', model: 'Wo ist das Buch?', accepted: ['Wo ist', 'Wo sind'] },
       notice: {
         title: 'der, die, das – der bestimmte Artikel',
-        bodyDe: 'Der bestimmte Artikel zeigt: Wir wissen, welche Sache gemeint ist. **der** (maskulin), **die** (feminin), **das** (neutral), im Plural immer **die**. Endungen helfen: -e ist oft feminin (die Lampe), -chen ist immer neutral (das Mäppchen).',
-        examples: ['Das Wörterbuch ist auf dem Tisch.', 'Die Schere ist in der Tasche.'],
+        bodyDe: 'Der bestimmte Artikel zeigt: Wir wissen, welche Sache gemeint ist. **der** (maskulin), **die** (feminin), **das** (neutral), im Plural immer **die**: die Bücher. Antworten kannst du zuerst mit **hier** und **da**. Sätze wie *auf dem Tisch* (Dativ) lernst du in A1.2.',
+        examples: ['Das Wörterbuch ist hier. Der Stift ist da.', 'Die Schere ist hier. Das Lineal auch.'],
         ruleSlug: 'definite-articles',
       },
-      phonetik: { focus: 'Der Laut sch in Schere und Tasche', items: ['SCHE-re', 'TA-sche', 'TSCHÜSS'] },
+      phonetik: { focus: 'sch – s – z: Schere, sechs, zehn', items: ['SCHE-re', 'SECHS', 'ZEHN'] },
       hoeren: { kind: 'dictation', lines: [1, 5] },
       sprechen: {
         readAloud: [4, 7],
@@ -563,10 +591,10 @@ export const CURRICULUM_A11 = {
         { de: 'der Verkäufer', word: 'Verkäufer', article: 'der', plural: 'Verkäufer', en: 'salesperson (m)', wordId: '497a6825-36c3-4af5-aaf5-5e70dafdbb4f' },
         { de: 'die Verkäuferin', word: 'Verkäuferin', article: 'die', plural: 'Verkäuferinnen', en: 'salesperson (f)', wordId: '1b7e9803-1125-4b4a-a392-79b59fa69dfa' },
         { de: 'die Pause', word: 'Pause', article: 'die', plural: 'Pausen', en: 'break', wordId: 'c1c71f2f-1cea-437b-b2ae-5cce152ee9a4' },
-        { de: 'die Nummer', word: 'Nummer', article: 'die', plural: 'Nummern', en: 'number (ordinal)', wordId: '83a14b7b-33f9-4972-9001-72c42442f14d' },
-        { de: 'brauchen', word: 'brauchen', article: null, plural: null, en: 'to need', wordId: null },
-        { de: 'anrufen', word: 'anrufen', article: null, plural: null, en: 'to call (on the phone)', wordId: null },
-        { de: 'das Handy', word: 'Handy', article: 'das', plural: 'Handys', en: 'mobile phone', wordId: null },
+        { de: 'die Nummer', word: 'Nummer', article: 'die', plural: 'Nummern', en: 'number', wordId: '83a14b7b-33f9-4972-9001-72c42442f14d' },
+        { de: 'brauchen', word: 'brauchen', article: null, plural: null, en: 'to need', wordId: '0bca1725-1790-4ec6-a1cb-362cda69fefb' },
+        { de: 'anrufen', word: 'anrufen', article: null, plural: null, en: 'to call (on the phone)', wordId: '29a7e95e-d41e-42b3-8fe2-84a90433082b' },
+        { de: 'das Handy', word: 'Handy', article: 'das', plural: 'Handys', en: 'mobile phone', wordId: '5facc4fc-da80-494c-ae4a-4bf2a2384fb5' },
         { de: 'das Telefon', word: 'Telefon', article: 'das', plural: 'Telefone', en: 'telephone', wordId: null },
       ],
       dialog: {
@@ -576,11 +604,11 @@ export const CURRICULUM_A11 = {
           { speaker: 'Ana', de: 'Guten Morgen, Herr Weber!', en: 'Good morning, Mr Weber!' },
           { speaker: 'Herr Weber', de: 'Guten Morgen, Ana. Das ist Ihr Büro.', en: 'Good morning, Ana. This is your office.' },
           { speaker: 'Ana', de: 'Danke. Ich brauche einen Computer und ein Telefon.', en: 'Thank you. I need a computer and a telephone.' },
-          { speaker: 'Herr Weber', de: 'Ein Computer ist im Büro. Ein Telefon auch.', en: 'There is a computer in the office. A telephone too.' },
+          { speaker: 'Herr Weber', de: 'Im Büro sind ein Computer und ein Telefon.', en: 'There is a computer and a telephone in the office.' },
           { speaker: 'Ana', de: 'Und ein Handy?', en: 'And a mobile phone?' },
-          { speaker: 'Herr Weber', de: 'Ein Handy haben wir nicht.', en: 'We do not have a mobile phone.' },
+          { speaker: 'Herr Weber', de: 'Wir haben kein Handy.', en: 'We do not have a mobile phone.' },
           { speaker: 'Ana', de: 'Und wie ist die Telefonnummer?', en: 'And what is the telephone number?' },
-          { speaker: 'Herr Weber', de: 'Null drei zwei eins. Die Chefin ruft um zehn an.', en: 'Zero three two one. The boss is calling at ten.' },
+          { speaker: 'Herr Weber', de: 'Null vier zwei – drei drei acht eins.', en: 'Zero four two – three three eight one.' },
           { speaker: 'Ana', de: 'Danke! Wann ist die Pause?', en: 'Thank you! When is the break?' },
           { speaker: 'Herr Weber', de: 'Die Pause ist um eins.', en: 'The break is at one.' },
         ],
@@ -593,8 +621,8 @@ export const CURRICULUM_A11 = {
       },
       notice: {
         title: 'ein, eine – der unbestimmte Artikel',
-        bodyDe: 'Neu oder unbekannt? Dann **ein** (der/das) oder **eine** (die): ein Computer, eine Lampe, ein Telefon. Nach **brauchen** wird maskulin zu **einen**: Ich brauche **einen** Computer. Die Verneinung ist **kein**: Das ist kein Telefon.',
-        examples: ['Danke. Ich brauche einen Computer und ein Telefon.', 'Ein Computer ist im Büro. Ein Telefon auch.'],
+        bodyDe: 'Neu oder unbekannt? Dann **ein** (der/das) oder **eine** (die): ein Computer, eine Lampe. Nach Verben wie **brauchen**, **haben**, **kaufen** wird maskulin **ein → einen**: Ich brauche **einen** Computer (Akkusativ — die Regel kommt in A1.2). Verneinung mit **kein**: Wir haben **kein** Handy. Die Uhrzeit **um eins** lernst du in Lektion 8.',
+        examples: ['Danke. Ich brauche einen Computer und ein Telefon.', 'Wir haben kein Handy.'],
         ruleSlug: 'indefinite-articles',
       },
       phonetik: { focus: 'Das lange ie in vier und Telefon', items: ['VIER', 'Te-le-FON', 'BÜ-ro'] },
@@ -610,11 +638,11 @@ export const CURRICULUM_A11 = {
       },
       schreiben: {
         kind: 'mitteilung',
-        taskDe: 'Schreiben Sie Ihrer Chefin eine kurze Nachricht.',
-        leitpunkte: ['Was Sie brauchen', 'Ihre Telefonnummer', 'Gruß'],
+        taskDe: 'Schreiben Sie Ihrer Chefin eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        leitpunkte: ['Was Sie brauchen', 'Ihre Telefonnummer', 'Wann Sie im Büro sind'],
         minWords: 0,
         maxWords: 30,
-        sample: 'Guten Tag, Frau Berg! Ich brauche einen Computer. Meine Nummer ist null drei zwei eins. Viele Grüße, Ana',
+        sample: 'Guten Tag, Frau Berg! Ich brauche einen Computer. Meine Nummer ist null vier zwei. Viele Grüße, Ana',
       },
       links: { listeningExercise: 5, readingOrder: null },
       practiceRule: { topics: ['indefinite-articles', 'definite-articles'], typedMin: 3 },
@@ -641,8 +669,14 @@ export const CURRICULUM_A11 = {
         { de: 'immer', word: 'immer', article: null, plural: null, en: 'always', wordId: '0039d89a-18d8-45ad-a982-76926f5840c4' },
         { de: 'nie', word: 'nie', article: null, plural: null, en: 'never', wordId: '1c4366bf-9f30-4797-be46-64427a7eb1fe' },
         { de: 'vielleicht', word: 'vielleicht', article: null, plural: null, en: 'maybe', wordId: '24287c01-68eb-4edf-a598-fb80799b4f67' },
-        { de: 'natürlich', word: 'natürlich', article: null, plural: null, en: 'of course', wordId: '7eef07d3-d262-4377-a7e2-2cb12067e987' },
-        { de: 'wirklich', word: 'wirklich', article: null, plural: null, en: 'really', wordId: '0bbb2255-7110-4073-94db-e4e5be1c92d6' },
+        // A Hobby-Lektion needs hobbies, not particles: natürlich, wirklich and glücklich gave way to
+        // the six A1-Wortliste leisure words below (DaF review, L7).
+        { de: 'lesen', word: 'lesen', article: null, plural: null, en: 'to read', wordId: 'f2920503-570f-42ac-9ab6-2cf44801f3cf' },
+        { de: 'schwimmen', word: 'schwimmen', article: null, plural: null, en: 'to swim', wordId: '08cd57ff-4ad6-4507-98de-be89cb5b9c33' },
+        { de: 'kochen', word: 'kochen', article: null, plural: null, en: 'to cook', wordId: 'ec94fc24-9c2a-40dd-9365-b2d897e46abd' },
+        { de: 'tanzen', word: 'tanzen', article: null, plural: null, en: 'to dance', wordId: '072de979-1dd1-49cd-a833-989402066a23' },
+        { de: 'der Fußball', word: 'Fußball', article: 'der', plural: 'Fußbälle', en: 'football, soccer', wordId: 'b4faaaee-78ba-4eda-8002-854ccac60bd4' },
+        { de: 'das Kino', word: 'Kino', article: 'das', plural: 'Kinos', en: 'cinema', wordId: 'c06bedd6-08d6-47f3-a3bc-f6441efd85b1' },
         { de: 'bestimmt', word: 'bestimmt', article: null, plural: null, en: 'definitely', wordId: 'b57550d1-a0f3-43a2-a257-2c4f3fa972d7' },
         { de: 'gut', word: 'gut', article: null, plural: null, en: 'good', wordId: '87798924-0cc3-4619-b45d-8e6cfa2eee57' },
         { de: 'das Wochenende', word: 'Wochenende', article: 'das', plural: 'Wochenenden', en: 'weekend', wordId: 'b5a36d15-71c0-4e81-9113-eeffcde1d9b7' },
@@ -651,12 +685,11 @@ export const CURRICULUM_A11 = {
         { de: 'frei', word: 'frei', article: null, plural: null, en: 'free, off', wordId: 'd55d73a1-a4d1-4bad-a6eb-f058373e9ee8' },
         { de: 'jede Woche', word: 'jede Woche', article: null, plural: null, en: 'every week', wordId: 'fa0c17a8-27a0-4d39-b4ca-2218001b5095' },
         { de: 'die Woche', word: 'Woche', article: 'die', plural: 'Wochen', en: 'week', wordId: '19bd209f-6a41-4f0f-9f58-9735dbb8809c' },
-        { de: 'glücklich', word: 'glücklich', article: null, plural: null, en: 'happy', wordId: '79d2f687-86dd-45d7-bb17-86c898bd1ce4' },
-        { de: 'das Hobby', word: 'Hobby', article: 'das', plural: 'Hobbys', en: 'hobby', wordId: null },
-        { de: 'die Musik', word: 'Musik', article: 'die', plural: '—', en: 'music', wordId: null },
-        { de: 'der Sport', word: 'Sport', article: 'der', plural: '—', en: 'sport', wordId: null },
-        { de: 'spielen', word: 'spielen', article: null, plural: null, en: 'to play', wordId: null },
-        { de: 'hören', word: 'hören', article: null, plural: null, en: 'to listen, to hear', wordId: null },
+        { de: 'das Hobby', word: 'Hobby', article: 'das', plural: 'Hobbys', en: 'hobby', wordId: '0892f4c7-70d2-4d54-aa72-11f6aed86e66' },
+        { de: 'die Musik', word: 'Musik', article: 'die', plural: '—', en: 'music', wordId: '372fae57-128a-4149-b1aa-45f51bffbe82' },
+        { de: 'der Sport', word: 'Sport', article: 'der', plural: '—', en: 'sport', wordId: '79a7911d-6f46-4058-8bbb-3384c6715a14' },
+        { de: 'spielen', word: 'spielen', article: null, plural: null, en: 'to play', wordId: '3f11825a-d3e4-444c-9d97-2a53203e8f15' },
+        { de: 'hören', word: 'hören', article: null, plural: null, en: 'to listen, to hear', wordId: '3c868b51-6e36-4d5a-a499-8e5b8fe60fee' },
       ],
       dialog: {
         title: 'Was machst du am Wochenende?',
@@ -664,24 +697,25 @@ export const CURRICULUM_A11 = {
         lines: [
           { speaker: 'Lena', de: 'Tim, was ist dein Hobby?', en: 'Tim, what is your hobby?' },
           { speaker: 'Tim', de: 'Ich höre gern Musik. Und du?', en: 'I like listening to music. And you?' },
-          { speaker: 'Lena', de: 'Mein Hobby ist Sport. Ich spiele immer am Samstag.', en: 'My hobby is sport. I always play on Saturdays.' },
+          { speaker: 'Lena', de: 'Mein Hobby ist Sport. Ich spiele am Samstag Fußball.', en: 'My hobby is sport. I play football on Saturdays.' },
           { speaker: 'Tim', de: 'Spielst du auch am Sonntag?', en: 'Do you play on Sundays too?' },
           { speaker: 'Lena', de: 'Nein, am Sonntag bin ich frei.', en: 'No, on Sundays I am free.' },
           { speaker: 'Tim', de: 'Hörst du auch Musik?', en: 'Do you listen to music too?' },
-          { speaker: 'Lena', de: 'Ja, natürlich! Ich höre jede Woche Musik.', en: 'Yes, of course! I listen to music every week.' },
-          { speaker: 'Tim', de: 'Wir hören zusammen Musik, vielleicht am Wochenende?', en: 'Let us listen to music together, maybe at the weekend?' },
-          { speaker: 'Lena', de: 'Ja, wirklich gern!', en: 'Yes, I would really like that!' },
+          { speaker: 'Lena', de: 'Ja, immer! Ich höre jede Woche Musik.', en: 'Yes, always! I listen to music every week.' },
+          { speaker: 'Tim', de: 'Hören wir am Wochenende zusammen Musik?', en: 'Shall we listen to music together at the weekend?' },
+          { speaker: 'Lena', de: 'Ja, sehr gern!', en: 'Yes, I would love to!' },
         ],
       },
       pretest: {
         promptDe: 'Sagen Sie, was Sie gern machen.',
         promptEn: 'Say what you like doing.',
         model: 'Ich höre gern Musik.',
-        accepted: ['Ich', 'Mein Hobby ist', 'Meine Hobbys sind'],
+        // Not the bare prefix 'Ich' — that accepts „Ich bin müde“ as an answer about free time.
+        accepted: ['Ich höre gern', 'Ich spiele gern', 'Ich mache gern', 'Ich lese gern', 'Mein Hobby ist', 'Meine Hobbys sind'],
       },
       notice: {
         title: 'Präsens: regelmäßige Verben',
-        bodyDe: 'Regelmäßige Verben haben feste Endungen am Stamm: ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. **gern** steht nach dem Verb: Ich höre **gern** Musik.',
+        bodyDe: 'Regelmäßige Verben haben feste Endungen am Stamm: ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. **gern** steht nach dem Verb: Ich höre **gern** Musik. **Achtung:** einige Verben wechseln den Vokal: sprechen → du **sprichst**, er **spricht**; fahren → du **fährst**, er **fährt**.',
         examples: ['Ich höre gern Musik. Und du?', 'Spielst du auch am Sonntag?'],
         ruleSlug: 'present-tense-regular',
       },
@@ -693,6 +727,8 @@ export const CURRICULUM_A11 = {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Freizeit: Hobby? Musik? Wochenende?',
           hintWords: ['spielen', 'hören', 'gern'],
+          // Missions 1–8 are the only published A1.1 speaking missions and each is linked once; this
+          // Lektion (and 10–12) falls back to the generic prompt until new missions are seeded.
           missionOrder: null,
         },
       },
@@ -732,8 +768,11 @@ export const CURRICULUM_A11 = {
         { de: 'pünktlich', word: 'pünktlich', article: null, plural: null, en: 'punctual, on time', wordId: '56f22ec2-7fe2-4ff7-b64b-91be9a0abcf1' },
         { de: 'zu spät', word: 'zu spät', article: null, plural: null, en: 'too late', wordId: 'c86cfd40-5bc1-421d-a6a1-cef236812adb' },
         { de: 'die Verspätung', word: 'Verspätung', article: 'die', plural: 'Verspätungen', en: 'delay', wordId: '00f57653-edbf-480c-8a0a-1b39518744e1' },
-        { de: 'verspätet', word: 'verspätet', article: null, plural: null, en: 'delayed, late', wordId: '9244eaed-95fb-4a9c-a9fc-facc59c3ede4' },
-        { de: 'rechtzeitig', word: 'rechtzeitig', article: null, plural: null, en: 'in time, on time', wordId: '894f2e53-a891-426f-954f-660959e5dbe1' },
+        // verspätet/rechtzeitig (neither in the A1 Wortliste) gave way to the clock-time words the
+        // notice actually uses, and the week is now learnt as a set (DaF review, L8).
+        { de: 'halb', word: 'halb', article: null, plural: null, en: 'half (past)', wordId: 'cc37acc3-4937-4d79-a6b1-5960406aa578' },
+        { de: 'Viertel nach', word: 'Viertel nach', article: null, plural: null, en: 'quarter past', wordId: null },
+        { de: 'Viertel vor', word: 'Viertel vor', article: null, plural: null, en: 'quarter to', wordId: null },
         { de: 'der Wecker', word: 'Wecker', article: 'der', plural: 'Wecker', en: 'alarm clock', wordId: '02801836-9974-4da2-9f1c-27c4bb1c5966' },
         { de: 'aufstehen', word: 'aufstehen', article: null, plural: null, en: 'to get up', wordId: 'b9753cfc-8f74-4540-9315-7f4d4ef332ea' },
         { de: 'aufwachen', word: 'aufwachen', article: null, plural: null, en: 'to wake up', wordId: 'ca054fb8-50a3-41a2-865d-91067bbb5c2f' },
@@ -742,10 +781,11 @@ export const CURRICULUM_A11 = {
         { de: 'abends', word: 'abends', article: null, plural: null, en: 'in the evening(s)', wordId: '9b059418-c75c-477b-93ae-f412a3dca3bf' },
         { de: 'der Vormittag', word: 'Vormittag', article: 'der', plural: 'Vormittage', en: 'morning (before noon)', wordId: '6f9a0b42-808f-4489-886d-a3a1306577a1' },
         { de: 'der Nachmittag', word: 'Nachmittag', article: 'der', plural: 'Nachmittage', en: 'afternoon', wordId: '03b8f2d1-40ff-4419-9c79-7e740c071989' },
-        { de: 'das Viertel', word: 'Viertel', article: 'das', plural: 'Viertel', en: 'quarter', wordId: '274c00e3-2d56-4057-84bc-0e5011f5b31e' },
         { de: 'der Montag', word: 'Montag', article: 'der', plural: 'Montage', en: 'Monday', wordId: '74232a41-8578-4826-af22-5c1235360cd9' },
         { de: 'der Dienstag', word: 'Dienstag', article: 'der', plural: 'Dienstage', en: 'Tuesday', wordId: '34b1bf45-b514-4590-ba20-4a83f93f47f9' },
         { de: 'der Mittwoch', word: 'Mittwoch', article: 'der', plural: 'Mittwoche', en: 'Wednesday', wordId: '683072dd-e46c-4a9e-bae7-e2bbc67678ad' },
+        { de: 'der Donnerstag', word: 'Donnerstag', article: 'der', plural: 'Donnerstage', en: 'Thursday', wordId: '4bd005d5-2b4e-4de7-b6c9-061f11e41675' },
+        { de: 'der Freitag', word: 'Freitag', article: 'der', plural: 'Freitage', en: 'Friday', wordId: '34c2e1e6-005c-4d2f-93d9-c4c285529878' },
         { de: 'heute', word: 'heute', article: null, plural: null, en: 'today', wordId: '30eb2fd7-5167-4a2b-9482-b7c57f3d7efe' },
       ],
       dialog: {
@@ -754,10 +794,10 @@ export const CURRICULUM_A11 = {
         lines: [
           { speaker: 'Ana', de: 'Lena, wann stehst du morgens auf?', en: 'Lena, when do you get up in the morning?' },
           { speaker: 'Lena', de: 'Ich stehe um sechs Uhr auf.', en: 'I get up at six o’clock.' },
-          { speaker: 'Ana', de: 'Und wann ist dein Termin heute?', en: 'And when is your appointment today?' },
+          { speaker: 'Ana', de: 'Und wann ist dein Termin?', en: 'And when is your appointment?' },
           { speaker: 'Lena', de: 'Der Termin ist am Montag um Viertel vor acht.', en: 'The appointment is on Monday at a quarter to eight.' },
-          { speaker: 'Ana', de: 'Bist du pünktlich?', en: 'Are you on time?' },
-          { speaker: 'Lena', de: 'Ja, immer. Mein Wecker ist gut.', en: 'Yes, always. My alarm clock is good.' },
+          { speaker: 'Ana', de: 'Kommst du pünktlich?', en: 'Will you be on time?' },
+          { speaker: 'Lena', de: 'Ja, immer. Ich habe einen guten Wecker.', en: 'Yes, always. I have a good alarm clock.' },
           { speaker: 'Ana', de: 'Und am Dienstag? Hast du nachmittags Zeit?', en: 'And on Tuesday? Do you have time in the afternoon?' },
           { speaker: 'Lena', de: 'Am Dienstag habe ich abends Zeit.', en: 'On Tuesday I have time in the evening.' },
           { speaker: 'Ana', de: 'Um acht Uhr?', en: 'At eight o’clock?' },
@@ -767,7 +807,7 @@ export const CURRICULUM_A11 = {
       pretest: { promptDe: 'Fragen Sie nach der Uhrzeit.', promptEn: 'Ask what time it is.', model: 'Wie spät ist es?', accepted: ['Wie spät', 'Wie viel Uhr', 'Wann'] },
       notice: {
         title: 'um, am – die Uhrzeit sagen',
-        bodyDe: 'Uhrzeit mit **um**: um acht Uhr. Wochentag mit **am**: am Montag. Umgangssprachlich: **Viertel nach** acht, **Viertel vor** neun, **halb** neun (= 8.30!). Die Frage lautet: **Wie spät ist es?** oder **Wann?**',
+        bodyDe: 'Uhrzeit mit **um**: um acht Uhr. Wochentag mit **am**: am Montag. Umgangssprachlich: **Viertel nach** acht, **Viertel vor** neun, **halb** neun (= 8.30!). Offiziell (Bahn, Radio): **acht Uhr dreißig**. Die Frage lautet: **Wie spät ist es?** **Hast du Zeit?** ist eine feste Wendung; haben kommt in Lektion 9.',
         examples: ['Ich stehe um sechs Uhr auf.', 'Der Termin ist am Montag um Viertel vor acht.'],
         ruleSlug: 'time-and-dates',
       },
@@ -784,14 +824,16 @@ export const CURRICULUM_A11 = {
       },
       schreiben: {
         kind: 'mitteilung',
-        taskDe: 'Schreiben Sie eine Nachricht und verschieben Sie einen Termin.',
-        leitpunkte: ['Warum Sie schreiben', 'Neuer Tag und neue Uhrzeit', 'Gruß'],
+        taskDe: 'Schreiben Sie eine Nachricht und verschieben Sie einen Termin. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        leitpunkte: ['Warum Sie schreiben', 'Neuer Tag und neue Uhrzeit', 'Eine Frage an Lena'],
         minWords: 0,
         maxWords: 30,
         sample: 'Hallo Lena! Ich komme am Montag zu spät. Der Termin am Dienstag um acht? Viele Grüße, Ana',
       },
       links: { listeningExercise: 4, readingOrder: 3 },
-      practiceRule: { topics: ['time-and-dates', 'present-tense-regular'], typedMin: 3 },
+      // Only the primary topic: with two topics the builder drew 5 present-tense items against 2 time
+      // items in a Lektion about the clock (DaF review, L8). Revisit once the pool weights topics[0].
+      practiceRule: { topics: ['time-and-dates'], typedMin: 4 },
     },
     {
       nr: 9,
@@ -812,8 +854,11 @@ export const CURRICULUM_A11 = {
       minutes: 15,
       wortfeld: [
         { de: 'das Bier', word: 'Bier', article: 'das', plural: 'Biere', en: 'beer', wordId: 'b39fa2aa-f2cc-4457-abc5-d39c65eb221a' },
-        { de: 'die Cola', word: 'Cola', article: 'die', plural: 'Colas', en: 'cola', wordId: '08c0d443-d026-44f6-bf3e-2517046167fa' },
-        { de: 'die Flasche', word: 'Flasche', article: 'die', plural: 'Flaschen', en: 'bottle', wordId: '29163706-929e-4df8-b20e-e0c480627abb' },
+        // Eleven drinks and two foods made the Hunger can-do unteachable; Cola and Flasche gave way to
+        // the food words SD1 Lesen Teil 2 works with (DaF review, L9).
+        { de: 'der Kuchen', word: 'Kuchen', article: 'der', plural: 'Kuchen', en: 'cake', wordId: 'ba939378-112b-44c2-aee2-795e7dff9beb' },
+        { de: 'die Suppe', word: 'Suppe', article: 'die', plural: 'Suppen', en: 'soup', wordId: '3593a46a-464f-494a-a09d-ab05c3538e1f' },
+        { de: 'der Salat', word: 'Salat', article: 'der', plural: 'Salate', en: 'salad', wordId: '3cc8d993-6ff3-4ea8-8a4c-3e1b0f330f4e' },
         { de: 'das Glas', word: 'Glas', article: 'das', plural: 'Gläser', en: 'glass', wordId: '0e2528d9-929f-4616-96c8-ed2de35098db' },
         { de: 'der Kaffee', word: 'Kaffee', article: 'der', plural: 'Kaffees', en: 'coffee', wordId: '990b6024-f44e-4b48-837c-c00c7f5298e6' },
         { de: 'das Mineralwasser', word: 'Mineralwasser', article: 'das', plural: '—', en: 'mineral water', wordId: 'e53ecdcf-8b61-448e-92df-87161af7bf16' },
@@ -826,25 +871,26 @@ export const CURRICULUM_A11 = {
         { de: 'der Durst', word: 'Durst', article: 'der', plural: '—', en: 'thirst', wordId: '2676efa7-e91b-4171-b65b-7c92216fc982' },
         { de: 'der Kellner', word: 'Kellner', article: 'der', plural: 'Kellner', en: 'waiter', wordId: '91650054-9faf-42ab-8835-b0bcca5d760c' },
         { de: 'die Kellnerin', word: 'Kellnerin', article: 'die', plural: 'Kellnerinnen', en: 'waitress', wordId: 'dbf47a75-7192-4ac8-831f-991a7038e190' },
-        { de: 'essen', word: 'essen', article: null, plural: null, en: 'to eat', wordId: null },
-        { de: 'trinken', word: 'trinken', article: null, plural: null, en: 'to drink', wordId: null },
-        { de: 'das Brot', word: 'Brot', article: 'das', plural: 'Brote', en: 'bread', wordId: null },
+        { de: 'essen', word: 'essen', article: null, plural: null, en: 'to eat', wordId: '276d4ec4-3197-462b-b13b-029eb8da4471' },
+        { de: 'trinken', word: 'trinken', article: null, plural: null, en: 'to drink', wordId: 'dd482964-5d26-4f43-b6ca-f6fe201263be' },
+        { de: 'das Brot', word: 'Brot', article: 'das', plural: 'Brote', en: 'bread', wordId: '591f344e-c254-431f-9f13-ba89042d23ea' },
         { de: 'das Frühstück', word: 'Frühstück', article: 'das', plural: 'Frühstücke', en: 'breakfast', wordId: null },
-        { de: 'möchten', word: 'möchten', article: null, plural: null, en: 'would like', wordId: null },
+        { de: 'möchten', word: 'möchten', article: null, plural: null, en: 'would like', wordId: 'ff2864f0-3fbb-47f7-bff8-f95802a66f49' },
+        { de: 'sofort', word: 'sofort', article: null, plural: null, en: 'right away', wordId: null },
       ],
       dialog: {
         title: 'Bestellen im Café',
         setting: 'Ana sitzt im Café. Paul ist Kellner.',
         lines: [
-          { speaker: 'Paul', de: 'Guten Tag! Haben Sie Hunger?', en: 'Good afternoon! Are you hungry?' },
-          { speaker: 'Ana', de: 'Ja, ich habe Hunger und Durst.', en: 'Yes, I am hungry and thirsty.' },
-          { speaker: 'Paul', de: 'Wir haben Brot, Kaffee und Tee.', en: 'We have bread, coffee and tea.' },
-          { speaker: 'Ana', de: 'Ich möchte einen Kaffee, bitte.', en: 'I would like a coffee, please.' },
+          { speaker: 'Paul', de: 'Guten Tag! Was möchten Sie trinken?', en: 'Good day! What would you like to drink?' },
+          { speaker: 'Ana', de: 'Ich habe Durst. Ich möchte einen Kaffee, bitte.', en: 'I am thirsty. I would like a coffee, please.' },
+          { speaker: 'Paul', de: 'Haben Sie auch Hunger? Wir haben Brot und Kuchen.', en: 'Are you hungry too? We have bread and cake.' },
+          { speaker: 'Ana', de: 'Ja, ich habe Hunger. Ich möchte Kuchen, bitte.', en: 'Yes, I am hungry. I would like cake, please.' },
           { speaker: 'Paul', de: 'Möchten Sie auch Wasser?', en: 'Would you like water as well?' },
           { speaker: 'Ana', de: 'Ja, ein Glas Wasser, bitte.', en: 'Yes, a glass of water, please.' },
-          { speaker: 'Paul', de: 'Möchten Sie auch Brot?', en: 'Would you like bread too?' },
+          { speaker: 'Paul', de: 'Möchten Sie auch einen Tee?', en: 'Would you like a tea too?' },
           { speaker: 'Ana', de: 'Nein, danke.', en: 'No, thank you.' },
-          { speaker: 'Paul', de: 'Gut. Der Kaffee kommt.', en: 'Good. The coffee is coming.' },
+          { speaker: 'Paul', de: 'Gut. Kommt sofort!', en: 'Good. Coming right up!' },
         ],
       },
       pretest: {
@@ -856,13 +902,13 @@ export const CURRICULUM_A11 = {
       notice: {
         title: 'haben und der Chunk „Ich möchte …“',
         bodyDe: '**haben**: ich habe, du hast, er/sie/es hat, wir haben, ihr habt, sie/Sie haben. Mit haben sagst du Hunger, Durst oder Zeit. **Ich möchte …** lernst du hier als festen Chunk; die Form gehört zu den Modalverben in A1.2.',
-        examples: ['Guten Tag! Haben Sie Hunger?', 'Wir haben Brot, Kaffee und Tee.'],
+        examples: ['Haben Sie auch Hunger? Wir haben Brot und Kuchen.', 'Ja, ich habe Hunger. Ich möchte Kuchen, bitte.'],
         ruleSlug: 'verb-haben',
       },
       phonetik: { focus: 'Der Vokal ö in möchten und hören', items: ['MÖCH-te', 'HÖ-ren', 'SCHÖN'] },
-      hoeren: { kind: 'dictation', lines: [1, 5] },
+      hoeren: { kind: 'dictation', lines: [4, 3] },
       sprechen: {
-        readAloud: [3, 4],
+        readAloud: [0, 1],
         open: {
           teil: 'Sprechen Teil 3',
           promptDe: 'Bitten Sie im Café um ein Glas Wasser und reagieren Sie auf die Antwort.',
@@ -876,7 +922,7 @@ export const CURRICULUM_A11 = {
         fields: ['Name', 'Tag', 'Uhrzeit', 'Personen'],
         minWords: 0,
         maxWords: 30,
-        sample: 'Name: Ferreira / Tag: Montag / Uhrzeit: 15 Uhr / Personen: 2',
+        sample: 'Name: Chakiri / Tag: Montag / Uhrzeit: 15 Uhr / Personen: 2',
       },
       links: { listeningExercise: 2, readingOrder: 8 },
       practiceRule: { topics: ['verb-haben', 'indefinite-articles'], typedMin: 3 },
@@ -889,7 +935,7 @@ export const CURRICULUM_A11 = {
       situation: 'Verkehrsmittel und Reisen',
       handlungsfeld: 'Mobilität und Verkehrsmittel: eine Fahrt planen',
       canDo: [
-        'Ich kann nach einer Verbindung fragen.',
+        'Ich kann fragen, wann der Zug fährt.',
         'Ich kann eine Fahrkarte kaufen.',
         'Ich kann Durchsagen zu Abfahrt und Verspätung verstehen.',
         'Ich kann sagen, wohin ich fahre.',
@@ -904,36 +950,37 @@ export const CURRICULUM_A11 = {
         { de: 'Deutschland', word: 'Deutschland', article: null, plural: null, en: 'Germany', wordId: 'f59e9ed6-4c90-4792-a69d-921a73b8c103' },
         { de: 'Österreich', word: 'Österreich', article: null, plural: null, en: 'Austria', wordId: '21edee4f-dacc-4a7a-b1ea-2e8f312f7907' },
         { de: 'die Schweiz', word: 'Schweiz', article: 'die', plural: '—', en: 'Switzerland', wordId: 'c3646999-1ca7-4b5e-903a-22a68642ef26' },
-        { de: 'Italien', word: 'Italien', article: null, plural: null, en: 'Italy', wordId: '49bf296b-96f3-4acf-b066-c13c25fd8c81' },
-        { de: 'Frankreich', word: 'Frankreich', article: null, plural: null, en: 'France', wordId: '0232697d-cdb8-4ac7-8158-ba00aaa2c4f9' },
-        { de: 'Spanien', word: 'Spanien', article: null, plural: null, en: 'Spain', wordId: '43df1e6c-b3bd-4b80-a9d2-8c358d505f93' },
-        { de: 'Polen', word: 'Polen', article: null, plural: null, en: 'Poland', wordId: 'b5b84176-3783-47a5-9085-fe19703f3e82' },
+        // Four more country names did not cover a Lektion called „Am Bahnhof“; the station lexis of the
+        // title and of two can-dos does (DaF review, L10).
+        { de: 'der Bahnhof', word: 'Bahnhof', article: 'der', plural: 'Bahnhöfe', en: 'station', wordId: '57180ebe-62ac-4b85-bc55-6f0b46319fda' },
+        { de: 'die Abfahrt', word: 'Abfahrt', article: 'die', plural: 'Abfahrten', en: 'departure', wordId: 'cc687805-201f-4cda-b4b4-48a20fad82cd' },
+        { de: 'die Ankunft', word: 'Ankunft', article: 'die', plural: 'Ankünfte', en: 'arrival', wordId: '7374721b-f929-4b81-943a-93dc6ba2b9a1' },
+        { de: 'das Gleis', word: 'Gleis', article: 'das', plural: 'Gleise', en: 'platform, track', wordId: 'e9a722a3-d2c7-46ae-8421-d8a213451e57' },
         { de: 'das Land', word: 'Land', article: 'das', plural: 'Länder', en: 'country', wordId: 'b8ff9106-be72-426f-8be3-c0687cf75641' },
         { de: 'morgen', word: 'morgen', article: null, plural: null, en: 'tomorrow', wordId: '79c868e5-5478-4d52-a85a-653c7acf078f' },
-        { de: 'übermorgen', word: 'übermorgen', article: null, plural: null, en: 'the day after tomorrow', wordId: '4848662e-e8b0-495f-92cf-e22f3579684b' },
+        { de: 'umsteigen', word: 'umsteigen', article: null, plural: null, en: 'to change (trains)', wordId: '7cf99ee9-b106-4db9-954f-cb6f17eab4e9' },
         { de: 'nächste Woche', word: 'nächste Woche', article: null, plural: null, en: 'next week', wordId: 'ebad6993-2d67-4891-8abe-5b0e74091495' },
-        { de: 'der Freitag', word: 'Freitag', article: 'der', plural: 'Freitage', en: 'Friday', wordId: '34c2e1e6-005c-4d2f-93d9-c4c285529878' },
         { de: 'leider', word: 'leider', article: null, plural: null, en: 'unfortunately', wordId: 'c76140c6-0461-47e2-98da-567540a79b9c' },
-        { de: 'der Zug', word: 'Zug', article: 'der', plural: 'Züge', en: 'train', wordId: null },
-        { de: 'der Bus', word: 'Bus', article: 'der', plural: 'Busse', en: 'bus', wordId: null },
-        { de: 'das Auto', word: 'Auto', article: 'das', plural: 'Autos', en: 'car', wordId: null },
-        { de: 'die Fahrkarte', word: 'Fahrkarte', article: 'die', plural: 'Fahrkarten', en: 'ticket', wordId: null },
-        { de: 'fahren', word: 'fahren', article: null, plural: null, en: 'to go (by vehicle), to drive', wordId: null },
+        { de: 'der Zug', word: 'Zug', article: 'der', plural: 'Züge', en: 'train', wordId: '5289f923-0edf-4d16-83ae-e010a14ecad8' },
+        { de: 'der Bus', word: 'Bus', article: 'der', plural: 'Busse', en: 'bus', wordId: '879f1d1d-1a84-427b-8c5d-fb15eeb67436' },
+        { de: 'das Auto', word: 'Auto', article: 'das', plural: 'Autos', en: 'car', wordId: '564227da-5f73-4b01-8130-650983c5c578' },
+        { de: 'die Fahrkarte', word: 'Fahrkarte', article: 'die', plural: 'Fahrkarten', en: 'ticket', wordId: 'f5fbb306-2e4a-416f-88df-30317db028f1' },
+        { de: 'fahren', word: 'fahren', article: null, plural: null, en: 'to go (by vehicle), to drive', wordId: 'ed0d6e08-7781-474d-93ab-c7113738a3af' },
       ],
       dialog: {
         title: 'Am Schalter',
         setting: 'Ana fragt am Bahnhof nach dem Zug.',
         lines: [
           { speaker: 'Ana', de: 'Entschuldigung, fährt der Zug nach Österreich?', en: 'Excuse me, does the train go to Austria?' },
-          { speaker: 'Herr Schmidt', de: 'Ja, der Zug fährt um neun Uhr.', en: 'Yes, the train leaves at nine o’clock.' },
+          { speaker: 'Herr Schmidt', de: 'Ja, der Zug fährt um neun Uhr von Gleis vier.', en: 'Yes, the train leaves at nine o’clock from platform four.' },
           { speaker: 'Ana', de: 'Hat der Zug Verspätung?', en: 'Is the train delayed?' },
           { speaker: 'Herr Schmidt', de: 'Nein, er ist pünktlich.', en: 'No, it is on time.' },
           { speaker: 'Ana', de: 'Kostet die Fahrkarte zwanzig Euro?', en: 'Does the ticket cost twenty euros?' },
           { speaker: 'Herr Schmidt', de: 'Nein, sie kostet fünfzehn Euro.', en: 'No, it costs fifteen euros.' },
-          { speaker: 'Ana', de: 'Fährt der Bus auch nach Italien?', en: 'Does the bus go to Italy too?' },
+          { speaker: 'Ana', de: 'Fährt der Bus auch in die Schweiz?', en: 'Does the bus go to Switzerland too?' },
           { speaker: 'Herr Schmidt', de: 'Nein, leider nicht.', en: 'No, unfortunately not.' },
-          { speaker: 'Ana', de: 'Danke! Kommt der Zug morgen auch?', en: 'Thank you! Does the train come tomorrow too?' },
-          { speaker: 'Herr Schmidt', de: 'Ja, morgen und übermorgen.', en: 'Yes, tomorrow and the day after tomorrow.' },
+          { speaker: 'Ana', de: 'Danke! Fährt der Zug morgen auch?', en: 'Thank you! Does the train go tomorrow as well?' },
+          { speaker: 'Herr Schmidt', de: 'Ja, morgen um neun Uhr.', en: 'Yes, tomorrow at nine o’clock.' },
         ],
       },
       pretest: {
@@ -961,21 +1008,22 @@ export const CURRICULUM_A11 = {
       },
       schreiben: {
         kind: 'mitteilung',
-        taskDe: 'Schreiben Sie Ihrer Kollegin: Sie kommen später.',
-        leitpunkte: ['Warum Sie schreiben', 'Wann Sie kommen', 'Gruß'],
+        taskDe: 'Schreiben Sie Ihrer Kollegin: Sie kommen später. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        leitpunkte: ['Warum Sie schreiben', 'Wann Sie kommen', 'Was die Kollegin bis dahin machen soll'],
         minWords: 0,
         maxWords: 30,
         sample: 'Hallo Lena! Der Zug hat Verspätung. Ich komme um zehn Uhr. Viele Grüße, Ana',
       },
       links: { listeningExercise: 3, readingOrder: 6 },
-      practiceRule: { topics: ['yes-no-questions', 'verb-haben'], typedMin: 3 },
+      // Only the primary topic: the two-topic rule drew haben items twice over from L9 (DaF review, L10).
+      practiceRule: { topics: ['yes-no-questions'], typedMin: 4 },
     },
     {
       nr: 11,
       id: 'a1.1-l11',
       slug: 'gestern-und-heute',
       title: 'Gestern und heute',
-      situation: 'Gestern: Tagesablauf (Perfekt mit haben als Chunk)',
+      situation: 'Gestern und heute: Tagesablauf mit aufstehen, einkaufen, anrufen',
       handlungsfeld: 'Alltag organisieren: über den Tagesablauf sprechen',
       canDo: [
         'Ich kann über meinen Tagesablauf sprechen.',
@@ -993,42 +1041,45 @@ export const CURRICULUM_A11 = {
         { de: 'der Tag', word: 'Tag', article: 'der', plural: 'Tage', en: 'day', wordId: '4442348b-1623-4a81-947e-04361d4a6c1e' },
         { de: 'der Wochentag', word: 'Wochentag', article: 'der', plural: 'Wochentage', en: 'weekday', wordId: '2df94b7e-3050-431d-af30-d7617a5868ee' },
         { de: 'der Kalender', word: 'Kalender', article: 'der', plural: 'Kalender', en: 'calendar', wordId: '507555cd-b476-46ed-b463-6ffe65aecf12' },
-        { de: 'der Donnerstag', word: 'Donnerstag', article: 'der', plural: 'Donnerstage', en: 'Thursday', wordId: '4bd005d5-2b4e-4de7-b6c9-061f11e41675' },
         { de: 'müde', word: 'müde', article: null, plural: null, en: 'tired', wordId: 'f1ba5ef3-a420-4d34-8598-5819dc7ffe2a' },
         { de: 'krank', word: 'krank', article: null, plural: null, en: 'sick', wordId: '609580f6-24f7-47c7-b777-2aecc41027ca' },
         { de: 'schon', word: 'schon', article: null, plural: null, en: 'already', wordId: '142081df-56c7-46ff-8e14-844d38e05201' },
         { de: 'noch nicht', word: 'noch nicht', article: null, plural: null, en: 'not yet', wordId: '177cfeb3-1b9b-4bb7-afb9-9a20c4892506' },
-        { de: 'genau', word: 'genau', article: null, plural: null, en: 'exactly', wordId: '169988f3-c187-4557-9840-3dfd06f44793' },
-        { de: 'klar', word: 'klar', article: null, plural: null, en: 'clear/sure', wordId: '81349ad5-7c54-4465-b677-959e5ce123a5' },
-        { de: 'richtig', word: 'richtig', article: null, plural: null, en: 'right/correct', wordId: 'df984dec-63b1-4499-8aac-d17d5d5455d1' },
-        { de: 'sicher', word: 'sicher', article: null, plural: null, en: 'sure', wordId: '71c58efc-9521-4ed7-b426-c084262bcb3f' },
-        { de: 'jeden', word: 'jeden', article: null, plural: null, en: 'every', wordId: '610abd2d-3525-4505-873f-f4fb125cb388' },
-        { de: 'einkaufen', word: 'einkaufen', article: null, plural: null, en: 'to go shopping', wordId: null },
+        // genau/klar/richtig/sicher were filler in a Lektion about the day; the four daily-routine verbs
+        // below carry the can-do, and abholen/mitbringen cover the separable items the pool draws.
+        // „jeden“ was a case form — a Wortfeld entry (and SRS card) must be a lemma or a chunk.
+        { de: 'jeden Tag', word: 'jeden Tag', article: null, plural: null, en: 'every day', wordId: '610abd2d-3525-4505-873f-f4fb125cb388' },
+        { de: 'frühstücken', word: 'frühstücken', article: null, plural: null, en: 'to have breakfast', wordId: 'f9e66eab-2823-48b2-b32f-a921fca16ad6' },
+        { de: 'duschen', word: 'duschen', article: null, plural: null, en: 'to shower', wordId: '60ef548d-d7ab-4274-bd5b-ed6eea05c14e' },
+        { de: 'schlafen', word: 'schlafen', article: null, plural: null, en: 'to sleep', wordId: '70c4d24c-b501-46d9-91ab-79c4d018b786' },
+        { de: 'nach Hause', word: 'nach Hause', article: null, plural: null, en: 'home (direction)', wordId: null },
+        { de: 'abholen', word: 'abholen', article: null, plural: null, en: 'to pick up, to collect', wordId: 'b26d75f6-1c2e-4749-a6fb-d10515ed285c' },
+        { de: 'mitbringen', word: 'mitbringen', article: null, plural: null, en: 'to bring along', wordId: '75574213-060f-4f93-80a9-e6764e9fdd5a' },
+        { de: 'einkaufen', word: 'einkaufen', article: null, plural: null, en: 'to go shopping', wordId: '1e4c6cff-59b8-42eb-8de3-b8142d10a6d3' },
         { de: 'mitkommen', word: 'mitkommen', article: null, plural: null, en: 'to come along', wordId: null },
-        { de: 'lernen', word: 'lernen', article: null, plural: null, en: 'to learn, to study', wordId: null },
-        { de: 'arbeiten', word: 'arbeiten', article: null, plural: null, en: 'to work', wordId: null },
-        { de: 'machen', word: 'machen', article: null, plural: null, en: 'to do, to make', wordId: null },
+        { de: 'lernen', word: 'lernen', article: null, plural: null, en: 'to learn, to study', wordId: '962b62ac-d60f-4ecf-b501-dcbdcfd7f8e2' },
+        { de: 'arbeiten', word: 'arbeiten', article: null, plural: null, en: 'to work', wordId: '10d8bc30-4f2f-4997-9205-34c8e0ed5a0a' },
       ],
       dialog: {
         title: 'Was hast du gestern gemacht?',
         setting: 'Tim und Lena am Donnerstag im Kurs.',
         lines: [
           { speaker: 'Lena', de: 'Tim, was hast du gestern gemacht?', en: 'Tim, what did you do yesterday?' },
-          { speaker: 'Tim', de: 'Ich habe gearbeitet. Und ich habe eingekauft.', en: 'I worked. And I did the shopping.' },
+          { speaker: 'Tim', de: 'Ich habe gearbeitet. Heute lerne ich Deutsch.', en: 'I worked. Today I am studying German.' },
           { speaker: 'Lena', de: 'Und wann stehst du morgens auf?', en: 'And when do you get up in the morning?' },
           { speaker: 'Tim', de: 'Ich stehe um sechs auf. Ich bin müde.', en: 'I get up at six. I am tired.' },
           { speaker: 'Lena', de: 'Kaufst du heute ein?', en: 'Are you going shopping today?' },
           { speaker: 'Tim', de: 'Ja, ich kaufe am Freitag ein. Kommst du mit?', en: 'Yes, I am going shopping on Friday. Are you coming along?' },
           { speaker: 'Lena', de: 'Ja, ich komme mit. Rufst du mich an?', en: 'Yes, I am coming along. Will you call me?' },
-          { speaker: 'Tim', de: 'Klar, ich rufe dich an.', en: 'Sure, I will call you.' },
-          { speaker: 'Lena', de: 'Gut! Gestern habe ich Deutsch gelernt.', en: 'Good! Yesterday I studied German.' },
+          { speaker: 'Tim', de: 'Ja, ich rufe dich an.', en: 'Yes, I will call you.' },
+          { speaker: 'Lena', de: 'Gut! Gestern habe ich auch gearbeitet.', en: 'Good! Yesterday I worked as well.' },
           { speaker: 'Tim', de: 'Ich lerne auch jeden Tag.', en: 'I study every day too.' },
         ],
       },
-      pretest: { promptDe: 'Sagen Sie, wann Sie aufstehen.', promptEn: 'Say when you get up.', model: 'Ich stehe um sechs Uhr auf.', accepted: ['Ich stehe', 'Um', 'Ich wache'] },
+      pretest: { promptDe: 'Sagen Sie, wann Sie aufstehen.', promptEn: 'Say when you get up.', model: 'Ich stehe um sechs Uhr auf.', accepted: ['Ich stehe um', 'Ich wache um'] },
       notice: {
         title: 'Trennbare Verben: die Satzklammer',
-        bodyDe: 'Trennbare Verben teilen sich im Satz: ein|kaufen → Ich **kaufe** am Freitag **ein**. Das Verb steht auf Position 2, die Vorsilbe ganz am Ende. So auch auf|stehen, an|rufen, mit|kommen. **Ich habe gearbeitet** lernst du hier als Chunk; das Perfekt kommt in A1.2.',
+        bodyDe: 'Trennbare Verben teilen sich im Satz: ein|kaufen → Ich **kaufe** am Freitag **ein**. Das Verb steht auf Position 2, die Vorsilbe ganz am Ende. So auch auf|stehen, an|rufen, mit|kommen. **Ich rufe dich an**: mich/dich lernst du als Wendung. **Was hast du gestern gemacht? – Ich habe gearbeitet.** sind feste Ausdrücke; das Perfekt kommt in A1.2.',
         examples: ['Ich stehe um sechs auf. Ich bin müde.', 'Ja, ich kaufe am Freitag ein. Kommst du mit?'],
         ruleSlug: 'separable-verbs-intro',
       },
@@ -1051,7 +1102,9 @@ export const CURRICULUM_A11 = {
         maxWords: 30,
         sample: 'Name: Tim Berger / Tag: Donnerstag / Kurs von: 9 Uhr / Kurs bis: 12 Uhr',
       },
-      links: { listeningExercise: null, readingOrder: null },
+      // A1.1 has six listening exercises and all six are linked elsewhere; reading 5 was the last
+      // unlinked text and belongs here (DaF review, L11).
+      links: { listeningExercise: null, readingOrder: 5 },
       practiceRule: { topics: ['separable-verbs-intro', 'present-tense-regular'], typedMin: 3 },
     },
     {
@@ -1063,11 +1116,11 @@ export const CURRICULUM_A11 = {
       handlungsfeld: 'Freizeit und soziale Kontakte: einladen und feiern',
       canDo: [
         'Ich kann jemanden zu einem Fest einladen.',
-        'Ich kann sagen, wann ich Geburtstag habe.',
+        'Ich kann sagen, in welchem Monat ich Geburtstag habe.',
         'Ich kann über meine Familie und meine Gäste sprechen.',
         'Ich kann mich verabschieden und gute Wünsche aussprechen.',
       ],
-      examTeile: ['Lesen Teil 3', 'Sprechen Teil 1', 'Schreiben Teil 2'],
+      examTeile: ['Lesen Teil 3', 'Sprechen Teil 3', 'Schreiben Teil 2'],
       grammarSlugs: ['possessive-articles', 'verb-sein', 'verb-haben'],
       primarySlug: 'possessive-articles',
       minutes: 15,
@@ -1077,9 +1130,14 @@ export const CURRICULUM_A11 = {
         { de: 'das Alter', word: 'Alter', article: 'das', plural: '—', en: 'age', wordId: '6276c62c-9009-4716-880a-410bdb5c9102' },
         { de: 'die Mama', word: 'Mama', article: 'die', plural: 'Mamas', en: 'mom', wordId: '1b7ca804-8c61-43cd-b9cf-7f54ff536ff1' },
         { de: 'der Papa', word: 'Papa', article: 'der', plural: 'Papas', en: 'dad', wordId: 'd4facfd1-4d57-4414-a526-a67b2b4a3c43' },
-        { de: 'die Ehefrau', word: 'Ehefrau', article: 'die', plural: 'Ehefrauen', en: 'wife', wordId: '4f24a446-238d-4f9e-bb50-87f5cfbff6b8' },
-        { de: 'der Ehemann', word: 'Ehemann', article: 'der', plural: 'Ehemänner', en: 'husband', wordId: 'e23e5327-30af-45d4-8ca4-49dd2a65f421' },
-        { de: 'der Zwilling', word: 'Zwilling', article: 'der', plural: 'Zwillinge', en: 'twin', wordId: '9775d09f-ee51-4cbd-b3e7-22b36235628d' },
+        // Ehefrau/Ehemann doubled Mann/Frau from L3 and Zwilling is not in the A1 Wortliste. The months
+        // are the level's one real gap: no month name appeared anywhere in the 12 Lektionen, while the
+        // Geburtstag can-do and SD1 Sprechen Teil 1 need them. They are taught as ONE set (DaF review, L12).
+        { de: 'der Monat', word: 'Monat', article: 'der', plural: 'Monate', en: 'month', wordId: 'fe8915e4-c42f-4fb9-bd35-639a491eef18' },
+        { de: 'die Monate: Januar bis Dezember', word: 'Monate: Januar bis Dezember', article: 'die', plural: 'Monate', en: 'the months: January to December', wordId: null },
+        { de: 'die Gäste', word: 'Gäste', article: 'die', plural: 'Gäste', en: 'guests', wordId: null },
+        { de: 'die Karte', word: 'Karte', article: 'die', plural: 'Karten', en: 'card', wordId: '824eaef7-c358-42e7-b369-1d4ed5697e31' },
+        { de: 'schön', word: 'schön', article: null, plural: null, en: 'beautiful, nice', wordId: '312cc6ce-56a2-4d77-b23c-509dbabfcf02' },
         { de: 'das Zuhause', word: 'Zuhause', article: 'das', plural: '—', en: 'home', wordId: 'b09adebf-9767-4079-b1ee-b639aec4a733' },
         { de: 'lieben', word: 'lieben', article: null, plural: null, en: 'to love', wordId: 'efd42d40-ceaa-4105-92cb-7b0896a39892' },
         { de: 'grüßen', word: 'grüßen', article: null, plural: null, en: 'to greet', wordId: '2b0cba13-bfdd-4f08-82d7-f9b2ea8b6488' },
@@ -1088,24 +1146,24 @@ export const CURRICULUM_A11 = {
         { de: 'Schönen Tag noch', word: 'Schönen Tag noch', article: null, plural: null, en: 'Have a nice day', wordId: 'efd72cd3-8751-42d1-abc4-be324bbbebd3' },
         { de: 'Mach\'s gut', word: 'Mach\'s gut', article: null, plural: null, en: 'Take care', wordId: '8751ef96-cac1-43ae-9e11-1dfba1e32d41' },
         { de: 'das Fest', word: 'Fest', article: 'das', plural: 'Feste', en: 'celebration, festival', wordId: null },
-        { de: 'die Party', word: 'Party', article: 'die', plural: 'Partys', en: 'party', wordId: null },
-        { de: 'feiern', word: 'feiern', article: null, plural: null, en: 'to celebrate', wordId: null },
-        { de: 'das Geschenk', word: 'Geschenk', article: 'das', plural: 'Geschenke', en: 'present, gift', wordId: null },
-        { de: 'einladen', word: 'einladen', article: null, plural: null, en: 'to invite', wordId: null },
+        { de: 'die Party', word: 'Party', article: 'die', plural: 'Partys', en: 'party', wordId: '4d67daf5-8c9f-4931-bdbd-857d09e925f4' },
+        { de: 'feiern', word: 'feiern', article: null, plural: null, en: 'to celebrate', wordId: '1641c0f4-e043-43fc-b93d-69592716ccc4' },
+        { de: 'das Geschenk', word: 'Geschenk', article: 'das', plural: 'Geschenke', en: 'present, gift', wordId: '8206f9ba-5d31-4ac0-92ac-01c85ac75d73' },
+        { de: 'einladen', word: 'einladen', article: null, plural: null, en: 'to invite', wordId: 'f04aa1b7-09db-49b6-b23b-deb6d9d8c791' },
       ],
       dialog: {
         title: 'Eine Einladung',
         setting: 'Lena und Ana planen Anas Geburtstag.',
         lines: [
           { speaker: 'Lena', de: 'Ana, wann ist dein Geburtstag?', en: 'Ana, when is your birthday?' },
-          { speaker: 'Ana', de: 'Mein Geburtstag ist am Freitag. Ich feiere mit meiner Familie.', en: 'My birthday is on Friday. I am celebrating with my family.' },
+          { speaker: 'Ana', de: 'Mein Geburtstag ist am Freitag. Meine Familie kommt auch.', en: 'My birthday is on Friday. My family is coming too.' },
           { speaker: 'Lena', de: 'Kommt deine Mama auch?', en: 'Is your mum coming too?' },
           { speaker: 'Ana', de: 'Ja, meine Mama und mein Papa kommen.', en: 'Yes, my mum and my dad are coming.' },
-          { speaker: 'Lena', de: 'Und dein Bruder? Kommt seine Ehefrau auch?', en: 'And your brother? Is his wife coming too?' },
+          { speaker: 'Lena', de: 'Und dein Bruder? Kommt seine Frau auch?', en: 'And your brother? Is his wife coming too?' },
           { speaker: 'Ana', de: 'Ja. Ich lade auch meine Kollegin ein.', en: 'Yes. I am inviting my colleague too.' },
-          { speaker: 'Lena', de: 'Und was ist dein Geschenk?', en: 'And what is your present?' },
-          { speaker: 'Ana', de: 'Mein Geschenk? Vielleicht ein Buch.', en: 'My present? Maybe a book.' },
-          { speaker: 'Lena', de: 'Deine Party ist bestimmt gut!', en: 'Your party is sure to be good!' },
+          { speaker: 'Lena', de: 'Was möchtest du zum Geburtstag?', en: 'What would you like for your birthday?' },
+          { speaker: 'Ana', de: 'Vielleicht ein Buch. Mein Bruder kauft das Geschenk.', en: 'Maybe a book. My brother is buying the present.' },
+          { speaker: 'Lena', de: 'Deine Party ist bestimmt schön!', en: 'Your party is sure to be lovely!' },
           { speaker: 'Ana', de: 'Ja! Mach\'s gut, Lena. Bis bald!', en: 'Yes! Take care, Lena. See you soon!' },
         ],
       },
@@ -1113,12 +1171,12 @@ export const CURRICULUM_A11 = {
         promptDe: 'Sagen Sie, wann Sie Geburtstag haben.',
         promptEn: 'Say when your birthday is.',
         model: 'Mein Geburtstag ist am Freitag.',
-        accepted: ['Mein Geburtstag', 'Ich habe', 'Am'],
+        accepted: ['Mein Geburtstag ist am', 'Ich habe am'],
       },
       notice: {
         title: 'mein, dein, sein, ihr – Possessivartikel',
-        bodyDe: 'Der Possessivartikel zeigt, wem etwas gehört: **mein** Geschenk, **dein** Bruder, **sein** Handy (er), **ihr** Buch (sie). Vor femininen Nomen und im Plural kommt **-e** dazu: **meine** Mama, **meine** Eltern.',
-        examples: ['Ana, wann ist dein Geburtstag?', 'Und dein Bruder? Kommt seine Ehefrau auch?'],
+        bodyDe: 'Der Possessivartikel zeigt, wem etwas gehört: **mein** Geschenk, **dein** Bruder, **sein** Handy (er), **ihr** Buch (sie), **Ihr** Büro (Sie, höflich — immer groß!). Vor femininen Nomen und im Plural kommt **-e** dazu: **meine** Mama, **meine** Eltern.',
+        examples: ['Ana, wann ist dein Geburtstag?', 'Und dein Bruder? Kommt seine Frau auch?'],
         ruleSlug: 'possessive-articles',
       },
       phonetik: { focus: 'Der Diphthong ei in mein und dein', items: ['MEIN', 'DEIN', 'ZWEI'] },
@@ -1126,22 +1184,25 @@ export const CURRICULUM_A11 = {
       sprechen: {
         readAloud: [0, 5],
         open: {
-          teil: 'Sprechen Teil 1',
-          promptDe: 'Stellen Sie sich vor und laden Sie den Kurs zu Ihrem Fest ein.',
+          // Teil 1 is „sich vorstellen“ over Stichwortkarten; formulating an invitation is Teil 3.
+          teil: 'Sprechen Teil 3',
+          promptDe: 'Laden Sie eine Kollegin zu Ihrem Fest ein und reagieren Sie auf die Antwort.',
           hintWords: ['einladen', 'der Geburtstag', 'feiern'],
           missionOrder: null,
         },
       },
       schreiben: {
         kind: 'mitteilung',
-        taskDe: 'Schreiben Sie eine Einladung zu Ihrem Geburtstag.',
-        leitpunkte: ['Einladung', 'Tag und Uhrzeit', 'Gruß'],
+        taskDe: 'Schreiben Sie eine Einladung zu Ihrem Geburtstag. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        leitpunkte: ['Warum Sie feiern', 'Tag und Uhrzeit', 'Was die Gäste mitbringen sollen'],
         minWords: 0,
         maxWords: 30,
         sample: 'Hallo Lena! Ich feiere am Freitag meinen Geburtstag. Komm um acht Uhr! Bis bald, Ana',
       },
       links: { listeningExercise: null, readingOrder: 10 },
-      practiceRule: { topics: ['possessive-articles', 'verb-sein'], typedMin: 3 },
+      // „Wiederholung“ has to be visible in the practice: the last Lektion before checkpoint 4 mixes
+      // all three of its slugs. time-and-dates would belong here too, but grammarSlugs is capped at 3.
+      practiceRule: { topics: ['possessive-articles', 'verb-sein', 'verb-haben'], typedMin: 4 },
     },
   ],
   checkpoints: [
