@@ -10,6 +10,8 @@ import Button from '../components/ui/Button.jsx';
 import Chip from '../components/ui/Chip.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
+import { curriculumFor } from '../data/curricula/index.js';
+import CurriculumHomePage from './CurriculumHomePage.jsx';
 
 // The course home: a guided path through one sub-level (decision 2026-09-08,
 // "a course is a separate identity, not a library listing"). Units are the
@@ -48,6 +50,10 @@ export default function CourseHomePage() {
   }, [user, course]);
 
   if (!course) return <Navigate to="/courses/" replace />;
+  // A rebuilt level (docs/course-standard-2026-09-12.md) renders the
+  // Lektionen path instead of the legacy 28-day program.
+  const curriculum = curriculumFor(level);
+  if (curriculum && curriculum.lektionen.length > 0) return <CurriculumHomePage curriculum={curriculum} />;
 
   const current = currentItem(items, done);
   const complete = isComplete(items, done);

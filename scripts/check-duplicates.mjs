@@ -25,6 +25,12 @@ const PAIRS = [
   // keys and derives the rubric — grading a task the UI doesn't show (or vice
   // versa) is exactly the drift this pair-check exists for.
   ['src/data/writingTasks.js', 'netlify/functions/_shared/writingTasks.mjs'],
+  // Curriculum registry (docs/course-factory/a11-rebuild/CONTRACT.md): the
+  // lesson engine and the public syllabus page must read the same 12
+  // Lektionen. The SPA side is still being authored — run
+  // scripts/sync-curricula.mjs after every change to it, or this fails.
+  ['src/data/curricula/a11.js', 'astro-site/src/data/curricula/a11.js'],
+  ['src/data/curricula/index.js', 'astro-site/src/data/curricula/index.js'],
 ];
 
 let failed = false;

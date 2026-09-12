@@ -61,6 +61,9 @@ const A21PhasePage = lazy(() => import('./pages/A21PhasePage'));
 const A22PhasePage = lazy(() => import('./pages/A22PhasePage'));
 const CourseHomePage = lazy(() => import('./pages/CourseHomePage'));
 const CourseLessonPage = lazy(() => import('./pages/CourseLessonPage'));
+const LessonPlayerPage = lazy(() => import('./pages/lesson/LessonPlayerPage'));
+const CheckpointPage = lazy(() => import('./pages/lesson/CheckpointPage'));
+const ReviewPage = lazy(() => import('./pages/lesson/ReviewPage'));
 const CourseCompletePage = lazy(() => import('./pages/CourseCompletePage'));
 const CourseCertificatePage = lazy(() => import('./pages/CourseCertificatePage'));
 const ModelltestHub = lazy(() => import('./pages/Modelltest/ModelltestHub'));
@@ -309,6 +312,9 @@ function App() {
                     <Route path="/course/:level" element={<LevelSubscriptionGuard><EmailVerificationGate><CourseHomePage /></EmailVerificationGate></LevelSubscriptionGuard>} />
                     <Route path="/course/:level/complete" element={<LevelSubscriptionGuard><EmailVerificationGate><CourseCompletePage /></EmailVerificationGate></LevelSubscriptionGuard>} />
                     <Route path="/course/:level/certificate" element={<LevelSubscriptionGuard><EmailVerificationGate><CourseCertificatePage /></EmailVerificationGate></LevelSubscriptionGuard>} />
+                    <Route path="/course/:level/l/:nr" element={<LevelSubscriptionGuard><EmailVerificationGate><LessonPlayerPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
+                    <Route path="/course/:level/checkpoint/:nr" element={<LevelSubscriptionGuard><EmailVerificationGate><CheckpointPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
+                    <Route path="/course/:level/review" element={<LevelSubscriptionGuard><EmailVerificationGate><ReviewPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
                     <Route path="/course/:level/:itemId" element={<LevelSubscriptionGuard><EmailVerificationGate><CourseLessonPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
 
                     {/* Level-aware routes — A1.1 is free, others require auth + email verification + subscription */}

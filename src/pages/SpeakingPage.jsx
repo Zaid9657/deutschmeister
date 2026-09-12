@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   Mic, Crown, ArrowRight, Loader2, AlertTriangle, Monitor, Lock, Play,
   Wallet, MessageCircle, CheckCircle2, RotateCcw, Clock,
@@ -141,12 +142,16 @@ const SpeakingPage = () => {
   const browserSupport = useMemo(() => checkSpeakingSupport(), []);
   const subscriber = !subLoading && typeof hasActiveSubscription === 'function' && hasActiveSubscription();
 
-  // Default the level to the user's placement level, once.
+  // Default the level to the user's placement level, once — unless the
+  // course player handed one over (?level=a1.1&mission=<mission_order>).
+  const [searchParams] = useSearchParams();
+  const wantedLevel = String(searchParams.get('level') || '').toUpperCase();
+  const wantedMission = Number(searchParams.get('mission')) || null;
   useEffect(() => {
     if (levelInitRef.current || subLoading) return;
     levelInitRef.current = true;
-    setSelectedLevel(normalizePlacementLevel(profile?.current_level));
-  }, [subLoading, profile]);
+    setSelectedLevel(LEVEL_ORDER.includes(wantedLevel) ? wantedLevel : normalizePlacementLevel(profile?.current_level));
+  }, [subLoading, profile, wantedLevel]);
 
   // Wallet balance + free-session allowance + trial usage (anon client / API).
   const loadMeta = useCallback(async () => {
@@ -188,11 +193,13 @@ const SpeakingPage = () => {
       if (cancelled) return;
       if (error) { console.error('Failed to load missions:', error); setMissions([]); }
       else setMissions(data || []);
-      setSelectedMissionId(null); // reset selection when level changes
+      // Reset selection when the level changes — except the course hand-off.
+      const wanted = wantedMission && selectedLevel === wantedLevel ? (data || []).find((m) => m.mission_order === wantedMission) : null;
+      setSelectedMissionId(wanted ? wanted.id : null);
       setMissionsLoading(false);
     })();
     return () => { cancelled = true; };
-  }, [selectedLevel, user]);
+  }, [selectedLevel, user, wantedMission, wantedLevel]);
 
   // ---- pricing / allowance ----
   const fiveMinFreeRemaining = subscriber
