@@ -9,7 +9,12 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-import buildLesson, { pickPracticeItems, seedFor, isTypedItem, isMultipleChoice, PRACTICE_SIZE, MAX_MULTIPLE_CHOICE } from '../src/lib/lesson/buildLesson.js';
+import buildLesson, {
+  pickPracticeItems, planPractice, seedFor, isTypedItem, isMultipleChoice, itemLemmas, answerLemmas,
+  PRACTICE_SIZE, MAX_MULTIPLE_CHOICE, PRIMARY_MIN, MAX_SAME_LEMMA, MAX_CARRIED_LEMMA,
+} from '../src/lib/lesson/buildLesson.js';
+import { exclusionReason, isUsableItem, filterPool, EXCLUDE_IDS, REASON } from '../src/data/lessonPools/quality.js';
+import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { requeueFor, REQUEUE_CAP } from '../src/lib/lesson/requeue.js';
 import { firstAttemptAccuracy, masteryStatus, masteryLabel, accuracyPercent, GOLD_THRESHOLD, nextReviewDate } from '../src/lib/lesson/mastery.js';
 import { checkAnswer, RESULT, STRICT_TOPIC, tagError } from '../src/lib/lesson/check.js';
@@ -19,6 +24,9 @@ import { FIXTURE_LEKTION, FIXTURE_CURRICULUM } from './fixtures/lektion-fixture.
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
 const POOL = JSON.parse(read('src/data/lessonPools/a11.json'));
+/** A second parse: a distinct object, so the plan cache cannot fake determinism. */
+const POOL_COPY = JSON.parse(read('src/data/lessonPools/a11.json'));
+const LEKTIONEN = CURRICULUM_A11.lektionen;
 
 const build = (over = {}) =>
   buildLesson({ curriculum: FIXTURE_CURRICULUM, lektion: FIXTURE_LEKTION, pool: POOL, ...over });
@@ -91,9 +99,140 @@ test('the draw is deterministic per (level, nr, attempt) and a retry gives a dif
   const otherLektion = pickPracticeItems(POOL, rule, seedFor('a1.1', 2, 1)).map((i) => i.id);
   assert.notDeepEqual(a, otherLektion, 'a different Lektion must not get the same seven');
 
-  // and the whole lesson build agrees with the standalone picker
+  // and the whole lesson build agrees with the plan, which is what it now reads
   const built = build().stages.find((s) => s.key === 'practice').items.map((i) => i.id);
-  assert.deepEqual(built, a);
+  const planned = planPractice(FIXTURE_CURRICULUM, POOL, 1).get(FIXTURE_LEKTION.nr).map((i) => i.id);
+  assert.deepEqual(built, planned);
+});
+
+// --- pool quality: what a learner may never be shown ----------------------
+
+test('the shipped pool is clean: nothing in it trips a quality rule', () => {
+  const { excluded } = filterPool(POOL.items);
+  assert.deepEqual(excluded, [], `a11.json still carries ${excluded.length} excluded items — re-run scripts/build-lesson-pool.mjs`);
+});
+
+test('the English respellings and English meta items are gone for good', () => {
+  for (const item of POOL.items) {
+    assert.doesNotMatch(item.questionDe, /klingt wie/i, `${item.id} is an English respelling`);
+    assert.doesNotMatch(item.questionDe, /\b[A-Z]{2,}[a-z]*-[A-Za-z]+\b/, `${item.id} spells German in English syllables`);
+    const english = [item.answer, ...(item.options || [])].join(' ');
+    assert.doesNotMatch(english, /\bLike English\b|\bending overrides\b|\balways safe\b/i, `${item.id} answers in English`);
+  }
+  // the five items the review names by quotation
+  const stems = POOL.items.map((i) => i.questionDe);
+  for (const gone of ['HOY-tuh', 'SHoo-leh', 'Es klingt wie', 'I am hungry', 'my key']) {
+    assert.ok(!stems.some((q) => q.includes(gone)), `"${gone}" is still in the pool`);
+  }
+});
+
+test('an item that expects kein/keine without a negation cue is excluded — the L9 BLOCKER', () => {
+  const trap = { id: 'x', questionDe: 'Das ist ___ Uhr.', answer: 'keine', options: null };
+  assert.equal(exclusionReason(trap), REASON.NEGATION_WITHOUT_CUE);
+  // with a cue in the prompt the very same answer is a fair item again
+  assert.equal(exclusionReason({ ...trap, questionDe: 'Verneine: Das ist ___ Uhr.' }), null);
+  // and the hand-flagged id can never come back, whatever the rules do
+  for (const id of Object.keys(EXCLUDE_IDS)) {
+    assert.equal(exclusionReason({ id, questionDe: 'harmlos', answer: 'gut' }), REASON.HAND_FLAGGED);
+    assert.ok(!POOL.items.some((i) => i.id === id), `${id} is still shipped`);
+  }
+});
+
+test('the English rules read words, not letters — a spelled-out German word stays in', () => {
+  assert.equal(exclusionReason({ id: 'a', questionDe: 'Buchstabiert: B-I-T-T-E. Schreib das Wort: ___', answer: 'Bitte' }), null);
+  assert.equal(exclusionReason({ id: 'b', questionDe: 'Wie klingt "ie" in "die"?', answer: 'Like EE' }), REASON.ENGLISH_RESPELLING);
+  assert.equal(exclusionReason({ id: 'c', questionDe: "Wie sagt man 'my key' auf Deutsch?", answer: 'mein Schlüssel' }), REASON.ENGLISH_PROMPT);
+  assert.equal(exclusionReason({ id: 'd', questionDe: 'Warum kein Artikel?', options: ['You forgot it'], answer: 'You forgot it' }), REASON.ENGLISH_ANSWER);
+});
+
+test('Lektion 1 — the free lesson — is seven German buchstabieren items', () => {
+  const items = planPractice(CURRICULUM_A11, POOL, 1).get(1);
+  assert.equal(items.length, PRACTICE_SIZE);
+  for (const it of items) {
+    assert.equal(it.topic, 'alphabet-pronunciation');
+    assert.ok(isUsableItem(it));
+    assert.match(it.questionDe, /Buchstab|Schreibweise/, `${it.id} is not about spelling`);
+  }
+});
+
+// --- the plan across all twelve Lektionen ---------------------------------
+
+test('every Lektion gets seven items and at least four of them from its own grammar point', () => {
+  const plan = planPractice(CURRICULUM_A11, POOL, 1);
+  for (const lektion of LEKTIONEN) {
+    const items = plan.get(lektion.nr);
+    assert.equal(items.length, PRACTICE_SIZE, `L${lektion.nr} drew ${items.length}`);
+    const primary = items.filter((i) => i.topic === lektion.primarySlug).length;
+    assert.ok(primary >= PRIMARY_MIN, `L${lektion.nr} (${lektion.primarySlug}) drew only ${primary} on its own slug`);
+    assert.ok(items.filter(isTypedItem).length >= lektion.practiceRule.typedMin, `L${lektion.nr} is below typedMin`);
+    assert.ok(items.filter(isMultipleChoice).length <= MAX_MULTIPLE_CHOICE, `L${lektion.nr} has too many MC`);
+    for (const it of items) assert.ok(lektion.practiceRule.topics.includes(it.topic), `L${lektion.nr}: ${it.topic} is off-topic`);
+  }
+});
+
+test('no item is drawn twice in the whole level — the eight verbatim repeats are gone', () => {
+  const plan = planPractice(CURRICULUM_A11, POOL, 1);
+  const seen = new Map();
+  for (const lektion of LEKTIONEN) {
+    for (const it of plan.get(lektion.nr)) {
+      assert.ok(!seen.has(it.id), `${it.id} is drawn by L${seen.get(it.id)} AND L${lektion.nr}`);
+      seen.set(it.id, lektion.nr);
+    }
+  }
+});
+
+test('no lemma carries more than two items in one Lektion — the Mädchen rule', () => {
+  const plan = planPractice(CURRICULUM_A11, POOL, 1);
+  const lektionenPerLemma = new Map();
+  for (const lektion of LEKTIONEN) {
+    const count = new Map();
+    for (const it of plan.get(lektion.nr)) {
+      for (const lemma of itemLemmas(it)) count.set(lemma, (count.get(lemma) || 0) + 1);
+    }
+    for (const [lemma, n] of count) {
+      assert.ok(n <= MAX_SAME_LEMMA, `L${lektion.nr} drills "${lemma}" ${n} times`);
+      lektionenPerLemma.set(lemma, (lektionenPerLemma.get(lemma) || 0) + 1);
+    }
+  }
+  assert.ok((lektionenPerLemma.get('mädchen') || 0) <= 2, 'das Mädchen is back in more than two Lektionen');
+});
+
+test('a Lektion carries at most one answer lemma over from the Lektion before it', () => {
+  const plan = planPractice(CURRICULUM_A11, POOL, 1);
+  let previous = new Set();
+  for (const lektion of LEKTIONEN) {
+    const items = plan.get(lektion.nr);
+    const carried = items.filter((it) => [...answerLemmas(it)].some((l) => previous.has(l))).length;
+    assert.ok(carried <= MAX_CARRIED_LEMMA, `L${lektion.nr} repeats ${carried} answer lemmas from L${lektion.nr - 1}`);
+    previous = new Set(items.flatMap((it) => [...answerLemmas(it)]));
+  }
+});
+
+test('the plan is deterministic, and attempt 2 is a different plan', () => {
+  const a = planPractice(CURRICULUM_A11, POOL, 1);
+  const b = planPractice(CURRICULUM_A11, POOL_COPY, 1); // a different pool OBJECT: no cache hit
+  for (const lektion of LEKTIONEN) {
+    assert.deepEqual(a.get(lektion.nr).map((i) => i.id), b.get(lektion.nr).map((i) => i.id), `L${lektion.nr} is not reproducible`);
+  }
+  const second = planPractice(CURRICULUM_A11, POOL, 2);
+  const same = LEKTIONEN.filter((l) => {
+    const x = a.get(l.nr).map((i) => i.id).join();
+    return x === second.get(l.nr).map((i) => i.id).join();
+  });
+  assert.deepEqual(same, [], 'a retry must not replay the same seven');
+});
+
+test('THE TABLE — every Lektion and the seven stems a learner actually sees', () => {
+  const plan = planPractice(CURRICULUM_A11, POOL, 1);
+  const lines = [];
+  for (const lektion of LEKTIONEN) {
+    const items = plan.get(lektion.nr);
+    const primary = items.filter((i) => i.topic === lektion.primarySlug).length;
+    lines.push(`L${String(lektion.nr).padStart(2)} ${lektion.primarySlug} — ${primary}/7 primary, ${items.filter(isTypedItem).length} typed, ${items.filter(isMultipleChoice).length} MC`);
+    for (const it of items) lines.push(`      ${it.questionDe.replace(/\s+/g, ' ').slice(0, 78)}`);
+  }
+  console.log(`\n${lines.join('\n')}\n`);
+  assert.equal(lines.filter((l) => l.startsWith('L')).length, LEKTIONEN.length);
 });
 
 // --- requeue ---------------------------------------------------------------
@@ -121,6 +260,29 @@ test('when the topic slice is exhausted the same item comes back rather than not
   const out = requeueFor(missed, POOL, sein.map((s) => s.id));
   assert.equal(out.length, 1);
   assert.equal(out[0].id, sein[0].id);
+});
+
+test('a requeued item is never one the quality filter rejects', () => {
+  for (const topic of [...new Set(POOL.items.map((i) => i.topic))]) {
+    const items = POOL.items.filter((i) => i.topic === topic);
+    const out = requeueFor([items[0]], POOL, [items[0].id]);
+    for (const it of out) assert.ok(isUsableItem(it), `${it.id} should never be requeued`);
+  }
+  // an excluded item handed in as a miss cannot pull its own kind back in
+  const trap = { id: 'trap', topic: 'verb-sein', questionDe: 'Es klingt wie "HOY-tuh"', answer: 'heute' };
+  const [replacement] = requeueFor([trap], POOL, []);
+  assert.ok(isUsableItem(replacement));
+  assert.notEqual(replacement.id, 'trap');
+});
+
+test('an item planned for another Lektion is only requeued when the topic has nothing else', () => {
+  const sein = POOL.items.filter((i) => i.topic === 'verb-sein');
+  const avoid = new Set(sein.slice(1, 3).map((i) => i.id));
+  const [pick] = requeueFor([sein[0]], POOL, [sein[0].id], { avoidIds: avoid });
+  assert.ok(!avoid.has(pick.id), 'a free item was available and should have been preferred');
+  const allButOne = new Set(sein.slice(1).map((i) => i.id));
+  const [forced] = requeueFor([sein[0]], POOL, [sein[0].id], { avoidIds: allButOne });
+  assert.ok(allButOne.has(forced.id), 'with nothing free, an avoided item still beats a short requeue');
 });
 
 test('no misses means no requeue stage content', () => {
