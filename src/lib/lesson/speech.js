@@ -48,11 +48,11 @@ export function playWord(audioUrl, text) {
 // every dialogue line, pretest model, phonetics item and checkpoint dictation
 // with Azure Neural TTS, uploads to Supabase Storage (bucket `audio`,
 // `course/<level>/<lektion>/<key>.mp3`) and writes the public URLs into the
-// committed manifest src/data/curricula/<level>.audio.json. Callers ask
+// committed manifest src/data/curricula/<level>.audio.js. Callers ask
 // `audioFor(lektionId, key)` and fall back to the synthesiser when null.
 // Keys: `line-<i>` (dialog.lines index), `pretest`, `phonetik-<i>`,
 // `word-<wordId>` is NOT here (words carry their own audio_url).
-import a11Audio from '../../data/curricula/a11.audio.json';
+import a11Audio from '../../data/curricula/a11.audio.js';
 
 const MANIFESTS = { 'a1.1': a11Audio };
 
