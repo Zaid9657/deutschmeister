@@ -21,6 +21,27 @@ const WRITING_LIMITS = {
   free_expired: 0,
 };
 
+// COURSE SCOPE. A task carrying `course` in the bank (the twelve `a11-…` tasks
+// of CURRICULUM_A11) is part of the free A1.1 course, not the exam training, so
+// it is billed against its OWN lifetime allowance — otherwise a free learner
+// would burn the two trial evaluations on Lektion 1 and 2 and meet a paywall
+// inside a course the site advertises as free.
+//
+// Owner decision 2026-09-12: twelve lifetime, one per Lektion. It applies to
+// free_trial AND free_expired: A1.1 stays free after the trial ends, so an
+// expired learner must still be able to finish the course's writing.
+// Pro is unchanged — a Pro learner's course tasks count inside the 20/month
+// above, which is more than the twelve anyway.
+//
+// src/data/marketing.js states this number to learners and tests/claims.test.mjs
+// parses it back out of this file, so the claim can never drift from the gate.
+const COURSE_WRITING_FREE_LIFETIME = 12;
+
+// Every course task_key starts with this. writing_submissions has no `scope`
+// column (migrations/2026-08-31-writing-submissions.sql), so the prefix IS the
+// scope — keep it in step with the bank's taskKeys.
+const COURSE_TASK_KEY_PREFIX = 'a11-';
+
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const MODEL = 'claude-sonnet-4-6';
@@ -45,6 +66,12 @@ function buildWritingPrompt(task, submission) {
     task.register === 'formular'
       ? '2. **Kommunikative Gestaltung** (structure) – Sind alle Formularfelder ausgefüllt, mit passenden und korrekten Angaben? (Kein Abzug für fehlende Anrede/Schluss — ein Formular hat keine.)'
       : `2. **Kommunikative Gestaltung** (structure) – Textsorte, Anrede/Schluss, Register (${task.register}), Aufbau, Verknüpfungen.`;
+  // A1 learners cannot read B1 feedback about their A1 text. Same criteria,
+  // same output shape — only the feedback wording is constrained.
+  const levelLine =
+    task.examKey === 'goethe_a1'
+      ? '\n\nWICHTIG: Der Schüler ist auf Niveau A1. Schreib das Feedback in kurzem, einfachem Deutsch (höchstens 60 Wörter, kurze Sätze, kein Fachjargon). Die Bewertungskriterien bleiben unverändert.'
+      : '';
   return `Du bist ein erfahrener Prüfer für Deutsch als Fremdsprache und bewertest den schriftlichen Ausdruck nach den öffentlich dokumentierten Kriterien der Prüfung (${task.examKey.replace('_', ' ').toUpperCase()}-Stil). Dies ist eine ÜBUNGSBEWERTUNG (Richtwert), keine offizielle Bewertung.
 
 AUFGABE, die der Schüler bekommen hat (Register: ${task.register}, ${task.minWords}–${task.maxWords} Wörter):
@@ -77,7 +104,7 @@ Antworte NUR mit einem JSON-Objekt in diesem Format (keine Erklärung davor oder
   "improvements": ["<Verbesserung 1>", "<Verbesserung 2>"]
 }
 
-Maximal 6 corrections — wähle die lehrreichsten Fehler. Wenn der Text die Wortzahl deutlich verfehlt oder das Thema verfehlt, spiegelt sich das in Aufgabenbewältigung.`;
+Maximal 6 corrections — wähle die lehrreichsten Fehler. Wenn der Text die Wortzahl deutlich verfehlt oder das Thema verfehlt, spiegelt sich das in Aufgabenbewältigung.${levelLine}`;
 }
 
 export const handler = async (event) => {
@@ -127,15 +154,24 @@ export const handler = async (event) => {
 
     // Per-tier limits, counted against the submissions ledger.
     const tier = await getTier(user_id);
-    const limit = WRITING_LIMITS[tier] ?? WRITING_LIMITS.pro; // premium falls through to pro's cap
-    if (tier === 'free_expired' || limit === 0) {
+    const isCourse = !!task.course;
+    // A free/expired learner's course tasks get the course allowance; everyone
+    // else (and every exam task) keeps the tier limit above.
+    const courseAllowance = isCourse && (tier === 'free_trial' || tier === 'free_expired');
+    const limit = courseAllowance
+      ? COURSE_WRITING_FREE_LIFETIME
+      : WRITING_LIMITS[tier] ?? WRITING_LIMITS.pro; // premium falls through to pro's cap
+    if (!courseAllowance && (tier === 'free_expired' || limit === 0)) {
       return { statusCode: 403, headers, body: JSON.stringify({ error: 'subscription_required', tier }) };
     }
     let usedQuery = supabase
       .from('writing_submissions')
       .select('id', { count: 'exact', head: true })
       .eq('user_id', user_id);
-    if (tier !== 'free_trial') {
+    if (courseAllowance) {
+      // Lifetime, and only the course's own rows — the prefix is the scope.
+      usedQuery = usedQuery.like('task_key', `${COURSE_TASK_KEY_PREFIX}%`);
+    } else if (tier !== 'free_trial') {
       const now = new Date();
       const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
       usedQuery = usedQuery.gte('created_at', monthStart);
@@ -145,7 +181,7 @@ export const handler = async (event) => {
       return {
         statusCode: 429,
         headers,
-        body: JSON.stringify({ error: 'limit_reached', used: used ?? 0, limit, tier }),
+        body: JSON.stringify({ error: 'limit_reached', used: used ?? 0, limit, tier, scope: isCourse ? 'course' : 'exam' }),
       };
     }
 
@@ -232,6 +268,7 @@ export const handler = async (event) => {
         used: (used ?? 0) + 1,
         limit,
         tier,
+        scope: isCourse ? 'course' : 'exam',
       }),
     };
   } catch (error) {

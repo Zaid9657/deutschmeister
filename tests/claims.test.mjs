@@ -65,6 +65,8 @@ import {
   TRIAL_SPEAKING_SESSIONS,
   PRO_WRITING_EVALUATIONS_PER_MONTH,
   TRIAL_WRITING_EVALUATIONS,
+  COURSE_WRITING_FREE_LIFETIME,
+  READALOUD_DAILY_LIMIT,
   READING_LESSON_COUNT,
 } from '../src/data/marketing.js';
 
@@ -304,6 +306,40 @@ test('writing limits match the server that enforces them', () => {
   assert.equal(PRO_WRITING_EVALUATIONS_PER_MONTH, tier('pro'));
   assert.equal(TRIAL_WRITING_EVALUATIONS, tier('free_trial'));
   assert.equal(tier('free_expired'), 0, 'expired users must get zero AI-cost evaluations');
+});
+
+test('the free course writing allowance matches the server that enforces it', () => {
+  // The course tasks of A1.1 are billed against their own lifetime allowance
+  // (owner decision 2026-09-12: 12). If marketing and the function disagree,
+  // a learner is told they get twelve graded texts inside a course the site
+  // calls free and meets a 429 earlier.
+  const src = read('netlify/functions/evaluate-writing.mjs');
+  assert.equal(
+    COURSE_WRITING_FREE_LIFETIME,
+    serverConst(src, 'COURSE_WRITING_FREE_LIFETIME'),
+    'marketing claims a different free course writing allowance than the server grants',
+  );
+});
+
+test('the read-aloud daily cap matches the server that enforces it', () => {
+  // score-readaloud.mjs is built in plan phase P3. Until it lands there is
+  // nothing to compare against — skip loudly rather than pass silently, so
+  // this check starts biting the moment the function exists.
+  let src;
+  try {
+    src = read('netlify/functions/score-readaloud.mjs');
+  } catch {
+    console.warn(
+      'SKIP: netlify/functions/score-readaloud.mjs does not exist yet — ' +
+      `READALOUD_DAILY_LIMIT (${READALOUD_DAILY_LIMIT}) is unverified until it does.`,
+    );
+    return;
+  }
+  assert.equal(
+    READALOUD_DAILY_LIMIT,
+    serverConst(src, 'READALOUD_DAILY_LIMIT'),
+    'marketing claims a different daily read-aloud cap than the server grants',
+  );
 });
 
 test('X-Ray limits match the server that enforces them', () => {
