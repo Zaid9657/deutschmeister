@@ -85,8 +85,13 @@ test('planRenders covers every Phonetik item, with the syllable markup removed f
 
 test('planRenders covers every Wortfeld entry the words table does not carry (wordId null)', () => {
   const missing = CURRICULUM_A11.lektionen.flatMap((l) => (l.wortfeld || []).filter((w) => !w.wordId));
-  assert.ok(missing.length > 0, 'if this ever hits 0 the migration is fully backfilled — delete the word step');
   const words = byKind('word');
+  if (missing.length === 0) {
+    // Fully backfilled (2026-09-12: every Wortfeld entry has a words row). The word
+    // step then renders nothing — generate-example-audio.mjs owns those rows' audio.
+    assert.equal(words.length, 0, 'no wordId-null entries, so no course word renders');
+    return;
+  }
   assert.equal(words.length, missing.length, 'one render per wordId-null entry');
   for (const w of missing) {
     const german = (w.word || w.de).trim();

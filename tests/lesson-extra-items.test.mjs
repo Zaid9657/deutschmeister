@@ -17,7 +17,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-import { exclusionReason } from '../src/data/lessonPools/quality.js';
+import { exclusionReason, answerInPrompt, isMetaPrompt } from '../src/data/lessonPools/quality.js';
 import { planPractice, relevanceScore, wortfeldTerms, isTypedItem } from '../src/lib/lesson/buildLesson.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 
@@ -26,22 +26,25 @@ const read = (p) => JSON.parse(readFileSync(join(ROOT, p), 'utf8'));
 const EXTRA = read('src/data/lessonPools/a11.extra.json').items;
 const POOL = read('src/data/lessonPools/a11.json');
 
-/** id prefix → the Lektion the item was written for, and that Lektion's topic. */
-const FOR_LEKTION = {
-  'extra-a11-l05': { nr: 5, topic: 'definite-articles' },
-  'extra-a11-l06': { nr: 6, topic: 'indefinite-articles' },
-  'extra-a11-l10': { nr: 10, topic: 'yes-no-questions' },
-  'extra-a11-l12': { nr: 12, topic: 'possessive-articles' },
-};
+/**
+ * The id names the Lektion (`extra-a11-l09-02` → Lektion 9) and the Lektion names
+ * its own topic, so the mapping is derived rather than restated: the first batch
+ * covered four Lektionen, the second all twelve, and a hand-written table would
+ * have to be edited in step with every batch.
+ */
 const lektion = (nr) => CURRICULUM_A11.lektionen.find((l) => l.nr === nr);
-const target = (item) => FOR_LEKTION[String(item.id).slice(0, 13)];
+const target = (item) => {
+  const m = /^extra-a11-l(\d\d)-\d\d$/.exec(String(item.id));
+  const l = m && lektion(Number(m[1]));
+  return l ? { nr: l.nr, topic: l.primarySlug } : null;
+};
 
 test('every extra item is addressed to one of the four Lektionen, with a unique id', () => {
   assert.ok(EXTRA.length >= 52, `only ${EXTRA.length} extra items`);
   assert.equal(new Set(EXTRA.map((i) => i.id)).size, EXTRA.length, 'duplicate id');
   for (const item of EXTRA) {
     assert.ok(target(item), `${item.id} does not name a Lektion`);
-    assert.match(item.id, /^extra-a11-l(05|06|10|12)-\d\d$/);
+    assert.match(item.id, /^extra-a11-l\d\d-\d\d$/);
   }
   const perLektion = new Map();
   for (const item of EXTRA) perLektion.set(target(item).nr, (perLektion.get(target(item).nr) || 0) + 1);
@@ -54,6 +57,17 @@ test('every extra item is addressed to one of the four Lektionen, with a unique 
 test('every extra item passes the pool quality rules', () => {
   for (const item of EXTRA) {
     assert.equal(exclusionReason(item), null, `${item.id} is excluded: ${exclusionReason(item)}`);
+  }
+});
+
+test('no extra item gives its answer away or hides its task in the English gloss', () => {
+  // REVIEW #2 fixes 2 and 3, applied to the file the next hand-authored batch
+  // lands in: the class the second review found alive three times is "the item
+  // punishes a correct answer", and its two mechanical shapes are the answer
+  // standing in its own prompt and a prompt whose content is only in questionEn.
+  for (const item of EXTRA) {
+    assert.equal(answerInPrompt(item), false, `${item.id}: the answer stands in its own prompt`);
+    assert.equal(isMetaPrompt(item), false, `${item.id}: the German prompt carries no task`);
   }
 });
 

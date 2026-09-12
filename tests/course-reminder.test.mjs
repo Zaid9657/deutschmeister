@@ -41,7 +41,7 @@ import { dirname, join } from 'node:path';
 import {
   WINDOW_HOURS, WINDOW_DAYS, MAX_PER_7_DAYS,
   isWithinWindow, overWeeklyCap, reminderKindFor,
-  LEKTION_TITLES, nextLektion, buildMessage,
+  LEKTION_TITLES, nextLektion, buildMessage, greeting,
 } from '../netlify/functions/course-reminder.mjs';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 
@@ -222,9 +222,48 @@ test('the copy makes no claim about what the learner did not do', () => {
     assert.ok(!/\b(unbegrenzt\w*|unlimited)\b/i.test(text), 'unlimited claim in reminder copy');
     // No urgency or streak threat: this is the lever, not a loss-aversion trick.
     assert.ok(!/nur noch|letzte Chance|Serie verlieren|Streak/i.test(text), 'pressure language in reminder copy');
-    assert.ok(!/!/.test(text), 'no exclamation marks — the register is calm');
+    // The register stays calm: the ONLY exclamation mark allowed is the
+    // greeting's („Hallo!“), which is how A1 material greets a learner.
+    assert.equal(text.replace('Hallo!', '').includes('!'), false, 'no exclamation marks beyond the greeting');
     // The door stays open.
     assert.ok(/auch gut|jederzeit/i.test(msg.body), 'the copy must leave an out');
+    // And nothing is asserted about the learner's own behaviour. The 20-hour
+    // floor makes such a claim impossible to justify, and the copy used to make
+    // one anyway („du warst vor Kurzem im Kurs“) against its own header promise.
+    assert.ok(!/vor Kurzem|warst|hast du|zurück im Kurs/i.test(text), `claim about the learner: ${text}`);
+  }
+});
+
+test('the greeting is a name or a bare Hallo, never the flapsig „Hallo, du …“', () => {
+  assert.equal(greeting('Ana'), 'Hallo Ana,');
+  assert.equal(greeting('Ana Chakiri'), 'Hallo Ana,', 'only the first name');
+  assert.equal(greeting('  '), 'Hallo!');
+  assert.equal(greeting(null), 'Hallo!');
+  assert.equal(greeting(undefined), 'Hallo!');
+  // The pronoun follows the punctuation: new sentence after „Hallo!“, same
+  // sentence after „Hallo Ana,“.
+  const named = buildMessage({ level: 'a1.1', nextNr: 4, vorname: 'Ana' });
+  assert.ok(named.body.includes('Hallo Ana, du lernst Deutsch'), named.body);
+  const anon = buildMessage({ level: 'a1.1', nextNr: 4 });
+  assert.ok(anon.body.includes('Hallo! Du lernst Deutsch'), anon.body);
+});
+
+test('the German is A1, not B1 — the level every recipient is at', () => {
+  // Owner-approved rewrite, DaF review 2026-09-12 §F. The three constructions
+  // below are what made the old copy B1; none may come back.
+  for (const nextNr of [1, 4, 12]) {
+    const body = buildMessage({ level: 'a1.1', nextNr }).body;
+    const text = body.replace(/<[^>]+>/g, ' ');
+    assert.ok(!/nichts geht verloren|der Teil, der zählt|nichts geht\b/i.test(text), `B1 idiom in the copy: ${text}`);
+    assert.ok(!/wenn heute nichts/i.test(text), 'elliptical B1 conditional in the copy');
+    // „wartet“ appeared twice in three sentences; once is already a repetition
+    // the review flagged, so the word is out of the copy entirely.
+    assert.equal((text.match(/wartet/gi) || []).length, 0, 'the copy must not say „wartet“');
+    // Short sentences: an A1 reader's limit. Counted on the visible text only.
+    for (const sentence of text.split(/[.!?](?:\s|$)/).map((x) => x.trim()).filter(Boolean)) {
+      const words = sentence.split(/\s+/).filter(Boolean).length;
+      assert.ok(words <= 12, `sentence too long for A1 (${words} words): ${sentence}`);
+    }
   }
 });
 

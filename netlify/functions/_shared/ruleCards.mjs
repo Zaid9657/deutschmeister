@@ -6,18 +6,23 @@
 
 export const RULE_CARDS = {
   "alphabet-pronunciation": {
-    "titleDe": "Buchstaben die anders klingen",
-    "content": "Diese Buchstaben gibt es im Englischen, aber sie klingen anders auf Deutsch.\nGerman Letter | German Sound | English Example | German Example\nW | sounds like English V | vine | Wasser (water)\nV | sounds like English F | fun | Vater (father)\nJ | sounds like English Y | yes | ja (yes)\nZ | sounds like English ts | cats | zehn (ten)\nS (before vowel) | sounds like English Z | zoo | Sonne (sun)\nR | rolled/throaty R | no English match | rot (red)\nCh | soft hissing sound | no English match | ich (I)",
+    "titleDe": "Die Buchstabennamen und das Buchstabieren",
+    "content": "Beim Buchstabieren sagst du jeden Buchstaben einzeln.\nJeder Buchstabe hat einen Namen:\nA a, B be, C tse, D de, E e, F ef, G ge, H ha, I i, J jot, K ka, L el, M em,\nN en, O o, P pe, Q ku, R er, S es, T te, U u, V vau, W we, X iks, Y ypsilon, Z tset.\nÄ a-Umlaut, Ö o-Umlaut, Ü u-Umlaut, ß Eszett.\nVorsicht: E und I, G und J, V und W haben ähnliche Namen.\nFrage: Wie schreibt man das? Antwort: A-N-A.\nBeispiele: Buchstabieren Sie bitte Chakiri. Wie buchstabiert man Ana?\nWie schreibt man Tschüss? Buchstabieren Sie Entschuldigung. Wie schreibt man Vorname?\nEnglish: every German letter has its own name — say the names one by one when you spell.",
     "commonMistakes": [
       {
-        "wrong": "Saying W like English W",
-        "correct": "Say W like English V",
-        "explanationDe": "Deutsches W klingt immer wie englisches V."
+        "wrong": "Wie heißt der Buchstabe Z? — Zed.",
+        "correct": "Wie heißt der Buchstabe Z? — tset (Zett).",
+        "explanationDe": "Der Buchstabe Z hat im Deutschen den Namen tset."
       },
       {
-        "wrong": "Saying Z like English Z",
-        "correct": "Say Z like English ts",
-        "explanationDe": "Deutsches Z klingt wie ts."
+        "wrong": "V und W haben denselben Namen.",
+        "correct": "V heißt vau, W heißt we.",
+        "explanationDe": "Zwei Buchstaben, zwei Namen. Beim Buchstabieren am Telefon ist das der häufigste Fehler."
+      },
+      {
+        "wrong": "Ich buchstabiere Tschüss: T-S-C-H-U-S-S.",
+        "correct": "Ich buchstabiere Tschüss: T-S-C-H-Ü-S-S.",
+        "explanationDe": "Ü ist ein eigener Buchstabe. Du sagst u-Umlaut."
       }
     ]
   },
@@ -43,9 +48,25 @@ export const RULE_CARDS = {
     ]
   },
   "nouns-gender": {
-    "titleDe": "Schnelle Genus-Übersicht",
-    "content": "Gender | Article | Example | Approx. % of Nouns\nMasculine | der | der Mann, der Tisch | ~40%\nFeminine | die | die Frau, die Lampe | ~35%\nNeuter | das | das Kind, das Buch | ~25%\nPlural (all) | die | die Männer, die Frauen, die Kinder | 100%",
-    "commonMistakes": []
+    "titleDe": "Genus: der, die, das — und die Endungen, die helfen",
+    "content": "Jedes Nomen hat ein Genus: der, die oder das. Im Plural steht immer die.\nDiese Endungen zeigen das Genus:\n-ung, -heit, -keit, -schaft → die: die Zeitung, die Freiheit, die Möglichkeit, die Freundschaft.\n-chen, -lein → das: das Mädchen, das Brötchen.\n-er bei Personen → der: der Lehrer, der Student.\nHat ein Nomen keine dieser Endungen, dann hilft nur Lernen.\nLerne jedes Nomen mit dem Artikel: nicht Tisch, sondern der Tisch.\nEnglish: learn every noun together with its article; the endings above are reliable groups, not a complete system.",
+    "commonMistakes": [
+      {
+        "wrong": "das Zeitung",
+        "correct": "die Zeitung",
+        "explanationDe": "Nomen auf -ung sind die-Wörter."
+      },
+      {
+        "wrong": "die Mädchen ist nett.",
+        "correct": "Das Mädchen ist nett.",
+        "explanationDe": "Nomen auf -chen sind das-Wörter, auch bei Personen."
+      },
+      {
+        "wrong": "die Lehrer arbeitet hier. (ein Mann)",
+        "correct": "Der Lehrer arbeitet hier.",
+        "explanationDe": "Personen auf -er sind der-Wörter. Die Frau ist die Lehrerin."
+      }
+    ]
   },
   "personal-pronouns": {
     "titleDe": "Personalpronomen",
@@ -122,23 +143,23 @@ export const RULE_CARDS = {
     ]
   },
   "time-and-dates": {
-    "titleDe": "Wiederholung: Zahlen 1–12 und Zehnerzahlen",
-    "content": "Du kennst diese Zahlen schon — du brauchst sie jetzt für die Uhrzeit und das Datum.\nZahl | Deutsch\n1 | eins\n2 | zwei\n3 | drei\n4 | vier\n5 | fünf\n6 | sechs\n7 | sieben\n8 | acht\n9 | neun\n10 | zehn\n11 | elf\n12 | zwölf\n20 | zwanzig\n30 | dreißig\n40 | vierzig\n50 | fünfzig\n60 | sechzig\n70 | siebzig\n80 | achtzig\n90 | neunzig\n100 | hundert",
+    "titleDe": "Die Uhrzeit: offiziell und im Alltag",
+    "content": "Offiziell sagst du die Stunde und die Minuten: 8:30 ist acht Uhr dreißig, 14:15 ist vierzehn Uhr fünfzehn.\nIm Alltag sagst du: halb neun ist 8:30, Viertel nach acht ist 8:15, Viertel vor neun ist 8:45.\nhalb nimmt die nächste Stunde. halb neun liegt also vor neun Uhr.\num steht vor der Uhrzeit: Der Kurs beginnt um acht Uhr.\nam steht vor Tagen und Tageszeiten: am Montag, am Morgen, am Abend.\nim steht vor Monaten: im Mai, im Dezember.\nDas Datum mit Ordnungszahlen kommt erst in A1.2. Hier lernst du nur die Uhrzeit, die Tage und die Monate.\nEnglish: um for clock times, am for days and parts of the day, im for months.",
     "commonMistakes": [
       {
-        "wrong": "Es ist halb drei Uhr. (gemeint: 3:30)",
-        "correct": "Es ist halb drei. (= 2:30)",
-        "explanationDe": "halb drei bedeutet 2:30, nicht 3:30 — halb + die NÄCHSTE Stunde."
+        "wrong": "halb neun ist 9:30.",
+        "correct": "halb neun = 8:30, nicht 9:30.",
+        "explanationDe": "halb nimmt die nächste Stunde: halb neun liegt eine halbe Stunde vor neun Uhr."
       },
       {
         "wrong": "Der Kurs ist um Montag.",
         "correct": "Der Kurs ist am Montag.",
-        "explanationDe": "Wochentage benutzen am. um ist nur für Uhrzeiten."
+        "explanationDe": "um Montag → am Montag. um steht nur vor der Uhrzeit, am vor Tagen und Tageszeiten."
       },
       {
-        "wrong": "Mein Geburtstag ist am fünf Mai.",
-        "correct": "Mein Geburtstag ist am fünften Mai.",
-        "explanationDe": "Nach am braucht das Datum die Ordnungszahl mit -en: am fünften."
+        "wrong": "Mein Geburtstag ist am Mai.",
+        "correct": "Mein Geburtstag ist im Mai.",
+        "explanationDe": "Monate bekommen im, Tage bekommen am."
       }
     ]
   },
@@ -175,23 +196,23 @@ export const RULE_CARDS = {
     ]
   },
   "yes-no-questions": {
-    "titleDe": "Aussage → Frage",
-    "content": "Verb an Position 1, Subjekt an Position 2 — der Rest bleibt gleich.\nAussage | Ja/Nein-Frage | English\nDu bist müde. | Bist du müde? | Are you tired?\nDu hast Zeit. | Hast du Zeit? | Do you have time?\nDu kommst aus Italien. | Kommst du aus Italien? | Do you come from Italy?\nDu arbeitest viel. | Arbeitest du viel? | Do you work a lot?\nDu stehst früh auf. | Stehst du früh auf? | Do you get up early?\nSie wohnen in Berlin. | Wohnen Sie in Berlin? | Do you live in Berlin? (formal)",
+    "titleDe": "Aussage → Ja/Nein-Frage",
+    "content": "In der geschriebenen Ja/Nein-Frage steht das Verb auf Platz 1, das Subjekt direkt danach. Der Rest bleibt gleich.\nDu bist müde. → Bist du müde?\nDu hast Zeit. → Hast du Zeit?\nDu kommst aus Italien. → Kommst du aus Italien?\nSie wohnen in Berlin. → Wohnen Sie in Berlin?\nDu stehst früh auf. → Stehst du früh auf? Das Präfix bleibt am Ende.\nAntworte mit einem ganzen Satz: Ja, ich bin müde. Nein, ich habe keine Zeit.\nEnglish: in a written yes/no question the verb comes first and the subject second.",
     "commonMistakes": [
       {
         "wrong": "Du kommst aus Italien?",
         "correct": "Kommst du aus Italien?",
-        "explanationDe": "Bei geschriebenen Fragen steht das Verb an Position 1 — nicht nur ein Fragezeichen am Satzende."
+        "explanationDe": "In der geschriebenen Frage steht das Verb auf Platz 1. Gesprochen gibt es auch die Frage mit gleicher Wortfolge und steigender Stimme; in Übungen schreibst du die Frage mit dem Verb auf Platz 1."
       },
       {
         "wrong": "Kommst aus Italien du?",
         "correct": "Kommst du aus Italien?",
-        "explanationDe": "Das Subjekt steht direkt nach dem Verb (Position 2), nicht am Satzende."
+        "explanationDe": "Das Subjekt steht direkt nach dem Verb, nicht am Satzende."
       },
       {
         "wrong": "Sind Sie Frau Meier? — Ja, ich bin.",
         "correct": "Ja, ich bin Frau Meier.",
-        "explanationDe": "Die Kurzantwort wiederholt die ganze Aussage, nicht nur Ja/Nein + Verb."
+        "explanationDe": "Die Kurzantwort wiederholt die ganze Aussage, nicht nur Ja plus Verb."
       }
     ]
   }

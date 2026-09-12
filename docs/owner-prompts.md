@@ -95,6 +95,7 @@ Summary (dry): rendered 0 / skipped 0 / failed 0 / ≈ 6.88 cents if all 181 are
 
 ```bash
 node scripts/generate-course-audio.mjs a1.1
+node scripts/generate-example-audio.mjs --table words   # the 31 course words seeded 2026-09-12 have rows but no audio yet
 ```
 
 Expected last line (first run — the numbers are what you paste back):
@@ -129,18 +130,18 @@ latest course activity **20–44 h ago**, inside the last 30 days, **at most 3 r
 rolling 7 days**, one claim per learner per day in `lifecycle_emails`. It **ships off** and
 cannot send until you do three things — 1 and 2 are yours, 3 is the migration.
 
-**1. Read the copy and say yes or change it.** German, no pressure, no figures, no claim
-about what the learner did or did not do (the 20-hour floor makes that impossible by
-construction). Subject and body for a learner whose next step is Lektion 4:
+**1. Read the copy and say yes or change it.** Controlled **A1 German** (every recipient is an
+A1.1 learner — the first version of this mail was B1 and the DaF review of 2026-09-12 §F
+rejected it), no pressure, no figures, and no claim about what the learner did or did not do.
+Subject and body for a learner whose next step is Lektion 4:
 
 > **Weiter mit Lektion 4: Auf dem Flohmarkt**
 >
-> Hallo, du warst vor Kurzem im Kurs — genau das ist der Teil, der zählt.
+> Hallo! Du lernst Deutsch — sehr gut.
 >
-> Als Nächstes wartet **Lektion 4: Auf dem Flohmarkt**. Ein Schritt pro Bildschirm, du kannst
-> jederzeit aufhören.
+> Lektion 4 heißt **Auf dem Flohmarkt**. Sie ist kurz: ein Schritt pro Bildschirm.
 >
-> Wenn heute nichts geht: auch gut. Der Kurs wartet, und nichts geht verloren.
+> Du kannst jederzeit aufhören. Bis bald.
 >
 > [ Lektion 4 öffnen → ]  (links to `/course/a1.1`)
 >
@@ -148,11 +149,16 @@ construction). Subject and body for a learner whose next step is Lektion 4:
 >
 > _Footer: DeutschMeister · deutsch-meister.de · Diese E-Mails abbestellen_
 
+The greeting is „Hallo!“ while the selection function carries no first name; with one it is
+„Hallo Ana, du lernst Deutsch — sehr gut.“ (never „Hallo, du …“, which reads as a vocative).
 The Lektion number and title come from the learner's own progress; the fallback for a level
-whose titles are not in the mailer yet is „Weiter im Kurs A1.1“ with no Lektion named.
-"vor Kurzem" is deliberate: the window spans two calendar days, so naming one would be a
-guess. `tests/course-reminder.test.mjs` fails if a price, an exclamation mark, a streak threat
-or the word „gestern“ ever enters this copy.
+whose titles are not in the mailer yet is „Weiter im Kurs A1.1“, with „Dein Kurs A1.1 geht
+weiter. Die Lektionen sind kurz: ein Schritt pro Bildschirm.“ instead of the middle line and no
+Lektion named. Nothing in the copy asserts a gap in the learner's practice — the 20-hour floor
+makes such a claim impossible to justify, and „du warst vor Kurzem im Kurs“ was exactly that
+claim. `tests/course-reminder.test.mjs` fails if a price, a streak threat, the word „gestern“,
+an exclamation mark beyond the greeting's, a sentence over 12 words, or any of the three
+retired B1 constructions ever enters this copy.
 
 **2. The two environment variables** (Netlify → Site configuration → Environment variables,
 **Functions** scope), set in this order:

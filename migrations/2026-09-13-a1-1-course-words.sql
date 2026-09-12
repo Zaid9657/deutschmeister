@@ -29,9 +29,29 @@
 --   L09  sofort — right away
 --   L11  nach Hause — home (direction)
 --   L11  mitkommen — to come along
---   L12  die Monate: Januar bis Dezember (Pl. Monate) — the months: January to December
---   L12  die Gäste (Pl. Gäste) — guests
 --   L12  das Fest (Pl. Feste) — celebration, festival
+--
+-- SECOND BATCH (DaF review #2, 2026-09-12). The review's §A repair pulled twelve
+-- further words into the Lektionen, and two entries of the first batch are gone
+-- from a11.js: „die Monate: Januar bis Dezember“ (a set posing as a lemma; the
+-- Lektion now teaches „im Mai“ plus „der Monat“, which already has a row) and
+-- „die Gäste“ (a plural posing as a lemma; now „der Gast“, Pl. Gäste). Both may
+-- stay in the table — they are harmless extra rows, and the rollback covers them.
+--   L04  die Zahlen 11–100 — the numbers 11–100 (one entry, as in L02)
+--   L04  der Flohmarkt (Pl. Flohmärkte) — flea market
+--   L04  verkaufen — to sell
+--   L04  das Regal (Pl. Regale) — shelf (the neuter noun L04's Genus card needs)
+--   L07  gehen — to go (for „Gehst du ins Kino?“)
+--   L07  der Freund (Pl. Freunde) — friend (m)
+--   L07  die Freundin (Pl. Freundinnen) — friend (f)
+--   L08  der Abend (Pl. Abende) — evening
+--   L08  der Arzt (Pl. Ärzte) — doctor
+--   L09  das Café (Pl. Cafés) — café
+--   L10  weit — far
+--   L10  die Durchsage (Pl. Durchsagen) — announcement
+--   L12  im Mai — in May
+--   L12  der Gast (Pl. Gäste) — guest
+--   L12  Gäste einladen — to invite the guests (chunk)
 --
 -- CONVENTIONS (CLAUDE.md, migrations/README.md):
 --   * `level` is LOWERCASE 'a1.1' — `words.level` is the lowercase side.
@@ -167,6 +187,99 @@ SELECT 'a1.1', 'Fest', 'celebration, festival', 'das', 'Feste', 'Course A1.1 · 
 WHERE NOT EXISTS (
   SELECT 1 FROM public.words WHERE german = 'Fest' AND level = 'a1.1'
 );
+
+-- ── second batch (DaF review #2, 2026-09-12) ──────────────────────────────
+
+INSERT INTO public.words (level, german, english, article, plural, category)
+SELECT 'a1.1', 'Zahlen 11–100', 'the numbers 11–100 (elf, zwölf … hundert)', 'die', NULL, 'Course A1.1 · L04'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.words WHERE german = 'Zahlen 11–100' AND level = 'a1.1'
+);
+
+INSERT INTO public.words (level, german, english, article, plural, category)
+SELECT 'a1.1', 'Flohmarkt', 'flea market', 'der', 'Flohmärkte', 'Course A1.1 · L04'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.words WHERE german = 'Flohmarkt' AND level = 'a1.1'
+);
+
+INSERT INTO public.words (level, german, english, article, plural, category)
+SELECT 'a1.1', 'verkaufen', 'to sell', NULL, NULL, 'Course A1.1 · L04'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.words WHERE german = 'verkaufen' AND level = 'a1.1'
+);
+
+INSERT INTO public.words (level, german, english, article, plural, category)
+SELECT 'a1.1', 'Regal', 'shelf', 'das', 'Regale', 'Course A1.1 · L04'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.words WHERE german = 'Regal' AND level = 'a1.1'
+);
+
+INSERT INTO public.words (level, german, english, article, plural, category)
+SELECT 'a1.1', 'gehen', 'to go', NULL, NULL, 'Course A1.1 · L07'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.words WHERE german = 'gehen' AND level = 'a1.1'
+);
+
+INSERT INTO public.words (level, german, english, article, plural, category)
+SELECT 'a1.1', 'Freund', 'friend (m)', 'der', 'Freunde', 'Course A1.1 · L07'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.words WHERE german = 'Freund' AND level = 'a1.1'
+);
+
+INSERT INTO public.words (level, german, english, article, plural, category)
+SELECT 'a1.1', 'Freundin', 'friend (f)', 'die', 'Freundinnen', 'Course A1.1 · L07'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.words WHERE german = 'Freundin' AND level = 'a1.1'
+);
+
+INSERT INTO public.words (level, german, english, article, plural, category)
+SELECT 'a1.1', 'Abend', 'evening', 'der', 'Abende', 'Course A1.1 · L08'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.words WHERE german = 'Abend' AND level = 'a1.1'
+);
+
+INSERT INTO public.words (level, german, english, article, plural, category)
+SELECT 'a1.1', 'Arzt', 'doctor', 'der', 'Ärzte', 'Course A1.1 · L08'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.words WHERE german = 'Arzt' AND level = 'a1.1'
+);
+
+INSERT INTO public.words (level, german, english, article, plural, category)
+SELECT 'a1.1', 'Café', 'café', 'das', 'Cafés', 'Course A1.1 · L09'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.words WHERE german = 'Café' AND level = 'a1.1'
+);
+
+INSERT INTO public.words (level, german, english, article, plural, category)
+SELECT 'a1.1', 'weit', 'far', NULL, NULL, 'Course A1.1 · L10'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.words WHERE german = 'weit' AND level = 'a1.1'
+);
+
+INSERT INTO public.words (level, german, english, article, plural, category)
+SELECT 'a1.1', 'Durchsage', 'announcement', 'die', 'Durchsagen', 'Course A1.1 · L10'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.words WHERE german = 'Durchsage' AND level = 'a1.1'
+);
+
+INSERT INTO public.words (level, german, english, article, plural, category)
+SELECT 'a1.1', 'im Mai', 'in May', NULL, NULL, 'Course A1.1 · L12'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.words WHERE german = 'im Mai' AND level = 'a1.1'
+);
+
+INSERT INTO public.words (level, german, english, article, plural, category)
+SELECT 'a1.1', 'Gast', 'guest', 'der', 'Gäste', 'Course A1.1 · L12'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.words WHERE german = 'Gast' AND level = 'a1.1'
+);
+
+INSERT INTO public.words (level, german, english, article, plural, category)
+SELECT 'a1.1', 'Gäste einladen', 'to invite the guests', NULL, NULL, 'Course A1.1 · L12'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.words WHERE german = 'Gäste einladen' AND level = 'a1.1'
+);
+
 COMMIT;
 
 -- Verification (run after applying):

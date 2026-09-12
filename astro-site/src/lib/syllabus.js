@@ -41,6 +41,47 @@ export function totalHoursFrom(curriculum) {
   return Math.round((lektionMin + checkpointMin) / 60);
 }
 
+// ---- The two halves of `hoursTotal`, kept apart on purpose ------------------
+// A1.1's `hoursTotal` (54) is engine time PLUS a budget for the practice
+// material around each Lektion, and the header of src/data/curricula/a11.js
+// forbids advertising it as one number: only the engine half exists as content,
+// the other half is a budget and is not complete at every level. So the buyer
+// page shows the two separately, and both are DERIVED from the curriculum —
+// the split below uses the same three components scripts/validate-curriculum.mjs
+// derives `hoursTotal` from, which is why the two halves always add back up.
+
+/** Minutes a checkpoint takes (docs/course-standard-2026-09-12.md §3). */
+export const CHECKPOINT_MINUTES = 12;
+/** Minutes of spaced review budgeted per Lektion (same source). */
+export const SPACED_REVIEW_MINUTES_PER_LEKTION = 10;
+
+/** Guided minutes that exist as content: Lektionen + checkpoints + spaced review. */
+export function guidedMinutes(curriculum) {
+  const lektionen = curriculum?.lektionen ?? [];
+  return (
+    lektionenMinutes(lektionen) +
+    (curriculum?.checkpoints?.length ?? 0) * CHECKPOINT_MINUTES +
+    lektionen.length * SPACED_REVIEW_MINUTES_PER_LEKTION
+  );
+}
+
+/**
+ * `{ guidedHours, practiceHours, totalHours }` — guided time derived from the
+ * minutes, practice material as the remainder of the curriculum's own
+ * `hoursTotal`. Never retyped: move a Lektion's minutes and both numbers move.
+ */
+export function courseTimeSplit(curriculum) {
+  const guidedHours = guidedMinutes(curriculum) / 60;
+  const totalHours = Number(curriculum?.hoursTotal) || 0;
+  return { guidedHours, practiceHours: Math.max(0, totalHours - guidedHours), totalHours };
+}
+
+/** 5.8 → „5,8“ — German decimal comma, one place, no trailing „,0“. */
+export function hoursDe(hours) {
+  const rounded = Math.round(Number(hours) * 10) / 10;
+  return (Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1)).replace('.', ',');
+}
+
 /** Goethe A1 guidance is 80–200 UE (Unterrichtseinheiten) for the full level; A2 the same band. */
 export const GOETHE_RICHTWERT_UE = { a1: [80, 200], a2: [80, 200] };
 
