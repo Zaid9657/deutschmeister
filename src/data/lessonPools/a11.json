@@ -1,284 +1,479 @@
 {
  "level": "a1.1",
  "builtFrom": "2026-08-24",
- "count": 262,
+ "count": 246,
  "items": [
   {
-   "id": "202b1660-d6de-4bae-a562-0e0b7fe3961d",
+   "id": "10fc1751-c3af-529f-8796-f8e46bfb1691",
    "topic": "alphabet-pronunciation",
-   "type": "multiple_choice",
+   "type": "fill_blank",
    "stage": 4,
    "difficulty": 1,
    "order": 1,
-   "questionDe": "Wie klingt das deutsche W?",
-   "questionEn": "How does the German W sound?",
-   "options": [
-    "Like English F",
-    "Like English V",
-    "Like English U",
-    "Like English W"
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Buchstabiert: H-A-L-L-O. Schreib das Wort: ___",
+   "questionEn": "Spelled out letter by letter. Write the word.",
+   "options": null,
+   "answer": "Hallo",
+   "accepted": [
+    "Hallo"
    ],
-   "answer": "Like English V",
-   "accepted": [],
-   "explanationDe": "Deutsches W = Englisches V.",
-   "hint": null
+   "explanationDe": "Buchstabe für Buchstabe: H-A-L-L-O = Hallo.",
+   "hint": "5 Buchstaben."
   },
   {
-   "id": "f5082228-b85f-4194-aecc-cc15756bb9e4",
+   "id": "dfa7474b-af31-5c93-8031-0bb797360123",
    "topic": "alphabet-pronunciation",
-   "type": "multiple_choice",
+   "type": "fill_blank",
    "stage": 4,
    "difficulty": 1,
    "order": 2,
-   "questionDe": "Welchen Laut macht Z?",
-   "questionEn": "What sound does Z make in German?",
-   "options": [
-    "SH (like in she)",
-    "S (like in sun)",
-    "TS (like in cats)",
-    "Z (like in zoo)"
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Buchstabiert: T-S-C-H-Ü-S-S. Schreib das Wort: ___",
+   "questionEn": "Spelled out letter by letter. Write the word.",
+   "options": null,
+   "answer": "Tschüss",
+   "accepted": [
+    "Tschüss"
    ],
-   "answer": "TS (like in cats)",
-   "accepted": [],
-   "explanationDe": "Z = TS.",
-   "hint": null
+   "explanationDe": "Buchstabe für Buchstabe: T-S-C-H-Ü-S-S = Tschüss.",
+   "hint": "7 Buchstaben."
   },
   {
-   "id": "18fc5f54-b2dc-4f94-98a1-c2d1f8b9fe67",
+   "id": "d662cf8b-e87f-5b87-8370-2b0e0feff300",
    "topic": "alphabet-pronunciation",
-   "type": "multiple_choice",
+   "type": "fill_blank",
    "stage": 4,
    "difficulty": 1,
    "order": 3,
-   "questionDe": "Wie klingt \"ei\" in \"mein\"?",
-   "questionEn": "How do you say \"ei\" in \"mein\"?",
-   "options": [
-    "Like AY",
-    "Like OY",
-    "Like EYE",
-    "Like EE"
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Buchstabiert: D-A-N-K-E. Schreib das Wort: ___",
+   "questionEn": "Spelled out letter by letter. Write the word.",
+   "options": null,
+   "answer": "Danke",
+   "accepted": [
+    "Danke"
    ],
-   "answer": "Like EYE",
-   "accepted": [],
-   "explanationDe": "ei = ei-Laut.",
-   "hint": null
+   "explanationDe": "Buchstabe für Buchstabe: D-A-N-K-E = Danke.",
+   "hint": "5 Buchstaben."
   },
   {
-   "id": "2ecc19de-5c44-45fe-977c-654e4f0c0a63",
+   "id": "f8396a37-3e46-5a06-8eea-ba9872d7e064",
    "topic": "alphabet-pronunciation",
-   "type": "multiple_choice",
+   "type": "fill_blank",
    "stage": 4,
    "difficulty": 1,
    "order": 4,
-   "questionDe": "Wie klingt \"ie\" in \"die\"?",
-   "questionEn": "How do you say \"ie\" in \"die\"?",
-   "options": [
-    "Like AY",
-    "Like EYE",
-    "Like EE",
-    "Like OY"
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Buchstabiert: B-I-T-T-E. Schreib das Wort: ___",
+   "questionEn": "Spelled out letter by letter. Write the word.",
+   "options": null,
+   "answer": "Bitte",
+   "accepted": [
+    "Bitte"
    ],
-   "answer": "Like EE",
-   "accepted": [],
-   "explanationDe": "ie = langes i.",
-   "hint": null
+   "explanationDe": "Buchstabe für Buchstabe: B-I-T-T-E = Bitte.",
+   "hint": "5 Buchstaben."
   },
   {
-   "id": "0f5c2a5f-fd21-43d7-b7b1-32f12e0a4518",
+   "id": "2488cb0f-ea25-5dae-85d8-fea6ed13b2f3",
    "topic": "alphabet-pronunciation",
-   "type": "multiple_choice",
+   "type": "fill_blank",
    "stage": 4,
    "difficulty": 1,
    "order": 5,
-   "questionDe": "Wie klingt \"sch\"?",
-   "questionEn": "What does \"sch\" sound like?",
-   "options": [
-    "CH (like church)",
-    "SH (like she)",
-    "S (like sun)",
-    "SK (like skip)"
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Buchstabiert: E-N-T-S-C-H-U-L-D-I-G-U-N-G. Schreib das Wort: ___",
+   "questionEn": "Spelled out letter by letter. Write the word.",
+   "options": null,
+   "answer": "Entschuldigung",
+   "accepted": [
+    "Entschuldigung"
    ],
-   "answer": "SH (like she)",
-   "accepted": [],
-   "explanationDe": "sch = SCH.",
-   "hint": null
+   "explanationDe": "Buchstabe für Buchstabe: E-N-T-S-C-H-U-L-D-I-G-U-N-G = Entschuldigung.",
+   "hint": "14 Buchstaben."
   },
   {
-   "id": "9dc221cb-e74f-4c2f-bcc7-a06e80ee72d5",
+   "id": "61b961a8-1c5a-59b9-8b63-430a94714181",
    "topic": "alphabet-pronunciation",
-   "type": "multiple_choice",
+   "type": "fill_blank",
    "stage": 4,
    "difficulty": 1,
    "order": 6,
-   "questionDe": "Was ist der Unterschied?",
-   "questionEn": "What is the difference between \"schon\" and \"schön\"?",
-   "options": [
-    "schon = fast, schön = slow",
-    "schon = beautiful, schön = already",
-    "Same meaning",
-    "schon = already, schön = beautiful"
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Buchstabiert: W-I-L-L-K-O-M-M-E-N. Schreib das Wort: ___",
+   "questionEn": "Spelled out letter by letter. Write the word.",
+   "options": null,
+   "answer": "Willkommen",
+   "accepted": [
+    "Willkommen"
    ],
-   "answer": "schon = already, schön = beautiful",
-   "accepted": [],
-   "explanationDe": "Der Umlaut ändert die Bedeutung!",
-   "hint": null
+   "explanationDe": "Buchstabe für Buchstabe: W-I-L-L-K-O-M-M-E-N = Willkommen.",
+   "hint": "10 Buchstaben."
   },
   {
-   "id": "c8b3921c-9341-4e96-94a8-b1c975712366",
+   "id": "448a9516-9d53-5c58-8f77-9ae1e60d9363",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 7,
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Buchstabiert: G-R-U-ß. Schreib das Wort: ___",
+   "questionEn": "Spelled out letter by letter. Write the word.",
+   "options": null,
+   "answer": "Gruß",
+   "accepted": [
+    "Gruß"
+   ],
+   "explanationDe": "Buchstabe für Buchstabe: G-R-U-ß = Gruß.",
+   "hint": "4 Buchstaben."
+  },
+  {
+   "id": "9d61145f-8a24-5b5a-85e3-6cb9dfc99315",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 8,
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Buchstabiert: H-E-I-ß-E-N. Schreib das Wort: ___",
+   "questionEn": "Spelled out letter by letter. Write the word.",
+   "options": null,
+   "answer": "heißen",
+   "accepted": [
+    "heißen"
+   ],
+   "explanationDe": "Buchstabe für Buchstabe: H-E-I-ß-E-N = heißen.",
+   "hint": "6 Buchstaben."
+  },
+  {
+   "id": "8bb13847-96f2-5671-8c3e-a8e40d6ad1eb",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 9,
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Buchstabiert: B-U-C-H-S-T-A-B-I-E-R-E-N. Schreib das Wort: ___",
+   "questionEn": "Spelled out letter by letter. Write the word.",
+   "options": null,
+   "answer": "buchstabieren",
+   "accepted": [
+    "buchstabieren"
+   ],
+   "explanationDe": "Buchstabe für Buchstabe: B-U-C-H-S-T-A-B-I-E-R-E-N = buchstabieren.",
+   "hint": "13 Buchstaben."
+  },
+  {
+   "id": "1d19c92e-e77d-5f3f-8e68-0cfd0223e650",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 10,
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Buchstabiert: B-U-C-H-S-T-A-B-E. Schreib das Wort: ___",
+   "questionEn": "Spelled out letter by letter. Write the word.",
+   "options": null,
+   "answer": "Buchstabe",
+   "accepted": [
+    "Buchstabe"
+   ],
+   "explanationDe": "Buchstabe für Buchstabe: B-U-C-H-S-T-A-B-E = Buchstabe.",
+   "hint": "9 Buchstaben."
+  },
+  {
+   "id": "9f22442a-a212-57af-8f9f-fd3c30231a4e",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 11,
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Buchstabiert: V-O-R-N-A-M-E. Schreib das Wort: ___",
+   "questionEn": "Spelled out letter by letter. Write the word.",
+   "options": null,
+   "answer": "Vorname",
+   "accepted": [
+    "Vorname"
+   ],
+   "explanationDe": "Buchstabe für Buchstabe: V-O-R-N-A-M-E = Vorname.",
+   "hint": "7 Buchstaben."
+  },
+  {
+   "id": "3befc1a5-09d9-5c0e-8f59-67c00b247ffa",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 12,
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Buchstabiert: N-A-C-H-N-A-M-E. Schreib das Wort: ___",
+   "questionEn": "Spelled out letter by letter. Write the word.",
+   "options": null,
+   "answer": "Nachname",
+   "accepted": [
+    "Nachname"
+   ],
+   "explanationDe": "Buchstabe für Buchstabe: N-A-C-H-N-A-M-E = Nachname.",
+   "hint": "8 Buchstaben."
+  },
+  {
+   "id": "85386a42-7cb4-5293-8a1b-fb8a5bb8e494",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 13,
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Wie heißt der Buchstabe ß auf Deutsch? ___",
+   "questionEn": "What is this letter called in German?",
+   "options": null,
+   "answer": "Eszett",
+   "accepted": [
+    "Eszett",
+    "eszett",
+    "scharfes S",
+    "scharfes s"
+   ],
+   "explanationDe": "Der Buchstabe ß heißt Eszett.",
+   "hint": "Der Name des Buchstaben, nicht der Laut."
+  },
+  {
+   "id": "eb59458f-62a5-539c-805e-5e94744b68cc",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 14,
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Wie heißt der Buchstabe Y auf Deutsch? ___",
+   "questionEn": "What is this letter called in German?",
+   "options": null,
+   "answer": "Ypsilon",
+   "accepted": [
+    "Ypsilon",
+    "ypsilon"
+   ],
+   "explanationDe": "Der Buchstabe Y heißt Ypsilon.",
+   "hint": "Der Name des Buchstaben, nicht der Laut."
+  },
+  {
+   "id": "23520fbd-d64b-5992-838d-6c6f27c7e999",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 15,
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Wie heißt der Buchstabe J auf Deutsch? ___",
+   "questionEn": "What is this letter called in German?",
+   "options": null,
+   "answer": "Jot",
+   "accepted": [
+    "Jot",
+    "jot",
+    "Jott",
+    "jott"
+   ],
+   "explanationDe": "Der Buchstabe J heißt Jot.",
+   "hint": "Der Name des Buchstaben, nicht der Laut."
+  },
+  {
+   "id": "ff1f6816-195c-5bf3-846d-9f904ef8c7cd",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 16,
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Wie heißt der Buchstabe V auf Deutsch? ___",
+   "questionEn": "What is this letter called in German?",
+   "options": null,
+   "answer": "Vau",
+   "accepted": [
+    "Vau",
+    "vau"
+   ],
+   "explanationDe": "Der Buchstabe V heißt Vau.",
+   "hint": "Der Name des Buchstaben, nicht der Laut."
+  },
+  {
+   "id": "559f4c15-815e-5d09-8929-f19548ef12cb",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 17,
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Wie heißt der Buchstabe Z auf Deutsch? ___",
+   "questionEn": "What is this letter called in German?",
+   "options": null,
+   "answer": "Zett",
+   "accepted": [
+    "Zett",
+    "zett"
+   ],
+   "explanationDe": "Der Buchstabe Z heißt Zett.",
+   "hint": "Der Name des Buchstaben, nicht der Laut."
+  },
+  {
+   "id": "0eb1a415-1bd6-5983-8951-b33d16ebb054",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 18,
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Buchstabiert: B-E-R-U-F. Schreib das Wort mit Artikel: ___",
+   "questionEn": "Write the word with its article.",
+   "options": null,
+   "answer": "der Beruf",
+   "accepted": [
+    "der Beruf"
+   ],
+   "explanationDe": "der Beruf — B-E-R-U-F.",
+   "hint": "der, die oder das?"
+  },
+  {
+   "id": "74f91cf4-e8b5-5ee1-887a-84e6370ac670",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 19,
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Buchstabiert: A-D-R-E-S-S-E. Schreib das Wort mit Artikel: ___",
+   "questionEn": "Write the word with its article.",
+   "options": null,
+   "answer": "die Adresse",
+   "accepted": [
+    "die Adresse"
+   ],
+   "explanationDe": "die Adresse — A-D-R-E-S-S-E.",
+   "hint": "der, die oder das?"
+  },
+  {
+   "id": "92ac55de-fb60-5f58-8698-7e85444b2255",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 20,
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Buchstabiert: T-E-L-E-F-O-N-N-U-M-M-E-R. Schreib das Wort mit Artikel: ___",
+   "questionEn": "Write the word with its article.",
+   "options": null,
+   "answer": "die Telefonnummer",
+   "accepted": [
+    "die Telefonnummer"
+   ],
+   "explanationDe": "die Telefonnummer — T-E-L-E-F-O-N-N-U-M-M-E-R.",
+   "hint": "der, die oder das?"
+  },
+  {
+   "id": "cbee2a2c-2b4a-5d9b-88d1-1b5bc64f3294",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 21,
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Buchstabiert: F-O-R-M-U-L-A-R. Schreib das Wort mit Artikel: ___",
+   "questionEn": "Write the word with its article.",
+   "options": null,
+   "answer": "das Formular",
+   "accepted": [
+    "das Formular"
+   ],
+   "explanationDe": "das Formular — F-O-R-M-U-L-A-R.",
+   "hint": "der, die oder das?"
+  },
+  {
+   "id": "32eb463d-1209-5db8-8aee-d227e1d99d62",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 22,
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Buchstabiert: W-O-H-N-O-R-T. Schreib das Wort mit Artikel: ___",
+   "questionEn": "Write the word with its article.",
+   "options": null,
+   "answer": "der Wohnort",
+   "accepted": [
+    "der Wohnort"
+   ],
+   "explanationDe": "der Wohnort — W-O-H-N-O-R-T.",
+   "hint": "der, die oder das?"
+  },
+  {
+   "id": "2df8b952-57b5-54ef-8c10-4a0d965d9115",
    "topic": "alphabet-pronunciation",
    "type": "multiple_choice",
    "stage": 4,
    "difficulty": 1,
-   "order": 7,
-   "questionDe": "Wie klingt \"sp\" am Wortanfang?",
-   "questionEn": "How does \"sp\" sound at the start of a word?",
+   "order": 23,
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Welche Schreibweise ist richtig?",
+   "questionEn": "Which spelling is correct?",
    "options": [
-    "SP (like English)",
-    "SHP",
-    "ZP",
-    "SH"
+    "Dane",
+    "Danke",
+    "Dnake"
    ],
-   "answer": "SHP",
-   "accepted": [],
-   "explanationDe": "sp am Anfang = SCHP.",
-   "hint": null
-  },
-  {
-   "id": "8cdb1026-03d3-56ae-a3b7-a18c487f7e33",
-   "topic": "alphabet-pronunciation",
-   "type": "fill_blank",
-   "stage": 5,
-   "difficulty": 2,
-   "order": 8,
-   "questionDe": "Es klingt wie \"Vasser\". Schreib das Wort: ___",
-   "questionEn": "It sounds like ‘Vasser’. Write the word. (W sounds like V)",
-   "options": null,
-   "answer": "Wasser",
+   "answer": "Danke",
    "accepted": [
-    "Wasser"
+    "Danke"
    ],
-   "explanationDe": "Deutsches W klingt wie englisches V, deshalb schreibt man Wasser.",
-   "hint": null
+   "explanationDe": "Danke — D-A-N-K-E.",
+   "hint": "Achte auf Doppelbuchstaben, Umlaute und ß."
   },
   {
-   "id": "6a53567a-8df7-5d07-95d1-fe0629a40cb2",
+   "id": "87e8f16d-a3fa-5012-8d47-373e6b16f736",
    "topic": "alphabet-pronunciation",
-   "type": "fill_blank",
-   "stage": 5,
-   "difficulty": 2,
-   "order": 9,
-   "questionDe": "Es klingt wie \"Tsehn\". Schreib das Wort: ___",
-   "questionEn": "It sounds like ‘Tsehn’. Write the word. (Z sounds like TS)",
-   "options": null,
-   "answer": "zehn",
-   "accepted": [
-    "zehn"
-   ],
-   "explanationDe": "Deutsches Z klingt wie TS, deshalb schreibt man zehn.",
-   "hint": null
-  },
-  {
-   "id": "38003760-3362-5fbc-a689-b3b6ed2856b6",
-   "topic": "alphabet-pronunciation",
-   "type": "fill_blank",
-   "stage": 5,
-   "difficulty": 2,
-   "order": 10,
-   "questionDe": "Es klingt wie \"SHoo-leh\". Schreib das Wort: ___",
-   "questionEn": "It sounds like ‘SHoo-leh’. Write the word. (sch sounds like SH)",
-   "options": null,
-   "answer": "Schule",
-   "accepted": [
-    "Schule"
-   ],
-   "explanationDe": "Die Buchstaben sch klingen wie SH, deshalb schreibt man Schule.",
-   "hint": null
-  },
-  {
-   "id": "28d37c84-aca4-5873-b90d-179deb41c1b9",
-   "topic": "alphabet-pronunciation",
-   "type": "fill_blank",
-   "stage": 5,
-   "difficulty": 3,
-   "order": 11,
-   "questionDe": "Es klingt wie \"SHTRAH-suh\". Schreib das Wort: ___",
-   "questionEn": "It sounds like ‘SHTRAH-suh’. Write the word. (st at the start sounds like SHT)",
-   "options": null,
-   "answer": "Straße",
-   "accepted": [
-    "Straße",
-    "Strasse"
-   ],
-   "explanationDe": "St am Wortanfang klingt wie SCHT, deshalb schreibt man Straße.",
-   "hint": null
-  },
-  {
-   "id": "2c03bb2f-6452-550a-a9ec-164a0803911c",
-   "topic": "alphabet-pronunciation",
-   "type": "fill_blank",
-   "stage": 5,
-   "difficulty": 2,
-   "order": 12,
-   "questionDe": "Es klingt wie \"HOY-tuh\". Schreib das Wort: ___",
-   "questionEn": "It sounds like ‘HOY-tuh’. Write the word. (eu sounds like OY)",
-   "options": null,
-   "answer": "heute",
-   "accepted": [
-    "heute"
-   ],
-   "explanationDe": "Die Buchstaben eu klingen wie OY, deshalb schreibt man heute.",
-   "hint": null
-  },
-  {
-   "id": "216813d5-ebc7-50c3-b212-089e4abf34a1",
-   "topic": "alphabet-pronunciation",
-   "type": "fill_blank",
-   "stage": 5,
+   "type": "multiple_choice",
+   "stage": 4,
    "difficulty": 1,
-   "order": 13,
-   "questionDe": "Es klingt wie \"mine\" und bedeutet \"my\". Schreib das Wort: ___",
-   "questionEn": "It sounds like the English word ‘mine’ and means ‘my’. Write the word. (ei = EYE)",
-   "options": null,
-   "answer": "mein",
-   "accepted": [
-    "mein"
+   "order": 24,
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Welche Schreibweise ist richtig?",
+   "questionEn": "Which spelling is correct?",
+   "options": [
+    "Vonrame",
+    "Vornae",
+    "Vorname"
    ],
-   "explanationDe": "Deutsches ei klingt wie englisches EYE, deshalb führt \"mine\" zu mein.",
-   "hint": null
+   "answer": "Vorname",
+   "accepted": [
+    "Vorname"
+   ],
+   "explanationDe": "Vorname — V-O-R-N-A-M-E.",
+   "hint": "Achte auf Doppelbuchstaben, Umlaute und ß."
   },
   {
-   "id": "d33d50cb-e6f2-5c6e-b9e0-7ad6c26c20da",
+   "id": "b08c9136-4135-57f2-89d8-c1eabb28ef77",
    "topic": "alphabet-pronunciation",
-   "type": "fill_blank",
-   "stage": 5,
-   "difficulty": 2,
-   "order": 14,
-   "questionDe": "Es klingt wie \"TSvahn-tsig\". Schreib das Wort: ___",
-   "questionEn": "It sounds like ‘TSvahn-tsig’. Write the word. (Z sounds like TS, W sounds like V)",
-   "options": null,
-   "answer": "zwanzig",
-   "accepted": [
-    "zwanzig"
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 25,
+   "generated": "buchstabieren aus dem Wortfeld (scripts/build-lesson-pool.mjs)",
+   "questionDe": "Welche Schreibweise ist richtig?",
+   "questionEn": "Which spelling is correct?",
+   "options": [
+    "Telefnonummer",
+    "Telefonnummer",
+    "Telefonnummr",
+    "Telefonummer"
    ],
-   "explanationDe": "Z klingt wie TS und W klingt wie V, deshalb ist \"TSvahn-tsig\" zwanzig.",
-   "hint": null
-  },
-  {
-   "id": "226ab627-c551-53fd-8d86-bebdb25ec4d9",
-   "topic": "alphabet-pronunciation",
-   "type": "fill_blank",
-   "stage": 5,
-   "difficulty": 2,
-   "order": 15,
-   "questionDe": "Es sieht fast aus wie \"schön\", aber ohne Umlaut. Es bedeutet \"already\". Schreib das Wort: ___",
-   "questionEn": "It looks like ‘schön’ but has no umlaut, and it means ‘already’. Write the word.",
-   "options": null,
-   "answer": "schon",
+   "answer": "Telefonnummer",
    "accepted": [
-    "schon"
+    "Telefonnummer"
    ],
-   "explanationDe": "Schon (ohne Umlaut) bedeutet already; schön (mit Umlaut) bedeutet beautiful — und klingt auch anders.",
-   "hint": null
+   "explanationDe": "Telefonnummer — T-E-L-E-F-O-N-N-U-M-M-E-R.",
+   "hint": "Achte auf Doppelbuchstaben, Umlaute und ß."
   },
   {
    "id": "f2555a1b-d961-4a7f-b185-a621309d3649",
@@ -441,26 +636,6 @@
    "hint": null
   },
   {
-   "id": "fb0e65aa-bd56-40d6-a87c-a9388a1c795f",
-   "topic": "definite-articles",
-   "type": "multiple_choice",
-   "stage": 5,
-   "difficulty": 1,
-   "order": 9,
-   "questionDe": "Was ist der Artikel für Pluralnomen?",
-   "questionEn": "What is the article for plural nouns?",
-   "options": [
-    "die",
-    "It depends on gender",
-    "das",
-    "der"
-   ],
-   "answer": "die",
-   "accepted": [],
-   "explanationDe": "ALLE Plurale verwenden die.",
-   "hint": null
-  },
-  {
    "id": "f5b9b89d-a939-4999-b381-d5cc235cd4ab",
    "topic": "definite-articles",
    "type": "multiple_choice",
@@ -516,66 +691,6 @@
    "answer": "die",
    "accepted": [],
    "explanationDe": "Neutral Singular → die im Plural.",
-   "hint": null
-  },
-  {
-   "id": "7b20214e-1cb3-44e6-a885-5fd75c0c3f34",
-   "topic": "definite-articles",
-   "type": "multiple_choice",
-   "stage": 5,
-   "difficulty": 1,
-   "order": 13,
-   "questionDe": "Finde den Fehler: \"Das Frau ist nett.\"",
-   "questionEn": "Find the error: \"Das Frau ist nett.\"",
-   "options": [
-    "Das → Die",
-    "ist → sind",
-    "Das → Der",
-    "No error"
-   ],
-   "answer": "Das → Die",
-   "accepted": [],
-   "explanationDe": "Frau ist feminin, also braucht es die.",
-   "hint": null
-  },
-  {
-   "id": "c1183867-955d-488a-a815-cca89386ea5b",
-   "topic": "definite-articles",
-   "type": "multiple_choice",
-   "stage": 5,
-   "difficulty": 1,
-   "order": 14,
-   "questionDe": "Finde den Fehler: \"Der Bücher sind teuer.\"",
-   "questionEn": "Find the error: \"Der Bücher sind teuer.\"",
-   "options": [
-    "No error",
-    "teuer → teure",
-    "sind → ist",
-    "Der → Die"
-   ],
-   "answer": "Der → Die",
-   "accepted": [],
-   "explanationDe": "Pluralnomen verwenden IMMER die.",
-   "hint": null
-  },
-  {
-   "id": "8d425a60-78be-48a7-99ef-d58d0beaa021",
-   "topic": "definite-articles",
-   "type": "multiple_choice",
-   "stage": 5,
-   "difficulty": 1,
-   "order": 15,
-   "questionDe": "Finde den Fehler: \"Die Mädchen ist klein.\"",
-   "questionEn": "Find the error: \"Die Mädchen ist klein.\"",
-   "options": [
-    "klein → kleine",
-    "No error",
-    "ist → sind",
-    "Die → Das"
-   ],
-   "answer": "Die → Das",
-   "accepted": [],
-   "explanationDe": "Endung -chen = neutral. Es muss das Mädchen sein.",
    "hint": null
   },
   {
@@ -875,46 +990,6 @@
    "hint": null
   },
   {
-   "id": "e0b9e131-b35c-4562-a240-9b4e1e6ea3dc",
-   "topic": "indefinite-articles",
-   "type": "fill_blank",
-   "stage": 4,
-   "difficulty": 1,
-   "order": 7,
-   "questionDe": "Ich habe ___ Zeit.",
-   "questionEn": "Ich habe ___ Zeit. (negation)",
-   "options": [
-    "keine",
-    "kein",
-    "nicht"
-   ],
-   "answer": "keine",
-   "accepted": [
-    "keine"
-   ],
-   "explanationDe": "Zeit = feminin → keine.",
-   "hint": null
-  },
-  {
-   "id": "f8740ad4-5bc3-4b2b-872e-7e717113c48b",
-   "topic": "indefinite-articles",
-   "type": "multiple_choice",
-   "stage": 4,
-   "difficulty": 1,
-   "order": 8,
-   "questionDe": "Warum kein Artikel?",
-   "questionEn": "Why no article in \"Ich sehe Bücher\"?",
-   "options": [
-    "You forgot it",
-    "Bücher is neuter",
-    "No plural form of ein/eine"
-   ],
-   "answer": "No plural form of ein/eine",
-   "accepted": [],
-   "explanationDe": "Kein Plural für ein/eine.",
-   "hint": null
-  },
-  {
    "id": "05649f0e-7308-50dd-8593-ac61018ef7e2",
    "topic": "indefinite-articles",
    "type": "fill_blank",
@@ -981,74 +1056,6 @@
     "Ich bin Lehrerin"
    ],
    "explanationDe": "Deutsch lässt den Artikel vor einem Beruf ganz weg — kein ein, keine eine.",
-   "hint": null
-  },
-  {
-   "id": "6ea84a95-1ef8-5486-b791-e5728b65b419",
-   "topic": "indefinite-articles",
-   "type": "fill_blank",
-   "stage": 5,
-   "difficulty": 1,
-   "order": 13,
-   "questionDe": "Ich habe ___ Fahrrad.",
-   "questionEn": "I have no bike. (negation)",
-   "options": null,
-   "answer": "kein",
-   "accepted": [
-    "kein"
-   ],
-   "explanationDe": "Fahrrad ist neutral, deshalb die Verneinung kein.",
-   "hint": null
-  },
-  {
-   "id": "b57a67fb-08e5-5af1-9721-6b6f33116d7a",
-   "topic": "indefinite-articles",
-   "type": "fill_blank",
-   "stage": 5,
-   "difficulty": 1,
-   "order": 14,
-   "questionDe": "Er ist ___ Lehrer.",
-   "questionEn": "He is not a teacher. (negation)",
-   "options": null,
-   "answer": "kein",
-   "accepted": [
-    "kein"
-   ],
-   "explanationDe": "Lehrer ist maskulin, deshalb die Verneinung kein. Ohne Verneinung steht kein Artikel (Er ist Lehrer), mit Verneinung steht kein (Er ist kein Lehrer).",
-   "hint": null
-  },
-  {
-   "id": "14d31bcd-eb04-5333-b2b9-2901d20e675a",
-   "topic": "indefinite-articles",
-   "type": "fill_blank",
-   "stage": 5,
-   "difficulty": 1,
-   "order": 15,
-   "questionDe": "Ich habe ___ Katze.",
-   "questionEn": "I have no cat. (negation)",
-   "options": null,
-   "answer": "keine",
-   "accepted": [
-    "keine"
-   ],
-   "explanationDe": "Katze ist feminin, deshalb die Verneinung keine.",
-   "hint": null
-  },
-  {
-   "id": "bb0ead84-4c69-547b-b8aa-b791b1c0e375",
-   "topic": "indefinite-articles",
-   "type": "fill_blank",
-   "stage": 5,
-   "difficulty": 1,
-   "order": 16,
-   "questionDe": "Das ist ___ Uhr.",
-   "questionEn": "That is not a watch. (negation)",
-   "options": null,
-   "answer": "keine",
-   "accepted": [
-    "keine"
-   ],
-   "explanationDe": "Uhr ist feminin, deshalb die Verneinung keine.",
    "hint": null
   },
   {
@@ -1246,106 +1253,6 @@
    "answer": "-ung",
    "accepted": [],
    "explanationDe": "-ung ist 100% feminin ohne Ausnahmen.",
-   "hint": null
-  },
-  {
-   "id": "a0447202-0897-482c-8238-d7f94781d2b6",
-   "topic": "nouns-gender",
-   "type": "multiple_choice",
-   "stage": 5,
-   "difficulty": 1,
-   "order": 10,
-   "questionDe": "Welche Kategorie ist IMMER maskulin?",
-   "questionEn": "Which category is ALWAYS masculine?",
-   "options": [
-    "Colors as nouns",
-    "Languages",
-    "Days and months",
-    "Letters of alphabet"
-   ],
-   "answer": "Days and months",
-   "accepted": [],
-   "explanationDe": "Tage und Monate sind immer maskulin.",
-   "hint": null
-  },
-  {
-   "id": "b260aa43-33e0-45f1-9464-f1ca0c5f4ef8",
-   "topic": "nouns-gender",
-   "type": "multiple_choice",
-   "stage": 5,
-   "difficulty": 1,
-   "order": 11,
-   "questionDe": "Was macht Nomen IMMER neutral?",
-   "questionEn": "What makes nouns ALWAYS neuter?",
-   "options": [
-    "Ending -heit",
-    "Ending -ung",
-    "Ending -chen or -lein",
-    "Ending -er"
-   ],
-   "answer": "Ending -chen or -lein",
-   "accepted": [],
-   "explanationDe": "Verkleinerungssuffixe -chen und -lein erzeugen immer neutrale Nomen.",
-   "hint": null
-  },
-  {
-   "id": "a0441ac7-1c1d-4610-80ec-80a606a76560",
-   "topic": "nouns-gender",
-   "type": "multiple_choice",
-   "stage": 5,
-   "difficulty": 1,
-   "order": 12,
-   "questionDe": "Warum ist \"das Mädchen\" neutral, nicht feminin?",
-   "questionEn": "Why is \"das Mädchen\" neuter, not feminine?",
-   "options": [
-    "The -chen ending overrides meaning",
-    "Girls are young",
-    "All people words are neuter",
-    "It's an exception"
-   ],
-   "answer": "The -chen ending overrides meaning",
-   "accepted": [],
-   "explanationDe": "Grammatik (das Suffix -chen) schlägt die biologische Bedeutung.",
-   "hint": null
-  },
-  {
-   "id": "15e2b8e2-c09e-4b42-8da9-958416f33936",
-   "topic": "nouns-gender",
-   "type": "multiple_choice",
-   "stage": 5,
-   "difficulty": 1,
-   "order": 13,
-   "questionDe": "Finde den Fehler: \"Der Universität ist groß.\"",
-   "questionEn": "Find the error: \"Der Universität ist groß.\"",
-   "options": [
-    "Der → Die",
-    "groß → große",
-    "No error",
-    "ist → sind"
-   ],
-   "answer": "Der → Die",
-   "accepted": [],
-   "explanationDe": "Endung -tät bedeutet feminin, also \"die Universität\".",
-   "hint": null
-  },
-  {
-   "id": "95bf8a7a-994f-46cc-bae3-e0aa3417c7c7",
-   "topic": "nouns-gender",
-   "type": "multiple_choice",
-   "stage": 5,
-   "difficulty": 1,
-   "order": 14,
-   "questionDe": "Finde den Fehler: \"Die Mädchen ist nett.\"",
-   "questionEn": "Find the error: \"Die Mädchen ist nett.\"",
-   "options": [
-    "Die → Das",
-    "nett → nette",
-    "No error",
-    "ist → sind"
-   ],
-   "answer": "Die → Das",
-   "accepted": [],
-   "explanationDe": "Endung -chen = neutral, also \"das Mädchen\".",
    "hint": null
   },
   {
@@ -1599,27 +1506,6 @@
    "hint": null
   },
   {
-   "id": "c7d35ca1-59f1-4b08-8b71-5df4d09765d7",
-   "topic": "personal-pronouns",
-   "type": "fill_blank",
-   "stage": 4,
-   "difficulty": 1,
-   "order": 4,
-   "questionDe": "___ lernen zusammen. (= We)",
-   "questionEn": "___ lernen zusammen.",
-   "options": [
-    "Wir",
-    "Sie",
-    "Ihr"
-   ],
-   "answer": "Wir",
-   "accepted": [
-    "Wir"
-   ],
-   "explanationDe": "wir = we.",
-   "hint": null
-  },
-  {
    "id": "28215564-f749-493a-a92c-b657a6c5be02",
    "topic": "personal-pronouns",
    "type": "fill_blank",
@@ -1659,45 +1545,6 @@
     "Es"
    ],
    "explanationDe": "Buch = neutral → es.",
-   "hint": null
-  },
-  {
-   "id": "dbabbe60-a06b-4a96-9aa3-09d66248a4c8",
-   "topic": "personal-pronouns",
-   "type": "multiple_choice",
-   "stage": 4,
-   "difficulty": 1,
-   "order": 7,
-   "questionDe": "Was bedeutet \"sie\"?",
-   "questionEn": "What does \"sie\" mean?",
-   "options": [
-    "only they",
-    "only she",
-    "formal you",
-    "she AND they"
-   ],
-   "answer": "she AND they",
-   "accepted": [],
-   "explanationDe": "sie = sie und sie. Sie (groß) = formell.",
-   "hint": null
-  },
-  {
-   "id": "9f954c38-9317-41e6-8f82-4ed9a00511a6",
-   "topic": "personal-pronouns",
-   "type": "multiple_choice",
-   "stage": 4,
-   "difficulty": 1,
-   "order": 8,
-   "questionDe": "Nicht sicher? Was benutzt du?",
-   "questionEn": "Not sure if du or Sie? What do you use?",
-   "options": [
-    "ihr — it is neutral",
-    "Sie — it is always safe",
-    "du — it is friendlier"
-   ],
-   "answer": "Sie — it is always safe",
-   "accepted": [],
-   "explanationDe": "Im Zweifel: Sie.",
    "hint": null
   },
   {
@@ -1959,26 +1806,6 @@
    "hint": null
   },
   {
-   "id": "fbf09b8d-ea92-56fa-b89d-870d2ddfda54",
-   "topic": "possessive-articles",
-   "type": "multiple_choice",
-   "stage": 4,
-   "difficulty": 2,
-   "order": 6,
-   "questionDe": "Wie heißt ___ Mutter? (ihr, Plural = you all)",
-   "questionEn": "What is your (you-all) mother's name? (owner: ihr, plural you)",
-   "options": [
-    "eure",
-    "euere",
-    "unsere",
-    "ihre"
-   ],
-   "answer": "eure",
-   "accepted": [],
-   "explanationDe": "euer verliert das e vor einer Endung: eure, nicht euere.",
-   "hint": null
-  },
-  {
    "id": "3350c4ae-d08b-5a28-8e66-3cb273f39b5e",
    "topic": "possessive-articles",
    "type": "fill_blank",
@@ -2070,23 +1897,6 @@
    "answer": "seine Schwester",
    "accepted": [],
    "explanationDe": "Schwester ist feminin → die Endung -e ist nötig: seine, auch wenn der Besitzer männlich ist.",
-   "hint": null
-  },
-  {
-   "id": "5873db19-6dab-5743-90a8-96231f8fa992",
-   "topic": "possessive-articles",
-   "type": "fill_blank",
-   "stage": 4,
-   "difficulty": 2,
-   "order": 12,
-   "questionDe": "Wie heißt ___ Lehrerin? (ihr, Plural = you all)",
-   "questionEn": "What is your (you-all) teacher's name? (owner: ihr, plural you)",
-   "options": null,
-   "answer": "eure",
-   "accepted": [
-    "eure"
-   ],
-   "explanationDe": "Lehrerin ist feminin → euer + e, aber das e fällt weg → eure.",
    "hint": null
   },
   {
@@ -2249,23 +2059,6 @@
    "hint": null
   },
   {
-   "id": "91c0eb68-580f-5688-97e2-7d8ec3fac6f9",
-   "topic": "possessive-articles",
-   "type": "fill_blank",
-   "stage": 5,
-   "difficulty": 2,
-   "order": 9,
-   "questionDe": "Wie heißt ___ Bruder? (ihr, Plural = you all)",
-   "questionEn": "What is your (you-all) brother's name? (owner: ihr, plural you)",
-   "options": null,
-   "answer": "euer",
-   "accepted": [
-    "euer"
-   ],
-   "explanationDe": "Bruder ist maskulin → euer, keine Endung (kein e fällt hier weg).",
-   "hint": null
-  },
-  {
    "id": "10b25f5c-723f-58dc-b4fb-6a5b5826e352",
    "topic": "possessive-articles",
    "type": "multiple_choice",
@@ -2283,26 +2076,6 @@
    "answer": "Ihr",
    "accepted": [],
    "explanationDe": "Name ist maskulin → Ihr, der Possessivartikel für Sie, ohne Endung. Ihre bräuchte ein feminines oder Plural-Nomen; sein und euer gehören zu anderen Besitzern.",
-   "hint": null
-  },
-  {
-   "id": "48df1e8d-2503-5a15-a985-e479c9f73dea",
-   "topic": "possessive-articles",
-   "type": "multiple_choice",
-   "stage": 5,
-   "difficulty": 2,
-   "order": 11,
-   "questionDe": "Wie sagt man 'my key' auf Deutsch? (Schlüssel = der-Wort)",
-   "questionEn": "How do you say 'my key' in German? (Schlüssel is masculine)",
-   "options": [
-    "mein Schlüssel",
-    "meine Schlüssel",
-    "sein Schlüssel",
-    "meinen Schlüssel"
-   ],
-   "answer": "mein Schlüssel",
-   "accepted": [],
-   "explanationDe": "Schlüssel ist maskulin, Nominativ → mein, keine Endung.",
    "hint": null
   },
   {
@@ -2450,28 +2223,6 @@
    "hint": null
   },
   {
-   "id": "73cff6a6-4302-41ff-b95d-0969455a16c9",
-   "topic": "present-tense-regular",
-   "type": "fill_blank",
-   "stage": 4,
-   "difficulty": 1,
-   "order": 6,
-   "questionDe": "Sie ___ ein Buch. (she)",
-   "questionEn": "Sie ___ ein Buch. (kaufen)",
-   "options": [
-    "kauft",
-    "kaufe",
-    "kaufst",
-    "kaufen"
-   ],
-   "answer": "kauft",
-   "accepted": [
-    "kauft"
-   ],
-   "explanationDe": "sie + -t.",
-   "hint": null
-  },
-  {
    "id": "85084f27-567e-414e-9725-0b46aee3b6c4",
    "topic": "present-tense-regular",
    "type": "fill_blank",
@@ -2491,25 +2242,6 @@
     "spielt"
    ],
    "explanationDe": "ihr + -t.",
-   "hint": null
-  },
-  {
-   "id": "86aa9506-dacc-48b4-a789-27deff8d1d43",
-   "topic": "present-tense-regular",
-   "type": "multiple_choice",
-   "stage": 4,
-   "difficulty": 1,
-   "order": 8,
-   "questionDe": "Was sind die 3 Schritte?",
-   "questionEn": "What are the 3 steps to conjugate?",
-   "options": [
-    "Infinitive → add -en → remove ending",
-    "Stem → add -en → remove ending",
-    "Infinitive → remove -en → add ending"
-   ],
-   "answer": "Infinitive → remove -en → add ending",
-   "accepted": [],
-   "explanationDe": "Infinitiv → -en entfernen → Endung.",
    "hint": null
   },
   {
@@ -3805,26 +3537,6 @@
    "hint": null
   },
   {
-   "id": "69b3af5c-84e9-4611-8353-af47f7dbb36f",
-   "topic": "verb-haben",
-   "type": "multiple_choice",
-   "stage": 4,
-   "difficulty": 1,
-   "order": 6,
-   "questionDe": "Wie sagt man \"I am hungry\"?",
-   "questionEn": "How do you say \"I am hungry\" in German?",
-   "options": [
-    "Ich bin hungrig.",
-    "Ich hat Hunger.",
-    "Ich bin Hunger.",
-    "Ich habe Hunger."
-   ],
-   "answer": "Ich habe Hunger.",
-   "accepted": [],
-   "explanationDe": "Ich habe Hunger.",
-   "hint": null
-  },
-  {
    "id": "75a1cec4-0090-4675-852f-abb4d51dabb1",
    "topic": "verb-haben",
    "type": "fill_blank",
@@ -4523,26 +4235,6 @@
     "Kochst"
    ],
    "explanationDe": "Aussage: Du kochst gern. Frage: Kochst du gern?",
-   "hint": null
-  },
-  {
-   "id": "872eba88-86e3-5604-93df-55f05e18427a",
-   "topic": "yes-no-questions",
-   "type": "multiple_choice",
-   "stage": 4,
-   "difficulty": 1,
-   "order": 10,
-   "questionDe": "Wie fragt man auf Deutsch: 'Do you have a question?'",
-   "questionEn": "How do you say 'Do you have a question?' in German?",
-   "options": [
-    "Hast du eine Frage?",
-    "Du hast eine Frage?",
-    "Hast eine Frage du?",
-    "Habe du eine Frage?"
-   ],
-   "answer": "Hast du eine Frage?",
-   "accepted": [],
-   "explanationDe": "haben: du → hast, an Position 1: Hast du eine Frage?",
    "hint": null
   },
   {
