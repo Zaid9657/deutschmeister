@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Check, AlertTriangle, X, Sparkles } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
+import ExplainAnswer from './ExplainAnswer.jsx';
 import { checkAnswer, tagError, RESULT, STRICT_TOPIC } from '../../lib/lesson/check.js';
 import { isTypedItem } from '../../lib/lesson/buildLesson.js';
 
@@ -53,8 +54,13 @@ export function ItemFeedback({ result, expected, explanation, onExplain }) {
  *
  * `onResult(item, { result, correct, errorTag })` fires ONCE per item, on the
  * first submit: that is the response the accuracy figure counts.
+ *
+ * After a miss, "Erklär mir das" mounts <ExplainAnswer>, which calls
+ * netlify/functions/explain-answer. `level` and `lektionId` are optional and only
+ * label the attempt row the function writes — pass them from the player when
+ * available; the function falls back to the level default.
  */
-export default function PracticeItem({ item, index, total, onResult, onNext }) {
+export default function PracticeItem({ item, index, total, onResult, onNext, level, lektionId }) {
   const [value, setValue] = useState('');
   const [picked, setPicked] = useState(null);
   const [state, setState] = useState(null);
@@ -144,10 +150,13 @@ export default function PracticeItem({ item, index, total, onResult, onNext }) {
           onExplain={state && state.result !== RESULT.CORRECT ? () => setExplain(true) : null}
         />
         {explain && (
-          <p className="mt-3 rounded-clay bg-paper-sunk p-3 text-[0.875rem] leading-relaxed text-graphite">
-            Die ausführliche KI-Erklärung kommt in einer der nächsten Versionen. Bis dahin: die Regel steht
-            auf der Grammatikkarte dieser Lektion.
-          </p>
+          <ExplainAnswer
+            item={item}
+            expected={state && state.expected}
+            userAnswer={answer}
+            level={level}
+            lektionId={lektionId}
+          />
         )}
       </Card>
 

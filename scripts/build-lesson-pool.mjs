@@ -15,7 +15,19 @@
 //      rules live in src/data/lessonPools/quality.js so the engine and the tests
 //      can apply the same ones; this script prints what it dropped and why.
 //
-//   2. ALPHABET SUPPLEMENT (a1.1 only). Filtering leaves the topic
+//   2. HAND-AUTHORED EXTRA ITEMS. src/data/lessonPools/<level>.extra.json holds
+//      the situational items the legacy bank simply does not have — the review
+//      measured Lektion 10 (Bahnhof) drawing ZERO items that mention a word from
+//      its own Wortfeld, and Lektion 12 (Fest) two. They are merged here and run
+//      through the SAME quality rules; a failing extra item stops the build
+//      rather than shipping, because nothing else would ever look at that file.
+//
+//   3. RULE CARDS. netlify/functions/_shared/ruleCards.mjs is generated from the
+//      same cache: topic slug → the grammar rule text that grounds
+//      netlify/functions/explain-answer.mjs. Generated here so the card the model
+//      is grounded in and the pool the item comes from can never drift apart.
+//
+//   4. ALPHABET SUPPLEMENT (a1.1 only). Filtering leaves the topic
 //      `alphabet-pronunciation` EMPTY — all 15 of its bank items were English
 //      sound questions or respellings, and that topic is the whole of Lektion 1,
 //      the free lesson. So the buchstabieren items are generated here from the
@@ -24,9 +36,9 @@
 //      and a spelling multiple choice — German prompt, German answer, words the
 //      learner met in the dialogue. The curriculum module is read ONLY; re-run
 //      this script after its Wortfeld changes, or the supplement drifts.
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { filterPool, REASONS, isUsableItem } from '../src/data/lessonPools/quality.js';
+import { filterPool, REASONS, isUsableItem, exclusionReason } from '../src/data/lessonPools/quality.js';
 
 const level = (process.argv[2] || 'a1.1').toLowerCase();
 const cache = JSON.parse(readFileSync(new URL('../grammar-content-cache.json', import.meta.url), 'utf8'));
@@ -215,7 +227,143 @@ if (level === 'a1.1') {
   }
 }
 
-const items = [...kept, ...supplement].sort(
+// ── the rule cards for netlify/functions/_shared/ruleCards.mjs ──────────────
+//
+// One card per topic of THIS level: the German-facing text of the topic's first
+// real rule (the `introduction` at order_index -1 is a marketing hook, not a
+// rule) plus its common mistakes. `explain-answer.mjs` puts the card in the
+// system prompt so the model explains the course's own rule rather than an
+// invented one. Generated, never hand-edited — the whole point is that the card
+// and the item come out of the same cache in the same run.
+const RULE_CARDS_TARGET = new URL('../netlify/functions/_shared/ruleCards.mjs', import.meta.url);
+const CARD_MAX_CHARS = 1200;
+
+/** German first: a card is grounding for a German answer, not a translation. */
+const germanFirst = (obj, ...keys) => {
+  for (const k of keys) if (typeof obj[k] === 'string' && obj[k].trim()) return obj[k].trim();
+  return '';
+};
+
+/** The rule's content object → plain text. Tables become one row per line. */
+function flattenContent(content) {
+  if (!content || typeof content !== 'object') return String(content || '').trim();
+  const parts = [];
+  const push = (v) => { if (typeof v === 'string' && v.trim()) parts.push(v.trim()); };
+  push(germanFirst(content, 'description_de', 'content_de', 'description_en', 'content_en', 'intro_en'));
+  if (Array.isArray(content.headers) && Array.isArray(content.rows)) {
+    push(content.headers.join(' | '));
+    for (const row of content.rows) push(Array.isArray(row) ? row.join(' | ') : String(row));
+  }
+  for (const step of content.steps || []) {
+    push(typeof step === 'string' ? step : germanFirst(step, 'text_de', 'title_de', 'text_en', 'title_en'));
+  }
+  for (const group of content.groups || []) {
+    push(typeof group === 'string' ? group : [group.title_de || group.title_en, (group.items || []).join(', ')].filter(Boolean).join(': '));
+  }
+  for (const point of content.points || []) push(typeof point === 'string' ? point : germanFirst(point, 'text_de', 'text_en'));
+  for (const para of content.paragraphs_en || []) push(para);
+  return parts.join('\n').slice(0, CARD_MAX_CHARS);
+}
+
+/** [{ wrong, correct, explanationDe }] — at most three, the ones a card can carry. */
+function mistakesFor(rules) {
+  for (const r of rules) {
+    if (!Array.isArray(r.common_mistakes) || !r.common_mistakes.length) continue;
+    return r.common_mistakes.slice(0, 3).map((m) => ({
+      wrong: String(m.wrong || ''),
+      correct: String(m.correct || ''),
+      explanationDe: String(m.explanation_de || m.explanation_en || ''),
+    }));
+  }
+  return [];
+}
+
+function writeRuleCards() {
+  const cards = {};
+  for (const topic of [...topics].sort((a, b) => a.slug.localeCompare(b.slug))) {
+    const rules = (cache.rules || [])
+      .filter((r) => r.topic_id === topic.id)
+      .sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
+    // Which rule grounds the card: a table of the actual forms beats prose, and
+    // German prose beats the English explainer — the answer is written in German
+    // for an A1 learner, so English-only grounding is the weakest option.
+    const real = rules.filter((r) => (r.order_index ?? 0) >= 0 && flattenContent(r.content).length >= 40);
+    const rank = (r) => {
+      const c = r.content || {};
+      const german = Boolean(c.description_de || c.content_de);
+      const table = Array.isArray(c.rows) && c.rows.length;
+      if (german && table) return 0;
+      if (table) return 1;
+      if (german) return 2;
+      return 3;
+    };
+    const chosen = [...real].sort((a, b) => rank(a) - rank(b) || (a.order_index ?? 0) - (b.order_index ?? 0))[0] || rules[0];
+    if (!chosen) continue;
+    cards[topic.slug] = {
+      titleDe: chosen.title_de || topic.title_de || topic.slug,
+      content: flattenContent(chosen.content),
+      commonMistakes: mistakesFor(rules),
+    };
+  }
+  const header = [
+    '// GENERATED by scripts/build-lesson-pool.mjs — do not edit by hand.',
+    `// Source: grammar-content-cache.json (dumpedAt ${cache.dumpedAt}), sub_level ${level.toUpperCase()}.`,
+    '// One card per grammar topic: the course\'s own rule text, used by',
+    '// netlify/functions/explain-answer.mjs to ground the "Erklär mir das" answer.',
+    '// Re-run `node scripts/build-lesson-pool.mjs a1.1` after refreshing the cache.',
+    '',
+    `export const RULE_CARDS = ${JSON.stringify(cards, null, 2)};`,
+    '',
+    '/** The card for a topic slug, or null when the topic has none. */',
+    'export function ruleCard(slug) {',
+    '  return RULE_CARDS[String(slug || \'\').toLowerCase()] || null;',
+    '}',
+    '',
+    '/** The card as the plain text block the prompt carries. */',
+    'export function ruleCardText(slug) {',
+    '  const card = ruleCard(slug);',
+    '  if (!card) return \'\';',
+    '  const mistakes = (card.commonMistakes || [])',
+    '    .map((m) => `Falsch: ${m.wrong} — Richtig: ${m.correct}. ${m.explanationDe}`)',
+    '    .join(\'\\n\');',
+    '  return [`Regel: ${card.titleDe}`, card.content, mistakes].filter(Boolean).join(\'\\n\');',
+    '}',
+    '',
+  ].join('\n');
+  writeFileSync(RULE_CARDS_TARGET, header);
+  console.log(`→ ${RULE_CARDS_TARGET.pathname} (${Object.keys(cards).length} rule cards)`);
+}
+
+// ── the hand-authored extra items ───────────────────────────────────────────
+const extraUrl = new URL(`../src/data/lessonPools/${level.replace('.', '')}.extra.json`, import.meta.url);
+let extra = [];
+if (existsSync(extraUrl)) {
+  const parsed = JSON.parse(readFileSync(extraUrl, 'utf8'));
+  extra = Array.isArray(parsed) ? parsed : parsed.items || [];
+  // The same rules as the bank, applied to hand-written items on purpose: the
+  // point of the filter is that NO item reaches a learner unchecked.
+  const failing = extra.map((it) => [it, exclusionReason(it)]).filter(([, r]) => r);
+  if (failing.length) {
+    console.error(`${extraUrl.pathname}: ${failing.length} item(s) fail the quality rules:`);
+    for (const [it, reason] of failing) console.error(`  ${it.id}  ${reason}`);
+    process.exit(1);
+  }
+  const clash = extra.filter((it) => kept.some((k) => k.id === it.id));
+  if (clash.length) {
+    console.error(`${extraUrl.pathname}: id already in the cache: ${clash.map((c) => c.id).join(', ')}`);
+    process.exit(1);
+  }
+  const dupes = extra.map((it) => it.id).filter((id, i, all) => all.indexOf(id) !== i);
+  if (dupes.length) {
+    console.error(`${extraUrl.pathname}: duplicate ids: ${[...new Set(dupes)].join(', ')}`);
+    process.exit(1);
+  }
+}
+
+// ── the rule cards the explain-answer function is grounded in ────────────────
+writeRuleCards();
+
+const items = [...kept, ...supplement, ...extra].sort(
   (a, b) => a.topic.localeCompare(b.topic) || a.stage - b.stage || a.order - b.order,
 );
 
@@ -225,7 +373,7 @@ writeFileSync(target, JSON.stringify(out, null, 1) + '\n');
 
 // ── what got dropped, and what the topics look like afterwards ───────────────
 const byReason = Object.entries(counts).filter(([, n]) => n > 0);
-console.log(`${level}: ${raw.length} in cache → ${kept.length} kept + ${supplement.length} generated = ${items.length}`);
+console.log(`${level}: ${raw.length} in cache → ${kept.length} kept + ${supplement.length} generated + ${extra.length} hand-authored = ${items.length}`);
 console.log(`excluded ${excluded.length}:`);
 for (const reason of REASONS) {
   const n = counts[reason] || 0;
