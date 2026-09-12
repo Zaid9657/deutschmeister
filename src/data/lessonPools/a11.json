@@ -1,0 +1,4842 @@
+{
+ "level": "a1.1",
+ "builtFrom": "2026-08-24",
+ "count": 262,
+ "items": [
+  {
+   "id": "202b1660-d6de-4bae-a562-0e0b7fe3961d",
+   "topic": "alphabet-pronunciation",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 1,
+   "questionDe": "Wie klingt das deutsche W?",
+   "questionEn": "How does the German W sound?",
+   "options": [
+    "Like English F",
+    "Like English V",
+    "Like English U",
+    "Like English W"
+   ],
+   "answer": "Like English V",
+   "accepted": [],
+   "explanationDe": "Deutsches W = Englisches V.",
+   "hint": null
+  },
+  {
+   "id": "f5082228-b85f-4194-aecc-cc15756bb9e4",
+   "topic": "alphabet-pronunciation",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 2,
+   "questionDe": "Welchen Laut macht Z?",
+   "questionEn": "What sound does Z make in German?",
+   "options": [
+    "SH (like in she)",
+    "S (like in sun)",
+    "TS (like in cats)",
+    "Z (like in zoo)"
+   ],
+   "answer": "TS (like in cats)",
+   "accepted": [],
+   "explanationDe": "Z = TS.",
+   "hint": null
+  },
+  {
+   "id": "18fc5f54-b2dc-4f94-98a1-c2d1f8b9fe67",
+   "topic": "alphabet-pronunciation",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 3,
+   "questionDe": "Wie klingt \"ei\" in \"mein\"?",
+   "questionEn": "How do you say \"ei\" in \"mein\"?",
+   "options": [
+    "Like AY",
+    "Like OY",
+    "Like EYE",
+    "Like EE"
+   ],
+   "answer": "Like EYE",
+   "accepted": [],
+   "explanationDe": "ei = ei-Laut.",
+   "hint": null
+  },
+  {
+   "id": "2ecc19de-5c44-45fe-977c-654e4f0c0a63",
+   "topic": "alphabet-pronunciation",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 4,
+   "questionDe": "Wie klingt \"ie\" in \"die\"?",
+   "questionEn": "How do you say \"ie\" in \"die\"?",
+   "options": [
+    "Like AY",
+    "Like EYE",
+    "Like EE",
+    "Like OY"
+   ],
+   "answer": "Like EE",
+   "accepted": [],
+   "explanationDe": "ie = langes i.",
+   "hint": null
+  },
+  {
+   "id": "0f5c2a5f-fd21-43d7-b7b1-32f12e0a4518",
+   "topic": "alphabet-pronunciation",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 5,
+   "questionDe": "Wie klingt \"sch\"?",
+   "questionEn": "What does \"sch\" sound like?",
+   "options": [
+    "CH (like church)",
+    "SH (like she)",
+    "S (like sun)",
+    "SK (like skip)"
+   ],
+   "answer": "SH (like she)",
+   "accepted": [],
+   "explanationDe": "sch = SCH.",
+   "hint": null
+  },
+  {
+   "id": "9dc221cb-e74f-4c2f-bcc7-a06e80ee72d5",
+   "topic": "alphabet-pronunciation",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 6,
+   "questionDe": "Was ist der Unterschied?",
+   "questionEn": "What is the difference between \"schon\" and \"schön\"?",
+   "options": [
+    "schon = fast, schön = slow",
+    "schon = beautiful, schön = already",
+    "Same meaning",
+    "schon = already, schön = beautiful"
+   ],
+   "answer": "schon = already, schön = beautiful",
+   "accepted": [],
+   "explanationDe": "Der Umlaut ändert die Bedeutung!",
+   "hint": null
+  },
+  {
+   "id": "c8b3921c-9341-4e96-94a8-b1c975712366",
+   "topic": "alphabet-pronunciation",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 7,
+   "questionDe": "Wie klingt \"sp\" am Wortanfang?",
+   "questionEn": "How does \"sp\" sound at the start of a word?",
+   "options": [
+    "SP (like English)",
+    "SHP",
+    "ZP",
+    "SH"
+   ],
+   "answer": "SHP",
+   "accepted": [],
+   "explanationDe": "sp am Anfang = SCHP.",
+   "hint": null
+  },
+  {
+   "id": "8cdb1026-03d3-56ae-a3b7-a18c487f7e33",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 8,
+   "questionDe": "Es klingt wie \"Vasser\". Schreib das Wort: ___",
+   "questionEn": "It sounds like ‘Vasser’. Write the word. (W sounds like V)",
+   "options": null,
+   "answer": "Wasser",
+   "accepted": [
+    "Wasser"
+   ],
+   "explanationDe": "Deutsches W klingt wie englisches V, deshalb schreibt man Wasser.",
+   "hint": null
+  },
+  {
+   "id": "6a53567a-8df7-5d07-95d1-fe0629a40cb2",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 9,
+   "questionDe": "Es klingt wie \"Tsehn\". Schreib das Wort: ___",
+   "questionEn": "It sounds like ‘Tsehn’. Write the word. (Z sounds like TS)",
+   "options": null,
+   "answer": "zehn",
+   "accepted": [
+    "zehn"
+   ],
+   "explanationDe": "Deutsches Z klingt wie TS, deshalb schreibt man zehn.",
+   "hint": null
+  },
+  {
+   "id": "38003760-3362-5fbc-a689-b3b6ed2856b6",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 10,
+   "questionDe": "Es klingt wie \"SHoo-leh\". Schreib das Wort: ___",
+   "questionEn": "It sounds like ‘SHoo-leh’. Write the word. (sch sounds like SH)",
+   "options": null,
+   "answer": "Schule",
+   "accepted": [
+    "Schule"
+   ],
+   "explanationDe": "Die Buchstaben sch klingen wie SH, deshalb schreibt man Schule.",
+   "hint": null
+  },
+  {
+   "id": "28d37c84-aca4-5873-b90d-179deb41c1b9",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 3,
+   "order": 11,
+   "questionDe": "Es klingt wie \"SHTRAH-suh\". Schreib das Wort: ___",
+   "questionEn": "It sounds like ‘SHTRAH-suh’. Write the word. (st at the start sounds like SHT)",
+   "options": null,
+   "answer": "Straße",
+   "accepted": [
+    "Straße",
+    "Strasse"
+   ],
+   "explanationDe": "St am Wortanfang klingt wie SCHT, deshalb schreibt man Straße.",
+   "hint": null
+  },
+  {
+   "id": "2c03bb2f-6452-550a-a9ec-164a0803911c",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 12,
+   "questionDe": "Es klingt wie \"HOY-tuh\". Schreib das Wort: ___",
+   "questionEn": "It sounds like ‘HOY-tuh’. Write the word. (eu sounds like OY)",
+   "options": null,
+   "answer": "heute",
+   "accepted": [
+    "heute"
+   ],
+   "explanationDe": "Die Buchstaben eu klingen wie OY, deshalb schreibt man heute.",
+   "hint": null
+  },
+  {
+   "id": "216813d5-ebc7-50c3-b212-089e4abf34a1",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 13,
+   "questionDe": "Es klingt wie \"mine\" und bedeutet \"my\". Schreib das Wort: ___",
+   "questionEn": "It sounds like the English word ‘mine’ and means ‘my’. Write the word. (ei = EYE)",
+   "options": null,
+   "answer": "mein",
+   "accepted": [
+    "mein"
+   ],
+   "explanationDe": "Deutsches ei klingt wie englisches EYE, deshalb führt \"mine\" zu mein.",
+   "hint": null
+  },
+  {
+   "id": "d33d50cb-e6f2-5c6e-b9e0-7ad6c26c20da",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 14,
+   "questionDe": "Es klingt wie \"TSvahn-tsig\". Schreib das Wort: ___",
+   "questionEn": "It sounds like ‘TSvahn-tsig’. Write the word. (Z sounds like TS, W sounds like V)",
+   "options": null,
+   "answer": "zwanzig",
+   "accepted": [
+    "zwanzig"
+   ],
+   "explanationDe": "Z klingt wie TS und W klingt wie V, deshalb ist \"TSvahn-tsig\" zwanzig.",
+   "hint": null
+  },
+  {
+   "id": "226ab627-c551-53fd-8d86-bebdb25ec4d9",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 15,
+   "questionDe": "Es sieht fast aus wie \"schön\", aber ohne Umlaut. Es bedeutet \"already\". Schreib das Wort: ___",
+   "questionEn": "It looks like ‘schön’ but has no umlaut, and it means ‘already’. Write the word.",
+   "options": null,
+   "answer": "schon",
+   "accepted": [
+    "schon"
+   ],
+   "explanationDe": "Schon (ohne Umlaut) bedeutet already; schön (mit Umlaut) bedeutet beautiful — und klingt auch anders.",
+   "hint": null
+  },
+  {
+   "id": "f2555a1b-d961-4a7f-b185-a621309d3649",
+   "topic": "definite-articles",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 1,
+   "questionDe": "___ Tisch ist braun.",
+   "questionEn": "___ table is brown.",
+   "options": [
+    "Die",
+    "Der",
+    "Das"
+   ],
+   "answer": "Der",
+   "accepted": [],
+   "explanationDe": "Tisch ist maskulin.",
+   "hint": null
+  },
+  {
+   "id": "0678b22c-9b41-43ba-8f8e-4ffa9522dc22",
+   "topic": "definite-articles",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 2,
+   "questionDe": "___ Lampe ist kaputt.",
+   "questionEn": "___ lamp is broken.",
+   "options": [
+    "Die",
+    "Der",
+    "Das"
+   ],
+   "answer": "Die",
+   "accepted": [],
+   "explanationDe": "Lampe endet auf -e und ist feminin.",
+   "hint": null
+  },
+  {
+   "id": "bf5700e7-7bab-49c2-b4b5-bfaf751233b5",
+   "topic": "definite-articles",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 3,
+   "questionDe": "___ Buch ist interessant.",
+   "questionEn": "___ book is interesting.",
+   "options": [
+    "Das",
+    "Die",
+    "Der"
+   ],
+   "answer": "Das",
+   "accepted": [],
+   "explanationDe": "Buch ist neutral.",
+   "hint": null
+  },
+  {
+   "id": "52fa3400-dcf5-4e97-bcc1-9aec2d9dafb2",
+   "topic": "definite-articles",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 4,
+   "questionDe": "___ Kinder spielen draußen.",
+   "questionEn": "___ children play outside.",
+   "options": [
+    "Die",
+    "Der",
+    "Das"
+   ],
+   "answer": "Die",
+   "accepted": [],
+   "explanationDe": "ALLE Plurale verwenden die.",
+   "hint": null
+  },
+  {
+   "id": "c68e4835-4ac3-4cc6-9372-3b67f4a09daf",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 5,
+   "questionDe": "___ Frau arbeitet hier.",
+   "questionEn": "___ woman works here.",
+   "options": [
+    "Der",
+    "Die",
+    "Das"
+   ],
+   "answer": "Die",
+   "accepted": [
+    "Die"
+   ],
+   "explanationDe": "Weibliche Personen sind feminin = die.",
+   "hint": null
+  },
+  {
+   "id": "fbc025da-31e9-44c1-9191-aab034a4e538",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 6,
+   "questionDe": "___ Mann kocht.",
+   "questionEn": "___ man cooks.",
+   "options": [
+    "Der",
+    "Die",
+    "Das"
+   ],
+   "answer": "Der",
+   "accepted": [
+    "Der"
+   ],
+   "explanationDe": "Männliche Personen sind maskulin = der.",
+   "hint": null
+  },
+  {
+   "id": "f9ac0c7f-652e-49c4-9d1b-2e7481294306",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 7,
+   "questionDe": "___ Mädchen singt.",
+   "questionEn": "___ girl sings.",
+   "options": [
+    "Der",
+    "Die",
+    "Das"
+   ],
+   "answer": "Das",
+   "accepted": [
+    "Das"
+   ],
+   "explanationDe": "Endung -chen = immer neutral!",
+   "hint": null
+  },
+  {
+   "id": "8416f0a6-cb80-40c3-9e22-c27b40875ebe",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 8,
+   "questionDe": "___ Häuser sind alt.",
+   "questionEn": "___ houses are old.",
+   "options": [
+    "Der",
+    "Die",
+    "Das"
+   ],
+   "answer": "Die",
+   "accepted": [
+    "Die"
+   ],
+   "explanationDe": "Alle Plurale = die.",
+   "hint": null
+  },
+  {
+   "id": "fb0e65aa-bd56-40d6-a87c-a9388a1c795f",
+   "topic": "definite-articles",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 9,
+   "questionDe": "Was ist der Artikel für Pluralnomen?",
+   "questionEn": "What is the article for plural nouns?",
+   "options": [
+    "die",
+    "It depends on gender",
+    "das",
+    "der"
+   ],
+   "answer": "die",
+   "accepted": [],
+   "explanationDe": "ALLE Plurale verwenden die.",
+   "hint": null
+  },
+  {
+   "id": "f5b9b89d-a939-4999-b381-d5cc235cd4ab",
+   "topic": "definite-articles",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 10,
+   "questionDe": "Welches Wort verwendet \"das\"?",
+   "questionEn": "Which word uses \"das\"?",
+   "options": [
+    "Mann",
+    "Kind",
+    "Lampe",
+    "Frau"
+   ],
+   "answer": "Kind",
+   "accepted": [],
+   "explanationDe": "das Kind — junge Menschen sind oft neutral.",
+   "hint": null
+  },
+  {
+   "id": "e0ac0425-9aea-44f8-8354-7c41cfbcb0d3",
+   "topic": "definite-articles",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 11,
+   "questionDe": "der Stuhl → ___ Stühle (Plural)",
+   "questionEn": "der Stuhl → ___ Stühle (Plural)",
+   "options": [
+    "der",
+    "das",
+    "die"
+   ],
+   "answer": "die",
+   "accepted": [],
+   "explanationDe": "Maskulin Singular → die im Plural.",
+   "hint": null
+  },
+  {
+   "id": "be8069b8-e189-4fa9-9888-c78e2d51736f",
+   "topic": "definite-articles",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 12,
+   "questionDe": "das Auto → ___ Autos (Plural)",
+   "questionEn": "das Auto → ___ Autos (Plural)",
+   "options": [
+    "die",
+    "der",
+    "das"
+   ],
+   "answer": "die",
+   "accepted": [],
+   "explanationDe": "Neutral Singular → die im Plural.",
+   "hint": null
+  },
+  {
+   "id": "7b20214e-1cb3-44e6-a885-5fd75c0c3f34",
+   "topic": "definite-articles",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 13,
+   "questionDe": "Finde den Fehler: \"Das Frau ist nett.\"",
+   "questionEn": "Find the error: \"Das Frau ist nett.\"",
+   "options": [
+    "Das → Die",
+    "ist → sind",
+    "Das → Der",
+    "No error"
+   ],
+   "answer": "Das → Die",
+   "accepted": [],
+   "explanationDe": "Frau ist feminin, also braucht es die.",
+   "hint": null
+  },
+  {
+   "id": "c1183867-955d-488a-a815-cca89386ea5b",
+   "topic": "definite-articles",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 14,
+   "questionDe": "Finde den Fehler: \"Der Bücher sind teuer.\"",
+   "questionEn": "Find the error: \"Der Bücher sind teuer.\"",
+   "options": [
+    "No error",
+    "teuer → teure",
+    "sind → ist",
+    "Der → Die"
+   ],
+   "answer": "Der → Die",
+   "accepted": [],
+   "explanationDe": "Pluralnomen verwenden IMMER die.",
+   "hint": null
+  },
+  {
+   "id": "8d425a60-78be-48a7-99ef-d58d0beaa021",
+   "topic": "definite-articles",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 15,
+   "questionDe": "Finde den Fehler: \"Die Mädchen ist klein.\"",
+   "questionEn": "Find the error: \"Die Mädchen ist klein.\"",
+   "options": [
+    "klein → kleine",
+    "No error",
+    "ist → sind",
+    "Die → Das"
+   ],
+   "answer": "Die → Das",
+   "accepted": [],
+   "explanationDe": "Endung -chen = neutral. Es muss das Mädchen sein.",
+   "hint": null
+  },
+  {
+   "id": "88087bc2-73f6-5e32-a234-6674fcfff68e",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 16,
+   "questionDe": "___ Auto ist alt.",
+   "questionEn": "The ___ (car) is old.",
+   "options": null,
+   "answer": "Das",
+   "accepted": [
+    "Das"
+   ],
+   "explanationDe": "Auto ist neutral, deshalb das.",
+   "hint": null
+  },
+  {
+   "id": "4eb28ead-6ff5-5a29-b891-4d9e443ffa58",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 17,
+   "questionDe": "___ Wohnung ist ruhig.",
+   "questionEn": "The ___ (apartment) is quiet.",
+   "options": null,
+   "answer": "Die",
+   "accepted": [
+    "Die"
+   ],
+   "explanationDe": "Wohnung ist feminin, deshalb die.",
+   "hint": null
+  },
+  {
+   "id": "cc7a95cf-00d3-524f-97e6-c317d907a5af",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 18,
+   "questionDe": "___ Lehrerin erklärt gut.",
+   "questionEn": "The ___ (teacher, female) explains well.",
+   "options": null,
+   "answer": "Die",
+   "accepted": [
+    "Die"
+   ],
+   "explanationDe": "Lehrerin ist feminin, deshalb die.",
+   "hint": null
+  },
+  {
+   "id": "78558634-0656-5dd3-ac08-f315def42a42",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 19,
+   "questionDe": "___ Fenster ist offen.",
+   "questionEn": "The ___ (window) is open.",
+   "options": null,
+   "answer": "Das",
+   "accepted": [
+    "Das"
+   ],
+   "explanationDe": "Fenster ist neutral, deshalb das.",
+   "hint": null
+  },
+  {
+   "id": "75d808cc-c866-58a7-947f-bd8be38af814",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 20,
+   "questionDe": "___ Katzen schlafen.",
+   "questionEn": "The ___ (cats, plural) sleep.",
+   "options": null,
+   "answer": "Die",
+   "accepted": [
+    "Die"
+   ],
+   "explanationDe": "Alle Pluralnomen nehmen die, egal welches Genus im Singular.",
+   "hint": null
+  },
+  {
+   "id": "1beeb08a-c03e-5ab8-8969-b3aec12ef2e5",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 21,
+   "questionDe": "___ Computer ist neu.",
+   "questionEn": "The ___ (computer) is new.",
+   "options": null,
+   "answer": "Der",
+   "accepted": [
+    "Der"
+   ],
+   "explanationDe": "Computer ist maskulin, deshalb der.",
+   "hint": null
+  },
+  {
+   "id": "2140796b-e5a8-5cb7-bc16-4fe85073fa93",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 22,
+   "questionDe": "___ Stühle sind bequem.",
+   "questionEn": "The ___ (chairs, plural of der Stuhl) are comfortable.",
+   "options": null,
+   "answer": "Die",
+   "accepted": [
+    "Die"
+   ],
+   "explanationDe": "Obwohl der Stuhl im Singular maskulin ist, nimmt der Plural die.",
+   "hint": null
+  },
+  {
+   "id": "cd6d471e-cd91-5863-b5db-eeb2cbce2f2e",
+   "topic": "definite-articles",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 23,
+   "questionDe": "Schreib den Satz: [Schrank / ist / neu]",
+   "questionEn": "Write the sentence: [the wardrobe / is / new]",
+   "options": null,
+   "answer": "Der Schrank ist neu.",
+   "accepted": [
+    "Der Schrank ist neu.",
+    "Der Schrank ist neu"
+   ],
+   "explanationDe": "Schrank ist maskulin, deshalb der Artikel der.",
+   "hint": null
+  },
+  {
+   "id": "670eaadb-ca17-52d3-a62b-220ef80b8828",
+   "topic": "definite-articles",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 24,
+   "questionDe": "Schreib den Satz: [Blume / ist / schön]",
+   "questionEn": "Write the sentence: [the flower / is / beautiful]",
+   "options": null,
+   "answer": "Die Blume ist schön.",
+   "accepted": [
+    "Die Blume ist schön.",
+    "Die Blume ist schön"
+   ],
+   "explanationDe": "Blume ist feminin, deshalb der Artikel die.",
+   "hint": null
+  },
+  {
+   "id": "86bc977f-724f-5b45-9330-a543a9d1bec6",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 25,
+   "questionDe": "___ Hund ist klein.",
+   "questionEn": "The ___ (dog) is small.",
+   "options": null,
+   "answer": "Der",
+   "accepted": [
+    "Der"
+   ],
+   "explanationDe": "Hund ist maskulin, deshalb der.",
+   "hint": null
+  },
+  {
+   "id": "1ce4f35f-6067-4fdf-a16b-689bb598fd67",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 1,
+   "questionDe": "Das ist ___ Stuhl.",
+   "questionEn": "Das ist ___ Stuhl.",
+   "options": [
+    "ein",
+    "eine",
+    "das"
+   ],
+   "answer": "ein",
+   "accepted": [
+    "ein"
+   ],
+   "explanationDe": "Stuhl = maskulin → ein.",
+   "hint": null
+  },
+  {
+   "id": "404c4a60-3448-46bf-99ed-3405eda0bd0f",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 2,
+   "questionDe": "Ich habe ___ Schwester.",
+   "questionEn": "Ich habe ___ Schwester.",
+   "options": [
+    "eine",
+    "ein",
+    "einer"
+   ],
+   "answer": "eine",
+   "accepted": [
+    "eine"
+   ],
+   "explanationDe": "Schwester = feminin → eine.",
+   "hint": null
+  },
+  {
+   "id": "5d184615-c23d-44f3-96f4-275878ca8109",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 3,
+   "questionDe": "Das ist ___ Bild.",
+   "questionEn": "Das ist ___ Bild.",
+   "options": [
+    "ein",
+    "eine",
+    "der"
+   ],
+   "answer": "ein",
+   "accepted": [
+    "ein"
+   ],
+   "explanationDe": "Bild = neutral → ein.",
+   "hint": null
+  },
+  {
+   "id": "ee6118f0-a72e-4434-9d28-4f30ffdc242b",
+   "topic": "indefinite-articles",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 4,
+   "questionDe": "Wie sagt man das?",
+   "questionEn": "How do you say \"I am a teacher\"?",
+   "options": [
+    "Ich bin Lehrer.",
+    "Ich bin der Lehrer.",
+    "Ich bin ein Lehrer."
+   ],
+   "answer": "Ich bin Lehrer.",
+   "accepted": [],
+   "explanationDe": "Kein Artikel für Berufe!",
+   "hint": null
+  },
+  {
+   "id": "674e53bb-7bda-4dd2-a8d4-39d5da916fd1",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 5,
+   "questionDe": "Ich habe ___ Idee!",
+   "questionEn": "Ich habe ___ Idee!",
+   "options": [
+    "eine",
+    "ein",
+    "die"
+   ],
+   "answer": "eine",
+   "accepted": [
+    "eine"
+   ],
+   "explanationDe": "Idee = feminin → eine.",
+   "hint": null
+  },
+  {
+   "id": "51c0db3b-9a30-4ccb-8c6c-d1361eec51da",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 6,
+   "questionDe": "Er hat ___ Auto.",
+   "questionEn": "Er hat ___ Auto.",
+   "options": [
+    "ein",
+    "eine",
+    "einen"
+   ],
+   "answer": "ein",
+   "accepted": [
+    "ein"
+   ],
+   "explanationDe": "Auto = neutral → ein.",
+   "hint": null
+  },
+  {
+   "id": "e0b9e131-b35c-4562-a240-9b4e1e6ea3dc",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 7,
+   "questionDe": "Ich habe ___ Zeit.",
+   "questionEn": "Ich habe ___ Zeit. (negation)",
+   "options": [
+    "keine",
+    "kein",
+    "nicht"
+   ],
+   "answer": "keine",
+   "accepted": [
+    "keine"
+   ],
+   "explanationDe": "Zeit = feminin → keine.",
+   "hint": null
+  },
+  {
+   "id": "f8740ad4-5bc3-4b2b-872e-7e717113c48b",
+   "topic": "indefinite-articles",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 8,
+   "questionDe": "Warum kein Artikel?",
+   "questionEn": "Why no article in \"Ich sehe Bücher\"?",
+   "options": [
+    "You forgot it",
+    "Bücher is neuter",
+    "No plural form of ein/eine"
+   ],
+   "answer": "No plural form of ein/eine",
+   "accepted": [],
+   "explanationDe": "Kein Plural für ein/eine.",
+   "hint": null
+  },
+  {
+   "id": "05649f0e-7308-50dd-8593-ac61018ef7e2",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 9,
+   "questionDe": "Das ist ___ Fenster.",
+   "questionEn": "That is ___ window. (ein/eine)",
+   "options": null,
+   "answer": "ein",
+   "accepted": [
+    "ein"
+   ],
+   "explanationDe": "Fenster ist neutral, deshalb ein.",
+   "hint": null
+  },
+  {
+   "id": "bb5c0422-921b-5e81-86fc-aa36c456ae8a",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 10,
+   "questionDe": "Ich habe ___ Tasche.",
+   "questionEn": "I have ___ bag. (ein/eine)",
+   "options": null,
+   "answer": "eine",
+   "accepted": [
+    "eine"
+   ],
+   "explanationDe": "Tasche ist feminin, deshalb eine.",
+   "hint": null
+  },
+  {
+   "id": "4aae7de0-bb31-5533-ac24-027af7598a19",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 11,
+   "questionDe": "Er hat ___ Handy.",
+   "questionEn": "He has ___ phone. (ein/eine)",
+   "options": null,
+   "answer": "ein",
+   "accepted": [
+    "ein"
+   ],
+   "explanationDe": "Handy ist neutral, deshalb ein, wie bei maskulinen Nomen.",
+   "hint": null
+  },
+  {
+   "id": "1ed2c78f-8f65-52e3-9e63-97f2a5b0663b",
+   "topic": "indefinite-articles",
+   "type": "error_correction",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 12,
+   "questionDe": "Finde den Fehler und schreib den Satz richtig: \"Ich bin eine Lehrerin.\"",
+   "questionEn": "Find the error and write the correct sentence: \"Ich bin eine Lehrerin.\" (no article before a profession)",
+   "options": null,
+   "answer": "Ich bin Lehrerin.",
+   "accepted": [
+    "Ich bin Lehrerin.",
+    "Ich bin Lehrerin"
+   ],
+   "explanationDe": "Deutsch lässt den Artikel vor einem Beruf ganz weg — kein ein, keine eine.",
+   "hint": null
+  },
+  {
+   "id": "6ea84a95-1ef8-5486-b791-e5728b65b419",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 13,
+   "questionDe": "Ich habe ___ Fahrrad.",
+   "questionEn": "I have no bike. (negation)",
+   "options": null,
+   "answer": "kein",
+   "accepted": [
+    "kein"
+   ],
+   "explanationDe": "Fahrrad ist neutral, deshalb die Verneinung kein.",
+   "hint": null
+  },
+  {
+   "id": "b57a67fb-08e5-5af1-9721-6b6f33116d7a",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 14,
+   "questionDe": "Er ist ___ Lehrer.",
+   "questionEn": "He is not a teacher. (negation)",
+   "options": null,
+   "answer": "kein",
+   "accepted": [
+    "kein"
+   ],
+   "explanationDe": "Lehrer ist maskulin, deshalb die Verneinung kein. Ohne Verneinung steht kein Artikel (Er ist Lehrer), mit Verneinung steht kein (Er ist kein Lehrer).",
+   "hint": null
+  },
+  {
+   "id": "14d31bcd-eb04-5333-b2b9-2901d20e675a",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 15,
+   "questionDe": "Ich habe ___ Katze.",
+   "questionEn": "I have no cat. (negation)",
+   "options": null,
+   "answer": "keine",
+   "accepted": [
+    "keine"
+   ],
+   "explanationDe": "Katze ist feminin, deshalb die Verneinung keine.",
+   "hint": null
+  },
+  {
+   "id": "bb0ead84-4c69-547b-b8aa-b791b1c0e375",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 16,
+   "questionDe": "Das ist ___ Uhr.",
+   "questionEn": "That is not a watch. (negation)",
+   "options": null,
+   "answer": "keine",
+   "accepted": [
+    "keine"
+   ],
+   "explanationDe": "Uhr ist feminin, deshalb die Verneinung keine.",
+   "hint": null
+  },
+  {
+   "id": "f12e69ee-d9c6-54f1-a2e7-b93304d4713c",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 17,
+   "questionDe": "Das ist ___ Computer.",
+   "questionEn": "That is ___ computer. (ein/eine)",
+   "options": null,
+   "answer": "ein",
+   "accepted": [
+    "ein"
+   ],
+   "explanationDe": "Computer ist maskulin, deshalb ein.",
+   "hint": null
+  },
+  {
+   "id": "d95d4abe-1cc1-4ebd-92e3-bd4f2d47a204",
+   "topic": "nouns-gender",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 1,
+   "questionDe": "Welcher Artikel passt? ___ Wohnung",
+   "questionEn": "Which article fits? ___ Wohnung (apartment)",
+   "options": [
+    "der",
+    "das",
+    "die"
+   ],
+   "answer": "die",
+   "accepted": [],
+   "explanationDe": "Endung -ung ist immer feminin.",
+   "hint": null
+  },
+  {
+   "id": "d97c6740-0ed1-488a-91b3-06e1aa26f942",
+   "topic": "nouns-gender",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 2,
+   "questionDe": "Welcher Artikel passt? ___ Brötchen",
+   "questionEn": "Which article fits? ___ Brötchen (bread roll)",
+   "options": [
+    "der",
+    "die",
+    "das"
+   ],
+   "answer": "das",
+   "accepted": [],
+   "explanationDe": "Endung -chen ist immer neutral.",
+   "hint": null
+  },
+  {
+   "id": "9ce2748a-f254-40b4-ba94-384f7979237a",
+   "topic": "nouns-gender",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 3,
+   "questionDe": "Welcher Artikel passt? ___ Sommer",
+   "questionEn": "Which article fits? ___ Sommer (summer)",
+   "options": [
+    "das",
+    "der",
+    "die"
+   ],
+   "answer": "der",
+   "accepted": [],
+   "explanationDe": "Jahreszeiten sind maskulin.",
+   "hint": null
+  },
+  {
+   "id": "82da8af3-5c84-47b9-ae10-fd848e8369ec",
+   "topic": "nouns-gender",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 4,
+   "questionDe": "Welcher Artikel passt? ___ Mädchen",
+   "questionEn": "Which article fits? ___ Mädchen (girl)",
+   "options": [
+    "der",
+    "die",
+    "das"
+   ],
+   "answer": "das",
+   "accepted": [],
+   "explanationDe": "Endung -chen überschreibt biologisches Geschlecht.",
+   "hint": null
+  },
+  {
+   "id": "57592d92-03cb-421e-aaf6-429a726ea8c3",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 5,
+   "questionDe": "___ Freiheit ist wichtig.",
+   "questionEn": "___ (freedom) is important.",
+   "options": [
+    "Der",
+    "Die",
+    "Das"
+   ],
+   "answer": "Die",
+   "accepted": [
+    "Die"
+   ],
+   "explanationDe": "Endung -heit ist immer feminin.",
+   "hint": null
+  },
+  {
+   "id": "9d436bb9-a17e-4106-81b7-a4d68ab4db58",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 6,
+   "questionDe": "___ Computer funktioniert nicht.",
+   "questionEn": "___ computer doesn't work.",
+   "options": [
+    "Der",
+    "Die",
+    "Das"
+   ],
+   "answer": "Der",
+   "accepted": [
+    "Der"
+   ],
+   "explanationDe": "Endung -er für Geräte/Täter ist meist maskulin.",
+   "hint": null
+  },
+  {
+   "id": "2dfd090d-1698-4356-86de-8f29894f5e16",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 7,
+   "questionDe": "___ Museum ist geschlossen.",
+   "questionEn": "___ museum is closed.",
+   "options": [
+    "Der",
+    "Die",
+    "Das"
+   ],
+   "answer": "Das",
+   "accepted": [
+    "Das"
+   ],
+   "explanationDe": "Endung -um ist meist neutral.",
+   "hint": null
+  },
+  {
+   "id": "e6813842-49d5-4cad-8c27-f5596e7bc5f8",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 8,
+   "questionDe": "___ Nation feiert.",
+   "questionEn": "___ nation celebrates.",
+   "options": [
+    "Der",
+    "Die",
+    "Das"
+   ],
+   "answer": "Die",
+   "accepted": [
+    "Die"
+   ],
+   "explanationDe": "Endung -tion ist immer feminin.",
+   "hint": null
+  },
+  {
+   "id": "89f19829-11d0-4a96-9cd4-f4b26d40b6ff",
+   "topic": "nouns-gender",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 9,
+   "questionDe": "Welche Endung ist IMMER feminin?",
+   "questionEn": "Which ending is ALWAYS feminine?",
+   "options": [
+    "-er",
+    "-um",
+    "-chen",
+    "-ung"
+   ],
+   "answer": "-ung",
+   "accepted": [],
+   "explanationDe": "-ung ist 100% feminin ohne Ausnahmen.",
+   "hint": null
+  },
+  {
+   "id": "a0447202-0897-482c-8238-d7f94781d2b6",
+   "topic": "nouns-gender",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 10,
+   "questionDe": "Welche Kategorie ist IMMER maskulin?",
+   "questionEn": "Which category is ALWAYS masculine?",
+   "options": [
+    "Colors as nouns",
+    "Languages",
+    "Days and months",
+    "Letters of alphabet"
+   ],
+   "answer": "Days and months",
+   "accepted": [],
+   "explanationDe": "Tage und Monate sind immer maskulin.",
+   "hint": null
+  },
+  {
+   "id": "b260aa43-33e0-45f1-9464-f1ca0c5f4ef8",
+   "topic": "nouns-gender",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 11,
+   "questionDe": "Was macht Nomen IMMER neutral?",
+   "questionEn": "What makes nouns ALWAYS neuter?",
+   "options": [
+    "Ending -heit",
+    "Ending -ung",
+    "Ending -chen or -lein",
+    "Ending -er"
+   ],
+   "answer": "Ending -chen or -lein",
+   "accepted": [],
+   "explanationDe": "Verkleinerungssuffixe -chen und -lein erzeugen immer neutrale Nomen.",
+   "hint": null
+  },
+  {
+   "id": "a0441ac7-1c1d-4610-80ec-80a606a76560",
+   "topic": "nouns-gender",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 12,
+   "questionDe": "Warum ist \"das Mädchen\" neutral, nicht feminin?",
+   "questionEn": "Why is \"das Mädchen\" neuter, not feminine?",
+   "options": [
+    "The -chen ending overrides meaning",
+    "Girls are young",
+    "All people words are neuter",
+    "It's an exception"
+   ],
+   "answer": "The -chen ending overrides meaning",
+   "accepted": [],
+   "explanationDe": "Grammatik (das Suffix -chen) schlägt die biologische Bedeutung.",
+   "hint": null
+  },
+  {
+   "id": "15e2b8e2-c09e-4b42-8da9-958416f33936",
+   "topic": "nouns-gender",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 13,
+   "questionDe": "Finde den Fehler: \"Der Universität ist groß.\"",
+   "questionEn": "Find the error: \"Der Universität ist groß.\"",
+   "options": [
+    "Der → Die",
+    "groß → große",
+    "No error",
+    "ist → sind"
+   ],
+   "answer": "Der → Die",
+   "accepted": [],
+   "explanationDe": "Endung -tät bedeutet feminin, also \"die Universität\".",
+   "hint": null
+  },
+  {
+   "id": "95bf8a7a-994f-46cc-bae3-e0aa3417c7c7",
+   "topic": "nouns-gender",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 14,
+   "questionDe": "Finde den Fehler: \"Die Mädchen ist nett.\"",
+   "questionEn": "Find the error: \"Die Mädchen ist nett.\"",
+   "options": [
+    "Die → Das",
+    "nett → nette",
+    "No error",
+    "ist → sind"
+   ],
+   "answer": "Die → Das",
+   "accepted": [],
+   "explanationDe": "Endung -chen = neutral, also \"das Mädchen\".",
+   "hint": null
+  },
+  {
+   "id": "14894fb2-78ed-4aa5-a68f-6d17b9f1fbfa",
+   "topic": "nouns-gender",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 15,
+   "questionDe": "___ Zeitung ist interessant.",
+   "questionEn": "___ (newspaper) is interesting.",
+   "options": [
+    "Der",
+    "Die",
+    "Das"
+   ],
+   "answer": "Die",
+   "accepted": [],
+   "explanationDe": "Das Suffix -ung ist feminin: die Zeitung.",
+   "hint": null
+  },
+  {
+   "id": "0fd68f47-d52a-5fe9-8415-7a06bafe1cf4",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 16,
+   "questionDe": "___ Freundschaft ist stark.",
+   "questionEn": "The ___ (friendship) is strong. (ending: -schaft)",
+   "options": null,
+   "answer": "Die",
+   "accepted": [
+    "Die"
+   ],
+   "explanationDe": "Nomen auf -schaft sind feminin: die Freundschaft, die Wirtschaft.",
+   "hint": null
+  },
+  {
+   "id": "0691d3fb-6017-5436-9c72-6873f2bf4d24",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 17,
+   "questionDe": "___ Fahrer kommt gleich.",
+   "questionEn": "The ___ (driver) is arriving soon. (ending: -er)",
+   "options": null,
+   "answer": "Der",
+   "accepted": [
+    "Der"
+   ],
+   "explanationDe": "Täternomen auf -er sind meist maskulin: der Fahrer, der Lehrer.",
+   "hint": null
+  },
+  {
+   "id": "0ab66073-239a-5be1-bfbb-e87f981d1ef7",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 18,
+   "questionDe": "___ Instrument ist teuer.",
+   "questionEn": "The ___ (instrument) is expensive. (ending: -ment)",
+   "options": null,
+   "answer": "Das",
+   "accepted": [
+    "Das"
+   ],
+   "explanationDe": "Nomen auf -ment sind meist neutral: das Instrument, das Dokument.",
+   "hint": null
+  },
+  {
+   "id": "0865c2f5-b8aa-5c6d-abec-ebe38e4edc41",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 19,
+   "questionDe": "___ Frühling ist schön.",
+   "questionEn": "The ___ (spring) is beautiful. (season)",
+   "options": null,
+   "answer": "Der",
+   "accepted": [
+    "Der"
+   ],
+   "explanationDe": "Alle Jahreszeiten sind maskulin: der Frühling, der Sommer, der Herbst, der Winter.",
+   "hint": null
+  },
+  {
+   "id": "319b95b6-ca95-5b56-b585-09aaaba51d9c",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 20,
+   "questionDe": "___ Mutter kocht Kaffee.",
+   "questionEn": "The ___ (mother) makes coffee. (female person)",
+   "options": null,
+   "answer": "Die",
+   "accepted": [
+    "Die"
+   ],
+   "explanationDe": "Weibliche Personen sind feminin: die Mutter, die Frau.",
+   "hint": null
+  },
+  {
+   "id": "bd698d97-022b-5acf-ada5-badb9b7ac6f6",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 21,
+   "questionDe": "___ Filme sind lang.",
+   "questionEn": "The ___ (films, plural) are long. (all plurals = die)",
+   "options": null,
+   "answer": "Die",
+   "accepted": [
+    "Die"
+   ],
+   "explanationDe": "Alle Pluralnomen nehmen die, unabhängig vom Genus: die Filme (von der Film).",
+   "hint": null
+  },
+  {
+   "id": "f153c9f2-8ecc-586d-8b69-550edaf75dd1",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 22,
+   "questionDe": "___ Wein ist gut.",
+   "questionEn": "The ___ (wine) is good. (alcoholic drink)",
+   "options": null,
+   "answer": "Der",
+   "accepted": [
+    "Der"
+   ],
+   "explanationDe": "Alkoholische Getränke außer Bier sind maskulin: der Wein, der Whisky.",
+   "hint": null
+  },
+  {
+   "id": "d205e58f-6102-5736-ae27-df3a5238fdbd",
+   "topic": "nouns-gender",
+   "type": "error_correction",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 23,
+   "questionDe": "Finde den Fehler und schreib den Satz richtig: \"Der Sonne ist warm.\"",
+   "questionEn": "Find the error and write the correct sentence: \"Der Sonne ist warm.\" (die Sonne is feminine)",
+   "options": null,
+   "answer": "Die Sonne ist warm.",
+   "accepted": [
+    "Die Sonne ist warm.",
+    "Die Sonne ist warm"
+   ],
+   "explanationDe": "Sonne ist im Deutschen feminin, anders als in vielen anderen Sprachen.",
+   "hint": null
+  },
+  {
+   "id": "c1b13a96-6de3-5b9c-81a1-a9ba59b75c96",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 24,
+   "questionDe": "___ Brötchen ist klein.",
+   "questionEn": "The ___ (bread roll) is small. (ending: -chen — always neuter, even for something small)",
+   "options": null,
+   "answer": "Das",
+   "accepted": [
+    "Das"
+   ],
+   "explanationDe": "Die Endung -chen macht ein Nomen immer neutral, auch bei etwas Kleinem.",
+   "hint": null
+  },
+  {
+   "id": "dd86dc8a-49b8-5d48-8a6a-2606fd90b0fd",
+   "topic": "nouns-gender",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 25,
+   "questionDe": "Schreib den Satz: [Honig / ist / gut]",
+   "questionEn": "Write the sentence: [honey / is / good] — add the right definite article.",
+   "options": null,
+   "answer": "Der Honig ist gut.",
+   "accepted": [
+    "Der Honig ist gut.",
+    "Der Honig ist gut"
+   ],
+   "explanationDe": "Endungen auf -ig sind meist maskulin: der Honig, der König.",
+   "hint": null
+  },
+  {
+   "id": "d44e8128-05d8-4556-b7b2-2eaa8cc2da97",
+   "topic": "personal-pronouns",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 1,
+   "questionDe": "Anna ist deine Freundin.",
+   "questionEn": "Anna is your friend. Which pronoun do you use to talk to her?",
+   "options": [
+    "Sie",
+    "ihr",
+    "du"
+   ],
+   "answer": "du",
+   "accepted": [],
+   "explanationDe": "Anna ist eine Freundin = du.",
+   "hint": null
+  },
+  {
+   "id": "160867f8-dbb5-41ec-87ba-d9408124308b",
+   "topic": "personal-pronouns",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 2,
+   "questionDe": "Du sprichst mit deinem Lehrer.",
+   "questionEn": "You talk to your teacher. Which do you use?",
+   "options": [
+    "du",
+    "Sie",
+    "ihr"
+   ],
+   "answer": "Sie",
+   "accepted": [],
+   "explanationDe": "Lehrer = Sie.",
+   "hint": null
+  },
+  {
+   "id": "dd1c3d60-8ae7-4c94-8990-19633dcba36f",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 3,
+   "questionDe": "___ ist meine Mutter.",
+   "questionEn": "___ ist meine Mutter.",
+   "options": [
+    "Sie",
+    "Er",
+    "Es"
+   ],
+   "answer": "Sie",
+   "accepted": [
+    "Sie"
+   ],
+   "explanationDe": "Mutter = weiblich → sie.",
+   "hint": null
+  },
+  {
+   "id": "c7d35ca1-59f1-4b08-8b71-5df4d09765d7",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 4,
+   "questionDe": "___ lernen zusammen. (= We)",
+   "questionEn": "___ lernen zusammen.",
+   "options": [
+    "Wir",
+    "Sie",
+    "Ihr"
+   ],
+   "answer": "Wir",
+   "accepted": [
+    "Wir"
+   ],
+   "explanationDe": "wir = we.",
+   "hint": null
+  },
+  {
+   "id": "28215564-f749-493a-a92c-b657a6c5be02",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 5,
+   "questionDe": "Die Lampe ist alt. ___ ist kaputt.",
+   "questionEn": "Die Lampe ist alt. ___ ist kaputt.",
+   "options": [
+    "Sie",
+    "Er",
+    "Es"
+   ],
+   "answer": "Sie",
+   "accepted": [
+    "Sie"
+   ],
+   "explanationDe": "Lampe = feminin → sie.",
+   "hint": null
+  },
+  {
+   "id": "250db8c3-4db9-4d45-a4f3-c489d4e29a63",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 6,
+   "questionDe": "Das Buch ist gut. ___ ist interessant.",
+   "questionEn": "Das Buch ist gut. ___ ist interessant.",
+   "options": [
+    "Es",
+    "Er",
+    "Sie"
+   ],
+   "answer": "Es",
+   "accepted": [
+    "Es"
+   ],
+   "explanationDe": "Buch = neutral → es.",
+   "hint": null
+  },
+  {
+   "id": "dbabbe60-a06b-4a96-9aa3-09d66248a4c8",
+   "topic": "personal-pronouns",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 7,
+   "questionDe": "Was bedeutet \"sie\"?",
+   "questionEn": "What does \"sie\" mean?",
+   "options": [
+    "only they",
+    "only she",
+    "formal you",
+    "she AND they"
+   ],
+   "answer": "she AND they",
+   "accepted": [],
+   "explanationDe": "sie = sie und sie. Sie (groß) = formell.",
+   "hint": null
+  },
+  {
+   "id": "9f954c38-9317-41e6-8f82-4ed9a00511a6",
+   "topic": "personal-pronouns",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 8,
+   "questionDe": "Nicht sicher? Was benutzt du?",
+   "questionEn": "Not sure if du or Sie? What do you use?",
+   "options": [
+    "ihr — it is neutral",
+    "Sie — it is always safe",
+    "du — it is friendlier"
+   ],
+   "answer": "Sie — it is always safe",
+   "accepted": [],
+   "explanationDe": "Im Zweifel: Sie.",
+   "hint": null
+  },
+  {
+   "id": "7edcea9d-a047-50f2-8a1d-772d58a738f7",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 9,
+   "questionDe": "Der Stuhl ist alt. ___ ist bequem.",
+   "questionEn": "The chair is old. ___ is comfortable. (pronoun for der Stuhl)",
+   "options": null,
+   "answer": "Er",
+   "accepted": [
+    "Er"
+   ],
+   "explanationDe": "Der Stuhl ist maskulin, deshalb wird er zu er.",
+   "hint": null
+  },
+  {
+   "id": "b19be5e4-48c0-5fad-a8a7-e16bf8e1772f",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 10,
+   "questionDe": "Die Tasche ist teuer. ___ ist schön.",
+   "questionEn": "The bag is expensive. ___ is beautiful. (pronoun for die Tasche)",
+   "options": null,
+   "answer": "Sie",
+   "accepted": [
+    "Sie"
+   ],
+   "explanationDe": "Die Tasche ist feminin, deshalb wird sie zu sie.",
+   "hint": null
+  },
+  {
+   "id": "cd9f14b0-a8a7-53ba-839b-8c6d1f05237c",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 11,
+   "questionDe": "Das Handy ist klein. ___ ist gut.",
+   "questionEn": "The phone is small. ___ is good. (pronoun for das Handy)",
+   "options": null,
+   "answer": "Es",
+   "accepted": [
+    "Es"
+   ],
+   "explanationDe": "Das Handy ist neutral, deshalb wird es zu es.",
+   "hint": null
+  },
+  {
+   "id": "0ef58eff-0411-5dc0-9115-e607c9648f80",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 12,
+   "questionDe": "___ bin hier.",
+   "questionEn": "___ am here. (= I, the speaker)",
+   "options": null,
+   "answer": "Ich",
+   "accepted": [
+    "Ich"
+   ],
+   "explanationDe": "Die sprechende Person benutzt ich.",
+   "hint": null
+  },
+  {
+   "id": "4299d5ca-a80e-5528-a6b9-0ac7bee052bb",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 13,
+   "questionDe": "___ seid meine Freunde.",
+   "questionEn": "___ are my friends. (= you all, informal plural)",
+   "options": null,
+   "answer": "Ihr",
+   "accepted": [
+    "Ihr"
+   ],
+   "explanationDe": "Ihr spricht mehrere Personen informell an.",
+   "hint": null
+  },
+  {
+   "id": "0416dbbe-821e-5033-954b-5cc62a09e8a2",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 14,
+   "questionDe": "Frau Müller, ___ sind sehr freundlich.",
+   "questionEn": "Mrs. Müller, ___ are very friendly. (formal you)",
+   "options": null,
+   "answer": "Sie",
+   "accepted": [
+    "Sie"
+   ],
+   "explanationDe": "Sie (großgeschrieben) ist das formelle Sie für Fremde und Beamte.",
+   "hint": null
+  },
+  {
+   "id": "7d593bf2-c262-52f8-9822-0c4c80a3ad81",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 15,
+   "questionDe": "Tom, ___ bist mein Freund.",
+   "questionEn": "Tom, ___ are my friend. (informal you)",
+   "options": null,
+   "answer": "du",
+   "accepted": [
+    "du"
+   ],
+   "explanationDe": "Du ist das informelle Du, für Freunde wie Tom.",
+   "hint": null
+  },
+  {
+   "id": "758c6589-bbd9-5fdd-8ce0-7d738039033c",
+   "topic": "personal-pronouns",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 16,
+   "questionDe": "Schreib den Satz: [spielen / Fußball]",
+   "questionEn": "Write the sentence: [we] + [play / football]",
+   "options": null,
+   "answer": "Wir spielen Fußball.",
+   "accepted": [
+    "Wir spielen Fußball.",
+    "Wir spielen Fußball"
+   ],
+   "explanationDe": "Wir ist das Pronomen für eine Gruppe mit dem Sprecher.",
+   "hint": null
+  },
+  {
+   "id": "fb78281e-be58-591c-913a-e071f141dc0b",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 17,
+   "questionDe": "Das Mädchen ist neu. ___ ist nett.",
+   "questionEn": "The girl is new (here). ___ is nice. (pronoun for das Mädchen — even though a girl is female, das Mädchen is neuter)",
+   "options": null,
+   "answer": "Es",
+   "accepted": [
+    "Es"
+   ],
+   "explanationDe": "Das Mädchen ist grammatisch neutral (Endung -chen), deshalb es, nicht sie.",
+   "hint": null
+  },
+  {
+   "id": "bdcf1de9-ab52-530c-a7da-2f83ac4fcd0d",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 18,
+   "questionDe": "Anna ist meine Freundin. ___ ist freundlich.",
+   "questionEn": "Anna is my friend. ___ is friendly. (= she)",
+   "options": null,
+   "answer": "Sie",
+   "accepted": [
+    "Sie"
+   ],
+   "explanationDe": "Eine genannte weibliche Person wird durch sie ersetzt.",
+   "hint": null
+  },
+  {
+   "id": "d9887d31-0932-5143-b05e-3f903d659cd9",
+   "topic": "possessive-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 1,
+   "questionDe": "Das ist ___ Bruder. (ich)",
+   "questionEn": "That is my brother. (owner: ich)",
+   "options": null,
+   "answer": "mein",
+   "accepted": [
+    "mein"
+   ],
+   "explanationDe": "Bruder ist maskulin (der-Wort) → mein, keine Endung.",
+   "hint": null
+  },
+  {
+   "id": "56dc459e-5c31-51fb-bd2f-799a23046228",
+   "topic": "possessive-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 2,
+   "questionDe": "___ Schwester ist Ärztin. (ich)",
+   "questionEn": "My sister is a doctor. (owner: ich)",
+   "options": null,
+   "answer": "Meine",
+   "accepted": [
+    "Meine",
+    "meine"
+   ],
+   "explanationDe": "Schwester ist feminin (die-Wort) → meine.",
+   "hint": null
+  },
+  {
+   "id": "46ae02ff-1593-5d9e-9956-bc9fb215b015",
+   "topic": "possessive-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 3,
+   "questionDe": "___ Auto ist neu. (er)",
+   "questionEn": "His car is new. (owner: er)",
+   "options": null,
+   "answer": "Sein",
+   "accepted": [
+    "Sein",
+    "sein"
+   ],
+   "explanationDe": "Auto ist neutral (das-Wort) → sein, keine Endung.",
+   "hint": null
+  },
+  {
+   "id": "3bc06ffd-69f5-52b2-bb90-9c38dce7128b",
+   "topic": "possessive-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 4,
+   "questionDe": "Das ist ___ Tasche. (sie, Einzahl)",
+   "questionEn": "That is her bag. (owner: she)",
+   "options": null,
+   "answer": "ihre",
+   "accepted": [
+    "ihre"
+   ],
+   "explanationDe": "Tasche ist feminin → ihre. ihr bedeutet hier her (sie, Einzahl).",
+   "hint": null
+  },
+  {
+   "id": "210e89f8-2c89-5897-a247-a9bd3d84e4ae",
+   "topic": "possessive-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 5,
+   "questionDe": "Die Eltern lieben ___ Kinder. (sie, Plural)",
+   "questionEn": "The parents love their children. (owner: sie, plural = they)",
+   "options": null,
+   "answer": "ihre",
+   "accepted": [
+    "ihre"
+   ],
+   "explanationDe": "Kinder ist Plural → ihre. ihr bedeutet hier their (sie, Plural).",
+   "hint": null
+  },
+  {
+   "id": "fbf09b8d-ea92-56fa-b89d-870d2ddfda54",
+   "topic": "possessive-articles",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 6,
+   "questionDe": "Wie heißt ___ Mutter? (ihr, Plural = you all)",
+   "questionEn": "What is your (you-all) mother's name? (owner: ihr, plural you)",
+   "options": [
+    "eure",
+    "euere",
+    "unsere",
+    "ihre"
+   ],
+   "answer": "eure",
+   "accepted": [],
+   "explanationDe": "euer verliert das e vor einer Endung: eure, nicht euere.",
+   "hint": null
+  },
+  {
+   "id": "3350c4ae-d08b-5a28-8e66-3cb273f39b5e",
+   "topic": "possessive-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 7,
+   "questionDe": "Wir lieben ___ Land. (wir)",
+   "questionEn": "We love our country. (owner: wir)",
+   "options": null,
+   "answer": "unser",
+   "accepted": [
+    "unser"
+   ],
+   "explanationDe": "Land ist neutral → unser, keine Endung.",
+   "hint": null
+  },
+  {
+   "id": "a85206a6-d5c3-5a86-8695-bfe661b1dd20",
+   "topic": "possessive-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 8,
+   "questionDe": "Wo ist ___ Schlüssel? (du)",
+   "questionEn": "Where is your key? (owner: du)",
+   "options": null,
+   "answer": "dein",
+   "accepted": [
+    "dein"
+   ],
+   "explanationDe": "Schlüssel ist maskulin → dein, keine Endung.",
+   "hint": null
+  },
+  {
+   "id": "025bbe17-3ad0-5282-a408-4dab49be3095",
+   "topic": "possessive-articles",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 9,
+   "questionDe": "Welche Frage ist die Höflichkeitsform?",
+   "questionEn": "Which question uses the formal (Sie) form?",
+   "options": [
+    "Wie ist dein Name?",
+    "Wie ist sein Name?",
+    "Wie ist Ihr Name?",
+    "Wie ist euer Name?"
+   ],
+   "answer": "Wie ist Ihr Name?",
+   "accepted": [],
+   "explanationDe": "Die Höflichkeitsform benutzt Sie/Ihr (immer großgeschrieben).",
+   "hint": null
+  },
+  {
+   "id": "b269d424-9f5f-5bfc-9703-50b0c0b5e5a4",
+   "topic": "possessive-articles",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 10,
+   "questionDe": "Ist das ___ Adresse? (Sie, Höflichkeitsform)",
+   "questionEn": "Is that your address? (formal, owner: Sie)",
+   "options": [
+    "Ihre",
+    "Ihr",
+    "seine",
+    "eure"
+   ],
+   "answer": "Ihre",
+   "accepted": [],
+   "explanationDe": "Adresse ist feminin → Ihre, der Possessivartikel für Sie. Ihr hat keine Endung (falsch für ein feminines Nomen); seine und eure gehören zu anderen Besitzern.",
+   "hint": null
+  },
+  {
+   "id": "48bbb8f0-2b0f-512f-a7df-04f8e6f43e0f",
+   "topic": "possessive-articles",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 11,
+   "questionDe": "Was ist richtig? Der Besitzer ist er, das Nomen ist Schwester.",
+   "questionEn": "Which is correct? The owner is 'he', the noun is 'sister' (feminine).",
+   "options": [
+    "sein Schwester",
+    "seine Schwester",
+    "ihre Schwester",
+    "ihr Schwester"
+   ],
+   "answer": "seine Schwester",
+   "accepted": [],
+   "explanationDe": "Schwester ist feminin → die Endung -e ist nötig: seine, auch wenn der Besitzer männlich ist.",
+   "hint": null
+  },
+  {
+   "id": "5873db19-6dab-5743-90a8-96231f8fa992",
+   "topic": "possessive-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 12,
+   "questionDe": "Wie heißt ___ Lehrerin? (ihr, Plural = you all)",
+   "questionEn": "What is your (you-all) teacher's name? (owner: ihr, plural you)",
+   "options": null,
+   "answer": "eure",
+   "accepted": [
+    "eure"
+   ],
+   "explanationDe": "Lehrerin ist feminin → euer + e, aber das e fällt weg → eure.",
+   "hint": null
+  },
+  {
+   "id": "41e1c650-118c-58a1-a6a9-ec54e540808c",
+   "topic": "possessive-articles",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 13,
+   "questionDe": "Das Kind hat ___ Buch. (es)",
+   "questionEn": "The child has its book. (owner: es)",
+   "options": [
+    "sein",
+    "seine",
+    "ihr",
+    "Ihre"
+   ],
+   "answer": "sein",
+   "accepted": [],
+   "explanationDe": "Buch ist neutral → sein, keine Endung. es benutzt sein, genauso wie er.",
+   "hint": null
+  },
+  {
+   "id": "9f8d70b7-2a9b-5c6c-8159-670b6cfd02c6",
+   "topic": "possessive-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 1,
+   "questionDe": "___ Vater kommt aus Deutschland. (ich)",
+   "questionEn": "My father comes from Germany. (owner: ich)",
+   "options": null,
+   "answer": "Mein",
+   "accepted": [
+    "Mein",
+    "mein"
+   ],
+   "explanationDe": "Vater ist maskulin → mein, keine Endung.",
+   "hint": null
+  },
+  {
+   "id": "388af6b1-9be8-5418-9d0f-1480baaa31b0",
+   "topic": "possessive-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 2,
+   "questionDe": "___ Freundin wohnt in Berlin. (ich)",
+   "questionEn": "My girlfriend lives in Berlin. (owner: ich)",
+   "options": null,
+   "answer": "Meine",
+   "accepted": [
+    "Meine",
+    "meine"
+   ],
+   "explanationDe": "Freundin ist feminin → meine.",
+   "hint": null
+  },
+  {
+   "id": "5e65eab6-eba1-5797-beb8-e34750c5ceb1",
+   "topic": "possessive-articles",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 3,
+   "questionDe": "[das / ist / mein Bruder] → Schreib den Satz.",
+   "questionEn": "Write the sentence: This is my brother. (owner: ich)",
+   "options": null,
+   "answer": "Das ist mein Bruder.",
+   "accepted": [
+    "Das ist mein Bruder"
+   ],
+   "explanationDe": "das + ist + mein Bruder (Bruder ist maskulin, keine Endung).",
+   "hint": null
+  },
+  {
+   "id": "8908dc09-b16b-57e4-b056-e0f3060766c8",
+   "topic": "possessive-articles",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 3,
+   "order": 4,
+   "questionDe": "[das / ist / seine Schwester] → Schreib den Satz.",
+   "questionEn": "Write the sentence: That is his sister. (owner: er)",
+   "options": null,
+   "answer": "Das ist seine Schwester.",
+   "accepted": [
+    "Das ist seine Schwester"
+   ],
+   "explanationDe": "das + ist + seine Schwester (Schwester ist feminin → seine, auch wenn der Besitzer männlich ist).",
+   "hint": null
+  },
+  {
+   "id": "d09ae745-12d0-5a21-9648-88fc36a55de1",
+   "topic": "possessive-articles",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 5,
+   "questionDe": "[das / ist / unser Auto] → Schreib den Satz.",
+   "questionEn": "Write the sentence: That is our car. (owner: wir)",
+   "options": null,
+   "answer": "Das ist unser Auto.",
+   "accepted": [
+    "Das ist unser Auto"
+   ],
+   "explanationDe": "das + ist + unser Auto (Auto ist neutral, keine Endung).",
+   "hint": null
+  },
+  {
+   "id": "83bab298-abc5-5e7f-a132-1bb60a689b8a",
+   "topic": "possessive-articles",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 3,
+   "order": 6,
+   "questionDe": "[das / ist / Ihre Adresse] → Schreib den Satz.",
+   "questionEn": "Write the sentence: That is your address. (formal, owner: Sie)",
+   "options": null,
+   "answer": "Das ist Ihre Adresse.",
+   "accepted": [
+    "Das ist Ihre Adresse"
+   ],
+   "explanationDe": "das + ist + Ihre Adresse (Adresse ist feminin → Ihre; großes I markiert die Höflichkeitsform).",
+   "hint": null
+  },
+  {
+   "id": "7ca45e8d-3d8f-5335-9e51-42dad2b58553",
+   "topic": "possessive-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 7,
+   "questionDe": "___ Handy ist kaputt. (er)",
+   "questionEn": "His phone is broken. (owner: er)",
+   "options": null,
+   "answer": "Sein",
+   "accepted": [
+    "Sein",
+    "sein"
+   ],
+   "explanationDe": "Handy ist neutral → sein, keine Endung.",
+   "hint": null
+  },
+  {
+   "id": "5ff6226a-1bd0-5e03-9643-7bb99ec7cccc",
+   "topic": "possessive-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 8,
+   "questionDe": "Das ist ___ Vater. (sie, Plural)",
+   "questionEn": "That is their father. (owner: sie, plural = they)",
+   "options": null,
+   "answer": "ihr",
+   "accepted": [
+    "ihr"
+   ],
+   "explanationDe": "Vater ist maskulin → ihr, keine Endung. ihr bedeutet hier their.",
+   "hint": null
+  },
+  {
+   "id": "91c0eb68-580f-5688-97e2-7d8ec3fac6f9",
+   "topic": "possessive-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 9,
+   "questionDe": "Wie heißt ___ Bruder? (ihr, Plural = you all)",
+   "questionEn": "What is your (you-all) brother's name? (owner: ihr, plural you)",
+   "options": null,
+   "answer": "euer",
+   "accepted": [
+    "euer"
+   ],
+   "explanationDe": "Bruder ist maskulin → euer, keine Endung (kein e fällt hier weg).",
+   "hint": null
+  },
+  {
+   "id": "10b25f5c-723f-58dc-b4fb-6a5b5826e352",
+   "topic": "possessive-articles",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 10,
+   "questionDe": "Wie ist ___ Name, bitte? (Sie, Höflichkeitsform)",
+   "questionEn": "What is your name, please? (formal, owner: Sie)",
+   "options": [
+    "Ihr",
+    "Ihre",
+    "sein",
+    "euer"
+   ],
+   "answer": "Ihr",
+   "accepted": [],
+   "explanationDe": "Name ist maskulin → Ihr, der Possessivartikel für Sie, ohne Endung. Ihre bräuchte ein feminines oder Plural-Nomen; sein und euer gehören zu anderen Besitzern.",
+   "hint": null
+  },
+  {
+   "id": "48df1e8d-2503-5a15-a985-e479c9f73dea",
+   "topic": "possessive-articles",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 11,
+   "questionDe": "Wie sagt man 'my key' auf Deutsch? (Schlüssel = der-Wort)",
+   "questionEn": "How do you say 'my key' in German? (Schlüssel is masculine)",
+   "options": [
+    "mein Schlüssel",
+    "meine Schlüssel",
+    "sein Schlüssel",
+    "meinen Schlüssel"
+   ],
+   "answer": "mein Schlüssel",
+   "accepted": [],
+   "explanationDe": "Schlüssel ist maskulin, Nominativ → mein, keine Endung.",
+   "hint": null
+  },
+  {
+   "id": "64680d9b-3681-560d-ada9-a64d0aa329aa",
+   "topic": "possessive-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 3,
+   "order": 12,
+   "questionDe": "Ich habe ___ Bruder gern. (ich — Vorschau Akkusativ)",
+   "questionEn": "I like my brother. (owner: ich; preview: after haben, masculine takes -en)",
+   "options": null,
+   "answer": "meinen",
+   "accepted": [
+    "meinen"
+   ],
+   "explanationDe": "Vorschau auf den Akkusativ (A1.2): nach haben bekommt maskulin die Endung -en: meinen, nicht mein.",
+   "hint": "Nach haben: maskulin + -en (Vorschau A1.2)."
+  },
+  {
+   "id": "03bd1113-6ab0-589d-b0d6-12f03d5c1952",
+   "topic": "possessive-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 3,
+   "order": 13,
+   "questionDe": "Hast du ___ Schlüssel? (du — Vorschau Akkusativ)",
+   "questionEn": "Do you have your key? (owner: du; preview: after haben, masculine takes -en)",
+   "options": null,
+   "answer": "deinen",
+   "accepted": [
+    "deinen"
+   ],
+   "explanationDe": "Vorschau auf den Akkusativ (A1.2): nach haben bekommt maskulin die Endung -en: deinen, nicht dein.",
+   "hint": "Nach haben: maskulin + -en (Vorschau A1.2)."
+  },
+  {
+   "id": "25fe0c36-72d2-47f1-928f-b91d70481b29",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 1,
+   "questionDe": "Ich ___ in Berlin.",
+   "questionEn": "Ich ___ in Berlin. (wohnen)",
+   "options": [
+    "wohne",
+    "wohnst",
+    "wohnt",
+    "wohnen"
+   ],
+   "answer": "wohne",
+   "accepted": [
+    "wohne"
+   ],
+   "explanationDe": "ich + -e.",
+   "hint": null
+  },
+  {
+   "id": "ea61494a-4f8e-4851-a5f6-1fa8a95364ab",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 2,
+   "questionDe": "Du ___ Deutsch.",
+   "questionEn": "Du ___ Deutsch. (lernen)",
+   "options": [
+    "lernst",
+    "lerne",
+    "lernt",
+    "lernen"
+   ],
+   "answer": "lernst",
+   "accepted": [
+    "lernst"
+   ],
+   "explanationDe": "du + -st.",
+   "hint": null
+  },
+  {
+   "id": "8f32fa13-901a-48f3-b07a-090b4bf980f4",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 3,
+   "questionDe": "Er ___ Fußball.",
+   "questionEn": "Er ___ Fußball. (spielen)",
+   "options": [
+    "spielt",
+    "spiele",
+    "spielst",
+    "spielen"
+   ],
+   "answer": "spielt",
+   "accepted": [
+    "spielt"
+   ],
+   "explanationDe": "er + -t.",
+   "hint": null
+  },
+  {
+   "id": "602e3a32-2024-4fb8-8717-11ad8773aa78",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 4,
+   "questionDe": "Wir ___ zusammen.",
+   "questionEn": "Wir ___ zusammen. (lernen)",
+   "options": [
+    "lernen",
+    "lernt",
+    "lernst",
+    "lerne"
+   ],
+   "answer": "lernen",
+   "accepted": [
+    "lernen"
+   ],
+   "explanationDe": "wir + -en.",
+   "hint": null
+  },
+  {
+   "id": "e7eb593b-0250-45d6-973c-d5b88fe2c7a4",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 5,
+   "questionDe": "Was ___ du?",
+   "questionEn": "Was ___ du? (machen)",
+   "options": [
+    "machst",
+    "mache",
+    "macht",
+    "machen"
+   ],
+   "answer": "machst",
+   "accepted": [
+    "machst"
+   ],
+   "explanationDe": "du + -st.",
+   "hint": null
+  },
+  {
+   "id": "73cff6a6-4302-41ff-b95d-0969455a16c9",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 6,
+   "questionDe": "Sie ___ ein Buch. (she)",
+   "questionEn": "Sie ___ ein Buch. (kaufen)",
+   "options": [
+    "kauft",
+    "kaufe",
+    "kaufst",
+    "kaufen"
+   ],
+   "answer": "kauft",
+   "accepted": [
+    "kauft"
+   ],
+   "explanationDe": "sie + -t.",
+   "hint": null
+  },
+  {
+   "id": "85084f27-567e-414e-9725-0b46aee3b6c4",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 7,
+   "questionDe": "Ihr ___ gut!",
+   "questionEn": "Ihr ___ gut! (spielen)",
+   "options": [
+    "spielt",
+    "spielst",
+    "spielen",
+    "spiele"
+   ],
+   "answer": "spielt",
+   "accepted": [
+    "spielt"
+   ],
+   "explanationDe": "ihr + -t.",
+   "hint": null
+  },
+  {
+   "id": "86aa9506-dacc-48b4-a789-27deff8d1d43",
+   "topic": "present-tense-regular",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 8,
+   "questionDe": "Was sind die 3 Schritte?",
+   "questionEn": "What are the 3 steps to conjugate?",
+   "options": [
+    "Infinitive → add -en → remove ending",
+    "Stem → add -en → remove ending",
+    "Infinitive → remove -en → add ending"
+   ],
+   "answer": "Infinitive → remove -en → add ending",
+   "accepted": [],
+   "explanationDe": "Infinitiv → -en entfernen → Endung.",
+   "hint": null
+  },
+  {
+   "id": "58dd25ce-36c5-4e52-a4cc-8ebddbdd8da0",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 9,
+   "questionDe": "Du ___ viel.",
+   "questionEn": "You ___ a lot. (arbeiten)",
+   "options": [
+    "arbeitst",
+    "arbeite",
+    "arbeitest",
+    "arbeiten"
+   ],
+   "answer": "arbeitest",
+   "accepted": [
+    "arbeitest"
+   ],
+   "explanationDe": "Stamm endet auf -t, deshalb -e- einfügen: arbeitest.",
+   "hint": null
+  },
+  {
+   "id": "23cda354-67fa-4f71-8753-af3b48d540ed",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 10,
+   "questionDe": "Wie ___ du?",
+   "questionEn": "What ___ your name? (heißen)",
+   "options": [
+    "heißst",
+    "heißest",
+    "heißt",
+    "heißen"
+   ],
+   "answer": "heißt",
+   "accepted": [
+    "heißt"
+   ],
+   "explanationDe": "Stamm endet auf -ß, deshalb bekommt die du-Form nur -t: heißt.",
+   "hint": null
+  },
+  {
+   "id": "02374938-9977-52c2-8828-2929e8075633",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 11,
+   "questionDe": "Ich ___ Fußball.",
+   "questionEn": "I ___ football. (verb: spielen, ich)",
+   "options": null,
+   "answer": "spiele",
+   "accepted": [
+    "spiele"
+   ],
+   "explanationDe": "Ich-Form: -en von spielen entfernen, -e anhängen: spiele.",
+   "hint": null
+  },
+  {
+   "id": "5ae0746e-85ff-5cd9-a807-f3487450694c",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 12,
+   "questionDe": "Du ___ in Berlin.",
+   "questionEn": "You ___ in Berlin. (verb: wohnen, du)",
+   "options": null,
+   "answer": "wohnst",
+   "accepted": [
+    "wohnst"
+   ],
+   "explanationDe": "Du-Form: wohn + st = wohnst.",
+   "hint": null
+  },
+  {
+   "id": "877e964c-ed46-512b-ad1a-8b390a459e1d",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 13,
+   "questionDe": "Wir ___ Musik.",
+   "questionEn": "We ___ music. (verb: hören, wir)",
+   "options": null,
+   "answer": "hören",
+   "accepted": [
+    "hören"
+   ],
+   "explanationDe": "Wir-Form behält den vollen Infinitiv: hören.",
+   "hint": null
+  },
+  {
+   "id": "d8082071-f2e5-5a17-84ff-c7335b4b14bc",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 14,
+   "questionDe": "Sie ___ zusammen.",
+   "questionEn": "They ___ together. (verb: arbeiten, sie = they)",
+   "options": null,
+   "answer": "arbeiten",
+   "accepted": [
+    "arbeiten"
+   ],
+   "explanationDe": "Plural-sie-Form behält den vollen Infinitiv: arbeiten.",
+   "hint": null
+  },
+  {
+   "id": "10822333-762f-5cf7-a878-3934135461a5",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 15,
+   "questionDe": "Er ___ Englisch.",
+   "questionEn": "He ___ English. (verb: lernen, er)",
+   "options": null,
+   "answer": "lernt",
+   "accepted": [
+    "lernt"
+   ],
+   "explanationDe": "Er-Form: lern + t = lernt.",
+   "hint": null
+  },
+  {
+   "id": "1981fa95-43a3-5ac5-87e5-0367f8b1e27f",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 16,
+   "questionDe": "Was ___ ihr?",
+   "questionEn": "What ___ you all doing? (verb: machen, ihr)",
+   "options": null,
+   "answer": "macht",
+   "accepted": [
+    "macht"
+   ],
+   "explanationDe": "Ihr-Form: mach + t = macht.",
+   "hint": null
+  },
+  {
+   "id": "898a0861-f041-509c-84ba-57bf2f027afb",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 17,
+   "questionDe": "Ich ___ viel.",
+   "questionEn": "I ___ a lot. (verb: arbeiten, ich)",
+   "options": null,
+   "answer": "arbeite",
+   "accepted": [
+    "arbeite"
+   ],
+   "explanationDe": "Ich-Form: arbeit + e = arbeite, kein Extra-Buchstabe nötig.",
+   "hint": null
+  },
+  {
+   "id": "e191f485-bb70-5fbe-a869-33fe7e0209c9",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 18,
+   "questionDe": "Er ___ Tom.",
+   "questionEn": "He is called Tom. (verb: heißen, er)",
+   "options": null,
+   "answer": "heißt",
+   "accepted": [
+    "heißt"
+   ],
+   "explanationDe": "Die er-Form ist die normale -t-Endung: heiß + t = heißt. Sie sieht wie die du-Form aus, denn nach -s/-ß/-z ist die du-Endung nur -t (du heißt, nicht du heißst).",
+   "hint": null
+  },
+  {
+   "id": "af4fc6ff-5616-5fb8-9ae3-6fa201d36fd3",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 19,
+   "questionDe": "Ihr ___ \"Tschüss\".",
+   "questionEn": "You all ___ ‘bye’. (verb: sagen, ihr)",
+   "options": null,
+   "answer": "sagt",
+   "accepted": [
+    "sagt"
+   ],
+   "explanationDe": "Ihr-Form: sag + t = sagt.",
+   "hint": null
+  },
+  {
+   "id": "62b2c518-9a21-5382-82e6-6efd80e34306",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 20,
+   "questionDe": "Du ___ ein Heft.",
+   "questionEn": "You ___ a notebook. (verb: kaufen, du)",
+   "options": null,
+   "answer": "kaufst",
+   "accepted": [
+    "kaufst"
+   ],
+   "explanationDe": "Du-Form: kauf + st = kaufst.",
+   "hint": null
+  },
+  {
+   "id": "4416ce85-3576-5677-9dea-08f332dbdd97",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 21,
+   "questionDe": "Ihr ___ heute.",
+   "questionEn": "You all ___ today. (verb: arbeiten, ihr)",
+   "options": null,
+   "answer": "arbeitet",
+   "accepted": [
+    "arbeitet"
+   ],
+   "explanationDe": "Ihr-Form: arbeit + et = arbeitet — ein -e- wird vor -t eingefügt.",
+   "hint": null
+  },
+  {
+   "id": "bb176cf1-73d2-5960-8b19-737bd928712b",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 22,
+   "questionDe": "Das Kind ___ Deutsch. Es lernt schnell.",
+   "questionEn": "The child ___ German. It learns fast. (verb: lernen, das Kind)",
+   "options": null,
+   "answer": "lernt",
+   "accepted": [
+    "lernt"
+   ],
+   "explanationDe": "Das Kind ist neutral, und sowohl das Kind als auch das Pronomen es nehmen die -t-Endung bei lernen.",
+   "hint": null
+  },
+  {
+   "id": "3d87b070-9689-58e0-9f0a-66393ce1b66a",
+   "topic": "present-tense-regular",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 23,
+   "questionDe": "Was ___ er?",
+   "questionEn": "What does he ask? (verb: fragen, er)",
+   "options": null,
+   "answer": "fragt",
+   "accepted": [
+    "fragt"
+   ],
+   "explanationDe": "Er-Form: frag + t = fragt.",
+   "hint": null
+  },
+  {
+   "id": "9a58bc0a-594f-5a6f-b82c-146efa8d78c6",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 1,
+   "questionDe": "Ich ___ um 7 Uhr auf.",
+   "questionEn": "Ich ___ um 7 Uhr auf. (verb: aufstehen, ich)",
+   "options": null,
+   "answer": "stehe",
+   "accepted": [
+    "stehe"
+   ],
+   "explanationDe": "aufstehen → ich stehe ... auf.",
+   "hint": null
+  },
+  {
+   "id": "bf805b90-6433-5303-95f3-96326a8783ef",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 2,
+   "questionDe": "Du ___ deine Mutter an.",
+   "questionEn": "Du ___ deine Mutter an. (verb: anrufen, du)",
+   "options": null,
+   "answer": "rufst",
+   "accepted": [
+    "rufst"
+   ],
+   "explanationDe": "anrufen → du rufst ... an.",
+   "hint": null
+  },
+  {
+   "id": "50c103cc-d4e5-58d1-a75f-d3efa5ba5653",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 3,
+   "questionDe": "Wir ___ heute ein.",
+   "questionEn": "Wir ___ heute ein. (verb: einkaufen, wir)",
+   "options": null,
+   "answer": "kaufen",
+   "accepted": [
+    "kaufen"
+   ],
+   "explanationDe": "einkaufen → wir kaufen ... ein.",
+   "hint": null
+  },
+  {
+   "id": "1431d5ad-2d26-5430-9dbe-123d255c53b9",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 4,
+   "questionDe": "Er ___ um 8 Uhr mit.",
+   "questionEn": "Er ___ um 8 Uhr mit. (verb: mitkommen, er)",
+   "options": null,
+   "answer": "kommt",
+   "accepted": [
+    "kommt"
+   ],
+   "explanationDe": "mitkommen → er kommt ... mit.",
+   "hint": null
+  },
+  {
+   "id": "5c0728c9-3e01-5e60-85d0-3ef077c6d6af",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 5,
+   "questionDe": "Ich ___ das Fenster auf.",
+   "questionEn": "Ich ___ das Fenster auf. (verb: aufmachen, ich)",
+   "options": null,
+   "answer": "mache",
+   "accepted": [
+    "mache"
+   ],
+   "explanationDe": "aufmachen → ich mache ... auf.",
+   "hint": null
+  },
+  {
+   "id": "7f4e5108-b840-59d7-bd86-f4b855f04391",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 6,
+   "questionDe": "Sie ___ die Tür zu.",
+   "questionEn": "Sie ___ die Tür zu. (verb: zumachen, sie = she)",
+   "options": null,
+   "answer": "macht",
+   "accepted": [
+    "macht"
+   ],
+   "explanationDe": "zumachen → sie macht ... zu.",
+   "hint": null
+  },
+  {
+   "id": "f4807b4d-cc19-5f72-90f3-9e7a21f37884",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 7,
+   "questionDe": "Ihr ___ das Zimmer auf.",
+   "questionEn": "Ihr ___ das Zimmer auf. (verb: aufräumen, ihr)",
+   "options": null,
+   "answer": "räumt",
+   "accepted": [
+    "räumt"
+   ],
+   "explanationDe": "aufräumen → ihr räumt ... auf.",
+   "hint": null
+  },
+  {
+   "id": "4437a129-e0ae-5b9b-8a5c-3ab9ee96cb18",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 8,
+   "questionDe": "Ich ___ die Kamera mit.",
+   "questionEn": "Ich ___ die Kamera mit. (verb: mitbringen, ich)",
+   "options": null,
+   "answer": "bringe",
+   "accepted": [
+    "bringe"
+   ],
+   "explanationDe": "mitbringen → ich bringe ... mit.",
+   "hint": null
+  },
+  {
+   "id": "1173ceb0-6080-5b4d-af12-0c6783e3339c",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 9,
+   "questionDe": "Der Zug ___ um 9 Uhr an.",
+   "questionEn": "Der Zug ___ um 9 Uhr an. (verb: ankommen, er = der Zug)",
+   "options": null,
+   "answer": "kommt",
+   "accepted": [
+    "kommt"
+   ],
+   "explanationDe": "ankommen → der Zug kommt ... an.",
+   "hint": null
+  },
+  {
+   "id": "c5afdbe2-b275-5db5-8379-8c16b05b3393",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 10,
+   "questionDe": "Wir ___ heute aus.",
+   "questionEn": "Wir ___ heute aus. (verb: ausgehen, wir)",
+   "options": null,
+   "answer": "gehen",
+   "accepted": [
+    "gehen"
+   ],
+   "explanationDe": "ausgehen → wir gehen ... aus.",
+   "hint": null
+  },
+  {
+   "id": "81ca8c57-dda8-56dc-9a74-39586ac3aa25",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 11,
+   "questionDe": "Ich ___ dich um 8 Uhr ab.",
+   "questionEn": "Ich ___ dich um 8 Uhr ab. (verb: abholen, ich)",
+   "options": null,
+   "answer": "hole",
+   "accepted": [
+    "hole"
+   ],
+   "explanationDe": "abholen → ich hole ... ab.",
+   "hint": null
+  },
+  {
+   "id": "ce39cf11-9cb2-5ecb-ada9-bc2dfe937c87",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 12,
+   "questionDe": "Er ___ gut zu.",
+   "questionEn": "Er ___ gut zu. (verb: zuhören, er)",
+   "options": null,
+   "answer": "hört",
+   "accepted": [
+    "hört"
+   ],
+   "explanationDe": "zuhören → er hört ... zu.",
+   "hint": null
+  },
+  {
+   "id": "b3e3699e-6bf6-506a-81aa-0410649ace63",
+   "topic": "separable-verbs-intro",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 13,
+   "questionDe": "Welcher Satz ist richtig?",
+   "questionEn": "Which sentence is correct? (verb: aufstehen, ich)",
+   "options": [
+    "Ich aufstehe um 7 Uhr.",
+    "Ich stehe auf um 7 Uhr.",
+    "Ich stehe um 7 Uhr auf.",
+    "Ich um 7 Uhr stehe auf."
+   ],
+   "answer": "Ich stehe um 7 Uhr auf.",
+   "accepted": [],
+   "explanationDe": "Stamm auf Position 2, Präfix ganz am Ende.",
+   "hint": null
+  },
+  {
+   "id": "54801fe3-5b02-56dc-9c28-31bb6f620f04",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 1,
+   "questionDe": "___ du um 7 Uhr auf?",
+   "questionEn": "___ du um 7 Uhr auf? (question, verb: aufstehen, du)",
+   "options": null,
+   "answer": "Stehst",
+   "accepted": [
+    "Stehst"
+   ],
+   "explanationDe": "Ja/Nein-Frage: Stamm zuerst, Präfix bleibt am Ende.",
+   "hint": null
+  },
+  {
+   "id": "9454a0c1-640f-54e9-81db-d63ea1557925",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 2,
+   "questionDe": "___ du meine Mutter an?",
+   "questionEn": "___ du meine Mutter an? (question, verb: anrufen, du)",
+   "options": null,
+   "answer": "Rufst",
+   "accepted": [
+    "Rufst"
+   ],
+   "explanationDe": "Ja/Nein-Frage: Stamm zuerst, Präfix bleibt am Ende.",
+   "hint": null
+  },
+  {
+   "id": "8a2be339-3196-5a98-a5e6-e41f4351e703",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 3,
+   "questionDe": "___ ihr heute ein?",
+   "questionEn": "___ ihr heute ein? (question, verb: einkaufen, ihr)",
+   "options": null,
+   "answer": "Kauft",
+   "accepted": [
+    "Kauft"
+   ],
+   "explanationDe": "Ja/Nein-Frage: Stamm zuerst, Präfix bleibt am Ende.",
+   "hint": null
+  },
+  {
+   "id": "fbe490d9-9b31-5e32-a6f3-dea1394f6863",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 4,
+   "questionDe": "___ der Zug um 8 Uhr an?",
+   "questionEn": "Does the train arrive at 8? (verb: ankommen, er)",
+   "options": null,
+   "answer": "Kommt",
+   "accepted": [
+    "Kommt"
+   ],
+   "explanationDe": "Ja/Nein-Frage: Stamm zuerst, Präfix bleibt am Ende.",
+   "hint": null
+  },
+  {
+   "id": "a31b05ff-9be9-5949-af9d-dcddeef307e2",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 5,
+   "questionDe": "Ich hole dich um 8 Uhr ___.",
+   "questionEn": "Ich hole dich um 8 Uhr ___. (prefix only, verb: abholen, ich)",
+   "options": null,
+   "answer": "ab",
+   "accepted": [
+    "ab"
+   ],
+   "explanationDe": "abholen → das Präfix ab steht ganz am Ende, nach der Zeitangabe.",
+   "hint": null
+  },
+  {
+   "id": "f1deffe2-8d4b-547c-8289-bdeafac5bc2c",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 6,
+   "questionDe": "Er macht die Tür ___.",
+   "questionEn": "Er macht die Tür ___. (prefix only, verb: zumachen, er)",
+   "options": null,
+   "answer": "zu",
+   "accepted": [
+    "zu"
+   ],
+   "explanationDe": "zumachen → das Präfix zu steht ganz am Ende.",
+   "hint": null
+  },
+  {
+   "id": "0346934e-7e0a-59f8-a5c3-135fcf18a812",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 7,
+   "questionDe": "Wir kaufen heute ___.",
+   "questionEn": "Wir kaufen heute ___. (prefix only, verb: einkaufen, wir)",
+   "options": null,
+   "answer": "ein",
+   "accepted": [
+    "ein"
+   ],
+   "explanationDe": "einkaufen → das Präfix ein steht ganz am Ende.",
+   "hint": null
+  },
+  {
+   "id": "a375e841-56f8-5772-90d9-c5a079863bdd",
+   "topic": "separable-verbs-intro",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 8,
+   "questionDe": "Ihr kommt um 8 Uhr ___.",
+   "questionEn": "Ihr kommt um 8 Uhr ___. (prefix only, verb: mitkommen, ihr)",
+   "options": null,
+   "answer": "mit",
+   "accepted": [
+    "mit"
+   ],
+   "explanationDe": "mitkommen → das Präfix mit steht ganz am Ende.",
+   "hint": null
+  },
+  {
+   "id": "96b41b81-d57b-5bfe-91c8-93ef7d8982ca",
+   "topic": "separable-verbs-intro",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 9,
+   "questionDe": "Schreib den Satz: [ich / aufstehen / um 7 Uhr]",
+   "questionEn": "Write the sentence: [ich / aufstehen / um 7 Uhr] (ich-form)",
+   "options": null,
+   "answer": "Ich stehe um 7 Uhr auf.",
+   "accepted": [
+    "Ich stehe um 7 Uhr auf",
+    "Um 7 Uhr stehe ich auf.",
+    "Um 7 Uhr stehe ich auf"
+   ],
+   "explanationDe": "ich + stehe (Position 2), auf am Ende. Die Zeitangabe kann auch am Satzanfang stehen.",
+   "hint": null
+  },
+  {
+   "id": "1958acf0-ed11-583e-88e0-6a55fab00172",
+   "topic": "separable-verbs-intro",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 10,
+   "questionDe": "Schreib den Satz: [wir / einkaufen / heute]",
+   "questionEn": "Write the sentence: [wir / einkaufen / heute] (wir-form)",
+   "options": null,
+   "answer": "Wir kaufen heute ein.",
+   "accepted": [
+    "Wir kaufen heute ein",
+    "Heute kaufen wir ein.",
+    "Heute kaufen wir ein"
+   ],
+   "explanationDe": "wir + kaufen (Position 2), ein am Ende. heute kann auch am Satzanfang stehen.",
+   "hint": null
+  },
+  {
+   "id": "51d74698-b413-58f3-bbc5-1fde9f41f83b",
+   "topic": "separable-verbs-intro",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 3,
+   "order": 11,
+   "questionDe": "Schreib den Satz: [er / abholen / dich / um 8 Uhr]",
+   "questionEn": "Write the sentence: [er / abholen / dich / um 8 Uhr] (er-form)",
+   "options": null,
+   "answer": "Er holt dich um 8 Uhr ab.",
+   "accepted": [
+    "Er holt dich um 8 Uhr ab",
+    "Um 8 Uhr holt er dich ab.",
+    "Um 8 Uhr holt er dich ab"
+   ],
+   "explanationDe": "er + holt (Position 2), ab am Ende. Die Zeitangabe kann auch am Satzanfang stehen.",
+   "hint": null
+  },
+  {
+   "id": "a14681b7-0b0a-5692-9580-bea937c6384a",
+   "topic": "separable-verbs-intro",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 12,
+   "questionDe": "Welcher Satz ist eine richtige Frage?",
+   "questionEn": "Which sentence is a correctly formed question? (verb: aufstehen, du)",
+   "options": [
+    "Du stehst auf um 7 Uhr?",
+    "Stehst du um 7 Uhr auf?",
+    "Auf stehst du um 7 Uhr?",
+    "Stehst auf du um 7 Uhr?"
+   ],
+   "answer": "Stehst du um 7 Uhr auf?",
+   "accepted": [],
+   "explanationDe": "In einer Ja/Nein-Frage steht der Stamm zuerst, das Präfix bleibt am Ende.",
+   "hint": null
+  },
+  {
+   "id": "abe9e994-8bcc-5d06-b81d-79f720c2ab69",
+   "topic": "separable-verbs-intro",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 13,
+   "questionDe": "Welcher Satz ist richtig?",
+   "questionEn": "Which sentence is correct? (verb: anrufen, ich)",
+   "options": [
+    "Ich rufe meine Mutter an.",
+    "Ich anrufe meine Mutter.",
+    "Ich rufe an meine Mutter.",
+    "Ich an meine Mutter rufe."
+   ],
+   "answer": "Ich rufe meine Mutter an.",
+   "accepted": [],
+   "explanationDe": "anrufen trennt sich: rufe auf Position 2, an ganz am Ende.",
+   "hint": null
+  },
+  {
+   "id": "2e4e344c-3116-5304-9f6e-afbed5d037e9",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 1,
+   "questionDe": "Es ist ___. (14:30, offiziell)",
+   "questionEn": "It is 2:30 pm. (official, 24-hour: write the time in words)",
+   "options": null,
+   "answer": "vierzehn Uhr dreißig",
+   "accepted": [
+    "vierzehn Uhr dreißig"
+   ],
+   "explanationDe": "Offizielle Zeit: Uhr + Stunde + Minuten.",
+   "hint": "vierzehn = 14"
+  },
+  {
+   "id": "36f2bd1a-d22a-5c9e-9f7e-a197b992f696",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 2,
+   "questionDe": "Es ist ___. (2:30, umgangssprachlich)",
+   "questionEn": "It is 2:30. (colloquial, everyday German)",
+   "options": null,
+   "answer": "halb drei",
+   "accepted": [
+    "halb drei"
+   ],
+   "explanationDe": "halb + NÄCHSTE Stunde = 2:30.",
+   "hint": "halb + nächste Stunde"
+  },
+  {
+   "id": "69162961-90a8-5f76-9cad-865fb2c8b9fb",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 3,
+   "questionDe": "Es ist ___. (2:15, umgangssprachlich)",
+   "questionEn": "It is 2:15. (colloquial)",
+   "options": null,
+   "answer": "Viertel nach zwei",
+   "accepted": [
+    "Viertel nach zwei"
+   ],
+   "explanationDe": "Viertel nach + aktuelle Stunde.",
+   "hint": null
+  },
+  {
+   "id": "f12532bf-6089-544f-83ef-8bfcc2940f6b",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 4,
+   "questionDe": "Es ist ___. (2:45, umgangssprachlich)",
+   "questionEn": "It is 2:45. (colloquial)",
+   "options": null,
+   "answer": "Viertel vor drei",
+   "accepted": [
+    "Viertel vor drei"
+   ],
+   "explanationDe": "Viertel vor + NÄCHSTE Stunde.",
+   "hint": null
+  },
+  {
+   "id": "2d34c5aa-a512-50b5-a1c5-57dd04acb619",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 5,
+   "questionDe": "Es ist ___. (8:00, offiziell)",
+   "questionEn": "It is 8:00. (official: include the word Uhr)",
+   "options": null,
+   "answer": "acht Uhr",
+   "accepted": [
+    "acht Uhr",
+    "acht"
+   ],
+   "explanationDe": "Offizielle Zeit enthält immer Uhr, auch bei einer vollen Stunde.",
+   "hint": null
+  },
+  {
+   "id": "e6b00988-f4b5-50e3-b7eb-843207dc8e71",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 6,
+   "questionDe": "Der Kurs ist ___ acht Uhr. (Präposition für Uhrzeit)",
+   "questionEn": "The course is at eight o'clock. (preposition for a clock time)",
+   "options": null,
+   "answer": "um",
+   "accepted": [
+    "um"
+   ],
+   "explanationDe": "um + Uhrzeit.",
+   "hint": null
+  },
+  {
+   "id": "2325f843-20ca-541b-b9a0-a7d00d07d9e8",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 7,
+   "questionDe": "Ich habe ___ Montag Deutschkurs. (Präposition für Wochentag)",
+   "questionEn": "I have German class on Monday. (preposition for a weekday)",
+   "options": null,
+   "answer": "am",
+   "accepted": [
+    "am"
+   ],
+   "explanationDe": "am + Wochentag.",
+   "hint": null
+  },
+  {
+   "id": "724520d1-5ba5-58b9-b331-78a101d51524",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 8,
+   "questionDe": "Mein Geburtstag ist ___ Mai. (Präposition für Monat)",
+   "questionEn": "My birthday is in May. (preposition for a month)",
+   "options": null,
+   "answer": "im",
+   "accepted": [
+    "im"
+   ],
+   "explanationDe": "im + Monat.",
+   "hint": null
+  },
+  {
+   "id": "8970aaea-186c-58b0-bcf2-fdc7bbc3a632",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 9,
+   "questionDe": "___ Abend höre ich Musik. (Präposition für Tageszeit)",
+   "questionEn": "In the evening I listen to music. (preposition for a time of day)",
+   "options": null,
+   "answer": "Am",
+   "accepted": [
+    "Am",
+    "am"
+   ],
+   "explanationDe": "am + Tageszeit.",
+   "hint": null
+  },
+  {
+   "id": "ba0f5667-a00d-57a4-9a76-5571224696a4",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 10,
+   "questionDe": "___ der Nacht bin ich zu Hause. (Ausnahme: nicht am)",
+   "questionEn": "At night I am at home. (exception — not am)",
+   "options": null,
+   "answer": "In",
+   "accepted": [
+    "In",
+    "in"
+   ],
+   "explanationDe": "in der Nacht ist die eine Ausnahme zum am-Muster.",
+   "hint": null
+  },
+  {
+   "id": "a8759f56-1064-5599-99bc-5bea3f752bfb",
+   "topic": "time-and-dates",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 11,
+   "questionDe": "Wie sagt man 5:30 umgangssprachlich?",
+   "questionEn": "How do you say 5:30 in colloquial German?",
+   "options": [
+    "halb fünf",
+    "halb sechs",
+    "Viertel nach fünf",
+    "fünf Uhr dreißig"
+   ],
+   "answer": "halb sechs",
+   "accepted": [],
+   "explanationDe": "halb + NÄCHSTE Stunde = 5:30.",
+   "hint": null
+  },
+  {
+   "id": "c307bcfa-5945-5c82-a3b8-5b2c30d48a39",
+   "topic": "time-and-dates",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 12,
+   "questionDe": "Welcher Tag kommt nach Mittwoch?",
+   "questionEn": "Which day comes after Wednesday?",
+   "options": [
+    "Dienstag",
+    "Donnerstag",
+    "Freitag",
+    "Montag"
+   ],
+   "answer": "Donnerstag",
+   "accepted": [],
+   "explanationDe": "Die Reihenfolge: Montag, Dienstag, Mittwoch, Donnerstag...",
+   "hint": null
+  },
+  {
+   "id": "268f5dae-dad0-5be7-bdac-50446e9bbdf3",
+   "topic": "time-and-dates",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 13,
+   "questionDe": "Was ist richtig? '___ Wochenende schlafe ich lange.'",
+   "questionEn": "Which is correct? 'On the weekend I sleep in.'",
+   "options": [
+    "Am",
+    "Um",
+    "Im",
+    "In"
+   ],
+   "answer": "Am",
+   "accepted": [],
+   "explanationDe": "am Wochenende, wie die anderen am-Ausdrücke.",
+   "hint": null
+  },
+  {
+   "id": "cd85b358-b44a-5708-ac6c-20e1b10198a9",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 1,
+   "questionDe": "Heute ist der ___ Mai. (3.)",
+   "questionEn": "Today is May 3rd. (der-form, -e ending)",
+   "options": null,
+   "answer": "dritte",
+   "accepted": [
+    "dritte"
+   ],
+   "explanationDe": "3 = dritte — unregelmäßig, nicht 'dreite'.",
+   "hint": "unregelmäßig!"
+  },
+  {
+   "id": "8484bb88-869a-539d-a570-51c505516730",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 2,
+   "questionDe": "Wann hast du Geburtstag? — Am ___ Mai. (3.)",
+   "questionEn": "When is your birthday? — On May 3rd. (am-form, -en ending)",
+   "options": null,
+   "answer": "dritten",
+   "accepted": [
+    "dritten"
+   ],
+   "explanationDe": "Nach am: Endung -en: dritten.",
+   "hint": null
+  },
+  {
+   "id": "a93ce5ee-312d-5474-a423-19265bdcecbe",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 3,
+   "questionDe": "Heute ist der ___ September. (1.)",
+   "questionEn": "Today is September 1st. (der-form, -e ending)",
+   "options": null,
+   "answer": "erste",
+   "accepted": [
+    "erste"
+   ],
+   "explanationDe": "1 = erste — unregelmäßig.",
+   "hint": "unregelmäßig!"
+  },
+  {
+   "id": "45a33a77-fc49-562d-9220-28f858d370aa",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 4,
+   "questionDe": "Der Kurs beginnt am ___ September. (1.)",
+   "questionEn": "The course starts on September 1st. (am-form, -en ending)",
+   "options": null,
+   "answer": "ersten",
+   "accepted": [
+    "ersten"
+   ],
+   "explanationDe": "erste + n nach am: ersten.",
+   "hint": null
+  },
+  {
+   "id": "36e6766a-afde-534d-b753-e49a0f6031a2",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 5,
+   "questionDe": "Heute ist der ___ Juli. (7.)",
+   "questionEn": "Today is July 7th. (der-form, -e ending)",
+   "options": null,
+   "answer": "siebte",
+   "accepted": [
+    "siebte"
+   ],
+   "explanationDe": "7 = siebte, nicht siebente.",
+   "hint": "nicht 'siebente'!"
+  },
+  {
+   "id": "f0532751-96db-5cb5-bde4-198903f34ed1",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 6,
+   "questionDe": "Heute ist der ___ August. (8.)",
+   "questionEn": "Today is August 8th. (der-form, -e ending)",
+   "options": null,
+   "answer": "achte",
+   "accepted": [
+    "achte"
+   ],
+   "explanationDe": "8 = achte — unregelmäßig, nur -e (nicht achtte).",
+   "hint": "unregelmäßig!"
+  },
+  {
+   "id": "2f9bf1dc-0221-5f9e-bfdc-17037f97d80a",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 7,
+   "questionDe": "Heute ist der ___ Juni. (20.)",
+   "questionEn": "Today is June 20th. (der-form, -e ending)",
+   "options": null,
+   "answer": "zwanzigste",
+   "accepted": [
+    "zwanzigste"
+   ],
+   "explanationDe": "Ab 20: -ste: zwanzigste.",
+   "hint": "ab 20: -ste"
+  },
+  {
+   "id": "b70ccf9a-e756-5b92-a885-ca3dacc73c3a",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 3,
+   "order": 8,
+   "questionDe": "Wann hast du Deutschkurs? — Am ___ Oktober. (21.)",
+   "questionEn": "When is your German class? — On October 21st. (am-form, -en ending)",
+   "options": null,
+   "answer": "einundzwanzigsten",
+   "accepted": [
+    "einundzwanzigsten"
+   ],
+   "explanationDe": "einundzwanzigste + n nach am.",
+   "hint": null
+  },
+  {
+   "id": "f9df3cd7-3f05-53c4-abd0-4853ce942dc5",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 9,
+   "questionDe": "Es ist ___. (20:45, offiziell)",
+   "questionEn": "It is 8:45 pm. (official, 24-hour: write the time in words)",
+   "options": null,
+   "answer": "zwanzig Uhr fünfundvierzig",
+   "accepted": [
+    "zwanzig Uhr fünfundvierzig"
+   ],
+   "explanationDe": "Offizielle Zeit: Uhr + Stunde + Minuten.",
+   "hint": null
+  },
+  {
+   "id": "827c155d-7b87-53a3-b047-d53ab532f296",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 10,
+   "questionDe": "Es ist ___. (18:20, umgangssprachlich)",
+   "questionEn": "It is 6:20 pm. (colloquial, 12-hour)",
+   "options": null,
+   "answer": "zwanzig nach sechs",
+   "accepted": [
+    "zwanzig nach sechs"
+   ],
+   "explanationDe": "18:20 umgangssprachlich: zwanzig nach sechs.",
+   "hint": null
+  },
+  {
+   "id": "ffb96fdf-5140-582a-bc5a-b3d17e131ea3",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 11,
+   "questionDe": "Es ist ___. (0:00, offiziell)",
+   "questionEn": "It is midnight (0:00). (official, 24-hour)",
+   "options": null,
+   "answer": "null Uhr",
+   "accepted": [
+    "null Uhr"
+   ],
+   "explanationDe": "0:00 offiziell: null Uhr.",
+   "hint": null
+  },
+  {
+   "id": "3e14842d-3e34-5d86-9284-5954e9593b61",
+   "topic": "time-and-dates",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 12,
+   "questionDe": "Wie sagt man 2:50 umgangssprachlich?",
+   "questionEn": "How do you say 2:50 in colloquial German?",
+   "options": [
+    "zehn vor drei",
+    "zehn nach drei",
+    "halb drei",
+    "Viertel vor drei"
+   ],
+   "answer": "zehn vor drei",
+   "accepted": [],
+   "explanationDe": "Nach der halben Stunde zählt man mit vor zur nächsten Stunde.",
+   "hint": null
+  },
+  {
+   "id": "83d70d20-0e47-540b-955a-96e01f70c29d",
+   "topic": "time-and-dates",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 13,
+   "questionDe": "Was ist richtig?",
+   "questionEn": "Which sentence is correct?",
+   "options": [
+    "Der Kurs ist um Montag.",
+    "Der Kurs ist am Montag.",
+    "Der Kurs ist im Montag.",
+    "Der Kurs ist in Montag."
+   ],
+   "answer": "Der Kurs ist am Montag.",
+   "accepted": [],
+   "explanationDe": "Wochentage stehen mit am, nicht um oder im.",
+   "hint": null
+  },
+  {
+   "id": "68be03d3-c547-41dc-9dc0-772fa974f74f",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 1,
+   "questionDe": "Ich ___ ein Auto.",
+   "questionEn": "Ich ___ ein Auto.",
+   "options": [
+    "habe",
+    "hast",
+    "hat",
+    "haben"
+   ],
+   "answer": "habe",
+   "accepted": [
+    "habe"
+   ],
+   "explanationDe": "ich + habe.",
+   "hint": null
+  },
+  {
+   "id": "08691f4b-7f85-4e21-8188-ea84795c0dc5",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 2,
+   "questionDe": "Du ___ Recht.",
+   "questionEn": "Du ___ Recht.",
+   "options": [
+    "hast",
+    "habe",
+    "hat",
+    "haben"
+   ],
+   "answer": "hast",
+   "accepted": [
+    "hast"
+   ],
+   "explanationDe": "du + hast.",
+   "hint": null
+  },
+  {
+   "id": "cb35f9d0-86d8-4f7c-b41d-3e6c1e2e1e4c",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 3,
+   "questionDe": "Er ___ Hunger.",
+   "questionEn": "Er ___ Hunger.",
+   "options": [
+    "hat",
+    "habe",
+    "hast",
+    "haben"
+   ],
+   "answer": "hat",
+   "accepted": [
+    "hat"
+   ],
+   "explanationDe": "er + hat.",
+   "hint": null
+  },
+  {
+   "id": "295341b6-a7f0-45ce-a5f3-88bdb84116d1",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 4,
+   "questionDe": "Wir ___ zwei Katzen.",
+   "questionEn": "Wir ___ zwei Katzen.",
+   "options": [
+    "haben",
+    "habt",
+    "hat",
+    "habe"
+   ],
+   "answer": "haben",
+   "accepted": [
+    "haben"
+   ],
+   "explanationDe": "wir + haben.",
+   "hint": null
+  },
+  {
+   "id": "d88c8854-e339-41db-ae40-5e8954311b4b",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 5,
+   "questionDe": "Ihr ___ Glück!",
+   "questionEn": "Ihr ___ Glück!",
+   "options": [
+    "habt",
+    "haben",
+    "hast",
+    "hat"
+   ],
+   "answer": "habt",
+   "accepted": [
+    "habt"
+   ],
+   "explanationDe": "ihr + habt.",
+   "hint": null
+  },
+  {
+   "id": "69b3af5c-84e9-4611-8353-af47f7dbb36f",
+   "topic": "verb-haben",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 6,
+   "questionDe": "Wie sagt man \"I am hungry\"?",
+   "questionEn": "How do you say \"I am hungry\" in German?",
+   "options": [
+    "Ich bin hungrig.",
+    "Ich hat Hunger.",
+    "Ich bin Hunger.",
+    "Ich habe Hunger."
+   ],
+   "answer": "Ich habe Hunger.",
+   "accepted": [],
+   "explanationDe": "Ich habe Hunger.",
+   "hint": null
+  },
+  {
+   "id": "75a1cec4-0090-4675-852f-abb4d51dabb1",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 7,
+   "questionDe": "Sie ___ drei Kinder.",
+   "questionEn": "Sie ___ drei Kinder. (they)",
+   "options": [
+    "haben",
+    "hat",
+    "habt",
+    "hast"
+   ],
+   "answer": "haben",
+   "accepted": [
+    "haben"
+   ],
+   "explanationDe": "sie + haben.",
+   "hint": null
+  },
+  {
+   "id": "ff343b73-534f-42bc-bc58-1fb8c6fbb1c5",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 8,
+   "questionDe": "___ du Zeit?",
+   "questionEn": "___ du Zeit?",
+   "options": [
+    "Hast",
+    "Habe",
+    "Hat",
+    "Haben"
+   ],
+   "answer": "Hast",
+   "accepted": [
+    "Hast"
+   ],
+   "explanationDe": "du + hast.",
+   "hint": null
+  },
+  {
+   "id": "fb88c1bb-9662-5838-9cd6-6a117218b6bb",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 9,
+   "questionDe": "Wir ___ Durst.",
+   "questionEn": "We ___ thirst (= we are thirsty). (verb: haben, wir)",
+   "options": null,
+   "answer": "haben",
+   "accepted": [
+    "haben"
+   ],
+   "explanationDe": "Wir steht immer mit haben.",
+   "hint": null
+  },
+  {
+   "id": "f8f43902-9746-5624-8939-baf8c5ef751f",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 10,
+   "questionDe": "Ihr ___ Recht.",
+   "questionEn": "You all ___ right (= you are right). (verb: haben, ihr)",
+   "options": null,
+   "answer": "habt",
+   "accepted": [
+    "habt"
+   ],
+   "explanationDe": "Ihr steht immer mit habt.",
+   "hint": null
+  },
+  {
+   "id": "29557669-a423-5299-92e7-949389ca14d7",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 11,
+   "questionDe": "Er ___ Glück.",
+   "questionEn": "He ___ luck (= he is lucky). (verb: haben, er)",
+   "options": null,
+   "answer": "hat",
+   "accepted": [
+    "hat"
+   ],
+   "explanationDe": "Er, sie, es stehen alle mit hat.",
+   "hint": null
+  },
+  {
+   "id": "3286c2b6-0c89-5187-ae66-841a73bcc4c4",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 12,
+   "questionDe": "Sie ___ Zeit.",
+   "questionEn": "She ___ time. (verb: haben, sie = she, singular)",
+   "options": null,
+   "answer": "hat",
+   "accepted": [
+    "hat"
+   ],
+   "explanationDe": "Singular-sie (she) steht mit hat, wie er und es.",
+   "hint": null
+  },
+  {
+   "id": "3c9fff52-7687-5322-b960-1dd3fd3c2b88",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 13,
+   "questionDe": "Du ___ Hunger.",
+   "questionEn": "You ___ hunger (= you are hungry). (verb: haben, du)",
+   "options": null,
+   "answer": "hast",
+   "accepted": [
+    "hast"
+   ],
+   "explanationDe": "Du steht immer mit hast.",
+   "hint": null
+  },
+  {
+   "id": "e8388d41-3d49-59c8-ac5b-020c596c2649",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 14,
+   "questionDe": "___ Sie Zeit?",
+   "questionEn": "Do you (formal) ___ time? (verb: haben, Sie, formal question)",
+   "options": null,
+   "answer": "Haben",
+   "accepted": [
+    "Haben",
+    "haben"
+   ],
+   "explanationDe": "In einer Frage steht die haben-Form vor dem formellen Sie.",
+   "hint": null
+  },
+  {
+   "id": "7b8f0fd0-cce3-51e8-8430-4a4ecb5c47c3",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 15,
+   "questionDe": "___ du einen Bruder?",
+   "questionEn": "Do you ___ a brother? (verb: haben, du, question)",
+   "options": null,
+   "answer": "Hast",
+   "accepted": [
+    "Hast",
+    "hast"
+   ],
+   "explanationDe": "In einer Frage steht die haben-Form vor du.",
+   "hint": null
+  },
+  {
+   "id": "fc0ea55b-2cab-5a32-b83f-d08915bf32d8",
+   "topic": "verb-haben",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 16,
+   "questionDe": "Schreib den Satz: [wir / Hunger]",
+   "questionEn": "Write the sentence: [we / hunger = we are hungry] (verb: haben)",
+   "options": null,
+   "answer": "Wir haben Hunger.",
+   "accepted": [
+    "Wir haben Hunger.",
+    "Wir haben Hunger"
+   ],
+   "explanationDe": "Deutsch benutzt haben, wo Englisch ‘to be hungry’ sagt.",
+   "hint": null
+  },
+  {
+   "id": "7f2c06ad-a7c0-5602-8852-4cce9b464311",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 17,
+   "questionDe": "Ich ___ Recht.",
+   "questionEn": "I ___ right (= I am right). (verb: haben, ich)",
+   "options": null,
+   "answer": "habe",
+   "accepted": [
+    "habe"
+   ],
+   "explanationDe": "Ich steht immer mit habe.",
+   "hint": null
+  },
+  {
+   "id": "dcfdd24d-b6da-4222-92a9-2e816bf4cc5d",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 1,
+   "questionDe": "Ich ___ müde.",
+   "questionEn": "Ich ___ müde.",
+   "options": [
+    "bin",
+    "bist",
+    "ist",
+    "sind"
+   ],
+   "answer": "bin",
+   "accepted": [
+    "bin"
+   ],
+   "explanationDe": "ich + bin.",
+   "hint": null
+  },
+  {
+   "id": "2c8a4ddf-5e06-4c1d-af9d-6319d6dc3aaf",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 2,
+   "questionDe": "Du ___ nett.",
+   "questionEn": "Du ___ nett.",
+   "options": [
+    "bist",
+    "bin",
+    "ist",
+    "sind"
+   ],
+   "answer": "bist",
+   "accepted": [
+    "bist"
+   ],
+   "explanationDe": "du + bist.",
+   "hint": null
+  },
+  {
+   "id": "34957c67-c29b-43c9-b3ef-5346fa68fa52",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 3,
+   "questionDe": "Er ___ Lehrer.",
+   "questionEn": "Er ___ Lehrer.",
+   "options": [
+    "ist",
+    "bin",
+    "bist",
+    "sind"
+   ],
+   "answer": "ist",
+   "accepted": [
+    "ist"
+   ],
+   "explanationDe": "er + ist.",
+   "hint": null
+  },
+  {
+   "id": "9fd52b13-6cb9-4430-b0b7-52d4a63c0a63",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 4,
+   "questionDe": "Wir ___ in Berlin.",
+   "questionEn": "Wir ___ in Berlin.",
+   "options": [
+    "sind",
+    "seid",
+    "bist",
+    "ist"
+   ],
+   "answer": "sind",
+   "accepted": [
+    "sind"
+   ],
+   "explanationDe": "wir + sind.",
+   "hint": null
+  },
+  {
+   "id": "7a464dbe-2ac1-4ed2-a606-9a99081a9ee2",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 5,
+   "questionDe": "Ihr ___ lustig!",
+   "questionEn": "Ihr ___ lustig!",
+   "options": [
+    "seid",
+    "sind",
+    "bist",
+    "ist"
+   ],
+   "answer": "seid",
+   "accepted": [
+    "seid"
+   ],
+   "explanationDe": "ihr + seid.",
+   "hint": null
+  },
+  {
+   "id": "a99e392a-bf57-4674-982d-0951d143b5e0",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 6,
+   "questionDe": "Sie ___ sehr nett.",
+   "questionEn": "Sie ___ sehr nett. (formal)",
+   "options": [
+    "sind",
+    "ist",
+    "seid",
+    "bist"
+   ],
+   "answer": "sind",
+   "accepted": [
+    "sind"
+   ],
+   "explanationDe": "Sie + sind.",
+   "hint": null
+  },
+  {
+   "id": "da9e486f-2548-4462-9bdd-c59560ed7276",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 7,
+   "questionDe": "Das ___ gut.",
+   "questionEn": "Das ___ gut.",
+   "options": [
+    "ist",
+    "bin",
+    "sind",
+    "seid"
+   ],
+   "answer": "ist",
+   "accepted": [
+    "ist"
+   ],
+   "explanationDe": "das + ist.",
+   "hint": null
+  },
+  {
+   "id": "0fe8146d-6e90-4c1c-b127-618c44e456ba",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 8,
+   "questionDe": "___ du Student?",
+   "questionEn": "___ du Student?",
+   "options": [
+    "Bist",
+    "Bin",
+    "Ist",
+    "Sind"
+   ],
+   "answer": "Bist",
+   "accepted": [
+    "Bist"
+   ],
+   "explanationDe": "du + bist.",
+   "hint": null
+  },
+  {
+   "id": "408d681a-e3ea-5556-8596-4de268454f06",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 9,
+   "questionDe": "Ich ___ glücklich.",
+   "questionEn": "I ___ happy. (verb: sein, ich)",
+   "options": null,
+   "answer": "bin",
+   "accepted": [
+    "bin"
+   ],
+   "explanationDe": "Ich steht immer mit bin.",
+   "hint": null
+  },
+  {
+   "id": "8d89816d-ebad-5eea-9f04-333bc2674fb2",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 10,
+   "questionDe": "Du ___ freundlich.",
+   "questionEn": "You ___ friendly. (verb: sein, du)",
+   "options": null,
+   "answer": "bist",
+   "accepted": [
+    "bist"
+   ],
+   "explanationDe": "Du steht immer mit bist.",
+   "hint": null
+  },
+  {
+   "id": "338b13a7-7712-555d-bdb5-380090c87ba3",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 11,
+   "questionDe": "Er ___ Arzt.",
+   "questionEn": "He ___ a doctor. (verb: sein, er)",
+   "options": null,
+   "answer": "ist",
+   "accepted": [
+    "ist"
+   ],
+   "explanationDe": "Er, sie, es stehen alle mit ist.",
+   "hint": null
+  },
+  {
+   "id": "885e0528-1c6e-541f-b25a-cbf5286eac36",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 12,
+   "questionDe": "Wir ___ Freunde.",
+   "questionEn": "We ___ friends. (verb: sein, wir)",
+   "options": null,
+   "answer": "sind",
+   "accepted": [
+    "sind"
+   ],
+   "explanationDe": "Wir steht immer mit sind.",
+   "hint": null
+  },
+  {
+   "id": "299cba23-0ab0-5c58-98bb-bca945fcc43e",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 13,
+   "questionDe": "Ihr ___ müde.",
+   "questionEn": "You all ___ tired. (verb: sein, ihr)",
+   "options": null,
+   "answer": "seid",
+   "accepted": [
+    "seid"
+   ],
+   "explanationDe": "Ihr steht immer mit seid.",
+   "hint": null
+  },
+  {
+   "id": "1e3a7370-9e9c-55ea-b513-496b45421861",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 14,
+   "questionDe": "Sie ___ Kollegen.",
+   "questionEn": "They ___ colleagues. (verb: sein, sie = they)",
+   "options": null,
+   "answer": "sind",
+   "accepted": [
+    "sind"
+   ],
+   "explanationDe": "Sie (sie/they) steht mit sind, wie wir.",
+   "hint": null
+  },
+  {
+   "id": "19f1aa27-7634-5599-8a61-8f69e259f6d4",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 15,
+   "questionDe": "Das ___ Kaffee.",
+   "questionEn": "That ___ coffee. (verb: sein, das)",
+   "options": null,
+   "answer": "ist",
+   "accepted": [
+    "ist"
+   ],
+   "explanationDe": "Das steht mit ist, genau wie er/sie/es.",
+   "hint": null
+  },
+  {
+   "id": "dae9ebf1-4492-563c-8aa0-142a40f8197f",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 16,
+   "questionDe": "___ Sie fertig?",
+   "questionEn": "___ you ready? (formal question, verb: sein)",
+   "options": null,
+   "answer": "Sind",
+   "accepted": [
+    "Sind",
+    "sind"
+   ],
+   "explanationDe": "In einer formellen Frage steht sind zuerst.",
+   "hint": null
+  },
+  {
+   "id": "4ecbc321-a7fa-57e4-8d21-285cd34986e4",
+   "topic": "verb-sein",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 17,
+   "questionDe": "Schreib den Satz: [wir / Lehrer]",
+   "questionEn": "Write the sentence: [we / teachers] (verb: sein, wir)",
+   "options": null,
+   "answer": "Wir sind Lehrer.",
+   "accepted": [
+    "Wir sind Lehrer.",
+    "Wir sind Lehrer"
+   ],
+   "explanationDe": "Wir nimmt sind — sein ist unregelmäßig, die wir-Form entsteht nicht wie bei regelmäßigen Verben aus dem Infinitiv.",
+   "hint": null
+  },
+  {
+   "id": "459b2960-6610-57b4-b4f9-631bf6eeed01",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 18,
+   "questionDe": "Sie ___ meine Schwester.",
+   "questionEn": "She ___ my sister. (verb: sein, sie = she, singular)",
+   "options": null,
+   "answer": "ist",
+   "accepted": [
+    "ist"
+   ],
+   "explanationDe": "Singular-sie (she) steht mit ist, wie er und das.",
+   "hint": null
+  },
+  {
+   "id": "5c5c272b-ff81-5811-83b6-6e7fde71ba1b",
+   "topic": "yes-no-questions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 1,
+   "questionDe": "___ du müde?",
+   "questionEn": "___ du müde? (verb: sein, person: du)",
+   "options": null,
+   "answer": "Bist",
+   "accepted": [
+    "Bist"
+   ],
+   "explanationDe": "Aussage: Du bist müde. Frage: Verb an Position 1 → Bist du müde?",
+   "hint": null
+  },
+  {
+   "id": "d1777221-6b65-55c3-8ecd-dbaa0583db0c",
+   "topic": "yes-no-questions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 2,
+   "questionDe": "___ du Zeit?",
+   "questionEn": "___ du Zeit? (verb: haben, person: du)",
+   "options": null,
+   "answer": "Hast",
+   "accepted": [
+    "Hast"
+   ],
+   "explanationDe": "Aussage: Du hast Zeit. Frage: Hast du Zeit?",
+   "hint": null
+  },
+  {
+   "id": "426d0034-6957-500d-84d9-4c2844e5338c",
+   "topic": "yes-no-questions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 3,
+   "questionDe": "___ du aus Polen?",
+   "questionEn": "___ du aus Polen? (verb: kommen, person: du)",
+   "options": null,
+   "answer": "Kommst",
+   "accepted": [
+    "Kommst"
+   ],
+   "explanationDe": "Aussage: Du kommst aus Polen. Frage: Kommst du aus Polen?",
+   "hint": null
+  },
+  {
+   "id": "8c1f7c82-1210-5d1b-8f48-8ad60f3cfa78",
+   "topic": "yes-no-questions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 4,
+   "questionDe": "___ du viel?",
+   "questionEn": "___ du viel? (verb: arbeiten, person: du)",
+   "options": null,
+   "answer": "Arbeitest",
+   "accepted": [
+    "Arbeitest"
+   ],
+   "explanationDe": "Der Stamm von arbeiten endet auf -t, deshalb -e- einfügen: arbeitest. Frage: Arbeitest du viel?",
+   "hint": null
+  },
+  {
+   "id": "e6ef37a0-c0d0-517a-9906-5f70f93dc488",
+   "topic": "yes-no-questions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 5,
+   "questionDe": "___ du früh auf?",
+   "questionEn": "___ du früh auf? (verb: aufstehen, person: du)",
+   "options": null,
+   "answer": "Stehst",
+   "accepted": [
+    "Stehst"
+   ],
+   "explanationDe": "aufstehen trennt sich: der Stamm stehst steht an Position 1, auf bleibt am Satzende: Stehst du früh auf?",
+   "hint": null
+  },
+  {
+   "id": "14eac77e-603e-51e0-9a53-4e18fa5b9d8f",
+   "topic": "yes-no-questions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 6,
+   "questionDe": "___ Sie in Berlin?",
+   "questionEn": "___ Sie in Berlin? (verb: wohnen, person: Sie – formal)",
+   "options": null,
+   "answer": "Wohnen",
+   "accepted": [
+    "Wohnen"
+   ],
+   "explanationDe": "Beim formellen Sie bleibt die Verbform gleich (wohnen), nur an Position 1: Wohnen Sie in Berlin?",
+   "hint": null
+  },
+  {
+   "id": "e327c296-1ea8-51db-b3c5-a6409f00534c",
+   "topic": "yes-no-questions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 7,
+   "questionDe": "___ Sie Englisch?",
+   "questionEn": "___ Sie Englisch? (verb: sprechen, person: Sie – formal)",
+   "options": null,
+   "answer": "Sprechen",
+   "accepted": [
+    "Sprechen"
+   ],
+   "explanationDe": "Sie benutzt die Form sprechen (wie der Infinitiv), an Position 1: Sprechen Sie Englisch?",
+   "hint": null
+  },
+  {
+   "id": "d58cff5b-760c-57bc-b030-05d1201f8846",
+   "topic": "yes-no-questions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 8,
+   "questionDe": "___ du gern Kaffee?",
+   "questionEn": "___ du gern Kaffee? (verb: trinken, person: du)",
+   "options": null,
+   "answer": "Trinkst",
+   "accepted": [
+    "Trinkst"
+   ],
+   "explanationDe": "Aussage: Du trinkst gern Kaffee. Frage: Trinkst du gern Kaffee?",
+   "hint": null
+  },
+  {
+   "id": "a3ddac97-a8fb-5ddc-8a2d-3c7763e89667",
+   "topic": "yes-no-questions",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 9,
+   "questionDe": "___ du gern?",
+   "questionEn": "___ du gern? (verb: kochen, person: du)",
+   "options": null,
+   "answer": "Kochst",
+   "accepted": [
+    "Kochst"
+   ],
+   "explanationDe": "Aussage: Du kochst gern. Frage: Kochst du gern?",
+   "hint": null
+  },
+  {
+   "id": "872eba88-86e3-5604-93df-55f05e18427a",
+   "topic": "yes-no-questions",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 10,
+   "questionDe": "Wie fragt man auf Deutsch: 'Do you have a question?'",
+   "questionEn": "How do you say 'Do you have a question?' in German?",
+   "options": [
+    "Hast du eine Frage?",
+    "Du hast eine Frage?",
+    "Hast eine Frage du?",
+    "Habe du eine Frage?"
+   ],
+   "answer": "Hast du eine Frage?",
+   "accepted": [],
+   "explanationDe": "haben: du → hast, an Position 1: Hast du eine Frage?",
+   "hint": null
+  },
+  {
+   "id": "981c7b46-2106-5b2d-9a72-003b907177ce",
+   "topic": "yes-no-questions",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 11,
+   "questionDe": "Wähle die richtige Ja/Nein-Frage zu: Du kommst aus Spanien.",
+   "questionEn": "Choose the correct yes/no question for: You come from Spain.",
+   "options": [
+    "Kommst du aus Spanien?",
+    "Du kommst aus Spanien?",
+    "Kommst aus Spanien du?",
+    "Aus Spanien kommst du?"
+   ],
+   "answer": "Kommst du aus Spanien?",
+   "accepted": [],
+   "explanationDe": "Das Verb kommst steht an Position 1, du an Position 2: Kommst du aus Spanien?",
+   "hint": null
+  },
+  {
+   "id": "fc7a220a-7ae3-5ffa-b698-703aead317eb",
+   "topic": "yes-no-questions",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 12,
+   "questionDe": "Welche Frage ist formell (Sie)?",
+   "questionEn": "Which question is formal (using Sie)?",
+   "options": [
+    "Kommst du aus Italien?",
+    "Sprechen Sie Englisch?",
+    "Hast du Zeit?",
+    "Stehst du früh auf?"
+   ],
+   "answer": "Sprechen Sie Englisch?",
+   "accepted": [],
+   "explanationDe": "Sprechen Sie...? benutzt die formelle Sie-Form; die anderen benutzen du.",
+   "hint": null
+  },
+  {
+   "id": "ffec1d33-2826-5332-93e5-2b8efe7ece89",
+   "topic": "yes-no-questions",
+   "type": "multiple_choice",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 13,
+   "questionDe": "Kommst du aus Italien? – ...",
+   "questionEn": "Complete the short answer (say yes, repeating the statement): Kommst du aus Italien?",
+   "options": [
+    "Ja, ich komme aus Italien.",
+    "Ja, komme.",
+    "Ja, ich bin aus Italien.",
+    "Ja, du kommst aus Italien."
+   ],
+   "answer": "Ja, ich komme aus Italien.",
+   "accepted": [],
+   "explanationDe": "Die Kurzantwort wiederholt die ganze Aussage: Ja, ich komme aus Italien.",
+   "hint": null
+  },
+  {
+   "id": "0b5c7d74-0e60-51b3-802e-50a4c8457f36",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 1,
+   "questionDe": "Schreib die Frage: [du / müde / sein]",
+   "questionEn": "Write the question: [you / tired / to be] (verb: sein, person: du)",
+   "options": null,
+   "answer": "Bist du müde?",
+   "accepted": [
+    "Bist du müde"
+   ],
+   "explanationDe": "bist an Position 1, du an Position 2: Bist du müde?",
+   "hint": null
+  },
+  {
+   "id": "25d78516-c414-59cf-80e1-1fd4940b40f5",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 2,
+   "questionDe": "Schreib die Frage: [du / Anna / heißen]",
+   "questionEn": "Write the question: [you / Anna / to be named] (verb: heißen, person: du)",
+   "options": null,
+   "answer": "Heißt du Anna?",
+   "accepted": [
+    "Heißt du Anna"
+   ],
+   "explanationDe": "heißt an Position 1: Heißt du Anna?",
+   "hint": null
+  },
+  {
+   "id": "e52a4dca-4065-58a0-ae8f-de107844d5f2",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 3,
+   "questionDe": "Schreib die Frage: [du / in Köln / wohnen]",
+   "questionEn": "Write the question: [you / in Cologne / to live] (verb: wohnen, person: du)",
+   "options": null,
+   "answer": "Wohnst du in Köln?",
+   "accepted": [
+    "Wohnst du in Köln"
+   ],
+   "explanationDe": "wohnst an Position 1: Wohnst du in Köln?",
+   "hint": null
+  },
+  {
+   "id": "20edbc50-95ff-5914-9381-9673b2716b68",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 4,
+   "questionDe": "Schreib die Frage: [du / aus Polen / kommen]",
+   "questionEn": "Write the question: [you / from Poland / to come] (verb: kommen, person: du)",
+   "options": null,
+   "answer": "Kommst du aus Polen?",
+   "accepted": [
+    "Kommst du aus Polen"
+   ],
+   "explanationDe": "kommst an Position 1: Kommst du aus Polen?",
+   "hint": null
+  },
+  {
+   "id": "c473031c-a540-5e7a-95a9-9a1fa803bff0",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 5,
+   "questionDe": "Schreib die Frage: [Sie / Frau Meier / sein]",
+   "questionEn": "Write the question: [you / Frau Meier / to be] (verb: sein, person: Sie – formal)",
+   "options": null,
+   "answer": "Sind Sie Frau Meier?",
+   "accepted": [
+    "Sind Sie Frau Meier"
+   ],
+   "explanationDe": "sind an Position 1, Sie an Position 2: Sind Sie Frau Meier?",
+   "hint": null
+  },
+  {
+   "id": "aae6d30e-fd95-526b-9970-279e8fc63534",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 6,
+   "questionDe": "Schreib die Frage: [das / Anna / sein]",
+   "questionEn": "Write the question: [that / Anna / to be] (verb: sein, subject: das)",
+   "options": null,
+   "answer": "Ist das Anna?",
+   "accepted": [
+    "Ist das Anna"
+   ],
+   "explanationDe": "ist an Position 1, das an Position 2: Ist das Anna?",
+   "hint": null
+  },
+  {
+   "id": "fa2176d8-3252-57b7-8e4e-0c009303f306",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 7,
+   "questionDe": "Schreib die Frage: [du / am Samstag / mitkommen]",
+   "questionEn": "Write the question: [you / on Saturday / to come along] (verb: mitkommen, person: du – separable)",
+   "options": null,
+   "answer": "Kommst du am Samstag mit?",
+   "accepted": [
+    "Kommst du am Samstag mit"
+   ],
+   "explanationDe": "Trennbares Verb: kommst an Position 1, mit bleibt am Ende: Kommst du am Samstag mit?",
+   "hint": null
+  },
+  {
+   "id": "78abfd45-9be5-51ff-a294-12c1aa43d6e9",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 8,
+   "questionDe": "Schreib die höfliche Frage: [Sie / in Berlin / wohnen]",
+   "questionEn": "Write the polite question: [you / in Berlin / to live] (verb: wohnen, person: Sie – formal)",
+   "options": null,
+   "answer": "Wohnen Sie in Berlin?",
+   "accepted": [
+    "Wohnen Sie in Berlin"
+   ],
+   "explanationDe": "wohnen an Position 1, Sie an Position 2: Wohnen Sie in Berlin?",
+   "hint": null
+  },
+  {
+   "id": "6f0fbd89-79de-53ab-9b82-67b4f5f734ed",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 9,
+   "questionDe": "Schreib die höfliche Frage: [Sie / Kinder / haben]",
+   "questionEn": "Write the polite question: [you / children / to have] (verb: haben, person: Sie – formal)",
+   "options": null,
+   "answer": "Haben Sie Kinder?",
+   "accepted": [
+    "Haben Sie Kinder"
+   ],
+   "explanationDe": "haben an Position 1, Sie an Position 2: Haben Sie Kinder?",
+   "hint": null
+  },
+  {
+   "id": "81cb7d4e-9f92-5d7a-a8a9-ac0a5302565e",
+   "topic": "yes-no-questions",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 10,
+   "questionDe": "Welcher Satz ist eine Ja/Nein-Frage?",
+   "questionEn": "Which sentence is a yes/no question?",
+   "options": [
+    "Wie heißt du?",
+    "Wo wohnst du?",
+    "Wohnst du in Köln?",
+    "Wer ist das?"
+   ],
+   "answer": "Wohnst du in Köln?",
+   "accepted": [],
+   "explanationDe": "Die anderen drei beginnen mit einem W-Wort und fragen nach Information; Wohnst du in Köln? beginnt mit dem Verb und erwartet ja/nein.",
+   "hint": null
+  },
+  {
+   "id": "b23563ad-0518-5b52-8784-eaeb1c31b431",
+   "topic": "yes-no-questions",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 11,
+   "questionDe": "Bist du müde? – ...",
+   "questionEn": "Complete the short answer (say no, and that you are awake instead): Bist du müde?",
+   "options": [
+    "Nein, ich bin wach.",
+    "Nein, bin.",
+    "Nein, du bist müde.",
+    "Ja, ich bin wach."
+   ],
+   "answer": "Nein, ich bin wach.",
+   "accepted": [],
+   "explanationDe": "Die Kurzantwort wiederholt Subjekt + Verb + die neue Information: Nein, ich bin wach.",
+   "hint": null
+  },
+  {
+   "id": "06ec104d-b3a4-5a51-bdcd-1aa7075b1e70",
+   "topic": "yes-no-questions",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 12,
+   "questionDe": "Eine Kollegin ist neu. Wie fragst du höflich? (Englisch)",
+   "questionEn": "You meet a new colleague. How do you politely ask whether she speaks English? (formal Sie)",
+   "options": [
+    "Sprechen Sie Englisch?",
+    "Sprechen du Englisch?",
+    "Du sprechen Englisch?",
+    "Haben Sie Englisch?"
+   ],
+   "answer": "Sprechen Sie Englisch?",
+   "accepted": [],
+   "explanationDe": "Bei einer neuen Kollegin benutzt man die höfliche Sie-Form: Sprechen Sie Englisch?",
+   "hint": null
+  },
+  {
+   "id": "3a67e278-236d-5adb-9e95-8e3102a6084c",
+   "topic": "yes-no-questions",
+   "type": "multiple_choice",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 13,
+   "questionDe": "Welcher Satz hat die richtige Wortstellung für eine Frage?",
+   "questionEn": "Which sentence has the correct word order for a question?",
+   "options": [
+    "Du kommst aus Italien?",
+    "Kommst aus Italien du?",
+    "Kommst du aus Italien?",
+    "Aus Italien kommst du?"
+   ],
+   "answer": "Kommst du aus Italien?",
+   "accepted": [],
+   "explanationDe": "Eine Ja/Nein-Frage braucht Verb zuerst, Subjekt zweitens: Kommst du aus Italien?",
+   "hint": null
+  }
+ ]
+}
