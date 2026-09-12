@@ -31,6 +31,13 @@
 # Weekly truth run (Monday 06:00 UTC): measures revenue/users/learning into
 # weekly_metrics and emails the owner the deltas. The schedule() wrapper in
 # the function is authoritative; this mirrors it.
+# Course reminder (P4): daily evening nudge for learners mid-course. Ships OFF
+# unless COURSE_REMINDER_ENABLED=true and migrations/2026-09-13-course-reminder.sql
+# is applied. The schedule() wrapper in the function is authoritative; this
+# mirrors it so the Netlify UI shows the cron.
+[functions."course-reminder"]
+  schedule = "0 18 * * *"
+
 [functions."weekly-truth"]
   schedule = "0 6 * * 1"
 

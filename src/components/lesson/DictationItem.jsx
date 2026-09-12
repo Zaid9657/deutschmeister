@@ -4,18 +4,26 @@ import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import { ItemFeedback } from './PracticeItem.jsx';
 import { checkAnswer, tagError, RESULT } from '../../lib/lesson/check.js';
-import { speakGerman, speechAvailable } from '../../lib/lesson/speech.js';
+import { audioFor, playLine, speechAvailable } from '../../lib/lesson/speech.js';
+import { AudioSourceBadge } from './DialogStage.jsx';
 
 /**
  * The listening item of stage 4: a dialogue line is played, the learner types
  * it. Checked NON-strictly — a dictation tests the ear, and punishing a
  * one-letter slip here would tag a hearing success as a grammar failure. The
  * German text appears with the feedback, so the line is never audio-only.
+ *
+ * The clip is the recording when the manifest has it (key `line-<i>`, the same
+ * key the dialogue screen uses — a dictation line IS a dialogue line) and
+ * browser speech otherwise; the badge says which.
  */
-export default function DictationItem({ line, index, total, onResult, onNext }) {
+export default function DictationItem({ line, lektionId, index, total, onResult, onNext }) {
   const [value, setValue] = useState('');
   const [state, setState] = useState(null);
   const ref = useRef(null);
+  const id = lektionId || line.lektionId || null;
+  const key = `line-${line.index}`;
+  const recorded = !!audioFor(id, key);
 
   useEffect(() => {
     setValue(''); setState(null);
@@ -42,15 +50,18 @@ export default function DictationItem({ line, index, total, onResult, onNext }) 
       </p>
       <Card className="mt-4 p-5 sm:p-6">
         <p className="text-[0.9375rem] text-graphite">Hör die Zeile und schreib sie auf.</p>
-        <button
-          type="button"
-          onClick={() => speakGerman(line.de, { rate: 0.85 })}
-          disabled={!speechAvailable()}
-          className="mt-4 inline-flex items-center gap-2 rounded-clay border border-rule bg-white px-4 py-2.5 text-sm font-bold text-ink shadow-raise hover:border-siegel active:translate-y-1 active:shadow-none disabled:opacity-40"
-        >
-          <Play className="h-4 w-4" aria-hidden="true" /> Abspielen
-        </button>
-        {!speechAvailable() && (
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={() => playLine(id, key, line.de, { rate: 0.85 })}
+            disabled={!recorded && !speechAvailable()}
+            className="inline-flex items-center gap-2 rounded-clay border border-rule bg-white px-4 py-2.5 text-sm font-bold text-ink shadow-raise hover:border-siegel active:translate-y-1 active:shadow-none disabled:opacity-40"
+          >
+            <Play className="h-4 w-4" aria-hidden="true" /> Abspielen
+          </button>
+          <AudioSourceBadge recorded={recorded} />
+        </div>
+        {!recorded && !speechAvailable() && (
           <p className="mt-2 text-[0.8125rem] text-graphite">
             Dein Browser kann nicht vorlesen — hier ist die Zeile zum Abschreiben: <strong>{line.de}</strong>
           </p>

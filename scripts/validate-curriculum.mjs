@@ -16,6 +16,7 @@
 // Freitag ein." passes on the strength of the entry "einkaufen" and nothing else.
 
 import { CURRICULUM_A11, FUNCTION_WORDS, DIALOG_NAMES } from '../src/data/curricula/a11.js';
+import { writingTaskByKey } from '../src/data/writingTasks.js';
 
 export const GRAMMAR_SLUGS = [
   'nouns-gender', 'definite-articles', 'personal-pronouns', 'verb-sein', 'alphabet-pronunciation',
@@ -321,6 +322,24 @@ export function validateCurriculum(c) {
     if (!w.taskDe) fail(`Lektion ${l.nr}: schreiben needs a taskDe`);
     if (w.maxWords !== 30) fail(`Lektion ${l.nr}: schreiben.maxWords must be 30`);
     if (words(w.sample || '').length > 30) fail(`Lektion ${l.nr}: schreiben.sample is longer than 30 words`);
+    // The Schreiben task is graded by netlify/functions/evaluate-writing.mjs, which
+    // looks the prompt up in the task bank by exam_key + task_key and never trusts
+    // client text. So a taskKey that does not resolve — or resolves to a task whose
+    // register/Leitpunkte disagree with this Lektion — means the learner would be
+    // graded against a different exercise than the screen shows them.
+    if (!w.taskKey) fail(`Lektion ${l.nr}: schreiben needs a taskKey into the writing task bank`);
+    const bank = w.taskKey ? writingTaskByKey('goethe_a1', w.taskKey) : null;
+    if (w.taskKey && !bank) fail(`Lektion ${l.nr}: schreiben.taskKey "${w.taskKey}" resolves to no goethe_a1 task`);
+    if (bank) {
+      if (bank.course !== 'a1.1') fail(`Lektion ${l.nr}: bank task ${w.taskKey} is not marked course:'a1.1'`);
+      if (bank.task !== w.taskDe) fail(`Lektion ${l.nr}: bank task ${w.taskKey} states a different task than taskDe`);
+      if (bank.maxWords !== w.maxWords || bank.minWords !== w.minWords) fail(`Lektion ${l.nr}: bank task ${w.taskKey} has a different word range`);
+      const expectedRegister = w.kind === 'formular' ? 'formular' : ['informell', 'formell'];
+      const okRegister = Array.isArray(expectedRegister) ? expectedRegister.includes(bank.register) : bank.register === expectedRegister;
+      if (!okRegister) fail(`Lektion ${l.nr}: bank task ${w.taskKey} has register "${bank.register}", which does not fit a ${w.kind}`);
+      const points = w.kind === 'formular' ? (w.fields || []) : (w.leitpunkte || []);
+      if ((bank.leitpunkte || []).join('|') !== points.join('|')) fail(`Lektion ${l.nr}: bank task ${w.taskKey} lists different Leitpunkte than the Lektion`);
+    }
     if (w.kind === 'formular') {
       const f = w.fields || [];
       if (f.length < 3 || f.length > 5) fail(`Lektion ${l.nr}: formular has ${f.length} fields, expected 3–5`);

@@ -42,3 +42,41 @@ export function playWord(audioUrl, text) {
   }
   return speakGerman(text);
 }
+
+// ---------------------------------------------------------------------------
+// Recorded course audio (plan P1). scripts/generate-course-audio.mjs renders
+// every dialogue line, pretest model, phonetics item and checkpoint dictation
+// with Azure Neural TTS, uploads to Supabase Storage (bucket `audio`,
+// `course/<level>/<lektion>/<key>.mp3`) and writes the public URLs into the
+// committed manifest src/data/curricula/<level>.audio.js. Callers ask
+// `audioFor(lektionId, key)` and fall back to the synthesiser when null.
+// Keys: `line-<i>` (dialog.lines index), `pretest`, `phonetik-<i>`,
+// `word-<wordId>` is NOT here (words carry their own audio_url).
+import a11Audio from '../../data/curricula/a11.audio.js';
+
+const MANIFESTS = { 'a1.1': a11Audio };
+
+export function audioFor(lektionId, key) {
+  const level = String(lektionId || '').split('-')[0];
+  const m = MANIFESTS[level];
+  const entry = m?.lektionen?.[lektionId]?.[key];
+  return entry?.url || null;
+}
+
+/** True when the level has at least one recorded line (drives the "Aufnahme" badge). */
+export const hasRecordings = (level) => Object.keys(MANIFESTS[String(level || '').toLowerCase()]?.lektionen || {}).length > 0;
+
+/** Play a recorded line if the manifest has it, else synthesise. Returns 'recording' | 'tts' | false. */
+export function playLine(lektionId, key, text, opts) {
+  const url = audioFor(lektionId, key);
+  if (url) {
+    try {
+      const audio = new Audio(url);
+      audio.play().catch(() => speakGerman(text, opts));
+      return 'recording';
+    } catch {
+      /* fall through */
+    }
+  }
+  return speakGerman(text, opts) ? 'tts' : false;
+}

@@ -3,6 +3,8 @@ import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
 import StageShell from './StageShell.jsx';
 import { accuracyPercent, masteryLabel, nextReviewDate } from '../../lib/lesson/mastery.js';
+import { useAuth } from '../../contexts/AuthContext';
+import SaveProgressCard from '../course/SaveProgressCard.jsx';
 
 const DE_DATE = new Intl.DateTimeFormat('de-DE', { day: 'numeric', month: 'long' });
 
@@ -11,8 +13,16 @@ const DE_DATE = new Intl.DateTimeFormat('de-DE', { day: 'numeric', month: 'long'
  * accuracy and its mastery label, the date the material comes back, and ONE
  * call to action: the next thing on the path. No XP, no hearts, no league
  * (standard §4, "Skip").
+ *
+ * One exception to "one call to action": a SIGNED-OUT learner also gets the
+ * save-progress card (P4, "first lesson before sign-up"). It is not a wall —
+ * the primary action below it still goes to the next Lektion — and it appears
+ * only here, after the work is done, because that is the one moment the ask is
+ * about something the learner already owns. The lesson is in localStorage by
+ * the time this renders (LessonPlayerPage's recap effect).
  */
-export default function RecapStage({ stage, accuracy, status, nextLabel, onNext, onBack }) {
+export default function RecapStage({ stage, accuracy, status, nextLabel, onNext, onBack, level }) {
+  const { user } = useAuth();
   const pct = accuracyPercent(accuracy);
   const review = nextReviewDate();
 
@@ -59,6 +69,8 @@ export default function RecapStage({ stage, accuracy, status, nextLabel, onNext,
             : 'Geschafft. Die Lektion zählt bei jeder Trefferquote — was heute wackelte, kommt zur Wiederholung zurück.'}
         </p>
       </Card>
+
+      {!user && level ? <SaveProgressCard level={level} /> : null}
 
     </StageShell>
   );

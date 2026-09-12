@@ -62,6 +62,25 @@ export const PRO_WRITING_EVALUATIONS_PER_MONTH = 20;
 /** Free writing evaluations during the trial, in TOTAL (not per month). Source: WRITING_LIMITS.free_trial, evaluate-writing.mjs (2026-08-31). */
 export const TRIAL_WRITING_EVALUATIONS = 2;
 
+/**
+ * AI-graded writing tasks inside the free A1.1 course, in TOTAL (lifetime), for
+ * learners who are not paying — the twelve `a11-…` course tasks, one per Lektion.
+ * This is a SEPARATE allowance from TRIAL_WRITING_EVALUATIONS above: the course
+ * is advertised as free, so its writing may not be gated behind the two trial
+ * evaluations. Pro learners' course tasks count inside PRO_WRITING_EVALUATIONS_PER_MONTH.
+ * Owner decision 2026-09-12 (docs plan P2). Source: COURSE_WRITING_FREE_LIFETIME,
+ * netlify/functions/evaluate-writing.mjs (2026-09-12).
+ */
+export const COURSE_WRITING_FREE_LIFETIME = 12;
+
+/**
+ * Scored read-aloud clips per user and day, across the whole product. Source:
+ * READALOUD_DAILY_LIMIT, netlify/functions/score-readaloud.mjs (2026-09-12) —
+ * the function is built in the same plan phase (P3); tests/claims.test.mjs
+ * compares the two as soon as it exists and says so while it does not.
+ */
+export const READALOUD_DAILY_LIMIT = 60;
+
 /** Length of the free trial. Source: src/config/limits.js, unchanged since launch. */
 export const TRIAL_DAYS = 7;
 

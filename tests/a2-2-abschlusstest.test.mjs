@@ -625,9 +625,19 @@ const overlap = (a, b) => {
   return { n: inter.length, shared: inter, jaccard: inter.length / new Set([...a, ...b]).size };
 };
 
+/**
+ * The EXAM bank — course tasks excluded.
+ *
+ * What this check is for is a mock/Abschlusstest scenario reproducing a task the
+ * learner can be served in the same exam-training context. The twelve `a11-…`
+ * course tasks of CURRICULUM_A11 are not in that context (writingTasksForExam()
+ * leaves them out too, so /schreiben never lists them), and comparing against
+ * them only produces false positives from the course's own recurring cast and
+ * A1 vocabulary — "Lena", "treffen" — which is not a reproduced scenario.
+ */
 async function liveTasks() {
   const { WRITING_TASKS } = await import(`${root}/src/data/writingTasks.js`);
-  return WRITING_TASKS;
+  return WRITING_TASKS.filter((t) => !t.course);
 }
 
 function distinctiveness(tasks) {

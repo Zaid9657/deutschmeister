@@ -187,6 +187,7 @@ export const CURRICULUM_A11 = {
       },
       schreiben: {
         kind: 'formular',
+        taskKey: 'a11-l01',
         taskDe: 'Füllen Sie das Anmeldeformular im Hostel aus.',
         fields: ['Familienname', 'Vorname', 'Land', 'Sprache', 'Unterschrift'],
         minWords: 0,
@@ -277,6 +278,7 @@ export const CURRICULUM_A11 = {
       },
       schreiben: {
         kind: 'mitteilung',
+        taskKey: 'a11-l02',
         taskDe: 'Schreiben Sie Ihrem neuen Nachbarn eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
         leitpunkte: ['Wer Sie sind', 'Was Sie von Beruf sind', 'Wann Sie zu Hause sind'],
         minWords: 0,
@@ -372,6 +374,7 @@ export const CURRICULUM_A11 = {
       },
       schreiben: {
         kind: 'formular',
+        taskKey: 'a11-l03',
         taskDe: 'Füllen Sie das Formular für den Sprachkurs aus.',
         fields: ['Vorname', 'Familienstand', 'Sprachen', 'Land'],
         minWords: 0,
@@ -460,6 +463,7 @@ export const CURRICULUM_A11 = {
       },
       schreiben: {
         kind: 'mitteilung',
+        taskKey: 'a11-l04',
         taskDe: 'Schreiben Sie Ihrer Freundin eine Nachricht über den Flohmarkt. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
         leitpunkte: ['Was Sie kaufen', 'Was es kostet', 'Wann Sie sich treffen'],
         minWords: 0,
@@ -549,6 +553,7 @@ export const CURRICULUM_A11 = {
       },
       schreiben: {
         kind: 'formular',
+        taskKey: 'a11-l05',
         taskDe: 'Füllen Sie die Liste für das Kursmaterial aus.',
         fields: ['Name', 'Kurs', 'Material', 'Farbe'],
         minWords: 0,
@@ -638,6 +643,7 @@ export const CURRICULUM_A11 = {
       },
       schreiben: {
         kind: 'mitteilung',
+        taskKey: 'a11-l06',
         taskDe: 'Schreiben Sie Ihrer Chefin eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
         leitpunkte: ['Was Sie brauchen', 'Ihre Telefonnummer', 'Wann Sie im Büro sind'],
         minWords: 0,
@@ -734,6 +740,7 @@ export const CURRICULUM_A11 = {
       },
       schreiben: {
         kind: 'formular',
+        taskKey: 'a11-l07',
         taskDe: 'Füllen Sie die Anmeldung für einen Sportkurs aus.',
         fields: ['Vorname', 'Nachname', 'Kurs', 'Tag'],
         minWords: 0,
@@ -824,6 +831,7 @@ export const CURRICULUM_A11 = {
       },
       schreiben: {
         kind: 'mitteilung',
+        taskKey: 'a11-l08',
         taskDe: 'Schreiben Sie eine Nachricht und verschieben Sie einen Termin. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
         leitpunkte: ['Warum Sie schreiben', 'Neuer Tag und neue Uhrzeit', 'Eine Frage an Lena'],
         minWords: 0,
@@ -918,6 +926,7 @@ export const CURRICULUM_A11 = {
       },
       schreiben: {
         kind: 'formular',
+        taskKey: 'a11-l09',
         taskDe: 'Füllen Sie die Reservierungskarte im Café aus.',
         fields: ['Name', 'Tag', 'Uhrzeit', 'Personen'],
         minWords: 0,
@@ -1008,6 +1017,7 @@ export const CURRICULUM_A11 = {
       },
       schreiben: {
         kind: 'mitteilung',
+        taskKey: 'a11-l10',
         taskDe: 'Schreiben Sie Ihrer Kollegin: Sie kommen später. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
         leitpunkte: ['Warum Sie schreiben', 'Wann Sie kommen', 'Was die Kollegin bis dahin machen soll'],
         minWords: 0,
@@ -1096,6 +1106,7 @@ export const CURRICULUM_A11 = {
       },
       schreiben: {
         kind: 'formular',
+        taskKey: 'a11-l11',
         taskDe: 'Füllen Sie den Wochenplan für den Kurs aus.',
         fields: ['Name', 'Tag', 'Kurs von', 'Kurs bis'],
         minWords: 0,
@@ -1193,6 +1204,7 @@ export const CURRICULUM_A11 = {
       },
       schreiben: {
         kind: 'mitteilung',
+        taskKey: 'a11-l12',
         taskDe: 'Schreiben Sie eine Einladung zu Ihrem Geburtstag. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
         leitpunkte: ['Warum Sie feiern', 'Tag und Uhrzeit', 'Was die Gäste mitbringen sollen'],
         minWords: 0,

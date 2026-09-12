@@ -1,5 +1,6 @@
 // Explicit .js extension so node --test can import this module's pure
-// functions (grammarRowStamps, computeStreak, computeActivitiesToday).
+// functions (grammarRowStamps, computeStreak, computeStreakForgiving,
+// computeActivitiesToday).
 import { supabase } from '../utils/supabase.js';
 
 // ──────────────────────────────────────────────────────────────
@@ -39,7 +40,7 @@ export function grammarRowStamps(row) {
 
 /** Gather every activity timestamp for a user across the activity tables. */
 async function fetchActivityTimestamps(userId) {
-  const [grammar, xray, speaking, reading, listening, srs, writing, exams] = await Promise.all([
+  const [grammar, xray, speaking, reading, listening, srs, writing, exams, lessonItems, lessons] = await Promise.all([
     supabase
       .from('user_grammar_progress')
       .select('last_accessed, completed_at')
@@ -82,6 +83,19 @@ async function fetchActivityTimestamps(userId) {
       .select('completed_at')
       .eq('user_id', userId)
       .eq('status', 'completed'),
+    // P4: the rebuilt course engine. Before this, a learner could do a whole
+    // Lektion a day and still see a 0-day streak — the Flame on the course
+    // home was measuring everything EXCEPT the course. lesson_attempts is one
+    // row per answered item (the work), lesson_progress one row per Lektion
+    // (the finish); both fail soft like every source above.
+    supabase
+      .from('lesson_attempts')
+      .select('created_at')
+      .eq('user_id', userId),
+    supabase
+      .from('lesson_progress')
+      .select('updated_at')
+      .eq('user_id', userId),
   ]);
 
   const stamps = [];
@@ -93,6 +107,8 @@ async function fetchActivityTimestamps(userId) {
   (srs.data || []).forEach((r) => r.last_reviewed_at && stamps.push(r.last_reviewed_at));
   (writing.data || []).forEach((r) => r.created_at && stamps.push(r.created_at));
   (exams.data || []).forEach((r) => r.completed_at && stamps.push(r.completed_at));
+  (lessonItems.data || []).forEach((r) => r.created_at && stamps.push(r.created_at));
+  (lessons.data || []).forEach((r) => r.updated_at && stamps.push(r.updated_at));
   return stamps;
 }
 
@@ -121,6 +137,62 @@ export function computeStreak(timestamps) {
   return streak;
 }
 
+/**
+ * The forgiving streak (P4, "completion levers").
+ *
+ * `computeStreak` above is strict: one missed calendar day and the count is
+ * back to zero. That is the rule research flags as the single biggest reason
+ * adult learners abandon a course after a normal bad week — and it is not a
+ * rule about learning, only about bookkeeping. This variant forgives
+ * `graceDaysPer7` missed days in any rolling seven-day window and keeps
+ * counting; the second miss inside the same window still ends the streak, so
+ * the number never becomes a lie.
+ *
+ * Both live side by side on purpose: `streak` keeps its meaning for the
+ * dashboard (and for tests/progress.test.mjs, which pins strict behaviour),
+ * `streakForgiving` is what the rebuilt course home shows on its Flame.
+ *
+ * Pure. `days` is any iterable of dayKey() strings (a Set is fine).
+ * A missed TODAY is free and never spends grace — the learner may still act
+ * later today, exactly as the strict version anchors on yesterday.
+ *
+ * @param {Iterable<string>} days
+ * @param {{graceDaysPer7?: number}} [options]
+ * @returns {number} days of activity in the surviving streak (missed days are
+ *          forgiven, never counted — the number is days worked, not elapsed)
+ */
+export function computeStreakForgiving(days, { graceDaysPer7 = 1 } = {}) {
+  const set = days instanceof Set ? days : new Set(days || []);
+  if (set.size === 0) return 0;
+
+  const keyFor = (offset) => {
+    const d = new Date();
+    d.setDate(d.getDate() - offset);
+    return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+  };
+
+  let streak = 0;
+  let seen = 0;
+  const missOffsets = [];
+
+  for (let offset = 0; seen < set.size && offset < 3650; offset += 1) {
+    if (set.has(keyFor(offset))) {
+      streak += 1;
+      seen += 1;
+      continue;
+    }
+    // Nothing yet today: not a miss, the day is not over.
+    if (offset === 0) continue;
+    missOffsets.push(offset);
+    // Misses inside the seven-day window ENDING at this day (offsets are
+    // counted backwards, so the window is (offset-7, offset]).
+    const inWindow = missOffsets.filter((o) => o > offset - 7).length;
+    if (inWindow > graceDaysPer7) break;
+  }
+
+  return streak;
+}
+
 /** Count of distinct activities done TODAY — feeds the daily-goal ring (target 3). */
 export function computeActivitiesToday(timestamps) {
   const today = new Date();
@@ -134,6 +206,7 @@ export function computeActivitiesToday(timestamps) {
 
 const EMPTY_STATS = {
   streak: 0,
+  streakForgiving: 0,
   activitiesToday: 0,
   speakingSessions: 0,
   xrayChecks: 0,
@@ -159,8 +232,10 @@ export async function loadDashboardStats(userId) {
         .eq('user_id', userId),
     ]);
 
+    const dayKeys = new Set(timestamps.map(dayKey).filter(Boolean));
     return {
       streak: computeStreak(timestamps),
+      streakForgiving: computeStreakForgiving(dayKeys),
       activitiesToday: computeActivitiesToday(timestamps),
       speakingSessions: speakingCount.count || 0,
       xrayChecks: xrayCount.count || 0,

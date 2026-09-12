@@ -8,6 +8,7 @@ import { requeueFor } from '../../lib/lesson/requeue.js';
 import { firstAttemptAccuracy, masteryStatus } from '../../lib/lesson/mastery.js';
 import { completeLesson, fetchWordsByIds, logAttempts, startLesson } from '../../services/lessonService.js';
 import { courseHome } from '../../lib/courseFlow.js';
+import { hasLocalProgress, mergeLocalProgress, recordLocalLesson } from '../../lib/course/localProgress.js';
 import { buildCardIndex, fetchDueCards, seedCardsForLektion } from '../../services/reviewService.js';
 import LessonProgressBar from '../../components/lesson/LessonProgressBar.jsx';
 import StageShell from '../../components/lesson/StageShell.jsx';
@@ -25,9 +26,16 @@ import Card from '../../components/ui/Card.jsx';
 // The lesson player: route /course/:level/l/:nr, one stage per screen
 // (docs/course-standard-2026-09-12.md §3). Everything it shows comes from the
 // curriculum module and the exercise pool — this file sequences, it does not
-// author. Persistence is best-effort: a signed-out learner plays the whole
-// lesson, nothing is written, nothing breaks (the standard's "first lesson
-// before sign-up").
+// author. Persistence is best-effort and never blocks a stage.
+//
+// P4 closed the leak in "first lesson before sign-up": a signed-out learner
+// used to play the whole lesson and have NOTHING written, so the work was gone
+// the moment they signed up. Now the recap writes it to localStorage
+// (src/lib/course/localProgress.js), the recap shows the save-progress card,
+// and the first render WITH a user merges the local rows into lesson_progress
+// / program_progress / lesson_attempts and clears the store. The merge runs
+// here rather than in an auth callback because this and the course home are
+// the only two screens where local course progress can exist.
 
 /** The multi-item stages the player pages through one item at a time. */
 const ITEM_STAGES = new Set(['practice', 'dictation', 'requeue']);
@@ -122,10 +130,22 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
 
   const back = stageIndex > 0 ? () => goStage(stageIndex - 1) : null;
 
-  // Persist once, when the recap comes into view.
+  // Merge anything a signed-out visitor finished earlier, once, as soon as a
+  // user is present. Idempotent (see mergeLocalProgress).
   useEffect(() => {
-    if (preview || saved || !stage || stage.kind !== 'recap' || !user) return;
+    if (preview || !user || !hasLocalProgress(curriculum.level)) return;
+    mergeLocalProgress(user.id);
+  }, [preview, user, curriculum.level]);
+
+  // Persist once, when the recap comes into view. Signed out, the same write
+  // goes to localStorage instead of Supabase — never nowhere.
+  useEffect(() => {
+    if (preview || saved || !stage || stage.kind !== 'recap') return;
     setSaved(true);
+    if (!user) {
+      recordLocalLesson({ level: curriculum.level, lektionId: lektion.id, status, accuracy, attempts });
+      return;
+    }
     logAttempts(user.id, { level: curriculum.level, lektionId: lektion.id }, attempts);
     completeLesson(user.id, { level: curriculum.level, lektionId: lektion.id, accuracy, status });
     seedCardsForLektion(user.id, lektion, curriculum.level);
@@ -160,10 +180,10 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
       );
       break;
     case 'pretest':
-      body = <PretestStage stage={stage} onBack={back} onDone={advance} />;
+      body = <PretestStage stage={stage} lektionId={lektion.id} onBack={back} onDone={advance} />;
       break;
     case 'dialog':
-      body = <DialogStage stage={stage} onBack={back} onDone={advance} />;
+      body = <DialogStage stage={stage} lektionId={lektion.id} onBack={back} onDone={advance} />;
       break;
     case 'wortfeld':
       body = <WortfeldStage stage={{ ...stage, words: wortfeld }} onBack={back} onDone={advance} />;
@@ -176,6 +196,8 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
       const item = items[itemIndex];
       body = item ? (
         <PracticeItem
+          level={curriculum.level}
+          lektionId={lektion.id}
           key={item.id}
           item={{ ...item, stage: stage.kind }}
           index={itemIndex}
@@ -189,7 +211,7 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
     case 'dictation': {
       const line = items[itemIndex];
       body = line ? (
-        <DictationItem key={line.index} line={line} index={itemIndex} total={items.length} onResult={recordResult} onNext={onItemNext} />
+        <DictationItem key={line.index} line={line} index={itemIndex} total={items.length} lektionId={lektion.id} onResult={recordResult} onNext={onItemNext} />
       ) : null;
       break;
     }
@@ -197,12 +219,13 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
       body = <SpeakingStage stage={stage} level={curriculum.level} code={curriculum.code} lektion={lektion} onBack={back} onDone={advance} />;
       break;
     case 'writing':
-      body = <WritingStage stage={stage} onBack={back} onDone={advance} />;
+      body = <WritingStage stage={stage} lektionId={lektion.id} onResult={recordResult} onBack={back} onDone={advance} />;
       break;
     case 'recap':
       body = (
         <RecapStage
           stage={stage}
+          level={curriculum.level}
           accuracy={accuracy}
           status={status}
           nextLabel={nextTarget.label}

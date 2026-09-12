@@ -14,6 +14,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
+import { writingTaskByKey } from '../src/data/writingTasks.js';
 import {
   validateCurriculum, GRAMMAR_SLUGS, EXAM_TEILE, PRIMARY_ORDER, SITUATION_KEYWORDS,
 } from '../scripts/validate-curriculum.mjs';
@@ -144,6 +145,10 @@ test('rule 7: pretest, Phonetik, Hören, Sprechen, Schreiben and the links', () 
     }
     const w = l.schreiben;
     assert.equal(w.kind, l.nr % 2 === 1 ? 'formular' : 'mitteilung');
+    // The task the AI grader will mark. tests/writing-course.test.mjs pins the
+    // bank side; here we only pin that the key exists and resolves.
+    assert.equal(w.taskKey, `a11-l${String(l.nr).padStart(2, '0')}`);
+    assert.ok(writingTaskByKey('goethe_a1', w.taskKey), `Lektion ${l.nr}: taskKey resolves to no bank task`);
     assert.equal(w.maxWords, 30);
     assert.ok(wordCount(w.sample) <= 30, `Lektion ${l.nr}: sample`);
     if (w.kind === 'formular') {
@@ -199,6 +204,8 @@ test('the validator bites: each mutation of a good curriculum is caught', () => 
     'a reading lesson linked twice': (c) => { c.lektionen[6].links.readingOrder = 1; },
     'a sixth word outside the words table': (c) => c.lektionen[0].wortfeld.forEach((w) => { w.wordId = null; }),
     'a Schreiben task that breaks the alternation': (c) => { c.lektionen[0].schreiben.kind = 'mitteilung'; },
+    'a Schreiben taskKey that resolves to nothing': (c) => { c.lektionen[0].schreiben.taskKey = 'a11-l99'; },
+    'a Schreiben taskKey pointing at another Lektion\'s task': (c) => { c.lektionen[0].schreiben.taskKey = 'a11-l03'; },
     'a practice topic outside grammarSlugs': (c) => { c.lektionen[0].practiceRule.topics = ['verb-haben']; },
     'a can-do that is not in ich-Form': (c) => { c.lektionen[0].canDo[0] = 'Du kannst dich vorstellen.'; },
     'a dictation index past the end of the dialogue': (c) => { c.lektionen[0].hoeren.lines = [0, 99]; },

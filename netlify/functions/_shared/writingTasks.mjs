@@ -311,6 +311,219 @@ export const WRITING_TASKS = [
     pointsNote:
       'Für Teil 2 gibt es 10 Punkte (3 Punkte für die Leitpunkte + Punkte für Anrede, Gruß und Verständlichkeit). Insgesamt braucht man 60 von 100 Punkten, um die Prüfung zu bestehen.',
   },
+
+  // ---- Kurs A1.1: die zwölf Schreib-Aufgaben der Lektionen -----------------
+  // One task per Lektion of CURRICULUM_A11, derived from its `schreiben`
+  // block (taskDe, fields/leitpunkte, minWords/maxWords) so the screen a
+  // learner reads and the prompt the grader builds can never disagree —
+  // src/data/curricula/a11.js carries the matching `schreiben.taskKey` and
+  // scripts/validate-curriculum.mjs pins that every one of them resolves here.
+  //
+  // `course: 'a1.1'` is the marker netlify/functions/evaluate-writing.mjs uses
+  // to bill these against the separate lifetime course allowance
+  // (COURSE_WRITING_FREE_LIFETIME in src/data/marketing.js) instead of the
+  // exam-training allowance. Course tasks are deliberately NOT returned by
+  // writingTasksForExam(), so /schreiben keeps showing the exam bank only.
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.1',
+    taskKey: 'a11-l01',
+    title: 'Lektion 1: Hallo, ich bin …',
+    register: 'formular',
+    minWords: 0,
+    maxWords: 30,
+    task:
+      'Füllen Sie das Anmeldeformular im Hostel aus.',
+    leitpunkte: [
+      'Familienname',
+      'Vorname',
+      'Land',
+      'Sprache',
+      'Unterschrift',
+    ],
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.1',
+    taskKey: 'a11-l02',
+    title: 'Lektion 2: Ich bin Studentin',
+    register: 'formell',
+    minWords: 0,
+    maxWords: 30,
+    task:
+      'Schreiben Sie Ihrem neuen Nachbarn eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    leitpunkte: [
+      'Wer Sie sind',
+      'Was Sie von Beruf sind',
+      'Wann Sie zu Hause sind',
+    ],
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.1',
+    taskKey: 'a11-l03',
+    title: 'Lektion 3: Meine Familie',
+    register: 'formular',
+    minWords: 0,
+    maxWords: 30,
+    task:
+      'Füllen Sie das Formular für den Sprachkurs aus.',
+    leitpunkte: [
+      'Vorname',
+      'Familienstand',
+      'Sprachen',
+      'Land',
+    ],
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.1',
+    taskKey: 'a11-l04',
+    title: 'Lektion 4: Auf dem Flohmarkt',
+    register: 'informell',
+    minWords: 0,
+    maxWords: 30,
+    task:
+      'Schreiben Sie Ihrer Freundin eine Nachricht über den Flohmarkt. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    leitpunkte: [
+      'Was Sie kaufen',
+      'Was es kostet',
+      'Wann Sie sich treffen',
+    ],
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.1',
+    taskKey: 'a11-l05',
+    title: 'Lektion 5: Im Klassenzimmer',
+    register: 'formular',
+    minWords: 0,
+    maxWords: 30,
+    task:
+      'Füllen Sie die Liste für das Kursmaterial aus.',
+    leitpunkte: [
+      'Name',
+      'Kurs',
+      'Material',
+      'Farbe',
+    ],
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.1',
+    taskKey: 'a11-l06',
+    title: 'Lektion 6: Der erste Tag im Büro',
+    register: 'formell',
+    minWords: 0,
+    maxWords: 30,
+    task:
+      'Schreiben Sie Ihrer Chefin eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    leitpunkte: [
+      'Was Sie brauchen',
+      'Ihre Telefonnummer',
+      'Wann Sie im Büro sind',
+    ],
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.1',
+    taskKey: 'a11-l07',
+    title: 'Lektion 7: Freizeit und Hobbys',
+    register: 'formular',
+    minWords: 0,
+    maxWords: 30,
+    task:
+      'Füllen Sie die Anmeldung für einen Sportkurs aus.',
+    leitpunkte: [
+      'Vorname',
+      'Nachname',
+      'Kurs',
+      'Tag',
+    ],
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.1',
+    taskKey: 'a11-l08',
+    title: 'Lektion 8: Termine und Uhrzeit',
+    register: 'informell',
+    minWords: 0,
+    maxWords: 30,
+    task:
+      'Schreiben Sie eine Nachricht und verschieben Sie einen Termin. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    leitpunkte: [
+      'Warum Sie schreiben',
+      'Neuer Tag und neue Uhrzeit',
+      'Eine Frage an Lena',
+    ],
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.1',
+    taskKey: 'a11-l09',
+    title: 'Lektion 9: Im Café',
+    register: 'formular',
+    minWords: 0,
+    maxWords: 30,
+    task:
+      'Füllen Sie die Reservierungskarte im Café aus.',
+    leitpunkte: [
+      'Name',
+      'Tag',
+      'Uhrzeit',
+      'Personen',
+    ],
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.1',
+    taskKey: 'a11-l10',
+    title: 'Lektion 10: Am Bahnhof',
+    register: 'informell',
+    minWords: 0,
+    maxWords: 30,
+    task:
+      'Schreiben Sie Ihrer Kollegin: Sie kommen später. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    leitpunkte: [
+      'Warum Sie schreiben',
+      'Wann Sie kommen',
+      'Was die Kollegin bis dahin machen soll',
+    ],
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.1',
+    taskKey: 'a11-l11',
+    title: 'Lektion 11: Gestern und heute',
+    register: 'formular',
+    minWords: 0,
+    maxWords: 30,
+    task:
+      'Füllen Sie den Wochenplan für den Kurs aus.',
+    leitpunkte: [
+      'Name',
+      'Tag',
+      'Kurs von',
+      'Kurs bis',
+    ],
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.1',
+    taskKey: 'a11-l12',
+    title: 'Lektion 12: Feste feiern',
+    register: 'informell',
+    minWords: 0,
+    maxWords: 30,
+    task:
+      'Schreiben Sie eine Einladung zu Ihrem Geburtstag. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    leitpunkte: [
+      'Warum Sie feiern',
+      'Tag und Uhrzeit',
+      'Was die Gäste mitbringen sollen',
+    ],
+  },
+
   // ---- Goethe-Zertifikat A2 ---------------------------------------------
   // ---- Teil 1: kurze persönliche Nachricht (SMS), 20–30 Wörter (2) -------
   {
@@ -399,8 +612,13 @@ export const WRITING_TASKS = [
 
 export const MAX_WRITING_POINTS = 20;
 
+/** The exam-training bank for one exam — course tasks are excluded on purpose. */
 export const writingTasksForExam = (examKey) =>
-  WRITING_TASKS.filter((t) => t.examKey === examKey);
+  WRITING_TASKS.filter((t) => t.examKey === examKey && !t.course);
+
+/** The course bank for one level, in Lektion order (`a1.1` → a11-l01 … a11-l12). */
+export const courseWritingTasks = (course) =>
+  WRITING_TASKS.filter((t) => t.course === course);
 
 export const writingTaskByKey = (examKey, taskKey) =>
   WRITING_TASKS.find((t) => t.examKey === examKey && t.taskKey === taskKey) || null;

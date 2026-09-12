@@ -1,12 +1,14 @@
-// Stage 6 scoring, v1 — CLIENT-SIDE ONLY.
+// Stage 6 scoring — the MECHANICAL half, client-side.
 //
-// The standard's moat is AI grading on the Goethe criteria; that runner is
-// phase 4 and not wired here. Until it is, this checks the mechanical half a
-// learner can be told honestly: did you fill every field, are you inside the
-// word range, did you touch each Leitpunkt, did you open and close a
-// Mitteilung. It never claims the text is "correct" — see the wording in
-// WritingStage.jsx — because an unchecked promise of feedback is exactly what
-// FernUSG forbids.
+// AI grading on the Goethe criteria now runs server-side
+// (netlify/functions/evaluate-writing.mjs, rendered by
+// src/components/lesson/GradedWriting.jsx). This file is what remains true
+// without it and is the honest FALLBACK whenever the grader is unavailable —
+// signed out, over the free course allowance, offline: did you fill every
+// field, are you inside the word range, did you touch each Leitpunkt, did you
+// open and close a Mitteilung. It never claims the text is "correct" — see the
+// wording in GradedWriting.jsx — because an unchecked promise of feedback is
+// exactly what FernUSG forbids.
 
 const words = (text) => String(text || '').trim().split(/\s+/).filter(Boolean);
 
@@ -28,6 +30,18 @@ export function leitpunktKeyword(leitpunkt) {
     .map((w) => w.replace(/[.,!?;:()"„“]/g, ''))
     .find((w) => w.length > 2 && !STOPWORDS.has(w.toLowerCase()));
   return token || '';
+}
+
+/**
+ * A filled-in Formular as the one text the grader receives: one "Feld: Wert"
+ * line per field, which is exactly the shape the Formular tasks in the bank ask
+ * for ("Schreib zu jedem Feld eine Zeile"). Empty fields are kept, so a missing
+ * answer is visible to the grader rather than silently dropped.
+ */
+export function formularText(fields = [], values = {}) {
+  return (fields || [])
+    .map((field) => `${field}: ${String(values?.[field] ?? '').trim()}`)
+    .join('\n');
 }
 
 const ANREDE = /\b(hallo|liebe|lieber|guten\s+(tag|morgen|abend)|sehr\s+geehrte)/i;
