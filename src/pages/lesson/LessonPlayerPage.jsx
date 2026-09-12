@@ -219,7 +219,7 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
 
   return (
     <div className="min-h-screen bg-paper font-body text-ink">
-      <div className="mx-auto max-w-2xl px-4 py-6 sm:py-10">
+      <div className="mx-auto max-w-2xl px-4 pb-6 pt-24 sm:pb-10 sm:pt-28">
         <div className="mb-5 flex items-center gap-3">
           <Link
             to={courseHome(curriculum.level)}
