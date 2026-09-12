@@ -13,6 +13,16 @@
 //   3. THE PASS RULE — 60 % overall AND no scored section below 40 %. Both
 //      halves matter: a learner who aces Sprachbausteine and hears nothing has
 //      not passed, and that is the whole point of the second clause.
+//   3b. SPRECHEN IS SCORED BY THE RUN, NOT THE BUILD (plan P3). Every read-aloud
+//      CAN be scored (score-readaloud aligns the transcript word by word), so
+//      the section enters the overall and the 40 % rule — but only when every
+//      item of it actually came back from a microphone. One self-confirm and the
+//      whole section drops out again, because half a Sprechen score is not a
+//      Sprechen score, and a number we cannot defend is worse than none.
+//   3c. AUDIO ITEMS SAY WHERE THEIR SOUND COMES FROM. Hören and Sprechen items
+//      carry lektionId + lineKey so playLine() can use the recording from the
+//      audio manifest and fall back to the synthesiser only where there is
+//      none. Without those fields every checkpoint is the robot voice forever.
 //   4. THE 70/30 DRAW — once earlier chapters exist, the pool-drawn items must
 //      interleave them. Spacing is the single strongest effect in the research
 //      memo (g = 0.74); a chapter-only checkpoint throws it away.
@@ -39,6 +49,9 @@ import {
   topicsOf,
   chapterLektionen,
   earlierLektionen,
+  itemIsScored,
+  isMicResult,
+  SPRECHEN_PASS_PCT,
 } from '../src/lib/checkpoint/buildCheckpoint.js';
 import { nextDue, LADDER_DAYS, MAX_STEP, wordCardKey, patternCardKey, sentenceCardKey, parseCardKey } from '../src/lib/review/ladder.js';
 import { CURRICULUM_FIXTURE, CURRICULUM_FIXTURE_6 } from './fixtures/curriculum-fixture.js';
@@ -120,13 +133,28 @@ test('Sprachbausteine is 6 pool items with at least 4 typed; Schreiben is 3 prod
   assert.ok(schreiben.every((i) => isTyped(poolById.get(i.poolItemId))), 'and typed in the pool too');
 });
 
-test('Sprechen is 2 unscored read-alouds of real dialogue lines', () => {
+test('Sprechen is 2 read-alouds of real dialogue lines, scorable but not yet scored', () => {
   const items = build(CURRICULUM_FIXTURE, cp1).filter((i) => i.section === 'sprechen');
   assert.equal(items.length, 2);
   for (const item of items) {
-    assert.equal(item.scored, false, 'self-confirm is required but never scored');
+    assert.equal(item.scored, false, 'nothing is scored until a mic result arrives');
+    assert.equal(item.scorable, true, 'but the microphone CAN score it');
     assert.equal(item.mode, 'confirm');
     assert.ok(item.audioText);
+    assert.ok(item.lektionId, 'playLine needs the Lektion the line belongs to');
+    assert.match(item.lineKey, /^line-\d+$/, 'and the manifest key of the line');
+  }
+});
+
+test('Hören items carry the audio manifest keys playLine needs', () => {
+  const items = build(CURRICULUM_FIXTURE, cp1).filter((i) => i.section === 'hoeren');
+  for (const item of items.filter((i) => i.kind === 'dictation')) {
+    assert.ok(item.lektionId, 'a dictation names its Lektion');
+    assert.match(item.lineKey, /^line-\d+$/);
+  }
+  for (const item of items.filter((i) => i.kind === 'wordChoice')) {
+    assert.ok(item.lektionId);
+    assert.equal(item.lineKey, null, 'a single word has no line recording — it synthesises');
   }
 });
 
@@ -204,6 +232,64 @@ test('Sprechen is required but never decides the result', () => {
   assert.equal(result.sections.sprechen.scored, false);
   assert.equal(result.overall, 100);
   assert.equal(result.passed, true);
+});
+
+test('a mic-scored Sprechen section counts — into the overall AND the 40 % rule', () => {
+  const items = build(CURRICULUM_FIXTURE, cp1);
+  const sprechen = items.filter((i) => i.section === 'sprechen');
+
+  // Everything right, both read-alouds recorded and understood.
+  const good = answerAll(items, { correctFor: () => true });
+  for (const item of sprechen) good[item.id] = { usedMic: true, pct: 0.9 };
+  const passed = scoreCheckpoint(items, good);
+  assert.equal(passed.sections.sprechen.scored, true, 'a mic result promotes the section');
+  assert.equal(passed.total, 20, 'and all 20 items are now scored');
+  assert.equal(passed.sections.sprechen.pct, 100);
+  assert.equal(passed.passed, true);
+
+  // Understood too little: below the threshold the item is simply wrong.
+  const weak = answerAll(items, { correctFor: () => true });
+  for (const item of sprechen) weak[item.id] = { usedMic: true, pct: 0.2 };
+  const weakResult = scoreCheckpoint(items, weak);
+  assert.equal(weakResult.sections.sprechen.scored, true);
+  assert.equal(weakResult.sections.sprechen.correct, 0);
+  assert.equal(weakResult.passed, false, 'Sprechen at 0 % trips the 40 % clause');
+  assert.equal(weakResult.errorTags.Aussprache, 2, 'and the misses are tagged as the function tags them');
+});
+
+test('the Sprechen threshold is 60 % word recognition, and it is a boundary', () => {
+  const item = build(CURRICULUM_FIXTURE, cp1).find((i) => i.section === 'sprechen');
+  assert.equal(SPRECHEN_PASS_PCT, 0.6);
+  assert.equal(isItemCorrect(item, { usedMic: true, pct: 0.6 }), true);
+  assert.equal(isItemCorrect(item, { usedMic: true, pct: 0.59 }), false);
+});
+
+test('one self-confirm anywhere in Sprechen keeps the whole section out of the score', () => {
+  const items = build(CURRICULUM_FIXTURE, cp1);
+  const sprechen = items.filter((i) => i.section === 'sprechen');
+  const answers = answerAll(items, { correctFor: () => true });
+  answers[sprechen[0].id] = { usedMic: true, pct: 0.95 };
+  answers[sprechen[1].id] = true; // no microphone — the honest fallback
+  const result = scoreCheckpoint(items, answers);
+  assert.equal(result.sections.sprechen.scored, false);
+  assert.equal(result.total, 18, 'half a Sprechen score is not a Sprechen score');
+  assert.equal(result.sections.sprechen.correct, 2, 'both are still reported as done');
+  assert.equal(result.passed, true);
+});
+
+test('a mic result is recognised only with the flag AND a numeric percentage', () => {
+  assert.equal(isMicResult({ usedMic: true, pct: 0.5 }), true);
+  assert.equal(isMicResult({ usedMic: false, pct: 0.5 }), false);
+  assert.equal(isMicResult({ usedMic: true }), false);
+  assert.equal(isMicResult(true), false);
+  assert.equal(isMicResult(null), false);
+
+  const built = build(CURRICULUM_FIXTURE, cp1);
+  const sprechenItem = built.find((i) => i.section === 'sprechen');
+  const typedItem = built.find((i) => i.section === 'bausteine');
+  assert.equal(itemIsScored(sprechenItem, true), false);
+  assert.equal(itemIsScored(sprechenItem, { usedMic: true, pct: 0 }), true);
+  assert.equal(itemIsScored(typedItem, undefined), true, 'a typed item is scored regardless');
 });
 
 test('a one-letter slip on a strict grammar topic is still wrong', () => {

@@ -25,6 +25,10 @@ const PAIRS = [
   // keys and derives the rubric — grading a task the UI doesn't show (or vice
   // versa) is exactly the drift this pair-check exists for.
   ['src/data/writingTasks.js', 'netlify/functions/_shared/writingTasks.mjs'],
+  // Read-aloud alignment: the browser shows a provisional score and the
+  // function writes the one that counts. Two copies of this arithmetic that
+  // drift would mark the same clip differently on the same screen.
+  ['src/lib/lesson/readaloud.js', 'netlify/functions/_shared/readaloud.mjs'],
   // Curriculum registry (docs/course-factory/a11-rebuild/CONTRACT.md): the
   // lesson engine and the public syllabus page must read the same 12
   // Lektionen. The SPA side is still being authored — run

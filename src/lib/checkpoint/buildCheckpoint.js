@@ -12,8 +12,15 @@
 //     30 % from earlier chapters (only once earlier chapters exist). Nine items
 //     are pool-drawn, so that is 7 / 2.
 //   - Pass = 60 % overall AND no scored section below 40 % (the Goethe/telc
-//     mirror). Sprechen is self-confirmed, therefore required but unscored: it
-//     counts in neither the overall nor the 40 % rule.
+//     mirror). Sprechen is the one section whose scored-ness depends on the
+//     RUN, not on the build: every read-aloud can be scored by the microphone
+//     (netlify/functions/score-readaloud), but only if the learner actually
+//     recorded it. So the items ship `scored: false, scorable: true`, and
+//     scoreCheckpoint promotes the section to scored — into the overall AND
+//     into the 40 % rule — only when EVERY item in it came back with a mic
+//     result. A self-confirm anywhere in the section keeps the whole section
+//     out of the result, because half a Sprechen score is not a Sprechen
+//     score.
 //
 // Everything is deterministic in `seed` (mulberry32), so tests can pin the
 // exact 20 items and "Nochmal" can reshuffle the ORDER without changing the
@@ -117,7 +124,7 @@ export function dialogLines(lektionen) {
 /** Flatten the chapter's Wortfeld entries. */
 export function wortfeldWords(lektionen) {
   const out = [];
-  for (const l of lektionen || []) for (const w of l?.wortfeld || []) out.push({ lektionNr: l.nr, ...w });
+  for (const l of lektionen || []) for (const w of l?.wortfeld || []) out.push({ lektionNr: l.nr, lektionId: l.id, ...w });
   return out;
 }
 
@@ -212,6 +219,10 @@ function buildHoeren(ctx) {
       mode: 'typed',
       topic: 'hoeren',
       lektionNr: line.lektionNr,
+      // Where the audio comes from: playLine(lektionId, lineKey, text) plays
+      // the recording when the manifest has one, the synthesiser when not.
+      lektionId: line.lektionId || null,
+      lineKey: `line-${line.idx}`,
       source: 'chapter',
       register: null,
       scored: true,
@@ -243,6 +254,10 @@ function buildHoeren(ctx) {
       mode: 'options',
       topic: 'hoeren',
       lektionNr: word.lektionNr,
+      // No manifest key for a single word (words carry their own audio_url),
+      // so this one always synthesises.
+      lektionId: word.lektionId || null,
+      lineKey: null,
       source: 'chapter',
       register: null,
       scored: true,
@@ -374,16 +389,18 @@ function buildSchreiben(ctx) {
   );
 }
 
-// Sprechen: 2 read-alouds. Self-confirmed, therefore unscored — but required,
-// so the result screen shows how many were done and the learner cannot skip the
-// section. (Per-word scoring lands with the speaking coach; §6 phase 4.)
+// Sprechen: 2 read-alouds, scored by the microphone when there is one. The
+// learner records the line, score-readaloud aligns the transcript word by word,
+// and `pct >= SPRECHEN_PASS_PCT` counts as correct. Without a mic (or signed
+// out, or over the daily clip cap) the item is self-confirmed and the section
+// stays out of the result — required, but never a number we cannot defend.
 function buildSprechen(ctx) {
   const { checkpoint, rng, chapter } = ctx;
   const preferred = [];
   for (const l of chapter) {
     for (const idx of l?.sprechen?.readAloud || []) {
       const line = l?.dialog?.lines?.[idx];
-      if (line) preferred.push({ lektionNr: l.nr, idx, ...line });
+      if (line) preferred.push({ lektionNr: l.nr, lektionId: l.id, idx, ...line });
     }
   }
   const source = preferred.length >= 2 ? preferred : dialogLines(chapter);
@@ -394,9 +411,14 @@ function buildSprechen(ctx) {
     mode: 'confirm',
     topic: 'sprechen',
     lektionNr: line.lektionNr,
+    lektionId: line.lektionId || null,
+    lineKey: `line-${line.idx}`,
     source: 'chapter',
     register: null,
+    // Not scored at build time — promoted by scoreCheckpoint when the mic
+    // scored every item of the section (see the header).
     scored: false,
+    scorable: true,
     promptDe: 'Lies den Satz laut vor.',
     promptEn: 'Read the sentence aloud.',
     audioText: line.de,
@@ -437,10 +459,31 @@ export function buildCheckpoint({ curriculum, checkpoint, pool, seed } = {}) {
 
 // ── scoring ─────────────────────────────────────────────────────────────────
 
-/** Was this answer right? Self-confirm items are "done", never right or wrong. */
+/** Word recognition at or above this counts a checkpoint read-aloud as correct. */
+export const SPRECHEN_PASS_PCT = 0.6;
+
+/**
+ * A read-aloud answer that came back from the microphone
+ * (netlify/functions/score-readaloud), as opposed to a self-confirm tap.
+ * Shape: { usedMic: true, pct: 0…1 }.
+ */
+export const isMicResult = (answer) =>
+  Boolean(answer) && typeof answer === 'object' && answer.usedMic === true && typeof answer.pct === 'number';
+
+/** Does this item count toward the score ON THIS RUN? (see the file header) */
+export const itemIsScored = (item, answer) =>
+  Boolean(item?.scored) || (item?.scorable === true && isMicResult(answer));
+
+/**
+ * Was this answer right? A self-confirmed read-aloud is "done", never right or
+ * wrong; a mic-scored one is right at SPRECHEN_PASS_PCT and up.
+ */
 export function isItemCorrect(item, answer) {
   if (!item) return false;
-  if (item.mode === 'confirm') return answer === true || answer === 'done';
+  if (item.mode === 'confirm') {
+    if (isMicResult(answer)) return answer.pct >= SPRECHEN_PASS_PCT;
+    return answer === true || answer === 'done';
+  }
   if (answer == null || answer === '') return false;
   const strict = STRICT_TOPIC.test(item.topic || '');
   const { result } = checkAnswer(String(answer), item.accepted, { strict });
@@ -449,8 +492,9 @@ export function isItemCorrect(item, answer) {
 
 /**
  * scoreCheckpoint(items, answers) → the result screen's whole payload.
- * `answers` is keyed by item id. Sprechen is reported but excluded from the
- * overall percentage and from the 40 %-per-section rule (it is self-confirmed).
+ * `answers` is keyed by item id. Sprechen enters the overall percentage and
+ * the 40 %-per-section rule only when every read-aloud in it was scored by the
+ * microphone; a single self-confirm leaves the section reported but unscored.
  */
 export function scoreCheckpoint(items, answers = {}) {
   const sections = {};
@@ -466,8 +510,11 @@ export function scoreCheckpoint(items, answers = {}) {
       const answer = answers[item.id];
       const ok = isItemCorrect(item, answer);
       if (ok) correct += 1;
-      else if (item.scored) {
-        const tag = tagError(
+      else if (itemIsScored(item, answer)) {
+        // A mic-scored read-aloud miss is a pronunciation/intelligibility miss
+        // and carries the same tag the function writes into lesson_attempts —
+        // tagError compares two answer strings and has nothing to compare here.
+        const tag = item.scorable && isMicResult(answer) ? 'Aussprache' : tagError(
           { stage: section === 'hoeren' ? 'listening' : 'checkpoint', kind: item.kind, topic: item.topic, type: item.type },
           answer == null ? '' : String(answer),
           item.answer,
@@ -476,7 +523,8 @@ export function scoreCheckpoint(items, answers = {}) {
       }
     }
     const total = inSection.length;
-    const scored = inSection.every((i) => i.scored);
+    // Sprechen is scored only when EVERY item of it came back from the mic.
+    const scored = inSection.every((i) => itemIsScored(i, answers[i.id]));
     sections[section] = { correct, total, pct: total ? Math.round((correct / total) * 100) : 0, scored };
     if (scored) {
       scoredCorrect += correct;
@@ -502,7 +550,7 @@ export function remediationSet(items, answers = {}, pool, { size = 10, seed } = 
   const missCounts = new Map();
   const tags = {};
   for (const item of items) {
-    if (!item.scored || isItemCorrect(item, answers[item.id])) continue;
+    if (!itemIsScored(item, answers[item.id]) || isItemCorrect(item, answers[item.id])) continue;
     const topic = item.topic;
     missCounts.set(topic, (missCounts.get(topic) || 0) + 1);
     const tag = tagError(
