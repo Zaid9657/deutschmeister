@@ -5,6 +5,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { getProgramProgress } from '../services/programProgress';
 import { loadDashboardStats } from '../services/dashboardStats';
 import { curriculumPath } from '../data/curricula/index.js';
+import { hasLocalProgress, localDoneIds, mergeLocalProgress } from '../lib/course/localProgress.js';
+import ExamDatePlan from '../components/course/ExamDatePlan.jsx';
 import Button from '../components/ui/Button.jsx';
 import Chip from '../components/ui/Chip.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
@@ -18,6 +20,16 @@ import Aurora from '../components/ui/Aurora.jsx';
 // in-order, like the legacy course home. The Lehrplan (can-dos, exam parts,
 // word count) is shown per chapter — buyers saw the same grid on the public
 // course page; here it is the promise the learner is working through.
+//
+// P4 ("completion levers") adds three things and no gates:
+//   * the exam-date plan (ExamDatePlan) under the continue card — a weekly
+//     target when profiles.exam_date is set, a one-tap ask when it is not;
+//   * the Flame reads the FORGIVING streak (one missed day per rolling seven
+//     is forgiven — src/services/dashboardStats.js), because a strict streak
+//     punishes a normal week and is the thing learners quit over;
+//   * a SIGNED-OUT visitor's locally finished Lektionen render as done
+//     (src/lib/course/localProgress.js), and the first load with a user
+//     present merges them into the account.
 
 export const programKeyFor = (level) => `${String(level).toLowerCase().replace('.', '')}_course`;
 
@@ -43,12 +55,23 @@ export default function CurriculumHomePage({ curriculum }) {
   const path = useMemo(() => curriculumPath(curriculum), [curriculum]);
 
   useEffect(() => {
-    if (!user) return;
+    // Signed out: the only progress that can exist is local (a free Lektion
+    // finished before sign-up). Render it, so the path a visitor walked is
+    // still visibly theirs.
+    if (!user) { setDone(localDoneIds(level)); setLoaded(true); return; }
     let cancelled = false;
-    getProgramProgress(user.id, programKey).then((set) => { if (!cancelled) { setDone(set); setLoaded(true); } });
-    loadDashboardStats(user.id).then((s) => { if (!cancelled && s) setStreak(s.streak || 0); }).catch(() => {});
+    const load = () => {
+      getProgramProgress(user.id, programKey).then((set) => { if (!cancelled) { setDone(set); setLoaded(true); } });
+      loadDashboardStats(user.id)
+        .then((s) => { if (!cancelled && s) setStreak(s.streakForgiving ?? s.streak ?? 0); })
+        .catch(() => {});
+    };
+    // Merge first when there is something local to merge, so the very first
+    // signed-in render already shows the visitor's own work as done.
+    if (hasLocalProgress(level)) mergeLocalProgress(user.id).finally(load);
+    else load();
     return () => { cancelled = true; };
-  }, [user, programKey]);
+  }, [user, programKey, level]);
 
   const firstOpenIndex = path.findIndex((n) => !done.has(n.id));
   const current = firstOpenIndex === -1 ? null : path[firstOpenIndex];
@@ -109,6 +132,7 @@ export default function CurriculumHomePage({ curriculum }) {
                   </Button>
                 </div>
               ) : null}
+              <ExamDatePlan curriculum={curriculum} path={path} doneIds={done} />
             </Reveal>
           </div>
         </header>
