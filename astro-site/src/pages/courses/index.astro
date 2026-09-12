@@ -14,6 +14,8 @@ import { levelCoursesWithVariants } from '../../lib/courseVariants.js';
 import { ALL_LEVELS, COURSE_PRO_MONTHS, COURSE_FROM_PRICE_EUR, eur, productKeyForLevel } from '../../data/pricing.js';
 import { FREE_LEVEL_LABEL } from '../../data/marketing.js';
 import { COURSE_CONTENTS, LEVEL_OUTCOME_EN, levelToSlug } from '../../data/courseContents.js';
+import { curriculumFor } from '../../data/curricula/index.js';
+import { hasSyllabus } from '../../lib/syllabus.js';
 
 const BTN = 'inline-flex items-center justify-center gap-2 rounded-clay text-sm font-bold transition-all duration-100 ease-snap select-none';
 const BTN_PRIMARY = `${BTN} bg-siegel px-5 py-3 text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`;
@@ -26,7 +28,8 @@ const rungs = await Promise.all(ALL_LEVELS.map(async (level) => {
   const topics = await getTopicsForLevel(level);
   const c = byKey[productKeyForLevel(level)] || null; // null for the free level
   const content = COURSE_CONTENTS[level];
-  return { level, code: level.toUpperCase(), slug: levelToSlug(level), course: c, topics: topics.length, content };
+  const showSyllabus = hasSyllabus(curriculumFor(level));
+  return { level, code: level.toUpperCase(), slug: levelToSlug(level), course: c, topics: topics.length, content, showSyllabus };
 }));
 
 const title = 'German Courses A1–B2, one level at a time | DeutschMeister';
@@ -92,6 +95,9 @@ const jsonLd = {
                 </p>
                 <a href={`/courses/${r.slug}/`} class="text-sm font-bold text-siegel transition-colors hover:text-siegel-deep">What's inside →</a>
               </div>
+              {r.showSyllabus && (
+                <a href={`/courses/${r.slug}/#lehrplan-h`} class="mt-2 text-xs font-bold text-siegel transition-colors hover:text-siegel-deep">Lehrplan mit 12 Lektionen ansehen →</a>
+              )}
               <div data-course-door={r.level} data-course-code={r.code} data-course-open-class={`${BTN_PRIMARY} mt-4 w-full`}>
               {r.course ? (
                 r.course.variantId ? (
