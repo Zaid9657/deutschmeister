@@ -296,6 +296,12 @@ format is recorded in the decisions log. Briefs: `docs/course-factory/wave7/`; t
 
 ## Decisions log
 
+- 2026-09-12 (owner): **define the course before rebuilding it.** "The courses have to compete with the
+  best online German courses — research all aspects, curriculum and design, before we rebuild."
+  Result: `docs/course-standard-2026-09-12.md` (binding definition: 12 situational Lektionen per
+  half-level with Goethe can-dos, 9-step Lektion anatomy, in-app lesson engine, checkpoints every 3
+  Lektionen, FSRS review, dated plan) backed by three sourced memos in `docs/research/*-2026-09-12.md`.
+  Rebuild order A1.1 → A1.2 → A2.1 → A2.2 per §6 of the standard; awaiting owner approval of §8.
 - 2026-09-08 (owner): **stop building, sell what is finished.** Wave 7 pauses after PR A2 (B1.1 grammar
   complete, live); PRs B–D and Waves 8–10 are parked, not cancelled. The catalogue is re-cut per
   sub-level — A1.1 free, A1.2 €40, A2.1/A2.2 €50, B1.1/B1.2 €60, B2.1/B2.2 €65 — with B1 and B2

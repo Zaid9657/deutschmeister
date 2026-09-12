@@ -214,6 +214,10 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
 
 ## Current state / open threads
 
+- **Course rebuilds are bound by `docs/course-standard-2026-09-12.md`** — what a course is (12
+  situational Lektionen with Goethe can-dos, 9-step Lektion, in-app lesson engine, checkpoints, spaced
+  review, dated plan), the measured gap of the four live courses, and the rebuild order. Never sequence
+  a course by grammar slug again; the three research memos behind it are `docs/research/*-2026-09-12.md`.
 - **Read `docs/HANDOFF-2026-09-03.md` first** — current state, measured revenue, the monetization
   decision that blocks money-side builds, and the open first-lesson-leak question.
 - `docs/medmeister-parity-roadmap.md` was the plan and has **fully shipped** (Batches A–F: claims
