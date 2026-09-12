@@ -3,7 +3,10 @@ import { Link, Navigate, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Check, Volume2, X } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { curriculumFor } from '../../data/curricula/index.js';
-import { fetchDueCards, gradeCard, fetchNextDueAt, buildCardIndex } from '../../services/reviewService.js';
+import { fetchDueCards, gradeCard, fetchNextDueAt, buildCardIndex, parseCardKey } from '../../services/reviewService.js';
+import { fetchWordsByIds } from '../../services/lessonService.js';
+import { audioFor, playLine, playWord, speakGerman } from '../../lib/lesson/speech.js';
+import { AudioSourceBadge } from '../../components/lesson/DialogStage.jsx';
 import { LADDER_DAYS } from '../../lib/review/ladder.js';
 import { checkAnswer, RESULT, STRICT_TOPIC } from '../../lib/lesson/check.js';
 import Button from '../../components/ui/Button.jsx';
@@ -29,13 +32,18 @@ const MODE_LABEL = {
   say: 'Sprechen',
 };
 
-function speak(text) {
-  if (!text || typeof window === 'undefined' || !('speechSynthesis' in window)) return;
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'de-DE';
-  utterance.rate = 0.9;
-  window.speechSynthesis.cancel();
-  window.speechSynthesis.speak(utterance);
+// Audio, in the order the standard wants it (plan P1): a recording when one
+// exists, browser speech only as the fallback. A sentence card IS a dialogue
+// line — `sentence:<lektionId>:<idx>` maps to the manifest key `line-<idx>` of
+// that Lektion — and a word card carries `words.audio_url` from the Azure run.
+// The card's text is on screen either way; sound is never the only channel.
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** The manifest key a recorded card would use, or null when it has none. */
+function recordedKeyFor(cardKey) {
+  const parsed = parseCardKey(cardKey);
+  if (!parsed || parsed.kind !== 'sentence' || !Number.isFinite(parsed.lineIdx)) return null;
+  return { lektionId: parsed.lektionId, key: `line-${parsed.lineIdx}` };
 }
 
 const formatDue = (iso) => {
@@ -59,6 +67,8 @@ export default function ReviewPage() {
   const [verdict, setVerdict] = useState(null);
   const [nextDueAt, setNextDueAt] = useState(null);
 
+  const [wordAudio, setWordAudio] = useState(() => new Map());
+
   const cardIndex = useMemo(() => buildCardIndex(curriculum), [curriculum]);
 
   useEffect(() => {
@@ -70,21 +80,51 @@ export default function ReviewPage() {
     }
     fetchDueCards(user.id, curriculum.level, 12).then((rows) => {
       if (cancelled) return;
-      setCards(rows.filter((row) => cardIndex.has(row.card_key)));
+      const due = rows.filter((row) => cardIndex.has(row.card_key));
+      setCards(due);
+      // Word cards reference a words row by id — fetch the real recordings once.
+      const ids = due
+        .map((row) => parseCardKey(row.card_key))
+        .filter((p) => p && p.kind === 'word' && UUID.test(p.ref))
+        .map((p) => p.ref);
+      if (ids.length) {
+        fetchWordsByIds(ids).then((map) => {
+          if (cancelled) return;
+          setWordAudio(new Map([...map].map(([id, row]) => [id, row.audioUrl || ''])));
+        });
+      }
     });
     return () => { cancelled = true; };
   }, [user, curriculum, cardIndex]);
 
   const card = cards?.[index] || null;
   const content = card ? cardIndex.get(card.card_key) : null;
+
+  const play = useCallback((row, face) => {
+    const text = (face && (face.speak || face.front)) || '';
+    if (!row) return speakGerman(text);
+    const recorded = recordedKeyFor(row.card_key);
+    if (recorded) return playLine(recorded.lektionId, recorded.key, text);
+    const parsed = parseCardKey(row.card_key);
+    if (parsed && parsed.kind === 'word') return playWord(wordAudio.get(parsed.ref) || '', text);
+    return speakGerman(text);
+  }, [wordAudio]);
+
+  const hasRecording = (() => {
+    if (!card) return false;
+    const recorded = recordedKeyFor(card.card_key);
+    if (recorded) return !!audioFor(recorded.lektionId, recorded.key);
+    const parsed = parseCardKey(card.card_key);
+    return !!(parsed && parsed.kind === 'word' && wordAudio.get(parsed.ref));
+  })();
   const mode = card ? (MODES_BY_KIND[card.kind] || MODES_BY_KIND.word)[index % (MODES_BY_KIND[card.kind] || MODES_BY_KIND.word).length] : null;
 
   useEffect(() => {
     setRevealed(false);
     setTyped('');
     setVerdict(null);
-    if (card && content && (mode === 'listening')) speak(content.speak || content.front);
-  }, [card, content, mode]);
+    if (card && content && (mode === 'listening')) play(card, content);
+  }, [card, content, mode, play]);
 
   const finish = useCallback(() => {
     if (!user || !curriculum) return;
@@ -151,9 +191,12 @@ export default function ReviewPage() {
 
             {mode === 'listening' ? (
               <>
-                <Button variant="secondary" onClick={() => speak(content.speak || content.front)}>
-                  <Volume2 className="h-4 w-4" aria-hidden="true" /> Nochmal hören
-                </Button>
+                <div className="flex flex-wrap items-center gap-3">
+                  <Button variant="secondary" onClick={() => play(card, content)}>
+                    <Volume2 className="h-4 w-4" aria-hidden="true" /> Nochmal hören
+                  </Button>
+                  <AudioSourceBadge recorded={hasRecording} />
+                </div>
                 {revealed && <p className="mt-4 font-display text-xl text-ink">{content.front}</p>}
               </>
             ) : mode === 'typed' ? (
@@ -193,7 +236,7 @@ export default function ReviewPage() {
 
             <div className="mt-6 flex flex-wrap gap-3">
               {!revealed && mode !== 'typed' && (
-                <Button onClick={() => { setRevealed(true); if (mode === 'say') speak(content.speak || content.front); }}>
+                <Button onClick={() => { setRevealed(true); if (mode === 'say') play(card, content); }}>
                   {mode === 'say' ? 'Gesagt — auflösen' : 'Auflösen'}
                 </Button>
               )}
