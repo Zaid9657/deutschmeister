@@ -8,6 +8,7 @@ import { requeueFor } from '../../lib/lesson/requeue.js';
 import { firstAttemptAccuracy, masteryStatus } from '../../lib/lesson/mastery.js';
 import { completeLesson, fetchWordsByIds, logAttempts, startLesson } from '../../services/lessonService.js';
 import { courseHome } from '../../lib/courseFlow.js';
+import { buildCardIndex, fetchDueCards, seedCardsForLektion } from '../../services/reviewService.js';
 import LessonProgressBar from '../../components/lesson/LessonProgressBar.jsx';
 import StageShell from '../../components/lesson/StageShell.jsx';
 import DialogStage from '../../components/lesson/DialogStage.jsx';
@@ -42,10 +43,26 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   const [requeued, setRequeued] = useState([]);
   const [wordRows, setWordRows] = useState(() => new Map());
   const [saved, setSaved] = useState(false);
+  const [dueCards, setDueCards] = useState(null); // null = not loaded yet
+
+  // Stage 0 warm-up: up to four cards due from the review ladder.
+  useEffect(() => {
+    if (preview || !user) { setDueCards([]); return; }
+    let cancelled = false;
+    const index = buildCardIndex(curriculum);
+    fetchDueCards(user.id, curriculum.level, 4)
+      .then((rows) => {
+        if (cancelled) return;
+        // Rows carry keys only; the card's face comes from the curriculum.
+        setDueCards((rows || []).map((r) => ({ cardKey: r.card_key, ...(index.get(r.card_key) || {}) })).filter((c) => c.front));
+      })
+      .catch(() => { if (!cancelled) setDueCards([]); });
+    return () => { cancelled = true; };
+  }, [preview, user, curriculum]);
 
   const lesson = useMemo(
-    () => buildLesson({ curriculum, lektion, pool, dueCards: [], attempt }),
-    [curriculum, lektion, pool, attempt],
+    () => buildLesson({ curriculum, lektion, pool, dueCards: dueCards || [], attempt }),
+    [curriculum, lektion, pool, attempt, dueCards],
   );
   const stages = lesson.stages;
   const stage = stages[stageIndex] || null;
@@ -111,7 +128,8 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
     setSaved(true);
     logAttempts(user.id, { level: curriculum.level, lektionId: lektion.id }, attempts);
     completeLesson(user.id, { level: curriculum.level, lektionId: lektion.id, accuracy, status });
-  }, [preview, saved, stage, user, curriculum.level, lektion.id, attempts, accuracy, status]);
+    seedCardsForLektion(user.id, lektion, curriculum.level);
+  }, [preview, saved, stage, user, curriculum.level, lektion, attempts, accuracy, status]);
 
   if (!stage) return <Navigate to={courseHome(curriculum.level)} replace />;
 
