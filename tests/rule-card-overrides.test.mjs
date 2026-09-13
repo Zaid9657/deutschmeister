@@ -363,7 +363,11 @@ test('yes-no-questions names the written-question rule and admits the spoken for
 
 import { DIALOG_NAMES as DIALOG_NAMES_A11, FUNCTION_WORDS as FUNCTION_WORDS_A11 } from '../src/data/curricula/a11.js';
 import { DIALOG_NAMES as DIALOG_NAMES_A12, FUNCTION_WORDS as FUNCTION_WORDS_A12 } from '../src/data/curricula/a12.js';
-import { hasEnglish } from '../src/data/lessonPools/quality.js';
+import {
+  hasEnglish,
+  NEXT_LEVEL_RE,
+  UNTAUGHT_ANSWER_FORMS,
+} from '../src/data/lessonPools/quality.js';
 
 const cardOf = (slug) => OVERRIDES[slug];
 const contentLines = (card) => card.content.split('\n').map((l) => l.trim()).filter(Boolean);
@@ -491,6 +495,9 @@ const META_NOUNS = [
   'Person', 'Pronomen', 'Genus', 'Stamm', 'Vokal', 'Infinitiv', 'Akkusativ', 'Regel',
   'Verneinung', 'Vorsilbe', 'Position', 'Beispiel', 'Gruppe', 'Anrede', 'Kurzantwort',
   'Wortfolge', 'Subjekt', 'Stimme', 'Sonderfall', 'Bedeutung', 'Ordnungszahl', 'Fehler',
+  // ADDED 2026-09-13 (round 10): the umlaut plural of Wort. The matcher resolves
+  // suffixes, never umlauts, so "die die-Wörter" needs the plural spelled out.
+  'Wörter',
   // ADDED 2026-09-13: the clock card needs the units it teaches, and neither is a
   // Wortfeld entry of A1.1 L8 (the Wortfeld carries Uhrzeit, halb, Viertel nach/vor).
   'Stunde', 'Minute',
@@ -635,7 +642,14 @@ test('every example noun stands in the Wortfeld the course has taught by that Le
 // `netlify/functions/explain-answer.mjs` hands a learner who is already stuck, so
 // a sentence there that the Lektion never says is a second, divergent course.
 //
-// THE RULE THESE FOUR TESTS PIN.
+// THE RULE THESE TESTS PIN. Four of them are round 3's; (e), at the bottom of
+// the file, is round 10's answer to DaF review #9 MAJOR 5, which measured that
+// (b) and (d) did not hold the class they were written for — (b) because the
+// cumulative lexis carries the single letters of the alphabet Lektion and its
+// matcher accepted any prefix or suffix, (d) because it can only guard a form
+// some notice happened to write a deferral for. Both are rewritten below; the
+// mutation tests at the end of the file break a card on purpose and watch each
+// guard fire.
 //   (a) EVERY EXAMPLE SENTENCE ON A CARD IS A LINE OF ITS OWN LEKTION. An example
 //       sentence is a segment that ends in . ! or ?, carries at least three words
 //       and a verb, and is not metalanguage (see META_SENTENCE below). It must
@@ -652,6 +666,10 @@ test('every example noun stands in the Wortfeld the course has taught by that Le
 //   (d) NO FORM THE NOTICE EXPLICITLY DEFERS IS TAUGHT. A notice that says
 //       "… kommt in Lektion 4" or "… folgt in A1.2" has withdrawn that form; the
 //       card may name the deferral and may not use the form anywhere else.
+//   (e) NO FORM THE COURSE INTRODUCES LATER IS TAUGHT — the same question asked
+//       of the LEVEL rather than of one notice: the untaught answer forms of
+//       quality.js, the next-level regex, and every form a later Lektion's
+//       notice puts in bold or names in its title.
 //
 // THERE IS NO BUDGET ANY MORE. These four rules were written for the A1.2 rebuild
 // and the A1.1 cards predated them, so round 3 held a1.1 at its MEASURED numbers
@@ -757,33 +775,114 @@ test('every example sentence on a card is a line of its own Lektion', () => {
   }
 });
 
-// (b) — the noun check above, widened to every token. The extra source is the
-// Lektion's own text: a card may use any word its Lektion (or an earlier one)
-// actually says, which is exactly the licence the Wortfeld alone does not give
-// for inflected verb forms ("nimmt", "hilfst") and quoted notice wording.
-const CARD_LANGUAGE = [
-  // the verbs and adverbs a rule statement is made of
-  'steht', 'stehen', 'wird', 'werden', 'heißt', 'heißen', 'bekommt', 'bekommen', 'verneint',
-  'verlangt', 'verlangen', 'bleibt', 'bleiben', 'ändert', 'ändern', 'fällt', 'entsteht', 'endet',
-  'verschmelzen', 'schickt', 'schicken', 'lernt', 'liest', 'zeigt', 'gezeigt', 'fragt', 'schreibt',
-  'rutscht', 'gehört', 'ergibt', 'lautet', 'entscheidet', 'wiederholt', 'beginnt', 'macht',
-  'dahinter', 'direkt', 'vorn', 'weitere', 'beiden', 'genauso', 'ganz', 'dagegen', 'ebenfalls',
-  'hinten', 'weg', 'jetzt', 'erst', 'plus', 'also', 'andere', 'anderen', 'jede', 'jeder', 'alles',
-  'immer', 'gleich', 'gleicher', 'neu', 'neuen', 'bekannt', 'richtig', 'falsch', 'fest', 'feste',
-  // the words for the grammatical categories themselves
-  'unregelmäßig', 'regelmäßig', 'feminin', 'feminine', 'femininen', 'maskulin', 'maskuline',
-  'männlich', 'männliche', 'männlichen', 'neutrum', 'neutral', 'trennbare', 'bestimmtem',
-  'bestimmten', 'unbestimmtem', 'unbestimmten', 'höflich', 'höfliche', 'einzeln', 'einzelne',
-  'auswendig',
-  // the two Anreden a card quotes in a polite example
-  'frau', 'herr',
+// (b) — the noun check above, widened to every token.
+//
+// WHY IT IS REWRITTEN (DaF review #9, MAJOR 5). The first version of this guard
+// did not bite. Its coverage test was
+//   `token === form || token.startsWith(form) || token.endsWith(form) ||
+//    form.startsWith(token) || commonPrefix(token, form) >= 4`
+// and sixteen out-of-course forms were probed against the A1.1 state at Lektion
+// 5: fifteen passed, including the Konjunktiv II (`hätte`, `wäre`, `müsste`,
+// `dürfte`) and the Partizip II (`gegangen`, `geschwommen`) that neither A1.1 nor
+// A1.2 teaches. MEASURED CAUSE, and it is one line: `cumulativeLexis()` did not
+// drop short forms the way `cumulativeWortfeld()` does, and Lektion 1 is the
+// ALPHABET — so the lexis set contains the single letters a, c, e, g, h, i, j, k,
+// n, r, s, v, w, y, z, ß. With `endsWith`/`startsWith` against a one-character
+// "form", every German word is covered: `gegangen` matched the letter `g`,
+// `hätte` matched the letter `e`. The four-character tolerance did the rest
+// (`unterschreibt` ~ `Unterschrift`).
+//
+// THE RULE NOW. A token is covered only by a form it SHARES A STEM WITH, and the
+// stem has to be four characters long:
+//   * the same word, or
+//   * a prefix relation in either direction where what the longer side adds is
+//     an ENDING and nothing else (`Buchstabe` → `Buchstaben`, `Tag` → `Tagen`,
+//     `nehmen` → `nehme`; `unter` does NOT cover `unterschreibt`, because
+//     `schreibt` is not an ending), or
+//   * the same inflectional stem, i.e. the same word after one German suffix is
+//     removed (`kaufen`/`kauft` → `kauf`, `fahren`/`fährst` is NOT the same stem
+//     and is not covered).
+// `endsWith` is gone — German compounds are head-final, so suffix matching is
+// right for the NOUN check above and wrong here, where it licensed every verb
+// and adjective in the language. The four-character prefix tolerance is gone
+// with it.
+//
+// THE ALLOW-LIST IS METALANGUAGE ONLY. What a card may say beyond the lexis of
+// its own course-so-far is the vocabulary it needs to talk ABOUT German: the
+// grammar nouns (META_NOUNS, already closed and argued above), the verbs a rule
+// statement is made of (read out of META_SENTENCE_VERB so the two cannot drift),
+// and a closed list of grammatical qualifiers. The test below asserts that the
+// list stays that: no entry may be a Wortfeld word of any curriculum, and none of
+// the sixteen probe forms may be covered by it. An inflected content form
+// ("kauft", "bestellt") is NOT allow-listed — it is covered by the stem rule or
+// the card is rewritten.
+/** The verbs a rule statement is made of — one source with META_SENTENCE_VERB. */
+const META_VERBS = META_SENTENCE_VERB.source.replace(/\\b|[()]/g, '').split('|');
+
+/**
+ * Three more rule-statement words that are metalanguage but not segment markers,
+ * so they do not belong in META_SENTENCE_VERB (a segment carrying one of those is
+ * exempted from the example-sentence guard, and these three verbs appear in real
+ * example sentences too): `gehört` ("Das Genus gehört zum Wort"), `gilt` ("In der
+ * Familie gilt das nicht"), `fehlt` ("Ohne die Vorsilbe fehlt das halbe Verb"),
+ * and `weg`, the separable particle of the rule verb `wegfallen` ("Der Artikel
+ * fällt nicht weg").
+ */
+const META_VERBS_EXTRA = ['gehört', 'gilt', 'fehlt'];
+
+/**
+ * Grammatical qualifiers: words that name a CATEGORY of German, never a thing in
+ * a situation. Closed, and asserted below to contain no Wortfeld word.
+ *   * the genus and regularity words a rule card cannot avoid;
+ *   * `richtig`/`falsch` — `ruleCardText()` renders every commonMistake as
+ *     "Falsch: … — Richtig: …", so the two words are the card's own frame;
+ *   * `feste` — "eine feste Wendung", "feste Endungen" is a grammatical
+ *     category, and `Wendung` is already a META_NOUN. The bare `fest` is not
+ *     here either: `das Fest` is A1.1 Lektion 12 vocabulary;
+ *   * the position words a word-order rule needs to point with;
+ *   * `geschrieben`/`gesprochen` — the written and the spoken form of a question
+ *     are what A1.1 L10 is about;
+ *   * the gender-predicting ENDINGS, which `nouns-gender` quotes with a leading
+ *     hyphen ("-ung, -heit …") and which `splitWords` hands over bare.
+ * The bare `bestimmt` is deliberately NOT here: it is the A1.1 Lektion 12
+ * Wortfeld adverb ("Ja, bestimmt"), a different word from the attributive
+ * `bestimmte` a rule card needs, and the assertion below would refuse it.
+ */
+const GRAMMAR_TERMS = [
+  'feminin', 'feminine', 'femininen', 'maskulin', 'maskuline', 'männlich', 'männliche',
+  'männlichen', 'neutrum', 'neutral', 'regelmäßig', 'regelmäßige', 'unregelmäßig',
+  'trennbar', 'trennbare', 'bestimmte', 'bestimmtem', 'bestimmten',
+  'unbestimmte', 'unbestimmtem', 'unbestimmten', 'höflich', 'höfliche',
+  'einzeln', 'einzelne', 'auswendig',
+  'richtig', 'falsch', 'feste',
+  'direkt', 'dahinter', 'vorn', 'hinten',
+  'geschrieben', 'geschriebene', 'geschriebenen', 'gesprochen',
+  'ung', 'heit', 'keit', 'schaft', 'chen', 'lein',
 ];
 
-const commonPrefix = (a, b) => {
-  let i = 0;
-  while (i < a.length && i < b.length && a[i] === b[i]) i += 1;
-  return i;
-};
+/** The metalanguage a card may use on top of its own course-so-far. Closed. */
+const CARD_METALANGUAGE = [
+  ...META_NOUNS,
+  ...META_VERBS,
+  ...META_VERBS_EXTRA,
+  ...GRAMMAR_TERMS,
+].map((w) => w.toLowerCase());
+
+/**
+ * Sixteen forms from outside both courses, the probe set of DaF review #9,
+ * MAJOR 5: four Konjunktiv II, two Partizip II, three inflected verbs, two
+ * adjectives, four compound nouns and one untaught possessive. The guard is run
+ * against them below and must catch EVERY one — a guard that does not pass its
+ * own counter-probe is not a rule.
+ */
+const OUT_OF_COURSE_PROBES = [
+  'hätte', 'wäre', 'müsste', 'dürfte',
+  'gegangen', 'geschwommen',
+  'repariert', 'verhandelt', 'unterschreibt',
+  'gewöhnlich', 'zuverlässig',
+  'Schmetterling', 'Waschmaschine', 'Zahnarzt', 'Gewerkschaft',
+  'deinen',
+];
 
 /** Every word the course has SAID by Lektion `nr` of `level` — not only its Wortfeld. */
 const cumulativeLexis = (level, nr) => {
@@ -811,42 +910,163 @@ const cumulativeLexis = (level, nr) => {
   return seen;
 };
 
-const ALL_FUNCTION_WORDS = [...FUNCTION_WORDS_A11, ...FUNCTION_WORDS_A12].map((w) => w.toLowerCase());
+/**
+ * FUNCTION_WORDS, cumulatively and PER LEVEL. A1.2's list carries the modal
+ * paradigm (`müsst`, `dürft`, `kann`), so handing both lists to an A1.1 card is
+ * how `müsste` and `dürfte` walked through the first version of this guard.
+ */
+const FUNCTION_WORDS_BY_LEVEL = { 'a1.1': FUNCTION_WORDS_A11, 'a1.2': [...FUNCTION_WORDS_A11, ...FUNCTION_WORDS_A12] };
+const functionWordsUpTo = (level) => (FUNCTION_WORDS_BY_LEVEL[level] || []).map((w) => w.toLowerCase());
+
+/**
+ * One German inflectional suffix, removed once. Only applied when at least four
+ * characters remain, so `ist` → `ist` and `gegangen` → `gegang` (which no A1
+ * stem matches) rather than collapsing to a syllable that matches everything.
+ */
+const INFLECTION_SUFFIX = /(?:en|em|er|es|et|st|te|e|n|t)$/;
+const stemOf = (word) => {
+  const stem = word.replace(INFLECTION_SUFFIX, '');
+  return stem.length >= 4 ? stem : word;
+};
+
+/**
+ * What a prefix relation is allowed to leave over. Without this the prefix rule
+ * is nearly as loose as the `endsWith` it replaces: `unter` is a word of the
+ * course and covered `unterschreibt` on its own. A longer word is an INFLECTION
+ * of a shorter one only when what follows is an ending.
+ */
+const INFLECTION_TAIL = /^(?:e|en|em|er|es|et|st|t|n|s|ns|in|innen)?$/;
+
+/** The noun heads a compound on this card may be built on. */
+const compoundHeads = (primary) => [
+  ...cumulativeLexis(primary.level, primary.nr),
+  ...META_NOUNS.map((w) => w.toLowerCase()),
+  ...ALWAYS_ALLOWED.map((w) => w.toLowerCase()),
+];
+
+/** The words a card at this Lektion may use, and nothing else. */
+const cardVocabulary = (primary) => [
+  ...cumulativeLexis(primary.level, primary.nr),
+  ...functionWordsUpTo(primary.level),
+  ...CARD_METALANGUAGE,
+  ...ALWAYS_ALLOWED.map((w) => w.toLowerCase()),
+  ...(EARLY_USE[primary.slug] || []).map((w) => w.toLowerCase()),
+];
+
+/**
+ * The tokens of a card that are checked: everything except the `wrong` fields.
+ * Case is KEPT — German capitalises nouns, and the compound rule below applies
+ * to nouns only.
+ */
+const cardTokens = (card) =>
+  [card.titleDe, ...germanLines(card), ...card.commonMistakes.flatMap((m) => [m.correct, m.explanationDe])]
+    .flatMap(splitWords)
+    .filter((w) => w.length >= 3);
+
+/**
+ * The guard itself, as a function so the mutation tests below can call it on a
+ * card fixture rather than on the shipped file. `wrong` fields are excluded —
+ * they are deliberately malformed German and are the one place a non-word
+ * belongs.
+ */
+const outsideLexis = (card, primary, vocabulary = cardVocabulary(primary)) => {
+  const stems = new Set(vocabulary.map(stemOf));
+  // German compounds are head-final, so a CAPITALISED token whose head is a word
+  // of the course is a compound of it (Beruf + Namen → Berufsnamen). This is the
+  // one suffix rule that survives, and it is restricted to nouns and to heads
+  // that are real course words — never to the grammatical ENDINGS in
+  // GRAMMAR_TERMS, which would turn "-schaft" into a licence for Gewerkschaft.
+  const heads = compoundHeads(primary);
+  const covered = (raw) => {
+    const token = raw.toLowerCase();
+    if (stems.has(stemOf(token))) return true;
+    if (
+      vocabulary.some(
+        (form) =>
+          token === form ||
+          (form.length >= 3 && token.startsWith(form) && INFLECTION_TAIL.test(token.slice(form.length))) ||
+          (token.length >= 3 && form.startsWith(token) && INFLECTION_TAIL.test(form.slice(token.length))),
+      )
+    ) {
+      return true;
+    }
+    const stem = stemOf(token);
+    return (
+      /^[A-ZÄÖÜ]/.test(raw) &&
+      heads.some((head) => head.length >= 4 && token !== head && (token.endsWith(head) || stem.endsWith(head)))
+    );
+  };
+  return [...new Set(cardTokens(card).filter((token) => !covered(token)).map((w) => w.toLowerCase()))];
+};
 
 test('no card uses a word the course has not used by that Lektion', () => {
   for (const primary of PRIMARIES) {
-    const card = cardOf(primary.slug);
-    const allowed = [
-      ...cumulativeLexis(primary.level, primary.nr),
-      ...ALL_FUNCTION_WORDS,
-      ...CARD_LANGUAGE,
-      ...ALWAYS_ALLOWED.map((w) => w.toLowerCase()),
-      ...(EARLY_USE[primary.slug] || []).map((w) => w.toLowerCase()),
-    ];
-    // Same prefix/suffix matching as the noun check, plus two tolerances a
-    // full-token sweep needs: a form the card shortens (nehmen → nehme) and an
-    // inflection of a form the Lektion says (hilft → hilfst), i.e. four shared
-    // leading characters. `wrong` fields are excluded — they are deliberately
-    // malformed German and are the one place a non-word belongs.
-    const covered = (token) =>
-      allowed.some(
-        (form) =>
-          token === form ||
-          token.startsWith(form) ||
-          token.endsWith(form) ||
-          form.startsWith(token) ||
-          commonPrefix(token, form) >= 4,
-      );
-    const text = [card.titleDe, ...germanLines(card), ...card.commonMistakes.flatMap((m) => [m.correct, m.explanationDe])];
-    const offenders = [
-      ...new Set(text.flatMap(splitWords).map((w) => w.toLowerCase()).filter((w) => w.length >= 3 && !covered(w))),
-    ];
+    const offenders = outsideLexis(cardOf(primary.slug), primary);
     assert.deepEqual(
       offenders,
       [],
       `${where(primary)}: words the course has not used by Lektion ${primary.nr}: ${offenders.join(', ')}`,
     );
   }
+});
+
+test('the card metalanguage list is metalanguage and nothing else', () => {
+  const wortfeld = new Set(
+    LEVELS.flatMap((level) =>
+      ALL_CURRICULA[level].lektionen.flatMap((l) => l.wortfeld.flatMap((w) => splitWords(w.word))),
+    ).map((w) => w.toLowerCase()),
+  );
+  for (const term of CARD_METALANGUAGE) {
+    assert.equal(term, term.toLowerCase(), `${term}: the list is matched lower-cased`);
+  }
+  // META_NOUNS is the closed, argued list above and legitimately overlaps the
+  // Wortfeld where the course teaches a grammar word as vocabulary (der
+  // Buchstabe, die Uhr, der Name). The two HAND-WRITTEN additions may not: a
+  // Wortfeld word there is a content form smuggled in as metalanguage.
+  for (const term of [...META_VERBS_EXTRA, ...GRAMMAR_TERMS]) {
+    assert.ok(
+      !wortfeld.has(term),
+      `${term} is a Wortfeld word of the course — a content form has no place in the metalanguage allow-list`,
+    );
+  }
+  assert.ok(
+    META_VERBS_EXTRA.length + GRAMMAR_TERMS.length <= 60,
+    'the metalanguage allow-list is meant to stay small — argue an entry or rewrite the card',
+  );
+  // And it may not, on its own, license anything from outside the course.
+  const covered = OUT_OF_COURSE_PROBES.map((w) => w.toLowerCase()).filter((probe) => {
+    const stems = new Set(CARD_METALANGUAGE.map(stemOf));
+    return (
+      stems.has(stemOf(probe)) ||
+      CARD_METALANGUAGE.some(
+        (t) => probe === t || (t.length >= 4 && probe.startsWith(t) && INFLECTION_TAIL.test(probe.slice(t.length))),
+      )
+    );
+  });
+  assert.deepEqual(covered, [], `the metalanguage list licenses out-of-course forms: ${covered.join(', ')}`);
+});
+
+test('the lexis guard catches every out-of-course probe form', () => {
+  // A1.1 Lektion 5 — the state review #9 measured the sixteen probes against.
+  const primary = PRIMARIES.find((p) => p.level === 'a1.1' && p.nr === 5);
+  const vocabulary = cardVocabulary(primary);
+  const probed = OUT_OF_COURSE_PROBES.map((form) => {
+    const fixture = {
+      titleDe: cardOf(primary.slug).titleDe,
+      content: `Der Artikel ${form} steht vor dem Nomen.\nEnglish: probe.`,
+      commonMistakes: [{ wrong: 'x', correct: 'y', explanationDe: 'z' }],
+    };
+    return { form, caught: outsideLexis(fixture, primary, vocabulary).includes(form.toLowerCase()) };
+  });
+  assert.deepEqual(
+    probed.filter((p) => !p.caught).map((p) => p.form),
+    // `deinen` is a FUNCTION_WORD of both levels (CONTRACT §2: a learner may MEET
+    // a function word early), so the lexis guard is the wrong guard for it — it
+    // is caught by the level-scoped deferral guard below, which reads
+    // UNTAUGHT_ANSWER_FORMS and knows no allow-list.
+    ['deinen'],
+    'a guard that does not pass its own counter-probe is not a rule',
+  );
 });
 
 // (c)
@@ -926,4 +1146,196 @@ test('no card teaches a form its own notice defers to a later Lektion', () => {
       );
     }
   }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// (e) ── DEFERRALS, LEVEL-SCOPED (DaF review #9, MAJOR 5).
+//
+// WHY (d) IS NOT ENOUGH, MEASURED. Guard (d) above reads the DEFERRAL out of the
+// card's own notice: "die Form keinen kommt in Lektion 4" withdraws `keinen`. Run
+// over the twelve A1.1 notices, it has nothing to guard in ten of them — the
+// regex reads the token immediately before "kommt/folgt", and in L4, L5, L9 and
+// L11 that token is a bracketed metalanguage word ("(Akkusativ) kommt in A1.2"),
+// which META_NOUNS filters away; in L9 the sentence does not say "kommt/folgt" at
+// all. Exactly two forms survive and both are misfires (`eins`, `haben`). So a
+// card could go on teaching the next Lektion's grammar as long as its own notice
+// had not happened to write the deferral down.
+//
+// THE QUESTION THIS GUARD ASKS INSTEAD: does the card teach a form THE COURSE
+// introduces later — whatever its own notice says? Three sources, all imported,
+// none retyped here:
+//   1. `UNTAUGHT_ANSWER_FORMS` (src/data/lessonPools/quality.js) — the possessive
+//      paradigm beyond -e, which A1.1 never teaches. These are FUNCTION_WORDS of
+//      both levels, so the lexis guard above cannot see them: `deinen` is covered
+//      by `deine` there and is caught only here.
+//   2. `NEXT_LEVEL_RE` (same file) — the card SAYING the next level out loud
+//      ("Vorschau", "A1.2", and at A1.1 the case names, which no A1.1 notice
+//      uses).
+//   3. Every form a LATER Lektion's notice puts in bold — the notice's bold spans
+//      are the teaching points (that is what guard (c) is built on), so a bold
+//      form of a later Lektion is by definition introduced later.
+// Both level-scoped lists apply to A1.1 only, exactly as quality.js scopes them:
+// `meinen` is ordinary German at A1.2 and `Dativ` is A1.2 metalanguage.
+//
+// THE ONE EXEMPTION, and it is the same one guard (d) has: a sentence that POINTS
+// AHEAD ("… kommt in A1.2", "Mehr dazu in Lektion 7", "gehört zu den Modalverben
+// in A1.2") is naming the deferral, which is what a card is supposed to do. The
+// exemption is a property of the SENTENCE, not of the card, so the rest of the
+// card stays under the guard. A later bold form is also skipped when the
+// course-so-far already says all of its words — then it is not introduced later,
+// it is being re-taught.
+
+/** A sentence that hands the form forward to a named Lektion or level. */
+const POINTS_AHEAD = /\bin\s+(Lektion\s+\d+|A1\.\d)\b/;
+
+const escapeRe = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/** The forms every Lektion after this one puts in bold, with where they come from. */
+const laterNoticeForms = (level, nr) => {
+  const forms = new Map();
+  for (const lvl of LEVELS) {
+    if (lvl < level) continue;
+    for (const lektion of ALL_CURRICULA[lvl].lektionen) {
+      if (lvl === level && lektion.nr <= nr) continue;
+      // The bold spans AND the NOUNS of the notice title: A1.1 L11 names the
+      // Satzklammer in its title and nowhere in bold, and the title is a teaching
+      // point like any other (guard (c) holds every card title to it). Only the
+      // capitalised words — a title also carries position words ("das Verb steht
+      // vorn"), which name where, not what.
+      const titleForms = splitWords(lektion.notice.title).filter(
+        (w) => w.length >= 4 && /^[A-ZÄÖÜ]/.test(w),
+      );
+      for (const form of [...noticeForms(lektion), ...titleForms]) {
+        if (!forms.has(form)) forms.set(form, `${lvl} L${lektion.nr}`);
+      }
+    }
+  }
+  return forms;
+};
+
+/** The sentences of a card that are under this guard. */
+const guardedSentences = (card) =>
+  [card.titleDe, card.content, ...card.commonMistakes.flatMap((m) => [m.correct, m.explanationDe])]
+    .flatMap((text) => String(text).split(/\n|(?<=[.!?])\s+/))
+    .map((s) => unbold(s).replace(/\s+/g, ' ').trim())
+    .filter(Boolean)
+    .filter((s) => !ENGLISH_LINE.test(s))
+    .filter((s) => !POINTS_AHEAD.test(s));
+
+const levelDeferralOffenders = (card, primary) => {
+  const lexis = cumulativeLexis(primary.level, primary.nr);
+  const stems = new Set([...lexis].map(stemOf));
+  const said = (word) => lexis.has(word.toLowerCase()) || stems.has(stemOf(word.toLowerCase()));
+  const sentences = guardedSentences(card);
+  const offenders = [];
+
+  const functionWords = new Set(functionWordsUpTo(primary.level));
+  for (const [form, from] of laterNoticeForms(primary.level, primary.nr)) {
+    if (form.length < 3) continue;
+    if (splitWords(form).every(said)) continue;
+    // A FUNCTION_WORD is one a learner may MEET before it is taught (CONTRACT
+    // §2) — `ist`, `die`, `ein` are bold somewhere later in every course. The
+    // subset that is genuinely off limits is UNTAUGHT_ANSWER_FORMS, checked
+    // below, and it is checked whether or not the form is a function word.
+    if (!/\s/.test(form) && functionWords.has(form.toLowerCase())) continue;
+    const multiWord = /\s/.test(form);
+    const pattern = new RegExp(multiWord ? escapeRe(form) : `\\b${escapeRe(form)}\\b`, 'i');
+    for (const sentence of sentences) {
+      if (pattern.test(sentence)) offenders.push(`${from} teaches "${form}" — "${sentence}"`);
+    }
+  }
+
+  if (primary.level === 'a1.1') {
+    for (const sentence of sentences) {
+      const preview = NEXT_LEVEL_RE.exec(sentence);
+      if (preview) offenders.push(`the card names the next level ("${preview[0]}") — "${sentence}"`);
+      for (const word of splitWords(sentence)) {
+        if (UNTAUGHT_ANSWER_FORMS.includes(word.toLowerCase())) {
+          offenders.push(`"${word}" is an untaught answer form at ${primary.level} — "${sentence}"`);
+        }
+      }
+    }
+  }
+  return [...new Set(offenders)];
+};
+
+test('no card teaches a form the course introduces after its own Lektion', () => {
+  for (const primary of PRIMARIES) {
+    const offenders = levelDeferralOffenders(cardOf(primary.slug), primary);
+    assert.deepEqual(
+      offenders,
+      [],
+      `${where(primary)}: ${offenders.length} forms the course introduces later:\n  ${offenders.join('\n  ')}`,
+    );
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MUTATION TESTS. The finding behind MAJOR 5 is that four guards passed the cards
+// they were written for and would not have caught the class the cards came from.
+// The only answer to that is to break a card on purpose and watch the guard fire.
+// Each case injects ONE thing into a copy of a shipped card and asserts the guard
+// that owns it reports it.
+
+/** A shipped card with one sentence appended to `content`. */
+const cardWith = (slug, sentence) => {
+  const card = cardOf(slug);
+  const lines = card.content.split('\n');
+  const english = lines.findIndex((l) => ENGLISH_LINE.test(l.trim()));
+  const injected = [...lines];
+  injected.splice(english < 0 ? lines.length : english, 0, sentence);
+  return { ...card, content: injected.join('\n') };
+};
+
+const A11_L5 = PRIMARIES.find((p) => p.level === 'a1.1' && p.nr === 5);
+const A11_L10 = PRIMARIES.find((p) => p.level === 'a1.1' && p.nr === 10);
+
+test('MUTATION: Konjunktiv II on a card is caught by the lexis guard', () => {
+  const offenders = outsideLexis(cardWith(A11_L5.slug, 'Das hätte der Lehrer gesagt.'), A11_L5);
+  assert.ok(offenders.includes('hätte'), `hätte went through: ${offenders.join(', ') || 'nothing reported'}`);
+});
+
+test('MUTATION: a Partizip II on a card is caught by the lexis guard', () => {
+  const offenders = outsideLexis(cardWith(A11_L5.slug, 'Der Lehrer ist gegangen.'), A11_L5);
+  assert.ok(offenders.includes('gegangen'), `gegangen went through: ${offenders.join(', ') || 'nothing reported'}`);
+});
+
+test('MUTATION: an untaught possessive is caught by the deferral guard', () => {
+  // `deinen` is a FUNCTION_WORD, so the lexis guard cannot see it — this is
+  // exactly the split the two guards exist for.
+  const card = cardWith(A11_L5.slug, 'Der Artikel steht vor deinen Nomen.');
+  assert.deepEqual(outsideLexis(card, A11_L5), [], 'the lexis guard is not the guard for a function word');
+  const offenders = levelDeferralOffenders(card, A11_L5);
+  assert.ok(
+    offenders.some((o) => o.includes('deinen')),
+    `deinen went through: ${offenders.join(' | ') || 'nothing reported'}`,
+  );
+});
+
+test('MUTATION: A1.2 content on an A1.1 card is caught by the deferral guard', () => {
+  // The Satzklammer is A1.1 Lektion 11's teaching point and `Satzklammer` is
+  // METALANGUAGE (META_NOUNS), so the lexis guard passes it on the Lektion 10
+  // card — the review's case (c) exactly. The deferral guard reads the notices.
+  const card = cardWith(A11_L10.slug, 'Die Satzklammer hält den Satz zusammen.');
+  const offenders = levelDeferralOffenders(card, A11_L10);
+  assert.ok(
+    offenders.some((o) => o.includes('Satzklammer')),
+    `Satzklammer went through: ${offenders.join(' | ') || 'nothing reported'}`,
+  );
+});
+
+test('MUTATION: naming the next level outside a deferral sentence is caught', () => {
+  const card = cardWith(A11_L5.slug, 'Der Artikel steht im Akkusativ.');
+  const offenders = levelDeferralOffenders(card, A11_L5);
+  assert.ok(
+    offenders.some((o) => o.includes('Akkusativ')),
+    `Akkusativ went through: ${offenders.join(' | ') || 'nothing reported'}`,
+  );
+  // …and the same word inside a sentence that names the deferral is allowed.
+  const deferring = cardWith(A11_L5.slug, 'Die Regel dazu (Akkusativ) kommt in A1.2.');
+  assert.deepEqual(
+    levelDeferralOffenders(deferring, A11_L5).filter((o) => o.includes('Akkusativ')),
+    [],
+    'a card must be able to name what it defers',
+  );
 });

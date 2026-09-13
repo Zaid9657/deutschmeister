@@ -97,6 +97,21 @@
 // on the time card, and no du-register outside a paradigm line.
 
 /** @type {Record<string, {titleDe: string, content: string, commonMistakes: Array<{wrong: string, correct: string, explanationDe: string}>}>} */
+// WHAT ROUND 10 CHANGED (DaF review #9, MAJOR 5). The guards, not the cards, were
+// the finding: the lexis guard accepted 15 of 16 probe forms from outside the
+// course and the deferral guard had nothing to guard in ten of twelve Lektionen.
+// `tests/rule-card-overrides.test.mjs` now checks every German token of a card —
+// examples, rule statements and commonMistakes alike — against the course-so-far
+// with a stem-anchored matcher and a metalanguage-only allow-list, and adds a
+// LEVEL-scoped deferral guard. Twelve lines across ten cards were rewritten to
+// pass them, each one a word from outside the Lektion rather than a rule change:
+// A1.1 L1 (dazu / häufigste / eigener), L3 (immer; and "Das Genus entscheidet"
+// → "Der Artikel entscheidet", because Genus is Lektion 4's teaching point),
+// L4 (diese), L5 ("fällt nicht weg" → "bleibt"), L6 and L12 (also), L8 (the
+// halb-neun explanation, which carried `nimmt`, `nächste` and `liegt`), L10
+// (gleicher, steigender, ganze, plus) — plus four A1.2 draft lines (weitere,
+// beiden, Genauso, Fragewort).
+//
 const RULE_CARD_OVERRIDES = {
   // ── Lektion 1 · Hallo, ich bin … (Begrüßung, Vorstellen und das Alphabet)
   'alphabet-pronunciation': {
@@ -105,7 +120,7 @@ const RULE_CARD_OVERRIDES = {
       'Beim Buchstabieren sagt man jeden Buchstaben einzeln.',
       'Die Namen der Buchstaben sind A a, B be, C ce, D de, E e, F ef, G ge, H ha, I i, J Jot,',
       'K ka, L el, M em, N en, O o, P pe, Q ku, R er, S es, T te, U u, V Vau, W we, X ix, Y Ypsilon, Z Zett.',
-      'Dazu kommen die Formen Ä a-Umlaut, Ö o-Umlaut, Ü u-Umlaut, ß Eszett.',
+      'Die Formen Ä a-Umlaut, Ö o-Umlaut, Ü u-Umlaut, ß Eszett haben auch Namen.',
       'Vorsicht bei E und I, G und J, V und W.',
       'Man fragt: Wie buchstabiert man das?',
       'Frage: Wie schreibt man das? Antwort: A-N-A.',
@@ -122,12 +137,12 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'V und W haben denselben Namen.',
         correct: 'V heißt Vau, W heißt We.',
-        explanationDe: 'Zwei Buchstaben, zwei Namen. Beim Buchstabieren ist das der häufigste Fehler.',
+        explanationDe: 'Zwei Buchstaben, zwei Namen. Beim Buchstabieren ist das ein Fehler.',
       },
       {
         wrong: 'Ich buchstabiere Tschüss: T-S-C-H-U-S-S.',
         correct: 'Ich buchstabiere Tschüss: T-S-C-H-Ü-S-S.',
-        explanationDe: 'Ü ist ein eigener Buchstabe. Man sagt u-Umlaut.',
+        explanationDe: 'Ü ist ein Buchstabe mit Umlaut. Man sagt u-Umlaut.',
       },
     ],
   },
@@ -179,7 +194,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Das Kind ist jung. Er ist zwei.',
         correct: 'Das Kind ist jung. Es ist zwei.',
-        explanationDe: 'das Kind → es. Das Genus entscheidet, nicht die Person.',
+        explanationDe: 'das Kind → es. Der Artikel entscheidet, nicht die Person.',
       },
       {
         wrong: 'Die Mutter kommt aus Marokko. Es spricht Arabisch.',
@@ -189,7 +204,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Woher kommen sie, Frau Weber?',
         correct: 'Woher kommen Sie, Frau Weber?',
-        explanationDe: 'Die höfliche Anrede schreibt man immer mit großem S.',
+        explanationDe: 'Die höfliche Anrede schreibt man mit großem S.',
       },
     ],
   },
@@ -200,7 +215,7 @@ const RULE_CARD_OVERRIDES = {
     content: [
       'Jedes Nomen hat ein Genus: der Tisch, die Lampe, das Regal.',
       'Im Plural haben alle Nomen die.',
-      'Diese Endungen zeigen das Genus:',
+      'Die Endungen zeigen das Genus:',
       '-ung, -heit, -keit, -schaft → die: die Entschuldigung, die Freiheit, die Möglichkeit, die Freundschaft.',
       '-chen, -lein → das: das Mädchen, das Brötchen.',
       '-er bei männlichen Berufsnamen → der: der Lehrer. Vorsicht: die Mutter, die Schwester.',
@@ -249,7 +264,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Wo ist Wörterbuch?',
         correct: 'Wo ist das Wörterbuch?',
-        explanationDe: 'Der Artikel fällt nicht weg. Vor dem Nomen steht der, die oder das.',
+        explanationDe: 'Der Artikel bleibt. Vor dem Nomen steht der, die oder das.',
       },
       {
         wrong: 'Der Schere ist hier.',
@@ -285,7 +300,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Das ist ein Pause.',
         correct: 'Das ist eine Pause.',
-        explanationDe: 'die Pause ist feminin, also eine Pause. ein steht bei der und das.',
+        explanationDe: 'die Pause ist feminin: eine Pause. ein steht bei der und das.',
       },
     ],
   },
@@ -339,7 +354,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'halb neun ist 9:30.',
         correct: 'halb neun = 8:30, nicht 9:30.',
-        explanationDe: 'halb nimmt die nächste Stunde: halb neun liegt eine halbe Stunde vor neun Uhr.',
+        explanationDe: 'halb neun ist eine halbe Stunde vor neun Uhr.',
       },
       {
         wrong: 'Der Termin ist um Montag.',
@@ -402,7 +417,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Sie kommen aus Österreich?',
         correct: 'Kommen Sie aus Österreich?',
-        explanationDe: 'In der geschriebenen Frage steht das Verb auf Platz 1. Gesprochen gibt es auch die Frage mit gleicher Wortfolge und steigender Stimme; in Übungen schreibt man die Frage mit dem Verb auf Platz 1.',
+        explanationDe: 'In der geschriebenen Frage steht das Verb auf Platz 1. Gesprochen gibt es auch die Frage mit der Wortfolge der Aussage; in Übungen schreibt man die Frage mit dem Verb auf Platz 1.',
       },
       {
         wrong: 'Kommen aus Österreich Sie?',
@@ -412,7 +427,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Sind Sie Frau Meier? — Ja, ich bin.',
         correct: 'Ja, ich bin Frau Meier.',
-        explanationDe: 'Die Kurzantwort wiederholt die ganze Aussage, nicht nur Ja plus Verb.',
+        explanationDe: 'Die Kurzantwort wiederholt die Aussage, nicht nur Ja und das Verb.',
       },
     ],
   },
@@ -473,7 +488,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Wir feiern unsere Fest.',
         correct: 'Wir feiern unser Fest.',
-        explanationDe: 'das Fest ist neutral, also unser Fest. Das -e steht nur vor femininen Nomen und im Plural.',
+        explanationDe: 'das Fest ist neutral: unser Fest. Das -e steht nur vor femininen Nomen und im Plural.',
       },
     ],
   },
@@ -534,7 +549,7 @@ const RULE_CARD_OVERRIDES = {
       'Im Aussagesatz steht das Verb an zweiter Stelle: Sie gehen geradeaus.',
       'Steht eine Angabe vorn, rutscht das Subjekt hinter das Verb: Dann gehen Sie links.',
       'Auch in der W-Frage steht das Verb auf Position 2: Wie komme ich zum Rathaus?',
-      'Weitere Beispiele: Zuerst gehen Sie geradeaus bis zur Kirche.',
+      'Beispiele: Zuerst gehen Sie geradeaus bis zur Kirche.',
       'Da ist die Apotheke und auch die Bank. Rechts ist die Haltestelle.',
       'Die U-Bahn fährt ins Zentrum. Da ist auch die Brücke.',
       'Feste Wendungen für den Weg: zum Rathaus, zur Kirche, an der Ecke.',
@@ -550,7 +565,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Wie ich komme zum Rathaus?',
         correct: 'Wie komme ich zum Rathaus?',
-        explanationDe: 'In der W-Frage steht das Verb direkt nach dem Fragewort.',
+        explanationDe: 'In der W-Frage steht das Verb auf Position 2.',
       },
       {
         wrong: 'Die Haltestelle rechts ist.',
@@ -566,7 +581,7 @@ const RULE_CARD_OVERRIDES = {
     content: [
       'Zahlen über 20 liest man von hinten nach vorn:',
       '21 ist einundzwanzig, 48 ist achtundvierzig.',
-      'Zwischen beiden steht und. Man schreibt alles in einem Wort.',
+      'Zwischen den zwei Zahlen steht und. Man schreibt alles in einem Wort.',
       'Der Hunderter steht vorn: 480 ist vierhundertachtzig.',
       'Die Ordnungszahl bekommt bis 19 die Endung -te: das dritte Stockwerk, die erste Wohnung.',
       'Ab 20 heißt die Endung -ste: der zwanzigste Mai.',
@@ -578,7 +593,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Die Miete ist achtvierzig Euro.',
         correct: 'Die Miete ist achtundvierzig Euro.',
-        explanationDe: 'Zwischen beiden steht und: achtundvierzig, einundzwanzig.',
+        explanationDe: 'Zwischen den zwei Zahlen steht und: achtundvierzig, einundzwanzig.',
       },
       {
         wrong: 'Das drei Stockwerk ist frei.',
@@ -716,7 +731,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Die Tablette helft gegen Fieber.',
         correct: 'Die Tablette hilft gegen Fieber.',
-        explanationDe: 'helfen wechselt zu hilft. Genauso: man isst, wer schläft.',
+        explanationDe: 'helfen wechselt zu hilft. So auch: man isst, wer schläft.',
       },
     ],
   },
@@ -730,7 +745,7 @@ const RULE_CARD_OVERRIDES = {
       'Wer ist das? — Mein Onkel ist groß.',
       'Nach sein steht das zweite Nomen ebenfalls im Nominativ: Das ist mein Bruder.',
       'Die Artikel im Nominativ: der Opa, die Oma.',
-      'Weitere Beispiele: Wer ist die Frau da? Sie hat lange Haare.',
+      'Beispiele: Wer ist die Frau da? Sie hat lange Haare.',
       'Das ist meine Tante. Ihr Gesicht ist schön.',
       'Sein Bein und sein Arm sind lang.',
       'English: the subject stands in the nominative, and so does the noun after sein.',

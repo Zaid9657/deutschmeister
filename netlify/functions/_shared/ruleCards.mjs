@@ -30,7 +30,7 @@ export const RULE_CARDS = {
   },
   "alphabet-pronunciation": {
     "titleDe": "Das Alphabet: buchstabieren",
-    "content": "Beim Buchstabieren sagt man jeden Buchstaben einzeln.\nDie Namen der Buchstaben sind A a, B be, C ce, D de, E e, F ef, G ge, H ha, I i, J Jot,\nK ka, L el, M em, N en, O o, P pe, Q ku, R er, S es, T te, U u, V Vau, W we, X ix, Y Ypsilon, Z Zett.\nDazu kommen die Formen Ä a-Umlaut, Ö o-Umlaut, Ü u-Umlaut, ß Eszett.\nVorsicht bei E und I, G und J, V und W.\nMan fragt: Wie buchstabiert man das?\nFrage: Wie schreibt man das? Antwort: A-N-A.\nBeispiele: Buchstabieren Sie bitte Chakiri. Und wie buchstabiert man Ana?\nWie schreibt man Tschüss? Buchstabieren Sie Entschuldigung.\nEnglish: every German letter has its own name — say the names one by one when you spell.",
+    "content": "Beim Buchstabieren sagt man jeden Buchstaben einzeln.\nDie Namen der Buchstaben sind A a, B be, C ce, D de, E e, F ef, G ge, H ha, I i, J Jot,\nK ka, L el, M em, N en, O o, P pe, Q ku, R er, S es, T te, U u, V Vau, W we, X ix, Y Ypsilon, Z Zett.\nDie Formen Ä a-Umlaut, Ö o-Umlaut, Ü u-Umlaut, ß Eszett haben auch Namen.\nVorsicht bei E und I, G und J, V und W.\nMan fragt: Wie buchstabiert man das?\nFrage: Wie schreibt man das? Antwort: A-N-A.\nBeispiele: Buchstabieren Sie bitte Chakiri. Und wie buchstabiert man Ana?\nWie schreibt man Tschüss? Buchstabieren Sie Entschuldigung.\nEnglish: every German letter has its own name — say the names one by one when you spell.",
     "commonMistakes": [
       {
         "wrong": "Wie heißt der Buchstabe Z? — Zed.",
@@ -40,12 +40,12 @@ export const RULE_CARDS = {
       {
         "wrong": "V und W haben denselben Namen.",
         "correct": "V heißt Vau, W heißt We.",
-        "explanationDe": "Zwei Buchstaben, zwei Namen. Beim Buchstabieren ist das der häufigste Fehler."
+        "explanationDe": "Zwei Buchstaben, zwei Namen. Beim Buchstabieren ist das ein Fehler."
       },
       {
         "wrong": "Ich buchstabiere Tschüss: T-S-C-H-U-S-S.",
         "correct": "Ich buchstabiere Tschüss: T-S-C-H-Ü-S-S.",
-        "explanationDe": "Ü ist ein eigener Buchstabe. Man sagt u-Umlaut."
+        "explanationDe": "Ü ist ein Buchstabe mit Umlaut. Man sagt u-Umlaut."
       }
     ]
   },
@@ -103,7 +103,7 @@ export const RULE_CARDS = {
       {
         "wrong": "Wo ist Wörterbuch?",
         "correct": "Wo ist das Wörterbuch?",
-        "explanationDe": "Der Artikel fällt nicht weg. Vor dem Nomen steht der, die oder das."
+        "explanationDe": "Der Artikel bleibt. Vor dem Nomen steht der, die oder das."
       },
       {
         "wrong": "Der Schere ist hier.",
@@ -150,7 +150,7 @@ export const RULE_CARDS = {
       {
         "wrong": "Das ist ein Pause.",
         "correct": "Das ist eine Pause.",
-        "explanationDe": "die Pause ist feminin, also eine Pause. ein steht bei der und das."
+        "explanationDe": "die Pause ist feminin: eine Pause. ein steht bei der und das."
       }
     ]
   },
@@ -219,7 +219,7 @@ export const RULE_CARDS = {
   },
   "nouns-gender": {
     "titleDe": "Jedes Nomen hat ein Genus",
-    "content": "Jedes Nomen hat ein Genus: der Tisch, die Lampe, das Regal.\nIm Plural haben alle Nomen die.\nDiese Endungen zeigen das Genus:\n-ung, -heit, -keit, -schaft → die: die Entschuldigung, die Freiheit, die Möglichkeit, die Freundschaft.\n-chen, -lein → das: das Mädchen, das Brötchen.\n-er bei männlichen Berufsnamen → der: der Lehrer. Vorsicht: die Mutter, die Schwester.\nNach kaufen wird der zu den: Ich kaufe den Stuhl.\nLernen Sie jedes Nomen mit dem Artikel: nicht Tisch, sondern der Tisch.\nEnglish: learn every noun together with its article; the endings above are reliable groups, not a complete system.",
+    "content": "Jedes Nomen hat ein Genus: der Tisch, die Lampe, das Regal.\nIm Plural haben alle Nomen die.\nDie Endungen zeigen das Genus:\n-ung, -heit, -keit, -schaft → die: die Entschuldigung, die Freiheit, die Möglichkeit, die Freundschaft.\n-chen, -lein → das: das Mädchen, das Brötchen.\n-er bei männlichen Berufsnamen → der: der Lehrer. Vorsicht: die Mutter, die Schwester.\nNach kaufen wird der zu den: Ich kaufe den Stuhl.\nLernen Sie jedes Nomen mit dem Artikel: nicht Tisch, sondern der Tisch.\nEnglish: learn every noun together with its article; the endings above are reliable groups, not a complete system.",
     "commonMistakes": [
       {
         "wrong": "das Entschuldigung",
@@ -287,7 +287,7 @@ export const RULE_CARDS = {
       {
         "wrong": "Das Kind ist jung. Er ist zwei.",
         "correct": "Das Kind ist jung. Es ist zwei.",
-        "explanationDe": "das Kind → es. Das Genus entscheidet, nicht die Person."
+        "explanationDe": "das Kind → es. Der Artikel entscheidet, nicht die Person."
       },
       {
         "wrong": "Die Mutter kommt aus Marokko. Es spricht Arabisch.",
@@ -297,7 +297,7 @@ export const RULE_CARDS = {
       {
         "wrong": "Woher kommen sie, Frau Weber?",
         "correct": "Woher kommen Sie, Frau Weber?",
-        "explanationDe": "Die höfliche Anrede schreibt man immer mit großem S."
+        "explanationDe": "Die höfliche Anrede schreibt man mit großem S."
       }
     ]
   },
@@ -318,7 +318,7 @@ export const RULE_CARDS = {
       {
         "wrong": "Wir feiern unsere Fest.",
         "correct": "Wir feiern unser Fest.",
-        "explanationDe": "das Fest ist neutral, also unser Fest. Das -e steht nur vor femininen Nomen und im Plural."
+        "explanationDe": "das Fest ist neutral: unser Fest. Das -e steht nur vor femininen Nomen und im Plural."
       }
     ]
   },
@@ -434,7 +434,7 @@ export const RULE_CARDS = {
       {
         "wrong": "halb neun ist 9:30.",
         "correct": "halb neun = 8:30, nicht 9:30.",
-        "explanationDe": "halb nimmt die nächste Stunde: halb neun liegt eine halbe Stunde vor neun Uhr."
+        "explanationDe": "halb neun ist eine halbe Stunde vor neun Uhr."
       },
       {
         "wrong": "Der Termin ist um Montag.",
@@ -497,7 +497,7 @@ export const RULE_CARDS = {
       {
         "wrong": "Sie kommen aus Österreich?",
         "correct": "Kommen Sie aus Österreich?",
-        "explanationDe": "In der geschriebenen Frage steht das Verb auf Platz 1. Gesprochen gibt es auch die Frage mit gleicher Wortfolge und steigender Stimme; in Übungen schreibt man die Frage mit dem Verb auf Platz 1."
+        "explanationDe": "In der geschriebenen Frage steht das Verb auf Platz 1. Gesprochen gibt es auch die Frage mit der Wortfolge der Aussage; in Übungen schreibt man die Frage mit dem Verb auf Platz 1."
       },
       {
         "wrong": "Kommen aus Österreich Sie?",
@@ -507,7 +507,7 @@ export const RULE_CARDS = {
       {
         "wrong": "Sind Sie Frau Meier? — Ja, ich bin.",
         "correct": "Ja, ich bin Frau Meier.",
-        "explanationDe": "Die Kurzantwort wiederholt die ganze Aussage, nicht nur Ja plus Verb."
+        "explanationDe": "Die Kurzantwort wiederholt die Aussage, nicht nur Ja und das Verb."
       }
     ]
   }
