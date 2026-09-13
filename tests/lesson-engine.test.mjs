@@ -199,8 +199,20 @@ test('every Lektion really drills its own grammar point — content, not label',
   //   * `possessive-articles` now counts a multi-word answer containing a
   //     possessive ("Wir feiern unser Fest."), which the whole-string regex
   //     missed — the instrument was wrong in both directions.
+  // REVIEW #5 MAJOR 1 tightened `yes-no-questions` for the third time, and this
+  // is the one that bites: the two surviving clauses counted items where the
+  // QUESTION FORM IS GIVEN. "Korrigieren Sie: „Sind der Bahnhof weit?“" → "Ist
+  // der Bahnhof weit?" is subject-verb agreement inside a question the prompt
+  // already prints, and "asked for a Frage by name" matched every prompt of the
+  // Lektion. An item now counts only when the learner PUTS the finite verb in
+  // first position — he types the whole question from a cue list or a statement
+  // (so the answer ends in `?` and the prompt contains none), or he picks
+  // Ja/Nein. Measured afterwards, both attempts: Lektion 10 is 2 of 7, not 4.
+  //
   // The floor is unchanged and deliberately so: this test is the honest number,
   // and a Lektion below it is a finding, not a reason to loosen the predicate.
+  // A failure here names the drawn items that do NOT produce the grammar point,
+  // because that list is the work order for the item author: two producers.
   const failures = [];
   const rows = [];
   for (const attempt of [1, 2]) {
@@ -216,7 +228,13 @@ test('every Lektion really drills its own grammar point — content, not label',
         rows.push(`             ✗ ${it.id.slice(0, 8)} ${it.questionDe.replace(/\s+/g, ' ').slice(0, 62)} → ${it.answer}`);
       }
       if (real.length < PRIMARY_MIN) {
-        failures.push(`L${lektion.nr} (${lektion.primarySlug}) attempt ${attempt}: only ${real.length} of 7 really drill it`);
+        const misses = items
+          .filter((i) => !drillsSlug(i, lektion.primarySlug))
+          .map((i) => `        ✗ ${i.id} [${i.type}] ${i.questionDe.replace(/\s+/g, ' ').slice(0, 60)} → ${i.answer}`);
+        failures.push(
+          `L${lektion.nr} (${lektion.primarySlug}) attempt ${attempt}: only ${real.length} of 7 really drill it` +
+          ` — ${PRIMARY_MIN - real.length} producer item(s) missing:\n${misses.join('\n')}`,
+        );
       }
     }
   }

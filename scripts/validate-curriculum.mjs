@@ -6,7 +6,7 @@
 // This script is the gate: it re-derives every structural rule of the contract from the data and
 // exits non-zero on the first failure. `tests/curricula.test.mjs` pins the same rules.
 //
-//   node scripts/validate-curriculum.mjs
+//   node scripts/validate-curriculum.mjs [level]      # level defaults to a1.1
 //
 // The one rule worth explaining: RULE 5 (dialogue vocabulary). Every content word a learner hears
 // in a dialogue must already have been taught — in this Lektion's Wortfeld or an earlier one — or
@@ -19,13 +19,25 @@
 // reads: „Der Validator läuft über Dialoge, nicht über Items“ — every repair round wrote new
 // Vorgriffe because only the dialogues were ever checked. RULE 10 turns RULE 5 around (a taught
 // word must also be USED, not only listed: ≈50 of 262 Wortfeld entries occurred in no input of
-// their own Lektion), RULE 11 runs RULE 5's own machinery over the hand-written practice items in
-// src/data/lessonPools/a11.extra.json. Both are ratchets, not hard gates, because the debt is
-// older than this round; they may only ever be lowered.
+// their own Lektion), RULE 11 runs RULE 5's own machinery over the practice items the learner is
+// actually served — since DaF review #5 that is the BUILT pool (src/data/lessonPools/<level>.json),
+// not only the hand-written half. Both are ratchets, not hard gates, because the debt is older than
+// this round; they may only ever be lowered.
+//
+// RULE 14 (DaF review #5, MAJOR 12) is not a ratchet: it compares the facts of the recurring
+// characters — Familienstand, Herkunft, Beruf, Sprachen — between the dialogue and the Schreiben
+// task of the same Lektion against the small PERSONAS table of the level, and fails hard. The
+// finding it closes: L3 got „Mein Mann und ich kommen aus Marokko“ pushed into a dialogue line to
+// satisfy the RULE 10 ratchet, while the Formular of the same Lektion lists Ana as **ledig**.
 
 import { readFileSync } from 'node:fs';
 
 import { CURRICULUM_A11, FUNCTION_WORDS, DIALOG_NAMES } from '../src/data/curricula/a11.js';
+import {
+  CURRICULUM_A12,
+  FUNCTION_WORDS as FUNCTION_WORDS_A12,
+  DIALOG_NAMES as DIALOG_NAMES_A12,
+} from '../src/data/curricula/a12.js';
 import { writingTaskByKey } from '../src/data/writingTasks.js';
 
 export const GRAMMAR_SLUGS = [
@@ -66,7 +78,7 @@ export const PRIMARY_ORDER = [
 ];
 
 // How "the primary structure occurs ≥ 3 times" is counted, per topic.
-const PRIMARY_PATTERNS = {
+const PRIMARY_PATTERNS_A11 = {
   'alphabet-pronunciation': /\bbuchstabier\w*|\b(?:[A-ZÄÖÜ]-){2,}[A-ZÄÖÜ]\b/g,
   'verb-sein': /\b(?:bin|bist|ist|sind|seid)\b/gi,
   'personal-pronouns': /\b(?:er|sie|es|wir|ihr)\b/gi,
@@ -81,6 +93,29 @@ const PRIMARY_PATTERNS = {
   'possessive-articles': /\b(?:mein|meine|meinen|meinem|meiner|dein|deine|deinen|sein|seine|ihr|ihre)\b/gi,
 };
 
+// A1.2 — how "the primary structure occurs >= 3 times" is counted, per topic. Same contract as
+// PRIMARY_PATTERNS_A11: one regex per slug, run over the Lektion's dialogue.
+const PRIMARY_PATTERNS_A12 = {
+  // Verb an Position 2, sichtbar an der Inversion nach einer vorangestellten Angabe.
+  'basic-sentence-structure': /\b(?:Dann|Danach|Zuerst|Jetzt|Heute|Morgen|Hier|Dort|Da)\s+(?:geh|fahr|komm|ist|sind|steh|nehm|bin|hab|wart|bezahl|kauf|schlaf)\w*/gi,
+  // Zahlen ab 20, Ziffern und Ordnungszahlen.
+  'numbers-counting': /\b\d+\b|\b(?:zwanzig|drei(?:ß|ss)ig|vierzig|f(?:ü|ue)nfzig|sechzig|siebzig|achtzig|neunzig|hundert|tausend)\w*|\b(?:erste|zweite|dritte|vierte|f(?:ü|ue)nfte|sechste|siebte|achte|neunte|zehnte)\w*/gi,
+  // Akkusativmarker: maskuline Formen und die Personalpronomen im Akkusativ.
+  'accusative-intro': /\b(?:einen|den|keinen|meinen|deinen|seinen|ihren|ihn|mich|dich|uns|euch)\b/gi,
+  'negation': /\b(?:nicht|kein|keine|keinen|keinem|keiner|nichts|nie)\b/gi,
+  'question-words': /\b(?:wer|was|wo|wann|warum|wie|wohin|woher|welche|welcher|welches|wen|wem)\b/gi,
+  // Nur die Formen MIT Vokalwechsel zählen — die Sie-Form zeigt ihn nicht.
+  'stem-changing-verbs': /\b(?:nimmt|nimmst|nimm|hilft|hilfst|hilf|isst|iss|schl(?:ä|ae)ft|schl(?:ä|ae)fst|spricht|sprichst|sprich|f(?:ä|ae)hrt|f(?:ä|ae)hrst|sieht|siehst|liest|gibt|gibst|tr(?:ä|ae)gt|l(?:ä|ae)uft)\b/gi,
+  // Frage nach dem Subjekt und die Gleichsetzung mit sein.
+  'nominative-case': /\bwer\b|\bdas\s+ist\b|\bdas\s+sind\b/gi,
+  // Imperativformen, die der Kurs benutzt (Sie-Form und du-Form).
+  'imperative': /\b(?:Komm|Warte|Hilf|Mach|Hol|Geh|Nimm|Sei|Gib|Kauf|Frag|Schreib|Lies|Steh|Zieh)\b/g,
+  'modal-verbs-intro': /\b(?:kann|kannst|k(?:ö|oe)nnen|k(?:ö|oe)nnt|muss|musst|m(?:ü|ue)ssen|m(?:ü|ue)sst|darf|darfst|d(?:ü|ue)rfen|d(?:ü|ue)rft|will|willst|wollen|wollt|soll|sollst|sollen|sollt|m(?:ö|oe)chte|m(?:ö|oe)chtest|m(?:ö|oe)chten)\b/gi,
+  'prepositions-accusative': /\b(?:f(?:ü|ue)r|ohne|gegen|um|durch)\s+(?:den|einen|die|eine|das|ein|meinen|meine|mein|deinen|deine|dein|ihren|ihre|seinen|seine|mich|dich|uns)\b/gi,
+  'dative-prepositions-intro': /\b(?:im|am|beim|zum|zur|vom)\b|\b(?:mit|nach|bei|seit|von|zu|aus)\s+(?:dem|der|den|einem|einer|mir|dir|ihm|ihr|uns|Ihnen|meinem|meiner)\b/gi,
+  'perfekt-intro': /\bge[a-zäöüß]+(?:t|en)\b/gi,
+};
+
 // Regular present-tense endings are generated; these are the few stem changes the dialogues use.
 const IRREGULAR_FORMS = {
   sprechen: ['spreche', 'sprichst', 'spricht', 'sprechen', 'sprecht', 'sprich', 'gesprochen'],
@@ -93,6 +128,31 @@ const IRREGULAR_FORMS = {
   'kommen aus': ['komme', 'kommst', 'kommt', 'kommen', 'gekommen'],
   aufstehen: ['stehe', 'stehst', 'steht', 'stehen', 'aufgestanden'],
   aufwachen: ['wache', 'wachst', 'wacht', 'wachen', 'aufgewacht'],
+};
+
+/**
+ * Stem changes and fixed forms the A1.2 dialogues need on top of IRREGULAR_FORMS. Kept per level
+ * rather than merged into the base table, because widening the base table would ALSO widen what
+ * A1.1's RULE 5 and RULE 10 accept — and A1.1's four ratchet numbers are measurements, not
+ * preferences. `formsOf()` takes the table as an argument, so A1.1 keeps the base table exactly.
+ */
+const IRREGULAR_FORMS_A12 = {
+  nehmen: ['nehme', 'nimmst', 'nimmt', 'nehmen', 'nehmt', 'nimm', 'genommen'],
+  helfen: ['helfe', 'hilfst', 'hilft', 'helfen', 'helft', 'hilf', 'geholfen'],
+  sehen: ['sehe', 'siehst', 'sieht', 'sehen', 'seht', 'sieh', 'gesehen'],
+  fernsehen: ['sehe', 'siehst', 'sieht', 'sehen', 'seht', 'fern', 'ferngesehen'],
+  tragen: ['trage', 'trägst', 'trägt', 'tragen', 'tragt', 'trag', 'getragen'],
+  laufen: ['laufe', 'läufst', 'läuft', 'laufen', 'lauft', 'lauf', 'gelaufen'],
+  fliegen: ['fliege', 'fliegst', 'fliegt', 'fliegen', 'flieg', 'geflogen'],
+  trinken: ['trinke', 'trinkst', 'trinkt', 'trinken', 'trink', 'getrunken'],
+  abfahren: ['fahre', 'fährst', 'fährt', 'fahren', 'fahrt', 'ab', 'abgefahren'],
+  anziehen: ['ziehe', 'ziehst', 'zieht', 'ziehen', 'zieh', 'an', 'angezogen'],
+  wehtun: ['tue', 'tut', 'tun', 'weh', 'wehgetan'],
+  // Ordnungszahlen dekliniert (formsOf() hängt Endungen an den ganzen Eintrag, nicht an den Stamm).
+  erste: ['erste', 'ersten', 'erster', 'erstes', 'erstem'],
+  dritte: ['dritte', 'dritten', 'dritter', 'drittes', 'drittem'],
+  // Einschub-e: regnen → es regnet (verbForms() bildet nur regne/regnst/regnt).
+  regnen: ['regne', 'regnest', 'regnet', 'regnen', 'geregnet'],
 };
 
 const SEPARABLE_PREFIXES = ['auf', 'an', 'ein', 'mit', 'aus', 'vor', 'nach', 'ab', 'zu'];
@@ -119,7 +179,7 @@ function verbForms(inf) {
 }
 
 /** Every form of one Wortfeld entry a dialogue line may legitimately use. */
-export function formsOf(entry) {
+export function formsOf(entry, irregulars = IRREGULAR_FORMS) {
   const forms = new Set();
   for (const t of tokenise(entry.de)) forms.add(t.toLowerCase());
   for (const t of tokenise(entry.word || '')) forms.add(t.toLowerCase());
@@ -144,7 +204,7 @@ export function formsOf(entry) {
     // adjective / adverb endings
     for (const e of ['', 'e', 'er', 'es', 'en', 'em']) forms.add(head + e);
   }
-  for (const [inf, list] of Object.entries(IRREGULAR_FORMS)) {
+  for (const [inf, list] of Object.entries(irregulars)) {
     if (inf === head || inf === entry.de) for (const f of list) forms.add(f.toLowerCase());
   }
   return forms;
@@ -156,9 +216,9 @@ export function formsOf(entry) {
  * rewrite, the L8 Samstag/Sonntag line and the four new L9 café lines closed the densest clusters.
  * This number may be lowered, never raised (the contract's ceiling is 30). Round 5 measured it
  * against the BUILT pool (see loadPoolItems) and exempted the two meta entries, then closed the L3
- * Familie and L6 Beruf clusters DaF review #4 named: 35 → 19.
+ * Familie and L6 Beruf clusters DaF review #4 named: 35 → 19, and 18 when re-measured 2026-09-13.
  */
-export const MAX_UNCOVERED_WORTFELD = 19;
+export const MAX_UNCOVERED_WORTFELD = 18;          // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
  * RULE 12 ratchet — how many can-do lines may still name something no exercise slot of their own
@@ -170,8 +230,11 @@ export const MAX_UNCOVERED_WORTFELD = 19;
  * teaches under another word: L1 begrüßen/verabschieden (the greetings are „Guten Tag“ and
  * „Tschüss“), L2 Zahlen, L4 Gegenstand, L7 „frei haben“, L9 „höflich fragen“, L12 „gute Wünsche“.
  * That is the honest number and the ratchet stands on it. Lower it, never raise it.
+ * DaF review #5, MAJOR 13 asked for the number to follow the repairs: the L2 Zahlwort items and the
+ * L9 „höflich fragen“ item landed, so the measurement is 4 (L1 begrüßen/verabschieden, L4
+ * Gegenstand, L7 „frei haben“, L12 gute Wünsche) and the ratchet moves with it.
  */
-export const MAX_UNREHEARSED_CANDOS = 6;
+export const MAX_UNREHEARSED_CANDOS = 4;           // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
  * RULE 13 ratchet — how many Lektionen may show a `sprechen.open` task whose prompt the speaking
@@ -180,19 +243,158 @@ export const MAX_UNREHEARSED_CANDOS = 6;
  * level. Four Lektionen (7, 10, 11, 12) are in that state; the UI agent is making the prompt itself
  * travel with `saveCourseContext`, and when it does this ratchet goes to 0 (DaF review #4, MAJOR 4).
  */
-export const MAX_MISSIONLESS_LEKTIONEN = 4;
+export const MAX_MISSIONLESS_LEKTIONEN = 4;        // a1.1; per level in LEVELS below
 
 /**
- * RULE 11 ratchet — how many (item, token) pairs in the hand-written pool may still use a word
- * that the course has not taught by that item's Lektion. The review's finding was that the
- * hand-written repairs „unterliegen keiner Prüfung“; this is that check. Lower it as items are
- * rewritten, never raise it.
+ * RULE 11 ratchet — how many (item, token) pairs in the pool the learner is served may still use a
+ * word the course has not taught by that item's Lektion.
+ *
+ * It stood at 9 while the rule read `a11.extra.json` only, i.e. 124 of 351 items; DaF review #5
+ * (MAJOR 5) measured 21 untaught tokens in the *drawn* generated items alone and asked for the rule
+ * to read the built pool. It now does, and over the whole pool the number is **187** — the legacy
+ * generated bank, word for word: `Honig` (L4), `Freiheit`, `Instrument`, `Kaffee` in L4 (Wortfeld of
+ * L9), `Deutschkurs` (L8), `interessant` (L5), `arbeitet` in L7 (Wortfeld of L11), plus a long tail
+ * of `nett`/`müde`/`kaputt`/`Auto`/`Mädchen` that no Lektion of A1.1 teaches. That is the honest
+ * number and it is meant to look bad: nine described an eighth of the course. Lower it as the bank
+ * is rewritten, never raise it.
  */
-export const MAX_UNTAUGHT_ITEM_TOKENS = 9;
+export const MAX_UNTAUGHT_ITEM_TOKENS = 187;       // a1.1; per level in LEVELS below — measured 2026-09-13
+
+/**
+ * A1.2 — the twelve grammar slugs of the level in `topic_order` (grammar-content-cache.json,
+ * sub_level A1.2, 287 exercises).
+ */
+export const GRAMMAR_SLUGS_A12 = [
+  'basic-sentence-structure', 'nominative-case', 'accusative-intro', 'numbers-counting',
+  'question-words', 'negation', 'modal-verbs-intro', 'prepositions-accusative',
+  'stem-changing-verbs', 'imperative', 'perfekt-intro', 'dative-prepositions-intro',
+];
+
+/** A1.2 — the 12 situations of the standard (§2.2, A1.2 row), in order. */
+export const SITUATION_KEYWORDS_A12 = [
+  ['Wegbeschreibung'],
+  ['Wohnen', 'Wohnungsanzeigen'],
+  ['Stadt'],
+  ['Hotel', 'Termine', 'Reklamation'],
+  ['Pläne', 'Wünsche'],
+  ['Gesundheit', 'Körper', 'Arzt'],
+  ['Aussehen', 'Charakter'],
+  ['Haushalt'],
+  ['Regeln', 'Verkehr', 'Umwelt'],
+  ['Kleidung', 'Vergleiche'],
+  ['Wetter'],
+  ['Feste', 'Feiern'],
+];
+
+/** A1.2 — order of `primarySlug` across the 12 Lektionen; the reasoning is in a12.js's header. */
+export const PRIMARY_ORDER_A12 = [
+  'basic-sentence-structure', 'numbers-counting', 'accusative-intro', 'negation',
+  'question-words', 'stem-changing-verbs', 'nominative-case', 'imperative',
+  'modal-verbs-intro', 'prepositions-accusative', 'dative-prepositions-intro', 'perfekt-intro',
+];
+
+const lowerSet = (list) => new Set(list.map((w) => String(w).toLowerCase()));
+
+/**
+ * THE PER-LEVEL REGISTRY. Every rule below reads its tables from here instead of from a constant,
+ * so a second level is data rather than a second validator. A1.1's entry holds exactly the values
+ * the hardcoded tables used to hold, which is why `node scripts/validate-curriculum.mjs` (no
+ * argument) still measures A1.1 to the same four numbers.
+ *
+ * `seedFrom` is the cumulative-vocabulary rule the standard implies: A1.2 learners have finished
+ * A1.1, so RULE 5 and RULE 11 seed their known set from the WHOLE A1.1 Wortfeld union (plus the
+ * A1.1 notice cards), not only from A1.2's own Lektionen.
+ */
+export const LEVELS = {
+  'a1.1': {
+    level: 'a1.1',
+    code: 'A1.1',
+    curriculum: CURRICULUM_A11,
+    functionWords: FUNCTION_WORDS,
+    dialogNames: DIALOG_NAMES,
+    functionSet: lowerSet(FUNCTION_WORDS),
+    nameSet: lowerSet(DIALOG_NAMES),
+    grammarSlugs: GRAMMAR_SLUGS,
+    primaryOrder: PRIMARY_ORDER,
+    situationKeywords: SITUATION_KEYWORDS,
+    primaryPatterns: PRIMARY_PATTERNS_A11,
+    irregularForms: IRREGULAR_FORMS,
+    extraPath: '../src/data/lessonPools/a11.extra.json',
+    poolPath: '../src/data/lessonPools/a11.json',
+    taskKeyPrefix: 'a11',
+    missionCount: 8,
+    listeningCount: 6,
+    readingCount: 10,
+    minUnionWords: 200,
+    seedFrom: null,
+    // RULE 14. Defined below (PERSONAS_A11) and attached lazily, because the table is written after
+    // the registry; `personaSource` keeps the row declarative.
+    personaSource: 'a1.1',
+    ratchets: {
+      uncoveredWortfeld: MAX_UNCOVERED_WORTFELD,
+      untaughtItemTokens: MAX_UNTAUGHT_ITEM_TOKENS,
+      unrehearsedCanDos: MAX_UNREHEARSED_CANDOS,
+      missionlessLektionen: MAX_MISSIONLESS_LEKTIONEN,
+    },
+  },
+  'a1.2': {
+    level: 'a1.2',
+    code: 'A1.2',
+    curriculum: CURRICULUM_A12,
+    functionWords: FUNCTION_WORDS_A12,
+    dialogNames: DIALOG_NAMES_A12,
+    functionSet: lowerSet(FUNCTION_WORDS_A12),
+    nameSet: lowerSet(DIALOG_NAMES_A12),
+    grammarSlugs: GRAMMAR_SLUGS_A12,
+    primaryOrder: PRIMARY_ORDER_A12,
+    situationKeywords: SITUATION_KEYWORDS_A12,
+    primaryPatterns: PRIMARY_PATTERNS_A12,
+    irregularForms: { ...IRREGULAR_FORMS, ...IRREGULAR_FORMS_A12 },
+    extraPath: '../src/data/lessonPools/a12.extra.json',
+    poolPath: '../src/data/lessonPools/a12.json',
+    taskKeyPrefix: 'a12',
+    // speaking_missions at level a1.2: 12 published missions (mission_order 1–12), read 2026-09-13.
+    missionCount: 12,
+    // listening_exercises: exercise_number 1–6; reading_lessons: order_index 1–10 (same query).
+    listeningCount: 6,
+    readingCount: 10,
+    minUnionWords: 195,
+    seedFrom: 'a1.1',
+    // A1.2 has recurring characters too, but nobody has written their fact table yet, so RULE 14
+    // stays silent for the level rather than pretending to check it.
+    personaSource: null,
+    // MEASURED on this module, not chosen. See docs/course-factory/a12-rebuild/CONTRACT.md §Ratchets.
+    ratchets: {
+      uncoveredWortfeld: 0,
+      untaughtItemTokens: 0,
+      unrehearsedCanDos: 0,
+      missionlessLektionen: 3,
+    },
+  },
+};
+
+/** The registry row for a level (any case), or null when the level is not rebuilt yet. */
+export const levelSpec = (level) => LEVELS[String(level || '').toLowerCase()] || null;
+
+/** The cumulative known vocabulary a level inherits from the level before it (RULE 5 / RULE 11). */
+function seedVocabulary(spec) {
+  const known = new Set([...spec.functionSet, ...spec.nameSet]);
+  const prior = spec.seedFrom ? levelSpec(spec.seedFrom) : null;
+  if (!prior) return known;
+  // The CURRENT level's irregular table, not the previous level's: an A1.2 learner knows A1.1's
+  // `trinken` and now meets its Partizip II, so the inherited entry has to yield `getrunken`.
+  for (const l of prior.curriculum.lektionen || []) {
+    for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
+    for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
+  }
+  return known;
+}
 
 /** The hand-written practice items, read from disk so the validator sees what the pool build sees. */
-export function loadExtraItems() {
-  const url = new URL('../src/data/lessonPools/a11.extra.json', import.meta.url);
+export function loadExtraItems(level = 'a1.1') {
+  const spec = levelSpec(level);
+  if (!spec) return [];
+  const url = new URL(spec.extraPath, import.meta.url);
   try {
     return JSON.parse(readFileSync(url, 'utf8')).items || [];
   } catch {
@@ -206,9 +408,16 @@ export function loadExtraItems() {
  * were reported as never used: „eine Ratchet-Zahl, die man nicht nachrechnen kann, ist keine
  * Messung“ (DaF review #4). Items carry a `topic`, and a Lektion draws the topics of its
  * `practiceRule`, so that is how an item is assigned to a Lektion here.
+ *
+ * A level whose pool has not been built yet has no `<level>.json` on disk — A1.2 is in that state
+ * while its extras are being written — and then this returns an empty list and RULE 10 / RULE 11
+ * measure the hand-written items alone. That is the correct reading (there is nothing else to
+ * serve), not a silent skip: the numbers move when the pool is built, which is when they should.
  */
-export function loadPoolItems() {
-  const url = new URL('../src/data/lessonPools/a11.json', import.meta.url);
+export function loadPoolItems(level = 'a1.1') {
+  const spec = levelSpec(level);
+  if (!spec) return [];
+  const url = new URL(spec.poolPath, import.meta.url);
   try {
     return JSON.parse(readFileSync(url, 'utf8')).items || [];
   } catch {
@@ -216,21 +425,21 @@ export function loadPoolItems() {
   }
 }
 
-/** Lektion number an item belongs to, from its `extra-a11-lNN-…` id. */
+/** Lektion number an item belongs to, from its `extra-<level>-lNN-…` id (extra-a11-…, extra-a12-…). */
 const lektionOfItem = (id) => {
-  const m = /^extra-a11-l(\d{2})-/.exec(String(id || ''));
+  const m = /^extra-[a-z]\d\d-l(\d{2})-/.exec(String(id || ''));
   return m ? Number(m[1]) : null;
 };
 
-const FUNCTION_SET = new Set(FUNCTION_WORDS.map((w) => w.toLowerCase()));
-const NAME_SET = new Set(DIALOG_NAMES.map((w) => w.toLowerCase()));
+// A1.1's own tables, kept as the defaults of coverageForms() so the A1.1 call sites are unchanged.
+const FUNCTION_SET = LEVELS['a1.1'].functionSet;
 
 /**
  * The forms that count as "this Wortfeld entry was used". formsOf() also yields the article and the
  * function words of multi-word entries ("von Beruf", "Viertel nach"), which would make almost
  * anything look covered, so they are dropped: an entry is carried by its content word or not at all.
  */
-export function coverageForms(w) {
+export function coverageForms(w, functionSet = FUNCTION_SET, irregulars = IRREGULAR_FORMS) {
   // Meta entries („die Zahlen 0–10“) name a SET of words, not a word: no input can ever contain
   // them verbatim, so counting them as debt makes a ratchet that can never be paid off.
   if (w.meta) return new Set();
@@ -238,15 +447,18 @@ export function coverageForms(w) {
     .filter((t) => t !== String(w.article || '').toLowerCase());
   // Entries whose only content IS a function word (gern, schon, bitte, danke, hallo) can never be
   // "missing" — RULE 5 lets any line use them — so they are outside this rule.
-  if (!head.length || head.every((t) => FUNCTION_SET.has(t))) return new Set();
-  const forms = formsOf(w);
+  if (!head.length || head.every((t) => functionSet.has(t))) return new Set();
+  const forms = formsOf(w, irregulars);
   if (w.article) forms.delete(String(w.article).toLowerCase());
-  for (const f of [...forms]) if (FUNCTION_SET.has(f)) forms.delete(f);
+  for (const f of [...forms]) if (functionSet.has(f)) forms.delete(f);
   return forms;
 }
 
 /** RULE 10: every Wortfeld entry must occur somewhere in the input of its own Lektion. */
-export function wortfeldCoverage(c, extraItems = loadExtraItems(), poolItems = loadPoolItems()) {
+export function wortfeldCoverage(c, extraItems, poolItems) {
+  const spec = levelSpec(c?.level) || LEVELS['a1.1'];
+  extraItems = extraItems ?? loadExtraItems(spec.level);
+  poolItems = poolItems ?? loadPoolItems(spec.level);
   const byLektion = new Map();
   const add = (nr, it) => { if (nr) byLektion.set(nr, [...(byLektion.get(nr) || []), it]); };
   for (const it of extraItems) add(lektionOfItem(it.id), it);
@@ -278,7 +490,7 @@ export function wortfeldCoverage(c, extraItems = loadExtraItems(), poolItems = l
     const seen = new Set();
     for (const s of sources) for (const t of tokenise(s)) seen.add(t.toLowerCase());
     for (const w of l.wortfeld || []) {
-      const forms = coverageForms(w);
+      const forms = coverageForms(w, spec.functionSet, spec.irregularForms);
       if (!forms.size) continue;                       // greetings whose only token is a function word
       if (![...forms].some((f) => seen.has(f))) uncovered.push({ nr: l.nr, de: w.de });
     }
@@ -293,29 +505,72 @@ const ITEM_CUE_RE = /\([^)]*\)|\[[^\]]*\]/g;
 // „das Wort“, „die Zahl“) used to be stripped from every prompt, which hid content words from the
 // check: „___ Gleis vier richtig?“ passed although `richtig` is in no Wortfeld of the course.
 const ITEM_FORMULA_RE = new RegExp([
+  // Longest first: the alternation is tried in order at each position.
+  'Finden Sie den Fehler und schreiben Sie den Satz richtig',
   'Schreiben Sie die Frage in der normalen Wortfolge', 'Schreiben Sie die Frage richtig',
+  // „Schreiben Sie den Satz“ and „Buchstabieren Sie den Gruß“ are the same closed Sie-Aufgabenformel
+  // as „Bilden Sie den Satz“ next door and were simply missing from the list; without them the
+  // generated half of the pool reports Satz/Schreiben/Fehler as untaught lexis in ~20 items, which
+  // is the formula talking, not the item (added when RULE 11 started reading the built pool).
+  'Schreiben Sie den Satz', 'Buchstabieren Sie den Gruß',
   'Schreiben Sie die Zahl als Wort', 'Schreiben Sie das Wort', 'Schreiben Sie die Frage',
   'Bilden Sie den Satz', 'Bilden Sie die höfliche Frage', 'Bilden Sie die Frage',
   'Buchstabieren Sie das Wort', 'Lesen Sie die Buchstaben',
   'Korrigieren Sie', 'Ergänzen Sie', 'Wählen Sie',
 ].join('|'), 'g');
 
-/** RULE 11: the hand-written items obey the same taught-words rule as the dialogues. */
-export function itemLexis(c, extraItems = loadExtraItems()) {
-  const known = new Set([...FUNCTION_SET, ...NAME_SET]);
+/**
+ * The Lektion an item is judged against: its id prefix when it is hand-written, otherwise the
+ * EARLIEST Lektion whose `practiceRule` lists the item's topic. A generated item carries a UUID and
+ * a topic, and every Lektion that names that topic can draw it — so the item may appear as early as
+ * the first of them, and that is the Lektion whose vocabulary it must not reach past. (Judging it
+ * against the last Lektion would be the lenient reading and would hide exactly the Vorgriffe this
+ * rule exists to find.)
+ */
+function lektionAssignment(c) {
+  const earliest = new Map();
+  for (const l of c.lektionen || []) {
+    for (const t of l.practiceRule?.topics || []) if (!earliest.has(t)) earliest.set(t, l.nr);
+  }
+  return (it) => lektionOfItem(it.id) ?? earliest.get(it.topic) ?? null;
+}
+
+/**
+ * RULE 11: the practice items obey the same taught-words rule as the dialogues.
+ *
+ * Until DaF review #5 this read `<level>.extra.json` only and derived the Lektion from the id
+ * prefix, so all 227 generated items of A1.1 fell through `if (!nr) continue` and the ratchet
+ * described 124 of 351 items („was der Validator nicht liest, existiert für die Reparaturrunde
+ * nicht“). It now reads the BUILT pool as `wortfeldCoverage` does and assigns generated items via
+ * `practiceRule.topics`; the built version of a hand-written item wins, because that is the text
+ * the build's repair run produced and the learner sees. The scanned fields are unchanged — prompt
+ * (minus the bracketed cue and the complete Sie-Aufgabenformel), answer, accepted — so the number
+ * moves because the item universe grew, not because the yardstick did.
+ */
+export function itemLexis(c, extraItems, poolItems) {
+  const spec = levelSpec(c?.level) || LEVELS['a1.1'];
+  extraItems = extraItems ?? loadExtraItems(spec.level);
+  poolItems = poolItems ?? loadPoolItems(spec.level);
+  // A level's known set starts from the level before it (see seedVocabulary): an A1.2 item may
+  // build on every word A1.1 taught, and must not reach past that.
+  const known = seedVocabulary(spec);
   const knownUpTo = new Map();
   for (const l of c.lektionen || []) {
-    for (const w of l.wortfeld || []) for (const f of coverageForms(w)) known.add(f);
-    for (const w of l.wortfeld || []) for (const f of formsOf(w)) known.add(f);
+    for (const w of l.wortfeld || []) for (const f of coverageForms(w, spec.functionSet, spec.irregularForms)) known.add(f);
+    for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
     // The Notice card is input the learner reads in this very Lektion, on the screen before the
     // practice items — so a word it teaches (the letter names Zett, Ypsilon, Jot, Vau, Eszett,
     // scharfes S in L1) counts as taught from here on (DaF review #4).
     for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
     knownUpTo.set(l.nr, new Set(known));
   }
+  const lektionOf = lektionAssignment(c);
+  const items = new Map();
+  for (const it of extraItems) items.set(it.id, it);
+  for (const it of poolItems) items.set(it.id, it);
   const offenders = [];
-  for (const it of extraItems) {
-    const nr = lektionOfItem(it.id);
+  for (const it of items.values()) {
+    const nr = lektionOf(it);
     if (!nr) continue;
     const vocab = knownUpTo.get(nr);
     if (!vocab) continue;
@@ -325,12 +580,14 @@ export function itemLexis(c, extraItems = loadExtraItems()) {
     for (const s of texts) {
       for (const t of tokenise(s)) {
         const low = t.toLowerCase();
-        if (vocab.has(low) || NAME_SET.has(low) || seen.has(low)) continue;
+        if (vocab.has(low) || spec.nameSet.has(low) || seen.has(low)) continue;
         seen.add(low);
-        offenders.push({ id: it.id, token: t });
+        offenders.push({ nr, id: it.id, token: t });
       }
     }
   }
+  // Reported Lektion by Lektion, so the list reads like the course rather than like the pool file.
+  offenders.sort((a, b) => a.nr - b.nr || a.id.localeCompare(b.id) || a.token.localeCompare(b.token));
   return offenders;
 }
 
@@ -366,7 +623,9 @@ function rehearsalText(l, itemsOfLektion) {
  * counts as rehearsed when one of its content words — stemmed with the same formsOf() that RULE 5
  * uses — occurs in one of the Lektion's exercise slots.
  */
-export function canDoRehearsal(c, extraItems = loadExtraItems()) {
+export function canDoRehearsal(c, extraItems) {
+  const spec = levelSpec(c?.level) || LEVELS['a1.1'];
+  extraItems = extraItems ?? loadExtraItems(spec.level);
   const byLektion = new Map();
   for (const it of extraItems) {
     const nr = lektionOfItem(it.id);
@@ -381,15 +640,15 @@ export function canDoRehearsal(c, extraItems = loadExtraItems()) {
     for (const t of tokenise(rehearsalText(l, byLektion.get(l.nr) || []))) {
       const low = t.toLowerCase();
       slots.add(low);
-      for (const f of formsOf({ de: low })) slots.add(f);
+      for (const f of formsOf({ de: low }, spec.irregularForms)) slots.add(f);
     }
     for (const line of l.canDo || []) {
       const keywords = tokenise(line).map((t) => t.toLowerCase())
-        .filter((t) => !FUNCTION_SET.has(t) && !CANDO_STOPWORDS.has(t));
+        .filter((t) => !spec.functionSet.has(t) && !CANDO_STOPWORDS.has(t));
       // A line whose every word is a function word („… mit hier oder da antworten“) carries no
       // content keyword to match on; it is outside this rule rather than an offender.
       if (!keywords.length) continue;
-      const hit = keywords.some((k) => slots.has(k) || [...formsOf({ de: k })].some((f) => slots.has(f)));
+      const hit = keywords.some((k) => slots.has(k) || [...formsOf({ de: k }, spec.irregularForms)].some((f) => slots.has(f)));
       if (!hit) offenders.push({ nr: l.nr, line });
     }
   }
@@ -408,15 +667,201 @@ export function missionlessLektionen(c) {
     .map((l) => l.nr);
 }
 
+
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+// RULE 14 — PERSONA CONSISTENCY (DaF review #5, MAJOR 12)
+//
+// The course is carried by a handful of recurring characters, and a learner meets the same person
+// twice in one sitting: Ana speaks the dialogue of Lektion 3 (she also reads two of its lines
+// aloud) and then fills in the Formular of Lektion 3. Round 5 satisfied the RULE 10 coverage
+// ratchet by pushing the missing word „der Mann“ into a dialogue line — „Ja, ein Baby. Mein Mann
+// und ich kommen aus Marokko.“ — which makes Ana married, while the Formular of the same Lektion
+// and the Mitteilung of Lektion 2 both say **ledig**. „Der Widerspruch ist sonst nur mit dem Auge
+// zu finden“, so this is the table that finds it.
+//
+// The facts below are READ OFF a11.js (dialogues, settings, schreiben tasks, samples and fields),
+// not invented; `null` means the course never states that fact about the person, and then there is
+// nothing to contradict and the check stays silent. This is a hard gate, not a ratchet: a
+// contradiction is never older debt, it is always something a repair round just wrote.
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+
+const MARITAL = ['ledig', 'verheiratet', 'geschieden'];
+const COUNTRIES = [
+  'Marokko', 'Deutschland', 'Österreich', 'Schweiz', 'Italien', 'Spanien', 'Polen', 'Türkei',
+  'Syrien', 'Frankreich', 'Portugal', 'Griechenland', 'Russland', 'Ukraine', 'Indien', 'China',
+  'Japan', 'Ägypten', 'Tunesien', 'Algerien', 'England', 'Brasilien',
+];
+const LANGUAGES = [
+  'Arabisch', 'Deutsch', 'Englisch', 'Französisch', 'Spanisch', 'Italienisch', 'Türkisch',
+  'Russisch', 'Polnisch', 'Chinesisch', 'Portugiesisch',
+];
+const PROFESSIONS = [
+  'Student', 'Studentin', 'Kellner', 'Kellnerin', 'Ingenieur', 'Ingenieurin', 'Lehrer', 'Lehrerin',
+  'Arzt', 'Ärztin', 'Verkäufer', 'Verkäuferin', 'Sekretär', 'Sekretärin', 'Koch', 'Köchin',
+  'Chef', 'Chefin',
+];
+
+/**
+ * A1.1 — the recurring characters and the facts the course states about them.
+ *   Ana Chakiri   L1, L2, L3, L6, L8, L9, L10, L12 — ledig (L3 Formular, L2 Mustertext), aus
+ *                 Marokko (L1/L3 Aufgabentext, L2 Mustertext), Studentin (L2 Dialog), spricht
+ *                 Arabisch und Deutsch (L1/L3 Aufgabentext). Sie arbeitet ab L6 im Bürgerbüro —
+ *                 das ist ein Arbeitsplatz, kein zweiter Beruf, deshalb bleibt `beruf` Studentin.
+ *   Lena Brandt   L3, L5, L7, L8, L11, L12 — Kursteilnehmerin (Kurs A1, Zimmer 12), Hobby Sport
+ *                 und Schwimmen. Familienstand, Herkunft und Beruf sagt der Kurs nie: null.
+ *   Tim Berger    L4, L5, L7, L11 — Kursteilnehmer (Kurs am Donnerstag). Ebenfalls nichts gesagt.
+ *   Herr Weber    L2, L6 — „vom Amt“, Schalter im Bürgerbüro; kein Berufswort genannt.
+ *   Frau Kaya     L1 — Rezeption im Hostel; kein Berufswort genannt.
+ *   Paul          L9 — Kellner im Café (dialog.setting).
+ *   Frau Wolf     L4 — verkauft auf dem Flohmarkt.  Herr Schmidt  L10 — Auskunft am Bahnhof.
+ */
+export const PERSONAS_A11 = {
+  Ana: { familienstand: 'ledig', herkunft: 'Marokko', beruf: ['Studentin'], sprachen: ['Arabisch', 'Deutsch'] },
+  Lena: { familienstand: null, herkunft: null, beruf: null, sprachen: null },
+  Tim: { familienstand: null, herkunft: null, beruf: null, sprachen: null },
+  Paul: { familienstand: null, herkunft: null, beruf: ['Kellner'], sprachen: null },
+  'Herr Weber': { familienstand: null, herkunft: null, beruf: null, sprachen: null },
+  'Frau Kaya': { familienstand: null, herkunft: null, beruf: null, sprachen: null },
+  'Frau Wolf': { familienstand: null, herkunft: null, beruf: null, sprachen: null },
+  'Herr Schmidt': { familienstand: null, herkunft: null, beruf: null, sprachen: null },
+};
+
+/** The per-level persona tables, keyed by the registry row's `personaSource`. */
+export const PERSONA_TABLES = { 'a1.1': PERSONAS_A11 };
+
+const alt = (list) => list.join('|');
+// SELF — the person asserts something about themselves: a dialogue line they speak, or the
+// Mitteilung they sign. Only first-person frames, so „Ihr Kollege ist Ingenieur“ (Herr Weber about
+// a third person) and „er spricht Englisch“ (Ana about her brother) are not read as self-reports.
+const SELF_PATTERNS = [
+  ['familienstand', new RegExp(`\\bich\\s+bin\\s+(${alt(MARITAL)})\\b`, 'gi')],
+  ['herkunft', new RegExp(`\\bich\\s+komme\\s+(?:auch\\s+)?aus\\s+(${alt(COUNTRIES)})\\b`, 'gi')],
+  ['beruf', new RegExp(`\\bich\\s+bin\\s+(?:von\\s+Beruf\\s+)?(${alt(PROFESSIONS)})\\b`, 'gi')],
+  ['beruf', new RegExp(`\\bich\\s+arbeite\\s+als\\s+(${alt(PROFESSIONS)})\\b`, 'gi')],
+  ['sprachen', new RegExp(`\\bich\\s+spreche\\s+([^.?!]*)`, 'gi')],
+];
+// ABOUT — a text that is about the person: a Formular task that names them, a dialogue line or
+// setting that names them, the fields of such a task. Third-person and form-field frames.
+const ABOUT_PATTERNS = [
+  ['familienstand', new RegExp(`\\b(?:ist|bin|sind)\\s+(${alt(MARITAL)})\\b`, 'gi')],
+  ['familienstand', new RegExp(`\\bFamilienstand\\s*:\\s*(${alt(MARITAL)})\\b`, 'gi')],
+  ['herkunft', new RegExp(`\\b(?:kommt|komme|kommen)\\s+(?:auch\\s+)?aus\\s+(${alt(COUNTRIES)})\\b`, 'gi')],
+  ['herkunft', new RegExp(`\\bLand\\s*:\\s*(${alt(COUNTRIES)})\\b`, 'gi')],
+  ['beruf', new RegExp(`\\b(?:ist|bin|sind)\\s+(?:von\\s+Beruf\\s+)?(${alt(PROFESSIONS)})\\b`, 'gi')],
+  ['sprachen', new RegExp(`\\b(?:spricht|spreche|sprechen)\\s+([^.?!]*)`, 'gi')],
+  ['sprachen', new RegExp(`\\bSprachen?\\s*:\\s*([^/]*)`, 'gi')],
+];
+// „Mein Mann“ / „meine Frau“ carry no captured value — they simply make the speaker married, which
+// is what the round-5 line did to Ana.
+const SPOUSE_RE = /\b(?:mein\s+Mann|meine\s+Frau)\b/i;
+
+/** The persona a Mitteilung is signed by: the name after the closing Gruß. */
+const signatureName = (sample) => {
+  const m = /(?:Grüße|Gruß|Tschüss|Bis bald|Bis morgen|Bis später)[,!\s]*([A-ZÄÖÜ][\wÄÖÜäöüß]*)/.exec(String(sample || ''));
+  return m ? m[1] : null;
+};
+
+/** Does this text name the persona? „Herr Weber“ by both words, „Ana“ not inside „Anas“. */
+const namesPersona = (text, name) => new RegExp(`\\b${name.replace(' ', '\\s+')}\\b`).test(String(text || ''));
+
+/**
+ * The part of a text that is ABOUT one persona. When the text names exactly one of them, all of it
+ * is — „Ana Chakiri ist ledig. **Sie** kommt aus Marokko.“ continues with a pronoun and must still
+ * be read as Ana. When it names two („Ana sitzt im Café. Paul ist Kellner.“), only the sentences
+ * that name the person are, or Ana becomes a Kellner.
+ */
+function aboutSpan(text, name, allNames) {
+  const s = String(text || '');
+  if (!namesPersona(s, name)) return '';
+  const named = allNames.filter((n) => namesPersona(s, n));
+  if (named.length <= 1) return s;
+  return (s.match(/[^.?!]+[.?!]*/g) || []).filter((sentence) => namesPersona(sentence, name)).join(' ');
+}
+
+/**
+ * RULE 14: no dialogue line and no Schreiben text may state a fact about a recurring character
+ * that contradicts the PERSONAS table. Returns one entry per contradiction.
+ */
+export function personaConsistency(c) {
+  const spec = levelSpec(c?.level) || LEVELS['a1.1'];
+  const personas = PERSONA_TABLES[spec.personaSource] || {};
+  const names = Object.keys(personas);
+  if (!names.length) return [];
+  const offenders = [];
+  const report = (nr, where, name, fact, found, expected) => offenders.push({
+    nr, where, name, fact, found, expected,
+  });
+
+  const check = (nr, where, name, text, patterns) => {
+    const p = personas[name];
+    if (!p || !text) return;
+    const s = String(text);
+    for (const [fact, re] of patterns) {
+      const expected = p[fact];
+      if (!expected) continue;
+      for (const m of s.matchAll(new RegExp(re.source, re.flags))) {
+        const value = m[1] || '';
+        if (fact === 'sprachen') {
+          // The span after „spricht“ / „Sprachen:“ may name several languages.
+          for (const lang of LANGUAGES) {
+            if (new RegExp(`\\b${lang}\\b`).test(value) && !expected.includes(lang)) {
+              report(nr, where, name, fact, lang, expected.join(', '));
+            }
+          }
+          continue;
+        }
+        const ok = Array.isArray(expected) ? expected.includes(value) : String(expected).toLowerCase() === value.toLowerCase();
+        if (!ok) report(nr, where, name, fact, value, Array.isArray(expected) ? expected.join(', ') : expected);
+      }
+    }
+    if (p.familienstand && p.familienstand !== 'verheiratet' && SPOUSE_RE.test(s)) {
+      report(nr, where, name, 'familienstand', SPOUSE_RE.exec(s)[0], p.familienstand);
+    }
+  };
+
+  for (const l of c.lektionen || []) {
+    for (const [i, line] of (l.dialog?.lines || []).entries()) {
+      check(l.nr, `dialog line ${i} (${line.speaker})`, line.speaker, line.de, SELF_PATTERNS);
+      for (const name of names) {
+        if (name === line.speaker) continue;
+        check(l.nr, `dialog line ${i}`, name, aboutSpan(line.de, name, names), ABOUT_PATTERNS);
+      }
+    }
+    for (const name of names) {
+      check(l.nr, 'dialog.setting', name, aboutSpan(l.dialog?.setting, name, names), ABOUT_PATTERNS);
+    }
+    const w = l.schreiben || {};
+    // A Formular task names the person it is about („Ana Chakiri ist ledig. Sie kommt aus …“), so
+    // the whole task — text, sample and fields — is read as being about that person.
+    const about = [w.taskDe, w.sample, ...(w.fields || []), ...(w.leitpunkte || [])].filter(Boolean);
+    for (const name of names) {
+      if (!namesPersona(w.taskDe, name)) continue;
+      // The task named exactly this person, so the whole block — task, sample, fields — is about
+      // them, except in a text that also names somebody else.
+      for (const t of about) {
+        const others = names.filter((n) => n !== name && namesPersona(t, n));
+        check(l.nr, 'schreiben', name, others.length ? aboutSpan(t, name, names) : t, ABOUT_PATTERNS);
+      }
+    }
+    // A Mitteilung is written in the first person by whoever signs it.
+    const author = signatureName(w.sample);
+    if (author && personas[author]) check(l.nr, 'schreiben.sample', author, w.sample, SELF_PATTERNS);
+  }
+  return offenders;
+}
+
 const words = (s) => String(s).trim().split(/\s+/).filter(Boolean);
 
-export function validateCurriculum(c, extraItems = loadExtraItems()) {
+export function validateCurriculum(c, extraItems) {
   const errors = [];
   const fail = (msg) => errors.push(msg);
   const L = c.lektionen || [];
+  const spec = levelSpec(c?.level);
+  if (!spec) return [`level "${c?.level}" is not registered in LEVELS — add its row before validating`];
+  extraItems = extraItems ?? loadExtraItems(spec.level);
 
   // ---- RULE 8 (shape + hours) -------------------------------------------------------------
-  if (c.level !== 'a1.1' || c.code !== 'A1.1') fail('level/code must be a1.1 / A1.1');
+  if (c.code !== spec.code) fail(`level/code must be ${spec.level} / ${spec.code}`);
   for (const k of ['examKey', 'examName', 'testSlug']) if (!c[k]) fail(`missing ${k}`);
   for (const k of ['canDo', 'wortliste', 'themen']) if (!c.provenance?.[k]) fail(`missing provenance.${k}`);
   if ((c.checkpoints || []).length !== 4) fail('expected 4 checkpoints');
@@ -435,7 +880,7 @@ export function validateCurriculum(c, extraItems = loadExtraItems()) {
   const slugs = new Set();
   L.forEach((l, i) => {
     if (l.nr !== i + 1) fail(`Lektion at index ${i}: nr ${l.nr} out of order`);
-    const id = `a1.1-l${String(i + 1).padStart(2, '0')}`;
+    const id = `${spec.level}-l${String(i + 1).padStart(2, '0')}`;
     if (l.id !== id) fail(`Lektion ${l.nr}: id must be ${id}`);
     if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(l.slug || '')) fail(`Lektion ${l.nr}: slug "${l.slug}" is not kebab-case`);
     if (slugs.has(l.slug)) fail(`Lektion ${l.nr}: duplicate slug ${l.slug}`);
@@ -447,7 +892,7 @@ export function validateCurriculum(c, extraItems = loadExtraItems()) {
   // ---- RULE 2 (situations, can-dos, Handlungsfeld, exam Teile) -----------------------------
   const teileSeen = new Set();
   L.forEach((l, i) => {
-    for (const kw of SITUATION_KEYWORDS[i] || []) {
+    for (const kw of spec.situationKeywords[i] || []) {
       if (!String(l.situation || '').includes(kw)) fail(`Lektion ${l.nr}: situation must mention "${kw}" (standard §2.2 order)`);
     }
     if (!l.handlungsfeld) fail(`Lektion ${l.nr}: missing handlungsfeld`);
@@ -471,16 +916,16 @@ export function validateCurriculum(c, extraItems = loadExtraItems()) {
   L.forEach((l) => {
     const gs = l.grammarSlugs || [];
     if (gs.length < 1 || gs.length > 3) fail(`Lektion ${l.nr}: ${gs.length} grammarSlugs, expected 1–3`);
-    for (const s of gs) if (!GRAMMAR_SLUGS.includes(s)) fail(`Lektion ${l.nr}: unknown grammar slug "${s}"`);
+    for (const g of gs) if (!spec.grammarSlugs.includes(g)) fail(`Lektion ${l.nr}: unknown grammar slug "${g}"`);
     if (!gs.includes(l.primarySlug)) fail(`Lektion ${l.nr}: primarySlug "${l.primarySlug}" not in grammarSlugs`);
     primaryCount.set(l.primarySlug, (primaryCount.get(l.primarySlug) || 0) + 1);
   });
-  for (const s of GRAMMAR_SLUGS) {
-    const n = primaryCount.get(s) || 0;
-    if (n !== 1) fail(`grammar slug "${s}" is primary in ${n} Lektionen, expected exactly 1`);
+  for (const g of spec.grammarSlugs) {
+    const n = primaryCount.get(g) || 0;
+    if (n !== 1) fail(`grammar slug "${g}" is primary in ${n} Lektionen, expected exactly 1`);
   }
   L.forEach((l, i) => {
-    if (l.primarySlug !== PRIMARY_ORDER[i]) fail(`Lektion ${l.nr}: primarySlug "${l.primarySlug}" breaks the taught order (expected "${PRIMARY_ORDER[i]}")`);
+    if (l.primarySlug !== spec.primaryOrder[i]) fail(`Lektion ${l.nr}: primarySlug "${l.primarySlug}" breaks the taught order (expected "${spec.primaryOrder[i]}")`);
   });
 
   // ---- RULE 4 (Wortfeld) ---------------------------------------------------------------------
@@ -508,14 +953,13 @@ export function validateCurriculum(c, extraItems = loadExtraItems()) {
     if (added > 5) fail(`Lektion ${l.nr}: ${added} Wortfeld entries without wordId, at most 5 allowed`);
     if (wf.length && (wf.length - added) / wf.length < 0.7) fail(`Lektion ${l.nr}: only ${wf.length - added}/${wf.length} entries carry a wordId (min 70 %)`);
   });
-  if (seenWords.size < 200) fail(`union of all Wortfelder is ${seenWords.size} words, expected ≥ 200`);
+  if (seenWords.size < spec.minUnionWords) fail(`union of all Wortfelder is ${seenWords.size} words, expected ≥ ${spec.minUnionWords}`);
   if (total && withId / total < 0.7) fail(`only ${withId}/${total} Wortfeld entries carry a wordId (min 70 %)`);
 
   // ---- RULE 5 (dialogue) ---------------------------------------------------------------------
-  const allowed = new Set([...FUNCTION_WORDS, ...DIALOG_NAMES].map((w) => w.toLowerCase()));
-  const known = new Set(allowed);
+  const known = seedVocabulary(spec);
   L.forEach((l) => {
-    for (const w of l.wortfeld || []) for (const f of formsOf(w)) known.add(f);
+    for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
     const d = l.dialog || {};
     const lines = d.lines || [];
     if (!d.title || !d.setting) fail(`Lektion ${l.nr}: dialog needs title and setting`);
@@ -531,7 +975,7 @@ export function validateCurriculum(c, extraItems = loadExtraItems()) {
       }
     });
     const text = lines.map((x) => x.de).join('\n');
-    const re = PRIMARY_PATTERNS[l.primarySlug];
+    const re = spec.primaryPatterns[l.primarySlug];
     const hits = re ? (text.match(new RegExp(re.source, re.flags)) || []).length : 0;
     if (hits < 3) fail(`Lektion ${l.nr}: the primary structure (${l.primarySlug}) occurs ${hits}× in the dialogue, expected ≥ 3`);
   });
@@ -579,7 +1023,7 @@ export function validateCurriculum(c, extraItems = loadExtraItems()) {
     if (!open.promptDe) fail(`Lektion ${l.nr}: sprechen.open needs a promptDe`);
     if ((open.hintWords || []).length !== 3) fail(`Lektion ${l.nr}: sprechen.open needs exactly 3 hintWords`);
     if (open.missionOrder !== null) {
-      if (!Number.isInteger(open.missionOrder) || open.missionOrder < 1 || open.missionOrder > 8) fail(`Lektion ${l.nr}: missionOrder ${open.missionOrder} is not a published A1.1 mission (1–8) or null`);
+      if (!Number.isInteger(open.missionOrder) || open.missionOrder < 1 || open.missionOrder > spec.missionCount) fail(`Lektion ${l.nr}: missionOrder ${open.missionOrder} is not a published ${spec.code} mission (1–${spec.missionCount}) or null`);
       if (missions.has(open.missionOrder)) fail(`speaking mission ${open.missionOrder} is linked from Lektion ${missions.get(open.missionOrder)} and ${l.nr}`);
       missions.set(open.missionOrder, l.nr);
     }
@@ -601,10 +1045,12 @@ export function validateCurriculum(c, extraItems = loadExtraItems()) {
     // register/Leitpunkte disagree with this Lektion — means the learner would be
     // graded against a different exercise than the screen shows them.
     if (!w.taskKey) fail(`Lektion ${l.nr}: schreiben needs a taskKey into the writing task bank`);
-    const bank = w.taskKey ? writingTaskByKey('goethe_a1', w.taskKey) : null;
-    if (w.taskKey && !bank) fail(`Lektion ${l.nr}: schreiben.taskKey "${w.taskKey}" resolves to no goethe_a1 task`);
+    const expectedKey = `${spec.taskKeyPrefix}-l${String(l.nr).padStart(2, '0')}`;
+    if (w.taskKey && w.taskKey !== expectedKey) fail(`Lektion ${l.nr}: schreiben.taskKey must be "${expectedKey}"`);
+    const bank = w.taskKey ? writingTaskByKey(c.examKey, w.taskKey) : null;
+    if (w.taskKey && !bank) fail(`Lektion ${l.nr}: schreiben.taskKey "${w.taskKey}" resolves to no ${c.examKey} task`);
     if (bank) {
-      if (bank.course !== 'a1.1') fail(`Lektion ${l.nr}: bank task ${w.taskKey} is not marked course:'a1.1'`);
+      if (bank.course !== spec.level) fail(`Lektion ${l.nr}: bank task ${w.taskKey} is not marked course:'${spec.level}'`);
       if (bank.task !== w.taskDe) fail(`Lektion ${l.nr}: bank task ${w.taskKey} states a different task than taskDe`);
       if (bank.maxWords !== w.maxWords || bank.minWords !== w.minWords) fail(`Lektion ${l.nr}: bank task ${w.taskKey} has a different word range`);
       const expectedRegister = w.kind === 'formular' ? 'formular' : ['informell', 'formell'];
@@ -627,12 +1073,12 @@ export function validateCurriculum(c, extraItems = loadExtraItems()) {
     const li = l.links || {};
     if (!('listeningExercise' in li) || !('readingOrder' in li)) fail(`Lektion ${l.nr}: links needs listeningExercise and readingOrder`);
     if (li.listeningExercise !== null) {
-      if (!Number.isInteger(li.listeningExercise) || li.listeningExercise < 1 || li.listeningExercise > 6) fail(`Lektion ${l.nr}: listeningExercise ${li.listeningExercise} is not an existing A1.1 exercise (1–6)`);
+      if (!Number.isInteger(li.listeningExercise) || li.listeningExercise < 1 || li.listeningExercise > spec.listeningCount) fail(`Lektion ${l.nr}: listeningExercise ${li.listeningExercise} is not an existing ${spec.code} exercise (1–${spec.listeningCount})`);
       if (listenings.has(li.listeningExercise)) fail(`listening exercise ${li.listeningExercise} is linked from Lektion ${listenings.get(li.listeningExercise)} and ${l.nr}`);
       listenings.set(li.listeningExercise, l.nr);
     }
     if (li.readingOrder !== null) {
-      if (!Number.isInteger(li.readingOrder) || li.readingOrder < 1 || li.readingOrder > 10) fail(`Lektion ${l.nr}: readingOrder ${li.readingOrder} is not an existing A1.1 reading lesson (1–10)`);
+      if (!Number.isInteger(li.readingOrder) || li.readingOrder < 1 || li.readingOrder > spec.readingCount) fail(`Lektion ${l.nr}: readingOrder ${li.readingOrder} is not an existing ${spec.code} reading lesson (1–${spec.readingCount})`);
       if (readings.has(li.readingOrder)) fail(`reading lesson ${li.readingOrder} is linked from Lektion ${readings.get(li.readingOrder)} and ${l.nr}`);
       readings.set(li.readingOrder, l.nr);
     }
@@ -664,23 +1110,31 @@ export function validateCurriculum(c, extraItems = loadExtraItems()) {
   });
 
   // ---- RULE 10 (Wortfeld coverage) and RULE 11 (hand-written item lexis) ------------------------
+  const r = spec.ratchets;
   const uncovered = wortfeldCoverage(c, extraItems);
-  if (uncovered.length > MAX_UNCOVERED_WORTFELD) {
-    fail(`RULE 10: ${uncovered.length} Wortfeld entries occur in no input of their Lektion, ratchet is ${MAX_UNCOVERED_WORTFELD} — ${uncovered.map((u) => `L${u.nr} ${u.de}`).join(', ')}`);
+  if (uncovered.length > r.uncoveredWortfeld) {
+    fail(`RULE 10: ${uncovered.length} Wortfeld entries occur in no input of their Lektion, ratchet is ${r.uncoveredWortfeld} — ${uncovered.map((u) => `L${u.nr} ${u.de}`).join(', ')}`);
   }
   const untaught = itemLexis(c, extraItems);
-  if (untaught.length > MAX_UNTAUGHT_ITEM_TOKENS) {
-    fail(`RULE 11: ${untaught.length} untaught tokens in hand-written items, ratchet is ${MAX_UNTAUGHT_ITEM_TOKENS} — ${untaught.map((o) => `${o.id}:${o.token}`).join(', ')}`);
+  if (untaught.length > r.untaughtItemTokens) {
+    fail(`RULE 11: ${untaught.length} untaught tokens in hand-written items, ratchet is ${r.untaughtItemTokens} — ${untaught.map((o) => `${o.id}:${o.token}`).join(', ')}`);
   }
 
   // ---- RULE 12 (can-dos are rehearsed) and RULE 13 (the speaking prompt travels) ---------------
   const unrehearsed = canDoRehearsal(c, extraItems);
-  if (unrehearsed.length > MAX_UNREHEARSED_CANDOS) {
-    fail(`RULE 12: ${unrehearsed.length} can-do lines no exercise slot of their Lektion rehearses, ratchet is ${MAX_UNREHEARSED_CANDOS} — ${unrehearsed.map((u) => `L${u.nr} „${u.line}“`).join(', ')}`);
+  if (unrehearsed.length > r.unrehearsedCanDos) {
+    fail(`RULE 12: ${unrehearsed.length} can-do lines no exercise slot of their Lektion rehearses, ratchet is ${r.unrehearsedCanDos} — ${unrehearsed.map((u) => `L${u.nr} „${u.line}“`).join(', ')}`);
   }
   const missionless = missionlessLektionen(c);
-  if (missionless.length > MAX_MISSIONLESS_LEKTIONEN) {
-    fail(`RULE 13: ${missionless.length} Lektionen have a sprechen.open without missionOrder, ratchet is ${MAX_MISSIONLESS_LEKTIONEN} — ${missionless.map((nr) => `L${nr}`).join(', ')}`);
+  if (missionless.length > r.missionlessLektionen) {
+    fail(`RULE 13: ${missionless.length} Lektionen have a sprechen.open without missionOrder, ratchet is ${r.missionlessLektionen} — ${missionless.map((nr) => `L${nr}`).join(', ')}`);
+  }
+
+  // ---- RULE 14 (the recurring characters keep their facts) --------------------------------------
+  // No ratchet: a learner meets Ana in the dialogue and again in the Formular of the same Lektion,
+  // and a contradiction between the two is always something a repair round just wrote.
+  for (const o of personaConsistency(c)) {
+    fail(`RULE 14: Lektion ${o.nr} ${o.where}: ${o.name} — ${o.fact} „${o.found}“ contradicts „${o.expected}“`);
   }
 
   return errors;
@@ -688,26 +1142,39 @@ export function validateCurriculum(c, extraItems = loadExtraItems()) {
 
 const isMain = process.argv[1] && import.meta.url.endsWith(process.argv[1].split('/').pop());
 if (isMain) {
-  const errors = validateCurriculum(CURRICULUM_A11);
-  const wf = CURRICULUM_A11.lektionen.flatMap((l) => l.wortfeld);
+  // `node scripts/validate-curriculum.mjs [level]` — the level argument defaults to a1.1, so the
+  // command in CLAUDE.md and in CI keeps measuring exactly what it measured before A1.2 existed.
+  const arg = (process.argv[2] || 'a1.1').toLowerCase();
+  const spec = levelSpec(arg);
+  if (!spec) {
+    console.error(`✗ unknown level "${arg}" — known levels: ${Object.keys(LEVELS).join(', ')}`);
+    process.exit(2);
+  }
+  const c = spec.curriculum;
+  const r = spec.ratchets;
+  const errors = validateCurriculum(c);
+  const wf = c.lektionen.flatMap((l) => l.wortfeld);
   const withId = wf.filter((w) => w.wordId).length;
-  // The two ratchets print on every run, pass or fail: a number nobody sees is a number that
+  // The four ratchets print on every run, pass or fail: a number nobody sees is a number that
   // silently climbs back (DaF review #3, „der Validator läuft über Dialoge, nicht über Items“).
   const mark = errors.length ? '·' : '✓';
-  console.log(`${mark} ${CURRICULUM_A11.code}: 12 Lektionen, ${wf.length} Wortfeld-Einträge (${withId} mit wordId, ${Math.round((100 * withId) / wf.length)} %), ${CURRICULUM_A11.hoursTotal} h`);
-  const uncovered = wortfeldCoverage(CURRICULUM_A11);
-  console.log(`  RULE 10 Wortfeld-Deckung: ${uncovered.length} ungenutzt von ${wf.length} (Ratchet ${MAX_UNCOVERED_WORTFELD})`);
+  console.log(`${mark} ${c.code}: ${c.lektionen.length} Lektionen, ${wf.length} Wortfeld-Einträge (${withId} mit wordId, ${Math.round((100 * withId) / wf.length)} %), ${c.hoursTotal} h`);
+  const uncovered = wortfeldCoverage(c);
+  console.log(`  RULE 10 Wortfeld-Deckung: ${uncovered.length} ungenutzt von ${wf.length} (Ratchet ${r.uncoveredWortfeld})`);
   for (const u of uncovered) console.log(`    L${u.nr} ${u.de}`);
-  const untaught = itemLexis(CURRICULUM_A11);
-  console.log(`  RULE 11 Item-Lexik: ${untaught.length} ungelehrte Tokens (Ratchet ${MAX_UNTAUGHT_ITEM_TOKENS})`);
+  const untaught = itemLexis(c);
+  console.log(`  RULE 11 Item-Lexik: ${untaught.length} ungelehrte Tokens (Ratchet ${r.untaughtItemTokens})`);
   for (const o of untaught) console.log(`    ${o.id}: ${o.token}`);
-  const unrehearsed = canDoRehearsal(CURRICULUM_A11);
-  console.log(`  RULE 12 Kann-Beschreibungen ohne Übung: ${unrehearsed.length} (Ratchet ${MAX_UNREHEARSED_CANDOS})`);
+  const unrehearsed = canDoRehearsal(c);
+  console.log(`  RULE 12 Kann-Beschreibungen ohne Übung: ${unrehearsed.length} (Ratchet ${r.unrehearsedCanDos})`);
   for (const u of unrehearsed) console.log(`    L${u.nr} ${u.line}`);
-  const missionless = missionlessLektionen(CURRICULUM_A11);
-  console.log(`  RULE 13 Sprechaufträge ohne Mission: ${missionless.length} (Ratchet ${MAX_MISSIONLESS_LEKTIONEN}) — ${missionless.map((nr) => `L${nr}`).join(', ') || '—'}`);
+  const missionless = missionlessLektionen(c);
+  console.log(`  RULE 13 Sprechaufträge ohne Mission: ${missionless.length} (Ratchet ${r.missionlessLektionen}) — ${missionless.map((nr) => `L${nr}`).join(', ') || '—'}`);
+  const personaBreaks = personaConsistency(c);
+  console.log(`  RULE 14 Figuren-Widersprüche: ${personaBreaks.length} (harte Regel, kein Ratchet)`);
+  for (const o of personaBreaks) console.log(`    L${o.nr} ${o.where}: ${o.name} ${o.fact} „${o.found}“ statt „${o.expected}“`);
   if (errors.length) {
-    console.error(`✗ ${CURRICULUM_A11.code}: ${errors.length} problem(s)`);
+    console.error(`✗ ${c.code}: ${errors.length} problem(s)`);
     for (const e of errors) console.error('  - ' + e);
     process.exit(1);
   }

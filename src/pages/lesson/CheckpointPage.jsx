@@ -1,4 +1,4 @@
-import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Check, RotateCcw, Volume2, X } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
@@ -12,11 +12,12 @@ import {
   SECTION_ORDER,
   PASS_OVERALL_PCT,
   PASS_SECTION_PCT,
+  WRITING_PASS_PCT,
   shuffle,
   mulberry32,
   hashSeed,
-  chapterLektionen,
 } from '../../lib/checkpoint/buildCheckpoint.js';
+import GradedWriting from '../../components/lesson/GradedWriting.jsx';
 import ReadAloudLine from '../../components/lesson/ReadAloudLine.jsx';
 import { playLine } from '../../lib/lesson/speech.js';
 import {
@@ -43,19 +44,6 @@ const POOL_LOADERS = {
   'a1.1': () => import('../../data/lessonPools/a11.json'),
 };
 
-// The AI-graded writing component is plan P2's; this page mounts it for ONE of
-// the three Schreiben items when it exists. import.meta.glob is resolved at
-// build time and yields {} when the file is absent, so the page builds and runs
-// either way and the graded Mitteilung simply appears once the file lands.
-// TODO(P2): delete this indirection and import GradedWriting directly once
-// src/components/lesson/GradedWriting.jsx is committed.
-const GRADED_WRITING = import.meta.glob('../../components/lesson/GradedWriting.jsx');
-const GRADED_WRITING_PATH = Object.keys(GRADED_WRITING)[0] || null;
-const GradedWriting = GRADED_WRITING_PATH ? lazy(GRADED_WRITING[GRADED_WRITING_PATH]) : null;
-
-/** Word recognition at or above this counts a graded Schreiben item as correct. */
-const WRITING_PASS_PCT = 0.6;
-
 /**
  * Play a checkpoint item's audio: the recorded line when the manifest has one
  * (playLine → src/data/curricula/<level>.audio.js), the browser voice when not.
@@ -64,54 +52,6 @@ const WRITING_PASS_PCT = 0.6;
 function speak(text, lektionId = null, lineKey = null) {
   if (!text) return;
   playLine(lektionId, lineKey, text, { rate: 0.9 });
-}
-
-/**
- * The graded Mitteilung that replaces one pool-drawn Schreiben item: the
- * chapter's last Lektion writing task, graded by evaluate-writing through
- * GradedWriting. Returns null when either half is missing (no component yet, or
- * no taskKey on the curriculum), and the three pool items stay as they were.
- */
-function gradedWritingItem(checkpoint, chapter) {
-  if (!GradedWriting) return null;
-  const last = [...(chapter || [])].reverse().find((l) => l?.schreiben?.taskKey);
-  if (!last) return null;
-  const s = last.schreiben;
-  return {
-    id: `${checkpoint.id}-schreiben-graded`,
-    section: 'schreiben',
-    kind: 'gradedWriting',
-    // Answered true/false, so the existing confirm path scores it unchanged.
-    mode: 'confirm',
-    topic: 'schreiben',
-    lektionNr: last.nr,
-    lektionId: last.id,
-    source: 'chapter',
-    register: s.kind || 'mitteilung',
-    scored: true,
-    promptDe: s.taskDe,
-    promptEn: null,
-    audioText: null,
-    text: null,
-    options: null,
-    answer: true,
-    accepted: [true],
-    explanationDe: null,
-    hint: `Lektion ${last.nr}`,
-    poolItemId: null,
-    type: 'graded_writing',
-    task: {
-      examKey: 'goethe_a1',
-      taskKey: s.taskKey,
-      kind: s.kind,
-      taskDe: s.taskDe,
-      fields: s.fields || null,
-      leitpunkte: s.leitpunkte || null,
-      minWords: s.minWords ?? 0,
-      maxWords: s.maxWords ?? 30,
-      sample: s.sample || null,
-    },
-  };
 }
 
 /** One item, one screen. Typed input, option chips, dictation or self-confirm. */
@@ -166,7 +106,7 @@ function PracticeItem({ item, onAnswer }) {
         </div>
         <p className="mt-3 text-xs text-graphite">
           {pending?.usedMic
-            ? 'Bewertet — Verständlichkeit zählt in dein Sprechen-Ergebnis.'
+            ? 'Bewertet — Verständlichkeit zählt in Ihr Sprechen-Ergebnis.'
             : 'Ohne Aufnahme wird der Sprechen-Teil nicht bewertet, gehört aber zum Test.'}
         </p>
         <Button
@@ -180,23 +120,31 @@ function PracticeItem({ item, onAnswer }) {
     );
   }
 
-  // Schreiben: one of the three items is the chapter's real Mitteilung, graded
-  // on the Goethe criteria by GradedWriting (plan P2).
-  if (item.kind === 'gradedWriting' && GradedWriting) {
+  // Schreiben: one of the three items is the chapter's real writing task, graded
+  // on the Goethe criteria by evaluate-writing through GradedWriting — the same
+  // component and the same request the lesson's Schreiben step makes.
+  if (item.kind === 'gradedWriting') {
+    // Only a real grader verdict is an answer. GradedWriting falls back to its
+    // mechanical form check when the learner is signed out, over the allowance
+    // or offline (`scored: false`); that is reported as "not attempted" and the
+    // Schreiben section scores over its two drills instead (buildCheckpoint's
+    // itemCounts). The task is shown either way.
+    const verdict = pending && pending.scored === true && typeof pending.pct === 'number'
+      ? { graded: true, pct: pending.pct }
+      : null;
     return (
       <Card className="p-5 sm:p-6">
         {header}
-        <Suspense fallback={<p className="text-sm text-graphite">Die Schreibaufgabe wird geladen …</p>}>
+        <p className="font-display text-lg leading-snug text-ink">{item.promptDe}</p>
+        <div className="mt-4">
           <GradedWriting task={item.task} lektionId={item.lektionId} onResult={setPending} />
-        </Suspense>
-        <Button
-          className="mt-4"
-          disabled={!pending}
-          onClick={() => {
-            const graded = pending && typeof pending.pct === 'number' && !pending.limitReached;
-            onAnswer(item, graded ? pending.pct >= WRITING_PASS_PCT : true);
-          }}
-        >
+        </div>
+        <p className="mt-3 text-xs text-graphite">
+          {verdict
+            ? `Bewertet — ab ${Math.round(WRITING_PASS_PCT * 100)} % zählt diese Aufgabe als richtig.`
+            : 'Ohne KI-Bewertung zählt diese Aufgabe nicht in das Schreiben-Ergebnis, gehört aber zum Test.'}
+        </p>
+        <Button className="mt-4" disabled={!pending} onClick={() => onAnswer(item, verdict)}>
           Weiter <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </Button>
       </Card>
@@ -258,7 +206,7 @@ function PracticeItem({ item, onAnswer }) {
             submit(value);
           }}
         >
-          <label className="sr-only" htmlFor={`answer-${item.id}`}>Deine Antwort</label>
+          <label className="sr-only" htmlFor={`answer-${item.id}`}>Ihre Antwort</label>
           <input
             id={`answer-${item.id}`}
             ref={inputRef}
@@ -357,16 +305,9 @@ export default function CheckpointPage() {
 
   const items = useMemo(() => {
     if (!curriculum || !checkpoint || !pool) return [];
-    let built = buildCheckpoint({ curriculum, checkpoint, pool });
-    // One of the three Schreiben items becomes the chapter's real, graded
-    // Mitteilung when GradedWriting and a schreiben.taskKey both exist. The
-    // section stays at three items either way.
-    const graded = gradedWritingItem(checkpoint, chapterLektionen(curriculum, checkpoint));
-    if (graded) {
-      const schreiben = built.filter((i) => i.section === 'schreiben');
-      const replaced = schreiben[schreiben.length - 1];
-      if (replaced) built = built.map((i) => (i.id === replaced.id ? graded : i));
-    }
+    // buildCheckpoint already puts the chapter's real writing task in the
+    // Schreiben section when the curriculum names a taskKey (see buildSchreiben).
+    const built = buildCheckpoint({ curriculum, checkpoint, pool });
     // "Nochmal" reshuffles the ORDER only — the same 20 items, so a second run
     // is a second look at the same evidence, not a different (easier) test.
     if (!round) return built;
@@ -426,7 +367,7 @@ export default function CheckpointPage() {
             <Chip tone="label">Checkpoint {checkpoint.nr}</Chip>
             <h1 className="mt-3 font-display text-2xl text-ink sm:text-3xl">{checkpoint.title}</h1>
             <p className="mt-3 text-[0.9375rem] leading-relaxed text-graphite">
-              20 Aufgaben aus {sectionsCovered} — im Format deiner Prüfung. Der Test zieht aus den
+              20 Aufgaben aus {sectionsCovered} — im Format Ihrer Prüfung. Der Test zieht aus den
               Lektionen dieses Kapitels und wiederholt Grammatik aus früheren Kapiteln.
             </p>
             <p className="mt-3 text-[0.9375rem] font-bold text-ink">

@@ -8,7 +8,7 @@ import { fetchWordsByIds } from '../../services/lessonService.js';
 import { audioFor, playLine, playWord, speakGerman } from '../../lib/lesson/speech.js';
 import { AudioSourceBadge } from '../../components/lesson/DialogStage.jsx';
 import { LADDER_DAYS } from '../../lib/review/ladder.js';
-import { checkAnswer, RESULT, STRICT_TOPIC } from '../../lib/lesson/check.js';
+import { gradeTypedReview } from '../../lib/checkpoint/reviewGrading.js';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import Chip from '../../components/ui/Chip.jsx';
@@ -147,9 +147,7 @@ export default function ReviewPage() {
   const done = cards && index >= cards.length;
 
   const checkTyped = () => {
-    const strict = STRICT_TOPIC.test(card.card_key);
-    const { result } = checkAnswer(typed, content.accepted, { strict });
-    const ok = result === RESULT.CORRECT || result === RESULT.TYPO;
+    const { ok } = gradeTypedReview(card.card_key, content.accepted, typed, { caseSensitive: content.caseSensitive });
     setVerdict(ok);
     setRevealed(true);
   };
@@ -176,7 +174,7 @@ export default function ReviewPage() {
         {cards !== null && cards.length === 0 && (
           <Card className="mt-6 p-6">
             <p className="text-[0.9375rem] text-ink">
-              {user ? 'Heute ist nichts fällig.' : 'Melde dich an, damit deine Wiederholungen gespeichert werden.'}
+              {user ? 'Heute ist nichts fällig.' : 'Melden Sie sich an, damit Ihre Wiederholungen gespeichert werden.'}
             </p>
             <Button className="mt-4" variant="secondary" to={`/course/${curriculum.level}`}>Zum Kursplan</Button>
           </Card>
@@ -260,7 +258,7 @@ export default function ReviewPage() {
               <Check className="h-5 w-5 text-accent-limette-ink" aria-hidden="true" /> Fertig für heute
             </p>
             <p className="mt-2 text-sm text-graphite">
-              {formatDue(nextDueAt) ? `Nächste Wiederholung am ${formatDue(nextDueAt)}.` : 'Neue Karten kommen, sobald du eine Lektion abschließt.'}
+              {formatDue(nextDueAt) ? `Nächste Wiederholung am ${formatDue(nextDueAt)}.` : 'Neue Karten kommen, sobald Sie eine Lektion abschließen.'}
             </p>
             <Button className="mt-4" to={`/course/${curriculum.level}`}>
               Zum Kursplan <ArrowRight className="h-4 w-4" aria-hidden="true" />

@@ -153,22 +153,37 @@ Counted 2026-09-12 from `src/data/programs/*Phase.js`, `src/data/courses/index.j
 
 | Dimension | Standard | A1.1 | A1.2 | A2.1 | A2.2 |
 |---|---|---|---|---|---|
-| Unit = situation with can-dos | 12 Lektionen, Goethe can-dos | 12 grammar slugs, no can-dos | same | same | same |
-| Items in the 28-day sequence | ~22 items per lesson × 12 | 99 items → 28 distinct pages | 92 → 27 | 93 → 27 | 87 → 27 |
-| Hours | 50–60 h | 30 h | 29 h | 30 h | 28 h |
-| Lesson engine | in-app 9-stage lesson | link out to the grammar page | same | same | same |
-| Dialogue input per unit | 1 native-voice dialogue each | 0 (listening set is 6 dialogues per level, unlinked to units) | 0 | 0 | 0 |
-| Grammar exercises available | typed-heavy pool | 262 (160 typed) | 287 (163) | 300 (183) | 262 (166) |
-| Examples with audio (cache) | all | 0 / 118 | 0 / 143 | 0 / 151 | 0 / 142 |
-| Vocabulary per unit with audio | 15–25 words + audio | level word list, not per unit; no audio | same | same | same |
-| Writing tasks, graded | 1 per lesson | 0 at A1 (all writing tasks are B1/B2) | 0 | 0 | 0 |
-| Speaking per lesson with score | read-aloud + open prompt | 10 missions per level, no per-lesson slot | 13 | 8 | 8 |
-| Spaced review | FSRS or ladder over words + patterns | SRS exists for vocab only; not fed by lessons | same | same | same |
-| Checkpoints | 4 per half-level, 5-section, 60 % + 40 % rule | 0 | 0 | 0 | 0 |
-| Level test | 40 items, official format | final test exists (`abschlusstest-*`) | yes | yes | yes |
-| Public syllabus | 12 × 6 grid + counters | content counts + titles only | same | same | same |
-| Dated plan | exam date → weekly targets | fixed 28-day sequence, no date | same | same | same |
-| Streak / reminders / certificate | forgiving streak, timed reminders, honest certificate | certificate page only | same | same | same |
+| Unit = situation with can-dos | 12 Lektionen, Goethe can-dos | **✓ 12 situational Lektionen, each with 3–5 Goethe can-dos, Handlungsfeld and exam Teile** | same | same | same |
+| Items in the 28-day sequence | ~22 items per lesson × 12 | **12 × 7 controlled items in the engine**, plus pretest, dictation, read-aloud and a writing task per Lektion | 92 → 27 | 93 → 27 | 87 → 27 |
+| Hours | 50–60 h | **54 h** (`hoursTotal`, derived from the minutes) — of which ≈5.8 h are guided lesson time, 48 h budgeted linked practice | 29 h | 30 h | 28 h |
+| Lesson engine | in-app 9-stage lesson | **✓ in-app 9-stage player** at `/course/a1.1/l/:nr` | same | same | same |
+| Dialogue input per unit | 1 native-voice dialogue each | **✓ 12 dialogues, one per Lektion** — browser voice, labelled „Computerstimme", until the owner audio run fills the manifest | 0 | 0 | 0 |
+| Grammar exercises available | typed-heavy pool | **347-item built pool, 119 of them hand-written situational items** | 287 (163) | 300 (183) | 262 (166) |
+| Examples with audio (cache) | all | 0 / 118 — the recorded-audio pipeline ships, the manifest is an empty stub until the owner run | 0 / 143 | 0 / 151 | 0 / 142 |
+| Vocabulary per unit with audio | 15–25 words + audio | **✓ 262 Wortfeld entries across the 12 Lektionen**, each keyed to a `words` row; recorded audio pending the run | same | same | same |
+| Writing tasks, graded | 1 per lesson | **✓ 12 graded** (`a11-l01…a11-l12`, 6 Formular / 6 Mitteilung, Goethe criteria) | 0 | 0 | 0 |
+| Speaking per lesson with score | read-aloud + open prompt | **✓ scored read-aloud + open prompt in every Lektion**; the coach works the Lektion's own task | 13 | 8 | 8 |
+| Spaced review | FSRS or ladder over words + patterns | **✓ Babbel ladder over `review_cards`**, seeded on lesson completion, served as the warm-up and at `/course/a1.1/review` | same | same | same |
+| Checkpoints | 4 per half-level, 5-section, 60 % + 40 % rule | **✓ 4** (20 items, five sections, 60/40, remediation sets) | 0 | 0 | 0 |
+| Level test | 40 items, official format | existing `abschlusstest-a1-1` (SD1 format, free) | yes | yes | yes |
+| Public syllabus | 12 × 6 grid + counters | **✓ 12 × 6 grid + running counters** on `/courses/a1-1/` | same | same | same |
+| Dated plan | exam date → weekly targets | **✓ exam date → weekly targets** + on-track banner on the course home | same | same | same |
+| Streak / reminders / certificate | forgiving streak, timed reminders, honest certificate | **✓ forgiving streak** (one missed day per week); reminder mailer live since 2026-09-12 (`COURSE_REMINDER_ENABLED=true`, migration applied, daily 18:00 UTC); certificate as before | same | same | same |
+
+Measured 2026-09-13 after PRs #114–#120 (Wave 8). The A1.1 column now reads the rebuilt course, not
+the 2026-09-12 baseline; the `same`/`0` entries in the A1.2–A2.2 columns still refer to that baseline
+reading of A1.1, which is what those levels still are. Each ✓ rests on: `src/data/curricula/a11.js`
+(Lektionen, can-dos, Wortfeld, dialogues, writing and speaking tasks, `hoursTotal: 54`);
+`src/lib/lesson/*` + `src/components/lesson/*` + `src/pages/lesson/LessonPlayerPage.jsx` (engine);
+`src/lib/checkpoint/buildCheckpoint.js` (checkpoints); `src/services/reviewService.js` +
+`review_cards` in `migrations/2026-09-12-lesson-engine.sql` (review ladder);
+`src/data/writingTasks.js` + `netlify/functions/evaluate-writing.mjs` (graded writing);
+`netlify/functions/score-readaloud.mjs` + `src/lib/lesson/readaloud.js` + `src/pages/SpeakingPage.jsx`
+(speaking); `src/data/lessonPools/a11.json` (347) + `a11.extra.json` (119);
+`astro-site/src/pages/courses/[level].astro` + `astro-site/src/lib/syllabus.js` (public grid);
+`src/components/course/ExamDatePlan.jsx` and `computeStreakForgiving` in
+`src/services/dashboardStats.js` (plan and streak); `src/data/curricula/a11.audio.js` (the empty
+manifest stub) and `netlify/functions/course-reminder.mjs` + `netlify.toml` (the mailer, live since 2026-09-12).
 
 What to keep as-is: the typed exercise pool (about 1,100 items across the four levels, two-thirds typed),
 the listening dialogues, the speaking missions, the four final tests and the mock-exam runner, the design
@@ -180,18 +195,19 @@ Sequence: **A1.1 first as the template** (free, the entry to every paid level, t
 traffic), then A1.2, A2.1, A2.2. Each phase ships behind the existing `/course/:level` routes; nothing
 below touches pricing, Lemon Squeezy or e-mail.
 
-| # | Phase | What ships | Effort (agent sessions + owner) | Moves |
-|---|---|---|---|---|
-| 1 | Curriculum data | `src/data/curricula/<level>.js`: 12 Lektionen per level with situation, Goethe can-dos, Handlungsfeld, exam Teil, grammar slugs, Wortfeld drawn from the cached examples; public syllabus grid on `/courses/<level>/` and in the player | ~2 sessions; owner reads the A1.1 grid once | Buyers can audit before paying; every later phase hangs off this table |
-| 2 | Lesson engine | `/course/:level/:lektion` 9-stage screen: warm-up, pretest, dialogue, notice card, 7 controlled items from the pool, re-queue, recap; typo rules, error tags, mastery states; program items replaced by Lektionen | ~4 sessions | The course stops linking out; the "not an online course" complaint ends |
-| 3 | Checkpoints + level test wiring | 4 checkpoints per level from the pool + listening + reading; 60 %/40 % rule; remediation sets; certificate wording | ~2 sessions | Finishing means something; refunds drop |
-| 4 | Speaking + writing in every lesson | A1 writing tasks (6 Formular + 6 Mitteilung per half-level) on the existing AI-writing runner with the Goethe criteria; read-aloud + open prompt on the existing speaking coach; results logged to error tags | ~3 sessions | The moat: nobody else grades every exam task instantly |
-| 5 | Dialogues + audio | 12 unit dialogues per level (scripted to the Wortfeld, recorded via the Azure TTS pipeline already used for B1.1), audio for every Wortfeld word and example | ~2 sessions + one owner Azure run per level | Input before output; removes the "no audio" false claim |
-| 6 | Spaced review | `ts-fsrs` over words, grammar patterns and production sentences; 4 due items per lesson; dashboard Wiederholen tile | ~2 sessions | Retention; the universal "nothing comes back" complaint |
-| 7 | Plan + habit layer | Exam-date input → weekly targets, on-track banner; forgiving streak; Resend reminders at last-practice + 23.5 h; first lesson open before sign-up | ~2 sessions | Completion (the strongest predictors in the evidence) |
-| 8 | Native review | A DaF teacher reads the four grids and one full Lektion per level; corrections applied | owner hires; ~4 h per level | The credibility the research says buyers check |
+| # | Phase | What ships | Effort (agent sessions + owner) | Moves | A1.1 status |
+|---|---|---|---|---|---|
+| 1 | Curriculum data | `src/data/curricula/<level>.js`: 12 Lektionen per level with situation, Goethe can-dos, Handlungsfeld, exam Teil, grammar slugs, Wortfeld drawn from the cached examples; public syllabus grid on `/courses/<level>/` and in the player | ~2 sessions; owner reads the A1.1 grid once | Buyers can audit before paying; every later phase hangs off this table | **shipped** #114 (curriculum module, public 12×6 Lehrplan, curriculum course home) |
+| 2 | Lesson engine | `/course/:level/:lektion` 9-stage screen: warm-up, pretest, dialogue, notice card, 7 controlled items from the pool, re-queue, recap; typo rules, error tags, mastery states; program items replaced by Lektionen | ~4 sessions | The course stops linking out; the "not an online course" complaint ends | **shipped** #114 (`/course/:level/l/:nr`, 9 stages, typo rules, error tags, mastery) |
+| 3 | Checkpoints + level test wiring | 4 checkpoints per level from the pool + listening + reading; 60 %/40 % rule; remediation sets; certificate wording | ~2 sessions | Finishing means something; refunds drop | **shipped** #114 (4 checkpoints, 60/40, remediation sets) |
+| 4 | Speaking + writing in every lesson | A1 writing tasks (6 Formular + 6 Mitteilung per half-level) on the existing AI-writing runner with the Goethe criteria; read-aloud + open prompt on the existing speaking coach; results logged to error tags | ~3 sessions | The moat: nobody else grades every exam task instantly | **shipped** #116, hardened #117–#120 (12 graded writing tasks; scored read-aloud + the Lektion task on the coach) |
+| 5 | Dialogues + audio | 12 unit dialogues per level (scripted to the Wortfeld, recorded via the Azure TTS pipeline already used for B1.1), audio for every Wortfeld word and example | ~2 sessions + one owner Azure run per level | Input before output; removes the "no audio" false claim | **shipped** #116 — 12 dialogues written and the Azure pipeline + manifest in place; the OWNER RUN is still open, so playback says „Computerstimme" |
+| 6 | Spaced review | `ts-fsrs` over words, grammar patterns and production sentences; 4 due items per lesson; dashboard Wiederholen tile | ~2 sessions | Retention; the universal "nothing comes back" complaint | **shipped** #114 — Babbel ladder over `review_cards`, not `ts-fsrs` |
+| 7 | Plan + habit layer | Exam-date input → weekly targets, on-track banner; forgiving streak; Resend reminders at last-practice + 23.5 h; first lesson open before sign-up | ~2 sessions | Completion (the strongest predictors in the evidence) | **shipped** #116 (exam-date plan, on-track banner, forgiving streak, signed-out first lesson); the reminder mailer is live (`COURSE_REMINDER_ENABLED=true` set 2026-09-12, migration applied) |
+| 8 | Native review | A DaF teacher reads the four grids and one full Lektion per level; corrections applied | owner hires; ~4 h per level | The credibility the research says buyers check | **in progress**: five adversarial DaF reviews (`docs/course-factory/a11-rebuild/REVIEW-daf-*.md`), ladder 5/45 → 1/35 → 3/11 → 3/11 → #5 pending; the standard requires **0 BLOCKER / 0 MAJOR** |
 
-Phases 1–3 make A1.1 a course in the professional sense in roughly eight sessions; phases 4–6 make it
+Status 2026-09-13: phases 1–7 are shipped for A1.1 (PRs #114–#120, Wave 8 of the course-factory
+tracker); phase 8 is in progress. Phases 1–3 make A1.1 a course in the professional sense in roughly eight sessions; phases 4–6 make it
 the best one; 7–8 make people finish it. A2 follows the same track with the same engine, so each later
 level costs content sessions only.
 

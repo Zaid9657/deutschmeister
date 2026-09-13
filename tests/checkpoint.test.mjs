@@ -26,6 +26,15 @@
 //   4. THE 70/30 DRAW — once earlier chapters exist, the pool-drawn items must
 //      interleave them. Spacing is the single strongest effect in the research
 //      memo (g = 0.74); a chapter-only checkpoint throws it away.
+//   4b. THE LESEN SECTION TESTS READING (DaF review #5). Two things are pinned:
+//      the truth values are DRAWN, so the four checkpoints do not all answer
+//      R–F–R–F (a learner who saw checkpoint 1 scored 4/4 in 2–4 blind), and a
+//      "falsch" statement is the SAME text with one detail changed, not a line
+//      quoted from another Lektion — string recognition was all the old
+//      generator asked for.
+//   4c. THE SCHREIBEN SECTION IS THE COURSE'S OWN WRITING (DaF review #5): the
+//      chapter's real, AI-graded task plus two drills from DIFFERENT Lektionen,
+//      and no invented `register` label on a sentence-building item.
 //   5. REMEDIATION TARGETING — the set after a failure must be about the topics
 //      that were actually missed, and must never repeat an item just seen.
 //   6. THE LADDER — 1/4/7/14/60/180 with lapse → step 0. These are the numbers
@@ -51,8 +60,13 @@ import {
   earlierLektionen,
   itemIsScored,
   isMicResult,
+  isWritingResult,
   SPRECHEN_PASS_PCT,
+  WRITING_PASS_PCT,
+  chapterWritingTask,
 } from '../src/lib/checkpoint/buildCheckpoint.js';
+import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
+import { courseWritingTasks } from '../src/data/writingTasks.js';
 import { nextDue, LADDER_DAYS, MAX_STEP, wordCardKey, patternCardKey, sentenceCardKey, parseCardKey } from '../src/lib/review/ladder.js';
 import { CURRICULUM_FIXTURE, CURRICULUM_FIXTURE_6 } from './fixtures/curriculum-fixture.js';
 
@@ -109,6 +123,7 @@ test('Lesen items carry a 2–3 line text and a richtig/falsch statement, two of
     assert.deepEqual(item.options, ['Richtig', 'Falsch']);
     assert.ok(item.text && item.text.split(' ').length > 3, 'a Lesen item shows a text');
     assert.ok(['Richtig', 'Falsch'].includes(item.answer));
+    assert.equal(item.hint, null, 'the hint named the Lektion, which is half the answer');
   }
   assert.equal(items.filter((i) => i.answer === 'Richtig').length, 2);
   assert.equal(items.filter((i) => i.answer === 'Falsch').length, 2);
@@ -116,6 +131,53 @@ test('Lesen items carry a 2–3 line text and a richtig/falsch statement, two of
   for (const item of items.filter((i) => i.answer === 'Falsch')) {
     const quoted = item.promptDe.slice(item.promptDe.indexOf('„') + 1, item.promptDe.lastIndexOf('“'));
     assert.ok(!item.text.includes(quoted.split(': ').slice(1).join(': ')), 'a falsch statement is false by construction');
+  }
+});
+
+const quotedStatement = (item) =>
+  item.promptDe.slice(item.promptDe.indexOf('„') + 1, item.promptDe.lastIndexOf('“')).split(': ').slice(1).join(': ');
+
+test('the Lesen answer key is drawn, not the same R–F–R–F in every checkpoint', () => {
+  // The real curriculum, because this is a claim about the four checkpoints a
+  // learner actually sits — the fixture has one.
+  const orders = CURRICULUM_A11.checkpoints.map((cp) =>
+    buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp, pool: POOL })
+      .filter((i) => i.section === 'lesen')
+      .map((i) => i.answer)
+      .join('-'),
+  );
+  assert.equal(orders.length, 4);
+  for (const order of orders) {
+    assert.equal(order.split('-').filter((a) => a === 'Richtig').length, 2, 'still two richtig');
+    assert.equal(order.split('-').filter((a) => a === 'Falsch').length, 2, 'and two falsch');
+  }
+  assert.ok(new Set(orders).size >= 2, `all four checkpoints share one answer key: ${orders.join(' | ')}`);
+});
+
+test('a falsch statement is this text with ONE detail changed, not another Lektion', () => {
+  for (const cp of CURRICULUM_A11.checkpoints) {
+    const chapterLines = new Set(
+      chapterLektionen(CURRICULUM_A11, cp).flatMap((l) => l.dialog.lines.map((line) => line.de)),
+    );
+    const items = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp, pool: POOL })
+      .filter((i) => i.section === 'lesen');
+    for (const item of items.filter((i) => i.answer === 'Falsch')) {
+      const statement = quotedStatement(item);
+      assert.ok(!chapterLines.has(statement), 'a falsch statement is not a real line of any Lektion');
+      // It derives from a line of ITS OWN text, with exactly ONE word changed —
+      // the explanation names the line, and the line is in the text.
+      assert.match(item.explanationDe, /Im Text steht/, 'the explanation shows what the text really says');
+      const source = item.explanationDe.slice(item.explanationDe.indexOf('„') + 1, item.explanationDe.indexOf('“'));
+      assert.ok(item.text.includes(source), `${cp.id}: the falsified line must be IN this text`);
+      const words = statement.split(' ');
+      const other = source.split(' ');
+      assert.equal(other.length, words.length, `${cp.id}: one detail changed, not the sentence`);
+      assert.equal(
+        words.filter((w, i) => w !== other[i]).length,
+        1,
+        `${cp.id}: exactly one word differs — ${statement} vs ${source}`,
+      );
+    }
   }
 });
 
@@ -128,9 +190,87 @@ test('Sprachbausteine is 6 pool items with at least 4 typed; Schreiben is 3 prod
 
   const schreiben = items.filter((i) => i.section === 'schreiben');
   assert.equal(schreiben.length, 3);
+  // The fixture curriculum carries no schreiben.taskKey, so there is no graded
+  // task to mount and the section is three drills — the fallback path.
   assert.ok(schreiben.every((i) => i.mode === 'typed'), 'Schreiben is production, never chips');
   const poolById = new Map(POOL.items.map((p) => [p.id, p]));
   assert.ok(schreiben.every((i) => isTyped(poolById.get(i.poolItemId))), 'and typed in the pool too');
+  assert.ok(schreiben.every((i) => i.register === null), 'a drill has no Textsorte — the label was invented');
+});
+
+test('Schreiben drills come from different Lektionen of the chapter, never one topic three times', () => {
+  for (const [curriculum, checkpoint] of [[CURRICULUM_FIXTURE, cp1], [CURRICULUM_FIXTURE_6, cp2of6]]) {
+    const schreiben = build(curriculum, checkpoint).filter((i) => i.section === 'schreiben');
+    const topics = new Set(schreiben.map((i) => i.topic));
+    assert.ok(topics.size >= 3, `Schreiben must span at least 3 topics, got ${[...topics].join(', ')}`);
+  }
+  for (const cp of CURRICULUM_A11.checkpoints) {
+    const schreiben = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp, pool: POOL })
+      .filter((i) => i.section === 'schreiben');
+    assert.equal(schreiben.length, SECTION_COUNTS.schreiben);
+    const topics = new Set(schreiben.map((i) => i.topic));
+    assert.ok(topics.size >= 3, `${cp.id}: Schreiben must span at least 3 topics, got ${[...topics].join(', ')}`);
+    const slugs = new Set(chapterLektionen(CURRICULUM_A11, cp).map((l) => l.primarySlug));
+    for (const drill of schreiben.filter((i) => i.kind !== 'gradedWriting')) {
+      assert.equal(drill.register, null, 'no invented Textsorte on a drill item');
+      assert.ok(slugs.has(drill.topic), `${drill.topic} is not a primarySlug of the chapter`);
+    }
+  }
+});
+
+test('every checkpoint carries the chapter\'s real writing task, AI-graded and optional', () => {
+  const bankKeys = new Set(courseWritingTasks(CURRICULUM_A11.level).map((t) => t.taskKey));
+  for (const cp of CURRICULUM_A11.checkpoints) {
+    const chapter = chapterLektionen(CURRICULUM_A11, cp);
+    const expected = [...chapter].reverse().find((l) => l?.schreiben?.taskKey).schreiben.taskKey;
+    const item = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp, pool: POOL })
+      .find((i) => i.kind === 'gradedWriting');
+    assert.ok(item, `${cp.id} must mount a real writing task`);
+    assert.equal(item.section, 'schreiben');
+    assert.equal(item.task.taskKey, expected, 'the task is the chapter\'s LAST Lektion');
+    assert.ok(bankKeys.has(item.task.taskKey), 'and evaluate-writing must know the key');
+    assert.equal(item.task.examKey, 'goethe_a1');
+    assert.ok(item.promptDe && item.promptDe.length > 20, 'the prompt is the bank prompt');
+    assert.equal(item.register, chapterWritingTask(chapter, CURRICULUM_A11.level).schreiben.kind, 'a REAL register');
+    assert.equal(item.scored, false);
+    assert.equal(item.scorable, true);
+    assert.equal(item.optional, true, 'no grader verdict = not attempted, never a failed section');
+  }
+});
+
+test('the writing task scores as one Schreiben item, and leaves the section when it was not graded', () => {
+  const cp = CURRICULUM_A11.checkpoints[0];
+  const items = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp, pool: POOL });
+  const writing = items.find((i) => i.kind === 'gradedWriting');
+  const base = answerAll(items, { correctFor: () => true });
+
+  // Graded and passed: three Schreiben items, all correct.
+  const passed = scoreCheckpoint(items, { ...base, [writing.id]: { graded: true, pct: 0.8 } });
+  assert.equal(passed.sections.schreiben.total, 3);
+  assert.equal(passed.sections.schreiben.correct, 3);
+
+  // Graded and failed: still three, one wrong, and tagged as a writing miss.
+  const failed = scoreCheckpoint(items, { ...base, [writing.id]: { graded: true, pct: 0.2 } });
+  assert.equal(failed.sections.schreiben.total, 3);
+  assert.equal(failed.sections.schreiben.correct, 2);
+  assert.equal(failed.errorTags.Schreiben, 1);
+
+  // Signed out / over the allowance / offline: GradedWriting falls back to its
+  // form check and the page sends no verdict. The task is NOT attempted — the
+  // section scores over its two drills instead of failing on an item the
+  // learner could not have passed.
+  const ungraded = scoreCheckpoint(items, { ...base, [writing.id]: null });
+  assert.equal(ungraded.sections.schreiben.total, 2);
+  assert.equal(ungraded.sections.schreiben.scored, true);
+  assert.equal(ungraded.sections.schreiben.pct, 100);
+  assert.equal(ungraded.passed, true);
+
+  assert.equal(WRITING_PASS_PCT, 0.6);
+  assert.equal(isItemCorrect(writing, { graded: true, pct: 0.6 }), true);
+  assert.equal(isItemCorrect(writing, { graded: true, pct: 0.59 }), false);
+  assert.equal(isWritingResult({ graded: true, pct: 0.5 }), true);
+  assert.equal(isWritingResult({ pct: 0.5 }), false);
+  assert.equal(isWritingResult(true), false);
 });
 
 test('Sprechen is 2 read-alouds of real dialogue lines, scorable but not yet scored', () => {
@@ -182,7 +322,10 @@ test('the default seed is the checkpoint id, so a reload rebuilds the same test'
 const answerAll = (items, { correctFor }) => {
   const answers = {};
   for (const item of items) {
-    if (item.mode === 'confirm') answers[item.id] = true;
+    // The writing task answers with a grader verdict (that is the only thing
+    // that counts as an answer there); everything else confirm-mode taps "done".
+    if (item.kind === 'gradedWriting') answers[item.id] = { graded: true, pct: correctFor(item) ? 1 : 0 };
+    else if (item.mode === 'confirm') answers[item.id] = true;
     else answers[item.id] = correctFor(item) ? item.answer : 'völlig falsch';
   }
   return answers;
@@ -302,6 +445,70 @@ test('a one-letter slip on a strict grammar topic is still wrong', () => {
   assert.equal(isItemCorrect(strict, 'die Türr'), false);
   const loose = { topic: 'verb-sein', mode: 'typed', accepted: ['du bist'], answer: 'du bist', scored: true };
   assert.equal(isItemCorrect(loose, 'du bistt'), true, 'one slip in a verb form is spelling');
+});
+
+// ── 3d. grading parity with the lesson (REVIEW #4 BLOCKER 3 + spelled-out) ──
+//
+// isItemCorrect (checkpoint) and gradeTypedReview (review) must grade exactly
+// like PracticeItem.jsx: caseSensitive: isCaseTask(item), so the polite `Ihr`
+// answered lowercase is wrong everywhere, and a spelled-out answer is correct
+// however its letters are separated, everywhere.
+
+test('the polite Ihr answered lowercase is wrong in the checkpoint, not a forgiven typo', () => {
+  // check.js: isCaseTask(item) is the item's OWN `caseSensitive === true` and
+  // nothing else — the polite-possessive regex that used to infer it was removed
+  // because it hit items whose explanation taught the lowercase answer. The
+  // checkpoint must carry the pool item's flag through fromPoolItem, which is
+  // what this pins.
+  const politeItem = {
+    topic: 'possessive-articles',
+    mode: 'typed',
+    answer: 'Ihr',
+    accepted: ['Ihr'],
+    caseSensitive: true,
+    scored: true,
+  };
+  assert.equal(isItemCorrect(politeItem, 'ihr'), false, 'caseSensitive must come from isCaseTask, not just STRICT_TOPIC');
+  assert.equal(isItemCorrect(politeItem, 'Ihr'), true);
+
+  // An explicit caseSensitive:true pool item (independent of the topic regex)
+  // must behave the same way once it reaches a checkpoint item.
+  const flagged = {
+    topic: 'some-other-topic',
+    mode: 'typed',
+    answer: 'Berlin',
+    accepted: ['Berlin'],
+    caseSensitive: true,
+    scored: true,
+  };
+  assert.equal(isItemCorrect(flagged, 'berlin'), false);
+});
+
+test('a spelled-out answer is correct in the checkpoint however the letters are separated', () => {
+  const spelled = {
+    topic: 'spelling',
+    mode: 'typed',
+    answer: 'H-A-L-L-O',
+    accepted: ['H-A-L-L-O'],
+    scored: true,
+  };
+  assert.equal(isItemCorrect(spelled, 'HALLO'), true);
+  assert.equal(isItemCorrect(spelled, 'H A L L O'), true);
+});
+
+test('gradeTypedReview (the review page grading helper) matches the checkpoint on the same two cases', async () => {
+  const { gradeTypedReview } = await import('../src/lib/checkpoint/reviewGrading.js');
+
+  // A possessive-articles review card whose accepted answer is the polite Ihr.
+  // The card carries the flag (reviewService.buildCardIndex copies it off the
+  // curriculum entry and ReviewPage passes it), exactly as a lesson item does.
+  const ihrCard = gradeTypedReview('pattern:possessive-articles', ['Ihr'], 'ihr', { caseSensitive: true });
+  assert.equal(ihrCard.ok, false, 'lowercase ihr must not be counted correct in the review helper either');
+  assert.equal(gradeTypedReview('pattern:possessive-articles', ['Ihr'], 'Ihr', { caseSensitive: true }).ok, true);
+
+  // A spelled-out sentence/word card.
+  assert.equal(gradeTypedReview('sentence:l1:0', ['H-A-L-L-O'], 'HALLO').ok, true);
+  assert.equal(gradeTypedReview('sentence:l1:0', ['H-A-L-L-O'], 'H A L L O').ok, true);
 });
 
 // ── 4. the 70/30 draw ───────────────────────────────────────────────────────
@@ -437,4 +644,38 @@ test('the review_cards migration carries own-row RLS and the checkpoint marker',
     assert.match(sql, new RegExp(`review_cards_${verb}_own`), `own-row ${verb} policy`);
   }
   assert.match(sql, /CHECK \(kind IN \('word', 'pattern', 'sentence'\)\)/);
+});
+
+// ── register (DaF review #5, MAJOR "CheckpointPage.jsx:169/429 …") ───────────
+//
+// The lesson chrome sieze; the two screens beside it duzed. tests/course-player.test.mjs
+// greps every src/pages/lesson/*.jsx for du-forms — this is the same guard kept
+// next to the builder, because the checkpoint's own generated prompts
+// ("Hören Sie zu und schreiben Sie den Satz.") are written HERE, not in the page,
+// and a du-form reintroduced in either place puts two Anreden on one screen.
+const DU_TOKENS = /\b(du|Du|dir|Dir|dich|Dich|dein|Dein|deine[mnrs]?|Deine[mnrs]?|kannst|musst|hast|willst|machst|hörst|schreibst|Schreib|Tippe|Lies|Hör|Sprich|Melde|Probier|bestätige|Versuch es)\b/;
+
+test('the checkpoint and review screens (and the prompts the builder writes) sieze', () => {
+  const offenders = [];
+  for (const file of [
+    'src/pages/lesson/CheckpointPage.jsx',
+    'src/pages/lesson/ReviewPage.jsx',
+    'src/lib/checkpoint/buildCheckpoint.js',
+    'src/lib/checkpoint/reviewGrading.js',
+  ]) {
+    const src = readFileSync(new URL(`../${file}`, import.meta.url), 'utf8');
+    src.split('\n').forEach((line, i) => {
+      if (DU_TOKENS.test(line)) offenders.push(`${file}:${i + 1}  ${line.trim()}`);
+    });
+  }
+  assert.deepEqual(offenders, [], `du-register on the checkpoint/review screens:\n${offenders.join('\n')}`);
+});
+
+test('the four strings DaF review #5 named now address the learner as Sie', () => {
+  const checkpoint = readFileSync(new URL('../src/pages/lesson/CheckpointPage.jsx', import.meta.url), 'utf8');
+  const review = readFileSync(new URL('../src/pages/lesson/ReviewPage.jsx', import.meta.url), 'utf8');
+  assert.ok(checkpoint.includes('Bewertet — Verständlichkeit zählt in Ihr Sprechen-Ergebnis.'));
+  assert.ok(checkpoint.includes('im Format Ihrer Prüfung'));
+  assert.ok(review.includes('Melden Sie sich an, damit Ihre Wiederholungen gespeichert werden.'));
+  assert.ok(review.includes('Neue Karten kommen, sobald Sie eine Lektion abschließen.'));
 });

@@ -27,6 +27,42 @@ const EXTRA = read('src/data/lessonPools/a11.extra.json').items;
 const POOL = read('src/data/lessonPools/a11.json');
 
 /**
+ * A gap that OPENS a sentence: the prompt starts with it, or it follows a full
+ * stop, a question mark, an exclamation mark, a colon or a dash. There the
+ * initial capital is orthography, not the taught distinction — see the
+ * caseSensitive rule below.
+ */
+const SENTENCE_INITIAL_GAP_RE = /(^|[.!?:—]\s*[„"]?\s*)___/;
+
+/**
+ * REVIEW #5 BLOCKER 2, mirrored from `cueAnswerMismatch` in quality.js: the
+ * three task formulas that ask for a BARE article, and the answers that are
+ * one. `extra-a11-l05-08` asked "(bestimmter Artikel)" and accepted only
+ * „das Heft“, so the learner who obeyed the formula was marked wrong and got a
+ * Wortschatz tag. The rule reads the formula and the answer key together.
+ */
+const ARTICLE_TASK_CUE_RE =
+  /\(\s*(?:un)?bestimmter\s+artikel\s*\)|\(\s*der,\s*die\s+oder\s+das\s*\?\s*\)/i;
+const BARE_ARTICLES = new Set(['der', 'die', 'das', 'den', 'dem', 'ein', 'eine', 'einen']);
+/**
+ * The one separable prefix spelled like an article, and the cue that marks a
+ * VERB task: "Kaufst du heute ___? (einkaufen)" → `ein` is a Satzklammer item,
+ * not an article item. `quality.js` carries the same exception, for the same
+ * reason — without it the reverse direction of the rule has two false positives.
+ */
+const ARTICLE_SHAPED_PREFIXES = new Set(['ein']);
+const VERB_TASK_CUE_RE = /\([^)]*[a-zäöüß]{2}en\b[^)]*\)/i;
+
+/**
+ * REVIEW #5 MAJOR 7: an A1.1 explanation may not make an absolute or numerical
+ * claim. „-ung ist 100% feminin ohne Ausnahmen“ is false for words ENDING in
+ * -ung (der Ursprung, der Sprung), and `tests/rule-card-overrides.test.mjs`
+ * already forbids a percentage on every rule card — the pool had the double
+ * standard. Plain rules only.
+ */
+const ABSOLUTE_CLAIM_RE = /%|\b100\b|\bimmer\b|ohne\s+Ausnahme/i;
+
+/**
  * The id names the Lektion (`extra-a11-l09-02` → Lektion 9) and the Lektion names
  * its own topic, so the mapping is derived rather than restated: the first batch
  * covered four Lektionen, the second all twelve, and a hand-written table would
@@ -82,13 +118,27 @@ test('every extra item has the Lektion topic, the pool shape and typed productio
     assert.ok(item.questionDe && item.questionEn, `${item.id} misses a prompt`);
     assert.ok(item.answer && Array.isArray(item.accepted) && item.accepted.includes(item.answer), `${item.id} answer/accepted`);
     assert.ok(item.explanationDe, `${item.id} has no explanation`);
-    // REVIEW #4 BLOCKER 3. The one optional field: an item whose TASK is the
-    // capitalisation (the höfliche „Ihr“) carries `caseSensitive: true`, and
-    // `check.js` then refuses the lowercase form its own explanation forbids.
+    // REVIEW #4 BLOCKER 3, re-cut by REVIEW #5 BLOCKER 3. The one optional
+    // field: an item whose TASK is the capitalisation (the höfliche „Sie/Ihnen/
+    // Ihr“) carries `caseSensitive: true`, and `check.js` then refuses the
+    // lowercase form its own explanation forbids. Round 5 measured the flag on
+    // the wrong item — `extra-a11-l12-10` („sie, Plural“ → ihre) was marked
+    // case-strict although its own explanation names the LOWERCASE form, so the
+    // learner who copied the explanation got a red cross. Hence the semantics
+    // pinned here, in both directions: a flagged item may not accept a
+    // case-variant of its own answer, and an unflagged gap that stands at the
+    // start of a sentence MUST accept the lowercase variant, because there the
+    // capital is only the sentence opening and nothing is being taught by it.
     if ('caseSensitive' in item) {
       assert.equal(typeof item.caseSensitive, 'boolean', `${item.id}: caseSensitive must be a boolean`);
-      assert.ok(item.accepted.every((a) => a === item.answer || a !== String(a).toLowerCase()),
-        `${item.id} is caseSensitive but still accepts a lowercase variant`);
+      assert.ok(
+        item.accepted.every((a) => a === item.answer || String(a).toLowerCase() !== String(item.answer).toLowerCase()),
+        `${item.id} is caseSensitive but still accepts a case-variant of its own answer`,
+      );
+    } else if (item.type === 'fill_blank' && SENTENCE_INITIAL_GAP_RE.test(item.questionDe)
+               && item.answer !== String(item.answer).toLowerCase()) {
+      assert.ok(item.accepted.includes(String(item.answer).toLowerCase()),
+        `${item.id}: the gap opens the sentence, so the lowercase form is not a mistake — accept it or set caseSensitive`);
     }
     const words = item.explanationDe.trim().split(/\s+/).length;
     assert.ok(words <= 15, `${item.id} explanation is ${words} words`);
@@ -239,15 +289,23 @@ const DRILLS = {
     }) ||
     endsOnPrefix(q),
 
-  // REVIEW #4 MAJOR: the gap-at-position-1 clause is GONE. "___ du eine
-  // Fahrkarte für morgen? (haben)" gives the inversion away and asks only for a
-  // verb form; five of Lektion 10's seven drawn items were that shape, so the
-  // slug measured 7/7 while the learner produced the word order twice. What
-  // counts now: the learner writes the whole question, or chooses Ja/Nein.
+  // REVIEW #5 MAJOR 4 tightened it twice more. Round 4 dropped the
+  // gap-at-position-1 clause; round 5 measured that two of the three remaining
+  // clauses still counted items that hand the learner the word order:
+  //   * the answer-ends-in-"?" clause counted every error-correction item that
+  //     QUOTES a finished question and asks only for the verb form
+  //     ("Korrigieren Sie: „Sind der Bahnhof weit?“" → "Ist der Bahnhof weit?"),
+  //     so it is now bound to the origin of the question mark — the prompt must
+  //     not already contain one, i.e. the learner is the one who makes it a
+  //     question;
+  //   * the task-formula clause counted the WORDING rather than the work, so it
+  //     is gone: an item counts when the learner writes the whole question, or
+  //     chooses Ja/Nein.
+  // Measured on the batch after the round-6 rewrite: L10 8 of 16 items, 6 of the
+  // 7 drawn on attempt 1 and on attempt 2 (it was 2 of 7).
   'yes-no-questions': ({ q, expected, options }) =>
-    expected.some((a) => /\?\s*$/.test(String(a).trim())) ||
-    options.some((o) => isOneOf(o, set('ja', 'nein'))) ||
-    /(bilden sie|bilde|schreiben sie|schreib)\s+(sie\s+)?(die\s+)?(höfliche\s+|richtige\s+)?frage/i.test(q),
+    (expected.some((a) => /\?\s*$/.test(String(a).trim())) && !/\?/.test(q)) ||
+    options.some((o) => isOneOf(o, set('ja', 'nein'))),
 
   'time-and-dates': ({ expected }) =>
     expected.some((a) => /uhr/i.test(String(a)) || wordsFlat(a).some((w) => TIME_WORD_RE.test(w))),
@@ -341,5 +399,76 @@ test('within one Lektion, the same verb family offers the same alternatives', ()
       assert.deepEqual(lemmas, first,
         `L${nr}: ${id} accepts ${lemmas.join('/')} where ${sets[0][0]} accepts ${first.join('/')}`);
     }
+  }
+});
+
+test('no explanation makes a percentage or an absolute claim', () => {
+  // REVIEW #5 MAJOR 7, as a pool-wide rule rather than the two ids it named:
+  // the drawn item „Welche Endung ist IMMER feminin?“ answered itself with
+  // „-ung ist 100% feminin ohne Ausnahmen“, and two hand-written L12 items said
+  // the höfliche „Ihr“ is „immer“ capitalised. An A1.1 learner cannot check any
+  // of it, and the first one is simply untrue.
+  for (const item of EXTRA) {
+    assert.doesNotMatch(item.explanationDe, ABSOLUTE_CLAIM_RE,
+      `${item.id} claims an absolute or a percentage: ${item.explanationDe}`);
+  }
+});
+
+test('an article task formula and the answer key agree', () => {
+  // The mirror of `cueAnswerMismatch` (quality.js, REVIEW #5 BLOCKER 2), in both
+  // directions: a prompt that says „(bestimmter Artikel)“ / „(unbestimmter
+  // Artikel)“ / „(der, die oder das?)“ must accept a bare article, and an item
+  // whose whole answer key is bare articles must carry such a formula — an
+  // article gap with no formula is the class REVIEW #4 closed.
+  for (const item of EXTRA) {
+    const expected = [item.answer, ...(item.accepted || [])]
+      .map((a) => String(a).replace(/[.,!?;:"“”„'’]/g, '').trim().toLowerCase());
+    const cued = ARTICLE_TASK_CUE_RE.test(item.questionDe);
+    if (cued) {
+      assert.ok(expected.some((a) => BARE_ARTICLES.has(a)),
+        `${item.id} asks for an article by formula but accepts only ${expected.join('/')}`);
+    }
+    const verbTask = expected.some((a) => ARTICLE_SHAPED_PREFIXES.has(a)) && VERB_TASK_CUE_RE.test(item.questionDe);
+    if (expected.every((a) => BARE_ARTICLES.has(a)) && !verbTask) {
+      assert.ok(cued, `${item.id} wants a bare article and its German prompt never says so`);
+    }
+  }
+});
+
+test('Lektion 10 makes the learner PRODUCE the question, not fill a gap in one', () => {
+  // REVIEW #5 MAJOR 4. The Lektion is called „Ja/Nein-Fragen“ and its rule card
+  // promises the inversion; under the tightened predicate above the learner used
+  // to produce it in 2 of the 7 drawn items, because five prompts already
+  // carried the finished question and asked only for a verb form. The floor is
+  // on the BATCH (so the draw has something to reach for) and on the DRAW
+  // itself, on both attempts — a Lektion that only passes on attempt 1 is not
+  // fixed.
+  const l10 = EXTRA.filter((i) => target(i).nr === 10);
+  const produces = (it) => drillsSlug(it, 'yes-no-questions');
+  assert.ok(l10.filter(produces).length >= 6,
+    `L10 has only ${l10.filter(produces).length} items whose answer is the whole question`);
+  for (const attempt of [1, 2]) {
+    const drawn = planPractice(CURRICULUM_A11, POOL, attempt).get(10) || [];
+    assert.ok(drawn.filter(produces).length >= 4,
+      `attempt ${attempt}: L10 draws only ${drawn.filter(produces).length} items that produce the question`);
+  }
+});
+
+test('the four number items of Lektion 2 derive the number from the German prompt', () => {
+  // REVIEW #5 MAJOR 13. The can-do „Ich kann Zahlen von null bis zehn verstehen
+  // und sagen“ had no practice at all: the two number items the third round left
+  // in L2 spelled a digit that stood in the English gloss. These four carry the
+  // digit as a cue in the GERMAN prompt and want the word back. They are filed
+  // under `verb-sein` because the closed slug list of scripts/validate-curriculum.mjs
+  // has no numbers slug and `practiceRule.topics` is what routes an item into
+  // Lektion 2 — so they deliberately do NOT drill their label, and `drillsSlug`
+  // says so. That is a routing label, not a claim about the item.
+  const NUMBERS = /^(null|eins|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn)$/;
+  const numberItems = EXTRA.filter((i) => target(i).nr === 2 && NUMBERS.test(i.answer));
+  assert.ok(numberItems.length >= 4, `L2 has only ${numberItems.length} number items`);
+  for (const item of numberItems) {
+    assert.match(item.questionDe, /\(\s*\d{1,2}\s*\)/, `${item.id}: the digit must stand in the German prompt`);
+    assert.equal(item.topic, 'verb-sein', `${item.id}: verb-sein is the only slug that routes into L2`);
+    assert.equal(drillsSlug(item, 'verb-sein'), false, `${item.id} claims to drill sein — it drills numbers`);
   }
 });

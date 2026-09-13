@@ -4,7 +4,7 @@
 // route rule for /course/*.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { flattenCourse, isUnlocked, currentItem, isComplete, percentDone, nextItem, INSTRUCTION } from '../src/lib/courseFlow.js';
@@ -87,6 +87,10 @@ const CHROME_FILES = [
   'src/components/lesson/StageShell.jsx',
   'src/components/lesson/WritingStage.jsx',
   'src/components/lesson/LessonProgressBar.jsx',
+  // MAJOR 10 (DaF review #5, last sentence): the register test must also cover
+  // the pages the player renders, not just its stage components — that is
+  // exactly where CheckpointPage.jsx and ReviewPage.jsx duzed.
+  ...readdirSync(join(ROOT, 'src/pages/lesson')).filter((f) => f.endsWith('.jsx')).map((f) => `src/pages/lesson/${f}`),
 ];
 
 // Pronouns, the du-forms of the verbs these screens use, and the du-imperatives

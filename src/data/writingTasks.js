@@ -558,6 +558,235 @@ export const WRITING_TASKS = [
     ],
   },
 
+
+  // ---- A1.2-Kursaufgaben (docs/course-factory/a12-rebuild/CONTRACT.md) ---
+  // Zwölf Aufgaben, eine je Lektion von src/data/curricula/a12.js, nach genau
+  // denselben zwei Regeln wie die A1.1-Kursaufgaben darüber:
+  //   1. Jedes Formular trägt seinen Quelltext im Feld `task` — SD1 Teil 1 gibt
+  //      dem Prüfling einen kurzen Text über eine Person und ein Formular, in
+  //      das er die Angaben überträgt. Fünf Felder, 5 Punkte, eins pro Feld.
+  //   2. Die Wortgrenzen sind die, die der Grader annehmen kann: Formular
+  //      5–40 Wörter, Mitteilung 25–45 (netlify/functions/evaluate-writing.mjs
+  //      leitet seine Zeichen-Untergrenze aus `register` ab).
+  // ACHTUNG INTEGRATION: `COURSE_TASK_KEY_PREFIX` in evaluate-writing.mjs ist
+  // 'a11-' und trifft diese Schlüssel NICHT. Siehe CONTRACT.md §Offene Fragen.
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.2',
+    taskKey: 'a12-l01',
+    title: 'Lektion 1: Wie komme ich zum Rathaus?',
+    register: 'formular',
+    minWords: 5,
+    maxWords: 40,
+    task:
+      'Ana Chakiri wohnt in Bremen am Platz 4. Sie fährt mit der Straßenbahn zum Kurs. Ihre Haltestelle heißt Rathaus. ' +
+      'Füllen Sie die Anmeldung für die Stadtbibliothek aus.',
+    leitpunkte: [
+      'Familienname',
+      'Vorname',
+      'Stadt',
+      'Haltestelle',
+      'Unterschrift',
+    ],
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.2',
+    taskKey: 'a12-l02',
+    title: 'Lektion 2: Die Wohnungsanzeige',
+    register: 'formell',
+    minWords: 25,
+    maxWords: 45,
+    task:
+      'Sie möchten die Wohnung aus der Anzeige besichtigen. Schreiben Sie dem Vermieter eine kurze Nachricht. ' +
+      'Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    leitpunkte: [
+      'Warum Sie schreiben',
+      'Wann Sie die Wohnung sehen möchten',
+      'Ihre Frage zur Miete',
+    ],
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.2',
+    taskKey: 'a12-l03',
+    title: 'Lektion 3: In der Stadt unterwegs',
+    register: 'formular',
+    minWords: 5,
+    maxWords: 40,
+    task:
+      'Ana Chakiri wohnt in Bremen und hat am Donnerstag Kurs. Sie möchte Bücher lesen und geht in die Bibliothek. ' +
+      'Füllen Sie die Anmeldung für die Bibliothek aus.',
+    leitpunkte: [
+      'Familienname',
+      'Vorname',
+      'Stadt',
+      'Tag',
+      'Unterschrift',
+    ],
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.2',
+    taskKey: 'a12-l04',
+    title: 'Lektion 4: Im Hotel reklamieren',
+    register: 'formell',
+    minWords: 25,
+    maxWords: 45,
+    task:
+      'Sie wohnen im Hotel. Im Zimmer funktioniert etwas nicht. Schreiben Sie dem Hotel eine kurze Nachricht. ' +
+      'Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    leitpunkte: [
+      'Ihre Zimmernummer und der Tag',
+      'Was im Zimmer nicht funktioniert',
+      'Ihre Frage zur Toilette im Flur',
+    ],
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.2',
+    taskKey: 'a12-l05',
+    title: 'Lektion 5: Pläne für das Wochenende',
+    register: 'formular',
+    minWords: 5,
+    maxWords: 40,
+    task:
+      'Tim Berger fährt am Samstag zum Konzert nach Köln. Der Zug fährt um 8 Uhr. Er bleibt zwei Tage. ' +
+      'Füllen Sie das Formular für den Ausflug aus.',
+    leitpunkte: [
+      'Name',
+      'Tag',
+      'Uhrzeit',
+      'Stadt',
+      'Unterschrift',
+    ],
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.2',
+    taskKey: 'a12-l06',
+    title: 'Lektion 6: In der Arztpraxis',
+    register: 'formell',
+    minWords: 25,
+    maxWords: 45,
+    task:
+      'Sie sind krank. Sie kommen heute nicht in die Praxis. Schreiben Sie der Praxis eine kurze Nachricht. ' +
+      'Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    leitpunkte: [
+      'Warum Sie schreiben',
+      'Was Ihnen wehtut',
+      'Ihre Frage nach einem neuen Termin',
+    ],
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.2',
+    taskKey: 'a12-l07',
+    title: 'Lektion 7: Wer ist das?',
+    register: 'formular',
+    minWords: 5,
+    maxWords: 40,
+    task:
+      'Lena Berg ist 24 Jahre alt und kommt aus Köln. Sie ist groß und hat lange Haare. Ihr Hobby ist Musik. ' +
+      'Füllen Sie den Steckbrief für den Kurs aus.',
+    leitpunkte: [
+      'Name',
+      'Alter',
+      'Stadt',
+      'Aussehen',
+      'Hobby',
+    ],
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.2',
+    taskKey: 'a12-l08',
+    title: 'Lektion 8: Im Haushalt helfen',
+    register: 'informell',
+    minWords: 25,
+    maxWords: 45,
+    task:
+      'Sie sind heute nicht zu Hause. Schreiben Sie Tim eine kurze Nachricht mit drei Bitten für den Haushalt. ' +
+      'Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    leitpunkte: [
+      'Was in der Küche zu tun ist',
+      'Wohin der Teppich soll',
+      'Wann Sie nach Hause kommen',
+    ],
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.2',
+    taskKey: 'a12-l09',
+    title: 'Lektion 9: Regeln unterwegs',
+    register: 'formular',
+    minWords: 5,
+    maxWords: 40,
+    task:
+      'Ana Chakiri fliegt am 14. Juli nach Marokko. Sie hat einen Koffer und fährt mit dem Taxi zum Flughafen. ' +
+      'Füllen Sie das Formular für die Reise aus.',
+    leitpunkte: [
+      'Name',
+      'Datum',
+      'Land',
+      'Koffer',
+      'Unterschrift',
+    ],
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.2',
+    taskKey: 'a12-l10',
+    title: 'Lektion 10: Kleidung kaufen',
+    register: 'informell',
+    minWords: 25,
+    maxWords: 45,
+    task:
+      'Sie kaufen Kleidung für eine Freundin. Schreiben Sie ihr eine kurze Nachricht. ' +
+      'Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    leitpunkte: [
+      'Was Sie kaufen',
+      'Welche Größe die Jacke hat',
+      'Wann Sie die Sachen bringen',
+    ],
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.2',
+    taskKey: 'a12-l11',
+    title: 'Lektion 11: Wie ist das Wetter?',
+    register: 'formular',
+    minWords: 5,
+    maxWords: 40,
+    task:
+      'Lena Berg macht am Sonntag einen Ausflug. Am Sonntag ist es sonnig, die Temperatur ist bei 22 Grad. Sie fährt mit dem Bus. ' +
+      'Füllen Sie das Formular für den Ausflug aus.',
+    leitpunkte: [
+      'Name',
+      'Tag',
+      'Wetter',
+      'Temperatur',
+      'Unterschrift',
+    ],
+  },
+  {
+    examKey: 'goethe_a1',
+    course: 'a1.2',
+    taskKey: 'a12-l12',
+    title: 'Lektion 12: Das Fest war schön',
+    register: 'informell',
+    minWords: 25,
+    maxWords: 45,
+    task:
+      'Sie haben ein Fest gefeiert. Schreiben Sie einer Freundin eine kurze Nachricht über das Fest. ' +
+      'Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+    leitpunkte: [
+      'Wann Sie gefeiert haben',
+      'Was Sie gegessen und getrunken haben',
+      'Wen Sie eingeladen haben',
+    ],
+  },
+
   // ---- Goethe-Zertifikat A2 ---------------------------------------------
   // ---- Teil 1: kurze persönliche Nachricht (SMS), 20–30 Wörter (2) -------
   {

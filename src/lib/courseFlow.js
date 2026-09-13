@@ -59,20 +59,25 @@ export const INSTRUCTION = {
 // key the SPA return bar and the Astro Layout bar both read).
 //
 // SHAPE: { level, code, itemId, title, position?, total?, returnTo?,
-//          openPrompt?, openTeil?, hintWords? }
+//          openPrompt?, openTeil?, hintWords?, anrede? }
 //
-// The last three carry a SPEAKING TASK across the hand-off. Four A1.1 Lektionen
+// The last four carry a SPEAKING TASK across the hand-off. Four A1.1 Lektionen
 // have `sprechen.open` without a `missionOrder`, so /speaking gets no
 // &mission=… and used to receive nothing at all: the learner read a task on the
 // lesson screen and landed on a generic speaking page (DaF review #4, MAJOR
 // "missionOrder null / SpeakingStage"). They travel here so the speaking page
-// can show the task the learner was just promised.
+// can show the task the learner was just promised. `anrede` ('Sie' | 'du')
+// carries the register the task implies — most A1.1 tasks are Sie-situations
+// (a waiter, an official), but L8/L9/L12 are peer tasks (DaF review #5, MAJOR
+// "the coach receives the task text but not the role/Anrede it implies").
 //
 // BACKWARD COMPATIBILITY: a context written before this existed (or by the
 // course path, which saves no speaking task) has no openPrompt. Readers must
 // cope, so readCourseContext normalises: openPrompt/openTeil are null when
-// absent and hintWords is always an array.
+// absent, hintWords is always an array, and anrede defaults to 'Sie'.
 export const CTX_KEY = 'dm_course_ctx';
+
+export const normalizeAnrede = (value) => (value === 'du' ? 'du' : 'Sie');
 
 export const normalizeCourseContext = (ctx) => {
   if (!ctx || typeof ctx !== 'object') return null;
@@ -81,6 +86,7 @@ export const normalizeCourseContext = (ctx) => {
     openPrompt: ctx.openPrompt || null,
     openTeil: ctx.openTeil || null,
     hintWords: Array.isArray(ctx.hintWords) ? ctx.hintWords : [],
+    anrede: normalizeAnrede(ctx.anrede),
   };
 };
 

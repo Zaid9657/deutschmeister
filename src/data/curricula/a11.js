@@ -188,6 +188,8 @@ export const CURRICULUM_A11 = {
           teil: 'Sprechen Teil 1',
           promptDe: 'Stellen Sie sich vor: Name und Vorname. Buchstabieren Sie Ihren Namen.',
           hintWords: ['heißen', 'buchstabieren', 'Guten Tag'],
+          // Sie — Sprechen Teil 1 vor Prüfenden und fremden Mitkandidaten.
+          anrede: 'Sie',
           missionOrder: 1,
         },
       },
@@ -289,7 +291,14 @@ export const CURRICULUM_A11 = {
       hoeren: { kind: 'dictation', lines: [7, 3] },
       sprechen: {
         readAloud: [2, 6],
-        open: { teil: 'Sprechen Teil 1', promptDe: 'Stellen Sie sich vor: Name, Wohnort, Beruf.', hintWords: ['sein', 'von Beruf', 'Wohnort'], missionOrder: 6 },
+        open: {
+          teil: 'Sprechen Teil 1',
+          promptDe: 'Stellen Sie sich vor: Name, Wohnort, Beruf.',
+          hintWords: ['sein', 'von Beruf', 'Wohnort'],
+          // Sie — dieselbe Vorstellrunde (Teil 1): das Gegenüber ist fremd.
+          anrede: 'Sie',
+          missionOrder: 6,
+        },
       },
       schreiben: {
         kind: 'mitteilung',
@@ -366,7 +375,9 @@ export const CURRICULUM_A11 = {
           { speaker: 'Lena', de: 'Spricht dein Bruder auch Englisch?', en: 'Does your brother speak English too?' },
           { speaker: 'Ana', de: 'Ja, er spricht Englisch und Deutsch.', en: 'Yes, he speaks English and German.' },
           { speaker: 'Lena', de: 'Und dein Bruder? Hat er einen Sohn oder eine Tochter?', en: 'And your brother? Does he have a son or a daughter?' },
-          { speaker: 'Ana', de: 'Ja, ein Baby. Mein Mann und ich kommen aus Marokko.', en: 'Yes, a baby. My husband and I come from Morocco.' },
+          // „Mein Mann und ich …“ made Ana married while the Formular of this very Lektion files her as
+          // ledig (DaF review #5, MAJOR 12). der Mann stays covered through her sister's husband.
+          { speaker: 'Ana', de: 'Ja, ein Baby. Der Mann von meiner Schwester kommt auch aus Marokko.', en: 'Yes, a baby. My sister’s husband is also from Morocco.' },
         ],
       },
       pretest: {
@@ -389,6 +400,8 @@ export const CURRICULUM_A11 = {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Familie: Geschwister? Sohn? Tochter?',
           hintWords: ['die Geschwister', 'der Sohn', 'die Tochter'],
+          // Sie — Teil 2 mit der fremden Mitkandidatin; das du im Dialog ist Lena↔Ana, nicht die Rolle des Lernenden.
+          anrede: 'Sie',
           missionOrder: 5,
         },
       },
@@ -480,7 +493,14 @@ export const CURRICULUM_A11 = {
       hoeren: { kind: 'dictation', lines: [3, 7] },
       sprechen: {
         readAloud: [0, 5],
-        open: { teil: 'Sprechen Teil 3', promptDe: 'Bitten Sie am Stand um einen Preis und reagieren Sie darauf.', hintWords: ['kosten', 'Euro', 'teuer'], missionOrder: 2 },
+        open: {
+          teil: 'Sprechen Teil 3',
+          promptDe: 'Bitten Sie am Stand um einen Preis und reagieren Sie darauf.',
+          hintWords: ['kosten', 'Euro', 'teuer'],
+          // Sie — Teil 3 am Marktstand: Kundin zu Verkäufer.
+          anrede: 'Sie',
+          missionOrder: 2,
+        },
       },
       schreiben: {
         kind: 'mitteilung',
@@ -572,6 +592,8 @@ export const CURRICULUM_A11 = {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Kursraum: Buch? Tafel? Farbe?',
           hintWords: ['der Stift', 'die Tafel', 'blau'],
+          // Sie — Teil 2 mit einer fremden Mitkandidatin im Prüfungsraum.
+          anrede: 'Sie',
           missionOrder: 3,
         },
       },
@@ -666,6 +688,8 @@ export const CURRICULUM_A11 = {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Arbeit: Büro? Beruf? Pause?',
           hintWords: ['der Verkäufer', 'die Ingenieurin', 'die Pause'],
+          // Sie — Teil 2 zum Thema Arbeit: das Gegenüber ist Kollegin/Mitkandidatin, keine Freundin.
+          anrede: 'Sie',
           missionOrder: 4,
         },
       },
@@ -726,6 +750,11 @@ export const CURRICULUM_A11 = {
         { de: 'der Sport', word: 'Sport', article: 'der', plural: '—', en: 'sport', wordId: '79a7911d-6f46-4058-8bbb-3384c6715a14' },
         { de: 'spielen', word: 'spielen', article: null, plural: null, en: 'to play', wordId: '3f11825a-d3e4-444c-9d97-2a53203e8f15' },
         { de: 'hören', word: 'hören', article: null, plural: null, en: 'to listen, to hear', wordId: '3c868b51-6e36-4d5a-a499-8e5b8fe60fee' },
+        // Two items of the drawn L7 practice set („Ich ___ viel. (arbeiten)“, „Du ___ viel.“) drill
+        // arbeiten and its -t stem e-Einschub; it used to be introduced in L11 (DaF review #5,
+        // MAJOR 6). Freizeit is defined against Arbeit, so the Lektion can carry it: the dialogue
+        // line below says it and the notice now explains the e.
+        { de: 'arbeiten', word: 'arbeiten', article: null, plural: null, en: 'to work', wordId: '10d8bc30-4f2f-4997-9205-34c8e0ed5a0a' },
       ],
       dialog: {
         title: 'Was machst du am Wochenende?',
@@ -735,7 +764,7 @@ export const CURRICULUM_A11 = {
           { speaker: 'Tim', de: 'Ich höre gern Musik. Und du?', en: 'I like listening to music. And you?' },
           { speaker: 'Lena', de: 'Mein Hobby ist Sport. Ich spiele am Wochenende Fußball.', en: 'My hobby is sport. I play football at the weekend.' },
           { speaker: 'Tim', de: 'Spielst du jede Woche Fußball?', en: 'Do you play football every week?' },
-          { speaker: 'Lena', de: 'Ja, immer. Am Wochenende bin ich frei.', en: 'Yes, always. At the weekend I am free.' },
+          { speaker: 'Lena', de: 'Ja, immer. Am Wochenende arbeite ich nicht. Ich bin frei.', en: 'Yes, always. At the weekend I do not work. I am free.' },
           // lesen, kochen, schwimmen, tanzen and das Kino were added to the Wortfeld in #115 and
           // appeared in no line of the Lektion; the Hobby can-do rested on Musik and Sport alone
           // (DaF review #2, L7 and §A). The weekdays moved to L8, so the dialogue says am Wochenende.
@@ -756,7 +785,7 @@ export const CURRICULUM_A11 = {
       },
       notice: {
         title: 'Präsens: regelmäßige Verben',
-        bodyDe: 'Regelmäßige Verben haben feste Endungen am Stamm: ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. **gern** steht nach dem Verb: Ich höre **gern** Musik. **Achtung:** einige Verben wechseln den Vokal: sprechen → du **sprichst**, er **spricht**; fahren → du **fährst**, er **fährt**.',
+        bodyDe: 'Regelmäßige Verben haben feste Endungen am Stamm: ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. **gern** steht nach dem Verb: Ich höre **gern** Musik. Endet der Stamm auf **-t**, kommt ein **e** dazu: du arbeit**e**st, er arbeit**e**t. **Achtung:** einige Verben wechseln den Vokal: sprechen → er **spricht**.',
         examples: ['Ich höre gern Musik. Und du?', 'Spielst du jede Woche Fußball?'],
         ruleSlug: 'present-tense-regular',
       },
@@ -768,6 +797,8 @@ export const CURRICULUM_A11 = {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Freizeit: Hobby? Musik? Wochenende?',
           hintWords: ['spielen', 'hören', 'gern'],
+          // Sie — Teil 2; auch beim Hobbythema bleibt die Prüfungsanrede Sie.
+          anrede: 'Sie',
           // Missions 1–8 are the only published A1.1 speaking missions and each is linked once; this
           // Lektion (and 10–12) falls back to the generic prompt until new missions are seeded.
           missionOrder: null,
@@ -880,6 +911,8 @@ export const CURRICULUM_A11 = {
           teil: 'Sprechen Teil 3',
           promptDe: 'Bitten Sie um einen Termin am Nachmittag und reagieren Sie auf die Antwort.',
           hintWords: ['der Termin', 'um', 'Zeit haben'],
+          // Sie — Teil 3: um einen Termin bitten heißt, mit einer Praxis oder einem Amt sprechen.
+          anrede: 'Sie',
           missionOrder: 8,
         },
       },
@@ -983,6 +1016,8 @@ export const CURRICULUM_A11 = {
           teil: 'Sprechen Teil 3',
           promptDe: 'Bitten Sie im Café um ein Glas Wasser und reagieren Sie auf die Antwort.',
           hintWords: ['möchten', 'bitte', 'das Glas'],
+          // Sie — Teil 3 im Café; der Dialog der Lektion siezt durchgehend („Was möchten Sie trinken?“).
+          anrede: 'Sie',
           missionOrder: 7,
         },
       },
@@ -1082,6 +1117,8 @@ export const CURRICULUM_A11 = {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Reisen: Zug? Fahrkarte? Wohin?',
           hintWords: ['fahren', 'die Fahrkarte', 'der Zug'],
+          // Sie — Teil 2 zum Thema Reisen: Schalter bzw. Mitkandidat, nicht Freundeskreis.
+          anrede: 'Sie',
           missionOrder: null,
         },
       },
@@ -1144,7 +1181,9 @@ export const CURRICULUM_A11 = {
         { de: 'anrufen', word: 'anrufen', article: null, plural: null, en: 'to call (on the phone)', wordId: '29a7e95e-d41e-42b3-8fe2-84a90433082b' },
         { de: 'mitkommen', word: 'mitkommen', article: null, plural: null, en: 'to come along', wordId: '889e2bbc-c219-4f4a-8491-317ff014aa38' },
         { de: 'lernen', word: 'lernen', article: null, plural: null, en: 'to learn, to study', wordId: '962b62ac-d60f-4ecf-b501-dcbdcfd7f8e2' },
-        { de: 'arbeiten', word: 'arbeiten', article: null, plural: null, en: 'to work', wordId: '10d8bc30-4f2f-4997-9205-34c8e0ed5a0a' },
+        // arbeiten moved to L7's Wortfeld: two drawn L7 items drill it (and the -t stem e-Einschub)
+        // four Lektionen before it was introduced here (DaF review #5, MAJOR 6). It stays in this
+        // Lektion's input (dialogue line 1, notice, Sprechauftrag) — it is simply taught earlier.
       ],
       dialog: {
         title: 'Was hast du gestern gemacht?',
@@ -1179,6 +1218,8 @@ export const CURRICULUM_A11 = {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Tagesablauf: aufstehen? arbeiten? einkaufen?',
           hintWords: ['aufstehen', 'einkaufen', 'gestern'],
+          // Sie — Teil 2 zum Tagesablauf; Gegenüber bleibt die fremde Mitkandidatin.
+          anrede: 'Sie',
           missionOrder: null,
         },
       },
@@ -1289,6 +1330,8 @@ export const CURRICULUM_A11 = {
           teil: 'Sprechen Teil 3',
           promptDe: 'Laden Sie eine Kollegin zu Ihrem Fest ein und reagieren Sie auf die Antwort.',
           hintWords: ['einladen', 'der Geburtstag', 'feiern'],
+          // Sie — Teil 3: die Einladung geht an eine Kollegin, und die Lektion prüft genau diese Form (extra-a11-l12-08/09/16, „Ihr Fest, Frau Kaya“).
+          anrede: 'Sie',
           missionOrder: null,
         },
       },
