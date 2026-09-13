@@ -57,6 +57,7 @@ import {
   FUNCTION_WORDS as FUNCTION_WORDS_A12,
   DIALOG_NAMES as DIALOG_NAMES_A12,
 } from '../src/data/curricula/a12.js';
+import { deferredConstructionHits } from '../src/data/curricula/constructions.js';
 import { writingTaskByKey } from '../src/data/writingTasks.js';
 // RULE 11b reads the two engines the learner actually meets. Both are plain ES modules with no DOM
 // import (buildLesson pulls in the pool quality rules, buildCheckpoint the answer checker and the
@@ -316,10 +317,11 @@ export const MAX_MISSIONLESS_LEKTIONEN = 4;        // a1.1; per level in LEVELS 
  * because `minLektion` is stamped from this same narrowed lexicon and the draw obeys it. So this
  * number went up because the measurement got honest; the number the learner feels did not move.
  *
- * Round 11 (2026-09-13): re-measured after both slices landed — 62. Function words are
+ * Round 11 (2026-09-13): re-measured after both slices landed — 62. Round 12: 59 after the
+ * unconditioned-rule exclusion removed eleven cache items. Function words are
  * bound to first use now, so the count is what the licence used to hide.
  */
-export const MAX_UNTAUGHT_ITEM_TOKENS = 62;        // a1.1; per level in LEVELS below — measured 2026-09-13
+export const MAX_UNTAUGHT_ITEM_TOKENS = 59;        // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
  * RULE 11b ratchet — how many (item, token) pairs the learner MEETS may still use a word the course
@@ -408,8 +410,38 @@ export const MAX_UNEXEMPLIFIED_NOTICE_FORMS = 26;  // a1.1; per level in LEVELS 
  * Lektion that teaches them. DaF review #1 for A1.2 (BLOCKER 3): the dictation and the read-aloud
  * are the two steps in which the learner types or speaks the line himself, and that is exactly
  * where the Vorgriffe sat („mit dem Koffer“ two Lektionen before the Dativ). Measured on A1.1: 12.
+ *
+ * 12 → **3** on 2026-09-13 (round 12), and not by a softer number: RULE 15b below took the same
+ * three windows that carried nine of the twelve (A1.1 L3 dictation and read-aloud, L7 dictation,
+ * L8 read-aloud) to dialogue lines that carry no deferred construction, and the form-level
+ * Vorgriffe those lines carried went with them. What is left is three and it is argued: „um eins“
+ * in L6 (`time-and-dates`, L8) and `Hast`/`habe` in L8 (`verb-haben`, L9) — both in windows whose
+ * dialogue has no alternative line free of them, i.e. a content repair, not a window move.
  */
-export const MAX_UNTAUGHT_IN_PRODUCTION = 12;      // a1.1; per level in LEVELS below — measured 2026-09-13
+export const MAX_UNTAUGHT_IN_PRODUCTION = 3;       // a1.1; per level in LEVELS below — measured 2026-09-13
+
+/**
+ * RULE 15b ratchet — how many DEFERRED CONSTRUCTIONS a level still puts in the learner's own mouth.
+ *
+ * DaF review #11, MAJOR 3. RULE 15 above measures FORMS: a word the learner has not met. A course
+ * also defers CONSTRUCTIONS — patterns every word of which is ordinary — and round 11 built a guard
+ * for exactly three of them (`src/data/curricula/constructions.js`) and bound it to the RULE CARDS
+ * only. The result was measurable: the same round deleted „Meine Schwester ist noch jung.“ from the
+ * A1.1 L3 card because the possessive article is Lektion 12, and left the identical sentence
+ * standing as L3's DICTATION line, where `checkAnswer` grades it letter by letter. A sentence
+ * cannot be too hard to READ and easy enough to TYPE.
+ *
+ * So the card guard and this rule read ONE module, and the introducing Lektion is read from the
+ * curriculum's own `primarySlug`, never typed. Measured before the fix: **12** hits — the eight
+ * dictation/read-aloud places the review lists (L3 dictation line 3, L3 read-aloud lines 1 and 6,
+ * L7 dictation line 2, L8 read-aloud line 1; line 1 of L3 carries four of them), plus L3's pretest
+ * model and the Schreiben model texts of L2, L4 and L6. All twelve closed 2026-09-13 (round 12) by moving the windows to dialogue lines without
+ * the construction and by rewriting the four model texts; the dialogues themselves are untouched —
+ * they may SAY the forms (CONTRACT §2), and they are the audio script the owner records.
+ *
+ * Hard 0 at both levels, therefore, and it may only ever be closed the same way.
+ */
+export const MAX_DEFERRED_CONSTRUCTIONS = 0;       // a1.1 and a1.2 — measured 2026-09-13
 
 /**
  * RULE 16 ratchet — how many `examTeile` claims a level may still make that nothing in the module
@@ -594,6 +626,7 @@ export const LEVELS = {
       missionlessLektionen: MAX_MISSIONLESS_LEKTIONEN,
       unexemplifiedNoticeForms: MAX_UNEXEMPLIFIED_NOTICE_FORMS,
       untaughtInProduction: MAX_UNTAUGHT_IN_PRODUCTION,
+      deferredConstructions: MAX_DEFERRED_CONSTRUCTIONS,
       unbackedExamTeile: MAX_UNBACKED_EXAM_TEILE,
     },
   },
@@ -674,6 +707,12 @@ export const LEVELS = {
       missionlessLektionen: 1,
       unexemplifiedNoticeForms: 0,
       untaughtInProduction: 0,
+      // RULE 15b, measured on the paused A1.2 draft 2026-09-13 (round 12): **0**. The level's
+      // production lines and model texts carry none of the three deferred constructions of
+      // `src/data/curricula/constructions.js` — which are A1.1's, read from A1.1's own
+      // `primarySlug`s; A1.2 introduces all three before its own Lektion 1. Paused; re-measured,
+      // and no A1.2 content was touched to get there.
+      deferredConstructions: 0,
       unbackedExamTeile: 0,
     },
   },
@@ -1303,6 +1342,45 @@ export function producedBeforeTaught(c, extraKnown) {
   return offenders;
 }
 
+/**
+ * The texts a Lektion puts in the learner's OWN MOUTH, verbatim: the dictation lines (typed), the
+ * read-aloud lines (spoken and scored by `readaloud.mjs`), the pretest MODEL answer and the
+ * Schreiben MODEL text — the two texts the course holds up as „so sagt/schreibt man das“.
+ *
+ * `pretest.accepted` is deliberately NOT here, and the distinction is the rule's whole point:
+ * `accepted` is what the course TOLERATES from the learner („Mein Hobby ist“), and a learner may
+ * hit a form before it is taught (CONTRACT §2). What he may not be given is a MODEL built on a
+ * construction his course defers.
+ */
+function producedTexts(l) {
+  const lines = l.dialog?.lines || [];
+  const at = (i) => (typeof lines[i] === 'string' ? lines[i] : lines[i]?.de);
+  const out = [];
+  for (const i of l.hoeren?.lines || []) if (at(i)) out.push({ where: `Diktat Zeile ${i}`, text: at(i) });
+  for (const i of l.sprechen?.readAloud || []) if (at(i)) out.push({ where: `Vorlesen Zeile ${i}`, text: at(i) });
+  if (l.pretest?.model) out.push({ where: 'pretest.model', text: l.pretest.model });
+  if (l.schreiben?.sample) out.push({ where: 'schreiben.sample', text: l.schreiben.sample });
+  return out;
+}
+
+/**
+ * RULE 15b: a construction the course DEFERS may not be put in the learner's mouth before it.
+ *
+ * Same three patterns as the rule-card guard, same module, same „the introducing Lektion comes from
+ * `primarySlug`“ rule — see `src/data/curricula/constructions.js` and DaF review #11, MAJOR 3.
+ */
+export function constructionsBeforeTaught(c) {
+  const offenders = [];
+  for (const l of c.lektionen || []) {
+    for (const { where, text } of producedTexts(l)) {
+      for (const h of deferredConstructionHits(c, l.nr, text)) {
+        offenders.push({ nr: l.nr, where, kind: h.slug, taught: h.taught, hit: h.hit, de: text });
+      }
+    }
+  }
+  return offenders;
+}
+
 // RULE 16 — a „Sprechen Teil 1“ prompt is a self-introduction. SD1 Teil 1 is nothing else: Name,
 // Alter, Land, Wohnort, Sprachen, Beruf, Hobby, plus spelling and the phone number.
 // Bare "Name" would let a check-in task ("Melden Sie sich an: Name, Termin") pass as
@@ -1894,6 +1972,10 @@ export function validateCurriculum(c, extraItems, poolItems) {
   if (produced.length > r.untaughtInProduction) {
     fail(`RULE 15: ${produced.length} forms in dictation/read-aloud lines the course teaches later, ratchet is ${r.untaughtInProduction} — ${produced.map((o) => `L${o.nr}/${o.line} ${o.kind} „${o.hit}“`).join(', ')}`);
   }
+  const constructions = constructionsBeforeTaught(c);
+  if (constructions.length > r.deferredConstructions) {
+    fail(`RULE 15b: ${constructions.length} deferred constructions in lines the learner produces, ratchet is ${r.deferredConstructions} — ${constructions.map((o) => `L${o.nr} ${o.where} [${o.kind}→L${o.taught}] „${o.hit}“`).join(', ')}`);
+  }
   const unbacked = examTeileBacked(c);
   if (unbacked.length > r.unbackedExamTeile) {
     fail(`RULE 16: ${unbacked.length} examTeile claims nothing in their Lektion backs, ratchet is ${r.unbackedExamTeile} — ${unbacked.map((o) => `L${o.nr} „${o.teil}“ (${o.why})`).join(', ')}`);
@@ -1948,6 +2030,9 @@ if (isMain) {
   const produced = producedBeforeTaught(c);
   console.log(`  RULE 15 Vorgriffe in Diktat/Nachsprechen: ${produced.length} (Ratchet ${r.untaughtInProduction})`);
   for (const o of produced) console.log(`    L${o.nr} Zeile ${o.line} [${o.kind}] „${o.hit}“ — ${o.de}`);
+  const constructions = constructionsBeforeTaught(c);
+  console.log(`  RULE 15b aufgeschobene Konstruktionen in Produktionstexten: ${constructions.length} (Ratchet ${r.deferredConstructions})`);
+  for (const o of constructions) console.log(`    L${o.nr} ${o.where} [${o.kind} → L${o.taught}] „${o.hit}“ — ${o.de}`);
   const unbacked = examTeileBacked(c);
   console.log(`  RULE 16 ungedeckte Prüfungsteile: ${unbacked.length} (Ratchet ${r.unbackedExamTeile})`);
   for (const o of unbacked) console.log(`    L${o.nr} „${o.teil}“ — ${o.why}`);

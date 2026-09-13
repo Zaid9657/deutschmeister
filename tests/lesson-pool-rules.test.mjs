@@ -89,6 +89,7 @@ import {
   missingSentenceArticle, cueAnswerMismatch, metalinguisticPrompt, SENTENCE_ARTICLE_CUE,
   ambiguousCorrection, minimalArticleCorrection, isPoliteFormItem, drillsSlug, isNumberWord,
   politeCaseItem, POLITE_CUE_RE, INFORMAL_VETO_RE, carriesPoliteForm, NEXT_LEVEL_RE, UNTAUGHT_ANSWER_FORMS, UNTAUGHT_ANSWER_FORM_RE, untaughtForm,
+  unconditionedRule, unconditionedRuleSentence, namesCondition,
 } from '../src/data/lessonPools/quality.js';
 import { levelLexicon, untaughtTokens, levelSpec, minLektionIndex } from '../scripts/validate-curriculum.mjs';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
@@ -1095,4 +1096,212 @@ test('every polite-form item of the built pool is case-strict, and no informal i
   // The predicate the build stamps with and the one the review cards derive from
   // are ONE function — the alias is what both sides import.
   assert.equal(isPoliteFormItem, politeCaseItem);
+});
+
+
+// --- REVIEW #11 -----------------------------------------------------------
+
+/**
+ * BLOCKER. `extra-a11-l06-14` explained „Nach brauchen wird ein zu einen: einen
+ * Computer." — a rule stated without the condition it holds under, and therefore
+ * false: after `brauchen` only MASKULIN `ein` becomes `einen`. The learner who
+ * applies it writes „Ich brauche einen Pause", which is the error sentence of
+ * `extra-a11-l06-12` in the very same drawn seven.
+ *
+ * THE GUARD MUST PASS ITS OWN COUNTER-SAMPLE. The five sentences the review
+ * measured are the fixture; a rule that does not catch them is not a rule.
+ */
+const FALSE_RULE_PROBES = [
+  ['extra-a11-l06-14', 'Nach brauchen wird ein zu einen: einen Computer.', 'transformation'],
+  ['4aae7de0', 'Handy ist neutral, deshalb ein, wie bei maskulinen Nomen.', 'cross-gender'],
+  ['fb88c1bb', 'Wir steht immer mit haben.', 'absolute-quantifier'],
+  ['3c9fff52', 'Du steht immer mit hast.', 'absolute-quantifier'],
+  ['885e0528', 'Wir steht immer mit sind.', 'absolute-quantifier'],
+];
+
+/**
+ * The correct, CONDITIONED explanations the same pool carries — including the
+ * three the course already writes for exactly the rule the blocker got wrong,
+ * and the two sentences the review names as „must stay legal". A predicate that
+ * rejects one of these has stopped measuring the condition and started
+ * measuring the vocabulary.
+ */
+const CONDITIONED_PROBES = [
+  'Nach brauchen wird maskulin ein zu einen.',
+  'Nach haben wird maskulin ein zu einen.',
+  'Computer ist maskulin: Nach brauchen wird maskulin ein zu einen.',
+  'Im Plural haben alle Nomen die: die Lampen.',
+  'Alle Pluralnomen nehmen die, egal welches Genus im Singular.',
+  'Endung -ung ist immer feminin.',
+  'Die Höflichkeitsform benutzt Sie/Ihr (immer großgeschrieben).',
+  'Offizielle Zeit enthält immer Uhr, auch bei einer vollen Stunde.',
+  'Auto ist neutral, deshalb das.',
+  'Lehrer ist maskulin, deshalb die Verneinung kein.',
+  'Der Stuhl ist maskulin, deshalb wird er zu er.',
+  'der Bruder wird zu er.',
+  'Bei er wird das e zu i: er spricht.',
+  'Der Stamm von arbeiten endet auf -t, deshalb -e- einfügen: arbeitest.',
+  // …and the A1.2 draft pool, which is where clause (D) and clause (B) were
+  // measured from the other side (see the header of `unconditionedRule`).
+  'Die Antwort nennt einen Ort, deshalb braucht die Frage wo.',
+  'Lehrer bleibt auch nach der Inversion das Subjekt, deshalb bleibt der Artikel der, nicht den.',
+  'wir wechselt den Vokal nie: sprechen bleibt regelmäßig.',
+];
+
+test('the unconditioned-rule guard catches every sentence the review measured — REVIEW #11 BLOCKER', () => {
+  for (const [id, sentence, clause] of FALSE_RULE_PROBES) {
+    const hit = unconditionedRuleSentence({ id, explanationDe: sentence });
+    assert.ok(hit, `${id}: the guard does not catch „${sentence}“`);
+    assert.equal(hit.clause, clause, `${id}: caught by the wrong clause`);
+    assert.equal(
+      exclusionReason({ id, topic: 'indefinite-articles', questionDe: 'Er ___ Hunger. (haben)', answer: 'hat', explanationDe: sentence }),
+      REASON.UNCONDITIONED_RULE,
+    );
+  }
+  // The hint carries an explanation too, and the review's shape fits in one.
+  assert.equal(unconditionedRule({ id: 'h', explanationDe: '', hint: 'Wir steht immer mit haben.' }), true);
+});
+
+test('the unconditioned-rule guard leaves every conditioned explanation alone — REVIEW #11 BLOCKER', () => {
+  for (const sentence of CONDITIONED_PROBES) {
+    const hit = unconditionedRuleSentence({ id: 'c', explanationDe: sentence });
+    assert.equal(hit, null, `false positive on „${sentence}“ (${hit && hit.clause})`);
+  }
+  // The three conditions, each on its own: a genus, a case, an explicit scope.
+  assert.equal(namesCondition('maskulin'), true);
+  assert.equal(namesCondition('im Akkusativ'), true);
+  assert.equal(namesCondition('nur bei haben'), true);
+  // A person counts — but not in a pairing, where the person is the thing being
+  // quantified and the verb is the condition that is missing.
+  assert.equal(namesCondition('wir wechselt den Vokal nie'), true, 'a person is a condition');
+  assert.equal(namesCondition('Wir steht immer mit haben.'), false, 'in a pairing the person is not the condition');
+});
+
+test('no item a learner can be shown states a rule without its condition — REVIEW #11 BLOCKER', () => {
+  for (const item of USABLE) {
+    const hit = unconditionedRuleSentence(item);
+    assert.equal(hit, null, `${label(item)} — ${hit && hit.clause}: „${hit && hit.sentence}“`);
+  }
+  // And the artefact itself, so a stale a11.json cannot ship the class either.
+  for (const item of POOL.items) {
+    assert.equal(unconditionedRule(item), false, `built pool: ${label(item)}`);
+  }
+});
+
+test('the eleven measured items are out of the built pool, with their own reason — REVIEW #11', () => {
+  const MEASURED = [
+    '4aae7de0', 'fb88c1bb', 'f8f43902', '29557669', '3c9fff52', '7f2c06ad',
+    '408d681a', '8d89816d', '338b13a7', '885e0528', '299cba23',
+  ];
+  for (const prefix of MEASURED) {
+    assert.ok(!POOL.items.some((i) => String(i.id).startsWith(prefix)), `${prefix} is still in the built pool`);
+  }
+  // The topics they came out of still carry a Lektion's worth of items, so the
+  // exclusion costs depth, not a draw.
+  for (const topic of ['verb-haben', 'verb-sein', 'indefinite-articles']) {
+    const n = POOL.items.filter((i) => i.topic === topic).length;
+    assert.ok(n >= 7, `only ${n} ${topic} items left`);
+  }
+  // The hand-written extra of the same class was REPAIRED rather than dropped —
+  // a build step may not guess the missing condition, an author may write it.
+  const repaired = EXTRA.find((i) => i.id === 'extra-a11-l06-14');
+  assert.ok(repaired, 'extra-a11-l06-14 is gone');
+  assert.match(repaired.explanationDe, /maskulin/, 'the repaired explanation must name the condition');
+  assert.equal(exclusionReason(repaired, { level: 'a1.1' }), null);
+});
+
+// --- the contradiction guard (REVIEW #11 BLOCKER, fourth clause) -----------
+//
+// The class has a second, measurable symptom: two items of the same topic state
+// OPPOSITE rules for the same trigger. `fb88c1bb` („Wir steht immer mit haben.")
+// and `885e0528` („Wir steht immer mit sind.") are the pair the review names,
+// and they were drawn in the same Lektion. The extractor below reads the three
+// statement shapes the pool actually writes — a pronoun/verb pairing, a
+// „nach <Verb> wird … zu <Artikel>" transformation and a „<Nomen> ist <Genus>,
+// deshalb <Artikel>" conclusion — and maps trigger → form. A trigger may map to
+// two forms only when a GENUS distinguishes them (maskulin einen vs. feminin
+// eine) or when the forms belong to different article families (der Computer,
+// ein Computer).
+
+const ARTICLE_FAMILY_OF = (form) => {
+  const w = String(form || '').toLowerCase();
+  if (['der', 'die', 'das', 'den', 'dem'].includes(w)) return 'bestimmt';
+  if (['ein', 'eine', 'einen', 'einem', 'einer'].includes(w)) return 'unbestimmt';
+  if (['kein', 'keine', 'keinen'].includes(w)) return 'verneint';
+  return 'sonstige';
+};
+
+const GENUS_RE = /\b(maskulin|feminin|neutral|sächlich|plural|singular)\p{L}*/iu;
+
+/** [{ family, trigger, genus, form }] — the rule statements a sentence makes. */
+function ruleStatements(sentence) {
+  const out = [];
+  const genus = (GENUS_RE.exec(sentence) || [])[1]?.toLowerCase() || '';
+  // Only an ABSOLUTE pairing is a rule that can contradict another: „Wir steht
+  // IMMER mit haben." excludes „Wir steht immer mit sind.", while the pool's
+  // „Singular-sie (she) steht mit hat, wie er und es." and „… steht mit ist …"
+  // are two compatible facts about two different verbs, each scoped by its own
+  // item — measured on the built pool, which carries exactly that pair.
+  const absolute = /\b(immer|nie|niemals|ausnahmslos|alle|jede|jeder|jedes)\b/iu.test(sentence);
+  const pairing = absolute
+    ? /\b(ich|du|er|sie|es|wir|ihr)\b[^.!?]{0,20}\b(?:steht|stehen)\b[^.!?]{0,20}\bmit\s+(\p{L}+)/iu.exec(sentence)
+    : null;
+  if (pairing) out.push({ family: 'verbform', trigger: pairing[1].toLowerCase(), genus, form: pairing[2].toLowerCase() });
+  const transform = /\bnach\s+(\p{L}+)\s+wird\b[^.!?]{0,30}\bzu\s+(\p{L}+)/iu.exec(sentence);
+  if (transform) {
+    out.push({
+      family: `transform:${ARTICLE_FAMILY_OF(transform[2])}`,
+      trigger: transform[1].toLowerCase(), genus, form: transform[2].toLowerCase(),
+    });
+  }
+  const conclusion = /(\p{Lu}\p{L}+)\s+ist\s+\p{L}*(?:maskulin|feminin|neutral)\p{L}*[^.!?]{0,30}\bdeshalb\b[^.!?]{0,25}\b(der|die|das|den|dem|ein|eine|einen|kein|keine|keinen)\b/u.exec(sentence);
+  if (conclusion) {
+    out.push({
+      family: `artikel:${ARTICLE_FAMILY_OF(conclusion[2])}`,
+      trigger: conclusion[1].toLowerCase(), genus, form: conclusion[2].toLowerCase(),
+    });
+  }
+  return out;
+}
+
+/** trigger → the forms the pool's explanations give it, keyed by family+genus. */
+function contradictions(items) {
+  const seen = new Map();
+  for (const item of items) {
+    for (const text of [item.explanationDe, item.hint]) {
+      for (const sentence of String(text || '').split(/(?<=[.!?])\s+/)) {
+        for (const st of ruleStatements(sentence.trim())) {
+          const key = `${st.family}|${st.trigger}|${st.genus}`;
+          const entry = seen.get(key) || new Map();
+          if (!entry.has(st.form)) entry.set(st.form, `${item.id}: „${sentence.trim()}“`);
+          seen.set(key, entry);
+        }
+      }
+    }
+  }
+  return [...seen].filter(([, forms]) => forms.size > 1)
+    .map(([key, forms]) => `${key} → ${[...forms.values()].join('  ⟂  ')}`);
+}
+
+test('the contradiction extractor sees the pair the review names — REVIEW #11 BLOCKER', () => {
+  const clash = contradictions([
+    { id: 'fb88c1bb', explanationDe: 'Wir steht immer mit haben.' },
+    { id: '885e0528', explanationDe: 'Wir steht immer mit sind.' },
+  ]);
+  assert.equal(clash.length, 1, 'the guard does not see its own counter-sample');
+  assert.match(clash[0], /verbform\|wir/);
+  // …and the same trigger with two forms the GENUS distinguishes is not one.
+  assert.deepEqual(contradictions([
+    { id: 'a', explanationDe: 'Nach brauchen wird maskulin ein zu einen.' },
+    { id: 'b', explanationDe: 'Nach brauchen bleibt feminin eine zu eine.' },
+  ]), []);
+  // Nor is der Computer / ein Computer: two article families, one noun.
+  assert.deepEqual(contradictions([
+    { id: 'c', explanationDe: 'Computer ist maskulin, deshalb der.' },
+    { id: 'd', explanationDe: 'Computer ist maskulin, deshalb ein.' },
+  ]), []);
+});
+
+test('no trigger of the built pool maps to two rules — REVIEW #11 BLOCKER', () => {
+  assert.deepEqual(contradictions([...POOL.items, ...EXTRA]), []);
 });

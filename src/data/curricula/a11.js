@@ -324,7 +324,7 @@ export const CURRICULUM_A11 = {
         leitpunkte: ['Ihr Name und Ihr Geburtsdatum', 'Ihr Land und Ihre Staatsangehörigkeit', 'Ihr Familienstand: ledig oder verheiratet'],
         minWords: 25,
         maxWords: 45,
-        sample: 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Mein Geburtsdatum ist 3. Mai 1998. Ich komme aus Marokko. Ich bin ledig. Viele Grüße, Ana Chakiri',
+        sample: 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri, Geburtsdatum 3. Mai 1998. Ich komme aus Marokko. Ich bin ledig. Viele Grüße, Ana Chakiri',
       },
       // A1.1 carries six listening exercises and ten reading texts; every one is linked from another
       // Lektion, so this one honestly has none — the syllabus shows „—“ rather than a repeat.
@@ -399,7 +399,7 @@ export const CURRICULUM_A11 = {
       pretest: {
         promptDe: 'Sprechen Sie über eine Person in Ihrer Familie.',
         promptEn: 'Say one sentence about a person in your family.',
-        model: 'Mein Bruder ist zwanzig.',
+        model: 'Das ist die Schwester. Sie ist zwanzig.',
         accepted: ['Mein', 'Meine', 'Das ist', 'Er ist', 'Sie ist'],
       },
       notice: {
@@ -409,9 +409,9 @@ export const CURRICULUM_A11 = {
         ruleSlug: 'personal-pronouns',
       },
       phonetik: { focus: 'Der Umlaut ü in Bruder – Brüder', items: ['der BRU-der', 'die BRÜ-der', 'die MÜT-ter'] },
-      hoeren: { kind: 'dictation', lines: [3, 5] },
+      hoeren: { kind: 'dictation', lines: [5, 7] },
       sprechen: {
-        readAloud: [1, 6],
+        readAloud: [2, 7],
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Familie: Geschwister? Sohn? Tochter?',
@@ -529,7 +529,7 @@ export const CURRICULUM_A11 = {
         leitpunkte: ['Was Sie kaufen', 'Was es kostet', 'Wann Sie sich treffen'],
         minWords: 25,
         maxWords: 45,
-        sample: 'Hallo Lena! Ich kaufe einen Stuhl. Er kostet zwölf Euro. Kommst du mit? Tschüss, Tim',
+        sample: 'Hallo Lena! Ich kaufe einen Stuhl. Er kostet zwölf Euro. Kommst du auch? Tschüss, Tim',
       },
       links: { listeningExercise: 1, readingOrder: 4 },
       practiceRule: { topics: ['nouns-gender'], typedMin: 3 },
@@ -720,7 +720,7 @@ export const CURRICULUM_A11 = {
         leitpunkte: ['Was Sie brauchen', 'Ihre Telefonnummer', 'Wann Sie im Büro sind'],
         minWords: 25,
         maxWords: 45,
-        sample: 'Guten Tag, Frau Berg! Ich brauche einen Computer. Meine Nummer ist null vier zwei. Viele Grüße, Ana',
+        sample: 'Guten Tag, Frau Berg! Ich brauche einen Computer. Die Nummer ist null vier zwei. Viele Grüße, Ana',
       },
       links: { listeningExercise: 5, readingOrder: null },
       practiceRule: { topics: ['indefinite-articles', 'definite-articles'], typedMin: 3 },
@@ -810,7 +810,7 @@ export const CURRICULUM_A11 = {
         ruleSlug: 'present-tense-regular',
       },
       phonetik: { focus: 'Endung -e und -en am Wortende', items: ['ich HÖ-re', 'wir HÖ-ren', 'du SPIELST'] },
-      hoeren: { kind: 'dictation', lines: [2, 6] },
+      hoeren: { kind: 'dictation', lines: [3, 6] },
       sprechen: {
         readAloud: [1, 4],
         open: {
@@ -926,7 +926,7 @@ export const CURRICULUM_A11 = {
       phonetik: { focus: 'Satzmelodie in der W-Frage: fallend', items: ['Wie SPÄT ist es?', 'WANN kommst du?', 'um ACHT Uhr'] },
       hoeren: { kind: 'dictation', lines: [3, 7] },
       sprechen: {
-        readAloud: [1, 6],
+        readAloud: [3, 6],
         open: {
           teil: 'Sprechen Teil 3',
           promptDe: 'Bitten Sie um einen Termin am Nachmittag und reagieren Sie auf die Antwort.',

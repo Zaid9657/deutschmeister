@@ -22,9 +22,10 @@ import {
   wortfeldCoverage, itemLexis, drawnLexis, drawnAssignment, loadExtraItems, loadPoolItems,
   canDoRehearsal, missionlessLektionen,
   personaConsistency, PERSONAS_A11, PERSONAS_A12, PERSONA_TABLES,
-  noticeFormCoverage, producedBeforeTaught, examTeileBacked,
+  noticeFormCoverage, producedBeforeTaught, constructionsBeforeTaught, examTeileBacked,
   MAX_UNCOVERED_WORTFELD, MAX_UNTAUGHT_ITEM_TOKENS, MAX_UNTAUGHT_DRAWN_TOKENS,
   MAX_MISSIONLESS_LEKTIONEN, MAX_UNEXEMPLIFIED_NOTICE_FORMS, MAX_UNTAUGHT_IN_PRODUCTION,
+  MAX_DEFERRED_CONSTRUCTIONS,
   MAX_UNBACKED_EXAM_TEILE, LEVELS, levelSpec, levelLexicon, untaughtTokens,
 } from '../scripts/validate-curriculum.mjs';
 
@@ -505,6 +506,7 @@ test('A1.1: every ratchet equals its measurement — a ratchet with slack is not
     ['13', missionlessLektionen(CURRICULUM_A11).length, MAX_MISSIONLESS_LEKTIONEN],
     ['6b', noticeFormCoverage(CURRICULUM_A11).length, MAX_UNEXEMPLIFIED_NOTICE_FORMS],
     ['15', producedBeforeTaught(CURRICULUM_A11).length, MAX_UNTAUGHT_IN_PRODUCTION],
+    ['15b', constructionsBeforeTaught(CURRICULUM_A11).length, MAX_DEFERRED_CONSTRUCTIONS],
     ['16', examTeileBacked(CURRICULUM_A11).length, MAX_UNBACKED_EXAM_TEILE],
   ];
   for (const [rule, measured, ratchet] of checks) {
@@ -618,6 +620,12 @@ test('the validator bites: each mutation of a good curriculum is caught', () => 
   const need15 = overshoot(producedBeforeTaught(CURRICULUM_A11).length, MAX_UNTAUGHT_IN_PRODUCTION);
   assert.equal(addProducedVorgriffe(c15, levelSpec('a1.1'), need15), need15, 'no late form to plant');
   assert.ok(failsWith(validateCurriculum(c15), 15), 'not caught: a Vorgriff in a line the learner produces');
+
+  // RULE 15b: a deferred CONSTRUCTION (not a deferred word) in a line the learner dictates.
+  const c15b = clone();
+  const l15b = c15b.lektionen[2];
+  l15b.dialog.lines[l15b.hoeren.lines[0]].de = 'Er ist zwanzig. Meine Schwester ist noch jung.';
+  assert.ok(failsWith(validateCurriculum(c15b), '15b'), 'not caught: a deferred construction in a dictation line');
 
   // RULE 16: a „Lesen“ claim whose Lektion has no reading surface.
   const c16 = clone();
@@ -755,6 +763,70 @@ test('rule 15: dictation and read-aloud lines use no form the course teaches lat
     producedBeforeTaught(licensed).filter((o) => o.nr === 1 && o.kind === 'dative-prepositions-intro'),
     [], 'the three Wendungen A1.2 L1 names must stay licensed',
   );
+});
+
+/**
+ * THE EIGHT PLACES DaF review #11 (MAJOR 3) measured, as a fixture.
+ *
+ * Every one is a line the learner DICTATES or READS ALOUD that carries a construction his own
+ * course defers — the same three patterns the rule cards are guarded against. The fix moved the
+ * WINDOWS onto dialogue lines without the construction; the dialogue lines themselves are
+ * untouched, because they are what the owner records and CONTRACT §2 lets a learner MEET a form.
+ * So the sentences below no longer sit in any window — and the checker must still report every one
+ * of them when they are planted back in, or the rule has been narrowed to the lines of the day.
+ */
+const DEFERRED_CONSTRUCTION_PRODUCTION_PROBES = [
+  { nr: 3, text: 'Er ist zwanzig. Meine Schwester ist noch jung.', kind: 'possessive-articles' },
+  { nr: 3, text: 'Ja. Das sind meine Eltern und meine Geschwister: ein Bruder, eine Schwester.', kind: 'indefinite-articles' },
+  { nr: 3, text: 'Ja. Das sind meine Eltern und meine Geschwister: ein Bruder, eine Schwester.', kind: 'possessive-articles' },
+  { nr: 3, text: 'Spricht dein Bruder auch Englisch?', kind: 'possessive-articles' },
+  { nr: 3, text: 'Mein Bruder ist zwanzig.', kind: 'possessive-articles' },
+  { nr: 7, text: 'Mein Hobby ist Sport. Ich spiele am Wochenende Fußball.', kind: 'possessive-articles' },
+  { nr: 8, text: 'Ich stehe um sechs Uhr auf.', kind: 'separable-verbs-intro' },
+  { nr: 4, text: 'Hallo Lena! Ich kaufe einen Stuhl. Kommst du mit? Tschüss, Tim', kind: 'separable-verbs-intro' },
+];
+
+test('rule 15b: a construction the course defers is in no line the learner produces', () => {
+  // DaF review #11, MAJOR 3. Round 11 deleted „Meine Schwester ist noch jung.“ from the A1.1 L3
+  // RULE CARD because the possessive article is Lektion 12, and left the same sentence standing as
+  // L3's DICTATION line, where checkAnswer grades it letter by letter. One definition of
+  // „deferred construction“, therefore, in src/data/curricula/constructions.js, read by the card
+  // guard (tests/rule-card-overrides.test.mjs) and by this rule.
+  assert.equal(MAX_DEFERRED_CONSTRUCTIONS, 0, 'RULE 15b is a hard 0 and may not be ratcheted up');
+  for (const [level, C] of Object.entries(ALL_CURRICULA)) {
+    const offenders = constructionsBeforeTaught(C);
+    assert.deepEqual(
+      offenders.map((o) => `L${o.nr} ${o.where} [${o.kind}→L${o.taught}] „${o.hit}“`), [],
+      `${level}: the learner is made to produce a construction his course has not taught`,
+    );
+  }
+});
+
+test('rule 15b: every place DaF review #11 measured is still caught when planted back', () => {
+  // The test as a CLASS, not as a list of ids: each probe goes into a real production surface of
+  // its own Lektion and must be reported with the pattern the review named.
+  const missed = [];
+  for (const { nr, text, kind } of DEFERRED_CONSTRUCTION_PRODUCTION_PROBES) {
+    const c = cloneOf(CURRICULUM_A11);
+    const l = c.lektionen[nr - 1];
+    l.dialog.lines[l.hoeren.lines[0]].de = text;
+    const found = constructionsBeforeTaught(c).filter((o) => o.nr === nr).map((o) => o.kind);
+    if (!found.includes(kind)) missed.push(`L${nr} [${kind}] „${text}“`);
+  }
+  assert.deepEqual(missed, [], `probes that go through RULE 15b:\n  ${missed.join('\n  ')}`);
+
+  // …and the MODEL texts are production too: the pretest model and the Schreiben sample are what
+  // the course holds up as „so sagt/schreibt man das“. `pretest.accepted` is deliberately not —
+  // that is what the course TOLERATES from the learner, and a learner may hit a form early
+  // (CONTRACT §2).
+  const cm = cloneOf(CURRICULUM_A11);
+  cm.lektionen[2].pretest.model = 'Mein Bruder ist zwanzig.';
+  cm.lektionen[3].schreiben.sample = 'Hallo Lena! Kommst du mit? Tschüss, Tim';
+  cm.lektionen[4].pretest.accepted = ['Mein Buch ist hier.'];
+  const where = constructionsBeforeTaught(cm).map((o) => o.where);
+  assert.ok(where.includes('pretest.model'), 'a pretest model with a deferred construction went through');
+  assert.ok(where.includes('schreiben.sample'), 'a Schreiben sample with a deferred construction went through');
+  assert.deepEqual(constructionsBeforeTaught(cm).filter((o) => o.nr === 5), [], 'pretest.accepted must stay out of RULE 15b');
 });
 
 test('rule 16: every examTeile claim is backed by the Lektion that makes it', () => {
@@ -1051,6 +1123,7 @@ for (const key of LEVEL_KEYS) {
     assert.ok(missionlessLektionen(C).length <= r.missionlessLektionen, 'RULE 13');
     assert.ok(noticeFormCoverage(C).length <= r.unexemplifiedNoticeForms, 'RULE 6b');
     assert.ok(producedBeforeTaught(C).length <= r.untaughtInProduction, 'RULE 15');
+    assert.ok(constructionsBeforeTaught(C).length <= r.deferredConstructions, 'RULE 15b');
     assert.ok(examTeileBacked(C).length <= r.unbackedExamTeile, 'RULE 16');
   });
 

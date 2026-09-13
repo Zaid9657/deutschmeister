@@ -147,6 +147,9 @@ export const REASON = Object.freeze({
   // REVIEW #7 — the item demands a form no notice and no rule card of the
   // level introduces (level-scoped, like the ordinal and the month name)
   UNTAUGHT_FORM: 'untaught-form',
+  // REVIEW #11 — the explanation states a rule without the condition under
+  // which it holds („Nach brauchen wird ein zu einen.")
+  UNCONDITIONED_RULE: 'unconditioned-rule',
 });
 
 /** The level whose taught-by-now rules below apply. */
@@ -1118,6 +1121,164 @@ export function drillsSlug(item, slug) {
   }));
 }
 
+// ── REVIEW #11 BLOCKER: a rule stated without the condition it holds under ──
+//
+// `extra-a11-l06-14` explained „Nach brauchen wird ein zu einen: einen
+// Computer." — and that is not an imprecise rule, it is a false one: after
+// `brauchen` only the MASCULINE `ein` becomes `einen`, feminine `eine` and
+// neuter `ein` stay. The course knows this and writes it correctly three times
+// („Nach brauchen wird MASKULIN ein zu einen." in `extra-a11-l06-04`, the same
+// sentence for `haben` in `extra-a11-l09-07`, and the L6 notice) — and the
+// same drawn seven of L6 contains the two error corrections („Ich brauche einen
+// Pause." → `eine Pause`, „Ich brauche einen Telefon." → `ein Telefon`) that
+// mark wrong exactly what the broken explanation tells the learner to write.
+//
+// The class is not that line. It is „an explanation asserts a transformation or
+// a fixed pairing and does not name the condition under which it holds", and
+// the review measured it four more times:
+//   * `4aae7de0` „Handy ist neutral, deshalb ein, WIE BEI MASKULINEN NOMEN." —
+//     the same error from the other side: after `haben` a masculine noun takes
+//     `einen`, so the neuter `ein` is justified with the one gender it differs
+//     from.
+//   * `fb88c1bb` „Wir steht immer mit haben.", `3c9fff52` „Du steht immer mit
+//     hast." — true only WITHIN the verb `haben`, and `885e0528` „Wir steht
+//     immer mit sind." contradicts the first verbatim. Eight more items of
+//     `verb-haben`/`verb-sein` carry the identical shape.
+//
+// THE CONDITION, NOT THE LIST. Three clauses, each measured over the whole A1.1
+// cache + the hand-written extras (481 explanations) before it was written:
+//
+//   (A) TRANSFORMATION — „nach <verb> wird …" or „… wird … zu <Artikel>".
+//       3 hits, all three in the extras: the two correct ones carry `maskulin`,
+//       `extra-a11-l06-14` does not. The second alternative deliberately asks
+//       that the TARGET be an article form, because the pronoun substitutions
+//       („der Bruder wird zu er.", „Der Stuhl ist maskulin, deshalb wird er zu
+//       er.") are correct and name their condition in the noun itself.
+//   (B) ABSOLUTE QUANTIFIER — immer/nie/alle/jede(r/s)/ausnahmslos. 29 hits.
+//       17 of them name a genus („Endung -ung ist immer feminin.", „Im Plural
+//       haben alle Nomen die." — the sentence the review explicitly keeps
+//       legal), one names a scope („… auch BEI einer vollen Stunde"), one a
+//       named form („Die HÖFLICHKEITSFORM benutzt Sie/Ihr (immer
+//       großgeschrieben)"), and the remaining ten are the pronoun/verb pairings
+//       above. A person IS a condition — the review lists it next to the genus
+//       and the case — EXCEPT in a pairing („X steht immer mit Y"), where the
+//       person is the thing being quantified over and the scope that is missing
+//       is the verb. The A1.2 draft measures that carve-out from the other side:
+//       „wir wechselt den Vokal nie: sprechen bleibt regelmäßig." is scoped by
+//       its person and correct, and it must not be caught.
+//   (C) CROSS-GENDER EQUATION — „… wie bei <Genus> …" in a sentence that has
+//       already named a DIFFERENT genus. 1 hit, `4aae7de0`, 0 false positives.
+//   (D) an ELLIPTICAL „deshalb <Artikel>" — the conclusion of a genus argument
+//       with the genus left out („… deshalb das.", „… deshalb der Artikel der.").
+//       0 hits in A1.1, where every such sentence names its genus, and it is
+//       kept because it is the shape the review names and the next author's most
+//       likely way back in. It must stay elliptical (at most two words before
+//       the article, then the clause ends): measured against the A1.2 draft
+//       pool, `/deshalb …/` with a wider window reads nine correct explanations
+//       („Die Antwort nennt einen Ort, deshalb braucht die Frage wo.") as
+//       conclusions about an article, which they are not.
+//
+// CARVED OUT AFTER MEASURING, and why: „-Form" words (Höflichkeitsform, du-Form,
+// Ihr-Form) count as a condition — a named form IS the scope — and so does a
+// following „bei …"/„nur …"/„Endung …". Without that carve-out clause (B) would
+// reject `025bbe17`, whose „immer großgeschrieben" is both true and scoped.
+//
+// NOT REPAIRABLE. The missing word is a fact about German that only the item's
+// author knows („maskulin"? „bei haben"?), and a build step that guesses it
+// would write the next false rule. So the item is EXCLUDED — and a hand-written
+// extra that trips the rule stops the build with its id, which is why
+// `extra-a11-l06-14` is repaired in `a11.extra.json` rather than dropped.
+
+/** maskulin / feminin / neutral / Plural … — the genus a rule may be scoped to. */
+export const GENDER_WORD_RE = /\b(maskulin\p{L}*|feminin\p{L}*|neutral\p{L}*|sächlich\p{L}*|plural\p{L}*|singular\p{L}*|genus)\b/iu;
+
+/** The case a rule may be scoped to. (At a1.1 these also trip `untaughtForm`.) */
+export const CASE_WORD_RE = /\b(nominativ|akkusativ|dativ|genitiv)\b/i;
+
+/** „bei …", „nur …", „Endung …", „die du-Form" — an explicit scope. */
+export const SCOPE_WORD_RE = /\bbei\b|\bnur\b|\bendung\b|\b\p{L}+-?form\b/iu;
+
+/**
+ * The person a rule may be scoped to — the review's third condition next to the
+ * genus and the case. „wir wechselt den Vokal nie: sprechen bleibt regelmäßig."
+ * (the A1.2 draft) is a correctly scoped rule: the domain is named (the stem
+ * vowel) and `wir` is the condition under which nothing happens.
+ */
+export const PERSON_WORD_RE = /\b(ich|du|er|sie|es|wir|ihr|man)\b/iu;
+
+/**
+ * …EXCEPT in a pairing, where the person is what is being quantified and the
+ * missing condition is the VERB: „Wir steht immer mit haben." is false as
+ * written (wir steht auch mit sind — the pool says so ten lines further down),
+ * and the review names exactly this shape as the one a person does not rescue.
+ */
+export const PAIRING_RE = /\b(?:steht|stehen)\b[^.!?]{0,20}\bmit\b/iu;
+
+/** True when the sentence names the condition its claim is scoped to. */
+export const namesCondition = (sentence) =>
+  GENDER_WORD_RE.test(sentence) || CASE_WORD_RE.test(sentence) || SCOPE_WORD_RE.test(sentence) ||
+  (PERSON_WORD_RE.test(sentence) && !PAIRING_RE.test(sentence));
+
+/** (A) „Nach brauchen wird ein zu einen." / „… wird ein zu einen." */
+export const TRANSFORMATION_RE =
+  /\bnach\s+\p{L}+\s+wird\b|\bwird\b[^.;:!?]{0,30}\bzu\s+(?:ein|eine|einen|einem|einer|der|die|das|den|dem)\b/iu;
+
+/** (B) immer / nie / alle / jede(r/s) / ausnahmslos. */
+export const ABSOLUTE_QUANTIFIER_RE = /\b(immer|nie|niemals|ausnahmslos|alle|alles|jede|jeder|jedes)\b/iu;
+
+/** (C) „… wie bei maskulinen Nomen" — the genus the claim is compared to. */
+export const CROSS_GENDER_RE = /\bwie\s+(?:bei\s+)?\p{L}*(maskulin|feminin|neutral|sächlich|plural)\p{L}*/iu;
+
+/** (D) „deshalb das", „deshalb die Verneinung kein" — a concluded article. */
+export const CONCLUDED_ARTICLE_RE =
+  /\bdeshalb\s+(?:\p{L}+\s+){0,2}(?:der|die|das|den|dem|ein|eine|einen|kein|keine|keinen)\s*(?:[,.!?]|$)/iu;
+
+/** The genus a sentence names, lower-cased and stemmed to the bare word. */
+const genusOf = (text) => {
+  const m = GENDER_WORD_RE.exec(String(text || ''));
+  if (!m) return null;
+  return m[1].toLowerCase().replace(/^(maskulin|feminin|neutral|sächlich|plural|singular).*$/, '$1');
+};
+
+/** An explanation split into the sentences a claim can live in. */
+const claimSentences = (text) =>
+  String(text || '').split(/(?<=[.!?])\s+/).map((s) => s.trim()).filter(Boolean);
+
+/**
+ * unconditionedRuleSentence(item) → { clause, sentence } for the first sentence
+ * of `explanationDe`/`hint` that states a rule without its condition, else null.
+ */
+export function unconditionedRuleSentence(item) {
+  if (!item) return null;
+  const sentences = [
+    ...claimSentences(item.explanationDe),
+    ...claimSentences(item.hint),
+  ];
+  for (const sentence of sentences) {
+    if (TRANSFORMATION_RE.test(sentence) && !namesCondition(sentence)) {
+      return { clause: 'transformation', sentence };
+    }
+    if (ABSOLUTE_QUANTIFIER_RE.test(sentence) && !namesCondition(sentence)) {
+      return { clause: 'absolute-quantifier', sentence };
+    }
+    const cross = CROSS_GENDER_RE.exec(sentence);
+    if (cross) {
+      const compared = cross[1].toLowerCase();
+      const asserted = genusOf(sentence.slice(0, cross.index));
+      if (asserted && asserted !== compared) return { clause: 'cross-gender', sentence };
+    }
+    if (CONCLUDED_ARTICLE_RE.test(sentence) && !namesCondition(sentence)) {
+      return { clause: 'concluded-article', sentence };
+    }
+  }
+  return null;
+}
+
+/** True when an explanation of the item states a rule without its condition. */
+export function unconditionedRule(item) {
+  return unconditionedRuleSentence(item) !== null;
+}
+
 /**
  * exclusionReason(item) → one of REASON, or null when the item may be drawn.
  * Order matters: the most specific finding wins, so the printed counts read as
@@ -1174,6 +1335,11 @@ export function exclusionReason(item, { level } = {}) {
   // minimal same-family correction), so it must report its own reason rather
   // than share one — an unrepairable instance is what the count is for.
   if (ambiguousCorrection(item)) return REASON.AMBIGUOUS_CORRECTION;
+
+  // REVIEW #11, last for the same reason once more: an id a suite pins to an
+  // older reason keeps it. NOT level-scoped — a false rule is false at every
+  // level — and not repairable: the missing condition is authorship.
+  if (unconditionedRule(item)) return REASON.UNCONDITIONED_RULE;
 
   return null;
 }

@@ -74,6 +74,8 @@ import {
   reportSpecFor,
   normaliseStatement,
   VERB_3SG,
+  servableBy,
+  stampsApplyTo,
 } from '../src/lib/checkpoint/buildCheckpoint.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js';
@@ -1174,6 +1176,106 @@ test('remediation is deterministic and ignores topics the pool cannot serve', ()
   assert.deepEqual(a.map((i) => i.poolItemId), b.map((i) => i.poolItemId));
   const poolTopics = new Set(POOL.items.map((i) => i.topic));
   for (const item of a) assert.ok(poolTopics.has(item.topic));
+});
+
+// ── 5b. the minLektion bound ────────────────────────────────────────────────
+
+/**
+ * THE RULE (round 12): a checkpoint may only draw a pool item the course has
+ * already taught every word of — `minLektion <= afterLektion`, as a hard filter
+ * before the `untaughtAt` sort, never relaxed.
+ *
+ * WHAT IT CLOSES. `pickPracticeItems` has applied that stamp as a filter since
+ * round 10; `buildCheckpoint` applied it nowhere and only SORTED by `untaughtAt`
+ * — the same question asked with the checkpoint's own lexis table, answered by
+ * moving the item to the back of its bucket. A sort seats the item as soon as
+ * the bucket runs dry, and when a cache item left the pool this round that is
+ * exactly what happened: Checkpoint 2 (`afterLektion: 6`) seated `bb5c0422`,
+ * stamped `minLektion: 8`, and RULE 11b of scripts/validate-curriculum.mjs went
+ * 0 → 1 until a hand-written item filled the seat back up. The paper was graded
+ * and the word was two chapters away.
+ */
+test('THE minLektion BOUND — no checkpoint draws an item its chapter has not taught', () => {
+  const byId = new Map(POOL.items.map((p) => [p.id, p]));
+  const offenders = [];
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    for (const item of items) {
+      if (!item.poolItemId) continue;
+      const source = byId.get(item.poolItemId);
+      assert.ok(source, `${item.id} draws ${item.poolItemId}, which is not in the pool`);
+      if (servableBy(source, cp.afterLektion)) continue;
+      offenders.push(
+        `${item.id} [${item.section}] ${item.poolItemId}: minLektion ${source.minLektion} > afterLektion ` +
+        `${cp.afterLektion} — „${String(item.promptDe).replace(/\s+/g, ' ')}“ → ${item.answer}`,
+      );
+    }
+  }
+  assert.deepEqual(offenders, [],
+    `${offenders.length} checkpoint item(s) ahead of their chapter:\n  - ${offenders.join('\n  - ')}`);
+  // …and the sections are still the sizes the standard asks for, so the filter
+  // bought this by leaving items out of the DRAW, not out of the paper.
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    for (const [section, size] of Object.entries(SECTION_COUNTS)) {
+      assert.equal(items.filter((i) => i.section === section).length, size,
+        `${cp.id}: ${section} is short under the minLektion filter — that is a POOL finding, not a reason to relax it`);
+    }
+  }
+});
+
+test('the bound BITES — an item stamped past the chapter leaves the draw, and the paper stays 20', () => {
+  // A mutation rather than a claim: `extra-a11-l05-08` is drawn by checkpoint 2
+  // (`afterLektion: 6`) with `minLektion: 5`. Re-stamp that one item to 8 — the
+  // Lektion `bb5c0422` came from — and it must disappear from the paper while
+  // every section keeps its size.
+  const cp2 = CURRICULUM_A11.checkpoints[1];
+  const drawn = (pool) => new Set(
+    buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp2, pool })
+      .map((i) => i.poolItemId).filter(Boolean),
+  );
+  const VICTIM = 'extra-a11-l05-08';
+  assert.ok(drawn(POOL).has(VICTIM), `${VICTIM} is no longer drawn by ${cp2.id} — pick another victim`);
+
+  const mutated = { ...POOL, items: POOL.items.map((i) => (i.id === VICTIM ? { ...i, minLektion: 8 } : { ...i })) };
+  const after = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp2, pool: mutated });
+  assert.ok(!after.some((i) => i.poolItemId === VICTIM), 'the filter did not bite: a Lektion-8 item sat a Lektion-6 paper');
+  assert.equal(after.length, CHECKPOINT_ITEM_COUNT);
+  for (const [section, size] of Object.entries(SECTION_COUNTS)) {
+    assert.equal(after.filter((i) => i.section === section).length, size, `${section} went short`);
+  }
+  // `minLektion: null` — a word the course never teaches in full — is out too.
+  const never = { ...POOL, items: POOL.items.map((i) => (i.id === VICTIM ? { ...i, minLektion: null } : { ...i })) };
+  assert.ok(!buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp2, pool: never })
+    .some((i) => i.poolItemId === VICTIM), 'an item no Lektion ever teaches was drawn');
+});
+
+test('remediation obeys the same bound as the paper it answers', () => {
+  const cp2 = CURRICULUM_A11.checkpoints[1];
+  const items = buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp2, pool: POOL });
+  const answers = answerAll(items, { correctFor: () => false });
+  const byId = new Map(POOL.items.map((p) => [p.id, p]));
+  const set = remediationSet(items, answers, POOL, { afterLektion: cp2.afterLektion });
+  assert.ok(set.length > 0, 'no remediation to measure');
+  for (const item of set) {
+    const source = byId.get(item.poolItemId);
+    assert.ok(servableBy(source, cp2.afterLektion),
+      `remediation ${item.poolItemId} is stamped minLektion ${source && source.minLektion} for a Lektion-${cp2.afterLektion} paper`);
+  }
+});
+
+test('the stamp is a position in a course, so it is only compared inside that course', () => {
+  // `minLektion` counts Lektionen of the curriculum the pool was built from. The
+  // fixtures draw from the real twelve-Lektion A1.1 pool with three and six
+  // Lektionen of their own, where „Lektion 3“ is not the same place — comparing
+  // the two would enforce an accident, so the bound is not applied there.
+  assert.equal(stampsApplyTo(CURRICULUM_A11, POOL), true);
+  assert.equal(stampsApplyTo(CURRICULUM_FIXTURE, POOL), false);
+  assert.equal(stampsApplyTo(CURRICULUM_FIXTURE_6, POOL), false);
+  // An item with no stamp at all (a hand-built pool in a fixture) is left alone;
+  // a stamped one is judged.
+  assert.equal(servableBy({ id: 'x' }, 3), true);
+  assert.equal(servableBy({ id: 'x', minLektion: 3 }, 3), true);
+  assert.equal(servableBy({ id: 'x', minLektion: 4 }, 3), false);
+  assert.equal(servableBy({ id: 'x', minLektion: null }, 12), false);
 });
 
 // ── 6. the review ladder ────────────────────────────────────────────────────

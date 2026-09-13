@@ -206,10 +206,74 @@ export const NEXT_LEVEL_RE = /Vorschau|A1\.2|kommt in A1/i;
 export const isNextLevelPreview = (item) =>
   NEXT_LEVEL_RE.test([item?.questionDe, item?.promptDe, item?.explanationDe, item?.hint].filter(Boolean).join(' '));
 
-const byTopics = (pool, topics) => {
+/**
+ * THE minLektion FILTER — the same hard rule `pickPracticeItems` applies, at the
+ * checkpoint's pool door (round 12).
+ *
+ * `scripts/build-lesson-pool.mjs` stamps every pool item with `minLektion`: the
+ * first Lektion by which the course has taught every German word of the item.
+ * The lesson engine has treated it as a filter that is never relaxed since round
+ * 10 — „ein Vorgriff ist schlimmer als ein kurzer Block“ — and this builder did
+ * not apply it at all. It only ever sorted by `untaughtAt`, which asks the same
+ * question with the CHECKPOINT's own lexis table and puts the answer at the back
+ * of the bucket instead of outside it. That is a sort, and a sort seats the item
+ * whenever the bucket runs dry: when a cache item left the pool this round,
+ * Checkpoint 2 (`afterLektion: 6`) seated `bb5c0422`, stamped `minLektion: 8`,
+ * and RULE 11b went 0 → 1 until a hand item filled the seat back up.
+ *
+ * So it is a FILTER, before the `untaughtAt` sort and never relaxed by it: an
+ * item may only be drawn by a checkpoint that closes a Lektion at or after its
+ * stamp. A section that cannot fill under it is a POOL finding and must be
+ * reported as one (tests/checkpoint.test.mjs names the items it would need) —
+ * a graded paper that asks for a word the chapter never taught is the worse
+ * failure, which is exactly the trade `untaughtAt`'s own header gets wrong for
+ * an item whose lexis the course has not reached YET rather than never.
+ *
+ * `minLektion: null` means the course never teaches all of the item's words, so
+ * no checkpoint may serve it either. An item with NO stamp (a hand-built pool in
+ * a test fixture) is left alone — only a stamped item can be filtered.
+ *
+ * ONE PRECONDITION, because a stamp is a POSITION IN A COURSE and not a number:
+ * `minLektion` counts Lektionen of the curriculum the pool was built from, so it
+ * may only be compared with a checkpoint of THAT curriculum. `stampsApplyTo`
+ * below says when that holds — the curriculum has to reach at least as far as
+ * the pool's stamps do. The three-Lektion fixture of tests/fixtures draws from
+ * the real twelve-Lektion A1.1 pool on purpose, and „Lektion 3“ there is not
+ * „Lektion 3“ here; comparing the two would not enforce the rule, it would
+ * enforce an accident. (`untaughtAt` has the same problem and answers it the
+ * other way, by recomputing the lexis from whatever curriculum it is handed.)
+ */
+const stampScale = new WeakMap();
+/** The highest `minLektion` the pool stamps — how far its course reaches. */
+const poolStampReach = (pool) => {
+  const key = pool && typeof pool === 'object' ? pool : null;
+  if (key && stampScale.has(key)) return stampScale.get(key);
+  let reach = 0;
+  for (const item of poolItems(pool)) {
+    if (Number.isInteger(item?.minLektion) && item.minLektion > reach) reach = item.minLektion;
+  }
+  if (key) stampScale.set(key, reach);
+  return reach;
+};
+
+/**
+ * True when this curriculum's Lektion numbers and this pool's stamps are the
+ * same scale — i.e. the curriculum runs at least as far as the pool was stamped
+ * for. A shorter curriculum is a fixture drawing from a foreign course's pool,
+ * and its checkpoint numbers mean nothing to the stamp.
+ */
+export const stampsApplyTo = (curriculum, pool) =>
+  Math.max(0, ...((curriculum?.lektionen || []).map((l) => Number(l?.nr) || 0))) >= poolStampReach(pool);
+
+export const servableBy = (item, afterLektion) =>
+  !Object.prototype.hasOwnProperty.call(item || {}, 'minLektion') ||
+  (Number.isInteger(item.minLektion)
+    && (!Number.isInteger(afterLektion) || item.minLektion <= afterLektion));
+
+const byTopics = (pool, topics, afterLektion) => {
   const wanted = new Set(topics);
   return poolItems(pool)
-    .filter((i) => wanted.has(i.topic) && !isNextLevelPreview(i))
+    .filter((i) => wanted.has(i.topic) && !isNextLevelPreview(i) && servableBy(i, afterLektion))
     .sort((a, b) => (a.topic === b.topic ? (a.order || 0) - (b.order || 0) : a.topic < b.topic ? -1 : 1));
 };
 
@@ -251,10 +315,10 @@ function untaughtAt(curriculum, lastNr) {
  * that, deterministically and without repeating anything in `usedIds`. Topics
  * are visited round-robin so one fat topic cannot crowd the others out.
  */
-function drawPool(pool, topics, n, rng, usedIds, { typedOnly = false, untaught = () => false } = {}) {
+function drawPool(pool, topics, n, rng, usedIds, { typedOnly = false, untaught = () => false, afterLektion } = {}) {
   if (n <= 0 || !topics.length) return [];
   const buckets = topics.map((topic) => {
-    const all = shuffle(byTopics(pool, [topic]).filter((i) => !usedIds.has(i.id)), rng);
+    const all = shuffle(byTopics(pool, [topic], afterLektion).filter((i) => !usedIds.has(i.id)), rng);
     const pick = (dirty) => {
       const some = all.filter((i) => untaught(i) === dirty);
       const typed = some.filter(isTyped);
@@ -1261,18 +1325,18 @@ function buildLesen(ctx) {
 // from earlier chapters lands, because grammar is the thing that has to keep
 // coming back.
 function buildBausteine(ctx) {
-  const { checkpoint, rng, chapter, earlier, pool, usedPoolIds, untaught } = ctx;
+  const { checkpoint, rng, chapter, earlier, pool, usedPoolIds, untaught, afterLektion } = ctx;
   const chapterTopics = topicsOf(chapter);
   const earlierTopics = topicsOf(earlier).filter((t) => !chapterTopics.includes(t));
   const earlierWanted = earlierTopics.length ? POOL_ITEMS_EARLIER : 0;
-  const drawnEarlier = drawPool(pool, earlierTopics, earlierWanted, rng, usedPoolIds, { untaught });
+  const drawnEarlier = drawPool(pool, earlierTopics, earlierWanted, rng, usedPoolIds, { untaught, afterLektion });
   const drawnChapter = drawPool(
     pool,
     chapterTopics,
     SECTION_COUNTS.bausteine - drawnEarlier.length,
     rng,
     usedPoolIds,
-    { untaught },
+    { untaught, afterLektion },
   );
   return [...drawnChapter, ...drawnEarlier].map((p, i) =>
     fromPoolItem(p, {
@@ -1307,7 +1371,7 @@ function buildBausteine(ctx) {
 //     name is taken: evaluate-writing derives its character floor from it. The
 //     only item with a register is the real task, whose register is real.
 function buildSchreiben(ctx) {
-  const { checkpoint, rng, chapter, pool, usedPoolIds, level, untaught } = ctx;
+  const { checkpoint, rng, chapter, pool, usedPoolIds, level, untaught, afterLektion } = ctx;
   const graded = gradedWritingItem(checkpoint, chapter, level);
   const drillCount = SECTION_COUNTS.schreiben - (graded ? 1 : 0);
 
@@ -1318,7 +1382,7 @@ function buildSchreiben(ctx) {
   for (const slug of slugs) {
     if (chosen.length >= drillCount) break;
     const candidates = shuffle(
-      byTopics(pool, [slug]).filter((i) => i.type === 'sentence_building' && !usedPoolIds.has(i.id)),
+      byTopics(pool, [slug], afterLektion).filter((i) => i.type === 'sentence_building' && !usedPoolIds.has(i.id)),
       rng,
     );
     // Taught lexis first, and only then this slug's other sentence-building
@@ -1334,10 +1398,10 @@ function buildSchreiben(ctx) {
   if (chosen.length < drillCount) {
     const used = new Set(chosen.map((c) => c.topic));
     const rest = topicsOf(chapter).filter((t) => !used.has(t));
-    chosen.push(...drawPool(pool, rest, drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught }));
+    chosen.push(...drawPool(pool, rest, drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion }));
   }
   if (chosen.length < drillCount) {
-    chosen.push(...drawPool(pool, topicsOf(chapter), drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught }));
+    chosen.push(...drawPool(pool, topicsOf(chapter), drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion }));
   }
 
   const drills = chosen.map((p, i) =>
@@ -1535,6 +1599,11 @@ export function buildCheckpoint({ curriculum, checkpoint, pool, seed } = {}) {
     // Measured at the END of the chapter this checkpoint closes: that is what
     // the learner sitting it has been taught (see untaughtAt).
     untaught: untaughtAt(curriculum, checkpoint.afterLektion),
+    // …and the hard half of the same question, applied before that sort rather
+    // than inside it (see servableBy). `undefined` where the stamps and this
+    // curriculum are not the same scale, which is the one case in which the
+    // comparison would be an accident rather than the rule.
+    afterLektion: stampsApplyTo(curriculum, pool) ? checkpoint.afterLektion : undefined,
   };
   return [
     ...buildHoeren(ctx),
@@ -1671,7 +1740,7 @@ export function scoreCheckpoint(items, answers = {}) {
  * single bad topic does not fill the whole set. Nothing already seen in this
  * checkpoint comes back (the standard: a miss returns as a DIFFERENT variant).
  */
-export function remediationSet(items, answers = {}, pool, { size = 10, seed } = {}) {
+export function remediationSet(items, answers = {}, pool, { size = 10, seed, afterLektion } = {}) {
   const missCounts = new Map();
   const tags = {};
   for (const item of items) {
@@ -1687,7 +1756,12 @@ export function remediationSet(items, answers = {}, pool, { size = 10, seed } = 
     tags[tag] = (tags[tag] || 0) + 1;
   }
 
-  const poolTopics = new Set(poolItems(pool).map((i) => i.topic));
+  // The remediation set is drawn for the learner who has just sat THIS paper, so
+  // it obeys the same `minLektion` bound the paper does: a miss is answered with
+  // a variant the course has already taught, never with a preview of Lektion 8.
+  const poolTopics = new Set(
+    poolItems(pool).filter((i) => servableBy(i, afterLektion)).map((i) => i.topic),
+  );
   const failing = [...missCounts.entries()]
     .filter(([topic]) => poolTopics.has(topic))
     .sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1))
@@ -1696,8 +1770,8 @@ export function remediationSet(items, answers = {}, pool, { size = 10, seed } = 
 
   const used = new Set(items.map((i) => i.poolItemId).filter(Boolean));
   const rng = mulberry32(hashSeed(seed ?? `${items[0]?.id || 'cp'}-remediation`));
-  const drawn = drawPool(pool, failing, size, rng, used);
-  if (drawn.length < size) drawn.push(...drawPool(pool, fallback, size - drawn.length, rng, used));
+  const drawn = drawPool(pool, failing, size, rng, used, { afterLektion });
+  if (drawn.length < size) drawn.push(...drawPool(pool, fallback, size - drawn.length, rng, used, { afterLektion }));
 
   return drawn.map((p, i) => ({
     ...fromPoolItem(p, {

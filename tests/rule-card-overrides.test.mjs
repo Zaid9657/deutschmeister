@@ -47,6 +47,12 @@ import assert from 'node:assert/strict';
 import OVERRIDES, { RULE_CARD_OVERRIDE_SLUGS } from '../scripts/rule-card-overrides.mjs';
 import { RULE_CARDS } from '../netlify/functions/_shared/ruleCards.mjs';
 import { ALL_CURRICULA } from '../src/data/curricula/index.js';
+import {
+  META_NOUNS,
+  CONSTRUCTION_PATTERNS,
+  isMetaNoun,
+  introducedAt as introducedIn,
+} from '../src/data/curricula/constructions.js';
 
 /** Level keys in course order — 'a1.1' before 'a1.2'; a later level inherits the earlier lexis. */
 const LEVELS = Object.keys(ALL_CURRICULA).sort();
@@ -497,54 +503,10 @@ test('no card duzt outside a paradigm listing', () => {
 //
 // Everything a card may legitimately name beyond that lexis is listed below, by
 // kind, and every list is closed.
-const META_NOUNS = [
-  // grammar vocabulary — the card talks about German, so it needs these words
-  'Artikel', 'Nomen', 'Verb', 'Satz', 'Satzende', 'Frage', 'Antwort', 'Aussage', 'Endung',
-  'Plural', 'Singular', 'Buchstabe', 'Name', 'Uhr', 'Uhrzeit', 'Wort', 'Form', 'Formen',
-  'Person', 'Pronomen', 'Genus', 'Stamm', 'Vokal', 'Infinitiv', 'Akkusativ', 'Regel',
-  'Verneinung', 'Vorsilbe', 'Position', 'Beispiel', 'Gruppe', 'Anrede', 'Kurzantwort',
-  'Wortfolge', 'Subjekt', 'Stimme', 'Sonderfall', 'Bedeutung', 'Ordnungszahl', 'Fehler',
-  // ADDED 2026-09-13 (round 10): the umlaut plural of Wort. The matcher resolves
-  // suffixes, never umlauts, so "die die-Wörter" needs the plural spelled out.
-  'Wörter',
-  // ADDED 2026-09-13: the clock card needs the units it teaches, and neither is a
-  // Wortfeld entry of A1.1 L8 (the Wortfeld carries Uhrzeit, halb, Viertel nach/vor).
-  'Stunde', 'Minute',
-  // ADDED 2026-09-13: "Die Sache ist schon bekannt" is what definite-articles
-  // teaches; A1.1 L5's Wortfeld names the objects, not the word for a thing.
-  'Sache',
-  // ADDED 2026-09-13: A1.1 L11 teaches the Satzklammer by name in its notice.
-  'Satzklammer',
-  // ADDED 2026-09-13: the words the cards use to talk about a sentence and about
-  // the course itself — "das Verb steht auf Platz 1" is the wording review #3
-  // pinned, "die Vorsilbe steht am Ende" is A1.1 L11's notice, and a card may say
-  // what happens "in Übungen".
-  'Platz', 'Ende', 'Übung',
-  // ADDED 2026-09-13: Ja and Nein quoted as words ("nicht nur Ja plus Verb").
-  'Ja', 'Nein',
-  // ADDED 2026-09-13 FOR A1.2: the rest of the metalanguage the twelve A1.2
-  // notices themselves use. Each is a term ABOUT German, never a thing in the
-  // situation: the three cases and the two other parts of speech A1.2 names
-  // (Nominativ/Dativ/Objekt, Adjektiv, Modalverb), the tense and form words
-  // (Präsens, Perfekt, Partizip, Vergangenes → Vergangenheitsform via `Form`),
-  // the sentence words (Präposition, Fragewort → `Wort`, Aussagesatz → `Satz`,
-  // Wendung, Vergleich), the four things a W-question asks after (Ort, Richtung,
-  // Grund, Dauer — the notice's own gloss list), and the two words a card needs
-  // to point at the course (Lektion, Kurs).
-  'Nominativ', 'Dativ', 'Objekt', 'Adjektiv', 'Modalverb', 'Präsens', 'Perfekt', 'Partizip',
-  'Präposition', 'Wendung', 'Vergleich', 'Ort', 'Richtung', 'Grund', 'Dauer', 'Lektion', 'Kurs',
-  'Imperativ',
-  // ADDED 2026-09-13 (round 3, A1.2 card rewrite): the rest of the metalanguage the
-  // rewritten A1.2 cards quote FROM their own notices. `Stelle` and `Angabe` are
-  // L1's own wording ("an zweiter Stelle", "Steht eine Angabe vorn"); `Maskulinum`
-  // and `Neutrum` are L3's and L10's; `Hunderter` is L2's; `Aufforderung` is L8's;
-  // `Menge` is L5's gloss for wie viel; `Erlaubnis`, `Notwendigkeit`, `Absicht`,
-  // `Auftrag` and `Fähigkeit` are L9's five modal glosses; `Vergangenes` and
-  // `Vergangenheitsform` are L12's. `Dialog` is how a card labels a quoted line.
-  'Stelle', 'Angabe', 'Maskulinum', 'Neutrum', 'Hunderter', 'Aufforderung', 'Menge',
-  'Erlaubnis', 'Notwendigkeit', 'Absicht', 'Auftrag', 'Fähigkeit', 'Vergangenes',
-  'Vergangenheitsform', 'Dialog',
-];
+// META_NOUNS, CONSTRUCTION_PATTERNS and isMetaNoun now live in
+// `src/data/curricula/constructions.js` so that this guard and RULE 15b in
+// `scripts/validate-curriculum.mjs` read ONE definition (DaF review #11, MAJOR 3).
+// The list itself is unchanged; see that module for its per-entry history.
 
 /** Letter NAMES, which the A1.1 L1 card must spell out — they are names, not lexis. */
 const LETTER_NAMES = ['Jot', 'Vau', 'We', 'Ypsilon', 'Zett', 'Eszett', 'Umlaut', 'Zed'];
@@ -1332,61 +1294,22 @@ const guardedSentences = (card) =>
  * and „ein und eine stehen bei einer Sache.“ on the L5 card came back clean from
  * all four earlier guards, because every single word in it is fine.
  *
- * The introducing Lektion is READ FROM THE CURRICULUM (the Lektion whose
- * `primarySlug` is the pattern's slug), never typed here, so moving a Lektion
- * moves the guard with it. Two deliberate narrowings, both measured against the
- * 24 shipped cards:
- *   • the indefinite-article pattern ignores a METALANGUAGE noun — „Jedes Nomen
- *     hat ein Genus“ is the A1.1 L4 notice TITLE and the card that must repeat
- *     it; the pattern is about naming a THING with an article, not about the
- *     card talking about grammar;
- *   • `ihr`/`Ihr` is not in the possessive pattern: it is also the L3 subject
- *     pronoun and the polite possessive of the Sie-register the whole course
- *     speaks, so the pattern would fire on „Wie ist Ihr Name?“.
+ * The patterns themselves, their two narrowings and the rule that the
+ * introducing Lektion is READ FROM THE CURRICULUM live in
+ * `src/data/curricula/constructions.js`, because the same question has to be
+ * answered the same way for the sentence the learner DICTATES or READS ALOUD —
+ * RULE 15b in `scripts/validate-curriculum.mjs` (DaF review #11, MAJOR 3).
  * The exemption is the same one every guard here has: a sentence that POINTS
  * AHEAD names its own deferral and is allowed to.
  */
-const CONSTRUCTION_PATTERNS = [
-  {
-    slug: 'indefinite-articles',
-    label: 'unbestimmter Artikel vor einem Nomen',
-    re: /\b(ein|eine|kein|keine)\s+([A-ZÄÖÜ][a-zäöüß]+)/g,
-    skip: (m) => META_NOUNS.map((w) => w.toLowerCase()).includes(m[2].toLowerCase()),
-  },
-  {
-    slug: 'separable-verbs-intro',
-    label: 'die Satzklammer (Verb vorn, Vorsilbe am Satzende)',
-    re: /\b\w+e?[stn]?\b[^.!?]*\s(ein|auf|an|aus|mit|zu|vor|nach)\s*[.!?]/g,
-    // …but only when the sentence actually has a FINITE verb that could be the
-    // front half of the clamp — otherwise „Der Teppich ist auf der Terrasse.“ is a
-    // Satzklammer. Every person of the form, the Sie-form included: the review's
-    // own probe is „Stehen Sie um sechs auf?“.
-    skip: (m, sentence) => !/\b(kauf|steh|ruf|fang|hör|mach|komm|seh|bring|schlaf|räum|geh|fahr|zieh)(e|st|t|en)\b/i.test(sentence),
-  },
-  {
-    slug: 'possessive-articles',
-    label: 'Possessivartikel vor einem Nomen',
-    // `sein` is NOT in this list: it is also the infinitive of the copula, which
-    // A1.1 Lektion 2 teaches and which every card that names the verb has to
-    // write („Nach sein steht der Beruf ohne Artikel“). The possessive `sein` is
-    // carried by UNTAUGHT_ANSWER_FORMS below instead.
-    re: /\b(mein|dein|unser|euer)e?[nmrs]?\s+([A-ZÄÖÜ][a-zäöüß]+)/gi,
-    skip: (m) => META_NOUNS.map((w) => w.toLowerCase()).includes(m[2].toLowerCase()),
-  },
-];
 
 /** The Lektion of `level` whose primarySlug is `slug` — the curriculum's own answer. */
-const introducedAt = (level, slug) => {
-  const l = (ALL_CURRICULA[level]?.lektionen || []).find((x) => x.primarySlug === slug);
-  return l ? l.nr : null;
-};
-
-const META_NOUN_SET = new Set(META_NOUNS.map((w) => w.toLowerCase()));
+const introducedAt = (level, slug) => introducedIn(ALL_CURRICULA[level], slug);
 
 /** True when every occurrence of `form` in the sentence is followed by a metalanguage noun. */
 const beforeMetaNounOnly = (form, sentence) => {
   const hits = [...sentence.matchAll(new RegExp(`\\b${escapeRe(form)}\\b\\s*(\\S*)`, 'gi'))];
-  return hits.length > 0 && hits.every((m) => META_NOUN_SET.has(String(m[1]).replace(/[^A-Za-zÄÖÜäöüß]/g, '').toLowerCase()));
+  return hits.length > 0 && hits.every((m) => isMetaNoun(m[1]));
 };
 
 const constructionOffenders = (sentences, primary) => {
