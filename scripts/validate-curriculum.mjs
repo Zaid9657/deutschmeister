@@ -289,8 +289,14 @@ export const MAX_MISSIONLESS_LEKTIONEN = 4;        // a1.1; per level in LEVELS 
  * merge (78 items at A1.1, 91 at A1.2). What is LEFT here is the repairable half by construction:
  * every remaining token is taught, only LATER than the Lektion the item is filed under, i.e. a
  * Vorgriff a repair round can move.
+ *
+ * 2026-09-13, round 10: **61 → 55**. `ITEM_FORMULA_RE` gained „Welche Schreibweise ist richtig“,
+ * the whole task line of the generated spelling-choice items — `Schreibweise` and `richtig` were
+ * being counted as item lexis in every one of them, which is the formula talking and not the item.
+ * (It is the same class as the four A1.2 formulas added a day earlier; without the entry those
+ * items could never be served at any Lektion under the new `minLektion` stamp.)
  */
-export const MAX_UNTAUGHT_ITEM_TOKENS = 61;        // a1.1; per level in LEVELS below — measured 2026-09-13
+export const MAX_UNTAUGHT_ITEM_TOKENS = 55;        // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
  * RULE 11b ratchet — how many (item, token) pairs the learner MEETS may still use a word the course
@@ -316,8 +322,21 @@ export const MAX_UNTAUGHT_ITEM_TOKENS = 61;        // a1.1; per level in LEVELS 
  * DaF review #8, MAJOR 4: the ratchet had drifted above the printed measurement (4, one `Deutsch`
  * spelling item having been repaired since). Re-measured 2026-09-13: **4**, and the ratchet moves
  * with it — read it off `node scripts/validate-curriculum.mjs a1.1`, not off this comment.
+ *
+ * 2026-09-13, round 10: **4 → 0, and RULE 11b is now a HARD RULE at A1.1 with no ratchet at all.**
+ * Commit 217c958 made the draw fresh per attempt and the list grew straight back to 13 pairs — nine
+ * cache items drawn one to five Lektionen too early. That is the proof the number could never be
+ * repaired item by item: the items are sound, the LEKTION was wrong, and any change to the draw
+ * re-rolls the list. So the question is answered at BUILD time instead: every pool item carries
+ * `minLektion` (see `minLektionIndex` below), the first Lektion by which the course has taught all
+ * of its words, and `pickPracticeItems` will not consider an item above the Lektion it draws for.
+ * The rule is 0 BY CONSTRUCTION, which is why it has no ratchet here — a non-zero reading now means
+ * the stamp and the filter have come apart, not that a repair round is owed.
+ *
+ * A1.2 keeps a ratchet (its row in LEVELS): the level is PAUSED and its pool carries no stamp yet,
+ * so the filter is a no-op there by design — an unstamped item is never filtered.
  */
-export const MAX_UNTAUGHT_DRAWN_TOKENS = 4;        // a1.1; per level in LEVELS below — measured 2026-09-13
+export const MAX_UNTAUGHT_DRAWN_TOKENS = 0;        // a1.1 — hard rule since round 10, see above
 
 /**
  * A1.2 — the twelve grammar slugs of the level in `topic_order` (grammar-content-cache.json,
@@ -552,7 +571,15 @@ export const LEVELS = {
       // („fliegen“/„fliege“ in L2, taught in L7; „Onkel“ in L3) — re-measured after the round-8
       // A1.1 engine changes. A1.2 is PAUSED by owner decision (2026-09-13); the number is a
       // work order for whoever resumes it, not a target.
-      untaughtDrawnTokens: 3,
+      //
+      // 3 → 4, paused; re-measured 2026-09-13. The engine change of commit 217c958 (fresh draw per
+      // attempt) re-rolled which items A1.2 serves and „fern“ (L6, taught L9) came into the draw.
+      // At A1.1 the same movement is now impossible — the `minLektion` stamp makes RULE 11b 0 by
+      // construction — but the mechanism needs the pool to carry the stamp, and A1.2's pool is a
+      // DRAFT nobody may rebuild while the level is paused. Rebuilding a1.2.json (`node
+      // scripts/build-lesson-pool.mjs a1.2`) is the first step of whoever resumes the level, and it
+      // takes this ratchet to 0 and hard, exactly as at A1.1.
+      untaughtDrawnTokens: 4,
       // RULE 12 is a hard rule (0, no ratchet) — see its comment above. No entry here.
       missionlessLektionen: 1,
       unexemplifiedNoticeForms: 0,
@@ -714,6 +741,11 @@ const ITEM_FORMULA_RE = new RegExp([
   // build-lesson-pool.mjs dropped two sound yes-no-questions items over the task line.
   'Schreiben Sie die höfliche Frage',
   'Bilden Sie den Satz', 'Bilden Sie die höfliche Frage', 'Bilden Sie die Frage',
+  // „Welche Schreibweise ist richtig?“ is the whole task line of the generated spelling-choice
+  // items this file's sibling build script writes from the Wortfeld — the learner picks between two
+  // spellings of a word that IS taught. It was missing, so `Schreibweise` and `richtig` counted as
+  // item lexis in every one of them and they could never be served at any Lektion (minLektion null).
+  'Welche Schreibweise ist richtig',
   'Buchstabieren Sie das Wort', 'Lesen Sie die Buchstaben',
   'Korrigieren Sie', 'Ergänzen Sie', 'Wählen Sie',
 ].join('|'), 'g');
@@ -847,6 +879,34 @@ export function untaughtTokens(item, knownSet, spec = null) {
     }
   }
   return out;
+}
+
+/**
+ * THE EARLIEST LEKTION AN ITEM MAY BE SERVED IN — `minLektion`, the build-time stamp that makes
+ * RULE 11b zero by construction (round 10).
+ *
+ * RULE 11b measured a Vorgriff the draw could produce and a repair round then had to chase item by
+ * item; commit 217c958 (fresh draw per attempt) moved the draw and the list grew back to 13. A list
+ * of ids is not a rule, so the question „is every word of this item taught by Lektion n?“ is
+ * answered ONCE, at build time, for every item and every n: `minLektion` is the first n at which
+ * `untaughtTokens(item, knownUpTo(n))` is empty, and `pickPracticeItems` will not consider an item
+ * whose `minLektion` is greater than the Lektion it is drawing for. `null` means the course never
+ * teaches all of the item's words — the build-time level gate already drops those.
+ *
+ * It is THE VALIDATOR'S OWN tokeniser and the validator's own per-Lektion snapshots, exported for
+ * the build for exactly the reason `levelLexicon` is: the build may not stamp items on a yardstick
+ * the validator does not measure them with, or the stamp and the rule could disagree.
+ *
+ * Returns a function rather than a table so the O(12) snapshots are built once per level.
+ */
+export function minLektionIndex(level = 'a1.1') {
+  const spec = levelSpec(level);
+  if (!spec) return () => null;
+  const snapshots = [...taughtUpTo(spec.curriculum, spec).entries()].sort((a, b) => a[0] - b[0]);
+  return (item) => {
+    for (const [nr, known] of snapshots) if (!untaughtTokens(item, known, spec).length) return nr;
+    return null;
+  };
 }
 
 /**

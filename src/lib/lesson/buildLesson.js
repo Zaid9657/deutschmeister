@@ -335,8 +335,11 @@ function seededShuffle(list, rng) {
  *
  * `options` is what only the LEVEL knows — pass nothing and it behaves like a
  * standalone draw (still filtered, still deterministic):
- *   { primarySlug, ownTerms, earlierTerms, usedIds, previousAnswerLemmas,
+ *   { lektionNr, primarySlug, ownTerms, earlierTerms, usedIds, previousAnswerLemmas,
  *     priorAttemptIds }
+ *
+ * `lektionNr` drives the one filter that is never relaxed: an item may only be
+ * drawn at or after its `minLektion` stamp (see below).
  *
  * When the topic slice is too small the result is simply shorter rather than
  * padded with off-topic items — a short pool is a content bug, not something to
@@ -350,7 +353,20 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
   const topicList = (rule && rule.topics) || [];
   const topics = new Set(topicList);
   const typedMin = Math.max(0, (rule && rule.typedMin) || 0);
-  const usable = poolItems(pool).filter((it) => topics.has(it.topic) && isUsableItem(it));
+  // RULE 11b IS A FILTER, NOT A RATCHET (round 10). `minLektion` is stamped on every pool item by
+  // `scripts/build-lesson-pool.mjs` with the validator's own per-Lektion lexicon: it is the first
+  // Lektion by which the course has taught every German word of the item. An item drawn before that
+  // shows the learner a word he has not met — „Welche Schreibweise ist richtig?“ in L1, `Kaffee`
+  // and `kocht` in L4 — which no edit to the item can repair, because the item is fine and the
+  // Lektion was wrong. So it is a HARD filter, applied before the caps and never relaxed by the
+  // fallback passes below: a Vorgriff is worse than a short block. `minLektion: null` means the
+  // course never teaches all of the item's words, so no Lektion may serve it.
+  // Items with no stamp at all (a hand-built pool in a test) are left alone — only a stamped item
+  // can be filtered, or every unit test would have to know the lexicon.
+  const servableHere = (it) =>
+    !Object.prototype.hasOwnProperty.call(it, 'minLektion') ||
+    (Number.isInteger(it.minLektion) && (!Number.isInteger(options.lektionNr) || it.minLektion <= options.lektionNr));
+  const usable = poolItems(pool).filter((it) => topics.has(it.topic) && isUsableItem(it) && servableHere(it));
   if (!usable.length) return [];
 
   const primarySlug = options.primarySlug || topicList[0];
@@ -529,11 +545,32 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
   }
   const chosen = best.chosen;
 
+  // WHAT THE DRAW HAD TO GIVE UP, for whoever asks. `relaxUsed` is the ladder
+  // stage the best pass needed: 0 means every cap held, ≥ 2 means the eligible
+  // slice held no legal seven under the lemma and answer-key caps after
+  // PICK_RETRIES orders — a CONTENT shortage, not an unlucky draw, and the only
+  // honest way to tell the two apart from outside the engine.
+  if (options.report && typeof options.report === 'object') {
+    options.report.relaxUsed = best.relaxUsed;
+    options.report.complete = best.complete;
+    options.report.eligible = eligible.length;
+  }
+
   // Present them in a seeded order so typed and recognition interleave.
   return seededShuffle([...chosen.values()], mulberry32(seed));
 }
 
 const planCache = new WeakMap();
+const planReports = new WeakMap();
+
+/**
+ * The per-Lektion draw report of a plan `planPractice` returned:
+ * Map<nr, { relaxUsed, complete, eligible }>. Guards read it to tell „this
+ * Lektion breaks a cap because the engine picked badly“ from „…because its
+ * eligible slice cannot honour every cap at once“ — after the `minLektion`
+ * filter of round 10, L4 is the second kind and no reshuffle can fix it.
+ */
+export const practiceReport = (plan) => planReports.get(plan) || new Map();
 
 /**
  * planPractice(curriculum, pool, attempt) → Map<lektion.nr, items[]>
@@ -583,19 +620,24 @@ export function planPractice(curriculum, pool, attempt = 1) {
   const earlierTerms = new Set();
   let previousAnswerLemmas = new Set();
 
+  const reports = new Map();
   for (const lektion of lektionen) {
     const ownTerms = wortfeldTerms(lektion);
+    const report = {};
+    reports.set(lektion.nr, report);
     const items = pickPracticeItems(
       pool,
       lektion.practiceRule || { topics: [], typedMin: 0 },
       seedFor(level, lektion.nr, attempt),
       {
+        lektionNr: lektion.nr,
         primarySlug: lektion.primarySlug || ((lektion.practiceRule || {}).topics || [])[0],
         ownTerms,
         earlierTerms: new Set(earlierTerms),
         usedIds: new Set(usedIds),
         previousAnswerLemmas,
         priorAttemptIds: priorByNr.get(lektion.nr) || new Set(),
+        report,
       },
     );
     plan.set(lektion.nr, items);
@@ -604,6 +646,7 @@ export function planPractice(curriculum, pool, attempt = 1) {
     for (const t of ownTerms) earlierTerms.add(t);
   }
 
+  planReports.set(plan, reports);
   if (byAttempt) byAttempt.set(attempt, plan);
   return plan;
 }

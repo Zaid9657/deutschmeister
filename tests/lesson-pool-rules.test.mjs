@@ -90,7 +90,8 @@ import {
   ambiguousCorrection, minimalArticleCorrection, isPoliteFormItem, drillsSlug, isNumberWord,
   politeCaseItem, POLITE_CUE_RE, INFORMAL_VETO_RE, carriesPoliteForm, NEXT_LEVEL_RE, UNTAUGHT_ANSWER_FORMS, UNTAUGHT_ANSWER_FORM_RE, untaughtForm,
 } from '../src/data/lessonPools/quality.js';
-import { levelLexicon, untaughtTokens, levelSpec } from '../scripts/validate-curriculum.mjs';
+import { levelLexicon, untaughtTokens, levelSpec, minLektionIndex } from '../scripts/validate-curriculum.mjs';
+import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => JSON.parse(readFileSync(join(ROOT, p), 'utf8'));
@@ -826,6 +827,44 @@ test('no shipped legacy item carries a word the course never teaches — REVIEW 
     // and the partition is real: a level whose legacy half is empty would pass
     // the assertion above without measuring anything.
     assert.ok(legacyOf(pool).length > 50, `${level}: only ${legacyOf(pool).length} legacy items found — the id partition broke`);
+  }
+});
+
+test('every pool item carries the minLektion the validator recomputes — round 10', () => {
+  // THE STAMP THE DRAW FILTERS ON. `scripts/build-lesson-pool.mjs` writes `minLektion` onto every
+  // item: the first Lektion by which the course has taught every German word of the item, measured
+  // with the validator's own per-Lektion lexicon. `pickPracticeItems` then refuses to serve an item
+  // above the Lektion it draws for, which is what makes RULE 11b 0 BY CONSTRUCTION rather than a
+  // ratchet a repair round chases after every change to the draw (commit 217c958 made the draw
+  // fresh per attempt and the old ratchet of 4 immediately measured 13).
+  //
+  // A STAMP THAT DRIFTS FROM THE LEXICON IS WORSE THAN NO STAMP, because the filter would then be
+  // enforcing yesterday's vocabulary silently. So this does not spot-check ids: it recomputes the
+  // whole column from `minLektionIndex` and compares item by item. It fails the moment the pool is
+  // stale against the curriculum — the remedy is `node scripts/build-lesson-pool.mjs a1.1`.
+  const minLektionOf = minLektionIndex('a1.1');
+  const wrong = [];
+  const missing = [];
+  for (const item of POOL.items) {
+    if (!Object.prototype.hasOwnProperty.call(item, 'minLektion')) { missing.push(item.id); continue; }
+    const expected = minLektionOf(item);
+    if (item.minLektion !== expected) wrong.push(`${item.id} stamped ${item.minLektion}, lexicon says ${expected}`);
+  }
+  assert.deepEqual(missing, [], `${missing.length} pool item(s) carry no minLektion — rebuild the pool`);
+  assert.deepEqual(wrong, [], `${wrong.length} stale minLektion stamp(s) — rebuild the pool:\n  - ${wrong.join('\n  - ')}`);
+
+  // The column is a measurement, not a constant: every Lektion must be reachable by some item, or
+  // a filter bug that stamped everything L1 (or everything L12) would pass the equality above.
+  const stamped = POOL.items.filter((it) => Number.isInteger(it.minLektion));
+  assert.ok(stamped.length > 250, `only ${stamped.length} items carry a numeric minLektion`);
+  const byNr = new Set(stamped.map((it) => it.minLektion));
+  for (const l of CURRICULUM_A11.lektionen) {
+    assert.ok(byNr.has(l.nr), `no item in the pool becomes servable at L${l.nr} — the stamp is degenerate`);
+  }
+  // `null` is legal and means „the course never teaches all of this item's words“, so no Lektion
+  // may serve it. Those items are RULE 11's work order; the draw simply never reaches them.
+  for (const it of POOL.items) {
+    assert.ok(it.minLektion === null || Number.isInteger(it.minLektion), `${it.id}: minLektion is ${it.minLektion}`);
   }
 });
 
