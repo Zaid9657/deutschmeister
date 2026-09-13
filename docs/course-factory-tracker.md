@@ -399,6 +399,13 @@ node scripts/validate-curriculum.mjs      # RULES 1–13 with the four ratchets
 
 ## Decisions log
 
+- 2026-09-13 (owner): **"only create A1.1."** A1.2 work is paused: the draft curriculum, pool, cards and
+  116 items stay on `main` as a DRAFT (`DRAFT_CURRICULA`, not in `CURRICULA`, invisible to the app)
+  with two DaF reviews on file (`docs/course-factory/a12-rebuild/`), but no further A1.2 rounds run
+  until the owner says so. Every agent session focuses on A1.1 until it is signed off (0 BLOCKER /
+  0 MAJOR). The paid A1.2 course page is untouched by any of this.
+
+
 - 2026-09-13 (Wave 8, round 5): **one register, and it is the Sie-register.** Everything the course
   says to the learner siezt — every practice instruction, notice, rule card, checkpoint and mail
   ("Bilden Sie den Satz…", "Schreiben Sie das Wort…"); only the *dialogues* duzen, and only between the
