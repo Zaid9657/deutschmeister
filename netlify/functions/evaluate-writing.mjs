@@ -37,10 +37,26 @@ const WRITING_LIMITS = {
 // parses it back out of this file, so the claim can never drift from the gate.
 const COURSE_WRITING_FREE_LIFETIME = 12;
 
-// Every course task_key starts with this. writing_submissions has no `scope`
-// column (migrations/2026-08-31-writing-submissions.sql), so the prefix IS the
-// scope — keep it in step with the bank's taskKeys.
-const COURSE_TASK_KEY_PREFIX = 'a11-';
+// Every course task_key is `<course>-l<NN>` (e.g. `a11-l03`, `a12-l07`).
+// writing_submissions has no `scope` column
+// (migrations/2026-08-31-writing-submissions.sql), so the prefix IS the
+// scope — but the prefix is PER COURSE, not a single hardcoded literal: a
+// fixed 'a11-' here made every a12-* (and any future course) task_key
+// `isCourse === true` (unlocking the free course allowance path) while the
+// usage COUNT still queried `task_key LIKE 'a11-%'`, so those submissions
+// were never counted (unlimited for free learners) and A1.1 usage could
+// separately lock A1.2 out once its own twelve were exhausted. Derive the
+// course prefix from the task's OWN key instead of a second literal.
+const COURSE_TASK_KEY_RE = /^(a\d\d)-l\d\d$/;
+
+// Returns the `<course>-` prefix (e.g. 'a11-') to scope the lifetime
+// allowance COUNT to, or null when task_key doesn't match the course task
+// key shape (in which case courseAllowance is never true, so the caller
+// never needs this value).
+export function courseTaskKeyPrefix(taskKey) {
+  const m = typeof taskKey === 'string' ? taskKey.match(COURSE_TASK_KEY_RE) : null;
+  return m ? `${m[1]}-` : null;
+}
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -181,8 +197,9 @@ export const handler = async (event) => {
       .select('id', { count: 'exact', head: true })
       .eq('user_id', user_id);
     if (courseAllowance) {
-      // Lifetime, and only the course's own rows — the prefix is the scope.
-      usedQuery = usedQuery.like('task_key', `${COURSE_TASK_KEY_PREFIX}%`);
+      // Lifetime, and only THIS course's own rows — the prefix is derived
+      // from the submitted task_key itself, never a fixed literal.
+      usedQuery = usedQuery.like('task_key', `${courseTaskKeyPrefix(task_key)}%`);
     } else if (tier !== 'free_trial') {
       const now = new Date();
       const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
