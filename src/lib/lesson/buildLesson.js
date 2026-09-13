@@ -61,6 +61,26 @@ export const PRACTICE_SIZE = 7;
 export const MAX_MULTIPLE_CHOICE = 2;
 /** The Lektion's own grammar point must supply at least this many of the seven. */
 export const PRIMARY_MIN = 4;
+/**
+ * THE SITUATION FLOOR (DaF review #12 MAJOR 4, the half of round 11's MAJOR 1
+ * that was never written). `relevanceScore` has ranked the draw by the Lektion's
+ * own Wortfeld since round 9 — and a sort key is not a floor. Measured on the
+ * shipped pool before this rule: L7 („Freizeit und Hobbys") served attempt 3
+ * with TWO of seven items containing a word of its own Wortfeld — Tschüss,
+ * Berlin, a baby and a brother — while every cap reported green and
+ * `relaxUsed` was 0, because nothing asked. A learner repeating a Lektion meets
+ * the third draw, and the third draw is where he finds out whether the product
+ * is a situation or a grammar bank.
+ *
+ * The floor is the same 4 of 7 as `PRIMARY_MIN` for the same reason: a majority
+ * of the seven has to be about the thing the Lektion is about. It is a FILL
+ * PASS, not a cap — `pickPracticeItems` seats situational items before the
+ * general fill, at whatever relaxation stage it has already reached, and it
+ * never takes a seat `PRIMARY_MIN` still needs. So the floor can never cost the
+ * grammar share, a cap, or a shorter block; a Lektion that misses it is a
+ * CONTENT finding (add items to its Wortfeld), which is what the test prints.
+ */
+export const SITUATION_MIN = 4;
 /** No lemma (Mädchen, Uhr, Auto …) may carry more than this many items in one Lektion. */
 export const MAX_SAME_LEMMA = 2;
 /** At most this many items whose answer lemma was already an answer in the Lektion before. */
@@ -535,7 +555,11 @@ function seededShuffle(list, rng) {
  *      answer lemma of the Lektion before, and NO item whose whole production is
  *      already printed in a sibling's prompt (`leaksAnswer`, DaF review #11
  *      MAJOR 2 — an exercise that solves another one is an exercise given away);
- *   6. within each topic, the most situational items first (relevanceScore);
+ *   6. within each topic, the most situational items first (relevanceScore),
+ *      and at least `SITUATION_MIN` (4) of the seven carrying a word of the
+ *      Lektion's OWN Wortfeld whenever the eligible slice holds that many —
+ *      a fill pass under the caps, never a relaxation of its own (DaF review
+ *      #12 MAJOR 4: L7 attempt 3 served 2 of 7 from „Freizeit und Hobbys“);
  *   7. none of the items this Lektion's EARLIER attempts drew (`priorAttemptIds`),
  *      while the topic slice can still fill seven without them — the repeat is
  *      the standard's remediation path, and DaF review #9 MAJOR 1 measured the
@@ -618,7 +642,7 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
   // every cap exists, and the first greedy order simply walked into a corner and
   // relaxed the lemma cap to get out of it. Relaxation is for a pool that CANNOT
   // fill seven, not for an unlucky order.
-  const runPass = (salt) => {
+  const runPass = (salt, seatSituation = true) => {
     const passSeed = (seed + Math.imul(salt, 0x9e3779b1)) >>> 0;
     const ranked = eligible
       .map((it) => ({
@@ -724,6 +748,20 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
       ranked.filter((it) => it.topic === primarySlug).length,
     );
 
+    // THE SITUATION FLOOR (`SITUATION_MIN`). „Situational" is measured against
+    // the Lektion's OWN Wortfeld only — `relevanceScore` with an empty set of
+    // earlier terms — because an item that revises Lektion 3's vocabulary is
+    // revision, not this Lektion's scene.
+    const isSituational = (it) => relevanceScore(it, ownTerms, new Set()) > 0;
+    const situationCount = () => [...chosen.values()].filter(isSituational).length;
+    const situationTarget = Math.min(
+      SITUATION_MIN,
+      PRACTICE_SIZE,
+      ranked.filter(isSituational).length,
+    );
+    /** Seats `PRIMARY_MIN` still needs — the situation fill may never take them. */
+    const primaryReserve = () => Math.max(0, primaryTarget - primaryCount());
+
     const fill = (list, relax, stop, stage) => {
       for (const it of list) {
         if (stop()) break;
@@ -760,6 +798,19 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
       fill(rest, relax, () => primaryCount() >= primaryTarget, stage);
       // 2. the typed floor across all topics
       fill(ranked.filter(isTypedItem), relax, () => typed >= typedMin || chosen.size >= PRACTICE_SIZE, stage);
+      // 2b. THE SITUATION FLOOR: before the block is filled with whatever ranks
+      //     next, seats go to items that carry a word of THIS Lektion's Wortfeld
+      //     — the ones on its own slug first, since those pay both floors. It
+      //     runs under the stage's own relaxation (it never relaxes anything of
+      //     its own) and stops short of the seats `PRIMARY_MIN` still needs, so
+      //     it can cost neither a cap nor the grammar share nor the seventh item.
+      const stopSituation = () =>
+        !seatSituation
+        || situationCount() >= situationTarget
+        || chosen.size >= PRACTICE_SIZE - primaryReserve();
+      const situational = ranked.filter(isSituational);
+      fill(situational.filter((it) => it.topic === primarySlug), relax, stopSituation, stage);
+      fill(situational, relax, stopSituation, stage);
       // 3. fill up to seven
       fill(ranked, relax, () => chosen.size >= PRACTICE_SIZE, stage);
       if (chosen.size >= PRACTICE_SIZE && primaryCount() >= primaryTarget && typed >= Math.min(typedMin, PRACTICE_SIZE)) break;
@@ -768,18 +819,57 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
     const complete = chosen.size >= PRACTICE_SIZE
       && primaryCount() >= primaryTarget
       && typed >= Math.min(typedMin, PRACTICE_SIZE);
-    return { chosen, relaxUsed, complete, size: chosen.size };
+    // The situation share is REPORTED, never a reason to climb the ladder: a
+    // block that misses it is short of situational ITEMS, and relaxing a lemma
+    // or leak cap would not add one.
+    return {
+      chosen,
+      relaxUsed,
+      complete,
+      size: chosen.size,
+      situation: situationCount(),
+      situationTarget,
+    };
   };
 
   let best = null;
   for (let salt = 0; salt < PICK_RETRIES; salt += 1) {
-    const pass = runPass(salt);
+    let pass = runPass(salt);
+    // THE SITUATION FLOOR NEVER OUTRANKS THE GRAMMAR SHARE. Reserving the seats
+    // `PRIMARY_MIN` still needs is not enough on its own: a situational item also
+    // spends lemma, answer-key and task-shape budget, and a primary item that
+    // needed that budget can then no longer be seated. So a pass that misses
+    // `complete` is simply drawn AGAIN without the situation fill, and the
+    // complete seven wins. It costs nothing at `SITUATION_MIN = 4` — all 36
+    // blocks of the shipped pool are complete either way — and it is there
+    // because the pressure is real: calibrating against a trial floor of 5 put
+    // L2 attempt 3 at three of seven on `verb-sein`. (That one this fallback
+    // could NOT repair, because the loss was carried in from attempt 2, whose
+    // draw had spent one more `verb-sein` item — which is how the floor of 5 was
+    // measured to be a content shortage rather than an engine setting.)
+    if (!pass.complete && pass.situationTarget > 0) {
+      const withoutSituation = runPass(salt, false);
+      if (withoutSituation.complete) pass = withoutSituation;
+    }
+    // Rank: a complete seven first, then the least relaxation, then the most
+    // items — and only then, between draws that are equal in all three, the one
+    // that is most about the Lektion's own situation. The order is what keeps
+    // `SITUATION_MIN` from ever buying itself a cap or a missing seventh item.
+    // Measured on the shipped a1.1 pool of 2026-09-13 this last key and the
+    // situation clause in the break below change not one of the 36 blocks — the
+    // fill pass already reaches the floor everywhere, and removing THAT is what
+    // drops L7 attempt 3 back to 2 of 7 (the mutation in
+    // `tests/lesson-engine.test.mjs`). They are the safety valve for the next
+    // pool: a draw that cannot reach the floor keeps looking through the
+    // remaining salts instead of stopping at the first complete seven.
     const better = !best
       || (pass.complete && !best.complete)
       || (pass.complete === best.complete && pass.relaxUsed < best.relaxUsed)
-      || (pass.complete === best.complete && pass.relaxUsed === best.relaxUsed && pass.size > best.size);
+      || (pass.complete === best.complete && pass.relaxUsed === best.relaxUsed && pass.size > best.size)
+      || (pass.complete === best.complete && pass.relaxUsed === best.relaxUsed && pass.size === best.size
+        && pass.situation > best.situation);
     if (better) best = pass;
-    if (best.complete && best.relaxUsed === 0) break;
+    if (best.complete && best.relaxUsed === 0 && best.situation >= best.situationTarget) break;
   }
   const chosen = best.chosen;
 
@@ -792,6 +882,11 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
     options.report.relaxUsed = best.relaxUsed;
     options.report.complete = best.complete;
     options.report.eligible = eligible.length;
+    // What `MAX_OFF_PRIMARY_BLOCKS` could not see: how much of the seven is
+    // about the Lektion's own scene (DaF review #12 MAJOR 4).
+    options.report.situationCount = best.situation;
+    options.report.situationTarget = best.situationTarget;
+    options.report.situationComplete = best.situation >= Math.min(SITUATION_MIN, best.situationTarget);
   }
 
   // Present them in a seeded order so typed and recognition interleave.
@@ -803,7 +898,8 @@ const planReports = new WeakMap();
 
 /**
  * The per-Lektion draw report of a plan `planPractice` returned:
- * Map<nr, { relaxUsed, complete, eligible }>. Guards read it to tell „this
+ * Map<nr, { relaxUsed, complete, eligible, situationCount, situationTarget,
+ * situationComplete }>. Guards read it to tell „this
  * Lektion breaks a cap because the engine picked badly“ from „…because its
  * eligible slice cannot honour every cap at once“ — after the `minLektion`
  * filter of round 10, L4 is the second kind and no reshuffle can fix it.

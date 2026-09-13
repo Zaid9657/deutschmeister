@@ -5,15 +5,16 @@
 // the six things a later edit is most likely to break quietly.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+import { readFileSync, writeFileSync, mkdtempSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { dirname, join, resolve } from 'node:path';
 
 import buildLesson, {
   pickPracticeItems, planPractice, practiceReport, seedFor, isTypedItem, isMultipleChoice, itemLemmas, answerLemmas,
   answerKey, taskShape, answerWords, promptWords, leaksAnswer,
   PRACTICE_SIZE, MAX_MULTIPLE_CHOICE, PRIMARY_MIN, MAX_SAME_LEMMA, MAX_CARRIED_LEMMA, MAX_SAME_ANSWER_KEY,
-  MAX_SAME_TASK_SHAPE, attemptFromCompletions, ATTEMPT_CYCLE,
+  MAX_SAME_TASK_SHAPE, attemptFromCompletions, ATTEMPT_CYCLE, SITUATION_MIN, wortfeldTerms, relevanceScore,
 } from '../src/lib/lesson/buildLesson.js';
 import { exclusionReason, isUsableItem, filterPool, EXCLUDE_IDS, REASON, drillsSlug } from '../src/data/lessonPools/quality.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
@@ -671,6 +672,130 @@ test('EVERY BLOCK FILLS SEVEN WITH ITS OWN GRAMMAR — practiceReport is read, a
   assert.ok(
     offPrimary.length <= MAX_OFF_PRIMARY_BLOCKS,
     `${offPrimary.length} block(s) report complete:false (ratchet ${MAX_OFF_PRIMARY_BLOCKS}):\n  - ${offPrimary.join('\n  - ')}`,
+  );
+});
+
+/**
+ * THE SITUATION FLOOR, the half of round 11's MAJOR 1 that was never written (DaF review #12
+ * MAJOR 4). `relevanceScore` has SORTED the draw by the Lektion's own Wortfeld since round 9 and
+ * nothing ever asked for a minimum — so L7 („Freizeit und Hobbys“) served attempt 3 with two of
+ * seven items carrying one of its own words (Tschüss, Berlin, a baby, a brother) while every cap
+ * was green, `relaxUsed` was 0 and `MAX_OFF_PRIMARY_BLOCKS = 0` stood true: the block WAS filled
+ * with its own grammar, just not with its own situation. The two ratchets are the pair the
+ * standard's promise of twelve SITUATIONAL Lektionen needs — one for the grammar share, one for
+ * the scene.
+ *
+ * „Situational“ is measured exactly as `pickPracticeItems` measures it: at least one word of THIS
+ * Lektion's Wortfeld in the prompt or the answer (`relevanceScore(it, ownTerms, new Set()) > 0` —
+ * an earlier Lektion's vocabulary is revision and does not count).
+ *
+ * 0 as of round 13 and by the engine, not by items: the fill pass seats situational items before
+ * the general fill, under the same caps, without ever taking a seat `PRIMARY_MIN` still needs.
+ * Measured on the pool `node scripts/build-lesson-pool.mjs a1.1` produces on 2026-09-13: every one
+ * of the 36 blocks reaches four or more, `relaxUsed` stays 0 everywhere, all seven task shapes stay
+ * distinct, and L7 attempt 3 goes 2 → 4 (and 5 → 6 on its own slug). A block that turns up here is
+ * a CONTENT finding — its Wortfeld has too few items in the pool — and the failure prints the whole
+ * 12 × 3 table so the next round can see which Lektion it has to pay for. Lower it with items,
+ * never with a smaller floor.
+ */
+const MAX_OFF_SITUATION_BLOCKS = 0;
+
+/** How many of a block's seven carry a word of the Lektion's OWN Wortfeld. */
+const situationalIn = (items, lektion) => {
+  const own = wortfeldTerms(lektion);
+  return (items || []).filter((it) => relevanceScore(it, own, new Set()) > 0).length;
+};
+
+/** The 12 × 3 table the review asked to see in the failure: real/7, situational/7, shapes, relax. */
+function practiceTable(planFor) {
+  const rows = ['  L  att  own-slug  Wortfeld  shapes  relax'];
+  for (const lektion of LEKTIONEN) {
+    for (const attempt of ATTEMPTS) {
+      const { plan, report } = planFor(attempt);
+      const items = plan.get(lektion.nr) || [];
+      const own = items.filter((it) => it.topic === lektion.primarySlug).length;
+      const shapes = new Set(items.map(taskShape)).size;
+      const r = report.get(lektion.nr) || {};
+      rows.push(
+        `  ${String(lektion.nr).padStart(2)}   ${attempt}     ${own}/${items.length}       ` +
+        `${situationalIn(items, lektion)}/${items.length}       ${shapes}       ${r.relaxUsed}`,
+      );
+    }
+  }
+  return rows.join('\n');
+}
+
+test('EVERY BLOCK IS ABOUT ITS OWN SITUATION — SITUATION_MIN, all 36 blocks', () => {
+  const plans = new Map(ATTEMPTS.map((attempt) => {
+    const plan = planPractice(CURRICULUM_A11, POOL, attempt);
+    return [attempt, { plan, report: practiceReport(plan) }];
+  }));
+  const thin = [];
+  for (const attempt of ATTEMPTS) {
+    const { plan, report } = plans.get(attempt);
+    for (const lektion of LEKTIONEN) {
+      const items = plan.get(lektion.nr);
+      const counted = situationalIn(items, lektion);
+      const r = report.get(lektion.nr) || {};
+      // The engine must REPORT the number it enforced — a guard that recounts a figure the engine
+      // does not publish is the failure mode of round 12 (the flag nobody read).
+      assert.equal(r.situationCount, counted,
+        `attempt ${attempt} L${lektion.nr}: practiceReport says ${r.situationCount}, the draw holds ${counted}`);
+      if (counted < SITUATION_MIN) {
+        thin.push(
+          `attempt ${attempt} L${lektion.nr} (${lektion.thema || lektion.primarySlug}): only ${counted} of ` +
+          `${items.length} items carry a word of its own Wortfeld (SITUATION_MIN ${SITUATION_MIN}); ` +
+          `the pool offers ${r.situationTarget} situational item(s) to this block — it needs ` +
+          `${SITUATION_MIN - counted} more, from ${[...wortfeldTerms(lektion)].slice(0, 8).join(', ')}:\n    ` +
+          items.map((it) => `[${it.topic}] ${it.id} · ${String(it.questionDe).replace(/\s+/g, ' ')} → ${it.answer}`).join('\n    '),
+        );
+      }
+    }
+  }
+  assert.ok(
+    thin.length <= MAX_OFF_SITUATION_BLOCKS,
+    `${thin.length} block(s) below SITUATION_MIN (ratchet ${MAX_OFF_SITUATION_BLOCKS}):\n  - ${thin.join('\n  - ')}\n\n` +
+    `${practiceTable((attempt) => plans.get(attempt))}`,
+  );
+});
+
+test('the situation fill pass bites — remove it and a block drops below the floor', async () => {
+  // A ratchet at 0 proves nothing on its own: it would also be 0 if the pool happened to be
+  // situational enough by itself, and round 12 shipped exactly that kind of green (`MAX_OFF_PRIMARY
+  // _BLOCKS = 0` while L7 served two of seven from its own Wortfeld). So the engine is loaded a
+  // second time with the fill pass CUT OUT of its source, and the same measurement must find the
+  // block the review named. The mutation is asserted to apply, or the test would pass on a stale
+  // anchor rather than on a working guard.
+  const SRC = join(ROOT, 'src/lib/lesson/buildLesson.js');
+  const FILL_PASS = `      const stopSituation = () =>
+        !seatSituation
+        || situationCount() >= situationTarget
+        || chosen.size >= PRACTICE_SIZE - primaryReserve();
+      const situational = ranked.filter(isSituational);
+      fill(situational.filter((it) => it.topic === primarySlug), relax, stopSituation, stage);
+      fill(situational, relax, stopSituation, stage);
+`;
+  const source = readFileSync(SRC, 'utf8');
+  assert.ok(source.includes(FILL_PASS), 'the situation fill pass moved — update this mutation');
+  // Relative imports have to survive the move out of the source tree.
+  const mutated = source
+    .replace(FILL_PASS, '')
+    .replace(/from '(\.[^']*)'/g, (_, spec) => `from '${pathToFileURL(resolve(dirname(SRC), spec)).href}'`);
+  const file = join(mkdtempSync(join(tmpdir(), 'dm-engine-')), 'buildLesson.mutated.mjs');
+  writeFileSync(file, mutated);
+  const withoutFloor = await import(pathToFileURL(file).href);
+
+  const dropped = [];
+  for (const attempt of ATTEMPTS) {
+    const plan = withoutFloor.planPractice(CURRICULUM_A11, POOL, attempt);
+    for (const lektion of LEKTIONEN) {
+      const counted = situationalIn(plan.get(lektion.nr), lektion);
+      if (counted < SITUATION_MIN) dropped.push(`attempt ${attempt} L${lektion.nr}: ${counted}`);
+    }
+  }
+  assert.ok(
+    dropped.length > 0,
+    'the fill pass changes nothing: every block reaches SITUATION_MIN without it, so this guard is decoration',
   );
 });
 

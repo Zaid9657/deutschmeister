@@ -18,6 +18,11 @@ const STOPWORDS = new Set([
   'der', 'die', 'das', 'ein', 'eine', 'einen', 'einem', 'einer', 'und', 'oder', 'aber', 'ihr', 'ihre',
   'sie', 'du', 'ich', 'wir', 'es', 'zu', 'in', 'an', 'auf', 'für', 'mit', 'von', 'dein', 'deine',
   'wann', 'wie', 'was', 'wo', 'wer', 'warum', 'schreiben', 'schreib', 'nennen', 'nenne', 'sagen',
+  // The reflexive pronouns. Without them „Wann Sie **sich** treffen“ (A1.1 L4) keys on `sich`,
+  // and a learner who writes the ordinary „Wir treffen uns um vier Uhr.“ is told he missed the
+  // Leitpunkt. Measured over the whole bank on 2026-09-13: one task, and the keyword it picks
+  // instead is `treffen` (DaF review #12, MAJOR 1).
+  'sich', 'uns', 'mich', 'dich', 'euch',
 ]);
 
 /**
@@ -74,10 +79,16 @@ export function scoreWriting(schreiben, value) {
     { key: 'length', label: `${min}–${Number.isFinite(max) ? max : '∞'} Wörter`, ok: count >= min && count <= max },
     { key: 'anrede', label: 'Anrede', ok: ANREDE.test(text) },
     { key: 'gruss', label: 'Gruß', ok: GRUSS.test(text) },
-    ...(schreiben.leitpunkte || []).map((lp, i) => {
-      const kw = leitpunktKeyword(lp);
-      return { key: `lp${i}`, label: lp, ok: !!kw && lower.includes(kw.toLowerCase()) };
-    }),
+    // A Leitpunkt with no derivable keyword is NOT a failed check — it is an undecidable one, and
+    // a row that can never turn green is a promise the screen cannot keep. Four Leitpunkte of the
+    // whole bank are in this class, all of them the same sentence („Warum Sie schreiben“: every
+    // token is a function word), and both A1.1 Mitteilungen that carry it scored `FAIL: lp0` on
+    // every text any learner could ever write, their own Beispieltext included (DaF review #12,
+    // MAJOR 1). They are dropped from the list rather than shown as red or, worse, as green.
+    ...(schreiben.leitpunkte || [])
+      .map((lp, i) => ({ lp, i, kw: leitpunktKeyword(lp) }))
+      .filter(({ kw }) => !!kw)
+      .map(({ lp, i, kw }) => ({ key: `lp${i}`, label: lp, ok: lower.includes(kw.toLowerCase()) })),
   ];
 
   return { ok: checks.every((c) => c.ok), checks, count };

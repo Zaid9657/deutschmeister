@@ -90,6 +90,7 @@ import {
   ambiguousCorrection, minimalArticleCorrection, isPoliteFormItem, drillsSlug, isNumberWord,
   politeCaseItem, POLITE_CUE_RE, INFORMAL_VETO_RE, carriesPoliteForm, NEXT_LEVEL_RE, UNTAUGHT_ANSWER_FORMS, UNTAUGHT_ANSWER_FORM_RE, untaughtForm,
   unconditionedRule, unconditionedRuleSentence, namesCondition,
+  frontableOrders, frontedAcceptedForms, missingFrontedOrder, agreementAmbiguity,
 } from '../src/data/lessonPools/quality.js';
 import { levelLexicon, untaughtTokens, levelSpec, minLektionIndex } from '../scripts/validate-curriculum.mjs';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
@@ -1304,4 +1305,113 @@ test('the contradiction extractor sees the pair the review names — REVIEW #11 
 
 test('no trigger of the built pool maps to two rules — REVIEW #11 BLOCKER', () => {
   assert.deepEqual(contradictions([...POOL.items, ...EXTRA]), []);
+});
+
+// ── REVIEW #12 ──────────────────────────────────────────────────────────────
+
+test('a Wortsalat with a time or place Angabe has two word orders, and both are right — REVIEW #12 BLOCKER 1', () => {
+  // The item the review measured, as round 12 shipped it: one accepted string,
+  // and the order the course's own rule card teaches marked wrong.
+  const trap = {
+    id: 'fo1', topic: 'separable-verbs-intro', type: 'sentence_building',
+    questionDe: 'Bilden Sie den Satz: [ich / haben / gestern / gearbeitet]',
+    answer: 'Ich habe gestern gearbeitet.',
+    accepted: ['Ich habe gestern gearbeitet.', 'Ich habe gestern gearbeitet'],
+  };
+  assert.deepEqual(frontableOrders(trap), ['Gestern habe ich gearbeitet']);
+  assert.deepEqual(missingFrontedOrder(trap), ['Gestern habe ich gearbeitet']);
+  // The build's repair closes it, in both spellings the pool uses.
+  assert.deepEqual(frontedAcceptedForms(trap),
+    ['Gestern habe ich gearbeitet.', 'Gestern habe ich gearbeitet']);
+  assert.equal(missingFrontedOrder({ ...trap, accepted: [...trap.accepted, ...frontedAcceptedForms(trap)] }), null);
+
+  // A separable prefix and a participle stay at the end, and a second Angabe
+  // fronts on its own as well as together with the first.
+  assert.deepEqual(frontableOrders({
+    id: 'fo2', type: 'sentence_building',
+    questionDe: 'Schreiben Sie den Satz: [er / abholen / dich / um 8 Uhr]',
+    answer: 'Er holt dich um 8 Uhr ab.',
+  }), ['Um 8 Uhr holt er dich ab']);
+  assert.deepEqual(frontableOrders({
+    id: 'fo3', type: 'sentence_building',
+    questionDe: 'Bilden Sie den Satz: [der Termin / sein / am Dienstag / um acht Uhr]',
+    answer: 'Der Termin ist am Dienstag um acht Uhr.',
+  }), [
+    'Am Dienstag ist der Termin um acht Uhr',
+    'Um acht Uhr ist der Termin am Dienstag',
+    'Am Dienstag um acht Uhr ist der Termin',
+  ]);
+
+  // The three shapes the rule may not touch: a question (its order IS the
+  // task), a sentence with nothing to front, and an already-inverted canonical
+  // whose first constituent is an OBJECT — there no build step can tell the
+  // subject from the fronted part („Fußball spielen wir am Wochenende.").
+  for (const item of [
+    { id: 'fn1', type: 'sentence_building', questionDe: 'Bilden Sie die Frage: [mitkommen / du / am Freitag]', answer: 'Kommst du am Freitag mit?' },
+    { id: 'fn2', type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [wir / tanzen / zusammen]', answer: 'Wir tanzen zusammen.' },
+    { id: 'fn3', type: 'sentence_building', questionDe: 'Schreiben Sie den Satz: [Fußball / wir / am Wochenende / spielen]', answer: 'Fußball spielen wir am Wochenende.' },
+    { id: 'fn4', type: 'fill_blank', questionDe: 'Bilden Sie den Satz: [ich / haben / gestern / gearbeitet]', answer: 'Ich habe gestern gearbeitet.' },
+  ]) {
+    assert.deepEqual(frontableOrders(item), [], `${item.id}: the rule invented an order`);
+    assert.equal(missingFrontedOrder(item), null, item.id);
+  }
+
+  // The class over the built A1.1 pool. A1.2 is paused by owner decision and its
+  // pool is not rebuilt in this round, so it is measured by its own build when
+  // it reopens — the rule is level-blind, the ARTEFACT is not.
+  for (const item of POOL.items) {
+    assert.equal(missingFrontedOrder(item), null,
+      `${label(item)} refuses ${JSON.stringify(missingFrontedOrder(item))} — run \`node scripts/build-lesson-pool.mjs a1.1\``);
+  }
+});
+
+test('an error correction has exactly one minimal repair — REVIEW #12 BLOCKER 2', () => {
+  // The round-12 item, as it shipped: „Du habt Durst." repairs at the verb
+  // („Du hast") and at the subject („Ihr habt"), and the prompt names neither.
+  const trap = {
+    id: 'ag1', topic: 'verb-haben', type: 'error_correction',
+    questionDe: 'Korrigieren Sie: „Du habt Durst.“',
+    answer: 'Du hast Durst.',
+    accepted: ['Du hast Durst.', 'Du hast Durst'],
+  };
+  assert.deepEqual(agreementAmbiguity(trap), { verb: ['habt', 'hast'], subject: 'Ihr habt Durst' });
+  assert.equal(exclusionReason(trap), REASON.AMBIGUOUS_AGREEMENT);
+  // The repair is the cue the course already carries fifteen times, and it is
+  // authorship, not a build step: the prompt names the element that changes.
+  const pinned = { ...trap, questionDe: 'Korrigieren Sie das Verb: „Du habt Durst.“' };
+  assert.equal(agreementAmbiguity(pinned), null);
+  assert.equal(exclusionReason(pinned), null);
+
+  // The other axis of the same class: a singular subject under a plural verb is
+  // repairable by pluralising the noun („die Abfahrt" → „die Abfahrten") or the
+  // article alone where the plural is the bare singular („der Fahrer" → „die
+  // Fahrer") — the plural L4 teaches.
+  assert.equal(agreementAmbiguity({
+    id: 'ag2', type: 'error_correction',
+    questionDe: 'Korrigieren Sie: „Sind die Abfahrt um neun Uhr?“',
+    answer: 'Ist die Abfahrt um neun Uhr?',
+  }).subject, 'Sind die Abfahrten um neun Uhr');
+  assert.equal(agreementAmbiguity({
+    id: 'ag3', type: 'error_correction',
+    questionDe: 'Korrigieren Sie: „Haben der Fahrer Verspätung?“',
+    answer: 'Hat der Fahrer Verspätung?',
+  }).subject, 'Haben die Fahrer Verspätung');
+
+  // What the rule may NOT reach. A proper name has no second person and no
+  // plural, so the verb is the only repair and the prompt owes no cue; and an
+  // ARTICLE correction is the neighbouring rule's business — `eine`/`einen`
+  // share a stem and must never read as a conjugation pair.
+  for (const item of [
+    { id: 'an1', type: 'error_correction', questionDe: 'Korrigieren Sie: „Lena spielen am Wochenende Fußball.“', answer: 'Lena spielt am Wochenende Fußball.' },
+    { id: 'an2', type: 'error_correction', questionDe: 'Korrigieren Sie: „Ich brauche einen Pause.“', answer: 'Ich brauche eine Pause.' },
+    { id: 'an3', type: 'error_correction', questionDe: 'Korrigieren Sie: „Das ist eine Tisch.“', answer: 'Das ist ein Tisch.' },
+  ]) {
+    assert.equal(agreementAmbiguity(item), null, `${item.id}: one repair, no cue owed`);
+  }
+
+  // The class, over both pools: the rule is about German, not about a syllabus.
+  for (const item of [...ALL, ...POOL_A12.items]) {
+    const hit = agreementAmbiguity(item);
+    assert.equal(hit, null, `${label(item)} — also repairs as „${hit && hit.subject}“`);
+  }
 });

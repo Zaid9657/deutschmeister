@@ -118,7 +118,7 @@ import { createHash } from 'node:crypto';
 import {
   filterPool, REASON, REASONS, isUsableItem, exclusionReason, parseVerbCue,
   articleAnswerKind, ARTICLE_CUE, missingSentenceArticle, SENTENCE_ARTICLE_CUE,
-  isPoliteFormItem, minimalArticleCorrection,
+  isPoliteFormItem, minimalArticleCorrection, frontedAcceptedForms,
 } from '../src/data/lessonPools/quality.js';
 // The lexis gate below is the VALIDATOR's predicate, imported rather than re-implemented — see the
 // „untaught-lexis“ block near the merge for why, and `levelLexicon`'s own header for why importing
@@ -233,6 +233,29 @@ function repairAmbiguousCorrection(item) {
 }
 
 raw.forEach(repairAmbiguousCorrection);
+
+// ── REVIEW #12 BLOCKER 1: accept the second word order as well ──────────────
+//
+// „Bilden Sie den Satz: [ich / haben / gestern / gearbeitet]" accepted „Ich
+// habe gestern gearbeitet." and marked „Gestern habe ich gearbeitet." wrong —
+// in four drawn items, three of them GRADED checkpoint tasks, against a rule
+// card that teaches verb-second and a pretest of the same Lektion that accepts
+// the fronted Angabe. `frontedAcceptedForms` derives the V2 permutations from
+// the item's own answer (see quality.js); the repair is the same promise as the
+// three above: the answer key GAINS a reading, it never loses one, and an item
+// with nothing to front is untouched.
+const frontingRepaired = [];
+function repairFrontedOrder(item) {
+  const wanted = frontedAcceptedForms(item);
+  if (!wanted.length) return;
+  const have = new Set([item.answer, ...(item.accepted || [])]);
+  const added = wanted.filter((a) => !have.has(a));
+  if (!added.length) return;
+  item.accepted = [...new Set([item.answer, ...(item.accepted || []), ...added])];
+  frontingRepaired.push({ id: item.id, topic: item.topic, answer: item.answer, added });
+}
+
+raw.forEach(repairFrontedOrder);
 
 const { kept, excluded, counts } = filterPool(raw, { level });
 
@@ -595,6 +618,9 @@ if (existsSync(extraUrl)) {
   // REVIEW #6 BLOCKER 2, same order and for the same reason: the extras face
   // the same gate, so they get the same repair first.
   extra.forEach(repairAmbiguousCorrection);
+  // REVIEW #12 BLOCKER 1, same order and for the same reason: the hand items
+  // are the ones the learner actually draws, so they face the same repair.
+  extra.forEach(repairFrontedOrder);
   // The same rules as the bank, applied to hand-written items on purpose: the
   // point of the filter is that NO item reaches a learner unchecked.
   const failing = extra.map((it) => [it, exclusionReason(it, { level })]).filter(([, r]) => r);
@@ -919,6 +945,8 @@ console.log(`ambiguous corrections repaired (REVIEW #6 BLOCKER 2): ${ambiguousRe
   ` · not computable, dropped: ${ambiguousUnrepairable.length}`);
 for (const r of ambiguousRepaired) console.log(`       ${r.id} + ${r.added.join(', ')}`);
 for (const r of ambiguousUnrepairable) console.log(`       DROPPED ${r.id} · ${r.answer}`);
+console.log(`fronted word orders accepted (REVIEW #12 BLOCKER 1): ${frontingRepaired.length}`);
+for (const r of frontingRepaired) console.log(`       ${String(r.id).slice(0, 16)} ${r.topic} · ${r.answer} + ${r.added.filter((x) => /[.!]$/.test(x)).join(' · ')}`);
 console.log(`polite-form caseSensitive (REVIEW #6 BLOCKER 1): ${caseDerived.length} derived` +
   ` + ${caseHandFlagged.length} hand-flagged (of them ${caseOverridden.length} by id here)`);
 for (const r of caseDerived) console.log(`       ${r.id} ${r.topic} → ${r.answer}`);

@@ -324,7 +324,11 @@ export const CURRICULUM_A11 = {
         leitpunkte: ['Ihr Name und Ihr Geburtsdatum', 'Ihr Land und Ihre Staatsangehörigkeit', 'Ihr Familienstand: ledig oder verheiratet'],
         minWords: 25,
         maxWords: 45,
-        sample: 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri, Geburtsdatum 3. Mai 1998. Ich komme aus Marokko. Ich bin ledig. Viele Grüße, Ana Chakiri',
+        // 39 Wörter, drei Leitpunkte in drei vollständigen Sätzen. Der Mustertext muss die
+        // Formcheck-Liste bestehen, die der Bildschirm einen Absatz darüber zeigt (RULE 17):
+        // 24 Wörter gegen „25–45“ waren `FAIL: length` neben dem Wort „Beispieltext“
+        // (DaF review #12, MAJOR 1). Ohne Possessivartikel — die sind Lektion 12.
+        sample: 'Sehr geehrte Damen und Herren, ich bin Ana Chakiri. Der Nachname ist Chakiri. Das Geburtsdatum ist der 3. Mai 1998. Ich komme aus Marokko. Das Land ist Marokko und die Staatsangehörigkeit ist marokkanisch. Der Familienstand: Ich bin ledig. Viele Grüße, Ana',
       },
       // A1.1 carries six listening exercises and ten reading texts; every one is linked from another
       // Lektion, so this one honestly has none — the syllabus shows „—“ rather than a repeat.
@@ -399,8 +403,14 @@ export const CURRICULUM_A11 = {
       pretest: {
         promptDe: 'Sprechen Sie über eine Person in Ihrer Familie.',
         promptEn: 'Say one sentence about a person in your family.',
-        model: 'Das ist die Schwester. Sie ist zwanzig.',
-        accepted: ['Mein', 'Meine', 'Das ist', 'Er ist', 'Sie ist'],
+        // Runde 12 hat „Mein Bruder ist zwanzig.“ (Possessivartikel → L12, RULE 15b) durch „Das ist
+        // die Schwester. Sie ist zwanzig.“ ersetzt — und damit die ZAHL der falschen Person gegeben:
+        // im Dialog dieser Lektion ist der BRUDER zwanzig, die Schwester ist „noch jung“
+        // (DaF review #12, MAJOR 2; jetzt RULE 19). Der Bruder trägt die Zahl des Dialogs, „Er ist
+        // Student.“ übt das Personalpronomen, das diese Lektion lehrt, und beides kommt ohne
+        // Possessivartikel aus.
+        model: 'Der Bruder ist zwanzig. Er ist Student.',
+        accepted: ['Mein', 'Meine', 'Das ist', 'Er ist', 'Sie ist', 'Der Bruder', 'Die Schwester'],
       },
       notice: {
         title: 'er, sie, es – die Personalpronomen',
@@ -529,7 +539,9 @@ export const CURRICULUM_A11 = {
         leitpunkte: ['Was Sie kaufen', 'Was es kostet', 'Wann Sie sich treffen'],
         minWords: 25,
         maxWords: 45,
-        sample: 'Hallo Lena! Ich kaufe einen Stuhl. Er kostet zwölf Euro. Kommst du auch? Tschüss, Tim',
+        // 37 Wörter, alle drei Leitpunkte (kaufen / kostet / treffen). Bestimmte Artikel statt
+        // „einen Stuhl“: der unbestimmte Artikel ist Lektion 6 (RULE 15b).
+        sample: 'Hallo Lena! Heute ist der Flohmarkt. Wir kaufen den Stuhl und die Lampe. Der Stuhl kostet zwölf Euro und die Lampe kostet acht Euro. Das ist nicht teuer. Wann treffen wir uns? Um vier Uhr? Tschüss, Tim',
       },
       links: { listeningExercise: 1, readingOrder: 4 },
       practiceRule: { topics: ['nouns-gender'], typedMin: 3 },
@@ -703,7 +715,10 @@ export const CURRICULUM_A11 = {
       // zwei - drei …“ would both be marked wrong. Line 9 has no punctuation trap (DaF review #2, L6).
       hoeren: { kind: 'dictation', lines: [2, 9] },
       sprechen: {
-        readAloud: [2, 6],
+        // Zeile 2 war bis Runde 12 zugleich Diktatzeile — Diktat und Vorlesen arbeiteten am
+        // selben Satz (RULE 18). Zeile 4 („Und ein Handy?“) ist frei: der unbestimmte Artikel
+        // ist genau das Thema DIESER Lektion.
+        readAloud: [4, 6],
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Arbeit: Büro? Beruf? Pause?',
@@ -720,7 +735,10 @@ export const CURRICULUM_A11 = {
         leitpunkte: ['Was Sie brauchen', 'Ihre Telefonnummer', 'Wann Sie im Büro sind'],
         minWords: 25,
         maxWords: 45,
-        sample: 'Guten Tag, Frau Berg! Ich brauche einen Computer. Die Nummer ist null vier zwei. Viele Grüße, Ana',
+        // 39 Wörter. „Die Nummer“ war die RULE-15b-Reparatur der Runde 12 für „Meine Nummer“ und
+        // hat den Leitpunkt „Ihre Telefonnummer“ mitgenommen (DaF review #12, MAJOR 2); das Wort
+        // selbst ist L2-Wortfeld und braucht keinen Possessivartikel.
+        sample: 'Guten Tag, Frau Berg! Ich brauche einen Computer. Wir brauchen auch ein Handy. Die Telefonnummer ist null vier zwei drei drei acht eins. Die Nummer ist für das Handy. Ich bin um neun Uhr im Büro. Viele Grüße, Ana',
       },
       links: { listeningExercise: 5, readingOrder: null },
       practiceRule: { topics: ['indefinite-articles', 'definite-articles'], typedMin: 3 },
@@ -926,7 +944,9 @@ export const CURRICULUM_A11 = {
       phonetik: { focus: 'Satzmelodie in der W-Frage: fallend', items: ['Wie SPÄT ist es?', 'WANN kommst du?', 'um ACHT Uhr'] },
       hoeren: { kind: 'dictation', lines: [3, 7] },
       sprechen: {
-        readAloud: [3, 6],
+        // RULE 18: Zeile 3 ist Diktatzeile. Zeile 6 und Zeile 8 sind beide Wochentagszeilen und
+        // damit das eigene Thema dieser Lektion.
+        readAloud: [6, 8],
         open: {
           teil: 'Sprechen Teil 3',
           promptDe: 'Bitten Sie um einen Termin am Nachmittag und reagieren Sie auf die Antwort.',
@@ -943,7 +963,8 @@ export const CURRICULUM_A11 = {
         leitpunkte: ['Warum Sie schreiben', 'Neuer Tag und neue Uhrzeit', 'Eine Frage an Lena'],
         minWords: 25,
         maxWords: 45,
-        sample: 'Hallo Lena! Ich komme am Montag zu spät. Der Termin am Dienstag um acht? Viele Grüße, Ana',
+        // 37 Wörter, mit dem neuen Tag, der neuen Uhrzeit und einer Frage an Lena.
+        sample: 'Hallo Lena! Ich komme am Montag zu spät. Ein neuer Termin: Geht es am Dienstag um halb neun? Das ist der neue Tag und die neue Uhrzeit. Noch eine Frage: Bist du dann pünktlich? Viele Grüße, Ana',
       },
       links: { listeningExercise: 4, readingOrder: 3 },
       // Only the primary topic: with two topics the builder drew 5 present-tense items against 2 time
@@ -1157,7 +1178,9 @@ export const CURRICULUM_A11 = {
         leitpunkte: ['Warum Sie schreiben', 'Wann Sie kommen', 'Was die Kollegin bis dahin machen soll'],
         minWords: 25,
         maxWords: 45,
-        sample: 'Hallo Lena! Der Zug hat Verspätung. Ich komme um zehn Uhr. Viele Grüße, Ana',
+        // 35 Wörter. Der dritte Leitpunkt („Was die Kollegin bis dahin machen soll“) war im alten
+        // Mustertext gar nicht modelliert; die Kollegin wird gesiezt.
+        sample: 'Liebe Kollegin, der Zug hat leider Verspätung. Die Kollegen kommen um neun Uhr, ich komme erst um zehn Uhr. Bitte machen Sie die Arbeit bis zehn Uhr ohne mich. Vielen Dank und viele Grüße, Ana',
       },
       links: { listeningExercise: 3, readingOrder: 6 },
       // Only the primary topic: the two-topic rule drew haben items twice over from L9 (DaF review, L10).
@@ -1375,7 +1398,8 @@ export const CURRICULUM_A11 = {
         leitpunkte: ['Warum Sie feiern', 'Tag und Uhrzeit', 'Was die Gäste mitbringen sollen'],
         minWords: 25,
         maxWords: 45,
-        sample: 'Hallo Lena! Ich feiere am Freitag meinen Geburtstag. Komm um acht Uhr! Bis bald, Ana',
+        // 37 Wörter. Der Possessivartikel ist hier erlaubt: Lektion 12 ist die Lektion, die ihn lehrt.
+        sample: 'Hallo Lena! Am Freitag feiern wir meinen Geburtstag. Der Tag ist der 15. Mai und die Party ist um acht Uhr. Die Gäste bringen Kuchen und Musik mit. Bringst du bitte den Salat mit? Bis bald, Ana',
       },
       links: { listeningExercise: null, readingOrder: 10 },
       // „Wiederholung“ has to be visible in the practice: the last Lektion before checkpoint 4 mixes

@@ -27,6 +27,8 @@ import {
   MAX_MISSIONLESS_LEKTIONEN, MAX_UNEXEMPLIFIED_NOTICE_FORMS, MAX_UNTAUGHT_IN_PRODUCTION,
   MAX_DEFERRED_CONSTRUCTIONS,
   MAX_UNBACKED_EXAM_TEILE, LEVELS, levelSpec, levelLexicon, untaughtTokens,
+  modelTextsPassOwnChecklist, sharedProductionLines, modelTextsMatchDialogue, formularSampleValues,
+  MAX_MODEL_CHECKLIST_BREAKS, MAX_SHARED_PRODUCTION_LINES,
 } from '../scripts/validate-curriculum.mjs';
 
 // ───────────────────────────────────────────────────────────────────────────────────────────────
@@ -332,7 +334,10 @@ test('rule 7: pretest, Phonetik, Hören, Sprechen, Schreiben and the links', () 
     assert.ok(writingTaskByKey('goethe_a1', w.taskKey), `Lektion ${l.nr}: taskKey resolves to no bank task`);
     // One range per Textsorte (DaF review #2 §B): the bank and evaluate-writing.mjs moved with it.
     assert.deepEqual([w.minWords, w.maxWords], w.kind === 'formular' ? [5, 40] : [25, 45], `Lektion ${l.nr}: word range`);
-    assert.ok(wordCount(w.sample) <= 30, `Lektion ${l.nr}: sample`);
+    // The sample's LENGTH is RULE 17's business and RULE 17 reads the window off the bank (see
+    // „rule 17: every Beispieltext passes the form checklist“ below). The `<= 30` that used to
+    // stand here was a third number beside the bank's two, and it contradicted them: 25–45 is
+    // the window the learner is graded against (DaF review #12, MAJOR 1).
     if (w.kind === 'formular') {
       assert.ok(w.fields.length >= 3 && w.fields.length <= 5);
       assert.equal(w.leitpunkte, undefined);
@@ -508,6 +513,8 @@ test('A1.1: every ratchet equals its measurement — a ratchet with slack is not
     ['15', producedBeforeTaught(CURRICULUM_A11).length, MAX_UNTAUGHT_IN_PRODUCTION],
     ['15b', constructionsBeforeTaught(CURRICULUM_A11).length, MAX_DEFERRED_CONSTRUCTIONS],
     ['16', examTeileBacked(CURRICULUM_A11).length, MAX_UNBACKED_EXAM_TEILE],
+    ['17', modelTextsPassOwnChecklist(CURRICULUM_A11).length, MAX_MODEL_CHECKLIST_BREAKS],
+    ['18', sharedProductionLines(CURRICULUM_A11).length, MAX_SHARED_PRODUCTION_LINES],
   ];
   for (const [rule, measured, ratchet] of checks) {
     assert.equal(
@@ -829,6 +836,155 @@ test('rule 15b: every place DaF review #11 measured is still caught when planted
   assert.deepEqual(constructionsBeforeTaught(cm).filter((o) => o.nr === 5), [], 'pretest.accepted must stay out of RULE 15b');
 });
 
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+// THE MODEL TEXTS — RULE 17, RULE 18, RULE 19 (DaF review #12, MAJOR 1-3)
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+
+test('rule 17: every Beispieltext passes the form checklist its own screen shows beside it', () => {
+  // The finding, measured: `GradedWriting.jsx` prints the checklist and, a paragraph below it, the
+  // Beispieltext — and all six A1.1 Mitteilungen failed their own length row (24, 15, 17, 17, 14,
+  // 15 words against a floor of 25). A learner who copies the model gets the red cross he has just
+  // clicked away. This runs the SAME function the screen runs (`scoreWriting`) against the SAME
+  // window the server enforces (the task bank), over every level and both Textsorten.
+  assert.equal(MAX_MODEL_CHECKLIST_BREAKS, 0, 'RULE 17 is a hard 0 at A1.1 and may not be ratcheted up');
+  assert.deepEqual(
+    modelTextsPassOwnChecklist(CURRICULUM_A11).map((o) => `L${o.nr} ${o.key} „${o.label}“ (${o.count} Wörter)`),
+    [],
+    'a Beispieltext fails the checklist the learner sees next to it',
+  );
+  // Both branches run. A Formular is graded on „is every field filled“, and all six do it.
+  const formularLektionen = L.filter((l) => l.schreiben.kind === 'formular').map((l) => l.nr);
+  assert.deepEqual(formularLektionen, [1, 3, 5, 7, 9, 11]);
+  for (const l of formularLektionen) {
+    const bank = writingTaskByKey(CURRICULUM_A11.examKey, `a11-l${String(l).padStart(2, '0')}`);
+    const values = formularSampleValues(L[l - 1].schreiben.sample, bank.leitpunkte);
+    assert.deepEqual(
+      (bank.leitpunkte || []).filter((f) => !String(values[f] || '').trim()), [],
+      `L${l}: the Formular sample leaves a field empty`,
+    );
+  }
+  // The window is DERIVED: it comes from the bank, so a bank that moves moves the rule with it.
+  for (const l of L) {
+    const bank = writingTaskByKey(CURRICULUM_A11.examKey, l.schreiben.taskKey);
+    assert.equal(bank.minWords, l.schreiben.minWords);
+    assert.equal(bank.maxWords, l.schreiben.maxWords);
+  }
+});
+
+test('rule 17 bites: the round-12 Beispieltexte are caught when planted back', () => {
+  // Every one of the six as it stood in `main` @ cbcac8e, with the count the review measured.
+  const ROUND_12_SAMPLES = {
+    2: 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri, Geburtsdatum 3. Mai 1998. Ich komme aus Marokko. Ich bin ledig. Viele Grüße, Ana Chakiri',
+    4: 'Hallo Lena! Ich kaufe einen Stuhl. Er kostet zwölf Euro. Kommst du auch? Tschüss, Tim',
+    6: 'Guten Tag, Frau Berg! Ich brauche einen Computer. Die Nummer ist null vier zwei. Viele Grüße, Ana',
+    8: 'Hallo Lena! Ich komme am Montag zu spät. Der Termin am Dienstag um acht? Viele Grüße, Ana',
+    10: 'Hallo Lena! Der Zug hat Verspätung. Ich komme um zehn Uhr. Viele Grüße, Ana',
+    12: 'Hallo Lena! Ich feiere am Freitag meinen Geburtstag. Komm um acht Uhr! Bis bald, Ana',
+  };
+  for (const [nr, sample] of Object.entries(ROUND_12_SAMPLES)) {
+    const c = cloneOf(CURRICULUM_A11);
+    c.lektionen[Number(nr) - 1].schreiben.sample = sample;
+    const keys = modelTextsPassOwnChecklist(c).filter((o) => o.nr === Number(nr)).map((o) => o.key);
+    assert.ok(keys.includes('length'), `L${nr}: the round-12 sample is under the floor and RULE 17 missed it`);
+    assert.ok(failsWith(validateCurriculum(c), '17'), `L${nr}: validateCurriculum did not report RULE 17`);
+  }
+  // …and the Formular branch bites too: an unfilled field is a failed check.
+  const cf = cloneOf(CURRICULUM_A11);
+  cf.lektionen[0].schreiben.sample = 'Familienname: Chakiri / Vorname: Ana / Land: Marokko / Sprache: Arabisch / Unterschrift:';
+  assert.ok(
+    modelTextsPassOwnChecklist(cf).some((o) => o.nr === 1 && o.key === 'Unterschrift'),
+    'an empty Formular field went through RULE 17',
+  );
+});
+
+test('rule 18: dictation and read-aloud never work on the same sentence', () => {
+  // Nine of twelve A1.1 Lektionen separate the two windows without being asked; the three that did
+  // not were made by the RULE-15b window moves of round 12. L6 and L8 are separated in round 13.
+  // L3 is the ratchet's 1 and the reason is structural, not a tolerance: RULE 15b leaves exactly
+  // three construction-free lines in that dialogue (2, 5, 7) and two disjoint windows need four.
+  // The owner decides the one-word dialogue change that closes it — see MAX_SHARED_PRODUCTION_LINES.
+  const shared = sharedProductionLines(CURRICULUM_A11);
+  assert.deepEqual(
+    shared.map((o) => `L${o.nr}`), ['L3'],
+    'a Lektion dictates and reads aloud the same line — move a window, do not raise the ratchet',
+  );
+  assert.equal(shared.length, MAX_SHARED_PRODUCTION_LINES);
+  assert.deepEqual(sharedProductionLines(CURRICULUM_A12), [], 'A1.2 keeps the windows apart; it must stay that way');
+  // Compared as TEXT, not as index: two indices can carry the same sentence.
+  const c = cloneOf(CURRICULUM_A11);
+  c.lektionen[0].dialog.lines[c.lektionen[0].sprechen.readAloud[0]].de =
+    c.lektionen[0].dialog.lines[c.lektionen[0].hoeren.lines[0]].de;
+  assert.ok(sharedProductionLines(c).some((o) => o.nr === 1), 'the same TEXT under two indices went through RULE 18');
+  // And the two windows round 12 collided are caught when put back.
+  for (const [nr, back] of [[6, [2, 6]], [8, [3, 6]]]) {
+    const cc = cloneOf(CURRICULUM_A11);
+    cc.lektionen[nr - 1].sprechen.readAloud = back;
+    assert.ok(
+      sharedProductionLines(cc).some((o) => o.nr === nr),
+      `L${nr}: the round-12 window is back and RULE 18 missed it`,
+    );
+    assert.ok(failsWith(validateCurriculum(cc), '18'), `L${nr}: validateCurriculum did not report RULE 18`);
+  }
+});
+
+test('rule 19: a model text states nothing its own dialogue states otherwise', () => {
+  for (const [level, C] of Object.entries(ALL_CURRICULA)) {
+    assert.deepEqual(
+      modelTextsMatchDialogue(C).map((o) => `L${o.nr} ${o.where}: ${o.subject} → „${o.value}“ (${o.why})`), [],
+      `${level}: a Modelltext contradicts the dialogue of its own Lektion`,
+    );
+  }
+});
+
+test('rule 19 bites: the round-12 L3 model and a wrong price are caught, a new fact is not', () => {
+  // THE FINDING. Round 12 replaced „Mein Bruder ist zwanzig.“ (possessive → L12) with „Das ist die
+  // Schwester. Sie ist zwanzig.“ — and gave the number to the wrong person: in the dialogue of that
+  // very Lektion the BROTHER is twenty and the sister is „noch jung“.
+  const c = cloneOf(CURRICULUM_A11);
+  c.lektionen[2].pretest.model = 'Das ist die Schwester. Sie ist zwanzig.';
+  const hits = modelTextsMatchDialogue(c).filter((o) => o.nr === 3);
+  assert.ok(
+    hits.some((o) => o.subject === 'schwester' && o.value.toLowerCase() === 'zwanzig'),
+    'the round-12 L3 model went through RULE 19',
+  );
+  assert.ok(failsWith(validateCurriculum(c), '19'), 'validateCurriculum did not report RULE 19');
+
+  // The same rule over a Schreiben sample and over a price: the L4 dialogue prices the Lampe at
+  // eight Euro, so a Beispieltext that prices it at four contradicts the text the learner just read.
+  const cp = cloneOf(CURRICULUM_A11);
+  cp.lektionen[3].schreiben.sample =
+    'Hallo Lena! Heute ist der Flohmarkt. Wir kaufen den Stuhl und die Lampe. Der Stuhl kostet zwölf Euro und die Lampe kostet vier Euro. Das ist nicht teuer. Wann treffen wir uns? Um vier Uhr? Tschüss, Tim';
+  assert.ok(
+    modelTextsMatchDialogue(cp).some((o) => o.nr === 4 && o.subject === 'lampe'),
+    'a price that contradicts the dialogue went through RULE 19',
+  );
+
+  // THE COUNTER-PROBE, which keeps the rule honest: a model may ADD a fact the dialogue never
+  // states („Er ist Student.“ — the L3 dialogue says nothing about the brother's Beruf), and it may
+  // repeat one („Der Bruder ist zwanzig.“). Neither may be reported.
+  const cn = cloneOf(CURRICULUM_A11);
+  cn.lektionen[2].pretest.model = 'Der Bruder ist zwanzig. Er ist Student.';
+  assert.deepEqual(modelTextsMatchDialogue(cn).filter((o) => o.nr === 3), []);
+});
+
+test('a pretest model answers its own prompt: it starts with a prefix its own accepted list names', () => {
+  // DaF review #12, MAJOR 2, „Drittens“. The model is printed under „Modellantwort“ and played back
+  // („Anhören“), so it is the sentence the learner repeats; `accepted` is what the course tells him
+  // a good answer starts with. When the two drift apart — round 12's „Das ist die Schwester.“ under
+  // an accepted list of `Mein/Meine/Das ist/Er ist/Sie ist` — the screen teaches one thing and
+  // grades another.
+  for (const [level, C] of Object.entries(ALL_CURRICULA)) {
+    for (const l of C.lektionen) {
+      const p = l.pretest || {};
+      const model = String(p.model || '');
+      assert.ok(
+        (p.accepted || []).some((a) => model.toLowerCase().startsWith(String(a).toLowerCase())),
+        `${level} L${l.nr}: the model „${model}“ starts with none of its accepted prefixes ${JSON.stringify(p.accepted)}`,
+      );
+    }
+  }
+});
+
 test('rule 16: every examTeile claim is backed by the Lektion that makes it', () => {
   // DaF review #1 for A1.2, BLOCKER 4: examTeile is the sixth column of the public 12x6 grid, i.e.
   // a sales claim (src/data/marketing.js: measure before you claim).
@@ -1048,7 +1204,10 @@ for (const key of LEVEL_KEYS) {
       assert.equal(w.kind, l.nr % 2 === 1 ? 'formular' : 'mitteilung');
       assert.equal(w.taskKey, `${spec.taskKeyPrefix}-l${String(l.nr).padStart(2, '0')}`);
       assert.deepEqual([w.minWords, w.maxWords], w.kind === 'formular' ? [5, 40] : [25, 45], `L${l.nr}: word range`);
-      assert.ok(wordCount(w.sample) <= 30, `L${l.nr}: sample`);
+      // The sample's LENGTH is RULE 17's business and RULE 17 reads the window off the bank (see
+      // „rule 17: every Beispieltext passes the form checklist“ below). The `<= 30` that used to
+      // stand here was a third number beside the bank's two, and it contradicted them: 25–45 is
+      // the window the learner is graded against (DaF review #12, MAJOR 1).
       if (w.kind === 'formular') {
         assert.ok(w.fields.length >= 3 && w.fields.length <= 5);
         assert.equal(w.leitpunkte, undefined);
