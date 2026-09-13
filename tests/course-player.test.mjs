@@ -63,3 +63,96 @@ test('the registry covers the four A sub-levels with their final tests, and the 
   assert.ok(read('netlify.toml').includes('from = "/course/*"'), '/course/* must be rewritten to /app.html (three-place rule)');
   assert.ok(read('astro-site/src/layouts/Layout.astro').includes("sessionStorage.getItem('dm_course_ctx')"), 'static lessons must render the return bar');
 });
+
+// ---------------------------------------------------------------------------
+// Register (DaF review #4, MAJOR "PretestStage.jsx register"). One decision,
+// enforced: the lesson chrome addresses the learner as Sie; only the dialogue
+// characters duzen each other — and the dialogue is curriculum DATA, never a
+// string in these files, so any du-form found here is chrome by definition.
+// The pretest screen showed 'Wie heißen Sie?' above a field placeholdered
+// 'Schreib einfach, was du kannst.' — two Anreden, two lines apart, in the free
+// first lesson.
+// ---------------------------------------------------------------------------
+const CHROME_FILES = [
+  'src/components/lesson/PretestStage.jsx',
+  'src/components/lesson/WortfeldStage.jsx',
+  'src/components/lesson/ReadAloudLine.jsx',
+  'src/components/lesson/GradedWriting.jsx',
+  'src/components/lesson/SpeakingStage.jsx',
+  'src/components/lesson/DialogStage.jsx',
+  'src/components/lesson/DictationItem.jsx',
+  'src/components/lesson/ExplainAnswer.jsx',
+  'src/components/lesson/NoticeStage.jsx',
+  'src/components/lesson/RecapStage.jsx',
+  'src/components/lesson/StageShell.jsx',
+  'src/components/lesson/WritingStage.jsx',
+  'src/components/lesson/LessonProgressBar.jsx',
+];
+
+// Pronouns, the du-forms of the verbs these screens use, and the du-imperatives
+// that were actually there. 'Versuch' is deliberately absent: it is also the
+// noun ("im ersten Versuch"), so the imperative is caught as 'Versuch es'.
+const DU_TOKENS = /\b(du|Du|dir|Dir|dich|Dich|dein|Dein|deine[mnrs]?|Deine[mnrs]?|kannst|musst|hast|willst|machst|hörst|schreibst|Schreib|Tippe|Lies|Hör|Sprich|Melde|Probier|bestätige|Versuch es)\b/;
+
+test('the lesson chrome sieze: no du-register token in any screen the player renders', () => {
+  const offenders = [];
+  for (const f of CHROME_FILES) {
+    read(f).split('\n').forEach((line, i) => {
+      if (DU_TOKENS.test(line)) offenders.push(`${f}:${i + 1}  ${line.trim()}`);
+    });
+  }
+  assert.deepEqual(offenders, [], `du-register in the lesson chrome:\n${offenders.join('\n')}`);
+});
+
+// ---------------------------------------------------------------------------
+// The speaking task travels (DaF review #4, MAJOR "missionOrder null /
+// SpeakingStage"). Four A1.1 Lektionen carry a `sprechen.open` prompt without a
+// missionOrder, so no ?mission= can be handed over; without the prompt in the
+// course context the learner reads a task and then lands on a generic page.
+// ---------------------------------------------------------------------------
+test('saveCourseContext round-trips the speaking task, and old contexts still read', async () => {
+  const store = new Map();
+  globalThis.sessionStorage = {
+    getItem: (k) => (store.has(k) ? store.get(k) : null),
+    setItem: (k, v) => store.set(k, String(v)),
+    removeItem: (k) => store.delete(k),
+  };
+  const { saveCourseContext, readCourseContext, clearCourseContext } = await import('../src/lib/courseFlow.js');
+
+  saveCourseContext({
+    level: 'a1.1', code: 'A1.1', itemId: 'l7', title: 'Freizeit',
+    returnTo: '/course/a1.1/l/7',
+    openPrompt: 'Fragen und antworten Sie zum Thema Freizeit: Hobby? Musik? Wochenende?',
+    openTeil: 'Sprechen Teil 2',
+    hintWords: ['das Hobby', 'gern'],
+  });
+  const ctx = readCourseContext();
+  assert.equal(ctx.openPrompt, 'Fragen und antworten Sie zum Thema Freizeit: Hobby? Musik? Wochenende?');
+  assert.equal(ctx.openTeil, 'Sprechen Teil 2');
+  assert.deepEqual(ctx.hintWords, ['das Hobby', 'gern']);
+  assert.equal(ctx.returnTo, '/course/a1.1/l/7', 'the old fields survive');
+
+  // Backward compatibility: a context written by the course path carries no
+  // speaking task, and every reader must still get a usable object.
+  clearCourseContext();
+  saveCourseContext({ level: 'a1.1', code: 'A1.1', itemId: 'w1d1', title: 'Lektion 1' });
+  const plain = readCourseContext();
+  assert.equal(plain.openPrompt, null);
+  assert.equal(plain.openTeil, null);
+  assert.deepEqual(plain.hintWords, []);
+
+  clearCourseContext();
+  assert.equal(readCourseContext(), null);
+  delete globalThis.sessionStorage;
+});
+
+test('SpeakingStage hands the prompt over and the speaking page uses it when no mission is set', () => {
+  const stage = read('src/components/lesson/SpeakingStage.jsx');
+  for (const field of ['openPrompt: open', 'openTeil: open', 'hintWords: open']) {
+    assert.ok(stage.includes(field), `SpeakingStage does not save ${field}`);
+  }
+  const page = read('src/pages/SpeakingPage.jsx');
+  assert.ok(page.includes('readCourseContext'), 'the speaking page never reads the course context');
+  assert.ok(/if \(wantedMission\) return null;/.test(page), 'an explicit ?mission= must win over the course task');
+  assert.ok(page.includes('courseTask.promptDe'), 'the handed-over prompt is not rendered');
+});

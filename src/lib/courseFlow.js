@@ -57,12 +57,38 @@ export const INSTRUCTION = {
 
 // Course context handed to the lesson screens (the same-origin sessionStorage
 // key the SPA return bar and the Astro Layout bar both read).
+//
+// SHAPE: { level, code, itemId, title, position?, total?, returnTo?,
+//          openPrompt?, openTeil?, hintWords? }
+//
+// The last three carry a SPEAKING TASK across the hand-off. Four A1.1 Lektionen
+// have `sprechen.open` without a `missionOrder`, so /speaking gets no
+// &mission=… and used to receive nothing at all: the learner read a task on the
+// lesson screen and landed on a generic speaking page (DaF review #4, MAJOR
+// "missionOrder null / SpeakingStage"). They travel here so the speaking page
+// can show the task the learner was just promised.
+//
+// BACKWARD COMPATIBILITY: a context written before this existed (or by the
+// course path, which saves no speaking task) has no openPrompt. Readers must
+// cope, so readCourseContext normalises: openPrompt/openTeil are null when
+// absent and hintWords is always an array.
 export const CTX_KEY = 'dm_course_ctx';
+
+export const normalizeCourseContext = (ctx) => {
+  if (!ctx || typeof ctx !== 'object') return null;
+  return {
+    ...ctx,
+    openPrompt: ctx.openPrompt || null,
+    openTeil: ctx.openTeil || null,
+    hintWords: Array.isArray(ctx.hintWords) ? ctx.hintWords : [],
+  };
+};
+
 export const saveCourseContext = (ctx) => {
   try { sessionStorage.setItem(CTX_KEY, JSON.stringify(ctx)); } catch { /* storage blocked */ }
 };
 export const readCourseContext = () => {
-  try { return JSON.parse(sessionStorage.getItem(CTX_KEY) || 'null'); } catch { return null; }
+  try { return normalizeCourseContext(JSON.parse(sessionStorage.getItem(CTX_KEY) || 'null')); } catch { return null; }
 };
 export const clearCourseContext = () => {
   try { sessionStorage.removeItem(CTX_KEY); } catch { /* storage blocked */ }

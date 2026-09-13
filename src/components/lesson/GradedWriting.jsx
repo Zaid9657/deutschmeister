@@ -80,13 +80,13 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
     const left = Math.max(0, data.limit - (data.used ?? 0));
     return left > 0
       ? `Formcheck, keine KI-Bewertung — noch ${left} KI-Bewertungen frei.`
-      : 'Formcheck, keine KI-Bewertung — dein Kontingent an KI-Bewertungen ist aufgebraucht.';
+      : 'Formcheck, keine KI-Bewertung — Ihr Kontingent an KI-Bewertungen ist aufgebraucht.';
   };
 
   const submit = async () => {
     if (busy || !canSubmit) return;
     if (!user) {
-      finish(mechanicalResult(), 'Melde dich an, um eine KI-Bewertung zu bekommen.');
+      finish(mechanicalResult(), 'Melden Sie sich an, um eine KI-Bewertung zu bekommen.');
       return;
     }
     setBusy(true);
@@ -164,7 +164,7 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
                 ))}
               </ul>
             )}
-            <label htmlFor="writing-text" className={FIELD_LABEL}>Dein Text</label>
+            <label htmlFor="writing-text" className={FIELD_LABEL}>Ihr Text</label>
             <textarea
               id="writing-text"
               rows={6}
@@ -272,7 +272,7 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
           </ul>
           <p className="mt-4 text-[0.8125rem] leading-relaxed text-graphite">
             {note || 'Formcheck, keine KI-Bewertung.'} Diese Checkliste prüft nur die Form (Länge, Punkte,
-            Anrede und Gruß). Sie korrigiert dein Deutsch nicht.
+            Anrede und Gruß). Sie korrigiert Ihr Deutsch nicht.
           </p>
         </Card>
       )}

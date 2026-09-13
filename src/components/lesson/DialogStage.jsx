@@ -91,7 +91,7 @@ export default function DialogStage({ stage, lektionId, onBack, onDone }) {
                     <p className="mt-1 text-[1.0625rem] leading-relaxed text-ink">{l.de}</p>
                     {gloss && <p className="mt-1 text-[0.875rem] leading-relaxed text-graphite">{l.en}</p>}
                     {played.has(i) && !recorded && !speechAvailable() && (
-                      <p className="mt-1 text-[0.75rem] text-graphite">Dein Browser kann diesen Text nicht vorlesen.</p>
+                      <p className="mt-1 text-[0.75rem] text-graphite">Ihr Browser kann diesen Text nicht vorlesen.</p>
                     )}
                   </div>
                 </div>

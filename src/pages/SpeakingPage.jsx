@@ -15,6 +15,7 @@ import { checkSpeakingSupport } from '../components/speaking/mediaSupport';
 import SpeakingSession from '../components/speaking/SpeakingSession';
 import SpeakingEvaluationResults from '../components/SpeakingEvaluationResults';
 import { LEVEL_ORDER } from '../config/levels';
+import { readCourseContext } from '../lib/courseFlow.js';
 import Button from '../components/ui/Button.jsx';
 import Card from '../components/ui/Card.jsx';
 import Chip from '../components/ui/Chip.jsx';
@@ -153,6 +154,28 @@ const SpeakingPage = () => {
     setSelectedLevel(LEVEL_ORDER.includes(wantedLevel) ? wantedLevel : normalizePlacementLevel(profile?.current_level));
   }, [subLoading, profile, wantedLevel]);
 
+  // The course hand-off WITHOUT a mission. Four A1.1 Lektionen have a
+  // `sprechen.open` prompt but no mission row, so no ?mission= can be sent;
+  // SpeakingStage now writes the prompt into the course context instead
+  // (courseFlow.js: openPrompt / openTeil / hintWords). When it is there and no
+  // mission was requested, THAT prompt is the task on screen — the learner
+  // speaks to the thing the lesson promised, not to some other mission of the
+  // level. It is a free conversation on the server side: speaking-session takes
+  // a missionId and reads the task out of `speaking_missions`, so there is no
+  // field a client-supplied task text could travel in (see the report).
+  const courseTask = useMemo(() => {
+    if (wantedMission) return null;
+    const ctx = readCourseContext();
+    if (!ctx || !ctx.openPrompt) return null;
+    return {
+      promptDe: ctx.openPrompt,
+      teil: ctx.openTeil || 'Sprechen',
+      hintWords: ctx.hintWords,
+      lektion: ctx.title || null,
+      level: String(ctx.level || '').toUpperCase(),
+    };
+  }, [wantedMission]);
+
   // Wallet balance + free-session allowance + trial usage (anon client / API).
   const loadMeta = useCallback(async () => {
     if (!user?.id) { setMetaLoading(false); return; }
@@ -220,6 +243,10 @@ const SpeakingPage = () => {
   const durationLabel = (m) => (m === 5 ? fiveMinLabel : `${m} min — ${euros(PRICE_CENTS[m])}`);
 
   const activeMission = missions.find((m) => m.id === selectedMissionId) || null;
+  // The course task is only the task while no mission is chosen and the level
+  // still matches the lesson the learner came from.
+  const courseTaskActive = !!courseTask && !activeMission
+    && (!courseTask.level || courseTask.level === selectedLevel);
   const missionLocked = !!activeMission && !activeMission.is_free && !hasAccess;
   const canAfford = selectedCost === 0 || walletCents >= selectedCost;
   const startDisabled = starting || metaLoading || missionLocked || !canAfford || !browserSupport.supported;
@@ -249,6 +276,13 @@ const SpeakingPage = () => {
         plannedMinutes: data.planned_minutes || selectedMinutes,
         level: data.level || selectedLevel,
         mission: activeMission,
+        // Display only, and deliberately NOT `mission`: the session really is a
+        // free conversation (no mission row, no pass criteria), so the mission
+        // result banner must stay away — but the task and its helper words stay
+        // on screen while the learner speaks.
+        courseTask: courseTaskActive
+          ? { title_de: courseTask.promptDe, hint_words: courseTask.hintWords }
+          : null,
         opening: { text: data.replyText, audioBase64: data.replyAudioBase64 },
       });
       setEvaluation(null);
@@ -343,7 +377,7 @@ const SpeakingPage = () => {
     return (
       <SpeakingSession
         level={session.level}
-        mission={session.mission}
+        mission={session.mission || session.courseTask}
         sessionToken={session.sessionToken}
         plannedMinutes={session.plannedMinutes}
         opening={session.opening}
@@ -466,6 +500,32 @@ const SpeakingPage = () => {
             <Clock className="w-4 h-4 text-graphite absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
         </Reveal>
+
+        {/* The course task, when the lesson handed one over without a mission.
+            German first (it is what the learner speaks), the Goethe Teil as the
+            label, the lesson's helper words as chips. */}
+        {courseTaskActive && (
+          <Reveal delay={135}>
+            <label className={FIELD_LABEL}>Task from your lesson</label>
+            <Card tone="wash" className="p-4 mb-6">
+              <div className="flex flex-wrap items-center gap-2">
+                <Chip tone="label">{courseTask.teil}</Chip>
+                {courseTask.lektion && <Chip tone="quiet">{courseTask.lektion}</Chip>}
+              </div>
+              <p className="mt-3 text-[1.0625rem] font-semibold text-ink leading-snug">{courseTask.promptDe}</p>
+              {courseTask.hintWords.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-3">
+                  {courseTask.hintWords.map((w, i) => (
+                    <Chip key={i} tone="label" size="md">{w}</Chip>
+                  ))}
+                </div>
+              )}
+              <p className="mt-3 text-sm text-graphite">
+                Start a free conversation and speak to this task — it stays on screen while you talk.
+              </p>
+            </Card>
+          </Reveal>
+        )}
 
         {/* Missions — clay cards the learner chooses from; the first mission of
             the level is the natural next one and gets the tilt. */}

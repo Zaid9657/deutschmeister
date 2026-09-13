@@ -59,12 +59,12 @@ export default function ExplainAnswer({ item, expected, userAnswer, level, lekti
     return <p className={BOX} role="status" aria-live="polite">Erklärung wird geschrieben …</p>;
   }
   if (state.status === 'anon') {
-    return <p className={BOX} role="status" aria-live="polite">Melde dich an für Erklärungen.</p>;
+    return <p className={BOX} role="status" aria-live="polite">Melden Sie sich an für Erklärungen.</p>;
   }
   if (state.status === 'limit') {
     return (
       <p className={BOX} role="status" aria-live="polite">
-        Du hast heute alle Erklärungen{state.limit ? ` (${state.limit})` : ''} genutzt. Morgen gibt es neue.
+        Sie haben heute alle Erklärungen{state.limit ? ` (${state.limit})` : ''} genutzt. Morgen gibt es neue.
       </p>
     );
   }
