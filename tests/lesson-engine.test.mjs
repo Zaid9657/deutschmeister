@@ -26,6 +26,8 @@ const read = (p) => readFileSync(join(ROOT, p), 'utf8');
 const POOL = JSON.parse(read('src/data/lessonPools/a11.json'));
 /** A second parse: a distinct object, so the plan cache cannot fake determinism. */
 const POOL_COPY = JSON.parse(read('src/data/lessonPools/a11.json'));
+/** The A1.2 pool, built by `node scripts/build-lesson-pool.mjs a1.2` from the same rules. */
+const POOL_A12 = JSON.parse(read('src/data/lessonPools/a12.json'));
 const LEKTIONEN = CURRICULUM_A11.lektionen;
 
 const build = (over = {}) =>
@@ -110,6 +112,15 @@ test('the draw is deterministic per (level, nr, attempt) and a retry gives a dif
 test('the shipped pool is clean: nothing in it trips a quality rule', () => {
   const { excluded } = filterPool(POOL.items);
   assert.deepEqual(excluded, [], `a11.json still carries ${excluded.length} excluded items — re-run scripts/build-lesson-pool.mjs`);
+});
+
+test('the shipped A1.2 pool is clean, measured at its own level', () => {
+  // At level a1.2, because three of quality.js's reasons are level-scoped
+  // (ORDINAL_NUMBER, MONTH_NAME, UNTAUGHT_TIME_EXCEPTION apply to a1.1's
+  // syllabus only) — calling filterPool without the level would drop A1.2 items
+  // for teaching exactly what A1.2 is there to teach.
+  const { excluded } = filterPool(POOL_A12.items, { level: 'a1.2' });
+  assert.deepEqual(excluded, [], `a12.json still carries ${excluded.length} excluded items — re-run scripts/build-lesson-pool.mjs a1.2`);
 });
 
 test('the English respellings and English meta items are gone for good', () => {

@@ -17,12 +17,13 @@
 // drill and it is never drawn), and an item that carries a Lektion's topic
 // label without practising its grammar point (`drillsSlug`, below).
 //
-// WHAT IS NOT PINNED HERE YET. `src/data/lessonPools/a12.json` does not exist —
-// `node scripts/build-lesson-pool.mjs a1.2` has not been run (CONTRACT §1 and
-// §6.0: the pool, the `POOL_LOADERS` entry and the route land together). The
-// A1.1 suite's two pool tests — "the shipped pool contains them" and "THE DRAW"
-// — therefore have no counterpart below. Add them in the change that builds the
-// pool: they are the ones that measure what the learner is actually served.
+// THE POOL IS NOW BUILT. `node scripts/build-lesson-pool.mjs a1.2` writes
+// `src/data/lessonPools/a12.json` (238 kept legacy items + these 116), and the
+// two tests this file used to defer — "the shipped pool contains them" and
+// "THE DRAW" — stand at the bottom. They are the ones that measure what the
+// learner is actually served: the draw is seeded, so an item that fails a
+// quality rule, loses its id or stops drilling its slug changes the drawn seven
+// of a Lektion without changing anything visible in this file.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -30,13 +31,17 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 import { exclusionReason, answerInPrompt, isMetaPrompt } from '../src/data/lessonPools/quality.js';
-import { relevanceScore, wortfeldTerms, isTypedItem } from '../src/lib/lesson/buildLesson.js';
+import {
+  planPractice, relevanceScore, wortfeldTerms, isTypedItem, isMultipleChoice,
+  PRACTICE_SIZE, MAX_MULTIPLE_CHOICE, PRIMARY_MIN,
+} from '../src/lib/lesson/buildLesson.js';
 import { CURRICULUM_A12 } from '../src/data/curricula/a12.js';
 import { itemLexis } from '../scripts/validate-curriculum.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => JSON.parse(readFileSync(join(ROOT, p), 'utf8'));
 const EXTRA = read('src/data/lessonPools/a12.extra.json').items;
+const POOL = read('src/data/lessonPools/a12.json');
 
 /** The level every rule below is measured at — three of quality.js's rules are level-scoped. */
 const LEVEL = { level: 'a1.2' };
@@ -179,7 +184,15 @@ test('RULE 11 — no extra item uses a word A1.1 or an earlier A1.2 Lektion has 
   // is why a new task formula has to be one of the strings ITEM_FORMULA_RE
   // knows, or its own words start counting as vocabulary the learner must have
   // been taught.
-  const offenders = itemLexis(CURRICULUM_A12, EXTRA);
+  //
+  // The third argument is the POOL half of `itemLexis`, and it is passed EMPTY on
+  // purpose: since `src/data/lessonPools/a12.json` exists, the default would load
+  // it and measure the 238 legacy bank items too. Those are a different finding
+  // with a different owner — RULE 11 over the built pool is what A1.1's ratchet of
+  // 187 counts, and A1.2 measures 156 the day its pool lands (run
+  // `node scripts/validate-curriculum.mjs a1.2`). This suite is about the 116
+  // items written by hand, and for those the bar is zero, not a ratchet.
+  const offenders = itemLexis(CURRICULUM_A12, EXTRA, []);
   assert.deepEqual(offenders.map((o) => `${o.id}:${o.token}`), [],
     'untaught tokens in the hand-written A1.2 items');
 });
@@ -421,5 +434,50 @@ test('the Lektionen the contract calls thin carry real production, not repeats',
     assert.ok(hits.length >= 7, `L${nr} (${slug}) has only ${hits.length} drilling items, a draw is 7`);
     const prompts = new Set(list.map((i) => i.questionDe.replace(/\s+/g, ' ').trim().toLowerCase()));
     assert.equal(prompts.size, list.length, `L${nr} repeats a prompt`);
+  }
+});
+
+// --- the shipped pool ------------------------------------------------------
+
+test('the shipped pool contains them — scripts/build-lesson-pool.mjs a1.2 has been re-run', () => {
+  assert.equal(POOL.level, 'a1.2');
+  const ids = new Set(POOL.items.map((i) => i.id));
+  const missing = EXTRA.filter((i) => !ids.has(i.id)).map((i) => i.id);
+  assert.deepEqual(missing, [], 'a12.json is stale — run `node scripts/build-lesson-pool.mjs a1.2`');
+});
+
+test('THE DRAW — every A1.2 Lektion gets a full, typed, on-topic seven that drills its own slug', () => {
+  // Both attempts, because attempt 2 draws from what attempt 1 left: a Lektion
+  // whose slug has barely enough drilling items passes the first draw and
+  // repeats itself on the second, and the repeat is the failure a learner sees.
+  for (const attempt of [1, 2]) {
+    const plan = planPractice(CURRICULUM_A12, POOL, attempt);
+    const lines = [`attempt ${attempt}`];
+    for (const l of CURRICULUM_A12.lektionen) {
+      const items = plan.get(l.nr) || [];
+      const typed = items.filter(isTypedItem).length;
+      const mc = items.filter(isMultipleChoice).length;
+      const drilling = items.filter((i) => drillsSlugA12(i, l.primarySlug));
+      const situational = items.filter((i) => relevanceScore(i, wortfeldTerms(l), new Set()) > 0).length;
+      lines.push(
+        `L${String(l.nr).padStart(2)} ${l.primarySlug.padEnd(26)} ${items.length} items · ` +
+        `${typed} typed (min ${l.practiceRule.typedMin}) · ${mc} MC · ` +
+        `${drilling.length} drilling (min ${PRIMARY_MIN}) · ${situational} situational`,
+      );
+      assert.equal(items.length, PRACTICE_SIZE, `L${l.nr} draws ${items.length} items on attempt ${attempt}`);
+      assert.ok(typed >= l.practiceRule.typedMin,
+        `L${l.nr} draws ${typed} typed items on attempt ${attempt}, needs ${l.practiceRule.typedMin}`);
+      assert.ok(mc <= MAX_MULTIPLE_CHOICE, `L${l.nr} draws ${mc} multiple-choice items on attempt ${attempt}`);
+      assert.equal(new Set(items.map((i) => i.id)).size, items.length, `L${l.nr} draws an item twice`);
+      for (const it of items) {
+        assert.ok(l.practiceRule.topics.includes(it.topic),
+          `L${l.nr} draws an off-topic item on attempt ${attempt}: ${it.id} (${it.topic})`);
+      }
+      assert.ok(drilling.length >= PRIMARY_MIN,
+        `L${l.nr} (${l.primarySlug}) draws only ${drilling.length} items that really drill its slug on attempt ${attempt}, needs ${PRIMARY_MIN}:\n` +
+        items.filter((i) => !drillsSlugA12(i, l.primarySlug))
+          .map((i) => `   ${i.id} ${i.questionDe.replace(/\s+/g, ' ').slice(0, 72)} → ${i.answer}`).join('\n'));
+    }
+    console.log(`\n${lines.join('\n')}\n`);
   }
 });

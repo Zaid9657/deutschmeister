@@ -259,6 +259,20 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   );
 }
 
+/**
+ * The exercise pool per level, one chunk each. Written out rather than built
+ * from a template literal because a `${key}.json` import makes the bundler emit
+ * EVERY json file of the directory — the hand-written `*.extra.json` sources
+ * included, which are build inputs and not something a learner downloads. A
+ * level without an entry here has no pool: the player says so instead of
+ * rendering a lesson with no practice (src/data/curricula/index.js only
+ * promotes a level once its pool exists).
+ */
+const POOL_LOADERS = {
+  'a1.1': () => import('../../data/lessonPools/a11.json'),
+  'a1.2': () => import('../../data/lessonPools/a12.json'),
+};
+
 export default function LessonPlayerPage() {
   const { level, nr } = useParams();
   const curriculum = curriculumFor(level);
@@ -270,8 +284,13 @@ export default function LessonPlayerPage() {
   useEffect(() => {
     if (!curriculum) return;
     let cancelled = false;
-    const key = String(curriculum.level).replace(/\./g, '');
-    import(`../../data/lessonPools/${key}.json`)
+    const load = POOL_LOADERS[String(curriculum.level).toLowerCase()];
+    if (!load) {
+      console.error(`[lesson] no pool for level ${curriculum.level}`);
+      setPoolFailed(true);
+      return undefined;
+    }
+    load()
       .then((mod) => { if (!cancelled) setPool(mod.default || mod); })
       .catch((err) => { console.error('[lesson] pool load failed:', err); if (!cancelled) setPoolFailed(true); });
     return () => { cancelled = true; };

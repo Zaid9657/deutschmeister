@@ -42,6 +42,7 @@ import Chip from '../../components/ui/Chip.jsx';
 
 const POOL_LOADERS = {
   'a1.1': () => import('../../data/lessonPools/a11.json'),
+  'a1.2': () => import('../../data/lessonPools/a12.json'),
 };
 
 /**
