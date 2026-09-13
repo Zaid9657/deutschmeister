@@ -314,9 +314,19 @@ test('taskShape reads the task, not the wording — the same exercise under two 
   // that differ only in the profession are ONE task: same skeleton, same rule,
   // an answer that removes the same article. `answerKey` cannot see it, because
   // it compares the content lemmas of the answer and `lehrerin` ≠ `verkäuferin`.
+  // The pair is an inline fixture: the shipped Verkäuferin twin (extra-a11-l06-09)
+  // was rewritten into a fill-blank in round 8 precisely so the pool no longer
+  // carries the duplicate — the pool test further down pins THAT; this one pins
+  // the axis that would catch the next such pair.
   const lehrerin = POOL.items.find((it) => it.id === '1ed2c78f-8f65-52e3-9e63-97f2a5b0663b');
-  const verkaeuferin = POOL.items.find((it) => it.id === 'extra-a11-l06-09');
-  assert.ok(lehrerin && verkaeuferin, 'the two Beruf items the review measured are no longer in the pool');
+  assert.ok(lehrerin, 'the Lehrerin correction the review measured is no longer in the pool');
+  const verkaeuferin = {
+    ...lehrerin,
+    id: 'fixture-verkaeuferin',
+    questionDe: 'Korrigieren Sie den Fehler: "Ich bin eine Verkäuferin."',
+    answer: 'Ich bin Verkäuferin.',
+    accepted: ['Ich bin Verkäuferin.'],
+  };
   assert.notEqual(answerKey(lehrerin), answerKey(verkaeuferin), 'answerKey is supposed to miss this pair');
   assert.equal(
     taskShape(lehrerin), taskShape(verkaeuferin),
@@ -364,18 +374,23 @@ test('no task shape carries more than one item in a Lektion — the Beruf-pair r
   assert.deepEqual(rows, [], rows.join('\n'));
 });
 
-test('L6 stops drawing the two Beruf corrections in one block — and stays above the floor', () => {
+test('L6 draws at most one Beruf correction per block — and stays above the floor', () => {
   // The instance: "Ich bin eine Lehrerin." and "Ich bin eine Verkäuferin." were
   // two of L6's seven in BOTH attempts, and neither makes the learner produce
   // an indefinite article (the right answer deletes it), which is why the
   // Lektion that introduces ein/eine sat exactly on PRIMARY_MIN with 4 of 7.
-  const BERUF = ['1ed2c78f-8f65-52e3-9e63-97f2a5b0663b', 'extra-a11-l06-09'];
+  // Round 8 rewrote the Verkäuferin twin into a fill-blank that PRODUCES „eine“;
+  // the class rule is: at most one article-deleting Beruf correction per draw.
+  const isBerufCorrection = (it) => it.type === 'error_correction' && /\bbin eine? [A-ZÄÖÜ]\w+in?\b/.test(it.questionDe || '');
+  const verkaeuferin = POOL.items.find((it) => it.id === 'extra-a11-l06-09');
+  assert.ok(verkaeuferin && verkaeuferin.type === 'fill_blank' && verkaeuferin.answer === 'eine',
+    'extra-a11-l06-09 must stay a fill-blank that produces „eine“, not a second Beruf correction');
   for (const attempt of [1, 2]) {
     const items = planPractice(CURRICULUM_A11, POOL, attempt).get(6);
-    const drawn = items.filter((it) => BERUF.includes(it.id));
+    const drawn = items.filter(isBerufCorrection);
     assert.ok(
       drawn.length <= 1,
-      `L6 attempt ${attempt} still draws both Beruf corrections:\n  ` + drawn.map((it) => `${it.id} → ${it.answer}`).join('\n  '),
+      `L6 attempt ${attempt} still draws two Beruf corrections:\n  ` + drawn.map((it) => `${it.id} → ${it.answer}`).join('\n  '),
     );
     const real = items.filter((it) => drillsSlug(it, 'indefinite-articles')).length;
     assert.ok(real >= PRIMARY_MIN, `L6 attempt ${attempt} drills its own slug only ${real}/7 times`);

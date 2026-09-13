@@ -125,6 +125,36 @@
    "hint": null
   },
   {
+   "id": "extra-a11-l01-09",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 9,
+   "questionDe": "Der Gruß am Morgen heißt: „___!“ (zwei Wörter)",
+   "questionEn": "Name the morning greeting.",
+   "options": null,
+   "answer": "Guten Morgen",
+   "accepted": ["Guten Morgen", "guten Morgen", "guten morgen"],
+   "explanationDe": "Am Morgen grüßt man mit Guten Morgen.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l01-10",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 10,
+   "questionDe": "Frau Kaya sagt zu Ana: „___!“ (Gruß zum Abschied, förmlich, zwei Wörter)",
+   "questionEn": "Mrs Kaya says the formal goodbye to Ana.",
+   "options": null,
+   "answer": "Auf Wiedersehen",
+   "accepted": ["Auf Wiedersehen", "auf Wiedersehen", "auf wiedersehen"],
+   "explanationDe": "Zu Frau Kaya sagt man förmlich: Auf Wiedersehen.",
+   "hint": null
+  },
+  {
    "id": "extra-a11-l02-01",
    "topic": "verb-sein",
    "type": "fill_blank",
@@ -1058,16 +1088,16 @@
   {
    "id": "extra-a11-l06-09",
    "topic": "indefinite-articles",
-   "type": "error_correction",
+   "type": "fill_blank",
    "stage": 5,
    "difficulty": 2,
    "order": 69,
-   "questionDe": "Korrigieren Sie: „Ich bin eine Verkäuferin.“",
-   "questionEn": "Fix the sentence.",
+   "questionDe": "Die Firma braucht ___ Verkäuferin. (unbestimmter Artikel)",
+   "questionEn": "The company needs a saleswoman.",
    "options": null,
-   "answer": "Ich bin Verkäuferin.",
-   "accepted": ["Ich bin Verkäuferin.", "Ich bin Verkäuferin"],
-   "explanationDe": "Nach sein steht der Beruf ohne Artikel.",
+   "answer": "eine",
+   "accepted": ["eine"],
+   "explanationDe": "die Verkäuferin ist feminin: eine Verkäuferin.",
    "hint": null
   },
   {
@@ -2106,6 +2136,36 @@
    "accepted": ["Ihr Papa kommt auch.", "Ihr Papa kommt auch"],
    "caseSensitive": true,
    "explanationDe": "Ihr Papa: maskulin ohne -e, höfliches Ihr mit großem I.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l12-17",
+   "topic": "possessive-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 137,
+   "questionDe": "Ana sagt am Telefon: „Mach's gut und ___ Tag noch!“ (Adjektiv)",
+   "questionEn": "Ana ends the call with a good wish.",
+   "options": null,
+   "answer": "schönen",
+   "accepted": ["schönen", "Schönen"],
+   "explanationDe": "Der gute Wunsch zum Abschied: Schönen Tag noch!",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l12-18",
+   "topic": "possessive-articles",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 138,
+   "questionDe": "Bilden Sie den Satz: [ich / grüßen / dein / Mama]",
+   "questionEn": "Build the sentence.",
+   "options": null,
+   "answer": "Ich grüße deine Mama.",
+   "accepted": ["Ich grüße deine Mama.", "Ich grüße deine Mama"],
+   "explanationDe": "die Mama ist feminin: deine Mama mit -e.",
    "hint": null
   }
  ]

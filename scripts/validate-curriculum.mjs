@@ -387,10 +387,10 @@ export const MAX_UNTAUGHT_IN_PRODUCTION = 12;      // a1.1; per level in LEVELS 
  * dialogue lines. The rule now asks whether the Lektion has a SURFACE for the Teil's family
  * (EXAM_TEIL_COVERS). Re-measured 2026-09-13: **1** — L2 „Lesen Teil 1“, and that one is real:
  * `readingOrder` is null and no step of the Lektion gives the learner a text to READ, while
- * *Start Deutsch 1* tests two short everyday texts there. It is a claim without a surface and it
- * stays reported until L2 either links a reading lesson or drops the Teil.
+ * *Start Deutsch 1* tests two short everyday texts there. It was a claim without a surface; L2
+ * dropped the Teil on 2026-09-13 (round 8) and the ratchet closed at 0.
  */
-export const MAX_UNBACKED_EXAM_TEILE = 1;          // a1.1; per level in LEVELS below — measured 2026-09-13
+export const MAX_UNBACKED_EXAM_TEILE = 0;          // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
  * RULE 15 — THE OFF-LIMITS FORMS, PER LEVEL.
@@ -555,10 +555,11 @@ export const LEVELS = {
       // built on words A1.2 teaches nowhere (`Zeitung`, `Kuli`, `Pizza`, `Präteritum`, `Hamburg`).
       // The 18 that remain are Vorgriffe — `fliegen` L1 (taught L7), `tragen`/`laufen` L6, …
       untaughtItemTokens: 18,
-      // RULE 11b measures the same tokens where the learner MEETS them (see drawnLexis): 18 → 2,
-      // both in L2 („fliegen“/„fliege“, taught in L7). All that is left is a work order for the
-      // items round, and it is two lines long.
-      untaughtDrawnTokens: 2,
+      // RULE 11b measures the same tokens where the learner MEETS them (see drawnLexis): 18 → 3
+      // („fliegen“/„fliege“ in L2, taught in L7; „Onkel“ in L3) — re-measured after the round-8
+      // A1.1 engine changes. A1.2 is PAUSED by owner decision (2026-09-13); the number is a
+      // work order for whoever resumes it, not a target.
+      untaughtDrawnTokens: 3,
       unrehearsedCanDos: 0,
       missionlessLektionen: 1,
       unexemplifiedNoticeForms: 0,

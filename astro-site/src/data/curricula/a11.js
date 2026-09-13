@@ -121,7 +121,11 @@ export const CURRICULUM_A11 = {
       situation: 'Begrüßung, Vorstellen und das Alphabet',
       handlungsfeld: 'Kontakte knüpfen: sich begrüßen und vorstellen',
       canDo: [
-        'Ich kann jemanden begrüßen und mich verabschieden.',
+        // The line used to name its own topic in two words the Lektion never uses — `begrüßen` and
+        // `verabschieden` occur in no dialogue line, no item and no prompt, so RULE 12 reported it
+        // (DaF review #7). It now quotes the two chunks the Lektion actually teaches and that
+        // `extra-a11-l01-09`/`-10` make the learner produce.
+        'Ich kann jemanden mit „Guten Tag“ begrüßen und mich mit „Auf Wiedersehen“ verabschieden.',
         'Ich kann sagen, wie ich heiße.',
         'Ich kann meinen Namen buchstabieren.',
         'Ich kann fragen, wie es jemandem geht, und darauf antworten.',
@@ -222,7 +226,15 @@ export const CURRICULUM_A11 = {
         'Ich kann meine Telefonnummer und meine Adresse nennen.',
         'Ich kann in einer kurzen Nachricht Angaben zu meiner Person machen.',
       ],
-      examTeile: ['Sprechen Teil 1', 'Lesen Teil 1', 'Schreiben Teil 2'],
+      // „Lesen Teil 1“ was a claim with no surface: `links.readingOrder` is null and no step of the
+      // Lektion gives the learner a text to READ (RULE 16, the level's last offender). The live
+      // `reading_lessons` table at a1.1 carries exactly ten rows (order_index 1–10, queried
+      // 2026-09-13) and all ten are already linked by another Lektion; none of them is the
+      // E-Mail/Brief format SD1 tests in Lesen Teil 1, so there was nothing honest to link. What
+      // the Lektion really rehearses is listening: `hoeren` dictates two dialogue lines of the
+      // Bürgerbüro exchange, which is Hören Teil 1 (short everyday dialogue). „Lesen Teil 1“ stays
+      // covered across the course by L3 and L11, which both link a reading lesson.
+      examTeile: ['Sprechen Teil 1', 'Hören Teil 1', 'Schreiben Teil 2'],
       grammarSlugs: ['verb-sein', 'alphabet-pronunciation'],
       primarySlug: 'verb-sein',
       minutes: 15,
@@ -429,7 +441,11 @@ export const CURRICULUM_A11 = {
       situation: 'Einkaufen, Möbel und Preise',
       handlungsfeld: 'Einkaufen: nach Gegenständen und Preisen fragen',
       canDo: [
-        'Ich kann fragen, was ein Gegenstand ist.',
+        // „was ein Gegenstand ist“ named the task in a word the Lektion never uses: the read-aloud
+        // line 0 („Entschuldigung, was ist das?“) makes the learner ASK it, and the pool asks after
+        // the price, but `Gegenstand` occurs in no input, so RULE 12 reported the line. The can-do
+        // now quotes what is actually produced instead of the metalinguistic label.
+        'Ich kann fragen, was etwas ist und was es kostet.',
         'Ich kann nach dem Preis fragen.',
         'Ich kann Preise bis hundert Euro verstehen.',
         'Ich kann sagen, was ich kaufe.',
@@ -1328,7 +1344,12 @@ export const CURRICULUM_A11 = {
       phonetik: { focus: 'Der Diphthong ei in mein und dein', items: ['MEIN', 'DEIN', 'ZWEI'] },
       hoeren: { kind: 'dictation', lines: [1, 3] },
       sprechen: {
-        readAloud: [0, 5],
+        // Line 9, not 5: „Ja! Mach's gut, Lena. Bis bald!“ is the ONLY place in the Lektion where
+        // the closing wish is said, and can-do 4 („mich verabschieden und gute Wünsche
+        // aussprechen“) was rehearsed nowhere — the learner read line 9 once, silently, and never
+        // produced it (DaF review #7, MAJOR 4). readAloud is the surface `score-readaloud` grades,
+        // so putting the farewell on it is what makes the last can-do of the course an exercise.
+        readAloud: [0, 9],
         open: {
           // Teil 1 is „sich vorstellen“ over Stichwortkarten; formulating an invitation is Teil 3.
           teil: 'Sprechen Teil 3',

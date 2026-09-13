@@ -729,9 +729,8 @@ test('rule 16: every examTeile claim is backed by the Lektion that makes it', ()
     unbacked.length <= MAX_UNBACKED_EXAM_TEILE,
     `${unbacked.length} unbacked examTeile > ratchet ${MAX_UNBACKED_EXAM_TEILE}:\n  - ${unbacked.map((o) => `L${o.nr} ${o.teil} (${o.why})`).join('\n  - ')}`,
   );
-  // The one that is left is the real one: L2 promises „Lesen Teil 1“ and gives the learner no text
-  // to read. It stays reported until L2 links a reading lesson or drops the claim.
-  assert.deepEqual(unbacked.map((o) => [o.nr, o.teil]), [[2, 'Lesen Teil 1']]);
+  // Round 8 closed the last one (L2 dropped „Lesen Teil 1“, which it never rehearsed).
+  assert.deepEqual(unbacked.map((o) => [o.nr, o.teil]), []);
   const c = cloneOf(CURRICULUM_A12);
   // A Sprechen-Teil-1 label on a prompt that is no self-introduction and no Teil-1 mission.
   c.lektionen[3].examTeile = ['Sprechen Teil 1'];
