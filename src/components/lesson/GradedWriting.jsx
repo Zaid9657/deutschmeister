@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, X, Loader2, CheckCircle, XCircle, PenTool } from 'lucide-react';
+import { Check, X, Loader2, CheckCircle, XCircle, PenTool, Sparkles } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { getAuthHeaders } from '../../utils/supabase';
 import { MAX_WRITING_POINTS } from '../../data/writingTasks';
@@ -267,18 +267,32 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
         <Card tone="sunk" className="mt-4 p-5">
           <p className={FIELD_LABEL}>Checkliste</p>
           <ul className="mt-3 space-y-2">
-            {check.checks.map((c) => (
-              <li key={c.key} className="flex items-start gap-2 text-[0.9375rem]">
-                {c.ok ? (
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-siegel" aria-hidden="true" />
-                ) : (
-                  <X className="mt-0.5 h-4 w-4 shrink-0 text-accent-himbeer" aria-hidden="true" />
-                )}
-                <span className={c.ok ? 'text-ink' : 'text-graphite'}>
-                  {c.label} — {c.ok ? 'erledigt' : 'fehlt noch'}
-                </span>
-              </li>
-            ))}
+            {check.checks.map((c) => {
+              // `ai` rows are UNDECIDABLE by form („Warum Sie schreiben“ — every token of it is a
+              // function word), so they are shown and named, never ticked and never crossed. A row
+              // the Formcheck cannot decide used to be dropped from the list, and the task then
+              // showed three Leitpunkte while the checklist showed two (DaF review #13, MAJOR 1).
+              if (c.ai) {
+                return (
+                  <li key={c.key} className="flex items-start gap-2 text-[0.9375rem]">
+                    <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-graphite" aria-hidden="true" />
+                    <span className="text-graphite">{c.label} — prüft die KI</span>
+                  </li>
+                );
+              }
+              return (
+                <li key={c.key} className="flex items-start gap-2 text-[0.9375rem]">
+                  {c.ok ? (
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-siegel" aria-hidden="true" />
+                  ) : (
+                    <X className="mt-0.5 h-4 w-4 shrink-0 text-accent-himbeer" aria-hidden="true" />
+                  )}
+                  <span className={c.ok ? 'text-ink' : 'text-graphite'}>
+                    {c.label} — {c.ok ? 'erledigt' : 'fehlt noch'}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
           <p className="mt-4 text-[0.8125rem] leading-relaxed text-graphite">
             {note || 'Formcheck, keine KI-Bewertung.'} Diese Checkliste prüft nur die Form (Länge, Punkte,

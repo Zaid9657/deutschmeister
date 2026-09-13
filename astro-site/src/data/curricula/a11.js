@@ -302,7 +302,12 @@ export const CURRICULUM_A11 = {
       // Not line 4: an enumeration with three commas is a punctuation test, not a listening test.
       hoeren: { kind: 'dictation', lines: [7, 3] },
       sprechen: {
-        readAloud: [2, 6],
+        // Zeile 2 („Bitte füllen Sie das Formular aus.“) ist RAUS (DaF review #13, MAJOR 3): der
+        // Satz trägt die Satzklammer aus Lektion 11 und einen Sie-Imperativ, den A1.1 nirgends
+        // erklärt. Im DIALOG darf er stehen (CONTRACT §2 — eine Beamtin sagt diesen Satz), zum
+        // Vorlesen und als Diktat in Checkpoint 1 nicht. Zeile 4 ist frei und trägt das eigene
+        // Thema der Lektion; RULE 18 bleibt erfüllt (Diktat liegt auf 7 und 3).
+        readAloud: [4, 6],
         open: {
           teil: 'Sprechen Teil 1',
           promptDe: 'Stellen Sie sich vor: Name, Wohnort, Beruf.',
@@ -324,11 +329,17 @@ export const CURRICULUM_A11 = {
         leitpunkte: ['Ihr Name und Ihr Geburtsdatum', 'Ihr Land und Ihre Staatsangehörigkeit', 'Ihr Familienstand: ledig oder verheiratet'],
         minWords: 25,
         maxWords: 45,
-        // 39 Wörter, drei Leitpunkte in drei vollständigen Sätzen. Der Mustertext muss die
+        // 32 Wörter, drei Leitpunkte in vollständigen Sätzen. Der Mustertext muss die
         // Formcheck-Liste bestehen, die der Bildschirm einen Absatz darüber zeigt (RULE 17):
         // 24 Wörter gegen „25–45“ waren `FAIL: length` neben dem Wort „Beispieltext“
         // (DaF review #12, MAJOR 1). Ohne Possessivartikel — die sind Lektion 12.
-        sample: 'Sehr geehrte Damen und Herren, ich bin Ana Chakiri. Der Nachname ist Chakiri. Das Geburtsdatum ist der 3. Mai 1998. Ich komme aus Marokko. Das Land ist Marokko und die Staatsangehörigkeit ist marokkanisch. Der Familienstand: Ich bin ledig. Viele Grüße, Ana',
+        // ROUND 14 (DaF review #13, MAJOR 1 + 2): „Der Nachname ist Chakiri.“, „Das Land ist
+        // Marokko“ und „Der Familienstand: Ich bin ledig.“ sind wieder draußen. Sie standen nur da,
+        // weil der Formcheck ein einziges Schlüsselwort je Leitpunkt suchte — das tut er nicht mehr
+        // (`leitpunktSatisfied`), und ein Mustertext darf kein Wort enthalten, das nur für den
+        // Checker dasteht. `marokkanisch` und `komme` sind weg, weil der Kurs sie bis Lektion 2
+        // nicht lehrt (RULE 20); das Datum steht in Ziffern, weil `Mai` Lektion 12 ist.
+        sample: 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Das Geburtsdatum ist der 3.5.1998. Ich bin aus Marokko. Ich bin ledig. Ich bin Studentin in Bremen. Viele Grüße, Ana Chakiri',
       },
       // A1.1 carries six listening exercises and ten reading texts; every one is linked from another
       // Lektion, so this one honestly has none — the syllabus shows „—“ rather than a repeat.
@@ -389,7 +400,7 @@ export const CURRICULUM_A11 = {
           { speaker: 'Lena', de: 'Ana, ist das deine Familie?', en: 'Ana, is that your family?' },
           { speaker: 'Ana', de: 'Ja. Das sind meine Eltern und meine Geschwister: ein Bruder, eine Schwester.', en: 'Yes. Those are my parents and my siblings: a brother, a sister.' },
           { speaker: 'Lena', de: 'Wie alt ist er?', en: 'How old is he?' },
-          { speaker: 'Ana', de: 'Er ist zwanzig. Meine Schwester ist noch jung.', en: 'He is twenty. My sister is still young.' },
+          { speaker: 'Ana', de: 'Er ist zwanzig. Sie ist noch jung.', en: 'He is twenty. She is still young.' },
           { speaker: 'Lena', de: 'Welche Sprachen sprechen deine Eltern?', en: 'Which languages do your parents speak?' },
           { speaker: 'Ana', de: 'Sie sprechen Arabisch und Deutsch.', en: 'They speak Arabic and German.' },
           { speaker: 'Lena', de: 'Spricht dein Bruder auch Englisch?', en: 'Does your brother speak English too?' },
@@ -421,7 +432,7 @@ export const CURRICULUM_A11 = {
       phonetik: { focus: 'Der Umlaut ü in Bruder – Brüder', items: ['der BRU-der', 'die BRÜ-der', 'die MÜT-ter'] },
       hoeren: { kind: 'dictation', lines: [5, 7] },
       sprechen: {
-        readAloud: [2, 7],
+        readAloud: [2, 3],
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Familie: Geschwister? Sohn? Tochter?',
@@ -539,9 +550,11 @@ export const CURRICULUM_A11 = {
         leitpunkte: ['Was Sie kaufen', 'Was es kostet', 'Wann Sie sich treffen'],
         minWords: 25,
         maxWords: 45,
-        // 37 Wörter, alle drei Leitpunkte (kaufen / kostet / treffen). Bestimmte Artikel statt
-        // „einen Stuhl“: der unbestimmte Artikel ist Lektion 6 (RULE 15b).
-        sample: 'Hallo Lena! Heute ist der Flohmarkt. Wir kaufen den Stuhl und die Lampe. Der Stuhl kostet zwölf Euro und die Lampe kostet acht Euro. Das ist nicht teuer. Wann treffen wir uns? Um vier Uhr? Tschüss, Tim',
+        // 34 Wörter, alle drei Leitpunkte (kaufen / kostet / treffen). Bestimmte Artikel statt
+        // „einen Stuhl“: der unbestimmte Artikel ist Lektion 6 (RULE 15b). ROUND 14: `Heute`, `uns`
+        // und `Um` sind raus — alle drei lehrt der Kurs erst später, und ein Mustertext wird mit
+        // demselben Maßstab gemessen wie ein Poolitem (RULE 20).
+        sample: 'Hallo Lena! Der Flohmarkt ist gut. Wir kaufen den Stuhl und die Lampe. Der Stuhl kostet zwölf Euro und die Lampe kostet acht Euro. Das ist nicht teuer. Wann treffen wir Ana? Tschüss, Tim',
       },
       links: { listeningExercise: 1, readingOrder: 4 },
       practiceRule: { topics: ['nouns-gender'], typedMin: 3 },
@@ -964,7 +977,7 @@ export const CURRICULUM_A11 = {
         minWords: 25,
         maxWords: 45,
         // 37 Wörter, mit dem neuen Tag, der neuen Uhrzeit und einer Frage an Lena.
-        sample: 'Hallo Lena! Ich komme am Montag zu spät. Ein neuer Termin: Geht es am Dienstag um halb neun? Das ist der neue Tag und die neue Uhrzeit. Noch eine Frage: Bist du dann pünktlich? Viele Grüße, Ana',
+        sample: 'Hallo Lena! Ich komme am Montag zu spät. Geht es am Dienstag um halb neun? Dann haben wir Zeit für den Termin. Noch eine Frage: Bist du dann pünktlich? Viele Grüße, Ana',
       },
       links: { listeningExercise: 4, readingOrder: 3 },
       // Only the primary topic: with two topics the builder drew 5 present-tense items against 2 time
@@ -1180,7 +1193,7 @@ export const CURRICULUM_A11 = {
         maxWords: 45,
         // 35 Wörter. Der dritte Leitpunkt („Was die Kollegin bis dahin machen soll“) war im alten
         // Mustertext gar nicht modelliert; die Kollegin wird gesiezt.
-        sample: 'Liebe Kollegin, der Zug hat leider Verspätung. Die Kollegen kommen um neun Uhr, ich komme erst um zehn Uhr. Bitte machen Sie die Arbeit bis zehn Uhr ohne mich. Vielen Dank und viele Grüße, Ana',
+        sample: 'Liebe Kollegin, der Zug hat leider Verspätung. Die Kollegen kommen um neun Uhr, ich komme um zehn Uhr. Bitte machen Sie die Arbeit bis zehn Uhr ohne mich. Vielen Dank und viele Grüße, Ana',
       },
       links: { listeningExercise: 3, readingOrder: 6 },
       // Only the primary topic: the two-topic rule drew haben items twice over from L9 (DaF review, L10).
@@ -1399,7 +1412,7 @@ export const CURRICULUM_A11 = {
         minWords: 25,
         maxWords: 45,
         // 37 Wörter. Der Possessivartikel ist hier erlaubt: Lektion 12 ist die Lektion, die ihn lehrt.
-        sample: 'Hallo Lena! Am Freitag feiern wir meinen Geburtstag. Der Tag ist der 15. Mai und die Party ist um acht Uhr. Die Gäste bringen Kuchen und Musik mit. Bringst du bitte den Salat mit? Bis bald, Ana',
+        sample: 'Hallo Lena! Am Freitag feiern wir Geburtstag. Der Tag ist der 15. Mai und die Party ist um acht Uhr. Die Gäste bringen Kuchen und Musik mit. Bringst du bitte den Salat mit? Bis bald, Ana',
       },
       links: { listeningExercise: null, readingOrder: 10 },
       // „Wiederholung“ has to be visible in the practice: the last Lektion before checkpoint 4 mixes

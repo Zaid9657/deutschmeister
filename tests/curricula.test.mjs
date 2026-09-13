@@ -29,7 +29,9 @@ import {
   MAX_UNBACKED_EXAM_TEILE, LEVELS, levelSpec, levelLexicon, untaughtTokens,
   modelTextsPassOwnChecklist, sharedProductionLines, modelTextsMatchDialogue, formularSampleValues,
   MAX_MODEL_CHECKLIST_BREAKS, MAX_SHARED_PRODUCTION_LINES,
+  modelTextLexis, MAX_UNTAUGHT_IN_MODEL_TEXTS, LICENSED_LETTER_CHUNKS,
 } from '../scripts/validate-curriculum.mjs';
+import { constructionHits, CONSTRUCTION_PATTERNS, SEPARABLE_PREFIXES } from '../src/data/curricula/constructions.js';
 
 // ───────────────────────────────────────────────────────────────────────────────────────────────
 // SELF-SIZING RATCHET MUTATIONS
@@ -799,14 +801,138 @@ test('rule 15b: a construction the course defers is in no line the learner produ
   // L3's DICTATION line, where checkAnswer grades it letter by letter. One definition of
   // „deferred construction“, therefore, in src/data/curricula/constructions.js, read by the card
   // guard (tests/rule-card-overrides.test.mjs) and by this rule.
-  assert.equal(MAX_DEFERRED_CONSTRUCTIONS, 0, 'RULE 15b is a hard 0 and may not be ratcheted up');
+  // Round 14 extended the rule to the CHECKPOINTS and made the Satzklammer pattern structural, and
+  // the A1.1 number went 0 → 1: `a1.1-cp1-hoeren-3` dictates „Bitte füllen Sie das Formular aus.“
+  // after Lektion 3. The measured reason is in MAX_DEFERRED_CONSTRUCTIONS' comment and it is the
+  // L3 line shortage the owner already holds RULE 18 open for. Every level is measured against its
+  // OWN row, never against zero, so a paused level's draft cannot be hidden behind A1.1's number.
   for (const [level, C] of Object.entries(ALL_CURRICULA)) {
-    const offenders = constructionsBeforeTaught(C);
-    assert.deepEqual(
-      offenders.map((o) => `L${o.nr} ${o.where} [${o.kind}→L${o.taught}] „${o.hit}“`), [],
-      `${level}: the learner is made to produce a construction his course has not taught`,
+    const ratchet = levelSpec(level).ratchets.deferredConstructions;
+    const offenders = constructionsBeforeTaught(C, loadPoolItems(level));
+    assert.ok(
+      offenders.length <= ratchet,
+      `${level}: ${offenders.length} production texts carry a construction the course has not taught `
+        + `(ratchet ${ratchet}) — ${offenders.map((o) => `L${o.nr} ${o.where} [${o.kind}] „${o.hit}“`).join(', ')}`,
     );
   }
+  assert.equal(MAX_DEFERRED_CONSTRUCTIONS, 0, 'RULE 15b at A1.1 closed at 0 — it may never go up');
+  // Closed in round 14: L3 line 3 lost its possessive and the dictation picker prefers
+  // construction-free, unreportable lines — nothing remains to name.
+  assert.deepEqual(
+    constructionsBeforeTaught(CURRICULUM_A11, loadPoolItems('a1.1'))
+      .map((o) => `${o.where} [${o.kind}] „${o.hit}“`),
+    [],
+  );
+});
+
+test('rule 15b: the Satzklammer is read off the SHAPE, never off a list of verb stems', () => {
+  // DaF review #13, MAJOR 3. The guard used to fire only when the sentence carried one of fourteen
+  // hand-written stems, so „Bitte kaufen Sie das Brot ein.“ was caught and the identical shape with
+  // `füllen` — a read-aloud line of L2 and the dictation of Checkpoint 1 — was not. The fixture the
+  // review asked for, by name:
+  const FUELLEN = 'Bitte füllen Sie das Formular aus.';
+  assert.deepEqual(
+    constructionHits(FUELLEN).map((h) => h.slug), ['separable-verbs-intro'],
+    'the sentence the review measured must be reported as a Satzklammer',
+  );
+  // …and the class, not the instance: any verb at all, including ones no A1 course teaches.
+  for (const verb of ['kaufen', 'füllen', 'prüfen', 'schicken', 'notieren', 'buchstabieren']) {
+    const de = `Bitte ${verb} Sie das Formular aus.`;
+    assert.deepEqual(constructionHits(de).map((h) => h.slug), ['separable-verbs-intro'], de);
+  }
+  // Every prefix of the closed class, in a V2 sentence.
+  for (const prefix of SEPARABLE_PREFIXES) {
+    const de = `Ich mache das Fenster ${prefix}.`;
+    assert.ok(constructionHits(de).some((h) => h.slug === 'separable-verbs-intro'), de);
+  }
+  // The counter-probes, both directions. A preposition that ends no clamp, a predicative adjective,
+  // and a sentence whose only finite verb is the copula: `sein` is never the front half of a clamp.
+  for (const de of [
+    'Der Teppich ist auf der Terrasse.',
+    'Die Tür ist zu.',
+    'Ich komme aus Marokko.',
+    'Der Termin ist am Dienstag um acht Uhr.',
+    'Das Heft ist grün.',
+  ]) {
+    assert.deepEqual(constructionHits(de).map((h) => h.slug), [], de);
+  }
+});
+
+test('rule 15b: Adjektivdeklination is deferred in EVERY Lektion, because A1.1 teaches it in none', () => {
+  // DaF review #13, MAJOR 2. The L8 dialogue line was protected from „Ich habe einen guten Wecker“
+  // („a fifth Vorgriff the course never names“) and the Beispieltext of the same Lektion carried
+  // the same construction three times, because no rule read a model text.
+  const pattern = CONSTRUCTION_PATTERNS.find((p) => p.slug === 'adjective-declension');
+  assert.ok(pattern, 'the pattern must exist');
+  assert.equal(pattern.never, true, 'A1.1 introduces it in no Lektion, so it is deferred everywhere');
+  for (const de of ['Ein neuer Termin ist frei.', 'Das ist der neue Tag.', 'Ich habe einen guten Wecker.', 'Mai ist ein schöner Monat!']) {
+    assert.ok(constructionHits(de).some((h) => h.slug === 'adjective-declension'), de);
+  }
+  // Not an adjective: a possessive, a quantifier, an adverb between article and noun.
+  for (const de of ['Ana, ist das deine Familie?', 'Das sind alle Kollegen.', 'Das ist nicht Ana.']) {
+    assert.ok(!constructionHits(de).some((h) => h.slug === 'adjective-declension'), de);
+  }
+  // …and it bites where it was found: planted back into a model text, RULE 15b reports it.
+  const c = cloneOf(CURRICULUM_A11);
+  c.lektionen[7].schreiben.sample = 'Hallo Lena! Ein neuer Termin: Geht es am Dienstag um halb neun? Viele Grüße, Ana';
+  assert.ok(
+    constructionsBeforeTaught(c).some((o) => o.nr === 8 && o.kind === 'adjective-declension'),
+    'the round-13 L8 Beispieltext must be caught',
+  );
+  assert.ok(failsWith(validateCurriculum(c), '15b'), 'validateCurriculum did not report RULE 15b');
+});
+
+test('rule 20: a Beispieltext uses only words its own Lektion has taught', () => {
+  // DaF review #13, MAJOR 2: five of the six Mitteilungen the round before had rewritten carried
+  // words the course never teaches — `marokkanisch` (L2), `uns` (L4), `neuer`/`neue` (L8), `erst`
+  // (L10), `meinen` (L12), the last one a form the BUILD throws pool items out for. `minLektion`
+  // asks this of all 374 pool items and nobody asked it of the two texts the course holds up as
+  // models.
+  assert.equal(MAX_UNTAUGHT_IN_MODEL_TEXTS, 0, 'RULE 20 is a hard 0 at A1.1 and may not be ratcheted up');
+  assert.deepEqual(
+    modelTextLexis(CURRICULUM_A11, levelSpec('a1.1')).map((o) => `L${o.nr} ${o.where} „${o.token}“`),
+    [],
+    'a model text uses a word its Lektion has not taught',
+  );
+  // It BITES: every one of the five, as it stood in `main` @ 6aabf4e, with the word the review
+  // measured. Planted back one at a time, RULE 20 must name it.
+  const ROUND_13_SAMPLES = {
+    2: ['Sehr geehrte Damen und Herren, ich bin Ana Chakiri. Der Nachname ist Chakiri. Das Geburtsdatum ist der 3. Mai 1998. Ich komme aus Marokko. Das Land ist Marokko und die Staatsangehörigkeit ist marokkanisch. Der Familienstand: Ich bin ledig. Viele Grüße, Ana', 'marokkanisch'],
+    4: ['Hallo Lena! Heute ist der Flohmarkt. Wir kaufen den Stuhl und die Lampe. Der Stuhl kostet zwölf Euro und die Lampe kostet acht Euro. Das ist nicht teuer. Wann treffen wir uns? Um vier Uhr? Tschüss, Tim', 'uns'],
+    10: ['Liebe Kollegin, der Zug hat leider Verspätung. Die Kollegen kommen um neun Uhr, ich komme erst um zehn Uhr. Bitte machen Sie die Arbeit bis zehn Uhr ohne mich. Vielen Dank und viele Grüße, Ana', 'erst'],
+    12: ['Hallo Lena! Am Freitag feiern wir meinen Geburtstag. Der Tag ist der 15. Mai und die Party ist um acht Uhr. Die Gäste bringen Kuchen und Musik mit. Bringst du bitte den Salat mit? Bis bald, Ana', 'meinen'],
+  };
+  for (const [nr, [sample, token]] of Object.entries(ROUND_13_SAMPLES)) {
+    const c = cloneOf(CURRICULUM_A11);
+    c.lektionen[Number(nr) - 1].schreiben.sample = sample;
+    const found = modelTextLexis(c, levelSpec('a1.1')).filter((o) => o.nr === Number(nr)).map((o) => o.token);
+    assert.ok(found.includes(token), `L${nr}: RULE 20 missed „${token}“ — found ${JSON.stringify(found)}`);
+    assert.ok(failsWith(validateCurriculum(c), 20), `L${nr}: validateCurriculum did not report RULE 20`);
+  }
+  // The pretest models are measured too, not only the Schreiben samples.
+  const cp = cloneOf(CURRICULUM_A11);
+  cp.lektionen[0].pretest.model = 'Ich bin Krankenpflegerin von Beruf.';
+  assert.ok(
+    modelTextLexis(cp, levelSpec('a1.1')).some((o) => o.nr === 1 && o.where === 'pretest.model'),
+    'a pretest model built on an untaught word went through RULE 20',
+  );
+});
+
+test("rule 20's licensed chunks are letter formulas — a closed list, and nothing content-bearing", () => {
+  // The ONE thing a Mitteilung needs that no Wortfeld carries. They are stripped as CHUNKS, not as
+  // words, so `marokkanisch` cannot ride in on „Viele Grüße“ (DaF review #13, MAJOR 2, fix 1).
+  assert.ok(LICENSED_LETTER_CHUNKS.length <= 12, 'the list is tiny on purpose');
+  const FORMULA = /^(?:Sehr geehrte[r]?(?: Damen und Herren| Herr| Frau)?|Mit freundlichen Grüßen|Viele Grüße|Liebe Grüße|Vielen Dank|Bis bald|Liebe|Lieber)$/;
+  for (const chunk of LICENSED_LETTER_CHUNKS) {
+    assert.match(chunk, FORMULA, `„${chunk}“ is not a salutation or a closing`);
+  }
+  // And the licence is a chunk: the words of a formula are NOT free on their own.
+  const c = cloneOf(CURRICULUM_A11);
+  c.lektionen[1].schreiben.sample = 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Ich bin ledig. Die Herren sind hier. Ich bin aus Marokko. Das Geburtsdatum ist der 3.5.1998. Viele Grüße, Ana';
+  assert.ok(
+    modelTextLexis(c, levelSpec('a1.1')).some((o) => o.nr === 2 && /Herren/i.test(o.token)),
+    'a formula word used OUTSIDE its formula must still be measured',
+  );
 });
 
 test('rule 15b: every place DaF review #11 measured is still caught when planted back', () => {
@@ -905,7 +1031,7 @@ test('rule 18: dictation and read-aloud never work on the same sentence', () => 
   // The owner decides the one-word dialogue change that closes it — see MAX_SHARED_PRODUCTION_LINES.
   const shared = sharedProductionLines(CURRICULUM_A11);
   assert.deepEqual(
-    shared.map((o) => `L${o.nr}`), ['L3'],
+    shared.map((o) => `L${o.nr}`), [],
     'a Lektion dictates and reads aloud the same line — move a window, do not raise the ratchet',
   );
   assert.equal(shared.length, MAX_SHARED_PRODUCTION_LINES);

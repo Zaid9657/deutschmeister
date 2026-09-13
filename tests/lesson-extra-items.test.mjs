@@ -19,7 +19,7 @@ import { dirname, join } from 'node:path';
 
 import {
   exclusionReason, answerInPrompt, isMetaPrompt, unconditionedRule, unconditionedRuleSentence,
-  frontableOrders, missingFrontedOrder, agreementAmbiguity,
+  frontableOrders, missingFrontedOrder, agreementAmbiguity, genderPairAmbiguity, genderPartners,
 } from '../src/data/lessonPools/quality.js';
 import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js';
 import { buildCheckpoint } from '../src/lib/checkpoint/buildCheckpoint.js';
@@ -811,17 +811,24 @@ test('every sentence-building item with a time or place Angabe accepts both word
   // bracket list is read from the source), the acceptance is asked of the
   // CHECKPOINT item, through the same checker the graded run uses.
   let graded = 0;
+  const gradedIds = new Set();
   for (const item of CHECKPOINT_ITEMS) {
     const orders = frontableOrders(item.source || item);
     if (!orders.length) continue;
     graded += 1;
+    gradedIds.add(item.id);
     for (const order of orders) {
       assert.equal(acceptsThroughChecker(item, `${order}.`), RESULT.CORRECT,
         `${item.id} (${item.poolItemId}): the graded item rejects „${order}.“`);
     }
   }
-  assert.ok(graded >= 3,
-    `only ${graded} checkpoint items have a second word order — the review measured three`);
+  // REVIEW #13 BLOCKER 1 „Viertens": a count can only ever report what the rule
+  // FINDS, so it can never report what it stopped finding. The set is named.
+  assert.deepEqual([...gradedIds].sort(), [
+    // Re-measured in round 14 after L3 line 3 changed and Hören began preferring
+    // construction-free, unreportable lines — the draw shifted and so did the seats.
+    'a1.1-cp1-bausteine-2', 'a1.1-cp1-schreiben-1', 'a1.1-cp4-schreiben-2',
+  ], `the graded items with a second word order changed (${graded} found)`);
 });
 
 test('the three cache items that always carried both orders still do — REVIEW #12 BLOCKER 1', () => {
@@ -906,5 +913,113 @@ test('a correction with two minimal repairs is caught, and the pinned prompt is 
       assert.equal(hit, null,
         `${where} ${item.id}: „${item.questionDe}“ also repairs as „${hit && hit.subject}“`);
     }
+  }
+});
+
+/**
+ * REVIEW #13 BLOCKER 1, the bridge the round-12 fix did not build. The course
+ * told the learner in step 1 of Lektion 2 that „Von Beruf bin ich …" is a good
+ * answer and marked the same opening wrong in step 4 and in the graded
+ * Checkpoint 1 — word for word the round-12 finding, one preposition further.
+ *
+ * The assurance reads the DATA rather than a list of ids: every `pretest`
+ * answer opener of every Lektion that starts with an Angabe rather than with
+ * the subject is taken apart into [Angabe] [finites Verb] [Subjekt]; every
+ * sentence-building item the same Lektion can draw whose own answer contains
+ * that Angabe must accept the fronted order, through the real checker.
+ */
+const PRETEST_SUBJECT_INITIAL_RE = /^(Ich|Du|Er|Sie|Es|Wir|Ihr|Mein|Meine|Dein|Deine|Der|Die|Das)\b/;
+const PRETEST_QUESTION_WORD_RE = /^(wo|was|wann|wie|wer|warum|welche[rsn]?)$/i;
+const PRETEST_FINITE_RE = /^(?:[a-zäöüß]{2,}(?:e|st|t|en|et)|bin|sind|kann|will|muss|mag|darf|soll|weiß)$/i;
+const flatten = (text) => String(text || '').toLowerCase()
+  .replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss')
+  .replace(/[.,!?;:"“”„'’]/g, '').trim();
+
+/** The Angabe a pretest opener fronts, or null when the opener is not a fronted
+ * statement (a subject-initial answer, a question, or a bare fragment). */
+function pretestFrontedAngabe(prefix) {
+  const toks = String(prefix).trim().split(/\s+/).filter(Boolean);
+  if (toks.length < 3) return null;
+  if (PRETEST_SUBJECT_INITIAL_RE.test(prefix)) return null;
+  if (PRETEST_QUESTION_WORD_RE.test(toks[0])) return null;
+  const verbAt = toks.findIndex((w, i) => i >= 1 && /^[a-zäöüß]/.test(w) && PRETEST_FINITE_RE.test(w));
+  if (verbAt < 1 || verbAt >= toks.length - 1) return null;
+  return toks.slice(0, verbAt);
+}
+
+test('an opening the pretest accepts is accepted by the Lektion\'s own Wortsalat items — REVIEW #13 BLOCKER 1', () => {
+  const bridged = [];
+  for (const l of CURRICULUM_A11.lektionen) {
+    for (const prefix of (l.pretest && l.pretest.accepted) || []) {
+      const angabe = pretestFrontedAngabe(prefix);
+      if (!angabe) continue;
+      const key = flatten(angabe.join(' '));
+      const candidates = POOL.items.filter((i) => i.type === 'sentence_building'
+        && (i.minLektion == null || i.minLektion <= l.nr)
+        && flatten(i.answer).includes(key));
+      for (const item of candidates) {
+        const orders = frontableOrders(item).filter((o) => flatten(o).startsWith(key));
+        assert.ok(orders.length,
+          `L${l.nr}: the pretest accepts „${prefix} …“ but ${item.id} („${item.answer}“) derives no such order`);
+        for (const order of orders) {
+          assert.equal(acceptsThroughChecker(item, `${order}.`), RESULT.CORRECT,
+            `L${l.nr}: the pretest accepts „${prefix} …“ and ${item.id} rejects „${order}.“`);
+        }
+        bridged.push(`L${l.nr} ${item.id} ← ${prefix}`);
+      }
+    }
+  }
+  // Measured on 2026-09-13: exactly two Lektionen name a fronted opening in
+  // their pretest and exactly two items can produce it. If this number drops,
+  // the bridge stopped reaching the two instances the review named.
+  assert.deepEqual(bridged.sort(), [
+    'L11 extra-a11-l11-10 ← Gestern habe ich',
+    'L2 extra-a11-l02-07 ← Von Beruf bin ich',
+  ], 'the pretest↔Wortsalat bridge no longer reaches the two measured Lektionen');
+});
+
+/**
+ * REVIEW #13 BLOCKER 2. „Korrigieren Sie: „Das ist ein Chefin."" has two
+ * minimal repairs — at the article („eine Chefin") and at the noun („ein
+ * Chef") — because the Lektion's own Wortfeld teaches „der Chef" and „die
+ * Chefin" as a PAIR, glossed „boss (m)" and „boss (f)". Three drawn L6 items
+ * fell between `ambiguousCorrection` (which only sees a change of article
+ * FAMILY) and `agreementAmbiguity` (which hands every determiner change to it).
+ *
+ * The rule is `genderPairAmbiguity` and the partner table is read from the
+ * curriculum. Here it is run over both surfaces that cost the learner: the
+ * built pool he draws from, and the four checkpoints he is graded on.
+ */
+test('no correction of the pool or a checkpoint has a second repair in its own Wortfeld — REVIEW #13 BLOCKER 2', () => {
+  // The partner table is data, not a list: it is read from the Wortfeld.
+  const pairs = genderPartners(CURRICULUM_A11);
+  for (const [noun, partner] of [['Chefin', 'Chef'], ['Kollegin', 'Kollege'], ['Verkäuferin', 'Verkäufer']]) {
+    assert.equal((pairs.get(flatten(noun)) || {}).word, partner, `${noun} lost its taught partner`);
+  }
+  assert.equal(pairs.get('firma'), undefined, 'die Firma must stay partnerless — it is the control');
+
+  // The three items the review measured now carry the cue the course already
+  // writes, so the learner knows which side to repair.
+  for (const id of ['extra-a11-l06-18', 'extra-a11-l06-19', 'extra-a11-l06-11']) {
+    const item = POOL.items.find((i) => i.id === id);
+    assert.ok(item, `${id} is gone from the built pool`);
+    assert.match(item.questionDe, /Korrigieren Sie den Artikel:/,
+      `${id}: the prompt must name the element that changes`);
+    assert.equal(genderPairAmbiguity(item, { level: 'a1.1' }), null, id);
+  }
+  // The control keeps its plain prompt: „die Firma" has no partner, so the
+  // article is the only repair and no cue is owed.
+  const control = POOL.items.find((i) => i.id === 'extra-a11-l06-21');
+  assert.ok(control && !/Korrigieren Sie den Artikel:/.test(control.questionDe),
+    'extra-a11-l06-21 gained a cue it does not need — the rule has become a blanket');
+  assert.equal(genderPairAmbiguity(control, { level: 'a1.1' }), null);
+
+  for (const item of POOL.items) {
+    const hit = genderPairAmbiguity(item, { level: 'a1.1' });
+    assert.equal(hit, null, `pool ${item.id}: „${item.questionDe}“ also repairs as „${hit && hit.noun}.“`);
+  }
+  for (const item of CHECKPOINT_ITEMS) {
+    const hit = genderPairAmbiguity(item, { level: 'a1.1' });
+    assert.equal(hit, null, `${item.id} (${item.poolItemId}) also repairs as „${hit && hit.noun}.“`);
   }
 });

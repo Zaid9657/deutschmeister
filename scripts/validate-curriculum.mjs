@@ -445,9 +445,36 @@ export const MAX_UNTAUGHT_IN_PRODUCTION = 3;       // a1.1; per level in LEVELS 
  * the construction and by rewriting the four model texts; the dialogues themselves are untouched —
  * they may SAY the forms (CONTRACT §2), and they are the audio script the owner records.
  *
- * Hard 0 at both levels, therefore, and it may only ever be closed the same way.
+ * Hard 0 on the LEKTION surfaces, therefore, and it may only ever be closed the same way.
+ *
+ * 0 → **1** on 2026-09-13 (round 14, DaF review #13 MAJOR 3), and the number is not a regression:
+ * the rule now also reads what it never read, the CHECKPOINTS. Two things changed under it.
+ * `separable-verbs-intro` stopped being a fourteen-stem list and became a structural test (a
+ * sentence-final prefix from the closed prefix class, preceded by a finite-verb-shaped token that
+ * is not a form of `sein`), and `adjective-declension` was added as a pattern A1.1 teaches in NO
+ * Lektion. On the Lektion surfaces that measured two new hits and both are repaired (L2's
+ * read-aloud window moved 2 → 4; the L8 Beispieltext lost „Ein neuer Termin … der neue Tag“).
+ *
+ * WHAT THE 1 IS, measured item by item over all four built checkpoints: `a1.1-cp1-hoeren-3`
+ * dictates „Bitte füllen Sie das Formular aus.“ — the Satzklammer of Lektion 11, typed after
+ * Lektion 3. The review assumed the checkpoint draws its dictations from the Lektion's own
+ * `hoeren`/`readAloud` windows; MEASURED, it does not — `buildHoeren` draws from ALL dialogue lines
+ * of the chapter, so moving L2's window does not move the checkpoint. The two read-aloud hits the
+ * same extension found (`a1.1-cp1-sprechen-2`: „ein Baby“, „meiner Schwester“) ARE closed, by the
+ * line preference `clampFreeFirst` now gives every section that puts a line in the learner's mouth.
+ *
+ * WHY THE DICTATION IS NOT CLOSED THE SAME WAY, and this is the work order: with the same
+ * preference in `buildHoeren`, cp1 takes „Ja, er spricht Englisch und Deutsch.“ instead — and that
+ * line is the only one left that the paper's LESEN section can build its fourth window on, so the
+ * checkpoint then dictates and prints the same sentence (the guard „no dialogue line is used twice
+ * across the sections of one checkpoint“, DaF review #8 MAJOR 2). Chapter 1 (L1–L3) is too poor in
+ * construction-free lines to feed three dictations, two read-alouds and four Lesen windows at once:
+ * it is the SAME line shortage that holds RULE 18 at 1 and that MAX_SHARED_PRODUCTION_LINES puts in
+ * front of the owner. The smallest change that closes both, for the owner to decide, is the one
+ * already written there: L3 line 3 „Er ist zwanzig. **Meine** Schwester ist noch jung.“ → „… **Sie**
+ * ist noch jung.“ Do NOT close it by narrowing the pattern — that is how it read 0 for three rounds.
  */
-export const MAX_DEFERRED_CONSTRUCTIONS = 0;       // a1.1 and a1.2 — measured 2026-09-13
+export const MAX_DEFERRED_CONSTRUCTIONS = 0;       // a1.1 — closed 2026-09-13 (round 14: L3 line 3 changed, dictation prefers construction-free, unreportable lines)
 
 /**
  * RULE 16 ratchet — how many `examTeile` claims a level may still make that nothing in the module
@@ -496,7 +523,53 @@ export const MAX_MODEL_CHECKLIST_BREAKS = 0;       // a1.1; per level in LEVELS 
  * „Er ist zwanzig. **Sie** ist noch jung.“ — one word, no possessive, and it rehearses the er/sie
  * contrast that IS this Lektion's grammar. Then L3 has four free lines and this ratchet goes to 0.
  */
-export const MAX_SHARED_PRODUCTION_LINES = 1;      // a1.1; per level in LEVELS below — measured 2026-09-13
+export const MAX_SHARED_PRODUCTION_LINES = 0;      // a1.1; per level in LEVELS below — closed 2026-09-13 (round 14: L3 line 3 „Sie ist noch jung.“)
+
+/**
+ * RULE 20 ratchet — how many words a level's MODEL TEXTS use that the course has not taught yet.
+ *
+ * DaF review #13, MAJOR 2. `minLektion` asks „is every word of this item taught by Lektion n?“ of
+ * all 374 pool items, `lexisScan` asks it of the hand source, RULE 15 asks it of the dictation and
+ * the read-aloud — and NOBODY asked it of the two texts the course holds up as models. The round
+ * that rewrote all six A1.1 Mitteilungen measured them on length, Anrede, Gruß and Leitpunkte
+ * (RULE 17) and on nothing else, and five of the six came back carrying words the course never
+ * teaches: `marokkanisch` (L2), `uns` (L4), `neuer`/`neue` (L8), `erst` (L10), `meinen` (L12) —
+ * the last one a form the BUILD throws pool items out for („Vorschau Akkusativ“).
+ *
+ * A model text is a PRODUCTION surface and is measured like one. What licenses a word here, and
+ * all three are derived rather than typed:
+ *   • the cumulative lexis of its own Lektion (`taughtUpTo`, the same snapshots RULE 11 uses);
+ *   • THE TASK'S OWN WORDS — the `task`/`leitpunkte` of the bank entry and the Lektion's
+ *     `taskDe`/`leitpunkte`. A model answer may reuse the words of its own question, and the
+ *     Formular samples are field labels before they are anything else („Familienname: Chakiri“);
+ *   • the PERSONA facts of the level (`PERSONA_TABLES`), because RULE 14 and RULE 19 *require*
+ *     the model to state them — Ana comes `aus Marokko` in Lektion 2 and the country is a Wortfeld
+ *     entry of Lektion 3.
+ * Plus LICENSED_LETTER_CHUNKS below, as CHUNKS: an A1 Mitteilung needs „Sehr geehrte Damen und
+ * Herren“ and „Viele Grüße“, and no Wortfeld carries them. As chunks, not as words, so that
+ * `marokkanisch` cannot ride in on a formula.
+ *
+ * Hard 0 at A1.1, like RULE 17: a model text is something a round just wrote.
+ */
+export const MAX_UNTAUGHT_IN_MODEL_TEXTS = 0;      // a1.1; per level in LEVELS below — measured 2026-09-13
+
+/**
+ * The letter formulas a Mitteilung needs and no Wortfeld lists. CLOSED and tiny on purpose — the
+ * test pins the list, and every entry is a salutation or a closing, never content
+ * (`tests/curricula.test.mjs`, „RULE 20's licensed chunks are letter formulas“).
+ */
+export const LICENSED_LETTER_CHUNKS = [
+  'Sehr geehrte Damen und Herren',
+  'Sehr geehrte Frau',
+  'Sehr geehrter Herr',
+  'Mit freundlichen Grüßen',
+  'Viele Grüße',
+  'Liebe Grüße',
+  'Vielen Dank',
+  'Bis bald',
+  'Liebe',
+  'Lieber',
+];
 
 /**
  * RULE 15 — THE OFF-LIMITS FORMS, PER LEVEL.
@@ -669,6 +742,7 @@ export const LEVELS = {
       unbackedExamTeile: MAX_UNBACKED_EXAM_TEILE,
       modelChecklistBreaks: MAX_MODEL_CHECKLIST_BREAKS,
       sharedProductionLines: MAX_SHARED_PRODUCTION_LINES,
+      untaughtInModelTexts: MAX_UNTAUGHT_IN_MODEL_TEXTS,
       // RULE 19 is a hard rule (0, no ratchet), like RULE 14: a model text that contradicts its own
       // dialogue is never older debt. No entry here.
     },
@@ -755,17 +829,36 @@ export const LEVELS = {
       // `src/data/curricula/constructions.js` — which are A1.1's, read from A1.1's own
       // `primarySlug`s; A1.2 introduces all three before its own Lektion 1. Paused; re-measured,
       // and no A1.2 content was touched to get there.
-      deferredConstructions: 0,
+      // 0 → **3**, paused; re-measured 2026-09-13 (round 14). Not a content change and not a
+      // regression: `adjective-declension` was added to `constructions.js` (DaF review #13,
+      // MAJOR 2) as a pattern A1.1 teaches in NO Lektion — and the pattern's `never` flag makes it
+      // deferred at every level that does not introduce it under this slug, A1.2 included — while
+      // RULE 15b at the same time began reading the CHECKPOINTS. The three, measured on the paused
+      // draft: „Das dritte Stockwerk“ (L2 dictation line 7), „ein neuer Termin“ (L6 Beispieltext)
+      // and „dem kurzen Haar“ (`a1.2-cp3-hoeren-1`, which quotes the L7 dialogue line). The number
+      // is a work order for whoever resumes the level; no A1.2 content was touched to get it.
+      deferredConstructions: 3,
       unbackedExamTeile: 0,
       // RULE 17, measured on the paused A1.2 draft 2026-09-13 (round 13): **17** failed form checks
       // across seven of the twelve Beispieltexte — three below the 25-word floor (L4 24, L8 21,
       // L10 23), one without a Gruß (L8) and thirteen unmodelled Leitpunkte. Paused; re-measured,
       // and no A1.2 content was touched to get there: the number is the draft's, and whoever
       // resumes the level rewrites those samples the way round 13 rewrote A1.1's six.
-      modelChecklistBreaks: 17,
+      //
+      // 17 → **8**, paused; re-measured 2026-09-13 (round 14). No A1.2 content was touched: the
+      // Leitpunkt half of `scoreWriting` stopped keying on ONE token per Leitpunkt (DaF review #13,
+      // MAJOR 1), so nine of the thirteen „unmodelled Leitpunkte“ turn out to have been modelled
+      // all along. What is left is the three samples below the 25-word floor, the missing Gruß in
+      // L8 and four Leitpunkte the drafts really do not answer.
+      modelChecklistBreaks: 8,
       // RULE 18, measured on the paused A1.2 draft 2026-09-13 (round 13): **0** — no A1.2 Lektion
       // dictates and reads aloud the same line. Hard from the start at this level.
       sharedProductionLines: 0,
+      // RULE 20, measured on the paused A1.2 draft 2026-09-13 (round 14): **3** words its own
+      // Lektion does not teach yet — `hoch` (L2 sample), `neuer` (L6 sample) and `leer` (L8
+      // sample). Paused; re-measured, and no A1.2 content was touched to get there: whoever
+      // resumes the level rewrites those three samples the way round 14 rewrote A1.1's five.
+      untaughtInModelTexts: 3,
     },
   },
 };
@@ -1038,7 +1131,7 @@ function itemUniverse(spec, extraItems, poolItems) {
 }
 
 /** What a learner has been taught by the end of each Lektion — Map<nr, Set<form>>. */
-function taughtUpTo(c, spec) {
+export function taughtUpTo(c, spec) {
   // A level's known set starts from the level before it (see seedVocabulary): an A1.2 item may
   // build on every word A1.1 taught, and must not reach past that.
   const known = seedVocabulary(spec, true);
@@ -1421,12 +1514,26 @@ function producedTexts(l) {
  * Same three patterns as the rule-card guard, same module, same „the introducing Lektion comes from
  * `primarySlug`“ rule — see `src/data/curricula/constructions.js` and DaF review #11, MAJOR 3.
  */
-export function constructionsBeforeTaught(c) {
+export function constructionsBeforeTaught(c, pool = null) {
   const offenders = [];
   for (const l of c.lektionen || []) {
     for (const { where, text } of producedTexts(l)) {
       for (const h of deferredConstructionHits(c, l.nr, text)) {
         offenders.push({ nr: l.nr, where, kind: h.slug, taught: h.taught, hit: h.hit, de: text });
+      }
+    }
+  }
+  // THE CHECKPOINTS, where the rule did not run at all (DaF review #13, MAJOR 3). A checkpoint
+  // dictation is typed and graded, a checkpoint read-aloud is spoken and scored, and both quote a
+  // dialogue line of an EARLIER Lektion — so the window that matters is the checkpoint's own
+  // `afterLektion`, not the Lektion the line comes from. `a1.1-cp1-hoeren-3` was „Bitte füllen Sie
+  // das Formular aus.“, three Lektionen before the course mentions the Satzklammer.
+  for (const cp of c.checkpoints || []) {
+    for (const item of buildCheckpoint({ curriculum: c, checkpoint: cp, pool: pool || [] })) {
+      if (item.type !== 'dictation' && item.type !== 'read_aloud') continue;
+      const text = item.audioText || item.answer || item.text;
+      for (const h of deferredConstructionHits(c, cp.afterLektion, text)) {
+        offenders.push({ nr: cp.afterLektion, where: `${item.id} (${item.type})`, kind: h.slug, taught: h.taught, hit: h.hit, de: text });
       }
     }
   }
@@ -1562,6 +1669,56 @@ export function modelTextsPassOwnChecklist(c) {
     for (const check of res.checks) {
       if (check.ok) continue;
       offenders.push({ nr: l.nr, kind: w.kind, key: check.key, label: check.label, count: countWords(w.sample) });
+    }
+  }
+  return offenders;
+}
+
+/**
+ * The persona facts a model text is REQUIRED to state (RULE 14/RULE 19) — Herkunft, Beruf,
+ * Sprachen, Familienstand, Stadt. Read off the level's own persona table, never typed.
+ */
+function personaWords(spec) {
+  const out = new Set();
+  const table = PERSONA_TABLES[spec?.personaSource] || {};
+  for (const facts of Object.values(table)) {
+    for (const v of Object.values(facts || {})) {
+      for (const one of Array.isArray(v) ? v : [v]) {
+        for (const t of tokenise(String(one || ''))) out.add(t.toLowerCase());
+      }
+    }
+  }
+  return out;
+}
+
+/**
+ * RULE 20: a model text uses only words its own Lektion has taught.
+ *
+ * Same tokeniser and same per-Lektion snapshots as RULE 11 — see MAX_UNTAUGHT_IN_MODEL_TEXTS above
+ * for what licenses a word beyond them (the task's own wording, the persona facts, the letter
+ * formulas as chunks).
+ */
+export function modelTextLexis(c, spec = null) {
+  const s = spec || levelSpec(c?.level) || LEVELS['a1.1'];
+  const knownUpTo = taughtUpTo(c, s);
+  const personas = personaWords(s);
+  const offenders = [];
+  for (const l of c.lektionen || []) {
+    const bank = l.schreiben?.taskKey ? writingTaskByKey(c.examKey, l.schreiben.taskKey) : null;
+    const known = new Set([...(knownUpTo.get(l.nr) || []), ...personas]);
+    const taskWords = [
+      bank?.task, ...(bank?.leitpunkte || []),
+      l.schreiben?.taskDe, ...(l.schreiben?.leitpunkte || []),
+      l.pretest?.promptDe,
+    ].join(' ');
+    for (const t of tokenise(taskWords)) known.add(t.toLowerCase());
+    for (const [where, text] of [['schreiben.sample', l.schreiben?.sample], ['pretest.model', l.pretest?.model]]) {
+      if (!text) continue;
+      let stripped = String(text);
+      for (const chunk of LICENSED_LETTER_CHUNKS) stripped = stripped.split(chunk).join(' ');
+      for (const token of untaughtTokens({ questionDe: '', answer: stripped }, known, s)) {
+        offenders.push({ nr: l.nr, where, token, de: text });
+      }
     }
   }
   return offenders;
@@ -2287,9 +2444,9 @@ export function validateCurriculum(c, extraItems, poolItems) {
   if (produced.length > r.untaughtInProduction) {
     fail(`RULE 15: ${produced.length} forms in dictation/read-aloud lines the course teaches later, ratchet is ${r.untaughtInProduction} — ${produced.map((o) => `L${o.nr}/${o.line} ${o.kind} „${o.hit}“`).join(', ')}`);
   }
-  const constructions = constructionsBeforeTaught(c);
+  const constructions = constructionsBeforeTaught(c, poolItems);
   if (constructions.length > r.deferredConstructions) {
-    fail(`RULE 15b: ${constructions.length} deferred constructions in lines the learner produces, ratchet is ${r.deferredConstructions} — ${constructions.map((o) => `L${o.nr} ${o.where} [${o.kind}→L${o.taught}] „${o.hit}“`).join(', ')}`);
+    fail(`RULE 15b: ${constructions.length} deferred constructions in lines the learner produces, ratchet is ${r.deferredConstructions} — ${constructions.map((o) => `L${o.nr} ${o.where} [${o.kind}→${o.taught ? `L${o.taught}` : 'nie gelehrt'}] „${o.hit}“`).join(', ')}`);
   }
   const unbacked = examTeileBacked(c);
   if (unbacked.length > r.unbackedExamTeile) {
@@ -2310,6 +2467,12 @@ export function validateCurriculum(c, extraItems, poolItems) {
   }
   for (const o of modelTextsMatchDialogue(c)) {
     fail(`RULE 19: Lektion ${o.nr} ${o.where}: „${o.subject} … ${o.value}“ widerspricht dem eigenen Dialog — ${o.why}`);
+  }
+
+  // ---- RULE 20 (the model texts' LEXIS, DaF review #13, MAJOR 2) --------------------------------
+  const modelWords = modelTextLexis(c, spec);
+  if (modelWords.length > (r.untaughtInModelTexts ?? 0)) {
+    fail(`RULE 20: ${modelWords.length} Wörter in Modelltexten, die ihre Lektion noch nicht lehrt, Ratchet ist ${r.untaughtInModelTexts ?? 0} — ${modelWords.map((o) => `L${o.nr} ${o.where} „${o.token}“`).join(', ')}`);
   }
 
   // ---- RULE 14 (the recurring characters keep their facts) --------------------------------------
@@ -2361,9 +2524,9 @@ if (isMain) {
   const produced = producedBeforeTaught(c);
   console.log(`  RULE 15 Vorgriffe in Diktat/Nachsprechen: ${produced.length} (Ratchet ${r.untaughtInProduction})`);
   for (const o of produced) console.log(`    L${o.nr} Zeile ${o.line} [${o.kind}] „${o.hit}“ — ${o.de}`);
-  const constructions = constructionsBeforeTaught(c);
+  const constructions = constructionsBeforeTaught(c, loadPoolItems(spec.level));
   console.log(`  RULE 15b aufgeschobene Konstruktionen in Produktionstexten: ${constructions.length} (Ratchet ${r.deferredConstructions})`);
-  for (const o of constructions) console.log(`    L${o.nr} ${o.where} [${o.kind} → L${o.taught}] „${o.hit}“ — ${o.de}`);
+  for (const o of constructions) console.log(`    L${o.nr} ${o.where} [${o.kind} → ${o.taught ? `L${o.taught}` : 'nie gelehrt'}] „${o.hit}“ — ${o.de}`);
   const unbacked = examTeileBacked(c);
   console.log(`  RULE 16 ungedeckte Prüfungsteile: ${unbacked.length} (Ratchet ${r.unbackedExamTeile})`);
   for (const o of unbacked) console.log(`    L${o.nr} „${o.teil}“ — ${o.why}`);
@@ -2376,6 +2539,9 @@ if (isMain) {
   const modelFacts = modelTextsMatchDialogue(c);
   console.log(`  RULE 19 Mustertexte gegen den eigenen Dialog: ${modelFacts.length} (harte Regel, kein Ratchet)`);
   for (const o of modelFacts) console.log(`    L${o.nr} ${o.where}: ${o.subject} → „${o.value}“ — ${o.why}`);
+  const modelWords = modelTextLexis(c, spec);
+  console.log(`  RULE 20 ungelehrte Wörter in Mustertexten: ${modelWords.length} (Ratchet ${r.untaughtInModelTexts ?? 0})`);
+  for (const o of modelWords) console.log(`    L${o.nr} ${o.where} „${o.token}“ — ${o.de}`);
   const personaBreaks = personaConsistency(c);
   console.log(`  RULE 14 Figuren-Widersprüche: ${personaBreaks.length} (harte Regel, kein Ratchet)`);
   for (const o of personaBreaks) console.log(`    L${o.nr} ${o.where}: ${o.name} ${o.fact} „${o.found}“ statt „${o.expected}“`);

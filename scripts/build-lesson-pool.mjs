@@ -234,7 +234,7 @@ function repairAmbiguousCorrection(item) {
 
 raw.forEach(repairAmbiguousCorrection);
 
-// ── REVIEW #12 BLOCKER 1: accept the second word order as well ──────────────
+// ── REVIEW #12 BLOCKER 1 · #13 BLOCKER 1: the second word order ─────────────
 //
 // „Bilden Sie den Satz: [ich / haben / gestern / gearbeitet]" accepted „Ich
 // habe gestern gearbeitet." and marked „Gestern habe ich gearbeitet." wrong —
@@ -244,6 +244,13 @@ raw.forEach(repairAmbiguousCorrection);
 // the item's own answer (see quality.js); the repair is the same promise as the
 // three above: the answer key GAINS a reading, it never loses one, and an item
 // with nothing to front is untouched.
+//
+// REVIEW #13 BLOCKER 1 replaced the heart of that rule — a hand-written list of
+// Angabe shapes that had no `von`, so the graded `a1.1-cp1-bausteine-2` marked
+// „Von Beruf bin ich Lehrer." wrong against its own Lektion's pretest — with a
+// derivation from the item's word bag. The list below is therefore the whole
+// measurement: every order printed here is read before it ships, because a
+// build step that writes into a graded answer key has no second reader.
 const frontingRepaired = [];
 function repairFrontedOrder(item) {
   const wanted = frontedAcceptedForms(item);
@@ -945,7 +952,7 @@ console.log(`ambiguous corrections repaired (REVIEW #6 BLOCKER 2): ${ambiguousRe
   ` · not computable, dropped: ${ambiguousUnrepairable.length}`);
 for (const r of ambiguousRepaired) console.log(`       ${r.id} + ${r.added.join(', ')}`);
 for (const r of ambiguousUnrepairable) console.log(`       DROPPED ${r.id} · ${r.answer}`);
-console.log(`fronted word orders accepted (REVIEW #12 BLOCKER 1): ${frontingRepaired.length}`);
+console.log(`fronted word orders accepted (REVIEW #12 BLOCKER 1 · #13 BLOCKER 1): ${frontingRepaired.length}`);
 for (const r of frontingRepaired) console.log(`       ${String(r.id).slice(0, 16)} ${r.topic} · ${r.answer} + ${r.added.filter((x) => /[.!]$/.test(x)).join(' · ')}`);
 console.log(`polite-form caseSensitive (REVIEW #6 BLOCKER 1): ${caseDerived.length} derived` +
   ` + ${caseHandFlagged.length} hand-flagged (of them ${caseOverridden.length} by id here)`);

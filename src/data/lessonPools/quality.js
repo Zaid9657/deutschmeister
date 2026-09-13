@@ -114,11 +114,22 @@
 // Reasons are stable strings: the build script prints counts per reason and
 // tests/lesson-engine.test.mjs and tests/lesson-pool-rules.test.mjs pin them.
 //
+// THE READING RULE (review #13, both BLOCKERs). AN EXERCISE WHOSE GERMAN
+// INSTRUCTION DOES NOT MAKE ITS SOLUTION UNIQUE DOES NOT BELONG IN THE POOL —
+// and "unique" means: no word of the level's OWN Wortfeld, and no word order the
+// level's own rule cards teach, produces a second correct answer. Both halves
+// have a rule below (`genderPairAmbiguity`, `frontableOrders`), and both read
+// the curriculum and the item's own word bag rather than a list of shapes: a
+// guard whose heart is a hand-written list closes the instances it has seen and
+// never their class, which is what reviews #9 to #13 kept measuring.
+//
 // LEVEL SCOPE. Three of the rules are about what A1.1 has taught by Lektion 12,
 // not about German: an ordinal or a month name is perfectly fine at A2. They
 // apply unless the caller names a level other than a1.1 — the default is the
 // strict one, so an engine-side call (`isUsableItem(item)`, which has no level
 // to hand) can never be the loophole that lets one back in.
+
+import { anyCurriculumFor } from '../curricula/index.js';
 
 export const REASON = Object.freeze({
   HAND_FLAGGED: 'hand-flagged',
@@ -154,6 +165,10 @@ export const REASON = Object.freeze({
   // other side of the agreement („Du habt Durst." → „Du hast" OR „Ihr habt")
   // and the German prompt names neither side
   AMBIGUOUS_AGREEMENT: 'ambiguous-agreement',
+  // REVIEW #13 — the correction changes an ARTICLE and the quoted noun has a
+  // taught gender partner, so swapping the noun repairs the sentence with the
+  // same one token („Das ist ein Chefin." → „eine Chefin" OR „ein Chef")
+  AMBIGUOUS_GENDER_PAIR: 'ambiguous-gender-pair',
 });
 
 /** The level whose taught-by-now rules below apply. */
@@ -868,12 +883,52 @@ export function minimalArticleCorrection(item) {
 // „Um 7 Uhr stehe ich auf.").
 
 /**
- * A bracket chunk that can open a German main clause: a time or place Angabe.
- * Deliberately a closed list of A1.1 shapes rather than „any prepositional
- * phrase" — an object („mit dem Bus") fronts too, but it is not what the four
- * measured items are about and a build step may not invent word orders it
- * cannot defend.
+ * REVIEW #13 BLOCKER 1. Frontability is DERIVED, not listed.
+ *
+ * Round 12 shipped `FRONTABLE_ADVERBIAL_RE`, a hand-written list of A1.1 Angabe
+ * shapes, and wrote down that it was deliberately closed. Round 13 measured what
+ * a closed list always measures: `von` was not on it, so `extra-a11-l02-07` —
+ * built as the GRADED `a1.1-cp1-bausteine-2` — marked „Von Beruf bin ich
+ * Lehrer." wrong while the same Lektion's own pretest lists „Von Beruf bin ich"
+ * in `accepted`. The list closed the instances it had seen and not their class.
+ *
+ * The rule underneath, which needs no shape list at all: in the canonical
+ * [Subjekt] [finites Verb] [Rest], every chunk of the task's own word bag is
+ * frontable EXCEPT
+ *   * the subject (everything before the finite verb),
+ *   * the finite verb itself,
+ *   * a chunk that is neither a prepositional phrase nor a time/place adverb —
+ *     i.e. a bare noun standing after the verb, which is an object or a
+ *     predicate nominal („Lehrer", „das Brot") and does not front at A1.1,
+ *   * and therefore, with no clause of its own, a sentence-final separable
+ *     prefix, participle or infinitive: „auf", „gearbeitet" and „einkaufen" are
+ *     single tokens that are neither a preposition WITH a complement nor an
+ *     adverb, so they fall out of the two positive clauses by construction.
+ *
+ * The two positive clauses are closed classes OF THE LANGUAGE — the German
+ * prepositions and the deictic time/place adverbs — not a list of item shapes,
+ * which is the difference the review asked for. Every order the rule derives is
+ * printed by `scripts/build-lesson-pool.mjs` and read before it ships.
  */
+
+/** A preposition that can open an Angabe, with the contractions A1.1 teaches. */
+const PREPOSITION_RE =
+  /^(?:an|am|ans|auf|aufs|aus|bei|beim|bis|durch|für|gegen|hinter|in|im|ins|mit|nach|neben|ohne|seit|über|um|unter|von|vom|vor|zu|zum|zur|zwischen)$/i;
+
+/** The deictic time and place adverbs. A frequency or modal adverb is NOT in
+ * here: „Zusammen tanzen wir." and „Gern trinke ich Kaffee." are marked orders,
+ * and a build step may not put a marked sentence into a graded answer key. */
+const ADVERBIAL_ADVERB_RE =
+  /^(?:gestern|vorgestern|heute|morgen|übermorgen|jetzt|dann|danach|hier|dort|da)$/i;
+
+/** The determiners that open a bare accusative time phrase („jeden Tag",
+ * „nächste Woche") — an Angabe without a preposition. */
+const TIME_DETERMINER_RE =
+  /^(?:jeden|jede|jedes|nächsten|nächste|nächstes|letzten|letzte|letztes|diesen|diese|dieses)$/i;
+
+/** The retired round-12 list, kept as a POSITIVE FIXTURE so the derivation can
+ * be measured against what it replaced: every shape here must still front.
+ * Nothing reads it at build or draw time. */
 export const FRONTABLE_ADVERBIAL_RE =
   /^(?:gestern|heute|morgen|übermorgen|vorgestern|jetzt|hier|dort|dann|danach|am\s+\S+|um\s+.+|im\s+\S+|in\s+.+|aus\s+.+|nach\s+\S+|bei\s+\S+|jeden\s+tag|jede\s+woche|nächste\s+woche|letzte\s+woche)$/i;
 
@@ -882,8 +937,12 @@ export const FRONTABLE_ADVERBIAL_RE =
 const LOWERCASABLE_SUBJECT_RE =
   /^(?:der|die|das|den|dem|ein|eine|einen|einem|einer|kein|keine|mein|meine|dein|deine|sein|seine|ihre|unser|unsere|euer|eure|ich|du|er|es|wir)$/i;
 
-/** A finite-verb shape: a personal ending on a lower-case word. */
-const FRONTABLE_FINITE_RE = /^[a-zäöüß]{2,}(?:e|st|t|en|et)$/i;
+/** A finite-verb shape: a personal ending on a lower-case word, plus the forms
+ * of the two irregular verbs A1.1 teaches that carry no personal ending at all
+ * (`bin`, `sind`) and the modals it meets. Without them „Ich bin Lehrer von
+ * Beruf." has no readable verb and the whole item falls out of the rule. */
+const FRONTABLE_FINITE_RE =
+  /^(?:[a-zäöüß]{2,}(?:e|st|t|en|et)|bin|sind|kann|will|muss|mag|darf|soll|weiß)$/i;
 
 /** Words of that shape that are not verbs — the A1.1 adverbs and particles that
  * happen to end in a personal ending. Measured against the built pool. */
@@ -928,22 +987,37 @@ export function frontableOrders(item) {
   const words = answer.replace(/[.!?]+$/, '').split(/\s+/).filter(Boolean);
   if (words.length < 3) return [];
 
-  const spans = chunks
-    .filter((c) => FRONTABLE_ADVERBIAL_RE.test(c))
-    .map((c) => chunkSpan(words, c))
-    .filter(Boolean)
-    .sort((a, b) => a[0] - b[0]);
-  if (!spans.length) return [];
-
-  // The finite verb: the first lower-case verb-shaped word before the first
-  // Angabe. German spells every noun with a capital and none of the personal
-  // pronouns ends in a personal ending, so the subject cannot be mistaken for
-  // it — and reading the word immediately BEFORE the Angabe cannot do this
-  // job: „Er holt dich um 8 Uhr ab." would make `dich` the verb.
-  const first = spans[0][0];
-  const verbAt = words.findIndex((w, i) => i >= 1 && i < first &&
+  // The finite verb FIRST, because frontability is a question about position
+  // and the position that matters is „after the finite verb". German spells
+  // every noun with a capital and no personal pronoun carries a personal
+  // ending, so the subject cannot be mistaken for the verb.
+  const verbAt = words.findIndex((w, i) => i >= 1 &&
     /^[a-zäöüß]/.test(w) && FRONTABLE_FINITE_RE.test(bare(w)) && !NOT_A_VERB_RE.test(bare(w)));
   if (verbAt < 1) return [];
+
+  // A chunk of the task's own word bag is frontable when it stands AFTER the
+  // finite verb (so it is neither the subject nor the verb) and is an Angabe by
+  // form: a preposition with a complement, a deictic time/place adverb, or a
+  // bare accusative time phrase. A bare noun after the verb is an object or a
+  // predicate nominal and stays put; a lone prefix, participle or infinitive at
+  // the end matches none of the three clauses and stays put with it.
+  const frontable = (chunk, [from]) => {
+    if (from <= verbAt) return false;
+    const toks = bare(chunk).split(/\s+/).filter(Boolean);
+    if (!toks.length) return false;
+    if (PREPOSITION_RE.test(toks[0])) return toks.length >= 2;
+    if (TIME_DETERMINER_RE.test(toks[0])) return toks.length >= 2;
+    return toks.length === 1 && ADVERBIAL_ADVERB_RE.test(toks[0]);
+  };
+
+  const spans = chunks
+    .map((c) => [c, chunkSpan(words, c)])
+    .filter(([, span]) => span)
+    .filter(([c, span]) => frontable(c, span))
+    .map(([, span]) => span)
+    .sort((a, b) => a[0] - b[0]);
+  if (!spans.length) return [];
+  const first = spans[0][0];
   const verb = words[verbAt];
   const subject = words.slice(0, verbAt);
   const tail = words.slice(verbAt + 1);
@@ -1095,7 +1169,7 @@ export function agreementAmbiguity(item) {
   const q = String(item.questionDe || '');
   // The prompt names the element that changes — the cue the course already
   // carries — so the learner knows which side to repair.
-  if (/\b(verb|verbform|subjekt|artikel|nomen)\b/i.test(q)) return null;
+  if (CORRECTION_CUE_RE.test(q)) return null;
   const quote = QUOTED_SPAN_RE.exec(q);
   if (!quote) return null;
   const src = bare(quote[1]).split(/\s+/).filter(Boolean);
@@ -1142,6 +1216,123 @@ export function agreementAmbiguity(item) {
     return null;
   }
   return { verb: [from, to], subject: words.join(' ') };
+}
+
+// ── REVIEW #13 BLOCKER 2: the SECOND minimal repair, on the GENDER axis ─────
+//
+// „Korrigieren Sie: „Das ist ein Chefin."" accepted „Das ist eine Chefin." and
+// marked „Das ist ein Chef." wrong. Both repair the sentence with ONE token,
+// both are correct German, and the course itself teaches the two nouns as a
+// PAIR in one Wortfeld line („der Chef" / „die Chefin", glossed „boss (m)" /
+// „boss (f)"). Three drawn L6 items sat in the hole between the two rules that
+// were supposed to catch this: `ambiguousCorrection` (round 7) only sees a
+// change of article FAMILY, and `ein → eine` stays inside `indefinite`;
+// `agreementAmbiguity` (round 13) hands every determiner change to it by name.
+//
+// THE READING RULE THIS FILE NOW CARRIES, and it is the general form of both
+// BLOCKERs of review #13: AN EXERCISE WHOSE GERMAN INSTRUCTION DOES NOT MAKE
+// ITS SOLUTION UNIQUE DOES NOT BELONG IN THE POOL — and „unique" means: no word
+// of the level's OWN Wortfeld produces a second correct answer. The partner
+// table below is therefore READ from the Wortfeld, never typed.
+
+/** The five cue words the course uses to name the element a correction changes
+ * („Korrigieren Sie das Verb: …", „Korrigieren Sie den Artikel: …"). Shared by
+ * both ambiguity axes, because the cue is one convention and not two. */
+export const CORRECTION_CUE_RE = /\b(verb|verbform|subjekt|artikel|nomen)\b/i;
+
+/** ä/ö/ü folded away entirely, so „Ärztin" and „Arzt" can be compared as a
+ * derivation rather than as two unrelated strings. */
+const deumlaut = (text) => flat(text).replace(/ae/g, 'a').replace(/oe/g, 'o').replace(/ue/g, 'u');
+
+/** True when `fem` is the feminine derivation of `masc`: the -in suffix (with
+ * or without a dropped final -e, with or without umlaut) or -mann → -frau. */
+function isGenderDerivation(masc, fem) {
+  const m = deumlaut(masc);
+  const f = deumlaut(fem);
+  if (!m || !f || m === f) return false;
+  if (f === `${m}in`) return true;
+  if (f === `${m.replace(/e$/, '')}in`) return true;
+  if (/mann$/.test(m) && f === m.replace(/mann$/, 'frau')) return true;
+  return false;
+}
+
+/**
+ * genderPartners(curriculum) → Map flat(noun) → { word, article }, both ways,
+ * for every pair of Wortfeld nouns of the LEVEL where one is the feminine
+ * derivation of the other. Read from the data; nothing here is typed.
+ */
+const PARTNER_CACHE = new Map();
+export function genderPartners(curriculum) {
+  if (!curriculum) return new Map();
+  if (PARTNER_CACHE.has(curriculum)) return PARTNER_CACHE.get(curriculum);
+  const nouns = [];
+  for (const lektion of curriculum.lektionen || []) {
+    for (const w of lektion.wortfeld || []) {
+      const word = String(w.word || '').trim();
+      const article = String(w.article || '').trim().toLowerCase();
+      if (word && /^(?:der|die|das)$/.test(article)) nouns.push({ word, article });
+    }
+  }
+  const map = new Map();
+  for (const a of nouns) {
+    for (const b of nouns) {
+      if (a === b || a.article === b.article) continue;
+      const masc = a.article === 'die' ? b : a;
+      const fem = a.article === 'die' ? a : b;
+      if (fem.article !== 'die' || masc.article === 'die') continue;
+      if (!isGenderDerivation(masc.word, fem.word)) continue;
+      map.set(flat(masc.word), fem);
+      map.set(flat(fem.word), masc);
+    }
+  }
+  PARTNER_CACHE.set(curriculum, map);
+  return map;
+}
+
+/** The nominative article `noun` takes in the family the quote uses. */
+const NOMINATIVE_ARTICLE = Object.freeze({
+  definite: { der: 'der', die: 'die', das: 'das' },
+  indefinite: { der: 'ein', die: 'eine', das: 'ein' },
+});
+
+/**
+ * genderPairAmbiguity(item, { level }) → { article: [from, to], noun } when the
+ * model answer repairs an ARTICLE and swapping the quoted noun for its taught
+ * gender partner repairs the same sentence with the same one token, else null.
+ * `noun` is the rewrite the item rejects — the test prints it, so the next
+ * author reads the answer he is marking wrong.
+ */
+export function genderPairAmbiguity(item, { level } = {}) {
+  if (String(item?.type) !== 'error_correction') return null;
+  const q = String(item.questionDe || '');
+  if (CORRECTION_CUE_RE.test(q) || ARTICLE_TASK_CUE_RE.test(q)) return null;
+  const quote = QUOTED_SPAN_RE.exec(q);
+  if (!quote) return null;
+  const src = bare(quote[1]).split(/\s+/).filter(Boolean);
+  const tgt = bare(item.answer).split(/\s+/).filter(Boolean);
+  if (!src.length || src.length !== tgt.length) return null;
+  const diff = src.map((w, i) => [w, tgt[i], i]).filter(([a, b]) => flat(a) !== flat(b));
+  if (diff.length !== 1) return null;
+  const [from, to, at] = diff[0];
+  // The repair has to be an ARTICLE repair: both sides an article, and the
+  // article family unchanged (a family swap is `ambiguousCorrection`'s finding
+  // and keeps the reason it was pinned with).
+  const fromFamily = ARTICLE_FAMILY(from);
+  const toFamily = ARTICLE_FAMILY(to);
+  if (!fromFamily || !toFamily || fromFamily !== toFamily) return null;
+  // The noun the article belongs to: the next capitalised word.
+  const nounAt = src.findIndex((w, i) => i > at && /^[A-ZÄÖÜ]/.test(w));
+  if (nounAt < 0) return null;
+  const partner = genderPartners(anyCurriculumFor(level || SCOPED_LEVEL)).get(flat(src[nounAt]));
+  if (!partner) return null;
+  // …and the swap has to be MINIMAL: the article the quote already carries must
+  // be the right one for the partner, or repairing the noun costs two tokens
+  // and the item is unambiguous after all.
+  const wanted = NOMINATIVE_ARTICLE[fromFamily][partner.article];
+  if (!wanted || flat(wanted) !== flat(from)) return null;
+  const words = [...src];
+  words[nounAt] = partner.word;
+  return { article: [from, to], noun: words.join(' ') };
 }
 
 /**
@@ -1655,6 +1846,11 @@ export function exclusionReason(item, { level } = {}) {
   // item is dropped and a hand item has to carry the cue („Korrigieren Sie das
   // Verb: …") before it may ship.
   if (agreementAmbiguity(item)) return REASON.AMBIGUOUS_AGREEMENT;
+
+  // REVIEW #13 BLOCKER 2, last for the same reason once more. Not repairable by
+  // a build step either: the fix is the cue the course already writes
+  // („Korrigieren Sie den Artikel: …"), and writing it is authorship.
+  if (genderPairAmbiguity(item, { level })) return REASON.AMBIGUOUS_GENDER_PAIR;
 
   return null;
 }
