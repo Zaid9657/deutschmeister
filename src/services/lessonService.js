@@ -88,6 +88,38 @@ export const logAttempts = async (userId, { level, lektionId }, attempts = []) =
 };
 
 /**
+ * How many times this learner has FINISHED one Lektion — derived, never stored.
+ *
+ * `logAttempts` writes one run's answers in a single INSERT, and `created_at`
+ * defaults to now(), which inside one statement is the same timestamp for every
+ * row of that batch. So the number of DISTINCT `created_at` values for a
+ * (user, Lektion) is the number of completed runs, and the lesson engine can
+ * derive the attempt number from it (`attemptFromCompletions`) without a schema
+ * column and without a second write path that could disagree with the first.
+ * A learner whose progress row says the Lektion is finished but who has no
+ * attempt rows (an offline run, a merge from before this existed) counts as 1.
+ *
+ * Fail-soft like everything else here: on any error the answer is 0, i.e.
+ * attempt 1 — a learner never loses a lesson to a failed count.
+ */
+export const countCompletedRuns = async (userId, { level, lektionId, completed = false } = {}) => {
+  if (!userId || !lektionId) return 0;
+  const { data, error } = await supabase
+    .from('lesson_attempts')
+    .select('created_at')
+    .eq('user_id', userId)
+    .eq('lektion_id', lektionId)
+    .eq('level', String(level || '').toLowerCase());
+
+  if (error) {
+    console.error('[lessonService] countCompletedRuns:', error.message);
+    return 0;
+  }
+  const runs = new Set((data || []).map((r) => r.created_at)).size;
+  return runs || (completed ? 1 : 0);
+};
+
+/**
  * The Wortfeld's words by id — article, plural and audio_url for the cards.
  * Words whose `wordId` is null in the curriculum simply render from the
  * curriculum's own de/en/article/plural fields.

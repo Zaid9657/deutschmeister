@@ -948,7 +948,15 @@ export const CURRICULUM_A11 = {
       links: { listeningExercise: 4, readingOrder: 3 },
       // Only the primary topic: with two topics the builder drew 5 present-tense items against 2 time
       // items in a Lektion about the clock (DaF review, L8). Revisit once the pool weights topics[0].
-      practiceRule: { topics: ['time-and-dates'], typedMin: 4 },
+      // mustCover (DaF review #9 MAJOR 1): the notice bolds „halb neun (= 8.30!)“ and the Lektion
+      // promises the official time of Hören Teil 1/2, and over twelve Lektionen à seven items plus
+      // four checkpoints the learner produced NEITHER — the pool held both forms and the seeded draw
+      // never reached them. A ceiling on repetition cannot reserve a seat; these two keys do.
+      practiceRule: {
+        topics: ['time-and-dates'],
+        typedMin: 4,
+        mustCover: ['halb', 'vierzehn Uhr dreißig'],
+      },
     },
     {
       nr: 9,

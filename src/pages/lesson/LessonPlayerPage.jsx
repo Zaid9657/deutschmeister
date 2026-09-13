@@ -3,12 +3,12 @@ import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { curriculumFor, curriculumPath } from '../../data/curricula/index.js';
-import buildLesson from '../../lib/lesson/buildLesson.js';
+import buildLesson, { attemptFromCompletions } from '../../lib/lesson/buildLesson.js';
 import { requeueFor } from '../../lib/lesson/requeue.js';
 import { firstAttemptAccuracy, masteryStatus } from '../../lib/lesson/mastery.js';
-import { completeLesson, fetchWordsByIds, logAttempts, startLesson } from '../../services/lessonService.js';
+import { completeLesson, countCompletedRuns, fetchWordsByIds, getLessonProgress, logAttempts, startLesson } from '../../services/lessonService.js';
 import { courseHome } from '../../lib/courseFlow.js';
-import { hasLocalProgress, mergeLocalProgress, recordLocalLesson } from '../../lib/course/localProgress.js';
+import { hasLocalProgress, localRunCount, mergeLocalProgress, recordLocalLesson } from '../../lib/course/localProgress.js';
 import { buildCardIndex, fetchDueCards, seedCardsForLektion } from '../../services/reviewService.js';
 import LessonProgressBar from '../../components/lesson/LessonProgressBar.jsx';
 import StageShell from '../../components/lesson/StageShell.jsx';
@@ -43,7 +43,13 @@ const ITEM_STAGES = new Set(['practice', 'dictation', 'requeue']);
 export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [attempt] = useState(1);
+  // The DRAW attempt, derived from how often this learner has already finished
+  // this Lektion — never a constant. It was `useState(1)` with no setter, which
+  // meant the repeat that the standard makes the remediation path handed back
+  // the identical seven for ever (DaF review #9 MAJOR 1). Signed in the count
+  // comes from the attempt batches, signed out from the local store; either way
+  // it is derived from what is already written, not from a new column.
+  const [attempt, setAttempt] = useState(1);
   const [stageIndex, setStageIndex] = useState(0);
   const [itemIndex, setItemIndex] = useState(0);
   const [attempts, setAttempts] = useState([]);
@@ -67,6 +73,27 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
       .catch(() => { if (!cancelled) setDueCards([]); });
     return () => { cancelled = true; };
   }, [preview, user, curriculum]);
+
+  useEffect(() => {
+    if (preview) return undefined;
+    if (!user) {
+      setAttempt(attemptFromCompletions(localRunCount(curriculum.level, lektion.id)));
+      return undefined;
+    }
+    let cancelled = false;
+    getLessonProgress(user.id, curriculum.level)
+      .then((rows) => {
+        const row = rows.get(lektion.id);
+        return countCompletedRuns(user.id, {
+          level: curriculum.level,
+          lektionId: lektion.id,
+          completed: !!(row && row.completed_at),
+        });
+      })
+      .then((runs) => { if (!cancelled) setAttempt(attemptFromCompletions(runs)); })
+      .catch(() => { /* fail-soft: attempt 1 */ });
+    return () => { cancelled = true; };
+  }, [preview, user, curriculum.level, lektion.id]);
 
   const lesson = useMemo(
     () => buildLesson({ curriculum, lektion, pool, dueCards: dueCards || [], attempt }),

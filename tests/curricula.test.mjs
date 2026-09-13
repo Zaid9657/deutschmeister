@@ -424,11 +424,18 @@ test('rule 11b: the items the learner is SERVED use only words taught by the Lek
   // and repairing all of the former barely moves it. RULE 11b runs the same token machinery over
   // the real draw: planPractice() attempts 1 and 2, plus the pool items buildCheckpoint() pulls
   // into a checkpoint, met at that checkpoint's chapter Lektion.
-  assert.ok(MAX_UNTAUGHT_DRAWN_TOKENS <= 16, 'the ratchet may only ever be lowered');
+  //
+  // ROUND 10 TURNED IT INTO A HARD RULE. The ratchet was 4 and commit 217c958 (fresh draw per
+  // attempt) took the measurement to 13 overnight — proof that a number repaired item by item is
+  // re-rolled by every change to the draw. The pool now stamps each item with `minLektion` (the
+  // first Lektion by which all of its words are taught) and `pickPracticeItems` refuses to draw
+  // above it, so this is 0 BY CONSTRUCTION. A non-zero reading means the stamp and the filter have
+  // come apart — rebuild the pool — not that a repair round is owed.
+  assert.equal(MAX_UNTAUGHT_DRAWN_TOKENS, 0, 'RULE 11b is a hard rule at A1.1 — no ratchet');
   const offenders = drawnLexis(CURRICULUM_A11);
-  assert.ok(
-    offenders.length <= MAX_UNTAUGHT_DRAWN_TOKENS,
-    `${offenders.length} untaught tokens in served items > ratchet ${MAX_UNTAUGHT_DRAWN_TOKENS}:\n  - ${offenders.map((o) => `L${o.nr} ${o.id}: ${o.token}`).join('\n  - ')}`,
+  assert.deepEqual(
+    offenders.map((o) => `L${o.nr} ${o.id}: ${o.token}`), [],
+    `${offenders.length} untaught tokens in served items (hard rule, no ratchet)`,
   );
   // Every offender names the Lektion the learner meets it in, so the list is a work order.
   for (const o of offenders) assert.ok(o.nr >= 1 && o.nr <= 12 && o.id && o.token, JSON.stringify(o));
@@ -489,11 +496,12 @@ test('A1.1: every ratchet equals its measurement — a ratchet with slack is not
   // something a reviewer has to notice by re-running the script and subtracting: for every ratchet
   // the validator holds, measured must equal the ratchet exactly. RULE 12 is exempt because DaF
   // review #8's fix turned it into a hard rule with no ratchet at all (see the test above and
-  // validate-curriculum.mjs) — there is no constant left here that could drift.
+  // validate-curriculum.mjs) — there is no constant left here that could drift. RULE 11b left this
+  // walk in round 10 for the same reason: the `minLektion` filter in the draw makes it 0 by
+  // construction, so it is pinned at 0 in its own test above rather than tracked as a ratchet.
   const checks = [
     ['10', wortfeldCoverage(CURRICULUM_A11).length, MAX_UNCOVERED_WORTFELD],
     ['11', itemLexis(CURRICULUM_A11).length, MAX_UNTAUGHT_ITEM_TOKENS],
-    ['11b', drawnLexis(CURRICULUM_A11).length, MAX_UNTAUGHT_DRAWN_TOKENS],
     ['13', missionlessLektionen(CURRICULUM_A11).length, MAX_MISSIONLESS_LEKTIONEN],
     ['6b', noticeFormCoverage(CURRICULUM_A11).length, MAX_UNEXEMPLIFIED_NOTICE_FORMS],
     ['15', producedBeforeTaught(CURRICULUM_A11).length, MAX_UNTAUGHT_IN_PRODUCTION],

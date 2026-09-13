@@ -111,7 +111,7 @@ import {
 // The lexis gate below is the VALIDATOR's predicate, imported rather than re-implemented — see the
 // „untaught-lexis“ block near the merge for why, and `levelLexicon`'s own header for why importing
 // it here is not circular.
-import { levelLexicon, untaughtTokens, levelSpec } from './validate-curriculum.mjs';
+import { levelLexicon, untaughtTokens, levelSpec, minLektionIndex } from './validate-curriculum.mjs';
 
 const level = (process.argv[2] || 'a1.1').toLowerCase();
 const cache = JSON.parse(readFileSync(new URL('../grammar-content-cache.json', import.meta.url), 'utf8'));
@@ -841,6 +841,31 @@ const items = [...keptTaught, ...supplement, ...extra].sort(
   (a, b) => a.topic.localeCompare(b.topic) || a.stage - b.stage || a.order - b.order,
 );
 
+// ── minLektion: the earliest Lektion an item may be SERVED in (round 10) ─────
+//
+// The gate above asks „does the course teach these words AT ALL?“. This asks the
+// same question twelve times — „by Lektion n?“ — and writes the first n whose
+// answer is yes onto the item. `src/lib/lesson/buildLesson.js` then refuses to
+// draw an item into a Lektion earlier than its stamp, which is what turns
+// RULE 11b from a ratchet a repair round chases into a hard 0: after commit
+// 217c958 made the draw fresh per attempt the list grew back to 13 pairs, all of
+// them cache items drawn too early („Welche Schreibweise ist richtig?“ in L1,
+// `Kaffee`/`kocht` in L4), none of them repairable by editing the item — the
+// item is fine, the Lektion was wrong.
+//
+// SAME YARDSTICK AS THE VALIDATOR: `minLektionIndex` is exported from
+// scripts/validate-curriculum.mjs and built from the same per-Lektion snapshots
+// RULE 11/11b judge an item against, so the stamp and the rule cannot disagree.
+// It is stamped on EVERY item — legacy, generated and hand-written alike —
+// because the draw filters all three.
+const minLektionOf = minLektionIndex(level);
+const minLektionHist = new Map();
+for (const item of items) {
+  item.minLektion = minLektionOf(item);
+  const key = item.minLektion === null ? 'null' : item.minLektion;
+  minLektionHist.set(key, (minLektionHist.get(key) || 0) + 1);
+}
+
 const out = { level, builtFrom: cache.dumpedAt, count: items.length, items };
 const target = new URL(`../src/data/lessonPools/${level.replace('.', '')}.json`, import.meta.url);
 writeFileSync(target, JSON.stringify(out, null, 1) + '\n');
@@ -915,6 +940,11 @@ if (thin.length) {
   console.log(`⚠ ${thin.length} topic(s) below the ${THIN_TOPIC_FLOOR}-item floor after the untaught-lexis drop` +
     ' — hand-written extras needed:');
   for (const [topic, n] of thin) console.log(`    ${String(n).padStart(3)}  ${topic} (was ${n + (droppedByTopic.get(topic) || 0)})`);
+}
+
+console.log('minLektion distribution (earliest Lektion an item may be served in):');
+for (const [key, n] of [...minLektionHist].sort((a, b) => (a[0] === 'null') - (b[0] === 'null') || a[0] - b[0])) {
+  console.log(`  ${String(n).padStart(3)}  ${key === 'null' ? 'null (never fully taught — the draw will not serve it)' : `L${key}`}`);
 }
 
 console.log('items per topic:');

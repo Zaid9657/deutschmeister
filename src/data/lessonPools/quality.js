@@ -650,9 +650,23 @@ export function cueAnswerMismatch(item) {
  *   4. SENTENCE answers are read as SENTENCES: a polite form counts only where
  *      the capital is a decision, i.e. NOT as the first word of its own
  *      sentence. `Ihnen` and a non-initial possessive `Ihr…` count on their
- *      own; `Sie` counts only where the sentence also addresses a `Frau`/`Herr`
- *      — otherwise a word-order item like `extra-a11-l10-08` („Fahren Sie
- *      morgen nach Deutschland?") would become wholly wrong over one letter.
+ *      own; `Sie` counts only where the sentence also addresses a `Frau`/`Herr`.
+ *
+ * REVIEW #9 MAJOR 4. Clause 3 read the item's SELF-DECLARATION — `POLITE_CUE_RE`
+ * over prompt, hint and explanation — for one-word answers only, so a SENTENCE
+ * answer was judged by the position of the form alone. Measured: three items
+ * whose own German prompt says „Schreiben Sie die **höfliche** Frage" (`78abfd45`,
+ * `6f0fbd89`, `extra-a11-l10-08`) forgave a lowercase `sie` as a typo, while
+ * `83bab298` („das / ist / Ihre Adresse") graded it wrong — the same task, split
+ * by the shape of the word rather than by the task.
+ *
+ * So the declaration is read for EVERY answer shape: an item whose own text names
+ * the register (`POLITE_CUE_RE`, no `INFORMAL_VETO_RE`) and whose answer carries a
+ * polite form at all is a case task, wherever that form stands. The two vetoes
+ * above still beat it. Nothing gets stricter that does NOT name its own register:
+ * a bare mid-sentence `Sie` with no cue stays lenient — the graded dictation
+ * `a1.1-cp1-hoeren-3` („Bitte füllen Sie das Formular aus.") is the case the
+ * review names, and a learner copying a heard line cannot HEAR the capital.
  */
 export const POLITE_FORM_RE = /^(Sie|Ihnen|Ihr|Ihre|Ihren|Ihrem|Ihrer|Ihres)$/;
 
@@ -679,6 +693,12 @@ const namesLowercase = (text, word) =>
 /** „…, Frau Kaya?“ — the address that makes a `Sie` in the same sentence the polite one. */
 const addressesPerson = (sentence) => /\b(Frau|Herrn?)\s+[A-ZÄÖÜ]/.test(sentence);
 
+/** Does this answer carry a polite form at all — anywhere, position ignored? */
+export const carriesPoliteForm = (line) =>
+  String(line || '')
+    .split(/\s+/)
+    .some((w) => POLITE_FORM_RE.test(w.replace(/[.,!?:;\u201e\u201c"\u00bb\u00ab]/g, '')));
+
 /**
  * A polite form standing where its capital is a DECISION — never as the first
  * word of its own sentence, which says nothing about register.
@@ -702,15 +722,18 @@ export function politeCaseItem(item) {
   const text = politeText(item);
   // 2. An item that calls itself informal is not a polite-form item, whatever its answer looks like.
   if (INFORMAL_VETO_RE.test(text)) return false;
+  // 3. The SELF-DECLARATION, read for every answer shape: the task names the register.
+  const declaresPolite = POLITE_CUE_RE.test(text) && !INFORMAL_VETO_RE.test(text);
   if (acc.every((a) => !a.includes(' '))) {
     if (!acc.every((a) => POLITE_FORM_RE.test(a))) return false;
     // …nor is one that names the lowercase counterpart as the form it wants.
     if (acc.some((a) => namesLowercase(text, a))) return false;
-    // 3. A card carries no prompt and no explanation: there the answer key is all there is.
+    // 4. A card carries no prompt and no explanation: there the answer key is all there is.
     if (!text) return true;
-    return POLITE_CUE_RE.test(text) || acc.every((a) => UNAMBIGUOUS_POLITE_RE.test(a));
+    return declaresPolite || acc.every((a) => UNAMBIGUOUS_POLITE_RE.test(a));
   }
-  // 4. Sentences are read as sentences.
+  // 5. Sentences: the declared register first, the position of the form second.
+  if (declaresPolite && acc.every(carriesPoliteForm)) return true;
   return acc.every(politeSentenceAnswer);
 }
 

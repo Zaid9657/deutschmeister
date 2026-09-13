@@ -87,7 +87,7 @@ const target = (item) => {
 };
 
 test('every extra item is addressed to one of the four Lektionen, with a unique id', () => {
-  assert.ok(EXTRA.length >= 128, `only ${EXTRA.length} extra items`);
+  assert.ok(EXTRA.length >= 165, `only ${EXTRA.length} extra items`);
   assert.equal(new Set(EXTRA.map((i) => i.id)).size, EXTRA.length, 'duplicate id');
   for (const item of EXTRA) {
     assert.ok(target(item), `${item.id} does not name a Lektion`);
@@ -105,6 +105,16 @@ test('every extra item is addressed to one of the four Lektionen, with a unique 
   // course teaches before L4 (Kaffee is L9). Twelve is the number at which the
   // Lektion covers its own draw out of its own Wortfeld.
   assert.ok(perLektion.get(4) >= 12, `L4 has only ${perLektion.get(4)} extra items`);
+  // ROUND 10. The draw became fresh per attempt and the cycle is three attempts long, so a Lektion
+  // needs roughly TWELVE real producers on its own slug before attempt 3 can still reach
+  // PRIMARY_MIN — the round-9 pool gave L3 zero of seven on the third draw, L10 two, L2 and L9
+  // three. These five floors are the measured sizes the twenty new items brought those batches to;
+  // the draw-side pin is the real-drill table of tests/lesson-engine.test.mjs, which now walks all
+  // three attempts.
+  for (const [nr, floor] of [[2, 14], [3, 16], [4, 21], [9, 11], [10, 22]]) {
+    assert.ok(perLektion.get(nr) >= floor,
+      `L${nr} has only ${perLektion.get(nr)} extra items — the third draw needs the depth`);
+  }
 });
 
 test('every extra item passes the pool quality rules', () => {
@@ -499,11 +509,17 @@ test('Lektion 10 makes the learner PRODUCE the question, not fill a gap in one',
   // on the BATCH (so the draw has something to reach for) and on the DRAW
   // itself, on both attempts — a Lektion that only passes on attempt 1 is not
   // fixed.
+  //
+  // ROUND 10 extended it to the THIRD attempt, where the Lektion measured 2 of 7: the six
+  // producers were consumed by the first two draws and every one that was left said „Frage“ in its
+  // prompt, which `MAX_SAME_LEMMA` caps at two per block. The six new producers (l10-17..22) name
+  // the task without the word — „(Das Verb steht zuerst.)“, „(höflich mit Sie)“ — so the cap binds
+  // on a template rather than on the Lektion's whole supply.
   const l10 = EXTRA.filter((i) => target(i).nr === 10);
   const produces = (it) => drillsSlug(it, 'yes-no-questions');
-  assert.ok(l10.filter(produces).length >= 6,
+  assert.ok(l10.filter(produces).length >= 12,
     `L10 has only ${l10.filter(produces).length} items whose answer is the whole question`);
-  for (const attempt of [1, 2]) {
+  for (const attempt of [1, 2, 3]) {
     const drawn = planPractice(CURRICULUM_A11, POOL, attempt).get(10) || [];
     assert.ok(drawn.filter(produces).length >= 4,
       `attempt ${attempt}: L10 draws only ${drawn.filter(produces).length} items that produce the question`);

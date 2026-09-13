@@ -70,6 +70,10 @@ import {
   WRITING_PASS_PCT,
   chapterWritingTask,
   isNextLevelPreview,
+  windowReports,
+  reportSpecFor,
+  normaliseStatement,
+  VERB_3SG,
 } from '../src/lib/checkpoint/buildCheckpoint.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js';
@@ -160,13 +164,14 @@ test('Lesen items carry a 2–3 line text and a richtig/falsch statement, two of
   assert.equal(items.filter((i) => i.answer === 'Falsch').length, 2);
   // A "falsch" statement must not be quoting a line of its own text.
   for (const item of items.filter((i) => i.answer === 'Falsch')) {
-    const quoted = item.promptDe.slice(item.promptDe.indexOf('„') + 1, item.promptDe.lastIndexOf('“'));
-    assert.ok(!item.text.includes(quoted.split(': ').slice(1).join(': ')), 'a falsch statement is false by construction');
+    assert.ok(!item.text.includes(quotedStatement(item)), 'a falsch statement is false by construction');
   }
 });
 
+// The statement the learner reads — no speaker prefix since DaF review #9
+// („Ana: " in front of it halved the search space to one of three lines).
 const quotedStatement = (item) =>
-  item.promptDe.slice(item.promptDe.indexOf('„') + 1, item.promptDe.lastIndexOf('“')).split(': ').slice(1).join(': ');
+  item.promptDe.slice(item.promptDe.indexOf('„') + 1, item.promptDe.lastIndexOf('“'));
 
 test('the Lesen answer key is drawn, not the same R–F–R–F in every checkpoint', () => {
   // The real curriculum, because this is a claim about the four checkpoints a
@@ -195,11 +200,14 @@ test('a falsch statement is this text with ONE detail changed, not another Lekti
     for (const item of items.filter((i) => i.answer === 'Falsch')) {
       const statement = quotedStatement(item);
       assert.ok(!chapterLines.has(statement), 'a falsch statement is not a real line of any Lektion');
-      // It derives from a line of ITS OWN text, with exactly ONE word changed —
+      // It derives from a line of ITS OWN text, through the SAME report the
+      // Richtig half is built with, with exactly ONE word changed after it —
       // the explanation names the line, and the line is in the text.
       assert.match(item.explanationDe, /Im Text steht/, 'the explanation shows what the text really says');
-      const source = item.explanationDe.slice(item.explanationDe.indexOf('„') + 1, item.explanationDe.indexOf('“'));
-      assert.ok(item.text.includes(source), `${cp.id}: the falsified line must be IN this text`);
+      const quotedLine = item.explanationDe.slice(item.explanationDe.indexOf('„') + 1, item.explanationDe.indexOf('“'));
+      assert.equal(quotedLine, item.sourceSentence, `${cp.id}: the explanation quotes the source sentence`);
+      assert.ok(item.text.includes(quotedLine), `${cp.id}: the falsified line must be IN this text`);
+      const source = item.trueStatement;
       const words = statement.split(' ');
       const other = source.split(' ');
       assert.equal(other.length, words.length, `${cp.id}: one detail changed, not the sentence`);
@@ -319,7 +327,9 @@ test('a falsch statement changes ONE word for a word of the same class — artic
     );
     for (const item of items.filter((i) => i.section === 'lesen' && i.answer === 'Falsch')) {
       const statement = quotedStatement(item);
-      const source = item.explanationDe.slice(item.explanationDe.indexOf('„') + 1, item.explanationDe.indexOf('“'));
+      // The TRUE report of the source line — what the falsifier changed one
+      // token of (DaF review #9, MAJOR 3: both halves are reports).
+      const source = item.trueStatement;
       const changed = statement.split(' ');
       const original = source.split(' ');
       assert.equal(changed.length, original.length, `${cp.id} ${item.id}: one word, not the sentence`);
@@ -392,6 +402,185 @@ test('a falsch statement changes ONE word for a word of the same class — artic
     }
   }
   assert.ok(checked >= 8, `two falsch statements per checkpoint, got ${checked}`);
+});
+
+// ── 4f. THE LESEN STATEMENT IS A REPORT, NOT A QUOTE (DaF review #9, MAJOR 3) ─
+//
+// Until round 9 `buildLesen` set `statement = quoted.de` and explained it with
+// „Der Satz steht genau so im Text." — counted over the four papers, EIGHT of
+// the sixteen Lesen statements stood letter for letter in their own printed
+// text, speaker prefix included, and carried the key `Richtig`; the other eight
+// were the same line with one word swapped and carried `Falsch`. „Find the
+// line; if it matches character by character, tick Richtig" scored 4/4 in every
+// checkpoint without one word of German being understood — in a section the
+// 40 % rule can fail a learner on by itself.
+//
+// *Start Deutsch 1* Lesen Teil 1 asks for the opposite: the statement
+// REFORMULATES the text („Ich spiele jede Woche Fußball." → „Tim spielt jede
+// Woche Fußball."), and the reformulation is the reading. The five rules below
+// are the class, not a list of ids:
+//
+//   (a) no statement — Richtig or Falsch — stands in its own text;
+//   (b) every Richtig statement is the report of EXACTLY ONE line of that text,
+//       re-derived here from the builder's own `windowReports`;
+//   (c) every Falsch statement is that same report with exactly one content
+//       detail changed (tests 4b/4d above measure WHICH detail);
+//   (d) every token of every statement is lexis the course has taught by the
+//       Lektion the checkpoint closes;
+//   (e) every verb form the transformation produced is a form the course
+//       teaches by that Lektion — which is what keeps „Ich lese auch gern."
+//       untransformed, because `liest` is in no Wortfeld and no notice of A1.1
+//       and a suffix machine would have shipped „lest".
+
+/** The window a Lesen text prints, found back in the Lektion it came from. */
+function windowForText(lektion, text) {
+  const lines = lektion?.dialog?.lines || [];
+  for (const span of [2, 3]) {
+    for (let start = 0; start + span <= lines.length; start += 1) {
+      const window = lines.slice(start, start + span);
+      if (window.map((l) => `${l.speaker}: ${l.de}`).join(' ') === text) return window;
+    }
+  }
+  return null;
+}
+
+const lesenItemsOf = (cp, items) => items.filter((i) => i.section === 'lesen');
+
+test('no Lesen statement — richtig or falsch — stands in its own text', () => {
+  let checked = 0;
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    for (const item of lesenItemsOf(cp, items)) {
+      const statement = quotedStatement(item);
+      assert.equal(statement, item.statement, `${item.id}: the prompt shows the item's statement`);
+      assert.ok(
+        !normaliseStatement(item.text).includes(normaliseStatement(statement)),
+        `${item.id}: the statement is copied out of its own text — „${statement}“`,
+      );
+      assert.ok(
+        !/^(Ana|Tim|Lena|Paul|Herr|Frau)[a-zäöüß ]*:/.test(statement),
+        `${item.id}: the statement carries a speaker prefix, which halves the search space — „${statement}“`,
+      );
+      assert.ok(item.transform, `${item.id}: an A1.1 Lesen statement is a report, never the verbatim rung`);
+      checked += 1;
+    }
+  }
+  assert.equal(checked, SECTION_COUNTS.lesen * 4, 'four Lesen items on each of the four papers');
+});
+
+test('every richtig statement is the report of EXACTLY ONE line of its text', () => {
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    const spec = reportSpecFor(CURRICULUM_A11, cp);
+    const chapter = chapterLektionen(CURRICULUM_A11, cp);
+    for (const item of lesenItemsOf(cp, items)) {
+      const lektion = chapter.find((l) => l.nr === item.lektionNr);
+      const window = windowForText(lektion, item.text);
+      assert.ok(window, `${item.id}: the printed text must be a contiguous window of L${item.lektionNr}`);
+      const reports = windowReports(window, spec);
+      const mine = reports.filter((r) => r.statement === item.trueStatement);
+      assert.equal(
+        mine.length,
+        1,
+        `${item.id}: „${item.trueStatement}“ follows from ${mine.length} lines of its text, not from one`,
+      );
+      assert.equal(mine[0].line.de, item.sourceLine, `${item.id}: the item names the line it reports on`);
+      assert.ok(item.text.includes(item.sourceSentence), `${item.id}: the source sentence is in the text`);
+      if (item.answer === 'Richtig') {
+        assert.equal(item.statement, item.trueStatement, `${item.id}: a richtig statement IS the report`);
+        assert.equal(item.changed, null, `${item.id}: nothing is changed in a richtig statement`);
+      }
+    }
+  }
+});
+
+test('every falsch statement is its own report with exactly one detail changed', () => {
+  let checked = 0;
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    for (const item of lesenItemsOf(cp, items).filter((i) => i.answer === 'Falsch')) {
+      assert.ok(item.changed && item.changed.from && item.changed.to, `${item.id}: a falsch item names its change`);
+      const { from, to } = item.changed;
+      assert.notEqual(from, to, `${item.id}: „${from}“ was not changed at all`);
+      const rebuilt = item.trueStatement.split(' ').map((w) => (w.replace(/[.,!?]/g, '') === from
+        ? w.replace(from, to)
+        : w));
+      assert.equal(
+        rebuilt.join(' '),
+        item.statement,
+        `${item.id}: the statement is not its report with „${from}“ → „${to}“`,
+      );
+      // The two halves must look alike, or the LENGTH is the answer.
+      assert.equal(
+        item.statement.split(' ').length,
+        item.trueStatement.split(' ').length,
+        `${item.id}: one word, not a rewritten sentence`,
+      );
+      checked += 1;
+    }
+  }
+  assert.equal(checked, 8, 'two falsch statements on each of the four papers');
+});
+
+test('every word of every Lesen statement is taught by the Lektion the checkpoint closes', () => {
+  const names = namesOf(CURRICULUM_A11.level);
+  const offenders = [];
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    const known = knownUpTo(CURRICULUM_A11, cp.afterLektion);
+    for (const item of lesenItemsOf(cp, items)) {
+      for (const statement of [item.statement, item.trueStatement]) {
+        const untaught = untaughtTokens({ questionDe: statement }, known, names);
+        if (untaught.length) offenders.push(`${item.id}: ${untaught.join(', ')} — „${statement}“`);
+      }
+    }
+  }
+  assert.deepEqual(offenders, [], `Lesen statements past the taught lexis:\n${offenders.join('\n')}`);
+});
+
+// The conjugation table and its two directions. A machine that suffixes the
+// stem produces `lest` for `lese` and `schlaft` for `schlafe`; the table is why
+// the builder does not, and the `known` gate is why the forms it does emit are
+// forms this course has taught by then.
+const REGULAR_3SG = (form) => {
+  const stem = form.endsWith('e') ? form.slice(0, -1) : form;
+  return /[td]$/.test(stem) ? `${stem}et` : `${stem}t`;
+};
+
+test('the conjugation table covers every „Ich <verb>“ of every A1.1 dialogue', () => {
+  const missing = [];
+  for (const l of CURRICULUM_A11.lektionen) {
+    for (const line of l.dialog?.lines || []) {
+      for (const sentence of String(line.de).split(/(?<=[.!?])\s+/)) {
+        const m = sentence.replace(/^(Ja|Nein|Gut|Doch)[,.]\s+/, '').match(/^[Ii]ch\s+([A-Za-zÄÖÜäöüß]+)/);
+        if (m && !VERB_3SG.has(m[1].toLowerCase())) missing.push(`L${l.nr}: ${m[1]} — ${sentence}`);
+      }
+    }
+  }
+  assert.deepEqual(missing, [], `first-person verbs with no third person in the table:\n${missing.join('\n')}`);
+});
+
+test('the stem-changing verbs are in the table as forms, not as suffixations', () => {
+  for (const [first, third] of [
+    ['esse', 'isst'], ['schlafe', 'schläft'], ['lade', 'lädt'], ['lese', 'liest'],
+    ['fahre', 'fährt'], ['spreche', 'spricht'], ['sehe', 'sieht'], ['bin', 'ist'], ['habe', 'hat'],
+  ]) {
+    assert.equal(VERB_3SG.get(first), third, `${first} → ${third}`);
+    assert.notEqual(third, REGULAR_3SG(first), `${first}: the table exists because the suffix rule is wrong here`);
+  }
+});
+
+test('every verb form a Lesen statement produced is one the course has taught by then', () => {
+  const offenders = [];
+  let produced = 0;
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    const known = knownUpTo(CURRICULUM_A11, cp.afterLektion);
+    for (const item of lesenItemsOf(cp, items)) {
+      for (const form of item.verbForms || []) {
+        produced += 1;
+        if (!known.has(form)) offenders.push(`${item.id}: ${form} — „${item.trueStatement}“`);
+        if (!new Set(VERB_3SG.values()).has(form)) offenders.push(`${item.id}: ${form} is not a table form`);
+      }
+    }
+  }
+  assert.deepEqual(offenders, [], `verb forms past the curriculum:\n${offenders.join('\n')}`);
+  assert.ok(produced >= 8, `the transformation must actually conjugate something, got ${produced}`);
 });
 
 // ── 4e. NO UNTAUGHT LEXIS IN A GRADED TEST (DaF review #6, MAJOR 8) ─────────
@@ -1174,7 +1363,12 @@ test('a pool item appears in at most one checkpoint of the level', () => {
 // it — and this walks all three surfaces with it. An explicit
 // `caseSensitive: true` in the pool data stays a documented override, and the
 // list of overrides is asserted here too so it cannot grow quietly.
-const POLITE_OVERRIDES = ['extra-a11-l12-16'];
+// REVIEW #9 MAJOR 4 emptied this list: the predicate now reads an item's own
+// declaration for EVERY answer shape, so `extra-a11-l12-16` („höfliches Ihr mit
+// großem I") is derived rather than hand-held. The list stays as the place an
+// override has to be written down, and the assertion below still forbids it
+// growing quietly.
+const POLITE_OVERRIDES = [];
 
 test('the lowercase answer is wrong exactly where the polite predicate fires — cards, pool and checkpoints', async () => {
   const { buildCardIndex } = await import('../src/services/reviewService.js');

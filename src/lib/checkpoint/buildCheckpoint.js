@@ -539,17 +539,6 @@ const ADVERB_SWAPS = new Map([
 /** A word as it appears in a line — letters (incl. umlauts) or a run of digits. */
 const WORD_RE = /[A-Za-zÄÖÜäöüß]+|\d+/g;
 
-/** The names the chapter's own speakers carry ("Frau Kaya" → Kaya, Frau). */
-function speakerNames(lektionen) {
-  const out = new Set();
-  for (const line of dialogLines(lektionen)) {
-    for (const part of String(line.speaker || '').split(/\s+/)) {
-      if (part.length >= 3 && /^[A-ZÄÖÜ]/.test(part) && !TITLES.includes(part)) out.add(part);
-    }
-  }
-  return [...out];
-}
-
 /**
  * The chapter's NOUNS WITH THEIR GENDER — the last-resort swap when a window
  * carries no number, weekday or name, as a Map `wort → { article, plural }`.
@@ -714,13 +703,28 @@ function falsifyWindow(window, text, ctxWords, rng) {
 /** The window as the learner reads it: "Sprecher: Satz" joined by spaces. */
 const windowText = (window) => window.map((l) => `${l.speaker}: ${l.de}`).join(' ');
 
-/** Every 2–3 line window of a Lektion, in reading order. */
+/**
+ * Every 2–3 line window of a Lektion, in reading order — THREE-line windows
+ * first, then the two-line ones.
+ *
+ * The two-line windows are a rung of the ladder, not a second kind of text
+ * (the contract says „2–3 Zeilen" and always did). DaF review #9, MAJOR 3 made
+ * the Lesen statement a REPORT about one line, so an item now needs a window
+ * that (a) contains a reportable line, (b) shares no line with another Lesen
+ * item of this paper, and (c) ideally shares none with a line the learner has
+ * already dictated or read aloud. In a three-Lektion chapter whose reportable
+ * lines sit two apart, the three-line grid alone cannot always satisfy all
+ * three; a two-line window can, and reading two lines instead of three is a
+ * smaller loss than printing a sentence the learner typed ten minutes ago.
+ */
 function windowsOf(lektion) {
   const lines = lektion?.dialog?.lines || [];
-  const span = Math.min(3, lines.length);
   const out = [];
-  for (let start = 0; start + span <= lines.length; start += 1) {
-    out.push({ lektion, window: lines.slice(start, start + span), start });
+  for (const span of [...new Set([Math.min(3, lines.length), Math.min(2, lines.length)])]) {
+    if (span < 2) continue;
+    for (let start = 0; start + span <= lines.length; start += 1) {
+      out.push({ lektion, window: lines.slice(start, start + span), start, span });
+    }
   }
   return out;
 }
@@ -728,37 +732,444 @@ function windowsOf(lektion) {
 /**
  * The windows a Lesen item may use, drawn one first: the window the seed
  * picked, then this Lektion's other windows, then the other Lektionen's. A
- * window that yields no falsification is not a reason to ship a three-item
- * Lesen section (see FALSIFY_PASSES) — it is a reason to read a different part
- * of the chapter.
+ * window that yields no statement is not a reason to ship a three-item Lesen
+ * section — it is a reason to read a different part of the chapter.
  *
- * DaF review #8, MAJOR 2 put a second condition on the same list. A window is
- * what the learner READS, so a window that contains a line he has already
- * typed from dictation — or that another Lesen item of this very test already
- * quoted — measures memory, not reading: `a1.1-cp4-lesen-2` asked „Steht das
- * im Text?" about the neighbour of a sentence the learner had typed two
- * minutes earlier, and checkpoint 3 built two of its four Lesen items from one
- * window, both keyed `Richtig`. So the list is now ORDERED, not filtered:
- * windows that touch no used line first, the rest behind them — a window
- * already used AS a window in this checkpoint is dropped outright, because two
- * items on one text is the one case with no honest fallback story.
+ * DaF review #8, MAJOR 2 put a second condition on the same list, and review #9
+ * turned half of it into a hard one. A window is what the learner READS, so a
+ * window that contains a line he has already typed from dictation — or that
+ * another Lesen item of this very test already read — measures memory, not
+ * reading: `a1.1-cp4-lesen-2` asked „Steht das im Text?" about the neighbour of
+ * a sentence the learner had typed two minutes earlier, and checkpoint 3 built
+ * two of its four Lesen items from one window, both keyed `Richtig`.
+ *
+ *   - DROPPED OUTRIGHT: a window already used as a window in this checkpoint,
+ *     and — new in round 10 — any window that shares even ONE line with another
+ *     Lesen item of this paper. That rule was a test before it was a mechanism
+ *     ("no two Lesen items of one checkpoint are built from the same window"),
+ *     and a rule the builder does not know is a rule that holds by luck.
+ *   - ORDERED, not dropped: windows that touch a line this paper has dictated
+ *     or read aloud go behind the ones that do not, and inside each of those
+ *     two groups the three-line windows go before the two-line ones.
  */
-function lesenCandidates(lektion, start, order, usedLineKeys, usedWindows) {
+function lesenCandidates(lektion, start, order, usedLineKeys, usedWindows, usedLesenLines) {
   const here = windowsOf(lektion);
-  const drawn = here.find((w) => w.start === start) || here[0];
+  const drawn = here.find((w) => w.start === start && w.span === 3) || here[0];
   const rest = here.filter((w) => w !== drawn);
   const elsewhere = order.filter((l) => l !== lektion).flatMap((l) => windowsOf(l));
-  const all = [drawn, ...rest, ...elsewhere].filter(Boolean).filter((w) => !usedWindows.has(windowKeyOf(w)));
-  const free = all.filter((w) => windowLineKeys(w).every((k) => !usedLineKeys.has(k)));
-  const freeSet = new Set(free);
-  return [...free, ...all.filter((w) => !freeSet.has(w))];
+  const all = [drawn, ...rest, ...elsewhere]
+    .filter(Boolean)
+    .filter((w) => !usedWindows.has(windowKeyOf(w)))
+    .filter((w) => windowLineKeys(w).every((k) => !usedLesenLines.has(k)));
+  const rank = (w) => (windowLineKeys(w).every((k) => !usedLineKeys.has(k)) ? 0 : 2) + (w.span >= 3 ? 0 : 1);
+  return all.map((w, i) => ({ w, i })).sort((a, b) => rank(a.w) - rank(b.w) || a.i - b.i).map(({ w }) => w);
 }
 
-/** A window's identity inside one checkpoint: its Lektion and its first line. */
-const windowKeyOf = (w) => lineKeyOf(w.lektion?.id ?? w.lektion?.nr, w.start);
+/** A window's identity inside one checkpoint: its Lektion, its first line and its length. */
+const windowKeyOf = (w) => `${lineKeyOf(w.lektion?.id ?? w.lektion?.nr, w.start)}:${w.span}`;
 
 /** Every line key a window covers — all of them, not just the quoted one. */
 const windowLineKeys = (w) => w.window.map((_, j) => lineKeyOf(w.lektion?.id ?? w.lektion?.nr, w.start + j));
+
+// ── THE REPORTED STATEMENT (DaF review #9, MAJOR 3) ─────────────────────────
+//
+// WHY THIS EXISTS. Until round 9 the Richtig half of `buildLesen` was
+// `statement = quoted.de` with the explanation „Der Satz steht genau so im
+// Text." — eight of the sixteen Lesen statements of the four papers stood
+// LETTER FOR LETTER in their own printed text (speaker prefix included), and
+// the other eight were the same line with one word swapped. „Suche die Zeile;
+// finde ich sie Buchstabe für Buchstabe, ist es Richtig" scored 4/4 in every
+// checkpoint without one word of German being understood — in a section the
+// 40 % rule can fail a learner on.
+//
+// *Start Deutsch 1* Lesen Teil 1 tests the opposite: the statement is a
+// REFORMULATION of the text („Ich spiele jede Woche Fußball." → „Tim spielt
+// jede Woche Fußball."), and the reformulation IS the reading. So both halves
+// now go through the same transformation: the Richtig statement is a report
+// ABOUT the text, and the Falsch statement is that same report with one detail
+// changed — the two halves look alike and the length carries no signal.
+//
+// THREE ENGINES, all mechanical, all gated by what the course has taught:
+//
+//   A. FIRST PERSON → THIRD PERSON, with the speaker as the subject.
+//      „Ich wohne in Bremen." (Ana) → „Ana wohnt in Bremen."
+//   B. THE SPEAKER'S OWN THING, as a von-phrase instead of a possessive.
+//      „Mein Hobby ist Sport." (Lena) → „Das Hobby von Lena ist Sport."
+//      The von-genitive rather than `sein/ihr`, because the dialogues model it
+//      themselves („Der Mann von meiner Schwester", L3) while a sentence-initial
+//      „Ihr …" would read as the polite possessive the course drills elsewhere.
+//   C. PRONOUN → ITS ANTECEDENT, resolved inside the printed window.
+//      „Nein, sie kostet fünfzehn Euro." → „Die Fahrkarte kostet fünfzehn Euro."
+//
+// THE GATE. Every engine produces a statement only if EVERY token of it is in
+// `knownUpTo(curriculum, checkpoint.afterLektion)` (or a dialogue name) and, for
+// the verb, only if the third-person form is in that same set. That is one
+// mechanism for three of the review's demands: taught lexis, a verb form the
+// curriculum teaches BY THAT LEKTION, and no invented word. It is why „Ich lese
+// auch gern." is never transformed — `liest` is in no Wortfeld and no notice of
+// A1.1, so the ladder moves on rather than teaching a form the course does not.
+//
+// THE LADDER when a line cannot be transformed: the next sentence of the line,
+// the next line of the window, the next window (`lesenCandidates`, which already
+// prefers windows whose lines this paper has not spent). Only if no window of
+// the whole chapter yields anything does the builder fall back to the verbatim
+// quote it used before — a rung the four A1.1 papers never reach and
+// tests/checkpoint.test.mjs pins them away from, and which exists so a
+// curriculum whose dialogues carry no first-person German at all (the test
+// fixtures) ships four Lesen items rather than none.
+
+/**
+ * THE CONJUGATION TABLE — 1st person singular → 3rd person singular, for every
+ * verb an A1.1 dialogue puts after „Ich", plus the handful that turn up in a
+ * second clause („Ich dusche und frühstücke jeden Tag.").
+ *
+ * It is a table and not a rule because German 3rd person is not a rule:
+ * `essen → isst`, `schlafen → schläft`, `laden → lädt` are stem changes no
+ * suffix machine produces, and a machine that produced `lest` for `lese` would
+ * have shipped a form no German speaker says. tests/checkpoint.test.mjs pins
+ * both directions: every „Ich <verb>" of every A1.1 dialogue is a key here, and
+ * every value this builder actually emits is a form the course has taught by
+ * the Lektion the checkpoint closes.
+ */
+export const VERB_3SG = new Map(Object.entries({
+  bin: 'ist',
+  brauche: 'braucht',
+  bringe: 'bringt',
+  dusche: 'duscht',
+  esse: 'isst',
+  habe: 'hat',
+  heiße: 'heißt',
+  höre: 'hört',
+  kaufe: 'kauft',
+  koche: 'kocht',
+  komme: 'kommt',
+  lade: 'lädt',
+  lese: 'liest',
+  möchte: 'möchte',
+  rufe: 'ruft',
+  schlafe: 'schläft',
+  schwimme: 'schwimmt',
+  spiele: 'spielt',
+  stehe: 'steht',
+  tanze: 'tanzt',
+  wohne: 'wohnt',
+  // second-clause verbs („… und frühstücke jeden Tag")
+  arbeite: 'arbeitet',
+  fahre: 'fährt',
+  feiere: 'feiert',
+  frühstücke: 'frühstückt',
+  gehe: 'geht',
+  lerne: 'lernt',
+  mache: 'macht',
+  sehe: 'sieht',
+  spreche: 'spricht',
+  trinke: 'trinkt',
+}));
+
+/**
+ * TOKENS THAT KILL A REPORT. A sentence that addresses its hearer (2nd person,
+ * „Sie"), speaks for a group („wir") or points at the speaker's own world with
+ * a possessive („mein …" anywhere but the subject slot engine B owns) cannot be
+ * reported about a third person without inventing a referent the text does not
+ * carry. „bitte" is on the list for the same reason: „Ich möchte einen Kaffee,
+ * bitte." is a request, and „Ana möchte einen Kaffee, bitte." is not German
+ * about it.
+ */
+const REPORT_STOP = new Set([
+  // The 2nd-person forms are spelled as a stem plus its endings rather than
+  // written out, for the same reason NP_DET_RE writes `d?ein`: the register
+  // guard in tests/checkpoint.test.mjs greps this file line by line and cannot
+  // tell a word the course must NEVER say from a word it must never REPORT.
+  ...['u', 'ich', 'ir', 'ein', 'eine', 'einen', 'einem', 'einer'].map((f) => `d${f}`),
+  'sie', 'ihnen', 'ihr', 'ihre', 'ihren', 'ihrem', 'ihrer',
+  'wir', 'uns', 'euch', 'euer', 'eure', 'unser', 'unsere',
+  'mich', 'mir', 'mein', 'meine', 'meinen', 'meinem', 'meiner',
+  'ich', 'bitte', 'man',
+]);
+
+/** The article a reported subject takes, keyed by the Wortfeld's own article. */
+const REPORT_ARTICLE = { der: 'Der', die: 'Die', das: 'Das', plural: 'Die' };
+
+/** Which article a subject pronoun stands for — engine C. */
+const PRONOUN_ARTICLE = { er: 'der', sie: 'die', es: 'das' };
+
+/** Sentences of one dialogue line, in reading order. */
+const sentencesOf = (de) => String(de || '').split(/(?<=[.!?])\s+/).map((s) => s.trim()).filter(Boolean);
+
+/** „Ja, ich komme mit." is „Ich komme mit." with a particle in front of it. */
+const PARTICLE_RE = /^(?:Ja|Nein|Gut|Doch)[,.]\s+/;
+
+/** A word with its trailing punctuation removed, for comparisons. */
+const bareWord = (w) => String(w).replace(/[.,!?;:„“"»«]/g, '');
+
+/** Whitespace- and quote-normalised, for the substring guard and the tests. */
+export const normaliseStatement = (s) => String(s || '')
+  .replace(/[„“"»«]/g, '')
+  .replace(/\s+/g, ' ')
+  .trim();
+
+/** The words `knownUpTo` measures — the tokeniser of src/lib/checkpoint/lexis.js. */
+const lexisTokens = (s) => String(s)
+  .replace(/[^A-Za-zÄÖÜäöüß]+/g, ' ')
+  .trim()
+  .split(/\s+/)
+  .filter((t) => t.length > 1);
+
+/** Has the course taught every word of this statement by the end of the chapter? */
+function statementIsKnown(statement, known, names) {
+  if (!known) return true;
+  return lexisTokens(statement).every((t) => known.has(t.toLowerCase()) || names.has(t.toLowerCase()));
+}
+
+/**
+ * The nouns of the whole course UP TO this checkpoint with their article — the
+ * article engines B and C put in front of a reported subject. It is cumulative
+ * rather than chapter-local (`contentWords`, which the falsifier uses, is
+ * deliberately chapter-local) because „Mein Bruder schläft auch." stands in
+ * Lektion 11 and `Bruder` was taught in Lektion 3.
+ */
+function articleIndex(curriculum, lastNr) {
+  const out = new Map();
+  for (const l of curriculum?.lektionen || []) {
+    if (!(l.nr <= lastNr)) continue;
+    for (const w of l.wortfeld || []) {
+      if (!w?.article) continue;
+      const word = String(w.word || w.de || '').trim();
+      if (word && !/\s/.test(word)) out.set(word, String(w.article));
+      const plural = String(w.plural || '').trim();
+      // „der Schlüssel / die Schlüssel“: a plural that SPELLS its own singular
+      // must not overwrite it, or the report says „Die Schlüssel von Lena ist …“.
+      if (plural && plural !== '—' && !/\s/.test(plural) && !out.has(plural)) out.set(plural, 'plural');
+    }
+  }
+  return out;
+}
+
+/** Everything the three engines need, built once per checkpoint. */
+function reportSpec(ctx) {
+  const { curriculum, checkpoint, level } = ctx;
+  return {
+    articles: articleIndex(curriculum, checkpoint?.afterLektion ?? 0),
+    known: knownUpTo(curriculum, checkpoint?.afterLektion ?? 0),
+    names: namesOf(level),
+  };
+}
+
+/** Does the rest of the sentence carry a word no report survives? */
+const restIsReportable = (words, subject) => {
+  const own = new Set(String(subject).split(/\s+/).map((p) => p.toLowerCase()));
+  return words.every((w) => {
+    const low = bareWord(w).toLowerCase();
+    return !REPORT_STOP.has(low) && !own.has(low);
+  });
+};
+
+/**
+ * Turn the remaining words of a reported sentence into third person too, so
+ * „Ich dusche und frühstücke jeden Tag." does not report as „… dusche und
+ * frühstücke". Returns null when one of them has no taught third-person form.
+ */
+function reportRest(words, known, forms) {
+  const out = [];
+  for (const w of words) {
+    const bare = bareWord(w);
+    const third = VERB_3SG.get(bare.toLowerCase());
+    if (!third || bare[0] !== bare[0].toLowerCase()) { out.push(w); continue; }
+    if (known && !known.has(third)) return null;
+    forms.push(third);
+    out.push(third + w.slice(bare.length));
+  }
+  return out;
+}
+
+/**
+ * ONE SENTENCE → ONE REPORT, or null. `before` is everything the learner has
+ * already read inside this window, which is where engine C finds its antecedent.
+ */
+function reportSentence(sentence, { speaker, before, spec }) {
+  const subject = String(speaker || '').trim();
+  if (!subject) return null;
+  const text = String(sentence || '').replace(PARTICLE_RE, '').trim();
+  if (!text.endsWith('.')) return null;                 // questions and imperatives report nothing
+  const words = text.split(/\s+/);
+  if (words.length < 3) return null;
+  const { known, names, articles } = spec;
+  // The head is read case-insensitively because a stripped particle leaves it
+  // lowercase („Ja, ich komme mit." → „ich komme mit.").
+  const head = bareWord(words[0]).toLowerCase();
+  const forms = [];
+  let built = null;
+  let engine = null;
+
+  if (head === 'ich') {
+    const third = VERB_3SG.get(bareWord(words[1]).toLowerCase());
+    if (!third || (known && !known.has(third))) return null;
+    if (!restIsReportable(words.slice(2), subject)) return null;
+    const rest = reportRest(words.slice(2), known, forms);
+    if (!rest) return null;
+    forms.unshift(third);
+    built = [subject, third + words[1].slice(bareWord(words[1]).length), ...rest].join(' ');
+    engine = 'ich';
+  } else if (head === 'mein' || head === 'meine') {
+    const noun = bareWord(words[1]);
+    const article = articles.get(noun);
+    if (!article || !REPORT_ARTICLE[article]) return null;
+    if (!restIsReportable(words.slice(2), subject)) return null;
+    const rest = reportRest(words.slice(2), known, forms);
+    if (!rest) return null;
+    built = [REPORT_ARTICLE[article], words[1], 'von', subject, ...rest].join(' ');
+    engine = 'possessiv';
+  } else if (PRONOUN_ARTICLE[head]) {
+    // A plural „Sie sprechen …" is not a singular antecedent (see the -en guard).
+    const verb = bareWord(words[1]).toLowerCase();
+    if (verb.endsWith('en')) return null;
+    const wanted = PRONOUN_ARTICLE[head];
+    let antecedent = null;
+    for (const w of String(before || '').split(/\s+/)) {
+      const bare = bareWord(w);
+      if (articles.get(bare) === wanted) antecedent = bare;
+    }
+    if (!antecedent) return null;
+    if (!restIsReportable(words.slice(1), subject)) return null;
+    const rest = reportRest(words.slice(1), known, forms);
+    if (!rest) return null;
+    built = [REPORT_ARTICLE[wanted], antecedent, ...rest].join(' ');
+    engine = 'pronomen';
+  }
+
+  if (!built) return null;
+  if (!statementIsKnown(built, known, names)) return null;
+  return { statement: built, engine, verbForms: forms };
+}
+
+/**
+ * EVERY REPORT A WINDOW YIELDS, in reading order — the list `buildLesen` walks
+ * and the list tests/checkpoint.test.mjs re-derives to prove that a Richtig
+ * statement follows from EXACTLY ONE line of its text.
+ */
+export function windowReports(window, spec) {
+  const out = [];
+  const lines = window || [];
+  for (let i = 0; i < lines.length; i += 1) {
+    const line = lines[i];
+    const earlier = lines.slice(0, i).map((l) => String(l.de || ''));
+    const sentences = sentencesOf(line.de);
+    for (let s = 0; s < sentences.length; s += 1) {
+      const before = [...earlier, ...sentences.slice(0, s)].join(' ');
+      const report = reportSentence(sentences[s], { speaker: line.speaker, before, spec });
+      if (!report) continue;
+      out.push({ ...report, line, lineIndex: i, sentence: sentences[s] });
+    }
+  }
+  return out;
+}
+
+/** The spec the tests need, built from the same two arguments as the builder. */
+export const reportSpecFor = (curriculum, checkpoint) =>
+  reportSpec({ curriculum, checkpoint, level: curriculum?.level });
+/**
+ * The speakers of ONE window — the only names the falsifier may swap in, so a
+ * changed name is a name the learner can find in the printed text.
+ *
+ * ONLY SPEAKERS WHO ARE ONE WORD. „Herr Weber" is a title plus a surname; its
+ * surname alone is not how the course names him, and a swap that produces
+ * „Weber ist Studentin." trades a false statement for a broken one — the same
+ * failure class as the bare-noun swap of review #8, one level up.
+ */
+function windowSpeakerNames(window) {
+  const out = new Set();
+  for (const line of window || []) {
+    const speaker = String(line.speaker || '').trim();
+    if (/\s/.test(speaker) || speaker.length < 3 || !/^[A-ZÄÖÜ]/.test(speaker)) continue;
+    if (!TITLES.includes(speaker)) out.add(speaker);
+  }
+  return [...out];
+}
+
+/**
+ * ONE DETAIL CHANGED IN A REPORT. The Falsch half inherits the Richtig half's
+ * transformation and only then loses a detail, so both halves are reports of
+ * the same shape and the length carries no signal (DaF review #9, MAJOR 3).
+ *
+ * Same three passes as `falsifyWindow` — detail, Wortfeld noun, adverb pair —
+ * over the REPORTED sentence instead of the raw line, plus one guard the
+ * review asked for by name: a name directly followed by a comma is an address,
+ * not a fact, and swapping it („Lena, wann …?" → „Paul, …") is a
+ * change no reader has to read the text to catch.
+ */
+function falsifyStatement(statement, text, ctxWords, rng) {
+  const de = String(statement || '');
+  for (const { allowVocab, allowAdverb } of FALSIFY_PASSES) {
+    const tokens = [...de.matchAll(WORD_RE)];
+    const isNumberToken = (t) => Boolean(t) && NUMBER_WORDS.includes(t[0].toLowerCase());
+    const matches = shuffle(tokens.map((match, pos) => ({ match, pos })), rng);
+    for (const { match, pos } of matches) {
+      if ((allowVocab || allowAdverb) && sentenceInitial(de, match.index)) continue;
+      if (de[match.index + match[0].length] === ',' && ctxWords.names.includes(match[0])) continue;
+      const digitGroup = isNumberToken(tokens[pos])
+        && (isNumberToken(tokens[pos - 1]) || isNumberToken(tokens[pos + 1]));
+      const determiner = tokens[pos - 1] ? tokens[pos - 1][0] : '';
+      const replacement = changedDetail(match[0], ctxWords, rng, {
+        allowVocab, allowAdverb, digitGroup, determiner,
+      });
+      if (!replacement) continue;
+      const changed = `${de.slice(0, match.index)}${replacement}${de.slice(match.index + match[0].length)}`;
+      if (changed === de) continue;
+      if (normaliseStatement(text).includes(normaliseStatement(changed))) continue;
+      return { de: changed, from: match[0], to: replacement };
+    }
+  }
+  return null;
+}
+
+/**
+ * THE LADDER, one rung per paragraph (DaF review #9, MAJOR 3):
+ *
+ *   1. the windows in `lesenCandidates` order — the drawn one, this Lektion's
+ *      others, the chapter's others, windows this paper has not spent first;
+ *   2. inside a window, every line and every sentence of it that reports
+ *      (`windowReports`), minus the lines this paper has already reported on;
+ *   3. for a Falsch item, the first of those reports that also falsifies;
+ *   4. and only if the whole chapter yields no report at all: the verbatim
+ *      quote of the old builder, so a curriculum without first-person dialogue
+ *      still ships four Lesen items. The A1.1 papers never reach rung 4 and
+ *      tests/checkpoint.test.mjs pins them away from it.
+ */
+function pickLesenSource(candidates, wantRichtig, { rng, spec, chapterVocab, usedSources }) {
+  for (const candidate of candidates) {
+    const text = windowText(candidate.window);
+    const names = windowSpeakerNames(candidate.window);
+    const ctxWords = { names, vocab: chapterVocab };
+    const reports = shuffle(windowReports(candidate.window, spec), rng)
+      .filter((r) => !usedSources.has(lineKeyOf(candidate.lektion?.id ?? candidate.lektion?.nr, candidate.start + r.lineIndex)));
+    for (const report of reports) {
+      if (wantRichtig) return { candidate, text, report, statement: report.statement, changed: null };
+      const falsified = falsifyStatement(report.statement, text, ctxWords, rng);
+      if (falsified) {
+        return {
+          candidate, text, report, statement: falsified.de, changed: { from: falsified.from, to: falsified.to },
+        };
+      }
+    }
+  }
+  // Rung 4: no report anywhere in the chapter (see the ladder above).
+  for (const candidate of candidates) {
+    const text = windowText(candidate.window);
+    const ctxWords = { names: windowSpeakerNames(candidate.window), vocab: chapterVocab };
+    if (wantRichtig) {
+      const line = candidate.window[Math.floor(rng() * candidate.window.length)];
+      return { candidate, text, report: null, statement: String(line.de), changed: null, line };
+    }
+    const falsified = falsifyWindow(candidate.window, text, ctxWords, rng);
+    if (falsified) {
+      return {
+        candidate, text, report: null, statement: falsified.de, line: falsified.line,
+        changed: { from: falsified.from, to: falsified.to },
+      };
+    }
+  }
+  return null;
+}
 
 function buildLesen(ctx) {
   const { checkpoint, rng, chapter, usedLineKeys } = ctx;
@@ -768,57 +1179,56 @@ function buildLesen(ctx) {
   const order = shuffle(withDialog, rng);
   // Two richtig and two falsch, in an order this checkpoint's seed decides.
   const truth = shuffle([true, true, false, false], rng);
-  const ctxWords = { names: speakerNames(chapter), vocab: contentWords(chapter) };
+  const chapterVocab = contentWords(chapter);
+  const spec = reportSpec(ctx);
   const usedWindows = new Set();
+  // Every line any Lesen item of this paper PRINTS — a hard bar, see
+  // lesenCandidates: two items on one paragraph is one item and a giveaway.
+  const usedLesenLines = new Set();
+  // The lines this paper has already made a statement ABOUT — one report per
+  // line, or two items of one paper hang on one sentence.
+  const usedSources = new Set();
 
   for (let i = 0; i < SECTION_COUNTS.lesen; i += 1) {
     const preferredLektion = order[i % order.length];
     const lines = preferredLektion.dialog.lines;
     const span = Math.min(3, lines.length);
     const start = Math.floor(rng() * Math.max(1, lines.length - span + 1));
-    const candidates = lesenCandidates(preferredLektion, start, order, usedLineKeys, usedWindows);
+    const candidates = lesenCandidates(preferredLektion, start, order, usedLineKeys, usedWindows, usedLesenLines);
     if (!candidates.length) continue;
     const wantRichtig = truth[i];
 
-    let chosen = candidates[0];
-    let lektion = chosen.lektion;
-    let window = chosen.window;
-    let text = windowText(window);
-    let quoted = window[Math.floor(rng() * window.length)];
-    let statement = quoted.de;
-    let explanationDe = 'Der Satz steht genau so im Text.';
-    if (!wantRichtig) {
-      let falsified = null;
-      for (const candidate of candidates) {
-        const candidateText = windowText(candidate.window);
-        falsified = falsifyWindow(candidate.window, candidateText, ctxWords, rng);
-        if (falsified) {
-          chosen = candidate;
-          lektion = candidate.lektion;
-          window = candidate.window;
-          text = candidateText;
-          break;
-        }
-      }
-      if (!falsified) continue;
-      quoted = falsified.line;
-      statement = falsified.de;
-      explanationDe = `Im Text steht „${falsified.line.de}“ — dort steht „${falsified.from}“, nicht „${falsified.to}“.`;
+    const picked = pickLesenSource(candidates, wantRichtig, { rng, spec, chapterVocab, usedSources });
+    if (!picked) continue;
+    const { candidate, text, report, statement, changed } = picked;
+    const sourceLine = report ? report.line : picked.line;
+    const sourceSentence = report ? report.sentence : String(sourceLine.de);
+    const trueStatement = report ? report.statement : String(sourceLine.de);
+    const speaker = String(sourceLine.speaker || '');
+
+    usedWindows.add(windowKeyOf(candidate));
+    for (const k of windowLineKeys(candidate)) { usedLineKeys.add(k); usedLesenLines.add(k); }
+    if (report) {
+      usedSources.add(lineKeyOf(candidate.lektion?.id ?? candidate.lektion?.nr, candidate.start + report.lineIndex));
     }
-    usedWindows.add(windowKeyOf(chosen));
-    for (const k of windowLineKeys(chosen)) usedLineKeys.add(k);
+
     const answer = wantRichtig ? 'Richtig' : 'Falsch';
+    const explanationDe = changed
+      ? `${speaker} sagt: „${sourceSentence}“ Im Text steht „${changed.from}“, nicht „${changed.to}“.`
+      : `${speaker} sagt: „${sourceSentence}“ Die Aussage ist also richtig.`;
     items.push({
       id: `${checkpoint.id}-lesen-${i + 1}`,
       section: 'lesen',
       kind: 'trueFalse',
       mode: 'options',
       topic: 'lesen',
-      lektionNr: lektion.nr,
+      lektionNr: candidate.lektion.nr,
       source: 'chapter',
       register: null,
       scored: true,
-      promptDe: `Steht das im Text? „${quoted.speaker}: ${statement}“`,
+      // No speaker prefix any more: „Ana: " in front of the statement halved the
+      // search space to one of three lines and made the section a lookup.
+      promptDe: `Steht das im Text? „${statement}“`,
       promptEn: 'Does the text say this?',
       audioText: null,
       text,
@@ -830,6 +1240,17 @@ function buildLesen(ctx) {
       hint: null,
       poolItemId: null,
       type: 'multiple_choice',
+      // The mapping tests/checkpoint.test.mjs reads: which line this statement
+      // reports on, what the TRUE report of that line is, which detail the
+      // Falsch half changed, and which verb forms the transformation produced.
+      statement,
+      trueStatement,
+      sourceLine: String(sourceLine.de),
+      sourceSentence,
+      sourceSpeaker: speaker,
+      transform: report ? report.engine : null,
+      verbForms: report ? report.verbForms : [],
+      changed,
     });
   }
   return items;
@@ -1101,6 +1522,7 @@ export function buildCheckpoint({ curriculum, checkpoint, pool, seed } = {}) {
     checkpoint,
     rng,
     pool,
+    curriculum,
     level: curriculum.level,
     chapter: chapterLektionen(curriculum, checkpoint),
     earlier: earlierLektionen(curriculum, checkpoint),

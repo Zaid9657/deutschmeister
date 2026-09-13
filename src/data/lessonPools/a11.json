@@ -1,7 +1,7 @@
 {
  "level": "a1.1",
  "builtFrom": "2026-08-24",
- "count": 291,
+ "count": 312,
  "items": [
   {
    "id": "10fc1751-c3af-529f-8796-f8e46bfb1691",
@@ -19,7 +19,8 @@
     "Hallo"
    ],
    "explanationDe": "Buchstabe für Buchstabe: H-A-L-L-O = Hallo.",
-   "hint": "5 Buchstaben."
+   "hint": "5 Buchstaben.",
+   "minLektion": 1
   },
   {
    "id": "extra-a11-l01-01",
@@ -37,7 +38,8 @@
     "zett"
    ],
    "explanationDe": "Den Buchstaben Z sagt man wie Zett.",
-   "hint": null
+   "hint": null,
+   "minLektion": 1
   },
   {
    "id": "dfa7474b-af31-5c93-8031-0bb797360123",
@@ -55,7 +57,8 @@
     "Tschüss"
    ],
    "explanationDe": "Buchstabe für Buchstabe: T-S-C-H-Ü-S-S = Tschüss.",
-   "hint": "7 Buchstaben."
+   "hint": "7 Buchstaben.",
+   "minLektion": 1
   },
   {
    "id": "extra-a11-l01-02",
@@ -73,7 +76,8 @@
     "ypsilon"
    ],
    "explanationDe": "Den Buchstaben Y sagt man wie Ypsilon.",
-   "hint": null
+   "hint": null,
+   "minLektion": 1
   },
   {
    "id": "d662cf8b-e87f-5b87-8370-2b0e0feff300",
@@ -91,7 +95,8 @@
     "Danke"
    ],
    "explanationDe": "Buchstabe für Buchstabe: D-A-N-K-E = Danke.",
-   "hint": "5 Buchstaben."
+   "hint": "5 Buchstaben.",
+   "minLektion": 1
   },
   {
    "id": "f8396a37-3e46-5a06-8eea-ba9872d7e064",
@@ -109,7 +114,8 @@
     "Bitte"
    ],
    "explanationDe": "Buchstabe für Buchstabe: B-I-T-T-E = Bitte.",
-   "hint": "5 Buchstaben."
+   "hint": "5 Buchstaben.",
+   "minLektion": 1
   },
   {
    "id": "extra-a11-l01-04",
@@ -130,7 +136,8 @@
     "H A L L O"
    ],
    "explanationDe": "Beim Buchstabieren sagt man jeden Buchstaben einzeln.",
-   "hint": null
+   "hint": null,
+   "minLektion": 1
   },
   {
    "id": "2488cb0f-ea25-5dae-85d8-fea6ed13b2f3",
@@ -148,7 +155,8 @@
     "Entschuldigung"
    ],
    "explanationDe": "Buchstabe für Buchstabe: E-N-T-S-C-H-U-L-D-I-G-U-N-G = Entschuldigung.",
-   "hint": "14 Buchstaben."
+   "hint": "14 Buchstaben.",
+   "minLektion": 1
   },
   {
    "id": "extra-a11-l01-05",
@@ -169,7 +177,8 @@
     "T S C H Ü S S"
    ],
    "explanationDe": "Tschüss buchstabiert man T-S-C-H-Ü-S-S.",
-   "hint": null
+   "hint": null,
+   "minLektion": 1
   },
   {
    "id": "61b961a8-1c5a-59b9-8b63-430a94714181",
@@ -187,7 +196,8 @@
     "Willkommen"
    ],
    "explanationDe": "Buchstabe für Buchstabe: W-I-L-L-K-O-M-M-E-N = Willkommen.",
-   "hint": "10 Buchstaben."
+   "hint": "10 Buchstaben.",
+   "minLektion": 1
   },
   {
    "id": "448a9516-9d53-5c58-8f77-9ae1e60d9363",
@@ -205,7 +215,8 @@
     "Gruß"
    ],
    "explanationDe": "Buchstabe für Buchstabe: G-R-U-ß = Gruß.",
-   "hint": "4 Buchstaben."
+   "hint": "4 Buchstaben.",
+   "minLektion": 1
   },
   {
    "id": "9d61145f-8a24-5b5a-85e3-6cb9dfc99315",
@@ -223,7 +234,8 @@
     "heißen"
    ],
    "explanationDe": "Buchstabe für Buchstabe: H-E-I-ß-E-N = heißen.",
-   "hint": "6 Buchstaben."
+   "hint": "6 Buchstaben.",
+   "minLektion": 1
   },
   {
    "id": "8bb13847-96f2-5671-8c3e-a8e40d6ad1eb",
@@ -241,7 +253,8 @@
     "buchstabieren"
    ],
    "explanationDe": "Buchstabe für Buchstabe: B-U-C-H-S-T-A-B-I-E-R-E-N = buchstabieren.",
-   "hint": "13 Buchstaben."
+   "hint": "13 Buchstaben.",
+   "minLektion": 1
   },
   {
    "id": "extra-a11-l01-09",
@@ -260,7 +273,8 @@
     "guten morgen"
    ],
    "explanationDe": "Am Morgen grüßt man mit Guten Morgen.",
-   "hint": null
+   "hint": null,
+   "minLektion": 1
   },
   {
    "id": "1d19c92e-e77d-5f3f-8e68-0cfd0223e650",
@@ -278,7 +292,8 @@
     "Buchstabe"
    ],
    "explanationDe": "Buchstabe für Buchstabe: B-U-C-H-S-T-A-B-E = Buchstabe.",
-   "hint": "9 Buchstaben."
+   "hint": "9 Buchstaben.",
+   "minLektion": 1
   },
   {
    "id": "extra-a11-l01-10",
@@ -297,7 +312,8 @@
     "auf wiedersehen"
    ],
    "explanationDe": "Zu Frau Kaya sagt man förmlich: Auf Wiedersehen.",
-   "hint": null
+   "hint": null,
+   "minLektion": 1
   },
   {
    "id": "9f22442a-a212-57af-8f9f-fd3c30231a4e",
@@ -315,7 +331,8 @@
     "Vorname"
    ],
    "explanationDe": "Buchstabe für Buchstabe: V-O-R-N-A-M-E = Vorname.",
-   "hint": "7 Buchstaben."
+   "hint": "7 Buchstaben.",
+   "minLektion": 2
   },
   {
    "id": "3befc1a5-09d9-5c0e-8f59-67c00b247ffa",
@@ -333,7 +350,8 @@
     "Nachname"
    ],
    "explanationDe": "Buchstabe für Buchstabe: N-A-C-H-N-A-M-E = Nachname.",
-   "hint": "8 Buchstaben."
+   "hint": "8 Buchstaben.",
+   "minLektion": 2
   },
   {
    "id": "85386a42-7cb4-5293-8a1b-fb8a5bb8e494",
@@ -354,7 +372,8 @@
     "scharfes s"
    ],
    "explanationDe": "Der Buchstabe ß heißt Eszett.",
-   "hint": "Der Name des Buchstaben, nicht der Laut."
+   "hint": "Der Name des Buchstaben, nicht der Laut.",
+   "minLektion": 3
   },
   {
    "id": "eb59458f-62a5-539c-805e-5e94744b68cc",
@@ -373,7 +392,8 @@
     "ypsilon"
    ],
    "explanationDe": "Der Buchstabe Y heißt Ypsilon.",
-   "hint": "Der Name des Buchstaben, nicht der Laut."
+   "hint": "Der Name des Buchstaben, nicht der Laut.",
+   "minLektion": 3
   },
   {
    "id": "23520fbd-d64b-5992-838d-6c6f27c7e999",
@@ -394,7 +414,8 @@
     "jott"
    ],
    "explanationDe": "Der Buchstabe J heißt Jot.",
-   "hint": "Der Name des Buchstaben, nicht der Laut."
+   "hint": "Der Name des Buchstaben, nicht der Laut.",
+   "minLektion": null
   },
   {
    "id": "ff1f6816-195c-5bf3-846d-9f904ef8c7cd",
@@ -413,7 +434,8 @@
     "vau"
    ],
    "explanationDe": "Der Buchstabe V heißt Vau.",
-   "hint": "Der Name des Buchstaben, nicht der Laut."
+   "hint": "Der Name des Buchstaben, nicht der Laut.",
+   "minLektion": 3
   },
   {
    "id": "559f4c15-815e-5d09-8929-f19548ef12cb",
@@ -432,7 +454,8 @@
     "zett"
    ],
    "explanationDe": "Der Buchstabe Z heißt Zett.",
-   "hint": "Der Name des Buchstaben, nicht der Laut."
+   "hint": "Der Name des Buchstaben, nicht der Laut.",
+   "minLektion": 3
   },
   {
    "id": "0eb1a415-1bd6-5983-8951-b33d16ebb054",
@@ -450,7 +473,8 @@
     "der Beruf"
    ],
    "explanationDe": "der Beruf — B-E-R-U-F.",
-   "hint": "der, die oder das?"
+   "hint": "der, die oder das?",
+   "minLektion": 2
   },
   {
    "id": "74f91cf4-e8b5-5ee1-887a-84e6370ac670",
@@ -468,7 +492,8 @@
     "die Adresse"
    ],
    "explanationDe": "die Adresse — A-D-R-E-S-S-E.",
-   "hint": "der, die oder das?"
+   "hint": "der, die oder das?",
+   "minLektion": 2
   },
   {
    "id": "92ac55de-fb60-5f58-8698-7e85444b2255",
@@ -486,7 +511,8 @@
     "die Telefonnummer"
    ],
    "explanationDe": "die Telefonnummer — T-E-L-E-F-O-N-N-U-M-M-E-R.",
-   "hint": "der, die oder das?"
+   "hint": "der, die oder das?",
+   "minLektion": 2
   },
   {
    "id": "cbee2a2c-2b4a-5d9b-88d1-1b5bc64f3294",
@@ -504,7 +530,8 @@
     "das Formular"
    ],
    "explanationDe": "das Formular — F-O-R-M-U-L-A-R.",
-   "hint": "der, die oder das?"
+   "hint": "der, die oder das?",
+   "minLektion": 2
   },
   {
    "id": "32eb463d-1209-5db8-8aee-d227e1d99d62",
@@ -522,7 +549,8 @@
     "der Wohnort"
    ],
    "explanationDe": "der Wohnort — W-O-H-N-O-R-T.",
-   "hint": "der, die oder das?"
+   "hint": "der, die oder das?",
+   "minLektion": 2
   },
   {
    "id": "2df8b952-57b5-54ef-8c10-4a0d965d9115",
@@ -544,7 +572,8 @@
     "Danke"
    ],
    "explanationDe": "Danke — D-A-N-K-E.",
-   "hint": "Achte auf Doppelbuchstaben, Umlaute und ß."
+   "hint": "Achte auf Doppelbuchstaben, Umlaute und ß.",
+   "minLektion": 1
   },
   {
    "id": "87e8f16d-a3fa-5012-8d47-373e6b16f736",
@@ -566,7 +595,8 @@
     "Vorname"
    ],
    "explanationDe": "Vorname — V-O-R-N-A-M-E.",
-   "hint": "Achte auf Doppelbuchstaben, Umlaute und ß."
+   "hint": "Achte auf Doppelbuchstaben, Umlaute und ß.",
+   "minLektion": 2
   },
   {
    "id": "b08c9136-4135-57f2-89d8-c1eabb28ef77",
@@ -589,7 +619,8 @@
     "Telefonnummer"
    ],
    "explanationDe": "Telefonnummer — T-E-L-E-F-O-N-N-U-M-M-E-R.",
-   "hint": "Achte auf Doppelbuchstaben, Umlaute und ß."
+   "hint": "Achte auf Doppelbuchstaben, Umlaute und ß.",
+   "minLektion": 2
   },
   {
    "id": "extra-a11-l01-03",
@@ -608,7 +639,8 @@
     "scharfes S"
    ],
    "explanationDe": "Der Buchstabe ß heißt Eszett oder scharfes S.",
-   "hint": null
+   "hint": null,
+   "minLektion": 1
   },
   {
    "id": "extra-a11-l01-06",
@@ -626,7 +658,8 @@
    ],
    "explanationDe": "Höflich zu Frau Kaya: Ihnen mit großem I.",
    "hint": null,
-   "caseSensitive": true
+   "caseSensitive": true,
+   "minLektion": 1
   },
   {
    "id": "extra-a11-l01-07",
@@ -644,7 +677,8 @@
     "Ich heiße Ana"
    ],
    "explanationDe": "heißen: ich heiße, du heißt.",
-   "hint": null
+   "hint": null,
+   "minLektion": 1
   },
   {
    "id": "extra-a11-l01-08",
@@ -662,7 +696,8 @@
     "Guten Tag, Frau Kaya"
    ],
    "explanationDe": "Der Gruß heißt Guten Tag, nicht Gute Tag.",
-   "hint": null
+   "hint": null,
+   "minLektion": 1
   },
   {
    "id": "f2555a1b-d961-4a7f-b185-a621309d3649",
@@ -681,7 +716,8 @@
    "answer": "Der",
    "accepted": [],
    "explanationDe": "Tisch ist maskulin.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "c68e4835-4ac3-4cc6-9372-3b67f4a09daf",
@@ -702,7 +738,8 @@
     "Die"
    ],
    "explanationDe": "Weibliche Personen sind feminin = die.",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "fbc025da-31e9-44c1-9191-aab034a4e538",
@@ -723,7 +760,8 @@
     "Der"
    ],
    "explanationDe": "Männliche Personen sind maskulin = der.",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "extra-a11-l05-01",
@@ -741,7 +779,8 @@
     "die"
    ],
    "explanationDe": "die Tafel ist feminin.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "extra-a11-l05-02",
@@ -750,16 +789,17 @@
    "stage": 4,
    "difficulty": 1,
    "order": 52,
-   "questionDe": "___ Schere liegt hier. (bestimmter Artikel)",
-   "questionEn": "The scissors are here — die Schere is singular in German.",
+   "questionDe": "Hier ist ___ Schere. (bestimmter Artikel)",
+   "questionEn": "Here are the scissors — die Schere is singular in German.",
    "options": null,
-   "answer": "Die",
+   "answer": "die",
    "accepted": [
-    "Die",
-    "die"
+    "die",
+    "Die"
    ],
    "explanationDe": "die Schere ist feminin und Singular.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "extra-a11-l05-03",
@@ -777,7 +817,8 @@
     "das"
    ],
    "explanationDe": "das Lineal ist neutral.",
-   "hint": null
+   "hint": null,
+   "minLektion": 6
   },
   {
    "id": "extra-a11-l05-04",
@@ -795,7 +836,8 @@
     "der"
    ],
    "explanationDe": "der Stift ist maskulin.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "extra-a11-l05-05",
@@ -804,8 +846,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 55,
-   "questionDe": "___ Tür ist offen. (bestimmter Artikel)",
-   "questionEn": "The door is open.",
+   "questionDe": "___ Tür ist weiß. (bestimmter Artikel)",
+   "questionEn": "The door is white.",
    "options": null,
    "answer": "Die",
    "accepted": [
@@ -813,7 +855,8 @@
     "die"
    ],
    "explanationDe": "die Tür ist feminin.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "extra-a11-l05-07",
@@ -822,8 +865,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 57,
-   "questionDe": "___ Schlüssel ist klein. (bestimmter Artikel)",
-   "questionEn": "The key is small.",
+   "questionDe": "___ Schlüssel ist gelb. (bestimmter Artikel)",
+   "questionEn": "The key is yellow.",
    "options": null,
    "answer": "Der",
    "accepted": [
@@ -831,7 +874,8 @@
     "der"
    ],
    "explanationDe": "der Schlüssel ist maskulin.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "extra-a11-l05-08",
@@ -849,7 +893,8 @@
     "Das"
    ],
    "explanationDe": "Erst ein Heft, dann bekannt: das Heft.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "extra-a11-l05-11",
@@ -867,7 +912,8 @@
     "das"
    ],
    "explanationDe": "das Fenster ist neutral.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "extra-a11-l05-13",
@@ -885,7 +931,8 @@
     "der"
    ],
    "explanationDe": "der Bleistift ist maskulin.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "extra-a11-l05-14",
@@ -903,7 +950,8 @@
     "das"
    ],
    "explanationDe": "das Buch ist neutral.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "extra-a11-l05-15",
@@ -921,7 +969,8 @@
     "der"
    ],
    "explanationDe": "der Kugelschreiber ist maskulin.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "extra-a11-l05-16",
@@ -939,7 +988,8 @@
     "das"
    ],
    "explanationDe": "das Papier ist neutral.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "e0ac0425-9aea-44f8-8354-7c41cfbcb0d3",
@@ -958,7 +1008,8 @@
    "answer": "die",
    "accepted": [],
    "explanationDe": "Maskulin Singular → die im Plural.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "be8069b8-e189-4fa9-9888-c78e2d51736f",
@@ -977,7 +1028,8 @@
    "answer": "die",
    "accepted": [],
    "explanationDe": "Neutral Singular → die im Plural.",
-   "hint": null
+   "hint": null,
+   "minLektion": 10
   },
   {
    "id": "88087bc2-73f6-5e32-a234-6674fcfff68e",
@@ -994,7 +1046,8 @@
     "Das"
    ],
    "explanationDe": "Auto ist neutral, deshalb das.",
-   "hint": null
+   "hint": null,
+   "minLektion": 10
   },
   {
    "id": "1beeb08a-c03e-5ab8-8969-b3aec12ef2e5",
@@ -1011,7 +1064,8 @@
     "Der"
    ],
    "explanationDe": "Computer ist maskulin, deshalb der.",
-   "hint": null
+   "hint": null,
+   "minLektion": 6
   },
   {
    "id": "extra-a11-l05-06",
@@ -1029,7 +1083,8 @@
     "Das"
    ],
    "explanationDe": "Wir wissen, welches Buch gemeint ist: das Wörterbuch.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "extra-a11-l05-09",
@@ -1047,7 +1102,8 @@
     "Die Schere ist hier"
    ],
    "explanationDe": "Bekannt und feminin: die Schere, nicht ein Schere.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "extra-a11-l05-10",
@@ -1065,7 +1121,8 @@
     "Das Bild ist gelb"
    ],
    "explanationDe": "das Bild ist neutral, Verb auf Platz zwei.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "extra-a11-l05-12",
@@ -1083,7 +1140,8 @@
     "Die Wohnung ist hier"
    ],
    "explanationDe": "Wohnung ist feminin: die Wohnung.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "1ce4f35f-6067-4fdf-a16b-689bb598fd67",
@@ -1104,7 +1162,8 @@
     "ein"
    ],
    "explanationDe": "Stuhl = maskulin → ein.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "404c4a60-3448-46bf-99ed-3405eda0bd0f",
@@ -1125,7 +1184,8 @@
     "eine"
    ],
    "explanationDe": "Schwester = feminin → eine.",
-   "hint": null
+   "hint": null,
+   "minLektion": 3
   },
   {
    "id": "5d184615-c23d-44f3-96f4-275878ca8109",
@@ -1146,7 +1206,8 @@
     "ein"
    ],
    "explanationDe": "Bild = neutral → ein.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "51c0db3b-9a30-4ccb-8c6c-d1361eec51da",
@@ -1167,7 +1228,8 @@
     "ein"
    ],
    "explanationDe": "Auto = neutral → ein.",
-   "hint": null
+   "hint": null,
+   "minLektion": 10
   },
   {
    "id": "extra-a11-l06-01",
@@ -1184,7 +1246,8 @@
     "ein"
    ],
    "explanationDe": "das Büro ist neutral: ein Büro.",
-   "hint": null
+   "hint": null,
+   "minLektion": 6
   },
   {
    "id": "extra-a11-l06-02",
@@ -1201,7 +1264,8 @@
     "eine"
    ],
    "explanationDe": "die Kollegin ist feminin: eine Kollegin.",
-   "hint": null
+   "hint": null,
+   "minLektion": 6
   },
   {
    "id": "extra-a11-l06-03",
@@ -1218,7 +1282,8 @@
     "ein"
    ],
    "explanationDe": "das Telefon ist neutral: ein Telefon.",
-   "hint": null
+   "hint": null,
+   "minLektion": 6
   },
   {
    "id": "extra-a11-l06-05",
@@ -1235,7 +1300,8 @@
     "eine"
    ],
    "explanationDe": "die E-Mail-Adresse ist feminin: eine E-Mail-Adresse.",
-   "hint": null
+   "hint": null,
+   "minLektion": 6
   },
   {
    "id": "extra-a11-l06-07",
@@ -1252,7 +1318,8 @@
     "eine"
    ],
    "explanationDe": "die Firma ist feminin: eine Firma.",
-   "hint": null
+   "hint": null,
+   "minLektion": 6
   },
   {
    "id": "05649f0e-7308-50dd-8593-ac61018ef7e2",
@@ -1269,7 +1336,8 @@
     "ein"
    ],
    "explanationDe": "Fenster ist neutral, deshalb ein.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "bb5c0422-921b-5e81-86fc-aa36c456ae8a",
@@ -1286,7 +1354,8 @@
     "eine"
    ],
    "explanationDe": "Tasche ist feminin, deshalb eine.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "4aae7de0-bb31-5533-ac24-027af7598a19",
@@ -1303,7 +1372,8 @@
     "ein"
    ],
    "explanationDe": "Handy ist neutral, deshalb ein, wie bei maskulinen Nomen.",
-   "hint": null
+   "hint": null,
+   "minLektion": 6
   },
   {
    "id": "1ed2c78f-8f65-52e3-9e63-97f2a5b0663b",
@@ -1321,7 +1391,8 @@
     "Ich bin Lehrerin"
    ],
    "explanationDe": "Deutsch lässt den Artikel vor einem Beruf ganz weg — kein ein, keine eine.",
-   "hint": null
+   "hint": null,
+   "minLektion": 2
   },
   {
    "id": "f12e69ee-d9c6-54f1-a2e7-b93304d4713c",
@@ -1338,7 +1409,8 @@
     "ein"
    ],
    "explanationDe": "Computer ist maskulin, deshalb ein.",
-   "hint": null
+   "hint": null,
+   "minLektion": 6
   },
   {
    "id": "extra-a11-l06-04",
@@ -1355,7 +1427,8 @@
     "einen"
    ],
    "explanationDe": "Nach brauchen wird maskulin ein zu einen.",
-   "hint": null
+   "hint": null,
+   "minLektion": 6
   },
   {
    "id": "extra-a11-l06-06",
@@ -1372,7 +1445,8 @@
     "eine"
    ],
    "explanationDe": "die Handynummer ist feminin: eine Handynummer.",
-   "hint": null
+   "hint": null,
+   "minLektion": 6
   },
   {
    "id": "extra-a11-l06-08",
@@ -1389,7 +1463,8 @@
     "eine"
    ],
    "explanationDe": "die Pause ist feminin: eine Pause.",
-   "hint": null
+   "hint": null,
+   "minLektion": 6
   },
   {
    "id": "extra-a11-l06-09",
@@ -1406,7 +1481,8 @@
     "eine"
    ],
    "explanationDe": "die Verkäuferin ist feminin: eine Verkäuferin.",
-   "hint": null
+   "hint": null,
+   "minLektion": 6
   },
   {
    "id": "extra-a11-l06-10",
@@ -1424,7 +1500,8 @@
     "Ich brauche ein Handy"
    ],
    "explanationDe": "das Handy ist neutral: ein Handy bleibt ein.",
-   "hint": null
+   "hint": null,
+   "minLektion": 6
   },
   {
    "id": "extra-a11-l06-11",
@@ -1442,7 +1519,8 @@
     "Das ist eine Kollegin im Büro"
    ],
    "explanationDe": "die Kollegin ist feminin: eine Kollegin.",
-   "hint": null
+   "hint": null,
+   "minLektion": 6
   },
   {
    "id": "extra-a11-l04-01",
@@ -1460,7 +1538,8 @@
     "die"
    ],
    "explanationDe": "die Lampe ist feminin.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "extra-a11-l04-02",
@@ -1478,7 +1557,8 @@
     "der"
    ],
    "explanationDe": "der Rucksack ist maskulin.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "extra-a11-l04-03",
@@ -1496,7 +1576,8 @@
     "die"
    ],
    "explanationDe": "die Uhr ist feminin.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "extra-a11-l04-04",
@@ -1514,7 +1595,8 @@
     "der"
    ],
    "explanationDe": "der Tisch ist maskulin.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "extra-a11-l04-09",
@@ -1532,7 +1614,8 @@
     "der"
    ],
    "explanationDe": "der Flohmarkt ist maskulin.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "extra-a11-l04-11",
@@ -1550,7 +1633,8 @@
     "der"
    ],
    "explanationDe": "der Stuhl ist maskulin.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "extra-a11-l04-13",
@@ -1568,7 +1652,8 @@
     "die"
    ],
    "explanationDe": "die Uhr ist feminin.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "extra-a11-l04-14",
@@ -1586,7 +1671,8 @@
     "das"
    ],
    "explanationDe": "Regal ist neutral. Man sagt: das Regal.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "extra-a11-l04-15",
@@ -1604,7 +1690,46 @@
     "die"
    ],
    "explanationDe": "die Tasche ist feminin.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-19",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 59,
+   "questionDe": "Hier ist ___ Tisch. (der, die oder das?)",
+   "questionEn": "Here is the table.",
+   "options": null,
+   "answer": "der",
+   "accepted": [
+    "der",
+    "Der"
+   ],
+   "explanationDe": "Tisch ist maskulin: der Tisch.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-20",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 60,
+   "questionDe": "___ Rucksack ist gut. (der, die oder das?)",
+   "questionEn": "The rucksack is good.",
+   "options": null,
+   "answer": "Der",
+   "accepted": [
+    "Der",
+    "der"
+   ],
+   "explanationDe": "Rucksack ist maskulin: der Rucksack.",
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "319b95b6-ca95-5b56-b585-09aaaba51d9c",
@@ -1621,7 +1746,8 @@
     "Die"
    ],
    "explanationDe": "Weibliche Personen sind feminin: die Mutter, die Frau.",
-   "hint": null
+   "hint": null,
+   "minLektion": 9
   },
   {
    "id": "f153c9f2-8ecc-586d-8b69-550edaf75dd1",
@@ -1638,7 +1764,8 @@
     "Der"
    ],
    "explanationDe": "Alkoholische Getränke außer Bier sind maskulin: der Wein, der Whisky.",
-   "hint": null
+   "hint": null,
+   "minLektion": 9
   },
   {
    "id": "extra-a11-l04-05",
@@ -1656,7 +1783,8 @@
     "das"
    ],
    "explanationDe": "Regal ist neutral. Man sagt: das Regal.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "extra-a11-l04-06",
@@ -1674,7 +1802,8 @@
     "die"
    ],
    "explanationDe": "Tasche ist feminin. Man sagt: die Tasche.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "extra-a11-l04-07",
@@ -1692,7 +1821,8 @@
     "der"
    ],
    "explanationDe": "der Preis ist maskulin. Man sagt: der Preis.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "extra-a11-l04-08",
@@ -1710,7 +1840,8 @@
     "Der Stuhl kostet zwölf Euro"
    ],
    "explanationDe": "Das Verb steht auf Platz zwei.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "extra-a11-l04-10",
@@ -1728,7 +1859,8 @@
     "Die Lampe kostet acht Euro"
    ],
    "explanationDe": "die Lampe ist feminin: die Lampe.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "extra-a11-l04-12",
@@ -1746,7 +1878,8 @@
     "Die Uhr kostet zwanzig Euro"
    ],
    "explanationDe": "die Uhr ist feminin, das Verb steht auf Platz zwei.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "extra-a11-l04-16",
@@ -1764,7 +1897,8 @@
     "Das"
    ],
    "explanationDe": "Man fragt nach dem Regal: das Regal.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "extra-a11-l04-17",
@@ -1782,7 +1916,8 @@
     "Die Lampe ist teuer"
    ],
    "explanationDe": "Lampe ist feminin: die Lampe.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "extra-a11-l04-18",
@@ -1800,7 +1935,27 @@
     "Die Tasche ist teuer"
    ],
    "explanationDe": "die Tasche ist feminin, das Verb steht auf Platz zwei.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-21",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 61,
+   "questionDe": "___ Tische sind alt. (der, die oder das?)",
+   "questionEn": "The tables are old.",
+   "options": null,
+   "answer": "Die",
+   "accepted": [
+    "Die",
+    "die"
+   ],
+   "explanationDe": "Im Plural haben die Nomen die: die Tische.",
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "extra-a11-l02-09",
@@ -1817,7 +1972,8 @@
     "sieben"
    ],
    "explanationDe": "In Zahlen 7, als Wort: sieben.",
-   "hint": null
+   "hint": null,
+   "minLektion": 2
   },
   {
    "id": "extra-a11-l02-10",
@@ -1834,7 +1990,8 @@
     "drei"
    ],
    "explanationDe": "In Zahlen 3, als Wort: drei.",
-   "hint": null
+   "hint": null,
+   "minLektion": 2
   },
   {
    "id": "extra-a11-l02-11",
@@ -1851,7 +2008,8 @@
     "acht"
    ],
    "explanationDe": "In Zahlen 8, als Wort: acht.",
-   "hint": null
+   "hint": null,
+   "minLektion": 2
   },
   {
    "id": "extra-a11-l02-12",
@@ -1868,7 +2026,8 @@
     "zehn"
    ],
    "explanationDe": "In Zahlen 10, als Wort: zehn.",
-   "hint": null
+   "hint": null,
+   "minLektion": 2
   },
   {
    "id": "dd1c3d60-8ae7-4c94-8990-19633dcba36f",
@@ -1889,7 +2048,8 @@
     "Sie"
    ],
    "explanationDe": "Mutter = weiblich → sie.",
-   "hint": null
+   "hint": null,
+   "minLektion": 3
   },
   {
    "id": "extra-a11-l03-01",
@@ -1907,7 +2067,8 @@
     "er"
    ],
    "explanationDe": "der Bruder wird zu er.",
-   "hint": null
+   "hint": null,
+   "minLektion": 3
   },
   {
    "id": "extra-a11-l03-02",
@@ -1925,7 +2086,8 @@
     "sie"
    ],
    "explanationDe": "die Schwester wird zu sie.",
-   "hint": null
+   "hint": null,
+   "minLektion": 3
   },
   {
    "id": "extra-a11-l03-03",
@@ -1943,7 +2105,8 @@
     "es"
    ],
    "explanationDe": "das Kind wird zu es.",
-   "hint": null
+   "hint": null,
+   "minLektion": 3
   },
   {
    "id": "extra-a11-l03-08",
@@ -1961,7 +2124,64 @@
    ],
    "explanationDe": "Sie mit großem S ist die höfliche Form.",
    "hint": null,
-   "caseSensitive": true
+   "caseSensitive": true,
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-09",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 39,
+   "questionDe": "Wie alt ist das Baby? — ___ ist noch jung.",
+   "questionEn": "How old is the baby? — It is still young.",
+   "options": null,
+   "answer": "Es",
+   "accepted": [
+    "Es",
+    "es"
+   ],
+   "explanationDe": "das Baby ist neutral, darum es.",
+   "hint": null,
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-13",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 43,
+   "questionDe": "Ana, ___ bist jung, und ich bin alt.",
+   "questionEn": "Ana, you are young, and I am old.",
+   "options": null,
+   "answer": "du",
+   "accepted": [
+    "du"
+   ],
+   "explanationDe": "Eine Freundin sprechen Sie mit du an.",
+   "hint": null,
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-15",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 45,
+   "questionDe": "Das Kind von meiner Schwester ist ein Baby. ___ ist noch jung.",
+   "questionEn": "My sister's child is a baby. It is still young.",
+   "options": null,
+   "answer": "Es",
+   "accepted": [
+    "Es",
+    "es"
+   ],
+   "explanationDe": "das Kind ist neutral, darum es.",
+   "hint": null,
+   "minLektion": 3
   },
   {
    "id": "b19be5e4-48c0-5fad-a8a7-e16bf8e1772f",
@@ -1978,7 +2198,8 @@
     "Sie"
    ],
    "explanationDe": "Die Tasche ist feminin, deshalb wird sie zu sie.",
-   "hint": null
+   "hint": null,
+   "minLektion": 12
   },
   {
    "id": "0ef58eff-0411-5dc0-9115-e607c9648f80",
@@ -1995,7 +2216,8 @@
     "Ich"
    ],
    "explanationDe": "Die sprechende Person benutzt ich.",
-   "hint": null
+   "hint": null,
+   "minLektion": 1
   },
   {
    "id": "4299d5ca-a80e-5528-a6b9-0ac7bee052bb",
@@ -2012,7 +2234,8 @@
     "Ihr"
    ],
    "explanationDe": "Ihr spricht mehrere Personen informell an.",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "extra-a11-l03-04",
@@ -2030,7 +2253,8 @@
     "sie"
    ],
    "explanationDe": "Für mehrere Personen steht sie: die Eltern → sie.",
-   "hint": null
+   "hint": null,
+   "minLektion": 3
   },
   {
    "id": "extra-a11-l03-05",
@@ -2048,7 +2272,8 @@
     "wir"
    ],
    "explanationDe": "Ana und ich – zusammen sind das wir.",
-   "hint": null
+   "hint": null,
+   "minLektion": 3
   },
   {
    "id": "extra-a11-l03-06",
@@ -2065,7 +2290,8 @@
     "spricht"
    ],
    "explanationDe": "Bei er wird das e zu i: er spricht.",
-   "hint": null
+   "hint": null,
+   "minLektion": 3
   },
   {
    "id": "extra-a11-l03-07",
@@ -2083,7 +2309,101 @@
     "Wir kommen aus Marokko"
    ],
    "explanationDe": "Bei wir endet das Verb auf -en.",
-   "hint": null
+   "hint": null,
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-10",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 40,
+   "questionDe": "Meine Schwester und ich wohnen zusammen. ___ sprechen Deutsch.",
+   "questionEn": "My sister and I live together. We speak German.",
+   "options": null,
+   "answer": "Wir",
+   "accepted": [
+    "Wir",
+    "wir"
+   ],
+   "explanationDe": "Meine Schwester und ich sind zwei Personen: wir.",
+   "hint": null,
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-11",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 41,
+   "questionDe": "Lena und Tim, kommt ___ auch aus Marokko?",
+   "questionEn": "Lena and Tim, do you come from Morocco too?",
+   "options": null,
+   "answer": "ihr",
+   "accepted": [
+    "ihr"
+   ],
+   "explanationDe": "Zwei Freunde zusammen: ihr kommt.",
+   "hint": null,
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-12",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 42,
+   "questionDe": "Der Mann von meiner Schwester kommt aus Marokko. ___ spricht Arabisch.",
+   "questionEn": "My sister's husband comes from Morocco. He speaks Arabic.",
+   "options": null,
+   "answer": "Er",
+   "accepted": [
+    "Er",
+    "er"
+   ],
+   "explanationDe": "der Mann ist maskulin, darum er.",
+   "hint": null,
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-14",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 44,
+   "questionDe": "Lena und Tim, sprecht ___ Englisch?",
+   "questionEn": "Lena and Tim, do you speak English?",
+   "options": null,
+   "answer": "ihr",
+   "accepted": [
+    "ihr"
+   ],
+   "explanationDe": "Zwei Personen zusammen: ihr sprecht.",
+   "hint": null,
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-16",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 46,
+   "questionDe": "Mein Bruder und ich sind zusammen hier. ___ sprechen Deutsch.",
+   "questionEn": "My brother and I are here together. We speak German.",
+   "options": null,
+   "answer": "Wir",
+   "accepted": [
+    "Wir",
+    "wir"
+   ],
+   "explanationDe": "Mein Bruder und ich sind zwei Personen: wir.",
+   "hint": null,
+   "minLektion": 3
   },
   {
    "id": "d9887d31-0932-5143-b05e-3f903d659cd9",
@@ -2100,7 +2420,8 @@
     "mein"
    ],
    "explanationDe": "Bruder ist maskulin (der-Wort) → mein, keine Endung.",
-   "hint": null
+   "hint": null,
+   "minLektion": 3
   },
   {
    "id": "46ae02ff-1593-5d9e-9956-bc9fb215b015",
@@ -2118,7 +2439,8 @@
     "sein"
    ],
    "explanationDe": "Auto ist neutral (das-Wort) → sein, keine Endung.",
-   "hint": null
+   "hint": null,
+   "minLektion": 10
   },
   {
    "id": "3bc06ffd-69f5-52b2-bb90-9c38dce7128b",
@@ -2135,7 +2457,8 @@
     "ihre"
    ],
    "explanationDe": "Tasche ist feminin → ihre. ihr bedeutet hier her (sie, Einzahl).",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "210e89f8-2c89-5897-a247-a9bd3d84e4ae",
@@ -2152,7 +2475,8 @@
     "ihre"
    ],
    "explanationDe": "Kinder ist Plural → ihre. ihr bedeutet hier their (sie, Plural).",
-   "hint": null
+   "hint": null,
+   "minLektion": 12
   },
   {
    "id": "3350c4ae-d08b-5a28-8e66-3cb273f39b5e",
@@ -2169,7 +2493,8 @@
     "unser"
    ],
    "explanationDe": "Land ist neutral → unser, keine Endung.",
-   "hint": null
+   "hint": null,
+   "minLektion": 12
   },
   {
    "id": "a85206a6-d5c3-5a86-8695-bfe661b1dd20",
@@ -2186,7 +2511,8 @@
     "dein"
    ],
    "explanationDe": "Schlüssel ist maskulin → dein, keine Endung.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "b269d424-9f5f-5bfc-9703-50b0c0b5e5a4",
@@ -2207,7 +2533,8 @@
    "accepted": [],
    "explanationDe": "Adresse ist feminin → Ihre, der Possessivartikel für Sie. Ihr hat keine Endung (falsch für ein feminines Nomen); seine und eure gehören zu anderen Besitzern.",
    "hint": null,
-   "caseSensitive": true
+   "caseSensitive": true,
+   "minLektion": 2
   },
   {
    "id": "41e1c650-118c-58a1-a6a9-ec54e540808c",
@@ -2227,7 +2554,8 @@
    "answer": "sein",
    "accepted": [],
    "explanationDe": "Buch ist neutral → sein, keine Endung. es benutzt sein, genauso wie er.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "extra-a11-l12-01",
@@ -2245,7 +2573,8 @@
     "mein"
    ],
    "explanationDe": "der Geburtstag ist maskulin: mein ohne Endung.",
-   "hint": null
+   "hint": null,
+   "minLektion": 12
   },
   {
    "id": "extra-a11-l12-02",
@@ -2263,7 +2592,8 @@
     "deine"
    ],
    "explanationDe": "die Party ist feminin: deine mit -e.",
-   "hint": null
+   "hint": null,
+   "minLektion": 12
   },
   {
    "id": "extra-a11-l12-03",
@@ -2281,7 +2611,8 @@
     "unser"
    ],
    "explanationDe": "das Fest ist neutral: unser ohne Endung.",
-   "hint": null
+   "hint": null,
+   "minLektion": 12
   },
   {
    "id": "extra-a11-l12-04",
@@ -2290,8 +2621,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 124,
-   "questionDe": "___ Geschenk ist klein. (er)",
-   "questionEn": "His present is small.",
+   "questionDe": "___ Geschenk ist schön. (er)",
+   "questionEn": "His present is lovely.",
    "options": null,
    "answer": "Sein",
    "accepted": [
@@ -2299,7 +2630,8 @@
     "sein"
    ],
    "explanationDe": "das Geschenk ist neutral: sein ohne Endung.",
-   "hint": null
+   "hint": null,
+   "minLektion": 12
   },
   {
    "id": "extra-a11-l12-05",
@@ -2317,7 +2649,8 @@
     "meine"
    ],
    "explanationDe": "Im Plural steht meine mit -e.",
-   "hint": null
+   "hint": null,
+   "minLektion": 12
   },
   {
    "id": "extra-a11-l12-06",
@@ -2335,7 +2668,8 @@
     "deine"
    ],
    "explanationDe": "die Mama ist feminin: deine Mama.",
-   "hint": null
+   "hint": null,
+   "minLektion": 12
   },
   {
    "id": "extra-a11-l12-07",
@@ -2353,7 +2687,8 @@
     "mein"
    ],
    "explanationDe": "der Papa ist maskulin: mein Papa.",
-   "hint": null
+   "hint": null,
+   "minLektion": 12
   },
   {
    "id": "extra-a11-l12-11",
@@ -2362,15 +2697,16 @@
    "stage": 4,
    "difficulty": 1,
    "order": 131,
-   "questionDe": "Im Januar ist ___ Geburtstag. (er)",
-   "questionEn": "His birthday is in January.",
+   "questionDe": "Im Mai ist ___ Geburtstag. (er)",
+   "questionEn": "His birthday is in May.",
    "options": null,
    "answer": "sein",
    "accepted": [
     "sein"
    ],
    "explanationDe": "Der Besitzer ist er: sein Geburtstag.",
-   "hint": null
+   "hint": null,
+   "minLektion": 12
   },
   {
    "id": "9f8d70b7-2a9b-5c6c-8159-670b6cfd02c6",
@@ -2388,7 +2724,8 @@
     "mein"
    ],
    "explanationDe": "Vater ist maskulin → mein, keine Endung.",
-   "hint": null
+   "hint": null,
+   "minLektion": 3
   },
   {
    "id": "388af6b1-9be8-5418-9d0f-1480baaa31b0",
@@ -2406,7 +2743,8 @@
     "meine"
    ],
    "explanationDe": "Freundin ist feminin → meine.",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "5e65eab6-eba1-5797-beb8-e34750c5ceb1",
@@ -2423,7 +2761,8 @@
     "Das ist mein Bruder"
    ],
    "explanationDe": "das + ist + mein Bruder (Bruder ist maskulin, keine Endung).",
-   "hint": null
+   "hint": null,
+   "minLektion": 3
   },
   {
    "id": "8908dc09-b16b-57e4-b056-e0f3060766c8",
@@ -2440,7 +2779,8 @@
     "Das ist seine Schwester"
    ],
    "explanationDe": "das + ist + seine Schwester (Schwester ist feminin → seine, auch wenn der Besitzer männlich ist).",
-   "hint": null
+   "hint": null,
+   "minLektion": 3
   },
   {
    "id": "d09ae745-12d0-5a21-9648-88fc36a55de1",
@@ -2457,7 +2797,8 @@
     "Das ist unser Auto"
    ],
    "explanationDe": "das + ist + unser Auto (Auto ist neutral, keine Endung).",
-   "hint": null
+   "hint": null,
+   "minLektion": 10
   },
   {
    "id": "83bab298-abc5-5e7f-a132-1bb60a689b8a",
@@ -2475,7 +2816,8 @@
    ],
    "explanationDe": "das + ist + Ihre Adresse (Adresse ist feminin → Ihre; großes I markiert die Höflichkeitsform).",
    "hint": null,
-   "caseSensitive": true
+   "caseSensitive": true,
+   "minLektion": 2
   },
   {
    "id": "5ff6226a-1bd0-5e03-9643-7bb99ec7cccc",
@@ -2492,7 +2834,8 @@
     "ihr"
    ],
    "explanationDe": "Vater ist maskulin → ihr, keine Endung. ihr bedeutet hier their.",
-   "hint": null
+   "hint": null,
+   "minLektion": 3
   },
   {
    "id": "extra-a11-l12-08",
@@ -2510,7 +2853,8 @@
    ],
    "caseSensitive": true,
    "explanationDe": "Höflich zu Frau Kaya: Ihr mit großem I.",
-   "hint": null
+   "hint": null,
+   "minLektion": 12
   },
   {
    "id": "extra-a11-l12-09",
@@ -2528,7 +2872,8 @@
    ],
    "caseSensitive": true,
    "explanationDe": "Zu Frau Kaya gehört Ihr mit großem I.",
-   "hint": null
+   "hint": null,
+   "minLektion": 12
   },
   {
    "id": "extra-a11-l12-10",
@@ -2546,7 +2891,8 @@
     "ihre"
    ],
    "explanationDe": "sie im Plural wird zu ihre, mit -e.",
-   "hint": null
+   "hint": null,
+   "minLektion": 12
   },
   {
    "id": "extra-a11-l12-12",
@@ -2564,7 +2910,8 @@
     "mein"
    ],
    "explanationDe": "der Bruder ist maskulin: mein Bruder.",
-   "hint": null
+   "hint": null,
+   "minLektion": 12
   },
   {
    "id": "extra-a11-l12-13",
@@ -2582,7 +2929,8 @@
     "Mein Geburtstag ist im Mai"
    ],
    "explanationDe": "Possessivartikel vor dem Nomen, Verb auf Platz zwei.",
-   "hint": null
+   "hint": null,
+   "minLektion": 12
   },
   {
    "id": "extra-a11-l12-14",
@@ -2600,7 +2948,8 @@
     "Wir feiern unser Fest"
    ],
    "explanationDe": "das Fest bleibt neutral: unser Fest.",
-   "hint": null
+   "hint": null,
+   "minLektion": 12
   },
   {
    "id": "extra-a11-l12-15",
@@ -2618,7 +2967,8 @@
     "Das ist meine Party"
    ],
    "explanationDe": "die Party ist feminin, also meine Party.",
-   "hint": null
+   "hint": null,
+   "minLektion": 12
   },
   {
    "id": "extra-a11-l12-16",
@@ -2637,7 +2987,8 @@
    ],
    "caseSensitive": true,
    "explanationDe": "Ihr Papa: maskulin ohne -e, höfliches Ihr mit großem I.",
-   "hint": null
+   "hint": null,
+   "minLektion": 12
   },
   {
    "id": "extra-a11-l12-17",
@@ -2655,7 +3006,8 @@
     "Schönen"
    ],
    "explanationDe": "Der gute Wunsch zum Abschied: Schönen Tag noch!",
-   "hint": null
+   "hint": null,
+   "minLektion": 12
   },
   {
    "id": "extra-a11-l12-18",
@@ -2673,7 +3025,8 @@
     "Ich grüße deine Mama"
    ],
    "explanationDe": "die Mama ist feminin: deine Mama mit -e.",
-   "hint": null
+   "hint": null,
+   "minLektion": 12
   },
   {
    "id": "25fe0c36-72d2-47f1-928f-b91d70481b29",
@@ -2695,7 +3048,8 @@
     "wohne"
    ],
    "explanationDe": "ich + -e.",
-   "hint": null
+   "hint": null,
+   "minLektion": 2
   },
   {
    "id": "ea61494a-4f8e-4851-a5f6-1fa8a95364ab",
@@ -2717,7 +3071,8 @@
     "lernst"
    ],
    "explanationDe": "du + -st.",
-   "hint": null
+   "hint": null,
+   "minLektion": 11
   },
   {
    "id": "8f32fa13-901a-48f3-b07a-090b4bf980f4",
@@ -2739,7 +3094,8 @@
     "spielt"
    ],
    "explanationDe": "er + -t.",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "602e3a32-2024-4fb8-8717-11ad8773aa78",
@@ -2761,7 +3117,8 @@
     "lernen"
    ],
    "explanationDe": "wir + -en.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "e7eb593b-0250-45d6-973c-d5b88fe2c7a4",
@@ -2783,7 +3140,8 @@
     "machst"
    ],
    "explanationDe": "du + -st.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "85084f27-567e-414e-9725-0b46aee3b6c4",
@@ -2805,7 +3163,8 @@
     "spielt"
    ],
    "explanationDe": "ihr + -t.",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "58dd25ce-36c5-4e52-a4cc-8ebddbdd8da0",
@@ -2827,7 +3186,8 @@
     "arbeitest"
    ],
    "explanationDe": "Stamm endet auf -t, deshalb -e- einfügen: arbeitest.",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "23cda354-67fa-4f71-8753-af3b48d540ed",
@@ -2849,7 +3209,8 @@
     "heißt"
    ],
    "explanationDe": "Stamm endet auf -ß, deshalb bekommt die du-Form nur -t: heißt.",
-   "hint": null
+   "hint": null,
+   "minLektion": 1
   },
   {
    "id": "extra-a11-l07-01",
@@ -2866,7 +3227,8 @@
     "höre"
    ],
    "explanationDe": "Bei ich ist die Endung -e: ich höre.",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "extra-a11-l07-02",
@@ -2883,7 +3245,8 @@
     "spielt"
    ],
    "explanationDe": "Bei sie ist die Endung -t: sie spielt.",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "extra-a11-l07-04",
@@ -2900,7 +3263,8 @@
     "kocht"
    ],
    "explanationDe": "Bei er ist die Endung -t: er kocht.",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "extra-a11-l07-06",
@@ -2917,7 +3281,8 @@
     "lese"
    ],
    "explanationDe": "Bei ich ist die Endung -e: ich lese.",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "02374938-9977-52c2-8828-2929e8075633",
@@ -2934,7 +3299,8 @@
     "spiele"
    ],
    "explanationDe": "Ich-Form: -en von spielen entfernen, -e anhängen: spiele.",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "5ae0746e-85ff-5cd9-a807-f3487450694c",
@@ -2951,7 +3317,8 @@
     "wohnst"
    ],
    "explanationDe": "Du-Form: wohn + st = wohnst.",
-   "hint": null
+   "hint": null,
+   "minLektion": 2
   },
   {
    "id": "877e964c-ed46-512b-ad1a-8b390a459e1d",
@@ -2968,7 +3335,8 @@
     "hören"
    ],
    "explanationDe": "Wir-Form behält den vollen Infinitiv: hören.",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "d8082071-f2e5-5a17-84ff-c7335b4b14bc",
@@ -2985,7 +3353,8 @@
     "arbeiten"
    ],
    "explanationDe": "Plural-sie-Form behält den vollen Infinitiv: arbeiten.",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "10822333-762f-5cf7-a878-3934135461a5",
@@ -3002,7 +3371,8 @@
     "lernt"
    ],
    "explanationDe": "Er-Form: lern + t = lernt.",
-   "hint": null
+   "hint": null,
+   "minLektion": 11
   },
   {
    "id": "1981fa95-43a3-5ac5-87e5-0367f8b1e27f",
@@ -3019,7 +3389,8 @@
     "macht"
    ],
    "explanationDe": "Ihr-Form: mach + t = macht.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "898a0861-f041-509c-84ba-57bf2f027afb",
@@ -3036,7 +3407,8 @@
     "arbeite"
    ],
    "explanationDe": "Ich-Form: arbeit + e = arbeite, kein Extra-Buchstabe nötig.",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "af4fc6ff-5616-5fb8-9ae3-6fa201d36fd3",
@@ -3053,7 +3425,8 @@
     "sagt"
    ],
    "explanationDe": "Ihr-Form: sag + t = sagt.",
-   "hint": null
+   "hint": null,
+   "minLektion": 1
   },
   {
    "id": "62b2c518-9a21-5382-82e6-6efd80e34306",
@@ -3070,7 +3443,8 @@
     "kaufst"
    ],
    "explanationDe": "Du-Form: kauf + st = kaufst.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "4416ce85-3576-5677-9dea-08f332dbdd97",
@@ -3087,7 +3461,8 @@
     "arbeitet"
    ],
    "explanationDe": "Ihr-Form: arbeit + et = arbeitet — ein -e- wird vor -t eingefügt.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "3d87b070-9689-58e0-9f0a-66393ce1b66a",
@@ -3104,7 +3479,8 @@
     "fragt"
    ],
    "explanationDe": "Er-Form: frag + t = fragt.",
-   "hint": null
+   "hint": null,
+   "minLektion": 1
   },
   {
    "id": "extra-a11-l07-03",
@@ -3122,7 +3498,8 @@
     "hört"
    ],
    "explanationDe": "Bei ihr ist die Endung -t: ihr hört.",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "extra-a11-l07-05",
@@ -3140,7 +3517,8 @@
     "Wir tanzen zusammen"
    ],
    "explanationDe": "Bei wir ist die Endung -en: wir tanzen.",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "extra-a11-l07-07",
@@ -3158,7 +3536,8 @@
     "schwimmst"
    ],
    "explanationDe": "Bei du ist die Endung -st: du schwimmst.",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "extra-a11-l07-08",
@@ -3176,7 +3555,8 @@
     "Lena spielt am Wochenende Fußball"
    ],
    "explanationDe": "Bei Lena endet das Verb auf -t.",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "9a58bc0a-594f-5a6f-b82c-146efa8d78c6",
@@ -3193,7 +3573,8 @@
     "stehe"
    ],
    "explanationDe": "aufstehen → ich stehe ... auf.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "bf805b90-6433-5303-95f3-96326a8783ef",
@@ -3210,7 +3591,8 @@
     "rufst"
    ],
    "explanationDe": "anrufen → du rufst ... an.",
-   "hint": null
+   "hint": null,
+   "minLektion": 11
   },
   {
    "id": "50c103cc-d4e5-58d1-a75f-d3efa5ba5653",
@@ -3227,7 +3609,8 @@
     "kaufen"
    ],
    "explanationDe": "einkaufen → wir kaufen ... ein.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "1431d5ad-2d26-5430-9dbe-123d255c53b9",
@@ -3244,7 +3627,8 @@
     "kommt"
    ],
    "explanationDe": "mitkommen → er kommt ... mit.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "5c0728c9-3e01-5e60-85d0-3ef077c6d6af",
@@ -3261,7 +3645,8 @@
     "mache"
    ],
    "explanationDe": "aufmachen → ich mache ... auf.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "7f4e5108-b840-59d7-bd86-f4b855f04391",
@@ -3278,7 +3663,8 @@
     "macht"
    ],
    "explanationDe": "zumachen → sie macht ... zu.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "1173ceb0-6080-5b4d-af12-0c6783e3339c",
@@ -3295,7 +3681,8 @@
     "kommt"
    ],
    "explanationDe": "ankommen → der Zug kommt ... an.",
-   "hint": null
+   "hint": null,
+   "minLektion": 10
   },
   {
    "id": "c5afdbe2-b275-5db5-8379-8c16b05b3393",
@@ -3312,7 +3699,8 @@
     "gehen"
    ],
    "explanationDe": "ausgehen → wir gehen ... aus.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "81ca8c57-dda8-56dc-9a74-39586ac3aa25",
@@ -3329,7 +3717,8 @@
     "hole"
    ],
    "explanationDe": "abholen → ich hole ... ab.",
-   "hint": null
+   "hint": null,
+   "minLektion": 11
   },
   {
    "id": "ce39cf11-9cb2-5ecb-ada9-bc2dfe937c87",
@@ -3346,7 +3735,8 @@
     "hört"
    ],
    "explanationDe": "zuhören → er hört ... zu.",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "extra-a11-l11-02",
@@ -3363,7 +3753,8 @@
     "auf"
    ],
    "explanationDe": "Bei aufstehen steht auf am Satzende.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "extra-a11-l11-03",
@@ -3380,7 +3771,8 @@
     "an"
    ],
    "explanationDe": "Bei anrufen steht an am Satzende.",
-   "hint": null
+   "hint": null,
+   "minLektion": 11
   },
   {
    "id": "extra-a11-l11-04",
@@ -3397,7 +3789,8 @@
     "ein"
    ],
    "explanationDe": "Bei einkaufen steht ein am Ende der Frage.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "extra-a11-l11-06",
@@ -3414,7 +3807,8 @@
     "ab"
    ],
    "explanationDe": "Bei abholen steht ab am Satzende.",
-   "hint": null
+   "hint": null,
+   "minLektion": 11
   },
   {
    "id": "extra-a11-l11-07",
@@ -3431,7 +3825,8 @@
     "mit"
    ],
    "explanationDe": "Bei mitkommen steht mit am Satzende.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "extra-a11-l11-09",
@@ -3448,7 +3843,8 @@
     "gearbeitet"
    ],
    "explanationDe": "Ich habe gearbeitet ist ein fester Ausdruck.",
-   "hint": null
+   "hint": null,
+   "minLektion": 11
   },
   {
    "id": "54801fe3-5b02-56dc-9c28-31bb6f620f04",
@@ -3465,7 +3861,8 @@
     "Stehst"
    ],
    "explanationDe": "Ja/Nein-Frage: Stamm zuerst, Präfix bleibt am Ende.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "9454a0c1-640f-54e9-81db-d63ea1557925",
@@ -3482,7 +3879,8 @@
     "Rufst"
    ],
    "explanationDe": "Ja/Nein-Frage: Stamm zuerst, Präfix bleibt am Ende.",
-   "hint": null
+   "hint": null,
+   "minLektion": 11
   },
   {
    "id": "8a2be339-3196-5a98-a5e6-e41f4351e703",
@@ -3499,7 +3897,8 @@
     "Kauft"
    ],
    "explanationDe": "Ja/Nein-Frage: Stamm zuerst, Präfix bleibt am Ende.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "fbe490d9-9b31-5e32-a6f3-dea1394f6863",
@@ -3516,7 +3915,8 @@
     "Kommt"
    ],
    "explanationDe": "Ja/Nein-Frage: Stamm zuerst, Präfix bleibt am Ende.",
-   "hint": null
+   "hint": null,
+   "minLektion": 10
   },
   {
    "id": "a31b05ff-9be9-5949-af9d-dcddeef307e2",
@@ -3533,7 +3933,8 @@
     "ab"
    ],
    "explanationDe": "abholen → das Präfix ab steht ganz am Ende, nach der Zeitangabe.",
-   "hint": null
+   "hint": null,
+   "minLektion": 11
   },
   {
    "id": "f1deffe2-8d4b-547c-8289-bdeafac5bc2c",
@@ -3550,7 +3951,8 @@
     "zu"
    ],
    "explanationDe": "zumachen → das Präfix zu steht ganz am Ende.",
-   "hint": null
+   "hint": null,
+   "minLektion": 5
   },
   {
    "id": "0346934e-7e0a-59f8-a5c3-135fcf18a812",
@@ -3567,7 +3969,8 @@
     "ein"
    ],
    "explanationDe": "einkaufen → das Präfix ein steht ganz am Ende.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "a375e841-56f8-5772-90d9-c5a079863bdd",
@@ -3584,7 +3987,8 @@
     "mit"
    ],
    "explanationDe": "mitkommen → das Präfix mit steht ganz am Ende.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "96b41b81-d57b-5bfe-91c8-93ef7d8982ca",
@@ -3603,7 +4007,8 @@
     "Um 7 Uhr stehe ich auf"
    ],
    "explanationDe": "ich + stehe (Position 2), auf am Ende. Die Zeitangabe kann auch am Satzanfang stehen.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "1958acf0-ed11-583e-88e0-6a55fab00172",
@@ -3622,7 +4027,8 @@
     "Heute kaufen wir ein"
    ],
    "explanationDe": "wir + kaufen (Position 2), ein am Ende. heute kann auch am Satzanfang stehen.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "51d74698-b413-58f3-bbc5-1fde9f41f83b",
@@ -3641,7 +4047,8 @@
     "Um 8 Uhr holt er dich ab"
    ],
    "explanationDe": "er + holt (Position 2), ab am Ende. Die Zeitangabe kann auch am Satzanfang stehen.",
-   "hint": null
+   "hint": null,
+   "minLektion": 11
   },
   {
    "id": "extra-a11-l11-01",
@@ -3659,7 +4066,8 @@
     "Kommst du am Freitag mit"
    ],
    "explanationDe": "mitkommen: kommst steht vorn, mit steht am Ende.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "extra-a11-l11-05",
@@ -3677,7 +4085,8 @@
     "Wir bringen den Kuchen mit"
    ],
    "explanationDe": "mitbringen: bringen auf Platz zwei, mit am Ende.",
-   "hint": null
+   "hint": null,
+   "minLektion": 11
   },
   {
    "id": "extra-a11-l11-08",
@@ -3695,7 +4104,8 @@
     "Ich rufe meine Mutter an"
    ],
    "explanationDe": "anrufen: rufe auf Platz zwei, an am Ende.",
-   "hint": null
+   "hint": null,
+   "minLektion": 11
   },
   {
    "id": "extra-a11-l11-10",
@@ -3713,7 +4123,8 @@
     "Ich habe gestern gearbeitet"
    ],
    "explanationDe": "habe + gearbeitet ist ein fester Ausdruck für gestern.",
-   "hint": null
+   "hint": null,
+   "minLektion": 11
   },
   {
    "id": "2e4e344c-3116-5304-9f6e-afbed5d037e9",
@@ -3730,7 +4141,8 @@
     "vierzehn Uhr dreißig"
    ],
    "explanationDe": "Offizielle Zeit: Uhr + Stunde + Minuten.",
-   "hint": "vierzehn = 14"
+   "hint": "vierzehn = 14",
+   "minLektion": 4
   },
   {
    "id": "36f2bd1a-d22a-5c9e-9f7e-a197b992f696",
@@ -3747,7 +4159,8 @@
     "halb drei"
    ],
    "explanationDe": "halb + NÄCHSTE Stunde = 2:30.",
-   "hint": "halb + nächste Stunde"
+   "hint": "halb + nächste Stunde",
+   "minLektion": 8
   },
   {
    "id": "69162961-90a8-5f76-9cad-865fb2c8b9fb",
@@ -3764,7 +4177,8 @@
     "Viertel nach zwei"
    ],
    "explanationDe": "Viertel nach + aktuelle Stunde.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "f12532bf-6089-544f-83ef-8bfcc2940f6b",
@@ -3781,7 +4195,8 @@
     "Viertel vor drei"
    ],
    "explanationDe": "Viertel vor + NÄCHSTE Stunde.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "2d34c5aa-a512-50b5-a1c5-57dd04acb619",
@@ -3799,7 +4214,8 @@
     "acht"
    ],
    "explanationDe": "Offizielle Zeit enthält immer Uhr, auch bei einer vollen Stunde.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "8970aaea-186c-58b0-bcf2-fdc7bbc3a632",
@@ -3817,7 +4233,8 @@
     "am"
    ],
    "explanationDe": "am + Tageszeit.",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "a8759f56-1064-5599-99bc-5bea3f752bfb",
@@ -3837,7 +4254,8 @@
    "answer": "halb sechs",
    "accepted": [],
    "explanationDe": "halb + NÄCHSTE Stunde = 5:30.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "c307bcfa-5945-5c82-a3b8-5b2c30d48a39",
@@ -3857,7 +4275,8 @@
    "answer": "Donnerstag",
    "accepted": [],
    "explanationDe": "Die Reihenfolge: Montag, Dienstag, Mittwoch, Donnerstag...",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "extra-a11-l08-01",
@@ -3874,7 +4293,8 @@
     "am"
    ],
    "explanationDe": "Wochentage kommen mit am: am Montag.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "extra-a11-l08-02",
@@ -3891,7 +4311,8 @@
     "um"
    ],
    "explanationDe": "Die Uhrzeit kommt mit um: um sechs Uhr.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "extra-a11-l08-06",
@@ -3909,7 +4330,8 @@
     "am"
    ],
    "explanationDe": "Tageszeiten mit am: am Abend, am Morgen.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "827c155d-7b87-53a3-b047-d53ab532f296",
@@ -3928,7 +4350,8 @@
     "zwanzig nach 6"
    ],
    "explanationDe": "18:20 umgangssprachlich: zwanzig nach sechs.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "ffb96fdf-5140-582a-bc5a-b3d17e131ea3",
@@ -3945,7 +4368,8 @@
     "null Uhr"
    ],
    "explanationDe": "0:00 offiziell: null Uhr.",
-   "hint": null
+   "hint": null,
+   "minLektion": 4
   },
   {
    "id": "3e14842d-3e34-5d86-9284-5954e9593b61",
@@ -3965,7 +4389,8 @@
    "answer": "zehn vor drei",
    "accepted": [],
    "explanationDe": "Nach der halben Stunde zählt man mit vor zur nächsten Stunde.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "extra-a11-l08-03",
@@ -3982,7 +4407,8 @@
     "halb"
    ],
    "explanationDe": "halb neun ist 8.30, eine halbe Stunde vor neun.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "extra-a11-l08-04",
@@ -3999,7 +4425,8 @@
     "Viertel vor"
    ],
    "explanationDe": "Viertel vor acht ist 7.45.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "extra-a11-l08-05",
@@ -4016,7 +4443,8 @@
     "Viertel nach"
    ],
    "explanationDe": "Viertel nach acht ist 8.15.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "extra-a11-l08-07",
@@ -4034,7 +4462,8 @@
     "Der Termin ist am Montag"
    ],
    "explanationDe": "Wochentag mit am, Uhrzeit mit um.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "extra-a11-l08-08",
@@ -4052,7 +4481,8 @@
     "Der Termin ist am Dienstag um acht Uhr"
    ],
    "explanationDe": "Das Verb steht auf Platz zwei, dann Tag und Uhrzeit.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "68be03d3-c547-41dc-9dc0-772fa974f74f",
@@ -4074,7 +4504,8 @@
     "habe"
    ],
    "explanationDe": "ich + habe.",
-   "hint": null
+   "hint": null,
+   "minLektion": 10
   },
   {
    "id": "cb35f9d0-86d8-4f7c-b41d-3e6c1e2e1e4c",
@@ -4096,7 +4527,8 @@
     "hat"
    ],
    "explanationDe": "er + hat.",
-   "hint": null
+   "hint": null,
+   "minLektion": 9
   },
   {
    "id": "ff343b73-534f-42bc-bc58-1fb8c6fbb1c5",
@@ -4118,7 +4550,8 @@
     "Hast"
    ],
    "explanationDe": "du + hast.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "extra-a11-l09-01",
@@ -4135,7 +4568,8 @@
     "habe"
    ],
    "explanationDe": "Durst sagt man mit haben: ich habe Durst.",
-   "hint": null
+   "hint": null,
+   "minLektion": 9
   },
   {
    "id": "extra-a11-l09-02",
@@ -4153,7 +4587,8 @@
     "haben"
    ],
    "explanationDe": "Zeit sagt man mit haben: Haben Sie Zeit?",
-   "hint": null
+   "hint": null,
+   "minLektion": 9
   },
   {
    "id": "extra-a11-l09-03",
@@ -4170,7 +4605,8 @@
     "haben"
    ],
    "explanationDe": "Bei wir bleibt haben: wir haben Hunger.",
-   "hint": null
+   "hint": null,
+   "minLektion": 9
   },
   {
    "id": "extra-a11-l09-06",
@@ -4188,7 +4624,26 @@
     "hast"
    ],
    "explanationDe": "Bei du ist die Form hast: Hast du Durst?",
-   "hint": null
+   "hint": null,
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a11-l09-10",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 100,
+   "questionDe": "Die Kellnerin ___ Kuchen und Tee. (haben)",
+   "questionEn": "The waitress has cake and tea.",
+   "options": null,
+   "answer": "hat",
+   "accepted": [
+    "hat"
+   ],
+   "explanationDe": "sie (die Kellnerin) → hat.",
+   "hint": null,
+   "minLektion": 9
   },
   {
    "id": "fb88c1bb-9662-5838-9cd6-6a117218b6bb",
@@ -4205,7 +4660,8 @@
     "haben"
    ],
    "explanationDe": "Wir steht immer mit haben.",
-   "hint": null
+   "hint": null,
+   "minLektion": 9
   },
   {
    "id": "3286c2b6-0c89-5187-ae66-841a73bcc4c4",
@@ -4222,7 +4678,8 @@
     "hat"
    ],
    "explanationDe": "Singular-sie (she) steht mit hat, wie er und es.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "3c9fff52-7687-5322-b960-1dd3fd3c2b88",
@@ -4239,7 +4696,8 @@
     "hast"
    ],
    "explanationDe": "Du steht immer mit hast.",
-   "hint": null
+   "hint": null,
+   "minLektion": 9
   },
   {
    "id": "e8388d41-3d49-59c8-ac5b-020c596c2649",
@@ -4257,7 +4715,8 @@
     "haben"
    ],
    "explanationDe": "In einer Frage steht die haben-Form vor dem formellen Sie.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "7b8f0fd0-cce3-51e8-8430-4a4ecb5c47c3",
@@ -4275,7 +4734,8 @@
     "hast"
    ],
    "explanationDe": "In einer Frage steht die haben-Form vor du.",
-   "hint": null
+   "hint": null,
+   "minLektion": 3
   },
   {
    "id": "extra-a11-l09-04",
@@ -4292,7 +4752,8 @@
     "hat"
    ],
    "explanationDe": "Bei er ist die Form hat: Paul hat Suppe.",
-   "hint": null
+   "hint": null,
+   "minLektion": 9
   },
   {
    "id": "extra-a11-l09-05",
@@ -4310,7 +4771,8 @@
     "Ich möchte ein Glas Wasser"
    ],
    "explanationDe": "Ich möchte … ist ein fester Ausdruck im Café.",
-   "hint": null
+   "hint": null,
+   "minLektion": 9
   },
   {
    "id": "extra-a11-l09-07",
@@ -4328,7 +4790,8 @@
     "Ich habe einen Kaffee"
    ],
    "explanationDe": "Nach haben wird maskulin ein zu einen.",
-   "hint": null
+   "hint": null,
+   "minLektion": 9
   },
   {
    "id": "extra-a11-l09-08",
@@ -4346,7 +4809,8 @@
     "habt"
    ],
    "explanationDe": "Bei ihr ist die Form habt: Habt ihr Hunger?",
-   "hint": null
+   "hint": null,
+   "minLektion": 9
   },
   {
    "id": "extra-a11-l09-09",
@@ -4364,7 +4828,27 @@
     "haben"
    ],
    "explanationDe": "Höflich mit Sie: Haben Sie auch Kuchen?",
-   "hint": null
+   "hint": null,
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a11-l09-11",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 101,
+   "questionDe": "Ana, ___ du Hunger oder Durst? (haben)",
+   "questionEn": "Ana, are you hungry or thirsty?",
+   "options": null,
+   "answer": "Hast",
+   "accepted": [
+    "Hast",
+    "hast"
+   ],
+   "explanationDe": "du → hast: Hast du Hunger?",
+   "hint": null,
+   "minLektion": 9
   },
   {
    "id": "dcfdd24d-b6da-4222-92a9-2e816bf4cc5d",
@@ -4386,7 +4870,8 @@
     "bin"
    ],
    "explanationDe": "ich + bin.",
-   "hint": null
+   "hint": null,
+   "minLektion": 11
   },
   {
    "id": "34957c67-c29b-43c9-b3ef-5346fa68fa52",
@@ -4408,7 +4893,8 @@
     "ist"
    ],
    "explanationDe": "er + ist.",
-   "hint": null
+   "hint": null,
+   "minLektion": 2
   },
   {
    "id": "9fd52b13-6cb9-4430-b0b7-52d4a63c0a63",
@@ -4430,7 +4916,8 @@
     "sind"
    ],
    "explanationDe": "wir + sind.",
-   "hint": null
+   "hint": null,
+   "minLektion": 1
   },
   {
    "id": "da9e486f-2548-4462-9bdd-c59560ed7276",
@@ -4452,7 +4939,8 @@
     "ist"
    ],
    "explanationDe": "das + ist.",
-   "hint": null
+   "hint": null,
+   "minLektion": 1
   },
   {
    "id": "0fe8146d-6e90-4c1c-b127-618c44e456ba",
@@ -4474,7 +4962,8 @@
     "Bist"
    ],
    "explanationDe": "du + bist.",
-   "hint": null
+   "hint": null,
+   "minLektion": 2
   },
   {
    "id": "extra-a11-l02-01",
@@ -4491,7 +4980,8 @@
     "bin"
    ],
    "explanationDe": "Bei ich heißt die Form von sein bin.",
-   "hint": null
+   "hint": null,
+   "minLektion": 2
   },
   {
    "id": "extra-a11-l02-02",
@@ -4509,7 +4999,8 @@
     "sind"
    ],
    "explanationDe": "Bei Sie steht sind: Sind Sie Lehrerin?",
-   "hint": null
+   "hint": null,
+   "minLektion": 2
   },
   {
    "id": "extra-a11-l02-03",
@@ -4526,7 +5017,8 @@
     "ist"
    ],
    "explanationDe": "Der Wohnort ist eine Sache: er ist.",
-   "hint": null
+   "hint": null,
+   "minLektion": 2
   },
   {
    "id": "extra-a11-l02-04",
@@ -4543,7 +5035,8 @@
     "ist"
    ],
    "explanationDe": "Nach einem Subjekt im Singular steht ist.",
-   "hint": null
+   "hint": null,
+   "minLektion": 2
   },
   {
    "id": "extra-a11-l02-05",
@@ -4561,7 +5054,27 @@
     "seid"
    ],
    "explanationDe": "Nach ihr steht seid: Seid ihr Studenten?",
-   "hint": null
+   "hint": null,
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a11-l02-13",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 33,
+   "questionDe": "Ana, ___ du ledig? (sein)",
+   "questionEn": "Ana, are you single?",
+   "options": null,
+   "answer": "Bist",
+   "accepted": [
+    "Bist",
+    "bist"
+   ],
+   "explanationDe": "Nach du steht bist: Bist du ledig?",
+   "hint": null,
+   "minLektion": 2
   },
   {
    "id": "338b13a7-7712-555d-bdb5-380090c87ba3",
@@ -4578,7 +5091,8 @@
     "ist"
    ],
    "explanationDe": "Er, sie, es stehen alle mit ist.",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "885e0528-1c6e-541f-b25a-cbf5286eac36",
@@ -4595,7 +5109,8 @@
     "sind"
    ],
    "explanationDe": "Wir steht immer mit sind.",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "299cba23-0ab0-5c58-98bb-bca945fcc43e",
@@ -4612,7 +5127,8 @@
     "seid"
    ],
    "explanationDe": "Ihr steht immer mit seid.",
-   "hint": null
+   "hint": null,
+   "minLektion": 11
   },
   {
    "id": "1e3a7370-9e9c-55ea-b513-496b45421861",
@@ -4629,7 +5145,8 @@
     "sind"
    ],
    "explanationDe": "Sie (sie/they) steht mit sind, wie wir.",
-   "hint": null
+   "hint": null,
+   "minLektion": 6
   },
   {
    "id": "19f1aa27-7634-5599-8a61-8f69e259f6d4",
@@ -4646,7 +5163,8 @@
     "ist"
    ],
    "explanationDe": "Das steht mit ist, genau wie er/sie/es.",
-   "hint": null
+   "hint": null,
+   "minLektion": 9
   },
   {
    "id": "459b2960-6610-57b4-b4f9-631bf6eeed01",
@@ -4663,7 +5181,8 @@
     "ist"
    ],
    "explanationDe": "Singular-sie (she) steht mit ist, wie er und das.",
-   "hint": null
+   "hint": null,
+   "minLektion": 3
   },
   {
    "id": "extra-a11-l02-06",
@@ -4680,7 +5199,8 @@
     "sind"
    ],
    "explanationDe": "Bei wir heißt die Form von sein sind.",
-   "hint": null
+   "hint": null,
+   "minLektion": 2
   },
   {
    "id": "extra-a11-l02-07",
@@ -4700,7 +5220,8 @@
     "Ich bin von Beruf Lehrer"
    ],
    "explanationDe": "Der Beruf steht ohne Artikel: Ich bin Lehrer.",
-   "hint": null
+   "hint": null,
+   "minLektion": 2
   },
   {
    "id": "extra-a11-l02-08",
@@ -4718,7 +5239,27 @@
     "Ich bin Lehrer"
    ],
    "explanationDe": "Nach sein steht der Beruf ohne Artikel.",
-   "hint": null
+   "hint": null,
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a11-l02-14",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 34,
+   "questionDe": "Lena und Tim, ___ ihr Studenten? (sein)",
+   "questionEn": "Lena and Tim, are you students?",
+   "options": null,
+   "answer": "Seid",
+   "accepted": [
+    "Seid",
+    "seid"
+   ],
+   "explanationDe": "Nach ihr steht seid: Seid ihr Studenten?",
+   "hint": null,
+   "minLektion": 2
   },
   {
    "id": "5c5c272b-ff81-5811-83b6-6e7fde71ba1b",
@@ -4735,7 +5276,8 @@
     "Bist"
    ],
    "explanationDe": "Aussage: Du bist müde. Frage: Verb an Position 1 → Bist du müde?",
-   "hint": null
+   "hint": null,
+   "minLektion": 11
   },
   {
    "id": "d1777221-6b65-55c3-8ecd-dbaa0583db0c",
@@ -4752,7 +5294,8 @@
     "Hast"
    ],
    "explanationDe": "Aussage: Du hast Zeit. Frage: Hast du Zeit?",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "426d0034-6957-500d-84d9-4c2844e5338c",
@@ -4769,7 +5312,8 @@
     "Kommst"
    ],
    "explanationDe": "Aussage: Du kommst aus Polen. Frage: Kommst du aus Polen?",
-   "hint": null
+   "hint": null,
+   "minLektion": 3
   },
   {
    "id": "8c1f7c82-1210-5d1b-8f48-8ad60f3cfa78",
@@ -4786,7 +5330,8 @@
     "Arbeitest"
    ],
    "explanationDe": "Der Stamm von arbeiten endet auf -t, deshalb -e- einfügen: arbeitest. Frage: Arbeitest du viel?",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "14eac77e-603e-51e0-9a53-4e18fa5b9d8f",
@@ -4803,7 +5348,8 @@
     "Wohnen"
    ],
    "explanationDe": "Beim formellen Sie bleibt die Verbform gleich (wohnen), nur an Position 1: Wohnen Sie in Berlin?",
-   "hint": null
+   "hint": null,
+   "minLektion": 2
   },
   {
    "id": "e327c296-1ea8-51db-b3c5-a6409f00534c",
@@ -4820,7 +5366,8 @@
     "Sprechen"
    ],
    "explanationDe": "Sie benutzt die Form sprechen (wie der Infinitiv), an Position 1: Sprechen Sie Englisch?",
-   "hint": null
+   "hint": null,
+   "minLektion": 3
   },
   {
    "id": "d58cff5b-760c-57bc-b030-05d1201f8846",
@@ -4837,7 +5384,8 @@
     "Trinkst"
    ],
    "explanationDe": "Aussage: Du trinkst gern Kaffee. Frage: Trinkst du gern Kaffee?",
-   "hint": null
+   "hint": null,
+   "minLektion": 9
   },
   {
    "id": "a3ddac97-a8fb-5ddc-8a2d-3c7763e89667",
@@ -4854,7 +5402,8 @@
     "Kochst"
    ],
    "explanationDe": "Aussage: Du kochst gern. Frage: Kochst du gern?",
-   "hint": null
+   "hint": null,
+   "minLektion": 7
   },
   {
    "id": "ffec1d33-2826-5332-93e5-2b8efe7ece89",
@@ -4874,7 +5423,8 @@
    "answer": "Ja, ich komme aus Italien.",
    "accepted": [],
    "explanationDe": "Die Kurzantwort wiederholt die ganze Aussage: Ja, ich komme aus Italien.",
-   "hint": null
+   "hint": null,
+   "minLektion": 3
   },
   {
    "id": "extra-a11-l10-01",
@@ -4896,7 +5446,8 @@
     "kommt"
    ],
    "explanationDe": "In der Ja/Nein-Frage steht das Verb auf Platz eins.",
-   "hint": null
+   "hint": null,
+   "minLektion": 10
   },
   {
    "id": "extra-a11-l10-02",
@@ -4914,7 +5465,8 @@
     "kostet"
    ],
    "explanationDe": "Ohne Fragewort kommt zuerst das Verb, dann das Subjekt.",
-   "hint": null
+   "hint": null,
+   "minLektion": 10
   },
   {
    "id": "extra-a11-l10-03",
@@ -4923,16 +5475,17 @@
    "stage": 4,
    "difficulty": 1,
    "order": 103,
-   "questionDe": "___ Gleis vier richtig?",
-   "questionEn": "Is platform four correct?",
+   "questionDe": "___ das Gleis vier? (sein)",
+   "questionEn": "Is that platform four?",
    "options": null,
    "answer": "Ist",
    "accepted": [
     "Ist",
     "ist"
    ],
-   "explanationDe": "Mit sein fragst du so: Ist Gleis vier richtig?",
-   "hint": null
+   "explanationDe": "Mit sein fragen Sie so: Ist das Gleis vier?",
+   "hint": null,
+   "minLektion": 10
   },
   {
    "id": "extra-a11-l10-04",
@@ -4950,7 +5503,8 @@
     "hast"
    ],
    "explanationDe": "haben in der Frage: Hast du …?",
-   "hint": null
+   "hint": null,
+   "minLektion": 10
   },
   {
    "id": "extra-a11-l10-05",
@@ -4968,7 +5522,8 @@
     "hat"
    ],
    "explanationDe": "Das Verb hat steht vor dem Subjekt der Zug.",
-   "hint": null
+   "hint": null,
+   "minLektion": 10
   },
   {
    "id": "extra-a11-l10-06",
@@ -4988,7 +5543,8 @@
     "kommst"
    ],
    "explanationDe": "du fährst wird in der Frage zu Fährst du.",
-   "hint": null
+   "hint": null,
+   "minLektion": 10
   },
   {
    "id": "0b5c7d74-0e60-51b3-802e-50a4c8457f36",
@@ -5005,7 +5561,8 @@
     "Bist du müde"
    ],
    "explanationDe": "bist an Position 1, du an Position 2: Bist du müde?",
-   "hint": null
+   "hint": null,
+   "minLektion": 11
   },
   {
    "id": "e52a4dca-4065-58a0-ae8f-de107844d5f2",
@@ -5022,7 +5579,8 @@
     "Wohnst du in Köln"
    ],
    "explanationDe": "wohnst an Position 1: Wohnst du in Köln?",
-   "hint": null
+   "hint": null,
+   "minLektion": 2
   },
   {
    "id": "20edbc50-95ff-5914-9381-9673b2716b68",
@@ -5039,7 +5597,8 @@
     "Kommst du aus Polen"
    ],
    "explanationDe": "kommst an Position 1: Kommst du aus Polen?",
-   "hint": null
+   "hint": null,
+   "minLektion": 3
   },
   {
    "id": "fa2176d8-3252-57b7-8e4e-0c009303f306",
@@ -5056,7 +5615,8 @@
     "Kommst du am Samstag mit"
    ],
    "explanationDe": "Trennbares Verb: kommst an Position 1, mit bleibt am Ende: Kommst du am Samstag mit?",
-   "hint": null
+   "hint": null,
+   "minLektion": 8
   },
   {
    "id": "78abfd45-9be5-51ff-a294-12c1aa43d6e9",
@@ -5073,7 +5633,9 @@
     "Wohnen Sie in Berlin"
    ],
    "explanationDe": "wohnen an Position 1, Sie an Position 2: Wohnen Sie in Berlin?",
-   "hint": null
+   "hint": null,
+   "caseSensitive": true,
+   "minLektion": 2
   },
   {
    "id": "6f0fbd89-79de-53ab-9b82-67b4f5f734ed",
@@ -5090,7 +5652,9 @@
     "Haben Sie Kinder"
    ],
    "explanationDe": "haben an Position 1, Sie an Position 2: Haben Sie Kinder?",
-   "hint": null
+   "hint": null,
+   "caseSensitive": true,
+   "minLektion": 3
   },
   {
    "id": "extra-a11-l10-07",
@@ -5108,7 +5672,8 @@
     "Fahrt ihr mit dem Auto in die Schweiz"
    ],
    "explanationDe": "ihr fahrt wird in der Frage zu Fahrt ihr.",
-   "hint": null
+   "hint": null,
+   "minLektion": 10
   },
   {
    "id": "extra-a11-l10-08",
@@ -5126,7 +5691,9 @@
     "Fahren Sie morgen nach Deutschland"
    ],
    "explanationDe": "Höfliche Frage mit Sie: Verb zuerst, dann Sie.",
-   "hint": null
+   "hint": null,
+   "caseSensitive": true,
+   "minLektion": 10
   },
   {
    "id": "extra-a11-l10-09",
@@ -5144,7 +5711,8 @@
     "Ist die Ankunft am Gleis vier"
    ],
    "explanationDe": "Ohne Fragewort steht ist auf Position 1.",
-   "hint": null
+   "hint": null,
+   "minLektion": 10
   },
   {
    "id": "extra-a11-l10-10",
@@ -5162,7 +5730,8 @@
     "Ist die Abfahrt um neun Uhr"
    ],
    "explanationDe": "Die Abfahrt ist Singular: Ist die Abfahrt …?",
-   "hint": null
+   "hint": null,
+   "minLektion": 10
   },
   {
    "id": "extra-a11-l10-11",
@@ -5180,7 +5749,8 @@
     "Hat der Fahrer Verspätung"
    ],
    "explanationDe": "Das Verb passt zum Subjekt: der Fahrer hat.",
-   "hint": null
+   "hint": null,
+   "minLektion": 10
   },
   {
    "id": "extra-a11-l10-12",
@@ -5198,7 +5768,8 @@
     "Kommt der Bus zum Bahnhof"
    ],
    "explanationDe": "Das Verb steht vorn, dann kommt das Subjekt.",
-   "hint": null
+   "hint": null,
+   "minLektion": 10
   },
   {
    "id": "extra-a11-l10-13",
@@ -5216,7 +5787,8 @@
     "Hat der Zug nach Österreich Verspätung"
    ],
    "explanationDe": "Bei haben steht die Form vorn: Hat der Zug …?",
-   "hint": null
+   "hint": null,
+   "minLektion": 10
   },
   {
    "id": "extra-a11-l10-14",
@@ -5234,7 +5806,8 @@
     "Kostet die Fahrkarte nach Deutschland zwanzig Euro"
    ],
    "explanationDe": "Das Verb zuerst, dann das Subjekt die Fahrkarte.",
-   "hint": null
+   "hint": null,
+   "minLektion": 10
   },
   {
    "id": "extra-a11-l10-15",
@@ -5252,7 +5825,8 @@
     "Ist die Abfahrt vom Gleis vier"
    ],
    "explanationDe": "Ohne Fragewort steht ist ganz vorn.",
-   "hint": null
+   "hint": null,
+   "minLektion": 10
   },
   {
    "id": "extra-a11-l10-16",
@@ -5270,7 +5844,123 @@
     "Ist der Bahnhof weit"
    ],
    "explanationDe": "Die Ja/Nein-Frage beginnt mit ist.",
-   "hint": null
+   "hint": null,
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a11-l10-17",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 117,
+   "questionDe": "[essen / ihr / im Zug] (Das Verb steht zuerst.)",
+   "questionEn": "Form the question: do you (plural) eat on the train?",
+   "options": null,
+   "answer": "Esst ihr im Zug?",
+   "accepted": [
+    "Esst ihr im Zug?",
+    "Esst ihr im Zug"
+   ],
+   "explanationDe": "Das Verb steht auf Position 1: Esst ihr im Zug?",
+   "hint": null,
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a11-l10-18",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 118,
+   "questionDe": "[haben / Sie / eine Fahrkarte] (höflich mit Sie)",
+   "questionEn": "Form the polite question: do you have a ticket?",
+   "options": null,
+   "answer": "Haben Sie eine Fahrkarte?",
+   "accepted": [
+    "Haben Sie eine Fahrkarte?",
+    "Haben Sie eine Fahrkarte"
+   ],
+   "explanationDe": "Höflich mit Sie, das Verb zuerst: Haben Sie eine Fahrkarte?",
+   "hint": null,
+   "caseSensitive": true,
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a11-l10-19",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 119,
+   "questionDe": "[kommen / der Fahrer / morgen] (Beginnen Sie mit dem Verb.)",
+   "questionEn": "Form the question: is the driver coming tomorrow?",
+   "options": null,
+   "answer": "Kommt der Fahrer morgen?",
+   "accepted": [
+    "Kommt der Fahrer morgen?",
+    "Kommt der Fahrer morgen"
+   ],
+   "explanationDe": "Das Verb kommt zuerst: Kommt der Fahrer morgen?",
+   "hint": null,
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a11-l10-20",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 120,
+   "questionDe": "[fahren / der Bus / nach Deutschland] (Die Stimme steigt am Ende.)",
+   "questionEn": "Form the question: does the bus go to Germany?",
+   "options": null,
+   "answer": "Fährt der Bus nach Deutschland?",
+   "accepted": [
+    "Fährt der Bus nach Deutschland?",
+    "Fährt der Bus nach Deutschland"
+   ],
+   "explanationDe": "Das Verb zuerst: Fährt der Bus nach Deutschland?",
+   "hint": null,
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a11-l10-21",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 121,
+   "questionDe": "[sein / das Auto / neu] (Zuerst das Verb, dann das Subjekt.)",
+   "questionEn": "Form the question: is the car new?",
+   "options": null,
+   "answer": "Ist das Auto neu?",
+   "accepted": [
+    "Ist das Auto neu?",
+    "Ist das Auto neu"
+   ],
+   "explanationDe": "Ist das Auto neu? — das Verb steht vor dem Subjekt.",
+   "hint": null,
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a11-l10-22",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 122,
+   "questionDe": "[haben / ihr / morgen / Zeit] (Das Verb steht vorn.)",
+   "questionEn": "Form the question: do you (plural) have time tomorrow?",
+   "options": null,
+   "answer": "Habt ihr morgen Zeit?",
+   "accepted": [
+    "Habt ihr morgen Zeit?",
+    "Habt ihr morgen Zeit"
+   ],
+   "explanationDe": "Habt ihr morgen Zeit? — das Verb zuerst.",
+   "hint": null,
+   "minLektion": 8
   }
  ]
 }
