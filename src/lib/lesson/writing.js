@@ -198,22 +198,101 @@ const splitVerbStem = (word) => {
 const DATE_RE = /\b\d{1,2}\.\s*(?:\d{1,2}\.|Januar|Februar|März|Maerz|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)|\b\d{1,2}\.\d{1,2}\.\d{2,4}\b|\bgeboren\b|\bGeburtstag\b/i;
 const CLOCK_RE = /\b\d{1,2}(?:[.:]\d{2})?\s*Uhr\b|\bUhr\b|\bhalb\s+\w+|\bViertel\s+(?:nach|vor)\b|\bum\s+(?:\d{1,2}|ein[sm]?|zwei|drei|vier|fünf|fuenf|sechs|sieben|acht|neun|zehn|elf|zwölf|zwoelf|halb)\b/i;
 const DAY_RE = /\b(?:Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonnabend|Sonntag|heute|morgen|übermorgen|Wochenende)\b/i;
-const COUNTRY_RE = /\b(?:komm\w*|bin|sind|ist)\s+aus\s+[A-ZÄÖÜ]\w+|\baus\s+[A-ZÄÖÜ]\w+/;
+// „aus Marokko“, „aus der Türkei“, „aus dem Iran“ — the article is part of the country name for
+// exactly the countries a German course's learners come from (die Türkei, der Irak, die Ukraine,
+// die Schweiz), so an optional `der`/`dem`/`den` stands between `aus` and the capitalised name.
+// Without it „Ich komme aus der Türkei.“ answered „Ihr Land“ no better than silence — the same
+// figure-instead-of-class error as NATIONALITY_RE (DaF review #15, MAJOR 2).
+const COUNTRY_NAME = '[A-ZÄÖÜ][A-Za-zÄÖÜäöüß-]+';
+const COUNTRY_RE = new RegExp(`\\b(?:komm\\w*|bin|sind|ist)\\s+aus\\s+(?:de[rmn]\\s+)?${COUNTRY_NAME}|\\baus\\s+(?:de[rmn]\\s+)?${COUNTRY_NAME}`);
 
 /**
  * A NATIONALITY, which „Ihre Staatsangehörigkeit“ asks for and a country name does not supply.
- * Round 14 keyed it to COUNTRY_RE, so „Ich bin aus Marokko.“ answered both halves of „Ihr Land und
- * Ihre Staatsangehörigkeit“ (DaF review #14, MAJOR 1, probe 2). Two closed classes and nothing
- * open-ended: the nationality ADJECTIVE (`-isch` with its inflections, plus the irregular
- * `deutsch`) and the nationality NOUN suffixes that are not also profession suffixes
- * (`-aner(in)`, `-ese/-esin`, `-ier(in)`, `-länder(in)`, `Deutsche(r)`) — „Ich bin
- * **Marokkanerin**.“ answers it, „Ich bin **Studentin** in Bremen.“ must not, and that is why
- * a bare `-in` is NOT in the class. The direction of the remaining error is deliberate: a learner
- * who writes „Ich bin Türkin.“ gets a red row he did not earn, which the AI grader then corrects,
- * and that is the survivable half — a GREEN row over a missing Leitpunkt is not (see the invariant
- * in the header).
+ *
+ * ROUND 16 (DaF review #15, MAJOR 2): the old `NATIONALITY_RE` claimed to be a closed class and was
+ * a SAMPLE. Measured over 50 common nationality forms it recognised 18 — essentially the forms of
+ * the course's own persona — and missed `türkisch`, `polnisch`, `russisch`, `syrisch`, `arabisch`,
+ * `spanisch`, `indisch`, `iranisch` (the `{5,}` threshold: `türk` has four letters) and every bare
+ * `-in`/`-e`/`-er` noun: `Türkin`, `Türke`, `Polin`, `Pole`, `Russin`, `Syrerin`, `Italienerin`,
+ * `Ukrainerin`, `Inderin`, `Griechin`, `Afghanin`, `Rumänin`. The task asks for the learner's OWN
+ * data, so that is not an edge: it is every learner who is not Ana, on the one surface she sees
+ * when the AI grader is unavailable. **A form that only recognises the answer of the course's own
+ * character is not a form, it is a name.**
+ *
+ * So the class is read structurally, in the two shapes German has, and the review's own
+ * prescription is followed on both:
+ *
+ *  1. THE ADJECTIVE is `<stem>isch` with NO minimum stem length, read in the PREDICATIVE POSITION
+ *     — after a finite form of `sein`. That position is what used to be done by the length
+ *     threshold (`frisch`, `typisch`): the shape is only ever asked of the Staatsangehörigkeit
+ *     conjunct, and „Ich bin türkisch.“ is the sentence that belongs there. A `-isch` word whose
+ *     stem is a KNOWN country stem counts anywhere („Nationalität: türkisch“).
+ *  2. THE NOUN is a capitalised word whose stem, after one of the nationality suffixes
+ *     (`-ier(in)`, `-erin`, `-er`, `-in`, `-e`), is a COUNTRY STEM. That is what keeps the
+ *     profession family out without a list of professions: `Studentin` → `student`,
+ *     `Lehrerin` → `lehr`, `Verkäuferin` → `verkäuf`, `Kellner` → `kelln` — none of them a country.
+ *     „Ich bin Studentin in Bremen.“ must NOT answer „Ihre Staatsangehörigkeit“, and it does not.
+ *  3. `deutsch`/`Deutsche(r)` is the irregular one (an adjective used as a noun) and is named.
+ *
+ * COUNTRY_STEMS is the second typed list in this file after FUNCTION_WORDS_DE, and it is the same
+ * kind of list: it belongs to the WORLD, not to this course — the countries of origin an adult
+ * integration course actually has in the room — so it does not grow with the material. The review
+ * asked for it in exactly these words („eine Liste, ja, aber eine, die zur Welt gehört und nicht zu
+ * diesem Material“).
  */
-const NATIONALITY_RE = /\b(?:deutsch|[A-Za-zÄÖÜäöüß]{5,}isch)(?:e[rnms]?)?\b|\b[A-ZÄÖÜ][a-zäöüß]{2,}(?:aner|anerin|ese|esin|ier|ierin|länder|länderin)\b|\bDeutsche[rn]?\b/;
+const COUNTRY_STEMS = new Set([
+  // Europa
+  'deutsch', 'österreich', 'schweiz', 'französ', 'franzos', 'ital', 'italien', 'span', 'portugies',
+  'griech', 'engländ', 'ir', 'niederländ', 'holländ', 'belg', 'dän', 'norweg', 'schwed', 'finn',
+  'pol', 'tschech', 'slowak', 'ungar', 'rumän', 'bulgar', 'kroat', 'serb', 'bosn', 'alban', 'kosovar',
+  'maked', 'mazedon', 'sloven', 'russ', 'ukrain', 'weißruss', 'belaruss', 'litau', 'lett', 'est',
+  'moldau', 'georg', 'armen', 'aserbaidschan', 'türk', 'zypr', 'malt',
+  // Naher Osten, Nordafrika, Zentralasien
+  'arab', 'syr', 'irak', 'iran', 'afghan', 'kurd', 'libanes', 'jordan', 'palästinens', 'israel',
+  'ägypt', 'marokkan', 'tunes', 'alger', 'liby', 'sudanes', 'somal', 'eritre', 'äthiop', 'jemenit',
+  'saudi', 'kasach', 'usbek', 'tadschik', 'turkmen',
+  // Süd- und Ostasien
+  'ind', 'pakistan', 'banglades', 'sri-lank', 'nepales', 'chines', 'japan', 'korean', 'vietnames',
+  'thail', 'indones', 'philippin', 'malays', 'mongol',
+  // Afrika südlich der Sahara
+  'nigerian', 'ghana', 'kamerun', 'kongoles', 'kenian', 'senegales', 'ivor', 'gambi', 'südafrikan',
+  // Amerika
+  'amerikan', 'kanad', 'mexikan', 'brasilian', 'argentin', 'chilen', 'kolumbian', 'peruan',
+  'venezolan', 'kuban', 'dominikan', 'ecuadorian', 'bolivian', 'uruguay', 'paraguay',
+  // Ozeanien
+  'australi', 'neuseeländ',
+]);
+
+/** The suffixes a German nationality NOUN is built with, longest first. */
+const NATIONALITY_NOUN_SUFFIXES = ['ierin', 'erin', 'ier', 'isch', 'er', 'in', 'e'];
+
+/** A word (any case) whose stem, after one nationality suffix, is a country stem. */
+const isNationalityWord = (word) => {
+  const w = String(word || '').toLowerCase();
+  if (!w) return false;
+  for (const suf of NATIONALITY_NOUN_SUFFIXES) {
+    if (!w.endsWith(suf) || w.length - suf.length < 2) continue;
+    if (COUNTRY_STEMS.has(w.slice(0, -suf.length))) return true;
+  }
+  return false;
+};
+
+/** `deutsch`, `deutsche`, `Deutscher`, `Deutschen` — the one nationality German declines as an adjective. */
+const DEUTSCH_RE = /\bdeutsche?[rnms]?\b/i;
+/** The predicative position: „Ich **bin** türkisch.“, „Meine Staatsangehörigkeit **ist** polnisch.“ */
+const PREDICATIVE_ISCH_RE = /\b(?:bin|bist|ist|sind|seid|war|warst|waren)\s+[A-Za-zÄÖÜäöüß]{2,}isch(?:e[rnms]?)?\b/i;
+
+/**
+ * Does `body` name a nationality? Structural, never a name — see the header above.
+ * Shape objects in ANSWER_SHAPES only need `.test`, so this is one of them.
+ */
+const NATIONALITY_SHAPE = {
+  test: (body) => {
+    const text = String(body || '');
+    if (DEUTSCH_RE.test(text) || PREDICATIVE_ISCH_RE.test(text)) return true;
+    return words(text).some((raw) => isNationalityWord(raw.replace(/[.,!?;:()"„“]/g, '')));
+  },
+};
 
 /**
  * A PHONE NUMBER, and the shape is bound to the question rather than to the text. Round 14's
@@ -235,7 +314,7 @@ const ANSWER_SHAPES = [
   { on: ['nam', 'vornam', 'nachnam', 'familiennam'], re: /\b(?:hei(?:ß|ss)\w*|nenn\w*)\b|\bich\s+bin\s+[A-ZÄÖÜ]/ },
   { on: ['geburtsdatum', 'geburtstag', 'datum', 'alter'], re: DATE_RE },
   { on: ['land', 'geburtsland', 'herkunft'], re: COUNTRY_RE },
-  { on: ['staatsangehörigkei', 'staatsangehoerigkei', 'nationalitä', 'nationalitae'], re: NATIONALITY_RE },
+  { on: ['staatsangehörigkei', 'staatsangehoerigkei', 'nationalitä', 'nationalitae'], re: NATIONALITY_SHAPE },
   { on: ['familienstand'], re: /\b(?:ledig|verheiratet|geschieden)\b/i },
   { on: ['uhrzei', 'zeit', 'termin'], re: CLOCK_RE },
   { on: ['tag', 'wochentag'], re: new RegExp(`${DAY_RE.source}|${DATE_RE.source}`, 'i') },
@@ -254,6 +333,12 @@ const ANSWER_SHAPES = [
  */
 const QUESTION_SHAPES = [
   { on: /\bwann\b/i, re: new RegExp(`${CLOCK_RE.source}|${DAY_RE.source}`, 'i') },
+  // ROUND 16 (DaF review #15, MAJOR 2, „Zweitens“): „Warum“ is UNDECIDABLE, and that is a row of
+  // its own rather than a missing row. Without it the word half decided the conjunct, and in an
+  // indirect question the only lower-case word of „Warum Sie feiern“ is the TASK's verb — so
+  // „Wir feiern.“ (the empty echo) was green and „Ich habe Geburtstag.“ (the reason) was red. In a
+  // „Wann …“ the answer has a form; in a „Warum …“ it has none, and a reason is not a form.
+  { on: /\bwarum\b/i, re: null },
 ];
 
 /**
@@ -262,6 +347,12 @@ const QUESTION_SHAPES = [
  * that is a real answer even where the shape misses it (a Spanish name is not matched by
  * `heiße`). It is NOT the bare noun: the noun must be followed by `ist`/`sind`/`:` AND by at least
  * one word that is not a function word, so „Die Telefonnummer ist hier.“ still fails.
+ *
+ * THE NAMED FIELD IS AN ANSWER OF THE LEARNER AND NEVER AN ANSWER OF THE COURSE — what a model
+ * text demonstrates has to be a Mitteilung. Callers that measure the COURSE (RULE 21 in
+ * scripts/validate-curriculum.mjs) pass `{ allowNamedField: false }`; the learner's screen does
+ * not. And the sister rule for the class above it: AN ANSWER FORM THAT ONLY RECOGNISES THE ANSWER
+ * OF THE COURSE'S OWN CHARACTER IS NOT A FORM, IT IS A NAME (DaF review #15, MAJOR 1 and MAJOR 2).
  */
 const namedFieldShape = (word) => {
   const re = new RegExp(`\\b${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\w*\\s*(?:ist|sind|:)\\s+([^.,!?;]+)`, 'i');
@@ -287,7 +378,12 @@ export function leitpunktConjuncts(leitpunkt) {
     .filter(Boolean);
 }
 
-const conjunctEvidence = (conjunct) => {
+const conjunctEvidence = (conjunct, { allowNamedField = true } = {}) => {
+  // A question shape with `re: null` declares the conjunct undecidable by FORM — neither its words
+  // nor a shape may decide it (see QUESTION_SHAPES). The row becomes „prüft die KI“.
+  if (QUESTION_SHAPES.some((s) => s.re === null && s.on.test(conjunct))) {
+    return { text: conjunct, words: [], folded: [], shapes: [] };
+  }
   const all = leitpunktKeywords(conjunct);
   // In an indirect question the capitalised nouns are the topic the task hands over, not the
   // answer; only the predicate decides. Elsewhere („Ihre Telefonnummer“) the noun IS the answer.
@@ -300,10 +396,16 @@ const conjunctEvidence = (conjunct) => {
     const f = [foldWord(w), ...splitVerbStem(w)];
     for (const shape of ANSWER_SHAPES) {
       if (!f.some((x) => shape.on.includes(x))) continue;
-      shapes.push(shape.re, namedFieldShape(w));
+      shapes.push(shape.re);
+      // THE NAMED FIELD IS THE LEARNER'S ANSWER AND NEVER THE COURSE'S. `allowNamedField` is true
+      // on the screen — a learner who writes „Die Telefonnummer ist null eins sieben sechs.“ has
+      // answered — and false where the COURSE is measured (RULE 21), because a rule that accepts
+      // the form line is satisfied by the one sentence type *Start Deutsch 1* takes points off for,
+      // and the model text then gets written to the checker (DaF review #15, MAJOR 1).
+      if (allowNamedField) shapes.push(namedFieldShape(w));
     }
   }
-  shapes.push(...QUESTION_SHAPES.filter((s) => s.on.test(conjunct)).map((s) => s.re));
+  shapes.push(...QUESTION_SHAPES.filter((s) => s.re && s.on.test(conjunct)).map((s) => s.re));
   return { text: conjunct, words: keywords, folded, shapes };
 };
 
@@ -313,8 +415,8 @@ const conjunctEvidence = (conjunct) => {
  * „prüft die KI“ row — see the header. The flat `words`/`folded`/`shapes` are the union over the
  * conjuncts and are kept because callers and tests read them.
  */
-export function leitpunktEvidence(leitpunkt) {
-  const conjuncts = leitpunktConjuncts(leitpunkt).map(conjunctEvidence);
+export function leitpunktEvidence(leitpunkt, opts = {}) {
+  const conjuncts = leitpunktConjuncts(leitpunkt).map((c) => conjunctEvidence(c, opts));
   return {
     conjuncts,
     words: conjuncts.flatMap((c) => c.words),
@@ -329,8 +431,8 @@ export function leitpunktEvidence(leitpunkt) {
  * EVERY decidable conjunct must have evidence, and where a conjunct derives a
  * shape the shape is what decides it.
  */
-export function leitpunktSatisfied(leitpunkt, text) {
-  const { conjuncts } = leitpunktEvidence(leitpunkt);
+export function leitpunktSatisfied(leitpunkt, text, opts = {}) {
+  const { conjuncts } = leitpunktEvidence(leitpunkt, opts);
   const decidable = conjuncts.filter((c) => c.folded.length || c.shapes.length);
   if (!decidable.length) return null;
   const body = String(text || '');

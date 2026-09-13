@@ -12,6 +12,9 @@
 //      green run means nothing.
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { CURRICULUM_A12 } from '../src/data/curricula/a12.js';
@@ -31,8 +34,12 @@ import {
   MAX_MODEL_CHECKLIST_BREAKS, MAX_SHARED_PRODUCTION_LINES,
   modelTextLexis, MAX_UNTAUGHT_IN_MODEL_TEXTS, LICENSED_LETTER_CHUNKS,
   writingTasksAreAnswerable, MAX_UNANSWERABLE_LEITPUNKTE,
+  formSpeakInModelTexts, MAX_FORM_SPEAK_SENTENCES,
+  wortfeldInputCoverage, MAX_WORTFELD_WITHOUT_INPUT,
 } from '../scripts/validate-curriculum.mjs';
 import { constructionHits, CONSTRUCTION_PATTERNS, SEPARABLE_PREFIXES } from '../src/data/curricula/constructions.js';
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 // ───────────────────────────────────────────────────────────────────────────────────────────────
 // SELF-SIZING RATCHET MUTATIONS
@@ -518,6 +525,9 @@ test('A1.1: every ratchet equals its measurement — a ratchet with slack is not
     ['16', examTeileBacked(CURRICULUM_A11).length, MAX_UNBACKED_EXAM_TEILE],
     ['17', modelTextsPassOwnChecklist(CURRICULUM_A11).length, MAX_MODEL_CHECKLIST_BREAKS],
     ['18', sharedProductionLines(CURRICULUM_A11).length, MAX_SHARED_PRODUCTION_LINES],
+    // RULE 23 joins the walk in round 16: it is the only ratchet of this round and the number is a
+    // work order (58 of 264 A1.1 Wortfeld entries reach no input surface of their Lektion).
+    ['23', wortfeldInputCoverage(CURRICULUM_A11).length, MAX_WORTFELD_WITHOUT_INPUT],
   ];
   for (const [rule, measured, ratchet] of checks) {
     assert.equal(
@@ -965,6 +975,58 @@ test('rule 21: every Leitpunkt the course grades is answerable from the lexis of
   // Behörden“, next to the Staatsangehörigkeit noun that was already there.
   const l2wf = CURRICULUM_A11.lektionen[1].wortfeld.map((w) => w.de);
   assert.ok(l2wf.includes('marokkanisch') && l2wf.includes('die Staatsangehörigkeit'), JSON.stringify(l2wf));
+});
+
+test('rule 22: a Mitteilung Beispieltext contains no form being read out', () => {
+  // DaF review #15, MAJOR 1. Round 15 wrote five „<Artikel> <Leitpunkt-Nomen> ist <Wert>“
+  // sentences into three of the six A1.1 Mitteilungen — L2 two, L6 two, L12 one — because RULE 21
+  // measured answerability with a checker that accepts the named field, so writing to the checker
+  // was the cheapest way to a green checklist. In *Start Deutsch 1* Schreiben Teil 2 that costs
+  // points under „Kommunikative Gestaltung“, and the model text is what the learner imitates.
+  assert.equal(MAX_FORM_SPEAK_SENTENCES, 0, 'RULE 22 is a hard 0 at A1.1 and may not be ratcheted up');
+  assert.deepEqual(formSpeakInModelTexts(CURRICULUM_A11, levelSpec('a1.1')), []);
+  // IT BITES, on all five sentences the review counted, planted back as `main` @ 413c2ed had them.
+  const ROUND_15_SAMPLES = {
+    2: ['Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Das Geburtsdatum ist der 3.5.1998. Ich bin aus Marokko. Die Staatsangehörigkeit ist marokkanisch. Ich bin ledig. Ich bin Studentin in Bremen. Viele Grüße, Ana Chakiri', 2],
+    6: ['Guten Tag, Frau Berg! Ich brauche einen Computer. Wir brauchen auch ein Handy. Die Telefonnummer ist null vier zwei drei drei acht eins. Die Nummer ist für das Handy. Ich bin um neun Uhr im Büro. Viele Grüße, Ana', 2],
+    12: ['Hallo Lena! Am Freitag feiern wir Geburtstag. Der Tag ist der 15. Mai und die Party ist um acht Uhr. Die Gäste bringen Kuchen und Musik mit. Bringst du bitte den Salat mit? Bis bald, Ana', 1],
+  };
+  for (const [nr, [sample, count]] of Object.entries(ROUND_15_SAMPLES)) {
+    const c = cloneOf(CURRICULUM_A11);
+    c.lektionen[Number(nr) - 1].schreiben.sample = sample;
+    const found = formSpeakInModelTexts(c, levelSpec('a1.1')).filter((o) => o.nr === Number(nr));
+    assert.equal(found.length, count, `L${nr}: ${JSON.stringify(found)}`);
+    assert.ok(failsWith(validateCurriculum(c), 22), `L${nr}: validateCurriculum did not report RULE 22`);
+  }
+  // The noun list comes from the TASK BANK and not from a string literal — the round-15 guard was
+  // three typed strings that matched none of the five sentences above.
+  const src = readFileSync(join(ROOT, 'scripts/validate-curriculum.mjs'), 'utf8');
+  assert.doesNotMatch(src, /Der Familienstand:\|Das Land ist/, 'RULE 22 must not be a string list');
+});
+
+test('rule 23: a Wortfeld entry reaches an input surface of its own Lektion, not only an exercise', () => {
+  // DaF review #15, MAJOR 4: `marokkanisch` — the word the GRADED task of its Lektion asks for —
+  // stood in the vocabulary list and in the model answer and nowhere else in the whole course.
+  // RULE 10 was green because RULE 10 counts the exercises too, and a word a learner only meets
+  // inside the exercise he is graded on has been shown, not taught.
+  const uncovered = wortfeldInputCoverage(CURRICULUM_A11, levelSpec('a1.1'));
+  assert.equal(uncovered.length, MAX_WORTFELD_WITHOUT_INPUT,
+    `RULE 23 measures ${uncovered.length} and the ratchet says ${MAX_WORTFELD_WITHOUT_INPUT} — re-measure, never relax`);
+  // The entry the rule was written for is closed: L2's notice names the Staatsangehörigkeit and the
+  // model text says „Ich bin marokkanisch.“
+  assert.ok(!uncovered.some((o) => o.de === 'marokkanisch'), JSON.stringify(uncovered.filter((o) => o.nr === 2)));
+  assert.ok(!uncovered.some((o) => o.de === 'geboren'));
+  // IT BITES: take the word off both surfaces and it is reported again.
+  const c = cloneOf(CURRICULUM_A11);
+  const l2 = c.lektionen[1];
+  l2.notice.bodyDe = l2.notice.bodyDe.replace(' Auch die Staatsangehörigkeit steht ohne Artikel: Ich bin marokkanisch.', '');
+  l2.schreiben.sample = l2.schreiben.sample.replace(' Ich bin marokkanisch.', '');
+  const after = wortfeldInputCoverage(c, levelSpec('a1.1'));
+  assert.ok(after.some((o) => o.nr === 2 && o.de === 'marokkanisch'), JSON.stringify(after.filter((o) => o.nr === 2)));
+  assert.ok(failsWith(validateCurriculum(c), 23), 'validateCurriculum did not report RULE 23');
+  // An ITEM is not an input surface — that is the whole difference to RULE 10, which counts both.
+  assert.ok(wortfeldCoverage(CURRICULUM_A11).length < uncovered.length,
+    'RULE 23 must be stricter than RULE 10, or it measures the same thing twice');
 });
 
 test("rule 20's licensed chunks are letter formulas — a closed list, and nothing content-bearing", () => {

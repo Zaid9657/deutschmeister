@@ -365,6 +365,21 @@
    "hint": null
   },
   {
+   "id": "extra-a11-l02-15",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 35,
+   "questionDe": "Die Staatsangehörigkeit im Formular: Ana ___ marokkanisch. (sein)",
+   "questionEn": "Nationality on the form: Ana is Moroccan.",
+   "options": null,
+   "answer": "ist",
+   "accepted": ["ist"],
+   "explanationDe": "Nach sein steht die Staatsangehörigkeit ohne Artikel: Ana ist marokkanisch.",
+   "hint": null
+  },
+  {
    "id": "extra-a11-l03-01",
    "topic": "personal-pronouns",
    "type": "fill_blank",
