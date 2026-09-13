@@ -50,8 +50,9 @@ test('parseCourseTask accepts a well-formed task and trims it', () => {
     taskPrompt: `  ${PROMPT}  `,
     taskTeil: ' Teil 2 ',
     taskHintWords: [' am Samstag ', 'mit Freunden', '', 'ins Kino'],
+    taskAnrede: 'du',
   });
-  assert.deepEqual(task, { prompt: PROMPT, teil: 'Teil 2', hintWords: HINTS });
+  assert.deepEqual(task, { prompt: PROMPT, teil: 'Teil 2', hintWords: HINTS, anrede: 'du' });
 });
 
 test('parseCourseTask defaults the Teil label but never the prompt', () => {
@@ -61,6 +62,14 @@ test('parseCourseTask defaults the Teil label but never the prompt', () => {
   assert.equal(parseCourseTask({}), null);
   assert.equal(parseCourseTask(null), null);
   assert.equal(parseCourseTask('nope'), null);
+});
+
+test('parseCourseTask normalises anrede to Sie|du, defaulting to Sie', () => {
+  assert.equal(parseCourseTask({ taskPrompt: PROMPT }).anrede, 'Sie');
+  assert.equal(parseCourseTask({ taskPrompt: PROMPT, taskAnrede: 'Sie' }).anrede, 'Sie');
+  assert.equal(parseCourseTask({ taskPrompt: PROMPT, taskAnrede: 'du' }).anrede, 'du');
+  assert.equal(parseCourseTask({ taskPrompt: PROMPT, taskAnrede: 'bogus' }).anrede, 'Sie');
+  assert.equal(parseCourseTask({ taskPrompt: PROMPT, taskAnrede: null }).anrede, 'Sie');
 });
 
 test('a missionId always wins — the client task is ignored outright', () => {
@@ -94,11 +103,19 @@ test('parseCourseTask ignores non-string hint words rather than throwing', () =>
 // --- 2. the round trip -------------------------------------------------------
 
 test('courseTaskColumns → taskFromSession round-trips a task unchanged', () => {
-  const task = parseCourseTask({ taskPrompt: PROMPT, taskTeil: 'Teil 2', taskHintWords: HINTS });
+  const task = parseCourseTask({ taskPrompt: PROMPT, taskTeil: 'Teil 2', taskHintWords: HINTS, taskAnrede: 'du' });
   const cols = courseTaskColumns(task);
   assert.equal(cols.topic, 'Teil 2');
-  assert.deepEqual(JSON.parse(cols.scenario), { prompt: PROMPT, hintWords: HINTS });
+  assert.deepEqual(JSON.parse(cols.scenario), { prompt: PROMPT, hintWords: HINTS, anrede: 'du' });
   assert.deepEqual(taskFromSession({ mission_id: null, ...cols }), task);
+});
+
+test('courseTaskColumns → taskFromSession round-trips the Sie default too', () => {
+  const task = parseCourseTask({ taskPrompt: PROMPT, taskTeil: 'Teil 2', taskHintWords: HINTS });
+  const cols = courseTaskColumns(task);
+  assert.deepEqual(JSON.parse(cols.scenario), { prompt: PROMPT, hintWords: HINTS, anrede: 'Sie' });
+  assert.deepEqual(taskFromSession({ mission_id: null, ...cols }), task);
+  assert.equal(task.anrede, 'Sie');
 });
 
 test('courseTaskColumns nulls both columns when there is no task', () => {
@@ -115,7 +132,7 @@ test('taskFromSession returns null for mission, placement-shaped and empty rows'
 
 test('taskFromSession tolerates a plain-string scenario', () => {
   const task = taskFromSession({ mission_id: null, topic: 'Teil 2', scenario: PROMPT });
-  assert.deepEqual(task, { prompt: PROMPT, teil: 'Teil 2', hintWords: [] });
+  assert.deepEqual(task, { prompt: PROMPT, teil: 'Teil 2', hintWords: [], anrede: 'Sie' });
   // Malformed JSON is a string, not a crash.
   assert.equal(taskFromSession({ mission_id: null, topic: null, scenario: '{"prompt":' }).teil, 'Sprechen');
   // A JSON object with no usable prompt is no task at all.
@@ -134,6 +151,26 @@ test('buildTeacherSystemPrompt carries the task text and hint words', () => {
   // Still a level-appropriate German teacher with the shared rules.
   assert.ok(system.includes('A1.1'));
   assert.ok(system.includes('WICHTIG — WIE DU SPRICHST'));
+});
+
+test('buildTeacherSystemPrompt carries the right ANREDE line for Sie and du', () => {
+  const sieTask = parseCourseTask({ taskPrompt: PROMPT, taskAnrede: 'Sie' });
+  const sieSystem = buildTeacherSystemPrompt({ level: 'A1.1', courseTask: sieTask });
+  assert.ok(sieSystem.includes('ANREDE: Sprich den Lernenden mit Sie an und spiele die Rolle, die die Aufgabe verlangt (z. B. Kellner, Beamtin).'));
+  assert.ok(!sieSystem.includes('duze den Lernenden'));
+
+  const duTask = parseCourseTask({ taskPrompt: PROMPT, taskAnrede: 'du' });
+  const duSystem = buildTeacherSystemPrompt({ level: 'A1.1', courseTask: duTask });
+  assert.ok(duSystem.includes('ANREDE: Ihr seid Freunde/Kollegen — duze den Lernenden.'));
+  assert.ok(!duSystem.includes('Sprich den Lernenden mit Sie an'));
+
+  // No task at all → no ANREDE line, for free, mission and placement prompts.
+  const free = buildTeacherSystemPrompt({ level: 'A1.1' });
+  assert.ok(!free.includes('ANREDE:'));
+  const mission = buildTeacherSystemPrompt({ level: 'A1.1', mission: { ai_role: 'Du bist Bäckerin.' } });
+  assert.ok(!mission.includes('ANREDE:'));
+  const placement = buildTeacherSystemPrompt({ level: 'placement', isPlacement: true, courseTask: duTask });
+  assert.ok(!placement.includes('ANREDE:'));
 });
 
 test('a task with no hint words adds the task block but no hint block', () => {
@@ -189,6 +226,7 @@ test('the client sends the task only when no mission is selected', () => {
   const src = read('src/pages/SpeakingPage.jsx');
   assert.ok(src.includes('taskPrompt: courseTask.promptDe'));
   assert.ok(src.includes('taskTeil: courseTask.teil'));
+  assert.ok(src.includes('taskAnrede: courseTask.anrede'));
   assert.ok(src.includes('taskHintWords: courseTask.hintWords'));
   assert.ok(src.includes('courseTaskActive && !selectedMissionId'), 'a chosen mission must suppress the task fields');
 });

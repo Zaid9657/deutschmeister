@@ -76,8 +76,11 @@ export const COURSE_TASK_LIMITS = {
 
 const trimTo = (value, max) => (typeof value === 'string' ? value.trim().slice(0, max).trim() : '');
 
+// 'Sie' | 'du', default 'Sie' when absent or unrecognized.
+const normalizeAnrede = (value) => (value === 'du' ? 'du' : 'Sie');
+
 // Normalize a validated task. Returns null when there is no usable prompt.
-function normalizeCourseTask({ prompt, teil, hintWords } = {}) {
+function normalizeCourseTask({ prompt, teil, hintWords, anrede } = {}) {
   const cleanPrompt = trimTo(prompt, COURSE_TASK_LIMITS.promptChars);
   if (!cleanPrompt) return null;
   const cleanHints = (Array.isArray(hintWords) ? hintWords : [])
@@ -88,6 +91,7 @@ function normalizeCourseTask({ prompt, teil, hintWords } = {}) {
     prompt: cleanPrompt,
     teil: trimTo(teil, COURSE_TASK_LIMITS.teilChars) || 'Sprechen',
     hintWords: cleanHints,
+    anrede: normalizeAnrede(anrede),
   };
 }
 
@@ -100,6 +104,7 @@ export function parseCourseTask(body) {
     prompt: body.taskPrompt,
     teil: body.taskTeil,
     hintWords: body.taskHintWords,
+    anrede: body.taskAnrede,
   });
 }
 
@@ -108,7 +113,7 @@ export function courseTaskColumns(task) {
   if (!task) return { topic: null, scenario: null };
   return {
     topic: task.teil || null,
-    scenario: JSON.stringify({ prompt: task.prompt, hintWords: task.hintWords || [] }),
+    scenario: JSON.stringify({ prompt: task.prompt, hintWords: task.hintWords || [], anrede: task.anrede }),
   };
 }
 
@@ -130,6 +135,7 @@ export function taskFromSession(row) {
     prompt: parsed.prompt,
     teil: parsed.teil || row.topic,
     hintWords: parsed.hintWords,
+    anrede: parsed.anrede,
   });
 }
 
@@ -163,6 +169,9 @@ export function buildTeacherSystemPrompt({ level, mission = null, isPlacement = 
     if (mission.system_prompt_extra) parts.push(mission.system_prompt_extra);
   } else if (courseTask) {
     parts.push(`DEINE AUFGABE (${courseTask.teil}) — dein Gegenüber bearbeitet gerade genau diese Aufgabe aus seiner Lektion:\n"${courseTask.prompt}"\nFühre das Gespräch so, dass diese Aufgabe wirklich bearbeitet wird: bleib beim Thema, stelle Rückfragen dazu und lenke höflich zurück, wenn das Gespräch abschweift.`);
+    parts.push(courseTask.anrede === 'du'
+      ? 'ANREDE: Ihr seid Freunde/Kollegen — duze den Lernenden.'
+      : 'ANREDE: Sprich den Lernenden mit Sie an und spiele die Rolle, die die Aufgabe verlangt (z. B. Kellner, Beamtin).');
     if (courseTask.hintWords.length) {
       parts.push(`HILFSWÖRTER — dein Gegenüber hat diese Wörter vor sich; baue sie ins Gespräch ein:\n${courseTask.hintWords.join(', ')}`);
     }

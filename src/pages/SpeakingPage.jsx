@@ -174,6 +174,7 @@ const SpeakingPage = () => {
       hintWords: ctx.hintWords,
       lektion: ctx.title || null,
       level: String(ctx.level || '').toUpperCase(),
+      anrede: ctx.anrede === 'du' ? 'du' : 'Sie',
     };
   }, [wantedMission]);
 
@@ -273,6 +274,7 @@ const SpeakingPage = () => {
             ? {
               taskPrompt: courseTask.promptDe,
               taskTeil: courseTask.teil,
+              taskAnrede: courseTask.anrede,
               ...(Array.isArray(courseTask.hintWords) && courseTask.hintWords.length
                 ? { taskHintWords: courseTask.hintWords }
                 : {}),

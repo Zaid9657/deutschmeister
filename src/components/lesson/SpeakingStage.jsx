@@ -50,6 +50,7 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
       openPrompt: open ? open.promptDe || null : null,
       openTeil: open ? open.teil || null : null,
       hintWords: open && Array.isArray(open.hintWords) ? open.hintWords : [],
+      anrede: open ? open.anrede || 'Sie' : 'Sie',
     });
     window.location.assign(speakingHref);
   };
