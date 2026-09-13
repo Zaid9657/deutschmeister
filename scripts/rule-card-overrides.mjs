@@ -69,6 +69,22 @@
 // a line that names the persons (`ich … du … er/sie/es …`), where they are the
 // grammar being taught rather than an address to the reader.
 //
+// WHAT ROUND 9 CHANGED (REVIEW-daf-8-2026-09-12.md, MAJOR 1). The four guards the
+// A1.2 cards were written against — every example sentence a VERBATIM line of its
+// own Lektion, no token outside the cumulative lexis, every bolded notice form on
+// the card, no deferred form taught, card title = notice title — ran over A1.1
+// with a LEGACY_BUDGET that froze its measured debt (47 unsourced sentences, 17
+// missing bold forms, 10 divergent titles) instead of paying it. The debt was
+// real: the L5 card taught ein/eine, which is Lektion 6; the L10 card taught the
+// separable-verb Satzklammer, which is Lektion 11; the L7 card conjugated fahren,
+// which is Lektion 10; the L9 card dropped „Ich möchte …“, the chunk its own
+// notice title names; the L11 card showed none of its five bolded forms.
+// All twelve cards are rewritten here from the `notice`, `dialog`, `wortfeld` and
+// `pretest` of src/data/curricula/a11.js: every example sentence on a card is now
+// a line the Lektion itself says, every title is its notice's title, and the
+// budget is DELETED from the test rather than set to zero — an allowance that
+// exists is an allowance the next level asks for.
+//
 // WHAT THIS FILE COVERS NOW. The twelve A1.1 slugs above and, since 2026-09-13,
 // the twelve A1.2 slugs of the curriculum draft (src/data/curricula/a12.js) —
 // every slug that a Lektion of a rebuilt course makes primary. The A1.2 half is
@@ -82,18 +98,18 @@
 
 /** @type {Record<string, {titleDe: string, content: string, commonMistakes: Array<{wrong: string, correct: string, explanationDe: string}>}>} */
 const RULE_CARD_OVERRIDES = {
-  // ── Lektion 1 · Hallo, ich bin … (Kontakte knüpfen)
+  // ── Lektion 1 · Hallo, ich bin … (Begrüßung, Vorstellen und das Alphabet)
   'alphabet-pronunciation': {
-    titleDe: 'Die Buchstabennamen und das Buchstabieren',
+    titleDe: 'Das Alphabet: buchstabieren',
     content: [
       'Beim Buchstabieren sagt man jeden Buchstaben einzeln.',
-      'Jeder Buchstabe hat einen Namen:',
-      'A a, B be, C ce, D de, E e, F ef, G ge, H ha, I i, J Jot, K ka, L el, M em,',
-      'N en, O o, P pe, Q ku, R er, S es, T te, U u, V Vau, W we, X ix, Y Ypsilon, Z Zett.',
-      'Ä a-Umlaut, Ö o-Umlaut, Ü u-Umlaut, ß Eszett.',
-      'Vorsicht: E und I, G und J, V und W haben ähnliche Namen.',
+      'Die Namen der Buchstaben sind A a, B be, C ce, D de, E e, F ef, G ge, H ha, I i, J Jot,',
+      'K ka, L el, M em, N en, O o, P pe, Q ku, R er, S es, T te, U u, V Vau, W we, X ix, Y Ypsilon, Z Zett.',
+      'Dazu kommen die Formen Ä a-Umlaut, Ö o-Umlaut, Ü u-Umlaut, ß Eszett.',
+      'Vorsicht bei E und I, G und J, V und W.',
+      'Man fragt: Wie buchstabiert man das?',
       'Frage: Wie schreibt man das? Antwort: A-N-A.',
-      'Beispiele: Buchstabieren Sie bitte Chakiri. Wie buchstabiert man Ana?',
+      'Beispiele: Buchstabieren Sie bitte Chakiri. Und wie buchstabiert man Ana?',
       'Wie schreibt man Tschüss? Buchstabieren Sie Entschuldigung.',
       'English: every German letter has its own name — say the names one by one when you spell.',
     ].join('\n'),
@@ -116,17 +132,16 @@ const RULE_CARD_OVERRIDES = {
     ],
   },
 
-  // ── Lektion 2 · Ich bin Studentin (Ämter und Behörden)
+  // ── Lektion 2 · Ich bin Studentin (Angaben zur Person, Beruf und Zahlen)
   'verb-sein': {
     titleDe: 'sein: ich bin, du bist, Sie sind',
     content: [
-      'sein ist unregelmäßig. Man lernt die sechs Formen auswendig:',
+      'sein ist das wichtigste Verb. Es ist unregelmäßig:',
       'ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.',
-      'Der Beruf: Was sind Sie von Beruf? — Ich bin Studentin. Herr Weber ist Lehrer.',
-      'Nach sein steht der Beruf ohne Artikel: Ich bin Lehrerin. Nicht: Ich bin eine Lehrerin.',
-      'Woher sind Sie? — Ich bin aus Marokko. Wir sind aus Marokko.',
-      'Der Wohnort: Ich bin in Bremen. Ana ist in Bremen.',
-      'In der Frage steht sein vorn: Sind Sie Frau Chakiri? — Ja, ich bin Frau Chakiri.',
+      'Nach sein steht der Beruf ohne Artikel: Ich bin Lehrer. Nicht: Ich bin ein Lehrer.',
+      'Der Beruf in der Frage: Was sind Sie von Beruf? — Ich bin Studentin.',
+      'Beispiele: Ich komme aus Marokko. Ich wohne in Bremen.',
+      'In der Frage steht sein vorn: Ist das Formular für die Adresse?',
       'English: sein is irregular — learn the six forms as whole words, not from a stem.',
     ].join('\n'),
     commonMistakes: [
@@ -148,17 +163,16 @@ const RULE_CARD_OVERRIDES = {
     ],
   },
 
-  // ── Lektion 3 · Meine Familie (Familie und Erziehung)
+  // ── Lektion 3 · Meine Familie (Familie und Sprachen)
   'personal-pronouns': {
-    titleDe: 'er, sie, es – und die Formen für mehrere Personen',
+    titleDe: 'er, sie, es – die Personalpronomen',
     content: [
-      'Das Pronomen richtet sich nach dem Artikel des Nomens, nicht nach der Bedeutung.',
-      'der Vater → er. der Bruder → er.',
-      'die Mutter → sie. die Schwester → sie.',
-      'das Kind → es. das Baby → es.',
-      'Mehrere Personen: wir (meine Familie und ich), ihr (mehrere Personen zusammen), sie (die Eltern).',
-      'Sie mit großem S ist die höfliche Form: Woher kommen Sie, Frau Chakiri?',
-      'Beispiele: Wie alt ist er? — Er ist zwanzig. Meine Schwester ist jung. Sie spricht Arabisch.',
+      'Das Pronomen richtet sich nach dem Nomen: der Bruder → er, die Schwester → sie, das Kind → es.',
+      'Für mehrere Personen stehen die Formen wir, ihr, sie.',
+      'Sie mit großem S ist die höfliche Form.',
+      'Beispiele: Wie alt ist er? Er ist zwanzig. Meine Schwester ist noch jung.',
+      'Bei sprechen wechselt der Vokal: er spricht. Mehr dazu in Lektion 7.',
+      'Ja, er spricht Englisch und Deutsch. Sie sprechen Arabisch und Deutsch.',
       'English: the pronoun follows the article of the noun — das Kind is always es.',
     ].join('\n'),
     commonMistakes: [
@@ -180,16 +194,17 @@ const RULE_CARD_OVERRIDES = {
     ],
   },
 
-  // ── Lektion 4 · Auf dem Flohmarkt (Einkaufen)
+  // ── Lektion 4 · Auf dem Flohmarkt (Einkaufen, Möbel und Preise)
   'nouns-gender': {
-    titleDe: 'Genus: der, die, das — und die Endungen, die helfen',
+    titleDe: 'Jedes Nomen hat ein Genus',
     content: [
-      'Jedes Nomen hat ein Genus: der, die oder das. Im Plural steht immer die.',
+      'Jedes Nomen hat ein Genus: der Tisch, die Lampe, das Regal.',
+      'Im Plural haben alle Nomen die.',
       'Diese Endungen zeigen das Genus:',
       '-ung, -heit, -keit, -schaft → die: die Entschuldigung, die Freiheit, die Möglichkeit, die Freundschaft.',
       '-chen, -lein → das: das Mädchen, das Brötchen.',
-      '-er bei männlichen Berufsnamen → der: der Lehrer. Vorsicht: die Mutter, die Schwester, die Tochter.',
-      'Hat ein Nomen keine dieser Endungen, dann lernt man den Artikel einfach mit.',
+      '-er bei männlichen Berufsnamen → der: der Lehrer. Vorsicht: die Mutter, die Schwester.',
+      'Nach kaufen wird der zu den: Ich kaufe den Stuhl.',
       'Lernen Sie jedes Nomen mit dem Artikel: nicht Tisch, sondern der Tisch.',
       'English: learn every noun together with its article; the endings above are reliable groups, not a complete system.',
     ].join('\n'),
@@ -213,27 +228,19 @@ const RULE_CARD_OVERRIDES = {
     ],
   },
 
-  // ── Lektion 5 · Im Klassenzimmer (Lernen und Bildung)
+  // ── Lektion 5 · Im Klassenzimmer (Gegenstände und Farben)
   'definite-articles': {
-    titleDe: 'der, die, das: die Sache ist schon bekannt',
+    titleDe: 'der, die, das – der bestimmte Artikel',
     content: [
-      'ein und eine stehen bei einer neuen Sache.',
-      'der, die und das zeigen: Beide wissen, welche Sache gemeint ist.',
-      'Neu: ein Heft, eine Schere, ein Lineal.',
-      'Schon bekannt: das Heft, die Schere, das Lineal.',
-      'der (maskulin), die (feminin), das (neutral). Im Plural steht immer die: die Hefte, die Stifte.',
-      'Man zeigt mit hier und da: Das Wörterbuch ist hier. Der Stift ist da.',
-      'Ist das ein Heft? — Ja, und das Heft ist grün.',
-      'Wo ist die Schere? — Die Schere ist hier.',
-      'Hier lernen Sie nur den Artikel. Die Pluralformen lernt man Wort für Wort.',
-      'English: ein/eine introduces something new; der/die/das points at the thing both speakers already mean.',
+      'Der bestimmte Artikel zeigt: Wir wissen, welche Sache gemeint ist.',
+      'Die Formen sind der (maskulin), die (feminin), das (neutral), im Plural immer die: die Hefte.',
+      'Antworten beginnen zuerst mit hier oder da.',
+      'Beispiele: Das Wörterbuch ist hier. Der Stift ist da. Die Schere ist hier.',
+      'Der Artikel steht immer vor dem Nomen: Der Stift ist blau, der Bleistift ist gelb.',
+      'Nein, das Heft ist grün.',
+      'English: der/die/das points at a thing both speakers already have in mind.',
     ].join('\n'),
     commonMistakes: [
-      {
-        wrong: 'Das ist eine Schere. Eine Schere ist hier.',
-        correct: 'Das ist eine Schere. Die Schere ist hier.',
-        explanationDe: 'Die Schere ist jetzt bekannt. Dann steht der bestimmte Artikel: die Schere.',
-      },
       {
         wrong: 'Die Stift ist blau.',
         correct: 'Der Stift ist blau.',
@@ -244,20 +251,24 @@ const RULE_CARD_OVERRIDES = {
         correct: 'Wo ist das Wörterbuch?',
         explanationDe: 'Der Artikel fällt nicht weg. Vor dem Nomen steht der, die oder das.',
       },
+      {
+        wrong: 'Der Schere ist hier.',
+        correct: 'Die Schere ist hier.',
+        explanationDe: 'die Schere ist feminin. Das Genus gehört zum Wort und ändert sich nicht.',
+      },
     ],
   },
 
-  // ── Lektion 6 · Der erste Tag im Büro (Arbeit und Beruf)
+  // ── Lektion 6 · Der erste Tag im Büro (Büro, Technik und Telefon)
   'indefinite-articles': {
-    titleDe: 'ein, eine, einen – und der Beruf ohne Artikel',
+    titleDe: 'ein, eine – der unbestimmte Artikel',
     content: [
-      'Neu oder unbekannt? Dann steht ein oder eine:',
-      'ein Computer (der), ein Telefon (das), eine Pause (die).',
-      'Nach brauchen, haben und kaufen wird maskulin ein zu einen:',
-      'Ich brauche einen Computer. Die Regel dahinter (Akkusativ) kommt in A1.2.',
-      'Der Beruf steht ohne Artikel: Ich bin Ingenieurin. Herr Weber ist Ingenieur.',
-      'Auch in der Frage: Was sind Sie von Beruf? — Ich bin Verkäufer.',
-      'Die Verneinung ist kein: Wir haben kein Handy. Ich habe keine Nummer.',
+      'Neu oder unbekannt? Dann ein (der/das) oder eine (die): ein Computer, eine Lampe.',
+      'Nach Verben wie brauchen, haben, kaufen wird maskulin ein → einen: Ich brauche einen Computer.',
+      'Die Regel dahinter (Akkusativ) kommt in A1.2.',
+      'Verneinung mit kein: Wir haben kein Handy.',
+      'Der Beruf steht ohne Artikel: Ihr Kollege ist Ingenieur.',
+      'Die Uhrzeit um eins folgt in Lektion 8.',
       'English: German uses no article before a job — Ich bin Ingenieurin, never eine Ingenieurin.',
     ].join('\n'),
     commonMistakes: [
@@ -279,18 +290,17 @@ const RULE_CARD_OVERRIDES = {
     ],
   },
 
-  // ── Lektion 7 · Freizeit und Hobbys (Freizeit und soziale Kontakte)
+  // ── Lektion 7 · Freizeit und Hobbys
   'present-tense-regular': {
-    titleDe: 'Präsens: die Endungen und zwei Sonderfälle',
+    titleDe: 'Präsens: regelmäßige Verben',
     content: [
-      'Regelmäßige Verben: Stamm plus Endung. spielen ohne -en ergibt den Stamm spiel-.',
+      'Regelmäßige Verben haben feste Endungen am Stamm:',
       'ich spiele, du spielst, er/sie/es spielt, wir spielen, ihr spielt, sie/Sie spielen.',
-      'So auch: hören, kochen, tanzen, lernen, wohnen, schwimmen.',
-      'Endet der Stamm auf -t oder -d, kommt ein e dazu: ich arbeite, du arbeitest, er arbeitet.',
-      'Zwei Verben wechseln den Vokal: ich spreche, du sprichst, er spricht.',
-      'Und: ich fahre, du fährst, er fährt.',
-      'gern steht nach dem Verb: Ich höre gern Musik. Ich spiele gern Fußball.',
-      'English: add the ending to the stem; stems on -t or -d take an extra e (arbeitest).',
+      'So bekommen auch hören, kochen, tanzen, lernen und schwimmen die Endungen.',
+      'Endet der Stamm auf -t, kommt ein e dazu: du arbeitest, er arbeitet. Am Wochenende arbeite ich nicht.',
+      'Achtung: einige Verben wechseln den Vokal: sprechen → er spricht.',
+      'gern steht nach dem Verb: Ich höre gern Musik.',
+      'English: add the ending to the stem; stems on -t take an extra e (arbeitest).',
     ].join('\n'),
     commonMistakes: [
       {
@@ -306,22 +316,23 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Er sprecht Arabisch.',
         correct: 'Er spricht Arabisch.',
-        explanationDe: 'sprechen wechselt den Vokal: er spricht. Genauso: er fährt.',
+        explanationDe: 'sprechen wechselt den Vokal: er spricht.',
       },
     ],
   },
 
-  // ── Lektion 8 · Termine und Uhrzeit (Gesundheit und Ämter)
+  // ── Lektion 8 · Termine und Uhrzeit (Verabredungen, Uhrzeit und Tagesablauf)
   'time-and-dates': {
-    titleDe: 'Die Uhrzeit: offiziell und im Alltag',
+    titleDe: 'um, am – die Uhrzeit sagen',
     content: [
-      'Offiziell sagt man die Stunde und die Minuten: 8:30 ist acht Uhr dreißig, 14:15 ist vierzehn Uhr fünfzehn.',
-      'Umgangssprachlich sagt man: halb neun ist 8:30, Viertel nach acht ist 8:15, Viertel vor neun ist 8:45.',
-      'halb nimmt die nächste Stunde. halb neun liegt also vor neun Uhr.',
-      'um steht vor der Uhrzeit: Der Termin ist um acht Uhr.',
-      'am steht vor Tagen und Tageszeiten: am Montag, am Morgen, am Abend.',
+      'Uhrzeit mit um: um acht Uhr. Wochentag mit am: am Montag.',
+      'Umgangssprachlich: Viertel nach acht, Viertel vor neun, halb neun (= 8.30!).',
+      'Die Uhrzeit halb neun ist 8.30 und nicht 9.30.',
+      'Offiziell lautet die Uhrzeit acht Uhr dreißig.',
+      'Die Frage lautet: Wie spät ist es?',
+      'Feste Wendung: Hast du Zeit? Am Dienstag habe ich abends Zeit.',
       'im steht vor Monaten: im Mai.',
-      'Das Datum mit Ordnungszahlen kommt erst in A1.2. Hier lernen Sie nur die Uhrzeit und die Tage.',
+      'Die Ordnungszahl für das Datum lernt man erst in A1.2.',
       'English: um for clock times, am for days and parts of the day, im for months.',
     ].join('\n'),
     commonMistakes: [
@@ -343,17 +354,17 @@ const RULE_CARD_OVERRIDES = {
     ],
   },
 
-  // ── Lektion 9 · Im Café (Essen und Trinken)
+  // ── Lektion 9 · Im Café (Essen und Trinken: etwas bestellen)
   'verb-haben': {
-    titleDe: 'haben: Hunger, Durst und Zeit',
+    titleDe: 'haben und der Chunk „Ich möchte …“',
     content: [
-      'haben ist unregelmäßig. Diese sechs Formen sind fest:',
+      'Das Verb haben ist unregelmäßig:',
       'ich habe, du hast, er/sie/es hat, wir haben, ihr habt, sie/Sie haben.',
-      'Mit haben sagt man Hunger, Durst und Zeit — und zwar ohne Artikel:',
-      'Ich habe Hunger. Ich habe Durst. Haben Sie Zeit?',
-      'Im Café: Wir haben Suppe, Salat und Kuchen. Die Kellnerin hat Zeit.',
-      'In der Frage steht haben vorn: Haben Sie auch Hunger? — Ja, ich habe Hunger.',
-      'Man bestellt so: Ich möchte einen Kaffee, bitte.',
+      'Mit haben sagt man Hunger, Durst oder Zeit.',
+      'Beispiele: Ja, ich habe Hunger. Ich habe Durst. Haben Sie auch Hunger?',
+      'Im Café: Wir haben Suppe, Salat und Kuchen.',
+      'Ich möchte … ist hier eine feste Wendung. Die Form gehört zu den Modalverben in A1.2.',
+      'So bestellt man: Ich möchte einen Kaffee, bitte.',
       'English: German has hunger and thirst rather than being hungry — Ich habe Hunger.',
     ].join('\n'),
     commonMistakes: [
@@ -375,17 +386,16 @@ const RULE_CARD_OVERRIDES = {
     ],
   },
 
-  // ── Lektion 10 · Am Bahnhof (Mobilität und Verkehrsmittel)
+  // ── Lektion 10 · Am Bahnhof (Verkehrsmittel und Reisen)
   'yes-no-questions': {
-    titleDe: 'Aussage → Ja/Nein-Frage',
+    titleDe: 'Ja/Nein-Fragen: das Verb steht vorn',
     content: [
-      'In der geschriebenen Ja/Nein-Frage steht das Verb auf Platz 1, das Subjekt direkt danach. Alles andere bleibt gleich.',
-      'Der Zug fährt pünktlich. → Fährt der Zug pünktlich?',
-      'Sie haben eine Fahrkarte. → Haben Sie eine Fahrkarte?',
-      'Sie kommen aus Österreich. → Kommen Sie aus Österreich?',
-      'Der Bus fährt in die Schweiz. → Fährt der Bus in die Schweiz?',
-      'Sie stehen früh auf. → Stehen Sie früh auf? Die Vorsilbe bleibt am Ende.',
-      'Antworten Sie mit einem ganzen Satz: Ja, ich bin pünktlich. Nein, ich habe keine Zeit.',
+      'Bei der Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → Fährt der Zug?',
+      'Das Subjekt steht direkt nach dem Verb.',
+      'Die Antwort ist ja oder nein. Die Satzmelodie steigt am Ende.',
+      'Das Verb fahren ist unregelmäßig mit den Formen ich fahre, du fährst, er fährt.',
+      'Beispiele: Fährt der Zug nach Österreich? Kostet die Fahrkarte zwanzig Euro?',
+      'Ist der Bahnhof weit? Hat der Zug Verspätung?',
       'English: in a written yes/no question the verb comes first and the subject second.',
     ].join('\n'),
     commonMistakes: [
@@ -407,17 +417,16 @@ const RULE_CARD_OVERRIDES = {
     ],
   },
 
-  // ── Lektion 11 · Mein Tag (Alltag organisieren)
+  // ── Lektion 11 · Mein Tag (Tagesablauf mit aufstehen, einkaufen, anrufen)
   'separable-verbs-intro': {
     titleDe: 'Trennbare Verben: die Satzklammer',
     content: [
-      'Trennbare Verben teilen sich im Satz: das Verb steht auf Position 2, die Vorsilbe ganz am Ende.',
-      'ein|kaufen: Ich kaufe am Freitag ein.',
-      'auf|stehen: Ich stehe um sechs auf.',
-      'an|rufen: Ich rufe meine Mutter an.',
-      'mit|bringen: Ich bringe Kuchen mit.',
-      'ab|holen: Ich hole meine Kollegin ab.',
-      'In der Frage steht das Verb vorn, die Vorsilbe bleibt am Ende: Kaufen Sie heute ein?',
+      'Trennbare Verben teilen sich: ein|kaufen → Ich kaufe am Freitag ein.',
+      'Das Verb steht auf Position 2, die Vorsilbe am Ende. So auch auf|stehen, an|rufen, mit|bringen.',
+      'Beispiele: Ich stehe um sechs auf. Ich bringe Kuchen mit. Ja, ich komme mit.',
+      'Ich rufe dich an ist eine feste Wendung. Rufst du mich an?',
+      'schlafen wechselt den Vokal: er schläft.',
+      'Gemacht und gearbeitet lernt man hier als feste Formen. Die Regel dazu (Perfekt) kommt in A1.2.',
       'English: a separable verb splits — the finite part comes second, the prefix goes last.',
     ].join('\n'),
     commonMistakes: [
@@ -439,16 +448,15 @@ const RULE_CARD_OVERRIDES = {
     ],
   },
 
-  // ── Lektion 12 · Feste feiern (Freizeit und soziale Kontakte)
+  // ── Lektion 12 · Feste feiern (Feste und Wiederholung)
   'possessive-articles': {
-    titleDe: 'Possessivartikel: mein, sein, ihr und Ihr',
+    titleDe: 'mein, dein, sein, ihr – Possessivartikel',
     content: [
-      'Der Possessivartikel zeigt, wem etwas gehört.',
-      'Beispiele: mein Geschenk (ich), dein Bruder (du), sein Handy (er), ihr Buch (sie).',
-      'Für Gruppen: unser Fest (wir), euer Fest (ihr).',
-      'Vor femininen Nomen und im Plural kommt -e dazu: meine Mama, unsere Gäste, eure Karten.',
-      'Die höfliche Form ist Ihr und steht immer mit großem I: Ist das Ihr Geschenk, Frau Kaya?',
-      'Beim Fest: Meine Mama kommt. Mein Papa bringt Kuchen mit. Unsere Party ist am Freitag.',
+      'Der Possessivartikel zeigt, wem etwas gehört: mein Geschenk, dein Bruder, sein Handy (er), ihr Buch (sie), Ihr Büro (Sie, höflich — immer groß!).',
+      'Vor femininen Nomen und im Plural kommt -e dazu: meine Mama.',
+      'Für Gruppen: unser Fest (wir), euer Fest (ihr) → vor die-Wörtern unsere, eure.',
+      'Die höfliche Form ist Ihr und steht immer mit großem I.',
+      'Beim Fest: Mein Geburtstag ist im Mai. Mein Bruder kauft das Geschenk.',
       'English: the polite form Ihr always takes a capital I, also inside a sentence.',
     ].join('\n'),
     commonMistakes: [
