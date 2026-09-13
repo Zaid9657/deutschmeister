@@ -137,6 +137,10 @@ export function buildCardIndex(curriculum) {
         detail: word.plural ? `Plural: ${word.plural}` : '',
         lektionNr: lektion.nr,
         accepted: [word.de, word.word].filter(Boolean),
+        // The case-task opt-in travels with the content (check.js's isCaseTask
+        // reads the item's own flag now), so a polite form is graded in the
+        // review exactly as it is in the lesson.
+        caseSensitive: word.caseSensitive === true,
       });
     }
     for (const slug of lektion.practiceRule?.topics || lektion.grammarSlugs || []) {
@@ -149,6 +153,7 @@ export function buildCardIndex(curriculum) {
         detail: lektion.notice?.examples?.[0] || '',
         lektionNr: lektion.nr,
         accepted: (lektion.notice?.examples || []).filter(Boolean),
+        caseSensitive: lektion.notice?.caseSensitive === true,
       });
     }
     (lektion.dialog?.lines || []).forEach((line, idx) => {
@@ -160,6 +165,7 @@ export function buildCardIndex(curriculum) {
         detail: `${line.speaker} — Lektion ${lektion.nr}`,
         lektionNr: lektion.nr,
         accepted: [line.de],
+        caseSensitive: line.caseSensitive === true,
       });
     });
   }

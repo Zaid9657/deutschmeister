@@ -21,11 +21,17 @@
 //     result. A self-confirm anywhere in the section keeps the whole section
 //     out of the result, because half a Sprechen score is not a Sprechen
 //     score.
+//   - Schreiben is one REAL writing task (the chapter's own, from
+//     src/data/writingTasks.js, AI-graded by evaluate-writing through
+//     GradedWriting) plus two sentence-building drills from two different
+//     Lektionen. The task is `optional: true`: without a grader verdict it is
+//     not attempted rather than wrong, and the section scores over the drills.
 //
 // Everything is deterministic in `seed` (mulberry32), so tests can pin the
 // exact 20 items and "Nochmal" can reshuffle the ORDER without changing the
 // test a learner already saw.
 import { checkAnswer, tagError, RESULT, STRICT_TOPIC, isCaseTask } from '../lesson/check.js';
+import { courseWritingTasks, writingTaskByKey } from '../../data/writingTasks.js';
 
 export const SECTION_ORDER = ['hoeren', 'lesen', 'bausteine', 'schreiben', 'sprechen'];
 
@@ -207,8 +213,8 @@ function fromPoolItem(poolItem, { id, section, source, register = null }) {
 
 // ── the five sections ───────────────────────────────────────────────────────
 
-// Hören: 3 full-line dictations from the chapter's dialogues + 2 "welches Wort
-// hast du gehört?" built from the Wortfeld (correct word + 3 Wortfeld
+// Hören: 3 full-line dictations from the chapter's dialogues + 2 "Welches Wort
+// hören Sie?" items built from the Wortfeld (correct word + 3 Wortfeld
 // distractors). Audio is window.speechSynthesis in v1 (CONTRACT.md).
 function buildHoeren(ctx) {
   const { checkpoint, rng, chapter } = ctx;
@@ -229,7 +235,7 @@ function buildHoeren(ctx) {
       source: 'chapter',
       register: null,
       scored: true,
-      promptDe: 'Hör zu und schreib den Satz.',
+      promptDe: 'Hören Sie zu und schreiben Sie den Satz.',
       promptEn: 'Listen and type the sentence.',
       audioText: line.de,
       text: null,
@@ -264,7 +270,7 @@ function buildHoeren(ctx) {
       source: 'chapter',
       register: null,
       scored: true,
-      promptDe: 'Welches Wort hörst du?',
+      promptDe: 'Welches Wort hören Sie?',
       promptEn: 'Which word do you hear?',
       audioText: word.de,
       text: null,
@@ -281,15 +287,146 @@ function buildHoeren(ctx) {
 }
 
 // Lesen: 4 short texts of 2–3 consecutive dialogue lines from the chapter, each
-// with ONE richtig/falsch statement. Deterministic templates — a "richtig"
-// statement quotes a line of the text; a "falsch" one quotes a line from a
-// different Lektion, so it is false by construction and never a judgement call.
+// with ONE richtig/falsch statement.
+//
+// Two things this section got wrong until DaF review #5 (MAJOR, `buildLesen`):
+//
+//   1. THE ANSWER KEY WAS THE SAME IN EVERY CHECKPOINT. `wantRichtig = i % 2 === 0`
+//      produced R–F–R–F four times over, so a learner who had seen checkpoint 1
+//      scored 4/4 in checkpoints 2–4 without reading a word — in a section the
+//      40 %-rule can fail a test on. The truth values are now DRAWN
+//      (`shuffle([true, true, false, false], rng)`): still two of each, but the
+//      order is the checkpoint's own seed, and tests/checkpoint.test.mjs pins
+//      that at least two different orders occur across the four checkpoints.
+//   2. A FALSE STATEMENT QUOTED ANOTHER LEKTION, so it tested string recognition,
+//      not reading. A false statement is now built from a line of THIS text with
+//      exactly ONE detail changed — a number word, a digit, a weekday, a name —
+//      taken from the dialogue's own vocabulary. That is what Lesen Teil 1/2/3 of
+//      *Start Deutsch 1* asks: the statement is plausible and you have to read the
+//      text to reject it.
+//
+// The `hint` is gone with it: it named the Lektion, which under (2) told the
+// learner which statements were the foreign ones.
+
+/** The number words a dialogue may use (a11.js FUNCTION_WORDS, 0–100). */
+const NUMBER_WORDS = [
+  'null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn',
+  'elf', 'zwölf', 'dreizehn', 'vierzehn', 'fünfzehn', 'sechzehn', 'siebzehn', 'achtzehn',
+  'neunzehn', 'zwanzig', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'siebzig', 'achtzig',
+  'neunzig', 'hundert',
+];
+
+const WEEKDAYS = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+
+// Numbers a REPLACEMENT may use: `eins` is excluded because "eins Euro" is not
+// German (the counted form is `ein`), and a false statement has to be wrong,
+// not broken. `null` goes with it — "null Euro" reads as a mistake, not a detail.
+const REPLACEMENT_NUMBERS = NUMBER_WORDS.filter((w) => w !== 'eins' && w !== 'null');
+
+/** Forms of address are not names: swapping "Ana" for "Herr" is nonsense, not a detail. */
+const TITLES = ['Herr', 'Frau'];
+
+/** A word as it appears in a line — letters (incl. umlauts) or a run of digits. */
+const WORD_RE = /[A-Za-zÄÖÜäöüß]+|\d+/g;
+
+/** The names the chapter's own speakers carry ("Frau Kaya" → Kaya, Frau). */
+function speakerNames(lektionen) {
+  const out = new Set();
+  for (const line of dialogLines(lektionen)) {
+    for (const part of String(line.speaker || '').split(/\s+/)) {
+      if (part.length >= 3 && /^[A-ZÄÖÜ]/.test(part) && !TITLES.includes(part)) out.add(part);
+    }
+  }
+  return [...out];
+}
+
+/**
+ * The nouns of the chapter's dialogues — the last-resort swap when a window
+ * carries no number, weekday or name. Sentence-initial words are skipped on
+ * both sides: a line-initial "Spielst …" is a capitalised VERB, and swapping it
+ * for a noun produces gibberish rather than a statement a learner can judge.
+ */
+function contentWords(lektionen) {
+  const out = new Set();
+  for (const line of dialogLines(lektionen)) {
+    const de = String(line.de || '');
+    for (const m of de.matchAll(WORD_RE)) {
+      if (m[0].length >= 4 && /^[A-ZÄÖÜ]/.test(m[0]) && !sentenceInitial(de, m.index)) out.add(m[0]);
+    }
+  }
+  return [...out];
+}
+
+/** Is this match at the start of the line or of a new sentence inside it? */
+function sentenceInitial(text, index) {
+  const before = text.slice(0, index).trimEnd();
+  return before === '' || /[.!?]$/.test(before);
+}
+
+/** Pick a member of `list` that is not `not` — deterministic in `rng`. */
+function pickOther(list, not, rng) {
+  const options = list.filter((x) => x.toLowerCase() !== String(not).toLowerCase());
+  if (!options.length) return null;
+  return options[Math.floor(rng() * options.length)];
+}
+
+/**
+ * The replacement table: one changed DETAIL, drawn from the dialogue's own
+ * kinds of token. Returns null for a word that carries no checkable detail.
+ */
+function changedDetail(word, { names, vocab }, rng, { allowVocab = true } = {}) {
+  const lower = word.toLowerCase();
+  if (NUMBER_WORDS.includes(lower)) {
+    const other = pickOther(REPLACEMENT_NUMBERS, lower, rng);
+    return other ? (/^[A-ZÄÖÜ]/.test(word) ? other[0].toUpperCase() + other.slice(1) : other) : null;
+  }
+  if (WEEKDAYS.includes(word)) return pickOther(WEEKDAYS, word, rng);
+  if (/^\d+$/.test(word)) {
+    const n = Number(word);
+    return String(n >= 10 ? n + 10 : n + 3);
+  }
+  if (names.includes(word)) return pickOther(names, word, rng);
+  if (allowVocab && vocab.includes(word)) return pickOther(vocab, word, rng);
+  return null;
+}
+
+/**
+ * Build a FALSE statement out of one line of this very text: the same sentence
+ * with exactly one detail replaced. Returns null when no line of the window
+ * carries a changeable detail (then the caller keeps the pattern honest by
+ * skipping the item rather than quoting a foreign Lektion again).
+ */
+function falsifyWindow(window, text, ctxWords, rng) {
+  const lines = shuffle(window, rng);
+  // Pass 1 changes a real DETAIL — a number, a time, a weekday, a name. Only
+  // when the window holds none of those does pass 2 swap a content word, which
+  // is the weaker (but still same-text) falsification.
+  for (const allowVocab of [false, true]) {
+    for (const line of lines) {
+      const de = String(line.de || '');
+      const matches = shuffle([...de.matchAll(WORD_RE)], rng);
+      for (const match of matches) {
+        if (allowVocab && sentenceInitial(de, match.index)) continue;
+        const replacement = changedDetail(match[0], ctxWords, rng, { allowVocab });
+        if (!replacement) continue;
+        const changed = `${de.slice(0, match.index)}${replacement}${de.slice(match.index + match[0].length)}`;
+        if (changed === de || text.includes(changed)) continue;
+        return { line, de: changed, from: match[0], to: replacement };
+      }
+    }
+  }
+  return null;
+}
+
 function buildLesen(ctx) {
   const { checkpoint, rng, chapter } = ctx;
   const items = [];
   const withDialog = chapter.filter((l) => (l?.dialog?.lines || []).length >= 2);
   if (!withDialog.length) return items;
   const order = shuffle(withDialog, rng);
+  // Two richtig and two falsch, in an order this checkpoint's seed decides.
+  const truth = shuffle([true, true, false, false], rng);
+  const ctxWords = { names: speakerNames(chapter), vocab: contentWords(chapter) };
 
   for (let i = 0; i < SECTION_COUNTS.lesen; i += 1) {
     const lektion = order[i % order.length];
@@ -298,18 +435,18 @@ function buildLesen(ctx) {
     const start = Math.floor(rng() * Math.max(1, lines.length - span + 1));
     const window = lines.slice(start, start + span);
     const text = window.map((l) => `${l.speaker}: ${l.de}`).join(' ');
-    const wantRichtig = i % 2 === 0;
+    const wantRichtig = truth[i];
 
     let quoted = window[Math.floor(rng() * window.length)];
+    let statement = quoted.de;
+    let explanationDe = 'Der Satz steht genau so im Text.';
     if (!wantRichtig) {
-      const others = dialogLines(order.filter((l) => l.nr !== lektion.nr)).filter(
-        (l) => !window.some((w) => w.de === l.de),
-      );
-      const foreign = others.length ? others[Math.floor(rng() * others.length)] : null;
-      if (foreign) quoted = foreign;
-      else continue;
+      const falsified = falsifyWindow(window, text, ctxWords, rng);
+      if (!falsified) continue;
+      quoted = falsified.line;
+      statement = falsified.de;
+      explanationDe = `Im Text steht „${falsified.line.de}“ — dort steht „${falsified.from}“, nicht „${falsified.to}“.`;
     }
-    const speaker = quoted.speaker;
     const answer = wantRichtig ? 'Richtig' : 'Falsch';
     items.push({
       id: `${checkpoint.id}-lesen-${i + 1}`,
@@ -321,17 +458,16 @@ function buildLesen(ctx) {
       source: 'chapter',
       register: null,
       scored: true,
-      promptDe: `Steht das im Text? „${speaker}: ${quoted.de}“`,
+      promptDe: `Steht das im Text? „${quoted.speaker}: ${statement}“`,
       promptEn: 'Does the text say this?',
       audioText: null,
       text,
       options: ['Richtig', 'Falsch'],
       answer,
       accepted: [answer],
-      explanationDe: wantRichtig
-        ? 'Der Satz steht genau so im Text.'
-        : 'Dieser Satz steht nicht in diesem Text — er kommt aus einer anderen Lektion.',
-      hint: `Lektion ${lektion.nr}`,
+      explanationDe,
+      // No hint: naming the Lektion is half the answer here (review #5).
+      hint: null,
       poolItemId: null,
       type: 'multiple_choice',
     });
@@ -365,31 +501,129 @@ function buildBausteine(ctx) {
   );
 }
 
-// Schreiben: 3 production items — sentence_building from the chapter's topics
-// where the pool has them, typed fill_blank where it does not. The register
-// (Formular / Mitteilung) comes from the chapter's own schreiben tasks so the
-// section reads like the writing the Lektionen actually taught.
+// Schreiben: 3 production items — and since DaF review #5 (MAJOR,
+// `buildSchreiben`) that means ONE REAL WRITING TASK plus two sentence-building
+// drills, not three drills with an invented Textsorte label.
+//
+//   - THE REAL TASK is the chapter's last Lektion's `schreiben.taskKey`
+//     (`a11-l03`, `a11-l06`, …), looked up in src/data/writingTasks.js — the
+//     same bank netlify/functions/evaluate-writing.mjs grades against, so the
+//     prompt the learner reads and the prompt the grader scores are one string.
+//     CheckpointPage mounts GradedWriting on it, exactly as the lesson does.
+//     It ships `scored: false, scorable: true, optional: true`: a grader verdict
+//     makes it one scored Schreiben item (correct at WRITING_PASS_PCT); without
+//     one — signed out, over the AI allowance, offline, where GradedWriting
+//     honestly falls back to its mechanical form check — the item is NOT
+//     ATTEMPTED and drops out of the section instead of scoring 0. Schreiben
+//     then scores over its two drills. Failing a section because the grader was
+//     unreachable would be a number we cannot defend; see scoreCheckpoint.
+//   - THE TWO DRILLS come from DIFFERENT Lektionen of the chapter: one item per
+//     `primarySlug`, round-robin, instead of three draws from one topic (the old
+//     code drew checkpoint 4 three times from Lektion 10's `yes-no-questions`).
+//   - `register` is NULL on the drills. It used to carry 'formular'/'mitteilung'
+//     on sentence-building items that have no Textsorte at all, and that field
+//     name is taken: evaluate-writing derives its character floor from it. The
+//     only item with a register is the real task, whose register is real.
 function buildSchreiben(ctx) {
-  const { checkpoint, rng, chapter, pool, usedPoolIds } = ctx;
-  const topics = topicsOf(chapter);
-  const registers = chapter.map((l) => l?.schreiben?.kind).filter(Boolean);
-  const candidates = shuffle(
-    byTopics(pool, topics).filter((i) => i.type === 'sentence_building' && !usedPoolIds.has(i.id)),
-    rng,
-  );
-  const chosen = take(candidates, SECTION_COUNTS.schreiben);
-  chosen.forEach((c) => usedPoolIds.add(c.id));
-  if (chosen.length < SECTION_COUNTS.schreiben) {
-    chosen.push(...drawPool(pool, topics, SECTION_COUNTS.schreiben - chosen.length, rng, usedPoolIds, { typedOnly: true }));
+  const { checkpoint, rng, chapter, pool, usedPoolIds, level } = ctx;
+  const graded = gradedWritingItem(checkpoint, chapter, level);
+  const drillCount = SECTION_COUNTS.schreiben - (graded ? 1 : 0);
+
+  const slugs = shuffle([...new Set((chapter || []).map((l) => l?.primarySlug).filter(Boolean))], rng);
+  const chosen = [];
+  // One sentence_building item per slug, so the drills span as many Lektionen
+  // of the chapter as there are slots.
+  for (const slug of slugs) {
+    if (chosen.length >= drillCount) break;
+    const candidates = shuffle(
+      byTopics(pool, [slug]).filter((i) => i.type === 'sentence_building' && !usedPoolIds.has(i.id)),
+      rng,
+    );
+    const pick = candidates[0];
+    if (!pick) continue;
+    usedPoolIds.add(pick.id);
+    chosen.push(pick);
   }
-  return chosen.map((p, i) =>
+  // Short (a slug the pool has no sentence-building item for): fill from the
+  // chapter's remaining topics, typed only, still round-robin across topics.
+  if (chosen.length < drillCount) {
+    const used = new Set(chosen.map((c) => c.topic));
+    const rest = topicsOf(chapter).filter((t) => !used.has(t));
+    chosen.push(...drawPool(pool, rest, drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true }));
+  }
+  if (chosen.length < drillCount) {
+    chosen.push(...drawPool(pool, topicsOf(chapter), drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true }));
+  }
+
+  const drills = chosen.map((p, i) =>
     fromPoolItem(p, {
       id: `${checkpoint.id}-schreiben-${i + 1}`,
       section: 'schreiben',
       source: 'chapter',
-      register: registers.length ? registers[i % registers.length] : null,
+      register: null,
     }),
   );
+  return graded ? [...drills, graded] : drills;
+}
+
+/**
+ * The chapter's own writing task: its last Lektion that has a `schreiben.taskKey`,
+ * resolved in the writing-task bank so the checkpoint sends evaluate-writing a
+ * key it knows. Returns null when the curriculum carries no taskKey (the test
+ * fixture) or the bank has no such task — then Schreiben stays three drills.
+ */
+export function chapterWritingTask(chapter, level) {
+  const lektion = [...(chapter || [])].reverse().find((l) => l?.schreiben?.taskKey);
+  if (!lektion) return null;
+  const taskKey = lektion.schreiben.taskKey;
+  const bank =
+    courseWritingTasks(level).find((t) => t.taskKey === taskKey) ||
+    writingTaskByKey('goethe_a1', taskKey);
+  return bank ? { lektion, schreiben: lektion.schreiben, bank } : null;
+}
+
+/** That task as a checkpoint item — rendered by GradedWriting on CheckpointPage. */
+function gradedWritingItem(checkpoint, chapter, level) {
+  const found = chapterWritingTask(chapter, level);
+  if (!found) return null;
+  const { lektion, schreiben: s, bank } = found;
+  return {
+    id: `${checkpoint.id}-schreiben-graded`,
+    section: 'schreiben',
+    kind: 'gradedWriting',
+    // Answered with the grader's verdict; the confirm path scores it.
+    mode: 'confirm',
+    topic: 'schreiben',
+    lektionNr: lektion.nr,
+    lektionId: lektion.id,
+    source: 'chapter',
+    register: s.kind || bank.register || null,
+    scored: false,
+    scorable: true,
+    optional: true,
+    promptDe: bank.task || s.taskDe,
+    promptEn: null,
+    audioText: null,
+    text: null,
+    options: null,
+    answer: true,
+    accepted: [true],
+    explanationDe: null,
+    hint: null,
+    poolItemId: null,
+    type: 'graded_writing',
+    task: {
+      examKey: bank.examKey,
+      taskKey: bank.taskKey,
+      kind: s.kind || bank.register,
+      taskDe: bank.task || s.taskDe,
+      fields: s.fields || (s.kind === 'formular' ? bank.leitpunkte : null) || null,
+      leitpunkte: bank.leitpunkte || s.leitpunkte || null,
+      minWords: bank.minWords ?? s.minWords ?? 0,
+      maxWords: bank.maxWords ?? s.maxWords ?? 30,
+      sample: s.sample || null,
+    },
+  };
 }
 
 // Sprechen: 2 read-alouds, scored by the microphone when there is one. The
@@ -422,7 +656,7 @@ function buildSprechen(ctx) {
     // scored every item of the section (see the header).
     scored: false,
     scorable: true,
-    promptDe: 'Lies den Satz laut vor.',
+    promptDe: 'Lesen Sie den Satz laut vor.',
     promptEn: 'Read the sentence aloud.',
     audioText: line.de,
     text: line.de,
@@ -447,6 +681,7 @@ export function buildCheckpoint({ curriculum, checkpoint, pool, seed } = {}) {
     checkpoint,
     rng,
     pool,
+    level: curriculum.level,
     chapter: chapterLektionen(curriculum, checkpoint),
     earlier: earlierLektionen(curriculum, checkpoint),
     usedPoolIds: new Set(),
@@ -473,9 +708,24 @@ export const SPRECHEN_PASS_PCT = 0.6;
 export const isMicResult = (answer) =>
   Boolean(answer) && typeof answer === 'object' && answer.usedMic === true && typeof answer.pct === 'number';
 
+/** A graded-writing answer that came back from evaluate-writing, not the form check. */
+export const isWritingResult = (answer) =>
+  Boolean(answer) && typeof answer === 'object' && answer.graded === true && typeof answer.pct === 'number';
+
+/** Score at or above this counts a checkpoint writing task as correct. */
+export const WRITING_PASS_PCT = 0.6;
+
 /** Does this item count toward the score ON THIS RUN? (see the file header) */
 export const itemIsScored = (item, answer) =>
-  Boolean(item?.scored) || (item?.scorable === true && isMicResult(answer));
+  Boolean(item?.scored) || (item?.scorable === true && (isMicResult(answer) || isWritingResult(answer)));
+
+/**
+ * An OPTIONAL item that no machine graded is "not attempted": it leaves the
+ * section instead of scoring 0. Only the graded writing task is optional — the
+ * grader needs a signed-in learner and an allowance, and neither is something a
+ * learner can fail at. Sprechen is NOT optional: its all-or-nothing rule stands.
+ */
+export const itemCounts = (item, answer) => !(item?.optional === true && !itemIsScored(item, answer));
 
 /**
  * Was this answer right? A self-confirmed read-aloud is "done", never right or
@@ -483,8 +733,11 @@ export const itemIsScored = (item, answer) =>
  *
  * Grading here MUST match the lesson's PracticeItem.jsx call exactly: same
  * `strict` rule (STRICT_TOPIC on the item's topic) and the same
- * `caseSensitive: isCaseTask(item)` (REVIEW #4 BLOCKER 3 — the polite `Ihr`
- * is wrong, not a forgiven typo, in the checkpoint too). TYPO handling is also
+ * `caseSensitive: isCaseTask(item)` — which is now the item's OWN
+ * `caseSensitive: true` flag and nothing else (check.js: the polite-possessive
+ * regex was replaced by an opt-in the items carry), so a `Sie`/`Ihnen`/`Ihr`
+ * politeness item is case-checked here exactly where it is in the lesson, and a
+ * plain sentence-initial capital never is. TYPO handling is also
  * identical on purpose: the standard (docs/course-standard-2026-09-12.md §3,
  * "Checkpoint") gives the checkpoint "3 attempts per 8 h with a remediation
  * set between" — that is a retake of the WHOLE test, not a per-item retry —
@@ -498,6 +751,7 @@ export function isItemCorrect(item, answer) {
   if (!item) return false;
   if (item.mode === 'confirm') {
     if (isMicResult(answer)) return answer.pct >= SPRECHEN_PASS_PCT;
+    if (isWritingResult(answer)) return answer.pct >= WRITING_PASS_PCT;
     return answer === true || answer === 'done';
   }
   if (answer == null || answer === '') return false;
@@ -512,6 +766,9 @@ export function isItemCorrect(item, answer) {
  * `answers` is keyed by item id. Sprechen enters the overall percentage and
  * the 40 %-per-section rule only when every read-aloud in it was scored by the
  * microphone; a single self-confirm leaves the section reported but unscored.
+ * The graded writing task is the one OPTIONAL item: with a verdict from
+ * evaluate-writing it is one scored Schreiben item, without one it leaves the
+ * section (total 3 → 2) instead of counting as a miss.
  */
 export function scoreCheckpoint(items, answers = {}) {
   const sections = {};
@@ -520,7 +777,10 @@ export function scoreCheckpoint(items, answers = {}) {
   let scoredTotal = 0;
 
   for (const section of SECTION_ORDER) {
-    const inSection = items.filter((i) => i.section === section);
+    const present = items.filter((i) => i.section === section);
+    if (!present.length) continue;
+    // An un-graded writing task is not attempted, not failed (see itemCounts).
+    const inSection = present.filter((i) => itemCounts(i, answers[i.id]));
     if (!inSection.length) continue;
     let correct = 0;
     for (const item of inSection) {
@@ -531,7 +791,7 @@ export function scoreCheckpoint(items, answers = {}) {
         // A mic-scored read-aloud miss is a pronunciation/intelligibility miss
         // and carries the same tag the function writes into lesson_attempts —
         // tagError compares two answer strings and has nothing to compare here.
-        const tag = item.scorable && isMicResult(answer) ? 'Aussprache' : tagError(
+        const tag = isMicResult(answer) ? 'Aussprache' : isWritingResult(answer) ? 'Schreiben' : tagError(
           { stage: section === 'hoeren' ? 'listening' : 'checkpoint', kind: item.kind, topic: item.topic, type: item.type },
           answer == null ? '' : String(answer),
           item.answer,
@@ -567,6 +827,7 @@ export function remediationSet(items, answers = {}, pool, { size = 10, seed } = 
   const missCounts = new Map();
   const tags = {};
   for (const item of items) {
+    if (!itemCounts(item, answers[item.id])) continue;
     if (!itemIsScored(item, answers[item.id]) || isItemCorrect(item, answers[item.id])) continue;
     const topic = item.topic;
     missCounts.set(topic, (missCounts.get(topic) || 0) + 1);

@@ -5,13 +5,21 @@
 //
 // Grades IDENTICALLY to the lesson (src/components/lesson/PracticeItem.jsx)
 // and the checkpoint (buildCheckpoint.js's isItemCorrect): same `strict` rule
-// and the same `caseSensitive: isCaseTask(item)` for the polite `Ihr`
-// (REVIEW #4 BLOCKER 3). A review card has no `topic` field of its own — its
-// card_key IS the topic/slug (`pattern:possessive-articles`, see
-// src/lib/review/ladder.js's patternCardKey), so a pseudo-item built from the
-// card_key plus the card's accepted answers is what isCaseTask and
-// STRICT_TOPIC are tested against, matching how the same grammar pattern is
-// graded everywhere else.
+// and the same `caseSensitive: isCaseTask(item)`. A review card has no `topic`
+// field of its own — its card_key IS the topic/slug
+// (`pattern:possessive-articles`, see src/lib/review/ladder.js's
+// patternCardKey), so a pseudo-item built from the card_key plus the card's
+// accepted answers is what STRICT_TOPIC is tested against, matching how the
+// same grammar pattern is graded everywhere else.
+//
+// CASE SENSITIVITY IS CARRIED, NOT GUESSED. `isCaseTask(item)` is now the
+// item's own `caseSensitive === true` flag and nothing else (check.js: the
+// polite-possessive regex that used to infer it was removed, because it hit
+// items whose own explanation taught the lowercase answer and missed the
+// `Sie`/`Ihnen` items where the capital IS the point). A review card therefore
+// has to bring the flag with it: reviewService.buildCardIndex copies it off the
+// curriculum entry, ReviewPage passes it here, and only then is the polite `Ihr`
+// case-checked in the review the way it is in the lesson and the checkpoint.
 //
 // TYPO is also handled identically on purpose: there is no per-item retry
 // here either (Prüfen locks the answer once submitted, exactly like
@@ -21,8 +29,8 @@
 // wrong.
 import { checkAnswer, RESULT, STRICT_TOPIC, isCaseTask } from '../lesson/check.js';
 
-export function gradeTypedReview(cardKey, accepted, typed) {
-  const pseudoItem = { topic: cardKey, answer: accepted?.[0], accepted };
+export function gradeTypedReview(cardKey, accepted, typed, { caseSensitive: flag = false } = {}) {
+  const pseudoItem = { topic: cardKey, answer: accepted?.[0], accepted, caseSensitive: flag === true };
   const strict = STRICT_TOPIC.test(cardKey);
   const caseSensitive = isCaseTask(pseudoItem);
   const { result } = checkAnswer(typed, accepted, { strict, caseSensitive });
