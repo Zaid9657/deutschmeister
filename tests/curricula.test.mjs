@@ -17,8 +17,9 @@ import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { writingTaskByKey } from '../src/data/writingTasks.js';
 import {
   validateCurriculum, GRAMMAR_SLUGS, EXAM_TEILE, PRIMARY_ORDER, SITUATION_KEYWORDS,
-  wortfeldCoverage, itemLexis, loadExtraItems,
-  MAX_UNCOVERED_WORTFELD, MAX_UNTAUGHT_ITEM_TOKENS,
+  wortfeldCoverage, itemLexis, loadExtraItems, canDoRehearsal, missionlessLektionen,
+  MAX_UNCOVERED_WORTFELD, MAX_UNTAUGHT_ITEM_TOKENS, MAX_UNREHEARSED_CANDOS,
+  MAX_MISSIONLESS_LEKTIONEN,
 } from '../scripts/validate-curriculum.mjs';
 
 const L = CURRICULUM_A11.lektionen;
@@ -199,14 +200,16 @@ test('rule 10: a taught word is also a used word, under a ratchet that only fall
   // of DaF review #3: „is every taught word ever heard?“ — ≈50 of 262 Wortfeld entries occurred in
   // no dialogue line, notice, pretest, Schreiben task or hand-written item of their own Lektion, so
   // whole Handlungsfelder (L2 Personalien, L9 Café food) rested on a list.
-  assert.ok(MAX_UNCOVERED_WORTFELD <= 35, 'the ratchet may only ever be lowered');
+  assert.ok(MAX_UNCOVERED_WORTFELD <= 19, 'the ratchet may only ever be lowered');
   const uncovered = wortfeldCoverage(CURRICULUM_A11);
   assert.ok(
     uncovered.length <= MAX_UNCOVERED_WORTFELD,
     `${uncovered.length} uncovered Wortfeld entries > ratchet ${MAX_UNCOVERED_WORTFELD}:\n  - ${uncovered.map((u) => `L${u.nr} ${u.de}`).join('\n  - ')}`,
   );
-  // The four Lektionen this round repaired carry their own vocabulary now.
-  for (const nr of [2, 7, 8, 9]) {
+  // The Lektionen whose Wortfeld was repaired carry their own vocabulary now: L2/L7/L8/L9 in
+  // round 4, L3 (Geschwister, Sohn, Tochter, Mann, Baby) and L6 (Kollege, Ingenieur, Verkäufer)
+  // in round 5 — the two Handlungsfelder DaF review #4 named, Familie and Arbeit und Beruf.
+  for (const nr of [2, 3, 6, 7, 8, 9]) {
     const left = uncovered.filter((u) => u.nr === nr).map((u) => u.de);
     assert.ok(left.length <= 1, `Lektion ${nr} still has unused Wortfeld words: ${left.join(', ')}`);
   }
@@ -215,13 +218,72 @@ test('rule 10: a taught word is also a used word, under a ratchet that only fall
 test('rule 11: hand-written practice items use only words taught by their Lektion', () => {
   // The review's last paragraph: „die handgeschriebenen Reparaturen unterliegen keiner Prüfung“.
   // Same machinery as RULE 5 (formsOf, FUNCTION_WORDS, DIALOG_NAMES), run over a11.extra.json.
-  assert.ok(MAX_UNTAUGHT_ITEM_TOKENS <= 40, 'the ratchet may only ever be lowered');
+  assert.ok(MAX_UNTAUGHT_ITEM_TOKENS <= 9, 'the ratchet may only ever be lowered');
   const offenders = itemLexis(CURRICULUM_A11);
   assert.ok(
     offenders.length <= MAX_UNTAUGHT_ITEM_TOKENS,
     `${offenders.length} untaught tokens > ratchet ${MAX_UNTAUGHT_ITEM_TOKENS}:\n  - ${offenders.map((o) => `${o.id}: ${o.token}`).join('\n  - ')}`,
   );
   assert.ok(loadExtraItems().length > 0, 'the hand-written pool must actually be read');
+});
+
+test('rule 12: every can-do line is rehearsed in its own Lektion, under a ratchet that only falls', () => {
+  // The can-do grid is rendered on the public course page, so an unrehearsed line is a promise to
+  // someone who has not paid yet (DaF review #4, MAJOR 6). The two named there are closed:
+  assert.ok(MAX_UNREHEARSED_CANDOS <= 6, 'the ratchet may only ever be lowered');
+  const offenders = canDoRehearsal(CURRICULUM_A11);
+  assert.ok(
+    offenders.length <= MAX_UNREHEARSED_CANDOS,
+    `${offenders.length} unrehearsed can-dos > ratchet ${MAX_UNREHEARSED_CANDOS}:\n  - ${offenders.map((o) => `L${o.nr} ${o.line}`).join('\n  - ')}`,
+  );
+  const lines = offenders.map((o) => o.line);
+  assert.ok(!lines.includes('Ich kann mit zwei festen Ausdrücken sagen, was ich gestern gemacht habe.'), 'L11 Perfekt chunk');
+  assert.ok(!L[1].canDo.includes('Ich kann ein einfaches Formular mit meinen Daten ausfüllen.'), 'the L2 Formular can-do lives in L1/L3, not here');
+  assert.equal(L[10].pretest.model, 'Ich habe gearbeitet.');
+});
+
+test('rule 13: a speaking task without a mission is a prompt the speaking page never receives', () => {
+  // SpeakingStage.jsx appends `&mission=` only when missionOrder is set; without it the learner
+  // lands on the generic /speaking page with some other mission of the level. The UI agent is
+  // making the prompt itself travel in saveCourseContext — then this ratchet goes to 0.
+  assert.ok(MAX_MISSIONLESS_LEKTIONEN <= 4, 'the ratchet may only ever be lowered');
+  const missionless = missionlessLektionen(CURRICULUM_A11);
+  assert.ok(
+    missionless.length <= MAX_MISSIONLESS_LEKTIONEN,
+    `Lektionen without a speaking mission: ${missionless.join(', ')}`,
+  );
+  assert.deepEqual(missionless, [7, 10, 11, 12]);
+});
+
+// REGISTER (DaF review #4, MAJOR 2). One decision, enforced: the tasks and the chrome address the
+// learner with Sie, the Notice cards speak impersonally („Beim Buchstabieren sagt man …“), and only
+// the dialogue duzt — there Ana, Tim and Lena talk to each other. The one thing a Notice may still
+// contain is a du-FORM as grammar content: a conjugation cell („du **bist**“, „du spiel**st**“) or
+// a quoted chunk („**Hast du Zeit?**“). Both are marked in the data by the bold that makes them a
+// form rather than an address, so the check strips exactly that and nothing else.
+const strippedForRegister = (s) => String(s)
+  .replace(/\bdu\s+\S*\*\*[^*]+\*\*/g, ' ')   // „du **bist**“, „du spiel**st**“ — a table cell
+  .replace(/\*\*[^*]+\*\*/g, ' ');              // „**Hast du Zeit?**“ — a quoted chunk
+const DUZEN = /\b(du|dir|dich|dein\w*|Schreib|Lerne|Tippe|Antworte|Frag|kannst)\b/;
+
+test('register: notices, pretests, writing and speaking tasks siezen — only the dialogue duzt', () => {
+  for (const l of L) {
+    const fields = {
+      'notice.bodyDe': l.notice.bodyDe,
+      'pretest.promptDe': l.pretest.promptDe,
+      'schreiben.taskDe': l.schreiben.taskDe,
+      'sprechen.open.promptDe': l.sprechen.open.promptDe,
+    };
+    for (const [name, value] of Object.entries(fields)) {
+      const m = DUZEN.exec(strippedForRegister(value));
+      assert.equal(m, null, `Lektion ${l.nr} ${name} duzt ("${m && m[0]}"): ${value}`);
+    }
+  }
+  // The whitelist is narrow on purpose: the bold marks a form, an unbolded „du hast“ is an address
+  // and must not pass.
+  assert.match(strippedForRegister('Mit haben sagst du Hunger.'), /\bdu\b/);
+  assert.doesNotMatch(strippedForRegister('ich **bin**, du **bist**, er **ist**'), DUZEN);
+  assert.doesNotMatch(strippedForRegister('**Hast du Zeit?** ist eine feste Wendung.'), DUZEN);
 });
 
 test('the validator bites: each mutation of a good curriculum is caught', () => {
@@ -272,4 +334,14 @@ test('the validator bites: each mutation of a good curriculum is caught', () => 
     validateCurriculum(c11, [...loadExtraItems(), untaughtItem]).length > 0,
     'not caught: a hand-written item built from untaught words',
   );
+
+  // RULE 12: a can-do line whose content word no exercise slot of its Lektion rehearses.
+  const c12 = clone();
+  c12.lektionen[0].canDo.push('Ich kann einen Elefanten im Zoo beschreiben.');
+  assert.ok(validateCurriculum(c12).length > 0, 'not caught: a can-do nothing in its Lektion rehearses');
+
+  // RULE 13: a fifth Lektion whose speaking prompt never reaches the speaking page.
+  const c13 = clone();
+  c13.lektionen[0].sprechen.open.missionOrder = null;
+  assert.ok(validateCurriculum(c13).length > 0, 'not caught: a fifth speaking task without a mission');
 });
