@@ -1,7 +1,7 @@
 {
  "level": "a1.1",
  "builtFrom": "2026-08-24",
- "count": 312,
+ "count": 366,
  "items": [
   {
    "id": "10fc1751-c3af-529f-8796-f8e46bfb1691",
@@ -274,7 +274,7 @@
    ],
    "explanationDe": "Am Morgen grüßt man mit Guten Morgen.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 2
   },
   {
    "id": "1d19c92e-e77d-5f3f-8e68-0cfd0223e650",
@@ -313,7 +313,7 @@
    ],
    "explanationDe": "Zu Frau Kaya sagt man förmlich: Auf Wiedersehen.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 3
   },
   {
    "id": "9f22442a-a212-57af-8f9f-fd3c30231a4e",
@@ -474,7 +474,7 @@
    ],
    "explanationDe": "der Beruf — B-E-R-U-F.",
    "hint": "der, die oder das?",
-   "minLektion": 2
+   "minLektion": 3
   },
   {
    "id": "74f91cf4-e8b5-5ee1-887a-84e6370ac670",
@@ -493,7 +493,7 @@
    ],
    "explanationDe": "die Adresse — A-D-R-E-S-S-E.",
    "hint": "der, die oder das?",
-   "minLektion": 2
+   "minLektion": 3
   },
   {
    "id": "92ac55de-fb60-5f58-8698-7e85444b2255",
@@ -512,7 +512,7 @@
    ],
    "explanationDe": "die Telefonnummer — T-E-L-E-F-O-N-N-U-M-M-E-R.",
    "hint": "der, die oder das?",
-   "minLektion": 2
+   "minLektion": 3
   },
   {
    "id": "cbee2a2c-2b4a-5d9b-88d1-1b5bc64f3294",
@@ -531,7 +531,7 @@
    ],
    "explanationDe": "das Formular — F-O-R-M-U-L-A-R.",
    "hint": "der, die oder das?",
-   "minLektion": 2
+   "minLektion": 3
   },
   {
    "id": "32eb463d-1209-5db8-8aee-d227e1d99d62",
@@ -550,7 +550,7 @@
    ],
    "explanationDe": "der Wohnort — W-O-H-N-O-R-T.",
    "hint": "der, die oder das?",
-   "minLektion": 2
+   "minLektion": 3
   },
   {
    "id": "2df8b952-57b5-54ef-8c10-4a0d965d9115",
@@ -621,6 +621,195 @@
    "explanationDe": "Telefonnummer — T-E-L-E-F-O-N-N-U-M-M-E-R.",
    "hint": "Achte auf Doppelbuchstaben, Umlaute und ß.",
    "minLektion": 2
+  },
+  {
+   "id": "extra-a11-l01-11",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 139,
+   "questionDe": "Buchstabieren Sie das Wort: Danke → ___",
+   "questionEn": "Spell the word Danke.",
+   "options": null,
+   "answer": "D-A-N-K-E",
+   "accepted": [
+    "D-A-N-K-E",
+    "d-a-n-k-e"
+   ],
+   "explanationDe": "Danke buchstabiert man D-A-N-K-E.",
+   "hint": null,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l01-12",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 140,
+   "questionDe": "Wie buchstabiert man Entschuldigung? ___",
+   "questionEn": "How do you spell Entschuldigung?",
+   "options": null,
+   "answer": "E-N-T-S-C-H-U-L-D-I-G-U-N-G",
+   "accepted": [
+    "E-N-T-S-C-H-U-L-D-I-G-U-N-G",
+    "e-n-t-s-c-h-u-l-d-i-g-u-n-g"
+   ],
+   "explanationDe": "Man sagt jeden Buchstaben einzeln: E-N-T-S-C-H-U-L-D-I-G-U-N-G.",
+   "hint": null,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l01-13",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 141,
+   "questionDe": "Wie buchstabiert man Bitte? ___",
+   "questionEn": "How do you spell Bitte?",
+   "options": null,
+   "answer": "B-I-T-T-E",
+   "accepted": [
+    "B-I-T-T-E",
+    "b-i-t-t-e"
+   ],
+   "explanationDe": "Bitte hat zwei T: B-I-T-T-E.",
+   "hint": null,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l01-14",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 142,
+   "questionDe": "Wie buchstabiert man Willkommen? ___",
+   "questionEn": "How do you spell Willkommen?",
+   "options": null,
+   "answer": "W-I-L-L-K-O-M-M-E-N",
+   "accepted": [
+    "W-I-L-L-K-O-M-M-E-N",
+    "w-i-l-l-k-o-m-m-e-n"
+   ],
+   "explanationDe": "Doppel-L und Doppel-M: W-I-L-L-K-O-M-M-E-N.",
+   "hint": null,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l01-15",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 143,
+   "questionDe": "Der Gruß am Abend heißt: „___!“ (zwei Wörter)",
+   "questionEn": "The evening greeting is … (two words)",
+   "options": null,
+   "answer": "Guten Abend",
+   "accepted": [
+    "Guten Abend",
+    "guten abend"
+   ],
+   "explanationDe": "Am Abend grüßt man mit Guten Abend.",
+   "hint": null,
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a11-l01-16",
+   "topic": "alphabet-pronunciation",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 144,
+   "questionDe": "Korrigieren Sie: „Gute Morgen, Frau Kaya!“",
+   "questionEn": "Correct the greeting.",
+   "options": null,
+   "answer": "Guten Morgen, Frau Kaya!",
+   "accepted": [
+    "Guten Morgen, Frau Kaya!",
+    "Guten Morgen, Frau Kaya"
+   ],
+   "explanationDe": "Der Gruß heißt Guten Morgen, nicht Gute Morgen.",
+   "hint": null,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l01-17",
+   "topic": "alphabet-pronunciation",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 145,
+   "questionDe": "Korrigieren Sie: „Gute Abend, Frau Kaya!“",
+   "questionEn": "Correct the greeting.",
+   "options": null,
+   "answer": "Guten Abend, Frau Kaya!",
+   "accepted": [
+    "Guten Abend, Frau Kaya!",
+    "Guten Abend, Frau Kaya"
+   ],
+   "explanationDe": "Der Gruß heißt Guten Abend, nicht Gute Abend.",
+   "hint": null,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l01-20",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 165,
+   "questionDe": "Welcher Buchstabe heißt Zett? ___",
+   "questionEn": "Which letter is called Zett?",
+   "options": null,
+   "answer": "Z",
+   "accepted": [
+    "Z",
+    "z"
+   ],
+   "explanationDe": "Zett ist der Name für den Buchstaben Z.",
+   "hint": null,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l01-21",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 166,
+   "questionDe": "Welcher Buchstabe heißt Ypsilon? ___",
+   "questionEn": "Which letter is called Ypsilon?",
+   "options": null,
+   "answer": "Y",
+   "accepted": [
+    "Y",
+    "y"
+   ],
+   "explanationDe": "Ypsilon ist der Name für den Buchstaben Y.",
+   "hint": null,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l01-22",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 167,
+   "questionDe": "Welcher Buchstabe heißt Eszett? ___",
+   "questionEn": "Which letter is called Eszett?",
+   "options": null,
+   "answer": "ß",
+   "accepted": [
+    "ß"
+   ],
+   "explanationDe": "Eszett ist der Name für den Buchstaben ß.",
+   "hint": null,
+   "minLektion": 1
   },
   {
    "id": "extra-a11-l01-03",
@@ -696,6 +885,83 @@
     "Guten Tag, Frau Kaya"
    ],
    "explanationDe": "Der Gruß heißt Guten Tag, nicht Gute Tag.",
+   "hint": null,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l01-18",
+   "topic": "alphabet-pronunciation",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 146,
+   "questionDe": "Bilden Sie den Satz: [ich / buchstabieren / Chakiri]",
+   "questionEn": "Form the sentence: I spell Chakiri.",
+   "options": null,
+   "answer": "Ich buchstabiere Chakiri.",
+   "accepted": [
+    "Ich buchstabiere Chakiri.",
+    "Ich buchstabiere Chakiri"
+   ],
+   "explanationDe": "Nach ich endet das Verb auf -e: ich buchstabiere.",
+   "hint": null,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l01-19",
+   "topic": "alphabet-pronunciation",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 147,
+   "questionDe": "Bilden Sie die Frage: [wie / gehen / es / Ihnen]",
+   "questionEn": "Form the polite question: how are you?",
+   "options": null,
+   "answer": "Wie geht es Ihnen?",
+   "accepted": [
+    "Wie geht es Ihnen?",
+    "Wie geht es Ihnen"
+   ],
+   "explanationDe": "Die höfliche Frage lautet: Wie geht es Ihnen?",
+   "hint": null,
+   "caseSensitive": true,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l01-23",
+   "topic": "alphabet-pronunciation",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 168,
+   "questionDe": "Bilden Sie den Satz: [ich / buchstabieren / Ana]",
+   "questionEn": "Form the sentence: I spell Ana.",
+   "options": null,
+   "answer": "Ich buchstabiere Ana.",
+   "accepted": [
+    "Ich buchstabiere Ana.",
+    "Ich buchstabiere Ana"
+   ],
+   "explanationDe": "Nach ich endet das Verb auf -e: ich buchstabiere.",
+   "hint": null,
+   "minLektion": 1
+  },
+  {
+   "id": "extra-a11-l01-24",
+   "topic": "alphabet-pronunciation",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 169,
+   "questionDe": "Bilden Sie die Frage: [wie / gehen / es / dir]",
+   "questionEn": "Form the informal question: how are you?",
+   "options": null,
+   "answer": "Wie geht es dir?",
+   "accepted": [
+    "Wie geht es dir?",
+    "Wie geht es dir"
+   ],
+   "explanationDe": "Unter Freunden fragt man: Wie geht es dir?",
    "hint": null,
    "minLektion": 1
   },
@@ -1185,7 +1451,7 @@
    ],
    "explanationDe": "Schwester = feminin → eine.",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 8
   },
   {
    "id": "5d184615-c23d-44f3-96f4-275878ca8109",
@@ -1322,6 +1588,139 @@
    "minLektion": 6
   },
   {
+   "id": "extra-a11-l06-12",
+   "topic": "indefinite-articles",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 174,
+   "questionDe": "Korrigieren Sie: „Ich brauche einen Pause.“",
+   "questionEn": "Correct the indefinite article.",
+   "options": null,
+   "answer": "Ich brauche eine Pause.",
+   "accepted": [
+    "Ich brauche eine Pause.",
+    "Ich brauche eine Pause"
+   ],
+   "explanationDe": "Pause ist feminin: Ich brauche eine Pause.",
+   "hint": null,
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l06-13",
+   "topic": "indefinite-articles",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 175,
+   "questionDe": "Korrigieren Sie: „Ich brauche einen Telefon.“",
+   "questionEn": "Correct the indefinite article.",
+   "options": null,
+   "answer": "Ich brauche ein Telefon.",
+   "accepted": [
+    "Ich brauche ein Telefon.",
+    "Ich brauche ein Telefon"
+   ],
+   "explanationDe": "Telefon ist neutral: Ich brauche ein Telefon.",
+   "hint": null,
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l06-14",
+   "topic": "indefinite-articles",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 176,
+   "questionDe": "Korrigieren Sie: „Ich brauche eine Computer.“",
+   "questionEn": "Correct the indefinite article.",
+   "options": null,
+   "answer": "Ich brauche einen Computer.",
+   "accepted": [
+    "Ich brauche einen Computer.",
+    "Ich brauche einen Computer"
+   ],
+   "explanationDe": "Nach brauchen wird ein zu einen: einen Computer.",
+   "hint": null,
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l06-16",
+   "topic": "indefinite-articles",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 181,
+   "questionDe": "Korrigieren Sie: „Ich brauche einen Handynummer.“",
+   "questionEn": "Correct the indefinite article.",
+   "options": null,
+   "answer": "Ich brauche eine Handynummer.",
+   "accepted": [
+    "Ich brauche eine Handynummer.",
+    "Ich brauche eine Handynummer"
+   ],
+   "explanationDe": "Handynummer ist feminin: eine Handynummer.",
+   "hint": null,
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l06-18",
+   "topic": "indefinite-articles",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 183,
+   "questionDe": "Korrigieren Sie: „Das ist ein Chefin.“",
+   "questionEn": "Correct the indefinite article.",
+   "options": null,
+   "answer": "Das ist eine Chefin.",
+   "accepted": [
+    "Das ist eine Chefin.",
+    "Das ist eine Chefin"
+   ],
+   "explanationDe": "Chefin ist feminin: Das ist eine Chefin.",
+   "hint": null,
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l06-19",
+   "topic": "indefinite-articles",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 184,
+   "questionDe": "Korrigieren Sie: „Das ist ein Verkäuferin.“",
+   "questionEn": "Correct the indefinite article.",
+   "options": null,
+   "answer": "Das ist eine Verkäuferin.",
+   "accepted": [
+    "Das ist eine Verkäuferin.",
+    "Das ist eine Verkäuferin"
+   ],
+   "explanationDe": "Verkäuferin ist feminin: Das ist eine Verkäuferin.",
+   "hint": null,
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l06-21",
+   "topic": "indefinite-articles",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 189,
+   "questionDe": "Korrigieren Sie: „Das ist ein Firma in Berlin.“",
+   "questionEn": "Correct the indefinite article.",
+   "options": null,
+   "answer": "Das ist eine Firma in Berlin.",
+   "accepted": [
+    "Das ist eine Firma in Berlin.",
+    "Das ist eine Firma in Berlin"
+   ],
+   "explanationDe": "Firma ist feminin: Das ist eine Firma in Berlin.",
+   "hint": null,
+   "minLektion": 6
+  },
+  {
    "id": "05649f0e-7308-50dd-8593-ac61018ef7e2",
    "topic": "indefinite-articles",
    "type": "fill_blank",
@@ -1355,7 +1754,7 @@
    ],
    "explanationDe": "Tasche ist feminin, deshalb eine.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 8
   },
   {
    "id": "4aae7de0-bb31-5533-ac24-027af7598a19",
@@ -1392,7 +1791,7 @@
    ],
    "explanationDe": "Deutsch lässt den Artikel vor einem Beruf ganz weg — kein ein, keine eine.",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 3
   },
   {
    "id": "f12e69ee-d9c6-54f1-a2e7-b93304d4713c",
@@ -1437,14 +1836,14 @@
    "stage": 5,
    "difficulty": 2,
    "order": 66,
-   "questionDe": "Ich habe ___ Handynummer für dich. (unbestimmter Artikel)",
-   "questionEn": "I have a mobile number for you.",
+   "questionDe": "Die Chefin braucht ___ Handynummer. (unbestimmter Artikel)",
+   "questionEn": "The boss needs a mobile number.",
    "options": null,
    "answer": "eine",
    "accepted": [
     "eine"
    ],
-   "explanationDe": "die Handynummer ist feminin: eine Handynummer.",
+   "explanationDe": "Handynummer ist feminin: eine Handynummer.",
    "hint": null,
    "minLektion": 6
   },
@@ -1519,6 +1918,63 @@
     "Das ist eine Kollegin im Büro"
    ],
    "explanationDe": "die Kollegin ist feminin: eine Kollegin.",
+   "hint": null,
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l06-15",
+   "topic": "indefinite-articles",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 177,
+   "questionDe": "Bilden Sie den Satz: [die Firma / brauchen / ein / Büro]",
+   "questionEn": "Form the sentence: the company needs an office.",
+   "options": null,
+   "answer": "Die Firma braucht ein Büro.",
+   "accepted": [
+    "Die Firma braucht ein Büro.",
+    "Die Firma braucht ein Büro"
+   ],
+   "explanationDe": "Büro ist neutral: Die Firma braucht ein Büro.",
+   "hint": null,
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l06-17",
+   "topic": "indefinite-articles",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 182,
+   "questionDe": "Bilden Sie den Satz: [der Chef / brauchen / ein / Telefon]",
+   "questionEn": "Form the sentence: the boss needs a telephone.",
+   "options": null,
+   "answer": "Der Chef braucht ein Telefon.",
+   "accepted": [
+    "Der Chef braucht ein Telefon.",
+    "Der Chef braucht ein Telefon"
+   ],
+   "explanationDe": "Telefon ist neutral: Der Chef braucht ein Telefon.",
+   "hint": null,
+   "minLektion": 6
+  },
+  {
+   "id": "extra-a11-l06-20",
+   "topic": "indefinite-articles",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 188,
+   "questionDe": "Bilden Sie den Satz: [die Kollegin / brauchen / ein / Handy]",
+   "questionEn": "Form the sentence: the colleague needs a mobile.",
+   "options": null,
+   "answer": "Die Kollegin braucht ein Handy.",
+   "accepted": [
+    "Die Kollegin braucht ein Handy.",
+    "Die Kollegin braucht ein Handy"
+   ],
+   "explanationDe": "Handy ist neutral: Die Kollegin braucht ein Handy.",
    "hint": null,
    "minLektion": 6
   },
@@ -1728,6 +2184,367 @@
     "der"
    ],
    "explanationDe": "Rucksack ist maskulin: der Rucksack.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-22",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 148,
+   "questionDe": "Ich kaufe ___ Lampe. (der, die oder das?)",
+   "questionEn": "Which article: lamp?",
+   "options": null,
+   "answer": "die",
+   "accepted": [
+    "die",
+    "Die"
+   ],
+   "explanationDe": "Lampe ist feminin: Ich kaufe die Lampe.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-23",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 149,
+   "questionDe": "Ich kaufe ___ Uhr. (der, die oder das?)",
+   "questionEn": "Which article: clock?",
+   "options": null,
+   "answer": "die",
+   "accepted": [
+    "die",
+    "Die"
+   ],
+   "explanationDe": "Uhr ist feminin: Ich kaufe die Uhr.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-24",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 150,
+   "questionDe": "Ich kaufe ___ Regal. (der, die oder das?)",
+   "questionEn": "Which article: shelf?",
+   "options": null,
+   "answer": "das",
+   "accepted": [
+    "das",
+    "Das"
+   ],
+   "explanationDe": "Regal ist neutral: Ich kaufe das Regal.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-25",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 151,
+   "questionDe": "Hier ist ___ Uhr. (der, die oder das?)",
+   "questionEn": "Which article: clock?",
+   "options": null,
+   "answer": "die",
+   "accepted": [
+    "die",
+    "Die"
+   ],
+   "explanationDe": "Uhr ist feminin: die Uhr.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-26",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 152,
+   "questionDe": "Hier ist ___ Regal. (der, die oder das?)",
+   "questionEn": "Which article: shelf?",
+   "options": null,
+   "answer": "das",
+   "accepted": [
+    "das",
+    "Das"
+   ],
+   "explanationDe": "Regal ist neutral: das Regal.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-27",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 153,
+   "questionDe": "___ Lampen sind alt. (der, die oder das?)",
+   "questionEn": "Which article in the plural: lamps?",
+   "options": null,
+   "answer": "Die",
+   "accepted": [
+    "Die",
+    "die"
+   ],
+   "explanationDe": "Im Plural haben alle Nomen die: die Lampen.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-28",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 154,
+   "questionDe": "___ Taschen sind alt. (der, die oder das?)",
+   "questionEn": "Which article in the plural: bags?",
+   "options": null,
+   "answer": "Die",
+   "accepted": [
+    "Die",
+    "die"
+   ],
+   "explanationDe": "Im Plural haben alle Nomen die: die Taschen.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-29",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 170,
+   "questionDe": "Was kostet ___ Regal? (der, die oder das?)",
+   "questionEn": "Which article: shelf?",
+   "options": null,
+   "answer": "das",
+   "accepted": [
+    "das",
+    "Das"
+   ],
+   "explanationDe": "Regal ist neutral: Was kostet das Regal?",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-30",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 171,
+   "questionDe": "Was kostet ___ Rucksack? (der, die oder das?)",
+   "questionEn": "Which article: rucksack?",
+   "options": null,
+   "answer": "der",
+   "accepted": [
+    "der",
+    "Der"
+   ],
+   "explanationDe": "Rucksack ist maskulin: Was kostet der Rucksack?",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-31",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 172,
+   "questionDe": "Was kostet ___ Tasche? (der, die oder das?)",
+   "questionEn": "Which article: bag?",
+   "options": null,
+   "answer": "die",
+   "accepted": [
+    "die",
+    "Die"
+   ],
+   "explanationDe": "Tasche ist feminin: Was kostet die Tasche?",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-32",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 173,
+   "questionDe": "Hier ist ___ Rucksack. (der, die oder das?)",
+   "questionEn": "Which article: rucksack?",
+   "options": null,
+   "answer": "der",
+   "accepted": [
+    "der",
+    "Der"
+   ],
+   "explanationDe": "Rucksack ist maskulin: der Rucksack.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-33",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 178,
+   "questionDe": "Hier ist ___ Stuhl. (der, die oder das?)",
+   "questionEn": "Which article: chair?",
+   "options": null,
+   "answer": "der",
+   "accepted": [
+    "der",
+    "Der"
+   ],
+   "explanationDe": "Stuhl ist maskulin: der Stuhl.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-34",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 179,
+   "questionDe": "Was kostet ___ Stuhl? (der, die oder das?)",
+   "questionEn": "Which article: chair?",
+   "options": null,
+   "answer": "der",
+   "accepted": [
+    "der",
+    "Der"
+   ],
+   "explanationDe": "Stuhl ist maskulin: Was kostet der Stuhl?",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-35",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 180,
+   "questionDe": "___ Preis ist gut. (der, die oder das?)",
+   "questionEn": "Which article: price?",
+   "options": null,
+   "answer": "Der",
+   "accepted": [
+    "Der",
+    "der"
+   ],
+   "explanationDe": "Preis ist maskulin: der Preis.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-36",
+   "topic": "nouns-gender",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 185,
+   "questionDe": "Korrigieren Sie: „Der Tasche ist teuer.“ (mit bestimmtem Artikel)",
+   "questionEn": "Correct the article.",
+   "options": null,
+   "answer": "Die Tasche ist teuer.",
+   "accepted": [
+    "Die Tasche ist teuer.",
+    "Die Tasche ist teuer"
+   ],
+   "explanationDe": "Tasche ist feminin: Die Tasche ist teuer.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-37",
+   "topic": "nouns-gender",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 186,
+   "questionDe": "Korrigieren Sie: „Die Rucksack ist gut.“ (mit bestimmtem Artikel)",
+   "questionEn": "Correct the article.",
+   "options": null,
+   "answer": "Der Rucksack ist gut.",
+   "accepted": [
+    "Der Rucksack ist gut.",
+    "Der Rucksack ist gut"
+   ],
+   "explanationDe": "Rucksack ist maskulin: Der Rucksack ist gut.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-39",
+   "topic": "nouns-gender",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 190,
+   "questionDe": "Korrigieren Sie: „Das Stuhl ist alt.“ (mit bestimmtem Artikel)",
+   "questionEn": "Correct the article.",
+   "options": null,
+   "answer": "Der Stuhl ist alt.",
+   "accepted": [
+    "Der Stuhl ist alt.",
+    "Der Stuhl ist alt"
+   ],
+   "explanationDe": "Stuhl ist maskulin: Der Stuhl ist alt.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-40",
+   "topic": "nouns-gender",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 191,
+   "questionDe": "Korrigieren Sie: „Die Tisch ist alt.“ (mit bestimmtem Artikel)",
+   "questionEn": "Correct the article.",
+   "options": null,
+   "answer": "Der Tisch ist alt.",
+   "accepted": [
+    "Der Tisch ist alt.",
+    "Der Tisch ist alt"
+   ],
+   "explanationDe": "Tisch ist maskulin: Der Tisch ist alt.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-41",
+   "topic": "nouns-gender",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 192,
+   "questionDe": "Korrigieren Sie: „Der Uhr ist alt.“ (mit bestimmtem Artikel)",
+   "questionEn": "Correct the article.",
+   "options": null,
+   "answer": "Die Uhr ist alt.",
+   "accepted": [
+    "Die Uhr ist alt.",
+    "Die Uhr ist alt"
+   ],
+   "explanationDe": "Uhr ist feminin: Die Uhr ist alt.",
    "hint": null,
    "minLektion": 4
   },
@@ -1958,6 +2775,25 @@
    "minLektion": 4
   },
   {
+   "id": "extra-a11-l04-38",
+   "topic": "nouns-gender",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 187,
+   "questionDe": "Bilden Sie den Satz: [das Regal / sein / teuer]",
+   "questionEn": "Form the sentence: the shelf is expensive.",
+   "options": null,
+   "answer": "Das Regal ist teuer.",
+   "accepted": [
+    "Das Regal ist teuer.",
+    "Das Regal ist teuer"
+   ],
+   "explanationDe": "Regal ist neutral: Das Regal ist teuer.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
    "id": "extra-a11-l02-09",
    "topic": "numbers",
    "type": "fill_blank",
@@ -2027,7 +2863,7 @@
    ],
    "explanationDe": "In Zahlen 10, als Wort: zehn.",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 3
   },
   {
    "id": "dd1c3d60-8ae7-4c94-8990-19633dcba36f",
@@ -2217,7 +3053,7 @@
    ],
    "explanationDe": "Die sprechende Person benutzt ich.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 2
   },
   {
    "id": "4299d5ca-a80e-5528-a6b9-0ac7bee052bb",
@@ -2780,7 +3616,7 @@
    ],
    "explanationDe": "das + ist + seine Schwester (Schwester ist feminin → seine, auch wenn der Besitzer männlich ist).",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 12
   },
   {
    "id": "d09ae745-12d0-5a21-9648-88fc36a55de1",
@@ -2798,7 +3634,7 @@
    ],
    "explanationDe": "das + ist + unser Auto (Auto ist neutral, keine Endung).",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 12
   },
   {
    "id": "83bab298-abc5-5e7f-a132-1bb60a689b8a",
@@ -3628,7 +4464,7 @@
    ],
    "explanationDe": "mitkommen → er kommt ... mit.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 6
   },
   {
    "id": "5c0728c9-3e01-5e60-85d0-3ef077c6d6af",
@@ -3988,7 +4824,7 @@
    ],
    "explanationDe": "mitkommen → das Präfix mit steht ganz am Ende.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 6
   },
   {
    "id": "96b41b81-d57b-5bfe-91c8-93ef7d8982ca",
@@ -4330,6 +5166,193 @@
     "am"
    ],
    "explanationDe": "Tageszeiten mit am: am Abend, am Morgen.",
+   "hint": null,
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a11-l08-09",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 155,
+   "questionDe": "Der Termin ist ___ acht Uhr.",
+   "questionEn": "The appointment is at eight.",
+   "options": null,
+   "answer": "um",
+   "accepted": [
+    "um"
+   ],
+   "explanationDe": "Die Uhrzeit steht mit um: um acht Uhr.",
+   "hint": null,
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a11-l08-10",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 156,
+   "questionDe": "Der Termin ist ___ neun Uhr.",
+   "questionEn": "The appointment is at nine.",
+   "options": null,
+   "answer": "um",
+   "accepted": [
+    "um"
+   ],
+   "explanationDe": "Die Uhrzeit steht mit um: um neun Uhr.",
+   "hint": null,
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a11-l08-11",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 157,
+   "questionDe": "Der Termin ist ___ sieben Uhr.",
+   "questionEn": "The appointment is at seven.",
+   "options": null,
+   "answer": "um",
+   "accepted": [
+    "um"
+   ],
+   "explanationDe": "Die Uhrzeit steht mit um: um sieben Uhr.",
+   "hint": null,
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a11-l08-12",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 158,
+   "questionDe": "Nach Montag kommt ___.",
+   "questionEn": "Which weekday follows Monday?",
+   "options": null,
+   "answer": "Dienstag",
+   "accepted": [
+    "Dienstag",
+    "der Dienstag"
+   ],
+   "explanationDe": "Die Woche beginnt mit Montag, dann kommt Dienstag.",
+   "hint": null,
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a11-l08-13",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 159,
+   "questionDe": "Nach Donnerstag kommt ___.",
+   "questionEn": "Which weekday follows Thursday?",
+   "options": null,
+   "answer": "Freitag",
+   "accepted": [
+    "Freitag",
+    "der Freitag"
+   ],
+   "explanationDe": "Nach Donnerstag kommt Freitag.",
+   "hint": null,
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a11-l08-14",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 160,
+   "questionDe": "Nach Samstag kommt ___.",
+   "questionEn": "Which weekday follows Saturday?",
+   "options": null,
+   "answer": "Sonntag",
+   "accepted": [
+    "Sonntag",
+    "der Sonntag"
+   ],
+   "explanationDe": "Das Wochenende ist Samstag und Sonntag.",
+   "hint": null,
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a11-l08-15",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 161,
+   "questionDe": "___ Freitag habe ich Zeit.",
+   "questionEn": "On Friday I have time.",
+   "options": null,
+   "answer": "Am",
+   "accepted": [
+    "Am",
+    "am"
+   ],
+   "explanationDe": "Der Wochentag steht mit am: am Freitag.",
+   "hint": null,
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a11-l08-16",
+   "topic": "time-and-dates",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 162,
+   "questionDe": "___ Dienstag habe ich Zeit.",
+   "questionEn": "On Tuesday I have time.",
+   "options": null,
+   "answer": "Am",
+   "accepted": [
+    "Am",
+    "am"
+   ],
+   "explanationDe": "Der Wochentag steht mit am: am Dienstag.",
+   "hint": null,
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a11-l08-17",
+   "topic": "time-and-dates",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 163,
+   "questionDe": "Korrigieren Sie: „Der Arzt ist um Freitag.“",
+   "questionEn": "Correct the preposition.",
+   "options": null,
+   "answer": "Der Arzt ist am Freitag.",
+   "accepted": [
+    "Der Arzt ist am Freitag.",
+    "Der Arzt ist am Freitag"
+   ],
+   "explanationDe": "Der Wochentag steht mit am, nicht mit um.",
+   "hint": null,
+   "minLektion": 8
+  },
+  {
+   "id": "extra-a11-l08-18",
+   "topic": "time-and-dates",
+   "type": "error_correction",
+   "stage": 4,
+   "difficulty": 2,
+   "order": 164,
+   "questionDe": "Korrigieren Sie: „Der Termin ist um Dienstag.“",
+   "questionEn": "Correct the preposition.",
+   "options": null,
+   "answer": "Der Termin ist am Dienstag.",
+   "accepted": [
+    "Der Termin ist am Dienstag.",
+    "Der Termin ist am Dienstag"
+   ],
+   "explanationDe": "Der Wochentag steht mit am, nicht mit um.",
    "hint": null,
    "minLektion": 8
   },
@@ -4735,7 +5758,7 @@
    ],
    "explanationDe": "In einer Frage steht die haben-Form vor du.",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 8
   },
   {
    "id": "extra-a11-l09-04",
@@ -4917,7 +5940,7 @@
    ],
    "explanationDe": "wir + sind.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 2
   },
   {
    "id": "da9e486f-2548-4462-9bdd-c59560ed7276",
@@ -4940,7 +5963,7 @@
    ],
    "explanationDe": "das + ist.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 2
   },
   {
    "id": "0fe8146d-6e90-4c1c-b127-618c44e456ba",
@@ -5654,7 +6677,7 @@
    "explanationDe": "haben an Position 1, Sie an Position 2: Haben Sie Kinder?",
    "hint": null,
    "caseSensitive": true,
-   "minLektion": 3
+   "minLektion": 4
   },
   {
    "id": "extra-a11-l10-07",
@@ -5854,15 +6877,15 @@
    "stage": 5,
    "difficulty": 2,
    "order": 117,
-   "questionDe": "[essen / ihr / im Zug] (Das Verb steht zuerst.)",
-   "questionEn": "Form the question: do you (plural) eat on the train?",
+   "questionDe": "Bilden Sie den Satz mit dem Verb auf Position 1: „Der Zug fährt nach Österreich.“",
+   "questionEn": "Turn the statement into a yes/no question.",
    "options": null,
-   "answer": "Esst ihr im Zug?",
+   "answer": "Fährt der Zug nach Österreich?",
    "accepted": [
-    "Esst ihr im Zug?",
-    "Esst ihr im Zug"
+    "Fährt der Zug nach Österreich?",
+    "Fährt der Zug nach Österreich"
    ],
-   "explanationDe": "Das Verb steht auf Position 1: Esst ihr im Zug?",
+   "explanationDe": "Das Verb rückt auf Position 1: Fährt der Zug …?",
    "hint": null,
    "minLektion": 10
   },
@@ -5873,17 +6896,16 @@
    "stage": 5,
    "difficulty": 2,
    "order": 118,
-   "questionDe": "[haben / Sie / eine Fahrkarte] (höflich mit Sie)",
-   "questionEn": "Form the polite question: do you have a ticket?",
+   "questionDe": "Die Antwort ist: „Ja, der Zug hat Verspätung.“ Schreiben Sie die Frage.",
+   "questionEn": "Write the question that this answer answers.",
    "options": null,
-   "answer": "Haben Sie eine Fahrkarte?",
+   "answer": "Hat der Zug Verspätung?",
    "accepted": [
-    "Haben Sie eine Fahrkarte?",
-    "Haben Sie eine Fahrkarte"
+    "Hat der Zug Verspätung?",
+    "Hat der Zug Verspätung"
    ],
-   "explanationDe": "Höflich mit Sie, das Verb zuerst: Haben Sie eine Fahrkarte?",
+   "explanationDe": "Zur Antwort ja gehört die Frage Hat der Zug Verspätung?",
    "hint": null,
-   "caseSensitive": true,
    "minLektion": 10
   },
   {
@@ -5893,15 +6915,15 @@
    "stage": 5,
    "difficulty": 2,
    "order": 119,
-   "questionDe": "[kommen / der Fahrer / morgen] (Beginnen Sie mit dem Verb.)",
-   "questionEn": "Form the question: is the driver coming tomorrow?",
+   "questionDe": "Bilden Sie den Satz mit dem Verb auf Position 1: „Der Bus fährt nach Deutschland.“",
+   "questionEn": "Turn the statement into a yes/no question.",
    "options": null,
-   "answer": "Kommt der Fahrer morgen?",
+   "answer": "Fährt der Bus nach Deutschland?",
    "accepted": [
-    "Kommt der Fahrer morgen?",
-    "Kommt der Fahrer morgen"
+    "Fährt der Bus nach Deutschland?",
+    "Fährt der Bus nach Deutschland"
    ],
-   "explanationDe": "Das Verb kommt zuerst: Kommt der Fahrer morgen?",
+   "explanationDe": "Aus Der Bus fährt … wird Fährt der Bus …?",
    "hint": null,
    "minLektion": 10
   },
@@ -5912,15 +6934,15 @@
    "stage": 5,
    "difficulty": 2,
    "order": 120,
-   "questionDe": "[fahren / der Bus / nach Deutschland] (Die Stimme steigt am Ende.)",
-   "questionEn": "Form the question: does the bus go to Germany?",
+   "questionDe": "Die Antwort ist: „Ja, der Bus hat Verspätung.“ Schreiben Sie die Frage.",
+   "questionEn": "Write the question that this answer answers.",
    "options": null,
-   "answer": "Fährt der Bus nach Deutschland?",
+   "answer": "Hat der Bus Verspätung?",
    "accepted": [
-    "Fährt der Bus nach Deutschland?",
-    "Fährt der Bus nach Deutschland"
+    "Hat der Bus Verspätung?",
+    "Hat der Bus Verspätung"
    ],
-   "explanationDe": "Das Verb zuerst: Fährt der Bus nach Deutschland?",
+   "explanationDe": "Die Frage beginnt mit dem Verb: Hat der Bus …?",
    "hint": null,
    "minLektion": 10
   },
@@ -5931,15 +6953,15 @@
    "stage": 5,
    "difficulty": 2,
    "order": 121,
-   "questionDe": "[sein / das Auto / neu] (Zuerst das Verb, dann das Subjekt.)",
-   "questionEn": "Form the question: is the car new?",
+   "questionDe": "Bilden Sie den Satz mit dem Verb auf Position 1: „Der Fahrer fährt nach Österreich.“",
+   "questionEn": "Turn the statement into a yes/no question.",
    "options": null,
-   "answer": "Ist das Auto neu?",
+   "answer": "Fährt der Fahrer nach Österreich?",
    "accepted": [
-    "Ist das Auto neu?",
-    "Ist das Auto neu"
+    "Fährt der Fahrer nach Österreich?",
+    "Fährt der Fahrer nach Österreich"
    ],
-   "explanationDe": "Ist das Auto neu? — das Verb steht vor dem Subjekt.",
+   "explanationDe": "Zuerst das Verb, dann der Fahrer: Fährt der Fahrer …?",
    "hint": null,
    "minLektion": 10
   },
@@ -5950,17 +6972,17 @@
    "stage": 5,
    "difficulty": 2,
    "order": 122,
-   "questionDe": "[haben / ihr / morgen / Zeit] (Das Verb steht vorn.)",
-   "questionEn": "Form the question: do you (plural) have time tomorrow?",
+   "questionDe": "Die Antwort ist: „Ja, der Fahrer hat Zeit.“ Schreiben Sie die Frage.",
+   "questionEn": "Write the question that this answer answers.",
    "options": null,
-   "answer": "Habt ihr morgen Zeit?",
+   "answer": "Hat der Fahrer Zeit?",
    "accepted": [
-    "Habt ihr morgen Zeit?",
-    "Habt ihr morgen Zeit"
+    "Hat der Fahrer Zeit?",
+    "Hat der Fahrer Zeit"
    ],
-   "explanationDe": "Habt ihr morgen Zeit? — das Verb zuerst.",
+   "explanationDe": "Aus Der Fahrer hat Zeit. wird Hat der Fahrer Zeit?",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 10
   }
  ]
 }

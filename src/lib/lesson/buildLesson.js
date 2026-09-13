@@ -234,12 +234,101 @@ const withGaps = (text) =>
  * "(formell)", "(Artikel)"). They stay in the skeleton because two items that
  * ask different questions about the same frame really are two tasks. Every
  * other word is content and is masked — see `taskShape`.
+ *
+ * Since DaF review #10 MAJOR 1 the BRACKET itself no longer reaches the mask:
+ * `TASK_MARKS` collapses it to one category first, so these words only matter
+ * where the pool writes the instruction without brackets.
  */
 export const TASK_WORDS = new Set([
   'artikel', 'präposition', 'plural', 'singular', 'satz', 'frage', 'antwort', 'fehler',
   'formell', 'informell', 'offiziell', 'höflich', 'höfliche', 'umgangssprachlich',
   'uhrzeit', 'zahl', 'zahlen', 'verb', 'nomen',
 ]);
+
+/**
+ * The CLOSED set of instruction categories a bracketed cue can carry, read off
+ * the shipped pool (79 distinct brackets on 2026-09-13) rather than invented.
+ *
+ * DaF review #10 MAJOR 1(b) measured what the un-normalised bracket cost: the
+ * six new L10 items `extra-a11-l10-17` … `-22` are ONE task — a scrambled word
+ * list turned into a yes/no question — and differed in nothing but the wording
+ * of their cue („(Das Verb steht zuerst.)", „(Das Verb steht vorn.)", „(Die
+ * Stimme steigt am Ende.)", „(Zuerst das Verb, dann das Subjekt.)"). Because
+ * `TASK_WORDS` and `LEMMA_STOPWORDS` left those words in the skeleton, the
+ * guard counted six task shapes and L10 drew five of the six into one seven,
+ * twice. A rewording is not a new exercise, so the wording never reaches the
+ * key: the whole bracket becomes its category, and a bracket that fits no
+ * category becomes the same generic mark as every other unclassified one.
+ *
+ * Order matters — the first match wins, so the more specific cue is listed
+ * first („(14:30, offiziell)" is a clock task, „(Sie, Höflichkeitsform)" a
+ * register task, „(sie, Plural)" a person cue and „(sein, Plural)" a verb-form
+ * cue).
+ */
+export const TASK_MARKS = [
+  // „(der, die oder das?)" — which gender does this noun have?
+  { key: 'genus', re: /der\s*,\s*die\s+oder\s+das/i },
+  // „(bestimmter Artikel)", „(unbestimmter Artikel)", „(mit bestimmtem Artikel)"
+  { key: 'artikel', re: /artikel/i },
+  // „(Verb auf Position 1)", „(Das Verb steht vorn.)", „(die Satzmelodie steigt)",
+  // „(Antwort: ja oder nein)" — all of them: make it a yes/no question.
+  {
+    key: 'verbzuerst',
+    re: /verb\s+(?:steht|zuerst|vorn|auf\s+position)|zuerst\s+das\s+verb|mit\s+dem\s+verb|satzmelodie|stimme\s+steigt|ja\s+oder\s+nein/i,
+  },
+  // „(14:30, offiziell)", „(2:45, umgangssprachlich)", „(8.30)", „(Präposition für Tageszeit)"
+  { key: 'uhrzeit', re: /\d{1,2}\s*[:.]\s*\d{2}|uhrzeit|tageszeit|umgangssprachlich|offiziell/i },
+  // „(höflich mit Sie)", „(Sie, Höflichkeitsform)", „(…, förmlich, …)"
+  { key: 'register', re: /höflich|formell|förmlich|höflichkeitsform/i },
+  // „(7)", „(10)" — write the number word.
+  { key: 'zahl', re: /^\s*\d+\s*$/ },
+  // „(ich)", „(du)", „(sie, Plural)" — conjugate for this person.
+  { key: 'person', re: /^\s*(?:ich|du|er|sie|es|wir|ihr)\b/i },
+  // „(sein)", „(haben)", „(aufstehen, nur die Vorsilbe)" — an infinitive cue.
+  { key: 'verbform', re: /^\s*[a-zäöüß]{2,}e?n\b/ },
+  // „(Plural)", „(Singular)", „(zwei Wörter)" — how many / which form.
+  { key: 'anzahl', re: /plural|singular|einzahl|mehrzahl|zwei\s+wörter|vorsilbe/i },
+];
+/** The mark a bracket that fits no category gets: one for all of them. */
+export const GENERIC_TASK_MARK = 'zzmarkx';
+/** The category of one bracketed instruction, as a single skeleton token. */
+export const instructionMark = (inner) =>
+  `zzmark${(TASK_MARKS.find((m) => m.re.test(String(inner || ''))) || {}).key || 'x'}`;
+
+/**
+ * A spelled-out word — „T-S-C-H-Ü-S-S", „B-U-C-H-S-T-A-B-I-E-R-E-N" — as ONE
+ * token. DaF review #10 MAJOR 1(a): every letter used to enter the skeleton as
+ * its own `·`, so the LENGTH of the answer word decided whether two „Lesen Sie
+ * die Buchstaben: …. Schreiben Sie das Wort: ___" items were the same task.
+ * L1's third attempt served five letter-for-letter identical prompts while the
+ * cap reported seven distinct shapes.
+ */
+const SPELLED_RE = /(?:^|\s)\p{L}(?:-\p{L})+(?=[\s.,!?;:]|$)/gu;
+/**
+ * A scrambled word list — „[fahren / der Bus / nach Deutschland]" — masked by
+ * its LENGTH CLASS only (DaF review #10 MAJOR 1(c)). Which words are in the
+ * bag is content; that the learner has to order a bag of words is the task.
+ */
+const WORD_LIST_RE = /\[[^\]]*\]/g;
+const listMark = (chunk) => (String(chunk).split('/').length >= 4 ? 'zzlistelang' : 'zzlistekurz');
+
+/**
+ * Placeholders `taskShape` injects. They are lowercase letter strings so that
+ * `withGaps` carries them through, and they survive the content mask because
+ * they ARE the shape.
+ */
+const SHAPE_TOKEN_RE = /^zz(?:mark[a-zäöüß]*|liste(?:kurz|lang)|buchstaben)$/;
+
+/**
+ * Content words that sit in `LEMMA_STOPWORDS` for the LEMMA cap's sake but are
+ * content as far as the FRAME is concerned. `alt`, `gut` and `neu` are there so
+ * that „Schreiben Sie den Satz richtig" items do not all count as one lemma —
+ * and DaF review #10 MAJOR 1(c) measured the side effect: „___ Uhr ist alt."
+ * and „___ Rucksack ist teuer." came out as two frames, because `alt` survived
+ * into the skeleton and `teuer` did not. Adjectives are content. The lemma cap
+ * keeps its stoplist; the shape mask subtracts this set from it.
+ */
+export const SHAPE_CONTENT_WORDS = new Set(['gut', 'neu', 'alt']);
 
 /**
  * The item's TASK as one comparable key: its type plus the skeleton of its bare
@@ -254,12 +343,33 @@ export const TASK_WORDS = new Set([
  * of one frame in both attempts while the guard reported seven distinct shapes.
  * The mask is bound to WORD CLASS instead: a token survives only if it is the
  * gap, a `LEMMA_STOPWORDS` function word, or a `TASK_WORDS` instruction word.
- * So the two sentences above are one key, and the cap binds for the first time.
+ *
+ * DaF review #10 MAJOR 1 closed the three ways a rewording could still buy a
+ * second seat, all three BEFORE the word mask runs:
+ *   (a) a spelled-letter sequence is one token, not one per letter;
+ *   (b) a bracketed instruction is its `TASK_MARKS` CATEGORY, not its wording,
+ *       and an unclassified bracket is the generic mark;
+ *   (c) a scrambled word list is its length class, not its words.
+ * Plus `SHAPE_CONTENT_WORDS`: an adjective is content even when the lemma
+ * stoplist holds it. So two items are one shape whenever a learner would say
+ * „that is the same exercise again".
  */
 export const taskShape = (item) => {
-  const skeleton = withGaps(bare(item && item.questionDe))
+  const marks = [];
+  const text = bare(item && item.questionDe)
+    .replace(/\(([^()]*)\)/g, (_, inner) => {
+      marks.push(instructionMark(inner));
+      return ` ${marks[marks.length - 1]} `;
+    })
+    .replace(SPELLED_RE, ' zzbuchstaben ')
+    .replace(WORD_LIST_RE, (chunk) => ` ${listMark(chunk)} `);
+  const skeleton = withGaps(text)
     .split(' ')
-    .map((w) => (w === '_' || LEMMA_STOPWORDS.has(w) || TASK_WORDS.has(w) ? w : '·'))
+    .map((w) => {
+      if (w === '_' || SHAPE_TOKEN_RE.test(w)) return w;
+      if (SHAPE_CONTENT_WORDS.has(w)) return '·';
+      return LEMMA_STOPWORDS.has(w) || TASK_WORDS.has(w) ? w : '·';
+    })
     .join(' ');
   return `${(item && item.type) || ''}:${skeleton}`;
 };
@@ -380,9 +490,18 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
   // Lektion has shown, only those are eligible. A topic that is exhausted falls
   // back to its full slice rather than leaving the block short.
   // The answer keys `mustCover` reserves a seat for, normalised once.
-  const coverKeys = [...new Set(
-    ((rule && rule.mustCover) || []).map((k) => answerKey({ answer: k })).filter(Boolean),
-  )];
+  // `mustCover` lists the answer STRING the Lektion exists to rehearse, and `answerKey` is
+  // case-blind by construction (`Mein` and `mein` are one key). For L12 those are two different
+  // forms — the polite `Ihr` is the whole point of the Lektion — and on attempt 3 the cover pass
+  // filled the seat with `ihr` (the plural possessive), because the prior-attempt filter had put
+  // the three polite items out of reach and a case-variant shares their key (DaF review #10
+  // MAJOR 2, measured once the guard walked attempt 3). So the raw string travels with the key and
+  // an item whose answer IS that string is preferred over one that merely shares its key.
+  const coverKeys = [];
+  for (const raw of (rule && rule.mustCover) || []) {
+    const key = answerKey({ answer: raw });
+    if (key && !coverKeys.some((c) => c.key === key)) coverKeys.push({ raw: String(raw).trim(), key });
+  }
 
   const eligible = [];
   for (const topic of topics) {
@@ -464,9 +583,11 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
     // typed and on the primary slug for preference, under the same caps as every
     // other pick. A key the pool cannot supply is a no-op — the draw is never
     // padded with something off-topic to satisfy it.
-    for (const key of coverKeys) {
+    for (const { raw, key } of coverKeys) {
       if (chosen.size >= PRACTICE_SIZE) break;
-      const candidates = ranked.filter((it) => answerKey(it) === key);
+      const all = ranked.filter((it) => answerKey(it) === key);
+      const exact = all.filter((it) => String(it.answer || '').trim() === raw);
+      const candidates = [...exact, ...all.filter((it) => !exact.includes(it))];
       const preferred = [
         ...candidates.filter((it) => it.topic === primarySlug && isTypedItem(it)),
         ...candidates.filter((it) => it.topic === primarySlug),
@@ -476,7 +597,18 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
       // A key an earlier attempt already covered is still a key this attempt
       // must cover: the prior-attempt filter is tried first and given up for the
       // cover pass alone, so `mustCover` never goes unmet because of rule 7.
-      const pick = preferred.find((it) => fits(it, {})) || preferred.find((it) => fits(it, { prior: true }));
+      //
+      // And the NAMED form is tried before any case-variant of it, prior filter and all. L12's
+      // key is `Ihr`; the pool also holds `ihr` (the plural possessive), which shares the key —
+      // so on attempt 3, with the two polite items prior-excluded, the seat reserved for the
+      // Höflichkeitsform went to the lowercase form and the Lektion's own exam point was not
+      // practised at all. A repeated `Ihr` item is the smaller price, and it is the exception
+      // `mustCover` exists to make.
+      const isExact = (it) => exact.includes(it);
+      const pick = preferred.find((it) => isExact(it) && fits(it, {}))
+        || preferred.find((it) => isExact(it) && fits(it, { prior: true }))
+        || preferred.find((it) => fits(it, {}))
+        || preferred.find((it) => fits(it, { prior: true }));
       if (pick) take(pick);
     }
 

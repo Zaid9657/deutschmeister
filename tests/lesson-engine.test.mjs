@@ -32,6 +32,21 @@ const POOL_COPY = JSON.parse(read('src/data/lessonPools/a11.json'));
 const POOL_A12 = JSON.parse(read('src/data/lessonPools/a12.json'));
 const LEKTIONEN = CURRICULUM_A11.lektionen;
 
+/**
+ * EVERY attempt of the cycle, derived from `ATTEMPT_CYCLE` and never written out.
+ *
+ * DaF review #10 MAJOR 2: round 10 lengthened the cycle to three draws and left the guards on
+ * `[1, 2]`. What attempt 3 then delivered, unwatched: L6 gave seven of seven seats to one article
+ * template with `eine` three times, L4 said `kostet` five times, four Lektionen broke the
+ * Mädchen rule, and the overlap test never looked at the pair 3→1 — which is as consecutive in
+ * 1 → 2 → 3 → 1 as the two pairs it did check, and where L8 shared five of seven. A literal
+ * attempt list is the bug; `ATTEMPTS` is the fix, and the source test below forbids the literal
+ * coming back.
+ */
+const ATTEMPTS = Array.from({ length: ATTEMPT_CYCLE }, (_, i) => i + 1);
+/** The consecutive pairs of the CYCLE, wrap included: 1→2, 2→3 and 3→1. */
+const ATTEMPT_PAIRS = ATTEMPTS.map((_, i) => [i, (i + 1) % ATTEMPTS.length]);
+
 const build = (over = {}) =>
   buildLesson({ curriculum: FIXTURE_CURRICULUM, lektion: FIXTURE_LEKTION, pool: POOL, ...over });
 
@@ -275,7 +290,8 @@ test('no item is drawn twice in the whole level — the eight verbatim repeats a
 });
 
 /**
- * How many Lektionen of attempt 1 may draw a seven the caps could not fully honour — i.e. whose
+ * How many BLOCKS — Lektion × attempt, all 36 of them since DaF review #10 MAJOR 2 — may draw a
+ * seven the caps could not fully honour — i.e. whose
  * report says the ladder had to relax (`relaxUsed` ≥ 2). It is a CONTENT number, not an engine
  * one: at that stage the engine has already tried `PICK_RETRIES` seeded orders and the eligible
  * slice holds no legal seven at all.
@@ -290,14 +306,27 @@ test('no item is drawn twice in the whole level — the eight verbatim repeats a
  * the learner produce an article with a noun and NO price („Hier ist ___ Tisch.“, „___ Rucksack ist
  * gut.“, „___ Tische sind alt.“), each in a task shape L4 did not already use, and L4 now fills
  * seven with every cap honoured (`relaxUsed` 0). It may never be raised.
+ *
+ * ROUND 11 re-measured it over ALL THREE attempts and against the task-shape key of MAJOR 1, which
+ * is coarser than the one round 10 measured with. The two together took five blocks below the caps
+ * (L1 attempt 3, L4 attempts 2 and 3, L6 attempts 2 and 3, L8 attempts 2 and 3 — `relaxUsed` 2 or
+ * 3, `kostet` ×3, `artikel` ×4, the answer key `die` ×3). It is 0 again, and again by content: 54
+ * hand items in task shapes their Lektion did not already own. The number is only ever to be
+ * lowered by items, never raised by a softer cap — and it now covers every draw a learner gets,
+ * not only the first of them.
  */
 const MAX_CAP_STARVED_LEKTIONEN = 0;
 
-test('no lemma carries more than two items in one Lektion — the Mädchen rule', () => {
-  const plan = planPractice(CURRICULUM_A11, POOL, 1);
-  const report = practiceReport(plan);
+test('no lemma carries more than two items in one Lektion — the Mädchen rule, every attempt', () => {
+  // DaF review #10 MAJOR 2(a): the rule used to be checked on `planPractice(…, 1)` alone, and only
+  // there was it true — attempt 3 broke it in four Lektionen (L1 `lesen`/`buchstaben` ×5, L4
+  // `kostet` ×5, L6 `artikel` ×7, L8) while the ratchet meant to report it read the same plan 1.
+  // It walks the whole cycle now, so a block is a block whichever draw a learner is on.
   const lektionenPerLemma = new Map();
   const starved = [];
+  for (const attempt of ATTEMPTS) {
+  const plan = planPractice(CURRICULUM_A11, POOL, attempt);
+  const report = practiceReport(plan);
   for (const lektion of LEKTIONEN) {
     const count = new Map();
     for (const it of plan.get(lektion.nr)) {
@@ -309,13 +338,15 @@ test('no lemma carries more than two items in one Lektion — the Mädchen rule'
     const relaxed = (report.get(lektion.nr) || {}).relaxUsed >= 2;
     const over = [...count].filter(([, n]) => n > MAX_SAME_LEMMA);
     if (over.length && relaxed) {
-      starved.push(`L${lektion.nr} (${lektion.primarySlug}): ${over.map(([l, n]) => `"${l}" ×${n}`).join(', ')}` +
+      starved.push(`attempt ${attempt} L${lektion.nr} (${lektion.primarySlug}): ` +
+        `${over.map(([l, n]) => `"${l}" ×${n}`).join(', ')}` +
         ` — only ${(report.get(lektion.nr) || {}).eligible} eligible items`);
     }
     for (const [lemma, n] of count) {
-      assert.ok(n <= MAX_SAME_LEMMA || relaxed, `L${lektion.nr} drills "${lemma}" ${n} times`);
-      lektionenPerLemma.set(lemma, (lektionenPerLemma.get(lemma) || 0) + 1);
+      assert.ok(n <= MAX_SAME_LEMMA || relaxed, `L${lektion.nr} attempt ${attempt} drills "${lemma}" ${n} times`);
+      if (attempt === 1) lektionenPerLemma.set(lemma, (lektionenPerLemma.get(lemma) || 0) + 1);
     }
+  }
   }
   assert.ok(
     starved.length <= MAX_CAP_STARVED_LEKTIONEN,
@@ -332,7 +363,7 @@ test('no answer key carries more than two items in one Lektion — the "mein" ru
   // in BOTH attempts. `answerKey` counts what the learner PRODUCES instead, and
   // this walks all twelve Lektionen on both attempts of the shipped pool.
   const rows = [];
-  for (const attempt of [1, 2]) {
+  for (const attempt of ATTEMPTS) {
     const plan = planPractice(CURRICULUM_A11, POOL, attempt);
     for (const lektion of LEKTIONEN) {
       const count = new Map();
@@ -405,6 +436,83 @@ test('taskShape reads the task, not the wording — the same exercise under two 
   );
 });
 
+/**
+ * The five L1 items DaF review #10 MAJOR 1(a) drew in ONE seven, verbatim from the shipped pool of
+ * round 10. `bare()` cut at the first task formula, the spelled word was left behind, every letter
+ * became its own `·` — so the LENGTH of the answer word decided whether two letter-for-letter
+ * identical prompts were one task, and the cap reported 7/7 distinct while the learner filled the
+ * same sentence five times in a row.
+ */
+const SPELLED_PROBES = [
+  'Lesen Sie die Buchstaben: T-S-C-H-Ü-S-S. Schreiben Sie das Wort: ___',
+  'Lesen Sie die Buchstaben: B-U-C-H-S-T-A-B-I-E-R-E-N. Schreiben Sie das Wort: ___',
+  'Lesen Sie die Buchstaben: B-U-C-H-S-T-A-B-E. Schreiben Sie das Wort: ___',
+  'Lesen Sie die Buchstaben: G-R-U-ß. Schreiben Sie das Wort: ___',
+  'Lesen Sie die Buchstaben: D-A-N-K-E. Schreiben Sie das Wort: ___',
+];
+/**
+ * The six L10 items of round 10 (`extra-a11-l10-17` … `-22`), verbatim as they were written. They
+ * are ONE task — a bag of words turned into a yes/no question — and differed in nothing but the
+ * wording of the bracket, which `TASK_WORDS` and `LEMMA_STOPWORDS` left standing in the key. L10
+ * drew five of the six into one seven, twice. They have since been rewritten into two other tasks,
+ * so they are kept HERE as the counter-probe: a guard that does not pass its own counter-probe is
+ * not a rule, and this one is measured, not invented.
+ */
+const BRACKET_PROBES = [
+  '[essen / ihr / im Zug] (Das Verb steht zuerst.)',
+  '[haben / Sie / eine Fahrkarte] (höflich mit Sie)',
+  '[kommen / der Fahrer / morgen] (Beginnen Sie mit dem Verb.)',
+  '[fahren / der Bus / nach Deutschland] (Die Stimme steigt am Ende.)',
+  '[sein / das Auto / neu] (Zuerst das Verb, dann das Subjekt.)',
+  '[haben / ihr / morgen / Zeit] (Das Verb steht vorn.)',
+];
+
+test('taskShape counts the TASK, not the letters, the wording or the word count — the three probes', () => {
+  const shape = (q, type = 'fill_blank') => taskShape({ type, questionDe: q });
+
+  // (a) a spelled-letter sequence is ONE token. Five identical sentences, one key.
+  const spelled = new Set(SPELLED_PROBES.map((q) => shape(q)));
+  assert.equal(spelled.size, 1,
+    `the five spelled-word items are five task shapes again:\n  ${[...spelled].join('\n  ')}`);
+
+  // (b) the bracket is its CATEGORY, not its wording. Five of the six are the same instruction
+  //     (verb first / rising intonation / begin with the verb) on a three-word bag; the sixth
+  //     differs only in the bag's length, and a register cue is a different question about the
+  //     same frame, which is why `(höflich mit Sie)` is allowed to stay its own shape.
+  const bracket = BRACKET_PROBES.map((q) => shape(q, 'sentence_building'));
+  assert.equal(new Set(bracket.slice(0, 5).filter((_, i) => i !== 1)).size, 1,
+    `the four reworded verb-first items are still more than one shape:\n  ${bracket.join('\n  ')}`);
+  assert.equal(shape('[x / y / z] (Das Verb steht zuerst.)'), shape('[a / b / c] (Die Stimme steigt am Ende.)'),
+    'a rewording of the same instruction must not buy a second seat');
+  assert.notEqual(shape('[x / y / z] (Das Verb steht zuerst.)'), shape('[x / y / z] (höflich mit Sie)'));
+  // an unclassified bracket is the GENERIC mark — one for all of them, never a wording
+  assert.equal(shape('Das ist ___. (Adjektiv)'), shape('Das ist ___. (etwas ganz anderes)'));
+
+  // (c) a scrambled word list is its LENGTH CLASS, not its words — and not its exact length.
+  assert.equal(shape('Bilden Sie den Satz: [der Bus / fahren / heute]', 'sentence_building'),
+    shape('Bilden Sie den Satz: [die Uhr / kosten / zwölf Euro]', 'sentence_building'));
+  assert.notEqual(shape('Bilden Sie den Satz: [a / b / c]', 'sentence_building'),
+    shape('Bilden Sie den Satz: [a / b / c / d / e]', 'sentence_building'));
+
+  // and the adjective is CONTENT even though the lemma stoplist holds it (MAJOR 1(c)):
+  // „___ Uhr ist alt.“ and „___ Rucksack ist teuer.“ are one frame, not two.
+  assert.equal(shape('___ Uhr ist alt. (der, die oder das?)'), shape('___ Rucksack ist teuer. (der, die oder das?)'));
+  assert.equal(shape('___ Rucksack ist gut. (der, die oder das?)'), shape('___ Regal ist neu. (der, die oder das?)'));
+});
+
+test('the guards walk EVERY attempt of the cycle — the literal [1, 2] may not come back', () => {
+  // DaF review #10 MAJOR 2. Round 10 lengthened `ATTEMPT_CYCLE` to 3 and left five guards looping
+  // over a hard-written two-element attempt list; everything the third draw did — seven seats to one
+  // article template in L6, `kostet` five times in L4, five of seven repeated across the wrap pair
+  // in L8 — happened where no test looked. The literal list IS the bug, so it is banned in the
+  // source rather than corrected once.
+  const src = read('tests/lesson-engine.test.mjs');
+  assert.doesNotMatch(src, /of \[1, ?2\]\)/, 'a guard walks only attempts 1 and 2 again — use ATTEMPTS');
+  assert.doesNotMatch(src, /\[\[0, ?1\], ?\[1, ?2\]\]/, 'the overlap test skips the wrap pair again — use ATTEMPT_PAIRS');
+  assert.deepEqual(ATTEMPTS, [1, 2, 3]);
+  assert.deepEqual(ATTEMPT_PAIRS, [[0, 1], [1, 2], [2, 0]], 'the cycle wraps, so 3→1 is a consecutive pair');
+});
+
 test('no task shape carries more than one item in a Lektion — the Beruf-pair rule', () => {
   // The third diversity axis, walked over all twelve Lektionen and BOTH
   // attempts of the shipped pool, as a class rule and not as the one instance
@@ -414,7 +522,7 @@ test('no task shape carries more than one item in a Lektion — the Beruf-pair r
   // under the other caps either — a POOL finding (too few distinct exercises on
   // that slug), to be fixed with items, not by loosening this number.
   const rows = [];
-  for (const attempt of [1, 2]) {
+  for (const attempt of ATTEMPTS) {
     const plan = planPractice(CURRICULUM_A11, POOL, attempt);
     for (const lektion of LEKTIONEN) {
       const items = plan.get(lektion.nr);
@@ -442,7 +550,7 @@ test('L6 draws at most one Beruf correction per block — and stays above the fl
   const verkaeuferin = POOL.items.find((it) => it.id === 'extra-a11-l06-09');
   assert.ok(verkaeuferin && verkaeuferin.type === 'fill_blank' && verkaeuferin.answer === 'eine',
     'extra-a11-l06-09 must stay a fill-blank that produces „eine“, not a second Beruf correction');
-  for (const attempt of [1, 2]) {
+  for (const attempt of ATTEMPTS) {
     const items = planPractice(CURRICULUM_A11, POOL, attempt).get(6);
     const drawn = items.filter(isBerufCorrection);
     assert.ok(
@@ -488,15 +596,22 @@ test('THE SECOND DRAW IS A SECOND DRAW — consecutive attempts share at most tw
   // the shipped pool gives 0 shared items in ten of twelve Lektionen, and 2 in
   // L8 — whose two shared items are its `mustCover` keys (`halb`, the official
   // time), i.e. the two forms the Lektion is REQUIRED to rehearse every time.
+  //
+  // DaF review #10 MAJOR 2(d): the cycle WRAPS, 1 → 2 → 3 → 1, so the pair 3→1 is as consecutive as
+  // the two pairs this test used to walk — and it was where L8 repeated FIVE of seven, unwatched.
+  // `ATTEMPT_PAIRS` is derived from `ATTEMPT_CYCLE`, so a fourth draw would be walked the day it
+  // exists. Measured on the round-11 pool: 0 shared in eleven of twelve Lektionen on all three
+  // pairs, and 2 in L8 on each — its two `mustCover` items, the documented exception.
   const MAX_SHARED = 2;
   const rows = [];
   const failures = [];
-  const plans = [1, 2, 3].map((a) => planPractice(CURRICULUM_A11, POOL, a));
+  const plans = ATTEMPTS.map((a) => planPractice(CURRICULUM_A11, POOL, a));
   for (const lektion of LEKTIONEN) {
     const ids = plans.map((p) => new Set(p.get(lektion.nr).map((i) => i.id)));
     const shared = (a, b) => [...ids[a]].filter((x) => ids[b].has(x));
-    rows.push(`L${String(lektion.nr).padStart(2)}  1∩2 = ${shared(0, 1).length}   2∩3 = ${shared(1, 2).length}`);
-    for (const [a, b] of [[0, 1], [1, 2]]) {
+    rows.push(`L${String(lektion.nr).padStart(2)}  ` +
+      ATTEMPT_PAIRS.map(([a, b]) => `${a + 1}∩${b + 1} = ${shared(a, b).length}`).join('   '));
+    for (const [a, b] of ATTEMPT_PAIRS) {
       const overlap = shared(a, b);
       if (overlap.length > MAX_SHARED) {
         failures.push(
@@ -589,7 +704,7 @@ test('L8 makes the learner produce „halb" and the official time — in every a
   // NEITHER. A ceiling on repetition cannot reserve a seat — `mustCover` does.
   const l8 = LEKTIONEN.find((l) => l.nr === 8);
   assert.deepEqual(l8.practiceRule.mustCover, ['halb', 'vierzehn Uhr dreißig'], 'L8 lost its mustCover keys');
-  for (const attempt of [1, 2, 3]) {
+  for (const attempt of ATTEMPTS) {
     const items = planPractice(CURRICULUM_A11, POOL, attempt).get(8);
     const answers = items.map((it) => String(it.answer || '').toLowerCase());
     assert.ok(
@@ -624,7 +739,7 @@ test('L12 spreads its possessives, and every attempt drills the polite Ihr', () 
   assert.deepEqual(inPool, POLITE, 'the three polite Ihr items are no longer in the shipped pool');
   assert.deepEqual(LEKTIONEN.find((l) => l.nr === 12).practiceRule.mustCover, ['Ihr'], 'L12 lost its mustCover key');
 
-  for (const attempt of [1, 2]) {
+  for (const attempt of ATTEMPTS) {
     const items = planPractice(CURRICULUM_A11, POOL, attempt).get(12);
     const owners = new Set(items.map((it) => String(it.answer || '').toLowerCase().split(/[^a-zäöüß]+/)[0]).filter(Boolean));
     assert.ok(owners.size >= 4, `L12 attempt ${attempt} draws only ${owners.size} distinct owners: ${[...owners].join(', ')}`);

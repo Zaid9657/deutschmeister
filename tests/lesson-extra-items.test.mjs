@@ -515,6 +515,14 @@ test('Lektion 10 makes the learner PRODUCE the question, not fill a gap in one',
   // prompt, which `MAX_SAME_LEMMA` caps at two per block. The six new producers (l10-17..22) name
   // the task without the word — „(Das Verb steht zuerst.)“, „(höflich mit Sie)“ — so the cap binds
   // on a template rather than on the Lektion's whole supply.
+  //
+  // ROUND 11 measured what that bought: the six were ONE task (a bag of words → a yes/no question)
+  // and differed in nothing but their bracket, which the old `taskShape` read as six shapes — L10
+  // drew five of them into one seven, twice (DaF review #10 MAJOR 1b). Under the normalised key
+  // ALL NINETEEN of L10's producers were one task in five length/wording variants, so the six were
+  // rewritten into two other operations, three items each: a quoted statement turned into a
+  // question (l10-17/19/21) and the question that belongs to a given „Ja, …“ answer
+  // (l10-18/20/22). Both avoid the word „Frage“, which is what the lemma cap was really counting.
   const l10 = EXTRA.filter((i) => target(i).nr === 10);
   const produces = (it) => drillsSlug(it, 'yes-no-questions');
   assert.ok(l10.filter(produces).length >= 12,
