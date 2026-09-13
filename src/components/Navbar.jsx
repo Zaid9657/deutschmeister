@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, User, LogOut, Globe, LayoutDashboard, Crown, Sparkles, Mic, ClipboardCheck, BookOpen, BookMarked, ChevronDown, Film, Radio, Scan, Headphones, FileText, PlayCircle, GraduationCap } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
+import { isAdminEmail } from '../config/admins';
 import { NAV_GROUPS } from '../data/navigation';
 import Logo from './Logo';
 import Button from './ui/Button';
@@ -75,7 +76,7 @@ const Navbar = () => {
   const inTrial = user ? isInFreeTrial() : false;
   const isSubscribed = user ? hasActiveSubscription() : false;
   const trialDays = user ? getTrialDaysRemaining() : 0;
-  const isAdmin = user?.email === 'zaid199660@gmail.com';
+  const isAdmin = isAdminEmail(user?.email);
 
   const label = (item) => (isGerman ? item.labelDe : item.labelEn);
   const visibleGroups = NAV_GROUPS.map((g) => ({
