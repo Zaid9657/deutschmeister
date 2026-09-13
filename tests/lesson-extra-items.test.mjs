@@ -19,7 +19,10 @@ import { dirname, join } from 'node:path';
 
 import {
   exclusionReason, answerInPrompt, isMetaPrompt, unconditionedRule, unconditionedRuleSentence,
+  frontableOrders, missingFrontedOrder, agreementAmbiguity,
 } from '../src/data/lessonPools/quality.js';
+import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js';
+import { buildCheckpoint } from '../src/lib/checkpoint/buildCheckpoint.js';
 import { planPractice, relevanceScore, wortfeldTerms, isTypedItem } from '../src/lib/lesson/buildLesson.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 
@@ -723,5 +726,185 @@ test('the three sentences the course writes for ein → einen say the same thing
     const item = EXTRA.find((i) => i.id === id);
     assert.ok(item, `${id} is gone — the counter-example to l06-14 must stay in the batch`);
     assert.match(String(item.answer), new RegExp(`\\b${right}\\b`), `${id} no longer corrects to ${right}`);
+  }
+});
+
+
+// --- REVIEW #12 ------------------------------------------------------------
+
+/**
+ * BLOCKER 1. „Bilden Sie den Satz: [ich / haben / gestern / gearbeitet]"
+ * accepted one string and marked „Gestern habe ich gearbeitet." WRONG — the
+ * order the course's own L11 rule card teaches („Das Verb steht auf Position
+ * 2"), the order the L11 pretest four screens earlier accepts, and the order
+ * three cache items of the same shape already carry. Four drawn hand items
+ * refused it and three of them are GRADED checkpoint tasks.
+ *
+ * The rule is `frontableOrders` in quality.js and the repair is a build pass;
+ * these tests are the guard that keeps both honest — over the BUILT pool (what
+ * the learner draws) and over every checkpoint item (what he is graded on),
+ * asked through the real `checkAnswer` + `checkOptionsFor`, because an accepted
+ * list the checker does not honour would pass a string comparison and still
+ * fail the learner.
+ */
+
+/** The three cache items that carried both orders before the rule existed. */
+const FRONTING_PROBES = [
+  '96b41b81-d57b-5bfe-91c8-93ef7d8982ca',
+  '1958acf0-ed11-583e-88e0-6a55fab00172',
+  '51d74698-b413-58f3-bbc5-1fde9f41f83b',
+];
+
+/** The two shapes the rule must NOT touch: a question (its order IS the task)
+ * and a sentence with no Angabe to front. */
+const FRONTING_NEGATIVES = ['extra-a11-l11-01', 'extra-a11-l09-16'];
+
+/**
+ * Every item of the four real checkpoints, projected back onto the shape the
+ * quality rules read: a checkpoint item carries its prompt as `promptDe` and
+ * its source as `poolItemId`, so asking the predicates about it unprojected
+ * would answer „nothing to see here" about the most expensive surface the
+ * course has. The `accepted` list under test is the CHECKPOINT's own.
+ */
+const CHECKPOINT_ITEMS = CURRICULUM_A11.checkpoints.flatMap((cp) =>
+  buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp, pool: POOL })
+    .map((it) => ({
+      ...it,
+      questionDe: it.questionDe || it.promptDe || '',
+      source: POOL.items.find((p) => p.id === it.poolItemId) || null,
+    })));
+
+const acceptsThroughChecker = (item, answer) =>
+  checkAnswer(answer, item.accepted && item.accepted.length ? item.accepted : [item.answer],
+    checkOptionsFor(item)).result;
+
+test('every sentence-building item with a time or place Angabe accepts both word orders — REVIEW #12 BLOCKER 1', () => {
+  // The four hand items the review measured, by id: they are the list that has
+  // to fall to zero, and they are named so a later rewrite of the predicate
+  // cannot quietly stop reaching them.
+  const measured = ['extra-a11-l11-10', 'extra-a11-l08-08', 'extra-a11-l03-07', 'extra-a11-l12-13'];
+  for (const id of measured) {
+    const item = POOL.items.find((i) => i.id === id);
+    assert.ok(item, `${id} is gone from the built pool`);
+    const orders = frontableOrders(item);
+    assert.ok(orders.length, `${id}: the rule no longer derives a second order from „${item.answer}“`);
+    assert.equal(missingFrontedOrder(item), null,
+      `${id}: ${JSON.stringify(missingFrontedOrder(item))} is correct German and is not accepted`);
+    for (const order of orders) {
+      assert.equal(acceptsThroughChecker(item, `${order}.`), RESULT.CORRECT,
+        `${id}: the checker rejects „${order}.“`);
+    }
+  }
+
+  // The class over the built pool — the draw the learner meets.
+  for (const item of POOL.items) {
+    const missing = missingFrontedOrder(item);
+    assert.equal(missing, null, `pool ${item.id}: „${item.answer}“ refuses ${JSON.stringify(missing)}`);
+    for (const order of frontableOrders(item)) {
+      assert.equal(acceptsThroughChecker(item, `${order}.`), RESULT.CORRECT,
+        `pool ${item.id}: the checker rejects „${order}.“`);
+    }
+  }
+
+  // …and over the four checkpoints, which is where it costs a grade. The orders
+  // come from the POOL item (the checkpoint copy keeps the prompt but the
+  // bracket list is read from the source), the acceptance is asked of the
+  // CHECKPOINT item, through the same checker the graded run uses.
+  let graded = 0;
+  for (const item of CHECKPOINT_ITEMS) {
+    const orders = frontableOrders(item.source || item);
+    if (!orders.length) continue;
+    graded += 1;
+    for (const order of orders) {
+      assert.equal(acceptsThroughChecker(item, `${order}.`), RESULT.CORRECT,
+        `${item.id} (${item.poolItemId}): the graded item rejects „${order}.“`);
+    }
+  }
+  assert.ok(graded >= 3,
+    `only ${graded} checkpoint items have a second word order — the review measured three`);
+});
+
+test('the three cache items that always carried both orders still do — REVIEW #12 BLOCKER 1', () => {
+  for (const id of FRONTING_PROBES) {
+    const item = POOL.items.find((i) => i.id === id);
+    assert.ok(item, `${id} is gone — re-measure the fronting rule against the cache`);
+    assert.ok(frontableOrders(item).length, `${id}: the predicate stopped reading this shape`);
+    assert.equal(missingFrontedOrder(item), null, id);
+    for (const order of frontableOrders(item)) {
+      assert.equal(acceptsThroughChecker(item, `${order}.`), RESULT.CORRECT, `${id}: „${order}.“`);
+    }
+  }
+});
+
+test('the fronting rule leaves questions and Angabe-less sentences alone — REVIEW #12 BLOCKER 1', () => {
+  for (const id of FRONTING_NEGATIVES) {
+    const item = POOL.items.find((i) => i.id === id);
+    assert.ok(item, `${id} is gone — the negative fixture of the fronting rule must stay`);
+    assert.deepEqual(frontableOrders(item), [],
+      `${id}: the rule invented a word order for „${item.answer}“`);
+  }
+  // …and the counter-proof that the widening is a WORD ORDER rule, not a
+  // general amnesty: verb-third is still wrong.
+  const item = POOL.items.find((i) => i.id === 'extra-a11-l11-10');
+  assert.equal(acceptsThroughChecker(item, 'Gestern ich habe gearbeitet.'), RESULT.WRONG,
+    'a verb in third position must stay wrong');
+  assert.equal(acceptsThroughChecker(item, 'Ich gestern habe gearbeitet.'), RESULT.WRONG,
+    'a verb in third position must stay wrong');
+});
+
+/**
+ * BLOCKER 2. „Korrigieren Sie: „Du habt Durst."" has TWO minimal repairs — „Du
+ * hast Durst." and „Ihr habt Durst." — and graded one of them wrong; the same
+ * shape stood twice in one drawn seven of L10 („Sind die Abfahrt …?" is also
+ * „Sind die Abfahrten …?", „Haben der Fahrer …?" also „Haben die Fahrer …?").
+ * The round-7 rule for this class, `ambiguousCorrection`, reads the ARTICLE
+ * family and could not see agreement. `agreementAmbiguity` is the missing axis;
+ * the three items now carry the cue the course already uses fifteen times
+ * („Korrigieren Sie das Verb: …"), which pins which side the repair is on.
+ */
+
+/** The three measured items in the form the review met them in: every one must
+ * be caught, or the rule has stopped being a rule. */
+const AGREEMENT_PROBES = [
+  { id: 'extra-a11-l09-14', questionDe: 'Korrigieren Sie: „Du habt Durst.“', answer: 'Du hast Durst.' },
+  { id: 'extra-a11-l10-10', questionDe: 'Korrigieren Sie: „Sind die Abfahrt um neun Uhr?“', answer: 'Ist die Abfahrt um neun Uhr?' },
+  { id: 'extra-a11-l10-11', questionDe: 'Korrigieren Sie: „Haben der Fahrer Verspätung?“', answer: 'Hat der Fahrer Verspätung?' },
+];
+
+test('a correction with two minimal repairs is caught, and the pinned prompt is not — REVIEW #12 BLOCKER 2', () => {
+  for (const probe of AGREEMENT_PROBES) {
+    const hit = agreementAmbiguity({ type: 'error_correction', ...probe });
+    assert.ok(hit, `${probe.id}: the unpinned prompt „${probe.questionDe}“ is not caught`);
+    // The rule has to be able to NAME the answer it is defending, or the next
+    // author cannot see what he is rejecting.
+    assert.ok(hit.subject && hit.subject !== probe.answer, `${probe.id}: no second repair named`);
+    // The same item with the cue the course already carries is fine.
+    assert.equal(agreementAmbiguity({
+      type: 'error_correction', ...probe,
+      questionDe: probe.questionDe.replace('Korrigieren Sie:', 'Korrigieren Sie das Verb:'),
+    }), null, `${probe.id}: the pinned prompt must pass`);
+    // …and the shipped item is the pinned one.
+    const shipped = POOL.items.find((i) => i.id === probe.id);
+    assert.ok(shipped, `${probe.id} is gone from the built pool`);
+    assert.match(shipped.questionDe, /\b(Verb|Subjekt|Artikel|Nomen)\b/,
+      `${probe.id}: the prompt must name the element the repair changes`);
+  }
+
+  // The negative fixture: „Lena spielen am Wochenende Fußball." is repairable at
+  // the verb and nowhere else — a proper name has no second person and no
+  // plural, so the prompt owes no cue.
+  const only = POOL.items.find((i) => i.id === 'extra-a11-l07-08');
+  assert.ok(only, 'extra-a11-l07-08 is gone — the negative fixture must stay');
+  assert.equal(agreementAmbiguity(only), null,
+    'a correction with one repair must not be asked for a cue it does not need');
+
+  // The class, over the built pool and over every graded checkpoint item (the
+  // latter projected, so the rule reads the prompt the learner is graded on).
+  for (const [where, items] of [['pool', POOL.items], ['checkpoint', CHECKPOINT_ITEMS]]) {
+    for (const item of items) {
+      const hit = agreementAmbiguity(item);
+      assert.equal(hit, null,
+        `${where} ${item.id}: „${item.questionDe}“ also repairs as „${hit && hit.subject}“`);
+    }
   }
 });

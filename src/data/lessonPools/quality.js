@@ -150,6 +150,10 @@ export const REASON = Object.freeze({
   // REVIEW #11 — the explanation states a rule without the condition under
   // which it holds („Nach brauchen wird ein zu einen.")
   UNCONDITIONED_RULE: 'unconditioned-rule',
+  // REVIEW #12 — the correction has a second, equally minimal repair on the
+  // other side of the agreement („Du habt Durst." → „Du hast" OR „Ihr habt")
+  // and the German prompt names neither side
+  AMBIGUOUS_AGREEMENT: 'ambiguous-agreement',
 });
 
 /** The level whose taught-by-now rules below apply. */
@@ -835,6 +839,311 @@ export function minimalArticleCorrection(item) {
   return words.join(' ');
 }
 
+// ── REVIEW #12 BLOCKER 1: the second word order a Wortsalat also produces ───
+//
+// „Bilden Sie den Satz: [ich / haben / gestern / gearbeitet]" accepted exactly
+// one string, „Ich habe gestern gearbeitet." — and marked „Gestern habe ich
+// gearbeitet." WRONG, in four drawn items of which three are GRADED checkpoint
+// tasks. The rejected order is the one the course itself teaches (the L11 rule
+// card: „Das Verb steht auf Position 2"), the one its own L11 pretest accepts
+// (`accepted: ['Ich habe', 'Gestern habe ich']`) and the one three cache items
+// of the same shape already carry. The prompt says „Bilden Sie den Satz", never
+// „beginnen Sie mit dem Subjekt", so both orders answer it.
+//
+// The rule, not the list: `frontableOrders(item)` derives the V2 permutations
+// from the canonical answer, and the build widens `accepted` with them. Three
+// narrowings, each measured against the built pool rather than guessed:
+//   * only a STATEMENT — a prompt asking for a Frage, or an answer carrying a
+//     question mark, is an inversion question whose order is the task;
+//   * only a bracket chunk that IS a time or place expression (the regex
+//     below), so „[wir / tanzen / zusammen]" gains nothing: a modal adverb is
+//     not a fronting-capable Angabe at A1.1;
+//   * only a canonical of the shape [subject] [finite verb] [rest], with the
+//     adverbial INSIDE the rest. An answer that already starts with its Angabe
+//     is left alone: the words after the verb are subject plus tail and no
+//     build step can say where one ends — measured on the 2026-09-12 pool,
+//     0 items have that shape, so nothing is lost.
+// Everything after the fronted Angabe keeps its order, which is what keeps a
+// separable prefix and a participle at the end („Gestern habe ich gearbeitet.",
+// „Um 7 Uhr stehe ich auf.").
+
+/**
+ * A bracket chunk that can open a German main clause: a time or place Angabe.
+ * Deliberately a closed list of A1.1 shapes rather than „any prepositional
+ * phrase" — an object („mit dem Bus") fronts too, but it is not what the four
+ * measured items are about and a build step may not invent word orders it
+ * cannot defend.
+ */
+export const FRONTABLE_ADVERBIAL_RE =
+  /^(?:gestern|heute|morgen|übermorgen|vorgestern|jetzt|hier|dort|dann|danach|am\s+\S+|um\s+.+|im\s+\S+|in\s+.+|aus\s+.+|nach\s+\S+|bei\s+\S+|jeden\s+tag|jede\s+woche|nächste\s+woche|letzte\s+woche)$/i;
+
+/** The subject openers a fronted order may lowercase. A name and the polite
+ * `Sie` are NOT in it: their capital is not a sentence opener. */
+const LOWERCASABLE_SUBJECT_RE =
+  /^(?:der|die|das|den|dem|ein|eine|einen|einem|einer|kein|keine|mein|meine|dein|deine|sein|seine|ihre|unser|unsere|euer|eure|ich|du|er|es|wir)$/i;
+
+/** A finite-verb shape: a personal ending on a lower-case word. */
+const FRONTABLE_FINITE_RE = /^[a-zäöüß]{2,}(?:e|st|t|en|et)$/i;
+
+/** Words of that shape that are not verbs — the A1.1 adverbs and particles that
+ * happen to end in a personal ending. Measured against the built pool. */
+const NOT_A_VERB_RE = /^(?:heute|morgen|gestern|dann|danach|jetzt|dort|nicht|oft|gut|gern|immer|zusammen|zuerst|spaet|spät|bitte|sehr|schon)$/i;
+
+/** A word that could be the subject of the clause: a nominative pronoun or a
+ * determiner opening a noun phrase. Used to refuse an already-inverted
+ * canonical, where the build cannot tell subject from fronted object. */
+const SUBJECT_SHAPED_RE =
+  /^(?:ich|du|er|sie|es|wir|ihr|der|die|das|ein|eine|kein|keine|mein|meine|dein|deine|unser|unsere)$/i;
+
+const capitalise = (word) => word.charAt(0).toUpperCase() + word.slice(1);
+const lowerSubject = (word) => (LOWERCASABLE_SUBJECT_RE.test(word) ? word.charAt(0).toLowerCase() + word.slice(1) : word);
+
+/** The spans of `words` that spell `chunk`, ä/ae-blind and case-blind. */
+function chunkSpan(words, chunk) {
+  const needle = bare(chunk).split(/\s+/).filter(Boolean).map(flat);
+  if (!needle.length) return null;
+  for (let i = 0; i + needle.length <= words.length; i += 1) {
+    if (needle.every((w, k) => flat(bare(words[i + k])) === w)) return [i, i + needle.length];
+  }
+  return null;
+}
+
+/**
+ * frontableOrders(item) → the V2 orders the item's own answer also has, as
+ * written strings (without the closing punctuation the caller re-adds), or [].
+ *
+ * „Der Termin ist am Dienstag um acht Uhr." has three: each Angabe fronted on
+ * its own, and — because the two are adjacent and the review measured exactly
+ * that string — the whole run fronted together.
+ */
+export function frontableOrders(item) {
+  if (String(item?.type) !== 'sentence_building') return [];
+  const q = String(item.questionDe || '');
+  if (/\bfrage\b/i.test(q)) return [];
+  const bracket = BRACKET_LIST_RE.exec(q);
+  if (!bracket) return [];
+  const chunks = bracket[1].split('/').map((c) => c.trim()).filter(Boolean);
+  const answer = String(item.answer || '').trim();
+  if (!answer || answer.includes('?')) return [];
+  const words = answer.replace(/[.!?]+$/, '').split(/\s+/).filter(Boolean);
+  if (words.length < 3) return [];
+
+  const spans = chunks
+    .filter((c) => FRONTABLE_ADVERBIAL_RE.test(c))
+    .map((c) => chunkSpan(words, c))
+    .filter(Boolean)
+    .sort((a, b) => a[0] - b[0]);
+  if (!spans.length) return [];
+
+  // The finite verb: the first lower-case verb-shaped word before the first
+  // Angabe. German spells every noun with a capital and none of the personal
+  // pronouns ends in a personal ending, so the subject cannot be mistaken for
+  // it — and reading the word immediately BEFORE the Angabe cannot do this
+  // job: „Er holt dich um 8 Uhr ab." would make `dich` the verb.
+  const first = spans[0][0];
+  const verbAt = words.findIndex((w, i) => i >= 1 && i < first &&
+    /^[a-zäöüß]/.test(w) && FRONTABLE_FINITE_RE.test(bare(w)) && !NOT_A_VERB_RE.test(bare(w)));
+  if (verbAt < 1) return [];
+  const verb = words[verbAt];
+  const subject = words.slice(0, verbAt);
+  const tail = words.slice(verbAt + 1);
+  // The canonical must put the SUBJECT first, not an object: „Fußball spielen
+  // wir am Wochenende." (measured in the A1.2 cache) is already inverted, and
+  // reading its first constituent as the subject produces „Am Wochenende
+  // spielen Fußball wir." So anything between the finite verb and the first
+  // Angabe that could itself be the subject — a nominative pronoun or a
+  // determiner — takes the item out of the rule. An accusative pronoun does
+  // not: „Er holt dich um 8 Uhr ab." is subject-first and keeps its second order.
+  if (words.slice(verbAt + 1, first).some((w) => SUBJECT_SHAPED_RE.test(bare(w)))) return [];
+
+  /** [Angabe] [Verb] [Subjekt] [alles andere in seiner Reihenfolge]. */
+  const front = ([from, to]) => {
+    const angabe = words.slice(from, to);
+    const rest = tail.filter((_, i) => {
+      const at = verbAt + 1 + i;
+      return at < from || at >= to;
+    });
+    return [capitalise(angabe[0]), ...angabe.slice(1), verb,
+      lowerSubject(subject[0]), ...subject.slice(1), ...rest].join(' ');
+  };
+
+  const orders = spans.map(front);
+  // The maximal run of adjacent Angaben that opens the rest, fronted as one —
+  // „Am Dienstag um acht Uhr ist der Termin."
+  let end = spans[0][1];
+  let n = 1;
+  while (n < spans.length && spans[n][0] === end) { end = spans[n][1]; n += 1; }
+  if (n > 1) orders.push(front([first, end]));
+  return [...new Set(orders)].filter((o) => flat(o) !== flat(words.join(' ')));
+}
+
+/**
+ * The strings `frontableOrders` asks `accepted` to carry, in both spellings the
+ * pool uses (with and without the closing period), so the guard below and the
+ * build repair ask for exactly the same thing.
+ */
+export function frontedAcceptedForms(item) {
+  const punct = (String(item?.answer || '').trim().match(/[.!]+$/) || ['.'])[0];
+  return frontableOrders(item).flatMap((o) => [`${o}${punct}`, o]);
+}
+
+/**
+ * REVIEW #12 BLOCKER 1, the guard side: true when the item HAS a second order
+ * and its answer key does not carry it. The build repair takes every such item
+ * to false; `tests/lesson-extra-items.test.mjs` runs it over the built pool and
+ * over every checkpoint item, because a graded item is the costliest surface.
+ */
+export function missingFrontedOrder(item) {
+  const wanted = frontableOrders(item);
+  if (!wanted.length) return null;
+  const have = new Set([item.answer, ...(item.accepted || [])].map((a) => flat(bare(a))));
+  const missing = wanted.filter((o) => !have.has(flat(bare(o))));
+  return missing.length ? missing : null;
+}
+
+// ── REVIEW #12 BLOCKER 2: the SECOND minimal repair of a correction ─────────
+//
+// „Korrigieren Sie: „Du habt Durst."" accepts „Du hast Durst." and marks „Ihr
+// habt Durst." wrong — both repair the sentence with ONE token, both are
+// correct German, and the German prompt names neither side. Round 7 wrote
+// `ambiguousCorrection` for exactly this class and gave it one axis, the
+// article family; agreement was the axis it could not see, and three items of
+// the round-12 batch walked straight through it („Sind die Abfahrt …?" is also
+// repairable as „Sind die Abfahrten …?", „Haben der Fahrer …?" as „Haben die
+// Fahrer …?").
+//
+// The rule: a correction whose model answer changes the FINITE VERB is
+// ambiguous when the SUBJECT could have been changed instead with one token —
+// unless the German prompt names the element that changes („Korrigieren Sie
+// das Verb: …"), which is the same cue the course already carries on every one
+// of its fifteen article corrections („(mit bestimmtem Artikel)").
+
+/** Person keys, in the order the tables below are written. */
+const AGREEMENT_PERSONS = Object.freeze(['1sg', '2sg', '3sg', '1pl', '2pl', '3pl']);
+
+/** The two irregular verbs A1.1 teaches, flat-spelled like every comparison. */
+const AGREEMENT_TABLES = Object.freeze({
+  sein: { '1sg': 'bin', '2sg': 'bist', '3sg': 'ist', '1pl': 'sind', '2pl': 'seid', '3pl': 'sind' },
+  haben: { '1sg': 'habe', '2sg': 'hast', '3sg': 'hat', '1pl': 'haben', '2pl': 'habt', '3pl': 'haben' },
+});
+
+/** ich/du/er/wir/ihr/sie → person. `sie` is 3sg and 3pl at once, so it is left
+ * out: an item whose subject is `sie` is ambiguous for a reason this axis may
+ * not decide, and `EXCLUDE_IDS` already carries the one the reviews found. */
+const PRONOUN_PERSON = Object.freeze({
+  ich: '1sg', du: '2sg', er: '3sg', es: '3sg', wir: '1pl', ihr: '2pl',
+});
+
+/** person → the pronoun a repair would write. */
+const PERSON_PRONOUN = Object.freeze({
+  '1sg': 'ich', '2sg': 'du', '3sg': 'er', '1pl': 'wir', '2pl': 'ihr', '3pl': 'sie',
+});
+
+/** The finite form `lemma` takes for `person`, for a regular -en verb too. */
+function finiteForm(lemma, person) {
+  const table = AGREEMENT_TABLES[lemma];
+  if (table) return table[person];
+  if (!/en$/.test(lemma)) return null;
+  const stem = lemma.replace(/e?n$/, '');
+  return { '1sg': `${stem}e`, '2sg': `${stem}st`, '3sg': `${stem}t`, '1pl': `${stem}en`, '2pl': `${stem}t`, '3pl': `${stem}en` }[person];
+}
+
+/** The lemma a finite form belongs to, or null when it is not a finite form of
+ * anything the level teaches. Regular verbs are recognised by their own two
+ * forms appearing in the same diff, so the lemma is derived from the PAIR. */
+function sharedLemma(a, b) {
+  const x = flat(bare(a));
+  const y = flat(bare(b));
+  for (const [lemma, table] of Object.entries(AGREEMENT_TABLES)) {
+    const forms = new Set(Object.values(table));
+    if (forms.has(x) && forms.has(y)) return lemma;
+  }
+  // A regular verb: both forms share a stem and differ only in the personal
+  // ending (spielen → spiele/spielst/spielt/spielen).
+  const ending = /^(.*?)(e|st|t|en|et)$/;
+  const mx = ending.exec(x);
+  const my = ending.exec(y);
+  if (mx && my && mx[1] && mx[1] === my[1]) return `${mx[1]}en`;
+  return null;
+}
+
+/**
+ * Determiners, which `sharedLemma`'s regular-verb clause would otherwise read as
+ * a conjugation pair: `eine`/`einen` share the stem `ein` and the endings `e`
+ * and `en`. Measured on the built pool: without this clause the rule reports two
+ * ARTICLE corrections („Ich brauche einen Pause.") as agreement-ambiguous, which
+ * is the neighbouring rule's business and a false finding here.
+ */
+const DETERMINER_FORM_RE =
+  /^(?:der|die|das|den|dem|des|ein|eine|einen|einem|einer|eines|kein|keine|keinen|keinem|keiner|mein|meine|meinen|meinem|meiner|dein|deine|deinen|ihr|ihre|ihren|unser|unsere|euer|eure)$/i;
+
+/** Nouns whose plural is the bare singular (der Fahrer → die Fahrer). */
+const ZERO_PLURAL_RE = /(er|el|en|chen|lein)$/i;
+
+/** The definite articles a subject can open with. Spelled out here rather than
+ * reused from the article-family block below, which is declared after this one. */
+const SUBJECT_DET_RE = /^(?:der|die|das|den|dem)$/i;
+
+/**
+ * agreementAmbiguity(item) → { verb: [from, to], subject } when the correction
+ * repairs the verb and the subject could have been repaired instead, else null.
+ * `subject` is the one-token rewrite that also repairs the sentence — it is
+ * what the test prints, so the next author sees the answer he is rejecting.
+ */
+export function agreementAmbiguity(item) {
+  if (String(item?.type) !== 'error_correction') return null;
+  const q = String(item.questionDe || '');
+  // The prompt names the element that changes — the cue the course already
+  // carries — so the learner knows which side to repair.
+  if (/\b(verb|verbform|subjekt|artikel|nomen)\b/i.test(q)) return null;
+  const quote = QUOTED_SPAN_RE.exec(q);
+  if (!quote) return null;
+  const src = bare(quote[1]).split(/\s+/).filter(Boolean);
+  const tgt = bare(item.answer).split(/\s+/).filter(Boolean);
+  if (!src.length || src.length !== tgt.length) return null;
+  const diff = src.map((w, i) => [w, tgt[i], i]).filter(([a, b]) => flat(a) !== flat(b));
+  if (diff.length !== 1) return null;
+  const [from, to, at] = diff[0];
+  if (DETERMINER_FORM_RE.test(bare(from)) || DETERMINER_FORM_RE.test(bare(to))) return null;
+  const lemma = sharedLemma(from, to);
+  if (!lemma) return null;
+
+  // (a) a pronoun subject: another pronoun of the same sentence position agrees
+  //     with the verb form the quote already carries („Du habt" → „Ihr habt").
+  const subjectAt = src.findIndex((w, i) => i !== at && Object.prototype.hasOwnProperty.call(PRONOUN_PERSON, flat(bare(w))));
+  if (subjectAt >= 0) {
+    const person = PRONOUN_PERSON[flat(bare(src[subjectAt]))];
+    const other = AGREEMENT_PERSONS.find((p) => p !== person && flat(finiteForm(lemma, p) || '') === flat(from));
+    if (!other) return null;
+    const written = subjectAt === 0 ? capitalise(PERSON_PRONOUN[other]) : PERSON_PRONOUN[other];
+    const words = [...src];
+    words[subjectAt] = written;
+    return { verb: [from, to], subject: words.join(' ') };
+  }
+
+  // (b) a determiner + noun subject and a PLURAL verb form: the noun could have
+  //     been pluralised instead („die Abfahrt" → „die Abfahrten", „der Fahrer"
+  //     → „die Fahrer"), which is the plural L4 teaches („Im Plural haben alle
+  //     Nomen die"). Only where the plural costs ONE token.
+  const plural = flat(finiteForm(lemma, '3pl') || '');
+  if (!plural || flat(from) !== plural) return null;
+  const detAt = src.findIndex((w, i) => i !== at && SUBJECT_DET_RE.test(bare(w)));
+  if (detAt < 0 || detAt + 1 >= src.length || detAt + 1 === at) return null;
+  const noun = src[detAt + 1];
+  if (!/^[A-ZÄÖÜ]/.test(noun)) return null;
+  const words = [...src];
+  if (ZERO_PLURAL_RE.test(noun)) {
+    // article only: der Fahrer → die Fahrer
+    words[detAt] = detAt === 0 ? 'Die' : 'die';
+  } else if (flat(bare(src[detAt])) === 'die') {
+    // noun only: die Abfahrt → die Abfahrten
+    words[detAt + 1] = `${noun}${/e$/.test(noun) ? 'n' : 'en'}`;
+  } else {
+    return null;
+  }
+  return { verb: [from, to], subject: words.join(' ') };
+}
+
 /**
  * REVIEW #5 MAJOR 7: the prompt asks ABOUT German instead of asking FOR German.
  * "Welche Endung ist IMMER feminin?" needs the words *Endung* and *feminin*
@@ -1340,6 +1649,12 @@ export function exclusionReason(item, { level } = {}) {
   // older reason keeps it. NOT level-scoped — a false rule is false at every
   // level — and not repairable: the missing condition is authorship.
   if (unconditionedRule(item)) return REASON.UNCONDITIONED_RULE;
+
+  // REVIEW #12 BLOCKER 2, last for the same reason once more. NOT repairable by
+  // a build step: naming the element that changes is authorship, so a cache
+  // item is dropped and a hand item has to carry the cue („Korrigieren Sie das
+  // Verb: …") before it may ship.
+  if (agreementAmbiguity(item)) return REASON.AMBIGUOUS_AGREEMENT;
 
   return null;
 }

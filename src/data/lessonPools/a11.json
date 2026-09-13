@@ -3294,7 +3294,9 @@
    "answer": "Wir kommen aus Marokko.",
    "accepted": [
     "Wir kommen aus Marokko.",
-    "Wir kommen aus Marokko"
+    "Wir kommen aus Marokko",
+    "Aus Marokko kommen wir.",
+    "Aus Marokko kommen wir"
    ],
    "explanationDe": "Bei wir endet das Verb auf -en.",
    "hint": null,
@@ -3914,7 +3916,9 @@
    "answer": "Mein Geburtstag ist im Mai.",
    "accepted": [
     "Mein Geburtstag ist im Mai.",
-    "Mein Geburtstag ist im Mai"
+    "Mein Geburtstag ist im Mai",
+    "Im Mai ist mein Geburtstag.",
+    "Im Mai ist mein Geburtstag"
    ],
    "explanationDe": "Possessivartikel vor dem Nomen, Verb auf Platz zwei.",
    "hint": null,
@@ -5108,7 +5112,9 @@
    "answer": "Ich habe gestern gearbeitet.",
    "accepted": [
     "Ich habe gestern gearbeitet.",
-    "Ich habe gestern gearbeitet"
+    "Ich habe gestern gearbeitet",
+    "Gestern habe ich gearbeitet.",
+    "Gestern habe ich gearbeitet"
    ],
    "explanationDe": "habe + gearbeitet ist ein fester Ausdruck für gestern.",
    "hint": null,
@@ -5653,7 +5659,13 @@
    "answer": "Der Termin ist am Dienstag um acht Uhr.",
    "accepted": [
     "Der Termin ist am Dienstag um acht Uhr.",
-    "Der Termin ist am Dienstag um acht Uhr"
+    "Der Termin ist am Dienstag um acht Uhr",
+    "Am Dienstag ist der Termin um acht Uhr.",
+    "Am Dienstag ist der Termin um acht Uhr",
+    "Um acht Uhr ist der Termin am Dienstag.",
+    "Um acht Uhr ist der Termin am Dienstag",
+    "Am Dienstag um acht Uhr ist der Termin.",
+    "Am Dienstag um acht Uhr ist der Termin"
    ],
    "explanationDe": "Das Verb steht auf Platz zwei, dann Tag und Uhrzeit.",
    "hint": null,
@@ -6032,7 +6044,7 @@
    "stage": 5,
    "difficulty": 2,
    "order": 196,
-   "questionDe": "Korrigieren Sie: „Du habt Durst.“",
+   "questionDe": "Korrigieren Sie das Verb: „Du habt Durst.“",
    "questionEn": "Correct the verb form.",
    "options": null,
    "answer": "Du hast Durst.",
@@ -6899,7 +6911,7 @@
    "stage": 5,
    "difficulty": 2,
    "order": 110,
-   "questionDe": "Korrigieren Sie: „Sind die Abfahrt um neun Uhr?“",
+   "questionDe": "Korrigieren Sie das Verb: „Sind die Abfahrt um neun Uhr?“",
    "questionEn": "Fix the verb form in the question.",
    "options": null,
    "answer": "Ist die Abfahrt um neun Uhr?",
@@ -6918,7 +6930,7 @@
    "stage": 5,
    "difficulty": 2,
    "order": 111,
-   "questionDe": "Korrigieren Sie: „Haben der Fahrer Verspätung?“",
+   "questionDe": "Korrigieren Sie das Verb: „Haben der Fahrer Verspätung?“",
    "questionEn": "Fix the verb form in the question.",
    "options": null,
    "answer": "Hat der Fahrer Verspätung?",
