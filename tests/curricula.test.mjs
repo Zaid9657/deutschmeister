@@ -36,6 +36,7 @@ import {
   writingTasksAreAnswerable, MAX_UNANSWERABLE_LEITPUNKTE,
   formSpeakInModelTexts, MAX_FORM_SPEAK_SENTENCES,
   wortfeldInputCoverage, MAX_WORTFELD_WITHOUT_INPUT,
+  predicativeNationalityAdjectives, COUNTRY_STEMS,
 } from '../scripts/validate-curriculum.mjs';
 import { constructionHits, CONSTRUCTION_PATTERNS, SEPARABLE_PREFIXES } from '../src/data/curricula/constructions.js';
 
@@ -485,7 +486,28 @@ test('rule 12: every can-do line is rehearsed in its own Lektion — hard rule, 
   assert.ok(!lines.includes('Ich kann mit zwei festen Ausdrücken sagen, was ich gestern gemacht habe.'), 'L11 Perfekt chunk');
   // DaF review #7, MAJOR 4: the last can-do of the course — L12's farewell and good wish — sat in
   // dialogue line 9, outside both production surfaces, and the learner met it once, silently.
-  assert.ok(!lines.includes('Ich kann mich verabschieden und gute Wünsche aussprechen.'), 'L12 gute Wünsche');
+  assert.ok(!lines.some((l) => /gute Wünsche aussprechen/.test(l)), 'L12 gute Wünsche');
+
+  // ── THE LINE IS SPLIT AT „ und “ AND EVERY HALF NEEDS ITS OWN EVIDENCE ───────────────────────
+  // DaF review #14, #15 and #16 ordered this three times. Until round 17 the rule asked for ONE
+  // content word anywhere in the line, so the backed half paid for the unbacked one: L2 promised
+  // „Ich kann sagen, woher ich komme“ on the PUBLIC syllabus page for sixteen rounds while `kommen`
+  // was Lektion 3 and no item asked where anybody came from.
+  {
+    const c = cloneOf(CURRICULUM_A11);
+    // First half backed by the Lektion (`Beruf`), second half a word nothing in L2 says.
+    c.lektionen[1].canDo = ['Ich kann nach dem Beruf fragen und ein Flugzeug reparieren.'];
+    const split = canDoRehearsal(c).filter((o) => o.nr === 2);
+    assert.equal(split.length, 1, `the rule did not split at „ und “: ${JSON.stringify(split)}`);
+    assert.match(split[0].half, /Flugzeug/, JSON.stringify(split[0]));
+    assert.ok(failsWith(validateCurriculum(c), 12), 'validateCurriculum did not report RULE 12');
+  }
+  // And the half the review named is backed now, on a surface and not on a neighbouring clause:
+  // `kommen aus` is a Wortfeld entry of L2, the notice says „Ich komme aus Marokko …“ and so does
+  // the graded model text.
+  assert.ok(L[1].canDo.some((l) => /woher ich komme/.test(l)), 'the L2 origin can-do is still promised');
+  assert.ok(L[1].wortfeld.some((w) => w.de === 'kommen aus'), 'L2 has to TEACH the verb it promises');
+  assert.match(L[1].schreiben.sample, /Ich komme aus Marokko/);
   assert.ok(!L[1].canDo.includes('Ich kann ein einfaches Formular mit meinen Daten ausfüllen.'), 'the L2 Formular can-do lives in L1/L3, not here');
   assert.equal(L[10].pretest.model, 'Ich habe gearbeitet.');
 });
@@ -998,10 +1020,55 @@ test('rule 22: a Mitteilung Beispieltext contains no form being read out', () =>
     assert.equal(found.length, count, `L${nr}: ${JSON.stringify(found)}`);
     assert.ok(failsWith(validateCurriculum(c), 22), `L${nr}: validateCurriculum did not report RULE 22`);
   }
-  // The noun list comes from the TASK BANK and not from a string literal — the round-15 guard was
-  // three typed strings that matched none of the five sentences above.
+  // ── THE ELEVEN SENTENCES OF DaF REVIEW #16, EACH PLANTED ALONE ──────────────────────────────
+  // Round 16's rule reported seven of them and missed four, for two reasons the review measured:
+  // `(ist|sind|:)\b` never reached its colon branch (a colon before a space is no word boundary),
+  // so „Der Familienstand: Ich bin ledig.“ — the sentence this whole strand started from in round
+  // 13 — walked past; and the noun list came only from the task bank, so „Der Beruf ist Studentin.“
+  // and „Der Wohnort ist Bremen.“ were invisible because no Leitpunkt of the level says Beruf or
+  // Wohnort. All eleven must be reported now, and the possessive must not be.
+  const ROUND_16_PROBES = [
+    'Das Geburtsdatum ist der 3.5.1998.',
+    'Die Staatsangehörigkeit ist marokkanisch.',
+    'Der Tag ist der 15. Mai.',
+    'Die Telefonnummer ist null vier zwei.',
+    'Die Nummer ist für das Handy.',
+    'Das Land ist Marokko.',
+    'Der Nachname ist Chakiri.',
+    'Der Familienstand: Ich bin ledig.',
+    'Das Geburtsdatum: 3.5.1998.',
+    'Der Wohnort ist Bremen.',
+    'Der Beruf ist Studentin.',
+  ];
+  for (const sentence of ROUND_16_PROBES) {
+    const c = cloneOf(CURRICULUM_A11);
+    c.lektionen[1].schreiben.sample = `Hallo Lena! ${sentence} Viele Grüße, Ana`;
+    const found = formSpeakInModelTexts(c, levelSpec('a1.1'));
+    assert.ok(found.length >= 1, `RULE 22 does not see „${sentence}“`);
+    assert.ok(failsWith(validateCurriculum(c), 22), `validateCurriculum did not report „${sentence}“`);
+  }
+  // THE POSSESSIVE IS NOT A VIOLATION, and that distinction is the whole finding: „Meine
+  // Telefonnummer ist …“ is what a person writes, „Die Telefonnummer ist …“ is what a form says.
+  {
+    const c = cloneOf(CURRICULUM_A11);
+    c.lektionen[1].schreiben.sample = 'Hallo Lena! Meine Telefonnummer ist null vier zwei. Viele Grüße, Ana';
+    assert.deepEqual(formSpeakInModelTexts(c, levelSpec('a1.1')), [], 'a possessive is not form-speak');
+  }
+  // The noun list comes from the TASK BANK, the Formular fields and the Wortfeld entries the
+  // curriculum marks `field: true` — never from a string literal. The round-15 guard was three
+  // typed strings that matched none of the five sentences above; the round-16 rule read only the
+  // bank and so stopped measuring wherever a Leitpunkt happened not to name the field.
   const src = readFileSync(join(ROOT, 'scripts/validate-curriculum.mjs'), 'utf8');
   assert.doesNotMatch(src, /Der Familienstand:\|Das Land ist/, 'RULE 22 must not be a string list');
+  assert.doesNotMatch(
+    src.slice(src.indexOf('export function formSpeakInModelTexts')).slice(0, 2500),
+    /'(?:wohnort|beruf|geburtsdatum|familienstand|staatsangehörigkeit)'/i,
+    'RULE 22 must not type its field nouns',
+  );
+  const fieldMarked = CURRICULUM_A11.lektionen.flatMap((l) => (l.wortfeld || []).filter((w) => w.field).map((w) => w.word));
+  for (const noun of ['Wohnort', 'Beruf', 'Geburtsdatum', 'Staatsangehörigkeit', 'Familienstand', 'Vorname', 'Nachname', 'Adresse', 'Telefonnummer']) {
+    assert.ok(fieldMarked.includes(noun), `${noun} must be marked \`field: true\` in the Wortfeld — that is where RULE 22 reads it`);
+  }
 });
 
 test('rule 23: a Wortfeld entry reaches an input surface of its own Lektion, not only an exercise', () => {
@@ -1012,21 +1079,102 @@ test('rule 23: a Wortfeld entry reaches an input surface of its own Lektion, not
   const uncovered = wortfeldInputCoverage(CURRICULUM_A11, levelSpec('a1.1'));
   assert.equal(uncovered.length, MAX_WORTFELD_WITHOUT_INPUT,
     `RULE 23 measures ${uncovered.length} and the ratchet says ${MAX_WORTFELD_WITHOUT_INPUT} — re-measure, never relax`);
-  // The entry the rule was written for is closed: L2's notice names the Staatsangehörigkeit and the
-  // model text says „Ich bin marokkanisch.“
-  assert.ok(!uncovered.some((o) => o.de === 'marokkanisch'), JSON.stringify(uncovered.filter((o) => o.nr === 2)));
-  assert.ok(!uncovered.some((o) => o.de === 'geboren'));
-  // IT BITES: take the word off both surfaces and it is reported again.
+  // THE MODEL ANSWER IS NOT AN INPUT SURFACE (round 17, DaF review #16, MAJOR 2). Round 16 counted
+  // `schreiben.sample` as input, against this rule's own header — the model answer is what the
+  // learner is shown AFTER he has written the graded task — and that hid exactly the subset round
+  // 15 had ordered: seven entries stood only there, `geboren` among them, the word round 16 had
+  // introduced for this very finding.
+  {
+    const c = cloneOf(CURRICULUM_A11);
+    const l = c.lektionen[3];
+    l.wortfeld = [...l.wortfeld, { de: 'der Papierkorb', word: 'Papierkorb', article: 'der', plural: 'Papierkörbe', en: 'waste basket', wordId: null }];
+    l.schreiben = { ...(l.schreiben || {}), sample: `${l.schreiben?.sample || ''} Der Papierkorb ist hier.` };
+    const after = wortfeldInputCoverage(c, levelSpec('a1.1'));
+    assert.ok(after.some((o) => o.nr === 4 && o.de === 'der Papierkorb'),
+      'a word taught ONLY in the model answer must still count as uncovered');
+  }
+  // The entries the nationality strand turns on are closed, and all of them on the NOTICE: L2's
+  // notice names the Staatsangehörigkeit in both shapes, the origin verb and the birth-date chunk.
+  for (const de of ['marokkanisch', 'die Marokkanerin', 'kommen aus', 'geboren']) {
+    assert.ok(!uncovered.some((o) => o.de === de), `${de} is uncovered: ${JSON.stringify(uncovered.filter((o) => o.nr === 2))}`);
+  }
+  // IT BITES: take the word off the notice and it is reported again.
   const c = cloneOf(CURRICULUM_A11);
   const l2 = c.lektionen[1];
-  l2.notice.bodyDe = l2.notice.bodyDe.replace(' Auch die Staatsangehörigkeit steht ohne Artikel: Ich bin marokkanisch.', '');
-  l2.schreiben.sample = l2.schreiben.sample.replace(' Ich bin marokkanisch.', '');
+  l2.notice.bodyDe = l2.notice.bodyDe.replace(' Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.', '');
   const after = wortfeldInputCoverage(c, levelSpec('a1.1'));
   assert.ok(after.some((o) => o.nr === 2 && o.de === 'marokkanisch'), JSON.stringify(after.filter((o) => o.nr === 2)));
   assert.ok(failsWith(validateCurriculum(c), 23), 'validateCurriculum did not report RULE 23');
   // An ITEM is not an input surface — that is the whole difference to RULE 10, which counts both.
   assert.ok(wortfeldCoverage(CURRICULUM_A11).length < uncovered.length,
     'RULE 23 must be stricter than RULE 10, or it measures the same thing twice');
+});
+
+test('rule 24: no person is an adjective — a nationality is a NOUN in a sentence', () => {
+  // DaF review #16, BLOCKER. Round 16 replaced the form line „Die Staatsangehörigkeit ist
+  // marokkanisch.“ with „Ich bin marokkanisch.“ and put it in three places at once: the L2 notice
+  // raised it to a rule, the graded L2 model text printed it, and `extra-a11-l02-15` made the
+  // learner produce it (drawn twice in the real plan). No German speaker says it about a person —
+  // German takes the NOUN („Ich bin Marokkanerin.“, „Er ist Marokkaner.“) and keeps the adjective
+  // for the form FIELD („Staatsangehörigkeit: marokkanisch“). `deutsch` is the one exception.
+  const spec = levelSpec('a1.1');
+  assert.deepEqual(predicativeNationalityAdjectives(CURRICULUM_A11, spec), [], 'hard 0, no ratchet');
+
+  // The three round-16 surfaces, each planted back alone, each reported.
+  const PROBES = [
+    ['schreiben.sample', (c) => { c.lektionen[1].schreiben.sample = 'Sehr geehrte Damen und Herren, ich heiße Ana. Ich bin marokkanisch. Viele Grüße, Ana'; }],
+    ['notice.bodyDe', (c) => { c.lektionen[1].notice.bodyDe += ' Auch die Staatsangehörigkeit steht ohne Artikel: Ich bin marokkanisch.'; }],
+    ['a country the course never names', (c) => { c.lektionen[1].schreiben.sample = 'Hallo Lena! Ich bin türkisch. Viele Grüße, Ana'; }],
+  ];
+  for (const [where, mutate] of PROBES) {
+    const c = cloneOf(CURRICULUM_A11);
+    mutate(c);
+    const found = predicativeNationalityAdjectives(c, spec);
+    assert.ok(found.length >= 1, `RULE 24 does not see the ${where} probe`);
+    assert.ok(failsWith(validateCurriculum(c), 24), `validateCurriculum did not report the ${where} probe`);
+  }
+  // AN ITEM IS A PRODUCTION SURFACE ONLY WHEN IT IS READ THE WAY THE LEARNER LEAVES IT: the round-16
+  // item „Ana ___ marokkanisch. (sein)“ is innocent until its own answer goes into the blank.
+  {
+    const extra = [...loadExtraItems('a1.1'), {
+      id: 'extra-a11-l02-99', topic: 'verb-sein', type: 'fill_blank', stage: 5, difficulty: 2, order: 99,
+      questionDe: 'Die Staatsangehörigkeit: Ana ___ marokkanisch. (sein)', questionEn: 'x',
+      options: null, answer: 'ist', accepted: ['ist'], explanationDe: 'x', hint: null,
+    }];
+    const found = predicativeNationalityAdjectives(CURRICULUM_A11, spec, { extraItems: extra, poolItems: loadPoolItems('a1.1') });
+    assert.equal(found.length, 1, JSON.stringify(found));
+    assert.match(found[0].de, /Ana ist marokkanisch/);
+  }
+  // THE FORM FIELD IS NOT A SENTENCE, and this is the distinction the notice used to blur: the
+  // adjective as a field VALUE must pass, or the rule would forbid correct German.
+  {
+    const c = cloneOf(CURRICULUM_A11);
+    c.lektionen[2].schreiben.sample = 'Vorname: Ana / Familienname: Chakiri / Staatsangehörigkeit: marokkanisch / Sprachen: Arabisch, Deutsch / Land: Marokko';
+    assert.deepEqual(predicativeNationalityAdjectives(c, spec), [], 'a Formular value is not a predicate');
+  }
+  // `deutsch` is the one exception and it is named, not inferred.
+  {
+    const c = cloneOf(CURRICULUM_A11);
+    c.lektionen[1].schreiben.sample = 'Hallo Lena! Ich bin deutsch. Viele Grüße, Ana';
+    assert.deepEqual(predicativeNationalityAdjectives(c, spec), []);
+  }
+  // The stem list belongs to the WORLD, not to the material — it does not grow when the course
+  // grows, and it is not imported from the file it polices (`src/lib/lesson/writing.js`), because a
+  // rule that reads its subject is not an independent measurement.
+  assert.ok(COUNTRY_STEMS.length >= 40, 'the country stems are a world list, not the course cast');
+  assert.ok(!COUNTRY_STEMS.includes('deut'), '`deutsch` is handled as the named exception, not by omission');
+  const src24 = readFileSync(join(ROOT, 'scripts/validate-curriculum.mjs'), 'utf8');
+  assert.match(src24, /export const COUNTRY_STEMS = \[/, 'the stem list is declared here, not imported from the grader');
+  assert.doesNotMatch(
+    src24.slice(src24.indexOf('export const COUNTRY_STEMS')).slice(0, 4000),
+    /COUNTRY_STEMS\s*(?:as\s+\w+\s*)?\}\s*from/,
+    'RULE 24 must not read its stems out of src/lib/lesson/writing.js — a rule that reads the file it polices is not an independent measurement',
+  );
+  // And the course teaches the noun it now demands.
+  const l2wf = CURRICULUM_A11.lektionen[1].wortfeld.map((w) => w.de);
+  assert.ok(l2wf.includes('die Marokkanerin'), JSON.stringify(l2wf));
+  assert.match(CURRICULUM_A11.lektionen[1].notice.bodyDe, /Ich komme aus Marokko und bin Marokkanerin/);
+  assert.match(CURRICULUM_A11.lektionen[1].schreiben.sample, /Ich komme aus Marokko und bin Marokkanerin/);
 });
 
 test("rule 20's licensed chunks are letter formulas — a closed list, and nothing content-bearing", () => {

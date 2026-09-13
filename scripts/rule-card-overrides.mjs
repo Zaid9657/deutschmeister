@@ -151,7 +151,7 @@ const RULE_CARD_OVERRIDES = {
   'verb-sein': {
     titleDe: 'sein: ich bin, du bist, Sie sind',
     content: [
-      'sein ist das wichtigste Verb. Es ist unregelmäßig:',
+      'sein ist unregelmäßig:',
       'ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.',
       'Nach sein steht der Beruf ohne Artikel: Ich bin Lehrer. Nicht: Ich bin ein Lehrer.',
       'Der Beruf in der Frage: Was sind Sie von Beruf? — Ich bin Studentin.',
@@ -160,6 +160,13 @@ const RULE_CARD_OVERRIDES = {
       // example must be a line of its own Lektion. „Ich bin Ana.“ is line 2 of the L2 dialogue and
       // is what this card is about in the first place.
       'Beispiele: Ich bin Ana. Ich wohne in Bremen.',
+      // ROUND 17 (DaF review #16, BLOCKER). The notice of Lektion 2 and this card said different
+      // things about the Staatsangehörigkeit — the notice said „Ich bin marokkanisch.“, which is
+      // not German about a person, and the card said nothing. Both now say the same, correct thing:
+      // NOMEN im Satz, ADJEKTIV nur als Formularwert. RULE 24 in scripts/validate-curriculum.mjs
+      // holds the course side of it at a hard 0.
+      'Im Satz steht die Staatsangehörigkeit als Nomen: Ich komme aus Marokko und bin Marokkanerin.',
+      'Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.',
       'In der Frage steht sein vorn: Ist das Formular für die Adresse?',
       'English: sein is irregular — learn the six forms as whole words, not from a stem.',
     ].join('\n'),
@@ -178,6 +185,11 @@ const RULE_CARD_OVERRIDES = {
         wrong: 'Wie sind Sie von Beruf?',
         correct: 'Was sind Sie von Beruf?',
         explanationDe: 'Die feste Frage lautet: Was sind Sie von Beruf?',
+      },
+      {
+        wrong: 'Ich bin marokkanisch.',
+        correct: 'Ich bin Marokkanerin.',
+        explanationDe: 'Im Satz steht die Staatsangehörigkeit als Nomen: Ich bin Marokkanerin. Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.',
       },
     ],
   },

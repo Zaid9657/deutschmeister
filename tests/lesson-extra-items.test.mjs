@@ -831,7 +831,12 @@ test('every sentence-building item with a time or place Angabe accepts both word
     // Round 16: the L12 Beispieltext lost its Formularsatz („Der Tag ist der 15. Mai …“, RULE 22),
     // which is one of the sentences checkpoint 4 builds its Schreiben items from — the seat moves
     // from -2 to -1, the count stays 2. Re-measured, not relaxed.
-    'a1.1-cp1-schreiben-2', 'a1.1-cp4-schreiben-1',
+    // Round 17: `kommen aus` moved from Lektion 3 to Lektion 2 (DaF review #16, BLOCKER/RULE 12),
+    // which changes the `minLektion` stamp of every origin item and reseats the built pool. The
+    // count falls from 2 to 1: `a1.1-cp4-schreiben-1` is now „Das ist unser Auto.“, a sentence with
+    // no time or place Angabe, so the rule finds no second order to demand of it — nothing stopped
+    // accepting anything. RE-MEASURED, and named here so the next round sees the move.
+    'a1.1-cp1-schreiben-2',
   ], `the graded items with a second word order changed (${graded} found)`);
 });
 

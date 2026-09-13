@@ -367,8 +367,12 @@ function readingMap(chapter) {
 }
 
 /** The 15 A1.1 nouns whose plural is spelled like their singular — the measured class. */
+// Round 17: `Schalter` left the list because it left the Wortfeld — L2 needed two of its
+// twenty-five slots for `die Marokkanerin` and `kommen aus` (DaF review #16, BLOCKER), and
+// `der Schalter` stood in the stage direction of the dialogue and in no line, item or task.
+// Fourteen measured, not fifteen; the rule above still covers whatever the Wortfeld holds.
 const PLURAL_OF_SELF_A11 = [
-  'Lehrer', 'Schalter', 'Eltern', 'Geschwister', 'Euro', 'Kugelschreiber', 'Fenster',
+  'Lehrer', 'Eltern', 'Geschwister', 'Euro', 'Kugelschreiber', 'Fenster',
   'Zimmer', 'Schlüssel', 'Computer', 'Verkäufer', 'Wecker', 'Kuchen', 'Kellner', 'Fahrer',
 ];
 

@@ -545,32 +545,39 @@ test('MAJOR 2: „Warum“ is undecidable by form — the reason is not the task
 });
 
 /**
- * TWO LINES PER LEITPUNKT of all six A1.1 Mitteilungen — one exam-grade answer that must be GREEN
- * and one that does not answer the Leitpunkt and must be RED. The rule is tested in both directions
- * on every Leitpunkt of the course rather than on the probes of one round, and the nationality line
- * plays five origins in both word classes.
+ * THREE LINES PER LEITPUNKT of all six A1.1 Mitteilungen — one exam-grade answer that must be
+ * GREEN, one that does not answer the Leitpunkt and must be RED, and (round 17, DaF review #16,
+ * MAJOR 1, „Drittens“) the TOPIC-ECHO: a text that names the Leitpunkt's own topic and gives no
+ * value („Ich bin in Bremen geboren.“ for a Geburtsdatum, „Ich komme aus Bremen.“ for a Land,
+ * „Ich spreche Arabisch.“ for a Staatsangehörigkeit). It must be RED too, and on three of these
+ * rows it was green until round 17. The rule is tested in both directions on every Leitpunkt of
+ * the course rather than on the probes of one round, and the nationality line plays five origins
+ * in both word classes.
  */
 const LEITPUNKT_FIXTURE = [
-  ['Ihr Name und Ihr Geburtsdatum', 'Ich heiße Ana Chakiri. Ich bin am 3.5.1998 geboren.', 'Ich heiße Ana Chakiri.'],
-  ['Ihr Land und Ihre Staatsangehörigkeit', 'Ich komme aus der Türkei. Ich bin Türkin.', 'Ich komme aus der Türkei.'],
-  ['Ihr Familienstand: ledig oder verheiratet', 'Ich bin verheiratet.', 'Ich bin Studentin in Bremen.'],
-  ['Was Sie kaufen', 'Ich kaufe den Stuhl und die Lampe.', 'Der Flohmarkt ist gut.'],
-  ['Was es kostet', 'Der Stuhl kostet zwölf Euro.', 'Der Stuhl ist nicht teuer.'],
-  ['Wann Sie kommen', 'Wir kommen morgen.', 'Wir kommen bald.'],
-  ['Was Sie brauchen', 'Ich brauche einen Computer.', 'Das Büro ist neu.'],
-  ['Ihre Telefonnummer', 'Hier ist die Nummer: null vier zwei drei drei acht eins.', 'Ich bin um neun Uhr im Büro.'],
-  ['Wann Sie im Büro sind', 'Ich bin um neun Uhr im Büro.', 'Ich arbeite im Büro.'],
-  ['Neuer Tag und neue Uhrzeit', 'Geht es am Dienstag um halb neun?', 'Ich komme am Montag zu spät.'],
-  ['Eine Frage an Lena', 'Bist du dann pünktlich?', 'Ich habe eine Frage für Lena.'],
-  ['Was die Kollegin bis dahin machen soll', 'Bitte machen Sie die Arbeit ohne mich.', 'Ich komme um zehn Uhr. Bis dann!'],
-  ['Tag und Uhrzeit', 'Wir feiern am Freitag um acht Uhr.', 'Wir feiern am Freitag.'],
-  ['Was die Gäste mitbringen sollen', 'Bringt ihr bitte Kuchen und Musik mit?', 'Die Gäste kommen um acht Uhr.'],
+  // Leitpunkt, GREEN, RED, TOPIC-ECHO (also red — it names the topic and gives no value)
+  ['Ihr Name und Ihr Geburtsdatum', 'Ich heiße Ana Chakiri. Ich bin am 3.5.1998 geboren.', 'Ich heiße Ana Chakiri.', 'Ich heiße Ana Chakiri. Ich bin in Bremen geboren.'],
+  ['Ihr Land und Ihre Staatsangehörigkeit', 'Ich komme aus der Türkei. Ich bin Türkin.', 'Ich komme aus der Türkei.', 'Ich komme aus Bremen. Ich spreche Türkisch.'],
+  ['Ihr Familienstand: ledig oder verheiratet', 'Ich bin verheiratet.', 'Ich bin Studentin in Bremen.', 'Der Familienstand ist wichtig.'],
+  ['Was Sie kaufen', 'Ich kaufe den Stuhl und die Lampe.', 'Der Flohmarkt ist gut.', 'Ich gehe zum Einkaufen.'],
+  ['Was es kostet', 'Der Stuhl kostet zwölf Euro.', 'Der Stuhl ist nicht teuer.', 'Der Preis ist gut.'],
+  ['Wann Sie kommen', 'Wir kommen morgen.', 'Wir kommen bald.', 'Wir kommen zu der Zeit.'],
+  ['Was Sie brauchen', 'Ich brauche einen Computer.', 'Das Büro ist neu.', 'Ich habe einen Wunsch.'],
+  ['Ihre Telefonnummer', 'Hier ist die Nummer: null vier zwei drei drei acht eins.', 'Ich bin um neun Uhr im Büro.', 'Meine Telefonnummer ist neu.'],
+  ['Wann Sie im Büro sind', 'Ich bin um neun Uhr im Büro.', 'Ich arbeite im Büro.', 'Ich bin zur Bürozeit da.'],
+  ['Neuer Tag und neue Uhrzeit', 'Geht es am Dienstag um halb neun?', 'Ich komme am Montag zu spät.', 'Wir brauchen einen neuen Tag und eine neue Uhrzeit.'],
+  ['Eine Frage an Lena', 'Bist du dann pünktlich?', 'Ich habe eine Frage für Lena.', 'Ich stelle Lena eine Frage.'],
+  ['Was die Kollegin bis dahin machen soll', 'Bitte machen Sie die Arbeit ohne mich.', 'Ich komme um zehn Uhr. Bis dann!', 'Die Kollegin weiß, was sie tut.'],
+  ['Tag und Uhrzeit', 'Wir feiern am Freitag um acht Uhr.', 'Wir feiern am Freitag.', 'Der Tag und die Uhrzeit stehen fest.'],
+  ['Was die Gäste mitbringen sollen', 'Bringt ihr bitte Kuchen und Musik mit?', 'Die Gäste kommen um acht Uhr.', 'Die Gäste sind eingeladen.'],
 ];
 
 test('every decidable Leitpunkt of the six Mitteilungen is tested GREEN and RED', () => {
-  for (const [lp, green, red] of LEITPUNKT_FIXTURE) {
+  for (const [lp, green, red, echo] of LEITPUNKT_FIXTURE) {
     assert.equal(leitpunktSatisfied(lp, green), true, `„${lp}“ ← „${green}“ must be green`);
     assert.equal(leitpunktSatisfied(lp, red), false, `„${lp}“ ← „${red}“ must be red`);
+    // The topic-echo: the Leitpunkt's own subject named, no value given (DaF review #16, MAJOR 1).
+    assert.equal(leitpunktSatisfied(lp, echo), false, `„${lp}“ ← „${echo}“ names the topic, not a value`);
   }
   // Five origins, adjective and noun, on the Leitpunkt the review measured (MAJOR 2).
   for (const [adj, noun] of [['marokkanisch', 'Marokkanerin'], ['türkisch', 'Türkin'],
@@ -584,6 +591,100 @@ test('every decidable Leitpunkt of the six Mitteilungen is tested GREEN and RED'
     .flatMap((t) => t.leitpunkte)
     .filter((lp) => !covered.has(lp) && leitpunktSatisfied(lp, 'Hallo! Viele Grüße, Ana') !== null);
   assert.deepEqual(open, [], 'a Leitpunkt of the course is in neither the fixture nor the KI rows');
+});
+
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+// ROUND 17 — DaF review #16, MAJOR 1: A VALUE, NOT A TOPIC
+//
+// Round 16's shapes recognised the SUBJECT of the question instead of its ANSWER. The reviewer ran
+// 21 probes over the Leitpunkte of all six Mitteilungen, one exam-grade and one topic-echo each,
+// and three came back green on a text that answers nothing: `DATE_RE` counted the bare word
+// `geboren`, `COUNTRY_RE` counted any capitalised word after `aus`, and `isNationalityWord`
+// counted `Arabisch` — which in German is a LANGUAGE, and „Ich spreche Arabisch und Deutsch.“ is
+// the sentence every learner of this course writes. The rule this table pins is one line:
+// AN ANSWER FORM MUST MATCH A VALUE OF ITS KIND. The six texts the review quotes verbatim are
+// marked; the rest carry the same rule across the other shapes.
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+
+/** `[Leitpunkt, text, expected, quoted-from-review]` — 21 probes, 7 red, 14 green. */
+const ROUND_17_PROBES = [
+  // The three findings, in the reviewer's own words (six texts).
+  ['Ihr Name und Ihr Geburtsdatum', 'Ich heiße Ana. Ich bin in Bremen geboren.', false, true],
+  ['Ihr Name und Ihr Geburtsdatum', 'Ich heiße Ana. Ich habe Geburtstag.', false, true],
+  ['Ihr Name und Ihr Geburtsdatum', 'Ich heiße Ana. Meine Mutter ist auch geboren.', false, true],
+  ['Ihr Land', 'Ich komme aus Bremen.', false, true],
+  ['Ihre Staatsangehörigkeit', 'Ich spreche Arabisch.', false, true],
+  ['Ihre Staatsangehörigkeit', 'Meine Sprache ist Arabisch.', false, true],
+  // The sentence the review calls the rule rather than the edge.
+  ['Ihre Staatsangehörigkeit', 'Ich spreche Arabisch und Deutsch.', false, false],
+  // The same three axes in the GREEN direction — a value of the right kind is still an answer.
+  ['Ihr Name und Ihr Geburtsdatum', 'Ich heiße Ana Chakiri. Ich bin am 3. Mai 1998 geboren.', true, false],
+  ['Ihr Name und Ihr Geburtsdatum', 'Ich heiße Ana Chakiri. Ich bin am 3.5.1998 geboren.', true, false],
+  ['Ihr Geburtsdatum', 'Ich bin am 3.5.98 geboren.', true, false],
+  ['Ihr Land', 'Ich komme aus Marokko.', true, false],
+  ['Ihr Land', 'Ich komme aus der Türkei.', true, false],
+  ['Ihr Land', 'Ich komme aus Frankreich.', true, false],
+  ['Ihre Staatsangehörigkeit', 'Ich spreche Arabisch und bin Marokkanerin.', true, false],
+  ['Ihre Staatsangehörigkeit', 'Ich spreche Arabisch. Ich bin Marokkanerin.', true, false],
+  ['Ihre Staatsangehörigkeit', 'Ich bin türkisch.', true, false],
+  // The same rule on the other shapes: the field named without a value of its kind is no answer.
+  ['Ihre Telefonnummer', 'Meine Telefonnummer ist neu.', false, false],
+  ['Ihre Telefonnummer', 'Meine Telefonnummer ist null eins sieben sechs.', true, false],
+  ['Ihre Uhrzeit', 'Die Uhr ist kaputt.', false, false],
+  ['Ihre Uhrzeit', 'Der Termin ist um acht Uhr.', true, false],
+  ['Was es kostet', 'Der Stuhl kostet zwölf Euro.', true, false],
+];
+
+test('MAJOR 1: an answer form matches a VALUE of its kind, never the topic of the question', () => {
+  assert.equal(ROUND_17_PROBES.length, 21, 'the review ran twenty-one probes');
+  assert.equal(ROUND_17_PROBES.filter(([, , , quoted]) => quoted).length, 6, 'six texts are quoted verbatim');
+  const wrong = ROUND_17_PROBES
+    .filter(([lp, text, want]) => leitpunktSatisfied(lp, text) !== want)
+    .map(([lp, text, want]) => `„${lp}“ ← „${text}“ must be ${want ? 'GREEN' : 'RED'}`);
+  assert.deepEqual(wrong, [], `${wrong.length} of 21 probes disagree`);
+  // And the field named with nothing behind it — the purest form of the same error.
+  assert.equal(leitpunktSatisfied('Ihr Geburtsdatum', 'Mein Geburtsdatum: …'), false);
+  assert.equal(leitpunktSatisfied('Ihr Geburtsdatum', 'Mein Geburtsdatum ist wichtig.'), false);
+  assert.equal(leitpunktSatisfied('Ihr Land', 'Das Land ist schön.'), false);
+  assert.equal(leitpunktSatisfied('Ihr Land', 'Das Land ist Marokko.'), true);
+});
+
+test('MAJOR 1: a language is not a nationality — case and context tell them apart', () => {
+  // German spells them alike. The language is the capitalised noun after `sprechen`; the
+  // nationality is the lower-case adjective after `sein` or the noun („Marokkanerin“).
+  for (const lang of ['Arabisch', 'Deutsch', 'Englisch', 'Türkisch', 'Russisch']) {
+    assert.equal(leitpunktSatisfied('Ihre Staatsangehörigkeit', `Ich spreche ${lang}.`), false, lang);
+    assert.equal(leitpunktSatisfied('Ihre Staatsangehörigkeit', `Meine Sprache ist ${lang}.`), false, lang);
+  }
+  // …and the same sentence still answers „Ihre Sprachen“-shaped rows through its own words, while
+  // a second sentence that names the nationality is read normally.
+  assert.equal(leitpunktSatisfied('Ihre Staatsangehörigkeit', 'Ich spreche Arabisch. Ich bin arabisch.'), true);
+  assert.equal(leitpunktSatisfied('Ihre Staatsangehörigkeit', 'Nationalität: arabisch'), true);
+});
+
+test('MAJOR 1: a country is a country name, not any capitalised word after „aus“', () => {
+  for (const city of ['Bremen', 'Berlin', 'Bonn', 'Köln', 'Frankfurt', 'Hamburg', 'München']) {
+    assert.equal(leitpunktSatisfied('Ihr Land', `Ich komme aus ${city}.`), false, city);
+  }
+  for (const land of ['Marokko', 'der Türkei', 'dem Irak', 'Syrien', 'Polen', 'Frankreich',
+    'China', 'Vietnam', 'Mexiko', 'Deutschland', 'Indien', 'der Ukraine', 'Italien']) {
+    assert.equal(leitpunktSatisfied('Ihr Land', `Ich komme aus ${land}.`), true, land);
+  }
+});
+
+test('MAJOR 1: a date is a day and a month, and `geboren` alone is neither', () => {
+  for (const text of ['Ich bin am 3. Mai 1998 geboren.', 'Ich bin am 3.5.1998 geboren.',
+    'Ich bin am 3.5.98 geboren.', 'Ich bin im Mai 1998 geboren.', 'Geburtsdatum: 03.05.1998']) {
+    assert.equal(leitpunktSatisfied('Ihr Geburtsdatum', text), true, text);
+  }
+  for (const text of ['Ich bin in Bremen geboren.', 'Ich habe Geburtstag.',
+    'Meine Mutter ist auch geboren.', 'Mein Geburtsdatum steht im Pass.', 'Ich bin zwanzig.']) {
+    assert.equal(leitpunktSatisfied('Ihr Geburtsdatum', text), false, text);
+  }
+  // An AGE is a value of another kind, and it has its own row — „Ihr Alter“ is not a Geburtsdatum.
+  assert.equal(leitpunktSatisfied('Ihr Alter', 'Ich bin zwanzig.'), true);
+  assert.equal(leitpunktSatisfied('Ihr Alter', 'Ich bin 25 Jahre alt.'), true);
+  assert.equal(leitpunktSatisfied('Ihr Alter', 'Ich bin jung.'), false);
 });
 
 test('MAJOR 1: the named field is the learner’s answer and never the course’s', () => {

@@ -99,6 +99,18 @@ const isFunctionWord = (w) => {
  * statement about his work — in the exam it costs exactly the points the list
  * just promised him.
  *
+ * AND THE SECOND HALF OF THE SAME SENTENCE, added in round 17 (DaF review #16, MAJOR 1): **AN
+ * ANSWER FORM THAT RECOGNISES THE TOPIC OF THE QUESTION INSTEAD OF ITS VALUE IS NOT AN ANSWER
+ * FORM — IT IS A KEYWORD FILTER, AND A KEYWORD FILTER WAS THE MISTAKE OF ROUND 13.** Round 16's
+ * shapes accepted the bare word `geboren` as a Geburtsdatum, ANY capitalised word after `aus` as
+ * a Land, and `Arabisch` as a Staatsangehörigkeit — so „Ich bin in Bremen geboren.“, „Ich komme
+ * aus Bremen.“ and „Ich spreche Arabisch.“ were green on Leitpunkte they do not answer. Every
+ * shape below therefore matches a VALUE OF ITS KIND: a date is a day and a month (or a month
+ * name), a country is a country NAME, a nationality is never a language name, a phone number is
+ * four digits, a clock is a time and not the word `Uhr`, a price is a number with Euro, an age is
+ * a number of years. The field-naming alternative (`namedFieldShape`) carries the same
+ * requirement: „Meine Telefonnummer ist neu.“ names the field, gives no number, and is no answer.
+ *
  * So a Leitpunkt is read in three steps, all derived from the Leitpunkt itself
  * and never from a typed list of texts:
  *
@@ -195,16 +207,118 @@ const splitVerbStem = (word) => {
   return [];
 };
 
-const DATE_RE = /\b\d{1,2}\.\s*(?:\d{1,2}\.|Januar|Februar|März|Maerz|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)|\b\d{1,2}\.\d{1,2}\.\d{2,4}\b|\bgeboren\b|\bGeburtstag\b/i;
-const CLOCK_RE = /\b\d{1,2}(?:[.:]\d{2})?\s*Uhr\b|\bUhr\b|\bhalb\s+\w+|\bViertel\s+(?:nach|vor)\b|\bum\s+(?:\d{1,2}|ein[sm]?|zwei|drei|vier|fünf|fuenf|sechs|sieben|acht|neun|zehn|elf|zwölf|zwoelf|halb)\b/i;
+/**
+ * A SENTENCE, for the shapes that need one. „geboren“ is a date only NEXT TO a number, and
+ * „Arabisch“ is a language only next to „sprechen“ — both are sentence-local facts, so the shapes
+ * below read sentences rather than the whole Mitteilung. The split deliberately does NOT break at
+ * a full stop that follows a digit: „am 3. Mai“ and „3.5.1998.“ are one date, not three sentences.
+ */
+const sentences = (text) => String(text || '')
+  .split(/(?<![0-9])[.!?]+\s+|\n+/)
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+const stripPunct = (w) => String(w || '').replace(/[.,!?;:()"„“»«]/g, '');
+
+/** The number words the course writes out, 0–20 plus the round tens — used by the value shapes. */
+const NUMBER_WORD = '(?:null|ein[sm]?|zwei|drei|vier|fünf|fuenf|sechs|sieben|acht|neun|zehn|elf'
+  + '|zwölf|zwoelf|dreizehn|vierzehn|fünfzehn|fuenfzehn|sechzehn|siebzehn|achtzehn|neunzehn'
+  + '|zwanzig|dreißig|dreissig|vierzig|fünfzig|fuenfzig|sechzig|siebzig|achtzig|neunzig|hundert)';
+
+const MONTH = 'Januar|Februar|März|Maerz|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember';
+
+/**
+ * A DATE IS A VALUE, NOT THE WORD `geboren` (DaF review #16, MAJOR 1).
+ *
+ * Round 16 wrote `|\bgeboren\b|\bGeburtstag\b` into `DATE_RE`, and with it „Ich heiße Ana. Ich bin
+ * in Bremen geboren.“, „Ich habe Geburtstag.“ and „Meine Mutter ist auch geboren.“ all answered
+ * „Ihr Name und Ihr Geburtsdatum“ — three green ticks over a text with no date in it. Worse, it
+ * made RULE 21 green on a course that teaches no date form at all: adding the single Wortfeld line
+ * `geboren` was enough. A date is now day + month (digits or a month name), or a month name, or a
+ * full digit date; the birth words count only WITH a number or a month IN THE SAME SENTENCE.
+ */
+const DATE_VALUE_RE = new RegExp(
+  `\\b\\d{1,2}\\.\\s*(?:\\d{1,2}\\.?|${MONTH})|\\b\\d{1,2}\\.\\d{1,2}\\.\\d{2,4}\\b|\\b(?:${MONTH})\\b`,
+  'i',
+);
+const BIRTH_WORD_RE = /\b(?:geboren|Geburtstag|Geburtsdatum)\b/i;
+const DATE_COMPANION_RE = new RegExp(`\\d|\\b(?:${MONTH})\\b`, 'i');
+const DATE_SHAPE = {
+  test: (body) => sentences(body).some(
+    (s) => DATE_VALUE_RE.test(s) || (BIRTH_WORD_RE.test(s) && DATE_COMPANION_RE.test(s)),
+  ),
+};
+
+/** An AGE is a number of years, and it is NOT a date — „Ihr Alter“ and „Ihr Geburtsdatum“ differ. */
+const AGE_RE = new RegExp(
+  `\\b(?:\\d{1,3}|${NUMBER_WORD})\\s*Jahre?\\s*alt\\b|\\b(?:bin|ist|sind|wird)\\s+(?:\\d{1,3}|${NUMBER_WORD})\\b`,
+  'i',
+);
+
+/** A CLOCK TIME is a time, never the bare word `Uhr` („Die Uhr ist kaputt.“ says no Uhrzeit). */
+const CLOCK_RE = new RegExp(
+  `\\b(?:\\d{1,2}(?:[.:]\\d{2})?|${NUMBER_WORD})\\s*Uhr\\b|\\b\\d{1,2}:\\d{2}\\b`
+  + `|\\bhalb\\s+(?:\\d{1,2}|${NUMBER_WORD})\\b|\\bViertel\\s+(?:nach|vor)\\b`
+  + `|\\bum\\s+(?:\\d{1,2}|${NUMBER_WORD}|halb)\\b`,
+  'i',
+);
 const DAY_RE = /\b(?:Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonnabend|Sonntag|heute|morgen|übermorgen|Wochenende)\b/i;
-// „aus Marokko“, „aus der Türkei“, „aus dem Iran“ — the article is part of the country name for
-// exactly the countries a German course's learners come from (die Türkei, der Irak, die Ukraine,
-// die Schweiz), so an optional `der`/`dem`/`den` stands between `aus` and the capitalised name.
-// Without it „Ich komme aus der Türkei.“ answered „Ihr Land“ no better than silence — the same
-// figure-instead-of-class error as NATIONALITY_RE (DaF review #15, MAJOR 2).
-const COUNTRY_NAME = '[A-ZÄÖÜ][A-Za-zÄÖÜäöüß-]+';
-const COUNTRY_RE = new RegExp(`\\b(?:komm\\w*|bin|sind|ist)\\s+aus\\s+(?:de[rmn]\\s+)?${COUNTRY_NAME}|\\baus\\s+(?:de[rmn]\\s+)?${COUNTRY_NAME}`);
+/** A PRICE is a number with Euro — „Das kostet Euro.“ is not a price. */
+const PRICE_RE = new RegExp(`\\b(?:\\d+(?:[.,]\\d{1,2})?|${NUMBER_WORD})\\s*(?:Euro|€)|€\\s*\\d`, 'i');
+
+/**
+ * A COUNTRY IS A COUNTRY NAME, NOT ANY CAPITALISED WORD AFTER `aus` (DaF review #16, MAJOR 1).
+ *
+ * Round 16's `COUNTRY_RE` was `…aus\s+(?:de[rmn]\s+)?[A-ZÄÖÜ]…`, so „Ich komme aus Bremen.“
+ * answered „Ihr Land“ — a city, a street, a friend's name, anything capitalised. The check the
+ * review asked for was already in this file: `COUNTRY_STEMS`, folded against the lower-cased name.
+ * Three ways in, all structural: the stem is the start of the name (`türk` → Türkei, `pol` → Polen,
+ * `deutsch` → Deutschland), the name is the start of the stem (`Korea` → `korean`, `Vietnam` →
+ * `vietnames`), or the two share five letters (`Marokko`/`marokkan`, `Mexiko`/`mexikan`,
+ * `Venezuela`/`venezolan`, `England`/`engländ`). Five letters is what keeps `Bremen` (`br` with
+ * `brasilian`), `Berlin`, `Bonn`, `Köln` and `Frankfurt` (`fran`, four, with `franzos`) out.
+ * COUNTRY_NAMES below is the small remainder whose German name shares no stem with its
+ * nationality — the same kind of list as COUNTRY_STEMS: it belongs to the world, not to A1.1.
+ */
+const COUNTRY_NAMES = new Set([
+  'frankreich', 'china', 'großbritannien', 'grossbritannien', 'usa', 'holland', 'taiwan',
+  'kambodscha', 'laos', 'myanmar', 'elfenbeinküste', 'tschetschenien', 'niederlande',
+]);
+
+const sharedPrefix = (a, b) => {
+  let i = 0;
+  while (i < a.length && i < b.length && a[i] === b[i]) i += 1;
+  return i;
+};
+
+const isCountryName = (raw) => {
+  const n = String(raw || '').toLowerCase().replace(/[^a-zäöüß-]/g, '');
+  if (n.length < 3) return false;
+  if (COUNTRY_NAMES.has(n)) return true;
+  for (const stem of COUNTRY_STEMS) {
+    if (n.startsWith(stem) || stem.startsWith(n)) return true;
+    if (sharedPrefix(n, stem) >= 5) return true;
+  }
+  return false;
+};
+
+/**
+ * „aus Marokko“, „aus der Türkei“, „aus dem Iran“ — the article is part of the country name for
+ * exactly the countries a German course's learners come from (die Türkei, der Irak, die Ukraine,
+ * die Schweiz), so an optional `der`/`dem`/`den` stands between `aus` and the name. What round 17
+ * adds is the only thing that made it a shape rather than a keyword: the name must BE a country.
+ */
+const AUS_LAND_RE = /\baus\s+(?:de[rmn]\s+)?([A-ZÄÖÜ][A-Za-zÄÖÜäöüß-]+)/g;
+const COUNTRY_SHAPE = {
+  test: (body) => {
+    const text = String(body || '');
+    AUS_LAND_RE.lastIndex = 0;
+    for (let m = AUS_LAND_RE.exec(text); m; m = AUS_LAND_RE.exec(text)) {
+      if (isCountryName(m[1])) return true;
+    }
+    return false;
+  },
+};
 
 /**
  * A NATIONALITY, which „Ihre Staatsangehörigkeit“ asks for and a country name does not supply.
@@ -283,15 +397,34 @@ const DEUTSCH_RE = /\bdeutsche?[rnms]?\b/i;
 const PREDICATIVE_ISCH_RE = /\b(?:bin|bist|ist|sind|seid|war|warst|waren)\s+[A-Za-zÄÖÜäöüß]{2,}isch(?:e[rnms]?)?\b/i;
 
 /**
+ * A LANGUAGE IS NOT A NATIONALITY (DaF review #16, MAJOR 1). „Ich spreche Arabisch.“ and „Meine
+ * Sprache ist Arabisch.“ answered „Ihre Staatsangehörigkeit“ in round 16 — and „Ich spreche
+ * Arabisch und Deutsch.“ is the sentence EVERY learner of this course writes into her
+ * introduction, so it is the rule and not the edge. German spells the two identically; what tells
+ * them apart is case and context: the language is the CAPITALISED noun („Arabisch“, „Deutsch“),
+ * the nationality adjective is lower case after `sein` („Ich bin arabisch.“), and the noun
+ * („Marokkanerin“) is neither. So a capitalised `-isch` word (and capitalised `Deutsch`) is
+ * discarded in a sentence that also carries a language marker — `sprechen`, `Sprache`,
+ * `Muttersprache`. Everything else in that sentence still counts: „Ich spreche Arabisch und bin
+ * Marokkanerin.“ answers the Leitpunkt, and so does a second sentence that names the nationality.
+ */
+const LANGUAGE_CONTEXT_RE = /\bsprech\w*\b|\bSprach\w*\b/i;
+const LANGUAGE_NAME_RE = /^(?:[A-ZÄÖÜ][a-zäöüß]*isch|Deutsch)$/;
+
+/**
  * Does `body` name a nationality? Structural, never a name — see the header above.
  * Shape objects in ANSWER_SHAPES only need `.test`, so this is one of them.
  */
 const NATIONALITY_SHAPE = {
-  test: (body) => {
-    const text = String(body || '');
-    if (DEUTSCH_RE.test(text) || PREDICATIVE_ISCH_RE.test(text)) return true;
-    return words(text).some((raw) => isNationalityWord(raw.replace(/[.,!?;:()"„“]/g, '')));
-  },
+  test: (body) => sentences(body).some((sentence) => {
+    const toks = words(sentence).map(stripPunct).filter(Boolean);
+    const usable = LANGUAGE_CONTEXT_RE.test(sentence)
+      ? toks.filter((t) => !LANGUAGE_NAME_RE.test(t))
+      : toks;
+    const rest = usable.join(' ');
+    if (DEUTSCH_RE.test(rest) || PREDICATIVE_ISCH_RE.test(rest)) return true;
+    return usable.some(isNationalityWord);
+  }),
 };
 
 /**
@@ -301,8 +434,8 @@ const NATIONALITY_SHAPE = {
  * digits or four number words IN SEQUENCE — the shortest number the course itself writes is
  * „null eins sieben sechs“ (A1.1 L2 dialogue).
  */
-const NUMBER_WORD = '(?:null|eins|zwei|drei|vier|fünf|fuenf|sechs|sieben|acht|neun|zehn)';
-const PHONE_RE = new RegExp(`(?:\\d[\\s/-]*){4,}|(?:${NUMBER_WORD}[\\s/-]+){3,}${NUMBER_WORD}`, 'i');
+const PHONE_DIGIT_WORD = '(?:null|eins|zwei|drei|vier|fünf|fuenf|sechs|sieben|acht|neun|zehn)';
+const PHONE_RE = new RegExp(`(?:\\d[\\s/-]*){4,}|(?:${PHONE_DIGIT_WORD}[\\s/-]+){3,}${PHONE_DIGIT_WORD}`, 'i');
 
 /**
  * The answer shapes, keyed by the FOLDED head word of the Leitpunkt. Each row
@@ -310,15 +443,28 @@ const PHONE_RE = new RegExp(`(?:\\d[\\s/-]*){4,}|(?:${NUMBER_WORD}[\\s/-]+){3,}$
  * answered it“ — the obvious realisation, not a synonym list of one course.
  * Where a conjunct derives a shape the shape is REQUIRED (see the header, step 2).
  */
+const anyOf = (...shapes) => ({ test: (body) => shapes.some((sh) => sh.test(body)) });
+
+/** A DAY is a weekday or a date. */
+const DAY_OR_DATE_SHAPE = anyOf(DAY_RE, DATE_SHAPE);
+
 const ANSWER_SHAPES = [
-  { on: ['nam', 'vornam', 'nachnam', 'familiennam'], re: /\b(?:hei(?:ß|ss)\w*|nenn\w*)\b|\bich\s+bin\s+[A-ZÄÖÜ]/ },
-  { on: ['geburtsdatum', 'geburtstag', 'datum', 'alter'], re: DATE_RE },
-  { on: ['land', 'geburtsland', 'herkunft'], re: COUNTRY_RE },
+  // `value` is what the FIELD-NAMING alternative must carry („Der Name ist Ana Ruiz.“) — by default
+  // the shape itself, so that naming a field without filling it in with a value of the right kind
+  // („Meine Telefonnummer ist neu.“) is not an answer either. See namedFieldShape below.
+  {
+    on: ['nam', 'vornam', 'nachnam', 'familiennam'],
+    re: /\b(?:hei(?:ß|ss)\w*|nenn\w*)\b|\bich\s+bin\s+[A-ZÄÖÜ]/,
+    value: /[A-ZÄÖÜ][a-zäöüß]/,
+  },
+  { on: ['geburtsdatum', 'geburtstag', 'datum'], re: DATE_SHAPE },
+  { on: ['alt', 'alter'], re: AGE_RE, value: new RegExp(`\\d|${NUMBER_WORD}`, 'i') },
+  { on: ['land', 'geburtsland', 'herkunft'], re: COUNTRY_SHAPE, value: { test: isCountryName } },
   { on: ['staatsangehörigkei', 'staatsangehoerigkei', 'nationalitä', 'nationalitae'], re: NATIONALITY_SHAPE },
   { on: ['familienstand'], re: /\b(?:ledig|verheiratet|geschieden)\b/i },
   { on: ['uhrzei', 'zeit', 'termin'], re: CLOCK_RE },
-  { on: ['tag', 'wochentag'], re: new RegExp(`${DAY_RE.source}|${DATE_RE.source}`, 'i') },
-  { on: ['preis', 'kost', 'geld'], re: /\b\d+\s*(?:Euro|€)|\bEuro\b|€/i },
+  { on: ['tag', 'wochentag'], re: DAY_OR_DATE_SHAPE },
+  { on: ['preis', 'kost', 'geld'], re: PRICE_RE },
   { on: ['telefonnumm', 'numm', 'handynumm'], re: PHONE_RE },
   { on: ['frag'], re: /\?/ },
 ];
@@ -354,12 +500,21 @@ const QUESTION_SHAPES = [
  * not. And the sister rule for the class above it: AN ANSWER FORM THAT ONLY RECOGNISES THE ANSWER
  * OF THE COURSE'S OWN CHARACTER IS NOT A FORM, IT IS A NAME (DaF review #15, MAJOR 1 and MAJOR 2).
  */
-const namedFieldShape = (word) => {
-  const re = new RegExp(`\\b${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\w*\\s*(?:ist|sind|:)\\s+([^.,!?;]+)`, 'i');
+const namedFieldShape = (word, valueShape) => {
+  const re = new RegExp(`\\b${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\w*\\s*(?:ist|sind|:)\\s+([^.,!?;]+)`, 'gi');
   return {
     test: (body) => {
-      const m = re.exec(String(body || ''));
-      return !!m && words(m[1]).some((w) => w.length > 1 && !isFunctionWord(w.replace(/[.,!?;:()"„“]/g, '')));
+      const text = String(body || '');
+      re.lastIndex = 0;
+      for (let m = re.exec(text); m; m = re.exec(text)) {
+        const value = m[1];
+        const filled = words(value).some((w) => w.length > 1 && !isFunctionWord(stripPunct(w)));
+        // ROUND 17 (DaF review #16, MAJOR 1): naming the field is not enough, and neither is any
+        // content word after it — the VALUE has to be of the field's kind. „Meine Telefonnummer ist
+        // neu.“ and „Mein Geburtsdatum: …“ name the topic and answer nothing.
+        if (filled && (!valueShape || valueShape.test(value))) return true;
+      }
+      return false;
     },
   };
 };
@@ -402,7 +557,7 @@ const conjunctEvidence = (conjunct, { allowNamedField = true } = {}) => {
       // answered — and false where the COURSE is measured (RULE 21), because a rule that accepts
       // the form line is satisfied by the one sentence type *Start Deutsch 1* takes points off for,
       // and the model text then gets written to the checker (DaF review #15, MAJOR 1).
-      if (allowNamedField) shapes.push(namedFieldShape(w));
+      if (allowNamedField) shapes.push(namedFieldShape(w, shape.value || shape.re));
     }
   }
   shapes.push(...QUESTION_SHAPES.filter((s) => s.re && s.on.test(conjunct)).map((s) => s.re));

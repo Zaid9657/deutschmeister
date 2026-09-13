@@ -371,12 +371,12 @@
    "stage": 5,
    "difficulty": 2,
    "order": 35,
-   "questionDe": "Die Staatsangehörigkeit im Formular: Ana ___ marokkanisch. (sein)",
-   "questionEn": "Nationality on the form: Ana is Moroccan.",
+   "questionDe": "Die Staatsangehörigkeit im Satz: Ana ___ Marokkanerin. (sein)",
+   "questionEn": "Nationality in a sentence: Ana is Moroccan.",
    "options": null,
    "answer": "ist",
    "accepted": ["ist"],
-   "explanationDe": "Nach sein steht die Staatsangehörigkeit ohne Artikel: Ana ist marokkanisch.",
+   "explanationDe": "Im Satz steht die Staatsangehörigkeit als Nomen: Ana ist Marokkanerin. Im Formular: Staatsangehörigkeit: marokkanisch.",
    "hint": null
   },
   {
