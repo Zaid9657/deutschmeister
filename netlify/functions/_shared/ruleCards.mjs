@@ -471,7 +471,7 @@ export const RULE_CARDS = {
   },
   "verb-sein": {
     "titleDe": "sein: ich bin, du bist, Sie sind",
-    "content": "sein ist das wichtigste Verb. Es ist unregelmäßig:\nich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.\nNach sein steht der Beruf ohne Artikel: Ich bin Lehrer. Nicht: Ich bin ein Lehrer.\nDer Beruf in der Frage: Was sind Sie von Beruf? — Ich bin Studentin.\nBeispiele: Ich komme aus Marokko. Ich wohne in Bremen.\nIn der Frage steht sein vorn: Ist das Formular für die Adresse?\nEnglish: sein is irregular — learn the six forms as whole words, not from a stem.",
+    "content": "sein ist das wichtigste Verb. Es ist unregelmäßig:\nich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.\nNach sein steht der Beruf ohne Artikel: Ich bin Lehrer. Nicht: Ich bin ein Lehrer.\nDer Beruf in der Frage: Was sind Sie von Beruf? — Ich bin Studentin.\nBeispiele: Ich bin Ana. Ich wohne in Bremen.\nIn der Frage steht sein vorn: Ist das Formular für die Adresse?\nEnglish: sein is irregular — learn the six forms as whole words, not from a stem.",
     "commonMistakes": [
       {
         "wrong": "Ich bin ein Lehrer.",

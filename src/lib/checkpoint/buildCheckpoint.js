@@ -34,6 +34,7 @@ import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../lesson/check.
 import { courseWritingTasks, writingTaskByKey } from '../../data/writingTasks.js';
 import { knownUpTo, untaughtTokens, namesOf } from './lexis.js';
 import { politeCaseItem } from '../../data/lessonPools/quality.js';
+import { deferredConstructionHits } from '../../data/curricula/constructions.js';
 
 export const SECTION_ORDER = ['hoeren', 'lesen', 'bausteine', 'schreiben', 'sprechen'];
 
@@ -161,6 +162,32 @@ export const lineIsCaseTask = (de) => politeCaseItem({ answer: de, accepted: [de
 const freeLinesFirst = (lines, usedLineKeys) => {
   const key = (l) => lineKeyOf(l.lektionId || l.lektionNr, l.idx);
   return [...lines.filter((l) => !usedLineKeys.has(key(l))), ...lines.filter((l) => usedLineKeys.has(key(l)))];
+};
+
+/**
+ * A DICTATION AND A READ-ALOUD ARE PRODUCTION, AND A CHECKPOINT IS GRADED.
+ *
+ * DaF review #13, MAJOR 3: `a1.1-cp1-hoeren-3` was „Bitte füllen Sie das Formular
+ * aus.“ — the Satzklammer of Lektion 11, typed and scored after Lektion 3 — and
+ * `a1.1-cp1-sprechen-2` read „Ja, ein Baby. Der Mann von meiner Schwester …“
+ * aloud, with the indefinite article of Lektion 6 and the possessive of Lektion 12
+ * in it. RULE 15b guarded exactly this on the LEKTION's windows and did not run on
+ * the checkpoints at all.
+ *
+ * A dialogue line may SAY all of that (CONTRACT §2 — it is the audio script); what
+ * a checkpoint may not do is put it in the learner's mouth. So lines whose
+ * constructions the course has not reached by this checkpoint go to the BACK of the
+ * preference, never out of it: a chapter too poor to fill a section still fills it,
+ * and `scripts/validate-curriculum.mjs` reports what is left (RULE 15b now reads
+ * every checkpoint dictation and read-aloud).
+ *
+ * It orders WITHIN a freeness bucket, never across one: a line another section has
+ * already spent stays behind an unspent line whatever its constructions, or one
+ * paper dictates and prints the same sentence.
+ */
+const clampFreeFirst = (lines, curriculum, afterLektion) => {
+  const clean = (l) => deferredConstructionHits(curriculum, afterLektion, l.de).length === 0;
+  return [...lines.filter(clean), ...lines.filter((l) => !clean(l))];
 };
 
 /** Flatten the chapter's Wortfeld entries. */
@@ -1262,7 +1289,20 @@ function buildLesen(ctx) {
     if (!candidates.length) continue;
     const wantRichtig = truth[i];
 
-    const picked = pickLesenSource(candidates, wantRichtig, { rng, spec, chapterVocab, usedSources });
+    // TWO PHASES, and the first is the rule: a Lesen text never reprints a line this paper DICTATES
+    // or READS ALOUD. `lesenCandidates` only ORDERS by that, and an ordering loses whenever the
+    // leading candidates yield no usable statement — which is how one paper could dictate a line
+    // and print it (the guard „no dialogue line is used twice across the sections of one
+    // checkpoint“ held by luck of the shuffle until the RULE-15b line preference of round 14 moved
+    // the draw). The clean pick wins only when it carries a REPORTED or a FALSIFIED statement:
+    // rung 4 of `pickLesenSource` copies a line of the window out as a richtig statement, which
+    // „no Lesen statement stands in its own text“ forbids, so a degraded clean pick loses to a
+    // proper pick from the full list.
+    const clean = candidates.filter((w) => windowLineKeys(w).every((k) => !usedLineKeys.has(k)));
+    const cleanPick = clean.length ? pickLesenSource(clean, wantRichtig, { rng, spec, chapterVocab, usedSources }) : null;
+    const picked = (cleanPick?.report || cleanPick?.changed)
+      ? cleanPick
+      : (pickLesenSource(candidates, wantRichtig, { rng, spec, chapterVocab, usedSources }) || cleanPick);
     if (!picked) continue;
     const { candidate, text, report, statement, changed } = picked;
     const sourceLine = report ? report.line : picked.line;
@@ -1507,7 +1547,8 @@ function buildSprechen(ctx) {
   const all = shuffle(dialogLines(chapter), rng);
   const ordered = [];
   const seen = new Set();
-  for (const bucket of [pref.filter(free), all.filter(free), pref, all]) {
+  const clamp = (ls) => clampFreeFirst(ls, ctx.curriculum, checkpoint.afterLektion);
+  for (const bucket of [pref.filter(free), all.filter(free), pref, all].map(clamp)) {
     for (const line of bucket) {
       if (seen.has(key(line))) continue;
       seen.add(key(line));

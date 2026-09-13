@@ -25,6 +25,9 @@ import {
 } from '../netlify/functions/evaluate-writing.mjs';
 import { ALL_CURRICULA } from '../src/data/curricula/index.js';
 import { chapterWritingTask, chapterLektionen } from '../src/lib/checkpoint/buildCheckpoint.js';
+import {
+  scoreWriting, countWords, leitpunktKeyword, leitpunktKeywords, leitpunktEvidence, leitpunktSatisfied,
+} from '../src/lib/lesson/writing.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const LEKTIONEN = CURRICULUM_A11.lektionen;
@@ -265,4 +268,116 @@ test('the function gates on the derived allowance, not on the bare constant', ()
   assert.match(src, /courseWritingTasks\(level\)\.length/, 'the allowance must be counted off the task bank');
   assert.match(src, /const courseLimit = courseAllowanceFor\(task_key\)/);
   assert.match(src, /\? courseLimit\n/, 'the enforced limit must be the derived course allowance');
+});
+
+
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+// THE FORMCHECK AND A CORRECT ANSWER — DaF review #13, MAJOR 1
+//
+// RULE 17 asks „does my Beispieltext pass my checker“. This asks the harder question, the one the
+// review says is the only one that can expose a WRONG checker: „does a correct answer pass my
+// checker“. The round before answered `lp0/lp1/lp2 FAIL` on an exam-grade 30-word Mitteilung and
+// rewrote the Beispieltext around its keywords („Der Familienstand: Ich bin ledig.“) instead of
+// repairing the rule.
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+
+/** The task shape `GradedWriting.jsx` hands `scoreWriting`, built from the BANK like RULE 17. */
+const formcheckTask = (nr) => {
+  const l = LEKTIONEN[nr - 1];
+  const bank = writingTaskByKey('goethe_a1', l.schreiben.taskKey);
+  return { kind: 'mitteilung', minWords: bank.minWords, maxWords: bank.maxWords, leitpunkte: bank.leitpunkte };
+};
+
+// One hand-written, exam-grade answer per Mitteilung. L2 is the reviewer's own text, quoted
+// verbatim from REVIEW-daf-13-2026-09-12.md (MAJOR 1): 30 words, Anrede, Gruß, all three
+// Leitpunkte answered, and `lp0 lp1 lp2` all red under the round-13 rule.
+const EXAM_GRADE_ANSWERS = {
+  2: 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Ich bin am 3. Mai 1998 geboren. Ich komme aus Marokko und bin Marokkanerin. Ich bin ledig. Viele Grüße, Ana Chakiri',
+  4: 'Hallo Lena! Ich kaufe auf dem Flohmarkt einen Stuhl. Er kostet zwölf Euro, das ist nicht teuer. Treffen wir uns um vier Uhr am Eingang? Tschüss, Tim',
+  6: 'Guten Tag, Frau Berg! Für das Büro brauche ich noch einen Computer. Meine Telefonnummer ist 0176 22 44 88. Ab neun Uhr bin ich im Büro. Viele Grüße, Ana',
+  8: 'Hallo Lena! Leider passt der Termin am Montag nicht. Ich schreibe dir deshalb schnell. Geht es am Dienstag um halb neun? Hast du dann Zeit für mich? Viele Grüße, Ana',
+  10: 'Liebe Kollegin, der Zug hat leider Verspätung. Ich bin erst um zehn Uhr da. Bitte machen Sie die Arbeit ohne mich. Vielen Dank und viele Grüße, Ana',
+  12: 'Hallo Lena! Ich feiere am Freitag Geburtstag. Die Party ist um acht Uhr bei mir. Bringt ihr bitte Kuchen und Musik mit? Bis bald, Ana',
+};
+
+test('a correct, exam-grade answer passes the Formcheck of its own Mitteilung', () => {
+  for (const [nr, answer] of Object.entries(EXAM_GRADE_ANSWERS)) {
+    const res = scoreWriting(formcheckTask(Number(nr)), answer);
+    const red = res.checks.filter((c) => !c.ok).map((c) => `${c.key} („${c.label}“)`);
+    assert.deepEqual(red, [], `L${nr} (${countWords(answer)} Wörter): the Formcheck calls a correct answer incomplete`);
+    assert.equal(res.ok, true, `L${nr}`);
+  }
+});
+
+test('the reviewer’s L2 text is the fixture: it shares no token with two of its three Leitpunkte', () => {
+  // WHY it used to fail, measured rather than asserted: the old rule took ONE token per Leitpunkt
+  // („Name“, „Land“, „Familienstand“) and searched it as a substring. Two of the three do not occur
+  // in a text that answers them — which is the structural point: a Leitpunkt is a request, an
+  // answer is a statement.
+  const text = EXAM_GRADE_ANSWERS[2];
+  const bank = writingTaskByKey('goethe_a1', 'a11-l02');
+  assert.deepEqual(bank.leitpunkte.map(leitpunktKeyword), ['Name', 'Land', 'Familienstand']);
+  assert.ok(!/\bName\b/i.test(text) && !/\bLand\b/i.test(text), 'the fixture must not contain the old keywords');
+  // …and every one of them is answered, by a word of the Leitpunkt's own family or by its shape.
+  for (const lp of bank.leitpunkte) assert.equal(leitpunktSatisfied(lp, text), true, lp);
+  // The family is DERIVED from the Leitpunkt: all its content words, plus the shape its head noun
+  // asks for. „ledig oder verheiratet“ stands in the Leitpunkt itself — the text supplies its own
+  // synonyms and round 13 read none of them.
+  assert.deepEqual(leitpunktKeywords(bank.leitpunkte[2]), ['Familienstand', 'ledig', 'verheiratet']);
+  assert.ok(leitpunktEvidence(bank.leitpunkte[0]).shapes.length, 'a Geburtsdatum has an answer shape (a date)');
+});
+
+test('the Formcheck stays honest: a text that omits a Leitpunkt fails that row', () => {
+  // Same length, same Anrede and Gruß, same first two Leitpunkte — and no Familienstand anywhere.
+  const missing = 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Ich bin am 3. Mai 1998 geboren. Ich komme aus Marokko und wohne jetzt in Bremen. Viele Grüße, Ana Chakiri';
+  const res = scoreWriting(formcheckTask(2), missing);
+  assert.ok(countWords(missing) >= 25, 'the fixture must clear the length row, or it proves nothing');
+  assert.deepEqual(res.checks.filter((c) => !c.ok).map((c) => c.key), ['lp2'], JSON.stringify(res.checks));
+  assert.equal(res.ok, false, 'a text that answers two of three Leitpunkte must not be green');
+  // And the empty text fails everything that can be decided.
+  const empty = scoreWriting(formcheckTask(2), '');
+  assert.equal(empty.ok, false);
+  assert.deepEqual(empty.checks.filter((c) => c.ok && !c.ai), []);
+});
+
+test('an undecidable Leitpunkt is shown and marked for the KI — never dropped, never green', () => {
+  // „Warum Sie schreiben“: every token is a function word, so no form can decide it. Round 13
+  // dropped those rows, and the task then showed three Leitpunkte while the checklist showed two.
+  for (const nr of [8, 10]) {
+    const task = formcheckTask(nr);
+    const res = scoreWriting(task, EXAM_GRADE_ANSWERS[nr]);
+    const lpRows = res.checks.filter((c) => c.key.startsWith('lp'));
+    assert.equal(lpRows.length, task.leitpunkte.length, `L${nr}: the checklist must show every Leitpunkt`);
+    assert.equal(lpRows[0].ai, true, `L${nr}: „${task.leitpunkte[0]}“ is undecidable by form`);
+    assert.equal(leitpunktSatisfied(task.leitpunkte[0], 'irgendein Text'), null);
+  }
+  // Exactly two of the eighteen A1.1 Leitpunkte are in this class, and both are the same sentence.
+  const undecidable = COURSE.flatMap((t) => (t.register === 'formular' ? [] : t.leitpunkte))
+    .filter((lp) => leitpunktSatisfied(lp, 'Hallo Lena! Viele Grüße, Ana') === null);
+  assert.deepEqual(undecidable, ['Warum Sie schreiben', 'Warum Sie schreiben']);
+});
+
+test('the Formcheck is one function: the screen and RULE 17 grade with the same code', () => {
+  // `GradedWriting.jsx` calls scoreWriting, `scripts/validate-curriculum.mjs` calls scoreWriting.
+  // No lexicon is passed in either place — everything the Leitpunkt check needs comes out of the
+  // Leitpunkt, so the screen and the validator can never disagree (writing.js header).
+  const src = readFileSync(join(ROOT, 'src/components/lesson/GradedWriting.jsx'), 'utf8');
+  assert.match(src, /scoreWriting\(task, value\)/);
+  const validator = readFileSync(join(ROOT, 'scripts/validate-curriculum.mjs'), 'utf8');
+  assert.match(validator, /const res = scoreWriting\(task, value\)/);
+  const writing = readFileSync(join(ROOT, 'src/lib/lesson/writing.js'), 'utf8');
+  assert.ok(!/import /.test(writing), 'writing.js stays dependency-free — one function, both callers');
+});
+
+test('every A1.1 Beispieltext passes its own Formcheck — with the family rule, not around it', () => {
+  // RULE 17 from the other side, and the guard the review asked for: no Beispieltext may contain a
+  // word that is only there for the checker („Der Nachname ist Chakiri.“ next to „ich bin Ana
+  // Chakiri“, „Das Land ist Marokko“ next to „Ich komme aus Marokko“).
+  for (const l of LEKTIONEN) {
+    if (l.schreiben.kind !== 'mitteilung') continue;
+    const res = scoreWriting(formcheckTask(l.nr), l.schreiben.sample);
+    assert.equal(res.ok, true, `L${l.nr}: ${JSON.stringify(res.checks.filter((c) => !c.ok))}`);
+    assert.ok(countWords(l.schreiben.sample) >= 25 && countWords(l.schreiben.sample) <= 45, `L${l.nr} length`);
+    assert.ok(!/Der Familienstand:|Das Land ist|Der Nachname ist/.test(l.schreiben.sample), `L${l.nr}: form-speak`);
+  }
 });

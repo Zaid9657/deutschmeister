@@ -91,6 +91,81 @@ const META_NOUN_SET = new Set(META_NOUNS.map((w) => w.toLowerCase()));
 export const isMetaNoun = (word) =>
   META_NOUN_SET.has(String(word || '').replace(/[^A-Za-zÄÖÜäöüß]/g, '').toLowerCase());
 
+/**
+ * THE SEPARABLE PREFIXES — a closed class of German, and the one list this module
+ * is allowed to keep. A verb stem list is not (see `separable-verbs-intro`).
+ */
+export const SEPARABLE_PREFIXES = [
+  'an', 'auf', 'aus', 'ein', 'mit', 'ab', 'zu', 'los', 'weg', 'vor', 'zurück', 'nach', 'her', 'hin',
+];
+
+/** A clause that ends in one of those prefixes — the shape of a closed Satzklammer. */
+const SATZKLAMMER_RE = new RegExp(`[^.!?]*\\b(?:${SEPARABLE_PREFIXES.join('|')})\\s*[.!?]`, 'g');
+
+/**
+ * Verb-SHAPED, the way `frontableOrders` in `src/data/lessonPools/quality.js` reads
+ * a finite verb: a present-tense personal ending on a lower-case word. The first
+ * word of a sentence is lower-cased before the test (a V1 question — „Stehen Sie
+ * um sechs auf?“ — puts the finite verb there), every other word is not, so a
+ * capitalised noun can never be read as a verb.
+ */
+const FINITE_VERB_RE = /^[a-zäöüß]{2,}(?:e|st|t|en|et)$/;
+/**
+ * THE OTHER CLOSED CLASS: the German FUNCTION WORDS that carry what looks like a
+ * present-tense ending (-e, -en, -er, -es, -st, -t) and are not verbs — articles,
+ * determiners, pronouns, the common adverbs and prepositions. Listing them is
+ * allowed for the same reason listing the prefixes is: a function word class is
+ * closed, a verb lexicon is not. Without it „Die Tür ist zu.“ reads as a clamp,
+ * because `die` ends in -e.
+ */
+const FUNCTION_WORD_RE = new RegExp(`^(?:${[
+  // articles and determiners
+  'der', 'die', 'das', 'den', 'dem', 'des', 'ein', 'eine', 'einen', 'einem', 'einer', 'eines',
+  'kein', 'keine', 'keinen', 'keinem', 'keiner', 'keines',
+  'mein', 'meine', 'meinen', 'meinem', 'meiner', 'dein', 'deine', 'deinen', 'deinem', 'deiner',
+  'seine', 'seinen', 'seinem', 'seiner', 'ihre', 'ihren', 'ihrem', 'ihrer', 'unser', 'unsere',
+  'unseren', 'unserem', 'unserer', 'euer', 'eure', 'euren', 'eurem', 'eurer',
+  'dieser', 'diese', 'dieses', 'diesen', 'diesem', 'jede', 'jeden', 'jedem', 'jeder', 'jedes',
+  'alle', 'allen', 'aller', 'alles', 'viele', 'vielen', 'manche', 'welche', 'andere', 'beide',
+  // pronouns and the words that stand in for one
+  'sie', 'ihnen', 'etwas', 'nichts', 'jemand', 'niemand', 'selbst',
+  // adverbs and particles
+  'bitte', 'heute', 'morgen', 'gestern', 'jetzt', 'dort', 'dann', 'denn', 'wenn', 'schon',
+  'immer', 'wieder', 'oder', 'aber', 'leider', 'oft', 'erst', 'fast', 'nicht', 'gern', 'gerne',
+  'zuerst', 'danach', 'vielleicht', 'zusammen', 'natürlich',
+  // prepositions and conjunctions
+  'unter', 'über', 'hinter', 'neben', 'zwischen', 'gegen', 'ohne', 'seit', 'mit', 'außer',
+  // the adjectives that most often stand before a noun in this material
+  'gute', 'guten', 'guter', 'gutes', 'beste', 'erste', 'zweite', 'dritte', 'letzte', 'nächste',
+  'liebe', 'lieber', 'nette', 'kurze', 'lange', 'neue', 'neuen', 'neuer', 'neues',
+].join('|')})$`);
+
+/** Forms of `sein` — the copula can never be the front half of a Satzklammer. */
+const COPULA_RE = /^(?:bin|bist|ist|sind|seid)$/;
+
+/**
+ * Lower-case words that sit between an article and a noun without being a declined
+ * adjective: the quantifiers and determiner-like words that end in -e/-en/-er/-es.
+ */
+const NOT_AN_ADJECTIVE_RE = /^(?:nicht|auch|noch|schon|bitte|eine|keine|andere|alle|viele|beide|meine|meinen|meinem|meiner|deine|deinen|deinem|deiner|seine|seinen|seinem|seiner|ihre|ihren|ihrem|ihrer|unsere|unseren|unserem|unserer|eure|euren|eurem|eurer|diese|diesen|diesem|dieser|jede|jeden|jedem|jeder)$/;
+
+/**
+ * Does this clause carry a token shaped like a finite verb that could be the FRONT
+ * half of a Satzklammer? A form of `sein` cannot: it is the copula, so „Der Teppich
+ * ist auf der Terrasse.“ and „Die Tür ist zu.“ are a predicate with a preposition
+ * and a predicative adjective, not a clamp — and those are the two negative probes
+ * this pattern is measured against.
+ */
+const hasFiniteVerb = (clause) => {
+  const tokens = String(clause || '').match(/[A-Za-zÄÖÜäöüß]+/g) || [];
+  // The last token is the prefix itself.
+  return tokens.slice(0, -1).some((t, i) => {
+    const w = i === 0 ? t.toLowerCase() : t;
+    const low = w.toLowerCase();
+    return FINITE_VERB_RE.test(w) && !FUNCTION_WORD_RE.test(low) && !COPULA_RE.test(low);
+  });
+};
+
 export const CONSTRUCTION_PATTERNS = [
   {
     slug: 'indefinite-articles',
@@ -101,12 +176,21 @@ export const CONSTRUCTION_PATTERNS = [
   {
     slug: 'separable-verbs-intro',
     label: 'die Satzklammer (Verb vorn, Vorsilbe am Satzende)',
-    re: /\b\w+e?[stn]?\b[^.!?]*\s(ein|auf|an|aus|mit|zu|vor|nach)\s*[.!?]/g,
-    // …but only when the sentence actually has a FINITE verb that could be the
-    // front half of the clamp — otherwise „Der Teppich ist auf der Terrasse.“ is a
-    // Satzklammer. Every person of the form, the Sie-form included: the review's
-    // own probe is „Stehen Sie um sechs auf?“.
-    skip: (m, sentence) => !/\b(kauf|steh|ruf|fang|hör|mach|komm|seh|bring|schlaf|räum|geh|fahr|zieh)(e|st|t|en)\b/i.test(sentence),
+    // STRUCTURAL, NOT A STEM LIST (DaF review #13, MAJOR 3). This pattern used to
+    // fire only when the sentence carried one of fourteen hand-written verb stems,
+    // so „Bitte **kaufen** Sie das Brot ein.“ was caught and „Bitte **füllen** Sie
+    // das Formular aus.“ — a read-aloud line of L2 and the dictation of Checkpoint 1
+    // — was not: `füll` was not on the list. A guard whose heart is a list does not
+    // report a null, it reports „null over this list“, and the next round reads the
+    // difference. So: a sentence-final prefix from the closed PREFIX set, preceded
+    // inside the same clause by a token SHAPED like a finite verb. The prefixes are
+    // a closed class of German and may be listed; verbs are not.
+    re: SATZKLAMMER_RE,
+    // …but only when the clause actually has a FINITE VERB that could be the front
+    // half of the clamp — otherwise „Der Teppich ist auf der Terrasse.“ would be a
+    // Satzklammer (it is not: nothing there is sentence-final). Every person of the
+    // form, the Sie-form included: the review's own probe is „Stehen Sie um sechs auf?“.
+    skip: (m) => !hasFiniteVerb(m[0]),
   },
   {
     slug: 'possessive-articles',
@@ -119,6 +203,24 @@ export const CONSTRUCTION_PATTERNS = [
     re: /\b(mein|dein|unser|euer)e?[nmrs]?\s+([A-ZÄÖÜ][a-zäöüß]+)/gi,
     skip: (m) => isMetaNoun(m[2]),
   },
+  {
+    slug: 'adjective-declension',
+    label: 'Adjektiv mit Endung vor einem Nomen',
+    // `never: true` — A1.1 teaches Adjektivdeklination in NO Lektion, so it is
+    // deferred in every one of them. This is the one construction the course
+    // rejects by name: the comment above A1.1 L8's dialogue line reads „NOT »Ich
+    // habe einen guten Wecker«: that is Adjektivdeklination im Akkusativ, a fifth
+    // Vorgriff the course never names“ — and eight lines below it the Beispieltext
+    // of the SAME Lektion carried it three times („ein neuer Termin“, „der neue
+    // Tag“, „die neue Uhrzeit“), because no rule read a model text (DaF review #13,
+    // MAJOR 2). Measured against the material BEFORE it was written, as round 12
+    // did for UNCONDITIONED_RULE: three hits in the L8 sample, one in the L12
+    // dialogue line „Mai ist ein schöner Monat!“ (a dialogue, CONTRACT §2 — the
+    // production surfaces are what RULE 15b reads), nothing else.
+    re: /\b(?:[Ee]in|[Ee]ine|[Ee]inen|[Ee]inem|[Ee]iner|[Kk]ein|[Kk]eine|[Kk]einen|[Dd]er|[Dd]ie|[Dd]as|[Dd]en|[Dd]em)\s+([a-zäöüß]+(?:e|en|er|es))\s+([A-ZÄÖÜ][a-zäöüß]+)/g,
+    skip: (m) => isMetaNoun(m[2]) || NOT_AN_ADJECTIVE_RE.test(m[1]),
+    never: true,
+  },
 ];
 
 /**
@@ -129,10 +231,10 @@ export const CONSTRUCTION_PATTERNS = [
 export const constructionHits = (sentence) => {
   const text = String(sentence || '');
   const out = [];
-  for (const { slug, label, re, skip } of CONSTRUCTION_PATTERNS) {
+  for (const { slug, label, re, skip, never } of CONSTRUCTION_PATTERNS) {
     for (const m of text.matchAll(new RegExp(re.source, re.flags))) {
       if (skip && skip(m, text)) continue;
-      out.push({ slug, label, hit: m[0].trim() });
+      out.push({ slug, label, hit: m[0].trim(), never: !!never });
     }
   }
   return out;
@@ -150,5 +252,7 @@ export const introducedAt = (curriculum, slug) => {
  */
 export const deferredConstructionHits = (curriculum, lektionNr, sentence) =>
   constructionHits(sentence)
-    .map((h) => ({ ...h, taught: introducedAt(curriculum, h.slug) }))
-    .filter((h) => h.taught && h.taught > lektionNr);
+    .map((h) => ({ ...h, taught: h.never ? null : introducedAt(curriculum, h.slug) }))
+    // `never` is the strongest case of deferred: the level teaches the pattern in NO
+    // Lektion, so it is in the future of every one of them.
+    .filter((h) => h.never || (h.taught && h.taught > lektionNr));
