@@ -13,7 +13,7 @@ import buildLesson, {
   pickPracticeItems, planPractice, seedFor, isTypedItem, isMultipleChoice, itemLemmas, answerLemmas,
   PRACTICE_SIZE, MAX_MULTIPLE_CHOICE, PRIMARY_MIN, MAX_SAME_LEMMA, MAX_CARRIED_LEMMA,
 } from '../src/lib/lesson/buildLesson.js';
-import { exclusionReason, isUsableItem, filterPool, EXCLUDE_IDS, REASON } from '../src/data/lessonPools/quality.js';
+import { exclusionReason, isUsableItem, filterPool, EXCLUDE_IDS, REASON, drillsSlug } from '../src/data/lessonPools/quality.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { requeueFor, REQUEUE_CAP } from '../src/lib/lesson/requeue.js';
 import { firstAttemptAccuracy, masteryStatus, masteryLabel, accuracyPercent, GOLD_THRESHOLD, nextReviewDate } from '../src/lib/lesson/mastery.js';
@@ -173,6 +173,38 @@ test('every Lektion gets seven items and at least four of them from its own gram
     assert.ok(items.filter(isMultipleChoice).length <= MAX_MULTIPLE_CHOICE, `L${lektion.nr} has too many MC`);
     for (const it of items) assert.ok(lektion.practiceRule.topics.includes(it.topic), `L${lektion.nr}: ${it.topic} is off-topic`);
   }
+});
+
+test('every Lektion really drills its own grammar point — content, not label', () => {
+  // REVIEW #3's systemic finding: `topic` is a ROUTING label. The test above
+  // counts the label the item carries, so "≥ 4 of 7 on the Lektion's own
+  // grammar point" was nominally true in L3, L4 and L11 while really 3 of 7 —
+  // two of those three items conjugated a verb on a pronoun Lektion, three more
+  // put a non-separable verb in the Satzklammer Lektion. `drillsSlug` reads what
+  // the item makes the learner produce instead, and the table below is the real
+  // figure. A Lektion under PRIMARY_MIN here is a MIS-TAGGING bug: the items are
+  // fine, they are filed in the wrong topic and drawn into the wrong Lektion.
+  const failures = [];
+  const rows = [];
+  for (const attempt of [1, 2]) {
+    const plan = planPractice(CURRICULUM_A11, POOL, attempt);
+    for (const lektion of LEKTIONEN) {
+      const items = plan.get(lektion.nr);
+      const real = items.filter((i) => drillsSlug(i, lektion.primarySlug));
+      rows.push(
+        `attempt ${attempt}  L${String(lektion.nr).padStart(2)} ${lektion.primarySlug.padEnd(24)}` +
+        ` ${real.length}/7 real · ${items.filter((i) => i.topic === lektion.primarySlug).length}/7 by label`,
+      );
+      for (const it of items.filter((i) => i.topic === lektion.primarySlug && !drillsSlug(i, lektion.primarySlug))) {
+        rows.push(`             ✗ ${it.id.slice(0, 8)} ${it.questionDe.replace(/\s+/g, ' ').slice(0, 62)} → ${it.answer}`);
+      }
+      if (real.length < PRIMARY_MIN) {
+        failures.push(`L${lektion.nr} (${lektion.primarySlug}) attempt ${attempt}: only ${real.length} of 7 really drill it`);
+      }
+    }
+  }
+  console.log(`\n${rows.join('\n')}\n`);
+  assert.deepEqual(failures, [], failures.join('\n'));
 });
 
 test('no item is drawn twice in the whole level — the eight verbatim repeats are gone', () => {

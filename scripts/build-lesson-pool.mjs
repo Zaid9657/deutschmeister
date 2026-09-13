@@ -44,9 +44,31 @@
 //      and a spelling multiple choice — German prompt, German answer, words the
 //      learner met in the dialogue. The curriculum module is read ONLY; re-run
 //      this script after its Wortfeld changes, or the supplement drifts.
+//
+//   5. VERB-CUE REPAIR (REVIEW #3 BLOCKER 1). 58 typed items of the bank name
+//      their verb ONLY in the English gloss — "Ich ___ viel." with `questionEn:
+//      'I ___ a lot. (verb: arbeiten, ich)'` — so `lerne`, correct German from
+//      the item's own Lektion, comes back wrong and writes a Konjugation tag
+//      into the learner's error profile. The rule that catches the class lives
+//      in quality.js; dropping all 58 would take `present-tense-regular` and
+//      `separable-verbs-intro` below a Lektion's worth of items, so the cue is
+//      REPAIRED first: it is appended to the German prompt ("Ich ___ viel.
+//      (arbeiten)"), with the person only where German needs it to be
+//      unambiguous (Sie = Plural/Singular/formal). `answer` and `accepted` are
+//      never touched — the repair adds information to the prompt, it does not
+//      change what counts as right. Whatever still fails afterwards is dropped.
+//
+//   6. REGISTER (REVIEW #3 MAJOR). The hand-written items siezen, the legacy
+//      bank duzt: 39 du-imperatives against 30 Sie-forms in the shipped pool,
+//      three of them in the drawn seven of the FREE Lektion 1, next to a
+//      "Füllen Sie … aus". For an adult exam course that is a break on the first
+//      screen. Normalised here rather than by hand, on the kept bank items, the
+//      generated supplement and the hand-authored extras alike.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { filterPool, REASONS, isUsableItem, exclusionReason } from '../src/data/lessonPools/quality.js';
+import {
+  filterPool, REASON, REASONS, isUsableItem, exclusionReason, parseVerbCue,
+} from '../src/data/lessonPools/quality.js';
 
 const level = (process.argv[2] || 'a1.1').toLowerCase();
 const cache = JSON.parse(readFileSync(new URL('../grammar-content-cache.json', import.meta.url), 'utf8'));
@@ -69,6 +91,34 @@ const raw = cache.exercises
     explanationDe: e.explanation_de || e.why_correct_de || '',
     hint: e.hint || null,
   }));
+
+// ── REVIEW #3 BLOCKER 1: pull the verb cue into the German prompt ───────────
+//
+// The gloss says "(verb: arbeiten, ich)" and the German prompt says nothing, so
+// the item accepts one verb out of a dozen that fit. The repair appends the
+// infinitive — and, only where the German is genuinely ambiguous, the reading
+// the answer assumes: `Sie` is she, they and the formal you at once, and the
+// prefix-only items ask for the Vorsilbe rather than the finite verb.
+function repairVerbCue(item) {
+  // Only an item the cue is the ONLY thing wrong with: repairing the prompt of
+  // an item that is dropped for another reason would put it in the report as a
+  // fix when it is not one.
+  if (exclusionReason(item, { level }) !== REASON.VERB_CUE_ONLY_IN_GLOSS) return null;
+  const cue = parseVerbCue(item.questionEn);
+  if (!cue || !cue.infinitive) return null;
+  const person = cue.person || '';
+  const subjectIsSie = /(^|[^a-zäöüß])sie([^a-zäöüß]|$)/i.test(String(item.questionDe || ''));
+  let extra = '';
+  if (cue.flag === 'prefix only') extra = ', nur die Vorsilbe';
+  else if (subjectIsSie && /they|plural/i.test(person)) extra = ', Plural';
+  else if (subjectIsSie && /she|singular/i.test(person)) extra = ', Singular';
+  else if (cue.flag === 'formal question' || /formal|(^|[^a-z])Sie([^a-z]|$)/.test(person)) extra = ', Sie';
+  const before = item.questionDe;
+  item.questionDe = `${String(item.questionDe).trim()} (${cue.infinitive}${extra})`;
+  return { id: item.id, topic: item.topic, before, after: item.questionDe };
+}
+
+const repaired = raw.map(repairVerbCue).filter(Boolean);
 
 const { kept, excluded, counts } = filterPool(raw, { level });
 
@@ -189,7 +239,7 @@ function alphabetItems(curriculum) {
   const spelled = new Set(words.slice(0, 12));
   for (const word of spelled) {
     push('spell-out', word, {
-      questionDe: `Buchstabiert: ${spellOut(word)}. Schreib das Wort: ___`,
+      questionDe: `Buchstabiert: ${spellOut(word)}. Schreiben Sie das Wort: ___`,
       questionEn: 'Spelled out letter by letter. Write the word.',
       options: null,
       answer: word,
@@ -218,7 +268,7 @@ function alphabetItems(curriculum) {
   //    Words already used by template 1 are skipped so the two stems differ.
   for (const e of entries.filter((x) => x.article && !spelled.has(x.word)).slice(0, 5)) {
     push('spell-out-article', e.word, {
-      questionDe: `Buchstabiert: ${spellOut(e.word)}. Schreib das Wort mit Artikel: ___`,
+      questionDe: `Buchstabiert: ${spellOut(e.word)}. Schreiben Sie das Wort mit Artikel: ___`,
       questionEn: 'Write the word with its article.',
       options: null,
       answer: `${e.article} ${e.word}`,
@@ -409,6 +459,43 @@ if (existsSync(extraUrl)) {
 // ── the rule cards the explain-answer function is grounded in ────────────────
 await writeRuleCards();
 
+// ── REVIEW #3 MAJOR: one register, and it is the Sie-register ───────────────
+//
+// The bank duzt ("Schreib den Satz: …"), the 116 hand-written items siezen
+// ("Bilden Sie den Satz: …"), and the shipped pool put both in the drawn seven
+// of the free Lektion 1. The rewrite is unanchored and whole-word, so a formula
+// in the middle of a prompt travels with its own text ("Finde den Fehler und
+// schreib den Satz richtig" → "Finden Sie den Fehler und schreiben Sie den Satz
+// richtig") and a sentence-initial one keeps its capital. `Buchstabiert:` is
+// deliberately NOT in the table: it is a participle ("[es wird] buchstabiert"),
+// not a du-imperative, and tests/lesson-engine.test.mjs identifies the L1
+// spelling items by that label.
+const REGISTER = [
+  [/\bschreibe?\b/gi, 'schreiben Sie'],
+  [/\bbilde\b/gi, 'bilden Sie'],
+  [/\bergänze\b/gi, 'ergänzen Sie'],
+  [/\bkorrigiere\b/gi, 'korrigieren Sie'],
+  [/\bsetze\b/gi, 'setzen Sie'],
+  [/\bwähle\b/gi, 'wählen Sie'],
+  [/\bfinde\b/gi, 'finden Sie'],
+  [/\bantworte\b/gi, 'antworten Sie'],
+];
+
+/** Sentence-initial (or prompt-initial) words keep their capital letter. */
+const recapitalise = (text) =>
+  text.replace(/(^|[.!?:„"“]\s*|→\s*)([a-zäöüß])/g, (_, lead, ch) => lead + ch.toUpperCase());
+
+function normaliseRegister(item) {
+  const before = String(item.questionDe || '');
+  let after = before;
+  for (const [re, to] of REGISTER) after = after.replace(re, to);
+  if (after === before) return null;
+  item.questionDe = recapitalise(after);
+  return { id: item.id, before, after: item.questionDe };
+}
+
+const normalised = [...kept, ...supplement, ...extra].map(normaliseRegister).filter(Boolean);
+
 const items = [...kept, ...supplement, ...extra].sort(
   (a, b) => a.topic.localeCompare(b.topic) || a.stage - b.stage || a.order - b.order,
 );
@@ -432,6 +519,12 @@ for (const reason of REASONS) {
   }
 }
 if (!byReason.length) console.log('  (nothing)');
+console.log(`repaired verb cues (REVIEW #3 BLOCKER 1): ${repaired.length}`);
+for (const r of repaired) console.log(`       ${r.id.slice(0, 8)} ${r.topic} · ${r.after}`);
+const stillFailing = excluded.filter((e) => e.reason === 'verb-cue-only-in-gloss');
+if (stillFailing.length) console.log(`  still verb-cue-only after the repair: ${stillFailing.length}`);
+console.log(`register normalisations (Sie-Form): ${normalised.length}`);
+for (const r of normalised) console.log(`       ${String(r.id).slice(0, 8)} · ${r.after}`);
 if (acceptedApplied.length) console.log(`widened accepted on ${acceptedApplied.length}: ${acceptedApplied.map((i) => i.slice(0, 8)).join(', ')}`);
 const staleAccepted = Object.keys(ACCEPTED_EXTRAS).filter((id) => !acceptedApplied.includes(id));
 if (staleAccepted.length) console.log(`ACCEPTED_EXTRAS ids no longer in the pool: ${staleAccepted.join(', ')}`);

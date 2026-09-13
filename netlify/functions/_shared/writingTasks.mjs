@@ -369,12 +369,16 @@ export const WRITING_TASKS = [
     register: 'formell',
     minWords: 25,
     maxWords: 45,
+    // Angaben zur Person, not a neighbour note: the Lektion's Handlungsfeld is „Ämter und
+    // Behörden“ and its Personalien lexis (ledig, verheiratet, Geburtsdatum, Staatsangehörigkeit,
+    // Familienstand) was taught and never asked for (DaF review #3). Mirrors a11.js §Lektion 2.
     task:
-      'Schreiben Sie Ihrem neuen Nachbarn eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+      'Sie melden sich in der Sprachschule an. Schreiben Sie eine kurze Nachricht mit Ihren Daten. ' +
+      'Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
     leitpunkte: [
-      'Wer Sie sind',
-      'Was Sie von Beruf sind',
-      'Wann Sie zu Hause sind',
+      'Ihr Name und Ihr Geburtsdatum',
+      'Ihr Land und Ihre Staatsangehörigkeit',
+      'Ihr Familienstand: ledig oder verheiratet',
     ],
   },
   {
@@ -455,15 +459,16 @@ export const WRITING_TASKS = [
     register: 'formular',
     minWords: 5,
     maxWords: 40,
+    // „am Wochenende“, not „am Samstag“: der Samstag is taught in L8 (DaF review #3).
     task:
-      'Lena Brandt ist neu im Sportkurs. Ihr Hobby ist Schwimmen. Der Kurs ist am Samstag. ' +
+      'Lena Brandt ist neu im Sportkurs. Ihr Hobby ist Schwimmen. Der Kurs ist am Wochenende. ' +
       'Füllen Sie die Anmeldung für einen Sportkurs aus.',
     leitpunkte: [
       'Vorname',
       'Nachname',
       'Kurs',
       'Hobby',
-      'Tag',
+      'Kurs am',
     ],
   },
   {
@@ -521,7 +526,7 @@ export const WRITING_TASKS = [
     examKey: 'goethe_a1',
     course: 'a1.1',
     taskKey: 'a11-l11',
-    title: 'Lektion 11: Gestern und heute',
+    title: 'Lektion 11: Mein Tag',
     register: 'formular',
     minWords: 5,
     maxWords: 40,

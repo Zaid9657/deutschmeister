@@ -20,6 +20,22 @@
 //     wrong). A course for Integrationskurs learners may not put its content in
 //     an English field.
 //
+// THIRD REVIEW (REVIEW-daf-3-2026-09-12.md) added the two classes that made the
+// same mistake a second time — a correction by id where a rule was needed:
+//
+//   * THE VERB ONLY IN THE ENGLISH GLOSS — "Ich ___ viel." accepting `arbeite`
+//     alone, because `(verb: arbeiten, ich)` stands in `questionEn`. 58 items,
+//     two of them in the drawn seven. The build script REPAIRS them (the cue
+//     moves into the German prompt) rather than dropping them; the rule is what
+//     makes a repaired pool provable and an unrepaired one fail.
+//   * A STATEMENT THAT ASKS NOTHING — "Anna ist deine Freundin." with the chips
+//     Sie/ihr/du, the task English-only. Exactly one item in the pool, the twin
+//     of one that was hand-flagged in round 2 with the rule left unwritten.
+//
+// And the register: the shipped pool had 39 du-imperatives against 30 Sie-forms,
+// three of them in the drawn seven of the FREE Lektion. The normaliser lives in
+// the build script, the proof lives here.
+//
 // The point of this file is that the rules are checked, not the artefact: the
 // tests apply `exclusionReason` to a11.json + a11.extra.json themselves, so they
 // still hold between a rule change and the next `node scripts/build-lesson-pool.mjs
@@ -33,7 +49,7 @@ import { dirname, join } from 'node:path';
 import {
   exclusionReason, isUsableItem, filterPool, REASON, REASONS, EXCLUDE_IDS,
   MONTH_NAMES, ORDINAL_CUE_RE, ORDINAL_WORD_RE, MIN_BRACKET_CUES,
-  answerInPrompt, isMetaPrompt,
+  answerInPrompt, isMetaPrompt, verbCueOnlyInGloss, statementNoTask, parseVerbCue,
 } from '../src/data/lessonPools/quality.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -168,4 +184,94 @@ test('enough survives for every topic Lektion 8 and Lektion 11 draw', () => {
     const n = USABLE.filter((i) => i.topic === topic).length;
     assert.ok(n >= 7, `only ${n} usable items left on ${topic}`);
   }
+});
+
+// --- REVIEW #3 ------------------------------------------------------------
+
+test('no usable typed item hides its verb in the English gloss — REVIEW #3 BLOCKER 1', () => {
+  for (const item of USABLE) {
+    assert.equal(verbCueOnlyInGloss(item), false, `verb cue only in the gloss: ${label(item)}`);
+  }
+  // the shape itself, and the two shapes the rule must NOT touch
+  const trap = {
+    id: 'v1', topic: 'present-tense-regular', type: 'fill_blank',
+    questionDe: 'Ich ___ viel.', questionEn: 'I ___ a lot. (verb: arbeiten, ich)', answer: 'arbeite',
+  };
+  assert.equal(exclusionReason(trap), REASON.VERB_CUE_ONLY_IN_GLOSS);
+  assert.equal(
+    exclusionReason({ ...trap, questionDe: 'Ich ___ viel. (arbeiten)' }),
+    null,
+    'the cue in the German prompt is the repair, and it must satisfy the rule',
+  );
+  assert.equal(
+    exclusionReason({
+      id: 'v2', topic: 'nouns-gender', type: 'fill_blank',
+      questionDe: '___ Auto ist alt.', questionEn: 'The ___ (car) is old.', answer: 'Das',
+    }),
+    null,
+    'an ordinary lexical gloss carries no verb cue',
+  );
+  // the parser the repair is built on
+  assert.deepEqual(parseVerbCue('They ___ together. (verb: arbeiten, sie = they)'),
+    { infinitive: 'arbeiten', person: 'sie = they', flag: '' });
+  assert.deepEqual(parseVerbCue('___ up at 7? (prefix only, verb: abholen, ich)'),
+    { infinitive: 'abholen', person: 'ich', flag: 'prefix only' });
+  assert.equal(parseVerbCue('The ___ (car) is old.'), null);
+});
+
+test('no usable item is a statement that asks nothing — REVIEW #3 BLOCKER 2', () => {
+  for (const item of USABLE) {
+    assert.equal(statementNoTask(item), false, `statement, no task: ${label(item)}`);
+  }
+  assert.ok(
+    !USABLE.some((i) => i.id === 'd44e8128-05d8-4556-b7b2-2eaa8cc2da97'),
+    '"Anna ist deine Freundin." survives the filter',
+  );
+  assert.equal(
+    exclusionReason({
+      id: 's1', topic: 'personal-pronouns', type: 'multiple_choice',
+      questionDe: 'Anna ist deine Freundin.', options: ['Sie', 'ihr', 'du'], answer: 'du',
+    }),
+    REASON.STATEMENT_NO_TASK,
+  );
+  assert.equal(
+    exclusionReason({
+      id: 's2', topic: 'definite-articles', type: 'error_correction',
+      questionDe: 'Korrigieren Sie: „Das Schere ist hier.“', answer: 'Die Schere ist hier.',
+    }),
+    null,
+    'an error-correction item carries a task verb and the sentence it quotes',
+  );
+  assert.equal(
+    exclusionReason({
+      id: 's3', topic: 'yes-no-questions', type: 'multiple_choice',
+      questionDe: 'Wähle die richtige Ja/Nein-Frage zu: Du kommst aus Spanien.',
+      options: ['Kommst du aus Spanien?', 'Du kommst aus Spanien?'], answer: 'Kommst du aus Spanien?',
+    }),
+    null,
+    'a task formula is a task, whatever follows it',
+  );
+});
+
+test('the shipped pool addresses an adult learner in the Sie-register — REVIEW #3 MAJOR', () => {
+  // `Buchstabiert:` stays: it is a participle ("[es wird] buchstabiert"), not a
+  // du-imperative, and the L1 spelling items are identified by that label.
+  const DU_IMPERATIVE = /\b(Schreib|Schreibe|Bilde|Ergänze|Korrigiere|Setze|Wähle|Finde|Antworte)\b/;
+  for (const item of POOL.items) {
+    assert.doesNotMatch(item.questionDe, DU_IMPERATIVE, `du-imperative: ${label(item)}`);
+  }
+  assert.ok(
+    POOL.items.some((i) => /Buchstabiert:/.test(i.questionDe)),
+    'the buchstabieren label must survive the normaliser',
+  );
+});
+
+test('the two items the review quotes now carry their verb in the German prompt', () => {
+  const byPrefix = (p) => POOL.items.find((i) => i.id.startsWith(p));
+  const l7 = byPrefix('898a0861');
+  const l11 = byPrefix('d8082071');
+  assert.ok(l7, '898a0861 (L7 "Ich ___ viel.") is gone from the pool');
+  assert.ok(l11, 'd8082071 (L11 "Sie ___ zusammen.") is gone from the pool');
+  assert.match(l7.questionDe, /\(arbeiten/, l7.questionDe);
+  assert.match(l11.questionDe, /\(arbeiten, Plural\)/, l11.questionDe);
 });

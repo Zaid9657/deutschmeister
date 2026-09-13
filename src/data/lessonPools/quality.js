@@ -27,6 +27,34 @@
 // produce lives only in the English gloss). The rule behind all four is the one
 // the review asked for: THE ANSWER MUST FOLLOW FROM THE GERMAN PROMPT.
 //
+// THIRD REVIEW (docs/course-factory/a11-rebuild/REVIEW-daf-3-2026-09-12.md)
+// found the same lesson unlearned a second time and named two more classes,
+// both of them "the German prompt does not carry the task":
+//
+//   * BLOCKER 1 — THE VERB LIVES ONLY IN THE ENGLISH GLOSS. 58 typed items read
+//     "Ich ___ viel." with `questionEn: 'I ___ a lot. (verb: arbeiten, ich)'`
+//     and accept `arbeite` alone, so a learner who writes `lerne` — correct
+//     German from the same Lektion's own Wortfeld — is marked wrong AND gets a
+//     Konjugation tag written into an error profile for a mistake never made.
+//     Round 2 closed three ids by hand and left the class alive; this is the
+//     rule. `scripts/build-lesson-pool.mjs` REPAIRS the class first (it pulls
+//     the cue into the German prompt: "Ich ___ viel. (arbeiten)"), because two
+//     of the affected topics would otherwise fall under a Lektion's worth of
+//     items; whatever still fails afterwards is dropped here.
+//   * BLOCKER 2 — A STATEMENT THAT ASKS NOTHING. "Anna ist deine Freundin." with
+//     the chips Sie/ihr/du: the whole task ("Which pronoun do you use to talk to
+//     her?") stands in the English gloss. `META_PROMPT_RE` covered only the fixed
+//     "Wie sagt man das?"; the rule below covers the shape — no gap, no question
+//     mark, no cue list, no task formula and no quoted span to work on.
+//
+// Also from review #3, but NOT a filter rule: `drillsSlug(item, slug)` below.
+// The review's systemic finding is that the `topic` marks in the pool are
+// ROUTING LABELS, not content descriptions — "≥ 4 of 7 items on the Lektion's
+// own grammar point" was nominally true in L3, L4 and L11 while really 3 of 7,
+// because the test read the same label the item carries. `drillsSlug` reads the
+// item instead. It is a measurement, not a gate: an item that drills something
+// else is mis-tagged, not unusable.
+//
 // Reasons are stable strings: the build script prints counts per reason and
 // tests/lesson-engine.test.mjs and tests/lesson-pool-rules.test.mjs pin them.
 //
@@ -48,6 +76,9 @@ export const REASON = Object.freeze({
   UNTAUGHT_TIME_EXCEPTION: 'untaught-time-exception',
   ANSWER_IN_PROMPT: 'answer-in-prompt',
   META_PROMPT: 'meta-prompt',
+  // REVIEW #3 — the task itself is missing from the German prompt
+  VERB_CUE_ONLY_IN_GLOSS: 'verb-cue-only-in-gloss',
+  STATEMENT_NO_TASK: 'statement-no-task',
 });
 
 /** The level whose taught-by-now rules below apply. */
@@ -163,6 +194,52 @@ export const MIN_BRACKET_CUES = 3;
 /** A prompt that asks nothing: the sentence to produce is in the gloss only. */
 export const META_PROMPT_RE = /^\s*wie sagt man (?:das|es)\s*\??\s*$/i;
 
+/**
+ * REVIEW #3 BLOCKER 1. The cue the bank writes into `questionEn` and nowhere
+ * else: "(verb: arbeiten, ich)", "(verb: haben, person: du)", "(question, verb:
+ * aufstehen, du)", "(prefix only, verb: abholen, wir)", "(formal question, verb:
+ * sein)". Always the LAST parenthesis of the gloss, so an ordinary lexical gloss
+ * — "The ___ (car) is old." — cannot trip it: it carries no `verb:`.
+ */
+export const VERB_CUE_RE =
+  /\(\s*(?:(question|prefix only|formal question)\s*,\s*)?verb:\s*([A-Za-zÄÖÜäöüß]+)\s*(?:,\s*(?:person:\s*)?([^)]*?))?\s*\)/i;
+
+/**
+ * parseVerbCue(questionEn) → { infinitive, person, flag } or null.
+ * `person` and `flag` are '' when the gloss omits them ("(formal question, verb:
+ * sein)" has no person token; the German prompt's own `Sie` supplies it).
+ */
+export function parseVerbCue(questionEn) {
+  const m = VERB_CUE_RE.exec(String(questionEn || ''));
+  if (!m) return null;
+  return {
+    infinitive: (m[2] || '').trim(),
+    person: (m[3] || '').trim(),
+    flag: (m[1] || '').trim().toLowerCase(),
+  };
+}
+
+/**
+ * The item types where the learner PRODUCES the answer rather than choosing it.
+ * A multiple-choice item whose verb is only in the gloss is not the same trap:
+ * the options themselves name the verb.
+ */
+const TYPED_TYPES = new Set(['sentence_building', 'error_correction']);
+const isTyped = (item) =>
+  TYPED_TYPES.has(String(item?.type || '')) ||
+  (String(item?.type || '') === 'fill_blank' && !(Array.isArray(item?.options) && item.options.length));
+
+/**
+ * REVIEW #3 BLOCKER 2. The task formulas an A1.1 prompt uses. Both registers,
+ * because the register normaliser in the build script turns the du-forms into
+ * Sie-forms and this rule has to hold on both sides of that change.
+ */
+export const TASK_FORMULA_RE =
+  /(bilden sie|bilde|korrigieren sie|korrigiere|schreiben sie|schreib|ergänzen sie|ergänze|wählen sie|wähle|welche[rs]?|buchstabiert|hören sie|setzen sie|setze|finden sie|finde|antworte|wie heißt|sagen sie|füllen sie|lesen sie)/i;
+
+/** A quoted sentence the item asks the learner to work on: „…“ or "…". */
+export const QUOTED_SPAN_RE = /[„"“][^„"“]+[“"]/;
+
 /** ä/ae-blind lowercase, the way src/utils/answerMatch.js compares answers. */
 const flat = (text) =>
   String(text || '').toLowerCase()
@@ -203,6 +280,39 @@ export function isMetaPrompt(item) {
   return flat(list[1]).split(/[^a-z]+/).filter(Boolean).length < MIN_BRACKET_CUES;
 }
 
+/**
+ * REVIEW #3 BLOCKER 1: a typed item with a gap whose verb is named ONLY in the
+ * English gloss. "Ich ___ viel." + "(verb: arbeiten, ich)" accepts `arbeite`
+ * and marks `lerne` wrong — a correct German sentence from the same Wortfeld.
+ * A German prompt that carries its own bracket — "Ich ___ viel. (arbeiten)" —
+ * or a cue list is fine, which is exactly what the build script's repair pass
+ * produces.
+ */
+export function verbCueOnlyInGloss(item) {
+  if (!item || !isTyped(item)) return false;
+  const q = String(item.questionDe || '');
+  if (!q.includes('___')) return false;
+  if (/\([^)]*\)/.test(q) || BRACKET_LIST_RE.test(q)) return false;
+  return VERB_CUE_RE.test(String(item.questionEn || ''));
+}
+
+/**
+ * REVIEW #3 BLOCKER 2: the German prompt is a statement and asks nothing — no
+ * gap, no question mark, no cue list, no task formula, no quoted span. The one
+ * item in the pool is "Anna ist deine Freundin." with the chips Sie/ihr/du,
+ * whose task ("Which pronoun do you use to talk to her?") is English-only.
+ * The error-correction items are safe by construction: they carry both a task
+ * verb and the sentence they quote.
+ */
+export function statementNoTask(item) {
+  const q = String(item?.questionDe || '');
+  if (!q.trim()) return false;
+  if (q.includes('___') || q.includes('?')) return false;
+  if (BRACKET_LIST_RE.test(q)) return false;
+  if (TASK_FORMULA_RE.test(q) || QUOTED_SPAN_RE.test(q)) return false;
+  return true;
+}
+
 const words = (text) =>
   String(text || '')
     .toLowerCase()
@@ -217,6 +327,131 @@ export function hasEnglish(text) {
 }
 
 const fields = (item) => [item.answer, ...(item.accepted || []), ...(item.options || [])];
+
+// ── drillsSlug: does the item really drill the grammar point it is filed under?
+//
+// REVIEW #3's systemic finding. `topic` routes an item into a Lektion; it does
+// not describe what the item makes the learner produce. Two of the L2 items
+// carry `topic: 'verb-sein'` in order to be drawn there and ask for a number
+// word; three of the eight hand-written L11 items carry
+// `separable-verbs-intro` and conjugate a verb that does not separate. This is
+// a CONTENT predicate: it looks at the answer, the options and the prompt, and
+// it is used by tests/lesson-engine.test.mjs to measure the real
+// primary-slug count. It is deliberately not a build gate — a mis-tagged item
+// is a routing bug, not an unusable exercise.
+
+const wordsFlat = (text) => flat(text).split(/[^a-z0-9]+/).filter(Boolean);
+const set = (...list) => new Set(list.map((w) => flat(w)));
+/** The whole string is one of these words (punctuation and case ignored). */
+const isOneOf = (text, allowed) => allowed.has(flat(bare(text)));
+/** One of these words stands in the string. */
+const containsOneOf = (text, allowed) => wordsFlat(text).some((w) => allowed.has(w));
+
+const DEF_NOM = set('der', 'die', 'das');
+const DEF_ALL = set('der', 'die', 'das', 'den', 'dem');
+const INDEF = set('ein', 'eine', 'einen', 'einem', 'einer', 'kein', 'keine', 'keinen', 'keinem', 'keiner');
+const PRONOUNS = set('ich', 'du', 'er', 'sie', 'es', 'wir', 'ihr');
+const SEIN = set('bin', 'bist', 'ist', 'sind', 'seid');
+const HABEN = set('habe', 'hast', 'hat', 'haben', 'habt');
+const PREFIXES = set('auf', 'an', 'ein', 'mit', 'um', 'ab', 'zu', 'aus', 'zurück', 'los', 'weg');
+const POSSESSIVE_RE = /^(mein|dein|sein|ihr|unser|euer)(e|en|em|er|es)?$/;
+const TIME_WORD_RE =
+  /^(um|am|im|uhr|halb|viertel|nach|vor|morgens|mittags|nachmittags|abends|montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag|eins|zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn|elf|zwoelf|zwanzig|dreissig|vierzig|fuenfzig)$/;
+const FINITE_RE = /^[a-zäöüß]+(e|st|t|en|et)$/i;
+/** The prompt's last word before the final punctuation is a separable prefix. */
+const endsOnPrefix = (q) => {
+  const toks = wordsFlat(String(q).replace(/\([^)]*\)\s*$/, ''));
+  const tail = toks[toks.length - 1];
+  return Boolean(tail) && PREFIXES.has(tail);
+};
+
+/** "(arbeiten)", "(aufstehen, nur die Vorsilbe)" — an infinitive cue in the prompt. */
+const INFINITIVE_CUE_RE = /\([^)]*[a-zäöüß]{2}en\b[^)]*\)/i;
+
+/** Predicate per slug. Each one reads what the learner produces, not the label. */
+const DRILLS = {
+  'nouns-gender': ({ expected, options, answer }) =>
+    expected.some((a) => isOneOf(a, DEF_NOM)) ||
+    /^(der|die|das)\s/i.test(answer) ||
+    (options.length > 0 && options.every((o) => isOneOf(o, DEF_NOM))),
+
+  'definite-articles': ({ expected, options, answer }) =>
+    expected.some((a) => isOneOf(a, DEF_ALL)) ||
+    /^(der|die|das|den|dem)\s/i.test(answer) ||
+    (options.length > 0 && options.every((o) => isOneOf(o, DEF_ALL))),
+
+  // Also true for an error-correction item whose corrected sentence carries the
+  // article: "Korrigieren Sie: „Das ist ein Schere.“" → "Das ist eine Schere."
+  'indefinite-articles': ({ expected, options }) =>
+    expected.some((a) => isOneOf(a, INDEF) || containsOneOf(a, INDEF)) ||
+    (options.length > 0 && options.every((o) => isOneOf(o, INDEF))),
+
+  'personal-pronouns': ({ expected, options }) =>
+    expected.some((a) => isOneOf(a, PRONOUNS)) ||
+    (options.length > 0 && options.every((o) => isOneOf(o, PRONOUNS))),
+
+  'verb-sein': ({ expected, options }) =>
+    expected.some((a) => isOneOf(a, SEIN) || containsOneOf(a, SEIN)) ||
+    (options.length > 0 && options.every((o) => isOneOf(o, SEIN))),
+
+  'verb-haben': ({ expected, options }) =>
+    expected.some((a) => isOneOf(a, HABEN) || containsOneOf(a, HABEN)) ||
+    (options.length > 0 && options.every((o) => isOneOf(o, HABEN))),
+
+  // The spelling skill of Lektion 1: a dictated word, a letter name, an
+  // orthography choice — all of them say so in the German prompt.
+  'alphabet-pronunciation': ({ q }) => /Buchstab|Schreibweise/i.test(q),
+
+  'present-tense-regular': ({ q, answer, options }) =>
+    (!/\s/.test(bare(answer)) && FINITE_RE.test(bare(answer)) && INFINITIVE_CUE_RE.test(q)) ||
+    (options.length >= 2 && options.every((o) => FINITE_RE.test(bare(o)))),
+
+  'possessive-articles': ({ expected, options }) =>
+    expected.some((a) => POSSESSIVE_RE.test(flat(bare(a)))) ||
+    (options.length > 0 && options.every((o) => POSSESSIVE_RE.test(flat(bare(o))))),
+
+  // The Satzklammer, from either end: the learner produces the prefix ("Er macht
+  // die Tür ___." → zu), or produces the finite verb while the prefix stands at
+  // the end of the prompt ("Wir ___ heute ein. (einkaufen)" → kaufen), or writes
+  // the whole sentence with the prefix last. A non-separable verb in a
+  // separable-verb prompt — "Ich ___ um sieben. (frühstücken)", the review's
+  // finding — has no prefix anywhere and fails all three.
+  'separable-verbs-intro': ({ q, expected }) =>
+    expected.some((a) => {
+      const plain = bare(a);
+      if (isOneOf(plain, PREFIXES)) return true;
+      const tail = wordsFlat(plain).slice(-1)[0];
+      return Boolean(tail) && /\s/.test(plain) && PREFIXES.has(tail);
+    }) ||
+    endsOnPrefix(q),
+
+  // A yes/no question is the finite verb in first position, so an item drills it
+  // when the learner writes the whole question, chooses Ja/Nein, is asked for a
+  // Frage by name, or fills the verb slot AT THE FRONT of a question.
+  'yes-no-questions': ({ q, expected, options }) =>
+    expected.some((a) => /\?\s*$/.test(String(a).trim())) ||
+    options.some((o) => isOneOf(o, set('ja', 'nein'))) ||
+    /(bilden sie|bilde|schreiben sie|schreib)\s+(sie\s+)?(die\s+)?(höfliche\s+|richtige\s+)?frage/i.test(q) ||
+    (/^\s*_{2,}/.test(q) && /\?/.test(q)),
+
+  'time-and-dates': ({ expected }) =>
+    expected.some((a) => /uhr/i.test(String(a)) || wordsFlat(a).some((w) => TIME_WORD_RE.test(w))),
+};
+
+/**
+ * drillsSlug(item, slug) → true when the item really practises `slug`.
+ * An unknown slug answers `true`: the predicate may not silently condemn a
+ * grammar point nobody has written a rule for.
+ */
+export function drillsSlug(item, slug) {
+  const rule = DRILLS[String(slug || '')];
+  if (!rule) return true;
+  if (!item) return false;
+  const answer = String(item.answer || '');
+  const expected = [answer, ...(item.accepted || [])].filter((a) => String(a).trim());
+  const options = (item.options || []).filter((o) => String(o).trim());
+  return Boolean(rule({ q: String(item.questionDe || ''), answer, expected, options }));
+}
 
 /**
  * exclusionReason(item) → one of REASON, or null when the item may be drawn.
@@ -248,6 +483,11 @@ export function exclusionReason(item, { level } = {}) {
 
   if (answerInPrompt(item)) return REASON.ANSWER_IN_PROMPT;
   if (isMetaPrompt(item)) return REASON.META_PROMPT;
+
+  // REVIEW #3. Both rules sit AFTER the older ones on purpose: the ids the test
+  // suites pin to a reason keep the reason they were pinned with.
+  if (verbCueOnlyInGloss(item)) return REASON.VERB_CUE_ONLY_IN_GLOSS;
+  if (statementNoTask(item)) return REASON.STATEMENT_NO_TASK;
 
   return null;
 }

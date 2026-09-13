@@ -24,7 +24,12 @@
 //     English-contrastive pronunciation table with not one German letter NAME,
 //     in the free lesson, whose items ask for exactly those names ("Wie heißt
 //     der Buchstabe Z?"). Replaced by the letter names plus how to spell a name
-//     aloud, with examples from the Lektion 1/2 Wortfeld.
+//     aloud, with examples from the Lektion 1/2 Wortfeld. CORRECTED after review #3
+//     (REVIEW-daf-3-2026-09-12.md, BLOCKER 3): the first version of this card
+//     wrote the names as sound respellings ("C tse … Z tset"), the very manner
+//     BLOCKER 1 of review #1 banned — and the free Lektion's own items accept
+//     only the standard spellings (Zett, Ypsilon, Jot, Vau, Eszett). The names
+//     here are now exactly what those items accept; the test pins the agreement.
 //   * `time-and-dates` (MAJOR) — the generated card is titled
 //     "Wiederholung: Zahlen 1–12" and is a number table; the clock appears only
 //     in `commonMistakes`, and so does the ordinal-date rule ("am fünften Mai")
@@ -32,7 +37,11 @@
 //     (official vs. everyday) and um/am/im, with the date explicitly deferred.
 //   * `nouns-gender` (MINOR) — "~40 % · ~35 % · ~25 %" with no source, against
 //     the repo's measure-before-you-claim rule. Replaced by the gender-predicting
-//     endings, which are teachable and need no count.
+//     endings, which are teachable and need no count. CORRECTED after review #3
+//     (REVIEW-daf-3-2026-09-12.md, MAJOR 1): the replacement taught "-er bei
+//     Personen → der", which the course itself refutes in L3 (die Mutter, die
+//     Schwester, die Tochter). The -er rule is now bound to male job titles and
+//     names the feminine relatives as the exception.
 //   * `yes-no-questions` (MINOR) — card and pool contradicted each other on the
 //     spoken intonation question. `commonMistakes[0]` now names the written rule
 //     ("Verb auf Platz 1") and says the spoken form exists.
@@ -49,8 +58,8 @@ const RULE_CARD_OVERRIDES = {
     content: [
       'Beim Buchstabieren sagst du jeden Buchstaben einzeln.',
       'Jeder Buchstabe hat einen Namen:',
-      'A a, B be, C tse, D de, E e, F ef, G ge, H ha, I i, J jot, K ka, L el, M em,',
-      'N en, O o, P pe, Q ku, R er, S es, T te, U u, V vau, W we, X iks, Y ypsilon, Z tset.',
+      'A a, B be, C ce, D de, E e, F ef, G ge, H ha, I i, J Jot, K ka, L el, M em,',
+      'N en, O o, P pe, Q ku, R er, S es, T te, U u, V Vau, W we, X ix, Y Ypsilon, Z Zett.',
       'Ä a-Umlaut, Ö o-Umlaut, Ü u-Umlaut, ß Eszett.',
       'Vorsicht: E und I, G und J, V und W haben ähnliche Namen.',
       'Frage: Wie schreibt man das? Antwort: A-N-A.',
@@ -61,12 +70,12 @@ const RULE_CARD_OVERRIDES = {
     commonMistakes: [
       {
         wrong: 'Wie heißt der Buchstabe Z? — Zed.',
-        correct: 'Wie heißt der Buchstabe Z? — tset (Zett).',
-        explanationDe: 'Der Buchstabe Z hat im Deutschen den Namen tset.',
+        correct: 'Wie heißt der Buchstabe Z? — Zett.',
+        explanationDe: 'Der Buchstabe Z heißt im Deutschen Zett.',
       },
       {
         wrong: 'V und W haben denselben Namen.',
-        correct: 'V heißt vau, W heißt we.',
+        correct: 'V heißt Vau, W heißt We.',
         explanationDe: 'Zwei Buchstaben, zwei Namen. Beim Buchstabieren am Telefon ist das der häufigste Fehler.',
       },
       {
@@ -115,7 +124,7 @@ const RULE_CARD_OVERRIDES = {
       'Diese Endungen zeigen das Genus:',
       '-ung, -heit, -keit, -schaft → die: die Zeitung, die Freiheit, die Möglichkeit, die Freundschaft.',
       '-chen, -lein → das: das Mädchen, das Brötchen.',
-      '-er bei Personen → der: der Lehrer, der Student.',
+      '-er bei Berufen von Männern → der: der Lehrer, der Verkäufer, der Kellner. Vorsicht: die Mutter, die Schwester, die Tochter.',
       'Hat ein Nomen keine dieser Endungen, dann hilft nur Lernen.',
       'Lerne jedes Nomen mit dem Artikel: nicht Tisch, sondern der Tisch.',
       'English: learn every noun together with its article; the endings above are reliable groups, not a complete system.',
@@ -134,7 +143,8 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'die Lehrer arbeitet hier. (ein Mann)',
         correct: 'Der Lehrer arbeitet hier.',
-        explanationDe: 'Personen auf -er sind der-Wörter. Die Frau ist die Lehrerin.',
+        explanationDe:
+          'Männliche Berufsnamen auf -er sind der-Wörter. Die Frau ist die Lehrerin. Bei Verwandten gilt das nicht: die Mutter, die Schwester.',
       },
     ],
   },

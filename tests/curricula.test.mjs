@@ -17,6 +17,8 @@ import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { writingTaskByKey } from '../src/data/writingTasks.js';
 import {
   validateCurriculum, GRAMMAR_SLUGS, EXAM_TEILE, PRIMARY_ORDER, SITUATION_KEYWORDS,
+  wortfeldCoverage, itemLexis, loadExtraItems,
+  MAX_UNCOVERED_WORTFELD, MAX_UNTAUGHT_ITEM_TOKENS,
 } from '../scripts/validate-curriculum.mjs';
 
 const L = CURRICULUM_A11.lektionen;
@@ -192,6 +194,36 @@ test('rule 9: German copy, no outcome promise and no exam fee anywhere in the mo
   assert.doesNotMatch(text, /Prüfungsgebühr|Anmeldegebühr/i);
 });
 
+test('rule 10: a taught word is also a used word, under a ratchet that only falls', () => {
+  // RULE 5 asks „is every word in the dialogue taught?“. RULE 10 is its mirror and the systemic ask
+  // of DaF review #3: „is every taught word ever heard?“ — ≈50 of 262 Wortfeld entries occurred in
+  // no dialogue line, notice, pretest, Schreiben task or hand-written item of their own Lektion, so
+  // whole Handlungsfelder (L2 Personalien, L9 Café food) rested on a list.
+  assert.ok(MAX_UNCOVERED_WORTFELD <= 35, 'the ratchet may only ever be lowered');
+  const uncovered = wortfeldCoverage(CURRICULUM_A11);
+  assert.ok(
+    uncovered.length <= MAX_UNCOVERED_WORTFELD,
+    `${uncovered.length} uncovered Wortfeld entries > ratchet ${MAX_UNCOVERED_WORTFELD}:\n  - ${uncovered.map((u) => `L${u.nr} ${u.de}`).join('\n  - ')}`,
+  );
+  // The four Lektionen this round repaired carry their own vocabulary now.
+  for (const nr of [2, 7, 8, 9]) {
+    const left = uncovered.filter((u) => u.nr === nr).map((u) => u.de);
+    assert.ok(left.length <= 1, `Lektion ${nr} still has unused Wortfeld words: ${left.join(', ')}`);
+  }
+});
+
+test('rule 11: hand-written practice items use only words taught by their Lektion', () => {
+  // The review's last paragraph: „die handgeschriebenen Reparaturen unterliegen keiner Prüfung“.
+  // Same machinery as RULE 5 (formsOf, FUNCTION_WORDS, DIALOG_NAMES), run over a11.extra.json.
+  assert.ok(MAX_UNTAUGHT_ITEM_TOKENS <= 40, 'the ratchet may only ever be lowered');
+  const offenders = itemLexis(CURRICULUM_A11);
+  assert.ok(
+    offenders.length <= MAX_UNTAUGHT_ITEM_TOKENS,
+    `${offenders.length} untaught tokens > ratchet ${MAX_UNTAUGHT_ITEM_TOKENS}:\n  - ${offenders.map((o) => `${o.id}: ${o.token}`).join('\n  - ')}`,
+  );
+  assert.ok(loadExtraItems().length > 0, 'the hand-written pool must actually be read');
+});
+
 test('the validator bites: each mutation of a good curriculum is caught', () => {
   const mutations = {
     'a word used in two Lektionen': (c) => { c.lektionen[4].wortfeld[0] = c.lektionen[3].wortfeld[0]; },
@@ -218,4 +250,26 @@ test('the validator bites: each mutation of a good curriculum is caught', () => 
     mutate(c);
     assert.ok(validateCurriculum(c).length > 0, `not caught: ${name}`);
   }
+
+  // RULE 10: one more Wortfeld word that no input of its Lektion uses pushes the count over the
+  // ratchet — which is the whole point of pinning the ratchet at the measured number.
+  const c10 = clone();
+  c10.lektionen[0].wortfeld.push({
+    de: 'die Giraffe', word: 'Giraffe', article: 'die', plural: 'Giraffen', en: 'giraffe',
+    wordId: '00000000-0000-0000-0000-000000000000',
+  });
+  assert.ok(validateCurriculum(c10).length > 0, 'not caught: a Wortfeld word no input of its Lektion uses');
+
+  // RULE 11: a hand-written item that reaches for a word the course has not taught yet.
+  const c11 = clone();
+  const untaughtItem = {
+    id: 'extra-a11-l01-99',
+    questionDe: 'Der Elefant wohnt im Zoo. Ergänzen Sie: Der Elefant ___ groß.',
+    answer: 'Elefant',
+    accepted: ['Elefant'],
+  };
+  assert.ok(
+    validateCurriculum(c11, [...loadExtraItems(), untaughtItem]).length > 0,
+    'not caught: a hand-written item built from untaught words',
+  );
 });
