@@ -209,10 +209,11 @@ function seededShuffle(list, rng) {
  *      drawing 2 of 7 on their own primary slug;
  *   2. at least `rule.typedMin` typed items and at most two multiple_choice;
  *   3. seven items in total, all from `rule.topics`;
- *   4. no lemma more than `MAX_SAME_LEMMA` times, no answer key more than
+ *   4. one item for every answer key in `rule.mustCover` the pool can supply;
+ *   5. no lemma more than `MAX_SAME_LEMMA` times, no answer key more than
  *      `MAX_SAME_ANSWER_KEY` times, and at most `MAX_CARRIED_LEMMA` item
  *      repeating an answer lemma of the Lektion before;
- *   5. within each topic, the most situational items first (relevanceScore).
+ *   6. within each topic, the most situational items first (relevanceScore).
  *
  * `options` is what only the LEVEL knows — pass nothing and it behaves like a
  * standalone draw (still filtered, still deterministic):
@@ -287,6 +288,32 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
     const k = answerKey(it);
     if (k) answerKeyCount.set(k, (answerKeyCount.get(k) || 0) + 1);
   };
+
+  // The cover pass (DaF review #6 MAJOR 6, second half). `MAX_SAME_ANSWER_KEY`
+  // is a CEILING on repetition and a ceiling cannot reserve a seat: L12 holds 38
+  // usable possessive items, the three polite `Ihr` ones score no higher than a
+  // dozen others, so which of them lands in the seven was decided by the seeded
+  // jitter — and on attempt 1 none of them did. `practiceRule.mustCover` lists
+  // the answer keys the Lektion EXISTS to rehearse (L12: the polite `Ihr`, the
+  // form Schreiben Teil 2 and Sprechen Teil 3 are graded on); one usable item
+  // per key is taken first, typed and on the primary slug for preference, under
+  // the same caps as every other pick. A key the pool cannot supply is a no-op —
+  // the draw is never padded with something off-topic to satisfy it.
+  const coverKeys = [...new Set(
+    ((rule && rule.mustCover) || []).map((k) => answerKey({ answer: k })).filter(Boolean),
+  )];
+  for (const key of coverKeys) {
+    if (chosen.size >= PRACTICE_SIZE) break;
+    const candidates = ranked.filter((it) => answerKey(it) === key);
+    const preferred = [
+      ...candidates.filter((it) => it.topic === primarySlug && isTypedItem(it)),
+      ...candidates.filter((it) => it.topic === primarySlug),
+      ...candidates.filter(isTypedItem),
+      ...candidates,
+    ];
+    const pick = preferred.find((it) => fits(it, {}));
+    if (pick) take(pick);
+  }
 
   const primaryCount = () => [...chosen.values()].filter((it) => it.topic === primarySlug).length;
   const primaryTarget = Math.min(

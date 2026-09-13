@@ -308,44 +308,41 @@ test('no answer key carries more than two items in one Lektion — the "mein" ru
   assert.deepEqual(rows, [], rows.join('\n'));
 });
 
-test('L12 spreads its possessives, and the polite Ihr is drawn by the course', () => {
-  // The Lektion this MAJOR was measured on. Two things are pinned here.
+test('L12 spreads its possessives, and every attempt drills the polite Ihr', () => {
+  // The Lektion this MAJOR was measured on. Two things are pinned, per attempt.
   //
   // 1. The owner varies. `Besitzer` is the first word of the answer (`Mein`,
   //    `Deine`, `Unser`, `Ihr`, and `Wir …` for the sentence items), which is
-  //    what the review counted; four distinct owners per attempt is its floor.
+  //    what the review counted; four distinct owners is its floor. Before the
+  //    answer-key cap, five of seven items on both attempts said `mein`.
   // 2. The polite `Ihr` — `extra-a11-l12-08/09/16`, the only three items in the
-  //    course that drill the Höflichkeitsform, and the only three carrying
-  //    `caseSensitive: true` — actually reaches a learner. Before the answer-key
-  //    cap NEITHER attempt drew one; measured after it, attempt 2 draws
-  //    `extra-a11-l12-09`, attempt 1 still draws none.
-  //
-  // Why 2 is asserted over the two attempts rather than per attempt: the cap is
-  // a CEILING on repetition, and a ceiling cannot reserve a seat. Among the 38
-  // usable `possessive-articles` items the three polite ones score the same
-  // relevance as a dozen others, so which of them lands in the seven is decided
-  // by the seeded jitter. Making it a per-attempt guarantee needs the other half
-  // of the review's fix — `practiceRule.mustCover: ['mein','dein','sein','ihr',
-  // 'unser','Ihr']` on L12 in `src/data/curricula/a11.js` plus a cover pass
-  // after the primary quota. When that data lands, tighten the loop below to
-  // assert `polite.length` per attempt and delete this paragraph.
+  //    course that drill the Höflichkeitsform and the only three carrying
+  //    `caseSensitive: true` — is actually drawn. It takes BOTH halves of the
+  //    fix: the cap stops `mein` eating the block, and `mustCover: ['Ihr']` on
+  //    L12's practiceRule reserves the seat, because a ceiling on repetition
+  //    cannot make a specific form appear. With the cap alone, attempt 1 drew
+  //    none of the three. If this fails after a pool rebuild, check that L12
+  //    still HAS a usable `Ihr` item before touching the engine — the cover pass
+  //    is a no-op on a key the pool cannot supply, by design.
   const POLITE = ['extra-a11-l12-08', 'extra-a11-l12-09', 'extra-a11-l12-16'];
   const inPool = POLITE.filter((id) => POOL.items.some((it) => it.id === id));
   assert.deepEqual(inPool, POLITE, 'the three polite Ihr items are no longer in the shipped pool');
+  assert.deepEqual(LEKTIONEN.find((l) => l.nr === 12).practiceRule.mustCover, ['Ihr'], 'L12 lost its mustCover key');
 
-  const drawnPolite = [];
   for (const attempt of [1, 2]) {
     const items = planPractice(CURRICULUM_A11, POOL, attempt).get(12);
     const owners = new Set(items.map((it) => String(it.answer || '').toLowerCase().split(/[^a-zäöüß]+/)[0]).filter(Boolean));
     assert.ok(owners.size >= 4, `L12 attempt ${attempt} draws only ${owners.size} distinct owners: ${[...owners].join(', ')}`);
     const polite = items.filter((it) => POLITE.includes(it.id));
+    assert.ok(
+      polite.length >= 1,
+      `L12 attempt ${attempt} never drills the polite Ihr — the exam form of the last Lektion:\n  ` +
+      items.map((it) => `${it.id} → ${it.answer}`).join('\n  '),
+    );
     for (const it of polite) {
       assert.equal(it.caseSensitive, true, `${it.id} must stay caseSensitive — Ihr is a capital-letter distinction`);
-      drawnPolite.push(`attempt ${attempt}: ${it.id} → ${it.answer}`);
     }
   }
-  assert.ok(drawnPolite.length, 'neither attempt of L12 drills the polite Ihr — the exam form of the last Lektion');
-  console.log(`\n  L12 polite Ihr drawn — ${drawnPolite.join(' · ')}\n`);
 });
 
 test('a Lektion carries at most one answer lemma over from the Lektion before it', () => {
