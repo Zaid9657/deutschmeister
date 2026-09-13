@@ -129,3 +129,123 @@ test('THE DRAW — the four Lektionen now practise their own situation', () => {
   assert.ok(situational[5] >= 5, `L5 draws only ${situational[5]} situational items (was 4)`);
   assert.ok(situational[6] >= 4, `L6 draws only ${situational[6]} situational items (was 3)`);
 });
+
+/**
+ * R4 — "really drills the primary slug". The `topic` a pool item carries is a
+ * ROUTING label, not a content description (REVIEW #3, MAJOR: „die topic-Marken
+ * sind Routing-Labels“), so the guarantee "≥4 of the drawn 7 sit on the
+ * Lektion's own grammar point" was only nominally met in L3, L4 and L11 — the
+ * test that measured it read the same label the item had written about itself.
+ * `drillsSlug` reads the ANSWER instead: what the learner actually has to
+ * produce. It is implemented here rather than imported because the same
+ * predicate is landing in src/data/lessonPools/quality.js in a parallel change;
+ * the integrator reconciles the two, and until then this file is the one that
+ * measures the hand-authored batch.
+ */
+const bareWords = (text) =>
+  String(text || '').replace(/[.,!?;:"“”„'’]/g, ' ').trim().toLowerCase().split(/\s+/).filter(Boolean);
+
+/** The parts of a prompt that may carry a cue: (…), […] and „…“. */
+const cueText = (item) =>
+  (String(item.questionDe || '').match(/\(([^)]*)\)|\[([^\]]*)\]|„([^“]*)“/g) || []).join(' ');
+
+/** The prompt without its trailing infinitive cue: "___ du …? (haben)" → "___ du …?". */
+const withoutCue = (text) => String(text || '').replace(/\s*\([^)]*\)\s*$/, '').trim();
+
+const ANY = (list) => (words) => words.some((w) => list.includes(w));
+const DEFINITE = ['der', 'die', 'das', 'den', 'dem'];
+const INDEFINITE = ['ein', 'eine', 'einen', 'kein', 'keine'];
+const PRONOUNS = ['ich', 'du', 'er', 'sie', 'es', 'wir', 'ihr'];
+const SEIN = ['bin', 'bist', 'ist', 'sind', 'seid'];
+const HABEN = ['habe', 'hast', 'hat', 'haben', 'habt'];
+const PREFIXES = ['auf', 'an', 'ein', 'mit', 'um', 'ab', 'zu', 'aus', 'zurück'];
+const DAYS = ['montag', 'dienstag', 'mittwoch', 'donnerstag', 'freitag', 'samstag', 'sonntag'];
+const NUMBERS = /^(null|eins?|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|.*zehn|.*zig|.*ßig)$/;
+const SPELLED_OUT = /^[A-Za-zÄÖÜäöüß](-[A-Za-zÄÖÜäöüß])+$/;
+const LETTER_NAMES = ['zett', 'ypsilon', 'eszett', 'scharfes s', 'vau', 'jot', 'ix', 'qu'];
+
+export function drillsSlug(item, slug) {
+  const answer = String(item.answer || '');
+  const words = bareWords(answer);
+  const last = words[words.length - 1] || '';
+  switch (slug) {
+    case 'nouns-gender':
+      // the article the learner has to choose — in the answer, or, for an error
+      // correction, in the wrong sentence the prompt quotes
+      return ANY([...DEFINITE, ...INDEFINITE])(words)
+        || (item.type === 'error_correction' && ANY([...DEFINITE, ...INDEFINITE])(bareWords(item.questionDe)));
+    case 'definite-articles':
+      return ANY(DEFINITE)(words)
+        || (item.type === 'error_correction' && ANY(DEFINITE)(bareWords(item.questionDe)));
+    case 'indefinite-articles':
+      return ANY(INDEFINITE)(words)
+        || (item.type === 'error_correction' && ANY(INDEFINITE)(bareWords(item.questionDe)));
+    case 'personal-pronouns':
+      return PRONOUNS.includes(words[0] || '');
+    case 'possessive-articles':
+      return words.some((w) => /^(mein|dein|sein|ihr|unser|euer|eur)(e|en|em|er|es)?$/.test(w));
+    case 'verb-sein':
+      return ANY(SEIN)(words);
+    case 'verb-haben':
+      return ANY(HABEN)(words);
+    case 'present-tense-regular':
+      // a conjugated verb whose infinitive the GERMAN prompt names (R1)
+      return /[a-zäöüß]{3,}(en|ern|eln)\b/.test(cueText(item)) && words.length > 0;
+    case 'separable-verbs-intro':
+      return PREFIXES.includes(answer.trim().toLowerCase()) || PREFIXES.includes(last);
+    case 'yes-no-questions':
+      // the answer is a question, or the gap the learner fills is the verb on
+      // position 1 of one
+      return /\?$/.test(answer.trim()) || ['ja', 'nein'].includes(last)
+        || (/^_{3}/.test(item.questionDe.trim()) && /\?$/.test(withoutCue(item.questionDe)));
+    case 'time-and-dates':
+      return words.some((w) => ['um', 'am', 'im', 'uhr', 'halb', 'viertel', 'nach', 'vor'].includes(w)
+        || DAYS.includes(w) || NUMBERS.test(w));
+    case 'alphabet-pronunciation':
+      return SPELLED_OUT.test(answer.trim()) || LETTER_NAMES.includes(answer.trim().toLowerCase());
+    default:
+      return false;
+  }
+}
+
+test('R4 — each Lektion drills its own grammar point, measured on the answer', () => {
+  const per = new Map();
+  for (const item of EXTRA) {
+    const t = target(item);
+    if (!per.has(t.nr)) per.set(t.nr, []);
+    per.get(t.nr).push(item);
+  }
+  const lines = [];
+  let drilled = 0;
+  for (const nr of [...per.keys()].sort((a, b) => a - b)) {
+    const list = per.get(nr);
+    const slug = lektion(nr).primarySlug;
+    const hits = list.filter((i) => drillsSlug(i, slug));
+    lines.push(`L${String(nr).padStart(2)} ${slug} — ${hits.length}/${list.length}`);
+    // The review's guarantee is "≥4 of the drawn 7 on the Lektion's own point";
+    // the extra items are what the draw prefers, so the batch has to carry it.
+    assert.ok(hits.length >= 4, `L${nr} has only ${hits.length} items that drill ${slug}`);
+    drilled += hits.length;
+  }
+  console.log(`\n${lines.join('\n')}\n`);
+  // A floor on the batch as a whole, deliberately well under the measured value
+  // (111/116 here, 92/116 with the stricter predicate landing in quality.js):
+  // the per-Lektion floor above is the guarantee, this one catches a wholesale
+  // drift of the batch away from its own grammar points.
+  assert.ok(drilled * 10 >= EXTRA.length * 7, `only ${drilled}/${EXTRA.length} extra items drill their slug`);
+});
+
+test('no extra item uses a word its Lektion has not taught yet', () => {
+  // Three lexical pre-empts the third DaF review measured, as a rule rather than
+  // three corrections: `der Samstag`/`der Sonntag` are taught in Lektion 8 (L7
+  // demanded them for a form field and an item); `der Vormittag`/`der Nachmittag`
+  // were dropped from every Wortfeld and belong to no Lektion at all; `sprichst`
+  // is deferred to Lektion 7 by the notice of Lektion 3 in writing.
+  for (const item of EXTRA) {
+    const { nr } = target(item);
+    const text = `${item.questionDe} ${item.answer} ${(item.accepted || []).join(' ')}`;
+    assert.doesNotMatch(text, /Vormittag|Nachmittag/i, `${item.id} uses a word no Lektion teaches`);
+    if (nr < 8) assert.doesNotMatch(text, /Samstag|Sonntag/i, `${item.id} (L${nr}) uses a weekday taught in L8`);
+    if (nr <= 6) assert.doesNotMatch(text, /sprichst/i, `${item.id} (L${nr}) uses sprichst — L3 defers it to L7`);
+  }
+});
