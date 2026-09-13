@@ -836,7 +836,12 @@ test('every sentence-building item with a time or place Angabe accepts both word
     // count falls from 2 to 1: `a1.1-cp4-schreiben-1` is now „Das ist unser Auto.“, a sentence with
     // no time or place Angabe, so the rule finds no second order to demand of it — nothing stopped
     // accepting anything. RE-MEASURED, and named here so the next round sees the move.
-    'a1.1-cp1-schreiben-2',
+    // Round 18: L2 gained a second sentence-building item (`extra-a11-l02-17`, „Ich komme aus
+    // Marokko.“ — no Angabe, so nothing to demand of it) and `Marokko` joined DIALOG_NAMES, which
+    // re-stamps every origin item and reseats checkpoint 1's Schreiben section: the frontable
+    // sentence „Ich bin Lehrer von Beruf.“ (`extra-a11-l02-07`) now sits at seat 1 instead of
+    // seat 2. Count stays 1. RE-MEASURED, not relaxed.
+    'a1.1-cp1-schreiben-1',
   ], `the graded items with a second word order changed (${graded} found)`);
 });
 

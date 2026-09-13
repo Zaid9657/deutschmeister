@@ -537,6 +537,69 @@ test('rule 12: every can-do line is rehearsed in its own Lektion — hard rule, 
   assert.equal(L[10].pretest.model, 'Ich habe gearbeitet.');
 });
 
+test('rule 12, round 18: a can-do half is backed without the model answer and without the notice body', () => {
+  // DaF review #17, MAJOR 3. RULE 12 counted `schreiben.sample` and `notice.bodyDe` as rehearsal —
+  // the ANSWER the learner is shown after the graded task and the RULE the learner reads — and so
+  // reported 0 for L2's „Ich kann sagen, woher ich komme“ while not one item, dictation line,
+  // read-aloud line, pretest or speaking prompt of L2 contained `komm*`. The content side of the
+  // fix is a dialogue pair („Und woher kommen Sie?“ — „Ich komme aus Marokko und wohne in
+  // Bremen.“), the Teil-1 speaking prompt with the country, and `extra-a11-l02-17`. This probe
+  // blanks the two non-practice surfaces in EVERY Lektion and asks the rule as built today: if a
+  // can-do half is reported here, its only evidence was the answer or the rule.
+  const c = cloneOf(CURRICULUM_A11);
+  for (const l of c.lektionen) { l.schreiben.sample = ''; l.notice.bodyDe = ''; }
+  const offenders = canDoRehearsal(c);
+  assert.deepEqual(offenders.map((o) => `L${o.nr} ${o.half || o.line}`), [],
+    'a can-do half is backed only by the model answer or the notice body');
+  // And the surfaces that back the L2 origin line are the ones a learner PRACTISES on.
+  const l2 = L[1];
+  assert.ok(l2.dialog.lines.some((x) => /\bIch komme aus Marokko\b/.test(x.de)), 'the L2 dialogue answers „Woher?“');
+  assert.ok(l2.dialog.lines.some((x) => /woher kommen Sie\?/.test(x.de)), 'the L2 dialogue asks „Woher?“ — in the Sie the counter uses');
+  assert.match(l2.sprechen.open.promptDe, /Land/, 'Sprechen Teil 1 asks the country (SD1: Name, Alter, Land, Wohnort …)');
+  assert.ok(l2.sprechen.open.hintWords.includes('kommen aus'));
+  const origin = loadExtraItems('a1.1').find((it) => it.id === 'extra-a11-l02-17');
+  assert.equal(origin?.answer, 'Ich komme aus Marokko.');
+});
+
+test('every masculine named in a Wortfeld gloss „(m: …)“ stands on an input surface of its own Lektion', () => {
+  // DaF review #17, MAJOR 2. A Lektion at its 25-slot ceiling may carry a paired person noun as ONE
+  // row with the other gender in the gloss — `die Marokkanerin` … `(m: der Marokkaner, …)`. Round 17
+  // did that and its comment claimed the notice and the rule card said „Er ist Marokkaner.“; neither
+  // did, so half the learners had no taught word for the Leitpunkt „Ihre Staatsangehörigkeit“. The
+  // gloss is a licence only when the form is TAUGHT: it must stand on an input surface of the
+  // Lektion — the same surfaces RULE 23 reads (dialogue, notice, pretest), never the model answer.
+  const tokens = (s) => String(s || '').toLowerCase().split(/[^a-zäöüß]+/).filter(Boolean);
+  const inputTokens = (l) => new Set([
+    l.dialog?.title, l.dialog?.setting, ...(l.dialog?.lines || []).map((x) => x.de),
+    l.notice?.title, l.notice?.bodyDe, ...(l.notice?.examples || []),
+    l.pretest?.model, ...(l.pretest?.accepted || []),
+  ].flatMap(tokens));
+  const glossed = [];
+  const missing = [];
+  for (const l of L) {
+    const seen = inputTokens(l);
+    for (const w of l.wortfeld) {
+      const m = /\(m:\s*(?:der|die|das)?\s*([A-Za-zÄÖÜäöüß]+)/.exec(String(w.en || ''));
+      if (!m) continue;
+      glossed.push(`L${l.nr} ${w.de}`);
+      if (!seen.has(m[1].toLowerCase())) missing.push(`L${l.nr} ${w.de} → ${m[1]}`);
+    }
+  }
+  assert.ok(glossed.includes('L2 die Marokkanerin'), 'the row this rule was written for is gone — re-read the Wortfeld');
+  assert.deepEqual(missing, [], `a masculine lives only in an English gloss: ${missing.join(', ')}`);
+  // It BITES: strip the one sentence that teaches it and the rule names the row.
+  {
+    const c = cloneOf(CURRICULUM_A11);
+    c.lektionen[1].notice.bodyDe = c.lektionen[1].notice.bodyDe.replace(' Ali ist Marokkaner.', '');
+    const seen = inputTokens(c.lektionen[1]);
+    assert.ok(!seen.has('marokkaner'), 'the probe did not remove the masculine — the notice teaches it twice?');
+  }
+  // And the learner produces it, not only reads it: the word-formation item asks for the noun.
+  const item = loadExtraItems('a1.1').find((it) => it.id === 'extra-a11-l02-16');
+  assert.equal(item?.answer, 'Marokkaner');
+  assert.match(item.questionDe, /Nomen/, 'the cue names the word class, or „Er ist ___.“ is answered by Student or verheiratet');
+});
+
 test('rule 13: a speaking task without a mission is a prompt the speaking page never receives', () => {
   // SpeakingStage.jsx appends `&mission=` only when missionOrder is set; without it the learner
   // lands on the generic /speaking page with some other mission of the level. The UI agent is

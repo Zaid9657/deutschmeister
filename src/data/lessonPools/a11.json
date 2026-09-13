@@ -1,7 +1,7 @@
 {
  "level": "a1.1",
  "builtFrom": "2026-08-24",
- "count": 376,
+ "count": 378,
  "items": [
   {
    "id": "10fc1751-c3af-529f-8796-f8e46bfb1691",
@@ -474,7 +474,7 @@
    ],
    "explanationDe": "der Beruf — B-E-R-U-F.",
    "hint": "der, die oder das?",
-   "minLektion": 2
+   "minLektion": 3
   },
   {
    "id": "74f91cf4-e8b5-5ee1-887a-84e6370ac670",
@@ -493,7 +493,7 @@
    ],
    "explanationDe": "die Adresse — A-D-R-E-S-S-E.",
    "hint": "der, die oder das?",
-   "minLektion": 2
+   "minLektion": 3
   },
   {
    "id": "92ac55de-fb60-5f58-8698-7e85444b2255",
@@ -512,7 +512,7 @@
    ],
    "explanationDe": "die Telefonnummer — T-E-L-E-F-O-N-N-U-M-M-E-R.",
    "hint": "der, die oder das?",
-   "minLektion": 2
+   "minLektion": 3
   },
   {
    "id": "cbee2a2c-2b4a-5d9b-88d1-1b5bc64f3294",
@@ -531,7 +531,7 @@
    ],
    "explanationDe": "das Formular — F-O-R-M-U-L-A-R.",
    "hint": "der, die oder das?",
-   "minLektion": 2
+   "minLektion": 3
   },
   {
    "id": "32eb463d-1209-5db8-8aee-d227e1d99d62",
@@ -550,7 +550,7 @@
    ],
    "explanationDe": "der Wohnort — W-O-H-N-O-R-T.",
    "hint": "der, die oder das?",
-   "minLektion": 2
+   "minLektion": 3
   },
   {
    "id": "2df8b952-57b5-54ef-8c10-4a0d965d9115",
@@ -6468,6 +6468,45 @@
     "ist"
    ],
    "explanationDe": "Im Satz steht die Staatsangehörigkeit als Nomen: Ana ist Marokkanerin. Im Formular: Staatsangehörigkeit: marokkanisch.",
+   "hint": null,
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a11-l02-16",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 36,
+   "questionDe": "Ali kommt aus Marokko. Er ist ___. (Staatsangehörigkeit, Nomen)",
+   "questionEn": "Ali comes from Morocco. He is Moroccan.",
+   "options": null,
+   "answer": "Marokkaner",
+   "accepted": [
+    "Marokkaner"
+   ],
+   "explanationDe": "Der Mann: Marokkaner. Die Frau: Marokkanerin. Wie Student und Studentin.",
+   "hint": null,
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a11-l02-17",
+   "topic": "verb-sein",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 37,
+   "questionDe": "Bilden Sie den Satz: [ich / kommen / aus Marokko]",
+   "questionEn": "Build the sentence.",
+   "options": null,
+   "answer": "Ich komme aus Marokko.",
+   "accepted": [
+    "Ich komme aus Marokko.",
+    "Ich komme aus Marokko",
+    "Aus Marokko komme ich.",
+    "Aus Marokko komme ich"
+   ],
+   "explanationDe": "Woher? Ich komme aus Marokko.",
    "hint": null,
    "minLektion": 2
   },
