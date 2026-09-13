@@ -173,8 +173,31 @@ const tokens = (text) =>
 /** The words of a text that actually name something — the stoplist removed. */
 export const contentLemmas = (text) => new Set(tokens(text).filter((w) => !LEMMA_STOPWORDS.has(w)));
 
-/** Everything the item talks about: prompt AND answer (Mädchen usually sits in the prompt). */
-export const itemLemmas = (item) => contentLemmas(`${item.questionDe || ''} ${item.answer || ''}`);
+/**
+ * The bracketed instruction a prompt prints after its sentence — „(bestimmter
+ * Artikel)", „(der, die oder das?)", „(14:30, offiziell)". It is the TASK, not
+ * the content, and `taskShape` has read it as one category since DaF review #10.
+ */
+const stripInstruction = (text) => String(text || '').replace(/\([^()]*\)/g, ' ');
+
+/**
+ * Everything the item talks about: prompt AND answer (Mädchen usually sits in
+ * the prompt) — but NOT the bracketed instruction.
+ *
+ * DaF review #11 MAJOR 1 measured what counting the bracket cost. `bestimmter`
+ * and `artikel` are not content words, they are the cue „(bestimmter Artikel)",
+ * and `MAX_SAME_LEMMA` therefore allowed the Lektion two of them: of the 17
+ * `definite-articles` items L5 may serve, THIRTEEN carry exactly that bracket,
+ * so from the third one on the Lektion's own grammar was locked out — not
+ * because the pool is empty but because the instruction was counted as lexis.
+ * L5 filled the gap from Lektion 4's flea market (attempt 2 and 3: 2 of 7 on its
+ * own slug, five items of Rucksack/Regal/Tasche) and reported `complete: false`
+ * while every cap „held". The two guards have to read the bracket the same way,
+ * and `taskShape` already collapses it to `zzmark…` before the mask — so the
+ * lemma cap ignores it entirely rather than chasing its wording word by word.
+ */
+export const itemLemmas = (item) =>
+  contentLemmas(`${stripInstruction(item && item.questionDe)} ${(item && item.answer) || ''}`);
 
 /** Only what the item makes the learner produce — used for the carry-over rule. */
 export const answerLemmas = (item) => contentLemmas(item.answer || '');
@@ -197,6 +220,79 @@ export const answerKey = (item) => {
   const lemmas = answerLemmas(item);
   if (lemmas.size) return [...lemmas].sort().join(' ');
   return flat(item && item.answer).split(' ')[0] || '';
+};
+
+/**
+ * THE SIXTH DIVERSITY AXIS: does the seven print its own solutions?
+ *
+ * DaF review #11 MAJOR 2 measured 17 pairs in 11 of the 36 blocks where one
+ * item's answer stood, word for word, in another item's prompt of the same
+ * seven — worst a MUTUAL pair in L1 attempt 2 („Lesen Sie die Buchstaben:
+ * W-I-L-L-K-O-M-M-E-N …" → `Willkommen` beside „Wie buchstabiert man
+ * Willkommen?" → `W-I-L-L-K-O-M-M-E-N`: two task shapes, one piece of
+ * information) and the L11 pair „Kommst du am Freitag ___? (mitkommen)" beside
+ * the word bag whose solution is that very sentence. The engine had five axes
+ * (lemma, answer key, task shape, carry-over, prior attempt) and not one that
+ * asked whether the learner had already been shown the answer.
+ *
+ * `answerWords` is what the item makes the learner WRITE, function words and
+ * one- and two-letter fragments dropped — so „Nach Donnerstag kommt ___." may
+ * still sit beside an item that produces a whole sentence containing
+ * `Donnerstag`, and only an item whose ENTIRE production is already printed is
+ * refused. `promptWords` drops the bracketed cue, because „(mitkommen)" names
+ * the task rather than giving the sentence away, and matches whole tokens: a
+ * `gearbeitet` in the prompt does not leak the answer `arbeite`.
+ */
+export const answerWords = (item) => {
+  const words = String((item && item.answer) || '')
+    .toLowerCase()
+    .replace(/[^a-zäöüß0-9-]+/g, ' ')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  const content = words.filter((w) => w.length > 2 && !LEMMA_STOPWORDS.has(w));
+  if (content.length) return new Set(content);
+  // An answer that is ONLY a function word still leaks when it is printed —
+  // „Der Chef braucht ___ Computer." → `einen` beside „Korrigieren Sie: «Ich
+  // brauche einen Pause.»" was one of the review's measured pairs. `answerKey`
+  // falls back to the bare first word for exactly this case. Four letters is
+  // the floor: `die`, `der` and `das` stand in half the prompts of the course,
+  // and refusing every item that produces one of them would empty the three
+  // Lektionen whose grammar IS the article.
+  return new Set(words.length === 1 && words[0].length >= 4 ? words : []);
+};
+
+/** The words a prompt PRINTS — the bracketed instruction removed, whole tokens. */
+export const promptWords = (item) =>
+  new Set(
+    stripInstruction(item && item.questionDe)
+      .toLowerCase()
+      .replace(/[^a-zäöüß0-9-]+/g, ' ')
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean),
+  );
+
+/**
+ * True when `solved`'s whole production is already printed in `prints`'s prompt
+ * — i.e. a learner reading `prints` has been handed the answer to `solved`. The
+ * accepted variants count too: any form the checker would take is an answer.
+ */
+export const leaksAnswer = (solved, prints) => {
+  const printed = [...promptWords(prints)];
+  if (!printed.length) return false;
+  // One word is printed when the prompt shows it or an inflection of it:
+  // „[der Chef / brauchen / ein / Telefon]" prints the answer „Ich brauche ein
+  // Telefon." The stem has to be long enough to mean something — `termHits`
+  // uses the same four-letter floor — so `ge|arbeitet` does not swallow
+  // `arbeite`, which is a different form the learner still has to produce.
+  const shows = (w) =>
+    printed.some((t) => t === w || (w.length >= 4 && t.startsWith(w)) || (t.length >= 4 && w.startsWith(t)));
+  const forms = [solved && solved.answer, ...((solved && solved.accepted) || [])];
+  return forms.some((form) => {
+    const words = answerWords({ answer: form });
+    return words.size > 0 && [...words].every(shows);
+  });
 };
 
 /** Quotation marks the pool uses around the sentence an item works on. */
@@ -435,8 +531,10 @@ function seededShuffle(list, rng) {
  *   4. one item for every answer key in `rule.mustCover` the pool can supply;
  *   5. no lemma more than `MAX_SAME_LEMMA` times, no answer key more than
  *      `MAX_SAME_ANSWER_KEY` times, no task shape more than
- *      `MAX_SAME_TASK_SHAPE` time, and at most `MAX_CARRIED_LEMMA` item
- *      repeating an answer lemma of the Lektion before;
+ *      `MAX_SAME_TASK_SHAPE` time, at most `MAX_CARRIED_LEMMA` item repeating an
+ *      answer lemma of the Lektion before, and NO item whose whole production is
+ *      already printed in a sibling's prompt (`leaksAnswer`, DaF review #11
+ *      MAJOR 2 — an exercise that solves another one is an exercise given away);
  *   6. within each topic, the most situational items first (relevanceScore);
  *   7. none of the items this Lektion's EARLIER attempts drew (`priorAttemptIds`),
  *      while the topic slice can still fill seven without them — the repeat is
@@ -456,8 +554,10 @@ function seededShuffle(list, rng) {
  * paper over. The caps of 5 are relaxed before the seven are given up on — the
  * carry-over first, then the lemma and answer-key caps, then the items the
  * EARLIER ATTEMPTS of this Lektion already showed (`priorAttemptIds`, rule 7),
- * and the task-shape cap last of all, because it is the coarsest and the one a
- * learner notices most.
+ * then the task-shape cap, because it is the coarsest and the one a learner
+ * notices most — and the LEAK cap dead last, after everything else, because a
+ * seven that prints its own answers is worse than a repeated task shape. A draw
+ * that reaches that stage is a POOL finding, and `relaxUsed` says so.
  */
 export function pickPracticeItems(pool, rule, seed, options = {}) {
   const topicList = (rule && rule.topics) || [];
@@ -554,6 +654,11 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
         const shape = taskShape(it);
         if (shape && (taskShapeCount.get(shape) || 0) >= MAX_SAME_TASK_SHAPE) return false;
       }
+      if (!relax.leak) {
+        for (const seated of chosen.values()) {
+          if (leaksAnswer(it, seated) || leaksAnswer(seated, it)) return false;
+        }
+      }
       if (!relax.carried && carried >= MAX_CARRIED_LEMMA && carriesOver(it)) return false;
       if (!relax.prior && priorIds.has(it.id)) return false;
       return true;
@@ -635,6 +740,7 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
       { lemma: true, carried: true, answerKey: true },
       { lemma: true, carried: true, answerKey: true, prior: true },
       { lemma: true, carried: true, answerKey: true, prior: true, taskShape: true },
+      { lemma: true, carried: true, answerKey: true, prior: true, taskShape: true, leak: true },
     ];
     for (let stage = 0; stage < LADDER.length; stage += 1) {
       const relax = LADDER[stage];

@@ -11,7 +11,7 @@ import { dirname, join } from 'node:path';
 
 import buildLesson, {
   pickPracticeItems, planPractice, practiceReport, seedFor, isTypedItem, isMultipleChoice, itemLemmas, answerLemmas,
-  answerKey, taskShape,
+  answerKey, taskShape, answerWords, promptWords, leaksAnswer,
   PRACTICE_SIZE, MAX_MULTIPLE_CHOICE, PRIMARY_MIN, MAX_SAME_LEMMA, MAX_CARRIED_LEMMA, MAX_SAME_ANSWER_KEY,
   MAX_SAME_TASK_SHAPE, attemptFromCompletions, ATTEMPT_CYCLE,
 } from '../src/lib/lesson/buildLesson.js';
@@ -511,6 +511,198 @@ test('the guards walk EVERY attempt of the cycle — the literal [1, 2] may not 
   assert.doesNotMatch(src, /\[\[0, ?1\], ?\[1, ?2\]\]/, 'the overlap test skips the wrap pair again — use ATTEMPT_PAIRS');
   assert.deepEqual(ATTEMPTS, [1, 2, 3]);
   assert.deepEqual(ATTEMPT_PAIRS, [[0, 1], [1, 2], [2, 0]], 'the cycle wraps, so 3→1 is a consecutive pair');
+});
+
+/**
+ * The four pairs DaF review #11 MAJOR 2 measured word for word, kept as the counter-probe of the
+ * leak rule. Three of them are gone from the shipped draw since the sixth axis went into `fits()`;
+ * they stay HERE because a guard that does not catch the finding it was written for is not a rule.
+ * Every pair must be reported in the direction the review printed it — and the L1 pair in BOTH.
+ */
+const ANSWER_LEAK_PROBES = [
+  {
+    why: 'L11 attempt 1: the gap and the word bag whose solution is that very sentence',
+    solved: { answer: 'Kommst du am Freitag mit?' },
+    prints: { questionDe: 'Kommst du am Freitag ___? (mitkommen)' },
+  },
+  {
+    why: 'L1 attempt 2, forwards: the spelled letters print the word the learner must write',
+    solved: { answer: 'Willkommen' },
+    prints: { questionDe: 'Wie buchstabiert man Willkommen? ___' },
+  },
+  {
+    why: 'L1 attempt 2, backwards: the mutual pair is a leak whichever item comes first',
+    solved: { answer: 'W-I-L-L-K-O-M-M-E-N' },
+    prints: { questionDe: 'Lesen Sie die Buchstaben: W-I-L-L-K-O-M-M-E-N. Schreiben Sie das Wort: ___' },
+  },
+  {
+    why: 'L11 attempt 3: the participle stands in the word bag next to the gap that asks for it',
+    solved: { answer: 'gearbeitet' },
+    prints: { questionDe: 'Bilden Sie den Satz: [ich / haben / gestern / gearbeitet]' },
+  },
+  {
+    why: 'L6 attempt 3: the article the gap asks for is printed in the sentence to correct',
+    solved: { answer: 'einen' },
+    prints: { questionDe: 'Korrigieren Sie: „Ich brauche einen Pause.“' },
+  },
+];
+
+/** Every pair of one block in which one item's whole production is printed by another's prompt. */
+const leaksIn = (items) => {
+  const out = [];
+  for (const solved of items) {
+    for (const prints of items) {
+      if (solved.id === prints.id) continue;
+      if (leaksAnswer(solved, prints)) {
+        out.push(`${solved.id} (→ ${solved.answer}) is printed by ${prints.id} („${String(prints.questionDe).replace(/\s+/g, ' ')}“)`);
+      }
+    }
+  }
+  return out;
+};
+
+test('the leak rule catches every pair the review measured — and lets a partial overlap through', () => {
+  // DaF review #11 MAJOR 2. The four measured pairs, plus the L6 one, must all be reported.
+  const missed = ANSWER_LEAK_PROBES.filter((p) => !leaksAnswer(p.solved, p.prints)).map((p) => p.why);
+  assert.deepEqual(missed, [], `the leak rule no longer sees:\n  - ${missed.join('\n  - ')}`);
+
+  // …and it is not a blanket ban on a shared word. The review names the case that must stay legal:
+  // an item that produces a whole sentence containing `Donnerstag` does not solve „Nach Donnerstag
+  // kommt ___.“, because only PART of its production is printed.
+  assert.equal(
+    leaksAnswer({ answer: 'Der Kurs ist am Donnerstag.' }, { questionDe: 'Nach Donnerstag kommt ___.' }),
+    false,
+    'a single shared word is not a leak',
+  );
+  // the bracketed cue names the task and never gives the sentence away
+  assert.equal(leaksAnswer({ answer: 'mitkommen' }, { questionDe: 'Kommst du am Freitag ___? (mitkommen)' }), false);
+  // a different FORM of the word is still work: the participle does not print the present tense
+  assert.equal(leaksAnswer({ answer: 'arbeite' }, { questionDe: 'Bilden Sie den Satz: [ich / haben / gestern / gearbeitet]' }), false);
+  // an inflection of the word IS printed: „brauchen“ in a word bag prints „brauche“
+  assert.equal(
+    leaksAnswer({ answer: 'Ich brauche ein Telefon.' }, { questionDe: 'Bilden Sie den Satz: [der Chef / brauchen / ein / Telefon]' }),
+    true,
+  );
+  // the accepted variants count too — any form the checker would take is an answer
+  assert.equal(
+    leaksAnswer({ answer: 'Die Uhr ist alt.', accepted: ['Die Uhr ist alt.', 'Das Regal ist alt.'] }, { questionDe: 'Das Regal ist alt. Und die Uhr?' }),
+    true,
+  );
+  // the units underneath, so a failure says which half moved
+  assert.deepEqual([...answerWords({ answer: 'Ich bin Lehrer.' })], ['lehrer']);
+  assert.ok(promptWords({ questionDe: 'Hier ist ___ Schere. (bestimmter Artikel)' }).has('schere'));
+  assert.ok(!promptWords({ questionDe: 'Hier ist ___ Schere. (bestimmter Artikel)' }).has('bestimmter'));
+});
+
+test('NO BLOCK PRINTS ITS OWN ANSWERS — the leak rule over all 36 blocks', () => {
+  // DaF review #11 MAJOR 2 measured 17 pairs in 11 of the 36 blocks: the learner read the solution
+  // of one task in the prompt of another of the same seven — a mutual inverse pair in L1 attempt 2,
+  // the „Kommst du am Freitag mit?“ pair in L11 attempt 1. The engine had five diversity axes and
+  // none that asked whether the answer had already been printed. It is the sixth, in `fits()`, and
+  // it is relaxed LAST of all (after the task-shape cap), so a leak here is not an unlucky order:
+  // it means the eligible slice holds no legal seven at all, which is a POOL finding — add items,
+  // never loosen this.
+  const rows = [];
+  for (const attempt of ATTEMPTS) {
+    const plan = planPractice(CURRICULUM_A11, POOL, attempt);
+    for (const lektion of LEKTIONEN) {
+      for (const leak of leaksIn(plan.get(lektion.nr))) {
+        rows.push(`attempt ${attempt} L${lektion.nr}: ${leak}`);
+      }
+    }
+  }
+  assert.deepEqual(rows, [], `${rows.length} answer(s) printed in a sibling prompt:\n  - ${rows.join('\n  - ')}`);
+});
+
+/**
+ * How many of the 36 blocks may report `practiceReport().complete === false` — i.e. fill seven but
+ * NOT reach `PRIMARY_MIN` items labelled with the Lektion's own slug.
+ *
+ * DaF review #11 MAJOR 1(b): the engine has written this flag since round 9 and nobody read it. A
+ * `grep` over `tests/` and `scripts/` found zero readers — every guard watched `relaxUsed`, which
+ * is 0 in exactly these blocks, because the block DOES fill seven; it fills it with the neighbour
+ * Lektion's material. L5 („Im Klassenzimmer“) reported `complete: false` on attempts 2 and 3 and
+ * served the flea market of L4 while `MAX_CAP_STARVED_LEKTIONEN = 0` stood green.
+ *
+ * 2 → 1 with the bracket fix of MAJOR 1(a): attempts 1 and 2 of L5 are complete again, and the
+ * review's own counterfactual is reproduced. The ONE that remains is attempt 3 of L5 and it is a
+ * measured CONTENT shortage the review predicted in the same paragraph („Versuch 3 bleibt auch dann
+ * dünn — das ist dann ein echter Inhaltsmangel und keine Kappe“): of the 17 `definite-articles`
+ * items L5 may serve, attempts 1 and 2 use eleven, and the six left over are ALL the one frame
+ * „___ Nomen ist Adjektiv. (bestimmter Artikel)“ (`extra-a11-l05-01/-04/-05/-07/-13/-16`), so
+ * `MAX_SAME_TASK_SHAPE` lets exactly one of them be seated. No draw can repair that. The repair is
+ * the review's fourth point: `definite-articles` items for L5 that do NOT carry that frame — and
+ * this number only ever goes down by items, never by a softer rule.
+ *
+ * Any OTHER block that turns up here is a fresh finding and is meant to fail this test: it says the
+ * seven was filled with a neighbour Lektion's material, which no `relaxUsed` and no cap reports.
+ */
+const MAX_OFF_PRIMARY_BLOCKS = 1;
+
+test('EVERY BLOCK FILLS SEVEN WITH ITS OWN GRAMMAR — practiceReport is read, all 36 blocks', () => {
+  const relaxed = [];
+  const offPrimary = [];
+  for (const attempt of ATTEMPTS) {
+    const plan = planPractice(CURRICULUM_A11, POOL, attempt);
+    const report = practiceReport(plan);
+    for (const lektion of LEKTIONEN) {
+      const r = report.get(lektion.nr) || {};
+      const items = plan.get(lektion.nr);
+      const byLabel = items.filter((it) => it.topic === lektion.primarySlug).length;
+      if (r.relaxUsed > 0) {
+        relaxed.push(`attempt ${attempt} L${lektion.nr} (${lektion.primarySlug}): relaxUsed ${r.relaxUsed}, ${r.eligible} eligible items`);
+      }
+      if (r.complete === false) {
+        offPrimary.push(
+          `attempt ${attempt} L${lektion.nr} (${lektion.primarySlug}): only ${byLabel} of ${PRACTICE_SIZE} items` +
+          ` carry its own slug (PRIMARY_MIN ${PRIMARY_MIN}), ${r.eligible} eligible:\n    ` +
+          items.map((it) => `[${it.topic}] ${it.id} · ${String(it.questionDe).replace(/\s+/g, ' ')} → ${it.answer}`).join('\n    '),
+        );
+      }
+    }
+  }
+  // A cap that had to be given up is an engine finding and is never tolerated.
+  assert.deepEqual(relaxed, [], `${relaxed.length} block(s) could not honour their caps:\n  - ${relaxed.join('\n  - ')}`);
+  assert.ok(
+    offPrimary.length <= MAX_OFF_PRIMARY_BLOCKS,
+    `${offPrimary.length} block(s) report complete:false (ratchet ${MAX_OFF_PRIMARY_BLOCKS}):\n  - ${offPrimary.join('\n  - ')}`,
+  );
+});
+
+test('the lemma cap ignores the bracketed instruction — it is the task, not the content', () => {
+  // DaF review #11 MAJOR 1(a). `bestimmter` and `artikel` are the cue „(bestimmter Artikel)“, and
+  // `MAX_SAME_LEMMA = 2` therefore let a Lektion have two of them: thirteen of the seventeen
+  // `definite-articles` items L5 may serve carry exactly that bracket, so from the third one on the
+  // Lektion's own grammar was locked out and the block filled up from L4's flea market. The two
+  // guards must read the bracket the same way — `taskShape` has collapsed it to its category since
+  // round 10 — so the lemma cap does not see it at all. A stoplist of bracket WORDS would have to
+  // be extended for every new cue; stripping the bracket is the rule.
+  const l5 = { questionDe: '___ Fenster ist hier. (bestimmter Artikel)', answer: 'Das' };
+  const lemmas = itemLemmas(l5);
+  assert.ok(!lemmas.has('bestimmter'), 'the instruction word is counted as content again');
+  assert.ok(!lemmas.has('artikel'), 'the instruction word is counted as content again');
+  assert.ok(lemmas.has('fenster'), 'the content of the prompt must still be counted');
+  for (const bracket of ['(unbestimmter Artikel)', '(der, die oder das?)', '(höflich mit Sie)', '(sie, Plural)']) {
+    assert.equal(itemLemmas({ questionDe: `___ Tisch ist neu. ${bracket}`, answer: 'Der' }).size, 1,
+      `„${bracket}“ still leaks words into the lemma count`);
+  }
+  // and the answer is read as it always was
+  assert.ok(itemLemmas({ questionDe: 'Ergänzen Sie: ___ (Artikel)', answer: 'die Schere' }).has('schere'));
+});
+
+test('L5 drills the article in every attempt — the Lektion whose grammar IS the bracket', () => {
+  // The Lektion the MAJOR was measured on: with the bracket counted as lexis, attempts 2 and 3
+  // drew 2 of 7 on `definite-articles` and five items from L4's flea market. Measured on real
+  // production (`drillsSlug`), not on the routing label, in every attempt of the cycle.
+  for (const attempt of ATTEMPTS) {
+    const items = planPractice(CURRICULUM_A11, POOL, attempt).get(5);
+    const real = items.filter((it) => drillsSlug(it, 'definite-articles')).length;
+    assert.ok(
+      real >= PRIMARY_MIN,
+      `L5 attempt ${attempt} makes the learner produce a definite article only ${real}/7 times:\n  ` +
+      items.map((it) => `[${it.topic}] ${it.id} · ${String(it.questionDe).replace(/\s+/g, ' ')} → ${it.answer}`).join('\n  '),
+    );
+  }
 });
 
 test('no task shape carries more than one item in a Lektion — the Beruf-pair rule', () => {
