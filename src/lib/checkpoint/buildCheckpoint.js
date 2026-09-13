@@ -30,8 +30,9 @@
 // Everything is deterministic in `seed` (mulberry32), so tests can pin the
 // exact 20 items and "Nochmal" can reshuffle the ORDER without changing the
 // test a learner already saw.
-import { checkAnswer, tagError, RESULT, STRICT_TOPIC, isCaseTask } from '../lesson/check.js';
+import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../lesson/check.js';
 import { courseWritingTasks, writingTaskByKey } from '../../data/writingTasks.js';
+import { knownUpTo, untaughtTokens, namesOf } from './lexis.js';
 
 export const SECTION_ORDER = ['hoeren', 'lesen', 'bausteine', 'schreiben', 'sprechen'];
 
@@ -153,17 +154,53 @@ const byTopics = (pool, topics) => {
 };
 
 /**
- * Draw `n` pool items for `topics`, typed first, deterministically and without
- * repeating anything in `usedIds`. Topics are visited round-robin so one fat
- * topic cannot crowd the others out.
+ * THE LEXIS FILTER (DaF review #6, MAJOR 8). A checkpoint may not ask for a word
+ * the course has not taught by the end of the chapter it closes:
+ * `a1.1-cp2-schreiben-1` was „[Honig / ist / gut]“ in a chapter about a
+ * Flohmarkt, a Klassenzimmer and a Büro, first of three items in a GRADED
+ * Schreiben section, and eleven of the 80 items carried lexis like it.
+ *
+ * `untaughtAt(curriculum, lastLektionNr)` returns the predicate the draw sorts
+ * by — the validator's own RULE 11 machinery (src/lib/checkpoint/lexis.js), so
+ * "untaught" means here exactly what it means in
+ * `node scripts/validate-curriculum.mjs`.
+ *
+ * It SORTS rather than filters: an item with untaught lexis goes to the back of
+ * its bucket and is drawn only when the pool has nothing clean left for that
+ * section. A hard filter would make a thin topic ship a 19-item checkpoint, and
+ * a short exam is a worse failure than a hard word — the measurement that
+ * matters is the one the test makes (all 80 A1.1 items clean), not the
+ * mechanism. A level with no lexis tables (see LEXIS_LEVELS) sorts by nothing.
  */
-function drawPool(pool, topics, n, rng, usedIds, { typedOnly = false } = {}) {
+function untaughtAt(curriculum, lastNr) {
+  const known = knownUpTo(curriculum, lastNr);
+  if (!known) return () => false;
+  const names = namesOf(curriculum?.level);
+  const cache = new Map();
+  return (item) => {
+    const id = item?.id;
+    if (id && cache.has(id)) return cache.get(id);
+    const dirty = untaughtTokens(item, known, names).length > 0;
+    if (id) cache.set(id, dirty);
+    return dirty;
+  };
+}
+
+/**
+ * Draw `n` pool items for `topics`, taught-lexis first and typed first within
+ * that, deterministically and without repeating anything in `usedIds`. Topics
+ * are visited round-robin so one fat topic cannot crowd the others out.
+ */
+function drawPool(pool, topics, n, rng, usedIds, { typedOnly = false, untaught = () => false } = {}) {
   if (n <= 0 || !topics.length) return [];
   const buckets = topics.map((topic) => {
     const all = shuffle(byTopics(pool, [topic]).filter((i) => !usedIds.has(i.id)), rng);
-    const typed = all.filter(isTyped);
-    const rest = typedOnly ? [] : all.filter((i) => !isTyped(i));
-    return [...typed, ...rest];
+    const pick = (dirty) => {
+      const some = all.filter((i) => untaught(i) === dirty);
+      const typed = some.filter(isTyped);
+      return typedOnly ? typed : [...typed, ...some.filter((i) => !isTyped(i))];
+    };
+    return [...pick(false), ...pick(true)];
   });
   const out = [];
   let progress = true;
@@ -323,6 +360,16 @@ const WEEKDAYS = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Sa
 // not broken. `null` goes with it — "null Euro" reads as a mistake, not a detail.
 const REPLACEMENT_NUMBERS = NUMBER_WORDS.filter((w) => w !== 'eins' && w !== 'null');
 
+/**
+ * The single-digit number words — the only replacements allowed INSIDE a digit
+ * group (DaF review #6, MAJOR 7). A phone number is spoken digit by digit
+ * ("Null vier zwei – drei drei acht eins"), so a two-digit word in the middle
+ * of it ("**Siebzehn** vier zwei") is not a changed detail, it is a number that
+ * cannot be dictated. Here `eins` and `null` are back in: they are digits, not
+ * counted quantities, so neither is broken German in this position.
+ */
+const DIGIT_NUMBERS = NUMBER_WORDS.slice(0, 10);
+
 /** Forms of address are not names: swapping "Ana" for "Herr" is nonsense, not a detail. */
 const TITLES = ['Herr', 'Frau'];
 
@@ -341,20 +388,37 @@ function speakerNames(lektionen) {
 }
 
 /**
- * The nouns of the chapter's dialogues — the last-resort swap when a window
- * carries no number, weekday or name. Sentence-initial words are skipped on
- * both sides: a line-initial "Spielst …" is a capitalised VERB, and swapping it
- * for a noun produces gibberish rather than a statement a learner can judge.
+ * The chapter's NOUNS WITH THEIR GENDER — the last-resort swap when a window
+ * carries no number, weekday or name, as a Map `wort → { article, plural }`.
+ *
+ * It is built from the Wortfeld, not from the dialogue lines, for two reasons
+ * (DaF review #6, MAJOR 7). The old version collected every capitalised word of
+ * the dialogues and swapped any one of them for any other, which produced
+ * `a1.1-cp3-lesen-2`: the L9 football line with `Woche` replaced by
+ * **Frühstück** — a NEUTER noun under a feminine `jede`. That is not a false
+ * statement, it is not German, and
+ * in the graded Lesen section it hands the learner the answer through the form
+ * instead of through the content. The Wortfeld already carries `article` and
+ * `plural`, so gender is data we have: a noun may only be replaced by a noun of
+ * the SAME article, and a plural only by another plural (keyed `plural`, since
+ * every German plural takes `die` and swapping a plural for a singular would
+ * break the same agreement from the other side).
+ *
+ * Sentence-initial words are still skipped at the call site: a line-initial
+ * "Spielst …" is a capitalised VERB, and the map cannot tell them apart.
  */
 function contentWords(lektionen) {
-  const out = new Set();
-  for (const line of dialogLines(lektionen)) {
-    const de = String(line.de || '');
-    for (const m of de.matchAll(WORD_RE)) {
-      if (m[0].length >= 4 && /^[A-ZÄÖÜ]/.test(m[0]) && !sentenceInitial(de, m.index)) out.add(m[0]);
+  const out = new Map();
+  for (const l of lektionen || []) {
+    for (const w of l?.wortfeld || []) {
+      if (!w?.article) continue;                       // greetings, verbs, adverbs: no gender to match
+      const word = String(w.word || w.de || '').trim();
+      if (word && !/\s/.test(word)) out.set(word, { article: String(w.article), plural: w.plural || null });
+      const plural = String(w.plural || '').trim();
+      if (plural && plural !== '—' && !/\s/.test(plural)) out.set(plural, { article: 'plural', plural: null });
     }
   }
-  return [...out];
+  return out;
 }
 
 /** Is this match at the start of the line or of a new sentence inside it? */
@@ -374,10 +438,10 @@ function pickOther(list, not, rng) {
  * The replacement table: one changed DETAIL, drawn from the dialogue's own
  * kinds of token. Returns null for a word that carries no checkable detail.
  */
-function changedDetail(word, { names, vocab }, rng, { allowVocab = true } = {}) {
+function changedDetail(word, { names, vocab }, rng, { allowVocab = true, digitGroup = false } = {}) {
   const lower = word.toLowerCase();
   if (NUMBER_WORDS.includes(lower)) {
-    const other = pickOther(REPLACEMENT_NUMBERS, lower, rng);
+    const other = pickOther(digitGroup ? DIGIT_NUMBERS : REPLACEMENT_NUMBERS, lower, rng);
     return other ? (/^[A-ZÄÖÜ]/.test(word) ? other[0].toUpperCase() + other.slice(1) : other) : null;
   }
   if (WEEKDAYS.includes(word)) return pickOther(WEEKDAYS, word, rng);
@@ -386,7 +450,12 @@ function changedDetail(word, { names, vocab }, rng, { allowVocab = true } = {}) 
     return String(n >= 10 ? n + 10 : n + 3);
   }
   if (names.includes(word)) return pickOther(names, word, rng);
-  if (allowVocab && vocab.includes(word)) return pickOther(vocab, word, rng);
+  // Congruence: same article only, or no swap at all (see contentWords).
+  if (allowVocab && vocab.has(word)) {
+    const { article } = vocab.get(word);
+    const same = [...vocab.keys()].filter((w) => w !== word && vocab.get(w).article === article);
+    return same.length ? pickOther(same, word, rng) : null;
+  }
   return null;
 }
 
@@ -404,10 +473,16 @@ function falsifyWindow(window, text, ctxWords, rng) {
   for (const allowVocab of [false, true]) {
     for (const line of lines) {
       const de = String(line.de || '');
-      const matches = shuffle([...de.matchAll(WORD_RE)], rng);
-      for (const match of matches) {
+      // Tokens in reading order first, so a number word can see its NEIGHBOURS
+      // (a digit group is two or more number words in a row — a phone number).
+      const tokens = [...de.matchAll(WORD_RE)];
+      const isNumberToken = (t) => Boolean(t) && NUMBER_WORDS.includes(t[0].toLowerCase());
+      const matches = shuffle(tokens.map((match, pos) => ({ match, pos })), rng);
+      for (const { match, pos } of matches) {
         if (allowVocab && sentenceInitial(de, match.index)) continue;
-        const replacement = changedDetail(match[0], ctxWords, rng, { allowVocab });
+        const digitGroup = isNumberToken(tokens[pos])
+          && (isNumberToken(tokens[pos - 1]) || isNumberToken(tokens[pos + 1]));
+        const replacement = changedDetail(match[0], ctxWords, rng, { allowVocab, digitGroup });
         if (!replacement) continue;
         const changed = `${de.slice(0, match.index)}${replacement}${de.slice(match.index + match[0].length)}`;
         if (changed === de || text.includes(changed)) continue;
@@ -480,17 +555,18 @@ function buildLesen(ctx) {
 // from earlier chapters lands, because grammar is the thing that has to keep
 // coming back.
 function buildBausteine(ctx) {
-  const { checkpoint, rng, chapter, earlier, pool, usedPoolIds } = ctx;
+  const { checkpoint, rng, chapter, earlier, pool, usedPoolIds, untaught } = ctx;
   const chapterTopics = topicsOf(chapter);
   const earlierTopics = topicsOf(earlier).filter((t) => !chapterTopics.includes(t));
   const earlierWanted = earlierTopics.length ? POOL_ITEMS_EARLIER : 0;
-  const drawnEarlier = drawPool(pool, earlierTopics, earlierWanted, rng, usedPoolIds);
+  const drawnEarlier = drawPool(pool, earlierTopics, earlierWanted, rng, usedPoolIds, { untaught });
   const drawnChapter = drawPool(
     pool,
     chapterTopics,
     SECTION_COUNTS.bausteine - drawnEarlier.length,
     rng,
     usedPoolIds,
+    { untaught },
   );
   return [...drawnChapter, ...drawnEarlier].map((p, i) =>
     fromPoolItem(p, {
@@ -525,7 +601,7 @@ function buildBausteine(ctx) {
 //     name is taken: evaluate-writing derives its character floor from it. The
 //     only item with a register is the real task, whose register is real.
 function buildSchreiben(ctx) {
-  const { checkpoint, rng, chapter, pool, usedPoolIds, level } = ctx;
+  const { checkpoint, rng, chapter, pool, usedPoolIds, level, untaught } = ctx;
   const graded = gradedWritingItem(checkpoint, chapter, level);
   const drillCount = SECTION_COUNTS.schreiben - (graded ? 1 : 0);
 
@@ -539,7 +615,10 @@ function buildSchreiben(ctx) {
       byTopics(pool, [slug]).filter((i) => i.type === 'sentence_building' && !usedPoolIds.has(i.id)),
       rng,
     );
-    const pick = candidates[0];
+    // Taught lexis first, and only then this slug's other sentence-building
+    // items — this is the draw that used to hand checkpoint 2 `dd86dc8a`
+    // („[Honig / ist / gut]“) as its first graded Schreiben item.
+    const pick = candidates.find((i) => !untaught(i)) || candidates[0];
     if (!pick) continue;
     usedPoolIds.add(pick.id);
     chosen.push(pick);
@@ -549,10 +628,10 @@ function buildSchreiben(ctx) {
   if (chosen.length < drillCount) {
     const used = new Set(chosen.map((c) => c.topic));
     const rest = topicsOf(chapter).filter((t) => !used.has(t));
-    chosen.push(...drawPool(pool, rest, drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true }));
+    chosen.push(...drawPool(pool, rest, drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught }));
   }
   if (chosen.length < drillCount) {
-    chosen.push(...drawPool(pool, topicsOf(chapter), drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true }));
+    chosen.push(...drawPool(pool, topicsOf(chapter), drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught }));
   }
 
   const drills = chosen.map((p, i) =>
@@ -685,6 +764,9 @@ export function buildCheckpoint({ curriculum, checkpoint, pool, seed } = {}) {
     chapter: chapterLektionen(curriculum, checkpoint),
     earlier: earlierLektionen(curriculum, checkpoint),
     usedPoolIds: new Set(),
+    // Measured at the END of the chapter this checkpoint closes: that is what
+    // the learner sitting it has been taught (see untaughtAt).
+    untaught: untaughtAt(curriculum, checkpoint.afterLektion),
   };
   return [
     ...buildHoeren(ctx),
@@ -731,13 +813,13 @@ export const itemCounts = (item, answer) => !(item?.optional === true && !itemIs
  * Was this answer right? A self-confirmed read-aloud is "done", never right or
  * wrong; a mic-scored one is right at SPRECHEN_PASS_PCT and up.
  *
- * Grading here MUST match the lesson's PracticeItem.jsx call exactly: same
- * `strict` rule (STRICT_TOPIC on the item's topic) and the same
- * `caseSensitive: isCaseTask(item)` — which is now the item's OWN
- * `caseSensitive: true` flag and nothing else (check.js: the polite-possessive
- * regex was replaced by an opt-in the items carry), so a `Sie`/`Ihnen`/`Ihr`
- * politeness item is case-checked here exactly where it is in the lesson, and a
- * plain sentence-initial capital never is. TYPO handling is also
+ * Grading here MUST match the lesson's PracticeItem.jsx call exactly, and the
+ * way it is kept matching is that NEITHER side makes up options: every option
+ * comes from `checkOptionsFor(item)` (REVIEW #6 BLOCKER 3), so `strict`,
+ * `caseSensitive`, `dictation` and `spelling` are all decided by the item.
+ * Round 5 passed `caseSensitive` here by hand and forgot `dictation`, and the
+ * one dictation with a separator (`a1.1-cp2-hoeren-1`, a phone number) graded
+ * `correct` in the lesson and `wrong` here for the same typed answer. TYPO handling is also
  * identical on purpose: the standard (docs/course-standard-2026-09-12.md §3,
  * "Checkpoint") gives the checkpoint "3 attempts per 8 h with a remediation
  * set between" — that is a retake of the WHOLE test, not a per-item retry —
@@ -755,9 +837,7 @@ export function isItemCorrect(item, answer) {
     return answer === true || answer === 'done';
   }
   if (answer == null || answer === '') return false;
-  const strict = STRICT_TOPIC.test(item.topic || '');
-  const caseSensitive = isCaseTask(item);
-  const { result } = checkAnswer(String(answer), item.accepted, { strict, caseSensitive });
+  const { result } = checkAnswer(String(answer), item.accepted, checkOptionsFor(item));
   return result === RESULT.CORRECT || result === RESULT.TYPO;
 }
 

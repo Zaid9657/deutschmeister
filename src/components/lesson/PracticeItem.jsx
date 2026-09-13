@@ -3,7 +3,7 @@ import { Check, AlertTriangle, X, Sparkles } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import ExplainAnswer from './ExplainAnswer.jsx';
-import { checkAnswer, tagError, RESULT, STRICT_TOPIC, isCaseTask } from '../../lib/lesson/check.js';
+import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../../lib/lesson/check.js';
 import { isTypedItem } from '../../lib/lesson/buildLesson.js';
 
 /**
@@ -52,9 +52,10 @@ export const CASE_HINT = 'Achten Sie auf die Groß-/Kleinschreibung.';
  *
  * Renders the four pool types: fill_blank typed, fill_blank with option chips,
  * multiple_choice, sentence_building (typed) and error_correction (typed).
- * Checking goes through the shared `checkAnswer` with `strict` decided by the
- * item's topic — on a conjugation or article topic a one-letter slip IS the
- * grammar, so the typo allowance is off.
+ * Checking goes through the shared `checkAnswer` with every option derived from
+ * the item by `checkOptionsFor()` — on a conjugation or article topic a
+ * one-letter slip IS the grammar, so the typo allowance is off; capitalisation
+ * is the answer on the polite `Ihr` items; a dictation folds separators.
  *
  * `onResult(item, { result, correct, errorTag })` fires ONCE per item, on the
  * first submit: that is the response the accuracy figure counts.
@@ -78,17 +79,17 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
 
   const chips = useMemo(() => (item.options && item.options.length ? item.options : null), [item]);
   const typed = isTypedItem(item);
-  const strict = STRICT_TOPIC.test(item.topic || '');
-  // Capitalisation is the answer on the polite `Ihr` items (standard §3 /
-  // REVIEW #4 BLOCKER 3); elsewhere a case-only slip costs one retry, not the item.
-  const caseSensitive = isCaseTask(item);
+  // Every check option comes from the ITEM (checkOptionsFor: strict, caseSensitive,
+  // dictation, spelling), never from this call site — that is what keeps the
+  // lesson, the checkpoint and the review grading one grader (REVIEW #6 BLOCKER 3).
+  const checkOpts = useMemo(() => checkOptionsFor(item), [item]);
   const answer = typed ? value : picked;
   const canSubmit = String(answer || '').trim().length > 0;
 
   const submit = () => {
     if (!canSubmit || state) return;
     const accepted = item.accepted && item.accepted.length ? item.accepted : [item.answer];
-    const { result, expected, reason } = checkAnswer(answer, accepted, { strict, caseSensitive });
+    const { result, expected, reason } = checkAnswer(answer, accepted, checkOpts);
     const correct = result !== RESULT.WRONG;
     setState({
       result,

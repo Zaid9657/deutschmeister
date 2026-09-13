@@ -4,9 +4,11 @@
 // React/Supabase imports.
 //
 // Grades IDENTICALLY to the lesson (src/components/lesson/PracticeItem.jsx)
-// and the checkpoint (buildCheckpoint.js's isItemCorrect): same `strict` rule
-// and the same `caseSensitive: isCaseTask(item)`. A review card has no `topic`
-// field of its own — its card_key IS the topic/slug
+// and the checkpoint (buildCheckpoint.js's isItemCorrect), because all four
+// sites now ask the ITEM for their options: `checkAnswer(user, expected,
+// checkOptionsFor(item))` (REVIEW #6 BLOCKER 3) — strict, caseSensitive,
+// dictation and spelling are item properties, never call-site arguments.
+// A review card has no `topic` field of its own — its card_key IS the topic/slug
 // (`pattern:possessive-articles`, see src/lib/review/ladder.js's
 // patternCardKey), so a pseudo-item built from the card_key plus the card's
 // accepted answers is what STRICT_TOPIC is tested against, matching how the
@@ -27,12 +29,12 @@
 // §3's "3 attempts per 8 h" is a whole-test retake, not a per-item one), so a
 // TYPO result counts as correct-with-warning rather than being carved out as
 // wrong.
-import { checkAnswer, RESULT, STRICT_TOPIC, isCaseTask } from '../lesson/check.js';
+import { checkAnswer, RESULT, checkOptionsFor } from '../lesson/check.js';
 
-export function gradeTypedReview(cardKey, accepted, typed, { caseSensitive: flag = false } = {}) {
-  const pseudoItem = { topic: cardKey, answer: accepted?.[0], accepted, caseSensitive: flag === true };
-  const strict = STRICT_TOPIC.test(cardKey);
-  const caseSensitive = isCaseTask(pseudoItem);
-  const { result } = checkAnswer(typed, accepted, { strict, caseSensitive });
+export function gradeTypedReview(cardKey, accepted, typed, { caseSensitive: flag = false, kind = null } = {}) {
+  const pseudoItem = {
+    topic: cardKey, answer: accepted?.[0], accepted, caseSensitive: flag === true, kind,
+  };
+  const { result } = checkAnswer(typed, accepted, checkOptionsFor(pseudoItem));
   return { result, ok: result === RESULT.CORRECT || result === RESULT.TYPO };
 }

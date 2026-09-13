@@ -1,5 +1,6 @@
 import { supabase } from '../utils/supabase.js';
 import { nextDue, cardKinds, wordCardKey, patternCardKey, sentenceCardKey, parseCardKey } from '../lib/review/ladder.js';
+import { politeCaseItem } from '../data/lessonPools/quality.js';
 
 // review_cards data access — the spaced review over WORDS, GRAMMAR PATTERNS and
 // PRODUCTION SENTENCES that the standard asks for (§3). It sits beside, and
@@ -125,6 +126,28 @@ export async function gradeCard(userId, cardKey, correct) {
  * row can go stale. This is the lookup the review screen renders from; a card
  * whose key no longer resolves (the curriculum changed) is simply skipped.
  */
+/**
+ * Is capitalisation part of THIS card's answer?
+ *
+ * DaF review #6, BLOCKER 1 (the review-card half). `isCaseTask(item)` is the
+ * item's own `caseSensitive === true` flag and nothing else, and the flag is
+ * carried by the POOL items — `grep -c caseSensitive src/data/curricula/a11.js`
+ * is **0**. So copying it off the curriculum entry, as these three lines used
+ * to, made EVERY review card case-blind: the L1 sentence card
+ * „Gut. Wie geht es Ihnen?“ forgave `ihnen` although the lesson item for the
+ * same form (`extra-a11-l01-06`) grades it wrong. One rule, two answers,
+ * decided by which file the learner met the form in.
+ *
+ * So the flag is DERIVED with the same predicate the pool build stamps items
+ * with (`politeCaseItem` in src/data/lessonPools/quality.js — the polite
+ * `Sie/Ihnen/Ihr…`, whose whole point is the capital), and an explicit
+ * `caseSensitive: true` on the curriculum entry (or on a pool item a card is
+ * ever built from) stays an override. Derive, never retype: when the predicate
+ * changes, both surfaces change with it.
+ */
+const caseFlag = (entry, accepted) =>
+  entry?.caseSensitive === true || politeCaseItem({ accepted: (accepted || []).filter(Boolean) });
+
 export function buildCardIndex(curriculum) {
   const index = new Map();
   for (const lektion of curriculum?.lektionen || []) {
@@ -137,10 +160,7 @@ export function buildCardIndex(curriculum) {
         detail: word.plural ? `Plural: ${word.plural}` : '',
         lektionNr: lektion.nr,
         accepted: [word.de, word.word].filter(Boolean),
-        // The case-task opt-in travels with the content (check.js's isCaseTask
-        // reads the item's own flag now), so a polite form is graded in the
-        // review exactly as it is in the lesson.
-        caseSensitive: word.caseSensitive === true,
+        caseSensitive: caseFlag(word, [word.de, word.word]),
       });
     }
     for (const slug of lektion.practiceRule?.topics || lektion.grammarSlugs || []) {
@@ -153,7 +173,7 @@ export function buildCardIndex(curriculum) {
         detail: lektion.notice?.examples?.[0] || '',
         lektionNr: lektion.nr,
         accepted: (lektion.notice?.examples || []).filter(Boolean),
-        caseSensitive: lektion.notice?.caseSensitive === true,
+        caseSensitive: caseFlag(lektion.notice, lektion.notice?.examples || []),
       });
     }
     (lektion.dialog?.lines || []).forEach((line, idx) => {
@@ -165,7 +185,7 @@ export function buildCardIndex(curriculum) {
         detail: `${line.speaker} — Lektion ${lektion.nr}`,
         lektionNr: lektion.nr,
         accepted: [line.de],
-        caseSensitive: line.caseSensitive === true,
+        caseSensitive: caseFlag(line, [line.de]),
       });
     });
   }
