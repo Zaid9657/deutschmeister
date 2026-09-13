@@ -251,7 +251,10 @@ export const CURRICULUM_A11 = {
         title: 'Am Schalter im Bürgerbüro',
         setting: 'Ana meldet sich im Bürgerbüro an. Herr Weber arbeitet am Schalter.',
         lines: [
-          { speaker: 'Herr Weber', de: 'Guten Tag! Ich bin Herr Weber.', en: 'Good day! I am Mr Weber.' },
+          // „das Amt“ and „die Post“ stood in the Wortfeld of the Ämter-Handlungsfeld and in no
+          // line of its own Lektion (DaF review #3, Wortfeld ↔ Input): they are carried here and in
+          // line 8 rather than by a Wortfeld entry nobody ever hears.
+          { speaker: 'Herr Weber', de: 'Guten Tag! Ich bin Herr Weber vom Amt.', en: 'Good day! I am Mr Weber from the public office.' },
           { speaker: 'Ana', de: 'Freut mich! Ich bin Ana.', en: 'Nice to meet you! I am Ana.' },
           { speaker: 'Herr Weber', de: 'Bitte füllen Sie das Formular aus.', en: 'Please fill out the form.' },
           { speaker: 'Ana', de: 'Ist das Formular für die Adresse?', en: 'Is that form for the address?' },
@@ -261,7 +264,7 @@ export const CURRICULUM_A11 = {
           { speaker: 'Ana', de: 'Ich bin Studentin.', en: 'I am a student.' },
           // The Zahlen can-do is carried by the input, not only by the Wortfeld entry: these two
           // lines are the only place a learner hears digits in L2 (DaF review #2, L2).
-          { speaker: 'Herr Weber', de: 'Danke. Und wie ist Ihre Telefonnummer?', en: 'Thank you. And what is your phone number?' },
+          { speaker: 'Herr Weber', de: 'Danke. Hier ist auch die Post. Wie ist Ihre Telefonnummer?', en: 'Thank you. The post office is here too. What is your phone number?' },
           { speaker: 'Ana', de: 'Meine Telefonnummer ist null eins sieben sechs.', en: 'My phone number is zero one seven six.' },
         ],
       },
@@ -287,11 +290,16 @@ export const CURRICULUM_A11 = {
       schreiben: {
         kind: 'mitteilung',
         taskKey: 'a11-l02',
-        taskDe: 'Schreiben Sie Ihrem neuen Nachbarn eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
-        leitpunkte: ['Wer Sie sind', 'Was Sie von Beruf sind', 'Wann Sie zu Hause sind'],
+        // The Textsorte stays a Mitteilung (the kind alternates by parity), but the CONTENT now
+        // serves the Handlungsfeld „Ämter und Behörden: Angaben zur Person“: the old neighbour note
+        // asked for none of the Personalien lexis this Lektion teaches, so ledig/verheiratet/
+        // Geburtsdatum/Staatsangehörigkeit/Familienstand lived in the Wortfeld and nowhere else
+        // (DaF review #3, Wortfeld ↔ Input, L2: 9 of 23).
+        taskDe: 'Sie melden sich in der Sprachschule an. Schreiben Sie eine kurze Nachricht mit Ihren Daten. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        leitpunkte: ['Ihr Name und Ihr Geburtsdatum', 'Ihr Land und Ihre Staatsangehörigkeit', 'Ihr Familienstand: ledig oder verheiratet'],
         minWords: 25,
         maxWords: 45,
-        sample: 'Guten Tag, Herr Weber! Ich bin Ana. Ich bin Studentin. Viele Grüße, Ana',
+        sample: 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Mein Geburtsdatum ist 3. Mai 1998. Ich komme aus Marokko. Ich bin ledig. Viele Grüße, Ana Chakiri',
       },
       // A1.1 carries six listening exercises and ten reading texts; every one is linked from another
       // Lektion, so this one honestly has none — the syllabus shows „—“ rather than a repeat.
@@ -730,8 +738,9 @@ export const CURRICULUM_A11 = {
           { speaker: 'Tim', de: 'Ich lese auch gern. Und ich koche gern.', en: 'I also like reading. And I like cooking.' },
           { speaker: 'Lena', de: 'Ich schwimme jede Woche. Gehst du ins Kino?', en: 'I swim every week. Do you go to the cinema?' },
           { speaker: 'Tim', de: 'Ja, sehr gern! Und tanzt du auch?', en: 'Yes, very gladly! And do you dance too?' },
-          { speaker: 'Lena', de: 'Nein, ich tanze nicht gut. Meine Freundin tanzt gern.', en: 'No, I do not dance well. My friend likes dancing.' },
-          { speaker: 'Tim', de: 'Hören wir am Wochenende zusammen Musik?', en: 'Shall we listen to music together at the weekend?' },
+          // der Freund and vielleicht were taught and never heard (DaF review #3, RULE 10).
+          { speaker: 'Lena', de: 'Nein, ich tanze nicht gut. Mein Freund und meine Freundin tanzen gern.', en: 'No, I do not dance well. My friend and my girlfriend like dancing.' },
+          { speaker: 'Tim', de: 'Vielleicht hören wir am Wochenende zusammen Musik?', en: 'Maybe we will listen to music together at the weekend?' },
         ],
       },
       pretest: {
@@ -763,11 +772,16 @@ export const CURRICULUM_A11 = {
       schreiben: {
         kind: 'formular',
         taskKey: 'a11-l07',
-        taskDe: 'Lena Brandt ist neu im Sportkurs. Ihr Hobby ist Schwimmen. Der Kurs ist am Samstag. Füllen Sie die Anmeldung für einen Sportkurs aus.',
-        fields: ['Vorname', 'Nachname', 'Kurs', 'Hobby', 'Tag'],
+        // NOT „am Samstag“: der Samstag is taught in L8, one Lektion later, so the form demanded a
+        // word the learner has not seen and then met it again in a Lektion that never used it
+        // (DaF review #3, L8 Wortfeld ↔ L7 Schreiben). „das Wochenende“ is in THIS Wortfeld and in
+        // three lines of this dialogue, so the learner can copy the answer out of the source text —
+        // which is what SD1 Schreiben Teil 1 actually tests.
+        taskDe: 'Lena Brandt ist neu im Sportkurs. Ihr Hobby ist Schwimmen. Der Kurs ist am Wochenende. Füllen Sie die Anmeldung für einen Sportkurs aus.',
+        fields: ['Vorname', 'Nachname', 'Kurs', 'Hobby', 'Kurs am'],
         minWords: 5,
         maxWords: 40,
-        sample: 'Vorname: Lena / Nachname: Brandt / Kurs: Sport / Hobby: Schwimmen / Tag: Samstag',
+        sample: 'Vorname: Lena / Nachname: Brandt / Kurs: Sport / Hobby: Schwimmen / Kurs am: Wochenende',
       },
       links: { listeningExercise: null, readingOrder: 9 },
       practiceRule: { topics: ['present-tense-regular', 'personal-pronouns'], typedMin: 3 },
@@ -833,7 +847,8 @@ export const CURRICULUM_A11 = {
           { speaker: 'Lena', de: 'Ich stehe um sechs Uhr auf.', en: 'I get up at six o’clock.' },
           { speaker: 'Ana', de: 'Und wann ist dein Termin?', en: 'And when is your appointment?' },
           { speaker: 'Lena', de: 'Der Termin ist am Montag um Viertel vor acht.', en: 'The appointment is on Monday at a quarter to eight.' },
-          { speaker: 'Ana', de: 'Kommst du pünktlich?', en: 'Will you be on time?' },
+          // heute and die Verspätung were taught and never heard (DaF review #3, RULE 10).
+          { speaker: 'Ana', de: 'Kommst du heute pünktlich? Oder hast du Verspätung?', en: 'Will you be on time today? Or will you be late?' },
           // NOT „Ich habe einen guten Wecker“: that is Adjektivdeklination im Akkusativ, a fifth
           // Vorgriff the course never names, in the Lektion whose exam part is Hören Teil 1.
           { speaker: 'Lena', de: 'Ja, immer. Mein Wecker ist gut.', en: 'Yes, always. My alarm clock is good.' },
@@ -841,7 +856,9 @@ export const CURRICULUM_A11 = {
           { speaker: 'Lena', de: 'Am Dienstag habe ich abends Zeit.', en: 'On Tuesday I have time in the evening.' },
           // Mittwoch, Donnerstag and Freitag were in the Wortfeld and in no line (DaF review #2, §A).
           { speaker: 'Ana', de: 'Und am Mittwoch, am Donnerstag oder am Freitag?', en: 'And on Wednesday, Thursday or Friday?' },
-          { speaker: 'Lena', de: 'Am Mittwoch bin ich beim Arzt. Am Freitag um acht!', en: 'On Wednesday I am at the doctor’s. On Friday at eight!' },
+          // Samstag and Sonntag came over from L7 with the rest of the week but appeared in no line,
+          // no item and no task of L8 — the week was a set on paper only (DaF review #3).
+          { speaker: 'Lena', de: 'Am Mittwoch beim Arzt. Am Samstag und am Sonntag habe ich frei!', en: 'On Wednesday at the doctor’s. On Saturday and Sunday I am free!' },
         ],
       },
       pretest: { promptDe: 'Fragen Sie nach der Uhrzeit.', promptEn: 'Ask what time it is.', model: 'Wie spät ist es?', accepted: ['Wie spät', 'Wie viel Uhr', 'Wann'] },
@@ -932,10 +949,14 @@ export const CURRICULUM_A11 = {
           { speaker: 'Paul', de: 'Haben Sie auch Hunger? Wir haben Suppe, Salat und Kuchen.', en: 'Are you hungry too? We have soup, salad and cake.' },
           { speaker: 'Ana', de: 'Ja, ich habe Hunger. Ich möchte Kuchen, bitte.', en: 'Yes, I am hungry. I would like cake, please.' },
           { speaker: 'Paul', de: 'Möchten Sie auch Wasser?', en: 'Would you like water as well?' },
-          { speaker: 'Ana', de: 'Ja, ein Glas Wasser, bitte.', en: 'Yes, a glass of water, please.' },
-          { speaker: 'Paul', de: 'Möchten Sie auch einen Tee?', en: 'Would you like a tea too?' },
-          { speaker: 'Ana', de: 'Nein, danke.', en: 'No, thank you.' },
-          { speaker: 'Paul', de: 'Gut. Kommt sofort!', en: 'Good. Coming right up!' },
+          // Eight of the 23 Wortfeld entries of the Café-Lektion were ordered by nobody: Bier,
+          // Mineralwasser, Orangensaft, Tasse, Kellnerin, essen, Brot, Frühstück (and Wein).
+          // The closing four lines carry them instead of repeating Wasser and Tee (DaF review #3).
+          { speaker: 'Ana', de: 'Ja, ein Glas Mineralwasser, bitte. Und einen Orangensaft.', en: 'Yes, a glass of mineral water, please. And an orange juice.' },
+          { speaker: 'Paul', de: 'Gern. Wir haben auch Tee, Bier und Wein.', en: 'Gladly. We also have tea, beer and wine.' },
+          { speaker: 'Ana', de: 'Nein, danke. Ich esse gern ein Brot mit Salat.', en: 'No, thank you. I like eating a bread roll with salad.' },
+          { speaker: 'Paul', de: 'Gut. Die Kellnerin kommt sofort mit dem Brot.', en: 'Good. The waitress is coming right away with the bread.' },
+          { speaker: 'Ana', de: 'Danke! Zum Frühstück trinke ich immer eine Tasse Kaffee.', en: 'Thank you! For breakfast I always drink a cup of coffee.' },
         ],
       },
       pretest: {

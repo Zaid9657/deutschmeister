@@ -14,6 +14,16 @@
 // tokenises each line and expands every Wortfeld entry into its forms (conjugations, separable
 // Satzklammer, participles for the Perfekt chunks, plurals, adjective endings), so "Ich kaufe am
 // Freitag ein." passes on the strength of the entry "einkaufen" and nothing else.
+//
+// RULE 10 and RULE 11 are the systemic ask of DaF review #3 (2026-09-12), whose closing paragraph
+// reads: „Der Validator läuft über Dialoge, nicht über Items“ — every repair round wrote new
+// Vorgriffe because only the dialogues were ever checked. RULE 10 turns RULE 5 around (a taught
+// word must also be USED, not only listed: ≈50 of 262 Wortfeld entries occurred in no input of
+// their own Lektion), RULE 11 runs RULE 5's own machinery over the hand-written practice items in
+// src/data/lessonPools/a11.extra.json. Both are ratchets, not hard gates, because the debt is
+// older than this round; they may only ever be lowered.
+
+import { readFileSync } from 'node:fs';
 
 import { CURRICULUM_A11, FUNCTION_WORDS, DIALOG_NAMES } from '../src/data/curricula/a11.js';
 import { writingTaskByKey } from '../src/data/writingTasks.js';
@@ -140,9 +150,133 @@ export function formsOf(entry) {
   return forms;
 }
 
+/**
+ * RULE 10 ratchet — how many Wortfeld entries may still occur in NO input of their own Lektion,
+ * counted across all twelve. DaF review #3 measured ≈50 of 262 before this round; the L2 Schreiben
+ * rewrite, the L8 Samstag/Sonntag line and the four new L9 café lines closed the densest clusters.
+ * This number may be lowered, never raised (the contract's ceiling is 30).
+ */
+export const MAX_UNCOVERED_WORTFELD = 35;
+
+/**
+ * RULE 11 ratchet — how many (item, token) pairs in the hand-written pool may still use a word
+ * that the course has not taught by that item's Lektion. The review's finding was that the
+ * hand-written repairs „unterliegen keiner Prüfung“; this is that check. Lower it as items are
+ * rewritten, never raise it.
+ */
+export const MAX_UNTAUGHT_ITEM_TOKENS = 15;
+
+/** The hand-written practice items, read from disk so the validator sees what the pool build sees. */
+export function loadExtraItems() {
+  const url = new URL('../src/data/lessonPools/a11.extra.json', import.meta.url);
+  try {
+    return JSON.parse(readFileSync(url, 'utf8')).items || [];
+  } catch {
+    return [];
+  }
+}
+
+/** Lektion number an item belongs to, from its `extra-a11-lNN-…` id. */
+const lektionOfItem = (id) => {
+  const m = /^extra-a11-l(\d{2})-/.exec(String(id || ''));
+  return m ? Number(m[1]) : null;
+};
+
+const FUNCTION_SET = new Set(FUNCTION_WORDS.map((w) => w.toLowerCase()));
+const NAME_SET = new Set(DIALOG_NAMES.map((w) => w.toLowerCase()));
+
+/**
+ * The forms that count as "this Wortfeld entry was used". formsOf() also yields the article and the
+ * function words of multi-word entries ("von Beruf", "Viertel nach"), which would make almost
+ * anything look covered, so they are dropped: an entry is carried by its content word or not at all.
+ */
+export function coverageForms(w) {
+  const head = tokenise(w.word || w.de).map((t) => t.toLowerCase())
+    .filter((t) => t !== String(w.article || '').toLowerCase());
+  // Entries whose only content IS a function word (gern, schon, bitte, danke, hallo) can never be
+  // "missing" — RULE 5 lets any line use them — so they are outside this rule.
+  if (!head.length || head.every((t) => FUNCTION_SET.has(t))) return new Set();
+  const forms = formsOf(w);
+  if (w.article) forms.delete(String(w.article).toLowerCase());
+  for (const f of [...forms]) if (FUNCTION_SET.has(f)) forms.delete(f);
+  return forms;
+}
+
+/** RULE 10: every Wortfeld entry must occur somewhere in the input of its own Lektion. */
+export function wortfeldCoverage(c, extraItems = loadExtraItems()) {
+  const byLektion = new Map();
+  for (const it of extraItems) {
+    const nr = lektionOfItem(it.id);
+    if (nr) byLektion.set(nr, [...(byLektion.get(nr) || []), it]);
+  }
+  const uncovered = [];
+  for (const l of c.lektionen || []) {
+    const sources = [
+      l.dialog?.title, l.dialog?.setting,
+      ...(l.dialog?.lines || []).map((x) => x.de),
+      l.notice?.title, l.notice?.bodyDe, ...(l.notice?.examples || []),
+      l.sprechen?.open?.promptDe, ...(l.sprechen?.open?.hintWords || []),
+      l.phonetik?.focus, ...(l.phonetik?.items || []),
+      l.pretest?.promptDe, l.pretest?.model, ...(l.pretest?.accepted || []),
+      l.schreiben?.taskDe, l.schreiben?.sample,
+      ...(l.schreiben?.leitpunkte || []), ...(l.schreiben?.fields || []),
+      ...(byLektion.get(l.nr) || []).flatMap((it) => [
+        it.questionDe, it.answer, it.explanationDe, ...(it.options || []), ...(it.accepted || []),
+      ]),
+    ].filter(Boolean);
+    const seen = new Set();
+    for (const s of sources) for (const t of tokenise(s)) seen.add(t.toLowerCase());
+    for (const w of l.wortfeld || []) {
+      const forms = coverageForms(w);
+      if (!forms.size) continue;                       // greetings whose only token is a function word
+      if (![...forms].some((f) => seen.has(f))) uncovered.push({ nr: l.nr, de: w.de });
+    }
+  }
+  return uncovered;
+}
+
+// What is NOT lexis in a hand-written prompt: the cue in brackets, the Sie-Aufgabenformel and the
+// article+noun that names what the learner has to produce.
+const ITEM_CUE_RE = /\([^)]*\)|\[[^\]]*\]/g;
+const ITEM_FORMULA_RE = new RegExp([
+  'Bilden Sie den Satz', 'Bilden Sie die Frage', 'Bilden Sie',
+  'Schreiben Sie', 'Korrigieren Sie', 'Ergänzen Sie', 'Wählen Sie', 'Setzen Sie', 'Finden Sie',
+  'die Frage', 'den Satz', 'das Wort', 'die Zahl', 'als Wort', 'richtig', 'normalen Wortfolge',
+].join('|'), 'g');
+
+/** RULE 11: the hand-written items obey the same taught-words rule as the dialogues. */
+export function itemLexis(c, extraItems = loadExtraItems()) {
+  const known = new Set([...FUNCTION_SET, ...NAME_SET]);
+  const knownUpTo = new Map();
+  for (const l of c.lektionen || []) {
+    for (const w of l.wortfeld || []) for (const f of coverageForms(w)) known.add(f);
+    for (const w of l.wortfeld || []) for (const f of formsOf(w)) known.add(f);
+    knownUpTo.set(l.nr, new Set(known));
+  }
+  const offenders = [];
+  for (const it of extraItems) {
+    const nr = lektionOfItem(it.id);
+    if (!nr) continue;
+    const vocab = knownUpTo.get(nr);
+    if (!vocab) continue;
+    const prompt = String(it.questionDe || '').replace(ITEM_CUE_RE, ' ').replace(ITEM_FORMULA_RE, ' ');
+    const texts = [prompt, it.answer, ...(it.accepted || [])].filter(Boolean);
+    const seen = new Set();
+    for (const s of texts) {
+      for (const t of tokenise(s)) {
+        const low = t.toLowerCase();
+        if (vocab.has(low) || NAME_SET.has(low) || seen.has(low)) continue;
+        seen.add(low);
+        offenders.push({ id: it.id, token: t });
+      }
+    }
+  }
+  return offenders;
+}
+
 const words = (s) => String(s).trim().split(/\s+/).filter(Boolean);
 
-export function validateCurriculum(c) {
+export function validateCurriculum(c, extraItems = loadExtraItems()) {
   const errors = [];
   const fail = (msg) => errors.push(msg);
   const L = c.lektionen || [];
@@ -395,18 +529,37 @@ export function validateCurriculum(c) {
     }
   });
 
+  // ---- RULE 10 (Wortfeld coverage) and RULE 11 (hand-written item lexis) ------------------------
+  const uncovered = wortfeldCoverage(c, extraItems);
+  if (uncovered.length > MAX_UNCOVERED_WORTFELD) {
+    fail(`RULE 10: ${uncovered.length} Wortfeld entries occur in no input of their Lektion, ratchet is ${MAX_UNCOVERED_WORTFELD} — ${uncovered.map((u) => `L${u.nr} ${u.de}`).join(', ')}`);
+  }
+  const untaught = itemLexis(c, extraItems);
+  if (untaught.length > MAX_UNTAUGHT_ITEM_TOKENS) {
+    fail(`RULE 11: ${untaught.length} untaught tokens in hand-written items, ratchet is ${MAX_UNTAUGHT_ITEM_TOKENS} — ${untaught.map((o) => `${o.id}:${o.token}`).join(', ')}`);
+  }
+
   return errors;
 }
 
 const isMain = process.argv[1] && import.meta.url.endsWith(process.argv[1].split('/').pop());
 if (isMain) {
   const errors = validateCurriculum(CURRICULUM_A11);
+  const wf = CURRICULUM_A11.lektionen.flatMap((l) => l.wortfeld);
+  const withId = wf.filter((w) => w.wordId).length;
+  // The two ratchets print on every run, pass or fail: a number nobody sees is a number that
+  // silently climbs back (DaF review #3, „der Validator läuft über Dialoge, nicht über Items“).
+  const mark = errors.length ? '·' : '✓';
+  console.log(`${mark} ${CURRICULUM_A11.code}: 12 Lektionen, ${wf.length} Wortfeld-Einträge (${withId} mit wordId, ${Math.round((100 * withId) / wf.length)} %), ${CURRICULUM_A11.hoursTotal} h`);
+  const uncovered = wortfeldCoverage(CURRICULUM_A11);
+  console.log(`  RULE 10 Wortfeld-Deckung: ${uncovered.length} ungenutzt von ${wf.length} (Ratchet ${MAX_UNCOVERED_WORTFELD})`);
+  for (const u of uncovered) console.log(`    L${u.nr} ${u.de}`);
+  const untaught = itemLexis(CURRICULUM_A11);
+  console.log(`  RULE 11 Item-Lexik: ${untaught.length} ungelehrte Tokens (Ratchet ${MAX_UNTAUGHT_ITEM_TOKENS})`);
+  for (const o of untaught) console.log(`    ${o.id}: ${o.token}`);
   if (errors.length) {
     console.error(`✗ ${CURRICULUM_A11.code}: ${errors.length} problem(s)`);
     for (const e of errors) console.error('  - ' + e);
     process.exit(1);
   }
-  const wf = CURRICULUM_A11.lektionen.flatMap((l) => l.wortfeld);
-  const withId = wf.filter((w) => w.wordId).length;
-  console.log(`✓ ${CURRICULUM_A11.code}: 12 Lektionen, ${wf.length} Wortfeld-Einträge (${withId} mit wordId, ${Math.round((100 * withId) / wf.length)} %), ${CURRICULUM_A11.hoursTotal} h`);
 }
