@@ -430,7 +430,15 @@ test('no card carries English outside its one English: support line', () => {
 // Nothing weaker is allowed: a bare "Du bist müde." or "Antworte mit einem Satz"
 // carries no `ich` and therefore fails.
 const DU_REGISTER_RE = /\b(du|dir|dich|dein\w*|sagst|lerne|antworte|tippe|kannst)\b/i;
-const isParadigmLine = (text) => /\bich\b/i.test(text) && /\bdu\b/i.test(text);
+// A PERSONAL paradigm names the persons (`ich … du …`); a POSSESSIVE paradigm
+// names the possessive articles (`mein … dein …`) and is the same thing one word
+// class over — it is what A1.1 Lektion 12 and its notice TITLE are made of
+// ("mein, dein, sein, ihr – Possessivartikel"), and a card whose title must equal
+// its notice title cannot drop the `dein` out of that listing. Both forms are
+// closed: two named forms on one line, never a bare `du`/`dein` addressed at the
+// reader.
+const isParadigmLine = (text) =>
+  (/\bich\b/i.test(text) && /\bdu\b/i.test(text)) || (/\bmein\b/i.test(text) && /\bdein\b/i.test(text));
 
 test('no card duzt outside a paradigm listing', () => {
   for (const primary of PRIMARIES) {
@@ -645,16 +653,15 @@ test('every example noun stands in the Wortfeld the course has taught by that Le
 //       "… kommt in Lektion 4" or "… folgt in A1.2" has withdrawn that form; the
 //       card may name the deferral and may not use the form anywhere else.
 //
-// A1.1 IS A RATCHET, NOT AN EXEMPTION. These four rules were written for the A1.2
-// rebuild and the A1.1 cards predate them — measured on 2026-09-13 they carry 47
-// unsourced example sentences, 17 uncovered bold forms and 10 titles that differ
-// from their notice. Skipping a1.1 is how a finding survives four rounds in this
-// repo, so the levels run through the same machinery and a1.1's numbers are
-// capped at the measured value: they can only fall. a1.2 is capped at 0.
-const LEGACY_BUDGET = {
-  'a1.1': { examples: 47, boldForms: 17, titles: 10 },
-  'a1.2': { examples: 0, boldForms: 0, titles: 0 },
-};
+// THERE IS NO BUDGET ANY MORE. These four rules were written for the A1.2 rebuild
+// and the A1.1 cards predated them, so round 3 held a1.1 at its MEASURED numbers
+// — 47 unsourced example sentences, 17 uncovered bold forms, 10 titles that
+// differ from their notice — as a ratchet that could only fall. Round 9
+// (REVIEW-daf-8-2026-09-12.md MAJOR 1) rewrote all twelve A1.1 cards from the
+// Lektionen's own notices and dialogue lines and took all three to zero, so the
+// ratchet is gone rather than set to 0: an allowance that exists is an allowance
+// a future level asks for, and the whole finding class was "a1.1 was skipped".
+// Every level now fails on the FIRST offending sentence, form or title.
 
 const unbold = (text) => String(text).replace(/\*\*/g, '');
 
@@ -721,10 +728,10 @@ const exampleSentences = (card) =>
 
 /**
  * Example sentences a card may carry that are NOT a line of its Lektion, keyed by
- * slug, each with the reason it is allowed. Deliberately empty: every one of the
- * twelve A1.2 cards quotes its own Lektion verbatim, and the twelve A1.1 cards
- * are held by the LEGACY_BUDGET ratchet instead. An entry here is a card saying
- * out loud that it had to invent a sentence, which is the thing BLOCKER 2 was.
+ * slug, each with the reason it is allowed. Deliberately empty: all twenty-four
+ * cards — the twelve A1.2 ones since round 3, the twelve A1.1 ones since round 9
+ * — quote their own Lektion verbatim. An entry here is a card saying out loud
+ * that it had to invent a sentence, which is the thing BLOCKER 2 was.
  */
 const EXAMPLE_ALLOW = /** @type {Record<string, Array<{ sentence: string, why: string }>>} */ ({});
 
@@ -742,9 +749,10 @@ test('every example sentence on a card is a line of its own Lektion', () => {
         offenders.push(`L${lektion.nr} ${lektion.primarySlug}: "${sentence}"`);
       }
     }
-    assert.ok(
-      offenders.length <= LEGACY_BUDGET[level].examples,
-      `${level}: ${offenders.length} example sentences are nobody's line (budget ${LEGACY_BUDGET[level].examples}):\n  ${offenders.join('\n  ')}`,
+    assert.deepEqual(
+      offenders,
+      [],
+      `${level}: ${offenders.length} example sentences are nobody's line:\n  ${offenders.join('\n  ')}`,
     );
   }
 });
@@ -864,9 +872,10 @@ test('every form the notice puts in bold appears on the card', () => {
         missing.push(`L${lektion.nr} ${lektion.primarySlug}: "${form}"`);
       }
     }
-    assert.ok(
-      missing.length <= LEGACY_BUDGET[level].boldForms,
-      `${level}: ${missing.length} bold notice forms are missing from their card (budget ${LEGACY_BUDGET[level].boldForms}):\n  ${missing.join('\n  ')}`,
+    assert.deepEqual(
+      missing,
+      [],
+      `${level}: ${missing.length} bold notice forms are missing from their card:\n  ${missing.join('\n  ')}`,
     );
   }
 });
@@ -879,9 +888,10 @@ test('the card title is the title of its notice', () => {
       if (!card || card.titleDe === lektion.notice.title) continue;
       diverged.push(`L${lektion.nr} ${lektion.primarySlug}: card "${card.titleDe}" vs notice "${lektion.notice.title}"`);
     }
-    assert.ok(
-      diverged.length <= LEGACY_BUDGET[level].titles,
-      `${level}: ${diverged.length} card titles differ from their notice (budget ${LEGACY_BUDGET[level].titles}):\n  ${diverged.join('\n  ')}`,
+    assert.deepEqual(
+      diverged,
+      [],
+      `${level}: ${diverged.length} card titles differ from their notice:\n  ${diverged.join('\n  ')}`,
     );
   }
 });

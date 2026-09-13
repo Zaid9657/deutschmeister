@@ -80,8 +80,14 @@ test('the registry covers the four A sub-levels with their final tests, and the 
 // read it. So this is a GLOB over both directories the player actually
 // renders from, plus the one top-level page the speaking task hands off to —
 // no file in scope can be omitted by forgetting to type its name.
+// MAJOR 3 (DaF review #8): the course chrome lives in THREE directories, not
+// two — src/components/course/ is the third, and ExamDatePlan.jsx duzed on
+// four lines while every other course screen siezt. Glob it in exactly like
+// the other two, and see the derived-directory guard below for what stops a
+// fourth directory from going unnoticed the same way.
+const CHROME_DIRS = ['src/components/lesson', 'src/components/course', 'src/components/ui'];
 const CHROME_FILES = [
-  ...readdirSync(join(ROOT, 'src/components/lesson')).filter((f) => f.endsWith('.jsx')).map((f) => `src/components/lesson/${f}`),
+  ...CHROME_DIRS.flatMap((dir) => readdirSync(join(ROOT, dir)).filter((f) => f.endsWith('.jsx')).map((f) => `${dir}/${f}`)),
   // MAJOR 10 (DaF review #5, last sentence): the register test must also cover
   // the pages the player renders, not just its stage components — that is
   // exactly where CheckpointPage.jsx and ReviewPage.jsx duzed.
@@ -155,6 +161,30 @@ test('the lesson chrome sieze: no du-register token in any screen the player ren
     });
   }
   assert.deepEqual(offenders, [], `du-register in the lesson chrome:\n${offenders.join('\n')}`);
+});
+
+// MAJOR 3's own guard against MAJOR 1's failure mode recurring one directory
+// later: don't hand-list which src/components/<dir> the player renders from —
+// read the import lines of the pages that assemble the course screens and
+// assert every `components/<dir>` they pull from is one of CHROME_DIRS. A
+// fourth directory (or a fifth) then fails on its first import, before any
+// du-form has to be found in it to notice.
+const IMPORT_SCAN_FILES = [
+  'src/pages/CurriculumHomePage.jsx',
+  ...readdirSync(join(ROOT, 'src/pages/lesson')).filter((f) => f.endsWith('.jsx')).map((f) => `src/pages/lesson/${f}`),
+];
+const COMPONENT_IMPORT_RE = /from\s+['"](?:\.\.\/)+components\/([^/'"]+)\//g;
+
+test('CHROME_DIRS covers every src/components/<dir> the course pages import from', () => {
+  const importedDirs = new Set();
+  for (const f of IMPORT_SCAN_FILES) {
+    const src = read(f);
+    for (const m of src.matchAll(COMPONENT_IMPORT_RE)) importedDirs.add(m[1]);
+  }
+  assert.ok(importedDirs.size > 0, 'the import scan found nothing — the regex or file list is broken');
+  const globbed = new Set(CHROME_DIRS.map((d) => d.replace(/^src\/components\//, '')));
+  const missing = [...importedDirs].filter((d) => !globbed.has(d));
+  assert.deepEqual(missing, [], `these src/components/<dir> are imported by course pages but not globbed into CHROME_FILES: ${missing.join(', ')}`);
 });
 
 test('every REGISTER_EXEMPT line still exists verbatim (a waiver must not silently drift)', () => {
