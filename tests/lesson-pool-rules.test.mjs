@@ -89,6 +89,7 @@ import {
   missingSentenceArticle, cueAnswerMismatch, metalinguisticPrompt, SENTENCE_ARTICLE_CUE,
   ambiguousCorrection, minimalArticleCorrection, isPoliteFormItem, drillsSlug, isNumberWord,
 } from '../src/data/lessonPools/quality.js';
+import { levelLexicon, untaughtTokens, levelSpec } from '../scripts/validate-curriculum.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => JSON.parse(readFileSync(join(ROOT, p), 'utf8'));
@@ -723,3 +724,67 @@ test('a number item drills numbers, not the verb it is filed under — REVIEW #6
     assert.equal(drillsSlug(it, 'numbers'), true, `filed under numbers but drills something else: ${label(it)}`);
   }
 });
+
+// --- REVIEW #6 MAJOR 4 -----------------------------------------------------
+
+/**
+ * THE LEGACY HALF of each built pool: the items whose id is an exercise id of
+ * `grammar-content-cache.json`. That is the build's own definition of "legacy"
+ * — the hand-written extras carry an `extra-<level>-lNN-` id and the generated
+ * buchstabieren supplement carries a hash-derived one, and neither is in the
+ * cache — so the test and `scripts/build-lesson-pool.mjs` partition the shipped
+ * pool the same way rather than by two guesses at a naming convention.
+ */
+const CACHE_IDS = new Set(read('grammar-content-cache.json').exercises.map((e) => e.id));
+const legacyOf = (pool) => pool.items.filter((i) => CACHE_IDS.has(i.id));
+
+test('no shipped legacy item carries a word the course never teaches — REVIEW #6 MAJOR 4', () => {
+  // THE CLASS UNDER RULE 11. RULE 11/11b measure a VORGRIFF — a word the course
+  // teaches LATER than the Lektion the item is met in — and a Vorgriff is
+  // repairable by moving the item. Five review rounds kept re-finding a
+  // different class underneath, one id at a time: legacy bank items built on
+  // words the course teaches NOWHERE, at any Lektion (`Honig`, `König`,
+  // `Instrument`, `Freiheit`, `Zeitung`, and the cast names `Tom` and `Anna`,
+  // who appear in no A1.1 dialogue). The build drops them before the merge; this
+  // is what makes the drop provable in the artefact a learner is served.
+  //
+  // HAND-WRITTEN EXTRAS AND THE GENERATED SUPPLEMENT ARE NOT IN SCOPE, on
+  // purpose: they are authored from the curriculum and are RULE 11's business,
+  // where a Vorgriff is a work order rather than a build-time deletion. Deleting
+  // authored work silently is the failure mode this scoping avoids.
+  for (const [level, pool] of [['a1.1', POOL], ['a1.2', POOL_A12]]) {
+    const spec = levelSpec(level);
+    const lexicon = levelLexicon(level);
+    const offenders = legacyOf(pool)
+      .map((item) => ({ item, tokens: untaughtTokens(item, lexicon, spec) }))
+      .filter((o) => o.tokens.length);
+    assert.deepEqual(
+      offenders.map((o) => `${o.item.id.slice(0, 8)} ${o.item.topic}: ${o.tokens.join(', ')}`),
+      [],
+      `${level}: ${offenders.length} legacy item(s) use words ${level} never teaches — rebuild the pool`,
+    );
+    // and the partition is real: a level whose legacy half is empty would pass
+    // the assertion above without measuring anything.
+    assert.ok(legacyOf(pool).length > 50, `${level}: only ${legacyOf(pool).length} legacy items found — the id partition broke`);
+  }
+});
+
+test('the per-topic floor still holds after the untaught-lexis drop', () => {
+  // Unchanged in substance from the floor test above — seven is one Lektion's
+  // practice set — but stated over the BUILT pools of both levels, because the
+  // untaught-lexis gate removes legacy items and a topic can only thin out
+  // here. If this fails, the remedy is hand-written extras on the named topic;
+  // lowering the floor would hide a Lektion drawing the same item twice.
+  const thin = [];
+  for (const [level, pool] of [['a1.1', POOL], ['a1.2', POOL_A12]]) {
+    const perTopic = new Map();
+    for (const it of pool.items) perTopic.set(it.topic, (perTopic.get(it.topic) || 0) + 1);
+    for (const [topic, n] of perTopic) if (n < 7) thin.push(`${level} ${topic}: ${n}`);
+  }
+  // `numbers` (a1.1) is a PRACTICE-ONLY topic supplied entirely by the
+  // hand-written extras and has stood at 4 since it was introduced — it is not
+  // a casualty of the lexis gate (the gate dropped 0 items from it). It is named
+  // here rather than filtered out, so the day it is filled the list gets shorter.
+  assert.deepEqual(thin, ['a1.1 numbers: 4'], `topics under the 7-item floor — hand-written extras needed:\n  ${thin.join('\n  ')}`);
+});
+

@@ -25,7 +25,7 @@ import {
   noticeFormCoverage, producedBeforeTaught, examTeileBacked,
   MAX_UNCOVERED_WORTFELD, MAX_UNTAUGHT_ITEM_TOKENS, MAX_UNTAUGHT_DRAWN_TOKENS, MAX_UNREHEARSED_CANDOS,
   MAX_MISSIONLESS_LEKTIONEN, MAX_UNEXEMPLIFIED_NOTICE_FORMS, MAX_UNTAUGHT_IN_PRODUCTION,
-  MAX_UNBACKED_EXAM_TEILE, LEVELS, levelSpec,
+  MAX_UNBACKED_EXAM_TEILE, LEVELS, levelSpec, levelLexicon, untaughtTokens,
 } from '../scripts/validate-curriculum.mjs';
 
 // ───────────────────────────────────────────────────────────────────────────────────────────────
@@ -405,7 +405,11 @@ test('rule 11: the practice items the learner is served use only words taught by
   // the twelve Lektionen practises is judged, not only the ones with an extra-a11-lNN- id.
   const topics = new Set(L.flatMap((l) => l.practiceRule.topics));
   const generated = loadPoolItems().filter((it) => !/^extra-/.test(it.id) && topics.has(it.topic));
-  assert.ok(generated.length > 200, `${generated.length} generated items reach a Lektion`);
+  // 227 before the build-time untaught-lexis gate (REVIEW #6 MAJOR 4), 149 after it: 78 legacy bank
+  // items were built on words A1.1 teaches nowhere and no longer ship. The bound is a shape check —
+  // „the generated half is still in scope“ — so it follows the artefact down rather than pinning a
+  // number the gate is supposed to move.
+  assert.ok(generated.length > 120, `${generated.length} generated items reach a Lektion`);
 });
 
 test('rule 11b: the items the learner is SERVED use only words taught by the Lektion that serves them', () => {
@@ -1097,3 +1101,84 @@ test('A1.2 ratchets for RULE 6b, 15 and 16 are the measured numbers', () => {
   assert.ok(r.untaughtInProduction <= 1, 'RULE 15: the ratchet may only ever be lowered');
   assert.ok(r.unbackedExamTeile <= 3, 'RULE 16: the ratchet may only ever be lowered');
 });
+
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+// THE LEVEL LEXICON (REVIEW #6 MAJOR 4)
+//
+// `levelLexicon()` + `untaughtTokens()` are the predicate `scripts/build-lesson-pool.mjs` drops
+// legacy bank items with, so they need their own bite test: a build step that deletes content is
+// only as trustworthy as the question it asks, and „does the course teach this word ANYWHERE?“ has
+// to stay a different question from RULE 11's „has it taught it YET?“.
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+
+test('levelLexicon knows the whole level, not one Lektion — and nothing the course never teaches', () => {
+  const lex = levelLexicon('a1.1');
+  // A word taught in the LAST Lektion is in it (RULE 11 would reject it in L1; this must not).
+  const last = CURRICULUM_A11.lektionen[CURRICULUM_A11.lektionen.length - 1];
+  const lateWord = last.wortfeld.find((w) => /^(der|die|das) /.test(w.de));
+  assert.ok(lateWord, 'the last Lektion has no article noun to test with');
+  assert.ok(lex.has(lateWord.de.split(' ')[1].toLowerCase()), `${lateWord.de} is taught in L${last.nr} but missing from the lexicon`);
+  // The function words and the cast are in it, because an item may use both freely.
+  assert.ok(lex.has('ist') && lex.has('nicht'), 'FUNCTION_WORDS are part of the lexicon');
+  for (const n of LEVELS['a1.1'].dialogNames) assert.ok(lex.has(String(n).toLowerCase()), `${n} is a DIALOG_NAME`);
+  // And the words the five DaF rounds kept finding are NOT — that is the whole point.
+  for (const w of ['honig', 'könig', 'instrument', 'freiheit', 'zeitung', 'tom', 'anna']) {
+    assert.ok(!lex.has(w), `"${w}" is in the A1.1 lexicon — the untaught-lexis gate would stop dropping it`);
+  }
+  // A1.2 inherits A1.1 (seedFrom) and is therefore strictly larger.
+  const lex12 = levelLexicon('a1.2');
+  for (const w of lex) assert.ok(lex12.has(w), `A1.2 lost the A1.1 word "${w}"`);
+  assert.ok(lex12.size > lex.size, 'A1.2 teaches nothing of its own?');
+  // An unknown level is an empty set, never a throw: the build asks per level.
+  assert.equal(levelLexicon('b2.2').size, 0);
+});
+
+test('untaughtTokens reads the item the way lexisScan does — cue and formula are not lexis', () => {
+  const spec = levelSpec('a1.1');
+  const lex = levelLexicon('a1.1');
+  const item = (over) => ({ id: 't', topic: 'nouns-gender', questionDe: '', answer: '', accepted: [], ...over });
+
+  // THE BITE. The item the fifth review quotes, with the article cue the build appends.
+  assert.deepEqual(
+    untaughtTokens(item({ questionDe: 'Schreiben Sie den Satz: [Honig / ist / gut] (mit bestimmtem Artikel)', answer: 'Der Honig ist gut.' }), lex, spec),
+    ['Honig'],
+    'the Sie-Aufgabenformel and the bracketed cue are not lexis — only Honig is',
+  );
+  // The A1.2 formula that used to count as lexis, on the level that uses it.
+  const spec12 = levelSpec('a1.2');
+  assert.deepEqual(
+    untaughtTokens(item({ questionDe: 'Schreiben Sie die Zahl in Worten: 340 = ___', answer: 'dreihundertvierzig' }), levelLexicon('a1.2'), spec12),
+    ['dreihundertvierzig'],
+    'Schreiben/Zahl/Worten are the formula talking, not the item',
+  );
+  // A cast name is never untaught — and it is in the LEXICON itself (seedVocabulary folds in
+  // DIALOG_NAMES), so it is silent with or without a spec. `spec.nameSet` is what keeps a name
+  // silent against a per-Lektion snapshot, which is the call RULE 11 makes.
+  const name = LEVELS['a1.1'].dialogNames[0];
+  assert.deepEqual(untaughtTokens(item({ questionDe: `${name} ist hier.`, answer: 'ist' }), lex, spec), []);
+  assert.deepEqual(untaughtTokens(item({ questionDe: `${name} ist hier.`, answer: 'ist' }), lex), []);
+  assert.deepEqual(untaughtTokens(item({ questionDe: `${name} ist hier.`, answer: 'ist' }), new Set(['ist', 'hier'])), [name]);
+  // …but a name the A1.1 dialogues never use is exactly what the gate must catch.
+  assert.deepEqual(untaughtTokens(item({ questionDe: 'Tom, ___ bist mein Freund.', answer: 'du' }), lex, spec), ['Tom']);
+  // `accepted` is scanned too — a second answer key may not smuggle a word in.
+  assert.deepEqual(untaughtTokens(item({ questionDe: 'Das ist gut.', answer: 'gut', accepted: ['gut', 'Zeitung'] }), lex, spec), ['Zeitung']);
+  // One entry per DISTINCT token, in the original case, whatever the repetition.
+  assert.deepEqual(untaughtTokens(item({ questionDe: 'Zeitung Zeitung zeitung', answer: 'Zeitung' }), lex, spec), ['Zeitung']);
+  // A taught word is silent, and so is an empty item.
+  assert.deepEqual(untaughtTokens(item({ questionDe: 'Das ist nicht gut.', answer: 'ist' }), lex, spec), []);
+  assert.deepEqual(untaughtTokens(item({}), lex, spec), []);
+});
+
+test('the untaught-lexis gate is non-circular: the lexicon does not read the pool', () => {
+  // The gate would be worthless if a pool item could teach itself its own word.
+  // `levelLexicon` is a pure function of the curriculum, so planting an item is
+  // invisible to it — the assertion is that the set is byte-identical before and
+  // after the pool on disk grows a word nothing teaches.
+  const before = levelLexicon('a1.1');
+  const planted = [...loadPoolItems('a1.1'), { id: 'p1', topic: 'nouns-gender', questionDe: 'Der Honig ist gut.', answer: 'Der' }];
+  assert.equal(planted.length, loadPoolItems('a1.1').length + 1);
+  const after = levelLexicon('a1.1');
+  assert.equal(after.size, before.size);
+  assert.ok(!after.has('honig'));
+});
+

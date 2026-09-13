@@ -281,8 +281,16 @@ export const MAX_MISSIONLESS_LEKTIONEN = 4;        // a1.1; per level in LEVELS 
  * of `nett`/`müde`/`kaputt`/`Auto`/`Mädchen` that no Lektion of A1.1 teaches. That is the honest
  * number and it is meant to look bad: nine described an eighth of the course. Lower it as the bank
  * is rewritten, never raise it.
+ *
+ * 2026-09-13: **187 → 61**, because the class underneath it was closed at BUILD time rather than
+ * item by item. `levelLexicon()` + `untaughtTokens()` are now the gate in
+ * `scripts/build-lesson-pool.mjs`: a legacy bank item carrying a word the course teaches NOWHERE —
+ * `Honig`, `König`, `Instrument`, `Freiheit`, `Zeitung`, `Tom`, `Anna` — is dropped before the
+ * merge (78 items at A1.1, 91 at A1.2). What is LEFT here is the repairable half by construction:
+ * every remaining token is taught, only LATER than the Lektion the item is filed under, i.e. a
+ * Vorgriff a repair round can move.
  */
-export const MAX_UNTAUGHT_ITEM_TOKENS = 187;       // a1.1; per level in LEVELS below — measured 2026-09-13
+export const MAX_UNTAUGHT_ITEM_TOKENS = 61;        // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
  * RULE 11b ratchet — how many (item, token) pairs the learner MEETS may still use a word the course
@@ -300,8 +308,13 @@ export const MAX_UNTAUGHT_ITEM_TOKENS = 187;       // a1.1; per level in LEVELS 
  *
  * Measured on A1.1 after the round-6 item repairs: 16 of RULE 11's 187, in 12 items across L1, L3,
  * L4, L5, L6 and L7 — all generated, none hand-written.
+ *
+ * 2026-09-13, after the build-time untaught-lexis gate (see MAX_UNTAUGHT_ITEM_TOKENS): **16 → 5**,
+ * in three generated items — `Deutsch` in two L1 spelling items (taught L3), `Kaffee`/`kocht` in an
+ * L4 item (Wortfeld of L9) and `arbeitet` in an L6 item (Wortfeld of L11). All five are Vorgriffe,
+ * which is the only class this number can still contain now that never-taught words cannot ship.
  */
-export const MAX_UNTAUGHT_DRAWN_TOKENS = 16;       // a1.1; per level in LEVELS below — measured 2026-09-13
+export const MAX_UNTAUGHT_DRAWN_TOKENS = 5;        // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
  * A1.2 — the twelve grammar slugs of the level in `topic_order` (grammar-content-cache.json,
@@ -518,17 +531,17 @@ export const LEVELS = {
     // MEASURED on this module, not chosen. See docs/course-factory/a12-rebuild/CONTRACT.md §Ratchets.
     ratchets: {
       uncoveredWortfeld: 0,
-      // RULE 11 counts the BUILT pool (src/data/lessonPools/a12.json, 354 items). The number is the
-      // legacy generated bank, not the hand-written items: all 156 pairs sit in the 238 generated
-      // items, none in `a12.extra.json`. It was 0 while no pool existed, which measured nothing.
-      untaughtItemTokens: 156,
-      // RULE 11b measures the same tokens where the learner MEETS them (see drawnLexis): 156
-      // becomes 18, and all 18 are in generated items a repair round can open. Three of them are
-      // the formula talking rather than the item — „Schreiben Sie die Zahl in Worten“ is an A1.2
-      // pool formula that `ITEM_FORMULA_RE` does not yet strip, so `Schreiben`/`Worten`/`Zahl` are
-      // counted as lexis in four items. Left in deliberately: the list is a work order for the
-      // items round and the yardstick must not move under it mid-round.
-      untaughtDrawnTokens: 18,
+      // RULE 11 counts the BUILT pool (src/data/lessonPools/a12.json). 156 → **18** on 2026-09-13:
+      // `ITEM_FORMULA_RE` gained the four A1.2 task formulas it was missing („Schreiben Sie die
+      // Zahl / den Preis / die Telefonnummer in Worten“, „Schreiben Sie die Bitte“), which were the
+      // formula talking rather than the item, and the build now drops the 91 legacy bank items
+      // built on words A1.2 teaches nowhere (`Zeitung`, `Kuli`, `Pizza`, `Präteritum`, `Hamburg`).
+      // The 18 that remain are Vorgriffe — `fliegen` L1 (taught L7), `tragen`/`laufen` L6, …
+      untaughtItemTokens: 18,
+      // RULE 11b measures the same tokens where the learner MEETS them (see drawnLexis): 18 → 2,
+      // both in L2 („fliegen“/„fliege“, taught in L7). All that is left is a work order for the
+      // items round, and it is two lines long.
+      untaughtDrawnTokens: 2,
       unrehearsedCanDos: 0,
       missionlessLektionen: 1,
       unexemplifiedNoticeForms: 0,
@@ -678,7 +691,17 @@ const ITEM_FORMULA_RE = new RegExp([
   // generated half of the pool reports Satz/Schreiben/Fehler as untaught lexis in ~20 items, which
   // is the formula talking, not the item (added when RULE 11 started reading the built pool).
   'Schreiben Sie den Satz', 'Buchstabieren Sie den Gruß',
+  // „Schreiben Sie die Zahl in Worten“ is the A1.2 pool's spelling of the same formula. It was
+  // missing, so `Schreiben`/`Zahl`/`Worten` counted as item lexis in four A1.2 items — three of
+  // RULE 11b's 18 were the formula talking (DaF review #6 note in the A1.2 registry row).
+  'Schreiben Sie die Telefonnummer in Worten', 'Schreiben Sie den Preis in Worten',
+  'Schreiben Sie die Zahl in Worten', 'Schreiben Sie die Bitte',
   'Schreiben Sie die Zahl als Wort', 'Schreiben Sie das Wort', 'Schreiben Sie die Frage',
+  // „Schreiben Sie die höfliche Frage“ is the register-normalised spelling of the same closed
+  // formula as its „Bilden Sie“ twin next door (the bank duzt: „Schreib die höfliche Frage:“).
+  // It was missing, so `Schreiben` counted as item lexis and the untaught-lexis gate in
+  // build-lesson-pool.mjs dropped two sound yes-no-questions items over the task line.
+  'Schreiben Sie die höfliche Frage',
   'Bilden Sie den Satz', 'Bilden Sie die höfliche Frage', 'Bilden Sie die Frage',
   'Buchstabieren Sie das Wort', 'Lesen Sie die Buchstaben',
   'Korrigieren Sie', 'Ergänzen Sie', 'Wählen Sie',
@@ -766,6 +789,56 @@ function taughtUpTo(c, spec) {
 }
 
 /**
+ * THE LEVEL LEXICON: every form the course knows at the END of the level — the inherited
+ * vocabulary of the level before it (`seedVocabulary`), every Lektion's Wortfeld in all the forms
+ * RULE 5 licenses, every token of every Notice card, plus FUNCTION_WORDS and DIALOG_NAMES (both
+ * already inside `seedVocabulary`).
+ *
+ * WHY IT IS EXPORTED. RULE 11/11b measure a Vorgriff — a word taught LATER than the Lektion the
+ * item is met in — and a Vorgriff is repairable by moving the item. The class DaF reviews #5 and #6
+ * kept finding underneath it is different and not repairable: legacy bank items built on words the
+ * course NEVER teaches (Honig, König, Instrument, Freiheit, Zeitung, and the cast names Tom and
+ * Anna, who appear in no A1.1 dialogue). `scripts/build-lesson-pool.mjs` drops those at build time,
+ * and it has to ask the same question with the same tokeniser the validator asks it with, or the
+ * build would close a class the validator still reports. Hence one exported predicate rather than a
+ * second copy of the machinery.
+ *
+ * NON-CIRCULAR: this reads the CURRICULUM only (Wortfeld, Notice, function words, names). It never
+ * reads the pool, so a pool item can never teach itself the word it uses.
+ */
+export function levelLexicon(level = 'a1.1') {
+  const spec = levelSpec(level);
+  if (!spec) return new Set();
+  // The last snapshot of `taughtUpTo` IS the end-of-level set, so the two can never drift: RULE 11
+  // judges an item against `knownUpTo.get(nr)`, this judges it against the union of all of them.
+  const snapshots = [...taughtUpTo(spec.curriculum, spec).values()];
+  return snapshots.length ? new Set(snapshots[snapshots.length - 1]) : seedVocabulary(spec);
+}
+
+/**
+ * The tokens of an item that `knownSet` does not contain — the same fields, the same tokeniser and
+ * the same formula/cue stripping `lexisScan` uses, one entry per distinct token in original case.
+ * Pass `levelLexicon(level)` to ask „does the course ever teach this?“ and a `knownUpTo` snapshot
+ * to ask „has it taught it YET?“ — RULE 11 and RULE 11b are the second question.
+ */
+export function untaughtTokens(item, knownSet, spec = null) {
+  const names = spec?.nameSet || new Set();
+  const prompt = String(item?.questionDe || '').replace(ITEM_CUE_RE, ' ').replace(ITEM_FORMULA_RE, ' ');
+  const texts = [prompt, item?.answer, ...(item?.accepted || [])].filter(Boolean);
+  const seen = new Set();
+  const out = [];
+  for (const s of texts) {
+    for (const t of tokenise(s)) {
+      const low = t.toLowerCase();
+      if (knownSet.has(low) || names.has(low) || seen.has(low)) continue;
+      seen.add(low);
+      out.push(t);
+    }
+  }
+  return out;
+}
+
+/**
  * The shared scan of RULE 11 and RULE 11b: for every item the `assign` function places in a
  * Lektion, every token of its prompt (minus the bracketed cue and the complete Sie-Aufgabenformel),
  * its answer and its accepted answers that the course has not taught by that Lektion. One offender
@@ -779,17 +852,7 @@ function lexisScan(c, spec, items, assign) {
     if (!nr) continue;
     const vocab = knownUpTo.get(nr);
     if (!vocab) continue;
-    const prompt = String(it.questionDe || '').replace(ITEM_CUE_RE, ' ').replace(ITEM_FORMULA_RE, ' ');
-    const texts = [prompt, it.answer, ...(it.accepted || [])].filter(Boolean);
-    const seen = new Set();
-    for (const s of texts) {
-      for (const t of tokenise(s)) {
-        const low = t.toLowerCase();
-        if (vocab.has(low) || spec.nameSet.has(low) || seen.has(low)) continue;
-        seen.add(low);
-        offenders.push({ nr, id: it.id, token: t });
-      }
-    }
+    for (const token of untaughtTokens(it, vocab, spec)) offenders.push({ nr, id: it.id, token });
   }
   offenders.sort((a, b) => a.nr - b.nr || a.id.localeCompare(b.id) || a.token.localeCompare(b.token));
   return offenders;

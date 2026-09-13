@@ -108,6 +108,10 @@ import {
   articleAnswerKind, ARTICLE_CUE, missingSentenceArticle, SENTENCE_ARTICLE_CUE,
   isPoliteFormItem, minimalArticleCorrection,
 } from '../src/data/lessonPools/quality.js';
+// The lexis gate below is the VALIDATOR's predicate, imported rather than re-implemented — see the
+// „untaught-lexis“ block near the merge for why, and `levelLexicon`'s own header for why importing
+// it here is not circular.
+import { levelLexicon, untaughtTokens, levelSpec } from './validate-curriculum.mjs';
 
 const level = (process.argv[2] || 'a1.1').toLowerCase();
 const cache = JSON.parse(readFileSync(new URL('../grammar-content-cache.json', import.meta.url), 'utf8'));
@@ -797,7 +801,43 @@ for (const item of [...kept, ...supplement, ...extra]) {
   if (hand || derived) item.caseSensitive = true;
 }
 
-const items = [...kept, ...supplement, ...extra].sort(
+// ── REVIEW #6 MAJOR 4: drop legacy items built on words the course never teaches ──
+//
+// RULE 11 and RULE 11b measure a VORGRIFF — a word taught later than the Lektion
+// the item is met in — and a Vorgriff is repairable by moving the item. Under it
+// sat a different class the last two reviews kept re-finding item by item: legacy
+// bank items whose vocabulary the course teaches NOWHERE, at any Lektion (Honig,
+// König, Instrument, Freiheit, Zeitung, and the cast names Tom and Anna, who
+// appear in no A1.1 dialogue). No repair round can move those into range, because
+// there is no range; naming them one id at a time is how the class survived five
+// rounds. So the CLASS is closed here, at build time.
+//
+// THE PREDICATE IS THE VALIDATOR'S OWN (`levelLexicon` + `untaughtTokens` in
+// scripts/validate-curriculum.mjs), not a second copy: the build may not close a
+// class on a yardstick the validator does not use. It is NON-CIRCULAR — the
+// lexicon is read from the CURRICULUM (Wortfeld + Notice + FUNCTION_WORDS +
+// DIALOG_NAMES + the inherited level), never from the pool, so a pool item can
+// never teach itself the word it uses.
+//
+// RUNS LAST, after the repairs and the register normalisation and before the
+// merge, because those passes change the very text that is scanned
+// („Schreib den Satz“ → „Schreiben Sie den Satz“ is a formula the scan strips).
+//
+// ONLY THE LEGACY BANK. The hand-written extras and the generated buchstabieren
+// supplement are written FROM the curriculum's own Wortfeld and are guarded by
+// RULE 11 at 0 for their own tokens; running a lexicon filter over them would
+// silently delete authored work instead of reporting it.
+const lexicon = levelLexicon(level);
+const lexSpec = levelSpec(level);
+const untaughtDropped = [];
+const keptTaught = [];
+for (const item of kept) {
+  const tokens = lexSpec ? untaughtTokens(item, lexicon, lexSpec) : [];
+  if (tokens.length) untaughtDropped.push({ id: item.id, topic: item.topic, tokens, questionDe: item.questionDe });
+  else keptTaught.push(item);
+}
+
+const items = [...keptTaught, ...supplement, ...extra].sort(
   (a, b) => a.topic.localeCompare(b.topic) || a.stage - b.stage || a.order - b.order,
 );
 
@@ -807,7 +847,8 @@ writeFileSync(target, JSON.stringify(out, null, 1) + '\n');
 
 // ── what got dropped, and what the topics look like afterwards ───────────────
 const byReason = Object.entries(counts).filter(([, n]) => n > 0);
-console.log(`${level}: ${raw.length} in cache → ${kept.length} kept + ${supplement.length} generated + ${extra.length} hand-authored = ${items.length}`);
+console.log(`${level}: ${raw.length} in cache → ${keptTaught.length} kept (${untaughtDropped.length} more dropped as untaught-lexis)` +
+  ` + ${supplement.length} generated + ${extra.length} hand-authored = ${items.length}`);
 console.log(`excluded ${excluded.length}:`);
 for (const reason of REASONS) {
   const n = counts[reason] || 0;
@@ -850,6 +891,32 @@ const staleAccepted = Object.keys(ACCEPTED_EXTRAS).filter((id) => !acceptedAppli
 if (staleAccepted.length) console.log(`ACCEPTED_EXTRAS ids no longer in the pool: ${staleAccepted.join(', ')}`);
 const perTopic = new Map();
 for (const it of items) perTopic.set(it.topic, (perTopic.get(it.topic) || 0) + 1);
+
+// ── the untaught-lexis drops, and what they cost each topic ──────────────────
+console.log(`untaught-lexis (REVIEW #6 MAJOR 4): ${untaughtDropped.length} legacy item(s) dropped`);
+const droppedByTopic = new Map();
+for (const d of untaughtDropped) {
+  droppedByTopic.set(d.topic, (droppedByTopic.get(d.topic) || 0) + 1);
+  console.log(`       ${String(d.id).slice(0, 8)} ${d.topic} · ${String(d.questionDe || '').replace(/\s+/g, ' ').slice(0, 56)}` +
+    `  ← ${d.tokens.join(', ')}`);
+}
+if (droppedByTopic.size) {
+  console.log('  per topic:');
+  for (const [topic, n] of [...droppedByTopic].sort()) console.log(`    ${String(n).padStart(3)}  ${topic}`);
+}
+// THE FLOOR IS A REPORT, NOT A VETO. `tests/lesson-pool-rules.test.mjs` wants at least seven usable
+// items per drawn topic — seven is one Lektion's practice set. A topic that falls under it after
+// this gate is NOT silently rescued by keeping an item whose words the course never teaches: the
+// hand-written extras carry those Lektionen, and the remedy is an extras round, so the build names
+// the topic and the count and lets the test fail honestly.
+const THIN_TOPIC_FLOOR = 7;
+const thin = [...perTopic].filter(([, n]) => n < THIN_TOPIC_FLOOR).sort();
+if (thin.length) {
+  console.log(`⚠ ${thin.length} topic(s) below the ${THIN_TOPIC_FLOOR}-item floor after the untaught-lexis drop` +
+    ' — hand-written extras needed:');
+  for (const [topic, n] of thin) console.log(`    ${String(n).padStart(3)}  ${topic} (was ${n + (droppedByTopic.get(topic) || 0)})`);
+}
+
 console.log('items per topic:');
 for (const [topic, n] of [...perTopic].sort()) console.log(`  ${String(n).padStart(3)}  ${topic}`);
 console.log(`→ ${target.pathname}`);
