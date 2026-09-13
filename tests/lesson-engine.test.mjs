@@ -11,7 +11,8 @@ import { dirname, join } from 'node:path';
 
 import buildLesson, {
   pickPracticeItems, planPractice, seedFor, isTypedItem, isMultipleChoice, itemLemmas, answerLemmas,
-  PRACTICE_SIZE, MAX_MULTIPLE_CHOICE, PRIMARY_MIN, MAX_SAME_LEMMA, MAX_CARRIED_LEMMA,
+  answerKey,
+  PRACTICE_SIZE, MAX_MULTIPLE_CHOICE, PRIMARY_MIN, MAX_SAME_LEMMA, MAX_CARRIED_LEMMA, MAX_SAME_ANSWER_KEY,
 } from '../src/lib/lesson/buildLesson.js';
 import { exclusionReason, isUsableItem, filterPool, EXCLUDE_IDS, REASON, drillsSlug } from '../src/data/lessonPools/quality.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
@@ -278,6 +279,73 @@ test('no lemma carries more than two items in one Lektion — the Mädchen rule'
     }
   }
   assert.ok((lektionenPerLemma.get('mädchen') || 0) <= 2, 'das Mädchen is back in more than two Lektionen');
+});
+
+test('no answer key carries more than two items in one Lektion — the "mein" rule', () => {
+  // The second diversity axis (DaF review #6 MAJOR 6). `MAX_SAME_LEMMA` reads
+  // `itemLemmas`, which drops every article and possessive through
+  // `LEMMA_STOPWORDS` — so in the three Lektionen whose grammar IS the
+  // determiner it capped nothing at all: L12 gave five of seven items to `mein`
+  // in BOTH attempts. `answerKey` counts what the learner PRODUCES instead, and
+  // this walks all twelve Lektionen on both attempts of the shipped pool.
+  const rows = [];
+  for (const attempt of [1, 2]) {
+    const plan = planPractice(CURRICULUM_A11, POOL, attempt);
+    for (const lektion of LEKTIONEN) {
+      const count = new Map();
+      for (const it of plan.get(lektion.nr)) {
+        const key = answerKey(it);
+        if (key) count.set(key, (count.get(key) || 0) + 1);
+      }
+      for (const [key, n] of count) {
+        if (n > MAX_SAME_ANSWER_KEY) {
+          const ids = plan.get(lektion.nr).filter((it) => answerKey(it) === key).map((it) => `${it.id} → ${it.answer}`);
+          rows.push(`attempt ${attempt} L${lektion.nr} makes the learner produce "${key}" ${n} times:\n    ${ids.join('\n    ')}`);
+        }
+      }
+    }
+  }
+  assert.deepEqual(rows, [], rows.join('\n'));
+});
+
+test('L12 spreads its possessives, and the polite Ihr is drawn by the course', () => {
+  // The Lektion this MAJOR was measured on. Two things are pinned here.
+  //
+  // 1. The owner varies. `Besitzer` is the first word of the answer (`Mein`,
+  //    `Deine`, `Unser`, `Ihr`, and `Wir …` for the sentence items), which is
+  //    what the review counted; four distinct owners per attempt is its floor.
+  // 2. The polite `Ihr` — `extra-a11-l12-08/09/16`, the only three items in the
+  //    course that drill the Höflichkeitsform, and the only three carrying
+  //    `caseSensitive: true` — actually reaches a learner. Before the answer-key
+  //    cap NEITHER attempt drew one; measured after it, attempt 2 draws
+  //    `extra-a11-l12-09`, attempt 1 still draws none.
+  //
+  // Why 2 is asserted over the two attempts rather than per attempt: the cap is
+  // a CEILING on repetition, and a ceiling cannot reserve a seat. Among the 38
+  // usable `possessive-articles` items the three polite ones score the same
+  // relevance as a dozen others, so which of them lands in the seven is decided
+  // by the seeded jitter. Making it a per-attempt guarantee needs the other half
+  // of the review's fix — `practiceRule.mustCover: ['mein','dein','sein','ihr',
+  // 'unser','Ihr']` on L12 in `src/data/curricula/a11.js` plus a cover pass
+  // after the primary quota. When that data lands, tighten the loop below to
+  // assert `polite.length` per attempt and delete this paragraph.
+  const POLITE = ['extra-a11-l12-08', 'extra-a11-l12-09', 'extra-a11-l12-16'];
+  const inPool = POLITE.filter((id) => POOL.items.some((it) => it.id === id));
+  assert.deepEqual(inPool, POLITE, 'the three polite Ihr items are no longer in the shipped pool');
+
+  const drawnPolite = [];
+  for (const attempt of [1, 2]) {
+    const items = planPractice(CURRICULUM_A11, POOL, attempt).get(12);
+    const owners = new Set(items.map((it) => String(it.answer || '').toLowerCase().split(/[^a-zäöüß]+/)[0]).filter(Boolean));
+    assert.ok(owners.size >= 4, `L12 attempt ${attempt} draws only ${owners.size} distinct owners: ${[...owners].join(', ')}`);
+    const polite = items.filter((it) => POLITE.includes(it.id));
+    for (const it of polite) {
+      assert.equal(it.caseSensitive, true, `${it.id} must stay caseSensitive — Ihr is a capital-letter distinction`);
+      drawnPolite.push(`attempt ${attempt}: ${it.id} → ${it.answer}`);
+    }
+  }
+  assert.ok(drawnPolite.length, 'neither attempt of L12 drills the polite Ihr — the exam form of the last Lektion');
+  console.log(`\n  L12 polite Ihr drawn — ${drawnPolite.join(' · ')}\n`);
 });
 
 test('a Lektion carries at most one answer lemma over from the Lektion before it', () => {
