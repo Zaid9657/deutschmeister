@@ -9,7 +9,7 @@ import Button from '../ui/Button.jsx';
 // The exam-date plan on a rebuilt course home (P4 "completion levers").
 //
 // Two states, both soft:
-//   no date  → one card, one tap: "Wann ist deine Prüfung?" with a date input.
+//   no date  → one card, one tap: "Wann ist Ihre Prüfung?" with a date input.
 //              Saving writes profiles.exam_date and, when the profile carries
 //              no exam_track yet, the course's examKey — so the dashboard and
 //              the exam hubs immediately know which exam this learner means.
@@ -81,9 +81,9 @@ export default function ExamDatePlan({ curriculum, path = [], doneIds = new Set(
             <CalendarDays className="h-5 w-5" aria-hidden="true" />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="font-bold text-ink">Wann ist deine Prüfung?</p>
+            <p className="font-bold text-ink">Wann ist Ihre Prüfung?</p>
             <p className="mt-0.5 text-[0.875rem] leading-relaxed text-graphite">
-              Mit einem Datum zeigt dir der Kurs, wie viele Lektionen pro Woche reichen. Du kannst es jederzeit ändern.
+              Mit einem Datum zeigt Ihnen der Kurs, wie viele Lektionen pro Woche reichen. Sie können es jederzeit ändern.
             </p>
             <div className="mt-3 flex flex-wrap items-center gap-2">
               <label className="sr-only" htmlFor="dm-exam-date">Prüfungsdatum</label>
@@ -128,12 +128,12 @@ export default function ExamDatePlan({ curriculum, path = [], doneIds = new Set(
   const past = plan.status === 'past';
   const Icon = behind ? Compass : CheckCircle2;
   const headline = past
-    ? 'Dein Prüfungsdatum liegt hinter dir'
+    ? 'Ihr Prüfungsdatum liegt hinter Ihnen'
     : behind
       ? `${plan.behindBy} ${plan.behindBy === 1 ? 'Lektion' : 'Lektionen'} hinter dem Plan — kein Problem, hier weiter`
       : `Auf Kurs · ${plan.perWeekTarget} ${plan.perWeekTarget === 1 ? 'Lektion' : 'Lektionen'} pro Woche`;
   const detail = past
-    ? 'Setz ein neues Datum, wenn du einen neuen Termin hast — der Kurs bleibt genau da, wo du bist.'
+    ? 'Setzen Sie ein neues Datum, wenn Sie einen neuen Termin haben — der Kurs bleibt genau da, wo Sie sind.'
     : plan.lektionenLeft === 0
       ? `Alles geschafft vor dem ${DE_DATE.format(new Date(`${examDate}T12:00:00`))}.`
       : `${plan.lektionenLeft} von ${plan.total} offen · Prüfung am ${DE_DATE.format(new Date(`${examDate}T12:00:00`))} · ${plan.weeksLeft} ${plan.weeksLeft === 1 ? 'Woche' : 'Wochen'}`;
