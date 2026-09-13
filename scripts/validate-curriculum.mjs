@@ -59,6 +59,10 @@ import {
 } from '../src/data/curricula/a12.js';
 import { deferredConstructionHits } from '../src/data/curricula/constructions.js';
 import { writingTaskByKey } from '../src/data/writingTasks.js';
+// RULE 17 grades the Beispieltexte with the SAME function the learner's screen grades him with —
+// `scoreWriting` is what `GradedWriting.jsx` calls, and the word window it measures against comes
+// from the server's own task bank above, never from a number retyped here.
+import { scoreWriting, countWords } from '../src/lib/lesson/writing.js';
 // RULE 11b reads the two engines the learner actually meets. Both are plain ES modules with no DOM
 // import (buildLesson pulls in the pool quality rules, buildCheckpoint the answer checker and the
 // writing tasks), so the validator can run the real draw under `node` instead of re-implementing it.
@@ -403,7 +407,9 @@ export const PRIMARY_ORDER_A12 = [
  * occurs at all — so L3 could be titled „Der Akkusativ: den, einen, keinen“ while `den` appears in
  * none of its ten lines. Measured on A1.1 the day the rule was written: 26.
  */
-export const MAX_UNEXEMPLIFIED_NOTICE_FORMS = 26;  // a1.1; per level in LEVELS below — measured 2026-09-13
+// 26 → **23** on 2026-09-13 (round 13): the six rewritten Beispieltexte are Lektion input too,
+// and three forms their Notice cards bold now have a Beleg in their own Lektion.
+export const MAX_UNEXEMPLIFIED_NOTICE_FORMS = 23;  // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
  * RULE 15 ratchet — how many grammatical forms a level's PRODUCTION lines may still use before the
@@ -458,6 +464,39 @@ export const MAX_DEFERRED_CONSTRUCTIONS = 0;       // a1.1 and a1.2 — measured
  * dropped the Teil on 2026-09-13 (round 8) and the ratchet closed at 0.
  */
 export const MAX_UNBACKED_EXAM_TEILE = 0;          // a1.1; per level in LEVELS below — measured 2026-09-13
+
+/**
+ * RULE 17 ratchet — how many form checks a level's Beispieltexte may still fail.
+ *
+ * DaF review #12, MAJOR 1. `GradedWriting.jsx` prints the checklist („25–45 Wörter“, Anrede, Gruß,
+ * one row per Leitpunkt) and, one paragraph below it, the Beispieltext — and for twelve rounds
+ * nobody ran the one against the other. Measured 2026-09-13: **all six** A1.1 Mitteilungen failed
+ * their own length row (24, 15, 17, 17, 14, 15 words against a floor of 25), and round 12 had
+ * pulled down the only one that passed. The six were rewritten in round 13 to 35–41 words, three
+ * full sentences for three Leitpunkte, so A1.1 is a HARD 0.
+ *
+ * A1.2 keeps a ratchet (its row in LEVELS): the level is PAUSED by owner decision (2026-09-13) and
+ * its twelve samples are a draft nobody may touch, so the number is a measurement of the draft.
+ */
+export const MAX_MODEL_CHECKLIST_BREAKS = 0;       // a1.1; per level in LEVELS below — measured 2026-09-13
+
+/**
+ * RULE 18 ratchet — how many Lektionen may dictate and read aloud the SAME sentence.
+ *
+ * DaF review #12, MAJOR 3. Nine of twelve A1.1 Lektionen keep the two windows apart without being
+ * asked, so separation is the material's own norm; the three that did not were made by the RULE-15b
+ * window moves of round 12, which measured the Vorgriffe in the new windows and not the windows.
+ * L6 and L8 were separated in round 13 (`readAloud` [2,6] → [4,6] and [3,6] → [6,8]).
+ *
+ * **L3 cannot be separated without the owner, and that is what the 1 is.** RULE 15b leaves exactly
+ * THREE construction-free lines in that dialogue (2, 5, 7 — every other line carries a possessive
+ * or an indefinite article, both deferred), and two disjoint windows need four. CONTRACT §2 forbids
+ * rewriting a dialogue line, because the lines are the audio script. The smallest change that would
+ * close it, for the owner to decide: line 3 „Er ist zwanzig. **Meine** Schwester ist noch jung.“ →
+ * „Er ist zwanzig. **Sie** ist noch jung.“ — one word, no possessive, and it rehearses the er/sie
+ * contrast that IS this Lektion's grammar. Then L3 has four free lines and this ratchet goes to 0.
+ */
+export const MAX_SHARED_PRODUCTION_LINES = 1;      // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
  * RULE 15 — THE OFF-LIMITS FORMS, PER LEVEL.
@@ -628,6 +667,10 @@ export const LEVELS = {
       untaughtInProduction: MAX_UNTAUGHT_IN_PRODUCTION,
       deferredConstructions: MAX_DEFERRED_CONSTRUCTIONS,
       unbackedExamTeile: MAX_UNBACKED_EXAM_TEILE,
+      modelChecklistBreaks: MAX_MODEL_CHECKLIST_BREAKS,
+      sharedProductionLines: MAX_SHARED_PRODUCTION_LINES,
+      // RULE 19 is a hard rule (0, no ratchet), like RULE 14: a model text that contradicts its own
+      // dialogue is never older debt. No entry here.
     },
   },
   'a1.2': {
@@ -714,6 +757,15 @@ export const LEVELS = {
       // and no A1.2 content was touched to get there.
       deferredConstructions: 0,
       unbackedExamTeile: 0,
+      // RULE 17, measured on the paused A1.2 draft 2026-09-13 (round 13): **17** failed form checks
+      // across seven of the twelve Beispieltexte — three below the 25-word floor (L4 24, L8 21,
+      // L10 23), one without a Gruß (L8) and thirteen unmodelled Leitpunkte. Paused; re-measured,
+      // and no A1.2 content was touched to get there: the number is the draft's, and whoever
+      // resumes the level rewrites those samples the way round 13 rewrote A1.1's six.
+      modelChecklistBreaks: 17,
+      // RULE 18, measured on the paused A1.2 draft 2026-09-13 (round 13): **0** — no A1.2 Lektion
+      // dictates and reads aloud the same line. Hard from the start at this level.
+      sharedProductionLines: 0,
     },
   },
 };
@@ -1451,6 +1503,266 @@ export function examTeileBacked(c) {
 
 
 // ───────────────────────────────────────────────────────────────────────────────────────────────
+// RULE 17 / RULE 18 / RULE 19 — THE TEXTS THE COURSE HOLDS UP AS MODELS (DaF review #12)
+//
+// Three rules, one subject: `pretest.model` and `schreiben.sample` are the two texts the course
+// shows the learner under the words „Modellantwort“ and „Beispieltext“, and a model is read as an
+// instruction. Round 12 measured what nobody had measured in twelve rounds: all six Mitteilung
+// samples FAILED the form checklist the same screen prints one paragraph above them (14–24 words
+// against „25–45 Wörter“), and the RULE-15b repair of the same round had paid for a deferred
+// construction with a model that contradicts its own dialogue („Das ist die Schwester. Sie ist
+// zwanzig.“ — in the dialogue the BROTHER is twenty).
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+
+/**
+ * A Formular sample („Vorname: Ana / Familienname: Chakiri / …“) as the `{ field: value }` map
+ * `scoreWriting` grades — the same shape `formularText` writes and the player collects, read back.
+ * Fields the sample does not fill stay absent, which is exactly what the check must see.
+ */
+export function formularSampleValues(sample, fields = []) {
+  const out = {};
+  for (const part of String(sample || '').split(/\s*[/\n]\s*/)) {
+    const m = /^\s*([^:]+):\s*(.*)$/.exec(part);
+    if (!m) continue;
+    const field = (fields || []).find((f) => f.toLowerCase() === m[1].trim().toLowerCase()) || m[1].trim();
+    out[field] = m[2].trim();
+  }
+  return out;
+}
+
+/**
+ * RULE 17: every Beispieltext passes the form checklist its own screen shows beside it.
+ *
+ * DERIVED, NEVER RETYPED. The word window and the Leitpunkte come from the writing-task bank
+ * (`netlify/functions/_shared/writingTasks.mjs` and its SPA twin) — the file the grader validates
+ * against — and the scoring comes from `scoreWriting`, the function `GradedWriting.jsx` calls. The
+ * Lektion supplies only the Textsorte. Both branches run: a Mitteilung is graded on length, Anrede,
+ * Gruß and every Leitpunkt, a Formular on „is every field filled“.
+ *
+ * Hard rule, no ratchet: a model text that fails the course's own checklist is never older debt
+ * that a later round can pay down — it is a text somebody wrote, and the round that writes it can
+ * measure it.
+ */
+export function modelTextsPassOwnChecklist(c) {
+  const offenders = [];
+  for (const l of c.lektionen || []) {
+    const w = l.schreiben;
+    if (!w?.sample) continue;
+    const bank = w.taskKey ? writingTaskByKey(c.examKey, w.taskKey) : null;
+    if (!bank) continue; // the taskKey/bank checks in validateCurriculum already report this
+    const isFormular = w.kind === 'formular';
+    const task = {
+      kind: w.kind,
+      minWords: bank.minWords,
+      maxWords: bank.maxWords,
+      ...(isFormular ? { fields: bank.leitpunkte || [] } : { leitpunkte: bank.leitpunkte || [] }),
+    };
+    const value = isFormular ? formularSampleValues(w.sample, bank.leitpunkte || []) : w.sample;
+    const res = scoreWriting(task, value);
+    for (const check of res.checks) {
+      if (check.ok) continue;
+      offenders.push({ nr: l.nr, kind: w.kind, key: check.key, label: check.label, count: countWords(w.sample) });
+    }
+  }
+  return offenders;
+}
+
+/**
+ * RULE 18: the dictation window and the read-aloud window of a Lektion never share a line.
+ *
+ * Step „Hören und schreiben“ types the line letter by letter and grades it; step „Sprechen“ reads
+ * the same line aloud and grades it. Where the two windows meet, one of the nine steps is spent on
+ * a sentence the learner has just written out — two skills sold, one rehearsed. Nine of the twelve
+ * A1.1 Lektionen keep them apart without being asked, so this is the material's own norm; the three
+ * that did not are the ones the RULE-15b window moves of round 12 created without measuring where
+ * they landed.
+ *
+ * Compared as TEXT, not as index: two different indices can carry the same sentence, and an index
+ * comparison would not see it.
+ */
+export function sharedProductionLines(c) {
+  const offenders = [];
+  for (const l of c.lektionen || []) {
+    const lines = l.dialog?.lines || [];
+    const at = (i) => String((typeof lines[i] === 'string' ? lines[i] : lines[i]?.de) || '').trim();
+    const dictated = new Map();
+    for (const i of l.hoeren?.lines || []) if (at(i)) dictated.set(at(i), i);
+    for (const i of l.sprechen?.readAloud || []) {
+      const text = at(i);
+      if (text && dictated.has(text)) {
+        offenders.push({ nr: l.nr, dictation: dictated.get(text), readAloud: i, de: text });
+      }
+    }
+  }
+  return offenders;
+}
+
+// ── RULE 19 — a model text may not contradict its own dialogue ─────────────────────────────────
+//
+// RULE 14 holds the facts of the recurring CHARACTERS across the whole level. This is the same
+// question one Lektion wide and for the things as well as the people: the dialogue of the Lektion
+// is the world the learner has just read, and the model answer printed four screens later is read
+// as being about that world. The facts are not typed here either — they are read off the dialogue.
+const FACT_VERBS = new Set(['ist', 'sind', 'kostet', 'kosten']);
+const NUMBER_WORDS = [
+  'null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn',
+  'elf', 'zwölf', 'dreizehn', 'vierzehn', 'fünfzehn', 'sechzehn', 'siebzehn', 'achtzehn',
+  'neunzehn', 'zwanzig', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'siebzig', 'achtzig',
+  'neunzig', 'hundert',
+];
+const NUMBER_SET = new Set(NUMBER_WORDS);
+const isNumber = (t) => /^\d{1,4}$/.test(t) || NUMBER_SET.has(t.toLowerCase());
+// Words that may stand between the verb and the value without being the value. The level's own
+// FUNCTION_WORDS list does the rest of this work (see `factPairs`), so „die Party ist **um** acht
+// Uhr“ files the number and not the preposition.
+const HEDGES = new Set(['noch', 'auch', 'sehr', 'nicht', 'schon', 'wieder', 'immer', 'heute', 'so', 'ganz']);
+
+/**
+ * The level's own adjectives: a Wortfeld entry with no article, written small, one word, not an
+ * infinitive. This is what „Eigenschaft“ means for RULE 19 — jung, alt, teuer, rot, pünktlich —
+ * and it is read off the Wortfeld rather than listed here, so a level that teaches another one
+ * gets it for free. A value that is neither a number nor one of these is no fact the rule judges:
+ * „die Party ist um acht **Uhr**“ states a time, „die Party ist bestimmt **schön**“ an opinion,
+ * and neither contradicts the other.
+ */
+function levelAdjectives(c) {
+  const out = new Set();
+  for (const l of c.lektionen || []) {
+    for (const w of l.wortfeld || []) {
+      const de = String(w.de || '');
+      if (w.article || /\s/.test(de) || !/^[a-zäöüß]/.test(de) || /en$/.test(de)) continue;
+      out.add(de.toLowerCase());
+    }
+  }
+  return out;
+}
+
+/** Every noun the level names, with its gender — the antecedent table for er/sie/es. */
+function nounGenders(c) {
+  const genders = new Map();
+  const plurals = [];
+  for (const l of c.lektionen || []) {
+    for (const w of l.wortfeld || []) {
+      if (!w.article || !w.word) continue;
+      const g = w.article === 'der' ? 'm' : w.article === 'die' ? 'f' : 'n';
+      genders.set(String(w.word).toLowerCase(), g);
+      if (w.plural) plurals.push(String(w.plural).toLowerCase());
+    }
+  }
+  // „sie“ is the plural pronoun too — but a plural that spells like its own singular must not
+  // overwrite the singular's gender: `der Euro` has the plural `Euro`, and writing it back as
+  // feminine made „Sie kostet acht **Euro**“ resolve to the currency instead of to the Lampe.
+  for (const p of plurals) if (!genders.has(p)) genders.set(p, 'f');
+  return genders;
+}
+
+// The value window is THREE tokens, not „to the end of the clause“: „Der Stuhl kostet zwölf Euro
+// und die Lampe kostet acht Euro.“ is one sentence with two facts, and a greedy window would
+// swallow the second one whole and never see it.
+const SUBJ_RE = /\b(?:(?:der|die|das|den|dem|ein|eine|einen|mein|meine|dein|deine|ihr|ihre)\s+)?([A-ZÄÖÜ][a-zäöüß]+|[EeSs]r|[Ss]ie|[Ee]s)\s+(ist|sind|kostet|kosten)\s+((?:[^\s,.;!?]+\s*){0,3})/g;
+
+/**
+ * The (subject, value) pairs a text states, with the pronouns resolved.
+ *
+ * `er`/`sie`/`es` bind to the last noun of matching gender the text has already named — which is
+ * how „Das ist eine Lampe. Sie kostet acht Euro.“ files a price under `Lampe`, and how the L3
+ * dialogue files `zwanzig` under `Bruder` although the sentence says „Er“.
+ */
+function factPairs(text, genders, functionSet = new Set(), adjectives = new Set()) {
+  const pairs = [];
+  const mentions = [];
+  for (const sentence of String(text || '').match(/[^.?!]+[.?!]*/g) || []) {
+    for (const m of sentence.matchAll(/\b([A-ZÄÖÜ][a-zäöüß]+)\b/g)) {
+      const key = m[1].toLowerCase();
+      if (genders.has(key)) mentions.push({ noun: key, gender: genders.get(key) });
+    }
+    for (const m of sentence.matchAll(new RegExp(SUBJ_RE.source, SUBJ_RE.flags))) {
+      const [, rawSubject, verb, rest] = m;
+      if (!FACT_VERBS.has(verb)) continue;
+      let subject = null;
+      const low = rawSubject.toLowerCase();
+      if (low === 'er' || low === 'sie' || low === 'es') {
+        const want = low === 'er' ? 'm' : low === 'sie' ? 'f' : 'n';
+        const hit = [...mentions].reverse().find((x) => x.gender === want);
+        subject = hit ? hit.noun : null;
+      } else if (genders.has(low)) {
+        subject = low;
+      }
+      if (!subject) continue;
+      const tokens = String(rest).trim().split(/\s+/)
+        .map((t) => t.replace(/[^A-Za-zÄÖÜäöüß0-9]/g, ''))
+        .filter((t) => t && !HEDGES.has(t.toLowerCase())
+          && (isNumber(t) || !functionSet.has(t.toLowerCase())));
+      // The first token that IS a fact: a number, or one of the level's own adjectives. Anything
+      // else the sentence puts after „ist“ is a phrase this rule does not read as a fact.
+      const value = tokens.find((t) => isNumber(t) || adjectives.has(t.toLowerCase()));
+      if (!value) continue;
+      pairs.push({ subject, value, family: isNumber(value) ? 'zahl' : 'eigenschaft', verb });
+    }
+  }
+  return pairs;
+}
+
+/**
+ * RULE 19: a model text states nothing its own dialogue states otherwise.
+ *
+ * Two directions, both measured over the pairs above:
+ *   (a) the model gives a NUMBER to a subject the dialogue does not give it to, while the dialogue
+ *       gives that number to somebody else — the L3 case, where „zwanzig“ belongs to the Bruder;
+ *   (b) the model gives a subject a value of a kind the dialogue has already fixed differently —
+ *       „die Lampe kostet vier Euro“ under a dialogue that says „Sie kostet acht Euro“.
+ * Values the dialogue never mentions are silent: a model may add („Er ist Student.“), it may not
+ * overturn. Hard rule — like RULE 14, a contradiction is always something a round just wrote.
+ */
+export function modelTextsMatchDialogue(c) {
+  const spec = levelSpec(c?.level) || LEVELS['a1.1'];
+  const functionSet = spec.functionSet || new Set();
+  const genders = nounGenders(c);
+  const adjectives = levelAdjectives(c);
+  const offenders = [];
+  for (const l of c.lektionen || []) {
+    const dialogText = (l.dialog?.lines || [])
+      .map((x) => (typeof x === 'string' ? x : x?.de)).filter(Boolean).join(' ');
+    const dialogPairs = factPairs(dialogText, genders, functionSet, adjectives);
+    if (!dialogPairs.length) continue;
+    const bySubject = new Map();
+    const byValue = new Map();
+    for (const p of dialogPairs) {
+      const key = `${p.subject}|${p.family}|${p.verb}`;
+      if (!bySubject.has(key)) bySubject.set(key, new Set());
+      bySubject.get(key).add(p.value.toLowerCase());
+      if (!byValue.has(p.value.toLowerCase())) byValue.set(p.value.toLowerCase(), new Set());
+      byValue.get(p.value.toLowerCase()).add(p.subject);
+    }
+    const models = [
+      ...(l.pretest?.model ? [{ where: 'pretest.model', text: l.pretest.model }] : []),
+      ...(l.schreiben?.sample ? [{ where: 'schreiben.sample', text: l.schreiben.sample }] : []),
+    ];
+    for (const { where, text } of models) {
+      for (const p of factPairs(text, genders, functionSet, adjectives)) {
+        const value = p.value.toLowerCase();
+        const owners = byValue.get(value);
+        if (p.family === 'zahl' && owners && !owners.has(p.subject)) {
+          offenders.push({
+            nr: l.nr, where, subject: p.subject, value: p.value,
+            why: `im Dialog gehört „${p.value}“ zu ${[...owners].join('/')}`,
+          });
+          continue;
+        }
+        const stated = bySubject.get(`${p.subject}|${p.family}|${p.verb}`);
+        if (stated && !stated.has(value)) {
+          offenders.push({
+            nr: l.nr, where, subject: p.subject, value: p.value,
+            why: `im Dialog ${p.verb} ${p.subject} „${[...stated].join('/')}“`,
+          });
+        }
+      }
+    }
+  }
+  return offenders;
+}
+
+// ───────────────────────────────────────────────────────────────────────────────────────────────
 // RULE 14 — PERSONA CONSISTENCY (DaF review #5, MAJOR 12)
 //
 // The course is carried by a handful of recurring characters, and a learner meets the same person
@@ -1862,7 +2174,10 @@ export function validateCurriculum(c, extraItems, poolItems) {
     // register, so the two halves move together (DaF review #2, §B).
     const range = w.kind === 'formular' ? [5, 40] : [25, 45];
     if (w.minWords !== range[0] || w.maxWords !== range[1]) fail(`Lektion ${l.nr}: schreiben word range ${w.minWords}–${w.maxWords}, expected ${range[0]}–${range[1]} for a ${w.kind}`);
-    if (words(w.sample || '').length > 30) fail(`Lektion ${l.nr}: schreiben.sample is longer than 30 words`);
+    // The sample's length is RULE 17's business and RULE 17 reads the BANK. The constant that used
+    // to stand here — „longer than 30 words“ — was a third number beside the two real ones, and it
+    // contradicted them: the window is 25–45, so a compliant 35-word Mitteilung failed the
+    // validator and only texts BELOW the learner's own minimum passed it (DaF review #12, MAJOR 1).
     // The Schreiben task is graded by netlify/functions/evaluate-writing.mjs, which
     // looks the prompt up in the task bank by exam_key + task_key and never trusts
     // client text. So a taskKey that does not resolve — or resolves to a task whose
@@ -1981,6 +2296,22 @@ export function validateCurriculum(c, extraItems, poolItems) {
     fail(`RULE 16: ${unbacked.length} examTeile claims nothing in their Lektion backs, ratchet is ${r.unbackedExamTeile} — ${unbacked.map((o) => `L${o.nr} „${o.teil}“ (${o.why})`).join(', ')}`);
   }
 
+  // ---- RULE 17 / 18 / 19 (the model texts, DaF review #12) --------------------------------------
+  // RULE 19 is hard (like RULE 14: a contradiction is always something a round just wrote). RULE 17
+  // and RULE 18 are hard at A1.1 too — their A1.1 ratchets are 0 and 1, and the 1 is the L3
+  // dialogue shortage documented at MAX_SHARED_PRODUCTION_LINES, not a tolerance.
+  const modelChecks = modelTextsPassOwnChecklist(c);
+  if (modelChecks.length > (r.modelChecklistBreaks ?? 0)) {
+    fail(`RULE 17: ${modelChecks.length} Formprüfungen, die die Beispieltexte selbst nicht bestehen, Ratchet ist ${r.modelChecklistBreaks ?? 0} — ${modelChecks.map((o) => `L${o.nr} ${o.key} („${o.label}“, ${o.count} Wörter)`).join(', ')}`);
+  }
+  const shared = sharedProductionLines(c);
+  if (shared.length > (r.sharedProductionLines ?? 0)) {
+    fail(`RULE 18: ${shared.length} Lektionen diktieren und lesen dieselbe Zeile vor, Ratchet ist ${r.sharedProductionLines ?? 0} — ${shared.map((o) => `L${o.nr} Zeile ${o.dictation}/${o.readAloud} „${o.de}“`).join(', ')}`);
+  }
+  for (const o of modelTextsMatchDialogue(c)) {
+    fail(`RULE 19: Lektion ${o.nr} ${o.where}: „${o.subject} … ${o.value}“ widerspricht dem eigenen Dialog — ${o.why}`);
+  }
+
   // ---- RULE 14 (the recurring characters keep their facts) --------------------------------------
   // No ratchet: a learner meets Ana in the dialogue and again in the Formular of the same Lektion,
   // and a contradiction between the two is always something a repair round just wrote.
@@ -2036,6 +2367,15 @@ if (isMain) {
   const unbacked = examTeileBacked(c);
   console.log(`  RULE 16 ungedeckte Prüfungsteile: ${unbacked.length} (Ratchet ${r.unbackedExamTeile})`);
   for (const o of unbacked) console.log(`    L${o.nr} „${o.teil}“ — ${o.why}`);
+  const modelChecks = modelTextsPassOwnChecklist(c);
+  console.log(`  RULE 17 Mustertexte, die ihre eigene Checkliste reißen: ${modelChecks.length} (harte Regel, kein Ratchet)`);
+  for (const o of modelChecks) console.log(`    L${o.nr} ${o.kind} (${o.count} Wörter) — ${o.key}: „${o.label}“`);
+  const shared = sharedProductionLines(c);
+  console.log(`  RULE 18 Lektionen, die Diktat und Vorlesen auf dieselbe Zeile legen: ${shared.length} (Ratchet ${r.sharedProductionLines ?? 0})`);
+  for (const o of shared) console.log(`    L${o.nr} Zeile ${o.dictation}/${o.readAloud} „${o.de}“`);
+  const modelFacts = modelTextsMatchDialogue(c);
+  console.log(`  RULE 19 Mustertexte gegen den eigenen Dialog: ${modelFacts.length} (harte Regel, kein Ratchet)`);
+  for (const o of modelFacts) console.log(`    L${o.nr} ${o.where}: ${o.subject} → „${o.value}“ — ${o.why}`);
   const personaBreaks = personaConsistency(c);
   console.log(`  RULE 14 Figuren-Widersprüche: ${personaBreaks.length} (harte Regel, kein Ratchet)`);
   for (const o of personaBreaks) console.log(`    L${o.nr} ${o.where}: ${o.name} ${o.fact} „${o.found}“ statt „${o.expected}“`);
