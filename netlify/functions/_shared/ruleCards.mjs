@@ -7,16 +7,16 @@
 export const RULE_CARDS = {
   "alphabet-pronunciation": {
     "titleDe": "Die Buchstabennamen und das Buchstabieren",
-    "content": "Beim Buchstabieren sagst du jeden Buchstaben einzeln.\nJeder Buchstabe hat einen Namen:\nA a, B be, C tse, D de, E e, F ef, G ge, H ha, I i, J jot, K ka, L el, M em,\nN en, O o, P pe, Q ku, R er, S es, T te, U u, V vau, W we, X iks, Y ypsilon, Z tset.\nÄ a-Umlaut, Ö o-Umlaut, Ü u-Umlaut, ß Eszett.\nVorsicht: E und I, G und J, V und W haben ähnliche Namen.\nFrage: Wie schreibt man das? Antwort: A-N-A.\nBeispiele: Buchstabieren Sie bitte Chakiri. Wie buchstabiert man Ana?\nWie schreibt man Tschüss? Buchstabieren Sie Entschuldigung. Wie schreibt man Vorname?\nEnglish: every German letter has its own name — say the names one by one when you spell.",
+    "content": "Beim Buchstabieren sagst du jeden Buchstaben einzeln.\nJeder Buchstabe hat einen Namen:\nA a, B be, C ce, D de, E e, F ef, G ge, H ha, I i, J Jot, K ka, L el, M em,\nN en, O o, P pe, Q ku, R er, S es, T te, U u, V Vau, W we, X ix, Y Ypsilon, Z Zett.\nÄ a-Umlaut, Ö o-Umlaut, Ü u-Umlaut, ß Eszett.\nVorsicht: E und I, G und J, V und W haben ähnliche Namen.\nFrage: Wie schreibt man das? Antwort: A-N-A.\nBeispiele: Buchstabieren Sie bitte Chakiri. Wie buchstabiert man Ana?\nWie schreibt man Tschüss? Buchstabieren Sie Entschuldigung. Wie schreibt man Vorname?\nEnglish: every German letter has its own name — say the names one by one when you spell.",
     "commonMistakes": [
       {
         "wrong": "Wie heißt der Buchstabe Z? — Zed.",
-        "correct": "Wie heißt der Buchstabe Z? — tset (Zett).",
-        "explanationDe": "Der Buchstabe Z hat im Deutschen den Namen tset."
+        "correct": "Wie heißt der Buchstabe Z? — Zett.",
+        "explanationDe": "Der Buchstabe Z heißt im Deutschen Zett."
       },
       {
         "wrong": "V und W haben denselben Namen.",
-        "correct": "V heißt vau, W heißt we.",
+        "correct": "V heißt Vau, W heißt We.",
         "explanationDe": "Zwei Buchstaben, zwei Namen. Beim Buchstabieren am Telefon ist das der häufigste Fehler."
       },
       {
@@ -49,7 +49,7 @@ export const RULE_CARDS = {
   },
   "nouns-gender": {
     "titleDe": "Genus: der, die, das — und die Endungen, die helfen",
-    "content": "Jedes Nomen hat ein Genus: der, die oder das. Im Plural steht immer die.\nDiese Endungen zeigen das Genus:\n-ung, -heit, -keit, -schaft → die: die Zeitung, die Freiheit, die Möglichkeit, die Freundschaft.\n-chen, -lein → das: das Mädchen, das Brötchen.\n-er bei Personen → der: der Lehrer, der Student.\nHat ein Nomen keine dieser Endungen, dann hilft nur Lernen.\nLerne jedes Nomen mit dem Artikel: nicht Tisch, sondern der Tisch.\nEnglish: learn every noun together with its article; the endings above are reliable groups, not a complete system.",
+    "content": "Jedes Nomen hat ein Genus: der, die oder das. Im Plural steht immer die.\nDiese Endungen zeigen das Genus:\n-ung, -heit, -keit, -schaft → die: die Zeitung, die Freiheit, die Möglichkeit, die Freundschaft.\n-chen, -lein → das: das Mädchen, das Brötchen.\n-er bei Berufen von Männern → der: der Lehrer, der Verkäufer, der Kellner. Vorsicht: die Mutter, die Schwester, die Tochter.\nHat ein Nomen keine dieser Endungen, dann hilft nur Lernen.\nLerne jedes Nomen mit dem Artikel: nicht Tisch, sondern der Tisch.\nEnglish: learn every noun together with its article; the endings above are reliable groups, not a complete system.",
     "commonMistakes": [
       {
         "wrong": "das Zeitung",
@@ -64,7 +64,7 @@ export const RULE_CARDS = {
       {
         "wrong": "die Lehrer arbeitet hier. (ein Mann)",
         "correct": "Der Lehrer arbeitet hier.",
-        "explanationDe": "Personen auf -er sind der-Wörter. Die Frau ist die Lehrerin."
+        "explanationDe": "Männliche Berufsnamen auf -er sind der-Wörter. Die Frau ist die Lehrerin. Bei Verwandten gilt das nicht: die Mutter, die Schwester."
       }
     ]
   },

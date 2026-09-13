@@ -93,6 +93,14 @@ export const LEMMA_STOPWORDS = new Set([
   'schreib', 'schreibe', 'schreibweise', 'wort', 'wörter', 'richtig', 'falsch',
   'buchstabiert', 'finde', 'ergänze', 'setze', 'wähle', 'bedeutet', 'heißt',
   'sagt', 'sagen', 'macht', 'gut', 'neu', 'alt',
+  // The Sie-forms of the same formulas. REVIEW #3 asked for the whole pool to
+  // address an adult learner in the Sie-register, and scripts/build-lesson-pool.mjs
+  // now rewrites "Schreib …" to "Schreiben Sie …" at build time. Without these
+  // the rewritten task words would count as content lemmas, MAX_SAME_LEMMA would
+  // cap the templates at two, and a Lektion built on them would come out thin —
+  // the stoplist has to follow the register, not the other way round.
+  'schreiben', 'bilden', 'bilde', 'korrigieren', 'korrigiere', 'ergänzen',
+  'setzen', 'wählen', 'finden', 'hören', 'antworten', 'antworte',
 ]);
 
 const tokens = (text) =>
