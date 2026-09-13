@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { ProgressProvider } from './contexts/ProgressContext';
@@ -44,7 +44,7 @@ const LevelTest = lazy(() => import('./pages/LevelTest'));
 const VideoLibraryPage = lazy(() => import('./pages/VideoLibraryPage'));
 const VideoDetailPage = lazy(() => import('./pages/VideoDetailPage'));
 const IntroPage = lazy(() => import('./pages/IntroPage'));
-const AdminVideosPage = lazy(() => import('./pages/AdminVideosPage'));
+const AdminApp = lazy(() => import('./pages/admin/AdminApp.jsx'));
 const PodcastsPage = lazy(() => import('./pages/PodcastsPage'));
 const VocabularySectionPage = lazy(() => import('./pages/VocabularySectionPage'));
 const SentenceXRay = lazy(() => import('./pages/SentenceXRay'));
@@ -85,6 +85,18 @@ function SessionTimeoutWrapper() {
   return <SessionTimeoutModal show={showWarning} onStay={stayLoggedIn} />;
 }
 
+/**
+ * App chrome that must NOT render inside the admin panel: the panel owns its
+ * own shell (sidebar, banner, filter bar) and the learner-facing floating
+ * elements (intro button, trial banner, course return bar, footer, bottom
+ * nav) would overlap its rail.
+ */
+function OutsideAdmin({ children }) {
+  const { pathname } = useLocation();
+  if (pathname === '/admin' || pathname.startsWith('/admin/')) return null;
+  return children;
+}
+
 function App() {
   return (
     <BrowserRouter>
@@ -103,8 +115,8 @@ function App() {
                   Skip to content
                 </a>
                 <Navbar />
-                <TrialBanner />
-                <FloatingIntroButton />
+                <OutsideAdmin><TrialBanner /></OutsideAdmin>
+                <OutsideAdmin><FloatingIntroButton /></OutsideAdmin>
                 <SessionTimeoutWrapper />
                 <main id="main">
                 <Suspense fallback={<PageLoader />}>
@@ -498,15 +510,15 @@ function App() {
                     {/* Sentence X-Ray — public tool */}
                     <Route path="/analyze" element={<SentenceXRay />} />
 
-                    {/* Admin */}
+                    {/* Admin panel — every /admin/* route lives in src/pages/admin/AdminApp.jsx.
+                        The role check is server-side (admin-session); ProtectedRoute only
+                        guarantees a signed-in user. netlify.toml rewrites /admin and /admin/*. */}
                     <Route
-                      path="/admin/videos"
+                      path="/admin/*"
                       element={
                         <ProtectedRoute>
                           <EmailVerificationGate>
-                            <OnboardingGate>
-                              <AdminVideosPage />
-                            </OnboardingGate>
+                            <AdminApp />
                           </EmailVerificationGate>
                         </ProtectedRoute>
                       }
@@ -517,11 +529,11 @@ function App() {
                   </Routes>
                 </Suspense>
                 </main>
-                <CourseReturnBar />
-                <Footer />
+                <OutsideAdmin><CourseReturnBar /></OutsideAdmin>
+                <OutsideAdmin><Footer /></OutsideAdmin>
                 {/* Mobile app tabs (signed-in only); pb clearance lives on the
                     wrapper so the fixed bar never covers page-end content. */}
-                <BottomNav />
+                <OutsideAdmin><BottomNav /></OutsideAdmin>
               </div>
             </ProgressProvider>
           </ThemeProvider>

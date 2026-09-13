@@ -12,6 +12,7 @@ import { markCheckoutStarted, consumeCheckoutSuccess } from '../lib/funnelTracki
 import { PLANS, num, levelsForProduct } from '../data/pricing.js';
 import { LEVEL_COUNT, READING_LESSON_COUNT } from '../data/marketing.js';
 import Button from '../components/ui/Button.jsx';
+import CouponField from '../components/CouponField.jsx';
 import Card from '../components/ui/Card.jsx';
 import Chip from '../components/ui/Chip.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
@@ -77,12 +78,16 @@ const SubscriptionPage = () => {
     };
   }, []);
 
+  // A validated coupon ({ code }) rides into every checkout URL; null = none.
+  const [coupon, setCoupon] = useState(null);
+
   const handleSubscribe = (planType) => {
     const plan = LEMONSQUEEZY_CONFIG.plans[planType];
     const checkoutUrl = LEMONSQUEEZY_CONFIG.getCheckoutUrl(
       plan.variantId,
       user?.email || '',
-      user?.id || ''
+      user?.id || '',
+      coupon
     );
     markCheckoutStarted(planType, PLANS[planType]?.price);
     openCheckout(checkoutUrl);
@@ -130,7 +135,8 @@ const SubscriptionPage = () => {
     const checkoutUrl = LEMONSQUEEZY_CONFIG.getCheckoutUrl(
       variantId,
       user?.email || '',
-      user?.id || ''
+      user?.id || '',
+      coupon
     );
     markCheckoutStarted(productKey, price);
     openCheckout(checkoutUrl);
@@ -264,6 +270,13 @@ const SubscriptionPage = () => {
             }
           />
         </div>
+
+        {/* Coupon: validated server-side; the code rides into every checkout URL below. */}
+        {user ? (
+          <div className="mb-8 flex justify-center">
+            <CouponField onApplied={setCoupon} isGerman={isGerman} />
+          </div>
+        ) : null}
 
         {/* Payment verification */}
         {verifying && (

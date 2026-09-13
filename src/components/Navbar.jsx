@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, User, LogOut, Globe, LayoutDashboard, Crown, Sparkles, Mic, ClipboardCheck, BookOpen, BookMarked, ChevronDown, Film, Radio, Scan, Headphones, FileText, PlayCircle, GraduationCap } from 'lucide-react';
+import { Menu, X, User, LogOut, Globe, LayoutDashboard, Crown, Sparkles, Mic, ClipboardCheck, BookOpen, BookMarked, ChevronDown, Film, Radio, Scan, Headphones, FileText, PlayCircle, GraduationCap, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { isAdminEmail } from '../config/admins';
@@ -76,7 +76,11 @@ const Navbar = () => {
   const inTrial = user ? isInFreeTrial() : false;
   const isSubscribed = user ? hasActiveSubscription() : false;
   const trialDays = user ? getTrialDaysRemaining() : 0;
-  const isAdmin = isAdminEmail(user?.email);
+  // The admin link shows for any staff role (profiles.role, read server-side on
+  // every admin request) — the email list only bridges the moment before the
+  // profile has loaded. Showing a link is not authorisation.
+  const { profile } = useSubscription();
+  const isAdmin = Boolean(profile?.role) || isAdminEmail(user?.email);
 
   const label = (item) => (isGerman ? item.labelDe : item.labelEn);
   const visibleGroups = NAV_GROUPS.map((g) => ({
@@ -202,12 +206,12 @@ const Navbar = () => {
                       </a>
                       {isAdmin && (
                         <Link
-                          to="/admin/videos"
+                          to="/admin"
                           onClick={() => setUserMenuOpen(false)}
                           className="flex items-center gap-3 px-4 py-2.5 text-sm text-ink hover:bg-siegel-wash transition-colors"
                         >
-                          <Film size={16} />
-                          Admin: Add Video
+                          <ShieldCheck size={16} />
+                          Admin-Panel
                         </Link>
                       )}
                       <div className="border-t border-rule my-1" />

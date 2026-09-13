@@ -247,6 +247,49 @@ function courseForVariant(variantId) {
   return variantId ? map[String(variantId)] || null : null;
 }
 
+// Coupon redemption ledger (docs/admin-panel.md, Part 3 §4.6). Called from the
+// PAID branch of order_created, after the paid gate and before fulfilment.
+// The code travels through checkout custom data (checkout[custom][coupon])
+// and comes back on the webhook as meta.custom_data.coupon — deterministic,
+// never guessed from the discount total. One row per paid order, idempotent
+// under provider retries by UNIQUE (coupon_id, order_id); amounts snapshotted
+// in minor units; the recorder never throws.
+async function recordCouponRedemption(meta, orderId, attributes, userId) {
+  try {
+    const raw = meta?.custom_data?.coupon;
+    if (!raw) return { skipped: 'no_code' };
+    const code = String(raw).trim().toUpperCase();
+    const { data: coupon } = await supabase.from('coupons').select('id, currency').eq('normalized_code', code).maybeSingle();
+    if (!coupon) {
+      console.warn(`order ${orderId} carried unknown coupon code ${code}`);
+      return { skipped: 'unknown_code' };
+    }
+    const discount = Number(attributes?.discount_total ?? 0) || 0;
+    const total = Number(attributes?.total ?? 0) || 0;
+    const { error } = await supabase.from('coupon_redemptions').insert({
+      coupon_id: coupon.id,
+      user_id: userId || null,
+      user_email: attributes?.user_email || null,
+      order_id: String(orderId),
+      variant_id: attributes?.first_order_item?.variant_id != null ? String(attributes.first_order_item.variant_id) : null,
+      original_amount: total + discount,
+      discount_amount: discount,
+      final_amount: total,
+      currency: attributes?.currency || coupon.currency,
+      payment_status: 'paid',
+    });
+    if (error) {
+      if (error.code === '23505') return { duplicate: true };
+      console.error('coupon ledger insert failed:', error.message);
+      return { failed: error.message };
+    }
+    return { recorded: true, couponId: coupon.id };
+  } catch (e) {
+    console.error('coupon ledger threw:', e.message);
+    return { failed: e.message };
+  }
+}
+
 async function handleOrderCreated(data, meta) {
   const customData = meta?.custom_data || {};
   const attributes = data?.attributes || {};
@@ -254,6 +297,12 @@ async function handleOrderCreated(data, meta) {
   const userId = customData.user_id;
 
   console.log('Order created for user:', userId, 'Order ID:', orderId);
+
+  // The coupon ledger: only for PAID, non-test orders, before any fulfilment lane.
+  if (attributes.status === 'paid' && meta?.test_mode !== true) {
+    const ledger = await recordCouponRedemption(meta, orderId, attributes, userId || null);
+    if (ledger.recorded || ledger.duplicate) console.log('coupon ledger:', JSON.stringify(ledger));
+  }
 
   // One-time course order? Route it to the purchases path and stop — there is
   // no subscription row to backfill for a one-time product.
