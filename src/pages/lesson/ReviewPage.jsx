@@ -8,7 +8,7 @@ import { fetchWordsByIds } from '../../services/lessonService.js';
 import { audioFor, playLine, playWord, speakGerman } from '../../lib/lesson/speech.js';
 import { AudioSourceBadge } from '../../components/lesson/DialogStage.jsx';
 import { LADDER_DAYS } from '../../lib/review/ladder.js';
-import { checkAnswer, RESULT, STRICT_TOPIC } from '../../lib/lesson/check.js';
+import { gradeTypedReview } from '../../lib/checkpoint/reviewGrading.js';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import Chip from '../../components/ui/Chip.jsx';
@@ -147,9 +147,7 @@ export default function ReviewPage() {
   const done = cards && index >= cards.length;
 
   const checkTyped = () => {
-    const strict = STRICT_TOPIC.test(card.card_key);
-    const { result } = checkAnswer(typed, content.accepted, { strict });
-    const ok = result === RESULT.CORRECT || result === RESULT.TYPO;
+    const { ok } = gradeTypedReview(card.card_key, content.accepted, typed);
     setVerdict(ok);
     setRevealed(true);
   };

@@ -304,6 +304,62 @@ test('a one-letter slip on a strict grammar topic is still wrong', () => {
   assert.equal(isItemCorrect(loose, 'du bistt'), true, 'one slip in a verb form is spelling');
 });
 
+// ── 3d. grading parity with the lesson (REVIEW #4 BLOCKER 3 + spelled-out) ──
+//
+// isItemCorrect (checkpoint) and gradeTypedReview (review) must grade exactly
+// like PracticeItem.jsx: caseSensitive: isCaseTask(item), so the polite `Ihr`
+// answered lowercase is wrong everywhere, and a spelled-out answer is correct
+// however its letters are separated, everywhere.
+
+test('the polite Ihr answered lowercase is wrong in the checkpoint, not a forgiven typo', () => {
+  const politeItem = {
+    topic: 'possessive-articles',
+    mode: 'typed',
+    answer: 'Ihr',
+    accepted: ['Ihr'],
+    scored: true,
+  };
+  assert.equal(isItemCorrect(politeItem, 'ihr'), false, 'caseSensitive must come from isCaseTask, not just STRICT_TOPIC');
+  assert.equal(isItemCorrect(politeItem, 'Ihr'), true);
+
+  // An explicit caseSensitive:true pool item (independent of the topic regex)
+  // must behave the same way once it reaches a checkpoint item.
+  const flagged = {
+    topic: 'some-other-topic',
+    mode: 'typed',
+    answer: 'Berlin',
+    accepted: ['Berlin'],
+    caseSensitive: true,
+    scored: true,
+  };
+  assert.equal(isItemCorrect(flagged, 'berlin'), false);
+});
+
+test('a spelled-out answer is correct in the checkpoint however the letters are separated', () => {
+  const spelled = {
+    topic: 'spelling',
+    mode: 'typed',
+    answer: 'H-A-L-L-O',
+    accepted: ['H-A-L-L-O'],
+    scored: true,
+  };
+  assert.equal(isItemCorrect(spelled, 'HALLO'), true);
+  assert.equal(isItemCorrect(spelled, 'H A L L O'), true);
+});
+
+test('gradeTypedReview (the review page grading helper) matches the checkpoint on the same two cases', async () => {
+  const { gradeTypedReview } = await import('../src/lib/checkpoint/reviewGrading.js');
+
+  // A possessive-articles review card whose accepted answer is the polite Ihr.
+  const ihrCard = gradeTypedReview('pattern:possessive-articles', ['Ihr'], 'ihr');
+  assert.equal(ihrCard.ok, false, 'lowercase ihr must not be counted correct in the review helper either');
+  assert.equal(gradeTypedReview('pattern:possessive-articles', ['Ihr'], 'Ihr').ok, true);
+
+  // A spelled-out sentence/word card.
+  assert.equal(gradeTypedReview('sentence:l1:0', ['H-A-L-L-O'], 'HALLO').ok, true);
+  assert.equal(gradeTypedReview('sentence:l1:0', ['H-A-L-L-O'], 'H A L L O').ok, true);
+});
+
 // ── 4. the 70/30 draw ───────────────────────────────────────────────────────
 
 test('checkpoint 1 has no earlier chapter, so every pool item is from this chapter', () => {

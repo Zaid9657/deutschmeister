@@ -25,7 +25,7 @@
 // Everything is deterministic in `seed` (mulberry32), so tests can pin the
 // exact 20 items and "Nochmal" can reshuffle the ORDER without changing the
 // test a learner already saw.
-import { checkAnswer, tagError, RESULT, STRICT_TOPIC } from '../lesson/check.js';
+import { checkAnswer, tagError, RESULT, STRICT_TOPIC, isCaseTask } from '../lesson/check.js';
 
 export const SECTION_ORDER = ['hoeren', 'lesen', 'bausteine', 'schreiben', 'sprechen'];
 
@@ -195,6 +195,9 @@ function fromPoolItem(poolItem, { id, section, source, register = null }) {
     options: hasOptions ? poolItem.options : null,
     answer: poolItem.answer,
     accepted: [poolItem.answer, ...(poolItem.accepted || [])].filter(Boolean),
+    // Carried through so isCaseTask sees it here exactly as PracticeItem.jsx
+    // does for the same pool item in the lesson (REVIEW #4 BLOCKER 3).
+    caseSensitive: poolItem.caseSensitive === true,
     explanationDe: poolItem.explanationDe || null,
     hint: poolItem.hint || null,
     poolItemId: poolItem.id,
@@ -477,6 +480,19 @@ export const itemIsScored = (item, answer) =>
 /**
  * Was this answer right? A self-confirmed read-aloud is "done", never right or
  * wrong; a mic-scored one is right at SPRECHEN_PASS_PCT and up.
+ *
+ * Grading here MUST match the lesson's PracticeItem.jsx call exactly: same
+ * `strict` rule (STRICT_TOPIC on the item's topic) and the same
+ * `caseSensitive: isCaseTask(item)` (REVIEW #4 BLOCKER 3 — the polite `Ihr`
+ * is wrong, not a forgiven typo, in the checkpoint too). TYPO handling is also
+ * identical on purpose: the standard (docs/course-standard-2026-09-12.md §3,
+ * "Checkpoint") gives the checkpoint "3 attempts per 8 h with a remediation
+ * set between" — that is a retake of the WHOLE test, not a per-item retry —
+ * and the lesson has no per-item retry either (PracticeItem.jsx locks the
+ * answer on first submit). So a TYPO result counts as correct-with-warning in
+ * both places; there is no separate "checkpoint has no retry" case to carve
+ * out, because neither surface ever offered one — the one-typo allowance
+ * lives entirely inside checkAnswer(), not in a UI retry step.
  */
 export function isItemCorrect(item, answer) {
   if (!item) return false;
@@ -486,7 +502,8 @@ export function isItemCorrect(item, answer) {
   }
   if (answer == null || answer === '') return false;
   const strict = STRICT_TOPIC.test(item.topic || '');
-  const { result } = checkAnswer(String(answer), item.accepted, { strict });
+  const caseSensitive = isCaseTask(item);
+  const { result } = checkAnswer(String(answer), item.accepted, { strict, caseSensitive });
   return result === RESULT.CORRECT || result === RESULT.TYPO;
 }
 
