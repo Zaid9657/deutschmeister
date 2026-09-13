@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { Upload, CheckCircle, AlertTriangle, Film, Plus, ArrowLeft, Loader2, X, ShieldX } from 'lucide-react';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { isAdminEmail } from '../config/admins';
 
-const ADMIN_EMAIL = 'zaid199660@gmail.com';
 import SEO from '../components/SEO';
 import Button from '../components/ui/Button.jsx';
 import Card from '../components/ui/Card.jsx';
@@ -24,7 +24,7 @@ function slugify(title) {
 
 const AdminVideosPage = () => {
   const { user } = useAuth();
-  const isAdmin = user?.email === ADMIN_EMAIL;
+  const isAdmin = isAdminEmail(user?.email);
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
