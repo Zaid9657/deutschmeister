@@ -1,5 +1,5 @@
-import { supabase } from '../utils/supabase';
-import { setProgramItemDone } from './programProgress';
+import { supabase } from '../utils/supabase.js';
+import { setProgramItemDone } from './programProgress.js';
 
 // Persistence for the lesson engine (migrations/2026-09-12-lesson-engine.sql).
 // Fail-soft like programProgress.js: a logged-out learner, a blocked network or
@@ -70,10 +70,24 @@ export const completeLesson = async (userId, { level, lektionId, accuracy = 0, s
 /**
  * One row per answered item, for the error-tag report and the review queue.
  * `attempts` = [{ itemId, stage, correct, errorTag }]. Batched in one insert.
+ *
+ * ONE BATCH IS ONE COMPLETED RUN — that is the contract `countCompletedRuns`
+ * below counts on, and the merge of a signed-out learner's progress depends on
+ * it (src/lib/course/localProgress.js). `createdAt` lets a caller stamp the
+ * batch with the moment the run actually happened, which is what keeps three
+ * merged runs three runs instead of one. The column has a plain `now()`
+ * DEFAULT and the INSERT policy on `lesson_attempts` only checks
+ * `auth.uid() = user_id` (migrations/2026-09-12-lesson-engine.sql), so an
+ * explicit value is allowed — but if a future policy or trigger ever refuses
+ * it, the batch is retried WITHOUT the stamp rather than lost: separate
+ * awaited INSERTs still get distinct `now()` values, so the run count survives
+ * either way.
+ *
+ * `client` is a seam for tests only; production always passes the real one.
  */
-export const logAttempts = async (userId, { level, lektionId }, attempts = []) => {
+export const logAttempts = async (userId, { level, lektionId, createdAt = null } = {}, attempts = [], client = supabase) => {
   if (!userId || !attempts.length) return false;
-  const rows = attempts.map((a) => ({
+  const base = attempts.map((a) => ({
     user_id: userId,
     level: String(level).toLowerCase(),
     lektion_id: lektionId,
@@ -82,10 +96,28 @@ export const logAttempts = async (userId, { level, lektionId }, attempts = []) =
     correct: !!a.correct,
     error_tag: a.errorTag || null,
   }));
-  const { error } = await supabase.from('lesson_attempts').insert(rows);
+  const rows = createdAt ? base.map((r) => ({ ...r, created_at: createdAt })) : base;
+  const { error } = await client.from('lesson_attempts').insert(rows);
+  if (error && createdAt) {
+    const retry = await client.from('lesson_attempts').insert(base);
+    if (retry.error) console.error('[lessonService] logAttempts:', retry.error.message);
+    return !retry.error;
+  }
   if (error) console.error('[lessonService] logAttempts:', error.message);
   return !error;
 };
+
+/**
+ * The stand-in row a merge writes for a completed run whose answers are no
+ * longer in the local store (a store written before runs were tagged, or a run
+ * whose items were trimmed). It records the FACT of the run, never an answer:
+ * `correct: true` and no error tag, so it seeds no review card and shows up in
+ * no error report; it is excluded by item_id/stage from every other reader of
+ * this table (checkpoint attempt windows, the explain and read-aloud caps).
+ */
+export const RUN_MARKER_ITEM_ID = '__run__';
+export const RUN_MARKER_STAGE = 'run';
+export const runMarkerAttempt = () => ({ itemId: RUN_MARKER_ITEM_ID, stage: RUN_MARKER_STAGE, correct: true, errorTag: null });
 
 /**
  * How many times this learner has FINISHED one Lektion — derived, never stored.
@@ -98,13 +130,16 @@ export const logAttempts = async (userId, { level, lektionId }, attempts = []) =
  * column and without a second write path that could disagree with the first.
  * A learner whose progress row says the Lektion is finished but who has no
  * attempt rows (an offline run, a merge from before this existed) counts as 1.
+ * The merge of signed-out progress therefore writes ONE BATCH PER COMPLETED
+ * RUN (localProgress.planLocalMerge) — it must never collapse three runs into
+ * one insert, and it must never write a batch for a run that did not happen.
  *
  * Fail-soft like everything else here: on any error the answer is 0, i.e.
  * attempt 1 — a learner never loses a lesson to a failed count.
  */
-export const countCompletedRuns = async (userId, { level, lektionId, completed = false } = {}) => {
+export const countCompletedRuns = async (userId, { level, lektionId, completed = false } = {}, client = supabase) => {
   if (!userId || !lektionId) return 0;
-  const { data, error } = await supabase
+  const { data, error } = await client
     .from('lesson_attempts')
     .select('created_at')
     .eq('user_id', userId)
