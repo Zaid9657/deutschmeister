@@ -317,7 +317,11 @@ export const CURRICULUM_A11 = {
       // A1.1 carries six listening exercises and ten reading texts; every one is linked from another
       // Lektion, so this one honestly has none — the syllabus shows „—“ rather than a repeat.
       links: { listeningExercise: null, readingOrder: null },
-      practiceRule: { topics: ['verb-sein', 'alphabet-pronunciation'], typedMin: 3 },
+      // `numbers` is a PRACTICE-ONLY topic, deliberately absent from grammarSlugs: Hören Teil 1
+      // of SD1 is almost only numbers, times and telephone numbers, and a number written wrong
+      // is a spelling error, not a conjugation one — which is what it was booked as while the
+      // four items sat under `verb-sein` (DaF review #6).
+      practiceRule: { topics: ['verb-sein', 'alphabet-pronunciation', 'numbers'], typedMin: 3 },
     },
     {
       nr: 3,
@@ -1347,7 +1351,11 @@ export const CURRICULUM_A11 = {
       links: { listeningExercise: null, readingOrder: 10 },
       // „Wiederholung“ has to be visible in the practice: the last Lektion before checkpoint 4 mixes
       // all three of its slugs. time-and-dates would belong here too, but grammarSlugs is capped at 3.
-      practiceRule: { topics: ['possessive-articles', 'verb-sein', 'verb-haben'], typedMin: 4 },
+      // mustCover: the answer key every draw of this Lektion has to contain at least once
+      // (DaF review #6). The polite `Ihr` is graded in Schreiben Teil 2 and Sprechen Teil 3,
+      // L12 is the last place it is taught, and without this the seeded draw missed it in a
+      // whole attempt — `MAX_SAME_ANSWER_KEY` caps repetition but cannot reserve a seat.
+      practiceRule: { topics: ['possessive-articles', 'verb-sein', 'verb-haben'], typedMin: 4, mustCover: ['Ihr'] },
     },
   ],
   checkpoints: [

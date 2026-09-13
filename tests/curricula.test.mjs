@@ -19,10 +19,13 @@ import { CURRICULA, ALL_CURRICULA, curriculumFor, anyCurriculumFor } from '../sr
 import { writingTaskByKey, courseWritingTasks } from '../src/data/writingTasks.js';
 import {
   validateCurriculum, GRAMMAR_SLUGS, EXAM_TEILE, PRIMARY_ORDER, SITUATION_KEYWORDS,
-  wortfeldCoverage, itemLexis, loadExtraItems, loadPoolItems, canDoRehearsal, missionlessLektionen,
-  personaConsistency, PERSONAS_A11, PERSONA_TABLES,
-  MAX_UNCOVERED_WORTFELD, MAX_UNTAUGHT_ITEM_TOKENS, MAX_UNREHEARSED_CANDOS,
-  MAX_MISSIONLESS_LEKTIONEN, LEVELS, levelSpec,
+  wortfeldCoverage, itemLexis, drawnLexis, drawnAssignment, loadExtraItems, loadPoolItems,
+  canDoRehearsal, missionlessLektionen,
+  personaConsistency, PERSONAS_A11, PERSONAS_A12, PERSONA_TABLES,
+  noticeFormCoverage, producedBeforeTaught, examTeileBacked,
+  MAX_UNCOVERED_WORTFELD, MAX_UNTAUGHT_ITEM_TOKENS, MAX_UNTAUGHT_DRAWN_TOKENS, MAX_UNREHEARSED_CANDOS,
+  MAX_MISSIONLESS_LEKTIONEN, MAX_UNEXEMPLIFIED_NOTICE_FORMS, MAX_UNTAUGHT_IN_PRODUCTION,
+  MAX_UNBACKED_EXAM_TEILE, LEVELS, levelSpec, levelLexicon, untaughtTokens,
 } from '../scripts/validate-curriculum.mjs';
 
 // ───────────────────────────────────────────────────────────────────────────────────────────────
@@ -65,6 +68,33 @@ const untaughtItems = (n, prefix) => Array.from({ length: n }, (_, i) => ({
   accepted: ['Elefant'],
 }));
 
+/**
+ * n items the learner is actually SERVED, each carrying a word the course never teaches (RULE 11b).
+ *
+ * The plant goes into `accepted`, which RULE 11b scans and the draw does not read at all —
+ * `relevanceScore`, `itemLemmas` and `answerKey` in `buildLesson.js` all run on questionDe + answer
+ * — so a planted item stays exactly where it was drawn. That is an assumption, not a guarantee, so
+ * the fixture re-asks `drawnAssignment` afterwards and returns how many of the planted items are
+ * still served: a plant that fell out of the draw then fails the bite test by name instead of
+ * quietly making a dead bite test look alive.
+ */
+function plantInDrawnItems(c, extraItems, poolItems, n) {
+  // The same universe `drawnLexis` builds: the BUILT item wins over its hand-written source, so the
+  // plant has to go into the object the validator will actually read.
+  const byId = new Map();
+  for (const it of [...extraItems, ...poolItems]) byId.set(it.id, it);
+  const items = [...byId.values()];
+  const planted = [];
+  for (const id of drawnAssignment(c, items).keys()) {
+    if (planted.length >= n) break;
+    // „Zebra“ is in no Wortfeld, no dialogue and no Notice card of either level.
+    byId.get(id).accepted = [...(byId.get(id).accepted || []), 'Zebra'];
+    planted.push(id);
+  }
+  const after = drawnAssignment(c, items);
+  return planted.filter((id) => after.has(id)).length;
+}
+
 /** n can-do lines whose content words no exercise slot of their Lektion rehearses (RULE 12). */
 function addUnrehearsedCanDos(c, n) {
   let added = 0;
@@ -88,6 +118,69 @@ function dropMissions(c, n) {
   }
   return dropped;
 }
+
+/** n more bolded Notice forms no input of their Lektion shows (RULE 6b). */
+function addUnexemplifiedNoticeForms(c, n) {
+  let added = 0;
+  while (added < n) {
+    for (const l of c.lektionen) {
+      if (added >= n) break;
+      // „Giraffe“ is in no Wortfeld, no dialogue and no writing sample of either course, and the
+      // bold stands on its own so it is read as a FORM rather than as an ending.
+      l.notice.bodyDe += ' **Giraffe**';
+      added += 1;
+    }
+  }
+  return added;
+}
+
+/**
+ * A form the level teaches in a LATE Lektion, lifted verbatim out of that Lektion's own dialogue —
+ * so the mutation below plants a real Vorgriff rather than a string the rule was written around.
+ */
+function lateFormSample(c, spec) {
+  for (let i = c.lektionen.length - 1; i >= 1; i -= 1) {
+    const l = c.lektionen[i];
+    const re = (spec.offLimitsForms || {})[l.primarySlug];
+    if (!re) continue;
+    for (const line of l.dialog.lines) {
+      const hit = (line.de.match(new RegExp(re.source, re.flags)) || [])[0];
+      if (hit) return String(hit).trim();
+    }
+  }
+  return null;
+}
+
+/** n occurrences of a late form in the FIRST Lektion's dictation line (RULE 15). */
+function addProducedVorgriffe(c, spec, n) {
+  const sample = lateFormSample(c, spec);
+  if (!sample) return 0;
+  const l = c.lektionen[0];
+  const idx = l.hoeren.lines[0];
+  l.dialog.lines[idx].de += ` ${Array.from({ length: n }, () => sample).join(' ')}`;
+  return n;
+}
+
+/** n more examTeile claims whose own Lektion links nothing (RULE 16). */
+function unbackExamTeile(c, n) {
+  let done = 0;
+  for (const l of c.lektionen) {
+    if (done >= n) break;
+    if (l.examTeile.some((t) => t.startsWith('Hören')) && l.links.listeningExercise !== null) {
+      l.links.listeningExercise = null;
+      done += 1;
+      continue;
+    }
+    if (l.examTeile.some((t) => t.startsWith('Lesen')) && l.links.readingOrder !== null) {
+      l.links.readingOrder = null;
+      done += 1;
+    }
+  }
+  return done;
+}
+
+/** Pool topics A1.1 may draw without them being grammar slugs — no rule card, never primary. */
+const PRACTICE_ONLY_A11 = levelSpec('a1.1').practiceOnlyTopics || [];
 
 const L = CURRICULUM_A11.lektionen;
 const clone = () => JSON.parse(JSON.stringify(CURRICULUM_A11));
@@ -129,8 +222,20 @@ test('rule 3: every grammar slug is primary exactly once, in the taught order', 
     assert.ok(l.grammarSlugs.length >= 1 && l.grammarSlugs.length <= 3);
     assert.ok(l.grammarSlugs.includes(l.primarySlug));
     for (const s of l.grammarSlugs) assert.ok(GRAMMAR_SLUGS.includes(s), s);
-    for (const t of l.practiceRule.topics) assert.ok(l.grammarSlugs.includes(t), t);
+    // A practice topic is either one of the twelve grammar slugs of the Lektion or a declared
+    // practice-only topic of the level — a pool topic with no rule card that is never primary
+    // („numbers“, the L2 Zahlwort items). Anything else is a typo or a mislabelled item.
+    for (const t of l.practiceRule.topics) {
+      assert.ok(l.grammarSlugs.includes(t) || PRACTICE_ONLY_A11.includes(t), t);
+    }
     assert.ok(l.practiceRule.typedMin >= 3);
+  }
+  // „Practice-only“ has to mean what it says, or it becomes a back door into RULE 3: a topic on
+  // that list may not be a grammar slug, may never be primary, and has to be drawn by someone.
+  for (const t of PRACTICE_ONLY_A11) {
+    assert.ok(!GRAMMAR_SLUGS.includes(t), `${t} is a grammar slug and needs no exemption`);
+    assert.ok(!PRIMARY_ORDER.includes(t), `${t} is a primarySlug`);
+    assert.ok(L.some((l) => l.practiceRule.topics.includes(t)), `${t} is drawn by no Lektion`);
   }
   // the three article lessons and sein/pronouns come before haben and the present tense
   const at = (slug) => PRIMARY_ORDER.indexOf(slug);
@@ -300,7 +405,42 @@ test('rule 11: the practice items the learner is served use only words taught by
   // the twelve Lektionen practises is judged, not only the ones with an extra-a11-lNN- id.
   const topics = new Set(L.flatMap((l) => l.practiceRule.topics));
   const generated = loadPoolItems().filter((it) => !/^extra-/.test(it.id) && topics.has(it.topic));
-  assert.ok(generated.length > 200, `${generated.length} generated items reach a Lektion`);
+  // 227 before the build-time untaught-lexis gate (REVIEW #6 MAJOR 4), 149 after it: 78 legacy bank
+  // items were built on words A1.1 teaches nowhere and no longer ship. The bound is a shape check —
+  // „the generated half is still in scope“ — so it follows the artefact down rather than pinning a
+  // number the gate is supposed to move.
+  assert.ok(generated.length > 120, `${generated.length} generated items reach a Lektion`);
+});
+
+test('rule 11b: the items the learner is SERVED use only words taught by the Lektion that serves them', () => {
+  // DaF review #6, MAJOR 5: RULE 11 measures every item of the pool at the EARLIEST Lektion whose
+  // practiceRule names its topic — neither where the item is drawn nor anything a repair round can
+  // move — so its number mixes tokens a learner reads with tokens in items no draw ever reaches,
+  // and repairing all of the former barely moves it. RULE 11b runs the same token machinery over
+  // the real draw: planPractice() attempts 1 and 2, plus the pool items buildCheckpoint() pulls
+  // into a checkpoint, met at that checkpoint's chapter Lektion.
+  assert.ok(MAX_UNTAUGHT_DRAWN_TOKENS <= 16, 'the ratchet may only ever be lowered');
+  const offenders = drawnLexis(CURRICULUM_A11);
+  assert.ok(
+    offenders.length <= MAX_UNTAUGHT_DRAWN_TOKENS,
+    `${offenders.length} untaught tokens in served items > ratchet ${MAX_UNTAUGHT_DRAWN_TOKENS}:\n  - ${offenders.map((o) => `L${o.nr} ${o.id}: ${o.token}`).join('\n  - ')}`,
+  );
+  // Every offender names the Lektion the learner meets it in, so the list is a work order.
+  for (const o of offenders) assert.ok(o.nr >= 1 && o.nr <= 12 && o.id && o.token, JSON.stringify(o));
+  // The rule exists because it measures FEWER items than RULE 11 and different ones: a drawn item
+  // is judged where it is served, so RULE 11's two measurement artefacts (an item charged to L1 and
+  // only ever drawn in L2) cannot appear here.
+  assert.ok(offenders.length < itemLexis(CURRICULUM_A11).length, 'RULE 11b must be the narrower cut');
+  const drawn = drawnAssignment(CURRICULUM_A11, [...loadExtraItems(), ...loadPoolItems()]);
+  assert.ok(drawn.size > 80, `${drawn.size} items are actually served`);
+  assert.ok(drawn.size < loadPoolItems().length, 'the draw must be a subset of the pool');
+  // A practice-only topic is assigned like any other — through practiceRule.topics — so the L2
+  // Zahlwort items are judged against L2's vocabulary and not against L1's.
+  const numberItems = loadPoolItems().filter((it) => PRACTICE_ONLY_A11.includes(it.topic));
+  assert.ok(numberItems.length > 0, 'the practice-only topics must actually be in the pool');
+  for (const it of numberItems) {
+    if (drawn.has(it.id)) assert.ok(drawn.get(it.id) >= 2, `${it.id} is served before Lektion 2`);
+  }
 });
 
 test('rule 12: every can-do line is rehearsed in its own Lektion, under a ratchet that only falls', () => {
@@ -378,6 +518,7 @@ test('the validator bites: each mutation of a good curriculum is caught', () => 
     'a Schreiben taskKey that resolves to nothing': (c) => { c.lektionen[0].schreiben.taskKey = 'a11-l99'; },
     'a Schreiben taskKey pointing at another Lektion\'s task': (c) => { c.lektionen[0].schreiben.taskKey = 'a11-l03'; },
     'a practice topic outside grammarSlugs': (c) => { c.lektionen[0].practiceRule.topics = ['verb-haben']; },
+    'a practice topic that is neither a grammar slug nor practice-only': (c) => { c.lektionen[1].practiceRule.topics = [...c.lektionen[1].practiceRule.topics, 'no-such-topic']; },
     'a can-do that is not in ich-Form': (c) => { c.lektionen[0].canDo[0] = 'Du kannst dich vorstellen.'; },
     'a dictation index past the end of the dialogue': (c) => { c.lektionen[0].hoeren.lines = [0, 99]; },
     'hoursTotal that no longer follows from the minutes': (c) => { c.hoursTotal = 40; },
@@ -402,6 +543,13 @@ test('the validator bites: each mutation of a good curriculum is caught', () => 
   const extra11 = [...loadExtraItems(), ...untaughtItems(need11, 'a11')];
   assert.ok(failsWith(validateCurriculum(c11, extra11), 11), 'not caught: items built from untaught words');
 
+  // RULE 11b: items the learner is SERVED that reach for a word the course has not taught yet.
+  const c11b = clone();
+  const [extra11b, pool11b] = [loadExtraItems(), loadPoolItems()];
+  const need11b = overshoot(drawnLexis(CURRICULUM_A11).length, MAX_UNTAUGHT_DRAWN_TOKENS);
+  assert.equal(plantInDrawnItems(c11b, extra11b, pool11b, need11b), need11b, 'the planted items are no longer drawn');
+  assert.ok(failsWith(validateCurriculum(c11b, extra11b, pool11b), '11b'), 'not caught: served items built from untaught words');
+
   // RULE 12: can-do lines whose content words no exercise slot of their Lektion rehearses.
   const c12 = clone();
   const need12 = overshoot(canDoRehearsal(CURRICULUM_A11).length, MAX_UNREHEARSED_CANDOS);
@@ -413,6 +561,24 @@ test('the validator bites: each mutation of a good curriculum is caught', () => 
   const need13 = overshoot(missionlessLektionen(CURRICULUM_A11).length, MAX_MISSIONLESS_LEKTIONEN);
   assert.equal(dropMissions(c13, need13), need13, 'the fixture could not drop enough missions');
   assert.ok(failsWith(validateCurriculum(c13), 13), 'not caught: speaking tasks without a mission');
+
+  // RULE 6b: a Notice card that bolds a form its own Lektion never shows.
+  const c6b = clone();
+  const need6b = overshoot(noticeFormCoverage(CURRICULUM_A11).length, MAX_UNEXEMPLIFIED_NOTICE_FORMS);
+  assert.equal(addUnexemplifiedNoticeForms(c6b, need6b), need6b, 'the fixture could not carry enough bolded forms');
+  assert.ok(failsWith(validateCurriculum(c6b), '6b'), 'not caught: a Notice form no input of its Lektion shows');
+
+  // RULE 15: a form of a LATE Lektion typed into the dictation line of Lektion 1.
+  const c15 = clone();
+  const need15 = overshoot(producedBeforeTaught(CURRICULUM_A11).length, MAX_UNTAUGHT_IN_PRODUCTION);
+  assert.equal(addProducedVorgriffe(c15, levelSpec('a1.1'), need15), need15, 'no late form to plant');
+  assert.ok(failsWith(validateCurriculum(c15), 15), 'not caught: a Vorgriff in a line the learner produces');
+
+  // RULE 16: an „Hören“/„Lesen“ claim whose Lektion links nothing.
+  const c16 = clone();
+  const need16 = overshoot(examTeileBacked(CURRICULUM_A11).length, MAX_UNBACKED_EXAM_TEILE);
+  assert.equal(unbackExamTeile(c16, need16), need16, 'the fixture could not unback enough exam Teile');
+  assert.ok(failsWith(validateCurriculum(c16), 16), 'not caught: an examTeile claim nothing backs');
 
   // RULE 14: the line DaF review #5 found — „Mein Mann“ from a woman the Formular of the same
   // Lektion lists as ledig. No ratchet, so one is enough.
@@ -471,6 +637,101 @@ test('rule 14: the recurring characters keep their Familienstand, Herkunft, Beru
 
 const LEVEL_KEYS = Object.keys(LEVELS);
 const cloneOf = (c) => JSON.parse(JSON.stringify(c));
+
+test('every registered level ships a persona table — RULE 14 is never silent for a whole level', () => {
+  // DaF review #1 for A1.2, BLOCKER 1: the A1.2 registry row carried `personaSource: null` („nobody
+  // has written their fact table yet“), and the waiver cost exactly what RULE 14 exists to prevent —
+  // Ana, whom A1.1 files as ledig in an AI-graded Formular, got a husband in an A1.2 DICTATION line.
+  // A level without a fact table must not ship, so the absence is a test failure, not a silence.
+  for (const key of LEVEL_KEYS) {
+    const spec = LEVELS[key];
+    assert.ok(spec.personaSource, `${spec.code}: personaSource is null — RULE 14 would be silent for the whole level`);
+    const table = PERSONA_TABLES[spec.personaSource];
+    assert.ok(table && Object.keys(table).length, `${spec.code}: personaSource "${spec.personaSource}" resolves to no table`);
+    // And every character who speaks in the level is in it: a new name with no row is a character
+    // the course can say anything about.
+    const speakers = new Set(spec.curriculum.lektionen.flatMap((l) => l.dialog.lines.map((x) => x.speaker)));
+    const missing = [...speakers].filter((sp) => !(sp in table));
+    assert.deepEqual(missing, [], `${spec.code}: dialogue speakers with no persona row: ${missing.join(', ')}`);
+  }
+});
+
+test('A1.2 inherits A1.1 facts and adds its own — Ana stays ledig, aus Marokko, Studentin', () => {
+  // The table is a spread of PERSONAS_A11 on purpose: A1.2's DIALOG_NAMES is A1.1's list extended,
+  // so an A1.2 line must not be able to overturn a fact A1.1 already grades against.
+  assert.equal(PERSONAS_A12.Ana.familienstand, 'ledig');
+  assert.equal(PERSONAS_A12.Ana.herkunft, 'Marokko');
+  assert.deepEqual(PERSONAS_A12.Ana.beruf, ['Studentin']);
+  assert.deepEqual(PERSONAS_A12.Ana.sprachen, ['Arabisch', 'Deutsch']);
+  // The facts A1.2 states itself, read off the Formulare of L1/L3 and the Steckbrief of L7.
+  assert.equal(PERSONAS_A12.Ana.stadt, 'Bremen');
+  assert.equal(PERSONAS_A12.Lena.stadt, 'Köln');
+  assert.equal(PERSONAS_A12.Lena.alter, 24);
+  assert.deepEqual(PERSONAS_A12['Frau Berger'].beruf, ['Ärztin']);
+  assert.equal(levelSpec('a1.2').personaSource, 'a1.2');
+  // Each new fact bites on its own, in the Lektion whose Formular states it.
+  for (const [nr, text] of [[1, 'Ana Chakiri wohnt in Berlin am Platz 4.'], [7, 'Lena Berg ist 30 Jahre alt und kommt aus Hamburg.']]) {
+    const c = cloneOf(CURRICULUM_A12);
+    c.lektionen[nr - 1].schreiben.taskDe = text;
+    assert.ok(personaConsistency(c).length > 0, `not caught: ${text}`);
+  }
+});
+
+test('rule 6b: a Notice card teaches only forms its own Lektion shows, under a ratchet that only falls', () => {
+  // DaF review #1 for A1.2, BLOCKER 2. RULE 6 pins the two examples to verbatim dialogue lines; it
+  // never asked whether the FORM the card bolds occurs anywhere the learner reads or hears.
+  assert.ok(noticeFormCoverage(CURRICULUM_A11).length <= MAX_UNEXEMPLIFIED_NOTICE_FORMS);
+  // An ending is not a form: „-te“, „ge- …-t“ and a bold inside a word („teu**rer**“) are outside
+  // the rule, or every declension table would be an offender.
+  const c = cloneOf(CURRICULUM_A11);
+  c.lektionen[0].notice.bodyDe = 'Die Endung ist **-te**, und teu**rer** ist unregelmäßig.';
+  assert.deepEqual(noticeFormCoverage(c).filter((o) => o.nr === 1), []);
+  c.lektionen[0].notice.bodyDe = 'Das Wort **Giraffe** ist neu.';
+  assert.deepEqual(noticeFormCoverage(c).filter((o) => o.nr === 1), [{ nr: 1, form: 'Giraffe' }]);
+});
+
+test('rule 15: dictation and read-aloud lines use no form the course teaches later', () => {
+  // DaF review #1 for A1.2, BLOCKER 3: „Diktat und Nachsprechen sind die beiden Schritte, in denen
+  // der Lernende die Zeile produziert“ — and that is where the Vorgriffe sat.
+  assert.ok(producedBeforeTaught(CURRICULUM_A11).length <= MAX_UNTAUGHT_IN_PRODUCTION);
+  // The rule reads the grammar order, not a list of lines: a form belonging to a slug whose own
+  // Lektion comes later is reported wherever it is planted.
+  const c = cloneOf(CURRICULUM_A12);
+  const l = c.lektionen[0];
+  l.dialog.lines[l.hoeren.lines[0]].de = 'Wir haben den Kuchen gekauft.';
+  const found = producedBeforeTaught(c).filter((o) => o.nr === 1).map((o) => o.kind);
+  assert.ok(found.includes('accusative-intro'), 'den (taught in L3) not reported in an L1 dictation line');
+  assert.ok(found.includes('perfekt-intro'), 'gekauft (taught in L12) not reported in an L1 dictation line');
+  // …but the fixed chunks the level's own L1 notice licences by name are not Vorgriffe.
+  const licensed = cloneOf(CURRICULUM_A12);
+  const l1 = licensed.lektionen[0];
+  l1.dialog.lines[l1.hoeren.lines[0]].de = 'Zuerst gehen Sie zur Kirche.';
+  assert.deepEqual(
+    producedBeforeTaught(licensed).filter((o) => o.nr === 1 && o.kind === 'dative-prepositions-intro'),
+    [], 'the three Wendungen A1.2 L1 names must stay licensed',
+  );
+});
+
+test('rule 16: every examTeile claim is backed by the Lektion that makes it', () => {
+  // DaF review #1 for A1.2, BLOCKER 4: examTeile is the sixth column of the public 12x6 grid, i.e.
+  // a sales claim (src/data/marketing.js: measure before you claim).
+  assert.ok(examTeileBacked(CURRICULUM_A11).length <= MAX_UNBACKED_EXAM_TEILE);
+  const c = cloneOf(CURRICULUM_A12);
+  // A Sprechen-Teil-1 label on a prompt that is no self-introduction and no Teil-1 mission.
+  c.lektionen[3].examTeile = ['Sprechen Teil 1'];
+  c.lektionen[3].sprechen.open.teil = 'Sprechen Teil 1';
+  c.lektionen[3].sprechen.open.promptDe = 'Reklamieren Sie höflich an der Rezeption.';
+  c.lektionen[3].sprechen.open.missionOrder = null;
+  assert.ok(examTeileBacked(c).some((o) => o.nr === 4 && o.teil === 'Sprechen Teil 1'));
+  // mission_order 9 („Sprechen Teil 1: Sich komplett vorstellen“, read from speaking_missions on
+  // 2026-09-13) backs the claim on its own.
+  c.lektionen[3].sprechen.open.missionOrder = 9;
+  assert.deepEqual(examTeileBacked(c).filter((o) => o.nr === 4 && o.teil === 'Sprechen Teil 1'), []);
+  // A Schreiben Teil that names the other Textsorte.
+  const w = cloneOf(CURRICULUM_A11);
+  w.lektionen[0].examTeile = ['Schreiben Teil 2'];
+  assert.ok(examTeileBacked(w).some((o) => o.nr === 1 && o.teil === 'Schreiben Teil 2'));
+});
 
 test('the registry, the curriculum index and the modules agree on which levels exist', () => {
   assert.deepEqual(LEVEL_KEYS.sort(), Object.keys(ALL_CURRICULA).sort());
@@ -533,7 +794,10 @@ for (const key of LEVEL_KEYS) {
       assert.ok(l.grammarSlugs.length >= 1 && l.grammarSlugs.length <= 3);
       assert.ok(l.grammarSlugs.includes(l.primarySlug));
       for (const g of l.grammarSlugs) assert.ok(spec.grammarSlugs.includes(g), g);
-      for (const t of l.practiceRule.topics) assert.ok(l.grammarSlugs.includes(t), t);
+      const practiceOnly = spec.practiceOnlyTopics || [];
+      for (const t of l.practiceRule.topics) {
+        assert.ok(l.grammarSlugs.includes(t) || practiceOnly.includes(t), t);
+      }
       assert.ok(l.practiceRule.typedMin >= 3);
     }
   });
@@ -682,8 +946,12 @@ for (const key of LEVEL_KEYS) {
     const r = spec.ratchets;
     assert.ok(wortfeldCoverage(C).length <= r.uncoveredWortfeld, 'RULE 10');
     assert.ok(itemLexis(C).length <= r.untaughtItemTokens, 'RULE 11');
+    assert.ok(drawnLexis(C).length <= r.untaughtDrawnTokens, 'RULE 11b');
     assert.ok(canDoRehearsal(C).length <= r.unrehearsedCanDos, 'RULE 12');
     assert.ok(missionlessLektionen(C).length <= r.missionlessLektionen, 'RULE 13');
+    assert.ok(noticeFormCoverage(C).length <= r.unexemplifiedNoticeForms, 'RULE 6b');
+    assert.ok(producedBeforeTaught(C).length <= r.untaughtInProduction, 'RULE 15');
+    assert.ok(examTeileBacked(C).length <= r.unbackedExamTeile, 'RULE 16');
   });
 
   test(`${spec.code}: the validator bites for this level`, () => {
@@ -696,6 +964,7 @@ for (const key of LEVEL_KEYS) {
       'a Notice card over 60 words': (c) => { c.lektionen[0].notice.bodyDe = Array(61).fill('Wort').join(' '); },
       'a taskKey that points at another Lektion': (c) => { c.lektionen[0].schreiben.taskKey = `${spec.taskKeyPrefix}-l03`; },
       'a practice topic outside grammarSlugs': (c) => { c.lektionen[0].practiceRule.topics = ['no-such-slug']; },
+      'a practice topic that is neither a grammar slug nor practice-only': (c) => { c.lektionen[0].practiceRule.topics = [...c.lektionen[0].practiceRule.topics, 'no-such-topic']; },
       'a can-do that is not in ich-Form': (c) => { c.lektionen[0].canDo[0] = 'Du kannst dich vorstellen.'; },
       'a dictation index past the end of the dialogue': (c) => { c.lektionen[0].hoeren.lines = [0, 99]; },
       'hoursTotal that no longer follows from the minutes': (c) => { c.hoursTotal = 40; },
@@ -727,6 +996,12 @@ for (const key of LEVEL_KEYS) {
     const extra11 = [...loadExtraItems(spec.level), ...untaughtItems(need11, spec.taskKeyPrefix)];
     assert.ok(failsWith(validateCurriculum(c11, extra11), 11), `${spec.code}: not caught: items built from untaught words`);
 
+    const c11b = cloneOf(C);
+    const [extra11b, pool11b] = [loadExtraItems(spec.level), loadPoolItems(spec.level)];
+    const need11b = overshoot(drawnLexis(C).length, r.untaughtDrawnTokens);
+    assert.equal(plantInDrawnItems(c11b, extra11b, pool11b, need11b), need11b, `${spec.code}: the planted items are no longer drawn`);
+    assert.ok(failsWith(validateCurriculum(c11b, extra11b, pool11b), '11b'), `${spec.code}: not caught: served items built from untaught words`);
+
     const c12 = cloneOf(C);
     const need12 = overshoot(canDoRehearsal(C).length, r.unrehearsedCanDos);
     assert.equal(addUnrehearsedCanDos(c12, need12), need12, `${spec.code}: not enough room for unrehearsed can-dos`);
@@ -736,6 +1011,21 @@ for (const key of LEVEL_KEYS) {
     const need13 = overshoot(missionlessLektionen(C).length, r.missionlessLektionen);
     assert.equal(dropMissions(c13, need13), need13, `${spec.code}: not enough missions to drop`);
     assert.ok(failsWith(validateCurriculum(c13), 13), `${spec.code}: not caught: speaking tasks without a mission`);
+
+    const c6b = cloneOf(C);
+    const need6b = overshoot(noticeFormCoverage(C).length, r.unexemplifiedNoticeForms);
+    assert.equal(addUnexemplifiedNoticeForms(c6b, need6b), need6b, `${spec.code}: not enough room for bolded forms`);
+    assert.ok(failsWith(validateCurriculum(c6b), '6b'), `${spec.code}: not caught: a Notice form no input shows`);
+
+    const c15 = cloneOf(C);
+    const need15 = overshoot(producedBeforeTaught(C).length, r.untaughtInProduction);
+    assert.equal(addProducedVorgriffe(c15, spec, need15), need15, `${spec.code}: no late form to plant`);
+    assert.ok(failsWith(validateCurriculum(c15), 15), `${spec.code}: not caught: a Vorgriff in a produced line`);
+
+    const c16 = cloneOf(C);
+    const need16 = overshoot(examTeileBacked(C).length, r.unbackedExamTeile);
+    assert.equal(unbackExamTeile(c16, need16), need16, `${spec.code}: not enough backed exam Teile to unback`);
+    assert.ok(failsWith(validateCurriculum(c16), 16), `${spec.code}: not caught: an examTeile claim nothing backs`);
 
     // RULE 14 only exists for a level that has a persona table; where there is none the rule is
     // silent by design, and saying so here keeps the silence deliberate rather than accidental.
@@ -768,12 +1058,127 @@ test('A1.2 is a second half-level, not a repeat: no Wortfeld entry is taught twi
 test('A1.2 ratchets are the measured numbers, and RULE 10–12 are already at zero', () => {
   // Measured on the module at hand-over, not chosen: the A1.1 debt came from a pool that predated
   // the curriculum; A1.2 was authored against the rules, so three of the four start closed and may
-  // never be raised. RULE 13 is 3 because A1.2 carries twelve speaking missions and three
-  // Lektionen (Hotel/Reklamation, Kleidung, Wetter) have no mission that fits their situation.
+  // never be raised. RULE 13 WAS 3 on the assumption that a mission has to match the SITUATION;
+  // DaF review #1 (MAJOR, mission mapping) measured the `target_structures` instead and found a
+  // fitting mission for L4 (negation → mission 6), L10 (für/ohne/um → mission 8) and L12
+  // (Wortkarten Essen & Trinken → mission 10). Only L11 is left: no A1.2 mission is about weather.
   const r = levelSpec('a1.2').ratchets;
   assert.equal(r.uncoveredWortfeld, 0);
-  assert.equal(r.untaughtItemTokens, 0);
   assert.equal(r.unrehearsedCanDos, 0);
   assert.ok(r.missionlessLektionen <= 3, 'the ratchet may only ever be lowered');
-  assert.deepEqual(missionlessLektionen(CURRICULUM_A12), [4, 10, 11]);
+  assert.deepEqual(missionlessLektionen(CURRICULUM_A12), [11]);
+  // RULE 11 stood at 0 while `src/data/lessonPools/a12.json` did not exist, i.e. while it measured
+  // nothing. With the built pool on disk (354 items) it measures the LEGACY generated bank: every
+  // offending pair sits in a generated item, none in the hand-written `a12.extra.json`. So the
+  // ratchet is the measurement, and the hand-written half is pinned separately at zero — that is
+  // the half this course wrote and the half a repair round can move.
+  assert.ok(itemLexis(CURRICULUM_A12).length <= r.untaughtItemTokens, 'RULE 11 measurement is under its ratchet');
+  assert.ok(r.untaughtItemTokens <= 156, 'RULE 11: the ratchet may only ever be lowered');
+  const handWritten = new Set(loadExtraItems('a1.2').map((it) => it.id));
+  assert.deepEqual(
+    itemLexis(CURRICULUM_A12).filter((o) => handWritten.has(o.id)), [],
+    'the hand-written A1.2 items must stay free of untaught tokens',
+  );
+  // RULE 11b: the same tokens measured where the learner MEETS them — 156 over the whole pool
+  // becomes 18 over the items the draw actually serves, and those 18 are the repairable list.
+  assert.ok(drawnLexis(CURRICULUM_A12).length <= r.untaughtDrawnTokens, 'RULE 11b measurement is under its ratchet');
+  assert.ok(r.untaughtDrawnTokens <= 18, 'RULE 11b: the ratchet may only ever be lowered');
+  assert.deepEqual(
+    drawnLexis(CURRICULUM_A12).filter((o) => handWritten.has(o.id)), [],
+    'the hand-written A1.2 items must stay free of untaught tokens in the draw too',
+  );
 });
+
+test('A1.2 ratchets for RULE 6b, 15 and 16 are the measured numbers', () => {
+  // Measured on the module at hand-over (2026-09-13): 31 / 1 / 3. The assertions read the
+  // measurement and pin the ceiling, so a repair round that LOWERS a number passes and a round that
+  // raises one fails — the same shape as the other four ratchets.
+  const r = levelSpec('a1.2').ratchets;
+  assert.ok(noticeFormCoverage(CURRICULUM_A12).length <= r.unexemplifiedNoticeForms, 'RULE 6b');
+  assert.ok(producedBeforeTaught(CURRICULUM_A12).length <= r.untaughtInProduction, 'RULE 15');
+  assert.ok(examTeileBacked(CURRICULUM_A12).length <= r.unbackedExamTeile, 'RULE 16');
+  assert.ok(r.unexemplifiedNoticeForms <= 31, 'RULE 6b: the ratchet may only ever be lowered');
+  assert.ok(r.untaughtInProduction <= 1, 'RULE 15: the ratchet may only ever be lowered');
+  assert.ok(r.unbackedExamTeile <= 3, 'RULE 16: the ratchet may only ever be lowered');
+});
+
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+// THE LEVEL LEXICON (REVIEW #6 MAJOR 4)
+//
+// `levelLexicon()` + `untaughtTokens()` are the predicate `scripts/build-lesson-pool.mjs` drops
+// legacy bank items with, so they need their own bite test: a build step that deletes content is
+// only as trustworthy as the question it asks, and „does the course teach this word ANYWHERE?“ has
+// to stay a different question from RULE 11's „has it taught it YET?“.
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+
+test('levelLexicon knows the whole level, not one Lektion — and nothing the course never teaches', () => {
+  const lex = levelLexicon('a1.1');
+  // A word taught in the LAST Lektion is in it (RULE 11 would reject it in L1; this must not).
+  const last = CURRICULUM_A11.lektionen[CURRICULUM_A11.lektionen.length - 1];
+  const lateWord = last.wortfeld.find((w) => /^(der|die|das) /.test(w.de));
+  assert.ok(lateWord, 'the last Lektion has no article noun to test with');
+  assert.ok(lex.has(lateWord.de.split(' ')[1].toLowerCase()), `${lateWord.de} is taught in L${last.nr} but missing from the lexicon`);
+  // The function words and the cast are in it, because an item may use both freely.
+  assert.ok(lex.has('ist') && lex.has('nicht'), 'FUNCTION_WORDS are part of the lexicon');
+  for (const n of LEVELS['a1.1'].dialogNames) assert.ok(lex.has(String(n).toLowerCase()), `${n} is a DIALOG_NAME`);
+  // And the words the five DaF rounds kept finding are NOT — that is the whole point.
+  for (const w of ['honig', 'könig', 'instrument', 'freiheit', 'zeitung', 'tom', 'anna']) {
+    assert.ok(!lex.has(w), `"${w}" is in the A1.1 lexicon — the untaught-lexis gate would stop dropping it`);
+  }
+  // A1.2 inherits A1.1 (seedFrom) and is therefore strictly larger.
+  const lex12 = levelLexicon('a1.2');
+  for (const w of lex) assert.ok(lex12.has(w), `A1.2 lost the A1.1 word "${w}"`);
+  assert.ok(lex12.size > lex.size, 'A1.2 teaches nothing of its own?');
+  // An unknown level is an empty set, never a throw: the build asks per level.
+  assert.equal(levelLexicon('b2.2').size, 0);
+});
+
+test('untaughtTokens reads the item the way lexisScan does — cue and formula are not lexis', () => {
+  const spec = levelSpec('a1.1');
+  const lex = levelLexicon('a1.1');
+  const item = (over) => ({ id: 't', topic: 'nouns-gender', questionDe: '', answer: '', accepted: [], ...over });
+
+  // THE BITE. The item the fifth review quotes, with the article cue the build appends.
+  assert.deepEqual(
+    untaughtTokens(item({ questionDe: 'Schreiben Sie den Satz: [Honig / ist / gut] (mit bestimmtem Artikel)', answer: 'Der Honig ist gut.' }), lex, spec),
+    ['Honig'],
+    'the Sie-Aufgabenformel and the bracketed cue are not lexis — only Honig is',
+  );
+  // The A1.2 formula that used to count as lexis, on the level that uses it.
+  const spec12 = levelSpec('a1.2');
+  assert.deepEqual(
+    untaughtTokens(item({ questionDe: 'Schreiben Sie die Zahl in Worten: 340 = ___', answer: 'dreihundertvierzig' }), levelLexicon('a1.2'), spec12),
+    ['dreihundertvierzig'],
+    'Schreiben/Zahl/Worten are the formula talking, not the item',
+  );
+  // A cast name is never untaught — and it is in the LEXICON itself (seedVocabulary folds in
+  // DIALOG_NAMES), so it is silent with or without a spec. `spec.nameSet` is what keeps a name
+  // silent against a per-Lektion snapshot, which is the call RULE 11 makes.
+  const name = LEVELS['a1.1'].dialogNames[0];
+  assert.deepEqual(untaughtTokens(item({ questionDe: `${name} ist hier.`, answer: 'ist' }), lex, spec), []);
+  assert.deepEqual(untaughtTokens(item({ questionDe: `${name} ist hier.`, answer: 'ist' }), lex), []);
+  assert.deepEqual(untaughtTokens(item({ questionDe: `${name} ist hier.`, answer: 'ist' }), new Set(['ist', 'hier'])), [name]);
+  // …but a name the A1.1 dialogues never use is exactly what the gate must catch.
+  assert.deepEqual(untaughtTokens(item({ questionDe: 'Tom, ___ bist mein Freund.', answer: 'du' }), lex, spec), ['Tom']);
+  // `accepted` is scanned too — a second answer key may not smuggle a word in.
+  assert.deepEqual(untaughtTokens(item({ questionDe: 'Das ist gut.', answer: 'gut', accepted: ['gut', 'Zeitung'] }), lex, spec), ['Zeitung']);
+  // One entry per DISTINCT token, in the original case, whatever the repetition.
+  assert.deepEqual(untaughtTokens(item({ questionDe: 'Zeitung Zeitung zeitung', answer: 'Zeitung' }), lex, spec), ['Zeitung']);
+  // A taught word is silent, and so is an empty item.
+  assert.deepEqual(untaughtTokens(item({ questionDe: 'Das ist nicht gut.', answer: 'ist' }), lex, spec), []);
+  assert.deepEqual(untaughtTokens(item({}), lex, spec), []);
+});
+
+test('the untaught-lexis gate is non-circular: the lexicon does not read the pool', () => {
+  // The gate would be worthless if a pool item could teach itself its own word.
+  // `levelLexicon` is a pure function of the curriculum, so planting an item is
+  // invisible to it — the assertion is that the set is byte-identical before and
+  // after the pool on disk grows a word nothing teaches.
+  const before = levelLexicon('a1.1');
+  const planted = [...loadPoolItems('a1.1'), { id: 'p1', topic: 'nouns-gender', questionDe: 'Der Honig ist gut.', answer: 'Der' }];
+  assert.equal(planted.length, loadPoolItems('a1.1').length + 1);
+  const after = levelLexicon('a1.1');
+  assert.equal(after.size, before.size);
+  assert.ok(!after.has('honig'));
+});
+

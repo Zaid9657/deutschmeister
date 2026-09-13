@@ -73,10 +73,23 @@ Three things differ from the A1.1 module, all of them additive:
 | RULE 13 — a speaking task without a mission | **3** | 4 | L4 (Hotel/Reklamation), L10 (Kleidung), L11 (Wetter) |
 
 Three of the four start closed because A1.2 was authored against the rules, while A1.1's debt came
-from a pool written years before the curriculum. **They may only ever be lowered.** RULE 13 is 3
-and not lower for an honest reason: `speaking_missions` at level a1.2 carries twelve published
-missions and none of them is about a hotel complaint, about clothes, or about the weather. The
-other nine Lektionen link a mission whose situation and whose target structures both fit.
+from a pool written years before the curriculum. **They may only ever be lowered.**
+
+**RULE 13 is 1, not 3 — the original justification was wrong (DaF review #1, MAJOR "mission
+mapping"; corrected 2026-09-13).** It read: „`speaking_missions` at level a1.2 carries twelve
+published missions and none of them is about a hotel complaint, about clothes, or about the
+weather." That is true of the **situations** and irrelevant: a mission does not have to be about
+the Lektion's topic, it has to train the Lektion's structure. Measured against
+`target_structures` instead, three of the three „missionless" Lektionen had a fitting mission
+lying unused — L4 (`negation`) ↔ mission 6 „Eine Einladung absagen" (*negation with nicht,
+kein/keine/keinen*), L10 (`prepositions-accusative`) ↔ mission 8 „Kaffee für das Team"
+(*accusative prepositions für, ohne, um*), L12 (`perfekt-intro`, Fest und Lebensmittel) ↔ mission
+10 „Sprechen Teil 2: Wortkarten, Thema Essen & Trinken". The same measurement moved three
+mismatches: L2 ↔ 4 (numbers), L5 ↔ 11 (W-Fragen), L7 ↔ 9 (the one real *Sprechen Teil 1* task of
+the level, which no Lektion used while L6 claimed the Teil). **Only L11 is left at `null`: no
+A1.2 mission is about the weather, and that is the honest rest.** Mission 2 („Meine Familie") is
+now the unused one. The registry ratchet in `scripts/validate-curriculum.mjs` may be lowered from
+3 to 1 accordingly; `tests/curricula.test.mjs` already pins the list as `[11]`.
 When the UI agent makes the prompt itself travel in `saveCourseContext`, this ratchet goes to 0.
 
 Wortfeld: **201 entries, 197 with a `wordId` (98 %)**, 15–19 per Lektion, none twice. The four
@@ -127,15 +140,18 @@ its Lektion — and every token in them must be a word A1.1 or an earlier A1.2 L
 
 ## 6. Open questions for the owner / integrator
 
-0. **BLOCKING: registering `a1.2` in `src/data/curricula/index.js` flips the player over before the
-   pool exists.** `curriculumFor(level)` is what `CourseHomePage`, `LessonPlayerPage`,
-   `CheckpointPage` and `ReviewPage` branch on, and the player then does
-   `import('../../data/lessonPools/a12.json')` while `CheckpointPage`'s `POOL_LOADERS` map has no
-   `a1.2` key at all. The registry entry is in place because the curriculum is done and the Astro
-   syllabus page derives from it; **`node scripts/build-lesson-pool.mjs a1.2` and the
-   `POOL_LOADERS` entry have to land in the same change as the route**, or `/course/a1.2/l/1`
-   throws on a missing module. Nothing outside `curricula/` was touched by this hand-over, so the
-   integrator owns both.
+0. **NOT blocking any more — corrected 2026-09-13 (DaF review #1, closing section).** This entry
+   used to say that registering `a1.2` in `src/data/curricula/index.js` flips the player over
+   before the pool exists. It does not: `src/data/curricula/index.js` splits the registry, and
+   **`CURRICULA` carries `a1.1` only**. A1.2 is a validated **draft** and reaches the validator and
+   the test suites through `DRAFT_CURRICULA` / `ALL_CURRICULA` (`anyCurriculumFor('a1.2')`), while
+   `curriculumFor('a1.2')` — the function `CourseHomePage`, `LessonPlayerPage`, `CheckpointPage`
+   and `ReviewPage` branch on — still returns `null`. The player therefore keeps the legacy
+   28-day program and cannot reach `import('../../data/lessonPools/a12.json')`.
+   What is still true is the **promotion** rule: moving `a1.2` from `DRAFT_CURRICULA` into
+   `CURRICULA` must land in the same change as `node scripts/build-lesson-pool.mjs a1.2`, the
+   `POOL_LOADERS` entry in `CheckpointPage`, and a signed-off DaF review — or `/course/a1.2/l/1`
+   throws on a missing module. The integrator owns that change.
 1. **`COURSE_TASK_KEY_PREFIX` in `netlify/functions/evaluate-writing.mjs` is `'a11-'`.** The twelve
    `a12-l*` tasks therefore do NOT count against `COURSE_WRITING_FREE_LIFETIME` and are billed
    against the ordinary writing allowance instead. That may be intended (A1.1 is the free course,

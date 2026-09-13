@@ -3,7 +3,7 @@ import { Play } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import { ItemFeedback } from './PracticeItem.jsx';
-import { checkAnswer, tagError, RESULT } from '../../lib/lesson/check.js';
+import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../../lib/lesson/check.js';
 import { audioFor, playLine, speechAvailable } from '../../lib/lesson/speech.js';
 import { AudioSourceBadge } from './DialogStage.jsx';
 
@@ -33,16 +33,20 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
   }, [line.index]);
 
   const itemId = `dictation-${line.index}`;
+  // The item, not the call site, decides the check options (REVIEW #6 BLOCKER 3):
+  // this one is built here rather than drawn from a pool, so it is built in full
+  // and handed to checkOptionsFor, which reads `kind: 'dictation'` off it.
+  const item = {
+    id: itemId, topic: 'hoeren', kind: 'dictation', stage: 'dictation', type: 'dictation',
+    answer: line.de, accepted: [line.de],
+  };
 
   const submit = () => {
     if (!value.trim() || state) return;
-    const { result, expected } = checkAnswer(value, [line.de], { strict: false, dictation: true });
+    const { result, expected } = checkAnswer(value, item.accepted, checkOptionsFor(item));
     const correct = result !== RESULT.WRONG;
     setState({ result, expected });
-    onResult(
-      { id: itemId, topic: 'hoeren', kind: 'dictation', stage: 'dictation', type: 'dictation' },
-      { result, correct, errorTag: correct ? null : tagError({ kind: 'dictation' }, value, line.de) },
-    );
+    onResult(item, { result, correct, errorTag: correct ? null : tagError(item, value, line.de) });
   };
 
   return (

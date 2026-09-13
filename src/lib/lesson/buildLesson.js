@@ -61,6 +61,19 @@ export const PRIMARY_MIN = 4;
 export const MAX_SAME_LEMMA = 2;
 /** At most this many items whose answer lemma was already an answer in the Lektion before. */
 export const MAX_CARRIED_LEMMA = 1;
+/**
+ * Second diversity axis: no ANSWER KEY may carry more than this many items in
+ * one Lektion (DaF review #6). `MAX_SAME_LEMMA` reads `itemLemmas`, which runs
+ * through `LEMMA_STOPWORDS` — and that list holds every article and possessive,
+ * on purpose, so that "Schreiben Sie den Satz" items do not all look like the
+ * same lexis. In the three Lektionen whose primary grammar IS the determiner
+ * (L5 definite, L6 indefinite, L12 possessive) the lemma cap is therefore blind
+ * to exactly the thing that has to vary: L12 gave five of seven items to `mein`
+ * in BOTH attempts and never drew one of the three polite `Ihr` items the
+ * Lektion exists to rehearse. The cap below counts what the item makes the
+ * learner PRODUCE, function words included, so `Mein` × 5 cannot happen again.
+ */
+export const MAX_SAME_ANSWER_KEY = 2;
 /** Weights for situational relevance: the Lektion's own Wortfeld vs. an earlier one's. */
 export const OWN_TERM_WEIGHT = 3;
 export const EARLIER_TERM_WEIGHT = 1;
@@ -117,6 +130,26 @@ export const itemLemmas = (item) => contentLemmas(`${item.questionDe || ''} ${it
 
 /** Only what the item makes the learner produce — used for the carry-over rule. */
 export const answerLemmas = (item) => contentLemmas(item.answer || '');
+
+/** Lower-cased, punctuation-free words of a text — used for function-word answers. */
+const flat = (text) =>
+  String(text || '')
+    .toLowerCase()
+    .replace(/[^a-zäöüß]+/g, ' ')
+    .trim();
+
+/**
+ * What the item makes the learner PRODUCE, as one comparable key: the content
+ * lemmas of the answer when it has any, and otherwise — an answer that is ONLY
+ * function words, i.e. `Mein`, `Ihr`, `eine` — the bare first word of the
+ * answer. Sorted, so two items asking for the same sentence in a different
+ * order count as one key. `Mein` and `mein` are the same key by construction.
+ */
+export const answerKey = (item) => {
+  const lemmas = answerLemmas(item);
+  if (lemmas.size) return [...lemmas].sort().join(' ');
+  return flat(item && item.answer).split(' ')[0] || '';
+};
 
 /** The situational vocabulary of one Lektion, as lemmas. */
 export function wortfeldTerms(lektion) {
@@ -176,9 +209,11 @@ function seededShuffle(list, rng) {
  *      drawing 2 of 7 on their own primary slug;
  *   2. at least `rule.typedMin` typed items and at most two multiple_choice;
  *   3. seven items in total, all from `rule.topics`;
- *   4. no lemma more than `MAX_SAME_LEMMA` times, and at most
- *      `MAX_CARRIED_LEMMA` item repeating an answer lemma of the Lektion before;
- *   5. within each topic, the most situational items first (relevanceScore).
+ *   4. one item for every answer key in `rule.mustCover` the pool can supply;
+ *   5. no lemma more than `MAX_SAME_LEMMA` times, no answer key more than
+ *      `MAX_SAME_ANSWER_KEY` times, and at most `MAX_CARRIED_LEMMA` item
+ *      repeating an answer lemma of the Lektion before;
+ *   6. within each topic, the most situational items first (relevanceScore).
  *
  * `options` is what only the LEVEL knows — pass nothing and it behaves like a
  * standalone draw (still filtered, still deterministic):
@@ -223,6 +258,7 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
 
   const chosen = new Map();
   const lemmaCount = new Map();
+  const answerKeyCount = new Map();
   let mc = 0;
   let typed = 0;
   let carried = 0;
@@ -235,6 +271,10 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
     if (!relax.lemma) {
       for (const l of itemLemmas(it)) if ((lemmaCount.get(l) || 0) >= MAX_SAME_LEMMA) return false;
     }
+    if (!relax.answerKey) {
+      const k = answerKey(it);
+      if (k && (answerKeyCount.get(k) || 0) >= MAX_SAME_ANSWER_KEY) return false;
+    }
     if (!relax.carried && carried >= MAX_CARRIED_LEMMA && carriesOver(it)) return false;
     return true;
   };
@@ -245,7 +285,35 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
     if (isTypedItem(it)) typed += 1;
     if (carriesOver(it)) carried += 1;
     for (const l of itemLemmas(it)) lemmaCount.set(l, (lemmaCount.get(l) || 0) + 1);
+    const k = answerKey(it);
+    if (k) answerKeyCount.set(k, (answerKeyCount.get(k) || 0) + 1);
   };
+
+  // The cover pass (DaF review #6 MAJOR 6, second half). `MAX_SAME_ANSWER_KEY`
+  // is a CEILING on repetition and a ceiling cannot reserve a seat: L12 holds 38
+  // usable possessive items, the three polite `Ihr` ones score no higher than a
+  // dozen others, so which of them lands in the seven was decided by the seeded
+  // jitter — and on attempt 1 none of them did. `practiceRule.mustCover` lists
+  // the answer keys the Lektion EXISTS to rehearse (L12: the polite `Ihr`, the
+  // form Schreiben Teil 2 and Sprechen Teil 3 are graded on); one usable item
+  // per key is taken first, typed and on the primary slug for preference, under
+  // the same caps as every other pick. A key the pool cannot supply is a no-op —
+  // the draw is never padded with something off-topic to satisfy it.
+  const coverKeys = [...new Set(
+    ((rule && rule.mustCover) || []).map((k) => answerKey({ answer: k })).filter(Boolean),
+  )];
+  for (const key of coverKeys) {
+    if (chosen.size >= PRACTICE_SIZE) break;
+    const candidates = ranked.filter((it) => answerKey(it) === key);
+    const preferred = [
+      ...candidates.filter((it) => it.topic === primarySlug && isTypedItem(it)),
+      ...candidates.filter((it) => it.topic === primarySlug),
+      ...candidates.filter(isTypedItem),
+      ...candidates,
+    ];
+    const pick = preferred.find((it) => fits(it, {}));
+    if (pick) take(pick);
+  }
 
   const primaryCount = () => [...chosen.values()].filter((it) => it.topic === primarySlug).length;
   const primaryTarget = Math.min(
@@ -261,7 +329,7 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
     }
   };
 
-  for (const relax of [{}, { carried: true }, { lemma: true, carried: true }]) {
+  for (const relax of [{}, { carried: true }, { lemma: true, carried: true, answerKey: true }]) {
     // 1. the primary slug's share, typed items first so the typed floor is cheap
     const primary = ranked.filter((it) => it.topic === primarySlug);
     fill(primary.filter(isTypedItem), relax, () => primaryCount() >= primaryTarget);

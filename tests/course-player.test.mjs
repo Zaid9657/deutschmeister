@@ -98,6 +98,42 @@ const CHROME_FILES = [
 // noun ("im ersten Versuch"), so the imperative is caught as 'Versuch es'.
 const DU_TOKENS = /\b(du|Du|dir|Dir|dich|Dich|dein|Dein|deine[mnrs]?|Deine[mnrs]?|kannst|musst|hast|willst|machst|hörst|schreibst|Schreib|Tippe|Lies|Hör|Sprich|Melde|Probier|bestätige|Versuch es)\b/;
 
+// ---------------------------------------------------------------------------
+// ONE GRADER, AND THE ITEM DECIDES (DaF review #6, BLOCKER 3). Every grading
+// site calls `checkAnswer(user, expected, checkOptionsFor(item))` — the four
+// options (strict, caseSensitive, dictation, spelling) are properties of the
+// ITEM, never arguments a screen makes up. Round 5 handed `caseSensitive`
+// through by hand at each site and `dictation` was forgotten in the checkpoint,
+// so the one dictation with a separator (a phone number) was `correct` in the
+// lesson and `wrong` in the graded test for the same typed answer. A hand-built
+// options object at any of these four sites is that bug coming back.
+// ---------------------------------------------------------------------------
+const GRADING_SITES = [
+  'src/components/lesson/PracticeItem.jsx',
+  'src/components/lesson/DictationItem.jsx',
+  'src/lib/checkpoint/buildCheckpoint.js',
+  'src/lib/checkpoint/reviewGrading.js',
+];
+
+test('every grading site takes its checkAnswer options from the item, not from the call site', () => {
+  for (const file of GRADING_SITES) {
+    const src = read(file);
+    const calls = [...src.matchAll(/checkAnswer\([^;]*?\);/gs)].map((m) => m[0]);
+    assert.ok(calls.length >= 1, `${file} must grade through checkAnswer`);
+    for (const call of calls) {
+      assert.ok(
+        /checkOptionsFor\(|checkOpts/.test(call),
+        `${file}: options are hand-built at a call site — ${call.replace(/\s+/g, ' ')}`,
+      );
+      assert.ok(
+        !/\{\s*(strict|dictation|caseSensitive|spelling)\s*:/.test(call),
+        `${file}: a literal option object in a checkAnswer call — ${call.replace(/\s+/g, ' ')}`,
+      );
+    }
+    assert.match(src, /checkOptionsFor/, `${file} must import checkOptionsFor`);
+  }
+});
+
 test('the lesson chrome sieze: no du-register token in any screen the player renders', () => {
   const offenders = [];
   for (const f of CHROME_FILES) {

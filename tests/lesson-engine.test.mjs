@@ -11,7 +11,8 @@ import { dirname, join } from 'node:path';
 
 import buildLesson, {
   pickPracticeItems, planPractice, seedFor, isTypedItem, isMultipleChoice, itemLemmas, answerLemmas,
-  PRACTICE_SIZE, MAX_MULTIPLE_CHOICE, PRIMARY_MIN, MAX_SAME_LEMMA, MAX_CARRIED_LEMMA,
+  answerKey,
+  PRACTICE_SIZE, MAX_MULTIPLE_CHOICE, PRIMARY_MIN, MAX_SAME_LEMMA, MAX_CARRIED_LEMMA, MAX_SAME_ANSWER_KEY,
 } from '../src/lib/lesson/buildLesson.js';
 import { exclusionReason, isUsableItem, filterPool, EXCLUDE_IDS, REASON, drillsSlug } from '../src/data/lessonPools/quality.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
@@ -26,6 +27,8 @@ const read = (p) => readFileSync(join(ROOT, p), 'utf8');
 const POOL = JSON.parse(read('src/data/lessonPools/a11.json'));
 /** A second parse: a distinct object, so the plan cache cannot fake determinism. */
 const POOL_COPY = JSON.parse(read('src/data/lessonPools/a11.json'));
+/** The A1.2 pool, built by `node scripts/build-lesson-pool.mjs a1.2` from the same rules. */
+const POOL_A12 = JSON.parse(read('src/data/lessonPools/a12.json'));
 const LEKTIONEN = CURRICULUM_A11.lektionen;
 
 const build = (over = {}) =>
@@ -110,6 +113,15 @@ test('the draw is deterministic per (level, nr, attempt) and a retry gives a dif
 test('the shipped pool is clean: nothing in it trips a quality rule', () => {
   const { excluded } = filterPool(POOL.items);
   assert.deepEqual(excluded, [], `a11.json still carries ${excluded.length} excluded items — re-run scripts/build-lesson-pool.mjs`);
+});
+
+test('the shipped A1.2 pool is clean, measured at its own level', () => {
+  // At level a1.2, because three of quality.js's reasons are level-scoped
+  // (ORDINAL_NUMBER, MONTH_NAME, UNTAUGHT_TIME_EXCEPTION apply to a1.1's
+  // syllabus only) — calling filterPool without the level would drop A1.2 items
+  // for teaching exactly what A1.2 is there to teach.
+  const { excluded } = filterPool(POOL_A12.items, { level: 'a1.2' });
+  assert.deepEqual(excluded, [], `a12.json still carries ${excluded.length} excluded items — re-run scripts/build-lesson-pool.mjs a1.2`);
 });
 
 test('the English respellings and English meta items are gone for good', () => {
@@ -267,6 +279,70 @@ test('no lemma carries more than two items in one Lektion — the Mädchen rule'
     }
   }
   assert.ok((lektionenPerLemma.get('mädchen') || 0) <= 2, 'das Mädchen is back in more than two Lektionen');
+});
+
+test('no answer key carries more than two items in one Lektion — the "mein" rule', () => {
+  // The second diversity axis (DaF review #6 MAJOR 6). `MAX_SAME_LEMMA` reads
+  // `itemLemmas`, which drops every article and possessive through
+  // `LEMMA_STOPWORDS` — so in the three Lektionen whose grammar IS the
+  // determiner it capped nothing at all: L12 gave five of seven items to `mein`
+  // in BOTH attempts. `answerKey` counts what the learner PRODUCES instead, and
+  // this walks all twelve Lektionen on both attempts of the shipped pool.
+  const rows = [];
+  for (const attempt of [1, 2]) {
+    const plan = planPractice(CURRICULUM_A11, POOL, attempt);
+    for (const lektion of LEKTIONEN) {
+      const count = new Map();
+      for (const it of plan.get(lektion.nr)) {
+        const key = answerKey(it);
+        if (key) count.set(key, (count.get(key) || 0) + 1);
+      }
+      for (const [key, n] of count) {
+        if (n > MAX_SAME_ANSWER_KEY) {
+          const ids = plan.get(lektion.nr).filter((it) => answerKey(it) === key).map((it) => `${it.id} → ${it.answer}`);
+          rows.push(`attempt ${attempt} L${lektion.nr} makes the learner produce "${key}" ${n} times:\n    ${ids.join('\n    ')}`);
+        }
+      }
+    }
+  }
+  assert.deepEqual(rows, [], rows.join('\n'));
+});
+
+test('L12 spreads its possessives, and every attempt drills the polite Ihr', () => {
+  // The Lektion this MAJOR was measured on. Two things are pinned, per attempt.
+  //
+  // 1. The owner varies. `Besitzer` is the first word of the answer (`Mein`,
+  //    `Deine`, `Unser`, `Ihr`, and `Wir …` for the sentence items), which is
+  //    what the review counted; four distinct owners is its floor. Before the
+  //    answer-key cap, five of seven items on both attempts said `mein`.
+  // 2. The polite `Ihr` — `extra-a11-l12-08/09/16`, the only three items in the
+  //    course that drill the Höflichkeitsform and the only three carrying
+  //    `caseSensitive: true` — is actually drawn. It takes BOTH halves of the
+  //    fix: the cap stops `mein` eating the block, and `mustCover: ['Ihr']` on
+  //    L12's practiceRule reserves the seat, because a ceiling on repetition
+  //    cannot make a specific form appear. With the cap alone, attempt 1 drew
+  //    none of the three. If this fails after a pool rebuild, check that L12
+  //    still HAS a usable `Ihr` item before touching the engine — the cover pass
+  //    is a no-op on a key the pool cannot supply, by design.
+  const POLITE = ['extra-a11-l12-08', 'extra-a11-l12-09', 'extra-a11-l12-16'];
+  const inPool = POLITE.filter((id) => POOL.items.some((it) => it.id === id));
+  assert.deepEqual(inPool, POLITE, 'the three polite Ihr items are no longer in the shipped pool');
+  assert.deepEqual(LEKTIONEN.find((l) => l.nr === 12).practiceRule.mustCover, ['Ihr'], 'L12 lost its mustCover key');
+
+  for (const attempt of [1, 2]) {
+    const items = planPractice(CURRICULUM_A11, POOL, attempt).get(12);
+    const owners = new Set(items.map((it) => String(it.answer || '').toLowerCase().split(/[^a-zäöüß]+/)[0]).filter(Boolean));
+    assert.ok(owners.size >= 4, `L12 attempt ${attempt} draws only ${owners.size} distinct owners: ${[...owners].join(', ')}`);
+    const polite = items.filter((it) => POLITE.includes(it.id));
+    assert.ok(
+      polite.length >= 1,
+      `L12 attempt ${attempt} never drills the polite Ihr — the exam form of the last Lektion:\n  ` +
+      items.map((it) => `${it.id} → ${it.answer}`).join('\n  '),
+    );
+    for (const it of polite) {
+      assert.equal(it.caseSensitive, true, `${it.id} must stay caseSensitive — Ihr is a capital-letter distinction`);
+    }
+  }
 });
 
 test('a Lektion carries at most one answer lemma over from the Lektion before it', () => {

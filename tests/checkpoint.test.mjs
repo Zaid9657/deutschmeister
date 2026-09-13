@@ -66,11 +66,19 @@ import {
   chapterWritingTask,
 } from '../src/lib/checkpoint/buildCheckpoint.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
+import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js';
+import { knownUpTo, untaughtTokens, namesOf } from '../src/lib/checkpoint/lexis.js';
 import { courseWritingTasks } from '../src/data/writingTasks.js';
 import { nextDue, LADDER_DAYS, MAX_STEP, wordCardKey, patternCardKey, sentenceCardKey, parseCardKey } from '../src/lib/review/ladder.js';
 import { CURRICULUM_FIXTURE, CURRICULUM_FIXTURE_6 } from './fixtures/curriculum-fixture.js';
 
 const POOL = JSON.parse(readFileSync(new URL('../src/data/lessonPools/a11.json', import.meta.url), 'utf8'));
+
+// The four real checkpoints, built once: several pins below read all 80 items.
+const ALL_CHECKPOINTS = CURRICULUM_A11.checkpoints.map((cp) => ({
+  cp,
+  items: buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp, pool: POOL }),
+}));
 
 const cp1 = CURRICULUM_FIXTURE.checkpoints[0];
 const cp2of6 = CURRICULUM_FIXTURE_6.checkpoints[1];
@@ -178,6 +186,166 @@ test('a falsch statement is this text with ONE detail changed, not another Lekti
         `${cp.id}: exactly one word differs — ${statement} vs ${source}`,
       );
     }
+  }
+});
+
+// ── 4d. A FALSE STATEMENT IS FALSE, NOT BROKEN (DaF review #6, MAJOR 7) ─────
+//
+// The falsifier replaces exactly one detail of a line of the same text. It had
+// no congruence bar: any capitalised word of the dialogues could be swapped for
+// any other, and checkpoint 3 shipped the L9 football line with `Woche` replaced
+// by **Frühstück** — a neuter noun under a feminine `jede`. In the graded Lesen
+// section that hands the answer over through the FORM instead of the content,
+// and shows the learner a wrong form on the way. The replacement must now share
+// the class of the word it replaces: a noun its ARTICLE (from the Wortfeld,
+// where `article` and `plural` already live), a weekday a weekday, a name a
+// name — and a number word inside a digit group (a phone number, read digit by
+// digit) only a SINGLE-DIGIT number word, because „Siebzehn vier zwei“ is not a
+// changed detail but a number nobody can dictate.
+
+const NUMBER_WORDS_TEST = [
+  'null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn',
+  'elf', 'zwölf', 'dreizehn', 'vierzehn', 'fünfzehn', 'sechzehn', 'siebzehn', 'achtzehn',
+  'neunzehn', 'zwanzig', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'siebzig', 'achtzig',
+  'neunzig', 'hundert',
+];
+const WEEKDAYS_TEST = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
+const isDigitWord = (w) => NUMBER_WORDS_TEST.slice(0, 10).includes(w.toLowerCase());
+
+/** The chapter's nouns with their gender, exactly as buildCheckpoint reads them. */
+function genderMap(chapter) {
+  const map = new Map();
+  for (const l of chapter) {
+    for (const w of l.wortfeld || []) {
+      if (!w.article) continue;
+      const word = String(w.word || w.de || '').trim();
+      if (word && !/\s/.test(word)) map.set(word, String(w.article));
+      const plural = String(w.plural || '').trim();
+      if (plural && plural !== '—' && !/\s/.test(plural)) map.set(plural, 'plural');
+    }
+  }
+  return map;
+}
+
+test('a falsch statement changes ONE word for a word of the same class — article, weekday, name, digit', () => {
+  let checked = 0;
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    const chapter = chapterLektionen(CURRICULUM_A11, cp);
+    const genders = genderMap(chapter);
+    const names = new Set(
+      chapter.flatMap((l) => (l.dialog?.lines || []).flatMap((line) => String(line.speaker || '').split(/\s+/)))
+        .filter((part) => part.length >= 3 && /^[A-ZÄÖÜ]/.test(part) && !['Herr', 'Frau'].includes(part)),
+    );
+    for (const item of items.filter((i) => i.section === 'lesen' && i.answer === 'Falsch')) {
+      const statement = quotedStatement(item);
+      const source = item.explanationDe.slice(item.explanationDe.indexOf('„') + 1, item.explanationDe.indexOf('“'));
+      const changed = statement.split(' ');
+      const original = source.split(' ');
+      assert.equal(changed.length, original.length, `${cp.id} ${item.id}: one word, not the sentence`);
+      const diff = changed.map((w, i) => [original[i], w]).filter(([a, b]) => a !== b);
+      assert.equal(diff.length, 1, `${cp.id} ${item.id}: exactly one word differs`);
+      const [rawFrom, rawTo] = diff[0].map((w) => w.replace(/[.,!?„“]/g, ''));
+      const from = rawFrom;
+      const to = rawTo;
+      checked += 1;
+
+      if (NUMBER_WORDS_TEST.includes(from.toLowerCase())) {
+        assert.ok(NUMBER_WORDS_TEST.includes(to.toLowerCase()), `${item.id}: a number is replaced by a number`);
+        // A digit group is two or more number words in a row — the phone number.
+        const words = original.map((w) => w.replace(/[.,!?„“]/g, ''));
+        const at = words.findIndex((w) => w === from);
+        const neighbourIsNumber = [at - 1, at + 1]
+          .some((j) => words[j] && NUMBER_WORDS_TEST.includes(words[j].toLowerCase()));
+        if (neighbourIsNumber) {
+          assert.ok(isDigitWord(to), `${item.id}: inside a phone number only single digits may be swapped, got "${to}"`);
+        } else {
+          assert.ok(!['eins', 'null'].includes(to.toLowerCase()), `${item.id}: "${to} Euro" is broken, not false`);
+        }
+        continue;
+      }
+      if (WEEKDAYS_TEST.includes(from)) {
+        assert.ok(WEEKDAYS_TEST.includes(to), `${item.id}: a weekday is replaced by a weekday`);
+        continue;
+      }
+      if (names.has(from)) {
+        assert.ok(names.has(to), `${item.id}: a name is replaced by a name of this chapter`);
+        continue;
+      }
+      if (/^\d+$/.test(from)) {
+        assert.match(to, /^\d+$/, `${item.id}: a figure is replaced by a figure`);
+        continue;
+      }
+      assert.ok(genders.has(from), `${item.id}: "${from}" is not a Wortfeld noun of the chapter`);
+      assert.equal(
+        genders.get(to),
+        genders.get(from),
+        `${item.id}: „${from}“ (${genders.get(from)}) replaced by „${to}“ (${genders.get(to)}) — the article must match`,
+      );
+    }
+  }
+  assert.ok(checked >= 8, `two falsch statements per checkpoint, got ${checked}`);
+});
+
+// ── 4e. NO UNTAUGHT LEXIS IN A GRADED TEST (DaF review #6, MAJOR 8) ─────────
+//
+// `dd86dc8a` shipped as `a1.1-cp2-schreiben-1` — „Schreiben Sie den Satz:
+// [Honig / ist / gut]“, first of three items in the GRADED Schreiben section of
+// a chapter about a Flohmarkt, a Klassenzimmer and a Büro. `Honig` is in no
+// Wortfeld of the course and its explanation adds `König`. Eleven of the 80
+// items carried lexis like it. The draw now sorts taught-first
+// (buildCheckpoint's untaughtAt), measured with the validator's own RULE 11
+// machinery, and this is the number that has to stay 0.
+//
+// WHAT IS MEASURED. The lexis an item OWNS: for a pool item its prompt (minus
+// the bracketed cue and the closed Sie-Aufgabenformel), answer and accepted —
+// the exact fields RULE 11 reads. The builder's own instruction chrome
+// („Hören Sie zu und schreiben Sie den Satz.“) and the fixed Richtig/Falsch
+// labels are not item lexis, and the graded writing task is the chapter's own
+// task from src/data/writingTasks.js — the checkpoint has no second candidate
+// to pick for it, so its text is that bank's rule, not this draw's.
+
+const quotedSpan = (s) => {
+  const a = s.indexOf('„'); const b = s.lastIndexOf('“');
+  return a >= 0 && b > a ? s.slice(a + 1, b) : '';
+};
+
+/** The texts whose lexis the item itself is responsible for (see above). */
+function ownLexis(item) {
+  if (item.poolItemId) {
+    return [item.promptDe, item.answer, ...item.accepted].filter((t) => typeof t === 'string');
+  }
+  if (item.type === 'graded_writing') return [];
+  if (item.section === 'lesen') return [quotedSpan(item.promptDe)].filter(Boolean);
+  return [item.audioText, typeof item.answer === 'string' ? item.answer : null].filter(Boolean);
+}
+
+test('no checkpoint item asks for lexis the course has not taught by the end of its chapter', () => {
+  const names = namesOf(CURRICULUM_A11.level);
+  const offenders = [];
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    const known = knownUpTo(CURRICULUM_A11, cp.afterLektion);
+    assert.ok(known && known.size > 100, 'the level must have lexis tables');
+    for (const item of items) {
+      const texts = ownLexis(item);
+      if (!texts.length) continue;
+      const tokens = untaughtTokens({ questionDe: texts[0], accepted: texts.slice(1) }, known, names);
+      if (tokens.length) offenders.push(`${cp.id} ${item.id} [${item.poolItemId || '—'}]: ${tokens.join(', ')} — ${texts[0]}`);
+    }
+  }
+  assert.deepEqual(offenders, [], `untaught lexis in a graded checkpoint:\n${offenders.join('\n')}`);
+});
+
+test('the Honig item is not drawn into checkpoint 2 (or any other) any more', () => {
+  const HONIG = 'dd86dc8a-49b8-5d48-8a6a-2606fd90b0fd';
+  const drawn = ALL_CHECKPOINTS.flatMap(({ items }) => items.map((i) => i.poolItemId));
+  assert.ok(!drawn.includes(HONIG), 'dd86dc8a („[Honig / ist / gut]“) must not be a checkpoint item');
+  const honig = POOL.items.find((i) => i.id === HONIG);
+  if (honig) {
+    const known = knownUpTo(CURRICULUM_A11, CURRICULUM_A11.checkpoints[1].afterLektion);
+    assert.ok(
+      untaughtTokens(honig, known, namesOf(CURRICULUM_A11.level)).length > 0,
+      'and it is excluded for the reason claimed: its lexis is untaught at the end of chapter 2',
+    );
   }
 });
 
@@ -484,6 +652,59 @@ test('the polite Ihr answered lowercase is wrong in the checkpoint, not a forgiv
   assert.equal(isItemCorrect(flagged, 'berlin'), false);
 });
 
+// ── 3e. ONE GRADER: the OPTIONS COME FROM THE ITEM (REVIEW #6 BLOCKER 3) ────
+//
+// Round 5 asked for `caseSensitive` to reach all three grading sites and it did
+// — but `dictation` was still whatever the call site decided, and
+// `isItemCorrect()` never passed it. `a1.1-cp2-hoeren-1` is the phone number
+// „Null vier zwei – drei drei acht eins.“: in the lesson every separator form
+// graded `correct` (normalizeDictation folds dashes and digit grouping, because
+// a dash is unhearable), in the checkpoint only the Halbgeviertstrich did — a
+// character a phone keyboard does not have.
+//
+// So this pins the CLASS, not the instance: for every item of all four
+// checkpoints, `isItemCorrect` must agree with `checkAnswer(…,
+// checkOptionsFor(item))`. There is no option list in this test on purpose —
+// which rules apply to an answer is a decision the ITEM carries.
+
+test('isItemCorrect grades exactly like checkAnswer(…, checkOptionsFor(item)), on all 80 items', () => {
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    for (const item of items) {
+      if (item.mode === 'confirm') continue;            // read-aloud / graded writing: no typed answer
+      const answers = [
+        ...item.accepted.filter((a) => typeof a === 'string'),
+        ...item.accepted.filter((a) => typeof a === 'string').flatMap((a) => [
+          a.toLowerCase(), a.replace(/[\u2010-\u2015]/g, '-'), a.replace(/\s*[\u2010-\u2015]\s*/g, ' '),
+          a.replace(/[.!?]$/, ''), `${a} `, a.replace(/e\b/, 'a'),
+        ]),
+        ...(item.options || []),
+      ];
+      for (const answer of answers) {
+        const expected = checkAnswer(String(answer), item.accepted, checkOptionsFor(item)).result !== RESULT.WRONG;
+        assert.equal(
+          isItemCorrect(item, answer),
+          expected,
+          `${cp.id} ${item.id}: "${answer}" grades differently in the checkpoint than in the lesson`,
+        );
+      }
+    }
+  }
+});
+
+test('a dictated phone number is right in the checkpoint however the learner separated it', () => {
+  // The measured item of REVIEW #6 BLOCKER 3. Found by shape, not by id, so the
+  // pin survives a reshuffle: the dictation whose answer carries a separator.
+  const dictations = ALL_CHECKPOINTS.flatMap(({ items }) => items).filter((i) => i.kind === 'dictation');
+  assert.ok(dictations.length >= 12, 'three dictations per checkpoint');
+  const withSeparator = dictations.filter((i) => /[\u2010-\u2015]/.test(i.answer));
+  assert.ok(withSeparator.length >= 1, 'the phone-number dictation must still be in a checkpoint');
+  for (const item of withSeparator) {
+    assert.equal(isItemCorrect(item, item.answer), true);
+    assert.equal(isItemCorrect(item, item.answer.replace(/[\u2010-\u2015]/g, '-')), true, 'a plain hyphen is the same answer');
+    assert.equal(isItemCorrect(item, item.answer.replace(/\s*[\u2010-\u2015]\s*/g, ' ')), true, 'and so is no separator at all');
+  }
+});
+
 test('a spelled-out answer is correct in the checkpoint however the letters are separated', () => {
   const spelled = {
     topic: 'spelling',
@@ -509,6 +730,51 @@ test('gradeTypedReview (the review page grading helper) matches the checkpoint o
   // A spelled-out sentence/word card.
   assert.equal(gradeTypedReview('sentence:l1:0', ['H-A-L-L-O'], 'HALLO').ok, true);
   assert.equal(gradeTypedReview('sentence:l1:0', ['H-A-L-L-O'], 'H A L L O').ok, true);
+});
+
+test('a review card whose answer IS the polite form is case-checked, even though the curriculum carries no flag', async () => {
+  // REVIEW #6 BLOCKER 1, the review-card half. `isCaseTask(item)` is the item's
+  // own `caseSensitive === true` and nothing else — and
+  // `grep -c caseSensitive src/data/curricula/a11.js` is 0, so copying the flag
+  // off the curriculum entry (as buildCardIndex did) left EVERY review card
+  // case-blind while the same form is graded strictly in the lesson and the
+  // checkpoint. The flag is now derived with the pool build's own predicate.
+  const { buildCardIndex } = await import('../src/services/reviewService.js');
+  const { gradeTypedReview } = await import('../src/lib/checkpoint/reviewGrading.js');
+  const { politeCaseItem } = await import('../src/data/lessonPools/quality.js');
+
+  const index = buildCardIndex({
+    level: 'a1.1',
+    lektionen: [{
+      nr: 1,
+      id: 'x-l01',
+      practiceRule: { topics: ['possessive-articles'] },
+      notice: { title: 'Höflichkeitsform', bodyDe: '…', examples: ['Das ist Ihr Name.', 'Hier ist Ihre Adresse.'] },
+      wortfeld: [
+        { de: 'Sie', word: 'Sie', article: null, plural: null, en: 'you (formal)' },
+        { de: 'die Tasche', word: 'Tasche', article: 'die', plural: 'Taschen', en: 'bag' },
+      ],
+      dialog: { lines: [{ speaker: 'Ana', de: 'Guten Tag.', en: 'Hello.' }] },
+    }],
+  });
+
+  const politeKey = patternCardKey('possessive-articles');
+  const polite = index.get(politeKey);
+  assert.equal(polite.caseSensitive, true, 'a card whose examples are the polite Ihr is a case task');
+  assert.equal(gradeTypedReview(politeKey, polite.accepted, 'Das ist ihr Name.', { caseSensitive: polite.caseSensitive }).ok, false);
+  assert.equal(gradeTypedReview(politeKey, polite.accepted, 'Das ist Ihr Name.', { caseSensitive: polite.caseSensitive }).ok, true);
+
+  const sieKey = wordCardKey({ de: 'Sie', word: 'Sie' });
+  const sie = index.get(sieKey);
+  assert.equal(sie.caseSensitive, true, 'the formal Sie is a case task wherever it is reviewed');
+  assert.equal(gradeTypedReview(sieKey, sie.accepted, 'sie', { caseSensitive: sie.caseSensitive }).ok, false);
+
+  // …and a word that is NOT a polite form keeps its one forgiven case slip.
+  const tasche = index.get(wordCardKey({ de: 'die Tasche', word: 'Tasche' }));
+  assert.equal(tasche.caseSensitive, false, 'a plain noun is not a case task');
+
+  // Derived, not retyped: the card uses the same predicate as the pool build.
+  assert.equal(politeCaseItem({ accepted: polite.accepted }), true);
 });
 
 // ── 4. the 70/30 draw ───────────────────────────────────────────────────────

@@ -17,6 +17,7 @@ import { dirname, join } from 'node:path';
 
 import { WRITING_TASKS, writingTaskByKey, writingTasksForExam, courseWritingTasks } from '../src/data/writingTasks.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
+import { courseTaskKeyPrefix } from '../netlify/functions/evaluate-writing.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const LEKTIONEN = CURRICULUM_A11.lektionen;
@@ -83,19 +84,42 @@ test('course tasks stay out of the exam bank the /schreiben page lists', () => {
 
 test('the grader bills course tasks against the free course allowance', () => {
   // The behaviour the owner decision rests on, read off the function: the
-  // course scope is counted by the task_key prefix (writing_submissions has no
-  // scope column), lifetime, and it covers free_expired too — A1.1 stays free
-  // after the trial ends.
+  // course scope is counted by the task_key's OWN course prefix
+  // (writing_submissions has no scope column), lifetime, and it covers
+  // free_expired too — A1.1 stays free after the trial ends. The prefix must
+  // be DERIVED from task_key, not a second hardcoded literal — a fixed
+  // 'a11-%' would make every other course's submissions uncounted.
   const src = readFileSync(join(ROOT, 'netlify/functions/evaluate-writing.mjs'), 'utf8');
-  const prefix = src.match(/const COURSE_TASK_KEY_PREFIX\s*=\s*'([^']+)'/);
-  assert.ok(prefix, 'COURSE_TASK_KEY_PREFIX not found');
   assert.ok(
-    COURSE.every((t) => t.taskKey.startsWith(prefix[1])),
-    `every course taskKey must start with ${prefix?.[1]}, or the usage count misses it`,
+    COURSE.every((t) => courseTaskKeyPrefix(t.taskKey) && t.taskKey.startsWith(courseTaskKeyPrefix(t.taskKey))),
+    'every A1.1 course taskKey must derive a non-null prefix that it starts with, or the usage count misses it',
   );
   assert.match(src, /const COURSE_WRITING_FREE_LIFETIME\s*=\s*12/);
   assert.match(src, /tier === 'free_trial' \|\| tier === 'free_expired'/, 'the course allowance must cover expired trials');
-  assert.match(src, /\.like\('task_key', `\$\{COURSE_TASK_KEY_PREFIX\}%`\)/, 'the lifetime count must be scoped to course rows');
+  assert.match(
+    src,
+    /\.like\('task_key', `\$\{courseTaskKeyPrefix\(task_key\)\}%`\)/,
+    'the lifetime count must be scoped by the derived per-course prefix, not a fixed literal',
+  );
+});
+
+test('courseTaskKeyPrefix derives the per-course scope from the task_key itself', () => {
+  assert.equal(courseTaskKeyPrefix('a11-l03'), 'a11-');
+  assert.equal(courseTaskKeyPrefix('a12-l07'), 'a12-');
+  assert.equal(courseTaskKeyPrefix('formular-hotel-anmeldung'), null, 'a non-course task_key must not get a course prefix');
+  assert.equal(courseTaskKeyPrefix('mitteilung-termin-absagen'), null);
+  assert.equal(courseTaskKeyPrefix(undefined), null);
+});
+
+test('the derived prefix scopes the allowance count to that course only, not a sibling course', () => {
+  // The regression this whole fix defends: a12-* tasks must be counted
+  // against a12-%, never against a11-% (which would leave them uncounted)
+  // nor against a bare 'a-%' (which would merge A1.1 and A1.2 usage).
+  const a11Prefix = courseTaskKeyPrefix('a11-l01');
+  const a12Prefix = courseTaskKeyPrefix('a12-l01');
+  assert.notEqual(a11Prefix, a12Prefix);
+  assert.ok('a12-l07'.startsWith(a12Prefix));
+  assert.ok(!'a12-l07'.startsWith(a11Prefix));
 });
 
 test('every course Formular has five gaps and a source text to fill them from', () => {

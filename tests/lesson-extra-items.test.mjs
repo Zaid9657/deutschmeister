@@ -63,6 +63,17 @@ const VERB_TASK_CUE_RE = /\([^)]*[a-zäöüß]{2}en\b[^)]*\)/i;
 const ABSOLUTE_CLAIM_RE = /%|\b100\b|\bimmer\b|ohne\s+Ausnahme/i;
 
 /**
+ * REVIEW #6 MAJOR 9. The second routing label the batch uses. The four number
+ * items of Lektion 2 used to carry `topic: 'verb-sein'` because that was the
+ * only slug `practiceRule` routes into L2 — and `tagError` reads the topic, so
+ * a learner who typed `sieber` for „sieben“ was told he had conjugated wrongly
+ * and was served more `sein` drills. A number word is a spelling, not a verb.
+ * The label only reaches Lektion 2 once `practiceRule.topics` of L2 lists it;
+ * that half lives in src/data/curricula/a11.js, this half is the item's.
+ */
+const NUMBERS_TOPIC = 'numbers';
+
+/**
  * The id names the Lektion (`extra-a11-l09-02` → Lektion 9) and the Lektion names
  * its own topic, so the mapping is derived rather than restated: the first batch
  * covered four Lektionen, the second all twelve, and a hand-written table would
@@ -76,7 +87,7 @@ const target = (item) => {
 };
 
 test('every extra item is addressed to one of the four Lektionen, with a unique id', () => {
-  assert.ok(EXTRA.length >= 116, `only ${EXTRA.length} extra items`);
+  assert.ok(EXTRA.length >= 128, `only ${EXTRA.length} extra items`);
   assert.equal(new Set(EXTRA.map((i) => i.id)).size, EXTRA.length, 'duplicate id');
   for (const item of EXTRA) {
     assert.ok(target(item), `${item.id} does not name a Lektion`);
@@ -88,6 +99,12 @@ test('every extra item is addressed to one of the four Lektionen, with a unique 
   assert.ok(perLektion.get(12) >= 16, `L12 has only ${perLektion.get(12)} extra items`);
   assert.ok(perLektion.get(5) >= 10, `L5 has only ${perLektion.get(5)} extra items`);
   assert.ok(perLektion.get(6) >= 10, `L6 has only ${perLektion.get(6)} extra items`);
+  // REVIEW #6 MAJOR 4. Lektion 4 had eight items and therefore filled three to
+  // four of its seven drawn places from the legacy bank, which practises Genus
+  // at Instrument, Freiheit, Zeitung, Sonne and Kaffee — none of them a word the
+  // course teaches before L4 (Kaffee is L9). Twelve is the number at which the
+  // Lektion covers its own draw out of its own Wortfeld.
+  assert.ok(perLektion.get(4) >= 12, `L4 has only ${perLektion.get(4)} extra items`);
 });
 
 test('every extra item passes the pool quality rules', () => {
@@ -109,7 +126,8 @@ test('no extra item gives its answer away or hides its task in the English gloss
 
 test('every extra item has the Lektion topic, the pool shape and typed production', () => {
   for (const item of EXTRA) {
-    assert.equal(item.topic, target(item).topic, `${item.id} is on the wrong topic`);
+    assert.ok(item.topic === target(item).topic || item.topic === NUMBERS_TOPIC,
+      `${item.id} is on the wrong topic`);
     assert.ok(['fill_blank', 'sentence_building', 'error_correction'].includes(item.type), `${item.id}: ${item.type}`);
     assert.equal(item.options, null, `${item.id} carries options — that would make it recognition`);
     assert.ok(isTypedItem(item), `${item.id} is not typed production`);
@@ -382,6 +400,21 @@ const lemmasOf = (strings) => new Set(
     .map(([lemma]) => lemma)),
 );
 
+/**
+ * REVIEW #6 MAJOR 10 narrowed the rule above from the LEMMA to the FRAME. The
+ * equality held, and it made `extra-a11-l10-06` („___ du morgen mit dem Bus?“)
+ * accept `Gehst` — and „Gehst du morgen mit dem Bus?“ is not German: one travels
+ * BY bus (fahren) or comes WITH it (kommen), but `gehen` excludes the vehicle.
+ * That is precisely the contrast A1 learners with a Romance or Slavic first
+ * language miss, and the item handed it a green tick. So a lemma is blocked in
+ * the frames that exclude it, and two items of one Lektion have to agree on the
+ * lemmas that are not blocked.
+ */
+const FRAME_BLOCKS = { gehen: /\bmit (dem|der) \w+/i };
+const blockedIn = (q) => new Set(
+  Object.entries(FRAME_BLOCKS).filter(([, re]) => re.test(String(q))).map(([lemma]) => lemma),
+);
+
 test('within one Lektion, the same verb family offers the same alternatives', () => {
   const byLektion = new Map();
   for (const item of EXTRA) {
@@ -393,11 +426,34 @@ test('within one Lektion, the same verb family offers the same alternatives', ()
   }
   assert.ok((byLektion.get(10) || []).length >= 2, 'L10 no longer has the two motion-verb items the rule is about');
   for (const [nr, list] of byLektion) {
-    const sets = list.map((i) => [i.id, [...lemmasOf([i.answer, ...(i.accepted || [])])].sort()]);
-    const [, first] = sets[0];
-    for (const [id, lemmas] of sets) {
-      assert.deepEqual(lemmas, first,
-        `L${nr}: ${id} accepts ${lemmas.join('/')} where ${sets[0][0]} accepts ${first.join('/')}`);
+    const sets = list.map((i) => {
+      const blocked = blockedIn(i.questionDe);
+      return [
+        i.id,
+        [...lemmasOf([i.answer, ...(i.accepted || [])])].sort(),
+        [...blocked],
+      ];
+    });
+    // The reference set is the union of what the Lektion's items offer; every
+    // item must offer all of it except the lemmas its own frame excludes.
+    const union = [...new Set(sets.flatMap(([, lemmas]) => lemmas))].sort();
+    for (const [id, lemmas, blocked] of sets) {
+      const expected = union.filter((l) => !blocked.includes(l));
+      assert.deepEqual(lemmas, expected,
+        `L${nr}: ${id} accepts ${lemmas.join('/')} where the Lektion offers ${expected.join('/')}`);
+    }
+  }
+});
+
+test('no item accepts a form of gehen in a frame that excludes it', () => {
+  // REVIEW #6 MAJOR 10, as the rule rather than as the one id: `mit dem Bus`,
+  // `mit der Bahn` — a prepositional object naming the vehicle — rules `gehen`
+  // out, whatever else the answer key holds.
+  for (const item of EXTRA) {
+    if (!FRAME_BLOCKS.gehen.test(String(item.questionDe))) continue;
+    for (const a of [item.answer, ...(item.accepted || [])]) {
+      assert.doesNotMatch(String(a), /^geh/i,
+        `${item.id}: „${a} …“ with a vehicle — one goes BY bus, not WITH it`);
     }
   }
 });
@@ -455,20 +511,143 @@ test('Lektion 10 makes the learner PRODUCE the question, not fill a gap in one',
 });
 
 test('the four number items of Lektion 2 derive the number from the German prompt', () => {
-  // REVIEW #5 MAJOR 13. The can-do „Ich kann Zahlen von null bis zehn verstehen
-  // und sagen“ had no practice at all: the two number items the third round left
-  // in L2 spelled a digit that stood in the English gloss. These four carry the
-  // digit as a cue in the GERMAN prompt and want the word back. They are filed
-  // under `verb-sein` because the closed slug list of scripts/validate-curriculum.mjs
-  // has no numbers slug and `practiceRule.topics` is what routes an item into
-  // Lektion 2 — so they deliberately do NOT drill their label, and `drillsSlug`
-  // says so. That is a routing label, not a claim about the item.
+  // REVIEW #5 MAJOR 13 for the items themselves, REVIEW #6 MAJOR 9 for the label
+  // they carry. The can-do „Ich kann Zahlen von null bis zehn verstehen und
+  // sagen“ had no practice at all; these four carry the digit as a cue in the
+  // GERMAN prompt and want the word back. Round 5 filed them under `verb-sein`
+  // because that is the slug `practiceRule` routes into Lektion 2 — and round 6
+  // measured what that label does downstream: `tagError` matches
+  // /verb|sein|haben|present|separable|conjug/ on the topic, so every misspelled
+  // number word („sieber“, „sechs“, „seven“, „siben“) was reported to the
+  // learner as a CONJUGATION error and answered with more sein items out of
+  // `remediationSet`. The label is now `numbers`, which is what the item drills.
   const NUMBERS = /^(null|eins|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn)$/;
   const numberItems = EXTRA.filter((i) => target(i).nr === 2 && NUMBERS.test(i.answer));
   assert.ok(numberItems.length >= 4, `L2 has only ${numberItems.length} number items`);
   for (const item of numberItems) {
     assert.match(item.questionDe, /\(\s*\d{1,2}\s*\)/, `${item.id}: the digit must stand in the German prompt`);
-    assert.equal(item.topic, 'verb-sein', `${item.id}: verb-sein is the only slug that routes into L2`);
+    assert.equal(item.topic, NUMBERS_TOPIC, `${item.id}: a number item is not a sein item`);
     assert.equal(drillsSlug(item, 'verb-sein'), false, `${item.id} claims to drill sein — it drills numbers`);
+  }
+  // The reverse direction: no item outside that group wears the label, so the
+  // Lektion-2 draw cannot be flooded by it.
+  for (const item of EXTRA) {
+    if (item.topic !== NUMBERS_TOPIC) continue;
+    assert.ok(numberItems.includes(item), `${item.id} is filed under ${NUMBERS_TOPIC} but is not a number item`);
+  }
+});
+
+/**
+ * REVIEW #6 BLOCKER 2, mirrored from `ambiguousCorrection` in quality.js rather
+ * than imported, for the same reason `drillsSlug` is: a mirror fails when the
+ * rule in the pool is weakened, an import does not.
+ *
+ * An error correction quotes a sentence and asks for it back, repaired. The
+ * model answer may therefore differ from the quote only in the way the GERMAN
+ * prompt names. `extra-a11-l05-09` („Ein Schere ist hier.“ → `Die Schere ist
+ * hier.`, prompt „Korrigieren Sie:“, English gloss „Fix the article.“) broke
+ * that: the quote holds exactly one error — the genus of the INDEFINITE article
+ * — so `Eine Schere ist hier.` is the minimal and complete repair and faultless
+ * German, and the item returned `wrong` with an Artikel tag. The intent („known,
+ * therefore definite“) stood only in the explanation, which the learner reads
+ * AFTER answering.
+ */
+const ARTICLE_FAMILY_OF = (word) => {
+  const w = flat(bare(word));
+  if (['der', 'die', 'das', 'den', 'dem'].includes(w)) return 'definite';
+  if (['ein', 'eine', 'einen', 'einem', 'einer'].includes(w)) return 'indefinite';
+  return null;
+};
+/** The quoted sentence of a „Korrigieren Sie: „…““ prompt. */
+const QUOTED_SPAN_RE = /[„"“]([^„"“]+)[“"]/;
+/** „(mit bestimmtem Artikel)“ / „(mit unbestimmtem Artikel)“ — the task, named. */
+const SENTENCE_ARTICLE_CUE_RE = /\(\s*mit\s+(?:un)?bestimmtem\s+artikel\s*\)/i;
+
+/** [from, to] when `answer` changes the quote in one word and crosses the family. */
+function articleFamilySwap(quoted, answer) {
+  const src = bare(quoted).split(/\s+/).filter(Boolean);
+  const tgt = bare(answer).split(/\s+/).filter(Boolean);
+  if (!src.length || src.length !== tgt.length) return null;
+  const diff = src.map((w, i) => [w, tgt[i]]).filter(([a, b]) => flat(a) !== flat(b));
+  if (diff.length !== 1) return null;
+  const [from, to] = diff[0];
+  const fromFam = ARTICLE_FAMILY_OF(from);
+  const toFam = ARTICLE_FAMILY_OF(to);
+  if (!fromFam || !toFam || fromFam === toFam) return null;
+  return [from, to];
+}
+
+function ambiguousCorrectionMirror(item) {
+  if (String(item?.type) !== 'error_correction') return false;
+  const q = String(item.questionDe || '');
+  if (ARTICLE_TASK_CUE_RE.test(q) || SENTENCE_ARTICLE_CUE_RE.test(q)) return false;
+  const quote = QUOTED_SPAN_RE.exec(q);
+  if (!quote) return false;
+  const answers = [item.answer, ...(item.accepted || [])]
+    .map((a) => String(a ?? '').trim()).filter(Boolean);
+  if (!answers.length) return false;
+  // Ambiguous only when EVERY accepted answer crosses the family: an item that
+  // takes both readings is one the learner cannot get wrong by obeying it.
+  return answers.every((a) => articleFamilySwap(quote[1], a) !== null);
+}
+
+test('an error correction differs from its quote only in the way the prompt names', () => {
+  // The predicate above is the rule; these two lines are the measurement that
+  // made it one, kept so a later rewrite of the predicate has to keep answering
+  // the same two questions.
+  assert.equal(ambiguousCorrectionMirror({
+    type: 'error_correction',
+    questionDe: 'Korrigieren Sie: „Ein Schere ist hier.“',
+    answer: 'Die Schere ist hier.',
+    accepted: ['Die Schere ist hier.', 'Die Schere ist hier'],
+  }), true, 'the round-6 blocker no longer trips its own rule');
+  assert.equal(ambiguousCorrectionMirror({
+    type: 'error_correction',
+    questionDe: 'Korrigieren Sie: „Das ist ein Kollegin im Büro.“',
+    answer: 'Das ist eine Kollegin im Büro.',
+    accepted: ['Das ist eine Kollegin im Büro.'],
+  }), false, 'a genus fix inside one article family has exactly one solution');
+
+  const corrections = EXTRA.filter((i) => i.type === 'error_correction');
+  assert.ok(corrections.length >= 12, `only ${corrections.length} error corrections to measure`);
+  for (const item of corrections) {
+    const quote = QUOTED_SPAN_RE.exec(String(item.questionDe));
+    assert.ok(quote, `${item.id}: a correction must quote the sentence it is about`);
+    assert.equal(ambiguousCorrectionMirror(item), false,
+      `${item.id}: the model answer crosses the article family and the German prompt never says so`);
+  }
+});
+
+test('every polite-form item is case-strict — the flag is the class, not a list', () => {
+  // REVIEW #6 BLOCKER 1. Round 5 closed this as a LIST of three ids, and round 6
+  // measured the list from both ends: items of exactly the same shape never got
+  // the flag, so `checkAnswer` returned `typo` for the lowercase form — and a
+  // typo counts as CORRECT in `PracticeItem`, in `isItemCorrect` and in
+  // `gradeTypedReview`. The course then graded the same rule two ways depending
+  // on which review had found which item. The predicate below is the one landing
+  // in quality.js as `politeCaseItem`, mirrored here; the hand-set flag stays a
+  // valid override (extra-a11-l12-16 carries it although the predicate, narrowed
+  // to a non-initial possessive, does not reach it).
+  const POLITE_FORM_RE = /^(Sie|Ihnen|Ihr|Ihre|Ihren|Ihrem|Ihrer|Ihres)$/;
+  const politeCaseItem = (item) => {
+    const acc = [item?.answer, ...(item?.accepted || [])].map((a) => String(a ?? '').trim()).filter(Boolean);
+    if (!acc.length) return false;
+    if (acc.every((a) => !a.includes(' '))) return acc.every((a) => POLITE_FORM_RE.test(a));
+    return acc.every((a) => a.split(/\s+/).slice(1).some((w) => /^Ihr(e|en|em|er|es)?$/.test(w.replace(/[.,!?]/g, ''))));
+  };
+  const derived = EXTRA.filter(politeCaseItem);
+  assert.ok(derived.length >= 4, `only ${derived.length} polite-form items found — the predicate stopped matching`);
+  for (const item of derived) {
+    assert.equal(item.caseSensitive, true,
+      `${item.id} teaches the polite capital and is not case-strict: ${JSON.stringify(item.accepted)}`);
+  }
+  // The two shapes the predicate must NOT reach, measured rather than asserted
+  // in prose: an item that accepts both spellings is not teaching the capital,
+  // and a word-order item must not become wholly wrong over one letter.
+  for (const id of ['extra-a11-l03-02', 'extra-a11-l12-10', 'extra-a11-l10-08']) {
+    const item = EXTRA.find((i) => i.id === id);
+    assert.ok(item, `${id} is gone — re-measure the polite-form rule against the batch`);
+    assert.equal(politeCaseItem(item), false, `${id} must stay outside the polite-form class`);
+    assert.notEqual(item.caseSensitive, true, `${id} must not be case-strict`);
   }
 });

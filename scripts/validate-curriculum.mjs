@@ -24,6 +24,25 @@
 // not only the hand-written half. Both are ratchets, not hard gates, because the debt is older than
 // this round; they may only ever be lowered.
 //
+// RULE 11b is DaF review #6 (2026-09-12), MAJOR 5. RULE 11 assigns a generated item to the EARLIEST
+// Lektion whose `practiceRule` names its topic, which is neither where the item is drawn nor
+// anything a repair round can move — „was er an der falschen Stelle liest, kann nicht repariert
+// werden“. RULE 11b runs the same token machinery over the REAL draw: `planPractice()` attempts 1
+// and 2 plus the pool items `buildCheckpoint()` pulls into a checkpoint, each item judged at the
+// earliest Lektion that serves it. RULE 11 stays as the informational number over the whole pool;
+// RULE 11b is the list a repair round works from, and it prints (Lektion, id, token).
+//
+// RULE 6b, RULE 15 and RULE 16 are DaF review #1 for A1.2 (2026-09-13), BLOCKER 2-4. RULE 6b asks
+// the Notice card to teach only what its own Lektion shows („die Karte darf nur lehren, was die
+// Lektion zeigt“): every whole word the card bolds must occur in the Lektion's input. RULE 15 reads
+// the two steps in which the learner PRODUCES the line — the dictation and the read-aloud — and
+// reports every grammatical form in them that the course only teaches in a LATER Lektion. RULE 16
+// holds the public 12x6 grid's sixth column to its own promise: an „Hören Teil n“ claim needs a
+// linked listening exercise, „Lesen Teil n“ a linked reading lesson, „Sprechen Teil 1“ a
+// self-introduction, and the two Schreiben Teile the Textsorte they name. All three are ratchets
+// per level, measured — A1.1 was measured before they were switched on and carries its own numbers
+// rather than being broken by a rule written for A1.2.
+//
 // RULE 14 (DaF review #5, MAJOR 12) is not a ratchet: it compares the facts of the recurring
 // characters — Familienstand, Herkunft, Beruf, Sprachen — between the dialogue and the Schreiben
 // task of the same Lektion against the small PERSONAS table of the level, and fails hard. The
@@ -39,6 +58,11 @@ import {
   DIALOG_NAMES as DIALOG_NAMES_A12,
 } from '../src/data/curricula/a12.js';
 import { writingTaskByKey } from '../src/data/writingTasks.js';
+// RULE 11b reads the two engines the learner actually meets. Both are plain ES modules with no DOM
+// import (buildLesson pulls in the pool quality rules, buildCheckpoint the answer checker and the
+// writing tasks), so the validator can run the real draw under `node` instead of re-implementing it.
+import { planPractice } from '../src/lib/lesson/buildLesson.js';
+import { buildCheckpoint } from '../src/lib/checkpoint/buildCheckpoint.js';
 
 export const GRAMMAR_SLUGS = [
   'nouns-gender', 'definite-articles', 'personal-pronouns', 'verb-sein', 'alphabet-pronunciation',
@@ -257,8 +281,40 @@ export const MAX_MISSIONLESS_LEKTIONEN = 4;        // a1.1; per level in LEVELS 
  * of `nett`/`müde`/`kaputt`/`Auto`/`Mädchen` that no Lektion of A1.1 teaches. That is the honest
  * number and it is meant to look bad: nine described an eighth of the course. Lower it as the bank
  * is rewritten, never raise it.
+ *
+ * 2026-09-13: **187 → 61**, because the class underneath it was closed at BUILD time rather than
+ * item by item. `levelLexicon()` + `untaughtTokens()` are now the gate in
+ * `scripts/build-lesson-pool.mjs`: a legacy bank item carrying a word the course teaches NOWHERE —
+ * `Honig`, `König`, `Instrument`, `Freiheit`, `Zeitung`, `Tom`, `Anna` — is dropped before the
+ * merge (78 items at A1.1, 91 at A1.2). What is LEFT here is the repairable half by construction:
+ * every remaining token is taught, only LATER than the Lektion the item is filed under, i.e. a
+ * Vorgriff a repair round can move.
  */
-export const MAX_UNTAUGHT_ITEM_TOKENS = 187;       // a1.1; per level in LEVELS below — measured 2026-09-13
+export const MAX_UNTAUGHT_ITEM_TOKENS = 61;        // a1.1; per level in LEVELS below — measured 2026-09-13
+
+/**
+ * RULE 11b ratchet — how many (item, token) pairs the learner MEETS may still use a word the course
+ * has not taught by the Lektion that serves them.
+ *
+ * DaF review #6, MAJOR 5: RULE 11 reads the whole pool and assigns each generated item to the
+ * earliest Lektion whose `practiceRule` names its topic, so its 187 is „eine Zahl, die niemand
+ * reparieren kann“ — 147 of those tokens sit in items no draw ever reaches, and two of the rest are
+ * pure measurement artefacts (`Formular` charged to L1 although the item is only drawn in L2, where
+ * `das Formular` is in the Wortfeld). This rule measures the same tokens at the Lektion where the
+ * item is DRAWN — `planPractice()` attempts 1 and 2, plus the pool items `buildCheckpoint()` pulls
+ * into a checkpoint, which the learner meets at `checkpoint.afterLektion`. Every offender on this
+ * list is a screen a learner reads, so the list is printed with (Lektion, id, token) and the ratchet
+ * is the repair target. It may be lowered, never raised.
+ *
+ * Measured on A1.1 after the round-6 item repairs: 16 of RULE 11's 187, in 12 items across L1, L3,
+ * L4, L5, L6 and L7 — all generated, none hand-written.
+ *
+ * 2026-09-13, after the build-time untaught-lexis gate (see MAX_UNTAUGHT_ITEM_TOKENS): **16 → 5**,
+ * in three generated items — `Deutsch` in two L1 spelling items (taught L3), `Kaffee`/`kocht` in an
+ * L4 item (Wortfeld of L9) and `arbeitet` in an L6 item (Wortfeld of L11). All five are Vorgriffe,
+ * which is the only class this number can still contain now that never-taught words cannot ship.
+ */
+export const MAX_UNTAUGHT_DRAWN_TOKENS = 5;        // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
  * A1.2 — the twelve grammar slugs of the level in `topic_order` (grammar-content-cache.json,
@@ -293,6 +349,86 @@ export const PRIMARY_ORDER_A12 = [
   'modal-verbs-intro', 'prepositions-accusative', 'dative-prepositions-intro', 'perfekt-intro',
 ];
 
+/**
+ * RULE 6b ratchet — how many whole words a level's Notice cards may still bold without showing
+ * them anywhere in the input of their own Lektion. DaF review #1 for A1.2 (BLOCKER 2): RULE 6 only
+ * checks that the two `examples` are verbatim dialogue lines, never that the FORM the card teaches
+ * occurs at all — so L3 could be titled „Der Akkusativ: den, einen, keinen“ while `den` appears in
+ * none of its ten lines. Measured on A1.1 the day the rule was written: 26.
+ */
+export const MAX_UNEXEMPLIFIED_NOTICE_FORMS = 26;  // a1.1; per level in LEVELS below — measured 2026-09-13
+
+/**
+ * RULE 15 ratchet — how many grammatical forms a level's PRODUCTION lines may still use before the
+ * Lektion that teaches them. DaF review #1 for A1.2 (BLOCKER 3): the dictation and the read-aloud
+ * are the two steps in which the learner types or speaks the line himself, and that is exactly
+ * where the Vorgriffe sat („mit dem Koffer“ two Lektionen before the Dativ). Measured on A1.1: 12.
+ */
+export const MAX_UNTAUGHT_IN_PRODUCTION = 12;      // a1.1; per level in LEVELS below — measured 2026-09-13
+
+/**
+ * RULE 16 ratchet — how many `examTeile` claims a level may still make that nothing in the module
+ * backs. DaF review #1 for A1.2 (BLOCKER 4): `examTeile` is the sixth column of the public 12x6
+ * grid (standard §2.4, „Goethe-Teil trained“), i.e. a sales claim, and RULE 7 checked exactly one
+ * sentence of it. Measured on A1.1: 3 (L2 „Lesen Teil 1“ and L5/L11 „Hören“, all three without a
+ * linked exercise).
+ */
+export const MAX_UNBACKED_EXAM_TEILE = 3;          // a1.1; per level in LEVELS below — measured 2026-09-13
+
+/**
+ * RULE 15 — THE OFF-LIMITS FORMS, PER LEVEL.
+ *
+ * The rule needs two things and the registry supplies both: the Lektion that TEACHES a structure
+ * (that is `primaryOrder` — position i in it is Lektion i+1), and the surface forms of that
+ * structure. This table is the second half. It is deliberately NOT `primaryPatterns`: those
+ * patterns exist to prove a structure is PRESENT ≥ 3×, so several of them are broad on purpose
+ * (`present-tense-regular`, `question-words`, `nominative-case`), and a broad pattern used as a
+ * ban reports the whole course. Every entry here names a form a learner can be shown to have not
+ * met yet; a slug with no entry is simply not policed.
+ */
+const OFF_LIMITS_FORMS_A11 = {
+  // Taught L6. The indefinite article and its negation.
+  'indefinite-articles': /\b(?:ein|eine|einen|einem|einer|kein|keine|keinen)\b/gi,
+  // Taught L8. Clock and calendar chunks („um eins“, „am Wochenende“, „… Uhr“).
+  'time-and-dates': /\b(?:um|am)\s+\w+|\bUhr\b/g,
+  // Taught L9. The finite forms of haben.
+  'verb-haben': /\b(?:habe|hast|hat|haben|habt)\b/gi,
+  // Taught L11. The Satzklammer: a stranded prefix at the end of the sentence.
+  'separable-verbs-intro': /\b(?:auf|an|ein|mit|zu)\s*[.?!]/g,
+  // Taught L12. The possessive articles.
+  'possessive-articles': /\b(?:mein|meine|meinen|meinem|meiner|dein|deine|deinen|deinem|sein|seine|seinen|ihre?)\b/gi,
+};
+
+const OFF_LIMITS_FORMS_A12 = {
+  // Taught L3. The masculine accusative markers — the forms the level's own Notice card bolds.
+  'accusative-intro': /\b(?:den|einen|keinen)\b/gi,
+  // Taught L8. The Sie-Imperativ, i.e. a sentence that OPENS with „<Verb> Sie“. „Dann gehen Sie
+  // links“ is inversion, not an imperative, so the match is anchored to the start of a sentence.
+  'imperative': /(?:^|[.!?]\s+)(?:Helfen|Kommen|Warten|Machen|Holen|Gehen|Nehmen|Geben|Kaufen|Fragen|Schreiben|Lesen|Ziehen|Sprechen|Hören|Bitten|Zeigen|Wechseln|Bezahlen|Sagen|Wiederholen)\s+Sie\b/g,
+  // Taught L9. The finite modal forms. They are in A1.2's FUNCTION_WORDS so RULE 5 lets a learner
+  // MEET them early (CONTRACT §2) — but meeting a form and typing it into a dictation are two
+  // different things, which is the whole point of this rule.
+  'modal-verbs-intro': /\b(?:kann|kannst|können|könnt|muss|musst|müssen|müsst|darf|darfst|dürfen|dürft|will|willst|wollen|wollt|soll|sollst|sollen|sollt|möchte|möchtest|möchten)\b/gi,
+  // Taught L11. The seven dative prepositions with a dative determiner, plus the contractions the
+  // card itself teaches. `im`/`am` are NOT here: A1.1 L8 teaches them as fixed time expressions
+  // („am Freitag“, „im Januar“), so an A1.2 learner has met them for a year.
+  'dative-prepositions-intro': /\b(?:zum|zur|beim|vom)\b|\b(?:mit|nach|bei|seit|von|zu|aus)\s+(?:dem|der|den|einem|einer|mir|dir|ihm|ihr|uns|Ihnen|meinem|meiner|meinen)\b/gi,
+  // Taught L12. Partizip II with ge-. `{2,}` keeps `gehen`, `gegen`, `geben` out: their stem is one
+  // letter, a participle's is at least two (ge-feier-t, ge-gess-en).
+  'perfekt-intro': /\bge[a-zäöüß]{2,}(?:t|en)\b/g,
+};
+
+/**
+ * RULE 15 — the chunks a level's own Notice cards licence BEFORE the rule arrives, verbatim. They
+ * are cut out of the line before the patterns run, so „Wie komme ich zum Rathaus?“ in L1 is not a
+ * Dativ-Vorgriff while „mit dem Koffer“ in L9 still is. A1.2's three are the ones A1.2 L1's notice
+ * names by hand („Feste Wendungen für den Weg: zum Rathaus, zur Kirche, an der Ecke — die Regel
+ * kommt in Lektion 11“) and CONTRACT.md §2 repeats; „Füllen Sie … aus“ is A1.1's Sie-Imperativ
+ * chunk, taught there as a fixed form.
+ */
+const LICENSED_CHUNKS_A11 = ['Füllen Sie'];
+const LICENSED_CHUNKS_A12 = ['zum Rathaus', 'zur Kirche', 'an der Ecke', 'Füllen Sie'];
+
 const lowerSet = (list) => new Set(list.map((w) => String(w).toLowerCase()));
 
 /**
@@ -315,6 +451,14 @@ export const LEVELS = {
     functionSet: lowerSet(FUNCTION_WORDS),
     nameSet: lowerSet(DIALOG_NAMES),
     grammarSlugs: GRAMMAR_SLUGS,
+    // PRACTICE-ONLY TOPICS. A pool topic a Lektion may DRAW from without it being one of the twelve
+    // grammar slugs: it has no rule card, is never a `primarySlug`, and appears in no `grammarSlugs`
+    // list. `numbers` is the first — the L2 Zahlwort items (DaF review #5/#6) drill a form the
+    // Lektion teaches in its Wortfeld rather than a structure the level has a rule card for, and
+    // filing them under `verb-sein` to get them drawn is exactly the mislabelling review #6 named.
+    // RULE 3 keeps holding: every grammar slug is still primary exactly once, and a topic that is
+    // in neither list still fails.
+    practiceOnlyTopics: ['numbers'],
     primaryOrder: PRIMARY_ORDER,
     situationKeywords: SITUATION_KEYWORDS,
     primaryPatterns: PRIMARY_PATTERNS_A11,
@@ -330,11 +474,21 @@ export const LEVELS = {
     // RULE 14. Defined below (PERSONAS_A11) and attached lazily, because the table is written after
     // the registry; `personaSource` keeps the row declarative.
     personaSource: 'a1.1',
+    offLimitsForms: OFF_LIMITS_FORMS_A11,
+    licensedChunks: LICENSED_CHUNKS_A11,
+    // RULE 16. `speaking_missions` at level A1.1 carries eight published missions and none of them
+    // is a Teil-1 self-introduction (read 2026-09-13), so an A1.1 „Sprechen Teil 1“ claim can only
+    // be backed by the prompt itself.
+    teil1MissionOrders: [],
     ratchets: {
       uncoveredWortfeld: MAX_UNCOVERED_WORTFELD,
       untaughtItemTokens: MAX_UNTAUGHT_ITEM_TOKENS,
+      untaughtDrawnTokens: MAX_UNTAUGHT_DRAWN_TOKENS,
       unrehearsedCanDos: MAX_UNREHEARSED_CANDOS,
       missionlessLektionen: MAX_MISSIONLESS_LEKTIONEN,
+      unexemplifiedNoticeForms: MAX_UNEXEMPLIFIED_NOTICE_FORMS,
+      untaughtInProduction: MAX_UNTAUGHT_IN_PRODUCTION,
+      unbackedExamTeile: MAX_UNBACKED_EXAM_TEILE,
     },
   },
   'a1.2': {
@@ -346,6 +500,9 @@ export const LEVELS = {
     functionSet: lowerSet(FUNCTION_WORDS_A12),
     nameSet: lowerSet(DIALOG_NAMES_A12),
     grammarSlugs: GRAMMAR_SLUGS_A12,
+    // No practice-only topic at A1.2 yet; the row is explicit so a level cannot inherit one by
+    // accident (see the A1.1 row for what it licenses).
+    practiceOnlyTopics: [],
     primaryOrder: PRIMARY_ORDER_A12,
     situationKeywords: SITUATION_KEYWORDS_A12,
     primaryPatterns: PRIMARY_PATTERNS_A12,
@@ -360,15 +517,36 @@ export const LEVELS = {
     readingCount: 10,
     minUnionWords: 195,
     seedFrom: 'a1.1',
-    // A1.2 has recurring characters too, but nobody has written their fact table yet, so RULE 14
-    // stays silent for the level rather than pretending to check it.
-    personaSource: null,
+    // RULE 14. A1.2 inherits A1.1's cast (`DIALOG_NAMES = [...DIALOG_NAMES_A11, 'Fischer']`), so it
+    // inherits A1.1's facts too — PERSONAS_A12 spreads PERSONAS_A11 and adds the characters A1.2
+    // introduces. Switched on by DaF review #1 for A1.2, BLOCKER 1: while this row said `null`,
+    // A1.2 L6 gave Ana a husband in a DICTATION line, against the A1.1 Formular that files her as
+    // ledig. No level may ship without a persona table; `tests/curricula.test.mjs` pins that.
+    personaSource: 'a1.2',
+    offLimitsForms: OFF_LIMITS_FORMS_A12,
+    licensedChunks: LICENSED_CHUNKS_A12,
+    // RULE 16. `speaking_missions` at level A1.2, read 2026-09-13: mission_order 9 is
+    // „Sprechen Teil 1: Sich komplett vorstellen“, the only Teil-1 mission of the level.
+    teil1MissionOrders: [9],
     // MEASURED on this module, not chosen. See docs/course-factory/a12-rebuild/CONTRACT.md §Ratchets.
     ratchets: {
       uncoveredWortfeld: 0,
-      untaughtItemTokens: 0,
+      // RULE 11 counts the BUILT pool (src/data/lessonPools/a12.json). 156 → **18** on 2026-09-13:
+      // `ITEM_FORMULA_RE` gained the four A1.2 task formulas it was missing („Schreiben Sie die
+      // Zahl / den Preis / die Telefonnummer in Worten“, „Schreiben Sie die Bitte“), which were the
+      // formula talking rather than the item, and the build now drops the 91 legacy bank items
+      // built on words A1.2 teaches nowhere (`Zeitung`, `Kuli`, `Pizza`, `Präteritum`, `Hamburg`).
+      // The 18 that remain are Vorgriffe — `fliegen` L1 (taught L7), `tragen`/`laufen` L6, …
+      untaughtItemTokens: 18,
+      // RULE 11b measures the same tokens where the learner MEETS them (see drawnLexis): 18 → 2,
+      // both in L2 („fliegen“/„fliege“, taught in L7). All that is left is a work order for the
+      // items round, and it is two lines long.
+      untaughtDrawnTokens: 2,
       unrehearsedCanDos: 0,
-      missionlessLektionen: 3,
+      missionlessLektionen: 1,
+      unexemplifiedNoticeForms: 0,
+      untaughtInProduction: 0,
+      unbackedExamTeile: 0,
     },
   },
 };
@@ -513,7 +691,17 @@ const ITEM_FORMULA_RE = new RegExp([
   // generated half of the pool reports Satz/Schreiben/Fehler as untaught lexis in ~20 items, which
   // is the formula talking, not the item (added when RULE 11 started reading the built pool).
   'Schreiben Sie den Satz', 'Buchstabieren Sie den Gruß',
+  // „Schreiben Sie die Zahl in Worten“ is the A1.2 pool's spelling of the same formula. It was
+  // missing, so `Schreiben`/`Zahl`/`Worten` counted as item lexis in four A1.2 items — three of
+  // RULE 11b's 18 were the formula talking (DaF review #6 note in the A1.2 registry row).
+  'Schreiben Sie die Telefonnummer in Worten', 'Schreiben Sie den Preis in Worten',
+  'Schreiben Sie die Zahl in Worten', 'Schreiben Sie die Bitte',
   'Schreiben Sie die Zahl als Wort', 'Schreiben Sie das Wort', 'Schreiben Sie die Frage',
+  // „Schreiben Sie die höfliche Frage“ is the register-normalised spelling of the same closed
+  // formula as its „Bilden Sie“ twin next door (the bank duzt: „Schreib die höfliche Frage:“).
+  // It was missing, so `Schreiben` counted as item lexis and the untaught-lexis gate in
+  // build-lesson-pool.mjs dropped two sound yes-no-questions items over the task line.
+  'Schreiben Sie die höfliche Frage',
   'Bilden Sie den Satz', 'Bilden Sie die höfliche Frage', 'Bilden Sie die Frage',
   'Buchstabieren Sie das Wort', 'Lesen Sie die Buchstaben',
   'Korrigieren Sie', 'Ergänzen Sie', 'Wählen Sie',
@@ -526,6 +714,9 @@ const ITEM_FORMULA_RE = new RegExp([
  * the first of them, and that is the Lektion whose vocabulary it must not reach past. (Judging it
  * against the last Lektion would be the lenient reading and would hide exactly the Vorgriffe this
  * rule exists to find.)
+ *
+ * The map is built from `practiceRule.topics` itself, so a practice-only topic (`numbers`, see
+ * LEVELS) is assigned exactly like a grammar slug — the L2 Zahlwort items land in L2.
  */
 function lektionAssignment(c) {
   const earliest = new Map();
@@ -536,21 +727,51 @@ function lektionAssignment(c) {
 }
 
 /**
- * RULE 11: the practice items obey the same taught-words rule as the dialogues.
+ * RULE 11b — the Lektion at which the learner actually SEES an item, from the two engines that
+ * serve it: `planPractice()` for the seven controlled-practice items of every Lektion (both
+ * attempts, because the second attempt redraws and a Vorgriff in attempt 2 is a Vorgriff), and
+ * `buildCheckpoint()` for the pool items a checkpoint pulls in — those are met at the chapter
+ * Lektion, i.e. `checkpoint.afterLektion`, which is when the learner sits the test.
  *
- * Until DaF review #5 this read `<level>.extra.json` only and derived the Lektion from the id
- * prefix, so all 227 generated items of A1.1 fell through `if (!nr) continue` and the ratchet
- * described 124 of 351 items („was der Validator nicht liest, existiert für die Reparaturrunde
- * nicht“). It now reads the BUILT pool as `wortfeldCoverage` does and assigns generated items via
- * `practiceRule.topics`; the built version of a hand-written item wins, because that is the text
- * the build's repair run produced and the learner sees. The scanned fields are unchanged — prompt
- * (minus the bracketed cue and the complete Sie-Aufgabenformel), answer, accepted — so the number
- * moves because the item universe grew, not because the yardstick did.
+ * The earliest Lektion an item is served in wins, because that is the smallest vocabulary it has
+ * to live inside. Items nothing draws are simply absent from the map — they are RULE 11's business,
+ * not this rule's.
+ *
+ * DaF review #6, MAJOR 5: „was er an der falschen Stelle liest, kann nicht repariert werden“.
+ * RULE 11 assigns a generated item to the EARLIEST Lektion whose `practiceRule` names its topic,
+ * which is neither where it is drawn nor something a repair round can move — so the 187 the review
+ * measured mixes 25 tokens in 16 items a learner meets with 147 in 100 items nobody will ever see,
+ * and repairing all sixteen moves the number by 25 and looks like nothing. This assignment sees
+ * only the items a learner meets.
  */
-export function itemLexis(c, extraItems, poolItems) {
-  const spec = levelSpec(c?.level) || LEVELS['a1.1'];
-  extraItems = extraItems ?? loadExtraItems(spec.level);
-  poolItems = poolItems ?? loadPoolItems(spec.level);
+export function drawnAssignment(c, items) {
+  const pool = { items: [...items] };
+  const drawn = new Map();
+  const keep = (id, nr) => {
+    if (!id || !Number.isInteger(nr)) return;
+    if (!drawn.has(id) || drawn.get(id) > nr) drawn.set(id, nr);
+  };
+  for (const attempt of [1, 2]) {
+    for (const [nr, list] of planPractice(c, pool, attempt)) for (const it of list) keep(it.id, nr);
+  }
+  for (const cp of c.checkpoints || []) {
+    for (const item of buildCheckpoint({ curriculum: c, checkpoint: cp, pool })) {
+      keep(item.poolItemId, cp.afterLektion);
+    }
+  }
+  return drawn;
+}
+
+/** The item universe both lexis rules read: the built pool wins over the hand-written source. */
+function itemUniverse(spec, extraItems, poolItems) {
+  const items = new Map();
+  for (const it of extraItems || []) items.set(it.id, it);
+  for (const it of poolItems || []) items.set(it.id, it);
+  return items;
+}
+
+/** What a learner has been taught by the end of each Lektion — Map<nr, Set<form>>. */
+function taughtUpTo(c, spec) {
   // A level's known set starts from the level before it (see seedVocabulary): an A1.2 item may
   // build on every word A1.1 taught, and must not reach past that.
   const known = seedVocabulary(spec);
@@ -564,31 +785,116 @@ export function itemLexis(c, extraItems, poolItems) {
     for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
     knownUpTo.set(l.nr, new Set(known));
   }
-  const lektionOf = lektionAssignment(c);
-  const items = new Map();
-  for (const it of extraItems) items.set(it.id, it);
-  for (const it of poolItems) items.set(it.id, it);
+  return knownUpTo;
+}
+
+/**
+ * THE LEVEL LEXICON: every form the course knows at the END of the level — the inherited
+ * vocabulary of the level before it (`seedVocabulary`), every Lektion's Wortfeld in all the forms
+ * RULE 5 licenses, every token of every Notice card, plus FUNCTION_WORDS and DIALOG_NAMES (both
+ * already inside `seedVocabulary`).
+ *
+ * WHY IT IS EXPORTED. RULE 11/11b measure a Vorgriff — a word taught LATER than the Lektion the
+ * item is met in — and a Vorgriff is repairable by moving the item. The class DaF reviews #5 and #6
+ * kept finding underneath it is different and not repairable: legacy bank items built on words the
+ * course NEVER teaches (Honig, König, Instrument, Freiheit, Zeitung, and the cast names Tom and
+ * Anna, who appear in no A1.1 dialogue). `scripts/build-lesson-pool.mjs` drops those at build time,
+ * and it has to ask the same question with the same tokeniser the validator asks it with, or the
+ * build would close a class the validator still reports. Hence one exported predicate rather than a
+ * second copy of the machinery.
+ *
+ * NON-CIRCULAR: this reads the CURRICULUM only (Wortfeld, Notice, function words, names). It never
+ * reads the pool, so a pool item can never teach itself the word it uses.
+ */
+export function levelLexicon(level = 'a1.1') {
+  const spec = levelSpec(level);
+  if (!spec) return new Set();
+  // The last snapshot of `taughtUpTo` IS the end-of-level set, so the two can never drift: RULE 11
+  // judges an item against `knownUpTo.get(nr)`, this judges it against the union of all of them.
+  const snapshots = [...taughtUpTo(spec.curriculum, spec).values()];
+  return snapshots.length ? new Set(snapshots[snapshots.length - 1]) : seedVocabulary(spec);
+}
+
+/**
+ * The tokens of an item that `knownSet` does not contain — the same fields, the same tokeniser and
+ * the same formula/cue stripping `lexisScan` uses, one entry per distinct token in original case.
+ * Pass `levelLexicon(level)` to ask „does the course ever teach this?“ and a `knownUpTo` snapshot
+ * to ask „has it taught it YET?“ — RULE 11 and RULE 11b are the second question.
+ */
+export function untaughtTokens(item, knownSet, spec = null) {
+  const names = spec?.nameSet || new Set();
+  const prompt = String(item?.questionDe || '').replace(ITEM_CUE_RE, ' ').replace(ITEM_FORMULA_RE, ' ');
+  const texts = [prompt, item?.answer, ...(item?.accepted || [])].filter(Boolean);
+  const seen = new Set();
+  const out = [];
+  for (const s of texts) {
+    for (const t of tokenise(s)) {
+      const low = t.toLowerCase();
+      if (knownSet.has(low) || names.has(low) || seen.has(low)) continue;
+      seen.add(low);
+      out.push(t);
+    }
+  }
+  return out;
+}
+
+/**
+ * The shared scan of RULE 11 and RULE 11b: for every item the `assign` function places in a
+ * Lektion, every token of its prompt (minus the bracketed cue and the complete Sie-Aufgabenformel),
+ * its answer and its accepted answers that the course has not taught by that Lektion. One offender
+ * per (item, token) pair, sorted Lektion by Lektion so the list reads like the course.
+ */
+function lexisScan(c, spec, items, assign) {
+  const knownUpTo = taughtUpTo(c, spec);
   const offenders = [];
-  for (const it of items.values()) {
-    const nr = lektionOf(it);
+  for (const it of items) {
+    const nr = assign(it);
     if (!nr) continue;
     const vocab = knownUpTo.get(nr);
     if (!vocab) continue;
-    const prompt = String(it.questionDe || '').replace(ITEM_CUE_RE, ' ').replace(ITEM_FORMULA_RE, ' ');
-    const texts = [prompt, it.answer, ...(it.accepted || [])].filter(Boolean);
-    const seen = new Set();
-    for (const s of texts) {
-      for (const t of tokenise(s)) {
-        const low = t.toLowerCase();
-        if (vocab.has(low) || spec.nameSet.has(low) || seen.has(low)) continue;
-        seen.add(low);
-        offenders.push({ nr, id: it.id, token: t });
-      }
-    }
+    for (const token of untaughtTokens(it, vocab, spec)) offenders.push({ nr, id: it.id, token });
   }
-  // Reported Lektion by Lektion, so the list reads like the course rather than like the pool file.
   offenders.sort((a, b) => a.nr - b.nr || a.id.localeCompare(b.id) || a.token.localeCompare(b.token));
   return offenders;
+}
+
+/**
+ * RULE 11: the practice items obey the same taught-words rule as the dialogues.
+ *
+ * Until DaF review #5 this read `<level>.extra.json` only and derived the Lektion from the id
+ * prefix, so all 227 generated items of A1.1 fell through `if (!nr) continue` and the ratchet
+ * described 124 of 351 items („was der Validator nicht liest, existiert für die Reparaturrunde
+ * nicht“). It now reads the BUILT pool as `wortfeldCoverage` does and assigns generated items via
+ * `practiceRule.topics`; the built version of a hand-written item wins, because that is the text
+ * the build's repair run produced and the learner sees. The scanned fields are unchanged — prompt
+ * (minus the bracketed cue and the complete Sie-Aufgabenformel), answer, accepted — so the number
+ * moves because the item universe grew, not because the yardstick did.
+ *
+ * Since DaF review #6 this is the INFORMATIONAL half of the pair: it covers the whole pool,
+ * including the ~100 items no draw reaches, and its assignment is the earliest topic-Lektion rather
+ * than the drawn one. RULE 11b below is the half that can be repaired.
+ */
+export function itemLexis(c, extraItems, poolItems) {
+  const spec = levelSpec(c?.level) || LEVELS['a1.1'];
+  extraItems = extraItems ?? loadExtraItems(spec.level);
+  poolItems = poolItems ?? loadPoolItems(spec.level);
+  const items = itemUniverse(spec, extraItems, poolItems);
+  return lexisScan(c, spec, items.values(), lektionAssignment(c));
+}
+
+/**
+ * RULE 11b: the items the learner is actually SERVED use only words taught by the Lektion that
+ * serves them. Same token machinery as RULE 11, same item texts — only the assignment differs, and
+ * that is the whole point: this number names items a repair round can find, open and rewrite, and
+ * every token on the list is one a learner reads on a screen.
+ */
+export function drawnLexis(c, extraItems, poolItems) {
+  const spec = levelSpec(c?.level) || LEVELS['a1.1'];
+  extraItems = extraItems ?? loadExtraItems(spec.level);
+  poolItems = poolItems ?? loadPoolItems(spec.level);
+  const items = itemUniverse(spec, extraItems, poolItems);
+  const drawn = drawnAssignment(c, [...items.values()]);
+  return lexisScan(c, spec, items.values(), (it) => drawn.get(it.id) ?? null);
 }
 
 /**
@@ -668,6 +974,144 @@ export function missionlessLektionen(c) {
 }
 
 
+/**
+ * RULE 6b: the Notice card may only teach what its own Lektion shows.
+ *
+ * Every **bold** in `notice.bodyDe` that is a whole word (or a phrase of whole words) must occur
+ * in the input of the same Lektion: the dialogue, the pretest model, the Schreiben sample and
+ * task, and the card's own two examples. Two things are deliberately NOT reported:
+ *   • a bold that is not plain letters — `-te`, `-ste`, `ge- …-t`, `**Sie**:` — an ending or a
+ *     schema, not a form;
+ *   • a bold that sits INSIDE a word (`teu**rer**`, `billig**er als**`, `gr**öß**er`), which marks
+ *     an ending as well: the adjacent character in bodyDe is a letter.
+ * The finding it closes (DaF review #1 for A1.2, BLOCKER 2): the Zahlen-Lektion whose dialogue
+ * contains no number word at all, and the Akkusativ card titled „den, einen, keinen“ in a Lektion
+ * whose ten lines contain neither `den` nor `keinen`.
+ */
+export function noticeFormsInInput(l) {
+  const input = new Set(tokenise([
+    ...(l.dialog?.lines || []).map((x) => x.de),
+    l.pretest?.model, l.schreiben?.sample, l.schreiben?.taskDe,
+    ...(l.notice?.examples || []),
+  ].filter(Boolean).join(' ')).map((t) => t.toLowerCase()));
+  const body = String(l.notice?.bodyDe || '');
+  const missing = [];
+  for (const m of body.matchAll(/\*\*(.+?)\*\*/g)) {
+    const before = body[m.index - 1] || ' ';
+    const after = body[m.index + m[0].length] || ' ';
+    if (/[A-Za-zÄÖÜäöüß]/.test(before) || /[A-Za-zÄÖÜäöüß]/.test(after)) continue;   // an ending
+    const bold = m[1];
+    if (!/^[A-Za-zÄÖÜäöüß ]+$/.test(bold)) continue;                                  // not a form
+    const parts = tokenise(bold);
+    if (parts.length && !parts.every((t) => input.has(t.toLowerCase()))) missing.push(bold);
+  }
+  return missing;
+}
+
+/** RULE 6b over a whole level. */
+export function noticeFormCoverage(c) {
+  return (c.lektionen || []).flatMap((l) => noticeFormsInInput(l).map((form) => ({ nr: l.nr, form })));
+}
+
+/** The lines a Lektion asks the learner to PRODUCE: the dictation and the read-aloud. */
+function productionLines(l) {
+  const idx = [...new Set([...(l.hoeren?.lines || []), ...(l.sprechen?.readAloud || [])])]
+    .filter((i) => Number.isInteger(i)).sort((a, b) => a - b);
+  return idx
+    .map((i) => ({ i, de: (l.dialog?.lines || [])[i]?.de }))
+    .filter((x) => x.de);
+}
+
+/**
+ * RULE 15: what the learner PRODUCES must already be explained.
+ *
+ * `hoeren` is a dictation — the learner types the line — and `sprechen.readAloud` is spoken back,
+ * so those two steps are the ones a prompt memorises. DaF review #1 for A1.2 (BLOCKER 3) measured
+ * the Dativ pattern firing 23× before Lektion 11, twice of it in a dictation line, and „Ja, ein
+ * Balkon“ (nominative) as the typed answer to „… **einen** Balkon?“.
+ *
+ * Two halves, both driven by the registry. The cumulative half asks that every token of a produced
+ * line is taught by that Lektion — the same known set RULE 5 builds, seeded from the previous
+ * level. The structural half is the table above: a form that belongs to a slug whose own Lektion
+ * comes LATER is a Vorgriff, minus the chunks the level's notice cards licence by name. The
+ * structural half is what makes the rule outlive this review: it reads the grammar order, not a
+ * list of lines.
+ */
+export function producedBeforeTaught(c, extraKnown) {
+  const spec = levelSpec(c?.level) || LEVELS['a1.1'];
+  const known = extraKnown ?? seedVocabulary(spec);
+  const taughtIn = new Map();
+  (c.lektionen || []).forEach((l) => { if (!taughtIn.has(l.primarySlug)) taughtIn.set(l.primarySlug, l.nr); });
+  const offenders = [];
+  for (const l of c.lektionen || []) {
+    // Grow the known set exactly as RULE 5 does, so „taught by this Lektion“ means the same thing.
+    for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
+    for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
+    for (const { i, de } of productionLines(l)) {
+      for (const t of tokenise(de)) {
+        const low = t.toLowerCase();
+        if (known.has(low) || spec.nameSet.has(low)) continue;
+        offenders.push({ nr: l.nr, line: i, kind: 'lexis', hit: t, de });
+      }
+      let text = de;
+      for (const chunk of spec.licensedChunks || []) text = text.split(chunk).join(' ');
+      for (const [slug, re] of Object.entries(spec.offLimitsForms || {})) {
+        const taught = taughtIn.get(slug);
+        if (!taught || taught <= l.nr) continue;
+        for (const hit of text.match(new RegExp(re.source, re.flags)) || []) {
+          offenders.push({ nr: l.nr, line: i, kind: slug, hit: String(hit).trim(), de });
+        }
+      }
+    }
+  }
+  return offenders;
+}
+
+// RULE 16 — a „Sprechen Teil 1“ prompt is a self-introduction. SD1 Teil 1 is nothing else: Name,
+// Alter, Land, Wohnort, Sprachen, Beruf, Hobby, plus spelling and the phone number.
+// Bare "Name" would let a check-in task ("Melden Sie sich an: Name, Termin") pass as
+// Sprechen Teil 1 — the very case A1.2 review #1 BLOCKER 4 is about.
+const SELF_INTRO_RE = /vorstellen|Vorname|Wohnort|Beruf/i;
+
+/**
+ * RULE 16: an `examTeile` claim must be backed by the Lektion that makes it.
+ *
+ * `examTeile` is the sixth column of the public 12x6 grid (standard §2.4), so it is read before
+ * anybody pays. RULE 7 checked one sentence of it — that `sprechen.open.teil` is in the list.
+ * This adds the four claims nobody checked: „Hören Teil n“ needs a linked listening exercise,
+ * „Lesen Teil n“ a linked reading lesson, „Sprechen Teil 1“ either a prompt that asks for a
+ * self-introduction or the level's Teil-1 speaking mission, and the two Schreiben Teile the
+ * Textsorte they name (Teil 1 = Formular, Teil 2 = Mitteilung).
+ */
+export function examTeileBacked(c) {
+  const spec = levelSpec(c?.level) || LEVELS['a1.1'];
+  const teil1 = spec.teil1MissionOrders || [];
+  const offenders = [];
+  for (const l of c.lektionen || []) {
+    const li = l.links || {};
+    const open = l.sprechen?.open || {};
+    for (const teil of l.examTeile || []) {
+      let why = null;
+      if (teil.startsWith('Hören') && (li.listeningExercise === null || li.listeningExercise === undefined)) {
+        why = 'links.listeningExercise is null';
+      } else if (teil.startsWith('Lesen') && (li.readingOrder === null || li.readingOrder === undefined)) {
+        why = 'links.readingOrder is null';
+      } else if (teil === 'Sprechen Teil 1'
+        && !SELF_INTRO_RE.test(open.promptDe || '')
+        && !(open.missionOrder !== null && open.missionOrder !== undefined && teil1.includes(open.missionOrder))) {
+        why = 'the sprechen.open prompt is no self-introduction and missionOrder is not the level’s Teil-1 mission';
+      } else if (teil === 'Schreiben Teil 1' && l.schreiben?.kind !== 'formular') {
+        why = `schreiben.kind is "${l.schreiben?.kind}", Teil 1 is a Formular`;
+      } else if (teil === 'Schreiben Teil 2' && l.schreiben?.kind !== 'mitteilung') {
+        why = `schreiben.kind is "${l.schreiben?.kind}", Teil 2 is a Mitteilung`;
+      }
+      if (why) offenders.push({ nr: l.nr, teil, why });
+    }
+  }
+  return offenders;
+}
+
+
 // ───────────────────────────────────────────────────────────────────────────────────────────────
 // RULE 14 — PERSONA CONSISTENCY (DaF review #5, MAJOR 12)
 //
@@ -695,6 +1139,10 @@ const LANGUAGES = [
   'Arabisch', 'Deutsch', 'Englisch', 'Französisch', 'Spanisch', 'Italienisch', 'Türkisch',
   'Russisch', 'Polnisch', 'Chinesisch', 'Portugiesisch',
 ];
+// The Wohnorte the two courses name. A city is a fact a Formular files, so it is checked like the
+// other four — „Stadt: Köln“ under a Steckbrief that says Bremen is the same error as „verheiratet“
+// under a Formular that says ledig.
+const CITIES = ['Bremen', 'Berlin', 'Köln', 'Hamburg', 'München', 'Wien', 'Zürich', 'Frankfurt', 'Leipzig', 'Dresden'];
 const PROFESSIONS = [
   'Student', 'Studentin', 'Kellner', 'Kellnerin', 'Ingenieur', 'Ingenieurin', 'Lehrer', 'Lehrerin',
   'Arzt', 'Ärztin', 'Verkäufer', 'Verkäuferin', 'Sekretär', 'Sekretärin', 'Koch', 'Köchin',
@@ -726,8 +1174,39 @@ export const PERSONAS_A11 = {
   'Herr Schmidt': { familienstand: null, herkunft: null, beruf: null, sprachen: null },
 };
 
+/**
+ * A1.2 — the same cast one half-level on, plus the characters A1.2 introduces. Spread from
+ * PERSONAS_A11 on purpose (DaF review #1 for A1.2, BLOCKER 1): A1.2's `DIALOG_NAMES` is A1.1's
+ * list extended, so these are the same people, and an A1.2 line must not be able to overturn a
+ * fact A1.1 already stated and grades against. Every fact below is READ OFF a12.js; `null` means
+ * A1.2 never states it.
+ *   Ana Chakiri   L1, L2, L3, L4, L6, L7, L9, L10, L12 — everything A1.1 says (ledig, aus Marokko,
+ *                 Studentin, Arabisch und Deutsch), plus `stadt: 'Bremen'` from the Formular of L1
+ *                 („Ana Chakiri wohnt in Bremen am Platz 4“) and L3. Her flight to Marokko in L9 is
+ *                 a journey, not a second Herkunft, and the Reise-Formular names no Wohnort.
+ *   Lena          L3, L5, L7, L8, L10, L11, L12 — `alter: 24` and `stadt: 'Köln'` from the
+ *                 Steckbrief of L7 („Lena Berg ist 24 Jahre alt und kommt aus Köln“). Familienstand,
+ *                 Herkunftsland, Beruf and Sprachen: A1.2 never says, so they stay A1.1's nulls.
+ *   Tim           L5, L8, L11 — the Ausflug-Formular of L5 files him travelling TO Köln, which is a
+ *                 destination and not a Wohnort, so `stadt` stays null and the line cannot collide.
+ *   Frau Berger   L6 — Ärztin (`dialog.setting`: „Frau Berger ist Ärztin.“).
+ *   Frau Fischer  L1 — „wohnt in der Stadt“; no city and no Berufswort is ever named.
+ *   Herr Berg     L2 — the Vermieter of the Wohnungsanzeige; „Vermieter“ is not a Berufswort the
+ *                 table knows, so nothing is claimed.
+ *   Frau Kaya     L4 (Rezeption im Hotel) and Herr Schmidt L9 (Bahnhof) keep A1.1's empty rows.
+ */
+export const PERSONAS_A12 = {
+  ...PERSONAS_A11,
+  Ana: { ...PERSONAS_A11.Ana, stadt: 'Bremen', alter: null },
+  Lena: { ...PERSONAS_A11.Lena, stadt: 'Köln', alter: 24 },
+  Tim: { ...PERSONAS_A11.Tim, stadt: null, alter: null },
+  'Frau Berger': { familienstand: null, herkunft: null, beruf: ['Ärztin'], sprachen: null, stadt: null, alter: null },
+  'Frau Fischer': { familienstand: null, herkunft: null, beruf: null, sprachen: null, stadt: null, alter: null },
+  'Herr Berg': { familienstand: null, herkunft: null, beruf: null, sprachen: null, stadt: null, alter: null },
+};
+
 /** The per-level persona tables, keyed by the registry row's `personaSource`. */
-export const PERSONA_TABLES = { 'a1.1': PERSONAS_A11 };
+export const PERSONA_TABLES = { 'a1.1': PERSONAS_A11, 'a1.2': PERSONAS_A12 };
 
 const alt = (list) => list.join('|');
 // SELF — the person asserts something about themselves: a dialogue line they speak, or the
@@ -739,6 +1218,8 @@ const SELF_PATTERNS = [
   ['beruf', new RegExp(`\\bich\\s+bin\\s+(?:von\\s+Beruf\\s+)?(${alt(PROFESSIONS)})\\b`, 'gi')],
   ['beruf', new RegExp(`\\bich\\s+arbeite\\s+als\\s+(${alt(PROFESSIONS)})\\b`, 'gi')],
   ['sprachen', new RegExp(`\\bich\\s+spreche\\s+([^.?!]*)`, 'gi')],
+  ['stadt', new RegExp(`\\bich\\s+wohne\\s+in\\s+(${alt(CITIES)})\\b`, 'gi')],
+  ['alter', new RegExp(`\\bich\\s+bin\\s+(\\d{1,2})\\s+Jahre\\s+alt\\b`, 'gi')],
 ];
 // ABOUT — a text that is about the person: a Formular task that names them, a dialogue line or
 // setting that names them, the fields of such a task. Third-person and form-field frames.
@@ -750,6 +1231,10 @@ const ABOUT_PATTERNS = [
   ['beruf', new RegExp(`\\b(?:ist|bin|sind)\\s+(?:von\\s+Beruf\\s+)?(${alt(PROFESSIONS)})\\b`, 'gi')],
   ['sprachen', new RegExp(`\\b(?:spricht|spreche|sprechen)\\s+([^.?!]*)`, 'gi')],
   ['sprachen', new RegExp(`\\bSprachen?\\s*:\\s*([^/]*)`, 'gi')],
+  ['stadt', new RegExp(`\\b(?:wohnt|wohne|wohnen|kommt|komme|kommen)\\s+(?:in|aus)\\s+(${alt(CITIES)})\\b`, 'gi')],
+  ['stadt', new RegExp(`\\bStadt\\s*:\\s*(${alt(CITIES)})\\b`, 'gi')],
+  ['alter', new RegExp(`\\b(?:ist|bin)\\s+(\\d{1,2})\\s+Jahre\\s+alt\\b`, 'gi')],
+  ['alter', new RegExp(`\\bAlter\\s*:\\s*(\\d{1,2})\\b`, 'gi')],
 ];
 // „Mein Mann“ / „meine Frau“ carry no captured value — they simply make the speaker married, which
 // is what the round-5 line did to Ana.
@@ -852,13 +1337,14 @@ export function personaConsistency(c) {
 
 const words = (s) => String(s).trim().split(/\s+/).filter(Boolean);
 
-export function validateCurriculum(c, extraItems) {
+export function validateCurriculum(c, extraItems, poolItems) {
   const errors = [];
   const fail = (msg) => errors.push(msg);
   const L = c.lektionen || [];
   const spec = levelSpec(c?.level);
   if (!spec) return [`level "${c?.level}" is not registered in LEVELS — add its row before validating`];
   extraItems = extraItems ?? loadExtraItems(spec.level);
+  poolItems = poolItems ?? loadPoolItems(spec.level);
 
   // ---- RULE 8 (shape + hours) -------------------------------------------------------------
   if (c.code !== spec.code) fail(`level/code must be ${spec.level} / ${spec.code}`);
@@ -1085,7 +1571,11 @@ export function validateCurriculum(c, extraItems) {
 
     const pr = l.practiceRule || {};
     if (!(pr.topics || []).length) fail(`Lektion ${l.nr}: practiceRule needs topics`);
-    for (const t of pr.topics || []) if (!(l.grammarSlugs || []).includes(t)) fail(`Lektion ${l.nr}: practiceRule topic "${t}" is not in grammarSlugs`);
+    const practiceOnly = spec.practiceOnlyTopics || [];
+    for (const t of pr.topics || []) {
+      if ((l.grammarSlugs || []).includes(t) || practiceOnly.includes(t)) continue;
+      fail(`Lektion ${l.nr}: practiceRule topic "${t}" is in neither grammarSlugs nor practiceOnlyTopics`);
+    }
     if (!(pr.typedMin >= 3)) fail(`Lektion ${l.nr}: practiceRule.typedMin must be ≥ 3`);
   });
 
@@ -1115,9 +1605,13 @@ export function validateCurriculum(c, extraItems) {
   if (uncovered.length > r.uncoveredWortfeld) {
     fail(`RULE 10: ${uncovered.length} Wortfeld entries occur in no input of their Lektion, ratchet is ${r.uncoveredWortfeld} — ${uncovered.map((u) => `L${u.nr} ${u.de}`).join(', ')}`);
   }
-  const untaught = itemLexis(c, extraItems);
+  const untaught = itemLexis(c, extraItems, poolItems);
   if (untaught.length > r.untaughtItemTokens) {
-    fail(`RULE 11: ${untaught.length} untaught tokens in hand-written items, ratchet is ${r.untaughtItemTokens} — ${untaught.map((o) => `${o.id}:${o.token}`).join(', ')}`);
+    fail(`RULE 11: ${untaught.length} untaught tokens across the whole pool, ratchet is ${r.untaughtItemTokens} — ${untaught.map((o) => `${o.id}:${o.token}`).join(', ')}`);
+  }
+  const drawnUntaught = drawnLexis(c, extraItems, poolItems);
+  if (drawnUntaught.length > r.untaughtDrawnTokens) {
+    fail(`RULE 11b: ${drawnUntaught.length} untaught tokens in items the learner is served, ratchet is ${r.untaughtDrawnTokens} — ${drawnUntaught.map((o) => `L${o.nr} ${o.id}:${o.token}`).join(', ')}`);
   }
 
   // ---- RULE 12 (can-dos are rehearsed) and RULE 13 (the speaking prompt travels) ---------------
@@ -1128,6 +1622,20 @@ export function validateCurriculum(c, extraItems) {
   const missionless = missionlessLektionen(c);
   if (missionless.length > r.missionlessLektionen) {
     fail(`RULE 13: ${missionless.length} Lektionen have a sprechen.open without missionOrder, ratchet is ${r.missionlessLektionen} — ${missionless.map((nr) => `L${nr}`).join(', ')}`);
+  }
+
+  // ---- RULE 6b / 15 / 16 (DaF review #1 for A1.2, BLOCKER 2-4) ----------------------------------
+  const unexemplified = noticeFormCoverage(c);
+  if (unexemplified.length > r.unexemplifiedNoticeForms) {
+    fail(`RULE 6b: ${unexemplified.length} bolded Notice forms occur in no input of their Lektion, ratchet is ${r.unexemplifiedNoticeForms} — ${unexemplified.map((u) => `L${u.nr} „${u.form}“`).join(', ')}`);
+  }
+  const produced = producedBeforeTaught(c);
+  if (produced.length > r.untaughtInProduction) {
+    fail(`RULE 15: ${produced.length} forms in dictation/read-aloud lines the course teaches later, ratchet is ${r.untaughtInProduction} — ${produced.map((o) => `L${o.nr}/${o.line} ${o.kind} „${o.hit}“`).join(', ')}`);
+  }
+  const unbacked = examTeileBacked(c);
+  if (unbacked.length > r.unbackedExamTeile) {
+    fail(`RULE 16: ${unbacked.length} examTeile claims nothing in their Lektion backs, ratchet is ${r.unbackedExamTeile} — ${unbacked.map((o) => `L${o.nr} „${o.teil}“ (${o.why})`).join(', ')}`);
   }
 
   // ---- RULE 14 (the recurring characters keep their facts) --------------------------------------
@@ -1163,13 +1671,25 @@ if (isMain) {
   console.log(`  RULE 10 Wortfeld-Deckung: ${uncovered.length} ungenutzt von ${wf.length} (Ratchet ${r.uncoveredWortfeld})`);
   for (const u of uncovered) console.log(`    L${u.nr} ${u.de}`);
   const untaught = itemLexis(c);
-  console.log(`  RULE 11 Item-Lexik: ${untaught.length} ungelehrte Tokens (Ratchet ${r.untaughtItemTokens})`);
-  for (const o of untaught) console.log(`    ${o.id}: ${o.token}`);
+  console.log(`  RULE 11 Item-Lexik (ganzer Pool, informativ): ${untaught.length} ungelehrte Tokens (Ratchet ${r.untaughtItemTokens})`);
+  for (const o of untaught) console.log(`    L${o.nr} ${o.id}: ${o.token}`);
+  const drawnUntaught = drawnLexis(c);
+  console.log(`  RULE 11b gezogene Item-Lexik: ${drawnUntaught.length} ungelehrte Tokens (Ratchet ${r.untaughtDrawnTokens})`);
+  for (const o of drawnUntaught) console.log(`    L${o.nr} ${o.id}: ${o.token}`);
   const unrehearsed = canDoRehearsal(c);
   console.log(`  RULE 12 Kann-Beschreibungen ohne Übung: ${unrehearsed.length} (Ratchet ${r.unrehearsedCanDos})`);
   for (const u of unrehearsed) console.log(`    L${u.nr} ${u.line}`);
   const missionless = missionlessLektionen(c);
   console.log(`  RULE 13 Sprechaufträge ohne Mission: ${missionless.length} (Ratchet ${r.missionlessLektionen}) — ${missionless.map((nr) => `L${nr}`).join(', ') || '—'}`);
+  const unexemplified = noticeFormCoverage(c);
+  console.log(`  RULE 6b Notice-Formen ohne Beleg: ${unexemplified.length} (Ratchet ${r.unexemplifiedNoticeForms})`);
+  for (const u of unexemplified) console.log(`    L${u.nr} „${u.form}“`);
+  const produced = producedBeforeTaught(c);
+  console.log(`  RULE 15 Vorgriffe in Diktat/Nachsprechen: ${produced.length} (Ratchet ${r.untaughtInProduction})`);
+  for (const o of produced) console.log(`    L${o.nr} Zeile ${o.line} [${o.kind}] „${o.hit}“ — ${o.de}`);
+  const unbacked = examTeileBacked(c);
+  console.log(`  RULE 16 ungedeckte Prüfungsteile: ${unbacked.length} (Ratchet ${r.unbackedExamTeile})`);
+  for (const o of unbacked) console.log(`    L${o.nr} „${o.teil}“ — ${o.why}`);
   const personaBreaks = personaConsistency(c);
   console.log(`  RULE 14 Figuren-Widersprüche: ${personaBreaks.length} (harte Regel, kein Ratchet)`);
   for (const o of personaBreaks) console.log(`    L${o.nr} ${o.where}: ${o.name} ${o.fact} „${o.found}“ statt „${o.expected}“`);

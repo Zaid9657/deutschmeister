@@ -10,7 +10,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  checkAnswer, tagError, isCaseTask, normalizeSpelling, spellingApplies,
+  checkAnswer, tagError, isCaseTask, isDictationTask, checkOptionsFor,
+  normalizeSpelling, spellingApplies, STRICT_TOPIC,
   RESULT, ERROR_TAGS,
 } from '../src/lib/lesson/check.js';
 
@@ -180,4 +181,83 @@ test('the yes-no-question rules still hold, and single words are unchanged', () 
   assert.equal(tagError({ topic: 'verb-sein', type: 'fill_blank' }, 'bist', 'bin'), 'Konjugation');
   assert.equal(tagError({ topic: 'plural-nouns', type: 'fill_blank' }, 'Buchs', 'Bücher'), 'Plural');
   assert.equal(tagError({ kind: 'dictation' }, 'x', 'y'), 'Hören');
+});
+
+// --- REVIEW #6 BLOCKER 3 (second half): dictation is an item flag ---------
+
+test('isDictationTask reads the item, not the call site', () => {
+  assert.equal(isDictationTask({ kind: 'dictation' }), true);
+  assert.equal(isDictationTask({ type: 'dictation' }), true);
+  assert.equal(isDictationTask({ stage: 'listening' }), true);
+  assert.equal(isDictationTask({ stage: 'listening', kind: 'other' }), true);
+  assert.equal(isDictationTask({ type: 'fill_blank' }), false);
+  assert.equal(isDictationTask({}), false);
+  assert.equal(isDictationTask(null), false);
+});
+
+test('a checkpoint dictation with a separator grades the same as the lesson', () => {
+  // a1.1-cp2-hoeren-1: the phone number that disagreed between the lesson
+  // (dictation: true passed by hand) and the checkpoint (dropped it).
+  const item = { stage: 'listening', accepted: ['Null vier zwei – drei drei acht eins.'] };
+  const opts = checkOptionsFor(item);
+  assert.equal(opts.dictation, true);
+  assert.equal(
+    checkAnswer('Null vier zwei - drei drei acht eins.', item.accepted, opts).result,
+    RESULT.CORRECT,
+    'a normal hyphen instead of an en dash is still correct once dictation is on',
+  );
+  assert.equal(
+    checkAnswer('Null vier zwei drei drei acht eins.', item.accepted, opts).result,
+    RESULT.CORRECT,
+    'no separator at all is still correct once dictation is on',
+  );
+});
+
+// --- REVIEW #6 BLOCKER 3: one options-builder, so every grading site agrees
+
+test('checkOptionsFor derives every option from the item alone', () => {
+  const politeItem = { caseSensitive: true, topic: 'polite-forms', answer: 'Ihr' };
+  assert.deepEqual(checkOptionsFor(politeItem), {
+    strict: STRICT_TOPIC.test('polite-forms'),
+    caseSensitive: true,
+    dictation: false,
+    spelling: false,
+  });
+
+  const spelledItem = { topic: 'alphabet-pronunciation', accepted: ['H-A-L-L-O'] };
+  assert.equal(checkOptionsFor(spelledItem).spelling, true);
+
+  const dictationItem = { kind: 'dictation', answer: 'Ich bin Lehrer.' };
+  assert.equal(checkOptionsFor(dictationItem).dictation, true);
+
+  const articleItem = { topic: 'definite-articles', answer: 'der' };
+  assert.equal(checkOptionsFor(articleItem).strict, true);
+  assert.equal(checkOptionsFor(articleItem).caseSensitive, false);
+
+  // falls back to `answer` when `accepted` is absent, same as the call sites do
+  assert.equal(checkOptionsFor({ answer: 'bin' }).spelling, false);
+
+  // and the whole thing is a drop-in replacement for the hand-built options
+  const item = { caseSensitive: true, topic: 'polite-forms', answer: 'Ihr', accepted: ['Ihr'] };
+  assert.deepEqual(
+    checkAnswer('ihr', item.accepted, checkOptionsFor(item)),
+    checkAnswer('ihr', item.accepted, { strict: STRICT_TOPIC.test(item.topic), caseSensitive: isCaseTask(item), dictation: isDictationTask(item), spelling: spellingApplies(item.accepted) }),
+  );
+});
+
+// --- REVIEW #6 MAJOR 9: a number word is never Konjugation -----------------
+
+test('a misspelt number word is Wortschatz, whatever the item topic says', () => {
+  // the four L2 items: topic 'verb-sein' (the lesson has no topic of its own
+  // for numbers), answer a number word — a slip must not read as conjugation
+  const item = { topic: 'verb-sein', type: 'fill_blank' };
+  assert.equal(tagError(item, 'sieber', 'sieben'), 'Wortschatz');
+  assert.equal(tagError(item, 'sechs', 'sieben'), 'Wortschatz');
+  assert.equal(tagError(item, 'seven', 'sieben'), 'Wortschatz');
+  assert.equal(tagError(item, 'siben', 'sieben'), 'Wortschatz');
+  assert.equal(tagError(item, 'zehn', 'zwölf'), 'Wortschatz');
+  // a bare digit string, same rule
+  assert.equal(tagError(item, '13', '12'), 'Wortschatz');
+  // a real verb-sein miss on the same topic is untouched
+  assert.equal(tagError(item, 'bist', 'bin'), 'Konjugation');
 });

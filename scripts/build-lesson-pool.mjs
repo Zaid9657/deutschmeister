@@ -26,6 +26,14 @@
 //      same cache: topic slug → the grammar rule text that grounds
 //      netlify/functions/explain-answer.mjs. Generated here so the card the model
 //      is grounded in and the pool the item comes from can never drift apart.
+//      ONE FILE FOR EVERY LEVEL, not one per level: explain-answer.mjs imports a
+//      single RULE_CARDS map keyed by slug, and a slug belongs to exactly one
+//      sub_level, so a per-level file would only move the merge into the
+//      function. A run therefore READS the committed file, merges the cards of
+//      the level it is building over what is there, and writes the union back in
+//      slug order — idempotent (re-running a1.1 reproduces the file byte for
+//      byte) and order-free (a1.1 then a1.2 gives the same file as a1.2 then
+//      a1.1). `RULE_CARD_LEVELS` records which levels have been built into it.
 //
 //   3b. RULE CARD OVERRIDES. scripts/rule-card-overrides.mjs, when it exists,
 //      may replace a generated card wholesale: the cache is a snapshot of
@@ -98,7 +106,12 @@ import { createHash } from 'node:crypto';
 import {
   filterPool, REASON, REASONS, isUsableItem, exclusionReason, parseVerbCue,
   articleAnswerKind, ARTICLE_CUE, missingSentenceArticle, SENTENCE_ARTICLE_CUE,
+  isPoliteFormItem, minimalArticleCorrection,
 } from '../src/data/lessonPools/quality.js';
+// The lexis gate below is the VALIDATOR's predicate, imported rather than re-implemented — see the
+// „untaught-lexis“ block near the merge for why, and `levelLexicon`'s own header for why importing
+// it here is not circular.
+import { levelLexicon, untaughtTokens, levelSpec } from './validate-curriculum.mjs';
 
 const level = (process.argv[2] || 'a1.1').toLowerCase();
 const cache = JSON.parse(readFileSync(new URL('../grammar-content-cache.json', import.meta.url), 'utf8'));
@@ -178,6 +191,37 @@ function repairArticleCue(item) {
 
 const articleRepaired = raw.map(repairArticleCue).filter(Boolean);
 
+// ── REVIEW #6 BLOCKER 2: accept the minimal correction as well ──────────────
+//
+// „Ein Schere ist hier." → `Die Schere ist hier.` quotes a sentence with ONE
+// error (the genus of the indefinite article) and accepts only an answer that
+// also swaps the article FAMILY, which the German prompt never asks for. The
+// minimal, complete correction — `Eine Schere ist hier.` — came back wrong.
+//
+// The repair is the same promise as the two above, from the other side: the
+// answer key GAINS a reading, it never loses one. Both spellings the pool uses
+// (with and without the closing period) are added, because `accepted` lists in
+// this pool carry both and the engine compares strings. Where the counterpart
+// is not computable — `ein` is `der` or `das`, and picking a gender is
+// authorship — nothing is written and the gate drops the item.
+const ambiguousRepaired = [];
+const ambiguousUnrepairable = [];
+function repairAmbiguousCorrection(item) {
+  if (exclusionReason(item, { level }) !== REASON.AMBIGUOUS_CORRECTION) return;
+  const minimal = minimalArticleCorrection(item);
+  if (!minimal) {
+    ambiguousUnrepairable.push({ id: item.id, topic: item.topic, answer: item.answer });
+    return;
+  }
+  const added = [minimal, minimal.replace(/[.!?]+$/, '')]
+    .filter((a) => a && ![item.answer, ...(item.accepted || [])].includes(a));
+  if (!added.length) return;
+  item.accepted = [...new Set([...(item.accepted || []), ...added])];
+  ambiguousRepaired.push({ id: item.id, topic: item.topic, added });
+}
+
+raw.forEach(repairAmbiguousCorrection);
+
 const { kept, excluded, counts } = filterPool(raw, { level });
 
 /**
@@ -190,9 +234,14 @@ const { kept, excluded, counts } = filterPool(raw, { level });
  * generated. An id that no longer survives the filter is reported, not silently
  * ignored: a stale entry here would otherwise outlive the item it is about.
  */
-const ACCEPTED_EXTRAS = {
-  '827c155d-7b87-53a3-b047-d53ab532f296': ['zwanzig nach sechs', 'sechs Uhr zwanzig', 'zwanzig nach 6'],
+const ACCEPTED_EXTRAS_BY_LEVEL = {
+  'a1.1': {
+    '827c155d-7b87-53a3-b047-d53ab532f296': ['zwanzig nach sechs', 'sechs Uhr zwanzig', 'zwanzig nach 6'],
+  },
 };
+
+/** The widenings for the level being built — an id is only ever in one level. */
+const ACCEPTED_EXTRAS = ACCEPTED_EXTRAS_BY_LEVEL[level] || {};
 
 const acceptedApplied = [];
 for (const [id, accepted] of Object.entries(ACCEPTED_EXTRAS)) {
@@ -429,6 +478,25 @@ async function ruleCardOverrides() {
   return overrides;
 }
 
+/**
+ * The cards already committed, plus the levels they were generated from. A fresh
+ * checkout always has a file (a1.1's); a missing or unreadable one is not fatal —
+ * the run simply rebuilds what it can, i.e. this level.
+ */
+async function committedRuleCards() {
+  if (!existsSync(RULE_CARDS_TARGET)) return { cards: {}, levels: [] };
+  try {
+    const mod = await import(`${RULE_CARDS_TARGET.href}?t=${Date.now()}`);
+    return {
+      cards: { ...(mod.RULE_CARDS || {}) },
+      levels: Array.isArray(mod.RULE_CARD_LEVELS) ? [...mod.RULE_CARD_LEVELS] : ['a1.1'],
+    };
+  } catch (err) {
+    console.error(`could not read the committed rule cards (${err.message}) — rebuilding from this level only`);
+    return { cards: {}, levels: [] };
+  }
+}
+
 async function writeRuleCards() {
   const cards = {};
   for (const topic of [...topics].sort((a, b) => a.slug.localeCompare(b.slug))) {
@@ -459,14 +527,27 @@ async function writeRuleCards() {
   for (const [slug, card] of Object.entries(await ruleCardOverrides())) {
     if (cards[slug]) cards[slug] = { ...cards[slug], ...card };
   }
+  // The union with what is committed: this level's cards win for their own
+  // slugs, every other level's cards are carried through untouched, and the
+  // result is written in slug order so the file does not depend on the order the
+  // levels were built in.
+  const { cards: committed, levels: builtLevels } = await committedRuleCards();
+  const merged = { ...committed, ...cards };
+  const ordered = Object.fromEntries(Object.keys(merged).sort().map((slug) => [slug, merged[slug]]));
+  const levels = [...new Set([...builtLevels, level])].sort();
   const header = [
     '// GENERATED by scripts/build-lesson-pool.mjs — do not edit by hand.',
-    `// Source: grammar-content-cache.json (dumpedAt ${cache.dumpedAt}), sub_level ${level.toUpperCase()}.`,
+    `// Source: grammar-content-cache.json (dumpedAt ${cache.dumpedAt}), sub_level(s) ${levels.map((l) => l.toUpperCase()).join(', ')}.`,
     '// One card per grammar topic: the course\'s own rule text, used by',
     '// netlify/functions/explain-answer.mjs to ground the "Erklär mir das" answer.',
-    '// Re-run `node scripts/build-lesson-pool.mjs a1.1` after refreshing the cache.',
+    '// One map for every level — a slug belongs to one sub_level, so the builder',
+    '// merges the level it runs for over the committed cards and writes both back.',
+    `// Re-run \`node scripts/build-lesson-pool.mjs <level>\` (${levels.join(', ')}) after refreshing the cache.`,
     '',
-    `export const RULE_CARDS = ${JSON.stringify(cards, null, 2)};`,
+    `export const RULE_CARDS = ${JSON.stringify(ordered, null, 2)};`,
+    '',
+    '/** The levels whose topics have been generated into the map above. */',
+    `export const RULE_CARD_LEVELS = ${JSON.stringify(levels)};`,
     '',
     '/** The card for a topic slug, or null when the topic has none. */',
     'export function ruleCard(slug) {',
@@ -485,7 +566,8 @@ async function writeRuleCards() {
     '',
   ].join('\n');
   writeFileSync(RULE_CARDS_TARGET, header);
-  console.log(`→ ${RULE_CARDS_TARGET.pathname} (${Object.keys(cards).length} rule cards)`);
+  console.log(`→ ${RULE_CARDS_TARGET.pathname} (${Object.keys(ordered).length} rule cards for ${levels.join(', ')}` +
+    `, ${Object.keys(cards).length} from ${level})`);
 }
 
 // ── the hand-authored extra items ───────────────────────────────────────────
@@ -498,6 +580,9 @@ if (existsSync(extraUrl)) {
   // same repair — and because the repair skips any prompt that already carries
   // a bracket, an item whose author wrote the cue by hand is untouched.
   for (const r of extra.map(repairArticleCue).filter(Boolean)) articleRepaired.push(r);
+  // REVIEW #6 BLOCKER 2, same order and for the same reason: the extras face
+  // the same gate, so they get the same repair first.
+  extra.forEach(repairAmbiguousCorrection);
   // The same rules as the bank, applied to hand-written items on purpose: the
   // point of the filter is that NO item reaches a learner unchecked.
   const failing = extra.map((it) => [it, exclusionReason(it, { level })]).filter(([, r]) => r);
@@ -540,18 +625,23 @@ const VERB_STEMS = { gehen: 'geh', kommen: 'komm' };
 /** Ids that opt in explicitly, id → the group head. Empty is the honest state. */
 const EQUIVALENT_VERB_IDS = {};
 
+/**
+ * REVIEW #6 MAJOR 10. The group is per LEMMA; German equivalence is per FRAME.
+ * `extra-a11-l10-06` ("___ du morgen mit dem Bus?") had `Gehst` in its accepted
+ * list and a green tick on a sentence that is not German: one fährt or kommt
+ * mit dem Bus, one does not gehen with it — the contrast A1 learners with a
+ * romance or slavic first language miss most often. A lemma is not added when
+ * its blocker matches the German prompt.
+ */
+const PP_BLOCKS = { gehen: /\bmit (dem|der) \w+/i };
+
 const lower = (t) => String(t || '').trim().toLowerCase();
 const capitalise = (w) => w.charAt(0).toUpperCase() + w.slice(1);
 
-/** Which lemma of the group a written form belongs to, or null. */
-function groupLemma(form, head) {
-  const f = lower(form);
-  if (Object.prototype.hasOwnProperty.call(FAHREN_FORMS, f)) return head;
-  for (const [lemma, stem] of Object.entries(VERB_STEMS)) {
-    if (Object.values(FAHREN_FORMS).some((suffix) => f === stem + suffix)) return lemma;
-  }
-  return null;
-}
+// `groupLemma()` — "which lemma of the group does this accepted form belong
+// to?" — is gone with the heuristic it served (REVIEW #6 MAJOR 10): counting
+// the lemmas an item already allows was the guess about authorial intent that
+// let `Gehst du morgen mit dem Bus?` through.
 
 const verbWidened = [];
 const HEAD = 'fahren';
@@ -560,11 +650,16 @@ function widenEquivalentVerbs(item) {
   const suffix = FAHREN_FORMS[lower(item.answer)];
   if (!suffix) return;
   const accepted = [...new Set([item.answer, ...(item.accepted || [])])];
-  const lemmas = new Set(accepted.map((a) => groupLemma(a, head)).filter(Boolean));
   const optedIn = EQUIVALENT_VERB_IDS[item.id] === head;
-  if (lemmas.size < 2 && !optedIn) return;
+  // REVIEW #6 MAJOR 10: the heuristic "the item already allows two lemmas, so
+  // its author meant the frame to be open" is a guess about intent, and it was
+  // wrong — `extra-a11-l10-06` allowed `fahren` and `kommen` because those two
+  // fit, and the table then added `gehen`, which does not. Only an explicit
+  // opt-in decides now, and the map above being empty is the honest state.
+  if (!optedIn) return;
   const added = [];
   for (const lemma of EQUIVALENT_VERBS[head]) {
+    if (PP_BLOCKS[lemma] && PP_BLOCKS[lemma].test(String(item.questionDe || ''))) continue;
     const form = VERB_STEMS[lemma] + suffix;
     // Both cases, because a gap at position 1 is written with a capital and the
     // same form mid-sentence is not — the engine folds case, the list documents.
@@ -660,7 +755,89 @@ function normaliseRegister(item) {
 
 const normalised = [...kept, ...supplement, ...extra].map(normaliseRegister).filter(Boolean);
 
-const items = [...kept, ...supplement, ...extra].sort(
+// ── REVIEW #6 BLOCKER 1: derive the polite-form case flag ───────────────────
+//
+// Round 5 set `caseSensitive: true` on the three items it had found by hand,
+// and round 6 measured what a list costs: two items of exactly the same shape
+// never got it, so `Frau Müller, ___ sind sehr freundlich.` counted `sie` as a
+// typo — i.e. as CORRECT — while the identical `Frau Kaya, sprechen ___
+// Englisch?` marked it wrong. Two of the unflagged ones are items of the GRADED
+// Checkpoint 4, whose own rule card says the polite Ihr is "immer mit großem I".
+//
+// So the flag is DERIVED from the answer key here and the hand entry is kept as
+// an override (`=== true ||`), never as a veto: an author may flag an item the
+// predicate does not see — `extra-a11-l12-16`, whose polite Ihr is the FIRST
+// word of the corrected sentence — but may not unflag one it does.
+//
+// Runs last, after the widening passes: `politeCaseItem` reads `accepted`.
+//
+// The override for a BANK item, id → why. A cache item cannot carry a hand
+// flag — the cache is a snapshot of the database — so this map is where one
+// lives, and it stays as short as EXCLUDE_IDS: one entry, the one the review
+// measured. `c473031c` is `a1.1-cp4-bausteine-1` of the GRADED Checkpoint 4,
+// and `isItemCorrect(item, 'Sind sie Frau Meier?')` came back true. The
+// derived predicate does not reach it on purpose (its sentence clause is
+// narrowed to the possessive, so a word-order item does not become wholly
+// wrong over one capital), which is exactly what an override is for.
+const CASE_SENSITIVE_IDS_BY_LEVEL = {
+  'a1.1': {
+    'c473031c-a540-5e7a-95a9-9a1fa803bff0': 'polite Sie in a graded Checkpoint-4 Frage (REVIEW #6 BLOCKER 1)',
+  },
+};
+const CASE_SENSITIVE_IDS = CASE_SENSITIVE_IDS_BY_LEVEL[level] || {};
+
+const caseDerived = [];
+const caseHandFlagged = [];
+const caseOverridden = [];
+for (const item of [...kept, ...supplement, ...extra]) {
+  if (Object.prototype.hasOwnProperty.call(CASE_SENSITIVE_IDS, item.id) && item.caseSensitive !== true) {
+    item.caseSensitive = true;
+    caseOverridden.push(item.id);
+  }
+  const hand = item.caseSensitive === true;
+  const derived = isPoliteFormItem(item);
+  if (hand) caseHandFlagged.push(item.id);
+  else if (derived) caseDerived.push({ id: item.id, topic: item.topic, answer: item.answer });
+  if (hand || derived) item.caseSensitive = true;
+}
+
+// ── REVIEW #6 MAJOR 4: drop legacy items built on words the course never teaches ──
+//
+// RULE 11 and RULE 11b measure a VORGRIFF — a word taught later than the Lektion
+// the item is met in — and a Vorgriff is repairable by moving the item. Under it
+// sat a different class the last two reviews kept re-finding item by item: legacy
+// bank items whose vocabulary the course teaches NOWHERE, at any Lektion (Honig,
+// König, Instrument, Freiheit, Zeitung, and the cast names Tom and Anna, who
+// appear in no A1.1 dialogue). No repair round can move those into range, because
+// there is no range; naming them one id at a time is how the class survived five
+// rounds. So the CLASS is closed here, at build time.
+//
+// THE PREDICATE IS THE VALIDATOR'S OWN (`levelLexicon` + `untaughtTokens` in
+// scripts/validate-curriculum.mjs), not a second copy: the build may not close a
+// class on a yardstick the validator does not use. It is NON-CIRCULAR — the
+// lexicon is read from the CURRICULUM (Wortfeld + Notice + FUNCTION_WORDS +
+// DIALOG_NAMES + the inherited level), never from the pool, so a pool item can
+// never teach itself the word it uses.
+//
+// RUNS LAST, after the repairs and the register normalisation and before the
+// merge, because those passes change the very text that is scanned
+// („Schreib den Satz“ → „Schreiben Sie den Satz“ is a formula the scan strips).
+//
+// ONLY THE LEGACY BANK. The hand-written extras and the generated buchstabieren
+// supplement are written FROM the curriculum's own Wortfeld and are guarded by
+// RULE 11 at 0 for their own tokens; running a lexicon filter over them would
+// silently delete authored work instead of reporting it.
+const lexicon = levelLexicon(level);
+const lexSpec = levelSpec(level);
+const untaughtDropped = [];
+const keptTaught = [];
+for (const item of kept) {
+  const tokens = lexSpec ? untaughtTokens(item, lexicon, lexSpec) : [];
+  if (tokens.length) untaughtDropped.push({ id: item.id, topic: item.topic, tokens, questionDe: item.questionDe });
+  else keptTaught.push(item);
+}
+
+const items = [...keptTaught, ...supplement, ...extra].sort(
   (a, b) => a.topic.localeCompare(b.topic) || a.stage - b.stage || a.order - b.order,
 );
 
@@ -670,7 +847,8 @@ writeFileSync(target, JSON.stringify(out, null, 1) + '\n');
 
 // ── what got dropped, and what the topics look like afterwards ───────────────
 const byReason = Object.entries(counts).filter(([, n]) => n > 0);
-console.log(`${level}: ${raw.length} in cache → ${kept.length} kept + ${supplement.length} generated + ${extra.length} hand-authored = ${items.length}`);
+console.log(`${level}: ${raw.length} in cache → ${keptTaught.length} kept (${untaughtDropped.length} more dropped as untaught-lexis)` +
+  ` + ${supplement.length} generated + ${extra.length} hand-authored = ${items.length}`);
 console.log(`excluded ${excluded.length}:`);
 for (const reason of REASONS) {
   const n = counts[reason] || 0;
@@ -700,12 +878,45 @@ for (const r of normalised) console.log(`       ${String(r.id).slice(0, 8)} · $
 if (acceptedApplied.length) console.log(`widened accepted on ${acceptedApplied.length}: ${acceptedApplied.map((i) => i.slice(0, 8)).join(', ')}`);
 console.log(`equivalent-verb widenings (REVIEW #4 MAJOR): ${verbWidened.length}`);
 for (const r of verbWidened) console.log(`       ${r.id} + ${r.added.join(', ')}`);
+console.log(`ambiguous corrections repaired (REVIEW #6 BLOCKER 2): ${ambiguousRepaired.length}` +
+  ` · not computable, dropped: ${ambiguousUnrepairable.length}`);
+for (const r of ambiguousRepaired) console.log(`       ${r.id} + ${r.added.join(', ')}`);
+for (const r of ambiguousUnrepairable) console.log(`       DROPPED ${r.id} · ${r.answer}`);
+console.log(`polite-form caseSensitive (REVIEW #6 BLOCKER 1): ${caseDerived.length} derived` +
+  ` + ${caseHandFlagged.length} hand-flagged (of them ${caseOverridden.length} by id here)`);
+for (const r of caseDerived) console.log(`       ${r.id} ${r.topic} → ${r.answer}`);
 console.log(`equivalent-time widenings (REVIEW #4 MAJOR): ${timeWidened.length}`);
 for (const r of timeWidened) console.log(`       ${r.id} + ${r.added}`);
 const staleAccepted = Object.keys(ACCEPTED_EXTRAS).filter((id) => !acceptedApplied.includes(id));
 if (staleAccepted.length) console.log(`ACCEPTED_EXTRAS ids no longer in the pool: ${staleAccepted.join(', ')}`);
 const perTopic = new Map();
 for (const it of items) perTopic.set(it.topic, (perTopic.get(it.topic) || 0) + 1);
+
+// ── the untaught-lexis drops, and what they cost each topic ──────────────────
+console.log(`untaught-lexis (REVIEW #6 MAJOR 4): ${untaughtDropped.length} legacy item(s) dropped`);
+const droppedByTopic = new Map();
+for (const d of untaughtDropped) {
+  droppedByTopic.set(d.topic, (droppedByTopic.get(d.topic) || 0) + 1);
+  console.log(`       ${String(d.id).slice(0, 8)} ${d.topic} · ${String(d.questionDe || '').replace(/\s+/g, ' ').slice(0, 56)}` +
+    `  ← ${d.tokens.join(', ')}`);
+}
+if (droppedByTopic.size) {
+  console.log('  per topic:');
+  for (const [topic, n] of [...droppedByTopic].sort()) console.log(`    ${String(n).padStart(3)}  ${topic}`);
+}
+// THE FLOOR IS A REPORT, NOT A VETO. `tests/lesson-pool-rules.test.mjs` wants at least seven usable
+// items per drawn topic — seven is one Lektion's practice set. A topic that falls under it after
+// this gate is NOT silently rescued by keeping an item whose words the course never teaches: the
+// hand-written extras carry those Lektionen, and the remedy is an extras round, so the build names
+// the topic and the count and lets the test fail honestly.
+const THIN_TOPIC_FLOOR = 7;
+const thin = [...perTopic].filter(([, n]) => n < THIN_TOPIC_FLOOR).sort();
+if (thin.length) {
+  console.log(`⚠ ${thin.length} topic(s) below the ${THIN_TOPIC_FLOOR}-item floor after the untaught-lexis drop` +
+    ' — hand-written extras needed:');
+  for (const [topic, n] of thin) console.log(`    ${String(n).padStart(3)}  ${topic} (was ${n + (droppedByTopic.get(topic) || 0)})`);
+}
+
 console.log('items per topic:');
 for (const [topic, n] of [...perTopic].sort()) console.log(`  ${String(n).padStart(3)}  ${topic}`);
 console.log(`→ ${target.pathname}`);
