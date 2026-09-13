@@ -41,7 +41,7 @@ export default function PretestStage({ stage, lektionId, onBack, onDone }) {
     >
       <Card className="p-5">
         <label htmlFor="pretest-answer" className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
-          Dein Satz
+          Ihr Satz
         </label>
         <textarea
           id="pretest-answer"
@@ -50,7 +50,7 @@ export default function PretestStage({ stage, lektionId, onBack, onDone }) {
           onChange={(e) => setValue(e.target.value)}
           disabled={revealed}
           className="mt-2 w-full resize-none rounded-clay border border-rule bg-white px-4 py-3 text-[1.0625rem] text-ink outline-none focus:border-siegel disabled:bg-paper-sunk"
-          placeholder="Schreib einfach, was du kannst."
+          placeholder="Schreiben Sie einfach, was Sie können."
         />
         <p className="mt-2 text-[0.8125rem] text-graphite">
           Noch nichts gelernt? Genau darum geht es. Der Versuch zählt, nicht die Note.
@@ -74,7 +74,7 @@ export default function PretestStage({ stage, lektionId, onBack, onDone }) {
           </div>
           {hit && (
             <p className="mt-3 flex items-center gap-2 text-[0.875rem] font-bold text-siegel-deep">
-              <Check className="h-4 w-4" aria-hidden="true" /> Dein Satz fängt schon richtig an.
+              <Check className="h-4 w-4" aria-hidden="true" /> Ihr Satz fängt schon richtig an.
             </p>
           )}
         </Card>

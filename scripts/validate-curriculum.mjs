@@ -154,9 +154,33 @@ export function formsOf(entry) {
  * RULE 10 ratchet — how many Wortfeld entries may still occur in NO input of their own Lektion,
  * counted across all twelve. DaF review #3 measured ≈50 of 262 before this round; the L2 Schreiben
  * rewrite, the L8 Samstag/Sonntag line and the four new L9 café lines closed the densest clusters.
- * This number may be lowered, never raised (the contract's ceiling is 30).
+ * This number may be lowered, never raised (the contract's ceiling is 30). Round 5 measured it
+ * against the BUILT pool (see loadPoolItems) and exempted the two meta entries, then closed the L3
+ * Familie and L6 Beruf clusters DaF review #4 named: 35 → 19.
  */
-export const MAX_UNCOVERED_WORTFELD = 35;
+export const MAX_UNCOVERED_WORTFELD = 19;
+
+/**
+ * RULE 12 ratchet — how many can-do lines may still name something no exercise slot of their own
+ * Lektion rehearses. DaF review #4 found two („Ich kann mit zwei festen Ausdrücken sagen, was ich
+ * gestern gemacht habe“ in L11, „Ich kann ein einfaches Formular … ausfüllen“ in L2) in the public
+ * 12×6 syllabus grid — the table a buyer reads before paying. Both are closed (the L11 pretest now
+ * asks for the Perfekt chunk, the L2 line names the Mitteilung the Lektion actually writes), and
+ * the measurement then found six more, all of the same kind — a can-do whose verb the Lektion
+ * teaches under another word: L1 begrüßen/verabschieden (the greetings are „Guten Tag“ and
+ * „Tschüss“), L2 Zahlen, L4 Gegenstand, L7 „frei haben“, L9 „höflich fragen“, L12 „gute Wünsche“.
+ * That is the honest number and the ratchet stands on it. Lower it, never raise it.
+ */
+export const MAX_UNREHEARSED_CANDOS = 6;
+
+/**
+ * RULE 13 ratchet — how many Lektionen may show a `sprechen.open` task whose prompt the speaking
+ * page never receives. `SpeakingStage.jsx` appends `&mission=` only when `missionOrder` is set, so
+ * a null mission sends the learner to the generic /speaking page with some other mission of the
+ * level. Four Lektionen (7, 10, 11, 12) are in that state; the UI agent is making the prompt itself
+ * travel with `saveCourseContext`, and when it does this ratchet goes to 0 (DaF review #4, MAJOR 4).
+ */
+export const MAX_MISSIONLESS_LEKTIONEN = 4;
 
 /**
  * RULE 11 ratchet — how many (item, token) pairs in the hand-written pool may still use a word
@@ -164,11 +188,27 @@ export const MAX_UNCOVERED_WORTFELD = 35;
  * hand-written repairs „unterliegen keiner Prüfung“; this is that check. Lower it as items are
  * rewritten, never raise it.
  */
-export const MAX_UNTAUGHT_ITEM_TOKENS = 15;
+export const MAX_UNTAUGHT_ITEM_TOKENS = 9;
 
 /** The hand-written practice items, read from disk so the validator sees what the pool build sees. */
 export function loadExtraItems() {
   const url = new URL('../src/data/lessonPools/a11.extra.json', import.meta.url);
+  try {
+    return JSON.parse(readFileSync(url, 'utf8')).items || [];
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * The BUILT pool — what the learner is actually served. RULE 10 used to count only the dialogues
+ * and the hand-written items, so words that the generated items drill („das Fenster“, „braun“)
+ * were reported as never used: „eine Ratchet-Zahl, die man nicht nachrechnen kann, ist keine
+ * Messung“ (DaF review #4). Items carry a `topic`, and a Lektion draws the topics of its
+ * `practiceRule`, so that is how an item is assigned to a Lektion here.
+ */
+export function loadPoolItems() {
+  const url = new URL('../src/data/lessonPools/a11.json', import.meta.url);
   try {
     return JSON.parse(readFileSync(url, 'utf8')).items || [];
   } catch {
@@ -191,6 +231,9 @@ const NAME_SET = new Set(DIALOG_NAMES.map((w) => w.toLowerCase()));
  * anything look covered, so they are dropped: an entry is carried by its content word or not at all.
  */
 export function coverageForms(w) {
+  // Meta entries („die Zahlen 0–10“) name a SET of words, not a word: no input can ever contain
+  // them verbatim, so counting them as debt makes a ratchet that can never be paid off.
+  if (w.meta) return new Set();
   const head = tokenise(w.word || w.de).map((t) => t.toLowerCase())
     .filter((t) => t !== String(w.article || '').toLowerCase());
   // Entries whose only content IS a function word (gern, schon, bitte, danke, hallo) can never be
@@ -203,11 +246,19 @@ export function coverageForms(w) {
 }
 
 /** RULE 10: every Wortfeld entry must occur somewhere in the input of its own Lektion. */
-export function wortfeldCoverage(c, extraItems = loadExtraItems()) {
+export function wortfeldCoverage(c, extraItems = loadExtraItems(), poolItems = loadPoolItems()) {
   const byLektion = new Map();
-  for (const it of extraItems) {
-    const nr = lektionOfItem(it.id);
-    if (nr) byLektion.set(nr, [...(byLektion.get(nr) || []), it]);
+  const add = (nr, it) => { if (nr) byLektion.set(nr, [...(byLektion.get(nr) || []), it]); };
+  for (const it of extraItems) add(lektionOfItem(it.id), it);
+  // Generated items have no Lektion in their id; they reach a Lektion through its practiceRule.
+  const byTopic = new Map();
+  for (const l of c.lektionen || []) {
+    for (const t of (l.practiceRule?.topics) || []) byTopic.set(t, [...(byTopic.get(t) || []), l.nr]);
+  }
+  for (const it of poolItems) {
+    const fromId = lektionOfItem(it.id);
+    if (fromId) { add(fromId, it); continue; }
+    for (const nr of byTopic.get(it.topic) || []) add(nr, it);
   }
   const uncovered = [];
   for (const l of c.lektionen || []) {
@@ -238,10 +289,15 @@ export function wortfeldCoverage(c, extraItems = loadExtraItems()) {
 // What is NOT lexis in a hand-written prompt: the cue in brackets, the Sie-Aufgabenformel and the
 // article+noun that names what the learner has to produce.
 const ITEM_CUE_RE = /\([^)]*\)|\[[^\]]*\]/g;
+// Only COMPLETE formulas are stripped. The bare words („richtig“, „die Frage“, „den Satz“,
+// „das Wort“, „die Zahl“) used to be stripped from every prompt, which hid content words from the
+// check: „___ Gleis vier richtig?“ passed although `richtig` is in no Wortfeld of the course.
 const ITEM_FORMULA_RE = new RegExp([
-  'Bilden Sie den Satz', 'Bilden Sie die Frage', 'Bilden Sie',
-  'Schreiben Sie', 'Korrigieren Sie', 'Ergänzen Sie', 'Wählen Sie', 'Setzen Sie', 'Finden Sie',
-  'die Frage', 'den Satz', 'das Wort', 'die Zahl', 'als Wort', 'richtig', 'normalen Wortfolge',
+  'Schreiben Sie die Frage in der normalen Wortfolge', 'Schreiben Sie die Frage richtig',
+  'Schreiben Sie die Zahl als Wort', 'Schreiben Sie das Wort', 'Schreiben Sie die Frage',
+  'Bilden Sie den Satz', 'Bilden Sie die höfliche Frage', 'Bilden Sie die Frage',
+  'Buchstabieren Sie das Wort', 'Lesen Sie die Buchstaben',
+  'Korrigieren Sie', 'Ergänzen Sie', 'Wählen Sie',
 ].join('|'), 'g');
 
 /** RULE 11: the hand-written items obey the same taught-words rule as the dialogues. */
@@ -251,6 +307,10 @@ export function itemLexis(c, extraItems = loadExtraItems()) {
   for (const l of c.lektionen || []) {
     for (const w of l.wortfeld || []) for (const f of coverageForms(w)) known.add(f);
     for (const w of l.wortfeld || []) for (const f of formsOf(w)) known.add(f);
+    // The Notice card is input the learner reads in this very Lektion, on the screen before the
+    // practice items — so a word it teaches (the letter names Zett, Ypsilon, Jot, Vau, Eszett,
+    // scharfes S in L1) counts as taught from here on (DaF review #4).
+    for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
     knownUpTo.set(l.nr, new Set(known));
   }
   const offenders = [];
@@ -272,6 +332,80 @@ export function itemLexis(c, extraItems = loadExtraItems()) {
     }
   }
   return offenders;
+}
+
+/**
+ * Words a can-do line is made OF rather than ABOUT: the „Ich kann …“ frame and the handful of
+ * verbs every Kann-Beschreibung uses („sagen“, „fragen“, „verstehen“). If they counted as content
+ * keywords, every line would match the nearest „Sagen Sie …“ prompt and RULE 12 would measure
+ * nothing. Everything else — Familie, Preis, buchstabieren, Formular — is content.
+ */
+const CANDO_STOPWORDS = new Set([
+  'kann', 'ich', 'mich', 'mir', 'meinen', 'meine', 'mein', 'meiner', 'meinem', 'meines',
+  'jemanden', 'jemandem', 'jemand', 'etwas', 'einfach', 'einfache', 'einfachen', 'einfaches',
+  'kurze', 'kurzen', 'kurzer', 'person', 'personen', 'wenige', 'einige',
+  'sagen', 'fragen', 'antworten', 'verstehen', 'machen', 'nennen', 'stellen', 'geben', 'nehmen',
+]);
+
+/** The exercise slots of a Lektion — the places where a learner PRODUCES something. */
+function rehearsalText(l, itemsOfLektion) {
+  return [
+    l.pretest?.promptDe, l.pretest?.model, ...(l.pretest?.accepted || []),
+    l.schreiben?.taskDe, l.schreiben?.sample,
+    ...(l.schreiben?.fields || []), ...(l.schreiben?.leitpunkte || []),
+    l.sprechen?.open?.promptDe, ...(l.sprechen?.open?.hintWords || []),
+    l.notice?.title, l.notice?.bodyDe, ...(l.notice?.examples || []),
+    ...itemsOfLektion.flatMap((it) => [it.questionDe, it.answer, it.explanationDe]),
+  ].filter(Boolean).join(' ');
+}
+
+/**
+ * RULE 12: every can-do line is rehearsed somewhere in its own Lektion. The 12×6 can-do grid is
+ * rendered on the public syllabus page (`astro-site/src/pages/courses/[level].astro`), so a line
+ * nothing rehearses is a promise made to a buyer before paying (DaF review #4, MAJOR 6). A line
+ * counts as rehearsed when one of its content words — stemmed with the same formsOf() that RULE 5
+ * uses — occurs in one of the Lektion's exercise slots.
+ */
+export function canDoRehearsal(c, extraItems = loadExtraItems()) {
+  const byLektion = new Map();
+  for (const it of extraItems) {
+    const nr = lektionOfItem(it.id);
+    if (nr) byLektion.set(nr, [...(byLektion.get(nr) || []), it]);
+  }
+  const offenders = [];
+  for (const l of c.lektionen || []) {
+    // Both sides are stemmed: a can-do says „wann ich arbeite“, the speaking prompt says
+    // „arbeiten?“, and neither string contains the other. formsOf() is applied to the slot tokens
+    // as well, so the two meet on the same set of forms.
+    const slots = new Set();
+    for (const t of tokenise(rehearsalText(l, byLektion.get(l.nr) || []))) {
+      const low = t.toLowerCase();
+      slots.add(low);
+      for (const f of formsOf({ de: low })) slots.add(f);
+    }
+    for (const line of l.canDo || []) {
+      const keywords = tokenise(line).map((t) => t.toLowerCase())
+        .filter((t) => !FUNCTION_SET.has(t) && !CANDO_STOPWORDS.has(t));
+      // A line whose every word is a function word („… mit hier oder da antworten“) carries no
+      // content keyword to match on; it is outside this rule rather than an offender.
+      if (!keywords.length) continue;
+      const hit = keywords.some((k) => slots.has(k) || [...formsOf({ de: k })].some((f) => slots.has(f)));
+      if (!hit) offenders.push({ nr: l.nr, line });
+    }
+  }
+  return offenders;
+}
+
+/**
+ * RULE 13: a `sprechen.open` task whose `missionOrder` is null. `SpeakingStage.jsx` appends
+ * `&mission=` only when the order is set, so those four Lektionen show a prompt and then send the
+ * learner to the generic /speaking page, which never receives it. Listed, ratcheted, and 0 once the
+ * prompt itself travels in `saveCourseContext` (DaF review #4, MAJOR 4).
+ */
+export function missionlessLektionen(c) {
+  return (c.lektionen || [])
+    .filter((l) => l.sprechen?.open && (l.sprechen.open.missionOrder === null || l.sprechen.open.missionOrder === undefined))
+    .map((l) => l.nr);
 }
 
 const words = (s) => String(s).trim().split(/\s+/).filter(Boolean);
@@ -539,6 +673,16 @@ export function validateCurriculum(c, extraItems = loadExtraItems()) {
     fail(`RULE 11: ${untaught.length} untaught tokens in hand-written items, ratchet is ${MAX_UNTAUGHT_ITEM_TOKENS} — ${untaught.map((o) => `${o.id}:${o.token}`).join(', ')}`);
   }
 
+  // ---- RULE 12 (can-dos are rehearsed) and RULE 13 (the speaking prompt travels) ---------------
+  const unrehearsed = canDoRehearsal(c, extraItems);
+  if (unrehearsed.length > MAX_UNREHEARSED_CANDOS) {
+    fail(`RULE 12: ${unrehearsed.length} can-do lines no exercise slot of their Lektion rehearses, ratchet is ${MAX_UNREHEARSED_CANDOS} — ${unrehearsed.map((u) => `L${u.nr} „${u.line}“`).join(', ')}`);
+  }
+  const missionless = missionlessLektionen(c);
+  if (missionless.length > MAX_MISSIONLESS_LEKTIONEN) {
+    fail(`RULE 13: ${missionless.length} Lektionen have a sprechen.open without missionOrder, ratchet is ${MAX_MISSIONLESS_LEKTIONEN} — ${missionless.map((nr) => `L${nr}`).join(', ')}`);
+  }
+
   return errors;
 }
 
@@ -557,6 +701,11 @@ if (isMain) {
   const untaught = itemLexis(CURRICULUM_A11);
   console.log(`  RULE 11 Item-Lexik: ${untaught.length} ungelehrte Tokens (Ratchet ${MAX_UNTAUGHT_ITEM_TOKENS})`);
   for (const o of untaught) console.log(`    ${o.id}: ${o.token}`);
+  const unrehearsed = canDoRehearsal(CURRICULUM_A11);
+  console.log(`  RULE 12 Kann-Beschreibungen ohne Übung: ${unrehearsed.length} (Ratchet ${MAX_UNREHEARSED_CANDOS})`);
+  for (const u of unrehearsed) console.log(`    L${u.nr} ${u.line}`);
+  const missionless = missionlessLektionen(CURRICULUM_A11);
+  console.log(`  RULE 13 Sprechaufträge ohne Mission: ${missionless.length} (Ratchet ${MAX_MISSIONLESS_LEKTIONEN}) — ${missionless.map((nr) => `L${nr}`).join(', ') || '—'}`);
   if (errors.length) {
     console.error(`✗ ${CURRICULUM_A11.code}: ${errors.length} problem(s)`);
     for (const e of errors) console.error('  - ' + e);

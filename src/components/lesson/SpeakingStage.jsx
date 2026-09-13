@@ -37,12 +37,19 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
     : `/speaking?level=${encodeURIComponent(level)}`;
 
   const goSpeak = () => {
+    // The task travels with the hand-off. Four A1.1 Lektionen have no
+    // `missionOrder`, so speakingHref carries no &mission=… and the coach page
+    // would otherwise show a generic mission instead of the prompt the learner
+    // just read two lines above (DaF review #4, MAJOR "missionOrder null").
     saveCourseContext({
       level,
       code: code || String(level).toUpperCase(),
       itemId: lektion.id,
       title: lektion.title,
       returnTo: `/course/${level}/l/${lektion.nr}`,
+      openPrompt: open ? open.promptDe || null : null,
+      openTeil: open ? open.teil || null : null,
+      hintWords: open && Array.isArray(open.hintWords) ? open.hintWords : [],
     });
     window.location.assign(speakingHref);
   };
@@ -80,7 +87,7 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
           </div>
           <p className="mt-3 text-[1.0625rem] font-semibold text-ink">{open.promptDe}</p>
           <p className="mt-2 text-[0.875rem] text-graphite">
-            Der Sprach-Coach hört zu und gibt dir automatisch eine Rückmeldung. Danach kommst du hierher zurück.
+            Der Sprach-Coach hört zu und gibt Ihnen automatisch eine Rückmeldung. Danach kommen Sie hierher zurück.
           </p>
           <div className="mt-4">
             <Button onClick={goSpeak} variant="secondary">

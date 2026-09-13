@@ -30,10 +30,10 @@ const MAX_ATTEMPTS = 3;
 const MAX_RECORD_MS = 8000;
 
 const FALLBACK_REASONS = {
-  no_mic: 'Dein Browser gibt kein Mikrofon frei — bestätige die Zeile selbst.',
-  signed_out: 'Zum Bewerten musst du angemeldet sein — bestätige die Zeile so lange selbst.',
-  limit: 'Du hast heute alle bewerteten Aufnahmen genutzt — bestätige die Zeile selbst.',
-  server: 'Die Bewertung antwortet gerade nicht — bestätige die Zeile selbst.',
+  no_mic: 'Ihr Browser gibt kein Mikrofon frei — bestätigen Sie die Zeile selbst.',
+  signed_out: 'Zum Bewerten müssen Sie angemeldet sein — bestätigen Sie die Zeile so lange selbst.',
+  limit: 'Sie haben heute alle bewerteten Aufnahmen genutzt — bestätigen Sie die Zeile selbst.',
+  server: 'Die Bewertung antwortet gerade nicht — bestätigen Sie die Zeile selbst.',
 };
 
 export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onResult }) {
@@ -240,7 +240,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
       </div>
 
       {phase === 'recording' && (
-        <p className="mt-2 text-xs text-graphite">Sprich den Satz — die Aufnahme stoppt nach {MAX_RECORD_MS / 1000} Sekunden von selbst.</p>
+        <p className="mt-2 text-xs text-graphite">Sprechen Sie den Satz — die Aufnahme stoppt nach {MAX_RECORD_MS / 1000} Sekunden von selbst.</p>
       )}
       {reason && <p className="mt-2 text-xs text-graphite">{FALLBACK_REASONS[reason]}</p>}
       {micError && <p className="mt-2 text-xs text-accent-himbeer-ink">{micError}</p>}

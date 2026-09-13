@@ -51,7 +51,7 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
         Schritt 4 · Hören {index + 1}/{total}
       </p>
       <Card className="mt-4 p-5 sm:p-6">
-        <p className="text-[0.9375rem] text-graphite">Hör die Zeile und schreib sie auf.</p>
+        <p className="text-[0.9375rem] text-graphite">Hören Sie die Zeile und schreiben Sie sie auf.</p>
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <button
             type="button"
@@ -65,12 +65,12 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
         </div>
         {!recorded && !speechAvailable() && (
           <p className="mt-2 text-[0.8125rem] text-graphite">
-            Dein Browser kann nicht vorlesen — hier ist die Zeile zum Abschreiben: <strong>{line.de}</strong>
+            Ihr Browser kann nicht vorlesen — hier ist die Zeile zum Abschreiben: <strong>{line.de}</strong>
           </p>
         )}
 
         <label htmlFor={itemId} className="mt-5 block font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
-          Was hörst du?
+          Was hören Sie?
         </label>
         <input
           id={itemId}

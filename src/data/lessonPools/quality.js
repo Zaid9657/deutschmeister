@@ -47,6 +47,22 @@
 //     "Wie sagt man das?"; the rule below covers the shape — no gap, no question
 //     mark, no cue list, no task formula and no quoted span to work on.
 //
+// FOURTH REVIEW (docs/course-factory/a11-rebuild/REVIEW-daf-4-2026-09-12.md)
+// found the same shape a third time, one part of speech further on:
+//
+//   * BLOCKER 2 — THE ARTICLE LIVES ONLY IN THE ENGLISH GLOSS. 42 typed items
+//     read "___ Tafel ist grün." with `questionEn: 'The blackboard is green.'`
+//     and accept `Die` alone — but "Eine Tafel ist grün." is faultless German
+//     out of the same Lektion's own Wortfeld, and `tagError` writes an Artikel
+//     (or, for the ein/eine items, a Kasus) tag into the learner's profile for
+//     a mistake never made. 30 of them want a definite article, 12 an
+//     indefinite one, and they sit in Lektionen 4, 5 and 6 — three consecutive
+//     PRIMARY series. `VERB_CUE_RE` cannot see them: it listens for `verb:`.
+//     Same treatment as BLOCKER 1 of review #3: `scripts/build-lesson-pool.mjs`
+//     REPAIRS the class first by appending the task formula to the German
+//     prompt — "___ Tafel ist grün. (bestimmter Artikel)" — and never touches
+//     `answer` or `accepted`; whatever still fails afterwards is dropped here.
+//
 // Also from review #3, but NOT a filter rule: `drillsSlug(item, slug)` below.
 // The review's systemic finding is that the `topic` marks in the pool are
 // ROUTING LABELS, not content descriptions — "≥ 4 of 7 items on the Lektion's
@@ -79,6 +95,8 @@ export const REASON = Object.freeze({
   // REVIEW #3 — the task itself is missing from the German prompt
   VERB_CUE_ONLY_IN_GLOSS: 'verb-cue-only-in-gloss',
   STATEMENT_NO_TASK: 'statement-no-task',
+  // REVIEW #4 — the article the item wants is named only in the English gloss
+  ARTICLE_CUE_ONLY_IN_GLOSS: 'article-cue-only-in-gloss',
 });
 
 /** The level whose taught-by-now rules below apply. */
@@ -230,6 +248,21 @@ const isTyped = (item) =>
   (String(item?.type || '') === 'fill_blank' && !(Array.isArray(item?.options) && item.options.length));
 
 /**
+ * REVIEW #4 BLOCKER 2. The two article sets a bare-article gap can want, and the
+ * task formula that has to stand in the German prompt for the gap to be
+ * answerable. Written as flat (ä/ae-blind, lowercase) strings because that is
+ * how the engine compares an answer.
+ */
+export const DEFINITE_ARTICLE_ANSWERS = Object.freeze(['der', 'die', 'das', 'den', 'dem']);
+export const INDEFINITE_ARTICLE_ANSWERS = Object.freeze(['ein', 'eine', 'einen']);
+
+/** The cue the repair appends, and the one shape that makes it idempotent. */
+export const ARTICLE_CUE = Object.freeze({
+  definite: '(bestimmter Artikel)',
+  indefinite: '(unbestimmter Artikel)',
+});
+
+/**
  * REVIEW #3 BLOCKER 2. The task formulas an A1.1 prompt uses. Both registers,
  * because the register normaliser in the build script turns the du-forms into
  * Sie-forms and this rule has to hold on both sides of that change.
@@ -297,6 +330,46 @@ export function verbCueOnlyInGloss(item) {
 }
 
 /**
+ * REVIEW #4 BLOCKER 2: which article family the item wants, read off the
+ * expected answers — 'definite', 'indefinite', or null when the answers are not
+ * a uniform set of bare articles. Uniform is the point: an item that accepts
+ * `Die` AND `Eine` is not asking which family, so nothing needs appending.
+ */
+export function articleAnswerKind(item) {
+  const expected = [item?.answer, ...(item?.accepted || [])]
+    .map((a) => flat(bare(a)))
+    .filter(Boolean);
+  if (!expected.length) return null;
+  if (expected.every((a) => DEFINITE_ARTICLE_ANSWERS.includes(a))) return 'definite';
+  if (expected.every((a) => INDEFINITE_ARTICLE_ANSWERS.includes(a))) return 'indefinite';
+  return null;
+}
+
+/**
+ * REVIEW #4 BLOCKER 2: a typed fill-in whose gap wants a bare article, where the
+ * German prompt says nothing about which family is meant. "___ Tafel ist grün."
+ * accepts `Die` alone while "Eine Tafel ist grün." is faultless German, so the
+ * learner is marked wrong — and `tagError` books it as an Artikel (or, for the
+ * ein/eine items, a Kasus) mistake that never happened. Only the whole task
+ * stands in `questionEn` ("The blackboard is green."), which is exactly the
+ * excuse round 3 refused to take for the verb.
+ *
+ * Narrow on purpose. A multiple-choice item is not the same trap: its chips name
+ * the family. A prompt that already carries ANY bracket — the cue the build
+ * script appends, an `(bestimmter Artikel)` a hand-written item brought along,
+ * or a lexical hint — is left alone, which is what makes the repair idempotent.
+ */
+export function articleCueOnlyInGloss(item) {
+  if (!item) return false;
+  if (String(item.type || '') !== 'fill_blank') return false;
+  if (Array.isArray(item.options) && item.options.length) return false;
+  const q = String(item.questionDe || '');
+  if (!q.includes('___')) return false;
+  if (/\([^)]*\)/.test(q) || BRACKET_LIST_RE.test(q)) return false;
+  return articleAnswerKind(item) !== null;
+}
+
+/**
  * REVIEW #3 BLOCKER 2: the German prompt is a statement and asks nothing — no
  * gap, no question mark, no cue list, no task formula, no quoted span. The one
  * item in the pool is "Anna ist deine Freundin." with the chips Sie/ihr/du,
@@ -347,6 +420,14 @@ const isOneOf = (text, allowed) => allowed.has(flat(bare(text)));
 /** One of these words stands in the string. */
 const containsOneOf = (text, allowed) => wordsFlat(text).some((w) => allowed.has(w));
 
+/**
+ * REVIEW #4 MAJOR. A definite-article CUE or a definiteness CONTRAST in the
+ * prompt: the formula the build script appends, an explicit "welcher Artikel",
+ * or the "Ist das ein Heft? — Ja, und ___ Heft ist grün." shape the Lektion-5
+ * notice actually teaches (indefinite first mention, definite second).
+ */
+const DEF_ARTICLE_CUE_RE = /bestimmter artikel|welche[rs]?\s+artikel|ist das (?:ein|eine)\b/i;
+
 const DEF_NOM = set('der', 'die', 'das');
 const DEF_ALL = set('der', 'die', 'das', 'den', 'dem');
 const INDEF = set('ein', 'eine', 'einen', 'einem', 'einer', 'kein', 'keine', 'keinen', 'keinem', 'keiner');
@@ -355,6 +436,8 @@ const SEIN = set('bin', 'bist', 'ist', 'sind', 'seid');
 const HABEN = set('habe', 'hast', 'hat', 'haben', 'habt');
 const PREFIXES = set('auf', 'an', 'ein', 'mit', 'um', 'ab', 'zu', 'aus', 'zurück', 'los', 'weg');
 const POSSESSIVE_RE = /^(mein|dein|sein|ihr|unser|euer)(e|en|em|er|es)?$/;
+/** One word of the string is a possessive form — for whole-sentence answers. */
+const containsPossessive = (text) => wordsFlat(text).some((w) => POSSESSIVE_RE.test(w));
 const TIME_WORD_RE =
   /^(um|am|im|uhr|halb|viertel|nach|vor|morgens|mittags|nachmittags|abends|montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag|eins|zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn|elf|zwoelf|zwanzig|dreissig|vierzig|fuenfzig)$/;
 const FINITE_RE = /^[a-zäöüß]+(e|st|t|en|et)$/i;
@@ -370,15 +453,27 @@ const INFINITIVE_CUE_RE = /\([^)]*[a-zäöüß]{2}en\b[^)]*\)/i;
 
 /** Predicate per slug. Each one reads what the learner produces, not the label. */
 const DRILLS = {
-  'nouns-gender': ({ expected, options, answer }) =>
+  // REVIEW #4 MAJOR: only what SHOWS the gender — a bare nominative article the
+  // learner produces, or chips that are nothing but der/die/das. The old
+  // `/^(der|die|das)\s/` clause read the FIRST WORD of any answer, so every
+  // error-correction item whose corrected sentence opens with "Das" counted:
+  // "Korrigieren Sie: „Das ist eine Tisch.“" → "Das ist ein Tisch." drills
+  // ein/eine — the slug of Lektion 6 — and was lifting Lektion 4 over the floor.
+  'nouns-gender': ({ expected, options }) =>
     expected.some((a) => isOneOf(a, DEF_NOM)) ||
-    /^(der|die|das)\s/i.test(answer) ||
     (options.length > 0 && options.every((o) => isOneOf(o, DEF_NOM))),
 
-  'definite-articles': ({ expected, options, answer }) =>
+  // The same bare-article FORM counts here, deliberately: der/die/das is what a
+  // definite-article exercise produces too, and no predicate can tell "which
+  // gender" from "which article" by looking at the string. The honest split is
+  // the routing one — `practiceRule.topics` — not a cleverer regex. What this
+  // adds over nouns-gender is the Dativ/Akkusativ forms and the contrast shape,
+  // where the answer is a whole sentence; the answer-prefix clause is gone for
+  // the same reason as above.
+  'definite-articles': ({ q, expected, options }) =>
     expected.some((a) => isOneOf(a, DEF_ALL)) ||
-    /^(der|die|das|den|dem)\s/i.test(answer) ||
-    (options.length > 0 && options.every((o) => isOneOf(o, DEF_ALL))),
+    (options.length > 0 && options.every((o) => isOneOf(o, DEF_ALL))) ||
+    (DEF_ARTICLE_CUE_RE.test(q) && expected.some((a) => containsOneOf(a, DEF_ALL))),
 
   // Also true for an error-correction item whose corrected sentence carries the
   // article: "Korrigieren Sie: „Das ist ein Schere.“" → "Das ist eine Schere."
@@ -406,8 +501,14 @@ const DRILLS = {
     (!/\s/.test(bare(answer)) && FINITE_RE.test(bare(answer)) && INFINITIVE_CUE_RE.test(q)) ||
     (options.length >= 2 && options.every((o) => FINITE_RE.test(bare(o)))),
 
+  // REVIEW #4 MAJOR, the other direction: POSSESSIVE_RE anchors on the whole
+  // string, so "Wir feiern unser Fest." — a possessive item by any reading —
+  // did not count. A multi-word answer counts when one of its words is a
+  // possessive form; a one-word answer still has to BE one, or "unser" inside
+  // a quoted prompt would carry an item that drills something else.
   'possessive-articles': ({ expected, options }) =>
     expected.some((a) => POSSESSIVE_RE.test(flat(bare(a)))) ||
+    expected.some((a) => /\s/.test(bare(a)) && containsPossessive(a)) ||
     (options.length > 0 && options.every((o) => POSSESSIVE_RE.test(flat(bare(o))))),
 
   // The Satzklammer, from either end: the learner produces the prefix ("Er macht
@@ -426,13 +527,18 @@ const DRILLS = {
     endsOnPrefix(q),
 
   // A yes/no question is the finite verb in first position, so an item drills it
-  // when the learner writes the whole question, chooses Ja/Nein, is asked for a
-  // Frage by name, or fills the verb slot AT THE FRONT of a question.
+  // when the learner writes the whole question, chooses Ja/Nein, or is asked for
+  // a Frage by name.
+  //
+  // REVIEW #4 MAJOR: the fourth clause — a gap at position 1 in front of a
+  // question mark — is gone. It counted "___ du eine Fahrkarte für morgen?
+  // (haben)" → Hast, where the INVERSION is given and only the verb form is
+  // asked; five of Lektion 10's seven drawn items were of that shape, so the
+  // slug measured 7/7 while the learner produced the word order at most twice.
   'yes-no-questions': ({ q, expected, options }) =>
     expected.some((a) => /\?\s*$/.test(String(a).trim())) ||
     options.some((o) => isOneOf(o, set('ja', 'nein'))) ||
-    /(bilden sie|bilde|schreiben sie|schreib)\s+(sie\s+)?(die\s+)?(höfliche\s+|richtige\s+)?frage/i.test(q) ||
-    (/^\s*_{2,}/.test(q) && /\?/.test(q)),
+    /(bilden sie|bilde|schreiben sie|schreib)\s+(sie\s+)?(die\s+)?(höfliche\s+|richtige\s+)?frage/i.test(q),
 
   'time-and-dates': ({ expected }) =>
     expected.some((a) => /uhr/i.test(String(a)) || wordsFlat(a).some((w) => TIME_WORD_RE.test(w))),
@@ -488,6 +594,10 @@ export function exclusionReason(item, { level } = {}) {
   // suites pin to a reason keep the reason they were pinned with.
   if (verbCueOnlyInGloss(item)) return REASON.VERB_CUE_ONLY_IN_GLOSS;
   if (statementNoTask(item)) return REASON.STATEMENT_NO_TASK;
+
+  // REVIEW #4, last for the same reason: an id already pinned to an older
+  // reason keeps it.
+  if (articleCueOnlyInGloss(item)) return REASON.ARTICLE_CUE_ONLY_IN_GLOSS;
 
   return null;
 }

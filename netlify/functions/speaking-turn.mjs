@@ -3,6 +3,7 @@ import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs
 import {
   AIError,
   buildTeacherSystemPrompt,
+  taskFromSession,
   transcribeAudio,
   teacherReply,
   synthesizeSpeech,
@@ -65,7 +66,7 @@ export const handler = async (event) => {
     // 1. The session must exist, belong to the caller, and be active.
     const { data: session, error: sessionError } = await supabase
       .from('speaking_sessions')
-      .select('level, mission_id, mode, status, started_at, planned_minutes')
+      .select('level, mission_id, mode, status, started_at, planned_minutes, topic, scenario')
       .eq('session_token', sessionToken)
       .eq('user_id', user_id)
       .maybeSingle();
@@ -102,6 +103,11 @@ export const handler = async (event) => {
       mission = missionRow || null;
     }
 
+    // No mission row, but the session was started from a course Lektion: the
+    // task was persisted in `topic`/`scenario` at start, so rebuild it here and
+    // every turn stays on the task the lesson promised.
+    const courseTask = (!isPlacement && !mission) ? taskFromSession(session) : null;
+
     // 3. Cascade: STT → teacher (Haiku) → TTS. Provider failures surface as
     //    structured errors, never a silent 500.
     let userTranscript = '';
@@ -112,7 +118,7 @@ export const handler = async (event) => {
     try {
       userTranscript = await transcribeAudio({ audioBase64, mimeType });
 
-      const system = buildTeacherSystemPrompt({ level, mission, isPlacement });
+      const system = buildTeacherSystemPrompt({ level, mission, isPlacement, courseTask });
       // An unintelligible turn still gets a gentle nudge to repeat.
       const userText = userTranscript || '(Der Schüler hat nichts Verständliches gesagt — bitte freundlich um Wiederholung.)';
       replyText = await teacherReply({

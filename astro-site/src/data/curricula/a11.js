@@ -92,6 +92,10 @@ export const FUNCTION_WORDS = [
 export const DIALOG_NAMES = [
   'Ana', 'Tim', 'Lena', 'Paul', 'Herr', 'Frau', 'Weber', 'Kaya', 'Wolf', 'Schmidt', 'Berg',
   'Chakiri', 'Brandt', 'Berger', 'Bremen', 'Thomas',
+  // Place names a dialogue line or a practice item may use. A city is a proper noun, not lexis the
+  // course has to teach first — but it must be listed here, or RULE 11 reports it as an untaught
+  // word (DaF review #4, „wortfeldCoverage()/itemLexis()“).
+  'Berlin', 'Köln', 'Deutschland', 'Österreich', 'Italien', 'Polen', 'Spanien',
 ];
 
 export const CURRICULUM_A11 = {
@@ -172,7 +176,7 @@ export const CURRICULUM_A11 = {
       },
       notice: {
         title: 'Das Alphabet: buchstabieren',
-        bodyDe: 'Beim Buchstabieren sagst du jeden Buchstaben einzeln. Vorsicht bei drei Paaren: **E** [eː] und **I** [iː], **G** [geː] und **J** [jɔt], **V** [faʊ] und **W** [veː]. **Y** heißt *Ypsilon*, **ß** heißt *Eszett* oder *scharfes S*. Frag im Zweifel: **Wie buchstabiert man das?**',
+        bodyDe: 'Beim Buchstabieren sagt man jeden Buchstaben einzeln. Vorsicht bei drei Paaren: **E** [eː] und **I** [iː], **G** [geː] und **J** (Jot), **V** (Vau) und **W** [veː]. **Y** heißt Ypsilon, **Z** heißt Zett, **ß** heißt Eszett oder scharfes S. Im Zweifel fragt man: **Wie buchstabiert man das?**',
         examples: ['Buchstabieren Sie bitte Chakiri.', 'Danke. Und wie buchstabiert man Ana?'],
         ruleSlug: 'alphabet-pronunciation',
       },
@@ -214,7 +218,7 @@ export const CURRICULUM_A11 = {
         'Ich kann nach dem Beruf einer Person fragen.',
         'Ich kann Zahlen von null bis zehn verstehen und sagen.',
         'Ich kann meine Telefonnummer und meine Adresse nennen.',
-        'Ich kann ein einfaches Formular mit meinen Daten ausfüllen.',
+        'Ich kann in einer kurzen Nachricht Angaben zu meiner Person machen.',
       ],
       examTeile: ['Sprechen Teil 1', 'Lesen Teil 1', 'Schreiben Teil 2'],
       grammarSlugs: ['verb-sein', 'alphabet-pronunciation'],
@@ -238,7 +242,7 @@ export const CURRICULUM_A11 = {
         { de: 'die Lehrerin', word: 'Lehrerin', article: 'die', plural: 'Lehrerinnen', en: 'teacher (f)', wordId: '1e7ad6c2-37b5-4063-971c-4b2090cafa9e' },
         // The digits 0–10 are ONE Wortfeld entry, not ten (DaF review: ten of 25 slots were digits,
         // which inflated the word count and crowded out the Personalien lexis the Handlungsfeld needs).
-        { de: 'die Zahlen 0–10', word: 'Zahlen 0–10', article: 'die', plural: '—', en: 'the numbers 0–10 (null, eins … zehn)', wordId: '1087cf2f-d531-45d9-b04c-803440a7563a' },
+        { de: 'die Zahlen 0–10', word: 'Zahlen 0–10', article: 'die', plural: '—', en: 'the numbers 0–10 (null, eins … zehn)', meta: true, wordId: '1087cf2f-d531-45d9-b04c-803440a7563a' },
         { de: 'wohnen', word: 'wohnen', article: null, plural: null, en: 'to live, to reside', wordId: 'fb025b05-6aa5-4a9e-91a2-52a903032000' },
         { de: 'das Geburtsdatum', word: 'Geburtsdatum', article: 'das', plural: 'Geburtsdaten', en: 'date of birth', wordId: '4b61db71-3720-4bf4-a936-d75495ebf91a' },
         { de: 'die Staatsangehörigkeit', word: 'Staatsangehörigkeit', article: 'die', plural: 'Staatsangehörigkeiten', en: 'nationality', wordId: '25aca43e-8b73-4f68-8d8f-aaf629150fb4' },
@@ -354,15 +358,15 @@ export const CURRICULUM_A11 = {
         setting: 'Lena sieht ein Foto auf Anas Handy.',
         lines: [
           { speaker: 'Lena', de: 'Ana, ist das deine Familie?', en: 'Ana, is that your family?' },
-          { speaker: 'Ana', de: 'Ja. Das sind meine Eltern, mein Bruder und meine Schwester.', en: 'Yes. Those are my parents, my brother and my sister.' },
+          { speaker: 'Ana', de: 'Ja. Das sind meine Eltern und meine Geschwister: ein Bruder, eine Schwester.', en: 'Yes. Those are my parents and my siblings: a brother, a sister.' },
           { speaker: 'Lena', de: 'Wie alt ist er?', en: 'How old is he?' },
           { speaker: 'Ana', de: 'Er ist zwanzig. Meine Schwester ist noch jung.', en: 'He is twenty. My sister is still young.' },
           { speaker: 'Lena', de: 'Welche Sprachen sprechen deine Eltern?', en: 'Which languages do your parents speak?' },
           { speaker: 'Ana', de: 'Sie sprechen Arabisch und Deutsch.', en: 'They speak Arabic and German.' },
           { speaker: 'Lena', de: 'Spricht dein Bruder auch Englisch?', en: 'Does your brother speak English too?' },
           { speaker: 'Ana', de: 'Ja, er spricht Englisch und Deutsch.', en: 'Yes, he speaks English and German.' },
-          { speaker: 'Lena', de: 'Woher kommt ihr?', en: 'Where are you (all) from?' },
-          { speaker: 'Ana', de: 'Wir kommen aus Marokko.', en: 'We come from Morocco.' },
+          { speaker: 'Lena', de: 'Und dein Bruder? Hat er einen Sohn oder eine Tochter?', en: 'And your brother? Does he have a son or a daughter?' },
+          { speaker: 'Ana', de: 'Ja, ein Baby. Mein Mann und ich kommen aus Marokko.', en: 'Yes, a baby. My husband and I come from Morocco.' },
         ],
       },
       pretest: {
@@ -383,8 +387,8 @@ export const CURRICULUM_A11 = {
         readAloud: [1, 6],
         open: {
           teil: 'Sprechen Teil 2',
-          promptDe: 'Fragen Sie und antworten Sie zum Thema Familie: Bruder? Schwester? Kinder?',
-          hintWords: ['Bruder', 'Schwester', 'sprechen'],
+          promptDe: 'Fragen und antworten Sie zum Thema Familie: Geschwister? Sohn? Tochter?',
+          hintWords: ['die Geschwister', 'der Sohn', 'die Tochter'],
           missionOrder: 5,
         },
       },
@@ -428,7 +432,7 @@ export const CURRICULUM_A11 = {
         // (the dialogue says acht, zwölf, fünfzehn, zwanzig, dreißig — all FUNCTION_WORDS anyway).
         // They are ONE entry now, exactly like L2's Zahlen 0–10, and the freed slots carry the
         // Flohmarkt lexis the situation actually needs (DaF review #2, L4).
-        { de: 'die Zahlen 11–100', word: 'Zahlen 11–100', article: 'die', plural: '—', en: 'the numbers 11–100 (elf, zwölf … hundert)', wordId: '112eb634-135f-4372-a74a-c60da86d1423' },
+        { de: 'die Zahlen 11–100', word: 'Zahlen 11–100', article: 'die', plural: '—', en: 'the numbers 11–100 (elf, zwölf … hundert)', meta: true, wordId: '112eb634-135f-4372-a74a-c60da86d1423' },
         { de: 'wie viel', word: 'wie viel', article: null, plural: null, en: 'how much', wordId: '80e786f9-8a29-45bd-862b-a498bc184c69' },
         { de: 'wie viele', word: 'wie viele', article: null, plural: null, en: 'how many', wordId: 'c4fad330-3515-46b0-ad99-aa883e0ea764' },
         { de: 'der Flohmarkt', word: 'Flohmarkt', article: 'der', plural: 'Flohmärkte', en: 'flea market', wordId: '245c8937-50c0-491e-a297-5008748e085d' },
@@ -468,7 +472,7 @@ export const CURRICULUM_A11 = {
       },
       notice: {
         title: 'Jedes Nomen hat ein Genus',
-        bodyDe: 'Jedes Nomen hat ein Genus: **der** Tisch, **die** Lampe, **das** Regal. Das Genus ist Teil des Wortes — lerne es immer mit: nicht Tisch, sondern der Tisch. Im Plural haben alle Nomen **die**. Nach **kaufen** wird **der** zu **den**: Ich kaufe **den** Stuhl. Das ist hier ein fester Ausdruck; die Regel (Akkusativ) kommt in A1.2.',
+        bodyDe: 'Jedes Nomen hat ein Genus: **der** Tisch, **die** Lampe, **das** Regal. Das Genus ist Teil des Wortes — lernen Sie jedes Nomen mit dem Artikel: nicht Tisch, sondern der Tisch. Im Plural haben alle Nomen **die**. Nach **kaufen** wird **der** zu **den**: Ich kaufe **den** Stuhl. Das ist hier ein fester Ausdruck; die Regel (Akkusativ) kommt in A1.2.',
         examples: ['Das ist eine Lampe. Sie kostet acht Euro.', 'Der Tisch kostet fünfzehn Euro.'],
         ruleSlug: 'nouns-gender',
       },
@@ -488,7 +492,7 @@ export const CURRICULUM_A11 = {
         sample: 'Hallo Lena! Ich kaufe einen Stuhl. Er kostet zwölf Euro. Kommst du mit? Tschüss, Tim',
       },
       links: { listeningExercise: 1, readingOrder: 4 },
-      practiceRule: { topics: ['nouns-gender', 'personal-pronouns'], typedMin: 3 },
+      practiceRule: { topics: ['nouns-gender'], typedMin: 3 },
     },
     {
       nr: 5,
@@ -556,7 +560,7 @@ export const CURRICULUM_A11 = {
       pretest: { promptDe: 'Fragen Sie, wo das Buch ist.', promptEn: 'Ask where the book is.', model: 'Wo ist das Buch?', accepted: ['Wo ist', 'Wo sind'] },
       notice: {
         title: 'der, die, das – der bestimmte Artikel',
-        bodyDe: 'Der bestimmte Artikel zeigt: Wir wissen, welche Sache gemeint ist. **der** (maskulin), **die** (feminin), **das** (neutral), im Plural immer **die**: die Bücher. Antworten kannst du zuerst mit **hier** und **da**. Sätze wie *auf dem Tisch* (Dativ) lernst du in A1.2.',
+        bodyDe: 'Der bestimmte Artikel zeigt: Wir wissen, welche Sache gemeint ist. **der** (maskulin), **die** (feminin), **das** (neutral), im Plural immer **die**: die Bücher. Antworten beginnen zuerst mit **hier** oder **da**. Sätze wie *auf dem Tisch* (Dativ) folgen in A1.2.',
         examples: ['Das Wörterbuch ist hier. Der Stift ist da.', 'Die Schere ist hier. Das Lineal auch.'],
         ruleSlug: 'definite-articles',
       },
@@ -631,7 +635,7 @@ export const CURRICULUM_A11 = {
           { speaker: 'Ana', de: 'Guten Morgen, Herr Weber!', en: 'Good morning, Mr Weber!' },
           { speaker: 'Herr Weber', de: 'Guten Morgen, Ana. Das ist Ihr Büro.', en: 'Good morning, Ana. This is your office.' },
           { speaker: 'Ana', de: 'Danke. Ich brauche einen Computer und ein Telefon.', en: 'Thank you. I need a computer and a telephone.' },
-          { speaker: 'Herr Weber', de: 'Im Büro sind ein Computer und ein Telefon.', en: 'There is a computer and a telephone in the office.' },
+          { speaker: 'Herr Weber', de: 'Hier sind ein Computer und ein Telefon. Ihr Kollege ist Ingenieur.', en: 'Here are a computer and a telephone. Your colleague is an engineer.' },
           { speaker: 'Ana', de: 'Und ein Handy?', en: 'And a mobile phone?' },
           { speaker: 'Herr Weber', de: 'Wir haben kein Handy.', en: 'We do not have a mobile phone.' },
           { speaker: 'Ana', de: 'Und wie ist die Telefonnummer?', en: 'And what is the telephone number?' },
@@ -648,7 +652,7 @@ export const CURRICULUM_A11 = {
       },
       notice: {
         title: 'ein, eine – der unbestimmte Artikel',
-        bodyDe: 'Neu oder unbekannt? Dann **ein** (der/das) oder **eine** (die): ein Computer, eine Lampe. Nach Verben wie **brauchen**, **haben**, **kaufen** wird maskulin **ein → einen**: Ich brauche **einen** Computer (Akkusativ — die Regel kommt in A1.2). Verneinung mit **kein**: Wir haben **kein** Handy. Die Uhrzeit **um eins** lernst du in Lektion 8.',
+        bodyDe: 'Neu oder unbekannt? Dann **ein** (der/das) oder **eine** (die): ein Computer, eine Lampe. Nach Verben wie **brauchen**, **haben**, **kaufen** wird maskulin **ein → einen**: Ich brauche **einen** Computer (Akkusativ — die Regel kommt in A1.2). Verneinung mit **kein**: Wir haben **kein** Handy. Die Uhrzeit **um eins** folgt in Lektion 8.',
         examples: ['Danke. Ich brauche einen Computer und ein Telefon.', 'Wir haben kein Handy.'],
         ruleSlug: 'indefinite-articles',
       },
@@ -660,8 +664,8 @@ export const CURRICULUM_A11 = {
         readAloud: [2, 6],
         open: {
           teil: 'Sprechen Teil 2',
-          promptDe: 'Fragen und antworten Sie zum Thema Arbeit: Büro? Kollegin? Pause?',
-          hintWords: ['brauchen', 'die Pause', 'die Nummer'],
+          promptDe: 'Fragen und antworten Sie zum Thema Arbeit: Büro? Beruf? Pause?',
+          hintWords: ['der Verkäufer', 'die Ingenieurin', 'die Pause'],
           missionOrder: 4,
         },
       },
@@ -967,7 +971,7 @@ export const CURRICULUM_A11 = {
       },
       notice: {
         title: 'haben und der Chunk „Ich möchte …“',
-        bodyDe: '**haben**: ich habe, du hast, er/sie/es hat, wir haben, ihr habt, sie/Sie haben. Mit haben sagst du Hunger, Durst oder Zeit. **Ich möchte …** lernst du hier als festen Chunk; die Form gehört zu den Modalverben in A1.2.',
+        bodyDe: '**haben**: ich **habe**, du **hast**, er/sie/es **hat**, wir **haben**, ihr **habt**, sie/Sie **haben**. Mit haben sagt man Hunger, Durst oder Zeit. **Ich möchte …** steht hier als fester Chunk; die Form gehört zu den Modalverben in A1.2.',
         examples: ['Haben Sie auch Hunger? Wir haben Suppe, Salat und Kuchen.', 'Ja, ich habe Hunger. Ich möchte Kuchen, bitte.'],
         ruleSlug: 'verb-haben',
       },
@@ -1066,7 +1070,7 @@ export const CURRICULUM_A11 = {
       },
       notice: {
         title: 'Ja/Nein-Fragen: das Verb steht vorn',
-        bodyDe: 'Bei der Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → **Fährt** der Zug? Die Antwort ist **ja** oder **nein**. Die Satzmelodie steigt am Ende. **fahren** ist unregelmäßig: du fährst, er fährt.',
+        bodyDe: 'Bei der Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → **Fährt** der Zug? Die Antwort ist **ja** oder **nein**. Die Satzmelodie steigt am Ende. **fahren** ist unregelmäßig: du **fährst**, er **fährt**.',
         examples: ['Entschuldigung, fährt der Zug nach Österreich?', 'Kostet die Fahrkarte zwanzig Euro?'],
         ruleSlug: 'yes-no-questions',
       },
@@ -1160,10 +1164,10 @@ export const CURRICULUM_A11 = {
           { speaker: 'Tim', de: 'Ich schlafe am Sonntag bis neun. Mein Bruder schläft auch.', en: 'On Sunday I sleep until nine. My brother sleeps in too.' },
         ],
       },
-      pretest: { promptDe: 'Sagen Sie, wann Sie aufstehen.', promptEn: 'Say when you get up.', model: 'Ich stehe um sechs Uhr auf.', accepted: ['Ich stehe um', 'Ich wache um'] },
+      pretest: { promptDe: 'Sagen Sie, was Sie gestern gemacht haben.', promptEn: 'Say what you did yesterday.', model: 'Ich habe gearbeitet.', accepted: ['Ich habe', 'Gestern habe ich'] },
       notice: {
         title: 'Trennbare Verben: die Satzklammer',
-        bodyDe: 'Trennbare Verben teilen sich: ein|kaufen → Ich **kaufe** am Freitag **ein**. Das Verb steht auf Position 2, die Vorsilbe am Ende. So auch auf|stehen, an|rufen, mit|bringen. **Ich rufe dich an**: mich/dich lernst du als Wendung. **schlafen** wechselt den Vokal: er **schläft**. **Gemacht** und **gearbeitet** lernst du als Ganzes — das Muster dahinter (Perfekt) kommt in A1.2.',
+        bodyDe: 'Trennbare Verben teilen sich: ein|kaufen → Ich **kaufe** am Freitag **ein**. Das Verb steht auf Position 2, die Vorsilbe am Ende. So auch auf|stehen, an|rufen, mit|bringen. **Ich rufe dich an** ist eine feste Wendung. **schlafen** wechselt den Vokal: er **schläft**. **Gemacht** und **gearbeitet** stehen hier als Ganzes — das Muster (Perfekt) kommt in A1.2.',
         examples: ['Ich stehe um sechs auf. Ich bin müde.', 'Ja, ich kaufe am Freitag ein. Kommst du mit?'],
         ruleSlug: 'separable-verbs-intro',
       },

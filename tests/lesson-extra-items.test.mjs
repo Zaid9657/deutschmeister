@@ -40,7 +40,7 @@ const target = (item) => {
 };
 
 test('every extra item is addressed to one of the four Lektionen, with a unique id', () => {
-  assert.ok(EXTRA.length >= 52, `only ${EXTRA.length} extra items`);
+  assert.ok(EXTRA.length >= 116, `only ${EXTRA.length} extra items`);
   assert.equal(new Set(EXTRA.map((i) => i.id)).size, EXTRA.length, 'duplicate id');
   for (const item of EXTRA) {
     assert.ok(target(item), `${item.id} does not name a Lektion`);
@@ -82,6 +82,14 @@ test('every extra item has the Lektion topic, the pool shape and typed productio
     assert.ok(item.questionDe && item.questionEn, `${item.id} misses a prompt`);
     assert.ok(item.answer && Array.isArray(item.accepted) && item.accepted.includes(item.answer), `${item.id} answer/accepted`);
     assert.ok(item.explanationDe, `${item.id} has no explanation`);
+    // REVIEW #4 BLOCKER 3. The one optional field: an item whose TASK is the
+    // capitalisation (the höfliche „Ihr“) carries `caseSensitive: true`, and
+    // `check.js` then refuses the lowercase form its own explanation forbids.
+    if ('caseSensitive' in item) {
+      assert.equal(typeof item.caseSensitive, 'boolean', `${item.id}: caseSensitive must be a boolean`);
+      assert.ok(item.accepted.every((a) => a === item.answer || a !== String(a).toLowerCase()),
+        `${item.id} is caseSensitive but still accepts a lowercase variant`);
+    }
     const words = item.explanationDe.trim().split(/\s+/).length;
     assert.ok(words <= 15, `${item.id} explanation is ${words} words`);
     // German only where the engine shows German: the prompt and the answer.
@@ -142,70 +150,117 @@ test('THE DRAW — the four Lektionen now practise their own situation', () => {
  * the integrator reconciles the two, and until then this file is the one that
  * measures the hand-authored batch.
  */
-const bareWords = (text) =>
-  String(text || '').replace(/[.,!?;:"“”„'’]/g, ' ').trim().toLowerCase().split(/\s+/).filter(Boolean);
+/** ä/ae-blind lowercase and punctuation-free, the way the pool compares answers. */
+const flat = (text) =>
+  String(text || '').toLowerCase()
+    .replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss');
+const bare = (text) => String(text || '').replace(/[.,!?;:"“”„'’]/g, '').trim();
+const wordsFlat = (text) => flat(text).split(/[^a-z0-9]+/).filter(Boolean);
+const set = (...list) => new Set(list.map((w) => flat(w)));
+/** The whole string is one of these words (punctuation and case ignored). */
+const isOneOf = (text, allowed) => allowed.has(flat(bare(text)));
+/** One of these words stands in the string. */
+const containsOneOf = (text, allowed) => wordsFlat(text).some((w) => allowed.has(w));
 
-/** The parts of a prompt that may carry a cue: (…), […] and „…“. */
-const cueText = (item) =>
-  (String(item.questionDe || '').match(/\(([^)]*)\)|\[([^\]]*)\]|„([^“]*)“/g) || []).join(' ');
+const DEF_NOM = set('der', 'die', 'das');
+const DEF_ALL = set('der', 'die', 'das', 'den', 'dem');
+const INDEF = set('ein', 'eine', 'einen', 'einem', 'einer', 'kein', 'keine', 'keinen', 'keinem', 'keiner');
+const PRONOUNS = set('ich', 'du', 'er', 'sie', 'es', 'wir', 'ihr');
+const SEIN = set('bin', 'bist', 'ist', 'sind', 'seid');
+const HABEN = set('habe', 'hast', 'hat', 'haben', 'habt');
+const PREFIXES = set('auf', 'an', 'ein', 'mit', 'um', 'ab', 'zu', 'aus', 'zurück', 'los', 'weg');
+const POSSESSIVE_RE = /^(mein|dein|sein|ihr|unser|euer)(e|en|em|er|es)?$/;
+const containsPossessive = (text) => wordsFlat(text).some((w) => POSSESSIVE_RE.test(w));
+const TIME_WORD_RE =
+  /^(um|am|im|uhr|halb|viertel|nach|vor|morgens|mittags|nachmittags|abends|montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag|eins|zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn|elf|zwoelf|zwanzig|dreissig|vierzig|fuenfzig)$/;
+const FINITE_RE = /^[a-zäöüß]+(e|st|t|en|et)$/i;
+/** "(arbeiten)", "(aufstehen, nur die Vorsilbe)" — an infinitive cue in the prompt. */
+const INFINITIVE_CUE_RE = /\([^)]*[a-zäöüß]{2}en\b[^)]*\)/i;
+/** The cue that makes a whole-sentence answer a definite-article task. */
+const DEF_ARTICLE_CUE_RE = /bestimmter artikel|welche[rs]?\s+artikel|ist das (?:ein|eine)\b/i;
+/** The prompt's last word before the final punctuation is a separable prefix. */
+const endsOnPrefix = (q) => {
+  const toks = wordsFlat(String(q).replace(/\([^)]*\)\s*$/, ''));
+  const tail = toks[toks.length - 1];
+  return Boolean(tail) && PREFIXES.has(tail);
+};
 
-/** The prompt without its trailing infinitive cue: "___ du …? (haben)" → "___ du …?". */
-const withoutCue = (text) => String(text || '').replace(/\s*\([^)]*\)\s*$/, '').trim();
+const DRILLS = {
+  // REVIEW #4 MAJOR: only what SHOWS the gender — a bare nominative article the
+  // learner produces, or chips that are nothing but der/die/das. The old
+  // answer-prefix clause counted every correction whose sentence opens with
+  // "Das", which is how `extra-a11-l04-07` — an ein/eine item — used to lift
+  // Lektion 4 over the floor.
+  'nouns-gender': ({ expected, options }) =>
+    expected.some((a) => isOneOf(a, DEF_NOM)) ||
+    (options.length > 0 && options.every((o) => isOneOf(o, DEF_NOM))),
 
-const ANY = (list) => (words) => words.some((w) => list.includes(w));
-const DEFINITE = ['der', 'die', 'das', 'den', 'dem'];
-const INDEFINITE = ['ein', 'eine', 'einen', 'kein', 'keine'];
-const PRONOUNS = ['ich', 'du', 'er', 'sie', 'es', 'wir', 'ihr'];
-const SEIN = ['bin', 'bist', 'ist', 'sind', 'seid'];
-const HABEN = ['habe', 'hast', 'hat', 'haben', 'habt'];
-const PREFIXES = ['auf', 'an', 'ein', 'mit', 'um', 'ab', 'zu', 'aus', 'zurück'];
-const DAYS = ['montag', 'dienstag', 'mittwoch', 'donnerstag', 'freitag', 'samstag', 'sonntag'];
-const NUMBERS = /^(null|eins?|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf|.*zehn|.*zig|.*ßig)$/;
-const SPELLED_OUT = /^[A-Za-zÄÖÜäöüß](-[A-Za-zÄÖÜäöüß])+$/;
-const LETTER_NAMES = ['zett', 'ypsilon', 'eszett', 'scharfes s', 'vau', 'jot', 'ix', 'qu'];
+  'definite-articles': ({ q, expected, options }) =>
+    expected.some((a) => isOneOf(a, DEF_ALL)) ||
+    (options.length > 0 && options.every((o) => isOneOf(o, DEF_ALL))) ||
+    (DEF_ARTICLE_CUE_RE.test(q) && expected.some((a) => containsOneOf(a, DEF_ALL))),
+
+  'indefinite-articles': ({ expected, options }) =>
+    expected.some((a) => isOneOf(a, INDEF) || containsOneOf(a, INDEF)) ||
+    (options.length > 0 && options.every((o) => isOneOf(o, INDEF))),
+
+  'personal-pronouns': ({ expected, options }) =>
+    expected.some((a) => isOneOf(a, PRONOUNS)) ||
+    (options.length > 0 && options.every((o) => isOneOf(o, PRONOUNS))),
+
+  'verb-sein': ({ expected, options }) =>
+    expected.some((a) => isOneOf(a, SEIN) || containsOneOf(a, SEIN)) ||
+    (options.length > 0 && options.every((o) => isOneOf(o, SEIN))),
+
+  'verb-haben': ({ expected, options }) =>
+    expected.some((a) => isOneOf(a, HABEN) || containsOneOf(a, HABEN)) ||
+    (options.length > 0 && options.every((o) => isOneOf(o, HABEN))),
+
+  'alphabet-pronunciation': ({ q }) => /Buchstab|Schreibweise/i.test(q),
+
+  'present-tense-regular': ({ q, answer, options }) =>
+    (!/\s/.test(bare(answer)) && FINITE_RE.test(bare(answer)) && INFINITIVE_CUE_RE.test(q)) ||
+    (options.length >= 2 && options.every((o) => FINITE_RE.test(bare(o)))),
+
+  // REVIEW #4 MAJOR, the other direction: a whole-sentence answer counts when
+  // one of its words is a possessive ("Wir feiern unser Fest."), a one-word
+  // answer still has to BE one.
+  'possessive-articles': ({ expected, options }) =>
+    expected.some((a) => POSSESSIVE_RE.test(flat(bare(a)))) ||
+    expected.some((a) => /\s/.test(bare(a)) && containsPossessive(a)) ||
+    (options.length > 0 && options.every((o) => POSSESSIVE_RE.test(flat(bare(o))))),
+
+  'separable-verbs-intro': ({ q, expected }) =>
+    expected.some((a) => {
+      const plain = bare(a);
+      if (isOneOf(plain, PREFIXES)) return true;
+      const tail = wordsFlat(plain).slice(-1)[0];
+      return Boolean(tail) && /\s/.test(plain) && PREFIXES.has(tail);
+    }) ||
+    endsOnPrefix(q),
+
+  // REVIEW #4 MAJOR: the gap-at-position-1 clause is GONE. "___ du eine
+  // Fahrkarte für morgen? (haben)" gives the inversion away and asks only for a
+  // verb form; five of Lektion 10's seven drawn items were that shape, so the
+  // slug measured 7/7 while the learner produced the word order twice. What
+  // counts now: the learner writes the whole question, or chooses Ja/Nein.
+  'yes-no-questions': ({ q, expected, options }) =>
+    expected.some((a) => /\?\s*$/.test(String(a).trim())) ||
+    options.some((o) => isOneOf(o, set('ja', 'nein'))) ||
+    /(bilden sie|bilde|schreiben sie|schreib)\s+(sie\s+)?(die\s+)?(höfliche\s+|richtige\s+)?frage/i.test(q),
+
+  'time-and-dates': ({ expected }) =>
+    expected.some((a) => /uhr/i.test(String(a)) || wordsFlat(a).some((w) => TIME_WORD_RE.test(w))),
+};
 
 export function drillsSlug(item, slug) {
+  const rule = DRILLS[String(slug || '')];
+  if (!rule) return true;
+  if (!item) return false;
   const answer = String(item.answer || '');
-  const words = bareWords(answer);
-  const last = words[words.length - 1] || '';
-  switch (slug) {
-    case 'nouns-gender':
-      // the article the learner has to choose — in the answer, or, for an error
-      // correction, in the wrong sentence the prompt quotes
-      return ANY([...DEFINITE, ...INDEFINITE])(words)
-        || (item.type === 'error_correction' && ANY([...DEFINITE, ...INDEFINITE])(bareWords(item.questionDe)));
-    case 'definite-articles':
-      return ANY(DEFINITE)(words)
-        || (item.type === 'error_correction' && ANY(DEFINITE)(bareWords(item.questionDe)));
-    case 'indefinite-articles':
-      return ANY(INDEFINITE)(words)
-        || (item.type === 'error_correction' && ANY(INDEFINITE)(bareWords(item.questionDe)));
-    case 'personal-pronouns':
-      return PRONOUNS.includes(words[0] || '');
-    case 'possessive-articles':
-      return words.some((w) => /^(mein|dein|sein|ihr|unser|euer|eur)(e|en|em|er|es)?$/.test(w));
-    case 'verb-sein':
-      return ANY(SEIN)(words);
-    case 'verb-haben':
-      return ANY(HABEN)(words);
-    case 'present-tense-regular':
-      // a conjugated verb whose infinitive the GERMAN prompt names (R1)
-      return /[a-zäöüß]{3,}(en|ern|eln)\b/.test(cueText(item)) && words.length > 0;
-    case 'separable-verbs-intro':
-      return PREFIXES.includes(answer.trim().toLowerCase()) || PREFIXES.includes(last);
-    case 'yes-no-questions':
-      // the answer is a question, or the gap the learner fills is the verb on
-      // position 1 of one
-      return /\?$/.test(answer.trim()) || ['ja', 'nein'].includes(last)
-        || (/^_{3}/.test(item.questionDe.trim()) && /\?$/.test(withoutCue(item.questionDe)));
-    case 'time-and-dates':
-      return words.some((w) => ['um', 'am', 'im', 'uhr', 'halb', 'viertel', 'nach', 'vor'].includes(w)
-        || DAYS.includes(w) || NUMBERS.test(w));
-    case 'alphabet-pronunciation':
-      return SPELLED_OUT.test(answer.trim()) || LETTER_NAMES.includes(answer.trim().toLowerCase());
-    default:
-      return false;
-  }
+  const expected = [answer, ...(item.accepted || [])].filter((a) => String(a).trim());
+  const options = (item.options || []).filter((o) => String(o).trim());
+  return Boolean(rule({ q: String(item.questionDe || ''), answer, expected, options }));
 }
 
 test('R4 — each Lektion drills its own grammar point, measured on the answer', () => {
@@ -229,9 +284,10 @@ test('R4 — each Lektion drills its own grammar point, measured on the answer',
   }
   console.log(`\n${lines.join('\n')}\n`);
   // A floor on the batch as a whole, deliberately well under the measured value
-  // (111/116 here, 92/116 with the stricter predicate landing in quality.js):
-  // the per-Lektion floor above is the guarantee, this one catches a wholesale
-  // drift of the batch away from its own grammar points.
+  // (the predicate above is the tightened one of REVIEW #4, so the number is
+  // lower than the 111/116 the loose one reported): the per-Lektion floor above
+  // is the guarantee, this one catches a wholesale drift of the batch away from
+  // its own grammar points.
   assert.ok(drilled * 10 >= EXTRA.length * 7, `only ${drilled}/${EXTRA.length} extra items drill their slug`);
 });
 
@@ -247,5 +303,43 @@ test('no extra item uses a word its Lektion has not taught yet', () => {
     assert.doesNotMatch(text, /Vormittag|Nachmittag/i, `${item.id} uses a word no Lektion teaches`);
     if (nr < 8) assert.doesNotMatch(text, /Samstag|Sonntag/i, `${item.id} (L${nr}) uses a weekday taught in L8`);
     if (nr <= 6) assert.doesNotMatch(text, /sprichst/i, `${item.id} (L${nr}) uses sprichst — L3 defers it to L7`);
+  }
+});
+
+/**
+ * REVIEW #4 MAJOR — `accepted` is the one part of the data layer without a rule,
+ * and it contradicted itself inside a single Lektion: `extra-a11-l10-01`
+ * ("___ der Zug nach Österreich?") accepted Fährt/Geht/Kommt while
+ * `extra-a11-l10-06` ("___ du morgen mit dem Bus?") accepted only Fährst/Kommst,
+ * so `Gehst` — which the Lektion's own pretest lists — was wrong two items
+ * later. The rule, stated on the shape rather than on the two ids: where the gap
+ * is a finite form of the fahren/gehen/kommen family and the German prompt names
+ * NO infinitive (a prompt that carries "(fahren)" has fixed the lemma itself),
+ * every such item of the Lektion must offer the same set of lemmas.
+ */
+const MOTION_LEMMAS = { fahren: /^f(ä|a)hr/i, gehen: /^geh/i, kommen: /^komm/i };
+const lemmasOf = (strings) => new Set(
+  strings.flatMap((s) => Object.entries(MOTION_LEMMAS)
+    .filter(([, re]) => re.test(String(s).trim()))
+    .map(([lemma]) => lemma)),
+);
+
+test('within one Lektion, the same verb family offers the same alternatives', () => {
+  const byLektion = new Map();
+  for (const item of EXTRA) {
+    if (item.type !== 'fill_blank') continue;
+    if (/\([^)]*[a-zäöüß]{2}en\b[^)]*\)/i.test(item.questionDe)) continue;  // the prompt names the verb
+    if (!lemmasOf([item.answer]).size) continue;
+    const { nr } = target(item);
+    byLektion.set(nr, [...(byLektion.get(nr) || []), item]);
+  }
+  assert.ok((byLektion.get(10) || []).length >= 2, 'L10 no longer has the two motion-verb items the rule is about');
+  for (const [nr, list] of byLektion) {
+    const sets = list.map((i) => [i.id, [...lemmasOf([i.answer, ...(i.accepted || [])])].sort()]);
+    const [, first] = sets[0];
+    for (const [id, lemmas] of sets) {
+      assert.deepEqual(lemmas, first,
+        `L${nr}: ${id} accepts ${lemmas.join('/')} where ${sets[0][0]} accepts ${first.join('/')}`);
+    }
   }
 });

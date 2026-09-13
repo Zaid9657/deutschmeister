@@ -58,6 +58,17 @@
 //      never touched — the repair adds information to the prompt, it does not
 //      change what counts as right. Whatever still fails afterwards is dropped.
 //
+//   5b. ARTICLE-CUE REPAIR (REVIEW #4 BLOCKER 2). The same shape, one part of
+//      speech on: 42 typed items read "___ Tafel ist grün." and accept `Die`
+//      alone, while "Eine Tafel ist grün." — faultless German from the same
+//      Lektion's Wortfeld — comes back wrong with an Artikel tag. They sit in
+//      Lektionen 4, 5 and 6, three consecutive PRIMARY series, so dropping them
+//      is not on the table either. Repaired the same way: the task formula is
+//      appended to the German prompt, "___ Tafel ist grün. (bestimmter
+//      Artikel)", and `answer`/`accepted` are never touched. The repair runs on
+//      the hand-written extras too — they pass through the same gate — and it is
+//      idempotent: a prompt that already carries a bracket is left alone.
+//
 //   6. REGISTER (REVIEW #3 MAJOR). The hand-written items siezen, the legacy
 //      bank duzt: 39 du-imperatives against 30 Sie-forms in the shipped pool,
 //      three of them in the drawn seven of the FREE Lektion 1, next to a
@@ -68,6 +79,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import {
   filterPool, REASON, REASONS, isUsableItem, exclusionReason, parseVerbCue,
+  articleAnswerKind, ARTICLE_CUE,
 } from '../src/data/lessonPools/quality.js';
 
 const level = (process.argv[2] || 'a1.1').toLowerCase();
@@ -119,6 +131,23 @@ function repairVerbCue(item) {
 }
 
 const repaired = raw.map(repairVerbCue).filter(Boolean);
+
+// ── REVIEW #4 BLOCKER 2: name the article family in the German prompt ───────
+//
+// Same pattern as repairVerbCue, and the same promise: the prompt gains
+// information, the answer key does not change. Idempotent by construction — an
+// item whose prompt already carries a bracket is not in the class at all, so a
+// cue the item author wrote by hand is left exactly as written.
+function repairArticleCue(item) {
+  if (exclusionReason(item, { level }) !== REASON.ARTICLE_CUE_ONLY_IN_GLOSS) return null;
+  const kind = articleAnswerKind(item);
+  if (!kind) return null;
+  const before = item.questionDe;
+  item.questionDe = `${String(item.questionDe).trim()} ${ARTICLE_CUE[kind]}`;
+  return { id: item.id, topic: item.topic, kind, before, after: item.questionDe };
+}
+
+const articleRepaired = raw.map(repairArticleCue).filter(Boolean);
 
 const { kept, excluded, counts } = filterPool(raw, { level });
 
@@ -239,7 +268,7 @@ function alphabetItems(curriculum) {
   const spelled = new Set(words.slice(0, 12));
   for (const word of spelled) {
     push('spell-out', word, {
-      questionDe: `Buchstabiert: ${spellOut(word)}. Schreiben Sie das Wort: ___`,
+      questionDe: `Lesen Sie die Buchstaben: ${spellOut(word)}. Schreiben Sie das Wort: ___`,
       questionEn: 'Spelled out letter by letter. Write the word.',
       options: null,
       answer: word,
@@ -268,7 +297,7 @@ function alphabetItems(curriculum) {
   //    Words already used by template 1 are skipped so the two stems differ.
   for (const e of entries.filter((x) => x.article && !spelled.has(x.word)).slice(0, 5)) {
     push('spell-out-article', e.word, {
-      questionDe: `Buchstabiert: ${spellOut(e.word)}. Schreiben Sie das Wort mit Artikel: ___`,
+      questionDe: `Lesen Sie die Buchstaben: ${spellOut(e.word)}. Schreiben Sie das Wort mit Artikel: ___`,
       questionEn: 'Write the word with its article.',
       options: null,
       answer: `${e.article} ${e.word}`,
@@ -436,6 +465,10 @@ let extra = [];
 if (existsSync(extraUrl)) {
   const parsed = JSON.parse(readFileSync(extraUrl, 'utf8'));
   extra = Array.isArray(parsed) ? parsed : parsed.items || [];
+  // REVIEW #4 BLOCKER 2: the extras go through the same gate, so they get the
+  // same repair — and because the repair skips any prompt that already carries
+  // a bracket, an item whose author wrote the cue by hand is untouched.
+  for (const r of extra.map(repairArticleCue).filter(Boolean)) articleRepaired.push(r);
   // The same rules as the bank, applied to hand-written items on purpose: the
   // point of the filter is that NO item reaches a learner unchecked.
   const failing = extra.map((it) => [it, exclusionReason(it, { level })]).filter(([, r]) => r);
@@ -456,6 +489,95 @@ if (existsSync(extraUrl)) {
   }
 }
 
+// ── REVIEW #4 MAJOR: `accepted` from one source, not one item at a time ─────
+//
+// The review measured `accepted` contradicting itself INSIDE a Lektion:
+// `extra-a11-l10-01` ("___ der Zug nach Österreich?") takes Fährt/Geht/Kommt,
+// `extra-a11-l10-06` ("___ du morgen mit dem Bus?") takes Fährt/Kommt but marks
+// `Gehst` wrong — the round-2 fix was made for one id and stayed an island.
+//
+// Deliberately NARROW. A blanket "fahren ≈ gehen ≈ kommen" is not true German
+// (`Ich gehe nach Berlin` is not `Ich fahre nach Berlin`), so the table is only
+// applied where the item HAS ALREADY DECIDED that the frame takes more than one
+// verb: its own `accepted` lists two or more distinct lemmas of the group, or
+// its id stands in the map below. Everything else keeps the answer key its
+// author wrote — including `extra-a11-l10-07`, whose prompt names `(fahren)`.
+const EQUIVALENT_VERBS = { fahren: ['gehen', 'kommen'] };
+
+/** The finite forms of the group's head verb → the suffix the others take. */
+const FAHREN_FORMS = { fahre: 'e', fährst: 'st', fährt: 't', fahren: 'en', fahrt: 't' };
+const VERB_STEMS = { gehen: 'geh', kommen: 'komm' };
+
+/** Ids that opt in explicitly, id → the group head. Empty is the honest state. */
+const EQUIVALENT_VERB_IDS = {};
+
+const lower = (t) => String(t || '').trim().toLowerCase();
+const capitalise = (w) => w.charAt(0).toUpperCase() + w.slice(1);
+
+/** Which lemma of the group a written form belongs to, or null. */
+function groupLemma(form, head) {
+  const f = lower(form);
+  if (Object.prototype.hasOwnProperty.call(FAHREN_FORMS, f)) return head;
+  for (const [lemma, stem] of Object.entries(VERB_STEMS)) {
+    if (Object.values(FAHREN_FORMS).some((suffix) => f === stem + suffix)) return lemma;
+  }
+  return null;
+}
+
+const verbWidened = [];
+const HEAD = 'fahren';
+function widenEquivalentVerbs(item) {
+  const head = HEAD;
+  const suffix = FAHREN_FORMS[lower(item.answer)];
+  if (!suffix) return;
+  const accepted = [...new Set([item.answer, ...(item.accepted || [])])];
+  const lemmas = new Set(accepted.map((a) => groupLemma(a, head)).filter(Boolean));
+  const optedIn = EQUIVALENT_VERB_IDS[item.id] === head;
+  if (lemmas.size < 2 && !optedIn) return;
+  const added = [];
+  for (const lemma of EQUIVALENT_VERBS[head]) {
+    const form = VERB_STEMS[lemma] + suffix;
+    // Both cases, because a gap at position 1 is written with a capital and the
+    // same form mid-sentence is not — the engine folds case, the list documents.
+    for (const variant of [capitalise(form), form]) {
+      if (accepted.includes(variant)) continue;
+      accepted.push(variant);
+      added.push(variant);
+    }
+  }
+  if (!added.length) return;
+  item.accepted = accepted;
+  verbWidened.push({ id: item.id, added });
+}
+
+// The clock the same way: "Viertel nach acht" and "acht Uhr fünfzehn" are the
+// same time, and the Lektion-8 rule card teaches both — but the second is the
+// OFFICIAL form, so an item that asks for the colloquial one BY NAME
+// ("umgangssprachlich") must not silently accept it.
+const HOURS = ['zwölf', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn', 'elf', 'zwölf'];
+const QUARTER_RE = /^Viertel (nach|vor) (\w+)$/i;
+
+const timeWidened = [];
+function widenEquivalentTime(item) {
+  const m = QUARTER_RE.exec(String(item.answer || '').trim());
+  if (!m) return;
+  if (/umgangssprachlich/i.test(String(item.questionDe || ''))) return;
+  const hour = HOURS.indexOf(lower(m[2]) === 'ein' ? 'eins' : lower(m[2]));
+  if (hour < 1) return;
+  const official = /^nach$/i.test(m[1])
+    ? `${HOURS[hour]} Uhr fünfzehn`
+    : `${HOURS[hour - 1]} Uhr fünfundvierzig`;
+  const accepted = [item.answer, ...(item.accepted || [])];
+  if (accepted.some((a) => lower(a) === lower(official))) return;
+  item.accepted = [...new Set([...accepted, official])];
+  timeWidened.push({ id: item.id, added: official });
+}
+
+for (const item of [...kept, ...supplement, ...extra]) {
+  widenEquivalentVerbs(item);
+  widenEquivalentTime(item);
+}
+
 // ── the rule cards the explain-answer function is grounded in ────────────────
 await writeRuleCards();
 
@@ -467,9 +589,16 @@ await writeRuleCards();
 // in the middle of a prompt travels with its own text ("Finde den Fehler und
 // schreib den Satz richtig" → "Finden Sie den Fehler und schreiben Sie den Satz
 // richtig") and a sentence-initial one keeps its capital. `Buchstabiert:` is
-// deliberately NOT in the table: it is a participle ("[es wird] buchstabiert"),
-// not a du-imperative, and tests/lesson-engine.test.mjs identifies the L1
-// spelling items by that label.
+// in the table for a different reason (REVIEW #4 MAJOR): it is not a register
+// slip but a factual one. The player renders text — PracticeItem.jsx plays no
+// audio — so the learner READS the letters that already stand in the prompt;
+// "Buchstabiert:" claims a listening act that does not happen, in the same line
+// as "Schreiben Sie das Wort". The truthful label is "Lesen Sie die
+// Buchstaben:", which also keeps the `/Buchstab/` mark the L1 spelling items
+// are identified by.
+const BUCHSTABIERT_RE = /^Buchstabiert:\s*/;
+const BUCHSTABIERT_TO = 'Lesen Sie die Buchstaben: ';
+
 const REGISTER = [
   [/\bschreibe?\b/gi, 'schreiben Sie'],
   [/\bbilde\b/gi, 'bilden Sie'],
@@ -485,9 +614,15 @@ const REGISTER = [
 const recapitalise = (text) =>
   text.replace(/(^|[.!?:„"“]\s*|→\s*)([a-zäöüß])/g, (_, lead, ch) => lead + ch.toUpperCase());
 
+const buchstabiertRewrites = [];
+
 function normaliseRegister(item) {
   const before = String(item.questionDe || '');
   let after = before;
+  if (BUCHSTABIERT_RE.test(after)) {
+    after = after.replace(BUCHSTABIERT_RE, BUCHSTABIERT_TO);
+    buchstabiertRewrites.push({ id: item.id, before, after });
+  }
   for (const [re, to] of REGISTER) after = after.replace(re, to);
   if (after === before) return null;
   item.questionDe = recapitalise(after);
@@ -523,9 +658,20 @@ console.log(`repaired verb cues (REVIEW #3 BLOCKER 1): ${repaired.length}`);
 for (const r of repaired) console.log(`       ${r.id.slice(0, 8)} ${r.topic} · ${r.after}`);
 const stillFailing = excluded.filter((e) => e.reason === 'verb-cue-only-in-gloss');
 if (stillFailing.length) console.log(`  still verb-cue-only after the repair: ${stillFailing.length}`);
+console.log(`repaired article cues (REVIEW #4 BLOCKER 2): ${articleRepaired.length}` +
+  ` (bestimmt ${articleRepaired.filter((r) => r.kind === 'definite').length}` +
+  ` · unbestimmt ${articleRepaired.filter((r) => r.kind === 'indefinite').length})`);
+for (const r of articleRepaired) console.log(`       ${String(r.id).slice(0, 8)} ${r.topic} · ${r.after}`);
+const stillArticle = excluded.filter((e) => e.reason === REASON.ARTICLE_CUE_ONLY_IN_GLOSS);
+if (stillArticle.length) console.log(`  still article-cue-only after the repair: ${stillArticle.length}`);
+console.log(`Buchstabiert → Lesen Sie die Buchstaben (REVIEW #4 MAJOR): ${buchstabiertRewrites.length}`);
 console.log(`register normalisations (Sie-Form): ${normalised.length}`);
 for (const r of normalised) console.log(`       ${String(r.id).slice(0, 8)} · ${r.after}`);
 if (acceptedApplied.length) console.log(`widened accepted on ${acceptedApplied.length}: ${acceptedApplied.map((i) => i.slice(0, 8)).join(', ')}`);
+console.log(`equivalent-verb widenings (REVIEW #4 MAJOR): ${verbWidened.length}`);
+for (const r of verbWidened) console.log(`       ${r.id} + ${r.added.join(', ')}`);
+console.log(`equivalent-time widenings (REVIEW #4 MAJOR): ${timeWidened.length}`);
+for (const r of timeWidened) console.log(`       ${r.id} + ${r.added}`);
 const staleAccepted = Object.keys(ACCEPTED_EXTRAS).filter((id) => !acceptedApplied.includes(id));
 if (staleAccepted.length) console.log(`ACCEPTED_EXTRAS ids no longer in the pool: ${staleAccepted.join(', ')}`);
 const perTopic = new Map();

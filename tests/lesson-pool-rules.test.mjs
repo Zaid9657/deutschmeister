@@ -32,6 +32,22 @@
 //     Sie/ihr/du, the task English-only. Exactly one item in the pool, the twin
 //     of one that was hand-flagged in round 2 with the rule left unwritten.
 //
+// FOURTH REVIEW (REVIEW-daf-4-2026-09-12.md) found the class a third time, one
+// part of speech on:
+//
+//   * THE ARTICLE ONLY IN THE ENGLISH GLOSS — "___ Tafel ist grün." accepting
+//     `Die` alone, because only `questionEn` ("The blackboard is green.") says
+//     which article is meant. 42 typed items, 30 definite and 12 indefinite,
+//     spread over Lektionen 4, 5 and 6 — three consecutive PRIMARY series. Same
+//     treatment as the verb: the build script appends "(bestimmter Artikel)" or
+//     "(unbestimmter Artikel)" to the German prompt and never touches the answer
+//     key; the rule here is what makes a repaired pool provable.
+//   * "Buchstabiert:" — 17 items of the shipped pool claimed a listening act the
+//     player never performs (PracticeItem.jsx renders text), in the same line as
+//     "Schreiben Sie das Wort" and next to the letters themselves. Rewritten to
+//     "Lesen Sie die Buchstaben:", which is true and keeps the `/Buchstab/` mark
+//     the Lektion-1 spelling items are identified by.
+//
 // And the register: the shipped pool had 39 du-imperatives against 30 Sie-forms,
 // three of them in the drawn seven of the FREE Lektion. The normaliser lives in
 // the build script, the proof lives here.
@@ -50,6 +66,7 @@ import {
   exclusionReason, isUsableItem, filterPool, REASON, REASONS, EXCLUDE_IDS,
   MONTH_NAMES, ORDINAL_CUE_RE, ORDINAL_WORD_RE, MIN_BRACKET_CUES,
   answerInPrompt, isMetaPrompt, verbCueOnlyInGloss, statementNoTask, parseVerbCue,
+  articleCueOnlyInGloss, articleAnswerKind, ARTICLE_CUE,
 } from '../src/data/lessonPools/quality.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -203,12 +220,15 @@ test('no usable typed item hides its verb in the English gloss — REVIEW #3 BLO
     null,
     'the cue in the German prompt is the repair, and it must satisfy the rule',
   );
+  // An ordinary lexical gloss carries no verb cue. (The same item DOES trip the
+  // REVIEW #4 article rule — "Eine Auto ist alt." is wrong German but "Ein Auto
+  // ist alt." is not — which is that rule's business, not this one's.)
   assert.equal(
-    exclusionReason({
+    verbCueOnlyInGloss({
       id: 'v2', topic: 'nouns-gender', type: 'fill_blank',
       questionDe: '___ Auto ist alt.', questionEn: 'The ___ (car) is old.', answer: 'Das',
     }),
-    null,
+    false,
     'an ordinary lexical gloss carries no verb cue',
   );
   // the parser the repair is built on
@@ -254,16 +274,87 @@ test('no usable item is a statement that asks nothing — REVIEW #3 BLOCKER 2', 
 });
 
 test('the shipped pool addresses an adult learner in the Sie-register — REVIEW #3 MAJOR', () => {
-  // `Buchstabiert:` stays: it is a participle ("[es wird] buchstabiert"), not a
-  // du-imperative, and the L1 spelling items are identified by that label.
   const DU_IMPERATIVE = /\b(Schreib|Schreibe|Bilde|Ergänze|Korrigiere|Setze|Wähle|Finde|Antworte)\b/;
   for (const item of POOL.items) {
     assert.doesNotMatch(item.questionDe, DU_IMPERATIVE, `du-imperative: ${label(item)}`);
   }
-  assert.ok(
-    POOL.items.some((i) => /Buchstabiert:/.test(i.questionDe)),
-    'the buchstabieren label must survive the normaliser',
+});
+
+// --- REVIEW #4 ------------------------------------------------------------
+
+test('no prompt claims a listening act the player never performs — REVIEW #4 MAJOR', () => {
+  // The same shape as the du-imperative test above, on the artefact: nothing in
+  // the SHIPPED pool may open with "Buchstabiert:". The player renders text, so
+  // the learner reads the letters that already stand in the prompt.
+  for (const item of POOL.items) {
+    assert.doesNotMatch(item.questionDe, /^Buchstabiert:/, `Buchstabiert: ${label(item)}`);
+  }
+  const spelling = POOL.items.filter((i) => /^Lesen Sie die Buchstaben:/.test(i.questionDe));
+  assert.ok(spelling.length >= 12, `only ${spelling.length} spell-out items carry the new label`);
+  // and the mark the Lektion-1 items are identified by survives the rewrite —
+  // "Buchstaben" matches /Buchstab/, which is what drillsSlug and
+  // tests/lesson-engine.test.mjs read.
+  for (const item of spelling) assert.match(item.questionDe, /Buchstab/);
+});
+
+test('no usable item names its article only in the English gloss — REVIEW #4 BLOCKER 2', () => {
+  for (const item of USABLE) {
+    assert.equal(articleCueOnlyInGloss(item), false, `article cue only in the gloss: ${label(item)}`);
+  }
+  // the shape the review quotes, and the repair that has to satisfy the rule
+  const trap = {
+    id: 'a1', topic: 'definite-articles', type: 'fill_blank',
+    questionDe: '___ Tafel ist grün.', questionEn: 'The blackboard is green.',
+    answer: 'Die', accepted: ['Die', 'die'],
+  };
+  assert.equal(exclusionReason(trap), REASON.ARTICLE_CUE_ONLY_IN_GLOSS);
+  assert.equal(
+    exclusionReason({ ...trap, questionDe: `___ Tafel ist grün. ${ARTICLE_CUE.definite}` }),
+    null,
+    'the cue in the German prompt is the repair, and it must satisfy the rule',
   );
+  // the indefinite half of the class
+  assert.equal(
+    exclusionReason({
+      id: 'a2', topic: 'indefinite-articles', type: 'fill_blank',
+      questionDe: 'Das ist ___ Büro.', questionEn: 'That is an office.', answer: 'ein', accepted: ['ein'],
+    }),
+    REASON.ARTICLE_CUE_ONLY_IN_GLOSS,
+  );
+  // and the three shapes the rule must NOT touch
+  assert.equal(
+    exclusionReason({
+      id: 'a3', topic: 'nouns-gender', type: 'multiple_choice',
+      questionDe: '___ Tafel ist grün.', options: ['Die', 'Der', 'Das'], answer: 'Die',
+    }),
+    null,
+    'chips name the article family, so the German prompt carries the task',
+  );
+  assert.equal(
+    exclusionReason({
+      id: 'a4', topic: 'definite-articles', type: 'error_correction',
+      questionDe: 'Korrigieren Sie: „Das Schere ist hier.“', answer: 'Die Schere ist hier.',
+    }),
+    null,
+    'a whole-sentence answer is not a bare article gap',
+  );
+  // A contrast prompt is not exempt either: "Ist das ein Heft? — Ja, und ___
+  // Heft ist grün." still has to say which form it wants, and the repair appends
+  // it. (`exclusionReason` reports ANSWER_IN_PROMPT for this one, because `das`
+  // stands in the prompt's own first clause — an older rule, and the right one.)
+  assert.equal(
+    articleCueOnlyInGloss({
+      id: 'a5', topic: 'definite-articles', type: 'fill_blank',
+      questionDe: 'Ist das ein Heft? — Ja, und ___ Heft ist grün.', answer: 'das', accepted: ['das'],
+    }),
+    true,
+  );
+  // the family reader the repair is built on
+  assert.equal(articleAnswerKind({ answer: 'Die', accepted: ['Die', 'die'] }), 'definite');
+  assert.equal(articleAnswerKind({ answer: 'einen', accepted: [] }), 'indefinite');
+  assert.equal(articleAnswerKind({ answer: 'Die', accepted: ['Die', 'Eine'] }), null,
+    'an item that takes both families is not asking which one');
+  assert.equal(articleAnswerKind({ answer: 'Die Schere ist hier.' }), null);
 });
 
 test('the two items the review quotes now carry their verb in the German prompt', () => {

@@ -55,11 +55,90 @@ WICHTIGE REGELN:
 - KORRIGIERE NICHT - dies ist ein Test, keine Unterrichtsstunde.
 - Sei warm, freundlich und ermutigend.`;
 
+// ---------------------------------------------------------------------------
+// Course tasks (Lektionen with a `sprechen.open` prompt but no mission row).
+//
+// Four Lektionen (L7/L10/L11/L12) show the learner a Goethe-style Sprechen task
+// and promise the coach will work through it — but they have no `speaking_missions`
+// row, so `missionId` is null and the session used to fall back to a generic free
+// conversation. The task travels in the START body instead, is validated here,
+// and is persisted in the two unused nullable columns `speaking_sessions.topic`
+// (the Teil label) and `.scenario` (JSON: prompt + hint words) so every later
+// turn can rebuild it without a schema change. A mission ALWAYS wins: mission
+// prompts are server-owned, a course task is client text and stays bounded.
+// ---------------------------------------------------------------------------
+export const COURSE_TASK_LIMITS = {
+  promptChars: 300,
+  teilChars: 40,
+  hintWords: 8,
+  hintWordChars: 30,
+};
+
+const trimTo = (value, max) => (typeof value === 'string' ? value.trim().slice(0, max).trim() : '');
+
+// Normalize a validated task. Returns null when there is no usable prompt.
+function normalizeCourseTask({ prompt, teil, hintWords } = {}) {
+  const cleanPrompt = trimTo(prompt, COURSE_TASK_LIMITS.promptChars);
+  if (!cleanPrompt) return null;
+  const cleanHints = (Array.isArray(hintWords) ? hintWords : [])
+    .map((w) => trimTo(w, COURSE_TASK_LIMITS.hintWordChars))
+    .filter(Boolean)
+    .slice(0, COURSE_TASK_LIMITS.hintWords);
+  return {
+    prompt: cleanPrompt,
+    teil: trimTo(teil, COURSE_TASK_LIMITS.teilChars) || 'Sprechen',
+    hintWords: cleanHints,
+  };
+}
+
+// Parse the optional course task out of a `action: 'start'` request body.
+// Ignored entirely when the body carries a missionId.
+export function parseCourseTask(body) {
+  if (!body || typeof body !== 'object') return null;
+  if (body.missionId) return null;
+  return normalizeCourseTask({
+    prompt: body.taskPrompt,
+    teil: body.taskTeil,
+    hintWords: body.taskHintWords,
+  });
+}
+
+// The two speaking_sessions columns a course task is stored in.
+export function courseTaskColumns(task) {
+  if (!task) return { topic: null, scenario: null };
+  return {
+    topic: task.teil || null,
+    scenario: JSON.stringify({ prompt: task.prompt, hintWords: task.hintWords || [] }),
+  };
+}
+
+// Rebuild the task from a session row. Tolerates a plain-string `scenario`
+// (anything written by an older/other writer) rather than throwing.
+export function taskFromSession(row) {
+  if (!row || row.mission_id) return null;
+  const raw = row.scenario;
+  if (typeof raw !== 'string' || !raw.trim()) return null;
+  let parsed = null;
+  try {
+    const candidate = JSON.parse(raw);
+    if (candidate && typeof candidate === 'object' && !Array.isArray(candidate)) parsed = candidate;
+  } catch {
+    parsed = null;
+  }
+  if (!parsed) return normalizeCourseTask({ prompt: raw, teil: row.topic, hintWords: [] });
+  return normalizeCourseTask({
+    prompt: parsed.prompt,
+    teil: parsed.teil || row.topic,
+    hintWords: parsed.hintWords,
+  });
+}
+
 // Build the teacher system prompt for a turn or the opening greeting.
 // - placement → the server-owned placement prompt
 // - mission   → ai_role + target_structures + system_prompt_extra + rules
+// - task      → a course Lektion's Sprechen prompt (no mission row exists)
 // - free      → a warm level-appropriate teacher + rules
-export function buildTeacherSystemPrompt({ level, mission = null, isPlacement = false }) {
+export function buildTeacherSystemPrompt({ level, mission = null, isPlacement = false, courseTask = null }) {
   if (isPlacement) return PLACEMENT_PROMPT;
 
   const lvl = String(level || '').toUpperCase();
@@ -82,6 +161,11 @@ export function buildTeacherSystemPrompt({ level, mission = null, isPlacement = 
       parts.push(`ZIELSTRUKTUREN — lenke das Gespräch so, dass dein Gegenüber diese Strukturen benutzt:\n${structures}`);
     }
     if (mission.system_prompt_extra) parts.push(mission.system_prompt_extra);
+  } else if (courseTask) {
+    parts.push(`DEINE AUFGABE (${courseTask.teil}) — dein Gegenüber bearbeitet gerade genau diese Aufgabe aus seiner Lektion:\n"${courseTask.prompt}"\nFühre das Gespräch so, dass diese Aufgabe wirklich bearbeitet wird: bleib beim Thema, stelle Rückfragen dazu und lenke höflich zurück, wenn das Gespräch abschweift.`);
+    if (courseTask.hintWords.length) {
+      parts.push(`HILFSWÖRTER — dein Gegenüber hat diese Wörter vor sich; baue sie ins Gespräch ein:\n${courseTask.hintWords.join(', ')}`);
+    }
   }
 
   return parts.join('\n\n');

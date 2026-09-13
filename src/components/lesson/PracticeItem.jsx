@@ -3,14 +3,14 @@ import { Check, AlertTriangle, X, Sparkles } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import ExplainAnswer from './ExplainAnswer.jsx';
-import { checkAnswer, tagError, RESULT, STRICT_TOPIC } from '../../lib/lesson/check.js';
+import { checkAnswer, tagError, RESULT, STRICT_TOPIC, isCaseTask } from '../../lib/lesson/check.js';
 import { isTypedItem } from '../../lib/lesson/buildLesson.js';
 
 /**
  * Correctness is TEXT + ICON + COLOUR, never colour alone (standard §4).
  * Exported because the dictation item shows the same three states.
  */
-export function ItemFeedback({ result, expected, explanation, onExplain }) {
+export function ItemFeedback({ result, expected, hint, explanation, onExplain }) {
   if (!result) return null;
   const map = {
     [RESULT.CORRECT]: { Icon: Check, label: 'Richtig', tone: 'border-siegel bg-siegel-wash text-siegel-deep' },
@@ -29,6 +29,7 @@ export function ItemFeedback({ result, expected, explanation, onExplain }) {
           Richtig ist: <strong className="font-bold">{expected}</strong>
         </p>
       )}
+      {hint && <p className="mt-2 text-[0.9375rem] font-bold">{hint}</p>}
       {explanation && <p className="mt-2 text-[0.875rem] leading-relaxed opacity-90">{explanation}</p>}
       {onExplain && (
         <button
@@ -42,6 +43,9 @@ export function ItemFeedback({ result, expected, explanation, onExplain }) {
     </div>
   );
 }
+
+/** Shown when the only thing wrong with an answer is its capitalisation (Sie-register). */
+export const CASE_HINT = 'Achten Sie auf die Groß-/Kleinschreibung.';
 
 /**
  * One controlled-practice item, one screen (standard §3 stage 4).
@@ -75,15 +79,22 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
   const chips = useMemo(() => (item.options && item.options.length ? item.options : null), [item]);
   const typed = isTypedItem(item);
   const strict = STRICT_TOPIC.test(item.topic || '');
+  // Capitalisation is the answer on the polite `Ihr` items (standard §3 /
+  // REVIEW #4 BLOCKER 3); elsewhere a case-only slip costs one retry, not the item.
+  const caseSensitive = isCaseTask(item);
   const answer = typed ? value : picked;
   const canSubmit = String(answer || '').trim().length > 0;
 
   const submit = () => {
     if (!canSubmit || state) return;
     const accepted = item.accepted && item.accepted.length ? item.accepted : [item.answer];
-    const { result, expected } = checkAnswer(answer, accepted, { strict });
+    const { result, expected, reason } = checkAnswer(answer, accepted, { strict, caseSensitive });
     const correct = result !== RESULT.WRONG;
-    setState({ result, expected: expected || item.answer });
+    setState({
+      result,
+      expected: expected || item.answer,
+      hint: reason === 'case' ? CASE_HINT : null,
+    });
     onResult(item, {
       result,
       correct,
@@ -146,6 +157,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
         <ItemFeedback
           result={state && state.result}
           expected={state && state.expected}
+          hint={state && state.hint}
           explanation={state && state.result !== RESULT.CORRECT ? item.explanationDe : null}
           onExplain={state && state.result !== RESULT.CORRECT ? () => setExplain(true) : null}
         />

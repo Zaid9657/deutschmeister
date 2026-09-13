@@ -34,7 +34,7 @@ export default function WortfeldStage({ stage, onBack, onDone }) {
     <StageShell
       eyebrow="Schritt 2 · Wortfeld"
       title={`${words.length} neue Wörter`}
-      lead="Tippe auf eine Karte für die Übersetzung, auf den Lautsprecher zum Hören."
+      lead="Tippen Sie auf eine Karte für die Übersetzung, auf den Lautsprecher zum Hören."
       onBack={onBack}
       primaryLabel="Weiter"
       onPrimary={onDone}
