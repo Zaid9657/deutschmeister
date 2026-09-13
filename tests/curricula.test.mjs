@@ -23,7 +23,7 @@ import {
   canDoRehearsal, missionlessLektionen,
   personaConsistency, PERSONAS_A11, PERSONAS_A12, PERSONA_TABLES,
   noticeFormCoverage, producedBeforeTaught, examTeileBacked,
-  MAX_UNCOVERED_WORTFELD, MAX_UNTAUGHT_ITEM_TOKENS, MAX_UNTAUGHT_DRAWN_TOKENS, MAX_UNREHEARSED_CANDOS,
+  MAX_UNCOVERED_WORTFELD, MAX_UNTAUGHT_ITEM_TOKENS, MAX_UNTAUGHT_DRAWN_TOKENS,
   MAX_MISSIONLESS_LEKTIONEN, MAX_UNEXEMPLIFIED_NOTICE_FORMS, MAX_UNTAUGHT_IN_PRODUCTION,
   MAX_UNBACKED_EXAM_TEILE, LEVELS, levelSpec, levelLexicon, untaughtTokens,
 } from '../scripts/validate-curriculum.mjs';
@@ -448,14 +448,15 @@ test('rule 11b: the items the learner is SERVED use only words taught by the Lek
   }
 });
 
-test('rule 12: every can-do line is rehearsed in its own Lektion, under a ratchet that only falls', () => {
+test('rule 12: every can-do line is rehearsed in its own Lektion — hard rule, no ratchet', () => {
   // The can-do grid is rendered on the public course page, so an unrehearsed line is a promise to
-  // someone who has not paid yet (DaF review #4, MAJOR 6). The two named there are closed:
-  assert.ok(MAX_UNREHEARSED_CANDOS <= 2, 'the ratchet may only ever be lowered');
+  // someone who has not paid yet (DaF review #4, MAJOR 6). The two named there are closed, and DaF
+  // review #8 (MAJOR 4) removed the ratchet entirely once the measurement reached 0: a can-do line
+  // may never again go unrehearsed silently.
   const offenders = canDoRehearsal(CURRICULUM_A11);
-  assert.ok(
-    offenders.length <= MAX_UNREHEARSED_CANDOS,
-    `${offenders.length} unrehearsed can-dos > ratchet ${MAX_UNREHEARSED_CANDOS}:\n  - ${offenders.map((o) => `L${o.nr} ${o.line}`).join('\n  - ')}`,
+  assert.equal(
+    offenders.length, 0,
+    `${offenders.length} unrehearsed can-dos (hard rule, no ratchet):\n  - ${offenders.map((o) => `L${o.nr} ${o.line}`).join('\n  - ')}`,
   );
   const lines = offenders.map((o) => o.line);
   assert.ok(!lines.includes('Ich kann mit zwei festen Ausdrücken sagen, was ich gestern gemacht habe.'), 'L11 Perfekt chunk');
@@ -477,6 +478,33 @@ test('rule 13: a speaking task without a mission is a prompt the speaking page n
     `Lektionen without a speaking mission: ${missionless.join(', ')}`,
   );
   assert.deepEqual(missionless, [7, 10, 11, 12]);
+});
+
+test('A1.1: every ratchet equals its measurement — a ratchet with slack is not a rule', () => {
+  // DaF review #8, MAJOR 4: RULE 10 (18 vs. 14 measured), RULE 11b (5 vs. 4) and RULE 12 (2 vs. 0)
+  // had drifted above what `node scripts/validate-curriculum.mjs a1.1` prints, and their doc
+  // comments quoted numbers the script no longer produces — so two Kann-Beschreibungen could go
+  // unrehearsed again with nothing in CI saying so, which is exactly what had started happening to
+  // L12's farewell can-do between rounds 7 and 8. This makes that drift machine-checked instead of
+  // something a reviewer has to notice by re-running the script and subtracting: for every ratchet
+  // the validator holds, measured must equal the ratchet exactly. RULE 12 is exempt because DaF
+  // review #8's fix turned it into a hard rule with no ratchet at all (see the test above and
+  // validate-curriculum.mjs) — there is no constant left here that could drift.
+  const checks = [
+    ['10', wortfeldCoverage(CURRICULUM_A11).length, MAX_UNCOVERED_WORTFELD],
+    ['11', itemLexis(CURRICULUM_A11).length, MAX_UNTAUGHT_ITEM_TOKENS],
+    ['11b', drawnLexis(CURRICULUM_A11).length, MAX_UNTAUGHT_DRAWN_TOKENS],
+    ['13', missionlessLektionen(CURRICULUM_A11).length, MAX_MISSIONLESS_LEKTIONEN],
+    ['6b', noticeFormCoverage(CURRICULUM_A11).length, MAX_UNEXEMPLIFIED_NOTICE_FORMS],
+    ['15', producedBeforeTaught(CURRICULUM_A11).length, MAX_UNTAUGHT_IN_PRODUCTION],
+    ['16', examTeileBacked(CURRICULUM_A11).length, MAX_UNBACKED_EXAM_TEILE],
+  ];
+  for (const [rule, measured, ratchet] of checks) {
+    assert.equal(
+      measured, ratchet,
+      `RULE ${rule} measures ${measured}, ratchet is ${ratchet} — lower it in the same commit`,
+    );
+  }
 });
 
 // REGISTER (DaF review #4, MAJOR 2). One decision, enforced: the tasks and the chrome address the
@@ -558,9 +586,10 @@ test('the validator bites: each mutation of a good curriculum is caught', () => 
   assert.equal(plantInDrawnItems(c11b, extra11b, pool11b, need11b), need11b, 'the planted items are no longer drawn');
   assert.ok(failsWith(validateCurriculum(c11b, extra11b, pool11b), '11b'), 'not caught: served items built from untaught words');
 
-  // RULE 12: can-do lines whose content words no exercise slot of their Lektion rehearses.
+  // RULE 12: can-do lines whose content words no exercise slot of their Lektion rehearses. Hard
+  // rule, no ratchet — the overshoot is against 0, same shape as RULE 14 below.
   const c12 = clone();
-  const need12 = overshoot(canDoRehearsal(CURRICULUM_A11).length, MAX_UNREHEARSED_CANDOS);
+  const need12 = overshoot(canDoRehearsal(CURRICULUM_A11).length, 0);
   assert.equal(addUnrehearsedCanDos(c12, need12), need12, 'the fixture could not carry enough unrehearsed can-do lines');
   assert.ok(failsWith(validateCurriculum(c12), 12), 'not caught: can-do lines nothing in their Lektion rehearses');
 
@@ -1010,7 +1039,7 @@ for (const key of LEVEL_KEYS) {
     assert.ok(wortfeldCoverage(C).length <= r.uncoveredWortfeld, 'RULE 10');
     assert.ok(itemLexis(C).length <= r.untaughtItemTokens, 'RULE 11');
     assert.ok(drawnLexis(C).length <= r.untaughtDrawnTokens, 'RULE 11b');
-    assert.ok(canDoRehearsal(C).length <= r.unrehearsedCanDos, 'RULE 12');
+    assert.equal(canDoRehearsal(C).length, 0, 'RULE 12 (hard rule, no ratchet)');
     assert.ok(missionlessLektionen(C).length <= r.missionlessLektionen, 'RULE 13');
     assert.ok(noticeFormCoverage(C).length <= r.unexemplifiedNoticeForms, 'RULE 6b');
     assert.ok(producedBeforeTaught(C).length <= r.untaughtInProduction, 'RULE 15');
@@ -1066,7 +1095,7 @@ for (const key of LEVEL_KEYS) {
     assert.ok(failsWith(validateCurriculum(c11b, extra11b, pool11b), '11b'), `${spec.code}: not caught: served items built from untaught words`);
 
     const c12 = cloneOf(C);
-    const need12 = overshoot(canDoRehearsal(C).length, r.unrehearsedCanDos);
+    const need12 = overshoot(canDoRehearsal(C).length, 0);
     assert.equal(addUnrehearsedCanDos(c12, need12), need12, `${spec.code}: not enough room for unrehearsed can-dos`);
     assert.ok(failsWith(validateCurriculum(c12), 12), `${spec.code}: not caught: can-do lines nothing rehearses`);
 
@@ -1127,7 +1156,9 @@ test('A1.2 ratchets are the measured numbers, and RULE 10–12 are already at ze
   // (Wortkarten Essen & Trinken → mission 10). Only L11 is left: no A1.2 mission is about weather.
   const r = levelSpec('a1.2').ratchets;
   assert.equal(r.uncoveredWortfeld, 0);
-  assert.equal(r.unrehearsedCanDos, 0);
+  // RULE 12 is a hard rule with no ratchet at any level (see validate-curriculum.mjs) — measured
+  // directly against 0 rather than against a per-level constant.
+  assert.equal(canDoRehearsal(CURRICULUM_A12).length, 0, 'RULE 12 (hard rule, no ratchet)');
   assert.ok(r.missionlessLektionen <= 3, 'the ratchet may only ever be lowered');
   assert.deepEqual(missionlessLektionen(CURRICULUM_A12), [11]);
   // RULE 11 stood at 0 while `src/data/lessonPools/a12.json` did not exist, i.e. while it measured

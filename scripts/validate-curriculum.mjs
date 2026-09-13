@@ -241,34 +241,24 @@ export function formsOf(entry, irregulars = IRREGULAR_FORMS) {
  * This number may be lowered, never raised (the contract's ceiling is 30). Round 5 measured it
  * against the BUILT pool (see loadPoolItems) and exempted the two meta entries, then closed the L3
  * Familie and L6 Beruf clusters DaF review #4 named: 35 → 19, and 18 when re-measured 2026-09-13.
+ * DaF review #8, MAJOR 4: the ratchet had drifted above the printed measurement (14, after L12's
+ * `readAloud`/item repairs took two more Wortfeld entries into use). Re-measured 2026-09-13: **14**,
+ * and the ratchet moves with it — `node scripts/validate-curriculum.mjs a1.1` is the source of truth
+ * from here on, not this comment.
  */
-export const MAX_UNCOVERED_WORTFELD = 18;          // a1.1; per level in LEVELS below — measured 2026-09-13
+export const MAX_UNCOVERED_WORTFELD = 14;          // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
- * RULE 12 ratchet — how many can-do lines may still name something no exercise slot of their own
- * Lektion rehearses. DaF review #4 found two („Ich kann mit zwei festen Ausdrücken sagen, was ich
- * gestern gemacht habe“ in L11, „Ich kann ein einfaches Formular … ausfüllen“ in L2) in the public
- * 12×6 syllabus grid — the table a buyer reads before paying. Both are closed (the L11 pretest now
- * asks for the Perfekt chunk, the L2 line names the Mitteilung the Lektion actually writes), and
- * the measurement then found six more, all of the same kind — a can-do whose verb the Lektion
- * teaches under another word: L1 begrüßen/verabschieden (the greetings are „Guten Tag“ and
- * „Tschüss“), L2 Zahlen, L4 Gegenstand, L7 „frei haben“, L9 „höflich fragen“, L12 „gute Wünsche“.
- * That is the honest number and the ratchet stands on it. Lower it, never raise it.
- * DaF review #5, MAJOR 13 asked for the number to follow the repairs: the L2 Zahlwort items and the
- * L9 „höflich fragen“ item landed, so the measurement was 4 (L1 begrüßen/verabschieden, L4
- * Gegenstand, L7 „frei haben“, L12 gute Wünsche) and the ratchet moves with it.
- * DaF review #7, MAJOR 4 moved the measurement itself onto the PRODUCTION surfaces (see
- * rehearsalText): the dialogue is read through `hoeren.lines` and `sprechen.readAloud` only, which
- * covers L7 („frei haben“ is in the read-aloud line) and, once L12's read-aloud reached the
- * farewell line, L12. Re-measured 2026-09-13: **2**.
- *   • L1 „begrüßen und verabschieden“ — the Lektion greets with „Guten Tag“ and says „Tschüss“;
- *     neither verb is produced anywhere, so the line names its own topic under words the Lektion
- *     never uses.
- *   • L4 „fragen, was ein Gegenstand ist“ — the read-aloud line 0 („Entschuldigung, was ist das?“)
- *     asks exactly that, but it never contains the word „Gegenstand“; this is the limit of a
- *     token-matching rule, and it is reported rather than papered over.
+ * RULE 12 — every can-do line is rehearsed somewhere in its own Lektion. Was a ratchet through DaF
+ * reviews #4–#7 (35 → 19 → 4 → 2, tightening as L1 begrüßen/verabschieden and the L4 Gegenstand
+ * question — the last two offenders — got read-aloud/hören lines that produce them). DaF review #8
+ * measured **0** and named the reappearance risk directly: with a ratchet still standing at 2, two
+ * can-do lines could go unrehearsed again with CI silent about it — which is exactly what happened
+ * to L12's farewell can-do between rounds 7 and 8 before its `readAloud` line closed it. So, like
+ * RULE 14 and RULE 16, this is now a HARD RULE with no ratchet: any can-do line no exercise slot of
+ * its own Lektion rehearses is a failure, full stop. There is no `MAX_UNREHEARSED_CANDOS` constant
+ * and no `ratchets.unrehearsedCanDos` entry to raise back up.
  */
-export const MAX_UNREHEARSED_CANDOS = 2;           // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
  * RULE 13 ratchet — how many Lektionen may show a `sprechen.open` task whose prompt the speaking
@@ -323,8 +313,11 @@ export const MAX_UNTAUGHT_ITEM_TOKENS = 61;        // a1.1; per level in LEVELS 
  * in three generated items — `Deutsch` in two L1 spelling items (taught L3), `Kaffee`/`kocht` in an
  * L4 item (Wortfeld of L9) and `arbeitet` in an L6 item (Wortfeld of L11). All five are Vorgriffe,
  * which is the only class this number can still contain now that never-taught words cannot ship.
+ * DaF review #8, MAJOR 4: the ratchet had drifted above the printed measurement (4, one `Deutsch`
+ * spelling item having been repaired since). Re-measured 2026-09-13: **4**, and the ratchet moves
+ * with it — read it off `node scripts/validate-curriculum.mjs a1.1`, not off this comment.
  */
-export const MAX_UNTAUGHT_DRAWN_TOKENS = 5;        // a1.1; per level in LEVELS below — measured 2026-09-13
+export const MAX_UNTAUGHT_DRAWN_TOKENS = 4;        // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
  * A1.2 — the twelve grammar slugs of the level in `topic_order` (grammar-content-cache.json,
@@ -501,7 +494,7 @@ export const LEVELS = {
       uncoveredWortfeld: MAX_UNCOVERED_WORTFELD,
       untaughtItemTokens: MAX_UNTAUGHT_ITEM_TOKENS,
       untaughtDrawnTokens: MAX_UNTAUGHT_DRAWN_TOKENS,
-      unrehearsedCanDos: MAX_UNREHEARSED_CANDOS,
+      // RULE 12 is a hard rule (0, no ratchet) — see its comment above. No entry here.
       missionlessLektionen: MAX_MISSIONLESS_LEKTIONEN,
       unexemplifiedNoticeForms: MAX_UNEXEMPLIFIED_NOTICE_FORMS,
       untaughtInProduction: MAX_UNTAUGHT_IN_PRODUCTION,
@@ -560,7 +553,7 @@ export const LEVELS = {
       // A1.1 engine changes. A1.2 is PAUSED by owner decision (2026-09-13); the number is a
       // work order for whoever resumes it, not a target.
       untaughtDrawnTokens: 3,
-      unrehearsedCanDos: 0,
+      // RULE 12 is a hard rule (0, no ratchet) — see its comment above. No entry here.
       missionlessLektionen: 1,
       unexemplifiedNoticeForms: 0,
       untaughtInProduction: 0,
@@ -1683,10 +1676,11 @@ export function validateCurriculum(c, extraItems, poolItems) {
     fail(`RULE 11b: ${drawnUntaught.length} untaught tokens in items the learner is served, ratchet is ${r.untaughtDrawnTokens} — ${drawnUntaught.map((o) => `L${o.nr} ${o.id}:${o.token}`).join(', ')}`);
   }
 
-  // ---- RULE 12 (can-dos are rehearsed) and RULE 13 (the speaking prompt travels) ---------------
+  // ---- RULE 12 (can-dos are rehearsed, hard rule — no ratchet) and RULE 13 (the speaking prompt
+  // travels) -------------------------------------------------------------------------------------
   const unrehearsed = canDoRehearsal(c, extraItems);
-  if (unrehearsed.length > r.unrehearsedCanDos) {
-    fail(`RULE 12: ${unrehearsed.length} can-do lines no exercise slot of their Lektion rehearses, ratchet is ${r.unrehearsedCanDos} — ${unrehearsed.map((u) => `L${u.nr} „${u.line}“`).join(', ')}`);
+  if (unrehearsed.length > 0) {
+    fail(`RULE 12: ${unrehearsed.length} can-do lines no exercise slot of their Lektion rehearses (hard rule, no ratchet) — ${unrehearsed.map((u) => `L${u.nr} „${u.line}“`).join(', ')}`);
   }
   const missionless = missionlessLektionen(c);
   if (missionless.length > r.missionlessLektionen) {
@@ -1746,7 +1740,7 @@ if (isMain) {
   console.log(`  RULE 11b gezogene Item-Lexik: ${drawnUntaught.length} ungelehrte Tokens (Ratchet ${r.untaughtDrawnTokens})`);
   for (const o of drawnUntaught) console.log(`    L${o.nr} ${o.id}: ${o.token}`);
   const unrehearsed = canDoRehearsal(c);
-  console.log(`  RULE 12 Kann-Beschreibungen ohne Übung: ${unrehearsed.length} (Ratchet ${r.unrehearsedCanDos})`);
+  console.log(`  RULE 12 Kann-Beschreibungen ohne Übung: ${unrehearsed.length} (harte Regel, kein Ratchet)`);
   for (const u of unrehearsed) console.log(`    L${u.nr} ${u.line}`);
   const missionless = missionlessLektionen(c);
   console.log(`  RULE 13 Sprechaufträge ohne Mission: ${missionless.length} (Ratchet ${r.missionlessLektionen}) — ${missionless.map((nr) => `L${nr}`).join(', ') || '—'}`);
