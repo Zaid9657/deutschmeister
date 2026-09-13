@@ -160,9 +160,10 @@ const SpeakingPage = () => {
   // (courseFlow.js: openPrompt / openTeil / hintWords). When it is there and no
   // mission was requested, THAT prompt is the task on screen — the learner
   // speaks to the thing the lesson promised, not to some other mission of the
-  // level. It is a free conversation on the server side: speaking-session takes
-  // a missionId and reads the task out of `speaking_missions`, so there is no
-  // field a client-supplied task text could travel in (see the report).
+  // level. On the server it stays a free session (no mission row, no pass
+  // criteria), but the task itself is sent with the start call as
+  // taskPrompt/taskTeil/taskHintWords — speaking-session validates it, stores it
+  // on the session row (topic/scenario) and the coach works to it every turn.
   const courseTask = useMemo(() => {
     if (wantedMission) return null;
     const ctx = readCourseContext();
@@ -260,7 +261,24 @@ const SpeakingPage = () => {
       const res = await fetch('/api/speaking/speaking-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
-        body: JSON.stringify({ action: 'start', level: selectedLevel, minutes: selectedMinutes, ...(selectedMissionId ? { missionId: selectedMissionId } : {}) }),
+        body: JSON.stringify({
+          action: 'start',
+          level: selectedLevel,
+          minutes: selectedMinutes,
+          ...(selectedMissionId ? { missionId: selectedMissionId } : {}),
+          // No mission row exists for this Lektion's Sprechen task, so the task
+          // itself travels with the start call; the server validates it, stores
+          // it on the session and coaches to it on every turn.
+          ...(courseTaskActive && !selectedMissionId
+            ? {
+              taskPrompt: courseTask.promptDe,
+              taskTeil: courseTask.teil,
+              ...(Array.isArray(courseTask.hintWords) && courseTask.hintWords.length
+                ? { taskHintWords: courseTask.hintWords }
+                : {}),
+            }
+            : {}),
+        }),
       });
       const data = await res.json().catch(() => ({}));
       if (res.status === 402) {

@@ -5,6 +5,8 @@ import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs
 import {
   AIError,
   buildTeacherSystemPrompt,
+  courseTaskColumns,
+  parseCourseTask,
   teacherReply,
   synthesizeSpeech,
 } from './_shared/speakingAI.mjs';
@@ -111,6 +113,7 @@ export const handler = async (event) => {
       return unauthorizedResponse(headers);
     }
 
+    const body = JSON.parse(event.body || '{}');
     const {
       action,
       level,
@@ -121,7 +124,7 @@ export const handler = async (event) => {
       duration_seconds,
       user_turns,
       status: endStatus,
-    } = JSON.parse(event.body || '{}');
+    } = body;
 
     // -----------------------------------------------------------------------
     // action 'end' — unchanged. The client reports final metrics; evaluation
@@ -171,6 +174,11 @@ export const handler = async (event) => {
       mission = missionRow;
     }
     const isMission = !!mission;
+
+    // A course Lektion's Sprechen task (validated, bounded client text). Only
+    // when there is no mission and this is not the placement test — a mission's
+    // server-owned prompt always wins.
+    const courseTask = isPlacement ? null : parseCourseTask(body);
 
     const effectiveLevel = isPlacement ? 'placement' : (level || mission?.level);
     if (!effectiveLevel) {
@@ -232,10 +240,18 @@ export const handler = async (event) => {
       if (isMission && mission.ai_opening_line) {
         openingText = mission.ai_opening_line;
       } else {
-        const baseSystem = buildTeacherSystemPrompt({ level: effectiveLevel, mission: isMission ? mission : null, isPlacement });
-        const system = isPlacement
-          ? baseSystem
-          : `${baseSystem}\n\nBEGINN: Begrüße den Schüler herzlich auf Deutsch und stelle EINE einfache, niveaugerechte Frage. Nur die Begrüßung und die Frage.`;
+        const baseSystem = buildTeacherSystemPrompt({
+          level: effectiveLevel,
+          mission: isMission ? mission : null,
+          isPlacement,
+          courseTask,
+        });
+        let system = baseSystem;
+        if (courseTask) {
+          system = `${baseSystem}\n\nBEGINN: Begrüße dein Gegenüber kurz auf Deutsch, nenne die Aufgabe in eigenen Worten und stelle EINE erste Frage dazu. Nur die Begrüßung und die Frage.`;
+        } else if (!isPlacement) {
+          system = `${baseSystem}\n\nBEGINN: Begrüße den Schüler herzlich auf Deutsch und stelle EINE einfache, niveaugerechte Frage. Nur die Begrüßung und die Frage.`;
+        }
         openingText = await teacherReply({ system, history: [], userText: '', maxTokens: 120 });
       }
       if (!openingText) openingText = 'Hallo! Schön, dass du da bist. Erzähl mir ein bisschen von dir.';
@@ -282,6 +298,8 @@ export const handler = async (event) => {
         started_at: new Date().toISOString(),
         planned_minutes: plannedMinutes,
         cost_cents: costCents,
+        // Course task → the two unused nullable columns (no schema change).
+        ...courseTaskColumns(courseTask),
       });
     if (insertError) {
       console.error('[speaking-session] Session insert failed:', JSON.stringify(insertError));
