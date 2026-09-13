@@ -68,10 +68,21 @@ export const TRIAL_WRITING_EVALUATIONS = 2;
  * This is a SEPARATE allowance from TRIAL_WRITING_EVALUATIONS above: the course
  * is advertised as free, so its writing may not be gated behind the two trial
  * evaluations. Pro learners' course tasks count inside PRO_WRITING_EVALUATIONS_PER_MONTH.
- * Owner decision 2026-09-12 (docs plan P2). Source: COURSE_WRITING_FREE_LIFETIME,
- * netlify/functions/evaluate-writing.mjs (2026-09-12).
+ * Owner decision 2026-09-12 (docs plan P2). One per Lektion, verified against
+ * evaluate-writing.mjs COURSE_WRITING_FREE_LIFETIME on 2026-09-13.
  */
 export const COURSE_WRITING_FREE_LIFETIME = 12;
+
+/**
+ * The WHOLE free A1.1 course writing allowance, lifetime — the twelve Lektion
+ * tasks above PLUS the four checkpoint writing tasks (one per checkpoint,
+ * same task_key as the Lektion it closes out, so it counts against the same
+ * lifetime total). This is the figure a claim should state if it means the
+ * complete allowance rather than the per-Lektion half above.
+ * Source: courseAllowanceFor("a11-l01") in netlify/functions/evaluate-writing.mjs
+ * = 12 Lektionen + CHECKPOINTS_PER_COURSE 4, verified 2026-09-13.
+ */
+export const COURSE_WRITING_FREE_TOTAL_A11 = 16;
 
 /**
  * Scored read-aloud clips per user and day, across the whole product. Source:

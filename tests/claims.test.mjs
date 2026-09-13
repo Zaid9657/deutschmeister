@@ -66,6 +66,7 @@ import {
   PRO_WRITING_EVALUATIONS_PER_MONTH,
   TRIAL_WRITING_EVALUATIONS,
   COURSE_WRITING_FREE_LIFETIME,
+  COURSE_WRITING_FREE_TOTAL_A11,
   READALOUD_DAILY_LIMIT,
   READING_LESSON_COUNT,
 } from '../src/data/marketing.js';
@@ -318,6 +319,25 @@ test('the free course writing allowance matches the server that enforces it', ()
     COURSE_WRITING_FREE_LIFETIME,
     serverConst(src, 'COURSE_WRITING_FREE_LIFETIME'),
     'marketing claims a different free course writing allowance than the server grants',
+  );
+});
+
+test('the whole free course writing allowance matches courseAllowanceFor()', async () => {
+  // COURSE_WRITING_FREE_TOTAL_A11 claims the WHOLE A1.1 allowance (Lektionen +
+  // checkpoints), not just the per-Lektion half above. courseAllowanceFor() in
+  // evaluate-writing.mjs is the actual gate a submission is checked against, so
+  // import it directly rather than re-deriving the arithmetic here.
+  const { courseAllowanceFor, CHECKPOINTS_PER_COURSE } = await import('../netlify/functions/evaluate-writing.mjs');
+  const gate = courseAllowanceFor('a11-l01');
+  assert.equal(
+    COURSE_WRITING_FREE_LIFETIME + CHECKPOINTS_PER_COURSE,
+    gate,
+    'per-Lektion allowance + checkpoints per course no longer sums to the server gate',
+  );
+  assert.equal(
+    COURSE_WRITING_FREE_TOTAL_A11,
+    gate,
+    'marketing claims a different whole-course writing allowance than the server grants',
   );
 });
 
