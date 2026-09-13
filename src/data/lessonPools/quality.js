@@ -63,6 +63,46 @@
 //     prompt — "___ Tafel ist grün. (bestimmter Artikel)" — and never touches
 //     `answer` or `accepted`; whatever still fails afterwards is dropped here.
 //
+// FIFTH REVIEW (docs/course-factory/a11-rebuild/REVIEW-daf-5-2026-09-12.md)
+// found the SAME class a fourth time and named the reason it keeps coming back:
+// "eine Regel muss an der Frage hängen, die sie beantwortet, nicht am Feld, in
+// dem die letzte Instanz gefunden wurde." Round 4's article rule asked
+// `type === 'fill_blank'`, i.e. the build shape of the instance round 4 had
+// found, so three items of another shape walked straight through it:
+//
+//   * BLOCKER 1 — THE ARTICLE LIVES ONLY IN THE ENGLISH GLOSS, IN A CUE LIST.
+//     "Schreiben Sie den Satz: [Honig / ist / gut]" accepts only "Der Honig ist
+//     gut." while "Honig ist gut." is faultless (idiomatic, even — a mass noun
+//     without an article), and `tagError` books the miss as VERBSTELLUNG, a
+//     mistake the learner cannot have made in a sentence he wrote in the given
+//     order. The twins `[Blume / ist / schön]` and `[Schrank / ist / neu]` are
+//     two of the three Schreiben tasks of the GRADED Checkpoint 2. So the rule
+//     below asks the question instead of the type: THE ARTICLE THE ANSWER
+//     REQUIRES MUST BE AVAILABLE IN THE GERMAN PROMPT — either as a cue word in
+//     the list, or as a task formula. The repair appends the formula
+//     ("… [Honig / ist / gut] (mit bestimmtem Artikel)") and never touches
+//     `answer`/`accepted`: the cue now demands what the answer key always
+//     wanted, which is the honest direction to close the gap in.
+//   * BLOCKER 2 — THE TASK FORMULA AND THE ANSWER KEY DISAGREE.
+//     `extra-a11-l05-08` reads "Ist das ein Heft? — Ja, und ___ ist grün.
+//     (bestimmter Artikel)" and accepts only `das Heft`, so the learner who
+//     obeys the formula and writes `das` — a correct German sentence, the
+//     demonstrative picking the Heft up — is marked WRONG and gets a Wortschatz
+//     tag. That item was itself written as the repair for round 4's finding,
+//     which is why this one is a RULE and not a widened list: `cueAnswerMismatch`
+//     below. It is deliberately NOT repaired. A repair would have to guess which
+//     half is right — the formula or the key — and guessing at the answer key is
+//     exactly what a course may not do; the item's author decides. A hand-written
+//     extra that fails it stops the build, which is the whole point of running
+//     the extras through the same gate.
+//   * MAJOR 7 — A PROMPT THAT ASKS ABOUT THE LANGUAGE INSTEAD OF USING IT.
+//     "Welche Endung ist IMMER feminin?" with the chips -er/-um/-chen/-ung,
+//     answered "-ung ist 100% feminin ohne Ausnahmen." — which is false for
+//     words ENDING in -ung (der Ursprung, der Sprung, der Dung), demands
+//     grammar terminology in a Lektion whose Handlungsfeld is "Einkaufen", and
+//     carries a percentage claim that `tests/rule-card-overrides.test.mjs`
+//     already forbids on every rule card. `metalinguisticPrompt` drops it.
+//
 // Also from review #3, but NOT a filter rule: `drillsSlug(item, slug)` below.
 // The review's systemic finding is that the `topic` marks in the pool are
 // ROUTING LABELS, not content descriptions — "≥ 4 of 7 items on the Lektion's
@@ -97,6 +137,10 @@ export const REASON = Object.freeze({
   STATEMENT_NO_TASK: 'statement-no-task',
   // REVIEW #4 — the article the item wants is named only in the English gloss
   ARTICLE_CUE_ONLY_IN_GLOSS: 'article-cue-only-in-gloss',
+  // REVIEW #5 — the task formula and the answer key ask for different things,
+  // and the prompt asks ABOUT German rather than asking for German
+  CUE_ANSWER_MISMATCH: 'cue-answer-mismatch',
+  METALINGUISTIC_PROMPT: 'metalinguistic-prompt',
 });
 
 /** The level whose taught-by-now rules below apply. */
@@ -263,6 +307,50 @@ export const ARTICLE_CUE = Object.freeze({
 });
 
 /**
+ * REVIEW #5 BLOCKER 1. The same cue for a sentence-building item, where the gap
+ * is the whole sentence and the article has to be INVENTED from a cue list that
+ * does not contain it. Written in the Dativ ("mit bestimmtem Artikel") both
+ * because that is the German and because it keeps the two cues apart for
+ * `ARTICLE_TASK_CUE_RE` below: a sentence-building prompt asks for a SENTENCE,
+ * so it must never be read as a prompt that wants a bare article back.
+ */
+export const SENTENCE_ARTICLE_CUE = Object.freeze({
+  definite: '(mit bestimmtem Artikel)',
+  indefinite: '(mit unbestimmtem Artikel)',
+});
+
+const SENTENCE_ARTICLE_CUE_RE = Object.freeze({
+  definite: /\(\s*mit\s+bestimmtem\s+artikel\s*\)/i,
+  indefinite: /\(\s*mit\s+unbestimmtem\s+artikel\s*\)/i,
+});
+
+/**
+ * REVIEW #5 BLOCKER 2. The task formulas that tell the learner to write a BARE
+ * ARTICLE and nothing else — the two the round-4 repair appends, plus the
+ * hand-written "(der, die oder das?)". `(mit bestimmtem Artikel)` is
+ * deliberately NOT in here: it asks for a whole sentence containing one.
+ */
+export const ARTICLE_TASK_CUE_RE =
+  /\(\s*(?:un)?bestimmter\s+artikel\s*\)|\(\s*der,\s*die\s+oder\s+das\s*\?\s*\)/i;
+
+/**
+ * "(arbeiten)", "(einkaufen, nur die Vorsilbe)" — an infinitive cue in the
+ * prompt, i.e. a task formula naming a VERB. Used by `cueAnswerMismatch` (a
+ * verb task whose answer key is a bare article) and by `drillsSlug` below.
+ */
+export const INFINITIVE_CUE_RE = /\([^)]*[a-zäöüß]{2}en\b[^)]*\)/i;
+
+/**
+ * Separable prefixes that are spelled like an article. Exactly one: `ein`. It is
+ * why `cueAnswerMismatch`'s reverse direction carries an exception rather than
+ * reading the answer form alone — "Wir kaufen heute ___. (einkaufen, nur die
+ * Vorsilbe)" → `ein` is a verb task with an article-shaped answer and is
+ * perfectly sound. Measured on the 2026-09-12 pool: the exception is what takes
+ * the reverse direction from two false positives to none.
+ */
+const ARTICLE_SHAPED_PREFIXES = Object.freeze(['ein']);
+
+/**
  * REVIEW #3 BLOCKER 2. The task formulas an A1.1 prompt uses. Both registers,
  * because the register normaliser in the build script turns the du-forms into
  * Sie-forms and this rule has to hold on both sides of that change.
@@ -361,12 +449,117 @@ export function articleAnswerKind(item) {
  */
 export function articleCueOnlyInGloss(item) {
   if (!item) return false;
+  if (String(item.type || '') === 'sentence_building') return missingSentenceArticle(item) !== null;
   if (String(item.type || '') !== 'fill_blank') return false;
   if (Array.isArray(item.options) && item.options.length) return false;
   const q = String(item.questionDe || '');
   if (!q.includes('___')) return false;
   if (/\([^)]*\)/.test(q) || BRACKET_LIST_RE.test(q)) return false;
   return articleAnswerKind(item) !== null;
+}
+
+/**
+ * REVIEW #5 BLOCKER 1, asked as a QUESTION rather than as a type: does the
+ * German prompt give the learner the article his answer is required to carry?
+ * `missingSentenceArticle(item)` → 'definite' | 'indefinite' | null.
+ *
+ * An article counts as REQUIRED when it stands in front of a noun in the
+ * expected sentence — a capitalised next word, which is what a German noun is.
+ * That is the whole narrowing, and it is a measured one: without it
+ * "Schreiben Sie den Satz: [wir / einkaufen / heute]" → "Wir kaufen heute ein."
+ * reads as a missing `ein`, when the `ein` is the separable prefix of the verb
+ * the cue list already names. It counts as AVAILABLE when the cue list carries
+ * the same word — "[der Stuhl / kosten / zwölf Euro]" — or when the prompt
+ * carries the task formula the repair appends, which is what makes the repair
+ * idempotent.
+ *
+ * Measured over the 347-item pool + the 119 hand-written extras: three hits,
+ * exactly the three the review names (`dd86dc8a`, `670eaadb`, `cd6d471e`), and
+ * no false positive among the other 36 sentence-building items.
+ */
+export function missingSentenceArticle(item) {
+  if (!item || String(item.type || '') !== 'sentence_building') return null;
+  const q = String(item.questionDe || '');
+  const list = BRACKET_LIST_RE.exec(q);
+  if (!list) return null;
+  const cues = new Set(flat(list[1]).split(/[^a-z0-9]+/).filter(Boolean));
+  const tokens = bare(item.answer).split(/\s+/).filter(Boolean);
+  for (let i = 0; i < tokens.length; i += 1) {
+    const word = flat(tokens[i]);
+    const definite = DEFINITE_ARTICLE_ANSWERS.includes(word);
+    if (!definite && !INDEFINITE_ARTICLE_ANSWERS.includes(word)) continue;
+    const next = tokens[i + 1];
+    if (!next || !/^[A-ZÄÖÜ]/.test(next)) continue;
+    if (cues.has(word)) continue;
+    const kind = definite ? 'definite' : 'indefinite';
+    if (SENTENCE_ARTICLE_CUE_RE[kind].test(q)) continue;
+    return kind;
+  }
+  return null;
+}
+
+/**
+ * REVIEW #5 BLOCKER 2: the task formula in the German prompt and the answer key
+ * ask for different things, so obeying the formula is marked wrong.
+ *
+ * Forward: the prompt says "(bestimmter Artikel)" / "(unbestimmter Artikel)" /
+ * "(der, die oder das?)" — a formula that asks for ONE WORD — and not one
+ * accepted answer is a bare article. `extra-a11-l05-08` ("… Ja, und ___ ist
+ * grün. (bestimmter Artikel)" → `das Heft`) is the measured instance and the
+ * reason this is a rule: it was itself written to repair the round-4 finding.
+ *
+ * Reverse: the answer key is nothing but bare articles while the prompt's
+ * formula names a verb. Measured hits on the current pool: none — the two items
+ * the shape catches ("Wir kaufen heute ___. (einkaufen, nur die Vorsilbe)" →
+ * `ein`) are the separable prefix, which `ARTICLE_SHAPED_PREFIXES` excepts. It
+ * is kept because the direction is the same finding and costs one clause; a
+ * rule with no instance today is not the same thing as a rule with false ones.
+ *
+ * NOT REPAIRABLE, on purpose. Both halves of a mismatch are plausible, and
+ * choosing between them means rewriting either the task or the answer key —
+ * which is authorship, not a build step. The item is excluded; a hand-written
+ * extra that trips it stops the build.
+ */
+export function cueAnswerMismatch(item) {
+  if (!item) return false;
+  const q = String(item.questionDe || '');
+  const expected = [item.answer, ...(item.accepted || [])].map((a) => flat(bare(a))).filter(Boolean);
+  if (!expected.length) return false;
+  const isBareArticle = (a) =>
+    DEFINITE_ARTICLE_ANSWERS.includes(a) || INDEFINITE_ARTICLE_ANSWERS.includes(a);
+  if (ARTICLE_TASK_CUE_RE.test(q)) return !expected.some(isBareArticle);
+  if (expected.every(isBareArticle) && !expected.some((a) => ARTICLE_SHAPED_PREFIXES.includes(a))) {
+    return INFINITIVE_CUE_RE.test(q);
+  }
+  return false;
+}
+
+/**
+ * REVIEW #5 MAJOR 7: the prompt asks ABOUT German instead of asking FOR German.
+ * "Welche Endung ist IMMER feminin?" needs the words *Endung* and *feminin*
+ * before it can be read at all, in a Lektion whose Wortfeld is Tisch, Stuhl,
+ * Lampe, Uhr — and the course's own notice says the opposite ("Das Genus ist
+ * Teil des Wortes"), i.e. it teaches gender as lexis, not as a suffix table.
+ *
+ * Two clauses, both measured against the pool before they were written:
+ *   * `^Welche Endung` — 1 hit, the item the review names, 0 false positives.
+ *   * `^Welches Genus` — 0 hits. Kept: the shape is metalinguistic by
+ *     construction and the pattern cannot reach anything else.
+ *   * options that are nothing but bare endings (`-er`, `-um`, `-chen`) — 1
+ *     hit, the same item. A chip set of suffixes cannot be a use exercise.
+ * Rejected after measuring: `^Welcher Artikel ist richtig für` and
+ * `^Welcher Artikel passt zu der Endung`. Both score 0 — but the pool holds
+ * four LEGITIMATE items one word away from them ("Welcher Artikel passt? ___
+ * Wohnung"), which use the article rather than talk about it, and a pattern
+ * that close to a good family is a trap waiting for the next author.
+ */
+export const METALINGUISTIC_PROMPT_RE = /^\s*(?:welche\s+endung|welches\s+genus)\b/i;
+
+export function metalinguisticPrompt(item) {
+  if (!item) return false;
+  if (METALINGUISTIC_PROMPT_RE.test(String(item.questionDe || ''))) return true;
+  const options = (item.options || []).filter((o) => String(o).trim());
+  return options.length > 0 && options.every((o) => /^-\s*[a-zäöüß]/i.test(String(o).trim()));
 }
 
 /**
@@ -448,8 +641,11 @@ const endsOnPrefix = (q) => {
   return Boolean(tail) && PREFIXES.has(tail);
 };
 
-/** "(arbeiten)", "(aufstehen, nur die Vorsilbe)" — an infinitive cue in the prompt. */
-const INFINITIVE_CUE_RE = /\([^)]*[a-zäöüß]{2}en\b[^)]*\)/i;
+/**
+ * The two item types where the learner TYPES the whole sentence, and so decides
+ * its word order himself. A fill-in cannot: its frame is printed around the gap.
+ */
+const INVERSION_TYPES = new Set(['sentence_building', 'error_correction']);
 
 /** Predicate per slug. Each one reads what the learner produces, not the label. */
 const DRILLS = {
@@ -526,19 +722,30 @@ const DRILLS = {
     }) ||
     endsOnPrefix(q),
 
-  // A yes/no question is the finite verb in first position, so an item drills it
-  // when the learner writes the whole question, chooses Ja/Nein, or is asked for
-  // a Frage by name.
+  // A yes/no question is the finite verb in FIRST POSITION. An item drills that
+  // only when the learner PUTS it there: he writes the whole question out of a
+  // cue list or out of a statement, or he chooses Ja/Nein.
   //
-  // REVIEW #4 MAJOR: the fourth clause — a gap at position 1 in front of a
-  // question mark — is gone. It counted "___ du eine Fahrkarte für morgen?
-  // (haben)" → Hast, where the INVERSION is given and only the verb form is
-  // asked; five of Lektion 10's seven drawn items were of that shape, so the
-  // slug measured 7/7 while the learner produced the word order at most twice.
-  'yes-no-questions': ({ q, expected, options }) =>
-    expected.some((a) => /\?\s*$/.test(String(a).trim())) ||
-    options.some((o) => isOneOf(o, set('ja', 'nein'))) ||
-    /(bilden sie|bilde|schreiben sie|schreib)\s+(sie\s+)?(die\s+)?(höfliche\s+|richtige\s+)?frage/i.test(q),
+  // REVIEW #4 MAJOR removed the gap-at-position-1 clause. REVIEW #5 MAJOR 1
+  // removed the other two, and for the same reason — they counted items where
+  // the question form is GIVEN:
+  //   * "answer ends in ?" alone counted `extra-a11-l10-10/11`
+  //     ("Korrigieren Sie: „Sind der Bahnhof weit?“" → "Ist der Bahnhof weit?"),
+  //     which is subject-verb agreement inside a question that already stands in
+  //     the prompt. The question mark now has to be the LEARNER's: the answer
+  //     ends in one and the prompt contains none.
+  //   * "asked for a Frage by name" counted any prompt that says the word, which
+  //     is every prompt of the Lektion including the fill-in ones. Gone; the
+  //     first clause already covers the "Bilden Sie die Frage: [...]" items,
+  //     which is where the formula actually means something.
+  // Measured after the change, both attempts: Lektion 10 drills its own slug in
+  // 2 of 7 items, not 4. That is the honest figure and it is BELOW PRIMARY_MIN —
+  // the gap is two missing producer items, not a predicate to loosen.
+  'yes-no-questions': ({ q, type, expected, options }) =>
+    (INVERSION_TYPES.has(type) &&
+      !/\?/.test(q) &&
+      expected.some((a) => /\?\s*$/.test(String(a).trim()))) ||
+    options.some((o) => isOneOf(o, set('ja', 'nein'))),
 
   'time-and-dates': ({ expected }) =>
     expected.some((a) => /uhr/i.test(String(a)) || wordsFlat(a).some((w) => TIME_WORD_RE.test(w))),
@@ -556,7 +763,9 @@ export function drillsSlug(item, slug) {
   const answer = String(item.answer || '');
   const expected = [answer, ...(item.accepted || [])].filter((a) => String(a).trim());
   const options = (item.options || []).filter((o) => String(o).trim());
-  return Boolean(rule({ q: String(item.questionDe || ''), answer, expected, options }));
+  return Boolean(rule({
+    q: String(item.questionDe || ''), type: String(item.type || ''), answer, expected, options,
+  }));
 }
 
 /**
@@ -598,6 +807,14 @@ export function exclusionReason(item, { level } = {}) {
   // REVIEW #4, last for the same reason: an id already pinned to an older
   // reason keeps it.
   if (articleCueOnlyInGloss(item)) return REASON.ARTICLE_CUE_ONLY_IN_GLOSS;
+
+  // REVIEW #5, last for the same reason again. Note the ORDER between these two
+  // and the article rule above is load-bearing in one direction only: a
+  // sentence-building item whose article is missing is REPAIRABLE, so it must
+  // report the repairable reason; a cue/answer mismatch is not, and must never
+  // be mistaken for one.
+  if (cueAnswerMismatch(item)) return REASON.CUE_ANSWER_MISMATCH;
+  if (metalinguisticPrompt(item)) return REASON.METALINGUISTIC_PROMPT;
 
   return null;
 }

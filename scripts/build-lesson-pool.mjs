@@ -69,6 +69,24 @@
 //      the hand-written extras too — they pass through the same gate — and it is
 //      idempotent: a prompt that already carries a bracket is left alone.
 //
+//   5c. THE SAME REPAIR, ASKED AS A QUESTION (REVIEW #5 BLOCKER 1). Round 4's
+//      rule listened for `type === 'fill_blank'`, so three sentence-building
+//      items of the same class survived it — "Schreiben Sie den Satz: [Honig /
+//      ist / gut]" accepts only "Der Honig ist gut.", while "Honig ist gut." is
+//      faultless German and comes back tagged VERBSTELLUNG. Two of the three are
+//      Schreiben tasks of the GRADED Checkpoint 2. The predicate now reads the
+//      FORM (an article in front of a noun in the expected sentence that the cue
+//      list does not carry), and this script appends "(mit bestimmtem Artikel)"
+//      rather than writing the article into the list, which would give the
+//      gender away. Idempotent: the appended formula is what makes the item pass.
+//
+//   5d. NOT REPAIRED, ON PURPOSE (REVIEW #5 BLOCKER 2). `cue-answer-mismatch` —
+//      a prompt that says "(bestimmter Artikel)" whose answer key wants
+//      "das Heft" — has two plausible fixes (change the formula, or change the
+//      key) and a build step may not pick one: that is authorship. Such an item
+//      is excluded, and a hand-written EXTRA that trips it stops the build with
+//      its id, which is what running the extras through the same gate is for.
+//
 //   6. REGISTER (REVIEW #3 MAJOR). The hand-written items siezen, the legacy
 //      bank duzt: 39 du-imperatives against 30 Sie-forms in the shipped pool,
 //      three of them in the drawn seven of the FREE Lektion 1, next to a
@@ -79,7 +97,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import {
   filterPool, REASON, REASONS, isUsableItem, exclusionReason, parseVerbCue,
-  articleAnswerKind, ARTICLE_CUE,
+  articleAnswerKind, ARTICLE_CUE, missingSentenceArticle, SENTENCE_ARTICLE_CUE,
 } from '../src/data/lessonPools/quality.js';
 
 const level = (process.argv[2] || 'a1.1').toLowerCase();
@@ -138,13 +156,24 @@ const repaired = raw.map(repairVerbCue).filter(Boolean);
 // information, the answer key does not change. Idempotent by construction — an
 // item whose prompt already carries a bracket is not in the class at all, so a
 // cue the item author wrote by hand is left exactly as written.
+// REVIEW #5 BLOCKER 1 extends it by FORM, not by type: a sentence-building item
+// whose expected sentence carries an article in front of a noun that the German
+// cue list does not contain — "Schreiben Sie den Satz: [Honig / ist / gut]" →
+// "Der Honig ist gut." — gets the task formula appended in the Dativ form
+// ("(mit bestimmtem Artikel)"), because the alternative, writing the article
+// INTO the cue list ("[der Honig / ist / gut]"), hands the learner the gender
+// the item exists to test. `answer`/`accepted` stay untouched here too: after
+// the repair the prompt demands what the key always required, which is the only
+// direction a build step may close such a gap in.
 function repairArticleCue(item) {
   if (exclusionReason(item, { level }) !== REASON.ARTICLE_CUE_ONLY_IN_GLOSS) return null;
-  const kind = articleAnswerKind(item);
+  const sentenceKind = missingSentenceArticle(item);
+  const kind = sentenceKind || articleAnswerKind(item);
   if (!kind) return null;
+  const cue = sentenceKind ? SENTENCE_ARTICLE_CUE[kind] : ARTICLE_CUE[kind];
   const before = item.questionDe;
-  item.questionDe = `${String(item.questionDe).trim()} ${ARTICLE_CUE[kind]}`;
-  return { id: item.id, topic: item.topic, kind, before, after: item.questionDe };
+  item.questionDe = `${String(item.questionDe).trim()} ${cue}`;
+  return { id: item.id, topic: item.topic, kind, shape: sentenceKind ? 'sentence' : 'gap', before, after: item.questionDe };
 }
 
 const articleRepaired = raw.map(repairArticleCue).filter(Boolean);
@@ -658,9 +687,10 @@ console.log(`repaired verb cues (REVIEW #3 BLOCKER 1): ${repaired.length}`);
 for (const r of repaired) console.log(`       ${r.id.slice(0, 8)} ${r.topic} · ${r.after}`);
 const stillFailing = excluded.filter((e) => e.reason === 'verb-cue-only-in-gloss');
 if (stillFailing.length) console.log(`  still verb-cue-only after the repair: ${stillFailing.length}`);
-console.log(`repaired article cues (REVIEW #4 BLOCKER 2): ${articleRepaired.length}` +
+console.log(`repaired article cues (REVIEW #4 BLOCKER 2 · #5 BLOCKER 1): ${articleRepaired.length}` +
   ` (bestimmt ${articleRepaired.filter((r) => r.kind === 'definite').length}` +
-  ` · unbestimmt ${articleRepaired.filter((r) => r.kind === 'indefinite').length})`);
+  ` · unbestimmt ${articleRepaired.filter((r) => r.kind === 'indefinite').length}` +
+  ` · davon Satzbau ${articleRepaired.filter((r) => r.shape === 'sentence').length})`);
 for (const r of articleRepaired) console.log(`       ${String(r.id).slice(0, 8)} ${r.topic} · ${r.after}`);
 const stillArticle = excluded.filter((e) => e.reason === REASON.ARTICLE_CUE_ONLY_IN_GLOSS);
 if (stillArticle.length) console.log(`  still article-cue-only after the repair: ${stillArticle.length}`);

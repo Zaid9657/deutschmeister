@@ -48,6 +48,25 @@
 //     "Lesen Sie die Buchstaben:", which is true and keeps the `/Buchstab/` mark
 //     the Lektion-1 spelling items are identified by.
 //
+// FIFTH REVIEW (REVIEW-daf-5-2026-09-12.md) found the class a FOURTH time, and
+// this time the reason was the rule's own shape rather than a new part of
+// speech: round 4's article rule asked `type === 'fill_blank'`, so three
+// sentence-building items kept inventing an article the German cue list never
+// names ("[Honig / ist / gut]" → only "Der Honig ist gut."), two of them inside
+// the graded Checkpoint 2. Three rules close it, all three phrased as the
+// question they answer rather than as the field the last instance was found in:
+//
+//   * THE ARTICLE THE ANSWER NEEDS MUST BE IN THE GERMAN PROMPT — as a cue word
+//     or as a task formula. Repaired in the build ("(mit bestimmtem Artikel)");
+//     writing the article into the cue list would give the gender away.
+//   * THE TASK FORMULA AND THE ANSWER KEY MUST ASK FOR THE SAME THING.
+//     "(bestimmter Artikel)" + `accepted: ['das Heft']` marks the learner who
+//     obeys the formula wrong. NOT repaired: choosing which half is right is
+//     authorship, so the item is excluded and a failing extra stops the build.
+//   * A PROMPT ASKS FOR GERMAN, NOT ABOUT IT. "Welche Endung ist IMMER
+//     feminin?" — plus the percentage claim in its explanation, which the rule
+//     cards have been forbidden from making since round 2.
+//
 // And the register: the shipped pool had 39 du-imperatives against 30 Sie-forms,
 // three of them in the drawn seven of the FREE Lektion. The normaliser lives in
 // the build script, the proof lives here.
@@ -67,6 +86,7 @@ import {
   MONTH_NAMES, ORDINAL_CUE_RE, ORDINAL_WORD_RE, MIN_BRACKET_CUES,
   answerInPrompt, isMetaPrompt, verbCueOnlyInGloss, statementNoTask, parseVerbCue,
   articleCueOnlyInGloss, articleAnswerKind, ARTICLE_CUE,
+  missingSentenceArticle, cueAnswerMismatch, metalinguisticPrompt, SENTENCE_ARTICLE_CUE,
 } from '../src/data/lessonPools/quality.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -365,4 +385,196 @@ test('the two items the review quotes now carry their verb in the German prompt'
   assert.ok(l11, 'd8082071 (L11 "Sie ___ zusammen.") is gone from the pool');
   assert.match(l7.questionDe, /\(arbeiten/, l7.questionDe);
   assert.match(l11.questionDe, /\(arbeiten, Plural\)/, l11.questionDe);
+});
+
+// --- REVIEW #5 ------------------------------------------------------------
+//
+// The fifth review's one sentence: "eine Regel muss an der Frage hängen, die
+// sie beantwortet, nicht am Feld, in dem die letzte Instanz gefunden wurde."
+// Round 4's article rule asked `type === 'fill_blank'` and three items of
+// another build shape walked through it — two of them into the GRADED
+// Checkpoint 2. The three tests below are written as the question, not as the
+// shape: is the article in the German prompt at all; do the task formula and
+// the answer key ask for the same thing; does the prompt ask FOR German or
+// ABOUT it.
+
+test('no usable sentence-building item invents an article the cue list never names — REVIEW #5 BLOCKER 1', () => {
+  for (const item of USABLE) {
+    assert.equal(missingSentenceArticle(item), null, `article missing from the cue list: ${label(item)}`);
+    assert.equal(articleCueOnlyInGloss(item), false, `article cue only in the gloss: ${label(item)}`);
+  }
+  // the three the review names by id, whichever file they live in
+  for (const id of [
+    'dd86dc8a-49b8-5d48-8a6a-2606fd90b0fd',
+    '670eaadb-ca17-52d3-a62b-220ef80b8828',
+    'cd6d471e-cd91-5863-b5db-eeb2cbce2f2e',
+  ]) {
+    const item = ALL.find((i) => i.id === id);
+    if (!item) continue; // replaced by the item author — the rule still stands
+    assert.equal(missingSentenceArticle(item), null, `${id} still hides its article: ${item.questionDe}`);
+  }
+  // the shape itself, and the repair that has to satisfy the rule
+  const trap = {
+    id: 'sb1', topic: 'nouns-gender', type: 'sentence_building',
+    questionDe: 'Schreiben Sie den Satz: [Honig / ist / gut]',
+    questionEn: 'Write the sentence: [honey / is / good] — add the right definite article.',
+    answer: 'Der Honig ist gut.',
+  };
+  assert.equal(exclusionReason(trap), REASON.ARTICLE_CUE_ONLY_IN_GLOSS);
+  assert.equal(missingSentenceArticle(trap), 'definite');
+  assert.equal(
+    exclusionReason({ ...trap, questionDe: `${trap.questionDe} ${SENTENCE_ARTICLE_CUE.definite}` }),
+    null,
+    'the task formula in the German prompt is the repair, and it must satisfy the rule',
+  );
+  // the indefinite half
+  assert.equal(
+    missingSentenceArticle({
+      id: 'sb2', type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [Blume / sein / schön]',
+      answer: 'Eine Blume ist schön.',
+    }),
+    'indefinite',
+  );
+  // and the four shapes the rule must NOT touch
+  assert.equal(
+    missingSentenceArticle({
+      id: 'sb3', type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [der Stuhl / kosten / zwölf Euro]',
+      answer: 'Der Stuhl kostet zwölf Euro.',
+    }),
+    null,
+    'the cue list carries the article',
+  );
+  assert.equal(
+    missingSentenceArticle({
+      id: 'sb4', type: 'sentence_building', questionDe: 'Schreiben Sie den Satz: [wir / einkaufen / heute]',
+      answer: 'Wir kaufen heute ein.',
+    }),
+    null,
+    'the `ein` is the separable prefix of the verb the cue list names, not an article',
+  );
+  assert.equal(
+    missingSentenceArticle({
+      id: 'sb5', type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [ich / brauchen / ein / Handy]',
+      answer: 'Ich brauche ein Handy.',
+    }),
+    null,
+    'the article stands in the cue list as its own chip',
+  );
+  assert.equal(
+    missingSentenceArticle({
+      id: 'sb6', type: 'fill_blank', questionDe: '___ Tafel ist grün. (bestimmter Artikel)',
+      answer: 'Die', accepted: ['Die', 'die'],
+    }),
+    null,
+    'a fill-in gap is the other half of the rule, not this one',
+  );
+});
+
+test('no usable item asks for one form and accepts another — REVIEW #5 BLOCKER 2', () => {
+  for (const item of USABLE) {
+    assert.equal(cueAnswerMismatch(item), false, `cue and answer disagree: ${label(item)}`);
+  }
+  // the item the review measures: the formula says ONE WORD, the key wants two
+  const trap = {
+    id: 'cm1', topic: 'definite-articles', type: 'fill_blank',
+    questionDe: 'Ist das ein Heft? — Ja, und ___ ist grün. (bestimmter Artikel)',
+    answer: 'das Heft', accepted: ['das Heft', 'Das Heft'],
+  };
+  assert.equal(exclusionReason(trap), REASON.CUE_ANSWER_MISMATCH);
+  // The fixed item, as its author rewrote it: the formula and a bare article
+  // agree. (The prompt loses its own `das` in the same edit — otherwise the
+  // older ANSWER_IN_PROMPT rule catches it, which is that rule's business.)
+  assert.equal(
+    exclusionReason({
+      ...trap,
+      questionDe: 'Ist hier ein Heft? — Ja, und ___ Heft ist grün. (bestimmter Artikel)',
+      answer: 'das', accepted: ['das', 'Das'],
+    }),
+    null,
+    'the formula and a bare article agree — that is the fixed item',
+  );
+  assert.equal(cueAnswerMismatch({ ...trap, answer: 'das', accepted: ['das', 'Das'] }), false);
+  assert.equal(
+    cueAnswerMismatch({
+      id: 'cm2', topic: 'nouns-gender', type: 'fill_blank',
+      questionDe: '___ Rucksack ist teuer. (der, die oder das?)', answer: 'Der', accepted: ['Der', 'der'],
+    }),
+    false,
+    'the hand-written article formula counts as one',
+  );
+  // the reverse: a verb task whose key is nothing but bare articles
+  assert.equal(
+    cueAnswerMismatch({
+      id: 'cm3', topic: 'present-tense-regular', type: 'fill_blank',
+      questionDe: 'Wir ___ heute. (kaufen)', answer: 'die', accepted: ['die'],
+    }),
+    true,
+  );
+  // …and the one exception that keeps the reverse honest: `ein` is also the
+  // separable prefix, so the two real items of that shape are NOT mismatches.
+  assert.equal(
+    cueAnswerMismatch({
+      id: 'cm4', topic: 'separable-verbs-intro', type: 'fill_blank',
+      questionDe: 'Wir kaufen heute ___. (einkaufen, nur die Vorsilbe)', answer: 'ein', accepted: ['ein'],
+    }),
+    false,
+    'the separable prefix is spelled like an article and is not one',
+  );
+  // a sentence-building repair asks for a SENTENCE containing an article, and
+  // must never be read as a prompt that wants a bare one back
+  assert.equal(
+    cueAnswerMismatch({
+      id: 'cm5', topic: 'nouns-gender', type: 'sentence_building',
+      questionDe: `Schreiben Sie den Satz: [Honig / ist / gut] ${SENTENCE_ARTICLE_CUE.definite}`,
+      answer: 'Der Honig ist gut.',
+    }),
+    false,
+  );
+});
+
+test('no usable prompt asks ABOUT German instead of asking FOR it — REVIEW #5 MAJOR 7', () => {
+  for (const item of USABLE) {
+    assert.equal(metalinguisticPrompt(item), false, `metalinguistic prompt: ${label(item)}`);
+  }
+  const trap = {
+    id: 'mp1', topic: 'nouns-gender', type: 'multiple_choice',
+    questionDe: 'Welche Endung ist IMMER feminin?', options: ['-er', '-um', '-chen', '-ung'],
+    answer: '-ung', explanationDe: '-ung ist 100% feminin ohne Ausnahmen.',
+  };
+  assert.equal(exclusionReason(trap), REASON.METALINGUISTIC_PROMPT);
+  // either clause alone is enough: the prompt, or a chip set of bare endings
+  assert.equal(metalinguisticPrompt({ ...trap, options: null }), true);
+  assert.equal(metalinguisticPrompt({ ...trap, questionDe: 'Was passt?' }), true);
+  // and the family one word away that the rule may NOT touch: these USE the
+  // article instead of talking about it, and four of them are in the pool.
+  for (const q of ['Welcher Artikel passt? ___ Wohnung', 'Welches Wort verwendet "das"?', 'Welche Schreibweise ist richtig?']) {
+    assert.equal(
+      metalinguisticPrompt({ id: 'mp2', type: 'multiple_choice', questionDe: q, options: ['der', 'die', 'das'], answer: 'die' }),
+      false,
+      q,
+    );
+  }
+});
+
+test('no explanation a learner is shown claims a percentage — REVIEW #5 MAJOR 7', () => {
+  // The same rule `tests/rule-card-overrides.test.mjs` holds for every rule card
+  // ("a percentage has no source on an A1 rule card"), applied to the pool: the
+  // review found the card rule and the item rule pulling in opposite directions
+  // on the SAME fact. "-ung ist 100% feminin ohne Ausnahmen." is false for words
+  // ending in -ung (der Ursprung, der Sprung, der Dung) and an A1.1 learner
+  // cannot make the suffix/ending distinction that would rescue it.
+  //
+  // WHY THERE IS NO EXPLANATION OVERRIDE IN THE BUILD SCRIPT. The one item in
+  // the pool that trips this is `89f19829`, and `METALINGUISTIC_PROMPT` already
+  // drops it for a second, independent reason — so an id-keyed
+  // EXPLANATION_OVERRIDES map would have exactly one entry that never runs,
+  // which is the "correction by id where a rule was needed" this review series
+  // has flagged four times. The test below is the rule, and it holds whichever
+  // rule does the dropping: loosen `METALINGUISTIC_PROMPT` and this goes red.
+  for (const item of USABLE) {
+    assert.ok(
+      !String(item.explanationDe || '').includes('%'),
+      `percentage claim in an explanation: ${label(item)} — ${item.explanationDe}`,
+    );
+  }
 });
