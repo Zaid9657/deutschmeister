@@ -877,7 +877,9 @@ export function producedBeforeTaught(c, extraKnown) {
 
 // RULE 16 — a „Sprechen Teil 1“ prompt is a self-introduction. SD1 Teil 1 is nothing else: Name,
 // Alter, Land, Wohnort, Sprachen, Beruf, Hobby, plus spelling and the phone number.
-const SELF_INTRO_RE = /vorstellen|Name|Vorname|Wohnort|Beruf/i;
+// Bare "Name" would let a check-in task ("Melden Sie sich an: Name, Termin") pass as
+// Sprechen Teil 1 — the very case A1.2 review #1 BLOCKER 4 is about.
+const SELF_INTRO_RE = /vorstellen|Vorname|Wohnort|Beruf/i;
 
 /**
  * RULE 16: an `examTeile` claim must be backed by the Lektion that makes it.
