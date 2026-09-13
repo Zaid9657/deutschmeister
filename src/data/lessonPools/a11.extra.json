@@ -1,7 +1,7 @@
 {
  "level": "a1.1",
  "authored": "2026-09-12",
- "why": "Hand-authored situational practice items for ALL twelve A1.1 Lektionen. The first DaF review of 2026-09-12 measured the legacy grammar bank as drill rather than situation (L10 drew 0 of 7 items containing a Wortfeld word, L12 2, L6 3, L5 4) and the second review measured what the first batch left open: L9 3/7, L3 3/7, L11 3/7, L2 4/7, L4 4/7, plus L8 drawing two unsolvable ordinal-number items and L1/L7 leaning on words the Lektion never uses. Every item here uses the exact Wortfeld of its Lektion (src/data/curricula/a11.js, read only) plus earlier Lektionen, is typed production (fill_blank without options, sentence_building or error_correction), is German-only in prompt and answer, and passes src/data/lessonPools/quality.js. THREE RULES the second review asked for, applied to every item: (1) the answer follows unambiguously from the GERMAN prompt — where several verbs fit a gap the prompt carries the infinitive cue „(fahren)“, and where several forms are correct they are all in `accepted` (extra-a11-l10-01 now accepts Fährt/Geht/Kommt, as its own Lektion pretest does); (2) `accepted` carries the lowercase variant only where the gap is sentence-initial — the höfliche „Ihr“ and the mid-sentence „ein/eine/sein“ are case-strict, because capitalisation is the taught distinction; (3) every task instruction uses Sie („Bilden Sie die Frage“, „Korrigieren Sie“, „Schreiben Sie“), matching the course, while the dialogues keep du between friends (review §C). Intonation questions are no longer marked wrong: the two error_correction items on „Der Zug fährt nach …?“ now ask for the WRITTEN question form. scripts/build-lesson-pool.mjs merges this file into a11.json under the same filter; tests/lesson-extra-items.test.mjs pins the Wortfeld hit and the resulting draw. ROUND 3 (REVIEW-daf-3-2026-09-12): the hand-authored batch was itself reviewed and corrected — L11 lost three NON-separable verbs (frühstücken/duschen/schlafen) from the Satzklammer Lektion and gained abholen/mitkommen/anrufen; three L3 items drilled possessive endings (L12) and the Vokalwechsel du-form sprichst (deferred to L7) under a personal-pronouns label and are now genuine pronoun items; two L2 number-spelling items tagged verb-sein are now sein items; L7 no longer demands Samstag (taught in L8) and L8 no longer Vormittag (taught nowhere); L10 asks for the normal word order instead of calling a marked question an error; every gap whose answer is a verb carries its infinitive in the GERMAN prompt, and no English gloss carries a bracket the German prompt lacks. The rule behind the round: a topic mark is a routing label, so tests/lesson-extra-items.test.mjs now measures what the ANSWER drills, per Lektion.",
+ "why": "Hand-authored situational practice items for ALL twelve A1.1 Lektionen. The first DaF review of 2026-09-12 measured the legacy grammar bank as drill rather than situation (L10 drew 0 of 7 items containing a Wortfeld word, L12 2, L6 3, L5 4) and the second review measured what the first batch left open: L9 3/7, L3 3/7, L11 3/7, L2 4/7, L4 4/7, plus L8 drawing two unsolvable ordinal-number items and L1/L7 leaning on words the Lektion never uses. Every item here uses the exact Wortfeld of its Lektion (src/data/curricula/a11.js, read only) plus earlier Lektionen, is typed production (fill_blank without options, sentence_building or error_correction), is German-only in prompt and answer, and passes src/data/lessonPools/quality.js. THREE RULES the second review asked for, applied to every item: (1) the answer follows unambiguously from the GERMAN prompt — where several verbs fit a gap the prompt carries the infinitive cue „(fahren)“, and where several forms are correct they are all in `accepted` (extra-a11-l10-01 now accepts Fährt/Geht/Kommt, as its own Lektion pretest does); (2) `accepted` carries the lowercase variant only where the gap is sentence-initial — the höfliche „Ihr“ and the mid-sentence „ein/eine/sein“ are case-strict, because capitalisation is the taught distinction; (3) every task instruction uses Sie („Bilden Sie die Frage“, „Korrigieren Sie“, „Schreiben Sie“), matching the course, while the dialogues keep du between friends (review §C). Intonation questions are no longer marked wrong: the two error_correction items on „Der Zug fährt nach …?“ now ask for the WRITTEN question form. scripts/build-lesson-pool.mjs merges this file into a11.json under the same filter; tests/lesson-extra-items.test.mjs pins the Wortfeld hit and the resulting draw. ROUND 3 (REVIEW-daf-3-2026-09-12): the hand-authored batch was itself reviewed and corrected — L11 lost three NON-separable verbs (frühstücken/duschen/schlafen) from the Satzklammer Lektion and gained abholen/mitkommen/anrufen; three L3 items drilled possessive endings (L12) and the Vokalwechsel du-form sprichst (deferred to L7) under a personal-pronouns label and are now genuine pronoun items; two L2 number-spelling items tagged verb-sein are now sein items; L7 no longer demands Samstag (taught in L8) and L8 no longer Vormittag (taught nowhere); L10 asks for the normal word order instead of calling a marked question an error; every gap whose answer is a verb carries its infinitive in the GERMAN prompt, and no English gloss carries a bracket the German prompt lacks. The rule behind the round: a topic mark is a routing label, so tests/lesson-extra-items.test.mjs now measures what the ANSWER drills, per Lektion. ROUND 6 (REVIEW-daf-5-2026-09-12): extra-a11-l05-08 no longer punishes the answer its own task formula demands — the prompt lost the „das“ that stood before the gap („Ist hier ein Heft? — Ja, und ___ Heft ist grün.“) and the key is the bare article the cue asks for, which is what the new `cueAnswerMismatch` rule in quality.js pins for the whole pool. `caseSensitive` is now set where the TASK is the capital letter and nowhere else: extra-a11-l01-06, l03-08, l12-08, l12-09 and l12-16 carry it and their explanations name the capital; extra-a11-l12-10 („sie, Plural“ → ihre) LOST it, because there the capital is only the sentence opening — the rule is „flag iff the explanation says the capital letter is the point“, and tests/lesson-extra-items.test.mjs pins both directions. Lektion 10 now makes the learner PRODUCE the inversion in six items (l10-07/08/09/12/13/14) rather than fill a gap in front of a question mark the prompt already carries; their task formulas are varied on purpose, because buildLesson.js caps any lemma at MAX_SAME_LEMMA=2 and eight prompts saying „Frage“ would have let two of them be drawn. Lektion 2 gained the four number items the review asked for (l02-09..12: the digit stands in the prompt cue, the learner writes the word) — they carry `topic: verb-sein` because the closed slug list of scripts/validate-curriculum.mjs has no numbers slug, so verb-sein is the routing label that reaches Lektion 2; they do NOT drill sein and drillsSlug says so. Lektion 9 gained l09-09 („Fragen Sie höflich im Café: ___ Sie auch Kuchen? (haben)“). No explanation claims a percentage, „immer“ or „ohne Ausnahme“ any more (MAJOR 7), and the test suite forbids all three.",
  "items": [
   {
    "id": "extra-a11-l01-01",
@@ -90,8 +90,9 @@
    "options": null,
    "answer": "Ihnen",
    "accepted": ["Ihnen"],
-   "explanationDe": "Zu Frau Kaya sagt man Sie: Wie geht es Ihnen?",
-   "hint": null
+   "explanationDe": "Höflich zu Frau Kaya: Ihnen mit großem I.",
+   "hint": null,
+   "caseSensitive": true
   },
   {
    "id": "extra-a11-l01-07",
@@ -244,6 +245,66 @@
    "hint": null
   },
   {
+   "id": "extra-a11-l02-09",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 29,
+   "questionDe": "Ergänzen Sie: Meine Telefonnummer im Formular ist null eins ___ sechs. (7)",
+   "questionEn": "Fill in: on the form my phone number is zero one … six.",
+   "options": null,
+   "answer": "sieben",
+   "accepted": ["sieben"],
+   "explanationDe": "In Zahlen 7, als Wort: sieben.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l02-10",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 30,
+   "questionDe": "Ergänzen Sie: Wir sind ___ Studenten. (3)",
+   "questionEn": "Fill in: we are … students.",
+   "options": null,
+   "answer": "drei",
+   "accepted": ["drei"],
+   "explanationDe": "In Zahlen 3, als Wort: drei.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l02-11",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 31,
+   "questionDe": "Ergänzen Sie: Hier sind ___ Formulare. (8)",
+   "questionEn": "Fill in: here are … forms.",
+   "options": null,
+   "answer": "acht",
+   "accepted": ["acht"],
+   "explanationDe": "In Zahlen 8, als Wort: acht.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l02-12",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 32,
+   "questionDe": "Ergänzen Sie: Mein Vorname hat ___ Buchstaben. (10)",
+   "questionEn": "Fill in: my first name has … letters.",
+   "options": null,
+   "answer": "zehn",
+   "accepted": ["zehn"],
+   "explanationDe": "In Zahlen 10, als Wort: zehn.",
+   "hint": null
+  },
+  {
    "id": "extra-a11-l03-01",
    "topic": "personal-pronouns",
    "type": "fill_blank",
@@ -361,7 +422,8 @@
    "answer": "Sie",
    "accepted": ["Sie"],
    "explanationDe": "Sie mit großem S ist die höfliche Form.",
-   "hint": null
+   "hint": null,
+   "caseSensitive": true
   },
   {
    "id": "extra-a11-l04-01",
@@ -595,11 +657,11 @@
    "stage": 4,
    "difficulty": 1,
    "order": 58,
-   "questionDe": "Ist das ein Heft? — Ja, und ___ ist grün. (bestimmter Artikel)",
-   "questionEn": "Is that a notebook? — Yes, and it is green.",
+   "questionDe": "Ist hier ein Heft? — Ja, und ___ Heft ist grün. (bestimmter Artikel)",
+   "questionEn": "Is there an exercise book here? — Yes, and the exercise book is green.",
    "options": null,
-   "answer": "das Heft",
-   "accepted": ["das Heft", "Das Heft"],
+   "answer": "das",
+   "accepted": ["das", "Das"],
    "explanationDe": "Erst ein Heft, dann bekannt: das Heft.",
    "hint": null
   },
@@ -1159,6 +1221,21 @@
    "hint": null
   },
   {
+   "id": "extra-a11-l09-09",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 99,
+   "questionDe": "Im Café: ___ Sie auch Kuchen? (haben, höflich)",
+   "questionEn": "Ask politely in the café whether they have cake as well.",
+   "options": null,
+   "answer": "Haben",
+   "accepted": ["Haben", "haben"],
+   "explanationDe": "Höflich mit Sie: Haben Sie auch Kuchen?",
+   "hint": null
+  },
+  {
    "id": "extra-a11-l10-01",
    "topic": "yes-no-questions",
    "type": "fill_blank",
@@ -1270,11 +1347,11 @@
    "stage": 5,
    "difficulty": 2,
    "order": 108,
-   "questionDe": "Bilden Sie die höfliche Frage: [kommen / Sie / aus Deutschland]",
-   "questionEn": "Build the polite yes/no question.",
+   "questionDe": "Bilden Sie die höfliche Frage: [fahren / Sie / morgen / nach Deutschland]",
+   "questionEn": "Build the polite yes/no question about tomorrow.",
    "options": null,
-   "answer": "Kommen Sie aus Deutschland?",
-   "accepted": ["Kommen Sie aus Deutschland?", "Kommen Sie aus Deutschland"],
+   "answer": "Fahren Sie morgen nach Deutschland?",
+   "accepted": ["Fahren Sie morgen nach Deutschland?", "Fahren Sie morgen nach Deutschland"],
    "explanationDe": "Höfliche Frage mit Sie: Verb zuerst, dann Sie.",
    "hint": null
   },
@@ -1285,12 +1362,12 @@
    "stage": 5,
    "difficulty": 2,
    "order": 109,
-   "questionDe": "Bilden Sie die Frage: [sein / die Abfahrt / um neun Uhr]",
-   "questionEn": "Build the yes/no question about the departure.",
+   "questionDe": "Bilden Sie den Satz: [sein / die Ankunft / am Gleis vier] (Verb auf Position 1)",
+   "questionEn": "Build the yes/no question about the arrival.",
    "options": null,
-   "answer": "Ist die Abfahrt um neun Uhr?",
-   "accepted": ["Ist die Abfahrt um neun Uhr?", "Ist die Abfahrt um neun Uhr"],
-   "explanationDe": "Ohne Fragewort steht ist auf Platz eins.",
+   "answer": "Ist die Ankunft am Gleis vier?",
+   "accepted": ["Ist die Ankunft am Gleis vier?", "Ist die Ankunft am Gleis vier"],
+   "explanationDe": "Ohne Fragewort steht ist auf Position 1.",
    "hint": null
   },
   {
@@ -1300,12 +1377,12 @@
    "stage": 5,
    "difficulty": 2,
    "order": 110,
-   "questionDe": "Korrigieren Sie: „Haben der Zug nach Österreich Verspätung?“",
+   "questionDe": "Korrigieren Sie: „Sind die Abfahrt um neun Uhr?“",
    "questionEn": "Fix the verb form in the question.",
    "options": null,
-   "answer": "Hat der Zug nach Österreich Verspätung?",
-   "accepted": ["Hat der Zug nach Österreich Verspätung?", "Hat der Zug nach Österreich Verspätung"],
-   "explanationDe": "Das Verb passt zum Subjekt: der Zug hat.",
+   "answer": "Ist die Abfahrt um neun Uhr?",
+   "accepted": ["Ist die Abfahrt um neun Uhr?", "Ist die Abfahrt um neun Uhr"],
+   "explanationDe": "Die Abfahrt ist Singular: Ist die Abfahrt …?",
    "hint": null
   },
   {
@@ -1315,12 +1392,12 @@
    "stage": 5,
    "difficulty": 2,
    "order": 111,
-   "questionDe": "Korrigieren Sie: „Sind der Bahnhof weit?“",
+   "questionDe": "Korrigieren Sie: „Haben der Fahrer Verspätung?“",
    "questionEn": "Fix the verb form in the question.",
    "options": null,
-   "answer": "Ist der Bahnhof weit?",
-   "accepted": ["Ist der Bahnhof weit?", "Ist der Bahnhof weit"],
-   "explanationDe": "Der Bahnhof ist Singular: Ist der Bahnhof weit?",
+   "answer": "Hat der Fahrer Verspätung?",
+   "accepted": ["Hat der Fahrer Verspätung?", "Hat der Fahrer Verspätung"],
+   "explanationDe": "Das Verb passt zum Subjekt: der Fahrer hat.",
    "hint": null
   },
   {
@@ -1345,12 +1422,12 @@
    "stage": 5,
    "difficulty": 2,
    "order": 112,
-   "questionDe": "Bilden Sie die Frage: [fahren / der Bus / nach Bremen]",
-   "questionEn": "Build the yes/no question.",
+   "questionDe": "Bilden Sie den Satz: [kommen / der Bus / zum Bahnhof] (Verb auf Position 1)",
+   "questionEn": "Build the yes/no question about the bus.",
    "options": null,
-   "answer": "Fährt der Bus nach Bremen?",
-   "accepted": ["Fährt der Bus nach Bremen?", "Fährt der Bus nach Bremen"],
-   "explanationDe": "Verb auf Platz eins, dann das Subjekt der Bus.",
+   "answer": "Kommt der Bus zum Bahnhof?",
+   "accepted": ["Kommt der Bus zum Bahnhof?", "Kommt der Bus zum Bahnhof"],
+   "explanationDe": "Das Verb steht vorn, dann kommt das Subjekt.",
    "hint": null
   },
   {
@@ -1375,12 +1452,12 @@
    "stage": 5,
    "difficulty": 2,
    "order": 113,
-   "questionDe": "Bilden Sie die Frage: [haben / der Zug / Verspätung]",
+   "questionDe": "[haben / der Zug / nach Österreich / Verspätung] (Antwort: ja oder nein)",
    "questionEn": "Build the yes/no question about a delay.",
    "options": null,
-   "answer": "Hat der Zug Verspätung?",
-   "accepted": ["Hat der Zug Verspätung?", "Hat der Zug Verspätung"],
-   "explanationDe": "Bei haben steht die Verbform vorn: Hat der Zug …?",
+   "answer": "Hat der Zug nach Österreich Verspätung?",
+   "accepted": ["Hat der Zug nach Österreich Verspätung?", "Hat der Zug nach Österreich Verspätung"],
+   "explanationDe": "Bei haben steht die Form vorn: Hat der Zug …?",
    "hint": null
   },
   {
@@ -1401,16 +1478,16 @@
   {
    "id": "extra-a11-l10-14",
    "topic": "yes-no-questions",
-   "type": "error_correction",
+   "type": "sentence_building",
    "stage": 5,
    "difficulty": 2,
    "order": 114,
-   "questionDe": "Schreiben Sie die Frage richtig: „Der Zug fährt um neun Uhr?“",
-   "questionEn": "Write the question as a written question.",
+   "questionDe": "[kosten / die Fahrkarte / nach Deutschland / zwanzig Euro] (Antwort: ja oder nein)",
+   "questionEn": "Build the yes/no question about the price.",
    "options": null,
-   "answer": "Fährt der Zug um neun Uhr?",
-   "accepted": ["Fährt der Zug um neun Uhr?", "Fährt der Zug um neun Uhr"],
-   "explanationDe": "In der geschriebenen Frage steht das Verb auf Platz eins.",
+   "answer": "Kostet die Fahrkarte nach Deutschland zwanzig Euro?",
+   "accepted": ["Kostet die Fahrkarte nach Deutschland zwanzig Euro?", "Kostet die Fahrkarte nach Deutschland zwanzig Euro"],
+   "explanationDe": "Das Verb zuerst, dann das Subjekt die Fahrkarte.",
    "hint": null
   },
   {
@@ -1431,16 +1508,16 @@
   {
    "id": "extra-a11-l10-15",
    "topic": "yes-no-questions",
-   "type": "error_correction",
+   "type": "sentence_building",
    "stage": 5,
    "difficulty": 2,
    "order": 115,
-   "questionDe": "Schreiben Sie die Frage richtig: „Du hast eine Fahrkarte?“",
-   "questionEn": "Write the question as a written question.",
+   "questionDe": "[sein / die Abfahrt / vom Gleis vier] (die Satzmelodie steigt)",
+   "questionEn": "Build the yes/no question about the departure.",
    "options": null,
-   "answer": "Hast du eine Fahrkarte?",
-   "accepted": ["Hast du eine Fahrkarte?", "Hast du eine Fahrkarte"],
-   "explanationDe": "Geschrieben steht das Verb vorn: Hast du eine Fahrkarte?",
+   "answer": "Ist die Abfahrt vom Gleis vier?",
+   "accepted": ["Ist die Abfahrt vom Gleis vier?", "Ist die Abfahrt vom Gleis vier"],
+   "explanationDe": "Ohne Fragewort steht ist ganz vorn.",
    "hint": null
   },
   {
@@ -1461,16 +1538,16 @@
   {
    "id": "extra-a11-l10-16",
    "topic": "yes-no-questions",
-   "type": "error_correction",
+   "type": "sentence_building",
    "stage": 5,
    "difficulty": 2,
    "order": 116,
-   "questionDe": "Schreiben Sie die Frage in der normalen Wortfolge: „Kommt pünktlich der Bus?“",
-   "questionEn": "Write the question in the normal word order.",
+   "questionDe": "[sein / der Bahnhof / weit] (die Satzmelodie steigt)",
+   "questionEn": "Build the yes/no question about the station.",
    "options": null,
-   "answer": "Kommt der Bus pünktlich?",
-   "accepted": ["Kommt der Bus pünktlich?", "Kommt der Bus pünktlich"],
-   "explanationDe": "Nach dem Verb kommt das Subjekt: Kommt der Bus …?",
+   "answer": "Ist der Bahnhof weit?",
+   "accepted": ["Ist der Bahnhof weit?", "Ist der Bahnhof weit"],
+   "explanationDe": "Die Ja/Nein-Frage beginnt mit ist.",
    "hint": null
   },
   {
@@ -1666,7 +1743,7 @@
    "answer": "Ihr",
    "accepted": ["Ihr"],
    "caseSensitive": true,
-   "explanationDe": "Höflich: Ihr Geschenk — immer mit großem I.",
+   "explanationDe": "Höflich zu Frau Kaya: Ihr mit großem I.",
    "hint": null
   },
   {
@@ -1682,7 +1759,7 @@
    "answer": "Ihr",
    "accepted": ["Ihr"],
    "caseSensitive": true,
-   "explanationDe": "Höflich schreibt man Ihr immer groß.",
+   "explanationDe": "Zu Frau Kaya gehört Ihr mit großem I.",
    "hint": null
   },
   {
@@ -1696,9 +1773,8 @@
    "questionEn": "Their presents are here.",
    "options": null,
    "answer": "Ihre",
-   "accepted": ["Ihre"],
-   "caseSensitive": true,
-   "explanationDe": "sie im Plural → ihre, im Plural mit -e.",
+   "accepted": ["Ihre", "ihre"],
+   "explanationDe": "sie im Plural wird zu ihre, mit -e.",
    "hint": null
   },
   {
@@ -1789,7 +1865,7 @@
    "answer": "Ihr Papa kommt auch.",
    "accepted": ["Ihr Papa kommt auch.", "Ihr Papa kommt auch"],
    "caseSensitive": true,
-   "explanationDe": "der Papa ist maskulin: Ihr Papa ohne -e.",
+   "explanationDe": "Ihr Papa: maskulin ohne -e, höfliches Ihr mit großem I.",
    "hint": null
   }
  ]

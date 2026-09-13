@@ -1,7 +1,7 @@
 {
  "level": "a1.1",
  "builtFrom": "2026-08-24",
- "count": 347,
+ "count": 351,
  "items": [
   {
    "id": "10fc1751-c3af-529f-8796-f8e46bfb1691",
@@ -586,8 +586,9 @@
    "accepted": [
     "Ihnen"
    ],
-   "explanationDe": "Zu Frau Kaya sagt man Sie: Wie geht es Ihnen?",
-   "hint": null
+   "explanationDe": "Höflich zu Frau Kaya: Ihnen mit großem I.",
+   "hint": null,
+   "caseSensitive": true
   },
   {
    "id": "extra-a11-l01-07",
@@ -901,13 +902,13 @@
    "stage": 4,
    "difficulty": 1,
    "order": 58,
-   "questionDe": "Ist das ein Heft? — Ja, und ___ ist grün. (bestimmter Artikel)",
-   "questionEn": "Is that a notebook? — Yes, and it is green.",
+   "questionDe": "Ist hier ein Heft? — Ja, und ___ Heft ist grün. (bestimmter Artikel)",
+   "questionEn": "Is there an exercise book here? — Yes, and the exercise book is green.",
    "options": null,
-   "answer": "das Heft",
+   "answer": "das",
    "accepted": [
-    "das Heft",
-    "Das Heft"
+    "das",
+    "Das"
    ],
    "explanationDe": "Erst ein Heft, dann bekannt: das Heft.",
    "hint": null
@@ -1096,7 +1097,7 @@
    "stage": 5,
    "difficulty": 1,
    "order": 23,
-   "questionDe": "Schreiben Sie den Satz: [Schrank / ist / neu]",
+   "questionDe": "Schreiben Sie den Satz: [Schrank / ist / neu] (mit bestimmtem Artikel)",
    "questionEn": "Write the sentence: [the wardrobe / is / new]",
    "options": null,
    "answer": "Der Schrank ist neu.",
@@ -1114,7 +1115,7 @@
    "stage": 5,
    "difficulty": 1,
    "order": 24,
-   "questionDe": "Schreiben Sie den Satz: [Blume / ist / schön]",
+   "questionDe": "Schreiben Sie den Satz: [Blume / ist / schön] (mit bestimmtem Artikel)",
    "questionEn": "Write the sentence: [the flower / is / beautiful]",
    "options": null,
    "answer": "Die Blume ist schön.",
@@ -1810,26 +1811,6 @@
    "hint": null
   },
   {
-   "id": "89f19829-11d0-4a96-9cd4-f4b26d40b6ff",
-   "topic": "nouns-gender",
-   "type": "multiple_choice",
-   "stage": 5,
-   "difficulty": 1,
-   "order": 9,
-   "questionDe": "Welche Endung ist IMMER feminin?",
-   "questionEn": "Which ending is ALWAYS feminine?",
-   "options": [
-    "-er",
-    "-um",
-    "-chen",
-    "-ung"
-   ],
-   "answer": "-ung",
-   "accepted": [],
-   "explanationDe": "-ung ist 100% feminin ohne Ausnahmen.",
-   "hint": null
-  },
-  {
    "id": "14894fb2-78ed-4aa5-a68f-6d17b9f1fbfa",
    "topic": "nouns-gender",
    "type": "multiple_choice",
@@ -2009,7 +1990,7 @@
    "stage": 5,
    "difficulty": 2,
    "order": 25,
-   "questionDe": "Schreiben Sie den Satz: [Honig / ist / gut]",
+   "questionDe": "Schreiben Sie den Satz: [Honig / ist / gut] (mit bestimmtem Artikel)",
    "questionEn": "Write the sentence: [honey / is / good] — add the right definite article.",
    "options": null,
    "answer": "Der Honig ist gut.",
@@ -2224,7 +2205,8 @@
     "Sie"
    ],
    "explanationDe": "Sie mit großem S ist die höfliche Form.",
-   "hint": null
+   "hint": null,
+   "caseSensitive": true
   },
   {
    "id": "7edcea9d-a047-50f2-8a1d-772d58a738f7",
@@ -3002,7 +2984,7 @@
     "Ihr"
    ],
    "caseSensitive": true,
-   "explanationDe": "Höflich: Ihr Geschenk — immer mit großem I.",
+   "explanationDe": "Höflich zu Frau Kaya: Ihr mit großem I.",
    "hint": null
   },
   {
@@ -3020,7 +3002,7 @@
     "Ihr"
    ],
    "caseSensitive": true,
-   "explanationDe": "Höflich schreibt man Ihr immer groß.",
+   "explanationDe": "Zu Frau Kaya gehört Ihr mit großem I.",
    "hint": null
   },
   {
@@ -3035,10 +3017,10 @@
    "options": null,
    "answer": "Ihre",
    "accepted": [
-    "Ihre"
+    "Ihre",
+    "ihre"
    ],
-   "caseSensitive": true,
-   "explanationDe": "sie im Plural → ihre, im Plural mit -e.",
+   "explanationDe": "sie im Plural wird zu ihre, mit -e.",
    "hint": null
   },
   {
@@ -3129,7 +3111,7 @@
     "Ihr Papa kommt auch"
    ],
    "caseSensitive": true,
-   "explanationDe": "der Papa ist maskulin: Ihr Papa ohne -e.",
+   "explanationDe": "Ihr Papa: maskulin ohne -e, höfliches Ihr mit großem I.",
    "hint": null
   },
   {
@@ -5125,6 +5107,24 @@
    "hint": null
   },
   {
+   "id": "extra-a11-l09-09",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 99,
+   "questionDe": "Im Café: ___ Sie auch Kuchen? (haben, höflich)",
+   "questionEn": "Ask politely in the café whether they have cake as well.",
+   "options": null,
+   "answer": "Haben",
+   "accepted": [
+    "Haben",
+    "haben"
+   ],
+   "explanationDe": "Höflich mit Sie: Haben Sie auch Kuchen?",
+   "hint": null
+  },
+  {
    "id": "dcfdd24d-b6da-4222-92a9-2e816bf4cc5d",
    "topic": "verb-sein",
    "type": "fill_blank",
@@ -5385,6 +5385,74 @@
     "seid"
    ],
    "explanationDe": "Nach ihr steht seid: Seid ihr Studenten?",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l02-09",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 29,
+   "questionDe": "Ergänzen Sie: Meine Telefonnummer im Formular ist null eins ___ sechs. (7)",
+   "questionEn": "Fill in: on the form my phone number is zero one … six.",
+   "options": null,
+   "answer": "sieben",
+   "accepted": [
+    "sieben"
+   ],
+   "explanationDe": "In Zahlen 7, als Wort: sieben.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l02-10",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 30,
+   "questionDe": "Ergänzen Sie: Wir sind ___ Studenten. (3)",
+   "questionEn": "Fill in: we are … students.",
+   "options": null,
+   "answer": "drei",
+   "accepted": [
+    "drei"
+   ],
+   "explanationDe": "In Zahlen 3, als Wort: drei.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l02-11",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 31,
+   "questionDe": "Ergänzen Sie: Hier sind ___ Formulare. (8)",
+   "questionEn": "Fill in: here are … forms.",
+   "options": null,
+   "answer": "acht",
+   "accepted": [
+    "acht"
+   ],
+   "explanationDe": "In Zahlen 8, als Wort: acht.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l02-12",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 32,
+   "questionDe": "Ergänzen Sie: Mein Vorname hat ___ Buchstaben. (10)",
+   "questionEn": "Fill in: my first name has … letters.",
+   "options": null,
+   "answer": "zehn",
+   "accepted": [
+    "zehn"
+   ],
+   "explanationDe": "In Zahlen 10, als Wort: zehn.",
    "hint": null
   },
   {
@@ -6183,13 +6251,13 @@
    "stage": 5,
    "difficulty": 2,
    "order": 108,
-   "questionDe": "Bilden Sie die höfliche Frage: [kommen / Sie / aus Deutschland]",
-   "questionEn": "Build the polite yes/no question.",
+   "questionDe": "Bilden Sie die höfliche Frage: [fahren / Sie / morgen / nach Deutschland]",
+   "questionEn": "Build the polite yes/no question about tomorrow.",
    "options": null,
-   "answer": "Kommen Sie aus Deutschland?",
+   "answer": "Fahren Sie morgen nach Deutschland?",
    "accepted": [
-    "Kommen Sie aus Deutschland?",
-    "Kommen Sie aus Deutschland"
+    "Fahren Sie morgen nach Deutschland?",
+    "Fahren Sie morgen nach Deutschland"
    ],
    "explanationDe": "Höfliche Frage mit Sie: Verb zuerst, dann Sie.",
    "hint": null
@@ -6201,15 +6269,15 @@
    "stage": 5,
    "difficulty": 2,
    "order": 109,
-   "questionDe": "Bilden Sie die Frage: [sein / die Abfahrt / um neun Uhr]",
-   "questionEn": "Build the yes/no question about the departure.",
+   "questionDe": "Bilden Sie den Satz: [sein / die Ankunft / am Gleis vier] (Verb auf Position 1)",
+   "questionEn": "Build the yes/no question about the arrival.",
    "options": null,
-   "answer": "Ist die Abfahrt um neun Uhr?",
+   "answer": "Ist die Ankunft am Gleis vier?",
    "accepted": [
-    "Ist die Abfahrt um neun Uhr?",
-    "Ist die Abfahrt um neun Uhr"
+    "Ist die Ankunft am Gleis vier?",
+    "Ist die Ankunft am Gleis vier"
    ],
-   "explanationDe": "Ohne Fragewort steht ist auf Platz eins.",
+   "explanationDe": "Ohne Fragewort steht ist auf Position 1.",
    "hint": null
   },
   {
@@ -6219,15 +6287,15 @@
    "stage": 5,
    "difficulty": 2,
    "order": 110,
-   "questionDe": "Korrigieren Sie: „Haben der Zug nach Österreich Verspätung?“",
+   "questionDe": "Korrigieren Sie: „Sind die Abfahrt um neun Uhr?“",
    "questionEn": "Fix the verb form in the question.",
    "options": null,
-   "answer": "Hat der Zug nach Österreich Verspätung?",
+   "answer": "Ist die Abfahrt um neun Uhr?",
    "accepted": [
-    "Hat der Zug nach Österreich Verspätung?",
-    "Hat der Zug nach Österreich Verspätung"
+    "Ist die Abfahrt um neun Uhr?",
+    "Ist die Abfahrt um neun Uhr"
    ],
-   "explanationDe": "Das Verb passt zum Subjekt: der Zug hat.",
+   "explanationDe": "Die Abfahrt ist Singular: Ist die Abfahrt …?",
    "hint": null
   },
   {
@@ -6237,15 +6305,15 @@
    "stage": 5,
    "difficulty": 2,
    "order": 111,
-   "questionDe": "Korrigieren Sie: „Sind der Bahnhof weit?“",
+   "questionDe": "Korrigieren Sie: „Haben der Fahrer Verspätung?“",
    "questionEn": "Fix the verb form in the question.",
    "options": null,
-   "answer": "Ist der Bahnhof weit?",
+   "answer": "Hat der Fahrer Verspätung?",
    "accepted": [
-    "Ist der Bahnhof weit?",
-    "Ist der Bahnhof weit"
+    "Hat der Fahrer Verspätung?",
+    "Hat der Fahrer Verspätung"
    ],
-   "explanationDe": "Der Bahnhof ist Singular: Ist der Bahnhof weit?",
+   "explanationDe": "Das Verb passt zum Subjekt: der Fahrer hat.",
    "hint": null
   },
   {
@@ -6255,15 +6323,15 @@
    "stage": 5,
    "difficulty": 2,
    "order": 112,
-   "questionDe": "Bilden Sie die Frage: [fahren / der Bus / nach Bremen]",
-   "questionEn": "Build the yes/no question.",
+   "questionDe": "Bilden Sie den Satz: [kommen / der Bus / zum Bahnhof] (Verb auf Position 1)",
+   "questionEn": "Build the yes/no question about the bus.",
    "options": null,
-   "answer": "Fährt der Bus nach Bremen?",
+   "answer": "Kommt der Bus zum Bahnhof?",
    "accepted": [
-    "Fährt der Bus nach Bremen?",
-    "Fährt der Bus nach Bremen"
+    "Kommt der Bus zum Bahnhof?",
+    "Kommt der Bus zum Bahnhof"
    ],
-   "explanationDe": "Verb auf Platz eins, dann das Subjekt der Bus.",
+   "explanationDe": "Das Verb steht vorn, dann kommt das Subjekt.",
    "hint": null
   },
   {
@@ -6273,69 +6341,69 @@
    "stage": 5,
    "difficulty": 2,
    "order": 113,
-   "questionDe": "Bilden Sie die Frage: [haben / der Zug / Verspätung]",
+   "questionDe": "[haben / der Zug / nach Österreich / Verspätung] (Antwort: ja oder nein)",
    "questionEn": "Build the yes/no question about a delay.",
    "options": null,
-   "answer": "Hat der Zug Verspätung?",
+   "answer": "Hat der Zug nach Österreich Verspätung?",
    "accepted": [
-    "Hat der Zug Verspätung?",
-    "Hat der Zug Verspätung"
+    "Hat der Zug nach Österreich Verspätung?",
+    "Hat der Zug nach Österreich Verspätung"
    ],
-   "explanationDe": "Bei haben steht die Verbform vorn: Hat der Zug …?",
+   "explanationDe": "Bei haben steht die Form vorn: Hat der Zug …?",
    "hint": null
   },
   {
    "id": "extra-a11-l10-14",
    "topic": "yes-no-questions",
-   "type": "error_correction",
+   "type": "sentence_building",
    "stage": 5,
    "difficulty": 2,
    "order": 114,
-   "questionDe": "Schreiben Sie die Frage richtig: „Der Zug fährt um neun Uhr?“",
-   "questionEn": "Write the question as a written question.",
+   "questionDe": "[kosten / die Fahrkarte / nach Deutschland / zwanzig Euro] (Antwort: ja oder nein)",
+   "questionEn": "Build the yes/no question about the price.",
    "options": null,
-   "answer": "Fährt der Zug um neun Uhr?",
+   "answer": "Kostet die Fahrkarte nach Deutschland zwanzig Euro?",
    "accepted": [
-    "Fährt der Zug um neun Uhr?",
-    "Fährt der Zug um neun Uhr"
+    "Kostet die Fahrkarte nach Deutschland zwanzig Euro?",
+    "Kostet die Fahrkarte nach Deutschland zwanzig Euro"
    ],
-   "explanationDe": "In der geschriebenen Frage steht das Verb auf Platz eins.",
+   "explanationDe": "Das Verb zuerst, dann das Subjekt die Fahrkarte.",
    "hint": null
   },
   {
    "id": "extra-a11-l10-15",
    "topic": "yes-no-questions",
-   "type": "error_correction",
+   "type": "sentence_building",
    "stage": 5,
    "difficulty": 2,
    "order": 115,
-   "questionDe": "Schreiben Sie die Frage richtig: „Du hast eine Fahrkarte?“",
-   "questionEn": "Write the question as a written question.",
+   "questionDe": "[sein / die Abfahrt / vom Gleis vier] (die Satzmelodie steigt)",
+   "questionEn": "Build the yes/no question about the departure.",
    "options": null,
-   "answer": "Hast du eine Fahrkarte?",
+   "answer": "Ist die Abfahrt vom Gleis vier?",
    "accepted": [
-    "Hast du eine Fahrkarte?",
-    "Hast du eine Fahrkarte"
+    "Ist die Abfahrt vom Gleis vier?",
+    "Ist die Abfahrt vom Gleis vier"
    ],
-   "explanationDe": "Geschrieben steht das Verb vorn: Hast du eine Fahrkarte?",
+   "explanationDe": "Ohne Fragewort steht ist ganz vorn.",
    "hint": null
   },
   {
    "id": "extra-a11-l10-16",
    "topic": "yes-no-questions",
-   "type": "error_correction",
+   "type": "sentence_building",
    "stage": 5,
    "difficulty": 2,
    "order": 116,
-   "questionDe": "Schreiben Sie die Frage in der normalen Wortfolge: „Kommt pünktlich der Bus?“",
-   "questionEn": "Write the question in the normal word order.",
+   "questionDe": "[sein / der Bahnhof / weit] (die Satzmelodie steigt)",
+   "questionEn": "Build the yes/no question about the station.",
    "options": null,
-   "answer": "Kommt der Bus pünktlich?",
+   "answer": "Ist der Bahnhof weit?",
    "accepted": [
-    "Kommt der Bus pünktlich?",
-    "Kommt der Bus pünktlich"
+    "Ist der Bahnhof weit?",
+    "Ist der Bahnhof weit"
    ],
-   "explanationDe": "Nach dem Verb kommt das Subjekt: Kommt der Bus …?",
+   "explanationDe": "Die Ja/Nein-Frage beginnt mit ist.",
    "hint": null
   }
  ]
