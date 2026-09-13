@@ -40,12 +40,12 @@ export const RULE_CARDS = {
       {
         "wrong": "V und W haben denselben Namen.",
         "correct": "V heißt Vau, W heißt We.",
-        "explanationDe": "Zwei Buchstaben, zwei Namen. Beim Buchstabieren ist das ein Fehler."
+        "explanationDe": "Zwei Buchstaben, zwei Namen. So heißen die Buchstaben V und W."
       },
       {
         "wrong": "Ich buchstabiere Tschüss: T-S-C-H-U-S-S.",
         "correct": "Ich buchstabiere Tschüss: T-S-C-H-Ü-S-S.",
-        "explanationDe": "Ü ist ein Buchstabe mit Umlaut. Man sagt u-Umlaut."
+        "explanationDe": "Ü ist der Buchstabe U mit Umlaut. Man sagt u-Umlaut."
       }
     ]
   },
@@ -108,7 +108,7 @@ export const RULE_CARDS = {
       {
         "wrong": "Der Schere ist hier.",
         "correct": "Die Schere ist hier.",
-        "explanationDe": "die Schere ist feminin. Das Genus gehört zum Wort und ändert sich nicht."
+        "explanationDe": "die Schere ist feminin. Das Genus ändert sich nicht."
       }
     ]
   },
@@ -282,7 +282,7 @@ export const RULE_CARDS = {
   },
   "personal-pronouns": {
     "titleDe": "er, sie, es – die Personalpronomen",
-    "content": "Das Pronomen richtet sich nach dem Nomen: der Bruder → er, die Schwester → sie, das Kind → es.\nFür mehrere Personen stehen die Formen wir, ihr, sie.\nSie mit großem S ist die höfliche Form.\nBeispiele: Wie alt ist er? Er ist zwanzig. Meine Schwester ist noch jung.\nBei sprechen wechselt der Vokal: er spricht. Mehr dazu in Lektion 7.\nJa, er spricht Englisch und Deutsch. Sie sprechen Arabisch und Deutsch.\nEnglish: the pronoun follows the article of the noun — das Kind is always es.",
+    "content": "Das Pronomen richtet sich nach dem Nomen: der Bruder → er, die Schwester → sie, das Kind → es.\nFür mehrere Personen stehen die Formen wir, ihr, sie.\nSie mit großem S ist die höfliche Form.\nBeispiele: Wie alt ist er? Er ist zwanzig.\nBei sprechen wechselt der Vokal: er spricht. Mehr dazu in Lektion 7.\nJa, er spricht Englisch und Deutsch. Sie sprechen Arabisch und Deutsch.\nEnglish: the pronoun follows the article of the noun — das Kind is always es.",
     "commonMistakes": [
       {
         "wrong": "Das Kind ist jung. Er ist zwei.",

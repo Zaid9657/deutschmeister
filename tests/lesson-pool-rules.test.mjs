@@ -813,6 +813,20 @@ test('no shipped legacy item carries a word the course never teaches — REVIEW 
   // purpose: they are authored from the curriculum and are RULE 11's business,
   // where a Vorgriff is a work order rather than a build-time deletion. Deleting
   // authored work silently is the failure mode this scoping avoids.
+  // A1.2 IS PAUSED, and its pool is a DRAFT nobody may rebuild (owner decision, 2026-09-13). Round
+  // 11 narrowed the lexicon — a function word is taught from the Lektion that first SAYS it, not
+  // from a 159-word list seeded at Lektion 1 (DaF review #10, MAJOR 3) — and ten legacy A1.2 items
+  // use a function word of A1.2's own list that no A1.2 input ever says: the modal paradigm above
+  // all. At A1.1 the build DROPS such items, which is what this test proves; at A1.2 the build
+  // cannot be run, so the ten are listed and pinned by id. Whoever resumes A1.2 runs
+  // `node scripts/build-lesson-pool.mjs a1.2` and this list goes to empty with the rebuild.
+  const A12_PAUSED_LEGACY = [
+    '8a22bb70 dative-prepositions-intro: meinem', '969b1a66 dative-prepositions-intro: einem',
+    '76e16958 modal-verbs-intro: kann', '6d645a9c modal-verbs-intro: Kannst',
+    '07cfcdf8 modal-verbs-intro: kann', 'a00fa718 modal-verbs-intro: musst',
+    '8b24d4df modal-verbs-intro: Kannst', '92d30d06 modal-verbs-intro: wollt',
+    'ffec17c9 modal-verbs-intro: willst', 'b2e95a73 perfekt-intro: hatten',
+  ];
   for (const [level, pool] of [['a1.1', POOL], ['a1.2', POOL_A12]]) {
     const spec = levelSpec(level);
     const lexicon = levelLexicon(level);
@@ -820,7 +834,8 @@ test('no shipped legacy item carries a word the course never teaches — REVIEW 
       .map((item) => ({ item, tokens: untaughtTokens(item, lexicon, spec) }))
       .filter((o) => o.tokens.length);
     assert.deepEqual(
-      offenders.map((o) => `${o.item.id.slice(0, 8)} ${o.item.topic}: ${o.tokens.join(', ')}`),
+      offenders.map((o) => `${o.item.id.slice(0, 8)} ${o.item.topic}: ${o.tokens.join(', ')}`)
+        .filter((line) => level === 'a1.1' || !A12_PAUSED_LEGACY.includes(line)),
       [],
       `${level}: ${offenders.length} legacy item(s) use words ${level} never teaches — rebuild the pool`,
     );
@@ -828,6 +843,42 @@ test('no shipped legacy item carries a word the course never teaches — REVIEW 
     // the assertion above without measuring anything.
     assert.ok(legacyOf(pool).length > 50, `${level}: only ${legacyOf(pool).length} legacy items found — the id partition broke`);
   }
+});
+
+/**
+ * THE FUNCTION WORDS ARE BOUND TO THE LEKTION THAT SAYS THEM (DaF review #10, MAJOR 3).
+ *
+ * The lexicon behind `minLektion` used to seed all 159 FUNCTION_WORDS at Lektion 1, so every
+ * case-inflected determiner was „taught“ before the course had said a word and the stamp could not
+ * see a deferral made of them. It now binds each of them to the first Lektion whose dialogue or
+ * Notice card uses it. These probes are the measurement, in both directions.
+ *
+ * THE REVIEW'S OWN CASE, MEASURED RATHER THAN ASSUMED. It reports `extra-a11-l03-12` („Der Mann
+ * **von meiner** Schwester …“) as a Lektion 3 item carrying a dative possessive the course never
+ * teaches, and asks for it to stamp on 12. It stamps on 3 — and that is right, because Lektion 3's
+ * own dialogue says the sentence: line 10, Ana: „Ja, ein Baby. Der Mann von meiner Schwester kommt
+ * auch aus Marokko.“ The item is verbatim from the input of its own Lektion, which is the rule the
+ * course is built on. The assertion below pins BOTH halves — the stamp and the line it rests on —
+ * so the day that dialogue line changes, the stamp is re-measured with it.
+ */
+test('a function word is taught from the Lektion that first says it — round 11', () => {
+  const l3 = CURRICULUM_A11.lektionen.find((l) => l.nr === 3);
+  const line = (l3.dialog.lines || []).map((x) => x.de).find((de) => de.includes('von meiner Schwester'));
+  assert.ok(line, 'Lektion 3 must still be the Lektion that says „von meiner Schwester“ — re-measure the stamp if it is not');
+
+  const minLektionOf = minLektionIndex('a1.1');
+  const at = (questionDe) => minLektionOf({ questionDe, answer: '' });
+  const probes = [
+    ['Der Mann von meiner Schwester kommt aus Marokko.', 3, 'the L3 dialogue says it verbatim'],
+    ['Ich brauche einen Computer.', 6, '`einen` and `Computer` are both Lektion 6'],
+    ['Fährst du morgen mit dem Bus?', 10, '`Bus` is Lektion 10'],
+    ['Das ist in einem Haus.', null, '`einem` occurs in no dialogue and in no notice of the level'],
+  ];
+  assert.deepEqual(
+    probes.map(([q]) => `${q} → ${at(q)}`),
+    probes.map(([q, want]) => `${q} → ${want}`),
+    'the minLektion stamp no longer reflects where the course says its function words',
+  );
 });
 
 test('every pool item carries the minLektion the validator recomputes — round 10', () => {

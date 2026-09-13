@@ -300,8 +300,29 @@ export const MAX_MISSIONLESS_LEKTIONEN = 4;        // a1.1; per level in LEVELS 
  * never serve (`minLektion: null`, because the course teaches none of `liegt`, `offen`, `klein`,
  * `Januar`, `richtig`) were reworded onto their own Lektion's Wortfeld rather than deleted, and
  * each untaught token they carried left RULE 11's count with them.
+ *
+ * 2026-09-13, round 11 (worker R11-B): **49 → 63, and the yardstick moved, not the material**.
+ * DaF review #10, MAJOR 3: the lexicon used to seed all 159 FUNCTION_WORDS at Lektion 1, so every
+ * case-inflected determiner and every preposition counted as taught before the course had said a
+ * word. `taughtUpTo` now binds a function word to the Lektion that first SAYS it (see
+ * `functionWordsUsedIn`), and the 14 pairs that appear are exactly the function words that licence
+ * used to hide, none of them new text:
+ *   `mit` ×4 (0eb1a415, 32eb463d, 74f91cf4, 92ac55de, cbee2a2c — L1/L2 items, `mit` is first said
+ *   in L3), `die` ×2 (74f91cf4, 92ac55de at L1, first said in L2), `habe` ×3 (404c4a60, bb5c0422,
+ *   extra-a11-l06-06 at L6, first said in L8), `am` (extra-a11-l01-09), `zu` (extra-a11-l01-10),
+ *   `hat` (extra-a11-l02-12) and `dich` (extra-a11-l06-06).
+ * RULE 11 assigns a generated item to the EARLIEST Lektion whose `practiceRule` names its topic,
+ * which is not where the item is served — that is RULE 11b, and it is **0 by construction**,
+ * because `minLektion` is stamped from this same narrowed lexicon and the draw obeys it. So this
+ * number went up because the measurement got honest; the number the learner feels did not move.
+ *
+ * INTEGRATOR'S NOTE (round 11): two other slices were adding hand-written extras while this was
+ * measured, and every new extra that carries a Vorgriff moves this number. The +14 above is the
+ * part this change owns; the rest belongs to whatever `a11.extra.json` says at merge. Re-run
+ * `node scripts/build-lesson-pool.mjs a1.1` and `node scripts/validate-curriculum.mjs a1.1` once at
+ * integration and set this to what they measure.
  */
-export const MAX_UNTAUGHT_ITEM_TOKENS = 49;        // a1.1; per level in LEVELS below — measured 2026-09-13
+export const MAX_UNTAUGHT_ITEM_TOKENS = 65;        // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
  * RULE 11b ratchet — how many (item, token) pairs the learner MEETS may still use a word the course
@@ -466,6 +487,60 @@ const LICENSED_CHUNKS_A12 = ['zum Rathaus', 'zur Kirche', 'an der Ecke', 'Fülle
 const lowerSet = (list) => new Set(list.map((w) => String(w).toLowerCase()));
 
 /**
+ * THE FUNCTION WORDS A LEARNER MAY MEET AT ANY TIME — and they are the only ones (DaF review #10,
+ * MAJOR 3).
+ *
+ * `FUNCTION_WORDS` is a RULE 5 licence: a dialogue line may USE these without the word standing in
+ * a Wortfeld. It was also, until round 11, seeded into the lexicon at Lektion 1, which made every
+ * case-inflected determiner of the level "taught" before the course had opened its mouth — so
+ * `minLektion` stamped „Der Mann von **meiner** Schwester …“ as servable in Lektion 3 and the card
+ * guards exempted `ein`, `eine`, `einen`, `dem`, `meiner` from every check. A list of 159 words is
+ * not one word class: `und` carries no grammar and `einem` carries two (Kasus and Genus).
+ *
+ * THE RULE NOW: a function word is taught from the first Lektion whose dialogue or Notice card
+ * USES it — the same cumulative-lexicon logic a content word gets from its Wortfeld (see
+ * `taughtUpTo`). This list is the measured exception: words no Lektion can be expected to introduce
+ * because the course has no surface on which to introduce them.
+ *
+ * EVERY ENTRY IS JUSTIFIED, and the justification is one of exactly three:
+ *
+ *  1. THE NUMBERS. A1.1 teaches them as META Wortfeld entries („die Zahlen 0–20“, L2/L4/L6), and a
+ *     meta entry names a SET — `coverageForms()` yields nothing for it and `formsOf()` yields the
+ *     words of the label, never `dreizehn`. Measured against the built pool: `zehn` (3 items),
+ *     `vierzehn` (2), `dreizehn` (1) occur in no dialogue and in no Notice, so binding them to
+ *     first use would drop items that drill exactly what L2 says it teaches.
+ *  2. THE PARTICLES, CONJUNCTIONS AND QUESTION WORDS. They inflect for nothing, so there is no
+ *     later form of them to defer to; `und`, `nicht`, `auch`, `wie`, `welcher` are as true in
+ *     Lektion 1 as in Lektion 12. Measured: `nur` (4 items) and `welcher` (1) occur in no dialogue.
+ *  3. THE NOMINATIVE SUBJECT PRONOUNS AND THE TWO BARE GREETINGS. `ich`/`du`/`er`/`sie`/`es`/`wir`/
+ *     `ihr`/`man` are the only pronoun forms A1.1 ever produces (the obliques `mich`, `dir`, `ihm`
+ *     … are NOT here: they are case, they are bound to first use, and no pool item uses one);
+ *     `hallo`/`tschüss` are L1 Wortfeld entries that the L1 dialogue happens to spell only in its
+ *     greeting line, and 5 pool items drill them.
+ *
+ * NOT HERE, deliberately, and this is the whole finding: every article and determiner (`der`,
+ * `die`, `das`, `den`, `dem`, `ein`, `eine`, `einen`, `kein…`, `mein…`, `dein…`, `ihr…` as a
+ * possessive), every oblique pronoun, every form of `sein`/`haben`, and every preposition and
+ * contraction. Those carry Kasus, Genus, Person or Rektion — the three things this course defers —
+ * and the course introduces each of them in a Lektion that can be named.
+ */
+export const FUNCTION_WORDS_FREE = [
+  // 3 — Subjektpronomen und die zwei blanken Grußformeln
+  'ich', 'du', 'er', 'sie', 'es', 'wir', 'ihr', 'man', 'hallo', 'tschüss',
+  // 2 — Partikeln, Konjunktionen, Fragewörter
+  'ja', 'nein', 'bitte', 'danke', 'doch', 'und', 'oder', 'aber', 'auch', 'nicht', 'noch',
+  'schon', 'sehr', 'nur', 'dann', 'hier', 'da', 'so', 'gern',
+  'wer', 'was', 'wo', 'wann', 'warum', 'wie', 'wohin', 'woher', 'welche', 'welcher', 'welches',
+  // 1 — die Zahlen 0–100
+  'null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn',
+  'elf', 'zwölf', 'dreizehn', 'vierzehn', 'fünfzehn', 'sechzehn', 'siebzehn', 'achtzehn',
+  'neunzehn', 'zwanzig', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'siebzig', 'achtzig',
+  'neunzig', 'hundert',
+];
+
+const FUNCTION_FREE_SET = lowerSet(FUNCTION_WORDS_FREE);
+
+/**
  * THE PER-LEVEL REGISTRY. Every rule below reads its tables from here instead of from a constant,
  * so a second level is data rather than a second validator. A1.1's entry holds exactly the values
  * the hardcoded tables used to hold, which is why `node scripts/validate-curriculum.mjs` (no
@@ -571,7 +646,14 @@ export const LEVELS = {
       // formula talking rather than the item, and the build now drops the 91 legacy bank items
       // built on words A1.2 teaches nowhere (`Zeitung`, `Kuli`, `Pizza`, `Präteritum`, `Hamburg`).
       // The 18 that remain are Vorgriffe — `fliegen` L1 (taught L7), `tragen`/`laufen` L6, …
-      untaughtItemTokens: 18,
+      // 18 → **36**, paused; re-measured 2026-09-13 (round 11, DaF review #10 MAJOR 3). The blanket
+      // FUNCTION_WORDS seed at Lektion 1 is gone from the item lexicon (see `seedVocabulary`'s
+      // `freeOnly` and `functionWordsUsedIn`), so A1.2's own function words — its MODAL paradigm
+      // above all (`kann`, `Kannst`, `wollt`), plus `gibt`, `nichts`, `Danach`, `Neben` — are now
+      // bound to the Lektion that first says them instead of being free from the first line. The
+      // material did not change and may not: A1.2 is PAUSED by owner decision and its pool is a
+      // DRAFT nobody may rebuild. The number is a work order for whoever resumes the level.
+      untaughtItemTokens: 36,
       // RULE 11b measures the same tokens where the learner MEETS them (see drawnLexis): 18 → 3
       // („fliegen“/„fliege“ in L2, taught in L7; „Onkel“ in L3) — re-measured after the round-8
       // A1.1 engine changes. A1.2 is PAUSED by owner decision (2026-09-13); the number is a
@@ -584,7 +666,13 @@ export const LEVELS = {
       // DRAFT nobody may rebuild while the level is paused. Rebuilding a1.2.json (`node
       // scripts/build-lesson-pool.mjs a1.2`) is the first step of whoever resumes the level, and it
       // takes this ratchet to 0 and hard, exactly as at A1.1.
-      untaughtDrawnTokens: 4,
+      //
+      // 4 → **14**, paused; re-measured 2026-09-13 (round 11, same cause as RULE 11 above). Ten of
+      // the fourteen are A1.2 function words met before their Lektion: `Kannst`/`kann`/`wollt` in
+      // L9, `Gibt`/`gibt` in L4/L6, `nichts` in L6, `Danach`/`Neben` in L1. At A1.1 this class is 0
+      // by construction because the pool carries the `minLektion` stamp; A1.2's draft pool does not
+      // and cannot be rebuilt while the level is paused, exactly as the note above says.
+      untaughtDrawnTokens: 14,
       // RULE 12 is a hard rule (0, no ratchet) — see its comment above. No entry here.
       missionlessLektionen: 1,
       unexemplifiedNoticeForms: 0,
@@ -597,9 +685,47 @@ export const LEVELS = {
 /** The registry row for a level (any case), or null when the level is not rebuilt yet. */
 export const levelSpec = (level) => LEVELS[String(level || '').toLowerCase()] || null;
 
-/** The cumulative known vocabulary a level inherits from the level before it (RULE 5 / RULE 11). */
-function seedVocabulary(spec) {
-  const known = new Set([...spec.functionSet, ...spec.nameSet]);
+/**
+ * The function words a single Lektion PUTS IN FRONT OF THE LEARNER — its dialogue (lines, title,
+ * setting) and its Notice card. This is what binds `ein`, `dem`, `mit`, `meiner` to a Lektion
+ * instead of to Lektion 1: a determiner is taught from the Lektion that first says it, exactly as a
+ * noun is taught from the Wortfeld that first lists it (DaF review #10, MAJOR 3).
+ *
+ * Only tokens that ARE function words of the level are returned. A dialogue does not teach its
+ * content words — those come from the Wortfeld and RULE 5 is what checks it.
+ */
+function functionWordsUsedIn(l, spec) {
+  const out = new Set();
+  const sources = [
+    l.dialog?.title, l.dialog?.setting,
+    ...(l.dialog?.lines || []).map((x) => x.de),
+    l.notice?.title, l.notice?.bodyDe, ...(l.notice?.examples || []),
+  ];
+  for (const text of sources) {
+    for (const t of tokenise(text || '')) {
+      const low = t.toLowerCase();
+      if (spec.functionSet.has(low)) out.add(low);
+    }
+  }
+  return out;
+}
+
+/**
+ * The cumulative known vocabulary a level inherits from the level before it (RULE 5 / RULE 15).
+ *
+ * `freeOnly` is the item-side seed (DaF review #10, MAJOR 3). RULE 5 and RULE 15 read the DIALOGUE,
+ * and CONTRACT §2 licences every FUNCTION_WORD there by name: a learner may MEET `dem` in a line
+ * before the course explains it, and RULE 15's structural half (`offLimitsForms`, per grammar slug)
+ * is the instrument that reports it when the line is one the learner has to PRODUCE — which is why
+ * „ein Bruder, eine Schwester“ is already on RULE 15's list as `indefinite-articles`, not as
+ * unknown lexis. The ITEM side is a different question — „may this item be SERVED here?“ — and
+ * there the blanket licence is what MAJOR 3 measured as blind: it is `taughtUpTo` that passes
+ * `freeOnly`, so `minLektion`, RULE 11 and RULE 11b bind every determiner to the Lektion that
+ * first says it.
+ */
+function seedVocabulary(spec, freeOnly = false) {
+  const base = freeOnly ? FUNCTION_FREE_SET : spec.functionSet;
+  const known = new Set([...base, ...spec.nameSet]);
   const prior = spec.seedFrom ? levelSpec(spec.seedFrom) : null;
   if (!prior) return known;
   // The CURRENT level's irregular table, not the previous level's: an A1.2 learner knows A1.1's
@@ -607,6 +733,11 @@ function seedVocabulary(spec) {
   for (const l of prior.curriculum.lektionen || []) {
     for (const w of l.wortfeld || []) for (const f of formsOf(w, spec.irregularForms)) known.add(f);
     for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
+    // …and, on the item side, every function word the finished level actually SAID. An A1.2 learner
+    // has met `dem` and `einen` in A1.1's dialogues; they are taught for that reason and not because
+    // they are on a list. Measured against the PRIOR level's own function-word list, which is the
+    // one that licensed those lines.
+    if (freeOnly) for (const w of functionWordsUsedIn(l, prior)) known.add(w);
   }
   return known;
 }
@@ -822,7 +953,7 @@ function itemUniverse(spec, extraItems, poolItems) {
 function taughtUpTo(c, spec) {
   // A level's known set starts from the level before it (see seedVocabulary): an A1.2 item may
   // build on every word A1.1 taught, and must not reach past that.
-  const known = seedVocabulary(spec);
+  const known = seedVocabulary(spec, true);
   const knownUpTo = new Map();
   for (const l of c.lektionen || []) {
     for (const w of l.wortfeld || []) for (const f of coverageForms(w, spec.functionSet, spec.irregularForms)) known.add(f);
@@ -831,6 +962,11 @@ function taughtUpTo(c, spec) {
     // practice items — so a word it teaches (the letter names Zett, Ypsilon, Jot, Vau, Eszett,
     // scharfes S in L1) counts as taught from here on (DaF review #4).
     for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
+    // The function words this Lektion says out loud (DaF review #10, MAJOR 3). Outside
+    // FUNCTION_WORDS_FREE a function word is taught where it is first met, not at Lektion 1 —
+    // otherwise `minLektion` calls `von meiner Schwester` servable in Lektion 1 and the whole
+    // deferral question is answered by a list instead of by the course.
+    for (const w of functionWordsUsedIn(l, spec)) known.add(w);
     knownUpTo.set(l.nr, new Set(known));
   }
   return knownUpTo;
@@ -860,7 +996,7 @@ export function levelLexicon(level = 'a1.1') {
   // The last snapshot of `taughtUpTo` IS the end-of-level set, so the two can never drift: RULE 11
   // judges an item against `knownUpTo.get(nr)`, this judges it against the union of all of them.
   const snapshots = [...taughtUpTo(spec.curriculum, spec).values()];
-  return snapshots.length ? new Set(snapshots[snapshots.length - 1]) : seedVocabulary(spec);
+  return snapshots.length ? new Set(snapshots[snapshots.length - 1]) : seedVocabulary(spec, true);
 }
 
 /**

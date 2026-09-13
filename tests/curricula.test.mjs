@@ -1177,8 +1177,20 @@ test('A1.2 ratchets are the measured numbers, and RULE 10–12 are already at ze
   assert.ok(itemLexis(CURRICULUM_A12).length <= r.untaughtItemTokens, 'RULE 11 measurement is under its ratchet');
   assert.ok(r.untaughtItemTokens <= 156, 'RULE 11: the ratchet may only ever be lowered');
   const handWritten = new Set(loadExtraItems('a1.2').map((it) => it.id));
+  // PAUSED; RE-MEASURED 2026-09-13 (round 11, DaF review #10 MAJOR 3). The item lexicon no longer
+  // seeds all FUNCTION_WORDS at Lektion 1 — a function word is taught from the Lektion that first
+  // SAYS it (`functionWordsUsedIn` in the validator) — and four hand-written A1.2 items use a
+  // function word of A1.2's own list that no A1.2 dialogue or notice ever says. The material may
+  // not be touched: A1.2 is paused by owner decision and this is a work order for whoever resumes
+  // it, in the same shape as the two ratchets in LEVELS['a1.2'].
+  const A12_PAUSED_HAND_WRITTEN = [
+    'extra-a12-l01-03:Danach', 'extra-a12-l01-09:Neben', 'extra-a12-l04-09:gibt', 'extra-a12-l04-03:Gibt',
+    'extra-a12-l06-05:nichts', 'extra-a12-l09-04:kann', 'extra-a12-l09-08:kann',
+  ];
   assert.deepEqual(
-    itemLexis(CURRICULUM_A12).filter((o) => handWritten.has(o.id)), [],
+    itemLexis(CURRICULUM_A12).filter((o) => handWritten.has(o.id)).map((o) => `${o.id}:${o.token}`)
+      .filter((pair) => !A12_PAUSED_HAND_WRITTEN.includes(pair)),
+    [],
     'the hand-written A1.2 items must stay free of untaught tokens',
   );
   // RULE 11b: the same tokens measured where the learner MEETS them — 156 over the whole pool
@@ -1186,7 +1198,9 @@ test('A1.2 ratchets are the measured numbers, and RULE 10–12 are already at ze
   assert.ok(drawnLexis(CURRICULUM_A12).length <= r.untaughtDrawnTokens, 'RULE 11b measurement is under its ratchet');
   assert.ok(r.untaughtDrawnTokens <= 18, 'RULE 11b: the ratchet may only ever be lowered');
   assert.deepEqual(
-    drawnLexis(CURRICULUM_A12).filter((o) => handWritten.has(o.id)), [],
+    drawnLexis(CURRICULUM_A12).filter((o) => handWritten.has(o.id)).map((o) => `${o.id}:${o.token}`)
+      .filter((pair) => !A12_PAUSED_HAND_WRITTEN.includes(pair)),
+    [],
     'the hand-written A1.2 items must stay free of untaught tokens in the draw too',
   );
 });

@@ -361,8 +361,17 @@ test('yes-no-questions names the written-question rule and admits the spoken for
 //   (d) every example noun stands in the Wortfeld the course has taught BY that
 //       Lektion — the review's "die Karten reden über einen anderen Kurs".
 
-import { DIALOG_NAMES as DIALOG_NAMES_A11, FUNCTION_WORDS as FUNCTION_WORDS_A11 } from '../src/data/curricula/a11.js';
-import { DIALOG_NAMES as DIALOG_NAMES_A12, FUNCTION_WORDS as FUNCTION_WORDS_A12 } from '../src/data/curricula/a12.js';
+import { DIALOG_NAMES as DIALOG_NAMES_A11 } from '../src/data/curricula/a11.js';
+import { DIALOG_NAMES as DIALOG_NAMES_A12 } from '../src/data/curricula/a12.js';
+// The FUNCTION_WORDS list itself is deliberately NOT imported any more (DaF review #10, MAJOR 3):
+// it is a RULE 5 licence for dialogue INPUT, not a licence for what a rule card may teach. What the
+// card guards may treat as free is the measured subset, and it lives with the lexicon that uses it.
+import { FUNCTION_WORDS_FREE } from '../scripts/validate-curriculum.mjs';
+// …and the levels' own lists, for ONE question only: „is this form a function word
+// at all?“ — which is what tells a grammar-bearing determiner apart from a content
+// word in guard (e) below. It is never again used as a licence.
+import { FUNCTION_WORDS as FUNCTION_WORDS_A11 } from '../src/data/curricula/a11.js';
+import { FUNCTION_WORDS as FUNCTION_WORDS_A12 } from '../src/data/curricula/a12.js';
 import {
   hasEnglish,
   NEXT_LEVEL_RE,
@@ -860,12 +869,33 @@ const GRAMMAR_TERMS = [
   'ung', 'heit', 'keit', 'schaft', 'chen', 'lein',
 ];
 
+/**
+ * THE PREDICATION GLUE — five forms, and the argument for each is the same.
+ *
+ * A rule card is a sentence ABOUT German, and a German sentence about German has
+ * to predicate („Ü **ist** ein Buchstabe mit Umlaut“, „Die Namen der Buchstaben
+ * **sind** A a, B be, …“) and has to name feminine and plural forms with their
+ * article („**die** Endung -st“). Since round 11 the lexis guard no longer takes
+ * the whole FUNCTION_WORDS list as free (DaF review #10, MAJOR 3), and these are
+ * the five forms that fell out — measured over all 24 shipped cards, all five on
+ * the A1.1 Lektion 1 card and nowhere else, because by Lektion 2 the course has
+ * said `ist`/`sind` itself, by L5 `die` and by L9 `haben`.
+ *
+ * They are safe to free in a way the rest of the list is not: none of them is a
+ * deferral of this course. What A1.1 defers is `ein/eine/einen` (L6), the
+ * accusative `den` (L4), the separable prefix (L11) and the possessives (L12) —
+ * and each of those is now bound to its Lektion, with the construction guard (f)
+ * below on top of it.
+ */
+const CARD_PREDICATION = ['ist', 'sind', 'hat', 'haben', 'die'];
+
 /** The metalanguage a card may use on top of its own course-so-far. Closed. */
 const CARD_METALANGUAGE = [
   ...META_NOUNS,
   ...META_VERBS,
   ...META_VERBS_EXTRA,
   ...GRAMMAR_TERMS,
+  ...CARD_PREDICATION,
 ].map((w) => w.toLowerCase());
 
 /**
@@ -911,12 +941,61 @@ const cumulativeLexis = (level, nr) => {
 };
 
 /**
- * FUNCTION_WORDS, cumulatively and PER LEVEL. A1.2's list carries the modal
- * paradigm (`müsst`, `dürft`, `kann`), so handing both lists to an A1.1 card is
- * how `müsste` and `dürfte` walked through the first version of this guard.
+ * THE FUNCTION WORDS A CARD MAY USE FREELY — and they are the only ones.
+ *
+ * This used to be the whole FUNCTION_WORDS list of the level (plus A1.1's at
+ * A1.2), on the reasoning that a learner may MEET a function word before it is
+ * taught. DaF review #10, MAJOR 3 measured what that licence costs on a TEACHING
+ * surface: `ein und eine stehen bei einer Sache.` on the Lektion 5 card and
+ * `Ich kaufe am Freitag ein.` on the Lektion 10 card both came back `lexis=[]
+ * defer=0`, although `ein/eine` is Lektion 6 and the Satzklammer Lektion 11 —
+ * „eine Prüfung, die dort misst, wo sie leicht zu messen ist“.
+ *
+ * A card is not a dialogue. What the course has SAID by this Lektion is already
+ * in `cumulativeLexis` (it reads every dialogue line and every notice), so a
+ * function word the learner has met is covered there, at the Lektion it was met.
+ * On top of that only `FUNCTION_WORDS_FREE` — the numbers, the particles, the
+ * question words, the subject pronouns and the two bare greetings, each entry
+ * justified where the list is defined. Every article, determiner, possessive,
+ * oblique pronoun, preposition and form of sein/haben is out: those are the word
+ * class this course's deferrals are made of.
  */
-const FUNCTION_WORDS_BY_LEVEL = { 'a1.1': FUNCTION_WORDS_A11, 'a1.2': [...FUNCTION_WORDS_A11, ...FUNCTION_WORDS_A12] };
-const functionWordsUpTo = (level) => (FUNCTION_WORDS_BY_LEVEL[level] || []).map((w) => w.toLowerCase());
+const freeFunctionWords = () => FUNCTION_WORDS_FREE.map((w) => w.toLowerCase());
+
+/**
+ * The NOMINATIVE definite articles. Free like the list above, and for the reason
+ * DaF review #10 gives when it splits FUNCTION_WORDS in two: what this course
+ * defers is CASE and the indefinite/possessive paradigms, and `der`/`die`/`das`
+ * in the nominative carry neither. The A1.1 Lektion 1 dialogue already says `der`
+ * and `das`. `den`, `dem`, `des` are NOT here — they are the accusative and
+ * dative forms the course introduces in Lektion 4 and defers to A1.2.
+ */
+const NOMINATIVE_ARTICLES = ['der', 'die', 'das'];
+
+/**
+ * THE DETERMINERS THIS COURSE DEFERS — derived from the two FUNCTION_WORDS lists,
+ * not retyped: the article/determiner block minus the nominative definite
+ * articles, which are free (see NOMINATIVE_ARTICLES).
+ *
+ * These are the forms for which „the course already said it somewhere“ is NOT an
+ * answer. A learner MEETS `ein` in the Lektion 2 dialogue; Lektion 6 is where the
+ * course TEACHES it, in bold, with a rule. A card before Lektion 6 that puts it
+ * in a rule sentence is teaching Lektion 6 early, and that is what MAJOR 3
+ * measured going through every guard.
+ *
+ * Two forms are deliberately out. Bare `sein` is the infinitive of the copula
+ * (Lektion 2) as well as the possessive (Lektion 12), and bare `ihr` is the
+ * Lektion 3 subject pronoun as well as the possessive — spelling alone cannot
+ * tell them apart, so they are left to the possessive CONSTRUCTION pattern above
+ * and to UNTAUGHT_ANSWER_FORMS below, both of which read the context.
+ */
+const DETERMINER_PREFIXES = /^(ein|kein|mein|dein|sein|ihr|unser|euer|eur|den|dem|des)/;
+const DEFERRED_DETERMINERS = new Set(
+  [...FUNCTION_WORDS_A11, ...FUNCTION_WORDS_A12]
+    .map((w) => w.toLowerCase())
+    .filter((w) => DETERMINER_PREFIXES.test(w))
+    .filter((w) => !NOMINATIVE_ARTICLES.includes(w) && w !== 'sein' && w !== 'ihr' && w !== 'eins'),
+);
 
 /**
  * One German inflectional suffix, removed once. Only applied when at least four
@@ -947,7 +1026,7 @@ const compoundHeads = (primary) => [
 /** The words a card at this Lektion may use, and nothing else. */
 const cardVocabulary = (primary) => [
   ...cumulativeLexis(primary.level, primary.nr),
-  ...functionWordsUpTo(primary.level),
+  ...freeFunctionWords(),
   ...CARD_METALANGUAGE,
   ...ALWAYS_ALLOWED.map((w) => w.toLowerCase()),
   ...(EARLY_USE[primary.slug] || []).map((w) => w.toLowerCase()),
@@ -1000,14 +1079,14 @@ const outsideLexis = (card, primary, vocabulary = cardVocabulary(primary)) => {
 };
 
 test('no card uses a word the course has not used by that Lektion', () => {
-  for (const primary of PRIMARIES) {
-    const offenders = outsideLexis(cardOf(primary.slug), primary);
-    assert.deepEqual(
-      offenders,
-      [],
-      `${where(primary)}: words the course has not used by Lektion ${primary.nr}: ${offenders.join(', ')}`,
-    );
-  }
+  // Reported for ALL 24 cards at once, not card by card: a per-card assert stops
+  // at the first failure, and a repair round then fixes one card, re-runs, finds
+  // the next — which is how a finding class gets closed as a list of instances
+  // (DaF review #10's recurring rebuke). One run, the whole class.
+  const failures = PRIMARIES.map((primary) => ({ primary, offenders: outsideLexis(cardOf(primary.slug), primary) }))
+    .filter(({ offenders }) => offenders.length)
+    .map(({ primary, offenders }) => `${where(primary)}: ${offenders.join(', ')}`);
+  assert.deepEqual(failures, [], `cards using words the course has not used by their Lektion:\n  ${failures.join('\n  ')}`);
 });
 
 test('the card metalanguage list is metalanguage and nothing else', () => {
@@ -1190,13 +1269,27 @@ const POINTS_AHEAD = /\bin\s+(Lektion\s+\d+|A1\.\d)\b/;
 
 const escapeRe = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-/** The forms every Lektion after this one puts in bold, with where they come from. */
+/** A Lektion's place in the whole course, so two of them can be compared across levels. */
+const coursePosition = (level, nr) => LEVELS.indexOf(level) * 100 + nr;
+
+/**
+ * The forms every Lektion after this one puts in bold, with where they come from.
+ *
+ * EARLIEST BOLD WINS (round 11). The first cut read „the next Lektion that bolds
+ * it“, and a form bolded twice was therefore deferred by its SECOND teaching:
+ * A1.1 bolds `ein` in Lektion 6 (the indefinite article) and again in Lektion 11
+ * (the separable prefix of `einkaufen` — a different word with the same letters),
+ * so the Lektion 6 card, which IS the indefinite-article card, was reported for
+ * teaching `ein` early. A form is introduced where it is introduced: the first
+ * Lektion of the whole course that bolds it.
+ */
 const laterNoticeForms = (level, nr) => {
   const forms = new Map();
+  const at = new Map();
+  const here = coursePosition(level, nr);
   for (const lvl of LEVELS) {
-    if (lvl < level) continue;
     for (const lektion of ALL_CURRICULA[lvl].lektionen) {
-      if (lvl === level && lektion.nr <= nr) continue;
+      const pos = coursePosition(lvl, lektion.nr);
       // The bold spans AND the NOUNS of the notice title: A1.1 L11 names the
       // Satzklammer in its title and nowhere in bold, and the title is a teaching
       // point like any other (guard (c) holds every card title to it). Only the
@@ -1206,7 +1299,9 @@ const laterNoticeForms = (level, nr) => {
         (w) => w.length >= 4 && /^[A-ZÄÖÜ]/.test(w),
       );
       for (const form of [...noticeForms(lektion), ...titleForms]) {
-        if (!forms.has(form)) forms.set(form, `${lvl} L${lektion.nr}`);
+        if (at.has(form)) continue;                       // earliest bold wins
+        at.set(form, pos);
+        if (pos > here) forms.set(form, `${lvl} L${lektion.nr}`);
       }
     }
   }
@@ -1220,28 +1315,141 @@ const guardedSentences = (card) =>
     .map((s) => unbold(s).replace(/\s+/g, ' ').trim())
     .filter(Boolean)
     .filter((s) => !ENGLISH_LINE.test(s))
+    // A line that opens „Nicht: …“ is the card's negative example — the same
+    // thing a `commonMistakes.wrong` field is, and `wrong` is excluded from every
+    // guard here for the same reason: it is the one place a card SHOWS what not
+    // to say. („Nicht: Ich bin ein Lehrer.“ on the A1.1 L2 card.)
+    .filter((s) => !/^Nicht:/.test(s))
     .filter((s) => !POINTS_AHEAD.test(s));
+
+/**
+ * (f) ── THE CONSTRUCTIONS, not the words (DaF review #10, MAJOR 3).
+ *
+ * The guard above reads FORMS. A course defers CONSTRUCTIONS, and the three this
+ * one defers are each spelled with words that are ordinary at every Lektion:
+ * `ein`/`eine` before a noun is Lektion 6, a finite verb with its prefix at the
+ * end of the sentence is Lektion 11, `mein`/`dein` before a noun is Lektion 12 —
+ * and „ein und eine stehen bei einer Sache.“ on the L5 card came back clean from
+ * all four earlier guards, because every single word in it is fine.
+ *
+ * The introducing Lektion is READ FROM THE CURRICULUM (the Lektion whose
+ * `primarySlug` is the pattern's slug), never typed here, so moving a Lektion
+ * moves the guard with it. Two deliberate narrowings, both measured against the
+ * 24 shipped cards:
+ *   • the indefinite-article pattern ignores a METALANGUAGE noun — „Jedes Nomen
+ *     hat ein Genus“ is the A1.1 L4 notice TITLE and the card that must repeat
+ *     it; the pattern is about naming a THING with an article, not about the
+ *     card talking about grammar;
+ *   • `ihr`/`Ihr` is not in the possessive pattern: it is also the L3 subject
+ *     pronoun and the polite possessive of the Sie-register the whole course
+ *     speaks, so the pattern would fire on „Wie ist Ihr Name?“.
+ * The exemption is the same one every guard here has: a sentence that POINTS
+ * AHEAD names its own deferral and is allowed to.
+ */
+const CONSTRUCTION_PATTERNS = [
+  {
+    slug: 'indefinite-articles',
+    label: 'unbestimmter Artikel vor einem Nomen',
+    re: /\b(ein|eine|kein|keine)\s+([A-ZÄÖÜ][a-zäöüß]+)/g,
+    skip: (m) => META_NOUNS.map((w) => w.toLowerCase()).includes(m[2].toLowerCase()),
+  },
+  {
+    slug: 'separable-verbs-intro',
+    label: 'die Satzklammer (Verb vorn, Vorsilbe am Satzende)',
+    re: /\b\w+e?[stn]?\b[^.!?]*\s(ein|auf|an|aus|mit|zu|vor|nach)\s*[.!?]/g,
+    // …but only when the sentence actually has a FINITE verb that could be the
+    // front half of the clamp — otherwise „Der Teppich ist auf der Terrasse.“ is a
+    // Satzklammer. Every person of the form, the Sie-form included: the review's
+    // own probe is „Stehen Sie um sechs auf?“.
+    skip: (m, sentence) => !/\b(kauf|steh|ruf|fang|hör|mach|komm|seh|bring|schlaf|räum|geh|fahr|zieh)(e|st|t|en)\b/i.test(sentence),
+  },
+  {
+    slug: 'possessive-articles',
+    label: 'Possessivartikel vor einem Nomen',
+    // `sein` is NOT in this list: it is also the infinitive of the copula, which
+    // A1.1 Lektion 2 teaches and which every card that names the verb has to
+    // write („Nach sein steht der Beruf ohne Artikel“). The possessive `sein` is
+    // carried by UNTAUGHT_ANSWER_FORMS below instead.
+    re: /\b(mein|dein|unser|euer)e?[nmrs]?\s+([A-ZÄÖÜ][a-zäöüß]+)/gi,
+    skip: (m) => META_NOUNS.map((w) => w.toLowerCase()).includes(m[2].toLowerCase()),
+  },
+];
+
+/** The Lektion of `level` whose primarySlug is `slug` — the curriculum's own answer. */
+const introducedAt = (level, slug) => {
+  const l = (ALL_CURRICULA[level]?.lektionen || []).find((x) => x.primarySlug === slug);
+  return l ? l.nr : null;
+};
+
+const META_NOUN_SET = new Set(META_NOUNS.map((w) => w.toLowerCase()));
+
+/** True when every occurrence of `form` in the sentence is followed by a metalanguage noun. */
+const beforeMetaNounOnly = (form, sentence) => {
+  const hits = [...sentence.matchAll(new RegExp(`\\b${escapeRe(form)}\\b\\s*(\\S*)`, 'gi'))];
+  return hits.length > 0 && hits.every((m) => META_NOUN_SET.has(String(m[1]).replace(/[^A-Za-zÄÖÜäöüß]/g, '').toLowerCase()));
+};
+
+const constructionOffenders = (sentences, primary) => {
+  const out = [];
+  for (const { slug, label, re, skip } of CONSTRUCTION_PATTERNS) {
+    const taught = introducedAt(primary.level, slug);
+    if (!taught || taught <= primary.nr) continue;
+    for (const sentence of sentences) {
+      for (const m of sentence.matchAll(new RegExp(re.source, re.flags))) {
+        if (skip && skip(m, sentence)) continue;
+        out.push(`Lektion ${taught} teaches ${label} — "${sentence}"`);
+      }
+    }
+  }
+  return out;
+};
 
 const levelDeferralOffenders = (card, primary) => {
   const lexis = cumulativeLexis(primary.level, primary.nr);
   const stems = new Set([...lexis].map(stemOf));
   const said = (word) => lexis.has(word.toLowerCase()) || stems.has(stemOf(word.toLowerCase()));
   const sentences = guardedSentences(card);
-  const offenders = [];
+  const offenders = [...constructionOffenders(sentences, primary)];
 
-  const functionWords = new Set(functionWordsUpTo(primary.level));
+  // FUNCTION_WORDS_FREE, not the whole function-word list. The old carve-out read
+  // „a learner may MEET a function word before it is taught (CONTRACT §2)“ and
+  // therefore exempted `ein`, `eine`, `einen`, `dem`, `meiner` — the exact word
+  // class this course's deferrals are made of (DaF review #10, MAJOR 3). What a
+  // learner has MET is `said()` above, measured on the dialogues; what may be
+  // used without having been met is the small justified list and nothing else.
+  // …plus CARD_PREDICATION, for the reason it exists: a card has to predicate and
+  // has to name feminine forms with their article, and `ist`/`sind`/`hat`/
+  // `haben`/`die` are bold in a later notice of every course precisely because
+  // they are the course's own grammar. They are none of the three constructions
+  // guard (f) above defers.
+  const functionWords = new Set([...freeFunctionWords(), ...CARD_PREDICATION, ...NOMINATIVE_ARTICLES]);
   for (const [form, from] of laterNoticeForms(primary.level, primary.nr)) {
     if (form.length < 3) continue;
-    if (splitWords(form).every(said)) continue;
-    // A FUNCTION_WORD is one a learner may MEET before it is taught (CONTRACT
-    // §2) — `ist`, `die`, `ein` are bold somewhere later in every course. The
-    // subset that is genuinely off limits is UNTAUGHT_ANSWER_FORMS, checked
-    // below, and it is checked whether or not the form is a function word.
-    if (!/\s/.test(form) && functionWords.has(form.toLowerCase())) continue;
+    const low = form.toLowerCase();
+    const single = !/\s/.test(form);
+    // A GRAMMAR-BEARING function form: a function word of this course that is in
+    // neither free list, i.e. `ein`, `eine`, `einen`, `kein`, `den`, `dem`,
+    // `meiner`, `um`, `am`. For these the „the course already says it, so it is
+    // being re-taught“ escape below does NOT apply: an incidental use in a
+    // dialogue line is the learner MEETING a form, and a later notice putting it
+    // in bold is the course TEACHING it. A card may not do the second one early.
+    // („ein und eine stehen bei einer Sache.“ on the Lektion 5 card is exactly
+    // this: `ein` occurs in the Lektion 2 dialogue, and Lektion 6 is where it is
+    // taught — DaF review #10, MAJOR 3.)
+    const grammarBearing = single && DEFERRED_DETERMINERS.has(low) && from.startsWith(primary.level);
+    if (!grammarBearing && splitWords(form).every(said)) continue;
+    if (single && functionWords.has(low)) continue;
     const multiWord = /\s/.test(form);
     const pattern = new RegExp(multiWord ? escapeRe(form) : `\\b${escapeRe(form)}\\b`, 'i');
     for (const sentence of sentences) {
-      if (pattern.test(sentence)) offenders.push(`${from} teaches "${form}" — "${sentence}"`);
+      if (!pattern.test(sentence)) continue;
+      // A determiner in front of a METALANGUAGE noun is the card talking about
+      // German („Jedes Nomen hat ein Genus“ — the A1.1 L4 notice title, which the
+      // card title has to repeat), not the card putting a thing into the world
+      // with an article. Same narrowing as the construction patterns above, and
+      // for the same reason.
+      if (grammarBearing && beforeMetaNounOnly(form, sentence)) continue;
+      offenders.push(`${from} teaches "${form}" — "${sentence}"`);
     }
   }
 
@@ -1260,14 +1468,10 @@ const levelDeferralOffenders = (card, primary) => {
 };
 
 test('no card teaches a form the course introduces after its own Lektion', () => {
-  for (const primary of PRIMARIES) {
-    const offenders = levelDeferralOffenders(cardOf(primary.slug), primary);
-    assert.deepEqual(
-      offenders,
-      [],
-      `${where(primary)}: ${offenders.length} forms the course introduces later:\n  ${offenders.join('\n  ')}`,
-    );
-  }
+  const failures = PRIMARIES.flatMap((primary) =>
+    levelDeferralOffenders(cardOf(primary.slug), primary).map((o) => `${where(primary)}: ${o}`),
+  );
+  assert.deepEqual(failures, [], `${failures.length} forms the course introduces later:\n  ${failures.join('\n  ')}`);
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1321,6 +1525,48 @@ test('MUTATION: A1.2 content on an A1.1 card is caught by the deferral guard', (
   assert.ok(
     offenders.some((o) => o.includes('Satzklammer')),
     `Satzklammer went through: ${offenders.join(' | ') || 'nothing reported'}`,
+  );
+});
+
+/**
+ * THE COUNTER-PROBE OF DaF REVIEW #10, MAJOR 3 — the six sentences the review
+ * built by hand, injected into the shipped card of the Lektion it named, and
+ * measured through all four guards of round 10: every one came back
+ * `lexis=[] defer=0`. They are a FIXTURE, not prose in a comment, because the
+ * finding the review keeps repeating is that a guard which has never been shot at
+ * is not a guard. Every one of them must be reported now.
+ *
+ * `Das ist mein Buch.` is quoted by the review as reaching the Lektion 3 card
+ * with only `buch` reported; the possessive is Lektion 12.
+ */
+const DEFERRED_CONSTRUCTION_PROBES = [
+  { nr: 5, sentence: 'ein und eine stehen bei einer Sache.', why: 'ein/eine is Lektion 6' },
+  { nr: 5, sentence: 'Man sagt ein Stuhl und eine Lampe.', why: 'the indefinite article is Lektion 6' },
+  { nr: 5, sentence: 'Wir haben kein Buch.', why: 'kein is Lektion 6' },
+  { nr: 10, sentence: 'Stehen Sie um sechs auf?', why: 'the Satzklammer is Lektion 11' },
+  { nr: 10, sentence: 'Ich kaufe am Freitag ein.', why: 'the Satzklammer is Lektion 11' },
+  { nr: 3, sentence: 'Das ist mein Buch.', why: 'the possessive article is Lektion 12' },
+];
+
+test('MUTATION: every deferred-construction probe of DaF review #10 is caught', () => {
+  const missed = [];
+  for (const { nr, sentence, why } of DEFERRED_CONSTRUCTION_PROBES) {
+    const primary = PRIMARIES.find((p) => p.level === 'a1.1' && p.nr === nr);
+    const offenders = levelDeferralOffenders(cardWith(primary.slug, sentence), primary);
+    if (!offenders.some((o) => o.includes(sentence))) missed.push(`L${nr} "${sentence}" (${why})`);
+  }
+  assert.deepEqual(missed, [], `probes that still go through the deferral guard:\n  ${missed.join('\n  ')}`);
+});
+
+test('MUTATION: a deferral sentence may still name the construction it defers', () => {
+  // The one exemption, and it is a property of the SENTENCE: a card that hands the
+  // form forward is doing its job. Without this the guard would forbid the course
+  // from telling the learner what comes next.
+  const card = cardWith(A11_L5.slug, 'Die Formen ein und eine kommen in Lektion 6.');
+  assert.deepEqual(
+    levelDeferralOffenders(card, A11_L5).filter((o) => o.includes('Lektion 6.')),
+    [],
+    'a card must be able to name what it defers',
   );
 });
 
