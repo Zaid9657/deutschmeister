@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 import { getTier } from './_shared/speakingUsage.mjs';
-import { writingTaskByKey, MAX_WRITING_POINTS } from './_shared/writingTasks.mjs';
+import { writingTaskByKey, courseWritingTasks, MAX_WRITING_POINTS } from './_shared/writingTasks.mjs';
 
 // AI writing feedback (renovation Phase 5b) — grades an exam-style letter
 // against our rubric and stores the result with the SERVICE ROLE (clients
@@ -27,15 +27,47 @@ const WRITING_LIMITS = {
 // would burn the two trial evaluations on Lektion 1 and 2 and meet a paywall
 // inside a course the site advertises as free.
 //
-// Owner decision 2026-09-12: twelve lifetime, one per Lektion. It applies to
-// free_trial AND free_expired: A1.1 stays free after the trial ends, so an
-// expired learner must still be able to finish the course's writing.
-// Pro is unchanged — a Pro learner's course tasks count inside the 20/month
-// above, which is more than the twelve anyway.
+// Owner decision 2026-09-12: one per Lektion. It applies to free_trial AND
+// free_expired: A1.1 stays free after the trial ends, so an expired learner
+// must still be able to finish the course's writing. Pro is unchanged — a Pro
+// learner's course tasks count inside the 20/month above, which is more than
+// the course asks for anyway.
 //
-// src/data/marketing.js states this number to learners and tests/claims.test.mjs
-// parses it back out of this file, so the claim can never drift from the gate.
-const COURSE_WRITING_FREE_LIFETIME = 12;
+// ONE PER LEKTION IS NOT THE WHOLE COURSE. Each of the four checkpoints ends in
+// the chapter's own graded writing task (gradedWritingItem() in
+// src/lib/checkpoint/buildCheckpoint.js), and it posts here with the SAME
+// task_key as the Lektion it came from — so a course of twelve Lektionen
+// demands SIXTEEN submissions against a `task_key LIKE '<course>-%'` count. The
+// twelve that used to stand here therefore 429'd every checkpoint's writing for
+// exactly the learners the course is advertised as free for, and nothing said
+// so: the checkpoint item is `optional: true`, so itemCounts() drops it from
+// the section instead of failing it (DaF review #7, BLOCKER 2).
+//
+// So the number is DERIVED from the course, not carried beside it — the rule
+// CLAUDE.md states for prices and claims. courseAllowanceFor() below is the
+// gate; this constant is the per-Lektion half of it, the figure
+// src/data/marketing.js states to learners and tests/claims.test.mjs parses
+// back out of this file. tests/writing-course.test.mjs pins it equal to
+// courseWritingTasks('a1.1').length, so it cannot drift from the curriculum,
+// and pins the gate itself against every level that has one.
+export const COURSE_WRITING_FREE_LIFETIME = 12;
+
+/** One graded writing task per checkpoint — four checkpoints per rebuilt course. */
+export const CHECKPOINTS_PER_COURSE = 4;
+
+// The course level behind a task-key prefix. The bank keys tasks by course
+// (`a11-l03`), the writing bank keys them by level (`a1.1`); this is the one
+// place the two spellings meet.
+const LEVEL_OF_PREFIX = {
+  'a11-': 'a1.1',
+  'a12-': 'a1.2',
+  'a21-': 'a2.1',
+  'a22-': 'a2.2',
+  'b11-': 'b1.1',
+  'b12-': 'b1.2',
+  'b21-': 'b2.1',
+  'b22-': 'b2.2',
+};
 
 // Every course task_key is `<course>-l<NN>` (e.g. `a11-l03`, `a12-l07`).
 // writing_submissions has no `scope` column
@@ -56,6 +88,18 @@ const COURSE_TASK_KEY_RE = /^(a\d\d)-l\d\d$/;
 export function courseTaskKeyPrefix(taskKey) {
   const m = typeof taskKey === 'string' ? taskKey.match(COURSE_TASK_KEY_RE) : null;
   return m ? `${m[1]}-` : null;
+}
+
+/**
+ * The free lifetime writing allowance of the course a task_key belongs to:
+ * one submission per Lektion that has a writing task, plus one per checkpoint.
+ * Returns 0 when the key names no known course — the caller then falls back to
+ * the ordinary tier limit rather than inventing an allowance.
+ */
+export function courseAllowanceFor(taskKey) {
+  const level = LEVEL_OF_PREFIX[courseTaskKeyPrefix(taskKey)];
+  const n = level ? courseWritingTasks(level).length : 0;
+  return n ? n + CHECKPOINTS_PER_COURSE : 0;
 }
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
@@ -185,9 +229,11 @@ export const handler = async (event) => {
     const isCourse = !!task.course;
     // A free/expired learner's course tasks get the course allowance; everyone
     // else (and every exam task) keeps the tier limit above.
-    const courseAllowance = isCourse && (tier === 'free_trial' || tier === 'free_expired');
+    const courseLimit = courseAllowanceFor(task_key);
+    const courseAllowance =
+      isCourse && courseLimit > 0 && (tier === 'free_trial' || tier === 'free_expired');
     const limit = courseAllowance
-      ? COURSE_WRITING_FREE_LIFETIME
+      ? courseLimit
       : WRITING_LIMITS[tier] ?? WRITING_LIMITS.pro; // premium falls through to pro's cap
     if (!courseAllowance && (tier === 'free_expired' || limit === 0)) {
       return { statusCode: 403, headers, body: JSON.stringify({ error: 'subscription_required', tier }) };
