@@ -295,8 +295,13 @@ export const MAX_MISSIONLESS_LEKTIONEN = 4;        // a1.1; per level in LEVELS 
  * being counted as item lexis in every one of them, which is the formula talking and not the item.
  * (It is the same class as the four A1.2 formulas added a day earlier; without the entry those
  * items could never be served at any Lektion under the new `minLektion` stamp.)
+ *
+ * 2026-09-13, round 10 (worker R10-F): **55 → 49**. The six hand-written items the build could
+ * never serve (`minLektion: null`, because the course teaches none of `liegt`, `offen`, `klein`,
+ * `Januar`, `richtig`) were reworded onto their own Lektion's Wortfeld rather than deleted, and
+ * each untaught token they carried left RULE 11's count with them.
  */
-export const MAX_UNTAUGHT_ITEM_TOKENS = 55;        // a1.1; per level in LEVELS below — measured 2026-09-13
+export const MAX_UNTAUGHT_ITEM_TOKENS = 49;        // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
  * RULE 11b ratchet — how many (item, token) pairs the learner MEETS may still use a word the course

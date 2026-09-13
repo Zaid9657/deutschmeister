@@ -226,9 +226,17 @@ test('every Lektion really drills its own grammar point — content, not label',
   // and a Lektion below it is a finding, not a reason to loosen the predicate.
   // A failure here names the drawn items that do NOT produce the grammar point,
   // because that list is the work order for the item author: two producers.
+  //
+  // ROUND 10 extended the loop from two attempts to all three. The cycle is
+  // `ATTEMPT_CYCLE` long (1 → 2 → 3 → 1), attempt n may not repeat what n−1 and
+  // n−2 drew, and the third draw is therefore the one the pool has to be DEEP
+  // enough for: measured on the round-9 pool, L3 drilled its own slug 0 of 7
+  // times on attempt 3, L10 2, L2 and L9 3 — none of it visible while the test
+  // stopped at attempt 2. Three attempts need twelve fresh real producers per
+  // Lektion; the repair is items (a11.extra.json), never a lower floor.
   const failures = [];
   const rows = [];
-  for (const attempt of [1, 2]) {
+  for (let attempt = 1; attempt <= ATTEMPT_CYCLE; attempt += 1) {
     const plan = planPractice(CURRICULUM_A11, POOL, attempt);
     for (const lektion of LEKTIONEN) {
       const items = plan.get(lektion.nr);
@@ -273,16 +281,17 @@ test('no item is drawn twice in the whole level — the eight verbatim repeats a
  * slice holds no legal seven at all.
  *
  * 0 → 1 in round 10, when the `minLektion` filter took L4's two price items out of reach (`Kaffee`
- * and `kocht` are L9 Wortfeld, `Wein` is never taught before L4 either). What is left is 18 items
- * of which nine say `kostet` and nine say `Euro`, and an exhaustive search over that slice shows no
+ * and `kocht` are L9 Wortfeld, `Wein` is never taught before L4 either). What was left was 18 items
+ * of which nine say `kostet` and nine say `Euro`, and an exhaustive search over that slice showed no
  * seven exists that keeps `kostet` under `MAX_SAME_LEMMA` AND every task shape distinct — so the
- * draw takes a third `kostet` rather than a repeated task shape. THE REMEDY IS CONTENT, not a
- * looser cap: L4 needs two or three more `nouns-gender` items servable by L4 (Wortfeld of L1–L4)
- * that make the learner produce an article with a noun WITHOUT a price — „___ Tisch ist neu.“,
- * „Wie heißt ___ Zimmer auf Deutsch?“ — in task shapes L4 does not already use. Lower this to 0
- * when they exist; it may never be raised.
+ * draw took a third `kostet` rather than a repeated task shape.
+ *
+ * BACK TO 0 later in round 10, by content and not by a looser cap: `extra-a11-l04-19/20/21` make
+ * the learner produce an article with a noun and NO price („Hier ist ___ Tisch.“, „___ Rucksack ist
+ * gut.“, „___ Tische sind alt.“), each in a task shape L4 did not already use, and L4 now fills
+ * seven with every cap honoured (`relaxUsed` 0). It may never be raised.
  */
-const MAX_CAP_STARVED_LEKTIONEN = 1;
+const MAX_CAP_STARVED_LEKTIONEN = 0;
 
 test('no lemma carries more than two items in one Lektion — the Mädchen rule', () => {
   const plan = planPractice(CURRICULUM_A11, POOL, 1);
@@ -445,10 +454,10 @@ test('L6 draws at most one Beruf correction per block — and stays above the fl
   }
 });
 
-test('THE SHAPE TABLE — real drills and distinct task shapes, twelve Lektionen, both attempts', () => {
+test('THE SHAPE TABLE — real drills and distinct task shapes, twelve Lektionen, three attempts', () => {
   const lines = [];
   const failures = [];
-  for (const attempt of [1, 2]) {
+  for (let attempt = 1; attempt <= ATTEMPT_CYCLE; attempt += 1) {
     const plan = planPractice(CURRICULUM_A11, POOL, attempt);
     for (const lektion of LEKTIONEN) {
       const items = plan.get(lektion.nr);

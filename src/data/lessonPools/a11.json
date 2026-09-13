@@ -1,7 +1,7 @@
 {
  "level": "a1.1",
  "builtFrom": "2026-08-24",
- "count": 291,
+ "count": 312,
  "items": [
   {
    "id": "10fc1751-c3af-529f-8796-f8e46bfb1691",
@@ -789,17 +789,17 @@
    "stage": 4,
    "difficulty": 1,
    "order": 52,
-   "questionDe": "___ Schere liegt hier. (bestimmter Artikel)",
-   "questionEn": "The scissors are here — die Schere is singular in German.",
+   "questionDe": "Hier ist ___ Schere. (bestimmter Artikel)",
+   "questionEn": "Here are the scissors — die Schere is singular in German.",
    "options": null,
-   "answer": "Die",
+   "answer": "die",
    "accepted": [
-    "Die",
-    "die"
+    "die",
+    "Die"
    ],
    "explanationDe": "die Schere ist feminin und Singular.",
    "hint": null,
-   "minLektion": null
+   "minLektion": 5
   },
   {
    "id": "extra-a11-l05-03",
@@ -846,8 +846,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 55,
-   "questionDe": "___ Tür ist offen. (bestimmter Artikel)",
-   "questionEn": "The door is open.",
+   "questionDe": "___ Tür ist weiß. (bestimmter Artikel)",
+   "questionEn": "The door is white.",
    "options": null,
    "answer": "Die",
    "accepted": [
@@ -856,7 +856,7 @@
    ],
    "explanationDe": "die Tür ist feminin.",
    "hint": null,
-   "minLektion": null
+   "minLektion": 5
   },
   {
    "id": "extra-a11-l05-07",
@@ -865,8 +865,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 57,
-   "questionDe": "___ Schlüssel ist klein. (bestimmter Artikel)",
-   "questionEn": "The key is small.",
+   "questionDe": "___ Schlüssel ist gelb. (bestimmter Artikel)",
+   "questionEn": "The key is yellow.",
    "options": null,
    "answer": "Der",
    "accepted": [
@@ -875,7 +875,7 @@
    ],
    "explanationDe": "der Schlüssel ist maskulin.",
    "hint": null,
-   "minLektion": null
+   "minLektion": 5
   },
   {
    "id": "extra-a11-l05-08",
@@ -1694,6 +1694,44 @@
    "minLektion": 4
   },
   {
+   "id": "extra-a11-l04-19",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 59,
+   "questionDe": "Hier ist ___ Tisch. (der, die oder das?)",
+   "questionEn": "Here is the table.",
+   "options": null,
+   "answer": "der",
+   "accepted": [
+    "der",
+    "Der"
+   ],
+   "explanationDe": "Tisch ist maskulin: der Tisch.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
+   "id": "extra-a11-l04-20",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 60,
+   "questionDe": "___ Rucksack ist gut. (der, die oder das?)",
+   "questionEn": "The rucksack is good.",
+   "options": null,
+   "answer": "Der",
+   "accepted": [
+    "Der",
+    "der"
+   ],
+   "explanationDe": "Rucksack ist maskulin: der Rucksack.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
    "id": "319b95b6-ca95-5b56-b585-09aaaba51d9c",
    "topic": "nouns-gender",
    "type": "fill_blank",
@@ -1901,6 +1939,25 @@
    "minLektion": 4
   },
   {
+   "id": "extra-a11-l04-21",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 61,
+   "questionDe": "___ Tische sind alt. (der, die oder das?)",
+   "questionEn": "The tables are old.",
+   "options": null,
+   "answer": "Die",
+   "accepted": [
+    "Die",
+    "die"
+   ],
+   "explanationDe": "Im Plural haben die Nomen die: die Tische.",
+   "hint": null,
+   "minLektion": 4
+  },
+  {
    "id": "extra-a11-l02-09",
    "topic": "numbers",
    "type": "fill_blank",
@@ -2071,6 +2128,62 @@
    "minLektion": 3
   },
   {
+   "id": "extra-a11-l03-09",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 39,
+   "questionDe": "Wie alt ist das Baby? — ___ ist noch jung.",
+   "questionEn": "How old is the baby? — It is still young.",
+   "options": null,
+   "answer": "Es",
+   "accepted": [
+    "Es",
+    "es"
+   ],
+   "explanationDe": "das Baby ist neutral, darum es.",
+   "hint": null,
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-13",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 43,
+   "questionDe": "Ana, ___ bist jung, und ich bin alt.",
+   "questionEn": "Ana, you are young, and I am old.",
+   "options": null,
+   "answer": "du",
+   "accepted": [
+    "du"
+   ],
+   "explanationDe": "Eine Freundin sprechen Sie mit du an.",
+   "hint": null,
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-15",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 45,
+   "questionDe": "Das Kind von meiner Schwester ist ein Baby. ___ ist noch jung.",
+   "questionEn": "My sister's child is a baby. It is still young.",
+   "options": null,
+   "answer": "Es",
+   "accepted": [
+    "Es",
+    "es"
+   ],
+   "explanationDe": "das Kind ist neutral, darum es.",
+   "hint": null,
+   "minLektion": 3
+  },
+  {
    "id": "b19be5e4-48c0-5fad-a8a7-e16bf8e1772f",
    "topic": "personal-pronouns",
    "type": "fill_blank",
@@ -2196,6 +2309,99 @@
     "Wir kommen aus Marokko"
    ],
    "explanationDe": "Bei wir endet das Verb auf -en.",
+   "hint": null,
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-10",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 40,
+   "questionDe": "Meine Schwester und ich wohnen zusammen. ___ sprechen Deutsch.",
+   "questionEn": "My sister and I live together. We speak German.",
+   "options": null,
+   "answer": "Wir",
+   "accepted": [
+    "Wir",
+    "wir"
+   ],
+   "explanationDe": "Meine Schwester und ich sind zwei Personen: wir.",
+   "hint": null,
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-11",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 41,
+   "questionDe": "Lena und Tim, kommt ___ auch aus Marokko?",
+   "questionEn": "Lena and Tim, do you come from Morocco too?",
+   "options": null,
+   "answer": "ihr",
+   "accepted": [
+    "ihr"
+   ],
+   "explanationDe": "Zwei Freunde zusammen: ihr kommt.",
+   "hint": null,
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-12",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 42,
+   "questionDe": "Der Mann von meiner Schwester kommt aus Marokko. ___ spricht Arabisch.",
+   "questionEn": "My sister's husband comes from Morocco. He speaks Arabic.",
+   "options": null,
+   "answer": "Er",
+   "accepted": [
+    "Er",
+    "er"
+   ],
+   "explanationDe": "der Mann ist maskulin, darum er.",
+   "hint": null,
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-14",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 44,
+   "questionDe": "Lena und Tim, sprecht ___ Englisch?",
+   "questionEn": "Lena and Tim, do you speak English?",
+   "options": null,
+   "answer": "ihr",
+   "accepted": [
+    "ihr"
+   ],
+   "explanationDe": "Zwei Personen zusammen: ihr sprecht.",
+   "hint": null,
+   "minLektion": 3
+  },
+  {
+   "id": "extra-a11-l03-16",
+   "topic": "personal-pronouns",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 46,
+   "questionDe": "Mein Bruder und ich sind zusammen hier. ___ sprechen Deutsch.",
+   "questionEn": "My brother and I are here together. We speak German.",
+   "options": null,
+   "answer": "Wir",
+   "accepted": [
+    "Wir",
+    "wir"
+   ],
+   "explanationDe": "Mein Bruder und ich sind zwei Personen: wir.",
    "hint": null,
    "minLektion": 3
   },
@@ -2415,8 +2621,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 124,
-   "questionDe": "___ Geschenk ist klein. (er)",
-   "questionEn": "His present is small.",
+   "questionDe": "___ Geschenk ist schön. (er)",
+   "questionEn": "His present is lovely.",
    "options": null,
    "answer": "Sein",
    "accepted": [
@@ -2425,7 +2631,7 @@
    ],
    "explanationDe": "das Geschenk ist neutral: sein ohne Endung.",
    "hint": null,
-   "minLektion": null
+   "minLektion": 12
   },
   {
    "id": "extra-a11-l12-05",
@@ -2491,8 +2697,8 @@
    "stage": 4,
    "difficulty": 1,
    "order": 131,
-   "questionDe": "Im Januar ist ___ Geburtstag. (er)",
-   "questionEn": "His birthday is in January.",
+   "questionDe": "Im Mai ist ___ Geburtstag. (er)",
+   "questionEn": "His birthday is in May.",
    "options": null,
    "answer": "sein",
    "accepted": [
@@ -2500,7 +2706,7 @@
    ],
    "explanationDe": "Der Besitzer ist er: sein Geburtstag.",
    "hint": null,
-   "minLektion": null
+   "minLektion": 12
   },
   {
    "id": "9f8d70b7-2a9b-5c6c-8159-670b6cfd02c6",
@@ -4422,6 +4628,24 @@
    "minLektion": 9
   },
   {
+   "id": "extra-a11-l09-10",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 100,
+   "questionDe": "Die Kellnerin ___ Kuchen und Tee. (haben)",
+   "questionEn": "The waitress has cake and tea.",
+   "options": null,
+   "answer": "hat",
+   "accepted": [
+    "hat"
+   ],
+   "explanationDe": "sie (die Kellnerin) → hat.",
+   "hint": null,
+   "minLektion": 9
+  },
+  {
    "id": "fb88c1bb-9662-5838-9cd6-6a117218b6bb",
    "topic": "verb-haben",
    "type": "fill_blank",
@@ -4604,6 +4828,25 @@
     "haben"
    ],
    "explanationDe": "Höflich mit Sie: Haben Sie auch Kuchen?",
+   "hint": null,
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a11-l09-11",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 101,
+   "questionDe": "Ana, ___ du Hunger oder Durst? (haben)",
+   "questionEn": "Ana, are you hungry or thirsty?",
+   "options": null,
+   "answer": "Hast",
+   "accepted": [
+    "Hast",
+    "hast"
+   ],
+   "explanationDe": "du → hast: Hast du Hunger?",
    "hint": null,
    "minLektion": 9
   },
@@ -4815,6 +5058,25 @@
    "minLektion": 2
   },
   {
+   "id": "extra-a11-l02-13",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 33,
+   "questionDe": "Ana, ___ du ledig? (sein)",
+   "questionEn": "Ana, are you single?",
+   "options": null,
+   "answer": "Bist",
+   "accepted": [
+    "Bist",
+    "bist"
+   ],
+   "explanationDe": "Nach du steht bist: Bist du ledig?",
+   "hint": null,
+   "minLektion": 2
+  },
+  {
    "id": "338b13a7-7712-555d-bdb5-380090c87ba3",
    "topic": "verb-sein",
    "type": "fill_blank",
@@ -4977,6 +5239,25 @@
     "Ich bin Lehrer"
    ],
    "explanationDe": "Nach sein steht der Beruf ohne Artikel.",
+   "hint": null,
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a11-l02-14",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 34,
+   "questionDe": "Lena und Tim, ___ ihr Studenten? (sein)",
+   "questionEn": "Lena and Tim, are you students?",
+   "options": null,
+   "answer": "Seid",
+   "accepted": [
+    "Seid",
+    "seid"
+   ],
+   "explanationDe": "Nach ihr steht seid: Seid ihr Studenten?",
    "hint": null,
    "minLektion": 2
   },
@@ -5194,17 +5475,17 @@
    "stage": 4,
    "difficulty": 1,
    "order": 103,
-   "questionDe": "___ Gleis vier richtig?",
-   "questionEn": "Is platform four correct?",
+   "questionDe": "___ das Gleis vier? (sein)",
+   "questionEn": "Is that platform four?",
    "options": null,
    "answer": "Ist",
    "accepted": [
     "Ist",
     "ist"
    ],
-   "explanationDe": "Mit sein fragst du so: Ist Gleis vier richtig?",
+   "explanationDe": "Mit sein fragen Sie so: Ist das Gleis vier?",
    "hint": null,
-   "minLektion": null
+   "minLektion": 10
   },
   {
    "id": "extra-a11-l10-04",
@@ -5565,6 +5846,121 @@
    "explanationDe": "Die Ja/Nein-Frage beginnt mit ist.",
    "hint": null,
    "minLektion": 10
+  },
+  {
+   "id": "extra-a11-l10-17",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 117,
+   "questionDe": "[essen / ihr / im Zug] (Das Verb steht zuerst.)",
+   "questionEn": "Form the question: do you (plural) eat on the train?",
+   "options": null,
+   "answer": "Esst ihr im Zug?",
+   "accepted": [
+    "Esst ihr im Zug?",
+    "Esst ihr im Zug"
+   ],
+   "explanationDe": "Das Verb steht auf Position 1: Esst ihr im Zug?",
+   "hint": null,
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a11-l10-18",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 118,
+   "questionDe": "[haben / Sie / eine Fahrkarte] (höflich mit Sie)",
+   "questionEn": "Form the polite question: do you have a ticket?",
+   "options": null,
+   "answer": "Haben Sie eine Fahrkarte?",
+   "accepted": [
+    "Haben Sie eine Fahrkarte?",
+    "Haben Sie eine Fahrkarte"
+   ],
+   "explanationDe": "Höflich mit Sie, das Verb zuerst: Haben Sie eine Fahrkarte?",
+   "hint": null,
+   "caseSensitive": true,
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a11-l10-19",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 119,
+   "questionDe": "[kommen / der Fahrer / morgen] (Beginnen Sie mit dem Verb.)",
+   "questionEn": "Form the question: is the driver coming tomorrow?",
+   "options": null,
+   "answer": "Kommt der Fahrer morgen?",
+   "accepted": [
+    "Kommt der Fahrer morgen?",
+    "Kommt der Fahrer morgen"
+   ],
+   "explanationDe": "Das Verb kommt zuerst: Kommt der Fahrer morgen?",
+   "hint": null,
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a11-l10-20",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 120,
+   "questionDe": "[fahren / der Bus / nach Deutschland] (Die Stimme steigt am Ende.)",
+   "questionEn": "Form the question: does the bus go to Germany?",
+   "options": null,
+   "answer": "Fährt der Bus nach Deutschland?",
+   "accepted": [
+    "Fährt der Bus nach Deutschland?",
+    "Fährt der Bus nach Deutschland"
+   ],
+   "explanationDe": "Das Verb zuerst: Fährt der Bus nach Deutschland?",
+   "hint": null,
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a11-l10-21",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 121,
+   "questionDe": "[sein / das Auto / neu] (Zuerst das Verb, dann das Subjekt.)",
+   "questionEn": "Form the question: is the car new?",
+   "options": null,
+   "answer": "Ist das Auto neu?",
+   "accepted": [
+    "Ist das Auto neu?",
+    "Ist das Auto neu"
+   ],
+   "explanationDe": "Ist das Auto neu? — das Verb steht vor dem Subjekt.",
+   "hint": null,
+   "minLektion": 10
+  },
+  {
+   "id": "extra-a11-l10-22",
+   "topic": "yes-no-questions",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 122,
+   "questionDe": "[haben / ihr / morgen / Zeit] (Das Verb steht vorn.)",
+   "questionEn": "Form the question: do you (plural) have time tomorrow?",
+   "options": null,
+   "answer": "Habt ihr morgen Zeit?",
+   "accepted": [
+    "Habt ihr morgen Zeit?",
+    "Habt ihr morgen Zeit"
+   ],
+   "explanationDe": "Habt ihr morgen Zeit? — das Verb zuerst.",
+   "hint": null,
+   "minLektion": 8
   }
  ]
 }
