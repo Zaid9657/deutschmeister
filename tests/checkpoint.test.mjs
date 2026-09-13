@@ -80,6 +80,7 @@ import {
   checkpointReport,
   leaksAcross,
   printedSurface,
+  agreementViolations,
 } from '../src/lib/checkpoint/buildCheckpoint.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js';
@@ -259,17 +260,32 @@ const isDigitWord = (w) => NUMBER_WORDS_TEST.slice(0, 10).includes(w.toLowerCase
 // adverbial accusative: the noun stands there as a time unit, not as a thing,
 // and the Wortfeld (`article`, `plural`) cannot see that. So the word LEFT of
 // the change decides: after a quantifier (jede/jeden/jedes/jeder/alle/allen)
-// nothing may be swapped at all, and after a deictic (diese/diesen/…) only
-// within the semantic class — time for time, thing for thing.
+// nothing may be swapped at all — and the semantic class (time for time,
+// person for person, thing for thing), which review #7 demanded only after a
+// deictic, is demanded on EVERY swap since review #15.
 const QUANTIFIER_DET_TEST = ['jede', 'jeden', 'jedes', 'jeder', 'alle', 'allen'];
-const DEICTIC_DET_TEST = ['diese', 'diesen', 'dieses', 'dieser', 'diesem'];
 const TIME_NOUNS_TEST = [
   'Woche', 'Wochen', 'Wochenende', 'Wochenenden', 'Tag', 'Tage', 'Monat', 'Monate',
   'Jahr', 'Jahre', 'Stunde', 'Stunden', 'Minute', 'Minuten', 'Morgen', 'Vormittag',
   'Mittag', 'Nachmittag', 'Abend', 'Abende', 'Nacht', 'Nächte', 'Uhrzeit', 'Zeit',
+  'Pause', 'Pausen', 'Termin', 'Termine', 'Verspätung', 'Verspätungen',
+  'Geburtstag', 'Geburtstage', 'Wochentag', 'Wochentage', 'Feierabend',
 ];
-const semanticClassTest = (w) =>
-  (TIME_NOUNS_TEST.includes(w) || WEEKDAYS_TEST.includes(w) ? 'zeit' : 'ding');
+const PERSON_GLOSS_RE_TEST = /\((?:m|f)\)/;
+const PERSON_NOUNS_TEST = [
+  'Arzt', 'Ärzte', 'Ärztin', 'Ärztinnen', 'Baby', 'Babys', 'Bruder', 'Brüder',
+  'Einzelkind', 'Einzelkinder', 'Eltern', 'Familie', 'Familien', 'Frau', 'Frauen',
+  'Gast', 'Gäste', 'Geschwister', 'Kellner', 'Kellnerin', 'Kellnerinnen',
+  'Kind', 'Kinder', 'Mama', 'Mamas', 'Mann', 'Männer', 'Mutter', 'Mütter',
+  'Papa', 'Papas', 'Schwester', 'Schwestern', 'Sohn', 'Söhne', 'Tochter', 'Töchter',
+  'Vater', 'Väter',
+];
+const semanticClassTest = (w, vocab) => {
+  if (TIME_NOUNS_TEST.includes(w) || WEEKDAYS_TEST.includes(w)) return 'zeit';
+  if (PERSON_NOUNS_TEST.includes(w)) return 'person';
+  if (PERSON_GLOSS_RE_TEST.test(String(vocab?.get?.(w)?.en || ''))) return 'person';
+  return 'ding';
+};
 
 // ── and the POSITIONAL half (the residual of round 8) ───────────────────────
 //
@@ -307,26 +323,122 @@ const ADVERB_SWAPS_TEST = new Map([
   ['abends', ['morgens']],
 ]);
 
-/** The chapter's nouns with their gender, exactly as buildCheckpoint reads them. */
-function genderMap(chapter) {
+// ── and the NUMBER half of the same rule (DaF review #15, MAJOR 3) ──────────
+//
+// The gender bar was built out of a table that had already LOST the gender.
+// `contentWords` wrote the singular and then the plural into the same Map with
+// `out.set`, so for every noun whose plural is spelled like its singular — 15
+// entries in A1.1: Lehrer, Schalter, Eltern, Geschwister, Euro, Kugelschreiber,
+// Fenster, Zimmer, Schlüssel, Computer, Verkäufer, Wecker, Kuchen, Kellner,
+// Fahrer — the plural line ate the gender and the word landed in the class
+// `plural`. `der Computer` and `die Taschen` were then "the same article", and
+// the GRADED checkpoint 2 asked: „Ana braucht **einen Taschen** und ein
+// Telefon." That is not a false statement, it is not a sentence — the learner
+// ticks Falsch off the form and the item measures nothing.
+//
+// The map below is this test's OWN lossless reading of the Wortfeld (gender,
+// number, and the both-numbers mark), so it can disagree with the builder. It
+// is fed to `agreementViolations`, which is the builder's own guard: what the
+// two share is the determiner table, what they must not share is the noun
+// table, because the noun table is where the bug was.
+
+/** The chapter's nouns with gender AND number, read losslessly from the Wortfeld. */
+function readingMap(chapter) {
   const map = new Map();
+  const bothNumbers = new Set();
   for (const l of chapter) {
     for (const w of l.wortfeld || []) {
       if (!w.article) continue;
       const word = String(w.word || w.de || '').trim();
-      if (word && !/\s/.test(word)) map.set(word, String(w.article));
       const plural = String(w.plural || '').trim();
-      if (plural && plural !== '—' && !/\s/.test(plural)) map.set(plural, 'plural');
+      const hasPlural = Boolean(plural) && plural !== '—' && !/\s/.test(plural);
+      if (word && !/\s/.test(word) && !map.has(word)) {
+        map.set(word, { article: String(w.article), number: 'sg', en: String(w.en || '') });
+      }
+      if (!hasPlural) continue;
+      if (plural === word) bothNumbers.add(plural);
+      else if (!map.has(plural)) map.set(plural, { article: 'plural', number: 'pl', en: String(w.en || '') });
     }
+  }
+  for (const word of bothNumbers) {
+    if (map.has(word)) map.set(word, { ...map.get(word), isPluralOfSelf: true });
   }
   return map;
 }
+
+/** The 15 A1.1 nouns whose plural is spelled like their singular — the measured class. */
+const PLURAL_OF_SELF_A11 = [
+  'Lehrer', 'Schalter', 'Eltern', 'Geschwister', 'Euro', 'Kugelschreiber', 'Fenster',
+  'Zimmer', 'Schlüssel', 'Computer', 'Verkäufer', 'Wecker', 'Kuchen', 'Kellner', 'Fahrer',
+];
+
+test('every noun whose plural is its singular keeps its gender and is marked', () => {
+  // The rule first, over whatever the Wortfeld holds today: a sixteenth entry
+  // of this shape is covered the moment it is written, without a list to
+  // maintain. The 15 measured ones are then asserted to be among them, so the
+  // report of review #15 can be re-read against the code.
+  const map = readingMap(CURRICULUM_A11.lektionen);
+  const marked = new Set([...map.entries()].filter(([, e]) => e.isPluralOfSelf).map(([w]) => w));
+  for (const [word, entry] of map) {
+    if (!marked.has(word)) continue;
+    assert.notEqual(entry.article, 'plural', `${word} must keep its gender`);
+    assert.equal(entry.number, 'sg', `${word} must keep a singular reading`);
+  }
+  for (const word of PLURAL_OF_SELF_A11) {
+    assert.ok(marked.has(word), `${word} is spelled the same in both numbers and must be marked`);
+  }
+});
+
+test('„einen Taschen" is rejected by the agreement guard — and the number key is what rejects it', () => {
+  // (a) the measured statement of a1.1-cp2-lesen-2, as it shipped.
+  const map = readingMap(CURRICULUM_A11.lektionen);
+  const broken = agreementViolations('Ana braucht einen Taschen und ein Telefon.', map);
+  assert.equal(broken.length, 1, 'the guard must see exactly the one broken NP');
+  assert.deepEqual(
+    { determiner: broken[0].determiner, noun: broken[0].noun },
+    { determiner: 'einen', noun: 'Taschen' },
+  );
+  // …and the sentence the text actually carries passes.
+  assert.deepEqual(agreementViolations('Ana braucht einen Computer und ein Telefon.', map), []);
+  // (b) THE MUTATION. Drop the `number` key from the plural entry — the single
+  // field the old table lost — and the guard goes blind on exactly this class.
+  const mutated = new Map(map);
+  for (const [word, entry] of mutated) {
+    const { number, ...rest } = entry;                    // eslint-disable-line no-unused-vars
+    mutated.set(word, rest);
+  }
+  assert.deepEqual(
+    agreementViolations('Ana braucht einen Taschen und ein Telefon.', mutated), [],
+    'without `number` the table cannot tell a plural from a singular — that was the bug',
+  );
+});
+
+test('no Falsch statement of the four papers contains a determiner its noun cannot take', () => {
+  let checked = 0;
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    const map = readingMap(chapterLektionen(CURRICULUM_A11, cp));
+    for (const item of items.filter((i) => i.section === 'lesen' && i.answer === 'Falsch')) {
+      const statement = quotedStatement(item);
+      assert.deepEqual(
+        agreementViolations(statement, map), [],
+        `${item.id}: „${statement}" — determiner and noun must agree in gender and number`,
+      );
+      checked += 1;
+    }
+  }
+  assert.ok(checked >= 8, `two falsch statements per checkpoint, got ${checked}`);
+});
 
 test('a falsch statement changes ONE word for a word of the same class — article, weekday, name, digit', () => {
   let checked = 0;
   for (const { cp, items } of ALL_CHECKPOINTS) {
     const chapter = chapterLektionen(CURRICULUM_A11, cp);
-    const genders = genderMap(chapter);
+    const genders = readingMap(chapter);
+    const printedInChapter = new Set(
+      chapter.flatMap((l) => (l.dialog?.lines || []).flatMap(
+        (line) => [...String(line.de || '').matchAll(/[A-ZÄÖÜ][A-Za-zÄÖÜäöüß-]+/g)].map((m) => m[0]),
+      )),
+    );
     const names = new Set(
       chapter.flatMap((l) => (l.dialog?.lines || []).flatMap((line) => String(line.speaker || '').split(/\s+/)))
         .filter((part) => part.length >= 3 && /^[A-ZÄÖÜ]/.test(part) && !['Herr', 'Frau'].includes(part)),
@@ -380,10 +492,13 @@ test('a falsch statement changes ONE word for a word of the same class — artic
         continue;
       }
       assert.ok(genders.has(from), `${item.id}: "${from}" is not a Wortfeld noun of the chapter`);
-      assert.equal(
-        genders.get(to),
-        genders.get(from),
-        `${item.id}: „${from}“ (${genders.get(from)}) replaced by „${to}“ (${genders.get(to)}) — the article must match`,
+      assert.ok(genders.has(to), `${item.id}: "${to}" is not a Wortfeld noun of the chapter`);
+      // Gender AND number, and never a form that is its own plural: „Computer“
+      // is masculine singular under „einen“ and plural under „die“, so an
+      // inserted one would be a number the reader cannot see (review #15).
+      assert.ok(
+        !genders.get(to).isPluralOfSelf,
+        `${item.id}: „${to}“ is spelled the same in both numbers — inserting it hides the number`,
       );
       // The determiner the swapped noun stands under, read off the SOURCE line.
       const at = original.findIndex((w) => w.replace(/[.,!?„“]/g, '') === from);
@@ -398,13 +513,22 @@ test('a falsch statement changes ONE word for a word of the same class — artic
         NP_DET_RE_TEST.test(det),
         `${item.id}: „${from}“ is a bare noun here („${det} ${from}“) — swapping it breaks the sentence instead of falsifying it`,
       );
-      if (DEICTIC_DET_TEST.includes(det)) {
-        assert.equal(
-          semanticClassTest(to),
-          semanticClassTest(from),
-          `${item.id}: „${det} ${from}“ (${semanticClassTest(from)}) may only become a ${semanticClassTest(from)} noun, got „${to}“`,
-        );
-      }
+      // The semantic bar, now on EVERY swap and not only under a deictic
+      // (DaF review #15, MAJOR 3): a time for a time, a person for a person, a
+      // thing for a thing. „Tim kauft den Stuhl und die Chefin." agrees in
+      // gender and number and is still absurd on sight.
+      assert.equal(
+        semanticClassTest(to, genders),
+        semanticClassTest(from, genders),
+        `${item.id}: „${det} ${from}“ (${semanticClassTest(from, genders)}) may only become a ${semanticClassTest(from, genders)} noun, got „${to}“`,
+      );
+      // …and the replacement must be a noun this chapter PRINTS. A Wortfeld is
+      // a word list: it holds „die Firma" beside „die Lampe", and a learner
+      // cannot weigh a word he was never shown.
+      assert.ok(
+        printedInChapter.has(to),
+        `${item.id}: „${to}“ never appears in a dialogue of this chapter — a distractor the learner cannot find is not a reading item`,
+      );
     }
   }
   assert.ok(checked >= 8, `two falsch statements per checkpoint, got ${checked}`);
@@ -1227,7 +1351,7 @@ test('THE minLektion BOUND — no checkpoint draws an item its chapter has not t
 });
 
 test('the bound BITES — an item stamped past the chapter leaves the draw, and the paper stays 20', () => {
-  // A mutation rather than a claim: `extra-a11-l05-10` is drawn by checkpoint 2
+  // A mutation rather than a claim: `extra-a11-l05-03` is drawn by checkpoint 2
   // (`afterLektion: 6`) with `minLektion: 5`. Re-stamp that one item to 8 — past
   // the chapter this paper closes — and it must disappear from the paper while
   // every section keeps its size. (The victim was `extra-a11-l05-08` until the
@@ -1238,7 +1362,7 @@ test('the bound BITES — an item stamped past the chapter leaves the draw, and 
     buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp2, pool })
       .map((i) => i.poolItemId).filter(Boolean),
   );
-  const VICTIM = 'extra-a11-l05-10';
+  const VICTIM = 'extra-a11-l05-03';
   assert.ok(drawn(POOL).has(VICTIM), `${VICTIM} is no longer drawn by ${cp2.id} — pick another victim`);
 
   const mutated = { ...POOL, items: POOL.items.map((i) => (i.id === VICTIM ? { ...i, minLektion: 8 } : { ...i })) };

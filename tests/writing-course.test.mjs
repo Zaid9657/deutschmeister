@@ -29,6 +29,7 @@ import {
   scoreWriting, countWords, leitpunktKeyword, leitpunktKeywords, leitpunktEvidence, leitpunktSatisfied,
   leitpunktConjuncts,
 } from '../src/lib/lesson/writing.js';
+import { formSpeakInModelTexts, LEVELS } from '../scripts/validate-curriculum.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const LEKTIONEN = CURRICULUM_A11.lektionen;
@@ -358,7 +359,10 @@ test('an undecidable Leitpunkt is shown and marked for the KI — never dropped,
   // Exactly two of the eighteen A1.1 Leitpunkte are in this class, and both are the same sentence.
   const undecidable = COURSE.flatMap((t) => (t.register === 'formular' ? [] : t.leitpunkte))
     .filter((lp) => leitpunktSatisfied(lp, 'Hallo Lena! Viele Grüße, Ana') === null);
-  assert.deepEqual(undecidable, ['Warum Sie schreiben', 'Warum Sie schreiben']);
+  // ROUND 16 (DaF review #15, MAJOR 2): „Warum Sie feiern“ joins them. A reason is not a form, and
+  // the only lower-case word of that Leitpunkt is the TASK's own verb — deciding it by that word
+  // made the empty echo („Wir feiern.“) green and the reason („Ich habe Geburtstag.“) red.
+  assert.deepEqual(undecidable, ['Warum Sie schreiben', 'Warum Sie schreiben', 'Warum Sie feiern']);
 });
 
 test('the Formcheck is one function: the screen and RULE 17 grade with the same code', () => {
@@ -382,7 +386,9 @@ test('every A1.1 Beispieltext passes its own Formcheck — with the family rule,
     const res = scoreWriting(formcheckTask(l.nr), l.schreiben.sample);
     assert.equal(res.ok, true, `L${l.nr}: ${JSON.stringify(res.checks.filter((c) => !c.ok))}`);
     assert.ok(countWords(l.schreiben.sample) >= 25 && countWords(l.schreiben.sample) <= 45, `L${l.nr} length`);
-    assert.ok(!/Der Familienstand:|Das Land ist|Der Nachname ist/.test(l.schreiben.sample), `L${l.nr}: form-speak`);
+    // FORM-SPEAK IS CHECKED AS A FORM, not as three strings — see the RULE 22 test below. The old
+    // line here („Der Familienstand:|Das Land ist|Der Nachname ist“) knew none of the five
+    // Formularsätze that stood in this file when DaF review #15 measured it.
   }
 });
 
@@ -467,4 +473,155 @@ test('in an indirect question the nouns are the task’s topic and the verb is t
   assert.deepEqual(leitpunktEvidence(lp).conjuncts[0].words, ['mitbringen']);
   assert.equal(leitpunktSatisfied(lp, 'Bringt ihr bitte Kuchen und Musik mit?'), true);
   assert.equal(leitpunktSatisfied(lp, 'Die Gäste kommen um acht Uhr.'), false);
+});
+
+
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+// ROUND 16 — DaF review #15, MAJOR 1 and MAJOR 2
+//
+// Two findings of one kind: a rule that closes its instance and leaves its class open.
+//  • MAJOR 1 — RULE 21 asked „is this Leitpunkt answerable from the taught lexis?“ and measured it
+//    with a checker that accepts the NAMED FIELD, so „Das Geburtsdatum ist der 3.5.1998.“ counted
+//    as an answer although A1.1 teaches neither `geboren` nor a month by Lektion 2. The course then
+//    wrote that sentence into its model text — five such sentences in three of six Mitteilungen —
+//    and the guard against them was a list of three strings that knew none of the five.
+//  • MAJOR 2 — `NATIONALITY_RE` recognised 18 of 50 common nationality forms, essentially those of
+//    the course's own character, so every learner who is not Ana got a red cross on a right answer.
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+
+/**
+ * FIFTY common nationality forms — adjective and noun, masculine and feminine. The 28 the review
+ * names verbatim (the eight adjectives and twelve nouns it measured as MISSED, plus the seven it
+ * measured as hit and `Deutscher`) are marked; the rest are the same classes for the other big
+ * origin groups of a German integration course. ALL FIFTY must be recognised.
+ */
+const NATIONALITY_FORMS = [
+  // Quoted from REVIEW-daf-15: not recognised before round 16 (adjectives) …
+  'türkisch', 'polnisch', 'russisch', 'syrisch', 'arabisch', 'spanisch', 'indisch', 'iranisch',
+  // … and the nouns it measured as missed.
+  'Türkin', 'Türke', 'Polin', 'Pole', 'Russin', 'Syrerin', 'Italienerin', 'Ukrainerin', 'Inderin',
+  'Griechin', 'Afghanin', 'Rumänin',
+  // Quoted from REVIEW-daf-15 as the forms that WERE recognised — they must stay recognised.
+  'marokkanisch', 'Marokkanerin', 'Marokkaner', 'deutsch', 'Deutsche', 'Spanier', 'Italienisch',
+  'Deutscher',
+  // The same two classes for the other large origin groups.
+  'ukrainisch', 'italienisch', 'griechisch', 'afghanisch', 'rumänisch', 'portugiesisch',
+  'chinesisch', 'vietnamesisch', 'brasilianisch', 'amerikanisch', 'kroatisch', 'serbisch',
+  'bulgarisch', 'albanisch', 'kurdisch',
+  'Russe', 'Syrer', 'Ukrainer', 'Inder', 'Grieche', 'Französin', 'Chinesin',
+];
+
+/** Ten words the same shapes must NOT swallow: the profession family and the course's own nouns. */
+const NOT_NATIONALITIES = [
+  'Studentin', 'Student', 'Lehrerin', 'Lehrer', 'Kellner', 'Verkäuferin', 'Fahrer', 'Ärztin',
+  'Kollegin', 'Ingenieurin',
+];
+
+test('MAJOR 2: the nationality shape is a CLASS — all fifty forms, none of the ten professions', () => {
+  assert.equal(NATIONALITY_FORMS.length, 50, 'the review measured fifty forms');
+  const missed = NATIONALITY_FORMS.filter(
+    (f) => leitpunktSatisfied('Ihre Staatsangehörigkeit', `Ich bin ${f}.`) !== true,
+  );
+  assert.deepEqual(missed, [], `${missed.length} of 50 nationality forms are not recognised`);
+  const wrong = NOT_NATIONALITIES.filter(
+    (f) => leitpunktSatisfied('Ihre Staatsangehörigkeit', `Ich bin ${f}.`) !== false,
+  );
+  assert.deepEqual(wrong, [], 'a profession must never answer „Ihre Staatsangehörigkeit“');
+  // And the country half: „aus der Türkei“ is a country name with its article.
+  assert.equal(leitpunktSatisfied('Ihr Land', 'Ich komme aus der Türkei.'), true);
+  assert.equal(leitpunktSatisfied('Ihr Land', 'Ich komme aus dem Irak.'), true);
+});
+
+test('MAJOR 2: „Warum“ is undecidable by form — the reason is not the task’s verb echoed back', () => {
+  // Round 15 made „Warum Sie feiern“ decidable through the only lower-case word it has, which is
+  // the TASK's own verb: „Wir feiern.“ (the empty echo) was green, „Ich habe Geburtstag.“ (the
+  // reason) was red. Both are now „prüft die KI“, where „Warum Sie schreiben“ already stood.
+  assert.equal(leitpunktSatisfied('Warum Sie feiern', 'Wir feiern.'), null);
+  assert.equal(leitpunktSatisfied('Warum Sie feiern', 'Ich habe Geburtstag.'), null);
+  assert.equal(leitpunktSatisfied('Warum Sie schreiben', 'Der Zug hat Verspätung.'), null);
+  // „Wann“ keeps its shape: a time IS a form.
+  assert.equal(leitpunktSatisfied('Wann Sie kommen', 'Wir kommen morgen.'), true);
+  assert.equal(leitpunktSatisfied('Wann Sie kommen', 'Wir kommen bald.'), false);
+});
+
+/**
+ * TWO LINES PER LEITPUNKT of all six A1.1 Mitteilungen — one exam-grade answer that must be GREEN
+ * and one that does not answer the Leitpunkt and must be RED. The rule is tested in both directions
+ * on every Leitpunkt of the course rather than on the probes of one round, and the nationality line
+ * plays five origins in both word classes.
+ */
+const LEITPUNKT_FIXTURE = [
+  ['Ihr Name und Ihr Geburtsdatum', 'Ich heiße Ana Chakiri. Ich bin am 3.5.1998 geboren.', 'Ich heiße Ana Chakiri.'],
+  ['Ihr Land und Ihre Staatsangehörigkeit', 'Ich komme aus der Türkei. Ich bin Türkin.', 'Ich komme aus der Türkei.'],
+  ['Ihr Familienstand: ledig oder verheiratet', 'Ich bin verheiratet.', 'Ich bin Studentin in Bremen.'],
+  ['Was Sie kaufen', 'Ich kaufe den Stuhl und die Lampe.', 'Der Flohmarkt ist gut.'],
+  ['Was es kostet', 'Der Stuhl kostet zwölf Euro.', 'Der Stuhl ist nicht teuer.'],
+  ['Wann Sie kommen', 'Wir kommen morgen.', 'Wir kommen bald.'],
+  ['Was Sie brauchen', 'Ich brauche einen Computer.', 'Das Büro ist neu.'],
+  ['Ihre Telefonnummer', 'Hier ist die Nummer: null vier zwei drei drei acht eins.', 'Ich bin um neun Uhr im Büro.'],
+  ['Wann Sie im Büro sind', 'Ich bin um neun Uhr im Büro.', 'Ich arbeite im Büro.'],
+  ['Neuer Tag und neue Uhrzeit', 'Geht es am Dienstag um halb neun?', 'Ich komme am Montag zu spät.'],
+  ['Eine Frage an Lena', 'Bist du dann pünktlich?', 'Ich habe eine Frage für Lena.'],
+  ['Was die Kollegin bis dahin machen soll', 'Bitte machen Sie die Arbeit ohne mich.', 'Ich komme um zehn Uhr. Bis dann!'],
+  ['Tag und Uhrzeit', 'Wir feiern am Freitag um acht Uhr.', 'Wir feiern am Freitag.'],
+  ['Was die Gäste mitbringen sollen', 'Bringt ihr bitte Kuchen und Musik mit?', 'Die Gäste kommen um acht Uhr.'],
+];
+
+test('every decidable Leitpunkt of the six Mitteilungen is tested GREEN and RED', () => {
+  for (const [lp, green, red] of LEITPUNKT_FIXTURE) {
+    assert.equal(leitpunktSatisfied(lp, green), true, `„${lp}“ ← „${green}“ must be green`);
+    assert.equal(leitpunktSatisfied(lp, red), false, `„${lp}“ ← „${red}“ must be red`);
+  }
+  // Five origins, adjective and noun, on the Leitpunkt the review measured (MAJOR 2).
+  for (const [adj, noun] of [['marokkanisch', 'Marokkanerin'], ['türkisch', 'Türkin'],
+    ['polnisch', 'Polin'], ['syrisch', 'Syrerin'], ['ukrainisch', 'Ukrainerin']]) {
+    assert.equal(leitpunktSatisfied('Ihre Staatsangehörigkeit', `Ich bin ${adj}.`), true, adj);
+    assert.equal(leitpunktSatisfied('Ihre Staatsangehörigkeit', `Ich bin ${noun}.`), true, noun);
+  }
+  // Every Leitpunkt of the course is either in the fixture or undecidable („Warum Sie …“).
+  const covered = new Set(LEITPUNKT_FIXTURE.map(([lp]) => lp));
+  const open = COURSE.filter((t) => t.register !== 'formular')
+    .flatMap((t) => t.leitpunkte)
+    .filter((lp) => !covered.has(lp) && leitpunktSatisfied(lp, 'Hallo! Viele Grüße, Ana') !== null);
+  assert.deepEqual(open, [], 'a Leitpunkt of the course is in neither the fixture nor the KI rows');
+});
+
+test('MAJOR 1: the named field is the learner’s answer and never the course’s', () => {
+  // On the screen (`allowNamedField` defaults to true) naming the field and filling it IS an
+  // answer — a Spanish name is not matched by `heiße`, and the learner has answered.
+  assert.equal(leitpunktSatisfied('Ihr Name', 'Der Name ist Ana Ruiz.'), true);
+  assert.equal(leitpunktSatisfied('Ihr Familienstand', 'Der Familienstand: geschieden'), true);
+  // Where the COURSE is measured it is not: RULE 21 asks whether a real Mitteilung exists in the
+  // taught lexis, not whether some string turns the checklist green.
+  assert.equal(leitpunktSatisfied('Ihr Name', 'Der Name ist Ana Ruiz.', { allowNamedField: false }), false);
+  assert.equal(leitpunktSatisfied('Ihr Name', 'Ich heiße Ana Ruiz.', { allowNamedField: false }), true);
+  assert.equal(leitpunktSatisfied('Ihr Geburtsdatum', 'Ich bin am 3.5.1998 geboren.', { allowNamedField: false }), true);
+  const validator = readFileSync(join(ROOT, 'scripts/validate-curriculum.mjs'), 'utf8');
+  assert.match(validator, /allowNamedField: false/, 'RULE 21 measures without the named field');
+});
+
+test('RULE 22: no sentence of a Mitteilung Beispieltext is a form being read out', () => {
+  // The nouns come from the TASK BANK, so the rule finds what it finds; round 15's guard was three
+  // typed strings and stayed silent over five real Formularsätze (L2 two, L6 two, L12 one).
+  assert.deepEqual(formSpeakInModelTexts(CURRICULUM_A11, LEVELS['a1.1']), []);
+  // And the negative probe: the sentence the review quoted must be REPORTED when it stands there.
+  const probe = {
+    ...CURRICULUM_A11,
+    lektionen: CURRICULUM_A11.lektionen.map((l) => (l.nr !== 2 ? l : {
+      ...l,
+      schreiben: { ...l.schreiben, sample: `${l.schreiben.sample}. Die Staatsangehörigkeit ist marokkanisch.` },
+    })),
+  };
+  const found = formSpeakInModelTexts(probe, LEVELS['a1.1']);
+  assert.equal(found.length, 1, JSON.stringify(found));
+  assert.equal(found[0].noun, 'Staatsangehörigkeit');
+  // A POSSESSIVE is not form-speak: „Meine Telefonnummer ist …“ is what a person writes.
+  const ok = {
+    ...CURRICULUM_A11,
+    lektionen: CURRICULUM_A11.lektionen.map((l) => (l.nr !== 2 ? l : {
+      ...l,
+      schreiben: { ...l.schreiben, sample: `${l.schreiben.sample}. Meine Telefonnummer ist null eins sieben sechs.` },
+    })),
+  };
+  assert.deepEqual(formSpeakInModelTexts(ok, LEVELS['a1.1']), []);
 });

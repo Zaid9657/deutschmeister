@@ -1,7 +1,7 @@
 {
  "level": "a1.1",
  "builtFrom": "2026-08-24",
- "count": 374,
+ "count": 375,
  "items": [
   {
    "id": "10fc1751-c3af-529f-8796-f8e46bfb1691",
@@ -6450,6 +6450,24 @@
     "seid"
    ],
    "explanationDe": "Nach ihr steht seid: Seid ihr Studenten?",
+   "hint": null,
+   "minLektion": 2
+  },
+  {
+   "id": "extra-a11-l02-15",
+   "topic": "verb-sein",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 35,
+   "questionDe": "Die Staatsangehörigkeit im Formular: Ana ___ marokkanisch. (sein)",
+   "questionEn": "Nationality on the form: Ana is Moroccan.",
+   "options": null,
+   "answer": "ist",
+   "accepted": [
+    "ist"
+   ],
+   "explanationDe": "Nach sein steht die Staatsangehörigkeit ohne Artikel: Ana ist marokkanisch.",
    "hint": null,
    "minLektion": 2
   },

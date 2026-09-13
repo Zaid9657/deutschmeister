@@ -580,6 +580,31 @@ export const MAX_UNTAUGHT_IN_MODEL_TEXTS = 0;      // a1.1; per level in LEVELS 
 export const MAX_UNANSWERABLE_LEITPUNKTE = 0;      // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
+ * RULE 23 ratchet — how many Wortfeld entries a level still teaches on NO input surface.
+ *
+ * See `wortfeldInputCoverage` for what counts as input and why the list is shorter than RULE 10's.
+ * The finding that produced the rule is one word: `marokkanisch` reached the learner through the
+ * vocabulary list and the model answer of the very task that grades him on it — no dialogue line,
+ * no notice, no item, no review card (DaF review #15, MAJOR 4). RULE 10 could not see it, because
+ * RULE 10 counts the exercises too.
+ *
+ * MEASURED over all 263 A1.1 entries in round 16, and the opening number is the work order: the
+ * cheapest repair is almost always a dialogue line or a clause in the notice of the Lektion that
+ * already teaches the word, and every one of them makes the Lektion better on its own terms. Only
+ * goes down.
+ */
+export const MAX_WORTFELD_WITHOUT_INPUT = 58;      // a1.1; per level in LEVELS below — measured 2026-09-13
+
+/**
+ * RULE 22 ratchet — how many sentences of a level's Mitteilung model texts are a FORM read out.
+ *
+ * See `formSpeakInModelTexts` for the shape and why the noun list comes from the task bank. Hard 0
+ * at A1.1: round 15 put five such sentences into three of the six A1.1 Mitteilungen because the
+ * Formcheck rewarded them, and round 16 took them out together with the rule that rewarded them.
+ */
+export const MAX_FORM_SPEAK_SENTENCES = 0;         // a1.1; per level in LEVELS below — measured 2026-09-13
+
+/**
  * The letter formulas a Mitteilung needs and no Wortfeld lists. CLOSED and tiny on purpose — the
  * test pins the list, and every entry is a salutation or a closing, never content
  * (`tests/curricula.test.mjs`, „RULE 20's licensed chunks are letter formulas“).
@@ -770,6 +795,16 @@ export const LEVELS = {
       sharedProductionLines: MAX_SHARED_PRODUCTION_LINES,
       untaughtInModelTexts: MAX_UNTAUGHT_IN_MODEL_TEXTS,
       unanswerableLeitpunkte: MAX_UNANSWERABLE_LEITPUNKTE,
+      // RULE 23, measured over all 264 A1.1 entries 2026-09-13 (round 16): **58**. The work order
+      // it names, Lektion by Lektion: L2 five (verheiratet, der Student, die Lehrerin, das
+      // Geburtsdatum, der Familienstand), L6 ten (die Firma, der Chef, die Chefin, die Kollegin,
+      // die Arbeit, die Handynummer, die E-Mail-Adresse, die Ingenieurin, der Verkäufer, die
+      // Verkäuferin), L12 eight, the rest spread over L1, L3–L5, L7–L11. `marokkanisch` — the entry
+      // the rule was written for — is NOT among them any more: it is in the L2 notice and in the
+      // L2 model text. Every repair is a dialogue line or a notice clause in the Lektion that
+      // already lists the word, and each one makes that Lektion better on its own terms.
+      wortfeldWithoutInput: MAX_WORTFELD_WITHOUT_INPUT,
+      formSpeakSentences: MAX_FORM_SPEAK_SENTENCES,
       // RULE 19 is a hard rule (0, no ratchet), like RULE 14: a model text that contradicts its own
       // dialogue is never older debt. No entry here.
     },
@@ -901,6 +936,18 @@ export const LEVELS = {
       // frozen by owner decision (2026-09-13) and whoever resumes it pays this down the way
       // round 15 paid A1.1's two (a Wortfeld line, or a Leitpunkt in taught words).
       unanswerableLeitpunkte: 9,
+      // RULE 23, measured on the paused A1.2 draft 2026-09-13 (round 16): **6** Wortfeld entries
+      // the draft lists and puts on no input surface of their own Lektion — L3 `das Kaufhaus`,
+      // `das Geschäft`, `die Bibliothek`, L7 `der Körper`, L11 `die Sonne`, `warm`. Paused;
+      // re-measured, and no A1.2 content was touched to get there (the level is frozen by owner
+      // decision, 2026-09-13). Six of 201 against A1.1's 58 of 264 is not a better draft — A1.2's
+      // Wortfelder are simply shorter.
+      wortfeldWithoutInput: 6,
+      // RULE 22, measured on the paused A1.2 draft 2026-09-13 (round 16): **1** — L10 „Die Größe
+      // ist 38.“, the same form-speak shape A1.1 carried five times. Paused; re-measured, and no
+      // A1.2 content was touched to get there; whoever resumes the level writes „Ich brauche
+      // Größe 38.“ and the ratchet goes to 0.
+      formSpeakSentences: 1,
     },
   },
 };
@@ -1818,8 +1865,15 @@ export function writingTasksAreAnswerable(c, spec = null) {
       continue;
     }
 
+    // NO NAMED FIELD HERE. `leitpunktSatisfied` accepts „Das Geburtsdatum **ist** der 3.5.1998.“ on
+    // the learner's screen and must, but a COURSE that may answer its own Leitpunkt that way has a
+    // rule it can satisfy with the one sentence type *Start Deutsch 1* deducts for — and the round
+    // that shipped RULE 21 wrote exactly that sentence into the L2 model text (DaF review #15,
+    // MAJOR 1). The question this rule asks is „does a real Mitteilung exist in the taught lexis?“,
+    // not „does some string exist that turns the checklist green?“.
+    const STRICT = { allowNamedField: false };
     for (const lp of bank.leitpunkte || []) {
-      for (const conj of leitpunktEvidence(lp).conjuncts) {
+      for (const conj of leitpunktEvidence(lp, STRICT).conjuncts) {
         // Only a LOWER-CASE head is measured: a German noun head („Ihr **Land**“, „Ihre
         // **Telefonnummer**“) is answered by its shape and the learner never needs the noun itself,
         // but a verb or adjective head („Wann Sie sich **treffen**“) IS the word he must have.
@@ -1829,13 +1883,113 @@ export function writingTasksAreAnswerable(c, spec = null) {
           offenders.push({ nr: l.nr, leitpunkt: lp, why: 'untaught-head', token: head });
         }
       }
-      if (leitpunktSatisfied(lp, w.sample) === null) continue;       // „prüft die KI“
-      if (leitpunktSatisfied(lp, taughtOnly) !== true) {
+      if (leitpunktSatisfied(lp, w.sample, STRICT) === null) continue;       // „prüft die KI“
+      if (leitpunktSatisfied(lp, taughtOnly, STRICT) !== true) {
         offenders.push({ nr: l.nr, leitpunkt: lp, why: 'unanswerable', de: taughtOnly });
       }
     }
   }
   return offenders;
+}
+
+/**
+ * RULE 22: no sentence of a Mitteilung model text is a FORM being read out.
+ *
+ * „Das Geburtsdatum ist der 3.5.1998.“, „Die Staatsangehörigkeit ist marokkanisch.“, „Die
+ * Telefonnummer ist null vier …“, „Der Tag ist der 15. Mai“ — five such sentences stood in three of
+ * the six A1.1 Mitteilungen (DaF review #15, MAJOR 1). In *Start Deutsch 1* Schreiben Teil 2 that
+ * costs points under „Kommunikative Gestaltung“, and the model text is the thing the learner
+ * imitates. They were there for one reason: the Formcheck accepted the named field, so writing to
+ * the checker was the cheapest way to a green list. RULE 21 no longer accepts it (`allowNamedField:
+ * false`) and this rule forbids the shape outright.
+ *
+ * THE SHAPE, NOT A STRING LIST. Round 15's guard was three typed strings in
+ * `tests/writing-course.test.mjs` that knew none of the five sentences actually in the file. Here the
+ * NOUNS ARE READ OFF THE TASK BANK (the Leitpunkte and Formular fields of the level's own tasks),
+ * so the rule finds what it finds and can never go quiet: `^(Der|Die|Das) <Leitpunkt-Nomen> (ist|
+ * sind|:)`. A POSSESSIVE is not a violation — „Meine Telefonnummer ist null vier …“ is what a
+ * person writes and „Die Telefonnummer ist …“ is what a form says; the difference between them is
+ * the whole finding.
+ *
+ * HARD 0 AT A1.1, like RULE 17 and RULE 20: a model text is something a round just wrote. A1.2
+ * keeps a ratchet (its row in LEVELS) because the level is PAUSED by owner decision (2026-09-13)
+ * and its one offender is measured, not repaired — see MAX_FORM_SPEAK_SENTENCES.
+ */
+export function formSpeakInModelTexts(c, spec = null) {
+  const s = spec || levelSpec(c?.level) || LEVELS['a1.1'];
+  // The nouns the level's own writing tasks name — from the bank, never typed here.
+  const nouns = new Set();
+  for (const l of c.lektionen || []) {
+    const bank = l.schreiben?.taskKey ? writingTaskByKey(c.examKey, l.schreiben.taskKey) : null;
+    if (!bank || bank.course !== s.level) continue;
+    for (const point of bank.leitpunkte || []) {
+      for (const word of String(point).split(/\s+/)) {
+        const w = word.replace(/[.,!?;:()"„“]/g, '');
+        // A capitalised word of the Leitpunkt that is not a function word („Ihr“, „Was“, „Wann“):
+        // that is the FIELD the task names — Name, Geburtsdatum, Tag, Uhrzeit, Telefonnummer …
+        if (/^[A-ZÄÖÜ][a-zäöüß]{2,}$/.test(w) && !s.functionSet.has(w.toLowerCase())) nouns.add(w.toLowerCase());
+      }
+    }
+  }
+  // „Die **Nummer** ist …“ is the same field as „Ihre **Telefonnummer**“: a bank noun that ENDS in
+  // the sentence's noun is the same field named shorter.
+  const isFieldNoun = (word) => {
+    const w = String(word || '').toLowerCase();
+    if (w.length < 3) return false;
+    for (const n of nouns) if (n === w || n.endsWith(w)) return true;
+    return false;
+  };
+  const offenders = [];
+  for (const l of c.lektionen || []) {
+    const w = l.schreiben;
+    if (w?.kind !== 'mitteilung' || !w.sample) continue;
+    for (const sentence of String(w.sample).split(/(?<=[.!?])\s+/)) {
+      const m = /^(Der|Die|Das)\s+([A-ZÄÖÜ][a-zäöüß]+)\s*(ist|sind|:)\b/.exec(sentence.trim());
+      if (m && isFieldNoun(m[2])) offenders.push({ nr: l.nr, de: sentence.trim(), noun: m[2] });
+    }
+  }
+  return offenders;
+}
+
+/**
+ * RULE 23: a Wortfeld entry is TAUGHT on an input surface, not only drilled.
+ *
+ * DaF review #15, MAJOR 4: `marokkanisch` — the word the GRADED writing task of its own Lektion
+ * asks for — stood in the Wortfeld list and in the model answer and nowhere else in the course:
+ * no dialogue line, no notice, no rule card, no item, no review card, no `wordId`. RULE 10 was
+ * green because RULE 10 counts ANY surface, items included, and a word a learner only ever meets
+ * inside an exercise he is being tested on has been shown, not taught. The nine-step Lektion of
+ * `docs/course-standard-2026-09-12.md` carries a word over INPUT (dialogue, notice, model text,
+ * pretest) and then drills it — this rule measures the first half, which RULE 10 does not separate.
+ *
+ * THE INPUT SURFACES, and the list is deliberately shorter than RULE 10's: the dialogue (title,
+ * setting, lines), the notice (title, body, examples), the pretest (model and accepted answers) and
+ * the Schreiben model text. NOT the items (that is the drill), NOT the Leitpunkte or the task line
+ * (that is the question, and RULE 21 is the rule for whether the course taught what it asks), NOT
+ * the hint words of the speaking task (three bare lemmas, which is the vocabulary list again).
+ *
+ * A RATCHET, not a hard rule: it measures all 264 A1.1 entries and its opening value is the work
+ * order. It only goes down.
+ */
+export function wortfeldInputCoverage(c, spec = null) {
+  const s = spec || levelSpec(c?.level) || LEVELS['a1.1'];
+  const uncovered = [];
+  for (const l of c.lektionen || []) {
+    const sources = [
+      l.dialog?.title, l.dialog?.setting, ...(l.dialog?.lines || []).map((x) => x.de),
+      l.notice?.title, l.notice?.bodyDe, ...(l.notice?.examples || []),
+      l.pretest?.model, ...(l.pretest?.accepted || []),
+      l.schreiben?.sample,
+    ].filter(Boolean);
+    const seen = new Set();
+    for (const src of sources) for (const t of tokenise(src)) seen.add(t.toLowerCase());
+    for (const w of l.wortfeld || []) {
+      const forms = coverageForms(w, s.functionSet, s.irregularForms);
+      if (!forms.size) continue;                     // meta entries and bare function words
+      if (![...forms].some((f) => seen.has(f))) uncovered.push({ nr: l.nr, de: w.de });
+    }
+  }
+  return uncovered;
 }
 
 /**
@@ -2595,6 +2749,18 @@ export function validateCurriculum(c, extraItems, poolItems) {
     fail(`RULE 21: ${unanswerable.length} Leitpunkte, die ihre Lektion prüft und nicht lehrt, Ratchet ist ${r.unanswerableLeitpunkte ?? 0} — ${unanswerable.map((o) => `L${o.nr} [${o.why}] „${o.leitpunkt}“${o.token ? ` (${o.token})` : ''}`).join(', ')}`);
   }
 
+  // ---- RULE 22 (no form-speak in a Mitteilung model text, DaF review #15, MAJOR 1) --------------
+  const formSpeak = formSpeakInModelTexts(c, spec);
+  if (formSpeak.length > (r.formSpeakSentences ?? 0)) {
+    fail(`RULE 22: ${formSpeak.length} Formularsätze in Mitteilungs-Mustertexten, Ratchet ist ${r.formSpeakSentences ?? 0} — ${formSpeak.map((o) => `L${o.nr} „${o.de}“ (${o.noun})`).join(', ')}`);
+  }
+
+  // ---- RULE 23 (a Wortfeld entry reaches an INPUT surface, DaF review #15, MAJOR 4) -------------
+  const wortfeldInput = wortfeldInputCoverage(c, spec);
+  if (wortfeldInput.length > (r.wortfeldWithoutInput ?? 0)) {
+    fail(`RULE 23: ${wortfeldInput.length} Wortfeld-Einträge stehen in keiner Eingabefläche ihrer Lektion, Ratchet ist ${r.wortfeldWithoutInput ?? 0} — ${wortfeldInput.map((u) => `L${u.nr} ${u.de}`).join(', ')}`);
+  }
+
   // ---- RULE 14 (the recurring characters keep their facts) --------------------------------------
   // No ratchet: a learner meets Ana in the dialogue and again in the Formular of the same Lektion,
   // and a contradiction between the two is always something a repair round just wrote.
@@ -2623,7 +2789,7 @@ if (isMain) {
   // The four ratchets print on every run, pass or fail: a number nobody sees is a number that
   // silently climbs back (DaF review #3, „der Validator läuft über Dialoge, nicht über Items“).
   const mark = errors.length ? '·' : '✓';
-  console.log(`${mark} ${c.code}: ${c.lektionen.length} Lektionen, ${wf.length} Wortfeld-Einträge (${withId} mit wordId, ${Math.round((100 * withId) / wf.length)} %), ${c.hoursTotal} h`);
+  console.log(`${mark} ${c.code}: ${c.lektionen.length} Lektionen, ${wf.length} Wortfeld-Einträge (${withId} mit wordId, ${Math.floor((100 * withId) / wf.length)} %), ${c.hoursTotal} h`);
   const uncovered = wortfeldCoverage(c);
   console.log(`  RULE 10 Wortfeld-Deckung: ${uncovered.length} ungenutzt von ${wf.length} (Ratchet ${r.uncoveredWortfeld})`);
   for (const u of uncovered) console.log(`    L${u.nr} ${u.de}`);
@@ -2665,6 +2831,12 @@ if (isMain) {
   const unanswerable = writingTasksAreAnswerable(c, spec);
   console.log(`  RULE 21 Leitpunkte ohne gelehrte Lexis: ${unanswerable.length} (Ratchet ${r.unanswerableLeitpunkte ?? 0})`);
   for (const o of unanswerable) console.log(`    L${o.nr} [${o.why}] „${o.leitpunkt}“${o.token ? ` (${o.token})` : ''}`);
+  const formSpeak = formSpeakInModelTexts(c, spec);
+  console.log(`  RULE 22 Formularsätze in Mitteilungs-Mustertexten: ${formSpeak.length} (Ratchet ${r.formSpeakSentences ?? 0})`);
+  for (const o of formSpeak) console.log(`    L${o.nr} „${o.de}“ (${o.noun})`);
+  const wortfeldInput = wortfeldInputCoverage(c, spec);
+  console.log(`  RULE 23 Wortfeld-Einträge ohne Eingabefläche: ${wortfeldInput.length} von ${wf.length} (Ratchet ${r.wortfeldWithoutInput ?? 0})`);
+  for (const u of wortfeldInput) console.log(`    L${u.nr} ${u.de}`);
   const personaBreaks = personaConsistency(c);
   console.log(`  RULE 14 Figuren-Widersprüche: ${personaBreaks.length} (harte Regel, kein Ratchet)`);
   for (const o of personaBreaks) console.log(`    L${o.nr} ${o.where}: ${o.name} ${o.fact} „${o.found}“ statt „${o.expected}“`);

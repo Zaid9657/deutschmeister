@@ -828,7 +828,10 @@ test('every sentence-building item with a time or place Angabe accepts both word
     // Re-measured in round 14 after L3 line 3 changed and Hören began preferring
     // construction-free, unreportable lines — the draw shifted and so did the seats.
     // Round 15 (paper-wide leak cap reseats the sections): re-measured again.
-    'a1.1-cp1-schreiben-2', 'a1.1-cp4-schreiben-2',
+    // Round 16: the L12 Beispieltext lost its Formularsatz („Der Tag ist der 15. Mai …“, RULE 22),
+    // which is one of the sentences checkpoint 4 builds its Schreiben items from — the seat moves
+    // from -2 to -1, the count stays 2. Re-measured, not relaxed.
+    'a1.1-cp1-schreiben-2', 'a1.1-cp4-schreiben-1',
   ], `the graded items with a second word order changed (${graded} found)`);
 });
 

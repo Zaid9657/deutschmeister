@@ -267,7 +267,15 @@ export const CURRICULUM_A11 = {
         // Handlungsfeld „Ämter und Behörden“ is where it belongs. One form, the one the persona
         // needs; `deutsch` the course already teaches in L3. RULE 21 fails the build if a Leitpunkt
         // ever again asks for lexis its Lektion has not taught.
-        { de: 'marokkanisch', word: 'marokkanisch', article: null, plural: null, en: 'Moroccan (nationality: Staatsangehörigkeit marokkanisch)' },
+        { de: 'marokkanisch', word: 'marokkanisch', article: null, plural: null, en: 'Moroccan (nationality: Staatsangehörigkeit marokkanisch)', wordId: 'f25db60a-b383-4427-9fb3-db2dc1b5cac3' },
+        // ROUND 16 (DaF review #15, MAJOR 1): `geboren`, as the chunk a learner actually needs. RULE
+        // 21 called the Leitpunkt „Ihr Name und Ihr **Geburtsdatum**“ answerable while the level
+        // taught neither `geboren` nor a month name — because the Formcheck accepted the FIELD line
+        // („Das Geburtsdatum ist der 3.5.1998.“), which is the one sentence type *Start Deutsch 1*
+        // deducts for. RULE 21 no longer accepts it (`allowNamedField: false`) and RULE 22 forbids
+        // it in a Mitteilung, so the word the natural answer needs has to be taught: „Ich bin am
+        // 3.5.1998 geboren.“ The date stays in digits — the months are Lektion 12.
+        { de: 'geboren', word: 'geboren', article: null, plural: null, en: 'born (ich bin am … geboren)', wordId: null },
         { de: 'der Familienstand', word: 'Familienstand', article: 'der', plural: '—', en: 'marital status', wordId: '3302687e-42ad-45b5-a4c9-43b65b8f4a2d' },
         { de: 'das Amt', word: 'Amt', article: 'das', plural: 'Ämter', en: 'public office, authority', wordId: 'b5556cee-448c-47fc-82a7-2a5f9f956c1b' },
         { de: 'der Schalter', word: 'Schalter', article: 'der', plural: 'Schalter', en: 'counter, service desk', wordId: '04eb49be-3f26-4496-b65d-7fd3e55b2f67' },
@@ -302,7 +310,7 @@ export const CURRICULUM_A11 = {
       },
       notice: {
         title: 'sein: ich bin, du bist, Sie sind',
-        bodyDe: '**sein** ist das wichtigste Verb im Deutschen. Es ist unregelmäßig: ich **bin**, du **bist**, er/sie/es **ist**, wir **sind**, ihr **seid**, sie/Sie **sind**. Nach sein steht der Beruf ohne Artikel: Ich bin Lehrer. Nicht: Ich bin ein Lehrer.',
+        bodyDe: '**sein** ist das wichtigste Verb im Deutschen. Es ist unregelmäßig: ich **bin**, du **bist**, er/sie/es **ist**, wir **sind**, ihr **seid**, sie/Sie **sind**. Nach sein steht der Beruf ohne Artikel: Ich bin Lehrer. Nicht: Ich bin ein Lehrer. Auch die Staatsangehörigkeit steht ohne Artikel: Ich bin marokkanisch.',
         examples: ['Was sind Sie von Beruf?', 'Ich bin Studentin.'],
         ruleSlug: 'verb-sein',
       },
@@ -351,7 +359,15 @@ export const CURRICULUM_A11 = {
         // and this time the word is TAUGHT (L2 Wortfeld) instead of being a Vorgriff on nothing.
         // Round 14 struck it for RULE 20 and the model then answered two of its three Leitpunkte —
         // a state no text could get out of, because it was a Wortfeld problem, not a text problem.
-        sample: 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Das Geburtsdatum ist der 3.5.1998. Ich bin aus Marokko. Die Staatsangehörigkeit ist marokkanisch. Ich bin ledig. Ich bin Studentin in Bremen. Viele Grüße, Ana Chakiri',
+        // ROUND 16 (DaF review #15, MAJOR 1): the two Formularsätze are out — for the second time,
+        // and this time the rule that put them back is gone too. RULE 21 measures with
+        // `allowNamedField: false`, so „Das Geburtsdatum ist …“ no longer counts as an answer, and
+        // RULE 22 forbids „<Artikel> <Leitpunkt-Nomen> ist <Wert>“ in any Mitteilung sample by form
+        // (the noun list comes from the task bank, not from a string). What replaces them is the
+        // sentence a person writes — „Ich bin am 3.5.1998 geboren.“ — which is why `geboren` is now
+        // a Wortfeld entry of this Lektion. 33 Wörter, alle drei Leitpunkte in vollen Sätzen, ohne
+        // Possessivartikel (die sind Lektion 12).
+        sample: 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Ich bin am 3.5.1998 geboren. Ich bin aus Marokko. Ich bin marokkanisch. Ich bin ledig. Ich bin Studentin in Bremen. Viele Grüße, Ana Chakiri',
       },
       // A1.1 carries six listening exercises and ten reading texts; every one is linked from another
       // Lektion, so this one honestly has none — the syllabus shows „—“ rather than a repeat.
@@ -767,7 +783,13 @@ export const CURRICULUM_A11 = {
         // 39 Wörter. „Die Nummer“ war die RULE-15b-Reparatur der Runde 12 für „Meine Nummer“ und
         // hat den Leitpunkt „Ihre Telefonnummer“ mitgenommen (DaF review #12, MAJOR 2); das Wort
         // selbst ist L2-Wortfeld und braucht keinen Possessivartikel.
-        sample: 'Guten Tag, Frau Berg! Ich brauche einen Computer. Wir brauchen auch ein Handy. Die Telefonnummer ist null vier zwei drei drei acht eins. Die Nummer ist für das Handy. Ich bin um neun Uhr im Büro. Viele Grüße, Ana',
+        // 37 Wörter. ROUND 16 (DaF review #15, MAJOR 1, RULE 22): „Die Telefonnummer ist …“ und
+        // „Die Nummer ist für das Handy.“ waren zwei der fünf Formularsätze des Kurses — zwei
+        // Feldzeilen für einen Leitpunkt. Sie werden EIN Satz, der die Nummer übergibt, statt sie
+        // zu beschriften. Der Possessivartikel („Meine Nummer ist …“) wäre die natürlichste
+        // Fassung, steht hier aber nicht: RULE 15b schiebt die Possessivartikel auf Lektion 12, und
+        // ein Mustertext ist ein Produktionstext.
+        sample: 'Guten Tag, Frau Berg! Ich brauche einen Computer. Wir brauchen auch ein Handy. Hier ist die Nummer für das Handy: null vier zwei drei drei acht eins. Ich bin um neun Uhr im Büro. Viele Grüße, Ana',
       },
       links: { listeningExercise: 5, readingOrder: null },
       practiceRule: { topics: ['indefinite-articles', 'definite-articles'], typedMin: 3 },
@@ -1427,8 +1449,11 @@ export const CURRICULUM_A11 = {
         leitpunkte: ['Warum Sie feiern', 'Tag und Uhrzeit', 'Was die Gäste mitbringen sollen'],
         minWords: 25,
         maxWords: 45,
-        // 37 Wörter. Der Possessivartikel ist hier erlaubt: Lektion 12 ist die Lektion, die ihn lehrt.
-        sample: 'Hallo Lena! Am Freitag feiern wir Geburtstag. Der Tag ist der 15. Mai und die Party ist um acht Uhr. Die Gäste bringen Kuchen und Musik mit. Bringst du bitte den Salat mit? Bis bald, Ana',
+        // 30 Wörter. Der Possessivartikel ist hier erlaubt: Lektion 12 ist die Lektion, die ihn lehrt.
+        // ROUND 16 (DaF review #15, MAJOR 1, RULE 22): „Der Tag ist der 15. Mai“ war der fünfte
+        // Formularsatz des Kurses. Der Grund der Einladung steht jetzt als Grund da („Ich habe im
+        // Mai Geburtstag.“, wie im Dialog) und Tag und Uhrzeit als Zeitangaben eines Satzes.
+        sample: 'Hallo Lena! Ich habe im Mai Geburtstag. Wir feiern am Freitag um acht Uhr. Die Gäste bringen Kuchen und Musik mit. Bringst du bitte den Salat mit? Bis bald, Ana',
       },
       links: { listeningExercise: null, readingOrder: 10 },
       // „Wiederholung“ has to be visible in the practice: the last Lektion before checkpoint 4 mixes
