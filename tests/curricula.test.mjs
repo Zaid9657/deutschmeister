@@ -19,10 +19,75 @@ import { CURRICULA, ALL_CURRICULA, curriculumFor, anyCurriculumFor } from '../sr
 import { writingTaskByKey, courseWritingTasks } from '../src/data/writingTasks.js';
 import {
   validateCurriculum, GRAMMAR_SLUGS, EXAM_TEILE, PRIMARY_ORDER, SITUATION_KEYWORDS,
-  wortfeldCoverage, itemLexis, loadExtraItems, canDoRehearsal, missionlessLektionen,
+  wortfeldCoverage, itemLexis, loadExtraItems, loadPoolItems, canDoRehearsal, missionlessLektionen,
+  personaConsistency, PERSONAS_A11, PERSONA_TABLES,
   MAX_UNCOVERED_WORTFELD, MAX_UNTAUGHT_ITEM_TOKENS, MAX_UNREHEARSED_CANDOS,
   MAX_MISSIONLESS_LEKTIONEN, LEVELS, levelSpec,
 } from '../scripts/validate-curriculum.mjs';
+
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+// SELF-SIZING RATCHET MUTATIONS
+//
+// A bite test for a ratcheted rule must not depend on the measurement happening to sit exactly on
+// the ratchet. The pool files and the curriculum are edited between rounds — round 6 lowered the
+// real counts under their ceilings and both „the validator bites“ tests went green on a mutation
+// that no longer bit, which is the failure mode a bite test exists to prevent. So every mutation
+// below asks the measurement first and mutates `ratchet − measured + 1` times, which crosses the
+// ratchet wherever the measurement currently stands; and the assertion names the rule, so an error
+// from some other rule cannot make a dead bite test look alive.
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+const overshoot = (measured, ratchet) => Math.max(1, ratchet - measured + 1);
+const failsWith = (errors, rule) => errors.some((e) => e.startsWith(`RULE ${rule}:`));
+
+/** n Wortfeld entries no input of their Lektion can possibly use (RULE 10). */
+function addUnusedWortfeld(c, n) {
+  let added = 0;
+  for (const l of c.lektionen) {
+    // RULE 4 caps a Lektion at 25 entries; overflowing it would fail the validator for the wrong
+    // reason and hide whether RULE 10 bit at all.
+    while (added < n && l.wortfeld.length < 25) {
+      added += 1;
+      l.wortfeld.push({
+        de: `die Giraffe ${added}`, word: `Giraffe ${added}`, article: 'die',
+        plural: `Giraffen ${added}`, en: 'giraffe',
+        wordId: `00000000-0000-0000-0000-0000000000${String(added).padStart(2, '0')}`,
+      });
+    }
+  }
+  return added;
+}
+
+/** n hand-written items built from a word the course never teaches (RULE 11). */
+const untaughtItems = (n, prefix) => Array.from({ length: n }, (_, i) => ({
+  id: `extra-${prefix}-l01-9${i}`,
+  questionDe: 'Der Elefant wohnt im Zoo. Ergänzen Sie: Der Elefant ___ groß.',
+  answer: 'Elefant',
+  accepted: ['Elefant'],
+}));
+
+/** n can-do lines whose content words no exercise slot of their Lektion rehearses (RULE 12). */
+function addUnrehearsedCanDos(c, n) {
+  let added = 0;
+  for (const l of c.lektionen) {
+    if (added >= n) break;
+    if (l.canDo.length >= 5) continue;                  // RULE 2 caps a Lektion at five can-dos
+    l.canDo.push('Ich kann einen Elefanten im Zoo beschreiben.');
+    added += 1;
+  }
+  return added;
+}
+
+/** n more Lektionen whose speaking prompt never reaches the speaking page (RULE 13). */
+function dropMissions(c, n) {
+  let dropped = 0;
+  for (const l of c.lektionen) {
+    if (dropped >= n) break;
+    if (l.sprechen?.open?.missionOrder === null || l.sprechen?.open?.missionOrder === undefined) continue;
+    l.sprechen.open.missionOrder = null;
+    dropped += 1;
+  }
+  return dropped;
+}
 
 const L = CURRICULUM_A11.lektionen;
 const clone = () => JSON.parse(JSON.stringify(CURRICULUM_A11));
@@ -202,7 +267,7 @@ test('rule 10: a taught word is also a used word, under a ratchet that only fall
   // of DaF review #3: „is every taught word ever heard?“ — ≈50 of 262 Wortfeld entries occurred in
   // no dialogue line, notice, pretest, Schreiben task or hand-written item of their own Lektion, so
   // whole Handlungsfelder (L2 Personalien, L9 Café food) rested on a list.
-  assert.ok(MAX_UNCOVERED_WORTFELD <= 19, 'the ratchet may only ever be lowered');
+  assert.ok(MAX_UNCOVERED_WORTFELD <= 18, 'the ratchet may only ever be lowered');
   const uncovered = wortfeldCoverage(CURRICULUM_A11);
   assert.ok(
     uncovered.length <= MAX_UNCOVERED_WORTFELD,
@@ -217,22 +282,31 @@ test('rule 10: a taught word is also a used word, under a ratchet that only fall
   }
 });
 
-test('rule 11: hand-written practice items use only words taught by their Lektion', () => {
+test('rule 11: the practice items the learner is served use only words taught by their Lektion', () => {
   // The review's last paragraph: „die handgeschriebenen Reparaturen unterliegen keiner Prüfung“.
-  // Same machinery as RULE 5 (formsOf, FUNCTION_WORDS, DIALOG_NAMES), run over a11.extra.json.
-  assert.ok(MAX_UNTAUGHT_ITEM_TOKENS <= 9, 'the ratchet may only ever be lowered');
+  // Same machinery as RULE 5 (formsOf, FUNCTION_WORDS, DIALOG_NAMES) — and since DaF review #5
+  // (MAJOR 5) run over the BUILT pool as well as a11.extra.json, with generated items assigned to
+  // the earliest Lektion whose practiceRule lists their topic. That is what took the number from 9
+  // (124 of 351 items) to 187 (all of them).
+  assert.ok(MAX_UNTAUGHT_ITEM_TOKENS <= 187, 'the ratchet may only ever be lowered');
   const offenders = itemLexis(CURRICULUM_A11);
   assert.ok(
     offenders.length <= MAX_UNTAUGHT_ITEM_TOKENS,
     `${offenders.length} untaught tokens > ratchet ${MAX_UNTAUGHT_ITEM_TOKENS}:\n  - ${offenders.map((o) => `${o.id}: ${o.token}`).join('\n  - ')}`,
   );
   assert.ok(loadExtraItems().length > 0, 'the hand-written pool must actually be read');
+  assert.ok(loadPoolItems().length > loadExtraItems().length, 'the BUILT pool must actually be read');
+  // The generated half is in scope now: every item of the built pool that carries a topic one of
+  // the twelve Lektionen practises is judged, not only the ones with an extra-a11-lNN- id.
+  const topics = new Set(L.flatMap((l) => l.practiceRule.topics));
+  const generated = loadPoolItems().filter((it) => !/^extra-/.test(it.id) && topics.has(it.topic));
+  assert.ok(generated.length > 200, `${generated.length} generated items reach a Lektion`);
 });
 
 test('rule 12: every can-do line is rehearsed in its own Lektion, under a ratchet that only falls', () => {
   // The can-do grid is rendered on the public course page, so an unrehearsed line is a promise to
   // someone who has not paid yet (DaF review #4, MAJOR 6). The two named there are closed:
-  assert.ok(MAX_UNREHEARSED_CANDOS <= 6, 'the ratchet may only ever be lowered');
+  assert.ok(MAX_UNREHEARSED_CANDOS <= 4, 'the ratchet may only ever be lowered');
   const offenders = canDoRehearsal(CURRICULUM_A11);
   assert.ok(
     offenders.length <= MAX_UNREHEARSED_CANDOS,
@@ -315,47 +389,72 @@ test('the validator bites: each mutation of a good curriculum is caught', () => 
     assert.ok(validateCurriculum(c).length > 0, `not caught: ${name}`);
   }
 
-  // RULE 10: one more Wortfeld word that no input of its Lektion uses pushes the count over the
-  // ratchet — which is the whole point of pinning the ratchet at the measured number.
+  // The four ratcheted rules, each mutated by as much as the ratchet's current slack plus one, and
+  // each asserted BY NAME — see the self-sizing note at the top of this file.
   const c10 = clone();
-  c10.lektionen[0].wortfeld.push({
-    de: 'die Giraffe', word: 'Giraffe', article: 'die', plural: 'Giraffen', en: 'giraffe',
-    wordId: '00000000-0000-0000-0000-000000000000',
-  });
-  assert.ok(validateCurriculum(c10).length > 0, 'not caught: a Wortfeld word no input of its Lektion uses');
+  const need10 = overshoot(wortfeldCoverage(CURRICULUM_A11).length, MAX_UNCOVERED_WORTFELD);
+  assert.equal(addUnusedWortfeld(c10, need10), need10, 'the fixture could not carry enough unused Wortfeld words');
+  assert.ok(failsWith(validateCurriculum(c10), 10), 'not caught: Wortfeld words no input of their Lektion uses');
 
-  // RULE 11: a hand-written item that reaches for a word the course has not taught yet.
+  // RULE 11: hand-written items that reach for a word the course has not taught yet.
   const c11 = clone();
-  const untaughtItem = {
-    id: 'extra-a11-l01-99',
-    questionDe: 'Der Elefant wohnt im Zoo. Ergänzen Sie: Der Elefant ___ groß.',
-    answer: 'Elefant',
-    accepted: ['Elefant'],
-  };
-  assert.ok(
-    validateCurriculum(c11, [...loadExtraItems(), untaughtItem]).length > 0,
-    'not caught: a hand-written item built from untaught words',
-  );
+  const need11 = overshoot(itemLexis(CURRICULUM_A11).length, MAX_UNTAUGHT_ITEM_TOKENS);
+  const extra11 = [...loadExtraItems(), ...untaughtItems(need11, 'a11')];
+  assert.ok(failsWith(validateCurriculum(c11, extra11), 11), 'not caught: items built from untaught words');
 
   // RULE 12: can-do lines whose content words no exercise slot of their Lektion rehearses.
-  // Enough of them to clear the ratchet's remaining slack whatever the current measurement is —
-  // the pool files the measurement reads are edited by other agents, and a bite test that only
-  // fires while the count happens to sit exactly on the ratchet is not a bite test.
   const c12 = clone();
-  let toAdd = Math.max(1, MAX_UNREHEARSED_CANDOS - canDoRehearsal(CURRICULUM_A11).length + 1);
-  for (const lektion of c12.lektionen) {
-    if (toAdd <= 0) break;
-    if (lektion.canDo.length >= 5) continue;               // RULE 2 caps a Lektion at five can-dos
-    lektion.canDo.push('Ich kann einen Elefanten im Zoo beschreiben.');
-    toAdd -= 1;
-  }
-  assert.equal(toAdd, 0, 'the fixture could not carry enough unrehearsed can-do lines');
-  assert.ok(validateCurriculum(c12).length > 0, 'not caught: can-do lines nothing in their Lektion rehearses');
+  const need12 = overshoot(canDoRehearsal(CURRICULUM_A11).length, MAX_UNREHEARSED_CANDOS);
+  assert.equal(addUnrehearsedCanDos(c12, need12), need12, 'the fixture could not carry enough unrehearsed can-do lines');
+  assert.ok(failsWith(validateCurriculum(c12), 12), 'not caught: can-do lines nothing in their Lektion rehearses');
 
-  // RULE 13: a fifth Lektion whose speaking prompt never reaches the speaking page.
+  // RULE 13: more Lektionen whose speaking prompt never reaches the speaking page.
   const c13 = clone();
-  c13.lektionen[0].sprechen.open.missionOrder = null;
-  assert.ok(validateCurriculum(c13).length > 0, 'not caught: a fifth speaking task without a mission');
+  const need13 = overshoot(missionlessLektionen(CURRICULUM_A11).length, MAX_MISSIONLESS_LEKTIONEN);
+  assert.equal(dropMissions(c13, need13), need13, 'the fixture could not drop enough missions');
+  assert.ok(failsWith(validateCurriculum(c13), 13), 'not caught: speaking tasks without a mission');
+
+  // RULE 14: the line DaF review #5 found — „Mein Mann“ from a woman the Formular of the same
+  // Lektion lists as ledig. No ratchet, so one is enough.
+  const c14 = clone();
+  c14.lektionen[2].dialog.lines[9] = {
+    speaker: 'Ana', de: 'Ja, ein Baby. Mein Mann und ich kommen aus Marokko.', en: 'Yes, a baby.',
+  };
+  assert.ok(failsWith(validateCurriculum(c14), 14), 'not caught: a dialogue line that contradicts the persona table');
+});
+
+test('rule 14: the recurring characters keep their Familienstand, Herkunft, Beruf and Sprachen', () => {
+  // DaF review #5, MAJOR 12: the RULE 10 coverage ratchet was satisfied by pushing „der Mann“ into
+  // an L3 dialogue line — „Mein Mann und ich kommen aus Marokko“ — while the Formular of that very
+  // Lektion and the Mitteilung of L2 both say ledig. A learner reads the line aloud and fills in the
+  // form in the same sitting.
+  assert.deepEqual(personaConsistency(CURRICULUM_A11), []);
+  assert.equal(PERSONAS_A11.Ana.familienstand, 'ledig');
+  assert.equal(PERSONAS_A11.Ana.herkunft, 'Marokko');
+  assert.deepEqual(PERSONAS_A11.Ana.beruf, ['Studentin']);
+  // The three texts the table is read off, so a change to any of them fails here rather than
+  // quietly making the table wrong.
+  assert.match(L[2].schreiben.sample, /Familienstand: ledig/);
+  assert.match(L[1].schreiben.sample, /Ich bin ledig\./);
+  assert.match(L[1].dialog.lines.map((x) => x.de).join(' '), /Ich bin Studentin\./);
+  assert.ok(
+    !L[2].dialog.lines.some((x) => x.speaker === 'Ana' && /\bMein Mann\b/.test(x.de)),
+    'the round-5 line is gone: Ana has no husband',
+  );
+  // Each fact bites on its own.
+  for (const line of [
+    'Ja, ein Baby. Mein Mann und ich kommen aus Marokko.',
+    'Ich bin verheiratet.',
+    'Ich komme aus Polen.',
+    'Ich bin Kellnerin.',
+  ]) {
+    const c = clone();
+    c.lektionen[2].dialog.lines[9] = { speaker: 'Ana', de: line, en: 'x' };
+    assert.ok(personaConsistency(c).length > 0, `not caught: ${line}`);
+  }
+  // And a fact about somebody else in the same sentence is not read as Ana's: „Ana sitzt im Café.
+  // Paul ist Kellner.“ must stay silent, or the rule would report the setting of L9 forever.
+  assert.deepEqual(personaConsistency(CURRICULUM_A11).filter((o) => o.nr === 9), []);
 });
 
 
@@ -606,17 +705,52 @@ for (const key of LEVEL_KEYS) {
         c.lektionen[0].primarySlug = b;
         c.lektionen[1].primarySlug = a;
       },
-      'a Wortfeld word no input of its Lektion uses': (c) => {
-        c.lektionen[0].wortfeld.push({
-          de: 'die Giraffe', word: 'Giraffe', article: 'die', plural: 'Giraffen', en: 'giraffe',
-          wordId: '00000000-0000-0000-0000-000000000000',
-        });
-      },
     };
     for (const [name, mutate] of Object.entries(mutations)) {
       const c = cloneOf(C);
       mutate(c);
       assert.ok(validateCurriculum(c).length > 0, `${spec.code}: not caught: ${name}`);
+    }
+
+    // The ratcheted rules, mutated by the ratchet's own slack plus one and asserted by name. A
+    // level whose measurement sits well under its ratchet (A1.1's RULE 10 did, after round 6) needs
+    // more than one mutation before the rule fires at all — see the note at the top of this file.
+    const r = spec.ratchets;
+
+    const c10 = cloneOf(C);
+    const need10 = overshoot(wortfeldCoverage(C).length, r.uncoveredWortfeld);
+    assert.equal(addUnusedWortfeld(c10, need10), need10, `${spec.code}: not enough room for unused Wortfeld words`);
+    assert.ok(failsWith(validateCurriculum(c10), 10), `${spec.code}: not caught: Wortfeld words no input of their Lektion uses`);
+
+    const c11 = cloneOf(C);
+    const need11 = overshoot(itemLexis(C).length, r.untaughtItemTokens);
+    const extra11 = [...loadExtraItems(spec.level), ...untaughtItems(need11, spec.taskKeyPrefix)];
+    assert.ok(failsWith(validateCurriculum(c11, extra11), 11), `${spec.code}: not caught: items built from untaught words`);
+
+    const c12 = cloneOf(C);
+    const need12 = overshoot(canDoRehearsal(C).length, r.unrehearsedCanDos);
+    assert.equal(addUnrehearsedCanDos(c12, need12), need12, `${spec.code}: not enough room for unrehearsed can-dos`);
+    assert.ok(failsWith(validateCurriculum(c12), 12), `${spec.code}: not caught: can-do lines nothing rehearses`);
+
+    const c13 = cloneOf(C);
+    const need13 = overshoot(missionlessLektionen(C).length, r.missionlessLektionen);
+    assert.equal(dropMissions(c13, need13), need13, `${spec.code}: not enough missions to drop`);
+    assert.ok(failsWith(validateCurriculum(c13), 13), `${spec.code}: not caught: speaking tasks without a mission`);
+
+    // RULE 14 only exists for a level that has a persona table; where there is none the rule is
+    // silent by design, and saying so here keeps the silence deliberate rather than accidental.
+    const table = PERSONA_TABLES[spec.personaSource] || {};
+    const married = Object.entries(table).find(([, p]) => p.familienstand && p.familienstand !== 'verheiratet');
+    if (!married) {
+      assert.deepEqual(personaConsistency(C), [], `${spec.code}: no persona table, so RULE 14 must be silent`);
+    } else {
+      const [who] = married;
+      const c14 = cloneOf(C);
+      const target = c14.lektionen.flatMap((l) => (l.dialog?.lines || []).map((line) => [l, line]))
+        .find(([, line]) => line.speaker === who);
+      assert.ok(target, `${spec.code}: ${who} speaks in no dialogue`);
+      target[1].de = 'Ich bin verheiratet.';
+      assert.ok(failsWith(validateCurriculum(c14), 14), `${spec.code}: not caught: a line that contradicts the persona table`);
     }
   });
 }

@@ -19,9 +19,16 @@
 // reads: „Der Validator läuft über Dialoge, nicht über Items“ — every repair round wrote new
 // Vorgriffe because only the dialogues were ever checked. RULE 10 turns RULE 5 around (a taught
 // word must also be USED, not only listed: ≈50 of 262 Wortfeld entries occurred in no input of
-// their own Lektion), RULE 11 runs RULE 5's own machinery over the hand-written practice items in
-// src/data/lessonPools/a11.extra.json. Both are ratchets, not hard gates, because the debt is
-// older than this round; they may only ever be lowered.
+// their own Lektion), RULE 11 runs RULE 5's own machinery over the practice items the learner is
+// actually served — since DaF review #5 that is the BUILT pool (src/data/lessonPools/<level>.json),
+// not only the hand-written half. Both are ratchets, not hard gates, because the debt is older than
+// this round; they may only ever be lowered.
+//
+// RULE 14 (DaF review #5, MAJOR 12) is not a ratchet: it compares the facts of the recurring
+// characters — Familienstand, Herkunft, Beruf, Sprachen — between the dialogue and the Schreiben
+// task of the same Lektion against the small PERSONAS table of the level, and fails hard. The
+// finding it closes: L3 got „Mein Mann und ich kommen aus Marokko“ pushed into a dialogue line to
+// satisfy the RULE 10 ratchet, while the Formular of the same Lektion lists Ana as **ledig**.
 
 import { readFileSync } from 'node:fs';
 
@@ -209,9 +216,9 @@ export function formsOf(entry, irregulars = IRREGULAR_FORMS) {
  * rewrite, the L8 Samstag/Sonntag line and the four new L9 café lines closed the densest clusters.
  * This number may be lowered, never raised (the contract's ceiling is 30). Round 5 measured it
  * against the BUILT pool (see loadPoolItems) and exempted the two meta entries, then closed the L3
- * Familie and L6 Beruf clusters DaF review #4 named: 35 → 19.
+ * Familie and L6 Beruf clusters DaF review #4 named: 35 → 19, and 18 when re-measured 2026-09-13.
  */
-export const MAX_UNCOVERED_WORTFELD = 19;          // a1.1; per level in LEVELS below
+export const MAX_UNCOVERED_WORTFELD = 18;          // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
  * RULE 12 ratchet — how many can-do lines may still name something no exercise slot of their own
@@ -223,8 +230,11 @@ export const MAX_UNCOVERED_WORTFELD = 19;          // a1.1; per level in LEVELS 
  * teaches under another word: L1 begrüßen/verabschieden (the greetings are „Guten Tag“ and
  * „Tschüss“), L2 Zahlen, L4 Gegenstand, L7 „frei haben“, L9 „höflich fragen“, L12 „gute Wünsche“.
  * That is the honest number and the ratchet stands on it. Lower it, never raise it.
+ * DaF review #5, MAJOR 13 asked for the number to follow the repairs: the L2 Zahlwort items and the
+ * L9 „höflich fragen“ item landed, so the measurement is 4 (L1 begrüßen/verabschieden, L4
+ * Gegenstand, L7 „frei haben“, L12 gute Wünsche) and the ratchet moves with it.
  */
-export const MAX_UNREHEARSED_CANDOS = 6;           // a1.1; per level in LEVELS below
+export const MAX_UNREHEARSED_CANDOS = 4;           // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
  * RULE 13 ratchet — how many Lektionen may show a `sprechen.open` task whose prompt the speaking
@@ -236,12 +246,19 @@ export const MAX_UNREHEARSED_CANDOS = 6;           // a1.1; per level in LEVELS 
 export const MAX_MISSIONLESS_LEKTIONEN = 4;        // a1.1; per level in LEVELS below
 
 /**
- * RULE 11 ratchet — how many (item, token) pairs in the hand-written pool may still use a word
- * that the course has not taught by that item's Lektion. The review's finding was that the
- * hand-written repairs „unterliegen keiner Prüfung“; this is that check. Lower it as items are
- * rewritten, never raise it.
+ * RULE 11 ratchet — how many (item, token) pairs in the pool the learner is served may still use a
+ * word the course has not taught by that item's Lektion.
+ *
+ * It stood at 9 while the rule read `a11.extra.json` only, i.e. 124 of 351 items; DaF review #5
+ * (MAJOR 5) measured 21 untaught tokens in the *drawn* generated items alone and asked for the rule
+ * to read the built pool. It now does, and over the whole pool the number is **187** — the legacy
+ * generated bank, word for word: `Honig` (L4), `Freiheit`, `Instrument`, `Kaffee` in L4 (Wortfeld of
+ * L9), `Deutschkurs` (L8), `interessant` (L5), `arbeitet` in L7 (Wortfeld of L11), plus a long tail
+ * of `nett`/`müde`/`kaputt`/`Auto`/`Mädchen` that no Lektion of A1.1 teaches. That is the honest
+ * number and it is meant to look bad: nine described an eighth of the course. Lower it as the bank
+ * is rewritten, never raise it.
  */
-export const MAX_UNTAUGHT_ITEM_TOKENS = 9;         // a1.1; per level in LEVELS below
+export const MAX_UNTAUGHT_ITEM_TOKENS = 187;       // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
  * A1.2 — the twelve grammar slugs of the level in `topic_order` (grammar-content-cache.json,
@@ -310,6 +327,9 @@ export const LEVELS = {
     readingCount: 10,
     minUnionWords: 200,
     seedFrom: null,
+    // RULE 14. Defined below (PERSONAS_A11) and attached lazily, because the table is written after
+    // the registry; `personaSource` keeps the row declarative.
+    personaSource: 'a1.1',
     ratchets: {
       uncoveredWortfeld: MAX_UNCOVERED_WORTFELD,
       untaughtItemTokens: MAX_UNTAUGHT_ITEM_TOKENS,
@@ -340,6 +360,9 @@ export const LEVELS = {
     readingCount: 10,
     minUnionWords: 195,
     seedFrom: 'a1.1',
+    // A1.2 has recurring characters too, but nobody has written their fact table yet, so RULE 14
+    // stays silent for the level rather than pretending to check it.
+    personaSource: null,
     // MEASURED on this module, not chosen. See docs/course-factory/a12-rebuild/CONTRACT.md §Ratchets.
     ratchets: {
       uncoveredWortfeld: 0,
@@ -385,6 +408,11 @@ export function loadExtraItems(level = 'a1.1') {
  * were reported as never used: „eine Ratchet-Zahl, die man nicht nachrechnen kann, ist keine
  * Messung“ (DaF review #4). Items carry a `topic`, and a Lektion draws the topics of its
  * `practiceRule`, so that is how an item is assigned to a Lektion here.
+ *
+ * A level whose pool has not been built yet has no `<level>.json` on disk — A1.2 is in that state
+ * while its extras are being written — and then this returns an empty list and RULE 10 / RULE 11
+ * measure the hand-written items alone. That is the correct reading (there is nothing else to
+ * serve), not a silent skip: the numbers move when the pool is built, which is when they should.
  */
 export function loadPoolItems(level = 'a1.1') {
   const spec = levelSpec(level);
@@ -477,17 +505,52 @@ const ITEM_CUE_RE = /\([^)]*\)|\[[^\]]*\]/g;
 // „das Wort“, „die Zahl“) used to be stripped from every prompt, which hid content words from the
 // check: „___ Gleis vier richtig?“ passed although `richtig` is in no Wortfeld of the course.
 const ITEM_FORMULA_RE = new RegExp([
+  // Longest first: the alternation is tried in order at each position.
+  'Finden Sie den Fehler und schreiben Sie den Satz richtig',
   'Schreiben Sie die Frage in der normalen Wortfolge', 'Schreiben Sie die Frage richtig',
+  // „Schreiben Sie den Satz“ and „Buchstabieren Sie den Gruß“ are the same closed Sie-Aufgabenformel
+  // as „Bilden Sie den Satz“ next door and were simply missing from the list; without them the
+  // generated half of the pool reports Satz/Schreiben/Fehler as untaught lexis in ~20 items, which
+  // is the formula talking, not the item (added when RULE 11 started reading the built pool).
+  'Schreiben Sie den Satz', 'Buchstabieren Sie den Gruß',
   'Schreiben Sie die Zahl als Wort', 'Schreiben Sie das Wort', 'Schreiben Sie die Frage',
   'Bilden Sie den Satz', 'Bilden Sie die höfliche Frage', 'Bilden Sie die Frage',
   'Buchstabieren Sie das Wort', 'Lesen Sie die Buchstaben',
   'Korrigieren Sie', 'Ergänzen Sie', 'Wählen Sie',
 ].join('|'), 'g');
 
-/** RULE 11: the hand-written items obey the same taught-words rule as the dialogues. */
-export function itemLexis(c, extraItems) {
+/**
+ * The Lektion an item is judged against: its id prefix when it is hand-written, otherwise the
+ * EARLIEST Lektion whose `practiceRule` lists the item's topic. A generated item carries a UUID and
+ * a topic, and every Lektion that names that topic can draw it — so the item may appear as early as
+ * the first of them, and that is the Lektion whose vocabulary it must not reach past. (Judging it
+ * against the last Lektion would be the lenient reading and would hide exactly the Vorgriffe this
+ * rule exists to find.)
+ */
+function lektionAssignment(c) {
+  const earliest = new Map();
+  for (const l of c.lektionen || []) {
+    for (const t of l.practiceRule?.topics || []) if (!earliest.has(t)) earliest.set(t, l.nr);
+  }
+  return (it) => lektionOfItem(it.id) ?? earliest.get(it.topic) ?? null;
+}
+
+/**
+ * RULE 11: the practice items obey the same taught-words rule as the dialogues.
+ *
+ * Until DaF review #5 this read `<level>.extra.json` only and derived the Lektion from the id
+ * prefix, so all 227 generated items of A1.1 fell through `if (!nr) continue` and the ratchet
+ * described 124 of 351 items („was der Validator nicht liest, existiert für die Reparaturrunde
+ * nicht“). It now reads the BUILT pool as `wortfeldCoverage` does and assigns generated items via
+ * `practiceRule.topics`; the built version of a hand-written item wins, because that is the text
+ * the build's repair run produced and the learner sees. The scanned fields are unchanged — prompt
+ * (minus the bracketed cue and the complete Sie-Aufgabenformel), answer, accepted — so the number
+ * moves because the item universe grew, not because the yardstick did.
+ */
+export function itemLexis(c, extraItems, poolItems) {
   const spec = levelSpec(c?.level) || LEVELS['a1.1'];
   extraItems = extraItems ?? loadExtraItems(spec.level);
+  poolItems = poolItems ?? loadPoolItems(spec.level);
   // A level's known set starts from the level before it (see seedVocabulary): an A1.2 item may
   // build on every word A1.1 taught, and must not reach past that.
   const known = seedVocabulary(spec);
@@ -501,9 +564,13 @@ export function itemLexis(c, extraItems) {
     for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
     knownUpTo.set(l.nr, new Set(known));
   }
+  const lektionOf = lektionAssignment(c);
+  const items = new Map();
+  for (const it of extraItems) items.set(it.id, it);
+  for (const it of poolItems) items.set(it.id, it);
   const offenders = [];
-  for (const it of extraItems) {
-    const nr = lektionOfItem(it.id);
+  for (const it of items.values()) {
+    const nr = lektionOf(it);
     if (!nr) continue;
     const vocab = knownUpTo.get(nr);
     if (!vocab) continue;
@@ -515,10 +582,12 @@ export function itemLexis(c, extraItems) {
         const low = t.toLowerCase();
         if (vocab.has(low) || spec.nameSet.has(low) || seen.has(low)) continue;
         seen.add(low);
-        offenders.push({ id: it.id, token: t });
+        offenders.push({ nr, id: it.id, token: t });
       }
     }
   }
+  // Reported Lektion by Lektion, so the list reads like the course rather than like the pool file.
+  offenders.sort((a, b) => a.nr - b.nr || a.id.localeCompare(b.id) || a.token.localeCompare(b.token));
   return offenders;
 }
 
@@ -596,6 +665,189 @@ export function missionlessLektionen(c) {
   return (c.lektionen || [])
     .filter((l) => l.sprechen?.open && (l.sprechen.open.missionOrder === null || l.sprechen.open.missionOrder === undefined))
     .map((l) => l.nr);
+}
+
+
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+// RULE 14 — PERSONA CONSISTENCY (DaF review #5, MAJOR 12)
+//
+// The course is carried by a handful of recurring characters, and a learner meets the same person
+// twice in one sitting: Ana speaks the dialogue of Lektion 3 (she also reads two of its lines
+// aloud) and then fills in the Formular of Lektion 3. Round 5 satisfied the RULE 10 coverage
+// ratchet by pushing the missing word „der Mann“ into a dialogue line — „Ja, ein Baby. Mein Mann
+// und ich kommen aus Marokko.“ — which makes Ana married, while the Formular of the same Lektion
+// and the Mitteilung of Lektion 2 both say **ledig**. „Der Widerspruch ist sonst nur mit dem Auge
+// zu finden“, so this is the table that finds it.
+//
+// The facts below are READ OFF a11.js (dialogues, settings, schreiben tasks, samples and fields),
+// not invented; `null` means the course never states that fact about the person, and then there is
+// nothing to contradict and the check stays silent. This is a hard gate, not a ratchet: a
+// contradiction is never older debt, it is always something a repair round just wrote.
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+
+const MARITAL = ['ledig', 'verheiratet', 'geschieden'];
+const COUNTRIES = [
+  'Marokko', 'Deutschland', 'Österreich', 'Schweiz', 'Italien', 'Spanien', 'Polen', 'Türkei',
+  'Syrien', 'Frankreich', 'Portugal', 'Griechenland', 'Russland', 'Ukraine', 'Indien', 'China',
+  'Japan', 'Ägypten', 'Tunesien', 'Algerien', 'England', 'Brasilien',
+];
+const LANGUAGES = [
+  'Arabisch', 'Deutsch', 'Englisch', 'Französisch', 'Spanisch', 'Italienisch', 'Türkisch',
+  'Russisch', 'Polnisch', 'Chinesisch', 'Portugiesisch',
+];
+const PROFESSIONS = [
+  'Student', 'Studentin', 'Kellner', 'Kellnerin', 'Ingenieur', 'Ingenieurin', 'Lehrer', 'Lehrerin',
+  'Arzt', 'Ärztin', 'Verkäufer', 'Verkäuferin', 'Sekretär', 'Sekretärin', 'Koch', 'Köchin',
+  'Chef', 'Chefin',
+];
+
+/**
+ * A1.1 — the recurring characters and the facts the course states about them.
+ *   Ana Chakiri   L1, L2, L3, L6, L8, L9, L10, L12 — ledig (L3 Formular, L2 Mustertext), aus
+ *                 Marokko (L1/L3 Aufgabentext, L2 Mustertext), Studentin (L2 Dialog), spricht
+ *                 Arabisch und Deutsch (L1/L3 Aufgabentext). Sie arbeitet ab L6 im Bürgerbüro —
+ *                 das ist ein Arbeitsplatz, kein zweiter Beruf, deshalb bleibt `beruf` Studentin.
+ *   Lena Brandt   L3, L5, L7, L8, L11, L12 — Kursteilnehmerin (Kurs A1, Zimmer 12), Hobby Sport
+ *                 und Schwimmen. Familienstand, Herkunft und Beruf sagt der Kurs nie: null.
+ *   Tim Berger    L4, L5, L7, L11 — Kursteilnehmer (Kurs am Donnerstag). Ebenfalls nichts gesagt.
+ *   Herr Weber    L2, L6 — „vom Amt“, Schalter im Bürgerbüro; kein Berufswort genannt.
+ *   Frau Kaya     L1 — Rezeption im Hostel; kein Berufswort genannt.
+ *   Paul          L9 — Kellner im Café (dialog.setting).
+ *   Frau Wolf     L4 — verkauft auf dem Flohmarkt.  Herr Schmidt  L10 — Auskunft am Bahnhof.
+ */
+export const PERSONAS_A11 = {
+  Ana: { familienstand: 'ledig', herkunft: 'Marokko', beruf: ['Studentin'], sprachen: ['Arabisch', 'Deutsch'] },
+  Lena: { familienstand: null, herkunft: null, beruf: null, sprachen: null },
+  Tim: { familienstand: null, herkunft: null, beruf: null, sprachen: null },
+  Paul: { familienstand: null, herkunft: null, beruf: ['Kellner'], sprachen: null },
+  'Herr Weber': { familienstand: null, herkunft: null, beruf: null, sprachen: null },
+  'Frau Kaya': { familienstand: null, herkunft: null, beruf: null, sprachen: null },
+  'Frau Wolf': { familienstand: null, herkunft: null, beruf: null, sprachen: null },
+  'Herr Schmidt': { familienstand: null, herkunft: null, beruf: null, sprachen: null },
+};
+
+/** The per-level persona tables, keyed by the registry row's `personaSource`. */
+export const PERSONA_TABLES = { 'a1.1': PERSONAS_A11 };
+
+const alt = (list) => list.join('|');
+// SELF — the person asserts something about themselves: a dialogue line they speak, or the
+// Mitteilung they sign. Only first-person frames, so „Ihr Kollege ist Ingenieur“ (Herr Weber about
+// a third person) and „er spricht Englisch“ (Ana about her brother) are not read as self-reports.
+const SELF_PATTERNS = [
+  ['familienstand', new RegExp(`\\bich\\s+bin\\s+(${alt(MARITAL)})\\b`, 'gi')],
+  ['herkunft', new RegExp(`\\bich\\s+komme\\s+(?:auch\\s+)?aus\\s+(${alt(COUNTRIES)})\\b`, 'gi')],
+  ['beruf', new RegExp(`\\bich\\s+bin\\s+(?:von\\s+Beruf\\s+)?(${alt(PROFESSIONS)})\\b`, 'gi')],
+  ['beruf', new RegExp(`\\bich\\s+arbeite\\s+als\\s+(${alt(PROFESSIONS)})\\b`, 'gi')],
+  ['sprachen', new RegExp(`\\bich\\s+spreche\\s+([^.?!]*)`, 'gi')],
+];
+// ABOUT — a text that is about the person: a Formular task that names them, a dialogue line or
+// setting that names them, the fields of such a task. Third-person and form-field frames.
+const ABOUT_PATTERNS = [
+  ['familienstand', new RegExp(`\\b(?:ist|bin|sind)\\s+(${alt(MARITAL)})\\b`, 'gi')],
+  ['familienstand', new RegExp(`\\bFamilienstand\\s*:\\s*(${alt(MARITAL)})\\b`, 'gi')],
+  ['herkunft', new RegExp(`\\b(?:kommt|komme|kommen)\\s+(?:auch\\s+)?aus\\s+(${alt(COUNTRIES)})\\b`, 'gi')],
+  ['herkunft', new RegExp(`\\bLand\\s*:\\s*(${alt(COUNTRIES)})\\b`, 'gi')],
+  ['beruf', new RegExp(`\\b(?:ist|bin|sind)\\s+(?:von\\s+Beruf\\s+)?(${alt(PROFESSIONS)})\\b`, 'gi')],
+  ['sprachen', new RegExp(`\\b(?:spricht|spreche|sprechen)\\s+([^.?!]*)`, 'gi')],
+  ['sprachen', new RegExp(`\\bSprachen?\\s*:\\s*([^/]*)`, 'gi')],
+];
+// „Mein Mann“ / „meine Frau“ carry no captured value — they simply make the speaker married, which
+// is what the round-5 line did to Ana.
+const SPOUSE_RE = /\b(?:mein\s+Mann|meine\s+Frau)\b/i;
+
+/** The persona a Mitteilung is signed by: the name after the closing Gruß. */
+const signatureName = (sample) => {
+  const m = /(?:Grüße|Gruß|Tschüss|Bis bald|Bis morgen|Bis später)[,!\s]*([A-ZÄÖÜ][\wÄÖÜäöüß]*)/.exec(String(sample || ''));
+  return m ? m[1] : null;
+};
+
+/** Does this text name the persona? „Herr Weber“ by both words, „Ana“ not inside „Anas“. */
+const namesPersona = (text, name) => new RegExp(`\\b${name.replace(' ', '\\s+')}\\b`).test(String(text || ''));
+
+/**
+ * The part of a text that is ABOUT one persona. When the text names exactly one of them, all of it
+ * is — „Ana Chakiri ist ledig. **Sie** kommt aus Marokko.“ continues with a pronoun and must still
+ * be read as Ana. When it names two („Ana sitzt im Café. Paul ist Kellner.“), only the sentences
+ * that name the person are, or Ana becomes a Kellner.
+ */
+function aboutSpan(text, name, allNames) {
+  const s = String(text || '');
+  if (!namesPersona(s, name)) return '';
+  const named = allNames.filter((n) => namesPersona(s, n));
+  if (named.length <= 1) return s;
+  return (s.match(/[^.?!]+[.?!]*/g) || []).filter((sentence) => namesPersona(sentence, name)).join(' ');
+}
+
+/**
+ * RULE 14: no dialogue line and no Schreiben text may state a fact about a recurring character
+ * that contradicts the PERSONAS table. Returns one entry per contradiction.
+ */
+export function personaConsistency(c) {
+  const spec = levelSpec(c?.level) || LEVELS['a1.1'];
+  const personas = PERSONA_TABLES[spec.personaSource] || {};
+  const names = Object.keys(personas);
+  if (!names.length) return [];
+  const offenders = [];
+  const report = (nr, where, name, fact, found, expected) => offenders.push({
+    nr, where, name, fact, found, expected,
+  });
+
+  const check = (nr, where, name, text, patterns) => {
+    const p = personas[name];
+    if (!p || !text) return;
+    const s = String(text);
+    for (const [fact, re] of patterns) {
+      const expected = p[fact];
+      if (!expected) continue;
+      for (const m of s.matchAll(new RegExp(re.source, re.flags))) {
+        const value = m[1] || '';
+        if (fact === 'sprachen') {
+          // The span after „spricht“ / „Sprachen:“ may name several languages.
+          for (const lang of LANGUAGES) {
+            if (new RegExp(`\\b${lang}\\b`).test(value) && !expected.includes(lang)) {
+              report(nr, where, name, fact, lang, expected.join(', '));
+            }
+          }
+          continue;
+        }
+        const ok = Array.isArray(expected) ? expected.includes(value) : String(expected).toLowerCase() === value.toLowerCase();
+        if (!ok) report(nr, where, name, fact, value, Array.isArray(expected) ? expected.join(', ') : expected);
+      }
+    }
+    if (p.familienstand && p.familienstand !== 'verheiratet' && SPOUSE_RE.test(s)) {
+      report(nr, where, name, 'familienstand', SPOUSE_RE.exec(s)[0], p.familienstand);
+    }
+  };
+
+  for (const l of c.lektionen || []) {
+    for (const [i, line] of (l.dialog?.lines || []).entries()) {
+      check(l.nr, `dialog line ${i} (${line.speaker})`, line.speaker, line.de, SELF_PATTERNS);
+      for (const name of names) {
+        if (name === line.speaker) continue;
+        check(l.nr, `dialog line ${i}`, name, aboutSpan(line.de, name, names), ABOUT_PATTERNS);
+      }
+    }
+    for (const name of names) {
+      check(l.nr, 'dialog.setting', name, aboutSpan(l.dialog?.setting, name, names), ABOUT_PATTERNS);
+    }
+    const w = l.schreiben || {};
+    // A Formular task names the person it is about („Ana Chakiri ist ledig. Sie kommt aus …“), so
+    // the whole task — text, sample and fields — is read as being about that person.
+    const about = [w.taskDe, w.sample, ...(w.fields || []), ...(w.leitpunkte || [])].filter(Boolean);
+    for (const name of names) {
+      if (!namesPersona(w.taskDe, name)) continue;
+      // The task named exactly this person, so the whole block — task, sample, fields — is about
+      // them, except in a text that also names somebody else.
+      for (const t of about) {
+        const others = names.filter((n) => n !== name && namesPersona(t, n));
+        check(l.nr, 'schreiben', name, others.length ? aboutSpan(t, name, names) : t, ABOUT_PATTERNS);
+      }
+    }
+    // A Mitteilung is written in the first person by whoever signs it.
+    const author = signatureName(w.sample);
+    if (author && personas[author]) check(l.nr, 'schreiben.sample', author, w.sample, SELF_PATTERNS);
+  }
+  return offenders;
 }
 
 const words = (s) => String(s).trim().split(/\s+/).filter(Boolean);
@@ -878,6 +1130,13 @@ export function validateCurriculum(c, extraItems) {
     fail(`RULE 13: ${missionless.length} Lektionen have a sprechen.open without missionOrder, ratchet is ${r.missionlessLektionen} — ${missionless.map((nr) => `L${nr}`).join(', ')}`);
   }
 
+  // ---- RULE 14 (the recurring characters keep their facts) --------------------------------------
+  // No ratchet: a learner meets Ana in the dialogue and again in the Formular of the same Lektion,
+  // and a contradiction between the two is always something a repair round just wrote.
+  for (const o of personaConsistency(c)) {
+    fail(`RULE 14: Lektion ${o.nr} ${o.where}: ${o.name} — ${o.fact} „${o.found}“ contradicts „${o.expected}“`);
+  }
+
   return errors;
 }
 
@@ -911,6 +1170,9 @@ if (isMain) {
   for (const u of unrehearsed) console.log(`    L${u.nr} ${u.line}`);
   const missionless = missionlessLektionen(c);
   console.log(`  RULE 13 Sprechaufträge ohne Mission: ${missionless.length} (Ratchet ${r.missionlessLektionen}) — ${missionless.map((nr) => `L${nr}`).join(', ') || '—'}`);
+  const personaBreaks = personaConsistency(c);
+  console.log(`  RULE 14 Figuren-Widersprüche: ${personaBreaks.length} (harte Regel, kein Ratchet)`);
+  for (const o of personaBreaks) console.log(`    L${o.nr} ${o.where}: ${o.name} ${o.fact} „${o.found}“ statt „${o.expected}“`);
   if (errors.length) {
     console.error(`✗ ${c.code}: ${errors.length} problem(s)`);
     for (const e of errors) console.error('  - ' + e);
