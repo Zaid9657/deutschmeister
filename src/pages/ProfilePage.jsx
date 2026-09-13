@@ -10,6 +10,7 @@ import { supabase } from '../utils/supabase';
 import SEO from '../components/SEO';
 import Button from '../components/ui/Button.jsx';
 import Card from '../components/ui/Card.jsx';
+import SupportRequestForm from '../components/SupportRequestForm.jsx';
 import Chip from '../components/ui/Chip.jsx';
 import SectionHeading from '../components/ui/SectionHeading.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
@@ -320,6 +321,15 @@ const ProfilePage = () => {
                 <span>{t('profile.deleteAccount')}</span>
               </button>
             </div>
+          </Card>
+        </Reveal>
+
+        {/* Support — opens a ticket in the admin panel's support centre */}
+        <Reveal>
+          <Card raised className="p-8">
+            <h3 className="font-display text-xl font-semibold text-ink mb-2">Support</h3>
+            <p className="text-sm text-graphite mb-4">Frage, Fehler oder Problem mit der Zahlung? Schreiben Sie uns — die Antwort kommt per E-Mail.</p>
+            <SupportRequestForm />
           </Card>
         </Reveal>
 

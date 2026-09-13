@@ -416,6 +416,12 @@
   from = "/listening/*"
   to = "/app.html"
   status = 200
+# The admin panel: /admin exactly (the cockpit) plus every module under it.
+# Role-gated server-side (netlify/functions/admin-*.mjs); see docs/admin-panel.md.
+[[redirects]]
+  from = "/admin"
+  to = "/app.html"
+  status = 200
 [[redirects]]
   from = "/admin/*"
   to = "/app.html"

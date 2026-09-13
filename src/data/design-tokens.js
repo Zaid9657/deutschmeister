@@ -105,6 +105,27 @@ export const accent = {
   limette: { bright: '#7BC943', wash: '#F1FAE6', ink: '#3E6B15', edge: '#5DA52A' },
 };
 
+/**
+ * The data-visualisation palette — the admin panel's chart, delta and status
+ * colours (docs/admin-panel.md). Wong's colourblind-safe set, NOT plain
+ * red/green: red-green is the most common colour vision deficiency, so a tile
+ * whose only signal is its colour is blank for part of the audience. Colour
+ * here only ever REINFORCES the arrow and the sign a delta already carries —
+ * it never carries meaning alone. `error` is the one true red in the admin
+ * area and is reserved for system faults, so "revenue fell" (`neg`) and "the
+ * webhook broke" (`error`) never look the same. Rule 1 still holds: none of
+ * these may mark a grammatical case, and none may appear on a learner-facing
+ * surface — they are for operators reading numbers.
+ */
+export const viz = {
+  pos: '#009E73', // growth / positive
+  neg: '#D55E00', // decline / negative — vermillion, not red
+  series1: '#0072B2', // primary data series
+  series2: '#E69F00', // secondary data series
+  warn: '#B7791F', // needs attention (past due, desync)
+  error: '#C0362C', // system fault ONLY
+};
+
 /** Font stacks. Every face here is already loaded by the shell — no new requests. */
 export const font = {
   display: "'Fraunces', 'Iowan Old Style', Georgia, serif",
@@ -206,6 +227,8 @@ export const tailwindColors = {
   accent: Object.fromEntries(
     Object.entries(accent).map(([name, v]) => [name, { DEFAULT: v.bright, wash: v.wash, ink: v.ink, edge: v.edge }]),
   ),
+  // `bg-viz-pos`, `text-viz-error` … — the admin panel's data colours.
+  viz: { ...viz },
 };
 
 /** Both configs spread this into theme.extend.boxShadow. */

@@ -2,8 +2,7 @@ import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Upload, CheckCircle, AlertTriangle, Film, Plus, ArrowLeft, Loader2, X, ShieldX } from 'lucide-react';
 import { supabase } from '../utils/supabase';
-import { useAuth } from '../contexts/AuthContext';
-import { isAdminEmail } from '../config/admins';
+import { useAdminSession } from '../components/admin/AdminSessionContext.jsx';
 
 import SEO from '../components/SEO';
 import Button from '../components/ui/Button.jsx';
@@ -23,8 +22,10 @@ function slugify(title) {
 }
 
 const AdminVideosPage = () => {
-  const { user } = useAuth();
-  const isAdmin = isAdminEmail(user?.email);
+  // Inside the admin shell: the server already confirmed a role; the upload
+  // needs content.write (admin, content).
+  const { can } = useAdminSession();
+  const isAdmin = can('content.write');
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
