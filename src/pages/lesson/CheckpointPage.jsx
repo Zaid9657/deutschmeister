@@ -323,7 +323,11 @@ export default function CheckpointPage() {
       setPhase('result');
       recordAttempt(user?.id, { level, checkpointId: checkpoint.id, items, answers: finalAnswers, result: scored });
       fetchAttemptState(user?.id, checkpoint.id).then(setAttempts);
-      if (!scored.passed && pool) setRemediation(remediationSet(items, finalAnswers, pool));
+      // The bound the paper itself was drawn under (see servableBy): a remediation
+      // item must not be the first place the learner meets a word.
+      if (!scored.passed && pool) {
+        setRemediation(remediationSet(items, finalAnswers, pool, { afterLektion: checkpoint.afterLektion }));
+      }
     },
     [items, user, level, checkpoint, pool],
   );

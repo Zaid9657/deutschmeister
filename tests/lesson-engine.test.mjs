@@ -625,19 +625,24 @@ test('NO BLOCK PRINTS ITS OWN ANSWERS — the leak rule over all 36 blocks', () 
  * served the flea market of L4 while `MAX_CAP_STARVED_LEKTIONEN = 0` stood green.
  *
  * 2 → 1 with the bracket fix of MAJOR 1(a): attempts 1 and 2 of L5 are complete again, and the
- * review's own counterfactual is reproduced. The ONE that remains is attempt 3 of L5 and it is a
+ * review's own counterfactual is reproduced. The ONE that remained was attempt 3 of L5 and it was a
  * measured CONTENT shortage the review predicted in the same paragraph („Versuch 3 bleibt auch dann
  * dünn — das ist dann ein echter Inhaltsmangel und keine Kappe“): of the 17 `definite-articles`
- * items L5 may serve, attempts 1 and 2 use eleven, and the six left over are ALL the one frame
+ * items L5 could serve, attempts 1 and 2 used eleven, and the six left over were ALL the one frame
  * „___ Nomen ist Adjektiv. (bestimmter Artikel)“ (`extra-a11-l05-01/-04/-05/-07/-13/-16`), so
- * `MAX_SAME_TASK_SHAPE` lets exactly one of them be seated. No draw can repair that. The repair is
- * the review's fourth point: `definite-articles` items for L5 that do NOT carry that frame — and
- * this number only ever goes down by items, never by a softer rule.
+ * `MAX_SAME_TASK_SHAPE` seated exactly one of them. No draw could repair that.
  *
- * Any OTHER block that turns up here is a fresh finding and is meant to fail this test: it says the
+ * 1 → 0 (round 12) by the review's fourth point, i.e. by SUPPLY: `extra-a11-l05-17`…`-24` are eight
+ * `definite-articles` items out of L5's own Kursraum-Wortfeld in eight task shapes L5 did not own
+ * (the indefinite→definite pair, „Wie ist ___ Tür?“, „Ist ___ Lineal hier?“, two article
+ * corrections whose answer is a whole sentence, a two-noun frame, a quoted question and a Zimmer
+ * frame). Attempt 3 now seats five items on its own slug instead of one, and its Wortfeld share
+ * rose 2/7 → 5/7. This number only ever goes down by items, never by a softer rule.
+ *
+ * ANY block that turns up here now is a fresh finding and is meant to fail this test: it says the
  * seven was filled with a neighbour Lektion's material, which no `relaxUsed` and no cap reports.
  */
-const MAX_OFF_PRIMARY_BLOCKS = 1;
+const MAX_OFF_PRIMARY_BLOCKS = 0;
 
 test('EVERY BLOCK FILLS SEVEN WITH ITS OWN GRAMMAR — practiceReport is read, all 36 blocks', () => {
   const relaxed = [];

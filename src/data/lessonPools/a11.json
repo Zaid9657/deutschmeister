@@ -1,7 +1,7 @@
 {
  "level": "a1.1",
  "builtFrom": "2026-08-24",
- "count": 366,
+ "count": 374,
  "items": [
   {
    "id": "10fc1751-c3af-529f-8796-f8e46bfb1691",
@@ -1406,6 +1406,158 @@
     "Die Wohnung ist hier"
    ],
    "explanationDe": "Wohnung ist feminin: die Wohnung.",
+   "hint": null,
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a11-l05-17",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 199,
+   "questionDe": "Ein Bild ist hier. ___ Bild ist blau. (bestimmter Artikel)",
+   "questionEn": "A picture is here. The picture is blue.",
+   "options": null,
+   "answer": "Das",
+   "accepted": [
+    "Das",
+    "das"
+   ],
+   "explanationDe": "Jetzt bekannt, und Bild ist neutral: das Bild.",
+   "hint": null,
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a11-l05-18",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 200,
+   "questionDe": "Wie ist ___ Tür? — Sie ist weiß. (bestimmter Artikel)",
+   "questionEn": "What colour is the door? — It is white.",
+   "options": null,
+   "answer": "die",
+   "accepted": [
+    "die",
+    "Die"
+   ],
+   "explanationDe": "Tür ist feminin, also die Tür.",
+   "hint": null,
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a11-l05-19",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 201,
+   "questionDe": "Ergänzen Sie: Ist ___ Lineal hier? (bestimmter Artikel)",
+   "questionEn": "Complete the question: Is the ruler here?",
+   "options": null,
+   "answer": "das",
+   "accepted": [
+    "das",
+    "Das"
+   ],
+   "explanationDe": "Lineal ist neutral: das Lineal.",
+   "hint": null,
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a11-l05-20",
+   "topic": "definite-articles",
+   "type": "error_correction",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 202,
+   "questionDe": "Korrigieren Sie: „Das Tür ist weiß.“ (mit bestimmtem Artikel)",
+   "questionEn": "Fix the article — the task names the definite article.",
+   "options": null,
+   "answer": "Die Tür ist weiß.",
+   "accepted": [
+    "Die Tür ist weiß.",
+    "Die Tür ist weiß"
+   ],
+   "explanationDe": "Tür ist feminin, nicht neutral: die Tür.",
+   "hint": null,
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a11-l05-21",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 203,
+   "questionDe": "Hier sind ein Buch und ein Heft. ___ Buch ist rot. (bestimmter Artikel)",
+   "questionEn": "Here are a book and a notebook. The book is red.",
+   "options": null,
+   "answer": "Das",
+   "accepted": [
+    "Das",
+    "das"
+   ],
+   "explanationDe": "Buch ist neutral: das Buch.",
+   "hint": null,
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a11-l05-22",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 204,
+   "questionDe": "Tim fragt: Wo ist ___ Papier? (bestimmter Artikel)",
+   "questionEn": "Tim asks: Where is the paper?",
+   "options": null,
+   "answer": "das",
+   "accepted": [
+    "das",
+    "Das"
+   ],
+   "explanationDe": "Papier ist neutral: das Papier.",
+   "hint": null,
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a11-l05-23",
+   "topic": "definite-articles",
+   "type": "error_correction",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 205,
+   "questionDe": "Korrigieren Sie: „Die Schlüssel ist gelb.“ (mit bestimmtem Artikel)",
+   "questionEn": "Fix the article — the task names the definite article.",
+   "options": null,
+   "answer": "Der Schlüssel ist gelb.",
+   "accepted": [
+    "Der Schlüssel ist gelb.",
+    "Der Schlüssel ist gelb"
+   ],
+   "explanationDe": "Schlüssel ist maskulin: der Schlüssel.",
+   "hint": null,
+   "minLektion": 5
+  },
+  {
+   "id": "extra-a11-l05-24",
+   "topic": "definite-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 206,
+   "questionDe": "Tim und Lena lernen hier. ___ Zimmer ist grün. (bestimmter Artikel)",
+   "questionEn": "Tim and Lena study here. The room is green.",
+   "options": null,
+   "answer": "Das",
+   "accepted": [
+    "Das",
+    "das"
+   ],
+   "explanationDe": "Zimmer ist neutral: das Zimmer.",
    "hint": null,
    "minLektion": 5
   },
