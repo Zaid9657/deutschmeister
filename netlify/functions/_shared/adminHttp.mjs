@@ -137,8 +137,12 @@ export async function fetchAll(buildQuery, { pageSize = 1000, maxRows = 50000 } 
   return rows;
 }
 
+/** buildQuery must return a `select('*', { count: 'exact', head: true })` query with its filters applied. */
 export async function exactCount(buildQuery) {
-  const { count, error } = await buildQuery().select('*', { count: 'exact', head: true });
+  const { count, error } = await buildQuery();
   if (error) throw new Error(error.message);
   return count ?? 0;
 }
+
+/** The counting select, for exactCount call sites. */
+export const counting = (supabase, table) => supabase.from(table).select('*', { count: 'exact', head: true });

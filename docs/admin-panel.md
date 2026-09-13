@@ -81,7 +81,7 @@ never classify from display text.
 | Phase | Status | What shipped |
 | --- | --- | --- |
 | 1 Foundation | ✅ 2026-09-13 | `profiles.role` + trigger, `admin_audit_log`, pg_trgm indexes; `adminRbacLib/adminRbac/adminHttp/adminLevels/adminOpsLib`; `admin-session`; `adminFetchCore/adminFetch/adminFormat`; `adminUi` kit, `AdminShell`, `AdminSidebar`, filter context; `/admin/*` router with every route resolving; `/admin` rewrite; tests `admin-rbac`, `admin-fetch`, `admin-format`, `admin-levels` |
-| 2 Operations | pending | cockpit, directory, User 360, actions, subscriptions/ops, support, audit trail |
+| 2 Operations | ✅ 2026-09-13 | `admin-metrics` (one clock, five `safe()` groups, revenue reconstructed from `webhook_logs`, honest funnel + coverage waterfall, `levelFilterApplies/Excluded`), `admin-directory` (server predicates, post-filters with inexact totals, saved views with rules, CSV behind `export`), `admin-user360` (eight panels, `gateReads`, masked ids, no transcripts), `admin-actions` (8 audited actions, zero provider mutations), `admin-ops` (discrepancy + failed-payment queues on `isFailedPayment`), `admin-support` + `support-ticket-create` + the Profil support form (migration `2026-09-13-admin-panel-operations.sql`), `admin-audit`; screens for all six; `tests/admin-ops.test.mjs` |
 | 3 Product & Growth | pending | usage analytics, content CMS, marketing, coupons, reports, status, settings |
 | 4 UI reference | pending | visual QA against Part 4 |
 
@@ -93,4 +93,7 @@ Filled in as each phase lands. At phase 1:
 | --- | --- |
 | Acquisition attribution | no source column exists on `profiles`; nothing captures UTM/referrer |
 | Course Lektion usage | `lesson_progress` / `lesson_attempts` hold 0 rows (the A1.1 engine is live but has no learners yet) |
+| Speaking "counted" usage | there is no duration threshold; a session counts when it is started (`speaking_usage`), so the cockpit says *gestartet* and *abgeschlossen*, never *gezählt ab N Sek.* |
+| Refunds | `order_refunded` is handled by the webhook on `purchases`; the revenue reconstruction subtracts `refunded_amount` from the order payload only when Lemon Squeezy re-sends the order — partial refunds after the fact are not visible in `webhook_logs` |
+| Login activity | `audit_logs` is written client-side (`src/lib/auditLogger.js`), so a blocked or failed insert under-counts logins; the label says *Login-aktiv*, not *aktiv* |
 | Roles | five defined and enforced; only `admin` assigned to real people (the two owner accounts) |

@@ -110,3 +110,15 @@ export function findDiscrepancies({ profile, subscriptions = [], purchases = [],
   }
   return out;
 }
+
+/**
+ * Product keys a manual course grant may use — exactly the keys the Lemon
+ * Squeezy webhook can deliver (COURSE_VARIANT_ENV in lemonsqueezy-webhook.mjs)
+ * and src/data/pricing.js declares. tests/admin-ops.test.mjs pins the set
+ * against both sources.
+ */
+export const PRODUCT_KEYS = Object.freeze([
+  'telc_b1_komplett',
+  'course_a1_2', 'course_a2_1', 'course_a2_2', 'course_b1_1', 'course_b1_2', 'course_b2_1', 'course_b2_2',
+  'course_a1', 'course_a2', 'course_b1', 'course_b2', 'course_alle',
+]);
