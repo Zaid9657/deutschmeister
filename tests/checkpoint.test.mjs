@@ -76,6 +76,10 @@ import {
   VERB_3SG,
   servableBy,
   stampsApplyTo,
+  checkpointLeaks,
+  checkpointReport,
+  leaksAcross,
+  printedSurface,
 } from '../src/lib/checkpoint/buildCheckpoint.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js';
@@ -1223,16 +1227,18 @@ test('THE minLektion BOUND — no checkpoint draws an item its chapter has not t
 });
 
 test('the bound BITES — an item stamped past the chapter leaves the draw, and the paper stays 20', () => {
-  // A mutation rather than a claim: `extra-a11-l05-08` is drawn by checkpoint 2
-  // (`afterLektion: 6`) with `minLektion: 5`. Re-stamp that one item to 8 — the
-  // Lektion `bb5c0422` came from — and it must disappear from the paper while
-  // every section keeps its size.
+  // A mutation rather than a claim: `extra-a11-l05-10` is drawn by checkpoint 2
+  // (`afterLektion: 6`) with `minLektion: 5`. Re-stamp that one item to 8 — past
+  // the chapter this paper closes — and it must disappear from the paper while
+  // every section keeps its size. (The victim was `extra-a11-l05-08` until the
+  // paper-wide leak cap of round 15 moved the draw; the id is a measurement of
+  // the current build, not a fact about the pool.)
   const cp2 = CURRICULUM_A11.checkpoints[1];
   const drawn = (pool) => new Set(
     buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp2, pool })
       .map((i) => i.poolItemId).filter(Boolean),
   );
-  const VICTIM = 'extra-a11-l05-08';
+  const VICTIM = 'extra-a11-l05-10';
   assert.ok(drawn(POOL).has(VICTIM), `${VICTIM} is no longer drawn by ${cp2.id} — pick another victim`);
 
   const mutated = { ...POOL, items: POOL.items.map((i) => (i.id === VICTIM ? { ...i, minLektion: 8 } : { ...i })) };
@@ -1423,6 +1429,133 @@ test('no dialogue line is used twice across the sections of one checkpoint', () 
         + `${all.filter((v, i, a) => a.indexOf(v) !== i).join(' | ')}`,
     );
   }
+});
+
+// ── THE PAPER-WIDE LEAK CAP (DaF review #14, MAJOR 3) ───────────────────────
+//
+// The practice draw has refused to print an item's answer in a sibling's prompt
+// since review #11; the GRADED paper did not, and the review measured eleven
+// leaking pairs over the four papers. The eleven are kept below as a fixture —
+// they are the OLD builder's own output, and `checkpointLeaks` must report every
+// one of them, or the guard would be measuring something else than the finding.
+const leakItem = (o) => ({
+  id: o.id, section: o.section, kind: o.kind, type: o.type || null,
+  promptDe: o.promptDe || null, text: o.text || null, audioText: o.audioText || null,
+  answer: o.answer ?? null, accepted: o.accepted || (o.answer ? [o.answer] : []),
+});
+
+// Exactly the pairs of the review, with the sentences it printed. The read-aloud
+// and the Lesen text are the halves an earlier prompt-only reading would miss.
+const CP3_READ_ALOUD = leakItem({
+  id: 'a1.1-cp3-sprechen-1', section: 'sprechen', kind: 'readAloud', type: 'read_aloud',
+  promptDe: 'Lesen Sie den Satz laut vor.',
+  text: 'Und am Dienstag? Hast du nachmittags Zeit?', answer: 'Und am Dienstag? Hast du nachmittags Zeit?',
+});
+const lesenItem = (id, text) => leakItem({ id, section: 'lesen', kind: 'trueFalse', text, answer: 'Richtig' });
+const typedItem = (id, section, promptDe, answer) => leakItem({ id, section, kind: 'typed', promptDe, answer });
+const wordItem = (id, answer) => leakItem({ id, section: 'hoeren', kind: 'wordChoice', promptDe: 'Welches Wort hören Sie?', answer });
+
+const MEASURED_LEAKS = [
+  [typedItem('a1.1-cp3-bausteine-3', 'bausteine', 'Nach Montag kommt ___.', 'Dienstag'), CP3_READ_ALOUD],
+  [typedItem('a1.1-cp3-bausteine-4', 'bausteine', 'Ana, ___ du Hunger oder Durst? (haben)', 'Hast'), CP3_READ_ALOUD],
+  [
+    typedItem('a1.1-cp4-bausteine-4', 'bausteine', '___ Party ist am Samstag. (du)', 'Deine'),
+    lesenItem('a1.1-cp4-lesen-3', 'Lena: Ana, wann ist dein Geburtstag? Ana: Mein Geburtstag ist im Mai. Wir feiern am Freitag. Lena: Mai ist ein schöner Monat! Kommt deine Mama auch?'),
+  ],
+  [
+    wordItem('a1.1-cp1-hoeren-4', 'die Schwester'),
+    lesenItem('a1.1-cp1-lesen-2', 'Ana: Ja. Das sind meine Eltern und meine Geschwister: ein Bruder, eine Schwester. Lena: Wie alt ist er? Ana: Er ist zwanzig. Sie ist noch jung.'),
+  ],
+  [
+    wordItem('a1.1-cp1-hoeren-5', 'Englisch'),
+    lesenItem('a1.1-cp1-lesen-3', 'Ana: Sie sprechen Arabisch und Deutsch. Lena: Spricht dein Bruder auch Englisch? Ana: Ja, er spricht Englisch und Deutsch.'),
+  ],
+  [
+    wordItem('a1.1-cp3-hoeren-4', 'essen'),
+    lesenItem('a1.1-cp3-lesen-4', 'Ana: Ja, ein Glas Mineralwasser, bitte. Und einen Orangensaft. Paul: Gern. Wir haben auch Tee, Bier und Wein. Ana: Nein, danke. Ich esse gern ein Brot mit Salat.'),
+  ],
+  [
+    wordItem('a1.1-cp3-hoeren-5', 'jede Woche'),
+    lesenItem('a1.1-cp3-lesen-2', 'Lena: Ja, immer. Am Wochenende arbeite ich nicht. Ich bin frei. Tim: Ich lese auch gern. Und ich koche gern. Lena: Ich schwimme jede Woche. Gehst du ins Kino?'),
+  ],
+  [
+    leakItem({
+      id: 'a1.1-cp2-sprechen-2', section: 'sprechen', kind: 'readAloud', type: 'read_aloud',
+      promptDe: 'Lesen Sie den Satz laut vor.',
+      text: 'Und wie ist die Telefonnummer?', answer: 'Und wie ist die Telefonnummer?',
+    }),
+    lesenItem('a1.1-cp2-lesen-1', 'Ana: Guten Morgen, Herr Weber! Herr Weber: Guten Morgen, Ana. Das ist Ihr Büro. Ana: Danke. Ich brauche einen Computer und ein Telefon. Und wie ist die Telefonnummer?'),
+  ],
+  [
+    typedItem('a1.1-cp2-bausteine-1', 'bausteine', 'Bilden Sie den Satz: [der Stuhl / sein / alt]', 'Der Stuhl ist alt.'),
+    lesenItem('a1.1-cp2-lesen-4', 'Tim: Das ist teuer. Und der Stuhl? Frau Wolf: Der Stuhl kostet zwölf Euro. Tim: Ich kaufe den Stuhl und die Lampe. Der Stuhl ist alt.'),
+  ],
+  [
+    typedItem('a1.1-cp1-bausteine-3', 'bausteine', 'Schreiben Sie die Zahl: 7', 'sieben'),
+    lesenItem('a1.1-cp1-lesen-1', 'Ana: Ich bin Studentin. Herr Weber: Danke. Hier ist auch die Post. Wie ist Ihre Telefonnummer? Ana: Meine Telefonnummer ist null eins sieben sechs.'),
+  ],
+  [
+    typedItem('a1.1-cp3-bausteine-5', 'bausteine', '___ schön! (danken)', 'Danke'),
+    lesenItem('a1.1-cp3-lesen-4', 'Ana: Ja, ein Glas Mineralwasser, bitte. Und einen Orangensaft. Paul: Gern. Wir haben auch Tee, Bier und Wein. Ana: Nein, danke. Ich esse gern ein Brot mit Salat.'),
+  ],
+];
+
+test('THE ELEVEN MEASURED PAIRS are leaks under the definition the engine exports', () => {
+  for (const [solved, prints] of MEASURED_LEAKS) {
+    assert.ok(
+      leaksAcross(solved, prints),
+      `${solved.id} (→ ${solved.answer}) is not reported as printed by ${prints.id} — `
+        + `the cap measures something else than the finding: "${printedSurface(prints)}"`,
+    );
+  }
+  // …and the measurement finds them in bulk, i.e. an old-style paper reports.
+  assert.ok(
+    checkpointLeaks(MEASURED_LEAKS.flat()).length >= MEASURED_LEAKS.length,
+    'checkpointLeaks does not report the pairs it is built from',
+  );
+});
+
+test('NO checkpoint prints the answer of one of its own items in another — over every pair', () => {
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    const leaks = checkpointLeaks(items);
+    assert.deepEqual(
+      leaks,
+      [],
+      `${cp.id}: ${leaks.map(([a, b]) => `${a} ↔ ${b}`).join(' | ')} — a graded paper is one unit`,
+    );
+  }
+});
+
+test('the leak cap never relaxed on the four real papers, and the sections stayed 5/4/6/3/2', () => {
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    assert.deepEqual(
+      checkpointReport(items).leakFallbacks,
+      [],
+      `${cp.id}: a seat had to take a leaking item — ${JSON.stringify(checkpointReport(items).leakFallbacks)}`,
+    );
+    for (const [section, size] of Object.entries(SECTION_COUNTS)) {
+      assert.equal(items.filter((i) => i.section === section).length, size, `${cp.id}: ${section} went short`);
+    }
+    assert.equal(items.length, CHECKPOINT_ITEM_COUNT);
+  }
+});
+
+test('the cap BITES — a hand-set pair is reported, and the printed surface is the whole item', () => {
+  const dictation = leakItem({
+    id: 'probe-hoeren-1', section: 'hoeren', kind: 'dictation', type: 'dictation',
+    promptDe: 'Hören Sie zu und schreiben Sie den Satz.',
+    audioText: 'Deine Party ist bestimmt schön!', answer: 'Deine Party ist bestimmt schön!',
+  });
+  const baustein = typedItem('probe-bausteine-1', 'bausteine', '___ Party ist am Samstag. (du)', 'Deine');
+  assert.equal(checkpointLeaks([dictation, baustein]).length, 1, 'the guard does not see a printed dictation');
+  // The same pair with the sentence taken OUT of the printed surface is no leak —
+  // which is what a prompt-only reading of a dictation amounts to.
+  const silent = { ...dictation, audioText: null, text: null };
+  assert.equal(checkpointLeaks([silent, baustein]).length, 0);
+  // A Lesen verdict is not a production: „Richtig" is never leaked by a prompt
+  // that happens to carry the word.
+  const verdict = lesenItem('probe-lesen-1', 'Ana: Das ist richtig.');
+  assert.equal(checkpointLeaks([verdict, typedItem('probe-bausteine-2', 'bausteine', 'Ist das richtig?', 'Ja')]).length, 0);
 });
 
 test('no two Lesen items of one checkpoint are built from the same window', () => {

@@ -14,19 +14,65 @@ const words = (text) => String(text || '').trim().split(/\s+/).filter(Boolean);
 
 export const countWords = (text) => words(text).length;
 
-const STOPWORDS = new Set([
-  'der', 'die', 'das', 'ein', 'eine', 'einen', 'einem', 'einer', 'und', 'oder', 'aber', 'ihr', 'ihre',
-  'sie', 'du', 'ich', 'wir', 'es', 'zu', 'in', 'an', 'auf', 'für', 'mit', 'von', 'dein', 'deine',
-  'wann', 'wie', 'was', 'wo', 'wer', 'warum', 'schreiben', 'schreib', 'nennen', 'nenne', 'sagen',
-  // The reflexive pronouns. Without them „Wann Sie **sich** treffen“ (A1.1 L4) keys on `sich`,
-  // and a learner who writes the ordinary „Wir treffen uns um vier Uhr.“ is told he missed the
-  // Leitpunkt. Measured over the whole bank on 2026-09-13: one task, and the keyword it picks
-  // instead is `treffen` (DaF review #12, MAJOR 1).
-  'sich', 'uns', 'mich', 'dich', 'euch',
+/**
+ * THE FUNCTION WORDS OF THE LANGUAGE, not a hand-kept list of forty.
+ *
+ * DaF review #14, MAJOR 1: the old `STOPWORDS` let `bis`, `sie`, `soll` and `lena` through as
+ * content words, so „Was die Kollegin **bis** dahin machen soll“ was answered by „**Bis** dann!“.
+ * The review's own prescription was to read `FUNCTION_WORDS` out of the A1.1 curriculum — but this
+ * file must stay dependency-free (the screen and RULE 17 grade with the SAME code, and a check
+ * that imports one level's Wortfeld is wrong for every other level; `tests/writing-course.test.mjs`
+ * pins it). So the list below is not a course's vocabulary: it is the CLOSED CLASSES of German —
+ * articles, pronouns (personal, possessive, reflexive, demonstrative), prepositions, conjunctions,
+ * question words, the finite forms of sein/haben and the modals, and the handful of particles. A
+ * closed class is finite and does not grow with the course, which is the same move round 14 made
+ * in `frontableOrders` (a form question, not an item list).
+ *
+ * TASK_VERBS is the second half and it is deliberately separate: `schreiben`, `nennen`, `sagen`
+ * are the words of the INSTRUCTION („Schreiben Sie …“), never of the answer. This is RULE 20's
+ * licence with the sign reversed — the task's own wording may not be evidence that the task was
+ * done. Dropping them is what keeps „Warum Sie schreiben“ the undecidable Leitpunkt it is.
+ */
+const FUNCTION_WORDS_DE = new Set([
+  // Artikel und Determinative
+  'der', 'die', 'das', 'den', 'dem', 'des', 'ein', 'eine', 'einen', 'einem', 'einer', 'eines',
+  'kein', 'keine', 'keinen', 'keinem', 'keiner', 'alle', 'alles', 'viel', 'viele', 'etwas',
+  // Personal-, Possessiv-, Reflexiv- und Demonstrativpronomen
+  'ich', 'mir', 'mich', 'mein', 'meine', 'meinen', 'meinem', 'meiner', 'meins',
+  'du', 'dir', 'dich', 'dein', 'deine', 'deinen', 'deinem', 'deiner', 'deins',
+  'er', 'ihn', 'ihm', 'sein', 'seine', 'seinen', 'seinem', 'seiner',
+  'sie', 'ihr', 'ihre', 'ihren', 'ihrem', 'ihrer', 'ihres', 'es',
+  'wir', 'uns', 'unser', 'unsere', 'unseren', 'unserem', 'unserer',
+  'euch', 'euer', 'eure', 'euren', 'eurem', 'eurer', 'man', 'sich',
+  'dies', 'diese', 'dieser', 'dieses', 'diesen', 'diesem',
+  // Präpositionen
+  'aus', 'bei', 'mit', 'nach', 'seit', 'von', 'zum', 'zur', 'bis', 'für', 'gegen', 'ohne',
+  'über', 'unter', 'neben', 'zwischen', 'vor', 'hinter', 'ins', 'beim', 'vom', 'auf', 'für',
+  // Konjunktionen und Partikeln
+  'und', 'oder', 'aber', 'denn', 'dass', 'weil', 'wenn', 'auch', 'noch', 'nur', 'schon',
+  'nicht', 'sehr', 'dann', 'hier', 'ja', 'nein', 'bitte', 'danke', 'jetzt', 'mal',
+  // Fragewörter
+  'wann', 'wie', 'was', 'wer', 'wen', 'wem', 'wo', 'warum', 'woher', 'wohin',
+  'welche', 'welcher', 'welches', 'welchen',
+  // sein / haben / werden und die Modalverben, finit und infinit
+  'bin', 'bist', 'ist', 'sind', 'seid', 'war', 'waren',
+  'habe', 'hast', 'hat', 'haben', 'habt', 'wird', 'werden',
+  'kann', 'kannst', 'können', 'könnt', 'muss', 'musst', 'müssen', 'müsst',
+  'will', 'willst', 'wollen', 'wollt', 'darf', 'darfst', 'dürfen', 'dürft',
+  'soll', 'sollst', 'sollen', 'sollt', 'mag', 'möchte', 'möchten',
 ]);
 
+/** The verbs of the INSTRUCTION — see the header above. */
+const TASK_VERBS = new Set(['schreiben', 'schreib', 'schreibt', 'nennen', 'nenne', 'nennt', 'sagen', 'sage', 'sagt']);
+
+const isFunctionWord = (w) => {
+  const t = String(w || '').toLowerCase();
+  return FUNCTION_WORDS_DE.has(t) || TASK_VERBS.has(t);
+};
+
 /**
- * THE LEITPUNKT FAMILY — why this is not one keyword any more.
+ * THE LEITPUNKT FAMILY — why this is not one keyword any more, and since DaF review #14 not one
+ * alternative either.
  *
  * DaF review #13, MAJOR 1 measured the old rule (`leitpunktKeyword`: the first
  * content word of the Leitpunkt, searched as a substring) against a correct,
@@ -42,29 +88,52 @@ const STOPWORDS = new Set([
  * *Start Deutsch 1* Schreiben Teil 2 that COSTS points under „Kommunikative
  * Gestaltung“.
  *
- * So the Leitpunkt is satisfied by a FAMILY of forms, derived from the
- * Leitpunkt itself, in two ways and never by a typed list of texts:
+ * Round 14 fixed that and overshot: „eines von allen genügt“ turned every
+ * coordinated Leitpunkt into two alternatives and every shape into a hint, and
+ * DaF review #14 measured ELEVEN texts that answer nothing getting a green tick
+ * („Wir sind zwei Kollegen.“ satisfied „Ihre Telefonnummer“ because the old
+ * `PHONE_RE` saw the numeral `zwei`). THE INVARIANT, and it is the reason this
+ * file exists: **the Formcheck may never be green on a text that omits a
+ * Leitpunkt.** It is the only feedback a signed-out, offline or over-quota
+ * learner gets, and a green list over a half-written Mitteilung is a false
+ * statement about his work — in the exam it costs exactly the points the list
+ * just promised him.
  *
- *  1. EVERY content word of the Leitpunkt, matched by FOLDED form rather than
- *     as a substring — „Was Sie brauchen“ is answered by „Ich brauche …“,
- *     „Wann Sie sich treffen“ by „Wann treffen wir uns?“, and „Ihr
- *     Familienstand: ledig oder verheiratet“ carries its own answers (the
- *     Leitpunkt text supplies its synonyms and nobody read them).
- *  2. THE ANSWER SHAPE its head noun asks for: a date for „Geburtsdatum“, a
- *     country phrase for „Land“, ledig/verheiratet for „Familienstand“, a clock
- *     time for „Uhrzeit“, a weekday for „Tag“, a price for „kostet“, digits for
- *     „Telefonnummer“, a question mark for „Frage“ (ANSWER_SHAPES below).
+ * So a Leitpunkt is read in three steps, all derived from the Leitpunkt itself
+ * and never from a typed list of texts:
+ *
+ *  1. IT IS SPLIT INTO CONJUNCTS at „ und “ and at „, “. In *Start Deutsch 1* a
+ *     Leitpunkt is one unit: „Ihr Land **und** Ihre Staatsangehörigkeit“ is not
+ *     answered by naming the country. EVERY decidable conjunct must have
+ *     evidence. „oder“ does NOT split — „ledig **oder** verheiratet“ is one
+ *     conjunct with two alternatives, and the Leitpunkt supplies its own
+ *     answers there.
+ *  2. EACH CONJUNCT DERIVES ITS ANSWER SHAPE, and WHERE A SHAPE EXISTS THE
+ *     SHAPE IS REQUIRED — a date for „Geburtsdatum“, a nationality adjective for
+ *     „Staatsangehörigkeit“, four digits or four number words for
+ *     „Telefonnummer“, a clock time for „Uhrzeit“, a weekday for „Tag“, a price
+ *     for „kostet“, a question mark for „Frage“, a time for any „Wann …“
+ *     (ANSWER_SHAPES / QUESTION_SHAPES below). Naming the head noun again is not
+ *     answering it: „Wir treffen Ana auf dem Flohmarkt.“ does not say WANN.
+ *  3. WHERE NO SHAPE EXISTS the conjunct's own content words decide, folded
+ *     rather than matched as substrings — „Was Sie brauchen“ is answered by „Ich
+ *     brauche …“. In an INDIRECT QUESTION („Was die Gäste mitbringen sollen“)
+ *     only the lower-case words count: the capitalised nouns are the TOPIC the
+ *     task hands the learner, not the answer, which is why „Ich lade meine Gäste
+ *     ein.“ does not satisfy it and „Die Gäste bringen Kuchen mit.“ does.
  *
  * ONE function, no lexicon argument, ON PURPOSE: `GradedWriting.jsx` and RULE 17
  * in `scripts/validate-curriculum.mjs` call this same code, and a check that
  * needed a Wortfeld handed to it could be green on the screen and red in the
- * validator. Everything it needs is in the Leitpunkt.
+ * validator. Everything it needs is in the Leitpunkt. (Whether the course has
+ * TAUGHT the words an answer needs is the opposite question and it has its own
+ * rule — RULE 21, `writingTasksAreAnswerable`.)
  *
- * A Leitpunkt from which NEITHER a content word NOR a shape can be derived is
+ * A conjunct from which NEITHER a content word NOR a shape can be derived is
  * UNDECIDABLE, not failed: „Warum Sie schreiben“ is every A1.1 Mitteilung's
- * first point and every token of it is a function word. Those rows are marked
- * `ai: true` and say „prüft die KI“ — they are never silently dropped (the
- * learner saw three Leitpunkte and a list of two) and never green.
+ * first point and every token of it is a function word or a task verb. Those
+ * rows are marked `ai: true` and say „prüft die KI“ — they are never silently
+ * dropped (the learner saw three Leitpunkte and a list of two) and never green.
  */
 
 /** The inflection endings a German content word can carry, longest first. */
@@ -87,15 +156,15 @@ export function foldWord(word) {
 }
 
 /**
- * ALL content words of a Leitpunkt, in original case — not the first one.
- * Function words (STOPWORDS above) are dropped, because „Ihr“, „Sie“, „was“ and
- * „wann“ are in every Leitpunkt and in every text.
+ * ALL content words of a Leitpunkt, in original case — not the first one, and not the nouns of an
+ * indirect question (that narrowing lives in `leitpunktEvidence`, which is what scoring reads).
+ * Function words are the closed classes of the language, see FUNCTION_WORDS_DE.
  */
 export function leitpunktKeywords(leitpunkt) {
   const out = [];
   for (const raw of words(leitpunkt)) {
     const w = raw.replace(/[.,!?;:()"„“]/g, '');
-    if (w.length > 2 && !STOPWORDS.has(w.toLowerCase())) out.push(w);
+    if (w.length > 2 && !isFunctionWord(w)) out.push(w);
   }
   return out;
 }
@@ -130,17 +199,43 @@ const DATE_RE = /\b\d{1,2}\.\s*(?:\d{1,2}\.|Januar|Februar|März|Maerz|April|Mai
 const CLOCK_RE = /\b\d{1,2}(?:[.:]\d{2})?\s*Uhr\b|\bUhr\b|\bhalb\s+\w+|\bViertel\s+(?:nach|vor)\b|\bum\s+(?:\d{1,2}|ein[sm]?|zwei|drei|vier|fünf|fuenf|sechs|sieben|acht|neun|zehn|elf|zwölf|zwoelf|halb)\b/i;
 const DAY_RE = /\b(?:Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonnabend|Sonntag|heute|morgen|übermorgen|Wochenende)\b/i;
 const COUNTRY_RE = /\b(?:komm\w*|bin|sind|ist)\s+aus\s+[A-ZÄÖÜ]\w+|\baus\s+[A-ZÄÖÜ]\w+/;
-const PHONE_RE = /\d[\s/-]*\d|\b(?:null|eins|zwei|drei|vier|fünf|fuenf|sechs|sieben|acht|neun)\b/i;
+
+/**
+ * A NATIONALITY, which „Ihre Staatsangehörigkeit“ asks for and a country name does not supply.
+ * Round 14 keyed it to COUNTRY_RE, so „Ich bin aus Marokko.“ answered both halves of „Ihr Land und
+ * Ihre Staatsangehörigkeit“ (DaF review #14, MAJOR 1, probe 2). Two closed classes and nothing
+ * open-ended: the nationality ADJECTIVE (`-isch` with its inflections, plus the irregular
+ * `deutsch`) and the nationality NOUN suffixes that are not also profession suffixes
+ * (`-aner(in)`, `-ese/-esin`, `-ier(in)`, `-länder(in)`, `Deutsche(r)`) — „Ich bin
+ * **Marokkanerin**.“ answers it, „Ich bin **Studentin** in Bremen.“ must not, and that is why
+ * a bare `-in` is NOT in the class. The direction of the remaining error is deliberate: a learner
+ * who writes „Ich bin Türkin.“ gets a red row he did not earn, which the AI grader then corrects,
+ * and that is the survivable half — a GREEN row over a missing Leitpunkt is not (see the invariant
+ * in the header).
+ */
+const NATIONALITY_RE = /\b(?:deutsch|[A-Za-zÄÖÜäöüß]{5,}isch)(?:e[rnms]?)?\b|\b[A-ZÄÖÜ][a-zäöüß]{2,}(?:aner|anerin|ese|esin|ier|ierin|länder|länderin)\b|\bDeutsche[rn]?\b/;
+
+/**
+ * A PHONE NUMBER, and the shape is bound to the question rather than to the text. Round 14's
+ * `PHONE_RE` accepted ONE numeral, so „Wir sind zwei Kollegen.“ and „Ich bin um neun Uhr im Büro.“
+ * both satisfied „Ihre Telefonnummer“ (DaF review #14, MAJOR 1, probes 3 and 4). A number is four
+ * digits or four number words IN SEQUENCE — the shortest number the course itself writes is
+ * „null eins sieben sechs“ (A1.1 L2 dialogue).
+ */
+const NUMBER_WORD = '(?:null|eins|zwei|drei|vier|fünf|fuenf|sechs|sieben|acht|neun|zehn)';
+const PHONE_RE = new RegExp(`(?:\\d[\\s/-]*){4,}|(?:${NUMBER_WORD}[\\s/-]+){3,}${NUMBER_WORD}`, 'i');
 
 /**
  * The answer shapes, keyed by the FOLDED head word of the Leitpunkt. Each row
- * reads „when the Leitpunkt asks for X, a text that carries this shape has
+ * reads „when the Leitpunkt asks for X, ONLY a text that carries this shape has
  * answered it“ — the obvious realisation, not a synonym list of one course.
+ * Where a conjunct derives a shape the shape is REQUIRED (see the header, step 2).
  */
 const ANSWER_SHAPES = [
   { on: ['nam', 'vornam', 'nachnam', 'familiennam'], re: /\b(?:hei(?:ß|ss)\w*|nenn\w*)\b|\bich\s+bin\s+[A-ZÄÖÜ]/ },
   { on: ['geburtsdatum', 'geburtstag', 'datum', 'alter'], re: DATE_RE },
-  { on: ['land', 'staatsangehörigkei', 'staatsangehoerigkei', 'geburtsland', 'herkunft'], re: COUNTRY_RE },
+  { on: ['land', 'geburtsland', 'herkunft'], re: COUNTRY_RE },
+  { on: ['staatsangehörigkei', 'staatsangehoerigkei', 'nationalitä', 'nationalitae'], re: NATIONALITY_RE },
   { on: ['familienstand'], re: /\b(?:ledig|verheiratet|geschieden)\b/i },
   { on: ['uhrzei', 'zeit', 'termin'], re: CLOCK_RE },
   { on: ['tag', 'wochentag'], re: new RegExp(`${DAY_RE.source}|${DATE_RE.source}`, 'i') },
@@ -151,41 +246,99 @@ const ANSWER_SHAPES = [
 
 /**
  * The shapes a QUESTION WORD in the Leitpunkt asks for, read off the whole
- * Leitpunkt rather than off a content word — „Wann Sie kommen“ is answered by
+ * conjunct rather than off a content word — „Wann Sie kommen“ is answered by
  * „Ich bin erst um zehn Uhr da.“, which shares no token with it at all, and
- * `wann` is (rightly) a stopword for the word half. „Warum“ deliberately has no
- * row: a reason is not a form, and that is what makes „Warum Sie schreiben“ the
- * undecidable Leitpunkt the KI has to grade.
+ * `wann` is (rightly) a function word for the word half. „Warum“ deliberately
+ * has no row: a reason is not a form, and that is what makes „Warum Sie
+ * schreiben“ the undecidable Leitpunkt the KI has to grade.
  */
 const QUESTION_SHAPES = [
   { on: /\bwann\b/i, re: new RegExp(`${CLOCK_RE.source}|${DAY_RE.source}`, 'i') },
 ];
 
 /**
- * The evidence a Leitpunkt accepts: `{ words, shapes }`. Empty on both counts
- * means the Leitpunkt is undecidable by form — see the header.
+ * THE FIELD NAMED AND FILLED — „Mein **Name ist** Ana Ruiz.“, „Die **Telefonnummer ist** null eins
+ * sieben sechs.“ A learner may answer a Leitpunkt by naming its field and giving it a value, and
+ * that is a real answer even where the shape misses it (a Spanish name is not matched by
+ * `heiße`). It is NOT the bare noun: the noun must be followed by `ist`/`sind`/`:` AND by at least
+ * one word that is not a function word, so „Die Telefonnummer ist hier.“ still fails.
+ */
+const namedFieldShape = (word) => {
+  const re = new RegExp(`\\b${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\w*\\s*(?:ist|sind|:)\\s+([^.,!?;]+)`, 'i');
+  return {
+    test: (body) => {
+      const m = re.exec(String(body || ''));
+      return !!m && words(m[1]).some((w) => w.length > 1 && !isFunctionWord(w.replace(/[.,!?;:()"„“]/g, '')));
+    },
+  };
+};
+
+/** An indirect question („Was die Gäste mitbringen sollen“) — see the header, step 3. */
+const INDIRECT_QUESTION_RE = /^(?:was|wer|wen|wem|wann|wo|wie|warum|woher|wohin|welche[rnms]?)\b/i;
+
+/**
+ * A Leitpunkt split into its CONJUNCTS — „ und “ and „, “, never „oder“. In *Start Deutsch 1* a
+ * Leitpunkt is one unit and half an answer is no answer (DaF review #14, MAJOR 1, „Erstens“).
+ */
+export function leitpunktConjuncts(leitpunkt) {
+  return String(leitpunkt || '')
+    .split(/\s+und\s+|,\s+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+const conjunctEvidence = (conjunct) => {
+  const all = leitpunktKeywords(conjunct);
+  // In an indirect question the capitalised nouns are the topic the task hands over, not the
+  // answer; only the predicate decides. Elsewhere („Ihre Telefonnummer“) the noun IS the answer.
+  const keywords = INDIRECT_QUESTION_RE.test(conjunct)
+    ? all.filter((w) => /^[a-zäöüß]/.test(w))
+    : all;
+  const folded = keywords.flatMap((w) => [foldWord(w), ...splitVerbStem(w)]).filter(Boolean);
+  const shapes = [];
+  for (const w of keywords) {
+    const f = [foldWord(w), ...splitVerbStem(w)];
+    for (const shape of ANSWER_SHAPES) {
+      if (!f.some((x) => shape.on.includes(x))) continue;
+      shapes.push(shape.re, namedFieldShape(w));
+    }
+  }
+  shapes.push(...QUESTION_SHAPES.filter((s) => s.on.test(conjunct)).map((s) => s.re));
+  return { text: conjunct, words: keywords, folded, shapes };
+};
+
+/**
+ * The evidence a Leitpunkt accepts: `{ conjuncts, words, shapes }`. A conjunct empty on both
+ * counts is undecidable by form; a Leitpunkt all of whose conjuncts are undecidable is the
+ * „prüft die KI“ row — see the header. The flat `words`/`folded`/`shapes` are the union over the
+ * conjuncts and are kept because callers and tests read them.
  */
 export function leitpunktEvidence(leitpunkt) {
-  const keywords = leitpunktKeywords(leitpunkt);
-  const folded = keywords.flatMap((w) => [foldWord(w), ...splitVerbStem(w)]).filter(Boolean);
-  const shapes = [
-    ...ANSWER_SHAPES.filter((s) => folded.some((f) => s.on.includes(f))).map((s) => s.re),
-    ...QUESTION_SHAPES.filter((s) => s.on.test(String(leitpunkt || ''))).map((s) => s.re),
-  ];
-  return { words: keywords, folded, shapes };
+  const conjuncts = leitpunktConjuncts(leitpunkt).map(conjunctEvidence);
+  return {
+    conjuncts,
+    words: conjuncts.flatMap((c) => c.words),
+    folded: conjuncts.flatMap((c) => c.folded),
+    shapes: conjuncts.flatMap((c) => c.shapes),
+  };
 }
 
 /**
  * Did `text` answer `leitpunkt`? `null` when the Leitpunkt is undecidable by
  * form — the caller renders that row as „prüft die KI“, never as green or red.
+ * EVERY decidable conjunct must have evidence, and where a conjunct derives a
+ * shape the shape is what decides it.
  */
 export function leitpunktSatisfied(leitpunkt, text) {
-  const { folded, shapes } = leitpunktEvidence(leitpunkt);
-  if (!folded.length && !shapes.length) return null;
+  const { conjuncts } = leitpunktEvidence(leitpunkt);
+  const decidable = conjuncts.filter((c) => c.folded.length || c.shapes.length);
+  if (!decidable.length) return null;
   const body = String(text || '');
   const inText = new Set(words(body).map(foldWord).filter(Boolean));
-  if (folded.some((f) => inText.has(f))) return true;
-  return shapes.some((re) => re.test(body));
+  const met = (c) => (c.shapes.length
+    ? c.shapes.some((re) => re.test(body))
+    : c.folded.some((f) => inText.has(f)));
+  return decidable.every(met);
 }
 
 /**

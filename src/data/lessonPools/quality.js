@@ -1235,10 +1235,15 @@ export function agreementAmbiguity(item) {
 // of the level's OWN Wortfeld produces a second correct answer. The partner
 // table below is therefore READ from the Wortfeld, never typed.
 
-/** The five cue words the course uses to name the element a correction changes
- * („Korrigieren Sie das Verb: …", „Korrigieren Sie den Artikel: …"). Shared by
- * both ambiguity axes, because the cue is one convention and not two. */
-export const CORRECTION_CUE_RE = /\b(verb|verbform|subjekt|artikel|nomen)\b/i;
+/** The cue words the course uses to name the element a correction changes
+ * („Korrigieren Sie das Verb: …", „Korrigieren Sie den Artikel: …",
+ * „Korrigieren Sie den Possessivartikel: …"). Shared by both ambiguity axes AND
+ * by the determiner-cue convention below, because the cue is one convention and
+ * not three. `possessiv`/`possessivartikel`/`endung` joined the list in review
+ * #14: Lektion 12 is the possessive Lektion and its corrections change an
+ * ENDING, which „Artikel" alone does not name. */
+export const CORRECTION_CUE_RE =
+  /\b(verb|verbform|subjekt|artikel|possessivartikel|possessiv|nomen|endung)\b/i;
 
 /** ä/ö/ü folded away entirely, so „Ärztin" and „Arzt" can be compared as a
  * derivation rather than as two unrelated strings. */
@@ -1296,6 +1301,37 @@ const NOMINATIVE_ARTICLE = Object.freeze({
 });
 
 /**
+ * REVIEW #14 MAJOR 2. The possessive family, which `ARTICLE_FAMILY` does not
+ * know and cannot be taught without changing what `ambiguousCorrection` means:
+ * `mein → meine` is not a family swap, it is an ENDING. So the possessives get
+ * their own predicate and both rules below read `DETERMINER_FAMILY`, which is
+ * `ARTICLE_FAMILY` plus one family — the article rules keep the meaning they
+ * were pinned with, and Lektion 12, the possessive Lektion, stops being
+ * invisible to every ambiguity axis at once.
+ */
+const POSSESSIVE_FORM_RE = /^(?:mein|dein|sein|unser|euer|eur|ihr)(?:e|en|em|er|es)?$/i;
+
+/** The stem a possessive form is built on, normalised (`eur` → `euer`). */
+function possessiveStem(word) {
+  const m = /^(mein|dein|sein|unser|euer|eur|ihr)(?:e|en|em|er|es)?$/.exec(flat(bare(word)));
+  if (!m) return null;
+  return m[1] === 'eur' ? 'euer' : m[1];
+}
+
+/** The nominative possessive of `form`'s stem for a noun of `article`'s gender. */
+function possessiveNominative(form, article) {
+  const stem = possessiveStem(form);
+  if (!stem) return null;
+  if (article === 'die') return stem === 'euer' ? 'eure' : `${stem}e`;
+  return stem;
+}
+
+/** `definite` · `indefinite` · `possessive` — the three determiner families of
+ * A1.1, as one question. */
+const DETERMINER_FAMILY = (word) =>
+  ARTICLE_FAMILY(word) || (POSSESSIVE_FORM_RE.test(bare(word)) ? 'possessive' : null);
+
+/**
  * genderPairAmbiguity(item, { level }) → { article: [from, to], noun } when the
  * model answer repairs an ARTICLE and swapping the quoted noun for its taught
  * gender partner repairs the same sentence with the same one token, else null.
@@ -1314,11 +1350,13 @@ export function genderPairAmbiguity(item, { level } = {}) {
   const diff = src.map((w, i) => [w, tgt[i], i]).filter(([a, b]) => flat(a) !== flat(b));
   if (diff.length !== 1) return null;
   const [from, to, at] = diff[0];
-  // The repair has to be an ARTICLE repair: both sides an article, and the
-  // article family unchanged (a family swap is `ambiguousCorrection`'s finding
-  // and keeps the reason it was pinned with).
-  const fromFamily = ARTICLE_FAMILY(from);
-  const toFamily = ARTICLE_FAMILY(to);
+  // The repair has to be a DETERMINER repair: both sides a determiner, and the
+  // family unchanged (a family swap is `ambiguousCorrection`'s finding and keeps
+  // the reason it was pinned with). Review #14 added `possessive` to the
+  // families read here — the rule used to give up on `mein → meine` before the
+  // partner table was ever asked.
+  const fromFamily = DETERMINER_FAMILY(from);
+  const toFamily = DETERMINER_FAMILY(to);
   if (!fromFamily || !toFamily || fromFamily !== toFamily) return null;
   // The noun the article belongs to: the next capitalised word.
   const nounAt = src.findIndex((w, i) => i > at && /^[A-ZÄÖÜ]/.test(w));
@@ -1328,11 +1366,101 @@ export function genderPairAmbiguity(item, { level } = {}) {
   // …and the swap has to be MINIMAL: the article the quote already carries must
   // be the right one for the partner, or repairing the noun costs two tokens
   // and the item is unambiguous after all.
-  const wanted = NOMINATIVE_ARTICLE[fromFamily][partner.article];
+  const wanted = fromFamily === 'possessive'
+    ? possessiveNominative(from, partner.article)
+    : NOMINATIVE_ARTICLE[fromFamily][partner.article];
   if (!wanted || flat(wanted) !== flat(from)) return null;
   const words = [...src];
   words[nounAt] = partner.word;
   return { article: [from, to], noun: words.join(' ') };
+}
+
+// ── REVIEW #14 MAJOR 2: the cue, not the proof ──────────────────────────────
+//
+// „Korrigieren Sie: „Ihre Papa kommt auch."" accepted „Ihr Papa kommt auch."
+// and marked „Ihre Mama kommt auch." wrong; „Korrigieren Sie: „Das ist mein
+// Party."" marked „Das ist mein Fest." wrong. Both rejected answers are correct
+// German, both repair the quote with ONE token, and both nouns stand as
+// NEIGHBOURING Wortfeld lines of the very Lektion that serves the item („die
+// Mama" · „der Papa"; „das Fest" · „die Party"). `genderPairAmbiguity` could not
+// see either: `Mama`/`Papa` is suppletive, so no derivation table reaches it,
+// and `Fest`/`Party` are not a pair in any morphological sense at all.
+//
+// THE READING RULE THIS FILE NOW CARRIES, and it replaces the sentence review
+// #13 left here: A CORRECTION TASK DOES NOT PROVE ITS UNIQUENESS — IT NAMES THE
+// ELEMENT IT WANTS CHANGED. WHOEVER PICKS THE PROOF BUILDS THE NEXT LIST. For
+// any article repair, a noun of another gender that fits the slot is a second
+// minimal repair, and no table over all Wortfelder can enumerate those; the cue
+// („Korrigieren Sie den Artikel: …", „… den Possessivartikel: …") costs one
+// line, holds for every noun the course will ever add, and is task wording
+// rather than answer widening — the key never changes.
+//
+// `genderPairAmbiguity` stays as the DETECTOR the tests read (it is what proves
+// the cue is load-bearing on the three L6 items); the convention below is what
+// the pool is held to.
+
+/** The cue words that NAME a determiner as the element to repair. Narrower than
+ * `CORRECTION_CUE_RE` on purpose: „Korrigieren Sie das Verb" is a cue, but it
+ * is not a cue for an article. */
+export const DETERMINER_CUE_RE = /\b(artikel|possessivartikel|possessiv|endung)\b/i;
+
+/** kind → the accusative noun phrase the task formula takes. */
+export const DETERMINER_CUE = Object.freeze({
+  artikel: 'den Artikel',
+  possessivartikel: 'den Possessivartikel',
+});
+
+/**
+ * determinerRepair(item) → { from, to, kind } when the model repair of an
+ * `error_correction` changes exactly one token and that token is a DETERMINER on
+ * both sides (article ↔ article, possessive ↔ possessive, article ↔ possessive),
+ * else null. `kind` is `possessivartikel` as soon as either side is a possessive,
+ * because that is the element the learner has to be told about.
+ */
+export function determinerRepair(item) {
+  if (String(item?.type) !== 'error_correction') return null;
+  const quote = QUOTED_SPAN_RE.exec(String(item.questionDe || ''));
+  if (!quote) return null;
+  const src = bare(quote[1]).split(/\s+/).filter(Boolean);
+  const tgt = bare(item.answer).split(/\s+/).filter(Boolean);
+  if (!src.length || src.length !== tgt.length) return null;
+  const diff = src.map((w, i) => [w, tgt[i]]).filter(([a, b]) => flat(a) !== flat(b));
+  if (diff.length !== 1) return null;
+  const [from, to] = diff[0];
+  const fromFamily = DETERMINER_FAMILY(from);
+  const toFamily = DETERMINER_FAMILY(to);
+  if (!fromFamily || !toFamily) return null;
+  const kind = fromFamily === 'possessive' || toFamily === 'possessive'
+    ? 'possessivartikel' : 'artikel';
+  return { from, to, kind };
+}
+
+/**
+ * missingDeterminerCue(item) → the same object when the German prompt does NOT
+ * name the element, else null. This is the rule the pool is measured against —
+ * always, not only where a partner noun happens to be findable.
+ */
+export function missingDeterminerCue(item) {
+  const repair = determinerRepair(item);
+  if (!repair) return null;
+  if (DETERMINER_CUE_RE.test(String(item.questionDe || ''))) return null;
+  return repair;
+}
+
+/**
+ * withDeterminerCue(questionDe, kind) → the same prompt with the element named.
+ * Task wording, never the answer key: the learner is told WHICH token to repair,
+ * and everything the item accepted before it is still accepted. Idempotent — a
+ * prompt that already names a determiner is returned unchanged.
+ */
+export function withDeterminerCue(questionDe, kind) {
+  const text = String(questionDe || '').trim();
+  if (!text || DETERMINER_CUE_RE.test(text)) return text;
+  const cue = DETERMINER_CUE[kind] || DETERMINER_CUE.artikel;
+  const formula = /(korrigieren sie|korrigiere)(\s+den satz)?(?=\s*:)/i;
+  if (formula.test(text)) return text.replace(formula, (_m, verb) => `${verb} ${cue}`);
+  const noun = cue.replace(/^den\s+/, '');
+  return `${text} (${noun})`;
 }
 
 /**

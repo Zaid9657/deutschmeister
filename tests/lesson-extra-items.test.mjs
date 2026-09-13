@@ -827,7 +827,8 @@ test('every sentence-building item with a time or place Angabe accepts both word
   assert.deepEqual([...gradedIds].sort(), [
     // Re-measured in round 14 after L3 line 3 changed and Hören began preferring
     // construction-free, unreportable lines — the draw shifted and so did the seats.
-    'a1.1-cp1-bausteine-2', 'a1.1-cp1-schreiben-1', 'a1.1-cp4-schreiben-2',
+    // Round 15 (paper-wide leak cap reseats the sections): re-measured again.
+    'a1.1-cp1-schreiben-2', 'a1.1-cp4-schreiben-2',
   ], `the graded items with a second word order changed (${graded} found)`);
 });
 
@@ -1007,11 +1008,12 @@ test('no correction of the pool or a checkpoint has a second repair in its own W
       `${id}: the prompt must name the element that changes`);
     assert.equal(genderPairAmbiguity(item, { level: 'a1.1' }), null, id);
   }
-  // The control keeps its plain prompt: „die Firma" has no partner, so the
-  // article is the only repair and no cue is owed.
+  // The partnerless control („die Firma") carries the cue too since review #14:
+  // the convention is a BLANKET over determiner corrections, because the proof
+  // it replaced can never be complete — see the determiner-cue test below. What
+  // it still controls is the DETECTOR: no partner, so no finding either way.
   const control = POOL.items.find((i) => i.id === 'extra-a11-l06-21');
-  assert.ok(control && !/Korrigieren Sie den Artikel:/.test(control.questionDe),
-    'extra-a11-l06-21 gained a cue it does not need — the rule has become a blanket');
+  assert.ok(control, 'extra-a11-l06-21 is gone from the built pool');
   assert.equal(genderPairAmbiguity(control, { level: 'a1.1' }), null);
 
   for (const item of POOL.items) {
@@ -1022,4 +1024,114 @@ test('no correction of the pool or a checkpoint has a second repair in its own W
     const hit = genderPairAmbiguity(item, { level: 'a1.1' });
     assert.equal(hit, null, `${item.id} (${item.poolItemId}) also repairs as „${hit && hit.noun}.“`);
   }
+});
+
+/**
+ * REVIEW #14 MAJOR 2. The class review #13 left open, and the reason it could
+ * not be closed by a table: „Korrigieren Sie: „Ihre Papa kommt auch."" was
+ * repaired by the key as „Ihr Papa kommt auch." and marked „Ihre Mama kommt
+ * auch." WRONG — „die Mama" and „der Papa" are neighbouring Wortfeld lines of
+ * the very Lektion that serves the item, so the noun swap is as minimal as the
+ * determiner swap and is faultless German. Same for „Das ist mein Party." ↔
+ * „Das ist mein Fest.". `genderPairAmbiguity` saw neither: Mama/Papa is
+ * suppletive and Fest/Party is no derivation at all.
+ *
+ * So the rule is the CUE, not the proof: any correction whose one-token repair
+ * changes a determiner NAMES the element („Korrigieren Sie den Artikel: …" /
+ * „… den Possessivartikel: …"), always — and then the learner who swaps the
+ * noun is wrong because he ignored the task, not because the course hid it.
+ * The predicate is mirrored rather than imported, for the reason the whole file
+ * mirrors: a weakened rule in quality.js must fail here, not travel here.
+ */
+const DETERMINER_FORM = new Set([
+  'der', 'die', 'das', 'den', 'dem', 'ein', 'eine', 'einen', 'einem', 'einer',
+  'mein', 'meine', 'meinen', 'meinem', 'meiner', 'dein', 'deine', 'deinen', 'deinem', 'deiner',
+  'sein', 'seine', 'seinen', 'seinem', 'seiner', 'ihr', 'ihre', 'ihren', 'ihrem', 'ihrer',
+  'unser', 'unsere', 'unseren', 'unserem', 'unserer', 'euer', 'eure', 'euren', 'eurem', 'eurer',
+]);
+const POSSESSIVE_FORM = (w) => /^(?:mein|dein|sein|unser|euer|eur|ihr)(?:e|en|em|er|es)?$/.test(w);
+/** The cue words that NAME a determiner as the element to repair. */
+const DETERMINER_CUE_MIRROR_RE = /\b(artikel|possessivartikel|possessiv|endung)\b/i;
+
+/** { from, to, kind } when the model repair changes exactly one token and that
+ * token is a determiner on both sides, else null. */
+function determinerRepairMirror(item) {
+  if (String(item?.type) !== 'error_correction') return null;
+  const quote = QUOTED_SPAN_RE.exec(String(item.questionDe || ''));
+  if (!quote) return null;
+  const src = bare(quote[1]).split(/\s+/).filter(Boolean);
+  const tgt = bare(item.answer).split(/\s+/).filter(Boolean);
+  if (!src.length || src.length !== tgt.length) return null;
+  const diff = src.map((w, i) => [flat(w), flat(tgt[i])]).filter(([a, b]) => a !== b);
+  if (diff.length !== 1) return null;
+  const [from, to] = diff[0];
+  if (!DETERMINER_FORM.has(from) || !DETERMINER_FORM.has(to)) return null;
+  return { from, to, kind: POSSESSIVE_FORM(from) || POSSESSIVE_FORM(to) ? 'possessivartikel' : 'artikel' };
+}
+
+const missingDeterminerCueMirror = (item) => {
+  const repair = determinerRepairMirror(item);
+  if (!repair) return null;
+  return DETERMINER_CUE_MIRROR_RE.test(String(item.questionDe || '')) ? null : repair;
+};
+
+test('every determiner correction of the pool and of a checkpoint names its element — REVIEW #14 MAJOR 2', () => {
+  // The predicate bites: the two items as review #14 measured them, WITHOUT the
+  // cue, are findings — that is what makes the assertion below an assertion.
+  assert.deepEqual(missingDeterminerCueMirror({
+    type: 'error_correction',
+    questionDe: 'Korrigieren Sie: „Ihre Papa kommt auch.“',
+    answer: 'Ihr Papa kommt auch.',
+  }), { from: 'ihre', to: 'ihr', kind: 'possessivartikel' });
+  assert.deepEqual(missingDeterminerCueMirror({
+    type: 'error_correction',
+    questionDe: 'Korrigieren Sie: „Das ist mein Party.“',
+    answer: 'Das ist meine Party.',
+  }), { from: 'mein', to: 'meine', kind: 'possessivartikel' });
+
+  // The class, over both surfaces that cost the learner. It counts what it
+  // FINDS, so no id list can make it quiet.
+  const seen = [];
+  for (const item of POOL.items) {
+    const hit = missingDeterminerCueMirror(item);
+    assert.equal(hit, null,
+      `pool ${item.id}: „${item.questionDe}“ repairs ${hit && hit.from} → ${hit && hit.to} and never says so`);
+    if (determinerRepairMirror(item)) seen.push(item.id);
+  }
+  assert.ok(seen.length >= 20, `only ${seen.length} determiner corrections measured — the rule stopped reaching them`);
+  for (const item of CHECKPOINT_ITEMS) {
+    const hit = missingDeterminerCueMirror(item);
+    assert.equal(hit, null,
+      `${item.id} (${item.poolItemId}): repairs ${hit && hit.from} → ${hit && hit.to} and never says so`);
+  }
+});
+
+test('the two review items say which element to fix, and the key still grades its own answer — REVIEW #14 MAJOR 2', () => {
+  const cases = [
+    { id: 'extra-a11-l12-16', canonical: 'Ihr Papa kommt auch.', nounSwap: 'Ihre Mama kommt auch.' },
+    { id: 'extra-a11-l12-15', canonical: 'Das ist meine Party.', nounSwap: 'Das ist mein Fest.' },
+  ];
+  for (const { id, canonical, nounSwap } of cases) {
+    const item = POOL.items.find((i) => i.id === id);
+    assert.ok(item, `${id} is gone from the built pool`);
+    assert.match(item.questionDe, /Korrigieren Sie den Possessivartikel:/,
+      `${id}: the prompt must name the element that changes`);
+    assert.equal(acceptsThroughChecker(item, canonical), RESULT.CORRECT,
+      `${id}: the cue changed the task and broke the item's own answer`);
+    // The noun swap is still WRONG — and now legitimately so: the task names the
+    // possessive, so repairing the noun is ignoring the instruction rather than
+    // guessing which of two correct repairs the author meant.
+    assert.equal(acceptsThroughChecker(item, nounSwap), RESULT.WRONG,
+      `${id}: „${nounSwap}“ answers a task the prompt no longer sets`);
+  }
+});
+
+test('a correction that repairs a VERB keeps its verb cue and is untouched by the determiner rule — REVIEW #14 MAJOR 2', () => {
+  const control = POOL.items.find((i) => i.id === 'extra-a11-l09-14');
+  assert.ok(control, 'extra-a11-l09-14 is gone from the built pool');
+  assert.match(control.questionDe, /Korrigieren Sie das Verb:/, 'the round-13 verb cue was overwritten');
+  assert.equal(determinerRepairMirror(control), null, 'a verb repair is not a determiner repair');
+  assert.ok(!/\b(artikel|possessivartikel)\b/i.test(control.questionDe),
+    'the determiner cue was pasted onto a verb task');
+  assert.equal(acceptsThroughChecker(control, 'Du hast Durst.'), RESULT.CORRECT);
 });

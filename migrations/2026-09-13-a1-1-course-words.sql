@@ -1,5 +1,9 @@
--- A1.1 course Wortfeld: the 18 words the curriculum names but `words` does not
+-- A1.1 course Wortfeld: the 19 words the curriculum names but `words` does not
 -- carry yet (plan P1, "Recorded audio everywhere").
+--
+-- RE-APPLYING IS SAFE. Every INSERT is guarded by `WHERE NOT EXISTS (… german, level)`,
+-- so applying this file again seeds only rows that are still missing — which is how the
+-- nineteenth entry (`marokkanisch`, round 15) reaches the table without a second file.
 --
 -- WHY. src/data/curricula/a11.js lists every Lektion's Wortfeld with the id of
 -- the live `words` row (`wordId`), so the lesson player can show the real
@@ -19,6 +23,9 @@
 --   L01  der Buchstabe (Pl. Buchstaben) — letter
 --   L02  die Zahlen 0–10 — the numbers 0–10 (null, eins … zehn)
 --   L02  der Familienstand — marital status
+--   L02  marokkanisch — Moroccan (added 2026-09-13, round 15: the nationality
+--        adjective the graded L2 Schreiben task asks for; DaF review #14,
+--        BLOCKER 1 / RULE 21)
 --   L03  sprechen — to speak
 --   L04  machen — to do, to make
 --   L05  das Bild (Pl. Bilder) — picture
@@ -108,6 +115,12 @@ INSERT INTO public.words (level, german, english, article, plural, category)
 SELECT 'a1.1', 'Familienstand', 'marital status', 'der', NULL, 'Course A1.1 · L02'
 WHERE NOT EXISTS (
   SELECT 1 FROM public.words WHERE german = 'Familienstand' AND level = 'a1.1'
+);
+
+INSERT INTO public.words (level, german, english, article, plural, category)
+SELECT 'a1.1', 'marokkanisch', 'Moroccan (nationality: Staatsangehörigkeit marokkanisch)', NULL, NULL, 'Course A1.1 · L02'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.words WHERE german = 'marokkanisch' AND level = 'a1.1'
 );
 
 INSERT INTO public.words (level, german, english, article, plural, category)
@@ -283,7 +296,7 @@ WHERE NOT EXISTS (
 COMMIT;
 
 -- Verification (run after applying):
---   SELECT count(*) FROM public.words WHERE level = 'a1.1' AND category LIKE 'Course A1.1 · L%';  -- expect 18
+--   SELECT count(*) FROM public.words WHERE level = 'a1.1' AND category LIKE 'Course A1.1 · L%';  -- expect 19
 --   SELECT count(*) FROM public.words WHERE level = 'a1.1' AND plural = 'null';                   -- expect 0
 --   SELECT count(*) FROM public.words
 --    WHERE level = 'a1.1' AND (german LIKE 'der %' OR german LIKE 'die %' OR german LIKE 'das %'); -- expect 0

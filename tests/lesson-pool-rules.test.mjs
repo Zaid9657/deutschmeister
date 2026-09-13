@@ -92,6 +92,7 @@ import {
   unconditionedRule, unconditionedRuleSentence, namesCondition,
   frontableOrders, frontedAcceptedForms, missingFrontedOrder, agreementAmbiguity,
   FRONTABLE_ADVERBIAL_RE, genderPairAmbiguity, genderPartners,
+  determinerRepair, missingDeterminerCue, withDeterminerCue, DETERMINER_CUE,
 } from '../src/data/lessonPools/quality.js';
 import { levelLexicon, untaughtTokens, levelSpec, minLektionIndex } from '../scripts/validate-curriculum.mjs';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
@@ -1534,4 +1535,84 @@ test('the gender pair of the Wortfeld is a second minimal repair — REVIEW #13 
     const hit = genderPairAmbiguity(item, { level: 'a1.1' });
     assert.equal(hit, null, `${label(item)} — also repairs as „${hit && hit.noun}.“`);
   }
+});
+
+test('a determiner correction names the element it wants changed — REVIEW #14 MAJOR 2', () => {
+  // The two items the review measured. Both have a second, equally minimal
+  // repair on the NOUN — „Ihre Mama kommt auch.", „Das ist mein Fest." — and
+  // both nouns are neighbouring Wortfeld lines of the very Lektion that serves
+  // the item. No derivation table reaches either pair (Mama/Papa is suppletive,
+  // Fest/Party is not a derivation at all), which is why the rule is the cue.
+  const papa = {
+    id: 'dc1', type: 'error_correction',
+    questionDe: 'Korrigieren Sie: „Ihre Papa kommt auch.“', answer: 'Ihr Papa kommt auch.',
+  };
+  const party = {
+    id: 'dc2', type: 'error_correction',
+    questionDe: 'Korrigieren Sie: „Das ist mein Party.“', answer: 'Das ist meine Party.',
+  };
+  assert.deepEqual(determinerRepair(papa), { from: 'Ihre', to: 'Ihr', kind: 'possessivartikel' });
+  assert.deepEqual(missingDeterminerCue(papa), { from: 'Ihre', to: 'Ihr', kind: 'possessivartikel' });
+  assert.deepEqual(missingDeterminerCue(party), { from: 'mein', to: 'meine', kind: 'possessivartikel' });
+
+  // An ARTICLE repair is the same class and takes the other cue.
+  const artikel = {
+    id: 'dc3', type: 'error_correction',
+    questionDe: 'Korrigieren Sie: „Ich brauche einen Pause.“', answer: 'Ich brauche eine Pause.',
+  };
+  assert.equal(missingDeterminerCue(artikel).kind, 'artikel');
+
+  // The repair the build applies: the PROMPT gains the element, the key is
+  // never touched, and running it twice changes nothing.
+  const cued = withDeterminerCue(papa.questionDe, 'possessivartikel');
+  assert.equal(cued, 'Korrigieren Sie den Possessivartikel: „Ihre Papa kommt auch.“');
+  assert.equal(withDeterminerCue(cued, 'possessivartikel'), cued, 'the cue injection is not idempotent');
+  assert.equal(missingDeterminerCue({ ...papa, questionDe: cued }), null);
+  assert.equal(withDeterminerCue('Korrigieren Sie: „Ich brauche einen Pause.“', 'artikel'),
+    'Korrigieren Sie den Artikel: „Ich brauche einen Pause.“');
+  // A prompt with another task formula still gets the element named, as a
+  // bracket — the legacy bank writes „Finde den Fehler und schreib den Satz
+  // richtig: …" and a build step may not rewrite that into a formula.
+  assert.match(withDeterminerCue('Finde den Fehler und schreib den Satz richtig: "Der Sonne ist warm."', 'artikel'),
+    /\(Artikel\)$/);
+  assert.equal(DETERMINER_CUE.possessivartikel, 'den Possessivartikel');
+
+  // The controls: a VERB repair keeps the round-13 cue and owes no determiner
+  // cue; a repair of two tokens is not a one-token determiner repair; and a
+  // prompt that already names the element owes nothing.
+  for (const item of [
+    { id: 'dn1', type: 'error_correction', questionDe: 'Korrigieren Sie das Verb: „Du habt Durst.“', answer: 'Du hast Durst.' },
+    { id: 'dn2', type: 'error_correction', questionDe: 'Korrigieren Sie: „Lena spielen am Wochenende Fußball.“', answer: 'Lena spielt am Wochenende Fußball.' },
+    { id: 'dn3', type: 'error_correction', questionDe: 'Korrigieren Sie den Artikel: „Das ist ein Chefin.“', answer: 'Das ist eine Chefin.' },
+    { id: 'dn4', type: 'fill_blank', questionDe: 'Ergänzen Sie: „___ Papa kommt auch.“', answer: 'Mein' },
+  ]) {
+    assert.equal(missingDeterminerCue(item), null, `${item.id}: no determiner cue is owed`);
+  }
+  assert.equal(determinerRepair({ id: 'dn1b', type: 'error_correction', questionDe: 'Korrigieren Sie das Verb: „Du habt Durst.“', answer: 'Du hast Durst.' }), null);
+
+  // The class, over the built A1.1 pool and the hand file: what it finds it
+  // reports, so no list of ids can make it quiet.
+  const measured = ALL.filter((item) => determinerRepair(item));
+  assert.ok(measured.length >= 20, `only ${measured.length} determiner corrections measured`);
+  for (const item of ALL) {
+    const hit = missingDeterminerCue(item);
+    assert.equal(hit, null,
+      `${label(item)} — repairs ${hit && hit.from} → ${hit && hit.to} and the prompt never says so`);
+  }
+});
+
+test('the gender-pair detector reaches the possessive family — REVIEW #14 MAJOR 2', () => {
+  // Review #13's rule gave up on `mein → meine` before the partner table was
+  // ever asked, because `ARTICLE_FAMILY` knows only der/die/das and ein/eine —
+  // and Lektion 12 is the possessive Lektion. It is the cue that closes the
+  // class; this is the proof that the detector no longer stops at the door.
+  assert.deepEqual(genderPairAmbiguity({
+    id: 'gp5', type: 'error_correction',
+    questionDe: 'Korrigieren Sie: „Das ist mein Chefin.“', answer: 'Das ist meine Chefin.',
+  }, { level: 'a1.1' }), { article: ['mein', 'meine'], noun: 'Das ist mein Chef' });
+  // …and the cue silences it, as on the article axis.
+  assert.equal(genderPairAmbiguity({
+    id: 'gp6', type: 'error_correction',
+    questionDe: 'Korrigieren Sie den Possessivartikel: „Das ist mein Chefin.“', answer: 'Das ist meine Chefin.',
+  }, { level: 'a1.1' }), null);
 });

@@ -260,6 +260,14 @@ export const CURRICULUM_A11 = {
         { de: 'wohnen', word: 'wohnen', article: null, plural: null, en: 'to live, to reside', wordId: 'fb025b05-6aa5-4a9e-91a2-52a903032000' },
         { de: 'das Geburtsdatum', word: 'Geburtsdatum', article: 'das', plural: 'Geburtsdaten', en: 'date of birth', wordId: '4b61db71-3720-4bf4-a936-d75495ebf91a' },
         { de: 'die Staatsangehörigkeit', word: 'Staatsangehörigkeit', article: 'die', plural: 'Staatsangehörigkeiten', en: 'nationality', wordId: '25aca43e-8b73-4f68-8d8f-aaf629150fb4' },
+        // The nationality ADJECTIVE, and it is here because the graded Schreiben task of this very
+        // Lektion asks for „Ihr Land und Ihre Staatsangehörigkeit“ while A1.1 taught no nationality
+        // form at all — not one, in twelve Lektionen (DaF review #14, BLOCKER 1: prüfen und nicht
+        // lehren). The Formular fields of *Start Deutsch 1* include Staatsangehörigkeit, so the
+        // Handlungsfeld „Ämter und Behörden“ is where it belongs. One form, the one the persona
+        // needs; `deutsch` the course already teaches in L3. RULE 21 fails the build if a Leitpunkt
+        // ever again asks for lexis its Lektion has not taught.
+        { de: 'marokkanisch', word: 'marokkanisch', article: null, plural: null, en: 'Moroccan (nationality: Staatsangehörigkeit marokkanisch)' },
         { de: 'der Familienstand', word: 'Familienstand', article: 'der', plural: '—', en: 'marital status', wordId: '3302687e-42ad-45b5-a4c9-43b65b8f4a2d' },
         { de: 'das Amt', word: 'Amt', article: 'das', plural: 'Ämter', en: 'public office, authority', wordId: 'b5556cee-448c-47fc-82a7-2a5f9f956c1b' },
         { de: 'der Schalter', word: 'Schalter', article: 'der', plural: 'Schalter', en: 'counter, service desk', wordId: '04eb49be-3f26-4496-b65d-7fd3e55b2f67' },
@@ -339,7 +347,11 @@ export const CURRICULUM_A11 = {
         // (`leitpunktSatisfied`), und ein Mustertext darf kein Wort enthalten, das nur für den
         // Checker dasteht. `marokkanisch` und `komme` sind weg, weil der Kurs sie bis Lektion 2
         // nicht lehrt (RULE 20); das Datum steht in Ziffern, weil `Mai` Lektion 12 ist.
-        sample: 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Das Geburtsdatum ist der 3.5.1998. Ich bin aus Marokko. Ich bin ledig. Ich bin Studentin in Bremen. Viele Grüße, Ana Chakiri',
+        // ROUND 15 (DaF review #14, BLOCKER 1): „Die Staatsangehörigkeit ist marokkanisch.“ is back,
+        // and this time the word is TAUGHT (L2 Wortfeld) instead of being a Vorgriff on nothing.
+        // Round 14 struck it for RULE 20 and the model then answered two of its three Leitpunkte —
+        // a state no text could get out of, because it was a Wortfeld problem, not a text problem.
+        sample: 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Das Geburtsdatum ist der 3.5.1998. Ich bin aus Marokko. Die Staatsangehörigkeit ist marokkanisch. Ich bin ledig. Ich bin Studentin in Bremen. Viele Grüße, Ana Chakiri',
       },
       // A1.1 carries six listening exercises and ten reading texts; every one is linked from another
       // Lektion, so this one honestly has none — the syllabus shows „—“ rather than a repeat.
@@ -547,14 +559,18 @@ export const CURRICULUM_A11 = {
         kind: 'mitteilung',
         taskKey: 'a11-l04',
         taskDe: 'Schreiben Sie Ihrer Freundin eine Nachricht über den Flohmarkt. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
-        leitpunkte: ['Was Sie kaufen', 'Was es kostet', 'Wann Sie sich treffen'],
+        leitpunkte: ['Was Sie kaufen', 'Was es kostet', 'Wann Sie kommen'],
         minWords: 25,
         maxWords: 45,
         // 34 Wörter, alle drei Leitpunkte (kaufen / kostet / treffen). Bestimmte Artikel statt
         // „einen Stuhl“: der unbestimmte Artikel ist Lektion 6 (RULE 15b). ROUND 14: `Heute`, `uns`
         // und `Um` sind raus — alle drei lehrt der Kurs erst später, und ein Mustertext wird mit
         // demselben Maßstab gemessen wie ein Poolitem (RULE 20).
-        sample: 'Hallo Lena! Der Flohmarkt ist gut. Wir kaufen den Stuhl und die Lampe. Der Stuhl kostet zwölf Euro und die Lampe kostet acht Euro. Das ist nicht teuer. Wann treffen wir Ana? Tschüss, Tim',
+        // ROUND 15 (DaF review #14, BLOCKER 1): der dritte Leitpunkt heißt „Wann Sie kommen“ und der
+        // Mustertext BEANTWORTET ihn wieder — „Wir kommen morgen.“ Runde 14 hatte „Wann treffen wir
+        // Ana?“ geschrieben: eine Frage ohne Zeitangabe, also keine Antwort. `morgen` lehrt L1 als
+        // „Bis morgen“, `kommen` L3; `treffen`, `uns` und `um` lehrt A1.1 bis hierher nicht.
+        sample: 'Hallo Lena! Der Flohmarkt ist gut. Wir kaufen den Stuhl und die Lampe. Der Stuhl kostet zwölf Euro und die Lampe kostet acht Euro. Das ist nicht teuer. Wir kommen morgen. Tschüss, Tim',
       },
       links: { listeningExercise: 1, readingOrder: 4 },
       practiceRule: { topics: ['nouns-gender'], typedMin: 3 },

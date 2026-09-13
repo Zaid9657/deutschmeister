@@ -107,6 +107,16 @@
 //      a11.extra.json instead, because an extra that trips the gate stops the
 //      build with its id.
 //
+//   5f. DETERMINER-CUE REPAIR (REVIEW #14 MAJOR 2). An `error_correction` whose
+//      model repair changes an ARTICLE or a POSSESSIVE has a second, equally
+//      minimal repair on the NOUN whenever the level teaches a noun of another
+//      gender that fits the slot („Ihre Papa" → „Ihr Papa" OR „Ihre Mama", both
+//      Wortfeld lines of Lektion 12) — and no table over all Wortfelder can
+//      enumerate that. So the prompt names the element it wants changed:
+//      „Korrigieren Sie den Artikel: …" / „… den Possessivartikel: …". Task
+//      wording, never the key — the item accepts afterwards exactly what it
+//      accepted before, the learner is simply told which token to repair.
+//
 //   6. REGISTER (REVIEW #3 MAJOR). The hand-written items siezen, the legacy
 //      bank duzt: 39 du-imperatives against 30 Sie-forms in the shipped pool,
 //      three of them in the drawn seven of the FREE Lektion 1, next to a
@@ -119,6 +129,7 @@ import {
   filterPool, REASON, REASONS, isUsableItem, exclusionReason, parseVerbCue,
   articleAnswerKind, ARTICLE_CUE, missingSentenceArticle, SENTENCE_ARTICLE_CUE,
   isPoliteFormItem, minimalArticleCorrection, frontedAcceptedForms,
+  missingDeterminerCue, withDeterminerCue,
 } from '../src/data/lessonPools/quality.js';
 // The lexis gate below is the VALIDATOR's predicate, imported rather than re-implemented — see the
 // „untaught-lexis“ block near the merge for why, and `levelLexicon`'s own header for why importing
@@ -263,6 +274,33 @@ function repairFrontedOrder(item) {
 }
 
 raw.forEach(repairFrontedOrder);
+
+// ── REVIEW #14 MAJOR 2: name the element an article repair changes ──────────
+//
+// „Korrigieren Sie: „Ihre Papa kommt auch."" has TWO one-token repairs — the
+// possessive (`Ihre → Ihr`) and the noun (`Papa → Mama`, the neighbouring
+// Wortfeld line of the same Lektion) — and the prompt named neither, so a
+// learner who repaired the noun was marked wrong for correct German. No partner
+// table can close that class: for ANY article correction, a noun of another
+// gender that fits the slot is a second minimal repair. So the convention
+// replaces the proof — every determiner correction NAMES its element — and this
+// pass writes the cue into the prompts of the cache that lack it.
+//
+// It is the same promise as the four repairs above, on the task side: the
+// PROMPT gains information, `answer`/`accepted` are never touched, and a prompt
+// that already names a determiner is left exactly as its author wrote it.
+const determinerCued = [];
+function repairDeterminerCue(item) {
+  const missing = missingDeterminerCue(item);
+  if (!missing) return;
+  const before = item.questionDe;
+  const after = withDeterminerCue(before, missing.kind);
+  if (after === before) return;
+  item.questionDe = after;
+  determinerCued.push({ id: item.id, topic: item.topic, kind: missing.kind, before, after });
+}
+
+raw.forEach(repairDeterminerCue);
 
 const { kept, excluded, counts } = filterPool(raw, { level });
 
@@ -628,6 +666,11 @@ if (existsSync(extraUrl)) {
   // REVIEW #12 BLOCKER 1, same order and for the same reason: the hand items
   // are the ones the learner actually draws, so they face the same repair.
   extra.forEach(repairFrontedOrder);
+  // REVIEW #14 MAJOR 2: and the same convention — the eight items the review
+  // measured are hand-written, so they carry their cue in the JSON; this call is
+  // the gate that keeps the next hand-written correction from shipping without
+  // one, and it reports zero when the JSON is right.
+  extra.forEach(repairDeterminerCue);
   // The same rules as the bank, applied to hand-written items on purpose: the
   // point of the filter is that NO item reaches a learner unchecked.
   const failing = extra.map((it) => [it, exclusionReason(it, { level })]).filter(([, r]) => r);
@@ -952,6 +995,11 @@ console.log(`ambiguous corrections repaired (REVIEW #6 BLOCKER 2): ${ambiguousRe
   ` · not computable, dropped: ${ambiguousUnrepairable.length}`);
 for (const r of ambiguousRepaired) console.log(`       ${r.id} + ${r.added.join(', ')}`);
 for (const r of ambiguousUnrepairable) console.log(`       DROPPED ${r.id} · ${r.answer}`);
+console.log(`determiner cues injected (determiner-cue-missing · REVIEW #14 MAJOR 2): ${determinerCued.length}`);
+for (const r of determinerCued.slice(0, 5)) {
+  console.log(`       ${String(r.id).slice(0, 8)} ${r.topic} · ${r.kind} · ${r.after.replace(/\s+/g, ' ')}`);
+}
+if (determinerCued.length > 5) console.log(`       … and ${determinerCued.length - 5} more`);
 console.log(`fronted word orders accepted (REVIEW #12 BLOCKER 1 · #13 BLOCKER 1): ${frontingRepaired.length}`);
 for (const r of frontingRepaired) console.log(`       ${String(r.id).slice(0, 16)} ${r.topic} · ${r.answer} + ${r.added.filter((x) => /[.!]$/.test(x)).join(' · ')}`);
 console.log(`polite-form caseSensitive (REVIEW #6 BLOCKER 1): ${caseDerived.length} derived` +
