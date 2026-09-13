@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ShieldX, RefreshCw } from 'lucide-react';
 import SEO from '../SEO';
-import AdminSidebar from './AdminSidebar.jsx';
+import AdminSidebar, { AdminMobileNav } from './AdminSidebar.jsx';
 import { useAdminSession } from './AdminSessionContext.jsx';
 import { useAdminFilters } from './AdminFilterContext.jsx';
 import { signOutLocally } from '../../lib/admin/adminFetch.js';
@@ -22,7 +22,7 @@ function FilterBar() {
   const { session, badgeState, refresh } = useAdminSession();
   const days = { '7d': 7, '30d': 30, '90d': 90 }[range];
   return (
-    <div className="flex min-h-[3.5rem] flex-wrap items-center gap-x-5 gap-y-2 border-b border-rule bg-white px-6 py-2">
+    <div className="flex min-h-[3.5rem] flex-wrap items-center gap-x-5 gap-y-2 border-b border-rule bg-white px-4 py-2 sm:px-6">
       <ChipRow label="Zeitraum" options={RANGES.map((r) => ({ id: r, label: `${r.replace('d', '')} T` }))} value={range} onChange={setRange} />
       <ChipRow
         label="Stufe"
@@ -44,7 +44,7 @@ function FilterBar() {
 function ExpiryBanner() {
   const navigate = useNavigate();
   return (
-    <div role="alert" className="flex flex-wrap items-center justify-between gap-2 border-b border-viz-warn/40 bg-viz-warn/10 px-6 py-2 text-[0.8125rem] text-ink">
+    <div role="alert" className="flex flex-wrap items-center justify-between gap-2 border-b border-viz-warn/40 bg-viz-warn/10 px-4 py-2 text-[0.8125rem] text-ink sm:px-6">
       <span>Ihre Sitzung ist abgelaufen. Die Daten unten sind möglicherweise nicht aktuell.</span>
       <PrimaryButton
         onClick={async () => {
@@ -107,10 +107,11 @@ export default function AdminShell({ children }) {
       <SEO title="Admin" noindex />
       <AdminSidebar collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} badges={badges} can={can} />
       <div className="flex min-w-0 flex-1 flex-col">
+        <AdminMobileNav badges={badges} can={can} />
         {expired ? <ExpiryBanner /> : null}
         {showFilters ? <FilterBar /> : null}
         <div className="min-w-0 flex-1">
-          <div className="mx-auto w-full max-w-[75rem] px-6 pb-12">{children}</div>
+          <div className="mx-auto w-full max-w-[75rem] px-4 pb-12 sm:px-6">{children}</div>
         </div>
       </div>
     </div>

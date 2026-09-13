@@ -27,7 +27,7 @@ export default function AdminSidebar({ collapsed, onToggle, badges = {}, can }) 
   return (
     <nav
       aria-label="Admin-Navigation"
-      className={`flex shrink-0 flex-col bg-ink text-white/80 transition-[width] duration-150 ${collapsed ? 'w-[4.5rem]' : 'w-[15.5rem]'}`}
+      className={`hidden shrink-0 flex-col bg-ink text-white/80 transition-[width] duration-150 lg:flex ${collapsed ? 'w-[4.5rem]' : 'w-[15.5rem]'}`}
     >
       <div className={`flex items-center gap-3 border-b border-white/10 px-4 py-4 ${collapsed ? 'justify-center px-0' : ''}`}>
         <Logo size={28} showWordmark={false} to="/admin" />
@@ -88,6 +88,42 @@ export default function AdminSidebar({ collapsed, onToggle, badges = {}, can }) 
           {collapsed ? null : 'Menü einklappen'}
         </button>
       </div>
+    </nav>
+  );
+}
+
+/**
+ * Below the lg breakpoint the rail would eat the phone; the same registry
+ * renders as a horizontally scrolling icon strip under the app navbar. Same
+ * badge rule: a null count renders no badge.
+ */
+export function AdminMobileNav({ badges = {}, can }) {
+  const { pathname } = useLocation();
+  return (
+    <nav aria-label="Admin-Navigation (mobil)" className="flex gap-1 overflow-x-auto border-b border-white/10 bg-ink px-2 py-1.5 lg:hidden">
+      {ADMIN_NAV.map(({ label, href, Icon, ready, badgeKey, capability }) => {
+        const active = href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
+        const allowed = !capability || (can ? can(capability) : true);
+        const count = badgeKey ? badges[badgeKey] : null;
+        const showBadge = typeof count === 'number' && count > 0;
+        const disabled = !ready || !allowed;
+        return (
+          <NavLink
+            key={href}
+            to={href}
+            end={href === '/admin'}
+            aria-disabled={disabled}
+            aria-label={label}
+            title={label}
+            onClick={(e) => disabled && e.preventDefault()}
+            className={`relative flex shrink-0 items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs ${active ? 'bg-white/10 font-semibold text-white' : 'text-white/75'} ${disabled ? 'opacity-40' : ''}`}
+          >
+            <Icon size={16} aria-hidden="true" />
+            <span className="whitespace-nowrap">{label}</span>
+            {showBadge ? <span className="ml-0.5 rounded-full bg-viz-error px-1.5 text-[0.625rem] font-bold text-white">{count}</span> : null}
+          </NavLink>
+        );
+      })}
     </nav>
   );
 }
