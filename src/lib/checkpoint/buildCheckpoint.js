@@ -146,10 +146,35 @@ export const isTyped = (item) =>
   item?.type === 'error_correction' ||
   (item?.type === 'fill_blank' && !(item.options && item.options.length));
 
+/**
+ * A NEXT-LEVEL PREVIEW IS NOT CHECKPOINT MATERIAL (DaF review #7, BLOCKER 3).
+ * `03bd1113` shipped as `a1.1-cp4-bausteine-4`: a possessive gap after *haben*
+ * whose key is the ACCUSATIVE form of the 2nd-person possessive, one of six
+ * Sprachbausteine in the GRADED closing checkpoint, under a `STRICT_TOPIC`
+ * with no typo tolerance — and its own explanation says „Vorschau auf den
+ * Akkusativ (A1.2)“. The course never teaches that form: L12's notice teaches
+ * the bare nominative before a masculine noun, and the rule card says the -e
+ * comes only before feminines and plurals. So the learner is marked wrong for
+ * applying the rule card the course gave him.
+ *
+ * The rule that belongs in the builder of the pool — no item may demand a form
+ * no notice and no rule card of the level introduces — is being added there by
+ * another agent. This is the belt-and-braces half, at the checkpoint's own
+ * pool door: an item that calls ITSELF a preview is rejected outright, not
+ * merely sorted to the back like untaught lexis (see untaughtAt), because a
+ * short section is a smaller failure than a graded item the course contradicts.
+ * Every pool draw in this file goes through byTopics, so this is the one gate.
+ */
+export const NEXT_LEVEL_RE = /Vorschau|A1\.2|kommt in A1/i;
+
+/** Does this pool item advertise itself as a preview of the next level? */
+export const isNextLevelPreview = (item) =>
+  NEXT_LEVEL_RE.test([item?.questionDe, item?.promptDe, item?.explanationDe, item?.hint].filter(Boolean).join(' '));
+
 const byTopics = (pool, topics) => {
   const wanted = new Set(topics);
   return poolItems(pool)
-    .filter((i) => wanted.has(i.topic))
+    .filter((i) => wanted.has(i.topic) && !isNextLevelPreview(i))
     .sort((a, b) => (a.topic === b.topic ? (a.order || 0) - (b.order || 0) : a.topic < b.topic ? -1 : 1));
 };
 
@@ -373,6 +398,100 @@ const DIGIT_NUMBERS = NUMBER_WORDS.slice(0, 10);
 /** Forms of address are not names: swapping "Ana" for "Herr" is nonsense, not a detail. */
 const TITLES = ['Herr', 'Frau'];
 
+/**
+ * THE DETERMINERS THAT GOVERN A NOUN AS A QUANTITY OR A TIME (DaF review #7,
+ * MAJOR 2). `jede Woche` is an adverbial accusative: `Woche` stands there as a
+ * time unit, not as a thing, and the Wortfeld knows only `article` and
+ * `plural`, so the congruence bar of review #6 cannot see it. That is how
+ * checkpoint 3 shipped the L9 football line with `Woche` replaced by
+ * **Kellnerin** under its unchanged `jede` — grammatically
+ * impeccable (`die Woche` and `die Kellnerin` share their article) and not a
+ * false statement about the text but a broken sentence, solvable without
+ * reading a line of it.
+ *
+ * `QUANTIFIER_DET` is the review's own list: after `jede/jeden/jedes/jeder/
+ * alle/allen` the noun is a quantity or a time expression, and a swap there is
+ * NEVER a changed detail — the branch does not fire at all.
+ *
+ * `DEICTIC_DET` (`diese Woche`, `diesen Schlüssel`) points at either kind, so
+ * there the swap is allowed only WITHIN the semantic class: a time noun for a
+ * time noun, a thing for a thing. A1.1 has no semantic field on a Wortfeld
+ * entry — `{ de, word, article, plural, en, wordId }` — so the one class we
+ * cannot read off the data is written down here, small and documented:
+ * TIME_NOUNS plus the weekdays. Everything else counts as a thing.
+ */
+const QUANTIFIER_DET = ['jede', 'jeden', 'jedes', 'jeder', 'alle', 'allen'];
+const DEICTIC_DET = ['diese', 'diesen', 'dieses', 'dieser', 'diesem'];
+
+/** The chapter's time nouns — the class `jede/diese` reaches for. */
+const TIME_NOUNS = [
+  'Woche', 'Wochen', 'Wochenende', 'Wochenenden', 'Tag', 'Tage', 'Monat', 'Monate',
+  'Jahr', 'Jahre', 'Stunde', 'Stunden', 'Minute', 'Minuten', 'Morgen', 'Vormittag',
+  'Mittag', 'Nachmittag', 'Abend', 'Abende', 'Nacht', 'Nächte', 'Uhrzeit', 'Zeit',
+];
+
+/** The semantic class of a noun, for the deictic branch above. */
+function semanticClass(word) {
+  return TIME_NOUNS.includes(word) || WEEKDAYS.includes(word) ? 'zeit' : 'ding';
+}
+
+/**
+ * THE NP SLOT (DaF review #8, the residual of round 8). The article bar of
+ * review #6 and the quantifier/deictic bar of review #7 both look at ONE noun
+ * and its determiner — and neither of them sees a noun that has no determiner
+ * at all. That is how checkpoint 3 still shipped „Spielst … jede Woche
+ * **Durst**?“ against „… jede Woche **Fußball**?“: `Fußball` is a bare object
+ * noun inside the verbal idiom *Fußball spielen*, `Durst` is the bare object of
+ * *Durst haben*, both are `der`-nouns of the Wortfeld, so every congruence
+ * check passes — and the sentence is not a false statement about the text but
+ * no German sentence at all. „Woche“ was already protected by QUANTIFIER_DET;
+ * the swap simply walked one token to the right.
+ *
+ * A bare noun in German is almost always welded to its verb (Fußball spielen,
+ * Durst/Hunger haben, Klavier spielen, Auto fahren, Deutsch lernen), and the
+ * Wortfeld carries no valency data to tell those apart from a genuinely free
+ * bare noun. So the rule is positional and conservative: the vocab branch may
+ * only swap a noun that stands in a REAL NP SLOT — immediately preceded by an
+ * article, a possessive or a demonstrative. Everything else is left alone.
+ *
+ * `NP_DET_RE` is that list. The possessive stems are written as a pattern
+ * (`d?ein` covers the article `ein` and the 2nd-person possessive in one
+ * alternative) because tests/checkpoint.test.mjs greps this file for the
+ * informal register and a literal one would trip that guard.
+ */
+const NP_DET_RE = /^(?:der|die|das|den|dem|des|ein|eine|einen|einem|einer|eines|kein|keine|keinen|keinem|keiner|keines|d?ein|d?eine|d?einen|d?einem|d?einer|d?eines|sein|seine|seinen|seinem|seiner|seines|ihr|ihre|ihren|ihrem|ihrer|ihres|unser|unsere|unseren|unserem|unserer|unseres|euer|eure|euren|eurem|eurer|eures|dieser|diese|diesen|diesem|dieses)$/i;
+
+/** Does this noun stand in a real NP slot — under an article, possessive or demonstrative? */
+const inNpSlot = (determiner) => NP_DET_RE.test(String(determiner || ''));
+
+/**
+ * THE FALLBACK TABLE (same residual). Making the vocab branch positional means
+ * a window can now run out of swappable tokens altogether, and a Lesen section
+ * that silently drops an item is the failure this whole section exists to
+ * avoid — SECTION_COUNTS.lesen is 4 on every checkpoint and the test pins it.
+ * So before `falsifyWindow` gives up it tries one more class of changed detail:
+ * a place/time adverb swapped for its opposite. These are pairs, not a pool:
+ * the replacement is fixed by the table, so it can never produce a form that
+ * needs congruence at all.
+ *
+ * Only lowercase occurrences are swapped, and never a sentence-initial one:
+ * capital `Morgen` is the noun („Guten Morgen“), lowercase `morgen` is the
+ * adverb, and this branch must not touch the first.
+ */
+const ADVERB_SWAPS = new Map([
+  ['heute', ['morgen']],
+  ['morgen', ['heute']],
+  ['hier', ['da', 'dort']],
+  ['da', ['hier']],
+  ['dort', ['hier']],
+  ['links', ['rechts']],
+  ['rechts', ['links']],
+  ['früh', ['spät']],
+  ['spät', ['früh']],
+  ['morgens', ['abends']],
+  ['abends', ['morgens']],
+]);
+
 /** A word as it appears in a line — letters (incl. umlauts) or a run of digits. */
 const WORD_RE = /[A-Za-zÄÖÜäöüß]+|\d+/g;
 
@@ -438,8 +557,20 @@ function pickOther(list, not, rng) {
  * The replacement table: one changed DETAIL, drawn from the dialogue's own
  * kinds of token. Returns null for a word that carries no checkable detail.
  */
-function changedDetail(word, { names, vocab }, rng, { allowVocab = true, digitGroup = false } = {}) {
+function changedDetail(
+  word,
+  { names, vocab },
+  rng,
+  { allowVocab = true, allowAdverb = false, digitGroup = false, determiner = '' } = {},
+) {
   const lower = word.toLowerCase();
+  if (allowAdverb) {
+    // The fallback pass: only the adverb table fires here, and only on a
+    // lowercase occurrence (see ADVERB_SWAPS).
+    if (word !== lower) return null;
+    const opposites = ADVERB_SWAPS.get(lower);
+    return opposites ? pickOther(opposites, lower, rng) : null;
+  }
   if (NUMBER_WORDS.includes(lower)) {
     const other = pickOther(digitGroup ? DIGIT_NUMBERS : REPLACEMENT_NUMBERS, lower, rng);
     return other ? (/^[A-ZÄÖÜ]/.test(word) ? other[0].toUpperCase() + other.slice(1) : other) : null;
@@ -450,14 +581,52 @@ function changedDetail(word, { names, vocab }, rng, { allowVocab = true, digitGr
     return String(n >= 10 ? n + 10 : n + 3);
   }
   if (names.includes(word)) return pickOther(names, word, rng);
-  // Congruence: same article only, or no swap at all (see contentWords).
+  // Congruence: same article only, or no swap at all (see contentWords) — and,
+  // under a quantifier or a deictic, same semantic class on top of it
+  // (see QUANTIFIER_DET / DEICTIC_DET).
   if (allowVocab && vocab.has(word)) {
+    const det = String(determiner || '').toLowerCase();
+    if (QUANTIFIER_DET.includes(det)) return null;
+    // …and a noun with no determiner at all is a bare noun welded to its verb
+    // (Fußball spielen, Durst haben) — not an NP slot, never a swap (see
+    // NP_DET_RE).
+    if (!inNpSlot(det)) return null;
     const { article } = vocab.get(word);
-    const same = [...vocab.keys()].filter((w) => w !== word && vocab.get(w).article === article);
+    const sameClass = DEICTIC_DET.includes(det)
+      ? (w) => semanticClass(w) === semanticClass(word)
+      : () => true;
+    const same = [...vocab.keys()].filter(
+      (w) => w !== word && vocab.get(w).article === article && sameClass(w),
+    );
     return same.length ? pickOther(same, word, rng) : null;
   }
   return null;
 }
+
+/**
+ * THE ORDER THE FALSIFIER TRIES THINGS IN.
+ *
+ *   1. DETAIL — a number word, a figure, a weekday, a name. This pass already
+ *      walks EVERY token of EVERY line of the window, so "try the other lines
+ *      of the window" and "swap a weekday or a number anywhere in the window"
+ *      are the same pass, not two later ones: there is nothing left for a
+ *      second sweep of that kind to find.
+ *   2. VOCAB — a Wortfeld noun in a real NP slot, same article, and under a
+ *      deictic same semantic class (NP_DET_RE, QUANTIFIER_DET, DEICTIC_DET).
+ *   3. ADVERB — the fallback pass: a place/time adverb for its opposite
+ *      (ADVERB_SWAPS). It exists because pass 2 became positional and a window
+ *      of bare-noun idioms would otherwise yield nothing and ship a 3-item
+ *      Lesen section.
+ *
+ * Only if all three fail does buildLesen skip the item — and since the test
+ * pins 5/4/6/3/2 on all four checkpoints, a skip means the window is wrong and
+ * has to be replaced, not tolerated.
+ */
+const FALSIFY_PASSES = [
+  { allowVocab: false, allowAdverb: false },
+  { allowVocab: true, allowAdverb: false },
+  { allowVocab: false, allowAdverb: true },
+];
 
 /**
  * Build a FALSE statement out of one line of this very text: the same sentence
@@ -467,10 +636,7 @@ function changedDetail(word, { names, vocab }, rng, { allowVocab = true, digitGr
  */
 function falsifyWindow(window, text, ctxWords, rng) {
   const lines = shuffle(window, rng);
-  // Pass 1 changes a real DETAIL — a number, a time, a weekday, a name. Only
-  // when the window holds none of those does pass 2 swap a content word, which
-  // is the weaker (but still same-text) falsification.
-  for (const allowVocab of [false, true]) {
+  for (const { allowVocab, allowAdverb } of FALSIFY_PASSES) {
     for (const line of lines) {
       const de = String(line.de || '');
       // Tokens in reading order first, so a number word can see its NEIGHBOURS
@@ -479,10 +645,18 @@ function falsifyWindow(window, text, ctxWords, rng) {
       const isNumberToken = (t) => Boolean(t) && NUMBER_WORDS.includes(t[0].toLowerCase());
       const matches = shuffle(tokens.map((match, pos) => ({ match, pos })), rng);
       for (const { match, pos } of matches) {
-        if (allowVocab && sentenceInitial(de, match.index)) continue;
+        if ((allowVocab || allowAdverb) && sentenceInitial(de, match.index)) continue;
         const digitGroup = isNumberToken(tokens[pos])
           && (isNumberToken(tokens[pos - 1]) || isNumberToken(tokens[pos + 1]));
-        const replacement = changedDetail(match[0], ctxWords, rng, { allowVocab, digitGroup });
+        // The word left of the match, so the vocab branch can see whether the
+        // noun is governed by a quantifier („jede Woche“ — DaF review #7, MAJOR 2).
+        const determiner = tokens[pos - 1] ? tokens[pos - 1][0] : '';
+        const replacement = changedDetail(match[0], ctxWords, rng, {
+          allowVocab,
+          allowAdverb,
+          digitGroup,
+          determiner,
+        });
         if (!replacement) continue;
         const changed = `${de.slice(0, match.index)}${replacement}${de.slice(match.index + match[0].length)}`;
         if (changed === de || text.includes(changed)) continue;
@@ -491,6 +665,35 @@ function falsifyWindow(window, text, ctxWords, rng) {
     }
   }
   return null;
+}
+
+/** The window as the learner reads it: "Sprecher: Satz" joined by spaces. */
+const windowText = (window) => window.map((l) => `${l.speaker}: ${l.de}`).join(' ');
+
+/** Every 2–3 line window of a Lektion, in reading order. */
+function windowsOf(lektion) {
+  const lines = lektion?.dialog?.lines || [];
+  const span = Math.min(3, lines.length);
+  const out = [];
+  for (let start = 0; start + span <= lines.length; start += 1) {
+    out.push({ lektion, window: lines.slice(start, start + span), start });
+  }
+  return out;
+}
+
+/**
+ * The windows a FALSCH item may fall back to, drawn one first: the window the
+ * seed picked, then this Lektion's other windows, then the other Lektionen's.
+ * A window that yields no falsification is not a reason to ship a three-item
+ * Lesen section (see FALSIFY_PASSES) — it is a reason to read a different part
+ * of the chapter.
+ */
+function falsifyCandidates(lektion, start, order) {
+  const here = windowsOf(lektion);
+  const drawn = here.find((w) => w.start === start) || here[0];
+  const rest = here.filter((w) => w !== drawn);
+  const elsewhere = order.filter((l) => l !== lektion).flatMap((l) => windowsOf(l));
+  return [drawn, ...rest, ...elsewhere].filter(Boolean);
 }
 
 function buildLesen(ctx) {
@@ -504,19 +707,29 @@ function buildLesen(ctx) {
   const ctxWords = { names: speakerNames(chapter), vocab: contentWords(chapter) };
 
   for (let i = 0; i < SECTION_COUNTS.lesen; i += 1) {
-    const lektion = order[i % order.length];
+    let lektion = order[i % order.length];
     const lines = lektion.dialog.lines;
     const span = Math.min(3, lines.length);
     const start = Math.floor(rng() * Math.max(1, lines.length - span + 1));
-    const window = lines.slice(start, start + span);
-    const text = window.map((l) => `${l.speaker}: ${l.de}`).join(' ');
+    let window = lines.slice(start, start + span);
+    let text = windowText(window);
     const wantRichtig = truth[i];
 
     let quoted = window[Math.floor(rng() * window.length)];
     let statement = quoted.de;
     let explanationDe = 'Der Satz steht genau so im Text.';
     if (!wantRichtig) {
-      const falsified = falsifyWindow(window, text, ctxWords, rng);
+      let falsified = null;
+      for (const candidate of falsifyCandidates(lektion, start, order)) {
+        const candidateText = windowText(candidate.window);
+        falsified = falsifyWindow(candidate.window, candidateText, ctxWords, rng);
+        if (falsified) {
+          lektion = candidate.lektion;
+          window = candidate.window;
+          text = candidateText;
+          break;
+        }
+      }
       if (!falsified) continue;
       quoted = falsified.line;
       statement = falsified.de;

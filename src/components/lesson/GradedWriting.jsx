@@ -75,12 +75,22 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
     if (typeof onResult === 'function') onResult(r);
   };
 
+  /**
+   * What the learner is told when the grader refuses. An exhausted allowance is
+   * NOT a network hiccup and must not read like one: the 429 says so in its own
+   * sentence, and the course scope says it is the COURSE's allowance that ran
+   * out (evaluate-writing bills course tasks against their own lifetime budget,
+   * so "Ihr Kontingent an KI-Bewertungen" would name the wrong one). The
+   * FernUSG half is unchanged — the checklist below still says, in those words,
+   * that it only checks the form and does not correct the learner's German.
+   */
   const remainingLine = (data) => {
     if (typeof data?.limit !== 'number') return 'Formcheck, keine KI-Bewertung.';
     const left = Math.max(0, data.limit - (data.used ?? 0));
-    return left > 0
-      ? `Formcheck, keine KI-Bewertung — noch ${left} KI-Bewertungen frei.`
-      : 'Formcheck, keine KI-Bewertung — Ihr Kontingent an KI-Bewertungen ist aufgebraucht.';
+    if (left > 0) return `Formcheck, keine KI-Bewertung — noch ${left} KI-Bewertungen frei.`;
+    return data?.scope === 'course'
+      ? 'Ihr Schreibkontingent für diesen Kurs ist aufgebraucht. Formcheck, keine KI-Bewertung.'
+      : 'Ihr Kontingent an KI-Bewertungen ist aufgebraucht. Formcheck, keine KI-Bewertung.';
   };
 
   const submit = async () => {

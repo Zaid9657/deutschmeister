@@ -261,6 +261,9 @@ only `src/data/curricula/<level>.js` + the pool are per level).
 | 6 | DaF review #3 report (3 blockers, 11 majors; mean 20.4/25) | merged 2026-09-13 | #118 |
 | 7 | Round 4 — review #3 closed **as rules**: gloss-only verb cues repaired at build time (58 items), `statementNoTask()`, alphabet card rewritten to the letter names the items accept, `drillsSlug()` measuring real primary-slug drill, du-imperatives normalised to Sie, Wortfeld words carried into the input, validator gains the Wortfeld-coverage and item-lexis ratchets. 581 tests, 136 pages verified | merged 2026-09-13 | #119 |
 | 8 | Round 5 — review #4 closed as rules: spelled answers fold their separators, article cue repaired at build time, capitalisation seen by the checker, all twelve rule cards in Lektion lexis, Sie register across chrome and notices, „Buchstabiert:" retired, the speaking task travels to the coach, can-do and missionless ratchets, the validator measures the shipped pool. 619 tests, 136 pages verified | merged 2026-09-13 | #120 |
+| 9 | Round 6 — review #5 closed as rules: politeness and case handled as a task signal, checkpoint falsifier gains congruence guards, AI-graded course writing in every checkpoint, register glob over the chrome; A1.2 curriculum draft (validated, not registered) | merged 2026-09-13 | #121 |
+| 10 | Round 7 — review #6 closed as rules: `politeCaseItem` sentence predicate, checkpoint Sprachbausteine drawn from the pool, RULE 12/13/15 ratchets; A1.2 round 2 (rule cards teach what their notices teach). Owner decision 2026-09-13: **A1.2 paused, A1.1 only** | merged 2026-09-13 | #123 |
+| 11 | Round 8 — review #7 closed as rules: polite-form case graded by position (every card and item graded alike), writing allowance derived (Lektionen + checkpoints = 16, stated with provenance), next-level forms undrawable and unexaminable, task-shape diversity axis, falsifier NP-slot/quantifier guards, RULE 12/16 measured at surfaces (RULE 16 closed at 0), L12 wish rehearsed. 750 tests, 136 pages verified | draft PR | #125 |
 
 ### The review ladder (adversarial DaF teacher / SD1 examiner, measured not assumed)
 
@@ -270,9 +273,12 @@ only `src/data/curricula/<level>.js` + the pool are per level).
 | 2 | #115/#116 | 1 BLOCKER · 35 MAJOR · 44 MINOR | 19.8 | `REVIEW-daf-2-2026-09-12.md` |
 | 3 | #117 | 3 BLOCKER · 11 MAJOR | 20.4 | `REVIEW-daf-3-2026-09-12.md` |
 | 4 | #119 | 3 BLOCKER · 11 MAJOR | 19.9 | `REVIEW-daf-4-2026-09-12.md` |
-| 5 | #120 | pending | — | — |
+| 5 | #120 | 3 BLOCKER · 11 MAJOR | 19.7 | `REVIEW-daf-5-2026-09-12.md` |
+| 6 | #121 | 3 BLOCKER · 7 MAJOR | 19.9 | `REVIEW-daf-6-2026-09-12.md` |
+| 7 | #123 | 3 BLOCKER · 5 MAJOR | 20.3 | `REVIEW-daf-7-2026-09-12.md` |
+| 8 | #125 | pending | — | — |
 
-All five reports live in `docs/course-factory/a11-rebuild/`. Every round recomputes the real draw
+All reports live in `docs/course-factory/a11-rebuild/`. Every round recomputes the real draw
 (`planPractice(CURRICULUM_A11, a11.json, attempt)`) rather than reading the pool, so each verdict is
 about what a learner sees. The standard's phase 8 requires **0 BLOCKER / 0 MAJOR** before A1.1 is
 fronted as finished.
@@ -398,6 +404,13 @@ node scripts/validate-curriculum.mjs      # RULES 1–13 with the four ratchets
   only screenshot the auth guard.
 
 ## Decisions log
+
+- 2026-09-13 (owner): **"only create A1.1."** A1.2 work is paused: the draft curriculum, pool, cards and
+  116 items stay on `main` as a DRAFT (`DRAFT_CURRICULA`, not in `CURRICULA`, invisible to the app)
+  with two DaF reviews on file (`docs/course-factory/a12-rebuild/`), but no further A1.2 rounds run
+  until the owner says so. Every agent session focuses on A1.1 until it is signed off (0 BLOCKER /
+  0 MAJOR). The paid A1.2 course page is untouched by any of this.
+
 
 - 2026-09-13 (Wave 8, round 5): **one register, and it is the Sie-register.** Everything the course
   says to the learner siezt — every practice instruction, notice, rule card, checkpoint and mail

@@ -255,10 +255,20 @@ export const MAX_UNCOVERED_WORTFELD = 18;          // a1.1; per level in LEVELS 
  * „Tschüss“), L2 Zahlen, L4 Gegenstand, L7 „frei haben“, L9 „höflich fragen“, L12 „gute Wünsche“.
  * That is the honest number and the ratchet stands on it. Lower it, never raise it.
  * DaF review #5, MAJOR 13 asked for the number to follow the repairs: the L2 Zahlwort items and the
- * L9 „höflich fragen“ item landed, so the measurement is 4 (L1 begrüßen/verabschieden, L4
+ * L9 „höflich fragen“ item landed, so the measurement was 4 (L1 begrüßen/verabschieden, L4
  * Gegenstand, L7 „frei haben“, L12 gute Wünsche) and the ratchet moves with it.
+ * DaF review #7, MAJOR 4 moved the measurement itself onto the PRODUCTION surfaces (see
+ * rehearsalText): the dialogue is read through `hoeren.lines` and `sprechen.readAloud` only, which
+ * covers L7 („frei haben“ is in the read-aloud line) and, once L12's read-aloud reached the
+ * farewell line, L12. Re-measured 2026-09-13: **2**.
+ *   • L1 „begrüßen und verabschieden“ — the Lektion greets with „Guten Tag“ and says „Tschüss“;
+ *     neither verb is produced anywhere, so the line names its own topic under words the Lektion
+ *     never uses.
+ *   • L4 „fragen, was ein Gegenstand ist“ — the read-aloud line 0 („Entschuldigung, was ist das?“)
+ *     asks exactly that, but it never contains the word „Gegenstand“; this is the limit of a
+ *     token-matching rule, and it is reported rather than papered over.
  */
-export const MAX_UNREHEARSED_CANDOS = 4;           // a1.1; per level in LEVELS below — measured 2026-09-13
+export const MAX_UNREHEARSED_CANDOS = 2;           // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
  * RULE 13 ratchet — how many Lektionen may show a `sprechen.open` task whose prompt the speaking
@@ -370,10 +380,17 @@ export const MAX_UNTAUGHT_IN_PRODUCTION = 12;      // a1.1; per level in LEVELS 
  * RULE 16 ratchet — how many `examTeile` claims a level may still make that nothing in the module
  * backs. DaF review #1 for A1.2 (BLOCKER 4): `examTeile` is the sixth column of the public 12x6
  * grid (standard §2.4, „Goethe-Teil trained“), i.e. a sales claim, and RULE 7 checked exactly one
- * sentence of it. Measured on A1.1: 3 (L2 „Lesen Teil 1“ and L5/L11 „Hören“, all three without a
- * linked exercise).
+ * sentence of it. The first measurement on A1.1 was 3 (L2 „Lesen Teil 1“ and L5/L11 „Hören“, all
+ * three without a linked exercise) — but DaF review #7, MAJOR 3 showed two of them to be
+ * measurement artefacts: the rule asked for `links.listeningExercise`, the link to an EXTERNAL
+ * exercise, while L5 and L11 each carry their own listening surface, the dictation over two
+ * dialogue lines. The rule now asks whether the Lektion has a SURFACE for the Teil's family
+ * (EXAM_TEIL_COVERS). Re-measured 2026-09-13: **1** — L2 „Lesen Teil 1“, and that one is real:
+ * `readingOrder` is null and no step of the Lektion gives the learner a text to READ, while
+ * *Start Deutsch 1* tests two short everyday texts there. It was a claim without a surface; L2
+ * dropped the Teil on 2026-09-13 (round 8) and the ratchet closed at 0.
  */
-export const MAX_UNBACKED_EXAM_TEILE = 3;          // a1.1; per level in LEVELS below — measured 2026-09-13
+export const MAX_UNBACKED_EXAM_TEILE = 0;          // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
  * RULE 15 — THE OFF-LIMITS FORMS, PER LEVEL.
@@ -538,10 +555,11 @@ export const LEVELS = {
       // built on words A1.2 teaches nowhere (`Zeitung`, `Kuli`, `Pizza`, `Präteritum`, `Hamburg`).
       // The 18 that remain are Vorgriffe — `fliegen` L1 (taught L7), `tragen`/`laufen` L6, …
       untaughtItemTokens: 18,
-      // RULE 11b measures the same tokens where the learner MEETS them (see drawnLexis): 18 → 2,
-      // both in L2 („fliegen“/„fliege“, taught in L7). All that is left is a work order for the
-      // items round, and it is two lines long.
-      untaughtDrawnTokens: 2,
+      // RULE 11b measures the same tokens where the learner MEETS them (see drawnLexis): 18 → 3
+      // („fliegen“/„fliege“ in L2, taught in L7; „Onkel“ in L3) — re-measured after the round-8
+      // A1.1 engine changes. A1.2 is PAUSED by owner decision (2026-09-13); the number is a
+      // work order for whoever resumes it, not a target.
+      untaughtDrawnTokens: 3,
       unrehearsedCanDos: 0,
       missionlessLektionen: 1,
       unexemplifiedNoticeForms: 0,
@@ -910,9 +928,36 @@ const CANDO_STOPWORDS = new Set([
   'sagen', 'fragen', 'antworten', 'verstehen', 'machen', 'nennen', 'stellen', 'geben', 'nehmen',
 ]);
 
-/** The exercise slots of a Lektion — the places where a learner PRODUCES something. */
+/**
+ * The PRODUCTION surfaces of a Lektion — the places where the learner types, speaks or writes
+ * something himself: the dictation lines (`hoeren.lines`), the read-aloud lines
+ * (`sprechen.readAloud`), the open speaking task, the Schreiben task, the pretest, and the pool
+ * items of the Lektion.
+ *
+ * Both line sets are INDICES into `dialog.lines`, so the dialogue is read only through them. A
+ * line the learner reads silently once in the dialogue and never again is NOT a rehearsal — that
+ * is the distinction DaF review #7, MAJOR 4 turns on: L12's farewell and good wish sit in dialogue
+ * line 9, outside `readAloud` and outside `hoeren.lines`, so the whole dialogue counted as
+ * rehearsal would have hidden the finding.
+ *
+ * The Notice card stays in the set: its `examples` are the model the Lektion asks the learner to
+ * reproduce in the very next step, and it is the only surface that covers a purely RECEPTIVE
+ * can-do („eine Wohnungsanzeige mit Zahlen verstehen“, A1.2 L2). Dropping it was measured and
+ * costs that line; the dialogue-derived surfaces are the change this round makes.
+ */
+function dialogLinesAt(l, indices) {
+  const lines = l.dialog?.lines || [];
+  return (indices || [])
+    .map((i) => lines[i])
+    .filter(Boolean)
+    .map((x) => (typeof x === 'string' ? x : x.de))
+    .filter(Boolean);
+}
+
 function rehearsalText(l, itemsOfLektion) {
   return [
+    ...dialogLinesAt(l, l.hoeren?.lines),
+    ...dialogLinesAt(l, l.sprechen?.readAloud),
     l.pretest?.promptDe, l.pretest?.model, ...(l.pretest?.accepted || []),
     l.schreiben?.taskDe, l.schreiben?.sample,
     ...(l.schreiben?.fields || []), ...(l.schreiben?.leitpunkte || []),
@@ -1074,28 +1119,52 @@ export function producedBeforeTaught(c, extraKnown) {
 const SELF_INTRO_RE = /vorstellen|Vorname|Wohnort|Beruf/i;
 
 /**
+ * The question RULE 16 answers: does the Lektion have a SURFACE for this Teil?
+ *
+ * DaF review #7, MAJOR 3: the first cut of the rule asked only for `links.listeningExercise` /
+ * `links.readingOrder`, i.e. for the link to an EXTERNAL exercise, and therefore reported L5 and
+ * L11 — two Lektionen that each carry their own listening surface, the dictation over two dialogue
+ * lines, the very surface the Checkpoints build their Hören part from. Two measurement artefacts
+ * and one real finding, reported equally loudly, make the ratchet look like a leftover. A Teil is
+ * covered when the module has a surface for its family; the family is the first word of the Teil.
+ */
+const EXAM_TEIL_COVERS = {
+  'Hören': (l) => Boolean(l.links?.listeningExercise) || Boolean(l.hoeren?.lines?.length),
+  'Lesen': (l) => Boolean(l.links?.readingOrder),
+  'Sprechen': (l) => Boolean(l.sprechen?.open || l.sprechen?.readAloud?.length),
+  'Schreiben': (l) => Boolean(l.schreiben?.taskKey),
+};
+
+const EXAM_TEIL_SURFACE_WHY = {
+  'Hören': 'no listening surface: links.listeningExercise is null and hoeren.lines is empty',
+  'Lesen': 'no reading surface: links.readingOrder is null',
+  'Sprechen': 'no speaking surface: neither sprechen.open nor sprechen.readAloud',
+  'Schreiben': 'no writing surface: schreiben.taskKey is unset',
+};
+
+/**
  * RULE 16: an `examTeile` claim must be backed by the Lektion that makes it.
  *
  * `examTeile` is the sixth column of the public 12x6 grid (standard §2.4), so it is read before
  * anybody pays. RULE 7 checked one sentence of it — that `sprechen.open.teil` is in the list.
- * This adds the four claims nobody checked: „Hören Teil n“ needs a linked listening exercise,
- * „Lesen Teil n“ a linked reading lesson, „Sprechen Teil 1“ either a prompt that asks for a
- * self-introduction or the level's Teil-1 speaking mission, and the two Schreiben Teile the
- * Textsorte they name (Teil 1 = Formular, Teil 2 = Mitteilung).
+ * This adds the claims nobody checked, in two steps: the Lektion must have a SURFACE for the Teil's
+ * family (EXAM_TEIL_COVERS above), and where the Teil names a Textsorte or a task type the surface
+ * must be the right one — „Sprechen Teil 1“ either a prompt that asks for a self-introduction or
+ * the level's Teil-1 speaking mission, „Schreiben Teil 1“ a Formular and „Schreiben Teil 2“ a
+ * Mitteilung.
  */
 export function examTeileBacked(c) {
   const spec = levelSpec(c?.level) || LEVELS['a1.1'];
   const teil1 = spec.teil1MissionOrders || [];
   const offenders = [];
   for (const l of c.lektionen || []) {
-    const li = l.links || {};
     const open = l.sprechen?.open || {};
     for (const teil of l.examTeile || []) {
+      const family = String(teil).split(' ')[0];
+      const covers = EXAM_TEIL_COVERS[family];
       let why = null;
-      if (teil.startsWith('Hören') && (li.listeningExercise === null || li.listeningExercise === undefined)) {
-        why = 'links.listeningExercise is null';
-      } else if (teil.startsWith('Lesen') && (li.readingOrder === null || li.readingOrder === undefined)) {
-        why = 'links.readingOrder is null';
+      if (covers && !covers(l)) {
+        why = EXAM_TEIL_SURFACE_WHY[family];
       } else if (teil === 'Sprechen Teil 1'
         && !SELF_INTRO_RE.test(open.promptDe || '')
         && !(open.missionOrder !== null && open.missionOrder !== undefined && teil1.includes(open.missionOrder))) {

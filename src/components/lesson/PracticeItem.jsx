@@ -135,7 +135,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
         ) : (
           <div className="mt-5">
             <label htmlFor={`answer-${item.id}`} className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
-              Deine Antwort
+              Ihre Antwort
             </label>
             <input
               id={`answer-${item.id}`}

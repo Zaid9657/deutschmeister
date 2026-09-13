@@ -32,6 +32,11 @@
 //      "falsch" statement is the SAME text with one detail changed, not a line
 //      quoted from another Lektion — string recognition was all the old
 //      generator asked for.
+//      A falsified word must also stand where a word can be swapped at all: in
+//      a real NP slot (article/possessive/demonstrative), or it is a bare noun
+//      welded to its verb (Fußball spielen) and the swap breaks the sentence
+//      instead of falsifying it. When a window yields nothing the builder falls
+//      back — adverb pair, then another window — so the section is never short.
 //   4c. THE SCHREIBEN SECTION IS THE COURSE'S OWN WRITING (DaF review #5): the
 //      chapter's real, AI-graded task plus two drills from DIFFERENT Lektionen,
 //      and no invented `register` label on a sentence-building item.
@@ -64,6 +69,7 @@ import {
   SPRECHEN_PASS_PCT,
   WRITING_PASS_PCT,
   chapterWritingTask,
+  isNextLevelPreview,
 } from '../src/lib/checkpoint/buildCheckpoint.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js';
@@ -99,6 +105,23 @@ test('a checkpoint is 20 items in the 5/4/6/3/2 section split', () => {
     );
   }
   assert.equal(Object.values(SECTION_COUNTS).reduce((a, b) => a + b, 0), CHECKPOINT_ITEM_COUNT);
+});
+
+test('all four real checkpoints ship the full 5/4/6/3/2 split, never a short section', () => {
+  // The fixture pins the shape in the abstract; this pins it on the four papers
+  // a learner actually sits. Lesen is the section that can go short — a window
+  // whose lines carry no falsifiable detail used to drop the item silently, and
+  // the builder must fall back (adverb pair, then another window) instead.
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    assert.equal(items.length, CHECKPOINT_ITEM_COUNT, `${cp.id} must be 20 items`);
+    for (const section of SECTION_ORDER) {
+      assert.equal(
+        items.filter((i) => i.section === section).length,
+        SECTION_COUNTS[section],
+        `${cp.id}: ${section} must hold exactly ${SECTION_COUNTS[section]} items`,
+      );
+    }
+  }
 });
 
 test('Hören is 3 dictations of dialogue lines plus 2 word-choice items with 3 distractors', () => {
@@ -212,6 +235,64 @@ const NUMBER_WORDS_TEST = [
 const WEEKDAYS_TEST = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
 const isDigitWord = (w) => NUMBER_WORDS_TEST.slice(0, 10).includes(w.toLowerCase());
 
+// ── and the SEMANTIC half of the same rule (DaF review #7, MAJOR 2) ─────────
+//
+// The article bar is morphological only, so checkpoint 3 shipped „Spielst du
+// jede **Kellinerin** Fußball?“ against „… jede **Woche** Fußball?“: `die Woche`
+// and `die Kellnerin` share their article, the swap is impeccable German — and
+// the sentence is broken rather than false, so the learner solves the graded
+// Lesen item through meaning instead of through the text. `jede Woche` is an
+// adverbial accusative: the noun stands there as a time unit, not as a thing,
+// and the Wortfeld (`article`, `plural`) cannot see that. So the word LEFT of
+// the change decides: after a quantifier (jede/jeden/jedes/jeder/alle/allen)
+// nothing may be swapped at all, and after a deictic (diese/diesen/…) only
+// within the semantic class — time for time, thing for thing.
+const QUANTIFIER_DET_TEST = ['jede', 'jeden', 'jedes', 'jeder', 'alle', 'allen'];
+const DEICTIC_DET_TEST = ['diese', 'diesen', 'dieses', 'dieser', 'diesem'];
+const TIME_NOUNS_TEST = [
+  'Woche', 'Wochen', 'Wochenende', 'Wochenenden', 'Tag', 'Tage', 'Monat', 'Monate',
+  'Jahr', 'Jahre', 'Stunde', 'Stunden', 'Minute', 'Minuten', 'Morgen', 'Vormittag',
+  'Mittag', 'Nachmittag', 'Abend', 'Abende', 'Nacht', 'Nächte', 'Uhrzeit', 'Zeit',
+];
+const semanticClassTest = (w) =>
+  (TIME_NOUNS_TEST.includes(w) || WEEKDAYS_TEST.includes(w) ? 'zeit' : 'ding');
+
+// ── and the POSITIONAL half (the residual of round 8) ───────────────────────
+//
+// The article bar and the quantifier bar both look at a noun and the word to
+// its left, and neither of them can see a noun that has no determiner at all.
+// So checkpoint 3 still shipped „Spielst … jede Woche **Durst**?“ against
+// „… jede Woche **Fußball**?“: `Fußball` is the bare object of the idiom
+// *Fußball spielen*, `Durst` the bare object of *Durst haben*, both `der`, so
+// every congruence check passes and the result is not a false statement about
+// the text but no German sentence at all. A bare noun in German is almost
+// always welded to its verb, and the Wortfeld carries no valency data — so the
+// rule is positional: the vocab branch may only swap a noun that stands in a
+// REAL NP SLOT, immediately preceded by an article, a possessive or a
+// demonstrative.
+//
+// That makes a window able to run out of swappable tokens, and a Lesen section
+// is 4 items on every checkpoint. The builder therefore falls back — to a
+// place/time adverb pair, and then to another window of the chapter — before it
+// would ever ship a short section. This pin allows exactly those two extra
+// sources and nothing else.
+const NP_DET_RE_TEST = /^(?:der|die|das|den|dem|des|ein|eine|einen|einem|einer|eines|kein|keine|keinen|keinem|keiner|keines|d?ein|d?eine|d?einen|d?einem|d?einer|d?eines|sein|seine|seinen|seinem|seiner|seines|ihr|ihre|ihren|ihrem|ihrer|ihres|unser|unsere|unseren|unserem|unserer|unseres|euer|eure|euren|eurem|eurer|eures|dieser|diese|diesen|diesem|dieses)$/i;
+
+/** The documented adverb fallback table, as ADVERB_SWAPS in the builder. */
+const ADVERB_SWAPS_TEST = new Map([
+  ['heute', ['morgen']],
+  ['morgen', ['heute']],
+  ['hier', ['da', 'dort']],
+  ['da', ['hier']],
+  ['dort', ['hier']],
+  ['links', ['rechts']],
+  ['rechts', ['links']],
+  ['früh', ['spät']],
+  ['spät', ['früh']],
+  ['morgens', ['abends']],
+  ['abends', ['morgens']],
+]);
+
 /** The chapter's nouns with their gender, exactly as buildCheckpoint reads them. */
 function genderMap(chapter) {
   const map = new Map();
@@ -275,12 +356,39 @@ test('a falsch statement changes ONE word for a word of the same class — artic
         assert.match(to, /^\d+$/, `${item.id}: a figure is replaced by a figure`);
         continue;
       }
+      if (ADVERB_SWAPS_TEST.has(from)) {
+        assert.ok(
+          ADVERB_SWAPS_TEST.get(from).includes(to),
+          `${item.id}: „${from}“ may only become its documented opposite, got „${to}“`,
+        );
+        continue;
+      }
       assert.ok(genders.has(from), `${item.id}: "${from}" is not a Wortfeld noun of the chapter`);
       assert.equal(
         genders.get(to),
         genders.get(from),
         `${item.id}: „${from}“ (${genders.get(from)}) replaced by „${to}“ (${genders.get(to)}) — the article must match`,
       );
+      // The determiner the swapped noun stands under, read off the SOURCE line.
+      const at = original.findIndex((w) => w.replace(/[.,!?„“]/g, '') === from);
+      const det = String(at > 0 ? original[at - 1].replace(/[.,!?„“]/g, '') : '').toLowerCase();
+      assert.ok(
+        !QUANTIFIER_DET_TEST.includes(det),
+        `${item.id}: „${det} ${from}“ is a quantity/time expression — „${det} ${to}“ is broken, not false`,
+      );
+      // …and the noun must stand in a real NP slot in the first place: a bare
+      // noun is the object of an idiom (Fußball spielen), never a free slot.
+      assert.ok(
+        NP_DET_RE_TEST.test(det),
+        `${item.id}: „${from}“ is a bare noun here („${det} ${from}“) — swapping it breaks the sentence instead of falsifying it`,
+      );
+      if (DEICTIC_DET_TEST.includes(det)) {
+        assert.equal(
+          semanticClassTest(to),
+          semanticClassTest(from),
+          `${item.id}: „${det} ${from}“ (${semanticClassTest(from)}) may only become a ${semanticClassTest(from)} noun, got „${to}“`,
+        );
+      }
     }
   }
   assert.ok(checked >= 8, `two falsch statements per checkpoint, got ${checked}`);
@@ -346,6 +454,47 @@ test('the Honig item is not drawn into checkpoint 2 (or any other) any more', ()
       untaughtTokens(honig, known, namesOf(CURRICULUM_A11.level)).length > 0,
       'and it is excluded for the reason claimed: its lexis is untaught at the end of chapter 2',
     );
+  }
+});
+
+// ── 4f. NO NEXT-LEVEL PREVIEW IN A GRADED TEST (DaF review #7, BLOCKER 3) ───
+//
+// `03bd1113` shipped as `a1.1-cp4-bausteine-4` — „Hast du ___ Schlüssel?
+// (du — Vorschau Akkusativ)“ → `deinen`, one of six Sprachbausteine in the
+// GRADED closing checkpoint, on a STRICT_TOPIC with no typo tolerance, and its
+// own explanation reads „Vorschau auf den Akkusativ (A1.2)“. L12's notice
+// teaches `dein Bruder` and the rule card says the -e comes only before
+// feminines and plurals, so `dein` — the answer the course taught — is marked
+// wrong in the final test. Its twin `64680d9b` („Ich habe ___ Bruder gern.“ →
+// `meinen`) sits in the same pool, so this is a class, not an instance.
+//
+// The builder-side rule (no item may demand a form no notice and no rule card
+// introduces) lands in the pool build; this is the belt-and-braces at the
+// checkpoint's own pool door, and this test is the number that has to stay 0.
+const NEXT_LEVEL_RE_TEST = /Vorschau|A1\.2|kommt in A1/i;
+
+test('no checkpoint item names a next-level preview in its prompt, hint or explanation', () => {
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    for (const item of items) {
+      const text = [item.promptDe, item.hint, item.explanationDe].filter(Boolean).join(' ');
+      assert.ok(
+        !NEXT_LEVEL_RE_TEST.test(text),
+        `${cp.id} ${item.id} (pool ${item.poolItemId}): a graded checkpoint may not test a form the course defers — „${text}“`,
+      );
+    }
+  }
+});
+
+test('the deinen/meinen preview twins are not drawable by any checkpoint', () => {
+  const TWINS = ['03bd1113-6ab0-589d-b0d6-12f03d5c1952', '64680d9b'];
+  const drawn = ALL_CHECKPOINTS.flatMap(({ items }) => items.map((i) => i.poolItemId).filter(Boolean));
+  for (const twin of TWINS) {
+    assert.ok(!drawn.some((id) => id.startsWith(twin)), `${twin} must not be a checkpoint item`);
+  }
+  // And for the reason claimed: the pool still holds it, the gate rejects it.
+  const previews = POOL.items.filter(isNextLevelPreview);
+  for (const item of previews) {
+    assert.ok(!drawn.includes(item.id), `${item.id} calls itself a preview and must stay out`);
   }
 });
 

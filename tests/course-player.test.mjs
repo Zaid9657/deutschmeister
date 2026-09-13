@@ -73,24 +73,20 @@ test('the registry covers the four A sub-levels with their final tests, and the 
 // 'Schreib einfach, was du kannst.' — two Anreden, two lines apart, in the free
 // first lesson.
 // ---------------------------------------------------------------------------
+// MAJOR 1 (DaF review #7): a hand-enumerated list is a list of what the last
+// report thought of, not of what exists — PracticeItem.jsx was never in this
+// list and its "Deine Antwort" label duzed on all 84 practice screens while
+// CheckpointPage.jsx said "Ihre Antwort" two files away, and nothing here ever
+// read it. So this is a GLOB over both directories the player actually
+// renders from, plus the one top-level page the speaking task hands off to —
+// no file in scope can be omitted by forgetting to type its name.
 const CHROME_FILES = [
-  'src/components/lesson/PretestStage.jsx',
-  'src/components/lesson/WortfeldStage.jsx',
-  'src/components/lesson/ReadAloudLine.jsx',
-  'src/components/lesson/GradedWriting.jsx',
-  'src/components/lesson/SpeakingStage.jsx',
-  'src/components/lesson/DialogStage.jsx',
-  'src/components/lesson/DictationItem.jsx',
-  'src/components/lesson/ExplainAnswer.jsx',
-  'src/components/lesson/NoticeStage.jsx',
-  'src/components/lesson/RecapStage.jsx',
-  'src/components/lesson/StageShell.jsx',
-  'src/components/lesson/WritingStage.jsx',
-  'src/components/lesson/LessonProgressBar.jsx',
+  ...readdirSync(join(ROOT, 'src/components/lesson')).filter((f) => f.endsWith('.jsx')).map((f) => `src/components/lesson/${f}`),
   // MAJOR 10 (DaF review #5, last sentence): the register test must also cover
   // the pages the player renders, not just its stage components — that is
   // exactly where CheckpointPage.jsx and ReviewPage.jsx duzed.
   ...readdirSync(join(ROOT, 'src/pages/lesson')).filter((f) => f.endsWith('.jsx')).map((f) => `src/pages/lesson/${f}`),
+  'src/pages/SpeakingPage.jsx',
 ];
 
 // Pronouns, the du-forms of the verbs these screens use, and the du-imperatives
@@ -134,14 +130,65 @@ test('every grading site takes its checkAnswer options from the item, not from t
   }
 });
 
+// Named exceptions only, each with the reason inline — never a gap in the
+// file list above. A `du`/`Du` token here is NOT dialogue rendering (the
+// curriculum data the standard's own register decision exempts): it is code
+// that reads or normalises a stored register value, never a string the
+// learner reads on screen. Match on the exact line text so a future edit that
+// changes what the line does re-trips the test instead of riding the waiver.
+const REGISTER_EXEMPT = [
+  {
+    file: 'src/pages/SpeakingPage.jsx',
+    line: "anrede: ctx.anrede === 'du' ? 'du' : 'Sie',",
+    reason: "normalises a stored anrede VALUE ('du'/'Sie') from the course context into the speaking task sent to the coach — not learner-facing chrome text.",
+  },
+];
+
 test('the lesson chrome sieze: no du-register token in any screen the player renders', () => {
   const offenders = [];
   for (const f of CHROME_FILES) {
     read(f).split('\n').forEach((line, i) => {
-      if (DU_TOKENS.test(line)) offenders.push(`${f}:${i + 1}  ${line.trim()}`);
+      if (!DU_TOKENS.test(line)) return;
+      const trimmed = line.trim();
+      if (REGISTER_EXEMPT.some((ex) => ex.file === f && ex.line === trimmed)) return;
+      offenders.push(`${f}:${i + 1}  ${trimmed}`);
     });
   }
   assert.deepEqual(offenders, [], `du-register in the lesson chrome:\n${offenders.join('\n')}`);
+});
+
+test('every REGISTER_EXEMPT line still exists verbatim (a waiver must not silently drift)', () => {
+  for (const ex of REGISTER_EXEMPT) {
+    const lines = read(ex.file).split('\n').map((l) => l.trim());
+    assert.ok(lines.includes(ex.line), `${ex.file}: exempted line no longer present — "${ex.line}"; remove or update the waiver`);
+  }
+});
+
+// ---------------------------------------------------------------------------
+// DaF review #7, BLOCKER 1 (the review-card half). A SENTENCE review card's
+// `accepted` is a whole dialogue line, not a bare polite word, so
+// `politeCaseItem` alone never reached it — the L1 sentence card
+// "Gut. Wie geht es Ihnen?" forgave `ihnen` as a typo while the lesson item
+// for the identical form (`extra-a11-l01-06`) grades it wrong. Pin the fix at
+// the card the review named.
+// ---------------------------------------------------------------------------
+test('the "Wie geht es Ihnen?" sentence card is case-sensitive and grades "ihnen" wrong, like the lesson item', async () => {
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  const { buildCardIndex } = await import('../src/services/reviewService.js');
+  const { sentenceCardKey } = await import('../src/lib/review/ladder.js');
+  const { gradeTypedReview } = await import('../src/lib/checkpoint/reviewGrading.js');
+
+  const index = buildCardIndex(CURRICULUM_A11);
+  const key = sentenceCardKey('a1.1-l01', 6);
+  const card = index.get(key);
+  assert.ok(card, `card ${key} must exist in the built index`);
+  assert.equal(card.front, 'Gut. Wie geht es Ihnen?');
+  assert.equal(card.caseSensitive, true, 'a polite Ihnen mid-sentence must flag the card case-sensitive');
+
+  const graded = gradeTypedReview(key, card.accepted, 'ihnen', { caseSensitive: card.caseSensitive });
+  assert.equal(graded.ok, false, 'lowercase "ihnen" must grade wrong, not typo-forgiven, for this card');
+  const gradedCorrect = gradeTypedReview(key, card.accepted, card.accepted[0], { caseSensitive: card.caseSensitive });
+  assert.equal(gradedCorrect.ok, true, 'the card\'s own accepted form must still grade correct');
 });
 
 // ---------------------------------------------------------------------------

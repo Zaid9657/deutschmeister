@@ -144,9 +144,37 @@ export async function gradeCard(userId, cardKey, correct) {
  * `caseSensitive: true` on the curriculum entry (or on a pool item a card is
  * ever built from) stays an override. Derive, never retype: when the predicate
  * changes, both surfaces change with it.
+ *
+ * DaF review #7, BLOCKER 1 (the review-card half). `politeCaseItem` is built
+ * for POOL ITEMS, whose `answer`/`accepted` ARE the polite word or short
+ * phrase itself (`extra-a11-l01-06`'s answer is `Ihnen`). A SENTENCE card's
+ * `accepted` is a whole rendered dialogue LINE (`sentenceCardKey` cards carry
+ * `line.de`, e.g. "Gut. Wie geht es Ihnen?") — the polite form is buried
+ * inside it, not the whole answer, so `politeCaseItem` alone never reaches
+ * it: that gap is exactly what let this card forgive `ihnen` as a typo while
+ * `extra-a11-l01-06` grades the same form wrong. So sentence cards get a
+ * second, narrow predicate of their own: a polite form (`Sie`, `Ihnen`,
+ * `Ihr(e/en/em/er/es)`) counted only when it is NOT the first word of its own
+ * sentence inside the line — a sentence-initial capital says nothing about
+ * register, exactly the carve-out `politeCaseItem`'s own comment documents.
+ * This is deliberately independent of quality.js — it reads the sentence
+ * shape a dialogue line has, not the answer-key shape a pool item has, so it
+ * does not drift if `politeCaseItem` is reshaped for its own reasons.
  */
-const caseFlag = (entry, accepted) =>
-  entry?.caseSensitive === true || politeCaseItem({ accepted: (accepted || []).filter(Boolean) });
+const POLITE_WORD_RE = /^(Sie|Ihnen|Ihr|Ihre|Ihren|Ihrem|Ihrer|Ihres)$/;
+const politeSentence = (line) =>
+  String(line || '')
+    .split(/(?<=[.!?])\s+/)
+    .some((sentence) => sentence.trim().split(/\s+/).slice(1).some((w) => POLITE_WORD_RE.test(w.replace(/[.,!?]/g, ''))));
+
+const caseFlag = (entry, accepted, { sentence = false } = {}) => {
+  const acc = (accepted || []).filter(Boolean);
+  return (
+    entry?.caseSensitive === true ||
+    politeCaseItem({ answer: entry?.answer, accepted: acc }) ||
+    (sentence && acc.some(politeSentence))
+  );
+};
 
 export function buildCardIndex(curriculum) {
   const index = new Map();
@@ -185,7 +213,7 @@ export function buildCardIndex(curriculum) {
         detail: `${line.speaker} — Lektion ${lektion.nr}`,
         lektionNr: lektion.nr,
         accepted: [line.de],
-        caseSensitive: caseFlag(line, [line.de]),
+        caseSensitive: caseFlag(line, [line.de], { sentence: true }),
       });
     });
   }

@@ -88,6 +88,7 @@ import {
   articleCueOnlyInGloss, articleAnswerKind, ARTICLE_CUE,
   missingSentenceArticle, cueAnswerMismatch, metalinguisticPrompt, SENTENCE_ARTICLE_CUE,
   ambiguousCorrection, minimalArticleCorrection, isPoliteFormItem, drillsSlug, isNumberWord,
+  politeCaseItem, NEXT_LEVEL_RE, UNTAUGHT_ANSWER_FORMS, UNTAUGHT_ANSWER_FORM_RE, untaughtForm,
 } from '../src/data/lessonPools/quality.js';
 import { levelLexicon, untaughtTokens, levelSpec } from '../scripts/validate-curriculum.mjs';
 
@@ -788,3 +789,151 @@ test('the per-topic floor still holds after the untaught-lexis drop', () => {
   assert.deepEqual(thin, ['a1.1 numbers: 4'], `topics under the 7-item floor — hand-written extras needed:\n  ${thin.join('\n  ')}`);
 });
 
+
+// --- REVIEW #7 ------------------------------------------------------------
+
+/**
+ * BLOCKER 3. The graded final checkpoint asked for a form the course files
+ * under the NEXT level and marked the form its own rule card teaches wrong:
+ * `03bd1113` shipped as `a1.1-cp4-bausteine-4` („Hast du ___ Schlüssel? (du —
+ * Vorschau Akkusativ)" → `deinen`), one of six Sprachbausteine in a section
+ * that passes at 40 %, on a `STRICT_TOPIC` with no typo tolerance — so `dein`,
+ * which L12's notice and the `possessive-articles` card teach for a masculine
+ * noun, came back red. Its twin `64680d9b` sat in the pool, drawable from the
+ * same `practiceRule.topics`, which is what makes it a CLASS.
+ *
+ * The rule is the inverse of RULE 6b and it is stated over the WHOLE pool: no
+ * item a learner can be drawn or tested on may demand a form that no notice and
+ * no rule card of the level introduces.
+ */
+test('no item of the built pool announces a form of the next level — REVIEW #7 BLOCKER 3', () => {
+  const offenders = POOL.items.filter((it) =>
+    NEXT_LEVEL_RE.test([it.questionDe, it.questionEn, it.explanationDe, it.hint].map((t) => String(t ?? '')).join(' ')));
+  assert.deepEqual(offenders.map(label), [], 'the pool a learner is drawn and tested from carries a Vorgriff');
+  // …and the shape itself, so the rule outlives the two ids it was found on.
+  assert.equal(
+    exclusionReason({
+      id: 'nl', topic: 'possessive-articles', questionDe: 'Hast du ___ Schlüssel? (du — Vorschau Akkusativ)',
+      answer: 'deinen', explanationDe: 'Vorschau auf den Akkusativ (A1.2): nach haben bekommt maskulin die Endung -en.',
+    }),
+    REASON.UNTAUGHT_FORM,
+  );
+});
+
+test('no item of the built pool demands an untaught answer form — REVIEW #7 BLOCKER 3', () => {
+  for (const item of POOL.items) {
+    for (const a of [item.answer, ...(item.accepted || [])]) {
+      for (const w of String(a ?? '').split(/\s+/)) {
+        assert.doesNotMatch(w.replace(/[.,!?;:]/g, ''), UNTAUGHT_ANSWER_FORM_RE, `untaught answer form: ${label(item)}`);
+      }
+    }
+  }
+  // The class, not the instance: the same demand without the confession.
+  assert.equal(
+    exclusionReason({ id: 'uf', topic: 'possessive-articles', questionDe: 'Ich sehe ___ Bruder. (ich)', answer: 'meinen' }),
+    REASON.UNTAUGHT_FORM,
+  );
+  assert.equal(
+    exclusionReason({ id: 'uf2', topic: 'possessive-articles', questionDe: 'Wie heißt ___ Bruder? (du)', answer: 'dein' }),
+    null,
+    'the form L12 teaches is not a Vorgriff',
+  );
+});
+
+test('the twins the review names are out, and Checkpoint 4 fills the seat from the same topic', () => {
+  for (const id of ['03bd1113-6ab0-589d-b0d6-12f03d5c1952', '64680d9b-3681-560d-ada9-a64d0aa329aa']) {
+    assert.ok(!POOL.items.some((i) => i.id === id), `${id} is still in the built pool`);
+    const item = ALL.find((i) => i.id === id);
+    if (item) assert.equal(exclusionReason(item, { level: 'a1.1' }), REASON.UNTAUGHT_FORM, id);
+  }
+  // The topic the graded checkpoint draws them from is still above a Lektion's
+  // worth of items, so the seat is filled rather than left empty.
+  const n = POOL.items.filter((i) => i.topic === 'possessive-articles').length;
+  assert.ok(n >= 7, `only ${n} possessive-articles items left for Checkpoint 4 to draw from`);
+});
+
+test('untaught-form is level-scoped, like the ordinal: meinen is ordinary German at A1.2', () => {
+  const item = { id: 'uf3', topic: 'possessive-articles', questionDe: 'Ich sehe ___ Bruder. (ich)', answer: 'meinen' };
+  assert.equal(exclusionReason(item), REASON.UNTAUGHT_FORM, 'no level named → the strict default');
+  assert.equal(exclusionReason(item, { level: 'a1.1' }), REASON.UNTAUGHT_FORM);
+  assert.equal(exclusionReason(item, { level: 'a1.2' }), null);
+  assert.equal(exclusionReason(item, { level: 'a2.1' }), null);
+});
+
+test('the off-limits list is MEASURED against the course, not asserted — REVIEW #7 BLOCKER 3', async () => {
+  // The rule says "a form no notice and no rule card of the level introduces".
+  // A hand-kept list can drift into banning a form the course DOES teach, which
+  // would fail the learner on the level's own material — so the list is checked
+  // against the material.
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  const { RULE_CARDS } = await import('../netlify/functions/_shared/ruleCards.mjs');
+  const A11_TOPICS = new Set(POOL.items.map((i) => i.topic));
+  const taught = [
+    ...CURRICULUM_A11.lektionen.flatMap((l) => [l.notice?.title, l.notice?.bodyDe, ...(l.notice?.examples || [])]),
+    ...Object.entries(RULE_CARDS).filter(([slug]) => A11_TOPICS.has(slug)).map(([, card]) => JSON.stringify(card)),
+  ].join(' ').split(/[^0-9A-Za-zÄÖÜäöüß]+/);
+  const introduced = UNTAUGHT_ANSWER_FORMS.filter((f) => taught.some((w) => w.toLowerCase() === f.toLowerCase()));
+  assert.deepEqual(introduced, [], 'the list bans a form an A1.1 notice or rule card introduces');
+  // The counter-check, and the reason `einen`/`keinen` are deliberately NOT on
+  // the list: L6's notice introduces exactly that form, with an example, so an
+  // item asking for it asks for something the course has shown.
+  assert.ok(taught.some((w) => w === 'einen'), 'L6 no longer introduces ein → einen — re-measure the off-limits list');
+  assert.equal(untaughtForm({ id: 'e', questionDe: 'Der Chef braucht ___ Computer. (unbestimmter Artikel)', answer: 'einen' }), false);
+});
+
+/**
+ * BLOCKER 1. Round 6 closed review #6's polite-capital finding with the very
+ * answer-FORM regex round 5 had removed from `isCaseTask`, one layer up — and
+ * both error directions were measured: three items whose own text says nothing
+ * polite is taught here carried `caseSensitive: true`, while the sentence
+ * clause, narrowed to `Ihr…`, never reached `Sie` or `Ihnen` inside a sentence.
+ * The predicate now asks whether the capital is the TASK.
+ */
+test('the polite capital is a task signal, not an answer form — REVIEW #7 BLOCKER 1', () => {
+  const t = (o) => politeCaseItem(o);
+  // The three FALSE POSITIVES the review measured, verbatim.
+  assert.equal(t({ questionDe: '___ ist meine Mutter.', answer: 'Sie', accepted: ['Sie'], explanationDe: 'Mutter = weiblich → sie.' }), false);
+  assert.equal(t({
+    questionDe: 'Die Tasche ist teuer. ___ ist schön.', answer: 'Sie', accepted: ['Sie'],
+    explanationDe: 'Die Tasche ist feminin, deshalb wird sie zu sie.',
+  }), false);
+  assert.equal(t({
+    questionDe: '___ seid meine Freunde.', questionEn: '___ are my friends. (= you all, informal plural)',
+    answer: 'Ihr', accepted: ['Ihr'], explanationDe: 'Ihr spricht mehrere Personen informell an.',
+  }), false, 'an item that calls itself informell is not a polite-form item');
+  // The TASK, in each of its three shapes.
+  assert.equal(t({
+    questionDe: 'Ist das ___ Geschenk, Frau Kaya? (Sie)', answer: 'Ihr', accepted: ['Ihr'],
+    explanationDe: 'Höflich zu Frau Kaya: Ihr mit großem I.',
+  }), true, 'the prompt names the formal counterpart');
+  assert.equal(t({
+    questionDe: 'Guten Tag! Wie geht es ___?', answer: 'Ihnen', accepted: ['Ihnen'], explanationDe: 'Mit großem I.',
+  }), true, 'Ihnen has no lowercase reading of its own');
+  assert.equal(t({ accepted: ['Gut. Wie geht es Ihnen?'] }), true, 'the FALSE NEGATIVE: Ihnen inside a sentence');
+  assert.equal(t({ accepted: ['Das ist Ihr Name.', 'Hier ist Ihre Adresse.'] }), true, 'a non-initial possessive Ihr');
+  assert.equal(t({ accepted: ['Sie', 'Sie'] }), true, 'a review card carries no prompt: the answer key is all there is');
+  // …and the three shapes it must NOT reach.
+  assert.equal(t({ questionDe: '___ Geschenke sind hier. (sie, Plural)', answer: 'Ihre', accepted: ['Ihre', 'ihre'] }), false,
+    'an item that accepts both spellings is not teaching the capital');
+  assert.equal(t({
+    questionDe: 'Bilden Sie die höfliche Frage: [fahren / Sie / morgen / nach Deutschland]',
+    answer: 'Fahren Sie morgen nach Deutschland?', accepted: ['Fahren Sie morgen nach Deutschland?'],
+    explanationDe: 'Höfliche Frage mit Sie: Verb zuerst, dann Sie.',
+  }), false, 'a word-order item may not become wholly wrong over one capital');
+  assert.equal(t({ accepted: ['Sie kostet acht Euro.'] }), false, 'a sentence-initial capital says nothing about register');
+});
+
+test('every polite-form item of the built pool is case-strict, and no informal item is', () => {
+  for (const item of POOL.items) {
+    if (politeCaseItem(item)) {
+      assert.equal(item.caseSensitive, true, `derived polite item is not case-strict: ${label(item)}`);
+    }
+    const text = [item.questionDe, item.questionEn, item.explanationDe].map((x) => String(x ?? '')).join(' ');
+    if (/informell|informal/i.test(text)) {
+      assert.notEqual(item.caseSensitive, true, `an item that calls itself informell is case-strict: ${label(item)}`);
+    }
+  }
+  // The predicate the build stamps with and the one the review cards derive from
+  // are ONE function — the alias is what both sides import.
+  assert.equal(isPoliteFormItem, politeCaseItem);
+});

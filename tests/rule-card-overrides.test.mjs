@@ -361,8 +361,8 @@ test('yes-no-questions names the written-question rule and admits the spoken for
 //   (d) every example noun stands in the Wortfeld the course has taught BY that
 //       Lektion — the review's "die Karten reden über einen anderen Kurs".
 
-import { DIALOG_NAMES as DIALOG_NAMES_A11 } from '../src/data/curricula/a11.js';
-import { DIALOG_NAMES as DIALOG_NAMES_A12 } from '../src/data/curricula/a12.js';
+import { DIALOG_NAMES as DIALOG_NAMES_A11, FUNCTION_WORDS as FUNCTION_WORDS_A11 } from '../src/data/curricula/a11.js';
+import { DIALOG_NAMES as DIALOG_NAMES_A12, FUNCTION_WORDS as FUNCTION_WORDS_A12 } from '../src/data/curricula/a12.js';
 import { hasEnglish } from '../src/data/lessonPools/quality.js';
 
 const cardOf = (slug) => OVERRIDES[slug];
@@ -510,6 +510,16 @@ const META_NOUNS = [
   'Nominativ', 'Dativ', 'Objekt', 'Adjektiv', 'Modalverb', 'Präsens', 'Perfekt', 'Partizip',
   'Präposition', 'Wendung', 'Vergleich', 'Ort', 'Richtung', 'Grund', 'Dauer', 'Lektion', 'Kurs',
   'Imperativ',
+  // ADDED 2026-09-13 (round 3, A1.2 card rewrite): the rest of the metalanguage the
+  // rewritten A1.2 cards quote FROM their own notices. `Stelle` and `Angabe` are
+  // L1's own wording ("an zweiter Stelle", "Steht eine Angabe vorn"); `Maskulinum`
+  // and `Neutrum` are L3's and L10's; `Hunderter` is L2's; `Aufforderung` is L8's;
+  // `Menge` is L5's gloss for wie viel; `Erlaubnis`, `Notwendigkeit`, `Absicht`,
+  // `Auftrag` and `Fähigkeit` are L9's five modal glosses; `Vergangenes` and
+  // `Vergangenheitsform` are L12's. `Dialog` is how a card labels a quoted line.
+  'Stelle', 'Angabe', 'Maskulinum', 'Neutrum', 'Hunderter', 'Aufforderung', 'Menge',
+  'Erlaubnis', 'Notwendigkeit', 'Absicht', 'Auftrag', 'Fähigkeit', 'Vergangenes',
+  'Vergangenheitsform', 'Dialog',
 ];
 
 /** Letter NAMES, which the A1.1 L1 card must spell out — they are names, not lexis. */
@@ -595,5 +605,315 @@ test('every example noun stands in the Wortfeld the course has taught by that Le
       [],
       `${where(primary)}: nouns outside the Wortfeld taught by Lektion ${primary.nr}: ${offenders.join(', ')}`,
     );
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ROUND 3 · THE A1.2 CARD CLASS
+// (docs/course-factory/a12-rebuild/REVIEW-daf-2-2026-09-13.md, BLOCKER 2 and
+// MAJOR 1/4/9/14.)
+//
+// WHAT WENT WRONG AND WHY A TEST IS THE ANSWER. Round 2 repaired the twelve A1.2
+// `notice` texts and left the twelve cards at the round-1 state, so six of twelve
+// cards contradicted their own Lektion: L3's card taught `keinen` while its notice
+// defers that form to Lektion 4; L1's card carried "Neben der Apotheke ist die
+// Bank", the line the review had just deleted from the dictation, plus a
+// commonMistake built on it, and quoted "Danach kommt die Brücke", a line that no
+// longer exists; L6's card said "Ihr Auge sieht gut" after the dialogue had been
+// corrected to "sehen gut aus"; L10's card taught `gegen`, `um`, `teurer`,
+// `größer` and `besser`, four forms its shortened notice had dropped and that
+// occur nowhere in the Lektion. Every one of those is the same failure: an
+// example sentence on the card that is nobody's line. The card is what
+// `netlify/functions/explain-answer.mjs` hands a learner who is already stuck, so
+// a sentence there that the Lektion never says is a second, divergent course.
+//
+// THE RULE THESE FOUR TESTS PIN.
+//   (a) EVERY EXAMPLE SENTENCE ON A CARD IS A LINE OF ITS OWN LEKTION. An example
+//       sentence is a segment that ends in . ! or ?, carries at least three words
+//       and a verb, and is not metalanguage (see META_SENTENCE below). It must
+//       appear VERBATIM among that Lektion's dialogue lines, notice body, notice
+//       examples, pretest model, or schreiben sample — or be listed in
+//       EXAMPLE_ALLOW with a reason.
+//   (b) NO WORD FROM OUTSIDE THE COURSE-SO-FAR. The noun check above is extended
+//       to every token: a card may use the cumulative Wortfeld, the curricula's
+//       own FUNCTION_WORDS, the metalanguage lists, and any word that the
+//       Lektionen up to and including its own actually use.
+//   (c) EVERY FORM THE NOTICE PUTS IN BOLD APPEARS ON THE CARD — the notice's
+//       bold spans ARE the teaching points, so a card that omits one teaches less
+//       than its Lektion.
+//   (d) NO FORM THE NOTICE EXPLICITLY DEFERS IS TAUGHT. A notice that says
+//       "… kommt in Lektion 4" or "… folgt in A1.2" has withdrawn that form; the
+//       card may name the deferral and may not use the form anywhere else.
+//
+// A1.1 IS A RATCHET, NOT AN EXEMPTION. These four rules were written for the A1.2
+// rebuild and the A1.1 cards predate them — measured on 2026-09-13 they carry 47
+// unsourced example sentences, 17 uncovered bold forms and 10 titles that differ
+// from their notice. Skipping a1.1 is how a finding survives four rounds in this
+// repo, so the levels run through the same machinery and a1.1's numbers are
+// capped at the measured value: they can only fall. a1.2 is capped at 0.
+const LEGACY_BUDGET = {
+  'a1.1': { examples: 47, boldForms: 17, titles: 10 },
+  'a1.2': { examples: 0, boldForms: 0, titles: 0 },
+};
+
+const unbold = (text) => String(text).replace(/\*\*/g, '');
+
+/**
+ * Sentence segmentation for both sides of the comparison. Splits after . ! ?,
+ * and ALSO at `:` and at `→`/`—`, because a card line is written as
+ * "Rule: example." and a notice as "…zweiter Stelle: Sie gehen geradeaus." —
+ * splitting there is what lets the example half match the notice half.
+ */
+const SEGMENT_SPLIT = /(?<=[.!?])\s+|:\s*|\s*→\s*|\s*—\s*/;
+const segments = (text) =>
+  unbold(text)
+    .split(SEGMENT_SPLIT)
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+/** Every sentence the Lektion itself says — the set an example must come from. */
+const lektionSentences = (lektion) => {
+  const sources = [
+    ...lektion.dialog.lines.map((line) => line.de),
+    ...(lektion.notice.examples || []),
+    lektion.notice.bodyDe,
+    lektion.pretest.model,
+    lektion.schreiben.sample || '',
+    lektion.schreiben.taskDe || '',
+  ];
+  return new Set(sources.flatMap(segments));
+};
+
+// Metalanguage: a segment that talks ABOUT German rather than showing it. These
+// two lists are how a rule statement is told from an example — a rule statement
+// is not required to be a Lektion line, an example is.
+const META_SENTENCE_NOUN = new RegExp(`\\b(${META_NOUNS.join('|')})n?\\b`);
+const META_SENTENCE_VERB =
+  /\b(steht|stehen|wird|werden|heißt|heißen|bekommt|bekommen|verneint|verlangt|verlangen|bleibt|bleiben|ändert|ändern|fällt|entsteht|endet|verschmelzen|schickt|schicken|lernt|liest|zeigt|gezeigt|fragt|schreibt|rutscht|ergibt|lautet|entscheidet|wiederholt|beginnt)\b/;
+
+/**
+ * "Contains a verb". A list fragment ("für den Bruder, ohne den Schal, durch das
+ * Kaufhaus.") is not an example sentence and is not checked. The test is closed
+ * and mechanical: a segment has a verb when it carries a lower-case word that is
+ * not in this stoplist of articles, prepositions, pronouns and particles.
+ */
+const VERBLESS_STOP = new Set(
+  ('der die das den dem des ein eine einen einem einer kein keine keinen mein meine meinen zum zur im am ' +
+    'an auf in mit nach bei seit von zu aus für ohne durch und oder also nur auch hier da dann nicht bis ' +
+    'als wie so man es sie er ich wir ihr du dich mir ihn ihre sein seine bitte gern noch schon sehr').split(' '),
+);
+const hasVerb = (segment) =>
+  segment
+    .split(/[^A-Za-zÄÖÜäöüß-]+/)
+    .filter(Boolean)
+    .some((w) => /^[a-zäöüß]/.test(w) && !VERBLESS_STOP.has(w.toLowerCase()));
+
+/** Segments of a card's German content that count as example sentences. */
+const exampleSentences = (card) =>
+  segments(germanLines(card).join(' ')).filter(
+    (s) =>
+      /[.!?]$/.test(s) &&
+      s.split(/\s+/).length >= 3 &&
+      hasVerb(s) &&
+      !META_SENTENCE_NOUN.test(s) &&
+      !META_SENTENCE_VERB.test(s),
+  );
+
+/**
+ * Example sentences a card may carry that are NOT a line of its Lektion, keyed by
+ * slug, each with the reason it is allowed. Deliberately empty: every one of the
+ * twelve A1.2 cards quotes its own Lektion verbatim, and the twelve A1.1 cards
+ * are held by the LEGACY_BUDGET ratchet instead. An entry here is a card saying
+ * out loud that it had to invent a sentence, which is the thing BLOCKER 2 was.
+ */
+const EXAMPLE_ALLOW = /** @type {Record<string, Array<{ sentence: string, why: string }>>} */ ({});
+
+// (a)
+test('every example sentence on a card is a line of its own Lektion', () => {
+  for (const level of LEVELS) {
+    const offenders = [];
+    for (const lektion of ALL_CURRICULA[level].lektionen) {
+      const card = cardOf(lektion.primarySlug);
+      if (!card) continue;
+      const known = lektionSentences(lektion);
+      const allowed = new Set((EXAMPLE_ALLOW[lektion.primarySlug] || []).map((e) => e.sentence));
+      for (const sentence of exampleSentences(card)) {
+        if (known.has(sentence) || allowed.has(sentence)) continue;
+        offenders.push(`L${lektion.nr} ${lektion.primarySlug}: "${sentence}"`);
+      }
+    }
+    assert.ok(
+      offenders.length <= LEGACY_BUDGET[level].examples,
+      `${level}: ${offenders.length} example sentences are nobody's line (budget ${LEGACY_BUDGET[level].examples}):\n  ${offenders.join('\n  ')}`,
+    );
+  }
+});
+
+// (b) — the noun check above, widened to every token. The extra source is the
+// Lektion's own text: a card may use any word its Lektion (or an earlier one)
+// actually says, which is exactly the licence the Wortfeld alone does not give
+// for inflected verb forms ("nimmt", "hilfst") and quoted notice wording.
+const CARD_LANGUAGE = [
+  // the verbs and adverbs a rule statement is made of
+  'steht', 'stehen', 'wird', 'werden', 'heißt', 'heißen', 'bekommt', 'bekommen', 'verneint',
+  'verlangt', 'verlangen', 'bleibt', 'bleiben', 'ändert', 'ändern', 'fällt', 'entsteht', 'endet',
+  'verschmelzen', 'schickt', 'schicken', 'lernt', 'liest', 'zeigt', 'gezeigt', 'fragt', 'schreibt',
+  'rutscht', 'gehört', 'ergibt', 'lautet', 'entscheidet', 'wiederholt', 'beginnt', 'macht',
+  'dahinter', 'direkt', 'vorn', 'weitere', 'beiden', 'genauso', 'ganz', 'dagegen', 'ebenfalls',
+  'hinten', 'weg', 'jetzt', 'erst', 'plus', 'also', 'andere', 'anderen', 'jede', 'jeder', 'alles',
+  'immer', 'gleich', 'gleicher', 'neu', 'neuen', 'bekannt', 'richtig', 'falsch', 'fest', 'feste',
+  // the words for the grammatical categories themselves
+  'unregelmäßig', 'regelmäßig', 'feminin', 'feminine', 'femininen', 'maskulin', 'maskuline',
+  'männlich', 'männliche', 'männlichen', 'neutrum', 'neutral', 'trennbare', 'bestimmtem',
+  'bestimmten', 'unbestimmtem', 'unbestimmten', 'höflich', 'höfliche', 'einzeln', 'einzelne',
+  'auswendig',
+  // the two Anreden a card quotes in a polite example
+  'frau', 'herr',
+];
+
+const commonPrefix = (a, b) => {
+  let i = 0;
+  while (i < a.length && i < b.length && a[i] === b[i]) i += 1;
+  return i;
+};
+
+/** Every word the course has SAID by Lektion `nr` of `level` — not only its Wortfeld. */
+const cumulativeLexis = (level, nr) => {
+  const seen = new Set();
+  for (const lvl of LEVELS) {
+    if (lvl > level) continue;
+    for (const lektion of ALL_CURRICULA[lvl].lektionen) {
+      if (lvl === level && lektion.nr > nr) continue;
+      const sources = [
+        lektion.title,
+        lektion.situation,
+        lektion.notice.title,
+        unbold(lektion.notice.bodyDe),
+        ...(lektion.notice.examples || []),
+        ...lektion.dialog.lines.map((line) => line.de),
+        ...(lektion.canDo || []),
+        ...lektion.wortfeld.map((w) => w.de),
+        lektion.pretest.model,
+        lektion.schreiben.sample || '',
+        lektion.schreiben.taskDe || '',
+      ];
+      for (const text of sources) for (const word of splitWords(text)) seen.add(word.toLowerCase());
+    }
+  }
+  return seen;
+};
+
+const ALL_FUNCTION_WORDS = [...FUNCTION_WORDS_A11, ...FUNCTION_WORDS_A12].map((w) => w.toLowerCase());
+
+test('no card uses a word the course has not used by that Lektion', () => {
+  for (const primary of PRIMARIES) {
+    const card = cardOf(primary.slug);
+    const allowed = [
+      ...cumulativeLexis(primary.level, primary.nr),
+      ...ALL_FUNCTION_WORDS,
+      ...CARD_LANGUAGE,
+      ...ALWAYS_ALLOWED.map((w) => w.toLowerCase()),
+      ...(EARLY_USE[primary.slug] || []).map((w) => w.toLowerCase()),
+    ];
+    // Same prefix/suffix matching as the noun check, plus two tolerances a
+    // full-token sweep needs: a form the card shortens (nehmen → nehme) and an
+    // inflection of a form the Lektion says (hilft → hilfst), i.e. four shared
+    // leading characters. `wrong` fields are excluded — they are deliberately
+    // malformed German and are the one place a non-word belongs.
+    const covered = (token) =>
+      allowed.some(
+        (form) =>
+          token === form ||
+          token.startsWith(form) ||
+          token.endsWith(form) ||
+          form.startsWith(token) ||
+          commonPrefix(token, form) >= 4,
+      );
+    const text = [card.titleDe, ...germanLines(card), ...card.commonMistakes.flatMap((m) => [m.correct, m.explanationDe])];
+    const offenders = [
+      ...new Set(text.flatMap(splitWords).map((w) => w.toLowerCase()).filter((w) => w.length >= 3 && !covered(w))),
+    ];
+    assert.deepEqual(
+      offenders,
+      [],
+      `${where(primary)}: words the course has not used by Lektion ${primary.nr}: ${offenders.join(', ')}`,
+    );
+  }
+});
+
+// (c)
+/** The bold spans of a notice — the forms the Lektion actually teaches. */
+const noticeForms = (lektion) => [
+  ...new Set(
+    [...lektion.notice.bodyDe.matchAll(/\*\*(.+?)\*\*/g)]
+      .flatMap((m) => m[1].split('…'))
+      .map((form) => form.trim())
+      .filter(Boolean),
+  ),
+];
+
+test('every form the notice puts in bold appears on the card', () => {
+  for (const level of LEVELS) {
+    const missing = [];
+    for (const lektion of ALL_CURRICULA[level].lektionen) {
+      const card = cardOf(lektion.primarySlug);
+      if (!card) continue;
+      const haystack = [card.content, ...card.commonMistakes.flatMap((m) => [m.wrong, m.correct, m.explanationDe])].join('\n');
+      for (const form of noticeForms(lektion)) {
+        if (haystack.includes(form)) continue;
+        missing.push(`L${lektion.nr} ${lektion.primarySlug}: "${form}"`);
+      }
+    }
+    assert.ok(
+      missing.length <= LEGACY_BUDGET[level].boldForms,
+      `${level}: ${missing.length} bold notice forms are missing from their card (budget ${LEGACY_BUDGET[level].boldForms}):\n  ${missing.join('\n  ')}`,
+    );
+  }
+});
+
+test('the card title is the title of its notice', () => {
+  for (const level of LEVELS) {
+    const diverged = [];
+    for (const lektion of ALL_CURRICULA[level].lektionen) {
+      const card = cardOf(lektion.primarySlug);
+      if (!card || card.titleDe === lektion.notice.title) continue;
+      diverged.push(`L${lektion.nr} ${lektion.primarySlug}: card "${card.titleDe}" vs notice "${lektion.notice.title}"`);
+    }
+    assert.ok(
+      diverged.length <= LEGACY_BUDGET[level].titles,
+      `${level}: ${diverged.length} card titles differ from their notice (budget ${LEGACY_BUDGET[level].titles}):\n  ${diverged.join('\n  ')}`,
+    );
+  }
+});
+
+// (d) — deferrals. "Die Form keinen kommt in Lektion 4 dazu." withdraws `keinen`
+// from Lektion 3; the card may repeat the deferral and may not teach the form.
+// The deferred token is read out of the notice rather than typed here, so a new
+// deferral is guarded the moment it is written.
+const DEFERRAL_RE = /(\S+)\s+(?:kommt|folgt)\s+(?:erst\s+)?(?:in\s+Lektion\s+\d+|in\s+A1\.\d)/g;
+const NAMES_DEFERRAL = /(kommt|folgt)\s+(erst\s+)?in\s+(Lektion|A1\.)/;
+
+const deferredForms = (lektion) =>
+  [...unbold(lektion.notice.bodyDe).matchAll(DEFERRAL_RE)]
+    .map((m) => m[1].replace(/[^A-Za-zÄÖÜäöüß-]/g, ''))
+    // A deferral can be about a CONCEPT ("die Regel kommt in Lektion 11") rather
+    // than a FORM; the metalanguage list is exactly how the two are told apart.
+    .filter((form) => form.length >= 3 && !META_NOUNS.some((m) => m.toLowerCase() === form.toLowerCase()));
+
+test('no card teaches a form its own notice defers to a later Lektion', () => {
+  for (const primary of PRIMARIES) {
+    const lektion = ALL_CURRICULA[primary.level].lektionen.find((l) => l.nr === primary.nr);
+    const card = cardOf(primary.slug);
+    for (const form of deferredForms(lektion)) {
+      const pattern = new RegExp(`\\b${form}\\b`, 'i');
+      const carriers = [card.content, ...card.commonMistakes.map((m) => m.correct)]
+        .flatMap((text) => text.split(/\n|(?<=[.!?])\s+/))
+        .filter((sentence) => pattern.test(sentence) && !NAMES_DEFERRAL.test(sentence));
+      assert.deepEqual(
+        carriers,
+        [],
+        `${where(primary)}: the notice defers "${form}", the card teaches it anyway:\n  ${carriers.join('\n  ')}`,
+      );
+    }
   }
 });

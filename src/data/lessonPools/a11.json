@@ -1,7 +1,7 @@
 {
  "level": "a1.1",
  "builtFrom": "2026-08-24",
- "count": 289,
+ "count": 291,
  "items": [
   {
    "id": "10fc1751-c3af-529f-8796-f8e46bfb1691",
@@ -244,6 +244,25 @@
    "hint": "13 Buchstaben."
   },
   {
+   "id": "extra-a11-l01-09",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 9,
+   "questionDe": "Der Gruß am Morgen heißt: „___!“ (zwei Wörter)",
+   "questionEn": "Name the morning greeting.",
+   "options": null,
+   "answer": "Guten Morgen",
+   "accepted": [
+    "Guten Morgen",
+    "guten Morgen",
+    "guten morgen"
+   ],
+   "explanationDe": "Am Morgen grüßt man mit Guten Morgen.",
+   "hint": null
+  },
+  {
    "id": "1d19c92e-e77d-5f3f-8e68-0cfd0223e650",
    "topic": "alphabet-pronunciation",
    "type": "fill_blank",
@@ -260,6 +279,25 @@
    ],
    "explanationDe": "Buchstabe für Buchstabe: B-U-C-H-S-T-A-B-E = Buchstabe.",
    "hint": "9 Buchstaben."
+  },
+  {
+   "id": "extra-a11-l01-10",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 10,
+   "questionDe": "Frau Kaya sagt zu Ana: „___!“ (Gruß zum Abschied, förmlich, zwei Wörter)",
+   "questionEn": "Mrs Kaya says the formal goodbye to Ana.",
+   "options": null,
+   "answer": "Auf Wiedersehen",
+   "accepted": [
+    "Auf Wiedersehen",
+    "auf Wiedersehen",
+    "auf wiedersehen"
+   ],
+   "explanationDe": "Zu Frau Kaya sagt man förmlich: Auf Wiedersehen.",
+   "hint": null
   },
   {
    "id": "9f22442a-a212-57af-8f9f-fd3c30231a4e",
@@ -1356,19 +1394,18 @@
   {
    "id": "extra-a11-l06-09",
    "topic": "indefinite-articles",
-   "type": "error_correction",
+   "type": "fill_blank",
    "stage": 5,
    "difficulty": 2,
    "order": 69,
-   "questionDe": "Korrigieren Sie: „Ich bin eine Verkäuferin.“",
-   "questionEn": "Fix the sentence.",
+   "questionDe": "Die Firma braucht ___ Verkäuferin. (unbestimmter Artikel)",
+   "questionEn": "The company needs a saleswoman.",
    "options": null,
-   "answer": "Ich bin Verkäuferin.",
+   "answer": "eine",
    "accepted": [
-    "Ich bin Verkäuferin.",
-    "Ich bin Verkäuferin"
+    "eine"
    ],
-   "explanationDe": "Nach sein steht der Beruf ohne Artikel.",
+   "explanationDe": "die Verkäuferin ist feminin: eine Verkäuferin.",
    "hint": null
   },
   {
@@ -1852,8 +1889,7 @@
     "Sie"
    ],
    "explanationDe": "Mutter = weiblich → sie.",
-   "hint": null,
-   "caseSensitive": true
+   "hint": null
   },
   {
    "id": "extra-a11-l03-01",
@@ -1942,8 +1978,7 @@
     "Sie"
    ],
    "explanationDe": "Die Tasche ist feminin, deshalb wird sie zu sie.",
-   "hint": null,
-   "caseSensitive": true
+   "hint": null
   },
   {
    "id": "0ef58eff-0411-5dc0-9115-e607c9648f80",
@@ -1977,8 +2012,7 @@
     "Ihr"
    ],
    "explanationDe": "Ihr spricht mehrere Personen informell an.",
-   "hint": null,
-   "caseSensitive": true
+   "hint": null
   },
   {
    "id": "extra-a11-l03-04",
@@ -2461,40 +2495,6 @@
    "hint": null
   },
   {
-   "id": "64680d9b-3681-560d-ada9-a64d0aa329aa",
-   "topic": "possessive-articles",
-   "type": "fill_blank",
-   "stage": 5,
-   "difficulty": 3,
-   "order": 12,
-   "questionDe": "Ich habe ___ Bruder gern. (ich — Vorschau Akkusativ)",
-   "questionEn": "I like my brother. (owner: ich; preview: after haben, masculine takes -en)",
-   "options": null,
-   "answer": "meinen",
-   "accepted": [
-    "meinen"
-   ],
-   "explanationDe": "Vorschau auf den Akkusativ (A1.2): nach haben bekommt maskulin die Endung -en: meinen, nicht mein.",
-   "hint": "Nach haben: maskulin + -en (Vorschau A1.2)."
-  },
-  {
-   "id": "03bd1113-6ab0-589d-b0d6-12f03d5c1952",
-   "topic": "possessive-articles",
-   "type": "fill_blank",
-   "stage": 5,
-   "difficulty": 3,
-   "order": 13,
-   "questionDe": "Hast du ___ Schlüssel? (du — Vorschau Akkusativ)",
-   "questionEn": "Do you have your key? (owner: du; preview: after haben, masculine takes -en)",
-   "options": null,
-   "answer": "deinen",
-   "accepted": [
-    "deinen"
-   ],
-   "explanationDe": "Vorschau auf den Akkusativ (A1.2): nach haben bekommt maskulin die Endung -en: deinen, nicht dein.",
-   "hint": "Nach haben: maskulin + -en (Vorschau A1.2)."
-  },
-  {
    "id": "extra-a11-l12-08",
    "topic": "possessive-articles",
    "type": "fill_blank",
@@ -2637,6 +2637,42 @@
    ],
    "caseSensitive": true,
    "explanationDe": "Ihr Papa: maskulin ohne -e, höfliches Ihr mit großem I.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l12-17",
+   "topic": "possessive-articles",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 137,
+   "questionDe": "Ana sagt am Telefon: „Mach's gut und ___ Tag noch!“ (Adjektiv)",
+   "questionEn": "Ana ends the call with a good wish.",
+   "options": null,
+   "answer": "schönen",
+   "accepted": [
+    "schönen",
+    "Schönen"
+   ],
+   "explanationDe": "Der gute Wunsch zum Abschied: Schönen Tag noch!",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l12-18",
+   "topic": "possessive-articles",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 138,
+   "questionDe": "Bilden Sie den Satz: [ich / grüßen / dein / Mama]",
+   "questionEn": "Build the sentence.",
+   "options": null,
+   "answer": "Ich grüße deine Mama.",
+   "accepted": [
+    "Ich grüße deine Mama.",
+    "Ich grüße deine Mama"
+   ],
+   "explanationDe": "die Mama ist feminin: deine Mama mit -e.",
    "hint": null
   },
   {

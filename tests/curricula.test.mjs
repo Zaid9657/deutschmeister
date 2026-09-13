@@ -161,17 +161,22 @@ function addProducedVorgriffe(c, spec, n) {
   return n;
 }
 
-/** n more examTeile claims whose own Lektion links nothing (RULE 16). */
+/**
+ * n more examTeile claims for which their own Lektion has no surface (RULE 16).
+ *
+ * Only the Lesen family can be stripped, and that is a property of the schema, not a shortcut:
+ * every Lektion is hard-gated to exactly two `hoeren.lines`, a `sprechen.readAloud` and a
+ * `schreiben.taskKey`, so a Hören, Sprechen or Schreiben claim always has a surface — pulling
+ * `links.listeningExercise` (what this mutation used to do) no longer removes one, which is
+ * exactly the measurement artefact DaF review #7, MAJOR 3 is about. A reading surface is the link
+ * alone, so nulling `links.readingOrder` on a Lektion that claims a Lesen Teil removes it for real.
+ * Six Lektionen per level are in that state, far above any overshoot the ratchets can ask for.
+ */
 function unbackExamTeile(c, n) {
   let done = 0;
   for (const l of c.lektionen) {
     if (done >= n) break;
-    if (l.examTeile.some((t) => t.startsWith('Hören')) && l.links.listeningExercise !== null) {
-      l.links.listeningExercise = null;
-      done += 1;
-      continue;
-    }
-    if (l.examTeile.some((t) => t.startsWith('Lesen')) && l.links.readingOrder !== null) {
+    if (l.examTeile.some((t) => t.startsWith('Lesen')) && l.links.readingOrder !== null && l.links.readingOrder !== undefined) {
       l.links.readingOrder = null;
       done += 1;
     }
@@ -446,7 +451,7 @@ test('rule 11b: the items the learner is SERVED use only words taught by the Lek
 test('rule 12: every can-do line is rehearsed in its own Lektion, under a ratchet that only falls', () => {
   // The can-do grid is rendered on the public course page, so an unrehearsed line is a promise to
   // someone who has not paid yet (DaF review #4, MAJOR 6). The two named there are closed:
-  assert.ok(MAX_UNREHEARSED_CANDOS <= 4, 'the ratchet may only ever be lowered');
+  assert.ok(MAX_UNREHEARSED_CANDOS <= 2, 'the ratchet may only ever be lowered');
   const offenders = canDoRehearsal(CURRICULUM_A11);
   assert.ok(
     offenders.length <= MAX_UNREHEARSED_CANDOS,
@@ -454,6 +459,9 @@ test('rule 12: every can-do line is rehearsed in its own Lektion, under a ratche
   );
   const lines = offenders.map((o) => o.line);
   assert.ok(!lines.includes('Ich kann mit zwei festen Ausdrücken sagen, was ich gestern gemacht habe.'), 'L11 Perfekt chunk');
+  // DaF review #7, MAJOR 4: the last can-do of the course — L12's farewell and good wish — sat in
+  // dialogue line 9, outside both production surfaces, and the learner met it once, silently.
+  assert.ok(!lines.includes('Ich kann mich verabschieden und gute Wünsche aussprechen.'), 'L12 gute Wünsche');
   assert.ok(!L[1].canDo.includes('Ich kann ein einfaches Formular mit meinen Daten ausfüllen.'), 'the L2 Formular can-do lives in L1/L3, not here');
   assert.equal(L[10].pretest.model, 'Ich habe gearbeitet.');
 });
@@ -574,7 +582,7 @@ test('the validator bites: each mutation of a good curriculum is caught', () => 
   assert.equal(addProducedVorgriffe(c15, levelSpec('a1.1'), need15), need15, 'no late form to plant');
   assert.ok(failsWith(validateCurriculum(c15), 15), 'not caught: a Vorgriff in a line the learner produces');
 
-  // RULE 16: an „Hören“/„Lesen“ claim whose Lektion links nothing.
+  // RULE 16: a „Lesen“ claim whose Lektion has no reading surface.
   const c16 = clone();
   const need16 = overshoot(examTeileBacked(CURRICULUM_A11).length, MAX_UNBACKED_EXAM_TEILE);
   assert.equal(unbackExamTeile(c16, need16), need16, 'the fixture could not unback enough exam Teile');
@@ -715,7 +723,14 @@ test('rule 15: dictation and read-aloud lines use no form the course teaches lat
 test('rule 16: every examTeile claim is backed by the Lektion that makes it', () => {
   // DaF review #1 for A1.2, BLOCKER 4: examTeile is the sixth column of the public 12x6 grid, i.e.
   // a sales claim (src/data/marketing.js: measure before you claim).
-  assert.ok(examTeileBacked(CURRICULUM_A11).length <= MAX_UNBACKED_EXAM_TEILE);
+  assert.ok(MAX_UNBACKED_EXAM_TEILE <= 1, 'the ratchet may only ever be lowered');
+  const unbacked = examTeileBacked(CURRICULUM_A11);
+  assert.ok(
+    unbacked.length <= MAX_UNBACKED_EXAM_TEILE,
+    `${unbacked.length} unbacked examTeile > ratchet ${MAX_UNBACKED_EXAM_TEILE}:\n  - ${unbacked.map((o) => `L${o.nr} ${o.teil} (${o.why})`).join('\n  - ')}`,
+  );
+  // Round 8 closed the last one (L2 dropped „Lesen Teil 1“, which it never rehearsed).
+  assert.deepEqual(unbacked.map((o) => [o.nr, o.teil]), []);
   const c = cloneOf(CURRICULUM_A12);
   // A Sprechen-Teil-1 label on a prompt that is no self-introduction and no Teil-1 mission.
   c.lektionen[3].examTeile = ['Sprechen Teil 1'];
@@ -731,6 +746,54 @@ test('rule 16: every examTeile claim is backed by the Lektion that makes it', ()
   const w = cloneOf(CURRICULUM_A11);
   w.lektionen[0].examTeile = ['Schreiben Teil 2'];
   assert.ok(examTeileBacked(w).some((o) => o.nr === 1 && o.teil === 'Schreiben Teil 2'));
+});
+
+test('rule 16: the question is whether the Lektion has a SURFACE for the Teil, not whether it links one', () => {
+  // DaF review #7, MAJOR 3: asking only for `links.listeningExercise` reported L5 and L11, two
+  // Lektionen that carry their own listening surface — the dictation over two dialogue lines, the
+  // very surface the Checkpoints build their Hören part from. Two artefacts and one real finding,
+  // reported equally loudly, make the ratchet look like a leftover.
+  const c = cloneOf(CURRICULUM_A11);
+  for (const l of c.lektionen) {
+    if (l.examTeile.some((t) => t.startsWith('Hören'))) {
+      assert.ok(l.hoeren?.lines?.length, `L${l.nr} claims a Hören Teil with no dictation lines`);
+      l.links.listeningExercise = null;
+    }
+  }
+  assert.deepEqual(
+    examTeileBacked(c).filter((o) => o.teil.startsWith('Hören')), [],
+    'the dictation is a listening surface; an unlinked external exercise is not a missing one',
+  );
+  // …and a Teil whose surface is really gone is still reported, per family.
+  const gone = cloneOf(CURRICULUM_A11);
+  const lesen = gone.lektionen.find((l) => l.examTeile.some((t) => t.startsWith('Lesen')));
+  lesen.links.readingOrder = null;
+  assert.ok(examTeileBacked(gone).some((o) => o.nr === lesen.nr && o.teil.startsWith('Lesen')));
+  const stumm = cloneOf(CURRICULUM_A11);
+  const sprechen = stumm.lektionen.find((l) => l.examTeile.some((t) => t.startsWith('Sprechen')));
+  sprechen.sprechen.open = null;
+  sprechen.sprechen.readAloud = [];
+  assert.ok(examTeileBacked(stumm).some((o) => o.nr === sprechen.nr && o.teil.startsWith('Sprechen')));
+});
+
+test('rule 12: a can-do is rehearsed at a PRODUCTION surface, not by a silently read dialogue line', () => {
+  // DaF review #7, MAJOR 4: the dialogue is read through `hoeren.lines` and `sprechen.readAloud`
+  // only — a line the learner meets once in the dialogue and never again is not a rehearsal.
+  const c = cloneOf(CURRICULUM_A11);
+  const l = c.lektionen[0];
+  const outside = l.dialog.lines.findIndex(
+    (_, i) => !l.hoeren.lines.includes(i) && !l.sprechen.readAloud.includes(i),
+  );
+  assert.ok(outside >= 0, 'L1 has no dialogue line outside both production surfaces');
+  l.canDo.push('Ich kann einen Elefanten beschreiben.');
+  l.dialog.lines[outside].de = 'Der Elefant ist da.';
+  assert.ok(
+    canDoRehearsal(c).some((o) => o.nr === 1 && /Elefanten/.test(o.line)),
+    'a can-do whose only occurrence is a silently read dialogue line must still be reported',
+  );
+  // The same line, moved onto the read-aloud surface, counts: there the learner speaks it.
+  l.sprechen.readAloud = [...l.sprechen.readAloud, outside];
+  assert.deepEqual(canDoRehearsal(c).filter((o) => o.nr === 1 && /Elefanten/.test(o.line)), []);
 });
 
 test('the registry, the curriculum index and the modules agree on which levels exist', () => {

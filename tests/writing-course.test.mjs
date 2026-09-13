@@ -17,7 +17,14 @@ import { dirname, join } from 'node:path';
 
 import { WRITING_TASKS, writingTaskByKey, writingTasksForExam, courseWritingTasks } from '../src/data/writingTasks.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
-import { courseTaskKeyPrefix } from '../netlify/functions/evaluate-writing.mjs';
+import {
+  courseTaskKeyPrefix,
+  courseAllowanceFor,
+  CHECKPOINTS_PER_COURSE,
+  COURSE_WRITING_FREE_LIFETIME,
+} from '../netlify/functions/evaluate-writing.mjs';
+import { ALL_CURRICULA } from '../src/data/curricula/index.js';
+import { chapterWritingTask, chapterLektionen } from '../src/lib/checkpoint/buildCheckpoint.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const LEKTIONEN = CURRICULUM_A11.lektionen;
@@ -95,6 +102,11 @@ test('the grader bills course tasks against the free course allowance', () => {
     'every A1.1 course taskKey must derive a non-null prefix that it starts with, or the usage count misses it',
   );
   assert.match(src, /const COURSE_WRITING_FREE_LIFETIME\s*=\s*12/);
+  assert.equal(
+    COURSE_WRITING_FREE_LIFETIME,
+    COURSE.length,
+    'the constant marketing states and claims.test.mjs parses must stay the per-Lektion count',
+  );
   assert.match(src, /tier === 'free_trial' \|\| tier === 'free_expired'/, 'the course allowance must cover expired trials');
   assert.match(
     src,
@@ -202,4 +214,55 @@ test('the two writing-task copies are byte-identical', () => {
     readFileSync(join(ROOT, 'netlify/functions/_shared/writingTasks.mjs'), 'utf8'),
     'src/data/writingTasks.js and netlify/functions/_shared/writingTasks.mjs drifted',
   );
+});
+
+test('the course allowance is derived from the course, and covers its checkpoints', () => {
+  // BLOCKER 2 of the DaF review of 2026-09-12 (#7): the allowance was the
+  // twelve Lektionen while the course asks for sixteen submissions — the four
+  // checkpoints each end in the chapter's graded writing task, posted to the
+  // SAME function with the SAME task_key. A free learner therefore met a 429 on
+  // every checkpoint's writing, and because that item is `optional: true`,
+  // itemCounts() dropped it instead of failing it: no test, no log, no screen.
+  //
+  // THE CLASS, not the instance: for every level that HAS a curriculum, the
+  // allowance must cover one submission per course writing task plus one per
+  // checkpoint that actually carries a graded task. A course may never have
+  // more writing surfaces than its allowance grants.
+  const levels = Object.keys(ALL_CURRICULA);
+  assert.ok(levels.length > 0, 'no curricula registered — has the registry moved?');
+  for (const level of levels) {
+    const curriculum = ALL_CURRICULA[level];
+    const prefix = `${level.replace(/\./g, '')}-`;
+    const allowance = courseAllowanceFor(`${prefix}l01`);
+    const tasks = courseWritingTasks(level).length;
+    const gradedCheckpoints = curriculum.checkpoints.filter(
+      (cp) => chapterWritingTask(chapterLektionen(curriculum, cp), level),
+    ).length;
+    assert.ok(tasks > 0, `${level}: no course writing tasks in the bank for a registered curriculum`);
+    assert.ok(
+      allowance >= tasks + gradedCheckpoints,
+      `${level}: allowance ${allowance} < ${tasks} writing tasks + ${gradedCheckpoints} graded checkpoints`,
+    );
+  }
+});
+
+test('the allowance grows with the course instead of standing beside it', () => {
+  // A1.1 today: twelve Lektionen + four checkpoints = sixteen. The number is
+  // read off the bank, so adding a Lektion moves it without a second edit.
+  assert.equal(CHECKPOINTS_PER_COURSE, 4);
+  assert.equal(courseAllowanceFor('a11-l01'), COURSE.length + CHECKPOINTS_PER_COURSE);
+  assert.equal(courseAllowanceFor('a11-l01'), 16);
+  // Per course, never shared: A1.2 gets its own, counted from its own bank.
+  assert.equal(courseAllowanceFor('a12-l01'), courseWritingTasks('a1.2').length + CHECKPOINTS_PER_COURSE);
+  // A key that names no course gets no course allowance at all — the caller
+  // then falls back to the ordinary tier limit rather than inventing one.
+  assert.equal(courseAllowanceFor('formular-hotel-anmeldung'), 0);
+  assert.equal(courseAllowanceFor(undefined), 0);
+});
+
+test('the function gates on the derived allowance, not on the bare constant', () => {
+  const src = readFileSync(join(ROOT, 'netlify/functions/evaluate-writing.mjs'), 'utf8');
+  assert.match(src, /courseWritingTasks\(level\)\.length/, 'the allowance must be counted off the task bank');
+  assert.match(src, /const courseLimit = courseAllowanceFor\(task_key\)/);
+  assert.match(src, /\? courseLimit\n/, 'the enforced limit must be the derived course allowance');
 });
