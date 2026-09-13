@@ -474,7 +474,7 @@ export const MAX_UNTAUGHT_IN_PRODUCTION = 3;       // a1.1; per level in LEVELS 
  * already written there: L3 line 3 „Er ist zwanzig. **Meine** Schwester ist noch jung.“ → „… **Sie**
  * ist noch jung.“ Do NOT close it by narrowing the pattern — that is how it read 0 for three rounds.
  */
-export const MAX_DEFERRED_CONSTRUCTIONS = 1;       // a1.1 — measured 2026-09-13 (round 14)
+export const MAX_DEFERRED_CONSTRUCTIONS = 0;       // a1.1 — closed 2026-09-13 (round 14: L3 line 3 changed, dictation prefers construction-free, unreportable lines)
 
 /**
  * RULE 16 ratchet — how many `examTeile` claims a level may still make that nothing in the module
@@ -523,7 +523,7 @@ export const MAX_MODEL_CHECKLIST_BREAKS = 0;       // a1.1; per level in LEVELS 
  * „Er ist zwanzig. **Sie** ist noch jung.“ — one word, no possessive, and it rehearses the er/sie
  * contrast that IS this Lektion's grammar. Then L3 has four free lines and this ratchet goes to 0.
  */
-export const MAX_SHARED_PRODUCTION_LINES = 1;      // a1.1; per level in LEVELS below — measured 2026-09-13
+export const MAX_SHARED_PRODUCTION_LINES = 0;      // a1.1; per level in LEVELS below — closed 2026-09-13 (round 14: L3 line 3 „Sie ist noch jung.“)
 
 /**
  * RULE 20 ratchet — how many words a level's MODEL TEXTS use that the course has not taught yet.

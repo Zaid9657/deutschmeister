@@ -400,7 +400,7 @@ export const CURRICULUM_A11 = {
           { speaker: 'Lena', de: 'Ana, ist das deine Familie?', en: 'Ana, is that your family?' },
           { speaker: 'Ana', de: 'Ja. Das sind meine Eltern und meine Geschwister: ein Bruder, eine Schwester.', en: 'Yes. Those are my parents and my siblings: a brother, a sister.' },
           { speaker: 'Lena', de: 'Wie alt ist er?', en: 'How old is he?' },
-          { speaker: 'Ana', de: 'Er ist zwanzig. Meine Schwester ist noch jung.', en: 'He is twenty. My sister is still young.' },
+          { speaker: 'Ana', de: 'Er ist zwanzig. Sie ist noch jung.', en: 'He is twenty. She is still young.' },
           { speaker: 'Lena', de: 'Welche Sprachen sprechen deine Eltern?', en: 'Which languages do your parents speak?' },
           { speaker: 'Ana', de: 'Sie sprechen Arabisch und Deutsch.', en: 'They speak Arabic and German.' },
           { speaker: 'Lena', de: 'Spricht dein Bruder auch Englisch?', en: 'Does your brother speak English too?' },
@@ -432,7 +432,7 @@ export const CURRICULUM_A11 = {
       phonetik: { focus: 'Der Umlaut ü in Bruder – Brüder', items: ['der BRU-der', 'die BRÜ-der', 'die MÜT-ter'] },
       hoeren: { kind: 'dictation', lines: [5, 7] },
       sprechen: {
-        readAloud: [2, 7],
+        readAloud: [2, 3],
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Familie: Geschwister? Sohn? Tochter?',

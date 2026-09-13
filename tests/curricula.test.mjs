@@ -815,12 +815,13 @@ test('rule 15b: a construction the course defers is in no line the learner produ
         + `(ratchet ${ratchet}) — ${offenders.map((o) => `L${o.nr} ${o.where} [${o.kind}] „${o.hit}“`).join(', ')}`,
     );
   }
-  assert.equal(MAX_DEFERRED_CONSTRUCTIONS, 1, 'RULE 15b at A1.1 stands at the measured 1 — it may only go down');
-  // The one that remains is NAMED, so a second one cannot hide behind the number.
+  assert.equal(MAX_DEFERRED_CONSTRUCTIONS, 0, 'RULE 15b at A1.1 closed at 0 — it may never go up');
+  // Closed in round 14: L3 line 3 lost its possessive and the dictation picker prefers
+  // construction-free, unreportable lines — nothing remains to name.
   assert.deepEqual(
     constructionsBeforeTaught(CURRICULUM_A11, loadPoolItems('a1.1'))
       .map((o) => `${o.where} [${o.kind}] „${o.hit}“`),
-    ['a1.1-cp1-hoeren-3 (dictation) [separable-verbs-intro] „Bitte füllen Sie das Formular aus.“'],
+    [],
   );
 });
 
@@ -1030,7 +1031,7 @@ test('rule 18: dictation and read-aloud never work on the same sentence', () => 
   // The owner decides the one-word dialogue change that closes it — see MAX_SHARED_PRODUCTION_LINES.
   const shared = sharedProductionLines(CURRICULUM_A11);
   assert.deepEqual(
-    shared.map((o) => `L${o.nr}`), ['L3'],
+    shared.map((o) => `L${o.nr}`), [],
     'a Lektion dictates and reads aloud the same line — move a window, do not raise the ratchet',
   );
   assert.equal(shared.length, MAX_SHARED_PRODUCTION_LINES);

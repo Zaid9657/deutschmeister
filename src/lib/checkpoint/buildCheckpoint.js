@@ -411,7 +411,30 @@ function buildHoeren(ctx) {
   // because "unused first, then whatever is left" is the rule all three skill
   // sections share (DaF review #8, MAJOR 2), and Hören must not become the one
   // section that is exempt the day the order changes.
-  const lines = freeLinesFirst(shuffle(dialogLines(chapter), rng), usedLineKeys);
+  // Construction-free lines first (RULE 15b reads checkpoint dictations too, review #13
+  // MAJOR 3): a learner must not be asked to reproduce a Satzklammer or a possessive
+  // the course has not taught yet — the same preference the read-aloud section applies.
+  // …and, among those, the lines Lesen cannot turn into a report LAST-BUT-ONE:
+  // a reportable statement is the raw material of a Lesen window, and a poor
+  // chapter (chapter 1 has three construction-free reportable lines) must not
+  // have Hören eat the one line the fourth Lesen window needs. Dictation takes
+  // what Lesen cannot use — greetings, questions, formulas — first.
+  const spec = reportSpec(ctx);
+  const reportable = new Set();
+  for (const lektion of chapter) {
+    for (const { window, start } of windowsOf(lektion)) {
+      for (const r of windowReports(window, spec)) reportable.add(lineKeyOf(lektion.id, start + r.lineIndex));
+    }
+  }
+  const unreportableFirst = (ls) => [
+    ...ls.filter((l) => !reportable.has(lineKeyOf(l.lektionId || l.lektionNr, l.idx))),
+    ...ls.filter((l) => reportable.has(lineKeyOf(l.lektionId || l.lektionNr, l.idx))),
+  ];
+  const lines = unreportableFirst(clampFreeFirst(
+    freeLinesFirst(shuffle(dialogLines(chapter), rng), usedLineKeys),
+    ctx.curriculum,
+    checkpoint.afterLektion,
+  ));
   take(lines, 3).forEach((line, i) => {
     usedLineKeys.add(lineKeyOf(line.lektionId || line.lektionNr, line.idx));
     items.push({
