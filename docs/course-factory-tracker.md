@@ -242,6 +242,109 @@ format is recorded in the decisions log. Briefs: `docs/course-factory/wave7/`; t
 | C | Reading B1.1 (8 rewrites ≤220 words with checks + telc Lesen Teil 1 / Teil 3 exam-format lessons) + listening B1.1 (+78 questions incl. 18 dictation) | parked 2026-09-08 | — |
 | D | Abschlusstest B1.1 (telc format: Hören, Lesen Teil 1+2, Sprachbausteine Teil 1, Schreiben) + `/b1-1-phase` 28-day plan + hand-offs + the eleven-key `exam_attempts` CHECK | parked 2026-09-08 | — |
 
+## Wave 8 — A1.1 rebuild on the course standard (started 2026-09-12)
+
+Not a content wave: the first rebuild of a course against `docs/course-standard-2026-09-12.md`.
+A1.1 stops being 12 grammar slugs in a 28-day list and becomes 12 situational Lektionen in an
+in-app lesson engine. Binding data contract: `docs/course-factory/a11-rebuild/CONTRACT.md`.
+Rebuild order per standard §6 is A1.1 → A1.2 → A2.1 → A2.2; this wave is A1.1 only, and it is
+the template every later level reuses (engine, checkpoints, review, syllabus are level-agnostic;
+only `src/data/curricula/<level>.js` + the pool are per level).
+
+| # | Step | Status | PR |
+|---|---|---|---|
+| 1 | The standard itself: what a DeutschMeister course is (12 situational Lektionen with Goethe can-dos, 9-step Lektion, lesson engine, checkpoints every 3, spaced review, dated plan), the measured gap of the four live courses, the rebuild order; three sourced research memos under `docs/research/*-2026-09-12.md` | merged 2026-09-12 | #113 |
+| 2 | A1.1 rebuilt to the standard: contract, pool builder, answer checker, curriculum module with 12 situational Lektionen, curriculum course home, public Lehrplan on `/courses/a1-1/`, the 9-stage player at `/course/:level/l/:nr`, 4 checkpoints with the 60/40 rule, the review ladder, migration `2026-09-12-lesson-engine.sql` | merged 2026-09-12 | #114 |
+| 3 | DaF review #1 applied: 5 blockers, majors and minors; practice-item quality filter (English meta and negation traps out, German spelling items in) and a level-wide selection plan (primary slug ≥ 4 of 7, no item twice in the level, no lemma more than twice per Lektion) | merged 2026-09-12 | #115 |
+| 4 | Toward 9/10: recorded-audio pipeline (`scripts/generate-course-audio.mjs` + the committed manifest), AI-graded writing in every Lektion, scored read-aloud (`score-readaloud`, no LLM), situational hand-written items + „Erklär mir das", completion levers (exam-date plan, forgiving streak, signed-out progress, course-reminder mailer) | merged 2026-09-12 | #116 |
+| 5 | DaF review #2 (written in the same branch) and round 3: level-scoped quality rules, 116 hand-authored situational items, L8–L12 curriculum fixes, five-gap Formulare with source text, register normalised to Sie, grader floor bound to the Textsorte | merged 2026-09-13 | #117 |
+| 6 | DaF review #3 report (3 blockers, 11 majors; mean 20.4/25) | merged 2026-09-13 | #118 |
+| 7 | Round 4 — review #3 closed **as rules**: gloss-only verb cues repaired at build time (58 items), `statementNoTask()`, alphabet card rewritten to the letter names the items accept, `drillsSlug()` measuring real primary-slug drill, du-imperatives normalised to Sie, Wortfeld words carried into the input, validator gains the Wortfeld-coverage and item-lexis ratchets. 581 tests, 136 pages verified | merged 2026-09-13 | #119 |
+| 8 | Round 5 — review #4 closed as rules: spelled answers fold their separators, article cue repaired at build time, capitalisation seen by the checker, all twelve rule cards in Lektion lexis, Sie register across chrome and notices, „Buchstabiert:" retired, the speaking task travels to the coach, can-do and missionless ratchets, the validator measures the shipped pool. 619 tests, 136 pages verified | merged 2026-09-13 | #120 |
+
+### The review ladder (adversarial DaF teacher / SD1 examiner, measured not assumed)
+
+| # | After | Findings | Course mean (of 25) | Report |
+|---|---|---|---|---|
+| 1 | #114 | 5 BLOCKER · 45 MAJOR · 25 MINOR | 17.2 | `REVIEW-daf-2026-09-12.md` |
+| 2 | #115/#116 | 1 BLOCKER · 35 MAJOR · 44 MINOR | 19.8 | `REVIEW-daf-2-2026-09-12.md` |
+| 3 | #117 | 3 BLOCKER · 11 MAJOR | 20.4 | `REVIEW-daf-3-2026-09-12.md` |
+| 4 | #119 | 3 BLOCKER · 11 MAJOR | 19.9 | `REVIEW-daf-4-2026-09-12.md` |
+| 5 | #120 | pending | — | — |
+
+All five reports live in `docs/course-factory/a11-rebuild/`. Every round recomputes the real draw
+(`planPractice(CURRICULUM_A11, a11.json, attempt)`) rather than reading the pool, so each verdict is
+about what a learner sees. The standard's phase 8 requires **0 BLOCKER / 0 MAJOR** before A1.1 is
+fronted as finished.
+
+### What is live on main (7d8b161)
+
+- **12 situational Lektionen** in `src/data/curricula/a11.js` (Astro twin drift-guarded), each with
+  situation, Handlungsfeld, Goethe can-dos, exam Teile, 15–25 Wortfeld entries (262 in total),
+  a dialogue, a notice card, a pretest, Phonetik, dictation, read-aloud, an open speaking task and a
+  writing task; `hoursTotal: 54` derived from the minutes, of which only ≈5.8 h are guided lesson time
+  (the syllabus tile splits guided time from practice material — never advertise „54 Stunden Kurs").
+- **9-stage lesson engine** (`src/lib/lesson/*`, `src/components/lesson/*`,
+  `/course/a1.1/l/:nr`) with 7 controlled items per Lektion, re-queue, mastery and error tags.
+- **4 checkpoints** (`src/lib/checkpoint/buildCheckpoint.js`, 20 items, five sections, 60 %/40 % rule,
+  remediation sets, 3 attempts per 8 h) plus the existing free Abschlusstest A1.1.
+- **AI-graded writing in all 12 Lektionen** — twelve `goethe_a1` course tasks (`a11-l01…a11-l12`,
+  6 Formular with source text and five gaps / 6 Mitteilung with three content Leitpunkte) on
+  `evaluate-writing.mjs` with the Goethe criteria and a Textsorte-bound length floor.
+- **Scored speaking**: `score-readaloud` aligns one clip word by word against the expected line (no
+  LLM), and the Lektion's open task travels to the speaking coach, which works that task.
+- **Exam-date plan** card + on-track banner, **forgiving streak** (one missed day per week),
+  signed-out local progress with a one-time merge on sign-in.
+- **Course-reminder mailer** `netlify/functions/course-reminder.mjs`, scheduled 18:00 UTC in
+  `netlify.toml`, A1 German copy (owner-approved, du-form by owner decision). **Live since
+  2026-09-12**: `COURSE_REMINDER_ENABLED=true` is set in the Netlify functions scope and
+  `migrations/2026-09-13-course-reminder.sql` is applied; first scheduled run 2026-09-13 18:00 UTC.
+- **Recorded-audio pipeline** `scripts/generate-course-audio.mjs` + `src/data/curricula/a11.audio.js`;
+  the manifest is still the empty stub, so every screen falls back to the browser voice and honestly
+  labels itself „Computerstimme" until the owner's Azure run (181 clips, ≈7 cents).
+- **347-item practice pool** (`src/data/lessonPools/a11.json`) built from the cache by
+  `scripts/build-lesson-pool.mjs`, of which **119** are hand-written situational items
+  (`a11.extra.json`) — never hand-edit the built pool.
+- **Quality rules + four validator ratchets** in `scripts/validate-curriculum.mjs`, current values:
+  RULE 10 Wortfeld coverage `MAX_UNCOVERED_WORTFELD = 19`, RULE 11 hand-written item lexis
+  `MAX_UNTAUGHT_ITEM_TOKENS = 9`, RULE 12 unrehearsed can-dos `MAX_UNREHEARSED_CANDOS = 6`,
+  RULE 13 speaking tasks without a mission `MAX_MISSIONLESS_LEKTIONEN = 4`. Ratchets only go down.
+
+### The lesson of this wave: rules, not item lists
+
+Every round that closed a finding by naming ids left the class alive, and the next review found it
+again: review #2 closed the ordinal items with a rule (gone for good) and the punish-a-correct-answer
+class with three ids (36 survivors, two of them in the draw); review #3 closed the verb-cue class with
+a rule that recognised it by its vocabulary (`verb:` in the gloss) instead of its form, and review #4
+found the identical shape on articles in 42 items. The binding form is therefore: **a finding class
+closes with a rule in the builder or the checker plus a test/ratchet that pins it at its floor —
+never with a list of ids.** The corollary the reviews state twice: what the validator does not read
+does not exist for the repair round (RULE 10/11 read only `a11.extra.json` for one round, i.e. half
+the course), and hand-written repairs must pass the same gate as the legacy bank.
+
+After any content edit, re-run both, in this order:
+
+```bash
+node scripts/build-lesson-pool.mjs a1.1   # rebuilds a11.json from the cache + extras
+node scripts/validate-curriculum.mjs      # RULES 1–13 with the four ratchets
+```
+
+### Open owner asks (Wave 8)
+
+1. **The A1.1 audio run** — `node scripts/generate-course-audio.mjs a1.1` (dry run first; needs
+   `AZURE_SPEECH_KEY`/`AZURE_SPEECH_REGION` + the service-role key, neither of which exists in a cloud
+   agent session), then commit the manifest and `node scripts/sync-curricula.mjs`. Paste-ready:
+   `docs/owner-prompts.md` § "Run the A1.1 course audio". Until it lands the course says
+   „Computerstimme" on every audio surface.
+2. **Three test learners through the free Lektion 1**, end to end on a phone, before A1.1 is fronted
+   as the shop window — four reviews have measured the data, nobody has watched a human use it.
+3. **GSC**: `deutsch-meister.de` is still not a verified Search Console property (see
+   `docs/seo-routines/README.md`) — no impressions data for the rebuilt course pages.
+4. **Netlify env vars**: the function variables (`COURSE_REMINDER_ENABLED=true`,
+   `LIFECYCLE_ACTIVATION_ENABLED=true`, the API keys) are stored non-secret and the connector once
+   returned them in plain text — mark them secret in the Netlify UI. Do NOT set
+   `LIFECYCLE_TEST_RECIPIENTS`: it would also mute the activation mailer.
+
 ## Measured baseline (do not re-derive)
 
 - `weekly_metrics` is **empty** as of 2026-09-04 — the Monday 06:00 UTC job has not
@@ -295,6 +398,51 @@ format is recorded in the decisions log. Briefs: `docs/course-factory/wave7/`; t
   only screenshot the auth guard.
 
 ## Decisions log
+
+- 2026-09-13 (Wave 8, round 5): **one register, and it is the Sie-register.** Everything the course
+  says to the learner siezt — every practice instruction, notice, rule card, checkpoint and mail
+  ("Bilden Sie den Satz…", "Schreiben Sie das Wort…"); only the *dialogues* duzen, and only between the
+  learner figures (Ana, Tim, Lena), while staff and neighbours (Frau Kaya, Herr Weber, Herr Schmidt)
+  are addressed with Sie. The legacy exercise bank duzt ("Schreib den Satz…"): 39 du-imperatives stood
+  against 30 Sie-forms in the shipped pool, three of them in the drawn seven of the FREE Lektion 1,
+  next to a "Füllen Sie … aus". Normalised in `scripts/build-lesson-pool.mjs` (unanchored, whole-word,
+  so a formula mid-prompt travels with its own text and a sentence-initial one keeps its capital), not
+  by hand, and pinned at 0 du-imperatives by `tests/lesson-pool-rules.test.mjs`. `Buchstabiert:` was
+  retired in the same pass for a different reason — the player renders text and plays no audio, so the
+  truthful label is "Lesen Sie die Buchstaben:".
+- 2026-09-13 (Wave 8, rounds 4–5): **every finding class closes with a rule plus a test, never with a
+  list of ids.** Measured three times in the ladder: the ordinal items were closed with a rule and
+  stayed closed; the "item punishes a correct answer" class was closed for three ids and 36 items of
+  the same build survived, two of them in the draw; `verbCueOnlyInGloss` was the right rule with the
+  wrong grip (it recognised the class by its vocabulary, `verb:` in the English gloss, instead of by
+  its form) and the identical shape reappeared on articles in 42 items. The form a fix must take:
+  a rule in `scripts/build-lesson-pool.mjs` or `src/lib/lesson/check.js` — the question is "does a
+  second answer fit the German prompt just as well?", not "which word is in the gloss" — plus a
+  ratchet or test at its floor. Corollary: **what the validator does not read does not exist for the
+  repair round** (RULE 10/11 read only `a11.extra.json` for one round, i.e. half the course), and
+  hand-written repairs pass the same gate as the legacy bank.
+- 2026-09-13 (Wave 8, round 5): **the Lektion's speaking task travels to the coach without a mission
+  schema.** Four A1.1 Lektionen have a `sprechen.open` prompt but no `speaking_missions` row, so no
+  `?mission=` can be handed over and the coach used to fall back to some other mission of the level —
+  the learner spoke to a task the lesson never set. The prompt now travels in the course context
+  (`courseFlow.js`: `openPrompt`/`openTeil`/`hintWords`) and is sent with the start call as
+  `taskPrompt`/`taskTeil`/`taskHintWords`; `speaking-session` validates it and stores it on the session
+  row, so the coach works that task every turn. On the server it stays a FREE session: no mission row,
+  no pass criteria, no scoring schema — inventing a mission row to carry a prompt would have put an
+  ungraded task into the graded-mission table. RULE 13 (`MAX_MISSIONLESS_LEKTIONEN = 4`) keeps the gap
+  visible instead of hiding it.
+- 2026-09-13 (Wave 8, round 5): **L2's writing task stays a Mitteilung; the can-do moved instead.**
+  Review #4 found L2 promising "Ich kann ein einfaches Formular … ausfüllen" in the public 12×6 grid
+  while its own task was a Mitteilung — and offered both repairs. The Textsorte alternates by parity
+  across the twelve Lektionen (6 Formular / 6 Mitteilung, the SD1 Schreiben Teil 1/2 split), so flipping
+  L2 to `formular` would have broken that balance for one can-do line; the learner fills a Formular in
+  L1, L3, L5, L7, L9 and L11 anyway. Instead the Mitteilung was re-written to serve the Handlungsfeld
+  "Ämter und Behörden: Angaben zur Person" (Anmeldung in der Sprachschule, Leitpunkte Name/Geburtsdatum,
+  Land/Staatsangehörigkeit, Familienstand), which also pulled ledig/verheiratet/Geburtsdatum/
+  Staatsangehörigkeit out of the Wortfeld and into the input, and the can-do line now reads
+  "Ich kann in einer kurzen Nachricht Angaben zu meiner Person machen." RULE 12
+  (`MAX_UNREHEARSED_CANDOS = 6`) pins the class: no can-do may be published that no exercise slot of
+  its own Lektion rehearses.
 
 - 2026-09-12 (owner): **define the course before rebuilding it.** "The courses have to compete with the
   best online German courses — research all aspects, curriculum and design, before we rebuild."

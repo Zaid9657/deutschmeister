@@ -117,6 +117,12 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   Lemon Squeezy products, discounts and redirect URLs are **dashboard-only** (API read-only);
   paste-ready owner prompts are in `docs/owner-prompts.md`; ids in
   `docs/monetization-2026-09-03.md`.
+- **The lesson checker is `src/lib/lesson/check.js`, and it decides every answer in the course.**
+  Spelling answers fold their separators (`HALLO` = `H A L L O` = `H-A-L-L-O`), a case-only miss is
+  `TYPO` (one retry) rather than `WRONG` — except where capitalisation IS the task (`caseSensitive`,
+  the polite `Ihr/Ihre/Ihren`), where it is `WRONG`. Never "fix" an item by widening its `accepted`
+  list alone: the rule belongs in the checker or in `scripts/build-lesson-pool.mjs`, with a test.
+
 - **Measure before you claim: read `weekly_metrics` first.** `netlify/functions/weekly-truth.mjs`
   runs every Monday 06:00 UTC, calls `public.weekly_truth_metrics()` (one SQL pass: users,
   paying subs + MRR, course sales, grammar activity and one-and-done rate, AI usage, lifecycle
@@ -218,6 +224,21 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   situational Lektionen with Goethe can-dos, 9-step Lektion, in-app lesson engine, checkpoints, spaced
   review, dated plan), the measured gap of the four live courses, and the rebuild order. Never sequence
   a course by grammar slug again; the three research memos behind it are `docs/research/*-2026-09-12.md`.
+- **A1.1 is rebuilt on that standard and is the template for every other level** (PRs #114–#120,
+  2026-09-12/13; tracker Wave 8). Live: 12 situational Lektionen (`src/data/curricula/a11.js`), the
+  9-stage player at `/course/a1.1/l/:nr`, 4 checkpoints, a Babbel review ladder, 12 AI-graded writing
+  tasks, scored read-aloud, an exam-date plan and a forgiving streak. Five adversarial DaF reviews
+  (`docs/course-factory/a11-rebuild/REVIEW-daf-*.md`): 5 BLOCKER/45 MAJOR → 1/35 → 3/11 → 3/11 →
+  #5 pending; the standard wants 0/0 before A1.1 is fronted as finished. Two rules from that ladder:
+  **close a finding class with a rule + a test, never with a list of ids**, and the course speaks **Sie**
+  everywhere (tasks, notices, rule cards, mail) — only the dialogues duzen, and only between learners.
+  Four ratchets in `scripts/validate-curriculum.mjs` (RULE 10/11/12/13 = 19/9/6/4) only go down.
+  After ANY content edit re-run both, in order: `node scripts/build-lesson-pool.mjs a1.1` then
+  `node scripts/validate-curriculum.mjs`. `src/data/curricula/a11.audio.js` is still the empty
+  manifest stub, so every audio surface honestly says „Computerstimme" until the owner's Azure run
+  (`docs/owner-prompts.md`). The course-reminder mailer is **live**: `COURSE_REMINDER_ENABLED=true`
+  was set in the Netlify functions scope on 2026-09-12 and `migrations/2026-09-13-course-reminder.sql`
+  is applied; it runs daily 18:00 UTC and claims into `lifecycle_emails` (kind `course_reminder_*`).
 - **Read `docs/HANDOFF-2026-09-03.md` first** — current state, measured revenue, the monetization
   decision that blocks money-side builds, and the open first-lesson-leak question.
 - `docs/medmeister-parity-roadmap.md` was the plan and has **fully shipped** (Batches A–F: claims
