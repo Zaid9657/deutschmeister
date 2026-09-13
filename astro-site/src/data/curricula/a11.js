@@ -292,7 +292,7 @@ export const CURRICULUM_A11 = {
         // `verb-sein` rule card both say „Er ist Marokkaner.“, which is an INPUT surface under
         // RULE 23 and licences the word for every lexis rule. Two slots were freed for this row and
         // for `kommen aus`: `von Beruf` and `der Schalter` (see below).
-        { de: 'die Marokkanerin', word: 'Marokkanerin', article: 'die', plural: 'Marokkanerinnen', en: 'Moroccan woman (m: der Marokkaner, Pl. die Marokkaner)', wordId: null },
+        { de: 'die Marokkanerin', word: 'Marokkanerin', article: 'die', plural: 'Marokkanerinnen', en: 'Moroccan woman (m: der Marokkaner, Pl. die Marokkaner)', wordId: '155e0b29-0bd2-44b9-a5db-f062de63bf9c' },
         { de: 'marokkanisch', word: 'marokkanisch', article: null, plural: null, en: 'Moroccan (form-field value: „Staatsangehörigkeit: marokkanisch“ — the sentence takes the noun)', wordId: 'f25db60a-b383-4427-9fb3-db2dc1b5cac3' },
         // MOVED HERE FROM LEKTION 3 (round 17, DaF review #16, MAJOR 3 / RULE 12): the can-do line
         // of this Lektion has promised „Ich kann sagen, woher ich komme“ since round 1 with nothing
@@ -310,7 +310,7 @@ export const CURRICULUM_A11 = {
         // deducts for. RULE 21 no longer accepts it (`allowNamedField: false`) and RULE 22 forbids
         // it in a Mitteilung, so the word the natural answer needs has to be taught: „Ich bin am
         // 3.5.1998 geboren.“ The date stays in digits — the months are Lektion 12.
-        { de: 'geboren', word: 'geboren', article: null, plural: null, en: 'born (ich bin am … geboren)', wordId: null },
+        { de: 'geboren', word: 'geboren', article: null, plural: null, en: 'born (ich bin am … geboren)', wordId: '23645e51-0aae-40c0-8c20-2d890c16f56d' },
         { de: 'der Familienstand', word: 'Familienstand', article: 'der', plural: '—', en: 'marital status', field: true, wordId: '3302687e-42ad-45b5-a4c9-43b65b8f4a2d' },
         { de: 'das Amt', word: 'Amt', article: 'das', plural: 'Ämter', en: 'public office, authority', wordId: 'b5556cee-448c-47fc-82a7-2a5f9f956c1b' },
         // `der Schalter` is out for the same reason (round 17): it stood in the stage direction of

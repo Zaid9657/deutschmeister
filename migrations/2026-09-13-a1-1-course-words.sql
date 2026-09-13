@@ -7,8 +7,8 @@
 -- twenty-first (`Marokkanerin`, round 17) reach the table without a second file. `marokkanisch`
 -- HAS been seeded (2026-09-13) and its id is back in src/data/curricula/a11.js
 -- (`wordId: 'f25db60a-…'`), so of the twenty-one listed below exactly TWO are still wordId-null
--- in the module: `geboren` and `Marokkanerin`. Re-apply this file to seed them, then paste their
--- ids into a11.js and run `node scripts/sync-curricula.mjs`.
+-- in the module: none — `geboren` and `Marokkanerin`/`Marokkaner` were seeded 2026-09-13 and their
+-- ids are in a11.js. The file stays idempotent for a fresh database.
 --
 -- WHY. src/data/curricula/a11.js lists every Lektion's Wortfeld with the id of
 -- the live `words` row (`wordId`), so the lesson player can show the real
