@@ -91,6 +91,7 @@ import {
   politeCaseItem, POLITE_CUE_RE, INFORMAL_VETO_RE, carriesPoliteForm, NEXT_LEVEL_RE, UNTAUGHT_ANSWER_FORMS, UNTAUGHT_ANSWER_FORM_RE, untaughtForm,
   unconditionedRule, unconditionedRuleSentence, namesCondition,
   frontableOrders, frontedAcceptedForms, missingFrontedOrder, agreementAmbiguity,
+  FRONTABLE_ADVERBIAL_RE, genderPairAmbiguity, genderPartners,
 } from '../src/data/lessonPools/quality.js';
 import { levelLexicon, untaughtTokens, levelSpec, minLektionIndex } from '../scripts/validate-curriculum.mjs';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
@@ -1413,5 +1414,124 @@ test('an error correction has exactly one minimal repair — REVIEW #12 BLOCKER 
   for (const item of [...ALL, ...POOL_A12.items]) {
     const hit = agreementAmbiguity(item);
     assert.equal(hit, null, `${label(item)} — also repairs as „${hit && hit.subject}“`);
+  }
+});
+
+// ── REVIEW #13 ──────────────────────────────────────────────────────────────
+
+test('frontability is derived from the item, not from a list of shapes — REVIEW #13 BLOCKER 1', () => {
+  // The item the review measured. `von Beruf` was not on the round-12 list, so
+  // the GRADED `a1.1-cp1-bausteine-2` marked „Von Beruf bin ich Lehrer." wrong
+  // while the same Lektion's own pretest lists „Von Beruf bin ich" in accepted.
+  const trap = {
+    id: 'gp0', topic: 'verb-sein', type: 'sentence_building',
+    questionDe: 'Bilden Sie den Satz: [ich / sein / Lehrer / von Beruf]',
+    answer: 'Ich bin Lehrer von Beruf.',
+    accepted: ['Ich bin Lehrer von Beruf.', 'Ich bin von Beruf Lehrer.'],
+  };
+  assert.deepEqual(frontableOrders(trap), ['Von Beruf bin ich Lehrer']);
+  assert.deepEqual(missingFrontedOrder(trap), ['Von Beruf bin ich Lehrer']);
+  assert.equal(missingFrontedOrder({ ...trap, accepted: [...trap.accepted, ...frontedAcceptedForms(trap)] }), null);
+
+  // The retired list is kept as a POSITIVE FIXTURE: every shape it held must
+  // still front under the derivation, or the generalisation lost something.
+  const shapes = [
+    ['gestern', 'Ich habe gestern gearbeitet.', 'Gestern habe ich gearbeitet'],
+    ['heute', 'Wir kaufen heute ein.', 'Heute kaufen wir ein'],
+    ['hier', 'Der Stuhl ist hier.', 'Hier ist der Stuhl'],
+    ['am Dienstag', 'Der Termin ist am Dienstag.', 'Am Dienstag ist der Termin'],
+    ['um 7 Uhr', 'Ich stehe um 7 Uhr auf.', 'Um 7 Uhr stehe ich auf'],
+    ['im Mai', 'Mein Geburtstag ist im Mai.', 'Im Mai ist mein Geburtstag'],
+    ['aus Marokko', 'Wir kommen aus Marokko.', 'Aus Marokko kommen wir'],
+    ['nach Berlin', 'Der Zug fährt nach Berlin.', 'Nach Berlin fährt der Zug'],
+    ['bei Anna', 'Das Fest ist bei Anna.', 'Bei Anna ist das Fest'],
+    ['jeden Tag', 'Ich arbeite jeden Tag.', 'Jeden Tag arbeite ich'],
+    ['nächste Woche', 'Der Kurs ist nächste Woche.', 'Nächste Woche ist der Kurs'],
+    // …and the shapes the list did NOT hold, which is what the BLOCKER was about.
+    ['von Beruf', 'Ich bin Lehrer von Beruf.', 'Von Beruf bin ich Lehrer'],
+    ['mit dem Bus', 'Ich fahre mit dem Bus.', 'Mit dem Bus fahre ich'],
+  ];
+  for (const [chunk, answer, want] of shapes) {
+    const item = {
+      id: `fd-${chunk}`, type: 'sentence_building',
+      questionDe: `Bilden Sie den Satz: [x / y / ${chunk}]`, answer,
+    };
+    assert.deepEqual(frontableOrders(item), [want], `„${chunk}“ no longer fronts`);
+  }
+  // Everything the old list held is still reached — read the other way round.
+  for (const [chunk] of shapes) {
+    if (!FRONTABLE_ADVERBIAL_RE.test(chunk)) continue;
+    assert.ok(shapes.find(([c]) => c === chunk), chunk);
+  }
+
+  // The negatives the derivation owes, and they are the reason it is not „any
+  // bracket chunk": a predicate nominal and an object are bare nouns AFTER the
+  // verb and stay put; a separable prefix, a participle and an infinitive are
+  // single tokens that are neither a preposition with a complement nor a
+  // deictic adverb; a modal adverb is not an Angabe at A1.1.
+  for (const item of [
+    { id: 'fd-n1', type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [ich / sein / Lehrer]', answer: 'Ich bin Lehrer.' },
+    { id: 'fd-n2', type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [ich / kaufen / das Brot]', answer: 'Ich kaufe das Brot.' },
+    { id: 'fd-n3', type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [wir / einkaufen / ein]', answer: 'Wir kaufen ein.' },
+    { id: 'fd-n4', type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [ich / haben / gearbeitet]', answer: 'Ich habe gearbeitet.' },
+    { id: 'fd-n5', type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [wir / tanzen / zusammen]', answer: 'Wir tanzen zusammen.' },
+    { id: 'fd-n6', type: 'sentence_building', questionDe: 'Bilden Sie den Satz: [ich / trinken / gern / Kaffee]', answer: 'Ich trinke gern Kaffee.' },
+  ]) {
+    assert.deepEqual(frontableOrders(item), [], `${item.id}: the rule invented an order`);
+  }
+});
+
+test('the gender pair of the Wortfeld is a second minimal repair — REVIEW #13 BLOCKER 2', () => {
+  // The partner table is READ from the curriculum, never typed: the L6 Wortfeld
+  // teaches „der Chef" and „die Chefin" as one pair with the glosses „boss (m)"
+  // and „boss (f)", so the course itself says both nouns exist.
+  const pairs = genderPartners(CURRICULUM_A11);
+  assert.equal(pairs.get('chefin').word, 'Chef');
+  assert.equal(pairs.get('kollegin').word, 'Kollege');
+  assert.equal(pairs.get('verkaeuferin').word, 'Verkäufer');
+  assert.equal(pairs.get('firma'), undefined, 'die Firma has no taught gender partner');
+
+  // The three items the review measured, before the cue.
+  const before = [
+    ['Korrigieren Sie: „Das ist ein Chefin.“', 'Das ist eine Chefin.', 'Das ist ein Chef'],
+    ['Korrigieren Sie: „Das ist ein Verkäuferin.“', 'Das ist eine Verkäuferin.', 'Das ist ein Verkäufer'],
+    ['Korrigieren Sie: „Das ist ein Kollegin im Büro.“', 'Das ist eine Kollegin im Büro.', 'Das ist ein Kollege im Büro'],
+  ];
+  for (const [questionDe, answer, also] of before) {
+    const item = { id: 'gpa', topic: 'indefinite-articles', type: 'error_correction', questionDe, answer, accepted: [answer] };
+    assert.deepEqual(genderPairAmbiguity(item, { level: 'a1.1' }), { article: ['ein', 'eine'], noun: also });
+    assert.equal(exclusionReason(item), REASON.AMBIGUOUS_GENDER_PAIR);
+    // …and after: the cue the course already writes names the element that changes.
+    const pinned = { ...item, questionDe: questionDe.replace('Korrigieren Sie:', 'Korrigieren Sie den Artikel:') };
+    assert.equal(genderPairAmbiguity(pinned, { level: 'a1.1' }), null);
+    assert.equal(exclusionReason(pinned), null);
+  }
+
+  // The axis is symmetric, which is the point of reading the pair rather than
+  // the suffix: „Das ist eine Chef." repairs at the article („ein Chef") and at
+  // the noun („eine Chefin") just as well, and the rule says so.
+  assert.deepEqual(genderPairAmbiguity({
+    id: 'gs1', type: 'error_correction',
+    questionDe: 'Korrigieren Sie: „Das ist eine Chef.“', answer: 'Das ist ein Chef.',
+  }, { level: 'a1.1' }), { article: ['eine', 'ein'], noun: 'Das ist eine Chefin' });
+
+  // The controls. „die Firma" has no partner in the Wortfeld, so the article is
+  // the only repair; „Lena spielen …" repairs at the verb and is the
+  // neighbouring axis; a family swap stays `ambiguousCorrection`'s finding; and
+  // a prompt that names the element owes nothing, whichever element it names.
+  for (const item of [
+    { id: 'gn1', type: 'error_correction', questionDe: 'Korrigieren Sie: „Das ist ein Firma in Berlin.“', answer: 'Das ist eine Firma in Berlin.' },
+    { id: 'gn2', type: 'error_correction', questionDe: 'Korrigieren Sie: „Lena spielen am Wochenende Fußball.“', answer: 'Lena spielt am Wochenende Fußball.' },
+    { id: 'gn3', type: 'error_correction', questionDe: 'Korrigieren Sie: „Ein Schere ist hier.“', answer: 'Die Schere ist hier.' },
+    { id: 'gn4', type: 'error_correction', questionDe: 'Korrigieren Sie das Nomen: „Das ist eine Chef.“', answer: 'Das ist eine Chefin.' },
+  ]) {
+    const hit = genderPairAmbiguity(item, { level: 'a1.1' });
+    assert.equal(hit, null, `${item.id}: no second repair is owed, the rule claims „${hit && hit.noun}“`);
+  }
+
+  // The class, over the built A1.1 pool and the hand file.
+  for (const item of ALL) {
+    const hit = genderPairAmbiguity(item, { level: 'a1.1' });
+    assert.equal(hit, null, `${label(item)} — also repairs as „${hit && hit.noun}.“`);
   }
 });
