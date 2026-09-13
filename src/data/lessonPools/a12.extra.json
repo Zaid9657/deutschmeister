@@ -1,0 +1,6 @@
+{
+  "level": "a1.2",
+  "authored": "2026-09-13",
+  "why": "Hand-written situational practice items for A1.2, in the shape scripts/build-lesson-pool.mjs emits (id `extra-a12-lNN-XX`, so scripts/validate-curriculum.mjs can tell which Lektion an item belongs to and check its lexis under RULE 11). Empty on purpose at hand-over: the curriculum author measured how many usable items the legacy A1.2 bank supplies per primary slug after quality.js filtering and listed the gap per Lektion in docs/course-factory/a12-rebuild/CONTRACT.md. The integrator running scripts/build-lesson-pool.mjs a1.2 fills this file against that list. RULE 11's A1.2 ratchet is 0 and must stay 0: every item added here has to be built from words A1.1 or an earlier A1.2 Lektion has taught.",
+  "items": []
+}
