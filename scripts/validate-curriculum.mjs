@@ -588,12 +588,20 @@ export const MAX_UNANSWERABLE_LEITPUNKTE = 0;      // a1.1; per level in LEVELS 
  * no notice, no item, no review card (DaF review #15, MAJOR 4). RULE 10 could not see it, because
  * RULE 10 counts the exercises too.
  *
- * MEASURED over all 263 A1.1 entries in round 16, and the opening number is the work order: the
+ * MEASURED over all 263 A1.1 entries in round 17, and the opening number is the work order: the
  * cheapest repair is almost always a dialogue line or a clause in the notice of the Lektion that
  * already teaches the word, and every one of them makes the Lektion better on its own terms. Only
  * goes down.
+ *
+ * THE NUMBER ROSE FROM 58 TO 64 IN ROUND 17 AND THAT IS THE RULE GETTING STRICTER, NOT THE COURSE
+ * GETTING WORSE (DaF review #16, MAJOR 2). Round 16 counted `schreiben.sample` as an input surface,
+ * against the rule's own header: the model answer is what the learner is shown AFTER he has written
+ * the graded task. Dropping it exposes the seven entries the course taught only there — the +7 the
+ * review measured — and round 17 closes one of them, `geboren`, on the notice of its own Lektion.
+ * 64 − 1 (`die Post` left the level with its slot) = 63. The remaining six (`L2 ledig`, `L4 der Flohmarkt`, `L5 die Farbe`, `L6 die Nummer`,
+ * `L12 der Gast`, `L12 Gäste einladen`) are the head of the work order.
  */
-export const MAX_WORTFELD_WITHOUT_INPUT = 58;      // a1.1; per level in LEVELS below — measured 2026-09-13
+export const MAX_WORTFELD_WITHOUT_INPUT = 63;      // a1.1; per level in LEVELS below — measured 2026-09-13 (round 17)
 
 /**
  * RULE 22 ratchet — how many sentences of a level's Mitteilung model texts are a FORM read out.
@@ -795,14 +803,17 @@ export const LEVELS = {
       sharedProductionLines: MAX_SHARED_PRODUCTION_LINES,
       untaughtInModelTexts: MAX_UNTAUGHT_IN_MODEL_TEXTS,
       unanswerableLeitpunkte: MAX_UNANSWERABLE_LEITPUNKTE,
-      // RULE 23, measured over all 264 A1.1 entries 2026-09-13 (round 16): **58**. The work order
-      // it names, Lektion by Lektion: L2 five (verheiratet, der Student, die Lehrerin, das
-      // Geburtsdatum, der Familienstand), L6 ten (die Firma, der Chef, die Chefin, die Kollegin,
-      // die Arbeit, die Handynummer, die E-Mail-Adresse, die Ingenieurin, der Verkäufer, die
-      // Verkäuferin), L12 eight, the rest spread over L1, L3–L5, L7–L11. `marokkanisch` — the entry
-      // the rule was written for — is NOT among them any more: it is in the L2 notice and in the
-      // L2 model text. Every repair is a dialogue line or a notice clause in the Lektion that
-      // already lists the word, and each one makes that Lektion better on its own terms.
+      // RULE 23, measured over all 263 A1.1 entries 2026-09-13 (round 17): **63**, with the model
+      // answer no longer counted as input (DaF review #16, MAJOR 2 — see MAX_WORTFELD_WITHOUT_INPUT
+      // for why 58 → 64 is the rule tightening). The work order it names, Lektion by Lektion: L2 six
+      // (ledig, verheiratet, der Student, die Lehrerin, das Geburtsdatum, der Familienstand), L6 ten
+      // (die Firma, der Chef, die Chefin, die Kollegin, die Arbeit, die Handynummer, die
+      // E-Mail-Adresse, die Ingenieurin, der Verkäufer, die Verkäuferin), L12 eight, the rest spread
+      // over L1, L3–L5, L7–L11. `marokkanisch`, `die Marokkanerin`, `der Marokkaner` and `geboren` —
+      // the four entries the nationality strand turns on — are NOT among them: all four stand in the
+      // L2 notice. Every repair is a dialogue line or a notice clause in the Lektion that already
+      // lists the word, and each one makes that Lektion better on its own terms. `58 → 63` is the
+      // rule tightening, not the course slipping.
       wortfeldWithoutInput: MAX_WORTFELD_WITHOUT_INPUT,
       formSpeakSentences: MAX_FORM_SPEAK_SENTENCES,
       // RULE 19 is a hard rule (0, no ratchet), like RULE 14: a model text that contradicts its own
@@ -938,11 +949,12 @@ export const LEVELS = {
       unanswerableLeitpunkte: 9,
       // RULE 23, measured on the paused A1.2 draft 2026-09-13 (round 16): **6** Wortfeld entries
       // the draft lists and puts on no input surface of their own Lektion — L3 `das Kaufhaus`,
-      // `das Geschäft`, `die Bibliothek`, L7 `der Körper`, L11 `die Sonne`, `warm`. Paused;
-      // re-measured, and no A1.2 content was touched to get there (the level is frozen by owner
-      // decision, 2026-09-13). Six of 201 against A1.1's 58 of 264 is not a better draft — A1.2's
-      // Wortfelder are simply shorter.
-      wortfeldWithoutInput: 6,
+      // `das Geschäft`, `die Bibliothek`, L7 `der Körper`, L11 `die Sonne`, `warm`. RE-MEASURED
+      // 2026-09-13 (round 17) after the model answer stopped counting as input: **7**, the seventh
+      // being L4 `die Toilette`. Paused; re-measured only, and no A1.2 content was touched to get
+      // there (the level is frozen by owner decision, 2026-09-13). Seven of 201 against A1.1's 63 of
+      // 263 is not a better draft — A1.2's Wortfelder are simply shorter.
+      wortfeldWithoutInput: 7,
       // RULE 22, measured on the paused A1.2 draft 2026-09-13 (round 16): **1** — L10 „Die Größe
       // ist 38.“, the same form-speak shape A1.1 carried five times. Paused; re-measured, and no
       // A1.2 content was touched to get there; whoever resumes the level writes „Ich brauche
@@ -1458,13 +1470,37 @@ export function canDoRehearsal(c, extraItems) {
       for (const f of formsOf({ de: low }, spec.irregularForms)) slots.add(f);
     }
     for (const line of l.canDo || []) {
-      const keywords = tokenise(line).map((t) => t.toLowerCase())
-        .filter((t) => !spec.functionSet.has(t) && !CANDO_STOPWORDS.has(t));
-      // A line whose every word is a function word („… mit hier oder da antworten“) carries no
-      // content keyword to match on; it is outside this rule rather than an offender.
-      if (!keywords.length) continue;
-      const hit = keywords.some((k) => slots.has(k) || [...formsOf({ de: k }, spec.irregularForms)].some((f) => slots.has(f)));
-      if (!hit) offenders.push({ nr: l.nr, line });
+      // SPLIT AT „ und “, AND EVERY HALF NEEDS ITS OWN EVIDENCE (round 17, DaF review #16, MAJOR 3;
+      // ordered in rounds 14, 15 and 16). A can-do line is printed on the PUBLIC syllabus page, so
+      // „Ich kann sagen, woher ich komme und was ich von Beruf bin.“ is two promises to a buyer, and
+      // the old `keywords.some(...)` over the whole line let the second half pay for the first: L2
+      // promised the origin sentence for sixteen rounds while `kommen` was Lektion 3, no country
+      // name stood in its Wortfeld and not one item asked where anybody came from.
+      for (const half of String(line).split(/ und /)) {
+        const keywords = tokenise(half).map((t) => t.toLowerCase())
+          .filter((t) => !spec.functionSet.has(t) && !CANDO_STOPWORDS.has(t));
+        // A half whose every word is a function word („… mit hier oder da antworten“) carries no
+        // content keyword to match on; it is outside this rule rather than an offender.
+        if (!keywords.length) continue;
+        // A SEPARABLE VERB IN A SUBORDINATE CLAUSE IS NOT A DIFFERENT WORD. „… wann ich aufstehe“
+        // is the unseparated finite form; the Lektion rehearses „Ich stehe um sechs **auf**.“, so
+        // `formsOf('aufstehen')` yields `auf` and `stehe` and never `aufstehe`. Matching the two
+        // halves of the Satzklammer against the slots is the same evidence, read the way the
+        // language writes it.
+        const split = (k) => {
+          for (const p of SEPARABLE_PREFIXES) {
+            if (k.startsWith(p) && k.length - p.length >= 4) return [p, k.slice(p.length)];
+          }
+          return null;
+        };
+        const backed = (k) => slots.has(k) || [...formsOf({ de: k }, spec.irregularForms)].some((f) => slots.has(f));
+        const hit = keywords.some((k) => {
+          if (backed(k)) return true;
+          const parts = split(k);
+          return Boolean(parts) && slots.has(parts[0]) && backed(parts[1]);
+        });
+        if (!hit) offenders.push({ nr: l.nr, line, half: half.trim() });
+      }
     }
   }
   return offenders;
@@ -1917,19 +1953,31 @@ export function writingTasksAreAnswerable(c, spec = null) {
  */
 export function formSpeakInModelTexts(c, spec = null) {
   const s = spec || levelSpec(c?.level) || LEVELS['a1.1'];
-  // The nouns the level's own writing tasks name — from the bank, never typed here.
+  // The nouns that NAME A FORM FIELD, from three declarative sources and no typed list (round 17,
+  // DaF review #16, MAJOR 3):
+  //   1. the Leitpunkte of the level's own writing tasks (the bank),
+  //   2. the `schreiben.fields` of the level's own Formular Lektionen,
+  //   3. every Wortfeld entry the curriculum marks `field: true` — the words that ARE form fields
+  //      (Name, Vorname, Nachname, Wohnort, Beruf, Geburtsdatum, Familienstand, Staatsangehörigkeit,
+  //      Telefonnummer, Adresse …). Source 1 alone bound the rule to today's tasks: „Der Beruf ist
+  //      Studentin.“ and „Der Wohnort ist Bremen.“ are the same mistake as „Die Staatsangehörigkeit
+  //      ist marokkanisch.“, and no Leitpunkt of the level happens to say Beruf or Wohnort, so the
+  //      rule could not see them. Form language does not stop being form language because the task
+  //      is not asking for that field today.
   const nouns = new Set();
+  const addNoun = (word) => {
+    const w = String(word || '').replace(/[.,!?;:()"„“]/g, '');
+    if (/^[A-ZÄÖÜ][a-zäöüß]{2,}$/.test(w) && !s.functionSet.has(w.toLowerCase())) nouns.add(w.toLowerCase());
+  };
   for (const l of c.lektionen || []) {
     const bank = l.schreiben?.taskKey ? writingTaskByKey(c.examKey, l.schreiben.taskKey) : null;
-    if (!bank || bank.course !== s.level) continue;
-    for (const point of bank.leitpunkte || []) {
-      for (const word of String(point).split(/\s+/)) {
-        const w = word.replace(/[.,!?;:()"„“]/g, '');
-        // A capitalised word of the Leitpunkt that is not a function word („Ihr“, „Was“, „Wann“):
-        // that is the FIELD the task names — Name, Geburtsdatum, Tag, Uhrzeit, Telefonnummer …
-        if (/^[A-ZÄÖÜ][a-zäöüß]{2,}$/.test(w) && !s.functionSet.has(w.toLowerCase())) nouns.add(w.toLowerCase());
-      }
+    if (bank && bank.course === s.level) {
+      // A capitalised word of the Leitpunkt that is not a function word („Ihr“, „Was“, „Wann“):
+      // that is the FIELD the task names — Name, Geburtsdatum, Tag, Uhrzeit, Telefonnummer …
+      for (const point of bank.leitpunkte || []) for (const word of String(point).split(/\s+/)) addNoun(word);
     }
+    for (const field of l.schreiben?.fields || []) for (const word of String(field).split(/\s+/)) addNoun(word);
+    for (const w of l.wortfeld || []) if (w.field) addNoun(w.word);
   }
   // „Die **Nummer** ist …“ is the same field as „Ihre **Telefonnummer**“: a bank noun that ENDS in
   // the sentence's noun is the same field named shorter.
@@ -1944,7 +1992,11 @@ export function formSpeakInModelTexts(c, spec = null) {
     const w = l.schreiben;
     if (w?.kind !== 'mitteilung' || !w.sample) continue;
     for (const sentence of String(w.sample).split(/(?<=[.!?])\s+/)) {
-      const m = /^(Der|Die|Das)\s+([A-ZÄÖÜ][a-zäöüß]+)\s*(ist|sind|:)\b/.exec(sentence.trim());
+      // `(ist|sind|:)\b` HAD A DEAD BRANCH: a colon followed by a space is not a word boundary, so
+      // the purest form line of all — „Der Familienstand: Ich bin ledig.“, the sentence this whole
+      // strand started from in round 13 — walked past the rule (DaF review #16, MAJOR 3). The word
+      // boundary now belongs to the two verbs and to nothing else.
+      const m = /^(Der|Die|Das)\s+([A-ZÄÖÜ][a-zäöüß]+)\s*(?:\b(?:ist|sind)\b|:)/.exec(sentence.trim());
       if (m && isFieldNoun(m[2])) offenders.push({ nr: l.nr, de: sentence.trim(), noun: m[2] });
     }
   }
@@ -1979,7 +2031,11 @@ export function wortfeldInputCoverage(c, spec = null) {
       l.dialog?.title, l.dialog?.setting, ...(l.dialog?.lines || []).map((x) => x.de),
       l.notice?.title, l.notice?.bodyDe, ...(l.notice?.examples || []),
       l.pretest?.model, ...(l.pretest?.accepted || []),
-      l.schreiben?.sample,
+      // NOT `l.schreiben.sample` (round 17, DaF review #16, MAJOR 2). The rule's own header says a
+      // word a learner only meets inside the exercise he is graded on has been shown, not taught —
+      // and the model answer is shown AFTER the graded task is written. Counting it as input made
+      // the rule blind to exactly the subset round 15 ordered: seven entries stood only there,
+      // `geboren` among them, the word round 16 introduced for this very finding.
     ].filter(Boolean);
     const seen = new Set();
     for (const src of sources) for (const t of tokenise(src)) seen.add(t.toLowerCase());
@@ -1990,6 +2046,113 @@ export function wortfeldInputCoverage(c, spec = null) {
     }
   }
   return uncovered;
+}
+
+/**
+ * COUNTRY STEMS — the world's, not the course's.
+ *
+ * The stem of a nationality adjective: `marokkan` + `isch`, `türk` + `isch`. The list belongs to
+ * the WORLD and therefore does not grow when the course grows — the same argument
+ * `src/lib/lesson/writing.js` makes for its own copy, and the reason a typed list is right here and
+ * wrong for a Wortfeld noun set. It is deliberately NOT imported from `writing.js`: this validator
+ * must keep measuring if the grader is rewritten, and a rule that reads the file it polices is not
+ * an independent measurement. Matching is EXACT (`stem + 'isch'`), so no ordinary `-isch` adjective
+ * (`praktisch`, `typisch`, `frisch`) can collide with it.
+ */
+export const COUNTRY_STEMS = [
+  'marokkan', 'türk', 'poln', 'russ', 'syr', 'arab', 'span', 'ital', 'griech', 'iran', 'irak',
+  'afghan', 'rumän', 'bulgar', 'ungar', 'kroat', 'serb', 'tschech', 'slowak', 'chines', 'japan',
+  'korean', 'indones', 'vietnames', 'brasilian', 'mexikan', 'amerikan', 'kanad', 'ägypt', 'tunes',
+  'alger', 'niger', 'kenian', 'äthiop', 'somal', 'sudanes', 'libanes', 'jordan', 'israel',
+  'palästinens', 'ukrain', 'litau', 'lett', 'estn', 'finn', 'schwed', 'norweg', 'dän',
+  'niederländ', 'belg', 'französ', 'portugies', 'österreich', 'schweizer', 'engl', 'brit', 'ir',
+  'schott', 'alban', 'bosn', 'mazedon', 'georg', 'armen', 'aserbaidschan', 'kasach', 'usbek',
+  'pakistan', 'ind', 'bengal', 'nepales', 'philippin', 'malays', 'thailänd',
+];
+
+const COUNTRY_ADJECTIVES = new Set(COUNTRY_STEMS.map((x) => x + 'isch'));
+
+/** Finite forms of `sein` a predicate can hang on. */
+const SEIN_FINITE = /\b(bin|bist|ist|sind|seid|war|warst|waren|wart)\b/;
+
+/**
+ * RULE 24: NO PERSON IS AN ADJECTIVE (DaF review #16, BLOCKER).
+ *
+ * Round 16 replaced the form line „Die Staatsangehörigkeit ist marokkanisch.“ with „**Ich bin
+ * marokkanisch.**“ and put it in three places at once: the notice of L2 raised it to a RULE, the
+ * graded model text of L2 printed it, and a hand item made the learner PRODUCE it (drawn twice in
+ * the real plan). No German speaker says it. A nationality adjective is attributive on a thing
+ * („marokkanischer Tee“) and it is the value of a form FIELD („Staatsangehörigkeit: marokkanisch“);
+ * about a person German uses the NOUN — „Ich bin Marokkanerin.“, „Er ist Marokkaner.“ `deutsch` is
+ * the one exception and is named as one.
+ *
+ * The way it happened is the finding behind the finding: RULE 20 requires every word of a model
+ * text to be taught, `Marokkanerin` was not in the Wortfeld, so the adjective was the only version
+ * that passed all twenty-three rules. THE RULE APPARATUS WROTE THE SENTENCE AND NO RULE ASKED
+ * WHETHER IT WAS GERMAN. This is that rule, and it is a FORM over the whole level rather than three
+ * repaired strings.
+ *
+ * THE SURFACES — every place the level PRODUCES language: the dialogue lines, the notice body and
+ * its examples, the pretest model and its accepted openings, the Schreiben model text, and every
+ * item the learner meets (hand source, built pool and all four built checkpoints) read as
+ * `questionDe` with the blank filled by its own `answer`, plus `answer`, `accepted`, `options` and
+ * `explanationDe`. An item is a production surface only when it is read the way the learner leaves
+ * it — „Ana ___ marokkanisch. (sein)“ is innocent until the answer goes in.
+ *
+ * THE PERSON SUBJECT is a personal pronoun, `man`, one of the level's cast names, or a
+ * `Herr`/`Frau` address, anywhere in the same sentence as the finite `sein`. A form field is not a
+ * sentence and carries no subject, which is exactly why „Staatsangehörigkeit: marokkanisch“ passes.
+ *
+ * HARD 0 at both levels, like RULE 17, 19, 20 and 22: a notice, a model text and an item are what a
+ * round has just written.
+ */
+export function predicativeNationalityAdjectives(c, spec = null, { extraItems = null, poolItems = null } = {}) {
+  const s = spec || levelSpec(c?.level) || LEVELS['a1.1'];
+  extraItems = extraItems ?? loadExtraItems(s.level);
+  poolItems = poolItems ?? loadPoolItems(s.level);
+  const personRe = new RegExp(
+    `\\b(?:ich|du|er|sie|es|wir|ihr|man|herr|frau|${[...s.nameSet].join('|')})\\b`, 'i',
+  );
+  const offenders = [];
+  const scan = (nr, where, text) => {
+    if (!text) return;
+    for (const sentence of String(text).split(/(?<=[.!?])\s+|\n+/)) {
+      if (!SEIN_FINITE.test(sentence) || !personRe.test(sentence)) continue;
+      const m = /\b(?:bin|bist|ist|sind|seid|war|warst|waren|wart)\s+(?:(?:auch|nicht|sehr|ganz|halb|schon|noch)\s+)*([a-zäöüß]+isch)\b/.exec(sentence);
+      if (!m) continue;
+      const adj = m[1];
+      if (adj === 'deutsch') continue;           // the one named exception
+      if (!COUNTRY_ADJECTIVES.has(adj)) continue;
+      offenders.push({ nr, where, de: sentence.trim(), adj });
+    }
+  };
+  // The item surfaces, read with the blank filled the way the learner leaves it.
+  const scanItem = (nr, it) => {
+    const filled = String(it.questionDe || '').includes('___')
+      ? String(it.questionDe).replace(/_{2,}/g, String(it.answer || ''))
+      : it.questionDe;
+    for (const [key, text] of [
+      ['questionDe', filled], ['answer', it.answer], ['explanationDe', it.explanationDe],
+      ...(it.accepted || []).map((a, i) => [`accepted[${i}]`, a]),
+      ...(it.options || []).map((o, i) => [`options[${i}]`, o]),
+    ]) scan(nr, `${it.id} ${key}`, text);
+  };
+  for (const l of c.lektionen || []) {
+    for (const line of l.dialog?.lines || []) scan(l.nr, 'dialog', line.de);
+    scan(l.nr, 'notice.bodyDe', l.notice?.bodyDe);
+    for (const ex of l.notice?.examples || []) scan(l.nr, 'notice.examples', ex);
+    scan(l.nr, 'pretest.model', l.pretest?.model);
+    for (const a of l.pretest?.accepted || []) scan(l.nr, 'pretest.accepted', a);
+    scan(l.nr, 'schreiben.sample', l.schreiben?.sample);
+  }
+  for (const it of [...extraItems, ...poolItems]) scanItem(lektionOfItem(it.id) || 0, it);
+  for (const cp of c.checkpoints || []) {
+    for (const item of buildCheckpoint({ curriculum: c, checkpoint: cp, pool: poolItems || [] })) {
+      scanItem(cp.afterLektion, { ...item, id: item.id });
+      scan(cp.afterLektion, `${item.id} text`, item.audioText || item.text || item.statement);
+    }
+  }
+  return offenders;
 }
 
 /**
@@ -2761,6 +2924,13 @@ export function validateCurriculum(c, extraItems, poolItems) {
     fail(`RULE 23: ${wortfeldInput.length} Wortfeld-Einträge stehen in keiner Eingabefläche ihrer Lektion, Ratchet ist ${r.wortfeldWithoutInput ?? 0} — ${wortfeldInput.map((u) => `L${u.nr} ${u.de}`).join(', ')}`);
   }
 
+  // ---- RULE 24 (no person is an adjective, DaF review #16, BLOCKER) -----------------------------
+  // Hard 0 at every level, no ratchet: a notice, a model text and an item are what a round just
+  // wrote, and the sentence this rule forbids is not German.
+  for (const o of predicativeNationalityAdjectives(c, spec, { extraItems, poolItems })) {
+    fail(`RULE 24: L${o.nr} ${o.where}: „${o.de}“ — eine Staatsangehörigkeit steht im Satz als NOMEN (Ich bin Marokkanerin.), das Adjektiv „${o.adj}“ nur als Formularwert`);
+  }
+
   // ---- RULE 14 (the recurring characters keep their facts) --------------------------------------
   // No ratchet: a learner meets Ana in the dialogue and again in the Formular of the same Lektion,
   // and a contradiction between the two is always something a repair round just wrote.
@@ -2837,6 +3007,9 @@ if (isMain) {
   const wortfeldInput = wortfeldInputCoverage(c, spec);
   console.log(`  RULE 23 Wortfeld-Einträge ohne Eingabefläche: ${wortfeldInput.length} von ${wf.length} (Ratchet ${r.wortfeldWithoutInput ?? 0})`);
   for (const u of wortfeldInput) console.log(`    L${u.nr} ${u.de}`);
+  const predAdj = predicativeNationalityAdjectives(c, spec);
+  console.log(`  RULE 24 prädikative Nationalitätsadjektive: ${predAdj.length} (harte Regel, kein Ratchet)`);
+  for (const o of predAdj) console.log(`    L${o.nr} ${o.where}: „${o.de}“`);
   const personaBreaks = personaConsistency(c);
   console.log(`  RULE 14 Figuren-Widersprüche: ${personaBreaks.length} (harte Regel, kein Ratchet)`);
   for (const o of personaBreaks) console.log(`    L${o.nr} ${o.where}: ${o.name} ${o.fact} „${o.found}“ statt „${o.expected}“`);
