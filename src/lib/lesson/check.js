@@ -6,11 +6,18 @@
 // (≤ 4 letters: der/die/das/ein/eine/dem/den…) or the user's slip changes the
 // final letter of a word (an ending), it is wrong.
 //
-// Two things are decided by the TASK rather than by the answer string:
-// `isCaseTask(item)` is `item.caseSensitive === true` and nothing else
-// (REVIEW #5 BLOCKER 3), and `tagError` reads WHERE a sentence differs instead
-// of booking every sentence_building miss as 'Verbstellung' (REVIEW #5 MAJOR
-// 14) — see the decision table above tagSentenceError.
+// Three things are decided by the ITEM rather than by the call site or the
+// answer string: `isCaseTask(item)` is `item.caseSensitive === true` and
+// nothing else (REVIEW #5 BLOCKER 3); `isDictationTask(item)` reads
+// kind/type/stage so every grading site agrees on whether a dictation's
+// dashes and digit grouping are folded (REVIEW #6 BLOCKER 3); and
+// `checkOptionsFor(item)` bundles both of those plus `strict`/`spelling` into
+// the one options object every call site should pass to `checkAnswer`.
+// `tagError` reads WHERE a sentence differs instead of booking every
+// sentence_building miss as 'Verbstellung' (REVIEW #5 MAJOR 14), and a number
+// word never reads as a conjugation slip just because the item's topic is a
+// verb topic (REVIEW #6 MAJOR 9) — see the decision table above
+// tagSentenceError.
 import { normalizeAnswer } from '../../utils/answerMatch.js';
 
 export const RESULT = { CORRECT: 'correct', TYPO: 'typo', WRONG: 'wrong' };
@@ -201,6 +208,39 @@ export function isCaseTask(item) {
   return item?.caseSensitive === true;
 }
 
+/**
+ * True when the item is a dictation (heard, not read) — decided by the ITEM,
+ * not by the call site (REVIEW #6 BLOCKER 3, the second half). Round 5 made
+ * `caseSensitive` an item flag but left `dictation` to whoever calls
+ * `checkAnswer`, and `buildCheckpoint.js`'s `isItemCorrect()` was one of the
+ * call sites that never passed it: the one dictation with a separator
+ * (`a1.1-cp2-hoeren-1`, a phone number) graded `correct` in the lesson and
+ * `wrong` in the checkpoint for the exact same typed answer. `kind: 'dictation'`
+ * and `type: 'dictation'` cover how the pool marks a dictation item today;
+ * `stage === 'listening'` covers the checkpoint's own listening section, which
+ * carries dictation-shaped answers without either field.
+ */
+export const isDictationTask = (item) =>
+  item?.kind === 'dictation' || item?.type === 'dictation' || item?.stage === 'listening';
+
+/**
+ * Derive every checkAnswer() option from the ITEM alone, so every grading site
+ * (PracticeItem, DictationItem, buildCheckpoint.isItemCorrect, reviewGrading)
+ * calls the same `checkAnswer(user, expected, checkOptionsFor(item))` and an
+ * answer is graded the same way wherever it is graded (REVIEW #6 BLOCKER 3):
+ * which check rules apply to an answer is a decision the item carries, never
+ * one the call site makes up on its own.
+ */
+export function checkOptionsFor(item) {
+  const accepted = item?.accepted && item.accepted.length ? item.accepted : [item?.answer];
+  return {
+    strict: STRICT_TOPIC.test(item?.topic || ''),
+    caseSensitive: isCaseTask(item),
+    dictation: isDictationTask(item),
+    spelling: spellingApplies(accepted),
+  };
+}
+
 // Error tags (standard §3): what a miss is about, for remediation and review.
 export const ERROR_TAGS = ['Artikel', 'Kasus', 'Verbstellung', 'Konjugation', 'Plural', 'Rechtschreibung', 'Hören', 'Wortschatz'];
 
@@ -214,6 +254,26 @@ const articleTag = (usr, exp) => (POSSESSIVE_RE.test(exp) && ARTICLES.has(usr) ?
 
 /** Personal endings of a finite German verb (plus the weak preterite set). */
 const VERB_ENDING_RE = /(e|st|t|en|et|te|ten|tet|test)$/;
+
+/**
+ * Number words (null…zwölf, zwanzig…hundert), normalised the same way `tagError`
+ * normalises the expected answer (normalizeAnswer folds ö→oe, ß→ss, lowercases).
+ * REVIEW #6 MAJOR 9: four L2 items teach a telephone number / letter count
+ * under `topic: 'verb-sein'` (the lesson has no topic of its own for numbers),
+ * so a misspelt number word fell into the topic-based Konjugation clause below
+ * and a learner who wrote "sieber" for "sieben" was told the mistake was verb
+ * conjugation. A number-word miss is a spelling/vocabulary miss whatever the
+ * item's topic says, so it is checked and tagged before the topic is ever read.
+ */
+const NUMBER_WORDS = new Set([
+  'null', 'eins', 'ein', 'zwei', 'drei', 'vier', 'fuenf', 'sechs', 'sieben', 'acht', 'neun',
+  'zehn', 'elf', 'zwoelf',
+  'zwanzig', 'dreissig', 'vierzig', 'fuenfzig', 'sechzig', 'siebzig', 'achtzig', 'neunzig',
+  'hundert',
+]);
+
+/** True when the expected answer IS a number word or a bare digit string. */
+const isNumberAnswer = (exp) => NUMBER_WORDS.has(exp) || /^\d+$/.test(exp);
 
 /** Longest common prefix length — a cheap stand-in for "same stem". */
 function commonPrefix(a, b) {
@@ -318,6 +378,7 @@ export function tagError(item, userInput, expected) {
     if (tag) return tag;
   }
   if (item?.type === 'sentence_building' || item?.topic === 'yes-no-questions') return 'Verbstellung';
+  if (isNumberAnswer(exp)) return 'Wortschatz';
   if (item?.topic && /verb|sein|haben|present|separable|conjug/i.test(item.topic)) return 'Konjugation';
   if (exp && usr && levenshtein(usr, exp) <= 2) return 'Rechtschreibung';
   return 'Wortschatz';
