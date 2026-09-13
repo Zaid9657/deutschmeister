@@ -137,12 +137,12 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'V und W haben denselben Namen.',
         correct: 'V heißt Vau, W heißt We.',
-        explanationDe: 'Zwei Buchstaben, zwei Namen. Beim Buchstabieren ist das ein Fehler.',
+        explanationDe: 'Zwei Buchstaben, zwei Namen. So heißen die Buchstaben V und W.',
       },
       {
         wrong: 'Ich buchstabiere Tschüss: T-S-C-H-U-S-S.',
         correct: 'Ich buchstabiere Tschüss: T-S-C-H-Ü-S-S.',
-        explanationDe: 'Ü ist ein Buchstabe mit Umlaut. Man sagt u-Umlaut.',
+        explanationDe: 'Ü ist der Buchstabe U mit Umlaut. Man sagt u-Umlaut.',
       },
     ],
   },
@@ -185,7 +185,7 @@ const RULE_CARD_OVERRIDES = {
       'Das Pronomen richtet sich nach dem Nomen: der Bruder → er, die Schwester → sie, das Kind → es.',
       'Für mehrere Personen stehen die Formen wir, ihr, sie.',
       'Sie mit großem S ist die höfliche Form.',
-      'Beispiele: Wie alt ist er? Er ist zwanzig. Meine Schwester ist noch jung.',
+      'Beispiele: Wie alt ist er? Er ist zwanzig.',
       'Bei sprechen wechselt der Vokal: er spricht. Mehr dazu in Lektion 7.',
       'Ja, er spricht Englisch und Deutsch. Sie sprechen Arabisch und Deutsch.',
       'English: the pronoun follows the article of the noun — das Kind is always es.',
@@ -269,7 +269,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Der Schere ist hier.',
         correct: 'Die Schere ist hier.',
-        explanationDe: 'die Schere ist feminin. Das Genus gehört zum Wort und ändert sich nicht.',
+        explanationDe: 'die Schere ist feminin. Das Genus ändert sich nicht.',
       },
     ],
   },
@@ -581,7 +581,7 @@ const RULE_CARD_OVERRIDES = {
     content: [
       'Zahlen über 20 liest man von hinten nach vorn:',
       '21 ist einundzwanzig, 48 ist achtundvierzig.',
-      'Zwischen den zwei Zahlen steht und. Man schreibt alles in einem Wort.',
+      'Die zwei Zahlen stehen mit und in einem Wort: achtundvierzig, einundzwanzig.',
       'Der Hunderter steht vorn: 480 ist vierhundertachtzig.',
       'Die Ordnungszahl bekommt bis 19 die Endung -te: das dritte Stockwerk, die erste Wohnung.',
       'Ab 20 heißt die Endung -ste: der zwanzigste Mai.',
@@ -593,7 +593,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Die Miete ist achtvierzig Euro.',
         correct: 'Die Miete ist achtundvierzig Euro.',
-        explanationDe: 'Zwischen den zwei Zahlen steht und: achtundvierzig, einundzwanzig.',
+        explanationDe: 'Die zwei Zahlen stehen mit und in einem Wort: achtundvierzig, einundzwanzig.',
       },
       {
         wrong: 'Das drei Stockwerk ist frei.',
@@ -792,7 +792,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Kommst jetzt!',
         correct: 'Komm jetzt!',
-        explanationDe: 'In dieser Form fällt die Endung -st weg: Komm! Warte! Hilf!',
+        explanationDe: 'Die Endung -st fällt weg: Komm! Warte! Hilf!',
       },
       {
         wrong: 'Mach aus den Fernseher!',

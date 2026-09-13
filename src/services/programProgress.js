@@ -1,4 +1,4 @@
-import { supabase } from '../utils/supabase';
+import { supabase } from '../utils/supabase.js';
 
 // Per-user checkboxes over a program's day items (course areas). RLS scopes
 // every call to the caller's own rows; see migrations/2026-08-31-purchases.sql.

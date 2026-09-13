@@ -81,7 +81,13 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
       return undefined;
     }
     let cancelled = false;
-    getLessonProgress(user.id, curriculum.level)
+    // Merge first, THEN count: a guest who finished this Lektion three times
+    // has those three runs in localStorage, and the count is only right once
+    // they are batches in lesson_attempts. Reading the count before the merge
+    // (two effects racing, as it used to be) is what handed the learner the
+    // seven items they had just done — review #10 MAJOR 4.
+    (hasLocalProgress(curriculum.level) ? mergeLocalProgress(user.id) : Promise.resolve(0))
+      .then(() => getLessonProgress(user.id, curriculum.level))
       .then((rows) => {
         const row = rows.get(lektion.id);
         return countCompletedRuns(user.id, {
@@ -156,13 +162,6 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   }, [stageIndex, stages, attempts, misses, pool, goStage]);
 
   const back = stageIndex > 0 ? () => goStage(stageIndex - 1) : null;
-
-  // Merge anything a signed-out visitor finished earlier, once, as soon as a
-  // user is present. Idempotent (see mergeLocalProgress).
-  useEffect(() => {
-    if (preview || !user || !hasLocalProgress(curriculum.level)) return;
-    mergeLocalProgress(user.id);
-  }, [preview, user, curriculum.level]);
 
   // Persist once, when the recap comes into view. Signed out, the same write
   // goes to localStorage instead of Supabase — never nowhere.
