@@ -77,12 +77,21 @@ export const LEMONSQUEEZY_CONFIG = {
   },
 
   // Generate checkout URL with user info
-  getCheckoutUrl: (variantId, userEmail, userId) => {
+  // `coupon` (optional): a code validated by coupon-validate. It rides along
+  // as checkout[discount_code] (LS prefills it) AND checkout[custom][coupon]
+  // (comes back on the order webhook as meta.custom_data.coupon, which is how
+  // the redemption ledger attributes it — deterministically, never guessed
+  // from the discount total).
+  getCheckoutUrl: (variantId, userEmail, userId, coupon) => {
     const baseUrl = `https://deutsch-meister.lemonsqueezy.com/checkout/buy/${variantId}`;
     const params = new URLSearchParams({
       'checkout[email]': userEmail || '',
       'checkout[custom][user_id]': userId || '',
     });
+    if (coupon?.code) {
+      params.set('checkout[discount_code]', String(coupon.code));
+      params.set('checkout[custom][coupon]', String(coupon.code).trim().toUpperCase());
+    }
     return `${baseUrl}?${params.toString()}`;
   },
 };

@@ -27,7 +27,7 @@ test('isFailedPayment is the one definition and past_due sits inside the active 
   assert.equal(isFailedPayment(null), false);
   assert.ok(ACTIVE_SUB_STATUSES.includes('past_due'));
   // the cockpit, the session badge and the ops queue all import THIS function
-  for (const f of ['netlify/functions/admin-metrics.mjs', 'netlify/functions/admin-session.mjs', 'netlify/functions/admin-ops.mjs']) {
+  for (const f of ['netlify/functions/_shared/adminCockpit.mjs', 'netlify/functions/admin-session.mjs', 'netlify/functions/admin-ops.mjs']) {
     assert.ok(read(f).includes('isFailedPayment'), `${f} must use isFailedPayment`);
     assert.ok(!/status\s*===\s*'past_due'/.test(read(f)), `${f} must not re-derive failed payment`);
   }

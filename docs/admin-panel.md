@@ -82,7 +82,7 @@ never classify from display text.
 | --- | --- | --- |
 | 1 Foundation | ✅ 2026-09-13 | `profiles.role` + trigger, `admin_audit_log`, pg_trgm indexes; `adminRbacLib/adminRbac/adminHttp/adminLevels/adminOpsLib`; `admin-session`; `adminFetchCore/adminFetch/adminFormat`; `adminUi` kit, `AdminShell`, `AdminSidebar`, filter context; `/admin/*` router with every route resolving; `/admin` rewrite; tests `admin-rbac`, `admin-fetch`, `admin-format`, `admin-levels` |
 | 2 Operations | ✅ 2026-09-13 | `admin-metrics` (one clock, five `safe()` groups, revenue reconstructed from `webhook_logs`, honest funnel + coverage waterfall, `levelFilterApplies/Excluded`), `admin-directory` (server predicates, post-filters with inexact totals, saved views with rules, CSV behind `export`), `admin-user360` (eight panels, `gateReads`, masked ids, no transcripts), `admin-actions` (8 audited actions, zero provider mutations), `admin-ops` (discrepancy + failed-payment queues on `isFailedPayment`), `admin-support` + `support-ticket-create` + the Profil support form (migration `2026-09-13-admin-panel-operations.sql`), `admin-audit`; screens for all six; `tests/admin-ops.test.mjs` |
-| 3 Product & Growth | pending | usage analytics, content CMS, marketing, coupons, reports, status, settings |
+| 3 Product & Growth | ✅ 2026-09-13 | `admin-usage` (speaking_sessions as the denominator, status read not derived, nearest-rank durations, failure classes, fingerprinted error groups, second-session-within-7-days with `tooRecent`, audited transcript reads), `admin-content` (lifecycle over six tables with `archived → published` absent, boolean flags mirrored where they exist, review `never` ≠ `due`, prerequisite-graph validation bounded at 64), `admin-marketing` (attribution honestly *not instrumented*; real lifecycle/signup signals), `admin-coupons` + `coupon-validate` + the webhook ledger + the learner `CouponField` (migration `2026-09-13-admin-panel-product.sql`), `admin-reports` (six reports composed from `_shared/adminCockpit.mjs`, drill-down routes, CSV behind `export`, no PDF), `admin-status` (derived states with printed thresholds, `unknown` never outranks), `admin-settings` (empty allow-list stated, matrix from enforcement, `configured` booleans only); screens for all seven; `tests/admin-product.test.mjs` |
 | 4 UI reference | pending | visual QA against Part 4 |
 
 ## Register of what could not be measured
@@ -96,4 +96,24 @@ Filled in as each phase lands. At phase 1:
 | Speaking "counted" usage | there is no duration threshold; a session counts when it is started (`speaking_usage`), so the cockpit says *gestartet* and *abgeschlossen*, never *gezählt ab N Sek.* |
 | Refunds | `order_refunded` is handled by the webhook on `purchases`; the revenue reconstruction subtracts `refunded_amount` from the order payload only when Lemon Squeezy re-sends the order — partial refunds after the fact are not visible in `webhook_logs` |
 | Login activity | `audit_logs` is written client-side (`src/lib/auditLogger.js`), so a blocked or failed insert under-counts logins; the label says *Login-aktiv*, not *aktiv* |
+| Reading / listening visibility | `reading_lessons` and `listening_exercises` have no published flag and every reader shows every row; the CMS lifecycle on them is administrative only — the screen says so. Unblock: add `is_published` and filter in `readingService.js` / `useListening.js` |
+| Email deliverability | Resend events are not stored; no bounce rate. Unblock: a Resend webhook into a table |
+| AI call errors | speaking/writing/X-Ray failures live only in Netlify logs. Unblock: a per-call error ledger |
+| Client timing | not instrumented; the status page says so rather than inventing a load time |
+| Scheduled-job evidence | a daily job leaves a trace only when someone was due that day — a quiet day looks like a missed run; the check says so. Unblock: a run ledger (last start per job) |
+| Coupon ↔ Lemon Squeezy | the panel records rules and redemptions; the discount must exist identically in LS (dashboard-only). No LS API call is made anywhere in the panel |
 | Roles | five defined and enforced; only `admin` assigned to real people (the two owner accounts) |
+
+## Acceptance checklist (Part 3 §9), as verified 2026-09-13
+
+**Numbers** — every metric group is `safe()`-wrapped (`{ error }` renders an error line, never `0`); formatters print `—` for absence and `0` for zero; `rate()` returns `null` on an empty denominator and `pct()` prints `—`; every `Stat` carries `definition` + `timeClass`; the coverage waterfall publishes `total → eligible → evaluated` and the tests pin both identities; `levelFilterApplies/Excluded` ship in the cockpit and usage payloads; every paged total comes from `exactCount`, and post-filtered totals say `(geschätzt)`; metric names live in one module with a drift test.
+
+**Filters** — verified in the mocked browser run on values (the level chip changes the request body and the payload echoes `appliedFilters`); the casing map is unit-tested per table; `Unbekannt` is a selectable level everywhere; every admin response carries `Cache-Control: no-store`.
+
+**Permissions and record** — every endpoint goes through `adminEndpoint` → `requireCapability` (role from `profiles`); every mutation writes one audit row with before/after and a reason; denials, transcript reads (both outcomes) and exports are audited; `admin_audit_log` has UPDATE/DELETE/TRUNCATE revoked; the source scan bans any other `Authorization` header in the admin tree; 401 → one refresh → one retry, 403 untouched; settings return `configured` booleans only.
+
+**Writes** — every write uses `.select()` and a zero-row check (`conflict`); grants write the field the gate reads (`gateReads` printed on User 360); provider-mutating actions: **none** (stated on the actions panel); money is integer minor units in the panel (DB decimals converted at the boundary); the redemption ledger is idempotent on `(coupon_id, order_id)`.
+
+**Honesty** — every uninstrumented area returns `unknown` with a reason and an unblock step; the status page derives its overall state from the worst real check; every red tile carries an action route; derived states (`ausgeliefert`, `gezählt`, `Login-aktiv`) are labelled with what they derive from.
+
+**Not done in this build** — a live browser walkthrough against production (the sandbox cannot reach `deutsch-meister.de`); the screens were verified against mocked payloads shaped from the endpoint code. First live login should be treated as the acceptance run.
