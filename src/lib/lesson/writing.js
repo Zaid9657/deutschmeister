@@ -10,6 +10,14 @@
 // wording in GradedWriting.jsx — because an unchecked promise of feedback is
 // exactly what FernUSG forbids.
 
+// THE ONE IMPORT, and why it is allowed: `countries.js` is a fact about the world (the stems and
+// names of countries), not a rule and not a level's Wortfeld. The dependency-freedom this file
+// keeps — one function, the screen and RULE 17 grading with the same code, nothing handed in from a
+// curriculum — is about RULES and LEXIS; a world list has one source or it drifts, and it drifted
+// (DaF review #17, Minor 17: two lists, two sizes, „aus England“ red). `tests/writing-course.test.mjs`
+// pins that this stays the only import and that it never reaches into `src/data/`.
+import { COUNTRY_STEMS, COUNTRY_NAMES } from './countries.js';
+
 const words = (text) => String(text || '').trim().split(/\s+/).filter(Boolean);
 
 export const countWords = (text) => words(text).length;
@@ -243,9 +251,21 @@ const DATE_VALUE_RE = new RegExp(
 );
 const BIRTH_WORD_RE = /\b(?:geboren|Geburtstag|Geburtsdatum)\b/i;
 const DATE_COMPANION_RE = new RegExp(`\\d|\\b(?:${MONTH})\\b`, 'i');
+/**
+ * A CLAUSE, for „beside“ (DaF review #17, Minor 12). „Ich bin in Bremen geboren **und habe 2
+ * Kinder**.“ carries a birth word and a number in one sentence and no birth date at all; round 17
+ * read the sentence and called it green. The number has to stand BESIDE the birth word, which in
+ * a written sentence means the same clause: no comma, semicolon or coordinating conjunction between
+ * them. The split is on the closed class of coordinators, not on any word list.
+ */
+const clauses = (sentence) => String(sentence || '')
+  .split(/\s*[,;]\s*|\s+(?:und|oder|aber|denn)\s+/i)
+  .map((c) => c.trim())
+  .filter(Boolean);
 const DATE_SHAPE = {
   test: (body) => sentences(body).some(
-    (s) => DATE_VALUE_RE.test(s) || (BIRTH_WORD_RE.test(s) && DATE_COMPANION_RE.test(s)),
+    (s) => DATE_VALUE_RE.test(s)
+      || clauses(s).some((c) => BIRTH_WORD_RE.test(c) && DATE_COMPANION_RE.test(c)),
   ),
 };
 
@@ -277,13 +297,12 @@ const PRICE_RE = new RegExp(`\\b(?:\\d+(?:[.,]\\d{1,2})?|${NUMBER_WORD})\\s*(?:E
  * `vietnames`), or the two share five letters (`Marokko`/`marokkan`, `Mexiko`/`mexikan`,
  * `Venezuela`/`venezolan`, `England`/`engländ`). Five letters is what keeps `Bremen` (`br` with
  * `brasilian`), `Berlin`, `Bonn`, `Köln` and `Frankfurt` (`fran`, four, with `franzos`) out.
- * COUNTRY_NAMES below is the small remainder whose German name shares no stem with its
- * nationality — the same kind of list as COUNTRY_STEMS: it belongs to the world, not to A1.1.
+ * COUNTRY_NAMES is the small remainder whose German name shares no stem with its nationality — the
+ * same kind of list as COUNTRY_STEMS: it belongs to the world, not to A1.1, and since round 18 both
+ * live in `./countries.js`, the ONE source the validator reads too (DaF review #17, Minor 17).
  */
-const COUNTRY_NAMES = new Set([
-  'frankreich', 'china', 'großbritannien', 'grossbritannien', 'usa', 'holland', 'taiwan',
-  'kambodscha', 'laos', 'myanmar', 'elfenbeinküste', 'tschetschenien', 'niederlande',
-]);
+const COUNTRY_NAME_SET = new Set(COUNTRY_NAMES.map((n) => n.toLowerCase()));
+const COUNTRY_STEM_SET = new Set(COUNTRY_STEMS);
 
 const sharedPrefix = (a, b) => {
   let i = 0;
@@ -294,8 +313,8 @@ const sharedPrefix = (a, b) => {
 const isCountryName = (raw) => {
   const n = String(raw || '').toLowerCase().replace(/[^a-zäöüß-]/g, '');
   if (n.length < 3) return false;
-  if (COUNTRY_NAMES.has(n)) return true;
-  for (const stem of COUNTRY_STEMS) {
+  if (COUNTRY_NAME_SET.has(n)) return true;
+  for (const stem of COUNTRY_STEM_SET) {
     if (n.startsWith(stem) || stem.startsWith(n)) return true;
     if (sharedPrefix(n, stem) >= 5) return true;
   }
@@ -348,34 +367,13 @@ const COUNTRY_SHAPE = {
  *     „Ich bin Studentin in Bremen.“ must NOT answer „Ihre Staatsangehörigkeit“, and it does not.
  *  3. `deutsch`/`Deutsche(r)` is the irregular one (an adjective used as a noun) and is named.
  *
- * COUNTRY_STEMS is the second typed list in this file after FUNCTION_WORDS_DE, and it is the same
+ * COUNTRY_STEMS is the second typed list this file reads after FUNCTION_WORDS_DE, and it is the same
  * kind of list: it belongs to the WORLD, not to this course — the countries of origin an adult
  * integration course actually has in the room — so it does not grow with the material. The review
  * asked for it in exactly these words („eine Liste, ja, aber eine, die zur Welt gehört und nicht zu
- * diesem Material“).
+ * diesem Material“). It lives in `./countries.js` (shape documented there) so that this file and
+ * `scripts/validate-curriculum.mjs` read the same world.
  */
-const COUNTRY_STEMS = new Set([
-  // Europa
-  'deutsch', 'österreich', 'schweiz', 'französ', 'franzos', 'ital', 'italien', 'span', 'portugies',
-  'griech', 'engländ', 'ir', 'niederländ', 'holländ', 'belg', 'dän', 'norweg', 'schwed', 'finn',
-  'pol', 'tschech', 'slowak', 'ungar', 'rumän', 'bulgar', 'kroat', 'serb', 'bosn', 'alban', 'kosovar',
-  'maked', 'mazedon', 'sloven', 'russ', 'ukrain', 'weißruss', 'belaruss', 'litau', 'lett', 'est',
-  'moldau', 'georg', 'armen', 'aserbaidschan', 'türk', 'zypr', 'malt',
-  // Naher Osten, Nordafrika, Zentralasien
-  'arab', 'syr', 'irak', 'iran', 'afghan', 'kurd', 'libanes', 'jordan', 'palästinens', 'israel',
-  'ägypt', 'marokkan', 'tunes', 'alger', 'liby', 'sudanes', 'somal', 'eritre', 'äthiop', 'jemenit',
-  'saudi', 'kasach', 'usbek', 'tadschik', 'turkmen',
-  // Süd- und Ostasien
-  'ind', 'pakistan', 'banglades', 'sri-lank', 'nepales', 'chines', 'japan', 'korean', 'vietnames',
-  'thail', 'indones', 'philippin', 'malays', 'mongol',
-  // Afrika südlich der Sahara
-  'nigerian', 'ghana', 'kamerun', 'kongoles', 'kenian', 'senegales', 'ivor', 'gambi', 'südafrikan',
-  // Amerika
-  'amerikan', 'kanad', 'mexikan', 'brasilian', 'argentin', 'chilen', 'kolumbian', 'peruan',
-  'venezolan', 'kuban', 'dominikan', 'ecuadorian', 'bolivian', 'uruguay', 'paraguay',
-  // Ozeanien
-  'australi', 'neuseeländ',
-]);
 
 /** The suffixes a German nationality NOUN is built with, longest first. */
 const NATIONALITY_NOUN_SUFFIXES = ['ierin', 'erin', 'ier', 'isch', 'er', 'in', 'e'];
@@ -386,13 +384,18 @@ const isNationalityWord = (word) => {
   if (!w) return false;
   for (const suf of NATIONALITY_NOUN_SUFFIXES) {
     if (!w.endsWith(suf) || w.length - suf.length < 2) continue;
-    if (COUNTRY_STEMS.has(w.slice(0, -suf.length))) return true;
+    if (COUNTRY_STEM_SET.has(w.slice(0, -suf.length))) return true;
   }
   return false;
 };
 
-/** `deutsch`, `deutsche`, `Deutscher`, `Deutschen` — the one nationality German declines as an adjective. */
-const DEUTSCH_RE = /\bdeutsche?[rnms]?\b/i;
+/**
+ * `deutsch`, `deutsche`, `Deutscher`, `Deutschen` — the one nationality German declines as an
+ * adjective. The bare CAPITALISED `Deutsch` is the language („Deutsch ist schwer.“) and counts only in
+ * the predicative position („Ich bin Deutsch.“ — wrong case, right answer); lower-case `deutsch`
+ * („Nationalität: deutsch“) and every declined form („Deutsche“, „Deutscher“) are the nationality.
+ */
+const DEUTSCH_RE = /\bdeutsche[rnms]?\b|(?<![A-Za-zÄÖÜäöüß])deutsch\b|\b(?:bin|bist|ist|sind|seid|war|warst|waren)\s+Deutsch\b/;
 /** The predicative position: „Ich **bin** türkisch.“, „Meine Staatsangehörigkeit **ist** polnisch.“ */
 const PREDICATIVE_ISCH_RE = /\b(?:bin|bist|ist|sind|seid|war|warst|waren)\s+[A-Za-zÄÖÜäöüß]{2,}isch(?:e[rnms]?)?\b/i;
 
@@ -405,10 +408,18 @@ const PREDICATIVE_ISCH_RE = /\b(?:bin|bist|ist|sind|seid|war|warst|waren)\s+[A-Z
  * the nationality adjective is lower case after `sein` („Ich bin arabisch.“), and the noun
  * („Marokkanerin“) is neither. So a capitalised `-isch` word (and capitalised `Deutsch`) is
  * discarded in a sentence that also carries a language marker — `sprechen`, `Sprache`,
- * `Muttersprache`. Everything else in that sentence still counts: „Ich spreche Arabisch und bin
- * Marokkanerin.“ answers the Leitpunkt, and so does a second sentence that names the nationality.
+ * `Muttersprache`, `lernen`. Everything else in that sentence still counts: „Ich spreche Arabisch
+ * und bin Marokkanerin.“ answers the Leitpunkt, and so does a second sentence that names the
+ * nationality.
+ *
+ * ROUND 18 (DaF review #17, MAJOR 1): the marker had `\b` before `sprach`, so `Muttersprache` — a
+ * compound, no word boundary inside it — was NOT a marker, and `lernen` was not one at all. Measured:
+ * 37 of 162 language sentences green on „Ihre Staatsangehörigkeit“, all in „Meine Muttersprache ist
+ * …“ and „Ich lerne …“, and „Ich lerne Deutsch.“ is the second sentence every learner of this course
+ * writes. `sprach` is now matched INSIDE a word and `lern\w*` is a marker: what a person speaks,
+ * has as a (mother) tongue or learns is a language.
  */
-const LANGUAGE_CONTEXT_RE = /\bsprech\w*\b|\bSprach\w*\b/i;
+const LANGUAGE_CONTEXT_RE = /\bsprech\w*|sprach\w*|\blern\w*/i;
 const LANGUAGE_NAME_RE = /^(?:[A-ZÄÖÜ][a-zäöüß]*isch|Deutsch)$/;
 
 /**
@@ -523,6 +534,68 @@ const namedFieldShape = (word, valueShape) => {
 const INDIRECT_QUESTION_RE = /^(?:was|wer|wen|wem|wann|wo|wie|warum|woher|wohin|welche[rnms]?)\b/i;
 
 /**
+ * AN AUFTRAG IS A SENTENCE TYPE, NOT A VERB ECHO (DaF review #17, MAJOR 1).
+ *
+ * „Was die Kollegin bis dahin **machen soll**“, „Was die Gäste **mitbringen sollen**“: an indirect
+ * question closed by a modal asks the learner to give the addressee an INSTRUCTION. Round 17 decided
+ * it by the predicate — the folded `mach`/`mitbring` had to occur in the text — and the reviewer
+ * measured the consequence on L10: ten of twelve correct Aufträge red („Bitte rufen Sie Herrn Weber
+ * an.“, „Bitte warten Sie im Büro.“) and four echoes without any Auftrag green („Das macht nichts.“,
+ * „Wir machen eine Pause.“). `machen` is the emptiest verb in the language; an instruction is not
+ * made of it. What every Auftrag shares is not a word but a SENTENCE TYPE, and German marks the three
+ * it has on the surface:
+ *
+ *  1. THE IMPERATIVE / VERB-FIRST SENTENCE — the finite verb stands first and the addressee follows:
+ *     „Rufen Sie Herrn Weber an.“, „Bring bitte einen Salat mit.“, „Bringt ihr Kuchen mit?“. Read as:
+ *     first token carries a verb ending and is not a function word, second token is an addressee
+ *     pronoun (`Sie`, `du`, `ihr`) or `bitte`, and the sentence carries at least one content word
+ *     beyond the verb — „Kommst du?“ asks for presence, not for a thing; „Hast du Zeit?“ starts with a
+ *     function word and is no instruction.
+ *  2. THE `bitte` SENTENCE — „Bitte Kuchen und Musik mitbringen.“, „Kuchen und Salat, bitte!“: the
+ *     request particle with at least one content word to request.
+ *  3. THE MODAL CHUNK — `soll|sollen|muss|müssen|kann|können|darf|dürfen` (any finite form) plus an
+ *     infinitive later in the sentence: „Ihr könnt Getränke mitbringen.“, „Sie sollen im Büro
+ *     warten.“ A modal beside `ich`/`wir` is the writer's own plan („Ich muss arbeiten.“), not an
+ *     instruction, and is excluded.
+ *
+ * The Leitpunkt's own verb no longer decides anything: a text that echoes it without instructing
+ * (declarative subject-first „Das macht nichts.“, „Ich mache das später.“; the question „Was machen
+ * Sie heute?“) is red, and a text that instructs with any verb at all is green. The predicate is
+ * kept in `words`/`folded` for the readers that measure the COURSE (RULE 21's untaught-head check),
+ * never for scoring — where a shape exists the shape decides (header, step 2).
+ */
+const AUFTRAG_MODAL_RE = /\b(?:soll|sollst|sollen|sollt|muss|musst|müssen|müsst|kann|kannst|können|könnt|darf|darfst|dürfen|dürft)\b/i;
+const ADDRESSEE_RE = /^(?:sie|du|ihr|bitte)$/i;
+const VERB_ENDING_RE = /(?:en|st|t|e)$/i;
+const INFINITIVE_RE = /^[a-zäöüß]+(?:en|ern|eln)$/;
+const isContentWord = (t) => t.length > 1 && !isFunctionWord(t) && !/^\d+$/.test(t);
+
+const isInstructionSentence = (sentence) => {
+  const toks = words(sentence).map(stripPunct).filter(Boolean);
+  if (toks.length < 2) return false;
+  const content = toks.filter(isContentWord);
+  const [first, second] = toks;
+  // 1. Verb first, addressee second, and something asked for.
+  if (VERB_ENDING_RE.test(first) && !isFunctionWord(first) && !INDIRECT_QUESTION_RE.test(first)
+    && ADDRESSEE_RE.test(second) && content.some((t) => t !== first)) return true;
+  // 2. `bitte` with something to request.
+  if (toks.some((t) => /^bitte$/i.test(t)) && content.length) return true;
+  // 3. A modal that is not the writer's own, with an infinitive after it.
+  for (let i = 0; i < toks.length; i += 1) {
+    if (!AUFTRAG_MODAL_RE.test(toks[i])) continue;
+    const beside = [toks[i - 1], toks[i + 1]].filter(Boolean).map((t) => t.toLowerCase());
+    if (beside.some((t) => t === 'ich' || t === 'wir')) continue;
+    if (toks.slice(i + 1).some((t) => INFINITIVE_RE.test(t) && !isFunctionWord(t))) return true;
+  }
+  return false;
+};
+
+const INSTRUCTION_SHAPE = { test: (body) => sentences(body).some(isInstructionSentence) };
+
+/** An indirect question asking WHAT SOMEONE SHOULD DO — the modal is its closing word. */
+const isAuftragLeitpunkt = (conjunct) => INDIRECT_QUESTION_RE.test(conjunct) && AUFTRAG_MODAL_RE.test(conjunct);
+
+/**
  * A Leitpunkt split into its CONJUNCTS — „ und “ and „, “, never „oder“. In *Start Deutsch 1* a
  * Leitpunkt is one unit and half an answer is no answer (DaF review #14, MAJOR 1, „Erstens“).
  */
@@ -561,6 +634,8 @@ const conjunctEvidence = (conjunct, { allowNamedField = true } = {}) => {
     }
   }
   shapes.push(...QUESTION_SHAPES.filter((s) => s.re && s.on.test(conjunct)).map((s) => s.re));
+  // An Auftrag is decided by sentence type, never by its verb echoed back (see INSTRUCTION_SHAPE).
+  if (isAuftragLeitpunkt(conjunct)) shapes.push(INSTRUCTION_SHAPE);
   return { text: conjunct, words: keywords, folded, shapes };
 };
 
