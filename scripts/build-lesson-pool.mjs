@@ -106,6 +106,7 @@ import { createHash } from 'node:crypto';
 import {
   filterPool, REASON, REASONS, isUsableItem, exclusionReason, parseVerbCue,
   articleAnswerKind, ARTICLE_CUE, missingSentenceArticle, SENTENCE_ARTICLE_CUE,
+  isPoliteFormItem, minimalArticleCorrection,
 } from '../src/data/lessonPools/quality.js';
 
 const level = (process.argv[2] || 'a1.1').toLowerCase();
@@ -185,6 +186,37 @@ function repairArticleCue(item) {
 }
 
 const articleRepaired = raw.map(repairArticleCue).filter(Boolean);
+
+// ── REVIEW #6 BLOCKER 2: accept the minimal correction as well ──────────────
+//
+// „Ein Schere ist hier." → `Die Schere ist hier.` quotes a sentence with ONE
+// error (the genus of the indefinite article) and accepts only an answer that
+// also swaps the article FAMILY, which the German prompt never asks for. The
+// minimal, complete correction — `Eine Schere ist hier.` — came back wrong.
+//
+// The repair is the same promise as the two above, from the other side: the
+// answer key GAINS a reading, it never loses one. Both spellings the pool uses
+// (with and without the closing period) are added, because `accepted` lists in
+// this pool carry both and the engine compares strings. Where the counterpart
+// is not computable — `ein` is `der` or `das`, and picking a gender is
+// authorship — nothing is written and the gate drops the item.
+const ambiguousRepaired = [];
+const ambiguousUnrepairable = [];
+function repairAmbiguousCorrection(item) {
+  if (exclusionReason(item, { level }) !== REASON.AMBIGUOUS_CORRECTION) return;
+  const minimal = minimalArticleCorrection(item);
+  if (!minimal) {
+    ambiguousUnrepairable.push({ id: item.id, topic: item.topic, answer: item.answer });
+    return;
+  }
+  const added = [minimal, minimal.replace(/[.!?]+$/, '')]
+    .filter((a) => a && ![item.answer, ...(item.accepted || [])].includes(a));
+  if (!added.length) return;
+  item.accepted = [...new Set([...(item.accepted || []), ...added])];
+  ambiguousRepaired.push({ id: item.id, topic: item.topic, added });
+}
+
+raw.forEach(repairAmbiguousCorrection);
 
 const { kept, excluded, counts } = filterPool(raw, { level });
 
@@ -544,6 +576,9 @@ if (existsSync(extraUrl)) {
   // same repair — and because the repair skips any prompt that already carries
   // a bracket, an item whose author wrote the cue by hand is untouched.
   for (const r of extra.map(repairArticleCue).filter(Boolean)) articleRepaired.push(r);
+  // REVIEW #6 BLOCKER 2, same order and for the same reason: the extras face
+  // the same gate, so they get the same repair first.
+  extra.forEach(repairAmbiguousCorrection);
   // The same rules as the bank, applied to hand-written items on purpose: the
   // point of the filter is that NO item reaches a learner unchecked.
   const failing = extra.map((it) => [it, exclusionReason(it, { level })]).filter(([, r]) => r);
@@ -586,18 +621,23 @@ const VERB_STEMS = { gehen: 'geh', kommen: 'komm' };
 /** Ids that opt in explicitly, id → the group head. Empty is the honest state. */
 const EQUIVALENT_VERB_IDS = {};
 
+/**
+ * REVIEW #6 MAJOR 10. The group is per LEMMA; German equivalence is per FRAME.
+ * `extra-a11-l10-06` ("___ du morgen mit dem Bus?") had `Gehst` in its accepted
+ * list and a green tick on a sentence that is not German: one fährt or kommt
+ * mit dem Bus, one does not gehen with it — the contrast A1 learners with a
+ * romance or slavic first language miss most often. A lemma is not added when
+ * its blocker matches the German prompt.
+ */
+const PP_BLOCKS = { gehen: /\bmit (dem|der) \w+/i };
+
 const lower = (t) => String(t || '').trim().toLowerCase();
 const capitalise = (w) => w.charAt(0).toUpperCase() + w.slice(1);
 
-/** Which lemma of the group a written form belongs to, or null. */
-function groupLemma(form, head) {
-  const f = lower(form);
-  if (Object.prototype.hasOwnProperty.call(FAHREN_FORMS, f)) return head;
-  for (const [lemma, stem] of Object.entries(VERB_STEMS)) {
-    if (Object.values(FAHREN_FORMS).some((suffix) => f === stem + suffix)) return lemma;
-  }
-  return null;
-}
+// `groupLemma()` — "which lemma of the group does this accepted form belong
+// to?" — is gone with the heuristic it served (REVIEW #6 MAJOR 10): counting
+// the lemmas an item already allows was the guess about authorial intent that
+// let `Gehst du morgen mit dem Bus?` through.
 
 const verbWidened = [];
 const HEAD = 'fahren';
@@ -606,11 +646,16 @@ function widenEquivalentVerbs(item) {
   const suffix = FAHREN_FORMS[lower(item.answer)];
   if (!suffix) return;
   const accepted = [...new Set([item.answer, ...(item.accepted || [])])];
-  const lemmas = new Set(accepted.map((a) => groupLemma(a, head)).filter(Boolean));
   const optedIn = EQUIVALENT_VERB_IDS[item.id] === head;
-  if (lemmas.size < 2 && !optedIn) return;
+  // REVIEW #6 MAJOR 10: the heuristic "the item already allows two lemmas, so
+  // its author meant the frame to be open" is a guess about intent, and it was
+  // wrong — `extra-a11-l10-06` allowed `fahren` and `kommen` because those two
+  // fit, and the table then added `gehen`, which does not. Only an explicit
+  // opt-in decides now, and the map above being empty is the honest state.
+  if (!optedIn) return;
   const added = [];
   for (const lemma of EQUIVALENT_VERBS[head]) {
+    if (PP_BLOCKS[lemma] && PP_BLOCKS[lemma].test(String(item.questionDe || ''))) continue;
     const form = VERB_STEMS[lemma] + suffix;
     // Both cases, because a gap at position 1 is written with a capital and the
     // same form mid-sentence is not — the engine folds case, the list documents.
@@ -706,6 +751,52 @@ function normaliseRegister(item) {
 
 const normalised = [...kept, ...supplement, ...extra].map(normaliseRegister).filter(Boolean);
 
+// ── REVIEW #6 BLOCKER 1: derive the polite-form case flag ───────────────────
+//
+// Round 5 set `caseSensitive: true` on the three items it had found by hand,
+// and round 6 measured what a list costs: two items of exactly the same shape
+// never got it, so `Frau Müller, ___ sind sehr freundlich.` counted `sie` as a
+// typo — i.e. as CORRECT — while the identical `Frau Kaya, sprechen ___
+// Englisch?` marked it wrong. Two of the unflagged ones are items of the GRADED
+// Checkpoint 4, whose own rule card says the polite Ihr is "immer mit großem I".
+//
+// So the flag is DERIVED from the answer key here and the hand entry is kept as
+// an override (`=== true ||`), never as a veto: an author may flag an item the
+// predicate does not see — `extra-a11-l12-16`, whose polite Ihr is the FIRST
+// word of the corrected sentence — but may not unflag one it does.
+//
+// Runs last, after the widening passes: `politeCaseItem` reads `accepted`.
+//
+// The override for a BANK item, id → why. A cache item cannot carry a hand
+// flag — the cache is a snapshot of the database — so this map is where one
+// lives, and it stays as short as EXCLUDE_IDS: one entry, the one the review
+// measured. `c473031c` is `a1.1-cp4-bausteine-1` of the GRADED Checkpoint 4,
+// and `isItemCorrect(item, 'Sind sie Frau Meier?')` came back true. The
+// derived predicate does not reach it on purpose (its sentence clause is
+// narrowed to the possessive, so a word-order item does not become wholly
+// wrong over one capital), which is exactly what an override is for.
+const CASE_SENSITIVE_IDS_BY_LEVEL = {
+  'a1.1': {
+    'c473031c-a540-5e7a-95a9-9a1fa803bff0': 'polite Sie in a graded Checkpoint-4 Frage (REVIEW #6 BLOCKER 1)',
+  },
+};
+const CASE_SENSITIVE_IDS = CASE_SENSITIVE_IDS_BY_LEVEL[level] || {};
+
+const caseDerived = [];
+const caseHandFlagged = [];
+const caseOverridden = [];
+for (const item of [...kept, ...supplement, ...extra]) {
+  if (Object.prototype.hasOwnProperty.call(CASE_SENSITIVE_IDS, item.id) && item.caseSensitive !== true) {
+    item.caseSensitive = true;
+    caseOverridden.push(item.id);
+  }
+  const hand = item.caseSensitive === true;
+  const derived = isPoliteFormItem(item);
+  if (hand) caseHandFlagged.push(item.id);
+  else if (derived) caseDerived.push({ id: item.id, topic: item.topic, answer: item.answer });
+  if (hand || derived) item.caseSensitive = true;
+}
+
 const items = [...kept, ...supplement, ...extra].sort(
   (a, b) => a.topic.localeCompare(b.topic) || a.stage - b.stage || a.order - b.order,
 );
@@ -746,6 +837,13 @@ for (const r of normalised) console.log(`       ${String(r.id).slice(0, 8)} · $
 if (acceptedApplied.length) console.log(`widened accepted on ${acceptedApplied.length}: ${acceptedApplied.map((i) => i.slice(0, 8)).join(', ')}`);
 console.log(`equivalent-verb widenings (REVIEW #4 MAJOR): ${verbWidened.length}`);
 for (const r of verbWidened) console.log(`       ${r.id} + ${r.added.join(', ')}`);
+console.log(`ambiguous corrections repaired (REVIEW #6 BLOCKER 2): ${ambiguousRepaired.length}` +
+  ` · not computable, dropped: ${ambiguousUnrepairable.length}`);
+for (const r of ambiguousRepaired) console.log(`       ${r.id} + ${r.added.join(', ')}`);
+for (const r of ambiguousUnrepairable) console.log(`       DROPPED ${r.id} · ${r.answer}`);
+console.log(`polite-form caseSensitive (REVIEW #6 BLOCKER 1): ${caseDerived.length} derived` +
+  ` + ${caseHandFlagged.length} hand-flagged (of them ${caseOverridden.length} by id here)`);
+for (const r of caseDerived) console.log(`       ${r.id} ${r.topic} → ${r.answer}`);
 console.log(`equivalent-time widenings (REVIEW #4 MAJOR): ${timeWidened.length}`);
 for (const r of timeWidened) console.log(`       ${r.id} + ${r.added}`);
 const staleAccepted = Object.keys(ACCEPTED_EXTRAS).filter((id) => !acceptedApplied.includes(id));

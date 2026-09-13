@@ -141,6 +141,9 @@ export const REASON = Object.freeze({
   // and the prompt asks ABOUT German rather than asking for German
   CUE_ANSWER_MISMATCH: 'cue-answer-mismatch',
   METALINGUISTIC_PROMPT: 'metalinguistic-prompt',
+  // REVIEW #6 — the model answer of an error correction changes more than the
+  // German prompt asks for, so the minimal correction is marked wrong
+  AMBIGUOUS_CORRECTION: 'ambiguous-correction',
 });
 
 /** The level whose taught-by-now rules below apply. */
@@ -358,8 +361,13 @@ const ARTICLE_SHAPED_PREFIXES = Object.freeze(['ein']);
 export const TASK_FORMULA_RE =
   /(bilden sie|bilde|korrigieren sie|korrigiere|schreiben sie|schreib|ergänzen sie|ergänze|wählen sie|wähle|welche[rs]?|buchstabiert|hören sie|setzen sie|setze|finden sie|finde|antworte|wie heißt|sagen sie|füllen sie|lesen sie)/i;
 
-/** A quoted sentence the item asks the learner to work on: „…“ or "…". */
-export const QUOTED_SPAN_RE = /[„"“][^„"“]+[“"]/;
+/**
+ * A quoted sentence the item asks the learner to work on: „…“ or "…".
+ * The inner text is CAPTURED (group 1) because `ambiguousCorrection` below has
+ * to compare the quote with the model answer word by word; every other caller
+ * only ever `.test()`s it, so the group costs nothing.
+ */
+export const QUOTED_SPAN_RE = /[„"“]([^„"“]+)[“"]/;
 
 /** ä/ae-blind lowercase, the way src/utils/answerMatch.js compares answers. */
 const flat = (text) =>
@@ -535,6 +543,134 @@ export function cueAnswerMismatch(item) {
 }
 
 /**
+ * REVIEW #6 BLOCKER 1. The polite (Höflichkeitsform) capitals, as a CLASS.
+ *
+ * Round 5 closed the same finding as a LIST — three ids got `caseSensitive:
+ * true` by hand — and round 6 measured the list from both ends: two more items
+ * of exactly the same shape never got the flag (`Frau Müller, ___ sind sehr
+ * freundlich.` marks `sie` as a typo, i.e. as CORRECT, while the identical
+ * `Frau Kaya, sprechen ___ Englisch?` marks it wrong), and the repetition cards
+ * built by `reviewService.buildCardIndex` carry no such field at all, so every
+ * review card was case-blind. The fix is to DERIVE the flag from the answer key
+ * and keep the hand entry as an override — `item.caseSensitive === true ||
+ * politeCaseItem(item)` in `scripts/build-lesson-pool.mjs`.
+ *
+ * The predicate is the review's, verbatim, and both of its clauses are narrow
+ * on purpose:
+ *   * ONE-WORD answers only count when NO lowercase variant is accepted. That
+ *     is what keeps `extra-a11-l12-10` (`['Ihre','ihre']` — their presents, 3rd
+ *     person plural) and `extra-a11-l03-02` (`['Sie','sie']` — she, the sister)
+ *     out: an item that accepts both spellings is not teaching the capital.
+ *   * SENTENCE answers are narrowed to the POSSESSIVE, and to a possessive that
+ *     is not the first word — a sentence-initial capital says nothing, and a
+ *     word-order item like `extra-a11-l10-08` must not become wholly wrong over
+ *     one letter.
+ */
+export const POLITE_FORM_RE = /^(Sie|Ihnen|Ihr|Ihre|Ihren|Ihrem|Ihrer|Ihres)$/;
+
+export function politeCaseItem(item) {
+  const acc = [item?.answer, ...(item?.accepted || [])].map((a) => String(a ?? '').trim()).filter(Boolean);
+  if (!acc.length) return false;
+  if (acc.every((a) => !a.includes(' '))) return acc.every((a) => POLITE_FORM_RE.test(a));
+  return acc.every((a) => a.split(/\s+/).slice(1).some((w) => /^Ihr(e|en|em|er|es)?$/.test(w.replace(/[.,!?]/g, ''))));
+}
+
+/** The name the build script and the tests import it under. Same function. */
+export const isPoliteFormItem = politeCaseItem;
+
+/**
+ * REVIEW #6 BLOCKER 2. An error correction whose model answer differs from the
+ * quoted sentence in MORE than the way the German prompt names.
+ *
+ * The measured item is `extra-a11-l05-09`: „Ein Schere ist hier." → `Die Schere
+ * ist hier.`, with `questionEn: 'Fix the article.'` and the intent ("bekannt,
+ * also bestimmt") written only in the explanation the learner sees AFTER he has
+ * answered. The quoted sentence carries exactly ONE error — the genus of the
+ * indefinite article — so `Eine Schere ist hier.` is the minimal and complete
+ * correction, faultless German, and it came back `wrong` with an Artikel tag.
+ *
+ * The rule is the question, not the field: does the answer change the article
+ * FAMILY (definite ↔ indefinite) without the German prompt saying so? Nothing
+ * else is touched — a genus fix, a conjugation fix or a preposition fix inside
+ * one family has exactly one solution and passes.
+ *
+ * `articleFamilySwap` is the review's predicate for ONE candidate answer. The
+ * exported rule then asks it of the whole answer key rather than of `answer`
+ * alone, which is what makes the repair provable: the build widens `accepted`
+ * with the minimal same-family correction, and an item that accepts BOTH
+ * readings is no longer ambiguous — the learner who writes either is right.
+ */
+const ARTICLE_FAMILY = (word) =>
+  (DEFINITE_ARTICLE_ANSWERS.includes(flat(word)) ? 'definite'
+    : INDEFINITE_ARTICLE_ANSWERS.includes(flat(word)) ? 'indefinite' : null);
+
+/**
+ * The same article one family over, for the two directions A1.1 can produce.
+ * `ein` has no entry going the other way on purpose: it is `der` OR `das`, and
+ * a build step may not pick a gender — such an item is dropped, not repaired.
+ */
+export const ARTICLE_FAMILY_COUNTERPART = Object.freeze({
+  definite: { der: 'ein', die: 'eine', das: 'ein', den: 'einen', dem: 'einem' },
+  indefinite: { eine: 'die', einen: 'den', einem: 'dem' },
+});
+
+/**
+ * articleFamilySwap(quoted, answer) → [from, to] when the answer corrects the
+ * quote in exactly one word and that word crosses the article family, else null.
+ */
+export function articleFamilySwap(quoted, answer) {
+  const src = bare(quoted).split(/\s+/).filter(Boolean);
+  const tgt = bare(answer).split(/\s+/).filter(Boolean);
+  if (!src.length || src.length !== tgt.length) return null;
+  const diff = src.map((w, i) => [w, tgt[i]]).filter(([a, b]) => flat(a) !== flat(b));
+  if (diff.length !== 1) return null;
+  const [from, to] = diff[0];
+  const fromFam = ARTICLE_FAMILY(from);
+  const toFam = ARTICLE_FAMILY(to);
+  if (!fromFam || !toFam || fromFam === toFam) return null;
+  return [from, to];
+}
+
+export function ambiguousCorrection(item) {
+  if (String(item?.type) !== 'error_correction') return false;
+  const q = String(item.questionDe || '');
+  if (ARTICLE_TASK_CUE_RE.test(q) || SENTENCE_ARTICLE_CUE_RE.definite.test(q) ||
+      SENTENCE_ARTICLE_CUE_RE.indefinite.test(q)) return false;
+  const quote = QUOTED_SPAN_RE.exec(q);
+  if (!quote) return false;
+  const answers = [item.answer, ...(item.accepted || [])]
+    .map((a) => String(a ?? '').trim()).filter(Boolean);
+  if (!answers.length) return false;
+  return answers.every((a) => articleFamilySwap(quote[1], a) !== null);
+}
+
+/**
+ * The minimal correction the item never accepted: the quoted sentence with its
+ * one wrong article replaced by the SAME-FAMILY form of the article the model
+ * answer chose. „Ein Schere ist hier." + `Die Schere ist hier.` → `Eine Schere
+ * ist hier.` Returns null when the counterpart is not computable (`ein` is der
+ * or das and a build step may not choose), and the build drops the item then.
+ */
+export function minimalArticleCorrection(item) {
+  const q = String(item?.questionDe || '');
+  const quote = QUOTED_SPAN_RE.exec(q);
+  if (!quote) return null;
+  const swap = articleFamilySwap(quote[1], item?.answer);
+  if (!swap) return null;
+  const [from, to] = swap;
+  const counterpart = ARTICLE_FAMILY_COUNTERPART[ARTICLE_FAMILY(to)][flat(to)];
+  if (!counterpart) return null;
+  // The written form follows the article the item's own answer uses: a
+  // sentence-initial article is capitalised, one mid-sentence is not.
+  const written = /^[A-ZÄÖÜ]/.test(from) ? counterpart.charAt(0).toUpperCase() + counterpart.slice(1) : counterpart;
+  const words = String(item.answer).split(/\s+/);
+  const at = words.findIndex((w) => flat(bare(w)) === flat(to));
+  if (at < 0) return null;
+  words[at] = written;
+  return words.join(' ');
+}
+
+/**
  * REVIEW #5 MAJOR 7: the prompt asks ABOUT German instead of asking FOR German.
  * "Welche Endung ist IMMER feminin?" needs the words *Endung* and *feminin*
  * before it can be read at all, in a Lektion whose Wortfeld is Tisch, Stuhl,
@@ -633,6 +769,19 @@ const POSSESSIVE_RE = /^(mein|dein|sein|ihr|unser|euer)(e|en|em|er|es)?$/;
 const containsPossessive = (text) => wordsFlat(text).some((w) => POSSESSIVE_RE.test(w));
 const TIME_WORD_RE =
   /^(um|am|im|uhr|halb|viertel|nach|vor|morgens|mittags|nachmittags|abends|montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag|eins|zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn|elf|zwoelf|zwanzig|dreissig|vierzig|fuenfzig)$/;
+/**
+ * REVIEW #6 MAJOR 9: the number words A1.1 teaches, in the ä/ae-blind lowercase
+ * form `flat()` produces — the spellings a learner types for a Telefonnummer,
+ * a Hausnummer or a letter count. Zero to twenty plus the tens and `hundert`
+ * is the whole of what Lektion 2 and the Hören-Teil-1 items ask for.
+ */
+export const NUMBER_WORDS = Object.freeze([
+  'null', 'eins', 'ein', 'eine', 'zwei', 'drei', 'vier', 'fuenf', 'sechs', 'sieben', 'acht',
+  'neun', 'zehn', 'elf', 'zwoelf', 'dreizehn', 'vierzehn', 'fuenfzehn', 'sechzehn',
+  'siebzehn', 'achtzehn', 'neunzehn', 'zwanzig', 'dreissig', 'vierzig', 'fuenfzig',
+  'sechzig', 'siebzig', 'achtzig', 'neunzig', 'hundert',
+]);
+
 const FINITE_RE = /^[a-zäöüß]+(e|st|t|en|et)$/i;
 /** The prompt's last word before the final punctuation is a separable prefix. */
 const endsOnPrefix = (q) => {
@@ -749,6 +898,16 @@ const DRILLS = {
 
   'time-and-dates': ({ expected }) =>
     expected.some((a) => /uhr/i.test(String(a)) || wordsFlat(a).some((w) => TIME_WORD_RE.test(w))),
+
+  // REVIEW #6 MAJOR 9. The number words, which Hören Teil 1 of Start Deutsch 1
+  // is nearly made of (Zahlen, Uhrzeiten, Telefonnummern) and which the pool
+  // filed under `verb-sein` because that was the topic Lektion 2 routes on. The
+  // consequence was not cosmetic: `tagError` falls through to the verb clause
+  // on a `verb-sein` topic, so `sieber` for `sieben` was diagnosed as a
+  // Konjugation mistake and `remediationSet` served more verb items for it.
+  // The predicate reads what the learner PRODUCES, like every other one here:
+  // the expected answer is a number word.
+  numbers: ({ expected }) => expected.some((a) => NUMBER_WORDS.includes(flat(bare(a)))),
 };
 
 /**
@@ -815,6 +974,12 @@ export function exclusionReason(item, { level } = {}) {
   // be mistaken for one.
   if (cueAnswerMismatch(item)) return REASON.CUE_ANSWER_MISMATCH;
   if (metalinguisticPrompt(item)) return REASON.METALINGUISTIC_PROMPT;
+
+  // REVIEW #6, last for the same reason once more: every id the suites pin to
+  // an older reason keeps it. Repairable (the build widens `accepted` with the
+  // minimal same-family correction), so it must report its own reason rather
+  // than share one — an unrepairable instance is what the count is for.
+  if (ambiguousCorrection(item)) return REASON.AMBIGUOUS_CORRECTION;
 
   return null;
 }

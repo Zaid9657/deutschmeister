@@ -87,6 +87,7 @@ import {
   answerInPrompt, isMetaPrompt, verbCueOnlyInGloss, statementNoTask, parseVerbCue,
   articleCueOnlyInGloss, articleAnswerKind, ARTICLE_CUE,
   missingSentenceArticle, cueAnswerMismatch, metalinguisticPrompt, SENTENCE_ARTICLE_CUE,
+  ambiguousCorrection, minimalArticleCorrection, isPoliteFormItem, drillsSlug,
 } from '../src/data/lessonPools/quality.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -98,6 +99,8 @@ const EXTRA = read('src/data/lessonPools/a11.extra.json').items;
 const ALL = [...POOL.items, ...EXTRA.filter((e) => !POOL.items.some((p) => p.id === e.id))];
 /** What survives the rules — the set a learner can actually be shown. */
 const USABLE = ALL.filter((item) => isUsableItem(item));
+
+const POOL_A12 = read('src/data/lessonPools/a12.json');
 
 const MONTH_RE = new RegExp(`(^|[^a-zäöüß])(${MONTH_NAMES.join('|')})([^a-zäöüß]|$)`, 'i');
 const label = (item) => `${item.id} (${item.topic}) — ${item.questionDe} → ${item.answer}`;
@@ -576,5 +579,139 @@ test('no explanation a learner is shown claims a percentage — REVIEW #5 MAJOR 
       !String(item.explanationDe || '').includes('%'),
       `percentage claim in an explanation: ${label(item)} — ${item.explanationDe}`,
     );
+  }
+});
+
+// ── REVIEW #6 ───────────────────────────────────────────────────────────────
+
+test('no error correction asks for more than the German prompt names — REVIEW #6 BLOCKER 2', () => {
+  // The whole pool, both levels: the rule is about German, not about a syllabus.
+  for (const item of [...ALL, ...POOL_A12.items]) {
+    assert.equal(ambiguousCorrection(item), false, `ambiguous correction: ${label(item)}`);
+  }
+  // `extra-a11-l05-09` as round 5 wrote it: „Ein Schere ist hier." carries ONE
+  // error (the genus of the indefinite article), so `Eine Schere ist hier.` is
+  // the minimal and complete correction — and the key accepted only an answer
+  // that ALSO swaps the article family, which no German prompt field asks for.
+  const trap = {
+    id: 'ac1', topic: 'definite-articles', type: 'error_correction',
+    questionDe: 'Korrigieren Sie: „Ein Schere ist hier.“',
+    questionEn: 'Fix the article.',
+    answer: 'Die Schere ist hier.',
+    accepted: ['Die Schere ist hier.', 'Die Schere ist hier'],
+  };
+  assert.equal(exclusionReason(trap), REASON.AMBIGUOUS_CORRECTION);
+  // The build's repair: the minimal correction is computed and accepted, and
+  // the item then passes — both readings are right, which is what makes the
+  // prompt honest without anyone guessing at the author's intent.
+  assert.equal(minimalArticleCorrection(trap), 'Eine Schere ist hier.');
+  assert.equal(
+    exclusionReason({ ...trap, accepted: [...trap.accepted, 'Eine Schere ist hier.', 'Eine Schere ist hier'] }),
+    null,
+    'accepting the minimal correction is what closes the finding',
+  );
+  // The author's own repair closes it too, from the other side: a prompt that
+  // NAMES the family it wants is not ambiguous — that is the shipped item.
+  assert.equal(
+    ambiguousCorrection({ ...trap, questionDe: 'Korrigieren Sie: „Ein Schere ist hier.“ (mit bestimmtem Artikel)' }),
+    false,
+    'the German prompt names the definite article, so the swap is the task',
+  );
+  assert.equal(
+    ambiguousCorrection({ ...trap, questionDe: 'Korrigieren Sie: „Ein Schere ist hier.“ (bestimmter Artikel)' }),
+    false,
+  );
+  // …and the corrections that are NOT ambiguous: one family, one solution.
+  for (const [questionDe, answer] of [
+    ['Korrigieren Sie: „Das ist eine Tisch.“', 'Das ist ein Tisch.'],
+    ['Korrigieren Sie: „Der Sonne ist warm.“', 'Die Sonne ist warm.'],
+    ['Korrigieren Sie: „Du bist müde?“', 'Bist du müde?'],
+    ['Korrigieren Sie: „Ich fahre nach der Bahnhof.“', 'Ich fahre zum Bahnhof.'],
+  ]) {
+    assert.equal(
+      ambiguousCorrection({ id: 'ac2', type: 'error_correction', questionDe, answer, accepted: [answer] }),
+      false,
+      questionDe,
+    );
+  }
+  // The half the build may NOT repair: `ein` is `der` or `das`, and picking a
+  // gender is authorship. Nothing is computed, so the gate drops the item.
+  const ungendered = {
+    id: 'ac3', type: 'error_correction',
+    questionDe: 'Korrigieren Sie: „Die Heft ist neu.“', answer: 'Ein Heft ist neu.',
+    accepted: ['Ein Heft ist neu.'],
+  };
+  assert.equal(ambiguousCorrection(ungendered), true);
+  assert.equal(minimalArticleCorrection(ungendered), null, 'der or das — a build step may not choose');
+});
+
+test('every polite-form item of the BUILT pool is case-strict — REVIEW #6 BLOCKER 1', () => {
+  // THIS ONE IS ABOUT THE ARTEFACT: the flag is written by
+  // `scripts/build-lesson-pool.mjs`, so it can only be proven on a11.json /
+  // a12.json. Round 5 closed the same finding as a list of three ids and round
+  // 6 measured two more items of the same shape without the flag — one of them
+  // in the graded Checkpoint 4 — which is why the flag is derived now.
+  for (const item of [...POOL.items, ...POOL_A12.items]) {
+    if (!isPoliteFormItem(item)) continue;
+    assert.equal(item.caseSensitive, true, `polite form without caseSensitive: ${label(item)}`);
+  }
+  // the two items the review names, and what makes them different
+  assert.equal(isPoliteFormItem({ answer: 'Sie', accepted: ['Sie'] }), true);
+  assert.equal(isPoliteFormItem({ answer: 'Ihnen', accepted: ['Ihnen'] }), true);
+  assert.equal(isPoliteFormItem({ answer: 'Das ist Ihre Adresse.', accepted: ['Das ist Ihre Adresse'] }), true);
+  // an item that accepts the lowercase spelling is not teaching the capital —
+  // `extra-a11-l12-10` („sie, Plural" → ihre) and `extra-a11-l03-02` (the
+  // sister, → sie) both accept both, and marking them case-strict is the
+  // mistake round 5 made in the other direction.
+  assert.equal(isPoliteFormItem({ answer: 'Ihre', accepted: ['Ihre', 'ihre'] }), false);
+  assert.equal(isPoliteFormItem({ answer: 'Sie', accepted: ['Sie', 'sie'] }), false);
+  // a sentence answer counts only for the POSSESSIVE, and only away from
+  // position 1: a word-order item may not become wholly wrong over a capital.
+  assert.equal(
+    isPoliteFormItem({ answer: 'Fahren Sie morgen nach Deutschland?', accepted: ['Fahren Sie morgen nach Deutschland'] }),
+    false,
+  );
+  assert.equal(isPoliteFormItem({ answer: '', accepted: [] }), false);
+});
+
+test('no item accepts a verb its own frame rules out — REVIEW #6 MAJOR 10', () => {
+  // "Gehst du morgen mit dem Bus?" is not German: one fährt or kommt mit dem
+  // Bus. The equivalence table is per LEMMA, the language is per FRAME, so the
+  // build no longer widens an answer key on the guess that an item which
+  // already allows two lemmas meant its frame to be open.
+  const WITH_VEHICLE = /\bmit (dem|der) \w+/i;
+  const GEHEN_FORM_RE = /^(gehe|gehst|geht|gehen)$/i;
+  for (const item of [...POOL.items, ...POOL_A12.items]) {
+    if (!WITH_VEHICLE.test(String(item.questionDe || ''))) continue;
+    for (const a of [item.answer, ...(item.accepted || [])]) {
+      assert.ok(
+        !GEHEN_FORM_RE.test(String(a || '').trim()),
+        `a form of gehen with a vehicle: ${label(item)} — accepted ${a}`,
+      );
+    }
+  }
+});
+
+test('a number item drills numbers, not the verb it is filed under — REVIEW #6 MAJOR 9', () => {
+  // The four L2 items ("… ist null eins ___ sechs. (7)" → sieben) sat under
+  // `topic: 'verb-sein'` because that is what Lektion 2 routes on, and every
+  // miss was diagnosed as Konjugation. `drillsSlug` reads what the learner
+  // PRODUCES, so the number topic has a predicate of its own.
+  const item = {
+    id: 'n1', topic: 'numbers', type: 'fill_blank',
+    questionDe: 'Ergänzen Sie: Meine Telefonnummer ist null eins ___ sechs. (7)',
+    answer: 'sieben', accepted: ['sieben'],
+  };
+  assert.equal(drillsSlug(item, 'numbers'), true);
+  assert.equal(drillsSlug({ ...item, answer: 'zwölf', accepted: ['zwölf'] }, 'numbers'), true);
+  assert.equal(drillsSlug({ ...item, answer: 'dreißig', accepted: ['dreißig'] }, 'numbers'), true);
+  // and what it may not count: the verb item next to it in the same Lektion
+  assert.equal(
+    drillsSlug({ id: 'n2', topic: 'numbers', type: 'fill_blank', questionDe: 'Ich ___ Anna.', answer: 'bin', accepted: ['bin'] }, 'numbers'),
+    false,
+  );
+  // every item the pool files under the topic really drills it
+  for (const it of [...POOL.items, ...POOL_A12.items].filter((i) => i.topic === 'numbers')) {
+    assert.equal(drillsSlug(it, 'numbers'), true, `filed under numbers but drills something else: ${label(it)}`);
   }
 });

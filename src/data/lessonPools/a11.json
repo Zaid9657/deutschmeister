@@ -1,7 +1,7 @@
 {
  "level": "a1.1",
  "builtFrom": "2026-08-24",
- "count": 351,
+ "count": 355,
  "items": [
   {
    "id": "10fc1751-c3af-529f-8796-f8e46bfb1691",
@@ -603,8 +603,7 @@
    "answer": "Ich heiße Ana.",
    "accepted": [
     "Ich heiße Ana.",
-    "Ich heiße Ana",
-    "Ich heisse Ana."
+    "Ich heiße Ana"
    ],
    "explanationDe": "heißen: ich heiße, du heißt.",
    "hint": null
@@ -1168,8 +1167,8 @@
    "stage": 5,
    "difficulty": 2,
    "order": 59,
-   "questionDe": "Korrigieren Sie: „Ein Schere ist hier.“",
-   "questionEn": "Fix the article.",
+   "questionDe": "Korrigieren Sie: „Ein Schere ist hier.“ (mit bestimmtem Artikel)",
+   "questionEn": "Fix the article — the task names the definite article.",
    "options": null,
    "answer": "Die Schere ist hier.",
    "accepted": [
@@ -1186,13 +1185,13 @@
    "stage": 5,
    "difficulty": 2,
    "order": 60,
-   "questionDe": "Bilden Sie den Satz: [das / Bild / sein / schön]",
+   "questionDe": "Bilden Sie den Satz: [das / Bild / sein / gelb]",
    "questionEn": "Build the sentence.",
    "options": null,
-   "answer": "Das Bild ist schön.",
+   "answer": "Das Bild ist gelb.",
    "accepted": [
-    "Das Bild ist schön.",
-    "Das Bild ist schön"
+    "Das Bild ist gelb.",
+    "Das Bild ist gelb"
    ],
    "explanationDe": "das Bild ist neutral, Verb auf Platz zwei.",
    "hint": null
@@ -1811,6 +1810,42 @@
    "hint": null
   },
   {
+   "id": "extra-a11-l04-09",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 49,
+   "questionDe": "___ Flohmarkt ist in Bremen. (der, die oder das?)",
+   "questionEn": "The flea market is in Bremen.",
+   "options": null,
+   "answer": "Der",
+   "accepted": [
+    "Der",
+    "der"
+   ],
+   "explanationDe": "der Flohmarkt ist maskulin.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l04-11",
+   "topic": "nouns-gender",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 51,
+   "questionDe": "___ Stuhl ist alt. (der, die oder das?)",
+   "questionEn": "The chair is old.",
+   "options": null,
+   "answer": "Der",
+   "accepted": [
+    "Der",
+    "der"
+   ],
+   "explanationDe": "der Stuhl ist maskulin.",
+   "hint": null
+  },
+  {
    "id": "14894fb2-78ed-4aa5-a68f-6d17b9f1fbfa",
    "topic": "nouns-gender",
    "type": "multiple_choice",
@@ -2074,6 +2109,110 @@
    "hint": null
   },
   {
+   "id": "extra-a11-l04-10",
+   "topic": "nouns-gender",
+   "type": "error_correction",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 50,
+   "questionDe": "Korrigieren Sie: „Das Lampe kostet acht Euro.“ (mit bestimmtem Artikel)",
+   "questionEn": "Fix the article — the task names the definite article.",
+   "options": null,
+   "answer": "Die Lampe kostet acht Euro.",
+   "accepted": [
+    "Die Lampe kostet acht Euro.",
+    "Die Lampe kostet acht Euro"
+   ],
+   "explanationDe": "die Lampe ist feminin: die Lampe.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l04-12",
+   "topic": "nouns-gender",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 52,
+   "questionDe": "Bilden Sie den Satz: [die Uhr / kosten / zwanzig Euro]",
+   "questionEn": "Build the sentence.",
+   "options": null,
+   "answer": "Die Uhr kostet zwanzig Euro.",
+   "accepted": [
+    "Die Uhr kostet zwanzig Euro.",
+    "Die Uhr kostet zwanzig Euro"
+   ],
+   "explanationDe": "die Uhr ist feminin, das Verb steht auf Platz zwei.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l02-09",
+   "topic": "numbers",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 29,
+   "questionDe": "Ergänzen Sie: Meine Telefonnummer im Formular ist null eins ___ sechs. (7)",
+   "questionEn": "Fill in: on the form my phone number is zero one … six.",
+   "options": null,
+   "answer": "sieben",
+   "accepted": [
+    "sieben"
+   ],
+   "explanationDe": "In Zahlen 7, als Wort: sieben.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l02-10",
+   "topic": "numbers",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 30,
+   "questionDe": "Ergänzen Sie: Wir sind ___ Studenten. (3)",
+   "questionEn": "Fill in: we are … students.",
+   "options": null,
+   "answer": "drei",
+   "accepted": [
+    "drei"
+   ],
+   "explanationDe": "In Zahlen 3, als Wort: drei.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l02-11",
+   "topic": "numbers",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 31,
+   "questionDe": "Ergänzen Sie: Hier sind ___ Formulare. (8)",
+   "questionEn": "Fill in: here are … forms.",
+   "options": null,
+   "answer": "acht",
+   "accepted": [
+    "acht"
+   ],
+   "explanationDe": "In Zahlen 8, als Wort: acht.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l02-12",
+   "topic": "numbers",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 32,
+   "questionDe": "Ergänzen Sie: Mein Vorname hat ___ Buchstaben. (10)",
+   "questionEn": "Fill in: my first name has … letters.",
+   "options": null,
+   "answer": "zehn",
+   "accepted": [
+    "zehn"
+   ],
+   "explanationDe": "In Zahlen 10, als Wort: zehn.",
+   "hint": null
+  },
+  {
    "id": "dd1c3d60-8ae7-4c94-8990-19633dcba36f",
    "topic": "personal-pronouns",
    "type": "fill_blank",
@@ -2092,7 +2231,8 @@
     "Sie"
    ],
    "explanationDe": "Mutter = weiblich → sie.",
-   "hint": null
+   "hint": null,
+   "caseSensitive": true
   },
   {
    "id": "28215564-f749-493a-a92c-b657a6c5be02",
@@ -2113,7 +2253,8 @@
     "Sie"
    ],
    "explanationDe": "Lampe = feminin → sie.",
-   "hint": null
+   "hint": null,
+   "caseSensitive": true
   },
   {
    "id": "250db8c3-4db9-4d45-a4f3-c489d4e29a63",
@@ -2240,7 +2381,8 @@
     "Sie"
    ],
    "explanationDe": "Die Tasche ist feminin, deshalb wird sie zu sie.",
-   "hint": null
+   "hint": null,
+   "caseSensitive": true
   },
   {
    "id": "cd9f14b0-a8a7-53ba-839b-8c6d1f05237c",
@@ -2291,7 +2433,8 @@
     "Ihr"
    ],
    "explanationDe": "Ihr spricht mehrere Personen informell an.",
-   "hint": null
+   "hint": null,
+   "caseSensitive": true
   },
   {
    "id": "0416dbbe-821e-5033-954b-5cc62a09e8a2",
@@ -2308,7 +2451,8 @@
     "Sie"
    ],
    "explanationDe": "Sie (großgeschrieben) ist das formelle Sie für Fremde und Beamte.",
-   "hint": null
+   "hint": null,
+   "caseSensitive": true
   },
   {
    "id": "7d593bf2-c262-52f8-9822-0c4c80a3ad81",
@@ -2359,7 +2503,8 @@
     "Sie"
    ],
    "explanationDe": "Eine genannte weibliche Person wird durch sie ersetzt.",
-   "hint": null
+   "hint": null,
+   "caseSensitive": true
   },
   {
    "id": "extra-a11-l03-04",
@@ -2571,7 +2716,8 @@
    "answer": "Wie ist Ihr Name?",
    "accepted": [],
    "explanationDe": "Die Höflichkeitsform benutzt Sie/Ihr (immer großgeschrieben).",
-   "hint": null
+   "hint": null,
+   "caseSensitive": true
   },
   {
    "id": "b269d424-9f5f-5bfc-9703-50b0c0b5e5a4",
@@ -2591,7 +2737,8 @@
    "answer": "Ihre",
    "accepted": [],
    "explanationDe": "Adresse ist feminin → Ihre, der Possessivartikel für Sie. Ihr hat keine Endung (falsch für ein feminines Nomen); seine und eure gehören zu anderen Besitzern.",
-   "hint": null
+   "hint": null,
+   "caseSensitive": true
   },
   {
    "id": "48bbb8f0-2b0f-512f-a7df-04f8e6f43e0f",
@@ -2878,7 +3025,8 @@
     "Das ist Ihre Adresse"
    ],
    "explanationDe": "das + ist + Ihre Adresse (Adresse ist feminin → Ihre; großes I markiert die Höflichkeitsform).",
-   "hint": null
+   "hint": null,
+   "caseSensitive": true
   },
   {
    "id": "7ca45e8d-3d8f-5335-9e51-42dad2b58553",
@@ -2933,7 +3081,8 @@
    "answer": "Ihr",
    "accepted": [],
    "explanationDe": "Name ist maskulin → Ihr, der Possessivartikel für Sie, ohne Endung. Ihre bräuchte ein feminines oder Plural-Nomen; sein und euer gehören zu anderen Besitzern.",
-   "hint": null
+   "hint": null,
+   "caseSensitive": true
   },
   {
    "id": "64680d9b-3681-560d-ada9-a64d0aa329aa",
@@ -5388,74 +5537,6 @@
    "hint": null
   },
   {
-   "id": "extra-a11-l02-09",
-   "topic": "verb-sein",
-   "type": "fill_blank",
-   "stage": 4,
-   "difficulty": 1,
-   "order": 29,
-   "questionDe": "Ergänzen Sie: Meine Telefonnummer im Formular ist null eins ___ sechs. (7)",
-   "questionEn": "Fill in: on the form my phone number is zero one … six.",
-   "options": null,
-   "answer": "sieben",
-   "accepted": [
-    "sieben"
-   ],
-   "explanationDe": "In Zahlen 7, als Wort: sieben.",
-   "hint": null
-  },
-  {
-   "id": "extra-a11-l02-10",
-   "topic": "verb-sein",
-   "type": "fill_blank",
-   "stage": 4,
-   "difficulty": 1,
-   "order": 30,
-   "questionDe": "Ergänzen Sie: Wir sind ___ Studenten. (3)",
-   "questionEn": "Fill in: we are … students.",
-   "options": null,
-   "answer": "drei",
-   "accepted": [
-    "drei"
-   ],
-   "explanationDe": "In Zahlen 3, als Wort: drei.",
-   "hint": null
-  },
-  {
-   "id": "extra-a11-l02-11",
-   "topic": "verb-sein",
-   "type": "fill_blank",
-   "stage": 4,
-   "difficulty": 1,
-   "order": 31,
-   "questionDe": "Ergänzen Sie: Hier sind ___ Formulare. (8)",
-   "questionEn": "Fill in: here are … forms.",
-   "options": null,
-   "answer": "acht",
-   "accepted": [
-    "acht"
-   ],
-   "explanationDe": "In Zahlen 8, als Wort: acht.",
-   "hint": null
-  },
-  {
-   "id": "extra-a11-l02-12",
-   "topic": "verb-sein",
-   "type": "fill_blank",
-   "stage": 4,
-   "difficulty": 1,
-   "order": 32,
-   "questionDe": "Ergänzen Sie: Mein Vorname hat ___ Buchstaben. (10)",
-   "questionEn": "Fill in: my first name has … letters.",
-   "options": null,
-   "answer": "zehn",
-   "accepted": [
-    "zehn"
-   ],
-   "explanationDe": "In Zahlen 10, als Wort: zehn.",
-   "hint": null
-  },
-  {
    "id": "408d681a-e3ea-5556-8596-4de268454f06",
    "topic": "verb-sein",
    "type": "fill_blank",
@@ -5986,9 +6067,7 @@
     "Fährst",
     "fährst",
     "Kommst",
-    "kommst",
-    "Gehst",
-    "gehst"
+    "kommst"
    ],
    "explanationDe": "du fährst wird in der Frage zu Fährst du.",
    "hint": null
@@ -6076,7 +6155,8 @@
     "Sind Sie Frau Meier"
    ],
    "explanationDe": "sind an Position 1, Sie an Position 2: Sind Sie Frau Meier?",
-   "hint": null
+   "hint": null,
+   "caseSensitive": true
   },
   {
    "id": "aae6d30e-fd95-526b-9970-279e8fc63534",
