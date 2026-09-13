@@ -12,7 +12,7 @@ export const RULE_CARDS = {
       {
         "wrong": "Wie heißt der Buchstabe Z? — Zed.",
         "correct": "Wie heißt der Buchstabe Z? — Zett.",
-        "explanationDe": "Der Buchstabe Z heißt im Deutschen Zett."
+        "explanationDe": "Der Buchstabe Z heißt Zett."
       },
       {
         "wrong": "V und W haben denselben Namen.",
@@ -28,7 +28,7 @@ export const RULE_CARDS = {
   },
   "definite-articles": {
     "titleDe": "der, die, das: die Sache ist schon bekannt",
-    "content": "ein und eine zeigen etwas Neues. der, die und das zeigen: Beide wissen, welche Sache gemeint ist.\nNeu: ein Heft, eine Schere, ein Lineal.\nSchon bekannt: das Heft, die Schere, das Lineal.\nder (maskulin), die (feminin), das (neutral). Im Plural steht immer die: die Hefte, die Stifte.\nMan zeigt mit hier und da: Das Wörterbuch ist hier. Der Stift ist da.\nIst das ein Heft? — Ja, und das Heft ist grün.\nWo ist die Schere? — Die Schere ist hier.\nHier lernen Sie nur den Artikel. Die Pluralformen lernt man Wort für Wort.\nEnglish: ein/eine introduces something new; der/die/das points at the thing both speakers already mean.",
+    "content": "ein und eine stehen bei einer neuen Sache.\nder, die und das zeigen: Beide wissen, welche Sache gemeint ist.\nNeu: ein Heft, eine Schere, ein Lineal.\nSchon bekannt: das Heft, die Schere, das Lineal.\nder (maskulin), die (feminin), das (neutral). Im Plural steht immer die: die Hefte, die Stifte.\nMan zeigt mit hier und da: Das Wörterbuch ist hier. Der Stift ist da.\nIst das ein Heft? — Ja, und das Heft ist grün.\nWo ist die Schere? — Die Schere ist hier.\nHier lernen Sie nur den Artikel. Die Pluralformen lernt man Wort für Wort.\nEnglish: ein/eine introduces something new; der/die/das points at the thing both speakers already mean.",
     "commonMistakes": [
       {
         "wrong": "Das ist eine Schere. Eine Schere ist hier.",
@@ -54,7 +54,7 @@ export const RULE_CARDS = {
       {
         "wrong": "Ich bin eine Verkäuferin.",
         "correct": "Ich bin Verkäuferin.",
-        "explanationDe": "Nach sein steht der Beruf ohne Artikel: Ich bin Verkäuferin, Ich bin Ingenieur."
+        "explanationDe": "Nach sein steht der Beruf ohne Artikel. Richtig: Ich bin Verkäuferin."
       },
       {
         "wrong": "Ich brauche ein Computer.",
@@ -70,7 +70,7 @@ export const RULE_CARDS = {
   },
   "nouns-gender": {
     "titleDe": "Genus: der, die, das — und die Endungen, die helfen",
-    "content": "Jedes Nomen hat ein Genus: der, die oder das. Im Plural steht immer die.\nDiese Endungen zeigen das Genus:\n-ung, -heit, -keit, -schaft → die: die Entschuldigung, die Freiheit, die Möglichkeit, die Freundschaft.\n-chen, -lein → das: das Mädchen, das Brötchen.\n-er bei Berufen von Männern → der: der Lehrer. Vorsicht: die Mutter, die Schwester, die Tochter.\nHat ein Nomen keine dieser Endungen, dann hilft nur Lernen.\nLernen Sie jedes Nomen mit dem Artikel: nicht Tisch, sondern der Tisch.\nEnglish: learn every noun together with its article; the endings above are reliable groups, not a complete system.",
+    "content": "Jedes Nomen hat ein Genus: der, die oder das. Im Plural steht immer die.\nDiese Endungen zeigen das Genus:\n-ung, -heit, -keit, -schaft → die: die Entschuldigung, die Freiheit, die Möglichkeit, die Freundschaft.\n-chen, -lein → das: das Mädchen, das Brötchen.\n-er bei männlichen Berufsnamen → der: der Lehrer. Vorsicht: die Mutter, die Schwester, die Tochter.\nHat ein Nomen keine dieser Endungen, dann lernt man den Artikel einfach mit.\nLernen Sie jedes Nomen mit dem Artikel: nicht Tisch, sondern der Tisch.\nEnglish: learn every noun together with its article; the endings above are reliable groups, not a complete system.",
     "commonMistakes": [
       {
         "wrong": "das Entschuldigung",
@@ -85,7 +85,7 @@ export const RULE_CARDS = {
       {
         "wrong": "die Lehrer kauft den Stuhl.",
         "correct": "Der Lehrer kauft den Stuhl.",
-        "explanationDe": "Männliche Berufsnamen auf -er sind der-Wörter. Die Frau ist die Lehrerin. Bei Verwandten gilt das nicht: die Mutter, die Schwester."
+        "explanationDe": "Männliche Berufsnamen auf -er sind der-Wörter. Die Frau ist die Lehrerin. In der Familie gilt das nicht: die Mutter, die Schwester."
       }
     ]
   },
@@ -196,7 +196,7 @@ export const RULE_CARDS = {
   },
   "verb-haben": {
     "titleDe": "haben: Hunger, Durst und Zeit",
-    "content": "haben ist unregelmäßig. Diese sechs Formen sind fest:\nich habe, du hast, er/sie/es hat, wir haben, ihr habt, sie/Sie haben.\nMit haben sagt man Hunger, Durst und Zeit — und zwar ohne Artikel:\nIch habe Hunger. Ich habe Durst. Haben Sie Zeit?\nIm Café: Wir haben Suppe, Salat und Kuchen. Die Kellnerin hat Zeit.\nIn der Frage steht haben vorn: Haben Sie auch Hunger? — Ja, ich habe Hunger.\nDie Bestellung ist ein anderer Satz: Ich möchte einen Kaffee, bitte.\nEnglish: German has hunger and thirst rather than being hungry — Ich habe Hunger.",
+    "content": "haben ist unregelmäßig. Diese sechs Formen sind fest:\nich habe, du hast, er/sie/es hat, wir haben, ihr habt, sie/Sie haben.\nMit haben sagt man Hunger, Durst und Zeit — und zwar ohne Artikel:\nIch habe Hunger. Ich habe Durst. Haben Sie Zeit?\nIm Café: Wir haben Suppe, Salat und Kuchen. Die Kellnerin hat Zeit.\nIn der Frage steht haben vorn: Haben Sie auch Hunger? — Ja, ich habe Hunger.\nMan bestellt so: Ich möchte einen Kaffee, bitte.\nEnglish: German has hunger and thirst rather than being hungry — Ich habe Hunger.",
     "commonMistakes": [
       {
         "wrong": "Ich bin Hunger.",
@@ -217,12 +217,12 @@ export const RULE_CARDS = {
   },
   "verb-sein": {
     "titleDe": "sein: ich bin, du bist, Sie sind",
-    "content": "sein ist unregelmäßig. Man lernt die sechs Formen als Ganzes:\nich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.\nDer Beruf: Was sind Sie von Beruf? — Ich bin Studentin. Herr Weber ist Lehrer.\nNach sein steht der Beruf ohne Artikel: Ich bin Lehrerin. Nicht: Ich bin eine Lehrerin.\nWoher sind Sie? — Ich bin aus Marokko. Wir sind aus Marokko.\nDer Wohnort: Ich bin in Bremen. Ana ist in Bremen.\nIn der Frage steht sein vorn: Sind Sie Frau Chakiri? — Ja, ich bin Frau Chakiri.\nEnglish: sein is irregular — learn the six forms as whole words, not from a stem.",
+    "content": "sein ist unregelmäßig. Man lernt die sechs Formen auswendig:\nich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.\nDer Beruf: Was sind Sie von Beruf? — Ich bin Studentin. Herr Weber ist Lehrer.\nNach sein steht der Beruf ohne Artikel: Ich bin Lehrerin. Nicht: Ich bin eine Lehrerin.\nWoher sind Sie? — Ich bin aus Marokko. Wir sind aus Marokko.\nDer Wohnort: Ich bin in Bremen. Ana ist in Bremen.\nIn der Frage steht sein vorn: Sind Sie Frau Chakiri? — Ja, ich bin Frau Chakiri.\nEnglish: sein is irregular — learn the six forms as whole words, not from a stem.",
     "commonMistakes": [
       {
         "wrong": "Ich bin ein Lehrer.",
         "correct": "Ich bin Lehrer.",
-        "explanationDe": "Nach sein steht der Beruf ohne Artikel: Ich bin Lehrer, Ich bin Studentin."
+        "explanationDe": "Nach sein steht der Beruf ohne Artikel. Richtig: Ich bin Lehrer."
       },
       {
         "wrong": "Ana bin Studentin.",
@@ -232,13 +232,13 @@ export const RULE_CARDS = {
       {
         "wrong": "Wie sind Sie von Beruf?",
         "correct": "Was sind Sie von Beruf?",
-        "explanationDe": "Die feste Frage nach dem Beruf beginnt mit Was, nicht mit Wie."
+        "explanationDe": "Die feste Frage lautet: Was sind Sie von Beruf?"
       }
     ]
   },
   "yes-no-questions": {
     "titleDe": "Aussage → Ja/Nein-Frage",
-    "content": "In der geschriebenen Ja/Nein-Frage steht das Verb auf Platz 1, das Subjekt direkt danach. Der Rest bleibt gleich.\nDer Zug fährt pünktlich. → Fährt der Zug pünktlich?\nSie haben eine Fahrkarte. → Haben Sie eine Fahrkarte?\nSie kommen aus Österreich. → Kommen Sie aus Österreich?\nDer Bus fährt in die Schweiz. → Fährt der Bus in die Schweiz?\nSie stehen früh auf. → Stehen Sie früh auf? Die Vorsilbe bleibt am Ende.\nAntworten Sie mit einem ganzen Satz: Ja, ich bin pünktlich. Nein, ich habe keine Zeit.\nEnglish: in a written yes/no question the verb comes first and the subject second.",
+    "content": "In der geschriebenen Ja/Nein-Frage steht das Verb auf Platz 1, das Subjekt direkt danach. Alles andere bleibt gleich.\nDer Zug fährt pünktlich. → Fährt der Zug pünktlich?\nSie haben eine Fahrkarte. → Haben Sie eine Fahrkarte?\nSie kommen aus Österreich. → Kommen Sie aus Österreich?\nDer Bus fährt in die Schweiz. → Fährt der Bus in die Schweiz?\nSie stehen früh auf. → Stehen Sie früh auf? Die Vorsilbe bleibt am Ende.\nAntworten Sie mit einem ganzen Satz: Ja, ich bin pünktlich. Nein, ich habe keine Zeit.\nEnglish: in a written yes/no question the verb comes first and the subject second.",
     "commonMistakes": [
       {
         "wrong": "Sie kommen aus Österreich?",

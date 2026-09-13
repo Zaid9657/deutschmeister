@@ -1,7 +1,7 @@
 {
  "level": "a1.1",
  "builtFrom": "2026-08-24",
- "count": 346,
+ "count": 347,
  "items": [
   {
    "id": "10fc1751-c3af-529f-8796-f8e46bfb1691",
@@ -1557,6 +1557,24 @@
     "Ich brauche ein Handy"
    ],
    "explanationDe": "das Handy ist neutral: ein Handy bleibt ein.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l06-11",
+   "topic": "indefinite-articles",
+   "type": "error_correction",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 71,
+   "questionDe": "Korrigieren Sie: „Das ist ein Kollegin im Büro.“",
+   "questionEn": "Fix the article.",
+   "options": null,
+   "answer": "Das ist eine Kollegin im Büro.",
+   "accepted": [
+    "Das ist eine Kollegin im Büro.",
+    "Das ist eine Kollegin im Büro"
+   ],
+   "explanationDe": "die Kollegin ist feminin: eine Kollegin.",
    "hint": null
   },
   {
@@ -5908,24 +5926,6 @@
    "hint": null
   },
   {
-   "id": "extra-a11-l10-11",
-   "topic": "yes-no-questions",
-   "type": "fill_blank",
-   "stage": 4,
-   "difficulty": 1,
-   "order": 111,
-   "questionDe": "___ der Bahnhof hier?",
-   "questionEn": "Is the station here?",
-   "options": null,
-   "answer": "Ist",
-   "accepted": [
-    "Ist",
-    "ist"
-   ],
-   "explanationDe": "Kurze Frage am Bahnhof: Ist der Bahnhof hier?",
-   "hint": null
-  },
-  {
    "id": "0b5c7d74-0e60-51b3-802e-50a4c8457f36",
    "topic": "yes-no-questions",
    "type": "sentence_building",
@@ -6219,15 +6219,33 @@
    "stage": 5,
    "difficulty": 2,
    "order": 110,
-   "questionDe": "Schreiben Sie die Frage richtig: „Die Ankunft ist am Abend?“",
-   "questionEn": "Write the question as a written question.",
+   "questionDe": "Korrigieren Sie: „Haben der Zug nach Österreich Verspätung?“",
+   "questionEn": "Fix the verb form in the question.",
    "options": null,
-   "answer": "Ist die Ankunft am Abend?",
+   "answer": "Hat der Zug nach Österreich Verspätung?",
    "accepted": [
-    "Ist die Ankunft am Abend?",
-    "Ist die Ankunft am Abend"
+    "Hat der Zug nach Österreich Verspätung?",
+    "Hat der Zug nach Österreich Verspätung"
    ],
-   "explanationDe": "In der geschriebenen Frage steht ist vorn.",
+   "explanationDe": "Das Verb passt zum Subjekt: der Zug hat.",
+   "hint": null
+  },
+  {
+   "id": "extra-a11-l10-11",
+   "topic": "yes-no-questions",
+   "type": "error_correction",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 111,
+   "questionDe": "Korrigieren Sie: „Sind der Bahnhof weit?“",
+   "questionEn": "Fix the verb form in the question.",
+   "options": null,
+   "answer": "Ist der Bahnhof weit?",
+   "accepted": [
+    "Ist der Bahnhof weit?",
+    "Ist der Bahnhof weit"
+   ],
+   "explanationDe": "Der Bahnhof ist Singular: Ist der Bahnhof weit?",
    "hint": null
   },
   {
