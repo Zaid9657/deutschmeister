@@ -41,6 +41,17 @@
 // else prints its prompt — without that, the two pairs of checkpoint 3 are
 // invisible, because a read-aloud line stands in `text` and nowhere else.
 //
+// A FALSE STATEMENT MUST BE A SENTENCE ONE CAN ONLY REFUTE BY READING.
+// Whoever recognises it by its FORM has solved the item without seeing the text
+// (DaF review #15, MAJOR 3). The graded checkpoint 2 printed „Ana braucht
+// **einen Taschen** und ein Telefon." because the noun table let a plural
+// overwrite its own singular, and „Tim kauft den Stuhl und **die
+// E-Mail-Adresse**." because gender was the only bar a swap had to clear. So
+// every swap now clears four: the NP slot, gender AND number resolved against
+// the determiner that stands in the text, the semantic class, and the chapter's
+// printed vocabulary — and the finished statement is re-checked for agreement
+// before it leaves the falsifier, whichever pass produced it.
+//
 // Everything is deterministic in `seed` (mulberry32), so tests can pin the
 // exact 20 items and "Nochmal" can reshuffle the ORDER without changing the
 // test a learner already saw.
@@ -693,26 +704,83 @@ const TITLES = ['Herr', 'Frau'];
  * alle/allen` the noun is a quantity or a time expression, and a swap there is
  * NEVER a changed detail — the branch does not fire at all.
  *
- * `DEICTIC_DET` (`diese Woche`, `diesen Schlüssel`) points at either kind, so
- * there the swap is allowed only WITHIN the semantic class: a time noun for a
- * time noun, a thing for a thing. A1.1 has no semantic field on a Wortfeld
- * entry — `{ de, word, article, plural, en, wordId }` — so the one class we
- * cannot read off the data is written down here, small and documented:
- * TIME_NOUNS plus the weekdays. Everything else counts as a thing.
+ * The semantic class used to be demanded only under a DEICTIC (`diese Woche`,
+ * `diesen Schlüssel`). Review #15 lifted it to EVERY vocab swap, because the
+ * bar has nothing to do with the determiner: „Tim kauft den Stuhl und **die
+ * E-Mail-Adresse**." stood on the graded checkpoint 2 under a plain `die`. A1.1
+ * has no semantic field on a Wortfeld entry — `{ de, word, article, plural, en,
+ * wordId }` — so the classes we cannot read off the data are written down here,
+ * small and documented: TIME_NOUNS plus the weekdays, PERSON_NOUNS (plus the
+ * course's own „(m)"/„(f)" gloss, which classifies every job-title pair without
+ * a second list), DATA_NOUNS for the fields of a form. Everything else counts
+ * as a thing — and a thing is still a coarse class, which is why the swap pool
+ * is narrowed a second time, to the nouns the chapter actually PRINTS.
  */
 const QUANTIFIER_DET = ['jede', 'jeden', 'jedes', 'jeder', 'alle', 'allen'];
-const DEICTIC_DET = ['diese', 'diesen', 'dieses', 'dieser', 'diesem'];
 
 /** The chapter's time nouns — the class `jede/diese` reaches for. */
 const TIME_NOUNS = [
   'Woche', 'Wochen', 'Wochenende', 'Wochenenden', 'Tag', 'Tage', 'Monat', 'Monate',
   'Jahr', 'Jahre', 'Stunde', 'Stunden', 'Minute', 'Minuten', 'Morgen', 'Vormittag',
   'Mittag', 'Nachmittag', 'Abend', 'Abende', 'Nacht', 'Nächte', 'Uhrzeit', 'Zeit',
+  'Pause', 'Pausen', 'Termin', 'Termine', 'Verspätung', 'Verspätungen',
+  'Geburtstag', 'Geburtstage', 'Wochentag', 'Wochentage', 'Feierabend',
 ];
 
-/** The semantic class of a noun, for the deictic branch above. */
-function semanticClass(word) {
-  return TIME_NOUNS.includes(word) || WEEKDAYS.includes(word) ? 'zeit' : 'ding';
+/**
+ * The chapter's PEOPLE — the third class (DaF review #15, MAJOR 3, „Zweitens“).
+ * „Ana braucht einen Kellner“ for „… einen Computer“ agrees in gender and
+ * number and is still not a reading item: a person is not a thing one needs off
+ * a shelf. Like TIME_NOUNS this is written down because a Wortfeld entry is
+ * `{ de, word, article, plural, en, wordId }` and carries no semantic field.
+ */
+const PERSON_NOUNS = [
+  'Arzt', 'Ärzte', 'Ärztin', 'Ärztinnen', 'Baby', 'Babys', 'Bruder', 'Brüder',
+  'Einzelkind', 'Einzelkinder', 'Eltern', 'Familie', 'Familien', 'Frau', 'Frauen',
+  'Gast', 'Gäste', 'Geschwister', 'Kellner', 'Kellnerin', 'Kellnerinnen',
+  'Kind', 'Kinder', 'Mama', 'Mamas', 'Mann', 'Männer', 'Mutter', 'Mütter',
+  'Nachbar', 'Nachbarn', 'Nachbarin', 'Nachbarinnen', 'Papa', 'Papas',
+  'Schwester', 'Schwestern', 'Sohn', 'Söhne', 'Tochter', 'Töchter',
+  'Vater', 'Väter',
+];
+
+/**
+ * …and the pairs the course marks itself. Every job title of the Wortfeld is
+ * glossed „teacher (m)" / „teacher (f)", so the person class does not have to
+ * be retyped for them: the gloss IS the data (`der Chef` — „boss (m)"), and a
+ * pair added to a later level is classified without touching this file.
+ */
+const PERSON_GLOSS_RE = /\((?:m|f)\)/;
+
+/**
+ * The chapter's FORM FIELDS — the fourth class, and the one the second axis of
+ * DaF review #15, MAJOR 3 named: `a1.1-cp2-lesen-4` read „Tim kauft den Stuhl
+ * und **die E-Mail-Adresse**.“ — `die Lampe → die E-Mail-Adresse` agrees in
+ * gender and number and is absurd without reading a word of the text. A datum
+ * one gives on a form is not a thing one buys, carries or needs.
+ */
+const DATA_NOUNS = [
+  'Adresse', 'Adressen', 'Alter', 'Beruf', 'Berufe', 'Datum', 'Daten',
+  'E-Mail', 'E-Mails', 'E-Mail-Adresse', 'E-Mail-Adressen', 'Familienname',
+  'Familienstand', 'Geburtsdatum', 'Geburtsdaten', 'Handynummer', 'Handynummern',
+  'Nachname', 'Nachnamen', 'Name', 'Namen', 'Nummer', 'Nummern',
+  'Postleitzahl', 'Postleitzahlen', 'Staatsangehörigkeit', 'Staatsangehörigkeiten',
+  'Telefonnummer', 'Telefonnummern', 'Vorname', 'Vornamen', 'Wohnort', 'Wohnorte',
+];
+
+/**
+ * The semantic class of a noun. It is required on EVERY vocab swap, not only
+ * under a deictic (DaF review #15, MAJOR 3): a time for a time, a person for a
+ * person, a datum for a datum, a thing for a thing. Where the class is unknown the word simply
+ * counts as a thing — the classes are a bar, not a taxonomy, and the falsifier
+ * has two more passes if this one yields nothing.
+ */
+function semanticClass(word, vocab) {
+  if (TIME_NOUNS.includes(word) || WEEKDAYS.includes(word)) return 'zeit';
+  if (PERSON_NOUNS.includes(word)) return 'person';
+  if (PERSON_GLOSS_RE.test(String(vocab?.get?.(word)?.en || ''))) return 'person';
+  if (DATA_NOUNS.includes(word)) return 'daten';
+  return 'ding';
 }
 
 /**
@@ -776,8 +844,9 @@ const ADVERB_SWAPS = new Map([
 const WORD_RE = /[A-Za-zÄÖÜäöüß]+|\d+/g;
 
 /**
- * The chapter's NOUNS WITH THEIR GENDER — the last-resort swap when a window
- * carries no number, weekday or name, as a Map `wort → { article, plural }`.
+ * The chapter's NOUNS WITH THEIR GENDER AND THEIR NUMBER — the last-resort swap
+ * when a window carries no number, weekday or name, as a Map
+ * `wort → { article, number, plural, isPluralOfSelf }`.
  *
  * It is built from the Wortfeld, not from the dialogue lines, for two reasons
  * (DaF review #6, MAJOR 7). The old version collected every capitalised word of
@@ -788,22 +857,173 @@ const WORD_RE = /[A-Za-zÄÖÜäöüß]+|\d+/g;
  * in the graded Lesen section it hands the learner the answer through the form
  * instead of through the content. The Wortfeld already carries `article` and
  * `plural`, so gender is data we have: a noun may only be replaced by a noun of
- * the SAME article, and a plural only by another plural (keyed `plural`, since
- * every German plural takes `die` and swapping a plural for a singular would
- * break the same agreement from the other side).
+ * the SAME gender and the SAME number.
+ *
+ * THE PLURAL MUST NOT OVERWRITE THE SINGULAR (DaF review #15, MAJOR 3). The old
+ * two lines wrote the singular and then the plural into the same Map with
+ * `out.set`, so for every noun whose plural is spelled like its singular the
+ * plural line ATE the gender: `der Computer` became `{ article: 'plural' }`,
+ * and the falsifier read „einen Computer“ as a plural slot and swapped in
+ * `Taschen` — „Ana braucht **einen Taschen** und ein Telefon.“ on the graded
+ * checkpoint 2. Fifteen Wortfeld entries of A1.1 have that shape (Lehrer,
+ * Schalter, Eltern, Geschwister, Euro, Kugelschreiber, Fenster, Zimmer,
+ * Schlüssel, Computer, Verkäufer, Wecker, Kuchen, Kellner, Fahrer), so it was a
+ * class and not a pair; which of them surfaces is decided by the seed.
+ *
+ * So the map is built without loss: the singular keeps its gender, a plural
+ * form only takes a key that is still free, and a form that is BOTH (plural ===
+ * singular) is marked `isPluralOfSelf` and carries both readings. Such a word
+ * is then read in ONE direction only:
+ *   - as the SOURCE of a swap it is legal, because the determiner standing in
+ *     the text decides its number for us („einen Computer“ is singular
+ *     masculine, full stop) — and where the determiner does not decide („die
+ *     Lehrer“ is either), no swap happens;
+ *   - as the REPLACEMENT it is never used, because the inserted form alone
+ *     cannot show the reader which number it is in, and a statement the learner
+ *     cannot parse is not a false statement (review #15's own „nie getauscht“).
  *
  * Sentence-initial words are still skipped at the call site: a line-initial
  * "Spielst …" is a capitalised VERB, and the map cannot tell them apart.
  */
 function contentWords(lektionen) {
   const out = new Map();
+  const bothNumbers = new Set();
   for (const l of lektionen || []) {
     for (const w of l?.wortfeld || []) {
       if (!w?.article) continue;                       // greetings, verbs, adverbs: no gender to match
       const word = String(w.word || w.de || '').trim();
-      if (word && !/\s/.test(word)) out.set(word, { article: String(w.article), plural: w.plural || null });
       const plural = String(w.plural || '').trim();
-      if (plural && plural !== '—' && !/\s/.test(plural)) out.set(plural, { article: 'plural', plural: null });
+      const hasPlural = Boolean(plural) && plural !== '—' && !/\s/.test(plural);
+      if (word && !/\s/.test(word) && !out.has(word)) {
+        out.set(word, {
+          article: String(w.article), number: 'sg', plural: w.plural || null, en: String(w.en || ''),
+        });
+      }
+      if (!hasPlural) continue;
+      if (plural === word) bothNumbers.add(plural);    // same form in both numbers: undecidable alone
+      else if (!out.has(plural)) {
+        out.set(plural, { article: 'plural', number: 'pl', plural: null, en: String(w.en || '') });
+      }
+    }
+  }
+  for (const word of bothNumbers) {
+    const entry = out.get(word);
+    if (entry) out.set(word, { ...entry, isPluralOfSelf: true });
+  }
+  return out;
+}
+
+/**
+ * THE NOUNS THE CHAPTER ACTUALLY PRINTS — every capitalised word of its
+ * dialogue lines.
+ *
+ * The swap pool used to be the whole Wortfeld of the chapter, and a Wortfeld is
+ * a word LIST: it holds `die Firma` and `die Arbeit` beside `die Lampe`, so
+ * „Tim kauft den Stuhl und **die Firma**." passes every congruence bar and is
+ * still absurd on sight (DaF review #15, MAJOR 3, second axis). A replacement
+ * the learner can FIND in the text he was given is plausible by construction —
+ * that is how a Goethe distractor is built — and the statement stays false
+ * only because of what the text says, which is the whole point of Lesen Teil 1.
+ */
+function printedNouns(lektionen) {
+  const out = new Set();
+  for (const l of lektionen || []) {
+    for (const line of l?.dialog?.lines || []) {
+      for (const m of String(line.de || '').matchAll(/[A-ZÄÖÜ][A-Za-zÄÖÜäöüß-]+/g)) out.add(m[0]);
+    }
+  }
+  return out;
+}
+
+/**
+ * AGREEMENT, AS A FUNCTION OF THE DATA (DaF review #15, MAJOR 3, „Zweitens“).
+ *
+ * A swap used to be waved through when two Wortfeld entries carried the same
+ * `article` string. That is a proxy for agreement, not agreement: it cannot see
+ * number at all, and it silently trusted a table that had already lost the
+ * gender. So gender and number are now read off the Wortfeld as FEATURES, the
+ * determiner standing in the text is read as the features it admits, and every
+ * swap — every pass, present and future — is checked against both BEFORE the
+ * statement is returned. A determiner or a noun this file does not know is
+ * never a violation: the guard only rejects what it can prove wrong.
+ */
+const GENDER_OF_ARTICLE = { der: 'm', die: 'f', das: 'n' };
+
+/** What a determiner form admits: 'm.sg' | 'f.sg' | 'n.sg' | 'pl'. */
+const DET_FEATURES = new Map(Object.entries({
+  der: ['m.sg', 'f.sg', 'pl'], die: ['f.sg', 'pl'], das: ['n.sg'],
+  den: ['m.sg', 'pl'], dem: ['m.sg', 'n.sg'], des: ['m.sg', 'n.sg'],
+  ein: ['m.sg', 'n.sg'], eine: ['f.sg'], einen: ['m.sg'],
+  einem: ['m.sg', 'n.sg'], einer: ['f.sg'], eines: ['m.sg', 'n.sg'],
+  dieser: ['m.sg', 'f.sg'], diese: ['f.sg', 'pl'], diesen: ['m.sg', 'pl'],
+  diesem: ['m.sg', 'n.sg'], dieses: ['n.sg', 'm.sg'],
+}));
+
+/** The ein-declension endings every possessive and `kein` share. */
+const POSSESSIVE_ENDINGS = {
+  '': ['m.sg', 'n.sg'], e: ['f.sg', 'pl'], en: ['m.sg', 'pl'],
+  em: ['m.sg', 'n.sg'], er: ['f.sg'], es: ['m.sg', 'n.sg'],
+};
+/** `eur` carries the inflected forms of `euer` (eure, euren …). */
+const POSSESSIVE_STEMS = ['kein', 'unser', 'euer', 'eur', 'mein', 'd?ein', 'sein', 'ihr'];
+
+/** The features a determiner admits, or null when this file does not know it. */
+function determinerFeatures(determiner) {
+  const det = String(determiner || '').toLowerCase();
+  if (!det) return null;
+  if (DET_FEATURES.has(det)) return DET_FEATURES.get(det);
+  for (const pattern of POSSESSIVE_STEMS) {
+    const stem = pattern.replace('d?', '');             // see NP_DET_RE for why the stem is a pattern
+    for (const form of pattern.includes('d?') ? [stem, `d${stem}`] : [stem]) {
+      if (!det.startsWith(form)) continue;
+      const ending = det.slice(form.length);
+      if (Object.prototype.hasOwnProperty.call(POSSESSIVE_ENDINGS, ending)) {
+        return POSSESSIVE_ENDINGS[ending];
+      }
+    }
+  }
+  return null;
+}
+
+/** The readings a Wortfeld noun has, or null when the chapter does not know it. */
+function nounReadings(word, vocab) {
+  const entry = vocab?.get?.(word);
+  if (!entry) return null;
+  const out = [];
+  if (entry.number === 'pl') out.push('pl');
+  else if (GENDER_OF_ARTICLE[entry.article]) out.push(`${GENDER_OF_ARTICLE[entry.article]}.sg`);
+  if (entry.isPluralOfSelf && !out.includes('pl')) out.push('pl');
+  return out.length ? out : null;
+}
+
+/**
+ * The ONE reading a determiner leaves a noun, or null when the pair is unknown,
+ * impossible or ambiguous. Ambiguity is not an error, it is a stop sign: „die
+ * Lehrer“ may be one female teacher or several of any gender, and a swap that
+ * guesses is the review's finding one determiner to the left.
+ */
+function resolvedReading(word, determiner, vocab) {
+  const feats = determinerFeatures(determiner);
+  const readings = nounReadings(word, vocab);
+  if (!feats || !readings) return null;
+  const both = readings.filter((r) => feats.includes(r));
+  return both.length === 1 ? both[0] : null;
+}
+
+/**
+ * Every determiner–noun pair of a statement this file can prove ungrammatical.
+ * The builder calls it on the pair it just created; tests/checkpoint.test.mjs
+ * calls it on whole statements of all four papers.
+ */
+export function agreementViolations(text, vocab) {
+  const out = [];
+  const tokens = [...String(text || '').matchAll(WORD_RE)];
+  for (let i = 1; i < tokens.length; i += 1) {
+    const feats = determinerFeatures(tokens[i - 1][0]);
+    const readings = nounReadings(tokens[i][0], vocab);
+    if (!feats || !readings) continue;
+    if (!readings.some((r) => feats.includes(r))) {
+      out.push({ determiner: tokens[i - 1][0], noun: tokens[i][0], readings, admits: feats });
     }
   }
   return out;
@@ -828,7 +1048,7 @@ function pickOther(list, not, rng) {
  */
 function changedDetail(
   word,
-  { names, vocab },
+  { names, vocab, printed },
   rng,
   { allowVocab = true, allowAdverb = false, digitGroup = false, determiner = '' } = {},
 ) {
@@ -850,9 +1070,10 @@ function changedDetail(
     return String(n >= 10 ? n + 10 : n + 3);
   }
   if (names.includes(word)) return pickOther(names, word, rng);
-  // Congruence: same article only, or no swap at all (see contentWords) — and,
-  // under a quantifier or a deictic, same semantic class on top of it
-  // (see QUANTIFIER_DET / DEICTIC_DET).
+  // Congruence: same GENDER and same NUMBER, read off the determiner that
+  // stands in the text (resolvedReading), or no swap at all — plus the semantic
+  // class on every swap, and nothing the chapter has not printed (see
+  // QUANTIFIER_DET, semanticClass, printedNouns).
   if (allowVocab && vocab.has(word)) {
     const det = String(determiner || '').toLowerCase();
     if (QUANTIFIER_DET.includes(det)) return null;
@@ -860,12 +1081,18 @@ function changedDetail(
     // (Fußball spielen, Durst haben) — not an NP slot, never a swap (see
     // NP_DET_RE).
     if (!inNpSlot(det)) return null;
-    const { article } = vocab.get(word);
-    const sameClass = DEICTIC_DET.includes(det)
-      ? (w) => semanticClass(w) === semanticClass(word)
-      : () => true;
+    // The slot's reading, not the entry's article: „einen Computer“ is
+    // masculine singular even though `Computer` is also its own plural, and
+    // „die Lehrer“ is undecidable and therefore never touched.
+    const reading = resolvedReading(word, det, vocab);
+    if (!reading) return null;
+    const sameClass = (w) => semanticClass(w, vocab) === semanticClass(word, vocab);
     const same = [...vocab.keys()].filter(
-      (w) => w !== word && vocab.get(w).article === article && sameClass(w),
+      (w) => w !== word
+        && !vocab.get(w).isPluralOfSelf                 // never INSERT an ambiguous form
+        && (nounReadings(w, vocab) || []).includes(reading)
+        && sameClass(w)
+        && (!printed || printed.has(w)),                // …and printed in this chapter
     );
     return same.length ? pickOther(same, word, rng) : null;
   }
@@ -880,8 +1107,9 @@ function changedDetail(
  *      of the window" and "swap a weekday or a number anywhere in the window"
  *      are the same pass, not two later ones: there is nothing left for a
  *      second sweep of that kind to find.
- *   2. VOCAB — a Wortfeld noun in a real NP slot, same article, and under a
- *      deictic same semantic class (NP_DET_RE, QUANTIFIER_DET, DEICTIC_DET).
+ *   2. VOCAB — a Wortfeld noun in a real NP slot, same gender and number, same
+ *      semantic class, and printed in this chapter (NP_DET_RE,
+ *      QUANTIFIER_DET, resolvedReading, semanticClass, printedNouns).
  *   3. ADVERB — the fallback pass: a place/time adverb for its opposite
  *      (ADVERB_SWAPS). It exists because pass 2 became positional and a window
  *      of bare-noun idioms would otherwise yield nothing and ship a 3-item
@@ -929,6 +1157,11 @@ function falsifyWindow(window, text, ctxWords, rng) {
         if (!replacement) continue;
         const changed = `${de.slice(0, match.index)}${replacement}${de.slice(match.index + match[0].length)}`;
         if (changed === de || text.includes(changed)) continue;
+        // THE SECOND BAR (DaF review #15, MAJOR 3): whatever pass produced the
+        // swap, the statement that leaves this function has to agree with
+        // itself. The check is on the finished sentence, so it also covers a
+        // pass that does not know about gender at all.
+        if (agreementViolations(changed, ctxWords.vocab).length) continue;
         return { line, de: changed, from: match[0], to: replacement };
       }
     }
@@ -1352,6 +1585,8 @@ function falsifyStatement(statement, text, ctxWords, rng) {
       const changed = `${de.slice(0, match.index)}${replacement}${de.slice(match.index + match[0].length)}`;
       if (changed === de) continue;
       if (normaliseStatement(text).includes(normaliseStatement(changed))) continue;
+      // Same second bar as in falsifyWindow — one definition, both surfaces.
+      if (agreementViolations(changed, ctxWords.vocab).length) continue;
       return { de: changed, from: match[0], to: replacement };
     }
   }
@@ -1371,11 +1606,11 @@ function falsifyStatement(statement, text, ctxWords, rng) {
  *      still ships four Lesen items. The A1.1 papers never reach rung 4 and
  *      tests/checkpoint.test.mjs pins them away from it.
  */
-function pickLesenSource(candidates, wantRichtig, { rng, spec, chapterVocab, usedSources }) {
+function pickLesenSource(candidates, wantRichtig, { rng, spec, chapterVocab, chapterPrinted, usedSources }) {
   for (const candidate of candidates) {
     const text = windowText(candidate.window);
     const names = windowSpeakerNames(candidate.window);
-    const ctxWords = { names, vocab: chapterVocab };
+    const ctxWords = { names, vocab: chapterVocab, printed: chapterPrinted };
     const reports = shuffle(windowReports(candidate.window, spec), rng)
       .filter((r) => !usedSources.has(lineKeyOf(candidate.lektion?.id ?? candidate.lektion?.nr, candidate.start + r.lineIndex)));
     for (const report of reports) {
@@ -1391,7 +1626,9 @@ function pickLesenSource(candidates, wantRichtig, { rng, spec, chapterVocab, use
   // Rung 4: no report anywhere in the chapter (see the ladder above).
   for (const candidate of candidates) {
     const text = windowText(candidate.window);
-    const ctxWords = { names: windowSpeakerNames(candidate.window), vocab: chapterVocab };
+    const ctxWords = {
+      names: windowSpeakerNames(candidate.window), vocab: chapterVocab, printed: chapterPrinted,
+    };
     if (wantRichtig) {
       const line = candidate.window[Math.floor(rng() * candidate.window.length)];
       return { candidate, text, report: null, statement: String(line.de), changed: null, line };
@@ -1416,6 +1653,7 @@ function buildLesen(ctx) {
   // Two richtig and two falsch, in an order this checkpoint's seed decides.
   const truth = shuffle([true, true, false, false], rng);
   const chapterVocab = contentWords(chapter);
+  const chapterPrinted = printedNouns(chapter);
   const spec = reportSpec(ctx);
   const usedWindows = new Set();
   // Every line any Lesen item of this paper PRINTS — a hard bar, see
@@ -1451,10 +1689,10 @@ function buildLesen(ctx) {
     const leakFreeFirst = (ws) => [...ws.filter(leakFree), ...ws.filter((w) => !leakFree(w))];
     candidates = leakFreeFirst(candidates);
     const clean = leakFreeFirst(candidates.filter((w) => windowLineKeys(w).every((k) => !usedLineKeys.has(k))));
-    const cleanPick = clean.length ? pickLesenSource(clean, wantRichtig, { rng, spec, chapterVocab, usedSources }) : null;
+    const cleanPick = clean.length ? pickLesenSource(clean, wantRichtig, { rng, spec, chapterVocab, chapterPrinted, usedSources }) : null;
     const picked = (cleanPick?.report || cleanPick?.changed)
       ? cleanPick
-      : (pickLesenSource(candidates, wantRichtig, { rng, spec, chapterVocab, usedSources }) || cleanPick);
+      : (pickLesenSource(candidates, wantRichtig, { rng, spec, chapterVocab, chapterPrinted, usedSources }) || cleanPick);
     if (!picked) continue;
     const { candidate, text, report, statement, changed } = picked;
     const sourceLine = report ? report.line : picked.line;
