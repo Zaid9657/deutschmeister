@@ -32,6 +32,11 @@
 //      "falsch" statement is the SAME text with one detail changed, not a line
 //      quoted from another Lektion — string recognition was all the old
 //      generator asked for.
+//      A falsified word must also stand where a word can be swapped at all: in
+//      a real NP slot (article/possessive/demonstrative), or it is a bare noun
+//      welded to its verb (Fußball spielen) and the swap breaks the sentence
+//      instead of falsifying it. When a window yields nothing the builder falls
+//      back — adverb pair, then another window — so the section is never short.
 //   4c. THE SCHREIBEN SECTION IS THE COURSE'S OWN WRITING (DaF review #5): the
 //      chapter's real, AI-graded task plus two drills from DIFFERENT Lektionen,
 //      and no invented `register` label on a sentence-building item.
@@ -100,6 +105,23 @@ test('a checkpoint is 20 items in the 5/4/6/3/2 section split', () => {
     );
   }
   assert.equal(Object.values(SECTION_COUNTS).reduce((a, b) => a + b, 0), CHECKPOINT_ITEM_COUNT);
+});
+
+test('all four real checkpoints ship the full 5/4/6/3/2 split, never a short section', () => {
+  // The fixture pins the shape in the abstract; this pins it on the four papers
+  // a learner actually sits. Lesen is the section that can go short — a window
+  // whose lines carry no falsifiable detail used to drop the item silently, and
+  // the builder must fall back (adverb pair, then another window) instead.
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    assert.equal(items.length, CHECKPOINT_ITEM_COUNT, `${cp.id} must be 20 items`);
+    for (const section of SECTION_ORDER) {
+      assert.equal(
+        items.filter((i) => i.section === section).length,
+        SECTION_COUNTS[section],
+        `${cp.id}: ${section} must hold exactly ${SECTION_COUNTS[section]} items`,
+      );
+    }
+  }
 });
 
 test('Hören is 3 dictations of dialogue lines plus 2 word-choice items with 3 distractors', () => {
@@ -235,6 +257,42 @@ const TIME_NOUNS_TEST = [
 const semanticClassTest = (w) =>
   (TIME_NOUNS_TEST.includes(w) || WEEKDAYS_TEST.includes(w) ? 'zeit' : 'ding');
 
+// ── and the POSITIONAL half (the residual of round 8) ───────────────────────
+//
+// The article bar and the quantifier bar both look at a noun and the word to
+// its left, and neither of them can see a noun that has no determiner at all.
+// So checkpoint 3 still shipped „Spielst … jede Woche **Durst**?“ against
+// „… jede Woche **Fußball**?“: `Fußball` is the bare object of the idiom
+// *Fußball spielen*, `Durst` the bare object of *Durst haben*, both `der`, so
+// every congruence check passes and the result is not a false statement about
+// the text but no German sentence at all. A bare noun in German is almost
+// always welded to its verb, and the Wortfeld carries no valency data — so the
+// rule is positional: the vocab branch may only swap a noun that stands in a
+// REAL NP SLOT, immediately preceded by an article, a possessive or a
+// demonstrative.
+//
+// That makes a window able to run out of swappable tokens, and a Lesen section
+// is 4 items on every checkpoint. The builder therefore falls back — to a
+// place/time adverb pair, and then to another window of the chapter — before it
+// would ever ship a short section. This pin allows exactly those two extra
+// sources and nothing else.
+const NP_DET_RE_TEST = /^(?:der|die|das|den|dem|des|ein|eine|einen|einem|einer|eines|kein|keine|keinen|keinem|keiner|keines|d?ein|d?eine|d?einen|d?einem|d?einer|d?eines|sein|seine|seinen|seinem|seiner|seines|ihr|ihre|ihren|ihrem|ihrer|ihres|unser|unsere|unseren|unserem|unserer|unseres|euer|eure|euren|eurem|eurer|eures|dieser|diese|diesen|diesem|dieses)$/i;
+
+/** The documented adverb fallback table, as ADVERB_SWAPS in the builder. */
+const ADVERB_SWAPS_TEST = new Map([
+  ['heute', ['morgen']],
+  ['morgen', ['heute']],
+  ['hier', ['da', 'dort']],
+  ['da', ['hier']],
+  ['dort', ['hier']],
+  ['links', ['rechts']],
+  ['rechts', ['links']],
+  ['früh', ['spät']],
+  ['spät', ['früh']],
+  ['morgens', ['abends']],
+  ['abends', ['morgens']],
+]);
+
 /** The chapter's nouns with their gender, exactly as buildCheckpoint reads them. */
 function genderMap(chapter) {
   const map = new Map();
@@ -298,6 +356,13 @@ test('a falsch statement changes ONE word for a word of the same class — artic
         assert.match(to, /^\d+$/, `${item.id}: a figure is replaced by a figure`);
         continue;
       }
+      if (ADVERB_SWAPS_TEST.has(from)) {
+        assert.ok(
+          ADVERB_SWAPS_TEST.get(from).includes(to),
+          `${item.id}: „${from}“ may only become its documented opposite, got „${to}“`,
+        );
+        continue;
+      }
       assert.ok(genders.has(from), `${item.id}: "${from}" is not a Wortfeld noun of the chapter`);
       assert.equal(
         genders.get(to),
@@ -310,6 +375,12 @@ test('a falsch statement changes ONE word for a word of the same class — artic
       assert.ok(
         !QUANTIFIER_DET_TEST.includes(det),
         `${item.id}: „${det} ${from}“ is a quantity/time expression — „${det} ${to}“ is broken, not false`,
+      );
+      // …and the noun must stand in a real NP slot in the first place: a bare
+      // noun is the object of an idiom (Fußball spielen), never a free slot.
+      assert.ok(
+        NP_DET_RE_TEST.test(det),
+        `${item.id}: „${from}“ is a bare noun here („${det} ${from}“) — swapping it breaks the sentence instead of falsifying it`,
       );
       if (DEICTIC_DET_TEST.includes(det)) {
         assert.equal(
