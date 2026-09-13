@@ -652,12 +652,12 @@ export const WRITING_TASKS = [
     maxWords: 40,
     task:
       'Tim Berger fährt am Samstag zum Konzert nach Köln. Der Zug fährt um 8 Uhr. Er bleibt zwei Tage. ' +
-      'Füllen Sie das Formular für den Ausflug aus.',
+      'Füllen Sie die Anmeldung für die Fahrt zum Konzert aus.',
     leitpunkte: [
-      'Name',
+      'Familienname',
+      'Vorname',
       'Tag',
       'Uhrzeit',
-      'Stadt',
       'Unterschrift',
     ],
   },
@@ -687,14 +687,14 @@ export const WRITING_TASKS = [
     minWords: 5,
     maxWords: 40,
     task:
-      'Lena Berg ist 24 Jahre alt und kommt aus Köln. Sie ist groß und hat lange Haare. Ihr Hobby ist Musik. ' +
-      'Füllen Sie den Steckbrief für den Kurs aus.',
+      'Lena Berg ist 24 Jahre alt und wohnt in der Kölner Straße 12 in Köln. Sie ist am 3. März 2002 geboren. ' +
+      'Füllen Sie die Anmeldung für den Sportverein aus.',
     leitpunkte: [
-      'Name',
-      'Alter',
-      'Stadt',
-      'Aussehen',
-      'Hobby',
+      'Familienname',
+      'Vorname',
+      'Geburtsdatum',
+      'Straße',
+      'Unterschrift',
     ],
   },
   {
@@ -723,13 +723,13 @@ export const WRITING_TASKS = [
     minWords: 5,
     maxWords: 40,
     task:
-      'Ana Chakiri fliegt am 14. Juli nach Marokko. Sie hat einen Koffer und fährt mit dem Taxi zum Flughafen. ' +
-      'Füllen Sie das Formular für die Reise aus.',
+      'Ana Chakiri fliegt am 14. Juli nach Marokko. Sie wohnt in Bremen und fährt mit dem Taxi zum Flughafen. ' +
+      'Füllen Sie die Anmeldung für die Reise aus.',
     leitpunkte: [
-      'Name',
+      'Familienname',
+      'Vorname',
       'Datum',
       'Land',
-      'Koffer',
       'Unterschrift',
     ],
   },
@@ -759,13 +759,13 @@ export const WRITING_TASKS = [
     minWords: 5,
     maxWords: 40,
     task:
-      'Lena Berg macht am Sonntag einen Ausflug. Am Sonntag ist es sonnig, die Temperatur ist bei 22 Grad. Sie fährt mit dem Bus. ' +
-      'Füllen Sie das Formular für den Ausflug aus.',
+      'Lena Berg meldet sich für den Ausflug am Sonntag an. Sie wohnt in Köln und fährt mit dem Bus. ' +
+      'Füllen Sie die Anmeldung für den Ausflug aus.',
     leitpunkte: [
-      'Name',
-      'Tag',
-      'Wetter',
-      'Temperatur',
+      'Familienname',
+      'Vorname',
+      'Stadt',
+      'Verkehrsmittel',
       'Unterschrift',
     ],
   },
