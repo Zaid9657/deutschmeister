@@ -51,6 +51,16 @@ export function localDoneIds(level) {
 
 export const hasLocalProgress = (level) => localDoneIds(level).size > 0;
 
+/** How often a signed-out learner finished one Lektion — 0 when never. */
+export function localRunCount(level, lektionId) {
+  const store = readLocalProgress();
+  const lvl = String(level || '').toLowerCase();
+  if (!store.level || store.level !== lvl) return 0;
+  const row = store.lektionen[lektionId];
+  if (!row || !row.status) return 0;
+  return Math.max(1, Number(row.runs) || 1);
+}
+
 /**
  * Record a finished Lektion locally. Switching level throws the old store
  * away — only one free level exists, and a half-merged mix of two would be
@@ -62,9 +72,16 @@ export function recordLocalLesson({ level, lektionId, status = 'complete', accur
   const prev = readLocalProgress();
   const store = prev.level === lvl ? prev : emptyStore(lvl);
   store.level = lvl;
+  // `runs` is what the lesson engine derives the attempt number from for a
+  // signed-out learner (buildLesson.attemptFromCompletions): a repeat has to
+  // draw a different seven, and the only record of "how often" on this side is
+  // this counter. A store written before it existed has no runs — a finished
+  // Lektion then counts as one, which is what `localRunCount` returns.
+  const previous = store.lektionen[lektionId] || null;
+  const runs = Math.max(0, Number(previous && previous.runs) || (previous && previous.status ? 1 : 0)) + 1;
   store.lektionen = {
     ...store.lektionen,
-    [lektionId]: { status, accuracy, completedAt: new Date().toISOString() },
+    [lektionId]: { status, accuracy, runs, completedAt: new Date().toISOString() },
   };
   store.attempts = [
     ...store.attempts,

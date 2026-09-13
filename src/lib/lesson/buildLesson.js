@@ -6,6 +6,10 @@
 // with a seeded PRNG keyed on (level, lektion nr, attempt), so tests can pin
 // exactly which items a learner gets, a retry gives a DIFFERENT seven, and the
 // page can rebuild the same lesson after a reload without storing the picks.
+// The seed alone never made that true — DaF review #9 MAJOR 1 measured attempt 2
+// repeating 62 of attempt 1's 84 items — so attempt n also EXCLUDES what the
+// attempts before it drew (rule 7), and the attempt number itself is derived
+// from the learner's own progress (`attemptFromCompletions`), not held at 1.
 //
 // SELECTION IS PLANNED FOR THE WHOLE LEVEL AT ONCE (`planPractice`), not per
 // call. The DaF review of 2026-09-12 measured what a per-call draw produced:
@@ -15,7 +19,7 @@
 // Wortfeld other than by accident. None of that is visible from inside a single
 // Lektion, so the plan walks the Lektionen in order and carries what has been
 // used — see planPractice for the five rules it enforces.
-import { isUsableItem } from '../../data/lessonPools/quality.js';
+import { isUsableItem, drillsSlug } from '../../data/lessonPools/quality.js';
 
 /** Tiny seeded PRNG (mulberry32, public domain). 32-bit state, uniform [0,1). */
 export function mulberry32(seed) {
@@ -86,6 +90,38 @@ export const MAX_SAME_ANSWER_KEY = 2;
  * one per Lektion, so the second seat goes to a different kind of task.
  */
 export const MAX_SAME_TASK_SHAPE = 1;
+/**
+ * How many seeded tie-break orders the draw tries before it starts relaxing a
+ * cap. The greedy pass takes the highest-ranked item that fits, which can walk
+ * into a corner even when a seven under every cap exists — measured in L4,
+ * which holds 20 usable items in 12 distinct task shapes and still needed the
+ * lemma cap relaxed on the first order. A retry is free and deterministic; a
+ * relaxed cap is a worse lesson.
+ */
+export const PICK_RETRIES = 8;
+/**
+ * How many DISTINCT draws one Lektion offers before the cycle starts over.
+ * Measured on the shipped a1.1 pool with the prior-attempt filter of rule 7:
+ * attempt 1→2 and 2→3 share at most two of seven items in every Lektion, while
+ * a fourth draw would have to repeat — L8's whole topic slice is 19 usable
+ * items, i.e. two and a half sevens. So the attempt number a learner's progress
+ * derives cycles 1 → 2 → 3 → 1 rather than growing without bound.
+ */
+export const ATTEMPT_CYCLE = 3;
+
+/**
+ * The attempt number for a learner who has FINISHED this Lektion `completed`
+ * times — the one thing `LessonPlayerPage` may not invent. It used to hold
+ * `useState(1)` with no setter, so the repeat that the standard makes the
+ * remediation path replayed the identical seven for ever (DaF review #9
+ * MAJOR 1). Derived, never stored: no schema column, just the count of
+ * completed runs the progress tables already carry.
+ */
+export const attemptFromCompletions = (completed, cycle = ATTEMPT_CYCLE) => {
+  const n = Number.isFinite(Number(completed)) && Number(completed) > 0 ? Math.floor(Number(completed)) : 0;
+  const span = Math.max(1, Math.floor(cycle) || 1);
+  return 1 + (n % span);
+};
 /** Weights for situational relevance: the Lektion's own Wortfeld vs. an earlier one's. */
 export const OWN_TERM_WEIGHT = 3;
 export const EARLIER_TERM_WEIGHT = 1;
@@ -193,15 +229,40 @@ const withGaps = (text) =>
     .replace(/\s+/g, ' ');
 
 /**
- * The item's TASK as one comparable key: its type plus the skeleton of its bare
- * prompt, with the content words replaced by a placeholder and the gap left
- * where it stands. Long words and -in derivations are the content; the short
- * function words and the gap position are the skeleton. So "Ich bin eine
- * Lehrerin." and "Ich bin eine Verkäuferin." are one key, while "___ Auto ist
- * teuer." and "Ich brauche ___ Handy." stay two.
+ * Words that belong to the TASK rather than to its content: the bracketed
+ * instruction the pool prints after the sentence ("(der, die oder das?)",
+ * "(formell)", "(Artikel)"). They stay in the skeleton because two items that
+ * ask different questions about the same frame really are two tasks. Every
+ * other word is content and is masked — see `taskShape`.
  */
-export const taskShape = (item) =>
-  `${(item && item.type) || ''}:${withGaps(bare(item && item.questionDe)).replace(/[a-zäöüß]+in\b|[a-zäöüß]{6,}/g, '·')}`;
+export const TASK_WORDS = new Set([
+  'artikel', 'präposition', 'plural', 'singular', 'satz', 'frage', 'antwort', 'fehler',
+  'formell', 'informell', 'offiziell', 'höflich', 'höfliche', 'umgangssprachlich',
+  'uhrzeit', 'zahl', 'zahlen', 'verb', 'nomen',
+]);
+
+/**
+ * The item's TASK as one comparable key: its type plus the skeleton of its bare
+ * prompt — the gap where it stands, the function words that make the frame, the
+ * task formula, and a `·` for every CONTENT word.
+ *
+ * The mask used to be bound to word LENGTH (six letters, plus -in derivations),
+ * and DaF review #9 MAJOR 2 measured what that cost: `uhr`, `stuhl`, `preis`,
+ * `bild`, `buch` are shorter, so "___ Uhr ist alt. (der, die oder das?)" and
+ * "___ Stuhl ist alt. (der, die oder das?)" were two different "task shapes"
+ * and `MAX_SAME_TASK_SHAPE` bound in NONE of the 24 blocks — L4 drew four items
+ * of one frame in both attempts while the guard reported seven distinct shapes.
+ * The mask is bound to WORD CLASS instead: a token survives only if it is the
+ * gap, a `LEMMA_STOPWORDS` function word, or a `TASK_WORDS` instruction word.
+ * So the two sentences above are one key, and the cap binds for the first time.
+ */
+export const taskShape = (item) => {
+  const skeleton = withGaps(bare(item && item.questionDe))
+    .split(' ')
+    .map((w) => (w === '_' || LEMMA_STOPWORDS.has(w) || TASK_WORDS.has(w) ? w : '·'))
+    .join(' ');
+  return `${(item && item.type) || ''}:${skeleton}`;
+};
 
 /** The situational vocabulary of one Lektion, as lemmas. */
 export function wortfeldTerms(lektion) {
@@ -266,17 +327,24 @@ function seededShuffle(list, rng) {
  *      `MAX_SAME_ANSWER_KEY` times, no task shape more than
  *      `MAX_SAME_TASK_SHAPE` time, and at most `MAX_CARRIED_LEMMA` item
  *      repeating an answer lemma of the Lektion before;
- *   6. within each topic, the most situational items first (relevanceScore).
+ *   6. within each topic, the most situational items first (relevanceScore);
+ *   7. none of the items this Lektion's EARLIER attempts drew (`priorAttemptIds`),
+ *      while the topic slice can still fill seven without them — the repeat is
+ *      the standard's remediation path, and DaF review #9 MAJOR 1 measured the
+ *      seed alone giving attempt 2 sixty-two of attempt 1's eighty-four items.
  *
  * `options` is what only the LEVEL knows — pass nothing and it behaves like a
  * standalone draw (still filtered, still deterministic):
- *   { primarySlug, ownTerms, earlierTerms, usedIds, previousAnswerLemmas }
+ *   { primarySlug, ownTerms, earlierTerms, usedIds, previousAnswerLemmas,
+ *     priorAttemptIds }
  *
  * When the topic slice is too small the result is simply shorter rather than
  * padded with off-topic items — a short pool is a content bug, not something to
  * paper over. The caps of 5 are relaxed before the seven are given up on — the
- * carry-over first, then the lemma and answer-key caps, and the task-shape cap
- * last of all, because it is the coarsest and the one a learner notices most.
+ * carry-over first, then the lemma and answer-key caps, then the items the
+ * EARLIER ATTEMPTS of this Lektion already showed (`priorAttemptIds`, rule 7),
+ * and the task-shape cap last of all, because it is the coarsest and the one a
+ * learner notices most.
  */
 export function pickPracticeItems(pool, rule, seed, options = {}) {
   const topicList = (rule && rule.topics) || [];
@@ -290,10 +358,16 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
   const earlierTerms = options.earlierTerms || new Set();
   const usedIds = options.usedIds || new Set();
   const carriedLemmas = options.previousAnswerLemmas || new Set();
+  const priorIds = options.priorAttemptIds || new Set();
 
   // Cross-Lektion dedup, per topic: while this topic still has items no earlier
   // Lektion has shown, only those are eligible. A topic that is exhausted falls
   // back to its full slice rather than leaving the block short.
+  // The answer keys `mustCover` reserves a seat for, normalised once.
+  const coverKeys = [...new Set(
+    ((rule && rule.mustCover) || []).map((k) => answerKey({ answer: k })).filter(Boolean),
+  )];
+
   const eligible = [];
   for (const topic of topics) {
     const all = usable.filter((it) => it.topic === topic);
@@ -301,114 +375,159 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
     eligible.push(...(fresh.length ? fresh : all));
   }
 
-  const ranked = eligible
-    .map((it) => ({
-      it,
-      score: relevanceScore(it, ownTerms, earlierTerms),
-      key: jitter(seed, it.id),
-    }))
-    .sort((a, b) => b.score - a.score || a.key - b.key || String(a.it.id).localeCompare(String(b.it.id)))
-    .map((r) => r.it);
+  // ONE PASS of the greedy draw, under a given tie-break salt. The salt only
+  // reorders items the relevance score cannot separate, so pass 0 is exactly
+  // the draw as it was — but it lets the caller RETRY instead of relaxing a cap.
+  // That matters since DaF review #9 MAJOR 2 bound `MAX_SAME_TASK_SHAPE` to the
+  // word class: L4 has 20 usable items in 12 distinct shapes, a seven under
+  // every cap exists, and the first greedy order simply walked into a corner and
+  // relaxed the lemma cap to get out of it. Relaxation is for a pool that CANNOT
+  // fill seven, not for an unlucky order.
+  const runPass = (salt) => {
+    const passSeed = (seed + Math.imul(salt, 0x9e3779b1)) >>> 0;
+    const ranked = eligible
+      .map((it) => ({
+        it,
+        score: relevanceScore(it, ownTerms, earlierTerms),
+        key: jitter(passSeed, it.id),
+      }))
+      .sort((a, b) => b.score - a.score || a.key - b.key || String(a.it.id).localeCompare(String(b.it.id)))
+      .map((r) => r.it);
 
-  const chosen = new Map();
-  const lemmaCount = new Map();
-  const answerKeyCount = new Map();
-  const taskShapeCount = new Map();
-  let mc = 0;
-  let typed = 0;
-  let carried = 0;
+    const chosen = new Map();
+    const lemmaCount = new Map();
+    const answerKeyCount = new Map();
+    const taskShapeCount = new Map();
+    let mc = 0;
+    let typed = 0;
+    let carried = 0;
+    let relaxUsed = 0;
 
-  const carriesOver = (it) => [...answerLemmas(it)].some((l) => carriedLemmas.has(l));
+    const carriesOver = (it) => [...answerLemmas(it)].some((l) => carriedLemmas.has(l));
 
-  const fits = (it, relax) => {
-    if (chosen.has(it.id)) return false;
-    if (isMultipleChoice(it) && mc >= MAX_MULTIPLE_CHOICE) return false;
-    if (!relax.lemma) {
-      for (const l of itemLemmas(it)) if ((lemmaCount.get(l) || 0) >= MAX_SAME_LEMMA) return false;
-    }
-    if (!relax.answerKey) {
+    const fits = (it, relax) => {
+      if (chosen.has(it.id) || chosen.size >= PRACTICE_SIZE) return false;
+      if (isMultipleChoice(it) && mc >= MAX_MULTIPLE_CHOICE) return false;
+      if (!relax.lemma) {
+        for (const l of itemLemmas(it)) if ((lemmaCount.get(l) || 0) >= MAX_SAME_LEMMA) return false;
+      }
+      if (!relax.answerKey) {
+        const k = answerKey(it);
+        if (k && (answerKeyCount.get(k) || 0) >= MAX_SAME_ANSWER_KEY) return false;
+      }
+      if (!relax.taskShape) {
+        const shape = taskShape(it);
+        if (shape && (taskShapeCount.get(shape) || 0) >= MAX_SAME_TASK_SHAPE) return false;
+      }
+      if (!relax.carried && carried >= MAX_CARRIED_LEMMA && carriesOver(it)) return false;
+      if (!relax.prior && priorIds.has(it.id)) return false;
+      return true;
+    };
+
+    const take = (it, stage = 0) => {
+      chosen.set(it.id, it);
+      relaxUsed = Math.max(relaxUsed, stage);
+      if (isMultipleChoice(it)) mc += 1;
+      if (isTypedItem(it)) typed += 1;
+      if (carriesOver(it)) carried += 1;
+      for (const l of itemLemmas(it)) lemmaCount.set(l, (lemmaCount.get(l) || 0) + 1);
       const k = answerKey(it);
-      if (k && (answerKeyCount.get(k) || 0) >= MAX_SAME_ANSWER_KEY) return false;
-    }
-    if (!relax.taskShape) {
+      if (k) answerKeyCount.set(k, (answerKeyCount.get(k) || 0) + 1);
       const shape = taskShape(it);
-      if (shape && (taskShapeCount.get(shape) || 0) >= MAX_SAME_TASK_SHAPE) return false;
+      if (shape) taskShapeCount.set(shape, (taskShapeCount.get(shape) || 0) + 1);
+    };
+
+    // The cover pass (DaF review #6 MAJOR 6, second half). `MAX_SAME_ANSWER_KEY`
+    // is a CEILING on repetition and a ceiling cannot reserve a seat: L12 holds 38
+    // usable possessive items, the three polite `Ihr` ones score no higher than a
+    // dozen others, so which of them lands in the seven was decided by the seeded
+    // jitter — and on attempt 1 none of them did. `practiceRule.mustCover` lists
+    // the answer keys the Lektion EXISTS to rehearse (L12: the polite `Ihr`, the
+    // form Schreiben Teil 2 and Sprechen Teil 3 are graded on; L8: `halb` and the
+    // official `vierzehn Uhr dreißig`); one usable item per key is taken first,
+    // typed and on the primary slug for preference, under the same caps as every
+    // other pick. A key the pool cannot supply is a no-op — the draw is never
+    // padded with something off-topic to satisfy it.
+    for (const key of coverKeys) {
+      if (chosen.size >= PRACTICE_SIZE) break;
+      const candidates = ranked.filter((it) => answerKey(it) === key);
+      const preferred = [
+        ...candidates.filter((it) => it.topic === primarySlug && isTypedItem(it)),
+        ...candidates.filter((it) => it.topic === primarySlug),
+        ...candidates.filter(isTypedItem),
+        ...candidates,
+      ];
+      // A key an earlier attempt already covered is still a key this attempt
+      // must cover: the prior-attempt filter is tried first and given up for the
+      // cover pass alone, so `mustCover` never goes unmet because of rule 7.
+      const pick = preferred.find((it) => fits(it, {})) || preferred.find((it) => fits(it, { prior: true }));
+      if (pick) take(pick);
     }
-    if (!relax.carried && carried >= MAX_CARRIED_LEMMA && carriesOver(it)) return false;
-    return true;
-  };
 
-  const take = (it) => {
-    chosen.set(it.id, it);
-    if (isMultipleChoice(it)) mc += 1;
-    if (isTypedItem(it)) typed += 1;
-    if (carriesOver(it)) carried += 1;
-    for (const l of itemLemmas(it)) lemmaCount.set(l, (lemmaCount.get(l) || 0) + 1);
-    const k = answerKey(it);
-    if (k) answerKeyCount.set(k, (answerKeyCount.get(k) || 0) + 1);
-    const shape = taskShape(it);
-    if (shape) taskShapeCount.set(shape, (taskShapeCount.get(shape) || 0) + 1);
-  };
+    const primaryCount = () => [...chosen.values()].filter((it) => it.topic === primarySlug).length;
+    const primaryTarget = Math.min(
+      PRIMARY_MIN,
+      PRACTICE_SIZE,
+      ranked.filter((it) => it.topic === primarySlug).length,
+    );
 
-  // The cover pass (DaF review #6 MAJOR 6, second half). `MAX_SAME_ANSWER_KEY`
-  // is a CEILING on repetition and a ceiling cannot reserve a seat: L12 holds 38
-  // usable possessive items, the three polite `Ihr` ones score no higher than a
-  // dozen others, so which of them lands in the seven was decided by the seeded
-  // jitter — and on attempt 1 none of them did. `practiceRule.mustCover` lists
-  // the answer keys the Lektion EXISTS to rehearse (L12: the polite `Ihr`, the
-  // form Schreiben Teil 2 and Sprechen Teil 3 are graded on); one usable item
-  // per key is taken first, typed and on the primary slug for preference, under
-  // the same caps as every other pick. A key the pool cannot supply is a no-op —
-  // the draw is never padded with something off-topic to satisfy it.
-  const coverKeys = [...new Set(
-    ((rule && rule.mustCover) || []).map((k) => answerKey({ answer: k })).filter(Boolean),
-  )];
-  for (const key of coverKeys) {
-    if (chosen.size >= PRACTICE_SIZE) break;
-    const candidates = ranked.filter((it) => answerKey(it) === key);
-    const preferred = [
-      ...candidates.filter((it) => it.topic === primarySlug && isTypedItem(it)),
-      ...candidates.filter((it) => it.topic === primarySlug),
-      ...candidates.filter(isTypedItem),
-      ...candidates,
+    const fill = (list, relax, stop, stage) => {
+      for (const it of list) {
+        if (stop()) break;
+        if (fits(it, relax)) take(it, stage);
+      }
+    };
+
+    // The shape cap is given up LAST: a Lektion that cannot otherwise fill seven
+    // takes a repeated task shape rather than coming out short, but only after
+    // the lemma, carry-over, answer-key and prior-attempt filters have gone.
+    const LADDER = [
+      {},
+      { carried: true },
+      { lemma: true, carried: true, answerKey: true },
+      { lemma: true, carried: true, answerKey: true, prior: true },
+      { lemma: true, carried: true, answerKey: true, prior: true, taskShape: true },
     ];
-    const pick = preferred.find((it) => fits(it, {}));
-    if (pick) take(pick);
-  }
-
-  const primaryCount = () => [...chosen.values()].filter((it) => it.topic === primarySlug).length;
-  const primaryTarget = Math.min(
-    PRIMARY_MIN,
-    PRACTICE_SIZE,
-    ranked.filter((it) => it.topic === primarySlug).length,
-  );
-
-  const fill = (list, relax, stop) => {
-    for (const it of list) {
-      if (stop()) break;
-      if (fits(it, relax)) take(it);
+    for (let stage = 0; stage < LADDER.length; stage += 1) {
+      const relax = LADDER[stage];
+      // 1. the primary slug's share, REAL producers and typed items first. The
+      //    slug on an item is a routing label; `drillsSlug` reads what the item
+      //    makes the learner produce. Attempt 1 used to take whichever labelled
+      //    items ranked highest, which left attempt 2 — which may not repeat
+      //    them — with the labelled non-producers: L3, L7, L10 and L11 fell under
+      //    PRIMARY_MIN on the second draw although every one of them holds ten
+      //    or more real producers on its own slug.
+      const primary = ranked.filter((it) => it.topic === primarySlug);
+      const real = primary.filter((it) => drillsSlug(it, primarySlug));
+      const rest = primary.filter((it) => !drillsSlug(it, primarySlug));
+      fill(real.filter(isTypedItem), relax, () => primaryCount() >= primaryTarget, stage);
+      fill(real, relax, () => primaryCount() >= primaryTarget, stage);
+      fill(rest.filter(isTypedItem), relax, () => primaryCount() >= primaryTarget, stage);
+      fill(rest, relax, () => primaryCount() >= primaryTarget, stage);
+      // 2. the typed floor across all topics
+      fill(ranked.filter(isTypedItem), relax, () => typed >= typedMin || chosen.size >= PRACTICE_SIZE, stage);
+      // 3. fill up to seven
+      fill(ranked, relax, () => chosen.size >= PRACTICE_SIZE, stage);
+      if (chosen.size >= PRACTICE_SIZE && primaryCount() >= primaryTarget && typed >= Math.min(typedMin, PRACTICE_SIZE)) break;
     }
+
+    const complete = chosen.size >= PRACTICE_SIZE
+      && primaryCount() >= primaryTarget
+      && typed >= Math.min(typedMin, PRACTICE_SIZE);
+    return { chosen, relaxUsed, complete, size: chosen.size };
   };
 
-  // The shape cap is given up LAST: a Lektion that cannot otherwise fill seven
-  // takes a repeated task shape rather than coming out short, but only after
-  // the lemma, carry-over and answer-key caps have already been relaxed.
-  for (const relax of [
-    {},
-    { carried: true },
-    { lemma: true, carried: true, answerKey: true },
-    { lemma: true, carried: true, answerKey: true, taskShape: true },
-  ]) {
-    // 1. the primary slug's share, typed items first so the typed floor is cheap
-    const primary = ranked.filter((it) => it.topic === primarySlug);
-    fill(primary.filter(isTypedItem), relax, () => primaryCount() >= primaryTarget);
-    fill(primary, relax, () => primaryCount() >= primaryTarget);
-    // 2. the typed floor across all topics
-    fill(ranked.filter(isTypedItem), relax, () => typed >= typedMin || chosen.size >= PRACTICE_SIZE);
-    // 3. fill up to seven
-    fill(ranked, relax, () => chosen.size >= PRACTICE_SIZE);
-    if (chosen.size >= PRACTICE_SIZE && primaryCount() >= primaryTarget && typed >= Math.min(typedMin, PRACTICE_SIZE)) break;
+  let best = null;
+  for (let salt = 0; salt < PICK_RETRIES; salt += 1) {
+    const pass = runPass(salt);
+    const better = !best
+      || (pass.complete && !best.complete)
+      || (pass.complete === best.complete && pass.relaxUsed < best.relaxUsed)
+      || (pass.complete === best.complete && pass.relaxUsed === best.relaxUsed && pass.size > best.size);
+    if (better) best = pass;
+    if (best.complete && best.relaxUsed === 0) break;
   }
+  const chosen = best.chosen;
 
   // Present them in a seeded order so typed and recognition interleave.
   return seededShuffle([...chosen.values()], mulberry32(seed));
@@ -444,6 +563,20 @@ export function planPractice(curriculum, pool, attempt = 1) {
   }
   if (byAttempt && byAttempt.has(attempt)) return byAttempt.get(attempt);
 
+  // What the earlier attempts of each Lektion already showed. The seed alone
+  // does not make a second draw a second draw — DaF review #9 MAJOR 1 measured
+  // 62 of 84 items repeating between attempt 1 and 2, all seven in L2 and L8 —
+  // so every attempt above 1 is planned against the union of the attempts
+  // before it, which `pickPracticeItems` excludes until it has to relax.
+  const priorByNr = new Map();
+  for (let earlier = 1; earlier < attempt; earlier += 1) {
+    for (const [nr, items] of planPractice(curriculum, pool, earlier)) {
+      const seen = priorByNr.get(nr) || new Set();
+      for (const it of items) seen.add(it.id);
+      priorByNr.set(nr, seen);
+    }
+  }
+
   const lektionen = [...((curriculum && curriculum.lektionen) || [])].sort((a, b) => a.nr - b.nr);
   const plan = new Map();
   const usedIds = new Set();
@@ -462,6 +595,7 @@ export function planPractice(curriculum, pool, attempt = 1) {
         earlierTerms: new Set(earlierTerms),
         usedIds: new Set(usedIds),
         previousAnswerLemmas,
+        priorAttemptIds: priorByNr.get(lektion.nr) || new Set(),
       },
     );
     plan.set(lektion.nr, items);
