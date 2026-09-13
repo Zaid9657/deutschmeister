@@ -48,7 +48,7 @@ test('on a case task a case-only miss is wrong and tagged Rechtschreibung', () =
   assert.equal(res.result, RESULT.WRONG);
   assert.equal(res.expected, 'Ihr');
   assert.equal(res.reason, 'case');
-  const tag = tagError({ topic: 'possessive-articles', type: 'fill_blank' }, 'ihr', 'Ihr');
+  const tag = tagError({ caseSensitive: true, topic: 'polite-forms', type: 'fill_blank' }, 'ihr', 'Ihr');
   assert.equal(tag, 'Rechtschreibung');
   assert.ok(ERROR_TAGS.includes('Rechtschreibung'));
   assert.equal(checkAnswer('Ihr', ['Ihr'], { caseSensitive: true }).result, RESULT.CORRECT);
@@ -71,16 +71,6 @@ test('elsewhere a case-only miss costs one retry, not the item (standard §3)', 
 
 test('a lower-case form that is explicitly accepted stays correct', () => {
   assert.equal(checkAnswer('ihr', ['Ihr', 'ihr'], { caseSensitive: true }).result, RESULT.CORRECT);
-});
-
-test('isCaseTask flags the polite possessive and an explicit flag', () => {
-  assert.equal(isCaseTask({ caseSensitive: true, topic: 'anything' }), true);
-  assert.equal(isCaseTask({ topic: 'possessive-articles', answer: 'Ihr' }), true);
-  assert.equal(isCaseTask({ topic: 'possessive-articles', answer: 'Ihre' }), true);
-  assert.equal(isCaseTask({ topic: 'possessive-articles', answer: 'Ihren' }), true);
-  assert.equal(isCaseTask({ topic: 'possessive-articles', answer: 'mein', accepted: ['mein'] }), false);
-  assert.equal(isCaseTask({ topic: 'definite-articles', answer: 'Die' }), false);
-  assert.equal(isCaseTask(null), false);
 });
 
 // --- everything that was already true ---------------------------------------
@@ -106,5 +96,88 @@ test('dictation is unchanged', () => {
   assert.equal(same('Null eins sieben sechs - drei', 'Null eins sieben sechs – drei'), RESULT.CORRECT);
   assert.equal(same('Er sagt "Hallo".', 'Er sagt „Hallo“.'), RESULT.CORRECT);
   assert.equal(same('0176 234568', '0176 234567'), RESULT.WRONG);
+  assert.equal(tagError({ kind: 'dictation' }, 'x', 'y'), 'Hören');
+});
+
+// --- REVIEW #5 BLOCKER 3: the case flag comes from the task ------------------
+//
+// The old isCaseTask read a regex over the ANSWER FORM (/^Ihr(e|en)?$/ on
+// possessive-article items). It fired on extra-a11-l12-10 ('___ Geschenke sind
+// hier. (sie, Plural)', accepted 'Ihre'), whose own explanation says the answer
+// is *ihre* — a capital that is only the sentence opener — and it missed the
+// real politeness items (extra-a11-l03-08 'Sie', extra-a11-l01-06 'Ihnen'),
+// which are not possessive-article items at all. The items now carry the flag.
+
+test('isCaseTask is the item flag and nothing else', () => {
+  assert.equal(isCaseTask({ caseSensitive: true, topic: 'anything' }), true);
+  assert.equal(isCaseTask({ caseSensitive: true, topic: 'polite-forms', answer: 'Ihnen' }), true);
+  // extra-a11-l12-10: 'ihre' is the taught answer, the capital is the opener
+  assert.equal(isCaseTask({ topic: 'possessive-articles', answer: 'Ihre' }), false);
+  assert.equal(isCaseTask({ topic: 'possessive-articles', answer: 'Ihr' }), false);
+  assert.equal(isCaseTask({ topic: 'definite-articles', answer: 'Die' }), false);
+  assert.equal(isCaseTask({ caseSensitive: false, answer: 'Ihr' }), false);
+  assert.equal(isCaseTask(null), false);
+});
+
+test('an unflagged sentence-opener answer is not graded on its capital', () => {
+  // extra-a11-l12-10: 'ihre' vs ['Ihre'], no flag → correct, no red X
+  assert.equal(checkAnswer('ihre', ['ihre']).result, RESULT.CORRECT);
+  assert.equal(checkAnswer('ihre', ['Ihre']).result, RESULT.TYPO);
+  // the polite item (flagged by the items agent) still grades the capital
+  assert.equal(checkAnswer('ihr', ['Ihr'], { caseSensitive: true }).result, RESULT.WRONG);
+  assert.equal(checkAnswer('ihr', ['Ihr'], { caseSensitive: false }).result, RESULT.TYPO);
+  assert.equal(
+    tagError({ caseSensitive: true, topic: 'polite-forms', type: 'fill_blank' }, 'ihr', 'Ihr'),
+    'Rechtschreibung',
+  );
+});
+
+// --- REVIEW #5 MAJOR 14: a sentence miss is tagged by WHERE it differs -------
+
+test('a sentence miss is tagged by what differs, not by the item type', () => {
+  const sb = { type: 'sentence_building', topic: 'definite-articles' };
+  // missing article — was booked as Verbstellung for every sentence item
+  assert.equal(tagError(sb, 'Honig ist gut.', 'Der Honig ist gut.'), 'Artikel');
+  assert.equal(
+    tagError({ type: 'sentence_building', topic: 'indefinite-articles' }, 'Ich möchte einen Glas Wasser.', 'Ich möchte ein Glas Wasser.'),
+    'Kasus',
+  );
+  // same words, different order — this is what Verbstellung means
+  assert.equal(
+    tagError({ type: 'sentence_building', topic: 'yes-no-questions' }, 'Kommst am Freitag du mit?', 'Kommst du am Freitag mit?'),
+    'Verbstellung',
+  );
+  // a wrong separable prefix is a word, not a word order
+  assert.equal(
+    tagError({ type: 'sentence_building', topic: 'separable-verbs' }, 'Ich rufe meine Mutter ab.', 'Ich rufe meine Mutter an.'),
+    'Wortschatz',
+  );
+  // another finite form of the same verb
+  assert.equal(
+    tagError({ type: 'sentence_building', topic: 'present-tense' }, 'Er spreche Deutsch.', 'Er spricht Deutsch.'),
+    'Konjugation',
+  );
+  // one misspelt long word stays spelling
+  assert.equal(
+    tagError({ type: 'sentence_building', topic: 'numbers' }, 'Der Stuhl kostet zwöllf Euro.', 'Der Stuhl kostet zwölf Euro.'),
+    'Rechtschreibung',
+  );
+  // a case-only miss is spelling before any of this
+  assert.equal(tagError(sb, 'der honig ist gut.', 'Der Honig ist gut.'), 'Rechtschreibung');
+});
+
+test('the yes-no-question rules still hold, and single words are unchanged', () => {
+  const yn = { type: 'sentence_building', topic: 'yes-no-questions' };
+  // the question mark is missing
+  assert.equal(tagError(yn, 'Kommst du am Freitag mit', 'Kommst du am Freitag mit?'), 'Verbstellung');
+  // the finite verb is not first
+  assert.equal(tagError(yn, 'Du kommst am Freitag mit?', 'Kommst du am Freitag mit?'), 'Verbstellung');
+  // too many differences to locate → the item's topic decides, as before
+  assert.equal(tagError(yn, 'Ich weiß es nicht.', 'Kommst du am Freitag mit?'), 'Verbstellung');
+  // single-word behaviour: untouched
+  assert.equal(tagError({ topic: 'definite-articles', type: 'fill_blank' }, 'die', 'der'), 'Artikel');
+  assert.equal(tagError({ topic: 'possessive-articles', type: 'fill_blank' }, 'mein', 'meine'), 'Kasus');
+  assert.equal(tagError({ topic: 'verb-sein', type: 'fill_blank' }, 'bist', 'bin'), 'Konjugation');
+  assert.equal(tagError({ topic: 'plural-nouns', type: 'fill_blank' }, 'Buchs', 'Bücher'), 'Plural');
   assert.equal(tagError({ kind: 'dictation' }, 'x', 'y'), 'Hören');
 });

@@ -5,6 +5,12 @@
 // ending is never a typo: if the expected answer is a short function word
 // (≤ 4 letters: der/die/das/ein/eine/dem/den…) or the user's slip changes the
 // final letter of a word (an ending), it is wrong.
+//
+// Two things are decided by the TASK rather than by the answer string:
+// `isCaseTask(item)` is `item.caseSensitive === true` and nothing else
+// (REVIEW #5 BLOCKER 3), and `tagError` reads WHERE a sentence differs instead
+// of booking every sentence_building miss as 'Verbstellung' (REVIEW #5 MAJOR
+// 14) — see the decision table above tagSentenceError.
 import { normalizeAnswer } from '../../utils/answerMatch.js';
 
 export const RESULT = { CORRECT: 'correct', TYPO: 'typo', WRONG: 'wrong' };
@@ -173,19 +179,26 @@ export function checkAnswer(userInput, expected, {
 }
 
 /**
- * True when capitalisation IS the task: the item says so (`caseSensitive: true`),
- * or it is a possessive-article item whose answer is the polite `Ihr/Ihre/Ihren`
- * — the form the L12 notice teaches as "immer groß". Pass the result as
+ * True when capitalisation IS the task — decided by the TASK, not by the shape
+ * of the answer: `item.caseSensitive === true` and nothing else (REVIEW #5
+ * BLOCKER 3).
+ *
+ * The previous version tested the accepted answers against
+ * `/^Ihr(e|en)?$/` on possessive-article items, and a regex on the answer form
+ * cannot tell a polite `Ihr` from a capitalised sentence opener: it fired on
+ * `extra-a11-l12-10` ("___ Geschenke sind hier. (sie, Plural)", accepted
+ * `Ihre`), where the item's own explanation says the answer is *ihre* — the
+ * learner typed what the explanation taught and got a red X — and it missed
+ * `extra-a11-l03-08` ("sprechen ___ Englisch?" → `Sie`) and
+ * `extra-a11-l01-06` ("Wie geht es ___?" → `Ihnen`), the two places where the
+ * polite capital IS the point, because neither is a possessive-article item.
+ * The flag is now carried by the item itself (the items own it, the checker
+ * only reads it), so `Sie/Ihnen/Ihr/Ihre` politeness items opt in wherever they
+ * live and a plain sentence-initial capital never does. Pass the result as
  * `checkAnswer(..., { caseSensitive: isCaseTask(item) })`.
  */
-export const POLITE_POSSESSIVE_RE = /^Ihr(e|en)?$/;
-
 export function isCaseTask(item) {
-  if (!item) return false;
-  if (item.caseSensitive === true) return true;
-  if (!/possessive-articles/i.test(String(item.topic || ''))) return false;
-  const answers = [item.answer, ...(Array.isArray(item.accepted) ? item.accepted : [])];
-  return answers.some((a) => POLITE_POSSESSIVE_RE.test(String(a ?? '').trim()));
+  return item?.caseSensitive === true;
 }
 
 // Error tags (standard §3): what a miss is about, for remediation and review.
@@ -193,14 +206,117 @@ export const ERROR_TAGS = ['Artikel', 'Kasus', 'Verbstellung', 'Konjugation', 'P
 
 const ARTICLES = new Set(['der', 'die', 'das', 'ein', 'eine', 'einen', 'einem', 'einer', 'dem', 'den', 'des', 'kein', 'keine', 'keinen', 'mein', 'meine', 'dein', 'deine', 'sein', 'seine', 'ihr', 'ihre', 'unser', 'unsere', 'euer', 'eure']);
 
-/** Best-effort tag for a wrong answer, from the item and the two strings. */
+/** A possessive/indefinite determiner: the ones whose ENDING carries the case. */
+const POSSESSIVE_RE = /^(ein|kein|mein|dein|sein|ihr|unser|euer)/;
+
+/** Article vs Kasus, as the single-word branch has always decided it. */
+const articleTag = (usr, exp) => (POSSESSIVE_RE.test(exp) && ARTICLES.has(usr) ? 'Kasus' : 'Artikel');
+
+/** Personal endings of a finite German verb (plus the weak preterite set). */
+const VERB_ENDING_RE = /(e|st|t|en|et|te|ten|tet|test)$/;
+
+/** Longest common prefix length — a cheap stand-in for "same stem". */
+function commonPrefix(a, b) {
+  let i = 0;
+  while (i < a.length && i < b.length && a[i] === b[i]) i += 1;
+  return i;
+}
+
+/**
+ * Two finite forms of the same verb: both end in a personal ending and they
+ * share a stem of at least three characters (spreche/spricht → `spr`). Deliberately
+ * loose — it only has to separate a conjugation slip from a different word.
+ */
+function sameLemmaVerb(usr, exp) {
+  if (!usr || !exp || usr === exp) return false;
+  if (!VERB_ENDING_RE.test(usr) || !VERB_ENDING_RE.test(exp)) return false;
+  return commonPrefix(usr, exp) >= 3;
+}
+
+const words = (s) => (s ? s.split(' ').filter(Boolean) : []);
+
+/** Which words are in `exp` but not in `usr`, and vice versa (multiset diff). */
+function bagDiff(usrWords, expWords) {
+  const onlyUser = [...usrWords];
+  const onlyExp = [];
+  for (const w of expWords) {
+    const i = onlyUser.indexOf(w);
+    if (i >= 0) onlyUser.splice(i, 1);
+    else onlyExp.push(w);
+  }
+  return { onlyUser, onlyExp };
+}
+
+/**
+ * Tag a miss on a SENTENCE answer by reading WHERE the sentence differs
+ * (REVIEW #5 MAJOR 14). The old rule booked every `sentence_building` miss as
+ * 'Verbstellung' — a missing article, a misspelt number and a wrong separable
+ * prefix all came back as a word-order problem, and those tags are what the
+ * checkpoint shows the learner and what the remediation set is drawn from.
+ *
+ * Decision order (first match wins), returning null when the sentence differs
+ * in more than one place and the caller's topic rules should decide:
+ *   1. same words, different order                     → 'Verbstellung'
+ *   2. yes-no question: '?' missing, or the expected
+ *      first word (the finite verb) is not first       → 'Verbstellung'
+ *   3. one word too many, none missing: article → 'Artikel', else 'Wortschatz'
+ *   4. exactly one word differs (or is missing):
+ *      a. the expected word is an article/possessive    → 'Artikel' ('Kasus'
+ *         when a possessive was swapped for another determiner)
+ *      b. same verb lemma, other finite form            → 'Konjugation'
+ *      c. expected word ≥ 5 letters, Levenshtein ≤ 2    → 'Rechtschreibung'
+ *      d. anything else (incl. a short wrong word such
+ *         as a separable prefix: ab ↔ an)               → 'Wortschatz'
+ * A miss that is nothing but Groß-/Kleinschreibung never reaches here: the
+ * case-only check above tags it 'Rechtschreibung' first.
+ */
+function tagSentenceError(item, userInput, expected, usr, exp) {
+  const usrWords = words(usr);
+  const expWords = words(exp);
+  const { onlyUser, onlyExp } = bagDiff(usrWords, expWords);
+
+  if (!onlyUser.length && !onlyExp.length) {
+    return usr === exp ? null : 'Verbstellung';
+  }
+
+  if (item?.topic === 'yes-no-questions') {
+    if (String(expected ?? '').includes('?') && !String(userInput ?? '').includes('?')) return 'Verbstellung';
+    if (expWords.length && usrWords.includes(expWords[0]) && usrWords[0] !== expWords[0]) return 'Verbstellung';
+  }
+
+  // One word too many and nothing missing: the same reading, from the other side.
+  if (!onlyExp.length && onlyUser.length === 1) {
+    return ARTICLES.has(onlyUser[0]) ? 'Artikel' : 'Wortschatz';
+  }
+
+  if (onlyExp.length === 1 && onlyUser.length <= 1) {
+    const e = onlyExp[0];
+    const u = onlyUser[0] || '';
+    if (ARTICLES.has(e)) return articleTag(u, e);
+    if (sameLemmaVerb(u, e)) return 'Konjugation';
+    if (u && e.length >= 5 && levenshtein(u, e) <= 2) return 'Rechtschreibung';
+    return 'Wortschatz';
+  }
+  return null;
+}
+
+/**
+ * Best-effort tag for a wrong answer, from the item and the two strings.
+ * Order: Hören → case-only → Plural → a single-word article answer → the
+ * sentence analysis above → the item's topic → a near-miss spelling → Wortschatz.
+ */
 export function tagError(item, userInput, expected) {
   const exp = stripPunct(normalizeAnswer(expected)); const usr = stripPunct(normalizeAnswer(userInput));
   if (item?.stage === 'listening' || item?.kind === 'dictation') return 'Hören';
   // A miss that is only Groß-/Kleinschreibung is spelling, whatever the word is.
   if (exp && usr && exp === usr && stripPunct(String(expected ?? '')) !== stripPunct(String(userInput ?? ''))) return 'Rechtschreibung';
   if (item?.topic && /plural/i.test(item.topic)) return 'Plural';
-  if (ARTICLES.has(exp)) return /^(ein|kein|mein|dein|sein|ihr|unser|euer)/.test(exp) && ARTICLES.has(usr) ? 'Kasus' : 'Artikel';
+  if (ARTICLES.has(exp)) return articleTag(usr, exp);
+  const isSentence = item?.type === 'sentence_building' || item?.topic === 'yes-no-questions' || exp.includes(' ');
+  if (isSentence && exp && usr) {
+    const tag = tagSentenceError(item, userInput, expected, usr, exp);
+    if (tag) return tag;
+  }
   if (item?.type === 'sentence_building' || item?.topic === 'yes-no-questions') return 'Verbstellung';
   if (item?.topic && /verb|sein|haben|present|separable|conjug/i.test(item.topic)) return 'Konjugation';
   if (exp && usr && levenshtein(usr, exp) <= 2) return 'Rechtschreibung';
