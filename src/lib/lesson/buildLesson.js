@@ -74,6 +74,18 @@ export const MAX_CARRIED_LEMMA = 1;
  * learner PRODUCE, function words included, so `Mein` × 5 cannot happen again.
  */
 export const MAX_SAME_ANSWER_KEY = 2;
+/**
+ * Third diversity axis, one step coarser than `answerKey`: no TASK SHAPE may
+ * carry more than this many items in one Lektion (DaF review #7 MAJOR 5).
+ * `answerKey` compares what the learner produces, so it reads two error
+ * corrections that differ only in their noun — "Ich bin eine Lehrerin." and
+ * "Ich bin eine Verkäuferin.", both answered by deleting the article — as two
+ * different items, and L6 drew both, in both attempts, out of seven. They are
+ * the same exercise with a different profession: same prompt skeleton, same
+ * rule, an answer that differs in one word. `taskShape` collapses exactly that:
+ * one per Lektion, so the second seat goes to a different kind of task.
+ */
+export const MAX_SAME_TASK_SHAPE = 1;
 /** Weights for situational relevance: the Lektion's own Wortfeld vs. an earlier one's. */
 export const OWN_TERM_WEIGHT = 3;
 export const EARLIER_TERM_WEIGHT = 1;
@@ -151,6 +163,46 @@ export const answerKey = (item) => {
   return flat(item && item.answer).split(' ')[0] || '';
 };
 
+/** Quotation marks the pool uses around the sentence an item works on. */
+const QUOTED = /[„“”"»]([^„“”"»«]+)[“”"«]/;
+/**
+ * The prompt without the exercise bank's task formula: the quoted sentence when
+ * the prompt quotes one, else what follows the instruction's colon. Two items
+ * can be the same exercise under different wrappers — "Korrigieren Sie: „Ich
+ * bin eine Verkäuferin.“" and "Finden Sie den Fehler und schreiben Sie den
+ * Satz richtig: „Ich bin eine Lehrerin.“" — and the shape has to see through
+ * the wrapper, or it compares formulas instead of tasks.
+ */
+export const bare = (text) => {
+  const s = String(text || '').trim();
+  const quoted = s.match(QUOTED);
+  if (quoted && quoted[1].trim()) return quoted[1];
+  const formula = s.match(
+    /^[^:()]*\b(?:bilden|bilde|schreiben|schreib|schreibe|korrigieren|korrigiere|ergänzen|ergänze|finden|finde|setzen|setze|wählen|wähle|antworten|antworte|buchstabieren|buchstabiere|lesen|lies|hören)\b[^:()]*:\s*(.+)$/i,
+  );
+  return formula ? formula[1] : s;
+};
+
+/** Lower-cased words of a text with the gap (`___`) kept as its own token. */
+const withGaps = (text) =>
+  String(text || '')
+    .toLowerCase()
+    .replace(/_+/g, ' _ ')
+    .replace(/[^a-zäöüß_]+/g, ' ')
+    .trim()
+    .replace(/\s+/g, ' ');
+
+/**
+ * The item's TASK as one comparable key: its type plus the skeleton of its bare
+ * prompt, with the content words replaced by a placeholder and the gap left
+ * where it stands. Long words and -in derivations are the content; the short
+ * function words and the gap position are the skeleton. So "Ich bin eine
+ * Lehrerin." and "Ich bin eine Verkäuferin." are one key, while "___ Auto ist
+ * teuer." and "Ich brauche ___ Handy." stay two.
+ */
+export const taskShape = (item) =>
+  `${(item && item.type) || ''}:${withGaps(bare(item && item.questionDe)).replace(/[a-zäöüß]+in\b|[a-zäöüß]{6,}/g, '·')}`;
+
 /** The situational vocabulary of one Lektion, as lemmas. */
 export function wortfeldTerms(lektion) {
   const out = new Set();
@@ -211,7 +263,8 @@ function seededShuffle(list, rng) {
  *   3. seven items in total, all from `rule.topics`;
  *   4. one item for every answer key in `rule.mustCover` the pool can supply;
  *   5. no lemma more than `MAX_SAME_LEMMA` times, no answer key more than
- *      `MAX_SAME_ANSWER_KEY` times, and at most `MAX_CARRIED_LEMMA` item
+ *      `MAX_SAME_ANSWER_KEY` times, no task shape more than
+ *      `MAX_SAME_TASK_SHAPE` time, and at most `MAX_CARRIED_LEMMA` item
  *      repeating an answer lemma of the Lektion before;
  *   6. within each topic, the most situational items first (relevanceScore).
  *
@@ -221,8 +274,9 @@ function seededShuffle(list, rng) {
  *
  * When the topic slice is too small the result is simply shorter rather than
  * padded with off-topic items — a short pool is a content bug, not something to
- * paper over. Constraints 4 and 1 are relaxed (in that order) before the seven
- * are given up on, so a thin topic still yields a full block.
+ * paper over. The caps of 5 are relaxed before the seven are given up on — the
+ * carry-over first, then the lemma and answer-key caps, and the task-shape cap
+ * last of all, because it is the coarsest and the one a learner notices most.
  */
 export function pickPracticeItems(pool, rule, seed, options = {}) {
   const topicList = (rule && rule.topics) || [];
@@ -259,6 +313,7 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
   const chosen = new Map();
   const lemmaCount = new Map();
   const answerKeyCount = new Map();
+  const taskShapeCount = new Map();
   let mc = 0;
   let typed = 0;
   let carried = 0;
@@ -275,6 +330,10 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
       const k = answerKey(it);
       if (k && (answerKeyCount.get(k) || 0) >= MAX_SAME_ANSWER_KEY) return false;
     }
+    if (!relax.taskShape) {
+      const shape = taskShape(it);
+      if (shape && (taskShapeCount.get(shape) || 0) >= MAX_SAME_TASK_SHAPE) return false;
+    }
     if (!relax.carried && carried >= MAX_CARRIED_LEMMA && carriesOver(it)) return false;
     return true;
   };
@@ -287,6 +346,8 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
     for (const l of itemLemmas(it)) lemmaCount.set(l, (lemmaCount.get(l) || 0) + 1);
     const k = answerKey(it);
     if (k) answerKeyCount.set(k, (answerKeyCount.get(k) || 0) + 1);
+    const shape = taskShape(it);
+    if (shape) taskShapeCount.set(shape, (taskShapeCount.get(shape) || 0) + 1);
   };
 
   // The cover pass (DaF review #6 MAJOR 6, second half). `MAX_SAME_ANSWER_KEY`
@@ -329,7 +390,15 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
     }
   };
 
-  for (const relax of [{}, { carried: true }, { lemma: true, carried: true, answerKey: true }]) {
+  // The shape cap is given up LAST: a Lektion that cannot otherwise fill seven
+  // takes a repeated task shape rather than coming out short, but only after
+  // the lemma, carry-over and answer-key caps have already been relaxed.
+  for (const relax of [
+    {},
+    { carried: true },
+    { lemma: true, carried: true, answerKey: true },
+    { lemma: true, carried: true, answerKey: true, taskShape: true },
+  ]) {
     // 1. the primary slug's share, typed items first so the typed floor is cheap
     const primary = ranked.filter((it) => it.topic === primarySlug);
     fill(primary.filter(isTypedItem), relax, () => primaryCount() >= primaryTarget);

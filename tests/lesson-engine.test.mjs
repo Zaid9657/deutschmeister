@@ -11,8 +11,9 @@ import { dirname, join } from 'node:path';
 
 import buildLesson, {
   pickPracticeItems, planPractice, seedFor, isTypedItem, isMultipleChoice, itemLemmas, answerLemmas,
-  answerKey,
+  answerKey, taskShape,
   PRACTICE_SIZE, MAX_MULTIPLE_CHOICE, PRIMARY_MIN, MAX_SAME_LEMMA, MAX_CARRIED_LEMMA, MAX_SAME_ANSWER_KEY,
+  MAX_SAME_TASK_SHAPE,
 } from '../src/lib/lesson/buildLesson.js';
 import { exclusionReason, isUsableItem, filterPool, EXCLUDE_IDS, REASON, drillsSlug } from '../src/data/lessonPools/quality.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
@@ -306,6 +307,102 @@ test('no answer key carries more than two items in one Lektion — the "mein" ru
     }
   }
   assert.deepEqual(rows, [], rows.join('\n'));
+});
+
+test('taskShape reads the task, not the wording — the same exercise under two formulas is one key', () => {
+  // The unit behind the cap below (DaF review #7 MAJOR 5). Two error corrections
+  // that differ only in the profession are ONE task: same skeleton, same rule,
+  // an answer that removes the same article. `answerKey` cannot see it, because
+  // it compares the content lemmas of the answer and `lehrerin` ≠ `verkäuferin`.
+  const lehrerin = POOL.items.find((it) => it.id === '1ed2c78f-8f65-52e3-9e63-97f2a5b0663b');
+  const verkaeuferin = POOL.items.find((it) => it.id === 'extra-a11-l06-09');
+  assert.ok(lehrerin && verkaeuferin, 'the two Beruf items the review measured are no longer in the pool');
+  assert.notEqual(answerKey(lehrerin), answerKey(verkaeuferin), 'answerKey is supposed to miss this pair');
+  assert.equal(
+    taskShape(lehrerin), taskShape(verkaeuferin),
+    'the two Beruf corrections must collapse to one shape — the task formula around them differs, the task does not',
+  );
+
+  // and it stays coarse without becoming blind: a different skeleton, a
+  // different gap position or a different item type are different shapes.
+  const shape = (q, type = 'fill_blank') => taskShape({ type, questionDe: q });
+  assert.notEqual(shape('Das ist ___ Stuhl.'), shape('Ich brauche ___ Handy.'));
+  assert.notEqual(shape('___ Frau arbeitet hier.'), shape('Die Frau arbeitet ___.'));
+  assert.notEqual(shape('Das ist ___ Stuhl.'), shape('Das ist ___ Stuhl.', 'multiple_choice'));
+  // the same skeleton with another CONTENT word is the same shape — the point.
+  // The placeholder rule is deliberately coarse but not total: a word of six
+  // letters or more, or an -in derivation, is content; a short noun (Stuhl,
+  // Auto, Buch) stays in the skeleton and keeps two such items apart. That is
+  // the boundary of this axis, and `answerKey` is the finer one underneath it.
+  assert.equal(shape('Das ist ___ Computer.'), shape('Das ist ___ Fahrkarte.'));
+  assert.notEqual(shape('Das ist ___ Stuhl.'), shape('Das ist ___ Auto.'));
+});
+
+test('no task shape carries more than one item in a Lektion — the Beruf-pair rule', () => {
+  // The third diversity axis, walked over all twelve Lektionen and BOTH
+  // attempts of the shipped pool, as a class rule and not as the one instance
+  // the review caught. The cap is a hard assertion rather than "≥ 6 distinct of
+  // 7" on purpose: `MAX_SAME_TASK_SHAPE` is relaxed LAST in pickPracticeItems,
+  // so a Lektion exceeding it here means the topic slice could not fill seven
+  // under the other caps either — a POOL finding (too few distinct exercises on
+  // that slug), to be fixed with items, not by loosening this number.
+  const rows = [];
+  for (const attempt of [1, 2]) {
+    const plan = planPractice(CURRICULUM_A11, POOL, attempt);
+    for (const lektion of LEKTIONEN) {
+      const items = plan.get(lektion.nr);
+      const count = new Map();
+      for (const it of items) count.set(taskShape(it), (count.get(taskShape(it)) || 0) + 1);
+      for (const [shape, n] of count) {
+        if (n <= MAX_SAME_TASK_SHAPE) continue;
+        const ids = items.filter((it) => taskShape(it) === shape)
+          .map((it) => `${it.id} · ${it.questionDe.replace(/\s+/g, ' ')} → ${it.answer}`);
+        rows.push(`attempt ${attempt} L${lektion.nr} draws ${n} items of one shape "${shape}":\n    ${ids.join('\n    ')}`);
+      }
+    }
+  }
+  assert.deepEqual(rows, [], rows.join('\n'));
+});
+
+test('L6 stops drawing the two Beruf corrections in one block — and stays above the floor', () => {
+  // The instance: "Ich bin eine Lehrerin." and "Ich bin eine Verkäuferin." were
+  // two of L6's seven in BOTH attempts, and neither makes the learner produce
+  // an indefinite article (the right answer deletes it), which is why the
+  // Lektion that introduces ein/eine sat exactly on PRIMARY_MIN with 4 of 7.
+  const BERUF = ['1ed2c78f-8f65-52e3-9e63-97f2a5b0663b', 'extra-a11-l06-09'];
+  for (const attempt of [1, 2]) {
+    const items = planPractice(CURRICULUM_A11, POOL, attempt).get(6);
+    const drawn = items.filter((it) => BERUF.includes(it.id));
+    assert.ok(
+      drawn.length <= 1,
+      `L6 attempt ${attempt} still draws both Beruf corrections:\n  ` + drawn.map((it) => `${it.id} → ${it.answer}`).join('\n  '),
+    );
+    const real = items.filter((it) => drillsSlug(it, 'indefinite-articles')).length;
+    assert.ok(real >= PRIMARY_MIN, `L6 attempt ${attempt} drills its own slug only ${real}/7 times`);
+  }
+});
+
+test('THE SHAPE TABLE — real drills and distinct task shapes, twelve Lektionen, both attempts', () => {
+  const lines = [];
+  const failures = [];
+  for (const attempt of [1, 2]) {
+    const plan = planPractice(CURRICULUM_A11, POOL, attempt);
+    for (const lektion of LEKTIONEN) {
+      const items = plan.get(lektion.nr);
+      const real = items.filter((it) => drillsSlug(it, lektion.primarySlug)).length;
+      const shapes = new Set(items.map(taskShape));
+      lines.push(
+        `attempt ${attempt}  L${String(lektion.nr).padStart(2)} ${lektion.primarySlug.padEnd(24)}` +
+        ` ${real}/7 real · ${shapes.size}/7 distinct task shapes`,
+      );
+      if (real < PRIMARY_MIN) failures.push(`L${lektion.nr} attempt ${attempt}: ${real}/7 real, below PRIMARY_MIN`);
+      if (shapes.size < PRACTICE_SIZE - MAX_SAME_TASK_SHAPE) {
+        failures.push(`L${lektion.nr} attempt ${attempt}: only ${shapes.size} distinct shapes in seven items`);
+      }
+    }
+  }
+  console.log(`\n${lines.join('\n')}\n`);
+  assert.deepEqual(failures, [], failures.join('\n'));
 });
 
 test('L12 spreads its possessives, and every attempt drills the polite Ihr', () => {
