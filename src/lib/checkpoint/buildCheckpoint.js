@@ -27,6 +27,20 @@
 //     Lektionen. The task is `optional: true`: without a grader verdict it is
 //     not attempted rather than wrong, and the section scores over the drills.
 //
+// ONE PAPER IS ONE UNIT: WHAT A SECTION PRINTS, ANOTHER MAY NOT ASK FOR.
+// The practice draw has capped that since DaF review #11 (`leaksAnswer`, the
+// sixth diversity axis) and the graded paper did not, so checkpoint 3 printed
+// the Lektion-8 read-aloud line about Tuesday afternoon beside two
+// Sprachbausteine whose answers were `Dienstag` and `Hast` — 2 of 20 points
+// handed over before the learner read them (DaF review #14, MAJOR 3). The rule
+// lives in `buildLesson.js` and is IMPORTED here, never written twice: the two
+// surfaces share one definition of "already printed" or they drift the first
+// time one of them is tuned. What counts as printed is decided by
+// `printedSurface`: a dictation and a read-aloud PRINT their own text (the
+// learner writes it down himself), a Lesen item prints its text, everything
+// else prints its prompt — without that, the two pairs of checkpoint 3 are
+// invisible, because a read-aloud line stands in `text` and nowhere else.
+//
 // Everything is deterministic in `seed` (mulberry32), so tests can pin the
 // exact 20 items and "Nochmal" can reshuffle the ORDER without changing the
 // test a learner already saw.
@@ -34,6 +48,7 @@ import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../lesson/check.
 import { courseWritingTasks, writingTaskByKey } from '../../data/writingTasks.js';
 import { knownUpTo, untaughtTokens, namesOf } from './lexis.js';
 import { politeCaseItem } from '../../data/lessonPools/quality.js';
+import { leaksAnswer } from '../lesson/buildLesson.js';
 import { deferredConstructionHits } from '../../data/curricula/constructions.js';
 
 export const SECTION_ORDER = ['hoeren', 'lesen', 'bausteine', 'schreiben', 'sprechen'];
@@ -91,6 +106,63 @@ export function shuffle(list, rng) {
 }
 
 const take = (list, n) => list.slice(0, Math.max(0, n));
+
+// ── the paper-wide leak guard (DaF review #14, MAJOR 3) ─────────────────────
+
+/**
+ * WHAT AN ITEM PRINTS ON THE PAPER.
+ *
+ * Not the same thing as "its prompt". A dictation and a read-aloud put their
+ * whole sentence in front of the learner — he writes it down, or reads it out —
+ * and a Lesen item prints its text above the statement. The read-aloud line is
+ * printed ONLY in `text`, which is why reading prompts alone missed the two
+ * pairs of checkpoint 3 that started this.
+ */
+export const printedSurface = (item) => {
+  if (!item) return '';
+  const parts = [item.promptDe];
+  if (item.type === 'dictation' || item.type === 'read_aloud') parts.push(item.text || item.audioText);
+  else if (item.section === 'lesen') parts.push(item.text);
+  return parts.filter(Boolean).join(' ');
+};
+
+/**
+ * Whose ANSWER is language, i.e. can be leaked at all. A Lesen item answers
+ * `Richtig`/`Falsch` and the graded writing task answers `true`: those are
+ * verdicts, not productions, and reading them as leakable answers would make
+ * every prompt containing „richtig" a leak.
+ */
+const VERDICT_KINDS = new Set(['trueFalse', 'gradedWriting']);
+export const leakable = (item) => Boolean(item) && !VERDICT_KINDS.has(item.kind);
+
+/** True when either item's whole production is already printed by the other. */
+export const leaksAcross = (a, b) =>
+  (leakable(a) && leaksAnswer(a, { questionDe: printedSurface(b) })) ||
+  (leakable(b) && leaksAnswer(b, { questionDe: printedSurface(a) }));
+
+/** Every leaking pair of one paper — the measurement tests/checkpoint.test.mjs runs. */
+export const checkpointLeaks = (items = []) => {
+  const out = [];
+  for (let i = 0; i < items.length; i += 1) {
+    for (let j = i + 1; j < items.length; j += 1) {
+      if (leaksAcross(items[i], items[j])) out.push([items[i].id, items[j].id]);
+    }
+  }
+  return out;
+};
+
+/**
+ * WHERE THE GUARD HAD TO GIVE WAY, per paper.
+ *
+ * The cap is the LAST rung of every preference, exactly as `relax.leak` is the
+ * first relaxation of the practice draw: a chapter too poor to fill a section
+ * fills it anyway rather than shipping a 19-item paper. But it never does so
+ * silently — every seat that had to take a leaking candidate is recorded here,
+ * `checkpointReport(items)` reads it, and the test forbids a non-empty report
+ * on the four real papers.
+ */
+const checkpointReports = new WeakMap();
+export const checkpointReport = (items) => checkpointReports.get(items) || { leakFallbacks: [] };
 
 // ── curriculum slicing ──────────────────────────────────────────────────────
 
@@ -342,7 +414,14 @@ function untaughtAt(curriculum, lastNr) {
  * that, deterministically and without repeating anything in `usedIds`. Topics
  * are visited round-robin so one fat topic cannot crowd the others out.
  */
-function drawPool(pool, topics, n, rng, usedIds, { typedOnly = false, untaught = () => false, afterLektion } = {}) {
+function drawPool(
+  pool,
+  topics,
+  n,
+  rng,
+  usedIds,
+  { typedOnly = false, untaught = () => false, afterLektion, accept = () => true, onSeat = () => {}, onRelax = () => {} } = {},
+) {
   if (n <= 0 || !topics.length) return [];
   const buckets = topics.map((topic) => {
     const all = shuffle(byTopics(pool, [topic], afterLektion).filter((i) => !usedIds.has(i.id)), rng);
@@ -354,6 +433,16 @@ function drawPool(pool, topics, n, rng, usedIds, { typedOnly = false, untaught =
     return [...pick(false), ...pick(true)];
   });
   const out = [];
+  // Rejected by the paper-wide leak cap (DaF review #14, MAJOR 3) — kept in
+  // draw order as the LAST rung: a topic too thin to offer a clean item still
+  // fills its seat, and `checkpointReport` names every seat that had to.
+  const deferred = [];
+  const seat = (next, relaxed) => {
+    out.push(next);
+    usedIds.add(next.id);
+    onSeat(next);
+    if (relaxed) onRelax(next);
+  };
   let progress = true;
   while (out.length < n && progress) {
     progress = false;
@@ -362,9 +451,16 @@ function drawPool(pool, topics, n, rng, usedIds, { typedOnly = false, untaught =
       const next = bucket.shift();
       if (!next) continue;
       progress = true;
-      out.push(next);
-      usedIds.add(next.id);
+      if (!accept(next)) {
+        deferred.push(next);
+        continue;
+      }
+      seat(next, false);
     }
+  }
+  for (const next of deferred) {
+    if (out.length >= n) break;
+    seat(next, true);
   }
   return out;
 }
@@ -404,7 +500,7 @@ function fromPoolItem(poolItem, { id, section, source, register = null }) {
 // Hören: 3 full-line dictations from the chapter's dialogues + 2 "Welches Wort
 // hören Sie?" items built from the Wortfeld (correct word + 3 Wortfeld
 // distractors). Audio is window.speechSynthesis in v1 (CONTRACT.md).
-function buildHoeren(ctx) {
+function buildHoerenDictation(ctx) {
   const { checkpoint, rng, chapter, usedLineKeys } = ctx;
   const items = [];
   // Hören draws first, so nothing is taken yet — the filter is here anyway
@@ -467,10 +563,35 @@ function buildHoeren(ctx) {
       poolItemId: null,
       type: 'dictation',
     });
+    ctx.seat(items[items.length - 1]);
   });
+  return items;
+}
+
+// The two „Welches Wort hören Sie?“ items — seated AFTER the three line-drawn
+// sections, because a Wortfeld word is free to move and a dialogue line is not:
+// `a1.1-cp1-hoeren-4` asked for „die Schwester“ while `a1.1-cp1-lesen-2` printed
+// „… ein Bruder, eine Schwester.“ on the same paper (DaF review #14, MAJOR 3).
+// A word whose answer is already printed goes to the BACK of the draw, never out
+// of it, and a seat that had to take one is recorded (see checkpointReport).
+function buildHoerenWords(ctx) {
+  const { checkpoint, rng, chapter } = ctx;
+  const items = [];
 
   const words = shuffle(wortfeldWords(chapter), rng);
-  const targets = take(words, 2);
+  const probe = (w) => ({
+    section: 'hoeren', kind: 'wordChoice', promptDe: 'Welches Wort hören Sie?', answer: w.de, accepted: [w.de],
+  });
+  const remaining = [...words];
+  const targets = [];
+  for (let n = 0; n < 2 && remaining.length; n += 1) {
+    let at = remaining.findIndex((w) => !ctx.leaks(probe(w)));
+    if (at < 0) {
+      at = 0;
+      ctx.relax('hoeren', `${checkpoint.id}-hoeren-${n + 4}: ${remaining[0].de}`);
+    }
+    targets.push(remaining.splice(at, 1)[0]);
+  }
   targets.forEach((word, i) => {
     const others = words.filter((w) => w.de !== word.de);
     const distractors = take(others.slice(i * 3), 3);
@@ -502,6 +623,7 @@ function buildHoeren(ctx) {
       poolItemId: null,
       type: 'multiple_choice',
     });
+    ctx.seat(items[items.length - 1]);
   });
   return items;
 }
@@ -1308,7 +1430,7 @@ function buildLesen(ctx) {
     const lines = preferredLektion.dialog.lines;
     const span = Math.min(3, lines.length);
     const start = Math.floor(rng() * Math.max(1, lines.length - span + 1));
-    const candidates = lesenCandidates(preferredLektion, start, order, usedLineKeys, usedWindows, usedLesenLines);
+    let candidates = lesenCandidates(preferredLektion, start, order, usedLineKeys, usedWindows, usedLesenLines);
     if (!candidates.length) continue;
     const wantRichtig = truth[i];
 
@@ -1321,7 +1443,14 @@ function buildLesen(ctx) {
     // rung 4 of `pickLesenSource` copies a line of the window out as a richtig statement, which
     // „no Lesen statement stands in its own text“ forbids, so a degraded clean pick loses to a
     // proper pick from the full list.
-    const clean = candidates.filter((w) => windowLineKeys(w).every((k) => !usedLineKeys.has(k)));
+    // A window that PRINTS the answer of an item this paper has already seated
+    // is the last resort, never the first (DaF review #14, MAJOR 3): the leak
+    // cap orders the candidates, exactly as freeness does, so a poor chapter
+    // still gets four texts.
+    const leakFree = (w) => !ctx.leaks({ section: 'lesen', kind: 'lesenProbe', promptDe: '', text: windowText(w.window) });
+    const leakFreeFirst = (ws) => [...ws.filter(leakFree), ...ws.filter((w) => !leakFree(w))];
+    candidates = leakFreeFirst(candidates);
+    const clean = leakFreeFirst(candidates.filter((w) => windowLineKeys(w).every((k) => !usedLineKeys.has(k))));
     const cleanPick = clean.length ? pickLesenSource(clean, wantRichtig, { rng, spec, chapterVocab, usedSources }) : null;
     const picked = (cleanPick?.report || cleanPick?.changed)
       ? cleanPick
@@ -1379,6 +1508,9 @@ function buildLesen(ctx) {
       verbForms: report ? report.verbForms : [],
       changed,
     });
+    const seatedItem = items[items.length - 1];
+    if (!leakFree(candidate)) ctx.relax('lesen', `${seatedItem.id}`);
+    ctx.seat(seatedItem);
   }
   return items;
 }
@@ -1392,14 +1524,20 @@ function buildBausteine(ctx) {
   const chapterTopics = topicsOf(chapter);
   const earlierTopics = topicsOf(earlier).filter((t) => !chapterTopics.includes(t));
   const earlierWanted = earlierTopics.length ? POOL_ITEMS_EARLIER : 0;
-  const drawnEarlier = drawPool(pool, earlierTopics, earlierWanted, rng, usedPoolIds, { untaught, afterLektion });
+  // The Sprachbausteine are seated AFTER Hören, Lesen and Sprechen have spent
+  // their lines, so this draw can see everything the paper prints: an item whose
+  // answer stands in a dictation, a Lesen text or a read-aloud line is skipped
+  // (DaF review #14, MAJOR 3 — `a1.1-cp3-bausteine-3` „Nach Montag kommt ___.“
+  // → `Dienstag`, beside a read-aloud line that names that very weekday).
+  const guard = ctx.poolGuard('bausteine');
+  const drawnEarlier = drawPool(pool, earlierTopics, earlierWanted, rng, usedPoolIds, { untaught, afterLektion, ...guard });
   const drawnChapter = drawPool(
     pool,
     chapterTopics,
     SECTION_COUNTS.bausteine - drawnEarlier.length,
     rng,
     usedPoolIds,
-    { untaught, afterLektion },
+    { untaught, afterLektion, ...guard },
   );
   return [...drawnChapter, ...drawnEarlier].map((p, i) =>
     fromPoolItem(p, {
@@ -1434,9 +1572,13 @@ function buildBausteine(ctx) {
 //     name is taken: evaluate-writing derives its character floor from it. The
 //     only item with a register is the real task, whose register is real.
 function buildSchreiben(ctx) {
-  const { checkpoint, rng, chapter, pool, usedPoolIds, level, untaught, afterLektion } = ctx;
-  const graded = gradedWritingItem(checkpoint, chapter, level);
+  const { checkpoint, rng, chapter, pool, usedPoolIds, untaught, afterLektion } = ctx;
+  // Built (and seated, so every other section can dodge its prompt) before any
+  // draw: the chapter's own task is not a choice, so it is the one item the
+  // leak cap has to work AROUND rather than on.
+  const graded = ctx.graded;
   const drillCount = SECTION_COUNTS.schreiben - (graded ? 1 : 0);
+  const guard = ctx.poolGuard('schreiben');
 
   const slugs = shuffle([...new Set((chapter || []).map((l) => l?.primarySlug).filter(Boolean))], rng);
   const chosen = [];
@@ -1451,20 +1593,35 @@ function buildSchreiben(ctx) {
     // Taught lexis first, and only then this slug's other sentence-building
     // items — this is the draw that used to hand checkpoint 2 `dd86dc8a`
     // („[Honig / ist / gut]“) as its first graded Schreiben item.
-    const pick = candidates.find((i) => !untaught(i)) || candidates[0];
+    // Taught lexis first, and only among the items this paper does not already
+    // print (DaF review #14, MAJOR 3). A slug whose sentence-building items all
+    // leak is SKIPPED here rather than relaxed: the two fills below draw from the
+    // chapter's other topics, and only when those are exhausted too does the
+    // last rung of `drawPool` seat a leaking item and record it.
+    const clean = candidates.filter(guard.accept);
+    const pick = clean.find((i) => !untaught(i)) || clean[0];
     if (!pick) continue;
     usedPoolIds.add(pick.id);
+    guard.onSeat(pick);
     chosen.push(pick);
   }
-  // Short (a slug the pool has no sentence-building item for): fill from the
-  // chapter's remaining topics, typed only, still round-robin across topics.
+  // Short (a slug the pool has no sentence-building item for, or none this paper
+  // does not already print): first fill from the chapter's OTHER primarySlugs,
+  // typed only — a drill still has to come from a Lektion of this chapter, which
+  // is what „Schreiben drills come from different Lektionen of the chapter"
+  // pins. Only then widen to the chapter's remaining practice topics.
+  if (chosen.length < drillCount) {
+    const used = new Set(chosen.map((c) => c.topic));
+    const otherSlugs = slugs.filter((t) => !used.has(t));
+    chosen.push(...drawPool(pool, otherSlugs, drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion, ...guard }));
+  }
   if (chosen.length < drillCount) {
     const used = new Set(chosen.map((c) => c.topic));
     const rest = topicsOf(chapter).filter((t) => !used.has(t));
-    chosen.push(...drawPool(pool, rest, drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion }));
+    chosen.push(...drawPool(pool, rest, drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion, ...guard }));
   }
   if (chosen.length < drillCount) {
-    chosen.push(...drawPool(pool, topicsOf(chapter), drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion }));
+    chosen.push(...drawPool(pool, topicsOf(chapter), drillCount - chosen.length, rng, usedPoolIds, { typedOnly: true, untaught, afterLektion, ...guard }));
   }
 
   const drills = chosen.map((p, i) =>
@@ -1578,9 +1735,29 @@ function buildSprechen(ctx) {
       ordered.push(line);
     }
   }
-  return take(ordered, SECTION_COUNTS.sprechen).map((line, i) => {
+  // …and one rung BELOW all four: a line whose sentence answers an item this
+  // paper has already seated (DaF review #14, MAJOR 3). `a1.1-cp2-sprechen-1`
+  // read „Und ein Handy?“ aloud beside a Lesen text that printed the whole
+  // exchange. Ordering, not filtering: the section keeps its two items whatever
+  // the chapter looks like, and a seat that had to take a leaking line is
+  // recorded (see checkpointReport).
+  const probe = (line) => ({
+    section: 'sprechen', kind: 'readAloud', type: 'read_aloud',
+    promptDe: 'Lesen Sie den Satz laut vor.', text: line.de, answer: line.de, accepted: [line.de],
+  });
+  const picked = [];
+  const pool = [...ordered];
+  while (picked.length < SECTION_COUNTS.sprechen && pool.length) {
+    let at = pool.findIndex((line) => !ctx.leaks(probe(line)));
+    if (at < 0) {
+      at = 0;
+      ctx.relax('sprechen', `${checkpoint.id}-sprechen-${picked.length + 1}: ${pool[0].de}`);
+    }
+    picked.push(pool.splice(at, 1)[0]);
+  }
+  return picked.map((line, i) => {
     usedLineKeys.add(lineKeyOf(line.lektionId || line.lektionNr, line.idx));
-    return {
+    const item = {
       id: `${checkpoint.id}-sprechen-${i + 1}`,
       section: 'sprechen',
       kind: 'readAloud',
@@ -1611,6 +1788,8 @@ function buildSprechen(ctx) {
       poolItemId: null,
       type: 'read_aloud',
     };
+    ctx.seat(item);
+    return item;
   });
 }
 
@@ -1646,13 +1825,14 @@ function poolIdsBefore(curriculum, checkpoint, pool) {
 export function buildCheckpoint({ curriculum, checkpoint, pool, seed } = {}) {
   if (!curriculum || !checkpoint) return [];
   const rng = mulberry32(hashSeed(seed ?? checkpoint.id));
+  const chapter = chapterLektionen(curriculum, checkpoint);
   const ctx = {
     checkpoint,
     rng,
     pool,
     curriculum,
     level: curriculum.level,
-    chapter: chapterLektionen(curriculum, checkpoint),
+    chapter,
     earlier: earlierLektionen(curriculum, checkpoint),
     usedPoolIds: poolIdsBefore(curriculum, checkpoint, pool),
     // Every dialogue line this paper has already spent, on ANY of its three
@@ -1669,13 +1849,46 @@ export function buildCheckpoint({ curriculum, checkpoint, pool, seed } = {}) {
     // comparison would be an accident rather than the rule.
     afterLektion: stampsApplyTo(curriculum, pool) ? checkpoint.afterLektion : undefined,
   };
-  return [
-    ...buildHoeren(ctx),
-    ...buildLesen(ctx),
-    ...buildBausteine(ctx),
-    ...buildSchreiben(ctx),
-    ...buildSprechen(ctx),
-  ];
+  // THE PAPER AS ONE UNIT (DaF review #14, MAJOR 3). Every item that has been
+  // placed, in placement order, with what it prints — `ctx.leaks(candidate)`
+  // asks the whole paper, not the section.
+  const seated = [];
+  const leakFallbacks = [];
+  ctx.seat = (item) => {
+    if (item) seated.push(item);
+    return item;
+  };
+  ctx.leaks = (candidate) => seated.some((placed) => leaksAcross(candidate, placed));
+  ctx.relax = (section, note) => leakFallbacks.push({ section, note: String(note) });
+  ctx.poolGuard = (section) => ({
+    accept: (row) => !ctx.leaks(fromPoolItem(row, { id: `${checkpoint.id}-${section}-probe`, section, source: 'chapter' })),
+    onSeat: (row) => ctx.seat(fromPoolItem(row, { id: `${checkpoint.id}-${section}-probe`, section, source: 'chapter' })),
+    onRelax: (row) => ctx.relax(section, row.id),
+  });
+  // The chapter's own writing task is fixed — it is not drawn, so it is seated
+  // FIRST and every drawn item dodges its prompt („Schreiben Sie Ihrer Chefin
+  // eine kurze Nachricht." stood beside the Hören item whose answer was
+  // `die Chefin`).
+  ctx.graded = gradedWritingItem(checkpoint, chapter, curriculum.level);
+  ctx.seat(ctx.graded);
+  // ORDER OF PLACEMENT ≠ order on the page. The three line-drawn sections go
+  // first because a dialogue line cannot move (usedLineKeys, DaF review #8), the
+  // two free draws — the Hören word choices and everything that comes out of the
+  // pool — go last, because they can.
+  const hoerenDictation = buildHoerenDictation(ctx);
+  const lesen = buildLesen(ctx);
+  const sprechen = buildSprechen(ctx);
+  const bausteine = buildBausteine(ctx);
+  const schreiben = buildSchreiben(ctx);
+  // Dead last, because it is the freest draw on the paper: the chapter's whole
+  // Wortfeld is available, so the two word-choice items can dodge everything
+  // else, while a three-Lektion chapter has three sentence-building items for
+  // its Schreiben drills and cannot. Placing them earlier cost checkpoint 1 two
+  // recorded fallbacks; placing them last costs none.
+  const hoerenWords = buildHoerenWords(ctx);
+  const items = [...hoerenDictation, ...hoerenWords, ...lesen, ...bausteine, ...schreiben, ...sprechen];
+  checkpointReports.set(items, { leakFallbacks });
+  return items;
 }
 
 // ── scoring ─────────────────────────────────────────────────────────────────
