@@ -62,7 +62,7 @@ import { writingTaskByKey } from '../src/data/writingTasks.js';
 // RULE 17 grades the Beispieltexte with the SAME function the learner's screen grades him with —
 // `scoreWriting` is what `GradedWriting.jsx` calls, and the word window it measures against comes
 // from the server's own task bank above, never from a number retyped here.
-import { scoreWriting, countWords } from '../src/lib/lesson/writing.js';
+import { scoreWriting, countWords, leitpunktSatisfied, leitpunktEvidence, foldWord } from '../src/lib/lesson/writing.js';
 // RULE 11b reads the two engines the learner actually meets. Both are plain ES modules with no DOM
 // import (buildLesson pulls in the pool quality rules, buildCheckpoint the answer checker and the
 // writing tasks), so the validator can run the real draw under `node` instead of re-implementing it.
@@ -554,6 +554,32 @@ export const MAX_SHARED_PRODUCTION_LINES = 0;      // a1.1; per level in LEVELS 
 export const MAX_UNTAUGHT_IN_MODEL_TEXTS = 0;      // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
+ * RULE 21 ratchet — how many Leitpunkte a level ASKS FOR and does not TEACH the words for.
+ *
+ * THE COUNTER-DIRECTION TO RULE 20, and the round that needed it is the round RULE 20 shipped in.
+ * RULE 20 forbids a model text a word its Lektion has not taught. Round 14 obeyed it and struck
+ * `marokkanisch` from the L2 Beispieltext — and the text then answered two of its three Leitpunkte,
+ * because the graded task asks for „Ihr Land und Ihre **Staatsangehörigkeit**“ and A1.1 taught no
+ * nationality form in any of its twelve Lektionen. Every version of that text broke either RULE 20
+ * or the Leitpunkt; that is not a text problem, it is a Wortfeld problem, and no rule asked the
+ * question (DaF review #14, BLOCKER 1). `evaluate-writing.mjs` grades „Sind alle Leitpunkte
+ * behandelt?“ and returns a boolean per Leitpunkt, so this is a GRADED surface: **the course may
+ * not test in writing what it has not taught.**
+ *
+ * MEASURED, not asserted, and with RULE 20's licence switched OFF: the Lektion's own Beispieltext
+ * is reduced to the words its cumulative lexis actually contains (`taughtUpTo`, the same snapshots
+ * RULE 11 uses, plus the persona facts and the letter formulas — but NOT „the words of the task“,
+ * which is precisely the licence that hid this), and every Leitpunkt must still be answered by what
+ * is left, judged by `leitpunktSatisfied`, the same function the learner's screen uses. A Formular
+ * field must still carry a value. An undecidable Leitpunkt („Warum Sie schreiben“) is skipped —
+ * the KI grades it and no lexis decides it.
+ *
+ * Hard 0 at A1.1, like RULE 17 and RULE 19: a task that asks for untaught lexis is a content
+ * decision somebody made, not debt a later round pays down.
+ */
+export const MAX_UNANSWERABLE_LEITPUNKTE = 0;      // a1.1; per level in LEVELS below — measured 2026-09-13
+
+/**
  * The letter formulas a Mitteilung needs and no Wortfeld lists. CLOSED and tiny on purpose — the
  * test pins the list, and every entry is a salutation or a closing, never content
  * (`tests/curricula.test.mjs`, „RULE 20's licensed chunks are letter formulas“).
@@ -743,6 +769,7 @@ export const LEVELS = {
       modelChecklistBreaks: MAX_MODEL_CHECKLIST_BREAKS,
       sharedProductionLines: MAX_SHARED_PRODUCTION_LINES,
       untaughtInModelTexts: MAX_UNTAUGHT_IN_MODEL_TEXTS,
+      unanswerableLeitpunkte: MAX_UNANSWERABLE_LEITPUNKTE,
       // RULE 19 is a hard rule (0, no ratchet), like RULE 14: a model text that contradicts its own
       // dialogue is never older debt. No entry here.
     },
@@ -850,7 +877,13 @@ export const LEVELS = {
       // MAJOR 1), so nine of the thirteen „unmodelled Leitpunkte“ turn out to have been modelled
       // all along. What is left is the three samples below the 25-word floor, the missing Gruß in
       // L8 and four Leitpunkte the drafts really do not answer.
-      modelChecklistBreaks: 8,
+      //
+      // 8 → **10**, paused; re-measured 2026-09-13 (round 15). No A1.2 content was touched: the
+      // Leitpunkt half of `scoreWriting` stopped treating a COORDINATED Leitpunkt as two
+      // alternatives (DaF review #14, MAJOR 1), and the L12 draft answers neither half of „Was Sie
+      // gegessen und getrunken haben“ (it says `gegessen`, not `getrunken`) nor „Wen Sie eingeladen
+      // haben“. Both are real gaps in the draft that the lenient rule was hiding.
+      modelChecklistBreaks: 10,
       // RULE 18, measured on the paused A1.2 draft 2026-09-13 (round 13): **0** — no A1.2 Lektion
       // dictates and reads aloud the same line. Hard from the start at this level.
       sharedProductionLines: 0,
@@ -859,6 +892,15 @@ export const LEVELS = {
       // sample). Paused; re-measured, and no A1.2 content was touched to get there: whoever
       // resumes the level rewrites those three samples the way round 14 rewrote A1.1's five.
       untaughtInModelTexts: 3,
+      // RULE 21, measured on the paused A1.2 draft 2026-09-13 (round 15): **9** Leitpunkte the
+      // draft asks for and does not teach the words for — L2 „… sehen möchten“ (`sehen` in no
+      // Wortfeld up to L2), L4 „Ihre Zimmernummer und der Tag“, L6 „Was Ihnen wehtut“, L7
+      // „Geburtsdatum“ (`März`) and „Straße“ (`Kölner`), L8 „Was in der Küche zu tun ist“, L9
+      // „Datum“ (`Juli`), L12 „Was Sie gegessen und getrunken haben“ and „Wen Sie eingeladen
+      // haben“. Paused; re-measured, and no A1.2 content was touched to get there — the level is
+      // frozen by owner decision (2026-09-13) and whoever resumes it pays this down the way
+      // round 15 paid A1.1's two (a Wortfeld line, or a Leitpunkt in taught words).
+      unanswerableLeitpunkte: 9,
     },
   },
 };
@@ -1725,6 +1767,78 @@ export function modelTextLexis(c, spec = null) {
 }
 
 /**
+ * RULE 21: every Leitpunkt of every writing task is answerable from the lexis of its own Lektion.
+ *
+ * See MAX_UNANSWERABLE_LEITPUNKTE above for why this rule exists and what it does NOT license.
+ * Two offenders are reported and they are different failures:
+ *   • `untaught-head` — the head word of a conjunct („**Staatsangehörigkeit**“, „sich **treffen**“)
+ *     stands in no Wortfeld, dialogue, notice or item up to this Lektion. The task names something
+ *     the learner has no word for, whatever the Beispieltext happens to say.
+ *   • `unanswerable` — the Beispieltext answers the Leitpunkt only with words the Lektion has not
+ *     taught. This is the one that bites after a RULE-20 repair strikes such a word out.
+ */
+export function writingTasksAreAnswerable(c, spec = null) {
+  const s = spec || levelSpec(c?.level) || LEVELS['a1.1'];
+  const knownUpTo = taughtUpTo(c, s);
+  const personas = personaWords(s);
+  const offenders = [];
+  for (const l of c.lektionen || []) {
+    const w = l.schreiben;
+    if (!w?.sample) continue;
+    const bank = w.taskKey ? writingTaskByKey(c.examKey, w.taskKey) : null;
+    if (!bank) continue;
+    const known = new Set([...(knownUpTo.get(l.nr) || []), ...personas]);
+    const foldedKnown = new Set([...known].map(foldWord).filter(Boolean));
+
+    // The Beispieltext as the course's own lexis leaves it: every whitespace word that carries an
+    // untaught token is dropped. The letter formulas ride as chunks, exactly as in RULE 20.
+    let stripped = String(w.sample);
+    for (const chunk of LICENSED_LETTER_CHUNKS) stripped = stripped.split(chunk).join(' ');
+    const untaught = new Set(
+      untaughtTokens({ questionDe: '', answer: stripped }, known, s).map((t) => t.toLowerCase()),
+    );
+    const taughtOnly = String(w.sample)
+      .split(/\s+/)
+      .filter((word) => !tokenise(word).some((t) => untaught.has(t.toLowerCase())))
+      .join(' ');
+
+    // A Formular asks with the FIELD LABEL and is answered with the VALUE, so the label is the
+    // task's own word and only the value is measured („Material: Wörterbuch, Heft“ — the learner
+    // needs `Wörterbuch`, not the word `Material`).
+    if (w.kind === 'formular') {
+      const values = formularSampleValues(w.sample, bank.leitpunkte || []);
+      for (const field of bank.leitpunkte || []) {
+        const value = String(values[field] || '').trim();
+        if (!value) continue;                                // RULE 17 reports an empty field
+        const missing = untaughtTokens({ questionDe: '', answer: value }, known, s);
+        if (missing.length) {
+          offenders.push({ nr: l.nr, leitpunkt: field, why: 'unanswerable', token: missing[0], de: value });
+        }
+      }
+      continue;
+    }
+
+    for (const lp of bank.leitpunkte || []) {
+      for (const conj of leitpunktEvidence(lp).conjuncts) {
+        // Only a LOWER-CASE head is measured: a German noun head („Ihr **Land**“, „Ihre
+        // **Telefonnummer**“) is answered by its shape and the learner never needs the noun itself,
+        // but a verb or adjective head („Wann Sie sich **treffen**“) IS the word he must have.
+        const head = conj.words[conj.words.length - 1];
+        if (!head || !/^[a-zäöüß]/.test(head)) continue;
+        if (!foldedKnown.has(foldWord(head))) {
+          offenders.push({ nr: l.nr, leitpunkt: lp, why: 'untaught-head', token: head });
+        }
+      }
+      if (leitpunktSatisfied(lp, w.sample) === null) continue;       // „prüft die KI“
+      if (leitpunktSatisfied(lp, taughtOnly) !== true) {
+        offenders.push({ nr: l.nr, leitpunkt: lp, why: 'unanswerable', de: taughtOnly });
+      }
+    }
+  }
+  return offenders;
+}
+
+/**
  * RULE 18: the dictation window and the read-aloud window of a Lektion never share a line.
  *
  * Step „Hören und schreiben“ types the line letter by letter and grades it; step „Sprechen“ reads
@@ -2475,6 +2589,12 @@ export function validateCurriculum(c, extraItems, poolItems) {
     fail(`RULE 20: ${modelWords.length} Wörter in Modelltexten, die ihre Lektion noch nicht lehrt, Ratchet ist ${r.untaughtInModelTexts ?? 0} — ${modelWords.map((o) => `L${o.nr} ${o.where} „${o.token}“`).join(', ')}`);
   }
 
+  // ---- RULE 21 (the tasks are answerable from the taught lexis, DaF review #14, BLOCKER 1) ------
+  const unanswerable = writingTasksAreAnswerable(c, spec);
+  if (unanswerable.length > (r.unanswerableLeitpunkte ?? 0)) {
+    fail(`RULE 21: ${unanswerable.length} Leitpunkte, die ihre Lektion prüft und nicht lehrt, Ratchet ist ${r.unanswerableLeitpunkte ?? 0} — ${unanswerable.map((o) => `L${o.nr} [${o.why}] „${o.leitpunkt}“${o.token ? ` (${o.token})` : ''}`).join(', ')}`);
+  }
+
   // ---- RULE 14 (the recurring characters keep their facts) --------------------------------------
   // No ratchet: a learner meets Ana in the dialogue and again in the Formular of the same Lektion,
   // and a contradiction between the two is always something a repair round just wrote.
@@ -2542,6 +2662,9 @@ if (isMain) {
   const modelWords = modelTextLexis(c, spec);
   console.log(`  RULE 20 ungelehrte Wörter in Mustertexten: ${modelWords.length} (Ratchet ${r.untaughtInModelTexts ?? 0})`);
   for (const o of modelWords) console.log(`    L${o.nr} ${o.where} „${o.token}“ — ${o.de}`);
+  const unanswerable = writingTasksAreAnswerable(c, spec);
+  console.log(`  RULE 21 Leitpunkte ohne gelehrte Lexis: ${unanswerable.length} (Ratchet ${r.unanswerableLeitpunkte ?? 0})`);
+  for (const o of unanswerable) console.log(`    L${o.nr} [${o.why}] „${o.leitpunkt}“${o.token ? ` (${o.token})` : ''}`);
   const personaBreaks = personaConsistency(c);
   console.log(`  RULE 14 Figuren-Widersprüche: ${personaBreaks.length} (harte Regel, kein Ratchet)`);
   for (const o of personaBreaks) console.log(`    L${o.nr} ${o.where}: ${o.name} ${o.fact} „${o.found}“ statt „${o.expected}“`);

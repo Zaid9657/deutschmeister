@@ -413,7 +413,13 @@ export const WRITING_TASKS = [
     leitpunkte: [
       'Was Sie kaufen',
       'Was es kostet',
-      'Wann Sie sich treffen',
+      // NOT „Wann Sie sich treffen“ (DaF review #14, BLOCKER 1): `treffen` and the reflexive `uns`
+      // stand in no Wortfeld of A1.1, and the missing half is not the verb but the TIME — every
+      // „Wann …“ needs a clock or a weekday, and L4's cumulative lexis has one (`morgen`, taught
+      // in L1 as „Bis morgen“). `kommen` is taught in L3, „Wann Sie kommen“ is a stock Leitpunkt of
+      // *Start Deutsch 1* Schreiben Teil 2, and teaching `sich treffen` instead would have meant
+      // introducing reflexive pronouns — a construction, not a Wortfeld line. RULE 21 measures it.
+      'Wann Sie kommen',
     ],
   },
   {

@@ -27,6 +27,7 @@ import { ALL_CURRICULA } from '../src/data/curricula/index.js';
 import { chapterWritingTask, chapterLektionen } from '../src/lib/checkpoint/buildCheckpoint.js';
 import {
   scoreWriting, countWords, leitpunktKeyword, leitpunktKeywords, leitpunktEvidence, leitpunktSatisfied,
+  leitpunktConjuncts,
 } from '../src/lib/lesson/writing.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -329,7 +330,10 @@ test('the reviewer’s L2 text is the fixture: it shares no token with two of it
 
 test('the Formcheck stays honest: a text that omits a Leitpunkt fails that row', () => {
   // Same length, same Anrede and Gruß, same first two Leitpunkte — and no Familienstand anywhere.
-  const missing = 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Ich bin am 3. Mai 1998 geboren. Ich komme aus Marokko und wohne jetzt in Bremen. Viele Grüße, Ana Chakiri';
+  // (Round 15: the old fixture dropped the Staatsangehörigkeit too, and „Ich komme aus Marokko“
+  // only answers the FIRST half of that coordinated Leitpunkt — so it now names the nationality,
+  // or the test would no longer isolate lp2. DaF review #14, MAJOR 1.)
+  const missing = 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Ich bin am 3. Mai 1998 geboren. Ich komme aus Marokko und bin Marokkanerin. Ich wohne jetzt in Bremen. Viele Grüße, Ana Chakiri';
   const res = scoreWriting(formcheckTask(2), missing);
   assert.ok(countWords(missing) >= 25, 'the fixture must clear the length row, or it proves nothing');
   assert.deepEqual(res.checks.filter((c) => !c.ok).map((c) => c.key), ['lp2'], JSON.stringify(res.checks));
@@ -380,4 +384,87 @@ test('every A1.1 Beispieltext passes its own Formcheck — with the family rule,
     assert.ok(countWords(l.schreiben.sample) >= 25 && countWords(l.schreiben.sample) <= 45, `L${l.nr} length`);
     assert.ok(!/Der Familienstand:|Das Land ist|Der Nachname ist/.test(l.schreiben.sample), `L${l.nr}: form-speak`);
   }
+});
+
+
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+// THE OTHER DIRECTION — DaF review #14, MAJOR 1
+//
+// Round 14 repaired the false RED of round 13 and bought a false GREEN: eleven texts that
+// demonstrably do not answer their Leitpunkt all got a tick („Wir sind zwei Kollegen.“ satisfied
+// „Ihre Telefonnummer“ because the old PHONE_RE saw the numeral `zwei`; any coordinated Leitpunkt
+// „X und Y“ was satisfied by half of itself). A rule tested only in the green direction is exactly
+// the rule that round built, so these are the reviewer's own eleven probes, quoted from
+// REVIEW-daf-14-2026-09-12.md, and the invariant they pin is: **the Formcheck is never green on a
+// text that omits a Leitpunkt.** It is the only feedback a signed-out or offline learner gets.
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+
+/** Nine single-Leitpunkt probes; the two whole Mitteilungen follow below (eleven rows in all). */
+const NEGATIVE_PROBES = [
+  ['Ihr Name und Ihr Geburtsdatum', 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Viele Grüße, Ana'],
+  ['Ihr Land und Ihre Staatsangehörigkeit', 'Ich bin aus Marokko.'],
+  ['Ihre Telefonnummer', 'Ich bin um neun Uhr im Büro.'],
+  ['Ihre Telefonnummer', 'Wir sind zwei Kollegen.'],
+  ['Neuer Tag und neue Uhrzeit', 'Ich komme am Montag zu spät.'],
+  ['Was die Kollegin bis dahin machen soll', 'Ich komme um zehn Uhr. Bis dann!'],
+  ['Was die Gäste mitbringen sollen', 'Ich lade meine Gäste ein.'],
+  ['Wann Sie sich treffen', 'Wir treffen Ana auf dem Flohmarkt.'],
+  // The reworded L4 Leitpunkt (DaF review #14, BLOCKER 1) under the same probe: a verb without a
+  // time does not say WANN.
+  ['Wann Sie kommen', 'Ich komme bald.'],
+];
+
+test('the eleven probes of DaF review #14: a text that does not answer its Leitpunkt is never green', () => {
+  for (const [lp, text] of NEGATIVE_PROBES) {
+    assert.equal(leitpunktSatisfied(lp, text), false, `„${lp}“ ← „${text}“ must not be satisfied`);
+  }
+  // Probe 10: the L2 Mitteilung without the Geburtsdatum. Everything else about it is right —
+  // length, Anrede, Gruß, the other two Leitpunkte — so the only thing that may turn it red is the
+  // Leitpunkt it omits.
+  const l2 = 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Ich komme aus Marokko und bin Marokkanerin. Ich bin ledig. Ich wohne jetzt in Bremen. Viele Grüße, Ana Chakiri';
+  const r2 = scoreWriting(formcheckTask(2), l2);
+  assert.deepEqual(r2.checks.filter((c) => !c.ok).map((c) => c.key), ['lp0'], JSON.stringify(r2.checks));
+  assert.equal(r2.ok, false);
+  // Probe 11: the L6 Mitteilung without the Telefonnummer — and it still mentions a „Nummer“ and a
+  // clock time, which is what made round 14 call it complete.
+  const l6 = 'Guten Tag, Frau Berg! Ich brauche einen Computer. Wir brauchen auch ein Handy. Die Nummer ist für das Handy. Ich bin um neun Uhr im Büro. Viele Grüße, Ana';
+  const r6 = scoreWriting(formcheckTask(6), l6);
+  assert.deepEqual(r6.checks.filter((c) => !c.ok).map((c) => c.key), ['lp1'], JSON.stringify(r6.checks));
+  assert.equal(r6.ok, false);
+});
+
+test('a coordinated Leitpunkt is a conjunction, „oder“ is not', () => {
+  // „Ihr Land und Ihre Staatsangehörigkeit“ is ONE Leitpunkt in Start Deutsch 1 and half an answer
+  // is no answer; „ledig oder verheiratet“ is one conjunct with two alternatives, and the
+  // Leitpunkt supplies its own answers there.
+  assert.deepEqual(leitpunktConjuncts('Ihr Land und Ihre Staatsangehörigkeit'), ['Ihr Land', 'Ihre Staatsangehörigkeit']);
+  assert.deepEqual(leitpunktConjuncts('Ihr Familienstand: ledig oder verheiratet'), ['Ihr Familienstand: ledig oder verheiratet']);
+  assert.equal(leitpunktSatisfied('Ihr Familienstand: ledig oder verheiratet', 'Ich bin verheiratet.'), true);
+  assert.equal(leitpunktSatisfied('Ihr Land und Ihre Staatsangehörigkeit', 'Ich komme aus Marokko und bin Marokkanerin.'), true);
+});
+
+test('the answer shapes are shape-specific: a bare numeral satisfies nothing', () => {
+  // A phone number is four digits or four number words in sequence — the shortest number the
+  // course itself writes is „null eins sieben sechs“ (A1.1 L2 dialogue).
+  assert.equal(leitpunktSatisfied('Ihre Telefonnummer', 'Meine Telefonnummer ist null eins sieben sechs.'), true);
+  assert.equal(leitpunktSatisfied('Ihre Telefonnummer', 'Meine Nummer ist 0176 22 44 88.'), true);
+  assert.equal(leitpunktSatisfied('Ihre Telefonnummer', 'Der Stuhl kostet zwölf Euro.'), false);
+  // A price has Euro, a clock has Uhr, a weekday is a weekday, a date is day + month.
+  assert.equal(leitpunktSatisfied('Was es kostet', 'Er kostet zwölf Euro.'), true);
+  assert.equal(leitpunktSatisfied('Was es kostet', 'Ich kaufe drei Stühle.'), false);
+  assert.equal(leitpunktSatisfied('Neuer Tag und neue Uhrzeit', 'Geht es am Dienstag um halb neun?'), true);
+  assert.equal(leitpunktSatisfied('Ihr Geburtsdatum', 'Ich bin am 3. Mai 1998 geboren.'), true);
+  assert.equal(leitpunktSatisfied('Ihr Geburtsdatum', 'Ich bin zwanzig.'), false);
+  // A country is not a nationality, and a profession is not one either.
+  assert.equal(leitpunktSatisfied('Ihre Staatsangehörigkeit', 'Ich bin Studentin in Bremen.'), false);
+  assert.equal(leitpunktSatisfied('Ihre Staatsangehörigkeit', 'Die Staatsangehörigkeit ist marokkanisch.'), true);
+});
+
+test('in an indirect question the nouns are the task’s topic and the verb is the answer', () => {
+  // „Was die Gäste mitbringen sollen“ ← „Ich lade meine Gäste ein.“ names the Gäste and answers
+  // nothing; the separable verb counts split („Bringt ihr Kuchen mit?“).
+  const lp = 'Was die Gäste mitbringen sollen';
+  assert.deepEqual(leitpunktEvidence(lp).conjuncts[0].words, ['mitbringen']);
+  assert.equal(leitpunktSatisfied(lp, 'Bringt ihr bitte Kuchen und Musik mit?'), true);
+  assert.equal(leitpunktSatisfied(lp, 'Die Gäste kommen um acht Uhr.'), false);
 });

@@ -30,6 +30,7 @@ import {
   modelTextsPassOwnChecklist, sharedProductionLines, modelTextsMatchDialogue, formularSampleValues,
   MAX_MODEL_CHECKLIST_BREAKS, MAX_SHARED_PRODUCTION_LINES,
   modelTextLexis, MAX_UNTAUGHT_IN_MODEL_TEXTS, LICENSED_LETTER_CHUNKS,
+  writingTasksAreAnswerable, MAX_UNANSWERABLE_LEITPUNKTE,
 } from '../scripts/validate-curriculum.mjs';
 import { constructionHits, CONSTRUCTION_PATTERNS, SEPARABLE_PREFIXES } from '../src/data/curricula/constructions.js';
 
@@ -897,7 +898,11 @@ test('rule 20: a Beispieltext uses only words its own Lektion has taught', () =>
   // It BITES: every one of the five, as it stood in `main` @ 6aabf4e, with the word the review
   // measured. Planted back one at a time, RULE 20 must name it.
   const ROUND_13_SAMPLES = {
-    2: ['Sehr geehrte Damen und Herren, ich bin Ana Chakiri. Der Nachname ist Chakiri. Das Geburtsdatum ist der 3. Mai 1998. Ich komme aus Marokko. Das Land ist Marokko und die Staatsangehörigkeit ist marokkanisch. Der Familienstand: Ich bin ledig. Viele Grüße, Ana', 'marokkanisch'],
+    // Round 15: the probe token is `Mai`, not `marokkanisch`. `marokkanisch` is TAUGHT now — L2's
+    // Wortfeld carries it, because the graded task of that Lektion asks for the Staatsangehörigkeit
+    // (RULE 21, DaF review #14, BLOCKER 1) — so RULE 20 rightly stops reporting it. The same
+    // round-13 text still breaks the rule on `Mai` and `komme`, which L2 does not teach either.
+    2: ['Sehr geehrte Damen und Herren, ich bin Ana Chakiri. Der Nachname ist Chakiri. Das Geburtsdatum ist der 3. Mai 1998. Ich komme aus Marokko. Das Land ist Marokko und die Staatsangehörigkeit ist marokkanisch. Der Familienstand: Ich bin ledig. Viele Grüße, Ana', 'Mai'],
     4: ['Hallo Lena! Heute ist der Flohmarkt. Wir kaufen den Stuhl und die Lampe. Der Stuhl kostet zwölf Euro und die Lampe kostet acht Euro. Das ist nicht teuer. Wann treffen wir uns? Um vier Uhr? Tschüss, Tim', 'uns'],
     10: ['Liebe Kollegin, der Zug hat leider Verspätung. Die Kollegen kommen um neun Uhr, ich komme erst um zehn Uhr. Bitte machen Sie die Arbeit bis zehn Uhr ohne mich. Vielen Dank und viele Grüße, Ana', 'erst'],
     12: ['Hallo Lena! Am Freitag feiern wir meinen Geburtstag. Der Tag ist der 15. Mai und die Party ist um acht Uhr. Die Gäste bringen Kuchen und Musik mit. Bringst du bitte den Salat mit? Bis bald, Ana', 'meinen'],
@@ -916,6 +921,50 @@ test('rule 20: a Beispieltext uses only words its own Lektion has taught', () =>
     modelTextLexis(cp, levelSpec('a1.1')).some((o) => o.nr === 1 && o.where === 'pretest.model'),
     'a pretest model built on an untaught word went through RULE 20',
   );
+});
+
+test('rule 21: every Leitpunkt the course grades is answerable from the lexis of its own Lektion', () => {
+  // DaF review #14, BLOCKER 1. The counter-direction to RULE 20, and the round that shipped RULE 20
+  // is the round that needed it: the graded L2 task asks for „Ihr Land und Ihre
+  // Staatsangehörigkeit“ and A1.1 taught no nationality form in any of its twelve Lektionen, so
+  // round 14 struck `marokkanisch` out of the Beispieltext (RULE 20, rightly) and the model then
+  // answered two of its three Leitpunkte. Every version of that text broke one rule or the other:
+  // a Wortfeld problem wearing a text problem's clothes. L4 the same one floor down — „Wann Sie
+  // sich treffen“ with a verb the level never teaches and no time expression to answer „wann“.
+  assert.equal(MAX_UNANSWERABLE_LEITPUNKTE, 0, 'RULE 21 is a hard 0 at A1.1 and may not be ratcheted up');
+  assert.deepEqual(
+    writingTasksAreAnswerable(CURRICULUM_A11, levelSpec('a1.1')).map((o) => `L${o.nr} ${o.why} „${o.leitpunkt}“`),
+    [],
+    'a graded Leitpunkt asks for lexis its Lektion has not taught',
+  );
+  // IT BITES, at both places the review measured, planted back exactly as `main` @ 69a009b had them.
+  const back = cloneOf(CURRICULUM_A11);
+  back.lektionen[1].schreiben.sample = 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Das Geburtsdatum ist der 3.5.1998. Ich bin aus Marokko. Ich bin ledig. Ich bin Studentin in Bremen. Viele Grüße, Ana Chakiri';
+  const l2 = writingTasksAreAnswerable(back, levelSpec('a1.1'));
+  assert.ok(l2.some((o) => o.nr === 2 && o.why === 'unanswerable' && /Staatsangehörigkeit/.test(o.leitpunkt)), JSON.stringify(l2));
+  assert.ok(failsWith(validateCurriculum(back), 21), 'validateCurriculum did not report RULE 21');
+
+  // And it bites the TASK side, not only the text side: „Wann Sie sich treffen“ is reported for the
+  // verb the level never teaches, whatever the Beispieltext says.
+  const l4 = cloneOf(CURRICULUM_A11);
+  l4.lektionen[3].schreiben.leitpunkte = ['Was Sie kaufen', 'Was es kostet', 'Wann Sie sich treffen'];
+  const bank = writingTaskByKey('goethe_a1', 'a11-l04');
+  const kept = bank.leitpunkte;
+  bank.leitpunkte = ['Was Sie kaufen', 'Was es kostet', 'Wann Sie sich treffen'];
+  try {
+    const found = writingTasksAreAnswerable(l4, levelSpec('a1.1'));
+    assert.ok(
+      found.some((o) => o.nr === 4 && o.why === 'untaught-head' && o.token === 'treffen'),
+      `RULE 21 missed „sich treffen“ — ${JSON.stringify(found)}`,
+    );
+  } finally {
+    bank.leitpunkte = kept;
+  }
+
+  // The word it needed is TAUGHT now, and taught where the Handlungsfeld puts it: L2, „Ämter und
+  // Behörden“, next to the Staatsangehörigkeit noun that was already there.
+  const l2wf = CURRICULUM_A11.lektionen[1].wortfeld.map((w) => w.de);
+  assert.ok(l2wf.includes('marokkanisch') && l2wf.includes('die Staatsangehörigkeit'), JSON.stringify(l2wf));
 });
 
 test("rule 20's licensed chunks are letter formulas — a closed list, and nothing content-bearing", () => {
