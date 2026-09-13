@@ -284,3 +284,234 @@ test('yes-no-questions names the written-question rule and admits the spoken for
     'commonMistakes[0] must acknowledge the spoken intonation question',
   );
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// REVIEW #4 (docs/course-factory/a11-rebuild/REVIEW-daf-4-2026-09-12.md, MAJOR 1
+// and MAJOR 2). Round 3 overrode the four cards the review had named and left
+// eight standing, seven of them the half-English pre-rebuild tables — the exact
+// mechanism this repo has been rebuked for four rounds running: the finding is
+// closed for the instances that were listed and stays open as a class. These
+// four tests close it as a class: they run over EVERY A1.1 slug that the
+// curriculum marks primary, so a thirteenth Lektion or a re-generated card
+// cannot quietly arrive without an override that meets the same bar.
+//
+//   (a) every card carries at least two commonMistakes — `definite-articles`
+//       shipped with an empty array, i.e. half the card was missing for L5;
+//   (b) no English outside the single `English:` support line, measured with
+//       `hasEnglish()` from src/data/lessonPools/quality.js — the same predicate
+//       that gates the exercise pool, so card and item are held to one rule;
+//   (c) no du-register anywhere (review #4 MAJOR 2: tasks and explanations use
+//       Sie or impersonal `man`; only the dialogue duzt);
+//   (d) every example noun stands in the Wortfeld the course has taught BY that
+//       Lektion — the review's "die Karten reden über einen anderen Kurs".
+
+import { CURRICULUM_A11, DIALOG_NAMES } from '../src/data/curricula/a11.js';
+import { hasEnglish } from '../src/data/lessonPools/quality.js';
+
+/** The twelve A1.1 slugs, each in the Lektion where the curriculum makes it primary. */
+const PRIMARY_LEKTION = new Map(CURRICULUM_A11.lektionen.map((l) => [l.primarySlug, l.nr]));
+const A11_SLUGS = [...PRIMARY_LEKTION.keys()];
+
+const cardOf = (slug) => OVERRIDES[slug];
+const contentLines = (card) => card.content.split('\n').map((l) => l.trim()).filter(Boolean);
+const germanLines = (card) => contentLines(card).filter((l) => !ENGLISH_LINE.test(l));
+const mistakeFields = (card) => card.commonMistakes.flatMap((m) => [m.wrong, m.correct, m.explanationDe]);
+
+test('every A1.1 slug that a Lektion makes primary carries an override', () => {
+  assert.equal(A11_SLUGS.length, 12, 'A1.1 has twelve Lektionen, each with one primary slug');
+  const missing = A11_SLUGS.filter((slug) => !Object.prototype.hasOwnProperty.call(OVERRIDES, slug));
+  assert.deepEqual(
+    missing,
+    [],
+    `these primary slugs still ship the generated pre-rebuild card: ${missing.join(', ')}`,
+  );
+});
+
+// (a)
+test('every A1.1 card carries at least two commonMistakes', () => {
+  for (const slug of A11_SLUGS) {
+    const mistakes = cardOf(slug).commonMistakes;
+    assert.ok(
+      mistakes.length >= 2,
+      `${slug}: ${mistakes.length} commonMistakes — half the card is missing for Lektion ${PRIMARY_LEKTION.get(slug)}`,
+    );
+  }
+});
+
+// (b)
+// ONE collision, and it is not English: the German NAME of the letter W is
+// *we*, and `ENGLISH_MARKERS` lists `we` as the English pronoun. The L1 card has
+// to spell the letter names out (that is the whole finding it answers), so the
+// name is removed before the English check rather than the check being skipped.
+const LETTER_NAME_COLLISION = /\bwe\b/gi;
+const withoutLetterNames = (text) => String(text).replace(LETTER_NAME_COLLISION, ' ');
+
+test('no A1.1 card carries English outside its one English: support line', () => {
+  for (const slug of A11_SLUGS) {
+    const card = cardOf(slug);
+    for (const line of germanLines(card)) {
+      assert.ok(!hasEnglish(withoutLetterNames(line)), `${slug}: English in a German content line — "${line}"`);
+    }
+    assert.ok(!hasEnglish(card.titleDe), `${slug}: English in titleDe — "${card.titleDe}"`);
+    for (const [i, field] of mistakeFields(card).entries()) {
+      assert.ok(
+        !hasEnglish(withoutLetterNames(field)),
+        `${slug}: English in commonMistakes field ${i} — "${field}"`,
+      );
+    }
+  }
+});
+
+// (c) ── du-register.
+//
+// The banned forms are the ones review #4 quoted plus the du-imperatives the
+// pool normaliser already removes. ONE exemption, deliberately narrow and
+// mechanical: a PARADIGM LINE — a line that names the persons, i.e. one
+// carrying both `ich` and `du` as standalone words ("ich bin, du bist, er ist",
+// "mein Geschenk (ich), dein Bruder (du)"). There `du` and `dein` are the
+// grammar being taught, not an address to the reader; anywhere else they are
+// the register bug. Nothing weaker is allowed: a bare "Du bist müde." or
+// "Antworte mit einem Satz" carries no `ich` and therefore fails.
+const DU_REGISTER_RE = /\b(du|dir|dich|dein\w*|sagst|lerne|antworte|tippe|kannst)\b/i;
+const isParadigmLine = (text) => /\bich\b/i.test(text) && /\bdu\b/i.test(text);
+
+test('no A1.1 card duzt outside a paradigm listing', () => {
+  for (const slug of A11_SLUGS) {
+    const card = cardOf(slug);
+    const checked = [
+      ['titleDe', card.titleDe],
+      ...germanLines(card).map((line, i) => [`content line ${i + 1}`, line]),
+      ...mistakeFields(card).map((field, i) => [`commonMistakes field ${i}`, field]),
+    ];
+    for (const [where, text] of checked) {
+      if (isParadigmLine(text)) continue;
+      const hit = DU_REGISTER_RE.exec(text);
+      assert.equal(
+        hit,
+        null,
+        `${slug} ${where}: du-register "${hit && hit[0]}" outside a paradigm line — "${text}"`,
+      );
+    }
+  }
+});
+
+// (d) ── example nouns against the cumulative Wortfeld.
+//
+// HOW A NOUN IS FOUND. German capitalises nouns, so a capitalised token that is
+// NOT at the start of a sentence is a noun. "Start of a sentence" resets at the
+// beginning of a line and after `.`, `?`, `!`, `:` or `—` — the colon matters
+// because these cards are written as "Frage: Wie schreibt man das?".
+//
+// HOW IT IS MATCHED. Against the `word` values of every Wortfeld entry of
+// Lektion 1 … N, split into single words (so "Guten Tag" yields Tag and
+// "Gäste einladen" yields Gäste). A token counts as covered when a Wortfeld form
+// is a PREFIX of it (Buchstabe → Buchstaben, Heft → Hefte) or a SUFFIX of it
+// (German compounds are head-final: Artikel → Possessivartikel). Umlaut plurals
+// are deliberately NOT resolved — write "die Hefte", not "die Bücher", and the
+// card stays inside the lexis it can point at.
+//
+// Everything a card may legitimately name beyond that lexis is listed below, by
+// kind, and every list is closed. The four additions this round had to make are
+// marked ADDED.
+const META_NOUNS = [
+  // grammar vocabulary — the card talks about German, so it needs these words
+  'Artikel', 'Nomen', 'Verb', 'Satz', 'Satzende', 'Frage', 'Antwort', 'Aussage', 'Endung',
+  'Plural', 'Singular', 'Buchstabe', 'Name', 'Uhr', 'Uhrzeit', 'Wort', 'Form', 'Formen',
+  'Person', 'Pronomen', 'Genus', 'Stamm', 'Vokal', 'Infinitiv', 'Akkusativ', 'Regel',
+  'Verneinung', 'Vorsilbe', 'Position', 'Beispiel', 'Gruppe', 'Anrede', 'Kurzantwort',
+  'Wortfolge', 'Subjekt', 'Stimme', 'Sonderfall', 'Bedeutung', 'Ordnungszahl', 'Fehler',
+  // ADDED 2026-09-13: the clock card needs the units it teaches, and neither is a
+  // Wortfeld entry of L8 (the Wortfeld carries Uhrzeit, halb, Viertel nach/vor).
+  'Stunde', 'Minute',
+  // ADDED 2026-09-13: "Die Sache ist schon bekannt" is what definite-articles
+  // teaches; L5's Wortfeld names the objects, not the word for a thing.
+  'Sache',
+  // ADDED 2026-09-13: L11 teaches the Satzklammer by name in its notice.
+  'Satzklammer',
+  // ADDED 2026-09-13: the words the cards use to talk about a sentence and about
+  // the course itself — "das Verb steht auf Platz 1" is the wording review #3
+  // pinned, "die Vorsilbe steht am Ende" is L11's notice, and a card may say
+  // what happens "in Übungen".
+  'Platz', 'Ende', 'Übung',
+  // ADDED 2026-09-13: Ja and Nein quoted as words ("nicht nur Ja plus Verb").
+  'Ja', 'Nein',
+];
+
+/** Letter NAMES, which the L1 card must spell out — they are names, not lexis. */
+const LETTER_NAMES = ['Jot', 'Vau', 'We', 'Ypsilon', 'Zett', 'Eszett', 'Umlaut', 'Zed'];
+
+/** The polite Sie/Ihr paradigm, capitalised by rule rather than by word class. */
+const POLITE_FORMS = ['Sie', 'Ihr', 'Ihre', 'Ihren', 'Ihrem', 'Ihnen'];
+
+/** Proper nouns: people and places. Reuses the curriculum's own list. */
+const PROPER_NAMES = [...DIALOG_NAMES, 'Marokko', 'Schweiz', 'Meier'];
+
+/**
+ * The nouns-gender card demonstrates gender-PREDICTING ENDINGS. An ending is
+ * shown on words that carry it, and A1.1's Wortfeld happens to contain exactly
+ * one (-ung: die Entschuldigung). These five are the -heit/-keit/-schaft/-chen/
+ * -lein demonstrations; they are the card's subject matter, not its situation.
+ */
+const GENDER_ENDING_EXAMPLES = ['Freiheit', 'Möglichkeit', 'Freundschaft', 'Mädchen', 'Brötchen'];
+
+/**
+ * Wortfeld words a card needs BEFORE the Lektion that teaches them. Kept to the
+ * one case that exists: `im` governs month names, so the L8 clock card cannot
+ * state its own rule without naming a month, and A1.1 teaches Monat and Mai in
+ * L12. Anything added here is a card reaching outside its own course-so-far and
+ * must be argued, not assumed.
+ */
+const EARLY_USE = { 'time-and-dates': ['Monat', 'Mai', 'Datum'] };
+
+const ALWAYS_ALLOWED = [...META_NOUNS, ...LETTER_NAMES, ...POLITE_FORMS, ...PROPER_NAMES, ...GENDER_ENDING_EXAMPLES];
+
+const splitWords = (text) => String(text).split(/[^A-Za-zÄÖÜäöüß]+/).filter(Boolean);
+
+/** Every Wortfeld word of Lektion 1 … nr, lowercased and split into single words. */
+const cumulativeWortfeld = (nr) => {
+  const forms = new Set();
+  for (const lektion of CURRICULUM_A11.lektionen) {
+    if (lektion.nr > nr) continue;
+    for (const entry of lektion.wortfeld) {
+      for (const word of splitWords(entry.word)) forms.add(word.toLowerCase());
+    }
+  }
+  return [...forms].filter((w) => w.length >= 3);
+};
+
+/** Capitalised tokens that are not sentence-initial — i.e. the nouns of the text. */
+const nounTokens = (text) => {
+  const found = [];
+  let atSentenceStart = true;
+  for (const token of String(text).split(/\s+/)) {
+    const bare = token.replace(/^[^A-Za-zÄÖÜäöüß]+/, '').replace(/[^A-Za-zÄÖÜäöüß]+$/, '');
+    if (bare && !atSentenceStart && /^[A-ZÄÖÜ][a-zäöüß]+$/.test(bare)) found.push(bare);
+    if (bare) atSentenceStart = false;
+    if (/[.?!:—]$/.test(token)) atSentenceStart = true;
+  }
+  return found;
+};
+
+test('every example noun stands in the Wortfeld the course has taught by that Lektion', () => {
+  for (const slug of A11_SLUGS) {
+    const nr = PRIMARY_LEKTION.get(slug);
+    const forms = cumulativeWortfeld(nr);
+    const allowed = new Set([...ALWAYS_ALLOWED, ...(EARLY_USE[slug] || [])].map((w) => w.toLowerCase()));
+    // Prefix/suffix matching applies to the allow-lists too: "Name" covers
+    // "Namen", "Artikel" covers "Possessivartikel".
+    const covered = (token) => {
+      const low = token.toLowerCase();
+      return [...allowed, ...forms].some((form) => low === form || low.startsWith(form) || low.endsWith(form));
+    };
+
+    const card = cardOf(slug);
+    const offenders = [...new Set(
+      [...germanLines(card), ...mistakeFields(card)].flatMap(nounTokens).filter((t) => !covered(t)),
+    )];
+    assert.deepEqual(
+      offenders,
+      [],
+      `${slug} (Lektion ${nr}): nouns outside the Wortfeld taught by Lektion ${nr}: ${offenders.join(', ')}`,
+    );
+  }
+});
