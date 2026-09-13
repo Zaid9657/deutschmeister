@@ -150,30 +150,35 @@ export async function gradeCard(userId, cardKey, correct) {
  * phrase itself (`extra-a11-l01-06`'s answer is `Ihnen`). A SENTENCE card's
  * `accepted` is a whole rendered dialogue LINE (`sentenceCardKey` cards carry
  * `line.de`, e.g. "Gut. Wie geht es Ihnen?") — the polite form is buried
- * inside it, not the whole answer, so `politeCaseItem` alone never reaches
- * it: that gap is exactly what let this card forgive `ihnen` as a typo while
- * `extra-a11-l01-06` grades the same form wrong. So sentence cards get a
- * second, narrow predicate of their own: a polite form (`Sie`, `Ihnen`,
- * `Ihr(e/en/em/er/es)`) counted only when it is NOT the first word of its own
- * sentence inside the line — a sentence-initial capital says nothing about
- * register, exactly the carve-out `politeCaseItem`'s own comment documents.
- * This is deliberately independent of quality.js — it reads the sentence
- * shape a dialogue line has, not the answer-key shape a pool item has, so it
- * does not drift if `politeCaseItem` is reshaped for its own reasons.
+ * inside it, not the whole answer. `politeCaseItem` reads that shape too:
+ * clause 4 hands a multi-word answer to `politeSentenceAnswer`, which counts a
+ * polite form only where its capital is a DECISION (never as the first word of
+ * its own sentence), so the sentence card and `extra-a11-l01-06` now grade
+ * `ihnen` the same way.
+ *
+ * DaF review #8, MAJOR 5. Round 8 answered that with a SECOND, local sentence
+ * predicate and passed it in at exactly one of the three `buildCardIndex`
+ * call sites (`{ sentence: true }`), so the same three dialogue lines were
+ * graded two ways inside one course: „Was sind Sie von Beruf?" was wrong as
+ * `sentence:a1.1-l02:6` and forgiven as `pattern:verb-sein`. A flag that
+ * depends on WHICH CARD KIND quotes the string is not a rule about German.
+ *
+ * So there is ONE predicate and it is the pool build's own: `politeCaseItem`,
+ * imported, never re-implemented. It decides from the ANSWER TEXT, so it gives
+ * the same verdict on a word card, a pattern card, a sentence card, a pool
+ * item and a checkpoint dictation (buildCheckpoint.js stamps its dictations
+ * and read-alouds with it for the same reason). An explicit
+ * `caseSensitive === true` on the entry stays an override; there is no option
+ * for a call site to forget. The local loose predicate that round 8 added is
+ * gone with the option: it counted a bare non-initial `Sie` with no address
+ * cue, which is precisely the carve-out quality.js documents — otherwise a
+ * word-order item like `extra-a11-l10-08` („Fahren Sie morgen nach
+ * Deutschland?") becomes wholly wrong over one letter, in the lesson and in
+ * the review alike.
  */
-const POLITE_WORD_RE = /^(Sie|Ihnen|Ihr|Ihre|Ihren|Ihrem|Ihrer|Ihres)$/;
-const politeSentence = (line) =>
-  String(line || '')
-    .split(/(?<=[.!?])\s+/)
-    .some((sentence) => sentence.trim().split(/\s+/).slice(1).some((w) => POLITE_WORD_RE.test(w.replace(/[.,!?]/g, ''))));
-
-const caseFlag = (entry, accepted, { sentence = false } = {}) => {
+const caseFlag = (entry, accepted) => {
   const acc = (accepted || []).filter(Boolean);
-  return (
-    entry?.caseSensitive === true ||
-    politeCaseItem({ answer: entry?.answer, accepted: acc }) ||
-    (sentence && acc.some(politeSentence))
-  );
+  return entry?.caseSensitive === true || politeCaseItem({ answer: entry?.answer, accepted: acc });
 };
 
 export function buildCardIndex(curriculum) {
@@ -213,7 +218,7 @@ export function buildCardIndex(curriculum) {
         detail: `${line.speaker} — Lektion ${lektion.nr}`,
         lektionNr: lektion.nr,
         accepted: [line.de],
-        caseSensitive: caseFlag(line, [line.de], { sentence: true }),
+        caseSensitive: caseFlag(line, [line.de]),
       });
     });
   }

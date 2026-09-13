@@ -33,6 +33,7 @@
 import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../lesson/check.js';
 import { courseWritingTasks, writingTaskByKey } from '../../data/writingTasks.js';
 import { knownUpTo, untaughtTokens, namesOf } from './lexis.js';
+import { politeCaseItem } from '../../data/lessonPools/quality.js';
 
 export const SECTION_ORDER = ['hoeren', 'lesen', 'bausteine', 'schreiben', 'sprechen'];
 
@@ -127,6 +128,40 @@ export function dialogLines(lektionen) {
   }
   return out;
 }
+
+/**
+ * THE IDENTITY OF A DIALOGUE LINE — one string, used by all three skill
+ * sections (DaF review #8, MAJOR 2). `ctx.usedLineKeys` is keyed on it.
+ */
+export const lineKeyOf = (lektionIdOrNr, idx) => `${lektionIdOrNr}#${idx}`;
+
+/**
+ * IS CAPITALISATION THE TASK IN THIS LINE? — the same predicate the pool build
+ * stamps its items with and `reviewService.buildCardIndex` flags its cards
+ * with (`politeCaseItem`, src/data/lessonPools/quality.js), asked here of a
+ * dictation or read-aloud line.
+ *
+ * DaF review #8, MAJOR 5. Dictations shipped `caseSensitive: undefined`, i.e.
+ * false for `checkOptionsFor()`, so the GRADED checkpoint 1 accepted
+ * „gut. wie geht es ihnen?" while the lesson item for the very same form
+ * (`extra-a11-l01-06`) grades `ihnen` wrong. The flag is a property of the
+ * ANSWER, never of the section that happens to ask for it — so it is derived
+ * here from the line itself, exactly as `fromPoolItem` carries it through for a
+ * pool item, and `checkOptionsFor()` picks it up unchanged. The four-options
+ * rule of review #7 is untouched: the ITEM still decides alone.
+ */
+export const lineIsCaseTask = (de) => politeCaseItem({ answer: de, accepted: [de] });
+
+/**
+ * UNUSED LINES FIRST, USED ONES STILL THERE (DaF review #8, MAJOR 2). A hard
+ * filter would let a thin chapter ship a four-item Hören section, and a short
+ * exam is a worse failure than a repeated line — so the sections order rather
+ * than filter, exactly as the pool draw orders by taught lexis.
+ */
+const freeLinesFirst = (lines, usedLineKeys) => {
+  const key = (l) => lineKeyOf(l.lektionId || l.lektionNr, l.idx);
+  return [...lines.filter((l) => !usedLineKeys.has(key(l))), ...lines.filter((l) => usedLineKeys.has(key(l)))];
+};
 
 /** Flatten the chapter's Wortfeld entries. */
 export function wortfeldWords(lektionen) {
@@ -279,10 +314,15 @@ function fromPoolItem(poolItem, { id, section, source, register = null }) {
 // hören Sie?" items built from the Wortfeld (correct word + 3 Wortfeld
 // distractors). Audio is window.speechSynthesis in v1 (CONTRACT.md).
 function buildHoeren(ctx) {
-  const { checkpoint, rng, chapter } = ctx;
+  const { checkpoint, rng, chapter, usedLineKeys } = ctx;
   const items = [];
-  const lines = shuffle(dialogLines(chapter), rng);
+  // Hören draws first, so nothing is taken yet — the filter is here anyway
+  // because "unused first, then whatever is left" is the rule all three skill
+  // sections share (DaF review #8, MAJOR 2), and Hören must not become the one
+  // section that is exempt the day the order changes.
+  const lines = freeLinesFirst(shuffle(dialogLines(chapter), rng), usedLineKeys);
   take(lines, 3).forEach((line, i) => {
+    usedLineKeys.add(lineKeyOf(line.lektionId || line.lektionNr, line.idx));
     items.push({
       id: `${checkpoint.id}-hoeren-${i + 1}`,
       section: 'hoeren',
@@ -304,6 +344,10 @@ function buildHoeren(ctx) {
       options: null,
       answer: line.de,
       accepted: [line.de],
+      // The capital is the task where the line carries a polite form that is
+      // not the first word of its sentence — one predicate, every surface
+      // (lineIsCaseTask; DaF review #8, MAJOR 5).
+      caseSensitive: lineIsCaseTask(line.de),
       explanationDe: line.en ? `${line.de} — ${line.en}` : null,
       hint: `Lektion ${line.lektionNr}`,
       poolItemId: null,
@@ -682,22 +726,42 @@ function windowsOf(lektion) {
 }
 
 /**
- * The windows a FALSCH item may fall back to, drawn one first: the window the
- * seed picked, then this Lektion's other windows, then the other Lektionen's.
- * A window that yields no falsification is not a reason to ship a three-item
+ * The windows a Lesen item may use, drawn one first: the window the seed
+ * picked, then this Lektion's other windows, then the other Lektionen's. A
+ * window that yields no falsification is not a reason to ship a three-item
  * Lesen section (see FALSIFY_PASSES) — it is a reason to read a different part
  * of the chapter.
+ *
+ * DaF review #8, MAJOR 2 put a second condition on the same list. A window is
+ * what the learner READS, so a window that contains a line he has already
+ * typed from dictation — or that another Lesen item of this very test already
+ * quoted — measures memory, not reading: `a1.1-cp4-lesen-2` asked „Steht das
+ * im Text?" about the neighbour of a sentence the learner had typed two
+ * minutes earlier, and checkpoint 3 built two of its four Lesen items from one
+ * window, both keyed `Richtig`. So the list is now ORDERED, not filtered:
+ * windows that touch no used line first, the rest behind them — a window
+ * already used AS a window in this checkpoint is dropped outright, because two
+ * items on one text is the one case with no honest fallback story.
  */
-function falsifyCandidates(lektion, start, order) {
+function lesenCandidates(lektion, start, order, usedLineKeys, usedWindows) {
   const here = windowsOf(lektion);
   const drawn = here.find((w) => w.start === start) || here[0];
   const rest = here.filter((w) => w !== drawn);
   const elsewhere = order.filter((l) => l !== lektion).flatMap((l) => windowsOf(l));
-  return [drawn, ...rest, ...elsewhere].filter(Boolean);
+  const all = [drawn, ...rest, ...elsewhere].filter(Boolean).filter((w) => !usedWindows.has(windowKeyOf(w)));
+  const free = all.filter((w) => windowLineKeys(w).every((k) => !usedLineKeys.has(k)));
+  const freeSet = new Set(free);
+  return [...free, ...all.filter((w) => !freeSet.has(w))];
 }
 
+/** A window's identity inside one checkpoint: its Lektion and its first line. */
+const windowKeyOf = (w) => lineKeyOf(w.lektion?.id ?? w.lektion?.nr, w.start);
+
+/** Every line key a window covers — all of them, not just the quoted one. */
+const windowLineKeys = (w) => w.window.map((_, j) => lineKeyOf(w.lektion?.id ?? w.lektion?.nr, w.start + j));
+
 function buildLesen(ctx) {
-  const { checkpoint, rng, chapter } = ctx;
+  const { checkpoint, rng, chapter, usedLineKeys } = ctx;
   const items = [];
   const withDialog = chapter.filter((l) => (l?.dialog?.lines || []).length >= 2);
   if (!withDialog.length) return items;
@@ -705,25 +769,31 @@ function buildLesen(ctx) {
   // Two richtig and two falsch, in an order this checkpoint's seed decides.
   const truth = shuffle([true, true, false, false], rng);
   const ctxWords = { names: speakerNames(chapter), vocab: contentWords(chapter) };
+  const usedWindows = new Set();
 
   for (let i = 0; i < SECTION_COUNTS.lesen; i += 1) {
-    let lektion = order[i % order.length];
-    const lines = lektion.dialog.lines;
+    const preferredLektion = order[i % order.length];
+    const lines = preferredLektion.dialog.lines;
     const span = Math.min(3, lines.length);
     const start = Math.floor(rng() * Math.max(1, lines.length - span + 1));
-    let window = lines.slice(start, start + span);
-    let text = windowText(window);
+    const candidates = lesenCandidates(preferredLektion, start, order, usedLineKeys, usedWindows);
+    if (!candidates.length) continue;
     const wantRichtig = truth[i];
 
+    let chosen = candidates[0];
+    let lektion = chosen.lektion;
+    let window = chosen.window;
+    let text = windowText(window);
     let quoted = window[Math.floor(rng() * window.length)];
     let statement = quoted.de;
     let explanationDe = 'Der Satz steht genau so im Text.';
     if (!wantRichtig) {
       let falsified = null;
-      for (const candidate of falsifyCandidates(lektion, start, order)) {
+      for (const candidate of candidates) {
         const candidateText = windowText(candidate.window);
         falsified = falsifyWindow(candidate.window, candidateText, ctxWords, rng);
         if (falsified) {
+          chosen = candidate;
           lektion = candidate.lektion;
           window = candidate.window;
           text = candidateText;
@@ -735,6 +805,8 @@ function buildLesen(ctx) {
       statement = falsified.de;
       explanationDe = `Im Text steht „${falsified.line.de}“ — dort steht „${falsified.from}“, nicht „${falsified.to}“.`;
     }
+    usedWindows.add(windowKeyOf(chosen));
+    for (const k of windowLineKeys(chosen)) usedLineKeys.add(k);
     const answer = wantRichtig ? 'Richtig' : 'Falsch';
     items.push({
       id: `${checkpoint.id}-lesen-${i + 1}`,
@@ -924,7 +996,7 @@ function gradedWritingItem(checkpoint, chapter, level) {
 // out, or over the daily clip cap) the item is self-confirmed and the section
 // stays out of the result — required, but never a number we cannot defend.
 function buildSprechen(ctx) {
-  const { checkpoint, rng, chapter } = ctx;
+  const { checkpoint, rng, chapter, usedLineKeys } = ctx;
   const preferred = [];
   for (const l of chapter) {
     for (const idx of l?.sprechen?.readAloud || []) {
@@ -932,34 +1004,90 @@ function buildSprechen(ctx) {
       if (line) preferred.push({ lektionNr: l.nr, lektionId: l.id, idx, ...line });
     }
   }
-  const source = preferred.length >= 2 ? preferred : dialogLines(chapter);
-  return take(shuffle(source, rng), SECTION_COUNTS.sprechen).map((line, i) => ({
-    id: `${checkpoint.id}-sprechen-${i + 1}`,
-    section: 'sprechen',
-    kind: 'readAloud',
-    mode: 'confirm',
-    topic: 'sprechen',
-    lektionNr: line.lektionNr,
-    lektionId: line.lektionId || null,
-    lineKey: `line-${line.idx}`,
-    source: 'chapter',
-    register: null,
-    // Not scored at build time — promoted by scoreCheckpoint when the mic
-    // scored every item of the section (see the header).
-    scored: false,
-    scorable: true,
-    promptDe: 'Lesen Sie den Satz laut vor.',
-    promptEn: 'Read the sentence aloud.',
-    audioText: line.de,
-    text: line.de,
-    options: null,
-    answer: line.de,
-    accepted: [line.de],
-    explanationDe: line.en || null,
-    hint: `Lektion ${line.lektionNr}`,
-    poolItemId: null,
-    type: 'read_aloud',
-  }));
+  // Sprechen draws LAST, so it is the section that would otherwise re-read a
+  // line the learner has just typed from dictation or just read in a Lesen
+  // text — that is how one L11 line (the Freitag shopping line) came to stand
+  // three times in checkpoint 4 (DaF review #8, MAJOR 2). Unused lines
+  // come first; the used ones stay at the back as the fallback, so the section
+  // is never short.
+  // The preference ladder, in order: a designated read-aloud line nobody has
+  // spent yet → ANY unspent line of the chapter → a designated line that was
+  // spent → anything at all. The middle rung is what stops checkpoint 3 from
+  // reading its own Lesen text aloud once the chapter's three read-aloud lines
+  // have gone into Hören and Lesen; the last two keep the section at its two
+  // items whatever the chapter looks like.
+  const key = (l) => lineKeyOf(l.lektionId || l.lektionNr, l.idx);
+  const free = (l) => !usedLineKeys.has(key(l));
+  const pref = shuffle(preferred, rng);
+  const all = shuffle(dialogLines(chapter), rng);
+  const ordered = [];
+  const seen = new Set();
+  for (const bucket of [pref.filter(free), all.filter(free), pref, all]) {
+    for (const line of bucket) {
+      if (seen.has(key(line))) continue;
+      seen.add(key(line));
+      ordered.push(line);
+    }
+  }
+  return take(ordered, SECTION_COUNTS.sprechen).map((line, i) => {
+    usedLineKeys.add(lineKeyOf(line.lektionId || line.lektionNr, line.idx));
+    return {
+      id: `${checkpoint.id}-sprechen-${i + 1}`,
+      section: 'sprechen',
+      kind: 'readAloud',
+      mode: 'confirm',
+      topic: 'sprechen',
+      lektionNr: line.lektionNr,
+      lektionId: line.lektionId || null,
+      lineKey: `line-${line.idx}`,
+      source: 'chapter',
+      register: null,
+      // Not scored at build time — promoted by scoreCheckpoint when the mic
+      // scored every item of the section (see the header).
+      scored: false,
+      scorable: true,
+      promptDe: 'Lesen Sie den Satz laut vor.',
+      promptEn: 'Read the sentence aloud.',
+      audioText: line.de,
+      text: line.de,
+      options: null,
+      answer: line.de,
+      accepted: [line.de],
+      // Folgenlos today (a read-aloud is scored by the microphone, not typed) and
+      // deliberately set anyway: the flag belongs to the line, not to the section
+      // that quotes it (DaF review #8, MAJOR 5).
+      caseSensitive: lineIsCaseTask(line.de),
+      explanationDe: line.en || null,
+      hint: `Lektion ${line.lektionNr}`,
+      poolItemId: null,
+      type: 'read_aloud',
+    };
+  });
+}
+
+/**
+ * THE POOL ITEMS THE EARLIER CHECKPOINTS OF THIS COURSE ALREADY USED.
+ *
+ * `usedPoolIds` was a per-checkpoint set, so `0ef58eff` („___ bin hier." →
+ * `Ich`) stood as a Sprachbaustein in checkpoint 1 AND in checkpoint 3 (DaF
+ * review #8, MAJOR 2). A checkpoint is built alone — CheckpointPage builds the
+ * one the learner opened — so the exclusion cannot be threaded through a loop:
+ * it is RE-DERIVED from the earlier checkpoints, which are deterministic in
+ * their own ids and therefore always draw the same items. Four checkpoints, so
+ * the recursion is cheap; a custom `seed` reshuffles this paper only, exactly
+ * as "Nochmal" should.
+ */
+function poolIdsBefore(curriculum, checkpoint, pool) {
+  const used = new Set();
+  const cps = curriculum?.checkpoints || [];
+  const idx = cps.findIndex((c) => c.nr === checkpoint.nr);
+  if (idx <= 0) return used;
+  for (const earlier of cps.slice(0, idx)) {
+    for (const item of buildCheckpoint({ curriculum, checkpoint: earlier, pool })) {
+      if (item.poolItemId) used.add(item.poolItemId);
+    }
+  }
+  return used;
 }
 
 /**
@@ -976,7 +1104,12 @@ export function buildCheckpoint({ curriculum, checkpoint, pool, seed } = {}) {
     level: curriculum.level,
     chapter: chapterLektionen(curriculum, checkpoint),
     earlier: earlierLektionen(curriculum, checkpoint),
-    usedPoolIds: new Set(),
+    usedPoolIds: poolIdsBefore(curriculum, checkpoint, pool),
+    // Every dialogue line this paper has already spent, on ANY of its three
+    // skill sections (DaF review #8, MAJOR 2). Hören fills it, Lesen honours
+    // and extends it with every line of the windows it prints, Sprechen reads
+    // it last — which is why the builders below run in that order.
+    usedLineKeys: new Set(),
     // Measured at the END of the chapter this checkpoint closes: that is what
     // the learner sitting it has been taught (see untaughtAt).
     untaught: untaughtAt(curriculum, checkpoint.afterLektion),

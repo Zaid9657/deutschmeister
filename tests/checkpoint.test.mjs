@@ -1094,3 +1094,154 @@ test('the four strings DaF review #5 named now address the learner as Sie', () =
   assert.ok(review.includes('Melden Sie sich an, damit Ihre Wiederholungen gespeichert werden.'));
   assert.ok(review.includes('Neue Karten kommen, sobald Sie eine Lektion abschließen.'));
 });
+
+// ── 7. NO LINE TWICE IN ONE PAPER (DaF review #8, MAJOR 2) ──────────────────
+//
+// buildCheckpoint kept `usedPoolIds` and nothing else, so Hören, Lesen and
+// Sprechen drew independently from the same pot of dialogue lines: in the
+// GRADED checkpoint 4 one L11 line stood three times in one test — as the first
+// dictation, as the second read-aloud and verbatim inside the Lesen text of
+// `a1.1-cp4-lesen-2`. Nine such overlaps over the four papers; checkpoint 3
+// built two of its four Lesen items from ONE window, both keyed `Richtig`; and
+// the pool item `0ef58eff` sat in checkpoint 1 AND checkpoint 3.
+//
+// Pinned as a class over all four built checkpoints, not as a list of ids: the
+// builder now carries `usedLineKeys` through the three skill sections in draw
+// order and re-derives the pool ids the earlier checkpoints spent.
+
+/** The chapter lines a Lesen text prints, found in the text the learner reads. */
+const linesInText = (text, chapter) =>
+  chapter.flatMap((l) => (l.dialog?.lines || []).map((line) => line.de)).filter((de) => text.includes(de));
+
+test('no dialogue line is used twice across the sections of one checkpoint', () => {
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    const chapter = chapterLektionen(CURRICULUM_A11, cp);
+    const spoken = items.filter((i) => i.kind === 'dictation' || i.kind === 'readAloud').map((i) => i.answer);
+    assert.equal(
+      new Set(spoken).size,
+      spoken.length,
+      `${cp.id}: a line is both dictated and read aloud — ${spoken.join(' | ')}`,
+    );
+
+    const read = items.filter((i) => i.section === 'lesen').flatMap((i) => linesInText(i.text, chapter));
+    const all = [...spoken, ...read];
+    assert.equal(
+      new Set(all).size,
+      all.length,
+      `${cp.id}: a line the learner types or speaks also stands in a Lesen text of the same paper — `
+        + `${all.filter((v, i, a) => a.indexOf(v) !== i).join(' | ')}`,
+    );
+  }
+});
+
+test('no two Lesen items of one checkpoint are built from the same window', () => {
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    const chapter = chapterLektionen(CURRICULUM_A11, cp);
+    const lesen = items.filter((i) => i.section === 'lesen');
+    assert.equal(lesen.length, SECTION_COUNTS.lesen, `${cp.id}: the fallback must keep Lesen at four items`);
+    const texts = lesen.map((i) => i.text);
+    assert.equal(new Set(texts).size, texts.length, `${cp.id}: two Lesen items print the same text`);
+    // Stronger than "not the same text": two windows may not even share a line,
+    // or the second item is answerable from the first one's paragraph.
+    for (let a = 0; a < lesen.length; a += 1) {
+      for (let b = a + 1; b < lesen.length; b += 1) {
+        const shared = linesInText(lesen[a].text, chapter).filter((de) => lesen[b].text.includes(de));
+        assert.deepEqual(shared, [], `${cp.id}: ${lesen[a].id} and ${lesen[b].id} overlap on ${shared.join(' | ')}`);
+      }
+    }
+  }
+});
+
+test('a pool item appears in at most one checkpoint of the level', () => {
+  const drawn = ALL_CHECKPOINTS.flatMap(({ items }) => items.map((i) => i.poolItemId).filter(Boolean));
+  const twice = drawn.filter((v, i, a) => a.indexOf(v) !== i);
+  assert.deepEqual(twice, [], `these pool items are drawn by two checkpoints: ${twice.join(', ')}`);
+  assert.equal(drawn.length, ALL_CHECKPOINTS.length * POOL_ITEMS_TOTAL - 4, 'nine pool draws per paper minus the graded writing task');
+});
+
+// ── 8. ONE POLITENESS PREDICATE, EVERY SURFACE (DaF review #8, MAJOR 5) ─────
+//
+// `caseFlag()` took a `{ sentence: true }` option that only the sentence-card
+// call site passed, so the identical dialogue line was graded two ways inside
+// one course („Was sind Sie von Beruf?": wrong as `sentence:a1.1-l02:6`,
+// forgiven as `pattern:verb-sein`), and the checkpoint dictations carried no
+// flag at all, so the graded checkpoint 1 accepted „gut. wie geht es ihnen?"
+// while `extra-a11-l01-06` grades `ihnen` wrong.
+//
+// The rule: the ANSWER TEXT decides, never the call site. `politeCaseItem` is
+// the one predicate — the pool build stamps items with it, buildCardIndex flags
+// cards with it, buildCheckpoint derives its dictations' `caseSensitive` from
+// it — and this walks all three surfaces with it. An explicit
+// `caseSensitive: true` in the pool data stays a documented override, and the
+// list of overrides is asserted here too so it cannot grow quietly.
+const POLITE_OVERRIDES = ['extra-a11-l12-16'];
+
+test('the lowercase answer is wrong exactly where the polite predicate fires — cards, pool and checkpoints', async () => {
+  const { buildCardIndex } = await import('../src/services/reviewService.js');
+  const { gradeTypedReview } = await import('../src/lib/checkpoint/reviewGrading.js');
+  const { politeCaseItem } = await import('../src/data/lessonPools/quality.js');
+
+  // The predicate reads everything the ITEM says about its own task (a pool
+  // item's prompt and explanation can veto — „Mutter = weiblich → sie."), so a
+  // pool-drawn checkpoint item is judged on the pool row it came from, not on
+  // the reshaped copy.
+  const byId = new Map(POOL.items.map((i) => [i.id, i]));
+  const strict = (answer, accepted) => politeCaseItem({ answer, accepted });
+  let fired = 0;
+
+  // (a) every review card of A1.1.
+  for (const [key, card] of buildCardIndex(CURRICULUM_A11)) {
+    const accepted = (card.accepted || []).filter((a) => typeof a === 'string');
+    if (!accepted.length) continue;
+    const want = strict(accepted[0], accepted);
+    assert.equal(card.caseSensitive, want, `${key}: the card flag must be the predicate's verdict on its own answer`);
+    if (!want) continue;
+    fired += 1;
+    const { ok } = gradeTypedReview(key, accepted, accepted[0].toLowerCase(), { caseSensitive: card.caseSensitive });
+    assert.equal(ok, false, `${key}: the lowercase form of "${accepted[0]}" must grade wrong`);
+  }
+
+  // (b) every item of the built pool.
+  for (const item of POOL.items) {
+    const accepted = [item.answer, ...(item.accepted || [])].filter((a) => typeof a === 'string' && a.trim());
+    if (!accepted.length) continue;
+    const want = politeCaseItem(item);
+    if (item.caseSensitive === true && !want) {
+      assert.ok(POLITE_OVERRIDES.includes(item.id), `${item.id} is case-strict without the predicate and is not a documented override`);
+      continue;
+    }
+    assert.equal(item.caseSensitive === true, want, `${item.id}: pool flag and predicate disagree on "${accepted[0]}"`);
+    if (!want) continue;
+    fired += 1;
+    const result = checkAnswer(accepted[0].toLowerCase(), accepted, checkOptionsFor(item)).result;
+    assert.equal(result, RESULT.WRONG, `${item.id}: the lowercase form of "${accepted[0]}" must grade wrong`);
+  }
+
+  // (c) every item of all four checkpoints, typed or spoken.
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    for (const item of items) {
+      const accepted = (item.accepted || []).filter((a) => typeof a === 'string' && a.trim());
+      if (!accepted.length) continue;
+      const origin = item.poolItemId ? byId.get(item.poolItemId) : null;
+      const want = origin
+        ? politeCaseItem(origin) || POLITE_OVERRIDES.includes(item.poolItemId)
+        : strict(accepted[0], accepted);
+      assert.equal(item.caseSensitive === true, want, `${cp.id} ${item.id}: flag and predicate disagree on "${accepted[0]}"`);
+      if (!want || item.mode === 'confirm') continue;
+      fired += 1;
+      assert.equal(isItemCorrect(item, accepted[0].toLowerCase()), false,
+        `${cp.id} ${item.id}: the lowercase form of "${accepted[0]}" must be wrong in a graded test`);
+    }
+  }
+
+  assert.ok(fired >= 10, `only ${fired} polite answers measured — the predicate stopped reaching the surfaces`);
+});
+
+test('the hand-set case overrides in the pool are exactly the documented ones', async () => {
+  const { politeCaseItem } = await import('../src/data/lessonPools/quality.js');
+  const overrides = POOL.items
+    .filter((i) => i.caseSensitive === true && !politeCaseItem(i))
+    .map((i) => i.id);
+  assert.deepEqual(overrides.sort(), [...POLITE_OVERRIDES].sort(),
+    'an override is a decision someone has to defend in writing — add it to POLITE_OVERRIDES with a reason or drop the flag');
+});
