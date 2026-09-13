@@ -24,6 +24,7 @@
 //     from that count — it is deliberately English, one line per card, and
 //     required to exist so the L1 support is consistent rather than accidental.
 
+import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
@@ -182,9 +183,33 @@ test('time-and-dates carries the clock but no ordinal form', () => {
 
 test('alphabet-pronunciation names the German letters', () => {
   const card = OVERRIDES['alphabet-pronunciation'];
-  for (const name of ['A a', 'B be', 'C tse', 'Z tset', 'Ä a-Umlaut', 'Ö o-Umlaut', 'Ü u-Umlaut', 'ß Eszett']) {
+  const names = [
+    'A a',
+    'B be',
+    'C ce',
+    'Q ku',
+    'V Vau',
+    'X ix',
+    'Y Ypsilon',
+    'Z Zett',
+    'Ä a-Umlaut',
+    'Ö o-Umlaut',
+    'Ü u-Umlaut',
+    'ß Eszett',
+  ];
+  for (const name of names) {
     assert.ok(card.content.includes(name), `alphabet-pronunciation: letter name "${name}" is missing`);
   }
+
+  // Review #3 BLOCKER 3: the first version of this card spelled the names as
+  // sound respellings ("C tse", "X iks", "Z tset"). A letter NAME is a word, not
+  // a pronunciation hint, and the Lektion-1 items accept only the word.
+  assert.ok(
+    !/\b(tse|tset|iks)\b/.test(card.content),
+    'alphabet-pronunciation: a sound respelling is back in the letter table',
+  );
+  assert.ok(!card.content.includes('Y ypsilon'), 'alphabet-pronunciation: Ypsilon is a name, capitalised');
+  assert.ok(!card.content.includes('V vau'), 'alphabet-pronunciation: Vau is a name, capitalised');
   assert.match(card.content, /Wie schreibt man das\?/, 'the card must show how to ask for a spelling');
   assert.match(card.content, /A-N-A/, 'the card must show a spelled-out name');
 
@@ -193,6 +218,57 @@ test('alphabet-pronunciation names the German letters', () => {
   const present = examples.filter((word) => card.content.includes(word));
   assert.ok(present.length >= 4, `alphabet-pronunciation: only ${present.length} Lektion examples`);
   assert.ok(present.length <= 6, 'alphabet-pronunciation: keep the example list short');
+});
+
+// Review #3 BLOCKER 3: the card and the items of the SAME free Lektion disagreed
+// on the letter names — the card taught "Z tset", the item accepted only "Zett",
+// so a learner who read the explanation and followed it was marked wrong. This
+// reads the shipped pools and pins the agreement rather than a hand-typed list.
+const poolItems = (file) => {
+  const parsed = JSON.parse(readFileSync(new URL(`../src/data/lessonPools/${file}`, import.meta.url), 'utf8'));
+  return Array.isArray(parsed) ? parsed : parsed.items || [];
+};
+
+const LETTER_ITEM_RE = /Buchstabe\s+(\S+)\s+(?:auf Deutsch\?|heißt)/;
+
+test('alphabet-pronunciation agrees with the letter names the Lektion 1 items accept', () => {
+  const card = OVERRIDES['alphabet-pronunciation'];
+  const items = [...poolItems('a11.json'), ...poolItems('a11.extra.json')].filter(
+    (item) => item.topic === 'alphabet-pronunciation' && LETTER_ITEM_RE.test(item.questionDe || ''),
+  );
+  assert.ok(items.length > 0, 'no letter-name items found — the pin would be vacuous');
+
+  for (const item of items) {
+    const letter = LETTER_ITEM_RE.exec(item.questionDe)[1];
+    const pair = `${letter} ${item.answer}`;
+    assert.ok(
+      card.content.includes(pair),
+      `alphabet-pronunciation: item ${item.id} accepts "${item.answer}" for ${letter}, the card does not say "${pair}"`,
+    );
+  }
+
+  const zMistake = card.commonMistakes.find((m) => /Buchstabe Z/.test(m.correct));
+  assert.ok(zMistake, 'alphabet-pronunciation: the Z mistake is pinned by review #3');
+  assert.match(zMistake.correct, /Zett/, 'the Z mistake must give the name the item accepts');
+  assert.ok(
+    !/tset/.test(`${zMistake.wrong} ${zMistake.correct} ${zMistake.explanationDe}`),
+    'the Z mistake must not offer the respelling as an answer',
+  );
+});
+
+// Review #3 MAJOR 1: "-er bei Personen → der" is refuted by the course itself —
+// die Mutter, die Schwester and die Tochter are taught in Lektion 3.
+test('nouns-gender does not claim -er marks every person noun as masculine', () => {
+  const card = OVERRIDES['nouns-gender'];
+  assert.ok(!/-er bei Personen/.test(card.content), 'nouns-gender: the refuted -er rule is back');
+  for (const exception of ['die Mutter', 'die Schwester']) {
+    assert.ok(card.content.includes(exception), `nouns-gender: the L3 counter-example ${exception} is missing`);
+  }
+  const mistakes = card.commonMistakes.map((m) => `${m.wrong} ${m.correct} ${m.explanationDe}`).join('\n');
+  assert.ok(
+    !/Personen auf -er sind der-Wörter/.test(mistakes),
+    'nouns-gender: commonMistakes still teaches the refuted -er rule',
+  );
 });
 
 test('yes-no-questions names the written-question rule and admits the spoken form', () => {
