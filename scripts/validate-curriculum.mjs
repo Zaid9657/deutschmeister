@@ -24,6 +24,14 @@
 // not only the hand-written half. Both are ratchets, not hard gates, because the debt is older than
 // this round; they may only ever be lowered.
 //
+// RULE 11b is DaF review #6 (2026-09-12), MAJOR 5. RULE 11 assigns a generated item to the EARLIEST
+// Lektion whose `practiceRule` names its topic, which is neither where the item is drawn nor
+// anything a repair round can move — „was er an der falschen Stelle liest, kann nicht repariert
+// werden“. RULE 11b runs the same token machinery over the REAL draw: `planPractice()` attempts 1
+// and 2 plus the pool items `buildCheckpoint()` pulls into a checkpoint, each item judged at the
+// earliest Lektion that serves it. RULE 11 stays as the informational number over the whole pool;
+// RULE 11b is the list a repair round works from, and it prints (Lektion, id, token).
+//
 // RULE 6b, RULE 15 and RULE 16 are DaF review #1 for A1.2 (2026-09-13), BLOCKER 2-4. RULE 6b asks
 // the Notice card to teach only what its own Lektion shows („die Karte darf nur lehren, was die
 // Lektion zeigt“): every whole word the card bolds must occur in the Lektion's input. RULE 15 reads
@@ -50,6 +58,11 @@ import {
   DIALOG_NAMES as DIALOG_NAMES_A12,
 } from '../src/data/curricula/a12.js';
 import { writingTaskByKey } from '../src/data/writingTasks.js';
+// RULE 11b reads the two engines the learner actually meets. Both are plain ES modules with no DOM
+// import (buildLesson pulls in the pool quality rules, buildCheckpoint the answer checker and the
+// writing tasks), so the validator can run the real draw under `node` instead of re-implementing it.
+import { planPractice } from '../src/lib/lesson/buildLesson.js';
+import { buildCheckpoint } from '../src/lib/checkpoint/buildCheckpoint.js';
 
 export const GRAMMAR_SLUGS = [
   'nouns-gender', 'definite-articles', 'personal-pronouns', 'verb-sein', 'alphabet-pronunciation',
@@ -272,6 +285,25 @@ export const MAX_MISSIONLESS_LEKTIONEN = 4;        // a1.1; per level in LEVELS 
 export const MAX_UNTAUGHT_ITEM_TOKENS = 187;       // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
+ * RULE 11b ratchet — how many (item, token) pairs the learner MEETS may still use a word the course
+ * has not taught by the Lektion that serves them.
+ *
+ * DaF review #6, MAJOR 5: RULE 11 reads the whole pool and assigns each generated item to the
+ * earliest Lektion whose `practiceRule` names its topic, so its 187 is „eine Zahl, die niemand
+ * reparieren kann“ — 147 of those tokens sit in items no draw ever reaches, and two of the rest are
+ * pure measurement artefacts (`Formular` charged to L1 although the item is only drawn in L2, where
+ * `das Formular` is in the Wortfeld). This rule measures the same tokens at the Lektion where the
+ * item is DRAWN — `planPractice()` attempts 1 and 2, plus the pool items `buildCheckpoint()` pulls
+ * into a checkpoint, which the learner meets at `checkpoint.afterLektion`. Every offender on this
+ * list is a screen a learner reads, so the list is printed with (Lektion, id, token) and the ratchet
+ * is the repair target. It may be lowered, never raised.
+ *
+ * Measured on A1.1 after the round-6 item repairs: 16 of RULE 11's 187, in 12 items across L1, L3,
+ * L4, L5, L6 and L7 — all generated, none hand-written.
+ */
+export const MAX_UNTAUGHT_DRAWN_TOKENS = 16;       // a1.1; per level in LEVELS below — measured 2026-09-13
+
+/**
  * A1.2 — the twelve grammar slugs of the level in `topic_order` (grammar-content-cache.json,
  * sub_level A1.2, 287 exercises).
  */
@@ -406,6 +438,14 @@ export const LEVELS = {
     functionSet: lowerSet(FUNCTION_WORDS),
     nameSet: lowerSet(DIALOG_NAMES),
     grammarSlugs: GRAMMAR_SLUGS,
+    // PRACTICE-ONLY TOPICS. A pool topic a Lektion may DRAW from without it being one of the twelve
+    // grammar slugs: it has no rule card, is never a `primarySlug`, and appears in no `grammarSlugs`
+    // list. `numbers` is the first — the L2 Zahlwort items (DaF review #5/#6) drill a form the
+    // Lektion teaches in its Wortfeld rather than a structure the level has a rule card for, and
+    // filing them under `verb-sein` to get them drawn is exactly the mislabelling review #6 named.
+    // RULE 3 keeps holding: every grammar slug is still primary exactly once, and a topic that is
+    // in neither list still fails.
+    practiceOnlyTopics: ['numbers'],
     primaryOrder: PRIMARY_ORDER,
     situationKeywords: SITUATION_KEYWORDS,
     primaryPatterns: PRIMARY_PATTERNS_A11,
@@ -430,6 +470,7 @@ export const LEVELS = {
     ratchets: {
       uncoveredWortfeld: MAX_UNCOVERED_WORTFELD,
       untaughtItemTokens: MAX_UNTAUGHT_ITEM_TOKENS,
+      untaughtDrawnTokens: MAX_UNTAUGHT_DRAWN_TOKENS,
       unrehearsedCanDos: MAX_UNREHEARSED_CANDOS,
       missionlessLektionen: MAX_MISSIONLESS_LEKTIONEN,
       unexemplifiedNoticeForms: MAX_UNEXEMPLIFIED_NOTICE_FORMS,
@@ -446,6 +487,9 @@ export const LEVELS = {
     functionSet: lowerSet(FUNCTION_WORDS_A12),
     nameSet: lowerSet(DIALOG_NAMES_A12),
     grammarSlugs: GRAMMAR_SLUGS_A12,
+    // No practice-only topic at A1.2 yet; the row is explicit so a level cannot inherit one by
+    // accident (see the A1.1 row for what it licenses).
+    practiceOnlyTopics: [],
     primaryOrder: PRIMARY_ORDER_A12,
     situationKeywords: SITUATION_KEYWORDS_A12,
     primaryPatterns: PRIMARY_PATTERNS_A12,
@@ -478,11 +522,18 @@ export const LEVELS = {
       // legacy generated bank, not the hand-written items: all 156 pairs sit in the 238 generated
       // items, none in `a12.extra.json`. It was 0 while no pool existed, which measured nothing.
       untaughtItemTokens: 156,
+      // RULE 11b measures the same tokens where the learner MEETS them (see drawnLexis): 156
+      // becomes 18, and all 18 are in generated items a repair round can open. Three of them are
+      // the formula talking rather than the item — „Schreiben Sie die Zahl in Worten“ is an A1.2
+      // pool formula that `ITEM_FORMULA_RE` does not yet strip, so `Schreiben`/`Worten`/`Zahl` are
+      // counted as lexis in four items. Left in deliberately: the list is a work order for the
+      // items round and the yardstick must not move under it mid-round.
+      untaughtDrawnTokens: 18,
       unrehearsedCanDos: 0,
-      missionlessLektionen: 3,
-      unexemplifiedNoticeForms: 31,
-      untaughtInProduction: 1,
-      unbackedExamTeile: 3,
+      missionlessLektionen: 1,
+      unexemplifiedNoticeForms: 0,
+      untaughtInProduction: 0,
+      unbackedExamTeile: 0,
     },
   },
 };
@@ -640,6 +691,9 @@ const ITEM_FORMULA_RE = new RegExp([
  * the first of them, and that is the Lektion whose vocabulary it must not reach past. (Judging it
  * against the last Lektion would be the lenient reading and would hide exactly the Vorgriffe this
  * rule exists to find.)
+ *
+ * The map is built from `practiceRule.topics` itself, so a practice-only topic (`numbers`, see
+ * LEVELS) is assigned exactly like a grammar slug — the L2 Zahlwort items land in L2.
  */
 function lektionAssignment(c) {
   const earliest = new Map();
@@ -650,21 +704,51 @@ function lektionAssignment(c) {
 }
 
 /**
- * RULE 11: the practice items obey the same taught-words rule as the dialogues.
+ * RULE 11b — the Lektion at which the learner actually SEES an item, from the two engines that
+ * serve it: `planPractice()` for the seven controlled-practice items of every Lektion (both
+ * attempts, because the second attempt redraws and a Vorgriff in attempt 2 is a Vorgriff), and
+ * `buildCheckpoint()` for the pool items a checkpoint pulls in — those are met at the chapter
+ * Lektion, i.e. `checkpoint.afterLektion`, which is when the learner sits the test.
  *
- * Until DaF review #5 this read `<level>.extra.json` only and derived the Lektion from the id
- * prefix, so all 227 generated items of A1.1 fell through `if (!nr) continue` and the ratchet
- * described 124 of 351 items („was der Validator nicht liest, existiert für die Reparaturrunde
- * nicht“). It now reads the BUILT pool as `wortfeldCoverage` does and assigns generated items via
- * `practiceRule.topics`; the built version of a hand-written item wins, because that is the text
- * the build's repair run produced and the learner sees. The scanned fields are unchanged — prompt
- * (minus the bracketed cue and the complete Sie-Aufgabenformel), answer, accepted — so the number
- * moves because the item universe grew, not because the yardstick did.
+ * The earliest Lektion an item is served in wins, because that is the smallest vocabulary it has
+ * to live inside. Items nothing draws are simply absent from the map — they are RULE 11's business,
+ * not this rule's.
+ *
+ * DaF review #6, MAJOR 5: „was er an der falschen Stelle liest, kann nicht repariert werden“.
+ * RULE 11 assigns a generated item to the EARLIEST Lektion whose `practiceRule` names its topic,
+ * which is neither where it is drawn nor something a repair round can move — so the 187 the review
+ * measured mixes 25 tokens in 16 items a learner meets with 147 in 100 items nobody will ever see,
+ * and repairing all sixteen moves the number by 25 and looks like nothing. This assignment sees
+ * only the items a learner meets.
  */
-export function itemLexis(c, extraItems, poolItems) {
-  const spec = levelSpec(c?.level) || LEVELS['a1.1'];
-  extraItems = extraItems ?? loadExtraItems(spec.level);
-  poolItems = poolItems ?? loadPoolItems(spec.level);
+export function drawnAssignment(c, items) {
+  const pool = { items: [...items] };
+  const drawn = new Map();
+  const keep = (id, nr) => {
+    if (!id || !Number.isInteger(nr)) return;
+    if (!drawn.has(id) || drawn.get(id) > nr) drawn.set(id, nr);
+  };
+  for (const attempt of [1, 2]) {
+    for (const [nr, list] of planPractice(c, pool, attempt)) for (const it of list) keep(it.id, nr);
+  }
+  for (const cp of c.checkpoints || []) {
+    for (const item of buildCheckpoint({ curriculum: c, checkpoint: cp, pool })) {
+      keep(item.poolItemId, cp.afterLektion);
+    }
+  }
+  return drawn;
+}
+
+/** The item universe both lexis rules read: the built pool wins over the hand-written source. */
+function itemUniverse(spec, extraItems, poolItems) {
+  const items = new Map();
+  for (const it of extraItems || []) items.set(it.id, it);
+  for (const it of poolItems || []) items.set(it.id, it);
+  return items;
+}
+
+/** What a learner has been taught by the end of each Lektion — Map<nr, Set<form>>. */
+function taughtUpTo(c, spec) {
   // A level's known set starts from the level before it (see seedVocabulary): an A1.2 item may
   // build on every word A1.1 taught, and must not reach past that.
   const known = seedVocabulary(spec);
@@ -678,13 +762,20 @@ export function itemLexis(c, extraItems, poolItems) {
     for (const t of tokenise(l.notice?.bodyDe || '')) known.add(t.toLowerCase());
     knownUpTo.set(l.nr, new Set(known));
   }
-  const lektionOf = lektionAssignment(c);
-  const items = new Map();
-  for (const it of extraItems) items.set(it.id, it);
-  for (const it of poolItems) items.set(it.id, it);
+  return knownUpTo;
+}
+
+/**
+ * The shared scan of RULE 11 and RULE 11b: for every item the `assign` function places in a
+ * Lektion, every token of its prompt (minus the bracketed cue and the complete Sie-Aufgabenformel),
+ * its answer and its accepted answers that the course has not taught by that Lektion. One offender
+ * per (item, token) pair, sorted Lektion by Lektion so the list reads like the course.
+ */
+function lexisScan(c, spec, items, assign) {
+  const knownUpTo = taughtUpTo(c, spec);
   const offenders = [];
-  for (const it of items.values()) {
-    const nr = lektionOf(it);
+  for (const it of items) {
+    const nr = assign(it);
     if (!nr) continue;
     const vocab = knownUpTo.get(nr);
     if (!vocab) continue;
@@ -700,9 +791,47 @@ export function itemLexis(c, extraItems, poolItems) {
       }
     }
   }
-  // Reported Lektion by Lektion, so the list reads like the course rather than like the pool file.
   offenders.sort((a, b) => a.nr - b.nr || a.id.localeCompare(b.id) || a.token.localeCompare(b.token));
   return offenders;
+}
+
+/**
+ * RULE 11: the practice items obey the same taught-words rule as the dialogues.
+ *
+ * Until DaF review #5 this read `<level>.extra.json` only and derived the Lektion from the id
+ * prefix, so all 227 generated items of A1.1 fell through `if (!nr) continue` and the ratchet
+ * described 124 of 351 items („was der Validator nicht liest, existiert für die Reparaturrunde
+ * nicht“). It now reads the BUILT pool as `wortfeldCoverage` does and assigns generated items via
+ * `practiceRule.topics`; the built version of a hand-written item wins, because that is the text
+ * the build's repair run produced and the learner sees. The scanned fields are unchanged — prompt
+ * (minus the bracketed cue and the complete Sie-Aufgabenformel), answer, accepted — so the number
+ * moves because the item universe grew, not because the yardstick did.
+ *
+ * Since DaF review #6 this is the INFORMATIONAL half of the pair: it covers the whole pool,
+ * including the ~100 items no draw reaches, and its assignment is the earliest topic-Lektion rather
+ * than the drawn one. RULE 11b below is the half that can be repaired.
+ */
+export function itemLexis(c, extraItems, poolItems) {
+  const spec = levelSpec(c?.level) || LEVELS['a1.1'];
+  extraItems = extraItems ?? loadExtraItems(spec.level);
+  poolItems = poolItems ?? loadPoolItems(spec.level);
+  const items = itemUniverse(spec, extraItems, poolItems);
+  return lexisScan(c, spec, items.values(), lektionAssignment(c));
+}
+
+/**
+ * RULE 11b: the items the learner is actually SERVED use only words taught by the Lektion that
+ * serves them. Same token machinery as RULE 11, same item texts — only the assignment differs, and
+ * that is the whole point: this number names items a repair round can find, open and rewrite, and
+ * every token on the list is one a learner reads on a screen.
+ */
+export function drawnLexis(c, extraItems, poolItems) {
+  const spec = levelSpec(c?.level) || LEVELS['a1.1'];
+  extraItems = extraItems ?? loadExtraItems(spec.level);
+  poolItems = poolItems ?? loadPoolItems(spec.level);
+  const items = itemUniverse(spec, extraItems, poolItems);
+  const drawn = drawnAssignment(c, [...items.values()]);
+  return lexisScan(c, spec, items.values(), (it) => drawn.get(it.id) ?? null);
 }
 
 /**
@@ -1145,13 +1274,14 @@ export function personaConsistency(c) {
 
 const words = (s) => String(s).trim().split(/\s+/).filter(Boolean);
 
-export function validateCurriculum(c, extraItems) {
+export function validateCurriculum(c, extraItems, poolItems) {
   const errors = [];
   const fail = (msg) => errors.push(msg);
   const L = c.lektionen || [];
   const spec = levelSpec(c?.level);
   if (!spec) return [`level "${c?.level}" is not registered in LEVELS — add its row before validating`];
   extraItems = extraItems ?? loadExtraItems(spec.level);
+  poolItems = poolItems ?? loadPoolItems(spec.level);
 
   // ---- RULE 8 (shape + hours) -------------------------------------------------------------
   if (c.code !== spec.code) fail(`level/code must be ${spec.level} / ${spec.code}`);
@@ -1378,7 +1508,11 @@ export function validateCurriculum(c, extraItems) {
 
     const pr = l.practiceRule || {};
     if (!(pr.topics || []).length) fail(`Lektion ${l.nr}: practiceRule needs topics`);
-    for (const t of pr.topics || []) if (!(l.grammarSlugs || []).includes(t)) fail(`Lektion ${l.nr}: practiceRule topic "${t}" is not in grammarSlugs`);
+    const practiceOnly = spec.practiceOnlyTopics || [];
+    for (const t of pr.topics || []) {
+      if ((l.grammarSlugs || []).includes(t) || practiceOnly.includes(t)) continue;
+      fail(`Lektion ${l.nr}: practiceRule topic "${t}" is in neither grammarSlugs nor practiceOnlyTopics`);
+    }
     if (!(pr.typedMin >= 3)) fail(`Lektion ${l.nr}: practiceRule.typedMin must be ≥ 3`);
   });
 
@@ -1408,9 +1542,13 @@ export function validateCurriculum(c, extraItems) {
   if (uncovered.length > r.uncoveredWortfeld) {
     fail(`RULE 10: ${uncovered.length} Wortfeld entries occur in no input of their Lektion, ratchet is ${r.uncoveredWortfeld} — ${uncovered.map((u) => `L${u.nr} ${u.de}`).join(', ')}`);
   }
-  const untaught = itemLexis(c, extraItems);
+  const untaught = itemLexis(c, extraItems, poolItems);
   if (untaught.length > r.untaughtItemTokens) {
-    fail(`RULE 11: ${untaught.length} untaught tokens in hand-written items, ratchet is ${r.untaughtItemTokens} — ${untaught.map((o) => `${o.id}:${o.token}`).join(', ')}`);
+    fail(`RULE 11: ${untaught.length} untaught tokens across the whole pool, ratchet is ${r.untaughtItemTokens} — ${untaught.map((o) => `${o.id}:${o.token}`).join(', ')}`);
+  }
+  const drawnUntaught = drawnLexis(c, extraItems, poolItems);
+  if (drawnUntaught.length > r.untaughtDrawnTokens) {
+    fail(`RULE 11b: ${drawnUntaught.length} untaught tokens in items the learner is served, ratchet is ${r.untaughtDrawnTokens} — ${drawnUntaught.map((o) => `L${o.nr} ${o.id}:${o.token}`).join(', ')}`);
   }
 
   // ---- RULE 12 (can-dos are rehearsed) and RULE 13 (the speaking prompt travels) ---------------
@@ -1470,8 +1608,11 @@ if (isMain) {
   console.log(`  RULE 10 Wortfeld-Deckung: ${uncovered.length} ungenutzt von ${wf.length} (Ratchet ${r.uncoveredWortfeld})`);
   for (const u of uncovered) console.log(`    L${u.nr} ${u.de}`);
   const untaught = itemLexis(c);
-  console.log(`  RULE 11 Item-Lexik: ${untaught.length} ungelehrte Tokens (Ratchet ${r.untaughtItemTokens})`);
-  for (const o of untaught) console.log(`    ${o.id}: ${o.token}`);
+  console.log(`  RULE 11 Item-Lexik (ganzer Pool, informativ): ${untaught.length} ungelehrte Tokens (Ratchet ${r.untaughtItemTokens})`);
+  for (const o of untaught) console.log(`    L${o.nr} ${o.id}: ${o.token}`);
+  const drawnUntaught = drawnLexis(c);
+  console.log(`  RULE 11b gezogene Item-Lexik: ${drawnUntaught.length} ungelehrte Tokens (Ratchet ${r.untaughtDrawnTokens})`);
+  for (const o of drawnUntaught) console.log(`    L${o.nr} ${o.id}: ${o.token}`);
   const unrehearsed = canDoRehearsal(c);
   console.log(`  RULE 12 Kann-Beschreibungen ohne Übung: ${unrehearsed.length} (Ratchet ${r.unrehearsedCanDos})`);
   for (const u of unrehearsed) console.log(`    L${u.nr} ${u.line}`);
