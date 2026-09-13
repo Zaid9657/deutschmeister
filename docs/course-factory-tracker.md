@@ -263,7 +263,17 @@ only `src/data/curricula/<level>.js` + the pool are per level).
 | 8 | Round 5 — review #4 closed as rules: spelled answers fold their separators, article cue repaired at build time, capitalisation seen by the checker, all twelve rule cards in Lektion lexis, Sie register across chrome and notices, „Buchstabiert:" retired, the speaking task travels to the coach, can-do and missionless ratchets, the validator measures the shipped pool. 619 tests, 136 pages verified | merged 2026-09-13 | #120 |
 | 9 | Round 6 — review #5 closed as rules: politeness and case handled as a task signal, checkpoint falsifier gains congruence guards, AI-graded course writing in every checkpoint, register glob over the chrome; A1.2 curriculum draft (validated, not registered) | merged 2026-09-13 | #121 |
 | 10 | Round 7 — review #6 closed as rules: `politeCaseItem` sentence predicate, checkpoint Sprachbausteine drawn from the pool, RULE 12/13/15 ratchets; A1.2 round 2 (rule cards teach what their notices teach). Owner decision 2026-09-13: **A1.2 paused, A1.1 only** | merged 2026-09-13 | #123 |
-| 11 | Round 8 — review #7 closed as rules: polite-form case graded by position (every card and item graded alike), writing allowance derived (Lektionen + checkpoints = 16, stated with provenance), next-level forms undrawable and unexaminable, task-shape diversity axis, falsifier NP-slot/quantifier guards, RULE 12/16 measured at surfaces (RULE 16 closed at 0), L12 wish rehearsed. 750 tests, 136 pages verified | draft PR | #125 |
+| 11 | Round 8 — review #7 closed as rules: polite-form case graded by position (every card and item graded alike), writing allowance derived (Lektionen + checkpoints = 16, stated with provenance), next-level forms undrawable and unexaminable, task-shape diversity axis, falsifier NP-slot/quantifier guards, RULE 12/16 measured at surfaces (RULE 16 closed at 0), L12 wish rehearsed. 750 tests, 136 pages verified | merged 2026-09-13 | #125 |
+| 12 | Round 9 — review #8 closed as rules: ExamDatePlan siezt and the register test derives its directories from the course pages' imports; every A1.1 ratchet equals its measurement (test) and RULE 12 is hard; no dialogue line twice in one paper, case flag decided by the answer on every surface; rule cards teach exactly what their notices teach | merged 2026-09-13 | #126 |
+| 13 | Round 10 — review #9 closed as rules: an item that names its register is case-strict whatever its answer shape; the retry draws a different seven and task shape masks by word class; Lesen statements report the text instead of quoting it; rule-card guards by inflection and level; every item carries its `minLektion` (RULE 11b hard 0); the third draw drills its slug (21 hand items) | merged 2026-09-13 | #127 |
+| 14 | Round 11 — review #10 closed as rules: completed runs survive the sign-in merge (one batch per run, distinct stamps); function words taught from first use and card guards see constructions; task shape by category, guards walk the whole three-attempt cycle | merged 2026-09-13 | #128 |
+| 15 | Round 12 — review #11 closed as rules: the lemma cap ignores the instruction and a seven never prints its own answers; deferred constructions checked on every produced line (RULE 15b); a rule-stating explanation names its condition; L5's third draw fills with its own grammar and checkpoints admit only servable items | merged 2026-09-13 | #129 |
+| 16 | Round 13 — review #12 closed as rules: every block is about its own situation (`SITUATION_MIN` 4 of 7); sentence-building accepts every V2 order and a correction has exactly one minimal repair; writing samples pass their own Formcheck, model texts match the dialogue, production windows disjoint | merged 2026-09-13 | #130 |
+| 17 | Round 14 — review #13 closed as rules: frontability derived from the sentence, article corrections see gender pairs; Leitpunkte scored by word family, samples in taught lexis (RULE 20), Satzklammer by structure; dictation prefers construction-free, unreportable lines — RULE 15b and 18 closed at 0 | merged 2026-09-13 | #131 |
+| 18 | Round 15 — review #14 closed as rules: a determiner-changing correction always names the element; a paper never prints the answer of one of its own items (leak axis, paper-wide); every writing Leitpunkt answerable from taught words (RULE 21) and the Formcheck greens only real answers | merged 2026-09-13 | #132 |
+| 19 | Round 16 — review #15 closed as rules: a false statement keeps gender and number (falsifier re-checks agreement on every swap); natural answers not form-speak — `geboren` taught, RULE 21 strict, RULE 22 (no „Feld ist Wert" sample), RULE 23 (every Wortfeld entry reaches an input surface, ratchet), nationality as a class | merged 2026-09-13 | #133 |
+| 20 | Round 17 — review #16 closed as rules: an answer shape recognises a value, not the topic of the question (date/country/nationality/phone/clock/price/age); the nationality NOUN is taught („… und bin Marokkanerin"), RULE 24 hard 0 on predicative nationality adjectives; RULE 23 without samples 58→63; RULE 12 splits on „und"; `Marokkanerin`/`Marokkaner`/`geboren` seeded, no `wordId: null` left | merged 2026-09-13 | #134 |
+| 21 | Round 18 — review #17 (0 BLOCKER · 3 MAJOR): Formcheck decides Auftrag Leitpunkte by sentence type and language sentences never green nationality; the masculine nationality noun gets its own surface; RULE 12 counts neither sample nor notice as rehearsal (`kommen aus` practisable in L2); RULE 23b hard 0; RULE 24 covers question order, particles, coordination; one country list for checker and validator | in progress | — |
 
 ### The review ladder (adversarial DaF teacher / SD1 examiner, measured not assumed)
 
@@ -276,7 +286,17 @@ only `src/data/curricula/<level>.js` + the pool are per level).
 | 5 | #120 | 3 BLOCKER · 11 MAJOR | 19.7 | `REVIEW-daf-5-2026-09-12.md` |
 | 6 | #121 | 3 BLOCKER · 7 MAJOR | 19.9 | `REVIEW-daf-6-2026-09-12.md` |
 | 7 | #123 | 3 BLOCKER · 5 MAJOR | 20.3 | `REVIEW-daf-7-2026-09-12.md` |
-| 8 | #125 | pending | — | — |
+| 8 | #125 | 0 BLOCKER · 5 MAJOR | 20.4 | `REVIEW-daf-8-2026-09-12.md` |
+| 9 | #126 | 0 BLOCKER · 5 MAJOR | 20.5 | `REVIEW-daf-9-2026-09-12.md` |
+| 10 | #127 | 0 BLOCKER · 4 MAJOR | 20.5 | `REVIEW-daf-10-2026-09-12.md` |
+| 11 | #128 | 1 BLOCKER · 3 MAJOR | 20.4 | `REVIEW-daf-11-2026-09-12.md` |
+| 12 | #129 | 2 BLOCKER · 4 MAJOR | 20.1 | `REVIEW-daf-12-2026-09-12.md` |
+| 13 | #130 | 2 BLOCKER · 3 MAJOR | 20.3 | `REVIEW-daf-13-2026-09-12.md` |
+| 14 | #131 | 1 BLOCKER · 3 MAJOR | 20.5 | `REVIEW-daf-14-2026-09-12.md` |
+| 15 | #132 | 0 BLOCKER · 4 MAJOR | 20.7 | `REVIEW-daf-15-2026-09-12.md` |
+| 16 | #133 | 1 BLOCKER · 3 MAJOR | 20.7 | `REVIEW-daf-16-2026-09-12.md` |
+| 17 | #134 | 0 BLOCKER · 3 MAJOR · 17 MINOR | 20.8 | `REVIEW-daf-17-2026-09-12.md` |
+| 18 | round 18 | pending | — | — |
 
 All reports live in `docs/course-factory/a11-rebuild/`. Every round recomputes the real draw
 (`planPractice(CURRICULUM_A11, a11.json, attempt)`) rather than reading the pool, so each verdict is

@@ -552,6 +552,12 @@ const cumulativeWortfeld = (level, nr) => {
       if (lvl === level && lektion.nr > nr) continue;
       for (const entry of lektion.wortfeld) {
         for (const word of splitWords(entry.word)) forms.add(word.toLowerCase());
+        // ROUND 18 (DaF review #17, MAJOR 2): a paired person noun whose Lektion is at its 25-slot
+        // ceiling carries the masculine in its gloss — `die Marokkanerin` … `(m: der Marokkaner,
+        // Pl. die Marokkaner)`. That form is taught on the Lektion's notice (tests/curricula.test.mjs
+        // pins that every `(m: …)` gloss reaches an input surface), so a card may say it. Read
+        // from the gloss, never typed: the licence ends where the gloss does.
+        for (const m of String(entry.en || '').matchAll(/\(m:\s*(?:der|die|das)?\s*([A-Za-zÄÖÜäöüß]+)/g)) forms.add(m[1].toLowerCase());
       }
     }
   }

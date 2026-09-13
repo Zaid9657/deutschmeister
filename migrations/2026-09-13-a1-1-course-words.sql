@@ -6,9 +6,12 @@
 -- nineteenth entry (`marokkanisch`, round 15), the twentieth (`geboren`, round 16) and the
 -- twenty-first (`Marokkanerin`, round 17) reach the table without a second file. `marokkanisch`
 -- HAS been seeded (2026-09-13) and its id is back in src/data/curricula/a11.js
--- (`wordId: 'f25db60a-…'`), so of the twenty-one listed below exactly TWO are still wordId-null
--- in the module: none — `geboren` and `Marokkanerin`/`Marokkaner` were seeded 2026-09-13 and their
--- ids are in a11.js. The file stays idempotent for a fresh database.
+-- (`wordId: 'f25db60a-…'`), and `geboren` and `Marokkanerin` were seeded the same day with their
+-- ids pasted back — so NONE of the entries listed below is still wordId-null in the module
+-- (measured 2026-09-13, round 18; the round-17 header said „exactly TWO … : none“, which was the
+-- count of the round before, left standing next to the answer that made it wrong). `Marokkaner` is
+-- seeded but holds no Wortfeld row and therefore no `wordId` — see its line below. The file stays
+-- idempotent for a fresh database.
 --
 -- WHY. src/data/curricula/a11.js lists every Lektion's Wortfeld with the id of
 -- the live `words` row (`wordId`), so the lesson player can show the real
@@ -43,7 +46,11 @@
 --        DaF review #16, BLOCKER / RULE 24. The masculine `der Marokkaner` is seeded
 --        with it so the audio script can render both, though only the feminine holds
 --        a Wortfeld row — the Lektion is at its 25-entry ceiling)
---   L02  Marokkaner — Moroccan man (seeded with the row above, see there)
+--   L02  Marokkaner — Moroccan man (seeded with the row above, see there; since round 18
+--        it is TAUGHT, not only seeded: the L2 notice and the `verb-sein` card say
+--        „Ali ist Marokkaner.“ and `extra-a11-l02-16` asks for the word — DaF review #17,
+--        MAJOR 2. It still has no Wortfeld row and so no `wordId` in a11.js; the gloss of
+--        `die Marokkanerin` names it)
 --   L03  sprechen — to speak
 --   L04  machen — to do, to make
 --   L05  das Bild (Pl. Bilder) — picture

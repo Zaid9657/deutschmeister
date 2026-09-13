@@ -29,6 +29,7 @@ import {
   scoreWriting, countWords, leitpunktKeyword, leitpunktKeywords, leitpunktEvidence, leitpunktSatisfied,
   leitpunktConjuncts,
 } from '../src/lib/lesson/writing.js';
+import { COUNTRY_STEMS, COUNTRY_NAMES } from '../src/lib/lesson/countries.js';
 import { formSpeakInModelTexts, LEVELS } from '../scripts/validate-curriculum.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -374,7 +375,13 @@ test('the Formcheck is one function: the screen and RULE 17 grade with the same 
   const validator = readFileSync(join(ROOT, 'scripts/validate-curriculum.mjs'), 'utf8');
   assert.match(validator, /const res = scoreWriting\(task, value\)/);
   const writing = readFileSync(join(ROOT, 'src/lib/lesson/writing.js'), 'utf8');
-  assert.ok(!/import /.test(writing), 'writing.js stays dependency-free — one function, both callers');
+  // ROUND 18 (DaF review #17, Minor 17): ONE import is allowed, and it is a fact, not a rule — the
+  // countries of the world, which the validator reads from the same file. Nothing from `src/data/`
+  // (a level's Wortfeld, a curriculum) may ever be handed in: that is the dependency-freedom this
+  // test has always pinned, and it still holds.
+  const imports = [...writing.matchAll(/^import .* from '([^']+)';$/gm)].map((m) => m[1]);
+  assert.deepEqual(imports, ['./countries.js'], 'writing.js imports the world list and nothing else');
+  assert.ok(!/from '[^']*\/data\//.test(writing), 'writing.js never imports a course');
 });
 
 test('every A1.1 Beispieltext passes its own Formcheck — with the family rule, not around it', () => {
@@ -473,6 +480,9 @@ test('in an indirect question the nouns are the task’s topic and the verb is t
   assert.deepEqual(leitpunktEvidence(lp).conjuncts[0].words, ['mitbringen']);
   assert.equal(leitpunktSatisfied(lp, 'Bringt ihr bitte Kuchen und Musik mit?'), true);
   assert.equal(leitpunktSatisfied(lp, 'Die Gäste kommen um acht Uhr.'), false);
+  // ROUND 18: the verb is kept as the conjunct's word (RULE 21 measures whether it is taught), but
+  // it no longer SCORES — an Auftrag is a sentence type, see the round-18 block below.
+  assert.equal(leitpunktEvidence(lp).conjuncts[0].shapes.length, 1, 'the Auftrag conjunct carries the instruction shape');
 });
 
 
@@ -725,4 +735,131 @@ test('RULE 22: no sentence of a Mitteilung Beispieltext is a form being read out
     })),
   };
   assert.deepEqual(formSpeakInModelTexts(ok, LEVELS['a1.1']), []);
+});
+
+
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+// ROUND 18 — DaF review #17, MAJOR 1 (with Minor 12 and Minor 17): THE CLASS, IN BOTH DIRECTIONS
+//
+// Round 17 closed „a language is not a nationality“ at three instances and left the class open: the
+// marker had a `\b` before `sprach`, so the compound `Muttersprache` was no marker, and `lernen` was
+// none at all — 37 of the reviewer's 162 language sentences were green on „Ihre Staatsangehörigkeit“,
+// every one in „Meine Muttersprache ist …“ or „Ich lerne …“, and „Ich lerne Deutsch.“ is the sentence
+// every learner writes. And the Auftrag Leitpunkte („Was die Kollegin bis dahin machen soll“) were
+// still decided by a predicate echo: on L10 ten of twelve correct instructions were red and four
+// `machen` sentences that instruct nothing were green. Each is closed here as a RULE with the probe
+// in both directions, never as a list of the sentences that happened to fail.
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+
+test('MAJOR 1 (round 18): what a person speaks, has as a mother tongue or learns is a language', () => {
+  // The two sentences the review names, and the two the Leitpunkt line of every learner carries.
+  assert.equal(leitpunktSatisfied('Ihre Staatsangehörigkeit', 'Meine Muttersprache ist Arabisch.'), false);
+  assert.equal(leitpunktSatisfied('Ihre Staatsangehörigkeit', 'Ich lerne Deutsch.'), false);
+  assert.equal(leitpunktSatisfied('Ihre Staatsangehörigkeit', 'Ich möchte Deutsch lernen.'), false);
+  assert.equal(leitpunktSatisfied('Ihre Staatsangehörigkeit', 'Deutsch ist schwer.'), false, 'the bare capitalised Deutsch is the language');
+  // THE CLASS: the reviewer's six sentence frames over the languages of the room — none green.
+  const langs = ['Arabisch', 'Deutsch', 'Englisch', 'Türkisch', 'Kurdisch', 'Persisch', 'Russisch',
+    'Ukrainisch', 'Polnisch', 'Rumänisch', 'Französisch', 'Spanisch', 'Italienisch', 'Chinesisch',
+    'Vietnamesisch', 'Griechisch', 'Albanisch', 'Serbisch', 'Bosnisch', 'Portugiesisch'];
+  const frames = [(l) => `Ich spreche ${l}.`, (l) => `Ich spreche ${l} und Deutsch.`, (l) => `Meine Sprache ist ${l}.`,
+    (l) => `Meine Muttersprache ist ${l}.`, (l) => `Ich lerne ${l}.`, (l) => `${l} ist meine Sprache.`];
+  const green = langs.flatMap((l) => frames.map((f) => f(l)))
+    .filter((t) => leitpunktSatisfied('Ihre Staatsangehörigkeit', `Ich heiße Ana. ${t}`) !== false);
+  assert.deepEqual(green, [], `${green.length} language sentences answer a Staatsangehörigkeit`);
+  // …and no true nationality sentence turned red with it: the same sentence that names one is green.
+  for (const t of ['Ich lerne Deutsch und bin Marokkanerin.', 'Meine Muttersprache ist Arabisch. Ich bin Syrer.',
+    'Ich bin Deutsche und lerne Arabisch.', 'Ich bin Deutsch.', 'Nationalität: deutsch', 'Ich bin türkisch.']) {
+    assert.equal(leitpunktSatisfied('Ihre Staatsangehörigkeit', t), true, t);
+  }
+});
+
+/**
+ * PER AUFTRAG LEITPUNKT: three instructions that do NOT contain the task's verb (green) and three
+ * echoes of the task's verb that instruct nothing (red). The echo is the old rule's whole evidence;
+ * the instruction is what the exam asks for. The L10 line the content worker writes into the model
+ * text („Bitte rufen Sie Herrn Weber an.“) is the first green of its row.
+ */
+const AUFTRAG_FIXTURE = [
+  ['Was die Kollegin bis dahin machen soll',
+    ['Bitte rufen Sie Herrn Weber an.', 'Warten Sie bitte im Büro.', 'Sie können ohne mich beginnen.'],
+    ['Das macht nichts.', 'Ich mache das später.', 'Wir machen eine Pause.']],
+  ['Was die Gäste mitbringen sollen',
+    ['Bitte kommt mit Kuchen.', 'Kuchen und Salat, bitte!', 'Ihr könnt Getränke kaufen.'],
+    ['Ich bringe Kuchen mit.', 'Wir bringen Musik mit.', 'Die Gäste bringen nichts mit.']],
+];
+
+test('MAJOR 1 (round 18): an Auftrag is a sentence type — instruction green, verb echo red', () => {
+  const auftraege = COURSE.filter((t) => t.register !== 'formular').flatMap((t) => t.leitpunkte)
+    .filter((lp) => /\b(?:soll|sollen|muss|müssen|kann|können)\b/.test(lp));
+  assert.deepEqual([...new Set(auftraege)], AUFTRAG_FIXTURE.map(([lp]) => lp), 'every Auftrag Leitpunkt of the course is in the fixture');
+  for (const [lp, instructions, echoes] of AUFTRAG_FIXTURE) {
+    const verb = leitpunktEvidence(lp).conjuncts[0].folded;
+    for (const t of instructions) {
+      assert.ok(!verb.some((v) => t.toLowerCase().includes(v)), `„${t}“ must not contain the task verb, or it proves nothing`);
+      assert.equal(leitpunktSatisfied(lp, `Hallo Lena! ${t} Viele Grüße, Ana`), true, `„${lp}“ ← „${t}“ is an instruction`);
+    }
+    for (const t of echoes) {
+      assert.ok(verb.some((v) => t.toLowerCase().includes(v)), `„${t}“ must echo the task verb, or it proves nothing`);
+      assert.equal(leitpunktSatisfied(lp, `Hallo Lena! ${t} Viele Grüße, Ana`), false, `„${lp}“ ← „${t}“ echoes and instructs nothing`);
+    }
+  }
+  // The three sentence types, one each, and the three that are none of them.
+  const lp = 'Was die Kollegin bis dahin machen soll';
+  assert.equal(leitpunktSatisfied(lp, 'Rufen Sie Herrn Weber an.'), true, 'imperative');
+  assert.equal(leitpunktSatisfied(lp, 'Bitte Herrn Weber anrufen.'), true, 'bitte + verb');
+  assert.equal(leitpunktSatisfied(lp, 'Sie müssen Herrn Weber anrufen.'), true, 'modal chunk');
+  assert.equal(leitpunktSatisfied(lp, 'Was machen Sie heute?'), false, 'a question word is not an instruction');
+  assert.equal(leitpunktSatisfied(lp, 'Ich muss Herrn Weber anrufen.'), false, 'the writer’s own modal is a plan, not an instruction');
+  assert.equal(leitpunktSatisfied(lp, 'Kommst du?'), false, 'a verb-first question with nothing asked for');
+  assert.equal(leitpunktSatisfied(lp, 'Hast du Zeit?'), false, 'a function-word question');
+  // The sentence going into the L10 model text satisfies the L10 Auftrag on the bank's own task.
+  assert.equal(scoreWriting(formcheckTask(10), 'Liebe Kollegin, der Zug hat leider Verspätung. Ich komme erst um zehn Uhr. Bitte rufen Sie Herrn Weber an und beginnen Sie ohne mich. Vielen Dank und viele Grüße, Ana').ok, true);
+});
+
+test('Minor 12 (round 18): the number stands BESIDE the birth word — same clause, not same sentence', () => {
+  assert.equal(leitpunktSatisfied('Ihr Geburtsdatum', 'Ich bin in Bremen geboren und habe 2 Kinder.'), false);
+  assert.equal(leitpunktSatisfied('Ihr Geburtsdatum', 'Ich habe 2 Kinder, ich bin in Bremen geboren.'), false);
+  assert.equal(leitpunktSatisfied('Ihr Geburtsdatum', 'Ich habe 2 Kinder, aber ich bin in Bremen geboren.'), false);
+  // A month NAME is a date value on its own (round 17: „Ich habe im Mai Geburtstag.“) — that is the
+  // value rule, not this one; only the bare number needs the birth word beside it.
+  for (const t of ['Ich bin 1998 geboren.', 'Ich bin im Mai 1998 geboren.', 'Mein Geburtstag ist der 12.3.1990.',
+    'Ich bin in Bremen geboren, am 3. Mai 1998.', 'Ich habe 2 Kinder und bin 1998 geboren.']) {
+    assert.equal(leitpunktSatisfied('Ihr Geburtsdatum', t), true, t);
+  }
+});
+
+test('Minor 17 (round 18): one world list — no duplicates, stems lower case, names as written', () => {
+  assert.equal(new Set(COUNTRY_STEMS).size, COUNTRY_STEMS.length, 'a duplicate stem');
+  assert.equal(new Set(COUNTRY_NAMES.map((n) => n.toLowerCase())).size, COUNTRY_NAMES.length, 'a duplicate name');
+  assert.ok(COUNTRY_STEMS.every((s) => s === s.toLowerCase() && /^[a-zäöüß-]+$/.test(s)), 'stems are lower-case letters');
+  assert.ok(COUNTRY_NAMES.every((n) => /^[A-ZÄÖÜ][A-Za-zÄÖÜäöüß]+$/.test(n)), 'names are single capitalised words as a person writes them');
+  // The four the review measured red on „Ihr Land“ and the five stems it asked for.
+  for (const land of ['England', 'Slowenien', 'Zypern', 'Luxemburg', 'Guinea', 'Mali', 'Togo', 'Benin', 'Angola']) {
+    assert.equal(leitpunktSatisfied('Ihr Land', `Ich komme aus ${land}.`), true, land);
+  }
+  for (const stem of ['guine', 'mali', 'togo', 'benin', 'angolan', 'eritre', 'deutsch', 'engländ']) {
+    assert.ok(COUNTRY_STEMS.includes(stem), stem);
+  }
+  // A stem is never a prefix search: the profession beside the new short stems stays a profession.
+  for (const word of ['Maler', 'Malerin', 'Manager', 'Studentin']) {
+    assert.equal(leitpunktSatisfied('Ihre Staatsangehörigkeit', `Ich bin ${word}.`), false, word);
+  }
+  // …and the reviewer's fifty-one cities still do not answer „Ihr Land“ (two US states excepted, known).
+  for (const city of ['Istanbul', 'Damaskus', 'Kabul', 'Casablanca', 'Kiew', 'Warschau', 'Lagos', 'Tunis', 'Kairo', 'Mailand', 'Tiflis']) {
+    assert.equal(leitpunktSatisfied('Ihr Land', `Ich komme aus ${city}.`), false, city);
+  }
+  // The validator reads the same module — a second copy is the finding.
+  const validator = readFileSync(join(ROOT, 'scripts/validate-curriculum.mjs'), 'utf8');
+  if (/from '\.\.\/src\/lib\/lesson\/countries\.js'/.test(validator)) {
+    assert.ok(!/^export const COUNTRY_STEMS = \[/m.test(validator), 'the validator imports the world list and keeps no copy');
+  }
+});
+
+test('the six model texts pass their Formcheck with the round-18 rules, and the L10 line to come', () => {
+  for (const l of LEKTIONEN) {
+    if (l.schreiben.kind !== 'mitteilung') continue;
+    const res = scoreWriting(formcheckTask(l.nr), l.schreiben.sample);
+    assert.equal(res.ok, true, `L${l.nr}: ${JSON.stringify(res.checks.filter((c) => !c.ok))}`);
+  }
+  assert.equal(leitpunktSatisfied('Was die Kollegin bis dahin machen soll', 'Bitte rufen Sie Herrn Weber an.'), true);
 });
