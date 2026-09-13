@@ -144,6 +144,9 @@ export const REASON = Object.freeze({
   // REVIEW #6 — the model answer of an error correction changes more than the
   // German prompt asks for, so the minimal correction is marked wrong
   AMBIGUOUS_CORRECTION: 'ambiguous-correction',
+  // REVIEW #7 — the item demands a form no notice and no rule card of the
+  // level introduces (level-scoped, like the ordinal and the month name)
+  UNTAUGHT_FORM: 'untaught-form',
 });
 
 /** The level whose taught-by-now rules below apply. */
@@ -152,6 +155,7 @@ export const SCOPED_LEVEL = 'a1.1';
 /** Reasons that are about the level's syllabus rather than about German. */
 export const LEVEL_SCOPED_REASONS = Object.freeze([
   REASON.ORDINAL_NUMBER, REASON.MONTH_NAME, REASON.UNTAUGHT_TIME_EXCEPTION,
+  REASON.UNTAUGHT_FORM,
 ]);
 
 export const REASONS = Object.freeze(Object.values(REASON));
@@ -244,6 +248,71 @@ export const MONTH_SCOPED_TOPIC_RE = /time|date|clock|uhrzeit/i;
  * "___ der Nacht bin ich zu Hause. (Ausnahme: nicht am)".
  */
 export const UNTAUGHT_TIME_RE = /(^|[^a-zäöüß])der\s+nacht([^a-zäöüß]|$)/i;
+
+/**
+ * REVIEW #7 BLOCKER 3. The inverse of RULE 6b: no drawn and no CHECKPOINT item
+ * may demand a form that no notice and no rule card of the level introduces.
+ *
+ * Measured on `03bd1113` — shipped as `a1.1-cp4-bausteine-4`, one of SIX
+ * Sprachbausteine of the GRADED final checkpoint, in a section whose pass mark
+ * is 40 %: „Hast du ___ Schlüssel? (du — Vorschau Akkusativ)" → `deinen`,
+ * explained as „Vorschau auf den Akkusativ (A1.2)". Its topic falls under
+ * `STRICT_TOPIC`, so there is no typo tolerance: `dein` — exactly what L12's
+ * notice and the `possessive-articles` rule card teach for a masculine noun —
+ * comes back red in the final test. The twin `64680d9b` („Ich habe ___ Bruder
+ * gern.") sat in the pool and was drawable from L12's `practiceRule.topics`, so
+ * this is a CLASS, not an instance.
+ *
+ * Two predicates, because an item can announce the Vorgriff or merely make it:
+ *
+ *   * NEXT_LEVEL_RE — the item says so itself, in the prompt, the hint or the
+ *     explanation the learner reads AFTER answering („Vorschau", „A1.2",
+ *     „kommt in A1.2", and at A1.1 the case names themselves, which no A1.1
+ *     notice uses). An item that calls itself a preview does not belong in the
+ *     pool that is drawn from and graded.
+ *   * UNTAUGHT_ANSWER_FORM_RE — the ANSWER is the untaught form, whether or not
+ *     the item admits it. At A1.1 that is the possessive paradigm beyond
+ *     `mein/meine`: the accusative `-en` and the dative `-em` of every owner.
+ *     A1.1's twelve notices name six possessives and ONE ending rule („vor
+ *     femininen Nomen und im Plural kommt -e dazu"); no notice, and no A1.1
+ *     rule card, contains any of the forms below — `tests/lesson-pool-rules.test.mjs`
+ *     measures that against the curriculum rather than asserting it here.
+ *
+ * WHAT IS DELIBERATELY NOT ON THE LIST: `einen` and `keinen`. The rule is
+ * "introduced by a notice", not "belongs to a later case", and L6's notice
+ * introduces exactly this form with an example — „Nach Verben wie brauchen,
+ * haben, kaufen wird maskulin ein → einen: Ich brauche einen Computer" — so
+ * `extra-a11-l06-04` („Der Chef braucht ___ Computer.") asks for a form the
+ * course has shown, and banning it would fail the level's own material. The
+ * same notice's sentence „die Regel kommt in A1.2" is about the RULE, and it
+ * lives in the curriculum, not in an item.
+ *
+ * LEVEL-SCOPED, like ORDINAL_NUMBER: `meinen` is ordinary German at A1.2, and
+ * the default is the strict reading, so an engine-side call with no level to
+ * hand can never be the loophole.
+ */
+export const NEXT_LEVEL_RE = /Vorschau|A1\.2|kommt in A1|Akkusativ|Dativ|Genitiv/i;
+
+/** The A1.1 off-limits answer forms: the possessive paradigm beyond -e. */
+export const UNTAUGHT_ANSWER_FORMS = Object.freeze([
+  'meinen', 'meinem', 'meiner', 'meines',
+  'deinen', 'deinem', 'deiner', 'deines',
+  'seinen', 'seinem', 'seiner', 'seines',
+  'ihren', 'ihrem', 'ihrer', 'ihres',
+  'unseren', 'unserem', 'unserer', 'unseres',
+  'euren', 'eurem', 'eurer', 'eures',
+]);
+
+export const UNTAUGHT_ANSWER_FORM_RE = new RegExp(`^(?:${UNTAUGHT_ANSWER_FORMS.join('|')})$`, 'i');
+
+/** True when the item demands a form the level has not introduced. */
+export function untaughtForm(item) {
+  const text = [item?.questionDe, item?.questionEn, item?.explanationDe, item?.hint]
+    .map((t) => String(t ?? '')).join(' ');
+  if (NEXT_LEVEL_RE.test(text)) return true;
+  const expected = [item?.answer, ...(item?.accepted || [])].map((a) => String(a ?? '').trim()).filter(Boolean);
+  return expected.some((a) => a.split(/\s+/).some((w) => UNTAUGHT_ANSWER_FORM_RE.test(w.replace(/[.,!?;:]/g, ''))));
+}
 
 /** A sentence-building cue list: "Bilde den Satz: [wir / kommen / aus Marokko]". */
 export const BRACKET_LIST_RE = /\[([^\]]*)\]/;
@@ -543,36 +612,106 @@ export function cueAnswerMismatch(item) {
 }
 
 /**
- * REVIEW #6 BLOCKER 1. The polite (Höflichkeitsform) capitals, as a CLASS.
+ * REVIEW #7 BLOCKER 1. The polite capital as a TASK, not as an answer FORM.
  *
- * Round 5 closed the same finding as a LIST — three ids got `caseSensitive:
- * true` by hand — and round 6 measured the list from both ends: two more items
- * of exactly the same shape never got the flag (`Frau Müller, ___ sind sehr
- * freundlich.` marks `sie` as a typo, i.e. as CORRECT, while the identical
- * `Frau Kaya, sprechen ___ Englisch?` marks it wrong), and the repetition cards
- * built by `reviewService.buildCardIndex` carry no such field at all, so every
- * review card was case-blind. The fix is to DERIVE the flag from the answer key
- * and keep the hand entry as an override — `item.caseSensitive === true ||
- * politeCaseItem(item)` in `scripts/build-lesson-pool.mjs`.
+ * Round 6 closed review #6's finding as a predicate — and round 7 measured that
+ * the predicate was the very answer-form regex round 5 had removed from
+ * `isCaseTask` in src/lib/lesson/check.js, moved one layer up. `check.js`
+ * writes down why that cannot work: "ein Regex auf die Antwortform kann ein
+ * höfliches `Ihr` nicht von einem großgeschriebenen Satzanfang unterscheiden."
+ * Both error directions were measured:
  *
- * The predicate is the review's, verbatim, and both of its clauses are narrow
- * on purpose:
- *   * ONE-WORD answers only count when NO lowercase variant is accepted. That
- *     is what keeps `extra-a11-l12-10` (`['Ihre','ihre']` — their presents, 3rd
- *     person plural) and `extra-a11-l03-02` (`['Sie','sie']` — she, the sister)
- *     out: an item that accepts both spellings is not teaching the capital.
- *   * SENTENCE answers are narrowed to the POSSESSIVE, and to a possessive that
- *     is not the first word — a sentence-initial capital says nothing, and a
- *     word-order item like `extra-a11-l10-08` must not become wholly wrong over
- *     one letter.
+ *   * FALSE POSITIVE — `dd1c3d60` („___ ist meine Mutter.", `Sie`, explanation
+ *     „Mutter = weiblich → sie."), `b19be5e4` („Die Tasche ist teuer. ___ ist
+ *     schön.", explanation „deshalb wird sie zu sie.") and `4299d5ca` („___
+ *     seid meine Freunde.", `Ihr`, explanation „Ihr spricht mehrere Personen
+ *     INFORMELL an") all carried `caseSensitive: true`. Three items whose own
+ *     text says that nothing polite is being taught here.
+ *   * FALSE NEGATIVE — the sentence clause was narrowed to `Ihr…`, so it never
+ *     reached `Sie` or `Ihnen` INSIDE a sentence: „Gut. Wie geht es Ihnen?"
+ *     forgave `ihnen` while `extra-a11-l01-06`, the same form, graded it wrong.
+ *
+ * So the question the predicate asks is the one the rule is about: *is the
+ * capital the TASK here?* — and the item's own text is what answers it:
+ *
+ *   1. AN ITEM THAT ACCEPTS BOTH SPELLINGS is not teaching the capital
+ *      (`extra-a11-l12-10` `['Ihre','ihre']`, `extra-a11-l03-02` `['Sie','sie']`).
+ *   2. AN ITEM THAT CALLS ITSELF INFORMAL VETOES, whatever its answer looks
+ *      like (`4299d5ca`) — and so does an item that NAMES the lowercase
+ *      counterpart as the form it wants (`dd1c3d60`, `b19be5e4`, `210e89f8`).
+ *      A veto beats every signal below: the text is the author speaking.
+ *   3. ONE-WORD answers are a case task when the text names the formal
+ *      counterpart (`Frau/Herr <Name>`, `Sie-Form`, `höflich`, `formell`,
+ *      `großes I`) or when the answer is the unambiguous polite `Ihnen`, which
+ *      has no lowercase reading in German outside a sentence start.
+ *      A card carries NO text at all (`buildCardIndex` passes `accepted` and
+ *      nothing else, and a Wortfeld entry for `Sie` is exactly that) — there
+ *      the answer key is all there is, so the form alone decides.
+ *   4. SENTENCE answers are read as SENTENCES: a polite form counts only where
+ *      the capital is a decision, i.e. NOT as the first word of its own
+ *      sentence. `Ihnen` and a non-initial possessive `Ihr…` count on their
+ *      own; `Sie` counts only where the sentence also addresses a `Frau`/`Herr`
+ *      — otherwise a word-order item like `extra-a11-l10-08` („Fahren Sie
+ *      morgen nach Deutschland?") would become wholly wrong over one letter.
  */
 export const POLITE_FORM_RE = /^(Sie|Ihnen|Ihr|Ihre|Ihren|Ihrem|Ihrer|Ihres)$/;
+
+/** The one polite form with no lowercase reading of its own: `ihnen` is not a word. */
+export const UNAMBIGUOUS_POLITE_RE = /^Ihnen$/;
+
+/** The text names the FORMAL counterpart — the signal that the capital is the task. */
+export const POLITE_CUE_RE =
+  /Höflichkeitsform|höflich|formell|formal address|Sie-Form|mit großem|großes I|\bFrau [A-ZÄÖÜ]|\bHerrn? [A-ZÄÖÜ]/i;
+
+/** The text says the opposite. A veto beats every signal: the author is speaking. */
+export const INFORMAL_VETO_RE = /informell|informal|\bduzen\b|\bduzt\b|du-Form/i;
+
+/** Everything the ITEM says about its own task. A review card says nothing at all. */
+const politeText = (item) =>
+  [item?.questionDe, item?.questionEn, item?.explanationDe, item?.hint].map((t) => String(t ?? '')).join(' ').trim();
+
+const WORD_EDGE = '[^0-9A-Za-zÄÖÜäöüß]';
+
+/** Does the text name `word` in LOWERCASE, as a word of its own? Then that is the form it wants. */
+const namesLowercase = (text, word) =>
+  new RegExp(`(^|${WORD_EDGE})${word.toLowerCase()}(${WORD_EDGE}|$)`).test(text);
+
+/** „…, Frau Kaya?“ — the address that makes a `Sie` in the same sentence the polite one. */
+const addressesPerson = (sentence) => /\b(Frau|Herrn?)\s+[A-ZÄÖÜ]/.test(sentence);
+
+/**
+ * A polite form standing where its capital is a DECISION — never as the first
+ * word of its own sentence, which says nothing about register.
+ */
+export function politeSentenceAnswer(line) {
+  return String(line || '')
+    .split(/(?<=[.!?])\s+/)
+    .some((sentence) => {
+      const words = sentence.trim().split(/\s+/).slice(1).map((w) => w.replace(/[.,!?:;„“"»«]/g, ''));
+      if (words.some((w) => UNAMBIGUOUS_POLITE_RE.test(w))) return true;
+      if (words.some((w) => /^Ihr(e|en|em|er|es)?$/.test(w))) return true;
+      return addressesPerson(sentence) && words.some((w) => POLITE_FORM_RE.test(w));
+    });
+}
 
 export function politeCaseItem(item) {
   const acc = [item?.answer, ...(item?.accepted || [])].map((a) => String(a ?? '').trim()).filter(Boolean);
   if (!acc.length) return false;
-  if (acc.every((a) => !a.includes(' '))) return acc.every((a) => POLITE_FORM_RE.test(a));
-  return acc.every((a) => a.split(/\s+/).slice(1).some((w) => /^Ihr(e|en|em|er|es)?$/.test(w.replace(/[.,!?]/g, ''))));
+  // 1. An item that accepts both spellings is not teaching the capital.
+  if (acc.some((a) => acc.some((b) => a !== b && a.toLowerCase() === b.toLowerCase()))) return false;
+  const text = politeText(item);
+  // 2. An item that calls itself informal is not a polite-form item, whatever its answer looks like.
+  if (INFORMAL_VETO_RE.test(text)) return false;
+  if (acc.every((a) => !a.includes(' '))) {
+    if (!acc.every((a) => POLITE_FORM_RE.test(a))) return false;
+    // …nor is one that names the lowercase counterpart as the form it wants.
+    if (acc.some((a) => namesLowercase(text, a))) return false;
+    // 3. A card carries no prompt and no explanation: there the answer key is all there is.
+    if (!text) return true;
+    return POLITE_CUE_RE.test(text) || acc.every((a) => UNAMBIGUOUS_POLITE_RE.test(a));
+  }
+  // 4. Sentences are read as sentences.
+  return acc.every(politeSentenceAnswer);
 }
 
 /** The name the build script and the tests import it under. Same function. */
@@ -982,6 +1121,9 @@ export function exclusionReason(item, { level } = {}) {
       return REASON.MONTH_NAME;
     }
     if (UNTAUGHT_TIME_RE.test(q)) return REASON.UNTAUGHT_TIME_EXCEPTION;
+    // REVIEW #7 BLOCKER 3, last of the level-scoped rules so that every id an
+    // older reason already names keeps the reason it was pinned with.
+    if (untaughtForm(item)) return REASON.UNTAUGHT_FORM;
   }
 
   if (answerInPrompt(item)) return REASON.ANSWER_IN_PROMPT;
