@@ -5073,7 +5073,8 @@
     "Wohnen Sie in Berlin"
    ],
    "explanationDe": "wohnen an Position 1, Sie an Position 2: Wohnen Sie in Berlin?",
-   "hint": null
+   "hint": null,
+   "caseSensitive": true
   },
   {
    "id": "6f0fbd89-79de-53ab-9b82-67b4f5f734ed",
@@ -5090,7 +5091,8 @@
     "Haben Sie Kinder"
    ],
    "explanationDe": "haben an Position 1, Sie an Position 2: Haben Sie Kinder?",
-   "hint": null
+   "hint": null,
+   "caseSensitive": true
   },
   {
    "id": "extra-a11-l10-07",
@@ -5126,7 +5128,8 @@
     "Fahren Sie morgen nach Deutschland"
    ],
    "explanationDe": "Höfliche Frage mit Sie: Verb zuerst, dann Sie.",
-   "hint": null
+   "hint": null,
+   "caseSensitive": true
   },
   {
    "id": "extra-a11-l10-09",

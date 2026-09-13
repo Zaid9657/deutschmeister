@@ -88,7 +88,7 @@ import {
   articleCueOnlyInGloss, articleAnswerKind, ARTICLE_CUE,
   missingSentenceArticle, cueAnswerMismatch, metalinguisticPrompt, SENTENCE_ARTICLE_CUE,
   ambiguousCorrection, minimalArticleCorrection, isPoliteFormItem, drillsSlug, isNumberWord,
-  politeCaseItem, NEXT_LEVEL_RE, UNTAUGHT_ANSWER_FORMS, UNTAUGHT_ANSWER_FORM_RE, untaughtForm,
+  politeCaseItem, POLITE_CUE_RE, INFORMAL_VETO_RE, carriesPoliteForm, NEXT_LEVEL_RE, UNTAUGHT_ANSWER_FORMS, UNTAUGHT_ANSWER_FORM_RE, untaughtForm,
 } from '../src/data/lessonPools/quality.js';
 import { levelLexicon, untaughtTokens, levelSpec } from '../scripts/validate-curriculum.mjs';
 
@@ -676,6 +676,65 @@ test('every polite-form item of the BUILT pool is case-strict — REVIEW #6 BLOC
   assert.equal(isPoliteFormItem({ answer: '', accepted: [] }), false);
 });
 
+test('an item that NAMES its register is case-strict, whatever shape its answer has — REVIEW #9 MAJOR 4', () => {
+  // The predicate used to read the item's self-declaration (`POLITE_CUE_RE` over
+  // prompt, hint and explanation) only for ONE-WORD answers; a sentence answer
+  // was judged by the POSITION of the polite form alone. Measured in round 9:
+  // three items whose own German prompt says „Schreiben Sie die höfliche Frage"
+  // forgave a lowercase `sie` as a TYPO, while `83bab298` („Das ist Ihre
+  // Adresse.") graded the same miss wrong. The task decides, not the word shape.
+  //
+  // As a CLASS over both built pools, with no id list: name the register in your
+  // own text and carry a polite form in your answer key, and the flag is on.
+  const declared = [];
+  for (const item of [...POOL.items, ...POOL_A12.items]) {
+    const text = [item.questionDe, item.questionEn, item.explanationDe, item.hint]
+      .map((t) => String(t ?? '')).join(' ');
+    if (!POLITE_CUE_RE.test(text) || INFORMAL_VETO_RE.test(text)) continue;
+    const acc = [item.answer, ...(item.accepted || [])].map((a) => String(a ?? '').trim()).filter(Boolean);
+    if (!acc.length || !acc.every(carriesPoliteForm)) continue;
+    // …unless the item accepts both spellings, which is the author saying the
+    // capital is not the task (clause 1 of the predicate).
+    if (acc.some((a) => acc.some((b) => a !== b && a.toLowerCase() === b.toLowerCase()))) continue;
+    declared.push(item);
+    assert.equal(
+      item.caseSensitive, true,
+      `the prompt names the register but the capital is forgiven: ${label(item)} — ${item.questionDe}`,
+    );
+  }
+  assert.ok(declared.length >= 3, 'the class must not be empty — the regexes drifted');
+
+  // the predicate itself, both directions
+  assert.equal(
+    politeCaseItem({
+      questionDe: 'Schreiben Sie die höfliche Frage: [Sie / in Berlin / wohnen]',
+      answer: 'Wohnen Sie in Berlin?', accepted: ['Wohnen Sie in Berlin'],
+    }),
+    true,
+    'a declared register is a case task even at position 2 of a sentence',
+  );
+  // THE INVERSE, and it is the half that matters: a bare mid-sentence `Sie` with
+  // NO declaration stays lenient. `a1.1-cp1-hoeren-3` is a graded dictation — a
+  // learner copying a heard line cannot hear the capital.
+  assert.equal(
+    politeCaseItem({
+      questionDe: 'Hören Sie zu und schreiben Sie den Satz.',
+      answer: 'Bitte füllen Sie das Formular aus.', accepted: ['Bitte füllen Sie das Formular aus'],
+    }),
+    false,
+    'no cue, no address, sentence-internal Sie: still a typo, not a wrong answer',
+  );
+  // and the veto still beats the declaration
+  assert.equal(
+    politeCaseItem({
+      questionDe: 'Schreiben Sie die höfliche Frage: [Sie / Kinder / haben]',
+      explanationDe: 'Hier duzen wir, die Frage ist informell.',
+      answer: 'Haben Sie Kinder?', accepted: ['Haben Sie Kinder'],
+    }),
+    false,
+  );
+});
+
 test('no item accepts a verb its own frame rules out — REVIEW #6 MAJOR 10', () => {
   // "Gehst du morgen mit dem Bus?" is not German: one fährt or kommt mit dem
   // Bus. The equivalence table is per LEMMA, the language is per FRAME, so the
@@ -915,11 +974,21 @@ test('the polite capital is a task signal, not an answer form — REVIEW #7 BLOC
   // …and the three shapes it must NOT reach.
   assert.equal(t({ questionDe: '___ Geschenke sind hier. (sie, Plural)', answer: 'Ihre', accepted: ['Ihre', 'ihre'] }), false,
     'an item that accepts both spellings is not teaching the capital');
+  // REVIEW #9 MAJOR 4 REVERSED THIS PIN, and the reason is in the item's own
+  // prompt: „Bilden Sie die HÖFLICHE Frage" — the task names the register, twice,
+  // so the capital IS what is being asked. Round 7 read it as a pure word-order
+  // item and forgave the miss; a learner who writes „Fahren sie …?" has written
+  // „do THEY drive", which is not the task. What stays lenient is the shape below
+  // and `a1.1-cp1-hoeren-3`: a sentence-internal `Sie` whose text names nothing.
   assert.equal(t({
     questionDe: 'Bilden Sie die höfliche Frage: [fahren / Sie / morgen / nach Deutschland]',
     answer: 'Fahren Sie morgen nach Deutschland?', accepted: ['Fahren Sie morgen nach Deutschland?'],
     explanationDe: 'Höfliche Frage mit Sie: Verb zuerst, dann Sie.',
-  }), false, 'a word-order item may not become wholly wrong over one capital');
+  }), true, 'the task names the register, so the capital is the task');
+  assert.equal(t({
+    questionDe: 'Ordnen Sie: [morgen / fahren / Sie / nach Deutschland]',
+    answer: 'Fahren Sie morgen nach Deutschland?', accepted: ['Fahren Sie morgen nach Deutschland?'],
+  }), false, 'the same word order with NO declared register stays lenient');
   assert.equal(t({ accepted: ['Sie kostet acht Euro.'] }), false, 'a sentence-initial capital says nothing about register');
 });
 
