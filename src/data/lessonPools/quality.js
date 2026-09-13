@@ -782,6 +782,35 @@ export const NUMBER_WORDS = Object.freeze([
   'sechzig', 'siebzig', 'achtzig', 'neunzig', 'hundert',
 ]);
 
+/** The units and the tens a German compound number is built from. */
+const NUMBER_UNITS = 'ein|zwei|drei|vier|fuenf|sechs|sieben|acht|neun';
+const NUMBER_TENS = 'zwanzig|dreissig|vierzig|fuenfzig|sechzig|siebzig|achtzig|neunzig';
+
+/**
+ * A compound written as one word, which is how German writes every number under
+ * a million: `einundzwanzig`, `siebenundsechzig`, `hundertzwanzig`,
+ * `einhundertdrei`. Listing them is not on — 0–100 alone is 101 strings — so
+ * the tens/units shape is a pattern and the list above stays the atoms.
+ */
+const NUMBER_COMPOUND_RE = new RegExp(
+  `^(?:(?:${NUMBER_UNITS})und(?:${NUMBER_TENS})` +
+  `|(?:${NUMBER_UNITS})?hundert(?:(?:${NUMBER_UNITS})und(?:${NUMBER_TENS})|${NUMBER_TENS}|` +
+  `null|eins|zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn|elf|zwoelf|dreizehn|vierzehn|` +
+  `fuenfzehn|sechzehn|siebzehn|achtzehn|neunzehn)?)$`,
+);
+
+/**
+ * isNumberWord(text) → the string IS a number: one of the atoms above, a
+ * compound, or a bare digit string (a Hausnummer or a Telefonnummer segment an
+ * item may legitimately ask back as digits).
+ */
+export function isNumberWord(text) {
+  const word = flat(bare(text));
+  if (!word) return false;
+  if (/^\d+$/.test(word)) return true;
+  return NUMBER_WORDS.includes(word) || NUMBER_COMPOUND_RE.test(word);
+}
+
 const FINITE_RE = /^[a-zäöüß]+(e|st|t|en|et)$/i;
 /** The prompt's last word before the final punctuation is a separable prefix. */
 const endsOnPrefix = (q) => {
@@ -907,7 +936,7 @@ const DRILLS = {
   // Konjugation mistake and `remediationSet` served more verb items for it.
   // The predicate reads what the learner PRODUCES, like every other one here:
   // the expected answer is a number word.
-  numbers: ({ expected }) => expected.some((a) => NUMBER_WORDS.includes(flat(bare(a)))),
+  numbers: ({ expected }) => expected.some(isNumberWord),
 };
 
 /**

@@ -87,7 +87,7 @@ import {
   answerInPrompt, isMetaPrompt, verbCueOnlyInGloss, statementNoTask, parseVerbCue,
   articleCueOnlyInGloss, articleAnswerKind, ARTICLE_CUE,
   missingSentenceArticle, cueAnswerMismatch, metalinguisticPrompt, SENTENCE_ARTICLE_CUE,
-  ambiguousCorrection, minimalArticleCorrection, isPoliteFormItem, drillsSlug,
+  ambiguousCorrection, minimalArticleCorrection, isPoliteFormItem, drillsSlug, isNumberWord,
 } from '../src/data/lessonPools/quality.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -705,6 +705,14 @@ test('a number item drills numbers, not the verb it is filed under — REVIEW #6
   assert.equal(drillsSlug(item, 'numbers'), true);
   assert.equal(drillsSlug({ ...item, answer: 'zwölf', accepted: ['zwölf'] }, 'numbers'), true);
   assert.equal(drillsSlug({ ...item, answer: 'dreißig', accepted: ['dreißig'] }, 'numbers'), true);
+  // the compounds, which is every German number above twenty and which no list
+  // could carry (0–100 alone is 101 strings), and the digit form an item may
+  // legitimately ask back (a Hausnummer, a segment of a Telefonnummer)
+  for (const w of ['einundzwanzig', 'siebenundsechzig', 'hundertzwanzig', 'einhundertdrei', 'dreißig', '42']) {
+    assert.equal(isNumberWord(w), true, w);
+  }
+  for (const w of ['bin', 'Bahnhof', 'sieber', '']) assert.equal(isNumberWord(w), false, w);
+  assert.equal(drillsSlug({ ...item, answer: 'einundzwanzig', accepted: ['einundzwanzig'] }, 'numbers'), true);
   // and what it may not count: the verb item next to it in the same Lektion
   assert.equal(
     drillsSlug({ id: 'n2', topic: 'numbers', type: 'fill_blank', questionDe: 'Ich ___ Anna.', answer: 'bin', accepted: ['bin'] }, 'numbers'),
