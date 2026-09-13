@@ -152,6 +152,26 @@ test('the grader\'s character floor is bound to the register, not to one constan
   assert.ok(shortestRealForm.length < fallback, 'and it would not have, at the letter floor');
 });
 
+test('every a11-l* task title tracks its Lektion\'s title in CURRICULUM_A11', () => {
+  // DaF review #3 (docs/course-factory/a11-rebuild/REVIEW-daf-3-2026-09-12.md) caught
+  // Lektion 11 renamed to "Mein Tag" in the curriculum while the task bank still said
+  // "Lektion 11: Gestern und heute" — the two titles drifted silently. Pin the
+  // convention (`Lektion <nr>: <curriculum title>`) so a future rename cannot drift again.
+  const a11Tasks = WRITING_TASKS.filter((t) => /^a11-l(\d+)/.test(t.taskKey));
+  assert.ok(a11Tasks.length > 0, 'no a11-l* tasks found — has the id scheme changed?');
+  for (const t of a11Tasks) {
+    const nr = Number(t.taskKey.match(/^a11-l(\d+)/)[1]);
+    const lektion = LEKTIONEN[nr - 1];
+    assert.ok(lektion, `${t.taskKey}: no Lektion ${nr} in CURRICULUM_A11`);
+    assert.equal(lektion.nr, nr, `${t.taskKey}: CURRICULUM_A11.lektionen[${nr - 1}].nr is not ${nr}`);
+    assert.equal(
+      t.title,
+      `Lektion ${nr}: ${lektion.title}`,
+      `${t.taskKey}: task title has drifted from CURRICULUM_A11's Lektion ${nr} title`,
+    );
+  }
+});
+
 test('the two writing-task copies are byte-identical', () => {
   assert.equal(
     readFileSync(join(ROOT, 'src/data/writingTasks.js'), 'utf8'),

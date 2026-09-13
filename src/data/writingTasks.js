@@ -521,7 +521,7 @@ export const WRITING_TASKS = [
     examKey: 'goethe_a1',
     course: 'a1.1',
     taskKey: 'a11-l11',
-    title: 'Lektion 11: Gestern und heute',
+    title: 'Lektion 11: Mein Tag',
     register: 'formular',
     minWords: 5,
     maxWords: 40,
