@@ -146,10 +146,35 @@ export const isTyped = (item) =>
   item?.type === 'error_correction' ||
   (item?.type === 'fill_blank' && !(item.options && item.options.length));
 
+/**
+ * A NEXT-LEVEL PREVIEW IS NOT CHECKPOINT MATERIAL (DaF review #7, BLOCKER 3).
+ * `03bd1113` shipped as `a1.1-cp4-bausteine-4`: a possessive gap after *haben*
+ * whose key is the ACCUSATIVE form of the 2nd-person possessive, one of six
+ * Sprachbausteine in the GRADED closing checkpoint, under a `STRICT_TOPIC`
+ * with no typo tolerance — and its own explanation says „Vorschau auf den
+ * Akkusativ (A1.2)“. The course never teaches that form: L12's notice teaches
+ * the bare nominative before a masculine noun, and the rule card says the -e
+ * comes only before feminines and plurals. So the learner is marked wrong for
+ * applying the rule card the course gave him.
+ *
+ * The rule that belongs in the builder of the pool — no item may demand a form
+ * no notice and no rule card of the level introduces — is being added there by
+ * another agent. This is the belt-and-braces half, at the checkpoint's own
+ * pool door: an item that calls ITSELF a preview is rejected outright, not
+ * merely sorted to the back like untaught lexis (see untaughtAt), because a
+ * short section is a smaller failure than a graded item the course contradicts.
+ * Every pool draw in this file goes through byTopics, so this is the one gate.
+ */
+export const NEXT_LEVEL_RE = /Vorschau|A1\.2|kommt in A1/i;
+
+/** Does this pool item advertise itself as a preview of the next level? */
+export const isNextLevelPreview = (item) =>
+  NEXT_LEVEL_RE.test([item?.questionDe, item?.promptDe, item?.explanationDe, item?.hint].filter(Boolean).join(' '));
+
 const byTopics = (pool, topics) => {
   const wanted = new Set(topics);
   return poolItems(pool)
-    .filter((i) => wanted.has(i.topic))
+    .filter((i) => wanted.has(i.topic) && !isNextLevelPreview(i))
     .sort((a, b) => (a.topic === b.topic ? (a.order || 0) - (b.order || 0) : a.topic < b.topic ? -1 : 1));
 };
 
@@ -373,6 +398,43 @@ const DIGIT_NUMBERS = NUMBER_WORDS.slice(0, 10);
 /** Forms of address are not names: swapping "Ana" for "Herr" is nonsense, not a detail. */
 const TITLES = ['Herr', 'Frau'];
 
+/**
+ * THE DETERMINERS THAT GOVERN A NOUN AS A QUANTITY OR A TIME (DaF review #7,
+ * MAJOR 2). `jede Woche` is an adverbial accusative: `Woche` stands there as a
+ * time unit, not as a thing, and the Wortfeld knows only `article` and
+ * `plural`, so the congruence bar of review #6 cannot see it. That is how
+ * checkpoint 3 shipped the L9 football line with `Woche` replaced by
+ * **Kellnerin** under its unchanged `jede` — grammatically
+ * impeccable (`die Woche` and `die Kellnerin` share their article) and not a
+ * false statement about the text but a broken sentence, solvable without
+ * reading a line of it.
+ *
+ * `QUANTIFIER_DET` is the review's own list: after `jede/jeden/jedes/jeder/
+ * alle/allen` the noun is a quantity or a time expression, and a swap there is
+ * NEVER a changed detail — the branch does not fire at all.
+ *
+ * `DEICTIC_DET` (`diese Woche`, `diesen Schlüssel`) points at either kind, so
+ * there the swap is allowed only WITHIN the semantic class: a time noun for a
+ * time noun, a thing for a thing. A1.1 has no semantic field on a Wortfeld
+ * entry — `{ de, word, article, plural, en, wordId }` — so the one class we
+ * cannot read off the data is written down here, small and documented:
+ * TIME_NOUNS plus the weekdays. Everything else counts as a thing.
+ */
+const QUANTIFIER_DET = ['jede', 'jeden', 'jedes', 'jeder', 'alle', 'allen'];
+const DEICTIC_DET = ['diese', 'diesen', 'dieses', 'dieser', 'diesem'];
+
+/** The chapter's time nouns — the class `jede/diese` reaches for. */
+const TIME_NOUNS = [
+  'Woche', 'Wochen', 'Wochenende', 'Wochenenden', 'Tag', 'Tage', 'Monat', 'Monate',
+  'Jahr', 'Jahre', 'Stunde', 'Stunden', 'Minute', 'Minuten', 'Morgen', 'Vormittag',
+  'Mittag', 'Nachmittag', 'Abend', 'Abende', 'Nacht', 'Nächte', 'Uhrzeit', 'Zeit',
+];
+
+/** The semantic class of a noun, for the deictic branch above. */
+function semanticClass(word) {
+  return TIME_NOUNS.includes(word) || WEEKDAYS.includes(word) ? 'zeit' : 'ding';
+}
+
 /** A word as it appears in a line — letters (incl. umlauts) or a run of digits. */
 const WORD_RE = /[A-Za-zÄÖÜäöüß]+|\d+/g;
 
@@ -438,7 +500,7 @@ function pickOther(list, not, rng) {
  * The replacement table: one changed DETAIL, drawn from the dialogue's own
  * kinds of token. Returns null for a word that carries no checkable detail.
  */
-function changedDetail(word, { names, vocab }, rng, { allowVocab = true, digitGroup = false } = {}) {
+function changedDetail(word, { names, vocab }, rng, { allowVocab = true, digitGroup = false, determiner = '' } = {}) {
   const lower = word.toLowerCase();
   if (NUMBER_WORDS.includes(lower)) {
     const other = pickOther(digitGroup ? DIGIT_NUMBERS : REPLACEMENT_NUMBERS, lower, rng);
@@ -450,10 +512,19 @@ function changedDetail(word, { names, vocab }, rng, { allowVocab = true, digitGr
     return String(n >= 10 ? n + 10 : n + 3);
   }
   if (names.includes(word)) return pickOther(names, word, rng);
-  // Congruence: same article only, or no swap at all (see contentWords).
+  // Congruence: same article only, or no swap at all (see contentWords) — and,
+  // under a quantifier or a deictic, same semantic class on top of it
+  // (see QUANTIFIER_DET / DEICTIC_DET).
   if (allowVocab && vocab.has(word)) {
+    const det = String(determiner || '').toLowerCase();
+    if (QUANTIFIER_DET.includes(det)) return null;
     const { article } = vocab.get(word);
-    const same = [...vocab.keys()].filter((w) => w !== word && vocab.get(w).article === article);
+    const sameClass = DEICTIC_DET.includes(det)
+      ? (w) => semanticClass(w) === semanticClass(word)
+      : () => true;
+    const same = [...vocab.keys()].filter(
+      (w) => w !== word && vocab.get(w).article === article && sameClass(w),
+    );
     return same.length ? pickOther(same, word, rng) : null;
   }
   return null;
@@ -482,7 +553,10 @@ function falsifyWindow(window, text, ctxWords, rng) {
         if (allowVocab && sentenceInitial(de, match.index)) continue;
         const digitGroup = isNumberToken(tokens[pos])
           && (isNumberToken(tokens[pos - 1]) || isNumberToken(tokens[pos + 1]));
-        const replacement = changedDetail(match[0], ctxWords, rng, { allowVocab, digitGroup });
+        // The word left of the match, so the vocab branch can see whether the
+        // noun is governed by a quantifier („jede Woche“ — DaF review #7, MAJOR 2).
+        const determiner = tokens[pos - 1] ? tokens[pos - 1][0] : '';
+        const replacement = changedDetail(match[0], ctxWords, rng, { allowVocab, digitGroup, determiner });
         if (!replacement) continue;
         const changed = `${de.slice(0, match.index)}${replacement}${de.slice(match.index + match[0].length)}`;
         if (changed === de || text.includes(changed)) continue;
