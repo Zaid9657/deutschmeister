@@ -184,6 +184,23 @@ test('every Lektion really drills its own grammar point — content, not label',
   // the item makes the learner produce instead, and the table below is the real
   // figure. A Lektion under PRIMARY_MIN here is a MIS-TAGGING bug: the items are
   // fine, they are filed in the wrong topic and drawn into the wrong Lektion.
+  //
+  // REVIEW #4 MAJOR tightened three of the predicates, because the instrument
+  // itself was lifting two Lektionen over the floor it was built to expose:
+  //   * `nouns-gender` no longer counts an answer that merely STARTS with
+  //     der/die/das, so "Korrigieren Sie: „Das ist eine Tisch.“" → "Das ist ein
+  //     Tisch." stops counting as a gender drill (it drills ein/eine, the slug
+  //     of Lektion 6). Without it Lektion 4 stood at 4 of 7; with it, at 3.
+  //   * `yes-no-questions` no longer counts a gap at position 1 in front of a
+  //     question mark. "___ du eine Fahrkarte für morgen? (haben)" → Hast GIVES
+  //     the inversion and asks for a verb form; five of Lektion 10's drawn seven
+  //     were that shape, so the slug measured 7 of 7 while the learner produced
+  //     the word order at most twice.
+  //   * `possessive-articles` now counts a multi-word answer containing a
+  //     possessive ("Wir feiern unser Fest."), which the whole-string regex
+  //     missed — the instrument was wrong in both directions.
+  // The floor is unchanged and deliberately so: this test is the honest number,
+  // and a Lektion below it is a finding, not a reason to loosen the predicate.
   const failures = [];
   const rows = [];
   for (const attempt of [1, 2]) {
