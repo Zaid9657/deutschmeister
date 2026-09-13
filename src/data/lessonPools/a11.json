@@ -1640,7 +1640,7 @@
     "Ich brauche einen Computer.",
     "Ich brauche einen Computer"
    ],
-   "explanationDe": "Nach brauchen wird ein zu einen: einen Computer.",
+   "explanationDe": "Computer ist maskulin: Nach brauchen wird maskulin ein zu einen.",
    "hint": null,
    "minLektion": 6
   },
@@ -1721,6 +1721,24 @@
    "minLektion": 6
   },
   {
+   "id": "extra-a11-l06-22",
+   "topic": "indefinite-articles",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 193,
+   "questionDe": "Er hat ___ Handy. (unbestimmter Artikel)",
+   "questionEn": "He has a mobile phone.",
+   "options": null,
+   "answer": "ein",
+   "accepted": [
+    "ein"
+   ],
+   "explanationDe": "Handy ist neutral: ein Handy.",
+   "hint": null,
+   "minLektion": 6
+  },
+  {
    "id": "05649f0e-7308-50dd-8593-ac61018ef7e2",
    "topic": "indefinite-articles",
    "type": "fill_blank",
@@ -1755,24 +1773,6 @@
    "explanationDe": "Tasche ist feminin, deshalb eine.",
    "hint": null,
    "minLektion": 8
-  },
-  {
-   "id": "4aae7de0-bb31-5533-ac24-027af7598a19",
-   "topic": "indefinite-articles",
-   "type": "fill_blank",
-   "stage": 5,
-   "difficulty": 1,
-   "order": 11,
-   "questionDe": "Er hat ___ Handy. (unbestimmter Artikel)",
-   "questionEn": "He has ___ phone. (ein/eine)",
-   "options": null,
-   "answer": "ein",
-   "accepted": [
-    "ein"
-   ],
-   "explanationDe": "Handy ist neutral, deshalb ein, wie bei maskulinen Nomen.",
-   "hint": null,
-   "minLektion": 6
   },
   {
    "id": "1ed2c78f-8f65-52e3-9e63-97f2a5b0663b",
@@ -5669,24 +5669,6 @@
    "minLektion": 9
   },
   {
-   "id": "fb88c1bb-9662-5838-9cd6-6a117218b6bb",
-   "topic": "verb-haben",
-   "type": "fill_blank",
-   "stage": 5,
-   "difficulty": 1,
-   "order": 9,
-   "questionDe": "Wir ___ Durst. (haben)",
-   "questionEn": "We ___ thirst (= we are thirsty). (verb: haben, wir)",
-   "options": null,
-   "answer": "haben",
-   "accepted": [
-    "haben"
-   ],
-   "explanationDe": "Wir steht immer mit haben.",
-   "hint": null,
-   "minLektion": 9
-  },
-  {
    "id": "3286c2b6-0c89-5187-ae66-841a73bcc4c4",
    "topic": "verb-haben",
    "type": "fill_blank",
@@ -5703,24 +5685,6 @@
    "explanationDe": "Singular-sie (she) steht mit hat, wie er und es.",
    "hint": null,
    "minLektion": 8
-  },
-  {
-   "id": "3c9fff52-7687-5322-b960-1dd3fd3c2b88",
-   "topic": "verb-haben",
-   "type": "fill_blank",
-   "stage": 5,
-   "difficulty": 1,
-   "order": 13,
-   "questionDe": "Du ___ Hunger. (haben)",
-   "questionEn": "You ___ hunger (= you are hungry). (verb: haben, du)",
-   "options": null,
-   "answer": "hast",
-   "accepted": [
-    "hast"
-   ],
-   "explanationDe": "Du steht immer mit hast.",
-   "hint": null,
-   "minLektion": 9
   },
   {
    "id": "e8388d41-3d49-59c8-ac5b-020c596c2649",
@@ -5870,6 +5834,99 @@
     "hast"
    ],
    "explanationDe": "du → hast: Hast du Hunger?",
+   "hint": null,
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a11-l09-12",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 194,
+   "questionDe": "Der Kellner ___ Zeit. (haben)",
+   "questionEn": "The waiter has time.",
+   "options": null,
+   "answer": "hat",
+   "accepted": [
+    "hat"
+   ],
+   "explanationDe": "Bei er ist die Form hat: Der Kellner hat Zeit.",
+   "hint": null,
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a11-l09-13",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 1,
+   "order": 195,
+   "questionDe": "Wir ___ Durst. Wir möchten Mineralwasser. (haben)",
+   "questionEn": "We are thirsty. We would like mineral water.",
+   "options": null,
+   "answer": "haben",
+   "accepted": [
+    "haben"
+   ],
+   "explanationDe": "Bei wir ist die Form haben: Wir haben Durst.",
+   "hint": null,
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a11-l09-14",
+   "topic": "verb-haben",
+   "type": "error_correction",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 196,
+   "questionDe": "Korrigieren Sie: „Du habt Durst.“",
+   "questionEn": "Correct the verb form.",
+   "options": null,
+   "answer": "Du hast Durst.",
+   "accepted": [
+    "Du hast Durst.",
+    "Du hast Durst"
+   ],
+   "explanationDe": "Bei du ist die Form hast, nicht habt.",
+   "hint": null,
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a11-l09-15",
+   "topic": "verb-haben",
+   "type": "fill_blank",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 197,
+   "questionDe": "___ ihr auch Tee? (haben)",
+   "questionEn": "Do you all want tea too?",
+   "options": null,
+   "answer": "Habt",
+   "accepted": [
+    "Habt",
+    "habt"
+   ],
+   "explanationDe": "Bei ihr ist die Form habt: Habt ihr Tee?",
+   "hint": null,
+   "minLektion": 9
+  },
+  {
+   "id": "extra-a11-l09-16",
+   "topic": "verb-haben",
+   "type": "sentence_building",
+   "stage": 5,
+   "difficulty": 2,
+   "order": 198,
+   "questionDe": "Bilden Sie den Satz: [die Kellnerin / haben / Kuchen]",
+   "questionEn": "Form the sentence: the waitress has cake.",
+   "options": null,
+   "answer": "Die Kellnerin hat Kuchen.",
+   "accepted": [
+    "Die Kellnerin hat Kuchen.",
+    "Die Kellnerin hat Kuchen"
+   ],
+   "explanationDe": "Bei sie im Singular ist die Form hat: Die Kellnerin hat Kuchen.",
    "hint": null,
    "minLektion": 9
   },
@@ -6098,60 +6155,6 @@
    "explanationDe": "Nach du steht bist: Bist du ledig?",
    "hint": null,
    "minLektion": 2
-  },
-  {
-   "id": "338b13a7-7712-555d-bdb5-380090c87ba3",
-   "topic": "verb-sein",
-   "type": "fill_blank",
-   "stage": 5,
-   "difficulty": 1,
-   "order": 11,
-   "questionDe": "Er ___ Arzt. (sein)",
-   "questionEn": "He ___ a doctor. (verb: sein, er)",
-   "options": null,
-   "answer": "ist",
-   "accepted": [
-    "ist"
-   ],
-   "explanationDe": "Er, sie, es stehen alle mit ist.",
-   "hint": null,
-   "minLektion": 8
-  },
-  {
-   "id": "885e0528-1c6e-541f-b25a-cbf5286eac36",
-   "topic": "verb-sein",
-   "type": "fill_blank",
-   "stage": 5,
-   "difficulty": 1,
-   "order": 12,
-   "questionDe": "Wir ___ Freunde. (sein)",
-   "questionEn": "We ___ friends. (verb: sein, wir)",
-   "options": null,
-   "answer": "sind",
-   "accepted": [
-    "sind"
-   ],
-   "explanationDe": "Wir steht immer mit sind.",
-   "hint": null,
-   "minLektion": 7
-  },
-  {
-   "id": "299cba23-0ab0-5c58-98bb-bca945fcc43e",
-   "topic": "verb-sein",
-   "type": "fill_blank",
-   "stage": 5,
-   "difficulty": 1,
-   "order": 13,
-   "questionDe": "Ihr ___ müde. (sein)",
-   "questionEn": "You all ___ tired. (verb: sein, ihr)",
-   "options": null,
-   "answer": "seid",
-   "accepted": [
-    "seid"
-   ],
-   "explanationDe": "Ihr steht immer mit seid.",
-   "hint": null,
-   "minLektion": 11
   },
   {
    "id": "1e3a7370-9e9c-55ea-b513-496b45421861",

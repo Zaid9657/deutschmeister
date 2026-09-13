@@ -317,10 +317,11 @@ export const MAX_MISSIONLESS_LEKTIONEN = 4;        // a1.1; per level in LEVELS 
  * because `minLektion` is stamped from this same narrowed lexicon and the draw obeys it. So this
  * number went up because the measurement got honest; the number the learner feels did not move.
  *
- * Round 11 (2026-09-13): re-measured after both slices landed — 62. Function words are
+ * Round 11 (2026-09-13): re-measured after both slices landed — 62. Round 12: 59 after the
+ * unconditioned-rule exclusion removed eleven cache items. Function words are
  * bound to first use now, so the count is what the licence used to hide.
  */
-export const MAX_UNTAUGHT_ITEM_TOKENS = 62;        // a1.1; per level in LEVELS below — measured 2026-09-13
+export const MAX_UNTAUGHT_ITEM_TOKENS = 59;        // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
  * RULE 11b ratchet — how many (item, token) pairs the learner MEETS may still use a word the course

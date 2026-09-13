@@ -95,6 +95,18 @@
 //      is excluded, and a hand-written EXTRA that trips it stops the build with
 //      its id, which is what running the extras through the same gate is for.
 //
+//   5e. NOT REPAIRED EITHER, FOR THE SAME REASON (REVIEW #11 BLOCKER). An
+//      explanation that states a rule without the condition it holds under —
+//      „Nach brauchen wird ein zu einen." (false: only MASKULIN does), „Wir
+//      steht immer mit haben." (true only within `haben`; the pool's own
+//      „Wir steht immer mit sind." contradicts it) — is excluded with
+//      `unconditioned-rule`. The missing word („maskulin"? „bei haben"?) is a
+//      fact only the item's author knows, so a build step may not insert it:
+//      guessing it would write the next false rule. Eleven cache items fall
+//      here; the hand-written extra that carried the class was repaired in
+//      a11.extra.json instead, because an extra that trips the gate stops the
+//      build with its id.
+//
 //   6. REGISTER (REVIEW #3 MAJOR). The hand-written items siezen, the legacy
 //      bank duzt: 39 du-imperatives against 30 Sie-forms in the shipped pool,
 //      three of them in the drawn seven of the FREE Lektion 1, next to a

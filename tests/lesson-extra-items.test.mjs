@@ -17,7 +17,9 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-import { exclusionReason, answerInPrompt, isMetaPrompt } from '../src/data/lessonPools/quality.js';
+import {
+  exclusionReason, answerInPrompt, isMetaPrompt, unconditionedRule, unconditionedRuleSentence,
+} from '../src/data/lessonPools/quality.js';
 import { planPractice, relevanceScore, wortfeldTerms, isTypedItem } from '../src/lib/lesson/buildLesson.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 
@@ -673,5 +675,48 @@ test('every polite-form item is case-strict — the flag is the class, not a lis
     assert.ok(item, `${id} is gone — re-measure the polite-form rule against the batch`);
     assert.equal(politeCaseItem(item), false, `${id} must stay outside the polite-form class`);
     assert.notEqual(item.caseSensitive, true, `${id} must not be case-strict`);
+  }
+});
+
+
+// --- REVIEW #11 -----------------------------------------------------------
+
+/**
+ * BLOCKER. The batch of this round wrote „Nach brauchen wird ein zu einen:
+ * einen Computer." onto `extra-a11-l06-14` — the rule without its condition,
+ * and therefore a false rule: after `brauchen` only MASKULIN `ein` becomes
+ * `einen`. Two items later in the SAME drawn seven the course marks „Ich
+ * brauche einen Pause" and „Ich brauche einen Telefon" wrong, i.e. it refutes
+ * its own explanation inside one Lektion.
+ *
+ * The gate in quality.js EXCLUDES such an item, and an excluded extra stops the
+ * build — so these two tests are what tells the next author which sentence of
+ * his batch is the problem before the build does.
+ */
+test('no extra item states a rule without the condition it holds under — REVIEW #11 BLOCKER', () => {
+  for (const item of EXTRA) {
+    const hit = unconditionedRuleSentence(item);
+    assert.equal(hit, null, `${item.id} — ${hit && hit.clause}: „${hit && hit.sentence}“`);
+  }
+});
+
+test('the three sentences the course writes for ein → einen say the same thing — REVIEW #11 BLOCKER', () => {
+  // The blocker was not that one line was wrong in isolation: it was that the
+  // course already carried the correct wording twice and a third item wrote a
+  // different, shorter, false one. So the check is on the FAMILY, by id.
+  const family = ['extra-a11-l06-04', 'extra-a11-l09-07', 'extra-a11-l06-14']
+    .map((id) => EXTRA.find((i) => i.id === id));
+  for (const [i, item] of family.entries()) {
+    assert.ok(item, `${['extra-a11-l06-04', 'extra-a11-l09-07', 'extra-a11-l06-14'][i]} is gone`);
+    assert.match(item.explanationDe, /\bmaskulin\b/,
+      `${item.id}: ein → einen is a MASCULINE rule and the explanation must say so`);
+    assert.equal(unconditionedRule(item), false, item.id);
+  }
+  // …and the two error corrections the broken explanation contradicted are the
+  // proof that the condition matters: they mark `einen` wrong on purpose.
+  for (const [id, right] of [['extra-a11-l06-12', 'eine'], ['extra-a11-l06-13', 'ein']]) {
+    const item = EXTRA.find((i) => i.id === id);
+    assert.ok(item, `${id} is gone — the counter-example to l06-14 must stay in the batch`);
+    assert.match(String(item.answer), new RegExp(`\\b${right}\\b`), `${id} no longer corrects to ${right}`);
   }
 });
