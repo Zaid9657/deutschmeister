@@ -827,7 +827,8 @@ test('every sentence-building item with a time or place Angabe accepts both word
   assert.deepEqual([...gradedIds].sort(), [
     // Re-measured in round 14 after L3 line 3 changed and Hören began preferring
     // construction-free, unreportable lines — the draw shifted and so did the seats.
-    'a1.1-cp1-bausteine-2', 'a1.1-cp1-schreiben-1', 'a1.1-cp4-schreiben-2',
+    // Round 15 (paper-wide leak cap reseats the sections): re-measured again.
+    'a1.1-cp1-schreiben-2', 'a1.1-cp4-schreiben-2',
   ], `the graded items with a second word order changed (${graded} found)`);
 });
 
