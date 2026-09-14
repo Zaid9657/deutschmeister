@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import SEO from '../components/SEO';
 import { seoProps } from '../data/seoRoutes.js';
 import { useAuth } from '../contexts/AuthContext';
@@ -21,6 +21,21 @@ const LevelTest = () => {
   const [listeningScore, setListeningScore] = useState(null);
   const [, setListeningAnswers] = useState([]);
   const [speakingScore, setSpeakingScore] = useState(null);
+  const assessmentRef = useRef(null);
+
+  // Route changes in this SPA preserve the previous document scroll position.
+  // Bring each assessment step back into view and move keyboard/screen-reader
+  // focus with it, especially when the landing CTA sits near the page footer.
+  useEffect(() => {
+    if (testState === 'landing') return undefined;
+
+    const frameId = window.requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      assessmentRef.current?.focus({ preventScroll: true });
+    });
+
+    return () => window.cancelAnimationFrame(frameId);
+  }, [testState, currentQuestionIndex]);
 
   // Shuffle questions within each level for variety
   const questions = useMemo(() => {
@@ -238,7 +253,13 @@ const LevelTest = () => {
       {/* The ground only. Each step owns its own gutter and rhythm — the
           speaking step hands the screen to SpeakingSession, which is a
           full-height layout of its own and must not sit in a padded box. */}
-      <div className="min-h-screen bg-paper text-ink">
+      <div
+        ref={assessmentRef}
+        tabIndex={testState === 'landing' ? undefined : -1}
+        role="region"
+        aria-label="German level test assessment"
+        className="min-h-screen bg-paper text-ink outline-none"
+      >
         {testState === 'landing' && (
           <LevelTestLanding onStart={startTest} />
         )}

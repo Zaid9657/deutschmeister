@@ -157,7 +157,7 @@ const authAttrs = (item) =>
           </a>
 
           <!-- Desktop nav — rendered from the shared navigation registry -->
-          <div class="hidden md:flex items-center gap-1">
+          <div class="hidden 2xl:flex items-center gap-1">
             {NAV_GROUPS.map((group, gi) => (
               <>
                 {gi > 0 && <div class="w-px h-5 bg-rule mx-1"></div>}
@@ -165,7 +165,7 @@ const authAttrs = (item) =>
                   <a
                     href={item.href}
                     {...authAttrs(item)}
-                    class="px-3 py-2 rounded-lg text-sm font-semibold text-graphite hover:text-siegel-deep hover:bg-siegel-wash transition-colors"
+                    class="whitespace-nowrap px-3 py-2 rounded-lg text-sm font-semibold text-graphite hover:text-siegel-deep hover:bg-siegel-wash transition-colors"
                   >
                     {item.labelEn}
                   </a>
@@ -176,21 +176,21 @@ const authAttrs = (item) =>
             <a
               href="/signup"
               data-anon-only
-              class="px-4 py-2 rounded-clay bg-siegel text-white text-sm font-bold shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none transition-all duration-100 ease-snap select-none"
+              class="whitespace-nowrap px-4 py-2 rounded-clay bg-siegel text-white text-sm font-bold shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none transition-all duration-100 ease-snap select-none"
             >
               Get started
             </a>
             <a
               href="/login"
               data-anon-only
-              class="px-3 py-2 text-sm font-semibold text-graphite hover:text-ink transition-colors"
+              class="whitespace-nowrap px-3 py-2 text-sm font-semibold text-graphite hover:text-ink transition-colors"
             >
               Log in
             </a>
           </div>
 
           <!-- Mobile: CTA + full menu (pure HTML disclosure, no client JS) -->
-          <div class="md:hidden flex items-center gap-2">
+          <div class="2xl:hidden flex items-center gap-2">
             <a href="/signup" data-anon-only class="px-3 py-1.5 rounded-clay bg-siegel text-white text-sm font-bold shadow-raise-siegel active:translate-y-1 active:shadow-none transition-all duration-100 ease-snap select-none">
               Get started
             </a>

@@ -495,12 +495,17 @@ const SentenceXRay = () => {
         {/* Input — the big raised clay card */}
         <div className="hero-line mb-4" style={{ '--d': '160ms' }}>
           <Card raised className="p-4 sm:p-5">
+            <label htmlFor="sentence-xray-input" className="sr-only">
+              German sentence to analyze
+            </label>
             <textarea
+              id="sentence-xray-input"
               value={sentence}
               onChange={(e) => setSentence(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Type or paste a German sentence… e.g. Die Mutter gibt dem Kind einen Apfel."
               rows={2}
+              maxLength={500}
               className="w-full resize-none rounded-clay border border-rule bg-paper px-4 py-3 text-base leading-relaxed text-ink placeholder:text-graphite focus:border-siegel"
             />
             <div className="flex items-center justify-between gap-3 pt-3">
@@ -547,7 +552,7 @@ const SentenceXRay = () => {
                 <HowItWorks />
               </Card>
 
-              <PreviewExample onTryIt={() => document.querySelector('textarea')?.focus()} />
+              <PreviewExample onTryIt={() => document.getElementById('sentence-xray-input')?.focus()} />
 
               <div>
                 <p className={`${EYEBROW} text-siegel mb-2 px-1`}>

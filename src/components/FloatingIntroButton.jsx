@@ -5,12 +5,28 @@ import { Play, X } from 'lucide-react';
 
 const DISMISS_KEY = 'dm_intro_dismissed';
 const DISMISS_DAYS = 7;
+const SUPPRESSED_ROUTES = [
+  '/intro',
+  '/signup',
+  '/login',
+  '/reset-password',
+  '/update-password',
+  '/verify-email',
+  '/level-test',
+  '/analyze',
+  '/speaking',
+  '/schreiben',
+  '/modelltest',
+];
 
 const FloatingIntroButton = () => {
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
+  const isSuppressedRoute = SUPPRESSED_ROUTES.some((route) => (
+    location.pathname === route || location.pathname.startsWith(`${route}/`)
+  ));
 
   // Check dismissal state on mount
   useEffect(() => {
@@ -31,10 +47,10 @@ const FloatingIntroButton = () => {
 
   // Delay entrance animation
   useEffect(() => {
-    if (dismissed) return;
+    if (dismissed || isSuppressedRoute) return;
     const timer = setTimeout(() => setVisible(true), 3000);
     return () => clearTimeout(timer);
-  }, [dismissed]);
+  }, [dismissed, isSuppressedRoute]);
 
   const handleDismiss = (e) => {
     e.stopPropagation();
@@ -49,8 +65,8 @@ const FloatingIntroButton = () => {
     navigate('/intro');
   };
 
-  // Don't show on /intro page or if dismissed
-  if (dismissed || location.pathname === '/intro') return null;
+  // Keep the prompt away from forms and focused assessment experiences.
+  if (dismissed || isSuppressedRoute) return null;
 
   return (
     <AnimatePresence>
@@ -76,10 +92,12 @@ const FloatingIntroButton = () => {
             {/* Dismiss button */}
             <button
               onClick={handleDismiss}
-              className="absolute -top-2 -right-2 w-6 h-6 rounded-pill bg-ink text-paper flex items-center justify-center hover:bg-graphite transition-colors"
-              aria-label="Dismiss"
+              className="absolute -top-5 -right-5 min-w-11 min-h-11 rounded-pill text-paper flex items-center justify-center"
+              aria-label="Dismiss intro video prompt"
             >
-              <X size={12} />
+              <span className="flex h-6 w-6 items-center justify-center rounded-pill bg-ink transition-colors hover:bg-graphite">
+                <X size={12} aria-hidden="true" />
+              </span>
             </button>
           </div>
         </motion.div>
