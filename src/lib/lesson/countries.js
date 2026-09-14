@@ -21,12 +21,22 @@
 //                                 ordinary `-isch` adjective (`praktisch`, `frisch`) cannot collide.
 //   COUNTRY_NAMES  Array<string>  country NAMES as written in German (`Frankreich`, `USA`,
 //                                 `Elfenbeinküste`, `Sierra Leone` — a name may be two words, the
-//                                 reader joins them) — the remainder whose German name shares no
-//                                 stem with its nationality (Frankreich/französisch, China/chinesisch)
-//                                 or whose stem does not start the name (Zypern/zyprisch). Readers
-//                                 lower-case at their boundary; the list is written as a person
-//                                 writes it. Names the stem search already finds (Marokko, Polen,
-//                                 Türkei) are NOT repeated here.
+//                                 reader joins them) — the remainder that `stem + country ending`
+//                                 does NOT build: Deutschland is `deutsch` + `land`, Türkei is
+//                                 `türk` + `ei`, Syrien is `syr` + `ien`, Eritrea is `eritre` + `a`,
+//                                 and those are not listed; Frankreich/französisch, China/chinesisch,
+//                                 Zypern/zyprisch, Marokko/marokkanisch, Kosovo/kosovarisch share no
+//                                 such composition and are. ROUND 20 (DaF review #19, MAJOR 2): the
+//                                 name FIELDS („Vorname: Franz“) ask „is this a whole country name?“
+//                                 and get exactly this composition or this list, nothing looser —
+//                                 the five-letter prefix search that reads „aus Marokko“ read Franz
+//                                 as Frankreich and Dominik as the Dominikanische Republik — so the
+//                                 list now carries every common country the composition misses.
+//                                 `Ukraine` is here although `ukrain` + `e` would find it, because
+//                                 `-e` is also a nationality-noun suffix (Pole, Türke) and the
+//                                 country field excludes nationality nouns: a LISTED name wins.
+//                                 Readers lower-case at their boundary; the list is written as a
+//                                 person writes it.
 //   LANGUAGE_NAMES Array<string>  the LANGUAGES whose German name does not end in `-isch` (`Dari`,
 //                                 `Urdu`, `Tigrinya`, `Somali`) — the `-isch` languages are read by
 //                                 form in `writing.js` (`LANGUAGE_NAME_RE`); this is the remainder,
@@ -72,6 +82,11 @@ export const COUNTRY_NAMES = [
   // compares, so `Sierra Leone` is one name and „Ich komme aus Sierra Leone.“ is a country.
   'Sierra Leone', 'Saudi-Arabien', 'Sri Lanka', 'Costa Rica', 'El Salvador', 'Burkina Faso',
   'Papua-Neuguinea', 'Trinidad und Tobago',
+  // ROUND 20 (DaF review #19, MAJOR 2): the names `stem + ending` does not build — see the header.
+  'Marokko', 'Mexiko', 'Kosovo', 'Korea', 'Chile', 'Kenia', 'Peru', 'Vietnam', 'Angola', 'Kongo',
+  'Sudan', 'Jemen', 'Nepal', 'Senegal', 'Portugal', 'Dänemark', 'Ungarn', 'Palästina', 'Südafrika',
+  'Venezuela', 'Ecuador', 'Brasilien', 'Bolivien', 'Kolumbien', 'Libanon', 'Ukraine', 'Montenegro',
+  'Mazedonien', 'Belarus',
 ];
 
 export const LANGUAGE_NAMES = [
