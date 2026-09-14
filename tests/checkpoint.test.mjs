@@ -81,6 +81,8 @@ import {
   leaksAcross,
   printedSurface,
   agreementViolations,
+  dictationCeiling,
+  DICTATION_MAX_WORDS,
 } from '../src/lib/checkpoint/buildCheckpoint.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js';
@@ -156,6 +158,89 @@ test('Hören is 3 dictations of dialogue lines plus 2 word-choice items with 3 d
     assert.ok(c.options.includes(c.answer));
     for (const option of c.options) assert.ok(wortfeld.has(option), 'distractors come from the Wortfeld');
   }
+});
+
+test('a checkpoint dictates nothing longer than its own chapter dictates, and never more than ten words', () => {
+  // DaF review #18, Minor 10: `a1.1-cp1-hoeren-1` dictated the longest line of L2 — twelve words,
+  // then the ten-word enumeration with three commas the L2 comment keeps out of its own window as
+  // „a punctuation test, not a listening test“. The preference knew freeness, constructions and
+  // reportability and not length. The ceiling is measured off the chapter's own `hoeren.lines`
+  // windows (measured 2026-09-14: chapter 1 of A1.1 nine words, chapter 4 ten — the „six“ this
+  // comment used to say was round 19 copying a number the same commit had changed, DaF review
+  // #19 Minor 25), never typed; the ten is the longest line any A1.1 Lektion dictates, and the
+  // pin the review asked for.
+  const wc = (de) => de.trim().split(/\s+/).length;
+  assert.equal(DICTATION_MAX_WORDS, 10);
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    const ceiling = dictationCeiling(chapterLektionen(CURRICULUM_A11, cp));
+    assert.ok(ceiling <= DICTATION_MAX_WORDS, `${cp.id}: the chapter dictates a ${ceiling}-word line itself`);
+    for (const d of items.filter((i) => i.kind === 'dictation')) {
+      assert.ok(wc(d.audioText) <= ceiling, `${d.id} „${d.audioText}“ is ${wc(d.audioText)} words, chapter ceiling ${ceiling}`);
+    }
+  }
+  const ceilings = CURRICULUM_A11.checkpoints.map((cp) => dictationCeiling(chapterLektionen(CURRICULUM_A11, cp)));
+  // Measured 2026-09-14 (round 19): chapter 1 is nine because L2 line 3 — „Ich bin ledig. Ist das
+  // Formular für die Adresse?“, the Familienstand answer of Minor 12 — is a dictation line.
+  assert.deepEqual(ceilings, [9, 8, 9, 10], 're-measure and re-pin when a window moves');
+  assert.equal(dictationCeiling([]), DICTATION_MAX_WORDS, 'a chapter with no window falls back to the A1.1 maximum');
+  // IT BITES: a chapter whose free, construction-free, UNREPORTABLE lines — the ones the
+  // preference used to take first — are all above its ceiling still dictates only lines under it.
+  const c = structuredClone(CURRICULUM_FIXTURE);
+  for (const l of chapterLektionen(c, c.checkpoints[0])) {
+    for (let k = 7; k <= 10; k += 1) {
+      l.dialog.lines.push({ speaker: 'Ana', de: `Wie geht es dir heute Morgen, liebe Ana, nach Satz ${l.nr}.${k}?`, en: `line ${l.nr}.${k}` });
+    }
+  }
+  const chapter = chapterLektionen(c, c.checkpoints[0]);
+  const ceiling = dictationCeiling(chapter);
+  const longQuestions = chapter.flatMap((l) => l.dialog.lines.filter((x) => wc(x.de) > ceiling));
+  assert.ok(longQuestions.length >= 12, 'the fixture offers more long questions than the section needs');
+  const dictations = buildCheckpoint({ curriculum: c, checkpoint: c.checkpoints[0], pool: [] }).filter((i) => i.kind === 'dictation');
+  assert.equal(dictations.length, 3);
+  for (const d of dictations) assert.ok(wc(d.audioText) <= ceiling, `„${d.audioText}“ is above the ceiling ${ceiling}`);
+  // …and the ceiling orders, it does not filter: a chapter with ONLY long lines still fills the section.
+  const only = structuredClone(CURRICULUM_FIXTURE);
+  for (const l of chapterLektionen(only, only.checkpoints[0])) {
+    l.dialog.lines = l.dialog.lines.map((x, i) => ({ ...x, de: `${x.de.replace(/[.?]$/, '')}, und das ist wirklich sehr lang, Satz ${l.nr}.${i}, ja.` }));
+  }
+  assert.equal(buildCheckpoint({ curriculum: only, checkpoint: only.checkpoints[0], pool: [] }).filter((i) => i.kind === 'dictation').length, 3);
+});
+
+test('the twelve dictations of the four real papers are pinned, so a reorder is visible, not silent', () => {
+  // DaF review #19, Minor 24: `dictableFirst` sorts before `take(lines, 3)`, so the round-19
+  // ceiling changed which lines Hören spends, `usedLineKeys` with them, and — because every later
+  // section draws „unused first“ — the Lesen windows, the swap words, the Wortfeld distractors and
+  // the Bausteine of ALL FOUR papers. The commit said „cp1 no longer dictates 12 words“. Nothing
+  // else said anything, because nothing pinned the paper. This does: the dictation ids, their
+  // source lines and their text, measured 2026-09-14 (round 20). A change here is not wrong by
+  // itself — but it must be re-measured, re-read as a paper, and re-pinned in the same commit,
+  // with the old and the new paper side by side in the diff.
+  const dictated = Object.fromEntries(ALL_CHECKPOINTS.map(({ cp, items }) => [
+    cp.id,
+    items.filter((i) => i.kind === 'dictation').map((i) => [i.id, i.lektionId, i.lineKey, i.audioText]),
+  ]));
+  assert.deepEqual(dictated, {
+    'a1.1-cp1': [
+      ['a1.1-cp1-hoeren-1', 'a1.1-l01', 'line-6', 'Gut. Wie geht es Ihnen?'],
+      ['a1.1-cp1-hoeren-2', 'a1.1-l01', 'line-9', 'Tschüss! Bis morgen.'],
+      ['a1.1-cp1-hoeren-3', 'a1.1-l01', 'line-3', 'C-H-A-K-I-R-I.'],
+    ],
+    'a1.1-cp2': [
+      ['a1.1-cp2-hoeren-1', 'a1.1-l06', 'line-7', 'Null vier zwei – drei drei acht eins.'],
+      ['a1.1-cp2-hoeren-2', 'a1.1-l04', 'line-7', 'Das macht zusammen zwanzig Euro.'],
+      ['a1.1-cp2-hoeren-3', 'a1.1-l04', 'line-0', 'Entschuldigung, was ist das?'],
+    ],
+    'a1.1-cp3': [
+      ['a1.1-cp3-hoeren-1', 'a1.1-l08', 'line-8', 'Und am Mittwoch, am Donnerstag oder am Freitag?'],
+      ['a1.1-cp3-hoeren-2', 'a1.1-l09', 'line-8', 'Gut. Die Kellnerin kommt sofort mit dem Brot.'],
+      ['a1.1-cp3-hoeren-3', 'a1.1-l07', 'line-9', 'Vielleicht hören wir am Wochenende zusammen Musik?'],
+    ],
+    'a1.1-cp4': [
+      ['a1.1-cp4-hoeren-1', 'a1.1-l10', 'line-2', 'Hat der Zug Verspätung?'],
+      ['a1.1-cp4-hoeren-2', 'a1.1-l12', 'line-8', 'Deine Party ist bestimmt schön!'],
+      ['a1.1-cp4-hoeren-3', 'a1.1-l10', 'line-4', 'Kostet die Fahrkarte zwanzig Euro?'],
+    ],
+  }, 'the papers were rebuilt — re-measure every dictation, re-read the four papers, re-pin here');
 });
 
 test('Lesen items carry a 2–3 line text and a richtig/falsch statement, two of each', () => {
@@ -367,8 +452,12 @@ function readingMap(chapter) {
 }
 
 /** The 15 A1.1 nouns whose plural is spelled like their singular — the measured class. */
+// Round 17: `Schalter` left the list because it left the Wortfeld — L2 needed two of its
+// twenty-five slots for `die Marokkanerin` and `kommen aus` (DaF review #16, BLOCKER), and
+// `der Schalter` stood in the stage direction of the dialogue and in no line, item or task.
+// Fourteen measured, not fifteen; the rule above still covers whatever the Wortfeld holds.
 const PLURAL_OF_SELF_A11 = [
-  'Lehrer', 'Schalter', 'Eltern', 'Geschwister', 'Euro', 'Kugelschreiber', 'Fenster',
+  'Lehrer', 'Eltern', 'Geschwister', 'Euro', 'Kugelschreiber', 'Fenster',
   'Zimmer', 'Schlüssel', 'Computer', 'Verkäufer', 'Wecker', 'Kuchen', 'Kellner', 'Fahrer',
 ];
 
@@ -1351,18 +1440,20 @@ test('THE minLektion BOUND — no checkpoint draws an item its chapter has not t
 });
 
 test('the bound BITES — an item stamped past the chapter leaves the draw, and the paper stays 20', () => {
-  // A mutation rather than a claim: `extra-a11-l05-03` is drawn by checkpoint 2
+  // A mutation rather than a claim: `extra-a11-l05-22` is drawn by checkpoint 2
   // (`afterLektion: 6`) with `minLektion: 5`. Re-stamp that one item to 8 — past
   // the chapter this paper closes — and it must disappear from the paper while
   // every section keeps its size. (The victim was `extra-a11-l05-08` until the
-  // paper-wide leak cap of round 15 moved the draw; the id is a measurement of
-  // the current build, not a fact about the pool.)
+  // paper-wide leak cap of round 15 moved the draw, then `extra-a11-l05-03` until
+  // round 18 added two L2 items and `Marokko`/`Ali` to DIALOG_NAMES — which
+  // re-stamps every origin item's `minLektion` and reseats the pool; the id is a
+  // measurement of the current build, not a fact about the pool.)
   const cp2 = CURRICULUM_A11.checkpoints[1];
   const drawn = (pool) => new Set(
     buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp2, pool })
       .map((i) => i.poolItemId).filter(Boolean),
   );
-  const VICTIM = 'extra-a11-l05-03';
+  const VICTIM = 'extra-a11-l05-22';
   assert.ok(drawn(POOL).has(VICTIM), `${VICTIM} is no longer drawn by ${cp2.id} — pick another victim`);
 
   const mutated = { ...POOL, items: POOL.items.map((i) => (i.id === VICTIM ? { ...i, minLektion: 8 } : { ...i })) };

@@ -1,13 +1,17 @@
--- A1.1 course Wortfeld: the 20 words the curriculum names but `words` does not
+-- A1.1 course Wortfeld: the 21 words the curriculum names but `words` does not
 -- carry yet (plan P1, "Recorded audio everywhere").
 --
 -- RE-APPLYING IS SAFE. Every INSERT is guarded by `WHERE NOT EXISTS (… german, level)`,
 -- so applying this file again seeds only rows that are still missing — which is how the
--- nineteenth entry (`marokkanisch`, round 15) and the twentieth (`geboren`, round 16)
--- reach the table without a second file. `marokkanisch` HAS been seeded (2026-09-13) and its
--- id is back in src/data/curricula/a11.js (`wordId: 'f25db60a-…'`), so of the twenty listed
--- below exactly ONE is still wordId-null in the module: `geboren`. Re-apply this file to seed
--- it, then paste its id into a11.js and run `node scripts/sync-curricula.mjs`.
+-- nineteenth entry (`marokkanisch`, round 15), the twentieth (`geboren`, round 16) and the
+-- twenty-first (`Marokkanerin`, round 17) reach the table without a second file. `marokkanisch`
+-- HAS been seeded (2026-09-13) and its id is back in src/data/curricula/a11.js
+-- (`wordId: 'f25db60a-…'`), and `geboren` and `Marokkanerin` were seeded the same day with their
+-- ids pasted back — so NONE of the entries listed below is still wordId-null in the module
+-- (measured 2026-09-13, round 18; the round-17 header said „exactly TWO … : none“, which was the
+-- count of the round before, left standing next to the answer that made it wrong). `Marokkaner` is
+-- seeded but holds no Wortfeld row and therefore no `wordId` — see its line below. The file stays
+-- idempotent for a fresh database.
 --
 -- WHY. src/data/curricula/a11.js lists every Lektion's Wortfeld with the id of
 -- the live `words` row (`wordId`), so the lesson player can show the real
@@ -35,6 +39,18 @@
 --        3.5.1998 geboren.“ Until round 16 the only version RULE 21 accepted was the
 --        form line „Das Geburtsdatum ist …“, which *Start Deutsch 1* deducts for;
 --        DaF review #15, MAJOR 1 / RULE 22)
+--   L02  Marokkanerin — Moroccan woman (added 2026-09-13, round 17: a nationality is
+--        an ADJECTIVE in a form field and a NOUN in a sentence about a person, and
+--        round 16 taught only the adjective, so the L2 model text, the L2 notice and
+--        a hand item all said „Ich bin marokkanisch.“ — which is not German;
+--        DaF review #16, BLOCKER / RULE 24. The masculine `der Marokkaner` is seeded
+--        with it so the audio script can render both, though only the feminine holds
+--        a Wortfeld row — the Lektion is at its 25-entry ceiling)
+--   L02  Marokkaner — Moroccan man (seeded with the row above, see there; since round 18
+--        it is TAUGHT, not only seeded: the L2 notice and the `verb-sein` card say
+--        „Ali ist Marokkaner.“ and `extra-a11-l02-16` asks for the word — DaF review #17,
+--        MAJOR 2. It still has no Wortfeld row and so no `wordId` in a11.js; the gloss of
+--        `die Marokkanerin` names it)
 --   L03  sprechen — to speak
 --   L04  machen — to do, to make
 --   L05  das Bild (Pl. Bilder) — picture
@@ -136,6 +152,18 @@ INSERT INTO public.words (level, german, english, article, plural, category)
 SELECT 'a1.1', 'geboren', 'born (ich bin am … geboren)', NULL, NULL, 'Course A1.1 · L02'
 WHERE NOT EXISTS (
   SELECT 1 FROM public.words WHERE german = 'geboren' AND level = 'a1.1'
+);
+
+INSERT INTO public.words (level, german, english, article, plural, category)
+SELECT 'a1.1', 'Marokkanerin', 'Moroccan woman (m: der Marokkaner, Pl. die Marokkaner)', 'die', 'Marokkanerinnen', 'Course A1.1 · L02'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.words WHERE german = 'Marokkanerin' AND level = 'a1.1'
+);
+
+INSERT INTO public.words (level, german, english, article, plural, category)
+SELECT 'a1.1', 'Marokkaner', 'Moroccan man', 'der', 'Marokkaner', 'Course A1.1 · L02'
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.words WHERE german = 'Marokkaner' AND level = 'a1.1'
 );
 
 INSERT INTO public.words (level, german, english, article, plural, category)

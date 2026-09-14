@@ -49,6 +49,15 @@
 // „5,8 h geführte Lektionszeit + Übungsmaterial“ separately and must NOT advertise „54 Stunden
 // Kurs“ as content (`src/data/marketing.js`: measure before you claim).
 //
+// NATIONALITY HAS TWO SHAPES AND THE COURSE MUST NOT MIX THEM (round 17, DaF review #16,
+// BLOCKER). In a form field a nationality is an ADJECTIVE („Staatsangehörigkeit: marokkanisch“);
+// in a sentence about a person it is a NOUN („Ich bin Marokkanerin.“, „Er ist Marokkaner.“).
+// Predicative „Ich bin marokkanisch.“ is not German — `deutsch` is the one exception, and it is
+// an exception. A STAATSANGEHÖRIGKEIT IS AN ADJECTIVE ON THE FORM AND A NOUN IN THE SENTENCE:
+// WHOEVER TURNS THE FORM VALUE INTO A SENTENCE TEACHES A MISTAKE THE LEARNER KEEPS FOR YEARS.
+// RULE 24 in scripts/validate-curriculum.mjs enforces it as a form, over every production surface
+// of the level, at a hard 0.
+//
 // REGISTER. du between learners (Ana, Tim, Lena), Sie with staff and neighbours (Frau Kaya,
 // Herr Weber, Herr Schmidt, Paul). No outcome promises and no exam fees anywhere in this file.
 
@@ -88,14 +97,41 @@ export const FUNCTION_WORDS = [
   'hallo', 'tschüss',
 ];
 
-/** Proper nouns and titles that may appear in a dialogue line (people, places, forms of address). */
+/**
+ * Proper nouns and titles that may appear in a dialogue line (people, places, forms of address).
+ *
+ * THIS LIST IS COUPLED TO A1.2, AND THE PAUSE DOES NOT KNOW IT (DaF review #18, Minor 22). A1.2's
+ * `DIALOG_NAMES` is `[...DIALOG_NAMES_A11, 'Fischer']` (`a12.js`) — by design for the CAST (Ana,
+ * Tim, Lena … recur, and RULE 14 holds their facts across both levels through `PERSONAS_A12`
+ * spreading `PERSONAS_A11`), but the coupling carries every name this level adds for its own
+ * reasons into A1.2's name set too. Measured in round 18: `Marokko` and `Ali` entered here for L2,
+ * and A1.2's RULE 11b ratchet moved 14 → 13 without an A1.2 file being touched, because a token
+ * that is a name is not an untaught word. Decoupling means splitting this list into the shared cast
+ * and a level-local remainder and having `a12.js` import only the cast — and `a12.js` is a PAUSED
+ * draft by owner decision (2026-09-13) that no round may edit. So the coupling stays, written down
+ * here and at the `LEVELS` registry of `scripts/validate-curriculum.mjs`: an addition to this list
+ * is an addition to A1.2's name set, and whoever re-measures A1.2's ratchets after one must say so.
+ * `tests/curricula.test.mjs` pins the direction of the coupling (A1.2 ⊇ A1.1), so the day it is
+ * broken the note is removed with the test, not silently outlived.
+ */
 export const DIALOG_NAMES = [
   'Ana', 'Tim', 'Lena', 'Paul', 'Herr', 'Frau', 'Weber', 'Kaya', 'Wolf', 'Schmidt', 'Berg',
   'Chakiri', 'Brandt', 'Berger', 'Bremen', 'Thomas',
+  // `Ali` is the masculine counterpart of Ana in the L2 notice („Ali ist Marokkaner.“), on the
+  // `verb-sein` card and in `extra-a11-l02-16` (round 18, DaF review #17, MAJOR 2): the nationality
+  // noun has two forms, the course lists Student/Studentin as a pair, and until round 18 it taught
+  // only the feminine one. A name is not lexis; he has no row in PERSONAS_A11, so no fact about him
+  // can be contradicted — he exists to carry the masculine form and nothing else.
+  'Ali',
   // Place names a dialogue line or a practice item may use. A city is a proper noun, not lexis the
   // course has to teach first — but it must be listed here, or RULE 11 reports it as an untaught
   // word (DaF review #4, „wortfeldCoverage()/itemLexis()“).
   'Berlin', 'Köln', 'Deutschland', 'Österreich', 'Italien', 'Polen', 'Spanien',
+  // `Marokko` is Ana's country (PERSONAS_A11) and, since round 18, a line of the L2 dialogue
+  // („Ich komme aus Marokko und wohne in Bremen.“). RULE 5 licenses a dialogue token from the
+  // Wortfeld, the function words and THIS list only — the notice does not count there — and a
+  // country name is a proper noun like Italien or Polen two entries up, not lexis to teach.
+  'Marokko',
 ];
 
 export const CURRICULUM_A11 = {
@@ -128,7 +164,14 @@ export const CURRICULUM_A11 = {
         'Ich kann jemanden mit „Guten Tag“ begrüßen und mich mit „Auf Wiedersehen“ verabschieden.',
         'Ich kann sagen, wie ich heiße.',
         'Ich kann meinen Namen buchstabieren.',
-        'Ich kann fragen, wie es jemandem geht, und darauf antworten.',
+        // ROUND 17 (DaF review #16, MAJOR 3 / RULE 12, now split at „ und “): the second half said
+        // „darauf antworten“, whose only content word is `darauf`. It now quotes the answer chunk the
+        // Lektion drills, exactly as the first line of this list already does.
+        // The chunk L1 actually drills (round 18, DaF review #17, Minor 16): dialogue line 8 says
+        // „Mir geht es gut, danke.“ and the Wortfeld row is „Mir geht es gut“. Round 17 wrote
+        // „Danke, gut“ here, which no surface of the Lektion contains — RULE 12 was green only
+        // because `danke` and `gut` occur separately. A can-do quotes what the learner rehearsed.
+        'Ich kann fragen, wie es jemandem geht, und mit „Mir geht es gut, danke“ antworten.',
       ],
       examTeile: ['Sprechen Teil 1', 'Schreiben Teil 1', 'Hören Teil 1'],
       grammarSlugs: ['alphabet-pronunciation'],
@@ -239,15 +282,18 @@ export const CURRICULUM_A11 = {
       primarySlug: 'verb-sein',
       minutes: 15,
       wortfeld: [
-        { de: 'der Vorname', word: 'Vorname', article: 'der', plural: 'Vornamen', en: 'first name', wordId: '6f92a8dc-f22e-418a-b13b-dc9c173d3aea' },
-        { de: 'der Nachname', word: 'Nachname', article: 'der', plural: 'Nachnamen', en: 'surname (= Familienname)', wordId: 'ad1996d7-42b5-4ad9-b765-022003806c29' },
-        { de: 'der Beruf', word: 'Beruf', article: 'der', plural: 'Berufe', en: 'profession, job', wordId: '2f54e3ae-2a16-47a3-9558-08b605c69dfb' },
-        { de: 'von Beruf', word: 'von Beruf', article: null, plural: null, en: 'by profession', wordId: 'dbb146f0-1c91-4c39-8339-4d0f67694901' },
-        { de: 'die Adresse', word: 'Adresse', article: 'die', plural: 'Adressen', en: 'address', wordId: 'bd5380d6-03a4-4fc8-bd88-cebf2346cc84' },
-        { de: 'die Telefonnummer', word: 'Telefonnummer', article: 'die', plural: 'Telefonnummern', en: 'phone number', wordId: '84fd3205-50f1-4187-a4ba-db6ec628ce11' },
+        { de: 'der Vorname', word: 'Vorname', article: 'der', plural: 'Vornamen', en: 'first name', field: true, wordId: '6f92a8dc-f22e-418a-b13b-dc9c173d3aea' },
+        { de: 'der Nachname', word: 'Nachname', article: 'der', plural: 'Nachnamen', en: 'surname (= Familienname)', field: true, wordId: 'ad1996d7-42b5-4ad9-b765-022003806c29' },
+        { de: 'der Beruf', word: 'Beruf', article: 'der', plural: 'Berufe', en: 'profession, job', field: true, wordId: '2f54e3ae-2a16-47a3-9558-08b605c69dfb' },
+        // `von Beruf` is NOT a Wortfeld row of its own (round 17): `der Beruf` teaches the noun and
+        // the chunk itself stands in dialogue line 6, in the pretest and in the speaking hint words.
+        // Two of the 25 slots of this Lektion had to be freed for the nationality noun and the
+        // origin verb the BLOCKER needs, and a duplicate entry is the first thing to go.
+        { de: 'die Adresse', word: 'Adresse', article: 'die', plural: 'Adressen', en: 'address', field: true, wordId: 'bd5380d6-03a4-4fc8-bd88-cebf2346cc84' },
+        { de: 'die Telefonnummer', word: 'Telefonnummer', article: 'die', plural: 'Telefonnummern', en: 'phone number', field: true, wordId: '84fd3205-50f1-4187-a4ba-db6ec628ce11' },
         { de: 'das Formular', word: 'Formular', article: 'das', plural: 'Formulare', en: 'form', wordId: '7dcdf9f6-5b5c-464e-87f5-a0a7f290b7bf' },
         { de: 'ausfüllen', word: 'ausfüllen', article: null, plural: null, en: 'to fill out', wordId: '0d5a6a88-9f0f-49dc-99c9-36432130acd6' },
-        { de: 'der Wohnort', word: 'Wohnort', article: 'der', plural: 'Wohnorte', en: 'place of residence', wordId: '67d01c31-7fcd-4662-b115-750547b1c7bf' },
+        { de: 'der Wohnort', word: 'Wohnort', article: 'der', plural: 'Wohnorte', en: 'place of residence', field: true, wordId: '67d01c31-7fcd-4662-b115-750547b1c7bf' },
         { de: 'ledig', word: 'ledig', article: null, plural: null, en: 'single, unmarried', wordId: 'e8bd092c-07b9-4b09-a80b-d1f22e5ad9e5' },
         { de: 'verheiratet', word: 'verheiratet', article: null, plural: null, en: 'married', wordId: '2d10cc55-fb90-4081-8484-51fad5923591' },
         { de: 'der Student', word: 'Student', article: 'der', plural: 'Studenten', en: 'student (m)', wordId: '7604734b-aab8-45da-ab00-da87605a9d20' },
@@ -258,16 +304,42 @@ export const CURRICULUM_A11 = {
         // which inflated the word count and crowded out the Personalien lexis the Handlungsfeld needs).
         { de: 'die Zahlen 0–10', word: 'Zahlen 0–10', article: 'die', plural: '—', en: 'the numbers 0–10 (null, eins … zehn)', meta: true, wordId: '1087cf2f-d531-45d9-b04c-803440a7563a' },
         { de: 'wohnen', word: 'wohnen', article: null, plural: null, en: 'to live, to reside', wordId: 'fb025b05-6aa5-4a9e-91a2-52a903032000' },
-        { de: 'das Geburtsdatum', word: 'Geburtsdatum', article: 'das', plural: 'Geburtsdaten', en: 'date of birth', wordId: '4b61db71-3720-4bf4-a936-d75495ebf91a' },
-        { de: 'die Staatsangehörigkeit', word: 'Staatsangehörigkeit', article: 'die', plural: 'Staatsangehörigkeiten', en: 'nationality', wordId: '25aca43e-8b73-4f68-8d8f-aaf629150fb4' },
-        // The nationality ADJECTIVE, and it is here because the graded Schreiben task of this very
-        // Lektion asks for „Ihr Land und Ihre Staatsangehörigkeit“ while A1.1 taught no nationality
-        // form at all — not one, in twelve Lektionen (DaF review #14, BLOCKER 1: prüfen und nicht
-        // lehren). The Formular fields of *Start Deutsch 1* include Staatsangehörigkeit, so the
-        // Handlungsfeld „Ämter und Behörden“ is where it belongs. One form, the one the persona
-        // needs; `deutsch` the course already teaches in L3. RULE 21 fails the build if a Leitpunkt
-        // ever again asks for lexis its Lektion has not taught.
-        { de: 'marokkanisch', word: 'marokkanisch', article: null, plural: null, en: 'Moroccan (nationality: Staatsangehörigkeit marokkanisch)', wordId: 'f25db60a-b383-4427-9fb3-db2dc1b5cac3' },
+        { de: 'das Geburtsdatum', word: 'Geburtsdatum', article: 'das', plural: 'Geburtsdaten', en: 'date of birth', field: true, wordId: '4b61db71-3720-4bf4-a936-d75495ebf91a' },
+        { de: 'die Staatsangehörigkeit', word: 'Staatsangehörigkeit', article: 'die', plural: 'Staatsangehörigkeiten', en: 'nationality', field: true, wordId: '25aca43e-8b73-4f68-8d8f-aaf629150fb4' },
+        // THE NATIONALITY, IN ITS TWO SHAPES, AND THEY ARE NOT INTERCHANGEABLE (round 17, DaF
+        // review #16, BLOCKER). Round 15 taught only the ADJECTIVE, because the graded Schreiben
+        // task of this very Lektion asks for „Ihr Land und Ihre Staatsangehörigkeit“ and A1.1
+        // taught no nationality form at all (DaF review #14, BLOCKER 1: prüfen und nicht lehren).
+        // Round 16 then had to build a sentence out of the only form it had, and wrote
+        // „Ich bin marokkanisch.“ — which no German speaker says about a person. The NOUN is the
+        // sentence form („Ich bin Marokkanerin.“, „Er ist Marokkaner.“); the ADJECTIVE is the
+        // FORM-FIELD value („Staatsangehörigkeit: marokkanisch“). Both are taught, each with the
+        // surface it belongs to, and RULE 24 fails the build if any production surface of the
+        // level ever again puts a country `-isch` adjective after a finite `sein` with a person
+        // subject (`deutsch` excepted — it is the one nationality German does use that way).
+        // ONE ROW, BOTH GENDERS, AND THAT IS A SLOT DECISION, NOT A LANGUAGE ONE: a Lektion may hold
+        // 15–25 Wortfeld entries (the validator fails outside that window, DaF review #2) and this
+        // one is full. The masculine is taught where the feminine is, and MEASURED there (round 18,
+        // DaF review #17, MAJOR 2 — round 17's version of this comment claimed the surfaces before
+        // writing them): the notice body and the `verb-sein` rule card say „Ali ist Marokkaner.“,
+        // the card's `commonMistakes` corrects the swapped gender, and `extra-a11-l02-16` makes the
+        // learner PRODUCE the masculine as word formation (Marokkaner/Marokkanerin like Student/
+        // Studentin). The notice is an INPUT surface under RULE 23 and licences the word for every
+        // lexis rule; `tests/curricula.test.mjs` pins the CLASS, not the id: every Wortfeld entry
+        // with an `(m: …)` gloss must have that masculine form on an input surface of its own
+        // Lektion. Two slots were freed for this row and for `kommen aus`: `von Beruf` and
+        // `der Schalter` (see below).
+        { de: 'die Marokkanerin', word: 'Marokkanerin', article: 'die', plural: 'Marokkanerinnen', en: 'Moroccan woman (m: der Marokkaner, Pl. die Marokkaner)', wordId: '155e0b29-0bd2-44b9-a5db-f062de63bf9c' },
+        { de: 'marokkanisch', word: 'marokkanisch', article: null, plural: null, en: 'Moroccan (form-field value: „Staatsangehörigkeit: marokkanisch“ — the sentence takes the noun)', wordId: 'f25db60a-b383-4427-9fb3-db2dc1b5cac3' },
+        // MOVED HERE FROM LEKTION 3 (round 17, DaF review #16, MAJOR 3 / RULE 12): the can-do line
+        // of this Lektion has promised „Ich kann sagen, woher ich komme“ since round 1 with nothing
+        // behind it — `kommen` was Lektion 3, and no item asked for an origin. „Woher kommen Sie?“
+        // is Sprechen Teil 1 and „Ihr Land“ is a Leitpunkt of the graded task, so the verb belongs
+        // to the Lektion that asks for it. `Marokko` stays in Lektion 3: it is a PERSONA fact of
+        // this course (Ana's country, `PERSONA_TABLES`), which is licence enough for the model text
+        // — measured, RULE 20 does not ask for a Wortfeld row, and a Wortfeld slot spent on one
+        // country name is a slot the Personalien lexis needs.
+        { de: 'kommen aus', word: 'kommen aus', article: null, plural: null, en: 'to come from', wordId: 'fc80d20a-6546-4917-9784-ed90efb5625a' },
         // ROUND 16 (DaF review #15, MAJOR 1): `geboren`, as the chunk a learner actually needs. RULE
         // 21 called the Leitpunkt „Ihr Name und Ihr **Geburtsdatum**“ answerable while the level
         // taught neither `geboren` nor a month name — because the Formcheck accepted the FIELD line
@@ -275,10 +347,12 @@ export const CURRICULUM_A11 = {
         // deducts for. RULE 21 no longer accepts it (`allowNamedField: false`) and RULE 22 forbids
         // it in a Mitteilung, so the word the natural answer needs has to be taught: „Ich bin am
         // 3.5.1998 geboren.“ The date stays in digits — the months are Lektion 12.
-        { de: 'geboren', word: 'geboren', article: null, plural: null, en: 'born (ich bin am … geboren)', wordId: null },
-        { de: 'der Familienstand', word: 'Familienstand', article: 'der', plural: '—', en: 'marital status', wordId: '3302687e-42ad-45b5-a4c9-43b65b8f4a2d' },
+        { de: 'geboren', word: 'geboren', article: null, plural: null, en: 'born (ich bin am … geboren)', wordId: '23645e51-0aae-40c0-8c20-2d890c16f56d' },
+        { de: 'der Familienstand', word: 'Familienstand', article: 'der', plural: '—', en: 'marital status', field: true, wordId: '3302687e-42ad-45b5-a4c9-43b65b8f4a2d' },
         { de: 'das Amt', word: 'Amt', article: 'das', plural: 'Ämter', en: 'public office, authority', wordId: 'b5556cee-448c-47fc-82a7-2a5f9f956c1b' },
-        { de: 'der Schalter', word: 'Schalter', article: 'der', plural: 'Schalter', en: 'counter, service desk', wordId: '04eb49be-3f26-4496-b65d-7fd3e55b2f67' },
+        // `der Schalter` is out for the same reason (round 17): it stood in the stage direction of
+        // the dialogue and in no line, no item and no task — the Ämter lexis the learner produces is
+        // `das Amt`, `die Post`, `das Formular`, `ausfüllen`.
         { de: 'die Post', word: 'Post', article: 'die', plural: '—', en: 'post office', wordId: '1897eb9b-5393-490d-aebf-c52080c2ec7d' },
       ],
       dialog: {
@@ -290,10 +364,32 @@ export const CURRICULUM_A11 = {
           // line 8 rather than by a Wortfeld entry nobody ever hears.
           { speaker: 'Herr Weber', de: 'Guten Tag! Ich bin Herr Weber vom Amt.', en: 'Good day! I am Mr Weber from the public office.' },
           { speaker: 'Ana', de: 'Freut mich! Ich bin Ana.', en: 'Nice to meet you! I am Ana.' },
-          { speaker: 'Herr Weber', de: 'Bitte füllen Sie das Formular aus.', en: 'Please fill out the form.' },
-          { speaker: 'Ana', de: 'Ist das Formular für die Adresse?', en: 'Is that form for the address?' },
-          { speaker: 'Herr Weber', de: 'Ja. Vorname, Nachname und Wohnort, bitte.', en: 'Yes. First name, surname and place of residence, please.' },
-          { speaker: 'Ana', de: 'Mein Nachname ist Chakiri. Ich wohne in Bremen.', en: 'My surname is Chakiri. I live in Bremen.' },
+          // THE FAMILIENSTAND IS ASKED AND ANSWERED, NOT DECLARED (round 19, DaF review #18, Minor
+          // 12). Round 18 put „Familienstand: Ich bin ledig oder verheiratet.“ into the notice so
+          // that RULE 23b would report 0 — a sentence nobody says, written for the rule. The two
+          // words of the graded task's third Leitpunkt and the field name now stand where a
+          // learner HEARS them: the clerk reads the field with its two values (index 2, eleven
+          // words — counted 2026-09-14, round 20, DaF review #19 Minor 25: round 19 wrote „ten“ —
+          // in no window) and Ana answers with the sentence the task wants (index 3, the dictation
+          // line, nine words: it is the longest line of the L2 window [7,3] and therefore the
+          // chapter-1 `dictationCeiling` of `buildCheckpoint.js` — the learner types „Ich bin
+          // ledig.“ from hearing it). The notice example
+          // „Ich bin Studentin.“ and „Was sind Sie von Beruf?“ (indices 6/7) stay verbatim lines,
+          // which is why the pair does not ride on them. Sie throughout — strangers at a counter.
+          { speaker: 'Herr Weber', de: 'Bitte füllen Sie das Formular aus. Ihr Familienstand: ledig oder verheiratet?', en: 'Please fill out the form. Your marital status: single or married?' },
+          { speaker: 'Ana', de: 'Ich bin ledig. Ist das Formular für die Adresse?', en: 'I am single. Is that form for the address?' },
+          // THE ORIGIN, ASKED AND ANSWERED (round 18, DaF review #17, MAJOR 3). The can-do line
+          // „Ich kann sagen, woher ich komme“ had exactly two L2 surfaces — the notice and the graded
+          // model text — and the learner PRACTISES neither; every line of this dialogue skipped the
+          // question an Amt asks third (*Start Deutsch 1*, Sprechen Teil 1: Name, Alter, LAND,
+          // Wohnort …). The dialogue is at its ten-line ceiling (RULE 5), so the pair rides on the
+          // two lines below instead of as two lines of its own. Windows are 0-based: Herr Weber's
+          // line (index 4) is a read-aloud line and now carries the question the learner reads out;
+          // Ana's answer (index 5, 12 words — the RULE 5 maximum) sits in no window, and the
+          // dictation window [7,3] does not move. Sie throughout — Ana and Herr Weber are strangers
+          // at a counter.
+          { speaker: 'Herr Weber', de: 'Ja. Vorname, Nachname und Wohnort, bitte. Und woher kommen Sie?', en: 'Yes. First name, surname and place of residence, please. And where do you come from?' },
+          { speaker: 'Ana', de: 'Mein Nachname ist Chakiri. Ich komme aus Marokko und wohne in Bremen.', en: 'My surname is Chakiri. I come from Morocco and live in Bremen.' },
           { speaker: 'Herr Weber', de: 'Was sind Sie von Beruf?', en: 'What is your profession?' },
           { speaker: 'Ana', de: 'Ich bin Studentin.', en: 'I am a student.' },
           // The Zahlen can-do is carried by the input, not only by the Wortfeld entry: these two
@@ -310,7 +406,37 @@ export const CURRICULUM_A11 = {
       },
       notice: {
         title: 'sein: ich bin, du bist, Sie sind',
-        bodyDe: '**sein** ist das wichtigste Verb im Deutschen. Es ist unregelmäßig: ich **bin**, du **bist**, er/sie/es **ist**, wir **sind**, ihr **seid**, sie/Sie **sind**. Nach sein steht der Beruf ohne Artikel: Ich bin Lehrer. Nicht: Ich bin ein Lehrer. Auch die Staatsangehörigkeit steht ohne Artikel: Ich bin marokkanisch.',
+        // THE LAST CLAUSE IS THE ROUND-17 REPAIR (DaF review #16, BLOCKER). It used to read „Auch
+        // die Staatsangehörigkeit steht ohne Artikel: Ich bin marokkanisch.“ — a rule that is not a
+        // rule (a predicative adjective never has an article, so „ohne Artikel“ says nothing about
+        // it) resting on a sentence that is not German. The clause now names the two shapes and
+        // keeps them apart: NOMEN im Satz, ADJEKTIV im Formularfeld. The body also carries the words
+        // the GRADED task of this Lektion needs and that nothing else in it says out loud — the two
+        // nationality nouns, `kommen aus` and `geboren`. The two `examples` stay verbatim dialogue
+        // lines (the validator requires exactly that), so the notice BODY is the input surface here
+        // — which is the whole point of RULE 23: the model answer is the answer, not the lesson.
+        // ROUND 18 (DaF review #17, MAJOR 2 + Minor 15). Two clauses joined and the body was already
+        // at RULE 6's 60-word ceiling, so two were shortened to pay for them: „Ali ist Marokkaner.“
+        // — the MASCULINE noun, which no surface of the course said until now while the comment two
+        // rows up claimed this body did — and „Der Familienstand: Ich bin ledig oder verheiratet.“,
+        // the two words of the graded task's third Leitpunkt that stood in two hand items and the
+        // model text and on NO input surface (RULE 23b). What paid for them: the four field labels
+        // lost their articles („Staatsangehörigkeit im Satz …“, „Familienstand: …“,
+        // „Geburtsdatum: …“) and „mit geboren“ went. What deliberately did NOT go: „Ich bin
+        // Lehrer.“ and „Nicht: Ich bin ein Lehrer.“ stay as sentences of their own, because the
+        // `verb-sein` card quotes both and a card example must be a line of its Lektion
+        // (`tests/rule-card-overrides.test.mjs`) — and because a notice token is lexis the Lektion
+        // has taught (`taughtUpTo`): the first trim of this round dropped `ein` and `Satz`, which
+        // RULE 11 measured at once as `extra-a11-l02-08:ein` and `extra-a11-l02-15:Satz` (59 → 61).
+        // ROUND 19 (DaF review #18, Minor 12): the Familienstand clause is GONE from here. „Ich bin
+        // ledig oder verheiratet.“ is not a sentence anyone says — it was a field with its two
+        // values dressed as a first-person sentence, written so that RULE 23b would read 0, which
+        // is the movement „the surface is written for the rule“ that this ladder had already
+        // banned for the model texts. The three words now stand in dialogue lines 2 and 3, where
+        // the learner hears and dictates them; the notice keeps the grammar. The class is closed
+        // as a rule: RULE 6c fails any notice body that carries a `Feld: Ich bin … oder …` clause.
+        // 54 words, read aloud.
+        bodyDe: '**sein** ist unregelmäßig: ich **bin**, du **bist**, er/sie/es **ist**, wir **sind**, ihr **seid**, sie/Sie **sind**. Der Beruf ohne Artikel: Ich bin Lehrer. Nicht: Ich bin ein Lehrer. Staatsangehörigkeit im Satz als Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner. Im Formular als Adjektiv: Staatsangehörigkeit: marokkanisch. Geburtsdatum: Ich bin am 3.5.1998 geboren.',
         examples: ['Was sind Sie von Beruf?', 'Ich bin Studentin.'],
         ruleSlug: 'verb-sein',
       },
@@ -326,8 +452,13 @@ export const CURRICULUM_A11 = {
         readAloud: [4, 6],
         open: {
           teil: 'Sprechen Teil 1',
-          promptDe: 'Stellen Sie sich vor: Name, Wohnort, Beruf.',
-          hintWords: ['sein', 'von Beruf', 'Wohnort'],
+          // ROUND 18 (DaF review #17, MAJOR 3): *Start Deutsch 1* Sprechen Teil 1 asks Name, Alter,
+          // LAND, Wohnort, Sprache, Beruf, Hobby — and this prompt, the one surface of the course
+          // that rehearses Teil 1, left the country out while the Lektion's can-do promised it.
+          // Exactly three hint words (validator): the origin verb replaces `sein`, which every
+          // sentence of the answer carries anyway.
+          promptDe: 'Stellen Sie sich vor: Name, Land, Wohnort, Beruf.',
+          hintWords: ['kommen aus', 'wohnen', 'von Beruf'],
           // Sie — dieselbe Vorstellrunde (Teil 1): das Gegenüber ist fremd.
           anrede: 'Sie',
           missionOrder: 6,
@@ -367,7 +498,13 @@ export const CURRICULUM_A11 = {
         // sentence a person writes — „Ich bin am 3.5.1998 geboren.“ — which is why `geboren` is now
         // a Wortfeld entry of this Lektion. 33 Wörter, alle drei Leitpunkte in vollen Sätzen, ohne
         // Possessivartikel (die sind Lektion 12).
-        sample: 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Ich bin am 3.5.1998 geboren. Ich bin aus Marokko. Ich bin marokkanisch. Ich bin ledig. Ich bin Studentin in Bremen. Viele Grüße, Ana Chakiri',
+        // ROUND 17 (DaF review #16, BLOCKER): „Ich bin aus Marokko. Ich bin marokkanisch.“ becomes
+        // „Ich komme aus Marokko und bin Marokkanerin.“ — the sentence `src/lib/lesson/writing.js`
+        // has quoted in its own header as the exam-fit A1 answer all along. Same 33 words, same
+        // three Leitpunkte, and the origin half of the Lektion's own can-do line finally has a
+        // surface. `kommen aus` moved into this Lektion's Wortfeld for it (`Marokko` is a persona fact
+        // and a DIALOG_NAME, not a Wortfeld row).
+        sample: 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Ich bin am 3.5.1998 geboren. Ich komme aus Marokko und bin Marokkanerin. Ich bin ledig. Ich bin Studentin in Bremen. Viele Grüße, Ana Chakiri',
       },
       // A1.1 carries six listening exercises and ten reading texts; every one is linked from another
       // Lektion, so this one honestly has none — the syllabus shows „—“ rather than a repeat.
@@ -417,7 +554,12 @@ export const CURRICULUM_A11 = {
         { de: 'Deutsch', word: 'Deutsch', article: null, plural: null, en: 'German (language)', wordId: '2fd09a1f-cf75-4094-8296-3dc81e4967ab' },
         { de: 'Englisch', word: 'Englisch', article: null, plural: null, en: 'English (language)', wordId: '1104bcc7-93f1-432f-ae84-64850c0c5d7c' },
         { de: 'Arabisch', word: 'Arabisch', article: null, plural: null, en: 'Arabic (language)', wordId: '77f2d528-3578-46b0-8b35-f31e2d152799' },
-        { de: 'kommen aus', word: 'kommen aus', article: null, plural: null, en: 'to come from', wordId: 'fc80d20a-6546-4917-9784-ed90efb5625a' },
+        // `kommen aus` MOVED TO LEKTION 2 (round 17, DaF review #16, BLOCKER + MAJOR 3): L2's can-do
+        // says „Ich kann sagen, woher ich komme“ and its graded Mitteilung asks for „Ihr Land und
+        // Ihre Staatsangehörigkeit“, so the level has to teach the origin sentence in the Lektion
+        // that promises it. This Lektion keeps using the verb — a Lektion may use anything an
+        // EARLIER Wortfeld taught (RULE 5/RULE 20 read `taughtUpTo`) — and dialogue line 9 and the
+        // Formular still do. `Marokko` stays here, where its dialogue line is.
         { de: 'Marokko', word: 'Marokko', article: null, plural: null, en: 'Morocco', wordId: '5396e33c-85f5-41db-84b2-3c9a6819cb1d' },
         { de: 'sprechen', word: 'sprechen', article: null, plural: null, en: 'to speak', wordId: 'bedd255d-fe20-4a60-a510-5be8413e5fcb' },
       ],
@@ -627,7 +769,7 @@ export const CURRICULUM_A11 = {
         { de: 'die Wohnung', word: 'Wohnung', article: 'die', plural: 'Wohnungen', en: 'flat, apartment', wordId: 'd46d546b-f0f1-4cab-818e-0e99a09b355d' },
         { de: 'der Schlüssel', word: 'Schlüssel', article: 'der', plural: 'Schlüssel', en: 'key', wordId: '1b3689de-3eee-4947-8ddd-c1b4fcada95b' },
         { de: 'das Bild', word: 'Bild', article: 'das', plural: 'Bilder', en: 'picture', wordId: '358ec9f0-c571-453a-a5c5-7e88ef81d1b8' },
-        { de: 'die Farbe', word: 'Farbe', article: 'die', plural: 'Farben', en: 'color', wordId: '9a35fe92-fc2d-42af-a718-7c6cf48a9984' },
+        { de: 'die Farbe', word: 'Farbe', article: 'die', plural: 'Farben', en: 'color', field: true, wordId: '9a35fe92-fc2d-42af-a718-7c6cf48a9984' },
         { de: 'rot', word: 'rot', article: null, plural: null, en: 'red', wordId: 'fd89afcf-f470-4427-8ab4-d88fb9d35c06' },
         { de: 'blau', word: 'blau', article: null, plural: null, en: 'blue', wordId: 'f5d65f53-08bd-40ec-b859-16ebe6143ba8' },
         { de: 'grün', word: 'grün', article: null, plural: null, en: 'green', wordId: 'a86cb4d8-541f-4335-bff1-150dac102f32' },
@@ -650,8 +792,28 @@ export const CURRICULUM_A11 = {
           { speaker: 'Tim', de: 'Nein, das Heft ist grün.', en: 'No, the notebook is green.' },
           // Zimmer, Schlüssel and Bild were flashcards only; the last two lines bring them into the
           // input, which is what the Wohnen can-do needs (DaF review #2, L5 and §A).
-          { speaker: 'Lena', de: 'Mein Schlüssel ist in der Tasche. Und das Bild?', en: 'My key is in the bag. And the picture?' },
-          { speaker: 'Tim', de: 'Das Bild ist blau. Es ist für mein Zimmer.', en: 'The picture is blue. It is for my room.' },
+          // `die Farbe` is a FIELD of the graded Formular of this Lektion („Farbe: grün“) and stood
+          // on no input surface — the dialogue named seven colours and never the word (round 18,
+          // DaF review #17, Minor 15 / RULE 23b, hard 0). Index 8 is in neither window ([1,5]
+          // dictation, [4,7] read-aloud), so nothing else moves.
+          // ROUND 19 (DaF review #18, Minor 20): round 18 wrote „Und die Farbe vom Bild?“ — spoken,
+          // correct German, and a Dativ (`vom` = von dem) in the Lektion whose notice defers the
+          // Dativ to A1.2, put there only so that `Farbe` had a surface. The question is now asked
+          // the way this Lektion asks everything (Wo ist …? Ist … blau?), with no case the level
+          // has not taught. ROUND 20 (DaF review #19, Minor 26): round 19 wrote „Ist die Farbe
+          // blau?“ — grammatical, and a sentence nobody says (one asks „Ist es blau?“); it showed
+          // that `Farbe` had to go in. The question is now the one in which the colour IS the
+          // topic: „Welche Farbe hat das Bild?“ — Tim: „Es ist blau.“ `welche` and `hat` are
+          // function words the level counts as taught from L1 (`FUNCTION_WORDS`, top of this
+          // file); `hat` here is input, not production — index 8 is in neither window ([1,5]
+          // dictation, [4,7] read-aloud), and the L8 notice teaches the chunk before L9 owns the
+          // verb (file header).
+          // Nine words each (counted 2026-09-14), two sentences each; Tim's answer keeps `das Bild`
+          // as its second surface.
+          // `der Schlüssel` keeps its line; `in der Tasche` is the one Dativ the line always had,
+          // and the setting („packen ihre Taschen aus“) carries `die Tasche` as well.
+          { speaker: 'Lena', de: 'Mein Schlüssel ist da. Welche Farbe hat das Bild?', en: 'My key is there. What colour is the picture?' },
+          { speaker: 'Tim', de: 'Es ist blau. Das Bild ist für mein Zimmer.', en: 'It is blue. The picture is for my room.' },
         ],
       },
       pretest: { promptDe: 'Fragen Sie, wo das Buch ist.', promptEn: 'Ask where the book is.', model: 'Wo ist das Buch?', accepted: ['Wo ist', 'Wo sind'] },
@@ -696,8 +858,13 @@ export const CURRICULUM_A11 = {
       canDo: [
         'Ich kann sagen, was ich brauche.',
         'Ich kann am Telefon meinen Namen nennen.',
-        'Ich kann eine Telefonnummer verstehen und notieren.',
-        'Ich kann nach der Pause und nach Arbeitszeiten fragen.',
+        // ROUND 17 (RULE 12 split): `notieren` occurs in no line, no item and no prompt of this
+        // Lektion — the Lektion hears numbers, it does not write them down. Both halves now name
+        // something it rehearses.
+        'Ich kann eine Telefonnummer und eine Handynummer verstehen.',
+        // ROUND 17 (RULE 12 split): `Arbeitszeiten` is in no surface of the Lektion; „das Büro“ is
+        // in its dialogue, its model text and its speaking prompt.
+        'Ich kann nach der Pause und nach dem Büro fragen.',
       ],
       examTeile: ['Hören Teil 3', 'Schreiben Teil 2', 'Sprechen Teil 2'],
       grammarSlugs: ['indefinite-articles', 'definite-articles', 'nouns-gender'],
@@ -712,14 +879,14 @@ export const CURRICULUM_A11 = {
         { de: 'die Kollegin', word: 'Kollegin', article: 'die', plural: 'Kolleginnen', en: 'colleague (f)', wordId: 'dfb0bc97-919c-4f20-9efd-59b78a541197' },
         { de: 'die Arbeit', word: 'Arbeit', article: 'die', plural: '—', en: 'work', wordId: '89ff21bb-79ad-470a-a29b-ff6bbeef344a' },
         { de: 'der Computer', word: 'Computer', article: 'der', plural: 'Computer', en: 'computer', wordId: 'b75584fd-ce50-433c-9deb-dc2c35906c15' },
-        { de: 'die Handynummer', word: 'Handynummer', article: 'die', plural: 'Handynummern', en: 'mobile number', wordId: '58fdee72-2812-4256-8f4b-7e6142c10b12' },
-        { de: 'die E-Mail-Adresse', word: 'E-Mail-Adresse', article: 'die', plural: 'E-Mail-Adressen', en: 'email address', wordId: '7a4581a1-0411-425b-b230-95840777b557' },
+        { de: 'die Handynummer', word: 'Handynummer', article: 'die', plural: 'Handynummern', en: 'mobile number', field: true, wordId: '58fdee72-2812-4256-8f4b-7e6142c10b12' },
+        { de: 'die E-Mail-Adresse', word: 'E-Mail-Adresse', article: 'die', plural: 'E-Mail-Adressen', en: 'email address', field: true, wordId: '7a4581a1-0411-425b-b230-95840777b557' },
         { de: 'der Ingenieur', word: 'Ingenieur', article: 'der', plural: 'Ingenieure', en: 'engineer (m)', wordId: 'a358f9d4-ef56-451c-8139-8a210b7a122f' },
         { de: 'die Ingenieurin', word: 'Ingenieurin', article: 'die', plural: 'Ingenieurinnen', en: 'engineer (f)', wordId: '19f79c25-b6b5-4ec9-b9b7-c56515c68da8' },
         { de: 'der Verkäufer', word: 'Verkäufer', article: 'der', plural: 'Verkäufer', en: 'salesperson (m)', wordId: '497a6825-36c3-4af5-aaf5-5e70dafdbb4f' },
         { de: 'die Verkäuferin', word: 'Verkäuferin', article: 'die', plural: 'Verkäuferinnen', en: 'salesperson (f)', wordId: '1b7e9803-1125-4b4a-a392-79b59fa69dfa' },
         { de: 'die Pause', word: 'Pause', article: 'die', plural: 'Pausen', en: 'break', wordId: 'c1c71f2f-1cea-437b-b2ae-5cce152ee9a4' },
-        { de: 'die Nummer', word: 'Nummer', article: 'die', plural: 'Nummern', en: 'number', wordId: '83a14b7b-33f9-4972-9001-72c42442f14d' },
+        { de: 'die Nummer', word: 'Nummer', article: 'die', plural: 'Nummern', en: 'number', field: true, wordId: '83a14b7b-33f9-4972-9001-72c42442f14d' },
         { de: 'brauchen', word: 'brauchen', article: null, plural: null, en: 'to need', wordId: '0bca1725-1790-4ec6-a1cb-362cda69fefb' },
         { de: 'das Handy', word: 'Handy', article: 'das', plural: 'Handys', en: 'mobile phone', wordId: '5facc4fc-da80-494c-ae4a-4bf2a2384fb5' },
         { de: 'das Telefon', word: 'Telefon', article: 'das', plural: 'Telefone', en: 'telephone', wordId: '45918530-54aa-40f0-8f51-b0193953fdd8' },
@@ -1162,7 +1329,7 @@ export const CURRICULUM_A11 = {
         { de: 'die Abfahrt', word: 'Abfahrt', article: 'die', plural: 'Abfahrten', en: 'departure', wordId: 'cc687805-201f-4cda-b4b4-48a20fad82cd' },
         { de: 'die Ankunft', word: 'Ankunft', article: 'die', plural: 'Ankünfte', en: 'arrival', wordId: '7374721b-f929-4b81-943a-93dc6ba2b9a1' },
         { de: 'das Gleis', word: 'Gleis', article: 'das', plural: 'Gleise', en: 'platform, track', wordId: 'e9a722a3-d2c7-46ae-8421-d8a213451e57' },
-        { de: 'das Land', word: 'Land', article: 'das', plural: 'Länder', en: 'country', wordId: 'b8ff9106-be72-426f-8be3-c0687cf75641' },
+        { de: 'das Land', word: 'Land', article: 'das', plural: 'Länder', en: 'country', field: true, wordId: 'b8ff9106-be72-426f-8be3-c0687cf75641' },
         { de: 'morgen', word: 'morgen', article: null, plural: null, en: 'tomorrow', wordId: '79c868e5-5478-4d52-a85a-653c7acf078f' },
         { de: 'umsteigen', word: 'umsteigen', article: null, plural: null, en: 'to change (trains)', wordId: '7cf99ee9-b106-4db9-954f-cb6f17eab4e9' },
         { de: 'nächste Woche', word: 'nächste Woche', article: null, plural: null, en: 'next week', wordId: 'ebad6993-2d67-4891-8abe-5b0e74091495' },
@@ -1229,9 +1396,18 @@ export const CURRICULUM_A11 = {
         leitpunkte: ['Warum Sie schreiben', 'Wann Sie kommen', 'Was die Kollegin bis dahin machen soll'],
         minWords: 25,
         maxWords: 45,
-        // 35 Wörter. Der dritte Leitpunkt („Was die Kollegin bis dahin machen soll“) war im alten
+        // 29 Wörter. Der dritte Leitpunkt („Was die Kollegin bis dahin machen soll“) war im alten
         // Mustertext gar nicht modelliert; die Kollegin wird gesiezt.
-        sample: 'Liebe Kollegin, der Zug hat leider Verspätung. Die Kollegen kommen um neun Uhr, ich komme um zehn Uhr. Bitte machen Sie die Arbeit bis zehn Uhr ohne mich. Vielen Dank und viele Grüße, Ana',
+        // ROUND 18 (DaF review #17, MAJOR 1 „Fünftens“): „Bitte machen Sie die Arbeit bis zehn Uhr
+        // ohne mich.“ ist raus — ein Satz, den niemand schreibt, und er stand da, weil der Formcheck
+        // den Auftrags-Leitpunkt am Echo von `machen` entschied (zehn von zwölf richtigen Aufträgen
+        // rot). Der Auftrag ist jetzt ein Satz: „Bitte beginnen Sie ohne mich.“ Die andere Fassung
+        // der Review, „Bitte rufen Sie Herrn Weber an.“, ist in Lektion 10 NICHT gelehrte Lexis —
+        // `anrufen` ist die Satzklammer-Lektion 11 und `Herrn` steht in keiner Liste — und RULE 20
+        // (hart 0) meldet beide; `beginnen` ist seit Lektion 5 gelehrt. Der Formcheck muss den
+        // Auftrag an der Satzart (Imperativ mit Sie / bitte + Verb) erkennen, nicht am Aufgabenverb —
+        // das ist die Regel in `src/lib/lesson/writing.js`, die MAJOR 1 „Zweitens“ bestellt.
+        sample: 'Liebe Kollegin, der Zug hat leider Verspätung. Die Kollegen kommen um neun Uhr, ich komme um zehn Uhr. Bitte beginnen Sie ohne mich. Vielen Dank und viele Grüße, Ana',
       },
       links: { listeningExercise: 3, readingOrder: 6 },
       // Only the primary topic: the two-topic rule drew haben items twice over from L9 (DaF review, L10).
@@ -1349,8 +1525,12 @@ export const CURRICULUM_A11 = {
       canDo: [
         'Ich kann jemanden zu einem Fest einladen.',
         'Ich kann sagen, in welchem Monat ich Geburtstag habe.',
-        'Ich kann über meine Familie und meine Gäste sprechen.',
-        'Ich kann mich verabschieden und gute Wünsche aussprechen.',
+        // ROUND 17 (RULE 12 split): the family belongs to Lektion 3; this Lektion rehearses the
+        // Fest and the Gäste.
+        'Ich kann über mein Fest und meine Gäste sprechen.',
+        // ROUND 17 (RULE 12 split): `verabschieden` names the act and appears nowhere; the two
+        // chunks the Lektion actually says goodbye with do.
+        'Ich kann mich mit „Mach’s gut“ und „Bis bald“ verabschieden und gute Wünsche aussprechen.',
       ],
       examTeile: ['Lesen Teil 3', 'Sprechen Teil 3', 'Schreiben Teil 2'],
       grammarSlugs: ['possessive-articles', 'verb-sein', 'verb-haben'],
@@ -1358,8 +1538,8 @@ export const CURRICULUM_A11 = {
       minutes: 15,
       wortfeld: [
         { de: 'der Geburtstag', word: 'Geburtstag', article: 'der', plural: 'Geburtstage', en: 'birthday', wordId: 'c34d4cef-643f-42e3-9d9a-8c3bfcc45f36' },
-        { de: 'das Datum', word: 'Datum', article: 'das', plural: 'Daten', en: 'date', wordId: '3efd1d54-db2c-4bf9-beb9-eb4d8a6decd1' },
-        { de: 'das Alter', word: 'Alter', article: 'das', plural: '—', en: 'age', wordId: '6276c62c-9009-4716-880a-410bdb5c9102' },
+        { de: 'das Datum', word: 'Datum', article: 'das', plural: 'Daten', en: 'date', field: true, wordId: '3efd1d54-db2c-4bf9-beb9-eb4d8a6decd1' },
+        { de: 'das Alter', word: 'Alter', article: 'das', plural: '—', en: 'age', field: true, wordId: '6276c62c-9009-4716-880a-410bdb5c9102' },
         { de: 'die Mama', word: 'Mama', article: 'die', plural: 'Mamas', en: 'mom', wordId: '1b7ca804-8c61-43cd-b9cf-7f54ff536ff1' },
         { de: 'der Papa', word: 'Papa', article: 'der', plural: 'Papas', en: 'dad', wordId: 'd4facfd1-4d57-4414-a526-a67b2b4a3c43' },
         // Ehefrau/Ehemann doubled Mann/Frau from L3 and Zwilling is not in the A1 Wortliste. The months
@@ -1404,7 +1584,12 @@ export const CURRICULUM_A11 = {
           { speaker: 'Lena', de: 'Mai ist ein schöner Monat! Kommt deine Mama auch?', en: 'May is a lovely month! Is your mum coming too?' },
           { speaker: 'Ana', de: 'Ja, meine Mama und mein Papa kommen.', en: 'Yes, my mum and my dad are coming.' },
           { speaker: 'Lena', de: 'Und dein Bruder? Kommt seine Frau auch?', en: 'And your brother? Is his wife coming too?' },
-          { speaker: 'Ana', de: 'Ja. Ich lade auch meine Kollegin ein.', en: 'Yes. I am inviting my colleague too.' },
+          // `der Gast` is the noun of the third Leitpunkt of this Lektion's graded task („Was die
+          // Gäste mitbringen sollen“) and stood on no input surface (round 18, DaF review #17,
+          // Minor 15 / RULE 23b, hard 0). The line now says the thing the task asks about — the
+          // guests bring something — with the L11 Satzklammer the learner has met. Index 5 is in
+          // neither window ([1,3] dictation, [0,9] read-aloud).
+          { speaker: 'Ana', de: 'Ja. Ich lade auch meine Kollegin ein. Die Gäste bringen Kuchen mit.', en: 'Yes. I am inviting my colleague too. The guests are bringing cake.' },
           { speaker: 'Lena', de: 'Was möchtest du zum Geburtstag?', en: 'What would you like for your birthday?' },
           { speaker: 'Ana', de: 'Vielleicht ein Buch. Mein Bruder kauft das Geschenk.', en: 'Maybe a book. My brother is buying the present.' },
           { speaker: 'Lena', de: 'Deine Party ist bestimmt schön!', en: 'Your party is sure to be lovely!' },

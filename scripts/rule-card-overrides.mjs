@@ -151,15 +151,28 @@ const RULE_CARD_OVERRIDES = {
   'verb-sein': {
     titleDe: 'sein: ich bin, du bist, Sie sind',
     content: [
-      'sein ist das wichtigste Verb. Es ist unregelmäßig:',
+      'sein ist unregelmäßig:',
       'ich bin, du bist, er/sie/es ist, wir sind, ihr seid, sie/Sie sind.',
       'Nach sein steht der Beruf ohne Artikel: Ich bin Lehrer. Nicht: Ich bin ein Lehrer.',
       'Der Beruf in der Frage: Was sind Sie von Beruf? — Ich bin Studentin.',
       // ROUND 14 (DaF review #13, MAJOR 2): „Ich komme aus Marokko.“ was a line of NOTHING once the
       // L2 Beispieltext stopped saying it — the course teaches `kommen` in Lektion 3 — and a card
       // example must be a line of its own Lektion. „Ich bin Ana.“ is line 2 of the L2 dialogue and
-      // is what this card is about in the first place.
-      'Beispiele: Ich bin Ana. Ich wohne in Bremen.',
+      // is what this card is about in the first place. ROUND 18: „Ich wohne in Bremen.“ stopped
+      // being a line of its own when dialogue line 5 became „Ich komme aus Marokko und wohne in
+      // Bremen.“ (MAJOR 3); „Ich bin Studentin.“ is line 7 and a notice example.
+      'Beispiele: Ich bin Ana. Ich bin Studentin.',
+      // ROUND 17 (DaF review #16, BLOCKER). The notice of Lektion 2 and this card said different
+      // things about the Staatsangehörigkeit — the notice said „Ich bin marokkanisch.“, which is
+      // not German about a person, and the card said nothing. Both now say the same, correct thing:
+      // NOMEN im Satz, ADJEKTIV nur als Formularwert. RULE 24 in scripts/validate-curriculum.mjs
+      // holds the course side of it at a hard 0.
+      // ROUND 18 (DaF review #17, MAJOR 2). Round 17 closed the BLOCKER with the form of the FIGURE
+      // (Ana, feminine) and its comment claimed this card said „Er ist Marokkaner.“ — it did not,
+      // and neither did the notice. The masculine is now on both, in the same sentence, and the
+      // commonMistakes entry below corrects the swapped gender for the learner who is not Ana.
+      'Im Satz steht die Staatsangehörigkeit als Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner.',
+      'Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.',
       'In der Frage steht sein vorn: Ist das Formular für die Adresse?',
       'English: sein is irregular — learn the six forms as whole words, not from a stem.',
     ].join('\n'),
@@ -178,6 +191,16 @@ const RULE_CARD_OVERRIDES = {
         wrong: 'Wie sind Sie von Beruf?',
         correct: 'Was sind Sie von Beruf?',
         explanationDe: 'Die feste Frage lautet: Was sind Sie von Beruf?',
+      },
+      {
+        wrong: 'Ich bin marokkanisch.',
+        correct: 'Ich bin Marokkanerin.',
+        explanationDe: 'Im Satz steht die Staatsangehörigkeit als Nomen: Ich bin Marokkanerin. Im Formular steht das Adjektiv: Staatsangehörigkeit: marokkanisch.',
+      },
+      {
+        wrong: 'Ali ist Marokkanerin.',
+        correct: 'Ali ist Marokkaner.',
+        explanationDe: 'Er ist Marokkaner, sie ist Marokkanerin. Wie Student und Studentin.',
       },
     ],
   },
