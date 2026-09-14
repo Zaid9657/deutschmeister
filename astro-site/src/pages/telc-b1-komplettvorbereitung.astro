@@ -26,6 +26,7 @@
 // resolves the buyer by e-mail — hence the "gleiche E-Mail" note by the button.
 import Layout from '../layouts/Layout.astro';
 import Aurora from '../components/Aurora.astro';
+import LanguageNotice from '../components/LanguageNotice.astro';
 import '../styles/global.css';
 import { ORGANIZATION } from '../lib/siteMeta.js';
 import { getTopicsForLevel } from '../lib/grammar.js';
@@ -113,6 +114,7 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-6 py-3.5 text-ink s
 
 <Layout title={title} description={description} canonical={canonical} jsonLd={jsonLd} lang="de" ogType="product">
   <div class="overflow-x-clip bg-paper text-ink">
+    <div class="mx-auto max-w-4xl px-5 pt-6"><LanguageNotice noun="course page" /></div>
 
     <!-- Hero: the person three weeks out, the pain, the plan -->
     <section class="relative">

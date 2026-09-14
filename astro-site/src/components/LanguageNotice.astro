@@ -1,0 +1,20 @@
+---
+interface Props {
+  noun?: string;
+}
+
+const { noun = 'page' } = Astro.props;
+---
+
+<aside
+  class="rounded-clay border border-rule bg-white px-4 py-3 text-sm leading-relaxed text-graphite shadow-raise"
+  aria-label="Language information"
+>
+  <p lang="en">
+    <span class="mr-2 rounded-pill bg-siegel-wash px-2 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.11em] text-siegel-deep">Deutsch</span>
+    This {noun} is written in German and uses German exam terminology.
+    For English explanations, visit the
+    <a href="/grammar/" class="font-bold text-siegel underline decoration-siegel/40 underline-offset-2 hover:text-siegel-deep">German grammar library</a>.
+  </p>
+</aside>
+

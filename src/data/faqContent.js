@@ -20,111 +20,111 @@ import {
 
 export const FAQ_CATEGORIES = [
   {
-    title: 'Über Deutschmeister',
+    title: 'About Deutschmeister',
     items: [
       {
-        q: 'Was ist Deutschmeister?',
-        a: 'Deutschmeister ist eine Online-Plattform, die dir hilft, Deutsch zu lernen — mit Grammatik-Erklärungen auf Englisch, KI-Sprechtraining und dem Sentence X-Ray Tool. Alles an einem Ort, von A1 bis B2.',
+        q: 'What is Deutschmeister?',
+        a: 'Deutschmeister is an online German-learning platform with grammar explanations in English, AI speaking practice, and the Sentence X-Ray tool. It brings the core skills together from A1 to B2.',
       },
       {
-        q: 'Für wen ist diese Plattform gedacht?',
-        a: 'Für alle, die Deutsch wirklich sprechen wollen. Besonders für Migranten, Fachkräfte und Studierende, die sich auf Goethe, telc, TestDaF oder DTZ vorbereiten. Wenn du unter Zeitdruck lernst und keine Lust auf Spielchen hast — bist du hier richtig.',
+        q: 'Who is the platform for?',
+        a: 'It is for learners who need to use German in real life—especially migrants, professionals, students, and people preparing for Goethe, telc, TestDaF, or DTZ exams.',
       },
       {
-        q: 'Wer steht hinter Deutschmeister?',
-        a: 'Gegründet von Zaid — Arzt aus Deutschland, der das Problem aus erster Hand kennt: eine neue Sprache lernen, während der Alltag weiterläuft. Heute entwickelt ein Team von Ärzten in Deutschland die Plattform weiter — Leute, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind.',
+        q: 'Who is behind Deutschmeister?',
+        a: 'Deutschmeister was founded by Zaid, a doctor in Germany who experienced the challenge of learning a new language while everyday life continued. A team of doctors in Germany now develops the platform further.',
       },
       {
-        q: 'Welche Niveaus deckt ihr ab?',
-        a: `A1.1 bis B2.2 — also vom absoluten Anfänger bis zur gehobenen Mittelstufe. ${GRAMMAR_TOPIC_COUNT} Grammatik-Themen, Hörübungen, Lesetexte und Sprechtraining auf jedem Niveau.`,
+        q: 'Which levels are covered?',
+        a: `A1.1 through B2.2, from complete beginner to upper intermediate. The library includes ${GRAMMAR_TOPIC_COUNT} grammar topics plus listening, reading, and speaking practice across the levels.`,
       },
     ],
   },
   {
-    title: 'Lernen & Inhalte',
+    title: 'Learning and content',
     items: [
       {
-        q: 'Wie unterscheidet sich Deutschmeister von Duolingo / Babbel?',
-        a: 'Duolingo macht Spaß, bringt dir aber nicht bei, einen ganzen Satz zu bilden. Babbel ist solide, aber ohne echtes Sprechtraining. Deutschmeister erklärt dir das WARUM hinter der Grammatik — auf Englisch — und lässt dich dann mit KI sprechen üben. Das ist der Unterschied.',
+        q: 'How is Deutschmeister different from Duolingo or Babbel?',
+        a: 'Deutschmeister focuses on understanding why German grammar works and then applying it in speaking practice. It is designed as a focused alternative for learners who want detailed English explanations, sentence analysis, and AI-guided conversation.',
       },
       {
-        q: 'Bekomme ich echtes Sprechtraining oder nur Übungen?',
-        a: 'Echtes Sprechtraining. Du sprichst mit einer KI, die auf dein Niveau abgestimmt ist. Du bekommst sofort Feedback zu Grammatik, Wortschatz und Aussprache. Kein Nachsprechen von Sätzen — echte Gespräche.',
+        q: 'Do I get speaking practice or only exercises?',
+        a: 'You can have level-appropriate conversations with an AI partner and receive feedback on grammar, vocabulary, and pronunciation, rather than only repeating fixed sentences.',
       },
       {
-        q: 'Wie funktioniert die KI-Auswertung beim Sprechen?',
-        a: 'Du sprichst, die KI hört zu und analysiert deinen Satz in Echtzeit. Du siehst sofort: Was war richtig? Was kannst du verbessern? Welche Alternative wäre natürlicher? Wie ein geduldiger Lehrer, der immer Zeit hat.',
+        q: 'How does AI speaking feedback work?',
+        a: 'After you speak, the system analyses your response and shows what worked, what could improve, and which phrasing may sound more natural. AI feedback can make mistakes, so treat it as practice support rather than an official assessment.',
       },
       {
-        q: 'Was ist das Sentence X-Ray Tool?',
-        a: 'Du gibst einen deutschen Satz ein — egal welchen. Das Tool zerlegt ihn: Fälle, Satzglieder, Wortarten. Farbcodiert und erklärt. Du verstehst endlich, warum „dem" und nicht „den" steht. Kein anderes Tool kann das so.',
+        q: 'What is the Sentence X-Ray tool?',
+        a: 'Enter a German sentence and the tool breaks it into cases, sentence roles, and parts of speech with colour-coded explanations. It helps you understand, for example, why a sentence uses “dem” instead of “den”.',
       },
       {
-        q: 'Wie viel Zeit brauche ich pro Tag?',
-        a: '15–20 Minuten reichen. Eine Grammatik-Lektion, ein paar Übungen, eine kurze Sprechübung. Jeden Tag ein bisschen ist besser als einmal pro Woche drei Stunden.',
+        q: 'How much time should I study each day?',
+        a: 'A consistent 15–20 minutes can be useful: one grammar lesson, a few exercises, and a short speaking session. A little every day is usually more sustainable than one long weekly session.',
       },
     ],
   },
   {
-    title: 'Preise & Abo',
+    title: 'Pricing and subscription',
     items: [
       {
-        q: 'Was kostet Deutschmeister?',
-        a: `Pro Monatlich: ${deEur(PLANS.monthly.price)} pro Monat. Pro Jährlich: ${deEur(PLANS.yearly.price)} pro Jahr (das sind ${deEur(PLANS.yearly.asMonthly)} pro Monat — weniger als ${deEur(PLANS.yearly.perDay)} am Tag). Günstiger als ein Kaffee.`,
+        q: 'How much does Deutschmeister cost?',
+        a: `Monthly Pro costs ${deEur(PLANS.monthly.price)} per month. Annual Pro costs ${deEur(PLANS.yearly.price)} per year, equivalent to ${deEur(PLANS.yearly.asMonthly)} per month or less than ${deEur(PLANS.yearly.perDay)} per day.`,
       },
       {
-        q: 'Gibt es eine kostenlose Version?',
-        a: `Ja. ${FREE_LEVEL_LABEL} ist komplett kostenlos — ohne Anmeldung. Dazu bekommst du ${TRIAL_SPEAKING_SESSIONS} kostenlose KI-Sprechübungen und ${ANON_DAILY_LIMIT} Sentence X-Ray Analyse pro Tag. Wenn du ein Konto erstellst, gibt es ${TRIAL_DAYS} Tage kostenlosen Pro-Zugang obendrauf.`,
+        q: 'Is there a free version?',
+        a: `Yes. ${FREE_LEVEL_LABEL} is free without registration. You also get ${TRIAL_SPEAKING_SESSIONS} free AI speaking sessions and ${ANON_DAILY_LIMIT} Sentence X-Ray analysis per day. Creating an account starts a ${TRIAL_DAYS}-day Pro trial.`,
       },
       {
-        q: 'Kann ich jederzeit kündigen?',
-        a: 'Ja. Ein Klick, fertig. Keine Fragen, keine versteckten Kosten, keine Kündigungsfrist. Du behältst den Zugang bis zum Ende der bezahlten Periode.',
+        q: 'Can I cancel at any time?',
+        a: 'Yes. You keep access through the end of the paid billing period, and the subscription does not renew after cancellation.',
       },
       {
-        q: 'Bekomme ich eine Rückerstattung, wenn ich nicht zufrieden bin?',
-        a: '7 Tage Geld-zurück-Garantie. Kein Risiko. Wenn es nichts für dich ist, bekommst du dein Geld zurück.',
+        q: 'Can I request a refund?',
+        a: 'Deutschmeister advertises a 7-day money-back guarantee. Contact support within that period so the request can be reviewed and processed under the applicable purchase terms.',
       },
       {
-        q: 'Welche Zahlungsarten akzeptiert ihr?',
-        a: 'Kreditkarte (Visa, Mastercard, AMEX), PayPal und Apple Pay. Alles über LemonSqueezy — sicher und verschlüsselt.',
+        q: 'Which payment methods are available?',
+        a: 'Available payment methods are shown by Lemon Squeezy at checkout and can vary by country and device.',
       },
     ],
   },
   {
-    title: 'Prüfungsvorbereitung',
+    title: 'Exam preparation',
     items: [
       {
-        q: 'Bereitet Deutschmeister auf Goethe / telc / TestDaF / DTZ vor?',
-        a: 'Ja. Die Grammatik und der Wortschatz decken genau die Themen ab, die in diesen Prüfungen vorkommen. Das Sprechtraining simuliert mündliche Prüfungssituationen. Für den DTZ (Deutsch-Test für Zuwanderer) ist besonders das B1-Material relevant.',
+        q: 'Does Deutschmeister prepare me for Goethe, telc, TestDaF, or DTZ?',
+        a: 'The grammar, vocabulary, and speaking materials cover skills relevant to these exams, and some exercises simulate oral-exam situations. Use the German-language exam guides to understand a specific format.',
       },
       {
-        q: 'Ist das genug für die B1-/B2-Prüfung?',
-        a: 'Deutschmeister gibt dir eine solide Grundlage — Grammatik, Hörverständnis, Sprechen. Für die Prüfung selbst empfehlen wir zusätzlich: offizielle Modellsätze vom Goethe-Institut oder telc durcharbeiten. Deutschmeister + Modellsätze = eine starke Kombination.',
+        q: 'Is Deutschmeister enough for a B1 or B2 exam?',
+        a: 'Deutschmeister can build grammar, listening, reading, and speaking skills. You should also work through official sample papers from your exam provider, because only those define the current format and scoring.',
       },
       {
-        q: 'Wie viele Wochen vor der Prüfung sollte ich anfangen?',
-        a: 'Mindestens 8–12 Wochen bei täglichem Lernen. Je früher, desto besser. Grammatik braucht Zeit zum Setzen. Das Sprechtraining hilft dir, sicherer zu werden — aber Sicherheit kommt nicht über Nacht.',
+        q: 'How many weeks before the exam should I start?',
+        a: 'A common planning range is 8–12 weeks of consistent study, but your starting level and target exam matter more than a fixed number. Take the level test and compare your results with the official exam requirements.',
       },
       {
-        q: 'Gibt es Probeprüfungen?',
-        a: 'Noch nicht — aber das ist geplant. Aktuell kannst du mit den Übungen auf jedem Niveau testen, wo du stehst. Der kostenlose Einstufungstest zeigt dir sofort dein CEFR-Level.',
+        q: 'Are mock exams available?',
+        a: 'Yes. Logged-in Pro or trial learners can access exam-style mock tests and review their results. We still recommend completing the latest official sample papers from the relevant exam provider.',
       },
     ],
   },
   {
-    title: 'Technisches',
+    title: 'Technical and privacy',
     items: [
       {
-        q: 'Funktioniert das auf dem Handy?',
-        a: 'Ja. Deutschmeister läuft im Browser — Desktop, Tablet, Handy. Keine App nötig. Einfach deutsch-meister.de öffnen und loslegen.',
+        q: 'Does it work on mobile devices?',
+        a: 'Yes. Deutschmeister runs in a modern browser on desktop, tablet, and mobile devices; no separate app is required.',
       },
       {
-        q: 'Brauche ich ein Mikrofon für das Sprechtraining?',
-        a: 'Ja, aber jedes eingebaute Mikrofon reicht. Laptop, Handy, Tablet — alles funktioniert. Externe Mikrofone sind nicht nötig.',
+        q: 'Do I need a microphone for speaking practice?',
+        a: 'Yes. A built-in laptop, phone, or tablet microphone is normally sufficient; an external microphone is optional.',
       },
       {
-        q: 'Wo werden meine Daten gespeichert?',
-        a: 'Server in der EU (Supabase). DSGVO-konform. Deine Daten werden nicht verkauft, nicht weitergegeben, nicht für Werbung genutzt. Punkt.',
+        q: 'How is my data handled?',
+        a: 'Account and learning features use service providers including Supabase. AI, analytics, payment, and email providers are described in the Privacy Policy, and optional analytics loads only after consent. The controller and vendor details are still undergoing release review.',
       },
     ],
   },

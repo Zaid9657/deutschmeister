@@ -12,34 +12,34 @@ import Reveal from '../components/ui/Reveal.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
 
 const BADGES = [
-  { icon: Stethoscope, label: 'Von Ärzten in Deutschland entwickelt' },
-  { icon: Target, label: 'Für ernsthafte Lerner' },
-  { icon: ShieldCheck, label: 'DSGVO-konform – Server in der EU' },
+  { icon: Stethoscope, label: 'Developed by doctors in Germany' },
+  { icon: Target, label: 'Built for serious learners' },
+  { icon: ShieldCheck, label: 'Optional analytics only with consent' },
 ];
 
 const DIFFERENTIATORS = [
   {
     icon: Mic,
-    title: 'Echtes Sprechen, nicht nur Klicken',
-    body: 'KI bewertet deine Aussprache, Grammatik und Wortschatz wie ein echter Prüfer. Keine Multiple-Choice-Show.',
+    title: 'Real speaking, not just clicking',
+    body: 'Practice complete responses and receive AI feedback on pronunciation, grammar, and vocabulary—not only multiple-choice drills.',
   },
   {
     icon: ScanSearch,
-    title: 'Grammatik, die haftet',
-    body: 'Sentence X-Ray seziert echte Sätze. Du verstehst das Wieso, nicht nur das Was.',
+    title: 'Grammar that makes sense',
+    body: 'Sentence X-Ray breaks down real sentences so you can understand why the language works, not only what the answer is.',
   },
   {
     icon: Heart,
-    title: 'Gebaut von Leuten, die’s selbst durchgemacht haben',
-    body: 'Kein Konzern. Ein Team von Ärzten in Deutschland, das weiß, wie es ist, wenn die Sprache zwischen dir und deinem Leben steht.',
+    title: 'Built by people who faced the same barrier',
+    body: 'Deutschmeister is developed by a team of doctors in Germany who know what it means when language stands between you and your work or daily life.',
   },
 ];
 
 const ROADMAP = [
-  { icon: BookOpen, text: 'Mehr Sprachstufen — C1 und darüber hinaus' },
-  { icon: Target, text: 'Live-Prüfungssimulationen für Goethe / telc / TestDaF' },
-  { icon: Briefcase, text: 'Spezialisierte Module: Pflegedeutsch, Wirtschaftsdeutsch' },
-  { icon: Users, text: 'Community — lerne mit anderen, nicht allein' },
+  { icon: BookOpen, text: 'More levels, including C1 and beyond' },
+  { icon: Target, text: 'Live exam simulations for Goethe, telc, and TestDaF' },
+  { icon: Briefcase, text: 'Specialist modules for nursing and business German' },
+  { icon: Users, text: 'A learning community for practising with others' },
 ];
 
 const UeberUnsPage = () => {
@@ -62,15 +62,14 @@ const UeberUnsPage = () => {
 
         <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 text-center">
           <h1 className="hero-line font-display text-[2.25rem] font-semibold leading-[1.02] tracking-[-0.025em] text-ink mb-6 sm:text-[3rem] lg:text-[3.5rem]">
-            Deutsch lernen sollte nicht{' '}
-            <span className="text-siegel">dein Albtraum</span>{' '}
-            sein.
+            Learning German should not feel like{' '}
+            <span className="text-siegel">a nightmare.</span>
           </h1>
           <p
             className="hero-line text-[1.0625rem] leading-relaxed text-graphite max-w-2xl mx-auto mb-10 sm:text-[1.1875rem]"
             style={{ '--d': '120ms' }}
           >
-            Die meisten Apps machen Sprachenlernen zum Spiel — und umgehen dabei das Schwere: echtes Sprechen, echte Grammatik, echte Prüfungsvorbereitung. Deutschmeister macht das Gegenteil.
+            Many language apps make learning playful but avoid the difficult parts: speaking freely, understanding grammar, and preparing for a real exam. Deutschmeister focuses on those parts.
           </p>
 
           <div className="hero-line flex flex-wrap justify-center gap-3" style={{ '--d': '240ms' }}>
@@ -87,22 +86,22 @@ const UeberUnsPage = () => {
       {/* FOUNDER */}
       <section className="py-20 bg-white border-y border-rule">
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
-          <SectionHeading title="Wer steckt dahinter" className="mb-6" />
+          <SectionHeading title="Who is behind Deutschmeister" className="mb-6" />
           <div className="text-[0.9375rem] leading-relaxed text-graphite space-y-4 sm:text-base">
             <Reveal as="p" delay={80}>
-              Ich bin Zaid. Arzt, Blue Card, Deutschland. Ich bin von außen gekommen und habe mich durch die Sprachbarriere gekämpft — jeden Tag, jede Prüfung, jedes Gespräch, bei dem mir die Worte fehlten.
+              I am Zaid, a doctor living in Germany on an EU Blue Card. I arrived from abroad and worked through the language barrier—through daily life, exams, and conversations where the right words were missing.
             </Reveal>
             <Reveal as="p" delay={160}>
-              Ich habe Kollegen scheitern sehen. Nicht, weil sie dumm waren. Sondern weil ihr Deutsch nicht gut genug war. Brillante Ärzte, die an der Fachsprachprüfung hängengeblieben sind. Das hat mich nicht losgelassen.
+              I watched capable colleagues struggle, not because they lacked professional knowledge, but because their German was not yet strong enough for the medical language exam. That problem stayed with me.
             </Reveal>
             <Reveal as="p" delay={240}>
-              Zuerst habe ich MedMeister gebaut — eine Plattform speziell für Ärzte, die sich auf die Kenntnisprüfung vorbereiten. Dann habe ich gemerkt: Das gleiche Problem trifft jeden, der Deutsch unter Druck lernt. Nicht nur Mediziner. Pflegekräfte, Ingenieure, Studenten, Familien.
+              I first built MedMeister for doctors preparing for the medical knowledge exam. Then I realised that the same challenge affects many people learning German under pressure: nurses, engineers, students, and families—not only doctors.
             </Reveal>
             <Reveal as="p" delay={320}>
-              Heute steht hinter Deutschmeister ein Team von Ärzten in Deutschland — Leute, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind und die Plattform weiterentwickeln.
+              Today, Deutschmeister is developed by a team of doctors in Germany who have taken the path through German language exams themselves.
             </Reveal>
             <Reveal as="p" delay={400} className="font-medium text-ink">
-              Deutschmeister ist diese Idee — für alle geöffnet.
+              Deutschmeister opens that idea to every serious German learner.
             </Reveal>
           </div>
         </div>
@@ -114,20 +113,19 @@ const UeberUnsPage = () => {
           Mirrored in scripts/prerender-spa-routes.mjs — keep in sync. */}
       <section className="py-20 bg-paper-sunk">
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
-          <SectionHeading title="Wie wir mit Fakten umgehen" className="mb-6" />
+          <SectionHeading title="How we handle factual claims" className="mb-6" />
           <div className="text-[0.9375rem] leading-relaxed text-graphite space-y-4 sm:text-base">
             <Reveal as="p" delay={80}>
-              Prüfungsfakten tragen bei uns ein sichtbares Prüfdatum und ihre Quellen — auf der Seite selbst,
-              nicht im Kleingedruckten. Ändert ein Prüfungsanbieter etwas, siehst du, wann wir zuletzt
-              nachgesehen haben.
+              Exam facts carry a visible review date and their sources on the page itself. If an exam provider
+              changes something, you can see when we last checked it.
             </Reveal>
             <Reveal as="p" delay={160}>
-              Jede Zahl über unsere Inhalte ist gegen die Datenbank gemessen, nie geschätzt. Wo wir nicht
-              gemessen haben, steht keine Zahl.
+              Every published content count is measured against the product data rather than estimated. If we
+              have not measured it, we do not publish a number.
             </Reveal>
             <Reveal as="p" delay={240}>
-              Und keine erfundenen Bewertungen: Erfahrungsberichte erscheinen hier erst, wenn echte Lernende
-              sie uns schreiben.
+              We do not invent reviews. Testimonials will appear only after real learners provide them and give
+              permission for publication.
             </Reveal>
           </div>
         </div>
@@ -137,7 +135,7 @@ const UeberUnsPage = () => {
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <SectionHeading
-            title="Warum Deutschmeister anders ist"
+            title="What makes Deutschmeister different"
             align="center"
             className="mb-12"
           />
@@ -162,10 +160,10 @@ const UeberUnsPage = () => {
       <section className="py-20 bg-ink">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center">
           <Reveal as="h2" className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-white mb-6 sm:text-[2.125rem]">
-            Unsere Mission
+            Our mission
           </Reveal>
           <Reveal as="p" delay={80} className="text-[1.0625rem] leading-relaxed text-rule sm:text-[1.1875rem]">
-            Den Menschen, die wirklich Deutsch brauchen — Migranten, Ärzte, Pflegekräfte, Studenten — das Werkzeug geben, das sie verdienen. Nicht das günstigste. Das beste. Weil ihre Zukunft davon abhängt, ob sie verstanden werden.
+            To give people who genuinely need German—migrants, doctors, nurses, students, and professionals—focused tools for being understood in real life, at work, and in exams.
           </Reveal>
         </div>
       </section>
@@ -174,7 +172,7 @@ const UeberUnsPage = () => {
       <section className="py-20">
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
           <SectionHeading
-            title="Was kommt als Nächstes"
+            title="What comes next"
             align="center"
             className="mb-8"
           />
@@ -198,16 +196,16 @@ const UeberUnsPage = () => {
       <section className="py-24 bg-ink">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
           <Reveal as="h2" className="font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] text-white mb-8 sm:text-[3rem]">
-            Bereit anzufangen?
+            Ready to begin?
           </Reveal>
           <Reveal delay={80} className="flex flex-col sm:flex-row items-center justify-center gap-4">
             {/* The one primary action on this screen — the only shimmer. */}
             <Button to="/signup" size="lg" shimmer className="group w-full sm:w-auto">
-              Kostenlos testen
+              Start for free
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button href="/pricing/" size="lg" variant="secondary" className="group w-full sm:w-auto">
-              Preise ansehen
+              View pricing
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Reveal>

@@ -11,6 +11,7 @@
 // interactive colour, no kasus colours (no case is named here).
 import Layout from '../../layouts/Layout.astro';
 import Aurora from '../../components/Aurora.astro';
+import LanguageNotice from '../../components/LanguageNotice.astro';
 import '../../styles/global.css';
 import { ORGANIZATION } from '../../lib/siteMeta.js';
 import { EXAM_HUBS, examHubUrl } from '../../data/exams/index.js';
@@ -68,6 +69,7 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-6 py-3.5 text-ink s
   lang="de"
 >
   <div class="overflow-x-clip bg-paper text-ink">
+    <div class="mx-auto max-w-3xl px-5 pt-6"><LanguageNotice noun="exam-preparation page" /></div>
     <article>
 
       <!-- Header -->

@@ -16,6 +16,7 @@
 import Layout from '../../layouts/Layout.astro';
 import '../../styles/global.css';
 import Aurora from '../../components/Aurora.astro';
+import LanguageNotice from '../../components/LanguageNotice.astro';
 import { BUILD_DATE, ORGANIZATION } from '../../lib/siteMeta.js';
 import { GUIDES, guideReadingMinutes, guideUrl } from '../../data/guides/index.js';
 
@@ -59,6 +60,7 @@ const CARD_INTERACTIVE =
 
 <Layout title={title} description={description} canonical="https://deutsch-meister.de/leitfaden/" jsonLd={jsonLd} lang="de">
   <div class="overflow-x-clip bg-paper text-ink">
+    <div class="mx-auto max-w-3xl px-5 pt-6"><LanguageNotice noun="guide collection" /></div>
 
     <!-- ═══ Hero ═══ -->
     <section class="relative" aria-labelledby="hero-h">

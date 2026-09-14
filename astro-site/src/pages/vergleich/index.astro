@@ -4,6 +4,7 @@
 // three comparison cards are the grid a visitor CHOOSES from, so they tilt.
 import Layout from '../../layouts/Layout.astro';
 import Aurora from '../../components/Aurora.astro';
+import LanguageNotice from '../../components/LanguageNotice.astro';
 import competitorComparisons from '../../data/competitorComparisons.js';
 import { BUILD_DATE, ORGANIZATION } from '../../lib/siteMeta.js';
 import '../../styles/global.css';
@@ -57,6 +58,7 @@ const TILE = {
 
 <Layout title={title} description={description} keywords={keywords} canonical="https://deutsch-meister.de/vergleich/" jsonLd={jsonLd} lang="de">
   <div class="overflow-x-clip bg-paper text-ink">
+    <div class="mx-auto max-w-4xl px-5 pt-6"><LanguageNotice noun="comparison collection" /></div>
 
     <!-- Hero -->
     <section class="relative overflow-hidden" aria-labelledby="vgl-h">

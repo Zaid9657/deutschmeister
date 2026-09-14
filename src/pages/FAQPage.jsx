@@ -16,11 +16,11 @@ import Aurora from '../components/ui/Aurora.jsx';
 // used to leave the FAQPage JSON-LD promising text no crawler could see.
 // Icons stay here: lucide components don't belong in a data module.
 const CATEGORY_ICONS = {
-  'Über Deutschmeister': BookOpen,
-  'Lernen & Inhalte': MessageSquare,
-  'Preise & Abo': CreditCard,
-  'Prüfungsvorbereitung': GraduationCap,
-  'Technisches': Monitor,
+  'About Deutschmeister': BookOpen,
+  'Learning and content': MessageSquare,
+  'Pricing and subscription': CreditCard,
+  'Exam preparation': GraduationCap,
+  'Technical and privacy': Monitor,
 };
 
 // An answer is reference material, so the entry is a FLAT card (tokens rule 3):
@@ -67,8 +67,8 @@ const FAQPage = () => {
               size="page"
               level={1}
               align="center"
-              title="Häufige Fragen"
-              lead="Alles, was du über Deutschmeister wissen musst — kurz und ehrlich."
+              title="Frequently asked questions"
+              lead="Clear answers about learning, speaking practice, exams, pricing, and privacy."
             />
           </div>
         </div>
@@ -97,10 +97,10 @@ const FAQPage = () => {
         </div>
 
         <Reveal delay={120} className="mt-16 text-center">
-          <p className="text-graphite mb-4">Noch Fragen? Einfach loslegen — A1.1 ist komplett kostenlos.</p>
+          <p className="text-graphite mb-4">Still have questions? Start with A1.1—it is completely free.</p>
           {/* The one primary action on this screen — the only shimmer. */}
           <Button to="/signup" size="lg" shimmer className="group">
-            Kostenlos starten
+            Start for free
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Button>
         </Reveal>

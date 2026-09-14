@@ -21,6 +21,7 @@
 import Layout from '../../layouts/Layout.astro';
 import '../../styles/global.css';
 import Aurora from '../../components/Aurora.astro';
+import LanguageNotice from '../../components/LanguageNotice.astro';
 import { BUILD_DATE, ORGANIZATION } from '../../lib/siteMeta.js';
 import { GUIDES, guideToc, guideJsonLd, guideReadingMinutes, guideUrl } from '../../data/guides/index.js';
 import { FOUNDER_LINE_DE } from '../../data/marketing.js';
@@ -64,6 +65,7 @@ const CARD_INTERACTIVE =
   ogType="article"
 >
   <div class="overflow-x-clip bg-paper text-ink">
+    <div class="mx-auto max-w-3xl px-5 pt-6"><LanguageNotice noun="exam guide" /></div>
 
     <!-- ═══ Header: aurora + hero-line entrance ═══ -->
     <section class="relative" aria-labelledby="hero-h">

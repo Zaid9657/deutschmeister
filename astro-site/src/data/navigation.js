@@ -27,7 +27,7 @@ export const NAV_GROUPS = [
     labelEn: 'Exams',
     labelDe: 'Prüfungen',
     items: [
-      { key: 'pruefung', labelEn: 'Exam Prep', labelDe: 'Prüfungen', href: '/pruefung/', kind: 'static', auth: 'any' },
+      { key: 'pruefung', labelEn: 'Exam Prep · DE', labelDe: 'Prüfungen', href: '/pruefung/', kind: 'static', auth: 'any' },
     ],
   },
   {
@@ -88,19 +88,19 @@ export const FOOTER_GROUPS = [
   },
   {
     key: 'guides',
-    titleEn: 'Exams & Guides',
+    titleEn: 'German Exams & Guides',
     titleDe: 'Prüfungen & Leitfäden',
     items: [
-      { labelEn: 'Prüfungsvorbereitung', labelDe: 'Prüfungsvorbereitung', href: '/pruefung/', kind: 'static' },
-      { labelEn: 'telc B1 Vorbereitung', labelDe: 'telc B1 Vorbereitung', href: '/pruefung/telc-b1/', kind: 'static' },
-      { labelEn: 'Alle Prüfungsleitfäden', labelDe: 'Alle Prüfungsleitfäden', href: '/leitfaden/', kind: 'static' },
-      { labelEn: 'telc B1', labelDe: 'telc B1', href: '/leitfaden/telc-b1/', kind: 'static' },
-      { labelEn: 'Goethe-Zertifikat B1', labelDe: 'Goethe-Zertifikat B1', href: '/leitfaden/goethe-b1/', kind: 'static' },
-      { labelEn: 'telc B2', labelDe: 'telc B2', href: '/leitfaden/telc-b2/', kind: 'static' },
-      { labelEn: 'DTZ', labelDe: 'DTZ', href: '/leitfaden/dtz/', kind: 'static' },
-      { labelEn: 'Plattform-Vergleich', labelDe: 'Plattform-Vergleich', href: '/vergleich/', kind: 'static' },
+      { labelEn: 'Exam preparation · DE', labelDe: 'Prüfungsvorbereitung', href: '/pruefung/', kind: 'static' },
+      { labelEn: 'telc B1 preparation · DE', labelDe: 'telc B1 Vorbereitung', href: '/pruefung/telc-b1/', kind: 'static' },
+      { labelEn: 'All exam guides · DE', labelDe: 'Alle Prüfungsleitfäden', href: '/leitfaden/', kind: 'static' },
+      { labelEn: 'telc B1 guide · DE', labelDe: 'telc B1', href: '/leitfaden/telc-b1/', kind: 'static' },
+      { labelEn: 'Goethe B1 guide · DE', labelDe: 'Goethe-Zertifikat B1', href: '/leitfaden/goethe-b1/', kind: 'static' },
+      { labelEn: 'telc B2 guide · DE', labelDe: 'telc B2', href: '/leitfaden/telc-b2/', kind: 'static' },
+      { labelEn: 'DTZ guide · DE', labelDe: 'DTZ', href: '/leitfaden/dtz/', kind: 'static' },
+      { labelEn: 'Platform comparisons · DE', labelDe: 'Plattform-Vergleich', href: '/vergleich/', kind: 'static' },
       { labelEn: 'FAQ', labelDe: 'FAQ', href: '/faq/', kind: 'spa' },
-      { labelEn: 'Über uns', labelDe: 'Über uns', href: '/ueber-uns/', kind: 'spa' },
+      { labelEn: 'About us', labelDe: 'Über uns', href: '/ueber-uns/', kind: 'spa' },
     ],
   },
 ];

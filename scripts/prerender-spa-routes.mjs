@@ -477,7 +477,7 @@ ${faqSection(PODCAST_FAQS)}
 </div></div>`,
   },
   {
-    // German content page. Was a bare SPA rewrite serving the empty shell —
+    // English FAQ page. Was a bare SPA rewrite serving the empty shell —
     // footer-linked from every static page, invisible to every crawler, while
     // its FAQPage JSON-LD promised 21 answers the accordion only shows on
     // click. The answers here come from the same src/data/faqContent.js the
@@ -491,16 +491,16 @@ ${faqSection(PODCAST_FAQS)}
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Start', item: 'https://deutsch-meister.de/' },
-          { '@type': 'ListItem', position: 2, name: 'Häufige Fragen', item: 'https://deutsch-meister.de/faq/' },
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de/' },
+          { '@type': 'ListItem', position: 2, name: 'Frequently asked questions', item: 'https://deutsch-meister.de/faq/' },
         ],
       },
     ],
     content: `
 <div class="min-h-screen bg-paper"><div class="mx-auto max-w-3xl px-4 pt-24 pb-20 sm:px-6">
   <div class="mb-16 text-center">
-    <h1 class="${H_HERO}">Häufige Fragen</h1>
-    <p class="mx-auto mt-4 max-w-xl ${LEAD}">Alles, was du über Deutschmeister wissen musst — kurz und ehrlich.</p>
+    <h1 class="${H_HERO}">Frequently asked questions</h1>
+    <p class="mx-auto mt-4 max-w-xl ${LEAD}">Clear answers about learning, speaking practice, exams, pricing, and privacy.</p>
   </div>
   <div class="flex flex-col gap-12">${FAQ_CATEGORIES.map((cat) => `
     <section>
@@ -514,8 +514,8 @@ ${faqSection(PODCAST_FAQS)}
     </section>`).join('')}
   </div>
   <div class="mt-16 text-center">
-    <p class="mb-6 ${BODY}">Noch Fragen? Einfach loslegen — A1.1 ist komplett kostenlos.</p>
-    <a href="/signup" class="${BTN_PRIMARY}">Kostenlos starten</a>
+    <p class="mb-6 ${BODY}">Still have questions? Start with A1.1—it is completely free.</p>
+    <a href="/signup" class="${BTN_PRIMARY}">Start for free</a>
   </div>
 </div></div>`,
   },
@@ -535,65 +535,65 @@ ${faqSection(PODCAST_FAQS)}
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Start', item: 'https://deutsch-meister.de/' },
-          { '@type': 'ListItem', position: 2, name: 'Über uns', item: 'https://deutsch-meister.de/ueber-uns/' },
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de/' },
+          { '@type': 'ListItem', position: 2, name: 'About Deutschmeister', item: 'https://deutsch-meister.de/ueber-uns/' },
         ],
       },
     ],
     content: `
 <div class="min-h-screen bg-paper">
   <section class="pt-28 pb-20"><div class="mx-auto max-w-3xl px-4 text-center sm:px-6">
-    <h1 class="${H_HERO}">Deutsch lernen sollte nicht dein Albtraum sein.</h1>
-    <p class="mx-auto mt-6 mb-10 max-w-2xl ${LEAD}">Die meisten Apps machen Sprachenlernen zum Spiel — und umgehen dabei das Schwere: echtes Sprechen, echte Grammatik, echte Prüfungsvorbereitung. Deutschmeister macht das Gegenteil.</p>
+    <h1 class="${H_HERO}">Learning German should not feel like a nightmare.</h1>
+    <p class="mx-auto mt-6 mb-10 max-w-2xl ${LEAD}">Many language apps make learning playful but avoid the difficult parts: speaking freely, understanding grammar, and preparing for a real exam. Deutschmeister focuses on those parts.</p>
     <ul class="flex list-none flex-wrap justify-center gap-3">
-      <li class="inline-flex items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-ink shadow-raise">Von Ärzten in Deutschland entwickelt</li>
-      <li class="inline-flex items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-ink shadow-raise">Für ernsthafte Lerner</li>
-      <li class="inline-flex items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-ink shadow-raise">DSGVO-konform – Server in der EU</li>
+      <li class="inline-flex items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-ink shadow-raise">Developed by doctors in Germany</li>
+      <li class="inline-flex items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-ink shadow-raise">Built for serious learners</li>
+      <li class="inline-flex items-center rounded-pill border border-rule bg-white px-4 py-2 text-[0.875rem] font-bold text-ink shadow-raise">Optional analytics only with consent</li>
     </ul>
   </div></section>
   <section class="border-y border-rule bg-white py-20"><div class="mx-auto max-w-2xl px-4 sm:px-6">
-    <h2 class="${H_SECTION}">Wer steckt dahinter</h2>
+    <h2 class="${H_SECTION}">Who is behind Deutschmeister</h2>
     <div class="mt-6 flex flex-col gap-4 ${BODY}">
-      <p>Ich bin Zaid. Arzt, Blue Card, Deutschland. Ich bin von außen gekommen und habe mich durch die Sprachbarriere gekämpft — jeden Tag, jede Prüfung, jedes Gespräch, bei dem mir die Worte fehlten.</p>
-      <p>Ich habe Kollegen scheitern sehen. Nicht, weil sie dumm waren. Sondern weil ihr Deutsch nicht gut genug war. Brillante Ärzte, die an der Fachsprachprüfung hängengeblieben sind. Das hat mich nicht losgelassen.</p>
-      <p>Zuerst habe ich MedMeister gebaut — eine Plattform speziell für Ärzte, die sich auf die Kenntnisprüfung vorbereiten. Dann habe ich gemerkt: Das gleiche Problem trifft jeden, der Deutsch unter Druck lernt. Nicht nur Mediziner. Pflegekräfte, Ingenieure, Studenten, Familien.</p>
-      <p>Heute steht hinter Deutschmeister ein Team von Ärzten in Deutschland — Leute, die den Weg durch die deutschen Sprachprüfungen selbst gegangen sind und die Plattform weiterentwickeln.</p>
-      <p class="font-bold text-ink">Deutschmeister ist diese Idee — für alle geöffnet.</p>
+      <p>I am Zaid, a doctor living in Germany on an EU Blue Card. I arrived from abroad and worked through the language barrier—through daily life, exams, and conversations where the right words were missing.</p>
+      <p>I watched capable colleagues struggle, not because they lacked professional knowledge, but because their German was not yet strong enough for the medical language exam. That problem stayed with me.</p>
+      <p>I first built MedMeister for doctors preparing for the medical knowledge exam. Then I realised that the same challenge affects many people learning German under pressure: nurses, engineers, students, and families—not only doctors.</p>
+      <p>Today, Deutschmeister is developed by a team of doctors in Germany who have taken the path through German language exams themselves.</p>
+      <p class="font-bold text-ink">Deutschmeister opens that idea to every serious German learner.</p>
     </div>
   </div></section>
   <section class="bg-paper-sunk py-20"><div class="mx-auto max-w-2xl px-4 sm:px-6">
-    <h2 class="${H_SECTION}">Wie wir mit Fakten umgehen</h2>
+    <h2 class="${H_SECTION}">How we handle factual claims</h2>
     <div class="mt-6 flex flex-col gap-4 ${BODY}">
-      <p>Prüfungsfakten tragen bei uns ein sichtbares Prüfdatum und ihre Quellen — auf der Seite selbst, nicht im Kleingedruckten. Ändert ein Prüfungsanbieter etwas, siehst du, wann wir zuletzt nachgesehen haben.</p>
-      <p>Jede Zahl über unsere Inhalte ist gegen die Datenbank gemessen, nie geschätzt. Wo wir nicht gemessen haben, steht keine Zahl.</p>
-      <p>Und keine erfundenen Bewertungen: Erfahrungsberichte erscheinen hier erst, wenn echte Lernende sie uns schreiben.</p>
+      <p>Exam facts carry a visible review date and their sources on the page itself. If an exam provider changes something, you can see when we last checked it.</p>
+      <p>Every published content count is measured against the product data rather than estimated. If we have not measured it, we do not publish a number.</p>
+      <p>We do not invent reviews. Testimonials will appear only after real learners provide them and give permission for publication.</p>
     </div>
   </div></section>
   <section class="py-20"><div class="mx-auto max-w-4xl px-4 sm:px-6">
-    <h2 class="text-center ${H_SECTION}">Warum Deutschmeister anders ist</h2>
+    <h2 class="text-center ${H_SECTION}">What makes Deutschmeister different</h2>
     <div class="mt-12 grid gap-6 sm:grid-cols-3">
-      <div class="${CARD_FLAT} p-6"><h3 class="${H_CARD}">Echtes Sprechen, nicht nur Klicken</h3><p class="mt-2 ${SMALL}">KI bewertet deine Aussprache, Grammatik und Wortschatz wie ein echter Prüfer. Keine Multiple-Choice-Show.</p></div>
-      <div class="${CARD_FLAT} p-6"><h3 class="${H_CARD}">Grammatik, die haftet</h3><p class="mt-2 ${SMALL}">Sentence X-Ray seziert echte Sätze. Du verstehst das Wieso, nicht nur das Was.</p></div>
-      <div class="${CARD_FLAT} p-6"><h3 class="${H_CARD}">Gebaut von Leuten, die’s selbst durchgemacht haben</h3><p class="mt-2 ${SMALL}">Kein Konzern. Ein Team von Ärzten in Deutschland, das weiß, wie es ist, wenn die Sprache zwischen dir und deinem Leben steht.</p></div>
+      <div class="${CARD_FLAT} p-6"><h3 class="${H_CARD}">Real speaking, not just clicking</h3><p class="mt-2 ${SMALL}">Practise complete responses and receive AI feedback on pronunciation, grammar, and vocabulary—not only multiple-choice drills.</p></div>
+      <div class="${CARD_FLAT} p-6"><h3 class="${H_CARD}">Grammar that makes sense</h3><p class="mt-2 ${SMALL}">Sentence X-Ray breaks down real sentences so you can understand why the language works, not only what the answer is.</p></div>
+      <div class="${CARD_FLAT} p-6"><h3 class="${H_CARD}">Built by people who faced the same barrier</h3><p class="mt-2 ${SMALL}">Deutschmeister is developed by a team of doctors in Germany who understand when language stands between you and your work or daily life.</p></div>
     </div>
   </div></section>
   <section class="bg-ink py-20"><div class="mx-auto max-w-2xl px-4 text-center sm:px-6">
-    <h2 class="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-white sm:text-[2.125rem]">Unsere Mission</h2>
-    <p class="mt-6 text-[1.0625rem] leading-relaxed text-rule sm:text-[1.1875rem]">Den Menschen, die wirklich Deutsch brauchen — Migranten, Ärzte, Pflegekräfte, Studenten — das Werkzeug geben, das sie verdienen. Nicht das günstigste. Das beste. Weil ihre Zukunft davon abhängt, ob sie verstanden werden.</p>
+    <h2 class="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-white sm:text-[2.125rem]">Our mission</h2>
+    <p class="mt-6 text-[1.0625rem] leading-relaxed text-rule sm:text-[1.1875rem]">To give people who genuinely need German—migrants, doctors, nurses, students, and professionals—focused tools for being understood in real life, at work, and in exams.</p>
   </div></section>
   <section class="py-20"><div class="mx-auto max-w-2xl px-4 sm:px-6">
-    <h2 class="text-center ${H_SECTION}">Was kommt als Nächstes</h2>
+    <h2 class="text-center ${H_SECTION}">What comes next</h2>
     <ul class="mt-8 flex list-none flex-col gap-4">
-      <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">Mehr Sprachstufen — C1 und darüber hinaus</li>
-      <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">Live-Prüfungssimulationen für Goethe / telc / TestDaF</li>
-      <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">Spezialisierte Module: Pflegedeutsch, Wirtschaftsdeutsch</li>
-      <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">Community — lerne mit anderen, nicht allein</li>
+      <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">More levels, including C1 and beyond</li>
+      <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">Live exam simulations for Goethe, telc, and TestDaF</li>
+      <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">Specialist modules for nursing and business German</li>
+      <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">A learning community for practising with others</li>
     </ul>
   </div></section>
   <section class="bg-ink py-24"><div class="mx-auto max-w-3xl px-4 text-center sm:px-6">
-    <h2 class="font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] text-white sm:text-[3rem]">Bereit anzufangen?</h2>
-    <p class="mt-8 flex flex-wrap justify-center gap-4"><a href="/signup" class="${BTN} bg-white text-ink shadow-raise">Kostenlos testen</a>
-    <a href="/pricing/" class="${BTN} border border-white/40 text-white">Preise ansehen</a></p>
+    <h2 class="font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] text-white sm:text-[3rem]">Ready to begin?</h2>
+    <p class="mt-8 flex flex-wrap justify-center gap-4"><a href="/signup" class="${BTN} bg-white text-ink shadow-raise">Start for free</a>
+    <a href="/pricing/" class="${BTN} border border-white/40 text-white">View pricing</a></p>
   </div></section>
 </div>`,
   },
@@ -621,7 +621,7 @@ for (const route of ROUTES) {
   // prerendered routes are the indexable ones, so the tag must come out here.
   html = mustReplace(html, /\s*<meta name="robots" content="noindex">/, '', 'robots removal', route.path);
   if (route.htmlLang && route.htmlLang !== 'en') {
-    // German pages (/faq/, /ueber-uns/) must not ship the shell's lang="en".
+    // Routes with an explicit non-English language must not ship the shell's lang="en".
     html = mustReplace(html, /(<html[^>]*\blang=")[^"]*(")/, `$1${route.htmlLang}$2`, 'html lang', route.path);
   }
   html = mustReplace(html, /(<meta name="description" content=")[^"]*(")/, `$1${esc(route.description)}$2`, 'description', route.path);

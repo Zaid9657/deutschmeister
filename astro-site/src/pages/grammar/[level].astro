@@ -15,9 +15,9 @@ const topics = await getTopicsForLevel(level);
 
 const levelPath = topics.map((t, i) => ({ id: t.id, slug: t.slug, n: i + 1 }));
 
-const title = `${meta.label} Grammatik — ${topics.length} Themen | DeutschMeister`;
+const title = `${meta.label} German Grammar — ${topics.length} Topics | DeutschMeister`;
 // Keep under 160 chars: list two topic titles, not four.
-const description = `Alle ${topics.length} Grammatikthemen für ${meta.label}: ${topics.slice(0, 2).map(t => t.title_en).join(', ')} und mehr — mit Regeln, Beispielen und Übungen.`;
+const description = `All ${topics.length} ${meta.label} German grammar topics: ${topics.slice(0, 2).map(t => t.title_en).join(', ')}, and more, with English explanations and practice.`;
 
 const levelUrl = `https://deutsch-meister.de/grammar/${level}/`;
 const jsonLd = {
@@ -26,7 +26,7 @@ const jsonLd = {
   name: title,
   description,
   url: levelUrl,
-  inLanguage: 'de',
+  inLanguage: 'en',
   educationalLevel: `CEFR ${meta.label}`,
   learningResourceType: 'Course module',
   isAccessibleForFree: level === 'a1.1',
@@ -51,7 +51,7 @@ const jsonLd = {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://deutsch-meister.de/' },
-      { '@type': 'ListItem', position: 2, name: 'Grammatik', item: 'https://deutsch-meister.de/grammar/' },
+      { '@type': 'ListItem', position: 2, name: 'Grammar', item: 'https://deutsch-meister.de/grammar/' },
       { '@type': 'ListItem', position: 3, name: meta.label, item: levelUrl },
     ],
   },
@@ -67,7 +67,7 @@ const CHIP_PRESSABLE =
   'rounded-pill border border-rule bg-white px-3 py-1.5 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep shadow-raise transition-all duration-100 ease-snap hover:border-siegel active:translate-y-1 active:shadow-none';
 ---
 
-<Layout title={title} description={description} canonical={`https://deutsch-meister.de/grammar/${level}/`} jsonLd={jsonLd} lang="de">
+<Layout title={title} description={description} canonical={`https://deutsch-meister.de/grammar/${level}/`} jsonLd={jsonLd} lang="en">
   <div class="overflow-x-clip bg-paper text-ink">
 
     <!-- ═══ HERO ═══ -->
@@ -78,7 +78,7 @@ const CHIP_PRESSABLE =
         <nav class="hero-line mb-8 flex items-center gap-2 font-data text-[0.8125rem] text-graphite" aria-label="Breadcrumb" style="--d:0ms">
           <a href="https://deutsch-meister.de/" class="transition-colors hover:text-siegel-deep">Home</a>
           <span>/</span>
-          <a href="/grammar/" class="transition-colors hover:text-siegel-deep" lang="de">Grammatik</a>
+          <a href="/grammar/" class="transition-colors hover:text-siegel-deep">Grammar</a>
           <span>/</span>
           <span class="font-semibold text-ink">{meta.label}</span>
         </nav>
@@ -89,10 +89,10 @@ const CHIP_PRESSABLE =
           <span class="text-[0.9375rem] font-semibold text-graphite" lang="en">{meta.name}</span>
         </div>
         <h1 id="level-h" class="hero-line font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.025em] sm:text-[3rem]" style="--d:140ms">
-          <span lang="de">{meta.label} Grammatik</span>
+          {meta.label} German Grammar
         </h1>
-        <p class="hero-line mt-4 max-w-xl text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]" lang="de" style="--d:260ms">
-          <span data-en={`${topics.length} topics with explanations, examples and interactive exercises.`}>{topics.length} Themen mit Erklärungen, Beispielen und interaktiven Übungen.</span>
+        <p class="hero-line mt-4 max-w-xl text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]" style="--d:260ms">
+          {topics.length} topics with English explanations, German examples, and interactive exercises.
         </p>
         <!-- Per-level progress — hidden until the client fills it for a signed-in user. -->
         <div data-level-bar class="mt-5 hidden max-w-sm items-center gap-3">
@@ -141,7 +141,7 @@ const CHIP_PRESSABLE =
 
       <!-- Level navigation -->
       <div class="reveal mt-12 border-t border-rule pt-8">
-        <p class="mb-4 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel" lang="de">Andere Niveaus</p>
+        <p class="mb-4 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">Other levels</p>
         <div class="flex flex-wrap gap-2.5">
           {SUB_LEVELS.filter(l => l !== level).map((l) => (
             <a href={`/grammar/${l}/`} class={CHIP_PRESSABLE}>

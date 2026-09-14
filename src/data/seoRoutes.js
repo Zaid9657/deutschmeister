@@ -84,20 +84,18 @@ export const SEO_ROUTES = {
       'German reading practice, German reading comprehension, learn German reading, German texts for learners, CEFR reading exercises',
   },
   '/faq': {
-    title: 'Häufige Fragen',
+    title: 'Frequently Asked Questions',
     description:
-      'Häufige Fragen zu Deutschmeister — Preise, Prüfungsvorbereitung (Goethe, telc, TestDaF, DTZ), KI-Sprechtraining, Sentence X-Ray und mehr. Deutsch lernen von A1 bis B2.',
+      'Answers about Deutschmeister pricing, exam preparation, AI speaking practice, Sentence X-Ray, privacy, and learning German from A1 to B2.',
     keywords:
-      'Deutschmeister FAQ, Deutsch lernen, Goethe Prüfung, telc Prüfung, TestDaF, DTZ, KI Sprechtraining, Sentence X-Ray, Deutsch Grammatik',
-    lang: 'de',
+      'Deutschmeister FAQ, learn German, Goethe exam, telc exam, TestDaF, DTZ, AI speaking practice, Sentence X-Ray, German grammar',
   },
   '/ueber-uns': {
-    title: 'Über uns',
+    title: 'About Deutschmeister',
     description:
-      'Deutschmeister wurde von Zaid gegründet — Arzt mit Blue Card in Deutschland — und wird von einem Team von Ärzten in Deutschland entwickelt. KI-Sprechtraining, Sentence X-Ray, Prüfungsvorbereitung von A1 bis B2.',
+      'Meet the team behind Deutschmeister and learn why doctors in Germany built focused tools for German grammar, speaking, and exam preparation.',
     keywords:
-      'Deutschmeister, Über uns, Deutsch lernen, Ärzte, Blue Card, KI Sprechtraining, Goethe Prüfung, telc, TestDaF',
-    lang: 'de',
+      'Deutschmeister, about us, learn German, AI speaking practice, German exam preparation, Goethe, telc, TestDaF',
   },
 };
 

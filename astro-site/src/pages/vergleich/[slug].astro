@@ -5,6 +5,7 @@
 // competitor figure and every "Stand:" stamp is rendered verbatim.
 import Layout from '../../layouts/Layout.astro';
 import Aurora from '../../components/Aurora.astro';
+import LanguageNotice from '../../components/LanguageNotice.astro';
 import competitorComparisons from '../../data/competitorComparisons.js';
 import { BUILD_DATE, ORGANIZATION } from '../../lib/siteMeta.js';
 import {
@@ -111,6 +112,7 @@ const STATS = [
 
 <Layout title={title} description={description} keywords={keywords} canonical={canonical} jsonLd={jsonLd} lang="de" ogType="article">
   <div class="overflow-x-clip bg-paper text-ink">
+    <div class="mx-auto max-w-4xl px-5 pt-6"><LanguageNotice noun="comparison" /></div>
     <!-- Hero -->
     <section class="relative overflow-hidden" aria-labelledby="cmp-hero-h">
       <Aurora />
