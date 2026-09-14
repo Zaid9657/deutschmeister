@@ -16,7 +16,7 @@
 // curriculum — is about RULES and LEXIS; a world list has one source or it drifts, and it drifted
 // (DaF review #17, Minor 17: two lists, two sizes, „aus England“ red). `tests/writing-course.test.mjs`
 // pins that this stays the only import and that it never reaches into `src/data/`.
-import { COUNTRY_STEMS, COUNTRY_NAMES } from './countries.js';
+import { COUNTRY_STEMS, COUNTRY_NAMES, LANGUAGE_NAMES } from './countries.js';
 
 const words = (text) => String(text || '').trim().split(/\s+/).filter(Boolean);
 
@@ -56,9 +56,19 @@ const FUNCTION_WORDS_DE = new Set([
   // Präpositionen
   'aus', 'bei', 'mit', 'nach', 'seit', 'von', 'zum', 'zur', 'bis', 'für', 'gegen', 'ohne',
   'über', 'unter', 'neben', 'zwischen', 'vor', 'hinter', 'ins', 'beim', 'vom', 'auf', 'für',
+  'am', 'im', 'ans', 'in', 'an', 'um', 'zu', 'ab',
   // Konjunktionen und Partikeln
   'und', 'oder', 'aber', 'denn', 'dass', 'weil', 'wenn', 'auch', 'noch', 'nur', 'schon',
   'nicht', 'sehr', 'dann', 'hier', 'ja', 'nein', 'bitte', 'danke', 'jetzt', 'mal',
+  // Satz-, Zeit- und Ortsadverbien — a closed class too, and the reason it is HERE (round 19, DaF
+  // review #18, MAJOR 1): a German sentence that opens with one of them has its subject AFTER the
+  // verb („Leider komme ich später.“, „Morgen fährt der Zug nicht.“), and the Auftrag shape has to
+  // know that the first word is not a name. Adjectives that double as adverbs (`früh`, `spät`,
+  // `schnell`) are NOT here — they are open-class words and may be an answer.
+  'heute', 'morgen', 'gestern', 'übermorgen', 'vorgestern', 'leider', 'bald', 'später', 'gern',
+  'gerne', 'vielleicht', 'natürlich', 'deshalb', 'darum', 'also', 'dort', 'da', 'zuerst', 'danach',
+  'immer', 'oft', 'manchmal', 'nie', 'wieder', 'erst', 'abends', 'morgens', 'mittags', 'nachts',
+  'vormittags', 'nachmittags', 'übrigens', 'sonst', 'endlich', 'gleich',
   // Fragewörter
   'wann', 'wie', 'was', 'wer', 'wen', 'wem', 'wo', 'warum', 'woher', 'wohin',
   'welche', 'welcher', 'welches', 'welchen',
@@ -136,11 +146,13 @@ const isFunctionWord = (w) => {
  *     (ANSWER_SHAPES / QUESTION_SHAPES below). Naming the head noun again is not
  *     answering it: „Wir treffen Ana auf dem Flohmarkt.“ does not say WANN.
  *  3. WHERE NO SHAPE EXISTS the conjunct's own content words decide, folded
- *     rather than matched as substrings — „Was Sie brauchen“ is answered by „Ich
- *     brauche …“. In an INDIRECT QUESTION („Was die Gäste mitbringen sollen“)
- *     only the lower-case words count: the capitalised nouns are the TOPIC the
- *     task hands the learner, not the answer, which is why „Ich lade meine Gäste
- *     ein.“ does not satisfy it and „Die Gäste bringen Kuchen mit.“ does.
+ *     rather than matched as substrings and read in STATEMENTS only — „Was Sie
+ *     brauchen“ is answered by „Ich brauche …“ and not by „Brauchen Sie etwas?“
+ *     (round 19, `isQuestion`). In an INDIRECT QUESTION („Was Sie kaufen“) only
+ *     the lower-case words count: the capitalised nouns are the TOPIC the task
+ *     hands the learner, not the answer. An indirect question closed by a MODAL
+ *     („Was die Gäste mitbringen sollen“) is an Auftrag and has a shape of its
+ *     own — `instructionShape` — so its verb decides nothing there.
  *
  * ONE function, no lexicon argument, ON PURPOSE: `GradedWriting.jsx` and RULE 17
  * in `scripts/validate-curriculum.mjs` call this same code, and a check that
@@ -220,13 +232,29 @@ const splitVerbStem = (word) => {
  * „Arabisch“ is a language only next to „sprechen“ — both are sentence-local facts, so the shapes
  * below read sentences rather than the whole Mitteilung. The split deliberately does NOT break at
  * a full stop that follows a digit: „am 3. Mai“ and „3.5.1998.“ are one date, not three sentences.
+ * The closing mark STAYS on the sentence (round 19): a question is a sentence type, and the `?` is
+ * how German writes it — `isQuestion` below reads it, the token readers strip it.
  */
 const sentences = (text) => String(text || '')
-  .split(/(?<![0-9])[.!?]+\s+|\n+/)
+  .split(/(?<=(?<![0-9])[.!?]+)\s+|\n+/)
   .map((s) => s.trim())
   .filter(Boolean);
 
 const stripPunct = (w) => String(w || '').replace(/[.,!?;:()"„“»«]/g, '');
+
+/**
+ * A QUESTION IS NOT AN ANSWER (DaF review #18, Minor 18). „Was Sie kaufen“ ← „Kaufst du auch?“ was
+ * green because the folded predicate `kauf` decides a shape-less Leitpunkt and a question carries the
+ * verb as well as a statement does. A question is a sentence that closes with `?` or opens with a
+ * question word; the fold half of `leitpunktSatisfied` reads only the sentences that are not one.
+ */
+const QUESTION_WORD_RE = /^(?:was|wer|wen|wem|wann|wo|wie|warum|woher|wohin|welche[rnms]?)$/i;
+const isQuestion = (sentence) => {
+  const s = String(sentence || '').trim();
+  if (/\?$/.test(s)) return true;
+  const first = stripPunct(words(s)[0] || '');
+  return QUESTION_WORD_RE.test(first);
+};
 
 /** The number words the course writes out, 0–20 plus the round tens — used by the value shapes. */
 const NUMBER_WORD = '(?:null|ein[sm]?|zwei|drei|vier|fünf|fuenf|sechs|sieben|acht|neun|zehn|elf'
@@ -262,12 +290,31 @@ const clauses = (sentence) => String(sentence || '')
   .split(/\s*[,;]\s*|\s+(?:und|oder|aber|denn)\s+/i)
   .map((c) => c.trim())
   .filter(Boolean);
+/**
+ * …OR IN THE APPOSITION BEHIND THE COMMA (DaF review #18, Minor 21): „Ich bin geboren in Marokko,
+ * 1998.“ carries the year in the NEXT clause, and that clause is nothing but the date — no verb, no
+ * other content word. Learner German, and an examiner reads it as a birth date. A clause that
+ * consists of a date value alone (optionally after `am`/`im`) is read together with the clause it
+ * follows; „…geboren, ich habe 2 Kinder.“ still has a sentence in its second clause and stays red.
+ */
+const DATE_ONLY_CLAUSE_RE = new RegExp(`^(?:am|im)?\\s*(?:\\d[\\d.\\s]*|(?:${MONTH})(?:\\s+\\d{2,4})?)\\.?$`, 'i');
 const DATE_SHAPE = {
-  test: (body) => sentences(body).some(
-    (s) => DATE_VALUE_RE.test(s)
-      || clauses(s).some((c) => BIRTH_WORD_RE.test(c) && DATE_COMPANION_RE.test(c)),
-  ),
+  test: (body) => sentences(body).some((s) => {
+    if (DATE_VALUE_RE.test(s)) return true;
+    const cs = clauses(s);
+    return cs.some((c, i) => BIRTH_WORD_RE.test(c)
+      && (DATE_COMPANION_RE.test(c) || (i + 1 < cs.length && DATE_ONLY_CLAUSE_RE.test(cs[i + 1]))));
+  }),
 };
+
+/** A NUMBER — a room, a head count, an age: digits or a number word. ONE definition, both readers. */
+const NUMBER_VALUE_RE = new RegExp(`\\d|\\b${NUMBER_WORD}\\b`, 'i');
+
+/**
+ * A COLOUR is one of the basic colour words of the language — a closed class, like the number
+ * words above — optionally with `hell`/`dunkel` in front. „Farbe: Wörterbuch“ is no colour.
+ */
+const COLOUR_RE = /\b(?:hell|dunkel)?(?:rot|blau|grün|gruen|gelb|schwarz|weiß|weiss|grau|braun|orange|rosa|lila|violett|pink|türkis|tuerkis|beige|bunt|golden|silbern)(?:e[rnms]?)?\b/i;
 
 /** An AGE is a number of years, and it is NOT a date — „Ihr Alter“ and „Ihr Geburtsdatum“ differ. */
 const AGE_RE = new RegExp(
@@ -279,7 +326,9 @@ const AGE_RE = new RegExp(
 const CLOCK_RE = new RegExp(
   `\\b(?:\\d{1,2}(?:[.:]\\d{2})?|${NUMBER_WORD})\\s*Uhr\\b|\\b\\d{1,2}:\\d{2}\\b`
   + `|\\bhalb\\s+(?:\\d{1,2}|${NUMBER_WORD})\\b|\\bViertel\\s+(?:nach|vor)\\b`
-  + `|\\bum\\s+(?:\\d{1,2}|${NUMBER_WORD}|halb)\\b`,
+  // `um` swallows the whole time it opens („um zehn Uhr“, „um halb neun“): the shapes that strip
+  // times out of a sentence (`contentBeyondTime`) must not be left holding a bare `Uhr`.
+  + `|\\bum\\s+(?:halb\\s+)?(?:\\d{1,2}(?:[.:]\\d{2})?|${NUMBER_WORD})(?:\\s*Uhr)?\\b|\\bum\\s+halb\\b`,
   'i',
 );
 const DAY_RE = /\b(?:Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonnabend|Sonntag|heute|morgen|übermorgen|Wochenende)\b/i;
@@ -301,7 +350,9 @@ const PRICE_RE = new RegExp(`\\b(?:\\d+(?:[.,]\\d{1,2})?|${NUMBER_WORD})\\s*(?:E
  * same kind of list as COUNTRY_STEMS: it belongs to the world, not to A1.1, and since round 18 both
  * live in `./countries.js`, the ONE source the validator reads too (DaF review #17, Minor 17).
  */
-const COUNTRY_NAME_SET = new Set(COUNTRY_NAMES.map((n) => n.toLowerCase()));
+/** A name as the reader compares it: lower case, letters and hyphens only — `Sierra Leone` → `sierraleone`. */
+const countryKey = (raw) => String(raw || '').toLowerCase().replace(/[^a-zäöüß-]/g, '');
+const COUNTRY_NAME_SET = new Set(COUNTRY_NAMES.map(countryKey));
 const COUNTRY_STEM_SET = new Set(COUNTRY_STEMS);
 
 const sharedPrefix = (a, b) => {
@@ -310,12 +361,21 @@ const sharedPrefix = (a, b) => {
   return i;
 };
 
-const isCountryName = (raw) => {
-  const n = String(raw || '').toLowerCase().replace(/[^a-zäöüß-]/g, '');
-  if (n.length < 3) return false;
-  if (COUNTRY_NAME_SET.has(n)) return true;
+/**
+ * The listed names count at any length (`USA`); the stem search needs FOUR letters. Three letters
+ * were enough for a country („Ira“ → `irak`, „Ben“ → `benin`) once the same test began to read
+ * name fields (round 19): no country has a three-letter German name, but people do.
+ */
+const isCountryName = (raw, { asName = false } = {}) => {
+  const n = countryKey(raw);
+  if (COUNTRY_NAME_SET.has(n) || COUNTRY_STEM_SET.has(n)) return true;
+  if (n.length < 4) return false;
   for (const stem of COUNTRY_STEM_SET) {
-    if (n.startsWith(stem) || stem.startsWith(n)) return true;
+    // `asName` is the NAME field asking „is this word a country?“ — there the two- and three-letter
+    // stems (`ir`, `ind`, `pol`) are not evidence: „Irina“ and „Indira“ are names, not Ireland and
+    // India. On „Ihr Land“ they are, because „Irland“ and „Indien“ have no longer stem.
+    if (n.startsWith(stem) && (!asName || stem.length >= 4)) return true;
+    if (!asName && stem.startsWith(n)) return true;
     if (sharedPrefix(n, stem) >= 5) return true;
   }
   return false;
@@ -327,15 +387,24 @@ const isCountryName = (raw) => {
  * die Schweiz), so an optional `der`/`dem`/`den` stands between `aus` and the name. What round 17
  * adds is the only thing that made it a shape rather than a keyword: the name must BE a country.
  */
-const AUS_LAND_RE = /\baus\s+(?:de[rmn]\s+)?([A-ZÄÖÜ][A-Za-zÄÖÜäöüß-]+)/g;
+const AUS_LAND_RE = /\baus\s+(?:de[rmn]\s+)?([A-ZÄÖÜ][A-Za-zÄÖÜäöüß-]+)(?:\s+([A-ZÄÖÜ][A-Za-zÄÖÜäöüß-]+))?/g;
 const COUNTRY_SHAPE = {
   test: (body) => {
     const text = String(body || '');
     AUS_LAND_RE.lastIndex = 0;
     for (let m = AUS_LAND_RE.exec(text); m; m = AUS_LAND_RE.exec(text)) {
-      if (isCountryName(m[1])) return true;
+      // Two capitalised words after `aus` are tried as ONE name first („aus Sierra Leone“), then the
+      // first alone („aus Marokko Ana“ is a country followed by a name).
+      if ((m[2] && isCountryName(`${m[1]} ${m[2]}`)) || isCountryName(m[1])) return true;
     }
     return false;
+  },
+};
+/** The value of a country FIELD or a named field („Mein Land ist die Türkei“): some word of it is a country. */
+const COUNTRY_VALUE_SHAPE = {
+  test: (value) => {
+    const toks = words(value).map(stripPunct).filter(Boolean);
+    return toks.some((t, i) => isCountryName(t) || (i + 1 < toks.length && isCountryName(`${t} ${toks[i + 1]}`)));
   },
 };
 
@@ -375,8 +444,14 @@ const COUNTRY_SHAPE = {
  * `scripts/validate-curriculum.mjs` read the same world.
  */
 
-/** The suffixes a German nationality NOUN is built with, longest first. */
-const NATIONALITY_NOUN_SUFFIXES = ['ierin', 'erin', 'ier', 'isch', 'er', 'in', 'e'];
+/**
+ * The suffixes a German nationality NOUN is built with, longest first. ROUND 19 (DaF review #18,
+ * Minor 17) adds `-sch` (`libysch` = `liby` + `sch` — the `-ysch` of the review, read from the stem
+ * the list has) and `-i` (`Israeli`, `Saudi`); the BARE STEM (`Ungar`, `Jemenit`) is the empty
+ * suffix and counts only in the predicative position — see `PREDICATIVE_STEM_RE` — because bare
+ * stems are also country names („aus dem Iran“ is a country, „Ich bin Iraner“ a nationality).
+ */
+const NATIONALITY_NOUN_SUFFIXES = ['ierin', 'erin', 'ier', 'isch', 'sch', 'er', 'in', 'e', 'i'];
 
 /** A word (any case) whose stem, after one nationality suffix, is a country stem. */
 const isNationalityWord = (word) => {
@@ -385,6 +460,15 @@ const isNationalityWord = (word) => {
   for (const suf of NATIONALITY_NOUN_SUFFIXES) {
     if (!w.endsWith(suf) || w.length - suf.length < 2) continue;
     if (COUNTRY_STEM_SET.has(w.slice(0, -suf.length))) return true;
+  }
+  return false;
+};
+/** „Ich **bin** Ungar.“, „Er **ist** Jemenit.“ — the bare stem as a noun, after a finite `sein`. */
+const PREDICATIVE_STEM_RE = /\b(?:bin|bist|ist|sind|seid|war|warst|waren)\s+([A-ZÄÖÜ][a-zäöüß-]+)/g;
+const hasPredicativeStem = (text) => {
+  PREDICATIVE_STEM_RE.lastIndex = 0;
+  for (let m = PREDICATIVE_STEM_RE.exec(text); m; m = PREDICATIVE_STEM_RE.exec(text)) {
+    if (COUNTRY_STEM_SET.has(m[1].toLowerCase())) return true;
   }
   return false;
 };
@@ -421,6 +505,11 @@ const PREDICATIVE_ISCH_RE = /\b(?:bin|bist|ist|sind|seid|war|warst|waren)\s+[A-Z
  */
 const LANGUAGE_CONTEXT_RE = /\bsprech\w*|sprach\w*|\blern\w*/i;
 const LANGUAGE_NAME_RE = /^(?:[A-ZÄÖÜ][a-zäöüß]*isch|Deutsch)$/;
+/** …and the languages whose German name does not end in `-isch` (`Dari`, `Urdu`), from the world list. */
+const LANGUAGE_NAME_SET = new Set(LANGUAGE_NAMES.map((n) => n.toLowerCase()));
+const isLanguageName = (t) => LANGUAGE_NAME_RE.test(t) || LANGUAGE_NAME_SET.has(String(t || '').toLowerCase());
+/** The value of a language FIELD: „Arabisch, Deutsch“, „Dari“ — some word of it is a language. */
+const LANGUAGE_VALUE_SHAPE = { test: (value) => words(value).map(stripPunct).some(isLanguageName) };
 
 /**
  * Does `body` name a nationality? Structural, never a name — see the header above.
@@ -430,12 +519,25 @@ const NATIONALITY_SHAPE = {
   test: (body) => sentences(body).some((sentence) => {
     const toks = words(sentence).map(stripPunct).filter(Boolean);
     const usable = LANGUAGE_CONTEXT_RE.test(sentence)
-      ? toks.filter((t) => !LANGUAGE_NAME_RE.test(t))
+      ? toks.filter((t) => !isLanguageName(t))
       : toks;
     const rest = usable.join(' ');
-    if (DEUTSCH_RE.test(rest) || PREDICATIVE_ISCH_RE.test(rest)) return true;
+    if (DEUTSCH_RE.test(rest) || PREDICATIVE_ISCH_RE.test(rest) || hasPredicativeStem(rest)) return true;
     return usable.some(isNationalityWord);
   }),
+};
+
+/**
+ * A NAME is a capitalised word of at least two letters that is neither a country nor a language —
+ * „Familienname: Marokko“ and „Vorname: Arabisch“ fill the field with a value of another field's
+ * kind, „Name: 12“ with none. A city („Vorname: Bremen“) is NOT caught: there is no world list of
+ * cities and a surname may be one. ONE definition: the named field of the Mitteilung („Mein Name
+ * ist Ana Ruiz“) and the name fields of the Formular read it alike.
+ */
+const NAME_VALUE_SHAPE = {
+  test: (value) => words(value).map(stripPunct).some(
+    (t) => /^[A-ZÄÖÜ][A-Za-zÄÖÜäöüß-]+$/.test(t) && t.length >= 2 && !isCountryName(t, { asName: true }) && !isLanguageName(t),
+  ),
 };
 
 /**
@@ -462,23 +564,61 @@ const DAY_OR_DATE_SHAPE = anyOf(DAY_RE, DATE_SHAPE);
 const ANSWER_SHAPES = [
   // `value` is what the FIELD-NAMING alternative must carry („Der Name ist Ana Ruiz.“) — by default
   // the shape itself, so that naming a field without filling it in with a value of the right kind
-  // („Meine Telefonnummer ist neu.“) is not an answer either. See namedFieldShape below.
+  // („Meine Telefonnummer ist neu.“) is not an answer either. See namedFieldShape below. The same
+  // `value` is what a FORMULAR FIELD of that name must carry — see `fieldValueShape` (round 19).
   {
     on: ['nam', 'vornam', 'nachnam', 'familiennam'],
     re: /\b(?:hei(?:ß|ss)\w*|nenn\w*)\b|\bich\s+bin\s+[A-ZÄÖÜ]/,
-    value: /[A-ZÄÖÜ][a-zäöüß]/,
+    value: NAME_VALUE_SHAPE,
   },
   { on: ['geburtsdatum', 'geburtstag', 'datum'], re: DATE_SHAPE },
-  { on: ['alt', 'alter'], re: AGE_RE, value: new RegExp(`\\d|${NUMBER_WORD}`, 'i') },
-  { on: ['land', 'geburtsland', 'herkunft'], re: COUNTRY_SHAPE, value: { test: isCountryName } },
+  { on: ['alt', 'alter'], re: AGE_RE, value: NUMBER_VALUE_RE },
+  { on: ['land', 'geburtsland', 'herkunft'], re: COUNTRY_SHAPE, value: COUNTRY_VALUE_SHAPE },
   { on: ['staatsangehörigkei', 'staatsangehoerigkei', 'nationalitä', 'nationalitae'], re: NATIONALITY_SHAPE },
-  { on: ['familienstand'], re: /\b(?:ledig|verheiratet|geschieden)\b/i },
+  { on: ['familienstand'], re: /\b(?:ledig|verheiratet|geschieden|verwitwet)\b/i },
   { on: ['uhrzei', 'zeit', 'termin'], re: CLOCK_RE },
   { on: ['tag', 'wochentag'], re: DAY_OR_DATE_SHAPE },
   { on: ['preis', 'kost', 'geld'], re: PRICE_RE },
+  { on: ['zimm', 'person', 'anzahl', 'hausnumm', 'postleitzahl', 'plz'], re: NUMBER_VALUE_RE },
   { on: ['telefonnumm', 'numm', 'handynumm'], re: PHONE_RE },
+  { on: ['sprach', 'muttersprach'], re: LANGUAGE_VALUE_SHAPE },
+  { on: ['farb'], re: COLOUR_RE },
   { on: ['frag'], re: /\?/ },
 ];
+
+/**
+ * A FORMULAR FIELD IS A LEITPUNKT WITH A NAME, AND A LEITPUNKT HAS A VALUE SHAPE — EVEN WHEN THE
+ * NAME STANDS ON A FORM LINE (DaF review #18, MAJOR 2).
+ *
+ * The Formular branch of `scoreWriting` used to read `value.trim().length > 0` and nothing else, so
+ * „Land: Bremen“, „Sprache: Marokko“, „Telefonnummer: neu“, „Uhrzeit: Montag“ and a single dot were
+ * „erledigt“ on all thirty fields of the six Formulare — while the SAME file, on the Mitteilung, had
+ * called „Ich komme aus Bremen.“ red since round 17. In *Start Deutsch 1* Teil 1 the point per
+ * field is for the RIGHT entry, and the value shapes were already here. This table maps a field
+ * name to the shape its value must have, and it is derived from ANSWER_SHAPES — the `value` a named
+ * field must carry is the value a form field must carry; one definition per shape, never a copy.
+ * The rows below it are the field names a Mitteilung never asks as a Leitpunkt (a street, a city)
+ * and therefore have no ANSWER_SHAPES row: a form field, unlike a Leitpunkt, can only ever be
+ * answered by a value, so „capitalised word(s)“ is a shape here and would be a keyword filter there.
+ *
+ * A field is looked up by EVERY word of its name, folded and raw: „Kurs von“ / „Kurs bis“ reach the
+ * clock through `von`/`bis`, „Kurs am“ reaches the day through `am` — the words the Leitpunkt reader
+ * drops as function words, because on a form line they are the whole question. A field no row
+ * knows („Hobby“, „Material“, „Kurs“, „Unterschrift“) has no shape: it is filled or empty, and a
+ * filled one is „prüft die KI“ — the third row, exactly as on the Mitteilung.
+ */
+const FIELD_SHAPES = [
+  ...ANSWER_SHAPES.map((row) => ({ on: row.on, value: row.value || row.re })),
+  { on: ['von', 'bis', 'beginn', 'anfang', 'end', 'start'], value: CLOCK_RE },
+  { on: ['am'], value: DAY_OR_DATE_SHAPE },
+  { on: ['wohnort', 'ort', 'stadt', 'geburtsort', 'straß', 'strass', 'adress'], value: NAME_VALUE_SHAPE },
+  { on: ['email', 'mail'], value: /\S+@\S+/ },
+];
+const fieldValueShape = (field) => {
+  const keys = words(field).flatMap((w) => [foldWord(w), String(w).toLowerCase()]);
+  const row = FIELD_SHAPES.find((r) => keys.some((k) => r.on.includes(k)));
+  return row ? row.value : null;
+};
 
 /**
  * The shapes a QUESTION WORD in the Leitpunkt asks for, read off the whole
@@ -534,63 +674,160 @@ const namedFieldShape = (word, valueShape) => {
 const INDIRECT_QUESTION_RE = /^(?:was|wer|wen|wem|wann|wo|wie|warum|woher|wohin|welche[rnms]?)\b/i;
 
 /**
- * AN AUFTRAG IS A SENTENCE TYPE, NOT A VERB ECHO (DaF review #17, MAJOR 1).
+ * AN AUFTRAG IS A SENTENCE TYPE, NOT A VERB ECHO (DaF review #17, MAJOR 1) — AND THE SENTENCE TYPE
+ * IS THE ANSWER'S, NOT THE INSTRUCTION'S (DaF review #18, MAJOR 1).
  *
  * „Was die Kollegin bis dahin **machen soll**“, „Was die Gäste **mitbringen sollen**“: an indirect
- * question closed by a modal asks the learner to give the addressee an INSTRUCTION. Round 17 decided
- * it by the predicate — the folded `mach`/`mitbring` had to occur in the text — and the reviewer
- * measured the consequence on L10: ten of twelve correct Aufträge red („Bitte rufen Sie Herrn Weber
- * an.“, „Bitte warten Sie im Büro.“) and four echoes without any Auftrag green („Das macht nichts.“,
- * „Wir machen eine Pause.“). `machen` is the emptiest verb in the language; an instruction is not
- * made of it. What every Auftrag shares is not a word but a SENTENCE TYPE, and German marks the three
- * it has on the surface:
+ * question closed by a modal asks the learner what the addressee or a third person should do. Round
+ * 17 decided it by the predicate — the folded `mach`/`mitbring` had to occur in the text — and the
+ * reviewer measured the consequence on L10: ten of twelve correct Aufträge red, four `machen`
+ * echoes green. Round 18 replaced the echo by three instruction shapes and the reviewer measured
+ * THAT: the shape described how an instruction looks, not how an A1 candidate answers the Leitpunkt
+ * — „Die Gäste bringen Kuchen mit.“, „Jeder bringt etwas mit.“, the sentences of the publishers'
+ * model texts, were 0 of 10 green, and „Der Zug kann nicht fahren.“ (a modal with a thing as its
+ * subject — world description, no addressee) was green. So the reading is now built from the three
+ * sentences a candidate actually writes, and it has FOUR shapes with ONE subject rule:
  *
- *  1. THE IMPERATIVE / VERB-FIRST SENTENCE — the finite verb stands first and the addressee follows:
- *     „Rufen Sie Herrn Weber an.“, „Bring bitte einen Salat mit.“, „Bringt ihr Kuchen mit?“. Read as:
- *     first token carries a verb ending and is not a function word, second token is an addressee
- *     pronoun (`Sie`, `du`, `ihr`) or `bitte`, and the sentence carries at least one content word
- *     beyond the verb — „Kommst du?“ asks for presence, not for a thing; „Hast du Zeit?“ starts with a
- *     function word and is no instruction.
- *  2. THE `bitte` SENTENCE — „Bitte Kuchen und Musik mitbringen.“, „Kuchen und Salat, bitte!“: the
- *     request particle with at least one content word to request.
- *  3. THE MODAL CHUNK — `soll|sollen|muss|müssen|kann|können|darf|dürfen` (any finite form) plus an
- *     infinitive later in the sentence: „Ihr könnt Getränke mitbringen.“, „Sie sollen im Büro
- *     warten.“ A modal beside `ich`/`wir` is the writer's own plan („Ich muss arbeiten.“), not an
- *     instruction, and is excluded.
+ *  THE SUBJECT RULE. A person subject is the addressee (`Sie`, `du`, `ihr`), everyone (`jeder`,
+ *  `alle`, „Jeder Gast“, „Alle Gäste“), the Leitpunkt's own people („die Gäste“, „die Kollegin“,
+ *  „meine Kollegin“, „die Kollegen“ — the capitalised nouns of the indirect question, folded, umlaut
+ *  ignored) or a NAME (a capitalised word that is no function word or adverb — „Lena bringt den
+ *  Salat mit.“). `ich`/`wir` are the writer's own plan; `es`, `man`, „der Zug“, „der Chef“ are not
+ *  who the Leitpunkt asks about. A sentence that opens with an adverb or a prepositional phrase has
+ *  its subject AFTER the verb („Leider komme ich später.“ → `ich`; „Morgen fährt der Zug.“ → „der
+ *  Zug“) — the closed class of adverbs sits in FUNCTION_WORDS_DE for exactly this.
  *
- * The Leitpunkt's own verb no longer decides anything: a text that echoes it without instructing
- * (declarative subject-first „Das macht nichts.“, „Ich mache das später.“; the question „Was machen
- * Sie heute?“) is red, and a text that instructs with any verb at all is green. The predicate is
- * kept in `words`/`folded` for the readers that measure the COURSE (RULE 21's untaught-head check),
- * never for scoring — where a shape exists the shape decides (header, step 2).
+ *  1. THE IMPERATIVE / VERB-FIRST SENTENCE — „Rufen Sie Herrn Weber an.“, „Warten Sie.“, „Bring bitte
+ *     einen Salat mit.“, „Bringst du Musik mit?“, „Könnt ihr Kuchen mitbringen?“: the verb (or a
+ *     modal) stands first, the addressee or `bitte` follows — WITHOUT a comma: „Entschuldigung,
+ *     bitte.“ is a noun and a particle. As a statement the verb is the content („Warten Sie.“); as a
+ *     question something must be asked for beyond WHEN — „Kommst du?“ asks for presence, „Kommen Sie
+ *     um zehn Uhr?“ for a time, „Bringst du Musik mit?“ for a thing.
+ *  2. THE `bitte` SENTENCE — „Bitte Kuchen und Musik mitbringen.“, „Bitte warten.“: the request
+ *     particle with a VERB in the same clause and no `ich`/`wir` in it. „Entschuldigung, bitte.“,
+ *     „Vielen Dank, bitte.“, „Bitte, der Zug hat Verspätung.“ request nothing; „Ich komme bitte um
+ *     zehn Uhr.“ is the writer.
+ *  3. THE MODAL SENTENCE — a person subject, a modal, an infinitive later: „Sie können ohne mich
+ *     beginnen.“, „Die Gäste sollen Kuchen mitbringen.“, „Ihr könnt Getränke mitbringen.“ „Es kann
+ *     regnen.“, „Der Zug muss um neun Uhr fahren.“, „Man muss warten.“ fail the subject rule.
+ *  4. THE DECLARATIVE — a person subject, a finite full verb second, not a question: „Die Gäste
+ *     bringen Kuchen mit.“, „Jeder bringt etwas mit.“, „Sie beginnt ohne mich.“, „Lena bringt den
+ *     Salat mit.“ `sein`/`haben` are function words and no full verb („Sie ist müde.“). A statement
+ *     whose only content after the verb is a TIME („Die Gäste kommen um acht Uhr.“) answers a Wann,
+ *     not this Leitpunkt, and is not one.
+ *
+ * The Leitpunkt's own verb still decides nothing („Das macht nichts.“, „Was machen Sie heute?“ are
+ * red); a text that answers with any verb at all is green. The predicate is kept in `words`/`folded`
+ * for the readers that measure the COURSE (RULE 21's untaught-head check), never for scoring —
+ * where a shape exists the shape decides (header, step 2). The shape is built per Leitpunkt, because
+ * the subject rule reads the Leitpunkt's people — `instructionShape(topics)`.
  */
 const AUFTRAG_MODAL_RE = /\b(?:soll|sollst|sollen|sollt|muss|musst|müssen|müsst|kann|kannst|können|könnt|darf|darfst|dürfen|dürft)\b/i;
 const ADDRESSEE_RE = /^(?:sie|du|ihr|bitte)$/i;
+const PRONOUN_RE = /^(?:ich|du|er|sie|es|wir|ihr|man|jeder|jede|alle|jemand|niemand)$/i;
+const PERSON_PRONOUN_RE = /^(?:sie|du|ihr|jeder|jede|alle)$/i;
+const DETERMINER_RE = /^(?:der|die|das|den|dem|ein|eine|einen|mein|meine|meinen|dein|deine|deinen|unser|unsere|unseren|euer|eure|ihr|ihre|ihren|jeder|jede|jeden|alle|kein|keine)$/i;
+const EVERYONE_RE = /^(?:jeder|jede|jeden|alle)$/i;
 const VERB_ENDING_RE = /(?:en|st|t|e)$/i;
 const INFINITIVE_RE = /^[a-zäöüß]+(?:en|ern|eln)$/;
+const NUMBER_WORD_RE = new RegExp(`^${NUMBER_WORD}$`, 'i');
 const isContentWord = (t) => t.length > 1 && !isFunctionWord(t) && !/^\d+$/.test(t);
+/** A token that can be a finite full verb or an infinitive: verb ending, not a closed-class word, not a number. */
+const isVerbLike = (t) => {
+  const w = String(t || '').toLowerCase();
+  // FUNCTION_WORDS_DE, not `isFunctionWord`: the TASK verbs (`schreiben`, `sagen`) are dropped from a
+  // Leitpunkt's evidence, but „Bitte schreiben Sie Frau Berg.“ is an instruction like any other.
+  return w.length >= 3 && /^[a-zäöüß]+$/.test(w) && VERB_ENDING_RE.test(w) && !FUNCTION_WORDS_DE.has(w) && !NUMBER_WORD_RE.test(w);
+};
+const isCapitalised = (t) => /^[A-ZÄÖÜ][A-Za-zÄÖÜäöüß-]*$/.test(t);
+const deUmlaut = (s) => String(s || '').replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ß/g, 'ss');
+const TIME_RE = new RegExp(`${CLOCK_RE.source}|${DAY_RE.source}|${DATE_VALUE_RE.source}`, 'gi');
+/** The content words of `toks` once every time expression is taken out. */
+const contentBeyondTime = (toks) => words(toks.join(' ').replace(TIME_RE, ' ')).filter(isContentWord);
 
-const isInstructionSentence = (sentence) => {
-  const toks = words(sentence).map(stripPunct).filter(Boolean);
-  if (toks.length < 2) return false;
-  const content = toks.filter(isContentWord);
-  const [first, second] = toks;
-  // 1. Verb first, addressee second, and something asked for.
-  if (VERB_ENDING_RE.test(first) && !isFunctionWord(first) && !INDIRECT_QUESTION_RE.test(first)
-    && ADDRESSEE_RE.test(second) && content.some((t) => t !== first)) return true;
-  // 2. `bitte` with something to request.
-  if (toks.some((t) => /^bitte$/i.test(t)) && content.length) return true;
-  // 3. A modal that is not the writer's own, with an infinitive after it.
-  for (let i = 0; i < toks.length; i += 1) {
-    if (!AUFTRAG_MODAL_RE.test(toks[i])) continue;
-    const beside = [toks[i - 1], toks[i + 1]].filter(Boolean).map((t) => t.toLowerCase());
-    if (beside.some((t) => t === 'ich' || t === 'wir')) continue;
-    if (toks.slice(i + 1).some((t) => INFINITIVE_RE.test(t) && !isFunctionWord(t))) return true;
+/**
+ * The subject phrase and the finite-verb position of a subject-first (or adverb-first) sentence,
+ * or null when the second position carries no verb and no modal. „Die Gäste | bringen“, „Jeder |
+ * bringt“, „Leider | komme | ich“ → `ich`, „Morgen | fährt | der Zug“ → „der Zug“.
+ */
+const subjectOf = (toks) => {
+  const t0 = toks[0];
+  const isPred = (t) => t && (AUFTRAG_MODAL_RE.test(t) || isVerbLike(t)) && !isCapitalised(t);
+  let phrase;
+  let v;
+  if (DETERMINER_RE.test(t0) && toks[1] && isCapitalised(toks[1])) { phrase = [t0, toks[1]]; v = 2; }
+  // A two-word name („Frau Berg beginnt …“, „Ana Chakiri bringt …“) before the verb.
+  else if (isCapitalised(t0) && !isFunctionWord(t0) && toks[1] && isCapitalised(toks[1]) && isPred(toks[2])) { phrase = [t0, toks[1]]; v = 2; }
+  else { phrase = [t0]; v = 1; }
+  if (!isPred(toks[v])) return null;
+  if (isFunctionWord(t0) && !PRONOUN_RE.test(t0) && !DETERMINER_RE.test(t0)) {
+    // Adverb or preposition first: the subject stands behind the verb.
+    const a = toks[v + 1];
+    if (!a) return null;
+    phrase = DETERMINER_RE.test(a) && toks[v + 2] ? [a, toks[v + 2]] : [a];
   }
-  return false;
+  return { phrase, v };
 };
 
-const INSTRUCTION_SHAPE = { test: (body) => sentences(body).some(isInstructionSentence) };
+const isPersonSubject = (phrase, topics) => {
+  if (phrase.length === 1) {
+    const t = phrase[0];
+    if (PERSON_PRONOUN_RE.test(t)) return true;
+    if (PRONOUN_RE.test(t) || isFunctionWord(t) || NUMBER_WORD_RE.test(t)) return false;
+    return isCapitalised(t) && t.length >= 2; // a name
+  }
+  const [det, noun] = phrase;
+  if (EVERYONE_RE.test(det)) return true;
+  if (!DETERMINER_RE.test(det)) return isCapitalised(det) && isCapitalised(noun); // a two-word name
+  const f = deUmlaut(foldWord(noun));
+  return f.length >= 3 && topics.some((t) => f.startsWith(t) || t.startsWith(f));
+};
+
+const isInstructionSentence = (sentence, topics) => {
+  const raw = words(sentence);
+  const toks = raw.map(stripPunct).filter(Boolean);
+  if (toks.length < 2) return false;
+  const question = isQuestion(sentence);
+  const [first, second] = toks;
+  // 1. Verb (or modal) first, addressee or `bitte` second — and no comma between them.
+  const commaBeforeSecond = /,$/.test(raw[0] || '');
+  // The du-imperative has no ending („Bring bitte …“, „Komm bitte …“): before `bitte` any word that
+  // is no function word and no number stands for the verb.
+  const verbFirst = isVerbLike(first) || AUFTRAG_MODAL_RE.test(first)
+    || (/^bitte$/i.test(second) && isContentWord(first) && !NUMBER_WORD_RE.test(first));
+  if (!commaBeforeSecond && verbFirst && ADDRESSEE_RE.test(second) && !QUESTION_WORD_RE.test(first)) {
+    if (AUFTRAG_MODAL_RE.test(first)) {
+      if (toks.slice(2).some((t) => INFINITIVE_RE.test(t) && !isFunctionWord(t))) return true;
+    } else if (!question || contentBeyondTime(toks.slice(2)).length) return true;
+  }
+  // 2. `bitte` with a verb in the same clause, and not the writer's own sentence.
+  for (const clause of [sentence, ...clauses(sentence)]) {
+    const ct = words(clause).map(stripPunct).filter(Boolean);
+    if (!ct.some((t) => /^bitte$/i.test(t))) continue;
+    if (ct.some((t) => /^(?:ich|wir)$/i.test(t))) continue;
+    if (ct.some((t, i) => i > 0 && !isCapitalised(t) && (isVerbLike(t) || INFINITIVE_RE.test(t)) && !FUNCTION_WORDS_DE.has(t.toLowerCase()))) return true;
+  }
+  // 3. and 4. A person subject with a modal (and an infinitive) or with a full verb — read per
+  // CLAUSE, so „Die Kollegen kommen um neun Uhr, ich komme um zehn Uhr.“ is two time statements
+  // and not one sentence with a content word somewhere behind the verb.
+  if (question) return false;
+  return clauses(sentence).some((clause) => {
+    const ct = words(clause).map(stripPunct).filter(Boolean);
+    if (ct.length < 2) return false;
+    const subj = subjectOf(ct);
+    if (!subj || !isPersonSubject(subj.phrase, topics)) return false;
+    const verb = ct[subj.v];
+    const rest = ct.slice(subj.v + 1);
+    if (AUFTRAG_MODAL_RE.test(verb)) return rest.some((t) => INFINITIVE_RE.test(t) && !isFunctionWord(t));
+    // A full verb — and if anything is said beyond it, some of it must be more than a time.
+    return !rest.some(isContentWord) || contentBeyondTime(rest).length > 0;
+  });
+};
+
+/** The instruction shape of ONE Auftrag Leitpunkt — `topics` are its people (see the subject rule). */
+const instructionShape = (topics) => ({
+  test: (body) => sentences(body).some((s) => isInstructionSentence(s, topics)),
+});
 
 /** An indirect question asking WHAT SOMEONE SHOULD DO — the modal is its closing word. */
 const isAuftragLeitpunkt = (conjunct) => INDIRECT_QUESTION_RE.test(conjunct) && AUFTRAG_MODAL_RE.test(conjunct);
@@ -634,8 +871,11 @@ const conjunctEvidence = (conjunct, { allowNamedField = true } = {}) => {
     }
   }
   shapes.push(...QUESTION_SHAPES.filter((s) => s.re && s.on.test(conjunct)).map((s) => s.re));
-  // An Auftrag is decided by sentence type, never by its verb echoed back (see INSTRUCTION_SHAPE).
-  if (isAuftragLeitpunkt(conjunct)) shapes.push(INSTRUCTION_SHAPE);
+  // An Auftrag is decided by sentence type, never by its verb echoed back (see instructionShape);
+  // the Leitpunkt's capitalised nouns are the people its answer may be about.
+  if (isAuftragLeitpunkt(conjunct)) {
+    shapes.push(instructionShape(all.filter((w) => isCapitalised(w)).map((w) => deUmlaut(foldWord(w)))));
+  }
   return { text: conjunct, words: keywords, folded, shapes };
 };
 
@@ -666,7 +906,10 @@ export function leitpunktSatisfied(leitpunkt, text, opts = {}) {
   const decidable = conjuncts.filter((c) => c.folded.length || c.shapes.length);
   if (!decidable.length) return null;
   const body = String(text || '');
-  const inText = new Set(words(body).map(foldWord).filter(Boolean));
+  // The fold half reads STATEMENTS only: a question that carries the Leitpunkt's verb („Kaufst du
+  // auch?“ for „Was Sie kaufen“) asks, and answers nothing (DaF review #18, Minor 18).
+  const statements = sentences(body).filter((s) => !isQuestion(s)).join(' ');
+  const inText = new Set(words(statements).map(foldWord).filter(Boolean));
   const met = (c) => (c.shapes.length
     ? c.shapes.some((re) => re.test(body))
     : c.folded.some((f) => inText.has(f)));
@@ -689,19 +932,32 @@ const ANREDE = /\b(hallo|liebe|lieber|guten\s+(tag|morgen|abend)|sehr\s+geehrte)
 const GRUSS = /\b(tschüss|tschuess|viele\s+grüße|viele\s+gruesse|liebe\s+grüße|liebe\s+gruesse|bis\s+bald|mit\s+freundlichen\s+grüßen|grüße|gruesse)/i;
 
 /**
- * scoreWriting(schreiben, value) → { ok, checks: [{ key, label, ok }], count }
+ * scoreWriting(schreiben, value) → { ok, checks: [{ key, label, ok, ai?, filled? }], count }
  * `value` is a string for a Mitteilung, or a { field: text } map for a Formular.
+ *
+ * A FORMULAR FIELD IS A LEITPUNKT WITH A NAME, AND A LEITPUNKT HAS A VALUE SHAPE — EVEN WHEN THE
+ * NAME STANDS ON A FORM LINE (DaF review #18, MAJOR 2). Each field is scored by the shape of its
+ * name (`fieldValueShape`): a country in „Land“, a language in „Sprache“, four digits in
+ * „Telefonnummer“, a clock in „Uhrzeit“ / „Kurs von“ / „Kurs bis“, a weekday or date in „Tag“ /
+ * „Kurs am“, a number in „Zimmer“ / „Personen“, `ledig|verheiratet|…` in „Familienstand“, a colour in
+ * „Farbe“, a capitalised name in the name fields. A field with no shape („Hobby“, „Material“,
+ * „Kurs“, „Unterschrift“) is `ai: true` once it is filled — „prüft die KI“, the third row of the
+ * Mitteilung. FILLED means a letter or a digit: a dot, a dash or spaces fill nothing, and
+ * `filled` is exported on every row so the screen can hold the button until every field has one.
  */
 export function scoreWriting(schreiben, value) {
   if (!schreiben) return { ok: false, checks: [], count: 0 };
 
   if (schreiben.kind === 'formular') {
     const map = value && typeof value === 'object' ? value : {};
-    const checks = (schreiben.fields || []).map((field) => ({
-      key: field,
-      label: field,
-      ok: String(map[field] || '').trim().length > 0,
-    }));
+    const checks = (schreiben.fields || []).map((field) => {
+      const v = String(map[field] || '').trim();
+      const filled = /[\p{L}\d]/u.test(v);
+      const shape = fieldValueShape(field);
+      if (!filled) return { key: field, label: field, ok: false, filled: false };
+      if (!shape) return { key: field, label: field, ok: true, ai: true, filled: true };
+      return { key: field, label: field, ok: shape.test(v), filled: true };
+    });
     return { ok: checks.length > 0 && checks.every((c) => c.ok), checks, count: checks.length };
   }
 

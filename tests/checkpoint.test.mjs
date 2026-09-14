@@ -81,6 +81,8 @@ import {
   leaksAcross,
   printedSurface,
   agreementViolations,
+  dictationCeiling,
+  DICTATION_MAX_WORDS,
 } from '../src/lib/checkpoint/buildCheckpoint.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { checkAnswer, checkOptionsFor, RESULT } from '../src/lib/lesson/check.js';
@@ -156,6 +158,50 @@ test('Hören is 3 dictations of dialogue lines plus 2 word-choice items with 3 d
     assert.ok(c.options.includes(c.answer));
     for (const option of c.options) assert.ok(wortfeld.has(option), 'distractors come from the Wortfeld');
   }
+});
+
+test('a checkpoint dictates nothing longer than its own chapter dictates, and never more than ten words', () => {
+  // DaF review #18, Minor 10: `a1.1-cp1-hoeren-1` dictated the longest line of L2 — twelve words,
+  // then the ten-word enumeration with three commas the L2 comment keeps out of its own window as
+  // „a punctuation test, not a listening test“. The preference knew freeness, constructions and
+  // reportability and not length. The ceiling is measured off the chapter's own `hoeren.lines`
+  // windows (chapter 1 of A1.1: six words; chapter 4: ten), never typed; the ten is the longest
+  // line any A1.1 Lektion dictates, and the pin the review asked for.
+  const wc = (de) => de.trim().split(/\s+/).length;
+  assert.equal(DICTATION_MAX_WORDS, 10);
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    const ceiling = dictationCeiling(chapterLektionen(CURRICULUM_A11, cp));
+    assert.ok(ceiling <= DICTATION_MAX_WORDS, `${cp.id}: the chapter dictates a ${ceiling}-word line itself`);
+    for (const d of items.filter((i) => i.kind === 'dictation')) {
+      assert.ok(wc(d.audioText) <= ceiling, `${d.id} „${d.audioText}“ is ${wc(d.audioText)} words, chapter ceiling ${ceiling}`);
+    }
+  }
+  const ceilings = CURRICULUM_A11.checkpoints.map((cp) => dictationCeiling(chapterLektionen(CURRICULUM_A11, cp)));
+  // Measured 2026-09-14 (round 19): chapter 1 is nine because L2 line 3 — „Ich bin ledig. Ist das
+  // Formular für die Adresse?“, the Familienstand answer of Minor 12 — is a dictation line.
+  assert.deepEqual(ceilings, [9, 8, 9, 10], 're-measure and re-pin when a window moves');
+  assert.equal(dictationCeiling([]), DICTATION_MAX_WORDS, 'a chapter with no window falls back to the A1.1 maximum');
+  // IT BITES: a chapter whose free, construction-free, UNREPORTABLE lines — the ones the
+  // preference used to take first — are all above its ceiling still dictates only lines under it.
+  const c = structuredClone(CURRICULUM_FIXTURE);
+  for (const l of chapterLektionen(c, c.checkpoints[0])) {
+    for (let k = 7; k <= 10; k += 1) {
+      l.dialog.lines.push({ speaker: 'Ana', de: `Wie geht es dir heute Morgen, liebe Ana, nach Satz ${l.nr}.${k}?`, en: `line ${l.nr}.${k}` });
+    }
+  }
+  const chapter = chapterLektionen(c, c.checkpoints[0]);
+  const ceiling = dictationCeiling(chapter);
+  const longQuestions = chapter.flatMap((l) => l.dialog.lines.filter((x) => wc(x.de) > ceiling));
+  assert.ok(longQuestions.length >= 12, 'the fixture offers more long questions than the section needs');
+  const dictations = buildCheckpoint({ curriculum: c, checkpoint: c.checkpoints[0], pool: [] }).filter((i) => i.kind === 'dictation');
+  assert.equal(dictations.length, 3);
+  for (const d of dictations) assert.ok(wc(d.audioText) <= ceiling, `„${d.audioText}“ is above the ceiling ${ceiling}`);
+  // …and the ceiling orders, it does not filter: a chapter with ONLY long lines still fills the section.
+  const only = structuredClone(CURRICULUM_FIXTURE);
+  for (const l of chapterLektionen(only, only.checkpoints[0])) {
+    l.dialog.lines = l.dialog.lines.map((x, i) => ({ ...x, de: `${x.de.replace(/[.?]$/, '')}, und das ist wirklich sehr lang, Satz ${l.nr}.${i}, ja.` }));
+  }
+  assert.equal(buildCheckpoint({ curriculum: only, checkpoint: only.checkpoints[0], pool: [] }).filter((i) => i.kind === 'dictation').length, 3);
 });
 
 test('Lesen items carry a 2–3 line text and a richtig/falsch statement, two of each', () => {

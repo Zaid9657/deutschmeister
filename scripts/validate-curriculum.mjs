@@ -864,6 +864,14 @@ export const LEVELS = {
     readingCount: 10,
     minUnionWords: 195,
     seedFrom: 'a1.1',
+    // THE NAME SET IS COUPLED TO A1.1 (DaF review #18, Minor 22): `dialogNames`/`nameSet` above are
+    // `[...DIALOG_NAMES_A11, 'Fischer']`, so every name A1.1 adds for its own reasons (`Ali`,
+    // `Marokko` in round 18) enters this level's name set the same day, and RULE 5 / RULE 11 /
+    // RULE 11b / RULE 24 at A1.2 move without an A1.2 file changing (RULE 11b 14 → 13 in round 18
+    // was exactly that). Decoupling needs `a12.js` to import a cast-only list, and `a12.js` is
+    // paused by owner decision (2026-09-13) — so the coupling is documented at both ends (see the
+    // `DIALOG_NAMES` header in `a11.js`) and pinned in `tests/curricula.test.mjs`, and a re-measured
+    // A1.2 ratchet must name it as the cause when it is.
     // RULE 14. A1.2 inherits A1.1's cast (`DIALOG_NAMES = [...DIALOG_NAMES_A11, 'Fischer']`), so it
     // inherits A1.1's facts too — PERSONAS_A12 spreads PERSONAS_A11 and adds the characters A1.2
     // introduces. Switched on by DaF review #1 for A1.2, BLOCKER 1: while this row said `null`,
@@ -1974,6 +1982,33 @@ export function writingTasksAreAnswerable(c, spec = null) {
 }
 
 /**
+ * RULE 6c: A NOTICE DOES NOT DRESS A FORM FIELD AS A FIRST-PERSON SENTENCE (round 19, DaF review
+ * #18, Minor 12 — hard 0, no ratchet).
+ *
+ * Round 18 wrote „Familienstand: Ich bin ledig oder verheiratet.“ into the L2 notice: a field label,
+ * then „Ich bin“, then the field's two values joined by `oder`. Nobody is „ledig oder verheiratet“;
+ * the clause existed so that RULE 23b would find the task's words on an input surface — the
+ * reviewer's negative probe showed it (without the clause: three reported). That is the movement
+ * this ladder had already banned for the model texts (RULE 22: a surface written for the rule),
+ * arrived on the input side. The words now stand in dialogue lines the learner hears; this rule
+ * closes the CLASS: a notice body may not contain `<Feld>: Ich bin … oder …` — a capitalised
+ * label, a colon, a first-person `sein` clause and an `oder` before the sentence ends. The real
+ * form-field lines a notice may teach („Staatsangehörigkeit: marokkanisch“) carry no `Ich bin`,
+ * and a real paradigm line with `oder` („Ich bin Lehrer oder Lehrerin.“) carries no label.
+ */
+const NOTICE_FIELD_SENTENCE_RE = /\b[A-ZÄÖÜ][a-zäöüß]+:\s*Ich bin\b[^.!?:]*\boder\b/;
+export function noticeFieldSentences(c) {
+  const offenders = [];
+  for (const l of c?.lektionen || []) {
+    const body = String(l.notice?.bodyDe || '').replace(/\*\*/g, '');
+    for (const sentence of body.split(/(?<=[.!?])\s+/)) {
+      if (NOTICE_FIELD_SENTENCE_RE.test(sentence)) offenders.push({ nr: l.nr, de: sentence.trim() });
+    }
+  }
+  return offenders;
+}
+
+/**
  * RULE 22: no sentence of a Mitteilung model text is a FORM being read out.
  *
  * „Das Geburtsdatum ist der 3.5.1998.“, „Die Staatsangehörigkeit ist marokkanisch.“, „Die
@@ -1997,9 +2032,20 @@ export function writingTasksAreAnswerable(c, spec = null) {
  * hand selection, which is the ordered-against thing: „Der Preis ist zehn Euro.“ walked past
  * because nobody had flagged `der Preis`. Two sources now, and neither is a list somebody keeps:
  *   1. THE TASK'S OWN NOUNS — the Leitpunkte of the level's writing tasks (the bank) and the
- *      `schreiben.fields` of its Formular Lektionen. These name a form field by definition, so
- *      any complement after them is the form talking („Der Kurs ist am Montag.“, „Die Farbe ist
- *      rot.“, „Die Nummer ist für das Handy.“).
+ *      `schreiben.fields` of its Formular Lektionen. These name a form field by definition, and
+ *      a task noun need not be a Wortfeld noun („Hobby“, „Material“, „Personen“) and matches by
+ *      its ending („Die **Nummer** ist …“ is the field „Ihre **Telefonnummer**“).
+ *      ONE DEFINITION OF „VALUE“ FOR BOTH SOURCES (round 19, DaF review #18, Minor 19). Round 18
+ *      let ANY complement after a task noun count, and reported „Der Kurs ist am Montag.“ — a
+ *      sentence, because a form field never holds a prepositional phrase — while the same
+ *      complement after a Wortfeld noun was correctly a sentence. `isFormValue` now decides for
+ *      both: a task noun is the form talking with a VALUE after the verb or in the colon form,
+ *      and a complement that opens with a preposition or is an adjective or adverb is a sentence
+ *      about the thing, whichever list the noun came from. Measured on the reviewer's 26 plants:
+ *      three left with the rule, each by that definition — „Der Kurs ist am Montag.“ (the
+ *      finding), „Die Nummer ist für das Handy.“ (the same shape; the definite article alone is
+ *      not the tell, or „Der Kurs ist am Montag.“ would be back) and „Die Farbe ist rot.“ (an
+ *      adjective, the shape „Der Flohmarkt ist gut.“ that L4's own model text must be allowed).
  *   2. EVERY NOUN OF THE LEVEL'S WORTFELD (an entry with an article, singular and plural). A noun
  *      is not a field just because the course teaches it — „Der Flohmarkt ist gut.“ (L4's own
  *      model text) and „Die Post ist da.“ are sentences, not forms — so a Wortfeld noun is form-
@@ -2022,13 +2068,24 @@ const PREPOSITIONS = new Set([
 ]);
 const VALUE_UNITS = new Set(['euro', 'cent', 'uhr', 'jahre', 'jahr']);
 
-/** Is the complement after „<Der Nomen> ist“ a form VALUE (see source 2 above)? */
+/**
+ * Is the complement after „<Der Nomen> ist“ a form VALUE (see the header)? A number, a date, an
+ * amount; or one bare capitalised word; or — since both sources share this definition (round 19)
+ * — a COORDINATION of such words („Arabisch und Deutsch“, „Arabisch, Deutsch“: the field
+ * `Sprachen` holds a list) and the one adjective German writes into a form field, the nationality
+ * („marokkanisch“ — RULE 24's own doctrine: the adjective is the field value, the noun the
+ * sentence). Any other adjective („rot“, „gut“), an adverb („hier“, „da“) or a preposition-led
+ * complement is a sentence about the thing. „Herr Weber“ is two words and no coordination — a
+ * sentence („Der Chef ist Herr Weber.“).
+ */
 function isFormValue(complement) {
   const words = String(complement || '').replace(/[.!?]+$/, '').trim().split(/\s+/).filter(Boolean);
   if (!words.length) return false;
   if (PREPOSITIONS.has(words[0].toLowerCase())) return false;
   if (words.some((t) => /\d/.test(t) || isNumber(t.replace(/[.,]$/, '')) || VALUE_UNITS.has(t.toLowerCase()))) return true;
-  return words.length === 1 && /^[A-ZÄÖÜ][a-zäöüß-]+$/.test(words[0]);
+  const parts = words.join(' ').split(/\s*(?:,|\bund\b|\boder\b)\s*/).filter(Boolean);
+  const isValueWord = (w) => /^[A-ZÄÖÜ][a-zäöüß-]+$/.test(w) || COUNTRY_ADJECTIVES.has(w.toLowerCase());
+  return parts.length >= 1 && parts.every((p) => !/\s/.test(p) && isValueWord(p));
 }
 
 export function formSpeakInModelTexts(c, spec = null) {
@@ -2080,8 +2137,9 @@ export function formSpeakInModelTexts(c, spec = null) {
       const [, article, noun, verb, colon, complement] = m;
       if (verb && !article) continue;
       const low = noun.toLowerCase();
-      const formSpeak = isTaskNoun(low)
-        || (wortfeldNouns.has(low) && (Boolean(colon) || isFormValue(complement)));
+      // Both sources, one value definition (round 19, Minor 19): the colon form is a form line
+      // whatever follows; after `ist`/`sind` only a VALUE makes the form talk.
+      const formSpeak = (isTaskNoun(low) || wortfeldNouns.has(low)) && (Boolean(colon) || isFormValue(complement));
       if (formSpeak) offenders.push({ nr: l.nr, de: sentence.trim(), noun });
     }
   }
@@ -2237,6 +2295,8 @@ const SEIN_FINITE = new RegExp(`\\b(?:${SEIN_FORMS})\\b`);
  * a language marker before the adjective counts.
  */
 const LANGUAGE_GAP_RE = /\b(?:sprech|sprich|sprach|lern)/i;
+/** A preposition directly before the `-isch` word: „für Englisch“, „auf Türkisch“, „in Deutsch“ — a language. */
+const LANGUAGE_PREP_RE = /\b(?:auf|für|in|aus|von|mit)\s*$/i;
 
 /**
  * RULE 24: NO PERSON IS AN ADJECTIVE (DaF review #16, BLOCKER).
@@ -2278,8 +2338,20 @@ const LANGUAGE_GAP_RE = /\b(?:sprech|sprich|sprach|lern)/i;
  * („marokkanisch**er** Tee“) — and the clause stops at the colon, so the field value in a notice
  * sentence („… das Adjektiv: Staatsangehörigkeit: marokkanisch“) is outside it. A language marker
  * in the gap (`LANGUAGE_GAP_RE`) discards the sentence, so „Ich lerne Deutsch.“-type lines and
- * „Ich bin Ana und lerne türkisch“ are not persons-as-adjectives; the capitalised language noun
- * („Ich spreche Türkisch.“) never matched in the first place.
+ * „Ich bin Ana und lerne türkisch“ are not persons-as-adjectives.
+ *
+ * TWO LEARNER SPELLINGS OF THE SAME ERROR (round 19, DaF review #18, Minor 13). Round 18 matched
+ * only the lower-cased adjective, so „Ich bin **T**ürkisch.“ — the learner who capitalises the
+ * word because the language is capitalised — read as a language and walked past, and so did the
+ * comma apposition „Ich bin aus Marokko**,** marokkanisch.“, because the clause stopped at the
+ * comma. The adjective is now read in either case (the language NOUN is told apart by what stands
+ * before it, not by its capital: a `sprech-`/`lern-`/`Sprache` marker in the gap, or a preposition
+ * directly before it — „Lehrerin für Englisch“, „auf Türkisch“), and the clause runs on across a
+ * comma: a bare `-isch` form after a comma in the same sentence as the finite `sein` and its
+ * person is still that person's predicate. The colon still ends the clause, so the field value in
+ * a notice sentence („… das Adjektiv: Staatsangehörigkeit: marokkanisch“) stays outside it. A
+ * sentence with no finite `sein` („Ich spreche Türkisch.“, „Ich lerne Deutsch.“) is outside the
+ * rule as before.
  *
  * HARD 0 at both levels, like RULE 17, 19, 20 and 22: a notice, a model text and an item are what a
  * round has just written.
@@ -2291,10 +2363,11 @@ export function predicativeNationalityAdjectives(c, spec = null, { extraItems = 
   const personRe = new RegExp(
     `\\b(?:ich|du|er|sie|es|wir|ihr|man|herr|frau|${[...s.nameSet].join('|')})\\b`, 'i',
   );
-  // The finite `sein`, then the rest of its clause (no comma, colon, semicolon or sentence mark),
-  // then a bare lower-cased `-isch` word — the question, the particles and the coordination are all
-  // „the rest of its clause“.
-  const predicateRe = new RegExp(`\\b(?:${SEIN_FORMS})\\b([^.,;:!?]*?)(?:^|\\s)([a-zäöüß]+isch)(?=$|[\\s.!?,;])`);
+  // The finite `sein`, then the rest of its clause (no colon, semicolon or sentence mark — a comma
+  // does NOT end it, see the header: „Ich bin aus Marokko, marokkanisch.“), then a bare `-isch`
+  // word in either case — the question, the particles, the coordination and the apposition are
+  // all „the rest of its clause“.
+  const predicateRe = new RegExp(`\\b(?:${SEIN_FORMS})\\b([^.;:!?]*?)(?:^|\\s)([A-Za-zäöüßÄÖÜ][a-zäöüß]*isch)(?=$|[\\s.!?,;])`);
   const offenders = [];
   const scan = (nr, where, text) => {
     if (!text) return;
@@ -2302,10 +2375,12 @@ export function predicativeNationalityAdjectives(c, spec = null, { extraItems = 
       if (!SEIN_FINITE.test(sentence) || !personRe.test(sentence)) continue;
       const m = predicateRe.exec(sentence);
       if (!m) continue;
-      const [, gap, adj] = m;
+      const [, gap, word] = m;
+      const adj = word.toLowerCase();
       if (adj === 'deutsch') continue;           // the one named exception
       if (!COUNTRY_ADJECTIVES.has(adj)) continue;
       if (LANGUAGE_GAP_RE.test(gap)) continue;   // „… und lerne türkisch“ is a language
+      if (LANGUAGE_PREP_RE.test(gap)) continue;  // „… Lehrerin für Englisch“, „… auf Türkisch“
       offenders.push({ nr, where, de: sentence.trim(), adj });
     }
   };
@@ -2899,6 +2974,10 @@ export function validateCurriculum(c, extraItems, poolItems) {
     if ((n.examples || []).length !== 2) fail(`Lektion ${l.nr}: notice needs exactly 2 examples`);
     for (const ex of n.examples || []) if (!dl.includes(ex)) fail(`Lektion ${l.nr}: notice example "${ex}" is not a verbatim dialogue line`);
   });
+  // ---- RULE 6c (no form field dressed as a first-person sentence in a notice, DaF review #18, Minor 12)
+  for (const o of noticeFieldSentences(c)) {
+    fail(`RULE 6c: L${o.nr} notice.bodyDe: „${o.de}“ — ein Formularfeld als Ich-Satz mit „oder“ ist kein Satz, den jemand sagt; die Wörter gehören in eine Dialog- oder Diktatzeile`);
+  }
 
   // ---- RULE 7 (the other steps) ----------------------------------------------------------------
   const missions = new Map();

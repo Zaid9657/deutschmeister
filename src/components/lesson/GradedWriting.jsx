@@ -50,7 +50,9 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
   const max = Number(task?.maxWords) || 0;
   const inRange = count >= min && (!max || count <= max);
   const submission = isFormular ? formularText(task?.fields, fields) : text;
-  const canSubmit = isFormular ? check.checks.some((c) => c.ok) : !!text.trim();
+  // A Formular is handed in with EVERY field filled (DaF review #18, MAJOR 2): the button used to
+  // open as soon as one field had a character. `filled` is a letter or a digit — see scoreWriting.
+  const canSubmit = isFormular ? check.checks.length > 0 && check.checks.every((c) => c.filled) : !!text.trim();
 
   /** The checklist result, used on its own whenever the AI is unavailable. */
   const mechanicalResult = (extra) => ({

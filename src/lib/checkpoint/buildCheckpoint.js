@@ -273,6 +273,42 @@ const clampFreeFirst = (lines, curriculum, afterLektion) => {
   return [...lines.filter(clean), ...lines.filter((l) => !clean(l))];
 };
 
+/**
+ * A CHECKPOINT DICTATES NOTHING LONGER THAN ITS OWN CHAPTER DOES (DaF review #18, Minor 10).
+ *
+ * `a1.1-cp1-hoeren-1` dictated the longest line of Lektion 2 — twelve words, the RULE 5 ceiling
+ * for a line the learner HEARS — and then the ten-word enumeration with three commas that the L2
+ * comment itself calls „a punctuation test, not a listening test“ and keeps out of the Lektion's
+ * own dictation window. The preference read freeness, constructions and reportability and never
+ * the length, so a line the course would never dictate in a Lektion was dictated in the exam.
+ *
+ * The ceiling is MEASURED, not chosen: the longest line the chapter's Lektionen themselves put in
+ * a `hoeren.lines` window (chapter 1 of A1.1: six words; chapter 4: ten). Lines above it go to the
+ * BACK of the preference, never out of it — a chapter too poor to fill the section still fills it
+ * — and this bucket is the outermost, so a short reportable line beats a long unreportable one:
+ * Lesen has four windows to choose from, a learner typing from one hearing has one. A chapter with
+ * no window at all (a fixture, a draft) falls back to `DICTATION_MAX_WORDS`, the longest line any
+ * A1.1 Lektion dictates. `tests/checkpoint.test.mjs` pins both: no dictation of the four real
+ * papers is longer than its chapter's ceiling, and none is longer than ten words.
+ */
+export const DICTATION_MAX_WORDS = 10;
+const wordCount = (de) => String(de || '').trim().split(/\s+/).filter(Boolean).length;
+export function dictationCeiling(chapter) {
+  let max = 0;
+  for (const l of chapter || []) {
+    const lines = l?.dialog?.lines || [];
+    for (const i of l?.hoeren?.lines || []) {
+      const de = typeof lines[i] === 'string' ? lines[i] : lines[i]?.de;
+      if (de) max = Math.max(max, wordCount(de));
+    }
+  }
+  return max || DICTATION_MAX_WORDS;
+}
+const dictableFirst = (lines, ceiling) => [
+  ...lines.filter((l) => wordCount(l.de) <= ceiling),
+  ...lines.filter((l) => wordCount(l.de) > ceiling),
+];
+
 /** Flatten the chapter's Wortfeld entries. */
 export function wortfeldWords(lektionen) {
   const out = [];
@@ -537,11 +573,13 @@ function buildHoerenDictation(ctx) {
     ...ls.filter((l) => !reportable.has(lineKeyOf(l.lektionId || l.lektionNr, l.idx))),
     ...ls.filter((l) => reportable.has(lineKeyOf(l.lektionId || l.lektionNr, l.idx))),
   ];
-  const lines = unreportableFirst(clampFreeFirst(
+  // …and, outermost, the lines the chapter itself would dictate: no longer than the longest
+  // line of its Lektionen's own dictation windows (`dictationCeiling`, DaF review #18, Minor 10).
+  const lines = dictableFirst(unreportableFirst(clampFreeFirst(
     freeLinesFirst(shuffle(dialogLines(chapter), rng), usedLineKeys),
     ctx.curriculum,
     checkpoint.afterLektion,
-  ));
+  )), dictationCeiling(chapter));
   take(lines, 3).forEach((line, i) => {
     usedLineKeys.add(lineKeyOf(line.lektionId || line.lektionNr, line.idx));
     items.push({

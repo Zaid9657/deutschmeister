@@ -29,8 +29,8 @@ import {
   scoreWriting, countWords, leitpunktKeyword, leitpunktKeywords, leitpunktEvidence, leitpunktSatisfied,
   leitpunktConjuncts,
 } from '../src/lib/lesson/writing.js';
-import { COUNTRY_STEMS, COUNTRY_NAMES } from '../src/lib/lesson/countries.js';
-import { formSpeakInModelTexts, LEVELS } from '../scripts/validate-curriculum.mjs';
+import { COUNTRY_STEMS, COUNTRY_NAMES, LANGUAGE_NAMES } from '../src/lib/lesson/countries.js';
+import { formSpeakInModelTexts, formularSampleValues, LEVELS } from '../scripts/validate-curriculum.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const LEKTIONEN = CURRICULUM_A11.lektionen;
@@ -783,9 +783,13 @@ const AUFTRAG_FIXTURE = [
   ['Was die Kollegin bis dahin machen soll',
     ['Bitte rufen Sie Herrn Weber an.', 'Warten Sie bitte im Büro.', 'Sie können ohne mich beginnen.'],
     ['Das macht nichts.', 'Ich mache das später.', 'Wir machen eine Pause.']],
+  // ROUND 19 (DaF review #18, MAJOR 1): „Kuchen und Salat, bitte!“ left this row — `bitte` now needs
+  // a verb in its clause, or „Entschuldigung, bitte.“ is an Auftrag too — and „Die Gäste bringen
+  // nichts mit.“ left the echo list: it is a statement about the guests, which IS the exam's answer
+  // (see the round-19 block below), not an echo.
   ['Was die Gäste mitbringen sollen',
-    ['Bitte kommt mit Kuchen.', 'Kuchen und Salat, bitte!', 'Ihr könnt Getränke kaufen.'],
-    ['Ich bringe Kuchen mit.', 'Wir bringen Musik mit.', 'Die Gäste bringen nichts mit.']],
+    ['Bitte kommt mit Kuchen.', 'Bitte Kuchen und Salat kaufen.', 'Ihr könnt Getränke kaufen.'],
+    ['Ich bringe Kuchen mit.', 'Wir bringen Musik mit.', 'Wir bringen nichts mit.']],
 ];
 
 test('MAJOR 1 (round 18): an Auftrag is a sentence type — instruction green, verb echo red', () => {
@@ -832,7 +836,8 @@ test('Minor 17 (round 18): one world list — no duplicates, stems lower case, n
   assert.equal(new Set(COUNTRY_STEMS).size, COUNTRY_STEMS.length, 'a duplicate stem');
   assert.equal(new Set(COUNTRY_NAMES.map((n) => n.toLowerCase())).size, COUNTRY_NAMES.length, 'a duplicate name');
   assert.ok(COUNTRY_STEMS.every((s) => s === s.toLowerCase() && /^[a-zäöüß-]+$/.test(s)), 'stems are lower-case letters');
-  assert.ok(COUNTRY_NAMES.every((n) => /^[A-ZÄÖÜ][A-Za-zÄÖÜäöüß]+$/.test(n)), 'names are single capitalised words as a person writes them');
+  // A name is one or two capitalised words as a person writes them („Sierra Leone“, round 19).
+  assert.ok(COUNTRY_NAMES.every((n) => /^[A-ZÄÖÜ][A-Za-zÄÖÜäöüß-]+(?:\s(?:und\s)?[A-ZÄÖÜ][A-Za-zÄÖÜäöüß-]+)?$/.test(n)), 'names are capitalised words as a person writes them');
   // The four the review measured red on „Ihr Land“ and the five stems it asked for.
   for (const land of ['England', 'Slowenien', 'Zypern', 'Luxemburg', 'Guinea', 'Mali', 'Togo', 'Benin', 'Angola']) {
     assert.equal(leitpunktSatisfied('Ihr Land', `Ich komme aus ${land}.`), true, land);
@@ -862,4 +867,225 @@ test('the six model texts pass their Formcheck with the round-18 rules, and the 
     assert.equal(res.ok, true, `L${l.nr}: ${JSON.stringify(res.checks.filter((c) => !c.ok))}`);
   }
   assert.equal(leitpunktSatisfied('Was die Kollegin bis dahin machen soll', 'Bitte rufen Sie Herrn Weber an.'), true);
+});
+
+
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+// ROUND 19 — DaF review #18, MAJOR 1 and MAJOR 2 (with Minors 17, 18, 21): THE CANDIDATE, NOT THE
+// CHECKER
+//
+// Round 18 replaced the verb echo by three instruction shapes, and the reviewer measured the shapes
+// against what a candidate writes: the exam answers „Was die Gäste mitbringen sollen“ with a
+// STATEMENT („Die Gäste bringen Kuchen mit.“, „Jeder bringt etwas mit.“ — 0 of 10 green), and the
+// modal shape let a THING be the subject („Der Zug kann nicht fahren.“ — 6 of 6 green). And the six
+// Formulare had no form check at all: `ok: value.trim().length > 0`, so „Land: Bremen“ and a single
+// dot were „erledigt“ on all thirty fields. Each is closed as a RULE with probes in both directions.
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+
+const L10 = 'Was die Kollegin bis dahin machen soll';
+const L12 = 'Was die Gäste mitbringen sollen';
+const wrap10 = (t) => `Liebe Kollegin, der Zug hat Verspätung. Ich komme um zehn Uhr. ${t} Viele Grüße, Ana`;
+const wrap12 = (t) => `Hallo Lena! Ich habe Geburtstag. Wir feiern am Samstag um acht Uhr. ${t} Bis bald, Ana`;
+
+test('MAJOR 1 (round 19): the statement about the person is the exam’s answer — a person subject, a full verb', () => {
+  // The reviewer's ten exam-typical statements: eight green; the two with `ich`/`wir` are the
+  // writer's own plan and stay red, as the round-18 fixture above already pins.
+  for (const t of ['Die Gäste bringen Kuchen mit.', 'Jeder bringt etwas mit.', 'Alle bringen Getränke mit.',
+    'Lena bringt den Salat mit.', 'Die Gäste bringen Kuchen und Musik mit.', 'Du bringst den Kuchen mit.',
+    'Ihr bringt Salat und Brot mit.', 'Jeder Gast bringt einen Salat.', 'Die Gäste bringen nichts mit.']) {
+    assert.equal(leitpunktSatisfied(L12, wrap12(t)), true, `L12 ← „${t}“`);
+  }
+  for (const t of ['Wir brauchen Kuchen und Getränke.', 'Ich brauche Kuchen und Musik.']) {
+    assert.equal(leitpunktSatisfied(L12, wrap12(t)), false, `L12 ← „${t}“ is the writer, not the guests`);
+  }
+  // Three statements per Auftrag Leitpunkt about the person it names, and the subject rule's people:
+  // the Leitpunkt's own noun in any inflection, `Sie`, a name.
+  for (const t of ['Die Kollegin beginnt ohne mich.', 'Sie beginnt bitte ohne mich.', 'Die Kollegen können schon beginnen.',
+    'Meine Kollegin soll warten.', 'Frau Berg beginnt ohne mich.']) {
+    assert.equal(leitpunktSatisfied(L10, wrap10(t)), true, `L10 ← „${t}“`);
+  }
+  // A statement whose only content after the verb is a TIME answers a Wann, not this Leitpunkt.
+  assert.equal(leitpunktSatisfied(L12, wrap12('Die Gäste kommen um acht Uhr.')), false);
+  assert.equal(leitpunktSatisfied(L10, wrap10('Die Kollegin kommt um neun Uhr.')), false);
+  // `sein`/`haben` are no full verb; a question is no statement; a W-word is no statement.
+  for (const t of ['Sie ist müde.', 'Die Kollegin hat Zeit.', 'Sind Sie müde?', 'Was machen Sie heute?']) {
+    assert.equal(leitpunktSatisfied(L10, wrap10(t)), false, `L10 ← „${t}“`);
+  }
+});
+
+test('MAJOR 1 (round 19): the modal shape needs a PERSON subject — a thing, `es`, `man` describe the world', () => {
+  // The reviewer's six, all green in round 18.
+  for (const t of ['Der Zug kann nicht fahren.', 'Der Bus kann nicht fahren.', 'Es kann regnen.', 'Es muss schnell gehen.',
+    'Der Zug muss um neun Uhr fahren.', 'Der Chef muss das wissen.', 'Man muss warten.', 'Dann können wir beginnen.',
+    'Leider kann ich nicht kommen.']) {
+    assert.equal(leitpunktSatisfied(L10, wrap10(t)), false, `L10 ← „${t}“ instructs nobody`);
+  }
+  // …and the modal sentences with a person stay green.
+  for (const t of ['Sie kann ohne mich beginnen.', 'Die Kollegin soll warten.', 'Sie müssen nichts machen.', 'Können Sie Herrn Weber anrufen?']) {
+    assert.equal(leitpunktSatisfied(L10, wrap10(t)), true, `L10 ← „${t}“`);
+  }
+  for (const t of ['Die Gäste sollen Kuchen und Salat mitbringen.', 'Könnt ihr Kuchen mitbringen?', 'Kannst du den Salat mitbringen?']) {
+    assert.equal(leitpunktSatisfied(L12, wrap12(t)), true, `L12 ← „${t}“`);
+  }
+  // Two full exam texts of the reviewer's: „der Zug kann heute nicht fahren“ is no Auftrag.
+  const task = formcheckTask(10);
+  for (const t of ['Liebe Kollegin, der Zug kann heute nicht fahren, er hat Verspätung. Ich komme um zehn Uhr. Viele Grüße, Ana',
+    'Liebe Kollegin, ich komme um zehn Uhr, der Bus kann nicht fahren. Es muss leider so gehen. Viele Grüße, Ana']) {
+    const row = scoreWriting(task, t).checks.find((c) => c.label === L10);
+    assert.equal(row.ok, false, t);
+  }
+});
+
+test('MAJOR 1 (round 19): `bitte` needs a verb in its clause; „Warten Sie.“ is an Auftrag; the question asks for more than a time', () => {
+  for (const t of ['Entschuldigung, bitte.', 'Vielen Dank, bitte.', 'Danke, bitte.', 'Bitte, der Zug hat Verspätung.', 'Ich komme bitte um zehn Uhr.', 'Wie bitte?']) {
+    assert.equal(leitpunktSatisfied(L10, wrap10(t)), false, `L10 ← „${t}“ requests nothing`);
+  }
+  for (const t of ['Bitte warten.', 'Bitte warten Sie auf mich.', 'Warten Sie.', 'Warten Sie bitte.', 'Bitte schreiben Sie Frau Berg.', 'Bitte sagen Sie Herrn Weber Bescheid.']) {
+    assert.equal(leitpunktSatisfied(L10, wrap10(t)), true, `L10 ← „${t}“`);
+  }
+  for (const t of ['Bring bitte einen Salat mit.', 'Bringt bitte Kuchen mit.', 'Bitte Kuchen und Musik mitbringen.', 'Bitte bringt Kuchen mit, ich habe Getränke.']) {
+    assert.equal(leitpunktSatisfied(L12, wrap12(t)), true, `L12 ← „${t}“`);
+  }
+  // A verb-first question: „Bringst du Musik mit?“ asks for a thing, „Kommen Sie um zehn Uhr?“ for
+  // a time, „Kommst du?“ for presence — one Auftrag, two questions.
+  assert.equal(leitpunktSatisfied(L12, wrap12('Bringst du Musik mit?')), true);
+  assert.equal(leitpunktSatisfied(L10, wrap10('Kommen Sie um zehn Uhr?')), false);
+  assert.equal(leitpunktSatisfied(L10, wrap10('Arbeiten Sie heute?')), false);
+  assert.equal(leitpunktSatisfied(L10, wrap10('Kommst du?')), false);
+});
+
+test('MAJOR 1 (round 19): the L12 model text passes on its statement, not on its question', () => {
+  const l12 = LEKTIONEN[11].schreiben;
+  assert.equal(l12.kind, 'mitteilung');
+  const question = 'Bringst du bitte den Salat mit?';
+  assert.ok(l12.sample.includes(question), 'the fixture reads the model text as built');
+  const blanked = l12.sample.replace(` ${question}`, '');
+  const row = scoreWriting(formcheckTask(12), blanked).checks.find((c) => c.label === L12);
+  assert.equal(row.ok, true, 'without its question the model text still answers the Auftrag by its statement');
+  // The two exam texts of the reviewer's, 32 and 26 words, both answering with a statement.
+  for (const t of ['Liebe Lena, ich habe am Freitag Geburtstag. Wir feiern am Samstag um acht Uhr bei mir. Jeder bringt etwas zu essen mit, ich habe Getränke und Musik. Kommst du? Viele Grüße, Ana',
+    'Hallo Lena! Ich habe Geburtstag und wir feiern am Samstag um sieben Uhr. Die Gäste bringen Kuchen und Salat mit. Ich freue mich! Bis bald, Ana']) {
+    assert.equal(scoreWriting(formcheckTask(12), t).ok, true, t);
+  }
+});
+
+/**
+ * PER FORMULAR FIELD of the six A1.1 Formulare: the sample value (green), ONE value of the wrong
+ * kind (red), and a single dot (never green). The wrong-kind value is one the field's SHAPE can
+ * refuse — a country in a name field, a language in a country field, a weekday in a clock field;
+ * a city in a name field („Vorname: Bremen“) is not one, there is no world list of cities. Fields
+ * without a shape („Hobby“, „Material“, „Kurs“, „Unterschrift“) are `ai` when filled: named, never
+ * ticked, never crossed — the third row of the Mitteilung.
+ */
+const FORMULAR_WRONG_KIND = {
+  Familienname: 'Marokko', Vorname: 'Arabisch', Nachname: '12', Name: '12', Land: 'Bremen', Sprache: 'Marokko',
+  Sprachen: 'Marokko', Familienstand: 'gut', Zimmer: 'grün', Farbe: 'Wörterbuch', 'Kurs am': 'Schwimmen',
+  Tag: '15 Uhr', Uhrzeit: 'Montag', Personen: 'Chakiri', Telefonnummer: 'neu', 'Kurs von': 'Donnerstag',
+  'Kurs bis': 'Zimmer',
+};
+const FORMULAR_AI_FIELDS = ['Unterschrift', 'Kurs', 'Material', 'Hobby'];
+
+test('MAJOR 2 (round 19): a Formular field is a Leitpunkt with a name — its value must have the field’s shape', () => {
+  let fields = 0;
+  for (const l of LEKTIONEN) {
+    const w = l.schreiben;
+    if (w.kind !== 'formular') continue;
+    const bank = writingTaskByKey('goethe_a1', w.taskKey);
+    const task = { kind: 'formular', fields: bank.leitpunkte };
+    const sample = formularSampleValues(w.sample, bank.leitpunkte);
+    // The sample, as built: every field green (RULE 17's question, asked here of the bank's fields).
+    const ok = scoreWriting(task, sample);
+    assert.equal(ok.ok, true, `L${l.nr}: ${JSON.stringify(ok.checks.filter((c) => !c.ok))}`);
+    for (const field of bank.leitpunkte) {
+      fields += 1;
+      const row = (value) => scoreWriting(task, { ...sample, [field]: value }).checks.find((c) => c.key === field);
+      assert.equal(row(sample[field]).filled, true, `L${l.nr} ${field}: the sample value fills the field`);
+      // A single dot, a dash, spaces: not filled, red, never `ai`.
+      for (const empty of ['.', '-', '   ', '']) {
+        const r = row(empty);
+        assert.equal(r.ok, false, `L${l.nr} ${field} ← „${empty}“`);
+        assert.equal(r.filled, false, `L${l.nr} ${field} ← „${empty}“ is not filled`);
+        assert.ok(!r.ai, `L${l.nr} ${field} ← „${empty}“ is not for the KI`);
+      }
+      if (FORMULAR_AI_FIELDS.includes(field)) {
+        assert.equal(row(sample[field]).ai, true, `L${l.nr} ${field} has no shape and is „prüft die KI“`);
+        assert.equal(row('irgendwas').ai, true);
+        continue;
+      }
+      assert.ok(field in FORMULAR_WRONG_KIND, `L${l.nr} ${field}: every shaped field has a wrong-kind probe`);
+      assert.ok(!row(sample[field]).ai, `L${l.nr} ${field} has a shape`);
+      const wrong = row(FORMULAR_WRONG_KIND[field]);
+      assert.equal(wrong.ok, false, `L${l.nr} ${field} ← „${FORMULAR_WRONG_KIND[field]}“ is a value of another kind`);
+      assert.equal(wrong.filled, true);
+    }
+  }
+  assert.equal(fields, 30, 'the six Formulare have thirty fields');
+  // The shapes are the Mitteilung's, not a second copy: the same value that names a field in a
+  // Mitteilung fills the form field, and the same wrong value fails both.
+  assert.equal(leitpunktSatisfied('Ihre Telefonnummer', 'Meine Telefonnummer ist neu.'), false);
+  assert.equal(leitpunktSatisfied('Ihr Land', 'Mein Land ist die Türkei.'), true);
+  assert.equal(scoreWriting({ kind: 'formular', fields: ['Land'] }, { Land: 'die Türkei' }).ok, true);
+  // Field names the bank does not use yet, mapped by the same table.
+  const one = (field, value) => scoreWriting({ kind: 'formular', fields: [field] }, { [field]: value }).checks[0];
+  assert.equal(one('Geburtsdatum', '3.5.1998').ok, true);
+  assert.equal(one('Geburtsdatum', 'Marokko').ok, false);
+  assert.equal(one('Staatsangehörigkeit', 'marokkanisch').ok, true);
+  assert.equal(one('Staatsangehörigkeit', 'Marokko').ok, false, 'a country is not a nationality');
+  assert.equal(one('Alter', '25').ok, true);
+  assert.equal(one('Wohnort', 'Bremen').ok, true);
+  assert.equal(one('Wohnort', '12').ok, false);
+  assert.equal(one('Sprache', 'Dari').ok, true, 'a language that does not end in -isch is in the world list');
+  assert.equal(one('E-Mail', 'ana@example.org').ok, true);
+  assert.equal(one('Beruf', 'Studentin').ai, true, 'no shape: the KI reads it');
+});
+
+test('MAJOR 2 (round 19): the screen hands a Formular in only when every field is filled', () => {
+  const src = readFileSync(join(ROOT, 'src/components/lesson/GradedWriting.jsx'), 'utf8');
+  assert.match(src, /canSubmit = isFormular \? check\.checks\.length > 0 && check\.checks\.every\(\(c\) => c\.filled\)/);
+  const task = { kind: 'formular', fields: ['Name', 'Tag'] };
+  assert.deepEqual(scoreWriting(task, { Name: 'Ana' }).checks.map((c) => c.filled), [true, false]);
+  assert.deepEqual(scoreWriting(task, { Name: 'Ana', Tag: '.' }).checks.map((c) => c.filled), [true, false]);
+  assert.deepEqual(scoreWriting(task, { Name: 'Ana', Tag: 'Montag' }).checks.map((c) => c.filled), [true, true]);
+});
+
+test('Minor 18 (round 19): a question that echoes the verb answers a shape-less Leitpunkt no more than a statement without it', () => {
+  for (const [lp, t] of [['Was Sie kaufen', 'Kaufst du auch?'], ['Was Sie kaufen', 'Kaufen Sie das?'], ['Was Sie kaufen', 'Was kaufen wir?'],
+    ['Was Sie brauchen', 'Brauchen Sie etwas?'], ['Was Sie brauchen', 'Was brauchen Sie?']]) {
+    assert.equal(leitpunktSatisfied(lp, `Hallo Lena! ${t} Viele Grüße, Ana`), false, `„${lp}“ ← „${t}“ asks`);
+  }
+  for (const [lp, t] of [['Was Sie kaufen', 'Ich kaufe nichts.'], ['Was Sie kaufen', 'Ich kaufe den Stuhl.'],
+    ['Was Sie brauchen', 'Ich brauche einen Stuhl.'], ['Was Sie brauchen', 'Wir brauchen nichts.']]) {
+    assert.equal(leitpunktSatisfied(lp, `Hallo Lena! ${t} Viele Grüße, Ana`), true, `„${lp}“ ← „${t}“ answers`);
+  }
+  // A shape still reads the whole text, questions included: „Eine Frage an Lena“ IS a question.
+  assert.equal(leitpunktSatisfied('Eine Frage an Lena', 'Lena, hast du Zeit?'), true);
+  assert.equal(leitpunktSatisfied('Wann Sie kommen', 'Kommen Sie um zehn?'), true);
+});
+
+test('Minor 21 (round 19): the year behind the comma belongs to the birth clause it follows', () => {
+  assert.equal(leitpunktSatisfied('Ihr Geburtsdatum', 'Ich bin geboren in Marokko, 1998.'), true);
+  assert.equal(leitpunktSatisfied('Ihr Geburtsdatum', 'Ich bin in Marokko geboren, im Mai 1998.'), true);
+  // …only when that clause is nothing but the date.
+  assert.equal(leitpunktSatisfied('Ihr Geburtsdatum', 'Ich bin in Bremen geboren, ich habe 2 Kinder.'), false);
+  assert.equal(leitpunktSatisfied('Ihr Geburtsdatum', 'Ich bin in Bremen geboren, Bahnhofstraße 3.'), false);
+});
+
+test('Minor 17 (round 19): `-sch`, `-i` and the bare stem as a nationality; two-word countries; the language remainder', () => {
+  for (const t of ['Meine Staatsangehörigkeit ist libysch.', 'Ich bin Jemenit.', 'Ich bin Israeli.', 'Ich bin Ungar.', 'Ich bin Saudi.']) {
+    assert.equal(leitpunktSatisfied('Ihre Staatsangehörigkeit', `Ich heiße Ana. ${t}`), true, t);
+  }
+  // The bare stem is a nationality only in the predicative position — a country is not one.
+  assert.equal(leitpunktSatisfied('Ihre Staatsangehörigkeit', 'Ich komme aus dem Iran.'), false);
+  assert.equal(leitpunktSatisfied('Ihre Staatsangehörigkeit', 'Ich komme aus Israel.'), false);
+  assert.equal(leitpunktSatisfied('Ihr Land', 'Ich komme aus Sierra Leone.'), true);
+  assert.equal(leitpunktSatisfied('Ihr Land', 'Ich komme aus Sri Lanka.'), true);
+  assert.ok(COUNTRY_NAMES.includes('Sierra Leone'));
+  // Names are names: the short stems (`ir`, `ind`, `pol`) do not make „Irina“ or „Indira“ a country.
+  const name = (v) => scoreWriting({ kind: 'formular', fields: ['Vorname'] }, { Vorname: v }).checks[0].ok;
+  for (const v of ['Irina', 'Indira', 'Ben', 'Ira', 'Ana', 'Ali', 'Lena', 'Tim', 'Chakiri', 'Brandt', 'Berger']) assert.equal(name(v), true, v);
+  for (const v of ['Marokko', 'Türkei', 'Deutschland', 'Iran', 'Arabisch', 'Deutsch', 'Dari']) assert.equal(name(v), false, v);
+  // The language remainder: capitalised, no `-isch` (those are read by form), no duplicates.
+  assert.equal(new Set(LANGUAGE_NAMES.map((n) => n.toLowerCase())).size, LANGUAGE_NAMES.length);
+  assert.ok(LANGUAGE_NAMES.every((n) => /^[A-ZÄÖÜ][a-zäöüß]+$/.test(n) && !/isch$/.test(n)), 'the list holds only what the form cannot read');
+  assert.equal(leitpunktSatisfied('Ihre Staatsangehörigkeit', 'Ich spreche Dari.'), false);
 });
