@@ -165,8 +165,10 @@ test('a checkpoint dictates nothing longer than its own chapter dictates, and ne
   // then the ten-word enumeration with three commas the L2 comment keeps out of its own window as
   // „a punctuation test, not a listening test“. The preference knew freeness, constructions and
   // reportability and not length. The ceiling is measured off the chapter's own `hoeren.lines`
-  // windows (chapter 1 of A1.1: six words; chapter 4: ten), never typed; the ten is the longest
-  // line any A1.1 Lektion dictates, and the pin the review asked for.
+  // windows (measured 2026-09-14: chapter 1 of A1.1 nine words, chapter 4 ten — the „six“ this
+  // comment used to say was round 19 copying a number the same commit had changed, DaF review
+  // #19 Minor 25), never typed; the ten is the longest line any A1.1 Lektion dictates, and the
+  // pin the review asked for.
   const wc = (de) => de.trim().split(/\s+/).length;
   assert.equal(DICTATION_MAX_WORDS, 10);
   for (const { cp, items } of ALL_CHECKPOINTS) {
@@ -202,6 +204,43 @@ test('a checkpoint dictates nothing longer than its own chapter dictates, and ne
     l.dialog.lines = l.dialog.lines.map((x, i) => ({ ...x, de: `${x.de.replace(/[.?]$/, '')}, und das ist wirklich sehr lang, Satz ${l.nr}.${i}, ja.` }));
   }
   assert.equal(buildCheckpoint({ curriculum: only, checkpoint: only.checkpoints[0], pool: [] }).filter((i) => i.kind === 'dictation').length, 3);
+});
+
+test('the twelve dictations of the four real papers are pinned, so a reorder is visible, not silent', () => {
+  // DaF review #19, Minor 24: `dictableFirst` sorts before `take(lines, 3)`, so the round-19
+  // ceiling changed which lines Hören spends, `usedLineKeys` with them, and — because every later
+  // section draws „unused first“ — the Lesen windows, the swap words, the Wortfeld distractors and
+  // the Bausteine of ALL FOUR papers. The commit said „cp1 no longer dictates 12 words“. Nothing
+  // else said anything, because nothing pinned the paper. This does: the dictation ids, their
+  // source lines and their text, measured 2026-09-14 (round 20). A change here is not wrong by
+  // itself — but it must be re-measured, re-read as a paper, and re-pinned in the same commit,
+  // with the old and the new paper side by side in the diff.
+  const dictated = Object.fromEntries(ALL_CHECKPOINTS.map(({ cp, items }) => [
+    cp.id,
+    items.filter((i) => i.kind === 'dictation').map((i) => [i.id, i.lektionId, i.lineKey, i.audioText]),
+  ]));
+  assert.deepEqual(dictated, {
+    'a1.1-cp1': [
+      ['a1.1-cp1-hoeren-1', 'a1.1-l01', 'line-6', 'Gut. Wie geht es Ihnen?'],
+      ['a1.1-cp1-hoeren-2', 'a1.1-l01', 'line-9', 'Tschüss! Bis morgen.'],
+      ['a1.1-cp1-hoeren-3', 'a1.1-l01', 'line-3', 'C-H-A-K-I-R-I.'],
+    ],
+    'a1.1-cp2': [
+      ['a1.1-cp2-hoeren-1', 'a1.1-l06', 'line-7', 'Null vier zwei – drei drei acht eins.'],
+      ['a1.1-cp2-hoeren-2', 'a1.1-l04', 'line-7', 'Das macht zusammen zwanzig Euro.'],
+      ['a1.1-cp2-hoeren-3', 'a1.1-l04', 'line-0', 'Entschuldigung, was ist das?'],
+    ],
+    'a1.1-cp3': [
+      ['a1.1-cp3-hoeren-1', 'a1.1-l08', 'line-8', 'Und am Mittwoch, am Donnerstag oder am Freitag?'],
+      ['a1.1-cp3-hoeren-2', 'a1.1-l09', 'line-8', 'Gut. Die Kellnerin kommt sofort mit dem Brot.'],
+      ['a1.1-cp3-hoeren-3', 'a1.1-l07', 'line-9', 'Vielleicht hören wir am Wochenende zusammen Musik?'],
+    ],
+    'a1.1-cp4': [
+      ['a1.1-cp4-hoeren-1', 'a1.1-l10', 'line-2', 'Hat der Zug Verspätung?'],
+      ['a1.1-cp4-hoeren-2', 'a1.1-l12', 'line-8', 'Deine Party ist bestimmt schön!'],
+      ['a1.1-cp4-hoeren-3', 'a1.1-l10', 'line-4', 'Kostet die Fahrkarte zwanzig Euro?'],
+    ],
+  }, 'the papers were rebuilt — re-measure every dictation, re-read the four papers, re-pin here');
 });
 
 test('Lesen items carry a 2–3 line text and a richtig/falsch statement, two of each', () => {

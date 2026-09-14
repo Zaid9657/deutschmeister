@@ -283,13 +283,28 @@ const clampFreeFirst = (lines, curriculum, afterLektion) => {
  * the length, so a line the course would never dictate in a Lektion was dictated in the exam.
  *
  * The ceiling is MEASURED, not chosen: the longest line the chapter's Lektionen themselves put in
- * a `hoeren.lines` window (chapter 1 of A1.1: six words; chapter 4: ten). Lines above it go to the
- * BACK of the preference, never out of it — a chapter too poor to fill the section still fills it
- * — and this bucket is the outermost, so a short reportable line beats a long unreportable one:
- * Lesen has four windows to choose from, a learner typing from one hearing has one. A chapter with
- * no window at all (a fixture, a draft) falls back to `DICTATION_MAX_WORDS`, the longest line any
- * A1.1 Lektion dictates. `tests/checkpoint.test.mjs` pins both: no dictation of the four real
- * papers is longer than its chapter's ceiling, and none is longer than ten words.
+ * a `hoeren.lines` window. Measured 2026-09-14 (round 20) off `a11.js`: chapter 1 of A1.1 is NINE
+ * words (L2 window [7,3] — line 3 „Ich bin ledig. Ist das Formular für die Adresse?“, the
+ * Familienstand answer round 19 lengthened from six words in the same commit that wrote „six“
+ * here — DaF review #19, Minor 25), chapter 2 eight (L5 [1,5]), chapter 3 nine (L8 [3,7]),
+ * chapter 4 ten (L10 [1,9], the `DICTATION_MAX_WORDS` line). Lines above it go to the BACK of the
+ * preference, never out of it — a chapter too poor to fill the section still fills it — and this
+ * bucket is the outermost, so a short reportable line beats a long unreportable one: Lesen has
+ * four windows to choose from, a learner typing from one hearing has one. A chapter with no
+ * window at all (a fixture, a draft) falls back to `DICTATION_MAX_WORDS`, the longest line any
+ * A1.1 Lektion dictates. `tests/checkpoint.test.mjs` pins all of it: the four measured ceilings,
+ * no dictation of the four real papers longer than its chapter's ceiling, none longer than ten
+ * words — and the dictation ids of the four papers themselves (next paragraph).
+ *
+ * THE ORDERING MOVES EVERY LATER DRAW OF THE PAPER (DaF review #19, Minor 24). `dictableFirst`
+ * runs before `take(lines, 3)`, so a changed ceiling — or a changed line length under an
+ * unchanged ceiling — changes WHICH three lines Hören spends, `usedLineKeys` with them, and
+ * through `usedLineKeys` every section drawn after Hören: the Lesen windows and their
+ * swap words, the Wortfeld distractors, the Bausteine. Round 19 said „cp1 no longer dictates 12
+ * words“ and all four papers had been silently rebuilt. That is by design (the sections share
+ * one „unused first“ rule), but it must be VISIBLE: `tests/checkpoint.test.mjs` pins the
+ * dictation ids and lines of the four real papers, so a reorder fails a test with the old and
+ * new paper side by side instead of shipping unannounced.
  */
 export const DICTATION_MAX_WORDS = 10;
 const wordCount = (de) => String(de || '').trim().split(/\s+/).filter(Boolean).length;

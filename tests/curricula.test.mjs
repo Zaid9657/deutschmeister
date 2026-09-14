@@ -1381,6 +1381,39 @@ test('rule 24: no person is an adjective — a nationality is a NOUN in a senten
     c.lektionen[1].schreiben.sample = `Hallo Lena! ${sentence} Viele Grüße, Ana`;
     assert.deepEqual(predicativeNationalityAdjectives(c, spec), [], `„${sentence}“ is not a person as adjective`);
   }
+  // THE SPEAKER IS NOT THE SUBJECT (round 20, DaF review #19, Minor 23). Planted on a dialogue
+  // line, „Der Tee ist marokkanisch.“ and „Meine Staatsangehörigkeit ist marokkanisch.“ were
+  // reported — not from the line, but from the checkpoint Lesen text („Ana: Der Tee …“) and its
+  // explanation („Ana sagt: „Der Tee …““), where the speaker label put a person into the
+  // sentence. A thing subject with a nationality adjective is correct German. L2 line 3 is the
+  // line the round-20 cp1 draws into `a1.1-cp1-lesen-4`; the extra item pins the two frames
+  // directly, so the assertion does not depend on the draw.
+  for (const sentence of ['Der Tee ist marokkanisch.', 'Meine Staatsangehörigkeit ist marokkanisch.', 'Der Tee ist gut, marokkanisch.']) {
+    const c = cloneOf(CURRICULUM_A11);
+    c.lektionen[1].dialog.lines[3].de = sentence;
+    assert.deepEqual(predicativeNationalityAdjectives(c, spec, { poolItems: loadPoolItems('a1.1') }), [], `„${sentence}“ on a dialogue line: the speaker label is not its subject`);
+  }
+  {
+    const frame = (explanationDe, id) => ({
+      id, topic: 'verb-sein', type: 'fill_blank', stage: 5, difficulty: 2, order: 90,
+      questionDe: 'Der Tee ___ gut. (sein)', questionEn: 'x', options: null, answer: 'ist', accepted: ['ist'], explanationDe, hint: null,
+    });
+    const innocent = [
+      frame('Ana sagt: „Der Tee ist marokkanisch.“ Die Aussage ist also richtig.', 'extra-a11-l02-90'),
+      frame('Ana: Der Tee ist marokkanisch.', 'extra-a11-l02-91'),
+      frame('Herr Weber: Meine Staatsangehörigkeit ist marokkanisch.', 'extra-a11-l02-92'),
+    ];
+    const guilty = [
+      frame('Ana sagt: „Ich bin marokkanisch.“ Die Aussage ist also richtig.', 'extra-a11-l02-93'),
+      frame('Ana: Ich bin marokkanisch.', 'extra-a11-l02-94'),
+      frame('Ana ist Studentin: Sie ist marokkanisch.', 'extra-a11-l02-95'),
+    ];
+    const pool = loadPoolItems('a1.1');
+    const base = loadExtraItems('a1.1');
+    assert.deepEqual(predicativeNationalityAdjectives(CURRICULUM_A11, spec, { extraItems: [...base, ...innocent], poolItems: pool }), [], 'a speaker frame is not a person subject');
+    const found = predicativeNationalityAdjectives(CURRICULUM_A11, spec, { extraItems: [...base, ...guilty], poolItems: pool });
+    assert.deepEqual(found.map((o) => o.where.split(' ')[0]).sort(), ['extra-a11-l02-93', 'extra-a11-l02-94', 'extra-a11-l02-95'], JSON.stringify(found));
+  }
   // The stem list belongs to the WORLD, not to the material — it does not grow when the course
   // grows — and since round 18 it has ONE source, `src/lib/lesson/countries.js`, which the grader
   // reads too (DaF review #17, Minor 17: two world lists of different sizes). The validator still

@@ -368,9 +368,12 @@ export const CURRICULUM_A11 = {
           // 12). Round 18 put „Familienstand: Ich bin ledig oder verheiratet.“ into the notice so
           // that RULE 23b would report 0 — a sentence nobody says, written for the rule. The two
           // words of the graded task's third Leitpunkt and the field name now stand where a
-          // learner HEARS them: the clerk reads the field with its two values (index 2, ten words,
+          // learner HEARS them: the clerk reads the field with its two values (index 2, eleven
+          // words — counted 2026-09-14, round 20, DaF review #19 Minor 25: round 19 wrote „ten“ —
           // in no window) and Ana answers with the sentence the task wants (index 3, the dictation
-          // line — the learner types „Ich bin ledig.“ from hearing it). The notice example
+          // line, nine words: it is the longest line of the L2 window [7,3] and therefore the
+          // chapter-1 `dictationCeiling` of `buildCheckpoint.js` — the learner types „Ich bin
+          // ledig.“ from hearing it). The notice example
           // „Ich bin Studentin.“ and „Was sind Sie von Beruf?“ (indices 6/7) stay verbatim lines,
           // which is why the pair does not ride on them. Sie throughout — strangers at a counter.
           { speaker: 'Herr Weber', de: 'Bitte füllen Sie das Formular aus. Ihr Familienstand: ledig oder verheiratet?', en: 'Please fill out the form. Your marital status: single or married?' },
@@ -797,11 +800,20 @@ export const CURRICULUM_A11 = {
           // correct German, and a Dativ (`vom` = von dem) in the Lektion whose notice defers the
           // Dativ to A1.2, put there only so that `Farbe` had a surface. The question is now asked
           // the way this Lektion asks everything (Wo ist …? Ist … blau?), with no case the level
-          // has not taught: „Und das Bild? Ist die Farbe blau?“ — Tim: „Ja, das Bild ist blau.“
+          // has not taught. ROUND 20 (DaF review #19, Minor 26): round 19 wrote „Ist die Farbe
+          // blau?“ — grammatical, and a sentence nobody says (one asks „Ist es blau?“); it showed
+          // that `Farbe` had to go in. The question is now the one in which the colour IS the
+          // topic: „Welche Farbe hat das Bild?“ — Tim: „Es ist blau.“ `welche` and `hat` are
+          // function words the level counts as taught from L1 (`FUNCTION_WORDS`, top of this
+          // file); `hat` here is input, not production — index 8 is in neither window ([1,5]
+          // dictation, [4,7] read-aloud), and the L8 notice teaches the chunk before L9 owns the
+          // verb (file header).
+          // Nine words each (counted 2026-09-14), two sentences each; Tim's answer keeps `das Bild`
+          // as its second surface.
           // `der Schlüssel` keeps its line; `in der Tasche` is the one Dativ the line always had,
           // and the setting („packen ihre Taschen aus“) carries `die Tasche` as well.
-          { speaker: 'Lena', de: 'Mein Schlüssel ist da. Und das Bild? Ist die Farbe blau?', en: 'My key is there. And the picture? Is the colour blue?' },
-          { speaker: 'Tim', de: 'Ja, das Bild ist blau. Es ist für mein Zimmer.', en: 'Yes, the picture is blue. It is for my room.' },
+          { speaker: 'Lena', de: 'Mein Schlüssel ist da. Welche Farbe hat das Bild?', en: 'My key is there. What colour is the picture?' },
+          { speaker: 'Tim', de: 'Es ist blau. Das Bild ist für mein Zimmer.', en: 'It is blue. The picture is for my room.' },
         ],
       },
       pretest: { promptDe: 'Fragen Sie, wo das Buch ist.', promptEn: 'Ask where the book is.', model: 'Wo ist das Buch?', accepted: ['Wo ist', 'Wo sind'] },
