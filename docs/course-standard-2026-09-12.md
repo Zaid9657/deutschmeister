@@ -88,8 +88,10 @@ Target 12–15 min, ~22 items, one exercise per screen, primary action at the bo
 | 7 | Re-queue | 1.5 | 0–4 | Every miss returns as a different variant |
 | 8 | Recap | 0.5 | — | Words learned, grammar point, mastery delta, next review date |
 
-**The writing form check decides form, the KI decides meaning (2026-09-14).** Before a text is
-submitted, `src/lib/lesson/writing.js` shows one row per Leitpunkt. A row is decided by form only
+**The writing form check decides form, the KI decides meaning (2026-09-14).** While a text is
+being written, `src/lib/lesson/writing.js` shows one row per Leitpunkt under it; after a submission
+that the KI could not grade, the same rows appear once more as the fallback card (there a KI row
+reads „ohne KI-Bewertung nicht prüfbar"). A row is decided by form only
 where the Leitpunkt asks for a value that has a shape: a date, a country, a nationality, a phone
 number, a clock time, a price, an age, a weekday or time of day, a name; the Anrede at the first
 sentence and the Gruß at the last line; a Formular field by the shape its name implies. A Leitpunkt

@@ -290,8 +290,11 @@ const DATE_COMPANION_RE = new RegExp(`\\d|\\b(?:${MONTH})\\b`, 'i');
  * a written sentence means the same clause: no comma, semicolon or coordinating conjunction between
  * them. The split is on the closed class of coordinators, not on any word list.
  */
+// `sondern` joined the coordinators in round 23 (DaF review #22, Minor 42): „Ich komme nicht um neun
+// sondern um zehn Uhr“ — the learner's spelling, no comma — is two clauses, and the second is the time.
+const CLAUSE_SPLIT_RE = /\s*[,;]\s*|\s+(?:und|oder|aber|denn|sondern)\s+/i;
 const clauses = (sentence) => String(sentence || '')
-  .split(/\s*[,;]\s*|\s+(?:und|oder|aber|denn)\s+/i)
+  .split(CLAUSE_SPLIT_RE)
   .map((c) => c.trim())
   .filter(Boolean);
 /**
@@ -332,41 +335,55 @@ const CLOCK_RE = new RegExp(
   + `|\\bhalb\\s+(?:\\d{1,2}|${NUMBER_WORD})\\b|\\bViertel\\s+(?:nach|vor)\\b`
   // `um` swallows the whole time it opens („um zehn Uhr“, „um halb neun“): the shapes that strip
   // times out of a sentence (`contentBeyondTime`) must not be left holding a bare `Uhr`.
-  + `|\\bum\\s+(?:halb\\s+)?(?:\\d{1,2}(?:[.:]\\d{2})?|${NUMBER_WORD})(?:\\s*Uhr)?\\b|\\bum\\s+halb\\b`,
+  + `|\\bum\\s+(?:halb\\s+)?(?:\\d{1,2}(?:[.:]\\d{2})?|${NUMBER_WORD})(?:\\s*Uhr)?\\b|\\bum\\s+halb\\b`
+  // „Ich komme gegen drei.“ — `gegen` + a number is an approximate clock time, `Uhr` or not
+  // (DaF review #22, Minor 41).
+  + `|\\bgegen\\s+(?:halb\\s+)?(?:\\d{1,2}(?:[.:]\\d{2})?|${NUMBER_WORD})(?:\\s*Uhr)?\\b`,
   'i',
 );
 /**
- * A DAY IS A WEEKDAY OR THE ADVERB, AND `Morgen` IN „Guten Morgen“ IS NEITHER (DaF review #21,
- * MAJOR 2). The old `DAY_RE` carried the `i` flag so that „montag“ and „Montag“ read the same —
- * and the same flag made the NOUN `Morgen` the ADVERB `morgen`, so the first Anrede of Lektion 1
- * („Guten Morgen, Frau Berg“) answered „Wann Sie kommen“ in L4 and L10 and „Wann Sie im Büro
- * sind“ in L6 without the text naming a time. The weekdays keep both cases (a form value is
- * folded, and „am montag“ is a spelling, not a different word); `heute|morgen|übermorgen` are
- * lower case — EXCEPT at the head of a sentence, where German capitalises the adverb („Morgen komme
- * ich.“), which is why the DAY shape below reads sentences and not the whole text. Lookarounds
- * rather than `\b`: JavaScript's `\b` is ASCII and sees no boundary before `übermorgen`.
+ * A DAY IS A WEEKDAY OR THE ADVERB, READ CASE-BLIND — AND `Morgen` AFTER `Guten` IS A GREETING
+ * WHEREVER IT STANDS (DaF review #22, MAJOR 2).
+ *
+ * Round 22 told the NOUN `Morgen` („Guten Morgen“) from the ADVERB `morgen` by its CAPITAL, and a
+ * capital is the one feature an A1 candidate does not have: „Guten **m**orgen Frau Berg, … ich komme
+ * später ins Büro“ was green at „Wann Sie kommen“ (the learner's spelling of the course's first
+ * Anrede, and the clause split let `morgen` into the Ich-clause), while „Ich komme **M**orgen.“, „Ich
+ * bin **N**achmittags im Büro.“ and „Ich komme am **n**achmittag.“ — spelling mistakes an examiner
+ * deducts under „Formale Richtigkeit“, with the Inhaltspunkt answered — were red. Four exam texts
+ * without a time green, four with a time red. The standard (course-standard §Writing) asks for „a
+ * weekday or time of day“, not for one spelled correctly.
+ *
+ * So the day words are read with `i` in every position, and two things keep „Guten Morgen“ out:
+ * the ANREDE IS CUT OFF before any shape reads the body (`openingCut` below — the reviewer's second
+ * option in round 21, the one that needs no spelling), and `morgen` directly after `guten` is never
+ * a day, wherever it stands („Ich sage Guten Morgen, ich komme später.“). Lookarounds rather than
+ * `\b`: JavaScript's `\b` is ASCII and sees no boundary before `übermorgen`.
  */
-const WEEKDAY = '(?:[Mm]ontag|[Dd]ienstag|[Mm]ittwoch|[Dd]onnerstag|[Ff]reitag|[Ss]amstag|[Ss]onnabend|[Ss]onntag)';
+const WEEKDAY = '(?:montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonnabend|sonntag)';
+const DAY_ADVERB = '(?:heute|morgen|übermorgen|uebermorgen)';
+/** The nouns a time of day is built from — after `am`, after `heute`, or fused to a weekday. */
+const TIME_OF_DAY_NOUN = '(?:morgen|vormittag|mittag|nachmittag|abend|nacht)';
 const DAY_RE = new RegExp(
-  `(?<!\\p{L})(?:${WEEKDAY}|heute|morgen|übermorgen|[Ww]ochenende)(?!\\p{L})|^\\W*(?:Heute|Morgen|Übermorgen)(?!\\p{L})`,
-  'u',
+  `(?<!\\p{L})(?<!guten\\s+)(?:${WEEKDAY}|${DAY_ADVERB}|wochenende)(?!\\p{L})`,
+  'iu',
 );
-/** The DAY read where it stands: sentence by sentence, so `^` is the head of a sentence. */
+/** The DAY read where it stands: sentence by sentence. */
 const DAY_SHAPE = { test: (body) => sentences(body).some((s) => DAY_RE.test(s)) };
 /**
  * A TIME OF DAY — the answer to „Wann“ that Lektion 8 teaches (`morgens`, `nachmittags`, `abends`,
  * `der Abend`) and that the Wann shape did not know: „Ich bin nachmittags im Büro.“ was red on
  * „Wann Sie im Büro sind“ two Lektionen after the course had taught the word (DaF review #21,
  * MAJOR 2). It is read ONLY by the Wann shape, never by the Tag field: „Tag: abends“ on a form is
- * still no day. `Morgen` counts here only after `am`, `heute` or `morgen` — „Guten Morgen“ is
- * still an Anrede.
+ * still no day. Case-blind since round 23 (`Nachmittags`, `am nachmittag` — see DAY_RE); `Morgen`
+ * counts here only after `am`, `heute` or `morgen`, so „Guten Morgen“ is still an Anrede.
  */
 const TIME_OF_DAY_RE = new RegExp(
   '(?<!\\p{L})(?:morgens|vormittags|mittags|nachmittags|abends|nachts'
-  + '|[Aa]m\\s+(?:Morgen|Vormittag|Mittag|Nachmittag|Abend)|[Ii]n\\s+der\\s+Nacht'
-  + '|(?:[Hh]eute|[Mm]orgen|[Üü]bermorgen)\\s+(?:früh|Morgen|Vormittag|Mittag|Nachmittag|Abend|Nacht)'
-  + `|${WEEKDAY}(?:morgen|vormittag|mittag|nachmittag|abend|nacht))(?!\\p{L})`,
-  'u',
+  + `|am\\s+${TIME_OF_DAY_NOUN}|in\\s+der\\s+nacht`
+  + `|${DAY_ADVERB}\\s+(?:früh|${TIME_OF_DAY_NOUN})`
+  + `|${WEEKDAY}\\s*(?:früh|${TIME_OF_DAY_NOUN}))(?!\\p{L})`,
+  'iu',
 );
 /** A PRICE is a number with Euro — „Das kostet Euro.“ is not a price. */
 const PRICE_RE = new RegExp(`\\b(?:\\d+(?:[.,]\\d{1,2})?|${NUMBER_WORD})\\s*(?:Euro|€)|€\\s*\\d`, 'i');
@@ -768,17 +785,47 @@ const fieldValueShape = (field) => {
  *    heute nicht.“ say when something does not happen. The clause, not the sentence, so that „Ich
  *    kann heute nicht kommen, ich komme morgen.“ is still an answer — the same rule and the same
  *    `clauses` split Minor 12 of round 17 wrote for the birth date („same clause, not same sentence“).
+ *
+ * ROUND 23 (DaF review #22, Minors 41 and 42) widens two of the three without moving them:
+ *  • „about the writer“ knows the whole first person — `mich`, `mir`, `uns`, `mein…`, `unser…`:
+ *    „**Mein** Zug ist erst um zehn Uhr in Bremen.“ (L10, no `komm`) and „Sie können **mich** von neun
+ *    bis zwölf Uhr anrufen.“ (L6) are the writer's sentences and were red;
+ *  • the negation is read against the CLAUSE, and a clause is split at `sondern` too („Ich komme
+ *    nicht um neun sondern um zehn Uhr“ — the learner's spelling, no comma). Inside a negated clause
+ *    the negation is of what FOLLOWS `nicht`: a time that stands before it and is contrasted by a
+ *    `sondern` („um zehn Uhr nicht mit dem Zug, sondern mit dem Bus“) is not what is denied, and
+ *    `nicht vor/nach/später als <Zeit>` is a bound, not a denial. „Ich komme heute nicht.“ — the
+ *    sentence round 22 pinned — has no `sondern` and stays red.
  */
 const NEGATION_RE = /(?<!\p{L})(?:nicht|kein\p{L}*|nie|niemals)(?!\p{L})/u;
-const FIRST_PERSON_RE = /(?<!\p{L})(?:ich|wir)(?!\p{L})/iu;
-// `clauses` is round 17's split (see DATE_SHAPE): the same closed class of coordinators.
+const FIRST_PERSON_RE = /(?<!\p{L})(?:ich|wir|mich|mir|uns|mein\p{L}*|unser\p{L}*)(?!\p{L})/iu;
 const hasTime = (clause) => CLOCK_RE.test(clause) || DAY_RE.test(clause) || TIME_OF_DAY_RE.test(clause);
+/** The clause splitter WITH its separators, so a clause knows whether `sondern` follows it. */
+const CLAUSE_PARTS_RE = new RegExp(`(${CLAUSE_SPLIT_RE.source})`, 'i');
+const BOUND_AFTER_NEGATION_RE = /^\s+(?:vor|nach|später\s+als|spaeter\s+als|früher\s+als|frueher\s+als)(?!\p{L})/iu;
+/** Does the sentence carry, in some clause, a time that is not denied? */
+const hasUndeniedTime = (sentence) => {
+  const parts = String(sentence || '').split(CLAUSE_PARTS_RE);
+  for (let i = 0; i < parts.length; i += 2) {
+    const c = parts[i].trim();
+    if (!c || !hasTime(c)) continue;
+    const neg = c.match(NEGATION_RE);
+    if (!neg) return true;
+    const after = c.slice(neg.index + neg[0].length);
+    if (BOUND_AFTER_NEGATION_RE.test(after)) return true;
+    const sep = parts[i + 1] || '';
+    const next = parts[i + 2] || '';
+    const contrasted = /sondern/i.test(sep) || /^\s*sondern(?!\p{L})/iu.test(next);
+    if (contrasted && hasTime(c.slice(0, neg.index))) return true;
+  }
+  return false;
+};
 const wannShape = (conjunct) => {
   const own = new Set(leitpunktKeywords(conjunct).flatMap((w) => [foldWord(w), ...splitVerbStem(w)]).filter(Boolean));
   return {
     test: (body) => sentences(body).some((s) => {
       const about = FIRST_PERSON_RE.test(s) || words(s).map(foldWord).some((f) => own.has(f));
-      return about && clauses(s).some((c) => !NEGATION_RE.test(c) && hasTime(c));
+      return about && hasUndeniedTime(s);
     }),
   };
 };
@@ -916,7 +963,11 @@ export function leitpunktSatisfied(leitpunkt, text, opts = {}) {
   const { conjuncts } = leitpunktEvidence(leitpunkt, opts);
   const decidable = conjuncts.filter((c) => c.folded.length || c.shapes.length);
   if (!decidable.length) return null;
-  const body = String(text || '');
+  // THE ANREDE IS CUT OFF BEFORE ANY SHAPE READS THE TEXT (DaF review #22, MAJOR 2): „Guten morgen
+  // Frau Berg, ich komme später“ carries no time once the greeting is gone, whatever its spelling.
+  // A header line before it (a place and date, a Betreff — Minor 40) goes with it: the letter's
+  // date is not the party's date.
+  const body = openingCut(text).body;
   // The fold half reads STATEMENTS only: a question that carries the Leitpunkt's verb („Kaufst du
   // auch?“ for „Was Sie kaufen“) asks, and answers nothing (DaF review #18, Minor 18).
   const statements = sentences(body).filter((s) => !isQuestion(s)).join(' ');
@@ -948,45 +999,170 @@ export function formularText(fields = [], values = {}) {
  * (L12) and the „Deine Ana“ of every informal Goethe model letter were all red, 21 of 31 closings.
  *
  * THE ANREDE opens the FIRST sentence: `Hallo|Hi|Hey|Moin|Servus|Grüß dich|Guten Tag/Morgen/Abend|
- * Sehr geehrte(r)|Liebe(r) <Name>`. `Liebe`/`Lieber` count only before a capitalised word — the
- * adverb in „ich bin lieber zu Hause“ is not an address, and „Liebe Grüße“ is excluded by name.
+ * Sehr geehrte(r)|Liebe(r) <Name>`. Case-blind since round 23 (DaF review #22, Minor 39): „liebe
+ * lena,“ and „LIEBE LENA,“ are an address written by someone without capitals, and *Start Deutsch 1*
+ * takes that off under „Formale Richtigkeit“, not under the Anrede. What still keeps the adverb
+ * („ich bin lieber zu Hause“) and „Liebe Grüße“ out is the PLACE (the head of the first sentence)
+ * and two named exclusions. A HEADER LINE before the Anrede — a place and date („Bremen, 12.5.2026“),
+ * a Betreff, an addressee („An Frau Berg“) — is skipped: it is the letter form some integration
+ * courses teach, and the Anrede then opens the second segment (Minor 40). A header is a segment
+ * with no Anrede that is a date or at most four words.
  *
- * THE GRUSS is the formula that starts a sentence or line and is followed by NOTHING BUT A SIGNATURE
- * to the end of the text: up to four capitalised words (`Ana`, `Ana Chakiri`, `Ihre Ana`), a
- * `deine`/`eure`/`ihre` before them, and punctuation. The formulas are the Wortfeld's family, not a
- * list of three: `bis` + a time word (bald, dann, später, morgen, nachher, gleich, a weekday, the
- * weekend), `<adjective> Grüße` (viele, liebe, schöne, herzliche, beste, freundliche, and „Mit
- * freundlichen Grüßen“) with an optional `von`, the bare `Grüße`/`Gruß` with a name, `Tschüs(s)`,
- * `Ciao`/`Tschau`, „Auf Wiedersehen“, „Mach's gut“, „Alles Gute/Liebe“, „Schönen Tag (noch)“,
- * `LG`, and `Dein(e) <Name>`. A „Danke und“ / „Vielen Dank und“ before it is allowed. So „Viele
- * Grüße an Tim! Ich komme um drei Uhr nach Hause. Ana“ has no Gruß (`an` is not a signature) and
- * „Grüße von Tim.“ has none either (the bare noun takes no `von`), while „Bis dann! Ana“, „Viele
- * Grüße\nAna“ and „Vielen Dank und viele Grüße, Ana“ all close.
+ * THE ANREDE IS ALSO CUT OFF THE BODY before any Leitpunkt shape reads it (`openingCut`, MAJOR 2 of
+ * review #22): the formula, an optional name after it („Frau Berg“, „liebe Lena“, „Damen und
+ * Herren“ — capitalised words or the address words themselves), and the comma, colon, mark or line
+ * break that closes it; twice, because „Hallo Lena, guten Morgen, …“ is two. Where no closing mark
+ * follows within four words only the formula goes — „Guten Morgen Frau Berg ich komme um zehn Uhr“
+ * keeps its clause — and a name that is a first-person clause („Hallo, ich bin Ana Chakiri.“) is
+ * never taken for the name.
+ *
+ * THE GRUSS IS A CLOSING BLOCK, NOT A STRING (DaF review #22, MAJOR 1). Round 22 read „the formula,
+ * followed by nothing but a signature“ literally, and 49 of the reviewer's 63 legitimate closings were
+ * red — „Tschüss und bis morgen, Ana“ (two formulas of the L1 Wortfeld, joined by `und`), „Bis
+ * Samstag um acht Uhr!“ (the closing an invitation calls for), „Bis heute Abend“, „Viele liebe
+ * Grüße“, „Gute Nacht“ (L1), the L6 telephone number under the name that the Leitpunkt asks for.
+ * The block is read in three layers:
+ *
+ *  1. THE FORMULAS, chained. One formula may follow another, joined by a comma, an exclamation
+ *     mark, a full stop or `und` — „Tschüss, bis Mittwoch!“, „Viele Grüße und bis bald“, „Mach's
+ *     gut. Bis bald!“ — and „Danke“ / „Vielen Dank“ may stand in the chain. The family: `bis` + a
+ *     TIME (the same atoms the Wann shape reads: a weekday or `heute/morgen`, optionally with a
+ *     time of day or `früh`, optionally `um <Uhrzeit>`; a bare clock; `bald|dann|später|nachher|
+ *     gleich|dahin|demnächst`; `nächste Woche`, `zum Fest`); `<adjective> Grüße/Gruß` in every
+ *     pairing German has (`viele liebe`, `ganz liebe`, `herzlichen Gruß`, `mit besten Grüßen`, `mit
+ *     freundlichem Gruß`), with `aus <Ort>` and `von`; the bare `Grüße`/`Gruß` with a name;
+ *     `Tschüs(s)`, `Ciao`/`Tschau`, „Auf Wiedersehen“, „Gute Nacht“, „Mach's gut“, „Alles Gute/
+ *     Liebe“, „(Einen) Schönen Tag/Abend/Wochenende (noch)“, „Hochachtungsvoll“, `LG|MfG|VG`, and
+ *     `Dein(e)|Euer/Eure|Ihr(e) <Name>`. Always at the head of a sentence or a line.
+ *  2. THE SIGNATURE — what follows the formula on the closing line(s): at most six tokens, each a
+ *     capitalised word, a number („Zimmer 12“, „Kurs A1.1“), `und` between two names, or one of the
+ *     address words (`deine`, `Ihre`, „deine Freundin Ana“); punctuation, a parenthesis and an emoji
+ *     between them are nothing. Case is not a rule of the signature (Minor 39): where the FORMULA is
+ *     written without a capital („viele grüße, ana“) the name may be too — up to three words that are
+ *     not function words. That is what keeps „Viele Grüße an Tim! Ana“ (`an`), „Bis Samstag ist Ana
+ *     krank.“ (`ist`) and „Bis Samstag Ana Chakiri arbeitet.“ (`arbeitet`, lower case after a
+ *     capitalised formula) red — the same ten non-formulas as in round 22, still 0 green.
+ *  3. THE APPENDIX — lines after the signature that are NOT part of the closing and do not break it:
+ *     a P.S. (and everything after it), a telephone line („Tel. 0176 …“ or the bare number), an
+ *     address line, a line of nothing but punctuation or emoji. In L6 the Leitpunkt asks for the
+ *     number and the place an adult writes it to a boss is under the name.
  */
-const ANREDE_RE = /^[\s"„“»«(]*(?:[Hh]allo|[Hh]i|[Hh]ey|[Mm]oin|[Ss]ervus|[Gg]rüß\s+dich|[Gg]uten\s+(?:[Tt]ag|[Mm]orgen|[Aa]bend)|[Ss]ehr\s+geehrte[rs]?|[Ll]iebe[rs]?\s+(?!Grüße|Gruesse|Grüsse)\p{Lu}\p{L}*)(?!\p{L})/u;
-const GRUSS_FORMULA = '(?:tschüs+|tschuess|tschau|ciao|lg|auf\\s+wiedersehen'
-  + '|(?:mit\\s+)?(?:viele|liebe|schöne|herzliche|beste|freundliche|freundlichen|vielen)\\s+(?:grüße|gruesse|grüsse|grüßen|gruessen|grüssen)(?:\\s+von)?'
-  + '|grüße|gruesse|grüsse|gruß|gruss'
-  + '|mach[\'’]?s\\s+gut|alles\\s+(?:gute|liebe)|schönen\\s+tag(?:\\s+noch)?'
-  + `|bis\\s+(?:bald|dann|später|spaeter|morgen|nachher|gleich|(?:zum\\s+)?${WEEKDAY.toLowerCase()}|(?:zum\\s+)?wochenende)`
-  + '|deine?)';
-/** The formula at the head of a sentence or a line. Case-blind: the formula has no case rule, the signature after it has. */
-const GRUSS_START_RE = new RegExp(`(?:^|[.!?…]\\s+|\\n\\s*)(?:(?:vielen\\s+)?danke?\\s+und\\s+)?${GRUSS_FORMULA}(?!\\p{L})`, 'giu');
-/** What may follow the formula to the end of the text: a signature, and nothing else. */
-const SIGNATURE_RE = /^(?:[\s,.!–-]*(?:deine?|eure?|ihre?|\p{Lu}[\p{L}'’.-]*)){0,5}[\s,.!–-]*$/u;
+const ANREDE_RE = /^[\s"„“»«(]*(?:hallo|hi|hey|moin|servus|grüß\s+dich|gruess\s+dich|guten\s+(?:tag|morgen|abend)|sehr\s+geehrte[rs]?|liebe[rs]?\s+(?!grüße|gruesse|grüsse|ich(?!\p{L})|zu(?!\p{L})|nicht(?!\p{L}))\p{L}+)(?!\p{L})/iu;
+/** The lower-case words that may extend an Anrede beyond its formula: „Sehr geehrte Damen **und** Herren“, „Hallo **ihr Lieben**“. */
+const ANREDE_WORD_RE = /^(?:und|liebe[rs]?|lieben|alle|zusammen|ihr|frau|herrn?|dr\.?)$/i;
+const ANREDE_TOKEN_RE = /^[^\S\n]*([^\s,!:;?]+)/u;
+const ANREDE_END_RE = /^[^\S\n]*(?:[,!:;?]+|\.(?=\s|$)|\n|$)/u;
+/**
+ * How much of `t` the Anrede at its head takes: the formula, an optional comma, up to four name
+ * words (capitalised, or one of the address words — never „ich bin …“), and the mark that closes it;
+ * where no mark closes it within four words, the formula alone. 0 when no Anrede opens `t`.
+ */
+const anredeLength = (t) => {
+  const m = t.match(ANREDE_RE);
+  if (!m) return 0;
+  let at = m[0].length;
+  const comma = t.slice(at).match(/^[^\S\n]*,/);
+  if (comma) at += comma[0].length;
+  for (let n = 0; n <= 4; n += 1) {
+    const end = t.slice(at).match(ANREDE_END_RE);
+    if (end) return at + end[0].length;
+    const tok = t.slice(at).match(ANREDE_TOKEN_RE);
+    if (!tok || !(/^\p{Lu}/u.test(tok[1]) || ANREDE_WORD_RE.test(tok[1]))) break;
+    at += tok[0].length;
+  }
+  return m[0].length;
+};
+/**
+ * A header segment: no Anrede, no first person, no closing mark (it ended at the line break, not at
+ * a full stop — „Ich heiße Ana Chakiri.“ is a sentence of four words, not a header), and a date or
+ * at most four words.
+ */
+const isHeaderSegment = (seg) => !ANREDE_RE.test(seg) && !FIRST_PERSON_RE.test(seg) && !/[.!?…]$/.test(seg)
+  && (DATE_VALUE_RE.test(seg) || words(seg).length <= 4);
 
-/** Is the FIRST sentence of `text` opened by an Anrede? */
-export const anredeAtOpening = (text) => ANREDE_RE.test(sentences(text)[0] || '');
+/**
+ * The text split at its opening: `{ anrede, body }` — whether an Anrede opens it (after an optional
+ * header line), and the text with the header and the Anrede(s) removed, for the shapes to read.
+ */
+export const openingCut = (text) => {
+  let t = String(text || '').replace(/^\s+/, '');
+  const segs = sentences(t);
+  if (segs.length > 1 && isHeaderSegment(segs[0])) {
+    const at = t.indexOf(segs[0]);
+    if (at >= 0) t = t.slice(at + segs[0].length).replace(/^\s+/, '');
+  }
+  let anrede = false;
+  for (let pass = 0; pass < 2; pass += 1) {
+    const len = anredeLength(t);
+    if (!len) break;
+    anrede = true;
+    t = t.slice(len).replace(/^[\s,]+/, '');
+  }
+  return { anrede, body: t };
+};
 
-/** Does `text` END in a Schlussformel — the formula, then a signature, then nothing? */
+const GRUESSE = '(?:grüße|gruesse|grüsse|grüßen|gruessen|grüssen|gruß|gruss)';
+const GRUSS_ADJ = '(?:viele|vielen|liebe|lieben|schöne|schoene|schönen|schoenen|herzliche|herzlichen|beste|besten|freundliche|freundlichen|freundlichem|sonnige)';
+const CLOCK_VALUE = `(?:halb\\s+)?(?:\\d{1,2}(?:[.:]\\d{2})?|${NUMBER_WORD})(?:\\s*Uhr)?`;
+/** What `bis` may close with — the Wann shape's own atoms, plus the adverbs of leave-taking. */
+const BIS_TIME = '(?:bald|dann|später|spaeter|nachher|gleich|dahin|demnächst|demnaechst'
+  + '|n[äa]e?chste[ns]?\\s+\\p{L}+|zu[mr]\\s+\\p{L}+'
+  + `|(?:${DAY_ADVERB}|${WEEKDAY}|wochenende)(?:\\s*(?:früh|${TIME_OF_DAY_NOUN}))?(?:\\s+um\\s+${CLOCK_VALUE})?`
+  + `|(?:um\\s+)?${CLOCK_VALUE})`;
+const GRUSS_FORMULA = '(?:tschüs+|tschuess|tschau|ciao|lg|glg|mfg|vg|auf\\s+wiedersehen|hochachtungsvoll'
+  + `|(?:mit\\s+)?(?:(?:ganz|viele|vielen|recht)\\s+)?${GRUSS_ADJ}\\s+${GRUESSE}(?:\\s+aus(?:\\s+de[mrn])?\\s+\\p{L}+)?(?:\\s+von)?`
+  + `|${GRUESSE}`
+  + '|mach[\'’]?s\\s+gut|alles\\s+(?:gute|liebe)|gute\\s+nacht'
+  + '|(?:einen\\s+)?schöne[ns]\\s+(?:tag|abend|wochenende|woche|sonntag|urlaub|feier)(?:\\s+noch)?'
+  + `|bis\\s+${BIS_TIME}`
+  + '|deine?|eure?|ihre?)';
+/** One formula, then any number of further formulas (or a thanks) joined by `,` `!` `.` or `und`. */
+const GRUSS_CHAIN = `${GRUSS_FORMULA}(?:\\s*(?:[,!.]\\s*|\\s+und\\s+)(?:vielen\\s+dank|danke|${GRUSS_FORMULA}))*`;
+/** The chain at the head of a sentence or a line. Case-blind: the formula has no case rule. */
+const GRUSS_START_RE = new RegExp(`(?:^|[.!?…]\\s+|\\n\\s*)(?:(?:vielen\\s+)?danke?\\s+und\\s+)?${GRUSS_CHAIN}(?!\\p{L})`, 'giu');
+/** The address words of a signature, and the `und` between two names. */
+const SIGNATURE_WORD_RE = /^(?:deine?|eure?|euer|ihre?|und)$/i;
+/** Is `rest` — what follows the formula — a signature? `lower`: the formula itself was written without a capital. */
+const isSignature = (rest, lower) => {
+  const toks = String(rest || '')
+    .replace(/\([^)]*\)/g, ' ')
+    .replace(/[^\p{L}\p{N}'’.\-\s]/gu, ' ')
+    .split(/\s+/)
+    .filter((t) => /[\p{L}\p{N}]/u.test(t));
+  if (toks.length > 6) return false;
+  if (lower) return toks.length <= 3 && toks.every((t) => SIGNATURE_WORD_RE.test(stripPunct(t)) || !isFunctionWord(stripPunct(t)));
+  return toks.every((t) => SIGNATURE_WORD_RE.test(stripPunct(t)) || /^[\p{Lu}\p{N}]/u.test(t));
+};
+/** A line that hangs under the signature without being part of the closing. */
+const POSTSCRIPT_RE = /^p\.?\s?s\.?\s*[:.]?(?!\p{L})/iu;
+const CONTACT_LINE_RE = /^(?:tel|telefon|handy|mobil|nummer|nr)\b/i;
+const ADDRESS_LINE_RE = /\b\d{5}\b|straße|strasse|str\.|\bweg\b|\bplatz\b|\ballee\b|\bgasse\b/i;
+const isAppendixLine = (line) => POSTSCRIPT_RE.test(line) || CONTACT_LINE_RE.test(line)
+  || !/[\p{L}\p{N}]/u.test(line)
+  || (PHONE_RE.test(line) && words(line).length <= 5)
+  || (ADDRESS_LINE_RE.test(line) && /\d/.test(line) && words(line).length <= 6);
+/** The text without its appendix: everything from a P.S. on, and the contact lines under the name. */
+const withoutAppendix = (text) => {
+  const lines = String(text || '').split('\n').map((l) => l.trim()).filter(Boolean);
+  const ps = lines.findIndex((l, i) => i > 0 && POSTSCRIPT_RE.test(l));
+  if (ps > 0) lines.length = ps;
+  while (lines.length > 1 && isAppendixLine(lines[lines.length - 1])) lines.pop();
+  return lines.join('\n');
+};
+
+/** Is `text` opened by an Anrede — at its first sentence, or at its second after a header line? */
+export const anredeAtOpening = (text) => openingCut(text).anrede;
+
+/** Does `text` END in a closing block — formula(s), then a signature, then at most an appendix? */
 export const grussAtClosing = (text) => {
-  const t = String(text || '').trim();
+  const t = withoutAppendix(text);
   for (const m of t.matchAll(GRUSS_START_RE)) {
     const rest = t.slice(m.index + m[0].length);
-    // „Dein“/„Deine“ is a signature only WITH the name („Deine Ana“); the other formulas stand alone.
-    const needsName = /deine?$/i.test(m[0]);
-    if (!SIGNATURE_RE.test(rest)) continue;
-    if (needsName && !/^\s+\p{Lu}/u.test(rest)) continue;
+    const lower = !/\p{Lu}/u.test(m[0]);
+    if (!isSignature(rest, lower)) continue;
+    // „Dein“/„Deine“/„Ihre“ is a signature only WITH the name („Deine Ana“); the other formulas stand alone.
+    const needsName = /(?:deine?|eure?|euer|ihre?)$/i.test(m[0].trim());
+    if (needsName && !/[\p{L}\p{N}]/u.test(rest)) continue;
     return true;
   }
   return false;

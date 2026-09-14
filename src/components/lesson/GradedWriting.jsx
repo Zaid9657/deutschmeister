@@ -32,6 +32,61 @@ const CRITERIA = [['task', 'Aufgabe'], ['structure', 'Aufbau'], ['accuracy', 'Ko
 const CRITERION_MAX = MAX_WRITING_POINTS / CRITERIA.length;
 const FIELD_LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite';
 
+/**
+ * What an `ai` row says, by the mode the checklist is in. The course standard (§Writing, 2026-09-14)
+ * describes ONE checklist with two moments: BEFORE submission it stands live under the text — one
+ * row per Leitpunkt, decided by form where the Leitpunkt has a shape, and „prüft die KI“ where it
+ * asks for a meaning („Warum Sie schreiben“, the Auftrag) — and AFTER a submission WITHOUT the KI it
+ * is the fallback that replaces the grade. DaF review #22, Minor 38: round 22 rendered it only after
+ * submission, so the standard described a screen that did not exist. The two labels differ on
+ * purpose: live, the row names who will decide it; in the fallback the KI did not run, and a row
+ * that said it was checking would promise a check that is not running (review #21, Minor 33).
+ */
+const AI_ROW_LABEL = {
+  live: 'prüft die KI',
+  liveSignedOut: 'prüft die KI — nach der Anmeldung',
+  fallback: 'ohne KI-Bewertung nicht prüfbar',
+};
+
+/** The Formcheck rows — live under the text, or as the fallback card after a submission without the KI. */
+function Checklist({ checks, mode, signedIn }) {
+  const aiLabel = mode === 'fallback' ? AI_ROW_LABEL.fallback : (signedIn ? AI_ROW_LABEL.live : AI_ROW_LABEL.liveSignedOut);
+  return (
+    <ul className="mt-3 space-y-2">
+      {checks.map((c) => {
+        // `ai` rows are UNDECIDABLE by form — either because every token of the Leitpunkt is a
+        // function word („Warum Sie schreiben“), or because the Leitpunkt asks for an INTENTION
+        // that has no form („Was die Gäste mitbringen sollen“: a description and an instruction
+        // share one shape, and only a reading tells them apart — see QUESTION_SHAPES in
+        // src/lib/lesson/writing.js, 2026-09-14). They are shown and named, never ticked and
+        // never crossed. A row the Formcheck cannot decide used to be dropped from the list, and
+        // the task then showed three Leitpunkte while the checklist showed two (DaF review #13,
+        // MAJOR 1). The label says what the row is, in the mode it is in — see AI_ROW_LABEL.
+        if (c.ai) {
+          return (
+            <li key={c.key} className="flex items-start gap-2 text-[0.9375rem]">
+              <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-graphite" aria-hidden="true" />
+              <span className="text-graphite">{c.label} — {aiLabel}</span>
+            </li>
+          );
+        }
+        return (
+          <li key={c.key} className="flex items-start gap-2 text-[0.9375rem]">
+            {c.ok ? (
+              <Check className="mt-0.5 h-4 w-4 shrink-0 text-siegel" aria-hidden="true" />
+            ) : (
+              <X className="mt-0.5 h-4 w-4 shrink-0 text-accent-himbeer" aria-hidden="true" />
+            )}
+            <span className={c.ok ? 'text-ink' : 'text-graphite'}>
+              {c.label} — {c.ok ? 'erledigt' : 'fehlt noch'}
+            </span>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 export default function GradedWriting({ task, lektionId = null, onResult }) {
   const { user } = useAuth();
   const isFormular = task?.kind === 'formular';
@@ -191,6 +246,16 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
           </>
         )}
 
+        {!done && check.checks.length > 0 && (
+          <div className="mt-5">
+            <p className={FIELD_LABEL}>Checkliste</p>
+            <Checklist checks={check.checks} mode="live" signedIn={!!user} />
+            <p className="mt-3 text-[0.8125rem] leading-relaxed text-graphite">
+              Formcheck: nur die Form (Länge, Punkte, Anrede und Gruß), noch keine Bewertung.
+            </p>
+          </div>
+        )}
+
         {!done && (
           <div className="mt-4 flex justify-end">
             <Button onClick={submit} disabled={busy || !canSubmit}>
@@ -268,40 +333,9 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
       {done && !outcome.scored && (
         <Card tone="sunk" className="mt-4 p-5">
           <p className={FIELD_LABEL}>Checkliste</p>
-          <ul className="mt-3 space-y-2">
-            {check.checks.map((c) => {
-              // `ai` rows are UNDECIDABLE by form — either because every token of the Leitpunkt is a
-              // function word („Warum Sie schreiben“), or because the Leitpunkt asks for an INTENTION
-              // that has no form („Was die Gäste mitbringen sollen“: a description and an instruction
-              // share one shape, and only a reading tells them apart — see QUESTION_SHAPES in
-              // src/lib/lesson/writing.js, 2026-09-14). They are shown and named, never ticked and
-              // never crossed. A row the Formcheck cannot decide used to be dropped from the list, and
-              // the task then showed three Leitpunkte while the checklist showed two (DaF review #13,
-              // MAJOR 1). This card is the FALLBACK without the KI, so the row must not promise a check
-              // that is not running (DaF review #21, Minor 33): it says what the row is, in the mode
-              // it is in.
-              if (c.ai) {
-                return (
-                  <li key={c.key} className="flex items-start gap-2 text-[0.9375rem]">
-                    <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-graphite" aria-hidden="true" />
-                    <span className="text-graphite">{c.label} — ohne KI-Bewertung nicht prüfbar</span>
-                  </li>
-                );
-              }
-              return (
-                <li key={c.key} className="flex items-start gap-2 text-[0.9375rem]">
-                  {c.ok ? (
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-siegel" aria-hidden="true" />
-                  ) : (
-                    <X className="mt-0.5 h-4 w-4 shrink-0 text-accent-himbeer" aria-hidden="true" />
-                  )}
-                  <span className={c.ok ? 'text-ink' : 'text-graphite'}>
-                    {c.label} — {c.ok ? 'erledigt' : 'fehlt noch'}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
+          {/* The FALLBACK without the KI: the same rows as under the text, and an `ai` row now says
+              the KI did not run rather than that it is checking (DaF review #21, Minor 33). */}
+          <Checklist checks={check.checks} mode="fallback" signedIn={!!user} />
           <p className="mt-4 text-[0.8125rem] leading-relaxed text-graphite">
             {note || 'Formcheck, keine KI-Bewertung.'} Diese Checkliste prüft nur die Form (Länge, Punkte,
             Anrede und Gruß). Sie korrigiert Ihr Deutsch nicht.

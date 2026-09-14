@@ -28,6 +28,7 @@ import { chapterWritingTask, chapterLektionen } from '../src/lib/checkpoint/buil
 import {
   scoreWriting, countWords, leitpunktKeyword, leitpunktKeywords, leitpunktEvidence, leitpunktSatisfied,
   leitpunktConjuncts,
+  openingCut,
 } from '../src/lib/lesson/writing.js';
 import { COUNTRY_STEMS, COUNTRY_NAMES, LANGUAGE_NAMES } from '../src/lib/lesson/countries.js';
 import { formSpeakInModelTexts, formularSampleValues, LEVELS } from '../scripts/validate-curriculum.mjs';
@@ -1461,11 +1462,263 @@ test('Minor 34 (round 22): the Auftrag row is the shape of the Leitpunkt — eve
 test('Minors 33 and 37 (round 22): the fallback card names the row for what it is, and the comment tells the whole truth', () => {
   const src = readFileSync(join(ROOT, 'src/components/lesson/GradedWriting.jsx'), 'utf8');
   // The card is shown WITHOUT the KI („Formcheck, keine KI-Bewertung.“ stands under it), so no row
-  // on it may say in the present tense that the KI is checking (Minor 33).
-  assert.ok(!/prüft die KI/.test(src), 'the fallback card promises a check that is not running');
-  assert.match(src, /ohne KI-Bewertung nicht prüfbar/);
+  // on it may say in the present tense that the KI is checking (Minor 33). Since round 23 the SAME
+  // rows also stand live under the text before submission, where „prüft die KI“ is the truth
+  // (Minor 38) — so the pin is on the mode: the fallback label is its own string, the live one is
+  // not reachable from the fallback card. See the round-23 test below.
+  assert.match(src, /fallback: 'ohne KI-Bewertung nicht prüfbar'/);
+  assert.match(src, /<Checklist checks=\{check\.checks\} mode="fallback"/);
+  assert.ok(!/mode="fallback"[^]*?prüft die KI/.test(src.slice(src.indexOf('done && !outcome.scored'))), 'the fallback card must not say „prüft die KI“');
   // Since 2026-09-14 an `ai` row is not only „every token a function word“: the Auftrag has content
   // words and is the KI's all the same (Minor 37).
   assert.match(src, /asks for an INTENTION/);
   assert.ok(!/every token of it is a\s+\/\/\s*function word\), so/.test(src));
+});
+
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+// ROUND 23 — DaF review #22, MAJOR 1 and MAJOR 2 (with Minors 38–42): THE CLOSING BLOCK, AND THE
+// ANREDE CUT OFF BEFORE THE FORM IS READ
+//
+// Round 22 built the place-not-word rule and the reviewer measured it against the text of the
+// CANDIDATE rather than the text of the review: „gefolgt von nichts als einer Unterschrift“ was
+// literal, so two formulas joined by `und` („Tschüss und bis morgen“ — both L1 Wortfeld), `Bis` +
+// any time the course teaches („Bis Samstag um acht Uhr!“, „Bis heute Abend“), „Gute Nacht“ (L1)
+// and a telephone number under the name (the L6 Leitpunkt) were red — 49 of 63 closings, 8 of 10
+// exam texts (MAJOR 1). And the Wann shape told `Morgen` from `morgen` by its capital, the one
+// feature an A1 candidate does not have: „Guten **m**orgen Frau Berg, … ich komme später“ was
+// green, „Ich komme **M**orgen.“ red (MAJOR 2). Both are closed as RULES — a closing BLOCK read in
+// layers; the Anrede CUT OFF before any shape reads the body, and the day words case-blind — and
+// the fixtures are LOOPS: every closing formula of the Wortfeld (selected by its GERMAN, so „Gute
+// Nacht“ is in), every PAIR of them, every weekday and time of day behind `Bis`, every time of day
+// in three spellings, the reviewer's 63 legitimate closings and the ten non-formulas.
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+
+/**
+ * The course's closing formulas, selected by the GERMAN text (DaF review #22, MAJOR 1 (d): the
+ * `en`-gloss selector missed „Gute Nacht“ — „Good night“ is no „See you“). A closing is a Wortfeld
+ * phrase without an article that is a leave-taking: `Bis …`, or one of the fixed farewells.
+ */
+const CLOSING_FORMULAS_DE = WORTFELD
+  .filter((w) => !w.article && /^(?:bis\s+\S+|tschüs+|auf wiedersehen|gute nacht|mach'?s gut|schönen tag(?: noch)?|ciao|tschau)$/i.test(w.de))
+  .map((w) => w.de);
+/** The reviewer's 63 legitimate closings of round 22, verbatim from the probe `gruss2.mjs`. */
+const REVIEW_22_CLOSINGS = {
+  chained: ['Viele Grüße und bis bald, Ana', 'Tschüss und bis morgen, Ana', 'Bis bald und viele Grüße, Ana', 'Mach\'s gut und bis Samstag, Ana',
+    'Liebe Grüße und bis Samstag! Ana', 'Vielen Dank und bis morgen, Ana', 'Danke und viele Grüße, Ana', 'Tschüss, bis morgen! Ana',
+    'Mach\'s gut. Bis bald! Ana', 'Bis bald, viele Grüße, Ana'],
+  bis: ['Bis heute Abend, Ana', 'Bis morgen Abend! Ana', 'Bis Samstagabend, Ana', 'Bis Samstag um acht Uhr! Ana', 'Bis Montag um zehn, Ana',
+    'Bis morgen um zehn Uhr, Ana', 'Bis dahin, Ana', 'Bis nächste Woche, Ana', 'Bis nächsten Montag, Ana', 'Bis zum Fest! Ana', 'Bis Samstag Abend, Ana',
+    'Bis morgen früh, Ana'],
+  formulas: ['Viele liebe Grüße, Ana', 'Ganz liebe Grüße, Ana', 'Herzlichen Gruß, Ana', 'Liebe Grüße aus Bremen, Ana', 'Viele Grüße aus dem Büro, Omar',
+    'Schönes Wochenende! Ana', 'Schönen Abend noch, Ana', 'Gute Nacht, Ana', 'Einen schönen Tag noch, Ana', 'Mit besten Grüßen, Omar',
+    'Mit freundlichem Gruß, Omar', 'Eure Ana', 'Ihre Ana Chakiri', 'Ihr Omar Haddad', 'Hochachtungsvoll Omar Haddad', 'Viele Grüße, Ana und Tim',
+    'Viele Grüße von Ana und Tim', 'Liebe Grüße, deine Freundin Ana', 'Grüße, deine Ana', 'Bis bald, eure Ana', 'Bis dann, Ihre Ana Chakiri'],
+  signatures: ['Viele Grüße, Ana\nP.S. Bring Kuchen mit!', 'Viele Grüße, Ana\nPS: Bring Kuchen mit!', 'Mit freundlichen Grüßen\nOmar Haddad\nTel. 0176 3344 5566',
+    'Mit freundlichen Grüßen\nOmar Haddad\n0176 3344 5566', 'Viele Grüße, Ana (Kurs A1)', 'Viele Grüße Ana :)', 'Viele Grüße, Ana 😊', 'Viele Grüße,\nAna',
+    'Viele Grüße, Ana.', 'Liebe Grüße, Ana!!!', 'LG, Ana', 'Lg Ana', 'MfG Omar', 'VG Ana', 'Viele Grüße\nAna Chakiri\nKurs A1.1', 'viele grüße, ana',
+    'deine ana', 'tschüss, ana', 'bis morgen, ana', 'Viele Grüße, Ana Chakiri, Zimmer 12'],
+};
+/** …and the ten that are not a Schlussformel — 0 of 10 green in round 22, and 0 still. */
+const REVIEW_22_NON_CLOSINGS = ['Ich freue mich, Ana', 'Ich grüße Tim. Ana', 'Grüße von Tim. Ana', 'Bis Samstag ist Ana krank.', 'Grüße Tim von mir!',
+  'Ich komme bis Samstag. Ana', 'Das ist alles. Ana', 'Tschüss sagt Tim.', 'Viele Grüße an Tim! Ana', 'Bis Samstag Ana Chakiri arbeitet.'];
+
+test('MAJOR 1 (round 23): the closing is a BLOCK — every pair of Wortfeld closings, joined by `und`, a comma or a mark, closes', () => {
+  // The German selector reaches L1 AND L12, and „Gute Nacht“ — which the `en` selector missed.
+  assert.ok(CLOSING_FORMULAS_DE.length >= 7, `${CLOSING_FORMULAS_DE.length} closings found in the Wortfeld`);
+  assert.ok(CLOSING_FORMULAS_DE.includes('Gute Nacht'), 'L1 „Gute Nacht“ is a closing');
+  assert.ok(CLOSING_FORMULAS_DE.some((f) => /^Bis morgen$/.test(f)) && CLOSING_FORMULAS_DE.some((f) => /^Bis später$/.test(f)), 'L1 and L12 both reached');
+  const gruss = (closing) => row(ANY_MITTEILUNG, `Hallo Lena! ${BODY_L4} ${closing}`, 'gruss');
+  for (const a of CLOSING_FORMULAS_DE) {
+    assert.equal(gruss(`${a}, Ana`), true, `„${a}, Ana“`);
+    assert.equal(gruss(`${a.toLowerCase()}, ana`), true, `„${a.toLowerCase()}, ana“ — no capital anywhere (Minor 39)`);
+    for (const b of CLOSING_FORMULAS_DE) {
+      if (a === b) continue;
+      // The two ways the course's own dialogues join them (L1: „Tschüss! Bis morgen.“, L12: „Mach's
+      // gut, Lena. Bis bald!“) and the two the learner writes („Tschüss und bis morgen“, „Tschüss, bis morgen“).
+      assert.equal(gruss(`${a} und ${b.charAt(0).toLowerCase()}${b.slice(1)}, Ana`), true, `„${a} und ${b}, Ana“`);
+      assert.equal(gruss(`${a}, ${b.charAt(0).toLowerCase()}${b.slice(1)}! Ana`), true, `„${a}, ${b}! Ana“`);
+      assert.equal(gruss(`${a}! ${b}. Ana`), true, `„${a}! ${b}. Ana“`);
+      // …and a pair in the MIDDLE of the text is still no closing.
+      assert.equal(row(ANY_MITTEILUNG, `Hallo Lena! ${a} und ${b}, Ana. ${BODY_L4}`, 'gruss'), false, `„${a} und ${b}“ mid-text`);
+    }
+  }
+});
+
+test('MAJOR 1 (round 23): `bis` + ANY time the course teaches closes — every weekday, every time of day, the clock, `dahin`', () => {
+  const gruss = (closing) => row(ANY_MITTEILUNG, `Hallo Lena! ${BODY_L4} ${closing}`, 'gruss');
+  const nouns = TIMES_OF_DAY.filter((w) => w.article).map((w) => w.word);
+  assert.ok(nouns.length >= 1, 'L8 teaches at least one time-of-day noun');
+  assert.equal(WEEKDAYS.length, 7);
+  for (const d of WEEKDAYS) {
+    for (const c of [`Bis ${d}`, `Bis ${d} um acht Uhr`, `Bis ${d} um halb neun`, `Bis zum ${d}`, ...nouns.flatMap((n) => [`Bis ${d}${n.toLowerCase()}`, `Bis ${d} ${n}`])]) {
+      assert.equal(gruss(`${c}, Ana`), true, `„${c}, Ana“`);
+      assert.equal(gruss(`${c}! Ana`), true, `„${c}! Ana“`);
+    }
+    // The weekday is a closing only at the head: „Ich komme bis Samstag.“ is a sentence.
+    assert.equal(gruss(`Ich komme bis ${d}. Ana`), false, `„Ich komme bis ${d}. Ana“`);
+  }
+  for (const adv of ['heute', 'morgen', 'übermorgen']) {
+    for (const c of [`Bis ${adv}`, `Bis ${adv} früh`, ...nouns.map((n) => `Bis ${adv} ${n}`), `Bis ${adv} um zehn Uhr`]) {
+      assert.equal(gruss(`${c}, Ana`), true, `„${c}, Ana“`);
+    }
+  }
+  for (const c of ['Bis dahin', 'Bis nachher', 'Bis später', 'Bis gleich', 'Bis bald', 'Bis dann', 'Bis zum Wochenende', 'Bis nächste Woche', 'Bis 15 Uhr', 'Bis drei Uhr']) {
+    assert.equal(gruss(`${c}, Ana`), true, `„${c}, Ana“`);
+  }
+});
+
+test('MAJOR 1 (round 23): the signature may carry contact lines — and the reviewer\'s 63 closings are 0 red, the 10 non-closings 0 green', () => {
+  const gruss = (closing) => row(ANY_MITTEILUNG, `Hallo Lena! ${BODY_L4} ${closing}`, 'gruss');
+  const all = Object.values(REVIEW_22_CLOSINGS).flat();
+  assert.equal(all.length, 63);
+  for (const c of all) assert.equal(gruss(c), true, `„${c.replace(/\n/g, '⏎')}“`);
+  for (const c of REVIEW_22_NON_CLOSINGS) assert.equal(gruss(c), false, `„${c}“ is no Gruß`);
+  // The L6 exam text with the number under the name: the Gruß AND the Telefonnummer are green.
+  const l6 = scoreWriting(formcheckTask(6), 'Sehr geehrte Frau Berg, ich brauche einen neuen Computer und ein Handy. Ich bin am Montag von neun bis zwölf Uhr im Büro. Mit freundlichen Grüßen\nOmar Haddad\nTel. 0176 3344 5566');
+  assert.deepEqual(l6.checks.filter((c) => !c.ok).map((c) => c.label), [], JSON.stringify(l6.checks));
+  // An appendix is a P.S., a phone or address line, an emoji line — and nothing else: a sentence
+  // after the signature is still a sentence.
+  for (const c of ['Viele Grüße, Ana\nMusterstraße 12, 28195 Bremen', 'Viele Grüße, Ana\n:)', 'Viele Grüße, Ana\nP.S. Bring Kuchen mit!\nUnd Musik!']) {
+    assert.equal(gruss(c), true, `„${c.replace(/\n/g, '⏎')}“`);
+  }
+  assert.equal(gruss('Viele Grüße, Ana\nIch komme um drei Uhr.'), false, 'a sentence under the name is not an appendix');
+  // Round 22's own pins hold: the reviewer's 30 closings of round 21, the control, „Dein“ without a name.
+  for (const g of REVIEW_21_CLOSINGS) assert.equal(gruss(g), true, g);
+  assert.equal(gruss('Ich freue mich, Ana'), false);
+  assert.equal(gruss('Das ist dein'), false);
+});
+
+test('MAJOR 2 (round 23): the Anrede is cut off before the form is read — „Guten morgen“ in the learner\'s spelling answers no Wann', () => {
+  const wannRow = (nr, text, label) => scoreWriting(formcheckTask(nr), text).checks.find((c) => c.label === label);
+  // The reviewer's four full exam texts without a time, all green in round 22.
+  const four = [
+    [10, 'Guten morgen Frau Berg, der Zug hat Verspätung und ich komme später ins Büro. Bitte beginnen Sie ohne mich und rufen Sie Herrn Weber an. Bis später, Ana', 'Wann Sie kommen'],
+    [6, 'Guten morgen Frau Berg, ich brauche einen neuen Computer und ein Handy. Meine Telefonnummer ist 0176 3344 5566. Ich bin nicht im Büro. Mit freundlichen Grüßen, Omar', 'Wann Sie im Büro sind'],
+    [4, 'Guten morgen Lena, ich bin auf dem Flohmarkt. Ich kaufe eine Lampe und einen Tisch. Die Lampe kostet fünf Euro, der Tisch zwanzig Euro. Ich komme später nach Hause. Liebe Grüße, Ana', 'Wann Sie kommen'],
+    [12, 'Guten morgen Lena, ich habe Geburtstag und ich feiere um acht Uhr bei mir. Bringst du bitte Musik und einen Salat mit? Ich freue mich auf dich! Viele Grüße, Ana', 'Tag und Uhrzeit'],
+  ];
+  for (const [nr, text, label] of four) {
+    const r = wannRow(nr, text, label);
+    assert.equal(r.ok, false, `L${nr} „${label}“ ← „${text.slice(0, 30)}…“ names no time`);
+    assert.equal(scoreWriting(formcheckTask(nr), text).checks.find((c) => c.key === 'anrede').ok, true, 'the Anrede row still reads „Guten morgen“');
+  }
+  // The five round-22 texts in all three spellings of the Anrede: still red.
+  const five = [
+    [10, 'Guten Morgen Frau Berg, der Zug hat Verspätung und ich komme später ins Büro. Bitte beginnen Sie ohne mich und rufen Sie Herrn Weber an. Bis später, Ana', 'Wann Sie kommen'],
+    [10, 'Guten Morgen Frau Berg, mein Bus kommt nicht. Ich komme später ins Büro, es tut mir leid. Bitte fangen Sie ohne mich an. Bis morgen, Ana', 'Wann Sie kommen'],
+    [6, 'Guten Morgen, Frau Berg! Ich brauche einen neuen Computer und ein Handy. Meine Telefonnummer ist 0176 3344 5566. Ich bin nicht im Büro. Mit freundlichen Grüßen, Omar', 'Wann Sie im Büro sind'],
+    [4, 'Guten Morgen Lena! Ich bin auf dem Flohmarkt. Ich kaufe eine Lampe und einen Tisch. Die Lampe kostet fünf Euro, der Tisch zwanzig Euro. Ich komme später nach Hause. Liebe Grüße, Ana', 'Wann Sie kommen'],
+    [10, 'Liebe Frau Berg, der Bus kommt heute nicht. Ich komme später ins Büro, es tut mir leid. Bitte fangen Sie ohne mich an. Viele Grüße, Ana', 'Wann Sie kommen'],
+  ];
+  for (const [nr, text, label] of five) {
+    for (const spelling of ['Guten Morgen', 'Guten morgen', 'guten morgen']) {
+      const t = text.replace('Guten Morgen', spelling);
+      assert.equal(wannRow(nr, t, label).ok, false, `L${nr} „${label}“ ← „${t.slice(0, 30)}…“`);
+    }
+  }
+  // The reviewer's isolated probes: the Anrede with a comma, a mark, no capital, a second Anrede,
+  // and „Guten Morgen“ as words inside a sentence.
+  for (const t of ['Guten morgen Frau Berg, ich komme später ins Büro.', 'Guten morgen Frau Berg! Ich komme später ins Büro.',
+    'guten morgen frau berg, ich komme später.', 'Hallo Lena, guten Morgen, ich komme später.', 'Ich sage Guten Morgen, ich komme später.']) {
+    assert.equal(leitpunktSatisfied('Wann Sie kommen', t), false, t);
+  }
+  assert.equal(leitpunktSatisfied('Wann Sie im Büro sind', 'Guten morgen Frau Berg, ich bin krank und nicht im Büro.'), false);
+  assert.equal(leitpunktSatisfied('Wann Sie im Büro sind', 'Guten morgen, Frau Berg! Ich brauche einen Computer. Ich bin heute nicht im Büro.'), false);
+  assert.equal(leitpunktSatisfied('Tag und Uhrzeit', 'Guten morgen Lena! Wir feiern um acht Uhr bei mir.'), false);
+  // The cut takes the Anrede and nothing of the sentence: the first clause after it still answers.
+  assert.equal(leitpunktSatisfied('Wann Sie kommen', 'Hallo Lena, ich komme um drei Uhr nach Hause.'), true);
+  assert.equal(leitpunktSatisfied('Ihr Name und Ihr Geburtsdatum', 'Hallo, ich bin Ana Chakiri. Ich bin am 3. Mai 1998 geboren.'), true, '„Hallo, ich bin …“ keeps its clause');
+  assert.equal(leitpunktSatisfied('Wann Sie kommen', 'Guten Morgen Frau Berg ich komme um zehn Uhr'), true, 'no mark after the Anrede: only the formula goes');
+  assert.deepEqual(openingCut('Sehr geehrte Damen und Herren, ich heiße Ana.'), { anrede: true, body: 'ich heiße Ana.' });
+  assert.deepEqual(openingCut('Guten Tag, Frau Berg! Ich brauche einen Computer.'), { anrede: true, body: 'Ich brauche einen Computer.' });
+});
+
+test('MAJOR 2 (round 23): the day words are read case-blind — „Ich komme Morgen.“, „Nachmittags“, „am nachmittag“ answer Wann', () => {
+  for (const t of ['Hallo Lena, ich komme Morgen.', 'Ich komme Morgen.', 'Ich komme Morgen um drei Uhr.', 'Ich komme Heute Nachmittag.', 'Ich komme am nachmittag.',
+    'Ich komme am abend.', 'Ich komme heute nachmittag.', 'Ich komme heute abend.', 'Ich komme Montag Abend.', 'Ich komme am Samstag Nachmittag.', 'Ich komme Übermorgen.']) {
+    assert.equal(leitpunktSatisfied('Wann Sie kommen', t), true, t);
+  }
+  assert.equal(leitpunktSatisfied('Wann Sie im Büro sind', 'Ich bin Nachmittags im Büro.'), true);
+  // The time-of-day loop of round 22, now in THREE spellings per Wortfeld entry — the test finds
+  // „Nachmittags“ before the reviewer does.
+  for (const w of TIMES_OF_DAY) {
+    const phrase = w.article ? `am ${w.word}` : w.word;
+    const cap = (s) => s.replace(/(^|\s)(\p{L})(?=\p{L}*$)/u, (m, sp, ch) => `${sp}${ch.toUpperCase()}`);
+    for (const p of new Set([phrase, phrase.toLowerCase(), cap(phrase)])) {
+      assert.equal(leitpunktSatisfied('Wann Sie kommen', `Ich komme ${p}.`), true, `Ich komme ${p}.`);
+      assert.equal(leitpunktSatisfied('Wann Sie im Büro sind', `Ich bin ${p} im Büro.`), true, `Ich bin ${p} im Büro.`);
+      assert.equal(leitpunktSatisfied('Tag und Uhrzeit', `Wir feiern ${p} um acht Uhr.`), false, `„${p}“ is no Tag`);
+    }
+  }
+  // …and the weekdays in both cases, on the Mitteilung and on the form.
+  const tag = (v) => scoreWriting({ kind: 'formular', fields: ['Tag'] }, { Tag: v }).ok;
+  for (const d of WEEKDAYS) {
+    for (const v of [d, d.toLowerCase(), `${d}abend`]) assert.equal(leitpunktSatisfied('Wann Sie kommen', `Ich komme am ${v}.`), true, v);
+    assert.equal(tag(d.toLowerCase()), true, d);
+  }
+  for (const v of ['Morgen', 'morgen', 'Heute', 'Übermorgen']) assert.equal(tag(v), true, v);
+  // „Guten Morgen“ is a greeting wherever it stands — on the form and in the text.
+  for (const v of ['Guten Morgen', 'guten morgen', 'Guten morgen']) assert.equal(tag(v), false, v);
+  for (const t of ['Ich komme bald.', 'Ich komme später.', 'Guten Morgen! Ich komme.', 'guten morgen! ich komme.', 'Der Bus kommt heute nicht.', 'Ich komme heute nicht.']) {
+    assert.equal(leitpunktSatisfied('Wann Sie kommen', t), false, t);
+  }
+});
+
+test('Minors 39 and 40 (round 23): the Anrede has no case rule, „Liebe alle“ opens, and a header line before it is skipped', () => {
+  const anrede = (opening) => row(ANY_MITTEILUNG, `${opening} ${BODY_L4} Viele Grüße, Ana`, 'anrede');
+  // Every opening formula of the Wortfeld in three spellings.
+  for (const f of OPENING_FORMULAS) {
+    for (const o of [`${f} Lena,`, `${f.toLowerCase()} lena,`, `${f.toUpperCase()} LENA!`]) assert.equal(anrede(o), true, o);
+  }
+  for (const o of ['liebe lena,', 'lieber tim,', 'hallo lena,', 'guten tag frau berg,', 'sehr geehrte frau berg,', 'LIEBE LENA,', 'HALLO LENA!', 'Liebe alle,',
+    'Liebe Kolleginnen und Kollegen,', 'Hallo ihr Lieben,', 'Liebes Team,', 'Liebe Frau Dr. Berg,', 'Lieber Herr Weber,', 'Hallo, liebe Lena!', 'Liebe Lena, lieber Tim,',
+    'Guten Morgen Lena,', 'Guten Tag!', 'Hallo Frau Berg, guten Morgen!', 'Liebe Lena!', 'Liebe Lena']) {
+    assert.equal(anrede(o), true, o);
+  }
+  // A place and date, a Betreff, an addressee — the letter form some courses teach — before the Anrede.
+  for (const o of ['Bremen, 12.5.2026\nLiebe Lena,', '12.05.2026\nHallo Lena,', 'Bremen, den 12. Mai\nLiebe Lena,', 'Betreff: Verspätung\nGuten Morgen Frau Berg,',
+    'An Frau Berg\nGuten Tag,', 'Montag\nHallo Lena,', 'Nachricht für Lena\nHallo Lena!', 'Hallo Lena!\n\n']) {
+    assert.equal(anrede(o), true, o.replace(/\n/g, '⏎'));
+  }
+  // …and the header's date is not the text's: L12 „Tag und Uhrzeit“ stays red without a day in the body.
+  assert.equal(leitpunktSatisfied('Tag und Uhrzeit', 'Bremen, 12.5.2026\nLiebe Lena, wir feiern um acht Uhr bei mir.'), false);
+  // No Anrede: a bare name, a colon, a sentence, the adverb, „Liebe Grüße“ — the reviewer's eight.
+  for (const o of ['Ana hier.', 'Ich bin Ana.', 'Lena,', 'Frau Berg,', 'Für Lena:', 'Liebe Grüße!', 'Ich habe eine Frage, liebe Lena.', 'Danke, Lena!']) {
+    assert.equal(anrede(o), false, o);
+  }
+  // A four-word SENTENCE is not a header: the L2 fixture without an Anrede keeps its first sentence.
+  assert.equal(leitpunktSatisfied('Ihr Name und Ihr Geburtsdatum', 'Ich heiße Ana Chakiri. Ich bin am 3.5.1998 geboren.'), true);
+  // The whole exam text without a capital: every form row green.
+  const lower = scoreWriting(formcheckTask(4), 'hallo lena! ich bin auf dem flohmarkt und kaufe eine lampe und einen tisch. die lampe kostet fünf euro, der tisch zwanzig euro. ich komme um drei uhr nach hause. viele grüße, ana');
+  assert.deepEqual(lower.checks.filter((c) => !c.ok).map((c) => c.label), [], JSON.stringify(lower.checks));
+});
+
+test('Minors 41 and 42 (round 23): `mein`/`mich`/`mir` are the writer, `gegen drei` is a clock, and the negation is per clause — `sondern` splits', () => {
+  for (const t of ['Mein Zug ist erst um zehn Uhr in Bremen.', 'Mein Bus kommt erst um zehn Uhr.', 'Ich komme gegen drei.', 'Ich komme gegen 15 Uhr.', 'Ich komme so gegen drei Uhr.',
+    'Ich komme nicht um neun sondern um zehn Uhr.', 'Ich komme nicht um neun Uhr, sondern um zehn Uhr.', 'Ich bin nicht um neun, sondern erst um zehn Uhr im Büro.',
+    'Ich komme um zehn Uhr nicht mit dem Zug, sondern mit dem Bus.', 'Kein Problem: ich komme um zehn Uhr.', 'Keine Sorge, ich komme um zehn Uhr.',
+    'Ich komme leider nicht um zehn Uhr, ich komme um zwölf Uhr.', 'Ich komme heute nicht, morgen um zehn Uhr.', 'Ich bin nicht vor zehn Uhr im Büro.',
+    'Ich komme nicht später als zehn Uhr.', 'Ich komme um zehn Uhr, nicht früher.']) {
+    assert.equal(leitpunktSatisfied('Wann Sie kommen', t), true, t);
+  }
+  for (const t of ['Sie können mich von neun bis zwölf Uhr anrufen.', 'Sie erreichen mich von neun bis zwölf Uhr im Büro.', 'Mein Büro ist von neun bis zwölf Uhr offen.',
+    'Ich bin heute nicht im Büro, aber morgen.', 'Ich bin heute nicht im Büro. Morgen bin ich wieder da.']) {
+    assert.equal(leitpunktSatisfied('Wann Sie im Büro sind', t), true, t);
+  }
+  // Still red: a denied time with no contrast, someone else's time, no time.
+  for (const t of ['Ich komme heute nicht.', 'Der Bus kommt heute nicht.', 'Ich kann heute nicht kommen.', 'Der Termin ist um zehn Uhr.', 'Ich komme später.']) {
+    assert.equal(leitpunktSatisfied('Wann Sie kommen', t), false, t);
+  }
+  assert.equal(leitpunktSatisfied('Wann Sie im Büro sind', 'Ich bin heute nicht im Büro.'), false);
+});
+
+test('Minor 38 (round 23): the checklist stands live under the text before submission, and its KI rows say „prüft die KI“', () => {
+  const src = readFileSync(join(ROOT, 'src/components/lesson/GradedWriting.jsx'), 'utf8');
+  // One component renders both moments; the live one is mounted while `!done`, with the standard's wording.
+  assert.match(src, /live: 'prüft die KI'/);
+  assert.match(src, /\{!done && check\.checks\.length > 0 && \([^]*?<Checklist checks=\{check\.checks\} mode="live"/);
+  // Live, an `ai` row is decided by the KI after submission; the fallback says the KI did not run.
+  assert.match(src, /mode === 'fallback' \? AI_ROW_LABEL\.fallback/);
+  // The FernUSG line stands under the live list too: a form check is not a correction.
+  assert.match(src, /Formcheck: nur die Form/);
 });
