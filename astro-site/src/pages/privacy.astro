@@ -1,112 +1,226 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import '../styles/global.css';
+import { LEGAL, isPrivacyReleaseReady } from '../data/legal.js';
 
-// DRAFT legal page — replaces the 404 the cookie banner used to link to.
-// The owner must review this text (ideally with legal counsel) before
-// removing the noindex flag and the draft notice below.
-//
-// Prose page on the Playful Depth system: flat, calm, token typography.
 const LINK = 'font-bold text-siegel underline decoration-siegel/40 underline-offset-2 transition-colors hover:text-siegel-deep';
 const H2 = 'mb-2 font-display text-[1.25rem] font-semibold leading-snug text-ink';
+const fact = (value, placeholder) => value || `[${placeholder}]`;
+const controllerAddress = [
+  LEGAL.operator.street,
+  [LEGAL.operator.postalCode, LEGAL.operator.city].filter(Boolean).join(' '),
+  LEGAL.operator.country,
+].filter(Boolean).join(', ');
 ---
 
 <Layout
   title="Privacy Policy — DeutschMeister"
-  description="How DeutschMeister handles your data: accounts, analytics cookies, payments, and emails."
+  description="How DeutschMeister handles account, learning, AI, analytics, payment, and email data."
   canonical="https://deutsch-meister.de/privacy/"
-  noindex={true}
+  noindex={!isPrivacyReleaseReady}
+  lang="en"
 >
   <div class="bg-paper text-ink">
     <div class="mx-auto max-w-prose px-5 py-12 sm:py-16">
-      <p class="mb-8 rounded-clay border border-accent-aprikose-edge bg-accent-aprikose-wash px-4 py-3 text-sm leading-relaxed text-accent-aprikose-ink">
-        <strong>Draft:</strong> this policy is a factual summary of the services this
-        site uses and is pending legal review. Contact us with any questions.
-      </p>
+      {!isPrivacyReleaseReady && (
+        <p class="mb-8 rounded-clay border border-accent-aprikose-edge bg-accent-aprikose-wash px-4 py-3 text-sm leading-relaxed text-accent-aprikose-ink">
+          <strong>Draft — not legally approved:</strong> this page describes the data
+          flows visible in the product and repository. The controller details,
+          production-service inventory, retention decisions, and legal review still
+          require operator evidence. The page remains excluded from search until then.
+        </p>
+      )}
 
       <header class="reveal mb-8">
         <h1 class="font-display text-[2.125rem] font-semibold leading-tight tracking-[-0.018em] text-ink sm:text-[2.5rem]">Privacy Policy</h1>
-        <p class="mt-3 font-data text-[0.8125rem] text-graphite">Last updated: August 2026 · Applies to deutsch-meister.de</p>
+        <p class="mt-3 font-data text-[0.8125rem] text-graphite">
+          Last updated: 14 September 2026 · Applies to deutsch-meister.de
+        </p>
       </header>
 
       <div class="space-y-8 text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
         <section>
-          <h2 class={H2}>Who we are</h2>
+          <h2 class={H2}>1. Controller and contact</h2>
           <p>
+            Controller: {fact(LEGAL.operator.name, 'full legal name of the controller')}<br />
+            Address: {fact(controllerAddress, 'street, postal code, city, country')}<br />
+            Privacy email: <a href={`mailto:${LEGAL.operator.email}`} class={LINK}>{LEGAL.operator.email}</a>
+          </p>
+          <p class="mt-3">
             DeutschMeister is an online German-learning platform at
             <a href="https://deutsch-meister.de/" class={LINK}>deutsch-meister.de</a>.
-            For any privacy request (access, correction, deletion), email
-            <a href="mailto:zaid@deutsch-meister.de" class={LINK}>zaid@deutsch-meister.de</a>.
           </p>
         </section>
 
         <section>
-          <h2 class={H2}>What we store when you create an account</h2>
+          <h2 class={H2}>2. Processing at a glance</h2>
+          <div class="grid gap-3 sm:grid-cols-2">
+            <article class="rounded-clay border border-rule bg-white p-4">
+              <h3 class="font-semibold text-ink">Account and learning</h3>
+              <p class="mt-1 text-sm">Email, authentication identifiers, progress, answers, and saved learning state to provide the service.</p>
+              <p class="mt-2 text-sm"><strong class="text-ink">Proposed basis:</strong> contract or requested pre-contract steps; operator confirmation required.</p>
+            </article>
+            <article class="rounded-clay border border-rule bg-white p-4">
+              <h3 class="font-semibold text-ink">AI learning tools</h3>
+              <p class="mt-1 text-sm">Sentences, transcripts, and task context to return analysis, speaking, writing, or answer feedback.</p>
+              <p class="mt-2 text-sm"><strong class="text-ink">Proposed basis:</strong> providing the requested feature; operator confirmation required.</p>
+            </article>
+            <article class="rounded-clay border border-rule bg-white p-4">
+              <h3 class="font-semibold text-ink">Analytics</h3>
+              <p class="mt-1 text-sm">Online identifiers and usage events to understand and improve the product.</p>
+              <p class="mt-2 text-sm"><strong class="text-ink">Basis:</strong> consent; optional analytics are not loaded before acceptance.</p>
+            </article>
+            <article class="rounded-clay border border-rule bg-white p-4">
+              <h3 class="font-semibold text-ink">Payments</h3>
+              <p class="mt-1 text-sm">Order, customer, and entitlement metadata to process purchases and unlock access.</p>
+              <p class="mt-2 text-sm"><strong class="text-ink">Proposed basis:</strong> contract and accounting obligations; final review required.</p>
+            </article>
+            <article class="rounded-clay border border-rule bg-white p-4 sm:col-span-2">
+              <h3 class="font-semibold text-ink">Emails</h3>
+              <p class="mt-1 text-sm">Email address and delivery events for account messages and opted-in learning emails.</p>
+              <p class="mt-2 text-sm"><strong class="text-ink">Proposed basis:</strong> service delivery or consent, depending on the message.</p>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <h2 class={H2}>3. Hosting and technical delivery</h2>
           <p>
-            Accounts, learning progress, speaking-practice transcripts and evaluations,
-            and subscription status are stored with
-            <a href="https://supabase.com/privacy" class={LINK} rel="noopener">Supabase</a>
-            (our database and authentication provider). We store your email address,
-            the learning data you generate, and — if you use the AI speaking practice —
-            text transcripts of your practice conversations. Audio recordings are
-            processed to generate those transcripts and are not kept.
+            The website and server functions are delivered through Netlify. Hosting
+            providers necessarily process technical request data such as IP address,
+            time, requested URL, browser information, and error/security logs so the
+            site can be delivered and protected. The exact production log retention
+            and transfer settings still require verification in the operator account.
           </p>
         </section>
 
         <section>
-          <h2 class={H2}>AI features</h2>
+          <h2 class={H2}>4. Accounts and learning records</h2>
           <p>
-            The speaking practice and Sentence X-Ray features send your input
-            (speech transcripts or sentences you type) to AI providers —
-            Anthropic (Claude) and OpenAI (speech-to-text and text-to-speech) —
-            to generate responses and feedback. These requests are made from our
-            servers; your account password and payment details are never shared
-            with AI providers.
+            Supabase provides authentication and database services. We process the
+            email address and authentication identifiers associated with an account,
+            plus learning progress, submitted answers, saved vocabulary, and access
+            status generated while the service is used. Read
+            <a href="https://supabase.com/privacy" class={LINK} rel="noopener">Supabase’s privacy information</a>.
           </p>
         </section>
 
         <section>
-          <h2 class={H2}>Cookies and analytics</h2>
+          <h2 class={H2}>5. AI features</h2>
           <p>
-            Analytics cookies load <strong>only after you accept</strong> the cookie
-            banner. We use Google Analytics 4 and PostHog to understand how the site
-            is used. If you decline, no analytics scripts are loaded. You can change
-            your choice at any time — declining or clearing your browser storage
-            resets the banner.
+            When you actively use Sentence X-Ray, AI speaking, writing evaluation, or
+            AI answer explanations, the text you submit and the context needed to
+            answer it are sent from our servers to the relevant AI provider. The
+            repository currently integrates Anthropic for language feedback and OpenAI
+            for speech processing. Account passwords and card details are not part of
+            these requests. Speaking audio is processed to create a transcript; the
+            product is designed to keep the transcript and evaluation, not the audio file.
+          </p>
+          <p class="mt-3">
+            Do not enter sensitive personal information into learning prompts. Provider
+            account settings, retention, and international-transfer safeguards must be
+            verified before this draft is approved.
           </p>
         </section>
 
         <section>
-          <h2 class={H2}>Payments</h2>
+          <h2 class={H2}>6. Optional analytics and your choice</h2>
           <p>
-            Subscriptions are processed by
-            <a href="https://www.lemonsqueezy.com/privacy" class={LINK} rel="noopener">Lemon Squeezy</a>
-            as merchant of record. We never see or store your card details; we
-            receive your subscription status and order metadata to unlock your access.
+            Google Analytics 4 and PostHog are optional. Their scripts load only after
+            you choose “Accept” in the consent banner. If you decline, the product does
+            not initialize those analytics tools. The preference itself is saved in
+            your browser’s local storage as <code>dm_cookie_consent</code> so the site
+            can remember your choice.
+          </p>
+          <button
+            id="manage-cookie-consent"
+            type="button"
+            class="mt-4 rounded-full border border-siegel px-4 py-2 text-sm font-bold text-siegel transition-colors hover:bg-siegel hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-siegel focus-visible:ring-offset-2"
+          >
+            Review or withdraw analytics consent
+          </button>
+          <p id="cookie-consent-status" class="mt-2 text-sm" aria-live="polite"></p>
+        </section>
+
+        <section>
+          <h2 class={H2}>7. Payments</h2>
+          <p>
+            Lemon Squeezy acts as merchant of record for paid access. Payment details
+            are entered with Lemon Squeezy; DeutschMeister receives order, customer,
+            subscription, and entitlement metadata needed to grant or remove access.
+            Read <a href="https://www.lemonsqueezy.com/privacy" class={LINK} rel="noopener">Lemon Squeezy’s privacy information</a>.
           </p>
         </section>
 
         <section>
-          <h2 class={H2}>Emails</h2>
+          <h2 class={H2}>8. Email</h2>
           <p>
-            We send account emails and, if you opted in, a daily practice sentence via
-            <a href="https://resend.com/legal/privacy-policy" class={LINK} rel="noopener">Resend</a>.
-            Every non-essential email contains an unsubscribe link, and you can opt
-            out at any time from your profile.
+            Resend delivers account and service messages and, where requested, learning
+            emails. Optional messages include an unsubscribe path. Read
+            <a href="https://resend.com/legal/privacy-policy" class={LINK} rel="noopener">Resend’s privacy information</a>.
           </p>
         </section>
 
         <section>
-          <h2 class={H2}>Your rights</h2>
+          <h2 class={H2}>9. Recipients and international transfers</h2>
           <p>
-            Under the GDPR you can request access to, correction of, or deletion of
-            your personal data, and you can withdraw consent for analytics at any
-            time. Email
-            <a href="mailto:zaid@deutsch-meister.de" class={LINK}>zaid@deutsch-meister.de</a>
-            and we will respond within 30 days.
+            The service is designed to send the named providers only the information needed for
+            their role. Some providers operate from or use infrastructure outside the
+            European Economic Area. The operator must verify each production account’s
+            processing region, data-processing agreement, subprocessors, and applicable
+            transfer safeguards before legal approval. The repository contains no
+            feature for selling personal data; the operator must confirm that statement.
+          </p>
+        </section>
+
+        <section>
+          <h2 class={H2}>10. Retention and deletion</h2>
+          <p>
+            Account and learning information is kept while it is needed to provide the
+            account and is deleted or anonymized after a valid deletion request, unless
+            a legal obligation requires specific records to be retained. Purchase and
+            accounting records may need to be retained for statutory periods. Analytics
+            and provider-specific retention settings still require operator verification;
+            no exact period is claimed in this draft until that evidence is recorded.
+          </p>
+        </section>
+
+        <section>
+          <h2 class={H2}>11. Your data-protection rights</h2>
+          <p>
+            Depending on the circumstances, you may request access, correction,
+            deletion, restriction, or portability of your personal data, and object to
+            certain processing. You may withdraw consent at any time without affecting
+            processing that was lawful before withdrawal. Email
+            <a href={`mailto:${LEGAL.operator.email}`} class={LINK}>{LEGAL.operator.email}</a>.
+            We respond without undue delay and normally within one month; identity may
+            need to be confirmed before account data is disclosed or deleted.
+          </p>
+          <p class="mt-3">
+            You also have the right to complain to a competent data-protection
+            supervisory authority. The locally competent authority depends on the
+            controller address that is still missing from this draft.
+          </p>
+        </section>
+
+        <section>
+          <h2 class={H2}>12. Changes to this notice</h2>
+          <p>
+            This notice will be updated when data uses, providers, or legal requirements
+            change. Material changes will be communicated in an appropriate way. The
+            effective date will be recorded when the controller facts and legal review
+            are complete.
           </p>
         </section>
       </div>
     </div>
   </div>
+
+  <script is:inline>
+    document.getElementById('manage-cookie-consent')?.addEventListener('click', () => {
+      window.dmCookieConsent?.manage();
+      const status = document.getElementById('cookie-consent-status');
+      if (status) status.textContent = 'Analytics is paused. Choose Accept or Decline in the open consent panel.';
+    });
+  </script>
 </Layout>

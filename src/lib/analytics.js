@@ -22,8 +22,12 @@ function hasConsent() {
 }
 
 export async function initAnalytics() {
-  if (typeof window === 'undefined' || !key || initialized) return;
+  if (typeof window === 'undefined' || !key) return;
   if (!hasConsent()) return;
+  if (initialized) {
+    posthog?.opt_in_capturing?.();
+    return;
+  }
   if (loading) return loading;
 
   loading = import('posthog-js')
@@ -60,4 +64,10 @@ export function track(event, props) {
 export function resetAnalytics() {
   if (!initialized || !posthog) return;
   posthog.reset();
+}
+
+export function withdrawAnalytics() {
+  if (!initialized || !posthog) return;
+  posthog.reset();
+  posthog.opt_out_capturing?.();
 }

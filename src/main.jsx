@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
 import ErrorBoundary from './components/ErrorBoundary';
 import App from './App';
-import { initAnalytics } from './lib/analytics';
+import { initAnalytics, withdrawAnalytics } from './lib/analytics';
 import './utils/i18n';
 import './index.css';
 
@@ -11,6 +11,7 @@ import './index.css';
 // dm-consent-accepted when they do (possibly long after page load).
 initAnalytics();
 window.addEventListener('dm-consent-accepted', initAnalytics);
+window.addEventListener('dm-consent-declined', withdrawAnalytics);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

@@ -1,28 +1,36 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import '../styles/global.css';
+import { LEGAL, isLegalReleaseReady } from '../data/legal.js';
 
-// DRAFT Impressum — §5 TMG/DDG requires the operator's full name and a
+// DRAFT Impressum — §5 DDG requires the operator's full name and a
 // ladungsfähige Anschrift (street address). The owner must fill in the
 // placeholders below before removing the noindex flag.
 //
 // Prose page on the Playful Depth system: flat, calm, token typography.
 const LINK = 'font-bold text-siegel underline decoration-siegel/40 underline-offset-2 transition-colors hover:text-siegel-deep';
 const H2 = 'mb-2 font-display text-[1.25rem] font-semibold leading-snug text-ink';
+const fact = (value, placeholder) => value || `[${placeholder}]`;
+const operatorAddress = [
+  LEGAL.operator.street,
+  [LEGAL.operator.postalCode, LEGAL.operator.city].filter(Boolean).join(' '),
+  LEGAL.operator.country,
+].filter(Boolean).join(', ');
 ---
 
 <Layout
   title="Impressum — DeutschMeister"
   description="Impressum und Anbieterkennzeichnung für deutsch-meister.de."
   canonical="https://deutsch-meister.de/impressum/"
-  noindex={true}
+  noindex={!isLegalReleaseReady}
   lang="de"
 >
   <div class="bg-paper text-ink">
     <div class="mx-auto max-w-prose px-5 py-12 sm:py-16">
       <p class="mb-8 rounded-clay border border-accent-aprikose-edge bg-accent-aprikose-wash px-4 py-3 text-sm leading-relaxed text-accent-aprikose-ink">
-        <strong>Entwurf:</strong> Die mit [&nbsp;] markierten Angaben müssen vor
-        Veröffentlichung vom Betreiber ergänzt werden.
+        <strong>Entwurf — nicht freigegeben:</strong> Die mit [&nbsp;] markierten
+        Angaben müssen aus den Unterlagen des Betreibers ergänzt und rechtlich
+        geprüft werden. Diese Seite bleibt bis dahin von Suchmaschinen ausgeschlossen.
       </p>
 
       <header class="reveal mb-8">
@@ -33,31 +41,78 @@ const H2 = 'mb-2 font-display text-[1.25rem] font-semibold leading-snug text-ink
         <section>
           <h2 class={H2}>Angaben gemäß § 5 DDG</h2>
           <p>
-            [Vollständiger Name des Betreibers]<br />
-            [Straße und Hausnummer]<br />
-            [PLZ und Ort]<br />
-            [Land]
+            {fact(LEGAL.operator.name, 'Vollständiger Name des Betreibers')}
+            {LEGAL.operator.legalForm && `, ${LEGAL.operator.legalForm}`}<br />
+            {LEGAL.operator.representative && <>Vertreten durch: {LEGAL.operator.representative}<br /></>}
+            {fact(LEGAL.operator.street, 'Straße und Hausnummer')}<br />
+            {fact([LEGAL.operator.postalCode, LEGAL.operator.city].filter(Boolean).join(' '), 'PLZ und Ort')}<br />
+            {fact(LEGAL.operator.country, 'Land')}
           </p>
         </section>
 
         <section>
           <h2 class={H2}>Kontakt</h2>
           <p>
-            E-Mail: <a href="mailto:zaid@deutsch-meister.de" class={LINK}>zaid@deutsch-meister.de</a>
+            E-Mail: <a href={`mailto:${LEGAL.operator.email}`} class={LINK}>{LEGAL.operator.email}</a>
+            {LEGAL.operator.phone && <><br />Telefon: {LEGAL.operator.phone}</>}
           </p>
         </section>
 
+        {(LEGAL.operator.registerApplies || LEGAL.operator.vatIdApplies) && (
+          <section>
+            <h2 class={H2}>Register- und Steuerangaben</h2>
+            <p>
+              {LEGAL.operator.registerName && <>Register: {LEGAL.operator.registerName}<br /></>}
+              {LEGAL.operator.registerNumber && <>Registernummer: {LEGAL.operator.registerNumber}<br /></>}
+              {LEGAL.operator.vatId && <>Umsatzsteuer-ID: {LEGAL.operator.vatId}</>}
+            </p>
+          </section>
+        )}
+
+        {LEGAL.operator.licensedActivityApplies && (
+          <section>
+            <h2 class={H2}>Aufsichtsbehörde</h2>
+            <p>{LEGAL.operator.supervisoryAuthority}</p>
+          </section>
+        )}
+
+        {LEGAL.operator.regulatedProfessionApplies && (
+          <section>
+            <h2 class={H2}>Berufsrechtliche Angaben</h2>
+            <p>
+              Kammer: {LEGAL.operator.chamber}<br />
+              Berufsbezeichnung: {LEGAL.operator.professionalTitle}<br />
+              Verliehen in: {LEGAL.operator.professionalTitleCountry}<br />
+              Berufsrechtliche Regelungen: <a href={LEGAL.operator.professionalRulesUrl} class={LINK} rel="noopener">{LEGAL.operator.professionalRulesUrl}</a>
+            </p>
+          </section>
+        )}
+
         <section>
-          <h2 class={H2}>Verantwortlich für den Inhalt</h2>
-          <p>[Name, Anschrift wie oben]</p>
+          <h2 class={H2}>Redaktionell verantwortlich</h2>
+          {LEGAL.editorial.applies === false ? (
+            <p>Für dieses Angebot wurde nach Prüfung keine gesonderte redaktionelle Verantwortlichkeit angegeben.</p>
+          ) : (
+            <p>
+              {fact(LEGAL.editorial.responsibleName, 'Anwendbarkeit prüfen und verantwortliche Person eintragen')}<br />
+              {LEGAL.editorial.sameAddressAsOperator
+                ? fact(operatorAddress, 'Anschrift wie oben')
+                : fact(LEGAL.editorial.address, 'Anschrift der verantwortlichen Person')}
+            </p>
+          )}
         </section>
 
         <section>
-          <h2 class={H2}>Streitschlichtung</h2>
+          <h2 class={H2}>Verbraucherstreitbeilegung</h2>
           <p>
             Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor
             einer Verbraucherschlichtungsstelle teilzunehmen.
           </p>
+          {!LEGAL.disputeResolution.employeeCountVerifiedAt && (
+            <p class="mt-2 text-sm text-accent-aprikose-ink">
+              [Die Voraussetzungen und die Beschäftigtenzahl zum Vorjahresende müssen vom Betreiber bestätigt werden.]
+            </p>
+          )}
         </section>
       </div>
     </div>

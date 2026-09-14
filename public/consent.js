@@ -23,10 +23,24 @@
     try { window.localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
   }
 
+  function setAnalyticsPermission(allowed) {
+    // GA honours this flag even after its script has loaded. The consent event
+    // lets the SPA stop or restart PostHog in the same browsing session.
+    window['ga-disable-' + GA_ID] = !allowed;
+    if (window.gtag) {
+      window.gtag('consent', 'update', {
+        analytics_storage: allowed ? 'granted' : 'denied'
+      });
+    }
+    try {
+      window.dispatchEvent(new CustomEvent(allowed ? 'dm-consent-accepted' : 'dm-consent-declined'));
+    } catch { /* ignore */ }
+  }
+
   // Inject GA4 exactly once. Also notifies the SPA (dm-consent-accepted) so
   // consent-gated tools like PostHog can start without a page reload.
   function loadAnalytics() {
-    try { window.dispatchEvent(new CustomEvent('dm-consent-accepted')); } catch { /* ignore */ }
+    setAnalyticsPermission(true);
     if (window.__dmGaLoaded) return;
     window.__dmGaLoaded = true;
     var s = document.createElement('script');
@@ -38,6 +52,10 @@
     window.gtag = gtag;
     gtag('js', new Date());
     gtag('config', GA_ID);
+  }
+
+  function declineAnalytics() {
+    setAnalyticsPermission(false);
   }
 
   function removeBanner() {
@@ -85,7 +103,11 @@
       'background:#0F766E;color:#fff;font-weight:700;font-size:14px';
 
     accept.addEventListener('click', function () { saveChoice('accepted'); loadAnalytics(); removeBanner(); });
-    decline.addEventListener('click', function () { saveChoice('declined'); removeBanner(); });
+    decline.addEventListener('click', function () {
+      saveChoice('declined');
+      declineAnalytics();
+      removeBanner();
+    });
 
     btns.appendChild(decline);
     btns.appendChild(accept);
@@ -98,7 +120,7 @@
   function init() {
     var choice = readChoice();
     if (choice === 'accepted') { loadAnalytics(); return; }
-    if (choice === 'declined') { return; }
+    if (choice === 'declined') { declineAnalytics(); return; }
     showBanner();
   }
 
@@ -106,8 +128,9 @@
   // Privacy page) can re-open or change the choice later.
   window.dmCookieConsent = {
     accept: function () { saveChoice('accepted'); loadAnalytics(); removeBanner(); },
-    decline: function () { saveChoice('declined'); removeBanner(); },
-    reset: function () { clearChoice(); showBanner(); }
+    decline: function () { saveChoice('declined'); declineAnalytics(); removeBanner(); },
+    reset: function () { clearChoice(); showBanner(); },
+    manage: function () { declineAnalytics(); clearChoice(); showBanner(); }
   };
 
   if (document.readyState === 'loading') {
