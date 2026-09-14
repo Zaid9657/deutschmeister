@@ -143,6 +143,6 @@ test('the migration never widens the topic_order CHECK (EXTEND mode never emits 
 
 test('the rule patch UPDATE is guarded on the OLD content value, not IS DISTINCT FROM', () => {
   const sql = readFileSync(join(ROOT, 'migrations', '2026-09-05-a1-typed-production.sql'), 'utf8');
-  const match = sql.match(/UPDATE public\.grammar_rules SET content = .*\nWHERE id = '125e153e-258b-4337-bbad-b6b20d1997bd'::uuid AND content = (.*)::jsonb;/);
+  const match = sql.match(/UPDATE public\.grammar_rules SET content = .*\r?\nWHERE id = '125e153e-258b-4337-bbad-b6b20d1997bd'::uuid AND content = (.*)::jsonb;/);
   assert.ok(match, 'expected a guarded UPDATE on the numbers-counting Quick Reference rule (id 125e153e-...)');
 });

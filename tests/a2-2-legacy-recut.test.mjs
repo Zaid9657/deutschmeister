@@ -34,8 +34,8 @@ const TABLES = { grammar_rules: 'rules', grammar_examples: 'examples', grammar_e
 
 const unq = (s) => s.replace(/''/g, "'");
 // UPDATE public.<table>\nSET <field> = <lit>\nWHERE id = '<uuid>'::uuid\n  AND <guard>;
-const UPDATE_RE = /UPDATE public\.(grammar_rules|grammar_examples|grammar_exercises)\nSET (\w+) = ('((?:[^']|'')*)'(::jsonb)?|NULL)\nWHERE id = '([0-9a-f-]{36})'::uuid\n {2}AND (\w+) (?:= '(?:[^']|'')*'(?:::jsonb)?|IS NULL);/g;
-const WORDS_RE = /UPDATE public\.words\nSET level = '([a-z0-9.]+)'\nWHERE id = '([0-9a-f-]{36})'::uuid AND level = '([a-z0-9.]+)' AND german = '((?:[^']|'')*)';/g;
+const UPDATE_RE = /UPDATE public\.(grammar_rules|grammar_examples|grammar_exercises)\r?\nSET (\w+) = ('((?:[^']|'')*)'(::jsonb)?|NULL)\r?\nWHERE id = '([0-9a-f-]{36})'::uuid\r?\n {2}AND (\w+) (?:= '(?:[^']|'')*'(?:::jsonb)?|IS NULL);/g;
+const WORDS_RE = /UPDATE public\.words\r?\nSET level = '([a-z0-9.]+)'\r?\nWHERE id = '([0-9a-f-]{36})'::uuid AND level = '([a-z0-9.]+)' AND german = '((?:[^']|'')*)';/g;
 
 const grammarUpdates = [...sql.matchAll(UPDATE_RE)].map((m) => ({
   table: m[1], field: m[2], raw: m[3], value: m[4], jsonb: !!m[5], id: m[6], guardField: m[7],
@@ -118,7 +118,7 @@ test('the words UPDATEs move rows out of a2.2 only, to b1.1/b1.2/b2.1, and touch
     assert.equal(w.oldLevel, 'a2.2', `${w.german}: only a2.2 rows move`);
     assert.ok(['b1.1', 'b1.2', 'b2.1'].includes(w.newLevel), `${w.german}: ${w.newLevel} is not an allowed target`);
   }
-  assert.ok(!/UPDATE public\.words\nSET (?!level = )/.test(sql), 'words UPDATEs may change level only');
+  assert.ok(!/UPDATE public\.words\r?\nSET (?!level = )/.test(sql), 'words UPDATEs may change level only');
   const ids = wordUpdates.map((w) => w.id);
   assert.equal(new Set(ids).size, ids.length, 'a word row is re-levelled at most once');
 });

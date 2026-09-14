@@ -36,7 +36,7 @@ test('weekly_metrics is service-role only and the metrics function is not client
 
 test('the function stores before it emails and fails closed without keys', () => {
   const fn = read('netlify/functions/weekly-truth.mjs');
-  const store = fn.indexOf(".from('weekly_metrics')\n    .insert(");
+  const store = fn.search(/\.from\('weekly_metrics'\)\r?\n\s+\.insert\(/);
   const mail = fn.indexOf('https://api.resend.com/emails');
   assert.ok(store > 0 && mail > 0 && store < mail, 'the insert must precede the Resend call');
   assert.ok(fn.includes('if (!resendKey)'), 'a missing Resend key must be handled, never a crash after storing');

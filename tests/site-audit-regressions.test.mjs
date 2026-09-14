@@ -55,21 +55,21 @@ test('Sentence X-Ray explains that example chips consume the daily allowance', (
   assert.match(sentenceXray, /Trying an example uses one of your daily Sentence X-Ray analyses\./);
 });
 
-test('the SPA navigation stays compact until wide screens and exposes 44px controls', () => {
+test('the SPA navigation switches at the large breakpoint and exposes 44px controls', () => {
   assert.match(navbar, /2xl:max-w-\[1536px\]/);
-  assert.match(navbar, /className="hidden 2xl:flex items-center gap-1"/);
-  assert.match(navbar, /className="2xl:hidden flex h-11 w-11/);
-  assert.match(navbar, /className="2xl:hidden max-h-\[calc\(100vh-4rem\)\] overflow-y-auto bg-paper border-b border-rule"/);
+  assert.match(navbar, /className="hidden lg:flex items-center gap-1"/);
+  assert.match(navbar, /className="lg:hidden flex h-11 w-11/);
+  assert.match(navbar, /className="lg:hidden max-h-\[calc\(100vh-4rem\)\] overflow-y-auto bg-paper border-b border-rule"/);
   assert.match(navbar, /aria-label=\{i18n\.language === 'en' \? 'Switch to German' : 'Switch to English'\}/);
   assert.match(navbar, /w-11 h-11/);
   assert.match(button, /rounded-clay min-h-11/);
 });
 
-test('the full Astro navigation is reserved for wide screens', () => {
+test('the full Astro navigation starts at the large breakpoint', () => {
   assert.match(astroLayout, /2xl:max-w-\[1536px\]/);
-  assert.match(astroLayout, /class="hidden 2xl:flex items-center gap-1"/);
-  assert.match(astroLayout, /class="2xl:hidden flex items-center gap-2"/);
-  assert.match(astroLayout, /class="whitespace-nowrap px-3 py-2 rounded-lg text-sm font-semibold/);
+  assert.match(astroLayout, /class="hidden lg:flex items-center gap-1"/);
+  assert.match(astroLayout, /class="lg:hidden flex items-center gap-2"/);
+  assert.match(astroLayout, /<summary class="flex min-h-11 cursor-pointer/);
 });
 
 test('pricing distinguishes recurring access from one-time courses in its headline and CTA', () => {

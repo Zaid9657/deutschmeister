@@ -636,7 +636,7 @@ const overlap = (a, b) => {
  * A1 vocabulary — "Lena", "treffen" — which is not a reproduced scenario.
  */
 async function liveTasks() {
-  const { WRITING_TASKS } = await import(`${root}/src/data/writingTasks.js`);
+  const { WRITING_TASKS } = await import('../src/data/writingTasks.js');
   return WRITING_TASKS.filter((t) => !t.course);
 }
 

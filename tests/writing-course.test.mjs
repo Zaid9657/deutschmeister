@@ -271,7 +271,7 @@ test('the function gates on the derived allowance, not on the bare constant', ()
   const src = readFileSync(join(ROOT, 'netlify/functions/evaluate-writing.mjs'), 'utf8');
   assert.match(src, /courseWritingTasks\(level\)\.length/, 'the allowance must be counted off the task bank');
   assert.match(src, /const courseLimit = courseAllowanceFor\(task_key\)/);
-  assert.match(src, /\? courseLimit\n/, 'the enforced limit must be the derived course allowance');
+  assert.match(src, /\? courseLimit\r?\n/, 'the enforced limit must be the derived course allowance');
 });
 
 

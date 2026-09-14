@@ -55,7 +55,7 @@
    "id": "G008",
    "title": "Production release verification",
    "objective": "Run the complete automated and rendered verification suite, deploy the verified changes, and smoke-test production with an evidence-backed blocker handoff.",
-   "status": "pending",
+   "status": "in_progress",
    "evidence": null
   }
  ]

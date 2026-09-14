@@ -775,7 +775,7 @@ test('the situation fill pass bites — remove it and a block drops below the fl
       fill(situational.filter((it) => it.topic === primarySlug), relax, stopSituation, stage);
       fill(situational, relax, stopSituation, stage);
 `;
-  const source = readFileSync(SRC, 'utf8');
+  const source = readFileSync(SRC, 'utf8').replace(/\r\n/g, '\n');
   assert.ok(source.includes(FILL_PASS), 'the situation fill pass moved — update this mutation');
   // Relative imports have to survive the move out of the source tree.
   const mutated = source

@@ -129,7 +129,7 @@ test('no banned B1.1 form in any German field of any B1.1 grammar row (rules, ex
 // --- the re-cut half (exercise fields the EXTEND generator cannot edit) ---
 const TABLES = { grammar_rules: 'rules', grammar_examples: 'examples', grammar_exercises: 'exercises' };
 const unq = (s) => s.replace(/''/g, "'");
-const UPDATE_RE = /UPDATE public\.(grammar_rules|grammar_examples|grammar_exercises)\nSET (\w+) = ('((?:[^']|'')*)'(::jsonb)?|NULL)\nWHERE id = '([0-9a-f-]{36})'::uuid\n {2}AND (\w+) (?:= '(?:[^']|'')*'(?:::jsonb)?|IS NULL);/g;
+const UPDATE_RE = /UPDATE public\.(grammar_rules|grammar_examples|grammar_exercises)\r?\nSET (\w+) = ('((?:[^']|'')*)'(::jsonb)?|NULL)\r?\nWHERE id = '([0-9a-f-]{36})'::uuid\r?\n {2}AND (\w+) (?:= '(?:[^']|'')*'(?:::jsonb)?|IS NULL);/g;
 const recutSql = readFileSync(RECUT, 'utf8');
 const recutUpdates = [...recutSql.matchAll(UPDATE_RE)].map((m) => ({
   table: m[1], field: m[2], raw: m[3], value: m[4], jsonb: !!m[5], id: m[6], guardField: m[7],
