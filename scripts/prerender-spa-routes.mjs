@@ -664,20 +664,8 @@ for (const route of ROUTES) {
   // carries real content, so remove it.
   html = html.replace(/<noscript>\s*<div style="max-width:960px[\s\S]*?<\/noscript>/, '');
 
-  // The shell carries a visually-hidden site-identity <h1> ("Learn German with
-  // DeutschMeister") as a fallback for the routes that render client-side only.
-  // Each route below injects its OWN real <h1>, so leaving the shell's in place
-  // gave every prerendered page two — a hidden site-wide heading competing with
-  // the page's actual subject, which is worse than having none. Strip it here;
-  // app.html keeps it, because the non-prerendered routes still need it.
-  html = mustReplace(
-    html,
-    /\s*<h1 style="position:absolute;[^"]*">[\s\S]*?<\/h1>/,
-    '',
-    'shell identity h1',
-    route.path,
-  );
-
+  // The shell deliberately has no heading outside its noscript fallback. Each
+  // route below supplies exactly one real page heading inside #root.
   html = mustReplace(html, '<div id="root"></div>', `<div id="root">${route.content}\n    </div>`, 'root div', route.path);
 
   const outDir = join(DIST, route.dir);

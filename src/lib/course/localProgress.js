@@ -24,10 +24,15 @@
 //      guest's three runs to one and handed the learner the seven items they
 //      had just done, at the exact moment the course asks them to sign up
 //      (DaF review #10 MAJOR 4).
-import { safeGetJSON, safeSetJSON, safeRemove } from '../../utils/safeStorage.js';
+import { safeSetJSON, safeRemove } from '../../utils/safeStorage.js';
 import { completeLesson, logAttempts, runMarkerAttempt } from '../../services/lessonService.js';
+import {
+  LOCAL_KEY,
+  emptyLocalProgress,
+  readLocalProgress,
+} from './localProgressRead.js';
 
-export const LOCAL_KEY = 'dm_course_local';
+export { LOCAL_KEY, hasLocalProgress, localDoneIds, readLocalProgress } from './localProgressRead.js';
 
 /**
  * Attempts are the bulky part. The cap is counted PER LEKTION and drops whole
@@ -67,32 +72,9 @@ function trimAttempts(list) {
   return list.filter((a) => !dropped.has(`${a.lektionId}#${runOf(a)}`));
 }
 
-const emptyStore = (level = null) => ({ level, lektionen: {}, attempts: [] });
-
-/** The store as written, or an empty one. Shape-checked: a hand-edited blob must not crash a render. */
-export function readLocalProgress() {
-  const raw = safeGetJSON(LOCAL_KEY, null);
-  if (!raw || typeof raw !== 'object') return emptyStore();
-  return {
-    level: typeof raw.level === 'string' ? raw.level : null,
-    lektionen: raw.lektionen && typeof raw.lektionen === 'object' ? raw.lektionen : {},
-    attempts: Array.isArray(raw.attempts) ? raw.attempts : [],
-  };
-}
-
 export function clearLocalProgress() {
   safeRemove(LOCAL_KEY);
 }
-
-/** Lektion ids finished locally for `level` — what the course home renders as done for a visitor. */
-export function localDoneIds(level) {
-  const store = readLocalProgress();
-  const lvl = String(level || '').toLowerCase();
-  if (!store.level || store.level !== lvl) return new Set();
-  return new Set(Object.keys(store.lektionen).filter((id) => store.lektionen[id]?.status));
-}
-
-export const hasLocalProgress = (level) => localDoneIds(level).size > 0;
 
 /** How often a signed-out learner finished one Lektion — 0 when never. */
 export function localRunCount(level, lektionId) {
@@ -113,7 +95,7 @@ export function recordLocalLesson({ level, lektionId, status = 'complete', accur
   if (!level || !lektionId) return false;
   const lvl = String(level).toLowerCase();
   const prev = readLocalProgress();
-  const store = prev.level === lvl ? prev : emptyStore(lvl);
+  const store = prev.level === lvl ? prev : emptyLocalProgress(lvl);
   store.level = lvl;
   // `runs` is what the lesson engine derives the attempt number from for a
   // signed-out learner (buildLesson.attemptFromCompletions): a repeat has to

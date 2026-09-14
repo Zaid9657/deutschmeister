@@ -29,6 +29,7 @@ import {
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import Chip from '../../components/ui/Chip.jsx';
+import useCurriculumNodeAccess from '../../hooks/useCurriculumNodeAccess.js';
 
 // The checkpoint screen (standard §3): 20 items, one per screen, a thin
 // progress bar, then a result that says what to do next. Design rules it
@@ -280,6 +281,7 @@ export default function CheckpointPage() {
     () => (curriculum?.checkpoints || []).find((c) => String(c.nr) === String(nr)) || null,
     [curriculum, nr],
   );
+  const access = useCurriculumNodeAccess(curriculum, checkpoint?.id);
 
   const [pool, setPool] = useState(null);
   const [phase, setPhase] = useState('intro');
@@ -340,6 +342,14 @@ export default function CheckpointPage() {
   };
 
   if (!curriculum || !checkpoint) return <Navigate to={`/course/${level || ''}`} replace />;
+  if (!access.loaded) {
+    return (
+      <div className="min-h-screen bg-paper font-body text-graphite">
+        <p className="mx-auto max-w-2xl px-4 py-16 text-sm italic">Kursfortschritt wird geprüft …</p>
+      </div>
+    );
+  }
+  if (!access.allowed) return <Navigate to={`/course/${curriculum.level}`} replace />;
 
   const path = curriculumPath(curriculum);
   const cpIndex = path.findIndex((entry) => entry.id === checkpoint.id);

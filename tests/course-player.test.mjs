@@ -8,6 +8,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { flattenCourse, isUnlocked, currentItem, isComplete, percentDone, nextItem, INSTRUCTION } from '../src/lib/courseFlow.js';
+import { curriculumNodeUnlocked } from '../src/data/curricula/index.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
@@ -41,6 +42,29 @@ test('lessons unlock strictly in sequence and the current lesson is the first no
   assert.equal(percentDone(items, one), 33);
   assert.equal(isComplete(items, new Set(['a', 'b', 'c'])), true);
   assert.equal(currentItem(items, new Set(['a', 'b', 'c'])), null);
+});
+
+test('rebuilt curriculum routes enforce the same one-step sequence as the course map', () => {
+  const path = [{ id: 'l1' }, { id: 'l2' }, { id: 'cp1' }, { id: 'l3' }];
+  assert.equal(curriculumNodeUnlocked(path, 'l1', new Set()), true);
+  assert.equal(curriculumNodeUnlocked(path, 'l2', new Set()), false);
+  assert.equal(curriculumNodeUnlocked(path, 'l2', new Set(['l1'])), true);
+  assert.equal(curriculumNodeUnlocked(path, 'cp1', new Set(['l1'])), false, 'a direct checkpoint URL must not skip lesson 2');
+  assert.equal(curriculumNodeUnlocked(path, 'cp1', new Set(['l2'])), true);
+  assert.equal(curriculumNodeUnlocked(path, 'l2', new Set(['l2'])), true, 'completed nodes stay replayable');
+  assert.equal(curriculumNodeUnlocked(path, 'missing', new Set()), false);
+
+  const hook = read('src/hooks/useCurriculumNodeAccess.js');
+  assert.ok(hook.includes('curriculumNodeUnlocked'), 'the route gate must use the shared unlock rule');
+  for (const file of ['src/pages/lesson/LessonPlayerPage.jsx', 'src/pages/lesson/CheckpointPage.jsx']) {
+    assert.ok(read(file).includes('useCurriculumNodeAccess'), `${file} does not enforce route-level sequencing`);
+  }
+});
+
+test('the rebuilt course path labels the shortened A1 final test as 40 minutes', async () => {
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  const { curriculumPath } = await import('../src/data/curricula/index.js');
+  assert.equal(curriculumPath(CURRICULUM_A11).at(-1).minutes, 40);
 });
 
 test('every program item type the runner styles has an instruction', () => {

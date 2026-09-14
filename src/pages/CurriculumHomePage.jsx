@@ -4,7 +4,7 @@ import { BookOpen, ClipboardCheck, Trophy, Check, Lock, Flame, Zap, ChevronDown 
 import { useAuth } from '../contexts/AuthContext';
 import { getProgramProgress } from '../services/programProgress';
 import { loadDashboardStats } from '../services/dashboardStats';
-import { curriculumPath } from '../data/curricula/index.js';
+import { curriculumNodeUnlocked, curriculumPath, curriculumProgramKey } from '../data/curricula/index.js';
 import { hasLocalProgress, localDoneIds, mergeLocalProgress } from '../lib/course/localProgress.js';
 import ExamDatePlan from '../components/course/ExamDatePlan.jsx';
 import Button from '../components/ui/Button.jsx';
@@ -31,7 +31,7 @@ import Aurora from '../components/ui/Aurora.jsx';
 //     (src/lib/course/localProgress.js), and the first load with a user
 //     present merges them into the account.
 
-export const programKeyFor = (level) => `${String(level).toLowerCase().replace('.', '')}_course`;
+export const programKeyFor = curriculumProgramKey;
 
 const hrefFor = (level, node) => {
   if (node.kind === 'lektion') return `/course/${level}/l/${node.nr}`;
@@ -173,7 +173,7 @@ export default function CurriculumHomePage({ curriculum }) {
                 {nodes.map((node) => {
                   const idx = nodeCounter; nodeCounter += 1;
                   const isDone = done.has(node.id);
-                  const unlocked = (!user || loaded) && (node.index === 0 || done.has(path[node.index - 1].id));
+                  const unlocked = (!user || loaded) && curriculumNodeUnlocked(path, node.id, done);
                   const isCurrent = current && current.id === node.id;
                   const Icon = KIND_ICON[node.kind];
                   const sway = SWAY[idx % SWAY.length];
