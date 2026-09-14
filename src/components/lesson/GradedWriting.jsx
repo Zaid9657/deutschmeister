@@ -270,15 +270,21 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
           <p className={FIELD_LABEL}>Checkliste</p>
           <ul className="mt-3 space-y-2">
             {check.checks.map((c) => {
-              // `ai` rows are UNDECIDABLE by form („Warum Sie schreiben“ — every token of it is a
-              // function word), so they are shown and named, never ticked and never crossed. A row
-              // the Formcheck cannot decide used to be dropped from the list, and the task then
-              // showed three Leitpunkte while the checklist showed two (DaF review #13, MAJOR 1).
+              // `ai` rows are UNDECIDABLE by form — either because every token of the Leitpunkt is a
+              // function word („Warum Sie schreiben“), or because the Leitpunkt asks for an INTENTION
+              // that has no form („Was die Gäste mitbringen sollen“: a description and an instruction
+              // share one shape, and only a reading tells them apart — see QUESTION_SHAPES in
+              // src/lib/lesson/writing.js, 2026-09-14). They are shown and named, never ticked and
+              // never crossed. A row the Formcheck cannot decide used to be dropped from the list, and
+              // the task then showed three Leitpunkte while the checklist showed two (DaF review #13,
+              // MAJOR 1). This card is the FALLBACK without the KI, so the row must not promise a check
+              // that is not running (DaF review #21, Minor 33): it says what the row is, in the mode
+              // it is in.
               if (c.ai) {
                 return (
                   <li key={c.key} className="flex items-start gap-2 text-[0.9375rem]">
                     <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-graphite" aria-hidden="true" />
-                    <span className="text-graphite">{c.label} — prüft die KI</span>
+                    <span className="text-graphite">{c.label} — ohne KI-Bewertung nicht prüfbar</span>
                   </li>
                 );
               }
