@@ -56,7 +56,7 @@ const server = createServer((req, res) => {
 });
 await new Promise((r) => server.listen(4181, r));
 
-const chrome = await launch({ chromeFlags: ['--headless', '--no-sandbox', '--disable-gpu'] });
+const chrome = await launch({ chromeFlags: ['--headless=new', '--disable-gpu'] });
 const results = [];
 
 for (const page of PAGES) {
@@ -85,7 +85,12 @@ for (const page of PAGES) {
   }
 }
 
-await chrome.kill();
+try {
+  await chrome.kill();
+} catch {
+  // Chrome 152 on Windows can finish the audit but race while deleting its
+  // temporary profile. Preserve the completed measurements in that case.
+}
 server.close();
 writeFileSync(join(OUT, 'lighthouse.json'), JSON.stringify(results, null, 1));
 console.log(`\n→ docs/evaluation/lighthouse.json`);

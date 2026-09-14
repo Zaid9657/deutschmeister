@@ -48,8 +48,8 @@
    "id": "G007",
    "title": "Technical SEO and performance",
    "objective": "Fix title warnings, validate crawl metadata and canonical coverage, run Lighthouse/CWV-style measurements, and remediate material performance defects.",
-   "status": "pending",
-   "evidence": null
+   "status": "complete",
+   "evidence": "Shared build merge includes all Astro routes; 138 built pages pass with 0 failures/warnings; home Lighthouse 93-95 with LCP 1.5-1.6s and lesson Lighthouse 98 with LCP 1.7s; merged SEO/a11y/best-practices 100; deferred content verified in real browser."
   },
   {
    "id": "G008",

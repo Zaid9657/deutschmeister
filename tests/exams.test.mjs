@@ -111,18 +111,17 @@ test('the mock disclaimer says what it must', () => {
 
 // ── 4. three-place rule for the new segment ──────────────────────────────
 
-test('/pruefung is copied, sitemapped and required in the built-HTML check', () => {
-  // BOTH merge sites: netlify.toml's build command (production) AND the CI
-  // workflow's own copy of the same steps. Adding the step in only one place
-  // is exactly how the /pruefung pages passed locally and failed in CI.
+test('/pruefung is merged, sitemapped and required in the built-HTML check', () => {
+  // Production and CI use the same directory-discovering merge script. This
+  // prevents any new Astro route family from being omitted in one environment.
   assert.ok(
-    netlifyToml.includes('cp -r astro-site/dist/pruefung dist/pruefung'),
-    'netlify.toml build command must copy the pruefung directory into dist/'
+    netlifyToml.includes('node scripts/merge-site-builds.mjs'),
+    'netlify.toml must use the shared Astro merge script'
   );
   const ciWorkflow = readFileSync(join(root, '.github/workflows/ci.yml'), 'utf8');
   assert.ok(
-    ciWorkflow.includes('cp -r astro-site/dist/pruefung dist/pruefung'),
-    'ci.yml must copy the pruefung directory into dist/ too'
+    ciWorkflow.includes('node scripts/merge-site-builds.mjs'),
+    'ci.yml must use the same Astro merge script'
   );
   assert.ok(
     astroConfig.includes("page.includes('/pruefung/')"),

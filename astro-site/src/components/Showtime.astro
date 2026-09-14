@@ -17,9 +17,13 @@
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   
   // ── Atropos 3D scenes ──────────────────────────────────────────────────
-  document.querySelectorAll('[data-atropos-card]').forEach((el) => {
-    Atropos({ el, activeOffset: 30, rotateXMax: 9, rotateYMax: 9, shadow: false, highlight: true, duration: 250 });
-  });
+  // Tilt is a pointer affordance. Initialising five 3D scenes on touch devices
+  // did expensive style/layout work without creating any usable interaction.
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    document.querySelectorAll('[data-atropos-card]').forEach((el) => {
+      Atropos({ el, activeOffset: 30, rotateXMax: 9, rotateYMax: 9, shadow: false, highlight: true, duration: 250 });
+    });
+  }
   
   // ── Scroll reveals ─────────────────────────────────────────────────────
   // IntersectionObserver first; plus a throttled scroll/resize fallback that

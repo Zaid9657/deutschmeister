@@ -11,8 +11,8 @@
   animation-delay: var(--d, 0ms);
 }
 @keyframes dmRise {
-  from { opacity: 0; transform: translateY(18px); filter: blur(4px); }
-  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 .underline-swash path {
   stroke-dasharray: 230;
@@ -46,15 +46,24 @@
 html.js .reveal {
   opacity: 0;
   transform: translateY(22px);
-  filter: blur(5px);
   transition:
     opacity 0.65s cubic-bezier(0.2, 1, 0.36, 1) var(--rd, 0ms),
-    transform 0.65s cubic-bezier(0.2, 1, 0.36, 1) var(--rd, 0ms),
-    filter 0.65s cubic-bezier(0.2, 1, 0.36, 1) var(--rd, 0ms);
+    transform 0.65s cubic-bezier(0.2, 1, 0.36, 1) var(--rd, 0ms);
 }
-html.js .reveal.is-visible { opacity: 1; transform: translateY(0); filter: blur(0); }
+html.js .reveal.is-visible { opacity: 1; transform: translateY(0); }
 @media (prefers-reduced-motion: reduce) {
   html.js .reveal { opacity: 1; transform: none; filter: none; }
+}
+
+/* Skip style, layout, and paint work for full homepage sections until they
+   approach the viewport. The intrinsic size keeps the scroll range stable. */
+.dm-defer {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 720px;
+}
+.dm-defer-card {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 360px;
 }
 
 /* Marquee */

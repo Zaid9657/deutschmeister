@@ -78,20 +78,7 @@ jobs:
           grep -q 'Using content cache' /tmp/astro-build.log
 
       - name: Merge Astro output into dist (mirrors netlify.toml)
-        run: |
-          cp -r astro-site/dist/grammar dist/grammar
-          cp -r astro-site/dist/vergleich dist/vergleich
-          cp -r astro-site/dist/leitfaden dist/leitfaden
-          cp -r astro-site/dist/pruefung dist/pruefung
-          cp -r astro-site/dist/telc-b1-komplettvorbereitung dist/telc-b1-komplettvorbereitung
-          cp -r astro-site/dist/pricing dist/pricing
-          cp -r astro-site/dist/courses dist/courses
-          cp -r astro-site/dist/privacy dist/privacy
-          cp -r astro-site/dist/impressum dist/impressum
-          mkdir -p dist/_astro && cp -r astro-site/dist/_astro/. dist/_astro/
-          cp astro-site/dist/404.html dist/404.html
-          cp astro-site/dist/index.html dist/index.html
-          cp astro-site/dist/sitemap-0.xml dist/
+        run: node scripts/merge-site-builds.mjs
 
       - name: Prerender SPA routes
         run: node scripts/prerender-spa-routes.mjs
