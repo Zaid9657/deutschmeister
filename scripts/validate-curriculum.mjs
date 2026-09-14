@@ -2353,9 +2353,27 @@ const LANGUAGE_PREP_RE = /\b(?:auf|für|in|aus|von|mit)\s*$/i;
  * sentence with no finite `sein` („Ich spreche Türkisch.“, „Ich lerne Deutsch.“) is outside the
  * rule as before.
  *
+ * THE SPEAKER IS NOT THE SUBJECT (round 20, DaF review #19, Minor 23). The reviewer planted „Der
+ * Tee ist marokkanisch.“ and „Meine Staatsangehörigkeit ist marokkanisch.“ on a dialogue line and
+ * the rule reported both — not from the line (no person in it) but from the two checkpoint
+ * surfaces the line is drawn into: the Lesen text prints it as „Ana: Der Tee ist marokkanisch.“
+ * and the explanation as „Ana sagt: „Der Tee ist marokkanisch.““, and `personRe` found `Ana`.
+ * A name before a colon is the speaker label of a printed dialogue or the name of a form field;
+ * it names who SAYS the sentence, never what the sentence is about. `stripSpeakerFrame` removes
+ * everything up to the first colon when no finite `sein` stands before it, so the person is
+ * looked for in the clause that carries the verb: „Ana: Ich bin marokkanisch.“ and „Ana sagt:
+ * „Ich bin marokkanisch.““ still report (the `ich` is inside), „Ana: Der Tee ist marokkanisch.“
+ * does not — a thing subject with a nationality adjective is correct German and was never the
+ * finding. „Ana ist Studentin: marokkanisch“ keeps its frame (the `sein` is before the colon).
+ *
  * HARD 0 at both levels, like RULE 17, 19, 20 and 22: a notice, a model text and an item are what a
  * round has just written.
  */
+/** „Ana: …“, „Herr Weber: …“, „Ana sagt: „…““, „Familienstand: …“ — the label before the first colon, when the finite `sein` is after it. */
+const stripSpeakerFrame = (sentence) => {
+  const m = /^([^:„"]*):\s*/.exec(sentence);
+  return m && !SEIN_FINITE.test(m[1]) ? sentence.slice(m[0].length) : sentence;
+};
 export function predicativeNationalityAdjectives(c, spec = null, { extraItems = null, poolItems = null } = {}) {
   const s = spec || levelSpec(c?.level) || LEVELS['a1.1'];
   extraItems = extraItems ?? loadExtraItems(s.level);
@@ -2371,7 +2389,8 @@ export function predicativeNationalityAdjectives(c, spec = null, { extraItems = 
   const offenders = [];
   const scan = (nr, where, text) => {
     if (!text) return;
-    for (const sentence of String(text).split(/(?<=[.!?])\s+|\n+/)) {
+    for (const raw of String(text).split(/(?<=[.!?])\s+|\n+/)) {
+      const sentence = stripSpeakerFrame(raw);
       if (!SEIN_FINITE.test(sentence) || !personRe.test(sentence)) continue;
       const m = predicateRe.exec(sentence);
       if (!m) continue;
