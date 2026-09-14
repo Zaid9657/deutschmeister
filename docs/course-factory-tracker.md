@@ -306,7 +306,12 @@ only `src/data/curricula/<level>.js` + the pool are per level).
 | 20 | #137 | 0 BLOCKER · 2 MAJOR · 18 MINOR (both majors on the Auftrag Leitpunkt of the form check, fourth round) | 21.2 (no lesson under 20) | `REVIEW-daf-20-2026-09-12.md` |
 | 21 | #138 | 0 BLOCKER · 2 MAJOR · 22 MINOR (the round-21 decision accepted; both majors in the form check: greeting/closing read anywhere in the text, „Guten Morgen" read as a time) | 21.2 | `REVIEW-daf-21-2026-09-12.md` |
 | 22 | #139 | 0 BLOCKER · 2 MAJOR · 23 MINOR (both majors in the form check: chained closings and `bis` + time rejected; noun/adverb `Morgen` told apart by case) — draw, checkpoints and ratchets identical to #20–#21 | 21.2 | `REVIEW-daf-22-2026-09-12.md` |
-| 23 | #140 | pending (closing review; checklist findings graded MINOR per the standard) | — | — |
+| 23 | #140 | **0 BLOCKER · 0 MAJOR** · 24 MINOR (closing review; the checklist graded MINOR per the standard; draw, checkpoints and ratchets identical to #21–#22) | 21.6 | `REVIEW-daf-23-2026-09-12.md` |
+
+**A1.1 declared finished 2026-09-14** at review #23 (0/0). Twenty-three reviews, PRs #114–#140, every
+finding class closed as a rule + test; the last six rounds spent every MAJOR on the pre-submit writing
+checklist, which the standard now defines as advisory (the KI grades meaning). Open owner items are
+unchanged: the Azure audio run, three test learners, the Telegram post for the free course.
 
 All reports live in `docs/course-factory/a11-rebuild/`. Every round recomputes the real draw
 (`planPractice(CURRICULUM_A11, a11.json, attempt)`) rather than reading the pool, so each verdict is

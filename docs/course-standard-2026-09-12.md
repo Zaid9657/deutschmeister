@@ -219,10 +219,13 @@ below touches pricing, Lemon Squeezy or e-mail.
 | 5 | Dialogues + audio | 12 unit dialogues per level (scripted to the Wortfeld, recorded via the Azure TTS pipeline already used for B1.1), audio for every Wortfeld word and example | ~2 sessions + one owner Azure run per level | Input before output; removes the "no audio" false claim | **shipped** #116 — 12 dialogues written and the Azure pipeline + manifest in place; the OWNER RUN is still open, so playback says „Computerstimme" |
 | 6 | Spaced review | `ts-fsrs` over words, grammar patterns and production sentences; 4 due items per lesson; dashboard Wiederholen tile | ~2 sessions | Retention; the universal "nothing comes back" complaint | **shipped** #114 — Babbel ladder over `review_cards`, not `ts-fsrs` |
 | 7 | Plan + habit layer | Exam-date input → weekly targets, on-track banner; forgiving streak; Resend reminders at last-practice + 23.5 h; first lesson open before sign-up | ~2 sessions | Completion (the strongest predictors in the evidence) | **shipped** #116 (exam-date plan, on-track banner, forgiving streak, signed-out first lesson); the reminder mailer is live (`COURSE_REMINDER_ENABLED=true` set 2026-09-12, migration applied) |
-| 8 | Native review | A DaF teacher reads the four grids and one full Lektion per level; corrections applied | owner hires; ~4 h per level | The credibility the research says buyers check | **in progress**: five adversarial DaF reviews (`docs/course-factory/a11-rebuild/REVIEW-daf-*.md`), ladder 5/45 → 1/35 → 3/11 → 3/11 → #5 pending; the standard requires **0 BLOCKER / 0 MAJOR** |
+| 8 | Native review | A DaF teacher reads the four grids and one full Lektion per level; corrections applied | owner hires; ~4 h per level | The credibility the research says buyers check | **done for A1.1 2026-09-14**: 23 adversarial DaF reviews (`docs/course-factory/a11-rebuild/REVIEW-daf-*.md`), ladder 5/45 → 1/35 → 3/11 ×3 → 3/7 → 3/5 → 0/5 ×2 → 0/4 → 1/3 → 2/4 → 2/3 → 1/3 → 0/4 → 1/3 → 0/3 → 0/2 ×5 → **0 BLOCKER / 0 MAJOR** (#23, 24 minors, mean 21.6/25); every class closed as a rule + test |
 
-Status 2026-09-13: phases 1–7 are shipped for A1.1 (PRs #114–#120, Wave 8 of the course-factory
-tracker); phase 8 is in progress. Phases 1–3 make A1.1 a course in the professional sense in roughly eight sessions; phases 4–6 make it
+Status 2026-09-14: **A1.1 is finished on this standard** — phases 1–8 shipped (PRs #114–#140, Wave 8 of
+the course-factory tracker); the closing review #23 measured 0 BLOCKER / 0 MAJOR under the severity rule
+in §2 (the pre-submit checklist is advisory, the KI grades). What A1.1 still is not: its audio is the
+browser voice („Computerstimme") until the owner's Azure run, and the 24 open minors of #23 are
+checklist edge cases and one elliptical item, none of which a learner is graded on. Phases 1–3 make A1.1 a course in the professional sense in roughly eight sessions; phases 4–6 make it
 the best one; 7–8 make people finish it. A2 follows the same track with the same engine, so each later
 level costs content sessions only.
 

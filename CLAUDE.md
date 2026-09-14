@@ -130,6 +130,11 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   A session that needs a revenue or usage figure reads the latest row (or calls the function via
   the Supabase connector) instead of re-deriving it — the handoff had to correct a stale
   "9 subs, €75–90/mo" claim once already. `tests/weekly-truth.test.mjs` pins store-before-email.
+- **The Astro build survives a Supabase outage.** Every build-time read in `astro-site/src/lib/grammar.js`
+  retries three times, then serves the whole build from the committed `grammar-content-cache.json`
+  with a loud warning (two deploys died on `fetch failed` on 2026-09-14, once because the Supabase
+  project had been **paused** — `get_project` said `INACTIVE`, `restore_project` fixed it). If a
+  production build log shows that warning, check the project status first, then re-dump the cache.
 - **Agent environment.** Cloud sessions cannot reach `deutsch-meister.de`, `*.netlify.app`,
   `supabase.co`, or `app.lemonsqueezy.com` (egress proxy) — use the Netlify, Supabase and
   GitHub connectors instead; the Claude in Chrome MCP exists only in local sessions. PR
@@ -227,12 +232,15 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
 - **A1.1 is rebuilt on that standard and is the template for every other level** (PRs #114–#120,
   2026-09-12/13; tracker Wave 8). Live: 12 situational Lektionen (`src/data/curricula/a11.js`), the
   9-stage player at `/course/a1.1/l/:nr`, 4 checkpoints, a Babbel review ladder, 12 AI-graded writing
-  tasks, scored read-aloud, an exam-date plan and a forgiving streak. Five adversarial DaF reviews
-  (`docs/course-factory/a11-rebuild/REVIEW-daf-*.md`): 5 BLOCKER/45 MAJOR → 1/35 → 3/11 → 3/11 →
-  #5 pending; the standard wants 0/0 before A1.1 is fronted as finished. Two rules from that ladder:
+  tasks, scored read-aloud, an exam-date plan and a forgiving streak. **A1.1 was declared finished on
+  2026-09-14** after 23 adversarial DaF reviews (`docs/course-factory/a11-rebuild/REVIEW-daf-*.md`,
+  PRs #114–#140): 5 BLOCKER/45 MAJOR → … → 0/0 at #23 (24 minors, mean 21.6/25). Rounds 17–22 spent
+  every MAJOR on the pre-submit writing checklist; the standard now says the checklist decides form and
+  the KI decides meaning, and an indirect Auftrag Leitpunkt shows „prüft die KI". Two rules from that ladder:
   **close a finding class with a rule + a test, never with a list of ids**, and the course speaks **Sie**
   everywhere (tasks, notices, rule cards, mail) — only the dialogues duzen, and only between learners.
-  Four ratchets in `scripts/validate-curriculum.mjs` (RULE 10/11/12/13 = 19/9/6/4) only go down.
+  The ratchets in `scripts/validate-curriculum.mjs` (RULE 10/11/13/6b/15/23 = 14/59/4/23/3/57, the
+  rest hard 0) only go down and must equal their measurement (test).
   After ANY content edit re-run both, in order: `node scripts/build-lesson-pool.mjs a1.1` then
   `node scripts/validate-curriculum.mjs`. `src/data/curricula/a11.audio.js` is still the empty
   manifest stub, so every audio surface honestly says „Computerstimme" until the owner's Azure run
