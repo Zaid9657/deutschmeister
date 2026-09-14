@@ -27,8 +27,8 @@
    "id": "G004",
    "title": "Navigation pricing and trust conversion",
    "objective": "Group desktop navigation, clarify no-account versus free-trial versus Pro states, and create an honest social-proof capture path.",
-   "status": "pending",
-   "evidence": null
+   "status": "complete",
+   "evidence": "Desktop navigation is grouped in native accessible disclosures in both renderers. Pricing and signup explicitly separate anonymous A1.1 access, the account-based 7-day trial, and Pro. A Netlify learner-story form captures verified feedback only with required publication consent and a no-auto-publish promise."
   },
   {
    "id": "G005",

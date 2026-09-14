@@ -192,6 +192,21 @@ const UeberUnsPage = () => {
         </div>
       </section>
 
+      {/* TESTIMONIAL CAPTURE — feedback is reviewed and permissioned before publication. */}
+      <section className="border-y border-rule bg-white py-20">
+        <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
+          <Reveal as="h2" className="font-display text-[1.5625rem] font-semibold leading-tight tracking-[-0.018em] text-ink sm:text-[2.125rem]">
+            Real stories start with permission
+          </Reveal>
+          <Reveal as="p" delay={80} className="mx-auto mt-4 max-w-xl text-[0.9375rem] leading-relaxed text-graphite sm:text-base">
+            Used Deutschmeister? Tell us what helped and what should improve. Submissions are reviewed, verified where possible, and never published automatically.
+          </Reveal>
+          <Reveal delay={160} className="mt-7">
+            <Button href="/share-your-story/" size="lg" variant="secondary">Share your experience</Button>
+          </Reveal>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="py-24 bg-ink">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">

@@ -11,6 +11,14 @@ import Button from '../components/ui/Button';
 import Card from '../components/ui/Card.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
 import Logo from '../components/Logo';
+import {
+  GRAMMAR_TOPIC_COUNT,
+  LEVEL_COUNT,
+  TRIAL_DAILY_LIMIT,
+  TRIAL_DAYS,
+  TRIAL_SPEAKING_SESSIONS,
+  TRIAL_WRITING_EVALUATIONS,
+} from '../data/marketing.js';
 
 // The playbook form field (docs/design/playbook.md §1), with room for the
 // leading icon. The focus ring comes from the global *:focus-visible rule.
@@ -100,20 +108,18 @@ const SignupPage = () => {
             className="hero-line font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] text-ink mb-2"
             style={{ '--d': '120ms' }}
           >
-            {/* EN: Start Free */}
-            Start for free
+            Start your {TRIAL_DAYS}-day Pro trial
           </h1>
           <p className="hero-line text-[0.9375rem] leading-relaxed text-graphite sm:text-base mb-4" style={{ '--d': '220ms' }}>
-            Create an account and get instant access to:
+            Creating a free account starts your trial. No payment details are requested.
           </p>
           {/* Free tier value list */}
           <ul className="hero-line text-left inline-block space-y-1 mb-2" style={{ '--d': '320ms' }}>
             {[
-              'All A1.1 lessons — no restrictions',
-              '2 free AI speaking sessions',
-              // Matches DAILY_LIMITS.free_trial in netlify/functions/analyze-sentence.mjs
-              '10 Sentence X-Ray analyses per day during your trial',
-              '7-day Pro trial included'
+              `All ${LEVEL_COUNT} levels and ${GRAMMAR_TOPIC_COUNT} grammar topics during the trial`,
+              `${TRIAL_SPEAKING_SESSIONS} AI speaking sessions during the trial`,
+              `${TRIAL_DAILY_LIMIT} Sentence X-Ray analyses per day during the trial`,
+              `${TRIAL_WRITING_EVALUATIONS} AI writing evaluations during the trial`,
             ].map((item) => (
               <li key={item} className="flex items-center gap-2 text-sm text-graphite">
                 <Check className="w-4 h-4 text-siegel flex-shrink-0" aria-hidden="true" />
@@ -121,6 +127,10 @@ const SignupPage = () => {
               </li>
             ))}
           </ul>
+          <p className="hero-line mt-3 text-sm text-graphite" style={{ '--d': '380ms' }}>
+            Want to look around first?{' '}
+            <a href="/grammar/a1.1/" className={TEXT_LINK}>Explore A1.1 without an account.</a>
+          </p>
         </div>
 
         {/* Form */}
@@ -225,7 +235,7 @@ const SignupPage = () => {
           {/* Trust line */}
           {/* EN: No credit card required · Cancel anytime */}
           <p className="mt-3 text-center font-data text-[0.6875rem] tracking-[0.02em] text-graphite">
-            No credit card required · Cancel anytime
+            Free account · no credit card · no automatic charge when the trial ends
           </p>
 
           {/* Login link */}

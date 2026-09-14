@@ -101,6 +101,7 @@ export const FOOTER_GROUPS = [
       { labelEn: 'Platform comparisons · DE', labelDe: 'Plattform-Vergleich', href: '/vergleich/', kind: 'static' },
       { labelEn: 'FAQ', labelDe: 'FAQ', href: '/faq/', kind: 'spa' },
       { labelEn: 'About us', labelDe: 'Über uns', href: '/ueber-uns/', kind: 'spa' },
+      { labelEn: 'Share your story', labelDe: 'Erfahrung teilen', href: '/share-your-story/', kind: 'static' },
     ],
   },
 ];

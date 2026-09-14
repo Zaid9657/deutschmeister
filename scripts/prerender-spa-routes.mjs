@@ -590,6 +590,11 @@ ${faqSection(PODCAST_FAQS)}
       <li class="${CARD_FLAT} p-4 text-[0.9375rem] font-bold text-ink">A learning community for practising with others</li>
     </ul>
   </div></section>
+  <section class="border-y border-rule bg-white py-20"><div class="mx-auto max-w-2xl px-4 text-center sm:px-6">
+    <h2 class="${H_SECTION}">Real stories start with permission</h2>
+    <p class="mx-auto mt-4 max-w-xl ${BODY}">Used Deutschmeister? Tell us what helped and what should improve. Submissions are reviewed, verified where possible, and never published automatically.</p>
+    <p class="mt-7"><a href="/share-your-story/" class="${BTN} border border-rule bg-white text-ink shadow-raise">Share your experience</a></p>
+  </div></section>
   <section class="bg-ink py-24"><div class="mx-auto max-w-3xl px-4 text-center sm:px-6">
     <h2 class="font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.022em] text-white sm:text-[3rem]">Ready to begin?</h2>
     <p class="mt-8 flex flex-wrap justify-center gap-4"><a href="/signup" class="${BTN} bg-white text-ink shadow-raise">Start for free</a>

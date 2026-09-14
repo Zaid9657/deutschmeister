@@ -43,7 +43,7 @@ const prerendered = new Set(
 );
 
 // Prefixes served by the Astro build (trailing-slash class 1)
-const ASTRO_PREFIXES = ['/courses', '/grammar', '/pricing', '/leitfaden', '/pruefung', '/vergleich', '/privacy', '/impressum'];
+const ASTRO_PREFIXES = ['/courses', '/grammar', '/pricing', '/leitfaden', '/pruefung', '/vergleich', '/privacy', '/impressum', '/share-your-story'];
 
 const spaItems = ALL_NAV_ITEMS.filter((i) => i.kind === 'spa');
 const staticItems = ALL_NAV_ITEMS.filter((i) => i.kind === 'static');

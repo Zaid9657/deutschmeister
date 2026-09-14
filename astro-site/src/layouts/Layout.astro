@@ -157,20 +157,25 @@ const authAttrs = (item) =>
           </a>
 
           <!-- Desktop nav — rendered from the shared navigation registry -->
-          <div class="hidden 2xl:flex items-center gap-1">
-            {NAV_GROUPS.map((group, gi) => (
-              <>
-                {gi > 0 && <div class="w-px h-5 bg-rule mx-1"></div>}
-                {group.items.map((item) => (
-                  <a
-                    href={item.href}
-                    {...authAttrs(item)}
-                    class="whitespace-nowrap px-3 py-2 rounded-lg text-sm font-semibold text-graphite hover:text-siegel-deep hover:bg-siegel-wash transition-colors"
-                  >
-                    {item.labelEn}
-                  </a>
-                ))}
-              </>
+          <div class="hidden lg:flex items-center gap-1">
+            {NAV_GROUPS.map((group) => (
+              <details class="group relative">
+                <summary class="flex min-h-11 cursor-pointer list-none items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold text-graphite transition-colors hover:bg-siegel-wash hover:text-ink [&::-webkit-details-marker]:hidden">
+                  {group.labelEn}
+                  <svg class="h-3.5 w-3.5 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 7.5 5 5 5-5" /></svg>
+                </summary>
+                <div class="absolute left-0 top-full z-50 mt-1 min-w-56 rounded-clay border border-rule bg-white p-2 shadow-overlay">
+                  {group.items.map((item) => (
+                    <a
+                      href={item.href}
+                      {...authAttrs(item)}
+                      class="flex min-h-11 items-center whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold text-graphite transition-colors hover:bg-siegel-wash hover:text-siegel-deep"
+                    >
+                      {item.labelEn}
+                    </a>
+                  ))}
+                </div>
+              </details>
             ))}
             <div class="w-px h-5 bg-rule mx-1"></div>
             <a
@@ -178,7 +183,7 @@ const authAttrs = (item) =>
               data-anon-only
               class="whitespace-nowrap px-4 py-2 rounded-clay bg-siegel text-white text-sm font-bold shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none transition-all duration-100 ease-snap select-none"
             >
-              Get started
+              Start 7-day trial
             </a>
             <a
               href="/login"
@@ -190,9 +195,9 @@ const authAttrs = (item) =>
           </div>
 
           <!-- Mobile: CTA + full menu (pure HTML disclosure, no client JS) -->
-          <div class="2xl:hidden flex items-center gap-2">
+          <div class="lg:hidden flex items-center gap-2">
             <a href="/signup" data-anon-only class="px-3 py-1.5 rounded-clay bg-siegel text-white text-sm font-bold shadow-raise-siegel active:translate-y-1 active:shadow-none transition-all duration-100 ease-snap select-none">
-              Get started
+              7-day trial
             </a>
             <a href="/dashboard" data-auth-only style="display:none" class="px-3 py-1.5 rounded-clay bg-siegel text-white text-sm font-bold shadow-raise-siegel active:translate-y-1 active:shadow-none transition-all duration-100 ease-snap select-none">
               Dashboard
@@ -218,7 +223,7 @@ const authAttrs = (item) =>
                 ))}
                 <div class="my-2 border-t border-rule"></div>
                 <a href="/login" data-anon-only class="block px-4 py-2 text-sm font-semibold text-graphite hover:bg-siegel-wash">Log in</a>
-                <a href="/signup" data-anon-only class="block px-4 py-2 text-sm font-bold text-siegel-deep hover:bg-siegel-wash">Get started</a>
+                <a href="/signup" data-anon-only class="block px-4 py-2 text-sm font-bold text-siegel-deep hover:bg-siegel-wash">Start 7-day trial</a>
               </div>
             </details>
           </div>

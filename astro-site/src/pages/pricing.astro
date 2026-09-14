@@ -45,6 +45,7 @@ import {
   XRAY_LINE,
   TRIAL_DAYS,
   TRIAL_SPEAKING_SESSIONS,
+  TRIAL_DAILY_LIMIT,
   ANON_DAILY_LIMIT,
   PRO_DAILY_LIMIT,
   PRO_SPEAKING_SESSIONS_PER_MONTH,
@@ -128,20 +129,20 @@ const productSchema = {
 // The comparison, as a table. `ladder` marks the one row that renders rungs
 // instead of text.
 const ROWS = [
-  { label: 'Levels', ladder: true, free: `${FREE_RUNGS} of ${LEVEL_COUNT}`, pro: `${LEVEL_COUNT} of ${LEVEL_COUNT}` },
-  { label: 'Grammar topics', free: String(TOPICS_PER_LEVEL), pro: String(GRAMMAR_TOPIC_COUNT) },
-  { label: 'Sentence X-Ray', free: `${ANON_DAILY_LIMIT} a day`, pro: `${PRO_DAILY_LIMIT} a day` },
-  { label: 'AI speaking practice', free: `${TRIAL_SPEAKING_SESSIONS} sessions`, pro: `${PRO_SPEAKING_SESSIONS_PER_MONTH} a month` },
+  { label: 'Levels', ladder: true, anonymous: `${FREE_RUNGS} of ${LEVEL_COUNT}`, trial: `${LEVEL_COUNT} of ${LEVEL_COUNT}`, pro: `${LEVEL_COUNT} of ${LEVEL_COUNT}` },
+  { label: 'Grammar topics', anonymous: String(TOPICS_PER_LEVEL), trial: String(GRAMMAR_TOPIC_COUNT), pro: String(GRAMMAR_TOPIC_COUNT) },
+  { label: 'Sentence X-Ray', anonymous: `${ANON_DAILY_LIMIT} a day`, trial: `${TRIAL_DAILY_LIMIT} a day`, pro: `${PRO_DAILY_LIMIT} a day` },
+  { label: 'AI speaking practice', anonymous: '—', trial: `${TRIAL_SPEAKING_SESSIONS} total`, pro: `${PRO_SPEAKING_SESSIONS_PER_MONTH} a month` },
   // Renovation additions (2026-09-01): the two exam tools shipped with the
   // exam-first rebuild. Figures derive from marketing.js like every row here.
-  { label: 'AI writing feedback', free: `${TRIAL_WRITING_EVALUATIONS} evaluations`, pro: `${PRO_WRITING_EVALUATIONS_PER_MONTH} a month` },
+  { label: 'AI writing feedback', anonymous: '—', trial: `${TRIAL_WRITING_EVALUATIONS} total`, pro: `${PRO_WRITING_EVALUATIONS_PER_MONTH} a month` },
   // Free column: what you get without paying — the practice exam opens during
   // the trial (SubscriptionGuard passes trial), the SRS trainer needs only an
   // account. Claiming Pro-only here would overstate the paywall.
-  { label: 'Timed practice exam', free: 'During trial', pro: 'telc B1' },
-  { label: 'Vocabulary trainer (spaced repetition)', free: 'With account', pro: 'Included' },
-  { label: 'Listening & reading', free: FREE_LEVEL_LABEL, pro: 'Every level' },
-  { label: 'Podcasts & video', free: '—', pro: 'Included' },
+  { label: 'Timed practice exam', anonymous: '—', trial: 'Included', pro: 'telc B1' },
+  { label: 'Vocabulary trainer (spaced repetition)', anonymous: '—', trial: 'Included', pro: 'Included' },
+  { label: 'Listening & reading', anonymous: FREE_LEVEL_LABEL, trial: 'Every level', pro: 'Every level' },
+  { label: 'Podcasts & video', anonymous: '—', trial: 'Included', pro: 'Included' },
 ];
 
 const FAQS = [
@@ -260,16 +261,20 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-5 py-3 text-ink sha
 
       <!-- The comparison, as a declension table — flat, reference material -->
       <section class="reveal mt-6 overflow-x-auto" style="--rd:80ms" aria-labelledby="compare-h">
-        <h2 id="compare-h" class="sr-only">Free and Pro compared</h2>
-        <table class="w-full min-w-[34rem] border-collapse text-left">
+        <h2 id="compare-h" class="sr-only">No-account access, free trial, and Pro compared</h2>
+        <table class="w-full min-w-[48rem] border-collapse text-left">
           <thead>
             <tr class="border-b border-ink">
-              <th scope="col" class="w-1/3 py-3 pr-4 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">What you get</th>
-              <th scope="col" class="w-1/3 px-4 py-3 align-bottom">
-                <span class="block font-display text-lg font-semibold">Free</span>
+              <th scope="col" class="w-1/4 py-3 pr-4 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">What you get</th>
+              <th scope="col" class="w-1/4 px-4 py-3 align-bottom">
+                <span class="block font-display text-lg font-semibold">Explore</span>
                 <span class="mt-1 block font-data text-[0.8125rem] text-graphite">Forever · no account</span>
               </th>
-              <th scope="col" class="w-1/3 bg-siegel-wash py-3 pl-4 align-bottom">
+              <th scope="col" class="w-1/4 px-4 py-3 align-bottom">
+                <span class="block font-display text-lg font-semibold">Free trial</span>
+                <span class="mt-1 block font-data text-[0.8125rem] text-graphite">{TRIAL_DAYS} days · account required</span>
+              </th>
+              <th scope="col" class="w-1/4 bg-siegel-wash py-3 pl-4 align-bottom">
                 <span class="flex items-center gap-2">
                   <span class="font-display text-lg font-semibold">Pro</span>
                   <span class="inline-block h-1.5 w-1.5 rounded-full bg-gold" aria-hidden="true"></span>
@@ -292,7 +297,15 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-5 py-3 text-ink sha
                       ))}
                     </span>
                   )}
-                  <span class={`font-data text-[0.8125rem] text-ink ${row.ladder ? 'mt-1.5 block' : ''}`}>{row.free}</span>
+                  <span class={`font-data text-[0.8125rem] text-ink ${row.ladder ? 'mt-1.5 block' : ''}`}>{row.anonymous}</span>
+                </td>
+                <td class="px-4 py-3.5">
+                  {row.ladder && (
+                    <span class="flex items-center gap-1" aria-hidden="true">
+                      {LEVELS.map(() => (<span class="h-1.5 w-3 rounded-sm bg-ink"></span>))}
+                    </span>
+                  )}
+                  <span class={`font-data text-[0.8125rem] font-semibold text-ink ${row.ladder ? 'mt-1.5 block' : ''}`}>{row.trial}</span>
                 </td>
                 <td class="bg-siegel-wash py-3.5 pl-4">
                   {row.ladder && (
@@ -309,9 +322,16 @@ const BTN_SECONDARY = `${BTN} border border-rule bg-white px-5 py-3 text-ink sha
             <tr>
               <td class="py-5 pr-4"></td>
               <td class="px-4 py-5">
-                <a href="https://deutsch-meister.de/signup" class={`${BTN_SECONDARY} w-full`}>
-                  Start free
+                <a href="/grammar/a1.1/" class={`${BTN_SECONDARY} w-full`}>
+                  Explore A1.1
                 </a>
+                <span class="mt-2 block font-data text-[0.6875rem] leading-snug text-graphite">No signup · no card</span>
+              </td>
+              <td class="px-4 py-5">
+                <a href="https://deutsch-meister.de/signup" class={`${BTN_SECONDARY} w-full`}>
+                  Create free account
+                </a>
+                <span class="mt-2 block font-data text-[0.6875rem] leading-snug text-graphite">Starts {TRIAL_DAYS}-day trial · no card</span>
               </td>
               <td class="bg-siegel-wash py-5 pl-4">
                 <button id="pro-btn" type="button" class={`${BTN_PRIMARY} btn-shimmer relative w-full overflow-hidden`}>

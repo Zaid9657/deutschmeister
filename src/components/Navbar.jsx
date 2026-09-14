@@ -100,20 +100,25 @@ const Navbar = () => {
           <Logo size={40} showWordmark to="/" />
 
           {/* Desktop Navigation */}
-          <div className="hidden 2xl:flex items-center gap-1">
-            {visibleGroups.map((group, gi) => (
-              <div key={group.key} className="flex items-center gap-1">
-                {gi > 0 && <NavSeparator />}
-                {group.items.map((item) => (
-                  <NavItem
-                    key={item.key}
-                    item={item}
-                    className="flex min-h-11 items-center whitespace-nowrap px-3 py-2 rounded-lg text-sm font-medium text-graphite hover:text-ink hover:bg-siegel-wash transition-colors"
-                  >
-                    {label(item)}
-                  </NavItem>
-                ))}
-              </div>
+          <div className="hidden lg:flex items-center gap-1">
+            {visibleGroups.filter((group) => group.items.length > 0).map((group) => (
+              <details key={group.key} className="group relative">
+                <summary className="flex min-h-11 cursor-pointer list-none items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold text-graphite transition-colors hover:bg-siegel-wash hover:text-ink [&::-webkit-details-marker]:hidden">
+                  {isGerman ? group.labelDe : group.labelEn}
+                  <ChevronDown size={14} className="transition-transform group-open:rotate-180" aria-hidden="true" />
+                </summary>
+                <div className="absolute left-0 top-full z-50 mt-1 min-w-56 rounded-clay border border-rule bg-white p-2 shadow-overlay">
+                  {group.items.map((item) => (
+                    <NavItem
+                      key={item.key}
+                      item={item}
+                      className="flex min-h-11 items-center whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-graphite transition-colors hover:bg-siegel-wash hover:text-ink"
+                    >
+                      {label(item)}
+                    </NavItem>
+                  ))}
+                </div>
+              </details>
             ))}
 
             {/* Free CTA for anonymous users */}
@@ -125,7 +130,7 @@ const Navbar = () => {
                   className="flex min-h-11 items-center gap-1.5 whitespace-nowrap px-3 py-1.5 rounded-full border border-siegel/25 bg-siegel-wash text-siegel-deep text-sm font-semibold hover:border-siegel/50 transition-colors"
                 >
                   <Sparkles size={14} />
-                  A1.1 Free
+                  {isGerman ? 'A1.1 · ohne Konto' : 'A1.1 · no account'}
                 </Link>
               </>
             )}
@@ -236,7 +241,7 @@ const Navbar = () => {
                   {t('nav.login')}
                 </Link>
                 <Button to="/signup" size="sm">
-                  {t('nav.signup')}
+                  {isGerman ? '7 Tage testen' : 'Start 7-day trial'}
                 </Button>
               </div>
             )}
@@ -245,7 +250,7 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="2xl:hidden flex h-11 w-11 items-center justify-center rounded-lg hover:bg-siegel-wash transition-colors"
+            className="lg:hidden flex h-11 w-11 items-center justify-center rounded-lg hover:bg-siegel-wash transition-colors"
             aria-label={isOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isOpen}
           >
@@ -261,7 +266,7 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="2xl:hidden max-h-[calc(100vh-4rem)] overflow-y-auto bg-paper border-b border-rule"
+            className="lg:hidden max-h-[calc(100vh-4rem)] overflow-y-auto bg-paper border-b border-rule"
           >
             <div className="px-4 py-4 space-y-1">
               {visibleGroups.map((group, gi) => (
@@ -295,7 +300,7 @@ const Navbar = () => {
                     className="flex items-center gap-3 px-4 py-3 rounded-lg border border-siegel/25 bg-siegel-wash text-siegel-deep font-semibold"
                   >
                     <Sparkles size={20} />
-                    A1.1 Free
+                    {isGerman ? 'A1.1 · ohne Konto' : 'A1.1 · no account'}
                   </Link>
                 </div>
               )}
@@ -383,7 +388,7 @@ const Navbar = () => {
                       {t('nav.login')}
                     </Button>
                     <Button to="/signup" size="lg" onClick={() => setIsOpen(false)} className="w-full">
-                      {t('nav.signup')}
+                      {isGerman ? '7 Tage testen' : 'Start 7-day trial'}
                     </Button>
                   </div>
                 )}
