@@ -335,7 +335,39 @@ const CLOCK_RE = new RegExp(
   + `|\\bum\\s+(?:halb\\s+)?(?:\\d{1,2}(?:[.:]\\d{2})?|${NUMBER_WORD})(?:\\s*Uhr)?\\b|\\bum\\s+halb\\b`,
   'i',
 );
-const DAY_RE = /\b(?:Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonnabend|Sonntag|heute|morgen|übermorgen|Wochenende)\b/i;
+/**
+ * A DAY IS A WEEKDAY OR THE ADVERB, AND `Morgen` IN „Guten Morgen“ IS NEITHER (DaF review #21,
+ * MAJOR 2). The old `DAY_RE` carried the `i` flag so that „montag“ and „Montag“ read the same —
+ * and the same flag made the NOUN `Morgen` the ADVERB `morgen`, so the first Anrede of Lektion 1
+ * („Guten Morgen, Frau Berg“) answered „Wann Sie kommen“ in L4 and L10 and „Wann Sie im Büro
+ * sind“ in L6 without the text naming a time. The weekdays keep both cases (a form value is
+ * folded, and „am montag“ is a spelling, not a different word); `heute|morgen|übermorgen` are
+ * lower case — EXCEPT at the head of a sentence, where German capitalises the adverb („Morgen komme
+ * ich.“), which is why the DAY shape below reads sentences and not the whole text. Lookarounds
+ * rather than `\b`: JavaScript's `\b` is ASCII and sees no boundary before `übermorgen`.
+ */
+const WEEKDAY = '(?:[Mm]ontag|[Dd]ienstag|[Mm]ittwoch|[Dd]onnerstag|[Ff]reitag|[Ss]amstag|[Ss]onnabend|[Ss]onntag)';
+const DAY_RE = new RegExp(
+  `(?<!\\p{L})(?:${WEEKDAY}|heute|morgen|übermorgen|[Ww]ochenende)(?!\\p{L})|^\\W*(?:Heute|Morgen|Übermorgen)(?!\\p{L})`,
+  'u',
+);
+/** The DAY read where it stands: sentence by sentence, so `^` is the head of a sentence. */
+const DAY_SHAPE = { test: (body) => sentences(body).some((s) => DAY_RE.test(s)) };
+/**
+ * A TIME OF DAY — the answer to „Wann“ that Lektion 8 teaches (`morgens`, `nachmittags`, `abends`,
+ * `der Abend`) and that the Wann shape did not know: „Ich bin nachmittags im Büro.“ was red on
+ * „Wann Sie im Büro sind“ two Lektionen after the course had taught the word (DaF review #21,
+ * MAJOR 2). It is read ONLY by the Wann shape, never by the Tag field: „Tag: abends“ on a form is
+ * still no day. `Morgen` counts here only after `am`, `heute` or `morgen` — „Guten Morgen“ is
+ * still an Anrede.
+ */
+const TIME_OF_DAY_RE = new RegExp(
+  '(?<!\\p{L})(?:morgens|vormittags|mittags|nachmittags|abends|nachts'
+  + '|[Aa]m\\s+(?:Morgen|Vormittag|Mittag|Nachmittag|Abend)|[Ii]n\\s+der\\s+Nacht'
+  + '|(?:[Hh]eute|[Mm]orgen|[Üü]bermorgen)\\s+(?:früh|Morgen|Vormittag|Mittag|Nachmittag|Abend|Nacht)'
+  + `|${WEEKDAY}(?:morgen|vormittag|mittag|nachmittag|abend|nacht))(?!\\p{L})`,
+  'u',
+);
 /** A PRICE is a number with Euro — „Das kostet Euro.“ is not a price. */
 const PRICE_RE = new RegExp(`\\b(?:\\d+(?:[.,]\\d{1,2})?|${NUMBER_WORD})\\s*(?:Euro|€)|€\\s*\\d`, 'i');
 
@@ -624,7 +656,7 @@ const PHONE_RE = new RegExp(`(?:\\d[\\s/-]*){4,}|(?:${PHONE_DIGIT_WORD}[\\s/-]+)
 const anyOf = (...shapes) => ({ test: (body) => shapes.some((sh) => sh.test(body)) });
 
 /** A DAY is a weekday or a date. */
-const DAY_OR_DATE_SHAPE = anyOf(DAY_RE, DATE_SHAPE);
+const DAY_OR_DATE_SHAPE = anyOf(DAY_SHAPE, DATE_SHAPE);
 
 const ANSWER_SHAPES = [
   // `value` is what the FIELD-NAMING alternative must carry („Der Name ist Ana Ruiz.“) — by default
@@ -723,8 +755,37 @@ const fieldValueShape = (field) => {
  * has no row: a reason is not a form, and that is what makes „Warum Sie
  * schreiben“ the undecidable Leitpunkt the KI has to grade.
  */
+/**
+ * THE WANN SHAPE READS A SENTENCE, NOT THE TEXT (DaF review #21, MAJOR 2, „Drittens“). Round 21's
+ * row was `CLOCK_RE | DAY_RE` over the whole Mitteilung, so `heute` in „Der Bus kommt heute nicht.“
+ * answered „Wann Sie kommen“ for the sentence after it. Three things make a sentence the answer:
+ *  • it carries a TIME — a clock, a day, or a time of day (`TIME_OF_DAY_RE`, this shape only);
+ *  • it is about the WRITER or the Leitpunkt's own matter: a first-person subject („Ich bin erst um
+ *    zehn Uhr da.“ shares no token with „Wann Sie kommen“ and is its answer) or one of the
+ *    Leitpunkt's content words folded („Der Zug kommt um zehn Uhr an.“, „Das Büro ist ab neun Uhr
+ *    offen.“) — „Der Zug hat heute Verspätung.“ is neither;
+ *  • the time stands in a clause that is NOT negated: „Der Bus kommt heute nicht.“ and „Ich komme
+ *    heute nicht.“ say when something does not happen. The clause, not the sentence, so that „Ich
+ *    kann heute nicht kommen, ich komme morgen.“ is still an answer — the same rule and the same
+ *    `clauses` split Minor 12 of round 17 wrote for the birth date („same clause, not same sentence“).
+ */
+const NEGATION_RE = /(?<!\p{L})(?:nicht|kein\p{L}*|nie|niemals)(?!\p{L})/u;
+const FIRST_PERSON_RE = /(?<!\p{L})(?:ich|wir)(?!\p{L})/iu;
+// `clauses` is round 17's split (see DATE_SHAPE): the same closed class of coordinators.
+const hasTime = (clause) => CLOCK_RE.test(clause) || DAY_RE.test(clause) || TIME_OF_DAY_RE.test(clause);
+const wannShape = (conjunct) => {
+  const own = new Set(leitpunktKeywords(conjunct).flatMap((w) => [foldWord(w), ...splitVerbStem(w)]).filter(Boolean));
+  return {
+    test: (body) => sentences(body).some((s) => {
+      const about = FIRST_PERSON_RE.test(s) || words(s).map(foldWord).some((f) => own.has(f));
+      return about && clauses(s).some((c) => !NEGATION_RE.test(c) && hasTime(c));
+    }),
+  };
+};
+
 const QUESTION_SHAPES = [
-  { on: /\bwann\b/i, re: new RegExp(`${CLOCK_RE.source}|${DAY_RE.source}`, 'i') },
+  // `shape` is built per conjunct (the anchor words differ), where `re` is one regex for all.
+  { on: /\bwann\b/i, shape: wannShape },
   // ROUND 16 (DaF review #15, MAJOR 2, „Zweitens“): „Warum“ is UNDECIDABLE, and that is a row of
   // its own rather than a missing row. Without it the word half decided the conjunct, and in an
   // indirect question the only lower-case word of „Warum Sie feiern“ is the TASK's verb — so
@@ -743,7 +804,10 @@ const QUESTION_SHAPES = [
   // an instruction — which is the KI's reading, never the Formcheck's. So the row is „prüft die
   // KI“, exactly like „Warum …“: never green, never red. The rule is the shape of the Leitpunkt
   // (a W-word first, a modal last), not a list of the two Leitpunkte that currently carry it.
-  { on: /^(?:was|wer|wen|wem|wann|wo|wie|warum|woher|wohin|welche[rnms]?)\b.*\b(?:soll|sollst|sollen|sollt|muss|musst|müssen|müsst|kann|kannst|können|könnt|darf|darfst|dürfen|dürft)$/i, re: null },
+  // Minor 34 (DaF review #21): the modal family is `sollen|müssen|können|dürfen|wollen|möchten|
+  // mögen`, the W-list includes `ob`, and a closing mark on the Leitpunkt („… sollen?“, „… sollen.“)
+  // does not turn the Auftrag back into a form.
+  { on: /^(?:was|wer|wen|wem|wann|wo|wie|warum|woher|wohin|welche[rnms]?|ob)\b.*\b(?:soll|sollst|sollen|sollt|muss|musst|müssen|müsst|kann|kannst|können|könnt|darf|darfst|dürfen|dürft|will|willst|wollen|wollt|möchte|möchtest|möchten|möchtet|mag|magst|mögen|mögt)\s*[?.!]?\s*$/i, re: null },
 ];
 
 /**
@@ -822,7 +886,7 @@ const conjunctEvidence = (conjunct, { allowNamedField = true } = {}) => {
       if (allowNamedField) shapes.push(namedFieldShape(w, shape.value || shape.re));
     }
   }
-  shapes.push(...QUESTION_SHAPES.filter((s) => s.re && s.on.test(conjunct)).map((s) => s.re));
+  shapes.push(...QUESTION_SHAPES.filter((s) => (s.re || s.shape) && s.on.test(conjunct)).map((s) => (s.shape ? s.shape(conjunct) : s.re)));
   return { text: conjunct, words: keywords, folded, shapes };
 };
 
@@ -875,8 +939,58 @@ export function formularText(fields = [], values = {}) {
     .join('\n');
 }
 
-const ANREDE = /\b(hallo|liebe|lieber|guten\s+(tag|morgen|abend)|sehr\s+geehrte)/i;
-const GRUSS = /\b(tschüss|tschuess|viele\s+grüße|viele\s+gruesse|liebe\s+grüße|liebe\s+gruesse|bis\s+bald|mit\s+freundlichen\s+grüßen|grüße|gruesse)/i;
+/**
+ * ANREDE AND GRUSS ARE A PLACE, NOT A WORD (DaF review #21, MAJOR 1). What *Start Deutsch 1* scores
+ * under „Kommunikative Gestaltung“ is the Anrede at the OPENING and the Schlussformel at the CLOSING;
+ * round 5's two regexes read a word anywhere in the text, so `liebe` in „Liebe Grüße“ was an Anrede
+ * for a text that had none, „Viele Grüße an Tim!“ in the third sentence was the Gruß, and the list
+ * was shorter than the course's own Wortfeld — „Bis morgen“ (L1), „Bis später“ and „Mach's gut“
+ * (L12) and the „Deine Ana“ of every informal Goethe model letter were all red, 21 of 31 closings.
+ *
+ * THE ANREDE opens the FIRST sentence: `Hallo|Hi|Hey|Moin|Servus|Grüß dich|Guten Tag/Morgen/Abend|
+ * Sehr geehrte(r)|Liebe(r) <Name>`. `Liebe`/`Lieber` count only before a capitalised word — the
+ * adverb in „ich bin lieber zu Hause“ is not an address, and „Liebe Grüße“ is excluded by name.
+ *
+ * THE GRUSS is the formula that starts a sentence or line and is followed by NOTHING BUT A SIGNATURE
+ * to the end of the text: up to four capitalised words (`Ana`, `Ana Chakiri`, `Ihre Ana`), a
+ * `deine`/`eure`/`ihre` before them, and punctuation. The formulas are the Wortfeld's family, not a
+ * list of three: `bis` + a time word (bald, dann, später, morgen, nachher, gleich, a weekday, the
+ * weekend), `<adjective> Grüße` (viele, liebe, schöne, herzliche, beste, freundliche, and „Mit
+ * freundlichen Grüßen“) with an optional `von`, the bare `Grüße`/`Gruß` with a name, `Tschüs(s)`,
+ * `Ciao`/`Tschau`, „Auf Wiedersehen“, „Mach's gut“, „Alles Gute/Liebe“, „Schönen Tag (noch)“,
+ * `LG`, and `Dein(e) <Name>`. A „Danke und“ / „Vielen Dank und“ before it is allowed. So „Viele
+ * Grüße an Tim! Ich komme um drei Uhr nach Hause. Ana“ has no Gruß (`an` is not a signature) and
+ * „Grüße von Tim.“ has none either (the bare noun takes no `von`), while „Bis dann! Ana“, „Viele
+ * Grüße\nAna“ and „Vielen Dank und viele Grüße, Ana“ all close.
+ */
+const ANREDE_RE = /^[\s"„“»«(]*(?:[Hh]allo|[Hh]i|[Hh]ey|[Mm]oin|[Ss]ervus|[Gg]rüß\s+dich|[Gg]uten\s+(?:[Tt]ag|[Mm]orgen|[Aa]bend)|[Ss]ehr\s+geehrte[rs]?|[Ll]iebe[rs]?\s+(?!Grüße|Gruesse|Grüsse)\p{Lu}\p{L}*)(?!\p{L})/u;
+const GRUSS_FORMULA = '(?:tschüs+|tschuess|tschau|ciao|lg|auf\\s+wiedersehen'
+  + '|(?:mit\\s+)?(?:viele|liebe|schöne|herzliche|beste|freundliche|freundlichen|vielen)\\s+(?:grüße|gruesse|grüsse|grüßen|gruessen|grüssen)(?:\\s+von)?'
+  + '|grüße|gruesse|grüsse|gruß|gruss'
+  + '|mach[\'’]?s\\s+gut|alles\\s+(?:gute|liebe)|schönen\\s+tag(?:\\s+noch)?'
+  + `|bis\\s+(?:bald|dann|später|spaeter|morgen|nachher|gleich|(?:zum\\s+)?${WEEKDAY.toLowerCase()}|(?:zum\\s+)?wochenende)`
+  + '|deine?)';
+/** The formula at the head of a sentence or a line. Case-blind: the formula has no case rule, the signature after it has. */
+const GRUSS_START_RE = new RegExp(`(?:^|[.!?…]\\s+|\\n\\s*)(?:(?:vielen\\s+)?danke?\\s+und\\s+)?${GRUSS_FORMULA}(?!\\p{L})`, 'giu');
+/** What may follow the formula to the end of the text: a signature, and nothing else. */
+const SIGNATURE_RE = /^(?:[\s,.!–-]*(?:deine?|eure?|ihre?|\p{Lu}[\p{L}'’.-]*)){0,5}[\s,.!–-]*$/u;
+
+/** Is the FIRST sentence of `text` opened by an Anrede? */
+export const anredeAtOpening = (text) => ANREDE_RE.test(sentences(text)[0] || '');
+
+/** Does `text` END in a Schlussformel — the formula, then a signature, then nothing? */
+export const grussAtClosing = (text) => {
+  const t = String(text || '').trim();
+  for (const m of t.matchAll(GRUSS_START_RE)) {
+    const rest = t.slice(m.index + m[0].length);
+    // „Dein“/„Deine“ is a signature only WITH the name („Deine Ana“); the other formulas stand alone.
+    const needsName = /deine?$/i.test(m[0]);
+    if (!SIGNATURE_RE.test(rest)) continue;
+    if (needsName && !/^\s+\p{Lu}/u.test(rest)) continue;
+    return true;
+  }
+  return false;
+};
 
 /**
  * scoreWriting(schreiben, value) → { ok, checks: [{ key, label, ok, ai?, filled? }], count }
@@ -915,8 +1029,10 @@ export function scoreWriting(schreiben, value) {
 
   const checks = [
     { key: 'length', label: `${min}–${Number.isFinite(max) ? max : '∞'} Wörter`, ok: count >= min && count <= max },
-    { key: 'anrede', label: 'Anrede', ok: ANREDE.test(text) },
-    { key: 'gruss', label: 'Gruß', ok: GRUSS.test(text) },
+    // A place, not a word: the Anrede opens the first sentence, the Gruß closes the text (MAJOR 1,
+    // DaF review #21 — see ANREDE_RE / GRUSS_FORMULA above).
+    { key: 'anrede', label: 'Anrede', ok: anredeAtOpening(text) },
+    { key: 'gruss', label: 'Gruß', ok: grussAtClosing(text) },
     // A Leitpunkt is satisfied by a FAMILY of forms (see the header), and one from which no form
     // can be derived at all — „Warum Sie schreiben“, every token a function word — is UNDECIDABLE.
     // Round 13 dropped those rows from the list; the task then showed three Leitpunkte and the

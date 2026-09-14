@@ -276,7 +276,8 @@ only `src/data/curricula/<level>.js` + the pool are per level).
 | 21 | Round 18 — review #17 (0 BLOCKER · 3 MAJOR): Formcheck decides Auftrag Leitpunkte by sentence type and language sentences never green nationality; the masculine nationality noun gets its own surface; RULE 12 counts neither sample nor notice as rehearsal (`kommen aus` practisable in L2); RULE 23b hard 0; RULE 24 covers question order, particles, coordination; one country list for checker and validator | merged 2026-09-13 | #135 |
 | 22 | Round 19 — review #18 (0 BLOCKER · 2 MAJOR, both in the writing checker): the Auftrag Leitpunkt accepts declarative answers and rejects non-person modals and bare „bitte"; the six Formulare get a per-field value-shape check (they only had a non-empty check); Familienstand and Farbe surfaces rewritten as sentences people say; cp1 dictation length rule; RULE 22/24 refinements | merged 2026-09-14 | #136 |
 | 23 | Round 20 — review #19 (0 BLOCKER · 2 MAJOR, both in the writing checker, third round on the Auftrag point): the declarative Auftrag shape needs content after the verb and knows the bare imperative, vocative, `und`-start and a two-word Vorfeld; Formular country fields reject language/nationality names, case decided once per field class, clock field accepts `15.00`; checkpoint dictation ids pinned; RULE 24 ignores speaker labels | merged 2026-09-14 (the preview failed once because the Supabase project had been paused; restored 09:16 UTC) | #137 |
-| 24 | Round 21 — review #20 (0 BLOCKER · 2 MAJOR, the Auftrag Leitpunkt a fourth time): decision 2026-09-14 — an indirect Auftrag Leitpunkt („Was … machen soll / mitbringen sollen") is undecidable by form; the form check shows „prüft die KI" for it, the AI grader decides, and the four-round instruction-shape machinery is deleted | in progress | — |
+| 24 | Round 21 — review #20 (0 BLOCKER · 2 MAJOR, the Auftrag Leitpunkt a fourth time): decision 2026-09-14 — an indirect Auftrag Leitpunkt („Was … machen soll / mitbringen sollen") is undecidable by form; the form check shows „prüft die KI" for it, the AI grader decides, and the four-round instruction-shape machinery is deleted | merged 2026-09-14 | #138 |
+| 25 | Round 22 — review #21 (0 BLOCKER · 2 MAJOR, form check): Anrede checked at the first sentence and Gruß at the last line from the Wortfeld formulas; the Wann shape per sentence, lower-case `heute/morgen` only, L8 times of day; KI-row wording, modal/`ob` variants of the Auftrag shape; the form-check scope written into the course standard | in progress | — |
 
 ### The review ladder (adversarial DaF teacher / SD1 examiner, measured not assumed)
 
@@ -302,7 +303,8 @@ only `src/data/curricula/<level>.js` + the pool are per level).
 | 18 | #135 | 0 BLOCKER · 2 MAJOR · 19 MINOR | 20.5 (the six Formulare measured for the first time) | `REVIEW-daf-18-2026-09-12.md` |
 | 19 | #136 | 0 BLOCKER · 2 MAJOR · 13 MINOR | 20.8 | `REVIEW-daf-19-2026-09-12.md` |
 | 20 | #137 | 0 BLOCKER · 2 MAJOR · 18 MINOR (both majors on the Auftrag Leitpunkt of the form check, fourth round) | 21.2 (no lesson under 20) | `REVIEW-daf-20-2026-09-12.md` |
-| 21 | round 21 | pending | — | — |
+| 21 | #138 | 0 BLOCKER · 2 MAJOR · 22 MINOR (the round-21 decision accepted; both majors in the form check: greeting/closing read anywhere in the text, „Guten Morgen" read as a time) | 21.2 | `REVIEW-daf-21-2026-09-12.md` |
+| 22 | round 22 | pending | — | — |
 
 All reports live in `docs/course-factory/a11-rebuild/`. Every round recomputes the real draw
 (`planPractice(CURRICULUM_A11, a11.json, attempt)`) rather than reading the pool, so each verdict is
