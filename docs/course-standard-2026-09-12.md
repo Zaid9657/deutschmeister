@@ -88,6 +88,19 @@ Target 12–15 min, ~22 items, one exercise per screen, primary action at the bo
 | 7 | Re-queue | 1.5 | 0–4 | Every miss returns as a different variant |
 | 8 | Recap | 0.5 | — | Words learned, grammar point, mastery delta, next review date |
 
+**The writing form check decides form, the KI decides meaning (2026-09-14).** Before a text is
+submitted, `src/lib/lesson/writing.js` shows one row per Leitpunkt. A row is decided by form only
+where the Leitpunkt asks for a value that has a shape: a date, a country, a nationality, a phone
+number, a clock time, a price, an age, a weekday or time of day, a name; the Anrede at the first
+sentence and the Gruß at the last line; a Formular field by the shape its name implies. A Leitpunkt
+that asks for a meaning — „Warum Sie schreiben", „Warum Sie feiern", and every indirect Auftrag closed
+by a modal („Was die Gäste mitbringen sollen", „Was die Kollegin bis dahin machen soll") — shows
+„prüft die KI" and is graded only by the AI runner against the Goethe criteria, exactly as two human
+raters decide Inhaltspunkte. Reviews #17–#20 spent four rounds on shape rules for the Auftrag and
+each was too narrow or too wide, because one sentence form carries two meanings; the rule above is
+the lesson, and `tests/writing-course.test.mjs` pins both halves (the 184-sentence Auftrag fixture
+yields the KI row; non-modal Leitpunkte of the same tasks are still decided by form).
+
 Exercise mix per lesson: recognition 35 % · typed production 35 % · listening 15 % · speaking 10 % ·
 writing 5 %, shifting to 25/40/15/12/8 by A2.2. Speaking from Lektion 1, open speaking from Lektion 4,
 writing from Lektion 3 (the A1 exam has it).
