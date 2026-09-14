@@ -477,7 +477,7 @@ const DashboardPage = () => {
           <Reveal className="mb-4">
             <Card raised tone="aprikose" edge="aprikose" className="flex flex-col sm:flex-row items-center justify-between gap-3 px-5 py-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-clay bg-accent-aprikose text-white flex items-center justify-center">
+                <div className="w-10 h-10 rounded-clay bg-accent-aprikose text-ink flex items-center justify-center">
                   <Clock className="w-5 h-5" />
                 </div>
                 <div>

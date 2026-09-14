@@ -199,7 +199,7 @@ const CHIP_PRESSABLE =
           const num = card.querySelector('[data-topic-num]');
           if (completed.has(id)) {
             if (num) num.textContent = '✓';
-            if (badge) { badge.classList.remove('bg-paper-sunk', 'text-ink'); badge.classList.add('bg-accent-limette', 'text-white'); }
+            if (badge) { badge.classList.remove('bg-paper-sunk'); badge.classList.add('bg-accent-limette'); }
             card.classList.add('ring-1', 'ring-accent-limette');
           } else if (current && id === current.id) {
             card.classList.add('ring-2', 'ring-siegel', 'shadow-raise-lg');

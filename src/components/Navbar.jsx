@@ -94,13 +94,13 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-paper/85 backdrop-blur-md border-b border-rule">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 2xl:max-w-[1536px]">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Logo size={40} showWordmark to="/" />
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden 2xl:flex items-center gap-1">
             {visibleGroups.map((group, gi) => (
               <div key={group.key} className="flex items-center gap-1">
                 {gi > 0 && <NavSeparator />}
@@ -108,7 +108,7 @@ const Navbar = () => {
                   <NavItem
                     key={item.key}
                     item={item}
-                    className="px-3 py-2 rounded-lg text-sm font-medium text-graphite hover:text-ink hover:bg-siegel-wash transition-colors"
+                    className="flex min-h-11 items-center whitespace-nowrap px-3 py-2 rounded-lg text-sm font-medium text-graphite hover:text-ink hover:bg-siegel-wash transition-colors"
                   >
                     {label(item)}
                   </NavItem>
@@ -122,7 +122,7 @@ const Navbar = () => {
                 <NavSeparator />
                 <Link
                   to="/level/a1.1"
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-siegel/25 bg-siegel-wash text-siegel-deep text-sm font-semibold hover:border-siegel/50 transition-colors"
+                  className="flex min-h-11 items-center gap-1.5 whitespace-nowrap px-3 py-1.5 rounded-full border border-siegel/25 bg-siegel-wash text-siegel-deep text-sm font-semibold hover:border-siegel/50 transition-colors"
                 >
                   <Sparkles size={14} />
                   A1.1 Free
@@ -142,7 +142,7 @@ const Navbar = () => {
             {user && inTrial && !isSubscribed && (
               <a
                 href="/pricing/"
-                className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-siegel-wash text-siegel-deep text-xs font-bold hover:bg-white transition-colors border border-siegel/30"
+                className="relative flex min-h-11 items-center gap-1.5 whitespace-nowrap px-3 py-1.5 rounded-full bg-siegel-wash text-siegel-deep text-xs font-bold hover:bg-white transition-colors border border-siegel/30"
               >
                 <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-gold animate-ping opacity-75" />
                 <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-gold" />
@@ -160,8 +160,9 @@ const Navbar = () => {
             {/* Language Toggle — icon only */}
             <button
               onClick={toggleLanguage}
-              className="flex items-center justify-center w-9 h-9 rounded-lg bg-paper-sunk hover:bg-siegel-wash transition-colors text-graphite"
+              className="flex items-center justify-center w-11 h-11 rounded-lg bg-paper-sunk hover:bg-siegel-wash transition-colors text-graphite"
               title={i18n.language === 'en' ? 'Deutsch' : 'English'}
+              aria-label={i18n.language === 'en' ? 'Switch to German' : 'Switch to English'}
             >
               <Globe size={18} />
             </button>
@@ -171,7 +172,7 @@ const Navbar = () => {
               <div className="relative" ref={userMenuRef}>
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-siegel-wash transition-colors text-graphite"
+                  className="flex min-h-11 items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-siegel-wash transition-colors text-graphite"
                 >
                   <div className="w-7 h-7 rounded-full bg-paper-sunk flex items-center justify-center">
                     <User size={14} className="text-graphite" />
@@ -230,7 +231,7 @@ const Navbar = () => {
               <div className="flex items-center gap-2">
                 <Link
                   to="/login"
-                  className="px-3 py-2 text-sm font-medium text-graphite hover:text-ink transition-colors"
+                  className="flex min-h-11 items-center px-3 py-2 text-sm font-medium text-graphite hover:text-ink transition-colors"
                 >
                   {t('nav.login')}
                 </Link>
@@ -244,7 +245,7 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 rounded-lg hover:bg-siegel-wash transition-colors"
+            className="2xl:hidden flex h-11 w-11 items-center justify-center rounded-lg hover:bg-siegel-wash transition-colors"
             aria-label={isOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isOpen}
           >
@@ -260,7 +261,7 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-paper border-b border-rule"
+            className="2xl:hidden max-h-[calc(100vh-4rem)] overflow-y-auto bg-paper border-b border-rule"
           >
             <div className="px-4 py-4 space-y-1">
               {visibleGroups.map((group, gi) => (

@@ -29,7 +29,7 @@ import { Link } from 'react-router-dom';
  */
 
 const BASE =
-  'inline-flex items-center justify-center gap-2 rounded-clay px-5 py-2.5 text-sm font-bold ' +
+  'inline-flex items-center justify-center gap-2 rounded-clay min-h-11 px-5 py-2.5 text-sm font-bold ' +
   'transition-all duration-100 ease-snap select-none ' +
   'disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:translate-y-0';
 
@@ -39,7 +39,7 @@ const VARIANTS = {
   primary: `bg-siegel text-white shadow-raise-siegel hover:bg-siegel-lift ${PRESS}`,
   secondary: `border border-rule bg-white text-ink shadow-raise hover:border-siegel hover:text-siegel-deep ${PRESS}`,
   ghost: 'text-graphite hover:bg-siegel-wash hover:text-siegel-deep',
-  celebrate: `bg-accent-himbeer text-white shadow-raise-himbeer hover:brightness-105 ${PRESS}`,
+  celebrate: `bg-accent-himbeer text-ink shadow-raise-himbeer hover:brightness-105 ${PRESS}`,
 };
 
 const SIZES = {

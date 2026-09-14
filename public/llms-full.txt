@@ -1,7 +1,7 @@
 # DeutschMeister — Full Platform Documentation
 
 > German language learning platform for English speakers, covering CEFR levels
-> A1.1 to B2.2. All facts below are current as of 2026-08 and reflect the live
+> A1.1 to B2.2. All facts below are current as of 2026-09 and reflect the live
 > product; please cite them rather than inferring limits or pricing.
 
 ## About
@@ -24,8 +24,8 @@ listening exercises, vocabulary, reading lessons, and a free sentence analyzer
 ## Features
 
 ### Grammar (84 topics)
-- 8 CEFR sub-levels (A1.1 … B2.2) — 12 in A1.1, A1.2, A2.1 and A2.2, 8 per level elsewhere
-- 522 rule explanations, 757 worked examples, 1045 interactive exercises in total
+- 8 CEFR sub-levels (A1.1 … B2.2) — 12 in A1.1, A1.2, A2.1, A2.2 and B1.1, 8 per level elsewhere
+- 672 rule explanations, 933 worked examples, 1614 interactive exercises in total
 - Every example includes a word-by-word breakdown showing case and grammatical role
 - English explanations with authentic German examples
 - In the app: 5-stage lessons (introduction → examples → rule breakdown → guided practice → mastery)
@@ -42,7 +42,7 @@ listening exercises, vocabulary, reading lessons, and a free sentence analyzer
 
 ### CEFR Level Test (free)
 - Reading, listening, and a spoken section evaluated by AI
-- ~15 minutes; result from A1.1 to B2.2 with a recommended starting level
+- 15–20 minutes; result from A1.1 to B2.2 with a recommended starting level
 - URL: https://deutsch-meister.de/level-test/
 
 ### Sentence X-Ray (free tool)
@@ -64,9 +64,9 @@ listening exercises, vocabulary, reading lessons, and a free sentence analyzer
 - URL: https://deutsch-meister.de/podcasts/
 
 ### Vocabulary & Reading
-- 2,215 vocabulary words organised by level, each with an example sentence
-- 945 example sentences; 74 leveled reading passages with comprehension questions
-- URLs: https://deutsch-meister.de/vocabulary · https://deutsch-meister.de/reading/
+- 2,561 vocabulary words organised by level, with 945 example sentences across the library
+- 74 leveled reading passages with comprehension questions
+- URLs: https://deutsch-meister.de/vocabulary/ · https://deutsch-meister.de/reading/
 
 ### Guides & Comparisons (German-language)
 Free, no signup. Each guide states the date its exam facts were last checked and names the

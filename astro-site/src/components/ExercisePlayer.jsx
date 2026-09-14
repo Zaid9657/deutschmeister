@@ -29,7 +29,7 @@ const BTN =
   'inline-flex select-none items-center justify-center gap-2 rounded-clay font-bold transition-all duration-100 ease-snap';
 const BTN_PRIMARY = `${BTN} bg-siegel px-5 py-2.5 text-sm text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`;
 const BTN_PRIMARY_LG = `${BTN} bg-siegel px-7 py-3.5 text-base text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`;
-const BTN_CELEBRATE = `${BTN} bg-accent-himbeer px-7 py-3.5 text-base text-white shadow-raise-himbeer hover:bg-accent-himbeer-edge active:translate-y-1 active:shadow-none`;
+const BTN_CELEBRATE = `${BTN} bg-accent-himbeer px-7 py-3.5 text-base text-ink shadow-raise-himbeer hover:brightness-105 active:translate-y-1 active:shadow-none`;
 // Secondary action on the results card. Flat by rule 3 (nothing to press home)
 // and siegel-on-paper by rule 2, so the forward action keeps the only raised button.
 const BTN_QUIET = `${BTN} px-5 py-2.5 text-sm text-siegel hover:text-siegel-deep`;
@@ -77,10 +77,10 @@ function MultipleChoice({ exercise, onAnswer, answered }) {
           >
             <span className="flex items-center gap-3">
               {answered && isCorrect && (
-                <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-pill bg-accent-limette font-data text-xs font-bold text-white" aria-hidden="true">{ICONS.correct}</span>
+                <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-pill bg-accent-limette font-data text-xs font-bold text-ink" aria-hidden="true">{ICONS.correct}</span>
               )}
               {answered && isSelected && !isCorrect && (
-                <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-pill bg-accent-himbeer font-data text-xs font-bold text-white" aria-hidden="true">{ICONS.wrong}</span>
+                <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-pill bg-accent-himbeer font-data text-xs font-bold text-ink" aria-hidden="true">{ICONS.wrong}</span>
               )}
               {opt}
               {answered && isCorrect && <span className="sr-only">(correct answer)</span>}
@@ -155,7 +155,7 @@ function FillBlank({ exercise, onAnswer, answered }) {
         />
         {submitted && (
           <span
-            className={`absolute right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-pill font-data text-xs font-bold text-white ${isCorrect ? 'bg-accent-limette' : 'bg-accent-himbeer'}`}
+            className={`absolute right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-pill font-data text-xs font-bold text-ink ${isCorrect ? 'bg-accent-limette' : 'bg-accent-himbeer'}`}
             aria-hidden="true"
           >
             {isCorrect ? ICONS.correct : ICONS.wrong}

@@ -83,7 +83,7 @@ const TRACK_LINES = {
 const STEPS = [
   {
     n: '1',
-    accent: 'bg-accent-himbeer',
+    accent: 'bg-accent-himbeer text-ink',
     title: 'Find out where you actually stand',
     body: `A free 20-minute level test — written, listening and speaking — tells you which of the ${LEVEL_COUNT} levels to train at. No more studying B1 material with an A2 gap underneath it.`,
     href: '/level-test/',
@@ -91,7 +91,7 @@ const STEPS = [
   },
   {
     n: '2',
-    accent: 'bg-accent-aprikose',
+    accent: 'bg-accent-aprikose text-ink',
     title: 'Train at your level, not around it',
     body: `${GRAMMAR_TOPIC_COUNT} grammar topics with exercises, ${LISTENING_DIALOGUE_COUNT} native-speaker dialogues, ${READING_LESSON_COUNT} reading lessons and ${VOCAB_WORD_COUNT} words in a spaced-repetition trainer — organised by level, so every session lands where your exam needs it.`,
     href: '/grammar/',
@@ -99,7 +99,7 @@ const STEPS = [
   },
   {
     n: '3',
-    accent: 'bg-accent-limette',
+    accent: 'bg-accent-limette text-ink',
     title: 'Speak and write before it counts',
     body: `The speaking test is the part nobody can cram. Practise conversations with the AI coach (${PRO_SPEAKING_SESSIONS_PER_MONTH} sessions a month on Pro) and get exam letters marked against the publicly documented criteria (${PRO_WRITING_EVALUATIONS_PER_MONTH} a month on Pro).`,
     href: '/speaking/',
@@ -107,7 +107,7 @@ const STEPS = [
   },
   {
     n: '4',
-    accent: 'bg-siegel',
+    accent: 'bg-siegel text-white',
     title: 'Rehearse the real thing',
     body: 'A timed practice test in the exam’s style (telc B1 today), scored against the documented pass mark — so your first run under exam conditions is not the exam.',
     href: '/modelltest',
@@ -286,7 +286,7 @@ const nf = (n) => n.toLocaleString('en-US');
         <ol class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
           {STEPS.map((s, i) => (
             <li class="reveal relative rounded-clay border border-rule bg-white p-6 shadow-raise" style={`--rd:${i * 110}ms`}>
-              <span class={`absolute -top-4 left-6 flex h-9 w-9 items-center justify-center rounded-pill ${s.accent} font-data text-sm font-bold text-white shadow-raise`} aria-hidden="true">{s.n}</span>
+              <span class={`absolute -top-4 left-6 flex h-9 w-9 items-center justify-center rounded-pill ${s.accent} font-data text-sm font-bold shadow-raise`} aria-hidden="true">{s.n}</span>
               <h3 class="mt-3 font-display text-[1.125rem] font-semibold">{s.title}</h3>
               <p class="mt-2 text-[0.9375rem] leading-relaxed text-graphite">{s.body}</p>
               <a href={s.href} class="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-siegel transition-colors hover:text-siegel-deep">

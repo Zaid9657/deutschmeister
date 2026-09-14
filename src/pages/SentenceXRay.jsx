@@ -558,6 +558,9 @@ const SentenceXRay = () => {
                 <p className={`${EYEBROW} text-siegel mb-2 px-1`}>
                   Or try an example
                 </p>
+                <p className="mb-2 px-1 text-xs text-graphite">
+                  Trying an example uses one of your daily Sentence X-Ray analyses.
+                </p>
                 <div className="flex flex-wrap gap-2">
                   {EXAMPLES.map((ex) => (
                     <Chip key={ex} tone="quiet" size="md" raised onClick={() => analyze(ex)}>

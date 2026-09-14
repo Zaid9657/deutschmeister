@@ -39,7 +39,7 @@ export default function CourseCompletePage() {
         <div className="relative overflow-hidden rounded-clay">
           <Aurora />
           <div className="relative px-2 py-6 text-center">
-            <Reveal><span className={`mx-auto flex h-24 w-24 items-center justify-center rounded-full ${complete ? 'bg-accent-himbeer text-white shadow-raise-himbeer' : 'bg-siegel-wash text-siegel'}`}><Trophy className="h-12 w-12" /></span></Reveal>
+            <Reveal><span className={`mx-auto flex h-24 w-24 items-center justify-center rounded-full ${complete ? 'bg-accent-himbeer text-ink shadow-raise-himbeer' : 'bg-siegel-wash text-siegel'}`}><Trophy className="h-12 w-12" /></span></Reveal>
             <Reveal as="h1" delay={80} className="mt-6 font-display text-[2rem] font-semibold leading-[1.05] tracking-[-0.022em] sm:text-[2.75rem]">
               {complete ? `German ${course.code}: complete.` : `German ${course.code}: ${pct}% done`}
             </Reveal>
