@@ -357,13 +357,15 @@ test('an undecidable Leitpunkt is shown and marked for the KI — never dropped,
     assert.equal(lpRows[0].ai, true, `L${nr}: „${task.leitpunkte[0]}“ is undecidable by form`);
     assert.equal(leitpunktSatisfied(task.leitpunkte[0], 'irgendein Text'), null);
   }
-  // Exactly two of the eighteen A1.1 Leitpunkte are in this class, and both are the same sentence.
+  // Five of the eighteen A1.1 Leitpunkte are in this class.
   const undecidable = COURSE.flatMap((t) => (t.register === 'formular' ? [] : t.leitpunkte))
     .filter((lp) => leitpunktSatisfied(lp, 'Hallo Lena! Viele Grüße, Ana') === null);
   // ROUND 16 (DaF review #15, MAJOR 2): „Warum Sie feiern“ joins them. A reason is not a form, and
   // the only lower-case word of that Leitpunkt is the TASK's own verb — deciding it by that word
   // made the empty echo („Wir feiern.“) green and the reason („Ich habe Geburtstag.“) red.
-  assert.deepEqual(undecidable, ['Warum Sie schreiben', 'Warum Sie schreiben', 'Warum Sie feiern']);
+  // 2026-09-14: the two Aufträge join them by owner decision — see the round-21 block below.
+  assert.deepEqual(undecidable, ['Warum Sie schreiben', 'Warum Sie schreiben', 'Was die Kollegin bis dahin machen soll',
+    'Warum Sie feiern', 'Was die Gäste mitbringen sollen']);
 });
 
 test('the Formcheck is one function: the screen and RULE 17 grade with the same code', () => {
@@ -419,8 +421,8 @@ const NEGATIVE_PROBES = [
   ['Ihre Telefonnummer', 'Ich bin um neun Uhr im Büro.'],
   ['Ihre Telefonnummer', 'Wir sind zwei Kollegen.'],
   ['Neuer Tag und neue Uhrzeit', 'Ich komme am Montag zu spät.'],
-  ['Was die Kollegin bis dahin machen soll', 'Ich komme um zehn Uhr. Bis dann!'],
-  ['Was die Gäste mitbringen sollen', 'Ich lade meine Gäste ein.'],
+  // The review's two Auftrag probes („Ich komme um zehn Uhr. Bis dann!“, „Ich lade meine Gäste
+  // ein.“) moved to AUFTRAG_PROBES below on 2026-09-14: the Auftrag row is the KI's, never red.
   ['Wann Sie sich treffen', 'Wir treffen Ana auf dem Flohmarkt.'],
   // The reworded L4 Leitpunkt (DaF review #14, BLOCKER 1) under the same probe: a verb without a
   // time does not say WANN.
@@ -474,15 +476,17 @@ test('the answer shapes are shape-specific: a bare numeral satisfies nothing', (
 });
 
 test('in an indirect question the nouns are the task’s topic and the verb is the answer', () => {
-  // „Was die Gäste mitbringen sollen“ ← „Ich lade meine Gäste ein.“ names the Gäste and answers
-  // nothing; the separable verb counts split („Bringt ihr Kuchen mit?“).
-  const lp = 'Was die Gäste mitbringen sollen';
-  assert.deepEqual(leitpunktEvidence(lp).conjuncts[0].words, ['mitbringen']);
-  assert.equal(leitpunktSatisfied(lp, 'Bringt ihr bitte Kuchen und Musik mit?'), true);
-  assert.equal(leitpunktSatisfied(lp, 'Die Gäste kommen um acht Uhr.'), false);
-  // ROUND 18: the verb is kept as the conjunct's word (RULE 21 measures whether it is taught), but
-  // it no longer SCORES — an Auftrag is a sentence type, see the round-18 block below.
-  assert.equal(leitpunktEvidence(lp).conjuncts[0].shapes.length, 1, 'the Auftrag conjunct carries the instruction shape');
+  // „Was Sie kaufen“ ← „Der Flohmarkt ist gut.“ answers nothing; the lower-case verb is the evidence.
+  const lp = 'Was Sie kaufen';
+  assert.deepEqual(leitpunktEvidence(lp).conjuncts[0].words, ['kaufen']);
+  assert.equal(leitpunktSatisfied(lp, 'Ich kaufe den Stuhl.'), true);
+  assert.equal(leitpunktSatisfied(lp, 'Der Flohmarkt ist gut.'), false);
+  // The Auftrag („… mitbringen sollen“) keeps its verb as the conjunct's WORD — RULE 21 measures
+  // whether the course has taught it — but carries nothing that scores: no fold, no shape. Since
+  // 2026-09-14 the row is the KI's (see the round-21 block below).
+  const auftrag = leitpunktEvidence('Was die Gäste mitbringen sollen').conjuncts[0];
+  assert.deepEqual(auftrag.words, ['mitbringen']);
+  assert.deepEqual([auftrag.folded, auftrag.shapes], [[], []], 'the Auftrag conjunct decides nothing by form');
 });
 
 
@@ -577,9 +581,9 @@ const LEITPUNKT_FIXTURE = [
   ['Wann Sie im Büro sind', 'Ich bin um neun Uhr im Büro.', 'Ich arbeite im Büro.', 'Ich bin zur Bürozeit da.'],
   ['Neuer Tag und neue Uhrzeit', 'Geht es am Dienstag um halb neun?', 'Ich komme am Montag zu spät.', 'Wir brauchen einen neuen Tag und eine neue Uhrzeit.'],
   ['Eine Frage an Lena', 'Bist du dann pünktlich?', 'Ich habe eine Frage für Lena.', 'Ich stelle Lena eine Frage.'],
-  ['Was die Kollegin bis dahin machen soll', 'Bitte machen Sie die Arbeit ohne mich.', 'Ich komme um zehn Uhr. Bis dann!', 'Die Kollegin weiß, was sie tut.'],
   ['Tag und Uhrzeit', 'Wir feiern am Freitag um acht Uhr.', 'Wir feiern am Freitag.', 'Der Tag und die Uhrzeit stehen fest.'],
-  ['Was die Gäste mitbringen sollen', 'Bringt ihr bitte Kuchen und Musik mit?', 'Die Gäste kommen um acht Uhr.', 'Die Gäste sind eingeladen.'],
+  // The two Aufträge („Was die Kollegin bis dahin machen soll“, „Was die Gäste mitbringen sollen“)
+  // left this table on 2026-09-14: they are KI rows now, and the `open` check below covers them.
 ];
 
 test('every decidable Leitpunkt of the six Mitteilungen is tested GREEN and RED', () => {
@@ -748,7 +752,8 @@ test('RULE 22: no sentence of a Mitteilung Beispieltext is a form being read out
 // every learner writes. And the Auftrag Leitpunkte („Was die Kollegin bis dahin machen soll“) were
 // still decided by a predicate echo: on L10 ten of twelve correct instructions were red and four
 // `machen` sentences that instruct nothing were green. Each is closed here as a RULE with the probe
-// in both directions, never as a list of the sentences that happened to fail.
+// in both directions, never as a list of the sentences that happened to fail. (The Auftrag half of
+// rounds 18–20 was superseded on 2026-09-14 — see the round-21 block below.)
 // ───────────────────────────────────────────────────────────────────────────────────────────────
 
 test('MAJOR 1 (round 18): what a person speaks, has as a mother tongue or learns is a language', () => {
@@ -773,51 +778,197 @@ test('MAJOR 1 (round 18): what a person speaks, has as a mother tongue or learns
   }
 });
 
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+// ROUND 21 (2026-09-14) — THE AUFTRAG IS UNDECIDABLE BY FORM (owner decision after DaF reviews
+// #17–#20)
+//
+// „Was die Kollegin bis dahin machen soll“ and „Was die Gäste mitbringen sollen“ — an indirect
+// question closed by a modal — were repaired four rounds in a row and measured wrong four times:
+// round 17 decided them by the task's verb echoed back (10 of 12 correct Aufträge red), round 18 by
+// three instruction shapes (0 of 10 exam statements green, „Der Zug kann nicht fahren.“ green),
+// round 19 by a fourth shape with a subject and a complement rule (22 of 48 correct answers red,
+// „Die Gäste tanzen.“ green), round 20 by a vocative cut and a bare imperative (13 of 51 red, „Die
+// Kollegin fährt mit dem Zug.“ green). The reason is not a missing case: „Die Kollegin trinkt
+// Kaffee.“ and „Die Kollegin ruft Herrn Weber an.“ have one form, and only their meaning tells a
+// description from an instruction. So the row is the KI's — „prüft die KI“, exactly like „Warum Sie
+// schreiben“ — and the Formcheck neither greens nor reds it. ONE rule test below: every sentence the
+// four rounds argued over, correct answers and non-answers alike, yields the KI row; a non-modal
+// Leitpunkt in the same task is still decided by form; and the rule is the SHAPE of the Leitpunkt
+// (W-word first, modal last), not a list of the two that carry it today.
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+
+const L10 = 'Was die Kollegin bis dahin machen soll';
+const L12 = 'Was die Gäste mitbringen sollen';
+const wrap10 = (t) => `Liebe Kollegin, der Zug hat Verspätung. Ich komme um zehn Uhr. ${t} Viele Grüße, Ana`;
+const wrap12 = (t) => `Hallo Lena! Ich habe Geburtstag. Wir feiern am Samstag um acht Uhr. ${t} Bis bald, Ana`;
+
 /**
- * PER AUFTRAG LEITPUNKT: three instructions that do NOT contain the task's verb (green) and three
- * echoes of the task's verb that instruct nothing (red). The echo is the old rule's whole evidence;
- * the instruction is what the exam asks for. The L10 line the content worker writes into the model
- * text („Bitte rufen Sie Herrn Weber an.“) is the first green of its row.
+ * EVERY SENTENCE THE FOUR ROUNDS PROBED, kept as the history of the finding — `correct` were the
+ * exam-grade answers the reviews wanted green, `other` the echoes, descriptions, questions, thing
+ * subjects, greetings and the writer's own plans they wanted red. Under the rule of this round the
+ * two lists have ONE verdict: the KI row.
  */
-const AUFTRAG_FIXTURE = [
-  ['Was die Kollegin bis dahin machen soll',
-    ['Bitte rufen Sie Herrn Weber an.', 'Warten Sie bitte im Büro.', 'Sie können ohne mich beginnen.'],
-    ['Das macht nichts.', 'Ich mache das später.', 'Wir machen eine Pause.']],
-  // ROUND 19 (DaF review #18, MAJOR 1): „Kuchen und Salat, bitte!“ left this row — `bitte` now needs
-  // a verb in its clause, or „Entschuldigung, bitte.“ is an Auftrag too — and „Die Gäste bringen
-  // nichts mit.“ left the echo list: it is a statement about the guests, which IS the exam's answer
-  // (see the round-19 block below), not an echo.
-  ['Was die Gäste mitbringen sollen',
-    ['Bitte kommt mit Kuchen.', 'Bitte Kuchen und Salat kaufen.', 'Ihr könnt Getränke kaufen.'],
-    ['Ich bringe Kuchen mit.', 'Wir bringen Musik mit.', 'Wir bringen nichts mit.']],
+const AUFTRAG_PROBES = [
+  [L10, wrap10, {
+    correct: [
+      // round 18: instruction, `bitte` + verb, modal chunk
+      'Bitte rufen Sie Herrn Weber an.', 'Warten Sie bitte im Büro.', 'Sie können ohne mich beginnen.',
+      'Rufen Sie Herrn Weber an.', 'Bitte Herrn Weber anrufen.', 'Sie müssen Herrn Weber anrufen.',
+      'Bitte machen Sie die Arbeit ohne mich.',
+      // round 19: the statement about the person; the modal with a person subject; `bitte` + verb
+      'Die Kollegin beginnt ohne mich.', 'Sie beginnt bitte ohne mich.', 'Die Kollegen können schon beginnen.',
+      'Meine Kollegin soll warten.', 'Frau Berg beginnt ohne mich.',
+      'Sie kann ohne mich beginnen.', 'Die Kollegin soll warten.', 'Sie müssen nichts machen.', 'Können Sie Herrn Weber anrufen?',
+      'Bitte warten.', 'Bitte warten Sie auf mich.', 'Warten Sie.', 'Warten Sie bitte.', 'Bitte schreiben Sie Frau Berg.',
+      'Bitte sagen Sie Herrn Weber Bescheid.',
+      // round 20: the complement that is one; the modal question with a noun subject; the vocative
+      'Sie beginnt ohne mich.', 'Die Kollegin wartet auf mich.',
+      'Kann die Kollegin warten?', 'Soll die Kollegin warten?', 'Muss die Kollegin warten?', 'Kann sie warten?',
+      'Frau Berg, warten Sie bitte.', 'Herr Weber, rufen Sie bitte Frau Berg an.', 'Und die Kollegin soll warten.',
+      // review #20, MAJOR 1: the formal address in the sentence
+      'Sehr geehrte Frau Berg, beginnen Sie ohne mich.',
+    ],
+    other: [
+      // review #14: the time, not the task
+      'Ich komme um zehn Uhr. Bis dann!',
+      // round 18: the verb echo; the question; the writer's own modal
+      'Das macht nichts.', 'Ich mache das später.', 'Wir machen eine Pause.', 'Was machen Sie heute?',
+      'Ich muss Herrn Weber anrufen.', 'Kommst du?', 'Hast du Zeit?', 'Die Kollegin weiß, was sie tut.',
+      // round 19: a time; `sein`/`haben`; a thing, `es`, `man`; `bitte` without a verb; the time question
+      'Die Kollegin kommt um neun Uhr.', 'Sie ist müde.', 'Die Kollegin hat Zeit.', 'Sind Sie müde?',
+      'Der Zug kann nicht fahren.', 'Der Bus kann nicht fahren.', 'Es kann regnen.', 'Es muss schnell gehen.',
+      'Der Zug muss um neun Uhr fahren.', 'Der Chef muss das wissen.', 'Man muss warten.', 'Dann können wir beginnen.',
+      'Leider kann ich nicht kommen.',
+      'Entschuldigung, bitte.', 'Vielen Dank, bitte.', 'Danke, bitte.', 'Bitte, der Zug hat Verspätung.', 'Ich komme bitte um zehn Uhr.', 'Wie bitte?',
+      'Kommen Sie um zehn Uhr?', 'Arbeiten Sie heute?',
+      // round 20: nothing beyond the verb, a time, a place; greetings; a thing subject in any order
+      'Die Kollegin arbeitet.', 'Herr Weber wartet.', 'Die Kollegin telefoniert.', 'Die Kollegin kommt auch.',
+      'Die Kollegin wartet im Büro.', 'Die Kollegin arbeitet im Büro.', 'Die Kollegin wohnt in Bremen.', 'Die Kollegin fährt nach Bremen.',
+      'Sie arbeitet im Büro.', 'Sie kommt auch später.', 'Die Kollegen kommen auch.', 'Frau Berg kommt auch.', 'Herr Weber ist da.',
+      'Der Chef arbeitet.', 'Sie kommt um neun Uhr.', 'Die Kollegen kommen um neun Uhr, ich komme um zehn Uhr.',
+      'Frau Berg, der Zug hat Verspätung.', 'Hallo Frau Berg!', 'Guten Tag, Frau Berg!', 'Vielen Dank!', 'Schöne Grüße!', 'Gute Party!',
+      'Herr Weber ruft an.', 'Lena ruft an.',
+      'Und der Zug kann nicht fahren.', 'Morgen fährt der Zug nicht.',
+      // review #20, MAJOR 2: the means of transport that the complement rule read as an Auftrag
+      'Die Kollegin fährt mit dem Zug.', 'Die Kollegen fahren mit dem Bus.',
+    ],
+  }],
+  [L12, wrap12, {
+    correct: [
+      // round 18
+      'Bringt ihr bitte Kuchen und Musik mit?', 'Bitte kommt mit Kuchen.', 'Bitte Kuchen und Salat kaufen.', 'Ihr könnt Getränke kaufen.',
+      // round 19: the exam's statements; the modal with a person; `bitte` + verb; the thing asked for
+      'Die Gäste bringen Kuchen mit.', 'Jeder bringt etwas mit.', 'Alle bringen Getränke mit.',
+      'Lena bringt den Salat mit.', 'Die Gäste bringen Kuchen und Musik mit.', 'Du bringst den Kuchen mit.',
+      'Ihr bringt Salat und Brot mit.', 'Jeder Gast bringt einen Salat.', 'Die Gäste bringen nichts mit.',
+      'Die Gäste sollen Kuchen und Salat mitbringen.', 'Könnt ihr Kuchen mitbringen?', 'Kannst du den Salat mitbringen?',
+      'Bring bitte einen Salat mit.', 'Bringt bitte Kuchen mit.', 'Bitte Kuchen und Musik mitbringen.', 'Bitte bringt Kuchen mit, ich habe Getränke.',
+      'Bringst du Musik mit?', 'Bringst du bitte den Salat mit?',
+      // round 20: the 30 of the reviewer's 48 — vocative, `Und`, Vorfeld, person nouns, bare imperative
+      'Alle bringen etwas zu essen mit.',
+      'Lena, bringst du Kuchen mit?', 'Lena, kannst du Musik mitbringen?', 'Lena, bring bitte Kuchen mit!',
+      'Liebe Lena, bring bitte einen Salat mit.', 'Hallo Lena, bringst du bitte Kuchen mit?',
+      'Und Tim bringt Musik mit.', 'Und die Gäste bringen Kuchen mit.', 'Und du bringst den Salat mit.', 'Dann bringt jeder etwas mit.',
+      'Vielleicht bringt Lena Kuchen mit.', 'Am Freitag bringen die Gäste Kuchen mit.', 'Am Samstag bringt jeder etwas mit.',
+      'Um acht Uhr bringen die Gäste Kuchen mit.', 'Meine Freunde bringen Getränke mit.', 'Meine Familie bringt Kuchen mit.',
+      'Die Freunde bringen Musik mit.', 'Die Kinder bringen Spiele mit.', 'Meine Freunde sollen Kuchen mitbringen.', 'Alle Gäste bringen etwas mit.',
+      'Bringt Kuchen und Getränke mit!', 'Bring Kuchen mit!', 'Komm und bring Musik mit!', 'Bringen Sie bitte Kuchen mit.', 'Sie bringen Kuchen mit.',
+      'Die Gäste müssen nichts mitbringen.', 'Kuchen bringt jeder mit.',
+      'Alle bringen Kuchen mit, ich mache Musik.', 'Ich mache Salat und die Gäste bringen Kuchen mit.', 'Ja, die Gäste bringen Kuchen mit.',
+      // review #20, MAJOR 1: the Start-Deutsch-1 sentence, `Und`/`Dann` before the imperative and the
+      // question, the comma at the end, two addressees; MAJOR 2: the fronted object in both orders
+      'Bringt etwas zu essen mit!', 'Und bringt Kuchen mit!', 'Und bringst du den Salat mit?', 'Und könnt ihr Musik mitbringen?',
+      'Dann bring Kuchen mit!', 'Bringt Kuchen mit, bitte!', 'Bring Musik mit, Lena!', 'Lena und Tim, bringt Kuchen mit!',
+      'Kuchen bringt der Chef mit.', 'Der Chef bringt Kuchen mit.', 'Musik macht die Band.', 'Die Band macht Musik.',
+    ],
+    other: [
+      // review #14: the guests named, nothing asked of them
+      'Ich lade meine Gäste ein.', 'Die Gäste kommen um acht Uhr.', 'Die Gäste sind eingeladen.',
+      // round 18: the writer's echo
+      'Ich bringe Kuchen mit.', 'Wir bringen Musik mit.', 'Wir bringen nichts mit.',
+      // round 19: the writer's plan
+      'Wir brauchen Kuchen und Getränke.', 'Ich brauche Kuchen und Musik.',
+      // round 20: nothing beyond the verb, a time, a place; the fronted object with the writer behind it
+      'Die Gäste tanzen.', 'Lena kommt.', 'Die Gäste kommen.', 'Alle kommen.', 'Jeder kommt.', 'Lena lacht.',
+      'Lena kommt auch.', 'Alle Freunde kommen.', 'Meine Freunde kommen auch.', 'Lena wohnt in Bremen.',
+      'Um acht Uhr kommen die Gäste.', 'Am Freitag kommen meine Freunde.', 'Tim arbeitet am Freitag.', 'Meine Mama kocht.',
+      'Kuchen bringe ich mit.', 'Musik mache ich.', 'Getränke kaufe ich.', 'Musik machen wir.',
+      // round 20, THE LIMIT the form check could not read — which is the whole finding
+      'Die Gäste tanzen und hören Musik.', 'Die Gäste trinken Kaffee.', 'Die Gäste tanzen und bringen Kuchen mit.',
+      // review #20, MAJOR 2: the means of transport
+      'Meine Freunde kommen mit dem Auto.',
+    ],
+  }],
 ];
 
-test('MAJOR 1 (round 18): an Auftrag is a sentence type — instruction green, verb echo red', () => {
+test('round 21: the Auftrag is undecidable by form — every probe of rounds 17–20 is the KI row, never green, never red', () => {
+  // Both Auftrag Leitpunkte of the course are in the fixture, and the fixture is not a list of two:
+  // the rule is the shape (W-word first, modal last), and it decides an exam-bank Leitpunkt and an
+  // invented one the same way.
   const auftraege = COURSE.filter((t) => t.register !== 'formular').flatMap((t) => t.leitpunkte)
     .filter((lp) => /\b(?:soll|sollen|muss|müssen|kann|können)\b/.test(lp));
-  assert.deepEqual([...new Set(auftraege)], AUFTRAG_FIXTURE.map(([lp]) => lp), 'every Auftrag Leitpunkt of the course is in the fixture');
-  for (const [lp, instructions, echoes] of AUFTRAG_FIXTURE) {
-    const verb = leitpunktEvidence(lp).conjuncts[0].folded;
-    for (const t of instructions) {
-      assert.ok(!verb.some((v) => t.toLowerCase().includes(v)), `„${t}“ must not contain the task verb, or it proves nothing`);
-      assert.equal(leitpunktSatisfied(lp, `Hallo Lena! ${t} Viele Grüße, Ana`), true, `„${lp}“ ← „${t}“ is an instruction`);
-    }
-    for (const t of echoes) {
-      assert.ok(verb.some((v) => t.toLowerCase().includes(v)), `„${t}“ must echo the task verb, or it proves nothing`);
-      assert.equal(leitpunktSatisfied(lp, `Hallo Lena! ${t} Viele Grüße, Ana`), false, `„${lp}“ ← „${t}“ echoes and instructs nothing`);
+  assert.deepEqual([...new Set(auftraege)], AUFTRAG_PROBES.map(([lp]) => lp), 'every Auftrag Leitpunkt of the course is in the fixture');
+  for (const lp of ['Wohin der Teppich soll', 'Was Ihr Bruder kaufen muss', 'Wann die Gäste kommen können']) {
+    assert.equal(leitpunktSatisfied(lp, 'Der Teppich kommt ins Wohnzimmer. Mein Bruder kauft Brot. Die Gäste können um acht Uhr kommen.'), null, lp);
+  }
+  // …and an indirect question WITHOUT a modal is still decided by its verb.
+  assert.equal(leitpunktSatisfied('Was Sie kaufen', 'Ich kaufe den Stuhl.'), true);
+  assert.equal(leitpunktSatisfied('Was Sie kaufen', 'Der Flohmarkt ist gut.'), false);
+
+  let probes = 0;
+  for (const [lp, wrap, { correct, other }] of AUFTRAG_PROBES) {
+    assert.ok(correct.length >= 30 && other.length >= 20, `${lp}: the history is kept`);
+    for (const t of [...correct, ...other]) {
+      assert.equal(leitpunktSatisfied(lp, wrap(t)), null, `„${lp}“ ← „${t}“ is the KI's to decide`);
+      assert.equal(leitpunktSatisfied(lp, t), null, `„${lp}“ ← „${t}“ (bare) is the KI's to decide`);
+      probes += 1;
     }
   }
-  // The three sentence types, one each, and the three that are none of them.
-  const lp = 'Was die Kollegin bis dahin machen soll';
-  assert.equal(leitpunktSatisfied(lp, 'Rufen Sie Herrn Weber an.'), true, 'imperative');
-  assert.equal(leitpunktSatisfied(lp, 'Bitte Herrn Weber anrufen.'), true, 'bitte + verb');
-  assert.equal(leitpunktSatisfied(lp, 'Sie müssen Herrn Weber anrufen.'), true, 'modal chunk');
-  assert.equal(leitpunktSatisfied(lp, 'Was machen Sie heute?'), false, 'a question word is not an instruction');
-  assert.equal(leitpunktSatisfied(lp, 'Ich muss Herrn Weber anrufen.'), false, 'the writer’s own modal is a plan, not an instruction');
-  assert.equal(leitpunktSatisfied(lp, 'Kommst du?'), false, 'a verb-first question with nothing asked for');
-  assert.equal(leitpunktSatisfied(lp, 'Hast du Zeit?'), false, 'a function-word question');
-  // The sentence going into the L10 model text satisfies the L10 Auftrag on the bank's own task.
-  assert.equal(scoreWriting(formcheckTask(10), 'Liebe Kollegin, der Zug hat leider Verspätung. Ich komme erst um zehn Uhr. Bitte rufen Sie Herrn Weber an und beginnen Sie ohne mich. Vielen Dank und viele Grüße, Ana').ok, true);
+  assert.ok(probes >= 180, `${probes} probes`);
+  // The empty text and a single word: the row is undecidable by form, not by content.
+  assert.equal(leitpunktSatisfied(L10, ''), null);
+  assert.equal(leitpunktSatisfied(L12, 'Kuchen'), null);
+});
+
+test('round 21: on the screen the Auftrag row is „prüft die KI“, and the other Leitpunkte of the same task are still decided by form', () => {
+  // Whole exam texts of the reviews — the two L10 texts round 20 pinned RED (no Auftrag in them),
+  // the L10 model line, the two L12 texts round 19 pinned GREEN, the L12 text round 20 pinned RED
+  // („Die Gäste tanzen.“) and the Start-Deutsch-1 text review #20 measured „fehlt noch“. All carry
+  // the same row now: `ok: true, ai: true`, and the `ok` of the checklist rests on the other rows.
+  const texts = [
+    [10, 'Liebe Kollegin, der Zug hat Verspätung. Ich komme erst um zehn Uhr. Die Kollegen kommen auch um neun Uhr. Frau Berg arbeitet im Büro. Viele Grüße, Ana'],
+    [10, 'Liebe Frau Berg, der Zug hat leider Verspätung. Ich komme um zehn Uhr. Der Chef arbeitet heute im Büro. Herr Weber wartet. Viele Grüße, Ana'],
+    [10, 'Liebe Kollegin, der Zug kann heute nicht fahren, er hat Verspätung. Ich komme um zehn Uhr. Viele Grüße, Ana'],
+    [10, 'Liebe Kollegin, der Zug hat leider Verspätung. Ich komme erst um zehn Uhr. Bitte rufen Sie Herrn Weber an und beginnen Sie ohne mich. Vielen Dank und viele Grüße, Ana'],
+    [12, 'Liebe Lena, ich habe am Freitag Geburtstag. Wir feiern am Samstag um acht Uhr bei mir. Jeder bringt etwas zu essen mit, ich habe Getränke und Musik. Kommst du? Viele Grüße, Ana'],
+    [12, 'Hallo Lena! Ich habe Geburtstag und wir feiern am Samstag um sieben Uhr. Die Gäste bringen Kuchen und Salat mit. Ich freue mich! Bis bald, Ana'],
+    [12, 'Hallo Tim! Am Freitag habe ich Geburtstag. Wir feiern um acht Uhr. Die Gäste tanzen. Ich freue mich. Bis bald, Lena'],
+    [12, 'Hallo Lena! Ich habe im Mai Geburtstag. Wir feiern am Freitag um acht Uhr bei mir. Meine Freunde kommen auch. Wir hören Musik und tanzen. Bis bald, Ana'],
+    [12, 'Liebe Lena, ich habe am Samstag Geburtstag. Wir feiern um acht Uhr bei mir. Bringt etwas zu essen mit! Viele Grüße, Ana'],
+  ];
+  for (const [nr, text] of texts) {
+    const res = scoreWriting(formcheckTask(nr), text);
+    const lp = nr === 10 ? L10 : L12;
+    const row = res.checks.find((c) => c.label === lp);
+    assert.deepEqual({ ok: row.ok, ai: row.ai }, { ok: true, ai: true }, `L${nr} ← „${text}“`);
+    // Nothing but the word window may be red (the 20-word L10 text of review #18 is under it).
+    assert.deepEqual(res.checks.filter((c) => !c.ok && c.key !== 'length'), [], `L${nr}: ${JSON.stringify(res.checks)}`);
+    // The row count is the Leitpunkt count: the KI row is shown, never dropped (round 13's mistake).
+    assert.equal(res.checks.filter((c) => c.key.startsWith('lp')).length, formcheckTask(nr).leitpunkte.length);
+  }
+  // The non-modal Leitpunkt in the same task is still decided by FORM — green with a value, red without.
+  const l10 = scoreWriting(formcheckTask(10), 'Liebe Kollegin, der Zug hat Verspätung. Die Kollegin soll warten. Viele Grüße, Ana').checks;
+  assert.equal(l10.find((c) => c.label === 'Wann Sie kommen').ok, false, 'L10: no time, no Wann');
+  assert.equal(l10.find((c) => c.label === L10).ai, true);
+  const l12 = scoreWriting(formcheckTask(12), 'Hallo Lena! Ich habe Geburtstag. Wir feiern bald. Bringt Kuchen mit! Bis bald, Ana').checks;
+  assert.equal(l12.find((c) => c.label === 'Tag und Uhrzeit').ok, false, 'L12: „bald“ is no Tag and no Uhrzeit');
+  assert.equal(l12.find((c) => c.label === L12).ai, true);
+  assert.equal(scoreWriting(formcheckTask(12), 'Hallo Lena! Ich habe Geburtstag. Wir feiern am Samstag um acht Uhr. Bis bald, Ana')
+    .checks.find((c) => c.label === 'Tag und Uhrzeit').ok, true);
+  // `canSubmit` semantics are unchanged: a KI row is `ok: true` in the checklist, so the button
+  // rests on length, Anrede, Gruß and the decidable rows exactly as for „Warum Sie schreiben“.
+  const warum = scoreWriting(formcheckTask(10), 'Liebe Kollegin, ich komme um zehn Uhr. Viele Grüße, Ana').checks;
+  assert.deepEqual(warum.filter((c) => c.ai).map((c) => c.label), ['Warum Sie schreiben', L10]);
 });
 
 test('Minor 12 (round 18): the number stands BESIDE the birth word — same clause, not same sentence', () => {
@@ -866,7 +1017,9 @@ test('the six model texts pass their Formcheck with the round-18 rules, and the 
     const res = scoreWriting(formcheckTask(l.nr), l.schreiben.sample);
     assert.equal(res.ok, true, `L${l.nr}: ${JSON.stringify(res.checks.filter((c) => !c.ok))}`);
   }
-  assert.equal(leitpunktSatisfied('Was die Kollegin bis dahin machen soll', 'Bitte rufen Sie Herrn Weber an.'), true);
+  // The L10 line („Bitte rufen Sie Herrn Weber an.“) went in as the first green of the Auftrag row;
+  // since 2026-09-14 that row is the KI's and no sentence turns it green (round-21 block below).
+  assert.equal(leitpunktSatisfied('Was die Kollegin bis dahin machen soll', 'Bitte rufen Sie Herrn Weber an.'), null);
 });
 
 
@@ -880,94 +1033,8 @@ test('the six model texts pass their Formcheck with the round-18 rules, and the 
 // modal shape let a THING be the subject („Der Zug kann nicht fahren.“ — 6 of 6 green). And the six
 // Formulare had no form check at all: `ok: value.trim().length > 0`, so „Land: Bremen“ and a single
 // dot were „erledigt“ on all thirty fields. Each is closed as a RULE with probes in both directions.
+// (MAJOR 1's Auftrag tests were superseded on 2026-09-14 by the round-21 block below; MAJOR 2 stands.)
 // ───────────────────────────────────────────────────────────────────────────────────────────────
-
-const L10 = 'Was die Kollegin bis dahin machen soll';
-const L12 = 'Was die Gäste mitbringen sollen';
-const wrap10 = (t) => `Liebe Kollegin, der Zug hat Verspätung. Ich komme um zehn Uhr. ${t} Viele Grüße, Ana`;
-const wrap12 = (t) => `Hallo Lena! Ich habe Geburtstag. Wir feiern am Samstag um acht Uhr. ${t} Bis bald, Ana`;
-
-test('MAJOR 1 (round 19): the statement about the person is the exam’s answer — a person subject, a full verb', () => {
-  // The reviewer's ten exam-typical statements: eight green; the two with `ich`/`wir` are the
-  // writer's own plan and stay red, as the round-18 fixture above already pins.
-  for (const t of ['Die Gäste bringen Kuchen mit.', 'Jeder bringt etwas mit.', 'Alle bringen Getränke mit.',
-    'Lena bringt den Salat mit.', 'Die Gäste bringen Kuchen und Musik mit.', 'Du bringst den Kuchen mit.',
-    'Ihr bringt Salat und Brot mit.', 'Jeder Gast bringt einen Salat.', 'Die Gäste bringen nichts mit.']) {
-    assert.equal(leitpunktSatisfied(L12, wrap12(t)), true, `L12 ← „${t}“`);
-  }
-  for (const t of ['Wir brauchen Kuchen und Getränke.', 'Ich brauche Kuchen und Musik.']) {
-    assert.equal(leitpunktSatisfied(L12, wrap12(t)), false, `L12 ← „${t}“ is the writer, not the guests`);
-  }
-  // Three statements per Auftrag Leitpunkt about the person it names, and the subject rule's people:
-  // the Leitpunkt's own noun in any inflection, `Sie`, a name.
-  for (const t of ['Die Kollegin beginnt ohne mich.', 'Sie beginnt bitte ohne mich.', 'Die Kollegen können schon beginnen.',
-    'Meine Kollegin soll warten.', 'Frau Berg beginnt ohne mich.']) {
-    assert.equal(leitpunktSatisfied(L10, wrap10(t)), true, `L10 ← „${t}“`);
-  }
-  // A statement whose only content after the verb is a TIME answers a Wann, not this Leitpunkt.
-  assert.equal(leitpunktSatisfied(L12, wrap12('Die Gäste kommen um acht Uhr.')), false);
-  assert.equal(leitpunktSatisfied(L10, wrap10('Die Kollegin kommt um neun Uhr.')), false);
-  // `sein`/`haben` are no full verb; a question is no statement; a W-word is no statement.
-  for (const t of ['Sie ist müde.', 'Die Kollegin hat Zeit.', 'Sind Sie müde?', 'Was machen Sie heute?']) {
-    assert.equal(leitpunktSatisfied(L10, wrap10(t)), false, `L10 ← „${t}“`);
-  }
-});
-
-test('MAJOR 1 (round 19): the modal shape needs a PERSON subject — a thing, `es`, `man` describe the world', () => {
-  // The reviewer's six, all green in round 18.
-  for (const t of ['Der Zug kann nicht fahren.', 'Der Bus kann nicht fahren.', 'Es kann regnen.', 'Es muss schnell gehen.',
-    'Der Zug muss um neun Uhr fahren.', 'Der Chef muss das wissen.', 'Man muss warten.', 'Dann können wir beginnen.',
-    'Leider kann ich nicht kommen.']) {
-    assert.equal(leitpunktSatisfied(L10, wrap10(t)), false, `L10 ← „${t}“ instructs nobody`);
-  }
-  // …and the modal sentences with a person stay green.
-  for (const t of ['Sie kann ohne mich beginnen.', 'Die Kollegin soll warten.', 'Sie müssen nichts machen.', 'Können Sie Herrn Weber anrufen?']) {
-    assert.equal(leitpunktSatisfied(L10, wrap10(t)), true, `L10 ← „${t}“`);
-  }
-  for (const t of ['Die Gäste sollen Kuchen und Salat mitbringen.', 'Könnt ihr Kuchen mitbringen?', 'Kannst du den Salat mitbringen?']) {
-    assert.equal(leitpunktSatisfied(L12, wrap12(t)), true, `L12 ← „${t}“`);
-  }
-  // Two full exam texts of the reviewer's: „der Zug kann heute nicht fahren“ is no Auftrag.
-  const task = formcheckTask(10);
-  for (const t of ['Liebe Kollegin, der Zug kann heute nicht fahren, er hat Verspätung. Ich komme um zehn Uhr. Viele Grüße, Ana',
-    'Liebe Kollegin, ich komme um zehn Uhr, der Bus kann nicht fahren. Es muss leider so gehen. Viele Grüße, Ana']) {
-    const row = scoreWriting(task, t).checks.find((c) => c.label === L10);
-    assert.equal(row.ok, false, t);
-  }
-});
-
-test('MAJOR 1 (round 19): `bitte` needs a verb in its clause; „Warten Sie.“ is an Auftrag; the question asks for more than a time', () => {
-  for (const t of ['Entschuldigung, bitte.', 'Vielen Dank, bitte.', 'Danke, bitte.', 'Bitte, der Zug hat Verspätung.', 'Ich komme bitte um zehn Uhr.', 'Wie bitte?']) {
-    assert.equal(leitpunktSatisfied(L10, wrap10(t)), false, `L10 ← „${t}“ requests nothing`);
-  }
-  for (const t of ['Bitte warten.', 'Bitte warten Sie auf mich.', 'Warten Sie.', 'Warten Sie bitte.', 'Bitte schreiben Sie Frau Berg.', 'Bitte sagen Sie Herrn Weber Bescheid.']) {
-    assert.equal(leitpunktSatisfied(L10, wrap10(t)), true, `L10 ← „${t}“`);
-  }
-  for (const t of ['Bring bitte einen Salat mit.', 'Bringt bitte Kuchen mit.', 'Bitte Kuchen und Musik mitbringen.', 'Bitte bringt Kuchen mit, ich habe Getränke.']) {
-    assert.equal(leitpunktSatisfied(L12, wrap12(t)), true, `L12 ← „${t}“`);
-  }
-  // A verb-first question: „Bringst du Musik mit?“ asks for a thing, „Kommen Sie um zehn Uhr?“ for
-  // a time, „Kommst du?“ for presence — one Auftrag, two questions.
-  assert.equal(leitpunktSatisfied(L12, wrap12('Bringst du Musik mit?')), true);
-  assert.equal(leitpunktSatisfied(L10, wrap10('Kommen Sie um zehn Uhr?')), false);
-  assert.equal(leitpunktSatisfied(L10, wrap10('Arbeiten Sie heute?')), false);
-  assert.equal(leitpunktSatisfied(L10, wrap10('Kommst du?')), false);
-});
-
-test('MAJOR 1 (round 19): the L12 model text passes on its statement, not on its question', () => {
-  const l12 = LEKTIONEN[11].schreiben;
-  assert.equal(l12.kind, 'mitteilung');
-  const question = 'Bringst du bitte den Salat mit?';
-  assert.ok(l12.sample.includes(question), 'the fixture reads the model text as built');
-  const blanked = l12.sample.replace(` ${question}`, '');
-  const row = scoreWriting(formcheckTask(12), blanked).checks.find((c) => c.label === L12);
-  assert.equal(row.ok, true, 'without its question the model text still answers the Auftrag by its statement');
-  // The two exam texts of the reviewer's, 32 and 26 words, both answering with a statement.
-  for (const t of ['Liebe Lena, ich habe am Freitag Geburtstag. Wir feiern am Samstag um acht Uhr bei mir. Jeder bringt etwas zu essen mit, ich habe Getränke und Musik. Kommst du? Viele Grüße, Ana',
-    'Hallo Lena! Ich habe Geburtstag und wir feiern am Samstag um sieben Uhr. Die Gäste bringen Kuchen und Salat mit. Ich freue mich! Bis bald, Ana']) {
-    assert.equal(scoreWriting(formcheckTask(12), t).ok, true, t);
-  }
-});
 
 /**
  * PER FORMULAR FIELD of the six A1.1 Formulare: the sample value (green), ONE value of the wrong
@@ -1105,80 +1172,8 @@ test('Minor 17 (round 19): `-sch`, `-i` and the bare stem as a nationality; two-
 // answers red). And the Formular read its values with the Mitteilung's readers: „Land: Arabisch“
 // was a country, „Vorname: ana“ was „fehlt noch“, „Uhrzeit: 15.00“ no time, „Vorname: Franz“ a
 // country. Each is closed as a RULE, with the reviewer's own probes in both directions.
+// (MAJOR 1's Auftrag tests were superseded on 2026-09-14 by the round-21 block below; MAJOR 2 stands.)
 // ───────────────────────────────────────────────────────────────────────────────────────────────
-
-test('MAJOR 1 (round 20): a statement with nothing beyond the verb, or only a time or place, is no Auftrag', () => {
-  for (const t of ['Die Gäste tanzen.', 'Lena kommt.', 'Die Gäste kommen.', 'Alle kommen.', 'Jeder kommt.', 'Lena lacht.',
-    'Lena kommt auch.', 'Alle Freunde kommen.', 'Meine Freunde kommen auch.', 'Lena wohnt in Bremen.', 'Die Gäste kommen um acht Uhr.',
-    'Um acht Uhr kommen die Gäste.', 'Am Freitag kommen meine Freunde.', 'Tim arbeitet am Freitag.', 'Meine Mama kocht.']) {
-    assert.equal(leitpunktSatisfied(L12, wrap12(t)), false, `L12 ← „${t}“ says nothing the guests should bring`);
-  }
-  for (const t of ['Die Kollegin arbeitet.', 'Herr Weber wartet.', 'Die Kollegin telefoniert.', 'Die Kollegin kommt auch.',
-    'Die Kollegin wartet im Büro.', 'Die Kollegin arbeitet im Büro.', 'Die Kollegin wohnt in Bremen.', 'Die Kollegin fährt nach Bremen.',
-    'Sie arbeitet im Büro.', 'Sie kommt auch später.', 'Die Kollegen kommen auch.', 'Frau Berg kommt auch.', 'Herr Weber ist da.',
-    'Der Chef arbeitet.', 'Sie kommt um neun Uhr.', 'Die Kollegen kommen um neun Uhr, ich komme um zehn Uhr.']) {
-    assert.equal(leitpunktSatisfied(L10, wrap10(t)), false, `L10 ← „${t}“ describes, it instructs nobody`);
-  }
-  // The two L10 exam texts and the L12 text of the reviewer's — no Auftrag in them, red as a whole.
-  const l10 = formcheckTask(10);
-  for (const t of ['Liebe Kollegin, der Zug hat Verspätung. Ich komme erst um zehn Uhr. Die Kollegen kommen auch um neun Uhr. Frau Berg arbeitet im Büro. Viele Grüße, Ana',
-    'Liebe Frau Berg, der Zug hat leider Verspätung. Ich komme um zehn Uhr. Der Chef arbeitet heute im Büro. Herr Weber wartet. Viele Grüße, Ana']) {
-    assert.equal(scoreWriting(l10, t).checks.find((c) => c.label === L10).ok, false, t);
-  }
-  const l12 = formcheckTask(12);
-  for (const t of ['Hallo Tim! Am Freitag habe ich Geburtstag. Wir feiern um acht Uhr. Die Gäste tanzen. Ich freue mich. Bis bald, Lena',
-    'Hallo Lena! Ich habe im Mai Geburtstag. Wir feiern am Freitag um acht Uhr bei mir. Meine Freunde kommen auch. Wir hören Musik und tanzen. Bis bald, Ana']) {
-    assert.equal(scoreWriting(l12, t).checks.find((c) => c.label === L12).ok, false, t);
-  }
-  // THE LIMIT, pinned so nobody reads it as a bug: the Formcheck reads FORM, not the verb's meaning.
-  // „Die Gäste tanzen und hören Musik.“ and „Die Gäste trinken Kaffee.“ have exactly the form of
-  // „Die Gäste tanzen und bringen Kuchen mit.“ and „Die Gäste bringen Kuchen mit.“ — a person subject,
-  // a full verb, a complement — and only the KI can tell a description from an instruction there.
-  for (const t of ['Die Gäste tanzen und hören Musik.', 'Die Gäste trinken Kaffee.', 'Die Gäste tanzen und bringen Kuchen mit.']) {
-    assert.equal(leitpunktSatisfied(L12, wrap12(t)), true, `L12 ← „${t}“ — a form the check cannot tell from an Auftrag`);
-  }
-  // …and the complement that IS one: a thing, `etwas`/`nichts`, „ohne mich“.
-  for (const t of ['Die Gäste bringen Kuchen mit.', 'Jeder bringt etwas mit.', 'Die Gäste bringen nichts mit.', 'Alle bringen etwas zu essen mit.']) {
-    assert.equal(leitpunktSatisfied(L12, wrap12(t)), true, `L12 ← „${t}“`);
-  }
-  for (const t of ['Sie beginnt ohne mich.', 'Die Kollegin beginnt ohne mich.', 'Die Kollegin wartet auf mich.']) {
-    assert.equal(leitpunktSatisfied(L10, wrap10(t)), true, `L10 ← „${t}“`);
-  }
-});
-
-test('MAJOR 1 (round 20): the subject is read off the sentence — vocative, `Und`, two-word Vorfeld, person nouns, bare imperative', () => {
-  // The reviewer's 48 correct answers to „Was die Gäste mitbringen sollen“ / „… machen soll“ that
-  // round 19 had red: the vocative, the coordinator, the Vorfeld, the person nouns, the bare
-  // imperative, the modal question with a noun subject.
-  for (const t of ['Lena, bringst du Kuchen mit?', 'Lena, kannst du Musik mitbringen?', 'Lena, bring bitte Kuchen mit!',
-    'Liebe Lena, bring bitte einen Salat mit.', 'Hallo Lena, bringst du bitte Kuchen mit?',
-    'Und Tim bringt Musik mit.', 'Und die Gäste bringen Kuchen mit.', 'Und du bringst den Salat mit.', 'Dann bringt jeder etwas mit.',
-    'Vielleicht bringt Lena Kuchen mit.', 'Am Freitag bringen die Gäste Kuchen mit.', 'Am Samstag bringt jeder etwas mit.',
-    'Um acht Uhr bringen die Gäste Kuchen mit.', 'Meine Freunde bringen Getränke mit.', 'Meine Familie bringt Kuchen mit.',
-    'Die Freunde bringen Musik mit.', 'Die Kinder bringen Spiele mit.', 'Meine Freunde sollen Kuchen mitbringen.', 'Alle Gäste bringen etwas mit.',
-    'Bringt Kuchen und Getränke mit!', 'Bring Kuchen mit!', 'Komm und bring Musik mit!', 'Bringen Sie bitte Kuchen mit.', 'Sie bringen Kuchen mit.',
-    'Die Gäste müssen nichts mitbringen.', 'Die Gäste sollen Kuchen und Salat mitbringen.', 'Kuchen bringt jeder mit.',
-    'Alle bringen Kuchen mit, ich mache Musik.', 'Ich mache Salat und die Gäste bringen Kuchen mit.', 'Ja, die Gäste bringen Kuchen mit.']) {
-    assert.equal(leitpunktSatisfied(L12, wrap12(t)), true, `L12 ← „${t}“`);
-  }
-  for (const t of ['Kann die Kollegin warten?', 'Soll die Kollegin warten?', 'Muss die Kollegin warten?', 'Kann sie warten?',
-    'Frau Berg, warten Sie bitte.', 'Herr Weber, rufen Sie bitte Frau Berg an.', 'Und die Kollegin soll warten.']) {
-    assert.equal(leitpunktSatisfied(L10, wrap10(t)), true, `L10 ← „${t}“`);
-  }
-  // The fronted object with the writer behind the verb is the writer — one verdict for one sentence.
-  for (const t of ['Kuchen bringe ich mit.', 'Musik mache ich.', 'Getränke kaufe ich.', 'Musik machen wir.', 'Ich bringe Kuchen mit.']) {
-    assert.equal(leitpunktSatisfied(L12, wrap12(t)), false, `L12 ← „${t}“ is the writer's plan`);
-  }
-  // The vocative cut leaves „Entschuldigung, bitte.“ a bare `bitte`; a greeting is not an imperative.
-  for (const t of ['Entschuldigung, bitte.', 'Danke, bitte.', 'Vielen Dank, bitte.', 'Bitte, der Zug hat Verspätung.', 'Frau Berg, der Zug hat Verspätung.',
-    'Hallo Frau Berg!', 'Guten Tag, Frau Berg!', 'Vielen Dank!', 'Schöne Grüße!', 'Gute Party!', 'Herr Weber ruft an.', 'Lena ruft an.']) {
-    assert.equal(leitpunktSatisfied(L10, wrap10(t)), false, `L10 ← „${t}“`);
-  }
-  // A thing subject stays a thing subject whatever stands before the verb.
-  for (const t of ['Und der Zug kann nicht fahren.', 'Morgen fährt der Zug nicht.', 'Leider kann ich nicht kommen.', 'Dann können wir beginnen.']) {
-    assert.equal(leitpunktSatisfied(L10, wrap10(t)), false, `L10 ← „${t}“`);
-  }
-});
 
 test('MAJOR 2 (round 20): a form value stands bare — a language or a nationality is no country, whatever field it is in', () => {
   const l1 = LEKTIONEN[0].schreiben;
