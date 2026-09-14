@@ -20,14 +20,20 @@
 //                                 `word − suffix === stem`, so a stem is never a prefix search and an
 //                                 ordinary `-isch` adjective (`praktisch`, `frisch`) cannot collide.
 //   COUNTRY_NAMES  Array<string>  country NAMES as written in German (`Frankreich`, `USA`,
-//                                 `Elfenbeinküste`) — the remainder whose German name shares no
+//                                 `Elfenbeinküste`, `Sierra Leone` — a name may be two words, the
+//                                 reader joins them) — the remainder whose German name shares no
 //                                 stem with its nationality (Frankreich/französisch, China/chinesisch)
 //                                 or whose stem does not start the name (Zypern/zyprisch). Readers
 //                                 lower-case at their boundary; the list is written as a person
 //                                 writes it. Names the stem search already finds (Marokko, Polen,
 //                                 Türkei) are NOT repeated here.
+//   LANGUAGE_NAMES Array<string>  the LANGUAGES whose German name does not end in `-isch` (`Dari`,
+//                                 `Urdu`, `Tigrinya`, `Somali`) — the `-isch` languages are read by
+//                                 form in `writing.js` (`LANGUAGE_NAME_RE`); this is the remainder,
+//                                 for the same two readers: „Sprache: Dari“ is a filled language
+//                                 field, and „Ich spreche Dari.“ names no nationality.
 //
-// Both lists belong to the WORLD, not to a course — the countries of origin an adult integration
+// All three lists belong to the WORLD, not to a course — the countries of origin an adult integration
 // course actually has in the room — so they do not grow with the material; they grow when a probe
 // against the world („123 Ländernamen, 22 nicht erkannt“, review #17) finds a country missing.
 // No duplicates: `tests/writing-course.test.mjs` pins that, and pins that every stem is lower case
@@ -62,4 +68,16 @@ export const COUNTRY_NAMES = [
   'Frankreich', 'China', 'Großbritannien', 'Grossbritannien', 'England', 'USA', 'Holland', 'Taiwan',
   'Kambodscha', 'Laos', 'Myanmar', 'Elfenbeinküste', 'Tschetschenien', 'Niederlande', 'Zypern',
   'Slowenien', 'Luxemburg', 'Island', 'Mosambik', 'Simbabwe', 'Bahrain', 'Nordmazedonien',
+  // ROUND 19 (DaF review #18, Minor 17): two-word names. The reader joins the words before it
+  // compares, so `Sierra Leone` is one name and „Ich komme aus Sierra Leone.“ is a country.
+  'Sierra Leone', 'Saudi-Arabien', 'Sri Lanka', 'Costa Rica', 'El Salvador', 'Burkina Faso',
+  'Papua-Neuguinea', 'Trinidad und Tobago',
+];
+
+export const LANGUAGE_NAMES = [
+  'Dari', 'Farsi', 'Paschtu', 'Urdu', 'Hindi', 'Punjabi', 'Bengali', 'Tamil', 'Nepali',
+  'Tigrinya', 'Somali', 'Oromo', 'Hausa', 'Igbo', 'Yoruba', 'Twi', 'Wolof', 'Fula',
+  'Bambara', 'Mandinka', 'Lingala', 'Suaheli', 'Swahili', 'Kinyarwanda', 'Kirundi', 'Edo', 'Krio',
+  'Kurmandschi', 'Sorani', 'Tagalog', 'Filipino', 'Thai', 'Mandarin', 'Latein',
+  'Esperanto', 'Romani', 'Romanes', 'Quechua', 'Guarani', 'Papiamento', 'Pidgin', 'Kreol',
 ];

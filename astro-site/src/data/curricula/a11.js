@@ -97,7 +97,23 @@ export const FUNCTION_WORDS = [
   'hallo', 'tschüss',
 ];
 
-/** Proper nouns and titles that may appear in a dialogue line (people, places, forms of address). */
+/**
+ * Proper nouns and titles that may appear in a dialogue line (people, places, forms of address).
+ *
+ * THIS LIST IS COUPLED TO A1.2, AND THE PAUSE DOES NOT KNOW IT (DaF review #18, Minor 22). A1.2's
+ * `DIALOG_NAMES` is `[...DIALOG_NAMES_A11, 'Fischer']` (`a12.js`) — by design for the CAST (Ana,
+ * Tim, Lena … recur, and RULE 14 holds their facts across both levels through `PERSONAS_A12`
+ * spreading `PERSONAS_A11`), but the coupling carries every name this level adds for its own
+ * reasons into A1.2's name set too. Measured in round 18: `Marokko` and `Ali` entered here for L2,
+ * and A1.2's RULE 11b ratchet moved 14 → 13 without an A1.2 file being touched, because a token
+ * that is a name is not an untaught word. Decoupling means splitting this list into the shared cast
+ * and a level-local remainder and having `a12.js` import only the cast — and `a12.js` is a PAUSED
+ * draft by owner decision (2026-09-13) that no round may edit. So the coupling stays, written down
+ * here and at the `LEVELS` registry of `scripts/validate-curriculum.mjs`: an addition to this list
+ * is an addition to A1.2's name set, and whoever re-measures A1.2's ratchets after one must say so.
+ * `tests/curricula.test.mjs` pins the direction of the coupling (A1.2 ⊇ A1.1), so the day it is
+ * broken the note is removed with the test, not silently outlived.
+ */
 export const DIALOG_NAMES = [
   'Ana', 'Tim', 'Lena', 'Paul', 'Herr', 'Frau', 'Weber', 'Kaya', 'Wolf', 'Schmidt', 'Berg',
   'Chakiri', 'Brandt', 'Berger', 'Bremen', 'Thomas',
@@ -348,8 +364,17 @@ export const CURRICULUM_A11 = {
           // line 8 rather than by a Wortfeld entry nobody ever hears.
           { speaker: 'Herr Weber', de: 'Guten Tag! Ich bin Herr Weber vom Amt.', en: 'Good day! I am Mr Weber from the public office.' },
           { speaker: 'Ana', de: 'Freut mich! Ich bin Ana.', en: 'Nice to meet you! I am Ana.' },
-          { speaker: 'Herr Weber', de: 'Bitte füllen Sie das Formular aus.', en: 'Please fill out the form.' },
-          { speaker: 'Ana', de: 'Ist das Formular für die Adresse?', en: 'Is that form for the address?' },
+          // THE FAMILIENSTAND IS ASKED AND ANSWERED, NOT DECLARED (round 19, DaF review #18, Minor
+          // 12). Round 18 put „Familienstand: Ich bin ledig oder verheiratet.“ into the notice so
+          // that RULE 23b would report 0 — a sentence nobody says, written for the rule. The two
+          // words of the graded task's third Leitpunkt and the field name now stand where a
+          // learner HEARS them: the clerk reads the field with its two values (index 2, ten words,
+          // in no window) and Ana answers with the sentence the task wants (index 3, the dictation
+          // line — the learner types „Ich bin ledig.“ from hearing it). The notice example
+          // „Ich bin Studentin.“ and „Was sind Sie von Beruf?“ (indices 6/7) stay verbatim lines,
+          // which is why the pair does not ride on them. Sie throughout — strangers at a counter.
+          { speaker: 'Herr Weber', de: 'Bitte füllen Sie das Formular aus. Ihr Familienstand: ledig oder verheiratet?', en: 'Please fill out the form. Your marital status: single or married?' },
+          { speaker: 'Ana', de: 'Ich bin ledig. Ist das Formular für die Adresse?', en: 'I am single. Is that form for the address?' },
           // THE ORIGIN, ASKED AND ANSWERED (round 18, DaF review #17, MAJOR 3). The can-do line
           // „Ich kann sagen, woher ich komme“ had exactly two L2 surfaces — the notice and the graded
           // model text — and the learner PRACTISES neither; every line of this dialogue skipped the
@@ -400,8 +425,15 @@ export const CURRICULUM_A11 = {
         // (`tests/rule-card-overrides.test.mjs`) — and because a notice token is lexis the Lektion
         // has taught (`taughtUpTo`): the first trim of this round dropped `ein` and `Satz`, which
         // RULE 11 measured at once as `extra-a11-l02-08:ein` and `extra-a11-l02-15:Satz` (59 → 61).
-        // 60 words, RULE 6's ceiling, read aloud.
-        bodyDe: '**sein** ist unregelmäßig: ich **bin**, du **bist**, er/sie/es **ist**, wir **sind**, ihr **seid**, sie/Sie **sind**. Der Beruf ohne Artikel: Ich bin Lehrer. Nicht: Ich bin ein Lehrer. Staatsangehörigkeit im Satz als Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner. Im Formular als Adjektiv: Staatsangehörigkeit: marokkanisch. Familienstand: Ich bin ledig oder verheiratet. Geburtsdatum: Ich bin am 3.5.1998 geboren.',
+        // ROUND 19 (DaF review #18, Minor 12): the Familienstand clause is GONE from here. „Ich bin
+        // ledig oder verheiratet.“ is not a sentence anyone says — it was a field with its two
+        // values dressed as a first-person sentence, written so that RULE 23b would read 0, which
+        // is the movement „the surface is written for the rule“ that this ladder had already
+        // banned for the model texts. The three words now stand in dialogue lines 2 and 3, where
+        // the learner hears and dictates them; the notice keeps the grammar. The class is closed
+        // as a rule: RULE 6c fails any notice body that carries a `Feld: Ich bin … oder …` clause.
+        // 54 words, read aloud.
+        bodyDe: '**sein** ist unregelmäßig: ich **bin**, du **bist**, er/sie/es **ist**, wir **sind**, ihr **seid**, sie/Sie **sind**. Der Beruf ohne Artikel: Ich bin Lehrer. Nicht: Ich bin ein Lehrer. Staatsangehörigkeit im Satz als Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner. Im Formular als Adjektiv: Staatsangehörigkeit: marokkanisch. Geburtsdatum: Ich bin am 3.5.1998 geboren.',
         examples: ['Was sind Sie von Beruf?', 'Ich bin Studentin.'],
         ruleSlug: 'verb-sein',
       },
@@ -760,9 +792,16 @@ export const CURRICULUM_A11 = {
           // `die Farbe` is a FIELD of the graded Formular of this Lektion („Farbe: grün“) and stood
           // on no input surface — the dialogue named seven colours and never the word (round 18,
           // DaF review #17, Minor 15 / RULE 23b, hard 0). Index 8 is in neither window ([1,5]
-          // dictation, [4,7] read-aloud), so nothing else moves; `vom` is a function word.
-          { speaker: 'Lena', de: 'Mein Schlüssel ist in der Tasche. Und die Farbe vom Bild?', en: 'My key is in the bag. And the colour of the picture?' },
-          { speaker: 'Tim', de: 'Das Bild ist blau. Es ist für mein Zimmer.', en: 'The picture is blue. It is for my room.' },
+          // dictation, [4,7] read-aloud), so nothing else moves.
+          // ROUND 19 (DaF review #18, Minor 20): round 18 wrote „Und die Farbe vom Bild?“ — spoken,
+          // correct German, and a Dativ (`vom` = von dem) in the Lektion whose notice defers the
+          // Dativ to A1.2, put there only so that `Farbe` had a surface. The question is now asked
+          // the way this Lektion asks everything (Wo ist …? Ist … blau?), with no case the level
+          // has not taught: „Und das Bild? Ist die Farbe blau?“ — Tim: „Ja, das Bild ist blau.“
+          // `der Schlüssel` keeps its line; `in der Tasche` is the one Dativ the line always had,
+          // and the setting („packen ihre Taschen aus“) carries `die Tasche` as well.
+          { speaker: 'Lena', de: 'Mein Schlüssel ist da. Und das Bild? Ist die Farbe blau?', en: 'My key is there. And the picture? Is the colour blue?' },
+          { speaker: 'Tim', de: 'Ja, das Bild ist blau. Es ist für mein Zimmer.', en: 'Yes, the picture is blue. It is for my room.' },
         ],
       },
       pretest: { promptDe: 'Fragen Sie, wo das Buch ist.', promptEn: 'Ask where the book is.', model: 'Wo ist das Buch?', accepted: ['Wo ist', 'Wo sind'] },
