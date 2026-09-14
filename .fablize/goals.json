@@ -34,8 +34,8 @@
    "id": "G005",
    "title": "Grammar page learning and conversion UX",
    "objective": "Add concise summaries, usable tables of contents, early practice calls to action, and Sentence X-Ray integration to long grammar pages.",
-   "status": "pending",
-   "evidence": null
+   "status": "complete",
+   "evidence": "The shared topic template now gives all 84 grammar lessons a data-derived at-a-glance summary, conditional anchored contents list, early practice jump, and prefilled Sentence X-Ray links for every example."
   },
   {
    "id": "G006",
