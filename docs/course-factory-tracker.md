@@ -278,7 +278,7 @@ only `src/data/curricula/<level>.js` + the pool are per level).
 | 23 | Round 20 — review #19 (0 BLOCKER · 2 MAJOR, both in the writing checker, third round on the Auftrag point): the declarative Auftrag shape needs content after the verb and knows the bare imperative, vocative, `und`-start and a two-word Vorfeld; Formular country fields reject language/nationality names, case decided once per field class, clock field accepts `15.00`; checkpoint dictation ids pinned; RULE 24 ignores speaker labels | merged 2026-09-14 (the preview failed once because the Supabase project had been paused; restored 09:16 UTC) | #137 |
 | 24 | Round 21 — review #20 (0 BLOCKER · 2 MAJOR, the Auftrag Leitpunkt a fourth time): decision 2026-09-14 — an indirect Auftrag Leitpunkt („Was … machen soll / mitbringen sollen") is undecidable by form; the form check shows „prüft die KI" for it, the AI grader decides, and the four-round instruction-shape machinery is deleted | merged 2026-09-14 | #138 |
 | 25 | Round 22 — review #21 (0 BLOCKER · 2 MAJOR, form check): Anrede checked at the first sentence and Gruß at the last line from the Wortfeld formulas; the Wann shape per sentence, lower-case `heute/morgen` only, L8 times of day; KI-row wording, modal/`ob` variants of the Auftrag shape; the form-check scope written into the course standard | merged 2026-09-14 | #139 |
-| 26 | Round 23 — review #22 (0 BLOCKER · 2 MAJOR, form check): the Gruß may be several taught formulas and `bis` + any time expression, contact lines after the signature are not the closing; the Anrede is stripped before every form check and time words are read case-blind; the pre-submit checklist rendered live; lowercase openings, Betreff line, `mein/mich`, `sondern` clauses | in progress | — |
+| 26 | Round 23 — review #22 (0 BLOCKER · 2 MAJOR, form check): the Gruß may be several taught formulas and `bis` + any time expression, contact lines after the signature are not the closing; the Anrede is stripped before every form check and time words are read case-blind; the pre-submit checklist rendered live; lowercase openings, Betreff line, `mein/mich`, `sondern` clauses | merged 2026-09-14 (plus: every build-time Supabase read in the Astro site retries and falls back to the committed cache — two deploys had died on `fetch failed`) | #140 |
 
 ### The review ladder (adversarial DaF teacher / SD1 examiner, measured not assumed)
 
@@ -306,7 +306,12 @@ only `src/data/curricula/<level>.js` + the pool are per level).
 | 20 | #137 | 0 BLOCKER · 2 MAJOR · 18 MINOR (both majors on the Auftrag Leitpunkt of the form check, fourth round) | 21.2 (no lesson under 20) | `REVIEW-daf-20-2026-09-12.md` |
 | 21 | #138 | 0 BLOCKER · 2 MAJOR · 22 MINOR (the round-21 decision accepted; both majors in the form check: greeting/closing read anywhere in the text, „Guten Morgen" read as a time) | 21.2 | `REVIEW-daf-21-2026-09-12.md` |
 | 22 | #139 | 0 BLOCKER · 2 MAJOR · 23 MINOR (both majors in the form check: chained closings and `bis` + time rejected; noun/adverb `Morgen` told apart by case) — draw, checkpoints and ratchets identical to #20–#21 | 21.2 | `REVIEW-daf-22-2026-09-12.md` |
-| 23 | round 23 | pending | — | — |
+| 23 | #140 | **0 BLOCKER · 0 MAJOR** · 24 MINOR (closing review; the checklist graded MINOR per the standard; draw, checkpoints and ratchets identical to #21–#22) | 21.6 | `REVIEW-daf-23-2026-09-12.md` |
+
+**A1.1 declared finished 2026-09-14** at review #23 (0/0). Twenty-three reviews, PRs #114–#140, every
+finding class closed as a rule + test; the last six rounds spent every MAJOR on the pre-submit writing
+checklist, which the standard now defines as advisory (the KI grades meaning). Open owner items are
+unchanged: the Azure audio run, three test learners, the Telegram post for the free course.
 
 All reports live in `docs/course-factory/a11-rebuild/`. Every round recomputes the real draw
 (`planPractice(CURRICULUM_A11, a11.json, attempt)`) rather than reading the pool, so each verdict is
