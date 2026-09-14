@@ -18,6 +18,21 @@ test('the shared build merge discovers every Astro directory', async () => {
   assert.doesNotMatch(netlify, /cp -r astro-site\/dist\/grammar/);
 });
 
+test('Netlify builds Astro deterministically from the committed grammar cache', async () => {
+  const [netlify, grammar, supabase] = await Promise.all([
+    read('netlify.toml'),
+    read('astro-site/src/lib/grammar.js'),
+    read('astro-site/src/lib/supabase.js'),
+  ]);
+
+  assert.match(netlify, /cd astro-site && npm ci && npm run build/);
+  assert.match(netlify, /\[build\.environment\][\s\S]*GRAMMAR_CONTENT_CACHE = "\.\.\/grammar-content-cache\.json"/);
+  assert.match(grammar, /const FETCH_TIMEOUT_MS = 12_000/);
+  assert.match(grammar, /AbortSignal\.timeout\(FETCH_TIMEOUT_MS\)/);
+  assert.ok((grammar.match(/withRequestTimeout\(/g) ?? []).length >= 8);
+  assert.match(supabase, /!supabaseKey && !process\.env\.GRAMMAR_CONTENT_CACHE/);
+});
+
 test('batch Lighthouse uses current headless Chrome without disabling sandboxing', async () => {
   const batch = await read('scripts/lighthouse-batch.mjs');
   assert.match(batch, /--headless=new/);

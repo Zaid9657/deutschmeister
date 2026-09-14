@@ -1,62 +1,34 @@
 {
- "brief": "Complete the remaining DeutschMeister audit remediation, verify it in real browsers, and deploy production safely; preserve explicit gates for evidence that only the operator can provide.",
- "created": "2026-09-14T13:27:44.779392+00:00",
+ "brief": "Verify Netlify resilience, evaluate the completed A1.1 course, and implement remaining safe remediation",
+ "created": "2026-09-14T17:48:53.474467+00:00",
  "goals": [
   {
    "id": "G001",
-   "title": "Baseline and evidence gates",
-   "objective": "Inventory current implementation and encode exact operator-only blockers without inventing legal or customer evidence.",
+   "title": "Netlify resilience",
+   "objective": "Reproduce the historical Supabase timeout path against current code, harden deterministic deployment if needed, and prove the build succeeds offline",
    "status": "complete",
-   "evidence": "Created docs/release-evidence-gates.md from repository evidence. It records four non-fabrication gates with owners and acceptance criteria: operator identity, privacy/vendor facts, authentic customer proof, and authenticated GSC/DataForSEO data. Worktree commit: document release evidence gates."
+   "evidence": "Forced local Supabase 504 produced two retries, emergency cache activation, and a successful 130-page Astro build; cache-first build also completed 130 pages; targeted release tests 6/6 pass; npm ci lock warning traced to and resolved by explicit @types/ms metadata."
   },
   {
    "id": "G002",
-   "title": "Legal and privacy hardening",
-   "objective": "Improve Impressum and privacy transparency using verified facts, centralize completion requirements, and add release safeguards.",
-   "status": "complete",
-   "evidence": "Centralized legal facts and conditional noindex in astro-site/src/data/legal.js; expanded Impressum and privacy draft coverage; added npm run check:legal-release, which correctly blocks on 15 verified operator/legal/vendor fields; implemented GA4 and PostHog same-session withdrawal; consent tests 2/2 and targeted ESLint passed; Astro built 128 pages; real browser render confirmed both legal pages and accept-then-withdraw reopened the consent dialog."
+   "title": "A1.1 deterministic quality",
+   "objective": "Inspect the completed course artifacts and run structural, content, coverage, and regression checks",
+   "status": "pending",
+   "evidence": null
   },
   {
    "id": "G003",
-   "title": "English-first public experience",
-   "objective": "Resolve mixed-language discovery paths and make the public acquisition experience consistently understandable to English-speaking learners.",
-   "status": "complete",
-   "evidence": "English FAQ/About and grammar hubs implemented; German exam route templates share an explicit language notice; navigation identifies German destinations. Astro built 128 pages, SPA prerender built 8 routes, rendered browser checks showed FAQ interaction, English About/grammar, and German guide notice."
+   "title": "A1.1 learner experience",
+   "objective": "Render and exercise representative A1.1 journeys on desktop and mobile, recording usability and teaching-quality findings",
+   "status": "pending",
+   "evidence": null
   },
   {
    "id": "G004",
-   "title": "Navigation pricing and trust conversion",
-   "objective": "Group desktop navigation, clarify no-account versus free-trial versus Pro states, and create an honest social-proof capture path.",
-   "status": "complete",
-   "evidence": "Desktop navigation is grouped in native accessible disclosures in both renderers. Pricing and signup explicitly separate anonymous A1.1 access, the account-based 7-day trial, and Pro. A Netlify learner-story form captures verified feedback only with required publication consent and a no-auto-publish promise."
-  },
-  {
-   "id": "G005",
-   "title": "Grammar page learning and conversion UX",
-   "objective": "Add concise summaries, usable tables of contents, early practice calls to action, and Sentence X-Ray integration to long grammar pages.",
-   "status": "complete",
-   "evidence": "The shared topic template now gives all 84 grammar lessons a data-derived at-a-glance summary, conditional anchored contents list, early practice jump, and prefilled Sentence X-Ray links for every example."
-  },
-  {
-   "id": "G006",
-   "title": "Accessibility and security",
-   "objective": "Fix remaining WCAG issues, validate keyboard zoom and automated accessibility, and move CSP from observation toward safe enforcement.",
-   "status": "complete",
-   "evidence": "Both renderers build; focused checks 5/5 pass; Lighthouse accessibility improved from 96/95 to 100/100; real-browser keyboard disclosure and 200%-equivalent reflow verified without overflow."
-  },
-  {
-   "id": "G007",
-   "title": "Technical SEO and performance",
-   "objective": "Fix title warnings, validate crawl metadata and canonical coverage, run Lighthouse/CWV-style measurements, and remediate material performance defects.",
-   "status": "complete",
-   "evidence": "Shared build merge includes all Astro routes; 138 built pages pass with 0 failures/warnings; home Lighthouse 93-95 with LCP 1.5-1.6s and lesson Lighthouse 98 with LCP 1.7s; merged SEO/a11y/best-practices 100; deferred content verified in real browser."
-  },
-  {
-   "id": "G008",
-   "title": "Production release verification",
-   "objective": "Run the complete automated and rendered verification suite, deploy the verified changes, and smoke-test production with an evidence-backed blocker handoff.",
-   "status": "complete",
-   "evidence": "Production commit f2c9808 pushed to audit branch and main; Netlify deploy 6aa82657f6bf78000880f945 reached ready for the exact commit; smoke tests passed for homepage, grammar, pricing, signup, privacy, Impressum, learner-story route, canonical redirects, CSP headers, and real HTTP 404; production browser rendered the deferred German Nouns & Gender rule card with no production console errors."
+   "title": "Final remediation and verification",
+   "objective": "Implement remaining in-scope code fixes, run the full verification suite, and leave a clean review-ready branch",
+   "status": "pending",
+   "evidence": null
   }
  ]
 }

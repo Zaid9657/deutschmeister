@@ -53,7 +53,10 @@ function getCache() {
 // ---------------------------------------------------------------------------
 const EMERGENCY_CACHE_URL = new URL('../../../grammar-content-cache.json', import.meta.url);
 const FETCH_ATTEMPTS = 3;
+const FETCH_TIMEOUT_MS = 12_000;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const requestTimeout = () => AbortSignal.timeout(FETCH_TIMEOUT_MS);
+const withRequestTimeout = (query) => query.abortSignal(requestTimeout());
 
 function useEmergencyCache(label, err) {
   if (contentCache) return contentCache;
@@ -112,22 +115,24 @@ const normalizeLevel = (level) => level?.toLowerCase() ?? level;
 async function fetchTopicPaths() {
   // Connectivity diagnostic — visible in Netlify build logs
   try {
-    const diagUrl = `https://omqyueddktqeyrrqvnyq.supabase.co/rest/v1/grammar_topics?select=count&limit=1`;
+    const diagBase = import.meta.env.PUBLIC_SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
+    const diagUrl = `${diagBase}/rest/v1/grammar_topics?select=count&limit=1`;
     const diagKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
     console.log('[grammar] Testing Supabase connectivity:', diagUrl);
     const diagResp = await fetch(diagUrl, {
       headers: { apikey: diagKey ?? '', Authorization: `Bearer ${diagKey ?? ''}` },
+      signal: requestTimeout(),
     });
     console.log('[grammar] Supabase test response status:', diagResp.status);
   } catch (diagErr) {
     console.error('[grammar] Raw fetch test FAILED:', diagErr.message, diagErr.cause?.code);
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await withRequestTimeout(supabase
     .from('grammar_topics')
     .select('slug, sub_level')
     .order('sub_level')
-    .order('topic_order');
+    .order('topic_order'));
 
   if (error) throw new Error(`getAllTopicPaths: ${error.message}`);
   return (data ?? []).map((t) => ({ ...t, sub_level: normalizeLevel(t.sub_level) }));
@@ -145,11 +150,11 @@ export async function getAllTopicPaths() {
 export async function getTopicsForLevel(subLevel) {
   return withFallback(`getTopicsForLevel(${subLevel})`, async () => {
     // Query using ilike so it matches regardless of case stored in DB
-    const { data, error } = await supabase
+    const { data, error } = await withRequestTimeout(supabase
       .from('grammar_topics')
       .select('id, slug, title_en, title_de, description_en, description_de, topic_order, updated_at')
       .ilike('sub_level', subLevel)
-      .order('topic_order');
+      .order('topic_order'));
 
     if (error) throw new Error(`getTopicsForLevel(${subLevel}): ${error.message}`);
     return (data ?? []).map((t) => ({ ...t, sub_level: normalizeLevel(t.sub_level) }));
@@ -162,11 +167,11 @@ export async function getTopicsForLevel(subLevel) {
 /** Fetch all topics for all levels — used on the /grammar index */
 export async function getAllTopics() {
   return withFallback('getAllTopics', async () => {
-    const { data, error } = await supabase
+    const { data, error } = await withRequestTimeout(supabase
       .from('grammar_topics')
       .select('id, slug, title_en, title_de, description_en, sub_level, topic_order, updated_at')
       .order('sub_level')
-      .order('topic_order');
+      .order('topic_order'));
 
     if (error) throw new Error(`getAllTopics: ${error.message}`);
     return (data ?? []).map((t) => ({ ...t, sub_level: normalizeLevel(t.sub_level) }));
@@ -212,12 +217,12 @@ function topicFullFromCache(cache, subLevel, slug) {
 
 async function topicFullFromNetwork(subLevel, slug) {
   // 1. Topic — use ilike so "a1.1" matches "A1.1" in the DB
-  const { data: topic, error: topicErr } = await supabase
+  const { data: topic, error: topicErr } = await withRequestTimeout(supabase
     .from('grammar_topics')
     .select('*')
     .ilike('sub_level', subLevel)
     .eq('slug', slug)
-    .single();
+    .single());
 
   if (topicErr) throw new Error(`getTopicFull topic(${subLevel}/${slug}): ${topicErr.message}`);
   if (!topic) return null;
@@ -227,21 +232,21 @@ async function topicFullFromNetwork(subLevel, slug) {
 
   // 2. Rules, examples, exercises — parallel fetch
   const [rulesRes, examplesRes, exercisesRes] = await Promise.all([
-    supabase
+    withRequestTimeout(supabase
       .from('grammar_rules')
       .select('*')
       .eq('topic_id', topic.id)
-      .order('order_index'),
-    supabase
+      .order('order_index')),
+    withRequestTimeout(supabase
       .from('grammar_examples')
       .select('*')
       .eq('topic_id', topic.id)
-      .order('order_index'),
-    supabase
+      .order('order_index')),
+    withRequestTimeout(supabase
       .from('grammar_exercises')
       .select('*')
       .eq('topic_id', topic.id)
-      .order('order_index'),
+      .order('order_index')),
   ]);
 
   if (rulesRes.error)     throw new Error(`rules: ${rulesRes.error.message}`);
@@ -251,11 +256,11 @@ async function topicFullFromNetwork(subLevel, slug) {
   const exercises_normalized = normalizeExercises(exercisesRes.data);
 
   // 3. Adjacent topics for prev/next navigation
-  const { data: siblings } = await supabase
+  const { data: siblings } = await withRequestTimeout(supabase
     .from('grammar_topics')
     .select('slug, title_en, topic_order')
     .ilike('sub_level', subLevel)
-    .order('topic_order');
+    .order('topic_order'));
 
   const idx = (siblings ?? []).findIndex(t => t.slug === slug);
   const prev = idx > 0 ? siblings[idx - 1] : null;

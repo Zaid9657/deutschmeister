@@ -2,9 +2,14 @@
   # Build order: SPA first (creates dist/), then Astro, then merge Astro output
   # into the SPA dist/ so grammar files aren't wiped by the Vite build.
   # _astro/ contains Astro's JS/CSS chunks; grammar/ contains the HTML pages.
-  command = "npm run build && cd astro-site && npm install && npm run build && cd .. && node scripts/merge-site-builds.mjs && node scripts/prerender-spa-routes.mjs && (node scripts/ping-indexnow.mjs || true)"
+  command = "npm run build && cd astro-site && npm ci && npm run build && cd .. && node scripts/merge-site-builds.mjs && node scripts/prerender-spa-routes.mjs && (node scripts/ping-indexnow.mjs || true)"
   publish = "dist"
   functions = "netlify/functions"
+
+[build.environment]
+  # Public deploys must not depend on Supabase being reachable during SSG.
+  # Refresh this committed snapshot separately with scripts/dump-grammar-cache.mjs.
+  GRAMMAR_CONTENT_CACHE = "../grammar-content-cache.json"
 
 [functions]
   node_bundler = "esbuild"
