@@ -55,8 +55,8 @@
    "id": "G008",
    "title": "Production release verification",
    "objective": "Run the complete automated and rendered verification suite, deploy the verified changes, and smoke-test production with an evidence-backed blocker handoff.",
-   "status": "in_progress",
-   "evidence": null
+   "status": "complete",
+   "evidence": "Production commit f2c9808 pushed to audit branch and main; Netlify deploy 6aa82657f6bf78000880f945 reached ready for the exact commit; smoke tests passed for homepage, grammar, pricing, signup, privacy, Impressum, learner-story route, canonical redirects, CSP headers, and real HTTP 404; production browser rendered the deferred German Nouns & Gender rule card with no production console errors."
   }
  ]
 }
