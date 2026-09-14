@@ -60,11 +60,10 @@ const FUNCTION_WORDS_DE = new Set([
   // Konjunktionen und Partikeln
   'und', 'oder', 'aber', 'denn', 'dass', 'weil', 'wenn', 'auch', 'noch', 'nur', 'schon',
   'nicht', 'sehr', 'dann', 'hier', 'ja', 'nein', 'bitte', 'danke', 'jetzt', 'mal',
-  // Satz-, Zeit- und Ortsadverbien — a closed class too, and the reason it is HERE (round 19, DaF
-  // review #18, MAJOR 1): a German sentence that opens with one of them has its subject AFTER the
-  // verb („Leider komme ich später.“, „Morgen fährt der Zug nicht.“), and the Auftrag shape has to
-  // know that the first word is not a name. Adjectives that double as adverbs (`früh`, `spät`,
-  // `schnell`) are NOT here — they are open-class words and may be an answer.
+  // Satz-, Zeit- und Ortsadverbien — a closed class too (round 19, DaF review #18, MAJOR 1): an
+  // adverb is never the content of an answer, and a closed class stays closed. Adjectives that
+  // double as adverbs (`früh`, `spät`, `schnell`) are NOT here — they are open-class words and may
+  // be an answer.
   'heute', 'morgen', 'gestern', 'übermorgen', 'vorgestern', 'leider', 'bald', 'später', 'gern',
   'gerne', 'vielleicht', 'natürlich', 'deshalb', 'darum', 'also', 'dort', 'da', 'zuerst', 'danach',
   'immer', 'oft', 'manchmal', 'nie', 'wieder', 'erst', 'abends', 'morgens', 'mittags', 'nachts',
@@ -151,8 +150,9 @@ const isFunctionWord = (w) => {
  *     (round 19, `isQuestion`). In an INDIRECT QUESTION („Was Sie kaufen“) only
  *     the lower-case words count: the capitalised nouns are the TOPIC the task
  *     hands the learner, not the answer. An indirect question closed by a MODAL
- *     („Was die Gäste mitbringen sollen“) is an Auftrag and has a shape of its
- *     own — `instructionShape` — so its verb decides nothing there.
+ *     („Was die Gäste mitbringen sollen“) is an AUFTRAG and is UNDECIDABLE BY
+ *     FORM — see the decision under QUESTION_SHAPES below: its row is „prüft die
+ *     KI“, like „Warum Sie schreiben“.
  *
  * ONE function, no lexicon argument, ON PURPOSE: `GradedWriting.jsx` and RULE 17
  * in `scripts/validate-curriculum.mjs` call this same code, and a check that
@@ -166,6 +166,10 @@ const isFunctionWord = (w) => {
  * first point and every token of it is a function word or a task verb. Those
  * rows are marked `ai: true` and say „prüft die KI“ — they are never silently
  * dropped (the learner saw three Leitpunkte and a list of two) and never green.
+ * A conjunct can also be DECLARED undecidable although it has words — a `re:
+ * null` row in QUESTION_SHAPES does that for „Warum …“ and, since 2026-09-14,
+ * for the Auftrag („Was … machen soll“); the row is then the KI's, whatever the
+ * text says.
  */
 
 /** The inflection endings a German content word can carry, longest first. */
@@ -727,6 +731,19 @@ const QUESTION_SHAPES = [
   // „Wir feiern.“ (the empty echo) was green and „Ich habe Geburtstag.“ (the reason) was red. In a
   // „Wann …“ the answer has a form; in a „Warum …“ it has none, and a reason is not a form.
   { on: /\bwarum\b/i, re: null },
+  // 2026-09-14, OWNER DECISION AFTER FOUR ROUNDS (DaF reviews #17–#20): THE AUFTRAG IS UNDECIDABLE
+  // BY FORM. „Was die Kollegin bis dahin machen soll“, „Was die Gäste mitbringen sollen“ — an
+  // indirect question closed by a modal asks what someone SHOULD DO, and four repairs in a row
+  // (a verb echo, three instruction shapes, a fourth shape with a subject and a complement rule, a
+  // vocative cut and a bare imperative) each closed the reviewer's probes and each opened the next
+  // set: #17 measured 10 of 12 correct Aufträge red, #18 0 of 10 exam statements green, #19 22 of
+  // 48 correct answers red, #20 13 of 51 red and „Die Kollegin fährt mit dem Zug.“ green. The
+  // reason is not a missing case but the question itself: „Die Kollegin trinkt Kaffee.“ and „Die
+  // Kollegin ruft Herrn Weber an.“ have ONE form, and only their meaning tells a description from
+  // an instruction — which is the KI's reading, never the Formcheck's. So the row is „prüft die
+  // KI“, exactly like „Warum …“: never green, never red. The rule is the shape of the Leitpunkt
+  // (a W-word first, a modal last), not a list of the two Leitpunkte that currently carry it.
+  { on: /^(?:was|wer|wen|wem|wann|wo|wie|warum|woher|wohin|welche[rnms]?)\b.*\b(?:soll|sollst|sollen|sollt|muss|musst|müssen|müsst|kann|kannst|können|könnt|darf|darfst|dürfen|dürft)$/i, re: null },
 ];
 
 /**
@@ -761,339 +778,8 @@ const namedFieldShape = (word, valueShape) => {
   };
 };
 
-/** An indirect question („Was die Gäste mitbringen sollen“) — see the header, step 3. */
+/** An indirect question („Was Sie kaufen“) — see the header, step 3. */
 const INDIRECT_QUESTION_RE = /^(?:was|wer|wen|wem|wann|wo|wie|warum|woher|wohin|welche[rnms]?)\b/i;
-
-/**
- * AN AUFTRAG IS A SENTENCE TYPE, NOT A VERB ECHO (DaF review #17, MAJOR 1) — AND THE SENTENCE TYPE
- * IS THE ANSWER'S, NOT THE INSTRUCTION'S (DaF review #18, MAJOR 1) — AND ITS SUBJECT IS READ OFF THE
- * SENTENCE, NOT OFF THE WORD ORDER OF THE MODEL TEXT (DaF review #19, MAJOR 1).
- *
- * „Was die Kollegin bis dahin **machen soll**“, „Was die Gäste **mitbringen sollen**“: an indirect
- * question closed by a modal asks the learner what the addressee or a third person should do. Round
- * 17 decided it by the predicate — the folded `mach`/`mitbring` had to occur in the text — and the
- * reviewer measured the consequence on L10: ten of twelve correct Aufträge red, four `machen`
- * echoes green. Round 18 replaced the echo by three instruction shapes and the reviewer measured
- * THAT: the shape described how an instruction looks, not how an A1 candidate answers the Leitpunkt
- * — „Die Gäste bringen Kuchen mit.“, „Jeder bringt etwas mit.“, the sentences of the publishers'
- * model texts, were 0 of 10 green, and „Der Zug kann nicht fahren.“ (a modal with a thing as its
- * subject — world description, no addressee) was green. Round 19 built the fourth shape from the
- * sentences a candidate writes, and the reviewer measured THAT: its third condition stood on its
- * head (an EMPTY rest after the verb was green — „Die Gäste tanzen.“, „Herr Weber wartet.“ answered
- * the Auftrag, and two whole exam texts without one got the tick), and its subject reader knew only
- * the word order of the model text: the vocative („Lena, bringst du Kuchen mit?“), the sentence
- * opened by `Und`, the two-word Vorfeld („Am Freitag bringen die Gäste Kuchen mit.“), the imperative
- * without pronoun („Bringt Kuchen mit!“) and „Meine Freunde bringen Getränke mit.“ were all red —
- * 22 of 48 correct answers. So the reading has FOUR shapes with ONE subject rule and ONE complement
- * rule, and each is read off the sentence's own structure:
- *
- *  THE SUBJECT RULE. A person subject is the addressee (`Sie`, `du`, `ihr`), everyone (`jeder`,
- *  `alle`, „Jeder Gast“, „Alle Gäste“), the Leitpunkt's own people („die Gäste“, „die Kollegin“,
- *  „meine Kollegin“, „die Kollegen“ — the capitalised nouns of the indirect question, folded, umlaut
- *  ignored), the PERSON NOUNS of the level (PERSON_NOUNS: `Freunde`, `Familie`, `Kinder`, `Eltern`,
- *  `Kollege`, `Gast`, `Leute`, `Bruder` … — the kinship and person lexis of A1, a closed and finite
- *  list, not a course's Wortfeld) or a NAME (a capitalised word that is no function word or adverb —
- *  „Lena bringt den Salat mit.“, „Frau Berg beginnt ohne mich.“). `ich`/`wir` are the writer's own
- *  plan; `es`, `man`, „der Zug“, „der Chef“ are not who the Leitpunkt asks about.
- *
- *  WHERE THE SUBJECT STANDS. `subjectOf` reads the VORFELD — everything before the first finite verb
- *  or modal — after skipping a leading coordinator (`und`, `aber`, `oder`, `denn`: an A1 text opens
- *  every third sentence with `Und`). A Vorfeld that is a noun phrase, a pronoun or a name IS the
- *  subject; any other Vorfeld — an adverb („Leider“, „Dann“, „Vielleicht“), a prepositional phrase
- *  („Am Freitag“, „Um acht Uhr“), a coordinated object — puts the subject BEHIND the verb. And a lone
- *  capitalised Vorfeld word with a PRONOUN behind the verb is the fronted OBJECT, the pronoun the
- *  subject: „Kuchen bringe ich mit.“ is „Ich bringe Kuchen mit.“ (the writer, red); „Kuchen bringt
- *  jeder mit.“ is „Jeder bringt Kuchen mit.“ (green). Same sentence, same verdict, whichever word
- *  the learner puts first.
- *
- *  THE COMPLEMENT RULE (`hasComplement`). An Auftrag says WHAT someone should do; a statement whose
- *  content beyond the verb is nothing („Die Gäste tanzen.“, „Lena kommt.“, „Herr Weber wartet.“), a
- *  particle („Lena kommt auch.“), a TIME („Die Gäste kommen um acht Uhr.“ — a Wann) or a PLACE
- *  („Die Kollegin arbeitet im Büro.“, „Lena wohnt in Bremen.“ — a Wo) describes the world and is
- *  not one. What counts as a complement: a content word („Kuchen“, „Salat“, „nichts“), an indefinite
- *  object pronoun (`etwas`, `nichts`, `alles` — „Jeder bringt etwas mit.“), or a preposition with a
- *  personal object („ohne mich“, „auf mich“, „mit mir“ — „Sie beginnt ohne mich.“ is the L10 answer;
- *  `zu`/`bei`/`nach` + pronoun say where and do not count). The same rule reads the verb-first
- *  question: „Bringst du Musik mit?“ asks for a thing, „Kommen Sie um zehn Uhr?“ for a time. What
- *  this rule cannot do — and does not claim — is read the VERB: „Die Kollegin trinkt Kaffee.“ and
- *  „Die Kollegin ruft Herrn Weber an.“ have one form, and only their meaning tells a description
- *  from an instruction. That is the KI's reading, not the Formcheck's.
- *
- *  0. THE VOCATIVE is cut before anything is read: one to four capitalised words closed by a comma —
- *     „Lena,“, „Liebe Lena,“, „Hallo Lena,“, „Guten Tag Frau Berg,“ — and the rest of the sentence
- *     is read as the sentence. „Entschuldigung, bitte.“ and „Danke, bitte.“ lose their noun and are
- *     left with a bare `bitte`; „Ja, die Gäste bringen Kuchen mit.“ loses its `Ja`.
- *  1. THE IMPERATIVE / VERB-FIRST SENTENCE — „Rufen Sie Herrn Weber an.“, „Warten Sie.“, „Bring bitte
- *     einen Salat mit.“, „Bringst du Musik mit?“, „Könnt ihr Kuchen mitbringen?“, „Kann die Kollegin
- *     warten?“: the verb (or a modal) stands first, the addressee, `bitte` or a person phrase
- *     follows. As a statement the verb is the content („Warten Sie.“); as a question something must
- *     be asked for beyond WHEN and WHERE („Kommst du?“ asks for presence). THE BARE IMPERATIVE
- *     without addressee or `bitte` — „Bringt Kuchen mit!“, „Bring Kuchen mit!“, „Komm und bring
- *     Musik mit!“ — is read by the one structure that marks it: the SEPARABLE PREFIX closing the
- *     clause, with no subject pronoun and no second finite verb in it. The du-form has no ending
- *     (`Bring`, `Komm`, `Ruf`), and an opener with a verb's ending is as often an adjective
- *     („Gute Party!“, „Schöne Grüße!“, „Vielen Dank!“) — so without the prefix or `bitte` a
- *     verb-first sentence with no addressee is not read as an instruction.
- *  2. THE `bitte` SENTENCE — „Bitte Kuchen und Musik mitbringen.“, „Bitte warten.“: the request
- *     particle with a VERB in the same clause and no `ich`/`wir` in it. „Entschuldigung, bitte.“,
- *     „Vielen Dank, bitte.“, „Bitte, der Zug hat Verspätung.“ request nothing; „Ich komme bitte um
- *     zehn Uhr.“ is the writer; „Kuchen und Salat, bitte!“ has no verb and stays red — a documented
- *     limit, the same as in round 19.
- *  3. THE MODAL SENTENCE — a person subject, a modal, an infinitive later: „Sie können ohne mich
- *     beginnen.“, „Die Gäste sollen Kuchen mitbringen.“, „Meine Freunde sollen Kuchen mitbringen.“
- *     „Es kann regnen.“, „Der Zug muss um neun Uhr fahren.“, „Man muss warten.“ fail the subject
- *     rule. („Die Kollegin kann nicht warten.“ is green: it has the form of „Die Kollegin soll nicht
- *     warten.“, and negation is not a form the Formcheck reads.)
- *  4. THE DECLARATIVE — a person subject, a finite full verb, a COMPLEMENT, not a question: „Die
- *     Gäste bringen Kuchen mit.“, „Jeder bringt etwas mit.“, „Sie beginnt ohne mich.“, „Am Freitag
- *     bringen die Gäste Kuchen mit.“, „Und du bringst den Salat mit.“ `sein`/`haben` are function
- *     words and no full verb („Sie ist müde.“).
- *
- * The Leitpunkt's own verb still decides nothing („Das macht nichts.“, „Was machen Sie heute?“ are
- * red); a text that answers with any verb at all is green. The predicate is kept in `words`/`folded`
- * for the readers that measure the COURSE (RULE 21's untaught-head check), never for scoring —
- * where a shape exists the shape decides (header, step 2). The shape is built per Leitpunkt, because
- * the subject rule reads the Leitpunkt's people — `instructionShape(topics)`.
- */
-const AUFTRAG_MODAL_RE = /\b(?:soll|sollst|sollen|sollt|muss|musst|müssen|müsst|kann|kannst|können|könnt|darf|darfst|dürfen|dürft)\b/i;
-const ADDRESSEE_RE = /^(?:sie|du|ihr|bitte)$/i;
-const PRONOUN_RE = /^(?:ich|du|er|sie|es|wir|ihr|man|jeder|jede|alle|jemand|niemand)$/i;
-const PERSON_PRONOUN_RE = /^(?:sie|du|ihr|jeder|jede|alle)$/i;
-/** The subject pronouns a bare imperative cannot carry — with one of them the sentence has a subject. */
-const SUBJECT_PRONOUN_RE = /^(?:ich|du|er|sie|es|wir|ihr|man)$/i;
-const DETERMINER_RE = /^(?:der|die|das|den|dem|ein|eine|einen|mein|meine|meinen|dein|deine|deinen|unser|unsere|unseren|euer|eure|ihr|ihre|ihren|jeder|jede|jeden|alle|kein|keine)$/i;
-const EVERYONE_RE = /^(?:jeder|jede|jeden|alle)$/i;
-const LEADING_COORDINATOR_RE = /^(?:und|aber|oder|denn)$/i;
-/** `Herr Weber`, `Frau Berg`, `Herrn Weber` — the two-word name behind the verb. */
-const TITLE_RE = /^(?:herr|herrn|frau)$/i;
-/** The openers and closers of a Mitteilung — never the verb of a bare imperative. */
-const OPENER_RE = /^(?:hallo|hi|hey|guten|liebe|lieber|sehr|tschüss|tschuess|grüße|gruesse|gruß|gruss|bis|viele|vielen|herzliche|schöne)$/i;
-const VERB_ENDING_RE = /(?:en|st|t|e)$/i;
-const INFINITIVE_RE = /^[a-zäöüß]+(?:en|ern|eln)$/;
-const NUMBER_WORD_RE = new RegExp(`^${NUMBER_WORD}$`, 'i');
-const isContentWord = (t) => t.length > 1 && !isFunctionWord(t) && !/^\d+$/.test(t);
-/** A token that can be a finite full verb or an infinitive: verb ending, not a closed-class word, not a number. */
-const isVerbLike = (t) => {
-  const w = String(t || '').toLowerCase();
-  // FUNCTION_WORDS_DE, not `isFunctionWord`: the TASK verbs (`schreiben`, `sagen`) are dropped from a
-  // Leitpunkt's evidence, but „Bitte schreiben Sie Frau Berg.“ is an instruction like any other.
-  return w.length >= 3 && /^[a-zäöüß]+$/.test(w) && VERB_ENDING_RE.test(w) && !FUNCTION_WORDS_DE.has(w) && !NUMBER_WORD_RE.test(w);
-};
-const isCapitalised = (t) => /^[A-ZÄÖÜ][A-Za-zÄÖÜäöüß-]*$/.test(t);
-const deUmlaut = (s) => String(s || '').replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ß/g, 'ss');
-/** A finite verb or modal in a sentence body — never a capitalised token (a noun, a name). */
-const isPredicate = (t) => Boolean(t) && (AUFTRAG_MODAL_RE.test(t) || isVerbLike(t)) && !isCapitalised(t);
-const isInfinitive = (t) => INFINITIVE_RE.test(t) && !isFunctionWord(t);
-
-/**
- * THE PERSON NOUNS of the level — the subject rule's closed list (DaF review #19, MAJOR 1, „Viertens“):
- * kinship and person lexis, small and finite, compared FOLDED and without umlauts so that every
- * inflection of it is the same word. `Chef`, `Lehrer`, `Arzt` are roles and deliberately not here:
- * „Der Chef muss das wissen.“ is a fact about the office, and round 19 pinned it red.
- */
-const PERSON_NOUNS = [
-  'Freund', 'Freunde', 'Freunden', 'Freundin', 'Freundinnen', 'Familie', 'Familien', 'Kind', 'Kinder', 'Kindern',
-  'Kollege', 'Kollegen', 'Kollegin', 'Kolleginnen', 'Gast', 'Gäste', 'Gästen', 'Leute', 'Leuten', 'Eltern',
-  'Bruder', 'Brüder', 'Schwester', 'Schwestern', 'Mutter', 'Mütter', 'Vater', 'Väter', 'Mann', 'Männer', 'Frau', 'Frauen',
-  'Mama', 'Papa', 'Oma', 'Opa', 'Sohn', 'Söhne', 'Tochter', 'Töchter', 'Nachbar', 'Nachbarn', 'Nachbarin',
-  'Partner', 'Partnerin', 'Geschwister', 'Verwandte', 'Verwandten', 'Person', 'Personen',
-];
-const PERSON_NOUN_SET = new Set(PERSON_NOUNS.map((n) => deUmlaut(foldWord(n))));
-
-const TIME_RE = new RegExp(`${CLOCK_RE.source}|${DAY_RE.source}|${DATE_VALUE_RE.source}`, 'gi');
-/** A WHERE: a locative preposition, an optional article, a capitalised noun — „im Büro“, „in Bremen“, „nach Hause“. */
-const PLACE_RE = /\b(?:in|im|ins|an|am|ans|auf|bei|beim|nach|zu|zum|zur|aus|vor|hinter|neben|über|unter|zwischen)\s+(?:de[rmns]|eine[mnr]?|meine[mnr]?|seine[mnr]?|ihre[mnr]?|unsere[mnr]?)?\s*[A-ZÄÖÜ][A-Za-zÄÖÜäöüß-]+/g;
-const OBJECT_PRONOUN_RE = /^(?:etwas|nichts|alles|viel|jemand|niemand|wenig|mehr)$/i;
-const PERSONAL_OBJECT_RE = /^(?:mich|mir|uns|dich|dir|euch|ihn|ihm|ihnen)$/i;
-const PREPOSITION_RE = /^(?:an|auf|aus|bei|für|gegen|mit|nach|ohne|über|um|unter|von|vor|zu|zwischen|hinter|neben)$/i;
-const LOCATIVE_ONLY_RE = /^(?:zu|bei|nach)$/i;
-/** THE COMPLEMENT RULE — see the header: content beyond time and place, or an object pronoun, or `ohne mich`. */
-const hasComplement = (toks) => {
-  const rest = words(toks.join(' ').replace(TIME_RE, ' ').replace(PLACE_RE, ' '));
-  if (rest.some((t) => isContentWord(t) || OBJECT_PRONOUN_RE.test(t))) return true;
-  return rest.some((t, i) => PREPOSITION_RE.test(t) && !LOCATIVE_ONLY_RE.test(t) && rest[i + 1] && PERSONAL_OBJECT_RE.test(rest[i + 1]));
-};
-
-/**
- * The noun phrase that starts at `toks[i]` — `[det, Noun]` (an adjective between them is stepped
- * over), a pronoun, a name, a two-word name — and the index after it; null when none starts there.
- * Behind the verb (`titledOnly`) a two-word name needs a title („Frau Berg“): „Vielleicht bringt
- * Lena Kuchen mit.“ has a name and an object, not a two-word name.
- */
-const nounPhraseAt = (toks, i, { titledOnly = false } = {}) => {
-  const t = toks[i];
-  if (!t) return null;
-  if (DETERMINER_RE.test(t)) {
-    for (let j = i + 1; j <= i + 3 && j < toks.length; j += 1) {
-      if (isCapitalised(toks[j]) && !isFunctionWord(toks[j])) return { phrase: [t, toks[j]], end: j + 1 };
-      if (isFunctionWord(toks[j])) break;
-    }
-  }
-  if (PRONOUN_RE.test(t)) return { phrase: [t], end: i + 1 };
-  if (isCapitalised(t) && !isFunctionWord(t)) {
-    const next = toks[i + 1];
-    const twoWord = Boolean(next) && isCapitalised(next) && !isFunctionWord(next) && (!titledOnly || TITLE_RE.test(t));
-    return twoWord ? { phrase: [t, next], end: i + 2 } : { phrase: [t], end: i + 1 };
-  }
-  return null;
-};
-
-/**
- * The subject phrase, the finite-verb position and the REST of a clause (every token that is neither
- * the verb nor the subject — the complement rule reads that), or null when no finite verb follows a
- * Vorfeld. See „WHERE THE SUBJECT STANDS“ in the header.
- */
-const subjectOf = (clauseToks) => {
-  let s = 0;
-  while (s < clauseToks.length && LEADING_COORDINATOR_RE.test(clauseToks[s])) s += 1;
-  const toks = clauseToks.slice(s);
-  if (toks.length < 2) return null;
-  // The Vorfeld runs to the first finite verb or modal. An adjective between article and noun
-  // („die neue Kollegin“) carries a verb's ending and is not it.
-  let v = -1;
-  for (let i = 1; i < toks.length; i += 1) {
-    if (!isPredicate(toks[i])) continue;
-    if (DETERMINER_RE.test(toks[i - 1]) && !PRONOUN_RE.test(toks[i - 1]) && toks[i + 1] && isCapitalised(toks[i + 1])) continue;
-    v = i;
-    break;
-  }
-  if (v < 0) return null;
-  const vorfeld = toks.slice(0, v);
-  const after = toks.slice(v + 1);
-  const np = nounPhraseAt(vorfeld, 0);
-  if (np && np.end === vorfeld.length) {
-    // A lone capitalised Vorfeld word with a pronoun behind the verb is the fronted object.
-    if (vorfeld.length === 1 && isCapitalised(vorfeld[0]) && after[0] && PRONOUN_RE.test(after[0])) {
-      return { phrase: [after[0]], v, rest: [...vorfeld, ...after.slice(1)] };
-    }
-    return { phrase: np.phrase, v, rest: after };
-  }
-  // Adverb, prepositional phrase, coordinated objects first: the subject stands behind the verb.
-  const sub = nounPhraseAt(after, 0, { titledOnly: true });
-  if (!sub) return null;
-  return { phrase: sub.phrase, v, rest: [...vorfeld, ...after.slice(sub.end)] };
-};
-
-const isPersonSubject = (phrase, topics) => {
-  if (phrase.length === 1) {
-    const t = phrase[0];
-    if (PERSON_PRONOUN_RE.test(t)) return true;
-    if (PRONOUN_RE.test(t) || isFunctionWord(t) || NUMBER_WORD_RE.test(t)) return false;
-    return isCapitalised(t) && t.length >= 2; // a name
-  }
-  const [det, noun] = phrase;
-  if (EVERYONE_RE.test(det)) return true;
-  if (!DETERMINER_RE.test(det)) return isCapitalised(det) && isCapitalised(noun); // a two-word name
-  const f = deUmlaut(foldWord(noun));
-  if (PERSON_NOUN_SET.has(f)) return true;
-  return f.length >= 3 && topics.some((t) => f.startsWith(t) || t.startsWith(f));
-};
-
-/**
- * The clauses of an Auftrag sentence: a comma or semicolon always closes one; `und`/`aber`/`oder`/
- * `denn` only where a NEW CLAUSE begins behind it — a pronoun, a determiner, or a name with a finite
- * verb („… und die Gäste bringen Kuchen mit“, „… und ich mache Musik“, „… und Lena bringt Musik mit“).
- * A coordinated OBJECT is not a clause: „Die Gäste sollen Kuchen **und Salat** mitbringen.“ read by
- * `clauses` was „Salat mitbringen.“, a name with no complement — and green in round 19 only by the
- * empty-rest bug that MAJOR 1 closes.
- */
-const CLAUSE_COORDINATOR_RE = /^(?:und|aber|oder|denn)$/i;
-const auftragClauses = (sentence) => {
-  const out = [];
-  for (const seg of String(sentence || '').split(/\s*[,;]\s*/)) {
-    const toks = words(seg);
-    let start = 0;
-    for (let i = 1; i < toks.length - 1; i += 1) {
-      if (!CLAUSE_COORDINATOR_RE.test(toks[i])) continue;
-      const next = stripPunct(toks[i + 1]);
-      const after = stripPunct(toks[i + 2] || '');
-      const opensClause = PRONOUN_RE.test(next) || DETERMINER_RE.test(next)
-        || (isCapitalised(next) && !isFunctionWord(next) && isPredicate(after) && !INFINITIVE_RE.test(after));
-      if (opensClause) {
-        out.push(toks.slice(start, i).join(' '));
-        start = i + 1;
-      }
-    }
-    out.push(toks.slice(start).join(' '));
-  }
-  return out.map((c) => c.trim()).filter(Boolean);
-};
-
-/** Shape 0: the vocative — up to four capitalised words closed by a comma — cut off the front. */
-const withoutVocative = (raw) => {
-  for (let k = 0; k < 4 && k < raw.length - 1; k += 1) {
-    const bare = stripPunct(raw[k]);
-    if (!bare || !isCapitalised(bare)) return raw;
-    if (/,$/.test(raw[k])) return raw.slice(k + 1);
-  }
-  return raw;
-};
-
-const isInstructionSentence = (sentence, topics) => {
-  const raw = words(sentence);
-  const body = withoutVocative(raw);
-  if (body !== raw) return isInstructionSentence(body.join(' '), topics);
-  const toks = raw.map(stripPunct).filter(Boolean);
-  if (toks.length < 2) return false;
-  const question = isQuestion(sentence);
-  const [first, second] = toks;
-  // 1. Verb (or modal) first, addressee, `bitte` or a person phrase second — and no comma between.
-  const commaBeforeSecond = /,$/.test(raw[0] || '');
-  // The du-imperative has no ending („Bring bitte …“, „Komm bitte …“): before `bitte` any word that
-  // is no function word and no number stands for the verb.
-  const verbFirst = isVerbLike(first) || AUFTRAG_MODAL_RE.test(first)
-    || (/^bitte$/i.test(second) && isContentWord(first) && !NUMBER_WORD_RE.test(first));
-  if (!commaBeforeSecond && verbFirst && !QUESTION_WORD_RE.test(first)) {
-    if (ADDRESSEE_RE.test(second)) {
-      if (AUFTRAG_MODAL_RE.test(first)) {
-        if (toks.slice(2).some(isInfinitive)) return true;
-      } else if (!question || hasComplement(toks.slice(2))) return true;
-    } else {
-      // „Kann die Kollegin warten?“, „Soll Lena Kuchen mitbringen?“, „Bringen die Gäste Kuchen mit?“
-      const np = nounPhraseAt(toks, 1, { titledOnly: true });
-      if (np && isPersonSubject(np.phrase, topics)) {
-        const rest = toks.slice(np.end);
-        if (AUFTRAG_MODAL_RE.test(first) ? rest.some(isInfinitive) : hasComplement(rest)) return true;
-      }
-    }
-  }
-  // 1b. The bare imperative: no addressee, no `bitte`, no subject pronoun, no second finite verb
-  // (except after `und`), the separable prefix closing the sentence — „Bringt Kuchen mit!“,
-  // „Bring Kuchen mit.“, „Komm und bring Musik mit!“.
-  if (!question && isContentWord(first) && !NUMBER_WORD_RE.test(first) && !OPENER_RE.test(first)
-    && SEPARABLE_PREFIXES.includes(toks[toks.length - 1].toLowerCase())
-    && !toks.some((t) => SUBJECT_PRONOUN_RE.test(t) || /^bitte$/i.test(t))
-    && !toks.slice(1).some((t, i) => isPredicate(t) && !/^(?:und|oder)$/i.test(toks[i]))
-    && hasComplement(toks.slice(1))) return true;
-  // 2. `bitte` with a verb in the same clause, and not the writer's own sentence.
-  for (const clause of [sentence, ...clauses(sentence)]) {
-    const ct = words(clause).map(stripPunct).filter(Boolean);
-    if (!ct.some((t) => /^bitte$/i.test(t))) continue;
-    if (ct.some((t) => /^(?:ich|wir)$/i.test(t))) continue;
-    if (ct.some((t, i) => i > 0 && !isCapitalised(t) && (isVerbLike(t) || INFINITIVE_RE.test(t)) && !FUNCTION_WORDS_DE.has(t.toLowerCase()))) return true;
-  }
-  // 3. and 4. A person subject with a modal (and an infinitive) or with a full verb and a complement
-  // — read per CLAUSE, so „Die Kollegen kommen um neun Uhr, ich komme um zehn Uhr.“ is two time
-  // statements and not one sentence with a content word somewhere behind the verb.
-  if (question) return false;
-  return auftragClauses(sentence).some((clause) => {
-    const ct = words(clause).map(stripPunct).filter(Boolean);
-    if (ct.length < 2) return false;
-    const subj = subjectOf(ct);
-    if (!subj || !isPersonSubject(subj.phrase, topics)) return false;
-    const verb = ct[subj.v];
-    if (AUFTRAG_MODAL_RE.test(verb)) return subj.rest.some(isInfinitive);
-    return hasComplement(subj.rest);
-  });
-};
-
-/** The instruction shape of ONE Auftrag Leitpunkt — `topics` are its people (see the subject rule). */
-const instructionShape = (topics) => ({
-  test: (body) => sentences(body).some((s) => isInstructionSentence(s, topics)),
-});
-
-/** An indirect question asking WHAT SOMEONE SHOULD DO — the modal is its closing word. */
-const isAuftragLeitpunkt = (conjunct) => INDIRECT_QUESTION_RE.test(conjunct) && AUFTRAG_MODAL_RE.test(conjunct);
 
 /**
  * A Leitpunkt split into its CONJUNCTS — „ und “ and „, “, never „oder“. In *Start Deutsch 1* a
@@ -1107,17 +793,20 @@ export function leitpunktConjuncts(leitpunkt) {
 }
 
 const conjunctEvidence = (conjunct, { allowNamedField = true } = {}) => {
-  // A question shape with `re: null` declares the conjunct undecidable by FORM — neither its words
-  // nor a shape may decide it (see QUESTION_SHAPES). The row becomes „prüft die KI“.
-  if (QUESTION_SHAPES.some((s) => s.re === null && s.on.test(conjunct))) {
-    return { text: conjunct, words: [], folded: [], shapes: [] };
-  }
   const all = leitpunktKeywords(conjunct);
   // In an indirect question the capitalised nouns are the topic the task hands over, not the
   // answer; only the predicate decides. Elsewhere („Ihre Telefonnummer“) the noun IS the answer.
   const keywords = INDIRECT_QUESTION_RE.test(conjunct)
     ? all.filter((w) => /^[a-zäöüß]/.test(w))
     : all;
+  // A question shape with `re: null` declares the conjunct undecidable by FORM — neither its words
+  // nor a shape may decide it (see QUESTION_SHAPES), so `folded` and `shapes` are EMPTY and the row
+  // becomes „prüft die KI“. `words` is kept: it never scores (`leitpunktSatisfied` reads `folded`),
+  // but RULE 21's untaught-head check reads it — „Was die Gäste **mitbringen** sollen“ still asks
+  // the course whether it has taught `mitbringen` by Lektion 12.
+  if (QUESTION_SHAPES.some((s) => s.re === null && s.on.test(conjunct))) {
+    return { text: conjunct, words: keywords, folded: [], shapes: [] };
+  }
   const folded = keywords.flatMap((w) => [foldWord(w), ...splitVerbStem(w)]).filter(Boolean);
   const shapes = [];
   for (const w of keywords) {
@@ -1134,11 +823,6 @@ const conjunctEvidence = (conjunct, { allowNamedField = true } = {}) => {
     }
   }
   shapes.push(...QUESTION_SHAPES.filter((s) => s.re && s.on.test(conjunct)).map((s) => s.re));
-  // An Auftrag is decided by sentence type, never by its verb echoed back (see instructionShape);
-  // the Leitpunkt's capitalised nouns are the people its answer may be about.
-  if (isAuftragLeitpunkt(conjunct)) {
-    shapes.push(instructionShape(all.filter((w) => isCapitalised(w)).map((w) => deUmlaut(foldWord(w)))));
-  }
   return { text: conjunct, words: keywords, folded, shapes };
 };
 
