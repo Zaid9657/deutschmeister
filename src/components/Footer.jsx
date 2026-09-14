@@ -25,10 +25,7 @@ const Footer = () => {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <Logo size={32} />
-              <span className="font-display font-semibold text-white">
-                Deutsch<span className="text-siegel-lift">Meister</span>
-              </span>
+              <Logo size={32} wordmarkTone="inverse" />
             </div>
             <p className="text-sm leading-relaxed">
               {isGerman
@@ -55,9 +52,9 @@ const Footer = () => {
           </div>
           {FOOTER_GROUPS.map((group) => (
             <div key={group.key}>
-              <h3 className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-white mb-3">
+              <h2 className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-white mb-3">
                 {isGerman ? group.titleDe : group.titleEn}
-              </h3>
+              </h2>
               <ul className="space-y-2 text-sm">
                 {group.items.map((item) => (
                   <li key={item.href + item.labelEn}>

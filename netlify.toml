@@ -51,9 +51,9 @@
     Permissions-Policy = "camera=(), microphone=(self), geolocation=(), payment=()"
     Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
     X-XSS-Protection = "1; mode=block"
-    # Report-Only first: watch the browser console / reporting endpoint for
-    # violations in production, then promote to Content-Security-Policy once
-    # the origin list is confirmed complete (see EVALUATION.md).
+    # Enforce low-risk structural directives now. Keep the resource allowlist
+    # in Report-Only until production reporting proves it complete.
+    Content-Security-Policy = "object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests"
     Content-Security-Policy-Report-Only = "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://us-assets.i.posthog.com https://app.lemonsqueezy.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; media-src 'self' blob: data: https://omqyueddktqeyrrqvnyq.supabase.co; connect-src 'self' https://omqyueddktqeyrrqvnyq.supabase.co wss://omqyueddktqeyrrqvnyq.supabase.co https://www.google-analytics.com https://us.i.posthog.com https://us-assets.i.posthog.com https://api.lemonsqueezy.com; frame-src https://app.lemonsqueezy.com https://deutsch-meister.lemonsqueezy.com https://www.youtube.com https://www.youtube-nocookie.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"
 
 # Hashed bundles — filenames change on every build, safe to cache forever

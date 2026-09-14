@@ -152,7 +152,7 @@ const authAttrs = (item) =>
               <text x="32" y="45" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="700" font-size="34" fill="#fff">M</text>
             </svg>
             <span class="font-display font-semibold text-xl text-ink hidden sm:block">
-              Deutsch<span class="text-siegel-lift">Meister</span>
+              Deutsch<span class="text-siegel-deep">Meister</span>
             </span>
           </a>
 
@@ -254,7 +254,7 @@ const authAttrs = (item) =>
                 <circle cx="32" cy="8.5" r="3.4" fill="#FBBF24" />
                 <text x="32" y="45" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="700" font-size="34" fill="#fff">M</text>
               </svg>
-              <span class="font-display font-semibold text-white">Deutsch<span class="text-siegel-lift">Meister</span></span>
+              <span class="font-display font-semibold text-white">Deutsch<span class="text-siegel-wash">Meister</span></span>
             </div>
             <p class="text-sm leading-relaxed">
               Learn German with AI — from A1.1 to B2.2. Grammar, speaking, listening, and reading.
@@ -282,7 +282,7 @@ const authAttrs = (item) =>
           </div>
           {FOOTER_GROUPS.map((group) => (
             <div>
-              <h3 class="text-white font-semibold text-sm mb-3">{group.titleEn}</h3>
+              <h2 class="text-white font-semibold text-sm mb-3">{group.titleEn}</h2>
               <ul class="space-y-2 text-sm">
                 {group.items.map((item) => (
                   <li><a href={item.href} class="hover:text-white transition-colors">{item.labelEn}</a></li>

@@ -41,8 +41,8 @@
    "id": "G006",
    "title": "Accessibility and security",
    "objective": "Fix remaining WCAG issues, validate keyboard zoom and automated accessibility, and move CSP from observation toward safe enforcement.",
-   "status": "pending",
-   "evidence": null
+   "status": "complete",
+   "evidence": "Both renderers build; focused checks 5/5 pass; Lighthouse accessibility improved from 96/95 to 100/100; real-browser keyboard disclosure and 200%-equivalent reflow verified without overflow."
   },
   {
    "id": "G007",

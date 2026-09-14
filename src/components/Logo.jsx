@@ -7,13 +7,20 @@
  * Props:
  *   size        — seal diameter in px (default 38); wordmark scales with it
  *   showWordmark — render the "DeutschMeister" wordmark beside the seal (default true)
+ *   wordmarkTone — "default" on light surfaces or "inverse" on dark surfaces
  *   to          — wrap in a link to this path (default '/'); pass null for a bare mark.
  *                 Renders a full-page <a>, not a router Link: "/" and "/pricing" are
  *                 served by the static Astro pages, which client-side routing would
  *                 bypass (showing the divergent SPA versions instead).
  *   className   — extra classes on the wrapper
  */
-export default function Logo({ size = 38, showWordmark = true, to = '/', className = '' }) {
+export default function Logo({
+  size = 38,
+  showWordmark = true,
+  wordmarkTone = 'default',
+  to = '/',
+  className = '',
+}) {
   // Unique gradient id per instance so multiple logos on a page don't collide.
   const gid = `dmSeal-${size}-${showWordmark ? 'w' : 'n'}`;
   const wordSize = Math.round(size * 0.47); // ~18px at size 38
@@ -58,10 +65,10 @@ export default function Logo({ size = 38, showWordmark = true, to = '/', classNa
       </svg>
       {showWordmark && (
         <span
-          className="dm-display font-semibold text-ink"
+          className={`dm-display font-semibold ${wordmarkTone === 'inverse' ? 'text-white' : 'text-ink'}`}
           style={{ fontSize: `${wordSize}px`, letterSpacing: '-0.01em' }}
         >
-          Deutsch<span style={{ color: '#0D9488' }}>Meister</span>
+          Deutsch<span className={wordmarkTone === 'inverse' ? 'text-siegel-wash' : 'text-siegel-deep'}>Meister</span>
         </span>
       )}
     </span>
