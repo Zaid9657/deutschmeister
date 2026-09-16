@@ -178,6 +178,9 @@ const PRICE_FREE_SURFACES = [
   'astro-site/src/pages/pricing.astro',
   'astro-site/src/pages/courses/index.astro',
   'astro-site/src/pages/courses/[level].astro',
+  // The DeutschStart A1.1 sales page — the one course surface whose whole job
+  // is the price, which is exactly why it may not contain the digits.
+  'astro-site/src/components/courses/A11CourseLanding.astro',
   'astro-site/src/data/courseContents.js',
   'astro-site/src/pages/index.astro',
   // The day-6 trial email carried a hardcoded €9.99 twice; it now derives from

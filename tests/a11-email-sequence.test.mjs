@@ -96,3 +96,17 @@ test('the operator script defaults to test mode and needs an explicit live confi
   assert.doesNotMatch(script, /CAMPAIGN_SECRET\s*=\s*["'][^"']+["']/, 'a secret literal is embedded in the script');
   assert.match(script, /\$env:CAMPAIGN_SECRET/, 'the secret must come from the environment');
 });
+
+test('every course CTA uses the slug the Astro build actually emits', () => {
+  // The sales page is built at /courses/a1-1/ (levelToSlug), NOT /courses/a1.1/.
+  // An email CTA in the dot form is a 404 sent to everyone who ever bought
+  // nothing yet — this caught exactly that before the first send.
+  for (const f of files) {
+    const body = read(f);
+    assert.ok(!/deutsch-meister\.de\/courses\/a1\.1/.test(body), `${f}: /courses/a1.1/ is a 404 — use /courses/a1-1/`);
+  }
+  // The SPA lesson routes DO use the dot form and are covered by the
+  // netlify.toml /course/* rewrite.
+  const toml = readFileSync(new URL('../netlify.toml', import.meta.url), 'utf8');
+  assert.match(toml, /from = "\/course\/\*"/, 'the SPA course rewrite must exist for /course/a1.1/l/1');
+});

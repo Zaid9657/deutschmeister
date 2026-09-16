@@ -33,7 +33,7 @@ assessment that includes speaking.
 Each situation has one guided speaking mission, and your first attempt at
 every one of them is included.
 
-[See the full route](https://deutsch-meister.de/courses/a1.1/?utm_source=email&utm_medium=sequence&utm_campaign=a11-foundation-2026-09)
+[See the full route](https://deutsch-meister.de/courses/a1-1/?utm_source=email&utm_medium=sequence&utm_campaign=a11-foundation-2026-09)
 
 Bis bald,
 DeutschMeister

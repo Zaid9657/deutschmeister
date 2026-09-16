@@ -13,7 +13,7 @@ allowlist drops everything it does not name.
 
 | Event | Fires when | Properties |
 |---|---|---|
-| `a11_sales_viewed` | the `/courses/a1.1/` sales page renders | source |
+| `a11_sales_viewed` | the `/courses/a1-1/` sales page renders | source |
 | `a11_preview_started` | preview lesson 1 opens | source, lesson |
 | `a11_preview_lesson_completed` | a preview lesson (1–3) is finished | source, lesson |
 | `a11_preview_completed` | lesson 3 is finished (the bridge appears) | source |

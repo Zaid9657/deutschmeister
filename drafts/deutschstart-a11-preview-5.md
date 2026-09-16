@@ -38,7 +38,7 @@ promise a certificate result.
 Honest note on audio: lesson audio is currently a computer voice, and every
 audio screen says so. Recorded human audio is in production.
 
-[Continue the route](https://deutsch-meister.de/courses/a1.1/?utm_source=email&utm_medium=sequence&utm_campaign=a11-foundation-2026-09)
+[Continue the route](https://deutsch-meister.de/courses/a1-1/?utm_source=email&utm_medium=sequence&utm_campaign=a11-foundation-2026-09)
 
 If A1.1 is not where you are, just stay on the free lessons — they stay open.
 

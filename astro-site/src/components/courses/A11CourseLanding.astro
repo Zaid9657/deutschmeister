@@ -244,7 +244,7 @@ const faq = [
              the curriculum so it can never show a different number than the
              syllabus below. Decorative — the same information is in section 3. -->
         <svg class="hero-line mt-8 w-full text-siegel" style="--d:300ms" viewBox="0 0 360 40" role="img" aria-label={`A route of ${lessonCount} lessons with ${checkpointCount} checkpoints`}>
-          <line x1="8" y1="20" x2="352" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.35" />
+          <line x1="8" y1="20" x2="352" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.3" />
           {lektionen.map((l, i) => {
             const x = 8 + (i * 344) / (lessonCount - 1);
             const cp = checkpointAfter(curriculum, l.nr);
