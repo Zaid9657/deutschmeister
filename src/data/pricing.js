@@ -17,14 +17,42 @@
 // price claim that disagrees with the checkout is irreführende Werbung under
 // UWG §5, not a typo. The helpers below recompute on every build instead.
 //
-// Provenance: prices verified against src/config/lemonsqueezy.js and the
-// Lemon Squeezy store (309512) checkout, 2026-08-22.
+// Provenance: subscription prices re-cut 2026-09-15 (approved rebuild spec,
+// docs/superpowers/specs/2026-09-15-deutschmeister-speaking-a11-commercial-rebuild-design.md
+// §7): the PUBLIC subscription is the AI Coach at €12.99/€129. The Lemon
+// Squeezy variants for these prices DO NOT EXIST YET — the owner creates them
+// (dashboard-only) and sets the AI_COACH variant env vars; until then every
+// subscription checkout surface hides (no-fallback rule below). Existing
+// subscribers are GRANDFATHERED on €9.99/€79.99 while continuously
+// subscribed: their remote LS subscriptions keep billing the old variants,
+// which this file no longer offers to anyone new.
 
 /** Gross price in EUR, billed monthly. */
-export const MONTHLY_PRICE_EUR = 9.99;
+export const MONTHLY_PRICE_EUR = 12.99;
 
 /** Gross price in EUR, billed once per year. */
-export const YEARLY_PRICE_EUR = 79.99;
+export const YEARLY_PRICE_EUR = 129;
+
+/**
+ * What existing subscribers keep paying while continuously subscribed
+ * (spec §7.3). Display-only — no checkout may ever open at these prices.
+ */
+export const GRANDFATHERED_MONTHLY_PRICE_EUR = 9.99;
+export const GRANDFATHERED_YEARLY_PRICE_EUR = 79.99;
+
+/**
+ * One-time speaking top-up: 60 permanent minutes (3,600 seconds — the grant
+ * lives in netlify/functions/_shared/speakingGrants.mjs TOPUP_SECONDS and
+ * tests/claims.test.mjs compares). Same no-fallback rule as the courses: an
+ * unset variant id hides the buy surface.
+ */
+export const SPEAKING_TOPUP = {
+  key: 'speaking_topup_60',
+  name: '60 speaking minutes',
+  nameDe: '60 Sprechminuten',
+  price: 6.99,
+  minutes: 60,
+};
 
 export const CURRENCY = 'EUR';
 

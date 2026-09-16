@@ -50,11 +50,23 @@ export const FREE_DAILY_LIMIT = 1;
 /** Pro subscriber, per UTC day. Source: DAILY_LIMITS.pro (2026-08-22). */
 export const PRO_DAILY_LIMIT = 50;
 
-/** Speaking sessions included with Pro, per month. Source: PRO_MONTHLY_LIMIT, netlify/functions/_shared/speakingUsage.mjs:8 (2026-08-22). */
-export const PRO_SPEAKING_SESSIONS_PER_MONTH = 30;
+/**
+ * AI speaking allowance per subscription month, in MINUTES (2026-09-15
+ * rebuild: speaking is billed in seconds from the allowance ledger, not in
+ * session counts). Source: AI_COACH_MONTHLY_SECONDS = 7200,
+ * netlify/functions/_shared/speakingGrants.mjs — the grant the webhook
+ * actually writes; grandfathered €9.99/€79.99 subscribers get the same.
+ */
+export const SPEAKING_MONTHLY_MINUTES = 120;
 
-/** Free speaking sessions during the trial, in TOTAL (not per month). Source: TRIAL_TOTAL_LIMIT, speakingUsage.mjs:9 (2026-08-22). */
-export const TRIAL_SPEAKING_SESSIONS = 2;
+/** Permanent speaking minutes a DeutschStart A1.1 purchase grants. Source: COURSE_SPEAKING_SECONDS = 3600, speakingGrants.mjs (2026-09-16). */
+export const COURSE_SPEAKING_MINUTES = 60;
+
+/** Included first attempts at the 12 course speaking missions per course purchase. Source: courseMissionKeys('A1.1').length, speakingEntitlements.mjs (2026-09-16). */
+export const COURSE_MISSION_ATTEMPTS = 12;
+
+/** Permanent minutes a speaking top-up grants. Source: TOPUP_SECONDS = 3600, speakingGrants.mjs (2026-09-16). */
+export const TOPUP_SPEAKING_MINUTES = 60;
 
 /** AI writing evaluations included with Pro, per month. Source: WRITING_LIMITS.pro, netlify/functions/evaluate-writing.mjs (2026-08-31). */
 export const PRO_WRITING_EVALUATIONS_PER_MONTH = 20;
@@ -193,9 +205,9 @@ export const UNLIMITED_CONTENT_LINE = `Unlimited access to all ${LEVEL_COUNT} le
 /** German equivalent. Compounds take the singular: "8-Level-Zugang", not "8-Levels". */
 export const UNLIMITED_CONTENT_LINE_DE = `Unbegrenzter Zugang zu allen ${LEVEL_COUNT} Leveln`;
 
-/** Pro's AI speaking allowance, stated with its period. Never as "unlimited". */
-export const SPEAKING_LINE = `${PRO_SPEAKING_SESSIONS_PER_MONTH} AI speaking sessions per month`;
-export const SPEAKING_LINE_DE = `${PRO_SPEAKING_SESSIONS_PER_MONTH} KI-Sprechübungen pro Monat`;
+/** The subscription's AI speaking allowance, stated with its period. Never as "unlimited". */
+export const SPEAKING_LINE = `${SPEAKING_MONTHLY_MINUTES} minutes of AI speaking per month`;
+export const SPEAKING_LINE_DE = `${SPEAKING_MONTHLY_MINUTES} Minuten KI-Sprechtraining pro Monat`;
 
 /** Pro's X-Ray allowance, stated with its period. */
 export const XRAY_LINE = `${PRO_DAILY_LIMIT} Sentence X-Ray analyses per day`;

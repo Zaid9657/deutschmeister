@@ -4,7 +4,7 @@
 // come from src/data/marketing.js. Only the variant IDs and the checkout URL
 // live here — those are checkout plumbing, not shared copy, and the Astro site
 // has no use for them.
-import { PLANS, COURSES, LEVEL_COURSES, CURRENCY } from '../data/pricing.js';
+import { PLANS, COURSES, LEVEL_COURSES, SPEAKING_TOPUP, CURRENCY } from '../data/pricing.js';
 import { LEVEL_COUNT, SPEAKING_LINE, XRAY_LINE } from '../data/marketing.js';
 
 export const LEMONSQUEEZY_CONFIG = {
@@ -17,7 +17,11 @@ export const LEMONSQUEEZY_CONFIG = {
       price: PLANS.monthly.price,
       currency: CURRENCY,
       interval: PLANS.monthly.interval,
-      variantId: import.meta.env.VITE_LEMONSQUEEZY_MONTHLY_VARIANT_ID || 'dfc81ca3-78f5-4bab-9d62-dca75b3f7e21',
+      // AI Coach pricing (2026-09-15): the old €9.99 variant fallback is gone
+      // ON PURPOSE — it would open a checkout at a price this config no
+      // longer claims. Unset id = subscription checkout hidden until the
+      // owner creates the €12.99 variant (same rule as the courses below).
+      variantId: import.meta.env.VITE_LEMONSQUEEZY_AI_COACH_MONTHLY_VARIANT_ID || '',
       features: [
         `Full access to all ${LEVEL_COUNT} levels (A1.1–B2.2)`,
         'All grammar lessons with exercises',
@@ -38,7 +42,7 @@ export const LEMONSQUEEZY_CONFIG = {
       price: PLANS.yearly.price,
       currency: CURRENCY,
       interval: PLANS.yearly.interval,
-      variantId: import.meta.env.VITE_LEMONSQUEEZY_YEARLY_VARIANT_ID || 'd58c1838-d935-4c59-a0ac-0bfce8ec9c3b',
+      variantId: import.meta.env.VITE_LEMONSQUEEZY_AI_COACH_YEARLY_VARIANT_ID || '',
       features: [
         'Everything in Pro Monthly',
         `Save ${PLANS.yearly.savingPercent}% compared to monthly`,
@@ -75,6 +79,15 @@ export const LEMONSQUEEZY_CONFIG = {
     course_b1_2: { ...LEVEL_COURSES.course_b1_2, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_B1_2_VARIANT_ID || '' },
     course_b2_1: { ...LEVEL_COURSES.course_b2_1, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_B2_1_VARIANT_ID || '' },
     course_b2_2: { ...LEVEL_COURSES.course_b2_2, currency: CURRENCY, variantId: import.meta.env.VITE_LEMONSQUEEZY_COURSE_B2_2_VARIANT_ID || '' },
+  },
+
+  // One-time speaking top-up (60 permanent minutes). No-fallback rule.
+  topups: {
+    speaking_topup_60: {
+      ...SPEAKING_TOPUP,
+      currency: CURRENCY,
+      variantId: import.meta.env.VITE_LEMONSQUEEZY_SPEAKING_TOPUP_60_VARIANT_ID || '',
+    },
   },
 
   // Generate checkout URL with user info

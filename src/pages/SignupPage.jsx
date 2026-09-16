@@ -16,7 +16,6 @@ import {
   LEVEL_COUNT,
   TRIAL_DAILY_LIMIT,
   TRIAL_DAYS,
-  TRIAL_SPEAKING_SESSIONS,
   TRIAL_WRITING_EVALUATIONS,
 } from '../data/marketing.js';
 
@@ -117,7 +116,7 @@ const SignupPage = () => {
           <ul className="hero-line text-left inline-block space-y-1 mb-2" style={{ '--d': '320ms' }}>
             {[
               `All ${LEVEL_COUNT} levels and ${GRAMMAR_TOPIC_COUNT} grammar topics during the trial`,
-              `${TRIAL_SPEAKING_SESSIONS} AI speaking sessions during the trial`,
+              'A free AI speaking demo during the trial',
               `${TRIAL_DAILY_LIMIT} Sentence X-Ray analyses per day during the trial`,
               `${TRIAL_WRITING_EVALUATIONS} AI writing evaluations during the trial`,
             ].map((item) => (

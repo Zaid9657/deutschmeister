@@ -83,6 +83,7 @@ const SubscriptionPage = () => {
 
   const handleSubscribe = (planType) => {
     const plan = LEMONSQUEEZY_CONFIG.plans[planType];
+    if (!plan?.variantId) return; // no product in the store yet — never a dead checkout
     const checkoutUrl = LEMONSQUEEZY_CONFIG.getCheckoutUrl(
       plan.variantId,
       user?.email || '',
@@ -190,6 +191,11 @@ const SubscriptionPage = () => {
     }
     setVerifying(false);
   };
+
+  // No-fallback rule (2026-09-15 AI Coach pricing): a plan whose LS variant
+  // env var is unset has no product in the store yet — its button must not
+  // open a dead (or wrongly-priced) checkout.
+  const planBuyable = (id) => !!LEMONSQUEEZY_CONFIG.plans[id]?.variantId;
 
   const plans = [
     {
@@ -431,15 +437,17 @@ const SubscriptionPage = () => {
 
                   <Button
                     onClick={() => handleSubscribe(plan.id)}
-                    disabled={isSubscribed}
+                    disabled={isSubscribed || !planBuyable(plan.id)}
                     variant={plan.highlight ? 'primary' : 'secondary'}
-                    shimmer={plan.highlight && !isSubscribed}
+                    shimmer={plan.highlight && !isSubscribed && planBuyable(plan.id)}
                     size="lg"
                     className="mt-auto w-full"
                   >
                     {isSubscribed
                       ? isGerman ? 'Bereits abonniert' : 'Already Subscribed'
-                      : isGerman ? 'Jetzt abonnieren' : 'Subscribe Now'}
+                      : !planBuyable(plan.id)
+                        ? isGerman ? 'Bald verfügbar' : 'Coming soon'
+                        : isGerman ? 'Jetzt abonnieren' : 'Subscribe Now'}
                   </Button>
                 </Card>
               </Tilt>

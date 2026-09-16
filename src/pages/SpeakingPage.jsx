@@ -9,7 +9,6 @@ import { useSubscription } from '../contexts/SubscriptionContext';
 import { supabase, getAuthHeaders } from '../utils/supabase';
 import SEO from '../components/SEO';
 import { seoProps } from '../data/seoRoutes.js';
-import { TRIAL_SPEAKING_SESSIONS } from '../data/marketing.js';
 import { getConfigForLevel } from '../constants/speakingPrompts';
 import { checkSpeakingSupport } from '../components/speaking/mediaSupport';
 import SpeakingSession from '../components/speaking/SpeakingSession';
@@ -369,7 +368,7 @@ const SpeakingPage = () => {
             </Button>
           </Reveal>
           <p className="text-sm text-graphite mt-4">
-            A free account includes {TRIAL_SPEAKING_SESSIONS} AI speaking sessions — no card needed.
+            A free account includes a guided speaking demo — no card needed.
           </p>
         </div>
       </div>

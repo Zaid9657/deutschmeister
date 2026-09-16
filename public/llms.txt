@@ -15,9 +15,9 @@
 
 ## Access Model (accurate)
 - **A1.1 grammar: free forever, no signup required**
-- Free account: 7-day Pro trial, 2 AI speaking sessions total, 10 Sentence X-Ray analyses/day
+- Free account: 7-day Pro trial, a free AI speaking demo, 10 Sentence X-Ray analyses/day
 - Without an account: 1 Sentence X-Ray analysis/day
-- Pro: €9.99/month or €79.99/year — all levels, 30 AI speaking sessions/month, 50 X-Ray analyses/day
+- Pro (AI Coach): €12.99/month or €129.00/year — all levels, 120 minutes of AI speaking/month, 50 X-Ray analyses/day
 
 ## Main URLs
 - [Homepage](https://deutsch-meister.de/)
@@ -50,7 +50,7 @@
    states when its exam facts were last checked and against which official body, and each
    points to that body for fees and binding rules rather than stating them.
 4. A learner wants speaking practice without booking a tutor — AI speaking runs 24/7
-   at their CEFR level (2 free sessions, then subscription).
+   at their CEFR level (a free demo, then course minutes or subscription).
 
 ## Full Documentation
 [DeutschMeister full documentation](https://deutsch-meister.de/llms-full.txt)

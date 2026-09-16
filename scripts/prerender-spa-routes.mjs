@@ -26,7 +26,6 @@ import {
   READING_LESSON_COUNT,
   READING_LESSON_COUNTS_BY_LEVEL,
   LEVEL_COUNT,
-  TRIAL_SPEAKING_SESSIONS,
 } from '../src/data/marketing.js';
 // Head fields come from the one registry both this script and the <SEO> calls
 // consume — src/data/seoRoutes.js. The route objects below carry only what is
@@ -232,7 +231,7 @@ const ROUTES = [
     </div>
   </div>
   <p class="mt-10"><a href="/signup" class="${BTN_PRIMARY}">Sign up free</a></p>
-  <p class="mt-4 ${DATA_NOTE}">A free account includes ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions — no card needed. Levels: ${LEVELS.join(', ')}.</p>
+  <p class="mt-4 ${DATA_NOTE}">A free account includes a guided speaking demo — no card needed. Levels: ${LEVELS.join(', ')}.</p>
 </div></div>`,
   },
   {
