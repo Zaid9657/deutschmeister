@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   Mic, Crown, ArrowRight, Loader2, AlertTriangle, Monitor, Lock, Play,
-  Wallet, MessageCircle, CheckCircle2, RotateCcw, Clock,
+  MessageCircle, CheckCircle2, RotateCcw, Clock,
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
@@ -32,9 +32,10 @@ const LEVEL_NAMES_EN = {
   'B1.1': 'Intermediate 1', 'B1.2': 'Intermediate 2',
   'B2.1': 'Upper Intermediate 1', 'B2.2': 'Upper Intermediate 2',
 };
-const DURATIONS = [5, 10, 15];
-const PRICE_CENTS = { 5: 100, 10: 200, 15: 300 };
-const SUB_FREE_5MIN_PER_DAY = 2;
+// Guided sessions reserve up to this many seconds from the allowance —
+// mirrors GUIDED_MISSION_SECONDS in netlify/functions/_shared/
+// speakingEntitlements.mjs; the server, not this page, decides the charge.
+const GUIDED_SECONDS = 300;
 
 const FIELD_LABEL = 'block font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel mb-2';
 const PRESS = 'transition-all duration-100 ease-snap active:translate-y-1 active:shadow-none';
@@ -54,14 +55,10 @@ function nextSpeakingLevel(level) {
   return idx >= 0 && idx < LEVEL_ORDER.length - 1 ? LEVEL_ORDER[idx + 1] : null;
 }
 
-function euros(cents) {
-  if (!cents) return '€0';
-  return cents % 100 === 0 ? `€${cents / 100}` : `€${(cents / 100).toFixed(2)}`;
-}
-
-function utcMidnightISO() {
-  const n = new Date();
-  return new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate())).toISOString();
+// Balances live in seconds; people read minutes. Whole minutes are enough on
+// every surface here (the server keeps the exact seconds).
+function fmtMinutes(seconds) {
+  return `${Math.floor(Math.max(0, Number(seconds) || 0) / 60)} min`;
 }
 
 function BrowserUnsupportedBanner({ browserSupport }) {
@@ -119,19 +116,19 @@ function MissionResultBanner({ passed }) {
 
 const SpeakingPage = () => {
   const { user } = useAuth();
-  const { profile, hasAccess, hasActiveSubscription, loading: subLoading } = useSubscription();
+  const { profile, hasAccess, loading: subLoading } = useSubscription();
 
   const [phase, setPhase] = useState('setup'); // setup | session | results | eval_failed
   const [selectedLevel, setSelectedLevel] = useState('A1.1');
-  const [selectedMinutes, setSelectedMinutes] = useState(5);
   const [selectedMissionId, setSelectedMissionId] = useState(null);
 
   const [missions, setMissions] = useState([]);
   const [missionsLoading, setMissionsLoading] = useState(true);
 
-  const [walletCents, setWalletCents] = useState(0);
-  const [freeFiveUsed, setFreeFiveUsed] = useState(0); // subscriber daily count
-  const [usage, setUsage] = useState(null);            // non-subscriber trial state
+  // The allowance balance (seconds) + included first attempts, read from the
+  // server. Display only — the ledger decides every charge.
+  const [balance, setBalance] = useState({ monthlySeconds: 0, permanentSeconds: 0, totalSeconds: 0 });
+  const [includedAttempts, setIncludedAttempts] = useState([]);
   const [metaLoading, setMetaLoading] = useState(true);
 
   const [starting, setStarting] = useState(false);
@@ -141,7 +138,6 @@ const SpeakingPage = () => {
 
   const levelInitRef = useRef(false);
   const browserSupport = useMemo(() => checkSpeakingSupport(), []);
-  const subscriber = !subLoading && typeof hasActiveSubscription === 'function' && hasActiveSubscription();
 
   // Default the level to the user's placement level, once — unless the
   // course player handed one over (?level=a1.1&mission=<mission_order>).
@@ -178,23 +174,22 @@ const SpeakingPage = () => {
     };
   }, [wantedMission]);
 
-  // Wallet balance + free-session allowance + trial usage (anon client / API).
+  // The allowance balance + included attempts (server read-model).
   const loadMeta = useCallback(async () => {
     if (!user?.id) { setMetaLoading(false); return; }
     setMetaLoading(true);
     try {
-      const [{ data: wallet }, { count }, usageRes] = await Promise.all([
-        supabase.from('speaking_wallet').select('balance_cents').eq('user_id', user.id).maybeSingle(),
-        supabase.from('speaking_sessions').select('id', { count: 'exact', head: true })
-          .eq('user_id', user.id).eq('planned_minutes', 5).eq('cost_cents', 0).neq('mode', 'placement')
-          .gte('started_at', utcMidnightISO()),
-        fetch('/api/speaking/check-speaking-usage', {
-          method: 'POST', headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) }, body: '{}',
-        }).then((r) => (r.ok ? r.json() : null)).catch(() => null),
-      ]);
-      setWalletCents(wallet?.balance_cents ?? 0);
-      setFreeFiveUsed(count || 0);
-      setUsage(usageRes);
+      const res = await fetch('/api/speaking/check-speaking-usage', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) }, body: '{}',
+      }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+      if (res && Number.isFinite(res.totalSeconds)) {
+        setBalance({
+          monthlySeconds: res.monthlySeconds || 0,
+          permanentSeconds: res.permanentSeconds || 0,
+          totalSeconds: res.totalSeconds || 0,
+        });
+        setIncludedAttempts(Array.isArray(res.includedMissionAttempts) ? res.includedMissionAttempts : []);
+      }
     } catch (err) {
       console.error('Failed to load speaking meta:', err);
     } finally {
@@ -226,31 +221,19 @@ const SpeakingPage = () => {
     return () => { cancelled = true; };
   }, [selectedLevel, user, wantedMission, wantedLevel]);
 
-  // ---- pricing / allowance ----
-  const fiveMinFreeRemaining = subscriber
-    ? Math.max(0, SUB_FREE_5MIN_PER_DAY - freeFiveUsed)
-    : (usage && usage.allowed && Number.isFinite(usage.limit - usage.used) ? Math.max(0, usage.limit - usage.used) : (usage?.allowed ? 1 : 0));
-  const fiveMinIsFree = subscriber ? fiveMinFreeRemaining > 0 : !!usage?.allowed;
-  const costFor = (m) => (m === 5 ? (fiveMinIsFree ? 0 : PRICE_CENTS[5]) : PRICE_CENTS[m]);
-  const selectedCost = costFor(selectedMinutes);
-
-  let fiveMinLabel;
-  if (subscriber) {
-    fiveMinLabel = fiveMinIsFree ? `5 min · ${fiveMinFreeRemaining}/${SUB_FREE_5MIN_PER_DAY} free today` : '5 min — €1';
-  } else if (usage?.unlimited) {
-    fiveMinLabel = '5 min · free';
-  } else {
-    fiveMinLabel = fiveMinIsFree ? `5 min · ${fiveMinFreeRemaining} free left` : '5 min — €1';
-  }
-  const durationLabel = (m) => (m === 5 ? fiveMinLabel : `${m} min — ${euros(PRICE_CENTS[m])}`);
-
+  // ---- allowance ----
   const activeMission = missions.find((m) => m.id === selectedMissionId) || null;
+  // A course buyer's untouched first attempt at the selected mission — the
+  // start is included then, whatever the minute balance says. Key mirrors
+  // missionEntitlementKey server-side ('A1.1' + order 3 → 'a11-m3').
+  const includedAttemptForSelection = !!activeMission
+    && includedAttempts.includes(`${selectedLevel.toLowerCase().replace(/\./g, '')}-m${activeMission.mission_order}`);
   // The course task is only the task while no mission is chosen and the level
   // still matches the lesson the learner came from.
   const courseTaskActive = !!courseTask && !activeMission
     && (!courseTask.level || courseTask.level === selectedLevel);
-  const missionLocked = !!activeMission && !activeMission.is_free && !hasAccess;
-  const canAfford = selectedCost === 0 || walletCents >= selectedCost;
+  const missionLocked = !!activeMission && !activeMission.is_free && !hasAccess && !includedAttemptForSelection;
+  const canAfford = includedAttemptForSelection || balance.totalSeconds >= GUIDED_SECONDS;
   const startDisabled = starting || metaLoading || missionLocked || !canAfford || !browserSupport.supported;
 
   // ---- start ----
@@ -265,7 +248,7 @@ const SpeakingPage = () => {
         body: JSON.stringify({
           action: 'start',
           level: selectedLevel,
-          minutes: selectedMinutes,
+          idempotencyKey: crypto.randomUUID(),
           ...(selectedMissionId ? { missionId: selectedMissionId } : {}),
           // No mission row exists for this Lektion's Sprechen task, so the task
           // itself travels with the start call; the server validates it, stores
@@ -284,7 +267,7 @@ const SpeakingPage = () => {
       });
       const data = await res.json().catch(() => ({}));
       if (res.status === 402) {
-        setStartError({ type: 'funds', balance: data.balance_cents ?? walletCents, cost: data.cost_cents ?? selectedCost });
+        setStartError({ type: 'allowance' });
         return;
       }
       if (!res.ok) {
@@ -292,8 +275,9 @@ const SpeakingPage = () => {
         return;
       }
       setSession({
-        sessionToken: data.session_token,
-        plannedMinutes: data.planned_minutes || selectedMinutes,
+        sessionToken: data.sessionToken,
+        reservedSeconds: data.reservedSeconds || GUIDED_SECONDS,
+        plannedMinutes: Math.max(1, Math.round((data.reservedSeconds || GUIDED_SECONDS) / 60)),
         level: data.level || selectedLevel,
         mission: activeMission,
         // Display only, and deliberately NOT `mission`: the session really is a
@@ -362,7 +346,7 @@ const SpeakingPage = () => {
                 <h2 className="font-semibold text-ink text-sm mb-1.5">Missions or free talk</h2>
                 <p className="text-sm text-graphite leading-relaxed">
                   Guided scenarios — ordering, appointments, small talk — or open
-                  conversation. Sessions run 5, 10 or 15 minutes.
+                  conversation, in focused sessions of up to five minutes.
                 </p>
               </Card>
             </Reveal>
@@ -472,10 +456,17 @@ const SpeakingPage = () => {
               <h1 className="font-display text-[1.75rem] sm:text-[2.125rem] font-semibold leading-tight tracking-[-0.018em] text-ink">German Speaking Practice</h1>
             </div>
             <span className="hero-line inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill bg-white border border-rule font-data text-[0.8125rem] font-bold text-ink shadow-raise" style={{ '--d': '120ms' }}>
-              <Wallet className="w-4 h-4 text-siegel" />
-              {metaLoading ? '…' : euros(walletCents)}
+              <Clock className="w-4 h-4 text-siegel" />
+              {metaLoading ? '…' : fmtMinutes(balance.totalSeconds)}
             </span>
           </div>
+          {/* Two labeled balances when both exist — never one misleading sum
+              alone (monthly expires, permanent does not). */}
+          {!metaLoading && balance.monthlySeconds > 0 && balance.permanentSeconds > 0 && (
+            <p className="mt-1 font-data text-[0.75rem] text-graphite">
+              Monthly allowance: {fmtMinutes(balance.monthlySeconds)} · Permanent minutes: {fmtMinutes(balance.permanentSeconds)}
+            </p>
+          )}
         </div>
       </div>
 
@@ -504,21 +495,17 @@ const SpeakingPage = () => {
           <p className="text-sm text-graphite mb-6">{LEVEL_NAMES_EN[selectedLevel] || levelConfig.name}</p>
         </Reveal>
 
-        {/* Duration */}
+        {/* Duration: guided sessions have one server-set cap. What the ledger
+            actually charges is the time spoken, refunded to the second. */}
         <Reveal delay={90}>
           <label className={FIELD_LABEL}>Duration</label>
-          <div className="relative mb-6">
-            <select
-              value={selectedMinutes}
-              onChange={(e) => setSelectedMinutes(Number(e.target.value))}
-              className="w-full appearance-none rounded-clay border border-rule bg-white px-4 py-3.5 pr-10 text-ink font-medium focus:border-siegel"
-            >
-              {DURATIONS.map((m) => (
-                <option key={m} value={m}>{durationLabel(m)}</option>
-              ))}
-            </select>
-            <Clock className="w-4 h-4 text-graphite absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
-          </div>
+          <Card tone="wash" className="mb-6 px-4 py-3.5 flex items-center gap-2 text-sm text-graphite">
+            <Clock className="w-4 h-4 text-siegel flex-shrink-0" />
+            <span>
+              Up to {Math.round(GUIDED_SECONDS / 60)} minutes · only the time you actually speak counts
+              {includedAttemptForSelection ? ' — this mission’s first attempt is included in your course' : ''}
+            </span>
+          </Card>
         </Reveal>
 
         {/* The course task, when the lesson handed one over without a mission.
@@ -606,9 +593,9 @@ const SpeakingPage = () => {
         )}
 
         {/* Start error / notices */}
-        {startError?.type === 'funds' && (
+        {startError?.type === 'allowance' && (
           <Card tone="wash" className="mb-4 p-3.5 text-sm text-siegel-deep text-center">
-            Not enough credit — top-ups are coming soon.
+            Not enough speaking time left — more minutes come with the AI Coach or a top-up (coming soon).
           </Card>
         )}
         {startError?.type === 'error' && (
@@ -617,9 +604,9 @@ const SpeakingPage = () => {
             <span>{startError.message}</span>
           </div>
         )}
-        {!canAfford && !startError && (
+        {!canAfford && !startError && !metaLoading && (
           <Card tone="wash" className="mb-4 p-3.5 text-sm text-siegel-deep text-center">
-            Not enough credit — top-ups are coming soon.
+            Not enough speaking time left — more minutes come with the AI Coach or a top-up (coming soon).
           </Card>
         )}
 
@@ -637,11 +624,11 @@ const SpeakingPage = () => {
             className="w-full"
           >
             {starting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Play className="w-5 h-5" />}
-            {selectedCost > 0 ? `Start · ${euros(selectedCost)}` : 'Start'}
+            Start
           </Button>
         )}
         <p className="text-center font-data text-[0.75rem] text-graphite mt-3">
-          {activeMission ? 'Guided mission' : 'Free conversation'} · {selectedMinutes} minutes
+          {activeMission ? 'Guided mission' : 'Free conversation'} · up to {Math.round(GUIDED_SECONDS / 60)} minutes
         </p>
       </div>
     </div>

@@ -224,7 +224,7 @@ const ROUTES = [
     </div>
     <div class="${CARD_FLAT} p-5">
       <h2 class="${H_CARD}">Missions or free talk</h2>
-      <p class="mt-2 ${SMALL}">Guided scenarios — ordering, appointments, small talk — or open conversation. Sessions run 5, 10 or 15 minutes.</p>
+      <p class="mt-2 ${SMALL}">Guided scenarios — ordering, appointments, small talk — or open conversation, in focused sessions of up to five minutes.</p>
     </div>
     <div class="${CARD_FLAT} p-5">
       <h2 class="${H_CARD}">Feedback you can use</h2>

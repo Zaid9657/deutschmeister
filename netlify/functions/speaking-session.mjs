@@ -1,7 +1,14 @@
 import { randomUUID } from 'node:crypto';
 import { supabase, supabaseKey } from './_shared/supabase.mjs';
-import { checkUsage, incrementUsage } from './_shared/speakingUsage.mjs';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
+import {
+  GUIDED_MISSION_SECONDS,
+  INSUFFICIENT_ALLOWANCE,
+  deniedFromReserveError,
+  resolveEntitlement,
+  restoreMissionAttempt,
+  clampUsedSeconds,
+} from './_shared/speakingEntitlements.mjs';
 import {
   AIError,
   buildTeacherSystemPrompt,
@@ -11,75 +18,32 @@ import {
   synthesizeSpeech,
 } from './_shared/speakingAI.mjs';
 
-// Session pricing (cents). 10/15-min always cost; 5-min may be free (see below).
-const PRICE_CENTS = { 5: 100, 10: 200, 15: 300 };
-const ALLOWED_MINUTES = [5, 10, 15];
-// Subscribers get this many free 5-min sessions per day.
-const SUBSCRIBER_FREE_5MIN_PER_DAY = 2;
+// Speaking sessions charge SECONDS from the allowance ledger
+// (migrations/2026-09-16-speaking-allowances.sql) — reserve on start,
+// finalize actual usage on end, refund technical failures. The old model
+// (cents wallet, per-day free sessions, monthly session counts) is gone:
+// entitlement, price and duration are decided here and in Postgres, never in
+// the browser. tests/speaking-session-contract.test.mjs pins all of this.
+//
+// Start:  { action: 'start', mode, level, missionId, durationSeconds, idempotencyKey }
+// End:    { action: 'end', sessionToken, usedSeconds, outcome, idempotencyKey }
+//   outcome: 'completed' | 'cancelled'  → finalize clamped elapsed usage
+//            'failed'                   → refund the whole reservation
+//
+// Placement stays quota-exempt: it is the free speaking demo of the preview
+// funnel and reserves nothing.
 
-// --- subscription_end check (mirrors the frontend's single source of truth) ---
-async function isActiveSubscriber(userId) {
-  const { data } = await supabase
-    .from('subscriptions')
-    .select('subscription_end')
-    .eq('user_id', userId)
-    .order('subscription_end', { ascending: false, nullsFirst: false })
-    .limit(1)
-    .maybeSingle();
-  if (!data?.subscription_end) return false;
-  const end = new Date(data.subscription_end);
-  return !Number.isNaN(end.getTime()) && end > new Date();
-}
+// Live sessions come in exactly these durations (seconds).
+const LIVE_DURATIONS = [300, 600, 900];
 
-// Count today's (UTC day) free 5-minute practice sessions for a subscriber.
-async function freeFiveMinuteSessionsToday(userId) {
-  const now = new Date();
-  const dayStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())).toISOString();
-  const { count, error } = await supabase
-    .from('speaking_sessions')
-    .select('*', { count: 'exact', head: true })
-    .eq('user_id', userId)
-    .eq('planned_minutes', 5)
-    .eq('cost_cents', 0)
-    .neq('mode', 'placement')
-    .gte('started_at', dayStart);
-  if (error) {
-    console.error('[speaking-session] free-session count error:', JSON.stringify(error));
-    return SUBSCRIBER_FREE_5MIN_PER_DAY; // fail closed → treat as no free session left
-  }
-  return count || 0;
-}
+const ALLOWED_LEVELS = ['A1.1', 'A1.2', 'A2.1', 'A2.2', 'B1.1', 'B1.2', 'B2.1', 'B2.2', 'placement'];
+const END_OUTCOMES = ['completed', 'cancelled', 'failed'];
 
-// Read the current wallet balance (0 when the user has no wallet row yet).
-async function walletBalance(userId) {
-  const { data } = await supabase
-    .from('speaking_wallet')
-    .select('balance_cents')
-    .eq('user_id', userId)
-    .maybeSingle();
-  return data?.balance_cents ?? 0;
-}
-
-// Best-effort refund if the session couldn't be created after a debit.
-async function creditWallet(userId, amount) {
-  for (let attempt = 0; attempt < 5; attempt++) {
-    const { data: row } = await supabase
-      .from('speaking_wallet')
-      .select('balance_cents')
-      .eq('user_id', userId)
-      .maybeSingle();
-    const balance = row?.balance_cents ?? 0;
-    const { data: updated } = await supabase
-      .from('speaking_wallet')
-      .update({ balance_cents: balance + amount, updated_at: new Date().toISOString() })
-      .eq('user_id', userId)
-      .eq('balance_cents', balance)
-      .select('balance_cents')
-      .maybeSingle();
-    if (updated) return true;
-  }
-  return false;
-}
+const bad = (headers, status, error, extra = {}) => ({
+  statusCode: status,
+  headers,
+  body: JSON.stringify({ error, ...extra }),
+});
 
 export const handler = async (event) => {
   const allowedOrigins = [
@@ -99,11 +63,11 @@ export const handler = async (event) => {
     return { statusCode: 200, headers, body: '' };
   }
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
+    return bad(headers, 405, 'Method Not Allowed');
   }
   if (!supabaseKey || !supabase) {
     console.error('SUPABASE_SERVICE_ROLE_KEY is not set');
-    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Server misconfigured' }) };
+    return bad(headers, 500, 'Server misconfigured');
   }
 
   try {
@@ -114,50 +78,112 @@ export const handler = async (event) => {
     }
 
     const body = JSON.parse(event.body || '{}');
-    const {
-      action,
-      level,
-      minutes,
-      missionId,
-      mode,
-      session_token: providedToken,
-      duration_seconds,
-      user_turns,
-      status: endStatus,
-    } = body;
+    const { action, level, missionId, mode, idempotencyKey } = body;
 
     // -----------------------------------------------------------------------
-    // action 'end' — unchanged. The client reports final metrics; evaluation
-    // still runs via evaluate-speaking.mjs.
+    // action 'end' — clamp reported usage to server truth and settle through
+    // the ledger: finalize for completed/cancelled, refund for failed.
     // -----------------------------------------------------------------------
     if (action === 'end') {
-      if (!providedToken) {
-        return { statusCode: 400, headers, body: JSON.stringify({ error: 'session_token is required to end a session' }) };
+      const sessionToken = body.sessionToken || body.session_token;
+      const outcome = body.outcome || 'completed';
+      if (!sessionToken) return bad(headers, 400, 'sessionToken is required to end a session');
+      if (!idempotencyKey || typeof idempotencyKey !== 'string') return bad(headers, 400, 'idempotencyKey is required');
+      if (!END_OUTCOMES.includes(outcome)) return bad(headers, 400, `outcome must be one of ${END_OUTCOMES.join(', ')}`);
+
+      const { data: sessionRow } = await supabase
+        .from('speaking_sessions')
+        .select('user_id, started_at, mode, status')
+        .eq('session_token', sessionToken)
+        .maybeSingle();
+      if (sessionRow && sessionRow.user_id !== user_id) {
+        return bad(headers, 409, 'Session belongs to another user');
       }
+
+      // Reserved seconds for the cap: sum of this session's reservations.
+      const { data: reservations } = await supabase
+        .from('speaking_session_reservations')
+        .select('reserved_seconds')
+        .eq('session_token', sessionToken)
+        .eq('user_id', user_id);
+      const reservedSeconds = (reservations || []).reduce((s, r) => s + r.reserved_seconds, 0);
+
+      let settlement = null;
+      if (reservedSeconds > 0) {
+        if (outcome === 'failed') {
+          const { data, error } = await supabase.rpc('refund_speaking_session', {
+            p_user_id: user_id,
+            p_session_token: sessionToken,
+            p_idempotency_key: `end:${idempotencyKey}`,
+          });
+          if (error) {
+            console.error('[speaking-session] refund RPC error:', JSON.stringify(error));
+            return bad(headers, 500, 'Settlement failed');
+          }
+          settlement = data;
+        } else {
+          const used = clampUsedSeconds({
+            usedSeconds: body.usedSeconds ?? body.duration_seconds,
+            startedAt: sessionRow?.started_at,
+            reservedSeconds,
+          });
+          const { data, error } = await supabase.rpc('finalize_speaking_session', {
+            p_user_id: user_id,
+            p_session_token: sessionToken,
+            p_used_seconds: used,
+            p_idempotency_key: `end:${idempotencyKey}`,
+          });
+          if (error) {
+            console.error('[speaking-session] finalize RPC error:', JSON.stringify(error));
+            return bad(headers, 500, 'Settlement failed');
+          }
+          settlement = data;
+        }
+      }
+
+      // Close the session row (metrics only; the ledger is the money record).
+      const userTurns = Number.isFinite(body.user_turns) ? body.user_turns : Number(body.userTurns) || 0;
       try {
         const { error: endError } = await supabase
           .from('speaking_sessions')
           .update({
-            duration_seconds: Number.isFinite(duration_seconds) ? duration_seconds : 0,
-            user_turns: Number.isFinite(user_turns) ? user_turns : 0,
+            duration_seconds: settlement?.consumedSeconds ?? clampUsedSeconds({
+              usedSeconds: body.usedSeconds ?? body.duration_seconds,
+              startedAt: sessionRow?.started_at,
+              reservedSeconds: Number.MAX_SAFE_INTEGER,
+            }),
+            user_turns: userTurns,
             completed_at: new Date().toISOString(),
-            status: endStatus || 'completed',
+            status: outcome === 'failed' ? 'failed' : 'completed',
           })
-          .eq('session_token', providedToken)
+          .eq('session_token', sessionToken)
           .eq('user_id', user_id);
-        if (endError) {
-          console.error('[speaking-session] Failed to log session end:', JSON.stringify(endError));
-        }
+        if (endError) console.error('[speaking-session] Failed to log session end:', JSON.stringify(endError));
       } catch (err) {
         console.error('[speaking-session] Session end update threw:', err.message);
       }
-      return { statusCode: 200, headers, body: JSON.stringify({ ok: true }) };
+
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          ok: true,
+          consumedSeconds: settlement?.consumedSeconds ?? 0,
+          refundedSeconds: settlement?.refundedSeconds ?? 0,
+          balance: settlement?.balance ?? null,
+        }),
+      };
     }
 
     // -----------------------------------------------------------------------
-    // action 'start' — price, debit, create the session, speak first.
+    // action 'start' — resolve entitlement, reserve, create the session.
     // -----------------------------------------------------------------------
     const isPlacement = mode === 'placement';
+    const isLive = mode === 'live';
+
+    if (!idempotencyKey || typeof idempotencyKey !== 'string') {
+      return bad(headers, 400, 'idempotencyKey is required');
+    }
 
     // Mission lookup (server-owned prompt fields + opening line).
     let mission = null;
@@ -169,71 +195,34 @@ export const handler = async (event) => {
         .single();
       if (missionError || !missionRow) {
         console.error('[speaking-session] Mission not found:', missionId, missionError && JSON.stringify(missionError));
-        return { statusCode: 404, headers, body: JSON.stringify({ error: 'Mission not found' }) };
+        return bad(headers, 404, 'Mission not found');
       }
       mission = missionRow;
     }
     const isMission = !!mission;
 
-    // A course Lektion's Sprechen task (validated, bounded client text). Only
-    // when there is no mission and this is not the placement test — a mission's
-    // server-owned prompt always wins.
+    // A course Lektion's Sprechen task (validated, bounded client text).
     const courseTask = isPlacement ? null : parseCourseTask(body);
 
     const effectiveLevel = isPlacement ? 'placement' : (level || mission?.level);
-    if (!effectiveLevel) {
-      return { statusCode: 400, headers, body: JSON.stringify({ error: 'level is required' }) };
-    }
-
-    // Validate the level up front. The teacher reply and the TTS render below
-    // both cost money and happen before the session row is written, so a level
-    // the speaking_sessions check constraint would reject must be caught here —
-    // otherwise every such attempt pays for an AI call and then 500s. ('placement'
-    // was exactly this bug until it was added to the constraint.)
-    const ALLOWED_LEVELS = ['A1.1', 'A1.2', 'A2.1', 'A2.2', 'B1.1', 'B1.2', 'B2.1', 'B2.2', 'placement'];
+    if (!effectiveLevel) return bad(headers, 400, 'level is required');
     if (!ALLOWED_LEVELS.includes(effectiveLevel)) {
       console.warn(`[speaking-session] rejected unsupported level: ${effectiveLevel}`);
-      return { statusCode: 400, headers, body: JSON.stringify({ error: 'Unsupported level' }) };
+      return bad(headers, 400, 'Unsupported level');
     }
 
-    // Planned minutes: placement is a short quota-exempt test; practice sessions
-    // must pick one of the allowed durations.
-    let plannedMinutes;
-    if (isPlacement) {
-      plannedMinutes = ALLOWED_MINUTES.includes(Number(minutes)) ? Number(minutes) : 5;
-    } else {
-      plannedMinutes = Number(minutes);
-      if (!ALLOWED_MINUTES.includes(plannedMinutes)) {
-        return { statusCode: 400, headers, body: JSON.stringify({ error: 'minutes must be 5, 10 or 15' }) };
+    // Duration: live picks one of the fixed durations; guided is capped
+    // server-side; placement is a short, unreserved demo.
+    let requestedSeconds = null;
+    if (isLive) {
+      requestedSeconds = Number(body.durationSeconds);
+      if (!LIVE_DURATIONS.includes(requestedSeconds)) {
+        return bad(headers, 400, 'durationSeconds must be 300, 600 or 900');
       }
     }
 
-    // -------- Pricing decision (skipped entirely for placement) --------
-    let costCents = 0;
-    let freeTrialConsumed = false; // non-subscriber free path → consume a trial session
-    if (!isPlacement) {
-      if (plannedMinutes === 5) {
-        const subscriber = await isActiveSubscriber(user_id);
-        if (subscriber) {
-          const usedToday = await freeFiveMinuteSessionsToday(user_id);
-          costCents = usedToday < SUBSCRIBER_FREE_5MIN_PER_DAY ? 0 : PRICE_CENTS[5];
-        } else {
-          // Non-subscriber: existing trial rules grant the free 5-min session.
-          const usage = await checkUsage(user_id);
-          if (usage.allowed) {
-            costCents = 0;
-            freeTrialConsumed = true;
-          } else {
-            costCents = PRICE_CENTS[5]; // wallet payment allowed for any signed-in user
-          }
-        }
-      } else {
-        costCents = PRICE_CENTS[plannedMinutes]; // 10 → 200, 15 → 300 always
-      }
-    }
-
-    // -------- Opening line + audio (before charging — a provider failure here
-    //          costs the user nothing). --------
+    // -------- Opening line + audio (before any charge — a provider failure
+    //          here costs the learner nothing). --------
     let openingText;
     let openingAudio;
     try {
@@ -258,34 +247,58 @@ export const handler = async (event) => {
       openingAudio = await synthesizeSpeech({ text: openingText });
     } catch (aiErr) {
       if (aiErr instanceof AIError) {
-        return { statusCode: aiErr.status || 502, headers, body: JSON.stringify({ error: aiErr.message, stage: aiErr.stage }) };
+        return bad(headers, aiErr.status || 502, aiErr.message, { stage: aiErr.stage });
       }
       throw aiErr;
     }
 
-    // -------- Charge the wallet if the session costs anything. --------
-    // Atomic debit via Postgres RPC (service role): returns the new balance, or
-    // -1 when the balance can't cover the cost.
-    let balanceCents;
-    if (costCents > 0) {
-      const { data: newBalance, error: debitError } = await supabase
-        .rpc('debit_speaking_wallet', { p_user_id: user_id, p_cost: costCents });
-      if (debitError) {
-        console.error('[speaking-session] wallet debit RPC error:', JSON.stringify(debitError));
-        return { statusCode: 500, headers, body: JSON.stringify({ error: 'Guthaben konnte nicht belastet werden.' }) };
+    // -------- Entitlement + reservation (skipped for placement). --------
+    const sessionToken = randomUUID();
+    let entitlement = { kind: 'placement' };
+    let reservedSeconds = 0;
+    let balance = null;
+    let includedMissionAttempt = false;
+
+    if (!isPlacement) {
+      entitlement = await resolveEntitlement({
+        supabase,
+        userId: user_id,
+        mode: isLive ? 'live' : 'guided',
+        mission,
+        requestedSeconds,
+      });
+      if (entitlement.kind === 'denied') {
+        return bad(headers, 400, 'Invalid session request', { code: entitlement.code });
       }
-      if (newBalance === -1) {
-        return {
-          statusCode: 402,
-          headers,
-          body: JSON.stringify({ error: 'Nicht genügend Guthaben.', code: 'insufficient_funds', balance_cents: await walletBalance(user_id), cost_cents: costCents }),
-        };
+
+      if (entitlement.kind === 'included-mission') {
+        includedMissionAttempt = true;
+        reservedSeconds = entitlement.maxSeconds;
+      } else {
+        const { data, error } = await supabase.rpc('reserve_speaking_seconds', {
+          p_user_id: user_id,
+          p_session_token: sessionToken,
+          p_requested_seconds: entitlement.requestedSeconds,
+          p_idempotency_key: `start:${idempotencyKey}`,
+        });
+        if (error) {
+          const denied = deniedFromReserveError(error.message);
+          if (denied?.code === INSUFFICIENT_ALLOWANCE) {
+            return { statusCode: 402, headers, body: JSON.stringify({ error: 'Nicht genügend Sprechzeit.', code: denied.code }) };
+          }
+          if (denied?.code === 'DUPLICATE_SESSION') {
+            return { statusCode: 409, headers, body: JSON.stringify({ error: 'Session token already in use', code: denied.code }) };
+          }
+          console.error('[speaking-session] reserve RPC error:', JSON.stringify(error));
+          return bad(headers, 500, 'Reservierung fehlgeschlagen');
+        }
+        reservedSeconds = data?.reservedSeconds ?? entitlement.requestedSeconds;
+        balance = data?.balance ?? null;
       }
-      balanceCents = newBalance;
     }
 
     // -------- Create the session row. --------
-    const sessionToken = providedToken || `sp_${randomUUID()}`;
+    const plannedSeconds = isPlacement ? GUIDED_MISSION_SECONDS : reservedSeconds;
     const { error: insertError } = await supabase
       .from('speaking_sessions')
       .insert({
@@ -293,37 +306,28 @@ export const handler = async (event) => {
         session_token: sessionToken,
         level: effectiveLevel,
         mission_id: isMission ? missionId : null,
-        mode: isPlacement ? 'placement' : (isMission ? 'mission' : 'free'),
+        mode: isPlacement ? 'placement' : (isLive ? 'live' : (isMission ? 'mission' : 'free')),
         status: 'active',
         started_at: new Date().toISOString(),
-        planned_minutes: plannedMinutes,
-        cost_cents: costCents,
-        // Course task → the two unused nullable columns (no schema change).
+        planned_minutes: Math.max(1, Math.round(plannedSeconds / 60)),
         ...courseTaskColumns(courseTask),
       });
     if (insertError) {
       console.error('[speaking-session] Session insert failed:', JSON.stringify(insertError));
-      if (costCents > 0) {
-        const refunded = await creditWallet(user_id, costCents);
-        console.error('[speaking-session] refund after failed insert:', refunded ? 'ok' : 'FAILED');
-      }
-      return { statusCode: 500, headers, body: JSON.stringify({ error: 'Sitzung konnte nicht erstellt werden' }) };
-    }
-
-    // -------- Record the debit transaction (after the session exists). --------
-    if (costCents > 0) {
-      const { error: txError } = await supabase
-        .from('speaking_wallet_transactions')
-        .insert({
-          user_id,
-          amount_cents: -costCents,
-          reason: `session_${plannedMinutes}min`,
-          session_token: sessionToken,
+      // Undo whatever the start consumed — the learner pays nothing for our
+      // insert failure.
+      if (includedMissionAttempt) {
+        const restored = await restoreMissionAttempt({ supabase, userId: user_id, missionKey: entitlement.missionKey });
+        if (!restored) console.error('[speaking-session] attempt restore after failed insert FAILED');
+      } else if (reservedSeconds > 0) {
+        const { error: refundError } = await supabase.rpc('refund_speaking_session', {
+          p_user_id: user_id,
+          p_session_token: sessionToken,
+          p_idempotency_key: `start-insert-failed:${idempotencyKey}`,
         });
-      if (txError) console.error('[speaking-session] wallet transaction insert failed:', JSON.stringify(txError));
-    } else if (freeTrialConsumed) {
-      // Non-subscriber free session counts against the trial allowance.
-      try { await incrementUsage(user_id); } catch (err) { console.error('[speaking-session] incrementUsage failed:', err.message); }
+        if (refundError) console.error('[speaking-session] refund after failed insert FAILED:', JSON.stringify(refundError));
+      }
+      return bad(headers, 500, 'Sitzung konnte nicht erstellt werden');
     }
 
     // -------- Persist the opening line so the record starts with the teacher. --
@@ -340,17 +344,17 @@ export const handler = async (event) => {
       statusCode: 200,
       headers,
       body: JSON.stringify({
-        session_token: sessionToken,
+        sessionToken,
         level: effectiveLevel,
-        planned_minutes: plannedMinutes,
-        cost_cents: costCents,
-        ...(balanceCents !== undefined ? { balance_cents: balanceCents } : {}),
+        reservedSeconds,
+        balance,
+        includedMissionAttempt,
         replyText: openingText,
         replyAudioBase64: openingAudio,
       }),
     };
   } catch (error) {
     console.error('speaking-session error:', error.message, error.stack);
-    return { statusCode: 500, headers, body: JSON.stringify({ error: 'Internal error' }) };
+    return bad(headers, 500, 'Internal error');
   }
 };

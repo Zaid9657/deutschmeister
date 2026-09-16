@@ -122,14 +122,23 @@ const SpeakingSession = ({
     const userTurns = currentMessages.filter((m) => m.role === 'user').length;
     const duration = startTimeRef.current ? Math.max(0, Math.round((Date.now() - startTimeRef.current) / 1000)) : 0;
 
-    // Log the end (best-effort — must not block evaluation).
+    // Settle the reservation: finalize actual usage (best-effort — must not
+    // block evaluation; the server clamps and the reconcile job catches a
+    // lost end call). The idempotency key makes a retried request safe.
     try {
       await fetch('/api/speaking/speaking-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
-        body: JSON.stringify({ action: 'end', session_token: sessionToken, duration_seconds: duration, user_turns: userTurns, status: 'completed' }),
+        body: JSON.stringify({
+          action: 'end',
+          sessionToken,
+          usedSeconds: duration,
+          outcome: 'completed',
+          user_turns: userTurns,
+          idempotencyKey: `${sessionToken}:end`,
+        }),
       });
-    } catch (err) { console.warn('[speaking] end log failed:', err?.message); }
+    } catch (err) { console.warn('[speaking] end settle failed:', err?.message); }
 
     // Nothing said → no evaluation.
     if (userTurns === 0) { onComplete?.(null); return; }
@@ -440,7 +449,31 @@ const SpeakingSession = ({
             </Button>
           </div>
 
-          <Button variant="ghost" size="sm" className="mt-3" onClick={() => { cleanup(); onCancel?.(); }}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="mt-3"
+            onClick={async () => {
+              cleanup();
+              // A user cancel settles the actual elapsed usage — the rest of
+              // the reservation flows back instead of waiting for reconcile.
+              try {
+                const duration = startTimeRef.current ? Math.max(0, Math.round((Date.now() - startTimeRef.current) / 1000)) : 0;
+                await fetch('/api/speaking/speaking-session', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
+                  body: JSON.stringify({
+                    action: 'end',
+                    sessionToken,
+                    usedSeconds: duration,
+                    outcome: 'cancelled',
+                    idempotencyKey: `${sessionToken}:end`,
+                  }),
+                });
+              } catch { /* best-effort; reconcile covers a lost cancel */ }
+              onCancel?.();
+            }}
+          >
             <X className="w-3 h-3" /> Cancel
           </Button>
         </div>
