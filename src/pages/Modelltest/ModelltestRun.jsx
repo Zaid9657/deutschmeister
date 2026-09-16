@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { Clock, ChevronRight, Volume2, Loader2 } from 'lucide-react';
+import { Clock, ChevronRight, Volume2, Loader2, Mic, Check } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { MOCK_DISCLAIMER_DE } from '../../data/examTracks';
 import { resolveModelltest } from '../../data/modelltest';
@@ -11,7 +11,12 @@ import {
   advanceSectionDeadline,
   completeAttempt,
 } from '../../services/examService';
-import { scoreObjectiveSections, mergeListeningResult } from '../../services/examScoring';
+import { scoreObjectiveSections, mergeListeningResult, applySpeakingFloor } from '../../services/examScoring';
+import {
+  missionHandoffUrl,
+  readMissionResult,
+  speakingMissionsAvailable,
+} from '../../lib/speaking/missionResultContract.js';
 import { useExerciseDetails } from '../../hooks/useListening';
 import { selectListeningQuestions } from '../../data/courseTests/listeningQuestions.js';
 import { getAudioUrl } from '../../utils/listeningHelpers';
@@ -141,6 +146,48 @@ function MockListeningPart({ part, answers, onAnswer, registerKey }) {
   );
 }
 
+// The Sprechen part of a course test (2026-09-15 plan Task 4): a handoff card
+// to guided mission N, whose result comes back through the shared contract
+// (missionResultContract.js). The result never scores points here — passing
+// the mission is a separate completion floor recorded by applySpeakingFloor.
+// While the mission trainer is not live (speakingMissionsAvailable() false)
+// the card says so honestly and the floor is recorded as not required, so no
+// learner is deadlocked behind a surface that does not exist yet.
+function MockSpeakingMissionPart({ part, returnTo }) {
+  const available = speakingMissionsAvailable();
+  const result = readMissionResult(part.level, part.missionOrder);
+  const passed = result?.passed === true;
+
+  return (
+    <Card className="p-5 space-y-4">
+      <div className="flex items-start gap-3">
+        <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${passed ? 'bg-siegel text-white' : 'bg-siegel-wash text-siegel'}`}>
+          {passed ? <Check className="w-5 h-5" aria-hidden="true" /> : <Mic className="w-5 h-5" aria-hidden="true" />}
+        </span>
+        <div className="min-w-0 text-sm leading-relaxed">
+          <p className="font-bold text-ink">Abschlussmission · Sprechen</p>
+          <p className="mt-1 text-graphite">
+            Du stellst dich vor, reagierst auf Rückfragen und lädst eine Person ein. Die Mission läuft im
+            Speaking-Trainer; danach kommst du hierher zurück.
+          </p>
+        </div>
+      </div>
+      {passed ? (
+        <p className="text-sm font-bold text-siegel-deep">Mission bestanden — dieser Teil ist abgeschlossen.</p>
+      ) : available ? (
+        <Button to={missionHandoffUrl({ level: part.level, missionOrder: part.missionOrder, returnTo })} size="lg">
+          <Mic className="w-4 h-4" /> Mission starten →
+        </Button>
+      ) : (
+        <Card tone="sunk" className="p-3 text-sm text-graphite">
+          Der Speaking-Trainer für diese Mission ist noch nicht freigeschaltet. Du kannst den Test ohne diesen
+          Teil abschließen; die Mission wird nicht bewertet, bis sie verfügbar ist.
+        </Card>
+      )}
+    </Card>
+  );
+}
+
 const ModelltestRun = () => {
   const { examSlug } = useParams();
   const navigate = useNavigate();
@@ -227,7 +274,18 @@ const ModelltestRun = () => {
     if (!attempt || finishing) return;
     setFinishing(true);
     const objective = scoreObjectiveSections(mock, answers);
-    const result = mergeListeningResult(objective, scoreListening());
+    let result = mergeListeningResult(objective, scoreListening());
+    // Course tests with a speaking-mission section record the pass floor —
+    // never points (see applySpeakingFloor).
+    const missionPart = mock.sections.flatMap((s) => s.parts).find((p) => p.type === 'speaking-mission');
+    if (missionPart) {
+      result = applySpeakingFloor(
+        result,
+        mock,
+        readMissionResult(missionPart.level, missionPart.missionOrder),
+        { required: speakingMissionsAvailable() }
+      );
+    }
     await completeAttempt(attempt.id, {
       answers: { ...answers, _meta: { sectionIndex } },
       score: result.score,
@@ -422,6 +480,10 @@ const ModelltestRun = () => {
                 />
               )}
 
+              {part.type === 'speaking-mission' && (
+                <MockSpeakingMissionPart part={part} returnTo={mock.examKey} />
+              )}
+
               {part.type === 'writing' && (
                 <div className="space-y-4">
                   <Card tone="sunk" className="p-4 text-sm text-ink leading-relaxed">
@@ -448,10 +510,28 @@ const ModelltestRun = () => {
           ))}
         </div>
 
-        <Button size="lg" className="mt-8 w-full" onClick={nextSection} disabled={finishing}>
-          {finishing ? 'Wird ausgewertet…' : isLast ? 'Test abschließen' : `Weiter zu: ${mock.sections[sectionIndex + 1].title}`}
-          <ChevronRight className="w-4 h-4" />
-        </Button>
+        {(() => {
+          // A live speaking-mission section is a completion floor: while the
+          // trainer is available and the mission is not passed, the section
+          // cannot be waved through with the button. (Time-out still advances
+          // — the floor lands in the result via applySpeakingFloor either way.)
+          const missionPart = section.parts.find((p) => p.type === 'speaking-mission');
+          const missionBlocked =
+            missionPart && speakingMissionsAvailable() && readMissionResult(missionPart.level, missionPart.missionOrder)?.passed !== true;
+          return (
+            <>
+              <Button size="lg" className="mt-8 w-full" onClick={nextSection} disabled={finishing || missionBlocked}>
+                {finishing ? 'Wird ausgewertet…' : isLast ? 'Test abschließen' : `Weiter zu: ${mock.sections[sectionIndex + 1].title}`}
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+              {missionBlocked && (
+                <p className="mt-2 text-sm text-graphite" role="status">
+                  Schließe zuerst die Abschlussmission ab — dann kannst du den Test beenden.
+                </p>
+              )}
+            </>
+          );
+        })()}
 
         <p className="mt-6 font-data text-[0.75rem] leading-relaxed text-graphite">
           {MOCK_DISCLAIMER_DE}

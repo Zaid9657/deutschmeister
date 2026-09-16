@@ -61,6 +61,31 @@ export function mergeListeningResult(objective, listening) {
   };
 }
 
+/**
+ * Record the speaking-mission floor of a course test (2026-09-15 plan Task 4).
+ * The mission result never contributes points — score and maxScore are
+ * untouched — it is a SEPARATE completion floor: the section entry carries
+ * `passed`, and `required: false` says the floor was not enforceable yet
+ * (mission trainer not live) rather than silently passed.
+ */
+export function applySpeakingFloor(result, mock, missionResult, { required } = { required: true }) {
+  const section = mock?.sections?.find((s) =>
+    s.parts?.some((p) => p.type === 'speaking-mission')
+  );
+  if (!section) return result;
+  return {
+    ...result,
+    sectionScores: {
+      ...result.sectionScores,
+      [section.key]: {
+        type: 'speaking-mission',
+        required: !!required,
+        passed: missionResult?.passed === true,
+      },
+    },
+  };
+}
+
 /** Percentage + band verdict. Richtwert only — the UI must label it so. */
 export function verdictFor(percent, passPercent) {
   if (percent >= passPercent + 15) return 'solide'; // comfortably above the line

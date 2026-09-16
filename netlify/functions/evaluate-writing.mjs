@@ -166,7 +166,9 @@ Antworte NUR mit einem JSON-Objekt in diesem Format (keine Erklärung davor oder
   "improvements": ["<Verbesserung 1>", "<Verbesserung 2>"]
 }
 
-Maximal 6 corrections — wähle die lehrreichsten Fehler. Wenn der Text die Wortzahl deutlich verfehlt oder das Thema verfehlt, spiegelt sich das in Aufgabenbewältigung.${levelLine}`;
+Maximal 6 corrections — wähle die lehrreichsten Fehler. Wenn der Text die Wortzahl deutlich verfehlt oder das Thema verfehlt, spiegelt sich das in Aufgabenbewältigung.
+
+Sprechen Sie den Schüler im Feedback, in "strengths" und "improvements" mit Sie an — niemals mit du. (Der Kurs spricht durchgehend Sie; DaF-Review #23, Minor 46.)${levelLine}`;
 }
 
 export const handler = async (event) => {
