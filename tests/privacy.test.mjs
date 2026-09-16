@@ -48,3 +48,11 @@ test('speaking analytics surfaces send no audio, transcript or learner utterance
     }
   }
 });
+
+test('the azure adapter and structured turn never log audio, headers or recognized text', () => {
+  const azure = read('netlify/functions/_shared/azurePronunciation.mjs');
+  const logs = [...azure.matchAll(/console\.\w+\([^)]*\)/g)].map((m) => m[0]);
+  for (const call of logs) {
+    assert.doesNotMatch(call, /wavBuffer|headers|referenceText|json|body/, `azure adapter logs content: ${call}`);
+  }
+});

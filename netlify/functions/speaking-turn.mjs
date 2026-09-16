@@ -6,8 +6,11 @@ import {
   taskFromSession,
   transcribeAudio,
   teacherReply,
+  guidedTurnFeedback,
   synthesizeSpeech,
 } from './_shared/speakingAI.mjs';
+import { assessPronunciation } from './_shared/azurePronunciation.mjs';
+import { stateSecret, signTaskState, verifyTaskState, signMissionResult } from './_shared/speakingState.mjs';
 
 const GRACE_MINUTES = 2;
 
@@ -42,7 +45,13 @@ export const handler = async (event) => {
       return unauthorizedResponse(headers);
     }
 
-    const { sessionToken, audioBase64, mimeType, history } = JSON.parse(event.body || '{}');
+    const body = JSON.parse(event.body || '{}');
+    const { audioBase64, mimeType, history, referenceText, taskStateToken } = body;
+    const sessionToken = body.sessionToken || body.session_token;
+    // The City Map's guided flow (plan 2026-09-15 Task 3): structured turns
+    // return the three-signal feedback, persist NO transcript, and carry
+    // their task state as a signed token instead of trusting the browser.
+    const structured = body.structured === true;
 
     if (!sessionToken || !audioBase64) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'sessionToken und audioBase64 sind erforderlich', stage: 'input' }) };
@@ -56,11 +65,13 @@ export const handler = async (event) => {
 
     // The conversation history is client-supplied context for the teacher
     // model; truncate rather than trust it as an unbounded prompt surface.
+    // Structured guided turns hold at most the last six turns (12 messages)
+    // in the browser — nothing is stored server-side on that path.
     const boundedHistory = (Array.isArray(history) ? history : [])
-      .slice(-40)
+      .slice(structured ? -12 : -40)
       .map((m) => ({
         role: m?.role === 'assistant' ? 'assistant' : 'user',
-        content: String(m?.content ?? '').slice(0, 5000),
+        content: String(m?.content ?? '').slice(0, structured ? 1000 : 5000),
       }));
 
     // 1. The session must exist, belong to the caller, and be active.
@@ -97,10 +108,32 @@ export const handler = async (event) => {
     if (!isPlacement && session.mission_id) {
       const { data: missionRow } = await supabase
         .from('speaking_missions')
-        .select('ai_role, target_structures, system_prompt_extra')
+        .select('ai_role, target_structures, system_prompt_extra, mission_order, pass_criteria')
         .eq('id', session.mission_id)
         .maybeSingle();
       mission = missionRow || null;
+    }
+
+    // Structured turns exist only for real guided missions, and only with the
+    // signing secret present (fail closed — an unsigned task state would make
+    // mission passes forgeable).
+    if (structured && (!mission || session.mode !== 'mission')) {
+      return { statusCode: 400, headers, body: JSON.stringify({ error: 'structured turns need a guided mission session', stage: 'input' }) };
+    }
+    const secret = stateSecret();
+    if (structured && !secret) {
+      console.error('[speaking-turn] SPEAKING_STATE_SECRET is not set — structured turns disabled');
+      return { statusCode: 500, headers, body: JSON.stringify({ error: 'Server misconfigured', stage: 'server' }) };
+    }
+    // Task state: turn 1 starts empty; later turns must present the signed
+    // state this function issued (the browser cannot edit it, only lose it).
+    let taskState = { completedCriteria: [], turn: 0 };
+    if (structured && taskStateToken) {
+      const verified = verifyTaskState(taskStateToken, { sessionToken, secret });
+      if (!verified) {
+        return { statusCode: 400, headers, body: JSON.stringify({ error: 'Ungültiger Aufgabenstand — bitte Mission neu starten.', stage: 'input', code: 'bad_task_state' }) };
+      }
+      taskState = verified;
     }
 
     // No mission row, but the session was started from a course Lektion: the
@@ -108,26 +141,55 @@ export const handler = async (event) => {
     // every turn stays on the task the lesson promised.
     const courseTask = (!isPlacement && !mission) ? taskFromSession(session) : null;
 
-    // 3. Cascade: STT → teacher (Haiku) → TTS. Provider failures surface as
-    //    structured errors, never a silent 500.
+    // 3. Cascade: STT (+ Azure acoustics in parallel for constrained steps)
+    //    → teacher → TTS. Provider failures surface as structured errors,
+    //    never a silent 500.
     let userTranscript = '';
     let replyText = '';
     let replyAudioBase64 = null;
     let ttsWarning = false;
+    let pronunciation = null;
+    let feedback = null;
 
     try {
-      userTranscript = await transcribeAudio({ audioBase64, mimeType });
+      // Acoustic pronunciation runs ONLY on real audio against a reference
+      // text (constrained step); an open turn without a trustworthy reference
+      // honestly reports pronunciation as unavailable. Never derived from the
+      // transcript. Audio is held in memory and discarded with this request.
+      const wantAcoustics = structured && typeof referenceText === 'string' && referenceText.trim()
+        && typeof mimeType === 'string' && mimeType.includes('wav');
+      const [transcript, acoustics] = await Promise.all([
+        transcribeAudio({ audioBase64, mimeType }),
+        wantAcoustics
+          ? assessPronunciation({
+            wavBuffer: Buffer.from(audioBase64, 'base64'),
+            referenceText: referenceText.trim().slice(0, 300),
+            locale: 'de-DE',
+          })
+          : Promise.resolve(null),
+      ]);
+      userTranscript = transcript;
+      pronunciation = acoustics; // null = honestly unavailable
 
       const system = buildTeacherSystemPrompt({ level, mission, isPlacement, courseTask });
       // An unintelligible turn still gets a gentle nudge to repeat.
       const userText = userTranscript || '(Der Schüler hat nichts Verständliches gesagt — bitte freundlich um Wiederholung.)';
-      replyText = await teacherReply({
-        system,
-        history: boundedHistory,
-        userText,
-        maxTokens: 120,
-      });
-      if (!replyText) replyText = 'Entschuldigung, kannst du das bitte wiederholen?';
+
+      if (structured) {
+        feedback = await guidedTurnFeedback({
+          system,
+          history: boundedHistory,
+          userText,
+          mission,
+          completedCriteria: taskState.completedCriteria,
+        });
+      }
+      if (feedback?.reply) {
+        replyText = feedback.reply;
+      } else {
+        replyText = await teacherReply({ system, history: boundedHistory, userText, maxTokens: 120 });
+      }
+      if (!replyText) replyText = 'Entschuldigung, können Sie das bitte wiederholen?';
 
       try {
         replyAudioBase64 = await synthesizeSpeech({ text: replyText });
@@ -152,8 +214,70 @@ export const handler = async (event) => {
       throw aiErr;
     }
 
-    // 4. Persist both sides (as the old flow did). Best-effort — a save failure
-    //    must not lose the turn the user already heard.
+    // 4a. Structured guided turns: three-signal feedback + the signed task
+    //     state. NOTHING is persisted — no transcript rows, no audio; the
+    //     session row keeps only aggregates at end (privacy by default,
+    //     spec §9.1). Pass integrity comes from the signed state chain.
+    if (structured) {
+      const criteria = Array.isArray(mission.pass_criteria) ? mission.pass_criteria : [];
+      const completedCriteria = [...new Set([...taskState.completedCriteria, ...(feedback?.completedNow || [])])];
+      const passed = criteria.length > 0 && criteria.every((c) => completedCriteria.includes(c));
+      const nextState = signTaskState({
+        sessionToken,
+        missionOrder: mission.mission_order,
+        completedCriteria,
+        turn: taskState.turn + 1,
+      }, secret);
+
+      // Pass: record aggregates on the session row (flags, never words) and
+      // issue the short-lived signed result the Abschlusstest handoff needs.
+      let missionResultToken = null;
+      if (passed) {
+        missionResultToken = signMissionResult({
+          userId: user_id,
+          missionOrder: mission.mission_order,
+          passed: true,
+          sessionToken,
+        }, secret);
+        try {
+          const { error: passError } = await supabase
+            .from('speaking_sessions')
+            .update({ evaluated: true, passed: true })
+            .eq('session_token', sessionToken)
+            .eq('user_id', user_id);
+          if (passError) console.error('[speaking-turn] pass flag update failed:', JSON.stringify(passError));
+        } catch (err) {
+          console.error('[speaking-turn] pass flag update threw:', err.message);
+        }
+      }
+
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          transcript: userTranscript,
+          reply: { text: replyText, audioBase64: replyAudioBase64 },
+          task: {
+            passed,
+            completedCriteria,
+            nextGoal: criteria.find((c) => !completedCriteria.includes(c)) ?? null,
+          },
+          language: {
+            bestVersion: feedback?.bestVersion ?? null,
+            tip: feedback?.tip ?? null,
+          },
+          pronunciation,
+          taskStateToken: nextState,
+          ...(missionResultToken ? { missionResultToken } : {}),
+          ...(ttsWarning ? { warning: 'tts_unavailable' } : {}),
+        }),
+      };
+    }
+
+    // 4b. Legacy paths (placement, free conversation, old mission UI) keep
+    //     persisting the turn: evaluate-speaking grades ONLY the transcript
+    //     stored server-side (its anti-forgery control). The guided City Map
+    //     path above never writes here.
     const rows = [];
     if (userTranscript) {
       rows.push({ session_token: sessionToken, user_id, role: 'user', content: userTranscript, level, created_at: new Date().toISOString() });
