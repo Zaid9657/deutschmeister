@@ -228,7 +228,7 @@ export default function CurriculumHomePage({ curriculum }) {
                   const lektion = node.kind === 'lektion' ? curriculum.lektionen.find((l) => l.id === node.id) : null;
                   const state = isDone && !paywalled ? 'done' : isCurrent && !paywalled ? 'current' : unlocked ? 'open' : 'locked';
                   return (
-                    <li key={node.id} className="relative flex w-full flex-col items-center pt-3" style={{ transform: `translateX(${sway}px)` }}>
+                    <li key={node.id} className="relative flex w-full flex-col items-center pt-3 sm:[transform:translateX(var(--sway))]" style={{ '--sway': `${sway}px` }}>
                       <span aria-hidden="true" className={`h-6 w-0.5 border-l-2 border-dashed ${isDone ? 'border-siegel' : 'border-rule'}`} />
                       {isCurrent && !paywalled && (
                         <span className="mb-1 animate-bounce rounded-pill bg-white px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel shadow-raise ring-1 ring-siegel motion-reduce:animate-none">Start</span>

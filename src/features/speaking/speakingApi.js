@@ -56,23 +56,45 @@ export async function startSpeakingSession({ level, missionId, mode }) {
  * Submit one guided turn (audio + short browser-held context) and get the
  * normalized three-signal feedback back. A contract violation surfaces as
  * INVALID_RESPONSE — the UI never renders an unvalidated payload.
+ *
+ * Returns { feedback, taskStateToken, missionResultToken }: the two signed
+ * tokens are plucked from the RAW response BEFORE normalizeGuidedFeedback,
+ * because the normalizer drops unknown properties by design — they are opaque
+ * server-signed strings the UI threads back, never renders.
  */
-export async function submitGuidedTurn({ sessionToken, audioBase64, mimeType, referenceText, history }) {
+export async function submitGuidedTurn({ sessionToken, audioBase64, mimeType, referenceText, history, taskStateToken }) {
   const data = await post('/api/speaking/speaking-turn', {
     session_token: sessionToken,
     audioBase64,
     mimeType,
+    structured: true,
     ...(referenceText ? { referenceText } : {}),
+    ...(taskStateToken ? { taskStateToken } : {}),
     ...(Array.isArray(history) ? { history } : {}),
   });
+  const nextTaskStateToken = typeof data.taskStateToken === 'string' ? data.taskStateToken : null;
+  const missionResultToken = typeof data.missionResultToken === 'string' ? data.missionResultToken : null;
   try {
-    return normalizeGuidedFeedback(data);
+    return {
+      feedback: normalizeGuidedFeedback(data),
+      taskStateToken: nextTaskStateToken,
+      missionResultToken,
+    };
   } catch (err) {
     if (err instanceof FeedbackContractError) {
       throw new SpeakingApiError('INVALID_RESPONSE', err.message);
     }
     throw err;
   }
+}
+
+/**
+ * Verify a signed mission-result token server-side. A mission pass may be
+ * recorded (writeMissionResult) ONLY after this returns { verified: true } —
+ * a query parameter or client-held token alone never completes anything.
+ */
+export async function verifyMissionResult({ token }) {
+  return post('/api/speaking/speaking-mission-result', { token });
 }
 
 /** Finish (or cancel/fail) a session; settles the reservation server-side. */

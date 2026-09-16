@@ -253,3 +253,33 @@
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 #xr-gloss { transition: opacity 0.3s ease; }
+
+/* City Conversation Map — the speaking surface's APPROVED, SCOPED visual
+   exception (plan 2026-09-15-speaking-guided-city-map, Task 4 Step 2).
+   Deep navy / cobalt / acid lime exist ONLY under .speaking-city; the global
+   brand tokens, focus ring and ::selection stay untouched. Acid lime is an
+   accent (progress, current station) and never body text on white. */
+.speaking-city {
+  --city-night: #07152f;
+  --city-cobalt: #2457ff;
+  --city-lime: #c7ff4a;
+  --city-mist: #eef3ff;
+  --city-line: #8ba4ff;
+  /* Derived tints, written HERE and nowhere else: Tailwind cannot apply a
+     /opacity modifier to a var() arbitrary color — `text-[var(--city-mist)]/80`
+     silently emits nothing (verified against dist/, the rounded-pill lesson). */
+  --city-mist-dim: rgba(238, 243, 255, 0.8);
+  --city-mist-faint: rgba(238, 243, 255, 0.62);
+  --city-hairline: rgba(139, 164, 255, 0.3);
+  --city-hairline-strong: rgba(139, 164, 255, 0.45);
+  --city-lime-soft: rgba(199, 255, 74, 0.7);
+  --city-lime-ring: rgba(199, 255, 74, 0.5);
+  --city-night-veil: rgba(7, 21, 47, 0.95);
+}
+@media (prefers-reduced-motion: reduce) {
+  .speaking-city *, .speaking-city *::before, .speaking-city *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

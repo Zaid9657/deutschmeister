@@ -129,7 +129,7 @@ export default function CourseHomePage() {
                   const sway = SWAY[idx % SWAY.length];
                   const firstOfDay = it.indexInDay === 0;
                   return (
-                    <li key={it.id} className="relative flex w-full flex-col items-center pt-3" style={{ transform: `translateX(${sway}px)` }}>
+                    <li key={it.id} className="relative flex w-full flex-col items-center pt-3 sm:[transform:translateX(var(--sway))]" style={{ '--sway': `${sway}px` }}>
                       <span aria-hidden="true" className={`h-6 w-0.5 border-l-2 border-dashed ${isDone ? 'border-siegel' : 'border-rule'}`} />
                       {firstOfDay && (
                         <span className="mb-2 rounded-pill bg-paper px-2.5 py-0.5 font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] text-graphite ring-1 ring-rule">{it.dayLabel}</span>

@@ -27,13 +27,22 @@ export function missionHandoffUrl({ level, missionOrder, returnTo }) {
 }
 
 /**
- * Whether the guided missions exist as a live surface. Plan 3 (guided City
- * Conversation Map) flips this by publishing the mission registry; until
- * then the Abschlusstest records the speaking floor as `required: false`
- * rather than deadlocking learners behind a trainer that is not there.
+ * Whether the guided missions exist as a live surface.
+ *
+ * The City Map UI ships, but a mission is only real once
+ * `migrations/2026-09-17-a11-speaking-route.sql` is APPLIED — before that the
+ * live table holds 8 non-sequential A1.1 rows and mission 12 (the
+ * Abschlusstest's handoff) does not exist. So this is owner-flipped with the
+ * migration, via a build-time flag, and defaults OFF: until then the
+ * Abschlusstest records its speaking floor as `required: false` rather than
+ * deadlocking learners behind a trainer that is not there.
  */
 export function speakingMissionsAvailable() {
-  return false;
+  try {
+    return import.meta.env?.VITE_SPEAKING_MISSIONS_LIVE === 'true';
+  } catch {
+    return false;
+  }
 }
 
 function storageRead(storage, k) {

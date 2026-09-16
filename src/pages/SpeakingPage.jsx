@@ -13,6 +13,7 @@ import { getConfigForLevel } from '../constants/speakingPrompts';
 import { checkSpeakingSupport } from '../components/speaking/mediaSupport';
 import SpeakingSession from '../components/speaking/SpeakingSession';
 import SpeakingEvaluationResults from '../components/SpeakingEvaluationResults';
+import SpeakingHub from '../features/speaking/SpeakingHub.jsx';
 import { LEVEL_ORDER } from '../config/levels';
 import { readCourseContext } from '../lib/courseFlow.js';
 import Button from '../components/ui/Button.jsx';
@@ -143,11 +144,20 @@ const SpeakingPage = () => {
   const [searchParams] = useSearchParams();
   const wantedLevel = String(searchParams.get('level') || '').toUpperCase();
   const wantedMission = Number(searchParams.get('mission')) || null;
+  const wantedReturn = searchParams.get('return') || null;
+  // Which surface serves this visit: the A1.1 City Conversation Map ('hub')
+  // or the legacy setup screen ('legacy' — free conversation, course-task
+  // hand-offs without a mission, and every other level). Decided once, and
+  // the hub offers an explicit way back to the legacy screen.
+  const [surface, setSurface] = useState(null);
   useEffect(() => {
     if (levelInitRef.current || subLoading) return;
     levelInitRef.current = true;
-    setSelectedLevel(LEVEL_ORDER.includes(wantedLevel) ? wantedLevel : normalizePlacementLevel(profile?.current_level));
-  }, [subLoading, profile, wantedLevel]);
+    const lvl = LEVEL_ORDER.includes(wantedLevel) ? wantedLevel : normalizePlacementLevel(profile?.current_level);
+    setSelectedLevel(lvl);
+    const courseHandoff = !wantedMission && !!readCourseContext()?.openPrompt;
+    setSurface(lvl === 'A1.1' && !courseHandoff ? 'hub' : 'legacy');
+  }, [subLoading, profile, wantedLevel, wantedMission]);
 
   // The course hand-off WITHOUT a mission. Four A1.1 Lektionen have a
   // `sprechen.open` prompt but no mission row, so no ?mission= can be sent;
@@ -371,6 +381,30 @@ const SpeakingPage = () => {
             A free account includes a guided speaking demo — no card needed.
           </p>
         </div>
+      </div>
+    );
+  }
+
+  // ---- the A1.1 City Conversation Map ----
+  if (surface === 'hub') {
+    return (
+      <>
+        <SEO {...seoProps('/speaking')} />
+        <SpeakingHub
+          initialMissionOrder={wantedMission}
+          returnTo={wantedReturn}
+          onExitToLegacy={() => setSurface('legacy')}
+        />
+      </>
+    );
+  }
+
+  // The surface is decided from the profile/query once loading settles; a
+  // blank beat here beats flashing the wrong screen.
+  if (surface === null) {
+    return (
+      <div className="min-h-screen bg-paper text-ink flex items-center justify-center pt-16">
+        <Loader2 className="w-6 h-6 animate-spin text-siegel" aria-label="Loading" />
       </div>
     );
   }
