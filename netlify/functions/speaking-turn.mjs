@@ -11,6 +11,7 @@ import {
 } from './_shared/speakingAI.mjs';
 import { assessPronunciation } from './_shared/azurePronunciation.mjs';
 import { stateSecret, signTaskState, verifyTaskState, signMissionResult } from './_shared/speakingState.mjs';
+import { logSpeakingEvent } from './_shared/speakingMetrics.mjs';
 
 const GRACE_MINUTES = 2;
 
@@ -150,6 +151,7 @@ export const handler = async (event) => {
     let ttsWarning = false;
     let pronunciation = null;
     let feedback = null;
+    const turnStartedAt = Date.now();
 
     try {
       // Acoustic pronunciation runs ONLY on real audio against a reference
@@ -205,6 +207,14 @@ export const handler = async (event) => {
       }
     } catch (aiErr) {
       if (aiErr instanceof AIError) {
+        // Aggregate only: stage + normalized code, never the provider text.
+        logSpeakingEvent('speaking_failed', {
+          mode: structured ? 'guided' : (isPlacement ? 'placement' : 'guided'),
+          missionOrder: mission?.mission_order,
+          providerStage: aiErr.stage,
+          errorCode: 'PROVIDER_UNAVAILABLE',
+          latencyBucket: Date.now() - turnStartedAt,
+        });
         return {
           statusCode: aiErr.status || 502,
           headers,
@@ -213,6 +223,13 @@ export const handler = async (event) => {
       }
       throw aiErr;
     }
+
+    logSpeakingEvent('speaking_turn_completed', {
+      mode: structured ? 'guided' : (isPlacement ? 'placement' : 'guided'),
+      missionOrder: mission?.mission_order,
+      latencyBucket: Date.now() - turnStartedAt,
+      providerStage: pronunciation ? 'acoustic' : 'llm',
+    });
 
     // 4a. Structured guided turns: three-signal feedback + the signed task
     //     state. NOTHING is persisted — no transcript rows, no audio; the

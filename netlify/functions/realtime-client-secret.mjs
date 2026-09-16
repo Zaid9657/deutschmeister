@@ -1,6 +1,7 @@
 import { supabase, supabaseKey } from './_shared/supabase.mjs';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 import { liveBetaEnabled } from './_shared/speakingFlags.mjs';
+import { logSpeakingEvent } from './_shared/speakingMetrics.mjs';
 
 // Short-lived OpenAI Realtime credential — plan Task 1 (speaking-live-quality).
 //
@@ -108,6 +109,7 @@ export const handler = async (event) => {
 
     const model = process.env.OPENAI_REALTIME_MODEL || 'gpt-realtime-2.1-mini';
     const voice = process.env.OPENAI_REALTIME_VOICE || 'marin';
+    const secretStartedAt = Date.now();
     let secretPayload = null;
     try {
       const res = await fetch(REALTIME_SECRETS_URL, {
@@ -134,6 +136,10 @@ export const handler = async (event) => {
         p_idempotency_key: `realtime-secret:${sessionToken}`,
       });
       if (refundError) console.error('[realtime-client-secret] refund after provider failure FAILED:', JSON.stringify(refundError));
+      logSpeakingEvent('speaking_failed', {
+        mode: 'live', providerStage: 'realtime', errorCode: 'PROVIDER_UNAVAILABLE',
+        latencyBucket: Date.now() - secretStartedAt,
+      });
       return { statusCode: 502, headers, body: JSON.stringify({ error: 'Live-Verbindung derzeit nicht möglich — deine Minuten wurden zurückgegeben.', code: 'PROVIDER_UNAVAILABLE', refunded: !refundError }) };
     }
 
@@ -142,6 +148,10 @@ export const handler = async (event) => {
     if (!clientSecret) {
       return { statusCode: 502, headers, body: JSON.stringify({ error: 'Provider returned no secret', code: 'PROVIDER_UNAVAILABLE' }) };
     }
+
+    logSpeakingEvent('speaking_connected', {
+      mode: 'live', providerStage: 'realtime', latencyBucket: Date.now() - secretStartedAt,
+    });
 
     return {
       statusCode: 200,

@@ -1,5 +1,8 @@
 import { track } from './analytics';
 import { safeGetJSON, safeSetJSON, safeRemove } from '../utils/safeStorage';
+// The SHARED speaking-event allowlist — the same module the server logs
+// through, so neither side can emit audio, transcripts or credentials.
+import { sanitizeSpeakingEvent } from '../../netlify/functions/_shared/speakingMetrics.mjs';
 
 // Checkout completion is observed from two independent places — the Lemon
 // Squeezy overlay's Checkout.Success event, and the subscription poller seeing
@@ -59,3 +62,26 @@ export const trackComparisonPageViewed = (competitor) => track('comparison_page_
 export const trackComparisonCtaClicked = (competitor, ctaType) => track('comparison_cta_clicked', { competitor, cta_type: ctaType });
 
 export const trackLeitfadenViewed = (topic) => track('leitfaden_viewed', { topic });
+
+// ---------------------------------------------------------------------------
+// Speaking telemetry (2026-09-15 rebuild plan, live-quality Task 4).
+//
+// Every speaking event goes through the SHARED allowlist in
+// netlify/functions/_shared/speakingMetrics.mjs — the same module the server
+// logs through — so audio, transcripts, reference phrases, credentials and
+// free-form provider errors cannot be emitted from either side. `track()`
+// is already consent-aware (public/consent.js gates GA4 and PostHog).
+// ---------------------------------------------------------------------------
+
+const trackSpeaking = (name, props) => {
+  const event = sanitizeSpeakingEvent(name, props);
+  if (!event) return;
+  track(event.name, event.properties);
+};
+
+export const trackSpeakingStarted = (props) => trackSpeaking('speaking_started', props);
+export const trackSpeakingConnected = (props) => trackSpeaking('speaking_connected', props);
+export const trackSpeakingTurnCompleted = (props) => trackSpeaking('speaking_turn_completed', props);
+export const trackSpeakingFailed = (props) => trackSpeaking('speaking_failed', props);
+export const trackSpeakingEnded = (props) => trackSpeaking('speaking_ended', props);
+export const trackSpeakingFallbackUsed = (props) => trackSpeaking('speaking_fallback_used', props);
