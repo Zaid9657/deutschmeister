@@ -12,16 +12,19 @@
 // The visual identity (deep navy / cobalt / acid lime) is the approved scoped
 // exception living under `.speaking-city` in src/index.css.
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Loader2, Play, Crown, MessageCircle } from 'lucide-react';
+import { Loader2, Play, Crown, MessageCircle, Mic } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useSubscription } from '../../contexts/SubscriptionContext';
 import { supabase } from '../../utils/supabase';
 import Button from '../../components/ui/Button.jsx';
 import { buildA11Route, canOpenStation } from './routeModel.js';
-import { fetchSpeakingBalance } from './speakingApi.js';
 import { A11_PRODUCT_KEY } from '../../lib/guidedCourseAccess.js';
 import CityRouteMap from './CityRouteMap.jsx';
 import SpeakingBalance from './SpeakingBalance.jsx';
+import LiveSetup from './LiveSetup.jsx';
+import LiveConversation from './LiveConversation.jsx';
+import { fetchSpeakingBalance, startSpeakingSession, SpeakingApiError } from './speakingApi.js';
+import { liveBetaEnabledClient } from './liveFlag.js';
 import MissionPrep from './MissionPrep.jsx';
 import GuidedMission from './GuidedMission.jsx';
 
@@ -38,7 +41,31 @@ export default function SpeakingHub({ initialMissionOrder, returnTo, onExitToLeg
   const [balance, setBalance] = useState({ monthlySeconds: 0, permanentSeconds: 0, totalSeconds: 0 });
   const [includedAttempts, setIncludedAttempts] = useState([]);
   const [balanceLoading, setBalanceLoading] = useState(true);
-  const [view, setView] = useState({ name: 'map' }); // map | prep | active
+  const [view, setView] = useState({ name: 'map' }); // map | prep | active | live-setup | live
+  const [liveStarting, setLiveStarting] = useState(false);
+  const [liveError, setLiveError] = useState(null);
+
+  // Live Conversation is behind the beta flag (spec §11.3 stage 3): the
+  // server refuses a credential when it is off, so the entry point stays
+  // hidden rather than offering a door that 503s.
+  const liveAvailable = liveBetaEnabledClient();
+
+  const startLive = async ({ durationSeconds, scenarioId }) => {
+    setLiveStarting(true);
+    setLiveError(null);
+    try {
+      const session = await startSpeakingSession({
+        level: 'A1.1', mode: 'live', durationSeconds, missionId: scenarioId || undefined,
+      });
+      setView({ name: 'live', session, durationSeconds, missionId: scenarioId || null });
+    } catch (err) {
+      setLiveError(err instanceof SpeakingApiError && err.code === 'INSUFFICIENT_ALLOWANCE'
+        ? 'Not enough speaking time left for that length.'
+        : 'The session could not be started. Nothing was charged.');
+    } finally {
+      setLiveStarting(false);
+    }
+  };
   const deepLinkRef = useRef(false);
 
   const loadRoute = useCallback(async () => {
@@ -137,6 +164,28 @@ export default function SpeakingHub({ initialMissionOrder, returnTo, onExitToLeg
           onBack={() => setView({ name: 'map' })}
           onStarted={(session) => setView({ name: 'active', station: view.station, session })}
         />
+      ) : view.name === 'live-setup' ? (
+        <LiveSetup
+          balance={balance}
+          scenarios={missions}
+          starting={liveStarting}
+          error={liveError}
+          onStart={startLive}
+          onBack={() => { setLiveError(null); setView({ name: 'map' }); }}
+        />
+      ) : view.name === 'live' ? (
+        <LiveConversation
+          sessionToken={view.session.sessionToken}
+          missionId={view.missionId}
+          missionTitle={missions.find((m) => m.id === view.missionId)?.title_de}
+          durationSeconds={view.durationSeconds}
+          onExit={() => { setView({ name: 'map' }); loadBalance(); loadRoute(); }}
+          onFallbackToGuided={() => {
+            // Same mission, guided mode — the task goal survives the drop.
+            const station = route.find((st) => st.id === view.missionId);
+            setView(station ? { name: 'prep', station } : { name: 'map' });
+          }}
+        />
       ) : view.name === 'active' ? (
         <GuidedMission
           station={view.station}
@@ -209,6 +258,17 @@ export default function SpeakingHub({ initialMissionOrder, returnTo, onExitToLeg
                 </section>
 
                 <SpeakingBalance balance={balance} loading={balanceLoading} />
+
+                {liveAvailable && (
+                  <Button
+                    variant="secondary"
+                    size="md"
+                    onClick={() => setView({ name: 'live-setup' })}
+                    className="w-full"
+                  >
+                    <Mic className="h-4 w-4" aria-hidden="true" /> Live conversation (beta)
+                  </Button>
+                )}
 
                 <button
                   type="button"

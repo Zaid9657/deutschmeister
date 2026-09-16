@@ -40,12 +40,15 @@ async function post(path, body) {
 }
 
 /** Start a session. Guided missions pass missionId; the server owns the cap. */
-export async function startSpeakingSession({ level, missionId, mode }) {
+export async function startSpeakingSession({ level, missionId, mode, durationSeconds }) {
   const data = await post('/api/speaking/speaking-session', {
     action: 'start',
     level,
     ...(missionId ? { missionId } : {}),
     ...(mode ? { mode } : {}),
+    // Live mode only: the server validates this against its own 300/600/900
+    // list and reserves from the ledger — the number here is a request.
+    ...(Number.isInteger(durationSeconds) ? { durationSeconds } : {}),
     idempotencyKey: crypto.randomUUID(),
   });
   if (!data.sessionToken) throw new SpeakingApiError('INVALID_RESPONSE', 'start returned no session');
@@ -112,4 +115,17 @@ export async function finishSpeakingSession({ sessionToken, usedSeconds, outcome
 /** The balance read-model (seconds + included attempts). Display only. */
 export async function fetchSpeakingBalance() {
   return post('/api/speaking/check-speaking-usage', {});
+}
+
+/**
+ * Mint the short-lived Realtime credential for a live session. The server
+ * refuses unless the session is the caller's own active live session WITH an
+ * active reservation, and refunds that reservation if the provider fails —
+ * so a failure here never costs the learner minutes.
+ */
+export async function fetchRealtimeCredential({ sessionToken, missionId }) {
+  return post('/api/speaking/realtime-client-secret', {
+    sessionToken,
+    ...(missionId ? { missionId } : {}),
+  });
 }
