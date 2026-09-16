@@ -1,62 +1,48 @@
 {
- "brief": "Complete the remaining DeutschMeister audit remediation, verify it in real browsers, and deploy production safely; preserve explicit gates for evidence that only the operator can provide.",
- "created": "2026-09-14T13:27:44.779392+00:00",
+ "brief": "Design a complete rebuild of DeutschMeister Speaking and the A1.1 commercial funnel before implementation",
+ "created": "2026-09-15T13:02:54.756352+00:00",
  "goals": [
   {
    "id": "G001",
-   "title": "Baseline and evidence gates",
-   "objective": "Inventory current implementation and encode exact operator-only blockers without inventing legal or customer evidence.",
+   "title": "Context audit",
+   "objective": "Map the current speaking product, course offer, billing, analytics, and recent changes",
    "status": "complete",
-   "evidence": "Created docs/release-evidence-gates.md from repository evidence. It records four non-fabrication gates with owners and acceptance criteria: operator identity, privacy/vendor facts, authentic customer proof, and authenticated GSC/DataForSEO data. Worktree commit: document release evidence gates."
+   "evidence": "Mapped the current product and commercial system: A1.1 is a free 12-lesson course scored 82/100 with 347 focused tests passing but missing recorded audio; Speaking is a 68/100 transcript-led beta with strong architecture but unresolved assessment, access, billing, accessibility, and privacy issues; Pro is EUR 9.99 monthly/EUR 79.99 yearly; paid sub-level courses use lifetime access plus 90 Pro days; Lemon Squeezy webhooks grant subscriptions and purchases; PostHog/funnel tracking and existing launch drafts are present."
   },
   {
    "id": "G002",
-   "title": "Legal and privacy hardening",
-   "objective": "Improve Impressum and privacy transparency using verified facts, centralize completion requirements, and add release safeguards.",
+   "title": "Product decisions",
+   "objective": "Define audience, primary promise, success criteria, and commercial constraints with the owner",
    "status": "complete",
-   "evidence": "Centralized legal facts and conditional noindex in astro-site/src/data/legal.js; expanded Impressum and privacy draft coverage; added npm run check:legal-release, which correctly blocks on 15 verified operator/legal/vendor fields; implemented GA4 and PostHog same-session withdrawal; consent tests 2/2 and targeted ESLint passed; Astro built 128 pages; real browser render confirmed both legal pages and accept-then-withdraw reopened the consent dialog."
+   "evidence": "Owner decisions: target all adult beginners; lead with a practical A1.1 foundation for everyday German and A1.2 readiness; sell the complete course after a free preview; include a fixed non-expiring speaking allowance; rebuild Speaking as a hybrid of guided tap-to-speak missions and premium real-time conversation; optimize AI for balanced quality/cost; launch organic-first, then introduce a EUR 300-1,000/month test budget when expenses permit."
   },
   {
    "id": "G003",
-   "title": "English-first public experience",
-   "objective": "Resolve mixed-language discovery paths and make the public acquisition experience consistently understandable to English-speaking learners.",
+   "title": "Strategic options",
+   "objective": "Compare 2-3 coherent product, AI, and monetization approaches",
    "status": "complete",
-   "evidence": "English FAQ/About and grammar hubs implemented; German exam route templates share an explicit language notice; navigation identifies German destinations. Astro built 128 pages, SPA prerender built 8 routes, rendered browser checks showed FAQ interaction, English About/grammar, and German guide notice."
+   "evidence": "Compared three coherent offers against current market anchors, current product maturity, and current AI costs. Owner selected Foundation First: three free preview lessons, EUR 39 one-time lifetime A1.1, all guided lesson missions plus a fixed 60-minute speaking balance, followed by an optional approximately EUR 12.99/month AI Coach. Rejected EUR 29 volume positioning because of margin/premium-signal limits and EUR 59 premium positioning because the unknown brand lacks enough proof today."
   },
   {
    "id": "G004",
-   "title": "Navigation pricing and trust conversion",
-   "objective": "Group desktop navigation, clarify no-account versus free-trial versus Pro states, and create an honest social-proof capture path.",
+   "title": "Approved design",
+   "objective": "Present and validate the product, pedagogy, architecture, UX, pricing, subscription, and sales design",
    "status": "complete",
-   "evidence": "Desktop navigation is grouped in native accessible disclosures in both renderers. Pricing and signup explicitly separate anonymous A1.1 access, the account-based 7-day trial, and Pro. A Netlify learner-story form captures verified feedback only with required publication consent and a no-auto-publish promise."
+   "evidence": "User approved Foundation First offer, City Conversation Map speaking journey, fixed pricing and allowances, organic sales engine, and specialist-model privacy/release architecture in five explicit review steps."
   },
   {
    "id": "G005",
-   "title": "Grammar page learning and conversion UX",
-   "objective": "Add concise summaries, usable tables of contents, early practice calls to action, and Sentence X-Ray integration to long grammar pages.",
+   "title": "Written specification",
+   "objective": "Write, self-review, and commit the approved rebuild specification",
    "status": "complete",
-   "evidence": "The shared topic template now gives all 84 grammar lessons a data-derived at-a-glance summary, conditional anchored contents list, early practice jump, and prefilled Sentence X-Ray links for every example."
+   "evidence": "Committed a 739-line design specification covering every approved product, UX, pricing, allowance, model-routing, privacy, evaluation, launch, analytics, and definition-of-done decision at commit c32f34b."
   },
   {
    "id": "G006",
-   "title": "Accessibility and security",
-   "objective": "Fix remaining WCAG issues, validate keyboard zoom and automated accessibility, and move CSP from observation toward safe enforcement.",
+   "title": "Implementation handoff",
+   "objective": "Obtain owner review and transition the approved specification into an executable implementation plan",
    "status": "complete",
-   "evidence": "Both renderers build; focused checks 5/5 pass; Lighthouse accessibility improved from 96/95 to 100/100; real-browser keyboard disclosure and 200%-equivalent reflow verified without overflow."
-  },
-  {
-   "id": "G007",
-   "title": "Technical SEO and performance",
-   "objective": "Fix title warnings, validate crawl metadata and canonical coverage, run Lighthouse/CWV-style measurements, and remediate material performance defects.",
-   "status": "complete",
-   "evidence": "Shared build merge includes all Astro routes; 138 built pages pass with 0 failures/warnings; home Lighthouse 93-95 with LCP 1.5-1.6s and lesson Lighthouse 98 with LCP 1.7s; merged SEO/a11y/best-practices 100; deferred content verified in real browser."
-  },
-  {
-   "id": "G008",
-   "title": "Production release verification",
-   "objective": "Run the complete automated and rendered verification suite, deploy the verified changes, and smoke-test production with an evidence-backed blocker handoff.",
-   "status": "in_progress",
-   "evidence": null
+   "evidence": "Owner approved the design. Wrote and committed a six-file, 1,689-line executable plan set covering course readiness, atomic allowances, guided City Map, realtime mode, quality gates, and organic launch at commit 663748e."
   }
  ]
 }

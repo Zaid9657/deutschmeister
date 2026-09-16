@@ -17,14 +17,42 @@
 // price claim that disagrees with the checkout is irreführende Werbung under
 // UWG §5, not a typo. The helpers below recompute on every build instead.
 //
-// Provenance: prices verified against src/config/lemonsqueezy.js and the
-// Lemon Squeezy store (309512) checkout, 2026-08-22.
+// Provenance: subscription prices re-cut 2026-09-15 (approved rebuild spec,
+// docs/superpowers/specs/2026-09-15-deutschmeister-speaking-a11-commercial-rebuild-design.md
+// §7): the PUBLIC subscription is the AI Coach at €12.99/€129. The Lemon
+// Squeezy variants for these prices DO NOT EXIST YET — the owner creates them
+// (dashboard-only) and sets the AI_COACH variant env vars; until then every
+// subscription checkout surface hides (no-fallback rule below). Existing
+// subscribers are GRANDFATHERED on €9.99/€79.99 while continuously
+// subscribed: their remote LS subscriptions keep billing the old variants,
+// which this file no longer offers to anyone new.
 
 /** Gross price in EUR, billed monthly. */
-export const MONTHLY_PRICE_EUR = 9.99;
+export const MONTHLY_PRICE_EUR = 12.99;
 
 /** Gross price in EUR, billed once per year. */
-export const YEARLY_PRICE_EUR = 79.99;
+export const YEARLY_PRICE_EUR = 129;
+
+/**
+ * What existing subscribers keep paying while continuously subscribed
+ * (spec §7.3). Display-only — no checkout may ever open at these prices.
+ */
+export const GRANDFATHERED_MONTHLY_PRICE_EUR = 9.99;
+export const GRANDFATHERED_YEARLY_PRICE_EUR = 79.99;
+
+/**
+ * One-time speaking top-up: 60 permanent minutes (3,600 seconds — the grant
+ * lives in netlify/functions/_shared/speakingGrants.mjs TOPUP_SECONDS and
+ * tests/claims.test.mjs compares). Same no-fallback rule as the courses: an
+ * unset variant id hides the buy surface.
+ */
+export const SPEAKING_TOPUP = {
+  key: 'speaking_topup_60',
+  name: '60 speaking minutes',
+  nameDe: '60 Sprechminuten',
+  price: 6.99,
+  minutes: 60,
+};
 
 export const CURRENCY = 'EUR';
 
@@ -96,9 +124,14 @@ export const COURSES = {
 
 /**
  * Level courses — the product, decided 2026-09-03 (docs/monetization-2026-09-03.md),
- * re-cut per SUB-LEVEL on 2026-09-08 (owner decision, see the addendum there):
- * A1.1 stays free, every other sub-level is its own one-time, lifetime product
- * with its own price, plus the same included Pro window as the telc course.
+ * re-cut per SUB-LEVEL on 2026-09-08 (owner decision, see the addendum there),
+ * and extended 2026-09-15 (approved rebuild spec,
+ * docs/superpowers/specs/2026-09-15-deutschmeister-speaking-a11-commercial-rebuild-design.md):
+ * A1.1's PUBLIC LIBRARY stays free (FREE_LEVELS is untouched), but its GUIDED
+ * COURSE is now the €39 one-time product "DeutschStart A1.1" with a
+ * three-lesson signed-in preview (`previewLessons`). Every other sub-level is
+ * its own one-time, lifetime product with its own price, plus the same
+ * included Pro window as the telc course.
  * B1 and B2 are listed but not yet buyable — they render as "Coming soon"
  * until the Course Factory has rebuilt them (Wave 7 B–D and Waves 8–10); a
  * coming-soon course has no checkout id and never opens one. The A1–B2 bundle
@@ -110,8 +143,9 @@ export const COURSES = {
  */
 export const ALL_LEVELS = ['a1.1', 'a1.2', 'a2.1', 'a2.2', 'b1.1', 'b1.2', 'b2.1', 'b2.2'];
 
-/** Gross one-time price in EUR per sub-level. A1.1 is free and has no product. */
+/** Gross one-time price in EUR per sub-level. A1.1 prices the guided course only. */
 export const SUBLEVEL_PRICES_EUR = {
+  'a1.1': 39,
   'a1.2': 40,
   'a2.1': 50,
   'a2.2': 50,
@@ -135,15 +169,19 @@ export const productKeyForLevel = (level) => `course_${String(level).toLowerCase
 
 const sublevel = (level) => {
   const code = level.toUpperCase();
+  // A1.1 sells under its own product name and keeps lessons 1–3 as the
+  // signed-in preview; the other courses have no preview window (0).
+  const a11 = level === 'a1.1';
   return {
     key: productKeyForLevel(level),
     code,
-    name: `German ${code} Course`,
-    nameDe: `Deutsch ${code} Kurs`,
+    name: a11 ? 'DeutschStart A1.1' : `German ${code} Course`,
+    nameDe: a11 ? 'DeutschStart A1.1' : `Deutsch ${code} Kurs`,
     price: SUBLEVEL_PRICES_EUR[level],
     proDays: COURSE_PRO_DAYS,
     proMonths: COURSE_PRO_MONTHS,
     levels: [level],
+    previewLessons: a11 ? 3 : 0,
     comingSoon: COMING_SOON_LEVELS.includes(level),
   };
 };

@@ -26,7 +26,6 @@ import {
   READING_LESSON_COUNT,
   READING_LESSON_COUNTS_BY_LEVEL,
   LEVEL_COUNT,
-  TRIAL_SPEAKING_SESSIONS,
 } from '../src/data/marketing.js';
 // Head fields come from the one registry both this script and the <SEO> calls
 // consume — src/data/seoRoutes.js. The route objects below carry only what is
@@ -224,7 +223,7 @@ const ROUTES = [
     </div>
     <div class="${CARD_FLAT} p-5">
       <h2 class="${H_CARD}">Missions or free talk</h2>
-      <p class="mt-2 ${SMALL}">Guided scenarios — ordering, appointments, small talk — or open conversation. Sessions run 5, 10 or 15 minutes.</p>
+      <p class="mt-2 ${SMALL}">Guided scenarios — ordering, appointments, small talk — or open conversation, in focused sessions of up to five minutes.</p>
     </div>
     <div class="${CARD_FLAT} p-5">
       <h2 class="${H_CARD}">Feedback you can use</h2>
@@ -232,7 +231,7 @@ const ROUTES = [
     </div>
   </div>
   <p class="mt-10"><a href="/signup" class="${BTN_PRIMARY}">Sign up free</a></p>
-  <p class="mt-4 ${DATA_NOTE}">A free account includes ${TRIAL_SPEAKING_SESSIONS} AI speaking sessions — no card needed. Levels: ${LEVELS.join(', ')}.</p>
+  <p class="mt-4 ${DATA_NOTE}">A free account includes a guided speaking demo — no card needed. Levels: ${LEVELS.join(', ')}.</p>
 </div></div>`,
   },
   {
@@ -664,20 +663,8 @@ for (const route of ROUTES) {
   // carries real content, so remove it.
   html = html.replace(/<noscript>\s*<div style="max-width:960px[\s\S]*?<\/noscript>/, '');
 
-  // The shell carries a visually-hidden site-identity <h1> ("Learn German with
-  // DeutschMeister") as a fallback for the routes that render client-side only.
-  // Each route below injects its OWN real <h1>, so leaving the shell's in place
-  // gave every prerendered page two — a hidden site-wide heading competing with
-  // the page's actual subject, which is worse than having none. Strip it here;
-  // app.html keeps it, because the non-prerendered routes still need it.
-  html = mustReplace(
-    html,
-    /\s*<h1 style="position:absolute;[^"]*">[\s\S]*?<\/h1>/,
-    '',
-    'shell identity h1',
-    route.path,
-  );
-
+  // The shell deliberately has no heading outside its noscript fallback. Each
+  // route below supplies exactly one real page heading inside #root.
   html = mustReplace(html, '<div id="root"></div>', `<div id="root">${route.content}\n    </div>`, 'root div', route.path);
 
   const outDir = join(DIST, route.dir);

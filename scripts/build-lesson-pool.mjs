@@ -331,6 +331,98 @@ for (const [id, accepted] of Object.entries(ACCEPTED_EXTRAS)) {
   acceptedApplied.push(id);
 }
 
+/**
+ * Replaced OPTIONS for legacy bank items, id → { from, to }.
+ *
+ * REVIEW #23 Minor 11: `ffec1d33` („Kommst du aus Italien? – ...") offers
+ * „Ja, ich bin aus Italien." as a WRONG option — but that sentence is plausible,
+ * correct spoken German for exactly this answer, so a learner who picks it is
+ * marked wrong for German that answers the question. A distractor has to be
+ * wrong for a reason the Lektion teaches; the replacement is the unconjugated
+ * infinitive („ich kommen"), the conjugation mistake the drawn seven of L10
+ * actually drills. The cache is a snapshot of the database, so the replacement
+ * lives here, like ACCEPTED_EXTRAS above: it must name an option that exists,
+ * must never touch `answer`/`accepted`, and a stale id is reported, not
+ * silently ignored. tests/lesson-pool-rules.test.mjs pins the built result.
+ */
+const OPTION_REPLACEMENTS_BY_LEVEL = {
+  'a1.1': {
+    'ffec1d33-2826-5332-93e5-2b8efe7ece89': {
+      from: 'Ja, ich bin aus Italien.',
+      to: 'Ja, ich kommen aus Italien.',
+    },
+  },
+};
+
+const OPTION_REPLACEMENTS = OPTION_REPLACEMENTS_BY_LEVEL[level] || {};
+const optionsReplaced = [];
+for (const [id, { from, to }] of Object.entries(OPTION_REPLACEMENTS)) {
+  const item = kept.find((k) => k.id === id);
+  if (!item || !Array.isArray(item.options)) continue;
+  const at = item.options.indexOf(from);
+  if (at < 0) {
+    console.error(`OPTION_REPLACEMENTS: ${id} has no option ${JSON.stringify(from)} — stale entry`);
+    process.exit(1);
+  }
+  const expected = [item.answer, ...(item.accepted || [])];
+  if (expected.includes(from) || expected.includes(to)) {
+    console.error(`OPTION_REPLACEMENTS: ${id} — a replacement may only touch a distractor, never the key`);
+    process.exit(1);
+  }
+  item.options = item.options.map((o, i) => (i === at ? to : o));
+  optionsReplaced.push({ id, from, to });
+}
+
+/**
+ * Real English glosses for the bank items whose `question_en` is the GERMAN
+ * question repeated (REVIEW #23 Minor 7 — six of them DRAWN: `34957c67`,
+ * `0fe8146d`, `dd1c3d60`, `cb35f9d0`, `9fd52b13`, `e0ac0425`; measured over the
+ * whole built pool: fifteen). The English text is authorship, so it lives in a
+ * table the way ACCEPTED_EXTRAS does — but the CLASS is closed by a rule, not
+ * by this list: the guard below (and its twin in tests/lesson-pool-rules.test.mjs)
+ * fails the build for ANY item whose questionEn equals its questionDe, so the
+ * next German-in-the-gloss row cannot ship unnoticed. A stale id is reported.
+ */
+const QUESTION_EN_REPAIRS_BY_LEVEL = {
+  'a1.1': {
+    // verb-sein
+    '34957c67-c29b-43c9-b3ef-5346fa68fa52': 'He ___ a teacher. (form of sein)',
+    '0fe8146d-6e90-4c1c-b127-618c44e456ba': '___ you a student? (form of sein)',
+    '9fd52b13-6cb9-4430-b0b7-52d4a63c0a63': 'We ___ in Berlin. (form of sein)',
+    'dcfdd24d-b6da-4222-92a9-2e816bf4cc5d': 'I ___ tired. (form of sein)',
+    'da9e486f-2548-4462-9bdd-c59560ed7276': 'That ___ good. (form of sein)',
+    // verb-haben
+    'cb35f9d0-86d8-4f7c-b41d-3e6c1e2e1e4c': 'He ___ hunger — German has hunger rather than being hungry. (form of haben)',
+    '68be03d3-c547-41dc-9dc0-772fa974f74f': 'I ___ a car. (form of haben)',
+    'ff343b73-534f-42bc-bc58-1fb8c6fbb1c5': '___ you (du) time? (form of haben)',
+    // personal-pronouns
+    'dd1c3d60-8ae7-4c94-8990-19633dcba36f': '___ is my mother. (which pronoun?)',
+    // definite-articles (plural)
+    'e0ac0425-9aea-44f8-8354-7c41cfbcb0d3': 'the chair → the chairs: which article do plural nouns take?',
+    'be8069b8-e189-4fa9-9888-c78e2d51736f': 'the car → the cars: which article do plural nouns take?',
+    // indefinite-articles
+    '1ce4f35f-6067-4fdf-a16b-689bb598fd67': 'That is ___ chair. (indefinite article)',
+    '404c4a60-3448-46bf-99ed-3405eda0bd0f': 'I have ___ sister. (indefinite article)',
+    '5d184615-c23d-44f3-96f4-275878ca8109': 'That is ___ picture. (indefinite article)',
+    '51c0db3b-9a30-4ccb-8c6c-d1361eec51da': 'He has ___ car. (indefinite article)',
+  },
+};
+
+const QUESTION_EN_REPAIRS = QUESTION_EN_REPAIRS_BY_LEVEL[level] || {};
+const questionEnRepaired = [];
+for (const [id, en] of Object.entries(QUESTION_EN_REPAIRS)) {
+  const item = kept.find((k) => k.id === id);
+  if (!item) continue;
+  if (String(item.questionEn || '') !== String(item.questionDe || '')) {
+    console.error(`QUESTION_EN_REPAIRS: ${id} no longer carries its German question as questionEn — stale entry`);
+    process.exit(1);
+  }
+  item.questionEn = en;
+  questionEnRepaired.push(id);
+}
+const staleEnRepairs = Object.keys(QUESTION_EN_REPAIRS).filter((id) => !questionEnRepaired.includes(id)
+  && !kept.some((k) => k.id === id));
+
 // ── the generated buchstabieren items ───────────────────────────────────────
 
 /** Stable id for a generated item: uuid-shaped, derived from its key. */
@@ -371,6 +463,11 @@ function misspellings(word) {
 /**
  * The German letter NAMES a beginner has to be able to say on the phone —
  * exactly the pairs the Lektion-1 notice card warns about (E/I, G/J, V/W, Y, ß).
+ * Q is NOT here on purpose (DaF review #23, Minor 1): these generated items say
+ * „auf Deutsch“, a token the course teaches in Lektion 3, so their `minLektion`
+ * puts them past the two Lektionen that draw the alphabet topic and they are
+ * never served. The Q item the review asked for is a HAND item instead
+ * (`extra-a11-l01-16`), shaped like the served letter-name extras.
  */
 const LETTER_NAMES = [
   { letter: 'ß', name: 'Eszett', accepted: ['Eszett', 'eszett', 'scharfes S', 'scharfes s'] },
@@ -954,6 +1051,24 @@ for (const item of items) {
   minLektionHist.set(key, (minLektionHist.get(key) || 0) + 1);
 }
 
+// ── REVIEW #23 Minor 7, the CLASS: a German gloss is no gloss ────────────────
+//
+// `questionEn` is the support line an A1 learner reads when the German prompt
+// alone does not carry him; fifteen bank items shipped with the German question
+// repeated there, so the "help" was the problem twice. The instances are
+// repaired above (QUESTION_EN_REPAIRS); this closes the class — a build in
+// which ANY item's questionEn equals its questionDe stops here, so the next
+// German-in-the-gloss row (cache refresh or hand extra) cannot ship unnoticed.
+// tests/lesson-pool-rules.test.mjs asserts the same over the committed file.
+const germanGloss = items.filter(
+  (i) => String(i.questionDe || '').trim() && String(i.questionDe).trim() === String(i.questionEn || '').trim(),
+);
+if (germanGloss.length) {
+  console.error(`${germanGloss.length} item(s) carry their German question as questionEn (REVIEW #23 Minor 7):`);
+  for (const i of germanGloss) console.error(`  ${i.id}  ${String(i.questionDe).slice(0, 60)}`);
+  process.exit(1);
+}
+
 const out = { level, builtFrom: cache.dumpedAt, count: items.length, items };
 const target = new URL(`../src/data/lessonPools/${level.replace('.', '')}.json`, import.meta.url);
 writeFileSync(target, JSON.stringify(out, null, 1) + '\n');
@@ -989,6 +1104,10 @@ console.log(`Buchstabiert → Lesen Sie die Buchstaben (REVIEW #4 MAJOR): ${buch
 console.log(`register normalisations (Sie-Form): ${normalised.length}`);
 for (const r of normalised) console.log(`       ${String(r.id).slice(0, 8)} · ${r.after}`);
 if (acceptedApplied.length) console.log(`widened accepted on ${acceptedApplied.length}: ${acceptedApplied.map((i) => i.slice(0, 8)).join(', ')}`);
+console.log(`options replaced (REVIEW #23 Minor 11): ${optionsReplaced.length}`);
+for (const r of optionsReplaced) console.log(`       ${r.id.slice(0, 8)} · ${r.from} → ${r.to}`);
+console.log(`questionEn written for German-gloss items (REVIEW #23 Minor 7): ${questionEnRepaired.length}`);
+if (staleEnRepairs.length) console.log(`QUESTION_EN_REPAIRS ids no longer in the pool: ${staleEnRepairs.join(', ')}`);
 console.log(`equivalent-verb widenings (REVIEW #4 MAJOR): ${verbWidened.length}`);
 for (const r of verbWidened) console.log(`       ${r.id} + ${r.added.join(', ')}`);
 console.log(`ambiguous corrections repaired (REVIEW #6 BLOCKER 2): ${ambiguousRepaired.length}` +

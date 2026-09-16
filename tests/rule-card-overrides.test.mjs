@@ -206,9 +206,19 @@ test('no card states a percentage', () => {
 
 test('nouns-gender teaches the gender-predicting endings instead of a share table', () => {
   const card = OVERRIDES['nouns-gender'];
-  for (const ending of ['-ung', '-heit', '-keit', '-schaft', '-chen', '-lein', '-er']) {
+  for (const ending of ['-ung', '-heit', '-keit', '-schaft', '-er']) {
     assert.ok(card.content.includes(ending), `nouns-gender: the ${ending} rule is missing`);
   }
+  // ROUND 24 (DaF review #23, Minor 2): `-chen, -lein → das` taught an ending group of which the
+  // whole course contains ZERO words — the card handed the learner a rule with nothing to apply
+  // it to, on two words (Mädchen, Brötchen) no Wortfeld, dialogue or item of A1.1 teaches. The
+  // line is out, and this pins it out: a diminutive rule returns only with course words to carry it.
+  const haystack = [
+    card.content,
+    ...card.commonMistakes.flatMap((m) => [m.wrong, m.correct, m.explanationDe]),
+  ].join('\n');
+  assert.ok(!/-chen|-lein|Mädchen|Brötchen/.test(haystack),
+    'nouns-gender: the -chen/-lein group is back although the course still contains no diminutive');
 });
 
 test('time-and-dates carries the clock but no ordinal form', () => {
@@ -245,22 +255,23 @@ test('time-and-dates carries the clock but no ordinal form', () => {
 test('alphabet-pronunciation names the German letters', () => {
   const card = OVERRIDES['alphabet-pronunciation'];
   const names = [
-    'A a',
-    'B be',
-    'C ce',
-    'Q ku',
+    'B Be',
+    'C Ce',
+    'Q Ku',
     'V Vau',
-    'X ix',
+    'X Ix',
     'Y Ypsilon',
     'Z Zett',
-    'Ä a-Umlaut',
-    'Ö o-Umlaut',
-    'Ü u-Umlaut',
+    'Ä A-Umlaut',
+    'Ö O-Umlaut',
+    'Ü U-Umlaut',
     'ß Eszett',
   ];
   for (const name of names) {
     assert.ok(card.content.includes(name), `alphabet-pronunciation: letter name "${name}" is missing`);
   }
+  // …and the vowels name themselves, on a line of their own.
+  assert.ok(card.content.includes('A, E, I, O, U heißen A, E, I, O, U.'), 'alphabet-pronunciation: the vowel line is missing');
 
   // Review #3 BLOCKER 3: the first version of this card spelled the names as
   // sound respellings ("C tse", "X iks", "Z tset"). A letter NAME is a word, not
@@ -269,8 +280,13 @@ test('alphabet-pronunciation names the German letters', () => {
     !/\b(tse|tset|iks)\b/.test(card.content),
     'alphabet-pronunciation: a sound respelling is back in the letter table',
   );
-  assert.ok(!card.content.includes('Y ypsilon'), 'alphabet-pronunciation: Ypsilon is a name, capitalised');
-  assert.ok(!card.content.includes('V vau'), 'alphabet-pronunciation: Vau is a name, capitalised');
+  // Review #23, Minor 1: the list mixed lowercase names ("be, ce, de") with capitalised ones
+  // ("Jot, Vau"). A letter name is a noun (das Be, das Jot), so the WHOLE list is capitalised —
+  // one rule for all 26, not a pin per letter: no "<letter> <lowercase name>" pair may appear.
+  assert.ok(
+    !/[A-ZÄÖÜß] (?:be|ce|de|ef|ge|ha|jot|ka|el|em|en|pe|ku|er|es|te|vau|we|ix|ypsilon|zett|eszett|[aouäöü]-Umlaut)\b/.test(card.content),
+    'alphabet-pronunciation: a lowercase letter name is back in the list',
+  );
   assert.match(card.content, /Wie schreibt man das\?/, 'the card must show how to ask for a spelling');
   assert.match(card.content, /A-N-A/, 'the card must show a spelled-out name');
 
@@ -511,6 +527,17 @@ test('no card duzt outside a paradigm listing', () => {
 /** Letter NAMES, which the A1.1 L1 card must spell out — they are names, not lexis. */
 const LETTER_NAMES = ['Jot', 'Vau', 'We', 'Ypsilon', 'Zett', 'Eszett', 'Umlaut', 'Zed'];
 
+/**
+ * The other letter names, since the whole list is capitalised (DaF review #23, Minor 1: a letter
+ * name is a noun — das Be, das Jot — and the card may not mix cases). They are matched EXACTLY,
+ * never by prefix or suffix: `Er` and `Es` as letter names must not license the pronouns, let
+ * alone every word ending in -er. The class is closed — it is the German alphabet.
+ */
+const ALPHABET_NAME_TOKENS = new Set(
+  ['Be', 'Ce', 'De', 'Ef', 'Ge', 'Ha', 'Ka', 'El', 'Em', 'En', 'Pe', 'Ku', 'Er', 'Es', 'Te', 'Ix',
+    ...LETTER_NAMES].map((w) => w.toLowerCase()),
+);
+
 /** The polite Sie/Ihr paradigm, capitalised by rule rather than by word class. */
 const POLITE_FORMS = ['Sie', 'Ihr', 'Ihre', 'Ihren', 'Ihrem', 'Ihnen'];
 
@@ -520,10 +547,12 @@ const PROPER_NAMES = [...DIALOG_NAMES_A11, ...DIALOG_NAMES_A12, 'Marokko', 'Schw
 /**
  * The nouns-gender card demonstrates gender-PREDICTING ENDINGS. An ending is
  * shown on words that carry it, and A1.1's Wortfeld happens to contain exactly
- * one (-ung: die Entschuldigung). These five are the -heit/-keit/-schaft/-chen/
- * -lein demonstrations; they are the card's subject matter, not its situation.
+ * one (-ung: die Entschuldigung). These three are the -heit/-keit/-schaft
+ * demonstrations; they are the card's subject matter, not its situation.
+ * `Mädchen` and `Brötchen` left with the -chen/-lein line (DaF review #23,
+ * Minor 2): the course contains zero diminutives, so the group is not taught.
  */
-const GENDER_ENDING_EXAMPLES = ['Freiheit', 'Möglichkeit', 'Freundschaft', 'Mädchen', 'Brötchen'];
+const GENDER_ENDING_EXAMPLES = ['Freiheit', 'Möglichkeit', 'Freundschaft'];
 
 /**
  * Wortfeld words a card needs BEFORE the Lektion that teaches them. Kept to the
@@ -585,6 +614,9 @@ test('every example noun stands in the Wortfeld the course has taught by that Le
     // "Namen", "Artikel" covers "Possessivartikel".
     const covered = (token) => {
       const low = token.toLowerCase();
+      // The letter names are matched exactly (see ALPHABET_NAME_TOKENS): a closed class of
+      // capitalised names that must never bleed into prefix/suffix matching.
+      if (ALPHABET_NAME_TOKENS.has(low)) return true;
       return [...allowed, ...forms].some((form) => low === form || low.startsWith(form) || low.endsWith(form));
     };
 
@@ -834,7 +866,8 @@ const GRAMMAR_TERMS = [
   'richtig', 'falsch', 'feste',
   'direkt', 'dahinter', 'vorn', 'hinten',
   'geschrieben', 'geschriebene', 'geschriebenen', 'gesprochen',
-  'ung', 'heit', 'keit', 'schaft', 'chen', 'lein',
+  // `chen` and `lein` left with the -chen/-lein card line (DaF review #23, Minor 2).
+  'ung', 'heit', 'keit', 'schaft',
 ];
 
 /**

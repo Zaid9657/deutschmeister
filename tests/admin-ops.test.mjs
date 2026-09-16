@@ -65,7 +65,11 @@ test('gateReads names the field the access gate actually reads', () => {
 
 test('PRODUCT_KEYS equals the keys the webhook can deliver and pricing.js declares', () => {
   const src = read('netlify/functions/lemonsqueezy-webhook.mjs');
-  const fromWebhook = [...src.matchAll(/LEMONSQUEEZY_[A-Z0-9_]+_VARIANT_ID:\s*'([a-z0-9_]+)'/g)].map((m) => m[1]);
+  // Course/level products only: the speaking top-up (TOPUP_VARIANT_ENV) is
+  // not manually grantable — a manual purchases row would grant no seconds,
+  // which is exactly the dishonest state PRODUCT_KEYS exists to prevent.
+  const courseBlock = src.slice(src.indexOf('const COURSE_VARIANT_ENV'), src.indexOf('};', src.indexOf('const COURSE_VARIANT_ENV')));
+  const fromWebhook = [...courseBlock.matchAll(/LEMONSQUEEZY_[A-Z0-9_]+_VARIANT_ID:\s*'([a-z0-9_]+)'/g)].map((m) => m[1]);
   assert.deepEqual([...PRODUCT_KEYS].sort(), [...new Set(fromWebhook)].sort());
   const fromPricing = [...Object.keys(COURSES), ...Object.keys(LEVEL_COURSES)];
   for (const k of fromPricing) assert.ok(PRODUCT_KEYS.includes(k), `${k} from pricing.js missing`);

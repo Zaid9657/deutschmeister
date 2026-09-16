@@ -87,6 +87,9 @@ export const COUNTRY_NAMES = [
   'Sudan', 'Jemen', 'Nepal', 'Senegal', 'Portugal', 'Dänemark', 'Ungarn', 'Palästina', 'Südafrika',
   'Venezuela', 'Ecuador', 'Brasilien', 'Bolivien', 'Kolumbien', 'Libanon', 'Ukraine', 'Montenegro',
   'Mazedonien', 'Belarus',
+  // ROUND 24 (DaF review #23, Minor 30): the probe against the world found four more the
+  // composition does not build — plus Nordkorea, the same class as Südkorea.
+  'Ruanda', 'Südkorea', 'Nordkorea', 'Vereinigte Staaten', 'Jamaika',
 ];
 
 export const LANGUAGE_NAMES = [
@@ -95,4 +98,7 @@ export const LANGUAGE_NAMES = [
   'Bambara', 'Mandinka', 'Lingala', 'Suaheli', 'Swahili', 'Kinyarwanda', 'Kirundi', 'Edo', 'Krio',
   'Kurmandschi', 'Sorani', 'Tagalog', 'Filipino', 'Thai', 'Mandarin', 'Latein',
   'Esperanto', 'Romani', 'Romanes', 'Quechua', 'Guarani', 'Papiamento', 'Pidgin', 'Kreol',
+  // ROUND 24 (DaF review #23, Minor 29): the languages of a North-African and Afghan classroom as
+  // the learners themselves write them — Tamazight and Darija (Morocco), Pashto beside `Paschtu`.
+  'Tamazight', 'Darija', 'Pashto',
 ];

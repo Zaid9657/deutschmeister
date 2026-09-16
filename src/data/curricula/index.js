@@ -35,6 +35,23 @@ export function curriculumPath(curriculum) {
     const cp = curriculum.checkpoints.find((c) => c.afterLektion === l.nr);
     if (cp) path.push({ kind: 'checkpoint', id: cp.id, nr: cp.nr, title: cp.title, minutes: 12, afterLektion: l.nr });
   }
-  path.push({ kind: 'leveltest', id: `${curriculum.level}-leveltest`, title: `Abschlusstest ${curriculum.code}`, minutes: 65, testSlug: curriculum.testSlug });
+  // Both rebuilt A1 completion tests are deliberately shortened 40-minute
+  // passes (15 Hören + 15 Lesen + 10 Schreiben). Do not display the old
+  // full-test estimate on the course path.
+  path.push({ kind: 'leveltest', id: `${curriculum.level}-leveltest`, title: `Abschlusstest ${curriculum.code}`, minutes: 40, testSlug: curriculum.testSlug });
   return path;
+}
+
+/** Program-progress key shared by the course home and route-level access checks. */
+export const curriculumProgramKey = (level) => `${String(level || '').toLowerCase().replace('.', '')}_course`;
+
+/**
+ * A curriculum node is reachable when it is the first node, already complete,
+ * or immediately follows a completed node. Keeping this rule pure lets the
+ * course map and the actual routes enforce the same sequence.
+ */
+export function curriculumNodeUnlocked(path, nodeId, doneSet) {
+  const index = (path || []).findIndex((node) => node.id === nodeId);
+  if (index < 0 || !(doneSet instanceof Set)) return false;
+  return index === 0 || doneSet.has(nodeId) || doneSet.has(path[index - 1].id);
 }

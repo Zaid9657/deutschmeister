@@ -183,6 +183,15 @@ const caseFlag = (entry, accepted) => {
 
 export function buildCardIndex(curriculum) {
   const index = new Map();
+  // A PATTERN card's content is its Lektion's notice, so two slugs whose first
+  // appearance is the SAME Lektion would render two cards with identical front
+  // and back — one card twice in the deck. Measured (DaF review #23, Minor 6):
+  // L2's `numbers` is a practice-only routing slug that is primary nowhere, so
+  // it duplicated the `verb-sein` card („sein: ich bin, du bist, Sie sind")
+  // under a second key. Deduped by CONTENT, not by a slug list: the first key
+  // wins, a later key with nothing new to show is skipped, and a review row
+  // whose key no longer resolves is simply skipped at render (see above).
+  const seenPatternContent = new Set();
   for (const lektion of curriculum?.lektionen || []) {
     for (const word of lektion.wortfeld || []) {
       index.set(wordCardKey(word), {
@@ -198,6 +207,9 @@ export function buildCardIndex(curriculum) {
     }
     for (const slug of lektion.practiceRule?.topics || lektion.grammarSlugs || []) {
       if (index.has(patternCardKey(slug))) continue;
+      const contentKey = `${lektion.notice?.title || slug} ${lektion.notice?.bodyDe || ''}`;
+      if (seenPatternContent.has(contentKey)) continue;
+      seenPatternContent.add(contentKey);
       index.set(patternCardKey(slug), {
         kind: cardKinds.PATTERN,
         front: lektion.notice?.title || slug,

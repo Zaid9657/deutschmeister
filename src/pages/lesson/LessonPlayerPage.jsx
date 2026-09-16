@@ -22,6 +22,11 @@ import SpeakingStage from '../../components/lesson/SpeakingStage.jsx';
 import WritingStage from '../../components/lesson/WritingStage.jsx';
 import RecapStage from '../../components/lesson/RecapStage.jsx';
 import Card from '../../components/ui/Card.jsx';
+import useCurriculumNodeAccess from '../../hooks/useCurriculumNodeAccess.js';
+import A11PreviewComplete from '../../components/course/A11PreviewComplete.jsx';
+import { useSubscription } from '../../contexts/SubscriptionContext';
+import { A11_PREVIEW_LESSONS, A11_PRODUCT_KEY } from '../../lib/guidedCourseAccess.js';
+import { trackA11PreviewLessonCompleted } from '../../lib/funnelTracking.js';
 
 // The lesson player: route /course/:level/l/:nr, one stage per screen
 // (docs/course-standard-2026-09-12.md §3). Everything it shows comes from the
@@ -136,6 +141,21 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
 
   const accuracy = firstAttemptAccuracy(attempts);
   const status = masteryStatus(accuracy);
+
+  // A1.1 preview seam (2026-09-15 launch plan Task 2): a learner without the
+  // course who just finished the LAST preview lesson gets the purchase
+  // bridge on the recap instead of a "next lesson" they cannot open.
+  const { hasProduct, hasActiveSubscription } = useSubscription();
+  const entitled = hasProduct(A11_PRODUCT_KEY) || hasActiveSubscription();
+  const previewComplete = curriculum.level === 'a1.1' && !entitled && lektion.nr === A11_PREVIEW_LESSONS;
+
+  // Preview-lesson completions are the funnel's spine; fire once per recap.
+  useEffect(() => {
+    if (stage.kind !== 'recap') return;
+    if (curriculum.level !== 'a1.1' || entitled) return;
+    if (lektion.nr > A11_PREVIEW_LESSONS) return;
+    trackA11PreviewLessonCompleted(lektion.nr, 'direct');
+  }, [stage.kind, curriculum.level, entitled, lektion.nr]);
 
   const recordResult = useCallback((item, { correct, errorTag, result }) => {
     setAttempts((prev) => [...prev, { itemId: item.id, stage: item.stage || 'practice', correct, errorTag, result }]);
@@ -254,6 +274,9 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
           level={curriculum.level}
           accuracy={accuracy}
           status={status}
+          // The third preview lesson ends at the purchase bridge, not at a
+          // "next lesson" the learner cannot open (launch plan Task 2).
+          afterSummary={previewComplete ? <A11PreviewComplete source="preview-complete" /> : null}
           nextLabel={nextTarget.label}
           onBack={back}
           onNext={() => navigate(nextTarget.to)}
@@ -306,6 +329,7 @@ export default function LessonPlayerPage() {
   const [poolFailed, setPoolFailed] = useState(false);
   const lektionNr = Number(nr);
   const lektion = curriculum ? (curriculum.lektionen || []).find((l) => l.nr === lektionNr) : null;
+  const access = useCurriculumNodeAccess(curriculum, lektion?.id);
 
   useEffect(() => {
     if (!curriculum) return;
@@ -324,6 +348,14 @@ export default function LessonPlayerPage() {
 
   if (!curriculum) return <Navigate to="/courses/" replace />;
   if (!lektion) return <Navigate to={courseHome(curriculum.level)} replace />;
+  if (!access.loaded) {
+    return (
+      <div className="min-h-screen bg-paper font-body text-graphite">
+        <p className="mx-auto max-w-2xl px-4 py-16 text-sm italic">Kursfortschritt wird geprüft …</p>
+      </div>
+    );
+  }
+  if (!access.allowed) return <Navigate to={courseHome(curriculum.level)} replace />;
   if (!pool && !poolFailed) {
     return (
       <div className="min-h-screen bg-paper font-body text-graphite">

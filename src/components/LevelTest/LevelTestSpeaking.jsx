@@ -35,14 +35,14 @@ const LevelTestSpeaking = ({ onComplete, onSkip }) => {
       const res = await fetch('/api/speaking/speaking-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(await getAuthHeaders()) },
-        body: JSON.stringify({ action: 'start', mode: 'placement' }),
+        body: JSON.stringify({ action: 'start', mode: 'placement', idempotencyKey: crypto.randomUUID() }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || 'Failed to create speaking session');
-      if (!data.session_token) throw new Error('Failed to create speaking session');
+      if (!data.sessionToken) throw new Error('Failed to create speaking session');
       setSession({
-        sessionToken: data.session_token,
-        plannedMinutes: data.planned_minutes || 5,
+        sessionToken: data.sessionToken,
+        plannedMinutes: 5,
         opening: { text: data.replyText, audioBase64: data.replyAudioBase64 },
       });
       setStage('session');

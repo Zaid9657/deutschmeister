@@ -9,7 +9,7 @@
 // synced copy honest. If a price changes, change src/data/pricing.js first and
 // let the failing test point here.
 
-export const MONTHLY_PRICE_EUR = 9.99;
+export const MONTHLY_PRICE_EUR = 12.99;
 
 /** English price convention: €9.99 (mirrors pricing.js `eur`). */
 export const eur = (v) => `€${v.toFixed(2)}`;

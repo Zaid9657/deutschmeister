@@ -17,6 +17,7 @@ const SUPPRESSED_ROUTES = [
   '/speaking',
   '/schreiben',
   '/modelltest',
+  '/course',
 ];
 
 const FloatingIntroButton = () => {

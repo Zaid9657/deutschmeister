@@ -41,7 +41,7 @@ import {
   VOCAB_WORD_COUNT,
   ANON_DAILY_LIMIT,
   PRO_DAILY_LIMIT,
-  PRO_SPEAKING_SESSIONS_PER_MONTH,
+  SPEAKING_MONTHLY_MINUTES,
   PRO_WRITING_EVALUATIONS_PER_MONTH,
   TRIAL_DAYS,
   FREE_LEVEL_LABEL,
@@ -101,7 +101,7 @@ const STEPS = [
     n: '3',
     accent: 'bg-accent-limette text-ink',
     title: 'Speak and write before it counts',
-    body: `The speaking test is the part nobody can cram. Practise conversations with the AI coach (${PRO_SPEAKING_SESSIONS_PER_MONTH} sessions a month on Pro) and get exam letters marked against the publicly documented criteria (${PRO_WRITING_EVALUATIONS_PER_MONTH} a month on Pro).`,
+    body: `The speaking test is the part nobody can cram. Practise conversations with the AI coach (${SPEAKING_MONTHLY_MINUTES} minutes a month on Pro) and get exam letters marked against the publicly documented criteria (${PRO_WRITING_EVALUATIONS_PER_MONTH} a month on Pro).`,
     href: '/speaking/',
     linkLabel: 'Try a speaking session',
   },
@@ -231,7 +231,7 @@ const nf = (n) => n.toLocaleString('en-US');
             {MARQUEE.map((m) => (
               <span class={`flex items-center gap-2 whitespace-nowrap rounded-pill border px-3.5 py-1.5 text-[0.9375rem] font-semibold ${KASUS_CLASS[m.k]}`}>
                 {m.t}
-                <span class="font-data text-[0.625rem] font-bold tracking-[0.13em] opacity-70">{m.a}</span>
+                <span class="font-data text-[0.625rem] font-bold tracking-[0.13em]">{m.a}</span>
               </span>
             ))}
           </div>
@@ -281,7 +281,7 @@ const nf = (n) => n.toLocaleString('en-US');
       <div class="relative mt-10">
         <!-- The connector: draws itself in when the section reveals -->
         <svg class="path-connector absolute -top-5 left-0 hidden w-full lg:block" viewBox="0 0 1200 40" fill="none" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M75 30 C 250 -10, 380 50, 525 22 S 850 0, 1125 26" stroke="#0F766E" stroke-opacity="0.35" stroke-width="3" stroke-dasharray="10 10" stroke-linecap="round" pathLength="100" />
+          <path d="M75 30 C 250 -10, 380 50, 525 22 S 850 0, 1125 26" stroke="#0F766E" stroke-opacity="0.32" stroke-width="3" stroke-dasharray="10 10" stroke-linecap="round" pathLength="100" />
         </svg>
         <ol class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
           {STEPS.map((s, i) => (
@@ -354,7 +354,7 @@ const nf = (n) => n.toLocaleString('en-US');
           <a href="/speaking/" class="reveal flex flex-col rounded-clay border border-rule bg-white p-6 shadow-raise transition-all duration-150 ease-snap hover:-translate-y-0.5 hover:shadow-raise-lg" style="--rd:360ms">
             <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">AI speaking coach</p>
             <p class="mt-3 flex-1 text-[0.875rem] leading-relaxed text-graphite">Hold a conversation at your level; get it back marked for grammar, vocabulary and pronunciation.</p>
-            <p class="mt-3 font-data text-[0.75rem] text-graphite">{PRO_SPEAKING_SESSIONS_PER_MONTH} sessions/month on Pro</p>
+            <p class="mt-3 font-data text-[0.75rem] text-graphite">{SPEAKING_MONTHLY_MINUTES} minutes/month on Pro</p>
           </a>
 
           <!-- X-Ray: the wide bottom tile -->
@@ -390,7 +390,7 @@ const nf = (n) => n.toLocaleString('en-US');
             <tbody>
               {[
                 { feature: 'Cost per month', us: eur(PLANS.monthly.price), group: '€150+', tutor: '€50–100', apps: '€0–15' },
-                { feature: 'Speaking practice', us: `${PRO_SPEAKING_SESSIONS_PER_MONTH} sessions a month`, group: 'Minutes per class', tutor: 'One-to-one', apps: 'None' },
+                { feature: 'Speaking practice', us: `${SPEAKING_MONTHLY_MINUTES} minutes a month`, group: 'Minutes per class', tutor: 'One-to-one', apps: 'None' },
                 { feature: 'Exam writing feedback', us: `${PRO_WRITING_EVALUATIONS_PER_MONTH} letters a month`, group: 'Teacher-dependent', tutor: 'By arrangement', apps: '—' },
                 { feature: 'Timed practice test', us: 'Built in (telc B1)', group: 'Sometimes', tutor: 'Rarely', apps: '—' },
                 { feature: 'Available', us: 'Any hour', group: 'Fixed timetable', tutor: 'By appointment', apps: 'Any hour' },

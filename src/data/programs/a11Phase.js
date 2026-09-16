@@ -113,21 +113,30 @@ const gReview = (slug, minutes = 20) => {
 const hubReview = (id, title, minutes) => ({ id, type: 'review', title, minutes, href: '/grammar/a1.1/', external: true });
 
 // -----------------------------------------------------------------------
-// Speaking — the 8 REAL published A1.1 missions
+// Speaking — the 12 published A1.1 missions (one per Lektion)
 // -----------------------------------------------------------------------
-// Sourced from scratchpad/source/speaking-missions-a1.json (read 2026-09-05):
-// filtering that file for level === "A1.1" gives 8 rows (mission_order 1–8),
-// not the 9 the brief mentioned — this table is the real, verified count.
-// title_de is copied verbatim (derived, never retyped from memory).
+// Sourced from migrations/2026-09-17-a11-speaking-route.sql (the 30-day-route
+// binding: mission_order N = Lektion N of src/data/curricula/a11.js). The
+// migration is WRITTEN, pending owner application — until then the live table
+// still carries the old 8-row mapping; tests/a11-speaking-route-content.test.mjs
+// pins that these orders/titles match the migration source. title_de is copied
+// verbatim (derived, never retyped from memory). This 28-day plan schedules 8
+// of the 12 as first attempts; missions 9–12 belong to the course player's own
+// Lektionen 9–12 (mission 12 is the Abschlussmission the Abschlusstest hands
+// off to, so it is deliberately NOT a plan item here).
 const A11_SPEAKING_MISSIONS = [
   { order: 1, titleDe: 'Ankunft im Hostel' },
-  { order: 2, titleDe: 'Auf dem Flohmarkt' },
-  { order: 3, titleDe: 'Im Klassenzimmer' },
-  { order: 4, titleDe: 'Einkaufen für die Wohnung' },
-  { order: 5, titleDe: 'Über Leute sprechen' },
-  { order: 6, titleDe: 'Neue Nachbarn' },
-  { order: 7, titleDe: 'Im Café' },
-  { order: 8, titleDe: 'Ein ganz normaler Tag' },
+  { order: 2, titleDe: 'Anmeldung im Bürgerbüro' },
+  { order: 3, titleDe: 'Über Leute sprechen' },
+  { order: 4, titleDe: 'Auf dem Flohmarkt' },
+  { order: 5, titleDe: 'Im Klassenzimmer' },
+  { order: 6, titleDe: 'Der erste Tag im Büro' },
+  { order: 7, titleDe: 'Freizeit und Hobbys' },
+  { order: 8, titleDe: 'Ein Termin beim Arzt' },
+  { order: 9, titleDe: 'Im Café' },
+  { order: 10, titleDe: 'Am Bahnhof' },
+  { order: 11, titleDe: 'Mein Tag' },
+  { order: 12, titleDe: 'Abschlussmission: Die Einladung' },
 ];
 const missionByOrder = (order) => {
   const m = A11_SPEAKING_MISSIONS.find((x) => x.order === order);
@@ -138,8 +147,8 @@ const missionByOrder = (order) => {
 // Speaking missions have no per-mission SPA route (App.jsx: a single
 // "/speaking" route with no :level or :missionId param) — same generic hub
 // href startDeutsch1.js and telcB1Komplett.js use ("/speaking/", trailing
-// slash: case 2 of the trailing-slash rule, a prerendered hub). Each of the 8
-// real missions is used at most once by title.
+// slash: case 2 of the trailing-slash rule, a prerendered hub). Each mission
+// is used at most once by title as a first attempt.
 const speaking = (id, order, minutes = 15) => ({
   id,
   type: 'speaking',
@@ -458,7 +467,7 @@ const WEEKS = [
     intro:
       'Possessivartikel, Präsens regelmäßiger Verben, trennbare Verben, Zeit und Datum — die letzten vier ' +
       'Grammatikthemen; damit sind alle zwölf A1.1-Themen behandelt. Dazu die zweite Schreibaufgabe, deine ' +
-      'letzten beiden der acht Sprechmissionen, und die Hörübungen 1–3 kommen mit neuen Diktat-Aufgaben (Zahlen, ' +
+      'letzten beiden geplanten Sprechmissionen, und die Hörübungen 1–3 kommen mit neuen Diktat-Aufgaben (Zahlen, ' +
       'Uhrzeiten, Termine) zurück. Du bist bereit für Woche 4, wenn alle zwölf Themen einmal wiederholt sind.',
     days: [
       {
@@ -510,7 +519,10 @@ const WEEKS = [
       },
       {
         label: 'Tag 24',
-        items: [readingSchilder('d24-reading'), listeningReuse('d24-listening', 6), vocab('d24-vocab', A11_VOCAB_CATEGORIES.FORMS), speakingRepeat('d24-speaking', 6)],
+        // Repeat order 2 (Anmeldung im Bürgerbüro, first attempt Tag 5), not 6: the repeat is
+        // framed as Teil-1 rehearsal, and after the 2026-09-17 realignment order 6 is the office
+        // mission while order 2 is the Angaben-zur-Person mission Teil 1 actually tests.
+        items: [readingSchilder('d24-reading'), listeningReuse('d24-listening', 6), vocab('d24-vocab', A11_VOCAB_CATEGORIES.FORMS), speakingRepeat('d24-speaking', 2)],
       },
       {
         label: 'Tag 25',

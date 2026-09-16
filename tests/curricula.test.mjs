@@ -337,7 +337,7 @@ test('rule 7: pretest, Phonetik, Hören, Sprechen, Schreiben and the links', () 
     assert.ok(open.teil.startsWith('Sprechen') && l.examTeile.includes(open.teil));
     assert.equal(open.hintWords.length, 3);
     if (open.missionOrder !== null) {
-      assert.ok(open.missionOrder >= 1 && open.missionOrder <= 8);
+      assert.ok(open.missionOrder >= 1 && open.missionOrder <= 12);
       assert.ok(!missions.has(open.missionOrder), `mission ${open.missionOrder} linked twice`);
       missions.add(open.missionOrder);
     }
@@ -371,7 +371,10 @@ test('rule 7: pretest, Phonetik, Hören, Sprechen, Schreiben and the links', () 
       readings.add(l.links.readingOrder);
     }
   }
-  assert.equal(missions.size, 8, 'all eight published A1.1 speaking missions are used');
+  // 12 since 2026-09-16: one mission per Lektion (missionOrder N = Lektion N),
+  // seeded/realigned by migrations/2026-09-17-a11-speaking-route.sql. The
+  // one-to-one binding itself is pinned in tests/a11-speaking-route-content.test.mjs.
+  assert.equal(missions.size, 12, 'all twelve published A1.1 speaking missions are used');
 });
 
 test('rule 8: 15 minutes per Lektion, four checkpoints, hoursTotal derived and inside 50–60 h', () => {
@@ -604,15 +607,16 @@ test('every masculine named in a Wortfeld gloss „(m: …)“ stands on an inpu
 
 test('rule 13: a speaking task without a mission is a prompt the speaking page never receives', () => {
   // SpeakingStage.jsx appends `&mission=` only when missionOrder is set; without it the learner
-  // lands on the generic /speaking page with some other mission of the level. The UI agent is
-  // making the prompt itself travel in saveCourseContext — then this ratchet goes to 0.
-  assert.ok(MAX_MISSIONLESS_LEKTIONEN <= 4, 'the ratchet may only ever be lowered');
+  // lands on the generic /speaking page with some other mission of the level. Since 2026-09-16
+  // every Lektion links its own mission (missionOrder N = Lektion N, seeded/realigned by
+  // migrations/2026-09-17-a11-speaking-route.sql), so the ratchet sits at its floor: 0.
+  assert.equal(MAX_MISSIONLESS_LEKTIONEN, 0, 'the ratchet reached its floor and may never rise');
   const missionless = missionlessLektionen(CURRICULUM_A11);
   assert.ok(
     missionless.length <= MAX_MISSIONLESS_LEKTIONEN,
     `Lektionen without a speaking mission: ${missionless.join(', ')}`,
   );
-  assert.deepEqual(missionless, [7, 10, 11, 12]);
+  assert.deepEqual(missionless, []);
 });
 
 test('A1.1: every ratchet equals its measurement — a ratchet with slack is not a rule', () => {
@@ -978,6 +982,27 @@ test('rule 15b: the Satzklammer is read off the SHAPE, never off a list of verb 
     'Das Heft ist grün.',
   ]) {
     assert.deepEqual(constructionHits(de).map((h) => h.slug), [], de);
+  }
+
+  // DaF review #23, Minor 8. FUNCTION_WORD_RE used to carry „the adjectives that
+  // most often stand before a noun in this material" — an OPEN class inside a
+  // list whose licence is being closed, so every UNLISTED adjective read as a
+  // finite verb: „Die grüne Lampe ist an." reported a Satzklammer that does not
+  // exist. The attributive adjective is recognised by POSITION now (determiner +
+  // lower-case verb-shaped word + capitalised noun), which holds for the class:
+  for (const de of [
+    'Die grüne Lampe ist an.',            // the measured false alarm
+    'Die blaue Tür ist zu.',              // any colour, not the listed ones
+    'Eine kleine Lampe ist an.',          // unlisted adjective after ein-word
+  ]) {
+    assert.ok(!constructionHits(de).some((h) => h.slug === 'separable-verbs-intro'),
+      `${de} — an attributive adjective is not the front half of a clamp`);
+  }
+  // …and the frame swallows no real verb: German puts no finite verb between a
+  // determiner and its noun, so a genuine clamp next to a noun phrase stays seen.
+  for (const de of ['Diese Lampe mache ich an.', 'Den Stuhl kaufe ich morgen ein.']) {
+    assert.ok(constructionHits(de).some((h) => h.slug === 'separable-verbs-intro'),
+      `${de} — the adjective frame must not swallow a real Satzklammer`);
   }
 });
 
@@ -2171,3 +2196,38 @@ test('the untaught-lexis gate is non-circular: the lexicon does not read the poo
   assert.ok(!after.has('honig'));
 });
 
+
+// ---------------------------------------------------------------------------
+// DaF review #23, Minor 12 (the register pair). The L2 model text opened with
+// „Sehr geehrte Damen und Herren" and closed with „Viele Grüße" — a formal
+// Anrede over an informal Gruß, in the one text the course holds up as the
+// model for a formal registration, for eight rounds. The rule, not the id:
+// EVERY live Mitteilung sample keeps opening and closing in one register — a
+// „Sehr geehrte…" Anrede takes „Mit freundlichen Grüßen", never a Grüße-Gruß,
+// and „Mit freundlichen Grüßen" never closes a Hallo/Liebe note. Live levels
+// only: the paused A1.2 draft carries three measured violations (L2/L4/L6,
+// „Sehr geehrte…" over „Viele Grüße") for the round that reopens it.
+// ---------------------------------------------------------------------------
+test('every Mitteilung sample pairs its Anrede and its Gruß in one register — REVIEW #23 Minor 12', () => {
+  const FORMAL_OPENING = /^Sehr geehrte/;
+  const FORMAL_CLOSING = /Mit freundlichen Grüßen|Hochachtungsvoll/;
+  const INFORMAL_CLOSING = /(Viele|Liebe) Grüße|Bis bald|Bis später|Tschüss/;
+  let measured = 0;
+  for (const c of Object.values(CURRICULA)) {
+    for (const l of c.lektionen || []) {
+      const s = l.schreiben || {};
+      if (s.kind !== 'mitteilung' || !s.sample) continue;
+      measured += 1;
+      if (FORMAL_OPENING.test(s.sample)) {
+        assert.match(s.sample, FORMAL_CLOSING,
+          `${c.level} L${l.nr}: a formal Anrede needs a formal Gruß — sample: „${s.sample.slice(-50)}"`);
+        assert.ok(!INFORMAL_CLOSING.test(s.sample),
+          `${c.level} L${l.nr}: „Sehr geehrte…" closed with an informal Gruß again`);
+      } else {
+        assert.ok(!FORMAL_CLOSING.test(s.sample),
+          `${c.level} L${l.nr}: an informal Anrede must not close with „Mit freundlichen Grüßen"`);
+      }
+    }
+  }
+  assert.ok(measured >= 6, `only ${measured} Mitteilung samples measured — the pin would be vacuous`);
+});

@@ -30,6 +30,69 @@ Then paste the three id pairs to the agent: it sets `LEMONSQUEEZY_COURSE_A1_2_VA
 scope) via the Netlify connector, merges the catalogue PR and redeploys. Afterwards archive the
 five 2026-09-03 variants (2088862, 2088867, 2088868, 2088869, 2088871).
 
+**DeutschStart A1.1 launch — the whole Lemon Squeezy side in one pass** (2026-09-16 rebuild).
+Three things do not exist in the store yet: the €39 A1.1 course, the €6.99 speaking top-up,
+and the re-priced AI Coach variants. The old €9.99/€79.99 subscription variants must NOT be
+edited — existing subscribers are grandfathered on them while continuously subscribed, and
+changing a variant's price changes what they are billed. Paste-ready:
+
+```
+You are working in Lemon Squeezy, store 309512 ("DeutschMeister" — NOT the MedMeister store).
+Verify you are in store 309512 before changing anything. Do not touch, re-price, archive or
+unpublish any existing product or variant except where a step says so explicitly. If a step is
+ambiguous or something already exists under a different name, stop and tell me instead of guessing.
+
+Do these four things, then report back.
+
+1) NEW VARIANT on the existing one-time product 1336941
+   Name: "DeutschStart A1.1"
+   Price: EUR 39.00, one-time
+   Tax category: "SaaS - personal use"
+   Description: "The 30-day A1.1 course: 12 real-life situations, in-app lessons with instant
+   feedback, 4 checkpoints, spaced review, 12 AI-graded writing tasks and 12 guided speaking
+   missions. One payment, lifetime access. The first three lessons are free to try."
+   Publish it.
+
+2) NEW ONE-TIME PRODUCT (its own product, not a variant of 1336941)
+   Name: "60 Sprechminuten"
+   Price: EUR 6.99, one-time
+   Tax category: "SaaS - personal use"
+   Description: "3,600 extra speaking seconds for AI speaking practice. They never expire."
+   Publish it.
+
+3) TWO NEW VARIANTS on the EXISTING AI Coach subscription product
+   First find the subscription product that currently carries the EUR 9.99/month and
+   EUR 79.99/year variants. Do not change those two variants in any way - people are still
+   billed on them. Add two NEW variants to that same product:
+     "AI Coach Monthly" = EUR 12.99 / month, recurring
+     "AI Coach Yearly"  = EUR 129.00 / year, recurring
+   Tax category: "SaaS - personal use". Publish both.
+   If you cannot find that product, stop and tell me what subscription products exist.
+
+4) REDIRECTS
+   Set "Redirect after purchase" to https://deutsch-meister.de/subscription/success
+   for the new top-up product and for the AI Coach subscription product. Leave product
+   1336941's existing redirect as it is if it already points there.
+
+REPORT BACK, for each of the four new variants (A1.1, top-up, AI Coach Monthly, AI Coach Yearly):
+  - the exact variant name
+  - the NUMERIC variant id
+  - the checkout share-link UUID (the /buy/<uuid> link)
+Also confirm: the old EUR 9.99 and EUR 79.99 variants are untouched and still published.
+```
+
+Then paste the four id pairs back to the agent. It sets, via the Netlify connector:
+
+| Variant | Functions scope (numeric id) | Builds scope (checkout UUID) |
+|---|---|---|
+| DeutschStart A1.1 | `LEMONSQUEEZY_COURSE_A1_1_VARIANT_ID` | `VITE_LEMONSQUEEZY_COURSE_A1_1_VARIANT_ID` + `PUBLIC_LEMONSQUEEZY_COURSE_A1_1_VARIANT_ID` |
+| 60 Sprechminuten | `LEMONSQUEEZY_SPEAKING_TOPUP_60_VARIANT_ID` | `VITE_LEMONSQUEEZY_SPEAKING_TOPUP_60_VARIANT_ID` |
+| AI Coach Monthly | — (subscriptions route by webhook payload) | `VITE_LEMONSQUEEZY_AI_COACH_MONTHLY_VARIANT_ID` |
+| AI Coach Yearly | — | `VITE_LEMONSQUEEZY_AI_COACH_YEARLY_VARIANT_ID` |
+
+Until each id is set the matching buy surface stays hidden by design — there is no fallback id,
+so a missing variant can never open a dead checkout.
+
 **Set the post-purchase redirect** (so buyers land on our success page, not LS's receipt):
 ```
 In store 309512, set product <id>'s "Redirect after purchase" URL to
@@ -120,6 +183,90 @@ git commit -m "chore(audio): A1.1 course audio manifest from the Azure run"
 Then paste the summary line back to the agent. Until the manifest lands, every screen falls
 back to the browser voice and honestly labels itself "Computerstimme" instead of "Aufnahme" —
 nothing is broken, it is just not yet the promised product.
+
+---
+
+## Render the six new A1.1 listening exercises (REQUIRED before their migration goes live)
+
+**Status: pending — nothing is rendered yet.** `migrations/2026-09-16-a1-1-course-linked-practice.sql`
+inserts listening exercises 7–12 for A1.1 (plus 2 reading lessons — those need no audio) so that
+every course Lektion links one listening and one reading activity. The exercises are inserted with
+`status = 'pending'` and **no audio file exists at their storage paths**. The listening library
+lists exercises regardless of status, so do BOTH steps in one sitting, in this order:
+
+1. **Render + upload the six MP3s** (below), then
+2. **apply the migration** in the Supabase SQL editor, then mark them completed:
+
+```sql
+UPDATE public.listening_exercises SET status = 'completed'
+WHERE level = 'A1.1' AND exercise_number BETWEEN 7 AND 12;
+-- optionally also set total_duration_seconds per row once you know the file lengths
+```
+
+(Applying first is acceptable if the render follows within minutes — until the file exists, the
+exercise's play button 404s.)
+
+**How to render.** Azure Neural TTS, exactly like the course audio run above (same
+`AZURE_SPEECH_KEY`/`AZURE_SPEECH_REGION`): female turns = `de-DE-KatjaNeural`, male turns =
+`de-DE-ConradNeural`, rate `-20%` (the exercises store `speed = '-20%'`), ~1.5 s silence between
+turns and ~3 s between dialogues, concatenate each exercise into ONE MP3 and upload it to the
+public `audio` bucket at the exact path below (folder is UPPERCASE `A1.1`; storage paths are
+case-sensitive). The transcripts here are byte-identical to the `listening_dialogues.transcript`
+rows the migration inserts — if you change a word here, change the migration too.
+
+**Exercise 7 → `audio/listening/A1.1/exercise7.mp3`** („Im Bürgerbüro“, 3 Dialoge)
+
+> D1 — F: Guten Tag! Wie heißen Sie? / M: Ich heiße Omar Yildiz. / F: Buchstabieren Sie bitte
+> Yildiz. / M: Y-I-L-D-I-Z.
+> D2 — F: Was sind Sie von Beruf? / M: Ich bin Lehrer. Ich komme aus Österreich und wohne in Bremen.
+> D3 — F: Wie ist Ihre Telefonnummer? / M: Meine Telefonnummer ist null eins sieben drei, vier acht
+> neun sechs. / F: Danke. Sind Sie verheiratet? / M: Nein, ich bin ledig.
+
+**Exercise 8 → `audio/listening/A1.1/exercise8.mp3`** („Familie und Sprachen“, 3 Dialoge)
+
+> D1 — F: Hast du Geschwister? / M: Ja, ich habe einen Bruder und eine Schwester. / F: Wie alt ist
+> dein Bruder? / M: Er ist achtzehn.
+> D2 — M: Welche Sprachen sprichst du? / F: Ich spreche Deutsch, Englisch und Arabisch. / M: Spricht
+> deine Mutter auch Deutsch? / F: Nein, sie spricht nur Arabisch.
+> D3 — M: Ist das deine Familie? / F: Ja. Das sind meine Eltern und mein Sohn. Mein Vater ist Arzt.
+
+**Exercise 9 → `audio/listening/A1.1/exercise9.mp3`** („Im Deutschkurs“, 3 Dialoge)
+
+> D1 — F: Wo ist das Wörterbuch? / M: Das Wörterbuch ist hier. Es ist gelb. / F: Und wo ist mein
+> Heft? / M: Dein Heft ist da.
+> D2 — M: Ist der Stift schwarz? / F: Nein, der Stift ist blau. Der Bleistift ist grün.
+> D3 — F: Ist die Tafel schwarz? / M: Nein, die Tafel ist grün. Die Tür ist braun. / F: Und das
+> Fenster? / M: Das Fenster ist groß.
+
+**Exercise 10 → `audio/listening/A1.1/exercise10.mp3`** („Hobbys am Wochenende“, 3 Dialoge)
+
+> D1 — M: Was ist dein Hobby? / F: Ich spiele gern Fußball. Und du? / M: Ich höre gern Musik und ich
+> koche gern.
+> D2 — F: Was machst du am Wochenende? / M: Ich schwimme am Samstag. Am Sonntag lese ich. / F: Gehst
+> du auch ins Kino? / M: Ja, sehr gern.
+> D3 — M: Tanzt du gern? / F: Nein, ich tanze nicht gut. Ich mache jede Woche Sport.
+
+**Exercise 11 → `audio/listening/A1.1/exercise11.mp3`** („Nachrichten auf der Mailbox“, 3 Ansagen —
+one speaker each, phone-message pacing)
+
+> A1 — M: Hallo Lena, hier ist Tim. Ich kaufe am Freitag ein. Kommst du mit? Ich rufe dich am Abend
+> an.
+> A2 — F: Guten Tag, hier ist die Praxis Doktor Berg. Ihr Termin ist am Montag um halb neun. Bitte
+> kommen Sie pünktlich.
+> A3 — F: Hallo Tim, hier ist Ana. Ich stehe morgen um sechs Uhr auf. Ich hole dich um sieben ab.
+> Bring bitte Kuchen mit.
+
+**Exercise 12 → `audio/listening/A1.1/exercise12.mp3`** („Die Geburtstagsfeier“, 3 Dialoge)
+
+> D1 — F: Hallo Tim! Ich habe im Mai Geburtstag. Wir feiern am Samstag. Kommst du? / M: Ja, gern!
+> Bringe ich etwas mit? / F: Ja, bring bitte einen Salat mit.
+> D2 — M: Was kaufen wir für Ana? / F: Vielleicht ein Buch. Sie liest gern. / M: Gut, ich kaufe das
+> Geschenk am Freitag.
+> D3 — F: Wie viele Gäste kommen zur Party? / M: Zehn Gäste. Meine Mama und mein Papa kommen auch. /
+> F: Schön! Bis Samstag. Mach's gut!
+
+Then paste back: the six storage paths as confirmed uploads and the `UPDATE` row count (6). Total
+text is ≈340 words — well inside the free tier, cents at most.
 
 ---
 

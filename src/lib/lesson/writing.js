@@ -338,7 +338,11 @@ const CLOCK_RE = new RegExp(
   + `|\\bum\\s+(?:halb\\s+)?(?:\\d{1,2}(?:[.:]\\d{2})?|${NUMBER_WORD})(?:\\s*Uhr)?\\b|\\bum\\s+halb\\b`
   // „Ich komme gegen drei.“ — `gegen` + a number is an approximate clock time, `Uhr` or not
   // (DaF review #22, Minor 41).
-  + `|\\bgegen\\s+(?:halb\\s+)?(?:\\d{1,2}(?:[.:]\\d{2})?|${NUMBER_WORD})(?:\\s*Uhr)?\\b`,
+  + `|\\bgegen\\s+(?:halb\\s+)?(?:\\d{1,2}(?:[.:]\\d{2})?|${NUMBER_WORD})(?:\\s*Uhr)?\\b`
+  // „Ich komme um 15h.“ — the learner's short clock — and „von 9 bis 12“: a bounded span is two
+  // clock times even without `Uhr` (DaF review #23, Minor 41).
+  + '|\\b\\d{1,2}h\\b'
+  + `|\\bvon\\s+(?:\\d{1,2}(?:[.:]\\d{2})?|${NUMBER_WORD})\\s+bis\\s+(?:\\d{1,2}(?:[.:]\\d{2})?|${NUMBER_WORD})\\b`,
   'i',
 );
 /**
@@ -364,8 +368,10 @@ const WEEKDAY = '(?:montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonnaben
 const DAY_ADVERB = '(?:heute|morgen|übermorgen|uebermorgen)';
 /** The nouns a time of day is built from — after `am`, after `heute`, or fused to a weekday. */
 const TIME_OF_DAY_NOUN = '(?:morgen|vormittag|mittag|nachmittag|abend|nacht)';
+// A weekday COMPOSITE („Montagabend“, „Samstagvormittag“) is still a day — it names the weekday
+// (DaF review #23, Minor 31). A bare time of day („abends“) stays out: that is the Wann shape's.
 const DAY_RE = new RegExp(
-  `(?<!\\p{L})(?<!guten\\s+)(?:${WEEKDAY}|${DAY_ADVERB}|wochenende)(?!\\p{L})`,
+  `(?<!\\p{L})(?<!guten\\s+)(?:${WEEKDAY}(?:früh|${TIME_OF_DAY_NOUN})?|${DAY_ADVERB}|wochenende)(?!\\p{L})`,
   'iu',
 );
 /** The DAY read where it stands: sentence by sentence. */
@@ -617,10 +623,17 @@ const capitalise = (t) => {
  * language; in a Mitteilung the sentence separates the language from the adjective by case
  * („Ich bin arabisch.“ is a nationality — round 16), so the Mitteilung keeps its capital.
  */
-const isLanguageName = (t, { foldCase = false } = {}) => LANGUAGE_NAME_RE.test(foldCase ? capitalise(t) : t)
+// The fold folds the WHOLE value, not the first letter: „Sprache: ARABISCH“ is the language in
+// block capitals too (DaF review #23, Minor 27).
+const isLanguageName = (t, { foldCase = false } = {}) => LANGUAGE_NAME_RE.test(foldCase ? capitalise(String(t || '').toLowerCase()) : t)
   || LANGUAGE_NAME_SET.has(String(t || '').toLowerCase());
-/** The value of a language FIELD: „Arabisch, Deutsch“, „Dari“ — some word of it is a language. */
-const languageValueShape = (opts = {}) => ({ test: (value) => words(value).map(stripPunct).some((t) => isLanguageName(t, opts)) });
+/**
+ * The value of a language FIELD: „Arabisch, Deutsch“, „Dari“ — some word of it is a language.
+ * The slash is the form's own „und“: „Arabisch/Deutsch“ is two words (DaF review #23, Minor 29).
+ */
+const languageValueShape = (opts = {}) => ({
+  test: (value) => String(value || '').split(/[\s/]+/).map(stripPunct).filter(Boolean).some((t) => isLanguageName(t, opts)),
+});
 const LANGUAGE_VALUE_SHAPE = languageValueShape();
 
 /**
@@ -644,12 +657,14 @@ const NATIONALITY_SHAPE = {
  * „Familienname: Marokko“ and „Vorname: Arabisch“ fill the field with a value of another field's
  * kind, „Name: 12“ with none. A city („Vorname: Bremen“) is NOT caught: there is no world list of
  * cities and a surname may be one. ONE definition: the named field of the Mitteilung („Mein Name
- * ist Ana Ruiz“) and the name fields of the Formular read it alike.
+ * ist Ana Ruiz“) and the name fields of the Formular read it alike. The letters are UNICODE
+ * letters — „Ayşe“, „Yıldız“, „Kovač“, „Traoré“, „O'Neill“ are the names of the room, and an
+ * ASCII-plus-umlauts class refused every one of them (DaF review #23, Minor 28).
  */
 const nameValueShape = (opts = {}) => ({
   test: (value) => words(value).map(stripPunct).some((raw) => {
     const t = opts.foldCase ? capitalise(raw) : raw;
-    return /^[A-ZÄÖÜ][A-Za-zÄÖÜäöüß-]+$/.test(t) && t.length >= 2 && !isCountryName(t, { asName: true }) && !isLanguageName(t, opts);
+    return /^\p{Lu}[\p{L}'’-]+$/u.test(t) && t.length >= 2 && !isCountryName(t, { asName: true }) && !isLanguageName(t, opts);
   }),
 });
 const NAME_VALUE_SHAPE = nameValueShape();
@@ -684,7 +699,8 @@ const ANSWER_SHAPES = [
   // option that differs there); a row without `form` reads the field exactly as the Mitteilung.
   {
     on: ['nam', 'vornam', 'nachnam', 'familiennam'],
-    re: /\b(?:hei(?:ß|ss)\w*|nenn\w*)\b|\bich\s+bin\s+[A-ZÄÖÜ]/,
+    // `\p{Lu}`, not `[A-ZÄÖÜ]`: „Ich bin Çelik.“ opens with a capital too (Minor 28).
+    re: /\b(?:hei(?:ß|ss)\w*|nenn\w*)\b|\bich\s+bin\s+\p{Lu}/u,
     value: NAME_VALUE_SHAPE,
     form: nameValueShape,
   },
@@ -694,9 +710,12 @@ const ANSWER_SHAPES = [
   { on: ['staatsangehörigkei', 'staatsangehoerigkei', 'nationalitä', 'nationalitae'], re: NATIONALITY_SHAPE },
   { on: ['familienstand'], re: /\b(?:ledig|verheiratet|geschieden|verwitwet)\b/i },
   { on: ['uhrzei', 'zeit', 'termin'], re: CLOCK_RE, form: () => FORM_CLOCK_SHAPE },
-  { on: ['tag', 'wochentag'], re: DAY_OR_DATE_SHAPE },
+  { on: ['tag', 'wochentag'], re: DAY_OR_DATE_SHAPE, form: () => FORM_DAY_SHAPE },
   { on: ['preis', 'kost', 'geld'], re: PRICE_RE },
-  { on: ['zimm', 'person', 'anzahl', 'hausnumm', 'postleitzahl', 'plz'], re: NUMBER_VALUE_RE },
+  // The head-count row is its own row since round 24: on the FORM a count may be counted in the
+  // persons it names („Personen: ich und mein Mann“ — Minor 31); a Zimmer or a PLZ may not.
+  { on: ['person', 'anzahl'], re: NUMBER_VALUE_RE, form: () => anyOf(NUMBER_VALUE_RE, PERSON_PAIR_RE) },
+  { on: ['zimm', 'hausnumm', 'postleitzahl', 'plz'], re: NUMBER_VALUE_RE },
   { on: ['telefonnumm', 'numm', 'handynumm'], re: PHONE_RE },
   { on: ['sprach', 'muttersprach'], re: LANGUAGE_VALUE_SHAPE, form: languageValueShape },
   { on: ['farb'], re: COLOUR_RE },
@@ -710,7 +729,23 @@ const ANSWER_SHAPES = [
  * hour 0–24 are FORM shapes — anchored to the whole value — and CLOCK_RE, which TIME_RE and the
  * „Wann“ shape read out of running text, stays as it is: there `12.10` is a date.
  */
-const FORM_CLOCK_SHAPE = anyOf(CLOCK_RE, /^\d{1,2}[.:]\d{2}$/, /^(?:[01]?\d|2[0-4])$/);
+// „15.00-17.00“, „9-12“, „(von) 9 bis 12“ — the RANGE a German form writes on a clock line, both
+// bounds in the form's own spellings (DaF review #23, Minor 31).
+const FORM_CLOCK_HOUR = '(?:[01]?\\d|2[0-4])(?:[.:]\\d{2})?';
+const FORM_CLOCK_RANGE_RE = new RegExp(`^(?:von\\s+)?${FORM_CLOCK_HOUR}\\s*(?:-|–|bis\\s)\\s*${FORM_CLOCK_HOUR}(?:\\s*Uhr)?$`, 'i');
+const FORM_CLOCK_SHAPE = anyOf(CLOCK_RE, /^\d{1,2}[.:]\d{2}$/, /^(?:[01]?\d|2[0-4])$/, FORM_CLOCK_RANGE_RE);
+
+/**
+ * THE DAY OF THE FORM: a day as the Mitteilung knows it, or the abbreviation a German form itself
+ * prints on its Tag line — `Mo` … `So`, with or without the dot, and nothing else in the value
+ * (DaF review #23, Minor 31). The abbreviation is FORM-ONLY: „Ich komme Mo.“ in a Mitteilung is
+ * not a sentence the shapes read.
+ */
+const FORM_DAY_ABBREV_RE = /^(?:mo|di|mi|do|fr|sa|so)\.?$/i;
+const FORM_DAY_SHAPE = anyOf(DAY_OR_DATE_SHAPE, { test: (v) => FORM_DAY_ABBREV_RE.test(String(v || '').trim()) });
+
+/** „Personen: ich und mein Mann“ — a coordination names its members, and two members are a count. */
+const PERSON_PAIR_RE = /\p{L}+\s+und\s+\p{L}+/iu;
 
 /**
  * A FORMULAR FIELD IS A LEITPUNKT WITH A NAME, AND A LEITPUNKT HAS A VALUE SHAPE — EVEN WHEN THE
@@ -754,7 +789,7 @@ const FORM_CASE = Object.freeze({ foldCase: true });
 const FIELD_SHAPES = [
   ...ANSWER_SHAPES.map((row) => ({ on: row.on, value: row.form ? row.form(FORM_CASE) : (row.value || row.re) })),
   { on: ['von', 'bis', 'beginn', 'anfang', 'end', 'start'], value: FORM_CLOCK_SHAPE },
-  { on: ['am'], value: DAY_OR_DATE_SHAPE },
+  { on: ['am'], value: FORM_DAY_SHAPE },
   { on: ['wohnort', 'ort', 'stadt', 'geburtsort', 'straß', 'strass', 'adress'], value: nameValueShape(FORM_CASE) },
   { on: ['email', 'mail'], value: /\S+@\S+/ },
 ];
@@ -820,11 +855,21 @@ const hasUndeniedTime = (sentence) => {
   }
   return false;
 };
+/**
+ * THE WRITER'S TRANSPORT ARRIVING IS THE WRITER COMING (DaF review #23, Minor 41): „Der Zug ist um
+ * zehn Uhr da.“ carries neither a first person nor `komm`, and it is the sentence an L10 candidate
+ * writes next to „Der Zug hat Verspätung.“. So where the Leitpunkt asks about KOMMEN, a vehicle —
+ * the closed class L10 teaches — is the writer, but only in an ARRIVAL clause (`ist … da`,
+ * `kommt … an`): „Der Zug hat heute Verspätung.“ names no arrival and answers no Wann.
+ */
+const VEHICLE_RE = /(?<!\p{L})(?:zug|bus|bahn|taxi)(?!\p{L})/iu;
+const ARRIVAL_RE = /(?<!\p{L})(?:angekommen|da|an)(?!\p{L})/iu;
 const wannShape = (conjunct) => {
   const own = new Set(leitpunktKeywords(conjunct).flatMap((w) => [foldWord(w), ...splitVerbStem(w)]).filter(Boolean));
   return {
     test: (body) => sentences(body).some((s) => {
-      const about = FIRST_PERSON_RE.test(s) || words(s).map(foldWord).some((f) => own.has(f));
+      const about = FIRST_PERSON_RE.test(s) || words(s).map(foldWord).some((f) => own.has(f))
+        || (own.has('komm') && VEHICLE_RE.test(s) && ARRIVAL_RE.test(s));
       return about && hasUndeniedTime(s);
     }),
   };
@@ -1075,21 +1120,42 @@ const anredeLength = (t) => {
 /**
  * A header segment: no Anrede, no first person, no closing mark (it ended at the line break, not at
  * a full stop — „Ich heiße Ana Chakiri.“ is a sentence of four words, not a header), and a date or
- * at most four words.
+ * at most four words. ONE mark is allowed since round 24: the `!` of a Betreff line („Party am
+ * Samstag!“) — but only when the Anrede follows it, or the exclamation is a sentence
+ * (DaF review #23, Minor 44).
  */
-const isHeaderSegment = (seg) => !ANREDE_RE.test(seg) && !FIRST_PERSON_RE.test(seg) && !/[.!?…]$/.test(seg)
+const isHeaderSegment = (seg, next) => !ANREDE_RE.test(seg) && !FIRST_PERSON_RE.test(seg)
+  && (!/[.!?…]$/.test(seg) || (/!$/.test(seg) && ANREDE_RE.test(next || '')))
   && (DATE_VALUE_RE.test(seg) || words(seg).length <= 4);
 
 /**
+ * THE LETTER'S OWN DATE LINE — an optional place with a comma, an optional `den`, and a date
+ * („Bremen, 12.5.2026“, „Bremen, den 12. Mai“, „12.05.2026“). It is the ONE header the body may
+ * not keep: the letter's date is not the party's date (the comment in `leitpunktSatisfied`).
+ * „Am 12. Mai“ is not this line — the preposition makes it the writer's own text.
+ */
+const LETTER_DATE_RE = new RegExp(
+  `^(?:\\p{Lu}[\\p{L}-]*\\s*,\\s*)?(?:den\\s+)?\\d{1,2}\\.\\s*(?:\\d{1,2}\\.?(?:\\d{2,4})?|(?:${MONTH}))(?:\\s+\\d{2,4})?$`,
+  'u',
+);
+
+/**
  * The text split at its opening: `{ anrede, body }` — whether an Anrede opens it (after an optional
- * header line), and the text with the header and the Anrede(s) removed, for the shapes to read.
+ * header line), and the text with the Anrede(s) removed, for the shapes to read. The HEADER leaves
+ * only the ANREDE reading, not the body: „Party am Samstag“ is where the Leitpunkt's day stands
+ * (DaF review #23, Minor 44) — except the letter's own date line (`LETTER_DATE_RE`), which leaves
+ * both.
  */
 export const openingCut = (text) => {
   let t = String(text || '').replace(/^\s+/, '');
+  let header = '';
   const segs = sentences(t);
-  if (segs.length > 1 && isHeaderSegment(segs[0])) {
+  if (segs.length > 1 && isHeaderSegment(segs[0], segs[1])) {
     const at = t.indexOf(segs[0]);
-    if (at >= 0) t = t.slice(at + segs[0].length).replace(/^\s+/, '');
+    if (at >= 0) {
+      if (!LETTER_DATE_RE.test(segs[0])) header = segs[0];
+      t = t.slice(at + segs[0].length).replace(/^\s+/, '');
+    }
   }
   let anrede = false;
   for (let pass = 0; pass < 2; pass += 1) {
@@ -1098,7 +1164,7 @@ export const openingCut = (text) => {
     anrede = true;
     t = t.slice(len).replace(/^[\s,]+/, '');
   }
-  return { anrede, body: t };
+  return { anrede, body: header ? `${header}\n${t}` : t };
 };
 
 const GRUESSE = '(?:grüße|gruesse|grüsse|grüßen|gruessen|grüssen|gruß|gruss)';
@@ -1118,10 +1184,37 @@ const GRUSS_FORMULA = '(?:tschüs+|tschuess|tschau|ciao|lg|glg|mfg|vg|auf\\s+wie
   + '|deine?|eure?|ihre?)';
 /** One formula, then any number of further formulas (or a thanks) joined by `,` `!` `.` or `und`. */
 const GRUSS_CHAIN = `${GRUSS_FORMULA}(?:\\s*(?:[,!.]\\s*|\\s+und\\s+)(?:vielen\\s+dank|danke|${GRUSS_FORMULA}))*`;
-/** The chain at the head of a sentence or a line. Case-blind: the formula has no case rule. */
-const GRUSS_START_RE = new RegExp(`(?:^|[.!?…]\\s+|\\n\\s*)(?:(?:vielen\\s+)?danke?\\s+und\\s+)?${GRUSS_CHAIN}(?!\\p{L})`, 'giu');
+/**
+ * The verbless one-word sentence a learner sets before the chain — „Danke, bis morgen“, „Ok bis
+ * dann“, „Also, bis Samstag!“ (DaF review #23, Minor 43). A closed class: the discourse words of
+ * leave-taking, never a clause.
+ */
+const GRUSS_OPENER = '(?:(?:vielen\\s+)?danke?|okay|ok|alles\\s+klar|also|gut|schön|schoen)';
+/**
+ * The chain at the head of a sentence or a line — or after a comma, since round 24 (Minor 43):
+ * „Ich komme um drei Uhr nach Hause, bis später, Ana“ closes at the comma. What keeps „Ich komme
+ * bis Samstag, Ana“ red is that there the `bis` stands INSIDE the clause, at no boundary at all,
+ * and after its comma stands only the name, which is no formula. Case-blind: the formula has no
+ * case rule.
+ */
+const GRUSS_START_RE = new RegExp(
+  `(?:^|[.!?…]\\s+|\\n\\s*|,\\s+)(?:${GRUSS_OPENER}\\s*(?:[,!]\\s*|\\s+und\\s+|\\s+))?${GRUSS_CHAIN}(?!\\p{L})`,
+  'giu',
+);
 /** The address words of a signature, and the `und` between two names. */
 const SIGNATURE_WORD_RE = /^(?:deine?|eure?|euer|ihre?|und)$/i;
+/**
+ * Without capitals only the morphology tells a name from a clause: a token that folds like a
+ * finite verb (`arbeitet`, `kommt` — suffix `t|st|en|et` on a stem of three letters or more, the
+ * same three-letter floor as `foldWord`) is a sentence, not a signature, so „bis samstag arbeitet
+ * ana.“ stays red while „tim“ (no stem) and a country name („polen“) keep their endings
+ * (DaF review #23, Minor 45).
+ */
+const VERB_SUFFIX_RE = /(?:st|et|en|t)$/;
+const isVerbShaped = (w) => {
+  const m = w.match(VERB_SUFFIX_RE);
+  return !!m && w.length - m[0].length >= 3 && !COUNTRY_NAME_SET.has(countryKey(w));
+};
 /** Is `rest` — what follows the formula — a signature? `lower`: the formula itself was written without a capital. */
 const isSignature = (rest, lower) => {
   const toks = String(rest || '')
@@ -1130,7 +1223,12 @@ const isSignature = (rest, lower) => {
     .split(/\s+/)
     .filter((t) => /[\p{L}\p{N}]/u.test(t));
   if (toks.length > 6) return false;
-  if (lower) return toks.length <= 3 && toks.every((t) => SIGNATURE_WORD_RE.test(stripPunct(t)) || !isFunctionWord(stripPunct(t)));
+  if (lower) {
+    return toks.length <= 3 && toks.every((t) => {
+      const w = stripPunct(t);
+      return SIGNATURE_WORD_RE.test(w) || (!isFunctionWord(w) && !isVerbShaped(w.toLowerCase()));
+    });
+  }
   return toks.every((t) => SIGNATURE_WORD_RE.test(stripPunct(t)) || /^[\p{Lu}\p{N}]/u.test(t));
 };
 /** A line that hangs under the signature without being part of the closing. */

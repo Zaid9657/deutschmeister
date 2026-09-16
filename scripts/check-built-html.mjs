@@ -79,6 +79,11 @@ const REQUIRED = [
   'leitfaden/goethe-a2/index.html',
   'leitfaden/brief-schreiben-b1/index.html',
   'leitfaden/modelltest-deutsch-b1/index.html',
+  // The four A1.1 organic-launch articles (docs/marketing/a11-organic-launch-calendar.md).
+  'leitfaden/deutsch-a1-anfaenger-start/index.html',
+  'leitfaden/sich-auf-deutsch-vorstellen/index.html',
+  'leitfaden/auf-deutsch-im-cafe-bestellen/index.html',
+  'leitfaden/deutsch-a1-30-tage-plan/index.html',
   'pruefung/index.html',
   'pruefung/telc-b1/index.html',
   'pruefung/goethe-b1/index.html',

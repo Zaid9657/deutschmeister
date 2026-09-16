@@ -34,6 +34,15 @@ import { briefSchreibenB1 } from './brief-schreiben-b1.js';
 import { modelltestDeutschB1 } from './modelltest-deutsch-b1.js';
 import { startDeutsch1 } from './start-deutsch-1.js';
 import { goetheA2 } from './goethe-a2.js';
+// The four A1.1 organic-launch articles (one per week, docs/marketing/
+// a11-organic-launch-calendar.md). They are beginner-intent articles rather
+// than exam guides, so they carry no pass marks — but the same fact discipline
+// applies: the A1 format facts they do state are sourced and dated, and each
+// one links exactly one free preview lesson rather than selling.
+import { deutschA1AnfaengerStart } from './deutsch-a1-anfaenger-start.js';
+import { sichAufDeutschVorstellen } from './sich-auf-deutsch-vorstellen.js';
+import { aufDeutschImCafeBestellen } from './auf-deutsch-im-cafe-bestellen.js';
+import { deutschA130TagePlan } from './deutsch-a1-30-tage-plan.js';
 
 /**
  * @typedef {{type:'p', text:string}} BlockP            paragraph; may carry inline <a>/<strong>
@@ -66,7 +75,15 @@ import { goetheA2 } from './goethe-a2.js';
  */
 
 /** Every guide, in the order the hub lists them. */
-export const GUIDES = [telcB1, goetheB1, telcB2, dtz, startDeutsch1, goetheA2, briefSchreibenB1, modelltestDeutschB1];
+export const GUIDES = [
+  telcB1, goetheB1, telcB2, dtz, startDeutsch1, goetheA2, briefSchreibenB1, modelltestDeutschB1,
+  deutschA1AnfaengerStart, sichAufDeutschVorstellen, aufDeutschImCafeBestellen, deutschA130TagePlan,
+];
+
+/** The A1.1 organic-launch set, in publishing order (week 1 → week 4). */
+export const A11_ORGANIC_GUIDES = [
+  deutschA1AnfaengerStart, sichAufDeutschVorstellen, aufDeutschImCafeBestellen, deutschA130TagePlan,
+];
 
 export const getGuide = (slug) => GUIDES.find((g) => g.slug === slug);
 

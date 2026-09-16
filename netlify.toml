@@ -2,9 +2,14 @@
   # Build order: SPA first (creates dist/), then Astro, then merge Astro output
   # into the SPA dist/ so grammar files aren't wiped by the Vite build.
   # _astro/ contains Astro's JS/CSS chunks; grammar/ contains the HTML pages.
-  command = "npm run build && cd astro-site && npm install && npm run build && cd .. && node scripts/merge-site-builds.mjs && node scripts/prerender-spa-routes.mjs && (node scripts/ping-indexnow.mjs || true)"
+  command = "npm run build && cd astro-site && npm ci && npm run build && cd .. && node scripts/merge-site-builds.mjs && node scripts/prerender-spa-routes.mjs && (node scripts/ping-indexnow.mjs || true)"
   publish = "dist"
   functions = "netlify/functions"
+
+[build.environment]
+  # Public deploys must not depend on Supabase being reachable during SSG.
+  # Refresh this committed snapshot separately with scripts/dump-grammar-cache.mjs.
+  GRAMMAR_CONTENT_CACHE = "../grammar-content-cache.json"
 
 [functions]
   node_bundler = "esbuild"
@@ -40,6 +45,13 @@
 
 [functions."weekly-truth"]
   schedule = "0 6 * * 1"
+
+# Speaking-ledger reconciliation: settles abandoned reservations (finalize or
+# refund per documented timeout) and releases the monthly allowance for
+# annual terms. The schedule() wrapper in the function is authoritative; this
+# mirrors it.
+[functions."reconcile-speaking-reservations"]
+  schedule = "*/15 * * * *"
 
 # Security headers for all pages
 [[headers]]
@@ -186,6 +198,16 @@
 [[redirects]]
   from = "/api/speaking/check-speaking-usage"
   to = "/.netlify/functions/check-speaking-usage"
+  status = 200
+
+[[redirects]]
+  from = "/api/speaking/speaking-mission-result"
+  to = "/.netlify/functions/speaking-mission-result"
+  status = 200
+
+[[redirects]]
+  from = "/api/speaking/realtime-client-secret"
+  to = "/.netlify/functions/realtime-client-secret"
   status = 200
 
 # Unsubscribe handler

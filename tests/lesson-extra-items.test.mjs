@@ -841,7 +841,16 @@ test('every sentence-building item with a time or place Angabe accepts both word
     // re-stamps every origin item and reseats checkpoint 1's Schreiben section: the frontable
     // sentence „Ich bin Lehrer von Beruf.“ (`extra-a11-l02-07`) now sits at seat 1 instead of
     // seat 2. Count stays 1. RE-MEASURED, not relaxed.
-    'a1.1-cp1-schreiben-1',
+    // Round 24 (DaF review #23, Minors 1 and 3): the pool gained the Q letter-name item
+    // (`extra-a11-l01-25`), the L1 notice teaches `Ku`, and the Lesen falsifier moved (name
+    // swaps last), which together reseat all four papers. The count rises 1 → 3 — the rule now
+    // FINDS two more graded items with a frontable Angabe („Von Beruf bin ich…“ moved to cp1
+    // seat 2, and two Schreiben word bags with a time Angabe surfaced on cp3/cp4) — and every
+    // one of the three accepts both orders through the checker (the loop above proves it
+    // before this pin is read). RE-MEASURED, not relaxed.
+    'a1.1-cp1-schreiben-2',
+    'a1.1-cp3-schreiben-1',
+    'a1.1-cp4-schreiben-2',
   ], `the graded items with a second word order changed (${graded} found)`);
 });
 

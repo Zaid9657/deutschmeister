@@ -126,6 +126,11 @@ test('internal links follow the three trailing-slash cases', () => {
     '/reading/',
   ];
   const NO_SLASH_ROUTES = ['/faq', '/ueber-uns', '/signup', '/login', '/dashboard', '/schreiben', '/modelltest', '/level/a2.1'];
+  // Guided-course routes (/course/<level>/l/<nr>) are case 3 as well, but they
+  // are parameterised, so they match by prefix rather than by exact path. The
+  // A1.1 organic articles each link one free preview lesson this way, with a
+  // ?source= tag the funnel reads (src/lib/a11Funnel.js).
+  const NO_SLASH_PREFIXES = ['/course/'];
 
   const failures = [];
   let linksSeen = 0;
@@ -143,7 +148,13 @@ test('internal links follow the three trailing-slash cases', () => {
         failures.push(`${g.slug}: link "${href}" is neither absolute nor root-relative`);
         continue;
       }
-      const path = href.split('#')[0];
+      // A query string is not part of the route shape — strip it before the
+      // slash rule, or `?source=…` would make every tagged link unknown.
+      const path = href.split('#')[0].split('?')[0];
+      if (NO_SLASH_PREFIXES.some((p) => path.startsWith(p))) {
+        if (path.endsWith('/')) failures.push(`${g.slug}: ${href} must NOT end with a slash`);
+        continue;
+      }
       if (NO_SLASH_ROUTES.includes(path.replace(/\/$/, ''))) {
         if (path.endsWith('/')) failures.push(`${g.slug}: ${href} must NOT end with a slash`);
         continue;

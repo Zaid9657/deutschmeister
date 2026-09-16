@@ -54,7 +54,7 @@ export const abschlusstestA11 = {
     'Das ist der Abschlusstest deines A1.1-Kurses. Er hat den Aufbau der echten Prüfung Start Deutsch 1, aber nur ' +
     'die halbe Länge, damit du das Prüfungsformat schon früh kennenlernst. Dieser Test ist eigenes Übungsmaterial ' +
     'von DeutschMeister und keine offizielle Prüfung. Wie bei der echten Prüfung bestehst du ab 60 % der ' +
-    'bewerteten Aufgaben. Sprechen trainierst du im Speaking-Missions-Trainer, nicht hier. Wenn du bestehst, geht ' +
+    'bewerteten Aufgaben. Zum Abschluss gehört auch Sprechen: die Abschlussmission im Speaking-Trainer. Wenn du bestehst, geht ' +
     'es weiter mit A1.2 und später mit der vollständigen Übungsprüfung im Start-Deutsch-1-Format.',
   passPercent: 60,
 
@@ -227,6 +227,19 @@ export const abschlusstestA11 = {
           ],
         },
       ],
+    },
+    // Sprechen (2026-09-15 rebuild plan Task 4): the final assessment hands
+    // off to guided speaking mission 12 (Einladung) and consumes its result.
+    // The mission result NEVER joins the objective score — passing it is a
+    // separate completion floor (services/examScoring.js applySpeakingFloor);
+    // the runner renders this part as the handoff card and reads the result
+    // through src/lib/speaking/missionResultContract.js.
+    {
+      key: 'sprechen',
+      title: 'Sprechen',
+      minutes: 5,
+      instructions: 'Führe die Abschlussmission durch. Du stellst dich vor, reagierst auf Rückfragen und lädst eine Person ein.',
+      parts: [{ key: 'sprechen-1', type: 'speaking-mission', level: 'A1.1', missionOrder: 12 }],
     },
   ],
 };

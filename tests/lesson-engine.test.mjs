@@ -1329,3 +1329,38 @@ test('the fixture matches the contract shape the curriculum author is writing to
     assert.ok(FIXTURE_LEKTION.dialog.lines.some((l) => l.de.toLowerCase().includes(needle)), `${ex} is not in the dialogue`);
   }
 });
+
+test('a separable prefix the cue names is content, not a function word — REVIEW #23 Minor 5', () => {
+  // L11 attempt 3 served `extra-a11-l11-04` („Kaufst du heute ___? (einkaufen)" → `ein`)
+  // beside `8a2be339` („___ ihr heute ein? (einkaufen)") — the printed `ein` IS the whole
+  // production of the first item, and the documented four-letter floor exempted it as a
+  // function word. The class rule: an answer that is the separable prefix of the infinitive
+  // the item's OWN bracket names is content — read off the cue, never off a prefix list.
+  const solved = { answer: 'ein', questionDe: 'Kaufst du heute ___? (einkaufen)' };
+  assert.equal(
+    leaksAnswer(solved, { questionDe: '___ ihr heute ein? (einkaufen)' }),
+    true,
+    'the printed prefix no longer counts as a leak',
+  );
+  // …and the exemption the floor exists for is untouched: the ARTICLE `ein` in an article
+  // item stays exempt, or the three Artikel-Lektionen would go short.
+  assert.equal(
+    leaksAnswer(
+      { answer: 'ein', questionDe: 'Das ist ___ Bild. (unbestimmter Artikel)' },
+      { questionDe: 'Korrigieren Sie den Artikel: „Das ist ein Pause.“' },
+    ),
+    false,
+    'the article ein must keep its function-word exemption',
+  );
+  // The measured pair never sits one seven again, on any attempt of the cycle.
+  for (let attempt = 1; attempt <= ATTEMPT_CYCLE; attempt += 1) {
+    const plan = planPractice(CURRICULUM_A11, POOL, attempt);
+    for (const [nr, items] of plan) {
+      const ids = new Set(items.map((i) => i.id));
+      assert.ok(
+        !(ids.has('extra-a11-l11-04') && ids.has('8a2be339-3196-5a98-a5e6-e41f4351e703')),
+        `L${nr} attempt ${attempt}: the einkaufen pair is served together again`,
+      );
+    }
+  }
+});

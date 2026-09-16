@@ -5,9 +5,13 @@
 // Plus the shared teacher system-prompt scaffolding (CONVERSATION_RULES etc.).
 
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
-const HAIKU_MODEL = 'claude-haiku-4-5-20251001';
-const STT_MODEL = 'gpt-4o-mini-transcribe';
-const TTS_MODEL = 'gpt-4o-mini-tts';
+// Model IDs are CONFIGURATION (approved spec §8.2: the router must allow
+// provider replacement without changing the learner-facing contract). The
+// defaults are the currently benchmarked/live choices; the env vars swap
+// them without a deploy of new code.
+const HAIKU_MODEL = process.env.SPEAKING_TEACHER_MODEL || 'claude-haiku-4-5-20251001';
+const STT_MODEL = process.env.SPEAKING_STT_MODEL || 'gpt-4o-mini-transcribe';
+const TTS_MODEL = process.env.SPEAKING_TTS_MODEL || 'gpt-4o-mini-tts';
 
 // Warm, teacher-suited OpenAI voice.
 export const TEACHER_VOICE = 'coral';
@@ -301,4 +305,48 @@ export async function teacherReply({ system, history = [], userText = '', maxTok
   }
   const data = await res.json().catch(() => ({}));
   return (data.content?.[0]?.text || '').trim();
+}
+
+// ---------------------------------------------------------------------------
+// Structured guided-mission turn (City Map, plan Task 3). ONE teacher call
+// returns the conversational reply plus the task/language judgement as JSON —
+// the three-signal contract's task and language halves (pronunciation comes
+// from Azure acoustics, never from here). Throws AIError('llm') on provider
+// failure; returns a defensive null when the model's JSON does not parse, so
+// the caller can degrade to a plain conversational turn.
+// ---------------------------------------------------------------------------
+export async function guidedTurnFeedback({ system, history = [], userText = '', mission, completedCriteria = [], callTeacher = teacherReply }) {
+  const criteria = Array.isArray(mission?.pass_criteria) ? mission.pass_criteria : [];
+  const open = criteria.filter((c) => !completedCriteria.includes(c));
+  const judgeSystem = `${system}
+
+BEWERTUNG (zusätzlich zu deiner Antwort): Prüfe NUR die Äußerung des Schülers in diesem Zug gegen die offenen Missionsziele.
+Offene Ziele: ${open.length ? open.map((c) => `"${c}"`).join(', ') : '(keine — alle erreicht)'}
+Bereits erreicht: ${completedCriteria.length ? completedCriteria.map((c) => `"${c}"`).join(', ') : '(noch keine)'}
+
+Antworte NUR mit einem JSON-Objekt, ohne Text davor oder danach:
+{
+  "reply": "<deine kurze gesprochene Antwort in deiner Rolle, max. 2 Sätze>",
+  "completedNow": ["<jedes offene Ziel, das DIESE Äußerung erkennbar erfüllt — exakt wie oben zitiert>"],
+  "bestVersion": "<die Äußerung des Schülers in korrektem, natürlichem Deutsch — oder null, wenn sie schon korrekt war>",
+  "tip": "<EIN kurzer, freundlicher Verbesserungshinweis auf Deutsch (Sie-Anrede) — oder ein kurzes Lob>"
+}`;
+
+  const raw = await callTeacher({ system: judgeSystem, history, userText, maxTokens: 400 });
+  try {
+    const jsonStart = raw.indexOf('{');
+    const jsonEnd = raw.lastIndexOf('}');
+    if (jsonStart === -1 || jsonEnd <= jsonStart) return null;
+    const parsed = JSON.parse(raw.slice(jsonStart, jsonEnd + 1));
+    const completedNow = (Array.isArray(parsed.completedNow) ? parsed.completedNow : [])
+      .filter((c) => open.includes(c)); // the model may only tick genuinely open, genuine criteria
+    return {
+      reply: typeof parsed.reply === 'string' && parsed.reply.trim() ? parsed.reply.trim().slice(0, 600) : null,
+      completedNow,
+      bestVersion: typeof parsed.bestVersion === 'string' && parsed.bestVersion.trim() ? parsed.bestVersion.trim().slice(0, 600) : null,
+      tip: typeof parsed.tip === 'string' && parsed.tip.trim() ? parsed.tip.trim().slice(0, 400) : null,
+    };
+  } catch {
+    return null;
+  }
 }

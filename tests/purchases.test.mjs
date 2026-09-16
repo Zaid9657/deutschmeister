@@ -583,3 +583,38 @@ test('the goethe_a2_30_tage course route exists in App.jsx and the netlify.toml 
   assert.match(read('src/data/examTracks.js'), /guideSlug: 'goethe-a2',[\s\S]*?courseHref: '\/goethe-a2-kurs'/);
   assert.match(read('astro-site/src/data/examTracks.js'), /guideSlug: 'goethe-a2',[\s\S]*?courseHref: '\/goethe-a2-kurs'/);
 });
+
+// ---------------------------------------------------------------------------
+// 7. DeutschStart A1.1 guided-course preview (2026-09-15). The guided course
+//    is a €39 product while the public A1.1 library stays free; the route
+//    guard must therefore sit on EVERY /course/:level variant, with the kind
+//    the pure policy expects — a missing wrap is a paywall a direct URL walks
+//    straight through.
+// ---------------------------------------------------------------------------
+
+test('every guided-course route is wrapped in GuidedCourseGuard with its kind', () => {
+  const appSrc = read('src/App.jsx');
+  const wraps = [
+    ['path="/course/:level"', 'kind="home"'],
+    ['path="/course/:level/complete"', 'kind="complete"'],
+    ['path="/course/:level/certificate"', 'kind="certificate"'],
+    ['path="/course/:level/l/:nr"', 'kind="lesson"'],
+    ['path="/course/:level/checkpoint/:nr"', 'kind="checkpoint"'],
+    ['path="/course/:level/review"', 'kind="review"'],
+    ['path="/course/:level/:itemId"', 'kind="legacy-item"'],
+  ];
+  for (const [route, kind] of wraps) {
+    const at = appSrc.indexOf(route);
+    assert.ok(at !== -1, `${route} route missing from App.jsx`);
+    const block = appSrc.slice(at, appSrc.indexOf('/>', at) + 2);
+    assert.ok(block.includes(`<GuidedCourseGuard ${kind}>`), `${route} is not wrapped in GuidedCourseGuard ${kind}`);
+    assert.ok(block.includes('<LevelSubscriptionGuard>'), `${route} lost its LevelSubscriptionGuard`);
+    assert.ok(block.includes('<EmailVerificationGate>'), `${route} lost its EmailVerificationGate`);
+  }
+  // The guard must decide from the pure policy and the server-backed context,
+  // never from client-supplied state.
+  const guardSrc = read('src/components/GuidedCourseGuard.jsx');
+  assert.match(guardSrc, /canOpenGuidedCourseItem\(/);
+  assert.match(guardSrc, /hasProduct\(A11_PRODUCT_KEY\)/);
+  assert.match(guardSrc, /hasActiveSubscription\(\)/);
+});

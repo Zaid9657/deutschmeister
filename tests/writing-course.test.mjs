@@ -1712,6 +1712,139 @@ test('Minors 41 and 42 (round 23): `mein`/`mich`/`mir` are the writer, `gegen dr
   assert.equal(leitpunktSatisfied('Wann Sie im Büro sind', 'Ich bin heute nicht im Büro.'), false);
 });
 
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+// ROUND 24 — DaF review #23, Minors 27–31, 41 (remainder), 43–45: THE MARGINS OF THE CHECKLIST
+//
+// Review #23 signed the course off (0 BLOCKER / 0 MAJOR) and left the checklist's remaining errors
+// as a measured backlog: the closing chain blind after a comma inside the sentence (43, the
+// reviewer's ten probes all red), the header line taking the Leitpunkt's day out of the body — or
+// refusing to be a header over a `!` (44), the all-lowercase signature letting a verb sentence
+// through (45), the three clock spellings Minor 41 left open, and the form-field edges 27–31
+// (block capitals on the language field, names in Unicode letters, the world lists, the form's
+// own day and clock spellings, the counted persons). Each is closed at the CLASS — the regex or
+// shape — and the reviewer's probes are the fixtures, as in every round before.
+// ───────────────────────────────────────────────────────────────────────────────────────────────
+
+test('Minor 43 (round 24): the closing chain may start after a comma — the reviewer’s ten probes close, the guards stay red', () => {
+  const gruss = (closing) => row(ANY_MITTEILUNG, `Hallo Lena! ${BODY_L4} ${closing}`, 'gruss');
+  // The ten probes of review #23: a verbless opener („Danke“, „Okay“, „Also“) or the body's last
+  // sentence before the comma, then the chain, then the name.
+  for (const c of ['Danke, bis morgen, Ana', 'Vielen Dank, bis morgen, Ana', 'Ich freue mich, bis Samstag! Ana', 'Alles klar, bis dann, Ana',
+    'Okay, bis morgen! Ana', 'Ok bis dann Ana', 'Also, bis Samstag! Ana', 'Gut, bis später! Ana', 'Danke, viele Grüße, Ana',
+    'Ich komme um drei Uhr nach Hause, bis später, Ana']) {
+    assert.equal(gruss(c), true, `„${c}“`);
+  }
+  // The reviewer's full L8 text, verbatim.
+  assert.equal(row(ANY_MITTEILUNG,
+    'Hallo Lena! Leider passt der Termin am Montag nicht. Geht es am Mittwoch um zehn Uhr? Hast du da Zeit? Ich hoffe ja, bis Mittwoch, Ana',
+    'gruss'), true);
+  // The guard: `bis` inside the sentence's own clause opens no chain, and a bare name after the
+  // comma is still no formula — the reviewer's two RED probes and the round-21 control.
+  for (const c of ['Ich komme bis Samstag, Ana', 'Ich komme um drei Uhr, Ana', 'Ich freue mich, Ana']) {
+    assert.equal(gruss(c), false, `„${c}“ is no Gruß`);
+  }
+});
+
+test('Minor 44 (round 24): a header leaves the Anrede reading, not the body — only the letter’s own date line leaves both', () => {
+  const anrede = (text) => row(ANY_MITTEILUNG, text, 'anrede');
+  // (a) The Betreff line carries the Leitpunkt's day: the Anrede opens the second segment AND the
+  // shapes still read the header's text.
+  for (const t of ['Party am Samstag\nHallo Lena, wir feiern um acht Uhr bei mir.',
+    'Einladung: Samstag, 20 Uhr\nHallo Lena, wir feiern bei mir.',
+    'Am 12. Mai\nLiebe Lena, wir feiern um acht Uhr bei mir.']) {
+    assert.equal(leitpunktSatisfied('Tag und Uhrzeit', t), true, t.replace(/\n/g, '⏎'));
+    assert.equal(anrede(`${t} Viele Grüße, Ana`), true, t.replace(/\n/g, '⏎'));
+  }
+  // The letter's own date line still leaves the body: its date is not the party's date (the
+  // round-23 pin, re-asserted against the widened rule).
+  assert.equal(leitpunktSatisfied('Tag und Uhrzeit', 'Bremen, 12.5.2026\nLiebe Lena, wir feiern um acht Uhr bei mir.'), false);
+  assert.equal(leitpunktSatisfied('Tag und Uhrzeit', '12.05.2026\nHallo Lena, wir feiern um acht Uhr bei mir.'), false);
+  assert.equal(leitpunktSatisfied('Tag und Uhrzeit', 'Bremen, den 12. Mai\nLiebe Lena, wir feiern um acht Uhr bei mir.'), false);
+  // (b) A `!`-terminated line before an Anrede is a header too …
+  assert.equal(anrede('Party am Samstag!\nHallo Lena, wir feiern um acht Uhr bei mir. Viele Grüße, Ana'), true);
+  assert.equal(leitpunktSatisfied('Tag und Uhrzeit', 'Party am Samstag!\nHallo Lena, wir feiern um acht Uhr bei mir.'), true);
+  // … and ONLY before an Anrede: a `!` sentence before plain text stays a sentence.
+  assert.equal(anrede(`Danke, Lena! ${BODY_L4} Viele Grüße, Ana`), false);
+  // The cut itself, pinned in both directions.
+  assert.deepEqual(openingCut('Party am Samstag\nHallo Lena, wir feiern.'), { anrede: true, body: 'Party am Samstag\nwir feiern.' });
+  assert.deepEqual(openingCut('Bremen, 12.5.2026\nLiebe Lena, wir feiern.'), { anrede: true, body: 'wir feiern.' });
+});
+
+test('Minor 45 (round 24): the all-lowercase signature refuses a verb token — the lowercase formulas still close', () => {
+  const gruss = (closing) => row(ANY_MITTEILUNG, `Hallo Lena! ${BODY_L4} ${closing}`, 'gruss');
+  // The reviewer's three probes: the lowercase mirror images of the non-formulas that are red when
+  // capitalised („Bis Samstag ist Ana krank.“, „Bis Samstag Ana Chakiri arbeitet.“).
+  for (const c of ['bis samstag arbeitet ana.', 'bis morgen kommt tim.', 'bis samstag ana chakiri arbeitet.']) {
+    assert.equal(gruss(c), false, `„${c}“ is a sentence, not a signature`);
+  }
+  // The round-23 fixtures hold: every lowercase formula with a lowercase name stays green.
+  for (const c of ['viele grüße, ana', 'deine ana', 'tschüss, ana', 'bis morgen, ana', 'bis samstag, ana chakiri']) {
+    assert.equal(gruss(c), true, `„${c}“`);
+  }
+});
+
+test('Minor 41 (round 24): `15h`, a `von … bis` range without `Uhr`, and the arriving Zug answer Wann', () => {
+  assert.equal(leitpunktSatisfied('Wann Sie kommen', 'Ich komme um 15h.'), true);
+  assert.equal(leitpunktSatisfied('Wann Sie im Büro sind', 'Ich bin jeden Tag von 9 bis 12 im Büro.'), true);
+  assert.equal(leitpunktSatisfied('Wann Sie im Büro sind', 'Ich bin von neun bis zwölf im Büro.'), true);
+  // The writer's transport arriving is the writer coming (the L10 sentence beside „Der Zug hat
+  // Verspätung.“) …
+  assert.equal(leitpunktSatisfied('Wann Sie kommen', 'Der Zug ist um zehn Uhr da.'), true);
+  assert.equal(leitpunktSatisfied('Wann Sie kommen', 'Der Bus ist erst um zehn Uhr da.'), true);
+  assert.equal(leitpunktSatisfied('Wann Sie kommen', 'Der Zug kommt um zehn Uhr an.'), true);
+  // … and a delay, someone else's appointment, or a vehicle on another Leitpunkt still answer
+  // nothing — the round-23 pins, re-asserted against the widened rule.
+  assert.equal(leitpunktSatisfied('Wann Sie kommen', 'Der Zug hat heute Verspätung.'), false);
+  assert.equal(leitpunktSatisfied('Wann Sie kommen', 'Der Zug hat heute Verspätung. Ich komme später.'), false);
+  assert.equal(leitpunktSatisfied('Wann Sie kommen', 'Der Termin ist um zehn Uhr.'), false);
+  assert.equal(leitpunktSatisfied('Wann Sie im Büro sind', 'Der Zug ist um zehn Uhr da.'), false,
+    'the vehicle is the writer only where the Leitpunkt asks about kommen');
+});
+
+test('Minors 27–30 (round 24): block capitals fold whole, a name is Unicode letters, and the world lists know the room', () => {
+  const one = (field, value) => scoreWriting({ kind: 'formular', fields: [field] }, { [field]: value }).checks[0];
+  // 27: the language field folds the WHOLE value, not the first letter.
+  for (const v of ['ARABISCH', 'DEUTSCH', 'ARABISCH UND DEUTSCH']) assert.equal(one('Sprache', v).ok, true, `Sprache: ${v}`);
+  assert.equal(one('Sprachen', 'ARABISCH UND DEUTSCH').ok, true);
+  assert.equal(one('Sprache', 'MAROKKO').ok, false, 'folding never turns a wrong kind right');
+  // 28: names carry ş, ı, ç, č, é and the apostrophe — on the form and in the Mitteilung.
+  for (const v of ['Ayşe', 'Yıldız', 'Çelik', 'Kovač', 'Traoré', 'O\'Neill']) {
+    assert.equal(one('Vorname', v).ok, true, `Vorname: ${v}`);
+    assert.equal(one('Familienname', v).ok, true, `Familienname: ${v}`);
+  }
+  assert.equal(leitpunktSatisfied('Ihr Name', 'Mein Name ist Ayşe Yıldız.'), true);
+  // 29: the languages of the room, and the slash as the form's own „und“.
+  for (const v of ['Tamazight', 'Darija', 'Pashto', 'Arabisch/Deutsch']) assert.equal(one('Sprache', v).ok, true, `Sprache: ${v}`);
+  assert.ok(['Tamazight', 'Darija', 'Pashto'].every((n) => LANGUAGE_NAMES.includes(n)), 'the world list carries them');
+  // 30: the countries the composition does not build — a country on the Land field, never a name.
+  for (const v of ['Ruanda', 'Südkorea', 'Vereinigte Staaten', 'Jamaika']) assert.equal(one('Land', v).ok, true, `Land: ${v}`);
+  for (const v of ['Ruanda', 'Südkorea', 'Jamaika']) assert.equal(one('Vorname', v).ok, false, `Vorname: ${v} is a country`);
+  assert.equal(leitpunktSatisfied('Ihr Land', 'Ich komme aus Ruanda.'), true);
+});
+
+test('Minor 31 (round 24): the form’s own day and clock spellings — abbreviation, composite, range, counted persons', () => {
+  const one = (field, value) => scoreWriting({ kind: 'formular', fields: [field] }, { [field]: value }).checks[0];
+  // The day as a German form prints it: the abbreviation and the weekday composite.
+  for (const v of ['Mo', 'Mo.', 'Di', 'Fr', 'so', 'Montagabend', 'montagabend', 'Samstagvormittag']) {
+    assert.equal(one('Tag', v).ok, true, `Tag: ${v}`);
+  }
+  assert.equal(one('Kurs am', 'Mo').ok, true);
+  // …and a bare time of day is still no day, on the field and in the text (the round-22 pin).
+  for (const v of ['abends', '15 Uhr', 'Guten Morgen', 'bald']) assert.equal(one('Tag', v).ok, false, `Tag: ${v}`);
+  assert.equal(leitpunktSatisfied('Tag und Uhrzeit', 'Wir feiern am Montagabend um acht Uhr.'), true);
+  assert.equal(leitpunktSatisfied('Tag und Uhrzeit', 'Wir feiern abends um acht Uhr.'), false);
+  // The clock range of the form.
+  for (const v of ['15.00-17.00', '15.00 - 17.00', '9-12', '9 bis 12', 'von 9 bis 12', '9 bis 12 Uhr']) {
+    assert.equal(one('Uhrzeit', v).ok, true, `Uhrzeit: ${v}`);
+  }
+  assert.equal(one('Kurs von', '9 bis 12').ok, true);
+  for (const v of ['Montag', '15.00.00', 'neu']) assert.equal(one('Uhrzeit', v).ok, false, `Uhrzeit: ${v}`);
+  // The counted persons: „ich und mein Mann“ is a head count of two.
+  assert.equal(one('Personen', 'ich und mein Mann').ok, true);
+  assert.equal(one('Personen', '2').ok, true);
+  assert.equal(one('Personen', 'Chakiri').ok, false, 'a bare name counts nothing');
+});
+
 test('Minor 38 (round 23): the checklist stands live under the text before submission, and its KI rows say „prüft die KI“', () => {
   const src = readFileSync(join(ROOT, 'src/components/lesson/GradedWriting.jsx'), 'utf8');
   // One component renders both moments; the live one is mounted while `!done`, with the standard's wording.

@@ -356,6 +356,15 @@ test('every course test is well-formed, distinct from EXAM_TRACKS, and shape-val
           );
         } else if (part.type === 'writing') {
           assert.ok(part.task && part.criteria?.length >= 3, `${part.key}: writing needs a task + criteria`);
+        } else if (part.type === 'speaking-mission') {
+          // The speaking part hands off to a guided mission and consumes its
+          // result; it must never join the objective score (the floor is
+          // passed === true, applied separately — see applySpeakingFloor).
+          assert.match(part.level, /^[AB][12]\.[12]$/, `${part.key}: mission level must be the DB uppercase form`);
+          assert.ok(
+            Number.isInteger(part.missionOrder) && part.missionOrder >= 1 && part.missionOrder <= 12,
+            `${ct.key}/${part.key}: speaking-mission needs a missionOrder 1–12`
+          );
         } else {
           assert.fail(`${part.key}: unexpected part type ${part.type} for a course test`);
         }
@@ -450,4 +459,52 @@ test('the runner honours a per-part playsAllowed cap (Wave 4 PR D2)', () => {
   assert.match(runSrc, /const canPlay = plays < playsAllowed;/, 'the play guard must read the resolved cap');
   assert.match(runSrc, /Noch \$\{playsAllowed - plays\}× abspielbar/, 'the counter label must read the resolved cap');
   assert.ok(!/plays < PLAYS_ALLOWED|PLAYS_ALLOWED - plays/.test(runSrc), 'nothing may read the module constant directly once a part can override it');
+});
+
+// ── 9. Speaking-inclusive A1.1 final assessment (2026-09-15 rebuild plan) ──
+//
+// A €39 course whose promise includes speaking cannot end in a final test
+// with no speaking. The section hands off to guided mission 12 and requires
+// a passed mission result as a separate completion floor — never a score
+// merged into the objective sections.
+
+test('A1.1 final assessment includes a five-minute speaking mission', async () => {
+  const { abschlusstestA11 } = await import('../src/data/courseTests/abschlusstestA11.js');
+  const speaking = abschlusstestA11.sections.find((section) => section.key === 'sprechen');
+  assert.deepEqual(speaking, {
+    key: 'sprechen',
+    title: 'Sprechen',
+    minutes: 5,
+    instructions: 'Führe die Abschlussmission durch. Du stellst dich vor, reagierst auf Rückfragen und lädst eine Person ein.',
+    parts: [{ key: 'sprechen-1', type: 'speaking-mission', level: 'A1.1', missionOrder: 12 }],
+  });
+});
+
+test('the runner hands off to the mission and applies the pass floor separately', async () => {
+  const runnerSrc = readFileSync(join(root, 'src/pages/Modelltest/ModelltestRun.jsx'), 'utf8');
+  // The handoff URL contract Plan 3 fulfils: level + mission + return key.
+  assert.match(runnerSrc, /missionHandoffUrl\(/, 'runner must build the handoff through the shared contract');
+  assert.match(runnerSrc, /'speaking-mission'/, 'runner must render the speaking-mission part type');
+
+  const { missionHandoffUrl } = await import('../src/lib/speaking/missionResultContract.js');
+  assert.equal(
+    missionHandoffUrl({ level: 'A1.1', missionOrder: 12, returnTo: 'a1_1_abschluss' }),
+    '/speaking?level=A1.1&mission=12&return=a1_1_abschluss'
+  );
+
+  const { applySpeakingFloor } = await import('../src/services/examScoring.js');
+  const base = { score: 10, maxScore: 18, sectionScores: { hoeren: { score: 10, max: 10 } } };
+  const mock = (await import('../src/data/courseTests/abschlusstestA11.js')).abschlusstestA11;
+
+  const passed = applySpeakingFloor(base, mock, { passed: true, sessionToken: 't' }, { required: true });
+  assert.equal(passed.score, 10, 'a passed mission must not add points');
+  assert.equal(passed.maxScore, 18, 'a passed mission must not add max points');
+  assert.deepEqual(passed.sectionScores.sprechen, { type: 'speaking-mission', required: true, passed: true });
+
+  const failed = applySpeakingFloor(base, mock, null, { required: true });
+  assert.deepEqual(failed.sectionScores.sprechen, { type: 'speaking-mission', required: true, passed: false });
+
+  const notRequired = applySpeakingFloor(base, mock, null, { required: false });
+  assert.equal(notRequired.sectionScores.sprechen.required, false,
+    'while the mission trainer is not live the floor must be recorded as not required, never silently passed');
 });

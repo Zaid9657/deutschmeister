@@ -11,7 +11,6 @@
 
 import { PLANS, deEur } from './pricing.js';
 import {
-  TRIAL_SPEAKING_SESSIONS,
   ANON_DAILY_LIMIT,
   TRIAL_DAYS,
   FREE_LEVEL_LABEL,
@@ -74,7 +73,7 @@ export const FAQ_CATEGORIES = [
       },
       {
         q: 'Is there a free version?',
-        a: `Yes. ${FREE_LEVEL_LABEL} is free without registration. You also get ${TRIAL_SPEAKING_SESSIONS} free AI speaking sessions and ${ANON_DAILY_LIMIT} Sentence X-Ray analysis per day. Creating an account starts a ${TRIAL_DAYS}-day Pro trial.`,
+        a: `Yes. ${FREE_LEVEL_LABEL} is free without registration. You also get a free AI speaking demo and ${ANON_DAILY_LIMIT} Sentence X-Ray analysis per day. Creating an account starts a ${TRIAL_DAYS}-day Pro trial.`,
       },
       {
         q: 'Can I cancel at any time?',

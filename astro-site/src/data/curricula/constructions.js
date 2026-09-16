@@ -111,15 +111,11 @@ const SATZKLAMMER_RE = new RegExp(`[^.!?]*\\b(?:${SEPARABLE_PREFIXES.join('|')})
  */
 const FINITE_VERB_RE = /^[a-zäöüß]{2,}(?:e|st|t|en|et)$/;
 /**
- * THE OTHER CLOSED CLASS: the German FUNCTION WORDS that carry what looks like a
- * present-tense ending (-e, -en, -er, -es, -st, -t) and are not verbs — articles,
- * determiners, pronouns, the common adverbs and prepositions. Listing them is
- * allowed for the same reason listing the prefixes is: a function word class is
- * closed, a verb lexicon is not. Without it „Die Tür ist zu.“ reads as a clamp,
- * because `die` ends in -e.
+ * The determiners — the words that OPEN a German noun phrase. Split out of
+ * FUNCTION_WORD_RE because `hasFiniteVerb` reads them twice since round 24: as
+ * non-verbs, and as the left edge of the Det + Adjektiv + NOMEN frame below.
  */
-const FUNCTION_WORD_RE = new RegExp(`^(?:${[
-  // articles and determiners
+const DETERMINERS = [
   'der', 'die', 'das', 'den', 'dem', 'des', 'ein', 'eine', 'einen', 'einem', 'einer', 'eines',
   'kein', 'keine', 'keinen', 'keinem', 'keiner', 'keines',
   'mein', 'meine', 'meinen', 'meinem', 'meiner', 'dein', 'deine', 'deinen', 'deinem', 'deiner',
@@ -127,6 +123,30 @@ const FUNCTION_WORD_RE = new RegExp(`^(?:${[
   'unseren', 'unserem', 'unserer', 'euer', 'eure', 'euren', 'eurem', 'eurer',
   'dieser', 'diese', 'dieses', 'diesen', 'diesem', 'jede', 'jeden', 'jedem', 'jeder', 'jedes',
   'alle', 'allen', 'aller', 'alles', 'viele', 'vielen', 'manche', 'welche', 'andere', 'beide',
+];
+
+const DETERMINER_RE = new RegExp(`^(?:${DETERMINERS.join('|')})$`);
+
+/**
+ * THE OTHER CLOSED CLASS: the German FUNCTION WORDS that carry what looks like a
+ * present-tense ending (-e, -en, -er, -es, -st, -t) and are not verbs — articles,
+ * determiners, pronouns, the common adverbs and prepositions. Listing them is
+ * allowed for the same reason listing the prefixes is: a function word class is
+ * closed, a verb lexicon is not. Without it „Die Tür ist zu.“ reads as a clamp,
+ * because `die` ends in -e.
+ *
+ * WHAT IS DELIBERATELY NOT ON THE LIST ANY MORE (DaF review #23, Minor 8): „the
+ * adjectives that most often stand before a noun in this material“. Adjectives
+ * are an OPEN class, so the entry was a list that closed the instances it had
+ * seen and not their kind — `hasFiniteVerb` read every UNLISTED adjective as a
+ * finite verb („Die **grüne** Lampe ist an.“ → a Satzklammer that does not
+ * exist). The attributive adjective is now recognised by POSITION instead
+ * (inside the Det + Adjektiv + NOMEN frame, in `hasFiniteVerb` below), which
+ * covers the whole class and keeps this list what its name says it is.
+ */
+const FUNCTION_WORD_RE = new RegExp(`^(?:${[
+  // articles and determiners
+  ...DETERMINERS,
   // pronouns and the words that stand in for one
   'sie', 'ihnen', 'etwas', 'nichts', 'jemand', 'niemand', 'selbst',
   // adverbs and particles
@@ -135,9 +155,6 @@ const FUNCTION_WORD_RE = new RegExp(`^(?:${[
   'zuerst', 'danach', 'vielleicht', 'zusammen', 'natürlich',
   // prepositions and conjunctions
   'unter', 'über', 'hinter', 'neben', 'zwischen', 'gegen', 'ohne', 'seit', 'mit', 'außer',
-  // the adjectives that most often stand before a noun in this material
-  'gute', 'guten', 'guter', 'gutes', 'beste', 'erste', 'zweite', 'dritte', 'letzte', 'nächste',
-  'liebe', 'lieber', 'nette', 'kurze', 'lange', 'neue', 'neuen', 'neuer', 'neues',
 ].join('|')})$`);
 
 /** Forms of `sein` — the copula can never be the front half of a Satzklammer. */
@@ -162,7 +179,18 @@ const hasFiniteVerb = (clause) => {
   return tokens.slice(0, -1).some((t, i) => {
     const w = i === 0 ? t.toLowerCase() : t;
     const low = w.toLowerCase();
-    return FINITE_VERB_RE.test(w) && !FUNCTION_WORD_RE.test(low) && !COPULA_RE.test(low);
+    if (!FINITE_VERB_RE.test(w) || FUNCTION_WORD_RE.test(low) || COPULA_RE.test(low)) return false;
+    // THE ATTRIBUTIVE ADJECTIVE, BY POSITION (DaF review #23, Minor 8). A
+    // lower-case verb-shaped word that stands between a determiner and a
+    // capitalised noun is the adjective of that noun phrase, not a finite verb
+    // — „Die grüne Lampe ist an.“ carries no clamp. The frame replaces the
+    // open adjective list this regex used to smuggle: it covers every
+    // adjective German can inflect, and it cannot swallow a real verb, because
+    // German puts no finite verb between a determiner and its noun.
+    const prev = i > 0 ? tokens[i - 1].toLowerCase() : '';
+    const next = tokens[i + 1] || '';
+    if (DETERMINER_RE.test(prev) && /^[A-ZÄÖÜ]/.test(next)) return false;
+    return true;
   });
 };
 

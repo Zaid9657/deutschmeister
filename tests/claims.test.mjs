@@ -56,13 +56,16 @@ import {
   eur,
   deEur,
 } from '../src/data/pricing.js';
+import { FREE_LEVELS } from '../src/config/freeTier.js';
 import {
   ANON_DAILY_LIMIT,
   TRIAL_DAILY_LIMIT,
   FREE_DAILY_LIMIT,
   PRO_DAILY_LIMIT,
-  PRO_SPEAKING_SESSIONS_PER_MONTH,
-  TRIAL_SPEAKING_SESSIONS,
+  SPEAKING_MONTHLY_MINUTES,
+  COURSE_SPEAKING_MINUTES,
+  COURSE_MISSION_ATTEMPTS,
+  TOPUP_SPEAKING_MINUTES,
   PRO_WRITING_EVALUATIONS_PER_MONTH,
   TRIAL_WRITING_EVALUATIONS,
   COURSE_WRITING_FREE_LIFETIME,
@@ -106,10 +109,11 @@ test('derived figures follow from the prices', () => {
   assert.ok(YEARLY_PER_DAY_EUR < MONTHLY_PER_DAY_EUR);
 });
 
-test('level courses cover every paid sub-level exactly once, at its own price', () => {
-  // Every level except the free one is a product; the free one never is —
+test('level courses cover every sub-level exactly once, at its own price', () => {
+  // Every sub-level is a product since 2026-09-15 — A1.1's product sells the
+  // GUIDED COURSE (DeutschStart A1.1) while its public library stays free —
   // a gap here is a level nobody can buy, an overlap is a level sold twice.
-  const paid = ALL_LEVELS.slice(1);
+  const paid = ALL_LEVELS;
   assert.deepEqual(Object.keys(SUBLEVEL_PRICES_EUR), paid);
   const covered = Object.values(LEVEL_COURSES).flatMap((c) => c.levels);
   assert.deepEqual(covered, paid);
@@ -137,7 +141,9 @@ test('level courses cover every paid sub-level exactly once, at its own price', 
   assert.equal(courseForProduct('course_a1').legacy, true);
   assert.equal(bandCourseForLevel('B2.1').key, 'course_b2_1', 'case-insensitive: the DB is uppercase');
   assert.equal(bandCourseForLevel('B2.1').comingSoon, true);
-  assert.equal(bandCourseForLevel('a1.1'), null, 'the free level is not a product');
+  // A1.1 is a product now (the guided course) while its library stays free.
+  assert.equal(bandCourseForLevel('a1.1')?.key, 'course_a1_1');
+  assert.ok(FREE_LEVELS.includes('a1.1'), 'public A1.1 resources remain free');
   assert.equal(bandCourseForLevel('zz'), null);
   // Retired keys never reappear as live products.
   for (const k of Object.keys(LEGACY_LEVEL_COURSES)) assert.ok(!(k in LEVEL_COURSES), `${k} is retired`);
@@ -172,6 +178,9 @@ const PRICE_FREE_SURFACES = [
   'astro-site/src/pages/pricing.astro',
   'astro-site/src/pages/courses/index.astro',
   'astro-site/src/pages/courses/[level].astro',
+  // The DeutschStart A1.1 sales page — the one course surface whose whole job
+  // is the price, which is exactly why it may not contain the digits.
+  'astro-site/src/components/courses/A11CourseLanding.astro',
   'astro-site/src/data/courseContents.js',
   'astro-site/src/pages/index.astro',
   // The day-6 trial email carried a hardcoded €9.99 twice; it now derives from
@@ -215,7 +224,16 @@ test('no page source retypes a price literal', () => {
       // immediately preceded by a digit — which would make it part of a longer
       // number like a competitor's "12,99".
       const re = new RegExp(`(?<![\\d.,])${literal.replace('.', '\\.')}(?![\\d])`);
-      if (re.test(body)) failures.push(`${file} contains the literal "${literal}"`);
+      if (re.test(body)) {
+        // A competitor genuinely charging one of our figures is not a retyped
+        // claim about US: on the comparison data twins, a line that names the
+        // competitor context (them:/priceRange/Stand:) may carry the number.
+        if (file.endsWith('competitorComparisons.js')) {
+          const lines = body.split('\n').filter((l) => re.test(l));
+          if (lines.every((l) => /them:|priceRange|\(Stand:|\(was |Abo\)|Babbel|Duolingo|Lingoda/.test(l))) continue;
+        }
+        failures.push(`${file} contains the literal "${literal}"`);
+      }
     }
   }
   // Sentinel: if the file list or the stripper ever breaks, the loop would pass
@@ -257,18 +275,34 @@ const serverConst = (src, name) => {
   return Number(m[1]);
 };
 
-test('speaking limits match the server that enforces them', () => {
-  const src = read('netlify/functions/_shared/speakingUsage.mjs');
+test('speaking allowance claims match the grants the webhook actually writes', () => {
+  // Since 2026-09-16 speaking is billed in SECONDS from the allowance ledger;
+  // the numbers marketing may claim are the grant constants in
+  // speakingGrants.mjs — parsed here the same way the old session limits were.
+  const grants = read('netlify/functions/_shared/speakingGrants.mjs');
   assert.equal(
-    PRO_SPEAKING_SESSIONS_PER_MONTH,
-    serverConst(src, 'PRO_MONTHLY_LIMIT'),
-    'marketing claims a different monthly speaking allowance than the server grants',
+    SPEAKING_MONTHLY_MINUTES * 60,
+    serverConst(grants, 'AI_COACH_MONTHLY_SECONDS'),
+    'marketing claims a different monthly speaking allowance than the webhook grants',
   );
   assert.equal(
-    TRIAL_SPEAKING_SESSIONS,
-    serverConst(src, 'TRIAL_TOTAL_LIMIT'),
-    'marketing claims a different trial speaking allowance than the server grants',
+    COURSE_SPEAKING_MINUTES * 60,
+    serverConst(grants, 'COURSE_SPEAKING_SECONDS'),
+    'marketing claims different course speaking minutes than the webhook grants',
   );
+  assert.equal(
+    TOPUP_SPEAKING_MINUTES * 60,
+    serverConst(grants, 'TOPUP_SECONDS'),
+    'marketing claims different top-up minutes than the webhook grants',
+  );
+  // The 12 included first attempts derive from the mission key list the
+  // webhook grants (courseMissionKeys('A1.1')).
+  const entitlements = read('netlify/functions/_shared/speakingEntitlements.mjs');
+  assert.match(entitlements, /\{ length: 12 \}/, 'courseMissionKeys no longer builds 12 keys');
+  assert.equal(COURSE_MISSION_ATTEMPTS, 12);
+  // The retired session-count model may not come back as a claim source.
+  const usage = read('netlify/functions/_shared/speakingUsage.mjs');
+  assert.doesNotMatch(usage, /PRO_MONTHLY_LIMIT|TRIAL_TOTAL_LIMIT/, 'the session-count quota model resurfaced');
 });
 
 test('the course copy claims the Pro window the webhook actually grants', () => {
@@ -390,8 +424,8 @@ test('llms.txt files quote the current prices and allowances', () => {
     assert.ok(body.includes(eur(MONTHLY_PRICE_EUR)), `${file} does not quote ${eur(MONTHLY_PRICE_EUR)}`);
     assert.ok(body.includes(eur(YEARLY_PRICE_EUR)), `${file} does not quote ${eur(YEARLY_PRICE_EUR)}`);
     assert.ok(
-      body.includes(String(PRO_SPEAKING_SESSIONS_PER_MONTH)),
-      `${file} does not quote the ${PRO_SPEAKING_SESSIONS_PER_MONTH}-session monthly allowance`,
+      body.includes(`${SPEAKING_MONTHLY_MINUTES} minutes of AI speaking`),
+      `${file} does not quote the ${SPEAKING_MONTHLY_MINUTES}-minute monthly speaking allowance`,
     );
     assert.ok(
       body.includes(String(PRO_DAILY_LIMIT)),

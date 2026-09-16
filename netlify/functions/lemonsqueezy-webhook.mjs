@@ -1,5 +1,11 @@
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
+import {
+  grantCourseSpeaking,
+  grantTopupSpeaking,
+  grantSubscriptionSpeaking,
+  revokeSpeakingForOrder,
+} from './_shared/speakingGrants.mjs';
 
 // Initialize Supabase with service role key (bypasses RLS)
 const supabaseUrl = process.env.SUPABASE_URL || 'https://omqyueddktqeyrrqvnyq.supabase.co';
@@ -222,6 +228,8 @@ const COURSE_VARIANT_ENV = {
   LEMONSQUEEZY_TELC_B1_VARIANT_ID: 'telc_b1_komplett',
   // One product per paid sub-level (2026-09-08). B1/B2 vars stay unset while
   // those courses are "coming soon" — an unset var is simply no route.
+  // A1.1 joined 2026-09-15 as the €39 DeutschStart A1.1 guided course.
+  LEMONSQUEEZY_COURSE_A1_1_VARIANT_ID: 'course_a1_1',
   LEMONSQUEEZY_COURSE_A1_2_VARIANT_ID: 'course_a1_2',
   LEMONSQUEEZY_COURSE_A2_1_VARIANT_ID: 'course_a2_1',
   LEMONSQUEEZY_COURSE_A2_2_VARIANT_ID: 'course_a2_2',
@@ -237,6 +245,22 @@ const COURSE_VARIANT_ENV = {
   LEMONSQUEEZY_COURSE_B2_VARIANT_ID: 'course_b2',
   LEMONSQUEEZY_COURSE_ALLE_VARIANT_ID: 'course_alle',
 };
+
+// One-time speaking top-up (2026-09-15 rebuild plan): NOT a course — it
+// grants 3,600 permanent seconds through the allowance ledger and no Pro
+// window, so it routes to its own handler, never handleCourseOrder.
+const TOPUP_VARIANT_ENV = {
+  LEMONSQUEEZY_SPEAKING_TOPUP_60_VARIANT_ID: 'speaking_topup_60',
+};
+
+function topupForVariant(variantId) {
+  const map = {};
+  for (const [envName, productKey] of Object.entries(TOPUP_VARIANT_ENV)) {
+    const id = process.env[envName];
+    if (id) map[String(id)] = { productKey };
+  }
+  return variantId ? map[String(variantId)] || null : null;
+}
 
 function courseForVariant(variantId) {
   const map = {};
@@ -310,6 +334,13 @@ async function handleOrderCreated(data, meta) {
   const course = courseForVariant(orderVariantId);
   if (course) {
     await handleCourseOrder({ course, orderId, customData, attributes });
+    return;
+  }
+
+  // Speaking top-up? Grant permanent seconds and stop.
+  const topup = topupForVariant(orderVariantId);
+  if (topup) {
+    await handleTopupOrder({ orderId, customData, attributes });
     return;
   }
 
@@ -428,10 +459,53 @@ async function handleCourseOrder({ course, orderId, customData, attributes }) {
     }
   }
 
+  // DeutschStart A1.1 carries speaking benefits: 3,600 permanent seconds and
+  // the 12 included first mission attempts (idempotent in the grant RPC —
+  // a webhook retry cannot double-grant).
+  if (course.productKey === 'course_a1_1') {
+    const grant = await grantCourseSpeaking(supabase, { userId, orderId });
+    console.log('course order: speaking grant', grant.replayed ? 'replayed' : 'created',
+      '— mission attempts created:', grant.missionAttemptsCreated);
+  }
+
   console.log(
     'SUCCESS: course purchase recorded:', course.productKey, 'user:', userId,
     'order:', orderId, 'included Pro until:', accessUntil || 'n/a (real sub live)'
   );
+}
+
+// Speaking top-up order: a purchases row for support/refund visibility (it
+// unlocks no level — levelsForProduct returns []) plus the permanent-seconds
+// grant. Idempotent on the order id at both layers.
+async function handleTopupOrder({ orderId, customData, attributes }) {
+  const userId = await resolveUserId(customData, attributes, null);
+  if (!userId) {
+    throw new Error(
+      `top-up order ${orderId} has no resolvable user — email: ${attributes?.user_email || 'none'}`
+    );
+  }
+  const now = new Date().toISOString();
+  const pricePaid = attributes.total != null ? Number(attributes.total) / 100 : null;
+  const { error: purchaseError } = await supabase
+    .from('purchases')
+    .upsert(
+      {
+        user_id: userId,
+        product_key: 'speaking_topup_60',
+        lemonsqueezy_order_id: orderId,
+        price_paid: pricePaid,
+        status: 'active',
+        access_until: null,
+        updated_at: now,
+      },
+      { onConflict: 'lemonsqueezy_order_id' }
+    );
+  if (purchaseError) {
+    console.error('top-up order: purchases upsert error:', JSON.stringify(purchaseError));
+    throw new Error(`top-up purchases upsert failed: ${purchaseError.message}`);
+  }
+  const grant = await grantTopupSpeaking(supabase, { userId, orderId });
+  console.log('SUCCESS: top-up recorded:', orderId, 'user:', userId, grant.replayed ? '(replayed)' : '');
 }
 
 // order_refunded: revoke the purchase, and the included Pro window with it if
@@ -497,6 +571,20 @@ async function handleOrderRefunded(data, _meta) {
     }
   }
 
+  // Speaking benefits of the refunded order: unspent seconds and unused
+  // included attempts become unavailable; consumed history stays untouched
+  // (revoke_speaking_grant guarantees both).
+  try {
+    await revokeSpeakingForOrder(supabase, {
+      userId: purchase.user_id,
+      orderId,
+      productKey: purchase.product_key,
+    });
+  } catch (revokeError) {
+    console.error('order_refunded: speaking revoke error:', revokeError.message);
+    throw revokeError;
+  }
+
   console.log('order_refunded: purchase', orderId, `(${purchase.product_key})`, 'revoked for user', purchase.user_id);
 }
 
@@ -534,6 +622,35 @@ async function handleSubscriptionPaymentSuccess(data, _meta) {
     console.warn('subscription_payment_success: no subscription row for', subscriptionId, '— price_paid not written');
   } else {
     console.log('subscription_payment_success: price_paid', pricePaid, 'set for sub', subscriptionId);
+  }
+
+  // Speaking allowance for the paid billing period: 7,200 seconds expiring
+  // at period end — the same quantity for grandfathered €9.99/€79.99
+  // subscribers (price is never an input to the grant). The period is keyed
+  // by the PAYLOAD's billing date, never a local clock month, so a retried
+  // webhook replays onto the same bucket. Annual terms release their monthly
+  // allowance through the reconcile job using the same source_ref shape.
+  const { data: subRow, error: subRowError } = await supabase
+    .from('subscriptions')
+    .select('user_id')
+    .eq('lemonsqueezy_subscription_id', subscriptionId)
+    .maybeSingle();
+  if (subRowError) {
+    console.error('subscription_payment_success: subscription lookup error:', JSON.stringify(subRowError));
+    throw new Error(`subscription lookup failed: ${subRowError.message}`);
+  }
+  if (subRow?.user_id) {
+    const periodStart = attributes.billing_on || attributes.created_at || new Date().toISOString();
+    // Monthly seconds expire a month after the billing date (plus 3 days of
+    // grace for late renewal webhooks), capped at the subscription's end.
+    const expiresAt = new Date(new Date(periodStart).getTime() + (31 + 3) * 24 * 60 * 60 * 1000).toISOString();
+    const grant = await grantSubscriptionSpeaking(supabase, {
+      userId: subRow.user_id,
+      subscriptionId,
+      periodStart,
+      expiresAt,
+    });
+    console.log('subscription_payment_success: speaking grant', grant.replayed ? 'replayed' : 'created', 'for period', String(periodStart).slice(0, 7));
   }
 }
 

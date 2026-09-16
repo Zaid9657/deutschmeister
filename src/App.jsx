@@ -14,6 +14,7 @@ import SubscriptionGuard from './components/SubscriptionGuard';
 import ExamSubscriptionGuard from './components/ExamSubscriptionGuard';
 import PurchaseGuard from './components/PurchaseGuard';
 import LevelSubscriptionGuard from './components/LevelSubscriptionGuard';
+import GuidedCourseGuard from './components/GuidedCourseGuard';
 import EmailVerificationGate from './components/EmailVerificationGate';
 import OnboardingGate from './components/onboarding/OnboardingGate';
 import TrialBanner from './components/TrialBanner';
@@ -321,13 +322,16 @@ function App() {
                         the course home (unit path), /course/:level/:itemId one
                         lesson, plus completion and certificate. Same gate as
                         /level/:level — the guard reads :level from the route. */}
-                    <Route path="/course/:level" element={<LevelSubscriptionGuard><EmailVerificationGate><CourseHomePage /></EmailVerificationGate></LevelSubscriptionGuard>} />
-                    <Route path="/course/:level/complete" element={<LevelSubscriptionGuard><EmailVerificationGate><CourseCompletePage /></EmailVerificationGate></LevelSubscriptionGuard>} />
-                    <Route path="/course/:level/certificate" element={<LevelSubscriptionGuard><EmailVerificationGate><CourseCertificatePage /></EmailVerificationGate></LevelSubscriptionGuard>} />
-                    <Route path="/course/:level/l/:nr" element={<LevelSubscriptionGuard><EmailVerificationGate><LessonPlayerPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
-                    <Route path="/course/:level/checkpoint/:nr" element={<LevelSubscriptionGuard><EmailVerificationGate><CheckpointPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
-                    <Route path="/course/:level/review" element={<LevelSubscriptionGuard><EmailVerificationGate><ReviewPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
-                    <Route path="/course/:level/:itemId" element={<LevelSubscriptionGuard><EmailVerificationGate><CourseLessonPage /></EmailVerificationGate></LevelSubscriptionGuard>} />
+                    {/* GuidedCourseGuard: DeutschStart A1.1 preview policy — home and
+                        lessons 1–3 stay free, everything later needs the course or an
+                        active subscription (docs/superpowers/plans/2026-09-15-deutschstart-a11-course-readiness.md). */}
+                    <Route path="/course/:level" element={<LevelSubscriptionGuard><GuidedCourseGuard kind="home"><EmailVerificationGate><CourseHomePage /></EmailVerificationGate></GuidedCourseGuard></LevelSubscriptionGuard>} />
+                    <Route path="/course/:level/complete" element={<LevelSubscriptionGuard><GuidedCourseGuard kind="complete"><EmailVerificationGate><CourseCompletePage /></EmailVerificationGate></GuidedCourseGuard></LevelSubscriptionGuard>} />
+                    <Route path="/course/:level/certificate" element={<LevelSubscriptionGuard><GuidedCourseGuard kind="certificate"><EmailVerificationGate><CourseCertificatePage /></EmailVerificationGate></GuidedCourseGuard></LevelSubscriptionGuard>} />
+                    <Route path="/course/:level/l/:nr" element={<LevelSubscriptionGuard><GuidedCourseGuard kind="lesson"><EmailVerificationGate><LessonPlayerPage /></EmailVerificationGate></GuidedCourseGuard></LevelSubscriptionGuard>} />
+                    <Route path="/course/:level/checkpoint/:nr" element={<LevelSubscriptionGuard><GuidedCourseGuard kind="checkpoint"><EmailVerificationGate><CheckpointPage /></EmailVerificationGate></GuidedCourseGuard></LevelSubscriptionGuard>} />
+                    <Route path="/course/:level/review" element={<LevelSubscriptionGuard><GuidedCourseGuard kind="review"><EmailVerificationGate><ReviewPage /></EmailVerificationGate></GuidedCourseGuard></LevelSubscriptionGuard>} />
+                    <Route path="/course/:level/:itemId" element={<LevelSubscriptionGuard><GuidedCourseGuard kind="legacy-item"><EmailVerificationGate><CourseLessonPage /></EmailVerificationGate></GuidedCourseGuard></LevelSubscriptionGuard>} />
 
                     {/* Level-aware routes — A1.1 is free, others require auth + email verification + subscription */}
                     <Route

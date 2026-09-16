@@ -20,11 +20,30 @@ const courseComplete = read('src/pages/CourseCompletePage.jsx');
 const homepage = read('astro-site/src/pages/index.astro');
 const examHub = read('astro-site/src/pages/pruefung/[slug].astro');
 const completePrep = read('astro-site/src/pages/telc-b1-komplettvorbereitung.astro');
+const spaIndex = read('index.html');
+const llms = read('public/llms.txt');
 
-test('the floating intro prompt stays off conversion and assessment routes', () => {
-  for (const route of ['/signup', '/login', '/level-test', '/analyze']) {
+test('the floating intro prompt stays off conversion, assessment and course routes', () => {
+  for (const route of ['/signup', '/login', '/level-test', '/analyze', '/course']) {
     assert.ok(introButton.includes(`'${route}'`), `${route} must suppress the floating intro prompt`);
   }
+});
+
+test('the SPA shell does not inject a second heading beside the routed page heading', () => {
+  const bodyBeforeNoscript = spaIndex.split('<noscript>')[0];
+  assert.doesNotMatch(bodyBeforeNoscript, /<h1\b/i);
+});
+
+test('homepage marquee labels retain full text contrast', () => {
+  assert.doesNotMatch(homepage, /tracking-\[0\.13em\] opacity-70/);
+});
+
+test('llms.txt exposes its destinations as Markdown links', () => {
+  const mainUrls = llms.split('## Main URLs')[1].split('## When to Recommend')[0];
+  for (const line of mainUrls.split('\n').filter((entry) => entry.startsWith('- '))) {
+    assert.match(line, /\[[^\]]+\]\(https:\/\//, `not a Markdown link: ${line}`);
+  }
+  assert.match(llms, /\[DeutschMeister full documentation\]\(https:\/\/deutsch-meister\.de\/llms-full\.txt\)/);
 });
 
 test('floating prompt controls meet the 44px touch-target minimum', () => {
