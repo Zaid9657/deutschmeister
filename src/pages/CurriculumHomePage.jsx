@@ -2,6 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, ClipboardCheck, Trophy, Check, Lock, Flame, Zap, ChevronDown } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../contexts/SubscriptionContext';
+import { canOpenGuidedCourseItem, A11_PRODUCT_KEY, A11_PREVIEW_LESSONS } from '../lib/guidedCourseAccess.js';
+import { LEVEL_COURSES, eur } from '../data/pricing.js';
 import { getProgramProgress } from '../services/programProgress';
 import { loadDashboardStats } from '../services/dashboardStats';
 import { curriculumNodeUnlocked, curriculumPath, curriculumProgramKey } from '../data/curricula/index.js';
@@ -45,7 +48,25 @@ const SWAY = [0, 44, 72, 44, 0, -44, -72, -44];
 
 export default function CurriculumHomePage({ curriculum }) {
   const { user } = useAuth();
+  const { hasProduct, hasActiveSubscription } = useSubscription();
   const level = curriculum.level;
+  // DeutschStart A1.1 preview policy: home + Lektionen 1–3 are the free
+  // preview; everything later needs the course or an active subscription.
+  // GuidedCourseGuard enforces the same policy at the URL — this is the map's
+  // honest rendering of it (locked nodes point at the course page, not at a
+  // lesson the guard would bounce).
+  const ownsCourse = hasProduct(A11_PRODUCT_KEY);
+  const hasSub = hasActiveSubscription();
+  const nodeAllowed = (node) => canOpenGuidedCourseItem({
+    level,
+    kind: node.kind === 'lektion' ? 'lesson' : node.kind,
+    nr: node.nr,
+    ownsCourse,
+    hasSubscription: hasSub,
+  });
+  const previewLimited = level === 'a1.1' && !ownsCourse && !hasSub;
+  const salesHref = `/courses/${level.replace('.', '-')}/`;
+  const a11Course = LEVEL_COURSES[A11_PRODUCT_KEY];
   const programKey = programKeyFor(level);
   const [done, setDone] = useState(() => new Set());
   const [loaded, setLoaded] = useState(false);
@@ -117,6 +138,20 @@ export default function CurriculumHomePage({ curriculum }) {
               </div>
               {complete ? (
                 <div className="mt-4"><Button to={`/course/${level}/complete`} variant="celebrate" size="lg">Course complete · see your result →</Button></div>
+              ) : current && !nodeAllowed(current) ? (
+                <div className="mt-4 flex flex-col gap-3 rounded-clay border border-rule bg-white p-4 shadow-raise sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel"><Lock className="h-5 w-5" aria-hidden="true" /></span>
+                    <div className="min-w-0">
+                      <p className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] text-graphite">Free preview finished · {firstOpenIndex + 1} of {path.length}</p>
+                      <p className="truncate font-bold text-ink">{current.title}</p>
+                      <p className="font-data text-[0.6875rem] text-graphite">Unlock {a11Course.name} — {eur(a11Course.price)} once, yours for life</p>
+                    </div>
+                  </div>
+                  <Button href={salesHref} variant="primary" size="lg" shimmer className="shrink-0">
+                    Unlock the full course →
+                  </Button>
+                </div>
               ) : current ? (
                 <div className="mt-4 flex flex-col gap-3 rounded-clay border border-rule bg-white p-4 shadow-raise sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex min-w-0 items-center gap-3">
@@ -132,6 +167,14 @@ export default function CurriculumHomePage({ curriculum }) {
                   </Button>
                 </div>
               ) : null}
+              {previewLimited && (
+                <p className="mt-3 text-[0.8125rem] text-graphite">
+                  You are in the free preview: the first {A11_PREVIEW_LESSONS} Lektionen are free.{' '}
+                  <a href={salesHref} className="font-bold text-siegel hover:text-siegel-deep">
+                    Unlock all {curriculum.lektionen.length} for {eur(a11Course.price)} once
+                  </a>.
+                </p>
+              )}
               <ExamDatePlan curriculum={curriculum} path={path} doneIds={done} />
             </Reveal>
           </div>
@@ -173,19 +216,31 @@ export default function CurriculumHomePage({ curriculum }) {
                 {nodes.map((node) => {
                   const idx = nodeCounter; nodeCounter += 1;
                   const isDone = done.has(node.id);
-                  const unlocked = (!user || loaded) && curriculumNodeUnlocked(path, node.id, done);
+                  // Two locks, one look: sequence (finish the node before) and
+                  // paywall (the preview ends after Lektion 3). A paywalled
+                  // node's action is the course page, never a lesson URL the
+                  // route guard would bounce.
+                  const paywalled = !nodeAllowed(node);
+                  const unlocked = !paywalled && (!user || loaded) && curriculumNodeUnlocked(path, node.id, done);
                   const isCurrent = current && current.id === node.id;
                   const Icon = KIND_ICON[node.kind];
                   const sway = SWAY[idx % SWAY.length];
                   const lektion = node.kind === 'lektion' ? curriculum.lektionen.find((l) => l.id === node.id) : null;
-                  const state = isDone ? 'done' : isCurrent ? 'current' : unlocked ? 'open' : 'locked';
+                  const state = isDone && !paywalled ? 'done' : isCurrent && !paywalled ? 'current' : unlocked ? 'open' : 'locked';
                   return (
                     <li key={node.id} className="relative flex w-full flex-col items-center pt-3" style={{ transform: `translateX(${sway}px)` }}>
                       <span aria-hidden="true" className={`h-6 w-0.5 border-l-2 border-dashed ${isDone ? 'border-siegel' : 'border-rule'}`} />
-                      {isCurrent && (
+                      {isCurrent && !paywalled && (
                         <span className="mb-1 animate-bounce rounded-pill bg-white px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel shadow-raise ring-1 ring-siegel motion-reduce:animate-none">Start</span>
                       )}
-                      <Node to={unlocked || isDone ? hrefFor(level, node) : null} state={state} Icon={Icon} label={node.title} big={node.kind !== 'lektion'} />
+                      <Node
+                        to={!paywalled && (unlocked || isDone) ? hrefFor(level, node) : null}
+                        href={paywalled ? salesHref : null}
+                        state={state}
+                        Icon={Icon}
+                        label={paywalled ? `${node.title} — unlock the full course` : node.title}
+                        big={node.kind !== 'lektion'}
+                      />
                       <p className={`mt-2 max-w-[14rem] text-center text-[0.8125rem] font-bold leading-snug ${isDone || unlocked ? 'text-ink' : 'text-graphite'}`}>{node.title}</p>
                       <p className="font-data text-[0.6875rem] text-graphite">
                         {KIND_LABEL[node.kind]}{node.minutes ? ` · ${node.minutes} min` : ''}{lektion?.situation ? ` · ${lektion.situation}` : ''}
@@ -227,7 +282,7 @@ function Stat({ icon: Icon, label, value, tone }) {
   );
 }
 
-function Node({ to, state, Icon, label, big }) {
+function Node({ to, href, state, Icon, label, big }) {
   const size = big ? 'h-[5.25rem] w-[5.25rem]' : 'h-[4.5rem] w-[4.5rem]';
   const base = `relative flex ${size} items-center justify-center rounded-full transition-all duration-100 ease-snap motion-reduce:transition-none`;
   const styles = {
@@ -237,6 +292,11 @@ function Node({ to, state, Icon, label, big }) {
     locked: `${base} bg-paper-sunk text-graphite/60 ring-1 ring-rule cursor-not-allowed`,
   };
   const inner = state === 'done' ? <Check className="h-7 w-7" aria-hidden="true" /> : state === 'locked' ? <Lock className="h-6 w-6" aria-hidden="true" /> : <Icon className="h-7 w-7" aria-hidden="true" />;
+  // A paywall-locked node still has an action: it opens the course page
+  // (full page load — /courses/** is Astro-owned).
+  if (!to && href) {
+    return <a href={href} className={`${styles.locked} !cursor-pointer hover:ring-siegel`} aria-label={label}>{inner}</a>;
+  }
   if (!to) return <span className={styles.locked} aria-label={`${label} (locked)`}>{inner}</span>;
   return (
     <Link to={to} className={styles[state]} aria-label={label}>
