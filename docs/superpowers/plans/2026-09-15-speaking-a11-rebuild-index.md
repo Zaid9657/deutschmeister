@@ -36,6 +36,25 @@
 | 4 | `2026-09-15-speaking-live-quality.md` | Realtime WebRTC mode, fallback, evaluation harness, controlled rollout | Plans 2–3 |
 | 5 | `2026-09-15-a11-organic-commercial-launch.md` | Sales page, analytics, email sequence, launch verification | Plans 1–4 release evidence |
 
+## Implementation state (2026-09-16)
+
+All five plans are implemented on `claude/bold-shannon-brr04p`. What is built
+and what remains owner work:
+
+| Plan | Commits | State |
+|---|---|---|
+| 1 Course readiness | `aab2aea` `f43ca5c` `bbec3ef` `0f747cb` `1fdf1e6` | Product, preview gate, assessment and the closed review minors are done. Audio manifest and the named DaF review are owner gates (both fail the release command loudly). |
+| 2 Entitlements ledger | `5ff6462` `2bd405a` `49cc2bd` `ba51c74` `6ca724c` | Complete and proved against real Postgres (12/12 including true concurrency). Needs the migration applied. |
+| 3 Guided City Map | `fcabcd9` `ef13d20` `2bbbb6b` `efd43dd` | Complete; browser-inspected at three viewports. Needs the mission migration applied + `VITE_SPEAKING_MISSIONS_LIVE`. |
+| 4 Live + quality | `37a7039` `9f7b50b` `14ebaa7` `6af900c` | Complete behind `SPEAKING_LIVE_BETA_ENABLED`. Benchmark and latency runs need provider credentials. |
+| 5 Organic launch | `e3a763e` `54fadd1` `f755568` `2566bdb` | Complete; paid ads stay at €0. Emails are Class B drafts; the first send is an owner checkpoint. |
+
+Release-state command: **`npm run verify:a11-release`** — it turns the two
+owner-blocked gates (recorded audio, named DaF review) from loud skips into
+hard failures, so release evidence must quote it rather than `npm test`.
+Checklists: `docs/releases/speaking-beta-checklist.md` and
+`docs/releases/deutschstart-a11-launch-checklist.md`.
+
 ## Delivery gates
 
 - [ ] **Gate A — course truth:** recorded audio manifest is populated, every lesson has linked listening and reading, review #23 edge cases are closed, and a named DaF reviewer signs the final course review.
