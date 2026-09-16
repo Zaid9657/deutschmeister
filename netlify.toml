@@ -200,6 +200,16 @@
   to = "/.netlify/functions/check-speaking-usage"
   status = 200
 
+[[redirects]]
+  from = "/api/speaking/speaking-mission-result"
+  to = "/.netlify/functions/speaking-mission-result"
+  status = 200
+
+[[redirects]]
+  from = "/api/speaking/realtime-client-secret"
+  to = "/.netlify/functions/realtime-client-secret"
+  status = 200
+
 # Unsubscribe handler
 [[redirects]]
   from = "/unsubscribe"
