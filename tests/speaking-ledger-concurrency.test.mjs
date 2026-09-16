@@ -158,3 +158,33 @@ test('a revoked grant zeroes unspent seconds without touching history', { skip }
   assert.equal(replay.replayed, true);
   assert.equal(db.sql(`select count(*) from public.speaking_mission_entitlements where user_id='${USER}' and attempts_remaining>0`).out, '0');
 });
+
+test('no client role can execute the allowance RPCs', { skip }, () => {
+  // These are SECURITY DEFINER and take p_user_id as an argument, so a default
+  // PostgREST EXECUTE grant would let any signed-in user mint themselves
+  // seconds for any account. Supabase's roles do not exist on this throwaway
+  // cluster, so create them, re-apply, and read the live privileges back.
+  for (const role of ['anon', 'authenticated', 'service_role']) {
+    db.sql(`do $$ begin if not exists (select 1 from pg_roles where rolname='${role}') then execute 'create role ${role}'; end if; end $$`);
+  }
+  db.sqlFile(MIGRATION);
+  const fns = [
+    'grant_speaking_seconds', 'reserve_speaking_seconds', 'finalize_speaking_session',
+    'refund_speaking_session', 'revoke_speaking_grant', 'grant_mission_attempts',
+    'consume_mission_attempt', 'speaking_session_summary',
+  ];
+  const rows = db.sql(`select p.proname
+      || ':' || has_function_privilege('anon', p.oid, 'EXECUTE')
+      || ':' || has_function_privilege('authenticated', p.oid, 'EXECUTE')
+      || ':' || has_function_privilege('service_role', p.oid, 'EXECUTE')
+    from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname = 'public' and p.proname in (${fns.map((f) => `'${f}'`).join(',')})
+    order by 1`).out.trim().split('\n').map((l) => l.trim());
+  assert.equal(rows.length, fns.length, 'every allowance RPC must be present');
+  for (const row of rows) {
+    const [name, anon, authed, service] = row.split(':');
+    assert.equal(anon, 'false', `${name} is executable by anon`);
+    assert.equal(authed, 'false', `${name} is executable by authenticated`);
+    assert.equal(service, 'true', `${name} is NOT executable by service_role — the functions would break`);
+  }
+});

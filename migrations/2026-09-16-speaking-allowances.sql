@@ -512,4 +512,47 @@ BEGIN
 END;
 $$;
 
+-- ---------------------------------------------------------------------------
+-- Execute grants. These RPCs are SECURITY DEFINER and take p_user_id as an
+-- argument, so PostgREST's default EXECUTE grant to anon/authenticated would
+-- let any caller mint, reserve, finalize, refund or revoke seconds for ANY
+-- user. Every real caller is a Netlify function holding the service role
+-- (speaking-session, realtime-client-secret, reconcile-speaking-reservations,
+-- and lemonsqueezy-webhook via _shared/speakingGrants.mjs); the service role
+-- bypasses these grants anyway. Clients read their balance through those
+-- functions, never through the RPC.
+--
+-- Role-guarded so the migration still applies to a bare Postgres cluster
+-- (tests/speaking-ledger-concurrency.test.mjs), which has no Supabase roles.
+-- ---------------------------------------------------------------------------
+
+DO $grants$
+DECLARE
+  fn text;
+  r text;
+  fns text[] := ARRAY[
+    'public.grant_speaking_seconds(uuid, text, text, integer, text, timestamptz, timestamptz)',
+    'public.reserve_speaking_seconds(uuid, uuid, integer, text)',
+    'public.finalize_speaking_session(uuid, uuid, integer, text)',
+    'public.refund_speaking_session(uuid, uuid, text)',
+    'public.revoke_speaking_grant(uuid, text, text, text)',
+    'public.grant_mission_attempts(uuid, text, text[])',
+    'public.consume_mission_attempt(uuid, text)',
+    'public.speaking_session_summary(uuid, uuid)'
+  ];
+BEGIN
+  FOREACH fn IN ARRAY fns LOOP
+    EXECUTE format('REVOKE EXECUTE ON FUNCTION %s FROM public', fn);
+    FOREACH r IN ARRAY ARRAY['anon', 'authenticated'] LOOP
+      IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = r) THEN
+        EXECUTE format('REVOKE EXECUTE ON FUNCTION %s FROM %I', fn, r);
+      END IF;
+    END LOOP;
+    IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'service_role') THEN
+      EXECUTE format('GRANT EXECUTE ON FUNCTION %s TO service_role', fn);
+    END IF;
+  END LOOP;
+END $grants$;
+
+
 COMMIT;
