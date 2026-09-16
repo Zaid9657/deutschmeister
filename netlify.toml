@@ -46,6 +46,13 @@
 [functions."weekly-truth"]
   schedule = "0 6 * * 1"
 
+# Speaking-ledger reconciliation: settles abandoned reservations (finalize or
+# refund per documented timeout) and releases the monthly allowance for
+# annual terms. The schedule() wrapper in the function is authoritative; this
+# mirrors it.
+[functions."reconcile-speaking-reservations"]
+  schedule = "*/15 * * * *"
+
 # Security headers for all pages
 [[headers]]
   for = "/*"

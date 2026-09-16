@@ -21,11 +21,15 @@ export const handler = adminEndpoint({ capability: 'user360.read' }, async ({ bo
   if (error) throw new Error(error.message);
   if (!profile) throw notFound('Kein Profil mit dieser ID.');
 
-  const [{ data: authUser }, subs, purchases, wallet] = await Promise.all([
+  const [{ data: authUser }, subs, purchases, speakingBuckets, speakingReservations, speakingLedger] = await Promise.all([
     supabase.auth.admin.getUserById(id).catch(() => ({ data: null })),
     fetchAll(() => supabase.from('subscriptions').select('*').eq('user_id', id).order('subscription_end', { ascending: false })),
     fetchAll(() => supabase.from('purchases').select('*').eq('user_id', id)),
-    supabase.from('speaking_wallet').select('balance_cents, updated_at').eq('user_id', id).maybeSingle().then((r) => r.data),
+    // Speaking allowance (2026-09-16 ledger): seconds buckets replaced the
+    // cents wallet. Reads fail soft to [] pre-migration.
+    fetchAll(() => supabase.from('speaking_credit_buckets').select('remaining_seconds, expires_at, source, created_at').eq('user_id', id)).catch(() => []),
+    fetchAll(() => supabase.from('speaking_session_reservations').select('session_token, reserved_seconds, status, created_at').eq('user_id', id).eq('status', 'reserved')).catch(() => []),
+    fetchAll(() => supabase.from('speaking_minute_ledger').select('kind, seconds, created_at').eq('user_id', id).order('created_at', { ascending: false }).limit(20)).catch(() => []),
   ]);
   const u = authUser?.user || null;
   const latestEnd = subs.map((s) => s.subscription_end).filter(Boolean).sort().at(-1) || null;
@@ -59,8 +63,13 @@ export const handler = adminEndpoint({ capability: 'user360.read' }, async ({ bo
     subscriptionLive: latestEnd ? new Date(latestEnd) > now : false,
     purchases: purchases.map((p) => ({ productKey: p.product_key, status: p.status, accessUntil: p.access_until, createdAt: p.created_at, pricePaid: p.price_paid, manual: String(p.lemonsqueezy_order_id || '').startsWith('manual-') })),
     gateReads: gateReads({ latestSubscriptionEnd: latestEnd, hasPurchases: purchases.some((p) => p.status === 'active'), trialEndsAt: profile.trial_ends_at, now }),
-    walletCents: wallet?.balance_cents ?? null,
-    source: 'profiles, subscriptions, purchases, speaking_wallet',
+    speaking: {
+      monthlySeconds: speakingBuckets.filter((b) => b.expires_at && new Date(b.expires_at) > now).reduce((s, b) => s + b.remaining_seconds, 0),
+      permanentSeconds: speakingBuckets.filter((b) => !b.expires_at).reduce((s, b) => s + b.remaining_seconds, 0),
+      activeReservations: speakingReservations.map((r) => ({ token: maskRef(r.session_token), reservedSeconds: r.reserved_seconds, createdAt: r.created_at })),
+      recentLedger: speakingLedger.map((l) => ({ kind: l.kind, seconds: l.seconds, at: l.created_at })),
+    },
+    source: 'profiles, subscriptions, purchases, speaking_credit_buckets/_reservations/_ledger',
   };
 
   const subscriptions = subs.map((s) => ({
