@@ -3,6 +3,7 @@ import { safeGetJSON, safeSetJSON, safeRemove } from '../utils/safeStorage';
 // The SHARED speaking-event allowlist — the same module the server logs
 // through, so neither side can emit audio, transcripts or credentials.
 import { sanitizeSpeakingEvent } from '../../netlify/functions/_shared/speakingMetrics.mjs';
+import { a11EventProperties } from './a11Funnel.js';
 
 // Checkout completion is observed from two independent places — the Lemon
 // Squeezy overlay's Checkout.Success event, and the subscription poller seeing
@@ -85,3 +86,31 @@ export const trackSpeakingTurnCompleted = (props) => trackSpeaking('speaking_tur
 export const trackSpeakingFailed = (props) => trackSpeaking('speaking_failed', props);
 export const trackSpeakingEnded = (props) => trackSpeaking('speaking_ended', props);
 export const trackSpeakingFallbackUsed = (props) => trackSpeaking('speaking_fallback_used', props);
+
+// ---------------------------------------------------------------------------
+// DeutschStart A1.1 sales funnel (2026-09-15 launch plan Task 3).
+//
+// Narrow helpers only, each through a11EventProperties — the allowlist in
+// src/lib/a11Funnel.js decides what may be measured (lesson 1–3, normalized
+// source, the A1.1 product key, the shared-data price). An email, transcript,
+// utterance or free-form note has no representation here.
+//
+// NOTE ON PURCHASE: trackA11PurchaseConfirmed fires from the ENTITLEMENT
+// OBSERVER (the subscription/purchase poller seeing access appear), never
+// from a checkout-button click — a click is an intention, not a purchase.
+// Refunds are a server event (the Lemon Squeezy webhook), recorded here only
+// when the client observes the entitlement disappear.
+// ---------------------------------------------------------------------------
+
+export const trackA11SalesViewed = (props) => track('a11_sales_viewed', a11EventProperties(props));
+export const trackA11PreviewStarted = (props) => track('a11_preview_started', a11EventProperties(props));
+export const trackA11PreviewLessonCompleted = (lesson, source) =>
+  track('a11_preview_lesson_completed', a11EventProperties({ lesson, source }));
+export const trackA11PreviewCompleted = (props) => track('a11_preview_completed', a11EventProperties(props));
+export const trackA11OfferViewed = (props) => track('a11_offer_viewed', a11EventProperties(props));
+export const trackA11CheckoutStarted = (source) =>
+  track('a11_checkout_started', a11EventProperties({ source, productKey: 'course_a1_1' }));
+export const trackA11PurchaseConfirmed = (source) =>
+  track('a11_purchase_confirmed', a11EventProperties({ source, productKey: 'course_a1_1' }));
+export const trackA11RefundRecorded = (props) =>
+  track('a11_refund_recorded', a11EventProperties({ ...props, productKey: 'course_a1_1' }));
