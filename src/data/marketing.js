@@ -135,6 +135,23 @@ export const GRAMMAR_EXERCISE_COUNT = 1614;
 /** Listening exercises, 6 per CEFR level. Source: listening_exercises count via Supabase (2026-08-24). */
 export const LISTENING_EXERCISE_COUNT = 48;
 
+/**
+ * Controlled practice activities in the DeutschStart A1.1 course pool — the
+ * items the 12 Lektionen, the 4 checkpoints and the spaced review draw from.
+ *
+ * Counted, not estimated: the value is the `count` field of
+ * src/data/lessonPools/a11.json, the built pool
+ * (`node scripts/build-lesson-pool.mjs a1.1`) that src/lib/lesson/buildLesson.js
+ * actually draws from — measured 2026-09-16. It lives here rather than being
+ * read from the JSON because the Astro front end is a separate package and
+ * does not carry the pool (same reason this file is duplicated at all);
+ * tests/a11-landing.test.mjs re-counts the pool on every run and fails if the
+ * two drift, so a pool rebuild forces the claim to be re-measured instead of
+ * quietly rotting. A Lektion draws PRACTICE_SIZE (7) of these per attempt and a
+ * retry draws a different seven — never claim a learner sees all of them.
+ */
+export const A11_PRACTICE_ACTIVITY_COUNT = 379;
+
 /** Vocabulary words, every one carrying a level. Source: the live per-level counts checked
  *  on 2026-09-05 (225+247+248+247+234+250+238+246 = 1935) matched the standing constant
  *  exactly, so that value plus the 114 rows of migrations/2026-09-05-a1-1-wortliste.sql

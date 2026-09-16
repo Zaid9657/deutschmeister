@@ -5,6 +5,12 @@
 import { LEVEL_COURSES } from '../data/pricing.js';
 
 const VARIANTS = {
+  // DeutschStart A1.1 (the guided course; the public A1.1 library stays free).
+  // It was missing here while src/config/lemonsqueezy.js already read its
+  // VITE_ twin, so the Astro sales page could never open its checkout — and
+  // an unset id still hides the buy surface and downgrades the Offer's
+  // availability rather than rendering a dead checkout.
+  course_a1_1: import.meta.env.PUBLIC_LEMONSQUEEZY_COURSE_A1_1_VARIANT_ID || '',
   course_a1_2: import.meta.env.PUBLIC_LEMONSQUEEZY_COURSE_A1_2_VARIANT_ID || '',
   course_a2_1: import.meta.env.PUBLIC_LEMONSQUEEZY_COURSE_A2_1_VARIANT_ID || '',
   course_a2_2: import.meta.env.PUBLIC_LEMONSQUEEZY_COURSE_A2_2_VARIANT_ID || '',

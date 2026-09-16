@@ -297,3 +297,44 @@ test('SpeakingStage hands the prompt over and the speaking page uses it when no 
   assert.ok(/if \(wantedMission\) return null;/.test(page), 'an explicit ?mission= must win over the course task');
   assert.ok(page.includes('courseTask.promptDe'), 'the handed-over prompt is not rendered');
 });
+
+test('the Rückblick tells the learner that a second pass draws different exercises — DaF review #23, Minor 12', () => {
+  // The draw is fresh per attempt (src/lib/lesson/buildLesson.js, commit 217c958), and until
+  // round 24 no screen said so: a learner who restarted a Lektion expecting the same seven
+  // items met different ones with no warning. The recap — the one screen everyone sees before
+  // a second pass — now says it, in one honest line, addressed as Sie.
+  const recap = read('src/components/lesson/RecapStage.jsx');
+  assert.ok(
+    recap.includes('Wenn Sie die Lektion noch einmal starten, bekommen Sie andere Aufgaben zum selben Stoff.'),
+    'RecapStage no longer tells the learner that a restart draws different exercises',
+  );
+  // The line speaks Sie, like every task and notice of the course.
+  assert.ok(!/\bdu bekommst\b|\bstartest\b/i.test(recap), 'the recap notice must not duzen');
+});
+
+// ---------------------------------------------------------------------------
+// DaF review #23, Minor 6. A PATTERN card's content is its Lektion's notice, so
+// a routing-only slug whose first appearance shares a Lektion with the primary
+// slug rendered the same card twice: L2's `numbers` duplicated the `verb-sein`
+// card ("sein: ich bin, du bist, Sie sind") under a second key. The dedupe is
+// by CONTENT at the index build, so it holds for the class, not for one slug.
+// ---------------------------------------------------------------------------
+test('the review index carries no two pattern cards with the same content — REVIEW #23 Minor 6', async () => {
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  const { buildCardIndex, patternCardKey, cardKinds } = await import('../src/services/reviewService.js');
+
+  const index = buildCardIndex(CURRICULUM_A11);
+  const seen = new Map();
+  for (const [key, card] of index) {
+    if (card.kind !== cardKinds.PATTERN) continue;
+    const content = `${card.front}#${card.back}`;
+    assert.ok(!seen.has(content),
+      `${key} and ${seen.get(content)} are one card twice: "${card.front}"`);
+    seen.set(content, key);
+  }
+  // The measured instance: verb-sein keeps its card, the routing slug does not
+  // resolve — a review row keyed to it is skipped at render, never shown twice.
+  assert.ok(index.has(patternCardKey('verb-sein')), 'the verb-sein pattern card is gone');
+  assert.ok(!index.has(patternCardKey('numbers')),
+    'pattern:numbers is back in the index although it only mirrors the verb-sein card');
+});

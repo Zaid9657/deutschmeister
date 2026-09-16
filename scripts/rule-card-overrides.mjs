@@ -118,9 +118,15 @@ const RULE_CARD_OVERRIDES = {
     titleDe: 'Das Alphabet: buchstabieren',
     content: [
       'Beim Buchstabieren sagt man jeden Buchstaben einzeln.',
-      'Die Namen der Buchstaben sind A a, B be, C ce, D de, E e, F ef, G ge, H ha, I i, J Jot,',
-      'K ka, L el, M em, N en, O o, P pe, Q ku, R er, S es, T te, U u, V Vau, W we, X ix, Y Ypsilon, Z Zett.',
-      'Die Formen Ä a-Umlaut, Ö o-Umlaut, Ü u-Umlaut, ß Eszett haben auch Namen.',
+      // ROUND 24 (DaF review #23, Minor 1): the name list mixed lowercase names („be, ce, de“)
+      // with capitalised ones („Jot, Vau, Ypsilon, Zett“), and `content` said „W we“ while the
+      // commonMistake below says „W heißt We“. A letter name is a noun (das Be, das Jot), so
+      // every name is capitalised now — one rule for the whole list, pinned by
+      // tests/rule-card-overrides.test.mjs. The vowels name themselves and get their own line.
+      'Die Namen der Buchstaben sind B Be, C Ce, D De, F Ef, G Ge, H Ha, J Jot, K Ka, L El,',
+      'M Em, N En, P Pe, Q Ku, R Er, S Es, T Te, V Vau, W We, X Ix, Y Ypsilon, Z Zett.',
+      'A, E, I, O, U heißen A, E, I, O, U.',
+      'Die Formen Ä A-Umlaut, Ö O-Umlaut, Ü U-Umlaut, ß Eszett haben auch Namen.',
       'Vorsicht bei E und I, G und J, V und W.',
       'Man fragt: Wie buchstabiert man das?',
       'Frage: Wie schreibt man das? Antwort: A-N-A.',
@@ -142,7 +148,7 @@ const RULE_CARD_OVERRIDES = {
       {
         wrong: 'Ich buchstabiere Tschüss: T-S-C-H-U-S-S.',
         correct: 'Ich buchstabiere Tschüss: T-S-C-H-Ü-S-S.',
-        explanationDe: 'Ü ist der Buchstabe U mit Umlaut. Man sagt u-Umlaut.',
+        explanationDe: 'Ü ist der Buchstabe U mit Umlaut. Man sagt U-Umlaut.',
       },
     ],
   },
@@ -244,7 +250,12 @@ const RULE_CARD_OVERRIDES = {
       'Im Plural haben alle Nomen die.',
       'Die Endungen zeigen das Genus:',
       '-ung, -heit, -keit, -schaft → die: die Entschuldigung, die Freiheit, die Möglichkeit, die Freundschaft.',
-      '-chen, -lein → das: das Mädchen, das Brötchen.',
+      // ROUND 24 (DaF review #23, Minor 2): the `-chen, -lein → das` line is GONE. It taught an
+      // ending group of which the whole course contains ZERO words (das Mädchen and das Brötchen
+      // stand in no Wortfeld, no dialogue and no item of A1.1), so the learner was handed a rule
+      // he could never apply and two words he was never taught. The -heit/-keit/-schaft examples
+      // stay: they demonstrate endings on words a rule card may show. The commonMistake that
+      // rode on das Mädchen is replaced by the plural rule two lines up, on Lektion 4's own Lampe.
       '-er bei männlichen Berufsnamen → der: der Lehrer. Vorsicht: die Mutter, die Schwester.',
       'Nach kaufen wird der zu den: Ich kaufe den Stuhl.',
       'Lernen Sie jedes Nomen mit dem Artikel: nicht Tisch, sondern der Tisch.',
@@ -257,9 +268,9 @@ const RULE_CARD_OVERRIDES = {
         explanationDe: 'Nomen auf -ung sind die-Wörter.',
       },
       {
-        wrong: 'die Mädchen ist jung.',
-        correct: 'Das Mädchen ist jung.',
-        explanationDe: 'Nomen auf -chen sind das-Wörter, auch bei Personen.',
+        wrong: 'Der Lampen kosten zwölf Euro.',
+        correct: 'Die Lampen kosten zwölf Euro.',
+        explanationDe: 'Im Plural haben alle Nomen die: die Lampen.',
       },
       {
         wrong: 'die Lehrer kauft den Stuhl.',

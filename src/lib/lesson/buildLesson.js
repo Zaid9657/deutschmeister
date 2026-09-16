@@ -272,6 +272,21 @@ export const answerWords = (item) => {
     .filter(Boolean);
   const content = words.filter((w) => w.length > 2 && !LEMMA_STOPWORDS.has(w));
   if (content.length) return new Set(content);
+  // REVIEW #23 Minor 5. The four-letter floor below exists for FUNCTION words —
+  // but an answer that is the SEPARABLE PREFIX of the very verb the item's own
+  // bracket cue names is the item's entire production, however it is spelled:
+  // „Kaufst du heute ___? (einkaufen)" → `ein` is not the article, it is the
+  // task — and „___ ihr heute ein? (einkaufen)" hands it over in print. The
+  // prefix is read off the item's own cue (the infinitive that starts with the
+  // answer), never off a prefix list, so `ein` the article in an article item
+  // keeps its exemption and the three Artikel-Lektionen stay drawable.
+  if (words.length === 1) {
+    const cued = /\(([^)]*)\)/.exec(String((item && item.questionDe) || ''));
+    const infinitive = cued && cued[1].toLowerCase().match(/\b[a-zäöüß]{2,}en\b/);
+    if (infinitive && infinitive[0] !== words[0] && infinitive[0].startsWith(words[0])) {
+      return new Set(words);
+    }
+  }
   // An answer that is ONLY a function word still leaks when it is printed —
   // „Der Chef braucht ___ Computer." → `einen` beside „Korrigieren Sie: «Ich
   // brauche einen Pause.»" was one of the review's measured pairs. `answerKey`
@@ -310,7 +325,9 @@ export const leaksAnswer = (solved, prints) => {
     printed.some((t) => t === w || (w.length >= 4 && t.startsWith(w)) || (t.length >= 4 && w.startsWith(t)));
   const forms = [solved && solved.answer, ...((solved && solved.accepted) || [])];
   return forms.some((form) => {
-    const words = answerWords({ answer: form });
+    // The prompt travels with the form (REVIEW #23 Minor 5): whether a short
+    // answer is content or a function word is decided by the item's own cue.
+    const words = answerWords({ answer: form, questionDe: solved && solved.questionDe });
     return words.size > 0 && [...words].every(shows);
   });
 };
@@ -597,6 +614,15 @@ export function pickPracticeItems(pool, rule, seed, options = {}) {
   // course never teaches all of the item's words, so no Lektion may serve it.
   // Items with no stamp at all (a hand-built pool in a test) are left alone — only a stamped item
   // can be filtered, or every unit test would have to know the lexicon.
+  //
+  // WHAT THE STAMP IS NOT (DaF review #23, Minor 22 — left open, deliberately). `minLektion` is a
+  // FLOOR, not an assignment: `extra-a11-l02-16` (authored for L2, stamp 2) is drawn in L3, because
+  // L3's `verb-sein` slice legitimately reaches every servable item of the topic. The review calls
+  // the late serving „folgenlos" — every word of the item is taught, the topic is the Lektion's own
+  // — and the class fix (capping an extra at its authored Lektion) would gut the supply the later
+  // Lektionen's secondary topics draw from and reseat all 36 blocks over a finding with no cost.
+  // If a later round measures a COST (an extra whose situation contradicts its host Lektion), the
+  // fix is a situation predicate on the draw, not an id cap.
   const servableHere = (it) =>
     !Object.prototype.hasOwnProperty.call(it, 'minLektion') ||
     (Number.isInteger(it.minLektion) && (!Number.isInteger(options.lektionNr) || it.minLektion <= options.lektionNr));

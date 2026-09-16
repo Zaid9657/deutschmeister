@@ -89,7 +89,7 @@ import {
   missingSentenceArticle, cueAnswerMismatch, metalinguisticPrompt, SENTENCE_ARTICLE_CUE,
   ambiguousCorrection, minimalArticleCorrection, isPoliteFormItem, drillsSlug, isNumberWord,
   politeCaseItem, POLITE_CUE_RE, INFORMAL_VETO_RE, carriesPoliteForm, NEXT_LEVEL_RE, UNTAUGHT_ANSWER_FORMS, UNTAUGHT_ANSWER_FORM_RE, untaughtForm,
-  unconditionedRule, unconditionedRuleSentence, namesCondition,
+  unconditionedRule, unconditionedRuleSentence, namesCondition, unconditionedProseSentence,
   frontableOrders, frontedAcceptedForms, missingFrontedOrder, agreementAmbiguity,
   FRONTABLE_ADVERBIAL_RE, genderPairAmbiguity, genderPartners,
   determinerRepair, missingDeterminerCue, withDeterminerCue, DETERMINER_CUE,
@@ -1615,4 +1615,111 @@ test('the gender-pair detector reaches the possessive family — REVIEW #14 MAJO
     id: 'gp6', type: 'error_correction',
     questionDe: 'Korrigieren Sie den Possessivartikel: „Das ist mein Chefin.“', answer: 'Das ist meine Chefin.',
   }, { level: 'a1.1' }), null);
+});
+
+// --- REVIEW #23, Minor 1 ----------------------------------------------------
+
+test('the pool tests the letter Q, and the item can actually be served — REVIEW #23 Minor 1', () => {
+  // Rounds 10–23 measured ZERO items over the whole pool that test Q — the one
+  // letter name (Ku) a learner cannot guess from the letter. The generated
+  // „Wie heißt der Buchstabe … auf Deutsch?“ items cannot carry it: their
+  // `auf Deutsch` is Lektion-3 lexis, so their minLektion stamp puts them past
+  // the two Lektionen that draw the alphabet topic. The Q item is therefore a
+  // hand extra shaped like the letter-name extras that ARE served.
+  const q = POOL.items.find((i) => /Buchstabe Q/.test(i.questionDe || ''));
+  assert.ok(q, 'no pool item tests the letter Q');
+  assert.equal(q.answer, 'Ku', 'the Q item must accept the letter name Ku');
+  assert.ok((q.accepted || []).includes('ku'), 'a typed lowercase ku is the same name');
+  assert.equal(q.minLektion, 1, 'the Q item must be servable in the Lektion that teaches the alphabet');
+  assert.equal(exclusionReason(q, { level: 'a1.1' }), null, 'the Q item fails the quality gate');
+});
+
+// --- REVIEW #23, Minor 7 ----------------------------------------------------
+
+test('no item carries its German question as questionEn — REVIEW #23 Minor 7', () => {
+  // `questionEn` is the support line an A1 learner reads when the German prompt
+  // alone does not carry him. Fifteen bank items shipped with the German
+  // question repeated there — six of them drawn (`34957c67`, `0fe8146d`,
+  // `dd1c3d60`, `cb35f9d0`, `9fd52b13`, `e0ac0425`). The instances are repaired
+  // in scripts/build-lesson-pool.mjs (QUESTION_EN_REPAIRS); the CLASS is closed
+  // twice — the build refuses to write such a pool, and this holds the
+  // committed file to the same zero, extras included.
+  for (const item of ALL) {
+    const de = String(item.questionDe || '').trim();
+    const en = String(item.questionEn || '').trim();
+    assert.ok(!de || de !== en, `${item.id}: questionEn is the German question again — „${de.slice(0, 50)}“`);
+  }
+  // …and the six drawn ids the review named carry a real English gloss now.
+  for (const short of ['34957c67', '0fe8146d', 'dd1c3d60', 'cb35f9d0', '9fd52b13', 'e0ac0425']) {
+    const item = POOL.items.find((i) => i.id.startsWith(short));
+    assert.ok(item, `${short} left the pool — re-measure Minor 7`);
+    assert.match(String(item.questionEn), /[a-z]/, `${short}: questionEn is empty`);
+    assert.ok(!/[äöüß]|\bder\b|\bdie\b|\bdas\b|\bich\b|\bdu\b/i.test(item.questionEn.replace(/\(.*?\)/g, '')
+      .replace(/der Stuhl|das Auto|Stühle|Autos/g, '')),
+      `${short}: questionEn still reads as German — „${item.questionEn}“`);
+  }
+});
+
+// --- REVIEW #23, Minor 11 ---------------------------------------------------
+
+test('ffec1d33 no longer marks a plausible German answer wrong — REVIEW #23 Minor 11', () => {
+  // „Kommst du aus Italien?" — „Ja, ich bin aus Italien." is correct spoken
+  // German that answers the question, and the item offered it as a WRONG
+  // option. The build replaces it with the unconjugated „ich kommen", a
+  // mistake the Lektion actually teaches against; the key is untouched.
+  const item = POOL.items.find((i) => i.id.startsWith('ffec1d33'));
+  assert.ok(item, 'ffec1d33 left the pool — re-measure Minor 11');
+  assert.ok(!item.options.includes('Ja, ich bin aus Italien.'),
+    'the plausible-German distractor is back');
+  assert.ok(item.options.includes('Ja, ich kommen aus Italien.'),
+    'the replacement distractor is gone');
+  assert.equal(item.answer, 'Ja, ich komme aus Italien.', 'the key must not move');
+  assert.equal(item.options.length, 4, 'a replacement swaps one option, it never shrinks the set');
+});
+
+// --- REVIEW #23, Minor 4 ----------------------------------------------------
+
+test('no rule card and no notice states a rule without its condition — REVIEW #23 Minor 4', async () => {
+  // Round 12 closed UNCONDITIONED_RULE over the pool items and wrote the rest
+  // down: "der Lint läuft über Poolitems, nicht über Karten und notices" — the
+  // extension needed a carve-out first, because two TRUE card sentences trip
+  // the item predicate. `unconditionedProseSentence` is that extension: the
+  // same four clauses, plus the conditions prose states and items never do
+  // (a position claim, a register word, a named grammar category, a spelled-
+  // out contraction). This runs it over every override card — content and
+  // mistake explanations — and over every notice of every curriculum.
+  const { default: OVERRIDES } = await import('../scripts/rule-card-overrides.mjs');
+  const { CURRICULA, DRAFT_CURRICULA } = await import('../src/data/curricula/index.js');
+
+  for (const [slug, card] of Object.entries(OVERRIDES)) {
+    for (const src of [card.content, ...card.commonMistakes.map((m) => m.explanationDe)]) {
+      const hit = unconditionedProseSentence(src);
+      assert.equal(hit, null, `card ${slug} — ${hit && hit.clause}: „${hit && hit.sentence}“`);
+    }
+  }
+  for (const [lvl, c] of Object.entries({ ...CURRICULA, ...DRAFT_CURRICULA })) {
+    for (const l of c.lektionen || []) {
+      const hit = unconditionedProseSentence(String(l.notice?.bodyDe || '').replace(/\*\*/g, ''));
+      assert.equal(hit, null, `${lvl} L${l.nr} notice — ${hit && hit.clause}: „${hit && hit.sentence}“`);
+    }
+  }
+});
+
+test('the prose lint keeps the item lint\'s teeth and only the prose carve-outs — REVIEW #23 Minor 4', () => {
+  // The false shapes the item rule was written for stay caught in prose:
+  assert.equal(unconditionedProseSentence('Nach brauchen wird ein zu einen: einen Computer.')?.clause,
+    'transformation', 'the round-11 blocker sentence must stay caught');
+  assert.equal(unconditionedProseSentence('Wir steht immer mit haben.')?.clause,
+    'absolute-quantifier', 'the pairing sentence must stay caught');
+  // …and the two TRUE card sentences round 12 measured as the reason the
+  // extension needed a carve-out pass for the reason each carve-out names:
+  assert.equal(unconditionedProseSentence('Der Artikel steht immer vor dem Nomen.'), null,
+    'a position claim quantifies over word order, not over a form');
+  assert.equal(unconditionedProseSentence('Die höfliche Form ist Ihr und steht immer mit großem I.'), null,
+    'the register is the condition, like a genus or a person');
+  // The two A1.2 prose shapes the measurement surfaced, one per carve-out:
+  assert.equal(unconditionedProseSentence('Das Perfekt steht in diesem Kurs immer mit haben.'), null,
+    'a named grammar category carries its own scope');
+  assert.equal(unconditionedProseSentence('zu dem wird zum, zu der wird zur: zum Bahnhof, zur Brücke.'), null,
+    'a spelled-out contraction has no free variable and no missing condition');
 });

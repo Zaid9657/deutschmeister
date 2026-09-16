@@ -1907,6 +1907,87 @@ export function unconditionedRule(item) {
   return unconditionedRuleSentence(item) !== null;
 }
 
+// ── REVIEW #23 Minor 4: the same lint over the HAND-AUTHORED PROSE ───────────
+//
+// Round 12 closed UNCONDITIONED_RULE over the pool items and wrote down the
+// rest: „der Lint läuft über Poolitems, nicht über Karten und notices … die
+// Ausweitung braucht erst ein Carve-out“ — because two TRUE card sentences trip
+// the item predicate. Both carve-outs are conditions the item clauses simply
+// never needed, measured on the 24 shipped cards and the 24 notices:
+//
+//   * A POSITION CLAIM. „Der Artikel steht immer vor dem Nomen.“ quantifies
+//     over WORD ORDER, not over a form choice — the claim carries its whole
+//     scope in the place it names (vor dem Nomen, am Ende, auf Position 2).
+//     An item explanation never states one (its rules are form rules), which
+//     is why `namesCondition` did not need the clause.
+//   * A REGISTER WORD. „Die höfliche Form ist Ihr und steht immer mit großem
+//     I.“ is scoped by its register — höflich IS the condition, exactly as a
+//     genus or a person is. The item-side SCOPE_WORD_RE reaches most of these
+//     through „…-Form“; the card sentence writes „die höfliche Form“ as two
+//     words, which that regex cannot see.
+//
+// Everything else is the SAME four clauses as the item lint, one source: a
+// false rule is false wherever it is printed, and the card is what
+// explain-answer.mjs grounds the model in when a learner is already stuck.
+// tests/lesson-pool-rules.test.mjs runs this over every override card and
+// every curriculum notice, with the two true sentences and the measured false
+// shapes as fixtures.
+
+/** A claim about WHERE something stands — order, not form. */
+export const POSITION_CLAIM_RE =
+  /\b(?:steht|stehen|kommt|kommen)\b[^.!?]*\b(?:vor\s|nach\s|hinter\s|dahinter|vorn|zuerst|am\s+(?:satz)?ende|am\s+anfang|auf\s+position|an\s+\p{L}+\s+stelle)/iu;
+
+/** The register a rule may be scoped to — höflich is a condition like a genus. */
+export const REGISTER_WORD_RE = /\b(?:höflich\p{L}*|informell\p{L}*|formell\p{L}*|Höflichkeitsform)\b/iu;
+
+/**
+ * A NAMED GRAMMAR CATEGORY as the domain of the claim. „nicht verneint alles
+ * andere: ein Verb, ein Adjektiv oder ein Nomen mit bestimmtem Artikel“ and
+ * „Das Perfekt steht in diesem Kurs immer mit haben“ quantify over a word
+ * class or a form they NAME — the condition is the category. An item
+ * explanation states its rules on words, not on categories (the pool's
+ * measured false sentences contain none of these), so the item clauses never
+ * needed it. Closed: word classes plus the tense/form names a card may state
+ * a rule about. The cases and genus words already live in `namesCondition`.
+ */
+export const GRAMMAR_CATEGORY_RE =
+  /\b(?:Artikel\p{L}*|Nomen|Verb(?:en|s)?|Adjektiv\p{L}*|Pronomen|Präposition\p{L}*|Modalverb\p{L}*|Possessivartikel\p{L}*|Perfekt|Präsens|Partizip\p{L}*|Imperativ\p{L}*|Infinitiv\p{L}*|Fragewort\p{L}*)\b/u;
+
+/**
+ * A CONTRACTION as the result of a transformation: „zu dem wird zum, zu der
+ * wird zur“ carries no free variable — both sides of the mapping are spelled
+ * out, so no condition is missing. Closed: the German preposition-article
+ * contractions.
+ */
+export const CONTRACTION_RESULT_RE = /\bwird\s+(?:zum|zur|am|im|ans|ins|beim|vom)\b/i;
+
+/**
+ * unconditionedProseSentence(text) → { clause, sentence } for the first
+ * sentence of a card or notice that states a rule without its condition.
+ */
+export function unconditionedProseSentence(text) {
+  for (const sentence of claimSentences(text)) {
+    const scoped = namesCondition(sentence) || REGISTER_WORD_RE.test(sentence)
+      || GRAMMAR_CATEGORY_RE.test(sentence);
+    if (TRANSFORMATION_RE.test(sentence) && !scoped && !CONTRACTION_RESULT_RE.test(sentence)) {
+      return { clause: 'transformation', sentence };
+    }
+    if (ABSOLUTE_QUANTIFIER_RE.test(sentence) && !scoped && !POSITION_CLAIM_RE.test(sentence)) {
+      return { clause: 'absolute-quantifier', sentence };
+    }
+    const cross = CROSS_GENDER_RE.exec(sentence);
+    if (cross) {
+      const compared = cross[1].toLowerCase();
+      const asserted = genusOf(sentence.slice(0, cross.index));
+      if (asserted && asserted !== compared) return { clause: 'cross-gender', sentence };
+    }
+    if (CONCLUDED_ARTICLE_RE.test(sentence) && !scoped) {
+      return { clause: 'concluded-article', sentence };
+    }
+  }
+  return null;
+}
+
 /**
  * exclusionReason(item) → one of REASON, or null when the item may be drawn.
  * Order matters: the most specific finding wins, so the printed counts read as

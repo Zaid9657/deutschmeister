@@ -1440,20 +1440,21 @@ test('THE minLektion BOUND — no checkpoint draws an item its chapter has not t
 });
 
 test('the bound BITES — an item stamped past the chapter leaves the draw, and the paper stays 20', () => {
-  // A mutation rather than a claim: `extra-a11-l05-22` is drawn by checkpoint 2
+  // A mutation rather than a claim: `extra-a11-l05-11` is drawn by checkpoint 2
   // (`afterLektion: 6`) with `minLektion: 5`. Re-stamp that one item to 8 — past
   // the chapter this paper closes — and it must disappear from the paper while
   // every section keeps its size. (The victim was `extra-a11-l05-08` until the
   // paper-wide leak cap of round 15 moved the draw, then `extra-a11-l05-03` until
-  // round 18 added two L2 items and `Marokko`/`Ali` to DIALOG_NAMES — which
-  // re-stamps every origin item's `minLektion` and reseats the pool; the id is a
-  // measurement of the current build, not a fact about the pool.)
+  // round 18 added two L2 items and `Marokko`/`Ali` to DIALOG_NAMES, then
+  // `extra-a11-l05-22` until round 24 added the Q letter-name item and taught
+  // `Ku` on the L1 notice (DaF review #23, Minor 1) — which reseats the pool;
+  // the id is a measurement of the current build, not a fact about the pool.)
   const cp2 = CURRICULUM_A11.checkpoints[1];
   const drawn = (pool) => new Set(
     buildCheckpoint({ curriculum: CURRICULUM_A11, checkpoint: cp2, pool })
       .map((i) => i.poolItemId).filter(Boolean),
   );
-  const VICTIM = 'extra-a11-l05-22';
+  const VICTIM = 'extra-a11-l05-11';
   assert.ok(drawn(POOL).has(VICTIM), `${VICTIM} is no longer drawn by ${cp2.id} — pick another victim`);
 
   const mutated = { ...POOL, items: POOL.items.map((i) => (i.id === VICTIM ? { ...i, minLektion: 8 } : { ...i })) };
@@ -1888,4 +1889,32 @@ test('the hand-set case overrides in the pool are exactly the documented ones', 
     .map((i) => i.id);
   assert.deepEqual(overrides.sort(), [...POLITE_OVERRIDES].sort(),
     'an override is a decision someone has to defend in writing — add it to POLITE_OVERRIDES with a reason or drop the flag');
+});
+
+// ---------------------------------------------------------------------------
+// DaF review #23, Minor 3. Of the eight Falsch Lesen items of the four papers,
+// FOUR were pure speaker swaps („Lena" for „Tim" in a report whose text prints
+// every speaker as a „Name:" prefix) — solvable by matching the name against
+// the left side of the colon, without one word of German being read. The name
+// pass is the falsifier's LAST resort now (FALSIFY_PASSES + the two-sweep
+// ladder in pickLesenSource), so a Falsch statement is wrong for a reason the
+// learner has to read the text to catch. Hard 0 over all four papers: if a
+// future chapter leaves the ladder nothing but a name, this fails and the
+// chapter — not the rule — is what needs the look.
+// ---------------------------------------------------------------------------
+test('no Falsch Lesen item is a pure speaker swap — REVIEW #23 Minor 3', () => {
+  const offenders = [];
+  for (const { cp, items } of ALL_CHECKPOINTS) {
+    for (const item of items.filter((i) => i.section === 'lesen' && i.answer === 'Falsch')) {
+      assert.ok(item.changed && item.changed.from, `${item.id}: a Falsch item must say which detail it changed`);
+      const speakers = new Set(
+        [...String(item.text).matchAll(/(?:^|\s)([A-ZÄÖÜ][a-zäöüß]+):/g)].map((m) => m[1]),
+      );
+      if (speakers.has(item.changed.from) || speakers.has(item.changed.to)) {
+        offenders.push(`${cp.id} ${item.id}: „${item.changed.from}" → „${item.changed.to}"`);
+      }
+    }
+  }
+  assert.deepEqual(offenders, [],
+    `Falsch by name swap again:\n  - ${offenders.join('\n  - ')}`);
 });

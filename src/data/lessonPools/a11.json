@@ -1,7 +1,7 @@
 {
  "level": "a1.1",
  "builtFrom": "2026-08-24",
- "count": 378,
+ "count": 379,
  "items": [
   {
    "id": "10fc1751-c3af-529f-8796-f8e46bfb1691",
@@ -812,6 +812,25 @@
    "minLektion": 1
   },
   {
+   "id": "extra-a11-l01-25",
+   "topic": "alphabet-pronunciation",
+   "type": "fill_blank",
+   "stage": 4,
+   "difficulty": 1,
+   "order": 207,
+   "questionDe": "Der Buchstabe Q heißt ___.",
+   "questionEn": "The letter Q is called …",
+   "options": null,
+   "answer": "Ku",
+   "accepted": [
+    "Ku",
+    "ku"
+   ],
+   "explanationDe": "Den Buchstaben Q sagt man wie Ku.",
+   "hint": null,
+   "minLektion": 1
+  },
+  {
    "id": "extra-a11-l01-03",
    "topic": "alphabet-pronunciation",
    "type": "fill_blank",
@@ -1265,7 +1284,7 @@
    "difficulty": 1,
    "order": 11,
    "questionDe": "der Stuhl → ___ Stühle (Plural)",
-   "questionEn": "der Stuhl → ___ Stühle (Plural)",
+   "questionEn": "the chair → the chairs: which article do plural nouns take?",
    "options": [
     "der",
     "das",
@@ -1285,7 +1304,7 @@
    "difficulty": 1,
    "order": 12,
    "questionDe": "das Auto → ___ Autos (Plural)",
-   "questionEn": "das Auto → ___ Autos (Plural)",
+   "questionEn": "the car → the cars: which article do plural nouns take?",
    "options": [
     "die",
     "der",
@@ -1569,7 +1588,7 @@
    "difficulty": 1,
    "order": 1,
    "questionDe": "Das ist ___ Stuhl.",
-   "questionEn": "Das ist ___ Stuhl.",
+   "questionEn": "That is ___ chair. (indefinite article)",
    "options": [
     "ein",
     "eine",
@@ -1591,7 +1610,7 @@
    "difficulty": 1,
    "order": 2,
    "questionDe": "Ich habe ___ Schwester.",
-   "questionEn": "Ich habe ___ Schwester.",
+   "questionEn": "I have ___ sister. (indefinite article)",
    "options": [
     "eine",
     "ein",
@@ -1613,7 +1632,7 @@
    "difficulty": 1,
    "order": 3,
    "questionDe": "Das ist ___ Bild.",
-   "questionEn": "Das ist ___ Bild.",
+   "questionEn": "That is ___ picture. (indefinite article)",
    "options": [
     "ein",
     "eine",
@@ -1635,7 +1654,7 @@
    "difficulty": 1,
    "order": 6,
    "questionDe": "Er hat ___ Auto.",
-   "questionEn": "Er hat ___ Auto.",
+   "questionEn": "He has ___ car. (indefinite article)",
    "options": [
     "ein",
     "eine",
@@ -3025,7 +3044,7 @@
    "difficulty": 1,
    "order": 3,
    "questionDe": "___ ist meine Mutter.",
-   "questionEn": "___ ist meine Mutter.",
+   "questionEn": "___ is my mother. (which pronoun?)",
    "options": [
     "Sie",
     "Er",
@@ -5483,13 +5502,13 @@
    "stage": 4,
    "difficulty": 2,
    "order": 163,
-   "questionDe": "Korrigieren Sie: „Der Arzt ist um Freitag.“",
+   "questionDe": "Korrigieren Sie: „Der Termin beim Arzt ist um Freitag.“",
    "questionEn": "Correct the preposition.",
    "options": null,
-   "answer": "Der Arzt ist am Freitag.",
+   "answer": "Der Termin beim Arzt ist am Freitag.",
    "accepted": [
-    "Der Arzt ist am Freitag.",
-    "Der Arzt ist am Freitag"
+    "Der Termin beim Arzt ist am Freitag.",
+    "Der Termin beim Arzt ist am Freitag"
    ],
    "explanationDe": "Der Wochentag steht mit am, nicht mit um.",
    "hint": null,
@@ -5679,7 +5698,7 @@
    "difficulty": 1,
    "order": 1,
    "questionDe": "Ich ___ ein Auto.",
-   "questionEn": "Ich ___ ein Auto.",
+   "questionEn": "I ___ a car. (form of haben)",
    "options": [
     "habe",
     "hast",
@@ -5702,7 +5721,7 @@
    "difficulty": 1,
    "order": 3,
    "questionDe": "Er ___ Hunger.",
-   "questionEn": "Er ___ Hunger.",
+   "questionEn": "He ___ hunger — German has hunger rather than being hungry. (form of haben)",
    "options": [
     "hat",
     "habe",
@@ -5725,7 +5744,7 @@
    "difficulty": 1,
    "order": 8,
    "questionDe": "___ du Zeit?",
-   "questionEn": "___ du Zeit?",
+   "questionEn": "___ you (du) time? (form of haben)",
    "options": [
     "Hast",
     "Habe",
@@ -6102,7 +6121,7 @@
    "difficulty": 1,
    "order": 1,
    "questionDe": "Ich ___ müde.",
-   "questionEn": "Ich ___ müde.",
+   "questionEn": "I ___ tired. (form of sein)",
    "options": [
     "bin",
     "bist",
@@ -6125,7 +6144,7 @@
    "difficulty": 1,
    "order": 3,
    "questionDe": "Er ___ Lehrer.",
-   "questionEn": "Er ___ Lehrer.",
+   "questionEn": "He ___ a teacher. (form of sein)",
    "options": [
     "ist",
     "bin",
@@ -6148,7 +6167,7 @@
    "difficulty": 1,
    "order": 4,
    "questionDe": "Wir ___ in Berlin.",
-   "questionEn": "Wir ___ in Berlin.",
+   "questionEn": "We ___ in Berlin. (form of sein)",
    "options": [
     "sind",
     "seid",
@@ -6171,7 +6190,7 @@
    "difficulty": 1,
    "order": 7,
    "questionDe": "Das ___ gut.",
-   "questionEn": "Das ___ gut.",
+   "questionEn": "That ___ good. (form of sein)",
    "options": [
     "ist",
     "bin",
@@ -6194,7 +6213,7 @@
    "difficulty": 1,
    "order": 8,
    "questionDe": "___ du Student?",
-   "questionEn": "___ du Student?",
+   "questionEn": "___ you a student? (form of sein)",
    "options": [
     "Bist",
     "Bin",
@@ -6666,7 +6685,7 @@
    "options": [
     "Ja, ich komme aus Italien.",
     "Ja, komme.",
-    "Ja, ich bin aus Italien.",
+    "Ja, ich kommen aus Italien.",
     "Ja, du kommst aus Italien."
    ],
    "answer": "Ja, ich komme aus Italien.",

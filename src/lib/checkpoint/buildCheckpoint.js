@@ -1103,11 +1103,22 @@ function changedDetail(
   word,
   { names, vocab, printed },
   rng,
-  { allowVocab = true, allowAdverb = false, digitGroup = false, determiner = '' } = {},
+  { allowVocab = true, allowAdverb = false, allowName = false, digitGroup = false, determiner = '' } = {},
 ) {
   const lower = word.toLowerCase();
+  if (allowName) {
+    // The LAST pass, and only names fire here (DaF review #23, Minor 3). A
+    // swapped speaker name is the one falsification a reader solves WITHOUT
+    // reading the content: the names stand as „Name:" prefixes in the printed
+    // text, so „steht der Name links vom Doppelpunkt?" decides the item. Four
+    // of the eight Falsch items of the four papers were exactly that. So a
+    // name swap is what the falsifier reaches for only when NO content detail
+    // of the whole ladder falsifies — the papers stay full, and a Falsch
+    // statement is wrong for a reason one has to read the text to catch.
+    return names.includes(word) ? pickOther(names, word, rng) : null;
+  }
   if (allowAdverb) {
-    // The fallback pass: only the adverb table fires here, and only on a
+    // The adverb pass: only the adverb table fires here, and only on a
     // lowercase occurrence (see ADVERB_SWAPS).
     if (word !== lower) return null;
     const opposites = ADVERB_SWAPS.get(lower);
@@ -1122,7 +1133,6 @@ function changedDetail(
     const n = Number(word);
     return String(n >= 10 ? n + 10 : n + 3);
   }
-  if (names.includes(word)) return pickOther(names, word, rng);
   // Congruence: same GENDER and same NUMBER, read off the determiner that
   // stands in the text (resolvedReading), or no swap at all — plus the semantic
   // class on every swap, and nothing the chapter has not printed (see
@@ -1163,12 +1173,18 @@ function changedDetail(
  *   2. VOCAB — a Wortfeld noun in a real NP slot, same gender and number, same
  *      semantic class, and printed in this chapter (NP_DET_RE,
  *      QUANTIFIER_DET, resolvedReading, semanticClass, printedNouns).
- *   3. ADVERB — the fallback pass: a place/time adverb for its opposite
- *      (ADVERB_SWAPS). It exists because pass 2 became positional and a window
- *      of bare-noun idioms would otherwise yield nothing and ship a 3-item
- *      Lesen section.
+ *   3. ADVERB — a place/time adverb for its opposite (ADVERB_SWAPS). It exists
+ *      because pass 2 became positional and a window of bare-noun idioms would
+ *      otherwise yield nothing and ship a 3-item Lesen section.
+ *   4. NAME — the last resort (DaF review #23, Minor 3). Until round 24 the
+ *      name swap sat in pass 1, and four of the eight Falsch items of the four
+ *      papers were PURE speaker swaps — solvable by matching the statement's
+ *      name against the „Name:" prefixes of the text, without one word of
+ *      German being read. A name still falsifies (the papers must fill), but
+ *      only after every CONTENT detail of every line of the ladder has been
+ *      tried and failed.
  *
- * Only if all three fail does buildLesen skip the item — and since the test
+ * Only if all four fail does buildLesen skip the item — and since the test
  * pins 5/4/6/3/2 on all four checkpoints, a skip means the window is wrong and
  * has to be replaced, not tolerated.
  */
@@ -1176,6 +1192,7 @@ const FALSIFY_PASSES = [
   { allowVocab: false, allowAdverb: false },
   { allowVocab: true, allowAdverb: false },
   { allowVocab: false, allowAdverb: true },
+  { allowVocab: false, allowAdverb: false, allowName: true },
 ];
 
 /**
@@ -1186,7 +1203,7 @@ const FALSIFY_PASSES = [
  */
 function falsifyWindow(window, text, ctxWords, rng) {
   const lines = shuffle(window, rng);
-  for (const { allowVocab, allowAdverb } of FALSIFY_PASSES) {
+  for (const { allowVocab, allowAdverb, allowName } of FALSIFY_PASSES) {
     for (const line of lines) {
       const de = String(line.de || '');
       // Tokens in reading order first, so a number word can see its NEIGHBOURS
@@ -1204,6 +1221,7 @@ function falsifyWindow(window, text, ctxWords, rng) {
         const replacement = changedDetail(match[0], ctxWords, rng, {
           allowVocab,
           allowAdverb,
+          allowName,
           digitGroup,
           determiner,
         });
@@ -1619,20 +1637,29 @@ function windowSpeakerNames(window) {
  * not a fact, and swapping it („Lena, wann …?" → „Paul, …") is a
  * change no reader has to read the text to catch.
  */
-function falsifyStatement(statement, text, ctxWords, rng) {
+function falsifyStatement(statement, text, ctxWords, rng, { names = true } = {}) {
   const de = String(statement || '');
-  for (const { allowVocab, allowAdverb } of FALSIFY_PASSES) {
+  const passes = names ? FALSIFY_PASSES : FALSIFY_PASSES.filter((p) => !p.allowName);
+  for (const { allowVocab, allowAdverb, allowName } of passes) {
     const tokens = [...de.matchAll(WORD_RE)];
     const isNumberToken = (t) => Boolean(t) && NUMBER_WORDS.includes(t[0].toLowerCase());
     const matches = shuffle(tokens.map((match, pos) => ({ match, pos })), rng);
     for (const { match, pos } of matches) {
       if ((allowVocab || allowAdverb) && sentenceInitial(de, match.index)) continue;
       if (de[match.index + match[0].length] === ',' && ctxWords.names.includes(match[0])) continue;
+      // The possessed head of engine B's report frame („Das **Hobby** von Lena
+      // ist Sport.") is not a detail, it is the frame: swapping it writes an
+      // identity about a different thing („Das Wasser von Lena ist Sport."),
+      // which is grammatical and no German anyone says. A detail may change;
+      // the frame may not (DaF review #23, Minor 3 — measured when the name
+      // pass moved last and this token became the first swap the vocab pass
+      // could reach).
+      if (tokens[pos + 1] && tokens[pos + 1][0] === 'von' && ctxWords.names.includes(String((tokens[pos + 2] || [''])[0]))) continue;
       const digitGroup = isNumberToken(tokens[pos])
         && (isNumberToken(tokens[pos - 1]) || isNumberToken(tokens[pos + 1]));
       const determiner = tokens[pos - 1] ? tokens[pos - 1][0] : '';
       const replacement = changedDetail(match[0], ctxWords, rng, {
-        allowVocab, allowAdverb, digitGroup, determiner,
+        allowVocab, allowAdverb, allowName, digitGroup, determiner,
       });
       if (!replacement) continue;
       const changed = `${de.slice(0, match.index)}${replacement}${de.slice(match.index + match[0].length)}`;
@@ -1660,22 +1687,33 @@ function falsifyStatement(statement, text, ctxWords, rng) {
  *      tests/checkpoint.test.mjs pins them away from it.
  */
 function pickLesenSource(candidates, wantRichtig, { rng, spec, chapterVocab, chapterPrinted, usedSources }) {
-  for (const candidate of candidates) {
-    const text = windowText(candidate.window);
-    const names = windowSpeakerNames(candidate.window);
-    const ctxWords = { names, vocab: chapterVocab, printed: chapterPrinted };
-    const reports = shuffle(windowReports(candidate.window, spec), rng)
-      .filter((r) => !usedSources.has(lineKeyOf(candidate.lektion?.id ?? candidate.lektion?.nr, candidate.start + r.lineIndex)));
-    for (const report of reports) {
-      if (wantRichtig) return { candidate, text, report, statement: report.statement, changed: null };
-      const falsified = falsifyStatement(report.statement, text, ctxWords, rng);
-      if (falsified) {
-        return {
-          candidate, text, report, statement: falsified.de, changed: { from: falsified.from, to: falsified.to },
-        };
+  // TWO SWEEPS FOR A FALSCH ITEM (DaF review #23, Minor 3). The name pass is
+  // last INSIDE falsifyStatement, but a per-statement ordering alone still
+  // returned the first report of the ladder — name swap and all — while a
+  // later report of the same chapter falsified on CONTENT. So the whole
+  // ladder is walked once with names off; only when no report anywhere
+  // falsifies on a detail worth reading for does the second sweep allow the
+  // name swap, which is what keeps a poor chapter at four Lesen items.
+  const sweep = (names) => {
+    for (const candidate of candidates) {
+      const text = windowText(candidate.window);
+      const ctxWords = { names: windowSpeakerNames(candidate.window), vocab: chapterVocab, printed: chapterPrinted };
+      const reports = shuffle(windowReports(candidate.window, spec), rng)
+        .filter((r) => !usedSources.has(lineKeyOf(candidate.lektion?.id ?? candidate.lektion?.nr, candidate.start + r.lineIndex)));
+      for (const report of reports) {
+        if (wantRichtig) return { candidate, text, report, statement: report.statement, changed: null };
+        const falsified = falsifyStatement(report.statement, text, ctxWords, rng, { names });
+        if (falsified) {
+          return {
+            candidate, text, report, statement: falsified.de, changed: { from: falsified.from, to: falsified.to },
+          };
+        }
       }
     }
-  }
+    return null;
+  };
+  const picked = wantRichtig ? sweep(true) : (sweep(false) || sweep(true));
+  if (picked) return picked;
   // Rung 4: no report anywhere in the chapter (see the ladder above).
   for (const candidate of candidates) {
     const text = windowText(candidate.window);

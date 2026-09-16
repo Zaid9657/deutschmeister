@@ -7,6 +7,7 @@ import Layout from '../../layouts/Layout.astro';
 import '../../styles/global.css';
 import Aurora from '../../components/Aurora.astro';
 import CourseCheckout from '../../components/CourseCheckout.astro';
+import A11CourseLanding from '../../components/courses/A11CourseLanding.astro';
 import { ORGANIZATION } from '../../lib/siteMeta.js';
 import { getTopicsForLevel } from '../../lib/grammar.js';
 import { levelCoursesWithVariants } from '../../lib/courseVariants.js';
@@ -21,6 +22,13 @@ export async function getStaticPaths() {
 }
 
 const { level } = Astro.props;
+// A1.1 is the one level that SELLS rather than lists: it renders the dedicated
+// DeutschStart A1.1 sales page (components/courses/A11CourseLanding.astro,
+// plan 2026-09-15-a11-organic-commercial-launch Task 1), which brings its own
+// Layout, head and Course+Offer schema. Every other level keeps this page
+// exactly as it was.
+const A11_LEVEL = 'a1.1';
+const isA11 = level === A11_LEVEL;
 const code = level.toUpperCase();
 const slug = levelToSlug(level);
 const course = levelCoursesWithVariants().find((c) => c.key === productKeyForLevel(level)) || null;
@@ -75,6 +83,9 @@ const jsonLd = {
 };
 ---
 
+{isA11 && <A11CourseLanding level={level} course={course} topics={topics} />}
+
+{!isA11 && (
 <Layout title={title} description={description} canonical={`https://deutsch-meister.de/courses/${slug}/`} jsonLd={jsonLd} lang="en">
   <div class="overflow-x-clip bg-paper text-ink">
     <section class="relative" aria-labelledby="hero-h">
@@ -327,3 +338,4 @@ const jsonLd = {
   </div>
   <CourseCheckout />
 </Layout>
+)}

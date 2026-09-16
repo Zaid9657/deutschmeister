@@ -1,0 +1,522 @@
+---
+// The DeutschStart A1.1 sales page — the one course URL that sells rather than
+// lists (plan: docs/superpowers/plans/2026-09-15-a11-organic-commercial-launch.md
+// Task 1; offer contract at the head of that file). Every other level keeps the
+// generic /courses/<level>/ page; this component is branched in from
+// pages/courses/[level].astro for level === 'a1.1' only.
+//
+// THREE RULES THIS FILE IS BUILT AROUND.
+//
+// 1. EVERY NUMBER DERIVES. The price comes from LEVEL_COURSES (pricing.js), the
+//    speaking allowances from marketing.js (which is pinned to the grants the
+//    webhook writes by tests/claims.test.mjs), the lesson/checkpoint/situation
+//    counts from the curriculum module itself, the practice-activity count from
+//    the measured pool constant, and the daily minutes from the curriculum's own
+//    minutes. Nothing on this page is a typed figure — tests/claims.test.mjs
+//    lists this file as a price-free surface and tests/a11-landing.test.mjs
+//    re-derives the rest.
+//
+// 2. ONE VISUAL PRIMARY ACTION. `BTN_PRIMARY` is spent exclusively on the free
+//    preview (PRIMARY_CTA → PREVIEW_HREF). The checkout button lives in the
+//    offer card and nowhere above it, and wears the secondary treatment: the
+//    page's job above the fold is to get a beginner into lesson one, not to ask
+//    a stranger for money.
+//
+// 3. NOTHING IS PROMISED THAT DOES NOT EXIST. Two things are not shipped yet and
+//    the page says so rather than dressing them up: the recorded-audio manifest
+//    (../../data/curricula/a11.audio.js) is still the empty stub, so every audio
+//    surface in the course is a computer voice and this page states that in
+//    plain words — `hasRecordedAudio` flips the wording the day the owner's
+//    voice run populates it — and the independent DaF review of the finished
+//    course is still pending, so the page names it as pending instead of citing
+//    an endorsement. No learner counts, no testimonials, no countdown, no
+//    outcome promise: A1.1 is the first half of A1 and the page says that too.
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/global.css';
+import Aurora from '../../components/Aurora.astro';
+import CourseCheckout from '../../components/CourseCheckout.astro';
+import { ORGANIZATION } from '../../lib/siteMeta.js';
+import { CURRENCY, COURSE_PRO_MONTHS, SPEAKING_TOPUP, eur, num } from '../../data/pricing.js';
+import {
+  A11_PRACTICE_ACTIVITY_COUNT,
+  COURSE_MISSION_ATTEMPTS,
+  COURSE_SPEAKING_MINUTES,
+  COURSE_WRITING_FREE_TOTAL_A11,
+  FREE_LEVEL_LABEL,
+} from '../../data/marketing.js';
+import { LEGAL } from '../../data/legal.js';
+import { levelToSlug } from '../../data/courseContents.js';
+import { curriculumFor } from '../../data/curricula/index.js';
+import A11_AUDIO from '../../data/curricula/a11.audio.js';
+import {
+  LEKTION_ANATOMY,
+  checkpointAfter,
+  guidedMinutes,
+  kannBeschreibungenCount,
+  wortfeldRunningTotals,
+} from '../../lib/syllabus.js';
+
+const { level, course, topics = [] } = Astro.props;
+
+const slug = levelToSlug(level);
+const canonical = `https://deutsch-meister.de/courses/${slug}/`;
+const curriculum = curriculumFor(level);
+const lektionen = curriculum.lektionen;
+const checkpoints = curriculum.checkpoints;
+
+// --- derived figures --------------------------------------------------------
+const lessonCount = lektionen.length;
+const checkpointCount = checkpoints.length;
+const previewCount = course.previewLessons;
+const previewLektionen = lektionen.slice(0, previewCount);
+const kannCount = kannBeschreibungenCount(lektionen);
+const wortfeldTotal = wortfeldRunningTotals(lektionen).at(-1)?.running ?? 0;
+
+// The route's length in days. It is the offer's promise (the plan's offer
+// contract: "a practical 30-day route"), not a measurement, so it is named once
+// here and everything else — the daily minutes, the refund window — is derived
+// from it rather than restated.
+const ROUTE_DAYS = 30;
+const guided = guidedMinutes(curriculum);
+const minutesPerDay = Math.round(guided / ROUTE_DAYS);
+// English page, English decimal separator — hoursDe() is the German form.
+const guidedHours = (Math.round((guided / 60) * 10) / 10).toFixed(1);
+
+// Recorded audio exists only once the generated manifest carries Lektionen.
+// While it is the empty stub, every audio surface in the course is a computer
+// voice — and so is every sentence on this page about audio.
+const hasRecordedAudio = Object.keys(A11_AUDIO.lektionen || {}).length > 0;
+
+// An unset checkout id means the product is not live yet: no button, and the
+// Offer's availability drops to PreOrder rather than claiming stock.
+const buyable = Boolean(course.variantId);
+
+const PRIMARY_CTA = `Start ${previewCount} free lessons`;
+const PREVIEW_HREF = `/course/${level}/l/1?source=a11-sales`;
+const previewHrefFor = (nr) => `/course/${level}/l/${nr}?source=a11-sales`;
+
+// --- head -------------------------------------------------------------------
+const title = `${course.name}: German for beginners — ${eur(course.price)}`;
+const description = `A practical ${ROUTE_DAYS}-day route through ${lessonCount} everyday situations for adult beginners, and the foundation to continue with A1.2. Start ${previewCount} complete lessons free.`;
+
+// Course + Offer only. No aggregateRating: the product has collected no genuine
+// reviews, and inventing one is the single most common piece of fraud in this
+// schema type. The description states the route length; it promises no outcome.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Course',
+  name: course.name,
+  description,
+  url: canonical,
+  inLanguage: 'de',
+  educationalLevel: course.code,
+  teaches: 'German as a foreign language, CEFR A1.1',
+  isAccessibleForFree: false,
+  provider: ORGANIZATION,
+  hasCourseInstance: {
+    '@type': 'CourseInstance',
+    courseMode: 'online',
+    courseWorkload: `PT${guided}M`,
+  },
+  offers: {
+    '@type': 'Offer',
+    price: num(course.price),
+    priceCurrency: CURRENCY,
+    url: canonical,
+    category: 'one-time purchase',
+    availability: buyable ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
+  },
+};
+
+// Playbook class strings (docs/design/playbook.md §1) — the same button the
+// pricing page and the guides render. Tokens only; no raw colour anywhere.
+const BTN = 'inline-flex items-center justify-center gap-2 rounded-clay text-base font-bold transition-all duration-100 ease-snap select-none';
+const BTN_PRIMARY = `${BTN} btn-shimmer relative overflow-hidden bg-siegel px-7 py-3.5 text-white shadow-raise-siegel hover:bg-siegel-lift active:translate-y-1 active:shadow-none`;
+const BTN_SECONDARY = `${BTN} border border-rule bg-white px-7 py-3.5 text-ink shadow-raise hover:border-siegel hover:text-siegel-deep active:translate-y-1 active:shadow-none`;
+const CARD = 'rounded-clay border border-rule bg-white p-5';
+const H2 = 'font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.015em] sm:text-[1.875rem]';
+const EYEBROW = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel';
+const LINK = 'font-bold text-siegel transition-colors hover:text-siegel-deep';
+
+const proofs = [
+  { figure: String(lessonCount), label: 'guided lessons, one situation each' },
+  { figure: String(A11_PRACTICE_ACTIVITY_COUNT), label: 'practice activities in the pool they draw from' },
+  { figure: String(checkpointCount), label: 'checkpoints that re-test what came before' },
+  { figure: '1', label: `final assessment in the ${curriculum.examName} format` },
+];
+
+const included = [
+  `${lessonCount} guided lessons of ${LEKTION_ANATOMY.length} steps each — ${minutesPerDay} minutes a day over ${ROUTE_DAYS} days`,
+  `${checkpointCount} checkpoints and a spaced review that brings earlier lessons back`,
+  `A final assessment in the ${curriculum.examName} format, scored against its real threshold`,
+  `${kannCount} Goethe can-do statements and ${wortfeldTotal} words from the official A1 Wortliste`,
+  `${topics.length} grammar topics, explained in English, practised in German`,
+  `${COURSE_MISSION_ATTEMPTS} speaking missions with the AI coach — the first attempt at each is included`,
+  `${COURSE_SPEAKING_MINUTES} permanent speaking minutes on top, for retries and free practice`,
+  `${COURSE_WRITING_FREE_TOTAL_A11} AI-graded writing tasks, corrected against the exam's own criteria`,
+  `${COURSE_PRO_MONTHS} months of Pro included, then the course stays yours`,
+];
+
+// The offer card restates only what a buyer is deciding about — what they keep,
+// what the AI parts allow, and what does not renew. Repeating the whole
+// `included` list here made the card a second syllabus instead of a decision.
+const offerLines = [
+  `${lessonCount} lessons, ${checkpointCount} checkpoints and the final assessment — yours for good`,
+  `${COURSE_MISSION_ATTEMPTS} included speaking attempts, one per mission, plus ${COURSE_SPEAKING_MINUTES} permanent minutes`,
+  `${COURSE_WRITING_FREE_TOTAL_A11} AI-graded writing tasks with exam-criteria feedback`,
+  `${COURSE_PRO_MONTHS} months of Pro included — then it stops, and the course does not`,
+  `A voluntary ${ROUTE_DAYS}-day refund, described in full below`,
+];
+
+const notPromised = [
+  {
+    title: 'This is A1.1 — the first half of A1',
+    body: `It is not the whole A1 level and not a substitute for it. A1.2 is the second half, and finishing this route is what makes it the obvious next step. The ${FREE_LEVEL_LABEL} library on this site — grammar, vocabulary, reading, listening — stays free with or without the course.`,
+  },
+  {
+    title: 'No exam promise',
+    body: `The final assessment uses the ${curriculum.examName} format because that is the exam most A1 learners sit, but we do not register you, we do not examine you, and no course can promise you a result. Goethe-Institut, telc and ÖSD issue the certificate.`,
+  },
+  {
+    title: hasRecordedAudio ? 'Recorded audio' : 'Lesson audio is a computer voice today',
+    body: hasRecordedAudio
+      ? 'Dialogues and example sentences are spoken by recorded voices; the player labels each clip so you always know what you are hearing.'
+      : 'The dialogues and example sentences are read by a speech synthesiser, and every player in the course labels them „Computerstimme“ so you are never told a machine is a person. Recorded human audio is planned; it is not here yet, and it is not part of what you are paying for today.',
+  },
+  {
+    title: 'The independent review is still pending',
+    body: 'The course has been through 23 rounds of internal adversarial teaching review, and every finding is closed. An external, named DaF reviewer has not signed it off yet — when that happens it will be named on this page. Until then, judge it by the three free lessons, not by a badge.',
+  },
+  {
+    title: 'No fixed timetable, no streak to lose',
+    body: `${ROUTE_DAYS} days is a pace, not a deadline: nothing locks, nothing expires, and a missed day moves the plan instead of scolding you.`,
+  },
+];
+
+const faq = [
+  {
+    q: `What exactly is free before I pay?`,
+    a: `Lessons 1 to ${previewCount} in full — the dialogue, the rule, the practice, the speaking task and the writing task, not a trailer. You need a free account so your progress survives a device change, and no card is asked for.`,
+  },
+  {
+    q: 'Who is this for?',
+    a: 'Adults starting German from zero, or restarting after an abandoned attempt. Explanations are in English; the German you practise is German from the first minute.',
+  },
+  {
+    q: 'What do I get after A1.1?',
+    a: 'A foundation you can continue with: you introduce yourself, ask and answer simple questions, handle a café, a station, an office and a form, and you know the twelve grammar points A1.2 builds on.',
+  },
+  {
+    q: 'Is this a subscription?',
+    a: `No. One payment, and the course stays yours. ${COURSE_PRO_MONTHS} months of Pro come with it; when they end, the course does not.`,
+  },
+  {
+    q: 'What happens when the included speaking time runs out?',
+    a: `The first attempt at each of the ${COURSE_MISSION_ATTEMPTS} missions is included, plus ${COURSE_SPEAKING_MINUTES} permanent minutes. After that you can keep going with a ${SPEAKING_TOPUP.minutes}-minute top-up for ${eur(SPEAKING_TOPUP.price)} or with a subscription — the course itself never stops working.`,
+  },
+  {
+    q: 'How much time does it take?',
+    a: `About ${minutesPerDay} minutes of guided lesson time a day over ${ROUTE_DAYS} days, which is ${guidedHours} hours in total. Practice around the lessons — listening, reading, vocabulary, speaking — takes as much more as you want to give it.`,
+  },
+];
+---
+
+<Layout title={title} description={description} canonical={canonical} jsonLd={jsonLd} lang="en">
+  <div class="overflow-x-clip bg-paper text-ink">
+
+    <!-- ═══ 1. Hero ═══ -->
+    <section class="relative" aria-labelledby="hero-h">
+      <Aurora />
+      <div class="relative mx-auto max-w-3xl px-5 pb-12 pt-14 sm:pt-20">
+        <nav class="hero-line font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel" style="--d:0ms" aria-label="Breadcrumb">
+          <a href="/courses/" class="transition-colors hover:text-siegel-deep">Courses</a> · {course.code}
+        </nav>
+        <p class={`hero-line mt-4 ${EYEBROW}`} style="--d:60ms">{course.name} · For complete beginners</p>
+        <h1 id="hero-h" class="hero-line mt-3 font-display text-[2.125rem] font-semibold leading-[1.05] tracking-[-0.025em] sm:text-[3rem]" style="--d:120ms">
+          Start speaking German for real life—not just completing exercises.
+        </h1>
+        <p class="hero-line mt-5 text-[1.0625rem] leading-relaxed text-graphite sm:text-[1.1875rem]" style="--d:220ms">
+          Follow a practical {ROUTE_DAYS}-day route through {lessonCount} everyday situations. Build the foundation you
+          need for A1.2, with guided lessons, lesson audio and speaking practice.
+        </p>
+
+        <!-- Route illustration: the 12 stops and the 4 checkpoints, drawn from
+             the curriculum so it can never show a different number than the
+             syllabus below. Decorative — the same information is in section 3. -->
+        <svg class="hero-line mt-8 w-full text-siegel" style="--d:300ms" viewBox="0 0 360 40" role="img" aria-label={`A route of ${lessonCount} lessons with ${checkpointCount} checkpoints`}>
+          <line x1="8" y1="20" x2="352" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.35" />
+          {lektionen.map((l, i) => {
+            const x = 8 + (i * 344) / (lessonCount - 1);
+            const cp = checkpointAfter(curriculum, l.nr);
+            return (
+              <>
+                <circle cx={x} cy="20" r={cp ? 7 : 4.5} fill="currentColor" opacity={cp ? '1' : '0.7'} />
+                {cp && <text x={x} y="38" text-anchor="middle" font-size="8" fill="currentColor" class="font-data">✓</text>}
+              </>
+            );
+          })}
+        </svg>
+
+        <div class="hero-line mt-8 flex flex-col items-start gap-3" style="--d:380ms">
+          <a href={PREVIEW_HREF} class={BTN_PRIMARY} data-a11-cta="preview-hero"><span class="relative z-10">{PRIMARY_CTA}</span></a>
+          <p class="font-data text-[0.75rem] text-graphite">No card required · Keep your progress</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="mx-auto max-w-3xl px-5 pb-20">
+
+      <!-- ═══ 2. Proof strip ═══ -->
+      <section class="reveal" aria-label="What is in the course">
+        <dl class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {proofs.map((p) => (
+            <div class={CARD}>
+              <dt class="font-display text-[1.75rem] font-semibold leading-none text-ink">{p.figure}</dt>
+              <dd class="mt-2 text-[0.8125rem] leading-snug text-graphite">{p.label}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <!-- ═══ 3. Your 12 stops ═══ -->
+      <section class="reveal mt-16" aria-labelledby="stops-h">
+        <p class={EYEBROW}>The route</p>
+        <h2 id="stops-h" class={`mt-2 ${H2}`}>Your {lessonCount} stops</h2>
+        <p class="mt-3 text-[0.9375rem] leading-relaxed text-graphite">
+          Each stop is a situation you can walk into, not a grammar chapter. The grammar is one step inside it — and
+          after every third stop a checkpoint asks for everything you have passed so far.
+        </p>
+        <ol class="mt-6 space-y-2">
+          {lektionen.map((l) => {
+            const cp = checkpointAfter(curriculum, l.nr);
+            return (
+              <>
+                <li class="flex gap-4 rounded-clay border border-rule bg-white px-4 py-3">
+                  <span class="font-data text-[0.75rem] font-bold text-siegel">{String(l.nr).padStart(2, '0')}</span>
+                  <span>
+                    <span class="block text-[0.9375rem] font-bold text-ink">{l.title}</span>
+                    <span class="mt-0.5 block text-[0.875rem] leading-snug text-graphite">{l.situation}</span>
+                  </span>
+                </li>
+                {cp && (
+                  <li class="flex items-center gap-3 rounded-clay bg-siegel-wash px-4 py-2">
+                    <span class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-siegel-deep">{cp.title}</span>
+                  </li>
+                )}
+              </>
+            );
+          })}
+          <li class="flex items-center gap-3 rounded-clay border border-rule bg-paper-sunk px-4 py-3">
+            <span class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.08em] text-graphite">
+              Final assessment · {curriculum.examName} format
+            </span>
+          </li>
+        </ol>
+      </section>
+
+      <!-- ═══ 4. The three free lessons ═══ -->
+      <section class="reveal mt-16" aria-labelledby="preview-h">
+        <p class={EYEBROW}>Free, in full</p>
+        <h2 id="preview-h" class={`mt-2 ${H2}`}>The first {previewCount} lessons, complete</h2>
+        <p class="mt-3 text-[0.9375rem] leading-relaxed text-graphite">
+          Not an excerpt: the whole lesson, end to end, including the speaking task and the graded writing task. You
+          finish lesson {previewCount} able to do the three things below — whether or not you ever buy anything.
+        </p>
+        <div class="mt-6 grid gap-4 sm:grid-cols-3">
+          {previewLektionen.map((l) => (
+            <div class={`${CARD} flex flex-col`}>
+              <p class="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">Lektion {l.nr}</p>
+              <p class="mt-1.5 font-display text-[1.0625rem] font-semibold leading-snug text-ink">{l.title}</p>
+              <p class="mt-2 text-[0.8125rem] leading-relaxed text-graphite">{l.situation}</p>
+              <ul class="mt-3 space-y-1.5">
+                {l.canDo.slice(0, 2).map((c) => (
+                  <li class="flex gap-2 text-[0.8125rem] leading-snug text-ink">
+                    <span class="mt-[0.5em] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-siegel" aria-hidden="true"></span>
+                    <span>{c}</span>
+                  </li>
+                ))}
+              </ul>
+              <a href={previewHrefFor(l.nr)} class={`mt-4 text-[0.875rem] ${LINK}`} data-a11-cta={`preview-card-${l.nr}`}>
+                Open Lektion {l.nr} →
+              </a>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- ═══ 5. Walkthrough: what one lesson actually does ═══ -->
+      <section class="reveal mt-16" aria-labelledby="walk-h">
+        <p class={EYEBROW}>Inside a lesson</p>
+        <h2 id="walk-h" class={`mt-2 ${H2}`}>{LEKTION_ANATOMY.length} steps, about {lektionen[0].minutes} minutes</h2>
+        <p class="mt-3 text-[0.9375rem] leading-relaxed text-graphite">
+          Every lesson runs the same shape, so you never spend attention on the interface. This is Lektion
+          {' '}{lektionen[0].nr}, „{lektionen[0].title}“.
+        </p>
+
+        <div class="mt-6 overflow-x-auto">
+          <ol class="flex min-w-max gap-2">
+            {LEKTION_ANATOMY.map((step) => (
+              <li class="flex w-28 flex-none flex-col rounded-clay border border-rule bg-white p-3">
+                <span class="font-data text-[0.6875rem] font-bold text-siegel">{String(step.nr).padStart(2, '0')}</span>
+                <span class="mt-1 text-[0.8125rem] font-bold leading-snug text-ink">{step.titleDe}</span>
+                <span class="mt-1 font-data text-[0.6875rem] text-graphite">{step.minutes} min</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <div class="mt-6 grid gap-4 sm:grid-cols-3">
+          <div class={CARD}>
+            <p class={EYEBROW}>Dialogue</p>
+            <p class="mt-2 text-[0.875rem] leading-relaxed text-ink">
+              {lektionen[0].dialog.lines.slice(0, 3).map((line) => (
+                <span class="block"><span class="font-semibold">{line.speaker}:</span> {line.de}</span>
+              ))}
+            </p>
+            <p class="mt-3 font-data text-[0.6875rem] leading-relaxed text-graphite">
+              {hasRecordedAudio
+                ? 'Spoken by a recorded voice; the player labels every clip.'
+                : 'You can play every line. The voice is a speech synthesiser — the player says „Computerstimme“ on each clip, and we will not call it a native recording while it is not one.'}
+            </p>
+          </div>
+          <div class={CARD}>
+            <p class={EYEBROW}>Speaking</p>
+            <p class="mt-2 text-[0.875rem] leading-relaxed text-ink">„{lektionen[0].sprechen.open.promptDe}“</p>
+            <p class="mt-3 font-data text-[0.6875rem] leading-relaxed text-graphite">
+              {lektionen[0].sprechen.open.teil} · the AI coach listens, answers and tells you what to fix.
+            </p>
+          </div>
+          <div class={CARD}>
+            <p class={EYEBROW}>Writing</p>
+            <p class="mt-2 text-[0.875rem] leading-relaxed text-ink">{lektionen[0].schreiben.taskDe}</p>
+            <p class="mt-3 font-data text-[0.6875rem] leading-relaxed text-graphite">
+              A checklist decides the form, the AI decides the meaning — and it answers in German, at your level.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ 6. Included / not promised ═══ -->
+      <section class="reveal mt-16" aria-labelledby="included-h">
+        <p class={EYEBROW}>The honest list</p>
+        <h2 id="included-h" class={`mt-2 ${H2}`}>What you get — and what we do not promise</h2>
+        <div class="mt-6 grid gap-6 sm:grid-cols-2">
+          <div>
+            <h3 class="font-display text-[1.125rem] font-semibold text-ink">Included</h3>
+            <ul class="mt-3 space-y-2">
+              {included.map((item) => (
+                <li class="flex gap-2.5 text-[0.9375rem] leading-relaxed text-graphite">
+                  <span class="mt-[0.55em] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-siegel" aria-hidden="true"></span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-display text-[1.125rem] font-semibold text-ink">Not promised</h3>
+            <ul class="mt-3 space-y-4">
+              {notPromised.map((item) => (
+                <li>
+                  <p class="text-[0.9375rem] font-semibold text-ink">{item.title}</p>
+                  <p class="mt-1 text-[0.875rem] leading-relaxed text-graphite">{item.body}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ 7. The offer. The first and only checkout on this page. ═══ -->
+      <section id="offer" class="reveal mt-16 scroll-mt-24" aria-labelledby="offer-h">
+        <div class="rounded-clay border border-rule bg-siegel-wash p-7 shadow-raise sm:p-9">
+          <p class={EYEBROW}>The offer</p>
+          <h2 id="offer-h" class={`mt-2 ${H2}`}>{course.name}</h2>
+          <p class="mt-4 font-display text-[2.5rem] font-semibold leading-none tracking-[-0.02em] text-ink">
+            {eur(course.price)}
+            <span class="ml-2 font-body text-sm font-normal tracking-normal text-graphite">once · lifetime access</span>
+          </p>
+          <ul class="mt-5 grid gap-2">
+            {offerLines.map((item) => (
+              <li class="flex gap-2.5 text-[0.875rem] leading-relaxed text-ink">
+                <span class="mt-[0.55em] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-siegel" aria-hidden="true"></span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+          <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <a href={PREVIEW_HREF} class={BTN_PRIMARY} data-a11-cta="preview-offer"><span class="relative z-10">{PRIMARY_CTA}</span></a>
+            <div data-course-door={level} data-course-code={course.code} data-course-open-class={BTN_SECONDARY}>
+              {buyable ? (
+                <button type="button" class={BTN_SECONDARY} data-course-variant={course.variantId} data-course-key={course.key} data-a11-cta="checkout">
+                  Buy the course — {eur(course.price)}
+                </button>
+              ) : (
+                <span class="block max-w-xs text-[0.8125rem] leading-relaxed text-graphite">
+                  Checkout is not open yet. The three free lessons are, and your progress carries over when it is.
+                </span>
+              )}
+            </div>
+          </div>
+          <p class="mt-4 font-data text-[0.75rem] text-graphite">
+            Prices include VAT where applicable · one payment, nothing renews
+          </p>
+        </div>
+      </section>
+
+      <!-- ═══ 8. Refund ═══ -->
+      <section class="reveal mt-16" aria-labelledby="refund-h">
+        <p class={EYEBROW}>If it is not for you</p>
+        <h2 id="refund-h" class={`mt-2 ${H2}`}>A voluntary {ROUTE_DAYS}-day refund, on top of your legal rights</h2>
+        <div class="mt-4 space-y-3 text-[0.9375rem] leading-relaxed text-graphite">
+          <p>
+            Your statutory rights come first and are not affected by anything on this page. As a consumer in the EU you
+            have a 14-day right of withdrawal for a distance purchase; for digital content that starts immediately you
+            are asked at checkout to consent to that start, which is what ends the withdrawal period early. Those rules
+            are the law's, not ours, and we cannot shorten them.
+          </p>
+          <p>
+            On top of them we give a voluntary promise: within {ROUTE_DAYS} days of buying {course.name}, write to
+            {' '}<a href={`mailto:${LEGAL.operator.email}`} class={LINK}>{LEGAL.operator.email}</a> and say the course was not
+            what you needed, and we refund the {eur(course.price)}. No form, no reason required, no questions about how
+            much of it you used. It is a promise we make voluntarily and honour in full — not a replacement for the
+            rights above.
+          </p>
+        </div>
+      </section>
+
+      <!-- ═══ 9. FAQ ═══ -->
+      <section class="reveal mt-16" aria-labelledby="faq-h">
+        <p class={EYEBROW}>Before you start</p>
+        <h2 id="faq-h" class={`mt-2 ${H2}`}>Questions beginners actually ask</h2>
+        <dl class="mt-5">
+          {faq.map((item) => (
+            <div class="border-b border-rule py-5">
+              <dt class="text-[0.9375rem] font-semibold text-ink">{item.q}</dt>
+              <dd class="mt-2 text-[0.9375rem] leading-[1.7] text-graphite">{item.a}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <!-- ═══ 10. Final CTA ═══ -->
+      <section class="reveal mt-16 rounded-clay border border-rule bg-white p-8 text-center shadow-raise-lg sm:p-10" aria-labelledby="final-h">
+        <h2 id="final-h" class="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.018em] text-ink sm:text-[1.75rem]">
+          Decide after lesson {previewCount}, not before lesson 1
+        </h2>
+        <p class="mx-auto mt-3 max-w-md text-[0.9375rem] leading-relaxed text-graphite">
+          {previewCount} complete lessons, no card, and your progress stays yours either way.
+        </p>
+        <div class="mt-7 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <a href={PREVIEW_HREF} class={BTN_PRIMARY} data-a11-cta="preview-final"><span class="relative z-10">{PRIMARY_CTA}</span></a>
+          <a href="#offer" class={`text-[0.875rem] ${LINK}`}>See what the course costs ↑</a>
+        </div>
+      </section>
+
+      <nav class="mt-10 flex justify-between font-data text-[0.75rem] text-graphite" aria-label="Neighbouring levels">
+        <a href="/courses/" class={LINK}>All courses</a>
+        <a href={`/courses/${levelToSlug('a1.2')}/`} class={LINK}>A1.2 →</a>
+      </nav>
+    </div>
+  </div>
+  <CourseCheckout />
+</Layout>
