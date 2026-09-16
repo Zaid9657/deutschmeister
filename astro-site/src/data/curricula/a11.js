@@ -44,8 +44,16 @@
 // from the minutes, so it is not free to set); inside the standard's 50–60 h.
 // READ THE 54 HONESTLY (DaF review 2026-09-12 §4): only the 5.8 h are guided lesson time that
 // exists as content. The 48 h are a budget for surrounding practice, and that material is not
-// complete — five Lektionen have no linked listening exercise (the level only carries six), three
-// no reading text, four no speaking mission, L2 neither. So a buyer-facing page must show
+// complete. Every Lektion now links one listening exercise and one reading text — the six missing
+// listening links and two missing reading links were closed on 2026-09-16 by
+// migrations/2026-09-16-a1-1-course-linked-practice.sql (exercises 7–12, readings 11–12; WRITTEN,
+// not yet applied — the live tables carry 6 exercises / 10 texts until the owner applies it and
+// runs the audio render in docs/owner-prompts.md). Every Lektion now links its own speaking
+// mission (missionOrder N = Lektion N, the 30-day-route binding of the 2026-09-15 speaking plan,
+// Task 1): the four missing missions (L7, L8-Termine, L10, L12-Abschlussmission) and the
+// realignment of the eight legacy rows live in migrations/2026-09-17-a11-speaking-route.sql —
+// WRITTEN, not yet applied; until the owner applies it the live speaking_missions table still
+// carries the old 8-row, non-sequential mapping. So a buyer-facing page must show
 // „5,8 h geführte Lektionszeit + Übungsmaterial“ separately and must NOT advertise „54 Stunden
 // Kurs“ as content (`src/data/marketing.js`: measure before you claim).
 //
@@ -223,7 +231,11 @@ export const CURRICULUM_A11 = {
       },
       notice: {
         title: 'Das Alphabet: buchstabieren',
-        bodyDe: 'Beim Buchstabieren sagt man jeden Buchstaben einzeln. Vorsicht bei drei Paaren: **E** [eː] und **I** [iː], **G** [geː] und **J** (Jot), **V** (Vau) und **W** [veː]. **Y** heißt Ypsilon, **Z** heißt Zett, **ß** heißt Eszett oder scharfes S. Im Zweifel fragt man: **Wie buchstabiert man das?**',
+        // ROUND 24 (DaF review #23, Minor 1): „Q heißt Ku“ joined the name list — no item of the
+        // whole pool tested Q, and the new `extra-a11-l01-25` needs its name taught here first
+        // (a notice token is lexis from this Lektion on). Unbolded on purpose: RULE 6b asks every
+        // bold form for a Beleg, and Ku's Beleg is the one new item.
+        bodyDe: 'Beim Buchstabieren sagt man jeden Buchstaben einzeln. Vorsicht bei drei Paaren: **E** [eː] und **I** [iː], **G** [geː] und **J** (Jot), **V** (Vau) und **W** [veː]. **Y** heißt Ypsilon, **Z** heißt Zett, Q heißt Ku, **ß** heißt Eszett oder scharfes S. Im Zweifel fragt man: **Wie buchstabiert man das?**',
         examples: ['Buchstabieren Sie bitte Chakiri.', 'Danke. Und wie buchstabiert man Ana?'],
         ruleSlug: 'alphabet-pronunciation',
       },
@@ -269,15 +281,18 @@ export const CURRICULUM_A11 = {
         'Ich kann meine Telefonnummer und meine Adresse nennen.',
         'Ich kann in einer kurzen Nachricht Angaben zu meiner Person machen.',
       ],
-      // „Lesen Teil 1“ was a claim with no surface: `links.readingOrder` is null and no step of the
-      // Lektion gives the learner a text to READ (RULE 16, the level's last offender). The live
-      // `reading_lessons` table at a1.1 carries exactly ten rows (order_index 1–10, queried
-      // 2026-09-13) and all ten are already linked by another Lektion; none of them is the
-      // E-Mail/Brief format SD1 tests in Lesen Teil 1, so there was nothing honest to link. What
-      // the Lektion really rehearses is listening: `hoeren` dictates two dialogue lines of the
-      // Bürgerbüro exchange, which is Hören Teil 1 (short everyday dialogue). „Lesen Teil 1“ stays
-      // covered across the course by L3 and L11, which both link a reading lesson.
-      examTeile: ['Sprechen Teil 1', 'Hören Teil 1', 'Schreiben Teil 2'],
+      // „Lesen Teil 1“ IS BACK, AND THIS TIME IT HAS A SURFACE (RULE 16). Until 2026-09-16 the
+      // live `reading_lessons` table at a1.1 carried exactly ten rows (order_index 1–10, queried
+      // 2026-09-13), all ten linked by other Lektionen and none in the E-Mail/Brief format SD1
+      // tests in Lesen Teil 1 — so the claim was dropped as unbackable.
+      // migrations/2026-09-16-a1-1-course-linked-practice.sql creates that missing text (order 11,
+      // „Eine E-Mail lesen (wie in der Prüfung, Teil 1)“, richtig/falsch over a personal E-Mail
+      // with Angaben zur Person), `links.readingOrder` below points at it, and the claim is honest
+      // once the owner applies the migration. `examTeile` is capped at 1–3 (RULE 2), so
+      // „Hören Teil 1“ gave up its seat: the Lektion keeps both listening surfaces (the dictation
+      // over lines [7,3] and the newly linked exercise 7), and „Hören Teil 1“ stays claimed by
+      // L1, L5 and L8.
+      examTeile: ['Sprechen Teil 1', 'Lesen Teil 1', 'Schreiben Teil 2'],
       grammarSlugs: ['verb-sein', 'alphabet-pronunciation'],
       primarySlug: 'verb-sein',
       minutes: 15,
@@ -352,12 +367,19 @@ export const CURRICULUM_A11 = {
         { de: 'das Amt', word: 'Amt', article: 'das', plural: 'Ämter', en: 'public office, authority', wordId: 'b5556cee-448c-47fc-82a7-2a5f9f956c1b' },
         // `der Schalter` is out for the same reason (round 17): it stood in the stage direction of
         // the dialogue and in no line, no item and no task — the Ämter lexis the learner produces is
-        // `das Amt`, `die Post`, `das Formular`, `ausfüllen`.
+        // `das Amt`, `die Post`, `das Formular`, `ausfüllen`. Round 24 (DaF review #23, Minor 12)
+        // tried the reviewer's preferred fix — putting the row back — and the L2 Wortfeld is at its
+        // 25-entry ceiling (RULE 5 failed at 26), so the TITLE stopped saying the word instead:
+        // it now reads „Im Bürgerbüro“, and the setting no longer stages Herr Weber at a piece of
+        // furniture the course never teaches.
         { de: 'die Post', word: 'Post', article: 'die', plural: '—', en: 'post office', wordId: '1897eb9b-5393-490d-aebf-c52080c2ec7d' },
       ],
       dialog: {
-        title: 'Am Schalter im Bürgerbüro',
-        setting: 'Ana meldet sich im Bürgerbüro an. Herr Weber arbeitet am Schalter.',
+        // „Am Schalter im Bürgerbüro“ until round 24: `der Schalter` stands in no Wortfeld of the
+        // level (DaF review #23, Minor 12), the Wortfeld is at its 25-entry ceiling, so the title
+        // lost the word rather than the Wortfeld gaining a 26th row.
+        title: 'Im Bürgerbüro',
+        setting: 'Ana meldet sich im Bürgerbüro an. Herr Weber arbeitet dort.',
         lines: [
           // „das Amt“ and „die Post“ stood in the Wortfeld of the Ämter-Handlungsfeld and in no
           // line of its own Lektion (DaF review #3, Wortfeld ↔ Input): they are carried here and in
@@ -461,7 +483,7 @@ export const CURRICULUM_A11 = {
           hintWords: ['kommen aus', 'wohnen', 'von Beruf'],
           // Sie — dieselbe Vorstellrunde (Teil 1): das Gegenüber ist fremd.
           anrede: 'Sie',
-          missionOrder: 6,
+          missionOrder: 2,
         },
       },
       schreiben: {
@@ -504,11 +526,17 @@ export const CURRICULUM_A11 = {
         // three Leitpunkte, and the origin half of the Lektion's own can-do line finally has a
         // surface. `kommen aus` moved into this Lektion's Wortfeld for it (`Marokko` is a persona fact
         // and a DIALOG_NAME, not a Wortfeld row).
-        sample: 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Ich bin am 3.5.1998 geboren. Ich komme aus Marokko und bin Marokkanerin. Ich bin ledig. Ich bin Studentin in Bremen. Viele Grüße, Ana Chakiri',
+        // REGISTER PAIR (DaF review #23, Minor 12): „Sehr geehrte Damen und Herren“ opened the
+        // model and „Viele Grüße“ closed it — a formal Anrede over an informal Gruß, in the one
+        // text the course holds up as the model for a formal registration. Opening and closing
+        // now match: „Mit freundlichen Grüßen“ (a LICENSED_LETTER_CHUNK, like the Anrede).
+        // 34 words. tests/curricula.test.mjs pins the pairing on every Mitteilung sample.
+        sample: 'Sehr geehrte Damen und Herren, ich heiße Ana Chakiri. Ich bin am 3.5.1998 geboren. Ich komme aus Marokko und bin Marokkanerin. Ich bin ledig. Ich bin Studentin in Bremen. Mit freundlichen Grüßen, Ana Chakiri',
       },
-      // A1.1 carries six listening exercises and ten reading texts; every one is linked from another
-      // Lektion, so this one honestly has none — the syllabus shows „—“ rather than a repeat.
-      links: { listeningExercise: null, readingOrder: null },
+      // Exercise 7 („Im Bürgerbüro“) and reading 11 (the SD1 Lesen-Teil-1 E-Mail) are created by
+      // migrations/2026-09-16-a1-1-course-linked-practice.sql — written for exactly this link,
+      // pending owner application.
+      links: { listeningExercise: 7, readingOrder: 11 },
       // `numbers` is a PRACTICE-ONLY topic, deliberately absent from grammarSlugs: Hören Teil 1
       // of SD1 is almost only numbers, times and telephone numbers, and a number written wrong
       // is a spelling error, not a conjugation one — which is what it was booked as while the
@@ -609,7 +637,7 @@ export const CURRICULUM_A11 = {
           hintWords: ['die Geschwister', 'der Sohn', 'die Tochter'],
           // Sie — Teil 2 mit der fremden Mitkandidatin; das du im Dialog ist Lena↔Ana, nicht die Rolle des Lernenden.
           anrede: 'Sie',
-          missionOrder: 5,
+          missionOrder: 3,
         },
       },
       schreiben: {
@@ -621,7 +649,8 @@ export const CURRICULUM_A11 = {
         maxWords: 40,
         sample: 'Vorname: Ana / Familienname: Chakiri / Familienstand: ledig / Sprachen: Arabisch, Deutsch / Land: Marokko',
       },
-      links: { listeningExercise: null, readingOrder: 2 },
+      // Exercise 8 („Familie und Sprachen“) is from migrations/2026-09-16-a1-1-course-linked-practice.sql.
+      links: { listeningExercise: 8, readingOrder: 2 },
       practiceRule: { topics: ['personal-pronouns', 'verb-sein'], typedMin: 3 },
     },
     {
@@ -710,7 +739,7 @@ export const CURRICULUM_A11 = {
           hintWords: ['kosten', 'Euro', 'teuer'],
           // Sie — Teil 3 am Marktstand: Kundin zu Verkäufer.
           anrede: 'Sie',
-          missionOrder: 2,
+          missionOrder: 4,
         },
       },
       schreiben: {
@@ -833,7 +862,7 @@ export const CURRICULUM_A11 = {
           hintWords: ['der Stift', 'die Tafel', 'blau'],
           // Sie — Teil 2 mit einer fremden Mitkandidatin im Prüfungsraum.
           anrede: 'Sie',
-          missionOrder: 3,
+          missionOrder: 5,
         },
       },
       schreiben: {
@@ -845,7 +874,8 @@ export const CURRICULUM_A11 = {
         maxWords: 40,
         sample: 'Name: Lena Brandt / Kurs: A1 / Zimmer: 12 / Material: Wörterbuch, Heft / Farbe: grün',
       },
-      links: { listeningExercise: null, readingOrder: 7 },
+      // Exercise 9 („Im Deutschkurs“) is from migrations/2026-09-16-a1-1-course-linked-practice.sql.
+      links: { listeningExercise: 9, readingOrder: 7 },
       practiceRule: { topics: ['definite-articles', 'nouns-gender'], typedMin: 3 },
     },
     {
@@ -937,7 +967,7 @@ export const CURRICULUM_A11 = {
           hintWords: ['der Verkäufer', 'die Ingenieurin', 'die Pause'],
           // Sie — Teil 2 zum Thema Arbeit: das Gegenüber ist Kollegin/Mitkandidatin, keine Freundin.
           anrede: 'Sie',
-          missionOrder: 4,
+          missionOrder: 6,
         },
       },
       schreiben: {
@@ -958,7 +988,9 @@ export const CURRICULUM_A11 = {
         // ein Mustertext ist ein Produktionstext.
         sample: 'Guten Tag, Frau Berg! Ich brauche einen Computer. Wir brauchen auch ein Handy. Hier ist die Nummer für das Handy: null vier zwei drei drei acht eins. Ich bin um neun Uhr im Büro. Viele Grüße, Ana',
       },
-      links: { listeningExercise: 5, readingOrder: null },
+      // Reading 12 („Der erste Tag im Büro“ — Anas erster Arbeitstag, the situation of THIS
+      // Lektion) is from migrations/2026-09-16-a1-1-course-linked-practice.sql.
+      links: { listeningExercise: 5, readingOrder: 12 },
       practiceRule: { topics: ['indefinite-articles', 'definite-articles'], typedMin: 3 },
     },
     {
@@ -1055,9 +1087,9 @@ export const CURRICULUM_A11 = {
           hintWords: ['spielen', 'hören', 'gern'],
           // Sie — Teil 2; auch beim Hobbythema bleibt die Prüfungsanrede Sie.
           anrede: 'Sie',
-          // Missions 1–8 are the only published A1.1 speaking missions and each is linked once; this
-          // Lektion (and 10–12) falls back to the generic prompt until new missions are seeded.
-          missionOrder: null,
+          // Mission 7 („Freizeit und Hobbys“) is seeded by
+          // migrations/2026-09-17-a11-speaking-route.sql (missionOrder N = Lektion N).
+          missionOrder: 7,
         },
       },
       schreiben: {
@@ -1074,7 +1106,8 @@ export const CURRICULUM_A11 = {
         maxWords: 40,
         sample: 'Vorname: Lena / Nachname: Brandt / Kurs: Sport / Hobby: Schwimmen / Kurs am: Wochenende',
       },
-      links: { listeningExercise: null, readingOrder: 9 },
+      // Exercise 10 („Hobbys am Wochenende“) is from migrations/2026-09-16-a1-1-course-linked-practice.sql.
+      links: { listeningExercise: 10, readingOrder: 9 },
       practiceRule: { topics: ['present-tense-regular', 'personal-pronouns'], typedMin: 3 },
     },
     {
@@ -1285,7 +1318,7 @@ export const CURRICULUM_A11 = {
           hintWords: ['möchten', 'bitte', 'das Glas'],
           // Sie — Teil 3 im Café; der Dialog der Lektion siezt durchgehend („Was möchten Sie trinken?“).
           anrede: 'Sie',
-          missionOrder: 7,
+          missionOrder: 9,
         },
       },
       schreiben: {
@@ -1386,7 +1419,8 @@ export const CURRICULUM_A11 = {
           hintWords: ['fahren', 'die Fahrkarte', 'der Zug'],
           // Sie — Teil 2 zum Thema Reisen: Schalter bzw. Mitkandidat, nicht Freundeskreis.
           anrede: 'Sie',
-          missionOrder: null,
+          // Mission 10 („Am Bahnhof“) is seeded by migrations/2026-09-17-a11-speaking-route.sql.
+          missionOrder: 10,
         },
       },
       schreiben: {
@@ -1498,7 +1532,9 @@ export const CURRICULUM_A11 = {
           hintWords: ['aufstehen', 'einkaufen', 'gestern'],
           // Sie — Teil 2 zum Tagesablauf; Gegenüber bleibt die fremde Mitkandidatin.
           anrede: 'Sie',
-          missionOrder: null,
+          // Mission 11 („Mein Tag“, realigned from the old order-8 row) —
+          // migrations/2026-09-17-a11-speaking-route.sql.
+          missionOrder: 11,
         },
       },
       schreiben: {
@@ -1510,9 +1546,11 @@ export const CURRICULUM_A11 = {
         maxWords: 40,
         sample: 'Name: Tim Berger / Tag: Donnerstag / Kurs von: 9 Uhr / Kurs bis: 12 Uhr / Zimmer: 4',
       },
-      // A1.1 has six listening exercises and all six are linked elsewhere; reading 5 was the last
-      // unlinked text and belongs here (DaF review, L11).
-      links: { listeningExercise: null, readingOrder: 5 },
+      // Exercise 11 („Nachrichten auf der Mailbox“, exercise_type phone_messages — the
+      // Hören-Teil-3 family this Lektion claims) is from
+      // migrations/2026-09-16-a1-1-course-linked-practice.sql; reading 5 was the last unlinked
+      // live text and belongs here (DaF review, L11).
+      links: { listeningExercise: 11, readingOrder: 5 },
       practiceRule: { topics: ['separable-verbs-intro', 'present-tense-regular'], typedMin: 3 },
     },
     {
@@ -1624,7 +1662,10 @@ export const CURRICULUM_A11 = {
           hintWords: ['einladen', 'der Geburtstag', 'feiern'],
           // Sie — Teil 3: die Einladung geht an eine Kollegin, und die Lektion prüft genau diese Form (extra-a11-l12-08/09/16, „Ihr Fest, Frau Kaya“).
           anrede: 'Sie',
-          missionOrder: null,
+          // Mission 12 is the Abschlussmission (vorstellen → Rückfragen → einladen) the
+          // Abschlusstest hands off to (abschlusstestA11.js, sprechen) — seeded by
+          // migrations/2026-09-17-a11-speaking-route.sql.
+          missionOrder: 12,
         },
       },
       schreiben: {
@@ -1640,7 +1681,8 @@ export const CURRICULUM_A11 = {
         // Mai Geburtstag.“, wie im Dialog) und Tag und Uhrzeit als Zeitangaben eines Satzes.
         sample: 'Hallo Lena! Ich habe im Mai Geburtstag. Wir feiern am Freitag um acht Uhr. Die Gäste bringen Kuchen und Musik mit. Bringst du bitte den Salat mit? Bis bald, Ana',
       },
-      links: { listeningExercise: null, readingOrder: 10 },
+      // Exercise 12 („Die Geburtstagsfeier“) is from migrations/2026-09-16-a1-1-course-linked-practice.sql.
+      links: { listeningExercise: 12, readingOrder: 10 },
       // „Wiederholung“ has to be visible in the practice: the last Lektion before checkpoint 4 mixes
       // all three of its slugs. time-and-dates would belong here too, but grammarSlugs is capped at 3.
       // mustCover: the answer key every draw of this Lektion has to contain at least once

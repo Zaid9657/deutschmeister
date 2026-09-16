@@ -273,10 +273,13 @@ export const MAX_UNCOVERED_WORTFELD = 14;          // a1.1; per level in LEVELS 
  * RULE 13 ratchet — how many Lektionen may show a `sprechen.open` task whose prompt the speaking
  * page never receives. `SpeakingStage.jsx` appends `&mission=` only when `missionOrder` is set, so
  * a null mission sends the learner to the generic /speaking page with some other mission of the
- * level. Four Lektionen (7, 10, 11, 12) are in that state; the UI agent is making the prompt itself
- * travel with `saveCourseContext`, and when it does this ratchet goes to 0 (DaF review #4, MAJOR 4).
+ * level. It stood at 4 (L7, L10, L11, L12) until the 2026-09-15 speaking plan's Task 1 bound the
+ * course to one mission per Lektion (missionOrder N = Lektion N;
+ * migrations/2026-09-17-a11-speaking-route.sql seeds the four missing missions and realigns the
+ * eight legacy rows). **0** since 2026-09-16, the floor — it only ever goes down (DaF review #4,
+ * MAJOR 4).
  */
-export const MAX_MISSIONLESS_LEKTIONEN = 4;        // a1.1; per level in LEVELS below
+export const MAX_MISSIONLESS_LEKTIONEN = 0;        // a1.1; per level in LEVELS below
 
 /**
  * RULE 11 ratchet — how many (item, token) pairs in the pool the learner is served may still use a
@@ -536,9 +539,13 @@ export const MAX_SHARED_PRODUCTION_LINES = 0;      // a1.1; per level in LEVELS 
  * all 374 pool items, `lexisScan` asks it of the hand source, RULE 15 asks it of the dictation and
  * the read-aloud — and NOBODY asked it of the two texts the course holds up as models. The round
  * that rewrote all six A1.1 Mitteilungen measured them on length, Anrede, Gruß and Leitpunkte
- * (RULE 17) and on nothing else, and five of the six came back carrying words the course never
- * teaches: `marokkanisch` (L2), `uns` (L4), `neuer`/`neue` (L8), `erst` (L10), `meinen` (L12) —
- * the last one a form the BUILD throws pool items out for („Vorschau Akkusativ“).
+ * (RULE 17) and on nothing else, and untaught words this rule measures rode in on four of them:
+ * `marokkanisch` (L2), `uns` (L4), `erst` (L10), `meinen` (L12) — the last one a form the BUILD
+ * throws pool items out for („Vorschau Akkusativ“). The round-13 poster child `neuer`/`neue` (L8)
+ * is deliberately NOT on that list: the L8 Leitpunkt itself reads „Neuer Tag und neue Uhrzeit“,
+ * so the task-words licence below admits both forms and THIS rule never measured them — what
+ * caught them is the `adjective-declension` `never: true` construction in
+ * src/data/curricula/constructions.js (DaF review #14, Minor 9).
  *
  * A model text is a PRODUCTION surface and is measured like one. What licenses a word here, and
  * all three are derived rather than typed:
@@ -790,9 +797,19 @@ export const LEVELS = {
     extraPath: '../src/data/lessonPools/a11.extra.json',
     poolPath: '../src/data/lessonPools/a11.json',
     taskKeyPrefix: 'a11',
-    missionCount: 8,
-    listeningCount: 6,
-    readingCount: 10,
+    // 8 live rows (read 2026-09-16) + the realignment/4 inserts of
+    // migrations/2026-09-17-a11-speaking-route.sql, which leaves speaking_missions with
+    // exactly 12 published A1.1 rows, mission_order 1–12, one per Lektion. The migration is
+    // WRITTEN, pending owner application — tests/a11-speaking-route-content.test.mjs pins
+    // that every order 1–12 resolves to a live row or a row that migration inserts/moves.
+    missionCount: 12,
+    // 6 live exercises / 10 live texts (queried 2026-09-13) + exercises 7–12 and readings 11–12
+    // from migrations/2026-09-16-a1-1-course-linked-practice.sql, written so every Lektion links
+    // one of each (plan 2026-09-15, Task 3). The migration is WRITTEN, pending owner application —
+    // tests/a1-1-course-linked-practice.test.mjs pins that every number in this range resolves to
+    // either a live row or a row that migration inserts.
+    listeningCount: 12,
+    readingCount: 12,
     minUnionWords: 200,
     seedFrom: null,
     // RULE 14. Defined below (PERSONAS_A11) and attached lazily, because the table is written after
@@ -800,9 +817,10 @@ export const LEVELS = {
     personaSource: 'a1.1',
     offLimitsForms: OFF_LIMITS_FORMS_A11,
     licensedChunks: LICENSED_CHUNKS_A11,
-    // RULE 16. `speaking_missions` at level A1.1 carries eight published missions and none of them
-    // is a Teil-1 self-introduction (read 2026-09-13), so an A1.1 „Sprechen Teil 1“ claim can only
-    // be backed by the prompt itself.
+    // RULE 16. After migrations/2026-09-17-a11-speaking-route.sql the A1.1 route carries twelve
+    // missions, but none is the full seven-category Teil-1 card drill (that is A1.2's
+    // mission_order 9) — L1's and L2's „Sprechen Teil 1“ claims stay backed by their own
+    // self-introduction prompts, so this list stays empty.
     teil1MissionOrders: [],
     ratchets: {
       uncoveredWortfeld: MAX_UNCOVERED_WORTFELD,
@@ -923,7 +941,16 @@ export const LEVELS = {
       // draw moved under the paused pool — `Kannst` (L9) and the L6 `Gibt` item are no longer
       // drawn, `langsam` (L8, a `c8ba…`-class pool item taught later) is — net one fewer. The
       // thirteen are printed by `node scripts/validate-curriculum.mjs a1.2`.
-      untaughtDrawnTokens: 13,
+      //
+      // 13 → **14**, paused; re-measured 2026-09-16 (round 24, DaF review #23 Minor 3). No A1.2
+      // content was touched: the Lesen falsifier in buildCheckpoint.js moved (name swaps are the
+      // LAST pass now, so a Falsch statement is wrong for a content reason), which re-rolls the
+      // rng stream of every paper — the paused A1.2 checkpoints reseat and cp4 now draws
+      // `8a22bb70` (L12, `meinem`, an untaught possessive form of the DRAFT pool). Same cause
+      // class as the 3 → 4 move above (engine change re-rolls the draw of a pool that cannot be
+      // rebuilt while paused); rebuilding a12.json stamps `minLektion` and takes this to 0 hard,
+      // and that rebuild is the first step of whoever resumes the level.
+      untaughtDrawnTokens: 14,
       // RULE 12 is a hard rule (0, no ratchet) — see its comment above. No entry here.
       missionlessLektionen: 1,
       unexemplifiedNoticeForms: 0,
@@ -1561,9 +1588,10 @@ export function canDoRehearsal(c, extraItems) {
 
 /**
  * RULE 13: a `sprechen.open` task whose `missionOrder` is null. `SpeakingStage.jsx` appends
- * `&mission=` only when the order is set, so those four Lektionen show a prompt and then send the
- * learner to the generic /speaking page, which never receives it. Listed, ratcheted, and 0 once the
- * prompt itself travels in `saveCourseContext` (DaF review #4, MAJOR 4).
+ * `&mission=` only when the order is set, so a missionless Lektion shows a prompt and then sends
+ * the learner to the generic /speaking page, which never receives it. Ratcheted at 0 for A1.1
+ * since 2026-09-16: every Lektion links its own mission (missionOrder N = Lektion N,
+ * migrations/2026-09-17-a11-speaking-route.sql) — (DaF review #4, MAJOR 4).
  */
 export function missionlessLektionen(c) {
   return (c.lektionen || [])
