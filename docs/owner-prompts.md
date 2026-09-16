@@ -30,6 +30,69 @@ Then paste the three id pairs to the agent: it sets `LEMONSQUEEZY_COURSE_A1_2_VA
 scope) via the Netlify connector, merges the catalogue PR and redeploys. Afterwards archive the
 five 2026-09-03 variants (2088862, 2088867, 2088868, 2088869, 2088871).
 
+**DeutschStart A1.1 launch — the whole Lemon Squeezy side in one pass** (2026-09-16 rebuild).
+Three things do not exist in the store yet: the €39 A1.1 course, the €6.99 speaking top-up,
+and the re-priced AI Coach variants. The old €9.99/€79.99 subscription variants must NOT be
+edited — existing subscribers are grandfathered on them while continuously subscribed, and
+changing a variant's price changes what they are billed. Paste-ready:
+
+```
+You are working in Lemon Squeezy, store 309512 ("DeutschMeister" — NOT the MedMeister store).
+Verify you are in store 309512 before changing anything. Do not touch, re-price, archive or
+unpublish any existing product or variant except where a step says so explicitly. If a step is
+ambiguous or something already exists under a different name, stop and tell me instead of guessing.
+
+Do these four things, then report back.
+
+1) NEW VARIANT on the existing one-time product 1336941
+   Name: "DeutschStart A1.1"
+   Price: EUR 39.00, one-time
+   Tax category: "SaaS - personal use"
+   Description: "The 30-day A1.1 course: 12 real-life situations, in-app lessons with instant
+   feedback, 4 checkpoints, spaced review, 12 AI-graded writing tasks and 12 guided speaking
+   missions. One payment, lifetime access. The first three lessons are free to try."
+   Publish it.
+
+2) NEW ONE-TIME PRODUCT (its own product, not a variant of 1336941)
+   Name: "60 Sprechminuten"
+   Price: EUR 6.99, one-time
+   Tax category: "SaaS - personal use"
+   Description: "3,600 extra speaking seconds for AI speaking practice. They never expire."
+   Publish it.
+
+3) TWO NEW VARIANTS on the EXISTING AI Coach subscription product
+   First find the subscription product that currently carries the EUR 9.99/month and
+   EUR 79.99/year variants. Do not change those two variants in any way - people are still
+   billed on them. Add two NEW variants to that same product:
+     "AI Coach Monthly" = EUR 12.99 / month, recurring
+     "AI Coach Yearly"  = EUR 129.00 / year, recurring
+   Tax category: "SaaS - personal use". Publish both.
+   If you cannot find that product, stop and tell me what subscription products exist.
+
+4) REDIRECTS
+   Set "Redirect after purchase" to https://deutsch-meister.de/subscription/success
+   for the new top-up product and for the AI Coach subscription product. Leave product
+   1336941's existing redirect as it is if it already points there.
+
+REPORT BACK, for each of the four new variants (A1.1, top-up, AI Coach Monthly, AI Coach Yearly):
+  - the exact variant name
+  - the NUMERIC variant id
+  - the checkout share-link UUID (the /buy/<uuid> link)
+Also confirm: the old EUR 9.99 and EUR 79.99 variants are untouched and still published.
+```
+
+Then paste the four id pairs back to the agent. It sets, via the Netlify connector:
+
+| Variant | Functions scope (numeric id) | Builds scope (checkout UUID) |
+|---|---|---|
+| DeutschStart A1.1 | `LEMONSQUEEZY_COURSE_A1_1_VARIANT_ID` | `VITE_LEMONSQUEEZY_COURSE_A1_1_VARIANT_ID` + `PUBLIC_LEMONSQUEEZY_COURSE_A1_1_VARIANT_ID` |
+| 60 Sprechminuten | `LEMONSQUEEZY_SPEAKING_TOPUP_60_VARIANT_ID` | `VITE_LEMONSQUEEZY_SPEAKING_TOPUP_60_VARIANT_ID` |
+| AI Coach Monthly | — (subscriptions route by webhook payload) | `VITE_LEMONSQUEEZY_AI_COACH_MONTHLY_VARIANT_ID` |
+| AI Coach Yearly | — | `VITE_LEMONSQUEEZY_AI_COACH_YEARLY_VARIANT_ID` |
+
+Until each id is set the matching buy surface stays hidden by design — there is no fallback id,
+so a missing variant can never open a dead checkout.
+
 **Set the post-purchase redirect** (so buyers land on our success page, not LS's receipt):
 ```
 In store 309512, set product <id>'s "Redirect after purchase" URL to
