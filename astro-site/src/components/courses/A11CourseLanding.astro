@@ -519,4 +519,32 @@ const faq = [
     </div>
   </div>
   <CourseCheckout />
+
+  <!--
+    a11_sales_viewed — the DENOMINATOR of the funnel's first rate
+    (docs/analytics/a11-funnel.md). The SPA fires the other seven events
+    through src/lib/funnelTracking.js, but this page is static Astro, so it
+    emits its own — consent-aware (GA4 only exists after /consent.js has been
+    allowed), with the same normalized source vocabulary the allowlist uses.
+    Without this the "sales → preview start" rate divides by zero.
+  -->
+  <script is:inline>
+    (function () {
+      var ALLOWED = ['a11-sales', 'preview-complete', 'locked-lesson', 'email', 'organic-social', 'organic-search', 'direct'];
+      function source() {
+        var raw = (new URLSearchParams(window.location.search).get('source') || '').toLowerCase();
+        if (ALLOWED.indexOf(raw) !== -1) return raw;
+        var utm = (new URLSearchParams(window.location.search).get('utm_source') || '').toLowerCase();
+        if (utm === 'email') return 'email';
+        if (document.referrer && !/deutsch-meister\.de/.test(document.referrer)) return 'organic-search';
+        return 'direct';
+      }
+      function fire() {
+        if (typeof window.gtag !== 'function') return;
+        window.gtag('event', 'a11_sales_viewed', { source: source() });
+      }
+      if (typeof window.gtag === 'function') fire();
+      else window.addEventListener('dm-consent-accepted', fire, { once: true });
+    })();
+  </script>
 </Layout>

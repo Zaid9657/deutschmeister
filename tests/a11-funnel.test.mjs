@@ -87,3 +87,15 @@ test('the funnel documentation states the exact denominators', () => {
   assert.match(doc, /100 qualified sales-page visits/);
   assert.match(doc, /20 checkout starts/);
 });
+
+test('the static sales page emits its own consent-aware a11_sales_viewed', () => {
+  // The other seven events come from the SPA; this page is Astro, so without
+  // its own emitter the funnel's first denominator is always zero.
+  const page = readFileSync(new URL('../astro-site/src/components/courses/A11CourseLanding.astro', import.meta.url), 'utf8');
+  assert.match(page, /a11_sales_viewed/);
+  assert.match(page, /dm-consent-accepted/, 'the event must wait for consent');
+  assert.match(page, /typeof window\.gtag === 'function'/, 'never emit without an analytics provider');
+  // Same closed source vocabulary as the allowlist.
+  const listed = page.match(/var ALLOWED = \[([^\]]+)\]/)[1].match(/'([a-z0-9-]+)'/g).map((s) => s.replace(/'/g, ''));
+  assert.deepEqual(listed.sort(), [...A11_SOURCES].sort());
+});
