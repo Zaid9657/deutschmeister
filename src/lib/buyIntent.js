@@ -7,20 +7,33 @@
 // destination that resumes it: /subscription?buy=<key>, which opens the
 // checkout once and clears the intent. Only known product keys are honoured.
 import { safeGet, safeSet, safeRemove } from '../utils/safeStorage';
+import { normalizeA11Source } from './a11Funnel.js';
 
 const KEY = 'dm_buy_intent';
-const VALID = /^(monthly|yearly|telc_b1_komplett|course_[a-z0-9]+)$/;
+const SOURCE_KEY = 'dm_buy_intent_source';
+const VALID = /^(monthly|yearly|telc_b1_komplett|speaking_topup_60|course_[a-z0-9_]+)$/;
 
-export const setBuyIntent = (productKey) => {
-  if (VALID.test(productKey || '')) safeSet(KEY, productKey);
+/**
+ * Remember the checkout a visitor asked for, and (optionally) WHERE they
+ * asked from. The source is normalized to the closed set in a11Funnel.js —
+ * an arbitrary string never becomes a campaign dimension, and never reaches
+ * Lemon Squeezy custom data.
+ */
+export const setBuyIntent = (productKey, source) => {
+  if (!VALID.test(productKey || '')) return;
+  safeSet(KEY, productKey);
+  if (source !== undefined) safeSet(SOURCE_KEY, normalizeA11Source(source));
 };
+
+/** The normalized attribution of the pending intent ('direct' when unknown). */
+export const peekBuyIntentSource = () => normalizeA11Source(safeGet(SOURCE_KEY));
 
 export const peekBuyIntent = () => {
   const v = safeGet(KEY);
   return v && VALID.test(v) ? v : null;
 };
 
-export const clearBuyIntent = () => safeRemove(KEY);
+export const clearBuyIntent = () => { safeRemove(KEY); safeRemove(SOURCE_KEY); };
 
 /** Where to send a user once they are authenticated: the pending checkout, else the dashboard. */
 export const postAuthPath = () => {

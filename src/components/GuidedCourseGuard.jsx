@@ -3,8 +3,8 @@ import { Lock } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { canOpenGuidedCourseItem, A11_PRODUCT_KEY, A11_PREVIEW_LESSONS } from '../lib/guidedCourseAccess.js';
-import { LEVEL_COURSES, eur } from '../data/pricing.js';
-import Button from './ui/Button.jsx';
+import { LEVEL_COURSES } from '../data/pricing.js';
+import A11PreviewComplete from './course/A11PreviewComplete.jsx';
 
 // Entitlement guard for the guided course routes (/course/:level/**). Sits
 // INSIDE LevelSubscriptionGuard: that guard decides whether the LEVEL is
@@ -60,19 +60,10 @@ const GuidedCourseGuard = ({ kind, children }) => {
           course — every later lesson, the checkpoints, the final test and your certificate —
           opens with the full course.
         </p>
-        <div className="mt-6 w-full rounded-clay border border-rule bg-white p-5 text-left shadow-raise">
-          <p className="font-data text-[0.625rem] font-bold uppercase tracking-[0.13em] text-graphite">One-time purchase · lifetime access</p>
-          <p className="mt-1 font-display text-[1.25rem] font-semibold">Unlock {course.name} for {eur(course.price)} once.</p>
-          <ul className="mt-3 list-disc space-y-1 pl-5 text-[0.875rem] text-graphite">
-            <li>All 12 Lektionen, 4 checkpoints and the final test</li>
-            <li>Certificate when you finish</li>
-            <li>Keep it forever — no subscription needed</li>
-          </ul>
-          <div className="mt-4">
-            <Button href={`/courses/${level.replace('.', '-')}/`} variant="primary" size="lg" className="w-full sm:w-auto">
-              Unlock the full course →
-            </Button>
-          </div>
+        {/* The same purchase bridge the third preview lesson ends on — one
+            offer, one wording, whichever way the learner reaches the wall. */}
+        <div className="mt-6 w-full">
+          <A11PreviewComplete source="locked-lesson" variant="locked" />
         </div>
         <p className="mt-6 text-sm text-graphite">
           {!user && (

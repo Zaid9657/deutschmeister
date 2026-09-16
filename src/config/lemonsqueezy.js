@@ -96,12 +96,16 @@ export const LEMONSQUEEZY_CONFIG = {
   // (comes back on the order webhook as meta.custom_data.coupon, which is how
   // the redemption ledger attributes it — deterministically, never guessed
   // from the discount total).
-  getCheckoutUrl: (variantId, userEmail, userId, coupon) => {
+  // `source` (optional): a NORMALIZED attribution value from
+  // src/lib/a11Funnel.js. Only the closed set is ever written into custom
+  // data — an arbitrary key or value never reaches Lemon Squeezy.
+  getCheckoutUrl: (variantId, userEmail, userId, coupon, source) => {
     const baseUrl = `https://deutsch-meister.lemonsqueezy.com/checkout/buy/${variantId}`;
     const params = new URLSearchParams({
       'checkout[email]': userEmail || '',
       'checkout[custom][user_id]': userId || '',
     });
+    if (source) params.set('checkout[custom][source]', String(source));
     if (coupon?.code) {
       params.set('checkout[discount_code]', String(coupon.code));
       params.set('checkout[custom][coupon]', String(coupon.code).trim().toUpperCase());

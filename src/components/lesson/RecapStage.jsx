@@ -21,7 +21,10 @@ const DE_DATE = new Intl.DateTimeFormat('de-DE', { day: 'numeric', month: 'long'
  * about something the learner already owns. The lesson is in localStorage by
  * the time this renders (LessonPlayerPage's recap effect).
  */
-export default function RecapStage({ stage, accuracy, status, nextLabel, onNext, onBack, level }) {
+// `afterSummary` is an optional node rendered under the recap card — the
+// A1.1 purchase bridge uses it so the offer follows the learner's result
+// instead of interrupting it (2026-09-15 launch plan Task 2).
+export default function RecapStage({ stage, accuracy, status, nextLabel, onNext, onBack, level, afterSummary = null }) {
   const { user } = useAuth();
   const pct = accuracyPercent(accuracy);
   const review = nextReviewDate();
@@ -68,9 +71,17 @@ export default function RecapStage({ stage, accuracy, status, nextLabel, onNext,
             ? 'Gold: mindestens 80 % im ersten Versuch. Die Wörter und die Regel kommen zur Wiederholung zurück.'
             : 'Geschafft. Die Lektion zählt bei jeder Trefferquote — was heute wackelte, kommt zur Wiederholung zurück.'}
         </p>
+        {/* Honest about the redraw (DaF review #23, Minor 12): every pass draws a fresh set of
+            exercises from the same pool, and the learner deserves to know that BEFORE the second
+            pass, not to discover it mid-lesson. tests/course-player.test.mjs pins this line. */}
+        <p className="mt-2 text-[0.875rem] leading-relaxed text-graphite">
+          Wenn Sie die Lektion noch einmal starten, bekommen Sie andere Aufgaben zum selben Stoff.
+        </p>
       </Card>
 
       {!user && level ? <SaveProgressCard level={level} /> : null}
+
+      {afterSummary ? <div className="mt-6">{afterSummary}</div> : null}
 
     </StageShell>
   );
