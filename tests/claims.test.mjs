@@ -56,6 +56,7 @@ import {
   eur,
   deEur,
 } from '../src/data/pricing.js';
+import { FREE_LEVELS } from '../src/config/freeTier.js';
 import {
   ANON_DAILY_LIMIT,
   TRIAL_DAILY_LIMIT,
@@ -106,10 +107,11 @@ test('derived figures follow from the prices', () => {
   assert.ok(YEARLY_PER_DAY_EUR < MONTHLY_PER_DAY_EUR);
 });
 
-test('level courses cover every paid sub-level exactly once, at its own price', () => {
-  // Every level except the free one is a product; the free one never is —
+test('level courses cover every sub-level exactly once, at its own price', () => {
+  // Every sub-level is a product since 2026-09-15 — A1.1's product sells the
+  // GUIDED COURSE (DeutschStart A1.1) while its public library stays free —
   // a gap here is a level nobody can buy, an overlap is a level sold twice.
-  const paid = ALL_LEVELS.slice(1);
+  const paid = ALL_LEVELS;
   assert.deepEqual(Object.keys(SUBLEVEL_PRICES_EUR), paid);
   const covered = Object.values(LEVEL_COURSES).flatMap((c) => c.levels);
   assert.deepEqual(covered, paid);
@@ -137,7 +139,9 @@ test('level courses cover every paid sub-level exactly once, at its own price', 
   assert.equal(courseForProduct('course_a1').legacy, true);
   assert.equal(bandCourseForLevel('B2.1').key, 'course_b2_1', 'case-insensitive: the DB is uppercase');
   assert.equal(bandCourseForLevel('B2.1').comingSoon, true);
-  assert.equal(bandCourseForLevel('a1.1'), null, 'the free level is not a product');
+  // A1.1 is a product now (the guided course) while its library stays free.
+  assert.equal(bandCourseForLevel('a1.1')?.key, 'course_a1_1');
+  assert.ok(FREE_LEVELS.includes('a1.1'), 'public A1.1 resources remain free');
   assert.equal(bandCourseForLevel('zz'), null);
   // Retired keys never reappear as live products.
   for (const k of Object.keys(LEGACY_LEVEL_COURSES)) assert.ok(!(k in LEVEL_COURSES), `${k} is retired`);

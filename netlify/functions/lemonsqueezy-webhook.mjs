@@ -222,6 +222,8 @@ const COURSE_VARIANT_ENV = {
   LEMONSQUEEZY_TELC_B1_VARIANT_ID: 'telc_b1_komplett',
   // One product per paid sub-level (2026-09-08). B1/B2 vars stay unset while
   // those courses are "coming soon" — an unset var is simply no route.
+  // A1.1 joined 2026-09-15 as the €39 DeutschStart A1.1 guided course.
+  LEMONSQUEEZY_COURSE_A1_1_VARIANT_ID: 'course_a1_1',
   LEMONSQUEEZY_COURSE_A1_2_VARIANT_ID: 'course_a1_2',
   LEMONSQUEEZY_COURSE_A2_1_VARIANT_ID: 'course_a2_1',
   LEMONSQUEEZY_COURSE_A2_2_VARIANT_ID: 'course_a2_2',
