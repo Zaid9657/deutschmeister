@@ -25,7 +25,13 @@ const EVAL_DIR = join(ROOT, 'evals/speaking');
 
 export const PROMPT_VERSION = '2026-09-16.1';
 
-export const loadCases = () => JSON.parse(readFileSync(join(EVAL_DIR, 'a11-cases.json'), 'utf8'));
+// The dataset file may be a bare array or an envelope carrying metadata
+// ({ version, course, missions, cases }); both yield the case list.
+export const loadCases = () => {
+  const parsed = JSON.parse(readFileSync(join(EVAL_DIR, 'a11-cases.json'), 'utf8'));
+  return Array.isArray(parsed) ? parsed : parsed.cases;
+};
+export const loadDataset = () => JSON.parse(readFileSync(join(EVAL_DIR, 'a11-cases.json'), 'utf8'));
 export const loadRubric = () => JSON.parse(readFileSync(join(EVAL_DIR, 'rubric.json'), 'utf8'));
 
 /**
@@ -111,9 +117,18 @@ async function responsesFromFixtures(model) {
 async function responsesFromProvider(cases, model) {
   const { guidedTurnFeedback } = await import('../netlify/functions/_shared/speakingAI.mjs');
   process.env.SPEAKING_TEACHER_MODEL = model;
+  // The model is given the mission's FULL criteria vocabulary (from the
+  // dataset's `missions` block) — never the case's expected answer, which
+  // would make the task-decision measurement self-fulfilling. The DB's own
+  // pass_criteria is a free-text sentence; the dataset's discrete ids are
+  // what make a pass/fail decision measurable.
+  const dataset = loadDataset();
+  const criteriaByMission = new Map(
+    (Array.isArray(dataset.missions) ? dataset.missions : []).map((m) => [m.missionOrder ?? m.order, m.criteria || []]),
+  );
   const out = {};
   for (const testCase of cases) {
-    const mission = { pass_criteria: testCase.expected?.taskCriteriaMet || [] };
+    const mission = { pass_criteria: criteriaByMission.get(testCase.missionOrder) || [] };
     const started = Date.now();
     let response = null;
     try {
