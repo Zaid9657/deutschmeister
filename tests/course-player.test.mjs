@@ -273,3 +273,19 @@ test('SpeakingStage hands the prompt over and the speaking page uses it when no 
   assert.ok(/if \(wantedMission\) return null;/.test(page), 'an explicit ?mission= must win over the course task');
   assert.ok(page.includes('courseTask.promptDe'), 'the handed-over prompt is not rendered');
 });
+
+// ---------------------------------------------------------------------------
+// Walkthrough 2026-09-19: ten dialogue lines cost nine taps. The dialogue
+// stage keeps line-by-line as its default and adds ONE secondary control that
+// reveals the rest; the footer primary stays "Nächste Zeile" / "Weiter".
+// Sie register — the copy will move to the string table in Wave 1.
+// ---------------------------------------------------------------------------
+test('DialogStage reveals line by line by default and offers "Alle Zeilen zeigen" as the secondary way out', () => {
+  const src = read('src/components/lesson/DialogStage.jsx');
+  assert.ok(src.includes('useState(1)'), 'the first line is shown alone by default');
+  assert.ok(src.includes("primaryLabel={allShown ? 'Weiter' : 'Nächste Zeile'}"), 'the primary still pages line by line');
+  assert.ok(src.includes('Alle Zeilen zeigen'), 'the reveal-all control is missing');
+  assert.ok(src.includes('onClick={() => setShown(lines.length)}'), 'reveal-all must show every line, after which the primary reads Weiter');
+  assert.ok(src.includes('<AudioSourceBadge recorded={recorded} />'), 'the audio-source badge stays on every line');
+  assert.ok(src.includes("{gloss ? 'Englisch aus' : 'Englisch an'}"), 'the English gloss toggle stays');
+});

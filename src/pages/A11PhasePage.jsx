@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Headphones, Mic, PenTool, Search, Target, ClipboardCheck } from 'lucide-react';
+import { BookOpen, Headphones, Mic, PenTool, Search, Target, ClipboardCheck, ArrowRight, Route } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { PROGRAM, PROGRAM_KEY, allItemIds } from '../data/programs/a11Phase';
 import { getProgramProgress, setProgramItemDone } from '../services/programProgress';
@@ -18,6 +18,12 @@ import Aurora from '../components/ui/Aurora.jsx';
 // not repeated here. Reached via LevelSubscriptionGuard (level="a1.1")
 // rather than PurchaseGuard — a1.1 is a free level, so this plan is open to
 // every logged-in user, same recorded decision as the Abschlusstest itself.
+//
+// This plan is NOT the course. The guided A1.1 course is /course/a1.1
+// (CurriculumHomePage, the rebuilt standard); this page is a 28-day
+// checklist over the library, kept for learners who prefer a calendar. The
+// card at the top says so, so nobody works this list believing it is the
+// Lektionen path (Wave 0 front door: one course, not three).
 
 const TYPE_ICON = {
   lesson: BookOpen,
@@ -88,10 +94,27 @@ const A11PhasePage = () => {
               </Link>
             </Reveal>
 
-            <Reveal delay={200} className="mt-6">
-              <Card raised edge="siegel" className="p-4">
+            <Reveal delay={180} className="mt-6">
+              <Card raised edge="siegel" className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-clay bg-siegel text-white shadow-raise-siegel">
+                    <Route className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-ink">Der geführte A1.1-Kurs</p>
+                    <p className="text-sm text-graphite">12 Lektionen, 4 Checkpoints, Abschlusstest — in Reihenfolge, kostenlos. Dieser Plan hier ist eine 28-Tage-Checkliste über die Bibliothek, nicht der Kurs.</p>
+                  </div>
+                </div>
+                <Link to="/course/a1.1" className="inline-flex shrink-0 items-center gap-2 rounded-clay bg-siegel px-5 py-3 text-sm font-bold text-white shadow-raise-siegel transition-all hover:bg-siegel-lift active:translate-y-1 active:shadow-none">
+                  Zum Kurs <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+              </Card>
+            </Reveal>
+
+            <Reveal delay={220} className="mt-4">
+              <Card className="p-4">
                 <div className="flex items-baseline justify-between mb-2">
-                  <span className="text-sm font-semibold text-ink">Dein Fortschritt</span>
+                  <span className="text-sm font-semibold text-ink">Ihr Fortschritt</span>
                   <span className="font-data text-[0.8125rem] text-graphite">{completed}/{totalItems} · {pct}%</span>
                 </div>
                 <div className="h-2 rounded-pill bg-siegel-wash overflow-hidden" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
@@ -157,9 +180,9 @@ const A11PhasePage = () => {
 
         <footer className="border-t border-rule pt-6 text-sm text-graphite">
           <p>
-            Arbeite in deinem Tempo — der Plan geht von einer Einheit pro Tag aus, aber nichts läuft ab.
-            A1.1 ist immer frei zugänglich; den Status siehst du auf{' '}
-            <Link to="/subscription" className="font-bold text-siegel transition-colors hover:text-siegel-deep">deiner Abo-Seite</Link>.
+            Arbeiten Sie in Ihrem Tempo — der Plan geht von einer Einheit pro Tag aus, aber nichts läuft ab.
+            A1.1 ist immer frei zugänglich; den Status sehen Sie auf{' '}
+            <Link to="/subscription" className="font-bold text-siegel transition-colors hover:text-siegel-deep">Ihrer Abo-Seite</Link>.
           </p>
         </footer>
       </div>

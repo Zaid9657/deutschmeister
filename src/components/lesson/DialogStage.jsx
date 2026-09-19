@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Play, Languages, Mic, Cpu } from 'lucide-react';
+import { Play, Languages, Mic, Cpu, ListEnd } from 'lucide-react';
 import Card from '../ui/Card.jsx';
 import StageShell from './StageShell.jsx';
 import { audioFor, playLine, speechAvailable } from '../../lib/lesson/speech.js';
@@ -8,7 +8,11 @@ import { audioFor, playLine, speechAvailable } from '../../lib/lesson/speech.js'
  * Stage 2a — Input. The dialogue arrives line by line: you reveal the next
  * line, you can play any line, and once a line is on screen it STAYS on screen
  * (CONTRACT.md: sound is never the only channel). The English gloss is a
- * toggle, off by default, so the German is read first.
+ * toggle, off by default, so the German is read first. Line by line is the
+ * default; „Alle Zeilen zeigen" (by the line counter) is the way out for a
+ * learner who is re-reading — nine taps for ten lines was the friction the
+ * walkthrough measured. Once every line is on screen the primary reads
+ * „Weiter" either way.
  *
  * Audio is the recording when scripts/generate-course-audio.mjs has rendered
  * the line (manifest src/data/curricula/<level>.audio.js, key `line-<i>`) and
@@ -101,9 +105,20 @@ export default function DialogStage({ stage, lektionId, onBack, onDone }) {
         })}
       </ol>
       {!allShown && (
-        <p className="mt-4 font-data text-[0.75rem] text-graphite">
-          Zeile {shown} von {lines.length}
-        </p>
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+          <p className="font-data text-[0.75rem] text-graphite">
+            Zeile {shown} von {lines.length}
+          </p>
+          {/* The secondary control sits by the counter, not in the footer: a
+              third footer control wraps its label at phone width. */}
+          <button
+            type="button"
+            onClick={() => setShown(lines.length)}
+            className="inline-flex items-center gap-1.5 rounded-pill border border-rule bg-white px-3 py-1.5 text-[0.8125rem] font-bold text-graphite hover:border-siegel hover:text-siegel-deep"
+          >
+            <ListEnd className="h-4 w-4" aria-hidden="true" /> Alle Zeilen zeigen
+          </button>
+        </div>
       )}
     </StageShell>
   );

@@ -352,7 +352,7 @@ export default function CheckpointPage() {
 
   return (
     <div className="min-h-screen bg-paper font-body text-ink">
-      <div className="mx-auto max-w-2xl px-4 pb-8 pt-24 sm:pb-12 sm:pt-28">
+      <div className="mx-auto max-w-2xl px-4 pb-8 pt-6 sm:pb-12 sm:pt-10">
         <div className="mb-6 flex items-center gap-3">
           <Link to={`/course/${curriculum.level}`} className="inline-flex items-center gap-1 text-sm font-bold text-siegel hover:text-siegel-deep">
             <ArrowLeft className="h-4 w-4" aria-hidden="true" /> {curriculum.code}

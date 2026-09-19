@@ -126,7 +126,7 @@ const Navbar = () => {
               <>
                 <NavSeparator />
                 <Link
-                  to="/level/a1.1"
+                  to="/course/a1.1"
                   className="flex min-h-11 items-center gap-1.5 whitespace-nowrap px-3 py-1.5 rounded-full border border-siegel/25 bg-siegel-wash text-siegel-deep text-sm font-semibold hover:border-siegel/50 transition-colors"
                 >
                   <Sparkles size={14} />
@@ -295,7 +295,7 @@ const Navbar = () => {
               {!user && (
                 <div className="border-t border-rule mt-2 pt-2">
                   <Link
-                    to="/level/a1.1"
+                    to="/course/a1.1"
                     onClick={() => setIsOpen(false)}
                     className="flex items-center gap-3 px-4 py-3 rounded-lg border border-siegel/25 bg-siegel-wash text-siegel-deep font-semibold"
                   >

@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { getProgramProgress } from '../services/programProgress';
 import { loadDashboardStats } from '../services/dashboardStats';
 import { curriculumPath } from '../data/curricula/index.js';
+import { isLevelFree } from '../config/freeTier.js';
 import { hasLocalProgress, localDoneIds, mergeLocalProgress } from '../lib/course/localProgress.js';
 import ExamDatePlan from '../components/course/ExamDatePlan.jsx';
 import Button from '../components/ui/Button.jsx';
@@ -39,7 +40,14 @@ const hrefFor = (level, node) => {
   return `/modelltest/${node.testSlug}`;
 };
 
-const KIND_LABEL = { lektion: 'Lektion', checkpoint: 'Checkpoint', leveltest: 'Final test' };
+// The final test of a FREE level is free too: /modelltest/<testSlug> sits
+// behind ExamSubscriptionGuard, whose gate for a course test is
+// hasLevelAccess(level) — true for every signed-in user when the level is in
+// FREE_LEVELS. A signed-out visitor is asked to sign in there, never to pay.
+// Say so on the node and in the footer, so the last step of the free course
+// never reads like an unmarked paywall (Wave 0 front door).
+const finalTestLabel = (level) => (isLevelFree(level) ? 'Abschlusstest · frei' : 'Abschlusstest');
+const kindLabelFor = (level) => ({ lektion: 'Lektion', checkpoint: 'Checkpoint', leveltest: finalTestLabel(level) });
 const KIND_ICON = { lektion: BookOpen, checkpoint: ClipboardCheck, leveltest: Trophy };
 const SWAY = [0, 44, 72, 44, 0, -44, -72, -44];
 
@@ -47,6 +55,7 @@ export default function CurriculumHomePage({ curriculum }) {
   const { user } = useAuth();
   const level = curriculum.level;
   const programKey = programKeyFor(level);
+  const KIND_LABEL = kindLabelFor(level);
   const [done, setDone] = useState(() => new Set());
   const [loaded, setLoaded] = useState(false);
   const [streak, setStreak] = useState(0);
@@ -201,7 +210,7 @@ export default function CurriculumHomePage({ curriculum }) {
         <footer className="mt-4 border-t border-rule pt-6 text-sm text-graphite">
           Lektionen open in order and save on every step, on any device.{' '}
           <Link to={`/course/${level}/review`} className="font-bold text-siegel hover:text-siegel-deep">Wiederholen</Link> ·{' '}
-          <Link to={`/modelltest/${curriculum.testSlug}`} className="font-bold text-siegel hover:text-siegel-deep">Final test</Link> ·{' '}
+          <Link to={`/modelltest/${curriculum.testSlug}`} className="font-bold text-siegel hover:text-siegel-deep">{finalTestLabel(level)}</Link> ·{' '}
           <Link to={`/courses/${level.replace('.', '-')}/`} className="font-bold text-siegel hover:text-siegel-deep" reloadDocument>Lehrplan</Link> ·{' '}
           <Link to="/courses/" className="font-bold text-siegel hover:text-siegel-deep" reloadDocument>All courses</Link>
         </footer>
