@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import StageShell from './StageShell.jsx';
 import GradedWriting from './GradedWriting.jsx';
+import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /**
  * Stage 6 — Schreiben. A Formular (fields) or a Mitteilung (short message),
@@ -28,6 +29,7 @@ const PASS_PCT = 0.6;
 export default function WritingStage({ stage, onBack, onDone, onResult }) {
   const schreiben = stage.schreiben || {};
   const [graded, setGraded] = useState(false);
+  const [lang] = useLessonLang();
 
   const handleResult = useCallback(
     (r) => {
@@ -47,10 +49,11 @@ export default function WritingStage({ stage, onBack, onDone, onResult }) {
 
   return (
     <StageShell
-      eyebrow="Schritt 6 · Schreiben"
+      eyebrow={t('stage.writing.eyebrow', lang)}
       title={schreiben.taskDe}
+      lead={schreiben.taskEn || null}
       onBack={onBack}
-      primaryLabel="Weiter"
+      primaryLabel={t('action.next', lang)}
       onPrimary={onDone}
       primaryDisabled={!graded}
     >

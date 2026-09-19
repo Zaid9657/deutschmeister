@@ -187,3 +187,19 @@ curl -s "https://deutsch-meister.de/.netlify/functions/course-reminder?dry=1&sec
 
 `"enabled":false` means the master switch is not `true`. A dry run is the honest way to see
 the queue size before any mail exists.
+
+---
+
+## Course funnel in the weekly truth — apply one migration (2026-09-19)
+
+**Why it needs you.** The Monday truth mail measured one-and-done on the grammar hub, not on the
+A1.1 course, so the rebuild's own success metric — Lektion 1 → Lektion 2 continuation — was never
+in the row. `migrations/2026-09-19-course-funnel.sql` re-declares `weekly_truth_metrics()` with a
+`course` block (same body otherwise, same `SECURITY DEFINER`, same REVOKEs). Until it is applied
+the mail prints `Kurs A1.1: nicht gemessen` on that line — nothing else changes. Migrations are
+never applied by the build (`migrations/README.md`), so: open the Supabase SQL editor
+(Dashboard → SQL Editor → New query), paste the whole file, Run. Then, in the same editor,
+run `SELECT public.weekly_truth_metrics()->'course';` once and paste the JSON back to the
+agent — it is the first measured baseline (`l01_started`, `l01_finished`, `l02_started`,
+`l1_to_l2_pct`, `one_and_done_14d`, `active_learners_7d` …), and next Monday's mail will show the
+delta against it. `l1_to_l2_pct` is `null`, not `0`, while nobody has finished Lektion 1.

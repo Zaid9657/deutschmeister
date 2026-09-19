@@ -4,6 +4,7 @@ import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
 import StageShell from './StageShell.jsx';
 import { playWord } from '../../lib/lesson/speech.js';
+import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /**
  * Stage 2b — the new words as cards: article, plural, English, audio.
@@ -22,6 +23,7 @@ import { playWord } from '../../lib/lesson/speech.js';
 export default function WortfeldStage({ stage, onBack, onDone }) {
   const [open, setOpen] = useState(() => new Set());
   const words = stage.words || [];
+  const [lang] = useLessonLang();
 
   const toggle = (i) =>
     setOpen((prev) => {
@@ -32,11 +34,11 @@ export default function WortfeldStage({ stage, onBack, onDone }) {
 
   return (
     <StageShell
-      eyebrow="Schritt 2 · Wortfeld"
-      title={`${words.length} neue Wörter`}
-      lead="Tippen Sie auf eine Karte für die Übersetzung, auf den Lautsprecher zum Hören."
+      eyebrow={t('stage.wortfeld.eyebrow', lang)}
+      title={t('stage.wortfeld.title', lang, { n: words.length })}
+      lead={t('stage.wortfeld.lead', lang)}
       onBack={onBack}
-      primaryLabel="Weiter"
+      primaryLabel={t('action.next', lang)}
       onPrimary={onDone}
     >
       <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -50,10 +52,10 @@ export default function WortfeldStage({ stage, onBack, onDone }) {
               <Card interactive as="div" className="p-4">
                 <div className="flex items-start justify-between gap-3">
                   <button type="button" onClick={() => toggle(i)} className="min-w-0 flex-1 text-left" aria-expanded={open.has(i)}>
-                    <p className="truncate font-display text-[1.0625rem] font-semibold text-ink">{spoken}</p>
+                    <p className="truncate font-display text-[1.0625rem] font-semibold text-ink" lang="de">{spoken}</p>
                     <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                       {article && <Chip tone="quiet">{article}</Chip>}
-                      {plural && <span className="font-data text-[0.6875rem] text-graphite">Pl. {plural}</span>}
+                      {plural && <span className="font-data text-[0.6875rem] text-graphite">{t('wortfeld.plural', lang)} {plural}</span>}
                     </div>
                     <p className={`mt-2 text-[0.875rem] leading-snug ${open.has(i) ? 'text-graphite' : 'text-transparent'}`}>
                       {open.has(i) ? w.en || (w.db && w.db.english) || '' : '—'}
@@ -62,7 +64,7 @@ export default function WortfeldStage({ stage, onBack, onDone }) {
                   <button
                     type="button"
                     onClick={() => playWord(audioUrl, spoken)}
-                    aria-label={`${spoken} anhören`}
+                    aria-label={t('wortfeld.listen', lang, { word: spoken })}
                     className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel hover:bg-siegel hover:text-white"
                   >
                     <Volume2 className="h-4 w-4" />

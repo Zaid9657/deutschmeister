@@ -1,3 +1,5 @@
+import { t, useLessonLang } from '../../lib/lesson/strings.js';
+
 /**
  * The thin progress bar at the top of a lesson (standard §4: "a thin progress
  * bar", not a score). It counts screens, not correctness — nothing here ever
@@ -5,12 +7,13 @@
  */
 export default function LessonProgressBar({ step, total, label }) {
   const pct = total > 0 ? Math.round((step / total) * 100) : 0;
+  const [lang] = useLessonLang();
   return (
     <div className="flex items-center gap-3">
       <div
         className="h-1.5 flex-1 overflow-hidden rounded-pill bg-siegel-wash"
         role="progressbar"
-        aria-label="Fortschritt in dieser Lektion"
+        aria-label={t('player.progress', lang)}
         aria-valuenow={pct}
         aria-valuemin={0}
         aria-valuemax={100}

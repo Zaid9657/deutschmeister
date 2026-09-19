@@ -1,23 +1,26 @@
 import { ArrowLeft } from 'lucide-react';
 import Button from '../ui/Button.jsx';
+import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /**
  * One stage = one screen (standard §4). The shell owns the three constants of
  * that screen: the eyebrow that says where you are, the content, and ONE
  * primary action pinned at the bottom. Back is always allowed — a locked-in
- * exercise is a reason to close the tab.
+ * exercise is a reason to close the tab. Its two fixed labels (Back, and the
+ * default primary) come from the lesson string table in the chrome language.
  */
 export default function StageShell({
   eyebrow,
   title,
   lead,
   onBack,
-  primaryLabel = 'Weiter',
+  primaryLabel = null,
   onPrimary,
   primaryDisabled = false,
   secondary = null,
   children,
 }) {
+  const [lang] = useLessonLang();
   return (
     <section className="flex min-h-[60vh] flex-col">
       <header className="mb-5">
@@ -41,7 +44,7 @@ export default function StageShell({
             onClick={onBack}
             className="inline-flex items-center gap-1 self-start text-sm font-bold text-graphite hover:text-siegel-deep"
           >
-            <ArrowLeft className="h-4 w-4" /> Zurück
+            <ArrowLeft className="h-4 w-4" /> {t('shell.back', lang)}
           </button>
         ) : (
           <span />
@@ -50,7 +53,7 @@ export default function StageShell({
           {secondary}
           {onPrimary && (
             <Button onClick={onPrimary} size="lg" disabled={primaryDisabled} className="w-full sm:w-auto">
-              {primaryLabel}
+              {primaryLabel || t('action.next', lang)}
             </Button>
           )}
         </div>

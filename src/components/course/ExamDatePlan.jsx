@@ -5,6 +5,7 @@ import { useSubscription } from '../../contexts/SubscriptionContext';
 import { supabase } from '../../utils/supabase';
 import { planFor } from '../../lib/course/plan.js';
 import Button from '../ui/Button.jsx';
+import { lessonDateFormat, t, useLessonLang } from '../../lib/lesson/strings.js';
 
 // The exam-date plan on a rebuilt course home (P4 "completion levers").
 //
@@ -25,10 +26,9 @@ import Button from '../ui/Button.jsx';
 // SubscriptionContext, which is already the one place the SPA reads it;
 // refreshSubscription() re-reads it after the save.
 //
-// Copy is German, matching the course engine's screens. No pressure language:
-// no "nur noch X Tage", no red, no exclamation marks.
-
-const DE_DATE = new Intl.DateTimeFormat('de-DE', { day: 'numeric', month: 'long', year: 'numeric' });
+// Copy comes from the lesson string table in the chrome language (English by
+// default, Deutsch-Modus on the toggle), matching the course engine's screens.
+// No pressure language: no "only X days left", no red, no exclamation marks.
 
 /** Today as YYYY-MM-DD in local time — the min for the date input. */
 const todayInput = () => {
@@ -41,6 +41,7 @@ const todayInput = () => {
 export default function ExamDatePlan({ curriculum, path = [], doneIds = new Set() }) {
   const { user } = useAuth();
   const { profile, refreshSubscription } = useSubscription();
+  const [lang] = useLessonLang();
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState('');
   const [saving, setSaving] = useState(false);
@@ -64,7 +65,7 @@ export default function ExamDatePlan({ curriculum, path = [], doneIds = new Set(
     const { error: err } = await supabase.from('profiles').update(fields).eq('id', user.id);
     if (err) {
       console.error('[ExamDatePlan] exam_date save failed:', err.message);
-      setError('Das Datum konnte nicht gespeichert werden. Bitte später noch einmal.');
+      setError(t('plan.saveFailed', lang));
     } else {
       setEditing(false);
       await refreshSubscription();
@@ -81,12 +82,12 @@ export default function ExamDatePlan({ curriculum, path = [], doneIds = new Set(
             <CalendarDays className="h-5 w-5" aria-hidden="true" />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="font-bold text-ink">Wann ist Ihre Prüfung?</p>
+            <p className="font-bold text-ink">{t('plan.question', lang)}</p>
             <p className="mt-0.5 text-[0.875rem] leading-relaxed text-graphite">
-              Mit einem Datum zeigt Ihnen der Kurs, wie viele Lektionen pro Woche reichen. Sie können es jederzeit ändern.
+              {t('plan.lead', lang)}
             </p>
             <div className="mt-3 flex flex-wrap items-center gap-2">
-              <label className="sr-only" htmlFor="dm-exam-date">Prüfungsdatum</label>
+              <label className="sr-only" htmlFor="dm-exam-date">{t('plan.dateLabel', lang)}</label>
               <input
                 id="dm-exam-date"
                 type="date"
@@ -101,7 +102,7 @@ export default function ExamDatePlan({ curriculum, path = [], doneIds = new Set(
                 disabled={saving || !(draft || examDate)}
                 onClick={() => save(draft || examDate)}
               >
-                {saving ? 'Speichern …' : 'Speichern'}
+                {t(saving ? 'action.saving' : 'action.save', lang)}
               </Button>
               {examDate && (
                 <button
@@ -109,11 +110,11 @@ export default function ExamDatePlan({ curriculum, path = [], doneIds = new Set(
                   onClick={() => { setEditing(false); setDraft(''); }}
                   className="font-data text-[0.75rem] font-bold uppercase tracking-[0.13em] text-graphite hover:text-ink"
                 >
-                  Abbrechen
+                  {t('action.cancel', lang)}
                 </button>
               )}
               {!examDate && (
-                <span className="font-data text-[0.75rem] text-graphite">Noch kein Datum? Kein Problem — der Kurs läuft auch ohne.</span>
+                <span className="font-data text-[0.75rem] text-graphite">{t('plan.noDate', lang)}</span>
               )}
             </div>
             {error && <p className="mt-2 text-[0.8125rem] text-graphite">{error}</p>}
@@ -127,16 +128,21 @@ export default function ExamDatePlan({ curriculum, path = [], doneIds = new Set(
   const behind = plan.status === 'behind';
   const past = plan.status === 'past';
   const Icon = behind ? Compass : CheckCircle2;
+  const lessons = (n) => t(n === 1 ? 'plan.lesson' : 'plan.lessons', lang);
+  const examDay = lessonDateFormat(lang, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(`${examDate}T12:00:00`));
   const headline = past
-    ? 'Ihr Prüfungsdatum liegt hinter Ihnen'
+    ? t('plan.past', lang)
     : behind
-      ? `${plan.behindBy} ${plan.behindBy === 1 ? 'Lektion' : 'Lektionen'} hinter dem Plan — kein Problem, hier weiter`
-      : `Auf Kurs · ${plan.perWeekTarget} ${plan.perWeekTarget === 1 ? 'Lektion' : 'Lektionen'} pro Woche`;
+      ? t('plan.behind', lang, { n: plan.behindBy, unit: lessons(plan.behindBy) })
+      : t('plan.onTrack', lang, { n: plan.perWeekTarget, unit: lessons(plan.perWeekTarget) });
   const detail = past
-    ? 'Setzen Sie ein neues Datum, wenn Sie einen neuen Termin haben — der Kurs bleibt genau da, wo Sie sind.'
+    ? t('plan.pastDetail', lang)
     : plan.lektionenLeft === 0
-      ? `Alles geschafft vor dem ${DE_DATE.format(new Date(`${examDate}T12:00:00`))}.`
-      : `${plan.lektionenLeft} von ${plan.total} offen · Prüfung am ${DE_DATE.format(new Date(`${examDate}T12:00:00`))} · ${plan.weeksLeft} ${plan.weeksLeft === 1 ? 'Woche' : 'Wochen'}`;
+      ? t('plan.allDone', lang, { date: examDay })
+      : t('plan.detail', lang, {
+        left: plan.lektionenLeft, total: plan.total, date: examDay, weeks: plan.weeksLeft,
+        unit: t(plan.weeksLeft === 1 ? 'plan.week' : 'plan.weeks', lang),
+      });
 
   return (
     <div className="mt-4 rounded-clay border border-rule bg-white p-4 shadow-raise">
@@ -153,7 +159,7 @@ export default function ExamDatePlan({ curriculum, path = [], doneIds = new Set(
               onClick={() => { setDraft(examDate); setEditing(true); }}
               className="font-data text-[0.75rem] font-bold uppercase tracking-[0.13em] text-siegel hover:text-siegel-deep"
             >
-              Datum ändern
+              {t('plan.changeDate', lang)}
             </button>
             <button
               type="button"
@@ -161,7 +167,7 @@ export default function ExamDatePlan({ curriculum, path = [], doneIds = new Set(
               onClick={() => save(null)}
               className="font-data text-[0.75rem] font-bold uppercase tracking-[0.13em] text-graphite hover:text-ink"
             >
-              Zurücksetzen
+              {t('plan.reset', lang)}
             </button>
           </div>
           {error && <p className="mt-2 text-[0.8125rem] text-graphite">{error}</p>}

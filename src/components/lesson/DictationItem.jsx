@@ -6,6 +6,7 @@ import { ItemFeedback } from './PracticeItem.jsx';
 import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../../lib/lesson/check.js';
 import { audioFor, playLine, speechAvailable } from '../../lib/lesson/speech.js';
 import { AudioSourceBadge } from './DialogStage.jsx';
+import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /**
  * The listening item of stage 4: a dialogue line is played, the learner types
@@ -26,6 +27,7 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
   const id = lektionId || line.lektionId || null;
   const key = `line-${line.index}`;
   const recorded = !!audioFor(id, key);
+  const [lang] = useLessonLang();
 
   useEffect(() => {
     setValue(''); setState(null);
@@ -52,10 +54,10 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
   return (
     <div>
       <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">
-        Schritt 4 · Hören {index + 1}/{total}
+        {t('stage.dictation.eyebrow', lang, { n: index + 1, total })}
       </p>
       <Card className="mt-4 p-5 sm:p-6">
-        <p className="text-[0.9375rem] text-graphite">Hören Sie die Zeile und schreiben Sie sie auf.</p>
+        <p className="text-[0.9375rem] text-graphite">{t('dictation.lead', lang)}</p>
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <button
             type="button"
@@ -63,18 +65,18 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
             disabled={!recorded && !speechAvailable()}
             className="inline-flex items-center gap-2 rounded-clay border border-rule bg-white px-4 py-2.5 text-sm font-bold text-ink shadow-raise hover:border-siegel active:translate-y-1 active:shadow-none disabled:opacity-40"
           >
-            <Play className="h-4 w-4" aria-hidden="true" /> Abspielen
+            <Play className="h-4 w-4" aria-hidden="true" /> {t('action.play', lang)}
           </button>
           <AudioSourceBadge recorded={recorded} />
         </div>
         {!recorded && !speechAvailable() && (
           <p className="mt-2 text-[0.8125rem] text-graphite">
-            Ihr Browser kann nicht vorlesen — hier ist die Zeile zum Abschreiben: <strong>{line.de}</strong>
+            {t('dictation.noSpeech', lang)} <strong lang="de">{line.de}</strong>
           </p>
         )}
 
         <label htmlFor={itemId} className="mt-5 block font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
-          Was hören Sie?
+          {t('dictation.whatDoYouHear', lang)}
         </label>
         <input
           id={itemId}
@@ -94,9 +96,9 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
 
       <div className="mt-6 flex justify-end">
         {state ? (
-          <Button onClick={onNext} size="lg" className="w-full sm:w-auto">Weiter</Button>
+          <Button onClick={onNext} size="lg" className="w-full sm:w-auto">{t('action.next', lang)}</Button>
         ) : (
-          <Button onClick={submit} size="lg" disabled={!value.trim()} className="w-full sm:w-auto">Prüfen</Button>
+          <Button onClick={submit} size="lg" disabled={!value.trim()} className="w-full sm:w-auto">{t('action.check', lang)}</Button>
         )}
       </div>
     </div>

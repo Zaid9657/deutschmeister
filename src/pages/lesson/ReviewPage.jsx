@@ -12,12 +12,15 @@ import { gradeTypedReview } from '../../lib/checkpoint/reviewGrading.js';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import Chip from '../../components/ui/Chip.jsx';
+import LangToggle from '../../components/lesson/LangToggle.jsx';
+import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
 // The Wiederholen screen (standard §3, "Spaced review"): the cards that are due
 // today, in four modes — flashcard reveal, listening, typed, and "say it"
 // self-confirm — so the same word is not always met the same way. The schedule
 // is the Babbel ladder; the card content comes from the curriculum, never from
-// the database row (see reviewService.buildCardIndex).
+// the database row (see reviewService.buildCardIndex). Chrome labels come from
+// src/lib/lesson/strings.js in the chrome language (header toggle).
 
 const MODES_BY_KIND = {
   word: ['flashcard', 'listening', 'typed'],
@@ -25,12 +28,6 @@ const MODES_BY_KIND = {
   sentence: ['listening', 'say', 'flashcard'],
 };
 
-const MODE_LABEL = {
-  flashcard: 'Karte',
-  listening: 'Hören',
-  typed: 'Schreiben',
-  say: 'Sprechen',
-};
 
 // Audio, in the order the standard wants it (plan P1): a recording when one
 // exists, browser speech only as the fallback. A sentence card IS a dialogue
@@ -46,10 +43,10 @@ function recordedKeyFor(cardKey) {
   return { lektionId: parsed.lektionId, key: `line-${parsed.lineIdx}` };
 }
 
-const formatDue = (iso) => {
+const formatDue = (iso, lang) => {
   if (!iso) return null;
   try {
-    return new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: 'long' });
+    return new Date(iso).toLocaleDateString(lang === 'de' ? 'de-DE' : 'en-GB', { day: '2-digit', month: 'long' });
   } catch {
     return null;
   }
@@ -58,6 +55,7 @@ const formatDue = (iso) => {
 export default function ReviewPage() {
   const { level } = useParams();
   const { user } = useAuth();
+  const [lang] = useLessonLang();
   const curriculum = curriculumFor(level);
 
   const [cards, setCards] = useState(null);
@@ -154,7 +152,7 @@ export default function ReviewPage() {
 
   return (
     <div className="min-h-screen bg-paper font-body text-ink">
-      <div className="mx-auto max-w-2xl px-4 pb-8 pt-24 sm:pb-12 sm:pt-28">
+      <div className="mx-auto max-w-2xl px-4 pb-8 pt-6 sm:pb-12 sm:pt-10">
         <div className="mb-6 flex items-center gap-3">
           <Link to={`/course/${curriculum.level}`} className="inline-flex items-center gap-1 text-sm font-bold text-siegel hover:text-siegel-deep">
             <ArrowLeft className="h-4 w-4" aria-hidden="true" /> {curriculum.code}
@@ -162,40 +160,43 @@ export default function ReviewPage() {
           {cards && cards.length > 0 && !done && (
             <span className="font-data text-xs text-graphite">{index + 1}/{cards.length}</span>
           )}
+          <LangToggle className="ml-auto" />
         </div>
 
-        <h1 className="font-display text-2xl text-ink sm:text-3xl">Wiederholen</h1>
+        <h1 className="font-display text-2xl text-ink sm:text-3xl">{t('review.title', lang)}</h1>
         <p className="mt-1 text-sm text-graphite">
-          Wörter, Strukturen und Sätze kommen nach {LADDER_DAYS.join(', ')} Tagen wieder.
+          {t('review.lead', lang, { days: LADDER_DAYS.join(', ') })}
         </p>
 
-        {cards === null && <p className="mt-8 text-sm text-graphite">Wird geladen …</p>}
+        {cards === null && <p className="mt-8 text-sm text-graphite">{t('review.loading', lang)}</p>}
 
         {cards !== null && cards.length === 0 && (
           <Card className="mt-6 p-6">
             <p className="text-[0.9375rem] text-ink">
-              {user ? 'Heute ist nichts fällig.' : 'Melden Sie sich an, damit Ihre Wiederholungen gespeichert werden.'}
+              {/* Deutsch-Modus: „Melden Sie sich an, damit Ihre Wiederholungen gespeichert werden."
+                  — the Sie-register line tests/checkpoint.test.mjs §6 pins; in the string table now. */}
+              {t(user ? 'review.nothingDue' : 'review.signIn', lang)}
             </p>
-            <Button className="mt-4" variant="secondary" to={`/course/${curriculum.level}`}>Zum Kursplan</Button>
+            <Button className="mt-4" variant="secondary" to={`/course/${curriculum.level}`}>{t('action.toCoursePlan', lang)}</Button>
           </Card>
         )}
 
         {card && content && !done && (
           <Card className="mt-6 p-5 sm:p-6">
             <div className="mb-3 flex flex-wrap items-center gap-2">
-              <Chip tone="label">{MODE_LABEL[mode]}</Chip>
-              {content.lektionNr && <span className="font-data text-[0.6875rem] uppercase tracking-[0.13em] text-graphite">Lektion {content.lektionNr}</span>}
+              <Chip tone="label">{t(`review.mode.${mode}`, lang)}</Chip>
+              {content.lektionNr && <span className="font-data text-[0.6875rem] uppercase tracking-[0.13em] text-graphite">{t('review.lesson', lang, { nr: content.lektionNr })}</span>}
             </div>
 
             {mode === 'listening' ? (
               <>
                 <div className="flex flex-wrap items-center gap-3">
                   <Button variant="secondary" onClick={() => play(card, content)}>
-                    <Volume2 className="h-4 w-4" aria-hidden="true" /> Nochmal hören
+                    <Volume2 className="h-4 w-4" aria-hidden="true" /> {t('action.listenAgain', lang)}
                   </Button>
                   <AudioSourceBadge recorded={hasRecording} />
                 </div>
-                {revealed && <p className="mt-4 font-display text-xl text-ink">{content.front}</p>}
+                {revealed && <p className="mt-4 font-display text-xl text-ink" lang="de">{content.front}</p>}
               </>
             ) : mode === 'typed' ? (
               <>
@@ -204,7 +205,7 @@ export default function ReviewPage() {
                   className="mt-4 flex flex-col gap-3 sm:flex-row"
                   onSubmit={(event) => { event.preventDefault(); checkTyped(); }}
                 >
-                  <label className="sr-only" htmlFor="review-answer">Auf Deutsch</label>
+                  <label className="sr-only" htmlFor="review-answer">{t('review.inGerman', lang)}</label>
                   <input
                     id="review-answer"
                     value={typed}
@@ -213,20 +214,20 @@ export default function ReviewPage() {
                     autoComplete="off"
                     spellCheck={false}
                     className="w-full rounded-clay border border-rule bg-white px-4 py-3 font-body text-base text-ink placeholder:text-graphite/60 disabled:bg-paper-sunk"
-                    placeholder="Auf Deutsch schreiben"
+                    placeholder={t('review.typePlaceholder', lang)}
                   />
-                  {!revealed && <Button type="submit" className="sm:w-auto">Prüfen</Button>}
+                  {!revealed && <Button type="submit" className="sm:w-auto">{t('action.check', lang)}</Button>}
                 </form>
                 {revealed && (
                   <p className={`mt-3 flex items-center gap-2 text-sm font-bold ${verdict ? 'text-accent-limette-ink' : 'text-accent-himbeer-ink'}`}>
                     {verdict ? <Check className="h-4 w-4" aria-hidden="true" /> : <X className="h-4 w-4" aria-hidden="true" />}
-                    {verdict ? 'Richtig' : `Richtig ist: ${content.front}`}
+                    {verdict ? t('feedback.correct', lang) : t('review.correctIs', lang, { answer: content.front })}
                   </p>
                 )}
               </>
             ) : (
               <>
-                <p className="font-display text-xl text-ink">{content.front}</p>
+                <p className="font-display text-xl text-ink" lang="de">{content.front}</p>
                 {content.detail && <p className="mt-1 text-sm text-graphite">{content.detail}</p>}
                 {revealed && content.back && <p className="mt-3 text-[0.9375rem] text-ink">{content.back}</p>}
               </>
@@ -235,16 +236,16 @@ export default function ReviewPage() {
             <div className="mt-6 flex flex-wrap gap-3">
               {!revealed && mode !== 'typed' && (
                 <Button onClick={() => { setRevealed(true); if (mode === 'say') play(card, content); }}>
-                  {mode === 'say' ? 'Gesagt — auflösen' : 'Auflösen'}
+                  {t(mode === 'say' ? 'review.sayReveal' : 'review.reveal', lang)}
                 </Button>
               )}
               {revealed && (
                 <>
                   <Button variant="secondary" onClick={() => grade(false)}>
-                    <X className="h-4 w-4" aria-hidden="true" /> Nochmal
+                    <X className="h-4 w-4" aria-hidden="true" /> {t('review.again', lang)}
                   </Button>
                   <Button onClick={() => grade(verdict !== false)}>
-                    <Check className="h-4 w-4" aria-hidden="true" /> Gewusst
+                    <Check className="h-4 w-4" aria-hidden="true" /> {t('review.knew', lang)}
                   </Button>
                 </>
               )}
@@ -255,13 +256,14 @@ export default function ReviewPage() {
         {done && (
           <Card raised edge="limette" className="mt-6 p-6">
             <p className="flex items-center gap-2 font-display text-xl text-ink">
-              <Check className="h-5 w-5 text-accent-limette-ink" aria-hidden="true" /> Fertig für heute
+              <Check className="h-5 w-5 text-accent-limette-ink" aria-hidden="true" /> {t('review.doneToday', lang)}
             </p>
             <p className="mt-2 text-sm text-graphite">
-              {formatDue(nextDueAt) ? `Nächste Wiederholung am ${formatDue(nextDueAt)}.` : 'Neue Karten kommen, sobald Sie eine Lektion abschließen.'}
+              {/* Deutsch-Modus: „Neue Karten kommen, sobald Sie eine Lektion abschließen." (same test). */}
+              {formatDue(nextDueAt, lang) ? t('review.nextOn', lang, { date: formatDue(nextDueAt, lang) }) : t('review.newCards', lang)}
             </p>
             <Button className="mt-4" to={`/course/${curriculum.level}`}>
-              Zum Kursplan <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              {t('action.toCoursePlan', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Button>
           </Card>
         )}

@@ -29,6 +29,8 @@ import {
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import Chip from '../../components/ui/Chip.jsx';
+import LangToggle from '../../components/lesson/LangToggle.jsx';
+import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
 // The checkpoint screen (standard §3): 20 items, one per screen, a thin
 // progress bar, then a result that says what to do next. Design rules it
@@ -39,6 +41,10 @@ import Chip from '../../components/ui/Chip.jsx';
 // The item renderer below is deliberately small. The lesson engine's
 // PracticeItem can replace it wholesale once it lands; the contract between
 // them is the item shape from buildCheckpoint.js, nothing else.
+//
+// Chrome labels come from src/lib/lesson/strings.js in the chrome language
+// (English by default, Deutsch-Modus on the header toggle). The SECTION names
+// (Hören, Lesen, …) stay German in both: they are the parts of the exam.
 
 const POOL_LOADERS = {
   'a1.1': () => import('../../data/lessonPools/a11.json'),
@@ -57,6 +63,7 @@ function speak(text, lektionId = null, lineKey = null) {
 
 /** One item, one screen. Typed input, option chips, dictation or self-confirm. */
 function PracticeItem({ item, onAnswer }) {
+  const [lang] = useLessonLang();
   const [value, setValue] = useState('');
   const [feedback, setFeedback] = useState(null);
   // A read-aloud or graded-writing result: the machine's verdict, or the
@@ -83,7 +90,7 @@ function PracticeItem({ item, onAnswer }) {
   const header = (
     <div className="mb-3 flex flex-wrap items-center gap-2">
       <Chip tone="label">{SECTION_LABELS[item.section] || item.section}</Chip>
-      {item.register && <Chip tone="quiet">{item.register === 'formular' ? 'Formular' : 'Mitteilung'}</Chip>}
+      {item.register && <Chip tone="quiet">{t(item.register === 'formular' ? 'checkpoint.formular' : 'checkpoint.mitteilung', lang)}</Chip>}
       {item.hint && <span className="font-data text-[0.6875rem] uppercase tracking-[0.13em] text-graphite">{item.hint}</span>}
     </div>
   );
@@ -95,7 +102,7 @@ function PracticeItem({ item, onAnswer }) {
     return (
       <Card className="p-5 sm:p-6">
         {header}
-        <p className="font-display text-lg leading-snug text-ink">{item.promptDe}</p>
+        <p className="font-display text-lg leading-snug text-ink" lang="de">{item.promptDe}</p>
         {item.promptEn && <p className="mt-1 text-sm text-graphite">{item.promptEn}</p>}
         <div className="mt-4">
           <ReadAloudLine
@@ -106,16 +113,16 @@ function PracticeItem({ item, onAnswer }) {
           />
         </div>
         <p className="mt-3 text-xs text-graphite">
-          {pending?.usedMic
-            ? 'Bewertet — Verständlichkeit zählt in Ihr Sprechen-Ergebnis.'
-            : 'Ohne Aufnahme wird der Sprechen-Teil nicht bewertet, gehört aber zum Test.'}
+          {/* Deutsch-Modus: „Bewertet — Verständlichkeit zählt in Ihr Sprechen-Ergebnis." — the
+              Sie-register line tests/checkpoint.test.mjs §6 pins; it lives in the string table now. */}
+          {t(pending?.usedMic ? 'checkpoint.readAloudScored' : 'checkpoint.readAloudUnscored', lang)}
         </p>
         <Button
           className="mt-4"
           disabled={!pending}
           onClick={() => onAnswer(item, pending?.usedMic ? { usedMic: true, pct: pending.pct } : true)}
         >
-          Weiter <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          {t('action.next', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </Button>
       </Card>
     );
@@ -136,17 +143,18 @@ function PracticeItem({ item, onAnswer }) {
     return (
       <Card className="p-5 sm:p-6">
         {header}
-        <p className="font-display text-lg leading-snug text-ink">{item.promptDe}</p>
+        <p className="font-display text-lg leading-snug text-ink" lang="de">{item.promptDe}</p>
+        {item.task?.taskEn && <p className="mt-1 text-sm text-graphite">{item.task.taskEn}</p>}
         <div className="mt-4">
           <GradedWriting task={item.task} lektionId={item.lektionId} onResult={setPending} />
         </div>
         <p className="mt-3 text-xs text-graphite">
           {verdict
-            ? `Bewertet — ab ${Math.round(WRITING_PASS_PCT * 100)} % zählt diese Aufgabe als richtig.`
-            : 'Ohne KI-Bewertung zählt diese Aufgabe nicht in das Schreiben-Ergebnis, gehört aber zum Test.'}
+            ? t('checkpoint.writingScored', lang, { pct: Math.round(WRITING_PASS_PCT * 100) })
+            : t('checkpoint.writingUnscored', lang)}
         </p>
         <Button className="mt-4" disabled={!pending} onClick={() => onAnswer(item, verdict)}>
-          Weiter <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          {t('action.next', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </Button>
       </Card>
     );
@@ -158,20 +166,20 @@ function PracticeItem({ item, onAnswer }) {
     <Card className="p-5 sm:p-6">
       {header}
 
-      <p className="font-display text-lg leading-snug text-ink">{item.promptDe}</p>
+      <p className="font-display text-lg leading-snug text-ink" lang="de">{item.promptDe}</p>
       {item.promptEn && <p className="mt-1 text-sm text-graphite">{item.promptEn}</p>}
 
       {isAudio && (
         <div className="mt-4">
           <Button variant="secondary" onClick={() => speak(item.audioText, item.lektionId, item.lineKey)}>
             <Volume2 className="h-4 w-4" aria-hidden="true" />
-            Nochmal hören
+            {t('action.listenAgain', lang)}
           </Button>
         </div>
       )}
 
       {item.text && (
-        <Card tone="sunk" className="mt-4 p-4 text-[0.9375rem] leading-relaxed text-ink">{item.text}</Card>
+        <Card tone="sunk" className="mt-4 p-4 text-[0.9375rem] leading-relaxed text-ink" lang="de">{item.text}</Card>
       )}
 
       {item.mode === 'options' && (
@@ -207,7 +215,7 @@ function PracticeItem({ item, onAnswer }) {
             submit(value);
           }}
         >
-          <label className="sr-only" htmlFor={`answer-${item.id}`}>Ihre Antwort</label>
+          <label className="sr-only" htmlFor={`answer-${item.id}`}>{t('practice.yourAnswer', lang)}</label>
           <input
             id={`answer-${item.id}`}
             ref={inputRef}
@@ -218,18 +226,18 @@ function PracticeItem({ item, onAnswer }) {
             autoCapitalize="off"
             spellCheck={false}
             className="w-full rounded-clay border border-rule bg-white px-4 py-3 font-body text-base text-ink placeholder:text-graphite/60 disabled:bg-paper-sunk"
-            placeholder="Antwort eingeben"
+            placeholder={t('checkpoint.typedPlaceholder', lang)}
           />
-          {!feedback && <Button type="submit" className="sm:w-auto">Prüfen</Button>}
+          {!feedback && <Button type="submit" className="sm:w-auto">{t('action.check', lang)}</Button>}
         </form>
       )}
 
       {item.mode === 'confirm' && !feedback && (
         <div className="mt-5">
           <Button onClick={() => submit(true)}>
-            <Check className="h-4 w-4" aria-hidden="true" /> Gesagt
+            <Check className="h-4 w-4" aria-hidden="true" /> {t('speaking.said', lang)}
           </Button>
-          <p className="mt-2 text-xs text-graphite">Nicht bewertet — aber Teil des Tests.</p>
+          <p className="mt-2 text-xs text-graphite">{t('checkpoint.notGraded', lang)}</p>
         </div>
       )}
 
@@ -237,14 +245,14 @@ function PracticeItem({ item, onAnswer }) {
         <div className="mt-5 border-t border-rule pt-4">
           <p className={`flex items-center gap-2 text-sm font-bold ${feedback.correct ? 'text-accent-limette-ink' : 'text-accent-himbeer-ink'}`}>
             {feedback.correct ? <Check className="h-4 w-4" aria-hidden="true" /> : <X className="h-4 w-4" aria-hidden="true" />}
-            {item.mode === 'confirm' ? 'Erledigt' : feedback.correct ? 'Richtig' : 'Nicht richtig'}
+            {t(item.mode === 'confirm' ? 'checkpoint.doneLabel' : feedback.correct ? 'feedback.correct' : 'checkpoint.wrong', lang)}
           </p>
           {!feedback.correct && item.mode !== 'confirm' && (
-            <p className="mt-1 text-sm text-ink">Richtig ist: <strong className="font-bold">{item.answer}</strong></p>
+            <p className="mt-1 text-sm text-ink">{t('feedback.correctIs', lang)} <strong className="font-bold" lang="de">{item.answer}</strong></p>
           )}
-          {item.explanationDe && <p className="mt-1 text-sm text-graphite">{item.explanationDe}</p>}
+          {(item.explanationEn || item.explanationDe) && <p className="mt-1 text-sm text-graphite">{lang !== 'de' && item.explanationEn ? item.explanationEn : item.explanationDe}</p>}
           <Button className="mt-4" onClick={advance}>
-            Weiter <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            {t('action.next', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Button>
         </div>
       )}
@@ -254,6 +262,7 @@ function PracticeItem({ item, onAnswer }) {
 
 /** A per-section result row: label, text score, number — and a bar behind it. */
 function SectionRow({ name, section }) {
+  const [lang] = useLessonLang();
   const ok = !section.scored || section.pct >= PASS_SECTION_PCT;
   return (
     <li className="py-2">
@@ -261,13 +270,13 @@ function SectionRow({ name, section }) {
         <span className="text-sm font-bold text-ink">{SECTION_LABELS[name] || name}</span>
         <span className="font-data text-sm text-graphite">
           {section.correct}/{section.total}
-          {section.scored ? ` · ${section.pct} %` : ' · nicht bewertet'}
+          {section.scored ? ` · ${section.pct} %` : t('checkpoint.notScored', lang)}
         </span>
       </div>
-      <div className="mt-1.5 h-2 overflow-hidden rounded-pill bg-paper-sunk" role="img" aria-label={`${SECTION_LABELS[name] || name}: ${section.pct} Prozent`}>
+      <div className="mt-1.5 h-2 overflow-hidden rounded-pill bg-paper-sunk" role="img" aria-label={t('checkpoint.sectionAria', lang, { name: SECTION_LABELS[name] || name, pct: section.pct })}>
         <div className={`h-full ${ok ? 'bg-siegel' : 'bg-accent-himbeer'}`} style={{ width: `${section.pct}%` }} />
       </div>
-      {section.scored && !ok && <p className="mt-1 text-xs text-accent-himbeer-ink">Unter {PASS_SECTION_PCT} % — dieser Teil muss noch einmal.</p>}
+      {section.scored && !ok && <p className="mt-1 text-xs text-accent-himbeer-ink">{t('checkpoint.sectionBelow', lang, { pct: PASS_SECTION_PCT })}</p>}
     </li>
   );
 }
@@ -275,6 +284,7 @@ function SectionRow({ name, section }) {
 export default function CheckpointPage() {
   const { level, nr } = useParams();
   const { user } = useAuth();
+  const [lang] = useLessonLang();
   const curriculum = curriculumFor(level);
   const checkpoint = useMemo(
     () => (curriculum?.checkpoints || []).find((c) => String(c.nr) === String(nr)) || null,
@@ -352,7 +362,7 @@ export default function CheckpointPage() {
 
   return (
     <div className="min-h-screen bg-paper font-body text-ink">
-      <div className="mx-auto max-w-2xl px-4 pb-8 pt-24 sm:pb-12 sm:pt-28">
+      <div className="mx-auto max-w-2xl px-4 pb-8 pt-6 sm:pb-12 sm:pt-10">
         <div className="mb-6 flex items-center gap-3">
           <Link to={`/course/${curriculum.level}`} className="inline-flex items-center gap-1 text-sm font-bold text-siegel hover:text-siegel-deep">
             <ArrowLeft className="h-4 w-4" aria-hidden="true" /> {curriculum.code}
@@ -365,31 +375,32 @@ export default function CheckpointPage() {
               <span className="font-data text-xs text-graphite">{index + 1}/{items.length}</span>
             </>
           )}
+          <LangToggle className="ml-auto" />
         </div>
 
         {phase === 'intro' && (
           <Card className="p-6 sm:p-8">
-            <Chip tone="label">Checkpoint {checkpoint.nr}</Chip>
+            <Chip tone="label">{t('checkpoint.label', lang, { nr: checkpoint.nr })}</Chip>
             <h1 className="mt-3 font-display text-2xl text-ink sm:text-3xl">{checkpoint.title}</h1>
             <p className="mt-3 text-[0.9375rem] leading-relaxed text-graphite">
-              20 Aufgaben aus {sectionsCovered} — im Format Ihrer Prüfung. Der Test zieht aus den
-              Lektionen dieses Kapitels und wiederholt Grammatik aus früheren Kapiteln.
+              {/* Deutsch-Modus: „… im Format Ihrer Prüfung …" (tests/checkpoint.test.mjs §6). */}
+              {t('checkpoint.intro', lang, { sections: sectionsCovered })}
             </p>
             <p className="mt-3 text-[0.9375rem] font-bold text-ink">
-              Bestanden ab {PASS_OVERALL_PCT} % insgesamt und mindestens {PASS_SECTION_PCT} % in jedem bewerteten Teil.
+              {t('checkpoint.passRule', lang, { overall: PASS_OVERALL_PCT, section: PASS_SECTION_PCT })}
             </p>
             <p className="mt-2 text-sm text-graphite">
               {attempts
                 ? attempts.blocked
-                  ? `Keine Versuche mehr in diesem Zeitfenster. Wieder frei ab ${attempts.nextAllowedAt?.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })} Uhr.`
-                  : `Noch ${attempts.remaining} von ${ATTEMPT_LIMIT} Versuchen in ${ATTEMPT_WINDOW_HOURS} Stunden.`
-                : `${ATTEMPT_LIMIT} Versuche pro ${ATTEMPT_WINDOW_HOURS} Stunden.`}
+                  ? t('checkpoint.blocked', lang, { time: attempts.nextAllowedAt?.toLocaleTimeString(lang === 'de' ? 'de-DE' : 'en-GB', { hour: '2-digit', minute: '2-digit' }) })
+                  : t('checkpoint.remaining', lang, { remaining: attempts.remaining, limit: ATTEMPT_LIMIT, hours: ATTEMPT_WINDOW_HOURS })
+                : t('checkpoint.limit', lang, { limit: ATTEMPT_LIMIT, hours: ATTEMPT_WINDOW_HOURS })}
             </p>
             <div className="mt-6">
               <Button disabled={!items.length || Boolean(attempts?.blocked)} onClick={() => { setPhase('run'); setIndex(0); setAnswers({}); }}>
-                Checkpoint starten <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                {t('checkpoint.start', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Button>
-              {!items.length && <p className="mt-2 text-sm text-graphite">Die Aufgaben werden geladen …</p>}
+              {!items.length && <p className="mt-2 text-sm text-graphite">{t('checkpoint.loadingItems', lang)}</p>}
             </div>
           </Card>
         )}
@@ -401,10 +412,10 @@ export default function CheckpointPage() {
             <Card raised edge={result.passed ? 'limette' : 'himbeer'} className="p-6 sm:p-8">
               <p className="flex items-center gap-2 font-display text-2xl text-ink">
                 {result.passed ? <Check className="h-6 w-6 text-accent-limette-ink" aria-hidden="true" /> : <X className="h-6 w-6 text-accent-himbeer-ink" aria-hidden="true" />}
-                {result.passed ? 'Bestanden' : 'Noch nicht bestanden'}
+                {t(result.passed ? 'checkpoint.passed' : 'checkpoint.notPassed', lang)}
               </p>
               <p className="mt-2 font-data text-4xl text-ink">{result.overall} %</p>
-              <p className="text-sm text-graphite">{result.correct} von {result.total} bewerteten Aufgaben richtig</p>
+              <p className="text-sm text-graphite">{t('checkpoint.correctOf', lang, { correct: result.correct, total: result.total })}</p>
               <ul className="mt-5 divide-y divide-rule">
                 {SECTION_ORDER.filter((s) => result.sections[s]).map((s) => (
                   <SectionRow key={s} name={s} section={result.sections[s]} />
@@ -412,7 +423,7 @@ export default function CheckpointPage() {
               </ul>
               {Object.keys(result.errorTags).length > 0 && (
                 <div className="mt-5">
-                  <p className="font-data text-[0.6875rem] uppercase tracking-[0.13em] text-graphite">Woran es lag</p>
+                  <p className="font-data text-[0.6875rem] uppercase tracking-[0.13em] text-graphite">{t('checkpoint.whyTitle', lang)}</p>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {Object.entries(result.errorTags)
                       .sort((a, b) => b[1] - a[1])
@@ -425,25 +436,25 @@ export default function CheckpointPage() {
               <div className="mt-6 flex flex-wrap gap-3">
                 {result.passed ? (
                   <Button to={nextHref}>
-                    {nextLektion ? `Weiter: Lektion ${nextLektion.nr}` : 'Zurück zum Kurs'} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    {nextLektion ? t('checkpoint.nextLesson', lang, { nr: nextLektion.nr }) : t('action.backToCourse', lang)} <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Button>
                 ) : (
                   <Button
                     disabled={Boolean(attempts?.blocked)}
                     onClick={() => { setRound(round + 1); setAnswers({}); setIndex(0); setRemediation([]); setPhase('run'); }}
                   >
-                    <RotateCcw className="h-4 w-4" aria-hidden="true" /> Nochmal
+                    <RotateCcw className="h-4 w-4" aria-hidden="true" /> {t('action.again', lang)}
                   </Button>
                 )}
-                <Button variant="secondary" to={`/course/${curriculum.level}`}>Zum Kursplan</Button>
+                <Button variant="secondary" to={`/course/${curriculum.level}`}>{t('action.toCoursePlan', lang)}</Button>
               </div>
             </Card>
 
             {!result.passed && remediation.length > 0 && (
               <section className="mt-8">
-                <h2 className="font-display text-xl text-ink">Zuerst üben</h2>
+                <h2 className="font-display text-xl text-ink">{t('checkpoint.practiceFirst', lang)}</h2>
                 <p className="mt-1 text-sm text-graphite">
-                  {remediation.length} Aufgaben zu genau den Themen, die eben nicht saßen. Danach den Checkpoint noch einmal.
+                  {t('checkpoint.practiceLead', lang, { n: remediation.length })}
                 </p>
                 <div className="mt-4 space-y-4">
                   {remediation.map((item) => (

@@ -59,11 +59,11 @@ export const CURRICULUM_A11 = {
     lines: [ { speaker: 'Ana', de: 'Hallo, ich bin Ana.', en: 'Hi, I am Ana.' }, /* 6–10 lines, ≤ 12 words each, ONLY words from this Lektion's wortfeld + earlier Lektionen + the closed list of function words; the primary grammar occurs ≥ 3 times */ ],
   },
   pretest: { promptDe: 'Wie heißt du? Antworte mit einem Satz.', promptEn: 'Say your name in one sentence.', model: 'Ich heiße Ana.', accepted: ['Ich heiße', 'Ich bin', 'Mein Name ist'] /* prefixes; checked with startsWith after normalisation */ },
-  notice: { title: 'sein: ich bin, du bist, Sie sind', bodyDe: '≤ 60 words, plain text, may use **bold**; one point only', examples: ['Ich bin Ana.', 'Sind Sie Frau Kaya?'] /* 2, taken verbatim from dialog.lines */ , ruleSlug: 'verb-sein' },
+  notice: { title: 'sein: ich bin, du bist, Sie sind', bodyDe: '≤ 60 words, plain text, may use **bold**; one point only', bodyEn: '≤ 80 words, the same rule in plain English for a day-one learner, German forms in **bold**, same inline marks as bodyDe (RULE 25)', examples: ['Ich bin Ana.', 'Sind Sie Frau Kaya?'] /* 2, taken verbatim from dialog.lines */ , ruleSlug: 'verb-sein' },
   phonetik: { focus: 'Wortakzent auf der ersten Silbe', items: ['HAL-lo', 'DAN-ke', 'A-na'] },
   hoeren: { kind: 'dictation', lines: [0, 2] },                 // indexes into dialog.lines to type after hearing
-  sprechen: { readAloud: [1, 3], open: { teil: 'Sprechen Teil 1', promptDe: 'Stellen Sie sich vor: Name, Land, Sprache.', hintWords: ['heißen', 'kommen aus', 'sprechen'], missionOrder: 1 /* speaking_missions.mission_order at A1.1 or null */ } },
-  schreiben: { kind: 'formular' | 'mitteilung', taskDe: '…', fields: ['Name', 'Vorname', 'Land'] /* formular */, leitpunkte: ['…','…','…'] /* mitteilung: exactly 3 */, minWords: 0, maxWords: 30, sample: '…' },
+  sprechen: { readAloud: [1, 3], open: { teil: 'Sprechen Teil 1', promptDe: 'Stellen Sie sich vor: Name, Land, Sprache.', promptEn: 'Introduce yourself: name, country, language.' /* English rendering of promptDe (RULE 25) */, hintWords: ['heißen', 'kommen aus', 'sprechen'], missionOrder: 1 /* speaking_missions.mission_order at A1.1 or null */ } },
+  schreiben: { kind: 'formular' | 'mitteilung', taskDe: '…', taskEn: '…' /* English rendering of taskDe including what the Leitpunkte/fields ask for, same facts (RULE 25) */, fields: ['Name', 'Vorname', 'Land'] /* formular */, leitpunkte: ['…','…','…'] /* mitteilung: exactly 3 */, minWords: 0, maxWords: 30, sample: '…' },
   links: { listeningExercise: 1 | null, readingOrder: 1 | null },   // existing A1.1 listening_exercises.exercise_number / reading_lessons.order_index worth doing after this Lektion
   practiceRule: { topics: ['verb-sein', 'alphabet-pronunciation'], typedMin: 3 }, // which pool topics feed the 7 controlled items; the engine picks deterministically
 }
@@ -87,7 +87,8 @@ teaches fixed chunks ("Ich habe gearbeitet", "Ich möchte einen Kaffee") and say
 
 ## Pool items (`src/data/lessonPools/a11.json`)
 
-`{ id, topic, type: fill_blank|multiple_choice|sentence_building|error_correction, stage, difficulty, order, questionDe, questionEn, options|null, answer, accepted[], explanationDe, hint }`.
+`{ id, topic, type: fill_blank|multiple_choice|sentence_building|error_correction, stage, difficulty, order, questionDe, questionEn, options|null, answer, accepted[], explanationDe, explanationEn, hint, minLektion }`.
+`explanationEn` is the English twin of `explanationDe` (RULE 25): from the bank (`explanation_en || why_correct_en`), else the sidecar `src/data/lessonPools/a11.explanationsEn.json` (`{ "<item id>": "<english>" }`, keyed by the final id — this is where the `a11.extra.json` items get theirs), else the generated template; `''` when none, which the validator reports with the ids.
 A `fill_blank` WITH `options` is recognition (show as chips); WITHOUT is typed. Typed = fill_blank without
 options, sentence_building, error_correction.
 
