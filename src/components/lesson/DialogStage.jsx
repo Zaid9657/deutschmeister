@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Play, Languages, Mic, Cpu, ListEnd } from 'lucide-react';
 import Card from '../ui/Card.jsx';
 import StageShell from './StageShell.jsx';
 import { audioFor, playLine, speechAvailable } from '../../lib/lesson/speech.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { buildLexicon, glossTokens, parseLektionId } from '../../lib/lesson/gloss.js';
 
 /**
  * Stage 2a — Input. The dialogue arrives line by line: you reveal the next
@@ -44,14 +45,93 @@ export function AudioSourceBadge({ recorded, className = '' }) {
   );
 }
 
+/**
+ * Tap-word gloss: one German dialogue line rendered as tokens, where a token
+ * (or a matched multi-word phrase) known from the Wortfeld of this or an
+ * earlier Lektion becomes a tappable gloss. Only one popover is open across
+ * the whole stage at a time (`openGloss`/`setOpenGloss`, lifted to the parent
+ * so a tap on line 3 closes line 1's popover); Escape and a tap outside close
+ * it, both wired once in the parent via a document listener.
+ */
+function GlossLine({ line, lineIndex, lexicon, lang, openGloss, setOpenGloss }) {
+  const segments = useMemo(() => glossTokens(line, lexicon), [line, lexicon]);
+  return (
+    <p className="mt-1 text-[1.0625rem] leading-relaxed text-ink" lang="de">
+      {segments.map((seg, i) => {
+        if (seg.type !== 'gloss') {
+          return <span key={i}>{i > 0 ? ' ' : ''}{seg.text}</span>;
+        }
+        const glossId = `gloss-${lineIndex}-${i}`;
+        const popoverId = `${glossId}-popover`;
+        const isOpen = openGloss === glossId;
+        const { entry } = seg;
+        return (
+          <span key={i} className="relative">
+            {i > 0 ? ' ' : ''}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpenGloss(isOpen ? null : glossId);
+              }}
+              aria-describedby={isOpen ? popoverId : undefined}
+              aria-expanded={isOpen}
+              className="inline-flex min-h-11 items-center px-0.5 py-2.5 -my-2.5 underline decoration-dotted underline-offset-4 outline-none focus-visible:ring-2 focus-visible:ring-siegel"
+            >
+              {seg.text}
+            </button>
+            {isOpen && (
+              <span
+                id={popoverId}
+                role="tooltip"
+                onClick={(e) => e.stopPropagation()}
+                className="absolute left-0 top-full z-10 mt-1 block w-max max-w-[15rem] rounded-clay border border-rule bg-white p-2.5 text-left shadow-md transition-opacity duration-100 ease-snap motion-reduce:transition-none"
+              >
+                <span className="block font-display text-[0.9375rem] font-semibold text-ink" lang="de">{entry.de}</span>
+                <span className="block text-[0.8125rem] leading-snug text-graphite">{entry.en}</span>
+                {entry.plural && (
+                  <span className="block text-[0.75rem] text-graphite">
+                    {t('wortfeld.plural', lang)} {entry.plural}
+                  </span>
+                )}
+              </span>
+            )}
+          </span>
+        );
+      })}
+    </p>
+  );
+}
+
 export default function DialogStage({ stage, lektionId, onBack, onDone }) {
   const lines = (stage.dialog && stage.dialog.lines) || [];
   const id = lektionId || stage.lektionId || null;
   const [shown, setShown] = useState(1);
   const [gloss, setGloss] = useState(false);
   const [played, setPlayed] = useState(() => new Set());
+  const [openGloss, setOpenGloss] = useState(null);
   const [lang] = useLessonLang();
   const allShown = shown >= lines.length;
+
+  const parsed = useMemo(() => parseLektionId(id), [id]);
+  const lexicon = useMemo(
+    () => (parsed ? buildLexicon(parsed.level, parsed.nr) : []),
+    [parsed],
+  );
+
+  // Escape and a tap outside any popover close it — one popover open at a
+  // time, wired once for the whole stage rather than per line.
+  useEffect(() => {
+    if (!openGloss) return undefined;
+    const onKey = (e) => { if (e.key === 'Escape') setOpenGloss(null); };
+    const onClick = () => setOpenGloss(null);
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('click', onClick);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('click', onClick);
+    };
+  }, [openGloss]);
 
   const play = (i, text) => {
     setPlayed((prev) => new Set(prev).add(i));
@@ -98,7 +178,14 @@ export default function DialogStage({ stage, lektionId, onBack, onDone }) {
                       <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">{l.speaker}</p>
                       <AudioSourceBadge recorded={recorded} />
                     </div>
-                    <p className="mt-1 text-[1.0625rem] leading-relaxed text-ink" lang="de">{l.de}</p>
+                    <GlossLine
+                      line={l.de}
+                      lineIndex={i}
+                      lexicon={lexicon}
+                      lang={lang}
+                      openGloss={openGloss}
+                      setOpenGloss={setOpenGloss}
+                    />
                     {gloss && <p className="mt-1 text-[0.875rem] leading-relaxed text-graphite">{l.en}</p>}
                     {played.has(i) && !recorded && !speechAvailable() && (
                       <p className="mt-1 text-[0.75rem] text-graphite">{t('dialog.noSpeech', lang)}</p>

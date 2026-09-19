@@ -565,3 +565,95 @@ test('the player\'s warm-up grades through gradeCard and gradeTypedReview, the s
   assert.match(player, /gradeCard\(user\.id, warmupCard\.cardKey, correct\)/, 'a graded warm-up card must write through gradeCard, keyed by its card_key');
   assert.match(player, /gradeTypedReview\(warmupCard\.cardKey, warmupCard\.accepted, warmupTyped/, 'a typed warm-up card must grade through gradeTypedReview, not a hand-rolled comparison');
 });
+
+// ── DialogStage tap-word gloss (owner: DialogStage.jsx/WortfeldStage.jsx) ───
+//
+// Pure helper tests live against src/lib/lesson/gloss.js directly — no React
+// mounting needed for phrase-first matching, punctuation handling or the
+// earlier-Lektion cutoff.
+
+test('glossTokens matches phrases greedily before single words, and keeps punctuation on the displayed text', async () => {
+  const { glossTokens } = await import('../src/lib/lesson/gloss.js');
+  const lexicon = [
+    { tokens: ['guten', 'tag'], entry: { de: 'Guten Tag', en: 'Good day' } },
+    { tokens: ['tag'], entry: { de: 'der Tag', en: 'day' } },
+    { tokens: ['danke'], entry: { de: 'Danke', en: 'Thank you' } },
+  ].sort((a, b) => b.tokens.length - a.tokens.length);
+
+  const segs = glossTokens('Guten Tag und danke.', lexicon);
+  assert.deepEqual(segs.map((s) => s.type), ['gloss', 'text', 'gloss']);
+  assert.equal(segs[0].text, 'Guten Tag', 'the two-word phrase wins over the single-word "Tag" entry');
+  assert.equal(segs[0].entry.de, 'Guten Tag');
+  assert.equal(segs[1].text, 'und');
+  assert.equal(segs[2].text, 'danke.', 'trailing punctuation is kept on the displayed gloss text');
+});
+
+test('glossTokens leaves an unknown word as plain text', async () => {
+  const { glossTokens } = await import('../src/lib/lesson/gloss.js');
+  const lexicon = [{ tokens: ['hallo'], entry: { de: 'Hallo', en: 'Hello' } }];
+  const segs = glossTokens('Hallo Fremdwort', lexicon);
+  assert.deepEqual(segs, [
+    { type: 'gloss', text: 'Hallo', entry: lexicon[0].entry },
+    { type: 'text', text: 'Fremdwort' },
+  ]);
+});
+
+test('buildLexicon only sees this Lektion and EARLIER ones, never a later one', async () => {
+  const { buildLexicon } = await import('../src/lib/lesson/gloss.js');
+  const { CURRICULUM_A11 } = await import('../src/data/curricula/a11.js');
+  const l1Word = (CURRICULUM_A11.lektionen[0].wortfeld[0].word || '').toLowerCase();
+  const l2Word = (CURRICULUM_A11.lektionen[1].wortfeld[0].word || '').toLowerCase();
+
+  const atLektion1 = buildLexicon('a1.1', 1);
+  assert.ok(atLektion1.some((e) => e.tokens.join(' ') === l1Word), 'Lektion 1 sees its own Wortfeld');
+  assert.ok(!atLektion1.some((e) => e.tokens.join(' ') === l2Word), 'Lektion 1 must not see Lektion 2\'s words yet');
+
+  const atLektion2 = buildLexicon('a1.1', 2);
+  assert.ok(atLektion2.some((e) => e.tokens.join(' ') === l1Word), 'Lektion 2 still sees Lektion 1\'s words');
+  assert.ok(atLektion2.some((e) => e.tokens.join(' ') === l2Word), 'Lektion 2 sees its own new Wortfeld');
+});
+
+test('parseLektionId derives level and Lektion number from the id alone', async () => {
+  const { parseLektionId } = await import('../src/lib/lesson/gloss.js');
+  assert.deepEqual(parseLektionId('a1.1-l01'), { level: 'a1.1', nr: 1 });
+  assert.deepEqual(parseLektionId('a1.1-l12'), { level: 'a1.1', nr: 12 });
+  assert.equal(parseLektionId(null), null);
+  assert.equal(parseLektionId('bogus'), null);
+});
+
+test('DialogStage renders the gloss as an accessible popover, one at a time, closable by Escape', () => {
+  const src = read('src/components/lesson/DialogStage.jsx');
+  assert.ok(src.includes("import { buildLexicon, glossTokens, parseLektionId } from '../../lib/lesson/gloss.js';"), 'DialogStage must use the shared gloss helpers');
+  assert.match(src, /aria-describedby=\{isOpen \? popoverId : undefined\}/, 'the gloss button wires aria-describedby to its popover');
+  assert.match(src, /role="tooltip"/, 'the popover has an accessible role');
+  assert.ok(src.includes("const [openGloss, setOpenGloss] = useState(null);"), 'exactly one gloss popover is open at a time, tracked in one piece of state');
+  assert.match(src, /e\.key === 'Escape'/, 'Escape closes the open popover');
+  assert.ok(src.includes('motion-reduce:transition-none'), 'the popover respects reduced motion');
+  // still owns the whole-dialogue toggle, line reveal, "show all lines", audio + badge
+  assert.ok(src.includes('dialog.glossOn') && src.includes('dialog.glossOff'), 'the whole-dialogue English toggle stays');
+  assert.ok(src.includes('action.showAllLines'), '"Show all lines" stays');
+  assert.ok(src.includes('AudioSourceBadge'), 'the per-line audio source badge stays');
+});
+
+// ── WortfeldStage badge polish ───────────────────────────────────────────────
+
+test('WortfeldStage shows one stage-level audio badge and drops the per-card badge', () => {
+  const src = read('src/components/lesson/WortfeldStage.jsx');
+  assert.ok(!/import\s*\{\s*AudioSourceBadge\s*\}\s*from\s*'\.\/DialogStage\.jsx'/.test(src), 'the per-card AudioSourceBadge import must be gone');
+  assert.ok(!src.includes('<AudioSourceBadge'), 'no per-card badge is rendered any more');
+  assert.ok(src.includes('function WortfeldAudioBadge('), 'one stage-header badge component summarises the set');
+  assert.ok(src.includes('<WortfeldAudioBadge'), 'the badge is rendered in the stage');
+  assert.ok(src.includes("t('wortfeld.listen'"), 'the per-card speaker button (with its accessible label) stays');
+  for (const key of ['wortfeld.audioBadge.computer', 'wortfeld.audioBadge.recordings', 'wortfeld.audioBadge.mixed']) {
+    assert.ok(src.includes(key), `WortfeldStage must reference ${key}`);
+  }
+});
+
+test('the three wortfeld.audioBadge.* keys exist in both string tables with no empty value', async () => {
+  const { STRINGS } = await import('../src/lib/lesson/strings.js');
+  for (const lang of ['en', 'de']) {
+    for (const key of ['wortfeld.audioBadge.computer', 'wortfeld.audioBadge.recordings', 'wortfeld.audioBadge.mixed']) {
+      assert.ok(STRINGS[lang][key] && STRINGS[lang][key].trim().length > 0, `${key} missing or empty in ${lang}`);
+    }
+  }
+});

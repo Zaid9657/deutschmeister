@@ -115,6 +115,9 @@ export const STRINGS = {
     'wortfeld.showAllEnglish': 'Show all English',
     'wortfeld.hideAllEnglish': 'Hide all English',
     'wortfeld.flipHint': '{word}, English shown',
+    'wortfeld.audioBadge.computer': 'Audio: computer voice',
+    'wortfeld.audioBadge.recordings': 'Audio: recordings',
+    'wortfeld.audioBadge.mixed': 'Audio: mixed',
 
     // ── dictation ────────────────────────────────────────────────────────────
     'dictation.lead': 'Listen to the line and write it down.',
@@ -406,6 +409,9 @@ export const STRINGS = {
     'wortfeld.showAllEnglish': 'Alle Übersetzungen zeigen',
     'wortfeld.hideAllEnglish': 'Alle Übersetzungen verbergen',
     'wortfeld.flipHint': '{word}, Übersetzung angezeigt',
+    'wortfeld.audioBadge.computer': 'Audio: Computerstimme',
+    'wortfeld.audioBadge.recordings': 'Audio: Aufnahmen',
+    'wortfeld.audioBadge.mixed': 'Audio: gemischt',
 
     // ── dictation ────────────────────────────────────────────────────────────
     'dictation.lead': 'Hören Sie die Zeile und schreiben Sie sie auf.',

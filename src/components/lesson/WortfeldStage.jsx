@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import * as LucideIcons from 'lucide-react';
-import { Volume2 } from 'lucide-react';
+import { Volume2, Mic, Cpu } from 'lucide-react';
 import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
 import StageShell from './StageShell.jsx';
-import { AudioSourceBadge } from './DialogStage.jsx';
 import { playWord } from '../../lib/lesson/speech.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import { WORTFELD_ICONS, WORTFELD_ICON_FALLBACK } from '../../data/curricula/a11.meta.js';
@@ -114,18 +113,41 @@ function WordCard({ w, lang, flipped, onToggle }) {
         )}
       </button>
 
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          onClick={() => playWord(audioUrl, spoken)}
-          aria-label={t('wortfeld.listen', lang, { word: spoken })}
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel transition-colors duration-100 hover:bg-siegel hover:text-white motion-reduce:transition-none"
-        >
-          <Volume2 className="h-4 w-4" />
-        </button>
-        <AudioSourceBadge recorded={!!audioUrl} />
-      </div>
+      <button
+        type="button"
+        onClick={() => playWord(audioUrl, spoken)}
+        aria-label={t('wortfeld.listen', lang, { word: spoken })}
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel transition-colors duration-100 hover:bg-siegel hover:text-white motion-reduce:transition-none"
+      >
+        <Volume2 className="h-4 w-4" />
+      </button>
     </Card>
+  );
+}
+
+/**
+ * ONE badge for the whole stage, in the header, instead of the same
+ * "Computer voice"/"Recording" badge repeated on all 20 cards — the
+ * per-card speaker button still plays each word, this just states once
+ * whether the set is recorded, synthetic, or a mix. Word AND icon, never
+ * colour alone, same rule as the per-card badge it replaces.
+ */
+function WortfeldAudioBadge({ words, lang }) {
+  const total = words.length;
+  if (total === 0) return null;
+  const recordedCount = words.reduce((n, w) => {
+    const audioUrl = (w.db && w.db.audioUrl) || w.audioUrl || '';
+    return n + (audioUrl ? 1 : 0);
+  }, 0);
+  const state = recordedCount === 0 ? 'synthetic' : recordedCount === total ? 'recorded' : 'mixed';
+  const key = state === 'synthetic' ? 'wortfeld.audioBadge.computer' : state === 'recorded' ? 'wortfeld.audioBadge.recordings' : 'wortfeld.audioBadge.mixed';
+
+  return (
+    <span className="inline-flex items-center gap-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.11em] text-graphite">
+      {state !== 'synthetic' && <Mic className="h-3 w-3" aria-hidden="true" />}
+      {state !== 'recorded' && <Cpu className="h-3 w-3" aria-hidden="true" />}
+      {t(key, lang)}
+    </span>
   );
 }
 
@@ -169,7 +191,8 @@ export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
         />
       )}
 
-      <div className="mb-3 flex justify-end">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <WortfeldAudioBadge words={words} lang={lang} />
         <button
           type="button"
           onClick={toggleAll}
