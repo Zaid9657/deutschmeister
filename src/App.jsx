@@ -122,7 +122,10 @@ function Shell() {
                 </a>
                 {!focused && <Navbar />}
                 {!focused && <OutsideAdmin><TrialBanner /></OutsideAdmin>}
-                {!focused && <OutsideAdmin><FloatingIntroButton /></OutsideAdmin>}
+                {/* Course home (chrome === 'course') also hides this: it overlaps
+                    FirstRunTour's first-run tooltip in the same bottom-left corner
+                    (docs/evaluation/screenshots/a11-w1-home.jpg). */}
+                {!focused && chrome !== 'course' && <OutsideAdmin><FloatingIntroButton /></OutsideAdmin>}
                 <SessionTimeoutWrapper />
                 <main id="main">
                 <Suspense fallback={<PageLoader />}>

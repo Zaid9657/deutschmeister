@@ -57,7 +57,7 @@ test('the stages come out in the order of the standard, and the warm-up is skipp
   const { stages } = build();
   assert.deepEqual(
     stages.map((s) => s.key),
-    ['pretest', 'dialog', 'wortfeld', 'notice', 'practice', 'dictation', 'speaking', 'writing', 'requeue', 'recap'],
+    ['pretest', 'dialog', 'wortfeld', 'notice', 'phonetik', 'practice', 'dictation', 'speaking', 'writing', 'requeue', 'recap'],
   );
   // The stage NUMBERS of the standard never decrease along the list.
   const nrs = stages.map((s) => s.nr);

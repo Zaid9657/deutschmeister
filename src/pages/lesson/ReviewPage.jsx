@@ -1,18 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, Check, Volume2, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { curriculumFor } from '../../data/curricula/index.js';
 import { fetchDueCards, gradeCard, fetchNextDueAt, buildCardIndex, parseCardKey } from '../../services/reviewService.js';
 import { fetchWordsByIds } from '../../services/lessonService.js';
 import { audioFor, playLine, playWord, speakGerman } from '../../lib/lesson/speech.js';
-import { AudioSourceBadge } from '../../components/lesson/DialogStage.jsx';
 import { LADDER_DAYS } from '../../lib/review/ladder.js';
 import { gradeTypedReview } from '../../lib/checkpoint/reviewGrading.js';
 import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
-import Chip from '../../components/ui/Chip.jsx';
 import LangToggle from '../../components/lesson/LangToggle.jsx';
+import ReviewCard, { modeForCard } from '../../components/lesson/ReviewCard.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
 // The Wiederholen screen (standard §3, "Spaced review"): the cards that are due
@@ -21,13 +20,6 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
 // is the Babbel ladder; the card content comes from the curriculum, never from
 // the database row (see reviewService.buildCardIndex). Chrome labels come from
 // src/lib/lesson/strings.js in the chrome language (header toggle).
-
-const MODES_BY_KIND = {
-  word: ['flashcard', 'listening', 'typed'],
-  pattern: ['flashcard', 'typed'],
-  sentence: ['listening', 'say', 'flashcard'],
-};
-
 
 // Audio, in the order the standard wants it (plan P1): a recording when one
 // exists, browser speech only as the fallback. A sentence card IS a dialogue
@@ -115,7 +107,7 @@ export default function ReviewPage() {
     const parsed = parseCardKey(card.card_key);
     return !!(parsed && parsed.kind === 'word' && wordAudio.get(parsed.ref));
   })();
-  const mode = card ? (MODES_BY_KIND[card.kind] || MODES_BY_KIND.word)[index % (MODES_BY_KIND[card.kind] || MODES_BY_KIND.word).length] : null;
+  const mode = card ? modeForCard(card.kind, index) : null;
 
   useEffect(() => {
     setRevealed(false);
@@ -182,75 +174,20 @@ export default function ReviewPage() {
         )}
 
         {card && content && !done && (
-          <Card className="mt-6 p-5 sm:p-6">
-            <div className="mb-3 flex flex-wrap items-center gap-2">
-              <Chip tone="label">{t(`review.mode.${mode}`, lang)}</Chip>
-              {content.lektionNr && <span className="font-data text-[0.6875rem] uppercase tracking-[0.13em] text-graphite">{t('review.lesson', lang, { nr: content.lektionNr })}</span>}
-            </div>
-
-            {mode === 'listening' ? (
-              <>
-                <div className="flex flex-wrap items-center gap-3">
-                  <Button variant="secondary" onClick={() => play(card, content)}>
-                    <Volume2 className="h-4 w-4" aria-hidden="true" /> {t('action.listenAgain', lang)}
-                  </Button>
-                  <AudioSourceBadge recorded={hasRecording} />
-                </div>
-                {revealed && <p className="mt-4 font-display text-xl text-ink" lang="de">{content.front}</p>}
-              </>
-            ) : mode === 'typed' ? (
-              <>
-                <p className="font-display text-xl text-ink">{content.back || content.front}</p>
-                <form
-                  className="mt-4 flex flex-col gap-3 sm:flex-row"
-                  onSubmit={(event) => { event.preventDefault(); checkTyped(); }}
-                >
-                  <label className="sr-only" htmlFor="review-answer">{t('review.inGerman', lang)}</label>
-                  <input
-                    id="review-answer"
-                    value={typed}
-                    onChange={(event) => setTyped(event.target.value)}
-                    disabled={revealed}
-                    autoComplete="off"
-                    spellCheck={false}
-                    className="w-full rounded-clay border border-rule bg-white px-4 py-3 font-body text-base text-ink placeholder:text-graphite/60 disabled:bg-paper-sunk"
-                    placeholder={t('review.typePlaceholder', lang)}
-                  />
-                  {!revealed && <Button type="submit" className="sm:w-auto">{t('action.check', lang)}</Button>}
-                </form>
-                {revealed && (
-                  <p className={`mt-3 flex items-center gap-2 text-sm font-bold ${verdict ? 'text-accent-limette-ink' : 'text-accent-himbeer-ink'}`}>
-                    {verdict ? <Check className="h-4 w-4" aria-hidden="true" /> : <X className="h-4 w-4" aria-hidden="true" />}
-                    {verdict ? t('feedback.correct', lang) : t('review.correctIs', lang, { answer: content.front })}
-                  </p>
-                )}
-              </>
-            ) : (
-              <>
-                <p className="font-display text-xl text-ink" lang="de">{content.front}</p>
-                {content.detail && <p className="mt-1 text-sm text-graphite">{content.detail}</p>}
-                {revealed && content.back && <p className="mt-3 text-[0.9375rem] text-ink">{content.back}</p>}
-              </>
-            )}
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              {!revealed && mode !== 'typed' && (
-                <Button onClick={() => { setRevealed(true); if (mode === 'say') play(card, content); }}>
-                  {t(mode === 'say' ? 'review.sayReveal' : 'review.reveal', lang)}
-                </Button>
-              )}
-              {revealed && (
-                <>
-                  <Button variant="secondary" onClick={() => grade(false)}>
-                    <X className="h-4 w-4" aria-hidden="true" /> {t('review.again', lang)}
-                  </Button>
-                  <Button onClick={() => grade(verdict !== false)}>
-                    <Check className="h-4 w-4" aria-hidden="true" /> {t('review.knew', lang)}
-                  </Button>
-                </>
-              )}
-            </div>
-          </Card>
+          <ReviewCard
+            content={content}
+            mode={mode}
+            lang={lang}
+            revealed={revealed}
+            onReveal={() => setRevealed(true)}
+            typed={typed}
+            onTypedChange={setTyped}
+            onCheckTyped={checkTyped}
+            verdict={verdict}
+            onPlay={() => play(card, content)}
+            hasRecording={hasRecording}
+            onGrade={grade}
+          />
         )}
 
         {done && (

@@ -400,3 +400,166 @@ test('explain-answer carries lang end to end and defaults to German server-side'
   assert.ok(fn.includes('EXPLAIN_DAILY_LIMIT = 40'), 'the daily cap is untouched');
   assert.ok(fn.includes('getAuthenticatedUserId(event)'), 'the auth is untouched');
 });
+
+// ---------------------------------------------------------------------------
+// Wave 2 (2026-09-19): FeedbackSheet, option chips, ComboChip, StageShell
+// variants — "make the lesson feel like a premium app inside the token
+// rules." Fun is pace and micro-feedback, never mascots/hearts/gems.
+// ---------------------------------------------------------------------------
+
+test('FeedbackSheet renders all three result tones, each with its own icon, string-table label and token tone class (never a kasus colour)', () => {
+  const src = read('src/components/lesson/FeedbackSheet.jsx');
+  assert.ok(src.includes("import { Check, AlertTriangle, X, Sparkles } from 'lucide-react';"), 'each tone needs its own icon');
+  for (const [state, key, tone] of [
+    ['RESULT.CORRECT', 'feedback.correct', 'siegel'],
+    ['RESULT.TYPO', 'feedback.typo', 'accent-aprikose'],
+    ['RESULT.WRONG', 'feedback.wrong', 'accent-himbeer'],
+  ]) {
+    assert.ok(src.includes(`[${state}]`), `no tone entry for ${state}`);
+    assert.ok(src.includes(`key: '${key}'`), `${state} does not use the ${key} string-table label`);
+    assert.ok(src.includes(tone), `${state} does not use the ${tone} token`);
+  }
+  for (const kasus of ['kasus-nominativ', 'kasus-akkusativ', 'kasus-dativ', 'kasus-genitiv']) {
+    assert.ok(!src.includes(kasus), `FeedbackSheet must never use the ${kasus} case colour (design-tokens.js rule 1)`);
+  }
+  // One action per screen: no dismiss control, Continue is the only button.
+  assert.ok(!/aria-label=["'].*[Cc]lose/.test(src), 'FeedbackSheet must not offer a close/dismiss control');
+  assert.ok(src.includes('onContinue'), 'the sheet needs a single Continue action');
+  assert.ok(src.includes('animate-feedback-sheet'), 'the mobile sheet must carry its slide-up class');
+  assert.ok(src.includes('motion-reduce:animate-none'), 'the slide-up must be gated for reduced motion, belt-and-suspenders with the site-wide gate');
+});
+
+test('PracticeItem and DictationItem render feedback through FeedbackSheet, not an inline card', () => {
+  for (const f of ['src/components/lesson/PracticeItem.jsx', 'src/components/lesson/DictationItem.jsx']) {
+    const src = read(f);
+    assert.ok(src.includes("import FeedbackSheet from './FeedbackSheet.jsx';"), `${f} must import FeedbackSheet`);
+    assert.ok(src.includes('<FeedbackSheet'), `${f} must render <FeedbackSheet>`);
+    assert.ok(src.includes('onContinue={onNext}'), `${f} must wire Continue to onNext`);
+  }
+});
+
+test('the option chips are full-width and stacked on mobile, at least 44px tall, and mark the selected option with an icon (never colour alone)', () => {
+  const src = read('src/components/lesson/PracticeItem.jsx');
+  assert.ok(src.includes('min-h-11'), 'option chips must be at least 44px tall');
+  assert.ok(src.includes('flex-col gap-2 sm:flex-row'), 'option chips must stack full-width on mobile');
+  assert.ok(src.includes('{on && <Check'), 'the selected chip must carry a check icon, not colour alone');
+});
+
+test('the primary Continue label key exists, non-empty, in both chrome tables', async () => {
+  const { STRINGS } = await import('../src/lib/lesson/strings.js');
+  for (const lang of ['en', 'de']) {
+    assert.ok(STRINGS[lang]['action.next'] && STRINGS[lang]['action.next'].trim().length > 0, `action.next missing or empty in ${lang}`);
+  }
+});
+
+// ComboChip.jsx is JSX and cannot be dynamically imported under plain
+// `node --test` (no JSX loader registered — the same reason
+// tests/course-home.test.mjs guards its one .jsx import with `.catch`), so
+// `nextCombo` is pinned at the source line (it is a pure one-liner) and its
+// behaviour is re-derived here from the same rule the comment above it
+// states: extend on true, reset to zero on false — never anything else.
+test('ComboChip.nextCombo: extends on a first-try correct, resets to zero on a miss', () => {
+  const src = read('src/components/lesson/ComboChip.jsx');
+  assert.ok(src.includes('export function nextCombo(combo, correct) {'), 'nextCombo must be an exported pure function');
+  assert.ok(src.includes('return correct ? combo + 1 : 0;'), 'nextCombo must extend by one on true and hard-reset to zero on false');
+  // Exercises the pinned one-liner above as a real function, not a re-implementation.
+  const nextCombo = new Function('combo', 'correct', 'return correct ? combo + 1 : 0;');
+  assert.equal(nextCombo(0, true), 1);
+  assert.equal(nextCombo(2, true), 3);
+  assert.equal(nextCombo(5, false), 0, 'a miss must reset the streak, not just fail to extend it');
+  assert.equal(nextCombo(0, false), 0);
+});
+
+test('ComboChip shows only at 3+ in a row and never renders XP/hearts/gems copy', () => {
+  const src = read('src/components/lesson/ComboChip.jsx');
+  assert.ok(src.includes('if (combo < 3) return null;'), 'the chip must stay hidden below a 3-streak');
+  assert.ok(src.includes("t('combo.streak', lang, { n: combo })"), 'the chip must render through the string table');
+  // A design comment is allowed to SAY "no XP" (this file has one); the
+  // banned form is XP awarded as a game score, e.g. `+{xp}` or `xp:`.
+  assert.ok(!/[+{]\s*xp\b|\bxp\s*[:=]/i.test(src), 'ComboChip must not introduce an XP score');
+  for (const banned of ['gem', 'heart', 'coin']) {
+    assert.ok(!new RegExp(banned, 'i').test(src), `ComboChip must not introduce ${banned}-style game currency`);
+  }
+  // Sound is opt-in: default OFF, never plays without a prior unmute.
+  assert.ok(src.includes("safeGet(SOUND_KEY) !== 'on'"), 'sound must default to muted');
+});
+
+test('LessonPlayerPage updates the combo through nextCombo and shows <ComboChip> beside the progress bar', () => {
+  const src = read('src/pages/lesson/LessonPlayerPage.jsx');
+  assert.ok(src.includes("import ComboChip, { nextCombo } from '../../components/lesson/ComboChip.jsx';"), 'the player must import ComboChip and nextCombo');
+  assert.ok(src.includes('setCombo((c) => nextCombo(c, correct))'), 'the combo must be updated through the pure helper, not re-derived inline');
+  assert.ok(src.includes('<ComboChip combo={combo} />'), 'the chip must be rendered in the player header');
+});
+
+test('StageShell accepts a variant prop that only changes the background wash, via existing token classes', () => {
+  const src = read('src/components/lesson/StageShell.jsx');
+  assert.ok(src.includes('variant = null'), 'variant must default to null so unmigrated callers keep today\'s look');
+  for (const [name, cls] of [['input', 'bg-siegel-wash'], ['speaking', 'bg-siegel-wash'], ['recap', 'bg-paper-sunk']]) {
+    assert.ok(src.includes(`${name}: '${cls}'`), `variant "${name}" must map to the token class ${cls}`);
+  }
+  for (const kasus of ['kasus-nominativ', 'kasus-akkusativ', 'kasus-dativ', 'kasus-genitiv']) {
+    assert.ok(!src.includes(kasus), `StageShell variants must never use the ${kasus} case colour`);
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Phonetik stage (stage 3, shared with notice) and the shared ReviewCard.
+// ---------------------------------------------------------------------------
+
+test('PhonetikStage plays through speech.js, splits syllables on the capitalised stress, and reads its strings from the table', () => {
+  const src = read('src/components/lesson/PhonetikStage.jsx');
+  assert.match(src, /playLine\(lektionId, `phonetik-\$\{i\}`, phonetikSpeechText\(item\)\)/, 'the play button must speak the normalised text through the recorded/fallback path, keyed phonetik-<i>');
+  assert.ok(src.includes("import { playLine, phonetikSpeechText } from '../../lib/lesson/speech.js';"), 'phonetikSpeechText must be imported from speech.js, not re-implemented here');
+  assert.match(src, /part === part\.toUpperCase\(\)/, 'the stressed syllable must be found by its own capitalisation, not a hand-picked index');
+  assert.ok(src.includes('<strong'), 'the stressed syllable must render as <strong>');
+  for (const key of ["t('stage.phonetik.eyebrow', lang)", "t('stage.phonetik.title', lang)", "t('phonetik.listenFor', lang)", "t('phonetik.sayAfter', lang)", "t('phonetik.said', lang)"]) {
+    assert.ok(src.includes(key), `PhonetikStage must read "${key}" from the string table rather than a literal`);
+  }
+});
+
+test('the phonetik string keys exist, non-empty, in both chrome tables', () => {
+  const src = read('src/lib/lesson/strings.js');
+  for (const key of ['stage.phonetik.eyebrow', 'stage.phonetik.title', 'phonetik.listenFor', 'phonetik.sayAfter', 'phonetik.said']) {
+    const matches = [...src.matchAll(new RegExp(`'${key}':\\s*'([^']*)'`, 'g'))];
+    assert.equal(matches.length, 2, `"${key}" must appear exactly once in each of the en/de tables`);
+    for (const m of matches) assert.ok(m[1].trim().length > 0, `"${key}" must not be empty`);
+  }
+});
+
+test('buildLesson inserts the phonetik stage right after notice, sharing its stage number', () => {
+  const src = read('src/lib/lesson/buildLesson.js');
+  const noticeAt = src.indexOf("key: 'notice'");
+  const phonetikAt = src.indexOf("key: 'phonetik'");
+  assert.ok(noticeAt >= 0 && phonetikAt >= 0 && phonetikAt > noticeAt, 'the phonetik stage must be pushed after the notice stage');
+  assert.ok(src.includes("nr: 3, key: 'phonetik'"), 'the phonetik stage must share stage number 3 with notice');
+});
+
+test('LessonPlayerPage renders the phonetik stage with PhonetikStage', () => {
+  const src = read('src/pages/lesson/LessonPlayerPage.jsx');
+  assert.ok(src.includes("import PhonetikStage from '../../components/lesson/PhonetikStage.jsx';"), 'the player must import PhonetikStage');
+  assert.match(src, /case 'phonetik':\s*\n\s*body = <PhonetikStage/, "the stage switch must render PhonetikStage for kind 'phonetik'");
+});
+
+test('ReviewCard is the one per-mode card renderer, used by both ReviewPage and the lesson player\'s warm-up', () => {
+  const card = read('src/components/lesson/ReviewCard.jsx');
+  assert.ok(card.includes('export const MODES_BY_KIND'), 'ReviewCard must export the mode table');
+  assert.ok(card.includes('export const modeForCard'), 'ReviewCard must export the pure mode-selection helper');
+  assert.ok(card.includes("export default function ReviewCard("), 'ReviewCard must be the default export');
+
+  const reviewPage = read('src/pages/lesson/ReviewPage.jsx');
+  assert.ok(reviewPage.includes("import ReviewCard, { modeForCard } from '../../components/lesson/ReviewCard.jsx';"), 'ReviewPage must import ReviewCard and modeForCard');
+  assert.ok(reviewPage.includes('<ReviewCard'), 'ReviewPage must render <ReviewCard>');
+  assert.ok(!reviewPage.includes('MODES_BY_KIND ='), 'ReviewPage must not keep its own copy of the mode table');
+
+  const player = read('src/pages/lesson/LessonPlayerPage.jsx');
+  assert.ok(player.includes("import ReviewCard, { modeForCard } from '../../components/lesson/ReviewCard.jsx';"), 'the player must import ReviewCard and modeForCard');
+  assert.ok(player.includes('<ReviewCard'), 'the player\'s warm-up must render <ReviewCard>');
+});
+
+test('the player\'s warm-up grades through gradeCard and gradeTypedReview, the same helpers ReviewPage uses', () => {
+  const player = read('src/pages/lesson/LessonPlayerPage.jsx');
+  assert.ok(player.includes("import { gradeCard } from '../../services/reviewService.js';"), 'the player must import gradeCard from the review service');
+  assert.ok(player.includes("import { gradeTypedReview } from '../../lib/checkpoint/reviewGrading.js';"), 'the player must import gradeTypedReview');
+  assert.match(player, /gradeCard\(user\.id, warmupCard\.cardKey, correct\)/, 'a graded warm-up card must write through gradeCard, keyed by its card_key');
+  assert.match(player, /gradeTypedReview\(warmupCard\.cardKey, warmupCard\.accepted, warmupTyped/, 'a typed warm-up card must grade through gradeTypedReview, not a hand-rolled comparison');
+});

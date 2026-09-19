@@ -647,4 +647,95 @@ export const WORTFELD_ICONS = {
 /** Fallback by rough category, for a word this table has not caught up with yet. */
 export const WORTFELD_ICON_FALLBACK = 'Sparkle';
 
+// ---------------------------------------------------------------------------
+// Landeskunde — one short cultural note per chapter, keyed by chapter nr
+// ---------------------------------------------------------------------------
+
+/**
+ * Four notes, `LANDESKUNDE[checkpoint.nr]` — each chapter's checkpoint closes
+ * a chapter, and `chapters[].nr` and `checkpoint.nr` are the same numbers
+ * (one checkpoint per chapter), so the checkpoint result screen can key
+ * straight off `checkpoint.nr`. Facts only: no stereotypes, no exam-fee
+ * figures, no outcome promises (the a11.js header's rule extends here). Each
+ * `source` is a real, checkable URL, or the literal string "allgemein
+ * bekannt" for a norm with no single citable page. `bodyEn`/`bodyDe` stay at
+ * or under 90 words; `bodyDe` speaks Sie, like the rest of the course.
+ */
+export const LANDESKUNDE = {
+  1: {
+    titleDe: 'Begrüßung: Sie oder du?',
+    titleEn: 'Greeting people: Sie or du?',
+    bodyEn:
+      'German has two forms of "you": the formal "Sie" and the informal "du". Adults who ' +
+      'do not know each other use "Sie" by default — with officials, shop staff, neighbours, ' +
+      'colleagues you have just met. "Du" is for family, friends, children, and people who have ' +
+      'explicitly offered it ("Wir können du sagen"). Switching from Sie to du is usually the older ' +
+      'or higher-ranked person’s call, though this is loosening among younger people. When unsure, ' +
+      'Sie is the safe default — nobody is offended by too much respect.',
+    bodyDe:
+      'Im Deutschen gibt es zwei Formen von „Sie“: die formelle „Sie“-Form und die informelle ' +
+      '„du“-Form. Erwachsene, die sich nicht kennen, verwenden meist „Sie“ — bei Ämtern, im ' +
+      'Geschäft, mit Nachbarn oder neuen Kolleginnen und Kollegen. „Du“ ist für Familie, Freunde, ' +
+      'Kinder und für Menschen, die es ausdrücklich anbieten („Wir können du sagen“). Wer den ' +
+      'Wechsel anbietet, ist meist die ältere oder ranghöhere Person, auch wenn das bei jüngeren ' +
+      'Leuten und in manchen Firmen lockerer gehandhabt wird. Im Zweifel ist „Sie“ die sichere Wahl.',
+    source: 'allgemein bekannt',
+  },
+  2: {
+    titleDe: 'Anmelden: das Bürgerbüro und die Meldebescheinigung',
+    titleEn: 'Registering: the Bürgerbüro and the Meldebescheinigung',
+    bodyEn:
+      'Anyone who moves into a home in Germany, including newcomers, must register the address ' +
+      '("sich anmelden") at the local citizens’ office (Bürgerbüro / Einwohnermeldeamt) within ' +
+      'two weeks of moving in — German law (Bundesmeldegesetz §17) sets the deadline. The office ' +
+      'issues a Meldebescheinigung, a short confirmation of the registered address, which banks, ' +
+      'landlords and other offices often ask to see. Bring your passport, the rental contract, and ' +
+      'a landlord’s move-in confirmation (Wohnungsgeberbestätigung); appointments are often needed.',
+    bodyDe:
+      'Wer in Deutschland eine Wohnung bezieht — auch neu Zugezogene —, muss die Adresse innerhalb ' +
+      'von zwei Wochen nach dem Einzug beim Bürgerbüro (Einwohnermeldeamt) anmelden; das schreibt ' +
+      'das Bundesmeldegesetz (§17) vor. Das Amt stellt dafür eine Meldebescheinigung aus, eine kurze ' +
+      'Bestätigung der gemeldeten Adresse, die Banken, Vermieter und andere Ämter oft sehen möchten. ' +
+      'Bringen Sie Ihren Pass, den Mietvertrag und die Wohnungsgeberbestätigung mit; oft ist vorher ' +
+      'ein Termin nötig.',
+    source: 'https://www.gesetze-im-internet.de/bmg/__17.html',
+  },
+  3: {
+    titleDe: 'Flohmarkt: gebraucht kaufen, bar bezahlen',
+    titleEn: 'Flohmarkt culture: buying secondhand, paying cash',
+    bodyEn:
+      'Flea markets (Flohmärkte) are a common way to buy and sell secondhand furniture, dishes, ' +
+      'clothes and books across Germany, often held on weekends in a square or hall. Prices are ' +
+      'usually marked but negotiable — asking "Geht der Preis noch runter?" ("Can you do it for ' +
+      'less?") is normal, not rude. Most sellers are private individuals without a card reader, so ' +
+      'cash (Bargeld), ideally in small notes and coins, is the expected way to pay; bring your own bag.',
+    bodyDe:
+      'Flohmärkte sind in Deutschland eine übliche Möglichkeit, gebrauchte Möbel, Geschirr, Kleidung ' +
+      'und Bücher zu kaufen oder zu verkaufen, oft am Wochenende auf einem Platz oder in einer Halle. ' +
+      'Preise sind meist ausgezeichnet, aber verhandelbar — die Frage „Geht der Preis noch runter?“ ' +
+      'ist üblich, nicht unhöflich. Die meisten Verkaufenden sind Privatpersonen ohne Kartenlesegerät, ' +
+      'deshalb zahlt man meist bar, am besten mit kleinen Scheinen und Münzen. Bringen Sie eine eigene Tasche mit.',
+    source: 'allgemein bekannt',
+  },
+  4: {
+    titleDe: 'Pünktlichkeit und die Bahn',
+    titleEn: 'Punctuality and the train',
+    bodyEn:
+      'Arriving on time for an appointment (Termin) is expected in Germany; if you will be even a ' +
+      'few minutes late, a short call or message ahead is considered polite. Deutsche Bahn, the ' +
+      'national rail operator, counts a long-distance train as "pünktlich" (on time) only if it ' +
+      'arrives less than six minutes after the scheduled time — its own definition, published with ' +
+      'its punctuality reporting. A delay is called "Verspätung"; announcements at the Bahnhof name ' +
+      'the platform (Gleis) and any delay together.',
+    bodyDe:
+      'Pünktlichkeit bei einem Termin wird in Deutschland erwartet; wer auch nur ein paar Minuten ' +
+      'später kommt, sollte kurz vorher anrufen oder eine Nachricht schreiben. Die Deutsche Bahn, ' +
+      'der staatliche Bahnbetreiber, zählt einen Fernverkehrszug nur dann als „pünktlich“, wenn er ' +
+      'weniger als sechs Minuten nach der planmäßigen Zeit ankommt — das ist ihre eigene Definition, ' +
+      'veröffentlicht in ihrer Pünktlichkeitsstatistik. Eine Verspätung heißt „Verspätung“; ' +
+      'Durchsagen am Bahnhof nennen Gleis und eventuelle Verspätung zusammen.',
+    source: 'https://www.deutschebahn.com/de/presse/konzernthemen/puenktlichkeit',
+  },
+};
+
 export default A11_META;

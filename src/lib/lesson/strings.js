@@ -79,6 +79,11 @@ export const STRINGS = {
     'stage.wortfeld.lead': 'Tap a card for the translation, the speaker to hear it.',
     'stage.notice.eyebrow': 'Step 3 · Grammar',
     'stage.notice.examples': 'Examples from the dialogue',
+    'stage.phonetik.eyebrow': 'Step 3 · Pronunciation',
+    'stage.phonetik.title': 'Listen and repeat',
+    'phonetik.listenFor': 'Stress falls on the capitalised syllable.',
+    'phonetik.sayAfter': 'Say it after the voice',
+    'phonetik.said': 'Said it',
     'stage.practice.eyebrow': 'Step 4 · Practice {n}/{total}',
     'stage.dictation.eyebrow': 'Step 4 · Listening {n}/{total}',
     'stage.speaking.eyebrow': 'Step 5 · Speaking',
@@ -105,6 +110,10 @@ export const STRINGS = {
     // ── vocabulary ───────────────────────────────────────────────────────────
     'wortfeld.plural': 'Pl.',
     'wortfeld.listen': 'Listen to {word}',
+    'wortfeld.en': 'EN',
+    'wortfeld.showAllEnglish': 'Show all English',
+    'wortfeld.hideAllEnglish': 'Hide all English',
+    'wortfeld.flipHint': '{word}, English shown',
 
     // ── dictation ────────────────────────────────────────────────────────────
     'dictation.lead': 'Listen to the line and write it down.',
@@ -121,6 +130,11 @@ export const STRINGS = {
     'feedback.wrong': 'Not yet',
     'feedback.correctIs': 'The answer is:',
     'feedback.explain': 'Explain this to me',
+
+    // ── combo chip (Wave 2, 2026-09-19) ──────────────────────────────────────
+    'combo.streak': '{n} in a row',
+    'combo.soundOn': 'Turn sound on',
+    'combo.soundOff': 'Turn sound off',
 
     // ── "explain this" answer box ────────────────────────────────────────────
     'explain.loading': 'Writing your explanation …',
@@ -188,6 +202,30 @@ export const STRINGS = {
     'recap.gold': 'Gold: at least 80 % on the first try. The words and the rule come back for review.',
     'recap.done': 'Done. The lesson counts at any score — what wobbled today comes back for review.',
 
+    // ── go deeper (recap) ────────────────────────────────────────────────────
+    'recap.goDeeper.title': 'Go deeper',
+    'recap.goDeeper.listening': 'Listening exercise for this Lektion',
+    'recap.goDeeper.reading': 'Reading text for this Lektion',
+    'recap.goDeeper.speaking': 'Speaking mission for this Lektion',
+    'recap.vocabBridge.add': 'Add these words to my vocab deck',
+    'recap.vocabBridge.adding': 'Adding …',
+    'recap.vocabBridge.added': 'Added to your vocab deck.',
+    'recap.vocabBridge.signInHint': 'Sign in to save these words to your vocab deck.',
+
+    // ── words-learned flip cards (recap) ─────────────────────────────────────
+    'words.tapToFlip': 'Tap a card for the translation',
+    'words.showEnglish': 'Show English',
+    'words.showGerman': 'Show German',
+
+    // ── milestone card (course home) ─────────────────────────────────────────
+    'milestone.day1.title': 'Day 1 — you started',
+    'milestone.day1.body': 'The first Lektion is the hardest one to begin. It is done.',
+    'milestone.day7.title': '7 days — this is a habit now',
+    'milestone.day7.body': 'A week of German, one Lektion at a time.',
+    'milestone.day30.title': '30 days — a month of German',
+    'milestone.day30.body': 'A month of showing up. That is how a language gets learned.',
+    'milestone.dismiss': 'Dismiss',
+
     // ── save-progress card ───────────────────────────────────────────────────
     'save.title': 'Save your progress — free',
     'save.body': "Right now this lesson lives only in this browser. With a free account it stays with you — on your phone, on your laptop, and with review at the right time.",
@@ -250,6 +288,10 @@ export const STRINGS = {
     'checkpoint.nextLesson': 'Continue: Lesson {nr}',
     'checkpoint.practiceFirst': 'Practise first',
     'checkpoint.practiceLead': "{n} tasks on exactly the topics that didn't stick. Then take the checkpoint again.",
+
+    // ── Landeskunde (checkpoint result) ─────────────────────────────────────
+    'landeskunde.eyebrow': 'Cultural note',
+    'landeskunde.source': 'Source:',
 
     // ── review ───────────────────────────────────────────────────────────────
     'review.title': 'Review',
@@ -316,6 +358,11 @@ export const STRINGS = {
     'stage.wortfeld.lead': 'Tippen Sie auf eine Karte für die Übersetzung, auf den Lautsprecher zum Hören.',
     'stage.notice.eyebrow': 'Schritt 3 · Grammatik',
     'stage.notice.examples': 'Beispiele aus dem Dialog',
+    'stage.phonetik.eyebrow': 'Schritt 3 · Aussprache',
+    'stage.phonetik.title': 'Hören und nachsprechen',
+    'phonetik.listenFor': 'Die Betonung liegt auf der großgeschriebenen Silbe.',
+    'phonetik.sayAfter': 'Sprechen Sie es nach der Stimme nach',
+    'phonetik.said': 'Gesagt',
     'stage.practice.eyebrow': 'Schritt 4 · Üben {n}/{total}',
     'stage.dictation.eyebrow': 'Schritt 4 · Hören {n}/{total}',
     'stage.speaking.eyebrow': 'Schritt 5 · Sprechen',
@@ -342,6 +389,10 @@ export const STRINGS = {
     // ── vocabulary ───────────────────────────────────────────────────────────
     'wortfeld.plural': 'Pl.',
     'wortfeld.listen': '{word} anhören',
+    'wortfeld.en': 'EN',
+    'wortfeld.showAllEnglish': 'Alle Übersetzungen zeigen',
+    'wortfeld.hideAllEnglish': 'Alle Übersetzungen verbergen',
+    'wortfeld.flipHint': '{word}, Übersetzung angezeigt',
 
     // ── dictation ────────────────────────────────────────────────────────────
     'dictation.lead': 'Hören Sie die Zeile und schreiben Sie sie auf.',
@@ -358,6 +409,11 @@ export const STRINGS = {
     'feedback.wrong': 'Noch nicht',
     'feedback.correctIs': 'Richtig ist:',
     'feedback.explain': 'Erklär mir das',
+
+    // ── combo chip (Wave 2, 2026-09-19) ──────────────────────────────────────
+    'combo.streak': '{n} in Folge',
+    'combo.soundOn': 'Ton einschalten',
+    'combo.soundOff': 'Ton ausschalten',
 
     // ── "explain this" answer box ────────────────────────────────────────────
     'explain.loading': 'Erklärung wird geschrieben …',
@@ -425,6 +481,30 @@ export const STRINGS = {
     'recap.gold': 'Gold: mindestens 80 % im ersten Versuch. Die Wörter und die Regel kommen zur Wiederholung zurück.',
     'recap.done': 'Geschafft. Die Lektion zählt bei jeder Trefferquote — was heute wackelte, kommt zur Wiederholung zurück.',
 
+    // ── go deeper (recap) ────────────────────────────────────────────────────
+    'recap.goDeeper.title': 'Vertiefen',
+    'recap.goDeeper.listening': 'Hörverstehen zu dieser Lektion',
+    'recap.goDeeper.reading': 'Lesetext zu dieser Lektion',
+    'recap.goDeeper.speaking': 'Sprechauftrag zu dieser Lektion',
+    'recap.vocabBridge.add': 'Diese Wörter zu meinem Wortschatz hinzufügen',
+    'recap.vocabBridge.adding': 'Wird hinzugefügt …',
+    'recap.vocabBridge.added': 'Zu Ihrem Wortschatz hinzugefügt.',
+    'recap.vocabBridge.signInHint': 'Melden Sie sich an, um diese Wörter in Ihrem Wortschatz zu speichern.',
+
+    // ── words-learned flip cards (recap) ─────────────────────────────────────
+    'words.tapToFlip': 'Für die Übersetzung antippen',
+    'words.showEnglish': 'Englisch zeigen',
+    'words.showGerman': 'Deutsch zeigen',
+
+    // ── milestone card (course home) ─────────────────────────────────────────
+    'milestone.day1.title': 'Tag 1 — Sie haben angefangen',
+    'milestone.day1.body': 'Die erste Lektion ist der schwerste Anfang. Geschafft.',
+    'milestone.day7.title': '7 Tage — das ist schon Gewohnheit',
+    'milestone.day7.body': 'Eine Woche Deutsch, Lektion für Lektion.',
+    'milestone.day30.title': '30 Tage — ein Monat Deutsch',
+    'milestone.day30.body': 'Ein Monat, in dem Sie drangeblieben sind. So lernt man eine Sprache.',
+    'milestone.dismiss': 'Schließen',
+
     // ── save-progress card ───────────────────────────────────────────────────
     'save.title': 'Fortschritt speichern — kostenlos',
     'save.body': 'Diese Lektion liegt gerade nur in diesem Browser. Mit einem kostenlosen Konto bleibt sie erhalten — auf dem Handy, am Laptop, und mit der Wiederholung zur richtigen Zeit.',
@@ -487,6 +567,10 @@ export const STRINGS = {
     'checkpoint.nextLesson': 'Weiter: Lektion {nr}',
     'checkpoint.practiceFirst': 'Zuerst üben',
     'checkpoint.practiceLead': '{n} Aufgaben zu genau den Themen, die eben nicht saßen. Danach den Checkpoint noch einmal.',
+
+    // ── Landeskunde (checkpoint result) ─────────────────────────────────────
+    'landeskunde.eyebrow': 'Landeskunde',
+    'landeskunde.source': 'Quelle:',
 
     // ── review ───────────────────────────────────────────────────────────────
     'review.title': 'Wiederholen',

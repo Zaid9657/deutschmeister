@@ -1,13 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import * as LucideIcons from 'lucide-react';
 import { Volume2 } from 'lucide-react';
 import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
 import StageShell from './StageShell.jsx';
+import { AudioSourceBadge } from './DialogStage.jsx';
 import { playWord } from '../../lib/lesson/speech.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
+import { WORTFELD_ICONS, WORTFELD_ICON_FALLBACK } from '../../data/curricula/a11.meta.js';
 
 /**
- * Stage 2b — the new words as cards: article, plural, English, audio.
+ * Stage 2b — the new words as picture cards: icon, article, plural, English
+ * (behind a flip), audio.
  *
  * NOTE ON COLOUR. The design tokens name colours for the four grammatical
  * CASES and nothing else (design-tokens.js rule 1: "colour means case"), so
@@ -15,15 +19,123 @@ import { t, useLessonLang } from '../../lib/lesson/strings.js';
  * in a quiet chip instead of being encoded in a hue. Inventing der/die/das
  * colours would either collide with the case palette or add hexes outside the
  * token file; both are out of system. The article is text, and text is
- * unambiguous.
+ * unambiguous. Same rule for the icon circle: it is always `siegel`/
+ * `siegel-wash`, never per-word colour — the icon is a memory hook, not a
+ * category code.
  *
  * `words` carries the curriculum's own fields; anything fetched from the
  * `words` table (audio_url above all) is merged in by the player as `db`.
+ * Every card flips independently (tap or Enter/Space on the card body) to
+ * show its English side; "Show all English" is the way out for a learner
+ * scanning the whole set, same shape as DialogStage's "Show all lines".
+ * Flipped state is never colour-only: a text "EN" tag travels with it.
+ *
+ * The optional situation-scene banner (a11.art.js, landing in parallel) is
+ * loaded defensively via `import.meta.glob` so a build or a render never
+ * fails when that file does not exist yet — the glob simply returns nothing
+ * to load.
  */
-export default function WortfeldStage({ stage, onBack, onDone }) {
+
+const artModules = import.meta.glob('../../data/curricula/a11.art.js');
+
+function useLektionArt(lektionId) {
+  const [art, setArt] = useState(null);
+  useEffect(() => {
+    let cancelled = false;
+    if (!lektionId) return undefined;
+    const key = Object.keys(artModules)[0];
+    const loader = key && artModules[key];
+    if (!loader) return undefined;
+    loader()
+      .then((mod) => {
+        if (cancelled) return;
+        const situations = mod && (mod.A11_ART || mod.default) && (mod.A11_ART || mod.default).situations;
+        const scene = situations && situations[lektionId];
+        if (scene && scene.srcSmall) setArt(scene);
+      })
+      .catch(() => {
+        /* optional module — never fail the stage for its absence */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [lektionId]);
+  return art;
+}
+
+function iconFor(word) {
+  const name = (word && WORTFELD_ICONS[word]) || WORTFELD_ICON_FALLBACK;
+  return LucideIcons[name] || LucideIcons[WORTFELD_ICON_FALLBACK];
+}
+
+function WordCard({ w, lang, flipped, onToggle }) {
+  const article = w.article || (w.db && w.db.article) || '';
+  const plural = w.plural || (w.db && w.db.plural) || '';
+  const audioUrl = (w.db && w.db.audioUrl) || w.audioUrl || '';
+  const spoken = w.de || w.word || '';
+  const english = w.en || (w.db && w.db.english) || '';
+  const Icon = iconFor(w.word || w.de);
+
+  return (
+    <Card interactive as="div" className="flex h-full flex-col items-center gap-2.5 p-3.5 text-center">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-pressed={flipped}
+        aria-label={flipped ? t('wortfeld.flipHint', lang, { word: spoken }) : spoken}
+        className="flex min-h-11 w-full flex-1 flex-col items-center gap-2 rounded-clay outline-none focus-visible:ring-2 focus-visible:ring-siegel"
+      >
+        <span
+          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel transition-transform duration-150 ease-snap motion-reduce:transition-none"
+          aria-hidden="true"
+        >
+          <Icon className="h-6 w-6" />
+        </span>
+
+        {flipped ? (
+          <>
+            <Chip tone="quiet">{t('wortfeld.en', lang)}</Chip>
+            <p className="text-[0.9375rem] leading-snug text-ink">{english}</p>
+          </>
+        ) : (
+          <>
+            <p className="truncate font-display text-[1.0625rem] font-semibold text-ink" lang="de">
+              {spoken}
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-1.5">
+              {article && <Chip tone="quiet">{article}</Chip>}
+              {plural && (
+                <span className="font-data text-[0.6875rem] text-graphite">
+                  {t('wortfeld.plural', lang)} {plural}
+                </span>
+              )}
+            </div>
+          </>
+        )}
+      </button>
+
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={() => playWord(audioUrl, spoken)}
+          aria-label={t('wortfeld.listen', lang, { word: spoken })}
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel transition-colors duration-100 hover:bg-siegel hover:text-white motion-reduce:transition-none"
+        >
+          <Volume2 className="h-4 w-4" />
+        </button>
+        <AudioSourceBadge recorded={!!audioUrl} />
+      </div>
+    </Card>
+  );
+}
+
+export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
   const [open, setOpen] = useState(() => new Set());
+  const [allOpen, setAllOpen] = useState(false);
   const words = stage.words || [];
   const [lang] = useLessonLang();
+  const id = lektionId || stage.lektionId || null;
+  const art = useLektionArt(id);
 
   const toggle = (i) =>
     setOpen((prev) => {
@@ -31,6 +143,14 @@ export default function WortfeldStage({ stage, onBack, onDone }) {
       if (next.has(i)) next.delete(i); else next.add(i);
       return next;
     });
+
+  const toggleAll = () => {
+    setAllOpen((prev) => {
+      const next = !prev;
+      setOpen(next ? new Set(words.map((_, i) => i)) : new Set());
+      return next;
+    });
+  };
 
   return (
     <StageShell
@@ -41,36 +161,31 @@ export default function WortfeldStage({ stage, onBack, onDone }) {
       primaryLabel={t('action.next', lang)}
       onPrimary={onDone}
     >
-      <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      {art && (
+        <img
+          src={art.srcSmall}
+          alt={art.alt || ''}
+          className="mb-4 h-32 w-full rounded-clay border border-rule object-cover sm:h-40"
+        />
+      )}
+
+      <div className="mb-3 flex justify-end">
+        <button
+          type="button"
+          onClick={toggleAll}
+          aria-pressed={allOpen}
+          className="min-h-11 rounded-clay px-2 text-sm font-bold text-siegel-deep hover:underline"
+        >
+          {t(allOpen ? 'wortfeld.hideAllEnglish' : 'wortfeld.showAllEnglish', lang)}
+        </button>
+      </div>
+
+      <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {words.map((w, i) => {
-          const article = w.article || (w.db && w.db.article) || '';
-          const plural = w.plural || (w.db && w.db.plural) || '';
-          const audioUrl = (w.db && w.db.audioUrl) || w.audioUrl || '';
           const spoken = w.de || w.word || '';
           return (
             <li key={`${spoken}-${i}`}>
-              <Card interactive as="div" className="p-4">
-                <div className="flex items-start justify-between gap-3">
-                  <button type="button" onClick={() => toggle(i)} className="min-w-0 flex-1 text-left" aria-expanded={open.has(i)}>
-                    <p className="truncate font-display text-[1.0625rem] font-semibold text-ink" lang="de">{spoken}</p>
-                    <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                      {article && <Chip tone="quiet">{article}</Chip>}
-                      {plural && <span className="font-data text-[0.6875rem] text-graphite">{t('wortfeld.plural', lang)} {plural}</span>}
-                    </div>
-                    <p className={`mt-2 text-[0.875rem] leading-snug ${open.has(i) ? 'text-graphite' : 'text-transparent'}`}>
-                      {open.has(i) ? w.en || (w.db && w.db.english) || '' : '—'}
-                    </p>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => playWord(audioUrl, spoken)}
-                    aria-label={t('wortfeld.listen', lang, { word: spoken })}
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel hover:bg-siegel hover:text-white"
-                  >
-                    <Volume2 className="h-4 w-4" />
-                  </button>
-                </div>
-              </Card>
+              <WordCard w={w} lang={lang} flipped={open.has(i)} onToggle={() => toggle(i)} />
             </li>
           );
         })}

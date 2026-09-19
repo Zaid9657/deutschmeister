@@ -49,6 +49,13 @@ import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+// The lesson-engine agent owns PhonetikStage.jsx's runtime play button, which
+// needs this same normalisation (`speech.js`'s `playLine(lektionId,
+// 'phonetik-<i>', speechText)`). Moved there so both call sites share one
+// implementation; re-exported here so this script (and its `--dry` planner)
+// and tests/course-audio.test.mjs, which imports it FROM this module, keep
+// working unchanged.
+import { phonetikSpeechText } from '../src/lib/lesson/speech.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -90,32 +97,7 @@ export function voiceForSpeaker(speaker) {
   return SPEAKER_VOICES[name] || VOICE_DEFAULT;
 }
 
-/**
- * The Phonetik items are written for the EYE — syllable hyphens and a
- * capitalised stressed syllable ("HAL-lo", "Te-le-FON"), plus the melody arrows
- * of the question items ("Hast du ZEIT?↗"). Spoken back literally, a TTS engine
- * says "H-A-L dash lo". So the display text stays exactly as authored and only
- * the SPEECH text is normalised: arrows dropped, syllable hyphens closed up,
- * the shouted syllable returned to ordinary case.
- *
- * German TTS is effectively case-insensitive for pronunciation, so the
- * capitalisation this produces ("Der Bruder", "Ich bin") is cosmetic — what
- * matters is that no hyphen and no arrow survives into the SSML.
- */
-export function phonetikSpeechText(display) {
-  const cleaned = String(display || '')
-    .replace(/[↗↘➚➘]/g, ' ')
-    .replace(/(\p{L})-(\p{L})/gu, '$1$2') // HAL-lo → HALlo, Te-le-FON → TeleFON
-    .replace(/\s+/g, ' ')
-    .trim();
-  const words = cleaned.split(' ').map((w) => {
-    if (!w) return w;
-    if (w === w.toUpperCase() && w !== w.toLowerCase()) return w.toLowerCase(); // BIN → bin
-    return w[0] + w.slice(1).toLowerCase(); // HALlo → Hallo, TeleFON → Telefon
-  });
-  const out = words.join(' ');
-  return out ? out[0].toUpperCase() + out.slice(1) : out;
-}
+export { phonetikSpeechText };
 
 /**
  * What to say for a Wortfeld entry. `de` already carries the article

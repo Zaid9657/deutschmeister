@@ -11,7 +11,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-import { A11_META, chapterGroups, charactersOf, weeklyEstimate } from '../src/data/curricula/a11.meta.js';
+import * as lucideIcons from 'lucide-react';
+import { A11_META, LANDESKUNDE, chapterGroups, charactersOf, weeklyEstimate, WORTFELD_ICONS, WORTFELD_ICON_FALLBACK } from '../src/data/curricula/a11.meta.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
 import { curriculumPath } from '../src/data/curricula/index.js';
 import { SUSTAINABLE_PER_WEEK } from '../src/lib/course/plan.js';
@@ -267,5 +268,92 @@ test('chapters carry the three banner fields the course home renders, and each L
   }
   for (const nr of NRS) {
     assert.equal(A11_META.chapters.filter((c) => c.lektionen.includes(nr)).length, 1, `Lektion ${nr} must be in exactly one chapter`);
+  }
+});
+
+// ---------------------------------------------------------------------------
+// 9. WORTFELD_ICONS — Wortfeld picture cards (Wave 2, 2026-09-19)
+// ---------------------------------------------------------------------------
+
+test('every Wortfeld word of every A1.1 Lektion has a WORTFELD_ICONS entry', () => {
+  for (const l of LEKTIONEN) {
+    for (const w of l.wortfeld || []) {
+      const key = w.word;
+      assert.ok(
+        Object.prototype.hasOwnProperty.call(WORTFELD_ICONS, key),
+        `Lektion ${l.nr} word "${key}" has no WORTFELD_ICONS entry`,
+      );
+    }
+  }
+});
+
+test('every WORTFELD_ICONS value, and the fallback, resolve to a real lucide-react icon', () => {
+  const names = new Set([...Object.values(WORTFELD_ICONS), WORTFELD_ICON_FALLBACK]);
+  assert.ok(names.size > 0);
+  for (const name of names) {
+    const icon = lucideIcons[name];
+    // lucide-react icons are forwardRef components: functions under CJS, objects under ESM.
+    assert.ok(
+      typeof icon === 'function' || (typeof icon === 'object' && icon !== null),
+      `"${name}" does not resolve in lucide-react`,
+    );
+  }
+});
+
+test('WORTFELD_ICON_FALLBACK is a non-empty string naming a real icon', () => {
+  assert.equal(typeof WORTFELD_ICON_FALLBACK, 'string');
+  assert.ok(WORTFELD_ICON_FALLBACK.trim().length > 0);
+});
+
+// ---------------------------------------------------------------------------
+// 10. WortfeldStage source pins (Wave 2, 2026-09-19)
+// ---------------------------------------------------------------------------
+
+test('WortfeldStage renders an icon circle, a flip toggle and a "show all English" control', () => {
+  const src = readFileSync(new URL('../src/components/lesson/WortfeldStage.jsx', import.meta.url), 'utf8');
+  assert.match(src, /bg-siegel-wash text-siegel/, 'the icon circle must use the siegel-wash/siegel token pair');
+  assert.match(src, /aria-pressed=\{flipped\}/, 'the flip toggle must carry aria-pressed');
+  assert.match(src, /wortfeld\.showAllEnglish/, 'must reference the show-all-English string key');
+  assert.match(src, /wortfeld\.en/, 'a flipped card must render the text "EN" tag, not colour alone');
+  assert.match(src, /AudioSourceBadge/, 'must keep the AudioSourceBadge behaviour');
+});
+
+test('the wortfeld string keys (EN tag, show/hide all English) exist in both chrome languages with no empty value', () => {
+  const src = readFileSync(new URL('../src/lib/lesson/strings.js', import.meta.url), 'utf8');
+  const keys = ['wortfeld.en', 'wortfeld.showAllEnglish', 'wortfeld.hideAllEnglish'];
+  for (const key of keys) {
+    const matches = src.match(new RegExp(`'${key.replace('.', '\\.')}':\\s*'[^']+'`, 'g')) || [];
+    assert.equal(matches.length, 2, `"${key}" must appear once in each of the en/de tables with a non-empty value`);
+  }
+});
+
+// ---------------------------------------------------------------------------
+// 11. Landeskunde notes (one per chapter, keyed by checkpoint/chapter nr)
+// ---------------------------------------------------------------------------
+
+test('every chapter has a Landeskunde note with both languages, both under 90 words, and a source', () => {
+  const chapterNrs = A11_META.chapters.map((c) => c.nr);
+  assert.deepEqual(Object.keys(LANDESKUNDE).map(Number).sort(), chapterNrs, 'LANDESKUNDE must have exactly one entry per chapter');
+  for (const nr of chapterNrs) {
+    const note = LANDESKUNDE[nr];
+    assert.ok(note, `chapter ${nr} has no Landeskunde note`);
+    for (const field of ['titleDe', 'titleEn', 'bodyEn', 'bodyDe', 'source']) {
+      assert.ok(typeof note[field] === 'string' && note[field].trim().length > 0, `chapter ${nr}: "${field}" is empty`);
+    }
+    assert.ok(note.bodyEn.split(/\s+/).length <= 90, `chapter ${nr}: bodyEn over 90 words`);
+    assert.ok(note.bodyDe.split(/\s+/).length <= 90, `chapter ${nr}: bodyDe over 90 words`);
+    assert.ok(
+      note.source === 'allgemein bekannt' || /^https:\/\//.test(note.source),
+      `chapter ${nr}: source must be a real https URL or "allgemein bekannt"`,
+    );
+  }
+});
+
+test('Landeskunde notes carry no outcome promise or exam-fee figure', () => {
+  const BANNED = /\b(garantiert|Erfolg garantiert|bestehen Sie sicher|€\s?\d|EUR\s?\d)\b/i;
+  for (const [nr, note] of Object.entries(LANDESKUNDE)) {
+    for (const field of ['bodyEn', 'bodyDe']) {
+      assert.ok(!BANNED.test(note[field]), `chapter ${nr}: "${field}" reads like an outcome promise or an exam fee figure`);
+    }
   }
 });

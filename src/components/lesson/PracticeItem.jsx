@@ -1,57 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Check, AlertTriangle, X, Sparkles } from 'lucide-react';
+import { Check } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import ExplainAnswer from './ExplainAnswer.jsx';
-import { OtherLanguage, inline } from './NoticeStage.jsx';
+import FeedbackSheet from './FeedbackSheet.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../../lib/lesson/check.js';
 import { isTypedItem } from '../../lib/lesson/buildLesson.js';
-
-/**
- * Correctness is TEXT + ICON + COLOUR, never colour alone (standard §4).
- * Exported because the dictation item shows the same three states.
- *
- * `explanation` is the paragraph in the chrome language; `otherExplanation`
- * is the same explanation in the other language, one tap away (the practice
- * item passes `explanationEn` / `explanationDe`, the dictation the English
- * gloss of the line). The labels come from the lesson string table.
- */
-export function ItemFeedback({ result, expected, hint, explanation, otherExplanation, onExplain }) {
-  const [lang] = useLessonLang();
-  if (!result) return null;
-  const map = {
-    [RESULT.CORRECT]: { Icon: Check, label: t('feedback.correct', lang), tone: 'border-siegel bg-siegel-wash text-siegel-deep' },
-    [RESULT.TYPO]: { Icon: AlertTriangle, label: t('feedback.typo', lang), tone: 'border-accent-aprikose bg-accent-aprikose-wash text-accent-aprikose-ink' },
-    [RESULT.WRONG]: { Icon: X, label: t('feedback.wrong', lang), tone: 'border-accent-himbeer bg-accent-himbeer-wash text-accent-himbeer-ink' },
-  };
-  const { Icon, label, tone } = map[result] || map[RESULT.WRONG];
-  return (
-    <div className={`mt-4 rounded-clay border p-4 ${tone}`} role="status" aria-live="polite">
-      <p className="flex items-center gap-2 font-bold">
-        <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
-        {label}
-      </p>
-      {result !== RESULT.CORRECT && expected && (
-        <p className="mt-2 text-[0.9375rem]">
-          {t('feedback.correctIs', lang)} <strong className="font-bold" lang="de">{expected}</strong>
-        </p>
-      )}
-      {hint && <p className="mt-2 text-[0.9375rem] font-bold">{hint}</p>}
-      {explanation && <p className="mt-2 text-[0.875rem] leading-relaxed opacity-90">{inline(explanation)}</p>}
-      {otherExplanation && <OtherLanguage text={otherExplanation} lang={lang} className="mt-2" />}
-      {onExplain && (
-        <button
-          type="button"
-          onClick={onExplain}
-          className="mt-3 inline-flex items-center gap-1.5 rounded-pill border border-current bg-white/60 px-3 py-1.5 text-[0.8125rem] font-bold"
-        >
-          <Sparkles className="h-4 w-4" aria-hidden="true" /> {t('feedback.explain', lang)}
-        </button>
-      )}
-    </div>
-  );
-}
 
 /**
  * Shown when the only thing wrong with an answer is its capitalisation — in
@@ -122,7 +77,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
   };
 
   return (
-    <div>
+    <div className={state ? 'pb-36 sm:pb-0' : ''}>
       <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">
         {t(eyebrowKey, lang, { n: index + 1, total })}
       </p>
@@ -131,7 +86,10 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
         {item.questionEn && <p className="mt-1.5 text-[0.875rem] leading-snug text-graphite">{item.questionEn}</p>}
 
         {chips ? (
-          <div className="mt-5 flex flex-wrap gap-2">
+          // Full-width, stacked options on mobile (one thumb-width tap target
+          // each); min 44px tall either way. Selected state is never colour
+          // alone — the check icon carries it too.
+          <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
             {chips.map((opt) => {
               const on = picked === opt;
               return (
@@ -141,11 +99,12 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
                   disabled={!!state}
                   onClick={() => setPicked(opt)}
                   aria-pressed={on}
-                  className={`rounded-clay border px-4 py-2.5 text-left text-[0.9375rem] font-bold transition-all duration-100 ease-snap disabled:opacity-70 motion-reduce:transition-none ${
+                  className={`flex min-h-11 w-full items-center justify-between gap-2 rounded-clay border px-4 py-2.5 text-left text-[0.9375rem] font-bold transition-all duration-100 ease-snap disabled:opacity-70 motion-reduce:transition-none sm:w-auto ${
                     on ? 'border-siegel bg-siegel text-white shadow-raise-siegel' : 'border-rule bg-white text-ink shadow-raise hover:border-siegel active:translate-y-1 active:shadow-none'
                   }`}
                 >
-                  {opt}
+                  <span>{opt}</span>
+                  {on && <Check className="h-4 w-4 shrink-0" aria-hidden="true" />}
                 </button>
               );
             })}
@@ -173,14 +132,6 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
           </div>
         )}
 
-        <ItemFeedback
-          result={state && state.result}
-          expected={state && state.expected}
-          hint={state && state.hint}
-          explanation={state && state.result !== RESULT.CORRECT ? (lang !== 'de' && item.explanationEn ? item.explanationEn : item.explanationDe) : null}
-          otherExplanation={state && state.result !== RESULT.CORRECT ? (lang !== 'de' && item.explanationEn ? item.explanationDe : item.explanationEn) : null}
-          onExplain={state && state.result !== RESULT.CORRECT ? () => setExplain(true) : null}
-        />
         {explain && (
           <ExplainAnswer
             item={item}
@@ -193,13 +144,21 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
         )}
       </Card>
 
-      <div className="mt-6 flex justify-end">
-        {state ? (
-          <Button onClick={onNext} size="lg" className="w-full sm:w-auto">{t('action.next', lang)}</Button>
-        ) : (
+      {!state && (
+        <div className="mt-6 flex justify-end">
           <Button onClick={submit} size="lg" disabled={!canSubmit} className="w-full sm:w-auto">{t('action.check', lang)}</Button>
-        )}
-      </div>
+        </div>
+      )}
+
+      <FeedbackSheet
+        result={state && state.result}
+        expected={state && state.expected}
+        hint={state && state.hint}
+        explanation={state && state.result !== RESULT.CORRECT ? (lang !== 'de' && item.explanationEn ? item.explanationEn : item.explanationDe) : null}
+        otherExplanation={state && state.result !== RESULT.CORRECT ? (lang !== 'de' && item.explanationEn ? item.explanationDe : item.explanationEn) : null}
+        onExplain={state && state.result !== RESULT.CORRECT ? () => setExplain(true) : null}
+        onContinue={onNext}
+      />
     </div>
   );
 }

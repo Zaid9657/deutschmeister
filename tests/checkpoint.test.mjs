@@ -1889,3 +1889,37 @@ test('the hand-set case overrides in the pool are exactly the documented ones', 
   assert.deepEqual(overrides.sort(), [...POLITE_OVERRIDES].sort(),
     'an override is a decision someone has to defend in writing — add it to POLITE_OVERRIDES with a reason or drop the flag');
 });
+
+// ── Landeskunde on the checkpoint result screen ────────────────────────────
+//
+// CheckpointPage.jsx mounts one Landeskunde note (src/data/curricula/a11.meta.js)
+// after the score, keyed by the checkpoint's own `nr` (one chapter per
+// checkpoint) and gated to A1.1 so a1.2's checkpoint page (no Landeskunde data
+// yet) never tries to render a missing entry. This sits beside, and respects,
+// the sieze pin above: the page imports LANDESKUNDE and LandeskundeCard rather
+// than writing any German literal of its own.
+
+test('CheckpointPage mounts LandeskundeCard after the score, gated to a1.1 and keyed by checkpoint.nr', () => {
+  const src = readFileSync(new URL('../src/pages/lesson/CheckpointPage.jsx', import.meta.url), 'utf8');
+  assert.match(src, /import LandeskundeCard from ['"]\.\.\/\.\.\/components\/course\/LandeskundeCard\.jsx['"]/);
+  assert.match(src, /import \{ LANDESKUNDE \} from ['"]\.\.\/\.\.\/data\/curricula\/a11\.meta\.js['"]/);
+  assert.match(src, /curriculum\.level === 'a1\.1' && LANDESKUNDE\[checkpoint\.nr\]/, 'must gate to a1.1 and key by checkpoint.nr');
+  assert.match(src, /<LandeskundeCard note=\{LANDESKUNDE\[checkpoint\.nr\]\} \/>/);
+  // "After the score": the mount must come after the result percentage/count
+  // paragraph and before the remediation section.
+  const scoreIdx = src.indexOf("t('checkpoint.correctOf'");
+  const landeskundeIdx = src.indexOf('<LandeskundeCard');
+  const remediationIdx = src.indexOf("t('checkpoint.practiceFirst'");
+  assert.ok(scoreIdx > -1 && landeskundeIdx > scoreIdx, 'LandeskundeCard must be mounted after the score');
+  assert.ok(remediationIdx === -1 || landeskundeIdx < remediationIdx, 'LandeskundeCard must come before the remediation section');
+});
+
+test('LandeskundeCard is a flat Card (no raised/interactive) and reads its language from useLessonLang', () => {
+  const src = readFileSync(new URL('../src/components/course/LandeskundeCard.jsx', import.meta.url), 'utf8');
+  assert.match(src, /useLessonLang/, 'must follow the chrome language toggle');
+  assert.doesNotMatch(src, /<Card[^>]*\braised\b/, 'must stay the flat, reference-material Card variant');
+  assert.doesNotMatch(src, /<Card[^>]*\binteractive\b/, 'a Landeskunde note is not clickable');
+  assert.match(src, /note\.titleDe|note\.titleEn/, 'must render the note title');
+  assert.match(src, /note\.bodyDe|note\.bodyEn/, 'must render the note body');
+  assert.match(src, /note\.source/, 'must render the source line');
+});

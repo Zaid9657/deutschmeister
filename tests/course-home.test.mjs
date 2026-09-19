@@ -171,3 +171,58 @@ test('LevelTestResults links the A1.1 course: Lektion 1 for an A1.1 result, unlo
   assert.doesNotMatch(src, /\/course\/a1\.1\//, 'SPA course routes carry no trailing slash');
   assert.doesNotMatch(src, /you will pass|guaranteed to/i, 'no pass promise');
 });
+
+// ---------------------------------------------------------------------------
+// 5. Wave 2: LessonRing, MilestoneCard, FloatingIntroButton hidden
+// ---------------------------------------------------------------------------
+
+test('the course home wraps every path node in a LessonRing keyed on the same state', () => {
+  const src = read(HOME);
+  assert.match(src, /import LessonRing from '\.\.\/components\/course\/LessonRing\.jsx'/);
+  assert.match(src, /import MilestoneCard from '\.\.\/components\/course\/MilestoneCard\.jsx'/);
+  assert.match(
+    src,
+    /<LessonRing state=\{state\}[^>]*>\s*<Node/,
+    'LessonRing must wrap Node and read the same `state` the label/icon logic already computes',
+  );
+  assert.match(src, /<MilestoneCard streak=\{streak\}\s*\/>/, 'MilestoneCard is mounted with the forgiving streak');
+});
+
+test('LessonRing is a two-state ring (done vs not) because per-node status is not available cheaply', () => {
+  const src = read('src/components/course/LessonRing.jsx');
+  assert.match(src, /const done = state === 'done';/);
+  assert.match(src, /strokeDashoffset=\{done \? 0 : c\}/);
+  assert.match(src, /getProgramProgress/i, 'the file must explain why it only has done/not-done, not a partial ring');
+  assert.match(src, /prefers-reduced-motion|motion-reduce:/, 'reduced motion must be respected somewhere in the file');
+});
+
+test('FloatingIntroButton is hidden on the course home, not just the player', () => {
+  const src = read('src/App.jsx');
+  assert.match(
+    src,
+    /\{!focused && chrome !== 'course' && <OutsideAdmin><FloatingIntroButton \/><\/OutsideAdmin>\}/,
+    'the course chrome must be excluded alongside the focused/player chrome',
+  );
+});
+
+test('RecapStage mounts WordsLearnedCards from the recap stage\'s own wortfeld', () => {
+  const src = read('src/components/lesson/RecapStage.jsx');
+  assert.match(src, /import WordsLearnedCards from '\.\/WordsLearnedCards\.jsx'/);
+  assert.match(src, /stage\.wortfeld && stage\.wortfeld\.length > 0/);
+  assert.match(src, /<WordsLearnedCards words=\{stage\.wortfeld\} \/>/);
+  // SaveProgressCard for signed-out learners must still be there (P4 requirement kept).
+  assert.match(src, /!user && level \? <SaveProgressCard level=\{level\} \/> : null/);
+});
+
+test('buildLesson attaches the Lektion\'s own wortfeld to the recap stage', () => {
+  const src = read('src/lib/lesson/buildLesson.js');
+  assert.match(src, /kind: 'recap'/);
+  assert.match(src, /wortfeld: lektion\.wortfeld \|\| \[\],/);
+});
+
+test('WordsLearnedCards flips per card via a real control (button + aria-pressed), never colour alone', () => {
+  const src = read('src/components/lesson/WordsLearnedCards.jsx');
+  assert.match(src, /type="button"/, 'the flip control must be a real button, keyboard-reachable by default');
+  assert.match(src, /aria-pressed=\{flipped\}/);
+  assert.match(src, /aria-label=\{/, 'flip state must be announced in text, not colour alone');
+});

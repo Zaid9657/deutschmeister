@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Play } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
-import { ItemFeedback } from './PracticeItem.jsx';
+import FeedbackSheet from './FeedbackSheet.jsx';
 import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../../lib/lesson/check.js';
 import { audioFor, playLine, speechAvailable } from '../../lib/lesson/speech.js';
 import { AudioSourceBadge } from './DialogStage.jsx';
@@ -52,7 +52,7 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
   };
 
   return (
-    <div>
+    <div className={state ? 'pb-36 sm:pb-0' : ''}>
       <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">
         {t('stage.dictation.eyebrow', lang, { n: index + 1, total })}
       </p>
@@ -91,16 +91,20 @@ export default function DictationItem({ line, lektionId, index, total, onResult,
           className="mt-2 w-full rounded-clay border border-rule bg-white px-4 py-3 text-[1.0625rem] text-ink outline-none focus:border-siegel disabled:bg-paper-sunk"
         />
 
-        <ItemFeedback result={state && state.result} expected={state && state.expected} explanation={state ? line.en : null} />
       </Card>
 
-      <div className="mt-6 flex justify-end">
-        {state ? (
-          <Button onClick={onNext} size="lg" className="w-full sm:w-auto">{t('action.next', lang)}</Button>
-        ) : (
+      {!state && (
+        <div className="mt-6 flex justify-end">
           <Button onClick={submit} size="lg" disabled={!value.trim()} className="w-full sm:w-auto">{t('action.check', lang)}</Button>
-        )}
-      </div>
+        </div>
+      )}
+
+      <FeedbackSheet
+        result={state && state.result}
+        expected={state && state.expected}
+        explanation={state ? line.en : null}
+        onContinue={onNext}
+      />
     </div>
   );
 }

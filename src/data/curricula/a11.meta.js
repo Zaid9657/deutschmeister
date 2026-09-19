@@ -364,4 +364,378 @@ export const A11_META = {
   howItWorksEn,
 };
 
+// ---------------------------------------------------------------------------
+// Wortfeld icons — one lucide-react icon name per A1.1 Wortfeld `word`
+// ---------------------------------------------------------------------------
+
+/**
+ * Every `word` in every Lektion's `wortfeld[]` (see a11.js), mapped to a
+ * `lucide-react` icon component name for WortfeldStage's picture cards.
+ * Concrete nouns get a specific icon (Telefon → Phone, Uhr → Clock);
+ * abstract words (greetings, verbs, questions, numbers, times) fall back to
+ * a small set of category icons (Hand, MoveRight/Play, HelpCircle, Hash,
+ * Clock). `tests/course-meta.test.mjs` pins full coverage — every Wortfeld
+ * word of every A1.1 Lektion has an entry — and that every name here
+ * actually resolves in `lucide-react` (imported as `import * as icons`).
+ */
+export const WORTFELD_ICONS = {
+  Hallo: 'Hand',
+  'Guten Morgen': 'Sunrise',
+  'Guten Tag': 'Sun',
+  'Guten Abend': 'Sunset',
+  'Gute Nacht': 'Moon',
+  Tschüss: 'Hand',
+  'Auf Wiedersehen': 'Hand',
+  'Bis morgen': 'Hand',
+  Danke: 'ThumbsUp',
+  Bitte: 'Hand',
+  Entschuldigung: 'Hand',
+  'Freut mich': 'Smile',
+  Willkommen: 'Hand',
+  'Wie geht es dir?': 'HelpCircle',
+  'Wie geht es Ihnen?': 'HelpCircle',
+  'Mir geht es gut': 'Smile',
+  Gruß: 'Hand',
+  heißen: 'Contact',
+  buchstabieren: 'Type',
+  Buchstabe: 'Type',
+  Vorname: 'Contact',
+  Nachname: 'Contact',
+  Beruf: 'Briefcase',
+  Adresse: 'MapPin',
+  Telefonnummer: 'Phone',
+  Formular: 'FileText',
+  ausfüllen: 'FileSignature',
+  Wohnort: 'Home',
+  ledig: 'User',
+  verheiratet: 'Heart',
+  Student: 'GraduationCap',
+  Studentin: 'GraduationCap',
+  Lehrer: 'School',
+  Lehrerin: 'School',
+  'Zahlen 0–10': 'Hash',
+  wohnen: 'Home',
+  Geburtsdatum: 'CalendarDays',
+  Staatsangehörigkeit: 'Flag',
+  Marokkanerin: 'Flag',
+  marokkanisch: 'Flag',
+  'kommen aus': 'MapPin',
+  geboren: 'Baby',
+  Familienstand: 'Heart',
+  Amt: 'Building2',
+  Post: 'Mailbox',
+  Familie: 'Users',
+  Eltern: 'Users',
+  Vater: 'User',
+  Mutter: 'User',
+  Bruder: 'User',
+  Schwester: 'User',
+  Geschwister: 'Users',
+  Sohn: 'User',
+  Tochter: 'User',
+  Kind: 'Baby',
+  Mann: 'User',
+  Frau: 'User',
+  Baby: 'Baby',
+  Einzelkind: 'User',
+  jung: 'Sparkle',
+  alt: 'Hourglass',
+  zusammen: 'Users',
+  Sprache: 'Languages',
+  Deutsch: 'Languages',
+  Englisch: 'Languages',
+  Arabisch: 'Languages',
+  Marokko: 'Globe',
+  sprechen: 'MessageCircle',
+  Tisch: 'Table2',
+  Stuhl: 'Armchair',
+  Lampe: 'Lamp',
+  Uhr: 'Clock',
+  Tasche: 'ShoppingBag',
+  Rucksack: 'Backpack',
+  'Zahlen 11–100': 'Hash',
+  'wie viel': 'HelpCircle',
+  'wie viele': 'HelpCircle',
+  Flohmarkt: 'Store',
+  verkaufen: 'Tag',
+  Regal: 'LayoutGrid',
+  Euro: 'Euro',
+  Preis: 'Tag',
+  kosten: 'Euro',
+  kaufen: 'ShoppingCart',
+  teuer: 'Euro',
+  machen: 'MoveRight',
+  Buch: 'Book',
+  Heft: 'BookOpen',
+  Stift: 'PenLine',
+  Bleistift: 'Pencil',
+  Kugelschreiber: 'PenLine',
+  Lineal: 'Ruler',
+  Schere: 'Scissors',
+  Papier: 'Newspaper',
+  Tafel: 'AppWindow',
+  Tür: 'DoorOpen',
+  Fenster: 'AppWindow',
+  Wörterbuch: 'BookMarked',
+  Zimmer: 'DoorClosed',
+  Wohnung: 'Home',
+  Schlüssel: 'Key',
+  Bild: 'Image',
+  Farbe: 'Palette',
+  rot: 'Palette',
+  blau: 'Palette',
+  grün: 'Palette',
+  gelb: 'Palette',
+  schwarz: 'Palette',
+  weiß: 'Palette',
+  braun: 'Palette',
+  Büro: 'Building',
+  Firma: 'Building2',
+  Chef: 'Briefcase',
+  Chefin: 'Briefcase',
+  Kollege: 'Users',
+  Kollegin: 'Users',
+  Arbeit: 'Briefcase',
+  Computer: 'Computer',
+  Handynummer: 'Smartphone',
+  'E-Mail-Adresse': 'AtSign',
+  Ingenieur: 'Briefcase',
+  Ingenieurin: 'Briefcase',
+  Verkäufer: 'Tag',
+  Verkäuferin: 'Tag',
+  Pause: 'Coffee',
+  Nummer: 'Hash',
+  brauchen: 'MoveRight',
+  Handy: 'Smartphone',
+  Telefon: 'Phone',
+  gern: 'Heart',
+  immer: 'Clock',
+  vielleicht: 'HelpCircle',
+  lesen: 'Book',
+  schwimmen: 'Waves',
+  kochen: 'ChefHat',
+  tanzen: 'Music2',
+  Fußball: 'Goal',
+  Kino: 'Film',
+  gehen: 'MoveRight',
+  gut: 'ThumbsUp',
+  Wochenende: 'CalendarDays',
+  Freund: 'User',
+  Freundin: 'User',
+  frei: 'CalendarDays',
+  'jede Woche': 'CalendarDays',
+  Woche: 'CalendarDays',
+  Hobby: 'Sparkle',
+  Musik: 'Music2',
+  Sport: 'Goal',
+  spielen: 'Play',
+  hören: 'Headphones',
+  arbeiten: 'Briefcase',
+  Uhrzeit: 'Clock',
+  Zeit: 'Clock',
+  Termin: 'CalendarClock',
+  pünktlich: 'AlarmClock',
+  'zu spät': 'AlarmClockOff',
+  Verspätung: 'AlarmClockOff',
+  halb: 'Clock',
+  'Viertel nach': 'Clock',
+  'Viertel vor': 'Clock',
+  Wecker: 'AlarmClock',
+  aufstehen: 'Sunrise',
+  morgens: 'Sunrise',
+  nachmittags: 'Sun',
+  abends: 'Sunset',
+  Abend: 'Sunset',
+  Montag: 'CalendarDays',
+  Dienstag: 'CalendarDays',
+  Mittwoch: 'CalendarDays',
+  Donnerstag: 'CalendarDays',
+  Freitag: 'CalendarDays',
+  Samstag: 'CalendarDays',
+  Sonntag: 'CalendarDays',
+  heute: 'CalendarDays',
+  krank: 'Stethoscope',
+  Arzt: 'Stethoscope',
+  Café: 'Coffee',
+  Bier: 'Beer',
+  Kuchen: 'CakeSlice',
+  Suppe: 'Soup',
+  Salat: 'Salad',
+  Glas: 'GlassWater',
+  Kaffee: 'Coffee',
+  Mineralwasser: 'GlassWater',
+  Orangensaft: 'CupSoda',
+  Tasse: 'CupSoda',
+  Tee: 'CupSoda',
+  Wasser: 'GlassWater',
+  Wein: 'Wine',
+  Hunger: 'UtensilsCrossed',
+  Durst: 'GlassWater',
+  Kellner: 'UtensilsCrossed',
+  Kellnerin: 'UtensilsCrossed',
+  essen: 'Utensils',
+  trinken: 'GlassWater',
+  Brot: 'Croissant',
+  Frühstück: 'Croissant',
+  möchten: 'Heart',
+  sofort: 'Zap',
+  Fahrer: 'User',
+  Fahrerin: 'User',
+  Deutschland: 'Flag',
+  Österreich: 'Flag',
+  Schweiz: 'Flag',
+  Bahnhof: 'TrainFront',
+  Abfahrt: 'TrainFront',
+  Ankunft: 'TrainFront',
+  Gleis: 'TrainFront',
+  Land: 'Globe',
+  morgen: 'CalendarDays',
+  umsteigen: 'ArrowLeftRight',
+  'nächste Woche': 'CalendarDays',
+  leider: 'AlertCircle',
+  Zug: 'TrainFront',
+  Bus: 'Bus',
+  Auto: 'Car',
+  Fahrkarte: 'Ticket',
+  fahren: 'Car',
+  weit: 'MapPin',
+  Durchsage: 'Radio',
+  gestern: 'CalendarDays',
+  'letzte Woche': 'CalendarDays',
+  Tag: 'CalendarDays',
+  Wochentag: 'CalendarDays',
+  müde: 'Moon',
+  schon: 'Clock',
+  'noch nicht': 'Clock',
+  'jeden Tag': 'CalendarDays',
+  frühstücken: 'Croissant',
+  duschen: 'ShowerHead',
+  schlafen: 'BedDouble',
+  'nach Hause': 'Home',
+  abholen: 'MoveRight',
+  mitbringen: 'MoveRight',
+  einkaufen: 'ShoppingCart',
+  anrufen: 'PhoneCall',
+  mitkommen: 'MoveRight',
+  lernen: 'GraduationCap',
+  Geburtstag: 'Cake',
+  Datum: 'CalendarDays',
+  Alter: 'Hash',
+  Mama: 'User',
+  Papa: 'User',
+  Monat: 'CalendarDays',
+  'im Mai': 'CalendarDays',
+  Gast: 'Users',
+  'Gäste einladen': 'Send',
+  Karte: 'Send',
+  schön: 'Sparkle',
+  bestimmt: 'ThumbsUp',
+  Zuhause: 'Home',
+  lieben: 'Heart',
+  grüßen: 'Hand',
+  'Bis bald': 'Hand',
+  'Bis später': 'Hand',
+  'Schönen Tag noch': 'Hand',
+  "Mach's gut": 'Hand',
+  Fest: 'PartyPopper',
+  Party: 'PartyPopper',
+  feiern: 'PartyPopper',
+  Geschenk: 'Gift',
+  einladen: 'Send',
+};
+
+/** Fallback by rough category, for a word this table has not caught up with yet. */
+export const WORTFELD_ICON_FALLBACK = 'Sparkle';
+
+// ---------------------------------------------------------------------------
+// Landeskunde — one short cultural note per chapter, keyed by chapter nr
+// ---------------------------------------------------------------------------
+
+/**
+ * Four notes, `LANDESKUNDE[checkpoint.nr]` — each chapter's checkpoint closes
+ * a chapter, and `chapters[].nr` and `checkpoint.nr` are the same numbers
+ * (one checkpoint per chapter), so the checkpoint result screen can key
+ * straight off `checkpoint.nr`. Facts only: no stereotypes, no exam-fee
+ * figures, no outcome promises (the a11.js header's rule extends here). Each
+ * `source` is a real, checkable URL, or the literal string "allgemein
+ * bekannt" for a norm with no single citable page. `bodyEn`/`bodyDe` stay at
+ * or under 90 words; `bodyDe` speaks Sie, like the rest of the course.
+ */
+export const LANDESKUNDE = {
+  1: {
+    titleDe: 'Begrüßung: Sie oder du?',
+    titleEn: 'Greeting people: Sie or du?',
+    bodyEn:
+      'German has two forms of "you": the formal "Sie" and the informal "du". Adults who ' +
+      'do not know each other use "Sie" by default — with officials, shop staff, neighbours, ' +
+      'colleagues you have just met. "Du" is for family, friends, children, and people who have ' +
+      'explicitly offered it ("Wir können du sagen"). Switching from Sie to du is usually the older ' +
+      'or higher-ranked person’s call, though this is loosening among younger people. When unsure, ' +
+      'Sie is the safe default — nobody is offended by too much respect.',
+    bodyDe:
+      'Im Deutschen gibt es zwei Formen von „Sie“: die formelle „Sie“-Form und die informelle ' +
+      '„du“-Form. Erwachsene, die sich nicht kennen, verwenden meist „Sie“ — bei Ämtern, im ' +
+      'Geschäft, mit Nachbarn oder neuen Kolleginnen und Kollegen. „Du“ ist für Familie, Freunde, ' +
+      'Kinder und für Menschen, die es ausdrücklich anbieten („Wir können du sagen“). Wer den ' +
+      'Wechsel anbietet, ist meist die ältere oder ranghöhere Person, auch wenn das bei jüngeren ' +
+      'Leuten und in manchen Firmen lockerer gehandhabt wird. Im Zweifel ist „Sie“ die sichere Wahl.',
+    source: 'allgemein bekannt',
+  },
+  2: {
+    titleDe: 'Anmelden: das Bürgerbüro und die Meldebescheinigung',
+    titleEn: 'Registering: the Bürgerbüro and the Meldebescheinigung',
+    bodyEn:
+      'Anyone who moves into a home in Germany, including newcomers, must register the address ' +
+      '("sich anmelden") at the local citizens’ office (Bürgerbüro / Einwohnermeldeamt) within ' +
+      'two weeks of moving in — German law (Bundesmeldegesetz §17) sets the deadline. The office ' +
+      'issues a Meldebescheinigung, a short confirmation of the registered address, which banks, ' +
+      'landlords and other offices often ask to see. Bring your passport, the rental contract, and ' +
+      'a landlord’s move-in confirmation (Wohnungsgeberbestätigung); appointments are often needed.',
+    bodyDe:
+      'Wer in Deutschland eine Wohnung bezieht — auch neu Zugezogene —, muss die Adresse innerhalb ' +
+      'von zwei Wochen nach dem Einzug beim Bürgerbüro (Einwohnermeldeamt) anmelden; das schreibt ' +
+      'das Bundesmeldegesetz (§17) vor. Das Amt stellt dafür eine Meldebescheinigung aus, eine kurze ' +
+      'Bestätigung der gemeldeten Adresse, die Banken, Vermieter und andere Ämter oft sehen möchten. ' +
+      'Bringen Sie Ihren Pass, den Mietvertrag und die Wohnungsgeberbestätigung mit; oft ist vorher ' +
+      'ein Termin nötig.',
+    source: 'https://www.gesetze-im-internet.de/bmg/__17.html',
+  },
+  3: {
+    titleDe: 'Flohmarkt: gebraucht kaufen, bar bezahlen',
+    titleEn: 'Flohmarkt culture: buying secondhand, paying cash',
+    bodyEn:
+      'Flea markets (Flohmärkte) are a common way to buy and sell secondhand furniture, dishes, ' +
+      'clothes and books across Germany, often held on weekends in a square or hall. Prices are ' +
+      'usually marked but negotiable — asking "Geht der Preis noch runter?" ("Can you do it for ' +
+      'less?") is normal, not rude. Most sellers are private individuals without a card reader, so ' +
+      'cash (Bargeld), ideally in small notes and coins, is the expected way to pay; bring your own bag.',
+    bodyDe:
+      'Flohmärkte sind in Deutschland eine übliche Möglichkeit, gebrauchte Möbel, Geschirr, Kleidung ' +
+      'und Bücher zu kaufen oder zu verkaufen, oft am Wochenende auf einem Platz oder in einer Halle. ' +
+      'Preise sind meist ausgezeichnet, aber verhandelbar — die Frage „Geht der Preis noch runter?“ ' +
+      'ist üblich, nicht unhöflich. Die meisten Verkaufenden sind Privatpersonen ohne Kartenlesegerät, ' +
+      'deshalb zahlt man meist bar, am besten mit kleinen Scheinen und Münzen. Bringen Sie eine eigene Tasche mit.',
+    source: 'allgemein bekannt',
+  },
+  4: {
+    titleDe: 'Pünktlichkeit und die Bahn',
+    titleEn: 'Punctuality and the train',
+    bodyEn:
+      'Arriving on time for an appointment (Termin) is expected in Germany; if you will be even a ' +
+      'few minutes late, a short call or message ahead is considered polite. Deutsche Bahn, the ' +
+      'national rail operator, counts a long-distance train as "pünktlich" (on time) only if it ' +
+      'arrives less than six minutes after the scheduled time — its own definition, published with ' +
+      'its punctuality reporting. A delay is called "Verspätung"; announcements at the Bahnhof name ' +
+      'the platform (Gleis) and any delay together.',
+    bodyDe:
+      'Pünktlichkeit bei einem Termin wird in Deutschland erwartet; wer auch nur ein paar Minuten ' +
+      'später kommt, sollte kurz vorher anrufen oder eine Nachricht schreiben. Die Deutsche Bahn, ' +
+      'der staatliche Bahnbetreiber, zählt einen Fernverkehrszug nur dann als „pünktlich“, wenn er ' +
+      'weniger als sechs Minuten nach der planmäßigen Zeit ankommt — das ist ihre eigene Definition, ' +
+      'veröffentlicht in ihrer Pünktlichkeitsstatistik. Eine Verspätung heißt „Verspätung“; ' +
+      'Durchsagen am Bahnhof nennen Gleis und eventuelle Verspätung zusammen.',
+    source: 'https://www.deutschebahn.com/de/presse/konzernthemen/puenktlichkeit',
+  },
+};
+
 export default A11_META;

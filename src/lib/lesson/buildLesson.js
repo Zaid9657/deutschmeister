@@ -1019,6 +1019,9 @@ export function buildLesson({ curriculum, lektion, pool, dueCards = [], attempt 
   if (lektion.notice) {
     stages.push({ nr: 3, key: 'notice', kind: 'notice', title: lektion.notice.title || 'Grammatik', notice: lektion.notice });
   }
+  if (lektion.phonetik && lektion.phonetik.items && lektion.phonetik.items.length) {
+    stages.push({ nr: 3, key: 'phonetik', kind: 'phonetik', title: 'Aussprache', phonetik: lektion.phonetik });
+  }
 
   // The plan owns the draw (cross-Lektion dedup); a Lektion the curriculum does
   // not list — the dev preview screen — falls back to a standalone draw.
@@ -1062,6 +1065,11 @@ export function buildLesson({ curriculum, lektion, pool, dueCards = [], attempt 
     kind: 'recap',
     title: 'Geschafft',
     wordCount: (lektion.wortfeld || []).length,
+    // The Lektion's own Wortfeld rows, for the recap's flip-card review
+    // (WordsLearnedCards). Same array LessonPlayerPage builds for the
+    // wortfeld stage's `stage.words` — a plain, DB-free shape (de/word/
+    // article/plural/en), which is all the flip card needs.
+    wortfeld: lektion.wortfeld || [],
     grammar: (lektion.notice && lektion.notice.title) || lektion.primarySlug || '',
   });
 

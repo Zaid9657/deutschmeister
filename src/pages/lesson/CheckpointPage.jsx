@@ -30,6 +30,8 @@ import Button from '../../components/ui/Button.jsx';
 import Card from '../../components/ui/Card.jsx';
 import Chip from '../../components/ui/Chip.jsx';
 import LangToggle from '../../components/lesson/LangToggle.jsx';
+import LandeskundeCard from '../../components/course/LandeskundeCard.jsx';
+import { LANDESKUNDE } from '../../data/curricula/a11.meta.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
 // The checkpoint screen (standard §3): 20 items, one per screen, a thin
@@ -449,6 +451,12 @@ export default function CheckpointPage() {
                 <Button variant="secondary" to={`/course/${curriculum.level}`}>{t('action.toCoursePlan', lang)}</Button>
               </div>
             </Card>
+
+            {curriculum.level === 'a1.1' && LANDESKUNDE[checkpoint.nr] && (
+              <div className="mt-6">
+                <LandeskundeCard note={LANDESKUNDE[checkpoint.nr]} />
+              </div>
+            )}
 
             {!result.passed && remediation.length > 0 && (
               <section className="mt-8">

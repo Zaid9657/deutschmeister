@@ -13,6 +13,8 @@ import { hasLocalProgress, localDoneIds, mergeLocalProgress } from '../lib/cours
 import ExamDatePlan from '../components/course/ExamDatePlan.jsx';
 import CourseWelcome from '../components/course/CourseWelcome.jsx';
 import FirstRunTour from '../components/course/FirstRunTour.jsx';
+import LessonRing from '../components/course/LessonRing.jsx';
+import MilestoneCard from '../components/course/MilestoneCard.jsx';
 import Button from '../components/ui/Button.jsx';
 import Chip from '../components/ui/Chip.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
@@ -175,6 +177,8 @@ export default function CurriculumHomePage({ curriculum }) {
               <Stat icon={Trophy} label="Done" value={`${doneCount}/${path.length}`} tone="gold" />
             </Reveal>
 
+            {loaded && <MilestoneCard streak={streak} />}
+
             <Reveal delay={180} className="mt-4">
               <div className="h-3 overflow-hidden rounded-pill bg-siegel-wash" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
                 <div className="h-full rounded-pill bg-siegel transition-all duration-700 motion-reduce:transition-none" style={{ width: `${pct}%` }} />
@@ -272,7 +276,9 @@ export default function CurriculumHomePage({ curriculum }) {
                       {isCurrent && (
                         <span className="mb-1 animate-bounce rounded-pill bg-white px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel shadow-raise ring-1 ring-siegel motion-reduce:animate-none">Start</span>
                       )}
-                      <Node to={unlocked || isDone ? hrefFor(level, node) : null} state={state} Icon={Icon} label={node.title} big={node.kind !== 'lektion'} />
+                      <LessonRing state={state} size={node.kind !== 'lektion' ? 112 : 96}>
+                        <Node to={unlocked || isDone ? hrefFor(level, node) : null} state={state} Icon={Icon} label={node.title} big={node.kind !== 'lektion'} />
+                      </LessonRing>
                       <p className={`mt-2 max-w-[14rem] text-center text-[0.8125rem] font-bold leading-snug ${isDone || unlocked ? 'text-ink' : 'text-graphite'}`}>{node.title}</p>
                       <p className="font-data text-[0.6875rem] text-graphite">
                         {KIND_LABEL[node.kind]}{node.minutes ? ` · ${node.minutes} min` : ''}{lektion?.situation ? ` · ${lektion.situation}` : ''}
