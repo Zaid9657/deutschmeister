@@ -315,7 +315,7 @@ test('WortfeldStage renders an icon circle, a flip toggle and a "show all Englis
   assert.match(src, /aria-pressed=\{flipped\}/, 'the flip toggle must carry aria-pressed');
   assert.match(src, /wortfeld\.showAllEnglish/, 'must reference the show-all-English string key');
   assert.match(src, /wortfeld\.en/, 'a flipped card must render the text "EN" tag, not colour alone');
-  assert.match(src, /AudioSourceBadge/, 'must keep the AudioSourceBadge behaviour');
+  assert.match(src, /WortfeldAudioBadge/, 'must keep an audio-source badge (one per stage since W3.4)');
 });
 
 test('the wortfeld string keys (EN tag, show/hide all English) exist in both chrome languages with no empty value', () => {
