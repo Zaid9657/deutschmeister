@@ -224,6 +224,7 @@ export const CURRICULUM_A11 = {
       notice: {
         title: 'Das Alphabet: buchstabieren',
         bodyDe: 'Beim Buchstabieren sagt man jeden Buchstaben einzeln. Vorsicht bei drei Paaren: **E** [eː] und **I** [iː], **G** [geː] und **J** (Jot), **V** (Vau) und **W** [veː]. **Y** heißt Ypsilon, **Z** heißt Zett, **ß** heißt Eszett oder scharfes S. Im Zweifel fragt man: **Wie buchstabiert man das?**',
+        bodyEn: 'When you spell a word in German, you say each letter on its own. Three pairs trip up English speakers: **E** is said like "ay", **I** like "ee"; **G** is said "gay", **J** is called **Jot**; **V** is called **Vau**, **W** sounds like an English "v". **Y** is **Ypsilon**, **Z** is **Zett**, **ß** is **Eszett** (also "scharfes S"). Not sure how a word is written? Ask: **Wie buchstabiert man das?** (How do you spell that?)',
         examples: ['Buchstabieren Sie bitte Chakiri.', 'Danke. Und wie buchstabiert man Ana?'],
         ruleSlug: 'alphabet-pronunciation',
       },
@@ -234,6 +235,7 @@ export const CURRICULUM_A11 = {
         open: {
           teil: 'Sprechen Teil 1',
           promptDe: 'Stellen Sie sich vor: Name und Vorname. Buchstabieren Sie Ihren Namen.',
+          promptEn: 'Introduce yourself: first name and surname. Then spell your name.',
           hintWords: ['heißen', 'buchstabieren', 'Guten Tag'],
           // Sie — Sprechen Teil 1 vor Prüfenden und fremden Mitkandidaten.
           anrede: 'Sie',
@@ -247,6 +249,7 @@ export const CURRICULUM_A11 = {
         // copies that person's data into the form. The six course Formulare had no source text, so
         // evaluate-writing.mjs had no correctness criterion. The bank carries the text (review #2, L1).
         taskDe: 'Ana Chakiri kommt aus Marokko. Sie spricht Arabisch. Heute Abend kommt sie im Hostel an. Füllen Sie das Anmeldeformular im Hostel für Ana aus.',
+        taskEn: 'Ana Chakiri comes from Morocco. She speaks Arabic. She arrives at the hostel this evening. Fill in the hostel registration form for Ana (surname, first name, country, language, signature).',
         fields: ['Familienname', 'Vorname', 'Land', 'Sprache', 'Unterschrift'],
         minWords: 5,
         maxWords: 40,
@@ -437,6 +440,7 @@ export const CURRICULUM_A11 = {
         // as a rule: RULE 6c fails any notice body that carries a `Feld: Ich bin … oder …` clause.
         // 54 words, read aloud.
         bodyDe: '**sein** ist unregelmäßig: ich **bin**, du **bist**, er/sie/es **ist**, wir **sind**, ihr **seid**, sie/Sie **sind**. Der Beruf ohne Artikel: Ich bin Lehrer. Nicht: Ich bin ein Lehrer. Staatsangehörigkeit im Satz als Nomen: Ich komme aus Marokko und bin Marokkanerin. Ali ist Marokkaner. Im Formular als Adjektiv: Staatsangehörigkeit: marokkanisch. Geburtsdatum: Ich bin am 3.5.1998 geboren.',
+        bodyEn: '**sein** (to be) follows no pattern, so learn its forms as a set: ich **bin**, du **bist**, er/sie/es **ist**, wir **sind**, ihr **seid**, sie/Sie **sind**. A job takes no article: **Ich bin Lehrer** – not "Ich bin ein Lehrer". In a sentence, a nationality is a noun: **Ich komme aus Marokko und bin Marokkanerin.** **Ali ist Marokkaner.** On a form it is an adjective: **Staatsangehörigkeit: marokkanisch**. Your date of birth: **Ich bin am 3.5.1998 geboren** (I was born on …).',
         examples: ['Was sind Sie von Beruf?', 'Ich bin Studentin.'],
         ruleSlug: 'verb-sein',
       },
@@ -458,6 +462,7 @@ export const CURRICULUM_A11 = {
           // Exactly three hint words (validator): the origin verb replaces `sein`, which every
           // sentence of the answer carries anyway.
           promptDe: 'Stellen Sie sich vor: Name, Land, Wohnort, Beruf.',
+          promptEn: 'Introduce yourself: name, country, where you live, job.',
           hintWords: ['kommen aus', 'wohnen', 'von Beruf'],
           // Sie — dieselbe Vorstellrunde (Teil 1): das Gegenüber ist fremd.
           anrede: 'Sie',
@@ -473,6 +478,7 @@ export const CURRICULUM_A11 = {
         // Geburtsdatum/Staatsangehörigkeit/Familienstand lived in the Wortfeld and nowhere else
         // (DaF review #3, Wortfeld ↔ Input, L2: 9 of 23).
         taskDe: 'Sie melden sich in der Sprachschule an. Schreiben Sie eine kurze Nachricht mit Ihren Daten. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'You are registering at the language school. Write a short message with your personal details. Open with a greeting and close with a sign-off. Cover three points: your name and your date of birth; your country and your nationality; your marital status – single or married.',
         leitpunkte: ['Ihr Name und Ihr Geburtsdatum', 'Ihr Land und Ihre Staatsangehörigkeit', 'Ihr Familienstand: ledig oder verheiratet'],
         minWords: 25,
         maxWords: 45,
@@ -596,6 +602,7 @@ export const CURRICULUM_A11 = {
       notice: {
         title: 'er, sie, es – die Personalpronomen',
         bodyDe: 'Das Pronomen richtet sich nach dem Nomen: der Bruder → **er**, die Schwester → **sie**, das Kind → **es**. Für mehrere Personen: **wir**, **ihr**, **sie**. **Sie** mit großem S ist die höfliche Form. Bei **sprechen** wechselt der Vokal: er **spricht** — mehr dazu in Lektion 7.',
+        bodyEn: 'A pronoun follows the article of the noun it stands for: **der** Bruder → **er**, **die** Schwester → **sie**, **das** Kind → **es**. For more than one person use **wir** (we), **ihr** (you, several people, informal) and **sie** (they). **Sie** with a capital S is the polite "you" – for one person or several. One verb to watch: **sprechen** changes its vowel – er **spricht**. Lektion 7 explains the pattern.',
         examples: ['Wie alt ist er?', 'Ja, er spricht Englisch und Deutsch.'],
         ruleSlug: 'personal-pronouns',
       },
@@ -606,6 +613,7 @@ export const CURRICULUM_A11 = {
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Familie: Geschwister? Sohn? Tochter?',
+          promptEn: 'Ask and answer questions about family: brothers and sisters? a son? a daughter?',
           hintWords: ['die Geschwister', 'der Sohn', 'die Tochter'],
           // Sie — Teil 2 mit der fremden Mitkandidatin; das du im Dialog ist Lena↔Ana, nicht die Rolle des Lernenden.
           anrede: 'Sie',
@@ -616,6 +624,7 @@ export const CURRICULUM_A11 = {
         kind: 'formular',
         taskKey: 'a11-l03',
         taskDe: 'Ana Chakiri ist ledig. Sie kommt aus Marokko und spricht Arabisch und Deutsch. Sie lernt Deutsch in der Sprachschule. Füllen Sie das Formular für den Sprachkurs aus.',
+        taskEn: 'Ana Chakiri is single. She comes from Morocco and speaks Arabic and German. She is learning German at the language school. Fill in the form for the language course (first name, surname, marital status, languages, country).',
         fields: ['Vorname', 'Familienname', 'Familienstand', 'Sprachen', 'Land'],
         minWords: 5,
         maxWords: 40,
@@ -697,6 +706,7 @@ export const CURRICULUM_A11 = {
       notice: {
         title: 'Jedes Nomen hat ein Genus',
         bodyDe: 'Jedes Nomen hat ein Genus: **der** Tisch, **die** Lampe, **das** Regal. Das Genus ist Teil des Wortes — lernen Sie jedes Nomen mit dem Artikel: nicht Tisch, sondern der Tisch. Im Plural haben alle Nomen **die**. Nach **kaufen** wird **der** zu **den**: Ich kaufe **den** Stuhl. Das ist hier ein fester Ausdruck; die Regel (Akkusativ) kommt in A1.2.',
+        bodyEn: 'Every German noun has a gender, and its article shows it: **der** Tisch (masculine), **die** Lampe (feminine), **das** Regal (neuter). The gender cannot be guessed from the meaning, so learn each noun together with its article: not "Tisch" but **der Tisch**. In the plural, every noun takes **die**. One thing to copy for now: after **kaufen** (to buy), **der** becomes **den** – **Ich kaufe den Stuhl.** The rule behind this (Akkusativ) comes in A1.2.',
         examples: ['Das ist eine Lampe. Sie kostet acht Euro.', 'Der Tisch kostet fünfzehn Euro.'],
         ruleSlug: 'nouns-gender',
       },
@@ -707,6 +717,7 @@ export const CURRICULUM_A11 = {
         open: {
           teil: 'Sprechen Teil 3',
           promptDe: 'Bitten Sie am Stand um einen Preis und reagieren Sie darauf.',
+          promptEn: 'At a market stall, ask for the price of something and react to the answer.',
           hintWords: ['kosten', 'Euro', 'teuer'],
           // Sie — Teil 3 am Marktstand: Kundin zu Verkäufer.
           anrede: 'Sie',
@@ -717,6 +728,7 @@ export const CURRICULUM_A11 = {
         kind: 'mitteilung',
         taskKey: 'a11-l04',
         taskDe: 'Schreiben Sie Ihrer Freundin eine Nachricht über den Flohmarkt. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'Write a message to a friend about the flea market. Open with a greeting and close with a sign-off. Cover three points: what you are buying; what it costs; when you are coming.',
         leitpunkte: ['Was Sie kaufen', 'Was es kostet', 'Wann Sie kommen'],
         minWords: 25,
         maxWords: 45,
@@ -820,6 +832,7 @@ export const CURRICULUM_A11 = {
       notice: {
         title: 'der, die, das – der bestimmte Artikel',
         bodyDe: 'Der bestimmte Artikel zeigt: Wir wissen, welche Sache gemeint ist. **der** (maskulin), **die** (feminin), **das** (neutral), im Plural immer **die**: die Bücher. Antworten beginnen zuerst mit **hier** oder **da**. Sätze wie *auf dem Tisch* (Dativ) folgen in A1.2.',
+        bodyEn: 'The definite article ("the") means both speakers know which thing is meant: **der** with masculine, **die** with feminine, **das** with neuter nouns – and in the plural always **die**: **die Bücher**. When you answer where something is, start with **hier** (here) or **da** (there): **Das Wörterbuch ist hier. Der Stift ist da.** Phrases like *auf dem Tisch* (on the table) change the article again; that pattern (Dativ) is A1.2.',
         examples: ['Das Wörterbuch ist hier. Der Stift ist da.', 'Die Schere ist hier. Das Lineal auch.'],
         ruleSlug: 'definite-articles',
       },
@@ -830,6 +843,7 @@ export const CURRICULUM_A11 = {
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Kursraum: Buch? Tafel? Farbe?',
+          promptEn: 'Ask and answer questions about the classroom: the book? the board? the colour?',
           hintWords: ['der Stift', 'die Tafel', 'blau'],
           // Sie — Teil 2 mit einer fremden Mitkandidatin im Prüfungsraum.
           anrede: 'Sie',
@@ -840,6 +854,7 @@ export const CURRICULUM_A11 = {
         kind: 'formular',
         taskKey: 'a11-l05',
         taskDe: 'Lena Brandt ist im Kurs A1. Ihr Kurs ist in Zimmer 12. Auf dem Tisch sind ein Wörterbuch und ein Heft. Das Heft ist grün. Füllen Sie die Liste für das Kursmaterial aus.',
+        taskEn: 'Lena Brandt is in course A1. Her course is in room 12. On the table there are a dictionary and an exercise book. The exercise book is green. Fill in the list of course materials (name, course, room, material, colour).',
         fields: ['Name', 'Kurs', 'Zimmer', 'Material', 'Farbe'],
         minWords: 5,
         maxWords: 40,
@@ -919,6 +934,7 @@ export const CURRICULUM_A11 = {
       notice: {
         title: 'ein, eine – der unbestimmte Artikel',
         bodyDe: 'Neu oder unbekannt? Dann **ein** (der/das) oder **eine** (die): ein Computer, eine Lampe. Nach Verben wie **brauchen**, **haben**, **kaufen** wird maskulin **ein → einen**: Ich brauche **einen** Computer (Akkusativ — die Regel kommt in A1.2). Verneinung mit **kein**: Wir haben **kein** Handy. Die Uhrzeit **um eins** folgt in Lektion 8.',
+        bodyEn: 'For something new or not yet known, use the indefinite article ("a"): **ein** with der- and das-nouns (**ein** Computer), **eine** with die-nouns (**eine** Lampe). After verbs like **brauchen** (need), **haben** (have) and **kaufen** (buy), the masculine **ein** becomes **einen**: **Ich brauche einen Computer.** The rule behind it (Akkusativ) is A1.2 – copy the form for now. "No / not a" is **kein**: **Wir haben kein Handy.** The time phrase **um eins** (at one) comes in Lektion 8.',
         examples: ['Danke. Ich brauche einen Computer und ein Telefon.', 'Wir haben kein Handy.'],
         ruleSlug: 'indefinite-articles',
       },
@@ -934,6 +950,7 @@ export const CURRICULUM_A11 = {
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Arbeit: Büro? Beruf? Pause?',
+          promptEn: 'Ask and answer questions about work: the office? your job? the break?',
           hintWords: ['der Verkäufer', 'die Ingenieurin', 'die Pause'],
           // Sie — Teil 2 zum Thema Arbeit: das Gegenüber ist Kollegin/Mitkandidatin, keine Freundin.
           anrede: 'Sie',
@@ -944,6 +961,7 @@ export const CURRICULUM_A11 = {
         kind: 'mitteilung',
         taskKey: 'a11-l06',
         taskDe: 'Schreiben Sie Ihrer Chefin eine kurze Nachricht. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'Write a short message to your boss. Open with a greeting and close with a sign-off. Cover three points: what you need; your phone number; when you will be in the office.',
         leitpunkte: ['Was Sie brauchen', 'Ihre Telefonnummer', 'Wann Sie im Büro sind'],
         minWords: 25,
         maxWords: 45,
@@ -1042,6 +1060,7 @@ export const CURRICULUM_A11 = {
       notice: {
         title: 'Präsens: regelmäßige Verben',
         bodyDe: 'Regelmäßige Verben haben feste Endungen am Stamm: ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. **gern** steht nach dem Verb: Ich höre **gern** Musik. Endet der Stamm auf **-t**, kommt ein **e** dazu: du arbeit**e**st, er arbeit**e**t. **Achtung:** einige Verben wechseln den Vokal: sprechen → er **spricht**.',
+        bodyEn: 'A regular verb is a stem plus an ending that shows who is doing it. Take **spielen** (to play): ich spiel**e**, du spiel**st**, er/sie/es spiel**t**, wir spiel**en**, ihr spiel**t**, sie/Sie spiel**en**. To say you like doing something, put **gern** after the verb: **Ich höre gern Musik.** If the stem ends in **-t**, an **e** is slipped in so you can say it: du arbeit**e**st, er arbeit**e**t. A few verbs also change their vowel: sprechen → er **spricht**.',
         examples: ['Ich höre gern Musik. Und du?', 'Spielst du jede Woche Fußball?'],
         ruleSlug: 'present-tense-regular',
       },
@@ -1052,6 +1071,7 @@ export const CURRICULUM_A11 = {
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Freizeit: Hobby? Musik? Wochenende?',
+          promptEn: 'Ask and answer questions about free time: your hobby? music? the weekend?',
           hintWords: ['spielen', 'hören', 'gern'],
           // Sie — Teil 2; auch beim Hobbythema bleibt die Prüfungsanrede Sie.
           anrede: 'Sie',
@@ -1069,6 +1089,7 @@ export const CURRICULUM_A11 = {
         // three lines of this dialogue, so the learner can copy the answer out of the source text —
         // which is what SD1 Schreiben Teil 1 actually tests.
         taskDe: 'Lena Brandt ist neu im Sportkurs. Ihr Hobby ist Schwimmen. Der Kurs ist am Wochenende. Füllen Sie die Anmeldung für einen Sportkurs aus.',
+        taskEn: 'Lena Brandt is new in the sports course. Her hobby is swimming. The course is at the weekend. Fill in the registration form for a sports course (first name, surname, course, hobby, course day).',
         fields: ['Vorname', 'Nachname', 'Kurs', 'Hobby', 'Kurs am'],
         minWords: 5,
         maxWords: 40,
@@ -1156,6 +1177,7 @@ export const CURRICULUM_A11 = {
       notice: {
         title: 'um, am – die Uhrzeit sagen',
         bodyDe: 'Uhrzeit mit **um**: um acht Uhr. Wochentag mit **am**: am Montag. Umgangssprachlich: **Viertel nach** acht, **Viertel vor** neun, **halb** neun (= 8.30!). Offiziell (Bahn, Radio): **acht Uhr dreißig**. Die Frage lautet: **Wie spät ist es?** **Hast du Zeit?** ist eine feste Wendung; haben kommt in Lektion 9.',
+        bodyEn: 'A clock time takes **um**: **um acht Uhr** (at eight). A weekday takes **am**: **am Montag** (on Monday). Everyday speech: **Viertel nach** acht (quarter past eight), **Viertel vor** neun (quarter to nine) – and careful: **halb neun** is half an hour before nine, so 8.30, not 9.30. Timetables and the radio say **acht Uhr dreißig**. To ask the time: **Wie spät ist es?** **Hast du Zeit?** (Do you have time?) is a set phrase for now; haben is Lektion 9.',
         examples: ['Ich stehe um sechs Uhr auf.', 'Der Termin ist am Montag um Viertel vor acht.'],
         ruleSlug: 'time-and-dates',
       },
@@ -1168,6 +1190,7 @@ export const CURRICULUM_A11 = {
         open: {
           teil: 'Sprechen Teil 3',
           promptDe: 'Bitten Sie um einen Termin am Nachmittag und reagieren Sie auf die Antwort.',
+          promptEn: 'Ask for an appointment in the afternoon and react to the answer.',
           hintWords: ['der Termin', 'um', 'Zeit haben'],
           // Sie — Teil 3: um einen Termin bitten heißt, mit einer Praxis oder einem Amt sprechen.
           anrede: 'Sie',
@@ -1178,6 +1201,7 @@ export const CURRICULUM_A11 = {
         kind: 'mitteilung',
         taskKey: 'a11-l08',
         taskDe: 'Schreiben Sie eine Nachricht und verschieben Sie einen Termin. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'Write a message to move an appointment. Open with a greeting and close with a sign-off. Cover three points: why you are writing; the new day and the new time; a question for Lena.',
         leitpunkte: ['Warum Sie schreiben', 'Neuer Tag und neue Uhrzeit', 'Eine Frage an Lena'],
         minWords: 25,
         maxWords: 45,
@@ -1272,6 +1296,7 @@ export const CURRICULUM_A11 = {
       notice: {
         title: 'haben und der Chunk „Ich möchte …“',
         bodyDe: '**haben**: ich **habe**, du **hast**, er/sie/es **hat**, wir **haben**, ihr **habt**, sie/Sie **haben**. Mit haben sagt man Hunger, Durst oder Zeit. **Ich möchte …** steht hier als fester Chunk; die Form gehört zu den Modalverben in A1.2.',
+        bodyEn: '**haben** (to have) is the second verb to learn as a set: ich **habe**, du **hast**, er/sie/es **hat**, wir **haben**, ihr **habt**, sie/Sie **haben**. Where English says "I am hungry", German uses haben: **Ich habe Hunger**, **Ich habe Durst** (I am thirsty) – and **Zeit** (time) works the same way. To order or ask for something politely, use **Ich möchte …** (I would like …) as a fixed phrase; its grammar belongs to the modal verbs in A1.2.',
         examples: ['Haben Sie auch Hunger? Wir haben Suppe, Salat und Kuchen.', 'Ja, ich habe Hunger. Ich möchte Kuchen, bitte.'],
         ruleSlug: 'verb-haben',
       },
@@ -1282,6 +1307,7 @@ export const CURRICULUM_A11 = {
         open: {
           teil: 'Sprechen Teil 3',
           promptDe: 'Bitten Sie im Café um ein Glas Wasser und reagieren Sie auf die Antwort.',
+          promptEn: 'In a café, ask for a glass of water and react to the answer.',
           hintWords: ['möchten', 'bitte', 'das Glas'],
           // Sie — Teil 3 im Café; der Dialog der Lektion siezt durchgehend („Was möchten Sie trinken?“).
           anrede: 'Sie',
@@ -1292,6 +1318,7 @@ export const CURRICULUM_A11 = {
         kind: 'formular',
         taskKey: 'a11-l09',
         taskDe: 'Ana Chakiri ist im Café. Sie reserviert einen Tisch am Montag um 15 Uhr, für zwei Personen. Ihre Telefonnummer ist 0176 22 44 88. Füllen Sie die Reservierungskarte im Café aus.',
+        taskEn: 'Ana Chakiri is in the café. She is reserving a table on Monday at 3 p.m. for two people. Her phone number is 0176 22 44 88. Fill in the reservation card in the café (name, day, time, number of people, phone number).',
         fields: ['Name', 'Tag', 'Uhrzeit', 'Personen', 'Telefonnummer'],
         minWords: 5,
         maxWords: 40,
@@ -1373,6 +1400,7 @@ export const CURRICULUM_A11 = {
       notice: {
         title: 'Ja/Nein-Fragen: das Verb steht vorn',
         bodyDe: 'Bei der Ja/Nein-Frage steht das Verb auf Position 1: Der Zug fährt. → **Fährt** der Zug? Die Antwort ist **ja** oder **nein**. Die Satzmelodie steigt am Ende. **fahren** ist unregelmäßig: du **fährst**, er **fährt**.',
+        bodyEn: 'A yes/no question needs no helper word like the English "do". Just move the verb to the front: **Der Zug fährt.** (The train is leaving.) → **Fährt der Zug?** (Is the train leaving?). The answer is **ja** or **nein**, and your voice goes up at the end of the question. The verb **fahren** (to go by train, bus or car) changes its vowel in two forms: du **fährst**, er **fährt**.',
         examples: ['Entschuldigung, fährt der Zug nach Österreich?', 'Kostet die Fahrkarte zwanzig Euro?'],
         ruleSlug: 'yes-no-questions',
       },
@@ -1383,6 +1411,7 @@ export const CURRICULUM_A11 = {
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Reisen: Zug? Fahrkarte? Wohin?',
+          promptEn: 'Ask and answer questions about travelling: the train? the ticket? where to?',
           hintWords: ['fahren', 'die Fahrkarte', 'der Zug'],
           // Sie — Teil 2 zum Thema Reisen: Schalter bzw. Mitkandidat, nicht Freundeskreis.
           anrede: 'Sie',
@@ -1393,6 +1422,7 @@ export const CURRICULUM_A11 = {
         kind: 'mitteilung',
         taskKey: 'a11-l10',
         taskDe: 'Schreiben Sie Ihrer Kollegin: Sie kommen später. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'Write to a colleague: you will be late. Open with a greeting and close with a sign-off. Cover three points: why you are writing; when you will arrive; what your colleague should do until then.',
         leitpunkte: ['Warum Sie schreiben', 'Wann Sie kommen', 'Was die Kollegin bis dahin machen soll'],
         minWords: 25,
         maxWords: 45,
@@ -1485,6 +1515,7 @@ export const CURRICULUM_A11 = {
       notice: {
         title: 'Trennbare Verben: die Satzklammer',
         bodyDe: 'Trennbare Verben teilen sich: ein|kaufen → Ich **kaufe** am Freitag **ein**. Das Verb steht auf Position 2, die Vorsilbe am Ende. So auch auf|stehen, an|rufen, mit|bringen. **Ich rufe dich an** ist eine feste Wendung. **schlafen** wechselt den Vokal: er **schläft**. **Gemacht** und **gearbeitet** stehen hier als Ganzes — das Muster (Perfekt) kommt in A1.2.',
+        bodyEn: 'Some verbs come in two parts, a prefix and a verb: **ein|kaufen** (to shop). In a sentence they split – the verb stays in second position, the prefix goes to the end: **Ich kaufe am Freitag ein.** Same with **auf|stehen** (get up), **an|rufen** (call), **mit|bringen** (bring along). **Ich rufe dich an** (I will call you) is a set phrase. **schlafen** changes its vowel: er **schläft**. **Gemacht** (did) and **gearbeitet** (worked) are learned whole; the pattern (Perfekt) comes in A1.2.',
         examples: ['Ich stehe um sechs auf. Ich bin müde.', 'Ja, ich kaufe am Freitag ein. Kommst du mit?'],
         ruleSlug: 'separable-verbs-intro',
       },
@@ -1495,6 +1526,7 @@ export const CURRICULUM_A11 = {
         open: {
           teil: 'Sprechen Teil 2',
           promptDe: 'Fragen und antworten Sie zum Thema Tagesablauf: aufstehen? arbeiten? einkaufen?',
+          promptEn: 'Ask and answer questions about your daily routine: getting up? working? shopping?',
           hintWords: ['aufstehen', 'einkaufen', 'gestern'],
           // Sie — Teil 2 zum Tagesablauf; Gegenüber bleibt die fremde Mitkandidatin.
           anrede: 'Sie',
@@ -1505,6 +1537,7 @@ export const CURRICULUM_A11 = {
         kind: 'formular',
         taskKey: 'a11-l11',
         taskDe: 'Tim Berger steht jeden Tag früh auf. Sein Kurs ist am Donnerstag von 9 Uhr bis 12 Uhr, in Zimmer 4. Füllen Sie den Wochenplan für den Kurs aus.',
+        taskEn: 'Tim Berger gets up early every day. His course is on Thursday from 9 a.m. to 12 noon, in room 4. Fill in the weekly plan for the course (name, day, course from, course until, room).',
         fields: ['Name', 'Tag', 'Kurs von', 'Kurs bis', 'Zimmer'],
         minWords: 5,
         maxWords: 40,
@@ -1605,6 +1638,7 @@ export const CURRICULUM_A11 = {
       notice: {
         title: 'mein, dein, sein, ihr – Possessivartikel',
         bodyDe: 'Der Possessivartikel zeigt, wem etwas gehört: **mein** Geschenk, **dein** Bruder, **sein** Handy (er), **ihr** Buch (sie), **Ihr** Büro (Sie, höflich — immer groß!). Vor femininen Nomen und im Plural kommt **-e** dazu: **meine** Mama. Für Gruppen: **unser** Fest (wir), **euer** Fest (ihr) — vor die-Wörtern **unsere**, **eure**.',
+        bodyEn: 'A possessive article says who something belongs to: **mein** Geschenk (my present), **dein** Bruder (your brother, informal), **sein** Handy (his phone), **ihr** Buch (her book), **Ihr** Büro (your office, polite – always with a capital I). Before a feminine noun and in the plural, add **-e**: **meine** Mama. For groups: **unser** Fest (our party, wir), **euer** Fest (your party, several people, ihr) – and before die-words **unsere**, **eure**.',
         examples: ['Ana, wann ist dein Geburtstag?', 'Und dein Bruder? Kommt seine Frau auch?'],
         ruleSlug: 'possessive-articles',
       },
@@ -1621,6 +1655,7 @@ export const CURRICULUM_A11 = {
           // Teil 1 is „sich vorstellen“ over Stichwortkarten; formulating an invitation is Teil 3.
           teil: 'Sprechen Teil 3',
           promptDe: 'Laden Sie eine Kollegin zu Ihrem Fest ein und reagieren Sie auf die Antwort.',
+          promptEn: 'Invite a colleague to your party and react to her answer.',
           hintWords: ['einladen', 'der Geburtstag', 'feiern'],
           // Sie — Teil 3: die Einladung geht an eine Kollegin, und die Lektion prüft genau diese Form (extra-a11-l12-08/09/16, „Ihr Fest, Frau Kaya“).
           anrede: 'Sie',
@@ -1631,6 +1666,7 @@ export const CURRICULUM_A11 = {
         kind: 'mitteilung',
         taskKey: 'a11-l12',
         taskDe: 'Schreiben Sie eine Einladung zu Ihrem Geburtstag. Beginnen Sie mit einer Anrede und schließen Sie mit einem Gruß.',
+        taskEn: 'Write an invitation to your birthday party. Open with a greeting and close with a sign-off. Cover three points: why you are celebrating; the day and the time; what the guests should bring.',
         leitpunkte: ['Warum Sie feiern', 'Tag und Uhrzeit', 'Was die Gäste mitbringen sollen'],
         minWords: 25,
         maxWords: 45,
