@@ -121,6 +121,8 @@ const DU_TOKENS = /\b(du|Du|dir|Dir|dich|Dich|dein|Dein|deine[mnrs]?|Deine[mnrs]
 const GRADING_SITES = [
   'src/components/lesson/PracticeItem.jsx',
   'src/components/lesson/DictationItem.jsx',
+  'src/components/lesson/WordOrderItem.jsx',
+  'src/components/lesson/ListenSelectItem.jsx',
   'src/lib/checkpoint/buildCheckpoint.js',
   'src/lib/checkpoint/reviewGrading.js',
 ];

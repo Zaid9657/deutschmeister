@@ -26,6 +26,9 @@ import { speakGerman } from '../../lib/lesson/speech.js';
 import PretestStage from '../../components/lesson/PretestStage.jsx';
 import PracticeItem from '../../components/lesson/PracticeItem.jsx';
 import DictationItem from '../../components/lesson/DictationItem.jsx';
+import MatchItem from '../../components/lesson/MatchItem.jsx';
+import WordOrderItem from '../../components/lesson/WordOrderItem.jsx';
+import ListenSelectItem from '../../components/lesson/ListenSelectItem.jsx';
 import SpeakingStage from '../../components/lesson/SpeakingStage.jsx';
 import WritingStage from '../../components/lesson/WritingStage.jsx';
 import RecapStage from '../../components/lesson/RecapStage.jsx';
@@ -52,7 +55,7 @@ import { trackLessonCompleted, trackLessonStarted } from '../../lib/funnelTracki
 // content (dialogue, questions, answers) is German in both.
 
 /** The multi-item stages the player pages through one item at a time. */
-const ITEM_STAGES = new Set(['practice', 'dictation', 'requeue', 'warmup']);
+const ITEM_STAGES = new Set(['practice', 'derived', 'dictation', 'requeue', 'warmup']);
 
 export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   const navigate = useNavigate();
@@ -301,6 +304,24 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
           onNext={onItemNext}
         />
       ) : null;
+      break;
+    }
+    case 'derived': {
+      const item = items[itemIndex];
+      if (!item) { body = null; break; }
+      const derivedProps = {
+        key: item.id,
+        item,
+        index: itemIndex,
+        total: items.length,
+        lektionId: lektion.id,
+        onResult: recordResult,
+        onNext: onItemNext,
+      };
+      if (item.type === 'match') body = <MatchItem {...derivedProps} />;
+      else if (item.type === 'word_order') body = <WordOrderItem {...derivedProps} />;
+      else if (item.type === 'listen_select') body = <ListenSelectItem {...derivedProps} />;
+      else body = null;
       break;
     }
     case 'dictation': {

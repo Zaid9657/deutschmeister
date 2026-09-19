@@ -85,6 +85,7 @@ export const STRINGS = {
     'phonetik.sayAfter': 'Say it after the voice',
     'phonetik.said': 'Said it',
     'stage.practice.eyebrow': 'Step 4 · Practice {n}/{total}',
+    'stage.derived.eyebrow': 'Step 4 · More practice {n}/{total}',
     'stage.dictation.eyebrow': 'Step 4 · Listening {n}/{total}',
     'stage.speaking.eyebrow': 'Step 5 · Speaking',
     'stage.speaking.title': 'Repeat first, then speak freely',
@@ -125,6 +126,17 @@ export const STRINGS = {
     'practice.wholeSentence': 'Whole sentence',
     'practice.tip': 'Tip: {hint}',
     'practice.caseHint': 'Watch the capitalisation.',
+
+    // ── derived exercises (match / word order / listen & choose) ────────────
+    'match.instructions': 'Tap a German word, then its English translation.',
+    'match.germanLabel': 'German word {n}',
+    'match.englishLabel': 'English translation {n}',
+    'wordOrder.instructions': 'Tap the words in order to build the sentence.',
+    'wordOrder.yourSentence': 'Your sentence',
+    'wordOrder.wordBank': 'Tap a word to add it',
+    'wordOrder.removeWord': 'Remove {word}',
+    'listenSelect.instructions': 'Listen, then choose the line you heard.',
+
     'feedback.correct': 'Correct!',
     'feedback.typo': 'Almost — just a typo',
     'feedback.wrong': 'Not yet',
@@ -364,6 +376,7 @@ export const STRINGS = {
     'phonetik.sayAfter': 'Sprechen Sie es nach der Stimme nach',
     'phonetik.said': 'Gesagt',
     'stage.practice.eyebrow': 'Schritt 4 · Üben {n}/{total}',
+    'stage.derived.eyebrow': 'Schritt 4 · Mehr üben {n}/{total}',
     'stage.dictation.eyebrow': 'Schritt 4 · Hören {n}/{total}',
     'stage.speaking.eyebrow': 'Schritt 5 · Sprechen',
     'stage.speaking.title': 'Erst nachsprechen, dann frei sprechen',
@@ -404,6 +417,17 @@ export const STRINGS = {
     'practice.wholeSentence': 'Ganzer Satz',
     'practice.tip': 'Tipp: {hint}',
     'practice.caseHint': 'Achten Sie auf die Groß-/Kleinschreibung.',
+
+    // ── derived exercises (match / word order / listen & choose) ────────────
+    'match.instructions': 'Tippen Sie ein deutsches Wort an, dann die englische Übersetzung.',
+    'match.germanLabel': 'Deutsches Wort {n}',
+    'match.englishLabel': 'Englische Übersetzung {n}',
+    'wordOrder.instructions': 'Tippen Sie die Wörter in der richtigen Reihenfolge an.',
+    'wordOrder.yourSentence': 'Ihr Satz',
+    'wordOrder.wordBank': 'Tippen Sie ein Wort an, um es hinzuzufügen',
+    'wordOrder.removeWord': '{word} entfernen',
+    'listenSelect.instructions': 'Hören Sie zu und wählen Sie den Satz, den Sie gehört haben.',
+
     'feedback.correct': 'Richtig',
     'feedback.typo': 'Fast — nur ein Tippfehler',
     'feedback.wrong': 'Noch nicht',
