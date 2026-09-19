@@ -19,6 +19,7 @@
     "Hallo"
    ],
    "explanationDe": "Buchstabe für Buchstabe: H-A-L-L-O = Hallo.",
+   "explanationEn": "Read each letter name, then join them into one word: H-A-L-L-O spells **Hallo**. Note the double **L**.",
    "hint": "5 Buchstaben.",
    "minLektion": 1
   },
@@ -39,7 +40,8 @@
    ],
    "explanationDe": "Den Buchstaben Z sagt man wie Zett.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 1,
+   "explanationEn": "Every German letter has its own name. The letter Z is called **Zett** — not \"zed\" or \"zee\"."
   },
   {
    "id": "dfa7474b-af31-5c93-8031-0bb797360123",
@@ -57,6 +59,7 @@
     "Tschüss"
    ],
    "explanationDe": "Buchstabe für Buchstabe: T-S-C-H-Ü-S-S = Tschüss.",
+   "explanationEn": "Join the letters into one word: T-S-C-H-Ü-S-S spells **Tschüss**. The **Ü** is u-Umlaut, and the word ends in double **S**.",
    "hint": "7 Buchstaben.",
    "minLektion": 1
   },
@@ -77,7 +80,8 @@
    ],
    "explanationDe": "Den Buchstaben Y sagt man wie Ypsilon.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 1,
+   "explanationEn": "The letter Y has a special name in German: **Ypsilon**. Say the name, not the English letter."
   },
   {
    "id": "d662cf8b-e87f-5b87-8370-2b0e0feff300",
@@ -95,6 +99,7 @@
     "Danke"
    ],
    "explanationDe": "Buchstabe für Buchstabe: D-A-N-K-E = Danke.",
+   "explanationEn": "Join the letters into one word: D-A-N-K-E spells **Danke** (thank you). Five letters, no double letters.",
    "hint": "5 Buchstaben.",
    "minLektion": 1
   },
@@ -114,6 +119,7 @@
     "Bitte"
    ],
    "explanationDe": "Buchstabe für Buchstabe: B-I-T-T-E = Bitte.",
+   "explanationEn": "Join the letters into one word: B-I-T-T-E spells **Bitte** (please). Watch the double **T**.",
    "hint": "5 Buchstaben.",
    "minLektion": 1
   },
@@ -137,7 +143,8 @@
    ],
    "explanationDe": "Beim Buchstabieren sagt man jeden Buchstaben einzeln.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 1,
+   "explanationEn": "When spelling, you say every letter separately: **H-A-L-L-O**. The double **L** is said twice."
   },
   {
    "id": "2488cb0f-ea25-5dae-85d8-fea6ed13b2f3",
@@ -155,6 +162,7 @@
     "Entschuldigung"
    ],
    "explanationDe": "Buchstabe für Buchstabe: E-N-T-S-C-H-U-L-D-I-G-U-N-G = Entschuldigung.",
+   "explanationEn": "Join the letters into one word: E-N-T-S-C-H-U-L-D-I-G-U-N-G spells **Entschuldigung** (excuse me). Long word, 14 letters — read slowly.",
    "hint": "14 Buchstaben.",
    "minLektion": 1
   },
@@ -178,7 +186,8 @@
    ],
    "explanationDe": "Tschüss buchstabiert man T-S-C-H-Ü-S-S.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 1,
+   "explanationEn": "Spell letter by letter: **T-S-C-H-Ü-S-S**. Say the umlaut as its own letter, **Ü** (u-Umlaut), and both **S** at the end."
   },
   {
    "id": "61b961a8-1c5a-59b9-8b63-430a94714181",
@@ -196,6 +205,7 @@
     "Willkommen"
    ],
    "explanationDe": "Buchstabe für Buchstabe: W-I-L-L-K-O-M-M-E-N = Willkommen.",
+   "explanationEn": "Join the letters into one word: W-I-L-L-K-O-M-M-E-N spells **Willkommen** (welcome). Two double letters: **LL** and **MM**.",
    "hint": "10 Buchstaben.",
    "minLektion": 1
   },
@@ -215,6 +225,7 @@
     "Gruß"
    ],
    "explanationDe": "Buchstabe für Buchstabe: G-R-U-ß = Gruß.",
+   "explanationEn": "Join the letters into one word: G-R-U-ß spells **Gruß** (greeting). The last letter is **ß** (Eszett), not double s.",
    "hint": "4 Buchstaben.",
    "minLektion": 1
   },
@@ -234,6 +245,7 @@
     "heißen"
    ],
    "explanationDe": "Buchstabe für Buchstabe: H-E-I-ß-E-N = heißen.",
+   "explanationEn": "Join the letters into one word: H-E-I-ß-E-N spells **heißen** (to be called). It is a verb, so it starts lowercase, and it contains **ß**.",
    "hint": "6 Buchstaben.",
    "minLektion": 1
   },
@@ -253,6 +265,7 @@
     "buchstabieren"
    ],
    "explanationDe": "Buchstabe für Buchstabe: B-U-C-H-S-T-A-B-I-E-R-E-N = buchstabieren.",
+   "explanationEn": "Join the letters into one word: B-U-C-H-S-T-A-B-I-E-R-E-N spells **buchstabieren** (to spell). A verb, so lowercase; 13 letters.",
    "hint": "13 Buchstaben.",
    "minLektion": 1
   },
@@ -274,7 +287,8 @@
    ],
    "explanationDe": "Am Morgen grüßt man mit Guten Morgen.",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 2,
+   "explanationEn": "The morning greeting is the fixed phrase **Guten Morgen**. The form is **Guten** with -n, and both words together."
   },
   {
    "id": "1d19c92e-e77d-5f3f-8e68-0cfd0223e650",
@@ -292,6 +306,7 @@
     "Buchstabe"
    ],
    "explanationDe": "Buchstabe für Buchstabe: B-U-C-H-S-T-A-B-E = Buchstabe.",
+   "explanationEn": "Join the letters into one word: B-U-C-H-S-T-A-B-E spells **Buchstabe** (letter). A noun, so it starts with a capital letter.",
    "hint": "9 Buchstaben.",
    "minLektion": 1
   },
@@ -313,7 +328,8 @@
    ],
    "explanationDe": "Zu Frau Kaya sagt man förmlich: Auf Wiedersehen.",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 3,
+   "explanationEn": "To someone you address formally (Sie), like Frau Kaya, the goodbye is **Auf Wiedersehen**. \"Tschüss\" is the informal goodbye."
   },
   {
    "id": "9f22442a-a212-57af-8f9f-fd3c30231a4e",
@@ -331,6 +347,7 @@
     "Vorname"
    ],
    "explanationDe": "Buchstabe für Buchstabe: V-O-R-N-A-M-E = Vorname.",
+   "explanationEn": "Join the letters into one word: V-O-R-N-A-M-E spells **Vorname** (first name). The first letter is **V** (Vau), not W.",
    "hint": "7 Buchstaben.",
    "minLektion": 2
   },
@@ -350,6 +367,7 @@
     "Nachname"
    ],
    "explanationDe": "Buchstabe für Buchstabe: N-A-C-H-N-A-M-E = Nachname.",
+   "explanationEn": "Join the letters into one word: N-A-C-H-N-A-M-E spells **Nachname** (last name). Eight letters, no double letters.",
    "hint": "8 Buchstaben.",
    "minLektion": 2
   },
@@ -372,6 +390,7 @@
     "scharfes s"
    ],
    "explanationDe": "Der Buchstabe ß heißt Eszett.",
+   "explanationEn": "The letter ß is called **Eszett** (also \"scharfes S\"). The question asks for the letter's name, not its sound.",
    "hint": "Der Name des Buchstaben, nicht der Laut.",
    "minLektion": 3
   },
@@ -392,6 +411,7 @@
     "ypsilon"
    ],
    "explanationDe": "Der Buchstabe Y heißt Ypsilon.",
+   "explanationEn": "The letter Y is called **Ypsilon** in German. The question asks for the name of the letter, not its sound.",
    "hint": "Der Name des Buchstaben, nicht der Laut.",
    "minLektion": 3
   },
@@ -414,6 +434,7 @@
     "jott"
    ],
    "explanationDe": "Der Buchstabe J heißt Jot.",
+   "explanationEn": "The letter J is called **Jot** in German. Be careful: G is \"ge\" and J is **Jot** — an easy pair to mix up.",
    "hint": "Der Name des Buchstaben, nicht der Laut.",
    "minLektion": null
   },
@@ -434,6 +455,7 @@
     "vau"
    ],
    "explanationDe": "Der Buchstabe V heißt Vau.",
+   "explanationEn": "The letter V is called **Vau** in German. Do not confuse it with W, which is called \"we\".",
    "hint": "Der Name des Buchstaben, nicht der Laut.",
    "minLektion": 3
   },
@@ -454,6 +476,7 @@
     "zett"
    ],
    "explanationDe": "Der Buchstabe Z heißt Zett.",
+   "explanationEn": "The letter Z is called **Zett** in German — not \"zed\" or \"zee\" as in English.",
    "hint": "Der Name des Buchstaben, nicht der Laut.",
    "minLektion": 3
   },
@@ -473,6 +496,7 @@
     "der Beruf"
    ],
    "explanationDe": "der Beruf — B-E-R-U-F.",
+   "explanationEn": "B-E-R-U-F spells Beruf (job). Learn every noun with its article: it is **der Beruf** (masculine).",
    "hint": "der, die oder das?",
    "minLektion": 3
   },
@@ -492,6 +516,7 @@
     "die Adresse"
    ],
    "explanationDe": "die Adresse — A-D-R-E-S-S-E.",
+   "explanationEn": "A-D-R-E-S-S-E spells Adresse (address). Learn the noun together with its article: **die Adresse** (feminine).",
    "hint": "der, die oder das?",
    "minLektion": 3
   },
@@ -511,6 +536,7 @@
     "die Telefonnummer"
    ],
    "explanationDe": "die Telefonnummer — T-E-L-E-F-O-N-N-U-M-M-E-R.",
+   "explanationEn": "T-E-L-E-F-O-N-N-U-M-M-E-R spells Telefonnummer (phone number). Its article is feminine: **die Telefonnummer**. Note the double **N** and double **M**.",
    "hint": "der, die oder das?",
    "minLektion": 3
   },
@@ -530,6 +556,7 @@
     "das Formular"
    ],
    "explanationDe": "das Formular — F-O-R-M-U-L-A-R.",
+   "explanationEn": "F-O-R-M-U-L-A-R spells Formular (form). Its article is neuter: **das Formular**. Learn noun and article as one unit.",
    "hint": "der, die oder das?",
    "minLektion": 3
   },
@@ -549,6 +576,7 @@
     "der Wohnort"
    ],
    "explanationDe": "der Wohnort — W-O-H-N-O-R-T.",
+   "explanationEn": "W-O-H-N-O-R-T spells Wohnort (place of residence). Its article is masculine: **der Wohnort**. Learn noun and article together.",
    "hint": "der, die oder das?",
    "minLektion": 3
   },
@@ -572,6 +600,7 @@
     "Danke"
    ],
    "explanationDe": "Danke — D-A-N-K-E.",
+   "explanationEn": "The correct spelling is **Danke**: D-A-N-K-E. The wrong options drop a letter (\"Dane\") or swap two letters (\"Dnake\").",
    "hint": "Achte auf Doppelbuchstaben, Umlaute und ß.",
    "minLektion": 1
   },
@@ -595,6 +624,7 @@
     "Vorname"
    ],
    "explanationDe": "Vorname — V-O-R-N-A-M-E.",
+   "explanationEn": "The correct spelling is **Vorname**: V-O-R-N-A-M-E. The other options swap letters (\"Vonrame\") or leave one out (\"Vornae\").",
    "hint": "Achte auf Doppelbuchstaben, Umlaute und ß.",
    "minLektion": 2
   },
@@ -619,6 +649,7 @@
     "Telefonnummer"
    ],
    "explanationDe": "Telefonnummer — T-E-L-E-F-O-N-N-U-M-M-E-R.",
+   "explanationEn": "The correct spelling is **Telefonnummer**, with double **N** and double **M**. The distractors drop a letter or scramble the order.",
    "hint": "Achte auf Doppelbuchstaben, Umlaute und ß.",
    "minLektion": 2
   },
@@ -639,7 +670,8 @@
    ],
    "explanationDe": "Danke buchstabiert man D-A-N-K-E.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 1,
+   "explanationEn": "When spelling, say each letter separately: **D-A-N-K-E**. Five letters, no double letters."
   },
   {
    "id": "extra-a11-l01-12",
@@ -658,7 +690,8 @@
    ],
    "explanationDe": "Man sagt jeden Buchstaben einzeln: E-N-T-S-C-H-U-L-D-I-G-U-N-G.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 1,
+   "explanationEn": "Spelling means saying every letter one by one: **E-N-T-S-C-H-U-L-D-I-G-U-N-G**. Take it slowly — 14 letters."
   },
   {
    "id": "extra-a11-l01-13",
@@ -677,7 +710,8 @@
    ],
    "explanationDe": "Bitte hat zwei T: B-I-T-T-E.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 1,
+   "explanationEn": "Spell letter by letter: **B-I-T-T-E**. The word has a double **T**, so you say T twice."
   },
   {
    "id": "extra-a11-l01-14",
@@ -696,7 +730,8 @@
    ],
    "explanationDe": "Doppel-L und Doppel-M: W-I-L-L-K-O-M-M-E-N.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 1,
+   "explanationEn": "Spell letter by letter: **W-I-L-L-K-O-M-M-E-N**. Two double letters — say **L** twice and **M** twice."
   },
   {
    "id": "extra-a11-l01-15",
@@ -715,7 +750,8 @@
    ],
    "explanationDe": "Am Abend grüßt man mit Guten Abend.",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 2,
+   "explanationEn": "The evening greeting is the fixed phrase **Guten Abend**. It follows the same pattern as Guten Morgen and Guten Tag."
   },
   {
    "id": "extra-a11-l01-16",
@@ -734,7 +770,8 @@
    ],
    "explanationDe": "Der Gruß heißt Guten Morgen, nicht Gute Morgen.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 1,
+   "explanationEn": "The greeting is a fixed phrase: **Guten Morgen**, always with **-n**. \"Gute Morgen\" is the common mistake."
   },
   {
    "id": "extra-a11-l01-17",
@@ -753,7 +790,8 @@
    ],
    "explanationDe": "Der Gruß heißt Guten Abend, nicht Gute Abend.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 1,
+   "explanationEn": "The greeting is a fixed phrase: **Guten Abend**, always with **-n**. \"Gute Abend\" is wrong."
   },
   {
    "id": "extra-a11-l01-20",
@@ -772,7 +810,8 @@
    ],
    "explanationDe": "Zett ist der Name für den Buchstaben Z.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 1,
+   "explanationEn": "**Zett** is the German name of the letter **Z**. Learn the names so you can spell aloud."
   },
   {
    "id": "extra-a11-l01-21",
@@ -791,7 +830,8 @@
    ],
    "explanationDe": "Ypsilon ist der Name für den Buchstaben Y.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 1,
+   "explanationEn": "**Ypsilon** is the German name of the letter **Y**. It sounds nothing like the English letter name."
   },
   {
    "id": "extra-a11-l01-22",
@@ -809,7 +849,8 @@
    ],
    "explanationDe": "Eszett ist der Name für den Buchstaben ß.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 1,
+   "explanationEn": "**Eszett** is the German name of the letter **ß** (sharp s). It only exists in German."
   },
   {
    "id": "extra-a11-l01-03",
@@ -829,7 +870,8 @@
    ],
    "explanationDe": "Der Buchstabe ß heißt Eszett oder scharfes S.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 1,
+   "explanationEn": "The letter ß has its own name: **Eszett**, also called **scharfes S**. Never spell it as \"double s\"."
   },
   {
    "id": "extra-a11-l01-06",
@@ -848,7 +890,8 @@
    "explanationDe": "Höflich zu Frau Kaya: Ihnen mit großem I.",
    "hint": null,
    "caseSensitive": true,
-   "minLektion": 1
+   "minLektion": 1,
+   "explanationEn": "When you talk to Frau Kaya, you use the formal you (Sie). The formal phrase is **Wie geht es Ihnen?** — with a capital **I**."
   },
   {
    "id": "extra-a11-l01-07",
@@ -867,7 +910,8 @@
    ],
    "explanationDe": "heißen: ich heiße, du heißt.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 1,
+   "explanationEn": "The verb heißen (to be called) after **ich** takes the ending **-e**: **Ich heiße Ana.** The subject comes first, the verb second."
   },
   {
    "id": "extra-a11-l01-08",
@@ -886,7 +930,8 @@
    ],
    "explanationDe": "Der Gruß heißt Guten Tag, nicht Gute Tag.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 1,
+   "explanationEn": "The greeting is a fixed phrase: **Guten Tag**, always with **-n**. \"Gute Tag\" is the common mistake."
   },
   {
    "id": "extra-a11-l01-18",
@@ -905,7 +950,8 @@
    ],
    "explanationDe": "Nach ich endet das Verb auf -e: ich buchstabiere.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 1,
+   "explanationEn": "Subject first, verb second. After **ich** the verb ends in **-e**: **Ich buchstabiere Chakiri.**"
   },
   {
    "id": "extra-a11-l01-19",
@@ -925,7 +971,8 @@
    "explanationDe": "Die höfliche Frage lautet: Wie geht es Ihnen?",
    "hint": null,
    "caseSensitive": true,
-   "minLektion": 1
+   "minLektion": 1,
+   "explanationEn": "The polite question to someone you address formally (Sie) is the fixed phrase **Wie geht es Ihnen?** — with a capital **I**."
   },
   {
    "id": "extra-a11-l01-23",
@@ -944,7 +991,8 @@
    ],
    "explanationDe": "Nach ich endet das Verb auf -e: ich buchstabiere.",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 1,
+   "explanationEn": "Subject first, verb second. After **ich** the verb ends in **-e**: **Ich buchstabiere Ana.**"
   },
   {
    "id": "extra-a11-l01-24",
@@ -963,7 +1011,8 @@
    ],
    "explanationDe": "Unter Freunden fragt man: Wie geht es dir?",
    "hint": null,
-   "minLektion": 1
+   "minLektion": 1,
+   "explanationEn": "To a friend (informal you, du) the question is the fixed phrase **Wie geht es dir?** To Frau Kaya you would say Ihnen."
   },
   {
    "id": "f2555a1b-d961-4a7f-b185-a621309d3649",
@@ -982,6 +1031,7 @@
    "answer": "Der",
    "accepted": [],
    "explanationDe": "Tisch ist maskulin.",
+   "explanationEn": "Tisch is masculine.",
    "hint": null,
    "minLektion": 5
   },
@@ -1004,6 +1054,7 @@
     "Die"
    ],
    "explanationDe": "Weibliche Personen sind feminin = die.",
+   "explanationEn": "Female people are feminine = die.",
    "hint": null,
    "minLektion": 7
   },
@@ -1026,6 +1077,7 @@
     "Der"
    ],
    "explanationDe": "Männliche Personen sind maskulin = der.",
+   "explanationEn": "Male people are masculine = der.",
    "hint": null,
    "minLektion": 7
   },
@@ -1046,7 +1098,8 @@
    ],
    "explanationDe": "die Tafel ist feminin.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "Tafel is a feminine noun, so the definite article is **die**: **die Tafel**. Learn each noun with its article."
   },
   {
    "id": "extra-a11-l05-02",
@@ -1065,7 +1118,8 @@
    ],
    "explanationDe": "die Schere ist feminin und Singular.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "Schere (scissors) is feminine and singular in German, so the article is **die**: **die Schere**. English \"scissors\" is plural, German is not."
   },
   {
    "id": "extra-a11-l05-03",
@@ -1084,7 +1138,8 @@
    ],
    "explanationDe": "das Lineal ist neutral.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "Lineal (ruler) is a neuter noun, so the definite article is **das**: **das Lineal**."
   },
   {
    "id": "extra-a11-l05-04",
@@ -1103,7 +1158,8 @@
    ],
    "explanationDe": "der Stift ist maskulin.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "Stift (pen) is a masculine noun, so the definite article is **der**: **der Stift**."
   },
   {
    "id": "extra-a11-l05-05",
@@ -1122,7 +1178,8 @@
    ],
    "explanationDe": "die Tür ist feminin.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "Tür (door) is a feminine noun, so the definite article is **die**: **die Tür**."
   },
   {
    "id": "extra-a11-l05-07",
@@ -1141,7 +1198,8 @@
    ],
    "explanationDe": "der Schlüssel ist maskulin.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "Schlüssel (key) is a masculine noun, so the definite article is **der**: **der Schlüssel**."
   },
   {
    "id": "extra-a11-l05-08",
@@ -1160,7 +1218,8 @@
    ],
    "explanationDe": "Erst ein Heft, dann bekannt: das Heft.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "First the notebook is new (ein Heft); now both speakers know which one, so the definite article follows. Heft is neuter: **das Heft**."
   },
   {
    "id": "extra-a11-l05-11",
@@ -1179,7 +1238,8 @@
    ],
    "explanationDe": "das Fenster ist neutral.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "Fenster (window) is a neuter noun, so the definite article is **das**: **das Fenster**."
   },
   {
    "id": "extra-a11-l05-13",
@@ -1198,7 +1258,8 @@
    ],
    "explanationDe": "der Bleistift ist maskulin.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "Bleistift (pencil) is a masculine noun, so the definite article is **der**: **der Bleistift**."
   },
   {
    "id": "extra-a11-l05-14",
@@ -1217,7 +1278,8 @@
    ],
    "explanationDe": "das Buch ist neutral.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "Buch (book) is a neuter noun, so the definite article is **das**: **das Buch**."
   },
   {
    "id": "extra-a11-l05-15",
@@ -1236,7 +1298,8 @@
    ],
    "explanationDe": "der Kugelschreiber ist maskulin.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "Kugelschreiber (ballpoint pen) is a masculine noun, so the definite article is **der**: **der Kugelschreiber**."
   },
   {
    "id": "extra-a11-l05-16",
@@ -1255,7 +1318,8 @@
    ],
    "explanationDe": "das Papier ist neutral.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "Papier (paper) is a neuter noun, so the definite article is **das**: **das Papier**."
   },
   {
    "id": "e0ac0425-9aea-44f8-8354-7c41cfbcb0d3",
@@ -1274,6 +1338,7 @@
    "answer": "die",
    "accepted": [],
    "explanationDe": "Maskulin Singular → die im Plural.",
+   "explanationEn": "Masculine singular → die in plural.",
    "hint": null,
    "minLektion": 4
   },
@@ -1294,6 +1359,7 @@
    "answer": "die",
    "accepted": [],
    "explanationDe": "Neutral Singular → die im Plural.",
+   "explanationEn": "Neuter singular → die in plural.",
    "hint": null,
    "minLektion": 10
   },
@@ -1312,6 +1378,7 @@
     "Das"
    ],
    "explanationDe": "Auto ist neutral, deshalb das.",
+   "explanationEn": "Auto is neuter, so it takes das.",
    "hint": null,
    "minLektion": 10
   },
@@ -1330,6 +1397,7 @@
     "Der"
    ],
    "explanationDe": "Computer ist maskulin, deshalb der.",
+   "explanationEn": "Computer is masculine, so it takes der.",
    "hint": null,
    "minLektion": 6
   },
@@ -1350,7 +1418,8 @@
    ],
    "explanationDe": "Wir wissen, welches Buch gemeint ist: das Wörterbuch.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "Both speakers know which dictionary is meant, so the definite article is used. Wörterbuch is neuter: **das Wörterbuch**."
   },
   {
    "id": "extra-a11-l05-09",
@@ -1369,7 +1438,8 @@
    ],
    "explanationDe": "Bekannt und feminin: die Schere, nicht ein Schere.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "The task wants the definite article for a known thing. Schere is feminine, so **die**: **Die Schere ist hier.**"
   },
   {
    "id": "extra-a11-l05-10",
@@ -1388,7 +1458,8 @@
    ],
    "explanationDe": "das Bild ist neutral, Verb auf Platz zwei.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "Bild is neuter, so **das Bild**. The subject comes first and the verb second: **Das Bild ist gelb.**"
   },
   {
    "id": "extra-a11-l05-12",
@@ -1407,7 +1478,8 @@
    ],
    "explanationDe": "Wohnung ist feminin: die Wohnung.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "Wohnung is a feminine noun (nouns ending in **-ung** are feminine), so the article is **die**: **Die Wohnung ist hier.**"
   },
   {
    "id": "extra-a11-l05-17",
@@ -1426,7 +1498,8 @@
    ],
    "explanationDe": "Jetzt bekannt, und Bild ist neutral: das Bild.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "First mention: ein Bild. Second mention, now known: definite article. Bild is neuter, so **das Bild**."
   },
   {
    "id": "extra-a11-l05-18",
@@ -1445,7 +1518,8 @@
    ],
    "explanationDe": "Tür ist feminin, also die Tür.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "Tür is feminine, so the definite article is **die**: **die Tür**. The answer \"Sie ist weiß\" confirms the feminine gender."
   },
   {
    "id": "extra-a11-l05-19",
@@ -1464,7 +1538,8 @@
    ],
    "explanationDe": "Lineal ist neutral: das Lineal.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "Lineal is a neuter noun, so the definite article is **das**: **das Lineal** — also inside a question."
   },
   {
    "id": "extra-a11-l05-20",
@@ -1483,7 +1558,8 @@
    ],
    "explanationDe": "Tür ist feminin, nicht neutral: die Tür.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "Tür is feminine, not neuter, so the article is **die**: **Die Tür ist weiß.** Das is only for neuter nouns."
   },
   {
    "id": "extra-a11-l05-21",
@@ -1502,7 +1578,8 @@
    ],
    "explanationDe": "Buch ist neutral: das Buch.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "The book is already mentioned, so the definite article follows. Buch is neuter: **das Buch**."
   },
   {
    "id": "extra-a11-l05-22",
@@ -1521,7 +1598,8 @@
    ],
    "explanationDe": "Papier ist neutral: das Papier.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "Papier is a neuter noun, so the definite article is **das**: **das Papier**."
   },
   {
    "id": "extra-a11-l05-23",
@@ -1540,7 +1618,8 @@
    ],
    "explanationDe": "Schlüssel ist maskulin: der Schlüssel.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "Schlüssel is masculine, so the article is **der**: **Der Schlüssel ist gelb.** Die is for feminine nouns and plurals."
   },
   {
    "id": "extra-a11-l05-24",
@@ -1559,7 +1638,8 @@
    ],
    "explanationDe": "Zimmer ist neutral: das Zimmer.",
    "hint": null,
-   "minLektion": 5
+   "minLektion": 5,
+   "explanationEn": "Zimmer (room) is a neuter noun, so the definite article is **das**: **das Zimmer**."
   },
   {
    "id": "1ce4f35f-6067-4fdf-a16b-689bb598fd67",
@@ -1580,6 +1660,7 @@
     "ein"
    ],
    "explanationDe": "Stuhl = maskulin → ein.",
+   "explanationEn": "Stuhl = masculine → ein.",
    "hint": null,
    "minLektion": 4
   },
@@ -1602,6 +1683,7 @@
     "eine"
    ],
    "explanationDe": "Schwester = feminin → eine.",
+   "explanationEn": "Schwester = feminine → eine.",
    "hint": null,
    "minLektion": 8
   },
@@ -1624,6 +1706,7 @@
     "ein"
    ],
    "explanationDe": "Bild = neutral → ein.",
+   "explanationEn": "Bild = neuter → ein. Same as masculine!",
    "hint": null,
    "minLektion": 5
   },
@@ -1646,6 +1729,7 @@
     "ein"
    ],
    "explanationDe": "Auto = neutral → ein.",
+   "explanationEn": "Auto = neuter → ein.",
    "hint": null,
    "minLektion": 10
   },
@@ -1665,7 +1749,8 @@
    ],
    "explanationDe": "das Büro ist neutral: ein Büro.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "Büro is neuter (das Büro). Something new or unknown gets the indefinite article; neuter takes **ein**: **ein Büro**."
   },
   {
    "id": "extra-a11-l06-02",
@@ -1683,7 +1768,8 @@
    ],
    "explanationDe": "die Kollegin ist feminin: eine Kollegin.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "Kollegin is feminine (die Kollegin), so the indefinite article is **eine**: **eine Kollegin**."
   },
   {
    "id": "extra-a11-l06-03",
@@ -1701,7 +1787,8 @@
    ],
    "explanationDe": "das Telefon ist neutral: ein Telefon.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "Telefon is neuter (das Telefon). Neuter nouns take **ein** even after brauchen: **ein Telefon**. Only masculine becomes einen."
   },
   {
    "id": "extra-a11-l06-05",
@@ -1719,7 +1806,8 @@
    ],
    "explanationDe": "die E-Mail-Adresse ist feminin: eine E-Mail-Adresse.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "E-Mail-Adresse is feminine (die Adresse), so the indefinite article is **eine**: **eine E-Mail-Adresse**."
   },
   {
    "id": "extra-a11-l06-07",
@@ -1737,7 +1825,8 @@
    ],
    "explanationDe": "die Firma ist feminin: eine Firma.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "Firma is feminine (die Firma), so the indefinite article is **eine**: **eine Firma**."
   },
   {
    "id": "extra-a11-l06-12",
@@ -1756,7 +1845,8 @@
    ],
    "explanationDe": "Pause ist feminin: Ich brauche eine Pause.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "Pause is feminine (die Pause), so the article is **eine**: **Ich brauche eine Pause.** Einen is only for masculine nouns after brauchen."
   },
   {
    "id": "extra-a11-l06-13",
@@ -1775,7 +1865,8 @@
    ],
    "explanationDe": "Telefon ist neutral: Ich brauche ein Telefon.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "Telefon is neuter (das Telefon). Only masculine nouns change to einen after brauchen; neuter stays **ein**: **Ich brauche ein Telefon.**"
   },
   {
    "id": "extra-a11-l06-14",
@@ -1794,7 +1885,8 @@
    ],
    "explanationDe": "Computer ist maskulin: Nach brauchen wird maskulin ein zu einen.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "Computer is masculine (der Computer). After brauchen, masculine **ein** becomes **einen**: **Ich brauche einen Computer.** Eine is feminine only."
   },
   {
    "id": "extra-a11-l06-16",
@@ -1813,7 +1905,8 @@
    ],
    "explanationDe": "Handynummer ist feminin: eine Handynummer.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "Handynummer is feminine (die Nummer), so the article is **eine**: **Ich brauche eine Handynummer.** Einen is only for masculine nouns."
   },
   {
    "id": "extra-a11-l06-18",
@@ -1832,7 +1925,8 @@
    ],
    "explanationDe": "Chefin ist feminin: Das ist eine Chefin.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "Chefin is feminine — the **-in** ending marks a woman — so the article is **eine**: **Das ist eine Chefin.**"
   },
   {
    "id": "extra-a11-l06-19",
@@ -1851,7 +1945,8 @@
    ],
    "explanationDe": "Verkäuferin ist feminin: Das ist eine Verkäuferin.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "Verkäuferin is feminine — the **-in** ending marks a woman — so the article is **eine**: **Das ist eine Verkäuferin.**"
   },
   {
    "id": "extra-a11-l06-21",
@@ -1870,7 +1965,8 @@
    ],
    "explanationDe": "Firma ist feminin: Das ist eine Firma in Berlin.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "Firma is feminine (die Firma), so the indefinite article is **eine**: **Das ist eine Firma in Berlin.**"
   },
   {
    "id": "extra-a11-l06-22",
@@ -1888,7 +1984,8 @@
    ],
    "explanationDe": "Handy ist neutral: ein Handy.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "Handy is neuter (das Handy), so it keeps **ein** even after haben: **ein Handy**. Only masculine nouns become einen."
   },
   {
    "id": "05649f0e-7308-50dd-8593-ac61018ef7e2",
@@ -1905,6 +2002,7 @@
     "ein"
    ],
    "explanationDe": "Fenster ist neutral, deshalb ein.",
+   "explanationEn": "Fenster is neuter, so it takes ein.",
    "hint": null,
    "minLektion": 5
   },
@@ -1923,6 +2021,7 @@
     "eine"
    ],
    "explanationDe": "Tasche ist feminin, deshalb eine.",
+   "explanationEn": "Tasche is feminine, so it takes eine.",
    "hint": null,
    "minLektion": 8
   },
@@ -1942,6 +2041,7 @@
     "Ich bin Lehrerin"
    ],
    "explanationDe": "Deutsch lässt den Artikel vor einem Beruf ganz weg — kein ein, keine eine.",
+   "explanationEn": "German drops the article before a profession entirely — no ein, no eine.",
    "hint": null,
    "minLektion": 3
   },
@@ -1960,6 +2060,7 @@
     "ein"
    ],
    "explanationDe": "Computer ist maskulin, deshalb ein.",
+   "explanationEn": "Computer is masculine, so it takes ein.",
    "hint": null,
    "minLektion": 6
   },
@@ -1979,7 +2080,8 @@
    ],
    "explanationDe": "Nach brauchen wird maskulin ein zu einen.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "Computer is masculine. After brauchen, masculine **ein** changes to **einen**: **einen Computer**. This is a fixed pattern for now; the rule comes in A1.2."
   },
   {
    "id": "extra-a11-l06-06",
@@ -1997,7 +2099,8 @@
    ],
    "explanationDe": "Handynummer ist feminin: eine Handynummer.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "Handynummer is feminine (die Nummer). Feminine nouns keep **eine** after brauchen: **eine Handynummer**. Only masculine changes."
   },
   {
    "id": "extra-a11-l06-08",
@@ -2015,7 +2118,8 @@
    ],
    "explanationDe": "die Pause ist feminin: eine Pause.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "Pause is feminine (die Pause), so the indefinite article is **eine**: **Wir machen eine Pause.**"
   },
   {
    "id": "extra-a11-l06-09",
@@ -2033,7 +2137,8 @@
    ],
    "explanationDe": "die Verkäuferin ist feminin: eine Verkäuferin.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "Verkäuferin is feminine (the **-in** ending). Feminine nouns keep **eine** after brauchen: **eine Verkäuferin**."
   },
   {
    "id": "extra-a11-l06-10",
@@ -2052,7 +2157,8 @@
    ],
    "explanationDe": "das Handy ist neutral: ein Handy bleibt ein.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "Subject first, verb second: ich brauch**e**. Handy is neuter, so **ein** stays **ein**: **Ich brauche ein Handy.**"
   },
   {
    "id": "extra-a11-l06-11",
@@ -2071,7 +2177,8 @@
    ],
    "explanationDe": "die Kollegin ist feminin: eine Kollegin.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "Kollegin is feminine (the **-in** ending), so the article is **eine**: **Das ist eine Kollegin im Büro.**"
   },
   {
    "id": "extra-a11-l06-15",
@@ -2090,7 +2197,8 @@
    ],
    "explanationDe": "Büro ist neutral: Die Firma braucht ein Büro.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "Subject first, verb second: die Firma brauch**t**. Büro is neuter, so the article stays **ein**: **Die Firma braucht ein Büro.**"
   },
   {
    "id": "extra-a11-l06-17",
@@ -2109,7 +2217,8 @@
    ],
    "explanationDe": "Telefon ist neutral: Der Chef braucht ein Telefon.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "Subject first, verb second: der Chef brauch**t**. Telefon is neuter, so **ein** stays **ein**: **Der Chef braucht ein Telefon.**"
   },
   {
    "id": "extra-a11-l06-20",
@@ -2128,7 +2237,8 @@
    ],
    "explanationDe": "Handy ist neutral: Die Kollegin braucht ein Handy.",
    "hint": null,
-   "minLektion": 6
+   "minLektion": 6,
+   "explanationEn": "Subject first, verb second: die Kollegin brauch**t**. Handy is neuter, so the article stays **ein**: **Die Kollegin braucht ein Handy.**"
   },
   {
    "id": "extra-a11-l04-01",
@@ -2147,7 +2257,8 @@
    ],
    "explanationDe": "die Lampe ist feminin.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Lampe is a feminine noun, so its article is **die**: **die Lampe**. Learn every noun together with its article."
   },
   {
    "id": "extra-a11-l04-02",
@@ -2166,7 +2277,8 @@
    ],
    "explanationDe": "der Rucksack ist maskulin.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Rucksack is a masculine noun, so its article is **der**: **der Rucksack**."
   },
   {
    "id": "extra-a11-l04-03",
@@ -2185,7 +2297,8 @@
    ],
    "explanationDe": "die Uhr ist feminin.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Uhr (clock) is a feminine noun, so its article is **die**: **die Uhr**."
   },
   {
    "id": "extra-a11-l04-04",
@@ -2204,7 +2317,8 @@
    ],
    "explanationDe": "der Tisch ist maskulin.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Tisch (table) is a masculine noun, so its article is **der**: **der Tisch**."
   },
   {
    "id": "extra-a11-l04-09",
@@ -2223,7 +2337,8 @@
    ],
    "explanationDe": "der Flohmarkt ist maskulin.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Flohmarkt (flea market) is a masculine noun, so its article is **der**: **der Flohmarkt**."
   },
   {
    "id": "extra-a11-l04-11",
@@ -2242,7 +2357,8 @@
    ],
    "explanationDe": "der Stuhl ist maskulin.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Stuhl (chair) is a masculine noun, so its article is **der**: **der Stuhl**."
   },
   {
    "id": "extra-a11-l04-13",
@@ -2261,7 +2377,8 @@
    ],
    "explanationDe": "die Uhr ist feminin.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Uhr (clock) is a feminine noun, so its article is **die**: **die Uhr**."
   },
   {
    "id": "extra-a11-l04-14",
@@ -2280,7 +2397,8 @@
    ],
    "explanationDe": "Regal ist neutral. Man sagt: das Regal.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Regal (shelf) is a neuter noun, so its article is **das**: **das Regal**."
   },
   {
    "id": "extra-a11-l04-15",
@@ -2299,7 +2417,8 @@
    ],
    "explanationDe": "die Tasche ist feminin.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Tasche (bag) is a feminine noun, so its article is **die**: **die Tasche**."
   },
   {
    "id": "extra-a11-l04-19",
@@ -2318,7 +2437,8 @@
    ],
    "explanationDe": "Tisch ist maskulin: der Tisch.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Tisch is masculine, so the article is **der**: **Hier ist der Tisch.** Gender is part of the word — learn it with the noun."
   },
   {
    "id": "extra-a11-l04-20",
@@ -2337,7 +2457,8 @@
    ],
    "explanationDe": "Rucksack ist maskulin: der Rucksack.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Rucksack is a masculine noun, so its article is **der**: **der Rucksack**."
   },
   {
    "id": "extra-a11-l04-22",
@@ -2356,7 +2477,8 @@
    ],
    "explanationDe": "Lampe ist feminin: Ich kaufe die Lampe.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Lampe is feminine, so the article is **die**: **Ich kaufe die Lampe.** Feminine nouns keep die after kaufen; only der changes to den."
   },
   {
    "id": "extra-a11-l04-23",
@@ -2375,7 +2497,8 @@
    ],
    "explanationDe": "Uhr ist feminin: Ich kaufe die Uhr.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Uhr is feminine, so the article is **die**: **Ich kaufe die Uhr.** Only masculine der changes to den after kaufen."
   },
   {
    "id": "extra-a11-l04-24",
@@ -2394,7 +2517,8 @@
    ],
    "explanationDe": "Regal ist neutral: Ich kaufe das Regal.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Regal is neuter, so the article is **das**: **Ich kaufe das Regal.** Neuter das does not change after kaufen."
   },
   {
    "id": "extra-a11-l04-25",
@@ -2413,7 +2537,8 @@
    ],
    "explanationDe": "Uhr ist feminin: die Uhr.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Uhr is a feminine noun, so its article is **die**: **die Uhr**."
   },
   {
    "id": "extra-a11-l04-26",
@@ -2432,7 +2557,8 @@
    ],
    "explanationDe": "Regal ist neutral: das Regal.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Regal is a neuter noun, so its article is **das**: **das Regal**."
   },
   {
    "id": "extra-a11-l04-27",
@@ -2451,7 +2577,8 @@
    ],
    "explanationDe": "Im Plural haben alle Nomen die: die Lampen.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "In the plural every noun takes **die**, whatever its singular gender: **die Lampen**. The -n ending marks the plural."
   },
   {
    "id": "extra-a11-l04-28",
@@ -2470,7 +2597,8 @@
    ],
    "explanationDe": "Im Plural haben alle Nomen die: die Taschen.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "In the plural every noun takes **die**: **die Taschen**. The verb \"sind\" also shows it is plural."
   },
   {
    "id": "extra-a11-l04-29",
@@ -2489,7 +2617,8 @@
    ],
    "explanationDe": "Regal ist neutral: Was kostet das Regal?",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Regal is a neuter noun, so its article is **das**: **Was kostet das Regal?**"
   },
   {
    "id": "extra-a11-l04-30",
@@ -2508,7 +2637,8 @@
    ],
    "explanationDe": "Rucksack ist maskulin: Was kostet der Rucksack?",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Rucksack is a masculine noun, so its article is **der**: **Was kostet der Rucksack?**"
   },
   {
    "id": "extra-a11-l04-31",
@@ -2527,7 +2657,8 @@
    ],
    "explanationDe": "Tasche ist feminin: Was kostet die Tasche?",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Tasche is a feminine noun, so its article is **die**: **Was kostet die Tasche?**"
   },
   {
    "id": "extra-a11-l04-32",
@@ -2546,7 +2677,8 @@
    ],
    "explanationDe": "Rucksack ist maskulin: der Rucksack.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Rucksack is a masculine noun, so its article is **der**: **der Rucksack**."
   },
   {
    "id": "extra-a11-l04-33",
@@ -2565,7 +2697,8 @@
    ],
    "explanationDe": "Stuhl ist maskulin: der Stuhl.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Stuhl is a masculine noun, so its article is **der**: **der Stuhl**."
   },
   {
    "id": "extra-a11-l04-34",
@@ -2584,7 +2717,8 @@
    ],
    "explanationDe": "Stuhl ist maskulin: Was kostet der Stuhl?",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Stuhl is a masculine noun, so its article is **der**: **Was kostet der Stuhl?**"
   },
   {
    "id": "extra-a11-l04-35",
@@ -2603,7 +2737,8 @@
    ],
    "explanationDe": "Preis ist maskulin: der Preis.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Preis (price) is a masculine noun, so its article is **der**: **der Preis**."
   },
   {
    "id": "extra-a11-l04-36",
@@ -2622,7 +2757,8 @@
    ],
    "explanationDe": "Tasche ist feminin: Die Tasche ist teuer.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Tasche is feminine, so the article is **die**, not der: **Die Tasche ist teuer.** Der belongs to masculine nouns only."
   },
   {
    "id": "extra-a11-l04-37",
@@ -2641,7 +2777,8 @@
    ],
    "explanationDe": "Rucksack ist maskulin: Der Rucksack ist gut.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Rucksack is masculine, so the article is **der**: **Der Rucksack ist gut.** Die is for feminine nouns and plurals."
   },
   {
    "id": "extra-a11-l04-39",
@@ -2660,7 +2797,8 @@
    ],
    "explanationDe": "Stuhl ist maskulin: Der Stuhl ist alt.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Stuhl is masculine, so the article is **der**, not das: **Der Stuhl ist alt.**"
   },
   {
    "id": "extra-a11-l04-40",
@@ -2679,7 +2817,8 @@
    ],
    "explanationDe": "Tisch ist maskulin: Der Tisch ist alt.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Tisch is masculine, so the article is **der**, not die: **Der Tisch ist alt.**"
   },
   {
    "id": "extra-a11-l04-41",
@@ -2698,7 +2837,8 @@
    ],
    "explanationDe": "Uhr ist feminin: Die Uhr ist alt.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Uhr is feminine, so the article is **die**, not der: **Die Uhr ist alt.**"
   },
   {
    "id": "319b95b6-ca95-5b56-b585-09aaaba51d9c",
@@ -2715,6 +2855,7 @@
     "Die"
    ],
    "explanationDe": "Weibliche Personen sind feminin: die Mutter, die Frau.",
+   "explanationEn": "Female people are feminine: die Mutter, die Frau.",
    "hint": null,
    "minLektion": 9
   },
@@ -2733,6 +2874,7 @@
     "Der"
    ],
    "explanationDe": "Alkoholische Getränke außer Bier sind maskulin: der Wein, der Whisky.",
+   "explanationEn": "Alcoholic drinks except beer are masculine: der Wein, der Whisky.",
    "hint": null,
    "minLektion": 9
   },
@@ -2753,7 +2895,8 @@
    ],
    "explanationDe": "Regal ist neutral. Man sagt: das Regal.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Regal (shelf) is a neuter noun, so its article is **das**: **das Regal**."
   },
   {
    "id": "extra-a11-l04-06",
@@ -2772,7 +2915,8 @@
    ],
    "explanationDe": "Tasche ist feminin. Man sagt: die Tasche.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Tasche (bag) is a feminine noun, so its article is **die**: **die Tasche**."
   },
   {
    "id": "extra-a11-l04-07",
@@ -2791,7 +2935,8 @@
    ],
    "explanationDe": "der Preis ist maskulin. Man sagt: der Preis.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Preis (price) is a masculine noun, so its article is **der**: **der Preis**."
   },
   {
    "id": "extra-a11-l04-08",
@@ -2810,7 +2955,8 @@
    ],
    "explanationDe": "Das Verb steht auf Platz zwei.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Subject first, verb second. Stuhl is masculine (der Stuhl) and the verb takes **-t** for er/sie/es: **Der Stuhl kostet zwölf Euro.**"
   },
   {
    "id": "extra-a11-l04-10",
@@ -2829,7 +2975,8 @@
    ],
    "explanationDe": "die Lampe ist feminin: die Lampe.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Lampe is feminine, so the definite article is **die**, not das: **Die Lampe kostet acht Euro.**"
   },
   {
    "id": "extra-a11-l04-12",
@@ -2848,7 +2995,8 @@
    ],
    "explanationDe": "die Uhr ist feminin, das Verb steht auf Platz zwei.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Subject first, verb second. Uhr is feminine (die Uhr) and the verb takes **-t**: **Die Uhr kostet zwanzig Euro.**"
   },
   {
    "id": "extra-a11-l04-16",
@@ -2867,7 +3015,8 @@
    ],
    "explanationDe": "Man fragt nach dem Regal: das Regal.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Regal is neuter, so its article is **das**: **Wie viel kostet das Regal?** The article stays the same inside a question."
   },
   {
    "id": "extra-a11-l04-17",
@@ -2886,7 +3035,8 @@
    ],
    "explanationDe": "Lampe ist feminin: die Lampe.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Lampe is feminine, so the article is **die**, not der: **Die Lampe ist teuer.**"
   },
   {
    "id": "extra-a11-l04-18",
@@ -2905,7 +3055,8 @@
    ],
    "explanationDe": "die Tasche ist feminin, das Verb steht auf Platz zwei.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Subject first, verb second. Tasche is feminine (die Tasche); sein for er/sie/es is **ist**: **Die Tasche ist teuer.**"
   },
   {
    "id": "extra-a11-l04-21",
@@ -2924,7 +3075,8 @@
    ],
    "explanationDe": "Im Plural haben die Nomen die: die Tische.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "In the plural every noun takes **die**, even a masculine one: der Tisch → **die Tische**. \"Sind\" confirms the plural."
   },
   {
    "id": "extra-a11-l04-38",
@@ -2943,7 +3095,8 @@
    ],
    "explanationDe": "Regal ist neutral: Das Regal ist teuer.",
    "hint": null,
-   "minLektion": 4
+   "minLektion": 4,
+   "explanationEn": "Subject first, verb second. Regal is neuter (das Regal); sein for er/sie/es is **ist**: **Das Regal ist teuer.**"
   },
   {
    "id": "extra-a11-l02-09",
@@ -2961,7 +3114,8 @@
    ],
    "explanationDe": "In Zahlen 7, als Wort: sieben.",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 2,
+   "explanationEn": "The digit 7 is written as the word **sieben**. Phone numbers are read digit by digit: null eins sieben sechs."
   },
   {
    "id": "extra-a11-l02-10",
@@ -2979,7 +3133,8 @@
    ],
    "explanationDe": "In Zahlen 3, als Wort: drei.",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 2,
+   "explanationEn": "The digit 3 is written as the word **drei**: **Wir sind drei Studenten.**"
   },
   {
    "id": "extra-a11-l02-11",
@@ -2997,7 +3152,8 @@
    ],
    "explanationDe": "In Zahlen 8, als Wort: acht.",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 2,
+   "explanationEn": "The digit 8 is written as the word **acht**: **Hier sind acht Formulare.**"
   },
   {
    "id": "extra-a11-l02-12",
@@ -3015,7 +3171,8 @@
    ],
    "explanationDe": "In Zahlen 10, als Wort: zehn.",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 3,
+   "explanationEn": "The number 10 is written as the word **zehn**: **Mein Vorname hat zehn Buchstaben.**"
   },
   {
    "id": "dd1c3d60-8ae7-4c94-8990-19633dcba36f",
@@ -3036,6 +3193,7 @@
     "Sie"
    ],
    "explanationDe": "Mutter = weiblich → sie.",
+   "explanationEn": "Mutter = female person → sie (she).",
    "hint": null,
    "minLektion": 3
   },
@@ -3056,7 +3214,8 @@
    ],
    "explanationDe": "der Bruder wird zu er.",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 3,
+   "explanationEn": "The pronoun follows the article: der Bruder → **er**. So: **Er spricht Arabisch.**"
   },
   {
    "id": "extra-a11-l03-02",
@@ -3075,7 +3234,8 @@
    ],
    "explanationDe": "die Schwester wird zu sie.",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 3,
+   "explanationEn": "The pronoun follows the article: die Schwester → **sie**. So: **Sie spricht Deutsch.**"
   },
   {
    "id": "extra-a11-l03-03",
@@ -3094,7 +3254,8 @@
    ],
    "explanationDe": "das Kind wird zu es.",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 3,
+   "explanationEn": "The pronoun follows the article, not the person: das Kind → **es**. So: **Es spricht Arabisch.** Not er or sie."
   },
   {
    "id": "extra-a11-l03-08",
@@ -3113,7 +3274,8 @@
    "explanationDe": "Sie mit großem S ist die höfliche Form.",
    "hint": null,
    "caseSensitive": true,
-   "minLektion": 3
+   "minLektion": 3,
+   "explanationEn": "Frau Kaya is addressed with the formal you. The polite form is **Sie** with a capital **S**: **Sprechen Sie Englisch?**"
   },
   {
    "id": "extra-a11-l03-09",
@@ -3132,7 +3294,8 @@
    ],
    "explanationDe": "das Baby ist neutral, darum es.",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 3,
+   "explanationEn": "Baby is neuter (das Baby), so the pronoun is **es**: **Es ist noch jung.** The article decides, not the person."
   },
   {
    "id": "extra-a11-l03-13",
@@ -3150,7 +3313,8 @@
    ],
    "explanationDe": "Eine Freundin sprechen Sie mit du an.",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 3,
+   "explanationEn": "Ana is a friend, so you use the informal you: **du**. The verb form \"bist\" also belongs to du: **du bist**."
   },
   {
    "id": "extra-a11-l03-15",
@@ -3169,7 +3333,8 @@
    ],
    "explanationDe": "das Kind ist neutral, darum es.",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 3,
+   "explanationEn": "Kind is neuter (das Kind), so the pronoun is **es**: **Es ist noch jung.** The article decides, not whether it is a boy or girl."
   },
   {
    "id": "b19be5e4-48c0-5fad-a8a7-e16bf8e1772f",
@@ -3186,6 +3351,7 @@
     "Sie"
    ],
    "explanationDe": "Die Tasche ist feminin, deshalb wird sie zu sie.",
+   "explanationEn": "Die Tasche is feminine, so it becomes sie.",
    "hint": null,
    "minLektion": 12
   },
@@ -3204,6 +3370,7 @@
     "Ich"
    ],
    "explanationDe": "Die sprechende Person benutzt ich.",
+   "explanationEn": "The person speaking about themselves uses ich.",
    "hint": null,
    "minLektion": 2
   },
@@ -3222,6 +3389,7 @@
     "Ihr"
    ],
    "explanationDe": "Ihr spricht mehrere Personen informell an.",
+   "explanationEn": "Ihr addresses more than one person informally.",
    "hint": null,
    "minLektion": 7
   },
@@ -3242,7 +3410,8 @@
    ],
    "explanationDe": "Für mehrere Personen steht sie: die Eltern → sie.",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 3,
+   "explanationEn": "Father and mother are two people, so the pronoun is **sie** (they): **Sie sprechen Arabisch.** Note the plural verb ending -en."
   },
   {
    "id": "extra-a11-l03-05",
@@ -3261,7 +3430,8 @@
    ],
    "explanationDe": "Ana und ich – zusammen sind das wir.",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 3,
+   "explanationEn": "Ana and I together means we, so the pronoun is **wir**: **Wir kommen aus Marokko.** Whenever \"ich\" is part of a group, use wir."
   },
   {
    "id": "extra-a11-l03-06",
@@ -3279,7 +3449,8 @@
    ],
    "explanationDe": "Bei er wird das e zu i: er spricht.",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 3,
+   "explanationEn": "Mein Vater is er. With sprechen the vowel changes in the er-form: e becomes i, **er spricht**. Not \"sprecht\"."
   },
   {
    "id": "extra-a11-l03-07",
@@ -3300,7 +3471,8 @@
    ],
    "explanationDe": "Bei wir endet das Verb auf -en.",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 2,
+   "explanationEn": "Subject first, verb second. After **wir** the verb ends in **-en**: **Wir kommen aus Marokko.**"
   },
   {
    "id": "extra-a11-l03-10",
@@ -3319,7 +3491,8 @@
    ],
    "explanationDe": "Meine Schwester und ich sind zwei Personen: wir.",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 3,
+   "explanationEn": "Meine Schwester und ich are two people including me, so the pronoun is **wir**: **Wir sprechen Deutsch.**"
   },
   {
    "id": "extra-a11-l03-11",
@@ -3337,7 +3510,8 @@
    ],
    "explanationDe": "Zwei Freunde zusammen: ihr kommt.",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 2,
+   "explanationEn": "Lena and Tim are two friends addressed together, so the informal plural you is **ihr**: **Kommt ihr auch aus Marokko?**"
   },
   {
    "id": "extra-a11-l03-12",
@@ -3356,7 +3530,8 @@
    ],
    "explanationDe": "der Mann ist maskulin, darum er.",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 3,
+   "explanationEn": "Der Mann is masculine, so the pronoun is **er**: **Er spricht Arabisch.** The pronoun follows the article."
   },
   {
    "id": "extra-a11-l03-14",
@@ -3374,7 +3549,8 @@
    ],
    "explanationDe": "Zwei Personen zusammen: ihr sprecht.",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 3,
+   "explanationEn": "Lena and Tim are addressed together as friends, so the pronoun is **ihr**; the verb form \"sprecht\" matches: **Sprecht ihr Englisch?**"
   },
   {
    "id": "extra-a11-l03-16",
@@ -3393,7 +3569,8 @@
    ],
    "explanationDe": "Mein Bruder und ich sind zwei Personen: wir.",
    "hint": null,
-   "minLektion": 3
+   "minLektion": 3,
+   "explanationEn": "Mein Bruder und ich are two people including me, so the pronoun is **wir**: **Wir sprechen Deutsch.**"
   },
   {
    "id": "d9887d31-0932-5143-b05e-3f903d659cd9",
@@ -3410,6 +3587,7 @@
     "mein"
    ],
    "explanationDe": "Bruder ist maskulin (der-Wort) → mein, keine Endung.",
+   "explanationEn": "Bruder is masculine (der-word) → mein, no ending.",
    "hint": null,
    "minLektion": 3
   },
@@ -3429,6 +3607,7 @@
     "sein"
    ],
    "explanationDe": "Auto ist neutral (das-Wort) → sein, keine Endung.",
+   "explanationEn": "Auto is neuter (das-word) → sein, no ending — same as masculine.",
    "hint": null,
    "minLektion": 10
   },
@@ -3447,6 +3626,7 @@
     "ihre"
    ],
    "explanationDe": "Tasche ist feminin → ihre. ihr bedeutet hier her (sie, Einzahl).",
+   "explanationEn": "Tasche is feminine → ihre (ihr + e). Here ihr means her.",
    "hint": null,
    "minLektion": 4
   },
@@ -3465,6 +3645,7 @@
     "ihre"
    ],
    "explanationDe": "Kinder ist Plural → ihre. ihr bedeutet hier their (sie, Plural).",
+   "explanationEn": "Kinder is plural → ihre (ihr + e). Here ihr means their.",
    "hint": null,
    "minLektion": 12
   },
@@ -3483,6 +3664,7 @@
     "unser"
    ],
    "explanationDe": "Land ist neutral → unser, keine Endung.",
+   "explanationEn": "Land is neuter → unser, no ending.",
    "hint": null,
    "minLektion": 12
   },
@@ -3501,6 +3683,7 @@
     "dein"
    ],
    "explanationDe": "Schlüssel ist maskulin → dein, keine Endung.",
+   "explanationEn": "Schlüssel is masculine → dein, no ending.",
    "hint": null,
    "minLektion": 5
   },
@@ -3522,6 +3705,7 @@
    "answer": "Ihre",
    "accepted": [],
    "explanationDe": "Adresse ist feminin → Ihre, der Possessivartikel für Sie. Ihr hat keine Endung (falsch für ein feminines Nomen); seine und eure gehören zu anderen Besitzern.",
+   "explanationEn": "Adresse is feminine → Ihre, the formal possessive for Sie. Ihr has no ending (wrong for a feminine noun); seine and eure belong to different owners.",
    "hint": null,
    "caseSensitive": true,
    "minLektion": 2
@@ -3544,6 +3728,7 @@
    "answer": "sein",
    "accepted": [],
    "explanationDe": "Buch ist neutral → sein, keine Endung. es benutzt sein, genauso wie er.",
+   "explanationEn": "Buch is neuter → sein, no ending. es (it) uses sein, same as er.",
    "hint": null,
    "minLektion": 5
   },
@@ -3564,7 +3749,8 @@
    ],
    "explanationDe": "der Geburtstag ist maskulin: mein ohne Endung.",
    "hint": null,
-   "minLektion": 12
+   "minLektion": 12,
+   "explanationEn": "The owner is ich, so the word is **mein** (my). Geburtstag is masculine (der Geburtstag), so there is no ending: **Mein Geburtstag**."
   },
   {
    "id": "extra-a11-l12-02",
@@ -3583,7 +3769,8 @@
    ],
    "explanationDe": "die Party ist feminin: deine mit -e.",
    "hint": null,
-   "minLektion": 12
+   "minLektion": 12,
+   "explanationEn": "The owner is du, so the word is **dein** (your). Party is feminine (die Party), and feminine nouns add **-e**: **Deine Party**."
   },
   {
    "id": "extra-a11-l12-03",
@@ -3602,7 +3789,8 @@
    ],
    "explanationDe": "das Fest ist neutral: unser ohne Endung.",
    "hint": null,
-   "minLektion": 12
+   "minLektion": 12,
+   "explanationEn": "The owner is wir, so the word is **unser** (our). Fest is neuter (das Fest), so there is no ending: **Unser Fest**."
   },
   {
    "id": "extra-a11-l12-04",
@@ -3621,7 +3809,8 @@
    ],
    "explanationDe": "das Geschenk ist neutral: sein ohne Endung.",
    "hint": null,
-   "minLektion": 12
+   "minLektion": 12,
+   "explanationEn": "The owner is er (he), so the word is **sein** (his). Geschenk is neuter (das Geschenk), so no ending: **Sein Geschenk**."
   },
   {
    "id": "extra-a11-l12-05",
@@ -3640,7 +3829,8 @@
    ],
    "explanationDe": "Im Plural steht meine mit -e.",
    "hint": null,
-   "minLektion": 12
+   "minLektion": 12,
+   "explanationEn": "The owner is ich, so the word is **mein**. Gäste is plural, and plurals add **-e** like feminine nouns: **Meine Gäste**."
   },
   {
    "id": "extra-a11-l12-06",
@@ -3659,7 +3849,8 @@
    ],
    "explanationDe": "die Mama ist feminin: deine Mama.",
    "hint": null,
-   "minLektion": 12
+   "minLektion": 12,
+   "explanationEn": "The owner is du, so the word is **dein**. Mama is feminine (die Mama), and feminine nouns add **-e**: **Deine Mama**."
   },
   {
    "id": "extra-a11-l12-07",
@@ -3678,7 +3869,8 @@
    ],
    "explanationDe": "der Papa ist maskulin: mein Papa.",
    "hint": null,
-   "minLektion": 12
+   "minLektion": 12,
+   "explanationEn": "The owner is ich, so the word is **mein**. Papa is masculine (der Papa), so there is no ending: **Mein Papa**."
   },
   {
    "id": "extra-a11-l12-11",
@@ -3696,7 +3888,8 @@
    ],
    "explanationDe": "Der Besitzer ist er: sein Geburtstag.",
    "hint": null,
-   "minLektion": 12
+   "minLektion": 12,
+   "explanationEn": "The owner is er (he), so the word is **sein** (his). Geburtstag is masculine, so no ending: **sein Geburtstag**."
   },
   {
    "id": "9f8d70b7-2a9b-5c6c-8159-670b6cfd02c6",
@@ -3714,6 +3907,7 @@
     "mein"
    ],
    "explanationDe": "Vater ist maskulin → mein, keine Endung.",
+   "explanationEn": "Vater is masculine → mein, no ending.",
    "hint": null,
    "minLektion": 3
   },
@@ -3733,6 +3927,7 @@
     "meine"
    ],
    "explanationDe": "Freundin ist feminin → meine.",
+   "explanationEn": "Freundin is feminine → meine.",
    "hint": null,
    "minLektion": 7
   },
@@ -3751,6 +3946,7 @@
     "Das ist mein Bruder"
    ],
    "explanationDe": "das + ist + mein Bruder (Bruder ist maskulin, keine Endung).",
+   "explanationEn": "das + ist + mein Bruder (Bruder is masculine, no ending).",
    "hint": null,
    "minLektion": 3
   },
@@ -3769,6 +3965,7 @@
     "Das ist seine Schwester"
    ],
    "explanationDe": "das + ist + seine Schwester (Schwester ist feminin → seine, auch wenn der Besitzer männlich ist).",
+   "explanationEn": "das + ist + seine Schwester (Schwester is feminine → seine, even though the owner is male).",
    "hint": null,
    "minLektion": 12
   },
@@ -3787,6 +3984,7 @@
     "Das ist unser Auto"
    ],
    "explanationDe": "das + ist + unser Auto (Auto ist neutral, keine Endung).",
+   "explanationEn": "das + ist + unser Auto (Auto is neuter, no ending).",
    "hint": null,
    "minLektion": 12
   },
@@ -3805,6 +4003,7 @@
     "Das ist Ihre Adresse"
    ],
    "explanationDe": "das + ist + Ihre Adresse (Adresse ist feminin → Ihre; großes I markiert die Höflichkeitsform).",
+   "explanationEn": "das + ist + Ihre Adresse (Adresse is feminine → Ihre; capital I marks the formal Sie-form).",
    "hint": null,
    "caseSensitive": true,
    "minLektion": 2
@@ -3824,6 +4023,7 @@
     "ihr"
    ],
    "explanationDe": "Vater ist maskulin → ihr, keine Endung. ihr bedeutet hier their.",
+   "explanationEn": "Vater is masculine → ihr, no ending. Here ihr means their.",
    "hint": null,
    "minLektion": 3
   },
@@ -3844,7 +4044,8 @@
    "caseSensitive": true,
    "explanationDe": "Höflich zu Frau Kaya: Ihr mit großem I.",
    "hint": null,
-   "minLektion": 12
+   "minLektion": 12,
+   "explanationEn": "Frau Kaya is addressed with the formal you (Sie), whose possessive is **Ihr** with a capital **I**. Geschenk is neuter, so no ending: **Ihr Geschenk**."
   },
   {
    "id": "extra-a11-l12-09",
@@ -3863,7 +4064,8 @@
    "caseSensitive": true,
    "explanationDe": "Zu Frau Kaya gehört Ihr mit großem I.",
    "hint": null,
-   "minLektion": 12
+   "minLektion": 12,
+   "explanationEn": "Frau Kaya is addressed formally (Sie), so the possessive is **Ihr** with a capital **I**. Fest is neuter, so no ending: **Ihr Fest**."
   },
   {
    "id": "extra-a11-l12-10",
@@ -3882,7 +4084,8 @@
    ],
    "explanationDe": "sie im Plural wird zu ihre, mit -e.",
    "hint": null,
-   "minLektion": 12
+   "minLektion": 12,
+   "explanationEn": "The owner is sie in the plural (they), so the word is **ihr** (their). Geschenke is plural, and plurals add **-e**: **Ihre Geschenke**."
   },
   {
    "id": "extra-a11-l12-12",
@@ -3901,7 +4104,8 @@
    ],
    "explanationDe": "der Bruder ist maskulin: mein Bruder.",
    "hint": null,
-   "minLektion": 12
+   "minLektion": 12,
+   "explanationEn": "The owner is ich, so the word is **mein**. Bruder is masculine (der Bruder), so there is no ending: **Mein Bruder**."
   },
   {
    "id": "extra-a11-l12-13",
@@ -3922,7 +4126,8 @@
    ],
    "explanationDe": "Possessivartikel vor dem Nomen, Verb auf Platz zwei.",
    "hint": null,
-   "minLektion": 12
+   "minLektion": 12,
+   "explanationEn": "The possessive stands before its noun: mein Geburtstag. Then the verb comes second: **Mein Geburtstag ist im Mai.** Months take **im**."
   },
   {
    "id": "extra-a11-l12-14",
@@ -3941,7 +4146,8 @@
    ],
    "explanationDe": "das Fest bleibt neutral: unser Fest.",
    "hint": null,
-   "minLektion": 12
+   "minLektion": 12,
+   "explanationEn": "Subject first, verb second: wir feier**n**. Fest is neuter (das Fest), so unser takes no ending: **Wir feiern unser Fest.**"
   },
   {
    "id": "extra-a11-l12-15",
@@ -3960,7 +4166,8 @@
    ],
    "explanationDe": "die Party ist feminin, also meine Party.",
    "hint": null,
-   "minLektion": 12
+   "minLektion": 12,
+   "explanationEn": "Party is feminine (die Party), and feminine nouns add **-e** to the possessive: **Das ist meine Party.** Mein without ending is for masculine and neuter nouns."
   },
   {
    "id": "extra-a11-l12-16",
@@ -3980,7 +4187,8 @@
    "caseSensitive": true,
    "explanationDe": "Ihr Papa: maskulin ohne -e, höfliches Ihr mit großem I.",
    "hint": null,
-   "minLektion": 12
+   "minLektion": 12,
+   "explanationEn": "Papa is masculine (der Papa), so the possessive takes no **-e**: **Ihr Papa kommt auch.** The capital **I** marks the formal you (Sie)."
   },
   {
    "id": "extra-a11-l12-17",
@@ -3999,7 +4207,8 @@
    ],
    "explanationDe": "Der gute Wunsch zum Abschied: Schönen Tag noch!",
    "hint": null,
-   "minLektion": 12
+   "minLektion": 12,
+   "explanationEn": "Saying goodbye, Germans wish **Schönen Tag noch!** (have a nice day). It is a fixed phrase — learn the form **schönen** as one chunk."
   },
   {
    "id": "extra-a11-l12-18",
@@ -4018,7 +4227,8 @@
    ],
    "explanationDe": "die Mama ist feminin: deine Mama mit -e.",
    "hint": null,
-   "minLektion": 12
+   "minLektion": 12,
+   "explanationEn": "Subject first, verb second: ich grüß**e**. Mama is feminine (die Mama), so dein adds **-e**: **Ich grüße deine Mama.**"
   },
   {
    "id": "25fe0c36-72d2-47f1-928f-b91d70481b29",
@@ -4040,6 +4250,7 @@
     "wohne"
    ],
    "explanationDe": "ich + -e.",
+   "explanationEn": "ich + -e = wohne.",
    "hint": null,
    "minLektion": 2
   },
@@ -4063,6 +4274,7 @@
     "lernst"
    ],
    "explanationDe": "du + -st.",
+   "explanationEn": "du + -st = lernst.",
    "hint": null,
    "minLektion": 11
   },
@@ -4086,6 +4298,7 @@
     "spielt"
    ],
    "explanationDe": "er + -t.",
+   "explanationEn": "er + -t = spielt.",
    "hint": null,
    "minLektion": 7
   },
@@ -4109,6 +4322,7 @@
     "lernen"
    ],
    "explanationDe": "wir + -en.",
+   "explanationEn": "wir + -en = lernen. Same as infinitive!",
    "hint": null,
    "minLektion": 4
   },
@@ -4132,6 +4346,7 @@
     "machst"
    ],
    "explanationDe": "du + -st.",
+   "explanationEn": "du + -st = machst.",
    "hint": null,
    "minLektion": 4
   },
@@ -4155,6 +4370,7 @@
     "spielt"
    ],
    "explanationDe": "ihr + -t.",
+   "explanationEn": "ihr + -t = spielt. Same as er/sie/es!",
    "hint": null,
    "minLektion": 7
   },
@@ -4178,6 +4394,7 @@
     "arbeitest"
    ],
    "explanationDe": "Stamm endet auf -t, deshalb -e- einfügen: arbeitest.",
+   "explanationEn": "Stem ends in -t, so insert -e- before -st: arbeitest.",
    "hint": null,
    "minLektion": 7
   },
@@ -4201,6 +4418,7 @@
     "heißt"
    ],
    "explanationDe": "Stamm endet auf -ß, deshalb bekommt die du-Form nur -t: heißt.",
+   "explanationEn": "Stem ends in -ß, so du takes just -t: heißt.",
    "hint": null,
    "minLektion": 1
   },
@@ -4220,7 +4438,8 @@
    ],
    "explanationDe": "Bei ich ist die Endung -e: ich höre.",
    "hint": null,
-   "minLektion": 7
+   "minLektion": 7,
+   "explanationEn": "After **ich** a regular verb takes the ending **-e**: hör + e = **höre**. Gern stands after the verb: Ich höre gern Musik."
   },
   {
    "id": "extra-a11-l07-02",
@@ -4238,7 +4457,8 @@
    ],
    "explanationDe": "Bei sie ist die Endung -t: sie spielt.",
    "hint": null,
-   "minLektion": 7
+   "minLektion": 7,
+   "explanationEn": "Lena is sie (she). After **sie** a regular verb takes the ending **-t**: spiel + t = **spielt**."
   },
   {
    "id": "extra-a11-l07-04",
@@ -4256,7 +4476,8 @@
    ],
    "explanationDe": "Bei er ist die Endung -t: er kocht.",
    "hint": null,
-   "minLektion": 7
+   "minLektion": 7,
+   "explanationEn": "Tim is er (he). After **er** a regular verb takes the ending **-t**: koch + t = **kocht**."
   },
   {
    "id": "extra-a11-l07-06",
@@ -4274,7 +4495,8 @@
    ],
    "explanationDe": "Bei ich ist die Endung -e: ich lese.",
    "hint": null,
-   "minLektion": 7
+   "minLektion": 7,
+   "explanationEn": "After **ich** the verb takes the ending **-e**: les + e = **lese**. Gern comes right after the verb: Ich lese gern."
   },
   {
    "id": "02374938-9977-52c2-8828-2929e8075633",
@@ -4291,6 +4513,7 @@
     "spiele"
    ],
    "explanationDe": "Ich-Form: -en von spielen entfernen, -e anhängen: spiele.",
+   "explanationEn": "Ich-form: remove -en from spielen, add -e: spiele.",
    "hint": null,
    "minLektion": 7
   },
@@ -4309,6 +4532,7 @@
     "wohnst"
    ],
    "explanationDe": "Du-Form: wohn + st = wohnst.",
+   "explanationEn": "Du-form: wohn + st = wohnst.",
    "hint": null,
    "minLektion": 2
   },
@@ -4327,6 +4551,7 @@
     "hören"
    ],
    "explanationDe": "Wir-Form behält den vollen Infinitiv: hören.",
+   "explanationEn": "Wir-form keeps the full infinitive: hören.",
    "hint": null,
    "minLektion": 7
   },
@@ -4345,6 +4570,7 @@
     "arbeiten"
    ],
    "explanationDe": "Plural-sie-Form behält den vollen Infinitiv: arbeiten.",
+   "explanationEn": "Plural sie-form keeps the full infinitive: arbeiten.",
    "hint": null,
    "minLektion": 7
   },
@@ -4363,6 +4589,7 @@
     "lernt"
    ],
    "explanationDe": "Er-Form: lern + t = lernt.",
+   "explanationEn": "Er-form: lern + t = lernt.",
    "hint": null,
    "minLektion": 11
   },
@@ -4381,6 +4608,7 @@
     "macht"
    ],
    "explanationDe": "Ihr-Form: mach + t = macht.",
+   "explanationEn": "Ihr-form: mach + t = macht.",
    "hint": null,
    "minLektion": 4
   },
@@ -4399,6 +4627,7 @@
     "arbeite"
    ],
    "explanationDe": "Ich-Form: arbeit + e = arbeite, kein Extra-Buchstabe nötig.",
+   "explanationEn": "Ich-form: arbeit + e = arbeite, no extra letter needed.",
    "hint": null,
    "minLektion": 7
   },
@@ -4417,6 +4646,7 @@
     "sagt"
    ],
    "explanationDe": "Ihr-Form: sag + t = sagt.",
+   "explanationEn": "Ihr-form: sag + t = sagt.",
    "hint": null,
    "minLektion": 1
   },
@@ -4435,6 +4665,7 @@
     "kaufst"
    ],
    "explanationDe": "Du-Form: kauf + st = kaufst.",
+   "explanationEn": "Du-form: kauf + st = kaufst.",
    "hint": null,
    "minLektion": 5
   },
@@ -4453,6 +4684,7 @@
     "arbeitet"
    ],
    "explanationDe": "Ihr-Form: arbeit + et = arbeitet — ein -e- wird vor -t eingefügt.",
+   "explanationEn": "Ihr-form: arbeit + et = arbeitet — an -e- is inserted before -t.",
    "hint": null,
    "minLektion": 8
   },
@@ -4471,6 +4703,7 @@
     "fragt"
    ],
    "explanationDe": "Er-Form: frag + t = fragt.",
+   "explanationEn": "Er-form: frag + t = fragt.",
    "hint": null,
    "minLektion": 1
   },
@@ -4491,7 +4724,8 @@
    ],
    "explanationDe": "Bei ihr ist die Endung -t: ihr hört.",
    "hint": null,
-   "minLektion": 7
+   "minLektion": 7,
+   "explanationEn": "After **ihr** (informal you, plural) the verb takes the ending **-t**: hör + t = **hört**. In a yes/no question the verb comes first: Hört ihr …?"
   },
   {
    "id": "extra-a11-l07-05",
@@ -4510,7 +4744,8 @@
    ],
    "explanationDe": "Bei wir ist die Endung -en: wir tanzen.",
    "hint": null,
-   "minLektion": 7
+   "minLektion": 7,
+   "explanationEn": "Subject first, verb second. After **wir** the verb takes **-en**, like the infinitive: **Wir tanzen zusammen.**"
   },
   {
    "id": "extra-a11-l07-07",
@@ -4529,7 +4764,8 @@
    ],
    "explanationDe": "Bei du ist die Endung -st: du schwimmst.",
    "hint": null,
-   "minLektion": 7
+   "minLektion": 7,
+   "explanationEn": "After **du** (informal you) the verb takes the ending **-st**: schwimm + st = **schwimmst**. In a question the verb comes first."
   },
   {
    "id": "extra-a11-l07-08",
@@ -4548,7 +4784,8 @@
    ],
    "explanationDe": "Bei Lena endet das Verb auf -t.",
    "hint": null,
-   "minLektion": 7
+   "minLektion": 7,
+   "explanationEn": "Lena is one person (sie), so the verb takes **-t**: **Lena spielt am Wochenende Fußball.** Spielen without change belongs to wir/sie (plural)/Sie."
   },
   {
    "id": "9a58bc0a-594f-5a6f-b82c-146efa8d78c6",
@@ -4565,6 +4802,7 @@
     "stehe"
    ],
    "explanationDe": "aufstehen → ich stehe ... auf.",
+   "explanationEn": "aufstehen → ich stehe ... auf.",
    "hint": null,
    "minLektion": 8
   },
@@ -4583,6 +4821,7 @@
     "rufst"
    ],
    "explanationDe": "anrufen → du rufst ... an.",
+   "explanationEn": "anrufen → du rufst ... an.",
    "hint": null,
    "minLektion": 11
   },
@@ -4601,6 +4840,7 @@
     "kaufen"
    ],
    "explanationDe": "einkaufen → wir kaufen ... ein.",
+   "explanationEn": "einkaufen → wir kaufen ... ein.",
    "hint": null,
    "minLektion": 8
   },
@@ -4619,6 +4859,7 @@
     "kommt"
    ],
    "explanationDe": "mitkommen → er kommt ... mit.",
+   "explanationEn": "mitkommen → er kommt ... mit.",
    "hint": null,
    "minLektion": 6
   },
@@ -4637,6 +4878,7 @@
     "mache"
    ],
    "explanationDe": "aufmachen → ich mache ... auf.",
+   "explanationEn": "aufmachen → ich mache ... auf.",
    "hint": null,
    "minLektion": 5
   },
@@ -4655,6 +4897,7 @@
     "macht"
    ],
    "explanationDe": "zumachen → sie macht ... zu.",
+   "explanationEn": "zumachen → sie (she) macht ... zu.",
    "hint": null,
    "minLektion": 5
   },
@@ -4673,6 +4916,7 @@
     "kommt"
    ],
    "explanationDe": "ankommen → der Zug kommt ... an.",
+   "explanationEn": "ankommen → der Zug (er) kommt ... an.",
    "hint": null,
    "minLektion": 10
   },
@@ -4691,6 +4935,7 @@
     "gehen"
    ],
    "explanationDe": "ausgehen → wir gehen ... aus.",
+   "explanationEn": "ausgehen → wir gehen ... aus.",
    "hint": null,
    "minLektion": 8
   },
@@ -4709,6 +4954,7 @@
     "hole"
    ],
    "explanationDe": "abholen → ich hole ... ab.",
+   "explanationEn": "abholen → ich hole ... ab.",
    "hint": null,
    "minLektion": 11
   },
@@ -4727,6 +4973,7 @@
     "hört"
    ],
    "explanationDe": "zuhören → er hört ... zu.",
+   "explanationEn": "zuhören → er hört ... zu.",
    "hint": null,
    "minLektion": 7
   },
@@ -4746,7 +4993,8 @@
    ],
    "explanationDe": "Bei aufstehen steht auf am Satzende.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 8,
+   "explanationEn": "Aufstehen is a separable verb: stehe stands second, and the prefix **auf** goes to the very end, after the time: **Ich stehe … um sechs Uhr auf.**"
   },
   {
    "id": "extra-a11-l11-03",
@@ -4764,7 +5012,8 @@
    ],
    "explanationDe": "Bei anrufen steht an am Satzende.",
    "hint": null,
-   "minLektion": 11
+   "minLektion": 11,
+   "explanationEn": "Anrufen is a separable verb: ruft stands second, and the prefix **an** goes to the very end of the sentence: **… ihre Mutter an.**"
   },
   {
    "id": "extra-a11-l11-04",
@@ -4782,7 +5031,8 @@
    ],
    "explanationDe": "Bei einkaufen steht ein am Ende der Frage.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 8,
+   "explanationEn": "Einkaufen is a separable verb: in a yes/no question kaufst comes first, and the prefix **ein** still goes to the very end: **Kaufst du heute ein?**"
   },
   {
    "id": "extra-a11-l11-06",
@@ -4800,7 +5050,8 @@
    ],
    "explanationDe": "Bei abholen steht ab am Satzende.",
    "hint": null,
-   "minLektion": 11
+   "minLektion": 11,
+   "explanationEn": "Abholen is a separable verb: hole stands second, and the prefix **ab** goes to the very end, after the time: **Ich hole Lena um acht ab.**"
   },
   {
    "id": "extra-a11-l11-07",
@@ -4818,7 +5069,8 @@
    ],
    "explanationDe": "Bei mitkommen steht mit am Satzende.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 8,
+   "explanationEn": "Mitkommen is a separable verb: in the question kommst comes first, and the prefix **mit** goes to the very end: **Kommst du am Freitag mit?**"
   },
   {
    "id": "extra-a11-l11-09",
@@ -4836,7 +5088,8 @@
    ],
    "explanationDe": "Ich habe gearbeitet ist ein fester Ausdruck.",
    "hint": null,
-   "minLektion": 11
+   "minLektion": 11,
+   "explanationEn": "\"Ich habe gearbeitet\" (I worked) is learned here as a fixed phrase: **gearbeitet** at the end. The pattern behind it comes in A1.2."
   },
   {
    "id": "54801fe3-5b02-56dc-9c28-31bb6f620f04",
@@ -4853,6 +5106,7 @@
     "Stehst"
    ],
    "explanationDe": "Ja/Nein-Frage: Stamm zuerst, Präfix bleibt am Ende.",
+   "explanationEn": "Yes/no question: stem first, prefix still at the end.",
    "hint": null,
    "minLektion": 8
   },
@@ -4871,6 +5125,7 @@
     "Rufst"
    ],
    "explanationDe": "Ja/Nein-Frage: Stamm zuerst, Präfix bleibt am Ende.",
+   "explanationEn": "Yes/no question: stem first, prefix still at the end.",
    "hint": null,
    "minLektion": 11
   },
@@ -4889,6 +5144,7 @@
     "Kauft"
    ],
    "explanationDe": "Ja/Nein-Frage: Stamm zuerst, Präfix bleibt am Ende.",
+   "explanationEn": "Yes/no question: stem first, prefix still at the end.",
    "hint": null,
    "minLektion": 8
   },
@@ -4907,6 +5163,7 @@
     "Kommt"
    ],
    "explanationDe": "Ja/Nein-Frage: Stamm zuerst, Präfix bleibt am Ende.",
+   "explanationEn": "Yes/no question: stem first, prefix still at the end.",
    "hint": null,
    "minLektion": 10
   },
@@ -4925,6 +5182,7 @@
     "ab"
    ],
    "explanationDe": "abholen → das Präfix ab steht ganz am Ende, nach der Zeitangabe.",
+   "explanationEn": "abholen → the prefix ab goes at the very end, after the time.",
    "hint": null,
    "minLektion": 11
   },
@@ -4943,6 +5201,7 @@
     "zu"
    ],
    "explanationDe": "zumachen → das Präfix zu steht ganz am Ende.",
+   "explanationEn": "zumachen → the prefix zu goes at the very end.",
    "hint": null,
    "minLektion": 5
   },
@@ -4961,6 +5220,7 @@
     "ein"
    ],
    "explanationDe": "einkaufen → das Präfix ein steht ganz am Ende.",
+   "explanationEn": "einkaufen → the prefix ein goes at the very end.",
    "hint": null,
    "minLektion": 8
   },
@@ -4979,6 +5239,7 @@
     "mit"
    ],
    "explanationDe": "mitkommen → das Präfix mit steht ganz am Ende.",
+   "explanationEn": "mitkommen → the prefix mit goes at the very end.",
    "hint": null,
    "minLektion": 6
   },
@@ -4999,6 +5260,7 @@
     "Um 7 Uhr stehe ich auf"
    ],
    "explanationDe": "ich + stehe (Position 2), auf am Ende. Die Zeitangabe kann auch am Satzanfang stehen.",
+   "explanationEn": "ich + stehe (position 2), auf at the end. The time phrase can also start the sentence.",
    "hint": null,
    "minLektion": 8
   },
@@ -5019,6 +5281,7 @@
     "Heute kaufen wir ein"
    ],
    "explanationDe": "wir + kaufen (Position 2), ein am Ende. heute kann auch am Satzanfang stehen.",
+   "explanationEn": "wir + kaufen (position 2), ein at the end. heute can also start the sentence.",
    "hint": null,
    "minLektion": 8
   },
@@ -5039,6 +5302,7 @@
     "Um 8 Uhr holt er dich ab"
    ],
    "explanationDe": "er + holt (Position 2), ab am Ende. Die Zeitangabe kann auch am Satzanfang stehen.",
+   "explanationEn": "er + holt (position 2), ab at the end. The time phrase can also start the sentence.",
    "hint": null,
    "minLektion": 11
   },
@@ -5059,7 +5323,8 @@
    ],
    "explanationDe": "mitkommen: kommst steht vorn, mit steht am Ende.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 8,
+   "explanationEn": "Mitkommen splits. In a yes/no question the verb part **kommst** comes first, and the prefix **mit** goes to the end: **Kommst du am Freitag mit?**"
   },
   {
    "id": "extra-a11-l11-05",
@@ -5078,7 +5343,8 @@
    ],
    "explanationDe": "mitbringen: bringen auf Platz zwei, mit am Ende.",
    "hint": null,
-   "minLektion": 11
+   "minLektion": 11,
+   "explanationEn": "Mitbringen splits: **bringen** (wir-form) stands second, and the prefix **mit** goes to the very end: **Wir bringen den Kuchen mit.**"
   },
   {
    "id": "extra-a11-l11-08",
@@ -5097,7 +5363,8 @@
    ],
    "explanationDe": "anrufen: rufe auf Platz zwei, an am Ende.",
    "hint": null,
-   "minLektion": 11
+   "minLektion": 11,
+   "explanationEn": "Anrufen splits: **rufe** (ich-form) stands second, and the prefix **an** goes to the very end: **Ich rufe meine Mutter an.**"
   },
   {
    "id": "extra-a11-l11-10",
@@ -5118,7 +5385,8 @@
    ],
    "explanationDe": "habe + gearbeitet ist ein fester Ausdruck für gestern.",
    "hint": null,
-   "minLektion": 11
+   "minLektion": 11,
+   "explanationEn": "\"Ich habe … gearbeitet\" is a fixed phrase for yesterday: **habe** second, **gearbeitet** at the very end: **Ich habe gestern gearbeitet.**"
   },
   {
    "id": "2e4e344c-3116-5304-9f6e-afbed5d037e9",
@@ -5135,6 +5403,7 @@
     "vierzehn Uhr dreißig"
    ],
    "explanationDe": "Offizielle Zeit: Uhr + Stunde + Minuten.",
+   "explanationEn": "Official time: Uhr + hour + minutes.",
    "hint": "vierzehn = 14",
    "minLektion": 4
   },
@@ -5153,6 +5422,7 @@
     "halb drei"
    ],
    "explanationDe": "halb + NÄCHSTE Stunde = 2:30.",
+   "explanationEn": "halb + the NEXT hour = 2:30.",
    "hint": "halb + nächste Stunde",
    "minLektion": 8
   },
@@ -5171,6 +5441,7 @@
     "Viertel nach zwei"
    ],
    "explanationDe": "Viertel nach + aktuelle Stunde.",
+   "explanationEn": "Viertel nach + the current hour.",
    "hint": null,
    "minLektion": 8
   },
@@ -5189,6 +5460,7 @@
     "Viertel vor drei"
    ],
    "explanationDe": "Viertel vor + NÄCHSTE Stunde.",
+   "explanationEn": "Viertel vor + the NEXT hour.",
    "hint": null,
    "minLektion": 8
   },
@@ -5208,6 +5480,7 @@
     "acht"
    ],
    "explanationDe": "Offizielle Zeit enthält immer Uhr, auch bei einer vollen Stunde.",
+   "explanationEn": "Official time always includes Uhr, even for a full hour.",
    "hint": null,
    "minLektion": 4
   },
@@ -5227,6 +5500,7 @@
     "am"
    ],
    "explanationDe": "am + Tageszeit.",
+   "explanationEn": "am + time of day.",
    "hint": null,
    "minLektion": 7
   },
@@ -5248,6 +5522,7 @@
    "answer": "halb sechs",
    "accepted": [],
    "explanationDe": "halb + NÄCHSTE Stunde = 5:30.",
+   "explanationEn": "halb + the NEXT hour = 5:30.",
    "hint": null,
    "minLektion": 8
   },
@@ -5269,6 +5544,7 @@
    "answer": "Donnerstag",
    "accepted": [],
    "explanationDe": "Die Reihenfolge: Montag, Dienstag, Mittwoch, Donnerstag...",
+   "explanationEn": "The order is Montag, Dienstag, Mittwoch, Donnerstag...",
    "hint": null,
    "minLektion": 8
   },
@@ -5288,7 +5564,8 @@
    ],
    "explanationDe": "Wochentage kommen mit am: am Montag.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 8,
+   "explanationEn": "Days of the week take **am**: **am Montag**. Um is only for clock times."
   },
   {
    "id": "extra-a11-l08-02",
@@ -5306,7 +5583,8 @@
    ],
    "explanationDe": "Die Uhrzeit kommt mit um: um sechs Uhr.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 8,
+   "explanationEn": "Clock times take **um**: **um sechs Uhr**. Am is for days and parts of the day."
   },
   {
    "id": "extra-a11-l08-06",
@@ -5325,7 +5603,8 @@
    ],
    "explanationDe": "Tageszeiten mit am: am Abend, am Morgen.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 8,
+   "explanationEn": "Parts of the day take **am**: **am Abend**, am Morgen. Um is only for clock times."
   },
   {
    "id": "extra-a11-l08-09",
@@ -5343,7 +5622,8 @@
    ],
    "explanationDe": "Die Uhrzeit steht mit um: um acht Uhr.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 8,
+   "explanationEn": "Clock times take **um**: **um acht Uhr**. Am would be for a day, im for a month."
   },
   {
    "id": "extra-a11-l08-10",
@@ -5361,7 +5641,8 @@
    ],
    "explanationDe": "Die Uhrzeit steht mit um: um neun Uhr.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 8,
+   "explanationEn": "Clock times take **um**: **um neun Uhr**. Am is for days, im for months."
   },
   {
    "id": "extra-a11-l08-11",
@@ -5379,7 +5660,8 @@
    ],
    "explanationDe": "Die Uhrzeit steht mit um: um sieben Uhr.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 8,
+   "explanationEn": "Clock times take **um**: **um sieben Uhr**. Am is for days, im for months."
   },
   {
    "id": "extra-a11-l08-12",
@@ -5398,7 +5680,8 @@
    ],
    "explanationDe": "Die Woche beginnt mit Montag, dann kommt Dienstag.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 8,
+   "explanationEn": "The German week starts on Montag; the second day is **Dienstag** (Tuesday)."
   },
   {
    "id": "extra-a11-l08-13",
@@ -5417,7 +5700,8 @@
    ],
    "explanationDe": "Nach Donnerstag kommt Freitag.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 8,
+   "explanationEn": "The weekdays in order: Montag, Dienstag, Mittwoch, Donnerstag, **Freitag**. After Donnerstag comes **Freitag**."
   },
   {
    "id": "extra-a11-l08-14",
@@ -5436,7 +5720,8 @@
    ],
    "explanationDe": "Das Wochenende ist Samstag und Sonntag.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 8,
+   "explanationEn": "The weekend is Samstag and **Sonntag**. After Samstag comes **Sonntag**, the last day of the German week."
   },
   {
    "id": "extra-a11-l08-15",
@@ -5455,7 +5740,8 @@
    ],
    "explanationDe": "Der Wochentag steht mit am: am Freitag.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 8,
+   "explanationEn": "Days of the week take **am**: **Am Freitag habe ich Zeit.** Um is only for clock times."
   },
   {
    "id": "extra-a11-l08-16",
@@ -5474,7 +5760,8 @@
    ],
    "explanationDe": "Der Wochentag steht mit am: am Dienstag.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 8,
+   "explanationEn": "Days of the week take **am**: **Am Dienstag habe ich Zeit.** Um is only for clock times."
   },
   {
    "id": "extra-a11-l08-17",
@@ -5493,7 +5780,8 @@
    ],
    "explanationDe": "Der Wochentag steht mit am, nicht mit um.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 8,
+   "explanationEn": "Freitag is a day of the week, so it takes **am**, not um: **Der Arzt ist am Freitag.** Um is only for clock times."
   },
   {
    "id": "extra-a11-l08-18",
@@ -5512,7 +5800,8 @@
    ],
    "explanationDe": "Der Wochentag steht mit am, nicht mit um.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 8,
+   "explanationEn": "Dienstag is a day of the week, so it takes **am**, not um: **Der Termin ist am Dienstag.** Um is only for clock times."
   },
   {
    "id": "827c155d-7b87-53a3-b047-d53ab532f296",
@@ -5531,6 +5820,7 @@
     "zwanzig nach 6"
    ],
    "explanationDe": "18:20 umgangssprachlich: zwanzig nach sechs.",
+   "explanationEn": "18:20 in 12-hour colloquial time is zwanzig nach sechs.",
    "hint": null,
    "minLektion": 4
   },
@@ -5549,6 +5839,7 @@
     "null Uhr"
    ],
    "explanationDe": "0:00 offiziell: null Uhr.",
+   "explanationEn": "0:00 officially is null Uhr.",
    "hint": null,
    "minLektion": 4
   },
@@ -5570,6 +5861,7 @@
    "answer": "zehn vor drei",
    "accepted": [],
    "explanationDe": "Nach der halben Stunde zählt man mit vor zur nächsten Stunde.",
+   "explanationEn": "For minutes past the half hour, count down to the next hour with vor.",
    "hint": null,
    "minLektion": 8
   },
@@ -5589,7 +5881,8 @@
    ],
    "explanationDe": "halb neun ist 8.30, eine halbe Stunde vor neun.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 8,
+   "explanationEn": "In everyday German, halb names the NEXT hour: 8:30 = **halb neun** (half way to nine), not half past nine."
   },
   {
    "id": "extra-a11-l08-04",
@@ -5607,7 +5900,8 @@
    ],
    "explanationDe": "Viertel vor acht ist 7.45.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 8,
+   "explanationEn": "For a quarter to, use Viertel vor + the NEXT hour: 7:45 = **Viertel vor acht**."
   },
   {
    "id": "extra-a11-l08-05",
@@ -5625,7 +5919,8 @@
    ],
    "explanationDe": "Viertel nach acht ist 8.15.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 8,
+   "explanationEn": "For a quarter past, use Viertel nach + the CURRENT hour: 8:15 = **Viertel nach acht**."
   },
   {
    "id": "extra-a11-l08-07",
@@ -5644,7 +5939,8 @@
    ],
    "explanationDe": "Wochentag mit am, Uhrzeit mit um.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 8,
+   "explanationEn": "Montag is a day of the week, so it takes **am**, not um: **Der Termin ist am Montag.** Um is only for clock times."
   },
   {
    "id": "extra-a11-l08-08",
@@ -5669,7 +5965,8 @@
    ],
    "explanationDe": "Das Verb steht auf Platz zwei, dann Tag und Uhrzeit.",
    "hint": null,
-   "minLektion": 8
+   "minLektion": 8,
+   "explanationEn": "Subject first, verb second, then the day and the time: **Der Termin ist am Dienstag um acht Uhr.** Day with **am**, clock time with **um**."
   },
   {
    "id": "68be03d3-c547-41dc-9dc0-772fa974f74f",
@@ -5691,6 +5988,7 @@
     "habe"
    ],
    "explanationDe": "ich + habe.",
+   "explanationEn": "ich + habe.",
    "hint": null,
    "minLektion": 10
   },
@@ -5714,6 +6012,7 @@
     "hat"
    ],
    "explanationDe": "er + hat.",
+   "explanationEn": "er + hat.",
    "hint": null,
    "minLektion": 9
   },
@@ -5737,6 +6036,7 @@
     "Hast"
    ],
    "explanationDe": "du + hast.",
+   "explanationEn": "du + hast. Questions: verb first!",
    "hint": null,
    "minLektion": 8
   },
@@ -5756,7 +6056,8 @@
    ],
    "explanationDe": "Durst sagt man mit haben: ich habe Durst.",
    "hint": null,
-   "minLektion": 9
+   "minLektion": 9,
+   "explanationEn": "Thirst is said with haben in German: **Ich habe Durst** (I have thirst). After **ich** the form is **habe**."
   },
   {
    "id": "extra-a11-l09-02",
@@ -5775,7 +6076,8 @@
    ],
    "explanationDe": "Zeit sagt man mit haben: Haben Sie Zeit?",
    "hint": null,
-   "minLektion": 9
+   "minLektion": 9,
+   "explanationEn": "Time is said with haben. The formal you (Sie) takes **haben**, and in a question the verb comes first: **Haben Sie Zeit?**"
   },
   {
    "id": "extra-a11-l09-03",
@@ -5793,7 +6095,8 @@
    ],
    "explanationDe": "Bei wir bleibt haben: wir haben Hunger.",
    "hint": null,
-   "minLektion": 9
+   "minLektion": 9,
+   "explanationEn": "Hunger is said with haben. After **wir** the form is **haben**, like the infinitive: **Wir haben Hunger.**"
   },
   {
    "id": "extra-a11-l09-06",
@@ -5812,7 +6115,8 @@
    ],
    "explanationDe": "Bei du ist die Form hast: Hast du Durst?",
    "hint": null,
-   "minLektion": 9
+   "minLektion": 9,
+   "explanationEn": "After **du** (informal you) the form of haben is **hast**: **Hast du Durst?** The verb comes first in a yes/no question."
   },
   {
    "id": "extra-a11-l09-10",
@@ -5830,7 +6134,8 @@
    ],
    "explanationDe": "sie (die Kellnerin) → hat.",
    "hint": null,
-   "minLektion": 9
+   "minLektion": 9,
+   "explanationEn": "Die Kellnerin is sie (she). After **sie** the form of haben is **hat**: **Die Kellnerin hat Kuchen und Tee.**"
   },
   {
    "id": "3286c2b6-0c89-5187-ae66-841a73bcc4c4",
@@ -5847,6 +6152,7 @@
     "hat"
    ],
    "explanationDe": "Singular-sie (she) steht mit hat, wie er und es.",
+   "explanationEn": "Singular sie (she) pairs with hat, like er and es.",
    "hint": null,
    "minLektion": 8
   },
@@ -5866,6 +6172,7 @@
     "haben"
    ],
    "explanationDe": "In einer Frage steht die haben-Form vor dem formellen Sie.",
+   "explanationEn": "In a question, the haben-form comes before the formal Sie.",
    "hint": null,
    "minLektion": 8
   },
@@ -5885,6 +6192,7 @@
     "hast"
    ],
    "explanationDe": "In einer Frage steht die haben-Form vor du.",
+   "explanationEn": "In a question, the haben-form comes before du.",
    "hint": null,
    "minLektion": 8
   },
@@ -5904,7 +6212,8 @@
    ],
    "explanationDe": "Bei er ist die Form hat: Paul hat Suppe.",
    "hint": null,
-   "minLektion": 9
+   "minLektion": 9,
+   "explanationEn": "Paul is er (he). After **er** the form of haben is **hat**: **Paul hat heute Suppe und Salat.**"
   },
   {
    "id": "extra-a11-l09-05",
@@ -5923,7 +6232,8 @@
    ],
    "explanationDe": "Ich möchte … ist ein fester Ausdruck im Café.",
    "hint": null,
-   "minLektion": 9
+   "minLektion": 9,
+   "explanationEn": "Ich möchte … (I would like …) is a fixed phrase for ordering. Subject first, then **möchte**, then what you want: **Ich möchte ein Glas Wasser.**"
   },
   {
    "id": "extra-a11-l09-07",
@@ -5942,7 +6252,8 @@
    ],
    "explanationDe": "Nach haben wird maskulin ein zu einen.",
    "hint": null,
-   "minLektion": 9
+   "minLektion": 9,
+   "explanationEn": "Kaffee is masculine (der Kaffee). After haben, masculine **ein** becomes **einen**: **Ich habe einen Kaffee.** Only masculine nouns change."
   },
   {
    "id": "extra-a11-l09-08",
@@ -5961,7 +6272,8 @@
    ],
    "explanationDe": "Bei ihr ist die Form habt: Habt ihr Hunger?",
    "hint": null,
-   "minLektion": 9
+   "minLektion": 9,
+   "explanationEn": "After **ihr** (informal you, plural) the form of haben is **habt**: **Habt ihr Hunger?** The verb opens the yes/no question."
   },
   {
    "id": "extra-a11-l09-09",
@@ -5980,7 +6292,8 @@
    ],
    "explanationDe": "Höflich mit Sie: Haben Sie auch Kuchen?",
    "hint": null,
-   "minLektion": 9
+   "minLektion": 9,
+   "explanationEn": "Talking politely to the waiter, you use the formal you (Sie), which takes **haben**. The verb comes first: **Haben Sie auch Kuchen?**"
   },
   {
    "id": "extra-a11-l09-11",
@@ -5999,7 +6312,8 @@
    ],
    "explanationDe": "du → hast: Hast du Hunger?",
    "hint": null,
-   "minLektion": 9
+   "minLektion": 9,
+   "explanationEn": "Ana is a friend, so the informal you (du) is used. After **du** the form of haben is **hast**: **Hast du Hunger oder Durst?**"
   },
   {
    "id": "extra-a11-l09-12",
@@ -6017,7 +6331,8 @@
    ],
    "explanationDe": "Bei er ist die Form hat: Der Kellner hat Zeit.",
    "hint": null,
-   "minLektion": 9
+   "minLektion": 9,
+   "explanationEn": "Der Kellner is er (he). After **er** the form of haben is **hat**: **Der Kellner hat Zeit.**"
   },
   {
    "id": "extra-a11-l09-13",
@@ -6035,7 +6350,8 @@
    ],
    "explanationDe": "Bei wir ist die Form haben: Wir haben Durst.",
    "hint": null,
-   "minLektion": 9
+   "minLektion": 9,
+   "explanationEn": "Thirst is said with haben. After **wir** the form is **haben**, like the infinitive: **Wir haben Durst.**"
   },
   {
    "id": "extra-a11-l09-14",
@@ -6054,7 +6370,8 @@
    ],
    "explanationDe": "Bei du ist die Form hast, nicht habt.",
    "hint": null,
-   "minLektion": 9
+   "minLektion": 9,
+   "explanationEn": "After **du** (informal you) the form of haben is **hast**: **Du hast Durst.** Habt belongs to ihr (you, plural)."
   },
   {
    "id": "extra-a11-l09-15",
@@ -6073,7 +6390,8 @@
    ],
    "explanationDe": "Bei ihr ist die Form habt: Habt ihr Tee?",
    "hint": null,
-   "minLektion": 9
+   "minLektion": 9,
+   "explanationEn": "After **ihr** (informal you, plural) the form of haben is **habt**: **Habt ihr auch Tee?** The verb opens the yes/no question."
   },
   {
    "id": "extra-a11-l09-16",
@@ -6092,7 +6410,8 @@
    ],
    "explanationDe": "Bei sie im Singular ist die Form hat: Die Kellnerin hat Kuchen.",
    "hint": null,
-   "minLektion": 9
+   "minLektion": 9,
+   "explanationEn": "Subject first, verb second. Die Kellnerin is sie (she), which takes **hat**: **Die Kellnerin hat Kuchen.**"
   },
   {
    "id": "dcfdd24d-b6da-4222-92a9-2e816bf4cc5d",
@@ -6114,6 +6433,7 @@
     "bin"
    ],
    "explanationDe": "ich + bin.",
+   "explanationEn": "ich + bin.",
    "hint": null,
    "minLektion": 11
   },
@@ -6137,6 +6457,7 @@
     "ist"
    ],
    "explanationDe": "er + ist.",
+   "explanationEn": "er + ist.",
    "hint": null,
    "minLektion": 2
   },
@@ -6160,6 +6481,7 @@
     "sind"
    ],
    "explanationDe": "wir + sind.",
+   "explanationEn": "wir + sind.",
    "hint": null,
    "minLektion": 2
   },
@@ -6183,6 +6505,7 @@
     "ist"
    ],
    "explanationDe": "das + ist.",
+   "explanationEn": "das + ist.",
    "hint": null,
    "minLektion": 2
   },
@@ -6206,6 +6529,7 @@
     "Bist"
    ],
    "explanationDe": "du + bist.",
+   "explanationEn": "du + bist → question: Bist du...?",
    "hint": null,
    "minLektion": 2
   },
@@ -6225,7 +6549,8 @@
    ],
    "explanationDe": "Bei ich heißt die Form von sein bin.",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 2,
+   "explanationEn": "After **ich** the form of sein is **bin**: **Ich bin Studentin.** The job stands without an article."
   },
   {
    "id": "extra-a11-l02-02",
@@ -6244,7 +6569,8 @@
    ],
    "explanationDe": "Bei Sie steht sind: Sind Sie Lehrerin?",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 2,
+   "explanationEn": "The formal you (Sie) takes **sind**, and the verb opens a yes/no question: **Sind Sie Lehrerin?**"
   },
   {
    "id": "extra-a11-l02-03",
@@ -6262,7 +6588,8 @@
    ],
    "explanationDe": "Der Wohnort ist eine Sache: er ist.",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 2,
+   "explanationEn": "Mein Wohnort is one thing (er), so sein takes **ist**: **Mein Wohnort ist Bremen.**"
   },
   {
    "id": "extra-a11-l02-04",
@@ -6280,7 +6607,8 @@
    ],
    "explanationDe": "Nach einem Subjekt im Singular steht ist.",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 2,
+   "explanationEn": "Meine Telefonnummer is one singular subject (sie), so sein takes **ist**: **Meine Telefonnummer ist …**"
   },
   {
    "id": "extra-a11-l02-05",
@@ -6299,7 +6627,8 @@
    ],
    "explanationDe": "Nach ihr steht seid: Seid ihr Studenten?",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 2,
+   "explanationEn": "After **ihr** (informal you, plural) the form of sein is **seid**; the verb opens the question: **Seid ihr acht Studenten?**"
   },
   {
    "id": "extra-a11-l02-13",
@@ -6318,7 +6647,8 @@
    ],
    "explanationDe": "Nach du steht bist: Bist du ledig?",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 2,
+   "explanationEn": "Ana is a friend, so the informal you (du) is used. After **du** the form of sein is **bist**: **Bist du ledig?**"
   },
   {
    "id": "1e3a7370-9e9c-55ea-b513-496b45421861",
@@ -6335,6 +6665,7 @@
     "sind"
    ],
    "explanationDe": "Sie (sie/they) steht mit sind, wie wir.",
+   "explanationEn": "Sie (they) pairs with sind, like wir.",
    "hint": null,
    "minLektion": 6
   },
@@ -6353,6 +6684,7 @@
     "ist"
    ],
    "explanationDe": "Das steht mit ist, genau wie er/sie/es.",
+   "explanationEn": "Das pairs with ist, just like er/sie/es.",
    "hint": null,
    "minLektion": 9
   },
@@ -6371,6 +6703,7 @@
     "ist"
    ],
    "explanationDe": "Singular-sie (she) steht mit ist, wie er und das.",
+   "explanationEn": "Singular sie (she) pairs with ist, like er and das.",
    "hint": null,
    "minLektion": 3
   },
@@ -6390,7 +6723,8 @@
    ],
    "explanationDe": "Bei wir heißt die Form von sein sind.",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 2,
+   "explanationEn": "After **wir** the form of sein is **sind**: **Wir sind verheiratet.**"
   },
   {
    "id": "extra-a11-l02-07",
@@ -6413,7 +6747,8 @@
    ],
    "explanationDe": "Der Beruf steht ohne Artikel: Ich bin Lehrer.",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 2,
+   "explanationEn": "After **ich** the form of sein is **bin**, and a job stands without an article: **Ich bin Lehrer von Beruf.** Never \"ein Lehrer\"."
   },
   {
    "id": "extra-a11-l02-08",
@@ -6432,7 +6767,8 @@
    ],
    "explanationDe": "Nach sein steht der Beruf ohne Artikel.",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 2,
+   "explanationEn": "After sein, a job takes no article in German: **Ich bin Lehrer.** \"Ein Lehrer\" copies the English \"a teacher\" and is wrong."
   },
   {
    "id": "extra-a11-l02-14",
@@ -6451,7 +6787,8 @@
    ],
    "explanationDe": "Nach ihr steht seid: Seid ihr Studenten?",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 2,
+   "explanationEn": "Lena and Tim are addressed together as friends: ihr. After **ihr** the form of sein is **seid**: **Seid ihr Studenten?**"
   },
   {
    "id": "extra-a11-l02-15",
@@ -6469,7 +6806,8 @@
    ],
    "explanationDe": "Im Satz steht die Staatsangehörigkeit als Nomen: Ana ist Marokkanerin. Im Formular: Staatsangehörigkeit: marokkanisch.",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 2,
+   "explanationEn": "Ana is one person (sie), so sein takes **ist**: **Ana ist Marokkanerin.** In a sentence the nationality is a noun; the form marokkanisch belongs on a form."
   },
   {
    "id": "extra-a11-l02-16",
@@ -6487,7 +6825,8 @@
    ],
    "explanationDe": "Der Mann: Marokkaner. Die Frau: Marokkanerin. Wie Student und Studentin.",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 2,
+   "explanationEn": "In a sentence the nationality is a noun. For a man it is **Marokkaner**, for a woman Marokkanerin — like Student and Studentin."
   },
   {
    "id": "extra-a11-l02-17",
@@ -6508,7 +6847,8 @@
    ],
    "explanationDe": "Woher? Ich komme aus Marokko.",
    "hint": null,
-   "minLektion": 2
+   "minLektion": 2,
+   "explanationEn": "Subject first, verb second. After **ich** the verb kommen ends in **-e**: **Ich komme aus Marokko.** Aus answers \"Woher?\"."
   },
   {
    "id": "5c5c272b-ff81-5811-83b6-6e7fde71ba1b",
@@ -6525,6 +6865,7 @@
     "Bist"
    ],
    "explanationDe": "Aussage: Du bist müde. Frage: Verb an Position 1 → Bist du müde?",
+   "explanationEn": "Statement: Du bist müde. Question: verb moves to position 1 → Bist du müde?",
    "hint": null,
    "minLektion": 11
   },
@@ -6543,6 +6884,7 @@
     "Hast"
    ],
    "explanationDe": "Aussage: Du hast Zeit. Frage: Hast du Zeit?",
+   "explanationEn": "Statement: Du hast Zeit. Question: Hast du Zeit?",
    "hint": null,
    "minLektion": 8
   },
@@ -6561,6 +6903,7 @@
     "Kommst"
    ],
    "explanationDe": "Aussage: Du kommst aus Polen. Frage: Kommst du aus Polen?",
+   "explanationEn": "Statement: Du kommst aus Polen. Question: Kommst du aus Polen?",
    "hint": null,
    "minLektion": 2
   },
@@ -6579,6 +6922,7 @@
     "Arbeitest"
    ],
    "explanationDe": "Der Stamm von arbeiten endet auf -t, deshalb -e- einfügen: arbeitest. Frage: Arbeitest du viel?",
+   "explanationEn": "arbeiten's stem ends in -t, so du takes the extra -e-: arbeitest. Question: Arbeitest du viel?",
    "hint": null,
    "minLektion": 7
   },
@@ -6597,6 +6941,7 @@
     "Wohnen"
    ],
    "explanationDe": "Beim formellen Sie bleibt die Verbform gleich (wohnen), nur an Position 1: Wohnen Sie in Berlin?",
+   "explanationEn": "Formal Sie uses the same verb form as the statement (wohnen), just moved to position 1: Wohnen Sie in Berlin?",
    "hint": null,
    "minLektion": 2
   },
@@ -6615,6 +6960,7 @@
     "Sprechen"
    ],
    "explanationDe": "Sie benutzt die Form sprechen (wie der Infinitiv), an Position 1: Sprechen Sie Englisch?",
+   "explanationEn": "Sie uses the infinitive-like form sprechen, moved to position 1: Sprechen Sie Englisch?",
    "hint": null,
    "minLektion": 3
   },
@@ -6633,6 +6979,7 @@
     "Trinkst"
    ],
    "explanationDe": "Aussage: Du trinkst gern Kaffee. Frage: Trinkst du gern Kaffee?",
+   "explanationEn": "Statement: Du trinkst gern Kaffee. Question: Trinkst du gern Kaffee?",
    "hint": null,
    "minLektion": 9
   },
@@ -6651,6 +6998,7 @@
     "Kochst"
    ],
    "explanationDe": "Aussage: Du kochst gern. Frage: Kochst du gern?",
+   "explanationEn": "Statement: Du kochst gern. Question: Kochst du gern?",
    "hint": null,
    "minLektion": 7
   },
@@ -6672,6 +7020,7 @@
    "answer": "Ja, ich komme aus Italien.",
    "accepted": [],
    "explanationDe": "Die Kurzantwort wiederholt die ganze Aussage: Ja, ich komme aus Italien.",
+   "explanationEn": "A short answer repeats the full statement: Ja, ich komme aus Italien.",
    "hint": null,
    "minLektion": 2
   },
@@ -6696,7 +7045,8 @@
    ],
    "explanationDe": "In der Ja/Nein-Frage steht das Verb auf Platz eins.",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 10,
+   "explanationEn": "In a yes/no question the verb comes first, then the subject. Der Zug is er, and fahren changes its vowel: **Fährt der Zug nach Österreich?**"
   },
   {
    "id": "extra-a11-l10-02",
@@ -6715,7 +7065,8 @@
    ],
    "explanationDe": "Ohne Fragewort kommt zuerst das Verb, dann das Subjekt.",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 10,
+   "explanationEn": "Without a question word, the verb comes first and the subject second. Die Fahrkarte is sie, so **kostet**: **Kostet die Fahrkarte …?**"
   },
   {
    "id": "extra-a11-l10-03",
@@ -6734,7 +7085,8 @@
    ],
    "explanationDe": "Mit sein fragen Sie so: Ist das Gleis vier?",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 10,
+   "explanationEn": "In a yes/no question the form of sein comes first. Das takes **ist**: **Ist das Gleis vier?**"
   },
   {
    "id": "extra-a11-l10-04",
@@ -6753,7 +7105,8 @@
    ],
    "explanationDe": "haben in der Frage: Hast du …?",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 10,
+   "explanationEn": "In a yes/no question the verb comes first. After **du** the form of haben is **hast**: **Hast du eine Fahrkarte für morgen?**"
   },
   {
    "id": "extra-a11-l10-05",
@@ -6772,7 +7125,8 @@
    ],
    "explanationDe": "Das Verb hat steht vor dem Subjekt der Zug.",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 10,
+   "explanationEn": "In a yes/no question the verb stands before the subject. Der Zug is er, so haben becomes **hat**: **Hat der Zug heute Verspätung?**"
   },
   {
    "id": "extra-a11-l10-06",
@@ -6793,7 +7147,8 @@
    ],
    "explanationDe": "du fährst wird in der Frage zu Fährst du.",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 10,
+   "explanationEn": "Statement: Du fährst mit dem Bus. In the question the verb comes first: **Fährst du morgen mit dem Bus?** Fahren changes its vowel after du."
   },
   {
    "id": "0b5c7d74-0e60-51b3-802e-50a4c8457f36",
@@ -6810,6 +7165,7 @@
     "Bist du müde"
    ],
    "explanationDe": "bist an Position 1, du an Position 2: Bist du müde?",
+   "explanationEn": "Move bist to position 1, du to position 2: Bist du müde?",
    "hint": null,
    "minLektion": 11
   },
@@ -6828,6 +7184,7 @@
     "Wohnst du in Köln"
    ],
    "explanationDe": "wohnst an Position 1: Wohnst du in Köln?",
+   "explanationEn": "wohnst moves to position 1: Wohnst du in Köln?",
    "hint": null,
    "minLektion": 2
   },
@@ -6846,6 +7203,7 @@
     "Kommst du aus Polen"
    ],
    "explanationDe": "kommst an Position 1: Kommst du aus Polen?",
+   "explanationEn": "kommst moves to position 1: Kommst du aus Polen?",
    "hint": null,
    "minLektion": 2
   },
@@ -6864,6 +7222,7 @@
     "Kommst du am Samstag mit"
    ],
    "explanationDe": "Trennbares Verb: kommst an Position 1, mit bleibt am Ende: Kommst du am Samstag mit?",
+   "explanationEn": "Separable verb: kommst moves to position 1, mit stays at the end: Kommst du am Samstag mit?",
    "hint": null,
    "minLektion": 8
   },
@@ -6882,6 +7241,7 @@
     "Wohnen Sie in Berlin"
    ],
    "explanationDe": "wohnen an Position 1, Sie an Position 2: Wohnen Sie in Berlin?",
+   "explanationEn": "wohnen moves to position 1, Sie stays in position 2: Wohnen Sie in Berlin?",
    "hint": null,
    "caseSensitive": true,
    "minLektion": 2
@@ -6901,6 +7261,7 @@
     "Haben Sie Kinder"
    ],
    "explanationDe": "haben an Position 1, Sie an Position 2: Haben Sie Kinder?",
+   "explanationEn": "haben moves to position 1, Sie to position 2: Haben Sie Kinder?",
    "hint": null,
    "caseSensitive": true,
    "minLektion": 4
@@ -6923,6 +7284,7 @@
    "answer": "Wohnst du in Köln?",
    "accepted": [],
    "explanationDe": "Die anderen drei beginnen mit einem W-Wort und fragen nach Information; Wohnst du in Köln? beginnt mit dem Verb und erwartet ja/nein.",
+   "explanationEn": "The other three start with a W-word and ask for information; Wohnst du in Köln? starts with the verb and expects ja/nein.",
    "hint": null,
    "minLektion": 8
   },
@@ -6943,7 +7305,8 @@
    ],
    "explanationDe": "ihr fahrt wird in der Frage zu Fahrt ihr.",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 10,
+   "explanationEn": "In a yes/no question the verb comes first, then the subject. After ihr the ending is -t: **Fahrt ihr mit dem Auto in die Schweiz?**"
   },
   {
    "id": "extra-a11-l10-08",
@@ -6963,7 +7326,8 @@
    "explanationDe": "Höfliche Frage mit Sie: Verb zuerst, dann Sie.",
    "hint": null,
    "caseSensitive": true,
-   "minLektion": 10
+   "minLektion": 10,
+   "explanationEn": "In a polite yes/no question the verb comes first and the formal you (Sie) second. Sie uses the form fahren: **Fahren Sie morgen nach Deutschland?**"
   },
   {
    "id": "extra-a11-l10-09",
@@ -6982,7 +7346,8 @@
    ],
    "explanationDe": "Ohne Fragewort steht ist auf Position 1.",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 10,
+   "explanationEn": "Without a question word, the form of sein comes first, then the subject. Die Ankunft is singular, so **ist**: **Ist die Ankunft am Gleis vier?**"
   },
   {
    "id": "extra-a11-l10-10",
@@ -7001,7 +7366,8 @@
    ],
    "explanationDe": "Die Abfahrt ist Singular: Ist die Abfahrt …?",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 10,
+   "explanationEn": "Die Abfahrt is one thing (singular), so sein takes **ist**, not sind: **Ist die Abfahrt um neun Uhr?** Sind belongs to wir, sie (they) and Sie."
   },
   {
    "id": "extra-a11-l10-11",
@@ -7020,7 +7386,8 @@
    ],
    "explanationDe": "Das Verb passt zum Subjekt: der Fahrer hat.",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 10,
+   "explanationEn": "The verb must match the subject. Der Fahrer is er, so haben becomes **hat**: **Hat der Fahrer Verspätung?** Haben belongs to plural subjects and Sie."
   },
   {
    "id": "extra-a11-l10-12",
@@ -7039,7 +7406,8 @@
    ],
    "explanationDe": "Das Verb steht vorn, dann kommt das Subjekt.",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 10,
+   "explanationEn": "In a yes/no question the verb comes first, then the subject. Der Bus is er, so the ending is -t: **Kommt der Bus zum Bahnhof?**"
   },
   {
    "id": "extra-a11-l10-13",
@@ -7058,7 +7426,8 @@
    ],
    "explanationDe": "Bei haben steht die Form vorn: Hat der Zug …?",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 10,
+   "explanationEn": "In a yes/no question the verb comes first. Der Zug is er, so haben becomes **hat**: **Hat der Zug nach Österreich Verspätung?**"
   },
   {
    "id": "extra-a11-l10-14",
@@ -7077,7 +7446,8 @@
    ],
    "explanationDe": "Das Verb zuerst, dann das Subjekt die Fahrkarte.",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 10,
+   "explanationEn": "In a yes/no question the verb comes first, then the subject. Die Fahrkarte is sie, so **kostet**: **Kostet die Fahrkarte nach Deutschland zwanzig Euro?**"
   },
   {
    "id": "extra-a11-l10-15",
@@ -7096,7 +7466,8 @@
    ],
    "explanationDe": "Ohne Fragewort steht ist ganz vorn.",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 10,
+   "explanationEn": "Without a question word, the form of sein opens the question. Die Abfahrt is singular, so **ist**: **Ist die Abfahrt vom Gleis vier?**"
   },
   {
    "id": "extra-a11-l10-16",
@@ -7115,7 +7486,8 @@
    ],
    "explanationDe": "Die Ja/Nein-Frage beginnt mit ist.",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 10,
+   "explanationEn": "A yes/no question starts with the verb. Der Bahnhof is er, so sein takes **ist**: **Ist der Bahnhof weit?**"
   },
   {
    "id": "extra-a11-l10-17",
@@ -7134,7 +7506,8 @@
    ],
    "explanationDe": "Das Verb rückt auf Position 1: Fährt der Zug …?",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 10,
+   "explanationEn": "To turn a statement into a yes/no question, move the verb to position 1 and the subject after it: **Fährt der Zug nach Österreich?**"
   },
   {
    "id": "extra-a11-l10-18",
@@ -7153,7 +7526,8 @@
    ],
    "explanationDe": "Zur Antwort ja gehört die Frage Hat der Zug Verspätung?",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 10,
+   "explanationEn": "The answer \"Ja, der Zug hat Verspätung\" repeats the statement. The question puts the verb first: **Hat der Zug Verspätung?**"
   },
   {
    "id": "extra-a11-l10-19",
@@ -7172,7 +7546,8 @@
    ],
    "explanationDe": "Aus Der Bus fährt … wird Fährt der Bus …?",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 10,
+   "explanationEn": "To turn a statement into a yes/no question, move the verb to position 1: Der Bus fährt … → **Fährt der Bus nach Deutschland?**"
   },
   {
    "id": "extra-a11-l10-20",
@@ -7191,7 +7566,8 @@
    ],
    "explanationDe": "Die Frage beginnt mit dem Verb: Hat der Bus …?",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 10,
+   "explanationEn": "The answer repeats the statement, so the question is the same words with the verb first: **Hat der Bus Verspätung?**"
   },
   {
    "id": "extra-a11-l10-21",
@@ -7210,7 +7586,8 @@
    ],
    "explanationDe": "Zuerst das Verb, dann der Fahrer: Fährt der Fahrer …?",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 10,
+   "explanationEn": "To turn a statement into a yes/no question, move the verb to position 1 and the subject after it: **Fährt der Fahrer nach Österreich?**"
   },
   {
    "id": "extra-a11-l10-22",
@@ -7229,7 +7606,8 @@
    ],
    "explanationDe": "Aus Der Fahrer hat Zeit. wird Hat der Fahrer Zeit?",
    "hint": null,
-   "minLektion": 10
+   "minLektion": 10,
+   "explanationEn": "The answer \"Ja, der Fahrer hat Zeit\" repeats the statement. The question puts the verb first: **Hat der Fahrer Zeit?**"
   }
  ]
 }

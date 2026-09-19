@@ -3,16 +3,19 @@ import { Play, Languages, Mic, Cpu, ListEnd } from 'lucide-react';
 import Card from '../ui/Card.jsx';
 import StageShell from './StageShell.jsx';
 import { audioFor, playLine, speechAvailable } from '../../lib/lesson/speech.js';
+import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /**
  * Stage 2a — Input. The dialogue arrives line by line: you reveal the next
  * line, you can play any line, and once a line is on screen it STAYS on screen
  * (CONTRACT.md: sound is never the only channel). The English gloss is a
  * toggle, off by default, so the German is read first. Line by line is the
- * default; „Alle Zeilen zeigen" (by the line counter) is the way out for a
+ * default; "Show all lines" (by the line counter) is the way out for a
  * learner who is re-reading — nine taps for ten lines was the friction the
  * walkthrough measured. Once every line is on screen the primary reads
- * „Weiter" either way.
+ * "Continue" either way. Every label here is `t()` from the lesson string
+ * table (English chrome by default, Deutsch-Modus on the toggle); the lines
+ * themselves are German content.
  *
  * Audio is the recording when scripts/generate-course-audio.mjs has rendered
  * the line (manifest src/data/curricula/<level>.audio.js, key `line-<i>`) and
@@ -21,7 +24,8 @@ import { audioFor, playLine, speechAvailable } from '../../lib/lesson/speech.js'
  */
 
 /**
- * "Aufnahme" vs "Computerstimme", honest until the whole level is recorded
+ * "Recording" vs "Computer voice" (Deutsch-Modus: „Aufnahme" / „Computerstimme"),
+ * honest until the whole level is recorded
  * (plan P1). Word AND icon, never colour alone — and it is a label, not a
  * control, so it carries no interactive colour (design tokens: one interactive
  * colour, `siegel`). Exported because the dictation and pretest screens show
@@ -29,12 +33,13 @@ import { audioFor, playLine, speechAvailable } from '../../lib/lesson/speech.js'
  */
 export function AudioSourceBadge({ recorded, className = '' }) {
   const Icon = recorded ? Mic : Cpu;
+  const [lang] = useLessonLang();
   return (
     <span
       className={`inline-flex items-center gap-1 font-data text-[0.625rem] font-bold uppercase tracking-[0.11em] text-graphite ${className}`}
     >
       <Icon className="h-3 w-3" aria-hidden="true" />
-      {recorded ? 'Aufnahme' : 'Computerstimme'}
+      {t(recorded ? 'audio.recorded' : 'audio.synthetic', lang)}
     </span>
   );
 }
@@ -45,6 +50,7 @@ export default function DialogStage({ stage, lektionId, onBack, onDone }) {
   const [shown, setShown] = useState(1);
   const [gloss, setGloss] = useState(false);
   const [played, setPlayed] = useState(() => new Set());
+  const [lang] = useLessonLang();
   const allShown = shown >= lines.length;
 
   const play = (i, text) => {
@@ -54,11 +60,11 @@ export default function DialogStage({ stage, lektionId, onBack, onDone }) {
 
   return (
     <StageShell
-      eyebrow="Schritt 2 · Input"
-      title={stage.dialog?.title || 'Dialog'}
+      eyebrow={t('stage.input.eyebrow', lang)}
+      title={stage.dialog?.title || t('stage.input.title', lang)}
       lead={stage.dialog?.setting}
       onBack={onBack}
-      primaryLabel={allShown ? 'Weiter' : 'Nächste Zeile'}
+      primaryLabel={allShown ? t('action.next', lang) : t('action.nextLine', lang)}
       onPrimary={allShown ? onDone : () => setShown((n) => Math.min(n + 1, lines.length))}
       secondary={
         <button
@@ -67,7 +73,7 @@ export default function DialogStage({ stage, lektionId, onBack, onDone }) {
           aria-pressed={gloss}
           className="inline-flex items-center gap-1.5 rounded-pill border border-rule bg-white px-3 py-1.5 text-[0.8125rem] font-bold text-graphite hover:border-siegel hover:text-siegel-deep"
         >
-          <Languages className="h-4 w-4" /> {gloss ? 'Englisch aus' : 'Englisch an'}
+          <Languages className="h-4 w-4" /> {t(gloss ? 'dialog.glossOff' : 'dialog.glossOn', lang)}
         </button>
       }
     >
@@ -82,7 +88,7 @@ export default function DialogStage({ stage, lektionId, onBack, onDone }) {
                     type="button"
                     onClick={() => play(i, l.de)}
                     disabled={!recorded && !speechAvailable()}
-                    aria-label={`Zeile von ${l.speaker} vorlesen`}
+                    aria-label={t('dialog.playLine', lang, { speaker: l.speaker })}
                     className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel transition-transform duration-100 ease-snap hover:bg-siegel hover:text-white active:translate-y-0.5 disabled:opacity-40 motion-reduce:transition-none"
                   >
                     <Play className="h-4 w-4" />
@@ -92,10 +98,10 @@ export default function DialogStage({ stage, lektionId, onBack, onDone }) {
                       <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">{l.speaker}</p>
                       <AudioSourceBadge recorded={recorded} />
                     </div>
-                    <p className="mt-1 text-[1.0625rem] leading-relaxed text-ink">{l.de}</p>
+                    <p className="mt-1 text-[1.0625rem] leading-relaxed text-ink" lang="de">{l.de}</p>
                     {gloss && <p className="mt-1 text-[0.875rem] leading-relaxed text-graphite">{l.en}</p>}
                     {played.has(i) && !recorded && !speechAvailable() && (
-                      <p className="mt-1 text-[0.75rem] text-graphite">Ihr Browser kann diesen Text nicht vorlesen.</p>
+                      <p className="mt-1 text-[0.75rem] text-graphite">{t('dialog.noSpeech', lang)}</p>
                     )}
                   </div>
                 </div>
@@ -107,7 +113,7 @@ export default function DialogStage({ stage, lektionId, onBack, onDone }) {
       {!allShown && (
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
           <p className="font-data text-[0.75rem] text-graphite">
-            Zeile {shown} von {lines.length}
+            {t('dialog.lineOf', lang, { n: shown, total: lines.length })}
           </p>
           {/* The secondary control sits by the counter, not in the footer: a
               third footer control wraps its label at phone width. */}
@@ -116,7 +122,7 @@ export default function DialogStage({ stage, lektionId, onBack, onDone }) {
             onClick={() => setShown(lines.length)}
             className="inline-flex items-center gap-1.5 rounded-pill border border-rule bg-white px-3 py-1.5 text-[0.8125rem] font-bold text-graphite hover:border-siegel hover:text-siegel-deep"
           >
-            <ListEnd className="h-4 w-4" aria-hidden="true" /> Alle Zeilen zeigen
+            <ListEnd className="h-4 w-4" aria-hidden="true" /> {t('action.showAllLines', lang)}
           </button>
         </div>
       )}

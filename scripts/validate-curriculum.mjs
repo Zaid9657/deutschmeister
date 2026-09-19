@@ -628,6 +628,24 @@ export const MAX_WORTFELD_WITHOUT_INPUT = 57;      // a1.1; per level in LEVELS 
 export const MAX_FORM_SPEAK_SENTENCES = 0;         // a1.1; per level in LEVELS below — measured 2026-09-13
 
 /**
+ * RULE 25 — English twins (2026-09-19, docs/language-strategy.md: explanations are English-first).
+ *
+ * The course is sold to English-speaking absolute beginners, and until this round every grammar
+ * notice (`notice.bodyDe`), every writing task (`schreiben.taskDe`) and every open speaking
+ * prompt (`sprechen.open.promptDe`) existed only in German — the one field that had a twin was
+ * `pretest.promptEn`. The rule asks four things of every Lektion — `notice.bodyEn` (1–80 words,
+ * plain text with the same **bold** marks as bodyDe, no `<>#`), `pretest.promptEn`,
+ * `schreiben.taskEn` and `sprechen.open.promptEn`, all non-empty strings — and one thing of every
+ * item of the BUILT pool: a non-empty `explanationEn` beside `explanationDe`. The pool half is
+ * what `scripts/build-lesson-pool.mjs` emits from the bank (`explanation_en || why_correct_en`),
+ * the sidecar `<level>.explanationsEn.json` and the generated templates, in that order; the
+ * missing ids are PRINTED so the sidecar can be written against the list rather than the pool.
+ *
+ * HARD 0 at A1.1 (no constant, like RULE 23b): a twin is what the round that adds the field writes.
+ * A1.2 is PAUSED by owner decision (2026-09-13) and carries its measured number in its LEVELS row.
+ */
+
+/**
  * The letter formulas a Mitteilung needs and no Wortfeld lists. CLOSED and tiny on purpose — the
  * test pins the list, and every entry is a salutation or a closing, never content
  * (`tests/curricula.test.mjs`, „RULE 20's licensed chunks are letter formulas“).
@@ -836,6 +854,7 @@ export const LEVELS = {
       formSpeakSentences: MAX_FORM_SPEAK_SENTENCES,
       // RULE 19 is a hard rule (0, no ratchet), like RULE 14: a model text that contradicts its own
       // dialogue is never older debt. No entry here.
+      // RULE 25 is a hard rule (0, no ratchet) at A1.1 — see `englishTwins`. No entry here.
     },
   },
   'a1.2': {
@@ -1000,6 +1019,15 @@ export const LEVELS = {
       // A1.2 content was touched to get there; whoever resumes the level writes „Ich brauche
       // Größe 38.“ and the ratchet goes to 0.
       formSpeakSentences: 1,
+      // RULE 25, measured on the paused A1.2 draft 2026-09-19: **299** — every one of the
+      // twelve Lektionen lacks `notice.bodyEn`, `schreiben.taskEn` and `sprechen.open.promptEn`
+      // (36; `pretest.promptEn` is present on all twelve), and none of the 263 items of the draft
+      // pool carries `explanationEn`, because a12.json was built before the field existed and the
+      // paused pool may not be rebuilt. Paused; measured only, and no A1.2 content was touched to
+      // get there. Whoever resumes the level writes the 36 strings, rebuilds the pool (the bank
+      // half of the 263 fills itself) and writes `a12.explanationsEn.json` for the extras; then
+      // this goes to 0 and hard, exactly as at A1.1.
+      missingEnglishTwins: 299,
     },
   },
 };
@@ -2852,6 +2880,36 @@ export function personaConsistency(c) {
 
 const words = (s) => String(s).trim().split(/\s+/).filter(Boolean);
 
+/**
+ * RULE 25: the English twins — see MAX_FORM_SPEAK_SENTENCES's neighbour comment above for the why.
+ * Returns `{ lektionen: [{ nr, field, why }], pool: [id] }`: the Lektion fields that are missing or
+ * malformed, and the ids of the BUILT pool items whose `explanationEn` is empty. The two halves are
+ * reported separately (a Lektion string is authored in `a11.js`, a pool string in the bank, the
+ * sidecar or a template) and counted together against the level's ratchet.
+ */
+export function englishTwins(c, spec = null, { poolItems = null } = {}) {
+  const s = spec || levelSpec(c?.level) || LEVELS['a1.1'];
+  poolItems = poolItems ?? loadPoolItems(s.level);
+  const nonEmpty = (v) => typeof v === 'string' && v.trim().length > 0;
+  const lektionen = [];
+  for (const l of c?.lektionen || []) {
+    const body = l.notice?.bodyEn;
+    if (!nonEmpty(body)) lektionen.push({ nr: l.nr, field: 'notice.bodyEn', why: 'fehlt' });
+    else {
+      const n = words(body).length;
+      if (n > 80) lektionen.push({ nr: l.nr, field: 'notice.bodyEn', why: `${n} Wörter, erlaubt 1–80` });
+      if (/[<>#]|\]\(/.test(body)) lektionen.push({ nr: l.nr, field: 'notice.bodyEn', why: 'nur Klartext mit **fett**, kein HTML/Markdown' });
+    }
+    for (const [field, v] of [
+      ['pretest.promptEn', l.pretest?.promptEn],
+      ['schreiben.taskEn', l.schreiben?.taskEn],
+      ['sprechen.open.promptEn', l.sprechen?.open?.promptEn],
+    ]) if (!nonEmpty(v)) lektionen.push({ nr: l.nr, field, why: 'fehlt' });
+  }
+  const pool = (poolItems || []).filter((it) => !nonEmpty(it.explanationEn)).map((it) => it.id);
+  return { lektionen, pool };
+}
+
 export function validateCurriculum(c, extraItems, poolItems) {
   const errors = [];
   const fail = (msg) => errors.push(msg);
@@ -3219,6 +3277,22 @@ export function validateCurriculum(c, extraItems, poolItems) {
     fail(`RULE 24: L${o.nr} ${o.where}: „${o.de}“ — eine Staatsangehörigkeit steht im Satz als NOMEN (Ich bin Marokkanerin.), das Adjektiv „${o.adj}“ nur als Formularwert`);
   }
 
+  // ---- RULE 25 (English twins, 2026-09-19) ------------------------------------------------------
+  // Hard 0 at A1.1 (no ratchet entry); A1.2's row carries its measured number while it is paused.
+  // Two messages, one per half: the Lektion strings are authored in the curriculum module, the pool
+  // strings come out of the build — and the pool message carries the COUNT and the ids so the
+  // sidecar (`<level>.explanationsEn.json`) can be written against it.
+  const twins = englishTwins(c, spec, { poolItems });
+  const twinsTotal = twins.lektionen.length + twins.pool.length;
+  if (twinsTotal > (r.missingEnglishTwins ?? 0)) {
+    if (twins.lektionen.length) {
+      fail(`RULE 25: ${twins.lektionen.length} englische Zwillinge in den Lektionen fehlen oder sind fehlerhaft, Ratchet ist ${r.missingEnglishTwins ?? 0} (gesamt ${twinsTotal}) — ${twins.lektionen.map((o) => `L${o.nr} ${o.field} (${o.why})`).join(', ')}`);
+    }
+    if (twins.pool.length) {
+      fail(`RULE 25: Pool — ${twins.pool.length} von ${(poolItems || []).length} gebauten Items ohne explanationEn, Ratchet ist ${r.missingEnglishTwins ?? 0} (gesamt ${twinsTotal}) — Sidecar-Arbeitsauftrag: ${twins.pool.slice(0, 12).join(', ')}${twins.pool.length > 12 ? `, … (+${twins.pool.length - 12})` : ''}`);
+    }
+  }
+
   // ---- RULE 14 (the recurring characters keep their facts) --------------------------------------
   // No ratchet: a learner meets Ana in the dialogue and again in the Formular of the same Lektion,
   // and a contradiction between the two is always something a repair round just wrote.
@@ -3301,6 +3375,11 @@ if (isMain) {
   const predAdj = predicativeNationalityAdjectives(c, spec);
   console.log(`  RULE 24 prädikative Nationalitätsadjektive: ${predAdj.length} (harte Regel, kein Ratchet)`);
   for (const o of predAdj) console.log(`    L${o.nr} ${o.where}: „${o.de}“`);
+  const twins = englishTwins(c, spec);
+  const poolSize = loadPoolItems(spec.level).length;
+  console.log(`  RULE 25 englische Zwillinge fehlen: ${twins.lektionen.length + twins.pool.length} (${r.missingEnglishTwins == null ? 'harte Regel, kein Ratchet' : `Ratchet ${r.missingEnglishTwins}`}) — Lektionen ${twins.lektionen.length}, Pool-Items ohne explanationEn ${twins.pool.length} von ${poolSize}`);
+  for (const o of twins.lektionen) console.log(`    L${o.nr} ${o.field}: ${o.why}`);
+  for (const id of twins.pool) console.log(`    ${id}`);
   const personaBreaks = personaConsistency(c);
   console.log(`  RULE 14 Figuren-Widersprüche: ${personaBreaks.length} (harte Regel, kein Ratchet)`);
   for (const o of personaBreaks) console.log(`    L${o.nr} ${o.where}: ${o.name} ${o.fact} „${o.found}“ statt „${o.expected}“`);

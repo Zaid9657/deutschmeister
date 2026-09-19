@@ -1,11 +1,12 @@
 import { useCallback, useState } from 'react';
-import { Mic } from 'lucide-react';
+import { Mic, SkipForward } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
 import StageShell from './StageShell.jsx';
 import ReadAloudLine from './ReadAloudLine.jsx';
 import { saveCourseContext } from '../../lib/courseFlow.js';
+import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /**
  * Stage 5 — Sprechen. Two halves:
@@ -21,9 +22,19 @@ import { saveCourseContext } from '../../lib/courseFlow.js';
  *    into this lesson.
  *
  * The prop contract with LessonPlayerPage is unchanged: onBack / onDone.
+ *
+ * THE WAY OUT. The primary stays disabled until every read-aloud line is
+ * confirmed or scored — but a learner without a microphone, or without the
+ * nerve on day one, used to have only "Back" here and looped into the
+ * dictation. "Skip for now" (secondary) calls the same onDone without
+ * confirming anything: no result is recorded for the unconfirmed lines, so
+ * nothing is logged as said or as correct — the accuracy figure counts
+ * practice responses only (LessonPlayerPage.recordResult), and a skipped line
+ * is simply absent from it. Skipped ≠ correct, and skipped ≠ wrong.
  */
 export default function SpeakingStage({ stage, level, code, lektion, onBack, onDone }) {
   const [results, setResults] = useState(() => ({}));
+  const [lang] = useLessonLang();
   const lines = stage.readAloud || [];
   const open = stage.open;
   const allDone = lines.every((l) => results[l.index] !== undefined);
@@ -57,12 +68,23 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
 
   return (
     <StageShell
-      eyebrow="Schritt 5 · Sprechen"
-      title="Erst nachsprechen, dann frei sprechen"
+      eyebrow={t('stage.speaking.eyebrow', lang)}
+      title={t('stage.speaking.title', lang)}
       onBack={onBack}
-      primaryLabel="Weiter"
+      primaryLabel={t('action.next', lang)}
       onPrimary={onDone}
       primaryDisabled={lines.length > 0 && !allDone}
+      secondary={
+        lines.length > 0 && !allDone ? (
+          <button
+            type="button"
+            onClick={onDone}
+            className="inline-flex items-center gap-1.5 rounded-pill border border-rule bg-white px-3 py-1.5 text-[0.8125rem] font-bold text-graphite hover:border-siegel hover:text-siegel-deep"
+          >
+            <SkipForward className="h-4 w-4" aria-hidden="true" /> {t('speaking.skip', lang)}
+          </button>
+        ) : null
+      }
     >
       <ul className="space-y-3">
         {lines.map((l) => (
@@ -81,18 +103,19 @@ export default function SpeakingStage({ stage, level, code, lektion, onBack, onD
       {open && (
         <Card tone="wash" className="mt-5 p-5">
           <div className="flex flex-wrap items-center gap-2">
-            <Chip tone="label">{open.teil || 'Sprechen'}</Chip>
+            <Chip tone="label">{open.teil || t('speaking.teilDefault', lang)}</Chip>
             {(open.hintWords || []).map((w) => (
               <Chip key={w} tone="quiet">{w}</Chip>
             ))}
           </div>
-          <p className="mt-3 text-[1.0625rem] font-semibold text-ink">{open.promptDe}</p>
+          <p className="mt-3 text-[1.0625rem] font-semibold text-ink" lang="de">{open.promptDe}</p>
+          {open.promptEn && <p className="mt-1 text-[0.9375rem] leading-relaxed text-graphite">{open.promptEn}</p>}
           <p className="mt-2 text-[0.875rem] text-graphite">
-            Der Sprach-Coach hört zu und gibt Ihnen automatisch eine Rückmeldung. Danach kommen Sie hierher zurück.
+            {t('speaking.coachLead', lang)}
           </p>
           <div className="mt-4">
             <Button onClick={goSpeak} variant="secondary">
-              <Mic className="h-4 w-4" aria-hidden="true" /> Frei sprechen
+              <Mic className="h-4 w-4" aria-hidden="true" /> {t('speaking.speakFree', lang)}
             </Button>
           </div>
         </Card>

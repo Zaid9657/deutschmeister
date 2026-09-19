@@ -2,11 +2,10 @@ import { Trophy, BookOpen, Target, CalendarClock } from 'lucide-react';
 import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
 import StageShell from './StageShell.jsx';
-import { accuracyPercent, masteryLabel, nextReviewDate } from '../../lib/lesson/mastery.js';
+import { accuracyPercent, nextReviewDate } from '../../lib/lesson/mastery.js';
 import { useAuth } from '../../contexts/AuthContext';
 import SaveProgressCard from '../course/SaveProgressCard.jsx';
-
-const DE_DATE = new Intl.DateTimeFormat('de-DE', { day: 'numeric', month: 'long' });
+import { lessonDateFormat, t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /**
  * Stage 8 — Recap. Words learned, the grammar point, the first-attempt
@@ -23,50 +22,50 @@ const DE_DATE = new Intl.DateTimeFormat('de-DE', { day: 'numeric', month: 'long'
  */
 export default function RecapStage({ stage, accuracy, status, nextLabel, onNext, onBack, level }) {
   const { user } = useAuth();
+  const [lang] = useLessonLang();
   const pct = accuracyPercent(accuracy);
   const review = nextReviewDate();
+  const date = lessonDateFormat(lang, { day: 'numeric', month: 'long' });
 
   return (
     <StageShell
-      eyebrow="Schritt 8 · Rückblick"
-      title="Lektion geschafft"
+      eyebrow={t('stage.recap.eyebrow', lang)}
+      title={t('stage.recap.title', lang)}
       onBack={onBack}
-      primaryLabel={nextLabel || 'Weiter'}
+      primaryLabel={nextLabel || t('action.next', lang)}
       onPrimary={onNext}
     >
       <Card raised edge={status === 'gold' ? 'siegel' : 'paper'} className="p-6">
         <div className="flex flex-wrap items-center gap-2">
           <Chip tone={status === 'gold' ? 'himbeer' : 'label'}>
-            <Trophy className="h-3.5 w-3.5" aria-hidden="true" /> {masteryLabel(status)}
+            <Trophy className="h-3.5 w-3.5" aria-hidden="true" /> {t(`recap.mastery.${status === 'gold' || status === 'complete' ? status : 'started'}`, lang)}
           </Chip>
-          <span className="font-data text-[0.8125rem] text-graphite">{pct} % im ersten Versuch</span>
+          <span className="font-data text-[0.8125rem] text-graphite">{t('recap.firstTry', lang, { pct })}</span>
         </div>
 
         <dl className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div>
             <dt className="flex items-center gap-1.5 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
-              <BookOpen className="h-3.5 w-3.5" aria-hidden="true" /> Wörter
+              <BookOpen className="h-3.5 w-3.5" aria-hidden="true" /> {t('recap.words', lang)}
             </dt>
             <dd className="mt-1 font-display text-[1.5rem] font-semibold text-ink">{stage.wordCount || 0}</dd>
           </div>
           <div>
             <dt className="flex items-center gap-1.5 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
-              <Target className="h-3.5 w-3.5" aria-hidden="true" /> Grammatik
+              <Target className="h-3.5 w-3.5" aria-hidden="true" /> {t('recap.grammar', lang)}
             </dt>
             <dd className="mt-1 text-[0.9375rem] font-bold leading-snug text-ink">{stage.grammar || '—'}</dd>
           </div>
           <div>
             <dt className="flex items-center gap-1.5 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
-              <CalendarClock className="h-3.5 w-3.5" aria-hidden="true" /> Wiederholung
+              <CalendarClock className="h-3.5 w-3.5" aria-hidden="true" /> {t('recap.review', lang)}
             </dt>
-            <dd className="mt-1 text-[0.9375rem] font-bold leading-snug text-ink">am {DE_DATE.format(review)}</dd>
+            <dd className="mt-1 text-[0.9375rem] font-bold leading-snug text-ink">{t('recap.reviewOn', lang, { date: date.format(review) })}</dd>
           </div>
         </dl>
 
         <p className="mt-5 border-t border-rule pt-4 text-[0.875rem] leading-relaxed text-graphite">
-          {status === 'gold'
-            ? 'Gold: mindestens 80 % im ersten Versuch. Die Wörter und die Regel kommen zur Wiederholung zurück.'
-            : 'Geschafft. Die Lektion zählt bei jeder Trefferquote — was heute wackelte, kommt zur Wiederholung zurück.'}
+          {t(status === 'gold' ? 'recap.gold' : 'recap.done', lang)}
         </p>
       </Card>
 

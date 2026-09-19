@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getAuthHeaders } from '../../utils/supabase';
+import { t } from '../../lib/lesson/strings.js';
 
 /**
  * The "Erklär mir das" answer under a missed practice item (plan P5).
@@ -8,13 +9,14 @@ import { getAuthHeaders } from '../../utils/supabase';
  * an item nobody wondered about. `netlify/functions/explain-answer` grounds the
  * answer in the course's own rule card for the item's topic and caps the calls
  * per user per day; everything this component can be told (signed out, cap
- * reached, outage) is said in one German line, in the same paragraph box the
- * text would appear in — the box is the only thing that appears, so nothing
- * below it moves twice.
+ * reached, outage) is said in one line of the chrome language, in the same
+ * paragraph box the text would appear in — the box is the only thing that
+ * appears, so nothing below it moves twice. `lang` travels to the function,
+ * which answers in English or German (both grounded in the same rule card).
  */
 const BOX = 'mt-3 rounded-clay bg-paper-sunk p-3 text-[0.875rem] leading-relaxed text-graphite';
 
-export default function ExplainAnswer({ item, expected, userAnswer, level, lektionId }) {
+export default function ExplainAnswer({ item, expected, userAnswer, level, lektionId, lang = 'en' }) {
   const [state, setState] = useState({ status: 'loading' });
 
   useEffect(() => {
@@ -38,6 +40,7 @@ export default function ExplainAnswer({ item, expected, userAnswer, level, lekti
             userAnswer: userAnswer || '',
             level: level || 'a1.1',
             lektionId: lektionId || '',
+            lang,
           }),
         });
         const data = await res.json().catch(() => ({}));
@@ -53,25 +56,25 @@ export default function ExplainAnswer({ item, expected, userAnswer, level, lekti
     };
     run();
     return () => { alive = false; };
-  }, [item.id, item.topic, item.questionDe, item.answer, expected, userAnswer, level, lektionId]);
+  }, [item.id, item.topic, item.questionDe, item.answer, expected, userAnswer, level, lektionId, lang]);
 
   if (state.status === 'loading') {
-    return <p className={BOX} role="status" aria-live="polite">Erklärung wird geschrieben …</p>;
+    return <p className={BOX} role="status" aria-live="polite">{t('explain.loading', lang)}</p>;
   }
   if (state.status === 'anon') {
-    return <p className={BOX} role="status" aria-live="polite">Melden Sie sich an für Erklärungen.</p>;
+    return <p className={BOX} role="status" aria-live="polite">{t('explain.anon', lang)}</p>;
   }
   if (state.status === 'limit') {
     return (
       <p className={BOX} role="status" aria-live="polite">
-        Sie haben heute alle Erklärungen{state.limit ? ` (${state.limit})` : ''} genutzt. Morgen gibt es neue.
+        {t('explain.limit', lang, { limit: state.limit ? ` (${state.limit})` : '' })}
       </p>
     );
   }
   if (state.status === 'error') {
     return (
       <p className={BOX} role="status" aria-live="polite">
-        Die Erklärung klappt gerade nicht. Die Regel steht auf der Grammatikkarte dieser Lektion.
+        {t('explain.error', lang)}
       </p>
     );
   }

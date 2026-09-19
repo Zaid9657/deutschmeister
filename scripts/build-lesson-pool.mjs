@@ -155,6 +155,12 @@ const raw = cache.exercises
     answer: e.correct_answer,
     accepted: Array.isArray(e.acceptable_answers) ? e.acceptable_answers : [],
     explanationDe: e.explanation_de || e.why_correct_de || '',
+    // The English twin (RULE 25), chosen exactly like the German one so the two
+    // stay a pair: every A1.1 and A1.2 exercise of the cache carries BOTH
+    // `explanation_en` and `why_correct_en` (measured 2026-09-19: 262/262 and
+    // 287/287, none empty), so the fallback never fires today — it is there for
+    // the same reason the German one is.
+    explanationEn: e.explanation_en || e.why_correct_en || '',
     hint: e.hint || null,
   }));
 
@@ -432,6 +438,7 @@ function alphabetItems(curriculum) {
       answer: word,
       accepted: [word],
       explanationDe: `Buchstabe für Buchstabe: ${spellOut(word)} = ${word}.`,
+      explanationEn: `Letter by letter: ${spellOut(word)} = ${word}.`,
       hint: `${word.length} Buchstaben.`,
     });
   }
@@ -446,6 +453,7 @@ function alphabetItems(curriculum) {
       answer: name,
       accepted,
       explanationDe: `Der Buchstabe ${letter} heißt ${name}.`,
+      explanationEn: `In German the letter ${letter} is called ${name}.`,
       hint: 'Der Name des Buchstaben, nicht der Laut.',
     });
   }
@@ -461,6 +469,7 @@ function alphabetItems(curriculum) {
       answer: `${e.article} ${e.word}`,
       accepted: [`${e.article} ${e.word}`],
       explanationDe: `${e.article} ${e.word} — ${spellOut(e.word)}.`,
+      explanationEn: `${e.article} ${e.word}${e.en ? ` (${e.en})` : ''} — spelled ${spellOut(e.word)}. The article is part of the word.`,
       hint: 'der, die oder das?',
     });
   }
@@ -476,6 +485,7 @@ function alphabetItems(curriculum) {
       answer: word,
       accepted: [word],
       explanationDe: `${word} — ${spellOut(word)}.`,
+      explanationEn: `${word} is spelled ${spellOut(word)}.`,
       hint: 'Achte auf Doppelbuchstaben, Umlaute und ß.',
     });
   }
@@ -953,6 +963,60 @@ for (const item of items) {
   const key = item.minLektion === null ? 'null' : item.minLektion;
   minLektionHist.set(key, (minLektionHist.get(key) || 0) + 1);
 }
+
+// ── explanationEn: the English twin of every item (RULE 25) ─────────────────
+//
+// docs/language-strategy.md: explanations are English-first for a course whose
+// learner is an English-speaking absolute beginner. Every built item therefore
+// carries `explanationEn` next to `explanationDe`, from three sources in this
+// order of precedence:
+//
+//   1. THE BANK — `explanation_en || why_correct_en` of the cache row (set in
+//      the `raw` map above; every A1.1/A1.2 row has both).
+//   2. THE SIDECAR — src/data/lessonPools/<level>.explanationsEn.json, a flat
+//      `{ "<item id>": "<english>" }` map keyed by the FINAL item id (the id
+//      as it stands in <level>.json). This is where the hand-written
+//      <level>.extra.json items get theirs: the extras file is authored German
+//      and the English lives beside it rather than inside it, so the two can be
+//      written and reviewed by different people. A missing file is an empty
+//      map and a missing key is '' — the build never fails on it, RULE 25 in
+//      scripts/validate-curriculum.mjs does, and prints the ids that are
+//      still missing so the sidecar can be targeted.
+//   3. THE TEMPLATE — the generated buchstabieren items write their English
+//      next to their German in `alphabetItems` above.
+//
+// An item is never left without the field: the fallback is '' so the pool's
+// shape is one shape, and '' is exactly what RULE 25 reports.
+const sidecarUrl = new URL(`../src/data/lessonPools/${level.replace('.', '')}.explanationsEn.json`, import.meta.url);
+let sidecar = {};
+if (existsSync(sidecarUrl)) {
+  const parsed = JSON.parse(readFileSync(sidecarUrl, 'utf8'));
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+    console.error(`${sidecarUrl.pathname}: expected a flat { "<item id>": "<english>" } object`);
+    process.exit(1);
+  }
+  sidecar = parsed;
+}
+const enText = (v) => (typeof v === 'string' ? v.trim() : '');
+const enSource = { bank: 0, sidecar: 0, template: 0, missing: [] };
+for (const item of items) {
+  const own = enText(item.explanationEn);          // bank row, or the template's own text
+  const fromSidecar = enText(sidecar[item.id]);
+  // bank → sidecar → template: a generated item's own text is the floor, a bank
+  // item's own text is the ceiling.
+  const chosen = item.generated ? fromSidecar || own : own || fromSidecar;
+  item.explanationEn = chosen;
+  if (!chosen) enSource.missing.push(item.id);
+  else if (chosen === fromSidecar) enSource.sidecar += 1;
+  else if (item.generated) enSource.template += 1;
+  else enSource.bank += 1;
+}
+const unusedSidecar = Object.keys(sidecar).filter((id) => !items.some((it) => it.id === id));
+console.log(
+  `explanationEn: ${enSource.bank} from the bank, ${enSource.sidecar} from the sidecar, ${enSource.template} from the templates, ` +
+  `${enSource.missing.length} missing${enSource.missing.length ? ` (sidecar work order: ${enSource.missing.slice(0, 8).join(', ')}${enSource.missing.length > 8 ? ', …' : ''})` : ''}` +
+  `${unusedSidecar.length ? `; ${unusedSidecar.length} sidecar key(s) match no item: ${unusedSidecar.slice(0, 8).join(', ')}` : ''}`,
+);
 
 const out = { level, builtFrom: cache.dumpedAt, count: items.length, items };
 const target = new URL(`../src/data/lessonPools/${level.replace('.', '')}.json`, import.meta.url);

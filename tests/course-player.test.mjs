@@ -66,12 +66,17 @@ test('the registry covers the four A sub-levels with their final tests, and the 
 
 // ---------------------------------------------------------------------------
 // Register (DaF review #4, MAJOR "PretestStage.jsx register"). One decision,
-// enforced: the lesson chrome addresses the learner as Sie; only the dialogue
-// characters duzen each other — and the dialogue is curriculum DATA, never a
-// string in these files, so any du-form found here is chrome by definition.
-// The pretest screen showed 'Wie heißen Sie?' above a field placeholdered
-// 'Schreib einfach, was du kannst.' — two Anreden, two lines apart, in the free
-// first lesson.
+// enforced: the lesson chrome is ENGLISH by default and GERMAN in Deutsch-Modus
+// (Wave 1, 2026-09-19; docs/language-strategy.md — English chrome, German
+// content), and the German chrome addresses the learner as Sie; only the
+// dialogue characters duzen each other — and the dialogue is curriculum DATA,
+// never a string in these files, so any du-form found here is chrome by
+// definition. The pretest screen showed 'Wie heißen Sie?' above a field
+// placeholdered 'Schreib einfach, was du kannst.' — two Anreden, two lines
+// apart, in the free first lesson. Since Wave 1 the German chrome lives in the
+// `de` table of src/lib/lesson/strings.js, which is globbed in below like any
+// other chrome file, so the Sie rule now guards the table instead of twenty
+// scattered literals.
 // ---------------------------------------------------------------------------
 // MAJOR 1 (DaF review #7): a hand-enumerated list is a list of what the last
 // report thought of, not of what exists — PracticeItem.jsx was never in this
@@ -93,6 +98,9 @@ const CHROME_FILES = [
   // exactly where CheckpointPage.jsx and ReviewPage.jsx duzed.
   ...readdirSync(join(ROOT, 'src/pages/lesson')).filter((f) => f.endsWith('.jsx')).map((f) => `src/pages/lesson/${f}`),
   'src/pages/SpeakingPage.jsx',
+  // The string table IS the German chrome now (Deutsch-Modus): its `de` values
+  // must sieze like the literals they replaced.
+  'src/lib/lesson/strings.js',
 ];
 
 // Pronouns, the du-forms of the verbs these screens use, and the du-imperatives
@@ -277,15 +285,118 @@ test('SpeakingStage hands the prompt over and the speaking page uses it when no 
 // ---------------------------------------------------------------------------
 // Walkthrough 2026-09-19: ten dialogue lines cost nine taps. The dialogue
 // stage keeps line-by-line as its default and adds ONE secondary control that
-// reveals the rest; the footer primary stays "Nächste Zeile" / "Weiter".
-// Sie register — the copy will move to the string table in Wave 1.
+// reveals the rest; the footer primary stays "Next line" / "Continue"
+// (`action.nextLine` / `action.next` in the string table).
 // ---------------------------------------------------------------------------
-test('DialogStage reveals line by line by default and offers "Alle Zeilen zeigen" as the secondary way out', () => {
+test('DialogStage reveals line by line by default and offers "Show all lines" as the secondary way out', () => {
   const src = read('src/components/lesson/DialogStage.jsx');
   assert.ok(src.includes('useState(1)'), 'the first line is shown alone by default');
-  assert.ok(src.includes("primaryLabel={allShown ? 'Weiter' : 'Nächste Zeile'}"), 'the primary still pages line by line');
-  assert.ok(src.includes('Alle Zeilen zeigen'), 'the reveal-all control is missing');
-  assert.ok(src.includes('onClick={() => setShown(lines.length)}'), 'reveal-all must show every line, after which the primary reads Weiter');
+  assert.ok(src.includes("primaryLabel={allShown ? t('action.next', lang) : t('action.nextLine', lang)}"), 'the primary still pages line by line');
+  assert.ok(src.includes("t('action.showAllLines', lang)"), 'the reveal-all control is missing');
+  assert.ok(src.includes('onClick={() => setShown(lines.length)}'), 'reveal-all must show every line, after which the primary reads Continue');
   assert.ok(src.includes('<AudioSourceBadge recorded={recorded} />'), 'the audio-source badge stays on every line');
-  assert.ok(src.includes("{gloss ? 'Englisch aus' : 'Englisch an'}"), 'the English gloss toggle stays');
+  assert.ok(src.includes("{t(gloss ? 'dialog.glossOff' : 'dialog.glossOn', lang)}"), 'the English gloss toggle stays');
+});
+
+// ---------------------------------------------------------------------------
+// Wave 1 (2026-09-19): English chrome, German content. The lesson chrome used
+// to be German-only — „Schritt 4 · Üben", „Ihre Antwort", „Prüfen", „Weiter" —
+// so a day-one English-speaking beginner could not read the instructions of
+// the app teaching them. Every chrome label now comes from
+// src/lib/lesson/strings.js: `en` by default, `de` in Deutsch-Modus.
+// ---------------------------------------------------------------------------
+const OWNED_CHROME_FILES = [
+  ...readdirSync(join(ROOT, 'src/components/lesson')).filter((f) => f.endsWith('.jsx')).map((f) => `src/components/lesson/${f}`),
+  'src/components/course/ExamDatePlan.jsx',
+  'src/components/course/SaveProgressCard.jsx',
+  ...readdirSync(join(ROOT, 'src/pages/lesson')).filter((f) => f.endsWith('.jsx')).map((f) => `src/pages/lesson/${f}`),
+];
+
+// The exact literals the walkthrough named. Quoted forms only ('Weiter' as a
+// JS string), so a doc comment that mentions the word does not trip it, and a
+// JSX text node does not hide from it: JSX text is covered by the `>Weiter<`
+// form.
+const BANNED_CHROME_LITERALS = ['Weiter', 'Prüfen', 'Ihre Antwort', 'Schritt ', 'Verstanden', 'Nächste Zeile', 'Antwort zeigen'];
+
+test('STRINGS.en and STRINGS.de carry exactly the same keys and no empty value', async () => {
+  const { STRINGS, t, DEFAULT_LESSON_LANG } = await import('../src/lib/lesson/strings.js');
+  const en = Object.keys(STRINGS.en);
+  const de = Object.keys(STRINGS.de);
+  assert.deepEqual(de.filter((k) => !en.includes(k)), [], 'keys only in de');
+  assert.deepEqual(en.filter((k) => !de.includes(k)), [], 'keys only in en');
+  assert.ok(en.length >= 150, `the table is suspiciously small (${en.length} keys)`);
+  for (const table of ['en', 'de']) {
+    for (const [k, v] of Object.entries(STRINGS[table])) {
+      assert.ok(typeof v === 'string' && v.trim().length > 0, `${table}.${k} is empty`);
+    }
+  }
+  assert.equal(DEFAULT_LESSON_LANG, 'en');
+  assert.equal(t('action.next'), 'Continue', 'the default is the English chrome');
+  assert.equal(t('action.next', 'de'), 'Weiter');
+  assert.equal(t('action.next', 'xx'), 'Continue', 'an unknown lang falls back to en');
+  assert.equal(t('no.such.key', 'de'), 'no.such.key', 'a missing key shows the key, never a blank');
+  assert.equal(t('stage.practice.eyebrow', 'en', { n: 3, total: 7 }), 'Step 4 · Practice 3/7');
+  assert.equal(t('stage.requeue.eyebrow', 'de', { n: 1, total: 2 }), 'Schritt 7 · Noch einmal 1/2', 'the requeue has its own eyebrow');
+});
+
+test('no owned lesson chrome file carries a banned German chrome literal outside strings.js', () => {
+  const offenders = [];
+  for (const f of OWNED_CHROME_FILES) {
+    const src = read(f);
+    for (const lit of BANNED_CHROME_LITERALS) {
+      const forms = [`'${lit}'`, `"${lit}"`, `>${lit}<`, `\`${lit}`];
+      for (const form of forms) if (src.includes(form)) offenders.push(`${f}: ${form}`);
+    }
+  }
+  assert.deepEqual(offenders, [], `German chrome literals outside the string table:\n${offenders.join('\n')}`);
+});
+
+test('every stage screen the player renders reads its chrome through useLessonLang', () => {
+  for (const f of OWNED_CHROME_FILES) {
+    if (f.endsWith('LessonPreviewPage.jsx')) continue; // dev-only redirect wrapper, no copy
+    assert.match(read(f), /useLessonLang\(\)|lang\b/, `${f} renders chrome without a chrome language`);
+  }
+  const player = read('src/pages/lesson/LessonPlayerPage.jsx');
+  assert.ok(player.includes('<LangToggle />'), 'the player header carries the Deutsch-Modus toggle');
+  assert.ok(read('src/pages/lesson/CheckpointPage.jsx').includes('<LangToggle'), 'the checkpoint header carries the toggle');
+  assert.ok(read('src/pages/lesson/ReviewPage.jsx').includes('<LangToggle'), 'the review header carries the toggle');
+  const toggle = read('src/components/lesson/LangToggle.jsx');
+  assert.ok(toggle.includes('aria-pressed={on}'), 'the toggle exposes its state');
+});
+
+// The requeue stage used to reuse PracticeItem's "Step 4 · Practice n/N"
+// eyebrow AFTER "Step 6 · Writing", so the lesson appeared to go backwards.
+test('the requeue stage has its own eyebrow (Step 7 · Try again)', () => {
+  const player = read('src/pages/lesson/LessonPlayerPage.jsx');
+  assert.ok(player.includes("eyebrowKey={stage.kind === 'requeue' ? 'stage.requeue.eyebrow' : 'stage.practice.eyebrow'}"), 'the player must pass the requeue eyebrow key');
+  const item = read('src/components/lesson/PracticeItem.jsx');
+  assert.ok(item.includes("eyebrowKey = 'stage.practice.eyebrow'"), 'PracticeItem defaults to the practice eyebrow');
+  assert.ok(item.includes('{t(eyebrowKey, lang, { n: index + 1, total })}'), 'PracticeItem renders the eyebrow it is given');
+});
+
+// The speaking stage trap: the primary is disabled until every read-aloud line
+// is self-confirmed, so a learner without a mic or the nerve only had "Back"
+// and looped into the dictation. "Skip for now" advances WITHOUT confirming:
+// it records nothing, so a skipped line is neither said nor correct.
+test('SpeakingStage offers "Skip for now" that advances without recording a result', () => {
+  const src = read('src/components/lesson/SpeakingStage.jsx');
+  assert.ok(src.includes('primaryDisabled={lines.length > 0 && !allDone}'), 'the primary still waits for every line');
+  assert.match(src, /secondary=\{\s*lines\.length > 0 && !allDone \? \(/, 'the skip is a secondary control, shown only while lines are unconfirmed');
+  assert.match(src, /onClick=\{onDone\}[^]*?t\('speaking\.skip', lang\)/, 'the skip calls onDone directly');
+  // recordResult is the ONLY writer of `results`; the skip must not call it.
+  const skipBlock = src.slice(src.indexOf('secondary={'), src.indexOf('</button>', src.indexOf('secondary={')));
+  assert.ok(!skipBlock.includes('recordResult'), 'skipping must not fabricate a result for the unconfirmed lines');
+});
+
+// ExplainAnswer sends the chrome language and the function answers in it —
+// both variants grounded in the same rule card, `lang` validated server-side.
+test('explain-answer carries lang end to end and defaults to German server-side', () => {
+  const client = read('src/components/lesson/ExplainAnswer.jsx');
+  assert.ok(client.includes('lang,'), 'the client must send lang');
+  const fn = read('netlify/functions/explain-answer.mjs');
+  assert.ok(fn.includes("const lang = LANGS.has(body.lang) ? body.lang : 'de';"), 'lang must be validated, default de');
+  assert.ok(fn.includes('SYSTEM_RULES[lang]'), 'the system prompt must vary by lang');
+  assert.ok(fn.includes('RULE_CARD_HEADING[lang]'), 'the rule card must ground both variants');
+  assert.ok(fn.includes('EXPLAIN_DAILY_LIMIT = 40'), 'the daily cap is untouched');
+  assert.ok(fn.includes('getAuthenticatedUserId(event)'), 'the auth is untouched');
 });
