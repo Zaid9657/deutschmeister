@@ -11,17 +11,29 @@ import { courseHome } from '../../lib/courseFlow.js';
 import { hasLocalProgress, localRunCount, mergeLocalProgress, recordLocalLesson } from '../../lib/course/localProgress.js';
 import { buildCardIndex, fetchDueCards, seedCardsForLektion } from '../../services/reviewService.js';
 import LessonProgressBar from '../../components/lesson/LessonProgressBar.jsx';
+import ComboChip, { nextCombo } from '../../components/lesson/ComboChip.jsx';
+import LangToggle from '../../components/lesson/LangToggle.jsx';
+import { readLessonLang, t, useLessonLang } from '../../lib/lesson/strings.js';
 import StageShell from '../../components/lesson/StageShell.jsx';
 import DialogStage from '../../components/lesson/DialogStage.jsx';
 import WortfeldStage from '../../components/lesson/WortfeldStage.jsx';
 import NoticeStage from '../../components/lesson/NoticeStage.jsx';
+import PhonetikStage from '../../components/lesson/PhonetikStage.jsx';
+import ReviewCard, { modeForCard } from '../../components/lesson/ReviewCard.jsx';
+import { gradeCard } from '../../services/reviewService.js';
+import { gradeTypedReview } from '../../lib/checkpoint/reviewGrading.js';
+import { speakGerman } from '../../lib/lesson/speech.js';
 import PretestStage from '../../components/lesson/PretestStage.jsx';
 import PracticeItem from '../../components/lesson/PracticeItem.jsx';
 import DictationItem from '../../components/lesson/DictationItem.jsx';
+import MatchItem from '../../components/lesson/MatchItem.jsx';
+import WordOrderItem from '../../components/lesson/WordOrderItem.jsx';
+import ListenSelectItem from '../../components/lesson/ListenSelectItem.jsx';
 import SpeakingStage from '../../components/lesson/SpeakingStage.jsx';
 import WritingStage from '../../components/lesson/WritingStage.jsx';
 import RecapStage from '../../components/lesson/RecapStage.jsx';
-import Card from '../../components/ui/Card.jsx';
+import IntroStage from '../../components/lesson/IntroStage.jsx';
+import { trackLessonCompleted, trackLessonStarted } from '../../lib/funnelTracking.js';
 
 // The lesson player: route /course/:level/l/:nr, one stage per screen
 // (docs/course-standard-2026-09-12.md §3). Everything it shows comes from the
@@ -36,13 +48,19 @@ import Card from '../../components/ui/Card.jsx';
 // / program_progress / lesson_attempts and clears the store. The merge runs
 // here rather than in an auth callback because this and the course home are
 // the only two screens where local course progress can exist.
+//
+// CHROME LANGUAGE. Every label this page and its stages show comes from
+// src/lib/lesson/strings.js in the learner's chrome language — English by
+// default, German in Deutsch-Modus (the LangToggle in the header row). The
+// content (dialogue, questions, answers) is German in both.
 
 /** The multi-item stages the player pages through one item at a time. */
-const ITEM_STAGES = new Set(['practice', 'dictation', 'requeue']);
+const ITEM_STAGES = new Set(['practice', 'derived', 'dictation', 'requeue', 'warmup']);
 
 export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [lang] = useLessonLang();
   // The DRAW attempt, derived from how often this learner has already finished
   // this Lektion — never a constant. It was `useState(1)` with no setter, which
   // meant the repeat that the standard makes the remediation path handed back
@@ -54,9 +72,25 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   const [itemIndex, setItemIndex] = useState(0);
   const [attempts, setAttempts] = useState([]);
   const [misses, setMisses] = useState([]);
+  // Consecutive first-try corrects across practice + dictation items, reset on
+  // a miss (ComboChip.jsx's nextCombo, unit-tested there). Player-level state
+  // because the combo spans stage boundaries within one run, not one item.
+  const [combo, setCombo] = useState(0);
   const [requeued, setRequeued] = useState([]);
   const [wordRows, setWordRows] = useState(() => new Map());
   const [saved, setSaved] = useState(false);
+  // Warm-up (stage 0) card state: the same four faces ReviewPage.jsx renders
+  // (flashcard/listening/typed/say-it), graded through the SAME helpers
+  // (gradeCard / gradeTypedReview) so a card met here and on the Wiederholen
+  // screen is judged the same way. The write to review_cards is fire-and-forget
+  // (never blocks the lesson) — a failed ladder write costs a schedule, not the
+  // lesson run.
+  const [warmupRevealed, setWarmupRevealed] = useState(false);
+  const [warmupTyped, setWarmupTyped] = useState('');
+  const [warmupVerdict, setWarmupVerdict] = useState(null);
+  // The intro screen (IntroStage) is player state, not a stage: shown once per
+  // run, before stage 0; preview mode skips it. Start fires lesson_started.
+  const [introDone, setIntroDone] = useState(preview);
   const [dueCards, setDueCards] = useState(null); // null = not loaded yet
 
   // Stage 0 warm-up: up to four cards due from the review ladder.
@@ -107,6 +141,27 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   );
   const stages = lesson.stages;
   const stage = stages[stageIndex] || null;
+  const warmupCard = stage && stage.kind === 'warmup' ? (stage.cards || [])[itemIndex] || null : null;
+  const warmupMode = warmupCard ? modeForCard(warmupCard.kind, itemIndex) : null;
+  const playWarmupCard = useCallback((content) => {
+    speakGerman((content && (content.speak || content.front)) || '');
+  }, []);
+
+  useEffect(() => {
+    if (!warmupCard) return;
+    setWarmupRevealed(false);
+    setWarmupTyped('');
+    setWarmupVerdict(null);
+    if (warmupMode === 'listening') playWarmupCard(warmupCard);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [warmupCard, warmupMode]);
+
+  const checkWarmupTyped = useCallback(() => {
+    if (!warmupCard) return;
+    const { ok } = gradeTypedReview(warmupCard.cardKey, warmupCard.accepted, warmupTyped, { caseSensitive: warmupCard.caseSensitive });
+    setWarmupVerdict(ok);
+    setWarmupRevealed(true);
+  }, [warmupCard, warmupTyped]);
 
   // The Wortfeld's real article/plural/audio, when the curriculum carries ids.
   useEffect(() => {
@@ -124,15 +179,15 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
 
   const path = useMemo(() => curriculumPath(curriculum), [curriculum]);
 
-  /** Where "Weiter" goes after the recap: the next item on the course path. */
+  /** Where the recap's primary ("Continue") goes: the next item on the course path. */
   const nextTarget = useMemo(() => {
     const i = path.findIndex((p) => p.kind === 'lektion' && p.nr === lektion.nr);
     const next = i >= 0 ? path[i + 1] : null;
-    if (!next) return { to: courseHome(curriculum.level), label: 'Zurück zum Kurs' };
+    if (!next) return { to: courseHome(curriculum.level), label: t('action.backToCourse', lang) };
     if (next.kind === 'checkpoint') return { to: `/course/${curriculum.level}/checkpoint/${next.nr}`, label: `${next.title} →` };
-    if (next.kind === 'leveltest') return { to: `/modelltest/${next.testSlug || curriculum.testSlug}`, label: 'Abschlusstest →' };
-    return { to: `/course/${curriculum.level}/l/${next.nr}`, label: `Lektion ${next.nr} →` };
-  }, [path, lektion.nr, curriculum.level, curriculum.testSlug]);
+    if (next.kind === 'leveltest') return { to: `/modelltest/${next.testSlug || curriculum.testSlug}`, label: t('player.finalTest', lang) };
+    return { to: `/course/${curriculum.level}/l/${next.nr}`, label: t('player.nextLesson', lang, { nr: next.nr }) };
+  }, [path, lektion.nr, curriculum.level, curriculum.testSlug, lang]);
 
   const accuracy = firstAttemptAccuracy(attempts);
   const status = masteryStatus(accuracy);
@@ -140,6 +195,7 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   const recordResult = useCallback((item, { correct, errorTag, result }) => {
     setAttempts((prev) => [...prev, { itemId: item.id, stage: item.stage || 'practice', correct, errorTag, result }]);
     if (!correct) setMisses((prev) => (prev.some((m) => m.id === item.id) ? prev : [...prev, item]));
+    if (item.stage === 'practice' || item.stage === 'dictation') setCombo((c) => nextCombo(c, correct));
   }, []);
 
   const goStage = useCallback((next) => {
@@ -168,6 +224,7 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   useEffect(() => {
     if (preview || saved || !stage || stage.kind !== 'recap') return;
     setSaved(true);
+    trackLessonCompleted(curriculum.level, lektion.id);
     if (!user) {
       recordLocalLesson({ level: curriculum.level, lektionId: lektion.id, status, accuracy, attempts });
       return;
@@ -178,11 +235,18 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   }, [preview, saved, stage, user, curriculum.level, lektion, attempts, accuracy, status]);
 
   if (!stage) return <Navigate to={courseHome(curriculum.level)} replace />;
+  if (!introDone) {
+    return <IntroStage curriculum={curriculum} lektion={lektion} onStart={() => { trackLessonStarted(curriculum.level, lektion.id); setIntroDone(true); }} />;
+  }
 
-  const items = stage.kind === 'requeue' ? requeued : stage.items || stage.lines || [];
+  const items = stage.kind === 'requeue' ? requeued : stage.kind === 'warmup' ? stage.cards || [] : stage.items || stage.lines || [];
   const onItemNext = () => {
     if (ITEM_STAGES.has(stage.kind) && itemIndex + 1 < items.length) setItemIndex(itemIndex + 1);
     else advance();
+  };
+  const gradeWarmupCard = (correct) => {
+    if (user && warmupCard) gradeCard(user.id, warmupCard.cardKey, correct).catch(() => {});
+    onItemNext();
   };
 
   const wortfeld = (lektion.wortfeld || []).map((w) => ({ ...w, db: w.wordId ? wordRows.get(w.wordId) : null }));
@@ -190,20 +254,24 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
   let body = null;
   switch (stage.kind) {
     case 'warmup':
-      body = (
-        <StageShell eyebrow="Schritt 0 · Wiederholung" title="Kurz auffrischen" onBack={back} primaryLabel="Weiter" onPrimary={advance}>
-          <ul className="space-y-3">
-            {(stage.cards || []).map((c) => (
-              <li key={c.cardKey || c.id}>
-                <Card className="p-4">
-                  <p className="text-[1.0625rem] text-ink">{c.front || c.de || c.questionDe}</p>
-                  <p className="mt-1 text-[0.875rem] text-graphite">{c.back || c.en || ''}</p>
-                </Card>
-              </li>
-            ))}
-          </ul>
+      body = warmupCard ? (
+        <StageShell variant="input" eyebrow={t('stage.warmup.eyebrow', lang)} title={t('stage.warmup.title', lang)} onBack={back}>
+          <ReviewCard
+            content={warmupCard}
+            mode={warmupMode}
+            lang={lang}
+            revealed={warmupRevealed}
+            onReveal={() => setWarmupRevealed(true)}
+            typed={warmupTyped}
+            onTypedChange={setWarmupTyped}
+            onCheckTyped={checkWarmupTyped}
+            verdict={warmupVerdict}
+            onPlay={() => playWarmupCard(warmupCard)}
+            hasRecording={false}
+            onGrade={gradeWarmupCard}
+          />
         </StageShell>
-      );
+      ) : null;
       break;
     case 'pretest':
       body = <PretestStage stage={stage} lektionId={lektion.id} onBack={back} onDone={advance} />;
@@ -217,6 +285,9 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
     case 'notice':
       body = <NoticeStage stage={stage} onBack={back} onDone={advance} />;
       break;
+    case 'phonetik':
+      body = <PhonetikStage stage={stage} lektionId={lektion.id} onBack={back} onDone={advance} />;
+      break;
     case 'practice':
     case 'requeue': {
       const item = items[itemIndex];
@@ -228,10 +299,29 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
           item={{ ...item, stage: stage.kind }}
           index={itemIndex}
           total={items.length}
+          eyebrowKey={stage.kind === 'requeue' ? 'stage.requeue.eyebrow' : 'stage.practice.eyebrow'}
           onResult={recordResult}
           onNext={onItemNext}
         />
       ) : null;
+      break;
+    }
+    case 'derived': {
+      const item = items[itemIndex];
+      if (!item) { body = null; break; }
+      const derivedProps = {
+        key: item.id,
+        item,
+        index: itemIndex,
+        total: items.length,
+        lektionId: lektion.id,
+        onResult: recordResult,
+        onNext: onItemNext,
+      };
+      if (item.type === 'match') body = <MatchItem {...derivedProps} />;
+      else if (item.type === 'word_order') body = <WordOrderItem {...derivedProps} />;
+      else if (item.type === 'listen_select') body = <ListenSelectItem {...derivedProps} />;
+      else body = null;
       break;
     }
     case 'dictation': {
@@ -268,16 +358,18 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
 
   return (
     <div className="min-h-screen bg-paper font-body text-ink">
-      <div className="mx-auto max-w-2xl px-4 pb-6 pt-24 sm:pb-10 sm:pt-28">
+      <div className="mx-auto max-w-2xl px-4 pb-6 pt-6 sm:pb-10 sm:pt-10">
         <div className="mb-5 flex items-center gap-3">
           <Link
             to={courseHome(curriculum.level)}
             className="inline-flex items-center gap-1 text-sm font-bold text-siegel hover:text-siegel-deep"
-            aria-label="Zurück zum Kurs"
+            aria-label={t('player.backToCourse', lang)}
           >
             <ArrowLeft className="h-4 w-4" /> {curriculum.code}
           </Link>
-          <LessonProgressBar step={step} total={stages.length} label={`Lektion ${lektion.nr}`} />
+          <LessonProgressBar step={step} total={stages.length} label={t('player.lesson', lang, { nr: lektion.nr })} />
+          <ComboChip combo={combo} />
+          <LangToggle />
         </div>
         {body}
       </div>
@@ -327,7 +419,7 @@ export default function LessonPlayerPage() {
   if (!pool && !poolFailed) {
     return (
       <div className="min-h-screen bg-paper font-body text-graphite">
-        <p className="mx-auto max-w-2xl px-4 py-16 text-sm italic">Lektion wird geladen …</p>
+        <p className="mx-auto max-w-2xl px-4 py-16 text-sm italic">{t('player.loading', readLessonLang())}</p>
       </div>
     );
   }

@@ -6,6 +6,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { playLine } from '../../lib/lesson/speech.js';
 import { alignTranscript } from '../../lib/lesson/readaloud.js';
 import { getAuthHeaders } from '../../utils/supabase';
+import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import {
   blobToBase64,
   checkSpeakingSupport,
@@ -24,20 +25,15 @@ import {
 //
 // Everything degrades to the honest self-confirm this screen had before:
 // no microphone, signed out, over the daily cap, or a server that is not
-// answering — each says WHY in one line and hands back "Ich habe es gesagt".
+// answering — each says WHY in one line (`speaking.fallback.<reason>` in the
+// lesson string table) and hands back "I said it".
 
 const MAX_ATTEMPTS = 3;
 const MAX_RECORD_MS = 8000;
 
-const FALLBACK_REASONS = {
-  no_mic: 'Ihr Browser gibt kein Mikrofon frei — bestätigen Sie die Zeile selbst.',
-  signed_out: 'Zum Bewerten müssen Sie angemeldet sein — bestätigen Sie die Zeile so lange selbst.',
-  limit: 'Sie haben heute alle bewerteten Aufnahmen genutzt — bestätigen Sie die Zeile selbst.',
-  server: 'Die Bewertung antwortet gerade nicht — bestätigen Sie die Zeile selbst.',
-};
-
 export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onResult }) {
   const { user } = useAuth();
+  const [lang] = useLessonLang();
   const [support] = useState(() => checkSpeakingSupport());
   const [phase, setPhase] = useState('idle'); // idle | recording | scoring | scored
   const [result, setResult] = useState(null); // { words, pct }
@@ -166,7 +162,7 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
 
       {/* Before an attempt the plain line; afterwards the same line, word by word. */}
       {result ? (
-        <p className="mt-1 text-[1.0625rem] leading-relaxed text-ink">
+        <p className="mt-1 text-[1.0625rem] leading-relaxed text-ink" lang="de">
           {result.words.map((w, i) => (
             <span
               key={`${w.word}-${i}`}
@@ -176,19 +172,19 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
                 ? <Check className="h-3.5 w-3.5 self-center" aria-hidden="true" />
                 : <X className="h-3.5 w-3.5 self-center" aria-hidden="true" />}
               <span className={w.hit ? '' : 'font-bold underline decoration-dotted'}>{w.word}</span>
-              <span className="sr-only">{w.hit ? ' (erkannt)' : ' (nicht erkannt)'}</span>
+              <span className="sr-only">{t(w.hit ? 'speaking.heard' : 'speaking.notHeard', lang)}</span>
             </span>
           ))}
         </p>
       ) : (
-        <p className="mt-1 text-[1.0625rem] leading-relaxed text-ink">{text}</p>
+        <p className="mt-1 text-[1.0625rem] leading-relaxed text-ink" lang="de">{text}</p>
       )}
 
       {result && (
         <p className="mt-2 text-sm font-bold text-ink">
-          Verständlichkeit: {pctLabel} %
+          {t('speaking.intelligibility', lang, { pct: pctLabel })}
           <span className="ml-2 font-normal text-graphite">
-            {result.words.filter((w) => w.hit).length} von {result.words.length} Wörtern erkannt
+            {t('speaking.wordsHeard', lang, { hit: result.words.filter((w) => w.hit).length, total: result.words.length })}
           </span>
         </p>
       )}
@@ -199,27 +195,27 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
           onClick={() => playLine(lektionId, lineKey, text, { rate: 0.85 })}
           className="inline-flex items-center gap-1.5 rounded-pill border border-rule bg-white px-3 py-1.5 text-[0.8125rem] font-bold text-ink hover:border-siegel"
         >
-          <Play className="h-4 w-4" aria-hidden="true" /> Vorsprechen
+          <Play className="h-4 w-4" aria-hidden="true" /> {t('speaking.model', lang)}
         </button>
 
         {scoringPossible && phase === 'idle' && attempts === 0 && (
           <Button size="sm" onClick={startRecording}>
-            <Mic className="h-4 w-4" aria-hidden="true" /> Aufnehmen
+            <Mic className="h-4 w-4" aria-hidden="true" /> {t('speaking.record', lang)}
           </Button>
         )}
         {scoringPossible && phase === 'recording' && (
           <Button size="sm" variant="celebrate" onClick={stopRecording}>
-            <Square className="h-4 w-4" aria-hidden="true" /> Aufnahme stoppen
+            <Square className="h-4 w-4" aria-hidden="true" /> {t('speaking.stop', lang)}
           </Button>
         )}
         {scoringPossible && phase === 'scoring' && (
           <span className="inline-flex items-center gap-1.5 text-[0.8125rem] font-bold text-graphite">
-            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> Wird ausgewertet …
+            <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> {t('speaking.scoring', lang)}
           </span>
         )}
         {canRetry && (
           <Button size="sm" variant="secondary" onClick={startRecording}>
-            <RotateCcw className="h-4 w-4" aria-hidden="true" /> Nochmal ({MAX_ATTEMPTS - attempts} übrig)
+            <RotateCcw className="h-4 w-4" aria-hidden="true" /> {t('speaking.retry', lang, { n: MAX_ATTEMPTS - attempts })}
           </Button>
         )}
 
@@ -229,20 +225,20 @@ export default function ReadAloudLine({ lektionId, lineKey, text, speaker, onRes
             onClick={selfConfirm}
             className="inline-flex items-center gap-1.5 rounded-pill border border-rule bg-white px-3 py-1.5 text-[0.8125rem] font-bold text-graphite hover:border-siegel hover:text-siegel-deep"
           >
-            <Check className="h-4 w-4" aria-hidden="true" /> Ich habe es gesagt
+            <Check className="h-4 w-4" aria-hidden="true" /> {t('speaking.iSaidIt', lang)}
           </button>
         )}
         {confirmed && (
           <span className="inline-flex items-center gap-1.5 rounded-pill bg-siegel px-3 py-1.5 text-[0.8125rem] font-bold text-white">
-            <Check className="h-4 w-4" aria-hidden="true" /> Gesagt
+            <Check className="h-4 w-4" aria-hidden="true" /> {t('speaking.said', lang)}
           </span>
         )}
       </div>
 
       {phase === 'recording' && (
-        <p className="mt-2 text-xs text-graphite">Sprechen Sie den Satz — die Aufnahme stoppt nach {MAX_RECORD_MS / 1000} Sekunden von selbst.</p>
+        <p className="mt-2 text-xs text-graphite">{t('speaking.recording', lang, { s: MAX_RECORD_MS / 1000 })}</p>
       )}
-      {reason && <p className="mt-2 text-xs text-graphite">{FALLBACK_REASONS[reason]}</p>}
+      {reason && <p className="mt-2 text-xs text-graphite">{t(`speaking.fallback.${reason}`, lang)}</p>}
       {micError && <p className="mt-2 text-xs text-accent-himbeer-ink">{micError}</p>}
     </Card>
   );

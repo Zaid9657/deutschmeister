@@ -261,3 +261,45 @@ test('a misspelt number word is Wortschatz, whatever the item topic says', () =>
   // a real verb-sein miss on the same topic is untouched
   assert.equal(tagError(item, 'bist', 'bin'), 'Konjugation');
 });
+
+// --- derived exercises (buildLesson.js `derivedItems`): the new item types --
+
+test('checkOptionsFor is safe for the three derived item types', () => {
+  const matchItem = { type: 'match', topic: 'verb-sein' };
+  assert.deepEqual(checkOptionsFor(matchItem), {
+    strict: STRICT_TOPIC.test('verb-sein'),
+    caseSensitive: false,
+    dictation: false,
+    spelling: false,
+  });
+
+  const wordOrderItem = { type: 'word_order', topic: 'verb-sein', answer: 'Ich bin Ana.', accepted: ['Ich bin Ana.'] };
+  const woOpts = checkOptionsFor(wordOrderItem);
+  assert.equal(woOpts.dictation, false, 'a word_order item is never folded like a dictation');
+  assert.equal(woOpts.caseSensitive, false);
+  assert.equal(woOpts.spelling, false);
+
+  const listenSelectItem = { type: 'listen_select', topic: 'verb-sein', answer: 'Ich bin Ana.', accepted: ['Ich bin Ana.'] };
+  const lsOpts = checkOptionsFor(listenSelectItem);
+  assert.equal(lsOpts.dictation, false);
+  assert.equal(isDictationTask(listenSelectItem), false, 'listen_select is graded like multiple choice, not folded');
+});
+
+test('a word_order miss is tagged through the same sentence analysis as sentence_building', () => {
+  const item = { type: 'word_order', topic: 'verb-sein', answer: 'Ich bin Ana.' };
+  // same words, wrong order
+  assert.equal(tagError(item, 'Ana bin ich.', 'Ich bin Ana.'), 'Verbstellung');
+});
+
+test('a listen_select miss is always tagged Hören', () => {
+  assert.ok(ERROR_TAGS.includes('Hören'));
+  const item = { type: 'listen_select', answer: 'Guten Tag!', stage: 'derived' };
+  assert.equal(tagError(item, 'Tschüss!', 'Guten Tag!'), 'Hören');
+});
+
+test('word_order grades a rebuilt sentence through checkAnswer, punctuation and case folded as usual', () => {
+  const item = { type: 'word_order', topic: 'verb-sein', answer: 'Ich bin Ana.', accepted: ['Ich bin Ana.'] };
+  const opts = checkOptionsFor(item);
+  assert.equal(checkAnswer('Ich bin Ana', item.accepted, opts).result, RESULT.CORRECT, 'a missing final period is still correct');
+  assert.equal(checkAnswer('Ana bin ich.', item.accepted, opts).result, RESULT.WRONG, 'the wrong order is wrong');
+});

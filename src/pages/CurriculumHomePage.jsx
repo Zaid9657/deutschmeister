@@ -1,16 +1,25 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { BookOpen, ClipboardCheck, Trophy, Check, Lock, Flame, Zap, ChevronDown } from 'lucide-react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { BookOpen, ClipboardCheck, Trophy, Check, Lock, Flame, Zap, ChevronDown, Compass } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useSubscription } from '../contexts/SubscriptionContext';
+import { LEVEL_ORDER } from '../config/levels.js';
+import { A11_META } from '../data/curricula/a11.meta.js';
 import { getProgramProgress } from '../services/programProgress';
 import { loadDashboardStats } from '../services/dashboardStats';
 import { curriculumPath } from '../data/curricula/index.js';
+import { isLevelFree } from '../config/freeTier.js';
 import { hasLocalProgress, localDoneIds, mergeLocalProgress } from '../lib/course/localProgress.js';
 import ExamDatePlan from '../components/course/ExamDatePlan.jsx';
+import CourseWelcome from '../components/course/CourseWelcome.jsx';
+import FirstRunTour from '../components/course/FirstRunTour.jsx';
+import LessonRing from '../components/course/LessonRing.jsx';
+import MilestoneCard from '../components/course/MilestoneCard.jsx';
 import Button from '../components/ui/Button.jsx';
 import Chip from '../components/ui/Chip.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
+import SituationScene from '../components/illustrations/SituationScene.jsx';
 
 // Course home for a REBUILT level (docs/course-standard-2026-09-12.md): the
 // path is 12 Lektionen + 4 checkpoints + the level test, grouped in four
@@ -30,6 +39,33 @@ import Aurora from '../components/ui/Aurora.jsx';
 //   * a SIGNED-OUT visitor's locally finished Lektionen render as done
 //     (src/lib/course/localProgress.js), and the first load with a user
 //     present merges them into the account.
+//
+// Wave 1 (2026-09-19) adds the ORIENTATION layer for a lost first-time
+// learner, all of it read from the level's meta module
+// (src/data/curricula/a11.meta.js — English chrome derived from the German
+// course, never retyped):
+//   * chapter banners carry the chapter's English name, its German name as a
+//     small line and the one-line story, instead of "Lektion 1–3";
+//   * CourseWelcome (what this is, how a Lektion works, who you meet, what you
+//     will be able to do) renders above the path while nothing is finished,
+//     and afterwards behind a "How this course works" toggle in the header;
+//   * FirstRunTour points at the path, the Continue card and the exam-date
+//     plan once per browser — the three `data-tour` anchors below;
+//   * ENDOWED progress: a learner whose placement test (profiles.current_level,
+//     UPPERCASE in the DB) suggests a level above this one, or who arrives from
+//     the results page with `?from=placement`, has every node open. Nothing is
+//     marked done for them — "your test suggests", never a level promise — and
+//     the in-order rule simply stops applying.
+
+/** The orientation module for a level, when one exists (A1.1 only today). */
+const courseMetaFor = (level) => (String(level).toLowerCase() === A11_META.level ? A11_META : null);
+
+/** Is `placed` (profiles.current_level, either case) strictly above `level` on the ladder? */
+export const placedAbove = (placed, level) => {
+  const a = LEVEL_ORDER.indexOf(String(placed || '').toUpperCase());
+  const b = LEVEL_ORDER.indexOf(String(level || '').toUpperCase());
+  return a >= 0 && b >= 0 && a > b;
+};
 
 export const programKeyFor = (level) => `${String(level).toLowerCase().replace('.', '')}_course`;
 
@@ -39,18 +75,30 @@ const hrefFor = (level, node) => {
   return `/modelltest/${node.testSlug}`;
 };
 
-const KIND_LABEL = { lektion: 'Lektion', checkpoint: 'Checkpoint', leveltest: 'Final test' };
+// The final test of a FREE level is free too: /modelltest/<testSlug> sits
+// behind ExamSubscriptionGuard, whose gate for a course test is
+// hasLevelAccess(level) — true for every signed-in user when the level is in
+// FREE_LEVELS. A signed-out visitor is asked to sign in there, never to pay.
+// Say so on the node and in the footer, so the last step of the free course
+// never reads like an unmarked paywall (Wave 0 front door).
+const finalTestLabel = (level) => (isLevelFree(level) ? 'Abschlusstest · frei' : 'Abschlusstest');
+const kindLabelFor = (level) => ({ lektion: 'Lektion', checkpoint: 'Checkpoint', leveltest: finalTestLabel(level) });
 const KIND_ICON = { lektion: BookOpen, checkpoint: ClipboardCheck, leveltest: Trophy };
 const SWAY = [0, 44, 72, 44, 0, -44, -72, -44];
 
 export default function CurriculumHomePage({ curriculum }) {
   const { user } = useAuth();
+  const { profile } = useSubscription() || {};
+  const [searchParams] = useSearchParams();
   const level = curriculum.level;
+  const meta = courseMetaFor(level);
   const programKey = programKeyFor(level);
+  const KIND_LABEL = kindLabelFor(level);
   const [done, setDone] = useState(() => new Set());
   const [loaded, setLoaded] = useState(false);
   const [streak, setStreak] = useState(0);
   const [openChapter, setOpenChapter] = useState(null);
+  const [showWelcome, setShowWelcome] = useState(false);
 
   const path = useMemo(() => curriculumPath(curriculum), [curriculum]);
 
@@ -77,6 +125,12 @@ export default function CurriculumHomePage({ curriculum }) {
   const current = firstOpenIndex === -1 ? null : path[firstOpenIndex];
   const complete = firstOpenIndex === -1;
   const doneCount = path.filter((n) => done.has(n.id)).length;
+  // Endowed: the placement test suggests a higher level, so every node is open
+  // (never done). `?from=placement` covers the signed-out visitor whose result
+  // could not be written to a profile.
+  const endowed = placedAbove(profile?.current_level, level) || searchParams.get('from') === 'placement';
+  const fresh = loaded && doneCount === 0;
+  const welcomeOpen = fresh || showWelcome;
   const pct = Math.round((doneCount / path.length) * 100);
   const xp = path.filter((n) => done.has(n.id)).reduce((s, n) => s + (n.minutes || 10), 0);
   const wordsTotal = curriculum.lektionen.reduce((s, l) => s + (l.wortfeld?.length || 0), 0);
@@ -97,7 +151,20 @@ export default function CurriculumHomePage({ curriculum }) {
         <header className="relative mb-8 overflow-hidden rounded-clay">
           <Aurora />
           <div className="relative px-2 py-4">
-            <Reveal><Chip tone="label">{curriculum.code} · Course</Chip></Reveal>
+            <Reveal className="flex flex-wrap items-center justify-between gap-2">
+              <Chip tone="label">{curriculum.code} · Course</Chip>
+              {meta && !fresh && (
+                <button
+                  type="button"
+                  onClick={() => setShowWelcome((v) => !v)}
+                  aria-expanded={showWelcome}
+                  aria-controls="dm-course-welcome-panel"
+                  className="inline-flex items-center gap-1 rounded-pill bg-white/70 px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel-deep ring-1 ring-rule hover:bg-siegel-wash"
+                >
+                  <Compass className="h-3.5 w-3.5" aria-hidden="true" /> How this course works
+                </button>
+              )}
+            </Reveal>
             <Reveal as="h1" delay={60} className="mt-3 font-display text-[2rem] font-semibold leading-[1.05] tracking-[-0.022em] sm:text-[2.75rem]">
               German {curriculum.code}
             </Reveal>
@@ -111,14 +178,22 @@ export default function CurriculumHomePage({ curriculum }) {
               <Stat icon={Trophy} label="Done" value={`${doneCount}/${path.length}`} tone="gold" />
             </Reveal>
 
+            {loaded && <MilestoneCard streak={streak} />}
+
             <Reveal delay={180} className="mt-4">
               <div className="h-3 overflow-hidden rounded-pill bg-siegel-wash" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
                 <div className="h-full rounded-pill bg-siegel transition-all duration-700 motion-reduce:transition-none" style={{ width: `${pct}%` }} />
               </div>
+              {endowed && (
+                <p className="mt-2 inline-flex items-center gap-1.5 rounded-pill bg-white/80 px-3 py-1 font-data text-[0.6875rem] font-bold text-siegel-deep ring-1 ring-rule" data-endowed>
+                  <Compass className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  Your test suggests a level above {curriculum.code} — everything here is open; start where you like.
+                </p>
+              )}
               {complete ? (
                 <div className="mt-4"><Button to={`/course/${level}/complete`} variant="celebrate" size="lg">Course complete · see your result →</Button></div>
               ) : current ? (
-                <div className="mt-4 flex flex-col gap-3 rounded-clay border border-rule bg-white p-4 shadow-raise sm:flex-row sm:items-center sm:justify-between">
+                <div className="mt-4 flex flex-col gap-3 rounded-clay border border-rule bg-white p-4 shadow-raise sm:flex-row sm:items-center sm:justify-between" data-tour="continue">
                   <div className="flex min-w-0 items-center gap-3">
                     {(() => { const I = KIND_ICON[current.kind]; return <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel"><I className="h-5 w-5" /></span>; })()}
                     <div className="min-w-0">
@@ -132,17 +207,27 @@ export default function CurriculumHomePage({ curriculum }) {
                   </Button>
                 </div>
               ) : null}
-              <ExamDatePlan curriculum={curriculum} path={path} doneIds={done} />
+              <div data-tour="plan"><ExamDatePlan curriculum={curriculum} path={path} doneIds={done} /></div>
             </Reveal>
           </div>
         </header>
 
+        {meta && welcomeOpen && (
+          <div id="dm-course-welcome-panel" className="mb-10">
+            <CourseWelcome curriculum={curriculum} meta={meta} className="!px-0" />
+            <hr className="mt-10 border-rule" />
+          </div>
+        )}
+
+        <div data-tour="path">
         {chapters.map((nodes, ci) => {
           const lektionen = nodes.filter((n) => n.kind === 'lektion').map((n) => curriculum.lektionen.find((l) => l.id === n.id)).filter(Boolean);
           const chapterDone = nodes.filter((n) => done.has(n.id)).length;
-          const title = nodes.find((n) => n.kind === 'leveltest') && lektionen.length === 0
+          const isFinal = nodes.find((n) => n.kind === 'leveltest') && lektionen.length === 0;
+          const chapterMeta = !isFinal && meta ? meta.chapters[ci] : null;
+          const title = isFinal
             ? 'Final test'
-            : `Lektion ${lektionen[0]?.nr}–${lektionen[lektionen.length - 1]?.nr}`;
+            : chapterMeta?.titleEn ?? `Lektion ${lektionen[0]?.nr}–${lektionen[lektionen.length - 1]?.nr}`;
           const canDos = lektionen.flatMap((l) => l.canDo || []);
           const teile = [...new Set(lektionen.flatMap((l) => l.examTeile || []))];
           const words = lektionen.reduce((s, l) => s + (l.wortfeld?.length || 0), 0);
@@ -150,9 +235,22 @@ export default function CurriculumHomePage({ curriculum }) {
           return (
             <Reveal as="section" key={ci} delay={Math.min(ci, 6) * 60} className="mb-6">
               <div className="rounded-clay bg-siegel px-5 py-4 text-white shadow-raise-siegel">
+                {!isFinal && lektionen[0] && (
+                  <SituationScene
+                    lektionId={lektionen[0].id}
+                    className="mb-3 h-20 w-full rounded-clay object-cover opacity-90 sm:h-24"
+                  />
+                )}
                 <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-white/80">Chapter {ci + 1}</p>
                 <h2 className="mt-1 font-display text-[1.25rem] font-semibold leading-tight">{title}</h2>
-                <p className="mt-1 text-[0.8125rem] text-white/85">{lektionen.map((l) => l.title).join(' · ')}</p>
+                {chapterMeta && (
+                  <p className="font-data text-[0.75rem] text-white/80" lang="de">{chapterMeta.titleDe} · Lektion {lektionen[0]?.nr}–{lektionen[lektionen.length - 1]?.nr}</p>
+                )}
+                {chapterMeta ? (
+                  <p className="mt-2 text-[0.8125rem] leading-snug text-white/90">{chapterMeta.storyEn}</p>
+                ) : (
+                  <p className="mt-1 text-[0.8125rem] text-white/85">{lektionen.map((l) => l.title).join(' · ')}</p>
+                )}
                 <p className="mt-2 font-data text-[0.75rem] text-white/80">{chapterDone}/{nodes.length} done{words ? ` · ${words} words` : ''}</p>
                 {canDos.length > 0 && (
                   <button type="button" onClick={() => setOpenChapter(open ? null : ci)} aria-expanded={open}
@@ -173,7 +271,7 @@ export default function CurriculumHomePage({ curriculum }) {
                 {nodes.map((node) => {
                   const idx = nodeCounter; nodeCounter += 1;
                   const isDone = done.has(node.id);
-                  const unlocked = (!user || loaded) && (node.index === 0 || done.has(path[node.index - 1].id));
+                  const unlocked = (!user || loaded) && (endowed || node.index === 0 || done.has(path[node.index - 1].id));
                   const isCurrent = current && current.id === node.id;
                   const Icon = KIND_ICON[node.kind];
                   const sway = SWAY[idx % SWAY.length];
@@ -185,7 +283,9 @@ export default function CurriculumHomePage({ curriculum }) {
                       {isCurrent && (
                         <span className="mb-1 animate-bounce rounded-pill bg-white px-3 py-1 font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel shadow-raise ring-1 ring-siegel motion-reduce:animate-none">Start</span>
                       )}
-                      <Node to={unlocked || isDone ? hrefFor(level, node) : null} state={state} Icon={Icon} label={node.title} big={node.kind !== 'lektion'} />
+                      <LessonRing state={state} size={node.kind !== 'lektion' ? 112 : 96}>
+                        <Node to={unlocked || isDone ? hrefFor(level, node) : null} state={state} Icon={Icon} label={node.title} big={node.kind !== 'lektion'} />
+                      </LessonRing>
                       <p className={`mt-2 max-w-[14rem] text-center text-[0.8125rem] font-bold leading-snug ${isDone || unlocked ? 'text-ink' : 'text-graphite'}`}>{node.title}</p>
                       <p className="font-data text-[0.6875rem] text-graphite">
                         {KIND_LABEL[node.kind]}{node.minutes ? ` · ${node.minutes} min` : ''}{lektion?.situation ? ` · ${lektion.situation}` : ''}
@@ -197,11 +297,15 @@ export default function CurriculumHomePage({ curriculum }) {
             </Reveal>
           );
         })}
+        </div>
+
+        {loaded && meta && <FirstRunTour curriculum={curriculum} meta={meta} />}
 
         <footer className="mt-4 border-t border-rule pt-6 text-sm text-graphite">
-          Lektionen open in order and save on every step, on any device.{' '}
+          {endowed ? 'Every Lektion is open for you and saves on every step.' : 'Lektionen open in order and save on every step.'}
+          {user ? ' On any device.' : ' Your progress saves on this device until you sign in.'}{' '}
           <Link to={`/course/${level}/review`} className="font-bold text-siegel hover:text-siegel-deep">Wiederholen</Link> ·{' '}
-          <Link to={`/modelltest/${curriculum.testSlug}`} className="font-bold text-siegel hover:text-siegel-deep">Final test</Link> ·{' '}
+          <Link to={`/modelltest/${curriculum.testSlug}`} className="font-bold text-siegel hover:text-siegel-deep">{finalTestLabel(level)}</Link> ·{' '}
           <Link to={`/courses/${level.replace('.', '-')}/`} className="font-bold text-siegel hover:text-siegel-deep" reloadDocument>Lehrplan</Link> ·{' '}
           <Link to="/courses/" className="font-bold text-siegel hover:text-siegel-deep" reloadDocument>All courses</Link>
         </footer>

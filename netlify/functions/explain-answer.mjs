@@ -2,9 +2,16 @@ import { supabase, supabaseKey } from './_shared/supabase.mjs';
 import { getAuthenticatedUserId, unauthorizedResponse } from './_shared/auth.mjs';
 import { ruleCard, ruleCardText } from './_shared/ruleCards.mjs';
 
-// "Erklär mir das" (plan P5). One missed practice item in, one short German
-// explanation out — the button under the feedback in
+// "Explain this to me" / „Erklär mir das" (plan P5). One missed practice item
+// in, one short explanation out — the button under the feedback in
 // src/components/lesson/PracticeItem.jsx used to be a placeholder.
+//
+// THE ANSWER IS IN THE CHROME LANGUAGE (Wave 1, 2026-09-19). The client sends
+// `lang` ('en' | 'de'); English is what a day-one learner can read, German is
+// Deutsch-Modus. Both variants are the same teacher with the same rule card —
+// only the language of the explanation changes, never its grounding. `lang` is
+// validated here like every other field and defaults to German when absent or
+// unknown, so an older client keeps getting what it always got.
 //
 // THE ANSWER IS GROUNDED, NOT INVENTED. The system prompt carries the course's
 // own rule card for the item's topic (netlify/functions/_shared/ruleCards.mjs,
@@ -22,7 +29,15 @@ const CLAUDE_MODEL = process.env.EXPLAIN_MODEL || 'claude-haiku-4-5';
 
 const MAX_FIELD_CHARS = 300;
 
-const SYSTEM_RULES = 'Du bist eine freundliche DaF-Lehrkraft. Erkläre auf A1-Deutsch in höchstens 60 Wörtern, warum die richtige Antwort richtig ist; nenne die Regel kurz; keine Einleitung.';
+const SYSTEM_RULES = {
+  de: 'Du bist eine freundliche DaF-Lehrkraft. Erkläre auf A1-Deutsch in höchstens 60 Wörtern, warum die richtige Antwort richtig ist; nenne die Regel kurz; keine Einleitung.',
+  en: 'You are a friendly teacher of German as a foreign language. In plain English and at most 60 words, explain why the correct answer is correct; name the rule briefly, quoting the German forms as they are; no preamble. Stay within the course rule below — do not add rules it does not state.',
+};
+const RULE_CARD_HEADING = {
+  de: 'Grundlage — die Regel dieses Kurses:',
+  en: "Ground truth — this course's own rule card (German; explain it, do not contradict it):",
+};
+const LANGS = new Set(['en', 'de']);
 
 const trim = (v) => (typeof v === 'string' ? v.trim().slice(0, MAX_FIELD_CHARS) : '');
 
@@ -73,6 +88,7 @@ export const handler = async (event) => {
     const userAnswer = trim(body.userAnswer);
     const level = (trim(body.level) || 'a1.1').toLowerCase();
     const lektionId = trim(body.lektionId);
+    const lang = LANGS.has(body.lang) ? body.lang : 'de';
 
     if (!itemId || !questionDe || !expected) {
       return {
@@ -119,15 +135,18 @@ export const handler = async (event) => {
 
     const card = ruleCardText(topic);
     if (!card) console.warn(`[explain-answer] no rule card for topic "${topic}"`);
-    const system = [SYSTEM_RULES, card && `Grundlage — die Regel dieses Kurses:\n${card}`]
+    const system = [SYSTEM_RULES[lang], card && `${RULE_CARD_HEADING[lang]}\n${card}`]
       .filter(Boolean)
       .join('\n\n');
 
+    const L = lang === 'en'
+      ? { task: 'Task', expected: 'Correct answer', user: "Learner's answer", level: 'Level' }
+      : { task: 'Aufgabe', expected: 'Richtige Antwort', user: 'Antwort der Lernenden', level: 'Niveau' };
     const userText = [
-      `Aufgabe: ${questionDe}`,
-      `Richtige Antwort: ${expected}`,
-      userAnswer ? `Antwort der Lernenden: ${userAnswer}` : null,
-      `Niveau: ${level}`,
+      `${L.task}: ${questionDe}`,
+      `${L.expected}: ${expected}`,
+      userAnswer ? `${L.user}: ${userAnswer}` : null,
+      `${L.level}: ${level}`,
     ].filter(Boolean).join('\n');
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -170,7 +189,7 @@ export const handler = async (event) => {
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({ explanation, used: used + 1, limit: EXPLAIN_DAILY_LIMIT, topic: ruleCard(topic) ? topic : null }),
+      body: JSON.stringify({ explanation, lang, used: used + 1, limit: EXPLAIN_DAILY_LIMIT, topic: ruleCard(topic) ? topic : null }),
     };
   } catch (error) {
     console.error('explain-answer error:', error.message, error.stack);

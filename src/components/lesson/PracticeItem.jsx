@@ -1,51 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Check, AlertTriangle, X, Sparkles } from 'lucide-react';
+import { Check } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import ExplainAnswer from './ExplainAnswer.jsx';
+import FeedbackSheet from './FeedbackSheet.jsx';
+import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import { checkAnswer, tagError, RESULT, checkOptionsFor } from '../../lib/lesson/check.js';
 import { isTypedItem } from '../../lib/lesson/buildLesson.js';
 
 /**
- * Correctness is TEXT + ICON + COLOUR, never colour alone (standard §4).
- * Exported because the dictation item shows the same three states.
+ * Shown when the only thing wrong with an answer is its capitalisation — in
+ * the chrome language (Sie register in Deutsch-Modus).
  */
-export function ItemFeedback({ result, expected, hint, explanation, onExplain }) {
-  if (!result) return null;
-  const map = {
-    [RESULT.CORRECT]: { Icon: Check, label: 'Richtig', tone: 'border-siegel bg-siegel-wash text-siegel-deep' },
-    [RESULT.TYPO]: { Icon: AlertTriangle, label: 'Fast — nur ein Tippfehler', tone: 'border-accent-aprikose bg-accent-aprikose-wash text-accent-aprikose-ink' },
-    [RESULT.WRONG]: { Icon: X, label: 'Noch nicht', tone: 'border-accent-himbeer bg-accent-himbeer-wash text-accent-himbeer-ink' },
-  };
-  const { Icon, label, tone } = map[result] || map[RESULT.WRONG];
-  return (
-    <div className={`mt-4 rounded-clay border p-4 ${tone}`} role="status" aria-live="polite">
-      <p className="flex items-center gap-2 font-bold">
-        <Icon className="h-5 w-5 shrink-0" aria-hidden="true" />
-        {label}
-      </p>
-      {result !== RESULT.CORRECT && expected && (
-        <p className="mt-2 text-[0.9375rem]">
-          Richtig ist: <strong className="font-bold">{expected}</strong>
-        </p>
-      )}
-      {hint && <p className="mt-2 text-[0.9375rem] font-bold">{hint}</p>}
-      {explanation && <p className="mt-2 text-[0.875rem] leading-relaxed opacity-90">{explanation}</p>}
-      {onExplain && (
-        <button
-          type="button"
-          onClick={onExplain}
-          className="mt-3 inline-flex items-center gap-1.5 rounded-pill border border-current bg-white/60 px-3 py-1.5 text-[0.8125rem] font-bold"
-        >
-          <Sparkles className="h-4 w-4" aria-hidden="true" /> Erklär mir das
-        </button>
-      )}
-    </div>
-  );
-}
-
-/** Shown when the only thing wrong with an answer is its capitalisation (Sie-register). */
-export const CASE_HINT = 'Achten Sie auf die Groß-/Kleinschreibung.';
+export const caseHint = (lang) => t('practice.caseHint', lang);
 
 /**
  * One controlled-practice item, one screen (standard §3 stage 4).
@@ -64,8 +31,14 @@ export const CASE_HINT = 'Achten Sie auf die Groß-/Kleinschreibung.';
  * netlify/functions/explain-answer. `level` and `lektionId` are optional and only
  * label the attempt row the function writes — pass them from the player when
  * available; the function falls back to the level default.
+ *
+ * `eyebrowKey` names the stage this item is shown in: 'stage.practice.eyebrow'
+ * by default, 'stage.requeue.eyebrow' when the player re-asks the misses after
+ * the writing step — the requeue used to reuse "Step 4 · Practice" after
+ * "Step 6 · Writing", which read as the lesson going backwards.
  */
-export default function PracticeItem({ item, index, total, onResult, onNext, level, lektionId }) {
+export default function PracticeItem({ item, index, total, onResult, onNext, level, lektionId, eyebrowKey = 'stage.practice.eyebrow' }) {
+  const [lang] = useLessonLang();
   const [value, setValue] = useState('');
   const [picked, setPicked] = useState(null);
   const [state, setState] = useState(null);
@@ -94,7 +67,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
     setState({
       result,
       expected: expected || item.answer,
-      hint: reason === 'case' ? CASE_HINT : null,
+      hint: reason === 'case' ? caseHint(lang) : null,
     });
     onResult(item, {
       result,
@@ -104,16 +77,19 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
   };
 
   return (
-    <div>
+    <div className={state ? 'pb-36 sm:pb-0' : ''}>
       <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-siegel">
-        Schritt 4 · Üben {index + 1}/{total}
+        {t(eyebrowKey, lang, { n: index + 1, total })}
       </p>
       <Card className="mt-4 p-5 sm:p-6">
-        <p className="font-display text-[1.25rem] font-semibold leading-snug text-ink sm:text-[1.375rem]">{item.questionDe}</p>
+        <p className="font-display text-[1.25rem] font-semibold leading-snug text-ink sm:text-[1.375rem]" lang="de">{item.questionDe}</p>
         {item.questionEn && <p className="mt-1.5 text-[0.875rem] leading-snug text-graphite">{item.questionEn}</p>}
 
         {chips ? (
-          <div className="mt-5 flex flex-wrap gap-2">
+          // Full-width, stacked options on mobile (one thumb-width tap target
+          // each); min 44px tall either way. Selected state is never colour
+          // alone — the check icon carries it too.
+          <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
             {chips.map((opt) => {
               const on = picked === opt;
               return (
@@ -123,11 +99,12 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
                   disabled={!!state}
                   onClick={() => setPicked(opt)}
                   aria-pressed={on}
-                  className={`rounded-clay border px-4 py-2.5 text-left text-[0.9375rem] font-bold transition-all duration-100 ease-snap disabled:opacity-70 motion-reduce:transition-none ${
+                  className={`flex min-h-11 w-full items-center justify-between gap-2 rounded-clay border px-4 py-2.5 text-left text-[0.9375rem] font-bold transition-all duration-100 ease-snap disabled:opacity-70 motion-reduce:transition-none sm:w-auto ${
                     on ? 'border-siegel bg-siegel text-white shadow-raise-siegel' : 'border-rule bg-white text-ink shadow-raise hover:border-siegel active:translate-y-1 active:shadow-none'
                   }`}
                 >
-                  {opt}
+                  <span>{opt}</span>
+                  {on && <Check className="h-4 w-4 shrink-0" aria-hidden="true" />}
                 </button>
               );
             })}
@@ -135,7 +112,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
         ) : (
           <div className="mt-5">
             <label htmlFor={`answer-${item.id}`} className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">
-              Ihre Antwort
+              {t('practice.yourAnswer', lang)}
             </label>
             <input
               id={`answer-${item.id}`}
@@ -149,19 +126,12 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
               onChange={(e) => setValue(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') submit(); }}
               className="mt-2 w-full rounded-clay border border-rule bg-white px-4 py-3 text-[1.0625rem] text-ink outline-none focus:border-siegel disabled:bg-paper-sunk"
-              placeholder={item.type === 'sentence_building' ? 'Ganzer Satz' : '…'}
+              placeholder={item.type === 'sentence_building' ? t('practice.wholeSentence', lang) : '…'}
             />
-            {item.hint && !state && <p className="mt-2 text-[0.8125rem] text-graphite">Tipp: {item.hint}</p>}
+            {item.hint && !state && <p className="mt-2 text-[0.8125rem] text-graphite">{t('practice.tip', lang, { hint: item.hint })}</p>}
           </div>
         )}
 
-        <ItemFeedback
-          result={state && state.result}
-          expected={state && state.expected}
-          hint={state && state.hint}
-          explanation={state && state.result !== RESULT.CORRECT ? item.explanationDe : null}
-          onExplain={state && state.result !== RESULT.CORRECT ? () => setExplain(true) : null}
-        />
         {explain && (
           <ExplainAnswer
             item={item}
@@ -169,17 +139,26 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
             userAnswer={answer}
             level={level}
             lektionId={lektionId}
+            lang={lang}
           />
         )}
       </Card>
 
-      <div className="mt-6 flex justify-end">
-        {state ? (
-          <Button onClick={onNext} size="lg" className="w-full sm:w-auto">Weiter</Button>
-        ) : (
-          <Button onClick={submit} size="lg" disabled={!canSubmit} className="w-full sm:w-auto">Prüfen</Button>
-        )}
-      </div>
+      {!state && (
+        <div className="mt-6 flex justify-end">
+          <Button onClick={submit} size="lg" disabled={!canSubmit} className="w-full sm:w-auto">{t('action.check', lang)}</Button>
+        </div>
+      )}
+
+      <FeedbackSheet
+        result={state && state.result}
+        expected={state && state.expected}
+        hint={state && state.hint}
+        explanation={state && state.result !== RESULT.CORRECT ? (lang !== 'de' && item.explanationEn ? item.explanationEn : item.explanationDe) : null}
+        otherExplanation={state && state.result !== RESULT.CORRECT ? (lang !== 'de' && item.explanationEn ? item.explanationDe : item.explanationEn) : null}
+        onExplain={state && state.result !== RESULT.CORRECT ? () => setExplain(true) : null}
+        onContinue={onNext}
+      />
     </div>
   );
 }

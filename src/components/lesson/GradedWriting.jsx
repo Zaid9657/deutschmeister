@@ -6,6 +6,7 @@ import { MAX_WRITING_POINTS } from '../../data/writingTasks';
 import { scoreWriting, countWords, formularText } from '../../lib/lesson/writing.js';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
+import { t, useLessonLang } from '../../lib/lesson/strings.js';
 
 /**
  * The graded writing exercise, reusable by any stage that has a task.
@@ -28,7 +29,7 @@ import Card from '../ui/Card.jsx';
  * promise of feedback is exactly what FernUSG forbids.
  */
 
-const CRITERIA = [['task', 'Aufgabe'], ['structure', 'Aufbau'], ['accuracy', 'Korrektheit'], ['vocabulary', 'Wortschatz']];
+const CRITERIA = ['task', 'structure', 'accuracy', 'vocabulary']; // labelled by `writing.criteria.<key>`
 const CRITERION_MAX = MAX_WRITING_POINTS / CRITERIA.length;
 const FIELD_LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite';
 
@@ -41,16 +42,27 @@ const FIELD_LABEL = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.
  * submission, so the standard described a screen that did not exist. The two labels differ on
  * purpose: live, the row names who will decide it; in the fallback the KI did not run, and a row
  * that said it was checking would promise a check that is not running (review #21, Minor 33).
+ *
+ * The German table is the Deutsch-Modus copy and the one tests/writing-course.test.mjs pins by
+ * its literals; the English twin is the default chrome (docs/language-strategy.md). They live
+ * here rather than in the lesson string table because the three labels are one decision.
  */
 const AI_ROW_LABEL = {
   live: 'prüft die KI',
   liveSignedOut: 'prüft die KI — nach der Anmeldung',
   fallback: 'ohne KI-Bewertung nicht prüfbar',
 };
+const AI_ROW_LABEL_EN = {
+  live: 'the AI checks this',
+  liveSignedOut: 'the AI checks this — after you sign in',
+  fallback: 'cannot be checked without the AI assessment',
+};
 
 /** The Formcheck rows — live under the text, or as the fallback card after a submission without the KI. */
-function Checklist({ checks, mode, signedIn }) {
-  const aiLabel = mode === 'fallback' ? AI_ROW_LABEL.fallback : (signedIn ? AI_ROW_LABEL.live : AI_ROW_LABEL.liveSignedOut);
+function Checklist({ checks, mode, signedIn, lang }) {
+  const aiLabelDe = mode === 'fallback' ? AI_ROW_LABEL.fallback : (signedIn ? AI_ROW_LABEL.live : AI_ROW_LABEL.liveSignedOut);
+  const aiLabelEn = mode === 'fallback' ? AI_ROW_LABEL_EN.fallback : (signedIn ? AI_ROW_LABEL_EN.live : AI_ROW_LABEL_EN.liveSignedOut);
+  const aiLabel = lang === 'de' ? aiLabelDe : aiLabelEn;
   return (
     <ul className="mt-3 space-y-2">
       {checks.map((c) => {
@@ -78,7 +90,7 @@ function Checklist({ checks, mode, signedIn }) {
               <X className="mt-0.5 h-4 w-4 shrink-0 text-accent-himbeer" aria-hidden="true" />
             )}
             <span className={c.ok ? 'text-ink' : 'text-graphite'}>
-              {c.label} — {c.ok ? 'erledigt' : 'fehlt noch'}
+              {c.label} — {t(c.ok ? 'writing.done' : 'writing.missing', lang)}
             </span>
           </li>
         );
@@ -89,6 +101,7 @@ function Checklist({ checks, mode, signedIn }) {
 
 export default function GradedWriting({ task, lektionId = null, onResult }) {
   const { user } = useAuth();
+  const [lang] = useLessonLang();
   const isFormular = task?.kind === 'formular';
   const points = (isFormular ? task?.fields : task?.leitpunkte) || [];
 
@@ -142,18 +155,16 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
    * that it only checks the form and does not correct the learner's German.
    */
   const remainingLine = (data) => {
-    if (typeof data?.limit !== 'number') return 'Formcheck, keine KI-Bewertung.';
+    if (typeof data?.limit !== 'number') return t('writing.fallbackPlain', lang);
     const left = Math.max(0, data.limit - (data.used ?? 0));
-    if (left > 0) return `Formcheck, keine KI-Bewertung — noch ${left} KI-Bewertungen frei.`;
-    return data?.scope === 'course'
-      ? 'Ihr Schreibkontingent für diesen Kurs ist aufgebraucht. Formcheck, keine KI-Bewertung.'
-      : 'Ihr Kontingent an KI-Bewertungen ist aufgebraucht. Formcheck, keine KI-Bewertung.';
+    if (left > 0) return t('writing.fallbackLeft', lang, { left });
+    return t(data?.scope === 'course' ? 'writing.courseQuotaUsed' : 'writing.quotaUsed', lang);
   };
 
   const submit = async () => {
     if (busy || !canSubmit) return;
     if (!user) {
-      finish(mechanicalResult(), 'Melden Sie sich an, um eine KI-Bewertung zu bekommen.');
+      finish(mechanicalResult(), t('writing.signInForAi', lang));
       return;
     }
     setBusy(true);
@@ -170,7 +181,7 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
           mechanicalResult({ limitReached }),
           limitReached || data.error === 'subscription_required'
             ? remainingLine(data)
-            : 'Formcheck, keine KI-Bewertung — die Bewertung war gerade nicht erreichbar.',
+            : t('writing.unreachable', lang),
         );
         return;
       }
@@ -193,7 +204,7 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
       });
     } catch (e) {
       console.error('[GradedWriting] evaluate-writing call failed:', e);
-      finish(mechanicalResult(), 'Formcheck, keine KI-Bewertung — keine Verbindung zur Bewertung.');
+      finish(mechanicalResult(), t('writing.offline', lang));
     } finally {
       setBusy(false);
     }
@@ -231,7 +242,7 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
                 ))}
               </ul>
             )}
-            <label htmlFor="writing-text" className={FIELD_LABEL}>Ihr Text</label>
+            <label htmlFor="writing-text" className={FIELD_LABEL}>{t('writing.yourText', lang)}</label>
             <textarea
               id="writing-text"
               rows={6}
@@ -241,17 +252,20 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
               className="mt-2 w-full resize-y rounded-clay border border-rule bg-white px-4 py-3 text-[1rem] leading-relaxed text-ink outline-none focus:border-siegel disabled:bg-paper-sunk"
             />
             <p className={`mt-2 font-data text-[0.75rem] ${inRange ? 'text-siegel-deep' : 'text-graphite'}`}>
-              {count} {count === 1 ? 'Wort' : 'Wörter'} · Ziel {min}–{max}
+              {count} {t(count === 1 ? 'writing.word' : 'writing.words', lang)} · {t('writing.target', lang, { min, max })}
             </p>
           </>
         )}
 
         {!done && check.checks.length > 0 && (
           <div className="mt-5">
-            <p className={FIELD_LABEL}>Checkliste</p>
-            <Checklist checks={check.checks} mode="live" signedIn={!!user} />
+            <p className={FIELD_LABEL}>{t('writing.checklist', lang)}</p>
+            <Checklist checks={check.checks} mode="live" signedIn={!!user} lang={lang} />
+            {/* Deutsch-Modus: „Formcheck: nur die Form (Länge, Punkte, Anrede und Gruß), noch keine
+                Bewertung." — the FernUSG line tests/writing-course.test.mjs pins; the English
+                twin says the same thing (writing.formcheckLive). */}
             <p className="mt-3 text-[0.8125rem] leading-relaxed text-graphite">
-              Formcheck: nur die Form (Länge, Punkte, Anrede und Gruß), noch keine Bewertung.
+              {t('writing.formcheckLive', lang)}
             </p>
           </div>
         )}
@@ -260,7 +274,7 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
           <div className="mt-4 flex justify-end">
             <Button onClick={submit} disabled={busy || !canSubmit}>
               {busy ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <PenTool className="h-4 w-4" aria-hidden="true" />}
-              {busy ? 'Wird bewertet…' : 'Abgeben'}
+              {t(busy ? 'action.submitting' : 'action.submit', lang)}
             </Button>
           </div>
         )}
@@ -277,13 +291,14 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
               <p className="mt-3 text-[0.9375rem] leading-relaxed text-graphite">{outcome.feedback}</p>
             )}
             <p className="mt-3 font-data text-[0.75rem] leading-relaxed text-graphite">
-              Einschätzung nach Prüfungskriterien — keine offizielle Bewertung.
-              {typeof outcome.remaining === 'number' && ` Noch ${outcome.remaining} KI-Bewertungen frei.`}
+              {t('writing.assessmentNote', lang)}
+              {typeof outcome.remaining === 'number' && t('writing.remaining', lang, { n: outcome.remaining })}
             </p>
           </Card>
 
           <Card className="mt-4 overflow-hidden">
-            {CRITERIA.map(([key, label]) => {
+            {CRITERIA.map((key) => {
+              const label = t(`writing.criteria.${key}`, lang);
               const score = outcome.scores?.[key];
               const pct = typeof score === 'number' ? Math.max(0, Math.min(100, (score / CRITERION_MAX) * 100)) : 0;
               return (
@@ -314,7 +329,7 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
 
           {outcome.corrections.length > 0 && (
             <Card className="mt-4 p-5">
-              <p className={FIELD_LABEL}>Korrekturen</p>
+              <p className={FIELD_LABEL}>{t('writing.corrections', lang)}</p>
               <ul className="mt-3 space-y-3">
                 {outcome.corrections.map((c, i) => (
                   <li key={`${c.original}-${i}`} className="text-[0.9375rem] leading-relaxed">
@@ -332,21 +347,20 @@ export default function GradedWriting({ task, lektionId = null, onResult }) {
 
       {done && !outcome.scored && (
         <Card tone="sunk" className="mt-4 p-5">
-          <p className={FIELD_LABEL}>Checkliste</p>
+          <p className={FIELD_LABEL}>{t('writing.checklist', lang)}</p>
           {/* The FALLBACK without the KI: the same rows as under the text, and an `ai` row now says
               the KI did not run rather than that it is checking (DaF review #21, Minor 33). */}
-          <Checklist checks={check.checks} mode="fallback" signedIn={!!user} />
+          <Checklist checks={check.checks} mode="fallback" signedIn={!!user} lang={lang} />
           <p className="mt-4 text-[0.8125rem] leading-relaxed text-graphite">
-            {note || 'Formcheck, keine KI-Bewertung.'} Diese Checkliste prüft nur die Form (Länge, Punkte,
-            Anrede und Gruß). Sie korrigiert Ihr Deutsch nicht.
+            {note || t('writing.fallbackPlain', lang)} {t('writing.fallbackNote', lang)}
           </p>
         </Card>
       )}
 
       {done && task?.sample && (
         <Card className="mt-4 p-5">
-          <p className={FIELD_LABEL}>Beispieltext</p>
-          <p className="mt-2 whitespace-pre-line text-[1rem] leading-relaxed text-ink">{task.sample}</p>
+          <p className={FIELD_LABEL}>{t('writing.sample', lang)}</p>
+          <p className="mt-2 whitespace-pre-line text-[1rem] leading-relaxed text-ink" lang="de">{task.sample}</p>
         </Card>
       )}
     </div>

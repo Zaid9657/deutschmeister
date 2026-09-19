@@ -140,6 +140,18 @@ const LevelTestResults = ({
     ? `/grammar/${finalSublevel.toLowerCase()}/${firstTopic.slug}/`
     : '/grammar/';
 
+  // The placement hook into the free A1.1 course (Wave 1). An A1.1 result
+  // starts at Lektion 1; any higher result opens the same course with every
+  // Lektion unlocked (`?from=placement` — CurriculumHomePage reads it, and the
+  // profile's current_level once signed in). "Your test suggests", never a
+  // level or pass promise — the result is a starting line, not a grade.
+  const placedAtStart = finalSublevel === 'A1.1';
+  const courseHref = placedAtStart ? '/course/a1.1' : '/course/a1.1?from=placement';
+  const courseLabel = placedAtStart ? 'Start your course at Lektion 1' : 'Open the A1.1 course (all Lektionen unlocked for you)';
+  const courseDetail = placedAtStart
+    ? 'Twelve short everyday situations, from the first „Hallo“ — no account needed.'
+    : 'Your test suggests you are past the start — every Lektion is open, so begin wherever you like.';
+
   // Section completion status
   const sections = [
     {
@@ -404,6 +416,16 @@ const LevelTestResults = ({
       <Reveal delay={380} className="mt-8">
         <h2 className="font-display text-[1.25rem] font-semibold tracking-[-0.01em] text-ink">Recommended Next Steps</h2>
         <div className="mt-3 flex flex-col gap-3">
+          <Card interactive as={Link} to={courseHref} className="flex items-center gap-4 p-4" data-placement-course>
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash text-siegel">
+              <BookOpen className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <span className="min-w-0">
+              <span className="block text-[0.9375rem] font-bold text-ink">{courseLabel}</span>
+              <span className="mt-0.5 block text-[0.8125rem] leading-snug text-graphite">{courseDetail}</span>
+            </span>
+          </Card>
+
           <Card interactive as={Link} to="/speaking/" className="flex items-center gap-4 p-4">
             <span className="text-2xl" aria-hidden="true">🗣️</span>
             <span className="min-w-0">

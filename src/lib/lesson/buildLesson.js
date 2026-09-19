@@ -990,6 +990,111 @@ const line = (dialog, i) => {
   return l ? { ...l, index: i } : null;
 };
 
+// ---------------------------------------------------------------------------
+// Derived exercises (7 → 10). Three extra items for one Lektion's own `derived`
+// stage (standard §3, after `practice` and before `dictation`) — a matching
+// pair, a word-order sentence and a listen-and-choose — built ENTIRELY from
+// that Lektion's own `wortfeld` and `dialog`, never from the pool. That is
+// what keeps rule 11b (no untaught word) true for free: an item drawn from a
+// Lektion's own data can only ever show words that Lektion itself already
+// teaches, so `scripts/validate-curriculum.mjs`'s ratchets never have to look
+// at these three the way they look at the pool draw.
+//
+// Deterministic per (lektion, attempt), same contract as `pickPracticeItems`:
+// reuses `mulberry32` and `seededShuffle`, keyed on the Lektion's own id so a
+// reload rebuilds the identical three without storing the picks, and a retry
+// (a later attempt) gets a different pick where the Lektion's data allows it.
+// The 7-item pool draw above is untouched by any of this — `derivedItems` never
+// reads or writes `pool`, `usedIds` or any of `pickPracticeItems`'s state.
+
+export const DERIVED_MATCH_PAIRS = 4;
+export const DERIVED_WORD_ORDER_MAX_TOKENS = 8;
+export const DERIVED_LISTEN_SELECT_OPTIONS = 3;
+
+/** Stable 32-bit hash for the derived-items draw, keyed on the Lektion's OWN id
+ *  (already level+lektion-unique) plus the attempt — distinct from `seedFor`'s
+ *  key so the two draws never share a stream. */
+function derivedSeedFor(lektionId, attempt = 1) {
+  const key = `${String(lektionId || '')}|${attempt}|derived`;
+  let h = 2166136261 >>> 0;
+  for (let i = 0; i < key.length; i += 1) {
+    h ^= key.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+function buildMatchItem(lektion, attempt, rng) {
+  const words = (lektion.wortfeld || []).filter((w) => w && w.de && w.en);
+  if (words.length < DERIVED_MATCH_PAIRS) return null;
+  const picked = seededShuffle(words, rng).slice(0, DERIVED_MATCH_PAIRS);
+  return {
+    id: `derived-${lektion.id}-match-${attempt}`,
+    type: 'match',
+    topic: lektion.primarySlug || null,
+    pairs: picked.map((w) => ({ de: w.de, en: w.en })),
+  };
+}
+
+function buildWordOrderItem(lektion, attempt, rng) {
+  const lines = (lektion.dialog && lektion.dialog.lines) || [];
+  const candidates = lines
+    .map((l, i) => ({ de: l && l.de, index: i, tokens: String((l && l.de) || '').trim().split(/\s+/).filter(Boolean) }))
+    .filter((c) => c.de && c.tokens.length >= 2 && c.tokens.length <= DERIVED_WORD_ORDER_MAX_TOKENS);
+  if (!candidates.length) return null;
+  const [chosen] = seededShuffle(candidates, rng);
+  // Reshuffle away from the original order when more than one arrangement
+  // exists, so the tiles are never handed over already solved.
+  let shuffled = seededShuffle(chosen.tokens, rng);
+  for (let tries = 0; tries < 6 && shuffled.join(' ') === chosen.tokens.join(' ') && chosen.tokens.length > 1; tries += 1) {
+    shuffled = seededShuffle(shuffled, rng);
+  }
+  return {
+    id: `derived-${lektion.id}-word_order-${attempt}`,
+    type: 'word_order',
+    topic: lektion.primarySlug || null,
+    lineIndex: chosen.index,
+    tokens: shuffled,
+    answer: chosen.de,
+    accepted: [chosen.de],
+  };
+}
+
+function buildListenSelectItem(lektion, attempt, rng) {
+  const lines = (lektion.dialog && lektion.dialog.lines) || [];
+  const withIndex = lines.map((l, i) => ({ de: l && l.de, index: i })).filter((l) => l.de);
+  if (withIndex.length < DERIVED_LISTEN_SELECT_OPTIONS) return null;
+  const [correct, ...restShuffled] = seededShuffle(withIndex, rng);
+  const distractors = restShuffled.slice(0, DERIVED_LISTEN_SELECT_OPTIONS - 1);
+  const options = seededShuffle([correct, ...distractors], rng).map((o) => o.de);
+  return {
+    id: `derived-${lektion.id}-listen_select-${attempt}`,
+    type: 'listen_select',
+    topic: lektion.primarySlug || null,
+    lineIndex: correct.index,
+    options,
+    answer: correct.de,
+    accepted: [correct.de],
+  };
+}
+
+/**
+ * derivedItems(lektion, attempt) → up to 3 items, one `match`, one
+ * `word_order`, one `listen_select` (omitted, never padded, when the
+ * Lektion's own data is too thin to build it — e.g. fewer than 4 Wortfeld
+ * rows, or no dialogue line short enough for a word-order tile set).
+ */
+export function derivedItems(lektion, attempt = 1) {
+  if (!lektion) return [];
+  const rng = mulberry32(derivedSeedFor(lektion.id, attempt));
+  const items = [
+    buildMatchItem(lektion, attempt, rng),
+    buildWordOrderItem(lektion, attempt, rng),
+    buildListenSelectItem(lektion, attempt, rng),
+  ].filter(Boolean);
+  return items;
+}
+
 /**
  * buildLesson({ curriculum, lektion, pool, dueCards, attempt }) → stage list.
  *
@@ -1019,6 +1124,9 @@ export function buildLesson({ curriculum, lektion, pool, dueCards = [], attempt 
   if (lektion.notice) {
     stages.push({ nr: 3, key: 'notice', kind: 'notice', title: lektion.notice.title || 'Grammatik', notice: lektion.notice });
   }
+  if (lektion.phonetik && lektion.phonetik.items && lektion.phonetik.items.length) {
+    stages.push({ nr: 3, key: 'phonetik', kind: 'phonetik', title: 'Aussprache', phonetik: lektion.phonetik });
+  }
 
   // The plan owns the draw (cross-Lektion dedup); a Lektion the curriculum does
   // not list — the dev preview screen — falls back to a standalone draw.
@@ -1030,6 +1138,11 @@ export function buildLesson({ curriculum, lektion, pool, dueCards = [], attempt 
     });
   if (practice.length) {
     stages.push({ nr: 4, key: 'practice', kind: 'practice', title: 'Üben', items: practice });
+  }
+
+  const derived = derivedItems(lektion, attempt);
+  if (derived.length) {
+    stages.push({ nr: 4, key: 'derived', kind: 'derived', title: 'Mehr üben', items: derived });
   }
 
   const hoeren = lektion.hoeren;
@@ -1062,6 +1175,11 @@ export function buildLesson({ curriculum, lektion, pool, dueCards = [], attempt 
     kind: 'recap',
     title: 'Geschafft',
     wordCount: (lektion.wortfeld || []).length,
+    // The Lektion's own Wortfeld rows, for the recap's flip-card review
+    // (WordsLearnedCards). Same array LessonPlayerPage builds for the
+    // wortfeld stage's `stage.words` — a plain, DB-free shape (de/word/
+    // article/plural/en), which is all the flip card needs.
+    wortfeld: lektion.wortfeld || [],
     grammar: (lektion.notice && lektion.notice.title) || lektion.primarySlug || '',
   });
 

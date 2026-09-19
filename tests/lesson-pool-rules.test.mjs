@@ -77,7 +77,7 @@
 // a1.1`. The one test that IS about the artefact says so in its message.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -109,8 +109,42 @@ const USABLE = ALL.filter((item) => isUsableItem(item));
 
 const POOL_A12 = read('src/data/lessonPools/a12.json');
 
+// RULE 25 (2026-09-19): the sidecar that carries the English of the hand-written extras. Written by
+// another hand than the extras themselves; until it lands the built pool carries '' for those items
+// and the De/En completeness test below is SKIPPED WITH A MESSAGE rather than failed, so the suite
+// stays green in the intermediate state and says why. The bank and template halves are provable now.
+const SIDECAR_A11 = join(ROOT, 'src/data/lessonPools/a11.explanationsEn.json');
+const SIDECAR_A11_PRESENT = existsSync(SIDECAR_A11);
+const nonEmpty = (v) => typeof v === 'string' && v.trim().length > 0;
+
 const MONTH_RE = new RegExp(`(^|[^a-zäöüß])(${MONTH_NAMES.join('|')})([^a-zäöüß]|$)`, 'i');
 const label = (item) => `${item.id} (${item.topic}) — ${item.questionDe} → ${item.answer}`;
+
+test('every bank and template item of the built pool carries an English explanation beside the German one — RULE 25', () => {
+  // These two sources need no sidecar: the bank rows all carry explanation_en/why_correct_en and the
+  // generated buchstabieren templates write their English next to their German in the build.
+  const provable = POOL.items.filter((it) => !it.id.startsWith('extra-'));
+  assert.ok(provable.length > 100, `only ${provable.length} bank/template items — the pool looks stale`);
+  for (const it of provable) {
+    assert.ok(nonEmpty(it.explanationDe), `${it.id}: explanationDe is empty`);
+    assert.ok(nonEmpty(it.explanationEn), `${it.id}: explanationEn is empty (${it.generated ? 'template' : 'bank'})`);
+  }
+});
+
+test(
+  'every item of the built pool has a De/En explanation pair — RULE 25',
+  { skip: SIDECAR_A11_PRESENT ? false : `${SIDECAR_A11} is absent — the extra items have no English until the sidecar lands and the pool is rebuilt` },
+  () => {
+    for (const it of POOL.items) {
+      assert.ok(nonEmpty(it.explanationDe), `${it.id}: explanationDe is empty`);
+      assert.ok(nonEmpty(it.explanationEn), `${it.id}: explanationEn is empty`);
+    }
+    // And every sidecar key names an item that exists, so a typo in an id cannot hide as "extra".
+    const sidecar = read('src/data/lessonPools/a11.explanationsEn.json');
+    const ids = new Set(POOL.items.map((it) => it.id));
+    for (const id of Object.keys(sidecar)) assert.ok(ids.has(id), `sidecar key ${id} matches no built item`);
+  },
+);
 
 test('whatever the rules drop carries a stable reason, and they are not broad', () => {
   // a11.json is generated: right after a build nothing here is dropped, and

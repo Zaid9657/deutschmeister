@@ -105,7 +105,7 @@ const jsonLd = {
           <div class="flex flex-col gap-2 sm:items-end">
             <div data-course-door={level} data-course-code={code} data-course-open-class={BTN_PRIMARY}>
             {isFree ? (
-              <a href={`/grammar/${level}/`} class={BTN_PRIMARY}>Start {code} free</a>
+              <a href={`/course/${level}`} class={BTN_PRIMARY}>Start the free {code} course</a>
             ) : buyable ? (
               <button type="button" class={BTN_PRIMARY} data-course-variant={course.variantId} data-course-key={course.key}>Buy {code} — {eur(course.price)}</button>
             ) : (
@@ -225,7 +225,7 @@ const jsonLd = {
             Quelle: {curriculum.provenance?.canDo}. Wortliste: {curriculum.provenance?.wortliste}. Themen: {curriculum.provenance?.themen}.
           </p>
 
-          <a href={`/course/${level}/l/1`} class="mt-6 inline-flex items-center gap-2 text-sm font-bold text-siegel transition-colors hover:text-siegel-deep">Lektion 1 ansehen →</a>
+          <a href={`/course/${level}`} class="mt-6 inline-flex items-center gap-2 text-sm font-bold text-siegel transition-colors hover:text-siegel-deep">Open the course →</a>
         </section>
       )}
 
@@ -308,7 +308,7 @@ const jsonLd = {
           </div>
           <div data-course-door={level} data-course-code={code} data-course-open-class={BTN_PRIMARY}>
           {isFree ? (
-            <a href={`/grammar/${level}/`} class={BTN_PRIMARY}>Start {code} free</a>
+            <a href={`/course/${level}`} class={BTN_PRIMARY}>Start the free {code} course</a>
           ) : buyable ? (
             <button type="button" class={BTN_PRIMARY} data-course-variant={course.variantId} data-course-key={course.key}>Buy {code} — {eur(course.price)}</button>
           ) : (

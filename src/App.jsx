@@ -20,6 +20,7 @@ import TrialBanner from './components/TrialBanner';
 import FloatingIntroButton from './components/FloatingIntroButton';
 import SessionTimeoutModal from './components/SessionTimeoutModal';
 import { useSessionTimeout } from './hooks/useSessionTimeout';
+import { chromeFor } from './lib/chrome.js';
 import { Loader2 } from 'lucide-react';
 
 // Lazy-loaded page components for code splitting
@@ -97,14 +98,19 @@ function OutsideAdmin({ children }) {
   return children;
 }
 
-function App() {
+/**
+ * The app shell: which chrome wraps the routed page is decided per route by
+ * src/lib/chrome.js. The lesson player, checkpoints and the review deck get
+ * NO navbar, footer or bottom tabs (a focused stage with the page's own
+ * "← A1.1" exit); the course home keeps the navbar and tabs but drops the
+ * marketing footer; everything else gets the full chrome. Hook order is
+ * stable: the shell always renders, only its children vary.
+ */
+function Shell() {
+  const { pathname } = useLocation();
+  const chrome = chromeFor(pathname);
+  const focused = chrome === 'player';
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <SubscriptionProvider>
-          <LemonSqueezyProvider>
-          <ThemeProvider>
-            <ProgressProvider>
               <div className="min-h-screen bg-paper">
                 {/* Keyboard users land here first and can jump the nav. The SPA
                     had no skip link and no <main> landmark at all. */}
@@ -114,9 +120,12 @@ function App() {
                 >
                   Skip to content
                 </a>
-                <Navbar />
-                <OutsideAdmin><TrialBanner /></OutsideAdmin>
-                <OutsideAdmin><FloatingIntroButton /></OutsideAdmin>
+                {!focused && <Navbar />}
+                {!focused && <OutsideAdmin><TrialBanner /></OutsideAdmin>}
+                {/* Course home (chrome === 'course') also hides this: it overlaps
+                    FirstRunTour's first-run tooltip in the same bottom-left corner
+                    (docs/evaluation/screenshots/a11-w1-home.jpg). */}
+                {!focused && chrome !== 'course' && <OutsideAdmin><FloatingIntroButton /></OutsideAdmin>}
                 <SessionTimeoutWrapper />
                 <main id="main">
                 <Suspense fallback={<PageLoader />}>
@@ -530,11 +539,25 @@ function App() {
                 </Suspense>
                 </main>
                 <OutsideAdmin><CourseReturnBar /></OutsideAdmin>
-                <OutsideAdmin><Footer /></OutsideAdmin>
+                {chrome === 'full' && <OutsideAdmin><Footer /></OutsideAdmin>}
                 {/* Mobile app tabs (signed-in only); pb clearance lives on the
-                    wrapper so the fixed bar never covers page-end content. */}
-                <OutsideAdmin><BottomNav /></OutsideAdmin>
+                    wrapper so the fixed bar never covers page-end content. Not
+                    in the player: its bottom primary button is the only thing
+                    a thumb should find there. */}
+                {!focused && <OutsideAdmin><BottomNav /></OutsideAdmin>}
               </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <SubscriptionProvider>
+          <LemonSqueezyProvider>
+          <ThemeProvider>
+            <ProgressProvider>
+              <Shell />
             </ProgressProvider>
           </ThemeProvider>
           </LemonSqueezyProvider>

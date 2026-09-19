@@ -367,7 +367,11 @@ function tagSentenceError(item, userInput, expected, usr, exp) {
  */
 export function tagError(item, userInput, expected) {
   const exp = stripPunct(normalizeAnswer(expected)); const usr = stripPunct(normalizeAnswer(userInput));
-  if (item?.stage === 'listening' || item?.kind === 'dictation') return 'Hören';
+  // 'listen_select' is a derived exercise (buildLesson.js `derivedItems`): the
+  // learner picks the dialogue line they heard, so a miss is a hearing miss
+  // whatever the item's stage says (the player stamps every derived item with
+  // `stage: 'derived'`, never `'listening'`).
+  if (item?.stage === 'listening' || item?.kind === 'dictation' || item?.type === 'listen_select') return 'Hören';
   // A miss that is only Groß-/Kleinschreibung is spelling, whatever the word is.
   if (exp && usr && exp === usr && stripPunct(String(expected ?? '')) !== stripPunct(String(userInput ?? ''))) return 'Rechtschreibung';
   if (item?.topic && /plural/i.test(item.topic)) return 'Plural';

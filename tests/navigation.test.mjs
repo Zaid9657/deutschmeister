@@ -169,3 +169,36 @@ test('no source file retypes the YouTube URL (registry + index.html only)', () =
   scan.forEach(walk);
   assert.deepEqual(offenders, [], `import YOUTUBE_CHANNEL_URL instead of retyping it: ${offenders.join(', ')}`);
 });
+
+// ─── The mobile bottom nav (Wave 0, the free A1.1 front door) ────────────────
+// The Home tab pointed at /dashboard for everyone, and /dashboard sits behind
+// SubscriptionGuard — a free learner's Home tab was a paywall, and no tab
+// reached the guided course at all. The tab set is data-driven from the
+// subscription state and the course target from src/lib/courseEntry.js.
+
+const bottomNavSrc = readFileSync(join(root, 'src/components/BottomNav.jsx'), 'utf8');
+
+test('the bottom nav has a Kurs tab and resolves Home from the subscription, never a bare /dashboard', () => {
+  assert.match(bottomNavSrc, /label: 'Kurs'/, 'no Kurs tab');
+  assert.match(bottomNavSrc, /from '\.\.\/lib\/courseEntry\.js'/, 'the Kurs target must come from courseEntry.js');
+  assert.match(bottomNavSrc, /useSubscription\(\)/, 'the tab set must read the subscription');
+  assert.match(bottomNavSrc, /hasAccess \? \[home, course\] : \[course\]/, 'Home is /dashboard only when the subscription opens it');
+  // /dashboard must still be a real, rewritten route for the paying case.
+  assert.ok(spaRoutes.includes('/dashboard'));
+  assert.ok(appShellRewrites.has('/dashboard'));
+});
+
+test('courseHomeFor: the free course is the default, the placement level only when it has a course the learner may open', async () => {
+  const { courseHomeFor, FREE_COURSE_HOME } = await import('../src/lib/courseEntry.js');
+  assert.equal(FREE_COURSE_HOME, '/course/a1.1');
+  assert.equal(courseHomeFor({}), '/course/a1.1', 'no profile → the free course');
+  assert.equal(courseHomeFor({ level: null }), '/course/a1.1');
+  assert.equal(courseHomeFor({ level: 'B1.1', hasLevelAccess: () => true }), '/course/a1.1', 'no course home exists for B1.1');
+  assert.equal(courseHomeFor({ level: 'A2.1', hasLevelAccess: () => false }), '/course/a1.1', 'a level lock is never a tab target');
+  assert.equal(courseHomeFor({ level: 'A2.1', hasLevelAccess: () => true }), '/course/a2.1', 'DB level is UPPERCASE, the URL lowercase');
+  assert.equal(courseHomeFor({ level: 'a1.1', hasLevelAccess: () => false }), '/course/a1.1', 'a1.1 is free regardless');
+});
+
+test('the /course/* target of every tab is rewritten to /app.html (three-place rule)', () => {
+  assert.ok(appShellRewrites.has('/course/*'), '/course/* must be in the netlify.toml allow-list');
+});

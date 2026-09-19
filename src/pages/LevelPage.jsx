@@ -343,8 +343,8 @@ const LevelPage = () => {
                   <ClipboardCheck className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="font-bold text-ink">German {level.toUpperCase()} Course · guided path</p>
-                  <p className="text-sm text-graphite">Lesson by lesson, in order, to the final test. Your progress is saved.</p>
+                  <p className="font-bold text-ink">The guided {level.toUpperCase()} course</p>
+                  <p className="text-sm text-graphite">Lesson by lesson, in order, to the final test. Your progress is saved. This page below is the level library for browsing.</p>
                 </div>
               </div>
               <div className="flex shrink-0 items-center gap-3">

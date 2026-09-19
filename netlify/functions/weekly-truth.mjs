@@ -36,6 +36,25 @@ const delta = (now, prev, fmt = (x) => String(x)) => {
 };
 const pct = (a, b) => (Number(b) > 0 ? `${Math.round((Number(a) / Number(b)) * 100)}%` : 'n/a');
 
+/**
+ * The A1.1 course funnel line (migrations/2026-09-19-course-funnel.sql). The
+ * rebuild's success metric is Lektion 1 → Lektion 2 continuation, so it gets
+ * its own line. An older function without the `course` block says so instead
+ * of rendering "undefined" — the migration must be applied by hand.
+ */
+export function renderCourseLine(course) {
+  if (!course || typeof course !== 'object') {
+    return 'Kurs A1.1: nicht gemessen — migrations/2026-09-19-course-funnel.sql noch nicht angewendet';
+  }
+  const n = (v) => (v == null ? '–' : String(v));
+  const ratio = course.l1_to_l2_pct != null
+    ? `${Number(course.l1_to_l2_pct)} %`
+    : (Number(course.l01_finished) > 0 ? pct(course.l02_started, course.l01_finished).replace('%', ' %') : 'n/a');
+  const level = String(course.level || 'a1.1').toUpperCase();
+  return `Kurs ${level}: L1 gestartet ${n(course.l01_started)} · beendet ${n(course.l01_finished)} · L2 gestartet ${n(course.l02_started)} (${ratio}) · one-and-done ${n(course.one_and_done_14d)}`
+    + ` · L3 beendet ${n(course.l03_finished)} · L12 beendet ${n(course.l12_finished)} · CP1 bestanden ${n(course.checkpoint1_passed)} · aktiv (7d) ${n(course.active_learners_7d)}`;
+}
+
 /** The email body. Pure so tests and dry runs can render it. */
 export function renderSummary(m, prev) {
   const p = prev || {};
@@ -51,6 +70,7 @@ export function renderSummary(m, prev) {
   lines.push(`Courses: ${m.purchases?.sales_7d} sold this week (${eur(m.purchases?.revenue_7d)}); lifetime ${m.purchases?.sales_all} for ${eur(m.purchases?.revenue_all)}; by product: ${JSON.stringify(m.purchases?.by_product_7d || {})}`);
   lines.push(`Users: ${delta(m.users?.total, p.users?.total)} total, ${m.users?.signups_7d} new this week, ${m.users?.confirmed} confirmed (${pct(m.users?.confirmed, m.users?.total)})`);
   lines.push(`Learning: ${m.grammar?.active_users_7d} users did grammar this week; new cohort (14d) ${m.grammar?.new_cohort_14d}, one-and-done ${m.grammar?.one_and_done_14d} (${pct(m.grammar?.one_and_done_14d, m.grammar?.new_cohort_14d)})`);
+  lines.push(renderCourseLine(m.course));
   lines.push(`AI this week: speaking ${m.ai_7d?.speaking_7d}, writing ${m.ai_7d?.writing_7d}, exams ${m.ai_7d?.exams_7d}, X-Ray ${m.ai_7d?.xray_7d}`);
   lines.push(`Lifecycle emails sent: ${JSON.stringify(m.lifecycle_emails_7d || {})}`);
   lines.push(`Webhooks: ${m.webhooks_7d?.total_7d} events, ${m.webhooks_7d?.failed_7d} failed`);

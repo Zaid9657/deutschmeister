@@ -12,9 +12,10 @@ import { dirname, join, resolve } from 'node:path';
 
 import buildLesson, {
   pickPracticeItems, planPractice, practiceReport, seedFor, isTypedItem, isMultipleChoice, itemLemmas, answerLemmas,
-  answerKey, taskShape, answerWords, promptWords, leaksAnswer,
+  answerKey, taskShape, answerWords, promptWords, leaksAnswer, derivedItems,
   PRACTICE_SIZE, MAX_MULTIPLE_CHOICE, PRIMARY_MIN, MAX_SAME_LEMMA, MAX_CARRIED_LEMMA, MAX_SAME_ANSWER_KEY,
   MAX_SAME_TASK_SHAPE, attemptFromCompletions, ATTEMPT_CYCLE, SITUATION_MIN, wortfeldTerms, relevanceScore,
+  DERIVED_MATCH_PAIRS, DERIVED_WORD_ORDER_MAX_TOKENS, DERIVED_LISTEN_SELECT_OPTIONS,
 } from '../src/lib/lesson/buildLesson.js';
 import { exclusionReason, isUsableItem, filterPool, EXCLUDE_IDS, REASON, drillsSlug } from '../src/data/lessonPools/quality.js';
 import { CURRICULUM_A11 } from '../src/data/curricula/a11.js';
@@ -57,7 +58,7 @@ test('the stages come out in the order of the standard, and the warm-up is skipp
   const { stages } = build();
   assert.deepEqual(
     stages.map((s) => s.key),
-    ['pretest', 'dialog', 'wortfeld', 'notice', 'practice', 'dictation', 'speaking', 'writing', 'requeue', 'recap'],
+    ['pretest', 'dialog', 'wortfeld', 'notice', 'phonetik', 'practice', 'derived', 'dictation', 'speaking', 'writing', 'requeue', 'recap'],
   );
   // The stage NUMBERS of the standard never decrease along the list.
   const nrs = stages.map((s) => s.nr);
@@ -123,6 +124,62 @@ test('the draw is deterministic per (level, nr, attempt) and a retry gives a dif
   const built = build().stages.find((s) => s.key === 'practice').items.map((i) => i.id);
   const planned = planPractice(FIXTURE_CURRICULUM, POOL, 1).get(FIXTURE_LEKTION.nr).map((i) => i.id);
   assert.deepEqual(built, planned);
+});
+
+test('the derived stage never moves the pool draw: L1 of the shipped a1.1 curriculum still draws the same seven, attempts 1-3', () => {
+  const PINNED = {
+    1: ['2488cb0f-ea25-5dae-85d8-fea6ed13b2f3', 'extra-a11-l01-04', 'extra-a11-l01-18', '2df8b952-57b5-54ef-8c10-4a0d965d9115', 'extra-a11-l01-17', 'extra-a11-l01-01', 'extra-a11-l01-06'],
+    2: ['extra-a11-l01-16', '61b961a8-1c5a-59b9-8b63-430a94714181', 'extra-a11-l01-12', 'extra-a11-l01-19', 'extra-a11-l01-11', 'extra-a11-l01-03', 'extra-a11-l01-07'],
+    3: ['extra-a11-l01-08', 'extra-a11-l01-02', 'extra-a11-l01-23', 'extra-a11-l01-24', 'extra-a11-l01-20', '448a9516-9d53-5c58-8f77-9ae1e60d9363', 'extra-a11-l01-05'],
+  };
+  for (const attempt of [1, 2, 3]) {
+    const ids = planPractice(CURRICULUM_A11, POOL, attempt).get(1).map((i) => i.id);
+    assert.deepEqual(ids, PINNED[attempt], `attempt ${attempt}'s practice draw changed — RULE 11b's ratchet may have moved`);
+  }
+});
+
+// --- derived exercises (7 → 10) --------------------------------------------
+
+test('derivedItems returns exactly 3 items, one of each shape, built only from the Lektion\'s own data', () => {
+  const items = derivedItems(FIXTURE_LEKTION, 1);
+  assert.equal(items.length, 3);
+  assert.deepEqual(items.map((i) => i.type), ['match', 'word_order', 'listen_select']);
+
+  const match = items[0];
+  assert.equal(match.pairs.length, DERIVED_MATCH_PAIRS);
+  const wortfeldDe = new Set(FIXTURE_LEKTION.wortfeld.map((w) => w.de));
+  const wortfeldEn = new Set(FIXTURE_LEKTION.wortfeld.map((w) => w.en));
+  for (const pair of match.pairs) {
+    assert.ok(wortfeldDe.has(pair.de), `${pair.de} is not one of this Lektion's own Wortfeld rows`);
+    assert.ok(wortfeldEn.has(pair.en), `${pair.en} is not one of this Lektion's own Wortfeld rows`);
+  }
+
+  const wordOrder = items[1];
+  assert.ok(wordOrder.tokens.length >= 2 && wordOrder.tokens.length <= DERIVED_WORD_ORDER_MAX_TOKENS);
+  const dialogLine = FIXTURE_LEKTION.dialog.lines[wordOrder.lineIndex];
+  assert.equal(wordOrder.answer, dialogLine.de);
+  assert.deepEqual([...wordOrder.tokens].sort(), dialogLine.de.trim().split(/\s+/).sort(), 'the tiles are the line\'s own words, just reordered');
+  assert.notDeepEqual(wordOrder.tokens, dialogLine.de.trim().split(/\s+/), 'the tiles are not handed over already solved');
+
+  const listenSelect = items[2];
+  assert.equal(listenSelect.options.length, DERIVED_LISTEN_SELECT_OPTIONS);
+  assert.ok(listenSelect.options.includes(listenSelect.answer));
+  const dialogTexts = new Set(FIXTURE_LEKTION.dialog.lines.map((l) => l.de));
+  for (const opt of listenSelect.options) assert.ok(dialogTexts.has(opt), `${opt} is not one of this Lektion's own dialogue lines`);
+});
+
+test('derivedItems is deterministic per (lektion, attempt), and a later attempt is free to differ', () => {
+  const a = derivedItems(FIXTURE_LEKTION, 1);
+  const again = derivedItems(FIXTURE_LEKTION, 1);
+  assert.deepEqual(a, again, 'the same lektion and attempt must draw the same three items');
+
+  const attempt2 = derivedItems(FIXTURE_LEKTION, 2);
+  assert.notDeepEqual(a.map((i) => i.id), attempt2.map((i) => i.id));
+});
+
+test('a lektion whose own data is too thin for a shape simply omits it, never pads with off-lektion content', () => {
+  const thin = { ...FIXTURE_LEKTION, wortfeld: FIXTURE_LEKTION.wortfeld.slice(0, 2), dialog: { lines: [] } };
+  assert.deepEqual(derivedItems(thin, 1), []);
 });
 
 // --- pool quality: what a learner may never be shown ----------------------
