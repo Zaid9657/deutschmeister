@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Play, Languages, Mic, Cpu, ListEnd } from 'lucide-react';
 import Card from '../ui/Card.jsx';
 import StageShell from './StageShell.jsx';
+import CharacterAvatar from '../illustrations/CharacterAvatar.jsx';
 import { audioFor, playLine, speechAvailable } from '../../lib/lesson/speech.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import { buildLexicon, glossTokens, parseLektionId } from '../../lib/lesson/gloss.js';
@@ -175,6 +176,9 @@ export default function DialogStage({ stage, lektionId, onBack, onDone }) {
                   </button>
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                      <span className="shrink-0 overflow-hidden rounded-full bg-siegel-wash" aria-hidden="true">
+                        <CharacterAvatar name={l.speaker} size={32} />
+                      </span>
                       <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-graphite">{l.speaker}</p>
                       <AudioSourceBadge recorded={recorded} />
                     </div>

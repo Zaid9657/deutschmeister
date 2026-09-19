@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import * as LucideIcons from 'lucide-react';
 import { Volume2, Mic, Cpu } from 'lucide-react';
 import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
 import StageShell from './StageShell.jsx';
+import SituationScene from '../illustrations/SituationScene.jsx';
 import { playWord } from '../../lib/lesson/speech.js';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
 import { WORTFELD_ICONS, WORTFELD_ICON_FALLBACK } from '../../data/curricula/a11.meta.js';
+import { CURRICULUM_A11 } from '../../data/curricula/a11.js';
 
 /**
  * Stage 2b — the new words as picture cards: icon, article, plural, English
@@ -29,37 +31,27 @@ import { WORTFELD_ICONS, WORTFELD_ICON_FALLBACK } from '../../data/curricula/a11
  * scanning the whole set, same shape as DialogStage's "Show all lines".
  * Flipped state is never colour-only: a text "EN" tag travels with it.
  *
- * The optional situation-scene banner (a11.art.js, landing in parallel) is
- * loaded defensively via `import.meta.glob` so a build or a render never
- * fails when that file does not exist yet — the glob simply returns nothing
- * to load.
+ * The scene banner is `SituationScene` (src/components/illustrations/) keyed
+ * by Lektion id — it renders the manifest's photo once `a11.art.js` carries
+ * one, and a flat-vector placeholder until then (see that component's
+ * header). `stage.words` alone carries no Lektion id by the time it reaches
+ * this stage (buildLesson.js's wortfeld stage object has none, and the one
+ * caller — LessonPlayerPage.jsx — does not pass a `lektionId` prop to this
+ * stage the way it does for every sibling stage), so `lektionIdFromWords`
+ * recovers it here, from the one file this component already reads for
+ * everything else: it matches this stage's first word against each
+ * Lektion's own `wortfeld[0]`, which is unique per Lektion in this course.
  */
 
-const artModules = import.meta.glob('../../data/curricula/a11.art.js');
-
-function useLektionArt(lektionId) {
-  const [art, setArt] = useState(null);
-  useEffect(() => {
-    let cancelled = false;
-    if (!lektionId) return undefined;
-    const key = Object.keys(artModules)[0];
-    const loader = key && artModules[key];
-    if (!loader) return undefined;
-    loader()
-      .then((mod) => {
-        if (cancelled) return;
-        const situations = mod && (mod.A11_ART || mod.default) && (mod.A11_ART || mod.default).situations;
-        const scene = situations && situations[lektionId];
-        if (scene && scene.srcSmall) setArt(scene);
-      })
-      .catch(() => {
-        /* optional module — never fail the stage for its absence */
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [lektionId]);
-  return art;
+/** Best-effort recovery of the Lektion id from Wortfeld content alone — see the note above. */
+function lektionIdFromWords(words) {
+  const first = words && words[0] && (words[0].de || words[0].word);
+  if (!first) return null;
+  const found = CURRICULUM_A11.lektionen.find((l) => {
+    const w0 = l.wortfeld && l.wortfeld[0];
+    return w0 && (w0.de || w0.word) === first;
+  });
+  return found ? found.id : null;
 }
 
 function iconFor(word) {
@@ -156,8 +148,7 @@ export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
   const [allOpen, setAllOpen] = useState(false);
   const words = stage.words || [];
   const [lang] = useLessonLang();
-  const id = lektionId || stage.lektionId || null;
-  const art = useLektionArt(id);
+  const id = lektionId || stage.lektionId || lektionIdFromWords(words);
 
   const toggle = (i) =>
     setOpen((prev) => {
@@ -183,12 +174,8 @@ export default function WortfeldStage({ stage, lektionId, onBack, onDone }) {
       primaryLabel={t('action.next', lang)}
       onPrimary={onDone}
     >
-      {art && (
-        <img
-          src={art.srcSmall}
-          alt={art.alt || ''}
-          className="mb-4 h-32 w-full rounded-clay border border-rule object-cover sm:h-40"
-        />
+      {id && (
+        <SituationScene lektionId={id} className="mb-4 h-32 w-full rounded-clay border border-rule object-cover sm:h-40" />
       )}
 
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">

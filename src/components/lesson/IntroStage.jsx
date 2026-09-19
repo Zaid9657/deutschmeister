@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Clock3, CheckCircle2 } from 'lucide-react';
 import StageShell from './StageShell.jsx';
+import CharacterAvatar from '../illustrations/CharacterAvatar.jsx';
+import SituationScene from '../illustrations/SituationScene.jsx';
 import { useLessonLang } from '../../lib/lesson/strings.js';
 import { A11_META } from '../../data/curricula/a11.meta.js';
 import { courseHome } from '../../lib/courseFlow.js';
@@ -65,12 +67,6 @@ const ti = (key, lang, vars) => {
 /** The orientation module for a level, when one exists (A1.1 only today). */
 export const courseMetaFor = (level) => (String(level).toLowerCase() === A11_META.level ? A11_META : null);
 
-// "Frau Kaya" → "K", "Ana" → "A": the surname carries the title (same rule as CourseWelcome).
-const initialOf = (name) => {
-  const parts = String(name).trim().split(/\s+/);
-  return (parts[parts.length - 1] || '?').charAt(0).toUpperCase();
-};
-
 /** Cast of one Lektion: from the meta module when there is one, else read off the dialogue. */
 export function castFor(lektion, meta) {
   if (meta?.characters) return meta.characters.filter((c) => c.appearsIn.includes(lektion.nr));
@@ -110,6 +106,8 @@ export default function IntroStage({ curriculum, lektion, meta = courseMetaFor(c
           ) : null}
         </div>
 
+        <SituationScene lektionId={lektion.id} className="mb-4 h-32 w-full rounded-clay border border-rule object-cover sm:h-40" />
+
         <StageShell
           eyebrow={chapter ? ti('intro.chapter', lang, { nr: chapter.nr, title: chapterTitle }) : ti('intro.eyebrow', lang)}
           title={ti('intro.lektion', lang, { nr: lektion.nr, title: lektion.title })}
@@ -147,12 +145,8 @@ export default function IntroStage({ curriculum, lektion, meta = courseMetaFor(c
               <ul className="mt-3 flex flex-wrap gap-3">
                 {cast.map((c) => (
                   <li key={c.name} className="flex items-center gap-2.5">
-                    <span
-                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-siegel-wash font-display text-base font-semibold text-siegel-deep"
-                      aria-hidden="true"
-                      data-avatar-slot={c.name}
-                    >
-                      {initialOf(c.name)}
+                    <span className="shrink-0 overflow-hidden rounded-full bg-siegel-wash" data-avatar-slot={c.name}>
+                      <CharacterAvatar name={c.name} size={40} />
                     </span>
                     <span className="min-w-0">
                       <span className="block text-[0.875rem] font-bold leading-tight text-ink">{c.name}</span>

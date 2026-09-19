@@ -90,7 +90,7 @@ test('the registry covers the four A sub-levels with their final tests, and the 
 // four lines while every other course screen siezt. Glob it in exactly like
 // the other two, and see the derived-directory guard below for what stops a
 // fourth directory from going unnoticed the same way.
-const CHROME_DIRS = ['src/components/lesson', 'src/components/course', 'src/components/ui'];
+const CHROME_DIRS = ['src/components/lesson', 'src/components/course', 'src/components/ui', 'src/components/illustrations'];
 const CHROME_FILES = [
   ...CHROME_DIRS.flatMap((dir) => readdirSync(join(ROOT, dir)).filter((f) => f.endsWith('.jsx')).map((f) => `${dir}/${f}`)),
   // MAJOR 10 (DaF review #5, last sentence): the register test must also cover

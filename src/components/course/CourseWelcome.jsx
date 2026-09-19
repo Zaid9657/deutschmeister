@@ -4,6 +4,7 @@ import Card from '../ui/Card.jsx';
 import Chip from '../ui/Chip.jsx';
 import Reveal from '../ui/Reveal.jsx';
 import CourseOutcomes from './CourseOutcomes.jsx';
+import CharacterAvatar from '../illustrations/CharacterAvatar.jsx';
 
 // The welcome screen of the free A1.1 course — the orientation a lost
 // first-time learner needs before the path makes sense: what this is, how one
@@ -22,16 +23,10 @@ import CourseOutcomes from './CourseOutcomes.jsx';
 //   placementHref the placement test; defaults to the prerendered /level-test/ (trailing slash — case 2)
 //
 // Tokens rule 2: `siegel` is the only interactive colour, and the primary
-// Button is the one primary action on the screen. The avatar circles are
-// placeholders in the siegel wash with the person's initial — the art arrives
-// in Wave 2 and replaces the circle, not the strip. No case colours: nothing
-// on this screen names a grammatical case.
-
-const initialOf = (name) => {
-  // "Frau Kaya" → "K", "Herr Weber" → "W", "Ana" → "A": the surname carries the title.
-  const parts = String(name).trim().split(/\s+/);
-  return (parts[parts.length - 1] || '?').charAt(0).toUpperCase();
-};
+// Button is the one primary action on the screen. The avatar circles render
+// `CharacterAvatar` (src/components/illustrations/, Wave 2) — a flat-vector
+// bust until the owner's photo lands in a11.art.js, never a colour swap. No
+// case colours: nothing on this screen names a grammatical case.
 
 export default function CourseWelcome({ curriculum, meta, startHref, placementHref = '/level-test/', className = '' }) {
   if (!curriculum || !meta) return null;
@@ -119,12 +114,8 @@ export default function CourseWelcome({ curriculum, meta, startHref, placementHr
           <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
             {characters.map((c) => (
               <li key={c.name} className="flex items-start gap-3 rounded-clay border border-rule bg-white p-3">
-                <span
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-siegel-wash font-display text-lg font-semibold text-siegel-deep"
-                  aria-hidden="true"
-                  data-avatar-slot={c.name}
-                >
-                  {initialOf(c.name)}
+                <span className="shrink-0 overflow-hidden rounded-full bg-siegel-wash" data-avatar-slot={c.name}>
+                  <CharacterAvatar name={c.name} size={44} />
                 </span>
                 <div className="min-w-0">
                   <p className="font-bold text-ink">{c.name}</p>

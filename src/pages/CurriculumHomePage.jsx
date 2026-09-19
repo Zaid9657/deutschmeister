@@ -19,6 +19,7 @@ import Button from '../components/ui/Button.jsx';
 import Chip from '../components/ui/Chip.jsx';
 import Reveal from '../components/ui/Reveal.jsx';
 import Aurora from '../components/ui/Aurora.jsx';
+import SituationScene from '../components/illustrations/SituationScene.jsx';
 
 // Course home for a REBUILT level (docs/course-standard-2026-09-12.md): the
 // path is 12 Lektionen + 4 checkpoints + the level test, grouped in four
@@ -234,6 +235,12 @@ export default function CurriculumHomePage({ curriculum }) {
           return (
             <Reveal as="section" key={ci} delay={Math.min(ci, 6) * 60} className="mb-6">
               <div className="rounded-clay bg-siegel px-5 py-4 text-white shadow-raise-siegel">
+                {!isFinal && lektionen[0] && (
+                  <SituationScene
+                    lektionId={lektionen[0].id}
+                    className="mb-3 h-20 w-full rounded-clay object-cover opacity-90 sm:h-24"
+                  />
+                )}
                 <p className="font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em] text-white/80">Chapter {ci + 1}</p>
                 <h2 className="mt-1 font-display text-[1.25rem] font-semibold leading-tight">{title}</h2>
                 {chapterMeta && (
