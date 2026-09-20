@@ -310,7 +310,6 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
       const item = items[itemIndex];
       if (!item) { body = null; break; }
       const derivedProps = {
-        key: item.id,
         item,
         index: itemIndex,
         total: items.length,
@@ -318,9 +317,9 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
         onResult: recordResult,
         onNext: onItemNext,
       };
-      if (item.type === 'match') body = <MatchItem {...derivedProps} />;
-      else if (item.type === 'word_order') body = <WordOrderItem {...derivedProps} />;
-      else if (item.type === 'listen_select') body = <ListenSelectItem {...derivedProps} />;
+      if (item.type === 'match') body = <MatchItem key={item.id} {...derivedProps} />;
+      else if (item.type === 'word_order') body = <WordOrderItem key={item.id} {...derivedProps} />;
+      else if (item.type === 'listen_select') body = <ListenSelectItem key={item.id} {...derivedProps} />;
       else body = null;
       break;
     }
