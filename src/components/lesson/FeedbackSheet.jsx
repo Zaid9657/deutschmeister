@@ -1,4 +1,4 @@
-import { Check, AlertTriangle, X, Sparkles } from 'lucide-react';
+import { Check, AlertTriangle, X, Sparkles, Eye } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import { OtherLanguage, inline } from './NoticeStage.jsx';
 import { t, useLessonLang } from '../../lib/lesson/strings.js';
@@ -22,6 +22,16 @@ const TONE = {
     Icon: X,
     key: 'feedback.wrong',
     className: 'border-accent-himbeer bg-accent-himbeer-wash text-accent-himbeer-ink sm:shadow-raise-himbeer',
+  },
+  // Requeue-only "I don't know" escape hatch (after-evaluation gap #3): a
+  // reveal is neither a correct nor a graded-wrong answer to LOOK at — it is
+  // the learner asking to be shown — so it gets its own neutral tone rather
+  // than borrowing the WRONG red, even though it still grades wrong for
+  // accuracy purposes (mastery.js counts first-attempt correctness only).
+  revealed: {
+    Icon: Eye,
+    key: 'feedback.revealed',
+    className: 'border-rule bg-paper-sunk text-ink sm:shadow-raise',
   },
 };
 
@@ -47,10 +57,10 @@ const TONE = {
  * `@media (prefers-reduced-motion: reduce)` gate and the `motion-reduce:`
  * class here as a second line of defence (src/lib/motion.js's own pattern).
  */
-export default function FeedbackSheet({ result, expected, hint, explanation, otherExplanation, onExplain, onContinue, primaryLabel }) {
+export default function FeedbackSheet({ result, expected, hint, explanation, otherExplanation, onExplain, onContinue, primaryLabel, revealed }) {
   const [lang] = useLessonLang();
   if (!result) return null;
-  const { Icon, key, className } = TONE[result] || TONE[RESULT.WRONG];
+  const { Icon, key, className } = revealed ? TONE.revealed : (TONE[result] || TONE[RESULT.WRONG]);
   return (
     <div
       className={

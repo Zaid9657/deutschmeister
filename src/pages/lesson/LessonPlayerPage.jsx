@@ -300,6 +300,7 @@ export function LessonPlayer({ curriculum, lektion, pool, preview = false }) {
           index={itemIndex}
           total={items.length}
           eyebrowKey={stage.kind === 'requeue' ? 'stage.requeue.eyebrow' : 'stage.practice.eyebrow'}
+          allowReveal={stage.kind === 'requeue'}
           onResult={recordResult}
           onNext={onItemNext}
         />

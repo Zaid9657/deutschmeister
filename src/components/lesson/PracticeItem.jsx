@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Check } from 'lucide-react';
+import { Check, Eye } from 'lucide-react';
 import Button from '../ui/Button.jsx';
 import Card from '../ui/Card.jsx';
 import ExplainAnswer from './ExplainAnswer.jsx';
@@ -36,8 +36,22 @@ export const caseHint = (lang) => t('practice.caseHint', lang);
  * by default, 'stage.requeue.eyebrow' when the player re-asks the misses after
  * the writing step — the requeue used to reuse "Step 4 · Practice" after
  * "Step 6 · Writing", which read as the lesson going backwards.
+ *
+ * `allowReveal` (after-evaluation gap #3) gates a secondary "Show answer"
+ * control, shown only in the requeue stage (the player passes it there; the
+ * first-pass practice stage keeps today's guess-only behaviour, on purpose —
+ * a reveal on the FIRST look would let a learner skip ever trying). Revealing
+ * shows <FeedbackSheet> in a neutral "revealed" tone (never the WRONG red —
+ * this is the learner asking to be shown, not a graded miss to feel bad
+ * about), disables the input, and fires `onResult` exactly once with
+ * `{ result: RESULT.WRONG, correct: false, errorTag, revealed: true }` — a
+ * reveal is not evidence of knowing the answer, so it must never count toward
+ * gold (mastery.js: first-attempt correctness only) and the requeue never
+ * re-queues it (requeue.js runs once per stage, from the ORIGINAL misses; a
+ * revealed item is not re-collected into `misses` after the requeue stage,
+ * so it simply ends there).
  */
-export default function PracticeItem({ item, index, total, onResult, onNext, level, lektionId, eyebrowKey = 'stage.practice.eyebrow' }) {
+export default function PracticeItem({ item, index, total, onResult, onNext, level, lektionId, eyebrowKey = 'stage.practice.eyebrow', allowReveal = false }) {
   const [lang] = useLessonLang();
   const [value, setValue] = useState('');
   const [picked, setPicked] = useState(null);
@@ -73,6 +87,22 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
       result,
       correct,
       errorTag: correct ? null : tagError(item, answer, item.answer),
+    });
+  };
+
+  const reveal = () => {
+    if (state) return;
+    setState({
+      result: RESULT.WRONG,
+      expected: item.answer,
+      hint: null,
+      revealed: true,
+    });
+    onResult(item, {
+      result: RESULT.WRONG,
+      correct: false,
+      errorTag: tagError(item, answer, item.answer),
+      revealed: true,
     });
   };
 
@@ -145,7 +175,16 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
       </Card>
 
       {!state && (
-        <div className="mt-6 flex justify-end">
+        <div className="mt-6 flex flex-wrap items-center justify-end gap-3">
+          {allowReveal && (
+            <button
+              type="button"
+              onClick={reveal}
+              className="flex min-h-11 items-center gap-1.5 rounded-pill border border-rule bg-white px-4 py-2.5 text-[0.875rem] font-bold text-graphite transition-colors duration-100 ease-snap hover:border-siegel hover:text-ink motion-reduce:transition-none"
+            >
+              <Eye className="h-4 w-4 shrink-0" aria-hidden="true" /> {t('action.showAnswer', lang)}
+            </button>
+          )}
           <Button onClick={submit} size="lg" disabled={!canSubmit} className="w-full sm:w-auto">{t('action.check', lang)}</Button>
         </div>
       )}
@@ -154,6 +193,7 @@ export default function PracticeItem({ item, index, total, onResult, onNext, lev
         result={state && state.result}
         expected={state && state.expected}
         hint={state && state.hint}
+        revealed={!!(state && state.revealed)}
         explanation={state && state.result !== RESULT.CORRECT ? (lang !== 'de' && item.explanationEn ? item.explanationEn : item.explanationDe) : null}
         otherExplanation={state && state.result !== RESULT.CORRECT ? (lang !== 'de' && item.explanationEn ? item.explanationDe : item.explanationEn) : null}
         onExplain={state && state.result !== RESULT.CORRECT ? () => setExplain(true) : null}
