@@ -143,6 +143,7 @@ export const STRINGS = {
     'feedback.correct': 'Correct!',
     'feedback.typo': 'Almost — just a typo',
     'feedback.wrong': 'Not yet',
+    'feedback.revealed': 'Here is the answer',
     'feedback.correctIs': 'The answer is:',
     'feedback.explain': 'Explain this to me',
 
@@ -437,6 +438,7 @@ export const STRINGS = {
     'feedback.correct': 'Richtig',
     'feedback.typo': 'Fast — nur ein Tippfehler',
     'feedback.wrong': 'Noch nicht',
+    'feedback.revealed': 'Hier ist die Antwort',
     'feedback.correctIs': 'Richtig ist:',
     'feedback.explain': 'Erklär mir das',
 

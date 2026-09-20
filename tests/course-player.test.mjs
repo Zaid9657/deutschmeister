@@ -411,7 +411,7 @@ test('explain-answer carries lang end to end and defaults to German server-side'
 
 test('FeedbackSheet renders all three result tones, each with its own icon, string-table label and token tone class (never a kasus colour)', () => {
   const src = read('src/components/lesson/FeedbackSheet.jsx');
-  assert.ok(src.includes("import { Check, AlertTriangle, X, Sparkles } from 'lucide-react';"), 'each tone needs its own icon');
+  assert.ok(src.includes("import { Check, AlertTriangle, X, Sparkles, Eye } from 'lucide-react';"), 'each tone needs its own icon (Eye for the revealed tone)');
   for (const [state, key, tone] of [
     ['RESULT.CORRECT', 'feedback.correct', 'siegel'],
     ['RESULT.TYPO', 'feedback.typo', 'accent-aprikose'],
@@ -656,4 +656,80 @@ test('the three wortfeld.audioBadge.* keys exist in both string tables with no e
       assert.ok(STRINGS[lang][key] && STRINGS[lang][key].trim().length > 0, `${key} missing or empty in ${lang}`);
     }
   }
+});
+
+// ---------------------------------------------------------------------------
+// After-evaluation gap #3: a learner stuck on Step 7 · Try again had no way
+// out except guessing. `allowReveal` gates a secondary "Show answer" control
+// on PracticeItem, and only the requeue stage (LessonPlayerPage.jsx) passes
+// it — the first-pass practice stage keeps today's guess-only behaviour.
+// ---------------------------------------------------------------------------
+
+test('PracticeItem gates a "Show answer" reveal control on allowReveal, and only the requeue case passes it', () => {
+  const item = read('src/components/lesson/PracticeItem.jsx');
+  assert.ok(item.includes('allowReveal = false'), 'PracticeItem must default allowReveal to false (the practice stage keeps guess-only behaviour)');
+  assert.ok(item.includes('{allowReveal && ('), 'the reveal control must be gated on allowReveal');
+  assert.ok(item.includes("<Eye className="), 'the reveal control must carry the Eye icon');
+  assert.ok(item.includes("t('action.showAnswer', lang)"), 'the reveal control must read its label from the string table');
+  assert.ok(item.includes('min-h-11'), 'the reveal control must meet the 44px target');
+
+  const player = read('src/pages/lesson/LessonPlayerPage.jsx');
+  assert.ok(player.includes("allowReveal={stage.kind === 'requeue'}"), 'only the requeue stage may pass allowReveal to PracticeItem');
+});
+
+test('revealing an answer fires onResult exactly once with correct:false and revealed:true, and never as a correct result', () => {
+  const src = read('src/components/lesson/PracticeItem.jsx');
+  const revealFn = src.slice(src.indexOf('const reveal = () => {'), src.indexOf('return (\n    <div'));
+  assert.match(revealFn, /if \(state\) return;/, 'a second reveal (or a submit after reveal) must be a no-op — the input is already disabled by `state`');
+  assert.match(revealFn, /result:\s*RESULT\.WRONG,/, 'the reveal must record RESULT.WRONG so accuracy is never inflated');
+  assert.match(revealFn, /correct:\s*false,/, 'the reveal must never report correct:true — a reveal is not evidence of knowing the answer');
+  assert.match(revealFn, /revealed:\s*true,/, 'the reveal must flag revealed:true so callers can tell it apart from a graded miss');
+  assert.match(revealFn, /errorTag:\s*tagError\(item, answer, item\.answer\),/, 'the reveal must still tag the error like any other miss');
+  // Exactly one onResult call in the whole file's reveal path (the submit path is separate).
+  const onResultCalls = [...revealFn.matchAll(/onResult\(/g)];
+  assert.equal(onResultCalls.length, 1, 'reveal must call onResult exactly once');
+});
+
+test('FeedbackSheet renders a neutral "revealed" tone (Eye icon, feedback.revealed label), never the WRONG red, when revealed', () => {
+  const src = read('src/components/lesson/FeedbackSheet.jsx');
+  assert.ok(src.includes("import { Check, AlertTriangle, X, Sparkles, Eye } from 'lucide-react';"), 'FeedbackSheet must import the Eye icon for the revealed tone');
+  assert.ok(src.includes('revealed: {'), 'FeedbackSheet must define a revealed tone entry');
+  assert.ok(src.includes("Icon: Eye,") && src.includes("key: 'feedback.revealed',"), 'the revealed tone must use the Eye icon and the feedback.revealed label');
+  assert.ok(src.includes('revealed ? TONE.revealed : (TONE[result] || TONE[RESULT.WRONG])'), 'a revealed feedback must never fall back to the WRONG (red) tone');
+  for (const kasus of ['kasus-nominativ', 'kasus-akkusativ', 'kasus-dativ', 'kasus-genitiv']) {
+    assert.ok(!src.includes(kasus), `the revealed tone must never use the ${kasus} case colour (design-tokens.js rule 1)`);
+  }
+  // Colour is never the only signal: the revealed tone still carries text + icon.
+  assert.match(src, /revealed:\s*\{\s*\n\s*Icon: Eye,\s*\n\s*key: 'feedback\.revealed',/, 'the revealed tone must pair an icon with a text label, not colour alone');
+});
+
+test('feedback.revealed exists, non-empty, in both chrome tables', async () => {
+  const { STRINGS, t } = await import('../src/lib/lesson/strings.js');
+  for (const lang of ['en', 'de']) {
+    assert.ok(STRINGS[lang]['feedback.revealed'] && STRINGS[lang]['feedback.revealed'].trim().length > 0, `feedback.revealed missing or empty in ${lang}`);
+  }
+  assert.equal(t('feedback.revealed', 'en'), 'Here is the answer');
+  assert.equal(t('feedback.revealed', 'de'), 'Hier ist die Antwort');
+});
+
+// requeue.js caps at 4 and runs exactly once per lesson (advance(), called when
+// entering the requeue stage from writing) — a revealed item inside the
+// requeue stage is never fed back through requeueFor, so it simply ends there.
+test('requeueFor is only invoked when entering the requeue stage, never again from inside it', () => {
+  const player = read('src/pages/lesson/LessonPlayerPage.jsx');
+  const calls = [...player.matchAll(/requeueFor\(/g)];
+  assert.equal(calls.length, 1, 'requeueFor must be called from exactly one site (advance(), on entering the requeue stage)');
+  assert.match(player, /if \(nextStage && nextStage\.kind === 'requeue'\) \{/, 'requeueFor must be gated on the transition INTO the requeue stage, not called again from inside it');
+});
+
+// The combo only updates for practice/dictation stages (LessonPlayerPage.jsx's
+// recordResult); a requeue-stage item (where reveal lives) never reaches
+// nextCombo at all. Pinned two ways: the gate excludes 'requeue', and
+// nextCombo itself resets to zero on any correct:false — including a reveal,
+// should the combo ever be extended to cover the requeue stage later.
+test('a revealed item never extends the combo: requeue is excluded from the combo gate, and nextCombo(combo, false) always resets to zero', () => {
+  const player = read('src/pages/lesson/LessonPlayerPage.jsx');
+  assert.ok(player.includes("if (item.stage === 'practice' || item.stage === 'dictation') setCombo((c) => nextCombo(c, correct));"), 'only practice/dictation items may update the combo — requeue (where reveal lives) must stay excluded');
+  const nextCombo = new Function('combo', 'correct', 'return correct ? combo + 1 : 0;');
+  assert.equal(nextCombo(3, false), 0, 'a reveal reports correct:false, which nextCombo hard-resets to zero');
 });
