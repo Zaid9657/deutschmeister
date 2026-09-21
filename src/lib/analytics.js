@@ -5,6 +5,8 @@
 // consent, for whom the library can never legally run. The consent gate itself
 // was already correct; only the delivery was wrong.
 
+import { getAttribution } from './attribution';
+
 const key = import.meta.env.VITE_POSTHOG_KEY;
 const host = import.meta.env.VITE_POSTHOG_HOST;
 
@@ -35,6 +37,12 @@ export async function initAnalytics() {
         capture_pageleave: true,
       });
       initialized = true;
+      // Every event carries the link that brought this visitor (first touch),
+      // so PostHog funnels can be split by dm_source without a join.
+      const a = getAttribution();
+      if (a) {
+        posthog.register({ dm_source: a.first.source, dm_medium: a.first.medium || null, dm_campaign: a.first.campaign || null });
+      }
     })
     .catch((err) => {
       // Analytics must never break the app — a blocked or failed chunk is fine.

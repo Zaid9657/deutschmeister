@@ -63,6 +63,8 @@ const authAttrs = (item) =>
     <script is:inline>document.documentElement.classList.add('js');</script>
     <!-- Analytics is loaded only after cookie consent — see /consent.js -->
     <script src="/consent.js" defer></script>
+    <!-- Which link brought this visitor (utm_* / ?ref= / social referrer) — see /attribution.js -->
+    <script src="/attribution.js" defer></script>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <!-- Primary Meta -->

@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <!-- Analytics is loaded only after cookie consent — see /consent.js -->
     <script src="/consent.js" defer></script>
+    <!-- Which link brought this visitor (utm_* / ?ref= / social referrer) — see /attribution.js -->
+    <script src="/attribution.js" defer></script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <!-- PWA manifest — deliberately UNstamped (no data-rh): SEO.jsx does not
          render a manifest link, and stamping a tag Helmet doesn't re-render
