@@ -74,6 +74,9 @@ export function renderSummary(m, prev) {
   lines.push(`AI this week: speaking ${m.ai_7d?.speaking_7d}, writing ${m.ai_7d?.writing_7d}, exams ${m.ai_7d?.exams_7d}, X-Ray ${m.ai_7d?.xray_7d}`);
   lines.push(`Lifecycle emails sent: ${JSON.stringify(m.lifecycle_emails_7d || {})}`);
   lines.push(`Webhooks: ${m.webhooks_7d?.total_7d} events, ${m.webhooks_7d?.failed_7d} failed`);
+  if (m.acquisition) {
+    lines.push(`Acquisition (first-touch source): signups 7d ${JSON.stringify(m.acquisition.signups_by_source_7d || {})}; signups 30d ${JSON.stringify(m.acquisition.signups_by_source_30d || {})}; course sales 30d ${JSON.stringify(m.acquisition.purchases_by_source_30d || {})}; campaigns 30d ${JSON.stringify(m.acquisition.signups_by_campaign_30d || {})} — "untracked" = signed up before 2026-09-20 or arrived direct`);
+  }
   lines.push('');
   lines.push('Rule of thumb: €10k/month needs ~80 bundle sales a month. Everything above is measured, nothing is estimated.');
   lines.push('');

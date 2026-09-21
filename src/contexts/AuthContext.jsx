@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../utils/supabase';
+import { signupAttributionMetadata } from '../lib/attribution';
 import { identify, resetAnalytics } from '../lib/analytics';
 import { trackSignupCompleted } from '../lib/funnelTracking';
 import { logAuditEvent, AUDIT_EVENTS } from '../lib/auditLogger';
@@ -65,6 +66,9 @@ export const AuthProvider = ({ children }) => {
       password,
       options: {
         emailRedirectTo: `${window.location.origin}/login`,
+        // Which link brought them (public/attribution.js); the profiles
+        // trigger copies these keys into profiles.acquisition_*.
+        data: signupAttributionMetadata(),
       },
     });
     return { data, error };

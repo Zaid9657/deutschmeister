@@ -123,6 +123,16 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   the polite `Ihr/Ihre/Ihren`), where it is `WRONG`. Never "fix" an item by widening its `accepted`
   list alone: the rule belongs in the checker or in `scripts/build-lesson-pool.mjs`, with a test.
 
+- **Acquisition attribution (which link brought each customer, 2026-09-20).** `public/attribution.js`
+  is loaded by BOTH heads (`index.html`, `Layout.astro`) and records `utm_*` / `?ref=<source>` / a
+  classified social referrer into localStorage `dm_attribution` `{first,last}` — first touch is never
+  overwritten. `src/lib/attribution.js` reads it; `AuthContext.signUp` sends it as user metadata and the
+  `handle_new_user()` trigger writes `profiles.acquisition_*`. PostHog gets it as super-properties
+  (`dm_source/medium/campaign`), `weekly_truth_metrics()` reports signups + course sales by source, and
+  the admin Marketing page renders it. NULL = "untracked" (pre-2026-09-20 or direct) — never report it as
+  "direct". No click ids are stored (gclid/fbclid), only the labels the owner typed into the link.
+  The one classifier lives in the public script and `tests/attribution.test.mjs` runs that exact file
+  under `node:vm` — add a social host there, not in a second list. Ready-made links: `docs/tracking-links.md`.
 - **Measure before you claim: read `weekly_metrics` first.** `netlify/functions/weekly-truth.mjs`
   runs every Monday 06:00 UTC, calls `public.weekly_truth_metrics()` (one SQL pass: users,
   paying subs + MRR, course sales, grammar activity and one-and-done rate, AI usage, lifecycle

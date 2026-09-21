@@ -110,13 +110,21 @@ export default function MarketingPage() {
   const { data, loading, error } = useAdminData('admin-marketing', { range }, [range]);
   return (
     <>
-      <PageHeader title="Marketing" lead="Die ehrliche Antwort zuerst: es gibt keine Kanalzuordnung. Nicht wenig — keine. Was echt ist, steht mit seiner Einschränkung dabei." />
+      <PageHeader title="Marketing" lead="Kanalzuordnung seit 2026-09-20: jede Registrierung trägt den Link, der sie gebracht hat (utm_source, ?ref= oder Social-Referrer). Was davor kam, heißt „untracked“." />
       <Tabs tabs={TABS} active={tab} onChange={(id) => setParams((p) => { const n = new URLSearchParams(p); n.set('tab', id); return n; })} />
       {loading && !data ? <Spinner /> : null}
       {error ? <ErrorLine>{error}</ErrorLine> : null}
       {data && tab === 'overview' ? (
         <>
-          <NotInstrumented label="Kanalzuordnung" reason={`${num(data.attribution.capturedUsers)} von ${num(data.attribution.totalUsers)} Nutzern haben eine erfasste Quelle. ${data.attribution.reason}`} unblock={data.attribution.unblock} />
+          <Section title="Kanalzuordnung: Registrierungen nach Quelle" note={`${num(data.attribution.capturedUsers)} von ${num(data.attribution.totalUsers)} Nutzern haben eine erfasste Quelle. ${data.attribution.definition}`}>
+            <KeyValues items={Object.entries(data.attribution.bySource || {}).sort((a, b) => b[1] - a[1]).map(([k, v]) => [k, num(v)])} />
+          </Section>
+          <Section title="Käufe nach Quelle des Käufers">
+            <KeyValues items={Object.entries(data.attribution.purchasesBySource || {}).sort((a, b) => b[1] - a[1]).map(([k, v]) => [k, num(v)])} />
+          </Section>
+          <Section title="Registrierungen nach Kampagne (Quelle / utm_campaign)">
+            <KeyValues items={Object.entries(data.attribution.byCampaign || {}).sort((a, b) => b[1] - a[1]).map(([k, v]) => [k, num(v)])} />
+          </Section>
           <StatRow>
             <Stat label="Registrierungen" value={num(data.signups.count)} definition="profiles.created_at im Zeitraum" timeClass="Zeitraum" />
             <Stat label="Fehlgeschlagene Registrierungen" value={num(data.signups.attempts)} definition={data.signups.definition} timeClass="Zeitraum" />
