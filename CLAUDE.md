@@ -230,6 +230,10 @@ cache means CI verifies a snapshot, not the database — the warning exists so t
   `next_run` body marker.
 - The Netlify build command in `netlify.toml` is one long line that also copies Astro
   output into `dist/` — when adding a new top-level Astro route, add its copy step there.
+- **`public/llms.txt` and `public/llms-full.txt` are generated** — `node scripts/build-llms.mjs`
+  derives them from `pricing.js`, `marketing.js`, the guide and exam registries and
+  `grammar-content-cache.json`; `tests/llms.test.mjs` fails when they are stale. Never hand-edit them:
+  hand-typed, they had drifted to 64 of 84 topics, 4 of 8 guides, no exam hubs and no courses.
 - `public/consent.js` gates GA4 **and** PostHog behind the `dm_cookie_consent`
   localStorage flag; new analytics must hook the same consent (`dm-consent-accepted`).
 
