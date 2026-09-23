@@ -27,3 +27,6 @@ npm-debug.log*
 # Lighthouse reports
 lighthouse-reports/
 /.cache
+social-publishing/shorts/quelle/
+social-publishing/shorts/clips/
+social-publishing/shorts-paket.zip
