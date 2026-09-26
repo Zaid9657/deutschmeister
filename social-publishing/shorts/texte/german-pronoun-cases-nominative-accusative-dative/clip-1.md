@@ -1,6 +1,6 @@
 # 06-german-pronoun-cases-nominative-accusative-dative--clip-1
 
-**Quellvideo:** German Pronoun Cases: Nominative, Accusative & Dative
+**Quellvideo:** Mastering Der, Die, Das: German Articles Explained
 **Schnitt:** ab 8 % der Gesamtlänge, 50 Sekunden
 **Datei nach dem Schnitt:** `clips/06-german-pronoun-cases-nominative-accusative-dative--clip-1.mp4`
 
@@ -11,22 +11,22 @@
 **Titel** (unter 100 Zeichen, so übernehmen):
 
 ```
-ich → mich → mir #Shorts
+Warum Deutsch drei Artikel hat — und Englisch nur einen #Shorts
 ```
 
 **Beschreibung:**
 
 ```
-Ein Pronomen, drei Formen, drei Rollen.
+the wird zu der, die oder das. Und es gibt kein System dahinter.
 
-ich bin der Handelnde. mich ist das direkte Ziel: Er sieht mich. mir ist der Empfänger: Er gibt mir das Buch.
+Jedes deutsche Substantiv hat ein Geschlecht: maskulin, feminin oder neutral. Das Geschlecht hat nichts mit der Bedeutung zu tun — Mädchen ist neutral.
 
 Die ganze Lektion: https://deutsch-meister.de/video-library/a2c76a90-e9f7-43f5-be97-64e5f93b4ece?utm_source=youtube&utm_medium=organic_short&utm_campaign=shorts_01&utm_content=dm-s-6-1-yt
 
 --- In English ---
-ich (I) → mich (me, direct) → mir (to me).
+Every German noun carries a gender, and it rarely matches meaning. Mädchen (girl) is neuter.
 
-#DeutschLernen #GermanA1 #DeutscheGrammatik #Akkusativ #Shorts
+#DeutschLernen #GermanA1 #DerDieDas #DeutscheGrammatik #Shorts
 ```
 
 ---
@@ -36,14 +36,14 @@ ich (I) → mich (me, direct) → mir (to me).
 **Caption:**
 
 ```
-Ein Pronomen, drei Formen, drei Rollen.
+the wird zu der, die oder das. Und es gibt kein System dahinter.
 
-ich bin der Handelnde. mich ist das direkte Ziel: Er sieht mich. mir ist der Empfänger: Er gibt mir das Buch.
+Jedes deutsche Substantiv hat ein Geschlecht: maskulin, feminin oder neutral. Das Geschlecht hat nichts mit der Bedeutung zu tun — Mädchen ist neutral.
 
-ich (I) → mich (me, direct) → mir (to me).
+Every German noun carries a gender, and it rarely matches meaning. Mädchen (girl) is neuter.
 
 Ganze Lektion im Profil-Link.
-#DeutschLernen #GermanA1 #DeutscheGrammatik #Akkusativ #reels #deutschlernen
+#DeutschLernen #GermanA1 #DerDieDas #DeutscheGrammatik #reels #deutschlernen
 ```
 
 **Link für die Bio / den Sticker:** https://deutsch-meister.de/video-library/a2c76a90-e9f7-43f5-be97-64e5f93b4ece?utm_source=instagram&utm_medium=organic_short&utm_campaign=shorts_01&utm_content=dm-s-6-1-ig
@@ -55,15 +55,15 @@ Ganze Lektion im Profil-Link.
 **Caption:**
 
 ```
-Ein Pronomen, drei Formen, drei Rollen.
+the wird zu der, die oder das. Und es gibt kein System dahinter.
 
-ich bin der Handelnde. mich ist das direkte Ziel: Er sieht mich. mir ist der Empfänger: Er gibt mir das Buch.
+Jedes deutsche Substantiv hat ein Geschlecht: maskulin, feminin oder neutral. Das Geschlecht hat nichts mit der Bedeutung zu tun — Mädchen ist neutral.
 
-ich (I) → mich (me, direct) → mir (to me).
+Every German noun carries a gender, and it rarely matches meaning. Mädchen (girl) is neuter.
 
 Ganze Lektion: https://deutsch-meister.de/video-library/a2c76a90-e9f7-43f5-be97-64e5f93b4ece?utm_source=facebook&utm_medium=organic_short&utm_campaign=shorts_01&utm_content=dm-s-6-1-fb
 
-#DeutschLernen #GermanA1 #DeutscheGrammatik #Akkusativ
+#DeutschLernen #GermanA1 #DerDieDas #DeutscheGrammatik
 ```
 
 ---
