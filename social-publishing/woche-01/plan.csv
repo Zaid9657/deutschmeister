@@ -1,0 +1,22 @@
+tag;datum;wochentag;thema;plattform;format;uhrzeit;bilder_oder_video;text_datei;status
+1;2026-09-09;Mittwoch;Das Alphabet & Ä Ö Ü ß;youtube;Video (voll);18:30;video-en.mp4 "German Alphabet" + bilder/yt-t1-thumb.png;texte/youtube/t1-youtube.txt;BEREIT
+1;2026-09-09;Mittwoch;Das Alphabet & Ä Ö Ü ß;instagram;Karussell (2);19:00;bilder/t1-alphabet-01..02.png;texte/instagram/t1-instagram.txt;BEREIT
+1;2026-09-09;Mittwoch;Das Alphabet & Ä Ö Ü ß;facebook;Bildpost (2);19:00;bilder/t1-alphabet-01..02.png;texte/facebook/t1-facebook.txt;BEREIT
+2;2026-09-10;Donnerstag;ei, ie, eu, ch;youtube;Video (voll);18:30;video-en.mp4 "Letter Combinations" + bilder/yt-t2-thumb.png;texte/youtube/t2-youtube.txt;BEREIT
+2;2026-09-10;Donnerstag;ei, ie, eu, ch;instagram;Karussell (2);19:00;bilder/t2-eiie-01..02.png;texte/instagram/t2-instagram.txt;BEREIT
+2;2026-09-10;Donnerstag;ei, ie, eu, ch;facebook;Bildpost (2);19:00;bilder/t2-eiie-01..02.png;texte/facebook/t2-facebook.txt;BEREIT
+3;2026-09-11;Freitag;Der Nominativ;youtube;Video (voll);18:30;video-en.mp4 "Nominative Case" + bilder/yt-t3-thumb.png;texte/youtube/t3-youtube.txt;BEREIT
+3;2026-09-11;Freitag;Der Nominativ;instagram;Karussell (4);19:00;bilder/t3-nominativ-01..04.png;texte/instagram/t3-instagram.txt;BEREIT
+3;2026-09-11;Freitag;Der Nominativ;facebook;Bildpost (4);19:00;bilder/t3-nominativ-01..04.png;texte/facebook/t3-facebook.txt;BEREIT
+4;2026-09-12;Samstag;Der Akkusativ;youtube;Video (voll);11:00;video-en.mp4 "Accusative Case" + bilder/yt-t4-thumb.png;texte/youtube/t4-youtube.txt;BEREIT
+4;2026-09-12;Samstag;Der Akkusativ;instagram;Karussell (4);11:30;bilder/t4-akkusativ-01..04.png;texte/instagram/t4-instagram.txt;BEREIT
+4;2026-09-12;Samstag;Der Akkusativ;facebook;Bildpost (4);11:30;bilder/t4-akkusativ-01..04.png;texte/facebook/t4-facebook.txt;BEREIT
+5;2026-09-13;Sonntag;Das Verb sein;youtube;Video (voll);11:00;video-en.mp4 "Verb Sein" + bilder/yt-t5-thumb.png;texte/youtube/t5-youtube.txt;BEREIT
+5;2026-09-13;Sonntag;Das Verb sein;instagram;Karussell (2);11:30;bilder/t5-sein-01..02.png;texte/instagram/t5-instagram.txt;BEREIT
+5;2026-09-13;Sonntag;Das Verb sein;facebook;Bildpost (2);11:30;bilder/t5-sein-01..02.png;texte/facebook/t5-facebook.txt;BEREIT
+6;2026-09-14;Montag;Das Verb haben;youtube;Video (voll);18:30;video-en.mp4 "Verb Haben" + bilder/yt-t6-thumb.png;texte/youtube/t6-youtube.txt;BEREIT
+6;2026-09-14;Montag;Das Verb haben;instagram;Karussell (2);19:00;bilder/t6-haben-01..02.png;texte/instagram/t6-instagram.txt;BEREIT
+6;2026-09-14;Montag;Das Verb haben;facebook;Bildpost (2);19:00;bilder/t6-haben-01..02.png;texte/facebook/t6-facebook.txt;BEREIT
+7;2026-09-15;Dienstag;ein oder eine?;youtube;Video (voll);18:30;video-en.mp4 "Ein & Eine" + bilder/yt-t7-thumb.png;texte/youtube/t7-youtube.txt;BEREIT
+7;2026-09-15;Dienstag;ein oder eine?;instagram;Karussell (4);19:00;bilder/t7-eineine-01..04.png;texte/instagram/t7-instagram.txt;BEREIT
+7;2026-09-15;Dienstag;ein oder eine?;facebook;Bildpost (4);19:00;bilder/t7-eineine-01..04.png;texte/facebook/t7-facebook.txt;BEREIT
