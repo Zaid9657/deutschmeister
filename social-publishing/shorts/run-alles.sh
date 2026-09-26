@@ -18,11 +18,19 @@ while IFS='|' read -r name slug anker dauer; do
   ziel="$HIER/clips/$name.mp4"
   [ -s "$ziel" ] && { echo "[skip] $name"; continue; }
   laenge=$("$FP" -v error -show_entries format=duration -of csv=p=0 "$datei")
+  breite=$("$FP" -v error -select_streams v:0 -show_entries stream=width -of csv=p=0 "$datei")
+  hoehe=$("$FP" -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 "$datei")
+  # NotebookLM-Wasserzeichen unten rechts, Koordinaten auf die Aufloesung skaliert
+  lx=$(awk -v b="$breite" 'BEGIN{printf "%d", b*1095/1280}')
+  ly=$(awk -v h="$hoehe"  'BEGIN{printf "%d", h*650/720}')
+  lw=$(awk -v b="$breite" 'BEGIN{printf "%d", b*160/1280}')
+  lh=$(awk -v h="$hoehe"  'BEGIN{printf "%d", h*42/720}')
+  LOGO="delogo=x=${lx}:y=${ly}:w=${lw}:h=${lh},"
   start=$(awk -v l="$laenge" -v a="$anker" 'BEGIN{printf "%.2f", l*a/100}')
   max=$(awk -v l="$laenge" -v d="$dauer" 'BEGIN{m=l-d; if(m<0)m=0; printf "%.2f", m}')
   start=$(awk -v s="$start" -v m="$max" 'BEGIN{printf "%.2f", (s>m?m:s)}')
   echo "[cut] $name  start=${start}s / len=${laenge}s"
-  "$FF" -nostdin -v error -y -ss "$start" -t "$dauer" -i "$datei" -vf "$FILTER" \
+  "$FF" -nostdin -v error -y -ss "$start" -t "$dauer" -i "$datei" -vf "${LOGO}${FILTER}" \
     -c:v libx264 -preset veryfast -crf 23 -profile:v high -pix_fmt yuv420p \
     -r 30 -g 60 -c:a aac -b:a 128k -ar 48000 -ac 2 -movflags +faststart "$ziel" \
     || echo "[FEHLER cut] $name"
