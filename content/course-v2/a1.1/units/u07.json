@@ -1776,8 +1776,14 @@
           "promptEn": "Correct the word order after “aber”.",
           "answer": "Emre arbeitet, aber Priya lernt.",
           "accepted": [
-            "Emre arbeitet, aber Priya lernt."
+            "Emre arbeitet, aber Priya lernt.",
+            "Emre arbeitet, Priya aber lernt.",
+            "Emre arbeitet, Priya lernt aber."
           ],
+          "acceptedWhy": {
+            "Emre arbeitet, Priya aber lernt.": "grammatisch: „aber“ steht hier nach dem Subjekt, das Verb bleibt auf Position 2",
+            "Emre arbeitet, Priya lernt aber.": "grammatisch: „aber“ steht hier am Ende, das Verb bleibt auf Position 2"
+          },
           "intentionalError": true,
           "errorTag": "connector-position",
           "errorTags": [

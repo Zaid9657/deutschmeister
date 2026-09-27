@@ -272,8 +272,8 @@
           {
             "id": "a1.1-u03-ls1-l02",
             "speaker": "cast.priya",
-            "de": "Ja, hier sind sie. Das ist meine Familie in Kochi. Das sind meine Eltern.",
-            "en": "Yes, here they are. This is my family in Kochi. These are my parents."
+            "de": "Ja, hier sind sie. Das ist meine Familie in Kochi – fünf Personen. Das sind meine Eltern.",
+            "en": "Yes, here they are. This is my family in Kochi – five people. These are my parents."
           },
           {
             "id": "a1.1-u03-ls1-l03",
@@ -2434,7 +2434,7 @@
           "id": "a1.1-u03-ls4-t2",
           "kind": "text",
           "title": "Nachricht von Bilal",
-          "text": "Hallo Priya,\ndu fragst: Wo wohnt deine Familie? Meine Familie wohnt in Lahore. Hier ist ein Foto mit fünf Personen. Das sind meine Eltern und meine Geschwister: zwei Schwestern und ein Bruder. Mein Bruder ist verheiratet. Er hat zwei Kinder: Der Sohn ist acht, die Tochter ist sechs.\nUnd ich? Ich bin ledig und wohne jetzt in Leipzig. Meine Mutter schreibt oft: „Bilal, wie geht’s? Bist du müde? Schläfst du gut?“\nBis morgen im Kurs!\nBilal",
+          "text": "Hallo Priya,\ndu fragst: Wo wohnt deine Familie? Meine Familie wohnt in Lahore. Hier ist ein Foto. Das sind meine Eltern und meine Geschwister: zwei Schwestern und ein Bruder. Mein Bruder ist verheiratet. Er hat zwei Kinder: Der Sohn ist acht, die Tochter ist sechs.\nUnd ich? Ich bin ledig und wohne jetzt in Leipzig. Meine Mutter schreibt oft: „Bilal, wie geht’s? Bist du müde? Schläfst du gut?“\nBis morgen im Kurs!\nBilal",
           "glosses": []
         }
       ],
