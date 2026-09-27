@@ -46,6 +46,7 @@ export function buildLexEnv(entries = []) {
     weakNouns: new Set(),
     vowelChange: new Set(), // 2sg/3sg present forms whose stem vowel differs from the infinitive's
     adjectives: new Set(), // ADJ lemmas: a participle with its own ADJ entry („beschädigt") is predicative after sein
+    nouns: new Set(), // NOUN lemmas and plurals: a capitalised „Sprachen:" opening a line is the noun, not „sprachen"
   };
   for (const e of arr(entries)) {
     if (!e || typeof e !== 'object') continue;
@@ -83,6 +84,10 @@ export function buildLexEnv(entries = []) {
       }
     }
     if (e.pos === 'ADJ') env.adjectives.add(lemma);
+    if (e.pos === 'NOUN') {
+      env.nouns.add(lemma.replace(/^(?:der|die|das)\s+/, ''));
+      if (typeof e.plural === 'string') env.nouns.add(lc(e.plural));
+    }
     if (e.pos === 'NOUN' && e.article === 'der' && typeof e.plural === 'string') {
       const pl = lc(e.plural);
       if ((pl === `${lemma}n` || pl === `${lemma}en`) && /(?:e|ant|ent|ist|at|oge|graf|soph|nom)$/.test(lemma)) env.weakNouns.add(lemma);
@@ -543,6 +548,8 @@ function lexPraeteritum(det, sentence, env) {
     // „Parken verboten!": a plural Präteritum form that is also a known Partizip II is read as the
     // participle (verboten, geboten, gelitten …); the Perfekt detectors own that reading
     if (env.participles.has(t.lower) && !arr(spec.forms).map(lc).includes(t.lower)) return;
+    // „Sprachen: Deutsch, Englisch" — a capitalised noun form of the lexicon opening a line
+    if (/^\p{Lu}/u.test(t.text) && env.nouns.has(t.lower)) return;
     if (forms.has(t.lower)) hits.push({ index: t.index, match: t.text, fallback: false });
   });
   return hits;

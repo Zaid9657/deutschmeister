@@ -203,8 +203,8 @@
         {
           "id": "a1.1-u01-start-l08",
           "speaker": "cast.frau-schulz",
-          "de": "Und hier ist Emre. Er ist online, aus İzmir in der Türkei. Hallo, Emre!",
-          "en": "And here is Emre. He’s online, from İzmir in Turkey. Hello, Emre!"
+          "de": "Und jetzt stelle ich Emre vor. Er ist online, aus İzmir in der Türkei. Hallo, Emre!",
+          "en": "And now let me introduce Emre. He’s online, from İzmir in Turkey. Hello, Emre!"
         },
         {
           "id": "a1.1-u01-start-l09",
@@ -261,8 +261,8 @@
           {
             "id": "a1.1-u01-ls1-l01",
             "speaker": "cast.frau-schulz",
-            "de": "Bitte stellen Sie sich jetzt vor. Sagen Sie: Wie heißen Sie? Woher kommen Sie? Wo wohnen Sie?",
-            "en": "Please introduce yourselves now. Say: What’s your name? Where are you from? Where do you live?"
+            "de": "Bitte sprechen Sie jetzt Deutsch! Sagen Sie: Wie heißen Sie? Woher kommen Sie? Wo wohnen Sie?",
+            "en": "Please speak German now! Say: What’s your name? Where are you from? Where do you live?"
           },
           {
             "id": "a1.1-u01-ls1-l02",
@@ -297,8 +297,8 @@
           {
             "id": "a1.1-u01-ls1-l07",
             "speaker": "cast.frau-schulz",
-            "de": "Danke, Herr Ahmed. Und jetzt Sie, bitte. Stellen Sie sich bitte vor!",
-            "en": "Thank you, Mr Ahmed. And now you, please. Please introduce yourself!"
+            "de": "Danke, Herr Ahmed. Und jetzt Sie, bitte. Wer sind Sie? Wie heißen Sie?",
+            "en": "Thank you, Mr Ahmed. And now you, please. Who are you? What’s your name?"
           },
           {
             "id": "a1.1-u01-ls1-l08",
@@ -319,14 +319,7 @@
             "en": "Yes, Kochi is a city in India. And now I live here in Leipzig too."
           }
         ],
-        "glosses": [
-          {
-            "token": "sich",
-            "gloss": {
-              "en": "stellen Sie sich vor = introduce yourself"
-            }
-          }
-        ],
+        "glosses": [],
         "transcriptAfterUnaidedListen": true
       },
       "inputItems": [
@@ -1041,8 +1034,8 @@
           {
             "id": "a1.1-u01-ls2-l02",
             "speaker": "cast.bilal",
-            "de": "Hallo, Priya! Ich frage jetzt: Was sprichst du? Englisch?",
-            "en": "Hi, Priya! My question: what languages do you speak? English?"
+            "de": "Hallo, Priya! Ich frage jetzt: Was sprichst du? Sprichst du Englisch?",
+            "en": "Hi, Priya! My question: what languages do you speak? Do you speak English?"
           },
           {
             "id": "a1.1-u01-ls2-l03",
@@ -1089,8 +1082,8 @@
           {
             "id": "a1.1-u01-ls2-l10",
             "speaker": "cast.bilal",
-            "de": "Tschüss, Priya! Bis morgen im Kurs!",
-            "en": "Bye, Priya! See you tomorrow in class!"
+            "de": "Tschüss, Priya! Bis morgen!",
+            "en": "Bye, Priya! See you tomorrow!"
           }
         ],
         "glosses": [
@@ -1155,8 +1148,8 @@
             "Der Kurs ist zu Ende."
           ],
           "explanation": {
-            "de": "Frau Schulz sagt: „Das ist alles für heute.“ Dann sagen Priya und Bilal: „Tschüss!“",
-            "en": "Mrs Schulz says that’s all for today, and Priya and Bilal say goodbye."
+            "de": "Frau Schulz sagt: „Auf Wiedersehen und bis morgen!“ Der Kurs ist zu Ende.",
+            "en": "Mrs Schulz says goodbye and see you tomorrow – class is over."
           },
           "origin": "agent"
         },
@@ -1207,17 +1200,17 @@
           "promptDe": "Was sagt Bilal am Ende zu Priya?",
           "promptEn": "What does Bilal say to Priya at the end?",
           "options": [
-            "Tschüss, Priya! Bis morgen im Kurs!",
+            "Tschüss, Priya! Bis morgen!",
             "Auf Wiedersehen, Frau Schulz!",
             "Freut mich, Priya!"
           ],
-          "answer": "Tschüss, Priya! Bis morgen im Kurs!",
+          "answer": "Tschüss, Priya! Bis morgen!",
           "accepted": [
-            "Tschüss, Priya! Bis morgen im Kurs!"
+            "Tschüss, Priya! Bis morgen!"
           ],
           "explanation": {
-            "de": "Bilal sagt zu Priya: „Tschüss, Priya! Bis morgen im Kurs!“ So sagen Freunde im Kurs „auf Wiedersehen“.",
-            "en": "Bilal says “Tschüss, Priya! Bis morgen im Kurs!” – the informal goodbye between classmates."
+            "de": "Bilal sagt zu Priya: „Tschüss, Priya! Bis morgen!“ So sagen Freunde im Kurs „auf Wiedersehen“.",
+            "en": "Bilal says “Tschüss, Priya! Bis morgen!” – the informal goodbye between classmates."
           },
           "origin": "agent"
         }
@@ -1652,17 +1645,20 @@
           "promptDe": "Bilden Sie einen Aussagesatz.",
           "promptEn": "Build a statement.",
           "tiles": [
-            "kommt",
-            "Bilal",
-            "aus Pakistan"
+            "lernt",
+            "Olena",
+            "hier",
+            "Deutsch"
           ],
-          "answer": "Bilal kommt aus Pakistan.",
+          "answer": "Olena lernt hier Deutsch.",
           "accepted": [
-            "Bilal kommt aus Pakistan.",
-            "Aus Pakistan kommt Bilal."
+            "Olena lernt hier Deutsch.",
+            "Hier lernt Olena Deutsch.",
+            "Deutsch lernt Olena hier."
           ],
           "acceptedWhy": {
-            "Aus Pakistan kommt Bilal.": "grammatisch: aus Pakistan auf Position 1, das Verb bleibt auf Position 2"
+            "Hier lernt Olena Deutsch.": "grammatisch: hier auf Position 1, das Verb bleibt auf Position 2",
+            "Deutsch lernt Olena hier.": "grammatisch: Deutsch betont auf Position 1, das Verb bleibt auf Position 2"
           },
           "errorTags": [
             "v2-inv"
@@ -1674,8 +1670,8 @@
             "repair"
           ],
           "explanation": {
-            "de": "Das Verb „kommt“ steht auf Position 2.",
-            "en": "The verb “kommt” is in position 2."
+            "de": "Das Verb „lernt“ steht auf Position 2. Steht „hier“ auf Position 1, kommt „Olena“ nach dem Verb.",
+            "en": "“lernt” is in position 2; if “hier” comes first, “Olena” follows the verb."
           },
           "origin": "agent"
         },
@@ -1801,8 +1797,8 @@
         "title": "Profile im Kurs-Chat",
         "textType": "tt.steckbrief",
         "text": {
-          "de": "Chat · Kurs A1 · Sprachschule Leipzig · 8 Teilnehmer\nFrau Schulz: Guten Abend! Ich begrüße alle Teilnehmer im Chat.\nArta: Guten Abend! Ich bin Arta Berisha. Land: Kosovo. Wohnort: Prishtina. Muttersprache: Albanisch. Ich spreche auch Englisch und lerne online Deutsch.\nEmre: Hallo, Arta! Ich bin Emre. Ich lerne auch online. Wohnort: İzmir. Muttersprache: Türkisch.\nArta: Hallo, Emre! Sprichst du auch Englisch?\nEmre: Nein, nur Türkisch und ein bisschen Deutsch.\nOlena: Hallo, Arta! Hallo, Emre! Ich heiße Olena. Ich komme aus Charkiw. Das ist eine Stadt in der Ukraine. Jetzt wohne ich in Leipzig. Ich spreche Ukrainisch, Russisch und Englisch.\nArta: Tschüss und bis morgen im Kurs!",
-          "en": "Chat · Course A1 · Leipzig language school · 8 participants\nMrs Schulz: Good evening! Welcome, everyone, to the chat.\nArta: Good evening! I’m Arta Berisha. Country: Kosovo. Place of residence: Prishtina. First language: Albanian. I also speak English and I’m learning German online.\nEmre: Hi, Arta! I’m Emre. I’m learning online too. Place of residence: İzmir. First language: Turkish.\nArta: Hi, Emre! Do you speak English too?\nEmre: No, only Turkish and a little German.\nOlena: Hi, Arta! Hi, Emre! My name is Olena. I’m from Kharkiv. That’s a city in Ukraine. Now I live in Leipzig. I speak Ukrainian, Russian and English.\nArta: Bye, see you tomorrow in class!"
+          "de": "Chat · Kurs A1 · Sprachschule Leipzig · 8 Teilnehmer\nFrau Schulz: Guten Abend! Ich begrüße alle Teilnehmer im Chat. Heute stelle ich Arta vor. Arta lernt online.\nArta: Guten Abend! Ich bin Arta Berisha. Land: Kosovo. Wohnort: Prishtina. Muttersprache: Albanisch. Ich spreche auch Englisch und lerne online Deutsch.\nEmre: Hallo, Arta! Ich bin Emre. Ich lerne auch online. Wohnort: İzmir. Muttersprache: Türkisch.\nArta: Hallo, Emre! Sprichst du auch Englisch?\nEmre: Nein, nur Türkisch und ein bisschen Deutsch.\nOlena: Hallo, Arta! Hallo, Emre! Ich heiße Olena. Ich komme aus Charkiw. Das ist eine Stadt in der Ukraine. Jetzt wohne ich in Leipzig. Ich spreche Ukrainisch, Russisch und Englisch.\nArta: Tschüss und bis morgen im Kurs!",
+          "en": "Chat · Course A1 · Leipzig language school · 8 participants\nMrs Schulz: Good evening! Welcome, everyone, to the chat. Today I’d like to introduce Arta. Arta is learning online.\nArta: Good evening! I’m Arta Berisha. Country: Kosovo. Place of residence: Prishtina. First language: Albanian. I also speak English and I’m learning German online.\nEmre: Hi, Arta! I’m Emre. I’m learning online too. Place of residence: İzmir. First language: Turkish.\nArta: Hi, Emre! Do you speak English too?\nEmre: No, only Turkish and a little German.\nOlena: Hi, Arta! Hi, Emre! My name is Olena. I’m from Kharkiv. That’s a city in Ukraine. Now I live in Leipzig. I speak Ukrainian, Russian and English.\nArta: Bye, see you tomorrow in class!"
         },
         "glosses": [
           {
@@ -2434,11 +2430,11 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.praesens",
-          "promptDe": "Korrigieren Sie: „Arta wohnen in Prishtina.“",
+          "promptDe": "Korrigieren Sie: „Emre kommen aus der Türkei.“",
           "promptEn": "Correct the sentence.",
-          "answer": "Arta wohnt in Prishtina.",
+          "answer": "Emre kommt aus der Türkei.",
           "accepted": [
-            "Arta wohnt in Prishtina."
+            "Emre kommt aus der Türkei."
           ],
           "intentionalError": true,
           "difficulty": 2,
@@ -2448,8 +2444,8 @@
             "einstufung"
           ],
           "explanation": {
-            "de": "Arta ist „sie“. Für „sie“ ist die Endung -t: Arta wohnt.",
-            "en": "Arta = sie, and sie takes -t: Arta wohnt."
+            "de": "Emre ist „er“. Für „er“ ist die Endung -t: Emre kommt.",
+            "en": "Emre = er, and er takes -t: Emre kommt."
           },
           "origin": "agent"
         },

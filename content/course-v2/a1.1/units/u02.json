@@ -268,35 +268,35 @@
           {
             "id": "a1.1-u02-ls1-l01",
             "speaker": "cast.herr-richter",
-            "de": "So, Frau Nair, jetzt das Formular. Zuerst der Familienname: Wie schreiben Sie Nair?",
-            "en": "Right, Ms Nair, now the form. First your surname: how do you spell Nair?"
+            "de": "So, Frau Nair, jetzt das Formular. Ich frage, und ich schreibe. Zuerst der Familienname: Wie schreiben Sie Nair?",
+            "en": "Right, Ms Nair, now the form. I ask, and I write. First your surname: how do you spell Nair?"
           },
           {
             "id": "a1.1-u02-ls1-l02",
             "speaker": "cast.priya",
-            "de": "Ich buchstabiere: N – A – I – R.",
-            "en": "I’ll spell it: N – A – I – R.",
-            "say": "Ich buchstabiere: Enn – A – I – Err."
+            "de": "Nair ist der Familienname, ja. Ich buchstabiere: N – A – I – R.",
+            "en": "Nair is my surname, yes. I’ll spell it: N – A – I – R.",
+            "say": "Nair ist der Familienname, ja. Ich buchstabiere: Enn – A – I – Err."
           },
           {
             "id": "a1.1-u02-ls1-l03",
             "speaker": "cast.herr-richter",
-            "de": "N – E – I – R. Ist das richtig?",
-            "en": "N – E – I – R. Is that right?",
-            "say": "Enn – E – I – Err. Ist das richtig?"
+            "de": "N – E – I – R. Ist das richtig, Frau Nair?",
+            "en": "N – E – I – R. Is that right, Ms Nair?",
+            "say": "Enn – E – I – Err. Ist das richtig, Frau Nair?"
           },
           {
             "id": "a1.1-u02-ls1-l04",
             "speaker": "cast.priya",
-            "de": "Nein, das ist falsch. Nicht E – A! N – A – I – R.",
-            "en": "No, that’s wrong. Not E – A! N – A – I – R.",
-            "say": "Nein, das ist falsch. Nicht E – A! Enn – A – I – Err."
+            "de": "Nein, das ist falsch. Nicht E – A! Ich buchstabiere noch einmal: N – A – I – R.",
+            "en": "No, that’s wrong. Not E – A! I’ll spell it again: N – A – I – R.",
+            "say": "Nein, das ist falsch. Nicht E – A! Ich buchstabiere noch einmal: Enn – A – I – Err."
           },
           {
             "id": "a1.1-u02-ls1-l05",
             "speaker": "cast.herr-richter",
-            "de": "Ah, mit A. Danke! Und der Vorname? Wie schreiben Sie Priya?",
-            "en": "Ah, with an A. Thank you! And your first name? How do you spell Priya?"
+            "de": "Ah, mit A, danke! Und der Vorname: Wie schreiben Sie Priya?",
+            "en": "Ah, with an A, thank you! And your first name: how do you spell Priya?"
           },
           {
             "id": "a1.1-u02-ls1-l06",
@@ -308,22 +308,22 @@
           {
             "id": "a1.1-u02-ls1-l07",
             "speaker": "cast.herr-richter",
-            "de": "Alles klar. Und wie ist die Adresse in Leipzig?",
-            "en": "All right. And what is your address in Leipzig?"
+            "de": "Alles klar, mit Y. Und wie ist die Adresse hier in Leipzig?",
+            "en": "All right, with a Y. And what is your address here in Leipzig?"
           },
           {
             "id": "a1.1-u02-ls1-l08",
             "speaker": "cast.priya",
-            "de": "Berliner Straße 21. Die Postleitzahl ist 04105.",
-            "en": "Berliner Straße 21. The postcode is 04105.",
-            "say": "Berliner Straße einundzwanzig. Die Postleitzahl ist null vier eins null fünf."
+            "de": "Die Adresse ist Berliner Straße 21. Und die Postleitzahl ist 04105.",
+            "en": "The address is Berliner Straße 21. And the postcode is 04105.",
+            "say": "Die Adresse ist Berliner Straße einundzwanzig. Und die Postleitzahl ist null vier eins null fünf."
           },
           {
             "id": "a1.1-u02-ls1-l09",
             "speaker": "cast.herr-richter",
-            "de": "Berliner Straße zwanzig, 04105 Leipzig. Richtig?",
-            "en": "Berliner Straße twenty, 04105 Leipzig. Right?",
-            "say": "Berliner Straße zwanzig, null vier eins null fünf Leipzig. Richtig?"
+            "de": "Moment, bitte, ich schreibe … Berliner Straße zwanzig, 04105 Leipzig. Ist das richtig?",
+            "en": "One moment, please, I’m writing … Berliner Straße twenty, 04105 Leipzig. Is that right?",
+            "say": "Moment, bitte, ich schreibe … Berliner Straße zwanzig, null vier eins null fünf Leipzig. Ist das richtig?"
           },
           {
             "id": "a1.1-u02-ls1-l10",
@@ -389,8 +389,8 @@
           "promptEn": "Mr Richter writes N-E-I-R. Which letter is wrong?",
           "options": [
             "das N",
-            "das E",
-            "das R"
+            "das R",
+            "das E"
           ],
           "answer": "das E",
           "accepted": [
@@ -452,8 +452,8 @@
           "promptDe": "Priya sagt: „Nicht E – A!“ Wie schreibt Priya Nair?",
           "promptEn": "“Nicht E” – which spelling is right?",
           "options": [
-            "N – E – I – R",
             "N – A – I – R",
+            "N – E – I – R",
             "N – I – E – R"
           ],
           "answer": "N – A – I – R",
@@ -476,8 +476,8 @@
           "promptEn": "What does “nicht zwanzig” tell you?",
           "options": [
             "Zwanzig ist richtig.",
-            "Zwanzig ist falsch.",
-            "Die Hausnummer ist zwanzig."
+            "Die Hausnummer ist zwanzig.",
+            "Zwanzig ist falsch."
           ],
           "answer": "Zwanzig ist falsch.",
           "accepted": [
@@ -498,8 +498,8 @@
           "promptEn": "Which sentence is true?",
           "options": [
             "Priya wohnt in Kochi.",
-            "Priya kommt nicht aus Kochi.",
-            "Priya wohnt nicht in Kochi."
+            "Priya wohnt nicht in Kochi.",
+            "Priya kommt nicht aus Kochi."
           ],
           "answer": "Priya wohnt nicht in Kochi.",
           "accepted": [
@@ -765,8 +765,8 @@
             "promptEn": "It is wrong. What does Priya say?",
             "options": [
               "Ja, das ist richtig.",
-              "Nein, das ist nicht richtig.",
-              "Ja, das ist nicht richtig."
+              "Ja, das ist nicht richtig.",
+              "Nein, das ist nicht richtig."
             ],
             "answer": "Nein, das ist nicht richtig.",
             "accepted": [
@@ -889,8 +889,8 @@
           "promptDe": "„Wohnt Priya in Kochi?“ – „Nein, sie wohnt ___ in Kochi.“",
           "promptEn": "Choose the word.",
           "options": [
-            "nicht",
             "nein",
+            "nicht",
             "doch"
           ],
           "answer": "nicht",
@@ -1022,20 +1022,20 @@
           {
             "id": "a1.1-u02-ls2-l02",
             "speaker": "cast.emre",
-            "de": "Ja, hallo, Herr Richter! Verstehen Sie mich nicht?",
-            "en": "Yes, hello, Mr Richter! Can’t you understand me?"
+            "de": "Ja, hallo, Herr Richter! Hier ist Emre. Verstehen Sie mich nicht?",
+            "en": "Yes, hello, Mr Richter! This is Emre. Can’t you understand me?"
           },
           {
             "id": "a1.1-u02-ls2-l03",
             "speaker": "cast.herr-richter",
-            "de": "Doch, jetzt verstehe ich Sie. Wohnen Sie nicht in Leipzig?",
-            "en": "Yes, now I can understand you. Don’t you live in Leipzig?"
+            "de": "Doch, jetzt verstehe ich Sie. Ich habe das Formular hier. Wohnen Sie nicht in Leipzig?",
+            "en": "Yes, now I can understand you. I have the form here. Don’t you live in Leipzig?"
           },
           {
             "id": "a1.1-u02-ls2-l04",
             "speaker": "cast.emre",
-            "de": "Nein, ich wohne in İzmir, in der Türkei. Ich lerne online.",
-            "en": "No, I live in İzmir, in Turkey. I study online."
+            "de": "Nein, ich wohne in İzmir, in der Türkei. Ich lerne online, im Kurs A1.",
+            "en": "No, I live in İzmir, in Turkey. I study online, in the A1 course."
           },
           {
             "id": "a1.1-u02-ls2-l05",
@@ -1053,8 +1053,8 @@
           {
             "id": "a1.1-u02-ls2-l07",
             "speaker": "cast.herr-richter",
-            "de": "Wie bitte? Langsam, bitte. Noch einmal!",
-            "en": "Sorry? Slowly, please. Once more!"
+            "de": "Wie bitte? Ich verstehe nicht. Langsam, bitte. Noch einmal!",
+            "en": "Sorry? I don’t understand. Slowly, please. Once more!"
           },
           {
             "id": "a1.1-u02-ls2-l08",
@@ -1117,15 +1117,15 @@
           "promptEn": "Does Mr Richter understand the number at once?",
           "options": [
             "Ja, er versteht sie sofort.",
-            "Nein, Emre sagt die Nummer noch einmal.",
-            "Nein, Emre schreibt eine E-Mail."
+            "Nein, Emre schreibt eine E-Mail.",
+            "Nein, Emre sagt die Nummer noch einmal."
           ],
           "answer": "Nein, Emre sagt die Nummer noch einmal.",
           "accepted": [
             "Nein, Emre sagt die Nummer noch einmal."
           ],
           "explanation": {
-            "de": "Herr Richter sagt: „Wie bitte? Langsam, bitte. Noch einmal!“ Dann sagt Emre die Nummer langsam.",
+            "de": "Herr Richter sagt: „Wie bitte? Ich verstehe nicht. Langsam, bitte.“ Dann sagt Emre die Nummer langsam.",
             "en": "He asks Emre to repeat it slowly."
           },
           "origin": "agent"
@@ -1182,8 +1182,8 @@
           "promptDe": "Wie oft sagt Emre die ganze Nummer?",
           "promptEn": "How often does Emre say the whole number?",
           "options": [
-            "einmal",
             "zweimal",
+            "einmal",
             "dreimal"
           ],
           "answer": "zweimal",
@@ -1207,8 +1207,8 @@
           "promptEn": "Emre answers “Ja”. What was the question?",
           "options": [
             "Wo wohnen Sie?",
-            "Lernen Sie online?",
-            "Wie ist die Nummer?"
+            "Wie ist die Nummer?",
+            "Lernen Sie online?"
           ],
           "answer": "Lernen Sie online?",
           "accepted": [
@@ -1228,8 +1228,8 @@
           "promptDe": "Emre sagt: „In İzmir.“ Was fragt Herr Richter?",
           "promptEn": "Emre answers “In İzmir”. What was the question?",
           "options": [
-            "Wohnen Sie in Leipzig?",
             "Wo wohnen Sie?",
+            "Wohnen Sie in Leipzig?",
             "Ist das richtig?"
           ],
           "answer": "Wo wohnen Sie?",
@@ -1273,8 +1273,8 @@
           "promptEn": "Emre lives in İzmir. What does he answer?",
           "options": [
             "Doch, in Leipzig.",
-            "Nein, in İzmir.",
-            "Ja, in Leipzig."
+            "Ja, in Leipzig.",
+            "Nein, in İzmir."
           ],
           "answer": "Nein, in İzmir.",
           "accepted": [
@@ -1501,8 +1501,8 @@
             "promptDe": "„Sprechen Sie Türkisch?“ – Was passt?",
             "promptEn": "Choose the right answer.",
             "options": [
-              "Ja, ich spreche Türkisch.",
               "Doch, ich spreche Türkisch.",
+              "Ja, ich spreche Türkisch.",
               "Ich wohne in İzmir."
             ],
             "answer": "Ja, ich spreche Türkisch.",
@@ -1537,7 +1537,6 @@
             "count": 1,
             "source": [
               "lx.telefonnummer",
-              "lx.nummer",
               "lx.zahl",
               "lx.verstehen",
               "lx.wie-bitte"
@@ -1621,8 +1620,8 @@
           "promptDe": "„Sind Sie nicht Herr Yıldız?“ – Er ist Herr Yıldız. Was sagt er?",
           "promptEn": "He is Mr Yıldız. What does he say?",
           "options": [
-            "Nein, ich bin Emre Yıldız.",
             "Doch, ich bin Emre Yıldız.",
+            "Nein, ich bin Emre Yıldız.",
             "Ja, ich bin nicht Emre Yıldız."
           ],
           "answer": "Doch, ich bin Emre Yıldız.",
@@ -1754,14 +1753,14 @@
           {
             "id": "a1.1-u02-ls3-l05",
             "speaker": "cast.priya",
-            "de": "Nein, hier arbeite ich nicht. Ich lerne jetzt Deutsch.",
-            "en": "No, I don’t work here. I’m learning German now."
+            "de": "Nein, hier arbeite ich nicht. Ich lerne jetzt Deutsch, hier im Kurs.",
+            "en": "No, I don’t work here. I’m learning German now, here in the course."
           },
           {
             "id": "a1.1-u02-ls3-l06",
             "speaker": "cast.herr-richter",
-            "de": "Dann schreiben Sie „Rezeptionistin“. Und hier die E-Mail, bitte.",
-            "en": "Then write “Rezeptionistin”. And your e-mail here, please."
+            "de": "Dann schreiben Sie „Rezeptionistin“. Und hier die E-Mail, bitte. Dann sind Sie fertig.",
+            "en": "Then write “Rezeptionistin”. And your e-mail here, please. Then you’re done."
           },
           {
             "id": "a1.1-u02-ls3-l07",
@@ -1789,8 +1788,8 @@
           }
         ],
         "text": {
-          "de": "Sprachschule Leipzig – Anmeldung\nKurs: A1\nFamilienname: Nair\nVorname: Priya\nStraße, Hausnummer: Berliner Straße 21\nPostleitzahl, Wohnort: 04105 Leipzig\nLand: Indien\nSprachen: Malayalam, Englisch, Deutsch\nTelefonnummer: 0176 38 29 41 06\nE-Mail: …\nBeruf: …",
-          "en": "Leipzig Language School – Registration · Course: A1 · Surname: Nair · First name: Priya · Street, house number: Berliner Straße 21 · Postcode, town: 04105 Leipzig · Country: India · Languages: Malayalam, English, German · Phone number: 0176 38 29 41 06 · E-mail: … · Profession: …"
+          "de": "Sprachschule Leipzig – Anmeldung\nKurs: A1\nFamilienname: Nair\nVorname: Priya\nStraße, Hausnummer: Berliner Straße 21\nPostleitzahl, Wohnort: 04105 Leipzig\nLand: Indien\nSprache(n): Malayalam, Englisch, Deutsch\nTelefonnummer: 0176 38 29 41 06\nE-Mail: …\nBeruf: …",
+          "en": "Leipzig Language School – Registration · Course: A1 · Surname: Nair · First name: Priya · Street, house number: Berliner Straße 21 · Postcode, town: 04105 Leipzig · Country: India · Language(s): Malayalam, English, German · Phone number: 0176 38 29 41 06 · E-mail: … · Profession: …"
         },
         "glosses": [
           {
@@ -1840,8 +1839,8 @@
           "promptEn": "Who comes to the reception desk next?",
           "options": [
             "Emre",
-            "Frau Schulz",
-            "Olena"
+            "Olena",
+            "Frau Schulz"
           ],
           "answer": "Frau Schulz",
           "accepted": [
@@ -1865,7 +1864,7 @@
             "Deutsch"
           ],
           "explanation": {
-            "de": "Im Formular steht: „Sprachen: Malayalam, Englisch, Deutsch“.",
+            "de": "Im Formular steht: „Sprache(n): Malayalam, Englisch, Deutsch“.",
             "en": "The form says: Malayalam, English, German."
           },
           "origin": "agent"
@@ -1926,8 +1925,8 @@
           "promptDe": "Frau Schulz: „Emre und Arta? Sie lernen online.“ Wer lernt online?",
           "promptEn": "“lernen” = plural. Who studies online?",
           "options": [
-            "nur Emre",
             "Emre und Arta",
+            "nur Emre",
             "Frau Schulz"
           ],
           "answer": "Emre und Arta",
@@ -1948,17 +1947,18 @@
           "promptDe": "Herr Richter: „Sie schreibt noch.“ Wer schreibt?",
           "promptEn": "“schreibt” = one person. Who is writing?",
           "options": [
-            "Priya",
-            "Frau Schulz und Herr Richter",
-            "Emre und Arta"
+            "Herr Richter",
+            "Priya und Emre",
+            "Priya"
           ],
           "answer": "Priya",
           "accepted": [
             "Priya"
           ],
+          "exact": "name",
           "explanation": {
-            "de": "„schreibt“ mit „-t“: eine Frau, also Priya. Zwei Personen: „schreiben“.",
-            "en": "“schreibt” is singular (she) – Priya; two people would be “schreiben”."
+            "de": "„sie schreibt“ mit „-t“: eine Frau, also Priya. Herr Richter ist „er“, zwei Personen „schreiben“.",
+            "en": "“sie schreibt” is one woman – Priya; Mr Richter would be “er”, two people “schreiben”."
           },
           "origin": "agent"
         },
@@ -1970,8 +1970,8 @@
           "promptDe": "„Habt ihr die Formulare?“ Wer fragt wen?",
           "promptEn": "“ihr” = two or more friends. Who asks whom?",
           "options": [
-            "Priya fragt Olena und Bilal.",
             "Herr Richter fragt Priya.",
+            "Priya fragt Olena und Bilal.",
             "Priya fragt Herrn Richter."
           ],
           "answer": "Priya fragt Olena und Bilal.",
@@ -1993,8 +1993,8 @@
           "promptEn": "“Haben Sie” = formal. Who asks whom?",
           "options": [
             "Priya fragt Emre.",
-            "Herr Richter fragt Priya.",
-            "Emre fragt Priya."
+            "Emre fragt Priya.",
+            "Herr Richter fragt Priya."
           ],
           "answer": "Herr Richter fragt Priya.",
           "accepted": [
@@ -2236,8 +2236,8 @@
             "promptDe": "„Was sind Sie von Beruf?“ – Was passt?",
             "promptEn": "Choose the right answer.",
             "options": [
-              "Ich bin Lehrerin.",
               "Ich wohne in Leipzig.",
+              "Ich bin Lehrerin.",
               "Ja, ich arbeite."
             ],
             "answer": "Ich bin Lehrerin.",
@@ -2273,9 +2273,8 @@
             "source": [
               "lx.lehrer",
               "lx.student",
-              "lx.kellner",
-              "lx.schueler",
-              "lx.informatiker"
+              "lx.beruf",
+              "lx.arbeiten"
             ]
           },
           {
@@ -2321,7 +2320,7 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "g.wortbildung-er-in",
-          "promptDe": "der Kellner – die ___",
+          "promptDe": "Herr Weber ist Kellner, und Frau Weber ist auch ___. (Kellner + in)",
           "promptEn": "The female form of Kellner.",
           "answer": "Kellnerin",
           "accepted": [
@@ -2381,8 +2380,8 @@
           "promptDe": "Frau Schulz: „___ Sie fertig, Frau Nair?“",
           "promptEn": "Choose the verb form.",
           "options": [
-            "Bist",
             "Sind",
+            "Bist",
             "Seid"
           ],
           "answer": "Sind",
@@ -3088,9 +3087,9 @@
       },
       {
         "id": "a1.1-u02-ls7-l03",
-        "speaker": "cast.emre",
-        "de": "Ich wohne nicht in Leipzig.",
-        "en": "I don’t live in Leipzig."
+        "speaker": "cast.herr-richter",
+        "de": "Wie schreiben Sie das, bitte?",
+        "en": "How do you spell that, please?"
       }
     ],
     "items": [
@@ -3137,8 +3136,8 @@
         "promptEn": "Emre does study online. What does he say?",
         "options": [
           "Nein, ich lerne online.",
-          "Doch, ich lerne online.",
-          "Ja, ich lerne nicht online."
+          "Ja, ich lerne nicht online.",
+          "Doch, ich lerne online."
         ],
         "answer": "Doch, ich lerne online.",
         "accepted": [
@@ -3197,13 +3196,13 @@
         "promptDe": "Hören Sie und schreiben Sie den Satz.",
         "promptEn": "Listen and write the sentence.",
         "audioLineRef": "a1.1-u02-ls7-l03",
-        "answer": "Ich wohne nicht in Leipzig.",
+        "answer": "Wie schreiben Sie das, bitte?",
         "accepted": [
-          "Ich wohne nicht in Leipzig."
+          "Wie schreiben Sie das, bitte?"
         ],
         "explanation": {
-          "de": "Emre sagt: „Ich wohne nicht in Leipzig.“ „nicht“ steht vor „in Leipzig“.",
-          "en": "Emre says he doesn’t live in Leipzig."
+          "de": "W-Frage: „Wie“ auf Position 1, „schreiben“ auf Position 2. „Sie“ (formell) ist immer groß.",
+          "en": "W-question: Wie first, schreiben second; formal Sie is always capitalised."
         },
         "origin": "agent"
       },
@@ -3258,7 +3257,7 @@
         "type": "fill_blank",
         "role": "proof",
         "topic": "hoeren",
-        "promptDe": "Hören Sie. Arta buchstabiert. Schreiben Sie den Familiennamen.",
+        "promptDe": "Hören Sie. Arta buchstabiert. Artas Familienname ist ___.",
         "promptEn": "Listen and write the surname Arta spells.",
         "audioLineRef": "a1.1-u02-ls7-l01",
         "answer": "Berisha",
@@ -3277,7 +3276,7 @@
         "type": "fill_blank",
         "role": "proof",
         "topic": "hoeren",
-        "promptDe": "Hören Sie. Schreiben Sie die Telefonnummer der Sprachschule.",
+        "promptDe": "Hören Sie. Die Sprachschule hat die Nummer ___.",
         "promptEn": "Write the school’s phone number.",
         "audioLineRef": "a1.1-u02-ls7-l02",
         "answer": "0341 97 63 20",
@@ -3299,8 +3298,8 @@
         "promptDe": "Am Telefon: Sie verstehen die Nummer nicht. Was sagen Sie?",
         "promptEn": "You didn’t catch the number. What do you say?",
         "options": [
-          "Wie bitte? Noch einmal, bitte.",
           "Ja, das ist richtig.",
+          "Wie bitte? Noch einmal, bitte.",
           "Wie ist Ihr Name?"
         ],
         "answer": "Wie bitte? Noch einmal, bitte.",
@@ -3317,11 +3316,13 @@
     "proofs": [
       {
         "canDo": "cd.a1.buchstabieren",
-        "item": "a1.1-u02-q01"
+        "item": "a1.1-u02-q01",
+        "aufgabe": "sprechen"
       },
       {
         "canDo": "cd.a1.zahlen",
-        "item": "a1.1-u02-q02"
+        "item": "a1.1-u02-q02",
+        "aufgabe": "sprechen"
       },
       {
         "canDo": "cd.a1.formular-person",
@@ -3394,7 +3395,7 @@
   ],
   "story": {
     "beat": "Priya füllt am Empfang der Sprachschule das Anmeldeformular aus. Herr Richter schreibt zuerst „Neir“ und „zwanzig“, aber Priya korrigiert ihn. Emre ist in İzmir und gibt seine Telefonnummer am Telefon durch – mit „Wie bitte?“ und „Noch einmal, bitte!“. Priya ist Teilnehmerin Nummer hundert.",
-    "cliffhanger": "Dann schreibt Olena im Chat: „Hallo Priya! Hast du Fotos von der Familie in Kochi?“",
+    "cliffhanger": "Im Formular steht noch ein Name: Arjun Nair. Herr Richter fragt: „Auch Nair? Wer ist das, Frau Nair?“",
     "castIn": [
       "cast.herr-richter"
     ]

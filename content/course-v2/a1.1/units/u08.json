@@ -279,14 +279,14 @@
           {
             "id": "a1.1-u08-ls1-l05",
             "speaker": "cast.sophie",
-            "de": "Priya, du kannst tanzen? Super! Dann können wir am Freitag zusammen tanzen.",
-            "en": "Priya, you can dance? Great! Then we can dance together on Friday."
+            "de": "Priya, du kannst tanzen? Super! Hast du Lust? Dann können wir am Freitag zusammen tanzen.",
+            "en": "Priya, you can dance? Great! Do you feel like it? Then we can dance together on Friday."
           },
           {
             "id": "a1.1-u08-ls1-l06",
             "speaker": "cast.olena",
-            "de": "Ohne mich, bitte! Ich tanze nicht gern, und ich kann nicht gut tanzen.",
-            "en": "Count me out, please! I don’t like dancing, and I’m not good at it."
+            "de": "Ohne mich! Ich tanze nicht gern, und ich kann nicht gut tanzen.",
+            "en": "Count me out! I don’t like dancing, and I’m not good at it."
           },
           {
             "id": "a1.1-u08-ls1-l07",
@@ -297,14 +297,14 @@
           {
             "id": "a1.1-u08-ls1-l08",
             "speaker": "cast.priya",
-            "de": "Ja, sehr gern! Musik ist auch mein Hobby. Ich höre jeden Abend Musik.",
-            "en": "Yes, very much! Music is my hobby too. I listen to music every evening."
+            "de": "Ja, sehr gern! Ich höre jeden Abend Musik.",
+            "en": "Yes, very much! I listen to music every evening."
           },
           {
             "id": "a1.1-u08-ls1-l09",
             "speaker": "cast.olena",
-            "de": "Ich auch, sehr gern. Wir haben viele Hobbys! Was planen wir am Samstag?",
-            "en": "Me too, very much. We have lots of hobbies! What shall we plan for Saturday?"
+            "de": "Ich auch! Wir haben viele Hobbys: Sport, Tanzen, Musik. Was meinst du, Priya? Was planen wir am Samstag?",
+            "en": "Me too! We have lots of hobbies: sport, dancing, music. What do you think, Priya? What shall we plan for Saturday?"
           }
         ],
         "text": {
@@ -330,8 +330,8 @@
           "promptDe": "Priya schreibt im Chat. Was fragt sie?",
           "promptEn": "Priya writes in the chat. What does she ask?",
           "options": [
-            "Wo wohnt ihr?",
             "Was macht ihr gern?",
+            "Wo wohnt ihr?",
             "Wie spät ist es?"
           ],
           "answer": "Was macht ihr gern?",
@@ -352,9 +352,9 @@
           "promptDe": "Worüber sprechen die Freunde?",
           "promptEn": "What are the friends talking about?",
           "options": [
-            "über Hobbys",
             "über die Arbeit",
-            "über eine Wohnung"
+            "über eine Wohnung",
+            "über Hobbys"
           ],
           "answer": "über Hobbys",
           "accepted": [
@@ -752,8 +752,8 @@
             "promptDe": "„Kannst du gut tanzen?“ – Was passt?",
             "promptEn": "Choose the right answer.",
             "options": [
-              "Ja, am Freitag.",
               "Ja, ich kann gut tanzen.",
+              "Ja, am Freitag.",
               "Ja, ich tanze heute."
             ],
             "answer": "Ja, ich kann gut tanzen.",
@@ -772,8 +772,8 @@
             "generator": "dictation.fromInput",
             "count": 2,
             "source": [
-              "a1.1-u08-ls1-l05",
-              "a1.1-u08-ls1-l07"
+              "a1.1-u08-ls1-l07",
+              "a1.1-u08-ls1-l08"
             ]
           },
           {
@@ -793,8 +793,8 @@
             "source": [
               "lx.hobby",
               "lx.fahrrad",
-              "lx.fussball",
-              "lx.rad"
+              "lx.termin",
+              "lx.woche"
             ]
           },
           {
@@ -902,11 +902,11 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.koennen",
-          "promptDe": "Korrigieren Sie: „Du kann gut tanzen.“",
+          "promptDe": "Korrigieren Sie: „Du kann gut schwimmen.“",
           "promptEn": "Correct the sentence.",
-          "answer": "Du kannst gut tanzen.",
+          "answer": "Du kannst gut schwimmen.",
           "accepted": [
-            "Du kannst gut tanzen."
+            "Du kannst gut schwimmen."
           ],
           "intentionalError": true,
           "banks": [
@@ -994,20 +994,20 @@
       },
       "input": {
         "kind": "mixed",
-        "title": "Samstag im Park: das Programm",
-        "textType": "tt.programm",
+        "title": "Samstag im Park: die Webseite",
+        "textType": "tt.webseite",
         "lines": [
           {
             "id": "a1.1-u08-ls2-l01",
             "speaker": "cast.olena",
-            "de": "Hallo Priya! Hast du die Webseite vom Park? Am Samstag gibt es dort viel Sport und Musik.",
-            "en": "Hi Priya! Have you got the park’s website? On Saturday there is lots of sport and music there."
+            "de": "Hallo Priya! Was planst du am Samstag? Hast du die Webseite vom Park?",
+            "en": "Hi Priya! What are you planning for Saturday? Have you got the park’s website?"
           },
           {
             "id": "a1.1-u08-ls2-l02",
             "speaker": "cast.priya",
-            "de": "Ja, ich habe sie hier. Um zehn Uhr ist Laufen. Da läuft auch Elif, die Frau von Emre.",
-            "en": "Yes, I’ve got it here. At ten there is running. Elif, Emre’s wife, runs there too."
+            "de": "Ja, ich habe sie hier. Um zehn Uhr ist Laufen. Da läuft auch Elif, die Frau von Emre. Vielleicht treffe ich sie da.",
+            "en": "Yes, I’ve got it here. At ten there is running. Elif, Emre’s wife, runs there too. Maybe I’ll meet her there."
           },
           {
             "id": "a1.1-u08-ls2-l03",
@@ -1024,55 +1024,55 @@
           {
             "id": "a1.1-u08-ls2-l05",
             "speaker": "cast.olena",
-            "de": "Nein, ich tanze wirklich nicht gern. Aber ich höre gern Musik. Das Konzert um sieben finde ich interessant.",
-            "en": "No, I really don’t like dancing. But I like listening to music. I think the concert at seven is interesting."
+            "de": "Nein, ich tanze wirklich nicht gern. Aber um sieben ist ein Konzert: Musik aus Indien und aus der Türkei. Das finde ich interessant.",
+            "en": "No, I really don’t like dancing. But at seven there is a concert: music from India and Turkey. I find that interesting."
           },
           {
             "id": "a1.1-u08-ls2-l06",
             "speaker": "cast.priya",
-            "de": "Ich auch! Musik aus Indien und aus der Türkei – das gefällt mir. Und der Film um neun?",
-            "en": "Me too! Music from India and Turkey – I like that. And the film at nine?"
+            "de": "Ich höre auch gern Musik. Wie findest du das Konzert?",
+            "en": "I like listening to music too. What do you think of the concert?"
           },
           {
             "id": "a1.1-u08-ls2-l07",
             "speaker": "cast.olena",
-            "de": "Kino? Nein, Filme finde ich nicht so interessant. Was meinst du? Gehen wir ins Konzert?",
-            "en": "Cinema? No, I don’t find films that interesting. What do you think? Shall we go to the concert?"
+            "de": "Das gefällt mir. Und um neun ist ein Film im Park. Was meinst du?",
+            "en": "I like it. And at nine there is a film in the park. What do you think?"
           },
           {
             "id": "a1.1-u08-ls2-l08",
             "speaker": "cast.priya",
-            "de": "Super Idee! Am Samstag um sieben gehen wir ins Konzert.",
-            "en": "Great idea! On Saturday at seven we’ll go to the concert."
+            "de": "Filme finde ich nicht so interessant. Das Konzert ist super!",
+            "en": "I don’t find films that interesting. The concert is great!"
           },
           {
             "id": "a1.1-u08-ls2-l09",
             "speaker": "cast.olena",
-            "de": "Und Bilal? Er spielt gern Fußball. Um zwölf ist Fußball, aber nur für Kinder!",
-            "en": "And Bilal? He likes playing football. At twelve there is football, but only for children!"
+            "de": "Okay, dann gehen wir zusammen ins Konzert!",
+            "en": "OK, then we’ll go to the concert together!"
           },
           {
             "id": "a1.1-u08-ls2-l10",
             "speaker": "cast.priya",
-            "de": "Oh! Das findet Bilal nicht so toll.",
-            "en": "Oh! Bilal won’t think that’s so great."
+            "de": "Und Bilal? Um zwölf ist Fußball – aber nur für Kinder! Das findet Bilal nicht so toll.",
+            "en": "And Bilal? At twelve there is football – but only for children! Bilal won’t think that’s so great."
           }
         ],
         "text": {
-          "de": "Samstag im Park – Sport und Musik für alle!\n10 Uhr: Laufen. Wir laufen langsam, eine Stunde.\n12 Uhr: Fußball für Kinder und Eltern\n15 Uhr: Tanzen für alle, auch ohne Partner\n17 Uhr: Mit dem Fahrrad durch Leipzig\n19 Uhr: Konzert: Musik aus Indien und aus der Türkei\n21 Uhr: Kino im Park: ein Film aus Deutschland\nEintritt frei!",
-          "en": "Saturday in the park – sport and music for everyone! 10 am: running – slowly, for one hour · 12 noon: football for children and parents · 3 pm: dancing for everyone, also without a partner · 5 pm: by bike through Leipzig · 7 pm: concert – music from India and Turkey · 9 pm: cinema in the park – a German film · Admission free!"
+          "de": "Freizeit im Park: Sport und Musik für alle!\nSamstag\n10 Uhr: Laufen. Wir laufen langsam, eine Stunde.\n12 Uhr: Fußball für Kinder und Eltern\n15 Uhr: Tanzen für alle, auch ohne Partner\n17 Uhr: Mit dem Fahrrad durch Leipzig\n19 Uhr: Konzert: Musik aus Indien und aus der Türkei\n21 Uhr: Kino im Park: ein Film aus Deutschland\nEintritt frei!",
+          "en": "Free time in the park: sport and music for everyone! Saturday · 10 am: running – slowly, for one hour · 12 noon: football for children and parents · 3 pm: dancing for everyone, also without a partner · 5 pm: by bike through Leipzig · 7 pm: concert – music from India and Turkey · 9 pm: cinema in the park – a German film · Admission free!"
         },
         "glosses": [
           {
             "token": "Eintritt",
             "gloss": {
-              "en": "admission (fee)"
+              "en": "admission (fee), entry"
             }
           },
           {
             "token": "frei",
             "gloss": {
-              "en": "free (of charge)"
+              "en": "free, available"
             }
           }
         ],
@@ -1106,8 +1106,8 @@
           "type": "multiple_choice",
           "role": "gist",
           "topic": "hoeren",
-          "promptDe": "Wohin gehen Olena und Priya am Samstag um sieben?",
-          "promptEn": "Where are they going on Saturday at seven?",
+          "promptDe": "Wohin gehen Olena und Priya am Samstag?",
+          "promptEn": "Where are Olena and Priya going on Saturday?",
           "options": [
             "ins Kino",
             "zum Tanzen",
@@ -1118,8 +1118,8 @@
             "ins Konzert"
           ],
           "explanation": {
-            "de": "Priya sagt: „Am Samstag um sieben gehen wir ins Konzert.“",
-            "en": "Priya says they’ll go to the concert at seven."
+            "de": "Olena sagt: „Okay, dann gehen wir zusammen ins Konzert!“",
+            "en": "Olena says they’ll go to the concert together."
           },
           "origin": "agent"
         },
@@ -1128,8 +1128,8 @@
           "type": "fill_blank",
           "role": "detail",
           "topic": "lesen",
-          "promptDe": "Lesen Sie das Programm. Das Konzert beginnt um ___ Uhr.",
-          "promptEn": "Read the programme: when does the concert start?",
+          "promptDe": "Lesen Sie die Webseite. Das Konzert beginnt um ___ Uhr.",
+          "promptEn": "Read the website: when does the concert start?",
           "answer": "19",
           "accepted": [
             "19",
@@ -1142,8 +1142,8 @@
           },
           "exact": "number",
           "explanation": {
-            "de": "Im Programm steht: „19 Uhr: Konzert“. Olena sagt „um sieben“.",
-            "en": "The programme says 7 pm (19 Uhr); Olena says “um sieben”."
+            "de": "Auf der Webseite steht: „19 Uhr: Konzert“. Olena sagt „um sieben“.",
+            "en": "The website says 7 pm (19 Uhr); Olena says “um sieben”."
           },
           "origin": "agent"
         },
@@ -1164,8 +1164,8 @@
             "tanzen"
           ],
           "explanation": {
-            "de": "Olena sagt: „Ich tanze wirklich nicht gern.“ Musik hört sie gern.",
-            "en": "Olena really doesn’t like dancing; she likes music."
+            "de": "Olena sagt: „Ich tanze wirklich nicht gern.“ Das Konzert gefällt ihr.",
+            "en": "Olena really doesn’t like dancing; she likes the concert."
           },
           "origin": "agent"
         },
@@ -1174,8 +1174,8 @@
           "type": "multiple_choice",
           "role": "detail",
           "topic": "lesen",
-          "promptDe": "Lesen Sie das Programm. Was kostet das Konzert?",
-          "promptEn": "Read the programme: how much is the concert?",
+          "promptDe": "Lesen Sie die Webseite. Was kostet das Konzert?",
+          "promptEn": "Read the website: how much is the concert?",
           "options": [
             "nichts",
             "fünf Euro",
@@ -1186,7 +1186,7 @@
             "nichts"
           ],
           "explanation": {
-            "de": "Im Programm steht: „Eintritt frei!“ Das Konzert kostet nichts.",
+            "de": "Auf der Webseite steht: „Eintritt frei!“ Das Konzert kostet nichts.",
             "en": "“Eintritt frei” – the concert is free."
           },
           "origin": "agent"
@@ -1201,8 +1201,8 @@
           "promptDe": "Welcher Satz sagt: Olena findet Tanzen nicht so toll?",
           "promptEn": "Which sentence means Olena doesn’t like dancing?",
           "options": [
-            "Olena tanzt gern.",
             "Olena tanzt nicht gern.",
+            "Olena tanzt gern.",
             "Olena tanzt am Samstag."
           ],
           "answer": "Olena tanzt nicht gern.",
@@ -1254,7 +1254,7 @@
             "Olena läuft nicht gut."
           ],
           "explanation": {
-            "de": "„nicht gut“ heißt: nicht schnell, nicht so gut. „nicht gern“ ist etwas anderes.",
+            "de": "„nicht gut“ heißt: nicht so gut, nicht schnell. „nicht gern“ ist etwas anderes.",
             "en": "“nicht gut” is about how well, not about liking it."
           },
           "origin": "agent"
@@ -1264,7 +1264,7 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.nicht-position-gern",
-          "promptDe": "Olena: „Ich höre gern Musik, aber ich tanze nicht gern.“ Was macht Olena gern?",
+          "promptDe": "Olena: „Ich tanze nicht gern, aber ich höre gern Musik.“ Was macht Olena gern?",
           "promptEn": "“gern” or “nicht gern”?",
           "options": [
             "tanzen",
@@ -1306,15 +1306,15 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.nicht-position-gern",
-            "promptDe": "Laufen? Ich kann ___ ___ laufen. (gut / nicht)",
+            "promptDe": "Eintritt frei! Das Konzert ist ___ ___. (teuer / nicht)",
             "promptEn": "Put the two words in order.",
-            "answer": "nicht gut",
+            "answer": "nicht teuer",
             "accepted": [
-              "nicht gut"
+              "nicht teuer"
             ],
             "explanation": {
-              "de": "„nicht“ steht vor „gut“: „Ich kann nicht gut laufen.“",
-              "en": "“nicht” comes before “gut”."
+              "de": "„nicht“ steht vor dem Adjektiv: „nicht teuer“.",
+              "en": "“nicht” comes before the adjective."
             },
             "origin": "agent"
           },
@@ -1499,11 +1499,11 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.nicht-position-gern",
-            "promptDe": "Korrigieren Sie: „Ich tanze gern nicht.“",
+            "promptDe": "Korrigieren Sie: „Ich schwimme gern nicht.“",
             "promptEn": "Correct the sentence.",
-            "answer": "Ich tanze nicht gern.",
+            "answer": "Ich schwimme nicht gern.",
             "accepted": [
-              "Ich tanze nicht gern."
+              "Ich schwimme nicht gern."
             ],
             "intentionalError": true,
             "explanation": {
@@ -1520,8 +1520,8 @@
             "promptDe": "Welcher Satz ist richtig?",
             "promptEn": "Which sentence is correct?",
             "options": [
-              "Ich kann gut nicht tanzen.",
               "Ich kann nicht gut tanzen.",
+              "Ich kann gut nicht tanzen.",
               "Ich nicht kann gut tanzen."
             ],
             "answer": "Ich kann nicht gut tanzen.",
@@ -1540,8 +1540,8 @@
             "generator": "dictation.fromInput",
             "count": 2,
             "source": [
-              "a1.1-u08-ls2-l04",
-              "a1.1-u08-ls2-l10"
+              "a1.1-u08-ls2-l06",
+              "a1.1-u08-ls2-l09"
             ]
           },
           {
@@ -1560,9 +1560,9 @@
             "count": 1,
             "source": [
               "lx.konzert",
-              "lx.film",
+              "lx.kino",
               "lx.idee",
-              "lx.kino"
+              "lx.hobby"
             ]
           },
           {
@@ -1670,11 +1670,11 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.nicht-position-gern",
-          "promptDe": "Korrigieren Sie: „Ich kann gut nicht laufen.“",
+          "promptDe": "Korrigieren Sie: „Das Kino ist teuer nicht.“",
           "promptEn": "Correct the sentence.",
-          "answer": "Ich kann nicht gut laufen.",
+          "answer": "Das Kino ist nicht teuer.",
           "accepted": [
-            "Ich kann nicht gut laufen."
+            "Das Kino ist nicht teuer."
           ],
           "intentionalError": true,
           "banks": [
@@ -1683,8 +1683,8 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "„nicht“ steht vor „gut“: „nicht gut laufen“.",
-            "en": "“nicht” goes before “gut”."
+            "de": "„nicht“ steht vor dem Adjektiv: „nicht teuer“.",
+            "en": "“nicht” goes before the adjective."
           },
           "origin": "agent"
         },
@@ -1768,8 +1768,8 @@
           {
             "id": "a1.1-u08-ls3-l04",
             "speaker": "cast.priya",
-            "de": "Am Samstag? Ja, da habe ich Zeit. Aber ich kann nicht gut laufen. Ich bin nicht schnell.",
-            "en": "On Saturday? Yes, I’m free then. But I’m not good at running. I’m not fast."
+            "de": "Am Samstag? Ja, da habe ich Zeit. Aber ich kann nicht gut laufen. Ich bin wirklich nicht schnell.",
+            "en": "On Saturday? Yes, I’m free then. But I’m not good at running. I’m really not fast."
           },
           {
             "id": "a1.1-u08-ls3-l05",
@@ -1780,37 +1780,37 @@
           {
             "id": "a1.1-u08-ls3-l06",
             "speaker": "cast.priya",
-            "de": "Super! Und um wie viel Uhr lauft ihr am Samstag?",
-            "en": "Great! And what time do you run on Saturday?"
+            "de": "Super! Und wann lauft ihr am Samstag? Um wie viel Uhr?",
+            "en": "Great! And when do you run on Saturday? At what time?"
           },
           {
             "id": "a1.1-u08-ls3-l07",
             "speaker": "cast.elif",
-            "de": "Um zehn Uhr. Ich bin schon um Viertel vor zehn am Park, vorne am Supermarkt.",
-            "en": "At ten. I’ll be at the park at a quarter to ten, at the front by the supermarket."
+            "de": "Um zehn Uhr. Ich treffe dich um Viertel vor zehn am Park, vorne am Supermarkt.",
+            "en": "At ten. I’ll meet you at a quarter to ten at the park, at the front by the supermarket."
           },
           {
             "id": "a1.1-u08-ls3-l08",
             "speaker": "cast.priya",
-            "de": "Gut. Kann meine Freundin Olena auch mitkommen? Sie läuft auch nicht so gut.",
-            "en": "Good. Can my friend Olena come along too? She isn’t very good at running either."
+            "de": "Kann meine Freundin Olena auch kommen? Sie ist auch nicht schnell.",
+            "en": "Can my friend Olena come too? She isn’t fast either."
           },
           {
             "id": "a1.1-u08-ls3-l09",
             "speaker": "cast.elif",
-            "de": "Ja, natürlich kann sie mitkommen! Das finde ich toll. Dann sind wir sechs.",
-            "en": "Yes, of course she can come! I think that’s great. Then we’ll be six."
+            "de": "Ja, natürlich! Ich treffe Olena gern.",
+            "en": "Yes, of course! I’d be glad to meet Olena."
           },
           {
             "id": "a1.1-u08-ls3-l10",
             "speaker": "cast.priya",
-            "de": "Danke, Elif! Dann bis Samstag um zehn. Tschüss!",
-            "en": "Thanks, Elif! See you on Saturday at ten, then. Bye!"
+            "de": "Danke, Elif! Dann sind wir verabredet: am Samstag um zehn Uhr im Park. Tschüss!",
+            "en": "Thanks, Elif! Then it’s a date: Saturday at ten in the park. Bye!"
           }
         ],
         "text": {
-          "de": "Priya: Hallo ihr drei! Elif und ich laufen am Samstag um 10 Uhr im Park. Kommt ihr mit?\nOlena: Ja, gern! Ich komme mit. Laufen gefällt mir nicht so, aber mit euch schon!\nSophie: Tut mir leid, am Samstag kann ich nicht. Ich bin in Dresden. Meine Eltern wohnen dort.\nBilal: Leider nicht, am Samstag spiele ich Fußball. Aber am Abend komme ich auch ins Konzert!",
-          "en": "Priya: Hi, you three! Elif and I are running in the park on Saturday at 10. Are you coming? · Olena: Yes, gladly! I’m coming. I don’t really like running, but with you I do! · Sophie: Sorry, I can’t on Saturday. I’m in Dresden. My parents live there. · Bilal: Unfortunately not, I play football on Saturday. But in the evening I’ll come to the concert too!"
+          "de": "Priya: Hallo ihr drei! Ich bin am Samstag mit Elif verabredet. Wir laufen um 10 Uhr im Park. Kommt ihr mit?\nOlena: Ja, gern, ich sage zu! Laufen gefällt mir nicht so, aber mit euch schon!\nSophie: Tut mir leid, ich muss absagen. Am Samstag bin ich in Dresden. Meine Eltern wohnen dort.\nBilal: Leider nicht, am Samstag spiele ich Fußball. Aber für das Konzert am Abend sage ich zu. Super Idee!",
+          "en": "Priya: Hi, you three! I’m meeting Elif on Saturday. We’re running in the park at 10. Are you coming? · Olena: Yes, gladly – I’m in! I don’t really like running, but with you I do! · Sophie: Sorry, I have to say no. On Saturday I’m in Dresden. My parents live there. · Bilal: Unfortunately not, I play football on Saturday. But I’m in for the concert in the evening. Great idea!"
         },
         "glosses": [
           {
@@ -1831,8 +1831,8 @@
           "promptDe": "Warum ruft Elif an?",
           "promptEn": "Why does Elif call?",
           "options": [
-            "Sie sucht einen Kurs.",
             "Sie möchte mit Priya laufen.",
+            "Sie sucht einen Kurs.",
             "Sie möchte mit Emre sprechen."
           ],
           "answer": "Sie möchte mit Priya laufen.",
@@ -1853,8 +1853,8 @@
           "promptDe": "Lesen Sie den Chat. Wer läuft am Samstag mit?",
           "promptEn": "Read the chat: who is running along on Saturday?",
           "options": [
-            "Olena",
             "Sophie",
+            "Olena",
             "Bilal"
           ],
           "answer": "Olena",
@@ -1862,8 +1862,8 @@
             "Olena"
           ],
           "explanation": {
-            "de": "Olena schreibt: „Ja, gern! Ich komme mit.“ Sophie und Bilal sagen ab.",
-            "en": "Olena says yes; Sophie and Bilal say no."
+            "de": "Olena schreibt: „Ja, gern, ich sage zu!“ Sophie und Bilal laufen nicht mit.",
+            "en": "Olena says yes; Sophie and Bilal are not running."
           },
           "origin": "agent"
         },
@@ -1896,20 +1896,20 @@
           "type": "multiple_choice",
           "role": "detail",
           "topic": "hoeren",
-          "promptDe": "Wo ist Elif um Viertel vor zehn?",
-          "promptEn": "Where is Elif at a quarter to ten?",
+          "promptDe": "Wo trifft Elif Priya um Viertel vor zehn?",
+          "promptEn": "Where does Elif meet Priya at a quarter to ten?",
           "options": [
-            "am Supermarkt",
             "im Kurs",
-            "am Kino"
+            "am Kino",
+            "am Supermarkt"
           ],
           "answer": "am Supermarkt",
           "accepted": [
             "am Supermarkt"
           ],
           "explanation": {
-            "de": "Elif sagt: „Ich bin schon um Viertel vor zehn am Park, vorne am Supermarkt.“",
-            "en": "Elif will be at the park, by the supermarket."
+            "de": "Elif sagt: „Ich treffe dich um Viertel vor zehn am Park, vorne am Supermarkt.“",
+            "en": "Elif meets Priya at the park, by the supermarket."
           },
           "origin": "agent"
         },
@@ -1921,17 +1921,17 @@
           "promptDe": "Lesen Sie den Chat. Warum kann Sophie am Samstag nicht?",
           "promptEn": "Read the chat: why can’t Sophie come?",
           "options": [
+            "Sie ist in Dresden.",
             "Sie spielt Fußball.",
-            "Sie muss arbeiten.",
-            "Sie ist in Dresden."
+            "Sie muss arbeiten."
           ],
           "answer": "Sie ist in Dresden.",
           "accepted": [
             "Sie ist in Dresden."
           ],
           "explanation": {
-            "de": "Sophie schreibt: „Ich bin in Dresden. Meine Eltern wohnen dort.“ Fußball spielt Bilal.",
-            "en": "Sophie is in Dresden with her parents; Bilal plays football."
+            "de": "Sophie schreibt: „Am Samstag bin ich in Dresden.“ Fußball spielt Bilal.",
+            "en": "Sophie is in Dresden; Bilal is the one who plays football."
           },
           "origin": "agent"
         }
@@ -1946,8 +1946,8 @@
           "promptEn": "“kann” here = it’s possible. What does Priya mean?",
           "options": [
             "Priya kann gut laufen.",
-            "Priya hat am Samstag Zeit.",
-            "Priya läuft gern."
+            "Priya läuft gern.",
+            "Priya hat am Samstag Zeit."
           ],
           "answer": "Priya hat am Samstag Zeit.",
           "accepted": [
@@ -1967,8 +1967,8 @@
           "promptDe": "Sophie: „Am Samstag kann ich nicht.“ Was stimmt?",
           "promptEn": "What is true?",
           "options": [
-            "Sophie hat am Samstag keine Zeit.",
             "Sophie kann nicht gut laufen.",
+            "Sophie hat am Samstag keine Zeit.",
             "Sophie läuft nicht gern."
           ],
           "answer": "Sophie hat am Samstag keine Zeit.",
@@ -1989,9 +1989,9 @@
           "promptDe": "Welcher Satz sagt: Priya hat am Samstag Zeit?",
           "promptEn": "Which sentence means Priya is free on Saturday?",
           "options": [
+            "Am Samstag kann Priya kommen.",
             "Priya kann gut laufen.",
-            "Priya läuft gern.",
-            "Am Samstag kann Priya kommen."
+            "Priya läuft gern."
           ],
           "answer": "Am Samstag kann Priya kommen.",
           "accepted": [
@@ -2012,8 +2012,8 @@
           "promptEn": "Which sentence means Olena swims well?",
           "options": [
             "Olena kann am Montag schwimmen.",
-            "Olena kann gut schwimmen.",
-            "Olena schwimmt am Montag."
+            "Olena schwimmt am Montag.",
+            "Olena kann gut schwimmen."
           ],
           "answer": "Olena kann gut schwimmen.",
           "accepted": [
@@ -2066,16 +2066,16 @@
             "id": "a1.1-u08-ls3-p03",
             "type": "fill_blank",
             "role": "practice",
-            "topic": "lx.laufen",
-            "promptDe": "Elif ___ jeden Samstag im Park. (laufen)",
-            "promptEn": "laufen: sie-form.",
-            "answer": "läuft",
+            "topic": "lx.treffen",
+            "promptDe": "Emre ___ Elif am Samstag nicht. Er ist in İzmir. (treffen)",
+            "promptEn": "treffen: er-form.",
+            "answer": "trifft",
             "accepted": [
-              "läuft"
+              "trifft"
             ],
             "explanation": {
-              "de": "„laufen“: „sie läuft“ mit „äu“.",
-              "en": "laufen: sie läuft (with äu)."
+              "de": "„treffen“: „er trifft“ mit „i“.",
+              "en": "treffen: er trifft (with i)."
             },
             "origin": "agent"
           },
@@ -2162,15 +2162,15 @@
               "kann",
               "Olena",
               "auch",
-              "mitkommen"
+              "kommen"
             ],
-            "answer": "Kann Olena auch mitkommen?",
+            "answer": "Kann Olena auch kommen?",
             "accepted": [
-              "Kann Olena auch mitkommen?"
+              "Kann Olena auch kommen?"
             ],
             "explanation": {
-              "de": "Ja/Nein-Frage: „Kann“ auf Position 1, „mitkommen“ am Ende.",
-              "en": "Yes/no question: “Kann” first, “mitkommen” at the end."
+              "de": "Ja/Nein-Frage: „Kann“ auf Position 1, „kommen“ am Ende.",
+              "en": "Yes/no question: “Kann” first, “kommen” at the end."
             },
             "origin": "agent"
           },
@@ -2211,22 +2211,22 @@
             "tiles": [
               "habe",
               "ich",
-              "am Freitag",
+              "am Montag",
               "Zeit"
             ],
-            "answer": "Am Freitag habe ich Zeit.",
+            "answer": "Am Montag habe ich Zeit.",
             "accepted": [
-              "Am Freitag habe ich Zeit.",
-              "Ich habe am Freitag Zeit.",
-              "Zeit habe ich am Freitag."
+              "Am Montag habe ich Zeit.",
+              "Ich habe am Montag Zeit.",
+              "Zeit habe ich am Montag."
             ],
             "acceptedWhy": {
-              "Ich habe am Freitag Zeit.": "grammatisch: das Subjekt auf Position 1, „habe“ bleibt auf Position 2",
-              "Zeit habe ich am Freitag.": "grammatisch: „Zeit“ betont auf Position 1"
+              "Ich habe am Montag Zeit.": "grammatisch: das Subjekt auf Position 1, „habe“ bleibt auf Position 2",
+              "Zeit habe ich am Montag.": "grammatisch: „Zeit“ betont auf Position 1"
             },
             "explanation": {
-              "de": "„habe“ steht auf Position 2, auch nach „am Freitag“.",
-              "en": "“habe” stays in position 2, also after “am Freitag”."
+              "de": "„habe“ steht auf Position 2, auch nach „am Montag“.",
+              "en": "“habe” stays in position 2, also after “am Montag”."
             },
             "origin": "agent"
           },
@@ -2235,15 +2235,15 @@
             "type": "error_correction",
             "role": "practice",
             "topic": "g.koennen",
-            "promptDe": "Korrigieren Sie: „Am Samstag ich kann nicht.“",
+            "promptDe": "Korrigieren Sie: „Am Montag ich kann nicht.“",
             "promptEn": "Correct the sentence.",
-            "answer": "Am Samstag kann ich nicht.",
+            "answer": "Am Montag kann ich nicht.",
             "accepted": [
-              "Am Samstag kann ich nicht.",
-              "Ich kann am Samstag nicht."
+              "Am Montag kann ich nicht.",
+              "Ich kann am Montag nicht."
             ],
             "acceptedWhy": {
-              "Ich kann am Samstag nicht.": "auch richtig: das Subjekt auf Position 1, „kann“ auf Position 2"
+              "Ich kann am Montag nicht.": "auch richtig: das Subjekt auf Position 1, „kann“ auf Position 2"
             },
             "intentionalError": true,
             "errorTag": "v2-inv",
@@ -2251,8 +2251,8 @@
               "v2-inv"
             ],
             "explanation": {
-              "de": "Nach „Am Samstag“ kommt das Verb: „Am Samstag kann ich nicht.“",
-              "en": "After “Am Samstag” the verb comes next."
+              "de": "Nach „Am Montag“ kommt das Verb: „Am Montag kann ich nicht.“",
+              "en": "After “Am Montag” the verb comes next."
             },
             "origin": "agent"
           },
@@ -2284,8 +2284,8 @@
             "generator": "dictation.fromInput",
             "count": 2,
             "source": [
-              "a1.1-u08-ls3-l06",
-              "a1.1-u08-ls3-l10"
+              "a1.1-u08-ls3-l08",
+              "a1.1-u08-ls3-l09"
             ]
           },
           {
@@ -2303,10 +2303,10 @@
             "generator": "lex.articlePlural",
             "count": 1,
             "source": [
-              "lx.park",
-              "lx.samstag",
+              "lx.kino",
+              "lx.konzert",
               "lx.idee",
-              "lx.kino"
+              "lx.fahrrad"
             ]
           },
           {
@@ -2390,8 +2390,8 @@
           "promptDe": "Olena: „Ja, gern! Ich komme mit.“ Was macht Olena?",
           "promptEn": "What is Olena doing?",
           "options": [
-            "Sie sagt ab.",
             "Sie sagt zu.",
+            "Sie sagt ab.",
             "Sie ruft an."
           ],
           "answer": "Sie sagt zu.",
@@ -2415,11 +2415,11 @@
           "type": "error_correction",
           "role": "practice",
           "topic": "g.koennen",
-          "promptDe": "Korrigieren Sie: „Kannst du am Samstag kommst?“",
+          "promptDe": "Korrigieren Sie: „Kannst du am Montag kommst?“",
           "promptEn": "Correct the sentence.",
-          "answer": "Kannst du am Samstag kommen?",
+          "answer": "Kannst du am Montag kommen?",
           "accepted": [
-            "Kannst du am Samstag kommen?"
+            "Kannst du am Montag kommen?"
           ],
           "intentionalError": true,
           "errorTag": "satzklammer",
@@ -2443,20 +2443,20 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "g.trennbare-verben",
-          "promptDe": "Kommst du am Samstag ___? (mitkommen)",
-          "promptEn": "Separable verb: the prefix.",
-          "answer": "mit",
+          "promptDe": "Bilal ___ am Abend ins Konzert mit. (mitkommen)",
+          "promptEn": "Separable verb: the verb in position 2.",
+          "answer": "kommt",
           "accepted": [
-            "mit"
+            "kommt"
           ],
           "banks": [
             "plateau",
             "mehr-ueben"
           ],
-          "difficulty": 1,
+          "difficulty": 2,
           "explanation": {
-            "de": "„mitkommen“: „Kommst du … mit?“ „mit“ steht am Ende.",
-            "en": "mitkommen: “mit” goes to the end."
+            "de": "„mitkommen“: „Bilal kommt … mit.“ „kommt“ steht auf Position 2, „mit“ am Ende.",
+            "en": "mitkommen: “kommt” in position 2, “mit” at the end."
           },
           "origin": "agent"
         }
@@ -2564,8 +2564,8 @@
             {
               "id": "a1.1-u08-ls4-t3-l02",
               "speaker": "x.markus",
-              "de": "Mein Garten ist zu klein. Wir spielen in der Schule, um drei Uhr. Kannst du auch kommen? Tschüss!",
-              "en": "My garden is too small. We’re playing at the school, at three. Can you come too? Bye!"
+              "de": "Mein Garten ist zu klein. Wir spielen in der Schule, um drei Uhr. Zwei Leute sagen leider ab. Kannst du kommen? Tschüss!",
+              "en": "My garden is too small. We’re playing at the school, at three. Two people have cancelled, unfortunately. Can you come? Bye!"
             }
           ],
           "glosses": []
@@ -2644,6 +2644,7 @@
               "accepted": [
                 "um acht Uhr"
               ],
+              "exact": "number",
               "explanation": {
                 "de": "Jana sagt: „Der Film fängt um acht Uhr an.“ Um halb acht ist sie am Kino, um sieben arbeitet sie.",
                 "en": "The film starts at eight; at half past seven Jana is at the cinema, at seven she is still working."
@@ -2732,6 +2733,7 @@
               "accepted": [
                 "sieben Euro"
               ],
+              "exact": "number",
               "explanation": {
                 "de": "Frau Berger sagt: „Der Film kostet sieben Euro.“ Neun und zwölf sind die Uhrzeiten vom Büro.",
                 "en": "The film costs seven euros; nine and twelve are the office hours."
@@ -2787,7 +2789,7 @@
             "profile": "sd1-sp2",
             "prepMinutes": 0,
             "instructionsDe": "Zwei Themen: „Freizeit“, dann „Wochenende“. Fragen und antworten Sie mit den Karten.",
-            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin haben Wortkarten zu zwei Themen: zuerst „Freizeit“, dann „Wochenende“. Stellen Sie mit Ihrer Karte eine Frage. Antworten Sie auf die Frage der Partnerin. Sagen Sie auch: Wie finden Sie das?",
+            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin haben Wortkarten zu zwei Themen: zuerst „Freizeit“, dann „Wochenende“. Stellen Sie mit Ihrer Karte eine Frage. Antworten Sie auf die Frage der Partnerin. Bei „Freizeit“ sagen Sie auch: Wie finden Sie das? Bei „Wochenende“ laden Sie ein, und Sie sagen zu oder ab.",
             "cards": {
               "learner": [
                 "Freizeit – Musik",
@@ -2807,19 +2809,19 @@
         ],
         "aiRole": {
           "name": "Nora",
-          "personaDe": "In Teil 1 Gesprächsleitung (KI): hört zu, bittet dann um das Buchstabieren des Vornamens und um die Telefonnummer. In Teil 2 Teilnehmerin in der Prüfung: hört gern Musik aus Indien, schwimmt gern, geht nicht gern ins Kino und hat am Samstag am Nachmittag Zeit. Spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste.",
+          "personaDe": "In Teil 1 Gesprächsleitung (KI): hört zu, bittet dann um das Buchstabieren des Vornamens und um die Telefonnummer. In Teil 2 Teilnehmerin in der Prüfung: hört gern Musik aus Indien, schwimmt gern und hat am Samstag am Nachmittag Zeit; fragt mit der Karte „Kino“ und lädt ein (Kommen Sie mit?). Spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste.",
           "register": "Sie",
           "support": "slow-wordbank"
         },
         "openingLine": "Guten Tag! Wir beginnen mit Teil 1. Bitte stellen Sie sich vor. Danach kommt Teil 2 mit den Karten.",
         "hintWords": [
           "Ich heiße …",
-          "Ich komme aus …",
           "Mein Hobby ist …",
           "Ich kann gut …",
           "Ich … gern.",
           "… finde ich super.",
-          "Haben Sie am Samstag Zeit?",
+          "Haben Sie am … Zeit?",
+          "Ja, gern!",
           "Tut mir leid, …"
         ],
         "modelTurns": [
@@ -2837,7 +2839,7 @@
           },
           {
             "speaker": "partner",
-            "de": "Danke. Buchstabieren Sie bitte Ihren Vornamen."
+            "de": "Danke. Buchstabieren Sie bitte „Priya“."
           },
           {
             "speaker": "learner",
@@ -2869,19 +2871,19 @@
           },
           {
             "speaker": "learner",
-            "de": "Haben Sie am Samstag Zeit?"
+            "de": "Haben Sie am Samstag Zeit? Gehen wir zusammen schwimmen?"
           },
           {
             "speaker": "partner",
-            "de": "Am Samstag? Ja, am Nachmittag habe ich Zeit."
+            "de": "Am Samstag? Ja, am Nachmittag habe ich Zeit. Gern!"
           },
           {
             "speaker": "partner",
-            "de": "Gehen Sie am Wochenende ins Kino?"
+            "de": "Gehen Sie am Wochenende ins Kino? Kommen Sie mit?"
           },
           {
             "speaker": "learner",
-            "de": "Nein, leider nicht. Am Samstag kann ich nicht, ich muss arbeiten."
+            "de": "Tut mir leid, am Samstag kann ich nicht. Ich muss arbeiten."
           }
         ]
       }
@@ -2899,7 +2901,7 @@
         "address": "du",
         "title": "Eine Antwort an Olena: Samstag geht leider nicht",
         "situationDe": "Olena aus Ihrem Kurs schreibt: „Hallo! Am Samstag um 19 Uhr ist ein Konzert im Park. Kommst du mit?“ Am Samstag können Sie nicht.",
-        "taskDe": "Schreiben Sie Olena eine Nachricht zu allen drei Punkten (25 bis 35 Wörter).",
+        "taskDe": "Antworten Sie Olena: Schreiben Sie etwas zu allen drei Punkten (25 bis 35 Wörter).",
         "leitpunkte": [
           {
             "id": "lp1",
@@ -2965,14 +2967,14 @@
       {
         "id": "a1.1-u08-ls7-l01",
         "speaker": "cast.olena",
-        "de": "Tut mir leid, am Samstag kann ich nicht.",
-        "en": "Sorry, I can’t on Saturday."
+        "de": "Ich höre gern Musik. Hast du am Montag Zeit?",
+        "en": "I like listening to music. Are you free on Monday?"
       },
       {
         "id": "a1.1-u08-ls7-l02",
         "speaker": "cast.sophie",
-        "de": "Hast du am Montag Zeit? Wir können schwimmen gehen.",
-        "en": "Are you free on Monday? We can go swimming."
+        "de": "Am Freitag kann ich nicht, aber am Montag. Wir können schwimmen gehen.",
+        "en": "I can’t on Friday, but on Monday I can. We can go swimming."
       }
     ],
     "items": [
@@ -3061,15 +3063,15 @@
         "type": "error_correction",
         "role": "check",
         "topic": "g.nicht-position-gern",
-        "promptDe": "Korrigieren Sie: „Olena tanzt gern nicht.“",
+        "promptDe": "Korrigieren Sie: „Ich höre gern nicht Musik.“",
         "promptEn": "Correct the sentence.",
-        "answer": "Olena tanzt nicht gern.",
+        "answer": "Ich höre nicht gern Musik.",
         "accepted": [
-          "Olena tanzt nicht gern."
+          "Ich höre nicht gern Musik."
         ],
         "intentionalError": true,
         "explanation": {
-          "de": "„nicht“ steht vor „gern“: „Olena tanzt nicht gern.“",
+          "de": "„nicht“ steht vor „gern“: „Ich höre nicht gern Musik.“",
           "en": "“nicht” goes before “gern”."
         },
         "origin": "agent"
@@ -3082,13 +3084,13 @@
         "audioLineRef": "a1.1-u08-ls7-l01",
         "promptDe": "Hören Sie und schreiben Sie den Satz.",
         "promptEn": "Listen and write the sentence.",
-        "answer": "Tut mir leid, am Samstag kann ich nicht.",
+        "answer": "Ich höre gern Musik. Hast du am Montag Zeit?",
         "accepted": [
-          "Tut mir leid, am Samstag kann ich nicht."
+          "Ich höre gern Musik. Hast du am Montag Zeit?"
         ],
         "explanation": {
-          "de": "„Samstag“ ist ein Nomen: groß. „kann“ steht nach „am Samstag“ auf Position 2.",
-          "en": "Samstag is a noun (capital letter); “kann” comes second after “am Samstag”."
+          "de": "„Musik“, „Montag“ und „Zeit“ sind Nomen: groß. In der Frage steht „Hast“ auf Position 1.",
+          "en": "Musik, Montag and Zeit are nouns (capital letters); in the question “Hast” comes first."
         },
         "origin": "agent"
       },
@@ -3100,8 +3102,8 @@
         "promptDe": "„Wie findest du das Konzert?“ – Was passt?",
         "promptEn": "Choose the right answer.",
         "options": [
-          "Am Samstag um sieben.",
           "Super, die Musik ist toll!",
+          "Am Samstag um sieben.",
           "Ja, ich komme mit."
         ],
         "answer": "Super, die Musik ist toll!",
@@ -3120,20 +3122,20 @@
         "role": "check",
         "topic": "hoeren",
         "audioLineRef": "a1.1-u08-ls7-l02",
-        "promptDe": "Hören Sie. Was möchte Sophie am Montag machen?",
-        "promptEn": "What does Sophie want to do on Monday?",
+        "promptDe": "Hören Sie. Wann hat Sophie Zeit?",
+        "promptEn": "When is Sophie free?",
         "options": [
-          "tanzen",
-          "schwimmen",
-          "ins Kino gehen"
+          "am Freitag",
+          "am Samstag",
+          "am Montag"
         ],
-        "answer": "schwimmen",
+        "answer": "am Montag",
         "accepted": [
-          "schwimmen"
+          "am Montag"
         ],
         "explanation": {
-          "de": "Sophie sagt: „Wir können schwimmen gehen.“",
-          "en": "Sophie suggests going swimming."
+          "de": "Sophie sagt: „Am Freitag kann ich nicht, aber am Montag.“",
+          "en": "Sophie can’t on Friday, but she can on Monday."
         },
         "origin": "agent"
       }
@@ -3143,34 +3145,11 @@
       "from": "previous-3",
       "pool": "reserve"
     },
-    "proofItems": [
-      {
-        "id": "a1.1-u08-q01",
-        "type": "multiple_choice",
-        "role": "proof",
-        "topic": "redemittel",
-        "promptDe": "Sie möchten mit Olena am Freitag ins Kino. Was sagen Sie?",
-        "promptEn": "You want to invite Olena to the cinema on Friday. What do you say?",
-        "options": [
-          "Tut mir leid, am Freitag kann ich nicht.",
-          "Hast du am Freitag Zeit? Gehen wir ins Kino?",
-          "Kino finde ich nicht so interessant."
-        ],
-        "answer": "Hast du am Freitag Zeit? Gehen wir ins Kino?",
-        "accepted": [
-          "Hast du am Freitag Zeit? Gehen wir ins Kino?"
-        ],
-        "explanation": {
-          "de": "So laden Sie ein: „Hast du … Zeit? Gehen wir …?“ Die anderen Sätze sagen ab.",
-          "en": "That is how you invite someone; the other sentences decline."
-        },
-        "origin": "agent"
-      }
-    ],
+    "proofItems": [],
     "proofs": [
       {
         "canDo": "cd.a1.verabreden",
-        "item": "a1.1-u08-q01"
+        "aufgabe": "sprechen"
       },
       {
         "canDo": "cd.a1.zeit-zusagen-absagen",

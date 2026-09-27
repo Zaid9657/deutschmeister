@@ -1091,6 +1091,9 @@ describe('detector engine: review fixtures (a1.1 r1 F24 / r2 F11, a1.2 r1 F27, a
     assert.ok(hits('det.relativsatz-wer', '„Wer ein kaputtes Gerät hat, soll anrufen.“'));
     assert.equal(hits('det.praeteritum-vollverb', 'Parken verboten!', [{ lemma: 'verbieten', pos: 'VERB', verb_forms: { '3sg': 'verbietet', praet: 'verbot', perfekt: 'hat verboten' } }]), 0);
     assert.ok(hits('det.praeteritum-vollverb', 'Er verbot es.', [{ lemma: 'verbieten', pos: 'VERB', verb_forms: { '3sg': 'verbietet', praet: 'verbot', perfekt: 'hat verboten' } }]));
+    const sprache = [{ lemma: 'Sprache', pos: 'NOUN', article: 'die', plural: 'Sprachen' }, { lemma: 'sprechen', pos: 'VERB', verb_forms: { '3sg': 'spricht', praet: 'sprach', perfekt: 'hat gesprochen' } }];
+    assert.equal(hits('det.praeteritum-vollverb', 'Sprachen: Deutsch, Englisch', sprache), 0, 'a capitalised noun form opening a line');
+    assert.ok(hits('det.praeteritum-vollverb', 'Wir sprachen lange.', sprache));
   });
 });
 

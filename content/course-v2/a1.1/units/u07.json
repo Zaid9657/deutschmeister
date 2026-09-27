@@ -274,8 +274,8 @@
           {
             "id": "a1.1-u07-ls1-l03",
             "speaker": "cast.priya",
-            "de": "Das weiß ich. Und am Nachmittag?",
-            "en": "I know that. And in the afternoon?"
+            "de": "Das weiß ich. Und wann arbeitest du?",
+            "en": "I know that. And when do you work?"
           },
           {
             "id": "a1.1-u07-ls1-l04",
@@ -292,8 +292,8 @@
           {
             "id": "a1.1-u07-ls1-l06",
             "speaker": "cast.emre",
-            "de": "Ich arbeite bis acht Uhr. Das sind sechs Stunden. Dann fahre ich nach Hause und sehe ein bisschen fern.",
-            "en": "I work until eight. That’s six hours. Then I go home and watch a bit of TV."
+            "de": "Ich arbeite bis acht Uhr, sechs Tage in der Woche. Dann fahre ich nach Hause und sehe ein bisschen fern.",
+            "en": "I work until eight, six days a week. Then I go home and watch a bit of TV."
           },
           {
             "id": "a1.1-u07-ls1-l07",
@@ -316,8 +316,8 @@
           {
             "id": "a1.1-u07-ls1-l10",
             "speaker": "cast.priya",
-            "de": "Am Nachmittag kaufe ich ein, oder ich lerne. Und am Abend rufe ich meine Mutter in Kochi an.",
-            "en": "In the afternoon I go shopping, or I study. And in the evening I call my mother in Kochi."
+            "de": "Am Nachmittag kaufe ich ein, oder ich lerne. Am Abend rufe ich meine Mutter in Kochi an. Oder ich sehe fern.",
+            "en": "In the afternoon I go shopping, or I study. In the evening I call my mother in Kochi. Or I watch TV."
           }
         ],
         "glosses": [],
@@ -792,10 +792,10 @@
             "generator": "lex.articlePlural",
             "count": 1,
             "source": [
-              "lx.tag",
               "lx.abend",
               "lx.stunde",
-              "lx.uhrzeit"
+              "lx.uhrzeit",
+              "lx.morgen"
             ]
           },
           {
@@ -950,26 +950,26 @@
         "register": "du"
       },
       "aussprache": {
-        "focus": "Wortakzent: Trennbare Verben haben den Akzent vorne (AUFstehen, ANfangen), nicht trennbare nicht (verSTEhen, erZÄHlen).",
+        "focus": "Trennbare Verben: Der erste Teil hat den Akzent, auch am Satzende: aufstehen – Ich stehe um sieben AUF.",
         "perception": [
           {
             "id": "a1.1-u07-ls1-x01",
             "type": "listen_select",
             "role": "perception",
             "topic": "aussprache",
-            "promptDe": "Hören Sie: „aufstehen“. Wie klingt das Wort?",
-            "promptEn": "Which syllable is stressed (capitals)?",
+            "promptDe": "Hören Sie: „Ich stehe um sieben auf.“ Was hören Sie am Ende?",
+            "promptEn": "Which part do you hear at the end?",
             "options": [
-              "AUFstehen",
-              "aufSTEhen"
+              "auf",
+              "an"
             ],
-            "answer": "AUFstehen",
+            "answer": "auf",
             "accepted": [
-              "AUFstehen"
+              "auf"
             ],
             "explanation": {
-              "de": "Trennbare Verben: Der Akzent ist vorne, auf „auf“: AUFstehen.",
-              "en": "Separable verbs stress the first part: AUFstehen."
+              "de": "„aufstehen“: „Ich stehe um sieben auf.“ Der Teil „auf“ steht am Ende und hat den Akzent.",
+              "en": "aufstehen: the stressed “auf” comes at the end."
             },
             "origin": "agent"
           },
@@ -978,19 +978,19 @@
             "type": "listen_select",
             "role": "perception",
             "topic": "aussprache",
-            "promptDe": "Hören Sie: „verstehen“. Wie klingt das Wort?",
-            "promptEn": "Which syllable is stressed (capitals)?",
+            "promptDe": "Hören Sie: „Der Kurs fängt um neun an.“ Was hören Sie am Ende?",
+            "promptEn": "Which part do you hear at the end?",
             "options": [
-              "VERstehen",
-              "verSTEhen"
+              "auf",
+              "an"
             ],
-            "answer": "verSTEhen",
+            "answer": "an",
             "accepted": [
-              "verSTEhen"
+              "an"
             ],
             "explanation": {
-              "de": "„verstehen“ ist nicht trennbar. Der Akzent ist auf „ste“: verSTEhen.",
-              "en": "verstehen is not separable: the stress is on “ste”."
+              "de": "„anfangen“: „Der Kurs fängt um neun an.“ „an“ steht am Ende.",
+              "en": "anfangen: the stressed “an” comes at the end."
             },
             "origin": "agent"
           },
@@ -999,19 +999,19 @@
             "type": "listen_select",
             "role": "perception",
             "topic": "aussprache",
-            "promptDe": "Hören Sie: „anfangen“. Wie klingt das Wort?",
-            "promptEn": "Which syllable is stressed (capitals)?",
+            "promptDe": "Hören Sie: „Wir kaufen am Freitag ein.“ Was hören Sie am Ende?",
+            "promptEn": "Which part do you hear at the end?",
             "options": [
-              "ANfangen",
-              "anFANgen"
+              "ein",
+              "an"
             ],
-            "answer": "ANfangen",
+            "answer": "ein",
             "accepted": [
-              "ANfangen"
+              "ein"
             ],
             "explanation": {
-              "de": "Trennbare Verben: Der Akzent ist vorne, auf „an“: ANfangen.",
-              "en": "Separable verbs stress the first part: ANfangen."
+              "de": "„einkaufen“: „Wir kaufen am Freitag ein.“ „ein“ steht am Ende.",
+              "en": "einkaufen: the stressed “ein” comes at the end."
             },
             "origin": "agent"
           },
@@ -1020,19 +1020,19 @@
             "type": "listen_select",
             "role": "perception",
             "topic": "aussprache",
-            "promptDe": "Hören Sie: „erzählen“. Wie klingt das Wort?",
-            "promptEn": "Which syllable is stressed (capitals)?",
+            "promptDe": "Hören Sie: „Emre sieht am Abend fern.“ Was hören Sie am Ende?",
+            "promptEn": "Which part do you hear at the end?",
             "options": [
-              "ERzählen",
-              "erZÄHlen"
+              "ein",
+              "fern"
             ],
-            "answer": "erZÄHlen",
+            "answer": "fern",
             "accepted": [
-              "erZÄHlen"
+              "fern"
             ],
             "explanation": {
-              "de": "„erzählen“ ist nicht trennbar. Der Akzent ist auf „zäh“: erZÄHlen.",
-              "en": "erzählen is not separable: the stress is on “zäh”."
+              "de": "„fernsehen“: „Emre sieht am Abend fern.“ „fern“ steht am Ende.",
+              "en": "fernsehen: the stressed “fern” comes at the end."
             },
             "origin": "agent"
           }
@@ -1046,7 +1046,7 @@
     {
       "id": "a1.1-u07-ls2",
       "kind": "situation",
-      "title": "Wann ist das Bürgeramt offen?",
+      "title": "Wann ist das Bürgerbüro offen?",
       "structure": "g.zeitangaben-inversion",
       "modelSentence": "Am Mittwoch arbeite ich zu Hause.",
       "ruleCard": "rc.zeitangaben-inversion",
@@ -1056,62 +1056,62 @@
       },
       "input": {
         "kind": "mixed",
-        "title": "Die Öffnungszeiten vom Bürgeramt",
-        "textType": "tt.schild",
+        "title": "Die Öffnungszeiten vom Bürgerbüro",
+        "textType": "tt.dialog",
         "lines": [
           {
             "id": "a1.1-u07-ls2-l01",
             "speaker": "cast.arjun",
-            "de": "Priya, wir brauchen einen Termin im Bürgeramt. Für die Anmeldung.",
-            "en": "Priya, we need an appointment at the citizens’ office. To register our address."
+            "de": "Priya, wir brauchen noch einen Termin im Bürgerbüro. Für die Anmeldung.",
+            "en": "Priya, we still need an appointment at the citizens’ office. To register our address."
           },
           {
             "id": "a1.1-u07-ls2-l02",
             "speaker": "cast.priya",
-            "de": "Stimmt. Wann ist das Bürgeramt offen?",
-            "en": "Right. When is the citizens’ office open?"
+            "de": "Stimmt. Und wann ist es offen?",
+            "en": "Right. And when is it open?"
           },
           {
             "id": "a1.1-u07-ls2-l03",
             "speaker": "cast.arjun",
-            "de": "Hier sind die Öffnungszeiten: Montag bis Freitag von acht bis zwölf Uhr.",
-            "en": "Here are the opening hours: Monday to Friday from eight to twelve."
+            "de": "Moment. Hier sind die Öffnungszeiten: Montag bis Freitag von acht bis zwölf Uhr.",
+            "en": "Just a moment. Here are the opening hours: Monday to Friday from eight to twelve."
           },
           {
             "id": "a1.1-u07-ls2-l04",
             "speaker": "cast.priya",
-            "de": "Nur am Morgen? Und am Nachmittag?",
-            "en": "Only in the morning? And in the afternoon?"
+            "de": "Nur am Morgen? Und am Abend nicht?",
+            "en": "Only in the morning? Not in the evening?"
           },
           {
             "id": "a1.1-u07-ls2-l05",
             "speaker": "cast.arjun",
-            "de": "Am Nachmittag ist es geschlossen, und am Wochenende auch.",
-            "en": "It’s closed in the afternoon, and at the weekend too."
+            "de": "Am Nachmittag und am Abend ist es geschlossen. Und am Wochenende auch.",
+            "en": "It’s closed in the afternoon and in the evening. And at the weekend too."
           },
           {
             "id": "a1.1-u07-ls2-l06",
             "speaker": "cast.priya",
-            "de": "Hm. Von Montag bis Freitag habe ich Kurs, immer von neun bis halb eins.",
-            "en": "Hm. I have class from Monday to Friday, always from nine to half past twelve."
+            "de": "Hm. Ich habe jede Woche Kurs, von Montag bis Freitag. Immer von neun bis halb eins.",
+            "en": "Hm. I have class every week, Monday to Friday. Always from nine to half past twelve."
           },
           {
             "id": "a1.1-u07-ls2-l07",
             "speaker": "cast.arjun",
-            "de": "Und ich arbeite von neun bis fünf. Aber am Mittwoch arbeite ich zu Hause. Gehen wir am Mittwoch um acht?",
+            "de": "Und ich arbeite von neun bis fünf. Aber am Mittwoch arbeite ich zu Hause. Fahren wir am Mittwoch um acht?",
             "en": "And I work from nine to five. But on Wednesday I work from home. Shall we go on Wednesday at eight?"
           },
           {
             "id": "a1.1-u07-ls2-l08",
             "speaker": "cast.priya",
-            "de": "Um acht? Und um neun bin ich im Kurs? Im Bürgeramt dauert das oft eine Stunde.",
-            "en": "At eight? And be in class at nine? At the citizens’ office it often takes an hour."
+            "de": "Um acht? Und um neun bin ich im Kurs? Nein, im Bürgerbüro dauert das oft eine Stunde.",
+            "en": "At eight? And be in class at nine? No, at the citizens’ office it often takes an hour."
           },
           {
             "id": "a1.1-u07-ls2-l09",
             "speaker": "cast.arjun",
-            "de": "Stimmt. Dann fehlst du einmal im Kurs? Nur einmal?",
-            "en": "True. Then you miss class once? Just once?"
+            "de": "Stimmt, das dauert. Dann fehlst du einmal im Kurs? Nur einmal?",
+            "en": "True, that takes time. Then you miss class once? Just once?"
           },
           {
             "id": "a1.1-u07-ls2-l10",
@@ -1121,14 +1121,14 @@
           }
         ],
         "text": {
-          "de": "Bürgeramt\nÖffnungszeiten\nMontag bis Freitag: 8 bis 12 Uhr\nnachmittags und am Wochenende geschlossen\nTermine bitte online oder am Telefon",
+          "de": "Bürgerbüro\nÖffnungszeiten\nMontag bis Freitag: 8 bis 12 Uhr\nnachmittags und am Wochenende geschlossen\nTermine bitte online oder am Telefon",
           "en": "Citizens’ office · Opening hours: Monday to Friday 8 am–12 noon · closed in the afternoons and at the weekend · Appointments online or by phone, please"
         },
         "glosses": [
           {
-            "token": "Bürgeramt",
+            "token": "Bürgerbüro",
             "gloss": {
-              "en": "citizens’ office (you register your address there)"
+              "en": "citizens’ office (registration office)"
             }
           }
         ],
@@ -1152,7 +1152,7 @@
             "einen Termin"
           ],
           "explanation": {
-            "de": "Arjun sagt: „Wir brauchen einen Termin im Bürgeramt.“",
+            "de": "Arjun sagt: „Wir brauchen einen Termin im Bürgerbüro.“",
             "en": "Arjun says they need an appointment at the citizens’ office."
           },
           "origin": "agent"
@@ -1165,7 +1165,7 @@
           "promptDe": "Was ist das Problem?",
           "promptEn": "What is the problem?",
           "options": [
-            "Das Bürgeramt ist am Morgen geschlossen.",
+            "Das Bürgerbüro ist am Morgen geschlossen.",
             "Priya hat am Morgen Kurs.",
             "Arjun arbeitet am Mittwoch im Büro."
           ],
@@ -1174,7 +1174,7 @@
             "Priya hat am Morgen Kurs."
           ],
           "explanation": {
-            "de": "Das Bürgeramt ist nur von 8 bis 12 Uhr offen. Priya hat dann Kurs, von neun bis halb eins.",
+            "de": "Das Bürgerbüro ist nur von 8 bis 12 Uhr offen. Priya hat dann Kurs, von neun bis halb eins.",
             "en": "The office is only open 8–12, and Priya has class from nine to half past twelve."
           },
           "origin": "agent"
@@ -1184,7 +1184,7 @@
           "type": "fill_blank",
           "role": "detail",
           "topic": "lesen",
-          "promptDe": "Lesen Sie die Öffnungszeiten. Das Bürgeramt ist bis ___ Uhr offen.",
+          "promptDe": "Lesen Sie die Öffnungszeiten. Das Bürgerbüro ist bis ___ Uhr offen.",
           "promptEn": "Read the opening hours: until when?",
           "answer": "12",
           "accepted": [
@@ -1235,8 +1235,8 @@
             "Freitag"
           ],
           "explanation": {
-            "de": "Priya sagt: „Von Montag bis Freitag habe ich Kurs.“",
-            "en": "Priya has class from Monday to Friday."
+            "de": "Priya sagt: „Ich habe jede Woche Kurs, von Montag bis Freitag.“",
+            "en": "Priya has class every week, Monday to Friday."
           },
           "origin": "agent"
         }
@@ -1593,8 +1593,8 @@
             "generator": "dictation.fromInput",
             "count": 2,
             "source": [
-              "a1.1-u07-ls2-l04",
-              "a1.1-u07-ls2-l09"
+              "a1.1-u07-ls2-l02",
+              "a1.1-u07-ls2-l04"
             ]
           },
           {
@@ -1609,22 +1609,20 @@
             "count": 1,
             "source": [
               "lx.montag",
-              "lx.dienstag",
-              "lx.mittwoch",
-              "lx.donnerstag",
-              "lx.freitag",
-              "lx.wochenende"
+              "lx.woche",
+              "lx.wochenende",
+              "lx.oeffnungszeit"
             ]
           },
           {
             "generator": "lex.glossMatch",
             "count": 1,
             "source": [
-              "lx.woche",
-              "lx.oeffnungszeit",
+              "lx.dienstag",
+              "lx.mittwoch",
+              "lx.donnerstag",
+              "lx.freitag",
               "lx.termin",
-              "lx.geschlossen",
-              "lx.offen",
               "lx.stunde"
             ]
           }
@@ -1695,21 +1693,15 @@
         },
         {
           "id": "a1.1-u07-ls2-r03",
-          "type": "multiple_choice",
+          "type": "fill_blank",
           "role": "practice",
           "topic": "g.zeitangaben-inversion",
-          "promptDe": "Es ist 9.15 Uhr. Was sagen Sie?",
-          "promptEn": "How do you say 9:15?",
-          "options": [
-            "Es ist Viertel vor neun.",
-            "Es ist Viertel nach neun.",
-            "Es ist halb zehn."
-          ],
-          "answer": "Es ist Viertel nach neun.",
+          "promptDe": "Es ist 9.15 Uhr: Viertel ___ neun. (nach oder vor?)",
+          "promptEn": "nach or vor?",
+          "answer": "nach",
           "accepted": [
-            "Es ist Viertel nach neun."
+            "nach"
           ],
-          "exact": "number",
           "banks": [
             "plateau",
             "mehr-ueben",
@@ -1717,8 +1709,8 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "9.15 Uhr ist „Viertel nach neun“. „Viertel vor neun“ ist 8.45 Uhr.",
-            "en": "9:15 is “Viertel nach neun”; “Viertel vor neun” is 8:45."
+            "de": "9.15 Uhr ist „Viertel nach neun“. 8.45 Uhr ist „Viertel vor neun“.",
+            "en": "9:15 is “Viertel nach neun”; 8:45 is “Viertel vor neun”."
           },
           "origin": "agent"
         },
@@ -1818,49 +1810,49 @@
           {
             "id": "a1.1-u07-ls3-l05",
             "speaker": "cast.arjun",
-            "de": "Erst um elf? Dann hast du am Donnerstag am Morgen Zeit!",
-            "en": "Not until eleven? Then you’re free on Thursday morning!"
+            "de": "Erst um elf? Dann hast du am Morgen Zeit!",
+            "en": "Not until eleven? Then you’re free in the morning!"
           },
           {
             "id": "a1.1-u07-ls3-l06",
             "speaker": "cast.priya",
-            "de": "Ja! Das Bürgeramt macht um acht Uhr auf. Um acht sind wir da!",
-            "en": "Yes! The citizens’ office opens at eight. We’ll be there at eight!"
+            "de": "Ja! Das Bürgerbüro macht um acht Uhr auf. Am Donnerstag um acht sind wir da!",
+            "en": "Yes! The citizens’ office opens at eight. On Thursday at eight we’ll be there!"
           },
           {
             "id": "a1.1-u07-ls3-l07",
             "speaker": "cast.arjun",
-            "de": "Und ich fange am Donnerstag erst um zehn an. Das geht!",
-            "en": "And on Thursday I won’t start work until ten. That works!"
+            "de": "Und ich fange erst um zehn an. Das geht!",
+            "en": "And I won’t start work until ten. That works!"
           },
           {
             "id": "a1.1-u07-ls3-l08",
             "speaker": "cast.priya",
-            "de": "Gut. Dann rufe ich jetzt beim Bürgeramt an.",
-            "en": "Good. Then I’ll call the citizens’ office now."
+            "de": "Gut. Dann rufe ich jetzt beim Bürgerbüro an und mache einen Termin.",
+            "en": "Good. Then I’ll call the citizens’ office now and make an appointment."
           },
           {
             "id": "a1.1-u07-ls3-l09",
             "speaker": "cast.arjun",
-            "de": "Wie spät ist es? Oh, schon halb fünf! Da ist das Bürgeramt schon zu.",
+            "de": "Wie spät ist es? Oh, schon halb fünf! Da ist das Bürgerbüro schon zu.",
             "en": "What time is it? Oh, half past four already! The office is closed by now."
           },
           {
             "id": "a1.1-u07-ls3-l10",
             "speaker": "cast.priya",
-            "de": "Stimmt. Aber Termine gibt es auch online. Hier: Donnerstag, Viertel nach acht!",
-            "en": "True. But you can book appointments online too. Here: Thursday, quarter past eight!"
+            "de": "Stimmt. Aber Termine gibt es auch online. Moment … hier: Donnerstag, Viertel nach acht! Das ist gut.",
+            "en": "True. But you can book appointments online too. Just a moment … here: Thursday, quarter past eight! That’s good."
           }
         ],
         "text": {
-          "de": "Ihr Termin im Bürgeramt\nTag: Donnerstag\nUhrzeit: 8.15 Uhr\nZimmer 12",
+          "de": "Ihr Termin im Bürgerbüro\nTag: Donnerstag\nUhrzeit: 8.15 Uhr\nZimmer 12",
           "en": "Your appointment at the citizens’ office · Day: Thursday · Time: 8:15 · Room 12"
         },
         "glosses": [
           {
-            "token": "Bürgeramt",
+            "token": "Bürgerbüro",
             "gloss": {
-              "en": "citizens’ office (you register your address there)"
+              "en": "citizens’ office (registration office)"
             }
           },
           {
@@ -1944,12 +1936,12 @@
           "type": "multiple_choice",
           "role": "detail",
           "topic": "hoeren",
-          "promptDe": "Wann macht das Bürgeramt auf?",
+          "promptDe": "Wann macht das Bürgerbüro auf?",
           "promptEn": "When does the citizens’ office open?",
           "options": [
             "um 10 Uhr",
-            "um 8 Uhr",
-            "um 11 Uhr"
+            "um 11 Uhr",
+            "um 8 Uhr"
           ],
           "answer": "um 8 Uhr",
           "accepted": [
@@ -1957,7 +1949,7 @@
           ],
           "exact": "number",
           "explanation": {
-            "de": "Priya sagt: „Das Bürgeramt macht um acht Uhr auf.“ Um zehn fängt Arjun an, um elf der Kurs.",
+            "de": "Priya sagt: „Das Bürgerbüro macht um acht Uhr auf.“ Um zehn fängt Arjun an, um elf der Kurs.",
             "en": "The office opens at eight; ten is when Arjun starts work, eleven the class."
           },
           "origin": "agent"
@@ -1967,7 +1959,7 @@
           "type": "fill_blank",
           "role": "detail",
           "topic": "lesen",
-          "promptDe": "Lesen Sie den Termin. Der Termin im Bürgeramt ist um ___.",
+          "promptDe": "Lesen Sie den Termin. Der Termin im Bürgerbüro ist um ___.",
           "promptEn": "Read the appointment: what time?",
           "answer": "8.15 Uhr",
           "accepted": [
@@ -1997,7 +1989,7 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.trennbare-verben",
-          "promptDe": "Priya: „Das Bürgeramt macht um acht Uhr auf.“ Was ist richtig?",
+          "promptDe": "Priya: „Das Bürgerbüro macht um acht Uhr auf.“ Was ist richtig?",
           "promptEn": "“macht … auf”: what is true?",
           "options": [
             "Ab acht Uhr ist es geschlossen.",
@@ -2009,7 +2001,7 @@
             "Ab acht Uhr ist es offen."
           ],
           "explanation": {
-            "de": "„macht … auf“ ist „aufmachen“: Ab acht Uhr ist das Bürgeramt offen.",
+            "de": "„macht … auf“ ist „aufmachen“: Ab acht Uhr ist das Bürgerbüro offen.",
             "en": "“macht … auf” (aufmachen) = opens: from eight it is open."
           },
           "origin": "agent"
@@ -2023,8 +2015,8 @@
           "promptEn": "“erst um elf”: is there class at ten?",
           "options": [
             "Ja, um zehn ist Kurs.",
-            "Ja, von zehn bis elf.",
-            "Nein, um zehn ist noch kein Kurs."
+            "Nein, um zehn ist noch kein Kurs.",
+            "Ja, von zehn bis elf."
           ],
           "answer": "Nein, um zehn ist noch kein Kurs.",
           "accepted": [
@@ -2066,8 +2058,8 @@
           "promptDe": "„Das Büro macht um zwölf zu.“ Ist es um halb eins offen?",
           "promptEn": "“macht … zu”: is it open at 12:30?",
           "options": [
-            "Ja, es ist offen.",
             "Nein, es ist geschlossen.",
+            "Ja, es ist offen.",
             "Nur am Wochenende."
           ],
           "answer": "Nein, es ist geschlossen.",
@@ -2307,8 +2299,8 @@
             "promptEn": "Choose the right answer.",
             "options": [
               "Am Donnerstag.",
-              "Schon halb fünf.",
-              "Eine Stunde."
+              "Eine Stunde.",
+              "Schon halb fünf."
             ],
             "answer": "Schon halb fünf.",
             "accepted": [
@@ -2327,8 +2319,8 @@
             "generator": "dictation.fromInput",
             "count": 2,
             "source": [
-              "a1.1-u07-ls3-l01",
-              "a1.1-u07-ls3-l05"
+              "a1.1-u07-ls3-l05",
+              "a1.1-u07-ls3-l07"
             ]
           },
           {
@@ -2343,9 +2335,9 @@
             "count": 1,
             "source": [
               "lx.termin",
-              "lx.anrufbeantworter",
-              "lx.geschaeft",
-              "lx.oeffnungszeit"
+              "lx.geschlossen",
+              "lx.offen",
+              "lx.anfangen"
             ]
           },
           {
@@ -2357,7 +2349,8 @@
               "lx.viertel",
               "lx.spaet",
               "lx.geoeffnet",
-              "lx.geschlossen"
+              "lx.anrufbeantworter",
+              "lx.geschaeft"
             ]
           }
         ]
@@ -2500,26 +2493,26 @@
         "register": "du"
       },
       "aussprache": {
-        "focus": "Satzmelodie: Frage oder Aussage? Bei „Erst um elf?“ geht die Melodie nach oben, bei „Erst um elf.“ nach unten.",
+        "focus": "Satzmelodie: Bei der Frage „Erst um elf?“ geht die Melodie am Ende nach oben, bei „Erst um elf.“ nach unten.",
         "perception": [
           {
             "id": "a1.1-u07-ls3-x01",
             "type": "listen_select",
             "role": "perception",
             "topic": "aussprache",
-            "promptDe": "Hören Sie: „Der Kurs fängt um elf an.“ Frage oder Aussage?",
-            "promptEn": "Question or statement?",
+            "promptDe": "Hören Sie: „Der Kurs fängt um elf an.“ Frage oder keine Frage?",
+            "promptEn": "Question or not?",
             "options": [
               "Frage",
-              "Aussage"
+              "keine Frage"
             ],
-            "answer": "Aussage",
+            "answer": "keine Frage",
             "accepted": [
-              "Aussage"
+              "keine Frage"
             ],
             "explanation": {
-              "de": "Die Melodie geht am Ende nach unten: eine Aussage.",
-              "en": "The pitch falls at the end: a statement."
+              "de": "Die Melodie geht am Ende nach unten: keine Frage.",
+              "en": "The pitch falls at the end: a statement, not a question."
             },
             "origin": "agent"
           },
@@ -2528,11 +2521,11 @@
             "type": "listen_select",
             "role": "perception",
             "topic": "aussprache",
-            "promptDe": "Hören Sie: „Der Kurs fängt um elf an?“ Frage oder Aussage?",
-            "promptEn": "Question or statement?",
+            "promptDe": "Hören Sie: „Der Kurs fängt um elf an?“ Frage oder keine Frage?",
+            "promptEn": "Question or not?",
             "options": [
               "Frage",
-              "Aussage"
+              "keine Frage"
             ],
             "answer": "Frage",
             "accepted": [
@@ -2549,11 +2542,11 @@
             "type": "listen_select",
             "role": "perception",
             "topic": "aussprache",
-            "promptDe": "Hören Sie: „Du stehst um sechs auf?“ Frage oder Aussage?",
-            "promptEn": "Question or statement?",
+            "promptDe": "Hören Sie: „Du stehst um sechs auf?“ Frage oder keine Frage?",
+            "promptEn": "Question or not?",
             "options": [
               "Frage",
-              "Aussage"
+              "keine Frage"
             ],
             "answer": "Frage",
             "accepted": [
@@ -2570,19 +2563,19 @@
             "type": "listen_select",
             "role": "perception",
             "topic": "aussprache",
-            "promptDe": "Hören Sie: „Du stehst um sechs auf.“ Frage oder Aussage?",
-            "promptEn": "Question or statement?",
+            "promptDe": "Hören Sie: „Du stehst um sechs auf.“ Frage oder keine Frage?",
+            "promptEn": "Question or not?",
             "options": [
               "Frage",
-              "Aussage"
+              "keine Frage"
             ],
-            "answer": "Aussage",
+            "answer": "keine Frage",
             "accepted": [
-              "Aussage"
+              "keine Frage"
             ],
             "explanation": {
-              "de": "Die Melodie geht am Ende nach unten: eine Aussage.",
-              "en": "The pitch falls at the end: a statement."
+              "de": "Die Melodie geht am Ende nach unten: keine Frage.",
+              "en": "The pitch falls at the end: a statement, not a question."
             },
             "origin": "agent"
           }
@@ -2601,33 +2594,33 @@
           "id": "a1.1-u07-ls4-t1",
           "kind": "sign",
           "title": "Am Supermarkt",
-          "text": "Öffnungszeiten\nMontag bis Freitag: 7 bis 22 Uhr\nsamstags: 7 bis 20 Uhr\nsonntags geschlossen",
+          "text": "Geöffnet:\nMontag bis Freitag 7 bis 22 Uhr\nsamstags 7 bis 20 Uhr\nsonntags geschlossen",
           "glosses": []
         },
         {
           "id": "a1.1-u07-ls4-t2",
           "kind": "sign",
           "title": "An der Sprachschule",
-          "text": "Büro\nMontag bis Donnerstag: 9 bis 17 Uhr\nfreitags: 9 bis 13 Uhr\nAm Wochenende ist das Büro geschlossen.",
+          "text": "Büro – geöffnet:\nMontag bis Donnerstag 9 bis 17 Uhr\nfreitags 9 bis 13 Uhr\nAm Wochenende ist das Büro geschlossen.",
           "glosses": []
         },
         {
           "id": "a1.1-u07-ls4-t3",
           "kind": "sign",
           "title": "An der Tür von einem Geschäft",
-          "text": "Heute ab 14 Uhr geschlossen!\nMorgen sind wir wieder ab 9 Uhr für Sie da.",
+          "text": "Das Geschäft ist heute ab 14 Uhr geschlossen!\nMorgen sind wir ab 9 Uhr wieder offen.",
           "glosses": []
         },
         {
           "id": "a1.1-u07-ls4-t4",
           "kind": "sign",
-          "title": "Am Bürgeramt",
-          "text": "Bürgeramt\nÖffnungszeiten: Montag bis Freitag 8 bis 12 Uhr\nnachmittags geschlossen\nTermine bitte online",
+          "title": "Am Bürgerbüro",
+          "text": "Bürgerbüro\nÖffnungszeiten: Montag bis Freitag 8 bis 12 Uhr\nnachmittags geschlossen\nTermine bitte online",
           "glosses": [
             {
-              "token": "Bürgeramt",
+              "token": "Bürgerbüro",
               "gloss": {
-                "en": "citizens’ office"
+                "en": "citizens’ office (registration office)"
               }
             }
           ]
@@ -2654,15 +2647,15 @@
             {
               "id": "a1.1-u07-ls4-t6-l01",
               "speaker": "cast.ensemble-a1-1",
-              "de": "Guten Tag, hier ist die Praxis Doktor Sommer. Sie haben am Dienstag um zehn Uhr einen Termin. Frau Doktor Sommer ist am Dienstag nicht da. Bitte kommen Sie am Mittwoch um halb neun. Auf Wiederhören!",
-              "en": "Hello, this is Dr Sommer’s surgery. You have an appointment on Tuesday at ten. Dr Sommer is not in on Tuesday. Please come on Wednesday at half past eight. Goodbye!"
+              "de": "Guten Tag, hier ist die Praxis Doktor Sommer. Sie haben am Dienstag um zehn Uhr einen Termin. Frau Doktor Sommer ist am Dienstag nicht da. Bitte kommen Sie am Mittwoch um Viertel vor neun. Auf Wiederhören!",
+              "en": "Hello, this is Dr Sommer’s surgery. You have an appointment on Tuesday at ten. Dr Sommer is not in on Tuesday. Please come on Wednesday at a quarter to nine. Goodbye!"
             }
           ],
           "glosses": [
             {
               "token": "Praxis",
               "gloss": {
-                "en": "doctor’s surgery, practice"
+                "en": "practice, surgery (doctor’s)"
               }
             },
             {
@@ -2687,8 +2680,8 @@
             {
               "id": "a1.1-u07-ls4-t7-l01",
               "speaker": "cast.bilal",
-              "de": "Hallo, hier ist Bilal. Wir lernen am Freitag zusammen, ja? Am Freitag habe ich um zwei Uhr einen Termin. Ich komme dann um vier, nicht um drei. Bis Freitag!",
-              "en": "Hi, it’s Bilal. We’re studying together on Friday, right? On Friday I have an appointment at two. So I’ll come at four, not at three. See you on Friday!"
+              "de": "Hallo, hier ist Bilal. Wir lernen am Freitag zusammen, ja? Am Freitag habe ich um zwei Uhr einen Termin. Er dauert eine Stunde. Ich komme dann um vier, nicht um drei. Bis Freitag!",
+              "en": "Hi, it’s Bilal. We’re studying together on Friday, right? On Friday I have an appointment at two. It takes an hour. So I’ll come at four, not at three. See you on Friday!"
             }
           ],
           "glosses": []
@@ -2758,7 +2751,7 @@
               "role": "exam",
               "topic": "lesen",
               "textRef": "a1.1-u07-ls4-t1",
-              "promptDe": "Am Supermarkt: Am Montag um 21 Uhr ist der Supermarkt offen.",
+              "promptDe": "Am Supermarkt: „Am Montag um 21 Uhr ist der Supermarkt offen.“",
               "options": [
                 "richtig",
                 "falsch"
@@ -2779,7 +2772,7 @@
               "role": "exam",
               "topic": "lesen",
               "textRef": "a1.1-u07-ls4-t2",
-              "promptDe": "An der Sprachschule: Am Freitag um 15 Uhr ist das Büro geöffnet.",
+              "promptDe": "An der Sprachschule: „Am Freitag um 15 Uhr ist das Büro geöffnet.“",
               "options": [
                 "richtig",
                 "falsch"
@@ -2800,7 +2793,7 @@
               "role": "exam",
               "topic": "lesen",
               "textRef": "a1.1-u07-ls4-t3",
-              "promptDe": "An der Tür: Morgen um 10 Uhr ist das Geschäft offen.",
+              "promptDe": "An der Tür: „Morgen um 10 Uhr kann man dort einkaufen.“",
               "options": [
                 "richtig",
                 "falsch"
@@ -2810,7 +2803,7 @@
                 "richtig"
               ],
               "explanation": {
-                "de": "Auf dem Schild steht: „Morgen sind wir wieder ab 9 Uhr für Sie da.“ Um 10 Uhr ist es also offen.",
+                "de": "Auf dem Schild steht: „Morgen sind wir ab 9 Uhr wieder offen.“ Um 10 Uhr ist es also offen.",
                 "en": "Tomorrow the shop is open again from 9, so it is open at 10."
               },
               "origin": "agent"
@@ -2821,7 +2814,7 @@
               "role": "exam",
               "topic": "lesen",
               "textRef": "a1.1-u07-ls4-t4",
-              "promptDe": "Am Bürgeramt: Sie haben am Freitag um 14 Uhr Zeit. Dann ist das Bürgeramt offen.",
+              "promptDe": "Am Bürgerbüro: „Am Freitag um 14 Uhr ist das Bürgerbüro offen.“",
               "options": [
                 "richtig",
                 "falsch"
@@ -2831,7 +2824,7 @@
                 "falsch"
               ],
               "explanation": {
-                "de": "Das Bürgeramt ist nur von 8 bis 12 Uhr offen. Nachmittags ist es geschlossen, auch am Freitag.",
+                "de": "Das Bürgerbüro ist nur von 8 bis 12 Uhr offen. Nachmittags ist es geschlossen, auch am Freitag.",
                 "en": "The office is only open 8–12; in the afternoon it is closed, Friday too."
               },
               "origin": "agent"
@@ -2842,7 +2835,7 @@
               "role": "exam",
               "topic": "lesen",
               "textRef": "a1.1-u07-ls4-t5",
-              "promptDe": "Im Kursraum: Am Donnerstag fängt der Kurs um 9 Uhr an.",
+              "promptDe": "Im Kursraum: „Am Donnerstag fängt der Kurs um 9 Uhr an.“",
               "options": [
                 "richtig",
                 "falsch"
@@ -2883,17 +2876,17 @@
               "promptDe": "Wann ist der Termin in der Praxis jetzt?",
               "options": [
                 "am Dienstag um 10 Uhr",
-                "am Mittwoch um 8.30 Uhr",
-                "am Mittwoch um 9.30 Uhr"
+                "am Mittwoch um 8.45 Uhr",
+                "am Mittwoch um 9.15 Uhr"
               ],
-              "answer": "am Mittwoch um 8.30 Uhr",
+              "answer": "am Mittwoch um 8.45 Uhr",
               "accepted": [
-                "am Mittwoch um 8.30 Uhr"
+                "am Mittwoch um 8.45 Uhr"
               ],
               "exact": "number",
               "explanation": {
-                "de": "Am Dienstag ist Frau Doktor Sommer nicht da. Der Termin ist jetzt am Mittwoch um halb neun: 8.30 Uhr.",
-                "en": "Tuesday at ten is cancelled; the new time is Wednesday at “halb neun” – 8:30."
+                "de": "Am Dienstag ist Frau Doktor Sommer nicht da. Der Termin ist jetzt am Mittwoch um Viertel vor neun: 8.45 Uhr.",
+                "en": "Tuesday at ten is cancelled; the new time is Wednesday at a quarter to nine – 8:45, not 9:15."
               },
               "origin": "agent"
             },
@@ -2992,14 +2985,14 @@
         "profile": "sd1-sp2",
         "prepMinutes": 0,
         "instructionsDe": "Zwei Themen: „Mein Tag“, dann „Meine Woche“. Fragen und antworten Sie mit den Karten.",
-        "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin haben Wortkarten zu zwei Themen: zuerst „Mein Tag“, dann „Meine Woche“. Fragen Sie mit Ihrer Karte. Antworten Sie auf die Frage der Partnerin.",
+        "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin haben Wortkarten zu zwei Themen: zuerst „Mein Tag“, dann „Meine Woche“. Fragen Sie mit Ihrer Karte. Antworten Sie auf die Frage der Partnerin und erzählen Sie von Ihrem Tag.",
         "cards": {
           "learner": [
-            "Mein Tag – aufstehen",
+            "Mein Tag – Uhrzeit",
             "Meine Woche – Wochenende"
           ],
           "partner": [
-            "Mein Tag – Abend",
+            "Mein Tag – aufstehen",
             "Meine Woche – arbeiten"
           ]
         },
@@ -3028,19 +3021,19 @@
         "modelTurns": [
           {
             "speaker": "learner",
+            "de": "Um wie viel Uhr frühstücken Sie?"
+          },
+          {
+            "speaker": "partner",
+            "de": "Um halb acht. Dann fahre ich zur Arbeit."
+          },
+          {
+            "speaker": "partner",
             "de": "Wann stehen Sie auf?"
           },
           {
-            "speaker": "partner",
-            "de": "Ich stehe um halb sieben auf."
-          },
-          {
-            "speaker": "partner",
-            "de": "Was machen Sie am Abend?"
-          },
-          {
             "speaker": "learner",
-            "de": "Am Abend sehe ich fern, oder ich lerne Deutsch."
+            "de": "Ich stehe um sieben Uhr auf."
           },
           {
             "speaker": "learner",
@@ -3080,13 +3073,12 @@
             "id": "lp1",
             "de": "Wann fängt der Kurs am Donnerstag an?",
             "cues": [
-              "elf",
-              "11",
-              "fängt",
-              "an",
               "Donnerstag",
+              "fängt",
               "später",
-              "erst"
+              "erst",
+              "elf Uhr",
+              "11 Uhr"
             ]
           },
           {
@@ -3094,15 +3086,12 @@
             "de": "Was machen Sie am Donnerstag am Morgen?",
             "cues": [
               "Morgen",
-              "um acht",
-              "um neun",
               "kaufe",
-              "ein",
               "Termin",
               "stehe",
-              "auf",
               "frühstücke",
-              "lerne"
+              "lerne",
+              "arbeite"
             ]
           },
           {
@@ -3112,8 +3101,7 @@
               "Wann",
               "Zeit",
               "zusammen",
-              "lernen",
-              "?"
+              "lernen"
             ]
           }
         ],
@@ -3331,7 +3319,7 @@
         "type": "fill_blank",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Schild: „Montag bis Freitag 10–19 Uhr, samstags 10–14 Uhr“. Samstags ist bis ___ Uhr offen.",
+        "promptDe": "Schild: „Montag–Freitag 10–19 Uhr, samstags 10–14 Uhr“. Samstags ist es bis ___ Uhr offen.",
         "promptEn": "Read the sign: until when on Saturdays?",
         "answer": "14",
         "accepted": [
@@ -3451,7 +3439,7 @@
     }
   ],
   "story": {
-    "beat": "Priya und Emre erzählen im Videochat vom Tag in Leipzig und in İzmir. Priya und Arjun brauchen einen Termin im Bürgeramt, aber das Amt ist nur am Morgen offen, und da hat Priya Kurs. Eine Nachricht von Herrn Richter hilft: Am Donnerstag fängt der Kurs erst um elf Uhr an.",
+    "beat": "Priya und Emre erzählen im Videochat vom Tag in Leipzig und in İzmir. Priya und Arjun brauchen einen Termin im Bürgerbüro, aber das Amt ist nur am Morgen offen, und da hat Priya Kurs. Eine Nachricht von Herrn Richter hilft: Am Donnerstag fängt der Kurs erst um elf Uhr an.",
     "cliffhanger": "Am Donnerstag um elf Uhr im Kurs: Emre ist online. Er sagt: „Priya, meine Frau Elif wohnt auch in Leipzig. Hast du am Samstag Zeit?“",
     "castIn": [
       "cast.emre",
