@@ -7,6 +7,18 @@
     "Goethe-Zertifikat B1 (identisch mit ÖSD Zertifikat B1)",
     "DTZ Deutsch-Test für Zuwanderer (B1-Bereich; nur im Integrationskurssystem)"
   ],
+  "examLanes": {
+    "rule": "Die Prüfungs-Lane wird einmal beim Onboarding gewählt und über alle Produkte mitgenommen (A1.1 bis B2.2); jede Stufe hat genau einen dokumentierten Standard für Lernende ohne Wahl. Die Regel gehört in BLUEPRINT.md; bis dahin gilt sie hier.",
+    "default": "telc Deutsch B1",
+    "defaultReason": "Nachfrage in Deutschland telc ≫ DTZ > Goethe (02-exams-b1 §5, Implikation 11). Der DTZ ist wegen des Zugangs (nur im Integrationskurssystem) nie Standard; die Goethe-/ÖSD-Lane bedient vor allem Lernende im Ausland. Gleicher Standard in B1.1 und B1.2.",
+    "lanes": [
+      "telc Deutsch B1 (Standard)",
+      "Goethe-Zertifikat B1 (identisch mit ÖSD Zertifikat B1)",
+      "DTZ Deutsch-Test für Zuwanderer (B1-Bereich; nur im Integrationskurssystem)"
+    ],
+    "core": "Der Kern trainiert die sechs gemeinsamen Aufgabenfamilien aller drei Prüfungen (02-exams-b1 §6) und die Goethe- und telc-Formate; die gewählte Lane bestimmt, welche Variante zuerst erscheint und nach welcher Regel bewertet wird.",
+    "dtz": "DTZ-spezifische Formate (Brief mit A/B-Wahl, Foto + eigene Erfahrung + Heimatland ohne Vorbereitung) sind nie die Hauptaufgabe im Kern, sondern Lane-Varianten (Feld laneVariants). B1.1 behandelt den DTZ als bekanntes Format aus A2.2: in der DTZ-Lane volle Länge, jeder Hörtext einmal, keine Wiederholung; nur die B1-Anforderung steigt (Schreiben 15–20/20, Sprechen 75–100/100, Hören+Lesen 33–45/45)."
+  },
   "hours": {
     "guided": 52,
     "total": 64
@@ -65,7 +77,6 @@
         "der Blog",
         "der Kontakt",
         "die Stimmung",
-        "sich erinnern an",
         "sich unterhalten",
         "sich verstehen mit",
         "sich ändern",
@@ -73,7 +84,11 @@
         "aufregend",
         "ehrlich",
         "übrigens",
-        "neulich"
+        "neulich",
+        "berichten",
+        "sich verabreden",
+        "zufällig",
+        "vertraut"
       ],
       "reading": {
         "textType": "Persönlicher Blogbeitrag: Zwei Jahre in Leipzig – was ich erlebt habe (Richtig/Falsch) + persönlicher Brief mit Wortlücken",
@@ -160,7 +175,10 @@
         "benachrichtigen",
         "sich krankmelden",
         "krankgeschrieben",
-        "kollegial"
+        "kollegial",
+        "der Schichtplan",
+        "die Einarbeitung",
+        "selbstständig"
       ],
       "reading": {
         "textType": "Erfahrungsbericht in der Mitarbeiterzeitung: Mein erster Monat (Multiple Choice) + Intranet-Verzeichnis der Abteilungen",
@@ -195,90 +213,102 @@
     {
       "nr": 3,
       "id": "b1.1-u03",
-      "title": "Die Wohnung, in der ich mich wohlfühle",
-      "titleEn": "The flat where I feel at home",
-      "situation": "Sie suchen eine größere Wohnung: Sie vergleichen Kleinanzeigen, fragen bei der Vermieterin nach Nebenkosten und Einzug und besichtigen die Wohnung.",
+      "title": "Die Wohnung, in die ich einziehe",
+      "titleEn": "The flat I am moving into",
+      "situation": "Sie haben eine Wohnung gefunden: Sie lesen den Mietvertrag genau, fragen die Vermieterin nach Nebenkosten und Kaution, organisieren den Umzug und gehen bei der Wohnungsübergabe das Übergabeprotokoll durch.",
       "handlungsfeld": "Wohnen (RC 12)",
       "unitType": "texttype",
       "canDo": [
         {
-          "de": "Ich kann im Gespräch mit Vermietern Detailinformationen zur angebotenen Wohnung erfragen, z. B. zu Einzugstermin, Größe und Nebenkosten.",
-          "source": "05-cando-b1-b2 (B1.1 #9) · RC 155"
+          "de": "Ich kann im Gespräch mit Vermietern Detailinformationen zur Wohnung und zum Vertrag erfragen, z. B. zu Einzugstermin, Nebenkosten und Kaution.",
+          "source": "05-cando-b1-b2 (B1.1 #9) · ≈ RC 155"
+        },
+        {
+          "de": "Ich kann die wichtigsten Regelungen eines Mietvertrags und einer Hausordnung im Detail verstehen, z. B. zu Nebenkosten, Kaution, Haustieren und Kündigung.",
+          "source": "02-exams-b1 §7 (G-L5/D-L4: Regeln und Bedingungen) · ≈ GI-B1 Lesen T5"
+        },
+        {
+          "de": "Ich kann mich schriftlich bei der Vermieterin melden, wenn nach der Übergabe ein Mangel auftaucht, und um eine Lösung bitten.",
+          "source": "05-cando-b1-b2 (B1.1 #9) · RC 156; ≈ telc B1 Schriftlicher Ausdruck"
         },
         {
           "de": "Ich kann Anzeigen gezielt nach den Informationen durchsuchen, die ich brauche, und passende von unpassenden Angeboten unterscheiden.",
           "source": "02-exams-b1 §7 (G-L3/t-LV3/D-L2) · ≈ GI-B1 Lesen T3 „Zur Orientierung lesen“"
-        },
-        {
-          "de": "Ich kann auf eine Anzeige mit einer halbformellen E-Mail antworten und darin vier vorgegebene Punkte bearbeiten.",
-          "source": "02-exams-b1 §2 · ≈ telc B1 Schriftlicher Ausdruck"
-        },
-        {
-          "de": "Ich kann ein Foto beschreiben, von eigenen Erfahrungen erzählen und die Situation mit meinem Heimatland vergleichen.",
-          "source": "02-exams-b1 §3 · ≈ DTZ Sprechen T2"
         }
       ],
       "grammar": [
         {
-          "point": "Relativsatz im Dativ und mit Präposition (die Vermieterin, der ich geschrieben habe; die Wohnung, in der …; das Viertel, in dem …)",
+          "point": "Relativsatz im Dativ und mit Präposition (die Vermieterin, der ich geschrieben habe; die Wohnung, in die ich einziehe; der Vertrag, über den wir gesprochen haben)",
           "new": true,
           "lehrwerk": "Menschen B1 L3; Schritte plus Neu 5 L2; Netzwerk B1 K6 (Linie 1 B1 K14 später)"
         },
         {
-          "point": "Relativsatz im Nominativ und Akkusativ – Wiederholung aus A2.2",
+          "point": "Relativsatz im Nominativ und Akkusativ – Wiederholung aus A2.2; Zuwachs: im selben Text im Kontrast zu Dativ und Präposition (der Mieter, der …; die Kaution, die …; die Vermieterin, der …)",
           "new": false,
           "lehrwerk": "Menschen A2 L23; Netzwerk neu A2 K12"
         }
       ],
-      "vocabTheme": "Wohnungssuche, Miete, Besichtigung",
+      "vocabTheme": "Mietvertrag, Nebenkosten, Wohnungsübergabe",
       "vocabTarget": 46,
       "keyWords": [
-        "die Warmmiete",
         "der Mieter / die Mieterin",
         "der Eigentümer / die Eigentümerin",
-        "der Makler / die Maklerin",
-        "die Provision",
         "der Nachmieter / die Nachmieterin",
-        "die Wohngemeinschaft",
-        "das Viertel",
-        "die Lage",
+        "die Warmmiete",
+        "die Kaltmiete",
+        "die Nebenkostenabrechnung",
+        "die Vorauszahlung",
+        "die Mieterhöhung",
+        "die Wohnungsübergabe",
+        "der Zustand",
         "die Wohnfläche",
-        "das Erdgeschoss",
         "das Haustier",
+        "die Wohngemeinschaft",
+        "die Untermiete",
         "vermieten",
         "ausziehen",
-        "renoviert",
-        "gepflegt",
-        "zentral"
+        "ablesen",
+        "abziehen",
+        "befristet",
+        "möbliert"
       ],
       "reading": {
-        "textType": "Kleinanzeigen Wohnungsmarkt: sieben Suchende, zehn Anzeigen (Zuordnung, eine Person ohne Anzeige)",
+        "textType": "Auszug aus einem Mietvertrag mit Hausordnung (Multiple Choice) + Kleinanzeigen rund um den Umzug: sieben Suchende, zehn Anzeigen für Umzugshilfe, Transporter, gebrauchte Möbel und Nachmieter (Zuordnung, eine Person ohne Anzeige)",
         "words": 380
       },
       "listening": {
-        "textType": "Telefonat mit der Vermieterin und Gespräch bei der Besichtigung (Richtig/Falsch)",
+        "textType": "Telefonat mit der Vermieterin über Nebenkosten und Kaution und Gespräch bei der Wohnungsübergabe (Richtig/Falsch)",
         "seconds": 240
       },
       "writing": {
-        "task": "Halbformelle E-Mail an die Vermieterin auf ihre Anzeige: sich vorstellen, nach Nebenkosten und Einzugstermin fragen, nach Haustieren fragen, einen Besichtigungstermin vorschlagen",
+        "task": "Halbformelle E-Mail an die Vermieterin nach der Wohnungsübergabe, vier Leitpunkte: sich für die Übergabe bedanken, einen Mangel melden, der nicht im Übergabeprotokoll steht, nach der Nebenkostenvorauszahlung fragen, einen Termin für die Reparatur vorschlagen",
         "words": 90,
         "examTeil": "telc B1 Schriftlicher Ausdruck"
       },
       "speaking": {
-        "task": "Ein Foto beschreiben (Umzugskartons in einer leeren Wohnung), von der eigenen Wohnungssuche erzählen und mit dem Heimatland vergleichen – ohne Vorbereitungszeit",
-        "examTeil": "DTZ Sprechen Teil 2"
+        "task": "Mit einer Freundin den Umzug planen (Transporter, Helferinnen und Helfer, Termin der Wohnungsübergabe, Ummeldung) und festlegen, wer was macht",
+        "examTeil": "telc B1 Mündlicher Ausdruck Teil 3"
       },
-      "pronunciation": "Pausen und unbetonte Relativpronomen: die Wohnung | in der ich wohne",
+      "pronunciation": "Pausen und unbetonte Relativpronomen: die Wohnung | in die ich einziehe",
       "examTeile": [
+        "Goethe B1 Lesen Teil 5",
         "Goethe B1 Lesen Teil 3",
         "telc B1 Leseverstehen Teil 3",
         "DTZ Lesen Teil 2",
         "telc B1 Hörverstehen Teil 2",
         "DTZ Hören Teil 3",
         "telc B1 Schriftlicher Ausdruck",
+        "telc B1 Mündlicher Ausdruck Teil 3",
+        "Goethe B1 Sprechen Teil 1",
+        "DTZ Sprechen Teil 3",
         "DTZ Sprechen Teil 2"
       ],
-      "landeskunde": "Kaltmiete, Warmmiete, Kaution und Wohngemeinschaft (WG): wie Mieten in D-A-CH funktioniert (Kautionsregel mit Quelle prüfen)"
+      "landeskunde": "Der Mietvertrag in D-A-CH: Kaltmiete, Warmmiete, Nebenkostenabrechnung, Kaution und Übergabeprotokoll; Mietervereine als Beratung (Kautionsregel und Fristen mit Quelle prüfen)",
+      "laneVariants": {
+        "DTZ": {
+          "speaking": "Ein Foto beschreiben (Umzugskartons in einer leeren Wohnung), vom eigenen Umzug erzählen und mit dem Heimatland vergleichen – ohne Vorbereitungszeit (DTZ Sprechen Teil 2)"
+        }
+      }
     },
     {
       "nr": 4,
@@ -327,14 +357,16 @@
         "der Mangel",
         "die Bestellnummer",
         "die Hotline",
-        "die Warteschleife",
         "reklamieren",
         "umtauschen",
         "zurückgeben",
         "erstatten",
         "defekt",
         "fehlerhaft",
-        "beschädigt"
+        "beschädigt",
+        "der Kundendienst",
+        "zurückschicken",
+        "verlangen"
       ],
       "reading": {
         "textType": "Rückgabe- und Garantiebedingungen eines Online-Shops (Multiple Choice) + Lückentext: Beschwerdebrief",
@@ -345,9 +377,9 @@
         "seconds": 150
       },
       "writing": {
-        "task": "Reklamation an den Online-Shop, Wahl A oder B, vier Leitpunkte: was Sie bestellt haben, was nicht funktioniert, was Sie schon versucht haben, was Sie jetzt erwarten",
+        "task": "Reklamation an den Online-Shop, vier Leitpunkte: was Sie bestellt haben, was nicht funktioniert, was Sie schon versucht haben, was Sie jetzt erwarten",
         "words": 80,
-        "examTeil": "DTZ Schreiben"
+        "examTeil": "telc B1 Schriftlicher Ausdruck"
       },
       "speaking": {
         "task": "Zwei kurze Meinungen zum Online-Einkauf wiedergeben und mit der KI-Partnerin darüber sprechen; im Kernteil: Reklamationsgespräch mit der Hotline",
@@ -361,9 +393,15 @@
         "telc B1 Hörverstehen Teil 3",
         "DTZ Hören Teil 1",
         "DTZ Schreiben",
-        "telc B1 Mündlicher Ausdruck Teil 2"
+        "telc B1 Mündlicher Ausdruck Teil 2",
+        "telc B1 Schriftlicher Ausdruck"
       ],
-      "landeskunde": "Gewährleistung und Garantie: der Unterschied, und wie Verbraucherzentralen helfen"
+      "landeskunde": "Gewährleistung und Garantie: der Unterschied, und wie Verbraucherzentralen helfen",
+      "laneVariants": {
+        "DTZ": {
+          "writing": "Dieselbe Reklamation als DTZ Schreiben mit A/B-Wahl, unter Prüfungsbedingungen"
+        }
+      }
     },
     {
       "nr": 5,
@@ -423,7 +461,9 @@
         "steuern",
         "digital",
         "vermutlich",
-        "wahrscheinlich"
+        "wahrscheinlich",
+        "vermuten",
+        "die Überschrift"
       ],
       "reading": {
         "textType": "Zwei kurze Zeitungsartikel über Technik im Alltag von morgen (Multiple Choice) + fünf Kurzmeldungen mit Überschriften + fünf Leserkommentare",
@@ -488,9 +528,9 @@
           "lehrwerk": "Menschen B1 L6 (Schritte plus Neu 6 und Linie 1 B1 K10–11 später; split)"
         },
         {
-          "point": "Adjektivdeklination in Kritiken und Empfehlungen (ein spannender Film mit tollen Schauspielern) – Wiederholung",
+          "point": "Adjektivdeklination in Kritiken und Empfehlungen (ein spannender Film mit tollen Schauspielern) – Wiederholung; Zuwachs: attributiver Komparativ und Superlativ in der Kritik (der spannendste Film des Jahres, ein besserer Schluss). Falls A2.2 E5 ihn nur rezeptiv geführt hat, wird er hier produktiv nachgeholt.",
           "new": false,
-          "lehrwerk": "Menschen A2 L4–5; Schritte plus Neu 4 L9–12"
+          "lehrwerk": "Menschen A2 L4–5; Schritte plus Neu 4 L9–12; Menschen B1 L9 (Komparativ attributiv)"
         }
       ],
       "vocabTheme": "Kultur, Ausgehen, Film",
@@ -512,7 +552,10 @@
         "witzig",
         "unterhaltsam",
         "beeindruckend",
-        "falls"
+        "falls",
+        "die Szene",
+        "die Rolle",
+        "der Humor"
       ],
       "reading": {
         "textType": "Veranstaltungstipps aus dem Stadtmagazin (Zuordnung) und eine Filmkritik",
@@ -580,7 +623,8 @@
         {
           "point": "Passiv Präsens im Beipackzettel erkennen (Die Tablette wird unzerkaut geschluckt.) – rezeptiv, Wiederholung aus A2.2",
           "new": false,
-          "lehrwerk": "Menschen A2 L14; Schritte plus Neu 4 L10"
+          "lehrwerk": "Menschen A2 L14; Schritte plus Neu 4 L10",
+          "receptive": true
         }
       ],
       "vocabTheme": "Beschwerden, Medikamente, gesund leben",
@@ -594,7 +638,6 @@
         "die Wirkung",
         "der Notdienst",
         "die Entzündung",
-        "das Immunsystem",
         "der Vortrag",
         "die Folie",
         "einnehmen",
@@ -602,7 +645,11 @@
         "sich erholen",
         "vorbeugen",
         "rezeptfrei",
-        "schädlich"
+        "schädlich",
+        "das Symptom",
+        "die Ursache",
+        "die Salbe",
+        "schwindlig"
       ],
       "reading": {
         "textType": "Beipackzettel (Multiple Choice) und Informationsbroschüre der Krankenkasse (Richtig/Falsch)",
@@ -677,20 +724,23 @@
         "die Fortbildung",
         "die Qualifikation",
         "die Volkshochschule",
-        "das Kursprogramm",
         "die Gebühr",
         "die Teilnahme",
         "die Förderung",
         "die Motivation",
         "die Herausforderung",
-        "der Lernerfolg",
         "sich weiterbilden",
         "fördern",
-        "sich verbessern",
         "beruflich",
         "erforderlich",
         "motiviert",
-        "unsicher"
+        "unsicher",
+        "die Beratung",
+        "die Umschulung",
+        "der Nachweis",
+        "die Chance",
+        "anerkennen",
+        "aufsteigen"
       ],
       "reading": {
         "textType": "Kursprogramm der Volkshochschule (Verzeichnis) und Zeitungsartikel „Mit 45 noch einmal lernen“ (Multiple Choice) + Lückentext: Anfrage",
@@ -701,13 +751,13 @@
         "seconds": 330
       },
       "writing": {
-        "task": "Anfrage an die Volkshochschule, Wahl A oder B, vier Leitpunkte: welcher Kurs, Ihre Vorkenntnisse, passende Zeiten, Kosten und Förderung",
+        "task": "Anfrage an die Volkshochschule, vier Leitpunkte: welcher Kurs, Ihre Vorkenntnisse, passende Zeiten, Kosten und Förderung",
         "words": 85,
-        "examTeil": "DTZ Schreiben"
+        "examTeil": "telc B1 Schriftlicher Ausdruck"
       },
       "speaking": {
-        "task": "Über sich sprechen: Ausbildung, Beruf, Deutschlernen und Ziele – und die Nachfragen der Prüferin beantworten; im Kernteil: Beratungsgespräch mit der KI-Beraterin",
-        "examTeil": "DTZ Sprechen Teil 1"
+        "task": "Einander kennenlernen beim Infoabend der Volkshochschule: nach Ausbildung, Beruf, Deutschlernen und Zielen fragen und selbst ausführlich antworten; im Kernteil: Beratungsgespräch mit der KI-Beraterin",
+        "examTeil": "telc B1 Mündlicher Ausdruck Teil 1"
       },
       "pronunciation": "Neueinsatz (Knacklaut) vor Vokal: be|antragen, Ab|itur, ich | arbeite | abends",
       "examTeile": [
@@ -718,9 +768,16 @@
         "telc B1 Hörverstehen Teil 2",
         "DTZ Schreiben",
         "DTZ Sprechen Teil 1",
-        "telc B1 Mündlicher Ausdruck Teil 1"
+        "telc B1 Mündlicher Ausdruck Teil 1",
+        "telc B1 Schriftlicher Ausdruck"
       ],
-      "landeskunde": "Volkshochschulen und Anerkennungsberatung: das Portal „Anerkennung in Deutschland“"
+      "landeskunde": "Volkshochschulen und Anerkennungsberatung: das Portal „Anerkennung in Deutschland“",
+      "laneVariants": {
+        "DTZ": {
+          "writing": "Dieselbe Anfrage als DTZ Schreiben mit A/B-Wahl, unter Prüfungsbedingungen",
+          "speaking": "Über sich sprechen (Ausbildung, Beruf, Deutschlernen, Ziele) und die Nachfragen der KI in der Rolle der Prüferin beantworten (DTZ Sprechen Teil 1)"
+        }
+      }
     },
     {
       "nr": 9,
@@ -774,7 +831,11 @@
         "mutig",
         "plötzlich",
         "nachdem",
-        "bevor"
+        "bevor",
+        "der Schritt",
+        "wagen",
+        "sich trauen",
+        "zurückblicken"
       ],
       "reading": {
         "textType": "Beiträge im Vereinsblog: Mein Neuanfang (Richtig/Falsch) + persönlicher Brief mit Grammatiklücken",
@@ -790,8 +851,8 @@
         "examTeil": "telc B1 Schriftlicher Ausdruck"
       },
       "speaking": {
-        "task": "Ein Foto beschreiben (eine Frau um die 40 an ihrem ersten Tag in einer Ausbildungswerkstatt), von einem eigenen Neuanfang erzählen und mit dem Heimatland vergleichen – ohne Vorbereitungszeit",
-        "examTeil": "DTZ Sprechen Teil 2"
+        "task": "Präsentation mit fünf Folien (mit Vorlage) „Mit 40 noch einmal neu anfangen?“ nach 15 Minuten Vorbereitung: eigene Erfahrung, Situation im Heimatland, Vor- und Nachteile, Meinung; danach Rückfragen der KI-Partnerin beantworten und eine Rückmeldung geben",
+        "examTeil": "Goethe B1 Sprechen Teil 2"
       },
       "pronunciation": "Satzmelodie im langen Satz: Nebensatz vorn, Hauptsatz danach (Nachdem ich umgezogen war, ↗ | fand ich schnell Arbeit. ↘)",
       "examTeile": [
@@ -800,9 +861,16 @@
         "Goethe B1 Hören Teil 3",
         "DTZ Hören Teil 3",
         "telc B1 Schriftlicher Ausdruck",
-        "DTZ Sprechen Teil 2"
+        "DTZ Sprechen Teil 2",
+        "Goethe B1 Sprechen Teil 2",
+        "Goethe B1 Sprechen Teil 3"
       ],
-      "landeskunde": "Porträt einer realen Person, die in D-A-CH beruflich neu angefangen hat (mit Quellenangabe)"
+      "landeskunde": "Porträt einer realen Person, die in D-A-CH beruflich neu angefangen hat (mit Quellenangabe)",
+      "laneVariants": {
+        "DTZ": {
+          "speaking": "Ein Foto beschreiben (eine Frau um die 40 an ihrem ersten Tag in einer Ausbildungswerkstatt), von einem eigenen Neuanfang erzählen und mit dem Heimatland vergleichen – ohne Vorbereitungszeit (DTZ Sprechen Teil 2)"
+        }
+      }
     },
     {
       "nr": 10,
@@ -856,7 +924,11 @@
         "sich lohnen",
         "halten von",
         "gerecht",
-        "ausgeglichen"
+        "ausgeglichen",
+        "die Diskussion",
+        "die Arbeitsbedingungen (Pl.)",
+        "die Einführung",
+        "sinnvoll"
       ],
       "reading": {
         "textType": "Leserkommentare in einem Online-Forum zur Vier-Tage-Woche (Ja/Nein: Ist die Person dafür?)",
@@ -939,7 +1011,10 @@
         "bedauern",
         "langjährig",
         "ehemalig",
-        "gerührt"
+        "gerührt",
+        "die Tradition",
+        "die Glückwunschkarte",
+        "enttäuscht"
       ],
       "reading": {
         "textType": "Kurzmeldungen aus der Firmenzeitung (Überschriften zuordnen), Rundschreiben der Geschäftsleitung und eine Einladung mit Wortlücken",
@@ -1027,7 +1102,11 @@
         "eingeschränkt",
         "wegen",
         "trotz",
-        "während (+ Genitiv)"
+        "während (+ Genitiv)",
+        "die Bauarbeiten (Pl.)",
+        "die Panne",
+        "ankündigen",
+        "ärgerlich"
       ],
       "reading": {
         "textType": "Informationsblatt Fahrgastrechte (Richtig/Falsch), Aushang des Verkehrsunternehmens und Zeitungsartikel über Bauarbeiten",
@@ -1038,13 +1117,13 @@
         "seconds": 200
       },
       "writing": {
-        "task": "Beschwerde an das Verkehrsunternehmen, Wahl A oder B, vier Leitpunkte: Fahrt und Ticket, was passiert ist, welche Folgen es hatte, welche Entschädigung Sie erwarten",
+        "task": "Beschwerde an das Verkehrsunternehmen, vier Leitpunkte: Fahrt und Ticket, was passiert ist, welche Folgen es hatte, welche Entschädigung Sie erwarten",
         "words": 90,
-        "examTeil": "DTZ Schreiben"
+        "examTeil": "telc B1 Schriftlicher Ausdruck"
       },
       "speaking": {
-        "task": "Ein Foto beschreiben (voller Bahnsteig bei einer Störung), von einer eigenen Reisepanne erzählen und mit dem Heimatland vergleichen – ohne Vorbereitungszeit; im Kernteil: eine Durchsage für eine Mitreisende in einfachen Worten wiedergeben",
-        "examTeil": "DTZ Sprechen Teil 2"
+        "task": "Mit einer Mitreisenden die Weiterfahrt organisieren (Ersatzverkehr oder Hotel, wer die Familie informiert, wer sich um die Entschädigung kümmert) und sich einigen; im Kernteil: eine Durchsage für die Mitreisende in einfachen Worten wiedergeben",
+        "examTeil": "Goethe B1 Sprechen Teil 1"
       },
       "pronunciation": "Durchsagen verstehen und nachsprechen: Konsonantenhäufungen und Zahlen (Gleis, Anschluss, Ersatzverkehr; 17:42 Uhr)",
       "examTeile": [
@@ -1055,9 +1134,19 @@
         "telc B1 Hörverstehen Teil 3",
         "DTZ Hören Teil 1",
         "DTZ Schreiben",
-        "DTZ Sprechen Teil 2"
+        "DTZ Sprechen Teil 2",
+        "telc B1 Schriftlicher Ausdruck",
+        "Goethe B1 Sprechen Teil 1",
+        "telc B1 Mündlicher Ausdruck Teil 3",
+        "DTZ Sprechen Teil 3"
       ],
-      "landeskunde": "Fahrgastrechte bei Verspätung und Ausfall in Deutschland und der EU (Entschädigungsstufen nur mit Quelle und Stand)"
+      "landeskunde": "Fahrgastrechte bei Verspätung und Ausfall in Deutschland und der EU (Entschädigungsstufen nur mit Quelle und Stand)",
+      "laneVariants": {
+        "DTZ": {
+          "writing": "Dieselbe Beschwerde als DTZ Schreiben mit A/B-Wahl, unter Prüfungsbedingungen",
+          "speaking": "Ein Foto beschreiben (voller Bahnsteig bei einer Störung), von einer eigenen Reisepanne erzählen und mit dem Heimatland vergleichen – ohne Vorbereitungszeit (DTZ Sprechen Teil 2); die Planung als DTZ Sprechen Teil 3"
+        }
+      }
     }
   ],
   "checkpoints": [
@@ -1095,7 +1184,7 @@
     }
   ],
   "levelTest": {
-    "format": "Halb-Modelltest im Format Goethe-/ÖSD-Zertifikat B1 auf dem Stoff von B1.1 (Lesen Teil 1, 3 und 5; Hören Teil 1 und 3; Schreiben Teil 1 und 3; Sprechen Teil 1 und 2 mit KI-Partner nach 10 Minuten Vorbereitung; ca. 100 + 12 Min., Texte in ca. 85 % der Prüfungslänge); im Prüfungs-Track gleichwertige Teile von telc Deutsch B1 (Leseverstehen 1 + 3, Sprachbausteine 1, Hörverstehen 2 + 3, Schriftlicher Ausdruck, Mündlicher Ausdruck 1 + 3) bzw. DTZ (Hören 1–3, Lesen 2, 4, 5, Schreiben, Sprechen 1–3 ohne Vorbereitung). Ergebnis als Übungswert nach der Bestehensregel der gewählten Prüfung, nie als Prüfungsergebnis.",
+    "format": "Halb-Modelltest auf dem Stoff von B1.1 im Format der beim Onboarding gewählten Prüfungs-Lane (Standard ohne Wahl: telc Deutsch B1). telc Deutsch B1: Leseverstehen 1 + 3, Sprachbausteine 1, Hörverstehen 2 + 3, Schriftlicher Ausdruck, Mündlicher Ausdruck 1 + 3 (ca. 100 + 10 Min.). Goethe-/ÖSD-Zertifikat B1: Lesen Teil 1, 3 und 5, Hören Teil 1 und 3, Schreiben Teil 1 und 3, Sprechen Teil 1 und 2 nach 10 Minuten Vorbereitung (ca. 100 + 12 Min.). DTZ (B1-Bereich; nur im Integrationskurssystem): Hören 1–3, Lesen 2, 4 und 5, Schreiben, Sprechen 1–3 ohne Vorbereitung, in voller Länge und jeder Hörtext einmal. telc- und Goethe-Texte in ca. 85 % der Prüfungslänge. Die KI als Gesprächspartnerin und in der Rolle der Prüferin (automatische Übungsbewertung). Übungswerte je Prüfungsteil, kein Gesamturteil, keine Bestehensregel und nie eine Bestehensprognose; der Diagnose-Mini-Modelltest in Woche 1 von B1.2 ist ein Ausschnitt einer Parallelform (ein Teil je Modul).",
     "sections": [
       "Lesen",
       "Hören",

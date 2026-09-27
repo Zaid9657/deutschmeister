@@ -7,6 +7,19 @@
     "Goethe-Zertifikat B1 (identisch mit ÖSD Zertifikat B1)",
     "DTZ Deutsch-Test für Zuwanderer (B1-Bereich; nur im Integrationskurssystem)"
   ],
+  "examLanes": {
+    "rule": "Die Prüfungs-Lane wird einmal beim Onboarding gewählt und über alle Produkte mitgenommen (A1.1 bis B2.2); jede Stufe hat genau einen dokumentierten Standard für Lernende ohne Wahl. Die Regel gehört in BLUEPRINT.md; bis dahin gilt sie hier.",
+    "default": "telc Deutsch B1",
+    "defaultReason": "Nachfrage in Deutschland telc ≫ DTZ > Goethe (02-exams-b1 §5, Implikation 11). Der DTZ ist wegen des Zugangs (nur im Integrationskurssystem) nie Standard; die Goethe-/ÖSD-Lane bedient vor allem Lernende im Ausland. Gleicher Standard in B1.1 und B1.2.",
+    "lanes": [
+      "telc Deutsch B1 (Standard)",
+      "Goethe-Zertifikat B1 (identisch mit ÖSD Zertifikat B1)",
+      "DTZ Deutsch-Test für Zuwanderer (B1-Bereich; nur im Integrationskurssystem)"
+    ],
+    "core": "Der Kern trainiert die sechs gemeinsamen Aufgabenfamilien aller drei Prüfungen (02-exams-b1 §6) und die Goethe- und telc-Formate; die gewählte Lane bestimmt, welche Variante zuerst erscheint und nach welcher Regel bewertet wird.",
+    "dtz": "DTZ-spezifische Formate (Brief mit A/B-Wahl, Foto + eigene Erfahrung + Heimatland ohne Vorbereitung) sind nie die Hauptaufgabe im Kern, sondern Lane-Varianten (Feld laneVariants). Die DTZ-Modelltests kommen aus einem gemeinsamen Pool für A2.2 und B1.2 (derselbe skalierte A2–B1-Test, der nur einmal abgelegt wird): ein Budgetposten in W3, keine Form zweimal für dieselbe Person.",
+    "examPath": "Vorlage für alle .2-Kurse: Diagnose-Mini-Modelltest in Woche 1 (CP0); voller Modelltest 1 = Checkpoint 3, voller Modelltest 2 = Checkpoint 4, voller Modelltest 3 = Abschlusstest in der letzten Woche ohne neuen Stoff; Einheit 12 ist Transfer und Wiederholung ohne neue Grammatik."
+  },
   "hours": {
     "guided": 60,
     "total": 74
@@ -73,7 +86,10 @@
         "unhöflich",
         "darum",
         "deswegen",
-        "nämlich"
+        "nämlich",
+        "die Herkunft",
+        "sich gewöhnen an",
+        "empfinden"
       ],
       "reading": {
         "textType": "Online-Forum: sieben Kommentare zur Frage „Soll man Kritik direkt sagen?“ (Ja/Nein) + Kurzmeldungen mit Überschriften",
@@ -108,7 +124,7 @@
       "id": "b1.2-u02",
       "title": "Kaufen, vergleichen, sparen",
       "titleEn": "Buy, compare, save",
-      "situation": "Eine Freundin will ein neues Handy auf Raten kaufen: Sie lesen einen Verbraucherartikel, vergleichen Angebote, fassen die wichtigsten Tipps für sie zusammen und antworten auf ihre E-Mail.",
+      "situation": "Eine Freundin will eine neue Waschmaschine auf Raten kaufen: Sie lesen einen Verbraucherartikel, vergleichen Angebote, fassen die wichtigsten Tipps für sie zusammen und antworten auf ihre E-Mail.",
       "handlungsfeld": "Einkaufen (RC 7) · Banken und Versicherungen (RC 5) · Mediation (Begleitband)",
       "unitType": "texttype",
       "canDo": [
@@ -137,7 +153,7 @@
           "lehrwerk": "Schritte plus Neu 4 L9–12"
         }
       ],
-      "vocabTheme": "Konsum, Werbung, Geld",
+      "vocabTheme": "Konsum, Ratenkauf, Geld",
       "vocabTarget": 45,
       "keyWords": [
         "die Werbung",
@@ -156,10 +172,13 @@
         "preiswert",
         "steigend",
         "lohnend",
-        "überzeugend"
+        "überzeugend",
+        "die Anschaffung",
+        "die Finanzierung",
+        "sich verschulden"
       ],
       "reading": {
-        "textType": "Verbraucherartikel „Handy auf Raten – lohnt sich das?“ (Multiple Choice) + Angebote und Anzeigen (Zuordnung)",
+        "textType": "Verbraucherartikel „Jetzt kaufen, später zahlen – lohnt sich das?“ (Multiple Choice) + Angebote und Anzeigen für Haushaltsgeräte (Zuordnung)",
         "words": 400
       },
       "listening": {
@@ -172,8 +191,8 @@
         "examTeil": "telc B1 Schriftlicher Ausdruck"
       },
       "speaking": {
-        "task": "Ein Foto beschreiben (lange Schlange vor einem Geschäft am Rabatttag), von eigenen Erfahrungen beim Sparen erzählen und mit dem Heimatland vergleichen – ohne Vorbereitungszeit",
-        "examTeil": "DTZ Sprechen Teil 2"
+        "task": "Präsentation mit fünf Folien „Kaufen auf Raten – eine gute Idee?“ nach 15 Minuten Vorbereitung: eigene Erfahrung, Situation im Heimatland, Vor- und Nachteile, Meinung; danach Fragen beantworten und der KI-Partnerin eine Rückmeldung geben",
+        "examTeil": "Goethe B1 Sprechen Teil 2"
       },
       "pronunciation": "Partizipien sprechen: -end und -t am Wortende (steigend, lohnend, reduziert) und Wortakzent in Komposita (SONderangebot, PREISvergleich)",
       "examTeile": [
@@ -183,9 +202,16 @@
         "Goethe B1 Hören Teil 1",
         "DTZ Hören Teil 2",
         "telc B1 Schriftlicher Ausdruck",
-        "DTZ Sprechen Teil 2"
+        "DTZ Sprechen Teil 2",
+        "Goethe B1 Sprechen Teil 2",
+        "Goethe B1 Sprechen Teil 3"
       ],
-      "landeskunde": "Verbraucherschutz: Stiftung Warentest, Verbraucherzentralen und Preisangaben"
+      "landeskunde": "Verbraucherschutz: Stiftung Warentest, Verbraucherzentralen und Preisangaben",
+      "laneVariants": {
+        "DTZ": {
+          "speaking": "Ein Foto beschreiben (lange Schlange vor einem Geschäft am Rabatttag), von eigenen Erfahrungen beim Sparen erzählen und mit dem Heimatland vergleichen – ohne Vorbereitungszeit (DTZ Sprechen Teil 2)"
+        }
+      }
     },
     {
       "nr": 3,
@@ -243,7 +269,11 @@
         "sich eignen für",
         "geeignet",
         "sowohl … als auch",
-        "nicht nur … sondern auch"
+        "nicht nur … sondern auch",
+        "der Aufgabenbereich",
+        "die Bezahlung",
+        "verhandeln",
+        "teamfähig"
       ],
       "reading": {
         "textType": "Stellenanzeigen (Zuordnung) + Lückentext: Bewerbungsschreiben",
@@ -254,9 +284,9 @@
         "seconds": 260
       },
       "writing": {
-        "task": "Bewerbung per E-Mail an einen Betrieb, Wahl A oder B, vier Leitpunkte: wer Sie sind, Ihre Erfahrung, warum Sie die Stelle wollen, wann Sie anfangen können (dazu ein Anschreiben mit Vorlage fürs Portfolio)",
+        "task": "Bewerbung per E-Mail an einen Betrieb, vier Leitpunkte: wer Sie sind, Ihre Erfahrung, warum Sie die Stelle wollen, wann Sie anfangen können (dazu ein Anschreiben mit Vorlage fürs Portfolio)",
         "words": 110,
-        "examTeil": "DTZ Schreiben"
+        "examTeil": "telc B1 Schriftlicher Ausdruck"
       },
       "speaking": {
         "task": "Vorstellungsgespräch mit der KI-Personalleiterin: sich vorstellen, Erfahrungen und Qualifikationen erklären, Fragen zu Gehalt und Arbeitszeit beantworten und selbst stellen",
@@ -270,9 +300,15 @@
         "DTZ Hören Teil 3",
         "DTZ Schreiben",
         "telc B1 Mündlicher Ausdruck Teil 1",
-        "DTZ Sprechen Teil 1"
+        "DTZ Sprechen Teil 1",
+        "telc B1 Schriftlicher Ausdruck"
       ],
-      "landeskunde": "Bewerbungsunterlagen in D-A-CH: tabellarischer Lebenslauf, Anschreiben, Foto freiwillig, Zeugnisse"
+      "landeskunde": "Bewerbungsunterlagen in D-A-CH: tabellarischer Lebenslauf, Anschreiben, Foto freiwillig, Zeugnisse",
+      "laneVariants": {
+        "DTZ": {
+          "writing": "Dieselbe Bewerbung als DTZ Schreiben mit A/B-Wahl, unter Prüfungsbedingungen"
+        }
+      }
     },
     {
       "nr": 4,
@@ -307,7 +343,7 @@
           "lehrwerk": "Schritte plus Neu 6 L10; Netzwerk B1 K11; Linie 1 B1 K14"
         },
         {
-          "point": "Relativsatz mit Präposition – Wiederholung aus B1.1 (das Projekt, an dem wir arbeiten)",
+          "point": "Relativsatz mit Präposition – Wiederholung aus B1.1; Zuwachs: im Kontrast zu was/wo (das Projekt, an dem wir arbeiten – alles, was wir beschlossen haben)",
           "new": false,
           "lehrwerk": "Menschen B1 L3; Schritte plus Neu 5 L2"
         }
@@ -330,7 +366,11 @@
         "sich einigen",
         "ergänzen",
         "verantwortlich",
-        "vorläufig"
+        "vorläufig",
+        "die Aufgabenverteilung",
+        "die Mehrheit",
+        "anwesend",
+        "protokollieren"
       ],
       "reading": {
         "textType": "Rundschreiben der Geschäftsleitung (Richtig/Falsch und Multiple Choice) + Intranet: Raumbuchung und Ansprechpartner",
@@ -406,14 +446,18 @@
         "die Hausgemeinschaft",
         "die Nachbarschaft",
         "die Geduld",
-        "die Schlichtung",
         "nachgeben",
         "stören",
         "akzeptieren",
         "sich aufregen",
         "beleidigt",
         "genervt",
-        "sodass"
+        "sodass",
+        "das Treppenhaus",
+        "die Ruhezeit",
+        "die Entschuldigung",
+        "sich vertragen",
+        "rücksichtslos"
       ],
       "reading": {
         "textType": "Zwei Ratgeberartikel „Streit mit den Nachbarn – was hilft?“ (Multiple Choice) + Brief an die Hausgemeinschaft mit Wortlücken",
@@ -504,7 +548,11 @@
         "einhalten",
         "prüfen",
         "vorgeschrieben",
-        "gültig"
+        "gültig",
+        "der Arbeitsschutz",
+        "die Gefahr",
+        "bedienen",
+        "vorsichtig"
       ],
       "reading": {
         "textType": "Betriebsordnung für Küche und Werkstatt (Multiple Choice) + Informationsbroschüre zum Arbeitsschutz (Richtig/Falsch)",
@@ -567,9 +615,9 @@
           "lehrwerk": "Menschen B1 L22; Schritte plus Neu 6 L13; Netzwerk B1 K10"
         },
         {
-          "point": "Nebensatz mit während (gleichzeitig): Während ich an der Ampel wartete, …",
+          "point": "Temporalsätze mit während, sobald und solange (Während ich an der Ampel wartete, … / Sobald die Polizei da war, … / Solange die Schwellung nicht zurückgeht, …)",
           "new": true,
-          "lehrwerk": "Schritte plus Neu 6 L9; Netzwerk B1 K7; Linie 1 B1 K11–12 (Menschen B1 L8 früher)"
+          "lehrwerk": "während: Schritte plus Neu 6 L9; Netzwerk B1 K7; Linie 1 B1 K11–12 (Menschen B1 L8 früher); sobald/solange: Lehrwerk-Platzierung unverified, Profile deutsch: sobald B2"
         }
       ],
       "vocabTheme": "Unfall, Verletzung, Versicherung",
@@ -591,7 +639,10 @@
         "haften",
         "schuld sein",
         "versichert",
-        "während (Nebensatz)"
+        "während (Nebensatz)",
+        "sobald",
+        "solange",
+        "stürzen"
       ],
       "reading": {
         "textType": "Blogbeitrag „Mein Pechtag“ (Richtig/Falsch) + Merkblatt der Versicherung „Was tun im Schadensfall?“ + Lückentext: Schadensmeldung",
@@ -602,13 +653,13 @@
         "seconds": 200
       },
       "writing": {
-        "task": "Schadensmeldung an die Versicherung, Wahl A oder B, vier Leitpunkte: was wann wo passiert ist, welcher Schaden entstanden ist, wer Zeuge war, was Sie von der Versicherung erwarten",
+        "task": "Schadensmeldung an die Versicherung, vier Leitpunkte: was wann wo passiert ist, welcher Schaden entstanden ist, wer Zeuge war, was Sie von der Versicherung erwarten",
         "words": 100,
-        "examTeil": "DTZ Schreiben"
+        "examTeil": "telc B1 Schriftlicher Ausdruck"
       },
       "speaking": {
-        "task": "Ein Foto beschreiben (Radfahrerin und Auto an einer Kreuzung), von eigenen Erfahrungen im Straßenverkehr erzählen und mit dem Heimatland vergleichen – ohne Vorbereitungszeit; im Kernteil: den Unfallhergang bei der Polizei schildern",
-        "examTeil": "DTZ Sprechen Teil 2"
+        "task": "Zwei kurze Meinungen zur Helmpflicht für Radfahrer wiedergeben, eigene Erfahrungen im Straßenverkehr einbringen und mit der KI-Partnerin diskutieren (20 Minuten Vorbereitung); im Kernteil: den Unfallhergang bei der Polizei schildern",
+        "examTeil": "telc B1 Mündlicher Ausdruck Teil 2"
       },
       "pronunciation": "r-Laute: konsonantisches und vokalisiertes r (Rad, Fahrer, Versicherung, verletzt)",
       "examTeile": [
@@ -619,9 +670,17 @@
         "DTZ Hören Teil 1",
         "telc B1 Hörverstehen Teil 3",
         "DTZ Schreiben",
-        "DTZ Sprechen Teil 2"
+        "DTZ Sprechen Teil 2",
+        "telc B1 Schriftlicher Ausdruck",
+        "telc B1 Mündlicher Ausdruck Teil 2"
       ],
-      "landeskunde": "Haftpflicht- und Hausratversicherung, Unfallmeldung und die Notrufe 110 und 112"
+      "landeskunde": "Haftpflicht- und Hausratversicherung, Unfallmeldung und die Notrufe 110 und 112",
+      "laneVariants": {
+        "DTZ": {
+          "writing": "Dieselbe Schadensmeldung als DTZ Schreiben mit A/B-Wahl, unter Prüfungsbedingungen",
+          "speaking": "Ein Foto beschreiben (Radfahrerin und Auto an einer Kreuzung), von eigenen Erfahrungen im Straßenverkehr erzählen und mit dem Heimatland vergleichen – ohne Vorbereitungszeit (DTZ Sprechen Teil 2)"
+        }
+      }
     },
     {
       "nr": 8,
@@ -653,7 +712,7 @@
         },
         {
           "point": "Nomen-Verb-Verbindungen im formellen Brief als feste Wendungen: Widerspruch einlegen, eine Frist setzen, in Rechnung stellen, zur Verfügung stellen",
-          "new": true,
+          "new": false,
           "lehrwerk": "Aspekte neu B2 K4; Sicher! B2 L5 (systematisch erst in B2.1)",
           "chunk": true
         },
@@ -682,7 +741,10 @@
         "berechtigt",
         "ungerechtfertigt",
         "innerhalb",
-        "außerhalb"
+        "außerhalb",
+        "die Mitgliedschaft",
+        "die Kundennummer",
+        "der Einspruch"
       ],
       "reading": {
         "textType": "Zahlungsaufforderung und Mahnung (Richtig/Falsch und Multiple Choice) + Vertragsbedingungen des Studios (Multiple Choice) + Lückentext: Widerspruchsschreiben",
@@ -710,9 +772,15 @@
         "telc B1 Hörverstehen Teil 3",
         "DTZ Hören Teil 1",
         "telc B1 Schriftlicher Ausdruck",
-        "telc B1 Mündlicher Ausdruck Teil 2"
+        "telc B1 Mündlicher Ausdruck Teil 2",
+        "DTZ Schreiben"
       ],
-      "landeskunde": "Mahnung, Widerspruch und eine Lastschrift zurückholen: Rechte als Kundin (Fristen nur mit Quelle und Stand)"
+      "landeskunde": "Mahnung, Widerspruch und eine Lastschrift zurückholen: Rechte als Kundin (Fristen nur mit Quelle und Stand)",
+      "laneVariants": {
+        "DTZ": {
+          "writing": "Derselbe Widerspruch als DTZ Schreiben mit A/B-Wahl, unter Prüfungsbedingungen"
+        }
+      }
     },
     {
       "nr": 9,
@@ -743,6 +811,11 @@
           "lehrwerk": "Menschen B1 L19; Schritte plus Neu 6 L8; Netzwerk B1 K11"
         },
         {
+          "point": "Präpositionen auf Wegen: entlang (den Fluss entlang; entlang der Stadtmauer) und um … herum (um den Marktplatz herum)",
+          "new": true,
+          "lehrwerk": "Menschen B1 L21; Netzwerk B1 K10; Linie 1 B1 K13 (06 F3 B1.2 #10: strong)"
+        },
+        {
           "point": "Komparativ und Superlativ für Vergleiche in Präsentationen – Wiederholung",
           "new": false,
           "lehrwerk": "Menschen A1 L22; Schritte plus Neu 4 L9"
@@ -766,14 +839,18 @@
         "städtisch",
         "abgelegen",
         "lebendig",
-        "je … desto"
+        "je … desto",
+        "entlang",
+        "um … herum",
+        "die Führung",
+        "das Denkmal"
       ],
       "reading": {
         "textType": "Zwei Zeitungsartikel: „Raus aufs Land?“ und „Zurück in die Stadt?“ (Multiple Choice) + Regionalmeldungen mit Überschriften",
         "words": 500
       },
       "listening": {
-        "textType": "Stadtführung durch eine Kleinstadt (Multiple Choice, einmal hören) + regionale Radionachrichten",
+        "textType": "Stadtführung durch eine Kleinstadt (Multiple Choice, einmal hören; den Fluss entlang, um den Marktplatz herum) + regionale Radionachrichten",
         "seconds": 230
       },
       "writing": {
@@ -833,6 +910,11 @@
           "point": "indem: Mittel und Weg (Man spart Energie, indem man die Heizung herunterdreht.)",
           "new": true,
           "lehrwerk": "Menschen B1 L20 (unverified); Schritte plus Neu 6 L12 (Profile deutsch: B2)"
+        },
+        {
+          "point": "als ob + Konjunktiv II: so tun, als ob …; ironische Kommentare verstehen und selbst formulieren (Er tut so, als ob ein Repair-Café das Klima retten könnte. Als ob das so einfach wäre!)",
+          "new": true,
+          "lehrwerk": "Menschen B1 L24; Schritte plus Neu 6 L9"
         }
       ],
       "vocabTheme": "Umwelt, Klima, Nachhaltigkeit",
@@ -853,7 +935,11 @@
         "wegwerfen",
         "nachhaltig",
         "statt",
-        "indem"
+        "indem",
+        "als ob",
+        "der Umweltschutz",
+        "die Lebensdauer",
+        "das Ersatzteil"
       ],
       "reading": {
         "textType": "Zeitungsartikel über ein Repair-Café (Multiple Choice) + sieben Leserkommentare zur Frage „Kurzstreckenflüge verbieten?“ (Ja/Nein)",
@@ -906,8 +992,8 @@
           "source": "02-exams-b1 §6 · ≈ GI-B1 Sprechen T1; telc M3; DTZ Sprechen T3"
         },
         {
-          "de": "Ich kann einem Radiointerview mit einer Ehrenamtlichen Einzelheiten entnehmen.",
-          "source": "02-exams-b1 §2 · ≈ telc B1 Hörverstehen T2"
+          "de": "Ich kann einem Radiointerview mit einer Ehrenamtlichen Einzelheiten entnehmen, auch wenn sie erzählt, was sie bedauert oder anders gemacht hätte; in festen Mustern kann ich das auch selbst sagen (Ich hätte früher … sollen.).",
+          "source": "02-exams-b1 §2 · ≈ telc B1 Hörverstehen T2; 14-lehrwerke-curricula §B1 · Menschen B1 L10 „Verpasste Gelegenheiten“ (Lehrwerk-Lernziel)"
         }
       ],
       "grammar": [
@@ -915,6 +1001,12 @@
           "point": "Zweiteilige Konnektoren weder … noch, entweder … oder, zwar … aber",
           "new": true,
           "lehrwerk": "Menschen B1 L18; Schritte plus Neu 6 L8/L10; Netzwerk B1 K8 (Profile deutsch: B2)"
+        },
+        {
+          "point": "Konjunktiv II der Vergangenheit: hätte/wäre + Partizip II (Wenn ich das früher gewusst hätte, hätte ich schon viel früher angefangen. Ich hätte mich früher engagieren sollen.) – rezeptiv, produktiv nur in festen Mustern",
+          "new": true,
+          "receptive": true,
+          "lehrwerk": "Menschen B1 L10; Schritte plus Neu 5 L7 (Hueber: B1.1); Profile deutsch: B2; produktiv in B2.1"
         },
         {
           "point": "Relativsätze in Anzeigen und Aufrufen (Wir suchen Menschen, die gern mit Kindern arbeiten.) – Wiederholung",
@@ -941,14 +1033,17 @@
         "spenden",
         "wählen",
         "sozial",
-        "weder … noch"
+        "weder … noch",
+        "bereuen",
+        "erleichtert",
+        "das Engagement"
       ],
       "reading": {
         "textType": "Ehrenamtsbörse: sieben Interessierte, zehn Angebote (Zuordnung) + Vereinsverzeichnis der Stadt",
         "words": 450
       },
       "listening": {
-        "textType": "Interview mit einer Ehrenamtlichen (Richtig/Falsch, zweimal hören) + Radiosendung: Wer engagiert sich warum? (Wer sagt was?)",
+        "textType": "Interview mit einer Ehrenamtlichen: warum sie angefangen hat und was sie heute anders gemacht hätte (Richtig/Falsch, zweimal hören) + Radiosendung: Wer engagiert sich warum? (Wer sagt was?)",
         "seconds": 420
       },
       "writing": {
@@ -957,7 +1052,7 @@
         "examTeil": "Goethe B1 Schreiben Teil 3"
       },
       "speaking": {
-        "task": "Mit einem Partner eine Benefizaktion planen (Flohmarkt für die Tafel: Ort, Termin, Werbung, Aufgaben) und sich einigen; im Kernteil: in einer Vereinsdiskussion zwischen zwei Positionen vermitteln",
+        "task": "Mit einem Partner eine Benefizaktion planen (Flohmarkt für die Tafel: Ort, Termin, Werbung, Aufgaben) und sich einigen; im Kernteil: in einer Vereinsdiskussion zwischen zwei Positionen vermitteln und in festen Mustern sagen, was man hätte anders machen können (Das hätten wir vorher besprechen sollen.)",
         "examTeil": "Goethe B1 Sprechen Teil 1"
       },
       "pronunciation": "Betonung zweiteiliger Konnektoren (WEDER heute NOCH morgen; ENTWEDER … ODER …)",
@@ -978,94 +1073,113 @@
     {
       "nr": 12,
       "id": "b1.2-u12",
-      "title": "Zwei Heimaten",
-      "titleEn": "Two homelands",
-      "situation": "Für ein Buchprojekt Ihrer Stadtbibliothek erzählen Menschen, was Heimat für sie bedeutet: Sie lesen einen Beitrag, sprechen über Ihren Lebensweg und schreiben einer Freundin in Ihrer alten Heimat.",
-      "handlungsfeld": "Umgang mit der Migrationssituation (RC) · Soziale Kontakte (BSK A)",
+      "title": "Zukunftsvisionen",
+      "titleEn": "Visions of the future",
+      "situation": "Die Stadtbibliothek zeigt die Ausstellung „Die Zukunft von gestern“: Wie stellten sich die Menschen vor fünfzig Jahren unser Leben heute vor? Sie lesen den Blog einer Besucherin, vergleichen die alten Visionen mit der Wirklichkeit, lernen in der Zukunftswerkstatt der Bibliothek andere Teilnehmende kennen und schreiben einem Freund, wie Sie sich Ihr Leben in zehn Jahren vorstellen.",
+      "handlungsfeld": "Freizeit und Kultur (Goethe-Themen) · Gefühle, Haltungen und Meinungen (BSK C) · Soziale Kontakte (BSK A)",
       "unitType": "texttype",
       "canDo": [
         {
-          "de": "Ich kann einen persönlichen Text über ein Leben zwischen zwei Ländern im Detail verstehen, auch wenn die Zeitformen wechseln.",
+          "de": "Ich kann einen persönlichen Blogbeitrag im Detail verstehen, auch wenn Zeitformen und Konjunktiv wechseln.",
           "source": "02-exams-b1 §7 (G-L1: Vergangenheitsformen, Plusquamperfekt, Passiv) · ≈ GI-B1 Lesen T1"
         },
         {
-          "de": "Ich kann sagen, was ich in meinem Leben anders gemacht hätte, und Gefühle wie Bedauern oder Erleichterung ausdrücken.",
-          "source": "14-lehrwerke-curricula §B1 · Menschen B1 L10 „Verpasste Gelegenheiten“ (Lehrwerk-Lernziel)"
+          "de": "Ich kann frühere Vorstellungen von der Zukunft mit der heutigen Wirklichkeit vergleichen und sagen, was anders gekommen wäre, wenn …",
+          "source": "14-lehrwerke-curricula §B1 · Menschen B1 L24 „Zukunftsvisionen“ (Lehrwerk-Lernziel); Transfer aus E10/E11"
         },
         {
-          "de": "Ich kann im Gespräch über mich (Herkunft, Lebensweg, Pläne) ausführlich Auskunft geben und auf Nachfragen reagieren.",
+          "de": "Ich kann kurz meine Meinungen und Pläne erklären und begründen.",
+          "source": "05-cando-b1-b2 (B1.2 #1) · SB B1"
+        },
+        {
+          "de": "Ich kann im Gespräch über mich (Herkunft, Ausbildung, Pläne) ausführlich Auskunft geben und auf Nachfragen reagieren.",
           "source": "02-exams-b1 §2–3 · ≈ telc B1 Mündlicher Ausdruck T1; DTZ Sprechen T1"
-        },
-        {
-          "de": "Ich kann ohne Vorbereitungszeit ein Foto beschreiben, von eigenen Erfahrungen erzählen und mit meinem Heimatland vergleichen.",
-          "source": "02-exams-b1 §3 · ≈ DTZ Sprechen T2"
         }
       ],
       "grammar": [
         {
-          "point": "Konjunktiv II der Vergangenheit: hätte/wäre + Partizip II (Wenn ich das gewusst hätte, wäre ich früher gekommen.) – rezeptiv, produktiv nur in festen Mustern",
-          "new": true,
-          "lehrwerk": "Menschen B1 L10; Schritte plus Neu 5 L7 (Hueber: B1.1); Profile deutsch: B2; produktiv in B2.1"
-        },
-        {
-          "point": "als ob + Konjunktiv II (Manchmal fühle ich mich, als ob ich hier fremd wäre.)",
-          "new": true,
+          "point": "Wiederholung und Transfer: als ob + Konjunktiv II (aus Einheit 10) – Zuwachs: Bilder und Visionen beschreiben (Auf dem Plakat sieht es aus, als ob die Autos fliegen könnten.)",
+          "new": false,
           "lehrwerk": "Menschen B1 L24; Schritte plus Neu 6 L9"
         },
         {
-          "point": "Präteritum und Plusquamperfekt in Lebensgeschichten – Wiederholung",
+          "point": "Wiederholung und Transfer: Konjunktiv II der Vergangenheit in festen Mustern (aus Einheit 11) – Zuwachs: über Vorhersagen statt über das eigene Leben (Was wäre gewesen, wenn …? Wenn das eingetroffen wäre, hätten wir heute …); weiter rezeptiv, produktiv nur in festen Rahmen",
           "new": false,
-          "lehrwerk": "Menschen B1 L11, L17"
+          "receptive": true,
+          "lehrwerk": "Menschen B1 L10; Schritte plus Neu 5 L7; produktiv in B2.1"
+        },
+        {
+          "point": "Wiederholung und Transfer: Pläne und Ziele mit Futur I, damit und um … zu (aus B1.1 Einheit 5 und 8) – Zuwachs: ein zusammenhängender Text über die eigene Zukunft (In zehn Jahren werde ich …, damit …)",
+          "new": false,
+          "lehrwerk": "Menschen B1 L24 (damit, um … zu); Menschen B1 L5; Schritte plus Neu 5 L6"
         }
       ],
-      "vocabTheme": "Heimat, Erinnerung, Identität",
+      "vocabTheme": "Zukunft, Visionen, Lebenspläne",
       "vocabTarget": 44,
       "keyWords": [
-        "die Herkunft",
-        "die Sehnsucht",
-        "das Heimweh",
-        "die Tradition",
-        "die Identität",
-        "die Integration",
+        "die Vision",
+        "die Wirklichkeit",
+        "die Gegenwart",
+        "das Jahrhundert",
+        "die Menschheit",
         "die Generation",
-        "die Wurzeln (Pl.)",
-        "sich gewöhnen an",
-        "sich zu Hause fühlen",
-        "zurückkehren",
-        "bereuen",
-        "prägen",
-        "vertraut",
-        "erleichtert",
-        "als ob"
+        "der Weltraum",
+        "die Fantasie",
+        "der Irrtum",
+        "die Aussicht",
+        "die Wahrscheinlichkeit",
+        "die Perspektive",
+        "sich irren",
+        "eintreffen",
+        "verwirklichen",
+        "pessimistisch",
+        "realistisch",
+        "veraltet",
+        "zukünftig",
+        "eines Tages"
       ],
       "reading": {
-        "textType": "Persönlicher Beitrag im Buchprojekt: Zwischen zwei Heimaten (Richtig/Falsch) + persönlicher Brief mit Wortlücken",
+        "textType": "Blogbeitrag einer Besucherin: „Die Zukunft von gestern“ (Richtig/Falsch) + Brief an mein Ich in zehn Jahren mit Wortlücken",
         "words": 300
       },
       "listening": {
-        "textType": "Gespräch zweier Freundinnen über Heimweh und Ankommen (Richtig/Falsch, einmal hören)",
+        "textType": "Gespräch zweier Freundinnen nach dem Ausstellungsbesuch (Richtig/Falsch, einmal hören)",
         "seconds": 270
       },
       "writing": {
-        "task": "Antwort auf den Brief einer Freundin aus der alten Heimat, vier Leitpunkte: für den Brief danken, erzählen, was sich verändert hat, sagen, was Sie vermissen, einen Besuch planen",
+        "task": "Antwort auf die E-Mail eines Freundes, vier Leitpunkte: von der Ausstellung erzählen, sagen, welche alte Vorhersage Sie überrascht hat und was gewesen wäre, wenn sie eingetroffen wäre, Ihre eigenen Pläne für die nächsten zehn Jahre beschreiben, einen gemeinsamen Besuch vorschlagen",
         "words": 110,
         "examTeil": "telc B1 Schriftlicher Ausdruck"
       },
       "speaking": {
-        "task": "Einander kennenlernen: über Herkunft, Lebensweg, Sprachen und Pläne sprechen und nachfragen; danach ein Foto zum Thema Heimat beschreiben und vergleichen",
-        "examTeil": "telc B1 Mündlicher Ausdruck Teil 1"
+        "task": "Generalprobe Mündlicher Ausdruck in der Standard-Lane nach 20 Minuten Vorbereitung: Teil 1 einander kennenlernen (Herkunft, Ausbildung, Pläne), Teil 2 zwei Meinungen zu „Früher war die Zukunft besser“ wiedergeben und diskutieren, Teil 3 gemeinsam einen Besuch der Ausstellung planen",
+        "examTeil": "telc B1 Mündlicher Ausdruck Teil 1–3"
       },
-      "pronunciation": "Regionale Aussprache verstehen: Beispiele aus Österreich und der Schweiz (rezeptiv); eigene Erinnerungen mit Gefühl erzählen",
+      "pronunciation": "Satzmelodie beim Vergleichen und Vermuten (Es sieht aus, als ob … ↗ | aber heute … ↘); regionale Aussprache verstehen: Beispiele aus Österreich und der Schweiz (rezeptiv)",
       "examTeile": [
         "Goethe B1 Lesen Teil 1",
         "telc B1 Sprachbausteine Teil 2",
         "Goethe B1 Hören Teil 3",
         "telc B1 Schriftlicher Ausdruck",
         "telc B1 Mündlicher Ausdruck Teil 1",
+        "telc B1 Mündlicher Ausdruck Teil 2",
+        "telc B1 Mündlicher Ausdruck Teil 3",
+        "Goethe B1 Sprechen Teil 1",
+        "Goethe B1 Sprechen Teil 2",
+        "Goethe B1 Sprechen Teil 3",
         "DTZ Sprechen Teil 1",
-        "DTZ Sprechen Teil 2"
+        "DTZ Sprechen Teil 2",
+        "DTZ Sprechen Teil 3"
       ],
-      "landeskunde": "Was ist „Heimat“? Der Begriff im Deutschen; Porträt einer realen Person zwischen zwei Ländern (mit Quelle); plurizentrisches Deutsch (Österreich, Schweiz)"
+      "landeskunde": "Wie man sich früher die Zukunft vorstellte: Beispiele aus Film, Werbung und Weltausstellungen im deutschsprachigen Raum (jeweils mit Quelle und Jahr); Zukunftswerkstätten in Bibliotheken und Volkshochschulen; plurizentrisches Deutsch (Österreich, Schweiz)",
+      "laneVariants": {
+        "Goethe": {
+          "speaking": "Generalprobe Sprechen Teil 1–3 nach 15 Minuten Vorbereitung: Teil 1 gemeinsam den Ausstellungsbesuch planen, Teil 2 Präsentation „Früher war die Zukunft besser?“, Teil 3 Rückmeldung und Frage"
+        },
+        "DTZ": {
+          "speaking": "Generalprobe Sprechen Teil 1–3 ohne Vorbereitung: über sich sprechen, ein Foto aus der Ausstellung beschreiben und mit dem Heimatland vergleichen, gemeinsam planen"
+        }
+      }
     }
   ],
   "checkpoints": [
@@ -1103,7 +1217,7 @@
     }
   ],
   "levelTest": {
-    "format": "Vollständiger Modelltest (dritter Modelltest der Stufe, Paralleltest) im gewählten Prüfungsformat: telc Deutsch B1 (Leseverstehen, Sprachbausteine, Hörverstehen, Schriftlicher Ausdruck: 150 Min.; Mündlicher Ausdruck 3 Teile nach 20 Min. Vorbereitung), Goethe-/ÖSD-Zertifikat B1 (Lesen 65 Min., Hören ca. 40 Min., Schreiben 60 Min., Sprechen 3 Teile nach 15 Min. Vorbereitung) oder DTZ (100 Min. ohne Pause, Sprechen ca. 16 Min. ohne Vorbereitung); KI als Partnerin und Prüferin; Abspielzahlen wie in der Prüfung. Ohne Wahl: telc Deutsch B1. Ergebnis als Übungswert nach der Bestehensregel der gewählten Prüfung, nie als Prüfungsergebnis.",
+    "format": "Vollständiger Modelltest, der dritte von drei vollen Modelltests als Parallelform (Modelltest 1 = Checkpoint 3, Modelltest 2 = Checkpoint 4; dazu der Diagnose-Mini-Modelltest in Woche 1), in der letzten Woche vor dem Prüfungstermin ohne neuen Stoff, im Format der beim Onboarding gewählten Prüfungs-Lane (Standard ohne Wahl: telc Deutsch B1). telc Deutsch B1: Leseverstehen, Sprachbausteine, Hörverstehen, Schriftlicher Ausdruck (150 Min.), Mündlicher Ausdruck 3 Teile nach 20 Min. Vorbereitung. Goethe-/ÖSD-Zertifikat B1: Lesen 65 Min., Hören ca. 40 Min., Schreiben 60 Min., Sprechen 3 Teile nach 15 Min. Vorbereitung. DTZ (B1-Bereich; nur im Integrationskurssystem; aus dem mit A2.2 geteilten DTZ-Pool): 100 Min. ohne Pause, Sprechen ca. 16 Min. ohne Vorbereitung. Abspielzahlen wie in der Prüfung; die KI als Gesprächspartnerin und in der Rolle der Prüferin (automatische Übungsbewertung). Übungswerte je Prüfungsteil, dazu je Modelltest der Satz »nach der Bewertungsregel von telc/Goethe/DTZ wäre dieses Übungsergebnis …«; kein Bereitschaftsurteil über mehrere Modelltests, nie eine Bestehensprognose.",
     "sections": [
       "Lesen",
       "Hören",
