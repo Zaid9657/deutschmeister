@@ -1,11 +1,14 @@
 // LEX-03 — items, model texts and expected answers use known lemmas only; ≤ 3 glossed receptive
-// extras per text (BLUEPRINT §9.1). Hard once the cumulative lexicon exists up to the unit; before
+// extras per text (BLUEPRINT §9.1). „Known" is LEX-01's set: every inflected form of an allocated
+// lemma, the closed A1 core, number words and the forms the unit's own grammar licenses (the rule-card
+// examples of its spine points: „am dritten Mai", „Könnten Sie …?"); one-letter option keys are not words. Hard once the cumulative lexicon exists up to the unit; before
 // that advisory (see LEX-01).
 
 import { walkProduction, walkTexts } from '../lib-validate/walk.mjs';
-import { knownForms, lexiconComplete, readTokens } from '../lib-validate/lexicon.mjs';
+import { knownForms, lexiconComplete, readTokens, licensedForms, isKnown } from '../lib-validate/lexicon.mjs';
 import { arr, finding, blocker, list } from '../lib-validate/helpers.mjs';
 import { parseUnitId } from '../lib-validate/ids.mjs';
+import { unitDoc } from '../lib-validate/context.mjs';
 
 export const id = 'LEX-03';
 export const title = 'Production uses known lemmas only; ≤ 3 glossed extras per text';
@@ -27,12 +30,15 @@ export function run({ ctx, docs }) {
     if (!ctx.levels.get(doc.level)?.lexicon) continue;
     const key = `${doc.level}|${nr}`;
     if (!cache.has(key)) cache.set(key, { known: knownForms(ctx, doc.level, nr), state: lexiconComplete(ctx, doc.level, nr) });
-    const { known, state } = cache.get(key);
+    const { known: base, state } = cache.get(key);
+    const known = new Set(base);
+    const unitData = doc.kind === 'unit' ? doc.data : doc.kind === 'lanepack' ? unitDoc(ctx, doc.data.unit)?.data : null;
+    if (unitData) for (const f of licensedForms(ctx, unitData).forms) known.add(f);
     const pending = { surfaces: 0, forms: new Set() };
     for (const p of walkProduction(doc)) {
       if (p.item?.intentionalError && p.kind !== 'answer') continue;
       n += 1;
-      const unknown = [...new Set(readTokens(p.de).filter((t) => !known.has(t.lower)).map((t) => t.text))];
+      const unknown = [...new Set(readTokens(p.de).filter((t) => !isKnown(t.lower, known)).map((t) => t.text))];
       if (!unknown.length) continue;
       if (state.complete) findings.push(blocker(doc, p.path, `unknown lemma form(s) in a ${p.kind}: ${list(unknown, 10)}`, p.item?.id || null));
       else {

@@ -136,7 +136,6 @@ function verbForms(e, add) {
   withEndings(add, p2);
   withEndings(add, `${base}d`);
   if (prefix) {
-    add(prefix);
     withEndings(add, `${prefix}${base}d`);
     add(inf);
     add(`${prefix}zu${base}`);
@@ -182,12 +181,19 @@ export function entryForms(e) {
   return { forms, prefix };
 }
 
+/** Add an entry's forms to a known set; a separable verb's particle is known with it („kommt … mit"). */
+function addEntry(set, e) {
+  const { forms, prefix } = entryForms(e);
+  for (const f of forms) set.add(f);
+  if (prefix) set.add(prefix);
+}
+
 let coreCache = null;
 /** Every form the closed core list (core-lexicon.mjs) and the number words license. */
 export function coreForms() {
   if (coreCache) return coreCache;
   const s = new Set([...FUNCTION_WORDS, ...PARTICLES, ...NUMBER_WORDS, ...CORE_FORMS]);
-  for (const e of CORE_ENTRIES) for (const f of entryForms(e).forms) s.add(f);
+  for (const e of CORE_ENTRIES) addEntry(s, e);
   coreCache = s;
   return s;
 }
@@ -204,7 +210,7 @@ export function knownForms(ctx, level, nr) {
       const u = parseUnitId(e?.unit);
       const p = u ? positionOf(u.level, u.nr) : null;
       if (p !== null && here !== null && p > here) continue;
-      for (const f of entryForms(e).forms) known.add(f);
+      addEntry(known, e);
     }
   }
   for (const [, { member }] of ctx.registries.casts?.members || []) {

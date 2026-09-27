@@ -80,4 +80,4 @@ for (const level of levels) {
     console.log(`course-v2 compile ${level}: ${result.outputs.length} output(s), ${changed.length} changed`);
   }
 }
-process.exit(failed ? 1 : 0);
+process.exitCode = failed ? 1 : 0; // not exit(): it drops unflushed piped stdout

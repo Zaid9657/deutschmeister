@@ -62,4 +62,4 @@ if (!flags.has('--quiet')) {
   const bad = result.files.filter((r) => r.errors.length).length;
   console.log(`course-v2 check: ${unique.length} file(s), ${result.errorCount} error(s) in ${bad} file(s)`);
 }
-process.exit(result.errorCount ? 1 : 0);
+process.exitCode = result.errorCount ? 1 : 0; // not exit(): it drops unflushed piped stdout

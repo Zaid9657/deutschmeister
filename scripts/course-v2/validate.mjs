@@ -58,4 +58,6 @@ const report = await validate(target, {
 
 if (flag('--json')) console.log(JSON.stringify(report, null, 2));
 else console.log(formatReport(report, { verbose: flag('--verbose') }));
-process.exit(report.exitCode);
+// exitCode, not exit(): exit() drops whatever stdout has not flushed to a pipe yet, which cut a
+// large --json report mid-string (CI, 2026-09-27).
+process.exitCode = report.exitCode;
