@@ -399,7 +399,7 @@ function closingFormsOf(course, req) {
     for (const [lane, forms] of Object.entries(c.modelltests || {})) {
       if (!Array.isArray(forms)) continue;
       // `<level>-m<form>-<lane>` (SCHEMA §2); a list without that pattern is read by position
-      const id = forms.find((f) => typeof f === 'string' && new RegExp(`-m${req.form}-${lane}$`).test(f)) || forms[at];
+      const id = forms.find((f) => typeof f === 'string' && f.endsWith(`-m${req.form}-${lane}`)) || forms[at];
       if (typeof id === 'string') out[lane] = id;
     }
   }
