@@ -2820,8 +2820,8 @@
       "strategyCards": [
         {
           "template": "sd1.l2",
-          "de": "Lesen Teil 2: Sie lesen fünf Situationen. Zu jeder Situation sind zwei Anzeigen da: a und b. Lesen Sie zuerst die Situation: Was ist wichtig? Das Geld, die Zimmer, ruhig oder laut? Oft steht ein Wort aus der Situation in a und in b. Lesen Sie genau: Was passt wirklich?",
-          "en": "Reading part 2: five situations, each with two ads, a and b. Read the situation first: what matters – money, rooms, quiet or noisy? A word from the situation often appears in both ads, so read closely: which one really fits?"
+          "de": "Lesen Teil 2: Sie lesen fünf Sätze, in der Prüfung heißen sie „Situationen“. Zu jedem Satz sind zwei Anzeigen da: a und b. Lesen Sie zuerst den Satz: Was ist wichtig? Das Geld, die Zimmer, ruhig oder laut? Oft steht ein Wort aus dem Satz in a und in b. Lesen Sie genau: Was passt wirklich?",
+          "en": "Reading part 2: five sentences – in the exam they are called „Situationen“ (situations) – each with two ads, a and b. Read the sentence first: what matters – money, rooms, quiet or noisy? A word from the sentence often appears in both ads, so read closely: which one really fits?"
         },
         {
           "template": "sd1.l1",
@@ -3325,14 +3325,14 @@
       "id": "a1.1-u05-rm02",
       "de": "Die Wohnung hat zwei Zimmer, eine Küche und ein Bad.",
       "en": "The flat has two rooms, a kitchen and a bathroom.",
-      "function": "die Wohnung beschreiben",
+      "function": "die Zimmer nennen",
       "forTemplate": "sd1.sp2"
     },
     {
       "id": "a1.1-u05-rm03",
       "de": "Das Wohnzimmer ist groß und hell.",
       "en": "The living room is big and bright.",
-      "function": "ein Zimmer beschreiben",
+      "function": "über ein Zimmer sprechen",
       "forTemplate": "sd1.sp2"
     },
     {
