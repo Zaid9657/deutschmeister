@@ -59,6 +59,13 @@ function assertFail(r, re = null) {
 
 const ex = (mutate, opts) => exampleContext(mutate, opts);
 const step = (parts, k) => parts.unit.steps[k];
+/**
+ * SCHEMA §15.6, ITM-01 row: the worked example's one error-correction item that trips the 2026-09-27 rail
+ * (a2.1-u07-ls3-p10, verb-final, a bare „Korrigieren Sie:"), fixed the way the row says. `exFixed` is the
+ * example with that fix — the example every other rule's passing test starts from where ITM-01 runs.
+ */
+const wortstellung = (p) => { const it = step(p, 2).pool.items[9]; it.promptDe = it.promptDe.replace('Korrigieren Sie:', 'Korrigieren Sie die Wortstellung:'); };
+const exFixed = (mutate, opts) => ex((p) => { wortstellung(p); if (mutate) mutate(p); }, opts);
 
 // ── the rule set itself ─────────────────────────────────────────────────────────────────────
 
@@ -297,7 +304,8 @@ describe('TXT-04 instruction length', () => {
 // ── items ───────────────────────────────────────────────────────────────────────────────────
 
 describe('ITM-01 the answer follows from the German prompt', () => {
-  test('pass', async () => assertPass(await rule('ITM-01', ex())));
+  test('pass (with the §15.6 ITM-01 prompt fix)', async () => assertPass(await rule('ITM-01', exFixed())));
+  test('fail: the worked example as written trips the error-correction rail once (§15.6 ITM-01 row)', async () => assertFail(await rule('ITM-01', ex()), /steps\[2\]\.pool\.items\[9\]\.promptDe error correction \(verb-final\) with a bare prompt/));
   test('fail: a typed gap without a gap', async () => assertFail(await rule('ITM-01', ex((p) => { step(p, 0).pool.items[0].promptDe = 'Frau Kowalski sagt: „Bitte melden Sie bei mir.“'; })), /without a gap/));
   test('fail: an English prompt (quality.js)', async () => assertFail(await rule('ITM-01', ex((p) => { step(p, 0).pool.items[1].promptDe = 'Jan is late today. He ___ himself.'; }))));
   test('pass: zuordnen/insert items answer from the block choices', async () => assertPass(await rule('ITM-01', choiceContext())));
@@ -535,12 +543,18 @@ describe('COV-5 productive rotation', () => {
 // ── SCHEMA §15.6: what the validator reports on the fixture ─────────────────────────────────
 
 describe('SCHEMA §15.6 on the worked example (--stage T)', () => {
-  test('exactly one blocking rule: CON-06 (verification "partial")', async () => {
+  test('two blocking rules: ITM-01 (ls3-p10, the rail of 2026-09-27) and CON-06 (verification "partial")', async () => {
     const b = ex(null, { verified: false });
     const rep = await runRules({ ctx: b.ctx, docs: b.docs, levels: b.levels, mode: 'file', label: 'test', notes: [] }, { rules: RULES, stage: 'T' });
     const failing = rep.results.filter((r) => r.status === 'fail').map((r) => r.id);
-    assert.deepEqual(failing, ['CON-06'], rep.results.filter((r) => r.status === 'fail').map(messages).join('\n'));
+    assert.deepEqual(failing, ['ITM-01', 'CON-06'], rep.results.filter((r) => r.status === 'fail').map(messages).join('\n'));
+    const itm = rep.results.find((r) => r.id === 'ITM-01').findings.filter((f) => f.severity === 'blocker');
+    assert.deepEqual(itm.map((f) => f.id), ['a2.1-u07-ls3-p10'], 'the §15.6 ITM-01 row: exactly the one verb-final item');
     assert.equal(rep.exitCode, 1);
+    // with the row's fix, CON-06 is the only blocker again
+    const f = exFixed(null, { verified: false });
+    const fixed = await runRules({ ctx: f.ctx, docs: f.docs, levels: f.levels, mode: 'file', label: 'test', notes: [] }, { rules: RULES, stage: 'T' });
+    assert.deepEqual(fixed.results.filter((r) => r.status === 'fail').map((r) => r.id), ['CON-06']);
     const pass = ['REF-01', 'ID-01', 'GRM-01', 'GRM-02', 'LEX-05', 'TXT-02', 'TXT-03', 'TXT-04', 'ITM-02', 'ITM-06', 'ITM-07', 'ITM-09', 'ITM-10', 'ITM-11', 'EXM-01', 'EXM-11'];
     for (const id of pass) assert.equal(rep.results.find((r) => r.id === id)?.status, 'pass', `${id} should pass`);
     // rail extensions of 2026-09-27 that measure the worked example as advisories only (RAILS §7 item 13):
@@ -552,8 +566,8 @@ describe('SCHEMA §15.6 on the worked example (--stage T)', () => {
       assert.equal(r.findings.filter((f) => f.severity === 'blocker').length, 0, `${id} has no blocker on the worked example`);
     }
   });
-  test('verified, the example passes every rule', async () => {
-    const b = ex();
+  test('verified and with the §15.6 ITM-01 prompt fix, the example passes every rule', async () => {
+    const b = exFixed();
     const rep = await runRules({ ctx: b.ctx, docs: b.docs, levels: b.levels, mode: 'file', label: 'test', notes: [] }, { rules: RULES });
     assert.equal(rep.summary.blocker, 0, rep.results.map(messages).filter(Boolean).join('\n'));
     assert.equal(rep.exitCode, 0);
@@ -873,11 +887,11 @@ describe('SCHEMA §8 UnitSpec.lexiconBlocks: 6..20 lemmas per block (B2 carries 
 
 describe('validate.mjs CLI', () => {
   const cli = (...args) => spawnSync(process.execPath, [VALIDATE, ...args], { cwd: REPO, encoding: 'utf8' });
-  test('the on-disk fixture: exit 1 on CON-06 only', () => {
+  test('the on-disk fixture: exit 1 on ITM-01 (§15.6 row, ls3-p10) and CON-06 only', () => {
     const r = cli(FIXTURE, '--json');
     assert.equal(r.status, 1, r.stderr);
     const rep = JSON.parse(r.stdout);
-    assert.deepEqual(rep.results.filter((x) => x.status === 'fail').map((x) => x.id), ['CON-06']);
+    assert.deepEqual(rep.results.filter((x) => x.status === 'fail').map((x) => x.id), ['ITM-01', 'CON-06']);
   });
   test('human report names the result and the skipped rules', () => {
     const r = cli(FIXTURE);
@@ -905,6 +919,7 @@ describe('validate.mjs CLI', () => {
       mkdirSync(join(root, 'a2.1', 'units'), { recursive: true });
       const unit = JSON.parse(readFileSync(FIXTURE, 'utf8'));
       unit.facts.forEach((f) => { f.verification = 'verified'; });
+      unit.steps[2].pool.items[9].promptDe = unit.steps[2].pool.items[9].promptDe.replace('Korrigieren Sie:', 'Korrigieren Sie die Wortstellung:'); // §15.6 ITM-01 row
       writeFileSync(join(root, 'a2.1', 'units', 'u07.json'), JSON.stringify(unit));
       copyFileSync(DETECTORS, join(root, 'registries', 'detectors.json'));
       const r = cli('a2.1', '--root', root, '--json');
@@ -1163,7 +1178,7 @@ describe('ITM-03 key balance extensions (a1.1 r2 F04, b1.1 r1 F02 / r2 F01, b2.1
 });
 
 describe('ITM-01 German cues (a1.1 r1 F06, a1.2 r1 F08/F10, a2.2 r2 F04, b1.1 r1 F05, b2.2 r1 F12)', () => {
-  const pool0 = (fields) => (p) => { step(p, 0).pool.items[0] = { ...step(p, 0).pool.items[0], options: undefined, exact: undefined, ...fields }; };
+  const pool0 = (fields) => (p) => { wortstellung(p); step(p, 0).pool.items[0] = { ...step(p, 0).pool.items[0], options: undefined, exact: undefined, ...fields }; };
   const typed = (promptDe, answer, extra = {}) => pool0({ type: 'fill_blank', promptDe, answer, accepted: [answer], ...extra });
   test('the key copied from the stem, no distractor there (fail); a flyer with every price (pass)', async () => {
     const mc = (promptDe) => pool0({ type: 'multiple_choice', promptDe, options: ['2,50 Euro', '1,90 Euro', '1,19 Euro'], answer: '1,19 Euro', accepted: ['1,19 Euro'] });
