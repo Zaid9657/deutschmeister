@@ -1015,8 +1015,8 @@ appears only in .2 Modelltests, once the whole level has been taught. The Teil-K
 
 ### 5.4 The .2 exam arc
 
-- **Diagnose** in week 1 (free, also sold-before-purchase as the Einstiegscheck): labelled as starting values; it may
-  contain untaught material because it is diagnostic.
+- **Diagnose** in week 1 (free, and offered before purchase as the Einstiegscheck): labelled as starting values; it
+  may contain untaught material because it is diagnostic.
 - **Modelltests come after the last new content.** The course path places Modelltest A after U12. The plan
   schedules A/B/C at exam −21/−14/−7 days, never before U12 is scheduled to be complete; if the date is too close it
   adds learning days (up to Intensiv) rather than moving a mock forward. A Modelltest opened before U12 via „Trotzdem
