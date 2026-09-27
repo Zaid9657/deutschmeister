@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { createHash } from 'crypto';
 import { getAuthenticatedUserId } from './_shared/auth.mjs';
+import { uaClass, cleanSource } from './_shared/xraySource.mjs';
 
 // Salt for the per-IP rate-limit key. Reuses an existing secret so no new env
 // var is required; if none is configured the IP ceiling is skipped (the
@@ -146,16 +147,22 @@ async function countTodayUsageByIp(ipKey) {
   return count ?? 0;
 }
 
-async function recordUsage(userId, anonymousId, sentence, ipKey) {
+async function recordUsage(userId, anonymousId, sentence, ipKey, source) {
   if (!supabase) return null;
   // Returns the row id so an upstream failure can refund it. The row is still
   // written BEFORE the model call, so concurrent requests stay metered.
-  const { data, error } = await supabase.from('xray_usage').insert({
+  const row = {
     user_id:      userId || null,
     anonymous_id: userId ? null : (anonymousId || null),
     ip_hash:      userId ? null : (ipKey || null),
     sentence:     sentence?.slice(0, 500) || null,
-  }).select('id').single();
+  };
+  const insert = (r) => supabase.from('xray_usage').insert(r).select('id').single();
+  let { data, error } = await insert(source ? { ...row, source } : row);
+  // `source` needs migrations/2026-09-27-xray-usage-source.sql. Until it is
+  // applied PostgREST rejects the unknown column, and the row must still be
+  // written without it — this row IS the meter.
+  if (error && source) ({ data, error } = await insert(row));
   if (error) {
     console.error('xray_usage insert failed:', error.message);
     return null;
@@ -201,12 +208,33 @@ export const handler = async (event) => {
   }
 
   try {
-    const { sentence, anonymousId } = JSON.parse(event.body || '{}');
+    const { sentence, anonymousId, source: rawSource } = JSON.parse(event.body || '{}');
 
     // Tier is derived from the verified JWT when present; without a valid
     // token the caller is anonymous (1/day) — a body-supplied userId is
     // never trusted, since anyone could claim another user's pro quota.
     const userId = await getAuthenticatedUserId(event);
+
+    // Coarse, PII-free provenance: the SPA-reported source (re-validated) and
+    // a one-word class of the user agent. Logged per analysis and stored on
+    // the usage row, so a spike can be attributed rather than guessed at.
+    const ua = uaClass(event.headers?.['user-agent']);
+    const source = { ...(cleanSource(rawSource) || {}), ua };
+
+    // --- Crawler gate ---
+    // From 2026-09-14 a JS-rendering crawler walked the ~900 grammar-example
+    // links to /analyze/?s=… and every render was a paid anonymous analysis
+    // with a fresh id (98% of anonymous X-Ray volume, measured 2026-09-27).
+    // A self-declared crawler never gets the model; the SPA does not
+    // auto-run for one either (src/lib/xray.js).
+    if (!userId && ua === 'crawler') {
+      console.log('[xray] crawler refused', JSON.stringify(source));
+      return {
+        statusCode: 403,
+        headers,
+        body: JSON.stringify({ error: 'Automated requests cannot use Sentence X-Ray.', code: 'crawler' }),
+      };
+    }
 
     if (!sentence || typeof sentence !== 'string' || sentence.trim().length === 0) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'sentence is required' }) };
@@ -260,7 +288,8 @@ export const handler = async (event) => {
     }
 
     // --- Record usage before calling Claude (counts even on API error) ---
-    const usageId = await recordUsage(userId || null, anonymousId || null, sentence.trim(), ipKey);
+    const usageId = await recordUsage(userId || null, anonymousId || null, sentence.trim(), ipKey, source);
+    console.log('[xray] analysis', JSON.stringify({ tier, ...source }));
 
     // --- Call Claude ---
     const claudeResponse = await fetch('https://api.anthropic.com/v1/messages', {

@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Scan, ArrowRight, Loader2, AlertCircle, ChevronDown, ChevronUp, Type, Sparkles, Eye, Crown } from 'lucide-react';
 import SEO from '../components/SEO';
 import { seoProps } from '../data/seoRoutes.js';
 import { useAuth } from '../contexts/AuthContext';
 import { getAuthHeaders } from '../utils/supabase';
-import { TRIAL_DAILY_LIMIT, PRO_DAILY_LIMIT } from '../config/limits';
+import { TRIAL_DAILY_LIMIT, PRO_DAILY_LIMIT, TRIAL_DAYS } from '../config/limits';
+import { FREE_LEVEL_LABEL } from '../data/marketing.js';
+import { getAttribution } from '../lib/attribution';
+import { getOrCreateAnonId, isLikelyCrawler, xraySource, XRAY_OFFER } from '../lib/xray.js';
 import { withTimeout } from '../utils/withTimeout';
 import Button from '../components/ui/Button.jsx';
 import Card from '../components/ui/Card.jsx';
@@ -96,25 +99,10 @@ const PREVIEW_WORDS = [
   { text: 'das Buch', case: 'accusative', role: 'direct_object',   translation: 'the book' },
 ];
 
-const ANON_ID_KEY = 'dm_xray_anon_id';
-
 const EYEBROW = 'font-data text-[0.6875rem] font-bold uppercase tracking-[0.13em]';
 const XR_CHIP = 'rounded-md border px-3 py-2 text-left';
 const XR_WORD = 'block text-[1.0625rem] font-semibold leading-none';
 const XR_ABBR = 'mt-1.5 block font-data text-[0.625rem] font-bold tracking-[0.13em]';
-
-function getOrCreateAnonId() {
-  try {
-    let id = localStorage.getItem(ANON_ID_KEY);
-    if (!id) {
-      id = crypto.randomUUID();
-      localStorage.setItem(ANON_ID_KEY, id);
-    }
-    return id;
-  } catch {
-    return 'unknown';
-  }
-}
 
 function getStyle(caseVal) {
   return CASE_STYLES[caseVal] || DEFAULT_STYLE;
@@ -301,18 +289,19 @@ function UsageBar({ usage, isLoggedIn }) {
       <span className={`font-data text-[0.75rem] font-medium whitespace-nowrap ${isLow ? 'text-accent-aprikose-ink' : 'text-graphite'}`}>
         {remaining} of {limit} left today
         {!isLoggedIn && (
-          <Link to="/signup" className="ml-1.5 font-bold text-siegel hover:text-siegel-deep underline underline-offset-2">
+          <a href={XRAY_OFFER.signupHref} className="ml-1.5 font-bold text-siegel hover:text-siegel-deep underline underline-offset-2">
             Sign up for more
-          </Link>
+          </a>
         )}
       </span>
     </div>
   );
 }
 
-// The daily-limit prompt: an aprikose attention card (warning tone, tokens
-// rule 2) with the one interactive colour on its CTA.
-function LimitReachedBanner({ limit, isLoggedIn }) {
+// The daily-limit prompt for a SIGNED-IN learner: an aprikose attention card
+// (warning tone, tokens rule 2) with the one interactive colour on its CTA.
+// A signed-out visitor gets XRayOffer instead — one offer, not two.
+function LimitReachedBanner({ limit }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: -8 }}
@@ -323,25 +312,47 @@ function LimitReachedBanner({ limit, isLoggedIn }) {
           <Crown size={20} className="text-accent-aprikose-ink" />
         </div>
         <h3 className="font-display font-semibold text-ink text-base mb-1">
-          {isLoggedIn
-            ? `That's all ${limit} of today's analyses. More tomorrow — or:`
-            : `That's your free analysis for today. A free account gives you ${TRIAL_DAILY_LIMIT} a day for your first week.`}
+          {`That's all ${limit} of today's analyses. More tomorrow — or:`}
         </h3>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-2 mt-4">
           <Button href="/pricing/">
             <Crown size={14} />
-            {isLoggedIn
-              ? `Upgrade to Pro — ${PRO_DAILY_LIMIT} analyses a day`
-              : `Try Pro — ${PRO_DAILY_LIMIT} analyses a day`}
+            {`Upgrade to Pro — ${PRO_DAILY_LIMIT} analyses a day`}
           </Button>
-          {!isLoggedIn && (
-            <Button variant="secondary" to="/signup">
-              Create a free account
-            </Button>
-          )}
         </div>
       </Card>
     </motion.div>
+  );
+}
+
+// The one conversion offer for a SIGNED-OUT visitor: under every result, and
+// in place of the limit banner once the anonymous analysis is spent. One
+// card, no popup (docs/SCORECARD.md work order #3). The links are plain hrefs
+// carrying ?ref=xray — attribution.js records a ref only on a page load, so a
+// router <Link> would lose it (src/lib/xray.js, XRAY_OFFER).
+function XRayOffer({ atLimit = false }) {
+  return (
+    <Card raised edge="siegel" className="p-5 sm:p-6">
+      <p className={`${EYEBROW} text-siegel mb-1`}>
+        {atLimit ? 'Daily analysis used' : 'Your next step'}
+      </p>
+      <h3 className="font-display font-semibold text-ink text-lg mb-2">
+        {atLimit ? "That's your free analysis for today." : 'Now learn to build sentences like this yourself.'}
+      </h3>
+      <p className="text-sm text-graphite leading-relaxed">
+        Start with the free {FREE_LEVEL_LABEL} course — short, guided lessons, no account needed. A free
+        account adds {TRIAL_DAILY_LIMIT} Sentence X-Ray analyses a day for your first {TRIAL_DAYS} days.
+      </p>
+      <div className="flex flex-col sm:flex-row gap-2 mt-4">
+        <Button href={XRAY_OFFER.signupHref}>
+          Create a free account
+          <ArrowRight size={14} />
+        </Button>
+        <Button variant="secondary" href={XRAY_OFFER.courseHref}>
+          Start the free {FREE_LEVEL_LABEL} course
+        </Button>
+      </div>
+    </Card>
   );
 }
 
@@ -363,10 +374,13 @@ const SentenceXRay = () => {
   // Stable anonymous ID
   const [anonId] = useState(() => getOrCreateAnonId());
 
-  // Auto-analyze if sentence arrived via ?s= param
+  // Auto-analyze if sentence arrived via ?s= param (grammar-example links,
+  // the daily email) — but never for a crawler: rendering the ~900
+  // /analyze/?s=… links cost a paid analysis per render (src/lib/xray.js).
+  // The sentence is still prefilled; a person can press Analyze.
   useEffect(() => {
     const prefill = searchParams.get('s');
-    if (prefill?.trim()) analyze(prefill.trim());
+    if (prefill?.trim() && !isLikelyCrawler()) analyze(prefill.trim(), 'link');
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -382,7 +396,9 @@ const SentenceXRay = () => {
     return data?.error || 'Analysis failed. Please try again.';
   };
 
-  const analyze = async (text) => {
+  // `entry` is how this analysis started ('link' | 'example' | 'typed'); it
+  // travels with the coarse source so link traffic and typing can be told apart.
+  const analyze = async (text, entry = 'typed') => {
     const trimmed = (text || sentence).trim();
     if (!trimmed) return;
 
@@ -403,6 +419,9 @@ const SentenceXRay = () => {
           body: JSON.stringify({
             sentence:    trimmed,
             anonymousId: user?.id ? null : anonId,
+            // Coarse and PII-free: referrer host or site section, the
+            // first/last attribution source, and `entry`. Logged per analysis.
+            source:      xraySource({ referrer: document.referrer, attribution: getAttribution(), entry }),
           }),
         }),
         45000,
@@ -563,7 +582,7 @@ const SentenceXRay = () => {
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {EXAMPLES.map((ex) => (
-                    <Chip key={ex} tone="quiet" size="md" raised onClick={() => analyze(ex)}>
+                    <Chip key={ex} tone="quiet" size="md" raised onClick={() => analyze(ex, 'example')}>
                       {ex}
                     </Chip>
                   ))}
@@ -597,10 +616,11 @@ const SentenceXRay = () => {
               exit={{ opacity: 0 }}
               className="mb-6"
             >
-              <LimitReachedBanner
-                limit={limitReached.limit}
-                isLoggedIn={!!user}
-              />
+              {user ? (
+                <LimitReachedBanner limit={limitReached.limit} />
+              ) : (
+                <XRayOffer atLimit />
+              )}
             </motion.div>
           )}
         </AnimatePresence>
@@ -674,6 +694,13 @@ const SentenceXRay = () => {
                     </p>
                   </Card>
                 </motion.div>
+              )}
+
+              {/* The conversion offer — signed-out visitors only */}
+              {!user && (
+                <div className="mb-6">
+                  <XRayOffer />
+                </div>
               )}
 
               {/* Analyze another */}
