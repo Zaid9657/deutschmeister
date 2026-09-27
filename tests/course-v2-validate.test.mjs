@@ -1254,7 +1254,8 @@ describe('EXM-04 cards, calendars, tb1.m2 (a2.1-u04 r1, a2.2-u04 r1 F07, b1.1-u0
     const mine = ['8.00–9.30 Uhr: joggen', '11.00–13.00 Uhr: helfen', '13.00–14.00 Uhr: essen', '17.30–19.00 Uhr: lernen', '19.00–20.00 Uhr: aufräumen'];
     const theirs = ['8.00–10.00 Uhr: Frühstück', '10.00–12.00 Uhr: Schwimmkurs', '12.00–14.00 Uhr: Mittagessen', '17.00–18.30 Uhr: Hausaufgaben', '18.30–20.00 Uhr: Abendessen'];
     assertPass(await rule('EXM-04', ex(cal(mine, theirs))));
-    assertFail(await rule('EXM-04', ex(cal(mine, theirs.slice(0, 3).concat(['18.30–20.00 Uhr: Abendessen', '8.00–8.30 Uhr: Zeitung'])))), /2 common free windows|common free windows/);
+    const two = [['8.00–9.00 Uhr: a', '12.00–13.00 Uhr: b', '13.00–14.00 Uhr: c', '18.00–19.00 Uhr: d', '19.00–20.00 Uhr: e'], ['8.00–9.00 Uhr: f', '9.00–9.30 Uhr: g', '12.00–12.30 Uhr: h', '18.00–18.30 Uhr: i', '19.00–20.00 Uhr: j']];
+    assertFail(await rule('EXM-04', ex(cal(...two))), /2 common free windows/);
     assertFail(await rule('EXM-04', ex(cal(mine.slice(0, 3), theirs))), /timed entries/);
   });
   test('tb1.m2: the learner\'s sheet holds one quote', async () => {
@@ -1336,5 +1337,24 @@ describe('TXT-02, CON-06, GRM-02, GRM-04, ALL-02, COV-3, ITM-04 rail extensions'
   test('ITM-04: a strategy card that names a key noun phrase of its step (a2.1-u04 r1)', async () => {
     assertFail(await rule('ITM-04', ex((p) => { step(p, 3).strategyCards[0].de = 'Achten Sie auf Orte, zum Beispiel im Konferenzraum.'; })), /„im konferenzraum", the key of a2\.1-u07-ls4-ga2-h1-03/);
     assertPass(await rule('ITM-04', ex()));
+  });
+});
+
+describe('GRM-04 review fixtures against the real spine and detectors (a1.1 r1 F24 / r2 F11, a1.2 r1 F27)', () => {
+  const real = (unitId, lines) => {
+    const ctx = emptyContext({ root: null, today: '2026-09-27' });
+    ingest(ctx, JSON.parse(readFileSync(join(REPO, 'content', 'course-v2', 'registries', 'grammar-spine.json'), 'utf8')), 'registries/grammar-spine.json');
+    addDetectors(ctx, REAL_DETECTORS, 'registries/detectors.json');
+    const [level, nr] = [unitId.slice(0, 4), Number(unitId.slice(-2))];
+    const doc = addDoc(ctx, 'unit', { $schema: 'course-v2/unit@1', id: unitId, level, nr, stage: 'S', spec: { grammar: { new: [], chunk: [], review: [] } }, steps: [{ id: `${unitId}-ls1`, kind: 'situation', input: { kind: 'dialog', lines: lines.map((de, i) => ({ id: `${unitId}-ls1-l${String(i + 1).padStart(2, '0')}`, speaker: 'cast.priya', de })) } }] }, `fixture:${level}/units/u${String(nr).padStart(2, '0')}.json`, { target: true });
+    return { ctx, docs: [doc], levels: [ctx.levels.get(level)] };
+  };
+  test('a1.1-u04: „ein bisschen", „Sie möchten", „Das macht zusammen 5 Euro", „300 Gramm, bitte.", „für eine Wohnung" raise nothing', async () => {
+    const r = await rule('GRM-04', real('a1.1-u04', ['Ich möchte ein bisschen Käse.', 'Sie möchten Brot?', 'Das macht zusammen 5 Euro.', '300 Gramm, bitte.', 'Das ist gut für eine Wohnung.']));
+    assert.equal(r.findings.length, 0, messages(r));
+  });
+  test('a1.2-u04: „Das Amt ist geöffnet.", „Ich finde das schwer.", „am dritten Juni", „Neu ab 1. Juni" raise nothing', async () => {
+    const r = await rule('GRM-04', real('a1.2-u04', ['Das Amt ist geöffnet.', 'Ich finde das schwer.', 'Der Termin ist am dritten Juni.', 'Neu ab 1. Juni.']));
+    assert.equal(r.findings.length, 0, messages(r));
   });
 });
