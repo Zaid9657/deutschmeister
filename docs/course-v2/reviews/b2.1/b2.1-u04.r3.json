@@ -272,7 +272,7 @@
       "path": "steps[5].task.modelText (Einleitung); steps[3].texts[3].lines[0] (b2.1-u04-ls4-t4-l01)",
       "quote": "„vom 12. bis 19. Oktober habe ich bei Ihnen eine Pauschalreise gemacht. … Neben unserem Zimmer …“ · „schicken Sie uns diese bitte als E-Mail“",
       "problem": "„bei Ihnen eine Pauschalreise gemacht“ is colloquial for a formal complaint; one books a trip with a company („gebucht“). The model then moves from ich to wir („unserem Zimmer“, „um uns gekümmert“) without ever introducing the second traveller. The booking is for 2 Reisende, and the 714 € covers both. In t4, „als E-Mail“ is less idiomatic than „per E-Mail“.",
-      "fix": "Model: „vom 12. bis 19. Oktober war ich mit einer Freundin auf Ihrer Pauschalreise „Kreta für Entdecker“. Leider hatte die Reise erhebliche Mängel.“ (+4 words; the body then has 139, inside 110-140). t4: „…, schicken Sie uns diese bitte per E-Mail.“",
+      "fix": "Model: „im Oktober war ich mit einer Freundin auf Ihrer Pauschalreise nach Kreta. Leider hatte die Reise erhebliche Mängel.“ This keeps the word count unchanged (the dates are already in the Betreff); for the word band, see F12. t4: „…, schicken Sie uns diese bitte per E-Mail.“",
       "scope": "instance",
       "proposedRule": null
     },
@@ -322,6 +322,18 @@
       "problem": "Carried from r1 F18 and r2 F09. No later b2.1 unit exists yet, so every lemma recurs in 0 later units. The in-unit half of the rule (≥ 2 occurrences in the inputs) passes. This is not a defect of this unit.",
       "fix": "No unit change. The specs of b2.1-u05 to u12 allocate recurrences, at least for the productive core (Minderung, Mängelanzeige, Fristsetzung, einfordern, sich berufen, Preisnachlass, Unterbringung). Then re-run node scripts/course-v2/validate.mjs b2.1.",
       "scope": "class",
+      "proposedRule": null
+    },
+    {
+      "id": "F12",
+      "severity": "minor",
+      "reviewer": "R1",
+      "unitId": "b2.1-u04",
+      "path": "steps[5].task.modelText; steps[5].task.leitpunkte[1].cues (lp2) and [2].cues (lp3); src/components/course-v2/WritingTaskView.jsx cueFound (l. 25-28) and band (wordBandLearning, countWords over the whole text) — validator EXM-03 WARN, 2 advisories (new at 20:04 UTC)",
+      "quote": "EXM-03: „model text of 155 words outside the band the player shows (110–140); it fits the exam band 150–200“ · „cue „deshalb“ is a connector the checklist already requires — it ticks the Leitpunkt for any text“ · lp2 cues [„schlafen“, „erholen“, „geärgert“, „Zeit“, „verloren“, „deshalb“] · lp3 cues [„hätte“, „hätten“, „müssen“, …] · cueFound: `body.includes(fold(c))`",
+      "problem": "(1) The player shows the learning band 110-140 and counts the whole text, but the model text has 155 words in total (body 135). A learner who copies its length is told they are over the band, and the checklist asks for „etwa 120 Wörter“. (2) The Leitpunkt tick is a substring match. Under lp2, „deshalb“ (a connector the checklist itself asks for) and „Zeit“ (contained in „rechtzeitig“, which LS3 drills as part of the lp3 reproach) tick „Folgen“ for texts that never say what the defects meant for the holiday. Under lp3, „müssen“ and „hätte“ are ticked by any modal sentence. The pre-submit checklist then shows three Punkte for a text that treats two. The KI still decides the meaning, so this is MINOR.",
+      "fix": "Either label the model as the exam version (≥ 150 words) or cut it to about 138 words in total. A simple cut is „Außerdem ist ein Ausflug ohne Ersatzleistung ausgefallen.“ (−7), plus „Leider hatte die Reise erhebliche Mängel.“ merged into the first sentence (−5); keep außerdem elsewhere, e.g. „Außerdem hätten Sie uns …“. For the cues: lp2 [„schlafen“, „erholen“, „Erholung“, „geärgert“, „verloren“, „Urlaub war“]; lp3 [„hätte … müssen“ written as the two cues „hätte uns“ and „hätten uns“, „Reiseleitung“, „gemeldet“, „Mängelanzeige“, „informieren“].",
+      "scope": "instance",
       "proposedRule": null
     }
   ],

@@ -4,14 +4,20 @@
 // "Inputs" are what the learner reads or hears in the unit file: the Folge, the Lernschritt inputs
 // (lines and written text) and the primary LS4 exam texts. Lane-pack texts do not count (a learner
 // of the primary lane never sees them).
+//
+// Hard floor (rule-smith 2026-09-27; reviews a2.2-u04 r1 F08, b1.2-u04 r1 F09, b2.2-u04 r1 F18): a
+// lemma allocated to the unit that occurs in NO authored German string of it (inputs, items, answers,
+// model texts — generator sources do not count, a generated item is not authored text) is not taught
+// there, and a PRODUCTIVE lemma with no occurrence in the unit's inputs is never met before it is
+// asked for. Both block; the ≥ 2 / later-unit measurements stay the ratchet.
 
 import { walkTexts, walkItems, walkProduction } from '../lib-validate/walk.mjs';
 import { countOccurrences } from '../lib-validate/lexicon.mjs';
-import { arr, ratchet } from '../lib-validate/helpers.mjs';
+import { arr, ratchet, blocker } from '../lib-validate/helpers.mjs';
 
 export const id = 'LEX-02';
 export const title = 'New lemmas recur: ≥ 2× in the unit\'s inputs and in ≥ 2 later units';
-export const type = 'ratchet';
+export const type = 'mixed';
 export const scope = 'unit';
 export const stage = 'S';
 
@@ -44,9 +50,12 @@ export function run({ ctx, docs }) {
     const nr = doc.nr;
     const later = [...(slot?.units.values() || [])].filter((u) => u.nr > nr).sort((a, b) => a.nr - b.nr);
     const laterTexts = later.map((u) => ({ nr: u.nr, text: unitAllText(u) }));
+    const own = unitAllText(doc);
     for (const e of entries) {
       checked += 1;
       const n = countOccurrences(e, inputs, cache);
+      if (!countOccurrences(e, own, cache)) findings.push(blocker(doc, 'spec.lexiconBlocks', `„${e.lemma}" is allocated to ${doc.data.id} but occurs in none of its authored German strings (a generator source is not a use) — use it, or the lexicon owner moves it`, e.id));
+      else if (e.role === 'productive' && !n) findings.push(blocker(doc, 'spec.lexiconBlocks', `productive lemma „${e.lemma}" occurs in none of the unit's inputs — the learner is asked to produce a word the unit never shows`, e.id));
       if (n < 2) findings.push(ratchet(doc, 'spec.lexiconBlocks', `${e.role || ''} lemma „${e.lemma}" occurs ${n}× in the unit's inputs (need ≥ 2)`.trim(), e.id));
       if (nr <= 10) {
         if (laterTexts.length >= 2) {

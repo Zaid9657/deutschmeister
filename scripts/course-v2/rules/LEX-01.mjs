@@ -6,12 +6,18 @@
 // (BLUEPRINT §9.1, §2.6). Hard once the cumulative lexicon exists up to the unit (every earlier
 // level and every earlier unit of this level); before that the measurement is advisory — the SCHEMA
 // §15.6 fixture row „LEX-01 … unknown tokens are reported as advisory".
+//
+// Rail extensions (rule-smith 2026-09-27): the unit's story.cliffhanger — the line a learner reads at the
+// end of the unit, without an English twin — is measured like an input (review a1.1-u04 r2 F07); a
+// compound of two known forms (compounds.mjs: „Radtour", „Möbelstücke") counts as known (reviews
+// b1.2-u04 r1 F01, b2.2-u04 r1 F05); its allocation is LEX-03's advisory.
 
 import { walkTexts } from '../lib-validate/walk.mjs';
 import { knownForms, lexiconComplete, readTokens, licensedForms, isKnown } from '../lib-validate/lexicon.mjs';
 import { levelNumbers, arr, finding, pct, list } from '../lib-validate/helpers.mjs';
 import { parseUnitId } from '../lib-validate/ids.mjs';
 import { unitDoc } from '../lib-validate/context.mjs';
+import { knownCompound } from '../lib-validate/compounds.mjs';
 
 export const id = 'LEX-01';
 export const title = 'Known-token coverage of inputs and exam texts (≥ 95 %; extensive ≥ 98 %)';
@@ -23,7 +29,8 @@ export function coverage(text, known, glosses = []) {
   const toks = readTokens(text);
   const gl = new Set(arr(glosses).map((g) => String(g).toLowerCase()));
   const unknown = [];
-  for (const t of toks) if (!isKnown(t.lower, known) && !gl.has(t.lower)) unknown.push(t.text);
+  const knownForm = (w) => isKnown(w, known);
+  for (const t of toks) if (!isKnown(t.lower, known) && !gl.has(t.lower) && !knownCompound(t.lower, knownForm)) unknown.push(t.text);
   return { total: toks.length, unknown, share: toks.length ? 1 - unknown.length / toks.length : 1 };
 }
 
@@ -45,7 +52,9 @@ export function run({ ctx, docs }) {
       for (const t of readTokens(`${x?.name || ''} ${x?.nameDe || ''} ${slug.replace(/^x\./, '').replace(/-/g, ' ')}`)) known.add(t.lower);
     }
     const min = levelNumbers(ctx, doc.level).coverageMin;
-    for (const t of walkTexts(doc)) {
+    const surfaces = [...walkTexts(doc)];
+    if (doc.kind === 'unit' && doc.data?.story?.cliffhanger) surfaces.push({ kind: 'story', de: String(doc.data.story.cliffhanger), path: 'story.cliffhanger', glosses: [], step: null });
+    for (const t of surfaces) {
       if (!t.de.trim()) continue;
       texts += 1;
       const need = t.kind === 'reward' ? 0.98 : min;
