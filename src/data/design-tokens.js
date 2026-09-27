@@ -126,12 +126,121 @@ export const viz = {
   error: '#C0362C', // system fault ONLY
 };
 
-/** Font stacks. Every face here is already loaded by the shell — no new requests. */
+/**
+ * Font stacks. The two brand faces are self-hosted (`fontFaces` below); each
+ * is followed by its metric-matched fallback, so the swap from fallback to
+ * brand face does not reflow the page.
+ */
 export const font = {
-  display: "'Fraunces', 'Iowan Old Style', Georgia, serif",
-  body: "'Nunito Sans', system-ui, -apple-system, 'Segoe UI', sans-serif",
+  display: "'Fraunces', 'Fraunces Fallback', 'Fraunces Fallback Times', 'Iowan Old Style', Georgia, serif",
+  body: "'Nunito Sans', 'Nunito Sans Fallback', system-ui, -apple-system, 'Segoe UI', sans-serif",
   data: "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace",
 };
+
+// ---------------------------------------------------------------------------
+// SELF-HOSTED FACES. Both front ends used to fetch these from
+// fonts.googleapis.com: two extra origins (DNS + TLS each) before the first
+// font byte, ~98 KB of each static page's ~144 KB, and a late swap from an
+// unmatched fallback that shifted the hero (CLS 0.11–0.18 on the pricing,
+// guide and grammar pages; docs/SCORECARD.md work order #9, 2026-09-27).
+//
+// The woff2 files in public/fonts/ are byte-for-byte what Google served for
+// the old css2 URLs (Fraunces v38 variable opsz+wght, Nunito Sans v19
+// variable wght, Nunito Sans italic 400), cut to the `latin` and `latin-ext`
+// subsets — nothing on either site uses Cyrillic or Vietnamese. SIL OFL 1.1:
+// the copyright and licence URL travel in each file's name table. A new
+// version gets a new filename (the version is in it), which is what lets
+// netlify.toml cache /fonts/* as immutable.
+//
+// Both tailwind configs add `fontFaces` to their base layer, so the @font-face
+// rules ship inside each front end's own stylesheet; the SPA adds
+// `fontFacesItalic` too (it always loaded the true italic, the Astro pages
+// never did). `fontPreloads` are the files every page needs above the fold —
+// index.html and Layout.astro preload exactly these (tests/web-performance).
+//
+// The fallbacks are the other half of the fix. Each names local fonts that
+// share one set of metrics and scales them to the brand face, so the text
+// wraps the same before and after the swap. size-adjust was MEASURED on the
+// site's own headings and paragraphs (Chromium, 2026-09-27), not taken from a
+// metrics table — Fraunces is variable, and a table's default instance is not
+// the weight the site sets: Fraunces 600 vs Georgia Bold (via its metric twin
+// Gelasio) 0.917–0.919, vs Noto Serif Bold 0.919–0.920, vs Times New Roman
+// Bold (via Liberation Serif) 1.09–1.11; Nunito Sans 400 vs Arial/Roboto
+// 1.01–1.02, 600–700 vs Arial Bold 0.99–1.02. The overrides are the brand
+// face's own vertical metrics (Fraunces ascent 0.978 / descent 0.255, Nunito
+// Sans 1.011 / 0.353, no line gap) divided by that size-adjust.
+// ---------------------------------------------------------------------------
+
+const UNICODE_LATIN =
+  'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD';
+const UNICODE_LATIN_EXT =
+  'U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF';
+
+const webFace = (family, file, weight, unicodeRange, fontStyle = 'normal') => ({
+  '@font-face': {
+    fontFamily: `'${family}'`,
+    fontStyle,
+    // Fraunces 500–700 and Nunito Sans 300–700 are the ranges the old css2
+    // URLs declared, so a weight outside them clamps exactly as it did.
+    fontWeight: weight,
+    fontDisplay: 'swap',
+    src: `url('/fonts/${file}.woff2') format('woff2')`,
+    unicodeRange,
+  },
+});
+
+const fallbackFace = (family, weight, locals, sizeAdjust, ascent, descent) => ({
+  '@font-face': {
+    fontFamily: `'${family}'`,
+    fontWeight: weight,
+    src: locals.map((name) => `local('${name}')`).join(', '),
+    sizeAdjust,
+    ascentOverride: ascent,
+    descentOverride: descent,
+    lineGapOverride: '0%',
+  },
+});
+
+export const fontFaces = [
+  webFace('Fraunces', 'fraunces-v38-latin', '500 700', UNICODE_LATIN),
+  webFace('Fraunces', 'fraunces-v38-latin-ext', '500 700', UNICODE_LATIN_EXT),
+  webFace('Nunito Sans', 'nunito-sans-v19-latin', '300 700', UNICODE_LATIN),
+  webFace('Nunito Sans', 'nunito-sans-v19-latin-ext', '300 700', UNICODE_LATIN_EXT),
+  // The site sets Fraunces at 500–700 only, so its fallbacks are the BOLD
+  // cuts at every weight — closer to 600 than a regular, and never synthetic.
+  fallbackFace(
+    'Fraunces Fallback',
+    '100 900',
+    ['Georgia Bold', 'Georgia-Bold', 'Noto Serif Bold', 'NotoSerif-Bold'],
+    '91.8%', '106.54%', '27.78%',
+  ),
+  fallbackFace(
+    'Fraunces Fallback Times',
+    '100 900',
+    ['Times New Roman Bold', 'TimesNewRomanPS-BoldMT', 'Liberation Serif Bold', 'LiberationSerif-Bold', 'Tinos Bold', 'Tinos-Bold'],
+    '109.5%', '89.32%', '23.29%',
+  ),
+  fallbackFace(
+    'Nunito Sans Fallback',
+    '100 500',
+    ['Arial', 'ArialMT', 'Liberation Sans', 'LiberationSans', 'Arimo', 'Arimo-Regular', 'Roboto', 'Roboto-Regular'],
+    '101.5%', '99.61%', '34.78%',
+  ),
+  fallbackFace(
+    'Nunito Sans Fallback',
+    '600 900',
+    ['Arial Bold', 'Arial-BoldMT', 'Liberation Sans Bold', 'LiberationSans-Bold', 'Arimo Bold', 'Arimo-Bold', 'Roboto Bold', 'Roboto-Bold'],
+    '100%', '101.1%', '35.3%',
+  ),
+];
+
+export const fontFacesItalic = [
+  webFace('Nunito Sans', 'nunito-sans-v19-italic-latin', '400', UNICODE_LATIN, 'italic'),
+  webFace('Nunito Sans', 'nunito-sans-v19-italic-latin-ext', '400', UNICODE_LATIN_EXT, 'italic'),
+];
+
+/** Above-the-fold on every page: the display face and the upright body face, latin subset. */
+export const fontPreloads = ['/fonts/fraunces-v38-latin.woff2', '/fonts/nunito-sans-v19-latin.woff2'];
 
 /**
  * Named type roles, each with its mobile step-down. Roles, not a raw scale:
@@ -250,7 +359,7 @@ export const tailwindEasing = {
 };
 
 export const tailwindFontFamily = {
-  display: ['Fraunces', 'Iowan Old Style', 'Georgia', 'serif'],
-  body: ['Nunito Sans', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+  display: ['Fraunces', 'Fraunces Fallback', 'Fraunces Fallback Times', 'Iowan Old Style', 'Georgia', 'serif'],
+  body: ['Nunito Sans', 'Nunito Sans Fallback', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
   data: ['ui-monospace', 'SFMono-Regular', 'SF Mono', 'Menlo', 'Consolas', 'monospace'],
 };
