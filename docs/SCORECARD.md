@@ -1,6 +1,6 @@
 # DeutschMeister scorecard (living)
 
-**Current: 30 / 100** · last measured 2026-09-27 · next refresh: Monday after `weekly-truth` (06:00 UTC)
+**Current: 31 / 100** · last measured 2026-09-27 (late) · next refresh: Monday after `weekly-truth` (06:00 UTC)
 
 This is the single source of truth for how the business is doing and what to work on next.
 Every session that works on this business reads it first. Any session that moves an aspect
@@ -20,7 +20,7 @@ measuring the same week get the same number. The dated snapshot this started fro
 | Acquisition | 15% | **2** | ↓ | Signups: 205 (Jun) → 147 (Sep). Search signups are brand searches (13 of 14 land on `/`). 22 keywords in DE, 0/20 targets in top 30, 11 referring domains (10 spam). No social running. The \"X-Ray spike\" since 09-14 was a **crawler** rendering the new example links (98% of anon analyses = our own example sentences); real anon X-Ray use is ~1–8/day |
 | Product & reliability | 15% | **5** | — | A1.1 at 0 blocker/major after 23 DaF reviews; 84 grammar topics; 3 mock exams. **Speaking: 24/45 starts (53%) got zero learner turns.** Paid levels still on older content. Webhooks: 0 failed in 30 days |
 | Retention & email | 10% | **3** | — | 29,500 sends/30 d, 1.95% bounce, 0 complaints. Click tracking switched **on** 2026-09-27; the click rate isn't known yet. Launch email written, never sent. 3 of 6 live paid subs failing |
-| Website performance | 5% | **8** | — | Mobile Lighthouse median 89 (home 100 … login 68), local build. `/login` CLS 2.0. `vendor-ui` 757 KB raw (all of lucide-react) |
+| Website performance | 5% | **10** | ↑ | Mobile Lighthouse, local build (2026-09-27, after PR #156): / 100, /pricing/ 99, grammar 99, course 99, guide 100, /level-test/ 86, /login 94 → median 99; worst CLS 2.0 → 0. `vendor-ui` 757 → 102 KB raw. Fonts self-hosted. **At target: this agent does nothing until it regresses** |
 | Support | 5% | **5** | — | 0 tickets ever from 1,685 accounts — no backlog, no signal |
 | Security & engineering | 5% | **6** | ↓ | Advisors: 0 errors; 2 actionable warnings (leaked-password protection off; 2 extensions in `public`). The exposed-function warning is fixed (2026-09-27). **New: every Netlify env var is stored non-secret, and a `phx_` PostHog personal API key ships in the public JS** (work order #0). CI green |
 
@@ -45,8 +45,8 @@ Same evening, after the secrets finding and the rubric line it added: security 7
 | Product | Speaking zero-turn rate / 30 d | 53% | <15% | `speaking_sessions.user_turns` |
 | Email | Click tracking on | yes (2026-09-27) | click rate ≥3% | Resend |
 | Email | Offer/campaign emails sent / 30 d | 0 | 2 | Resend / `send-campaign` |
-| Web | Mobile Lighthouse median, 7 pages | 89 | 95 | Lighthouse §7 |
-| Web | Worst CLS | 2.0 | <0.1 | Lighthouse §7 |
+| Web | Mobile Lighthouse median, 7 pages | 99 (was 89) | ≥95 (hold) | Lighthouse §7 |
+| Web | Worst CLS | 0 (was 2.0) | <0.1 (hold) | Lighthouse §7 |
 | Security | Actionable advisor warnings | 2 (was 3) | 0 | Supabase `get_advisors` |
 | Security | Known exposed secrets | 2 (phx_ key in bundle; env vars non-secret) | 0 | agent-reported 2026-09-27; verify: grep the built JS for `phx_`; Netlify env `is_secret` |
 
@@ -64,14 +64,14 @@ item above is done or blocked on someone else.
 | 2 | **Launch the sub-level courses by email.** Do NOT run `drafts/send-launch-email-1.sh`: it is the old telc B1 email with code START49, which expired 2026-09-14. Steps: (a) owner creates a new 100% code in Lemon Squeezy restricted to the A2.1 product (DMTEST100 is tied to the retired product); (b) owner buys A2.1 for €0 on `/pricing/` with a **fresh** account; (c) agent verifies the `course_a2_1` purchase row and the 90-day `plan_type='course'` Pro row, and owner deactivates the code; (d) agent stages `drafts/send-launch-sublevel-1.sh` from Email 1 of `drafts/launch-sublevel-courses-2026-09.md`, excluding subscribers and buyers, and fixes 3 copy issues (unsourced quote, "Goethe exam format" → Goethe-*style*, "since Monday"); (e) owner runs `test`, then `live` **once** — nothing records sends, so a rerun re-mails everyone | Revenue | Owner + agent | open | email sent once; clicks visible; first real sale |
 | 3 | **Unpaid subscribers keep Pro.** The webhook copies the next renewal date into `subscription_end` even when the status is `unpaid`/`past_due`, so access rolls forward every month (e.g. last paid 06-03, Pro until 10-03). Fix: access must follow status, not only `subscription_end` | Revenue, Product | Agent (review) | open | an unpaid sub loses Pro at the end of its paid period; test pins it |
 | 4 | **Trial end sells only Pro.** 181 trials ended in 30 days and 0 converted. The day-6 and trial-ended emails offer only €9.99/mo, never the one-time courses. Draft course-offer versions | Revenue, Email | Agent draft + **owner decision** | open | a trial-end email offers the course; trial→paid measured |
-| 5 | Sign-up + course offer under the X-Ray result; record X-Ray→signup; find the traffic source — **source found: a crawler** (see §6); crawler renders now 403 before any AI call; offer card + `ref=xray` shipped | Acquisition, Activation | Agent | in PR | X-Ray→signup measured, ≥2% |
+| 5 | Sign-up + course offer under the X-Ray result; record X-Ray→signup; find the traffic source — **source found: a crawler** (see §6); crawler renders now 403 before any AI call; offer card + `ref=xray` shipped | Acquisition, Activation | Agent | shipped 2026-09-27 (#155) | X-Ray→signup measured, ≥2% |
 | 6 | Social pack live 2026-10-01: accounts created, IDs filled, posting Routine on | Acquisition | Owner, then agent | open | first attributed social signup |
-| 7 | Fix speaking starts that end with zero learner turns (and 8 of 12 speaking users hit the free cap — an offer moment) | Product | Agent | in PR | zero-turn rate <15% |
-| 8 | First-lesson path for new signups (land in a lesson, not a menu) | Activation | Agent | in PR | October cohort ≥18% |
+| 7 | Fix speaking starts that end with zero learner turns (and 8 of 12 speaking users hit the free cap — an offer moment) | Product | Agent | shipped 2026-09-27 (#155) | zero-turn rate <15% |
+| 8 | First-lesson path for new signups (land in a lesson, not a menu) | Activation | Agent | shipped 2026-09-27 (#155) | October cohort ≥18% |
 | 9 | ~~Revoke EXECUTE on the exposed SECURITY DEFINER functions~~ — **done 2026-09-27**: `migrations/2026-09-27-revoke-public-execute.sql` applied via connector; 0 functions executable by anon/authenticated; `tests/function-grants.test.mjs` closes the class | Security | Agent | done | advisor warning gone |
 | 10 | Measurement: verify `deutsch-meister.de` in GSC; allow `api.dataforseo.com` for this environment | Acquisition | Owner | open | both connectors return data |
-| 11 | Stop bundling all of lucide-react (`vite.config.js:13`); self-host the two fonts; fix `/login` CLS | Web | Agent | in PR | median ≥95, worst CLS <0.1 |
-| 12 | Visible support/contact entry in the app | Support | Agent | in PR | first ticket or reply received |
+| 11 | Stop bundling all of lucide-react (`vite.config.js:13`); self-host the two fonts; fix `/login` CLS | Web | Agent | shipped 2026-09-27 (#156) | median ≥95, worst CLS <0.1 |
+| 12 | Visible support/contact entry in the app | Support | Agent | shipped 2026-09-27 (#155) | first ticket or reply received |
 | 13 | Earn real backlinks (r/German answers, VHS/university resource lists) | Acquisition | Owner/brother | ongoing | 5 non-spam referring domains |
 
 ## 4. How the loop works (agents)
@@ -143,6 +143,7 @@ Change a band only in a PR that says why, and re-score the history line it affec
 | 2026-09-27 | Support | `/support` open to everyone + links in every footer and the account menu (the only form sat behind the subscription guard: ~97% of accounts could not reach it) | tickets/30 d 0 → _next run_ | — | expected: first tickets within 2 weeks |
 | 2026-09-27 | Activation | Confirm link no longer dead-ends on /login; last onboarding slide sends beginners straight to A1.1 Lektion 1; dashboard "Start here" card | Sep cohort signup→lesson 10% → _October cohort_ | — | expected ≥18% |
 | 2026-09-27 | Product | Speaking: close sessions by server-counted turns; zero-turn sessions return the trial allowance; mic checked before a session is created | zero-turn 53% (13 of 24 were a counting bug) → _next run_ | — | expected <15%; 7/20 trial sessions this month were burnt |
+| 2026-09-27 | Web | Tree-shook lucide-react, self-hosted Fraunces + Nunito Sans with metric-matched fallbacks, hero slides instead of fading, `<main>` min-height on /login | median 89 → 99; worst CLS 2.0 → 0; vendor-ui 757 → 102 KB | keep | area now at target; the 5% weight means no more work here unless it regresses |
 
 ## 7. How to refresh (exact sources)
 
@@ -181,6 +182,7 @@ select status, count(*) from subscriptions where price_paid > 0 group by 1;
 |---|---|---|---|---|---|---|---|---|---|---|
 | 2026-09-27 | **30** | 1 | 2 | 2 | 5 | 3 | 8 | 5 | 7 | First measurement |
 | 2026-09-27 (eve) | **30** | 1 | 2 | 2 | 5 | 3 | 8 | 5 | 6 | Exposed-function warning fixed (+1), but exposed secrets found (−2, new rubric line); click tracking on (the score moves once the click rate is measured) |
+| 2026-09-27 (late) | **31** | 1 | 2 | 2 | 5 | 3 | 10 | 5 | 6 | Web to target (#156). Support, activation, speaking and X-Ray fixes shipped in #155; their areas are re-scored when the next cohort or run measures them |
 
 ## 9. Can't measure yet
 
