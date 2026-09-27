@@ -6,7 +6,9 @@
       "id": "course-micro",
       "kind": "writing",
       "lane": null,
+      "method": "ai",
       "max": 5,
+      "examMax": 5,
       "criteria": [
         {
           "id": "task",
@@ -16,15 +18,42 @@
             2,
             1,
             0
+          ],
+          "scoredBy": "ai",
+          "descriptors": [
+            {
+              "points": 2,
+              "de": "Alles, was die Mini-Aufgabe verlangt, steht im Text, und er passt zur Situation und zur Person, an die Sie schreiben."
+            },
+            {
+              "points": 1,
+              "de": "Ein Teil der Mini-Aufgabe fehlt, oder der Text passt nur teilweise zur Situation."
+            },
+            {
+              "points": 0,
+              "de": "Der Text passt nicht zur Mini-Aufgabe, oder es steht fast nichts da."
+            }
           ]
         },
         {
           "id": "target",
-          "label": "Zielstruktur benutzt",
+          "label": "Zielstruktur benutzt (nur bei Mikro-Aufgaben mit Zielstruktur)",
           "per": "task",
           "levels": [
             1,
             0
+          ],
+          "scoredBy": "ai",
+          "appliesIf": "targets",
+          "descriptors": [
+            {
+              "points": 1,
+              "de": "Die Struktur, die Sie in diesem Lernschritt geübt haben, steht mindestens einmal richtig gebildet im Text."
+            },
+            {
+              "points": 0,
+              "de": "Die geübte Struktur fehlt, oder sie ist so gebildet, dass man sie nicht erkennt."
+            }
           ]
         },
         {
@@ -35,9 +64,53 @@
             2,
             1,
             0
+          ],
+          "scoredBy": "ai",
+          "descriptors": [
+            {
+              "points": 2,
+              "de": "Man versteht Ihre Nachricht beim ersten Lesen. Kleine Fehler stören nicht."
+            },
+            {
+              "points": 1,
+              "de": "Man versteht das Wichtigste, muss aber an einzelnen Stellen raten."
+            },
+            {
+              "points": 0,
+              "de": "Man versteht nicht, was Sie mitteilen wollen."
+            }
           ]
         }
       ],
+      "errorPolicy": {
+        "a1": {
+          "v2-inv": "flag",
+          "verb-final": "flag",
+          "satzklammer": "flag",
+          "case-np": "flag",
+          "case-pp": "flag",
+          "gender-article": "flag",
+          "adj-ending": "flag",
+          "perfekt-aux-participle": "flag",
+          "connector-position": "flag",
+          "n-dekl": "flag",
+          "reflexive": "flag",
+          "register": "score",
+          "spelling-meaning": "score"
+        },
+        "a2": {
+          "verb-final": "flag",
+          "adj-ending": "flag",
+          "case-np": "flag",
+          "n-dekl": "flag"
+        },
+        "b1": {
+          "v2-inv": "flag",
+          "adj-ending": "flag",
+          "n-dekl": "flag"
+        },
+        "b2": {}
+      },
       "zeroRules": [],
       "capRules": [],
       "spelling": "only-if-meaning-suffers",
@@ -48,19 +121,21 @@
         "en"
       ],
       "modelId": "config:micro",
-      "splitVerified": true,
+      "splitVerified": false,
       "calibration": {
         "status": "pending",
         "rangeBands": 1
       },
-      "source": "https://www.goethe.de/pro/relaunch/prf/de/Pruefungsziele_Testbeschreibung_A1_SD1.pdf"
+      "source": "https://github.com/Zaid9657/deutschmeister/blob/main/docs/course-v2/BLUEPRINT.md#43-writing-rubric-profiles-registriesrubricswritingjson"
     },
     "course-micro-sp": {
       "$schema": "course-v2/rubric@1",
       "id": "course-micro-sp",
       "kind": "speaking",
       "lane": null,
+      "method": "ai",
       "max": 5,
+      "examMax": 5,
       "criteria": [
         {
           "id": "task",
@@ -70,15 +145,42 @@
             2,
             1,
             0
+          ],
+          "scoredBy": "ai",
+          "descriptors": [
+            {
+              "points": 2,
+              "de": "Sie sagen alles, was die Mini-Aufgabe verlangt, passend zur Situation und zur Person, mit der Sie sprechen."
+            },
+            {
+              "points": 1,
+              "de": "Ein Teil der Mini-Aufgabe fehlt, oder Ihre Antwort passt nur teilweise zur Situation."
+            },
+            {
+              "points": 0,
+              "de": "Ihre Antwort passt nicht zur Mini-Aufgabe, oder Sie sagen fast nichts."
+            }
           ]
         },
         {
           "id": "target",
-          "label": "Zielstruktur benutzt",
+          "label": "Zielstruktur benutzt (nur bei Mikro-Aufgaben mit Zielstruktur)",
           "per": "task",
           "levels": [
             1,
             0
+          ],
+          "scoredBy": "ai",
+          "appliesIf": "targets",
+          "descriptors": [
+            {
+              "points": 1,
+              "de": "Die Struktur, die Sie in diesem Lernschritt geübt haben, kommt mindestens einmal richtig gebildet vor."
+            },
+            {
+              "points": 0,
+              "de": "Die geübte Struktur fehlt, oder sie ist so gebildet, dass man sie nicht erkennt."
+            }
           ]
         },
         {
@@ -89,9 +191,53 @@
             2,
             1,
             0
+          ],
+          "scoredBy": "ai",
+          "descriptors": [
+            {
+              "points": 2,
+              "de": "Man versteht Ihre Aussage beim ersten Hören. Sie sprechen ohne lange Pausen; kurzes Nachdenken ist normal."
+            },
+            {
+              "points": 1,
+              "de": "Man versteht das Wichtigste, aber lange Pausen oder abgebrochene Sätze machen es schwer, Ihnen zu folgen."
+            },
+            {
+              "points": 0,
+              "de": "Man versteht nicht, was Sie mitteilen wollen, oder Sie sprechen nur einzelne Wörter."
+            }
           ]
         }
       ],
+      "errorPolicy": {
+        "a1": {
+          "v2-inv": "flag",
+          "verb-final": "flag",
+          "satzklammer": "flag",
+          "case-np": "flag",
+          "case-pp": "flag",
+          "gender-article": "flag",
+          "adj-ending": "flag",
+          "perfekt-aux-participle": "flag",
+          "connector-position": "flag",
+          "n-dekl": "flag",
+          "reflexive": "flag",
+          "register": "score",
+          "spelling-meaning": "score"
+        },
+        "a2": {
+          "verb-final": "flag",
+          "adj-ending": "flag",
+          "case-np": "flag",
+          "n-dekl": "flag"
+        },
+        "b1": {
+          "v2-inv": "flag",
+          "adj-ending": "flag",
+          "n-dekl": "flag"
+        },
+        "b2": {}
+      },
       "zeroRules": [],
       "capRules": [],
       "spelling": "not-scored",
@@ -102,12 +248,12 @@
         "en"
       ],
       "modelId": "config:micro-sp",
-      "splitVerified": true,
+      "splitVerified": false,
       "calibration": {
         "status": "pending",
         "rangeBands": 1
       },
-      "source": "https://www.goethe.de/pro/relaunch/prf/de/Pruefungsziele_Testbeschreibung_A1_SD1.pdf"
+      "source": "https://github.com/Zaid9657/deutschmeister/blob/main/docs/course-v2/BLUEPRINT.md#43-writing-rubric-profiles-registriesrubricswritingjson"
     },
     "ga2-s1": {
       "$schema": "course-v2/rubric@1",
@@ -1573,7 +1719,7 @@
     "g.dass": "Nebensatz mit dass (Ich finde, dass … / Ich glaube, dass …)",
     "g.dat-akk-objekte": "Verben mit Dativ und Akkusativ: Ich schicke meiner Schwester ein Foto.",
     "g.dat-akk-stellung": "Dativ und Akkusativ mit Pronomen: Ich schenke es ihr. Ich schenke ihr ein Buch.",
-    "g.dativverben-pronomen": "Verben mit Dativ (gefallen, passen, stehen, gehören, helfen, danken) und mir, dir, ihm, ihr, Ihnen",
+    "g.dativverben-pronomen": "Verben mit Dativ (gefallen, passen, stehen, gehören, helfen, danken) und die Personalpronomen im Dativ: mir, dir, ihm, ihr, uns, euch, ihnen, Ihnen",
     "g.denn": "denn: einen Grund nennen (Ich mag den Sommer, denn es ist warm.)",
     "g.deshalb": "deshalb: Verb auf Position 2 (Ich habe Fieber, deshalb bleibe ich zu Hause.)",
     "g.einerseits-andererseits": "einerseits … andererseits, zum einen … zum anderen",
@@ -1585,6 +1731,7 @@
     "g.imperativ-du-ihr": "Imperativ mit du und ihr (Kauf bitte Milch! Räumt bitte die Küche auf!)",
     "g.imperativ-sie": "Imperativ mit Sie: Gehen Sie geradeaus! Nehmen Sie die U2!",
     "g.indefinitpronomen": "Indefinitpronomen einer, eins, eine, keiner, welche (Hast du einen? – Ja, ich habe einen.)",
+    "g.indefinitpronomen-personen": "Indefinitpronomen für Personen und Sachen: jemand, niemand; etwas, nichts, alles (Hat jemand angerufen? – Nein, niemand.)",
     "g.indem": "indem: Mittel und Weg (…, indem Sie der Lastschrift widersprechen.)",
     "g.indirekte-frage": "Indirekte Fragen mit ob und W-Wort (Können Sie mir sagen, wann …? Ich möchte wissen, ob …)",
     "g.infinitiv-oder-dass": "Infinitivsatz oder dass-Satz: wann beide möglich sind, wann nur einer",
@@ -1596,7 +1743,6 @@
     "g.koennen": "können: Fähigkeit und Möglichkeit; die Satzklammer (Ich kann gut schwimmen.)",
     "g.komparation": "Komparation: größer als, so groß wie; gut – besser – am besten, gern – lieber – am liebsten",
     "g.komparation-attributiv": "Komparativ und Superlativ vor dem Nomen (der günstigere Tarif, das beste Angebot)",
-    "g.komposita": "Komposita: Das letzte Wort bestimmt den Artikel (der Apfelkuchen).",
     "g.konditional-konnektoren": "Bedingungen: sofern, vorausgesetzt, dass, es sei denn, im Fall, dass; Sollten Sie …, …",
     "g.konj1-gegenwart": "Konjunktiv I in der indirekten Rede und Ersatz durch Konjunktiv II (Sie sagt, sie habe keine Zeit.)",
     "g.konj1-vergangenheit": "Konjunktiv I der Vergangenheit (Er sagte, er sei 1961 nach Berlin gekommen.)",
@@ -1609,7 +1755,7 @@
     "g.konj2-waere-haette-wuerde": "Konjunktiv II für Wünsche und Träume: wäre, hätte, würde + Infinitiv",
     "g.konsekutiv-adversativ": "Konsekutive und adversative Konnektoren: folglich, infolgedessen; wohingegen, hingegen, während",
     "g.konzessive-konnektoren": "Konzessive Konnektoren: obgleich, wenngleich, selbst wenn, auch wenn; dennoch, gleichwohl",
-    "g.korrelat-es-da": "Verweiswörter: es und da(r)- + Präposition vor dass- und zu-Sätzen (Ich lege Wert darauf, dass …)",
+    "g.korrelat-es-da": "Korrelate: es vor dass- und zu-Sätzen (Es fällt mir schwer, …), da(r)- + Präposition vor zu-Sätzen (Ich bestehe darauf, pünktlich bezahlt zu werden.); wann das Korrelat stehen muss und wann es wegfallen kann",
     "g.lassen": "lassen: etwas reparieren lassen, jemanden etwas machen lassen",
     "g.lokale-praep-weg": "Wege beschreiben: gegenüber, an … vorbei, bis zu, durch; woher? wo? wohin?",
     "g.mittelfeld-angaben": "Wortstellung im Mittelfeld: Angaben temporal – kausal – modal – lokal",
@@ -1622,9 +1768,9 @@
     "g.n-deklination": "n-Deklination (der Kollege – den/dem Kollegen; der Kunde, Herr)",
     "g.nachdem-bevor": "Temporalsätze mit nachdem und bevor",
     "g.negation-nicht": "Verneinung mit nicht (Ich bin nicht Lehrerin.)",
-    "g.negation-system": "Negation als System: Satz- und Teilnegation, nicht mehr, noch nicht, gar nicht",
+    "g.negation-system": "Negation als System: Satz- und Teilnegation, die Stellung von nicht im Mittelfeld, Teilnegation mit nicht …, sondern …; verstärkte Negation mit gar nicht, keineswegs, keinesfalls",
     "g.nicht-nur-sowohl": "nicht nur … sondern auch; sowohl … als auch",
-    "g.nicht-position-gern": "gern und nicht gern; die Position von nicht im Satz",
+    "g.nicht-position-gern": "Die Position von nicht im Satz; gern und nicht gern; schon – noch nicht, noch – nicht mehr; nicht …, sondern … (Ich wohne nicht mehr in Kairo, sondern in Köln.)",
     "g.nomen-adjektiv-praeposition": "Nomen und Adjektive mit Präpositionen (die Kritik an, der Einfluss auf; angewiesen auf)",
     "g.nomen-verb-verbindungen": "Nomen-Verb-Verbindungen (einen Antrag stellen, in Anspruch nehmen, zur Verfügung stehen)",
     "g.nominalgruppen": "Nominalgruppen mit Genitivattribut und Präposition (die Anmeldung zur Prüfung, die Abgabe der Hausarbeit)",
@@ -1638,14 +1784,14 @@
     "g.passiv-praesens": "Passiv Präsens: wird + Partizip II (Ihr Antrag wird bearbeitet.) – erst verstehen, dann selbst bilden",
     "g.passiv-vergangenheit": "Passiv Präteritum und Perfekt: wurde … / ist … worden (worden oder geworden?)",
     "g.passiversatz": "Passiversatz: man, sich lassen, sein + zu; -bar/-lich mit passivischer Bedeutung (Das lässt sich messen.)",
-    "g.perfekt-haben": "Perfekt mit haben: ge-…-t und ge-…-en (Ich habe Pizza gemacht. Wir haben einen Film gesehen.)",
-    "g.perfekt-sein": "Perfekt mit sein: Bewegung und Veränderung (Ich bin nach Köln gefahren.)",
+    "g.perfekt-haben": "Perfekt mit haben: ge-…-t und ge-…-en (Ich habe Pizza gemacht. Wir haben einen Film gesehen.) – zuerst feste Verben, dann das System",
+    "g.perfekt-sein": "Perfekt mit sein: Bewegung und Veränderung (Ich bin nach Köln gefahren.) – zuerst feste Verben, dann das System",
     "g.perfekt-trennbar-untrennbar": "Perfekt trennbarer und untrennbarer Verben und der Verben auf -ieren (abgeholt, bezahlt, repariert)",
     "g.plusquamperfekt": "Plusquamperfekt: hatte/war + Partizip II",
     "g.positionsverben": "Verben der Position: stellen/stehen, legen/liegen, hängen",
     "g.possessiv-mein-dein": "Possessivartikel mein, dein, Ihr im Nominativ (Das ist meine Mutter.)",
     "g.possessiv-sein-ihr": "Possessivartikel sein, ihr, unser, euer; Genitiv-s bei Namen (Annas Fahrrad)",
-    "g.praep-akkusativ": "Präpositionen mit Akkusativ: für, ohne, um, durch, bis (ein Ticket für Samstag)",
+    "g.praep-akkusativ": "Präpositionen mit Akkusativ: für, ohne, gegen, um, durch, bis (ein Ticket für Samstag)",
     "g.praep-dativ": "Dativ nach Präpositionen: mit, zu, bei, von, aus, nach; Wo? in, an, auf, neben + Dativ",
     "g.praep-entlang-herum": "entlang und um … herum (den Fluss entlang, um den Marktplatz herum)",
     "g.praep-genitiv": "Präpositionen mit Genitiv: wegen, trotz, während",
@@ -1654,9 +1800,10 @@
     "g.praepositionaladverb": "Präpositionaladverbien: worauf? – darauf, wofür? – dafür, auch mit dass-Satz",
     "g.praesens": "Präsens: regelmäßige Verben, sein und haben; du und Sie (ich wohne, du wohnst, wir haben)",
     "g.praeteritum": "Präteritum regelmäßiger und unregelmäßiger Verben (kam, ging, sagte, fand): erst verstehen, dann erzählen",
+    "g.praeteritum-kernverben": "Präteritum häufiger Verben beim Erzählen: kam, sagte, es gab (Als ich nach Wien kam, gab es noch keinen Kurs.)",
     "g.praeteritum-modalverben": "Präteritum der Modalverben: musste, konnte, durfte, wollte, sollte",
     "g.praeteritum-sein-haben": "Präteritum von sein und haben: war, hatte (Früher war ich Verkäuferin.)",
-    "g.pronomen-er-es-sie": "Personalpronomen er, es, sie für Sachen (Der Tisch? Er ist neu.)",
+    "g.pronomen-er-es-sie": "Personalpronomen er, es, sie für Sachen (Der Tisch? Er ist neu.); es ohne Bezug beim Wetter (Es regnet. Es ist kalt.)",
     "g.redewiedergabe": "Redewiedergabe ohne Konjunktiv I: laut, zufolge, nach Angaben von; behaupten, betonen, einräumen",
     "g.reflexiv-akk": "Reflexive Verben mit Akkusativ: ich melde mich, du beeilst dich",
     "g.reflexiv-dat": "Reflexivpronomen im Dativ: Ich wünsche mir … Stell dir vor …",
@@ -1687,17 +1834,16 @@
     "g.welch-dies": "welch- und dies- (Welche Jacke? – Diese hier.)",
     "g.wenn": "Nebensatz mit wenn: Bedingung und Zeitpunkt; Nebensatz zuerst (Wenn der Zug Verspätung hat, …)",
     "g.werden-vollverb": "werden als Vollverb: ich werde, du wirst, es wird (Es wird dunkel. Sie wird Erzieherin.)",
-    "g.wetter-es": "Wetter mit es: Es regnet. Es ist kalt.",
     "g.wollen": "wollen: Pläne und Absichten (Ich will im Sommer die Prüfung machen.)",
     "g.wortbildung-adjektive": "Wortbildung Adjektive: -fähig, -sam, -ig (konfliktfähig, sparsam, sorgfältig)",
     "g.wortbildung-er-in": "Wortbildung Personen: -in für Frauen, -er aus Verben (Lehrerin; fahren → der Fahrer, die Fahrerin)",
+    "g.wortbildung-heit-keit": "Wortbildung: Nomen auf -heit und -keit aus Adjektiven, immer mit die (pünktlich → die Pünktlichkeit, frei → die Freiheit)",
     "g.wortbildung-t-kunft": "Wortbildung: Nomen aus Verben (abfahren → die Abfahrt, ankommen → die Ankunft)",
     "g.wortbildung-un-los": "Wortbildung: Adjektive mit un- und -los (unfreundlich, kostenlos)",
     "g.wortbildung-ung-bar": "Wortbildung: Nomen auf -ung, Adjektive auf -bar (die Anmeldung; erreichbar)",
     "g.zeitadverbien-erzaehlen": "Zeitadverbien beim Erzählen: danach, später, damals, inzwischen, schließlich",
     "g.zeitangaben-akkusativ": "Zeitangaben: von … an, über; jeden, letzten, nächsten + Akkusativ (jeden Montag)",
     "g.zeitangaben-inversion": "Uhrzeit, am/um/von … bis; Verb auf Position 2 nach Zeitangabe und nach zuerst/dann; und, aber, oder",
-    "g.zeitangaben-vergangenheit": "Zeitangaben der Vergangenheit: gestern, letzte Woche, am Wochenende",
     "g.zu-infinitiv": "Infinitiv mit zu nach Verben, Nomen und Adjektiven (Es ist wichtig, genug zu schlafen.)",
     "g.zustandspassiv": "Zustandspassiv: Vorgang und Zustand (Der Antrag wird geprüft. – Der Antrag ist eingereicht.)"
   }

@@ -9,6 +9,7 @@ export const id = 'ITM-03';
 export const title = 'Key balance: R/F 40–60 % true without runs > 3; a/b/c balanced ±1 per block';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'I';
 
 const TRUE = new Set(['richtig', 'ja', 'r', 'true', 'stimmt']);
 const TF = new Set(['richtig_falsch', 'ja_nein']);

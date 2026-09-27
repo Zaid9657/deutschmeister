@@ -1,5 +1,6 @@
-// ITM-02 — MC / a-b-c: 3 options, one key, distractors in the key's form class; R/F, Ja/Nein and
-// listen-select: 2 options (BLUEPRINT §9.1, SCHEMA §3.1).
+// ITM-02 — non-exam MC / a-b-c: 3 options, one key, distractors in the key's form class; R/F,
+// Ja/Nein and listen-select: 2 options (BLUEPRINT §9.1, SCHEMA §3.1). Exam items (role 'exam')
+// take their option count from the Teil template — that is EXM-01.
 
 import { walkItems } from '../lib-validate/walk.mjs';
 import { norm, tokens } from '../lib-validate/text.mjs';
@@ -9,6 +10,7 @@ export const id = 'ITM-02';
 export const title = 'Choice items: option count, exactly one key, distractors in the key\'s form class';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'I';
 
 const isSentence = (s) => /[.!?]["“”»]?\s*$/.test(String(s).trim());
 
@@ -16,8 +18,8 @@ export function run({ docs }) {
   const findings = [];
   let n = 0;
   for (const doc of docs) {
-    for (const { item, path } of walkItems(doc)) {
-      if (!isObj(item)) continue;
+    for (const { item, path, where } of walkItems(doc)) {
+      if (!isObj(item) || where === 'exam' || item.role === 'exam') continue;
       const want = expectedOptions(item.type);
       if (want === null) continue;
       n += 1;

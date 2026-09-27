@@ -8,6 +8,7 @@ export const id = 'ITM-08';
 export const title = 'caseSensitive only where capitalisation is the task';
 export const type = 'advisory';
 export const scope = 'unit';
+export const stage = 'I';
 
 const POLITE_RE = /\b(?:Sie|Ihnen|Ihr|Ihre|Ihren|Ihrem|Ihrer|Ihres)\b/;
 const CAPS_TASK_RE = /groß|klein|Großschreibung|Kleinschreibung|capital/i;

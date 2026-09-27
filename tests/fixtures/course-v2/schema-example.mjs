@@ -88,3 +88,32 @@ export function exampleContext(mutate = null, { today = '2026-09-27', verified =
   const pack = addDoc(ctx, 'lanepack', parts.lanePack, f('a2.1/units/u07.lane-ta2.json'), { target: true });
   return { ctx, docs: [unit, pack], unit, pack, parts, levels: [ctx.levels.get('a2.1')] };
 }
+
+/**
+ * The SCHEMA §15.7 shape fixtures (`tb1.lv3` in B1.2 U2 as a slot-'input' examBlock, `gb2.l2` in a
+ * B2.2 U7 lane pack) with their two template rows. `mutate(parts)` edits them before ingestion.
+ */
+export function choiceContext(mutate = null) {
+  const md = readFileSync(SCHEMA_MD, 'utf8');
+  const s157 = md.indexOf('### 15.7');
+  const j = (marker) => blockAfter(md, marker, s157);
+  const parts = clone({
+    templates: j('**Registry entries**'),
+    lv3: j('**`tb1.lv3` in B1.2 U2'),
+    l2: j('**`gb2.l2` in B2.2 U7**'),
+  });
+  if (mutate) mutate(parts);
+  const ctx = emptyContext({ root: null, today: '2026-09-27' });
+  const f = (name) => `fixture:${name}`;
+  ingest(ctx, { $schema: 'course-v2/lane@1', id: 'tb1', teile: { lv3: parts.templates.lv3 } }, f('lanes/tb1.json'));
+  ingest(ctx, { $schema: 'course-v2/lane@1', id: 'gb2', teile: { l2: parts.templates.l2 } }, f('lanes/gb2.json'));
+  const unit = addDoc(ctx, 'unit', {
+    $schema: 'course-v2/unit@1', id: 'b1.2-u02', level: 'b1.2', nr: 2, etappe: 1, stage: 'T',
+    steps: [{ id: 'b1.2-u02-ls1', kind: 'situation', title: 'Kurse', ...parts.lv3 }],
+  }, f('b1.2/units/u02.json'), { target: true });
+  const pack = addDoc(ctx, 'lanepack', {
+    $schema: 'course-v2/lanepack@1', unit: 'b2.2-u07', lane: 'gb2', version: 1, status: 'draft', reviewedIn: null,
+    slots: { ls4: { mode: 'replace', texts: parts.l2.texts, blocks: parts.l2.blocks, strategyCards: [] } },
+  }, f('b2.2/units/u07.lane-gb2.json'), { target: true });
+  return { ctx, docs: [unit, pack], unit, pack, parts, levels: [] };
+}

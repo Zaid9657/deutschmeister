@@ -24,6 +24,9 @@ export const rubricSchema = obj({
     'weight?': 'num',
     'scoredBy?': 'enum(ai|deterministic|notAutoScored)',
     'descriptors?': arr({ points: 'num', de: 'de' }, '*'),
+    // Used by course-micro / course-micro-sp since 2026-09-27: the criterion counts only when the
+    // task has target structures. NOT YET IN SCHEMA §4.5 — the SCHEMA owner should add the line.
+    'appliesIf?': 'enum(targets)',
   })),
   'bands?': arr({ label: 'str', min: 'num', max: 'num' }, '*'),
   'errorPolicy?': map('enum(a1|a2|b1|b2)', map(ERROR_TAG, 'enum(flag|score)')),

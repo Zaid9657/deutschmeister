@@ -8,7 +8,10 @@
 // in prompt, negation without cue. A sentence-building item whose tiles are exactly the words of
 // its answer is determined by its tiles, so the thin-cue-list reason (meta-prompt) does not apply.
 // The level-scoped reasons (ordinal, month, untaught form) encode the LIVE A1.1 syllabus; the v2
-// ceiling is GRM-04/LEX-03, so they are not applied.
+// ceiling is GRM-04/LEX-03, so they are not applied. An item that answers from its block's choice
+// set (zuordnen, insert, word-bank cloze: the answer is a KEY, SCHEMA §3.6) has no German answer
+// form, and its promptDe is a situation or „Lücke N" whose task is the block instruction; only the
+// language-of-prompt reasons apply to it (the fit of each key is SOL-02's, not a string rule).
 
 import { walkItems } from '../lib-validate/walk.mjs';
 import { norm, tokens } from '../lib-validate/text.mjs';
@@ -18,6 +21,7 @@ export const id = 'ITM-01';
 export const title = 'The answer follows from the German prompt (quality.js reasons + v2 task shape)';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'I';
 
 let Q = null;
 let qError = null;
@@ -69,7 +73,7 @@ export function run({ docs }) {
   const preds = predicates();
   let n = 0;
   for (const doc of docs) {
-    for (const { item, path, where, block } of walkItems(doc)) {
+    for (const { item, path, where, block, texts } of walkItems(doc)) {
       if (!isObj(item)) continue;
       n += 1;
       const id = item.id;
@@ -84,14 +88,18 @@ export function run({ docs }) {
       }
       if (item.type === 'sentence_building' && arr(item.tiles).length < 2) findings.push(blocker(doc, `${path}.tiles`, 'sentence building without its tiles', id));
       if (item.type === 'dictation' && !item.audioLineRef) findings.push(blocker(doc, `${path}.audioLineRef`, 'dictation without the line it dictates (audioLineRef)', id));
-      if (where === 'exam' && !item.textRef && arr(block?.texts).length > 1) findings.push(blocker(doc, `${path}.textRef`, 'exam item of a multi-text block without textRef', id));
-      if (where === 'exam' && item.textRef && !arr(block?.texts).some((t) => t?.id === item.textRef)) findings.push(blocker(doc, `${path}.textRef`, `textRef "${item.textRef}" is not a text of its block`, id));
+      const blockTexts = arr(texts).map((x) => x.text);
+      const choiceBlock = arr(block?.choices).length > 0;
+      if (where === 'exam' && !item.textRef && !choiceBlock && blockTexts.length > 1) findings.push(blocker(doc, `${path}.textRef`, 'exam item of a multi-text block without textRef', id));
+      if (where === 'exam' && item.textRef && !blockTexts.some((t) => t?.id === item.textRef)) findings.push(blocker(doc, `${path}.textRef`, `textRef "${item.textRef}" is not a text of its block`, id));
       if (CHOICE_TYPES.has(item.type) && !arr(item.options).length && item.type !== 'zuordnen' && item.type !== 'match') {
         findings.push(blocker(doc, `${path}.options`, `${item.type} item without options`, id));
       }
       // quality.js
       const c = compiledItem(item);
+      const keyAnswer = choiceBlock && where === 'exam';
       for (const [reason, applies] of preds) {
+        if (keyAnswer && reason !== Q.REASON.ENGLISH_PROMPT && reason !== Q.REASON.ENGLISH_RESPELLING) continue;
         let hit = false;
         try {
           hit = Boolean(applies(item, c));

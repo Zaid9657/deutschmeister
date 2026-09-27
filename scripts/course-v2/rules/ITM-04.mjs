@@ -9,6 +9,7 @@ export const id = 'ITM-04';
 export const title = 'R/F statements are not copied from their text (substring or one-token edit)';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'I';
 
 const TF = new Set(['richtig_falsch', 'ja_nein']);
 
@@ -35,11 +36,11 @@ export function run({ docs }) {
   const findings = [];
   let n = 0;
   for (const doc of docs) {
-    for (const { item, path, block, step } of walkItems(doc)) {
+    for (const { item, path, block, step, texts: resolved } of walkItems(doc)) {
       if (!isObj(item) || !TF.has(item.type)) continue;
       let text = '';
       if (block) {
-        const texts = arr(block.texts);
+        const texts = arr(resolved).map((x) => x.text);
         const t = item.textRef ? texts.find((x) => x?.id === item.textRef) : texts.length === 1 ? texts[0] : null;
         text = t ? textOf(t) : texts.map(textOf).join(' ');
       } else if (step?.input) {

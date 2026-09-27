@@ -24,6 +24,7 @@ export const id = 'GRM-04';
 export const title = 'Grammar ceiling: no construction before the spine licenses it (detectors)';
 export const type = 'mixed';
 export const scope = 'unit';
+export const stage = 'S';
 
 /** Course position of a document (Plateaus after their unit, closing and mocks after U12). */
 export function docPosition(doc) {
@@ -38,7 +39,7 @@ export function docPosition(doc) {
   return null;
 }
 
-export function run({ ctx, docs, levels, mode }) {
+export function run({ ctx, docs, levels, mode, stageOf = () => 'T' }) {
   if (!ctx.registries.spine) return { findings: [], skipped: 'grammar-spine.json missing' };
   if (!ctx.registries.detectors) return { findings: [], skipped: 'detectors.json missing' };
   const placement = detectorPlacement(ctx);
@@ -93,6 +94,7 @@ export function run({ ctx, docs, levels, mode }) {
       if (t.writtenText) check(doc, pos, declared, t.writtenText, `${t.path}.text`, surface, t.glosses.map((x) => x.toLowerCase()));
       else if (!t.lines.length && t.de) check(doc, pos, declared, t.de, t.path, surface, t.glosses.map((x) => x.toLowerCase()));
     }
+    if (stageOf(doc) === 'S') continue; // stage S: texts only; items and expected answers arrive with I (BLUEPRINT §9)
     for (const p of walkProduction(doc)) check(doc, pos, declared, p.de, p.path, 'production');
     if (doc.kind === 'unit') {
       const lines = arr(doc.data.check?.lines);

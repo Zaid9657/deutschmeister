@@ -13,6 +13,7 @@ export const id = 'LEX-02';
 export const title = 'New lemmas recur: ≥ 2× in the unit\'s inputs and in ≥ 2 later units';
 export const type = 'ratchet';
 export const scope = 'unit';
+export const stage = 'S';
 
 function unitText(doc) {
   const parts = [];

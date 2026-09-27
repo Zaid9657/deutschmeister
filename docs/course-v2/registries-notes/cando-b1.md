@@ -467,44 +467,79 @@ unit that lists it; never-core ids show their *more* placements.
 
 ## 11. Open issues
 
-1. **Blueprint rows vs W2 drafts.** §2 follows BLUEPRINT §2.8; the curriculum agents decide. One placement depends on a
-   situation choice: the Konsultation step `symptome-genau` is core in **B1.2 U6 „Einspruch!“**, because B1.2 has no
-   health row and draft b1.2-u07 (Fahrradunfall: Polizei, Ärztin, Versicherung) feeds U6's „einen Schaden melden“. If
-   U6 is built around the wrong bill only, swap `symptome-genau` for `versicherung-gespraech` (a logged deviation) and
-   carry `symptome-genau` in a Fokus-Karte Gesundheit, naming it as the thread's B1.2 step.
-2. **B1.1 work units (ALL-06 ≥ 3).** Only two B1.1 rows are work situations (U7 Unter Kollegen · 2, U8 Weiterbildung ·
-   4). Units whose core carries HF 2/3/4 — B1.1: `b1.1-u02`, `b1.1-u07`, `b1.1-u08`, `b1.1-u10`, `b1.1-u11`, `b1.1-u12`; B1.2: `b1.2-u02`, `b1.2-u03`, `b1.2-u04`, `b1.2-u08`, `b1.2-u10`, `b1.2-u12` — overstate it, because an HF tag
-   on one can-do does not make the unit a work unit. Proposal: make B1.1 U2 a Betriebsfest (Menschen B1 L12 „Feiern im
-   Betrieb“; the draft's own Feier was a Firmenabschied, b1.1-u11) or U11 a portrait of a colleague for the
-   Firmenzeitung; either keeps the can-dos unchanged.
-3. **Weak source tags (DaF reviewer to confirm).** `beratung-gespraech` (BSK 41.3·B1 — memo 05 quoted only the B2 cell;
-   plus M7, Si5), `rat-geben` (M9, a Lehrwerk placement only), `missverstaendnis-klaeren` (M13 only),
-   `werbung-kritisch` (S6-L10, N12 only), `kaufentscheidung-begruenden` (GER-R·B1 by extension + Si7),
-   `ueber-frueher-berichten` (GER-R·B1 by extension + M16/M17), `foto-beschreiben-vergleichen` (DTZ S2, a format
-   source), `frueher-heute-vergleichen` (M24, as in the draft), `formelle-wendungen` (RC 78 by extension). RC page·level
-   tags are taken from memo 05 and the drafts; no RC page was re-read, and `RC 142·B1`, `RC 85·B1` and
-   `RC 112·B1` are condensed („≈“) in memo 05. The ÖIF §3.1 lines are Profile-deutsch items per the ÖIF only (memo 05,
+1. **B1.2 U6 and the Konsultation step (settled by the W2 review).** U6 „Einspruch!“ is „falsche Rechnung,
+   Versicherung, Fristen · 1, 5“, so its core is the in-situation set: `einspruch-schriftlich`, `schaden-melden`,
+   `problem-erklaeren-loesung`, `versicherung-gespraech`. `symptome-genau` (the Konsultation thread's B1.2 step, B1+)
+   is *more* on U6 and is proved in a **Fokus-Karte Gesundheit** there — the doctor's visit after the accident whose
+   damage the unit reports (draft b1.2-u07: Polizei, Ärztin, Versicherung). If U6 keeps the accident as its scene, a
+   curriculum agent may swap `versicherung-gespraech` for `unfall-schildern` (logged deviation); if the Fokus card does
+   not fit U6, `symptome-genau` may move to *more* on B1.2 U4 or U10 with the same card. Either way §10 names it as the
+   thread's B1.2 step, and no unit invents a doctor scene to prove a core Lernziel.
+2. **B1.1 work units (ALL-06 ≥ 3) — no open issue.** The BLUEPRINT ALL-06 recount lists B1.1 U3, U7 and U8 as work
+   units, and the ids now carry that framing: U3 „Wenn die Bahn nicht fährt“ (Weg zur Arbeit, HF 10, 2) through
+   `durchsage-weitergeben` (relay to the Team, hf 10, 2) and `stoerung-umbuchen` (RC 142·B1 names the connection to
+   the workplace); U7 „Unter Kollegen“ (HF 2); U8 „Weiterbildung im Betrieb“ (HF 2, 4) through `beratung-gespraech`
+   (Personalabteilung) and `kursanfrage-schreiben` (hf 2, 4). B1.2: U3 (HF 3), U4 (HF 2), U12 (HF 2). The earlier
+   proposal to re-frame B1.1 U2 or U11 as a work unit came from a stale reading of the blueprint and is **withdrawn**.
+3. **Source tags.** The RC pages were read in the BAMF PDF (Rahmencurriculum für Integrationskurse, revision 2016,
+   186 pp.) on 2026-09-27. Every `RC p·B1` tag in the file names a page that carries a B1 goal of that content:
+   30, 32, 36, 40, 50, 56, 58, 78, 84, 85, 86, 98, 99, 100, 105, 111, 112, 124, 125, 138, 142, 155, 156, and 118
+   for HF 6 (116 is an A2 situation tag). This also settles the three tags memo 05 had condensed (`RC 142·B1`,
+   `RC 85·B1`, `RC 112·B1`: all exact). Two tags are by extension and say so here: `beschwerde-schriftlich` (`RC 125·B1`
+   is the spoken complaint; the written one is its transfer) and `formelle-wendungen` (`RC 78·B1`, the Einspruch
+   phrases). Page checks added three sources: `RC 105·B1` (`beratung-gespraech`), `RC 32·B1`
+   (`missverstaendnis-klaeren`), `RC 124·B1` (`kaufentscheidung-begruenden`). **Still weak (DaF reviewer to confirm):**
+   `rat-geben` (M9, a Lehrwerk placement only), `werbung-kritisch` (S6-L10, N12 only), `ueber-frueher-berichten`
+   (GER-R·B1 by extension + M16/M17), `foto-beschreiben-vergleichen` (DTZ S2, a format source),
+   `frueher-heute-vergleichen` (M24, as in the draft), and `BSK 41.3·B1` on `beratung-gespraech` (memo 05 quoted only
+   the B2 cell; RC 105 now carries the id). The ÖIF §3.1 lines are Profile-deutsch items per the ÖIF only (memo 05,
    unverified 2).
-4. **HF 6 (Kinder) has no B1 can-do.** ALL-04 needs all 12 Handlungsfelder per band in units or Fokus-Karten. Neither
-   memo 05 nor the drafts name a B1 RC goal in HF 6, and no RC page was read for one, so no id was invented. Options: a
-   Fokus-DaZ card that reuses `cd.a2.nach-dem-kind-fragen` / `cd.a2.elternabend-verstehen` at a B1 depth, or a new
-   `cd.b1.*` id through this registry once a B1 RC goal in HF 6 is verified. HF 11 is thin (3 ids) but present.
+4. **HF 6 (Kinder) — resolved.** The earlier note said no B1 RC goal exists in HF 6; that was wrong. The RC has six
+   HF 6 goals at B1 (as memo 04 F2 counts), on pp. 117–120: asking the Elternbeirat for something, also by phone
+   (117); as a member of staff, writing notes to parents (117) and informing parents by phone (118); understanding
+   how a procedure is described, e.g. the parent-council election (118, listening); understanding advice on a child's
+   learning in a counselling talk (119, listening); understanding and answering complaints about a child's behaviour
+   (120). None is a reading goal, and the BLUEPRINT card is about a contract. The new id `cd.b1.betreuungsvertrag-verstehen`
+   (receptive-written, b1.2, hf 6) therefore cites RC 118·B1 as its HF 6 B1 goal, RC 116·A2 for the situation
+   (rules such as pick-up times, which the Landeskunde column calls binding) and GI-B1 L5 for the B1 operation (rules
+   read in detail). It is *more* on B1.2 U8 and the Lernziel of the Fokus-DaZ card „Betreuungsvertrag und Kita-Ordnung“,
+   which gives ALL-04 its B1 HF 6. HF 11 has two ids, both core in B1.1 U12, whose tag carries the field.
 5. **Two B1.1 draft lines map to B1.2 ids** (b1.1-u07 #4 → `praesentation-rueckmeldung`, b1.1-u08 #4 →
    `debatte-wer-meint-was`; the draft calls both „Einführung“). They are kept out of every B1.1 unit so no B1.1 unit
    references a B1.2 id; the B1.1 units can still practise the formats in LS4 without a Lernziel. If the validator
    allows forward references in *more*, add them to B1.1 U12 and U8.
 6. **`band` semantics** — as `cando-a1.md` open issue 3: this file uses the course level. No entry would change under
    the source-level reading except that none is lower than B1 anyway.
-7. **Mediation: mode or flag?** SCHEMA §4.1 has both; ALL-06 does not say which one it counts. The flag is set on all
-   six mediation can-dos and mode `mediation` on three; B1.1 passes under either reading (`durchsage-weitergeben` has
-   both).
+7. **Mediation: mode or flag — rule proposed, agreement pending.** The DaF review found two rules (B1: any relaying;
+   B2: flag exactly when mode is `mediation`). §9 states the shared rule this file follows (flag = any relaying for a
+   third party, whatever the mode; ALL-06 counts the flag). Hand-over: **cando-b2** to adopt the same wording in its
+   §2 (its current flags already satisfy it), and the **validator owner** to count ALL-06 mediation on `mediation:
+   true`. B1.1 passes under either reading (`durchsage-weitergeben` has mode and flag); B1.2 passes under either
+   (`zwischen-positionen-vermitteln`, `nachricht-notieren`).
 8. **tb1 lane file** (`registries/lanes/tb1.json`, read 2026-09-27): the Teil ids lv1 … m3 match §3. Its open question
    on `m1` (mutual „Einander kennenlernen“, not a monologue) agrees with the modes here: `kennenlernen-gespraech` and
    `ueber-mich-ausfuehrlich` are interaction-spoken.
-9. **Checks run.** `node scripts/course-v2/check.mjs content/course-v2/registries/cando/b1.json` → 0 errors (SCH-01
-   against `scripts/course-v2/lib/schemas/cando.mjs`, band prefix refine); `JSON.parse` OK;
-   `scripts/course-v2/validate.mjs` does not exist yet. A scratch generator additionally checked: every draft line
-   mapped (line counts equal to the drafts), every id placed, 3–5 core per unit, ≥ 1 productive/interaction core per
-   unit, each id core at most once and in its halfLevel, no B1.1 → B1.2 reference, the online-interaction and mediation
-   quotas per half, a B1.1 id for every tb1 Teil, and the wording distance above. ALL-02/ALL-06 proper run on the unit
-   specs once they exist.
+9. **Checks run** (2026-09-27, after the review fixes). `node scripts/course-v2/check.mjs content/course-v2/registries/cando/b1.json`
+   → 0 errors (SCH-01 against `scripts/course-v2/lib/schemas/cando.mjs`, band prefix refine); `JSON.parse` OK; 96 unique
+   ids. `node scripts/course-v2/validate.mjs b1.1` → 38 rules skipped (no unit content yet), no blocker. A scratch
+   generator additionally checked: every draft line mapped (line counts equal to the drafts), every id placed, 3–5
+   core per unit, ≥ 1 productive/interaction core per unit, each id core at most once and in its halfLevel, no B1.1 →
+   B1.2 reference, the online-interaction and mediation quotas per half, a B1.1 id for every tb1 Teil, and the wording
+   distance in §9. ALL-02/ALL-04/ALL-06 proper run on the unit specs once they exist.
+10. **Irony moves to B2 (hand-over to cando-b2).** The draft line b1.2-u10 #3 asked for stance behind irony; the DaF
+   review places irony and implicit attitude at B2. `cd.b1.kommentare-einschraenkungen` keeps the qualified and hinted
+   stance; the irony clause should become the B2 step of `cd.b2.leserkommentare-haltung` (or a new B2 id), which today
+   asks only for dafür/dagegen/unentschieden and so sits below the B1.2 id. The Goethe B1 L4 lane mapping (§3,
+   deferred) is unaffected: that Teil asks only for or against.
+
+## 12. Changes after the W2 DaF review (2026-09-27)
+
+| Finding | Change |
+|---|---|
+| major — placement of irony / implicit stance | **Id change: `cd.b1.kommentare-ironie` → `cd.b1.kommentare-einschraenkungen`** (meaning changed: irony dropped, „mit Einschränkungen oder nur andeutungsweise“; ID-01 — the orchestrator's compile step tombstones the old id in the ledger). `meinungsbeitraege-einmal`: „nicht direkt ausspricht“ → „mit Einschränkungen äußert“ (id kept: the telc HV1 skill is unchanged, only the ceiling is lowered). Irony handed to B2 (open issue 10). |
+| major — B1.1 U8/U3 vs blueprint, work framing | §2/§7: U8 retitled „Weiterbildung im Betrieb“, U3 annotated „Weg zur Arbeit · HF 10, 2“. `beratung-gespraech` → Weiterbildungsberatung in der Personalabteilung, hf [2, 4], + `RC 105·B1`. `kursanfrage-schreiben` → addressee Personalabteilung or Kursanbieter, hf [2, 4] (was 4, 11). `durchsage-weitergeben` → relay to Kolleginnen und Kollegen, hf [10, 2] (was 10, D). Open issue 2 and its U2/U11 proposal withdrawn. Ids kept. |
+| major — no HF 6 id | **New id `cd.b1.betreuungsvertrag-verstehen`** (b1.2, receptive-written, hf 6, RC 118·B1 · RC 116·A2 · GI-B1 L5, page-checked), *more* + Fokus-DaZ on B1.2 U8. Open issue 4 resolved. |
+| major — `symptome-genau` core in U6 | U6 core: `versicherung-gespraech` replaces `symptome-genau`; `symptome-genau` is *more* + Fokus-Karte Gesundheit on U6 and named as the Konsultation B1.2 step (§10, open issue 1). |
+| minor — two mediation rules | §9 states one shared rule (flag = any relaying; ALL-06 counts the flag); flags unchanged; hand-over in open issue 7. |
+| (alignment) online-flag rule proposed in the review's A2 finding | `meinung-forum` `online: true` → `false` (a single post is not interaction); §9 rule rewritten. B1.1 online quota: `online-austausch`. |
+| (page check) open issue 3 | RC pages read; sources added to `missverstaendnis-klaeren` (RC 32·B1) and `kaufentscheidung-begruenden` (RC 124·B1). |

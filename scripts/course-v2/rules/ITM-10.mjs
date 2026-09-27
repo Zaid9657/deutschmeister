@@ -10,6 +10,7 @@ export const id = 'ITM-10';
 export const title = 'Accepted forms: answer accepted, acceptedWhy and reviewerConfirmed consistent';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'I';
 
 export function run({ docs }) {
   const findings = [];

@@ -149,7 +149,9 @@ Verification queries are at the foot of the file. After applying it, add a row t
 **Before the migration (graceful degradation).** Nothing breaks:
 
 - `checkCourseAiAllowance()` detects the missing table (PostgREST `PGRST205` / Postgres `42P01`) and counts
-  `writing_submissions` instead, so written slots stay capped by the grader's own ledger. Spoken slots are gated by
+  `writing_submissions` instead, so written slots stay capped by the grader's own ledger — per slot (the key and its
+  lane variants together) and only rows a model graded (`model <> 'deterministic'`: a rule-decided zero costs no model
+  call and no attempt, exactly as with the ledger). Spoken slots are gated by
   access only, and the result carries `degraded: true, reason: 'ledger_missing'`.
 - `recordCourseAiUse()` returns `{ recorded: false, reason: 'ledger_missing' }`.
 - A one-time warning in the function log names this file.

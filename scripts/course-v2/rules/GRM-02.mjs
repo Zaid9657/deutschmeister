@@ -12,6 +12,7 @@ export const id = 'GRM-02';
 export const title = 'Spine points enter at their registry position, receptive before productive';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'T';
 
 export function run({ ctx, docs }) {
   const spine = ctx.registries.spine?.byId;

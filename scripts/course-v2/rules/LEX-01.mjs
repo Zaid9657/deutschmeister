@@ -1,5 +1,6 @@
 // LEX-01 — known-token coverage ≥ 95 % per input and exam text (≥ 98 % for the extensive strand);
-// known = earlier units + this unit's lexicon + function words + cast names + glossed extras
+// known = earlier units + this unit's lexicon + function words + cast names + the file's `extras`
+// names (one-off speakers, SCHEMA §3.5) + glossed extras
 // (BLUEPRINT §9.1, §2.6). Hard once the cumulative lexicon exists up to the unit (every earlier
 // level and every earlier unit of this level); before that the measurement is advisory — the SCHEMA
 // §15.6 fixture row „LEX-01 … unknown tokens are reported as advisory".
@@ -13,6 +14,7 @@ export const id = 'LEX-01';
 export const title = 'Known-token coverage of inputs and exam texts (≥ 95 %; extensive ≥ 98 %)';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'S';
 
 export function coverage(text, known, glosses = []) {
   const toks = readTokens(text);
@@ -32,7 +34,11 @@ export function run({ ctx, docs }) {
     if (!ctx.levels.get(doc.level)?.lexicon) continue;
     const key = `${doc.level}|${nr}`;
     if (!cache.has(key)) cache.set(key, { known: knownForms(ctx, doc.level, nr), state: lexiconComplete(ctx, doc.level, nr) });
-    const { known, state } = cache.get(key);
+    const { known: base, state } = cache.get(key);
+    const known = new Set(base);
+    for (const [slug, x] of Object.entries(doc.data?.extras && typeof doc.data.extras === 'object' ? doc.data.extras : {})) {
+      for (const t of readTokens(`${x?.name || ''} ${x?.nameDe || ''} ${slug.replace(/^x\./, '').replace(/-/g, ' ')}`)) known.add(t.lower);
+    }
     const min = levelNumbers(ctx, doc.level).coverageMin;
     for (const t of walkTexts(doc)) {
       if (!t.de.trim()) continue;

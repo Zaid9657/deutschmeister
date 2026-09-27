@@ -9,6 +9,7 @@ export const id = 'ITM-11';
 export const title = 'Static explanation {de, en} on every item; de ≤ 25 words at A levels';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'I';
 
 const MAX_A = 25;
 

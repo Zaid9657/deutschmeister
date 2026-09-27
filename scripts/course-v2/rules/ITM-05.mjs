@@ -16,6 +16,7 @@ export const id = 'ITM-05';
 export const title = 'Task shapes: no POS-masked key repeated beyond MAX_SAME_TASK_SHAPE per pool';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'I';
 
 let engine = null;
 try {

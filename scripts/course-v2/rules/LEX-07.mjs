@@ -10,6 +10,7 @@ export const id = 'LEX-07';
 export const title = 'Lexicon hygiene: one gloss per lemma, feminine pairs, plural_kind, wordId null';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'T';
 
 const bare = (s) => String(s ?? '').toLowerCase().replace(/^(der|die|das)\s+/, '').trim();
 

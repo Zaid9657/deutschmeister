@@ -28,7 +28,7 @@ export const RULE_ORDER = [
   'TXT-02', 'TXT-03', 'TXT-04',
   'ITM-01', 'ITM-02', 'ITM-03', 'ITM-04', 'ITM-05', 'ITM-06', 'ITM-07', 'ITM-08', 'ITM-09', 'ITM-10', 'ITM-11',
   'CON-06',
-  'EXM-01', 'EXM-02', 'EXM-03', 'EXM-04',
+  'EXM-01', 'EXM-02', 'EXM-03', 'EXM-04', 'EXM-11',
   'COV-1', 'COV-3', 'COV-4', 'COV-5',
 ];
 
@@ -130,9 +130,34 @@ function relPathFrom(base, file) {
 
 const SEV_ORDER = { blocker: 0, ratchet: 1, advisory: 2 };
 
+/**
+ * Stages (SCHEMA §8.1, BLUEPRINT §9): a rule declares the earliest stage whose content it can judge
+ * (`export const stage = 'spec'|'S'|'I'|'T'`; absent = 'T'). A unit is judged at its declared
+ * `stage` (absent = 'T', the full gate set); `--stage` overrides it; a lane pack has no stages and
+ * is always judged at 'T' unless `--stage` lowers it.
+ */
+export const STAGES = ['spec', 'S', 'I', 'T'];
+export const stageRank = (s) => STAGES.indexOf(s);
+export function normalizeStage(raw) {
+  if (raw === null || raw === undefined || raw === '') return null;
+  const s = String(raw).trim();
+  if (s.toLowerCase() === 'all') return 'T';
+  if (s.toLowerCase() === 'spec') return 'spec';
+  const u = s.toUpperCase();
+  return STAGES.includes(u) ? u : undefined;
+}
+export function stageOfDoc(doc, override = null) {
+  if (override) return override;
+  if (doc.kind === 'unit') return normalizeStage(doc.data?.stage) || 'T';
+  return 'T';
+}
+
 /** Run the rules on a resolved target. */
-export async function runRules(resolved, { rules, only = null } = {}) {
-  const { ctx, docs, levels, mode } = resolved;
+export async function runRules(resolved, { rules, only = null, stage = null } = {}) {
+  const { ctx, levels, mode } = resolved;
+  const override = normalizeStage(stage) || null;
+  const stageOf = (doc) => stageOfDoc(doc, override);
+  const allDocs = resolved.docs;
   const list = (rules || (await loadRules())).filter((r) => !only || only.includes(r.id));
   const results = [];
   if (ctx.loadErrors.length) {
@@ -143,7 +168,15 @@ export async function runRules(resolved, { rules, only = null } = {}) {
   }
   for (const rule of list) {
     let out;
-    if (rule.scope === 'level' && mode === 'file') {
+    const ruleStage = normalizeStage(rule.stage) || 'T';
+    const docs = allDocs.filter((d) => stageRank(stageOf(d)) >= stageRank(ruleStage));
+    const levelStageOk = !override || stageRank(override) >= stageRank(ruleStage);
+    if (allDocs.length && !docs.length) {
+      const at = [...new Set(allDocs.map(stageOf))].join('/');
+      out = { findings: [], skipped: `stage-${ruleStage} rule; the target is at stage ${at}` };
+    } else if (rule.scope === 'level' && !levelStageOk) {
+      out = { findings: [], skipped: `stage-${ruleStage} rule; --stage ${override}` };
+    } else if (rule.scope === 'level' && mode === 'file') {
       out = { findings: [], skipped: 'level-scope rule; run the validator on the level (node scripts/course-v2/validate.mjs <level>)' };
     } else if (!docs.length && !levels.length && mode !== 'all') {
       out = { findings: [], skipped: 'no content in the target yet' };
@@ -151,7 +184,7 @@ export async function runRules(resolved, { rules, only = null } = {}) {
       out = { findings: [], skipped: 'no level content in the target yet' };
     } else {
       try {
-        out = rule.run({ ctx, docs, levels, mode }) || { findings: [] };
+        out = rule.run({ ctx, docs, levels, mode, stageOf }) || { findings: [] };
       } catch (e) {
         out = { findings: [{ severity: 'blocker', file: null, path: null, id: null, message: `rule crashed: ${e.stack || e.message}` }] };
       }
@@ -170,7 +203,7 @@ export async function runRules(resolved, { rules, only = null } = {}) {
     summary[r.status] += 1;
     for (const f of r.findings) summary[f.severity] += 1;
   }
-  return { target: resolved.label, mode, notes: resolved.notes, idSource: ID_SOURCE, docs: docs.map((d) => d.file), results, summary, exitCode: summary.blocker ? 1 : 0 };
+  return { target: resolved.label, mode, stage: override || 'declared', notes: resolved.notes, idSource: ID_SOURCE, docs: allDocs.map((d) => d.file), results, summary, exitCode: summary.blocker ? 1 : 0 };
 }
 
 /** One call: resolve + run. */
@@ -182,7 +215,7 @@ export async function validate(target, opts = {}) {
 /** Human-readable report (no colour, no emoji). */
 export function formatReport(report, { verbose = false, maxFindings = 40 } = {}) {
   const out = [];
-  out.push(`course-v2 validate — ${report.target} (${report.docs.length} document(s))`);
+  out.push(`course-v2 validate — ${report.target} (${report.docs.length} document(s), stage ${report.stage})`);
   for (const n of report.notes) out.push(`  note: ${n}`);
   const tag = { pass: 'PASS', fail: 'FAIL', warn: 'WARN', skip: 'SKIP' };
   for (const r of report.results) {

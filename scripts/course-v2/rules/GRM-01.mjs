@@ -9,6 +9,7 @@ export const id = 'GRM-01';
 export const title = '≤ 2 new spine points and ≤ 1 chunk preview per unit';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'T';
 
 export function run({ ctx, docs }) {
   const findings = [];

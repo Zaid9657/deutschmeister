@@ -9,6 +9,7 @@ export const id = 'ALL-02';
 export const title = 'Can-dos: 3–5 per unit, tagged, proven; ≥ 1 productive proven by an Aufgabe';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'I';
 
 const PRODUCTIVE = /^(productive|interaction)-/;
 const sameSet = (a, b) => a.length === b.length && a.every((x) => b.includes(x));

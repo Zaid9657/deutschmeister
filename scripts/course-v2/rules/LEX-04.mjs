@@ -7,6 +7,7 @@ export const id = 'LEX-04';
 export const title = 'Off-list share per unit within the level limit; extension words receptive';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'S';
 
 export function run({ ctx, docs }) {
   const findings = [];

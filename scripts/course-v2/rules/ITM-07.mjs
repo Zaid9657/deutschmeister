@@ -10,6 +10,7 @@ export const id = 'ITM-07';
 export const title = 'Numbers, times, dates, prices and spelled names carry `exact`';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'I';
 
 const NUMBER_WORD = '(?:eins|ein|zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|elf|zwölf)';
 const TIME_RE = new RegExp(`\\b(?:halb|viertel\\s+(?:nach|vor))\\s+${NUMBER_WORD}\\b|\\b${NUMBER_WORD}\\s+uhr\\b|\\bnull\\s+(?:drei|eins|zwei)`, 'i');

@@ -11,6 +11,7 @@ export const id = 'TXT-03';
 export const title = 'Input sizes: lines, words and seconds per level';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'S';
 
 const WORDS_PER_SECOND = 2.3; // TTS at -5 … -10 % rate (design; replace with measured seconds)
 const PAUSE_PER_LINE = 0.4;

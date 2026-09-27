@@ -45,6 +45,12 @@ export function isAutoScored(c) {
   return true;
 }
 
+/** Whether a criterion applies to THIS task (`appliesIf: 'targets'`: only when the task names target structures). */
+export function appliesTo(c, task) {
+  if (c?.appliesIf === 'targets') return Array.isArray(task?.targets) && task.targets.length > 0;
+  return true;
+}
+
 function critCount(c, task) {
   if (c.per !== 'leitpunkt') return 1;
   const pick = Number(task?.choose?.pick);
@@ -72,8 +78,12 @@ export function unscoredCriteria(profile, task = {}) {
  */
 export function scoredTarget(profile, task = {}) {
   if (!Number.isFinite(profile?.max)) return null;
-  if (Number.isFinite(profile.examMax)) return profile.max;
-  return round2(profile.max - unscoredCriteria(profile, task).reduce((s, c) => s + c.examMax, 0));
+  // A criterion that does not apply to this task takes its share off the target too.
+  const inapplicable = (profile.criteria || [])
+    .filter((c) => isAutoScored(c) && !appliesTo(c, task))
+    .reduce((s, c) => s + (levelsDesc(c.levels)[0] || 0) * critCount(c, task) * (Number.isFinite(c.weight) ? c.weight : 1), 0);
+  if (Number.isFinite(profile.examMax)) return round2(profile.max - inapplicable);
+  return round2(profile.max - inapplicable - unscoredCriteria(profile, task).reduce((s, c) => s + c.examMax, 0));
 }
 
 /**
@@ -87,7 +97,7 @@ export function scoredTarget(profile, task = {}) {
  */
 export function criteriaPlan(profile, task = {}) {
   const target = scoredTarget(profile, task);
-  const plan = (profile?.criteria || []).filter(isAutoScored).map((c) => {
+  const plan = (profile?.criteria || []).filter((c) => isAutoScored(c) && appliesTo(c, task)).map((c) => {
     const levels = levelsDesc(c.levels);
     const descriptors = Array.isArray(c.descriptors) ? c.descriptors.filter((d) => d && Number.isFinite(d.points) && typeof d.de === 'string' && d.de.trim()) : [];
     return {

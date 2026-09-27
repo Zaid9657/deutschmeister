@@ -11,6 +11,7 @@ export const id = 'KEY-01';
 export const title = 'Bank keys match BANK_KEY_RE and their slot';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'T';
 
 /** The slot segment a doc's keys must carry ('u07', 'p2', 'ht', 'dx', 'ma'). */
 function slotOf(doc) {

@@ -1,6 +1,8 @@
 // EXM-01 — every exam block matches its Teil template: lane, item count (full length = the
-// template's count; reduced/mini fewer), item type, options, the no-match option, and the play
-// count its instruction states (BLUEPRINT §9.1). Text bands are TXT-02; word bands EXM-03;
+// template's count; reduced/mini within the template's `scaffold`), item type, options, the
+// block-level choice set (count, kind, reuse, no-match key), every answer a choice key or the
+// no-match key, every gap marker ⟦NN⟧ filled exactly once, and the play count its instruction
+// states (BLUEPRINT §9.1, SCHEMA §3.1/§3.6/§15.7). Text bands are TXT-02; word bands EXM-03;
 // preparation minutes EXM-04.
 
 import { walkBlocks } from '../lib-validate/walk.mjs';
@@ -10,6 +12,11 @@ export const id = 'EXM-01';
 export const title = 'Exam blocks match their Teil template (items, type, options, no-match, plays)';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'T';
+
+const CHOICE_TASKS = new Set(['zuordnen', 'insert']);
+const GAP_TASKS = new Set(['insert', 'cloze']);
+const suffixOf = (itemId) => (String(itemId || '').match(/-(\d{2})$/) || [])[1] || null;
 
 const TYPES_FOR_TASK = {
   abc: ['abc', 'multiple_choice'],
@@ -28,7 +35,7 @@ export function run({ ctx, docs }) {
   let blocks = 0;
   let unknown = 0;
   for (const doc of docs) {
-    for (const { block, path } of walkBlocks(doc)) {
+    for (const { block, path, texts } of walkBlocks(doc)) {
       if (!isObj(block)) continue;
       const entry = ctx.registries.templates.get(block.template);
       if (!entry) { unknown += 1; continue; }
@@ -41,10 +48,18 @@ export function run({ ctx, docs }) {
         continue;
       }
       const items = arr(block.items).filter(isObj);
+      const scaffold = isObj(t.scaffold) ? t.scaffold : null;
+      const short = block.length === 'reduced' || block.length === 'mini';
+      if (short && Array.isArray(t.scaffoldAllowedIn) && doc.level && !t.scaffoldAllowedIn.includes(doc.level)) {
+        findings.push(blocker(doc, `${path}.length`, `${block.length} ${block.template} in ${doc.level}; the template allows a scaffold only in ${t.scaffoldAllowedIn.join(', ') || 'no level'}`, id));
+      }
       if (typeof t.items === 'number') {
         if (block.length === 'full' && items.length !== t.items) findings.push(blocker(doc, `${path}.items`, `${items.length} items; ${block.template} at full length has ${t.items}`, id));
-        if (block.length === 'reduced' && (items.length >= t.items || items.length < 1)) findings.push(blocker(doc, `${path}.items`, `reduced block with ${items.length} items (template ${t.items}: reduced means fewer)`, id));
-        if (block.length === 'mini' && (items.length > Math.ceil(t.items / 2) || items.length < 1)) findings.push(blocker(doc, `${path}.items`, `mini block with ${items.length} items (≤ ${Math.ceil(t.items / 2)} of ${t.items})`, id));
+        if (short) {
+          const min = scaffold && typeof scaffold.minItems === 'number' ? scaffold.minItems : 1;
+          const max = block.length === 'mini' ? Math.max(min, Math.ceil(t.items / 2)) : t.items - 1;
+          if (items.length < min || items.length > max) findings.push(blocker(doc, `${path}.items`, `${block.length} block with ${items.length} items; ${block.template} allows ${min}–${max} (template ${t.items}${scaffold ? `, scaffold minItems ${min}` : ''})`, id));
+        }
       }
       const allowed = TYPES_FOR_TASK[t.task];
       items.forEach((it, i) => {
@@ -52,17 +67,88 @@ export function run({ ctx, docs }) {
         if (it.role && it.role !== 'exam') findings.push(blocker(doc, `${path}.items[${i}].role`, `role ${it.role} in an exam block (role exam)`, it.id));
         if (typeof t.options === 'number' && ['abc', 'richtig_falsch', 'ja_nein'].includes(t.task)) {
           const n = arr(it.options).length;
-          if (n !== t.options) findings.push(blocker(doc, `${path}.items[${i}].options`, `${n} options; ${block.template} has ${t.options}`, it.id));
+          const fixed = !short || !scaffold || scaffold.optionsFixed !== false;
+          if (fixed ? n !== t.options : (n < 2 || n > t.options)) findings.push(blocker(doc, `${path}.items[${i}].options`, `${n} options; ${block.template} has ${t.options}`, it.id));
         }
-        if (t.task === 'zuordnen' && typeof t.options === 'number' && arr(it.options).length) {
-          const n = arr(it.options).length;
-          if (n !== t.options && n !== t.options + (t.noMatch ? 1 : 0)) findings.push(blocker(doc, `${path}.items[${i}].options`, `${n} options; ${block.template} has ${t.options}${t.noMatch ? ` + the no-match ${t.noMatch}` : ''}`, it.id));
+        if (block.choices !== undefined && arr(it.options).length) {
+          findings.push(blocker(doc, `${path}.items[${i}].options`, `per-item options in a block with a choice set; a ${t.task} item answers from the block's choices`, it.id));
         }
       });
+
+      // block-level choice set (zuordnen, insert, word-bank cloze)
+      const choices = arr(block.choices).filter(isObj);
+      const keys = choices.map((c) => String(c.key ?? ''));
+      const keySet = new Set(keys);
+      const wantsChoices = typeof t.choices === 'number' || CHOICE_TASKS.has(t.task);
+      if (typeof t.choices === 'number' && !choices.length) {
+        findings.push(blocker(doc, `${path}.choices`, `${block.template} answers from a block-level choice set of ${t.choices}; the block has none`, id));
+      }
+      if (choices.length && !wantsChoices && t.task !== 'cloze') {
+        findings.push(blocker(doc, `${path}.choices`, `${block.template} (${t.task}) has no block-level choice set; per-item options belong on the items`, id));
+      }
+      if (choices.length) {
+        if (typeof t.choices === 'number') {
+          const min = short && scaffold && typeof scaffold.choicesMin === 'number' ? scaffold.choicesMin : t.choices;
+          const ok = short ? choices.length >= min && choices.length <= t.choices : choices.length === t.choices;
+          if (!ok) findings.push(blocker(doc, `${path}.choices`, `${choices.length} choices; ${block.template} has ${short ? `${min}–${t.choices} in a ${block.length} block` : t.choices}`, id));
+          if (short && items.length >= choices.length && t.choiceReuse !== true) {
+            findings.push(blocker(doc, `${path}.choices`, `${choices.length} choices for ${items.length} items without reuse leaves no distractor`, id));
+          }
+        }
+        const dup = keys.filter((k, i) => keys.indexOf(k) !== i);
+        if (dup.length) findings.push(blocker(doc, `${path}.choices`, `choice keys repeat: ${[...new Set(dup)].join(', ')}`, id));
+        choices.forEach((c, i) => {
+          if (!c.key) findings.push(blocker(doc, `${path}.choices[${i}].key`, 'choice without a key', id));
+          if (!c.de && !c.textRef && !c.imageRef) findings.push(blocker(doc, `${path}.choices[${i}]`, `choice ${c.key} carries neither de, textRef nor imageRef`, id));
+          if (t.choiceKind === 'picture' && !c.imageRef) findings.push(blocker(doc, `${path}.choices[${i}].imageRef`, `${block.template} choices are pictures; choice ${c.key} has no imageRef`, id));
+          if (t.choiceKind && t.choiceKind !== 'picture' && c.imageRef && !c.de && !c.textRef) findings.push(blocker(doc, `${path}.choices[${i}]`, `${block.template} choices are of kind ${t.choiceKind}; choice ${c.key} is only a picture`, id));
+        });
+      }
+      // no-match key
+      const nm = block.noMatchKey;
+      if (nm !== undefined && nm !== null) {
+        if (!t.noMatch) findings.push(blocker(doc, `${path}.noMatchKey`, `${block.template} has no no-match option; the block declares "${nm}"`, id));
+        else if (String(nm) !== String(t.noMatch)) findings.push(blocker(doc, `${path}.noMatchKey`, `no-match key "${nm}"; ${block.template} uses "${t.noMatch}"`, id));
+        if (keySet.has(String(nm))) findings.push(blocker(doc, `${path}.noMatchKey`, `no-match key "${nm}" is also a choice key`, id));
+      } else if (t.noMatch && choices.length) {
+        findings.push(blocker(doc, `${path}.noMatchKey`, `${block.template} has a no-match option ("${t.noMatch}"); the block declares no noMatchKey`, id));
+      }
+      if (choices.length) {
+        const used = new Map();
+        items.forEach((it, i) => {
+          const a = String(it.answer ?? '');
+          const isNm = nm !== undefined && nm !== null && a === String(nm);
+          if (!keySet.has(a) && !isNm) findings.push(blocker(doc, `${path}.items[${i}].answer`, `answer "${a}" is neither a choice key nor the no-match key`, it.id));
+          if (Boolean(it.noMatch) !== isNm && (it.noMatch || isNm)) findings.push(blocker(doc, `${path}.items[${i}].noMatch`, `noMatch ${it.noMatch ? 'set' : 'missing'} but the answer is "${a}"`, it.id));
+          if (!isNm && keySet.has(a)) used.set(a, [...(used.get(a) || []), it.id]);
+        });
+        if (t.choiceReuse !== true) {
+          for (const [k, ids] of used) if (ids.length > 1) findings.push(blocker(doc, `${path}.items`, `choice ${k} answers ${ids.length} items (${ids.join(', ')}); ${block.template} does not reuse choices`, id));
+        }
+        if (block.length === 'full' && t.choiceReuse !== true && used.size >= choices.length && typeof t.choices === 'number' && t.choices > items.length) {
+          findings.push(blocker(doc, `${path}.choices`, 'every choice is an answer; the template leaves distractors', id));
+        }
+      }
+      // gap markers ⟦NN⟧: every gap item has exactly one marker and every marker one item
+      if (GAP_TASKS.has(t.task)) {
+        const markers = new Map();
+        for (const { text } of arr(texts)) {
+          const body = [text.text, ...arr(text.lines).map((l) => l?.de)].filter(Boolean).join('\n');
+          for (const m of String(body).matchAll(/⟦(\d{2})⟧/g)) markers.set(m[1], (markers.get(m[1]) || 0) + 1);
+        }
+        if (markers.size || t.task === 'insert') {
+          const suffixes = items.map((it) => suffixOf(it.id)).filter(Boolean);
+          for (const sfx of suffixes) {
+            const n = markers.get(sfx) || 0;
+            if (n !== 1) findings.push(blocker(doc, `${path}.items`, `item …-${sfx} has ${n} gap markers ⟦${sfx}⟧ in the block's texts (exactly one)`, id));
+          }
+          for (const k of markers.keys()) if (!suffixes.includes(k)) findings.push(blocker(doc, `${path}.textRefs`, `gap marker ⟦${k}⟧ has no item`, id));
+        }
+      }
       const noMatchItems = items.filter((it) => it.noMatch || (t.noMatch && String(it.answer).trim() === t.noMatch));
       if (t.noMatch && block.length === 'full' && !noMatchItems.length) findings.push(blocker(doc, `${path}.items`, `${block.template} has a no-match option (${t.noMatch}); no item uses it`, id));
       if (!t.noMatch && noMatchItems.some((it) => it.noMatch)) findings.push(blocker(doc, `${path}.items`, `${block.template} has no no-match option; an item is marked noMatch`, id));
-      if (typeof t.plays === 'number') {
+      if (typeof t.plays === 'number' && (!short || !scaffold || scaffold.playsFixed !== false)) {
         const ins = String(block.instructionsDe || '').toLowerCase();
         const says = /\bzweimal\b|\b2-mal\b|\bzwei mal\b/.test(ins) ? 2 : /\beinmal\b|\bnur einmal\b|\b1-mal\b/.test(ins) ? 1 : null;
         if (says !== null && says !== t.plays) findings.push(blocker(doc, `${path}.instructionsDe`, `the instruction says ${says === 2 ? 'zweimal' : 'einmal'}; ${block.template} plays ${t.plays}×`, id));

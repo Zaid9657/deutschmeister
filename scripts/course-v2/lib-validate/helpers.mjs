@@ -15,6 +15,16 @@ export const blocker = (doc, path, message, id) => finding('blocker', doc, path,
 export const advisory = (doc, path, message, id) => finding('advisory', doc, path, message, id);
 export const ratchet = (doc, path, message, id) => finding('ratchet', doc, path, message, id);
 
+/**
+ * A unit written before the 2026-09-27 schema revision declares no `stage` (the draft shape: texts
+ * inside blocks, no Prüfungsfokus slots, no reserves). Findings about fields the revision introduced
+ * are advisory on such a file, so the draft reports what is missing without failing on it.
+ */
+export const isDraftShape = (doc) => doc?.kind === 'unit' && doc.data?.stage === undefined;
+export const revisionFinding = (doc, path, message, id) => (isDraftShape(doc)
+  ? finding('advisory', doc, path, `${message} [draft shape: no stage declared]`, id)
+  : finding('blocker', doc, path, message, id));
+
 /** Item types by what the learner does (BLUEPRINT §3.4). */
 export const CHOICE_TYPES = new Set(['multiple_choice', 'abc', 'richtig_falsch', 'ja_nein', 'listen_select', 'match', 'zuordnen']);
 export const TYPED_TYPES = new Set(['fill_blank', 'dictation', 'cloze', 'notes', 'form_fill']);

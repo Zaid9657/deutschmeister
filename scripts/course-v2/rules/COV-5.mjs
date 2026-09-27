@@ -11,6 +11,7 @@ export const id = 'COV-5';
 export const title = 'Productive Teile recur at least every 4th unit';
 export const type = 'hard';
 export const scope = 'level';
+export const stage = 'T';
 
 const WINDOW = 4;
 

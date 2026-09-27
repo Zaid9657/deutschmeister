@@ -1,19 +1,26 @@
 {
   "$schema": "course-v2/text-types@1",
+  "notes": [
+    "lengthByLevel (Stand 2026-09-27, Befund W2-Review): je Niveau { input: [min, max], writing?: [min, max] }, beide in Wörtern.",
+    "input = Länge eines Kurs-Inputs dieser Textsorte (Situation-Input, Text A/B, Folge, Lesetext in einer Übung). Die Obergrenze ist auf TXT-03 gedeckelt: A-Niveaus Dialogzeilen × sentence.maxWords des Niveauprofils (a1.1 100, a1.2 130, a2.1 220, a2.2 250 Wörter; TXT-03 prüft dort Zeilen und 60–120 s), B-Niveaus 450 Wörter (geschrieben) bzw. ≤ 4 Minuten Audio. TXT-03 gilt für den Haupt-Input eines Lernschritts; kurze Textsorten (Schild, SMS, Anzeige) stehen dort nur als Teil eines gemischten Inputs, dessen Summe TXT-03 erfüllen muss.",
+    "Prüfungstexte (ExamText) richten sich NICHT nach diesem Band, sondern nach textWords der Teil-Vorlage in lanes/<lane>.json (TXT-02, ±15 % der offiziellen Beispiellänge).",
+    "writing = Richtband für einen Lernertext dieser Textsorte im Kurs (Schreiben-Schritt, Portfolio), abgeleitet aus den writing.words der Niveaupläne (docs/course-v2/curriculum/*.json) und den Schreib-Vorlagen der Spuren (sd1 ≈ 30, ga2 20–30 / 30–40, tb1 Design ≈ 100, tb2 ≥ 150). Es steuert nur die Empfehlung im Editor; die Wortvorgabe einer Prüfungsaufgabe steht in der Teil-Vorlage (words). Mikro-Ausgaben folgen microOutput.words im Niveauprofil. Fehlt writing, ist die Textsorte auf diesem Niveau nur Input.",
+    "parts gelten auf allen Niveaus der Textsorte. Deshalb gibt es tt.email-halbformell (A1/A2: Anrede, Gruß) und tt.email-halbformell-b (B1/B2: Betreff, Anrede, Einleitung, Schluss, Gruß, wie telc B1/B2 Schriftlicher Ausdruck)."
+  ],
   "types": [
     {
       "id": "tt.formular",
       "label": "Formular oder Vordruck",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [10, 100],
-        "a1.2": [10, 130],
-        "a2.1": [10, 150],
-        "a2.2": [10, 150],
-        "b1.1": [15, 200],
-        "b1.2": [15, 200],
-        "b2.1": [15, 250],
-        "b2.2": [15, 250]
+        "a1.1": { "input": [10, 100], "writing": [5, 15] },
+        "a1.2": { "input": [10, 130], "writing": [5, 20] },
+        "a2.1": { "input": [10, 150], "writing": [5, 25] },
+        "a2.2": { "input": [10, 150], "writing": [5, 25] },
+        "b1.1": { "input": [15, 200], "writing": [5, 40] },
+        "b1.2": { "input": [15, 200], "writing": [5, 40] },
+        "b2.1": { "input": [15, 250], "writing": [5, 40] },
+        "b2.2": { "input": [15, 250], "writing": [5, 40] }
       }
     },
     {
@@ -21,10 +28,10 @@
       "label": "Steckbrief oder Profil",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [15, 100],
-        "a1.2": [15, 130],
-        "a2.1": [20, 150],
-        "a2.2": [20, 150]
+        "a1.1": { "input": [15, 100], "writing": [15, 40] },
+        "a1.2": { "input": [15, 130], "writing": [15, 45] },
+        "a2.1": { "input": [20, 150], "writing": [20, 50] },
+        "a2.2": { "input": [20, 150], "writing": [20, 50] }
       }
     },
     {
@@ -32,10 +39,10 @@
       "label": "Kurze Mitteilung (Nachricht, Notiz oder E-Mail)",
       "parts": ["anrede", "gruss"],
       "lengthByLevel": {
-        "a1.1": [15, 100],
-        "a1.2": [20, 130],
-        "a2.1": [20, 150],
-        "a2.2": [20, 150]
+        "a1.1": { "input": [15, 100], "writing": [15, 40] },
+        "a1.2": { "input": [20, 130], "writing": [20, 45] },
+        "a2.1": { "input": [20, 150], "writing": [20, 40] },
+        "a2.2": { "input": [20, 150], "writing": [25, 50] }
       }
     },
     {
@@ -43,14 +50,14 @@
       "label": "Notiz oder Zettel",
       "parts": ["anrede", "gruss"],
       "lengthByLevel": {
-        "a1.1": [10, 80],
-        "a1.2": [10, 100],
-        "a2.1": [10, 120],
-        "a2.2": [10, 120],
-        "b1.1": [10, 150],
-        "b1.2": [10, 150],
-        "b2.1": [10, 150],
-        "b2.2": [10, 150]
+        "a1.1": { "input": [10, 80], "writing": [10, 30] },
+        "a1.2": { "input": [10, 100], "writing": [10, 35] },
+        "a2.1": { "input": [10, 120], "writing": [10, 40] },
+        "a2.2": { "input": [10, 120], "writing": [10, 40] },
+        "b1.1": { "input": [10, 150], "writing": [15, 60] },
+        "b1.2": { "input": [10, 150], "writing": [15, 60] },
+        "b2.1": { "input": [10, 150], "writing": [20, 80] },
+        "b2.2": { "input": [10, 150], "writing": [20, 80] }
       }
     },
     {
@@ -58,14 +65,14 @@
       "label": "SMS oder Chat-Nachricht",
       "parts": ["anrede", "gruss"],
       "lengthByLevel": {
-        "a1.1": [5, 80],
-        "a1.2": [5, 100],
-        "a2.1": [10, 150],
-        "a2.2": [10, 150],
-        "b1.1": [10, 200],
-        "b1.2": [10, 200],
-        "b2.1": [10, 200],
-        "b2.2": [10, 200]
+        "a1.1": { "input": [5, 80], "writing": [5, 30] },
+        "a1.2": { "input": [5, 100], "writing": [10, 35] },
+        "a2.1": { "input": [10, 150], "writing": [15, 40] },
+        "a2.2": { "input": [10, 150], "writing": [15, 40] },
+        "b1.1": { "input": [10, 200], "writing": [20, 60] },
+        "b1.2": { "input": [10, 200], "writing": [20, 60] },
+        "b2.1": { "input": [10, 200], "writing": [20, 80] },
+        "b2.2": { "input": [10, 200], "writing": [20, 80] }
       }
     },
     {
@@ -73,29 +80,36 @@
       "label": "Persönliche E-Mail",
       "parts": ["anrede", "gruss"],
       "lengthByLevel": {
-        "a1.1": [25, 100],
-        "a1.2": [25, 130],
-        "a2.1": [30, 300],
-        "a2.2": [40, 320],
-        "b1.1": [50, 450],
-        "b1.2": [60, 480],
-        "b2.1": [80, 500],
-        "b2.2": [80, 550]
+        "a1.1": { "input": [25, 100], "writing": [15, 40] },
+        "a1.2": { "input": [25, 130], "writing": [20, 45] },
+        "a2.1": { "input": [30, 220], "writing": [20, 50] },
+        "a2.2": { "input": [40, 250], "writing": [25, 60] },
+        "b1.1": { "input": [50, 450], "writing": [60, 120] },
+        "b1.2": { "input": [60, 450], "writing": [70, 130] },
+        "b2.1": { "input": [80, 450], "writing": [100, 180] },
+        "b2.2": { "input": [80, 450], "writing": [120, 220] }
       }
     },
     {
       "id": "tt.email-halbformell",
-      "label": "Halbformelle E-Mail oder Nachricht",
+      "label": "Halbformelle E-Mail oder Nachricht (A1/A2)",
       "parts": ["anrede", "gruss"],
       "lengthByLevel": {
-        "a1.1": [15, 100],
-        "a1.2": [20, 130],
-        "a2.1": [25, 230],
-        "a2.2": [25, 280],
-        "b1.1": [30, 300],
-        "b1.2": [30, 300],
-        "b2.1": [50, 350],
-        "b2.2": [60, 350]
+        "a1.1": { "input": [15, 100], "writing": [15, 40] },
+        "a1.2": { "input": [20, 130], "writing": [20, 45] },
+        "a2.1": { "input": [25, 220], "writing": [25, 50] },
+        "a2.2": { "input": [25, 250], "writing": [30, 60] }
+      }
+    },
+    {
+      "id": "tt.email-halbformell-b",
+      "label": "Halbformelle E-Mail mit Betreff (Anfrage, Bitte, Beschwerde)",
+      "parts": ["betreff", "anrede", "einleitung", "schluss", "gruss"],
+      "lengthByLevel": {
+        "b1.1": { "input": [30, 300], "writing": [40, 120] },
+        "b1.2": { "input": [30, 300], "writing": [40, 130] },
+        "b2.1": { "input": [50, 350], "writing": [70, 180] },
+        "b2.2": { "input": [60, 350], "writing": [90, 250] }
       }
     },
     {
@@ -103,10 +117,10 @@
       "label": "Antwort-E-Mail mit Betreff (informell oder halbformell)",
       "parts": ["betreff", "anrede", "einleitung", "schluss", "gruss"],
       "lengthByLevel": {
-        "b1.1": [60, 300],
-        "b1.2": [80, 300],
-        "b2.1": [100, 350],
-        "b2.2": [120, 350]
+        "b1.1": { "input": [60, 300], "writing": [80, 130] },
+        "b1.2": { "input": [80, 300], "writing": [80, 140] },
+        "b2.1": { "input": [100, 350], "writing": [120, 200] },
+        "b2.2": { "input": [120, 350], "writing": [150, 250] }
       }
     },
     {
@@ -114,10 +128,10 @@
       "label": "Formelle E-Mail (Anfrage, Beschwerde, Widerspruch)",
       "parts": ["betreff", "anrede", "einleitung", "schluss", "gruss"],
       "lengthByLevel": {
-        "b1.1": [60, 300],
-        "b1.2": [80, 300],
-        "b2.1": [100, 350],
-        "b2.2": [140, 400]
+        "b1.1": { "input": [60, 300], "writing": [40, 130] },
+        "b1.2": { "input": [80, 300], "writing": [40, 140] },
+        "b2.1": { "input": [100, 350], "writing": [100, 200] },
+        "b2.2": { "input": [140, 400], "writing": [150, 250] }
       }
     },
     {
@@ -125,12 +139,12 @@
       "label": "Persönlicher Brief",
       "parts": ["anrede", "gruss"],
       "lengthByLevel": {
-        "a2.1": [30, 230],
-        "a2.2": [30, 280],
-        "b1.1": [60, 350],
-        "b1.2": [60, 350],
-        "b2.1": [80, 400],
-        "b2.2": [80, 400]
+        "a2.1": { "input": [30, 220], "writing": [30, 55] },
+        "a2.2": { "input": [30, 250], "writing": [30, 60] },
+        "b1.1": { "input": [60, 350], "writing": [60, 130] },
+        "b1.2": { "input": [60, 350], "writing": [60, 130] },
+        "b2.1": { "input": [80, 400], "writing": [100, 180] },
+        "b2.2": { "input": [80, 400], "writing": [120, 220] }
       }
     },
     {
@@ -138,11 +152,11 @@
       "label": "Formeller Brief oder Bescheid (Behörde, Versicherung, Firma)",
       "parts": ["datum", "betreff", "anrede", "gruss", "unterschrift"],
       "lengthByLevel": {
-        "a2.2": [50, 280],
-        "b1.1": [60, 400],
-        "b1.2": [60, 400],
-        "b2.1": [80, 450],
-        "b2.2": [100, 500]
+        "a2.2": { "input": [50, 250] },
+        "b1.1": { "input": [60, 400], "writing": [60, 130] },
+        "b1.2": { "input": [60, 400], "writing": [70, 140] },
+        "b2.1": { "input": [80, 450], "writing": [100, 200] },
+        "b2.2": { "input": [100, 450], "writing": [150, 250] }
       }
     },
     {
@@ -150,10 +164,10 @@
       "label": "Bewerbungsschreiben (Anschreiben)",
       "parts": ["betreff", "anrede", "einleitung", "schluss", "gruss"],
       "lengthByLevel": {
-        "b1.1": [80, 300],
-        "b1.2": [80, 300],
-        "b2.1": [100, 350],
-        "b2.2": [120, 350]
+        "b1.1": { "input": [80, 300], "writing": [80, 150] },
+        "b1.2": { "input": [80, 300], "writing": [80, 160] },
+        "b2.1": { "input": [100, 350], "writing": [120, 200] },
+        "b2.2": { "input": [120, 350], "writing": [150, 250] }
       }
     },
     {
@@ -161,11 +175,11 @@
       "label": "Tabellarischer Lebenslauf",
       "parts": [],
       "lengthByLevel": {
-        "a2.2": [30, 200],
-        "b1.1": [40, 250],
-        "b1.2": [40, 250],
-        "b2.1": [60, 300],
-        "b2.2": [60, 300]
+        "a2.2": { "input": [30, 200], "writing": [20, 60] },
+        "b1.1": { "input": [40, 250], "writing": [30, 100] },
+        "b1.2": { "input": [40, 250], "writing": [30, 100] },
+        "b2.1": { "input": [60, 300], "writing": [40, 120] },
+        "b2.2": { "input": [60, 300], "writing": [40, 120] }
       }
     },
     {
@@ -173,14 +187,14 @@
       "label": "Einladung",
       "parts": ["anrede", "gruss"],
       "lengthByLevel": {
-        "a1.1": [15, 100],
-        "a1.2": [20, 130],
-        "a2.1": [25, 200],
-        "a2.2": [25, 200],
-        "b1.1": [30, 250],
-        "b1.2": [30, 250],
-        "b2.1": [40, 300],
-        "b2.2": [40, 300]
+        "a1.1": { "input": [15, 100], "writing": [15, 40] },
+        "a1.2": { "input": [20, 130], "writing": [20, 45] },
+        "a2.1": { "input": [25, 200], "writing": [20, 50] },
+        "a2.2": { "input": [25, 200], "writing": [20, 50] },
+        "b1.1": { "input": [30, 250], "writing": [40, 100] },
+        "b1.2": { "input": [30, 250], "writing": [40, 100] },
+        "b2.1": { "input": [40, 300], "writing": [60, 150] },
+        "b2.2": { "input": [40, 300], "writing": [60, 150] }
       }
     },
     {
@@ -188,14 +202,14 @@
       "label": "Postkarte oder Glückwunschkarte",
       "parts": ["anrede", "gruss"],
       "lengthByLevel": {
-        "a1.1": [15, 80],
-        "a1.2": [15, 100],
-        "a2.1": [15, 120],
-        "a2.2": [15, 120],
-        "b1.1": [15, 150],
-        "b1.2": [15, 150],
-        "b2.1": [15, 150],
-        "b2.2": [15, 150]
+        "a1.1": { "input": [15, 80], "writing": [15, 40] },
+        "a1.2": { "input": [15, 100], "writing": [20, 45] },
+        "a2.1": { "input": [15, 120], "writing": [20, 50] },
+        "a2.2": { "input": [15, 120], "writing": [20, 50] },
+        "b1.1": { "input": [15, 150], "writing": [30, 80] },
+        "b1.2": { "input": [15, 150], "writing": [30, 80] },
+        "b2.1": { "input": [15, 150], "writing": [30, 100] },
+        "b2.2": { "input": [15, 150], "writing": [30, 100] }
       }
     },
     {
@@ -203,14 +217,14 @@
       "label": "Beitrag in sozialen Medien",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [10, 80],
-        "a1.2": [10, 100],
-        "a2.1": [15, 150],
-        "a2.2": [15, 150],
-        "b1.1": [20, 250],
-        "b1.2": [20, 250],
-        "b2.1": [20, 300],
-        "b2.2": [20, 300]
+        "a1.1": { "input": [10, 80], "writing": [15, 40] },
+        "a1.2": { "input": [10, 100], "writing": [15, 45] },
+        "a2.1": { "input": [15, 150], "writing": [20, 60] },
+        "a2.2": { "input": [15, 150], "writing": [20, 60] },
+        "b1.1": { "input": [20, 250], "writing": [40, 120] },
+        "b1.2": { "input": [20, 250], "writing": [40, 120] },
+        "b2.1": { "input": [20, 300], "writing": [60, 180] },
+        "b2.2": { "input": [20, 300], "writing": [60, 200] }
       }
     },
     {
@@ -218,10 +232,10 @@
       "label": "Forumsbeitrag (Meinung mit Begründung)",
       "parts": ["einleitung", "schluss"],
       "lengthByLevel": {
-        "b1.1": [40, 480],
-        "b1.2": [50, 520],
-        "b2.1": [80, 650],
-        "b2.2": [100, 700]
+        "b1.1": { "input": [40, 450], "writing": [60, 120] },
+        "b1.2": { "input": [50, 450], "writing": [70, 130] },
+        "b2.1": { "input": [80, 450], "writing": [100, 180] },
+        "b2.2": { "input": [100, 450], "writing": [120, 250] }
       }
     },
     {
@@ -229,10 +243,10 @@
       "label": "Zusammenfassung zum Weitergeben",
       "parts": [],
       "lengthByLevel": {
-        "b1.1": [30, 150],
-        "b1.2": [40, 150],
-        "b2.1": [60, 200],
-        "b2.2": [80, 220]
+        "b1.1": { "input": [30, 150], "writing": [30, 100] },
+        "b1.2": { "input": [40, 150], "writing": [40, 120] },
+        "b2.1": { "input": [60, 200], "writing": [60, 150] },
+        "b2.2": { "input": [80, 220], "writing": [80, 180] }
       }
     },
     {
@@ -240,13 +254,13 @@
       "label": "Telefon- oder Gesprächsnotiz",
       "parts": [],
       "lengthByLevel": {
-        "a1.2": [5, 130],
-        "a2.1": [5, 230],
-        "a2.2": [5, 280],
-        "b1.1": [10, 480],
-        "b1.2": [10, 520],
-        "b2.1": [10, 600],
-        "b2.2": [10, 600]
+        "a1.2": { "input": [5, 130], "writing": [5, 30] },
+        "a2.1": { "input": [5, 220], "writing": [10, 40] },
+        "a2.2": { "input": [5, 250], "writing": [10, 40] },
+        "b1.1": { "input": [10, 450], "writing": [15, 60] },
+        "b1.2": { "input": [10, 450], "writing": [15, 60] },
+        "b2.1": { "input": [10, 450], "writing": [20, 80] },
+        "b2.2": { "input": [10, 450], "writing": [20, 80] }
       }
     },
     {
@@ -254,14 +268,14 @@
       "label": "Schild, Hinweis oder Aushang",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [3, 60],
-        "a1.2": [3, 80],
-        "a2.1": [5, 120],
-        "a2.2": [5, 120],
-        "b1.1": [5, 200],
-        "b1.2": [5, 200],
-        "b2.1": [5, 250],
-        "b2.2": [5, 250]
+        "a1.1": { "input": [3, 60] },
+        "a1.2": { "input": [3, 80] },
+        "a2.1": { "input": [5, 120] },
+        "a2.2": { "input": [5, 120] },
+        "b1.1": { "input": [5, 200] },
+        "b1.2": { "input": [5, 200] },
+        "b2.1": { "input": [5, 250] },
+        "b2.2": { "input": [5, 250] }
       }
     },
     {
@@ -269,14 +283,14 @@
       "label": "Internetanzeige oder kurzes Online-Angebot",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [8, 100],
-        "a1.2": [8, 130],
-        "a2.1": [15, 230],
-        "a2.2": [15, 280],
-        "b1.1": [20, 480],
-        "b1.2": [20, 520],
-        "b2.1": [30, 650],
-        "b2.2": [30, 700]
+        "a1.1": { "input": [8, 100] },
+        "a1.2": { "input": [8, 130] },
+        "a2.1": { "input": [15, 220] },
+        "a2.2": { "input": [15, 250] },
+        "b1.1": { "input": [20, 450] },
+        "b1.2": { "input": [20, 450] },
+        "b2.1": { "input": [30, 450] },
+        "b2.2": { "input": [30, 450] }
       }
     },
     {
@@ -284,14 +298,14 @@
       "label": "Kleinanzeige",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [8, 100],
-        "a1.2": [8, 130],
-        "a2.1": [15, 230],
-        "a2.2": [15, 280],
-        "b1.1": [20, 480],
-        "b1.2": [20, 520],
-        "b2.1": [30, 650],
-        "b2.2": [30, 700]
+        "a1.1": { "input": [8, 100] },
+        "a1.2": { "input": [8, 130] },
+        "a2.1": { "input": [15, 220] },
+        "a2.2": { "input": [15, 250] },
+        "b1.1": { "input": [20, 450] },
+        "b1.2": { "input": [20, 450] },
+        "b2.1": { "input": [30, 450] },
+        "b2.2": { "input": [30, 450] }
       }
     },
     {
@@ -299,13 +313,13 @@
       "label": "Stellenanzeige",
       "parts": [],
       "lengthByLevel": {
-        "a1.2": [15, 130],
-        "a2.1": [20, 230],
-        "a2.2": [20, 280],
-        "b1.1": [30, 480],
-        "b1.2": [30, 520],
-        "b2.1": [40, 650],
-        "b2.2": [40, 700]
+        "a1.2": { "input": [15, 130] },
+        "a2.1": { "input": [20, 220] },
+        "a2.2": { "input": [20, 250] },
+        "b1.1": { "input": [30, 450] },
+        "b1.2": { "input": [30, 450] },
+        "b2.1": { "input": [40, 450] },
+        "b2.2": { "input": [40, 450] }
       }
     },
     {
@@ -313,14 +327,14 @@
       "label": "Webseite",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [15, 100],
-        "a1.2": [15, 130],
-        "a2.1": [30, 230],
-        "a2.2": [30, 280],
-        "b1.1": [50, 480],
-        "b1.2": [50, 520],
-        "b2.1": [80, 650],
-        "b2.2": [80, 700]
+        "a1.1": { "input": [15, 100] },
+        "a1.2": { "input": [15, 130] },
+        "a2.1": { "input": [30, 220] },
+        "a2.2": { "input": [30, 250] },
+        "b1.1": { "input": [50, 450] },
+        "b1.2": { "input": [50, 450] },
+        "b2.1": { "input": [80, 450] },
+        "b2.2": { "input": [80, 450] }
       }
     },
     {
@@ -328,14 +342,14 @@
       "label": "Prospekt oder Werbeblatt mit Angeboten",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [20, 100],
-        "a1.2": [20, 130],
-        "a2.1": [30, 230],
-        "a2.2": [30, 280],
-        "b1.1": [40, 400],
-        "b1.2": [40, 400],
-        "b2.1": [60, 450],
-        "b2.2": [60, 450]
+        "a1.1": { "input": [20, 100] },
+        "a1.2": { "input": [20, 130] },
+        "a2.1": { "input": [30, 220] },
+        "a2.2": { "input": [30, 250] },
+        "b1.1": { "input": [40, 400] },
+        "b1.2": { "input": [40, 400] },
+        "b2.1": { "input": [60, 450] },
+        "b2.2": { "input": [60, 450] }
       }
     },
     {
@@ -343,14 +357,14 @@
       "label": "Informationstafel, Wegweiser oder Verzeichnis",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [5, 80],
-        "a1.2": [5, 100],
-        "a2.1": [30, 270],
-        "a2.2": [30, 280],
-        "b1.1": [40, 400],
-        "b1.2": [40, 400],
-        "b2.1": [40, 450],
-        "b2.2": [40, 450]
+        "a1.1": { "input": [5, 80] },
+        "a1.2": { "input": [5, 100] },
+        "a2.1": { "input": [30, 220] },
+        "a2.2": { "input": [30, 250] },
+        "b1.1": { "input": [40, 400] },
+        "b1.2": { "input": [40, 400] },
+        "b2.1": { "input": [40, 450] },
+        "b2.2": { "input": [40, 450] }
       }
     },
     {
@@ -358,14 +372,14 @@
       "label": "Programm oder Veranstaltungskalender",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [20, 100],
-        "a1.2": [20, 130],
-        "a2.1": [40, 270],
-        "a2.2": [40, 280],
-        "b1.1": [60, 480],
-        "b1.2": [60, 520],
-        "b2.1": [80, 650],
-        "b2.2": [80, 700]
+        "a1.1": { "input": [20, 100] },
+        "a1.2": { "input": [20, 130] },
+        "a2.1": { "input": [40, 220] },
+        "a2.2": { "input": [40, 250] },
+        "b1.1": { "input": [60, 450] },
+        "b1.2": { "input": [60, 450] },
+        "b2.1": { "input": [80, 450] },
+        "b2.2": { "input": [80, 450] }
       }
     },
     {
@@ -373,14 +387,14 @@
       "label": "Fahrplan oder Anzeigetafel",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [5, 80],
-        "a1.2": [5, 100],
-        "a2.1": [10, 150],
-        "a2.2": [10, 150],
-        "b1.1": [10, 200],
-        "b1.2": [10, 200],
-        "b2.1": [10, 200],
-        "b2.2": [10, 200]
+        "a1.1": { "input": [5, 80] },
+        "a1.2": { "input": [5, 100] },
+        "a2.1": { "input": [10, 150] },
+        "a2.2": { "input": [10, 150] },
+        "b1.1": { "input": [10, 200] },
+        "b1.2": { "input": [10, 200] },
+        "b2.1": { "input": [10, 200] },
+        "b2.2": { "input": [10, 200] }
       }
     },
     {
@@ -388,12 +402,12 @@
       "label": "Speisekarte",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [15, 100],
-        "a1.2": [15, 130],
-        "a2.1": [20, 150],
-        "a2.2": [20, 150],
-        "b1.1": [20, 200],
-        "b1.2": [20, 200]
+        "a1.1": { "input": [15, 100] },
+        "a1.2": { "input": [15, 130] },
+        "a2.1": { "input": [20, 150] },
+        "a2.2": { "input": [20, 150] },
+        "b1.1": { "input": [20, 200] },
+        "b1.2": { "input": [20, 200] }
       }
     },
     {
@@ -401,13 +415,13 @@
       "label": "Beleg oder Bestätigung (Buchung, Rechnung, Abrechnung)",
       "parts": [],
       "lengthByLevel": {
-        "a1.2": [10, 100],
-        "a2.1": [15, 180],
-        "a2.2": [15, 200],
-        "b1.1": [20, 300],
-        "b1.2": [20, 300],
-        "b2.1": [30, 350],
-        "b2.2": [30, 350]
+        "a1.2": { "input": [10, 100] },
+        "a2.1": { "input": [15, 180] },
+        "a2.2": { "input": [15, 200] },
+        "b1.1": { "input": [20, 300] },
+        "b1.2": { "input": [20, 300] },
+        "b2.1": { "input": [30, 350] },
+        "b2.2": { "input": [30, 350] }
       }
     },
     {
@@ -415,12 +429,12 @@
       "label": "Ausweis, Karte oder Zeugnis",
       "parts": [],
       "lengthByLevel": {
-        "a2.1": [5, 100],
-        "a2.2": [5, 120],
-        "b1.1": [5, 150],
-        "b1.2": [5, 150],
-        "b2.1": [5, 200],
-        "b2.2": [5, 200]
+        "a2.1": { "input": [5, 100] },
+        "a2.2": { "input": [5, 120] },
+        "b1.1": { "input": [5, 150] },
+        "b1.2": { "input": [5, 150] },
+        "b2.1": { "input": [5, 200] },
+        "b2.2": { "input": [5, 200] }
       }
     },
     {
@@ -428,13 +442,13 @@
       "label": "Anleitung, Gebrauchshinweis oder Beipackzettel",
       "parts": [],
       "lengthByLevel": {
-        "a1.2": [10, 100],
-        "a2.1": [20, 200],
-        "a2.2": [20, 250],
-        "b1.1": [40, 450],
-        "b1.2": [40, 450],
-        "b2.1": [60, 500],
-        "b2.2": [60, 500]
+        "a1.2": { "input": [10, 100] },
+        "a2.1": { "input": [20, 200] },
+        "a2.2": { "input": [20, 250] },
+        "b1.1": { "input": [40, 450] },
+        "b1.2": { "input": [40, 450] },
+        "b2.1": { "input": [60, 450] },
+        "b2.2": { "input": [60, 450] }
       }
     },
     {
@@ -442,13 +456,13 @@
       "label": "Hausordnung, Betriebsordnung oder Studienordnung",
       "parts": [],
       "lengthByLevel": {
-        "a1.2": [20, 130],
-        "a2.1": [30, 230],
-        "a2.2": [30, 280],
-        "b1.1": [60, 450],
-        "b1.2": [60, 450],
-        "b2.1": [100, 500],
-        "b2.2": [100, 500]
+        "a1.2": { "input": [20, 130] },
+        "a2.1": { "input": [30, 220] },
+        "a2.2": { "input": [30, 250] },
+        "b1.1": { "input": [60, 450] },
+        "b1.2": { "input": [60, 450] },
+        "b2.1": { "input": [100, 450] },
+        "b2.2": { "input": [100, 450] }
       }
     },
     {
@@ -456,11 +470,11 @@
       "label": "Vertrags- oder Geschäftsbedingungen",
       "parts": [],
       "lengthByLevel": {
-        "a2.2": [40, 280],
-        "b1.1": [60, 450],
-        "b1.2": [60, 450],
-        "b2.1": [100, 500],
-        "b2.2": [100, 500]
+        "a2.2": { "input": [40, 250] },
+        "b1.1": { "input": [60, 450] },
+        "b1.2": { "input": [60, 450] },
+        "b2.1": { "input": [100, 450] },
+        "b2.2": { "input": [100, 450] }
       }
     },
     {
@@ -468,12 +482,12 @@
       "label": "Informationsbroschüre oder Merkblatt",
       "parts": [],
       "lengthByLevel": {
-        "a2.1": [40, 230],
-        "a2.2": [60, 280],
-        "b1.1": [80, 480],
-        "b1.2": [80, 520],
-        "b2.1": [100, 600],
-        "b2.2": [100, 650]
+        "a2.1": { "input": [40, 220] },
+        "a2.2": { "input": [60, 250] },
+        "b1.1": { "input": [80, 450] },
+        "b1.2": { "input": [80, 450] },
+        "b2.1": { "input": [100, 450] },
+        "b2.2": { "input": [100, 450] }
       }
     },
     {
@@ -481,10 +495,10 @@
       "label": "Rundschreiben oder Mitteilung im Betrieb",
       "parts": ["datum", "betreff", "anrede", "gruss"],
       "lengthByLevel": {
-        "b1.1": [50, 350],
-        "b1.2": [50, 400],
-        "b2.1": [80, 450],
-        "b2.2": [80, 450]
+        "b1.1": { "input": [50, 350] },
+        "b1.2": { "input": [50, 400] },
+        "b2.1": { "input": [80, 450] },
+        "b2.2": { "input": [80, 450] }
       }
     },
     {
@@ -492,12 +506,12 @@
       "label": "Zeitungs- oder Zeitschriftenartikel",
       "parts": [],
       "lengthByLevel": {
-        "a2.1": [80, 260],
-        "a2.2": [120, 280],
-        "b1.1": [150, 480],
-        "b1.2": [150, 520],
-        "b2.1": [200, 650],
-        "b2.2": [250, 700]
+        "a2.1": { "input": [80, 220] },
+        "a2.2": { "input": [120, 250] },
+        "b1.1": { "input": [150, 450] },
+        "b1.2": { "input": [150, 450] },
+        "b2.1": { "input": [200, 450] },
+        "b2.2": { "input": [250, 450] }
       }
     },
     {
@@ -505,11 +519,11 @@
       "label": "Kurzmeldung (Presse oder Firmenzeitung)",
       "parts": [],
       "lengthByLevel": {
-        "a2.2": [30, 150],
-        "b1.1": [40, 480],
-        "b1.2": [50, 520],
-        "b2.1": [60, 650],
-        "b2.2": [80, 700]
+        "a2.2": { "input": [30, 150] },
+        "b1.1": { "input": [40, 450] },
+        "b1.2": { "input": [50, 450] },
+        "b2.1": { "input": [60, 450] },
+        "b2.2": { "input": [80, 450] }
       }
     },
     {
@@ -517,10 +531,10 @@
       "label": "Leserkommentar oder kurze Meinung",
       "parts": [],
       "lengthByLevel": {
-        "b1.1": [20, 480],
-        "b1.2": [20, 520],
-        "b2.1": [30, 650],
-        "b2.2": [30, 700]
+        "b1.1": { "input": [20, 450], "writing": [40, 100] },
+        "b1.2": { "input": [20, 450], "writing": [40, 100] },
+        "b2.1": { "input": [30, 450], "writing": [60, 150] },
+        "b2.2": { "input": [30, 450], "writing": [60, 150] }
       }
     },
     {
@@ -528,9 +542,9 @@
       "label": "Kommentar (Meinungsbeitrag in der Presse)",
       "parts": [],
       "lengthByLevel": {
-        "b1.2": [120, 450],
-        "b2.1": [150, 550],
-        "b2.2": [150, 600]
+        "b1.2": { "input": [120, 450] },
+        "b2.1": { "input": [150, 450] },
+        "b2.2": { "input": [150, 450] }
       }
     },
     {
@@ -538,12 +552,12 @@
       "label": "Blogbeitrag oder Erfahrungsbericht",
       "parts": [],
       "lengthByLevel": {
-        "a2.1": [60, 230],
-        "a2.2": [80, 280],
-        "b1.1": [100, 480],
-        "b1.2": [100, 520],
-        "b2.1": [120, 650],
-        "b2.2": [150, 700]
+        "a2.1": { "input": [60, 220] },
+        "a2.2": { "input": [80, 250] },
+        "b1.1": { "input": [100, 450] },
+        "b1.2": { "input": [100, 450] },
+        "b2.1": { "input": [120, 450] },
+        "b2.2": { "input": [150, 450] }
       }
     },
     {
@@ -551,13 +565,13 @@
       "label": "Erzähltext (Erinnerung oder Geschichte)",
       "parts": [],
       "lengthByLevel": {
-        "a1.2": [40, 130],
-        "a2.1": [80, 230],
-        "a2.2": [100, 280],
-        "b1.1": [150, 600],
-        "b1.2": [150, 650],
-        "b2.1": [200, 800],
-        "b2.2": [200, 900]
+        "a1.2": { "input": [40, 130] },
+        "a2.1": { "input": [80, 220] },
+        "a2.2": { "input": [100, 250] },
+        "b1.1": { "input": [150, 450] },
+        "b1.2": { "input": [150, 450] },
+        "b2.1": { "input": [200, 450] },
+        "b2.2": { "input": [200, 450] }
       }
     },
     {
@@ -565,11 +579,11 @@
       "label": "Porträt (Person oder Ort)",
       "parts": [],
       "lengthByLevel": {
-        "a2.2": [80, 280],
-        "b1.1": [80, 480],
-        "b1.2": [80, 520],
-        "b2.1": [100, 550],
-        "b2.2": [100, 600]
+        "a2.2": { "input": [80, 250] },
+        "b1.1": { "input": [80, 450] },
+        "b1.2": { "input": [80, 450] },
+        "b2.1": { "input": [100, 450] },
+        "b2.2": { "input": [100, 450] }
       }
     },
     {
@@ -577,10 +591,10 @@
       "label": "Kritik oder Rezension",
       "parts": [],
       "lengthByLevel": {
-        "b1.1": [80, 400],
-        "b1.2": [80, 450],
-        "b2.1": [120, 500],
-        "b2.2": [120, 550]
+        "b1.1": { "input": [80, 400] },
+        "b1.2": { "input": [80, 450] },
+        "b2.1": { "input": [120, 450] },
+        "b2.2": { "input": [120, 450] }
       }
     },
     {
@@ -588,10 +602,10 @@
       "label": "Bericht (über ein Projekt, die Arbeit oder ein Ereignis)",
       "parts": [],
       "lengthByLevel": {
-        "b1.1": [80, 400],
-        "b1.2": [80, 450],
-        "b2.1": [100, 500],
-        "b2.2": [120, 550]
+        "b1.1": { "input": [80, 400], "writing": [60, 120] },
+        "b1.2": { "input": [80, 450], "writing": [60, 120] },
+        "b2.1": { "input": [100, 450], "writing": [100, 180] },
+        "b2.2": { "input": [120, 450], "writing": [120, 220] }
       }
     },
     {
@@ -599,14 +613,14 @@
       "label": "Kurzdialog im Alltag",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [15, 100],
-        "a1.2": [20, 130],
-        "a2.1": [25, 150],
-        "a2.2": [25, 150],
-        "b1.1": [30, 200],
-        "b1.2": [30, 200],
-        "b2.1": [40, 250],
-        "b2.2": [40, 250]
+        "a1.1": { "input": [15, 100] },
+        "a1.2": { "input": [20, 130] },
+        "a2.1": { "input": [25, 150] },
+        "a2.2": { "input": [25, 150] },
+        "b1.1": { "input": [30, 200] },
+        "b1.2": { "input": [30, 200] },
+        "b2.1": { "input": [40, 250] },
+        "b2.2": { "input": [40, 250] }
       }
     },
     {
@@ -614,14 +628,14 @@
       "label": "Dialog oder Gespräch im Alltag",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [15, 100],
-        "a1.2": [20, 130],
-        "a2.1": [25, 300],
-        "a2.2": [25, 320],
-        "b1.1": [30, 600],
-        "b1.2": [30, 650],
-        "b2.1": [40, 800],
-        "b2.2": [40, 900]
+        "a1.1": { "input": [15, 100] },
+        "a1.2": { "input": [20, 130] },
+        "a2.1": { "input": [25, 220] },
+        "a2.2": { "input": [25, 250] },
+        "b1.1": { "input": [30, 450] },
+        "b1.2": { "input": [30, 450] },
+        "b2.1": { "input": [40, 450] },
+        "b2.2": { "input": [40, 450] }
       }
     },
     {
@@ -629,14 +643,14 @@
       "label": "Telefonat oder Videotelefonat",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [25, 100],
-        "a1.2": [25, 130],
-        "a2.1": [30, 230],
-        "a2.2": [30, 280],
-        "b1.1": [60, 520],
-        "b1.2": [60, 550],
-        "b2.1": [80, 600],
-        "b2.2": [80, 650]
+        "a1.1": { "input": [25, 100] },
+        "a1.2": { "input": [25, 130] },
+        "a2.1": { "input": [30, 220] },
+        "a2.2": { "input": [30, 250] },
+        "b1.1": { "input": [60, 450] },
+        "b1.2": { "input": [60, 450] },
+        "b2.1": { "input": [80, 450] },
+        "b2.2": { "input": [80, 450] }
       }
     },
     {
@@ -644,14 +658,14 @@
       "label": "Nachricht auf der Mailbox oder Sprachnachricht",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [15, 100],
-        "a1.2": [15, 130],
-        "a2.1": [20, 230],
-        "a2.2": [20, 280],
-        "b1.1": [25, 480],
-        "b1.2": [25, 520],
-        "b2.1": [30, 520],
-        "b2.2": [30, 520]
+        "a1.1": { "input": [15, 100] },
+        "a1.2": { "input": [15, 130] },
+        "a2.1": { "input": [20, 220] },
+        "a2.2": { "input": [20, 250] },
+        "b1.1": { "input": [25, 450] },
+        "b1.2": { "input": [25, 450] },
+        "b2.1": { "input": [30, 450] },
+        "b2.2": { "input": [30, 450] }
       }
     },
     {
@@ -659,14 +673,14 @@
       "label": "Telefonansage oder Nachricht auf dem Anrufbeantworter",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [15, 100],
-        "a1.2": [15, 130],
-        "a2.1": [20, 230],
-        "a2.2": [20, 280],
-        "b1.1": [25, 480],
-        "b1.2": [25, 520],
-        "b2.1": [30, 520],
-        "b2.2": [30, 520]
+        "a1.1": { "input": [15, 100] },
+        "a1.2": { "input": [15, 130] },
+        "a2.1": { "input": [20, 220] },
+        "a2.2": { "input": [20, 250] },
+        "b1.1": { "input": [25, 450] },
+        "b1.2": { "input": [25, 450] },
+        "b2.1": { "input": [30, 450] },
+        "b2.2": { "input": [30, 450] }
       }
     },
     {
@@ -674,14 +688,14 @@
       "label": "Kurze Ansage (Radio, Telefon oder Durchsage)",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [10, 100],
-        "a1.2": [10, 130],
-        "a2.1": [20, 230],
-        "a2.2": [20, 280],
-        "b1.1": [25, 480],
-        "b1.2": [25, 520],
-        "b2.1": [30, 520],
-        "b2.2": [30, 520]
+        "a1.1": { "input": [10, 100] },
+        "a1.2": { "input": [10, 130] },
+        "a2.1": { "input": [20, 220] },
+        "a2.2": { "input": [20, 250] },
+        "b1.1": { "input": [25, 450] },
+        "b1.2": { "input": [25, 450] },
+        "b2.1": { "input": [30, 450] },
+        "b2.2": { "input": [30, 450] }
       }
     },
     {
@@ -689,14 +703,14 @@
       "label": "Durchsage (Bahnhof, Flughafen, Kaufhaus, Betrieb)",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [8, 100],
-        "a1.2": [8, 130],
-        "a2.1": [15, 230],
-        "a2.2": [15, 280],
-        "b1.1": [20, 480],
-        "b1.2": [20, 520],
-        "b2.1": [25, 520],
-        "b2.2": [25, 520]
+        "a1.1": { "input": [8, 100] },
+        "a1.2": { "input": [8, 130] },
+        "a2.1": { "input": [15, 220] },
+        "a2.2": { "input": [15, 250] },
+        "b1.1": { "input": [20, 450] },
+        "b1.2": { "input": [20, 450] },
+        "b2.1": { "input": [25, 450] },
+        "b2.2": { "input": [25, 450] }
       }
     },
     {
@@ -704,13 +718,13 @@
       "label": "Radiomeldung (Nachrichten, Wetter, Verkehr, Tipp)",
       "parts": [],
       "lengthByLevel": {
-        "a1.2": [15, 130],
-        "a2.1": [20, 230],
-        "a2.2": [20, 280],
-        "b1.1": [30, 480],
-        "b1.2": [30, 520],
-        "b2.1": [40, 600],
-        "b2.2": [40, 650]
+        "a1.2": { "input": [15, 130] },
+        "a2.1": { "input": [20, 220] },
+        "a2.2": { "input": [20, 250] },
+        "b1.1": { "input": [30, 450] },
+        "b1.2": { "input": [30, 450] },
+        "b2.1": { "input": [40, 450] },
+        "b2.2": { "input": [40, 450] }
       }
     },
     {
@@ -718,14 +732,14 @@
       "label": "Interview (Radio oder Podcast)",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [30, 100],
-        "a1.2": [30, 130],
-        "a2.1": [80, 280],
-        "a2.2": [120, 300],
-        "b1.1": [200, 650],
-        "b1.2": [200, 700],
-        "b2.1": [250, 900],
-        "b2.2": [300, 1000]
+        "a1.1": { "input": [30, 100] },
+        "a1.2": { "input": [30, 130] },
+        "a2.1": { "input": [80, 220] },
+        "a2.2": { "input": [120, 250] },
+        "b1.1": { "input": [200, 450] },
+        "b1.2": { "input": [200, 450] },
+        "b2.1": { "input": [250, 450] },
+        "b2.2": { "input": [300, 450] }
       }
     },
     {
@@ -733,12 +747,12 @@
       "label": "Straßenumfrage oder kurze Meinungsäußerungen",
       "parts": [],
       "lengthByLevel": {
-        "a2.1": [50, 230],
-        "a2.2": [60, 280],
-        "b1.1": [80, 480],
-        "b1.2": [80, 520],
-        "b2.1": [100, 600],
-        "b2.2": [100, 650]
+        "a2.1": { "input": [50, 220] },
+        "a2.2": { "input": [60, 250] },
+        "b1.1": { "input": [80, 450] },
+        "b1.2": { "input": [80, 450] },
+        "b2.1": { "input": [100, 450] },
+        "b2.2": { "input": [100, 450] }
       }
     },
     {
@@ -746,10 +760,10 @@
       "label": "Radiodiskussion oder Gesprächsrunde",
       "parts": [],
       "lengthByLevel": {
-        "b1.1": [200, 650],
-        "b1.2": [250, 700],
-        "b2.1": [300, 800],
-        "b2.2": [300, 900]
+        "b1.1": { "input": [200, 450] },
+        "b1.2": { "input": [250, 450] },
+        "b2.1": { "input": [300, 450] },
+        "b2.2": { "input": [300, 450] }
       }
     },
     {
@@ -757,10 +771,10 @@
       "label": "Vortrag, Kurzvortrag oder Ansprache",
       "parts": [],
       "lengthByLevel": {
-        "b1.1": [120, 550],
-        "b1.2": [150, 600],
-        "b2.1": [200, 800],
-        "b2.2": [250, 1000]
+        "b1.1": { "input": [120, 450] },
+        "b1.2": { "input": [150, 450] },
+        "b2.1": { "input": [200, 450] },
+        "b2.2": { "input": [250, 450] }
       }
     },
     {
@@ -768,14 +782,14 @@
       "label": "Führung oder Rundgang",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [30, 100],
-        "a1.2": [30, 130],
-        "a2.1": [50, 230],
-        "a2.2": [60, 280],
-        "b1.1": [120, 550],
-        "b1.2": [150, 600],
-        "b2.1": [150, 650],
-        "b2.2": [150, 700]
+        "a1.1": { "input": [30, 100] },
+        "a1.2": { "input": [30, 130] },
+        "a2.1": { "input": [50, 220] },
+        "a2.2": { "input": [60, 250] },
+        "b1.1": { "input": [120, 450] },
+        "b1.2": { "input": [150, 450] },
+        "b2.1": { "input": [150, 450] },
+        "b2.2": { "input": [150, 450] }
       }
     },
     {
@@ -783,14 +797,14 @@
       "label": "Stichwortblatt (Angaben zur Person)",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [3, 20],
-        "a1.2": [3, 20],
-        "a2.1": [3, 25],
-        "a2.2": [3, 25],
-        "b1.1": [5, 50],
-        "b1.2": [5, 50],
-        "b2.1": [5, 60],
-        "b2.2": [5, 60]
+        "a1.1": { "input": [3, 20] },
+        "a1.2": { "input": [3, 20] },
+        "a2.1": { "input": [3, 25] },
+        "a2.2": { "input": [3, 25] },
+        "b1.1": { "input": [5, 50] },
+        "b1.2": { "input": [5, 50] },
+        "b2.1": { "input": [5, 60] },
+        "b2.2": { "input": [5, 60] }
       }
     },
     {
@@ -798,10 +812,10 @@
       "label": "Wortkarte (Thema und Stichwort)",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [1, 4],
-        "a1.2": [1, 4],
-        "a2.1": [1, 4],
-        "a2.2": [1, 4]
+        "a1.1": { "input": [1, 4] },
+        "a1.2": { "input": [1, 4] },
+        "a2.1": { "input": [1, 4] },
+        "a2.2": { "input": [1, 4] }
       }
     },
     {
@@ -809,10 +823,10 @@
       "label": "Bildkarte",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [0, 3],
-        "a1.2": [0, 3],
-        "a2.1": [0, 3],
-        "a2.2": [0, 3]
+        "a1.1": { "input": [0, 3] },
+        "a1.2": { "input": [0, 3] },
+        "a2.1": { "input": [0, 3] },
+        "a2.2": { "input": [0, 3] }
       }
     },
     {
@@ -820,12 +834,12 @@
       "label": "Aufgabenkarte mit Leitfrage und Stichpunkten",
       "parts": [],
       "lengthByLevel": {
-        "a2.1": [6, 30],
-        "a2.2": [6, 30],
-        "b1.1": [10, 60],
-        "b1.2": [10, 60],
-        "b2.1": [10, 80],
-        "b2.2": [10, 80]
+        "a2.1": { "input": [6, 30] },
+        "a2.2": { "input": [6, 30] },
+        "b1.1": { "input": [10, 60] },
+        "b1.2": { "input": [10, 60] },
+        "b2.1": { "input": [10, 80] },
+        "b2.2": { "input": [10, 80] }
       }
     },
     {
@@ -833,13 +847,13 @@
       "label": "Terminkalender, Dienst- oder Stundenplan",
       "parts": [],
       "lengthByLevel": {
-        "a1.2": [5, 50],
-        "a2.1": [5, 60],
-        "a2.2": [5, 60],
-        "b1.1": [5, 80],
-        "b1.2": [5, 80],
-        "b2.1": [5, 100],
-        "b2.2": [5, 100]
+        "a1.2": { "input": [5, 50] },
+        "a2.1": { "input": [5, 60] },
+        "a2.2": { "input": [5, 60] },
+        "b1.1": { "input": [5, 80] },
+        "b1.2": { "input": [5, 80] },
+        "b2.1": { "input": [5, 100] },
+        "b2.2": { "input": [5, 100] }
       }
     },
     {
@@ -847,12 +861,12 @@
       "label": "Aufgabenblatt zur gemeinsamen Planung",
       "parts": [],
       "lengthByLevel": {
-        "a2.1": [5, 60],
-        "a2.2": [5, 60],
-        "b1.1": [15, 80],
-        "b1.2": [15, 80],
-        "b2.1": [20, 100],
-        "b2.2": [20, 100]
+        "a2.1": { "input": [5, 60] },
+        "a2.2": { "input": [5, 60] },
+        "b1.1": { "input": [15, 80] },
+        "b1.2": { "input": [15, 80] },
+        "b2.1": { "input": [20, 100] },
+        "b2.2": { "input": [20, 100] }
       }
     },
     {
@@ -860,10 +874,10 @@
       "label": "Aufgabenblatt mit zwei kurzen Meinungen",
       "parts": [],
       "lengthByLevel": {
-        "b1.1": [30, 120],
-        "b1.2": [30, 120],
-        "b2.1": [40, 150],
-        "b2.2": [40, 150]
+        "b1.1": { "input": [30, 120] },
+        "b1.2": { "input": [30, 120] },
+        "b2.1": { "input": [40, 150] },
+        "b2.2": { "input": [40, 150] }
       }
     },
     {
@@ -871,14 +885,14 @@
       "label": "Foto zum Beschreiben",
       "parts": [],
       "lengthByLevel": {
-        "a1.1": [0, 15],
-        "a1.2": [0, 15],
-        "a2.1": [0, 15],
-        "a2.2": [0, 15],
-        "b1.1": [0, 15],
-        "b1.2": [0, 15],
-        "b2.1": [0, 15],
-        "b2.2": [0, 15]
+        "a1.1": { "input": [0, 15] },
+        "a1.2": { "input": [0, 15] },
+        "a2.1": { "input": [0, 15] },
+        "a2.2": { "input": [0, 15] },
+        "b1.1": { "input": [0, 15] },
+        "b1.2": { "input": [0, 15] },
+        "b2.1": { "input": [0, 15] },
+        "b2.2": { "input": [0, 15] }
       }
     },
     {
@@ -886,10 +900,10 @@
       "label": "Präsentationsfolien",
       "parts": [],
       "lengthByLevel": {
-        "b1.1": [10, 100],
-        "b1.2": [10, 100],
-        "b2.1": [15, 150],
-        "b2.2": [15, 150]
+        "b1.1": { "input": [10, 100] },
+        "b1.2": { "input": [10, 100] },
+        "b2.1": { "input": [15, 150] },
+        "b2.2": { "input": [15, 150] }
       }
     }
   ]

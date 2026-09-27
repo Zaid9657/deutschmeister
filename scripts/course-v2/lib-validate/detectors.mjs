@@ -19,7 +19,7 @@
 //            notPrecededBy[]?, notFollowedBy[]?, followedByCapital?, caseSensitive?
 //   pattern  regex, flags?, group?, skip? (regex on the match), skipSentence?, requireVerbFinal?, notQuestion?
 //   clause   kind: pair | subordinate | relative | aux-final | imperative (see the functions below)
-//   lexicon  kind: participle-aux | praeteritum | reflexive | zu-infinitive | n-declension
+//   lexicon  kind: participle-aux | praeteritum | reflexive | zu-infinitive | n-declension | stem-vowel-change
 // Every spec may carry whitelist[] (lower-case phrases inside which hits are ignored) and
 // examples { hit[], miss[], lexicon[]? } which the test suite runs.
 
@@ -44,6 +44,7 @@ export function buildLexEnv(entries = []) {
     reflexiveStems: new Map(), // stem → 'akk'|'dat'
     verbStems: new Set(),
     weakNouns: new Set(),
+    vowelChange: new Set(), // 2sg/3sg present forms whose stem vowel differs from the infinitive's
   };
   for (const e of arr(entries)) {
     if (!e || typeof e !== 'object') continue;
@@ -64,6 +65,11 @@ export function buildLexEnv(entries = []) {
       const praet = lc(vf.praet).trim().split(/\s+/).filter(Boolean);
       if (praet.length) env.praet.add(praet[0]);
       const third = lc(vf['3sg']).trim().split(/\s+/).filter(Boolean);
+      const second = lc(vf['2sg']).trim().split(/\s+/).filter(Boolean);
+      const simpleStem = inf.replace(/(?:en|n)$/, '');
+      for (const f of [third[0], second[0]]) {
+        if (f && stemVowelChanged(simpleStem, f)) env.vowelChange.add(f);
+      }
       let prefix = null;
       if (e.separable && third.length >= 2) prefix = third[third.length - 1];
       if (prefix && inf.startsWith(prefix)) {
@@ -81,6 +87,21 @@ export function buildLexEnv(entries = []) {
     }
   }
   return env;
+}
+
+/** The first vowel group of a word ('sprech' → 'e', 'schlaf' → 'a', 'lies' → 'ie'). */
+const firstVowel = (w) => (String(w).match(/(?:ie|ei|au|eu|äu|[aeiouäöü])/) || [])[0] || '';
+
+/**
+ * Does a finite present form carry a changed stem vowel against its infinitive stem (e → i/ie,
+ * a → ä, au → äu, o → ö)? `fährt` against `fahr` yes, `macht` against `mach` no. The separable
+ * prefix of a 3sg like „fährt ab" is already split off by the caller.
+ */
+export function stemVowelChanged(stem, form) {
+  const a = firstVowel(stem.replace(/^(?:ab|an|auf|aus|ein|mit|vor|zu|zurück|weg|fern|los|nach|her|hin|um|bei|dar)(?=[^aeiouäöü]*[aeiouäöü])/, ''));
+  const b = firstVowel(form.replace(/^(?:ab|an|auf|aus|ein|mit|vor|zu|zurück|weg|fern|los|nach|her|hin|um|bei|dar)(?=[^aeiouäöü]*[aeiouäöü])/, ''));
+  if (!a || !b || a === b) return false;
+  return (a === 'e' && (b === 'i' || b === 'ie')) || (a === 'a' && b === 'ä') || (a === 'au' && b === 'äu') || (a === 'o' && b === 'ö');
 }
 
 export const EMPTY_ENV = buildLexEnv([]);
@@ -464,6 +485,26 @@ function lexPraeteritum(det, sentence, env) {
   return hits;
 }
 
+/**
+ * Present-tense stem-vowel change in the 2nd/3rd person singular (du sprichst, er liest, sie fährt):
+ * a closed list of the frequent strong verbs ∪ the lexicon's verb_forms.2sg/3sg where they differ
+ * from the infinitive stem. `exclude` removes forms another spine point owns (hat, wird, weiß, the
+ * modal verbs). Capitalised forms mid-sentence are nouns or names and never hit.
+ */
+function lexStemVowel(det, sentence, env) {
+  const spec = det.spec || {};
+  const exclude = new Set(arr(spec.exclude).map(lc));
+  const forms = new Map();
+  for (const f of arr(spec.forms).map(lc)) if (f && !exclude.has(f)) forms.set(f, false);
+  for (const f of env.vowelChange) if (!exclude.has(f)) forms.set(f, false);
+  const hits = [];
+  tokens(sentence).forEach((t, i) => {
+    if (isCapitalMidSentence(t, i)) return;
+    if (forms.has(t.lower)) hits.push({ index: t.index, match: t.text, fallback: false });
+  });
+  return hits;
+}
+
 /** Reflexive pronoun agreeing with the subject in one clause (or `sich`, or a reflexive imperative). */
 function lexReflexive(det, sentence, env) {
   const spec = det.spec || {};
@@ -601,6 +642,7 @@ const LEXICON_KINDS = {
   reflexive: lexReflexive,
   'zu-infinitive': lexZuInfinitive,
   'n-declension': lexNDeclension,
+  'stem-vowel-change': lexStemVowel,
 };
 
 /** Is this detector definition runnable by this engine? Returns an error string or null. */

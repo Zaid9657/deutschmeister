@@ -1,4 +1,5 @@
 {
+  "$schema": "course-v2/detectors@1",
   "detectors": [
     {
       "id": "det.negation-nicht",
@@ -1304,6 +1305,129 @@
             "Berlin ist größer als Leipzig.",
             "Ich arbeite als Lehrer.",
             "Als Kind habe ich in Izmir gewohnt."
+          ]
+        }
+      }
+    },
+    {
+      "id": "det.vokalwechsel",
+      "construction": "Präsens mit Vokalwechsel in der 2./3. Person Singular (du sprichst, er liest, sie fährt, du nimmst)",
+      "precision": "exact",
+      "method": "lexicon",
+      "spec": {
+        "spinePoints": [
+          "g.vokalwechsel"
+        ],
+        "kind": "stem-vowel-change",
+        "forms": [
+          "liest",
+          "isst",
+          "fährst",
+          "fährt",
+          "schläfst",
+          "schläft",
+          "nimmst",
+          "nimmt",
+          "gibst",
+          "gibt",
+          "siehst",
+          "sieht",
+          "triffst",
+          "trifft",
+          "hilfst",
+          "hilft",
+          "trägst",
+          "trägt",
+          "läufst",
+          "läuft",
+          "wäschst",
+          "wäscht",
+          "lädst",
+          "lädt",
+          "hältst",
+          "hält",
+          "lässt",
+          "fällt",
+          "fällst",
+          "vergisst",
+          "empfiehlst",
+          "empfiehlt",
+          "wirfst",
+          "wirft",
+          "stirbt",
+          "brichst",
+          "bricht",
+          "misst",
+          "fängst",
+          "fängt",
+          "rätst",
+          "rät",
+          "stiehlt",
+          "befiehlt",
+          "wächst",
+          "bläst",
+          "gräbt",
+          "stößt",
+          "erfährst",
+          "erfährt",
+          "verlässt",
+          "gefällt",
+          "unterhältst",
+          "unterhält"
+        ],
+        "exclude": [
+          "hat",
+          "hast",
+          "ist",
+          "bist",
+          "wird",
+          "wirst",
+          "weiß",
+          "weißt",
+          "kann",
+          "kannst",
+          "muss",
+          "musst",
+          "darf",
+          "darfst",
+          "will",
+          "willst",
+          "mag",
+          "magst"
+        ],
+        "whitelist": [
+          "sprichst",
+          "spricht",
+          "es gibt",
+          "gibt es"
+        ],
+        "notes": "Geschlossene Liste ∪ verb_forms.2sg/3sg des Lexikons, wo der Stammvokal wechselt. sprichst/spricht sind der A1.1-U1-Chunk („Sprichst du Deutsch?\"), es gibt ist ein eigener Chunk; hat/wird/weiß und die Modalverben gehören anderen Spine-Punkten.",
+        "examples": {
+          "lexicon": [
+            {
+              "lemma": "backen",
+              "pos": "VERB",
+              "verb_forms": {
+                "3sg": "bäckt",
+                "praet": "backte",
+                "perfekt": "hat gebacken"
+              }
+            }
+          ],
+          "hit": [
+            "Du fährst mit dem Bus.",
+            "Er liest die Zeitung.",
+            "Nimmst du den Kaffee?",
+            "Sie bäckt einen Kuchen.",
+            "Er gibt mir das Buch."
+          ],
+          "miss": [
+            "Sprichst du Deutsch?",
+            "Ich fahre mit dem Bus.",
+            "Hier gibt es einen Supermarkt.",
+            "Er macht eine Pause.",
+            "Die Kinder schlafen schon.",
+            "Das Kind hat Hunger."
           ]
         }
       }

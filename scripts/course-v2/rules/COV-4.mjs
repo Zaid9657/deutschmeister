@@ -9,6 +9,7 @@ export const id = 'COV-4';
 export const title = 'Module balance: each module ≥ 15 % of the Prüfungsfokus slots';
 export const type = 'hard';
 export const scope = 'level';
+export const stage = 'T';
 
 const MIN_SHARE = 0.15;
 

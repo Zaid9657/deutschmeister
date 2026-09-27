@@ -10,6 +10,7 @@ export const id = 'ITM-09';
 export const title = 'Sentence building: every order accepted, every accepted order built from the tiles';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'I';
 
 let Q = null;
 try {

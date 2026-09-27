@@ -8,6 +8,7 @@ export const id = 'CON-06';
 export const title = 'Facts carry sources, a fresh check date and verification "verified"';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'S';
 
 const MAX_AGE_DAYS = 180;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;

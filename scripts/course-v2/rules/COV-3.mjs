@@ -8,6 +8,7 @@ export const id = 'COV-3';
 export const title = 'Prüfungsfokus: 2–4 primary-lane Teile per unit; .2: ≥ 1 full length in Prüfungsmodus';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'T';
 
 export function run({ ctx, docs }) {
   const findings = [];

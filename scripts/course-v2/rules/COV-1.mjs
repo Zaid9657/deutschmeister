@@ -13,6 +13,7 @@ export const id = 'COV-1';
 export const title = 'Every Teil of a live lane appears ≥ 2× (.1) / ≥ 3× (.2) across the level';
 export const type = 'hard';
 export const scope = 'level';
+export const stage = 'T';
 
 /** Template ids a level uses, with multiplicity. */
 export function templateUses(slot) {

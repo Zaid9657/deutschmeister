@@ -11,6 +11,7 @@ export const id = 'LEX-03';
 export const title = 'Production uses known lemmas only; ≤ 3 glossed extras per text';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'I';
 
 export function run({ ctx, docs }) {
   const findings = [];

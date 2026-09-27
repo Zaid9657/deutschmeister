@@ -10,6 +10,7 @@ export const id = 'GRM-05';
 export const title = 'Rule cards: word limit, model sentence, English twin';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'T';
 
 const CASE_RE = /Nominativ|Akkusativ|Dativ|Genitiv/;
 

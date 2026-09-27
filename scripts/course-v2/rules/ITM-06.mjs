@@ -1,14 +1,18 @@
 // ITM-06 — per Lernschritt: a pool of 16 (authored + generated), the mix of §3.4 from the level
-// profile, ≥ 70 % recall formats, generated items ≤ the level cap (BLUEPRINT §9.1, §3.3–3.4).
+// profile, ≥ 70 % recall formats, generated items ≤ the level cap (BLUEPRINT §9.1, §3.3–3.4);
+// a reserve of 4–6 (level profile `pool.reserve`) of which no item repeats a pool item's
+// POS-masked key (the ITM-05 shape key; SCHEMA §15.6).
 
 import { walkSteps } from '../lib-validate/walk.mjs';
-import { levelNumbers, arr, isObj, blocker, pct } from '../lib-validate/helpers.mjs';
+import { levelNumbers, arr, isObj, blocker, revisionFinding, pct } from '../lib-validate/helpers.mjs';
 import { levelProfile } from '../lib-validate/context.mjs';
+import { shapeKey } from './ITM-05.mjs';
 
 export const id = 'ITM-06';
 export const title = 'Pools: 16 items, the level mix, ≥ 70 % recall, generated ≤ cap';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'I';
 
 const GENERATOR_CLASS = {
   'dictation.fromInput': 'typed',
@@ -67,6 +71,19 @@ export function run({ ctx, docs }) {
       const recall = (count.typed + count.sb + count.ec) / total;
       if (recall < recallMin - 1e-9) findings.push(blocker(doc, p, `recall formats ${pct(recall)} (need ≥ ${pct(recallMin)})`, step.id));
       if (count.other) notes.push(`${step.id}: ${count.other} pool item(s) of a type outside the §3.4 mix`);
+      // reserve
+      const [rMin, rMax] = Array.isArray(prof?.pool?.reserve) && prof.pool.reserve.length === 2 ? prof.pool.reserve : [4, 6];
+      const reserve = arr(step.reserve).filter(isObj);
+      if (reserve.length < rMin || reserve.length > rMax) findings.push(revisionFinding(doc, `${path}.reserve`, `reserve holds ${reserve.length} items (need ${rMin}–${rMax})`, step.id));
+      const poolKeys = new Map();
+      for (const it of items) {
+        const k = shapeKey(it);
+        if (k) poolKeys.set(k, it.id);
+      }
+      reserve.forEach((it, i) => {
+        const k = shapeKey(it);
+        if (k && poolKeys.has(k)) findings.push(blocker(doc, `${path}.reserve[${i}]`, `reserve item repeats the POS-masked key of pool item ${poolKeys.get(k)} („${k}")`, it.id));
+      });
     }
   }
   notes.push(...[...sources].map((s) => `numbers from ${s}`));

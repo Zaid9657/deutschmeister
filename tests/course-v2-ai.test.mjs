@@ -212,6 +212,11 @@ test('criteriaPlan: telc × 3, per-Leitpunkt and per-turn criteria keep each exa
   assert.equal(sum(criteriaPlan(P('tb1-m1'), {})), 12, 'telc B1 M1 15 − Aussprache 3 (not auto-scored)');
   assert.equal(sum(criteriaPlan(P('tb1-m2'), {})), 24);
   assert.equal(sum(criteriaPlan(P('tb2-m1'), {})), 21);
+  const micro = P('course-micro');
+  if (micro.criteria.some((c) => c.appliesIf === 'targets')) {
+    assert.equal(sum(criteriaPlan(micro, { targets: ['g.reflexiv-akk'] })), 5);
+    assert.equal(sum(criteriaPlan(micro, { targets: [] })), 4, 'the target criterion drops out when the task names no target');
+  }
 });
 
 test('Aussprache is never auto-scored (BLUEPRINT §4.4): out of the plan, the prompt and the total, shown as scored:false', async () => {

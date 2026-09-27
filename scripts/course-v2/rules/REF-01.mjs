@@ -6,7 +6,7 @@
 // exists and lacks the id is a blocker. A fixture tree may declare ids of the full registries it
 // does not excerpt in a `course-v2/stubs@1` file; those resolve.
 
-import { walkSteps, walkBlocks, walkTasks, walkMicroOutputs, walkItems, walkLines } from '../lib-validate/walk.mjs';
+import { walkSteps, walkBlocks, walkTasks, walkMicroOutputs, walkItems, walkLines, walkExamTexts, speakingParts } from '../lib-validate/walk.mjs';
 import { unitDoc } from '../lib-validate/context.mjs';
 import { LEVELS, PATTERNS, parseUnitId, bandOfLevel } from '../lib-validate/ids.mjs';
 import { arr, isObj, blocker, advisory, list } from '../lib-validate/helpers.mjs';
@@ -15,6 +15,7 @@ export const id = 'REF-01';
 export const title = 'Every referenced id resolves in its registry';
 export const type = 'hard';
 export const scope = 'unit';
+export const stage = 'spec';
 
 const SPEAKER_ENUM = new Set(['ansage', 'radio', 'durchsage', 'pruefer']);
 
@@ -40,6 +41,7 @@ export function makeResolver(ctx) {
     cast: (ref) => yesNo(R.casts?.members.has(ref) || stub('cast', ref), Boolean(R.casts) || stubLoaded('cast')),
     texttype: (ref) => yesNo(R.textTypes?.has(ref) || stub('texttype', ref), Boolean(R.textTypes) || stubLoaded('texttype')),
     detector: (ref) => yesNo(R.detectors?.byId.has(ref) || stub('detector', ref), Boolean(R.detectors) || stubLoaded('detector')),
+    voice: (ref) => yesNo(R.voices?.has(ref) || stub('voice', ref), Boolean(R.voices) || stubLoaded('voice')),
     family: (ref) => yesNo(R.families?.has(ref) || stub('family', ref), Boolean(R.families) || stubLoaded('family')),
     rulecard: (ref, level) => {
       const levels = lexiconLevels(level);
@@ -48,6 +50,7 @@ export function makeResolver(ctx) {
       return yesNo(has, loaded);
     },
     lexicon: (ref, level) => {
+      if (R.lemmas) return yesNo(R.lemmas.has(ref) || stub('lexicon', ref), true);
       const levels = lexiconLevels(level);
       const has = levels.some((l) => ctx.levels.get(l)?.lexicon?.entries.some((e) => e.id === ref)) || stub('lexicon', ref);
       // "no" only when every lexicon up to this level exists: a lemma of an unwritten earlier lexicon is unknown
@@ -122,10 +125,13 @@ export function collectRefs(doc) {
     push('template', block?.template, `${path}.template`);
     push('lane', block?.lane, `${path}.lane`);
   }
-  for (const { task, path } of walkTasks(doc)) {
-    push('template', task?.template, `${path}.template`);
+  for (const { task, kind, path } of walkTasks(doc)) {
     push('lane', task?.lane, `${path}.lane`);
-    push('rubric', task?.profile, `${path}.profile`);
+    const parts = kind === 'speaking' ? speakingParts(task) : [{ part: task, path: '' }];
+    for (const { part, path: pp } of parts) {
+      push('template', part?.template, `${path}${pp}.template`);
+      push('rubric', part?.profile, `${path}${pp}.profile`);
+    }
   }
   for (const { mo, path } of walkMicroOutputs(doc)) {
     // MicroOutput.profile is enum(course-micro|course-micro-sp) in SCHEMA §8, not a ref(rubric)
@@ -138,8 +144,10 @@ export function collectRefs(doc) {
   }
   for (const { line, path } of walkLines(doc)) {
     const sp = String(line?.speaker || '');
-    if (sp && !SPEAKER_ENUM.has(sp)) push('cast', sp, `${path}.speaker`);
+    if (sp && !SPEAKER_ENUM.has(sp) && !sp.startsWith('x.')) push('cast', sp, `${path}.speaker`);
   }
+  for (const [key, x] of Object.entries(isObj(d.extras) ? d.extras : {})) push('voice', x?.voice, `extras.${key}.voice`);
+  arr(d.check?.rueckschau).forEach((r, i) => push('rulecard', r, `check.rueckschau[${i}]`));
   return out;
 }
 
@@ -149,14 +157,17 @@ function localIds(docs) {
   const items = new Set();
   const facts = new Set();
   const banks = new Set();
+  const texts = new Set();
+  const legacyTexts = new Set();
   for (const doc of docs) {
+    for (const { text, ownerBlock } of walkExamTexts(doc)) (ownerBlock ? legacyTexts : texts).add(text.id);
     for (const { line } of walkLines(doc)) if (line?.id) lines.add(line.id);
     for (const { item } of walkItems(doc)) if (item?.id) items.add(item.id);
     for (const f of arr(doc.data?.facts)) if (f?.id) facts.add(f.id);
     for (const { task } of walkTasks(doc)) if (task?.bankKey) banks.add(task.bankKey);
     for (const { mo } of walkMicroOutputs(doc)) if (mo?.bankKey) banks.add(mo.bankKey);
   }
-  return { lines, items, facts, banks };
+  return { lines, items, facts, banks, texts, legacyTexts };
 }
 
 /** An item id of another unit: 'yes' | 'no' | 'unknown'. */
@@ -200,6 +211,45 @@ export function run({ ctx, docs, levels, mode }) {
         if (item?.audioLineRef && !local.lines.has(item.audioLineRef)) {
           findings.push(blocker(doc, `${path}.audioLineRef`, `line "${item.audioLineRef}" is not a line of this unit`, item.id));
         }
+        if (item?.textRef && !local.texts.has(item.textRef) && !local.legacyTexts.has(item.textRef)) {
+          findings.push(blocker(doc, `${path}.textRef`, `exam text "${item.textRef}" is not a text of this file`, item.id));
+        }
+      }
+      // file-scoped speakers (extras), exam texts and assets
+      const extras = new Set(Object.keys(isObj(doc.data?.extras) ? doc.data.extras : {}));
+      for (const { line, path } of walkLines(doc)) {
+        const sp = String(line?.speaker || '');
+        if (sp.startsWith('x.') && !extras.has(sp)) findings.push(blocker(doc, `${path}.speaker`, `extra "${sp}" is not declared in this file's extras`, sp));
+      }
+      const assets = new Set(arr(doc.data?.assets).map((a) => a?.id).filter(Boolean));
+      const assetRef = (ref, path) => { if (ref && !assets.has(ref)) findings.push(blocker(doc, path, `asset "${ref}" is not declared in this file's assets`, ref)); };
+      for (const { block, path, texts } of walkBlocks(doc)) {
+        const resolvedIds = new Set(arr(texts).map((x) => x.text.id));
+        arr(block?.textRefs).forEach((r, i) => { if (!resolvedIds.has(r)) findings.push(blocker(doc, `${path}.textRefs[${i}]`, `exam text "${r}" is not a text of this block's step or file`, r)); });
+        arr(block?.choices).forEach((c, i) => {
+          if (c?.textRef && !local.texts.has(c.textRef)) findings.push(blocker(doc, `${path}.choices[${i}].textRef`, `exam text "${c.textRef}" is not a text of this file`, c.textRef));
+          assetRef(c?.imageRef, `${path}.choices[${i}].imageRef`);
+        });
+      }
+      for (const { text, path } of walkExamTexts(doc)) assetRef(text.assetRef, `${path}.assetRef`);
+      if (doc.kind === 'unit') {
+        assetRef(doc.data.start?.auftakt?.assetRef, 'start.auftakt.assetRef');
+        assetRef(doc.data.check?.portrait?.assetRef, 'check.portrait.assetRef');
+        const pf = doc.data.check?.portrait?.factRef;
+        if (pf && !local.facts.has(pf)) findings.push(blocker(doc, 'check.portrait.factRef', `fact "${pf}" is not in this unit's facts[]`, pf));
+        const stepIds = new Set([...walkSteps(doc)].map((x) => x.step?.id));
+        arr(doc.data.spec?.lanes?.pruefungsfokus).forEach((p, i) => {
+          if (p?.step && !stepIds.has(p.step) && doc.data.steps) findings.push(blocker(doc, `spec.lanes.pruefungsfokus[${i}].step`, `step "${p.step}" is not a step of this unit`, p.step));
+        });
+      }
+      for (const { task, kind, path } of walkTasks(doc)) {
+        if (kind === 'speaking') {
+          for (const { part, path: pp } of speakingParts(task)) {
+            for (const side of ['learner', 'partner']) arr(part?.cards?.[side]).forEach((c, i) => { if (isObj(c)) assetRef(c.imageRef, `${path}${pp}.cards.${side}[${i}].imageRef`); });
+            assetRef(part?.photos?.learner, `${path}${pp}.photos.learner`);
+            assetRef(part?.photos?.partner, `${path}${pp}.photos.partner`);
+          }
+        } else arr(task?.form?.documents).forEach((a, i) => assetRef(a, `${path}.form.documents[${i}]`));
       }
       for (const { step, path } of walkSteps(doc)) {
         arr(step?.pool?.generators).forEach((g, gi) => arr(g?.source).forEach((s, si) => {

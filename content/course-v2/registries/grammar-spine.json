@@ -59,7 +59,9 @@
         "receptive": "a1.1-u02",
         "productive": "a1.1-u02"
       },
-      "detectors": [],
+      "detectors": [
+        "det.negation-nicht"
+      ],
       "errorTags": [],
       "lehrwerk": [
         "M A1 L2",
@@ -108,7 +110,9 @@
         "receptive": "a1.1-u03",
         "productive": "a1.1-u03"
       },
-      "detectors": [],
+      "detectors": [
+        "det.possessiv-mein-dein-ihr"
+      ],
       "errorTags": [
         "gender-article",
         "register"
@@ -160,7 +164,10 @@
         "receptive": "a1.1-u04",
         "productive": "a1.1-u04"
       },
-      "detectors": [],
+      "detectors": [
+        "det.bestimmter-artikel",
+        "det.unbestimmter-artikel"
+      ],
       "contrast": "g.possessiv-mein-dein",
       "errorTags": [
         "gender-article"
@@ -186,7 +193,9 @@
         "receptive": "a1.1-u04",
         "productive": "a1.1-u04"
       },
-      "detectors": [],
+      "detectors": [
+        "det.moechte"
+      ],
       "errorTags": [
         "satzklammer"
       ],
@@ -205,7 +214,7 @@
     },
     {
       "id": "g.pronomen-er-es-sie",
-      "label": "Personalpronomen er, es, sie für Sachen (Der Tisch? Er ist neu.)",
+      "label": "Personalpronomen er, es, sie für Sachen (Der Tisch? Er ist neu.); es ohne Bezug beim Wetter (Es regnet. Es ist kalt.)",
       "intro": {
         "receptive": "a1.1-u05",
         "productive": "a1.1-u05"
@@ -219,11 +228,13 @@
         "M A1 L4",
         "S1 L4",
         "N A1 K2–3",
-        "LIN A1 K3–4"
+        "LIN A1 K3–4",
+        "M A1 L23"
       ],
       "consensus": "strong",
       "ruleCards": [
-        "rc.pronomen-er-es-sie"
+        "rc.pronomen-er-es-sie",
+        "rc.pronomen-er-es-sie-2"
       ],
       "inventory": [
         "gz-a1"
@@ -258,7 +269,9 @@
         "productive": "a1.1-u06"
       },
       "chunkFrom": "a1.1-u04",
-      "detectors": [],
+      "detectors": [
+        "det.akkusativ-maskulin"
+      ],
       "contrast": "g.artikel-genus-plural",
       "errorTags": [
         "case-np",
@@ -285,7 +298,9 @@
         "receptive": "a1.1-u06",
         "productive": "a1.1-u06"
       },
-      "detectors": [],
+      "detectors": [
+        "det.negation-kein"
+      ],
       "contrast": "g.negation-nicht",
       "errorTags": [
         "gender-article",
@@ -312,7 +327,9 @@
         "receptive": "a1.1-u07",
         "productive": "a1.1-u07"
       },
-      "detectors": [],
+      "detectors": [
+        "det.trennbare-verben"
+      ],
       "contrast": "g.verbposition-2",
       "errorTags": [
         "satzklammer"
@@ -364,7 +381,9 @@
         "receptive": "a1.1-u08",
         "productive": "a1.1-u08"
       },
-      "detectors": [],
+      "detectors": [
+        "det.modal-koennen"
+      ],
       "contrast": "g.trennbare-verben",
       "errorTags": [
         "satzklammer"
@@ -385,7 +404,7 @@
     },
     {
       "id": "g.nicht-position-gern",
-      "label": "gern und nicht gern; die Position von nicht im Satz",
+      "label": "Die Position von nicht im Satz; gern und nicht gern; schon – noch nicht, noch – nicht mehr; nicht …, sondern … (Ich wohne nicht mehr in Kairo, sondern in Köln.)",
       "intro": {
         "receptive": "a1.1-u08",
         "productive": "a1.1-u08"
@@ -399,7 +418,8 @@
       ],
       "consensus": "majority",
       "ruleCards": [
-        "rc.nicht-position-gern"
+        "rc.nicht-position-gern",
+        "rc.nicht-position-gern-2"
       ],
       "inventory": [
         "gz-a1"
@@ -412,7 +432,9 @@
         "receptive": "a1.1-u09",
         "productive": "a1.1-u09"
       },
-      "detectors": [],
+      "detectors": [
+        "det.modal-moegen"
+      ],
       "contrast": "g.moechte",
       "errorTags": [
         "case-np"
@@ -430,27 +452,6 @@
       ]
     },
     {
-      "id": "g.komposita",
-      "label": "Komposita: Das letzte Wort bestimmt den Artikel (der Apfelkuchen).",
-      "intro": {
-        "receptive": "a1.1-u09",
-        "productive": "a1.1-u09"
-      },
-      "detectors": [],
-      "contrast": "g.artikel-genus-plural",
-      "errorTags": [
-        "gender-article"
-      ],
-      "lehrwerk": [
-        "M A1 L9"
-      ],
-      "consensus": "single",
-      "ruleCards": [
-        "rc.komposita"
-      ],
-      "inventory": []
-    },
-    {
       "id": "g.wortbildung-er-in",
       "label": "Wortbildung Personen: -in für Frauen, -er aus Verben (Lehrerin; fahren → der Fahrer, die Fahrerin)",
       "intro": {
@@ -459,7 +460,7 @@
       },
       "chunkFrom": "a1.1-u02",
       "detectors": [],
-      "contrast": "g.komposita",
+      "contrast": "g.artikel-genus-plural",
       "errorTags": [
         "gender-article"
       ],
@@ -477,12 +478,14 @@
     },
     {
       "id": "g.perfekt-haben",
-      "label": "Perfekt mit haben: ge-…-t und ge-…-en (Ich habe Pizza gemacht. Wir haben einen Film gesehen.)",
+      "label": "Perfekt mit haben: ge-…-t und ge-…-en (Ich habe Pizza gemacht. Wir haben einen Film gesehen.) – zuerst feste Verben, dann das System",
       "intro": {
         "receptive": "a1.1-u11",
-        "productive": "a1.1-u11"
+        "productive": "a1.2-u05"
       },
-      "detectors": [],
+      "detectors": [
+        "det.perfekt-haben"
+      ],
       "contrast": "g.koennen",
       "errorTags": [
         "perfekt-aux-participle",
@@ -495,41 +498,23 @@
       ],
       "consensus": "split",
       "ruleCards": [
-        "rc.perfekt-haben"
+        "rc.perfekt-haben",
+        "rc.perfekt-haben-2"
       ],
       "inventory": [
         "gz-a1"
       ]
     },
     {
-      "id": "g.zeitangaben-vergangenheit",
-      "label": "Zeitangaben der Vergangenheit: gestern, letzte Woche, am Wochenende",
-      "intro": {
-        "receptive": "a1.1-u11",
-        "productive": "a1.1-u11"
-      },
-      "detectors": [],
-      "contrast": "g.zeitangaben-inversion",
-      "errorTags": [
-        "v2-inv"
-      ],
-      "lehrwerk": [
-        "M A1 L11"
-      ],
-      "consensus": "single",
-      "ruleCards": [
-        "rc.zeitangaben-vergangenheit"
-      ],
-      "inventory": []
-    },
-    {
       "id": "g.perfekt-sein",
-      "label": "Perfekt mit sein: Bewegung und Veränderung (Ich bin nach Köln gefahren.)",
+      "label": "Perfekt mit sein: Bewegung und Veränderung (Ich bin nach Köln gefahren.) – zuerst feste Verben, dann das System",
       "intro": {
         "receptive": "a1.1-u12",
-        "productive": "a1.1-u12"
+        "productive": "a1.2-u08"
       },
-      "detectors": [],
+      "detectors": [
+        "det.perfekt-sein"
+      ],
       "contrast": "g.perfekt-haben",
       "errorTags": [
         "perfekt-aux-participle"
@@ -541,7 +526,8 @@
       ],
       "consensus": "split",
       "ruleCards": [
-        "rc.perfekt-sein"
+        "rc.perfekt-sein",
+        "rc.perfekt-sein-2"
       ],
       "inventory": [
         "gz-a1"
@@ -554,7 +540,9 @@
         "receptive": "a1.1-u12",
         "productive": "a1.1-u12"
       },
-      "detectors": [],
+      "detectors": [
+        "det.modal-wollen"
+      ],
       "contrast": "g.moechte",
       "errorTags": [
         "satzklammer"
@@ -579,7 +567,9 @@
         "productive": "a1.2-u01"
       },
       "chunkFrom": "a1.1-u01",
-      "detectors": [],
+      "detectors": [
+        "det.imperativ-sie"
+      ],
       "contrast": "g.ja-nein-frage",
       "errorTags": [
         "v2-inv",
@@ -634,7 +624,9 @@
         "productive": "a1.2-u02"
       },
       "chunkFrom": "a1.1-u11",
-      "detectors": [],
+      "detectors": [
+        "det.praeteritum-sein-haben"
+      ],
       "contrast": "g.perfekt-haben",
       "errorTags": [],
       "lehrwerk": [
@@ -659,8 +651,10 @@
         "productive": "a1.2-u02"
       },
       "chunkFrom": "a1.1-u12",
-      "detectors": [],
-      "contrast": "g.zeitangaben-vergangenheit",
+      "detectors": [
+        "det.temporal-seit-vor"
+      ],
+      "contrast": "g.zeitangaben-inversion",
       "errorTags": [
         "case-pp"
       ],
@@ -683,7 +677,11 @@
         "productive": "a1.2-u03"
       },
       "chunkFrom": "a1.1-u08",
-      "detectors": [],
+      "detectors": [
+        "det.modal-muessen",
+        "det.modal-duerfen",
+        "det.man"
+      ],
       "contrast": "g.koennen",
       "errorTags": [
         "satzklammer"
@@ -708,7 +706,10 @@
         "receptive": "a1.2-u03",
         "productive": "a1.2-u03"
       },
-      "detectors": [],
+      "detectors": [
+        "det.possessiv-sein-ihr-unser-euer",
+        "det.genitiv-s-name"
+      ],
       "contrast": "g.possessiv-mein-dein",
       "errorTags": [
         "gender-article"
@@ -755,7 +756,9 @@
         "receptive": "a1.2-u04",
         "productive": "a1.2-u04"
       },
-      "detectors": [],
+      "detectors": [
+        "det.ordinalzahl"
+      ],
       "contrast": "g.zeitangaben-inversion",
       "errorTags": [],
       "lehrwerk": [
@@ -776,7 +779,9 @@
         "receptive": "a1.2-u05",
         "productive": "a1.2-u05"
       },
-      "detectors": [],
+      "detectors": [
+        "det.modal-sollen"
+      ],
       "contrast": "g.muessen-duerfen-man",
       "errorTags": [
         "satzklammer"
@@ -795,13 +800,15 @@
     },
     {
       "id": "g.dativverben-pronomen",
-      "label": "Verben mit Dativ (gefallen, passen, stehen, gehören, helfen, danken) und mir, dir, ihm, ihr, Ihnen",
+      "label": "Verben mit Dativ (gefallen, passen, stehen, gehören, helfen, danken) und die Personalpronomen im Dativ: mir, dir, ihm, ihr, uns, euch, ihnen, Ihnen",
       "intro": {
         "receptive": "a1.2-u06",
         "productive": "a1.2-u06"
       },
       "chunkFrom": "a1.1-u06",
-      "detectors": [],
+      "detectors": [
+        "det.dativ-pronomen"
+      ],
       "contrast": "g.akkusativ",
       "errorTags": [
         "case-np"
@@ -826,7 +833,9 @@
         "receptive": "a1.2-u06",
         "productive": "a1.2-u06"
       },
-      "detectors": [],
+      "detectors": [
+        "det.welch-dies"
+      ],
       "contrast": "g.artikel-genus-plural",
       "errorTags": [
         "gender-article"
@@ -851,7 +860,9 @@
         "receptive": "a1.2-u07",
         "productive": "a1.2-u07"
       },
-      "detectors": [],
+      "detectors": [
+        "det.perfekt-trennbar-untrennbar"
+      ],
       "contrast": "g.perfekt-haben",
       "errorTags": [
         "perfekt-aux-participle"
@@ -877,7 +888,10 @@
         "productive": "a1.2-u07"
       },
       "chunkFrom": "a1.2-u04",
-      "detectors": [],
+      "detectors": [
+        "det.konjunktiv2-koennte",
+        "det.konjunktiv2-waere-haette-wuerde"
+      ],
       "contrast": "g.moechte",
       "errorTags": [
         "register"
@@ -901,7 +915,9 @@
         "receptive": "a1.2-u08",
         "productive": "a1.2-u08"
       },
-      "detectors": [],
+      "detectors": [
+        "det.konnektor-denn"
+      ],
       "contrast": "g.zeitangaben-inversion",
       "errorTags": [
         "connector-position"
@@ -918,32 +934,15 @@
       "inventory": []
     },
     {
-      "id": "g.wetter-es",
-      "label": "Wetter mit es: Es regnet. Es ist kalt.",
-      "intro": {
-        "receptive": "a1.2-u08",
-        "productive": "a1.2-u08"
-      },
-      "detectors": [],
-      "contrast": "g.pronomen-er-es-sie",
-      "errorTags": [],
-      "lehrwerk": [
-        "M A1 L23"
-      ],
-      "consensus": "single",
-      "ruleCards": [
-        "rc.wetter-es"
-      ],
-      "inventory": []
-    },
-    {
       "id": "g.imperativ-du-ihr",
       "label": "Imperativ mit du und ihr (Kauf bitte Milch! Räumt bitte die Küche auf!)",
       "intro": {
         "receptive": "a1.2-u09",
         "productive": "a1.2-u09"
       },
-      "detectors": [],
+      "detectors": [
+        "det.imperativ-du-ihr"
+      ],
       "contrast": "g.imperativ-sie",
       "errorTags": [
         "v2-inv",
@@ -969,7 +968,9 @@
         "receptive": "a1.2-u09",
         "productive": "a1.2-u09"
       },
-      "detectors": [],
+      "detectors": [
+        "det.akkusativ-pronomen-ihn"
+      ],
       "contrast": "g.dativverben-pronomen",
       "errorTags": [
         "case-np"
@@ -985,7 +986,8 @@
       ],
       "inventory": [
         "gz-a1"
-      ]
+      ],
+      "chunkFrom": "a1.2-u06"
     },
     {
       "id": "g.komparation",
@@ -995,7 +997,11 @@
         "productive": "a1.2-u10"
       },
       "chunkFrom": "a1.2-u08",
-      "detectors": [],
+      "detectors": [
+        "det.komparativ-als",
+        "det.superlativ-am",
+        "det.vergleich-so-wie"
+      ],
       "contrast": "g.adjektiv-praedikativ",
       "errorTags": [
         "spelling-meaning"
@@ -1038,7 +1044,7 @@
     },
     {
       "id": "g.praep-akkusativ",
-      "label": "Präpositionen mit Akkusativ: für, ohne, um, durch, bis (ein Ticket für Samstag)",
+      "label": "Präpositionen mit Akkusativ: für, ohne, gegen, um, durch, bis (ein Ticket für Samstag)",
       "intro": {
         "receptive": "a1.2-u11",
         "productive": "a1.2-u11"
@@ -1090,7 +1096,9 @@
         "receptive": "a2.1-u01",
         "productive": "a2.1-u01"
       },
-      "detectors": [],
+      "detectors": [
+        "det.nebensatz-weil"
+      ],
       "contrast": "g.denn",
       "errorTags": [
         "verb-final"
@@ -1160,7 +1168,9 @@
         "receptive": "a2.1-u03",
         "productive": "a2.1-u03"
       },
-      "detectors": [],
+      "detectors": [
+        "det.nebensatz-dass"
+      ],
       "contrast": "g.weil",
       "errorTags": [
         "verb-final"
@@ -1209,7 +1219,9 @@
         "productive": "a2.1-u04"
       },
       "chunkFrom": "a1.2-u10",
-      "detectors": [],
+      "detectors": [
+        "det.adjektiv-endung-unbestimmt"
+      ],
       "contrast": "g.adjektiv-praedikativ",
       "errorTags": [
         "adj-ending"
@@ -1257,7 +1269,9 @@
         "receptive": "a2.1-u05",
         "productive": "a2.1-u05"
       },
-      "detectors": [],
+      "detectors": [
+        "det.adjektiv-endung-bestimmt"
+      ],
       "contrast": "g.adj-dekl-unbestimmt",
       "errorTags": [
         "adj-ending"
@@ -1282,7 +1296,9 @@
         "receptive": "a2.1-u06",
         "productive": "a2.1-u06"
       },
-      "detectors": [],
+      "detectors": [
+        "det.nebensatz-wenn"
+      ],
       "contrast": "g.weil",
       "errorTags": [
         "verb-final",
@@ -1329,7 +1345,9 @@
         "receptive": "a2.1-u07",
         "productive": "a2.1-u07"
       },
-      "detectors": [],
+      "detectors": [
+        "det.konjunktiv2-koennte"
+      ],
       "contrast": "g.konj2-hoeflichkeit",
       "errorTags": [
         "satzklammer",
@@ -1376,7 +1394,9 @@
         "receptive": "a2.1-u08",
         "productive": "a2.1-u08"
       },
-      "detectors": [],
+      "detectors": [
+        "det.reflexiv-pronomen"
+      ],
       "contrast": "g.akk-personalpronomen",
       "errorTags": [
         "reflexive"
@@ -1390,7 +1410,8 @@
       "ruleCards": [
         "rc.reflexiv-akk"
       ],
-      "inventory": []
+      "inventory": [],
+      "chunkFrom": "a1.2-u05"
     },
     {
       "id": "g.konj2-sollte",
@@ -1399,7 +1420,9 @@
         "receptive": "a2.1-u09",
         "productive": "a2.1-u09"
       },
-      "detectors": [],
+      "detectors": [
+        "det.konjunktiv2-sollte"
+      ],
       "contrast": "g.konj2-koennte",
       "errorTags": [
         "satzklammer"
@@ -1422,7 +1445,9 @@
         "receptive": "a2.1-u09",
         "productive": "a2.1-u09"
       },
-      "detectors": [],
+      "detectors": [
+        "det.konnektor-deshalb"
+      ],
       "contrast": "g.weil",
       "errorTags": [
         "v2-inv",
@@ -1471,7 +1496,10 @@
         "receptive": "a2.1-u11",
         "productive": "a2.1-u11"
       },
-      "detectors": [],
+      "detectors": [
+        "det.konjunktiv2-sollte",
+        "det.praeteritum-modalverb"
+      ],
       "contrast": "g.konj2-koennte",
       "errorTags": [
         "spelling-meaning"
@@ -1484,6 +1512,37 @@
       "consensus": "majority",
       "ruleCards": [
         "rc.praeteritum-modalverben"
+      ],
+      "inventory": [
+        "gz-a2"
+      ]
+    },
+    {
+      "id": "g.praeteritum",
+      "label": "Präteritum regelmäßiger und unregelmäßiger Verben (kam, ging, sagte, fand): erst verstehen, dann erzählen",
+      "intro": {
+        "receptive": "a2.1-u11",
+        "productive": "b1.1-u01"
+      },
+      "detectors": [
+        "det.praeteritum-vollverb"
+      ],
+      "contrast": "g.perfekt-haben",
+      "errorTags": [
+        "spelling-meaning"
+      ],
+      "lehrwerk": [
+        "M A2 L24",
+        "S5 L1",
+        "M B1 L2",
+        "LIN B1 K4",
+        "NW B1 K3",
+        "As B1+ K1"
+      ],
+      "consensus": "split",
+      "ruleCards": [
+        "rc.praeteritum",
+        "rc.praeteritum-2"
       ],
       "inventory": [
         "gz-a2"
@@ -1519,7 +1578,9 @@
         "receptive": "a2.2-u01",
         "productive": "a2.2-u01"
       },
-      "detectors": [],
+      "detectors": [
+        "det.nebensatz-als-temporal"
+      ],
       "contrast": "g.wenn",
       "errorTags": [
         "verb-final"
@@ -1536,29 +1597,21 @@
       "inventory": []
     },
     {
-      "id": "g.praeteritum",
-      "label": "Präteritum regelmäßiger und unregelmäßiger Verben (kam, ging, sagte, fand): erst verstehen, dann erzählen",
+      "id": "g.praeteritum-kernverben",
+      "label": "Präteritum häufiger Verben beim Erzählen: kam, sagte, es gab (Als ich nach Wien kam, gab es noch keinen Kurs.)",
       "intro": {
         "receptive": "a2.2-u01",
-        "productive": "b1.1-u01"
+        "productive": "a2.2-u01"
       },
       "detectors": [],
       "contrast": "g.perfekt-haben",
-      "errorTags": [
-        "spelling-meaning"
-      ],
+      "errorTags": [],
       "lehrwerk": [
-        "M A2 L24",
-        "S5 L1",
-        "M B1 L2",
-        "LIN B1 K4",
-        "NW B1 K3",
-        "As B1+ K1"
+        "M A2 L24"
       ],
-      "consensus": "split",
+      "consensus": "single",
       "ruleCards": [
-        "rc.praeteritum",
-        "rc.praeteritum-2"
+        "rc.praeteritum-kernverben"
       ],
       "inventory": [
         "gz-a2"
@@ -1571,7 +1624,9 @@
         "receptive": "a2.2-u02",
         "productive": "a2.2-u02"
       },
-      "detectors": [],
+      "detectors": [
+        "det.konjunktiv2-waere-haette-wuerde"
+      ],
       "contrast": "g.konj2-koennte",
       "errorTags": [
         "satzklammer",
@@ -1597,7 +1652,9 @@
         "receptive": "a2.2-u02",
         "productive": "a2.2-u02"
       },
-      "detectors": [],
+      "detectors": [
+        "det.reflexiv-dativ"
+      ],
       "contrast": "g.reflexiv-akk",
       "errorTags": [
         "reflexive",
@@ -1620,7 +1677,10 @@
         "receptive": "a2.2-u03",
         "productive": "a2.2-u03"
       },
-      "detectors": [],
+      "detectors": [
+        "det.nebensatz-ob",
+        "det.indirekte-w-frage"
+      ],
       "contrast": "g.wenn",
       "errorTags": [
         "verb-final"
@@ -1637,6 +1697,27 @@
       "inventory": [
         "gz-a2"
       ]
+    },
+    {
+      "id": "g.indefinitpronomen-personen",
+      "label": "Indefinitpronomen für Personen und Sachen: jemand, niemand; etwas, nichts, alles (Hat jemand angerufen? – Nein, niemand.)",
+      "intro": {
+        "receptive": "a2.2-u03",
+        "productive": "a2.2-u03"
+      },
+      "detectors": [],
+      "contrast": "g.indefinitpronomen",
+      "errorTags": [
+        "case-np"
+      ],
+      "lehrwerk": [
+        "(unverified) A2 – kein F3-Eintrag, Kapitel nicht geprüft"
+      ],
+      "consensus": "single",
+      "ruleCards": [
+        "rc.indefinitpronomen-personen"
+      ],
+      "inventory": []
     },
     {
       "id": "g.lokale-praep-weg",
@@ -1691,7 +1772,9 @@
         "receptive": "a2.2-u05",
         "productive": "a2.2-u05"
       },
-      "detectors": [],
+      "detectors": [
+        "det.komparativ-attributiv"
+      ],
       "contrast": "g.komparation",
       "errorTags": [
         "adj-ending"
@@ -1715,7 +1798,9 @@
         "receptive": "a2.2-u05",
         "productive": "a2.2-u05"
       },
-      "detectors": [],
+      "detectors": [
+        "det.adjektiv-endung-nullartikel"
+      ],
       "contrast": "g.adj-dekl-bestimmt",
       "errorTags": [
         "adj-ending"
@@ -1740,7 +1825,9 @@
         "receptive": "a2.2-u06",
         "productive": "a2.2-u06"
       },
-      "detectors": [],
+      "detectors": [
+        "det.lassen-infinitiv"
+      ],
       "contrast": "g.muessen-duerfen-man",
       "errorTags": [
         "satzklammer"
@@ -1762,7 +1849,9 @@
         "receptive": "a2.2-u06",
         "productive": "a2.2-u06"
       },
-      "detectors": [],
+      "detectors": [
+        "det.konnektor-trotzdem"
+      ],
       "contrast": "g.deshalb",
       "errorTags": [
         "v2-inv",
@@ -1786,7 +1875,9 @@
         "receptive": "a2.2-u07",
         "productive": "b1.2-u06"
       },
-      "detectors": [],
+      "detectors": [
+        "det.passiv-praesens"
+      ],
       "contrast": "g.werden-vollverb",
       "errorTags": [
         "satzklammer"
@@ -1812,7 +1903,9 @@
         "receptive": "a2.2-u08",
         "productive": "a2.2-u08"
       },
-      "detectors": [],
+      "detectors": [
+        "det.praepositionaladverb"
+      ],
       "contrast": "g.verben-praeposition",
       "errorTags": [
         "case-pp"
@@ -1835,7 +1928,9 @@
         "receptive": "a2.2-u09",
         "productive": "a2.2-u09"
       },
-      "detectors": [],
+      "detectors": [
+        "det.relativsatz-nom-akk"
+      ],
       "contrast": "g.artikel-genus-plural",
       "errorTags": [
         "verb-final",
@@ -1860,7 +1955,9 @@
         "receptive": "a2.2-u09",
         "productive": "a2.2-u09"
       },
-      "detectors": [],
+      "detectors": [
+        "det.zeitadverbien-erzaehlen"
+      ],
       "contrast": "g.zeitangaben-inversion",
       "errorTags": [
         "v2-inv"
@@ -1882,7 +1979,9 @@
         "receptive": "a2.2-u10",
         "productive": "a2.2-u10"
       },
-      "detectors": [],
+      "detectors": [
+        "det.relativsatz-nom-akk"
+      ],
       "contrast": "g.relativsatz-nom",
       "errorTags": [
         "verb-final",
@@ -1900,13 +1999,36 @@
       "inventory": []
     },
     {
+      "id": "g.wortbildung-heit-keit",
+      "label": "Wortbildung: Nomen auf -heit und -keit aus Adjektiven, immer mit die (pünktlich → die Pünktlichkeit, frei → die Freiheit)",
+      "intro": {
+        "receptive": "a2.2-u10",
+        "productive": "a2.2-u10"
+      },
+      "detectors": [],
+      "contrast": "g.wortbildung-ung-bar",
+      "errorTags": [
+        "gender-article"
+      ],
+      "lehrwerk": [
+        "06 Impl. 13 (Wortbildungsstrang -ung/-heit/-keit)"
+      ],
+      "consensus": "single",
+      "ruleCards": [
+        "rc.wortbildung-heit-keit"
+      ],
+      "inventory": []
+    },
+    {
       "id": "g.bis-seitdem",
       "label": "Nebensätze mit bis und seit(dem) (Bis die Kollegin zurück ist, …)",
       "intro": {
         "receptive": "a2.2-u11",
         "productive": "a2.2-u11"
       },
-      "detectors": [],
+      "detectors": [
+        "det.nebensatz-bis-seit"
+      ],
       "contrast": "g.temporal-seit-vor",
       "errorTags": [
         "verb-final"
@@ -1950,7 +2072,9 @@
         "receptive": "b1.1-u02",
         "productive": "b1.1-u02"
       },
-      "detectors": [],
+      "detectors": [
+        "det.n-deklination"
+      ],
       "contrast": "g.akkusativ",
       "errorTags": [
         "n-dekl"
@@ -1974,7 +2098,9 @@
         "receptive": "b1.1-u03",
         "productive": "b1.1-u03"
       },
-      "detectors": [],
+      "detectors": [
+        "det.relativsatz-dativ-praeposition"
+      ],
       "contrast": "g.relativsatz-akk",
       "errorTags": [
         "verb-final",
@@ -1993,13 +2119,42 @@
       "inventory": []
     },
     {
+      "id": "g.zu-infinitiv",
+      "label": "Infinitiv mit zu nach Verben, Nomen und Adjektiven (Es ist wichtig, genug zu schlafen.)",
+      "intro": {
+        "receptive": "b1.1-u03",
+        "productive": "b1.1-u03"
+      },
+      "chunkFrom": "a2.1-u07",
+      "detectors": [
+        "det.zu-infinitiv"
+      ],
+      "contrast": "g.koennen",
+      "errorTags": [
+        "satzklammer"
+      ],
+      "lehrwerk": [
+        "M B1 L7",
+        "S5 L5",
+        "NW B1 K1",
+        "MOT L17"
+      ],
+      "consensus": "strong",
+      "ruleCards": [
+        "rc.zu-infinitiv"
+      ],
+      "inventory": []
+    },
+    {
       "id": "g.obwohl",
       "label": "obwohl: Nebensatz, im Kontrast zu trotzdem",
       "intro": {
         "receptive": "b1.1-u04",
         "productive": "b1.1-u04"
       },
-      "detectors": [],
+      "detectors": [
+        "det.nebensatz-obwohl"
+      ],
       "contrast": "g.trotzdem",
       "errorTags": [
         "verb-final",
@@ -2024,7 +2179,9 @@
         "receptive": "b1.1-u05",
         "productive": "b1.1-u05"
       },
-      "detectors": [],
+      "detectors": [
+        "det.futur1"
+      ],
       "contrast": "g.werden-vollverb",
       "errorTags": [
         "satzklammer"
@@ -2049,7 +2206,9 @@
         "receptive": "b1.1-u05",
         "productive": "b1.1-u05"
       },
-      "detectors": [],
+      "detectors": [
+        "det.vermutung-modalwoerter"
+      ],
       "contrast": "g.futur1",
       "errorTags": [
         "v2-inv"
@@ -2071,7 +2230,9 @@
         "receptive": "b1.1-u06",
         "productive": "b1.1-u06"
       },
-      "detectors": [],
+      "detectors": [
+        "det.nebensatz-falls"
+      ],
       "contrast": "g.wenn",
       "errorTags": [
         "verb-final"
@@ -2087,38 +2248,16 @@
       "inventory": []
     },
     {
-      "id": "g.zu-infinitiv",
-      "label": "Infinitiv mit zu nach Verben, Nomen und Adjektiven (Es ist wichtig, genug zu schlafen.)",
-      "intro": {
-        "receptive": "b1.1-u07",
-        "productive": "b1.1-u07"
-      },
-      "chunkFrom": "a2.1-u07",
-      "detectors": [],
-      "contrast": "g.koennen",
-      "errorTags": [
-        "satzklammer"
-      ],
-      "lehrwerk": [
-        "M B1 L7",
-        "S5 L5",
-        "NW B1 K1",
-        "MOT L17"
-      ],
-      "consensus": "strong",
-      "ruleCards": [
-        "rc.zu-infinitiv"
-      ],
-      "inventory": []
-    },
-    {
       "id": "g.um-zu-damit",
       "label": "Finalsätze mit um … zu und damit",
       "intro": {
         "receptive": "b1.1-u08",
         "productive": "b1.1-u08"
       },
-      "detectors": [],
+      "detectors": [
+        "det.um-zu",
+        "det.nebensatz-damit"
+      ],
       "contrast": "g.weil",
       "errorTags": [
         "verb-final",
@@ -2142,7 +2281,9 @@
         "receptive": "b1.1-u08",
         "productive": "b1.1-u08"
       },
-      "detectors": [],
+      "detectors": [
+        "det.nebensatz-da-kausal"
+      ],
       "contrast": "g.weil",
       "errorTags": [
         "verb-final"
@@ -2164,7 +2305,9 @@
         "receptive": "b1.1-u09",
         "productive": "b1.1-u09"
       },
-      "detectors": [],
+      "detectors": [
+        "det.plusquamperfekt"
+      ],
       "contrast": "g.praeteritum",
       "errorTags": [
         "perfekt-aux-participle"
@@ -2189,7 +2332,10 @@
         "receptive": "b1.1-u09",
         "productive": "b1.1-u09"
       },
-      "detectors": [],
+      "detectors": [
+        "det.nebensatz-nachdem",
+        "det.nebensatz-bevor"
+      ],
       "contrast": "g.als-temporal",
       "errorTags": [
         "verb-final"
@@ -2212,7 +2358,10 @@
         "receptive": "b1.1-u10",
         "productive": "b1.1-u10"
       },
-      "detectors": [],
+      "detectors": [
+        "det.konjunktiv2-irreal",
+        "det.konjunktiv2-andere"
+      ],
       "contrast": "g.wenn",
       "errorTags": [
         "verb-final",
@@ -2237,7 +2386,10 @@
         "receptive": "b1.1-u11",
         "productive": "b1.1-u11"
       },
-      "detectors": [],
+      "detectors": [
+        "det.genitiv-des",
+        "det.genitiv-artikel"
+      ],
       "contrast": "g.praep-dativ",
       "errorTags": [
         "case-np"
@@ -2261,7 +2413,9 @@
         "receptive": "b1.1-u12",
         "productive": "b1.1-u12"
       },
-      "detectors": [],
+      "detectors": [
+        "det.praeposition-genitiv-wegen-trotz-waehrend"
+      ],
       "contrast": "g.weil",
       "errorTags": [
         "case-pp"
@@ -2285,7 +2439,11 @@
         "receptive": "b1.2-u01",
         "productive": "b1.2-u01"
       },
-      "detectors": [],
+      "detectors": [
+        "det.kausaladverb-deswegen",
+        "det.kausaladverb-darum-daher",
+        "det.naemlich"
+      ],
       "contrast": "g.deshalb",
       "errorTags": [
         "v2-inv",
@@ -2309,7 +2467,9 @@
         "receptive": "b1.2-u02",
         "productive": "b1.2-u02"
       },
-      "detectors": [],
+      "detectors": [
+        "det.partizip-attribut"
+      ],
       "contrast": "g.adj-dekl-bestimmt",
       "errorTags": [
         "adj-ending"
@@ -2333,7 +2493,10 @@
         "receptive": "b1.2-u03",
         "productive": "b1.2-u03"
       },
-      "detectors": [],
+      "detectors": [
+        "det.konnektor-nicht-nur-sondern-auch",
+        "det.konnektor-sowohl-als-auch"
+      ],
       "contrast": "g.zeitangaben-inversion",
       "errorTags": [
         "connector-position"
@@ -2357,7 +2520,9 @@
         "receptive": "b1.2-u04",
         "productive": "b1.2-u04"
       },
-      "detectors": [],
+      "detectors": [
+        "det.relativsatz-was-wo"
+      ],
       "contrast": "g.relativsatz-dat-praep",
       "errorTags": [
         "verb-final"
@@ -2380,7 +2545,9 @@
         "receptive": "b1.2-u04",
         "productive": "b1.2-u04"
       },
-      "detectors": [],
+      "detectors": [
+        "det.brauchen-zu"
+      ],
       "contrast": "g.muessen-duerfen-man",
       "errorTags": [
         "satzklammer"
@@ -2403,7 +2570,10 @@
         "receptive": "b1.2-u05",
         "productive": "b1.2-u05"
       },
-      "detectors": [],
+      "detectors": [
+        "det.nebensatz-sodass",
+        "det.so-dass"
+      ],
       "contrast": "g.deshalb",
       "errorTags": [
         "verb-final"
@@ -2426,7 +2596,9 @@
         "receptive": "b1.2-u05",
         "productive": "b1.2-u05"
       },
-      "detectors": [],
+      "detectors": [
+        "det.modalpartikeln"
+      ],
       "contrast": "g.imperativ-sie",
       "errorTags": [
         "register"
@@ -2449,7 +2621,9 @@
         "receptive": "b1.2-u06",
         "productive": "b1.2-u06"
       },
-      "detectors": [],
+      "detectors": [
+        "det.passiv-modalverb"
+      ],
       "contrast": "g.passiv-praesens",
       "errorTags": [
         "satzklammer"
@@ -2471,7 +2645,10 @@
         "receptive": "b1.2-u07",
         "productive": "b1.2-u07"
       },
-      "detectors": [],
+      "detectors": [
+        "det.passiv-praeteritum",
+        "det.passiv-worden"
+      ],
       "contrast": "g.passiv-praesens",
       "errorTags": [
         "perfekt-aux-participle",
@@ -2495,7 +2672,11 @@
         "receptive": "b1.2-u07",
         "productive": "b1.2-u07"
       },
-      "detectors": [],
+      "detectors": [
+        "det.nebensatz-waehrend",
+        "det.nebensatz-sobald",
+        "det.nebensatz-solange"
+      ],
       "contrast": "g.praep-genitiv",
       "errorTags": [
         "verb-final"
@@ -2519,7 +2700,9 @@
         "receptive": "b1.2-u08",
         "productive": "b1.2-u08"
       },
-      "detectors": [],
+      "detectors": [
+        "det.praeposition-innerhalb-ausserhalb"
+      ],
       "contrast": "g.praep-genitiv",
       "errorTags": [
         "case-pp"
@@ -2542,7 +2725,9 @@
         "receptive": "b1.2-u08",
         "productive": "b1.2-u08"
       },
-      "detectors": [],
+      "detectors": [
+        "det.nebensatz-indem"
+      ],
       "contrast": "g.um-zu-damit",
       "errorTags": [
         "verb-final"
@@ -2564,7 +2749,9 @@
         "receptive": "b1.2-u09",
         "productive": "b1.2-u09"
       },
-      "detectors": [],
+      "detectors": [
+        "det.konnektor-je-desto"
+      ],
       "contrast": "g.komparation",
       "errorTags": [
         "verb-final",
@@ -2588,7 +2775,10 @@
         "receptive": "b1.2-u09",
         "productive": "b1.2-u09"
       },
-      "detectors": [],
+      "detectors": [
+        "det.praeposition-entlang",
+        "det.praeposition-um-herum"
+      ],
       "contrast": "g.lokale-praep-weg",
       "errorTags": [
         "case-pp"
@@ -2611,7 +2801,10 @@
         "receptive": "b1.2-u10",
         "productive": "b1.2-u10"
       },
-      "detectors": [],
+      "detectors": [
+        "det.statt-ohne-zu",
+        "det.ohne-statt-dass"
+      ],
       "contrast": "g.um-zu-damit",
       "errorTags": [
         "satzklammer",
@@ -2635,7 +2828,9 @@
         "receptive": "b1.2-u10",
         "productive": "b1.2-u10"
       },
-      "detectors": [],
+      "detectors": [
+        "det.als-ob"
+      ],
       "contrast": "g.konj2-irreal-gegenwart",
       "errorTags": [
         "verb-final"
@@ -2657,7 +2852,11 @@
         "receptive": "b1.2-u11",
         "productive": "b1.2-u11"
       },
-      "detectors": [],
+      "detectors": [
+        "det.konnektor-weder-noch",
+        "det.konnektor-entweder-oder",
+        "det.konnektor-zwar-aber"
+      ],
       "contrast": "g.nicht-nur-sowohl",
       "errorTags": [
         "connector-position"
@@ -2680,7 +2879,10 @@
         "receptive": "b1.2-u11",
         "productive": "b2.1-u04"
       },
-      "detectors": [],
+      "detectors": [
+        "det.konjunktiv2-vergangenheit",
+        "det.konjunktiv2-modal-vergangenheit"
+      ],
       "contrast": "g.konj2-irreal-gegenwart",
       "errorTags": [
         "perfekt-aux-participle"
@@ -2721,7 +2923,7 @@
     },
     {
       "id": "g.negation-system",
-      "label": "Negation als System: Satz- und Teilnegation, nicht mehr, noch nicht, gar nicht",
+      "label": "Negation als System: Satz- und Teilnegation, die Stellung von nicht im Mittelfeld, Teilnegation mit nicht …, sondern …; verstärkte Negation mit gar nicht, keineswegs, keinesfalls",
       "intro": {
         "receptive": "b2.1-u01",
         "productive": "b2.1-u01"
@@ -2742,12 +2944,14 @@
     },
     {
       "id": "g.korrelat-es-da",
-      "label": "Verweiswörter: es und da(r)- + Präposition vor dass- und zu-Sätzen (Ich lege Wert darauf, dass …)",
+      "label": "Korrelate: es vor dass- und zu-Sätzen (Es fällt mir schwer, …), da(r)- + Präposition vor zu-Sätzen (Ich bestehe darauf, pünktlich bezahlt zu werden.); wann das Korrelat stehen muss und wann es wegfallen kann",
       "intro": {
         "receptive": "b2.1-u02",
         "productive": "b2.1-u02"
       },
-      "detectors": [],
+      "detectors": [
+        "det.korrelat-da-praeposition"
+      ],
       "contrast": "g.praepositionaladverb",
       "errorTags": [
         "case-pp"
@@ -2769,7 +2973,9 @@
         "receptive": "b2.1-u02",
         "productive": "b2.1-u02"
       },
-      "detectors": [],
+      "detectors": [
+        "det.textverweise"
+      ],
       "contrast": "g.korrelat-es-da",
       "errorTags": [
         "register"
@@ -2814,7 +3020,9 @@
         "receptive": "b2.1-u03",
         "productive": "b2.1-u03"
       },
-      "detectors": [],
+      "detectors": [
+        "det.zu-infinitiv-passiv-perfekt"
+      ],
       "contrast": "g.passiv-modalverb",
       "errorTags": [
         "perfekt-aux-participle",
@@ -2837,7 +3045,9 @@
         "receptive": "b2.1-u04",
         "productive": "b2.1-u04"
       },
-      "detectors": [],
+      "detectors": [
+        "det.konjunktiv2-modal-vergangenheit"
+      ],
       "contrast": "g.konj2-vergangenheit",
       "errorTags": [
         "register"
@@ -2858,7 +3068,10 @@
         "receptive": "b2.1-u05",
         "productive": "b2.1-u05"
       },
-      "detectors": [],
+      "detectors": [
+        "det.konnektor-einerseits-andererseits",
+        "det.konnektor-zum-einen-zum-anderen"
+      ],
       "contrast": "g.weder-entweder-zwar",
       "errorTags": [
         "connector-position",
@@ -2881,7 +3094,10 @@
         "receptive": "b2.1-u06",
         "productive": "b2.1-u06"
       },
-      "detectors": [],
+      "detectors": [
+        "det.passiversatz-sich-lassen",
+        "det.sein-haben-zu-infinitiv"
+      ],
       "contrast": "g.passiv-modalverb",
       "errorTags": [
         "reflexive",
@@ -2904,7 +3120,9 @@
         "receptive": "b2.1-u06",
         "productive": "b2.1-u06"
       },
-      "detectors": [],
+      "detectors": [
+        "det.sein-haben-zu-infinitiv"
+      ],
       "contrast": "g.passiversatz",
       "errorTags": [
         "satzklammer"
@@ -2925,7 +3143,9 @@
         "receptive": "b2.1-u07",
         "productive": "b2.1-u07"
       },
-      "detectors": [],
+      "detectors": [
+        "det.relativsatz-wer"
+      ],
       "contrast": "g.relativsatz-was-wo",
       "errorTags": [
         "verb-final",
@@ -2948,7 +3168,9 @@
         "receptive": "b2.1-u07",
         "productive": "b2.1-u07"
       },
-      "detectors": [],
+      "detectors": [
+        "det.relativsatz-genitiv"
+      ],
       "contrast": "g.relativsatz-dat-praep",
       "errorTags": [
         "case-np"
@@ -2993,7 +3215,9 @@
         "receptive": "b2.1-u08",
         "productive": "b2.1-u08"
       },
-      "detectors": [],
+      "detectors": [
+        "det.zustandspassiv"
+      ],
       "contrast": "g.passiv-praesens",
       "errorTags": [
         "perfekt-aux-participle"
@@ -3034,7 +3258,9 @@
         "receptive": "b2.1-u10",
         "productive": "b2.1-u10"
       },
-      "detectors": [],
+      "detectors": [
+        "det.futur2"
+      ],
       "contrast": "g.futur1",
       "errorTags": [
         "perfekt-aux-participle",
@@ -3056,7 +3282,9 @@
         "receptive": "b2.1-u11",
         "productive": "b2.1-u11"
       },
-      "detectors": [],
+      "detectors": [
+        "det.redewiedergabe-laut-zufolge"
+      ],
       "contrast": "g.dass",
       "errorTags": [
         "case-pp",
@@ -3101,7 +3329,9 @@
         "receptive": "b2.1-u12",
         "productive": "b2.1-u12"
       },
-      "detectors": [],
+      "detectors": [
+        "det.vergleichssatz-als-konjunktiv"
+      ],
       "contrast": "g.als-ob",
       "errorTags": [
         "v2-inv"
@@ -3123,7 +3353,9 @@
         "productive": "b2.2-u01"
       },
       "chunkFrom": "b2.1-u11",
-      "detectors": [],
+      "detectors": [
+        "det.konjunktiv1"
+      ],
       "contrast": "g.redewiedergabe",
       "errorTags": [
         "register"
@@ -3145,7 +3377,9 @@
         "receptive": "b2.2-u02",
         "productive": "b2.2-u02"
       },
-      "detectors": [],
+      "detectors": [
+        "det.dadurch-dass"
+      ],
       "contrast": "g.indem",
       "errorTags": [
         "verb-final"
@@ -3167,7 +3401,9 @@
         "receptive": "b2.2-u03",
         "productive": "b2.2-u03"
       },
-      "detectors": [],
+      "detectors": [
+        "det.modalpartikeln"
+      ],
       "contrast": "g.modalpartikeln",
       "errorTags": [
         "register"
@@ -3189,7 +3425,10 @@
         "receptive": "b2.2-u04",
         "productive": "b2.2-u04"
       },
-      "detectors": [],
+      "detectors": [
+        "det.konditional-sofern-es-sei-denn",
+        "det.konditional-uneingeleitet"
+      ],
       "contrast": "g.falls",
       "errorTags": [
         "verb-final",
@@ -3212,7 +3451,9 @@
         "receptive": "b2.2-u05",
         "productive": "b2.2-u05"
       },
-      "detectors": [],
+      "detectors": [
+        "det.nominalisierung"
+      ],
       "contrast": "g.praep-genitiv",
       "errorTags": [
         "register",
@@ -3235,7 +3476,9 @@
         "receptive": "b2.2-u05",
         "productive": "b2.2-u05"
       },
-      "detectors": [],
+      "detectors": [
+        "det.nominalisierung"
+      ],
       "contrast": "g.genitiv",
       "errorTags": [
         "case-np",
@@ -3279,7 +3522,9 @@
         "receptive": "b2.2-u07",
         "productive": "b2.2-u07"
       },
-      "detectors": [],
+      "detectors": [
+        "det.konjunktiv1"
+      ],
       "contrast": "g.konj1-gegenwart",
       "errorTags": [
         "perfekt-aux-participle",
@@ -3301,7 +3546,9 @@
         "receptive": "b2.2-u07",
         "productive": "b2.2-u07"
       },
-      "detectors": [],
+      "detectors": [
+        "det.subjektive-modalverben"
+      ],
       "contrast": "g.vermutung-modalwoerter",
       "errorTags": [
         "satzklammer",
@@ -3324,7 +3571,11 @@
         "receptive": "b2.2-u09",
         "productive": "b2.2-u09"
       },
-      "detectors": [],
+      "detectors": [
+        "det.konnektor-obgleich-wenngleich",
+        "det.konnektor-selbst-auch-wenn",
+        "det.konnektor-folglich-hingegen"
+      ],
       "contrast": "g.obwohl",
       "errorTags": [
         "verb-final",
@@ -3347,7 +3598,9 @@
         "receptive": "b2.2-u09",
         "productive": "b2.2-u09"
       },
-      "detectors": [],
+      "detectors": [
+        "det.konnektor-folglich-hingegen"
+      ],
       "contrast": "g.sodass",
       "errorTags": [
         "connector-position",
@@ -3370,7 +3623,9 @@
         "receptive": "b2.2-u10",
         "productive": "b2.2-u10"
       },
-      "detectors": [],
+      "detectors": [
+        "det.erweitertes-partizipialattribut"
+      ],
       "contrast": "g.partizip-adjektiv",
       "errorTags": [
         "adj-ending"
@@ -3415,7 +3670,9 @@
         "productive": "b2.2-u11"
       },
       "chunkFrom": "b2.1-u04",
-      "detectors": [],
+      "detectors": [
+        "det.praeposition-genitiv-formell"
+      ],
       "contrast": "g.praep-genitiv",
       "errorTags": [
         "case-pp",

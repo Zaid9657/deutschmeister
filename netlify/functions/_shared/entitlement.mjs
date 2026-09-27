@@ -5,7 +5,10 @@
 //
 //   hasCourseAccess(admin, userId, level)         may this user open v2 content of this level?
 //   checkCourseAiAllowance(admin, userId, bankKey) may this user have one more graded AI attempt on this slot?
-//   recordCourseAiUse(admin, userId, bankKey, kind) count one graded AI attempt (after it succeeded)
+//   recordCourseAiUse(admin, userId, bankKey, kind) count one graded AI attempt (after it succeeded;
+//                                                   for speaking the attempt is the SESSION: speaking-session
+//                                                   records it once the session row exists, because the partner
+//                                                   conversation is itself the AI cost — E1 integration 2026-09-27)
 //
 // THE RULE (BLUEPRINT §1.5 item 3): a v2 level is open when it is free (A1.1),
 // or when an ACTIVE purchases row's product covers it — the per-level keys
@@ -278,7 +281,8 @@ async function degradedAllowance(admin, userId, info, access, dayStart, dailyCap
  *   remaining: graded attempts still open on the slot NOW (the attempt about to be made included)
  *   reason: ok | ledger_missing (allowed, degraded) | slot_allowance_exhausted | daily_cap_reached |
  *           purchase_required | no_user | invalid_key | legacy_key | lookup_failed | usage_lookup_failed
- * Check before the AI call; recordCourseAiUse() after it succeeded.
+ * Check before the AI call; recordCourseAiUse() after it succeeded (writing: after a real model call,
+ * never for a rule-decided zero; speaking: once per session, at session start).
  * options: { now?, trialProOpensPaid?, dailyCap? }
  */
 export async function checkCourseAiAllowance(admin, userId, bankKey, options = {}) {
