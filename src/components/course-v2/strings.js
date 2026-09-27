@@ -192,7 +192,7 @@ const EN = {
   'exam.origin': 'From: {label}',
 
   'check.title': 'Unit check',
-  'check.lead': '12 short tasks. No AI — every answer is checked the same way.',
+  'check.lead': '{n} short tasks. No AI — every answer is checked the same way.',
   'check.earlier': 'From earlier units',
   'check.proofs': 'Proofs',
   'check.canDo': 'I can do this',
@@ -426,7 +426,7 @@ const DE = {
   'exam.origin': 'Aus: {label}',
 
   'check.title': 'Lektions-Check',
-  'check.lead': '12 kurze Aufgaben. Ohne KI – jede Antwort wird gleich geprüft.',
+  'check.lead': '{n} kurze Aufgaben. Ohne KI – jede Antwort wird gleich geprüft.',
   'check.earlier': 'Aus früheren Lektionen',
   'check.proofs': 'Nachweise',
   'check.canDo': 'Das kann ich',

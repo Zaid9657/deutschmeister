@@ -202,6 +202,8 @@ ADJ offen
 ADJ geschlossen
 ADJ geehrt
 ADJ lieb
+ADJ laut
+ADJ leise
 ADJ freundlich
 `;
 

@@ -62,7 +62,9 @@ export default function CheckView({ unit, level, stepId, endLine = null, earlier
   if (phase === 'items') {
     return (
       <div>
-        <p className="mb-4 text-[0.9375rem] text-graphite">{t('check.lead')}</p>
+        {/* The count the learner will actually answer: 12 once the earlier-unit draw is filled,
+            fewer while earlier units have no reserve (the plan's `earlierMissing`). */}
+        <p className="mb-4 text-[0.9375rem] text-graphite">{t('check.lead', { n: items.length })}</p>
         <ItemRun
           key="check-items"
           items={items}
