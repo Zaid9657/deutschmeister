@@ -76,3 +76,17 @@ Users 1,656 total (1,127 confirmed), 23 sign-ups in 7 days, 181 in 30 days. Cour
 2 all-time, €0 recorded revenue (sales_all 2, revenue_all 0 — the course sales so far were €0 orders).
 Subscriptions: 5 paying, MRR €55.15, 1 at risk. AI usage 7 d: X-Ray 1,635, speaking 10, writing 0, exams 0.
 Previous row (2026-09-07): 1,589 users, 55 sign-ups/7 d, MRR €45.16, 1 course sale (course_a1, €0).
+
+## Search demand (DataForSEO Google Ads search volume, pulled 2026-09-27 by the orchestrator)
+
+Average monthly searches (last 12 months); the API view returned the first 10 keywords of each batch.
+
+Germany (location 2276, language de): deutschkurs online 2,400 (CPC €4.25, competition high) · online deutschkurs 2,400 ·
+deutsch lernen a1 1,600 · deutsch lernen online 1,300 · deutsch lernen b1 1,300 · deutschkurs b2 online 1,000 (Sep peak 2,400) ·
+deutschkurs b1 online 390 · deutschkurs a1 online 210 · deutschkurs a2 online 210 · goethe a1 vorbereitung 10.
+India (location 2356, language en): german language course 27,100 · goethe a1 exam 27,100 (peak 40,500 in Jul 2026) ·
+learn german online 3,600 · german course online 3,600 · goethe b1 exam 1,900 · goethe b2 exam 1,600 · german a1 course 1,300 ·
+german b1 course 390 · german a2 course 320 · german b2 course 320.
+Read: exam-named queries are large abroad (India: "goethe a1 exam" alone ≈ 27k/month), level-named course queries are
+modest in Germany but expensive (CPC €2.65–4.25) — the buyer abroad with an exam date is the volume, B2 is the biggest
+level-named course query inside Germany.
