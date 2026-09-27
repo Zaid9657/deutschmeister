@@ -1243,7 +1243,7 @@ from the rating sheet and **unverified** ([m01] Unverified); hence `splitVerifie
       "id": "a2.1-u07-fk1", "kind": "beruf", "title": "Pausen bei der Arbeit",
       "bodyDe": "Arbeiten Sie mehr als sechs Stunden am Tag? Dann bekommen Sie mindestens 30 Minuten Pause. Wenn Sie mehr als neun Stunden arbeiten, sind es 45 Minuten. Sie können die Pause teilen: Jeder Teil dauert mindestens 15 Minuten. Für Jugendliche unter 18 Jahren und in manchen Branchen gelten andere Regeln.",
       "bodyEn": "Working time law: more than six hours of work a day means at least 30 minutes of break; more than nine hours, 45 minutes. Breaks may be split into parts of at least 15 minutes. Different rules apply to employees under 18 and in some sectors.",
-      "factRefs": ["a2.1-u07-f01"], "minutes": 8, "optional": true
+      "factRefs": ["a2.1-u07-f01"], "minutes": 10, "optional": true
     }
   ],
 
@@ -1265,3 +1265,178 @@ from the rating sheet and **unverified** ([m01] Unverified); hence `splitVerifie
   ]
 }
 ```
+
+### 15.4 The telc A2 lane pack `content/course-v2/a2.1/units/u07.lane-ta2.json`
+
+Written by a different agent from the unit file (lease rule, BLUEPRINT §10.5). A telc A2 learner sees this block in
+LS4 instead of `ga2.h1`; for LS5/LS6 A2.1 is a .1 course, so the primary tasks are shown with their origin labels.
+
+```json
+{
+  "$schema": "course-v2/lanepack@1",
+  "unit": "a2.1-u07",
+  "lane": "ta2",
+  "version": 1,
+  "status": "review",
+  "reviewedIn": null,
+  "slots": {
+    "ls4": {
+      "mode": "replace",
+      "blocks": [
+        {
+          "id": "a2.1-u07-ls4-ta2-h1", "template": "ta2.h1", "lane": "ta2", "length": "full", "scaffolded": false, "modeDefault": "lern",
+          "instructionsDe": "Sie hören fünf Ansagen am Telefon zweimal. Ergänzen Sie die Notizen.",
+          "texts": [
+            { "id": "t1", "kind": "audio", "title": "Zahnarztpraxis", "lines": [{ "id": "a2.1-u07-ls4-ta2-h1-t1-l01", "speaker": "ansage", "de": "Guten Tag, hier ist die Zahnarztpraxis Dr. Lehmann. Frau Nair, Sie haben am Dienstag einen Termin bei uns. Leider müssen wir die Uhrzeit ändern.", "en": "Hello, this is Dr Lehmann's dental practice. Ms Nair, you have an appointment with us on Tuesday. Unfortunately we have to change the time.", "say": "Guten Tag, hier ist die Zahnarztpraxis Doktor Lehmann. Frau Nair, Sie haben am Dienstag einen Termin bei uns. Leider müssen wir die Uhrzeit ändern." }, { "id": "a2.1-u07-ls4-ta2-h1-t1-l02", "speaker": "ansage", "de": "Bitte kommen Sie nicht um zehn Uhr, sondern um 11.15 Uhr. Wenn das nicht geht, rufen Sie uns bitte zurück. Auf Wiederhören!", "en": "Please come not at ten but at 11:15. If that doesn't work, please call us back. Goodbye!", "say": "Bitte kommen Sie nicht um zehn Uhr, sondern um elf Uhr fünfzehn. Wenn das nicht geht, rufen Sie uns bitte zurück. Auf Wiederhören!" }], "glosses": [] },
+            { "id": "t2", "kind": "audio", "title": "Paketdienst", "lines": [{ "id": "a2.1-u07-ls4-ta2-h1-t2-l01", "speaker": "ansage", "de": "Hallo, hier ist Ihr Paketdienst. Wir waren heute um 14 Uhr bei Ihnen, aber Sie waren nicht zu Hause. Ihr Paket ist jetzt bei Ihren Nachbarn, bei Familie Rohde. Ich buchstabiere: R-O-H-D-E. Familie Rohde wohnt im Erdgeschoss.", "en": "Hello, this is your parcel service. We came by at 2 pm today, but you weren't at home. Your parcel is now with your neighbours, the Rohde family. I'll spell it: R-O-H-D-E. The Rohdes live on the ground floor.", "say": "Hallo, hier ist Ihr Paketdienst. Wir waren heute um vierzehn Uhr bei Ihnen, aber Sie waren nicht zu Hause. Ihr Paket ist jetzt bei Ihren Nachbarn, bei Familie Rohde. Ich buchstabiere: Er – O – Ha – De – E. Familie Rohde wohnt im Erdgeschoss." }], "glosses": [] },
+            { "id": "t3", "kind": "audio", "title": "Stadtbibliothek", "lines": [{ "id": "a2.1-u07-ls4-ta2-h1-t3-l01", "speaker": "ansage", "de": "Guten Tag, hier spricht Frau Klein von der Stadtbibliothek. Sie haben noch zwei Bücher von uns. Bitte bringen Sie die Bücher bis Freitag zurück.", "en": "Hello, this is Ms Klein from the city library. You still have two of our books. Please return them by Friday." }, { "id": "a2.1-u07-ls4-ta2-h1-t3-l02", "speaker": "ansage", "de": "Haben Sie noch Fragen? Dann rufen Sie mich bitte an. Meine Nummer ist 0341 72 55 18.", "en": "Any questions? Then please call me. My number is 0341 72 55 18.", "say": "Haben Sie noch Fragen? Dann rufen Sie mich bitte an. Meine Nummer ist null drei vier eins, zweiundsiebzig, fünfundfünfzig, achtzehn." }], "glosses": [] },
+            { "id": "t4", "kind": "audio", "title": "Nachricht von Anna", "lines": [{ "id": "a2.1-u07-ls4-ta2-h1-t4-l01", "speaker": "cast.anna", "de": "Hallo Priya, hier ist Anna. Wir fahren doch am Sonntag nach Dresden. Wir treffen uns aber nicht an der Bushaltestelle, sondern am Hauptbahnhof, vor der Information. Der Zug fährt um neun Uhr. Sei bitte pünktlich! Bis Sonntag!", "en": "Hi Priya, it's Anna. We're going to Dresden on Sunday, right? But we're not meeting at the bus stop – we're meeting at the main station, in front of the information desk. The train leaves at nine. Please be on time! See you Sunday!" }], "glosses": [] },
+            { "id": "t5", "kind": "audio", "title": "Volkshochschule", "lines": [{ "id": "a2.1-u07-ls4-ta2-h1-t5-l01", "speaker": "ansage", "de": "Hier ist die Volkshochschule Leipzig. Sie möchten einen Computerkurs für Anfänger machen? Der Kurs beginnt am 4. Mai, immer am Mittwochabend, und kostet 85 Euro.", "en": "This is Leipzig adult education centre. You'd like to take a computer course for beginners? The course starts on 4 May, always on Wednesday evenings, and costs 85 euros.", "say": "Hier ist die Volkshochschule Leipzig. Sie möchten einen Computerkurs für Anfänger machen? Der Kurs beginnt am vierten Mai, immer am Mittwochabend, und kostet fünfundachtzig Euro." }, { "id": "a2.1-u07-ls4-ta2-h1-t5-l02", "speaker": "ansage", "de": "Bitte melden Sie sich bis Ende April an. Sie können sich auch im Internet anmelden.", "en": "Please sign up by the end of April. You can also sign up online." }], "glosses": [] }
+          ],
+          "items": [
+            { "id": "a2.1-u07-ls4-ta2-h1-01", "type": "notes", "role": "exam", "topic": "hoeren", "textRef": "t1", "promptDe": "Zahnarzt: Dienstag, um ___ Uhr", "answer": "11.15", "accepted": ["11.15", "11:15", "11.15 Uhr", "11:15 Uhr", "Viertel nach elf"], "exact": "number", "explanation": { "de": "Nicht um zehn Uhr, sondern um 11.15 Uhr. Achten Sie auf „nicht …, sondern …“.", "en": "Not at ten but at 11:15 – listen for 'nicht …, sondern …'." }, "origin": "agent" },
+            { "id": "a2.1-u07-ls4-ta2-h1-02", "type": "notes", "role": "exam", "topic": "hoeren", "textRef": "t2", "promptDe": "Das Paket ist bei Familie ___.", "answer": "Rohde", "accepted": ["Rohde"], "exact": "name", "explanation": { "de": "Der Name wird buchstabiert: R-O-H-D-E. Jeder Buchstabe zählt.", "en": "The name is spelled out: R-O-H-D-E. Every letter counts." }, "origin": "agent" },
+            { "id": "a2.1-u07-ls4-ta2-h1-03", "type": "notes", "role": "exam", "topic": "hoeren", "textRef": "t3", "promptDe": "Frau Klein, Stadtbibliothek – Telefon: ___", "answer": "0341 72 55 18", "accepted": ["0341 72 55 18"], "exact": "number", "explanation": { "de": "Die Nummer: 0341 72 55 18. Jede Ziffer zählt.", "en": "The number is 0341 72 55 18 – every digit counts." }, "origin": "agent" },
+            { "id": "a2.1-u07-ls4-ta2-h1-04", "type": "notes", "role": "exam", "topic": "hoeren", "textRef": "t4", "promptDe": "Treffpunkt am Sonntag: ___", "answer": "am Hauptbahnhof", "accepted": ["am Hauptbahnhof", "Hauptbahnhof", "am Hauptbahnhof, vor der Information", "Hauptbahnhof, vor der Information", "vor der Information am Hauptbahnhof"], "explanation": { "de": "Nicht an der Bushaltestelle, sondern am Hauptbahnhof, vor der Information.", "en": "Not at the bus stop but at the main station, in front of the information desk." }, "origin": "agent" },
+            { "id": "a2.1-u07-ls4-ta2-h1-05", "type": "notes", "role": "exam", "topic": "hoeren", "textRef": "t5", "promptDe": "Computerkurs: Preis ___ Euro", "answer": "85", "accepted": ["85", "85,00", "85 Euro"], "exact": "number", "explanation": { "de": "Der Kurs kostet 85 Euro. Der 4. Mai ist das Datum, nicht der Preis.", "en": "The course costs 85 euros; 4 May is the start date, not the price." }, "origin": "agent" }
+          ]
+        }
+      ],
+      "strategyCards": [
+        { "template": "ta2.h1", "de": "Hören Teil 1: Sie hören fünf Ansagen am Telefon zweimal. Lesen Sie zuerst die Notiz: Fehlt eine Uhrzeit, eine Nummer, ein Preis oder ein Name? Schreiben Sie Zahlen und buchstabierte Namen genau – jede Ziffer und jeder Buchstabe zählt.", "en": "Listening part 1: five phone messages, each played twice. Read the note first – is a time, number, price or name missing? Write numbers and spelled names exactly." }
+      ]
+    }
+  },
+  "originLabels": {
+    "sprechen": "im Format: Goethe-Zertifikat A2, Sprechen Teil 1 – in Ihrer Prüfung ähnlich: telc Deutsch A2, Sprechen Teil 2",
+    "schreiben": "im Format: Goethe-Zertifikat A2, Schreiben Teil 2"
+  }
+}
+```
+
+The `sprechen` label follows `ga2.sp1.transfersTo: ["ta2.sp2"]` in the lane registry; `ga2.s2` has no telc A2
+counterpart, so its label names only the source format (COV-6). A2.2 must carry lane-exact `schreiben` / `sprechen`
+slots for ta2 in every unit whose primary task is not lane-exact (COV-6 in a .2 course).
+
+### 15.5 What the compiler makes of it (excerpts)
+
+**Pool item** — `a2.1-u07-ls1-p06` in the live `lessonPools` item shape, read unchanged by `check.js`, `requeue.js`,
+`mastery.js` and `reviewGrading` (`src/data/course-v2/a2.1/units/u07.js`):
+
+```json
+{
+  "id": "a2.1-u07-ls1-p06",
+  "topic": "g.reflexiv-akk",
+  "type": "sentence_building",
+  "questionDe": "Bilden Sie den Satz: [sich / Jan / leider / verspätet]",
+  "questionEn": "Build the sentence.",
+  "options": null,
+  "answer": "Jan verspätet sich leider.",
+  "accepted": ["Jan verspätet sich leider.", "Leider verspätet sich Jan.", "Leider verspätet Jan sich."],
+  "caseSensitive": false,
+  "explanationDe": "Das Verb verspätet steht auf Position 2.",
+  "explanationEn": "The verb verspätet stays in second position.",
+  "hint": null,
+  "minLektion": 7
+}
+```
+
+**Writing bank entries** — `netlify/functions/_shared/writingTasks/a2.1.mjs`, byte-identical twin
+`src/data/writingTasks/a2.1.js` (`check-duplicates`). The grader resolves the task by `bankKey`, never from the
+client's prompt; the allowance scope is the prefix `a21-` (BANK_KEY_RE, §2). Model texts and cues stay in the unit
+chunk; they are not grader input.
+
+```js
+// generated by scripts/course-v2/compile.mjs — do not edit
+export const WRITING_TASKS = {
+  'a21-u07-w': {
+    level: 'a2.1', unit: 'a2.1-u07', lane: 'ga2', template: 'ga2.s2', examKey: 'goethe_a2', profile: 'ga2-s2',
+    register: 'halbformell', address: 'Sie',
+    situationDe: 'Sie haben morgen um 14 Uhr eine Besprechung mit Frau Kowalski von der Firma Hansen Bau. Sie können nicht kommen.',
+    taskDe: 'Schreiben Sie Frau Kowalski eine E-Mail zu allen drei Punkten (30 bis 40 Wörter).',
+    leitpunkte: [
+      { id: 'lp1', de: 'Sagen Sie ab und entschuldigen Sie sich.' },
+      { id: 'lp2', de: 'Nennen Sie einen Grund.' },
+      { id: 'lp3', de: 'Schlagen Sie einen neuen Termin vor.' },
+    ],
+    wordBand: [30, 40], minSubmitWords: 15,
+    contentHash: 'sha256:…',
+  },
+  'a21-u07-mo2': {
+    level: 'a2.1', unit: 'a2.1-u07', lane: null, profile: 'course-micro', mode: 'written', register: 'Sie',
+    situationDe: 'Sie sind zu spät zum Deutschkurs gekommen.',
+    promptDe: 'Schreiben Sie Ihrer Lehrerin 1–3 Sätze: Entschuldigen Sie sich. Nennen Sie einen Grund.',
+    words: [8, 30], targets: ['g.reflexiv-akk'],
+    contentHash: 'sha256:…',
+  },
+};
+```
+
+**Syllabus row** — `astro-site/src/data/syllabus/a2.1.json` ↔ `src/data/syllabus/a2.1.json`. Only live lanes appear
+(`course.json.lanes.live`), so telc A2 is absent until its pack passes review; minutes are the design value until
+`minutesMeasured` exists, and the page labels them „geplant".
+
+```json
+{
+  "unit": "a2.1-u07",
+  "nr": 7,
+  "etappe": 3,
+  "title": "Am Telefon im Job",
+  "canDoTitle": "Sie können Nachrichten am Telefon verstehen, notieren und weitergeben.",
+  "handlungsfeld": ["2"],
+  "canDos": [
+    "Ich kann einer Nachricht auf dem Anrufbeantworter die wichtigen Informationen entnehmen: wer anruft, worum es geht und bis wann.",
+    "Ich kann auf eine Bitte um Rückruf reagieren und eine Nachricht für eine Kollegin oder einen Kollegen annehmen und weitergeben.",
+    "Ich kann einfach erzählen, was ich bei der Arbeit mache, und andere danach fragen.",
+    "Ich kann in einer kurzen E-Mail einen Termin absagen, einen Grund nennen und einen neuen Termin vorschlagen."
+  ],
+  "grammar": ["Reflexive Verben mit Akkusativ: ich melde mich, du beeilst dich"],
+  "pruefungsfokus": { "ga2": ["Hören Teil 1", "Schreiben Teil 2", "Sprechen Teil 1"] },
+  "minutesPlanned": 150,
+  "minutesMeasured": null
+}
+```
+
+**Review cards** introduced by the unit (`reviewCards`, generated): 28 `word:` cards (`word:lx.anruf` …
+`word:lx.beschaeftigt`), one `pattern:g.reflexiv-akk:a2.1-u07`, and five `sentence:` cards
+(`sentence:a2.1-u07-rm01` … `rm05`). SRS-01 counts them against the A2 budget of 7 minutes a day; the first-review
+stagger keeps day-1 reviews ≤ 30 (`firstReviewCeiling`).
+
+**Audio lines** — `a2.1.lines.json` (input of `generate-course-audio.mjs`; the voice comes from the cast bible, the
+text from `say` when present, else `de`):
+
+```json
+[
+  { "id": "a2.1-u07-ls1-l03", "speaker": "cast.monika-kowalski", "voice": "de-DE-LouisaNeural", "rate": "-5%", "text": "Bitte melden Sie sich so schnell wie möglich bei mir. Meine Nummer ist null drei vier eins, achtundfünfzig, siebenundzwanzig, neunzig. Vielen Dank!" },
+  { "id": "a2.1-u07-ls1-l05", "speaker": "cast.jan-wolf", "voice": "de-DE-ConradNeural", "rate": "-5%", "text": "Hallo Priya, hier ist Jan. Ich stehe auf der Autobahn im Stau und verspäte mich leider. Ich bin erst um halb zehn im Büro." }
+]
+```
+
+### 15.6 What the validator should report on this fixture
+
+The E0 validator is correct when it reports exactly this on §15.1–§15.4 (plus stub files for U1–U6, which E0-1
+generates so that `earlier` references and the cumulative lexicon resolve):
+
+| Rule | Expected result on `a2.1-u07` | Why |
+|---|---|---|
+| SCH-01, REF-01, ID-01 | pass | every field is in §8/§9; every id resolves in §15.1 or the U1–U6 stubs |
+| GRM-01 | pass | one new spine point, no chunk |
+| LEX-05 | pass | 28 new entries (profile 28–30), 14 productive = 50 % (profile 0.5) |
+| LEX-02 | **7 ratchet entries** | every productive lemma occurs ≥ 2× in the unit's inputs; the receptive *sich anmelden, Durchwahl, Buchhaltung, Feierabend, Überstunde, sich setzen, beschäftigt* occur once each (the second occurrence is planned for U8–U9); the ratchet records 7 and may only go down |
+| LEX-01, LEX-03 | run against the stub cumulative lexicon | the result is real only once U1–U6 exist; until then unknown tokens are reported as advisory |
+| TXT-01 | pass | no sentence in a non-exam input over 16 words |
+| TXT-02 | pass | `ga2.h1` texts 26–32 words (band 25–60); `ta2.h1` texts 37–46 words (band 30–70) |
+| TXT-03 | pass | dialogues 8–10 lines |
+| TXT-04 | pass | every `promptDe` / `instructionsDe` / `taskDe` ≤ 90 characters |
+| ITM-02, ITM-03 | pass | three options everywhere; `ga2.h1` keys b, c, a, c, b (balanced ±1) |
+| ITM-06 | pass | each situation step: 11 authored + 5 generated = 16; typed/dictation 8/16, sentence building 5/16, error correction 1/16, choice 2/16, generated 5/16 ≤ 0.4 |
+| ITM-07 | pass | every answer with a digit, time, phone number or spelled name carries `exact` |
+| ITM-09, ITM-10 | pass | fronted orders are in `accepted`; the non-obvious ones carry `acceptedWhy` |
+| ITM-11 | pass | every authored item carries `{de, en}` |
+| EXM-01, EXM-03, EXM-04 | pass | 5 items / 3 options / 2 plays; 3 Leitpunkte, register halbformell, Anrede and Gruß not Leitpunkte; cards-ask with 0 minutes' preparation |
+| AUD-02, AUD-03, AUD-04 | pass | `say` on every number, time, date and spelled name; lines ≤ 250 characters; perception drill with 4 voices |
+| **CON-06** | **fail → blocks promotion** | `a2.1-u07-f01` has `verification: "partial"`: § 4 ArbZG was read at dejure.org on 2026-09-27, but the two exceptions (JArbSchG, § 7 ArbZG) are (unverified). The unit therefore stays `status: "review"` until a reviewer reads both at a primary source and sets `verified` |
+| QA-FRESH-01 | **blocks `approved`** | no `qa/a2.1/a2.1-u07.*.json` exists yet (SOL-01…03, CAL, LGL-05 have not run) |
+| COV-6 (ta2) | pass for a .1 course | the ta2 learner gets a lane-exact LS4 block and origin-labelled LS5/LS6 |
+
+A validator that passes this fixture without the CON-06 failure, or that fails any row marked "pass", is wrong.
