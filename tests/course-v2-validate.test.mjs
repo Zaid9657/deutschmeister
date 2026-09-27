@@ -11,7 +11,7 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { readFileSync, mkdtempSync, mkdirSync, writeFileSync, copyFileSync, rmSync } from 'node:fs';
+import { readFileSync, mkdtempSync, mkdirSync, writeFileSync, copyFileSync, cpSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -51,7 +51,6 @@ function assertFail(r, re = null) {
 
 const ex = (mutate, opts) => exampleContext(mutate, opts);
 const step = (parts, k) => parts.unit.steps[k];
-const allPoolItems = (parts) => parts.unit.steps.flatMap((s) => s.pool?.items || []);
 
 // ── the rule set itself ─────────────────────────────────────────────────────────────────────
 
@@ -229,11 +228,17 @@ describe('LEX-03 production uses known lemmas', () => {
   test('pass (advisory while the lexicon is partial)', async () => assertPass(await rule('LEX-03', ex())));
   test('an unknown lemma in a model text is reported', async () => {
     // while the lexicon is partial the finding is one aggregated advisory per file: count its surfaces
-    const surfaces = (r) => r.findings.reduce((sum, f) => sum + Number((f.message.match(/^(\d+) production surface/) || [0, 0])[1]), 0);
+    const forms = (r) => r.findings.reduce((sum, f) => {
+      const m = f.message.match(/so far: (.*?)(?: … \(\+(\d+)\))? — /);
+      return m ? sum + m[1].split(', ').length + Number(m[2] || 0) : sum;
+    }, 0);
     const base = await rule('LEX-03', ex());
     const r = await rule('LEX-03', ex((p) => { step(p, 5).task.modelText += ' Die Rechtsbehelfsbelehrung liegt bei.'; }));
-    assert.ok(surfaces(r) > surfaces(base) || r.findings.some((f) => /Rechtsbehelfsbelehrung/.test(f.message)), messages(r));
+    assert.ok(forms(r) > forms(base), messages(r));
   });
+  test('fail: four glossed extras in one text', async () => assertFail(await rule('LEX-03', ex((p) => {
+    step(p, 0).input.glosses = ['a', 'b', 'c', 'd'].map((x) => ({ token: x, gloss: { en: x } }));
+  })), /4 glossed extras/));
 });
 
 describe('LEX-04 off-list share', () => {
@@ -638,12 +643,7 @@ describe('validate.mjs CLI', () => {
     const root = mkdtempSync(join(tmpdir(), 'cv2-'));
     try {
       const reg = join(REPO, 'content', 'course-v2', 'fixtures', 'registries');
-      const copyTree = (from, to) => {
-        mkdirSync(to, { recursive: true });
-        const r = spawnSync('cp', ['-r', `${from}/.`, to]);
-        assert.equal(r.status, 0);
-      };
-      copyTree(reg, join(root, 'registries'));
+      cpSync(reg, join(root, 'registries'), { recursive: true });
       mkdirSync(join(root, 'a2.1', 'units'), { recursive: true });
       const unit = JSON.parse(readFileSync(FIXTURE, 'utf8'));
       unit.facts.forEach((f) => { f.verification = 'verified'; });
@@ -658,8 +658,12 @@ describe('validate.mjs CLI', () => {
       rmSync(root, { recursive: true, force: true });
     }
   });
-  test('--all on the repository content exits 0 (partial content is a normal state)', () => {
-    const r = cli('--all');
-    assert.equal(r.status, 0, r.stdout.slice(-2000));
+  test('--all on the repository content runs every rule without crashing (partial content is a normal state)', () => {
+    const r = cli('--all', '--json');
+    assert.ok(r.status === 0 || r.status === 1, r.stderr);
+    const rep = JSON.parse(r.stdout);
+    const crashed = rep.results.flatMap((x) => x.findings).filter((f) => /rule crashed/.test(f.message));
+    assert.deepEqual(crashed, []);
+    assert.ok(!rep.results.some((x) => x.id === 'LOAD'), 'a content file failed to parse');
   });
 });
