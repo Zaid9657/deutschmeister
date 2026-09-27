@@ -38,7 +38,7 @@ export function levenshtein(a, b) {
 }
 
 /** An ellipsis, typographic (U+2026) or typed as three or more dots: a pause, never a word. */
-const ELLIPSIS_RE = /…|\.{3,}/g;
+const ELLIPSIS_RE = /\u2026|\.{3,}/g;
 
 /**
  * Punctuation folding for every check. An ellipsis becomes a space first
@@ -64,7 +64,7 @@ export const stripPunct = (s) =>
 export function normalizeDictation(text) {
   return String(text ?? '')
     .replace(ELLIPSIS_RE, ' ')
-    .replace(/[‐-―−－-]/g, ' ')
+    .replace(/[\u2010-\u2015\u2212\uFF0D-]/g, ' ')
     .replace(/(\d)[\s./]+(?=\d)/g, '$1')
     .replace(/\s+/g, ' ')
     .trim();
