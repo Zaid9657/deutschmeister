@@ -371,6 +371,20 @@ test('the Start’s answers are stored under their own stage, never as a unit st
   assert.ok(body.indexOf('flushAttempts(') < body.indexOf('testOutPassed('), 'written before the test-out decision moves on');
 });
 
+test('a step finished in this visit re-draws itself for a repeat, and a weak Check offers the step list', () => {
+  const page = read('src/pages/course-v2/UnitPlayerPage.jsx');
+  assert.match(page, /\(Number\(learner\.stepRuns\.get\(s\.id\)\) \|\| 0\) \+ \(sessionRuns\.get\(s\.id\) \|\| 0\) \+ 1/, 'attempt = stored runs + runs in this visit + 1');
+  const at = page.indexOf('const onDone = useCallback(');
+  const body = page.slice(at, page.indexOf('}, [', at));
+  assert.ok(body.indexOf('setSessionRuns(') > body.indexOf('AUFGABE_KINDS.includes(step.kind) && result && result.submitted === false'), 'only a finished step counts as a run');
+  // the same unit: attempt 2 of a pool step serves the other items first
+  const s1 = unit.steps.find((s) => s.pool);
+  const a1 = drawStep(s1, { unitId: unit.id, attempt: 1 });
+  const a2 = drawStep(s1, { unitId: unit.id, attempt: 2 });
+  assert.notDeepEqual(a2.practice.map((x) => x.id), a1.practice.map((x) => x.id));
+  assert.match(page, /accuracy !== null && accuracy < 0\.6 && \([\s\S]{0,400}<StepList /, 'the repeat tip comes with the step list');
+});
+
 test('the Check announces the number of items it will actually ask', () => {
   const strings = read('src/components/course-v2/strings.js');
   for (const line of strings.split('\n').filter((l) => l.includes("'check.lead'"))) {

@@ -199,6 +199,7 @@ export function UnitPlayer({ level, unit, manifest, user }) {
   const [earlierItems, setEarlierItems] = useState([]);
   const [checkResult, setCheckResult] = useState(null);
   const [testOutNote, setTestOutNote] = useState(null);
+  const [sessionRuns, setSessionRuns] = useState(() => new Map()); // stepId → runs finished in this visit
   const pending = useRef(new Map()); // stepId → attempts not yet written
   const stepStarted = useRef(Date.now());
   const savedStatus = useRef(null); // the status last written in this session
@@ -228,14 +229,16 @@ export function UnitPlayer({ level, unit, manifest, user }) {
     return () => { cancelled = true; };
   }, [level, unit, manifest]);
 
-  // The draw's attempt number per step is frozen when the learner state loads:
-  // finishing a step in this session must not re-draw the steps still ahead.
+  // The draw's attempt number per step: the runs stored when the learner state
+  // loaded, plus the runs finished in this visit, plus one. Finishing a step
+  // re-draws only that step (so repeating it — from the step list — is not the same
+  // twelve again, unitPlan.js), never the steps still ahead.
   const attempts = useMemo(() => {
     const out = {};
     if (!learner) return out;
-    for (const s of unit.steps || []) out[s.id] = (Number(learner.stepRuns.get(s.id)) || 0) + 1;
+    for (const s of unit.steps || []) out[s.id] = (Number(learner.stepRuns.get(s.id)) || 0) + (sessionRuns.get(s.id) || 0) + 1;
     return out;
-  }, [learner, unit.steps]);
+  }, [learner, unit.steps, sessionRuns]);
   const plan = useMemo(() => buildUnitPlan(unit, { attempts, earlierItems }), [unit, attempts, earlierItems]);
   const steps = plan.steps;
 
@@ -302,6 +305,7 @@ export function UnitPlayer({ level, unit, manifest, user }) {
       });
     } else localStepDone(unitId, level, step.id);
     if (step.kind === 'check' && result) setCheckResult({ correct: Number(result.correct) || 0, total: Number(result.total) || 0 });
+    setSessionRuns((m) => new Map(m).set(step.id, (m.get(step.id) || 0) + 1));
     const done = new Set(finished);
     done.add(step.id);
     setFinished(done);
@@ -503,7 +507,12 @@ export function UnitPlayer({ level, unit, manifest, user }) {
         )}
 
         {accuracy !== null && accuracy < 0.6 && (
-          <p className="text-sm text-graphite">{t('player.repeatTip')}</p>
+          // The Check suggests repeating a Lernschritt; the list makes that one tap
+          // (a repeat serves a fresh draw — see `attempts`). A suggestion, never a gate.
+          <div className="space-y-3">
+            <p className="text-sm text-graphite">{t('player.repeatTip')}</p>
+            <StepList unit={unit} steps={steps} finished={finished} currentIndex={-1} onOpen={goTo} />
+          </div>
         )}
 
         {canDos.length > 0 && (

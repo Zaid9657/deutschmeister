@@ -230,8 +230,8 @@
         {
           "id": "b2.1-u04-start-l05",
           "speaker": "cast.amal",
-          "de": "Und sieh mal ins Bad: Die Dusche ist verschmutzt, und die Möbel sind alt und abgenutzt. Das ganze Zimmer ist renovierungsbedürftig.",
-          "en": "And look at the bathroom: the shower is dirty and the furniture is old and worn. The whole room needs renovating."
+          "de": "Sieh mal ins Bad: Die Dusche ist verschmutzt, und die Möbel sind alt und abgenutzt. Das ganze Zimmer ist renovierungsbedürftig.",
+          "en": "Look at the bathroom: the shower is dirty and the furniture is old and worn. The whole room needs renovating."
         },
         {
           "id": "b2.1-u04-start-l06",
@@ -1090,7 +1090,7 @@
           "options": [
             "die Gäste über die Baustelle informieren",
             "den Gästen ein anderes Hotel buchen",
-            "die Klimaanlage reparieren lassen"
+            "die Dusche sauber machen lassen"
           ],
           "answer": "die Gäste über die Baustelle informieren",
           "accepted": [
@@ -1237,7 +1237,8 @@
             "answer": "Wir bitten Sie um einen Preisnachlass.",
             "accepted": [
               "Wir bitten Sie um einen Preisnachlass.",
-              "Um einen Preisnachlass bitten wir Sie."
+              "Um einen Preisnachlass bitten wir Sie.",
+              "Sie bitten wir um einen Preisnachlass."
             ],
             "errorTags": [
               "v2-inv"
@@ -1246,7 +1247,10 @@
               "de": "bitten steht auf Position 2; um einen Preisnachlass kann auch vorne stehen.",
               "en": "bitten is in second position; the um-phrase can also come first."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "acceptedWhy": {
+              "Sie bitten wir um einen Preisnachlass.": "grammatisch: Sie im Vorfeld betont (Sie, nicht andere)"
+            }
           },
           {
             "id": "b2.1-u04-ls2-p07",
@@ -1265,7 +1269,8 @@
             "answer": "Andernfalls wenden wir uns an die Verbraucherzentrale.",
             "accepted": [
               "Andernfalls wenden wir uns an die Verbraucherzentrale.",
-              "Wir wenden uns andernfalls an die Verbraucherzentrale."
+              "Wir wenden uns andernfalls an die Verbraucherzentrale.",
+              "An die Verbraucherzentrale wenden wir uns andernfalls."
             ],
             "errorTags": [
               "v2-inv"
@@ -1274,7 +1279,10 @@
               "de": "andernfalls steht auf Position 1 oder im Mittelfeld; das Verb bleibt auf Position 2.",
               "en": "andernfalls comes first or in the middle field; the verb stays in second position."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "acceptedWhy": {
+              "An die Verbraucherzentrale wenden wir uns andernfalls.": "grammatisch: das Ziel im Vorfeld betont"
+            }
           },
           {
             "id": "b2.1-u04-ls2-p08",
@@ -1766,7 +1774,8 @@
             "answer": "Wir hätten ein anderes Hotel reserviert.",
             "accepted": [
               "Wir hätten ein anderes Hotel reserviert.",
-              "Ein anderes Hotel hätten wir reserviert."
+              "Ein anderes Hotel hätten wir reserviert.",
+              "Reserviert hätten wir ein anderes Hotel."
             ],
             "errorTags": [
               "satzklammer"
@@ -1775,7 +1784,11 @@
               "de": "hätten steht auf Position 2, das Partizip reserviert am Ende.",
               "en": "hätten is in second position, the participle at the end."
             },
-            "origin": "agent"
+            "origin": "agent",
+            "acceptedWhy": {
+              "Ein anderes Hotel hätten wir reserviert.": "grammatisch: das Objekt im Vorfeld betont",
+              "Reserviert hätten wir ein anderes Hotel.": "grammatisch (Partizip im Vorfeld), aber sehr selten"
+            }
           },
           {
             "id": "b2.1-u04-ls3-p07",
@@ -2051,8 +2064,8 @@
           "type": "multiple_choice",
           "role": "practice",
           "topic": "g.konj2-vergangenheit",
-          "promptDe": "Welcher Satz sagt: Wir sind pünktlich gewesen?",
-          "promptEn": "Which sentence means: we were on time?",
+          "promptDe": "Welcher Satz bedeutet: Wir sind pünktlich gekommen?",
+          "promptEn": "Which sentence means: we arrived on time?",
           "options": [
             "Ohne dein Handy wären wir zu spät gekommen.",
             "Wir sind zu spät gekommen.",
@@ -2208,7 +2221,7 @@
           "id": "b2.1-u04-ls4-t1",
           "kind": "text",
           "title": "E-Mail an die Mitreisenden",
-          "text": "Betreff: Gemeinsame Beschwerde bei Blauwelle Reisen\n\nLiebe Mitreisende,\n\nseit einer Woche sind wir wieder zu Hause, und viele von Ihnen haben uns geschrieben, ⟦01⟧ sehr Sie sich über die Reise geärgert haben. Bis jetzt will uns der Reiseveranstalter mit einem Gutschein über 50 Euro abwimmeln. Wir möchten aber unsere Rechte wahrnehmen und nachträglich eine Minderung einfordern. Deshalb schlagen wir Ihnen eine gemeinsame Vorgehensweise vor.\n\n⟦02⟧ wir uns zusammentun, ist unsere Beweislage viel besser. Amal hat viele Beweisfotos gemacht, ⟦03⟧ die Baustelle, das verschmutzte Bad und sogar Ungeziefer zeigen. Neun Mitreisende haben sich schon mit uns zusammengetan, und wir haben uns ⟦04⟧ geeinigt, hartnäckig zu bleiben.\n\nWir finden, dass der Reiseveranstalter uns schon vor der Reise über die Baustelle ⟦05⟧ informieren müssen. Das war seine Informationspflicht, so steht es auch in den Reisebedingungen. Mit dieser Information ⟦06⟧ viele von uns sicher ein anderes Hotel gebucht.\n\nFür die Arbeitsteilung schlagen wir vor, ⟦07⟧ jeder von uns einen Beschwerdebrief schickt und sich darin auf die Leistungsbeschreibung beruft. Den Musterbrief der Verbraucherzentrale haben wir schon an unseren Fall angepasst. Es ist sinnvoll, alle Belege mit dem Brief ⟦08⟧. ⟦09⟧ der mangelhaften Unterbringung halten wir eine Minderung von 30 Prozent des Reisepreises für angemessen. Ein kleiner Preisnachlass reicht nicht.\n\nWir schreiben mit Fristsetzung bis Ende November. ⟦10⟧ der Reiseveranstalter bis dahin nicht reagiert, wenden wir uns gemeinsam an die Verbraucherzentrale. Weitere Schritte behalten wir uns vor, aber einen Rechtsbeistand brauchen wir noch nicht. Die Rechtslage ist klar: Wir sind im Recht, und eine gemeinsame Beschwerde ist aussichtsreich. Bitte antworten Sie uns bis Freitag, wenn Sie mitmachen möchten.\n\nViele Grüße\nPriya Nair und Amal Haddad",
+          "text": "Betreff: Gemeinsame Beschwerde bei Blauwelle Reisen\n\nLiebe Mitreisende,\n\nseit einer Woche sind wir wieder zu Hause, und viele von Ihnen haben uns geschrieben, ⟦01⟧ sehr Sie sich über die Reise geärgert haben. Bis jetzt will uns der Reiseveranstalter mit einem Gutschein über 50 Euro abwimmeln. Wir möchten aber unsere Rechte wahrnehmen und nachträglich eine Minderung einfordern. Deshalb schlagen wir Ihnen eine gemeinsame Vorgehensweise vor.\n\n⟦02⟧ wir uns zusammentun, ist unsere Beweislage viel besser. Wir haben viele Beweisfotos gemacht, ⟦03⟧ die Baustelle, das verschmutzte Bad und sogar Ungeziefer zeigen. Neun Mitreisende haben sich schon mit uns zusammengetan, und wir haben uns ⟦04⟧ geeinigt, hartnäckig zu bleiben.\n\nWir finden, dass der Reiseveranstalter uns schon vor der Reise über die Baustelle ⟦05⟧ informieren müssen. Das war seine Informationspflicht, so steht es auch in den Reisebedingungen. Mit dieser Information ⟦06⟧ viele von uns sicher ein anderes Hotel gebucht.\n\nFür die Arbeitsteilung schlagen wir vor, ⟦07⟧ jeder von uns einen Beschwerdebrief schickt und sich darin auf die Leistungsbeschreibung beruft. Den Musterbrief der Verbraucherzentrale haben wir schon an unseren Fall angepasst. Es ist sinnvoll, alle Belege mit dem Brief ⟦08⟧. ⟦09⟧ der mangelhaften Unterbringung halten wir eine Minderung von 30 Prozent des Reisepreises für angemessen. Ein kleiner Preisnachlass reicht nicht.\n\nWir schreiben mit Fristsetzung bis Ende November. ⟦10⟧ der Reiseveranstalter bis dahin nicht reagiert, wenden wir uns gemeinsam an die Verbraucherzentrale. Weitere Schritte behalten wir uns vor, aber einen Rechtsbeistand brauchen wir noch nicht. Die Rechtslage ist klar: Wir sind im Recht, und eine gemeinsame Beschwerde ist aussichtsreich. Bitte antworten Sie uns bis Freitag, wenn Sie mitmachen möchten.\n\nViele Grüße\nPriya Nair und Amal Haddad",
           "glosses": []
         },
         {
@@ -2720,12 +2733,12 @@
         "register": "halbformell",
         "address": "Sie",
         "title": "Beschwerde an den Reiseveranstalter",
-        "situationDe": "Sie waren im Oktober mit diesem Angebot auf Kreta:\n„Blauwelle Reisen – Kreta für Entdecker. 8 Tage Gruppenreise im Herbst: ruhiges Vier-Sterne-Hotel direkt am Meer, alle Zimmer mit Meerblick, Halbpension mit kretischer Küche, täglich geführte Ausflüge mit deutschsprachiger Reiseleitung. Ab 1.190 Euro pro Person.“\nDie Reise hatte viele Mängel. Sie haben sich vor Ort beschwert, aber es hat sich kaum etwas geändert.",
+        "situationDe": "Sie waren im Oktober mit diesem Angebot auf Kreta:\n„Blauwelle Reisen – Kreta für Entdecker. 8 Tage Gruppenreise im Herbst: ruhiges Vier-Sterne-Hotel direkt am Meer, alle Zimmer mit Meerblick, Halbpension mit kretischer Küche, jeden Tag ein Ausflug mit deutschsprachiger Reiseleitung. Ab 1.190 Euro pro Person.“\nDie Reise hatte viele Mängel. Sie haben sich vor Ort beschwert, aber es hat sich kaum etwas geändert.",
         "taskDe": "Schreiben Sie eine Beschwerde an Blauwelle Reisen. Behandeln Sie drei der vier Punkte.",
         "leitpunkte": [
           {
             "id": "lp1",
-            "de": "Mängel: Was war anders, als die Anzeige versprochen hat?",
+            "de": "Mängel: Was hat die Anzeige versprochen, und wie war es wirklich?",
             "cues": [
               "Baustelle",
               "Baulärm",
@@ -2738,7 +2751,7 @@
           },
           {
             "id": "lp2",
-            "de": "Folgen: Wie haben die Mängel Ihren Urlaub beeinträchtigt?",
+            "de": "Folgen: Was haben die Mängel für Ihren Urlaub bedeutet?",
             "cues": [
               "schlafen",
               "erholen",
