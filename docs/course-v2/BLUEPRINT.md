@@ -1515,3 +1515,325 @@ humour; **blandness** — the characteristic failure of templated production, sc
 An item or screen where learners quit at ≥ 2× the Lernschritt's median rate goes to review within a week. A
 Lernschritt with measured p50 > 25 min is split. AI grading p95 latency > 10 s on Android makes the degraded UX
 (§4.7) the default.
+
+---
+
+## 10. Production plan
+
+### 10.1 Order, tracks and gates
+
+Two tracks run side by side: **Track E (engineering)** starts now; **the content workflows W2 → W3 → W4 → W5** run per
+level, rolling. The calendar is set by review convergence and owner steps, not by compute (≈ 400 agent-minutes per
+unit by C's estimate, to be measured in the pilot). No date is promised; the plan is re-cut after the agent pilot.
+
+| Phase | Content | Runs in parallel with | Gate to leave |
+|---|---|---|---|
+| **P0** | E0 rails · W2 registries → specs, lexicon, casts · design and copy strategy | — | registries frozen by the W2 reviewers; E0 back-test passes (§10.2) |
+| **P1 Agent pilot** | U4 of every level (8 units) through the full loop | E1 player/exam/AI build | go/no-go (§10.4) |
+| **P2 Wave 1** | **A1 (A1.1 + A1.2, SD1) and B1 (B1.1 + B1.2, telc B1 primary) together** — B1 is the revenue core and is not held behind A1 | learner pilot on A1.1 Etappe 1 (3 weeks, never a blocker); E1 finishing | per unit: 0/0 exit; mass authoring beyond the pilot units starts only when the **SCHEMA fixture unit plays end to end at 360 px** (E1 exit) |
+| **P3 Wave 2** | A2 (Goethe A2 + telc A2 pack) and the B1 lane packs (DTZ, Goethe/ÖSD B1) | W4 on Wave 1 | per unit/pack exit |
+| **Decision point (moat)** | learner-pilot results (§10.4) | — | if the first-session AI metrics miss, fix the UX before Wave 3 |
+| **P4 Wave 3** | B2 (telc B2 + Goethe B2 pack) | W4/W5 on Waves 1–2 | per unit/pack exit |
+| **Integration** | one PR per level, one per lane pack (§10.7) | rolling | CI green incl. `validate.mjs --all`; §1.5 conditions for paid/B levels |
+
+### 10.2 Track E — engineering (honestly re-estimated)
+
+What must be generalised, measured in the repo: `buildLesson.js` (1,189 lines, the 9-stage A1.1 pipeline),
+`quality.js` (2,013 lines, `SCOPED_LEVEL = 'a1.1'`), `validate-curriculum.mjs` (3,391 lines, RULE ids with A1.1
+ratchets), `buildCheckpoint.js` (2,353 lines), `checkpoint/lexis.js` (only a1.1/a1.2), `speech.js` (hard-coded
+manifests), `IntroStage`/`WortfeldStage`/`CheckpointPage` metas, 34 of 79 test files pinned to A1.1,
+`evaluate-writing` (one 4 × 0–5 scale), the speaking stack (client `courseTask`), the Modelltest runner (no play-count
+enforcement, ungraded writing). Proposal C's "2 days of rails" and A's 13 build agents are not credible. Design
+estimate: **E0 ≈ 30–40 agent-days, E1 ≈ 60–80 agent-days**, E2 ≈ 5–8 agent-days per level; with 6–8 concurrent
+engineering agents E0 ≈ 1–1.5 weeks and E1 ≈ 2–3 weeks, overlapping.
+
+**E0 rails (6 agents, P0):**
+
+| Agent | Builds | Owns |
+|---|---|---|
+| E0-1 | schema checker, ids ledger, compiler v0 | `scripts/course-v2/lib/*`, `scripts/course-v2/compile.mjs` |
+| E0-2 | validator core; generic rules ported from `validate-curriculum.mjs` (no A1.1 personas or ratchet numbers) | `scripts/course-v2/validate.mjs`, `scripts/course-v2/rules/<RULE-ID>.mjs` (one file per rule) |
+| E0-3 | `quality.js` generalised to a level parameter, A1.1 output unchanged | `src/data/lessonPools/quality.js` + its tests |
+| E0-4 | Hunspell/LanguageTool CI job, detectors | `scripts/course-v2/lang/*`, `content/course-v2/registries/detectors.json`, `.github/workflows/course-v2.yml` |
+| E0-5 | model-gate harness: solver, probes, calibration runner, shingle check, QA-FRESH hashes | `scripts/course-v2/qa/*` |
+| E0-6 | generators, time model, SRS-01/02 calculators | `scripts/course-v2/generators/*`, `scripts/course-v2/models/*` |
+
+**E0 exit:** unit tests green; **back-test** — an old A1.1 Lektion at its review-#1 state (from git history),
+converted to the v2 schema, reproduces the known review-#1 finding classes through the gates; the SCHEMA example
+unit validates with exit 0.
+
+**E1 player, exam layer, AI, learner state (8 agents, P1–P2):**
+
+| Agent | Builds | Owns |
+|---|---|---|
+| E1-1 | v2 unit builder (stage plan from unit JSON; reuses the seeded draw and earlier-attempt exclusion), lazy unit loader, resume at item level, course home | `src/lib/course-v2/*` (except board/completion), `src/pages/course-v2/*` |
+| E1-2 | renderers for the new item types, in-lesson speaking, micro-output, no-mic path, player primitives into `ui/` | `src/components/course-v2/*`, `src/components/ui/*` (new primitives only) |
+| E1-3 | lane loader, Prüfungsmodus runner (extends the Modelltest runner), per-lane scorers + boundary tests | `src/lib/exam/*`, `src/services/examRules/*`, `src/pages/Modelltest/*`, `src/services/examScoring.js` |
+| E1-4 | `evaluate-writing` v2: rubric profiles, server zero/cap rules, response schema 2, `BANK_KEY_RE`, sharded writing bank twins | `netlify/functions/evaluate-writing.mjs`, `netlify/functions/_shared/rubrics/*`, `src/data/writingTasks/*` ↔ `netlify/functions/_shared/writingTasks/*` |
+| E1-5 | entitlement: server `hasCourseAccess`, purchase-aware lifetime allowance + daily cap across AI functions, anonymous-session caps; client `hasCourseAccess` | `netlify/functions/_shared/entitlement.mjs`, `_shared/speakingUsage.mjs`, `score-readaloud.mjs`, `src/contexts/SubscriptionContext.jsx`, `src/components/LevelSubscriptionGuard.jsx` |
+| E1-6 | speaking bank twins and modes (group, plan-together moves, photo, feedback-question, mediate), preparation timer, collapsing notes, anti-recitation note | `netlify/functions/speaking-*.mjs`, `evaluate-speaking.mjs`, `_shared/speakingAI.mjs`, `src/data/speakingTasks/*` ↔ `_shared/speakingTasks/*` |
+| E1-7 | migrations (`exam_practice_results`, `learner_goals`, `review_cards` kinds), ladder parameter + exam cap, plan, Prüfungsstand, Teil-Karte, the one completion function, funnel and reminder SQL updated in the same PR | `migrations/2026-10-*.sql`, `src/lib/review/ladder.js`, `src/lib/course/plan.js`, `src/lib/course-v2/board/*`, `src/lib/course-v2/completion.js`, `netlify/functions/course-reminder.mjs` |
+| E1-8 | tests: the 34 A1.1-pinned files re-pointed as class tests over every registered course; KEY/PRG/EXM tests | `tests/*` |
+
+**E1 exit:** the SCHEMA fixture unit (A2.1 U7) plays end to end at 360 × 640 in Playwright Chrome device emulation,
+including one graded writing task and one graded speaking task against dev functions; CI green.
+
+### 10.3 W2 — curriculum, registries, design, copy (P0)
+
+| Role | Agents | Owns (sole writer) |
+|---|---|---|
+| Can-do registry | 4 (A1, A2, B1, B2) | `content/course-v2/registries/cando/<band>.json` |
+| Grammar spine | 1 | `registries/grammar-spine.json` |
+| Lane profiles, Teil templates, form blueprints, pass-rule ids | 5 (sd1+oza1 · ga2+ta2 · tb1+dtz · gb1 · tb2+gb2) | `registries/lanes/<lane>.json` |
+| Families and transfer map | 1 | `registries/families.json` |
+| Rubric profiles | 2 (writing, speaking) | `registries/rubrics/writing/*.json`, `registries/rubrics/speaking/*.json` |
+| Level profiles, text types | 1 | `registries/level-profiles.json`, `registries/text-types.json` |
+| Story architect + band casts | 1 + 4 | `casts/series.json`, `casts/<band>.json` |
+| Curriculum (one per level): converts the W2 draft onto the §2.8 rows | 8 | `<level>/course.json`, the `spec` block of each `units/uNN.json` (created by this agent), `<level>/rule-cards.json` |
+| Lexicon (one per level, after the level's specs) | 8 | `<level>/lexicon.json` |
+| UX design | 1 | `docs/course-v2/design/player.md` |
+| Copy strategy | 1 | `docs/course-v2/copy/<level>.md`, `docs/course-v2/copy/emails.md` |
+| Counsel brief | 1 | `docs/course-v2/legal/counsel-questions.md` |
+| W2 reviewers (Prüferin: lanes + rubrics · DaF: spine + can-dos · progression: all 8 specs · cast/Landeskunde) | 4 | `docs/course-v2/reviews/w2/<reviewer>.json` |
+
+≈ 43 runs, peak ≈ 24 concurrent. Order: registries → W2 reviewers → **freeze** → specs → lexicon and casts → review →
+freeze. After a freeze a registry changes only through its owner agent, on a rule-smith's or reviewer's finding.
+
+### 10.4 Pilots (run in parallel)
+
+**Agent pilot (P1):** U4 of all eight levels, through S → I → T, Spur-Karten for each secondary lane, gates, solver,
+two reviewers, fixes, ≤ 4 rounds; 2 rule-smiths standing; the walkthrough reviewer on every pilot unit (≈ 140 runs,
+peak ≈ 24). **Go only if all hold:** all 8 exit at 0/0 in ≤ 4 rounds; SOL-01 disagreement on first submission ≤ 5 %
+of items; LNG findings on first submission ≤ 1 per 1,000 words; reviewer mean ≥ 29/35 with no criterion < 4;
+measured agent-minutes per unit within 2× the estimate; CAL-01 passes for the profiles the pilots use. If any fails,
+fix the rails (templates, exemplars, rules) before mass authoring; **never add authors to compensate**. The pilot
+units become the **exemplars** every later author prompt carries.
+
+**Learner pilot (from P2):** A1.1 Etappe 1 (U1–U3 + P1), authored first in Wave 1, shipped to free users as a
+beta path beside the live A1.1 (feature flag; the live A1.1 keeps serving), with existing users invited by an
+owner-approved e-mail so the sample is not limited to ≈ 23 new sign-ups a week. Three weeks. Measures: minutes per
+Lernschritt (p50/p95), week-1 learning days, share reaching day 7, AI Aufgaben per active learner, first-session
+scored sentence rate, abandonment hotspots, mic denials, AI latency. Internal targets (design, never copy): ≥ 70 % of
+starters finish LS1 with its scored sentence; ≥ 40 % have ≥ 3 learning days in week 1; ≥ 1.5 AI Aufgaben per active
+learner per unit. **It never blocks B1.** Its results freeze anatomy v1.1 (split rule, time-model recalibration),
+applied by rule to every unit; the moat decision point uses its AI metrics.
+
+### 10.5 W3 — materials
+
+**Lease rule:** exactly one agent holds a content file at a time; the orchestrator grants and releases leases;
+reviewers never edit content (they write findings files). A unit file is authored in three sequential runs (C's split):
+
+| Role | Writes into `units/uNN.json` |
+|---|---|
+| **S „Szene & Text"** | Start, LS1–LS3 inputs (B: text types), LS4 texts, dialogue lines with voices and `say` overrides, story beat and cliffhanger, Fokus-Karten, `facts[]` |
+| **I „Items"** | input items, structured input, practice pools (incl. generator declarations), exit, Lektions-Check, proofs, static explanations |
+| **T „Prüfungsaufgaben"** | LS4 blocks against their templates, strategy cards, micro-outputs, both Aufgaben (writing and speaking bank entries inline), checklists, moves, model texts |
+
+| Work package | Files (one writer each) | Author runs |
+|---|---|---|
+| Units (96 − 8 pilots) | `<level>/units/uNN.json` | 88 × 3 = 264 |
+| Spur-Karten (secondary lanes) | `<level>/units/uNN.lane-<lane>.json` | ≈ 96 (A2 24 ta2; B1 24 dtz + 24 gb1; B2 24 gb2) |
+| Plateaus | `<level>/plateaus/pN.json` + `pN.lane-<lane>.json` | 24 + 24 |
+| Closing blocks | `<level>/closing/halbtest-<lane>.json` (.1), `diagnose-<lane>.json` (.2) | 8 + 8 |
+| Modelltest modules (one agent per module, never one per whole mock) | `<level>/mocks/<lane>/<form>/<module>.json` | primary: sd1 12, ga2 12, tb1 15, tb2 15; secondary: ta2 8, dtz 8, gb1 8, gb2 8 → 86 |
+| Calibration anchors | `content/course-v2/anchors/<profile>/*.json` | ≈ 30 profiles |
+| Lexicon and rule-card fixes | the level's `lexicon.json`, `rule-cards.json` | on call (the 8 W2 owners) |
+
+≈ 540 author runs + ≈ 340 pipeline runs (solver/probes/calibration); peak ≈ 36–40 concurrent. **Every author prompt
+carries:** the unit spec, the level profile, the cast bible, one pilot exemplar at the same level, the gate list, and
+the reviewers' brief (§9.5). **Authors write lemmas, never database ids**; `wordId` is filled by the orchestrator with
+one SQL match at integration (db snapshot header). **Generators are code**, not agents.
+
+### 10.6 W4 — review and fix (rolling, per unit as it arrives)
+
+| Reviewer | Scope | Runs per full round |
+|---|---|---|
+| R1 Prüferin + R2 Kursleiterin | every unit and Spur file | ≈ 192 unit reviews (+ Spur files reviewed with their unit) |
+| Level reviewer | all 12 units of a level | 8 |
+| Exam-fidelity reviewer | Plateaus, Halbtests, Diagnosen per band | 4 |
+| Mock-module reviewer (Prüferin persona) | each mock module file | ≈ 86 |
+| Calibration reviewer | each rubric profile (CAL-01/02 results) | ≈ 30 |
+| Walkthrough reviewer | pilots, first 2 units per level, all Plateaus | ≈ 40 |
+| Copy/legal reviewer | pages, e-mails, in-app strings per level | 8 |
+| Fresh-eyes auditor | random 20 % of exited units | ≈ 20 |
+| Rule-smiths | class findings → rule + fixture + test | 2–3 standing |
+
+Findings files: `docs/course-v2/reviews/<level>/<unitId>.<reviewer>.r<N>.json`. Fixes: the original role under a new
+lease (S for texts, I for items, T for blocks). Re-review covers only failed criteria plus the fresh-eyes sample.
+
+### 10.7 W5 — build and integrate
+
+- **One integration PR per level** (8 agents) once its 12 units, 3 Plateaus, closing block and primary-lane forms have
+  exited: compiled outputs committed (unit chunks, pool items, writing and speaking bank shards, syllabus twins,
+  `courseFacts` twins, audio line files), the `words` JSON batch as guarded SQL for the owner, the audio lines for the
+  owner's Azure run, pages (Astro course page, lane pages, SPA), `llms.txt` regenerated, steward conventions (squash;
+  the lockfile trap; the non-idempotent prerender — build from scratch). **Secondary lane packs** ship in follow-up
+  PRs, one per pack. Shared: 1 pages/copy agent, 1 e2e agent.
+- **Paid levels become buyable** only with §1.5 conditions met and the owner's Lemon Squeezy variant set (the real
+  on-switch, DECISIONS 2026-09-26).
+- **Replacing the live A1.1:** after v2 A1.1 has exited review and the learner pilot has run. Old A1.1 progress stays
+  visible as history, is never counted as v2 completion, and still counts as activity for the reminder view; the funnel
+  SQL (`migrations/2026-09-19-course-funnel.sql` hard-codes `'a1.1-l01'`, `'a1.1-cp1'`) and the reminder view are
+  updated in the same PR.
+- **A1.2 legacy buyers:** free upgrade to v2 A1.2 with a § 327r notice on a durable medium; the legacy A1.2 player stays
+  reachable until the notice is sent.
+
+### 10.8 File ownership (the rule that keeps parallel agents apart)
+
+| Path | Sole writer | Phase |
+|---|---|---|
+| `content/course-v2/registries/**` | the W2 registry owner of that file | P0; later only on findings |
+| `content/course-v2/casts/**` | story architect / band cast agent | P0 |
+| `content/course-v2/<level>/course.json`, `rule-cards.json` | that level's curriculum agent | P0 |
+| `content/course-v2/<level>/lexicon.json` | that level's lexicon agent | P0; fixes on call |
+| `content/course-v2/<level>/units/uNN.json` | the lease holder (curriculum agent for `spec`, then S → I → T, then fixers) | P0–P4 |
+| `content/course-v2/<level>/units/uNN.lane-<lane>.json` | that lane's Spur author | P2–P4 |
+| `content/course-v2/<level>/plateaus/**`, `closing/**`, `mocks/**` | the assigned assessment author per file | P2–P4 |
+| `content/course-v2/anchors/**` | anchor author per profile | P2–P4 |
+| `content/course-v2/qa/**` | pipeline runners (generated) | continuous |
+| `docs/course-v2/reviews/**` | the reviewer who wrote the file | continuous |
+| `scripts/course-v2/**`, `src/**`, `netlify/**`, `migrations/**`, `tests/**`, `astro-site/**` | Track E agents per §10.2, integration agents per §10.7 | E0–W5 |
+| `src/data/pricing.js` twins, `src/data/marketing.js` twins | integration agent of the level being shipped, one at a time | W5 |
+
+### 10.9 Owner touchpoints and decision points
+
+- **Decision points:** (1) agent-pilot go/no-go (orchestrator, §10.4); (2) before the first paid v2 sale — §1.5
+  entitlement live, counsel's answer, §13 D1; (3) **moat check** after the learner pilot — if fewer than 50 % of
+  starters submit the first Aufgabe or AI Aufgaben per active learner per unit stay below 1.5, fix the UX before Wave 3;
+  (4) before B-levels go buyable — Impressum and Nutzungsbedingungen, Lemon Squeezy variants.
+- **Owner actions that agents cannot do:** one Azure TTS run per level and per lane pack (≈ $20 in total by C's
+  derivation; owner time is the constraint); applying the `words` SQL batches and the migrations; Lemon Squeezy
+  variants; booking counsel; hiring the DaF examiner(s); enabling Supabase anonymous sign-ins (if chosen); approving
+  the pilot invitation e-mail; the legal pages.
+
+---
+
+## 11. Reuse and replace
+
+| Asset | Decision | How |
+|---|---|---|
+| `src/lib/lesson/check.js` | **reuse**, extend | add `exact: 'number' \| 'name'` (numbers/times/names exact, no typo allowance on those tokens); the solver and generators call the same checker, so QA and the app agree |
+| `mastery.js`, `requeue.js`, `reviewGrading`, `reviewService` | **reuse** | level-agnostic ([m12] §3) |
+| `src/lib/review/ladder.js` | **generalise** | ladder as a course parameter + exam cap; legacy ladder kept for the live A1.1 |
+| `readaloud.js` + `score-readaloud` | **reuse**, extend | Aussprache slots and the no-mic path; purchase-aware allowance; anonymous caps |
+| `buildLesson.js` | **keep for the live A1.1**; v2 gets its own unit builder | reuse its seeded draw and earlier-attempt exclusion; wire `attempt` from progress (review #9) |
+| `quality.js` | **generalise** | level parameter; A1.1 output unchanged |
+| `validate-curriculum.mjs` | **port** the generic rules into `scripts/course-v2/validate.mjs`; keep the file for the live A1.1 until retirement | no A1.1 personas or ratchet numbers in v2 |
+| `constructions.js` | **extend** into `registries/detectors.json` | introducing unit read from the spine |
+| `buildCheckpoint.js`, `checkpoint/lexis.js` | **replace** for v2 | Plateaus compiled from unit data; known-word sets emitted per unit |
+| `speech.js`, `generate-course-audio.mjs` | **generalise** | a manifest per level; voices from the cast bible |
+| `evaluate-writing` + `writingTasks.js` twins (893 lines) | **generalise** | rubric profiles, zero rules, response schema 2, `BANK_KEY_RE`, purchase-aware allowance; bank sharded per level with lazy imports (≈ 200–400 new tasks) to hold the player JS budget; `SchreibenPage`/`GradedWriting` keep working on schema 1 |
+| `speaking-session`/`-turn`/`evaluate-speaking`, `_shared/speakingAI.mjs` | **reuse + speaking bank** | server-owned tasks, exam modes, in-lesson stage; the client `courseTask` path stays for legacy only |
+| `explain-answer` | **off in paid v2 courses** | static explanations; allowed in the free A1.1 only |
+| Modelltest runner + `examScoring.js` | **reuse, extend** | lane profiles, play counts, reading times, answer-sheet step, per-lane scorers, graded productive parts, new part types (`richtig-falsch`, `notes`, `form`, `speaking`) |
+| `src/data/mockExams/*` (Kurzversionen) | **replace** | full-format forms; keep `examKey` values; the 14 listening exercises they consume stay untouched until those consumers are re-pointed in the same PR ([m12] §2.4) |
+| `src/data/courseTests/*` | **replace** | no separate end test where mocks exist; the .1 Halbtest is the .1 end test |
+| `words` rows with audio (2,561 of 2,597) | **reuse by lemma** | B-level defect pass first; new rows via `words-from-json.mjs` |
+| grammar DB (84 topics, 672 rules, 933 examples) | **quarry** | for rule-card drafts after the `quality.js` filter; its grammar-first sequencing is not inherited ([m06] F5) |
+| `speaking_missions` | machinery **reuse**; A2.1–B2.2 content **replace** | one mission per grammar topic does not set the sequence |
+| `listening_exercises`, `reading_lessons` | transcripts and A1–A2 lessons with checks as **quarry** (Lesemagazin candidates); B-level essays **replace** | re-render per line with course voices |
+| `programs/*` + `src/data/courses/index.js` | **retire** per level when its v2 course ships | legacy 28-day player |
+| `CourseCertificatePage.jsx` | **replace** | Teilnahmebescheinigung with the fixed line |
+| `levelTestQuestions.json` | **replace** | Einstufung over the Plateau banks |
+| curricula registry (LIVE vs DRAFT) | **reuse the pattern** | a level is promoted only after review; the paused A1.2 draft is a quarry, not a template |
+| `plan.js`, `course-reminder.mjs`, `lifecycle_emails` | **reuse, extend** | plan places mocks; reminders name the next step; claim-before-send |
+| `hasLevelAccess` / purchases | **reuse client; add server twin and `hasCourseAccess`** | build prerequisite (§1.5) |
+| product keys `course_a1_2` … `course_b2_2`, legacy `course_a1` … `course_alle`, `/course/:level` routes, `LevelSubscriptionGuard` | **keep resolving** | the v2 player mounts behind the same routes and guard (extended) |
+| `telc_b1_komplett` (no `levels` today) | **owner decision** §13 D9 | — |
+| the live A1.1 (`src/data/curricula/a11.js`, `lessonPools/a11*`, A1.1 routes) | **keep serving** until v2 A1.1 exits review | then replace (§10.7) |
+| the W2 drafts in `docs/course-v2/curriculum/` | **input** to the W2 specs | converted onto §2.8 rows |
+| tests (34 of 79 pin A1.1) | **re-point** | class tests over every registered course |
+
+---
+
+## 12. Risks
+
+| # | Risk | L / I | Mitigation | Owner |
+|---|---|---|---|---|
+| R1 | **FernUSG:** AI rubric grading in a paid course may count as „Überwachung des Lernerfolgs"; void contracts, repayment, fines up to €10,000 ([m13] §1–2) | M / H | formative, private, retryable, never a gate; no human in the loop; no Fragerecht; no score on any document or e-mail; counsel before any paid v2 course incl. A1.2; the free A1.1 carries the moat | owner |
+| R2 | **Entitlement leakage:** trial/Pro opens every level; a €40 buyer opens B-level mocks for 90 days | certain until fixed / H | §1.5 build + §13 D1 before any paid v2 page promises AI grading; B-levels stay coming-soon until then | owner + engineering |
+| R3 | **UWG:** the Prüfungsstand read as a pass prediction | M / H | module values vs the official rule only; ranges for AI parts; LGL lint; no single percentage | design |
+| R4 | **AI Act Annex III 3(b)** from 2 Dec 2027: AI scores steering the path | M / M | deterministic plan and suggestion inputs (PRG-04); re-review before Dec 2027 | engineering |
+| R5 | **Grader validity** unmeasured; German morphology is hard for automated feedback ([m09] §5); B2 anchors are error-heavy | H / H | human ground truth (§4.6); ranges; no accuracy copy; pinned models with re-runs | engineering + owner (raters) |
+| R6 | **Review does not converge** at 8× A1.1 volume (A1.1 took 23 rounds) | M / H | rails first; pilot go/no-go; rule-smiths; stop-the-line; exemplars; a 5th round fixes rails, never adds authors | orchestrator |
+| R7 | **Engine work larger than estimated** | M / M | honest E0/E1 estimate; fixture gate before mass authoring; compile into existing shapes where possible | engineering |
+| R8 | **The moat is unused** (0 AI writing uses in 7 days, 2 sales ever) | H / H | scored sentence in the first 3 screens; an Aufgabe per unit; events; learner pilot; the moat decision point before B2 | owner |
+| R9 | **AI cost vs one-time price** (speaking unmeasured) | M / M | measure in the pilot; fair-use cap in the terms; no „unbegrenzt"; cheaper model for `course-micro` only if CAL passes | owner |
+| R10 | **Fluent but wrong or bland German** passes every gate | M / H | two personas with the §9.5 brief; LanguageTool; exemplars; H scores blandness; fresh-eyes audit | orchestrator |
+| R11 | **Teaching to the test / washback**, esp. for beginners and DaF learners without an exam | M / M | situational spine; A1.1 miniatures untimed, board opt-in; ≥ 75 % teaching items; parallel forms; full-length-only board | design |
+| R12 | **Format drift** at the providers | M / M | lane profiles with `stand` and sources; quarterly re-check; EXM tests; mocks regenerate from blueprints | orchestrator |
+| R13 | **Secondary lanes lag or stay thin** (DTZ volume falling, telc A2 demand unknown) | M / M | lane packs as data; lane choice measured at onboarding; only live lanes listed | owner |
+| R14 | **DTZ mis-selling** to people outside the Integrationskurs | L / H | gate question and fixed label; no DTZ-only product | design |
+| R15 | **Copyright:** Goethe lists, official sets, rated samples | L / H | own wording; `private/` tables and hashes; LGL-05; counsel on calibration use | owner |
+| R16 | **Outdated Landeskunde** (the eAU case) | M / M | CON-06 currency fields; reviewers check currency; 180-day re-check at promotion | orchestrator |
+| R17 | **Audio bottleneck and TTS realism** | H / M | one batched owner run per level; „Computerstimme"; several voices and natural rate; human recordings later | owner |
+| R18 | **Progress and legacy migration** (old A1.1 progress, A1.2 buyers, § 327r) | M / M | distinct v2 ids; history view; reminder counts both; free upgrade + notice; funnel SQL in the same PR | engineering |
+| R19 | **Learner pilot underpowered** at ≈ 23 sign-ups a week | H / M | invite existing users; pre-registered thresholds; qualitative walkthroughs; it informs, never blocks | orchestrator |
+| R20 | **Client-side content** (keys reachable) | certain / L | server AI allowance and progress are the boundary; no predictable public URLs; owner decides previews (D6) | owner |
+
+---
+
+## 13. Owner-only decisions
+
+| # | Decision | Recommendation | Blocks |
+|---|---|---|---|
+| **D1** | Do trial and Pro subscriptions still open **paid v2 levels** (today `hasLevelAccess` returns true for any live trial/subscription, and every course purchase grants a 90-day Pro window)? And what happens to the „3 Monate Pro inklusive" claim? | v2 paid content and its AI allowance follow the purchase only; trial/Pro keep the existing tools; keep „Pro inklusive" as a bonus for the existing tools or drop it — reconcile `pricing.js`/`marketing.js` in the same PR | first paid v2 sale |
+| **D2** | **Counsel** (FernUSG and more): AI grading in paid courses incl. A1.2; reminders, plan and Wochenbericht wording and any share link; the existing 90-day Pro window with AI tools; private use of official rated samples for calibration (copyright); Teilnahmebescheinigung wording; the voluntary refund promise; FernUSG for buyers abroad (Rome I) | book counsel now; the counsel brief is produced in W2 | first paid v2 sale; share link; calibration ground truth |
+| **D3** | **Hire human DaF examiner(s)** (Goethe/telc licensed) to rate ≥ 30 samples per rubric profile as calibration ground truth; optionally a spot check of 2 units per level (internal QA, never a learner entitlement) | yes; without it no accuracy statement is ever possible and AI parts stay ranges | CAL-02 |
+| **D4** | **Voice budget:** keep Azure TTS („Computerstimme") at launch, or commission human recordings for mocks and scenes later | TTS at launch (≈ $20 total, owner time); revisit human recordings for Modelltests after revenue | none at launch |
+| **D5** | **Pair offer** (.1 + .2) at checkout, and its price | offer it; the .1 courses are weak standalone buys | .1 conversion |
+| **D6** | **Paid previews / first-lesson leak:** is U1 of each paid course playable before purchase? | yes for U1 LS1–LS3 without Aufgaben; the free Diagnose covers the taste of scoring | page copy |
+| **D7** | **Supabase anonymous sign-ins** for the scored first sentence without an account | enable, with the caps of §4.7; otherwise the unscored fallback | A1.1 first session |
+| **D8** | **Fair-use numbers** and whether any copy may ever say „unbegrenzt" | set after the pilot's cost measurement; never „unbegrenzt" | terms, copy |
+| **D9** | What **`telc_b1_komplett`** buyers (no `levels` today) receive in v2 | grant v2 B1.1 + B1.2 access as the successor product | B1 integration PR |
+| **D10** | **Lemon Squeezy:** variants for the B-level products, the checkout consent box, the voluntary refund in the dashboard | variants when B1 passes review; refund „30 Tage Geld zurück" with linked terms | B-levels buyable |
+| **D11** | **Legal pages:** complete Impressum and publish Nutzungsbedingungen | before B-levels go live | B-levels buyable |
+| **D12** | **L1 explanation layer** (Turkish, Arabic): when and with which translator budget | after A1 revenue; the schema stores `{en, tr?, ar?}` from day one | none at launch |
+
+---
+
+## Sources
+
+**Exam specifications:** Goethe A1 [Durchführungsbestimmungen](https://www.goethe.de/pro/relaunch/prf/de/Durchfuehrungsbestimmungen_A1_Start_Deutsch_1.pdf) ·
+[Prüfungsziele SD1](https://www.goethe.de/pro/relaunch/prf/de/Pruefungsziele_Testbeschreibung_A1_SD1.pdf) ·
+Goethe A2 [Durchführungsbestimmungen](https://www.goethe.de/pro/relaunch/prf/de/Durchfuehrungsbestimmungen_A2.pdf) ·
+[Übungssatz A2](https://www.goethe.de/pro/relaunch/prf/materialien/A2/A2_Uebungssatz_Erwachsene.pdf) ·
+[Fit 2 Prüfungsziele](https://www.goethe.de/pro/relaunch/prf/zh/Pruefungsziele_Testbeschreibung_A2_Fit2.pdf) ·
+Goethe B1 [DFB](https://www.goethe.de/pro/relaunch/prf/de/Durchfuehrungsbestimmungen_B1.pdf) ·
+[Modellsatz B1](https://www.goethe.de/pro/relaunch/prf/materialien/B1/b1_modellsatz_erwachsene.pdf) ·
+Goethe B2 [DFB](https://www.goethe.de/pro/relaunch/prf/de/Durchfuehrungsbestimmungen_B2.pdf) ·
+[Modellsatz B2](https://www.goethe.de/pro/relaunch/prf/materialien/B2/b2_modellsatz_erwachsene.pdf) ·
+telc [Übungstest A2](https://shop.telc.net/media/catalog/product/file//2/0/20201226_5090-b00-010106_web_1.pdf) ·
+[Übungstest B1](https://shop.telc.net/media/catalog/product/file/telc_deutsch_b1_zd_uebungstest_1.pdf) ·
+[Übungstest B2](https://shop.telc.net/media/catalog/product/file/2/0/20201223_5023-b00-010201_web.pdf) ·
+DTZ [g.a.s.t. Übungssatz 1](https://www.gast.de/fileadmin/gast.de/GAST/5_DTZ/PDF/gast_DTZ_UEbungssatz_1.pdf) ·
+ÖSD [ZA1 DB](https://osd.at/wp-content/uploads/2023/09/ZA1-Durchfuhrungsbestimmungen_10_2023.pdf) ·
+DTB [BAMF Übungstest](https://www.bamf.de/SharedDocs/Anlagen/DE/Integration/Berufsbezsprachf-ESF-BAMF/BSK-Konzepte/b2-modelltest-bsk.pdf?__blob=publicationFile&v=10) ·
+[RO-DT](https://www.goethe.de/pro/relaunch/prf/rahmenordnung/Rahmenordnung-ueber-Deutsche-Sprachpruefungen-fuer-das-Studium-an-deutschen-Hochschulen.pdf) ·
+Goethe digital exams word counter (snippet): <https://www.goethe.de/de/spr/prf/ddp.html>.
+
+**Buyers and law:** [Drs. 21/175](https://dserver.bundestag.de/btd/21/001/2100175.pdf) ·
+[Drs. 21/5716](https://dserver.bundestag.de/btd/21/057/2105716.pdf) ·
+[Destatis PD26_186](https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/06/PD26_186_125.html) ·
+[Destatis PD26_295](https://www.destatis.de/DE/Presse/Pressemitteilungen/2026/08/PD26_295_212.html) ·
+[BAMF spouse-visa leaflet](https://www.bamf.de/SharedDocs/Anlagen/DE/MigrationAufenthalt/Ehegattennachzug/ehegattennachzug.pdf?__blob=publicationFile&v=9) ·
+§ 5 EntgFG (read 2026-09-27): <https://dejure.org/gesetze/EntgFG/5.html> ·
+[Bund-Verlag on the eAU](https://www.bund-verlag.de/aktuelles~Die-neue-eAU-Das-Ende-des-gelben-Scheins~.html) ·
+§ 4 ArbZG (read 2026-09-27): <https://dejure.org/gesetze/ArbZG/4.html> ·
+[§ 23 MarkenG](https://www.gesetze-im-internet.de/markeng/__23.html) ·
+Lemon Squeezy pricing (snippet): <https://www.lemonsqueezy.com/pricing>.
+
+**Learning science:** [Latimier et al. 2021](https://doi.org/10.1007/s10648-020-09572-8) ·
+[Hausknecht et al. 2007](https://doi.org/10.1037/0021-9010.92.2.373) · the rest via [m09], [m11] and Proposal B's
+source list.
+
+**Tools:** LanguageTool public API limits <https://dev.languagetool.org/public-http-api.html> · `dictionary-de`
+<https://www.npmjs.com/package/dictionary-de> · spaCy `de_core_news_sm` <https://huggingface.co/spacy/de_core_news_sm>
+(via Proposal C, read 2026-09-27).
+
+**Repo:** `CLAUDE.md`; `docs/course-v2/DECISIONS.md`; `inputs/db-snapshot-2026-09-27.md`; research memos 01–14;
+proposals A, B, C and the three judge verdicts; `src/contexts/SubscriptionContext.jsx`; `src/data/pricing.js`;
+`src/data/marketing.js`; `netlify/functions/evaluate-writing.mjs`; `netlify/functions/lemonsqueezy-webhook.mjs`;
+`netlify/functions/_shared/speakingUsage.mjs`; `migrations/2026-09-12-lesson-engine.sql`;
+`migrations/2026-09-19-course-funnel.sql`; `src/lib/lesson/check.js`; `src/data/lessonPools/quality.js`;
+`src/data/design-tokens.js`; `src/data/writingTasks.js`.
