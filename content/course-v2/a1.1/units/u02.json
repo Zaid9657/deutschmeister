@@ -1706,7 +1706,7 @@
         "mode": "written",
         "profile": "course-micro",
         "situationDe": "Eine E-Mail von Herrn Richter: „Bitte schreiben Sie: Familienname, Vorname, Wohnort, Telefonnummer, Beruf.“ Sie können auch andere Angaben schreiben.",
-        "promptDe": "Schreiben Sie die fünf Angaben. Stellen Sie auch eine Ja/Nein-Frage.",
+        "promptDe": "Schreiben Sie die fünf Angaben. Stellen Sie Herrn Richter auch eine Ja/Nein-Frage.",
         "promptEn": "Write the five details (invented ones are fine). Ask Mr Richter one yes/no question, too.",
         "planSeconds": 30,
         "words": [
@@ -1733,7 +1733,7 @@
       },
       "input": {
         "kind": "mixed",
-        "title": "Das Anmeldeformular",
+        "title": "Das Formular für die Anmeldung",
         "textType": "tt.formular",
         "lines": [
           {
@@ -2993,7 +2993,7 @@
           },
           {
             "speaker": "learner",
-            "de": "Ich arbeite am Empfang, in Kochi. Hier in Leipzig arbeite ich nicht, ich lerne Deutsch."
+            "de": "In Kochi arbeite ich am Empfang. Hier in Leipzig arbeite ich nicht, ich lerne Deutsch."
           },
           {
             "speaker": "partner",
