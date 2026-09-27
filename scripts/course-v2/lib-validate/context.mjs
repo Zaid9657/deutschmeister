@@ -56,6 +56,7 @@ export function levelSlot(ctx, level) {
       ruleCards: null, // { cards: [], file }
       ledger: null,
       units: new Map(), // nr → doc
+      specs: new Map(), // nr → the unit's entry in <level>/specs.json (the curriculum bundle), kept when units/uNN.json replaces it
       lanePacks: [],
       plateaus: [],
       closing: [],
@@ -218,6 +219,7 @@ export function addDoc(ctx, kind, data, file, { target = false } = {}) {
     const nr = typeof data.nr === 'number' ? data.nr : parseUnitId(data.id)?.nr;
     if (!nr) return null;
     doc.nr = nr;
+    if (/(?:^|[\\/])specs\.json$/.test(String(file || ''))) slot.specs.set(nr, data);
     slot.units.set(nr, doc);
   } else if (kind === 'lanepack') {
     doc.nr = parseUnitId(data.unit)?.nr ?? null;
@@ -271,7 +273,16 @@ export function ingest(ctx, value, file, { levelHint = null, key = null, depth =
       if (lv) levelSlot(ctx, lv).course = { data: value, file };
       return added;
     }
-    case 'lexicon': addLexiconEntries(ctx, value.entries, file, levelOfDoc(value, levelHint)); return added;
+    case 'lexicon': {
+      const lv = levelOfDoc(value, levelHint);
+      addLexiconEntries(ctx, value.entries, file, lv);
+      if (lv && arr(value.promotions).length) {
+        const slot = levelSlot(ctx, lv);
+        if (!slot.lexicon) slot.lexicon = { entries: [], file };
+        slot.lexicon.promotions = [...arr(slot.lexicon.promotions), ...arr(value.promotions).filter(isObj)];
+      }
+      return added;
+    }
     case 'rulecards': addRuleCards(ctx, value.cards, file, levelOfDoc(value, levelHint)); return added;
     case 'stubs':
       for (const [k, ids] of Object.entries(value.ids || {})) {

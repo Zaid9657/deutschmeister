@@ -19,7 +19,9 @@ const arr = (x) => (Array.isArray(x) ? x : []);
 /** Words the claim never speaks about: pronouns, articles, conjunctions, prepositions, labels. */
 const NOT_A_FORM = new Set(`ich du er sie es wir ihr man mich dich ihn uns euch mir dir ihm ihnen sich
 der die das den dem des ein eine einen einem einer und oder aber auch nur mit ohne kein keine am im an in
-bei von zu für nach vor auf aus the a an and or with without no not at end ending form forms
+bei von zu für nach vor auf aus sondern denn dann also hier
+the a an and or but with without no not at end ending form forms is are has have of to on for it he she
+we you they this that here there
 achtung hinweis note beispiel merke tipp`.split(/\s+/).filter(Boolean));
 const PRONOUNS = new Set(['ich', 'du', 'er', 'sie', 'es', 'wir', 'ihr']);
 
