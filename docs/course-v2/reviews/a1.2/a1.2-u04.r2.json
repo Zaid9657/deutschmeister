@@ -1,0 +1,451 @@
+{
+  "review": "a1.2-u04.r2",
+  "unitId": "a1.2-u04",
+  "file": "content/course-v2/a1.2/units/u04.json",
+  "round": 2,
+  "date": "2026-09-27",
+  "reviewers": [
+    {
+      "id": "R1",
+      "persona": "Prüferin (lizenzierte Goethe-A1-Prüferin): Prüfungstreue, Rubrik, Aufgabenklarheit"
+    },
+    {
+      "id": "R2",
+      "persona": "Kursleiterin DaF (A1.2): Natürlichkeit, Niveau, Didaktik, Szenenplausibilität"
+    }
+  ],
+  "method": "Both reviewers re-read every German string in the fixed unit: the Folge, the three LS inputs (lines, web page, LS3 board), the 11 LS4 texts, the redemittel, the three rule cards the unit shows (a1.2/rule-cards.json: rc.temporal-praepositionen, rc.ordinalzahlen-datum, rc.imperativ-sie), the Sp2 and S1 Aufgaben, the story, the Fokus, the facts and every explanation.de. They solved every item blind, from promptDe plus options, tiles or the played line only: the gist item, 15 input items, 12 structured items, 36 pool items, 15 reserve items, 4 perception items, 11 exam items, 9 check items and 4 proof items. Questionable answers were run through the real checker (src/lib/lesson/check.js, via checkAnswer + checkOptionsFor): Reisepass, Fotokopie, 0176 2345 67, 0176-234567, 16 Uhr 30 and the ls3-p10 midfield order. The player's perception path was re-read: ItemView.jsx l. 105–116 plays speak || quoteOf(promptDe) and masks the quote until the item is answered. The exam blocks were checked against registries/lanes/sd1.json (h1, h3, sp2, s1), and all 11 exam texts and the S1 situation were recounted. The grammar ceiling was checked against grammar-spine.json and a1-2.md §6 unit 4 and §9. Can-dos were checked against registries/cando/a1.json; cast facts against casts/a1.json and casts/series.json; the plan against a1-2.md §5, §6, §8 and §11. Every weekday–date pair was recomputed for 2026, the year in which 1 June is a Monday. Each of the 32 round-1 findings was verified against the current file (see previousRound).",
+  "validator": {
+    "command": "node scripts/course-v2/validate.mjs content/course-v2/a1.2/units/u04.json",
+    "result": "FAIL. 39 rules: 31 pass, 1 fail, 2 warn, 5 skipped. The fail is EXM-02 (1 blocker: sd1.h1 is pictorial, and the block has no approved image assets; in a1.2 that blocks the lane, §4.9). The warnings are GRM-04 (33 advisory; all are detector false positives or receptive forms, as in round 1) and LEX-02 (28 ratchet; no later a1.2 unit exists yet). ITM-04, ITM-08 and COV-1/4/5 are skipped. The level run (validate.mjs a1.2) gives the same blocker, COV-3/4/5 pass, and COV-1 gives 11 advisories because the level has only one unit.",
+    "check": "node scripts/course-v2/check.mjs content/course-v2/a1.2/units/u04.json → 0 errors"
+  },
+  "verdict": "Not exit-ready, but close. The count is 1 BLOCKER (validator EXM-02), 2 MAJOR and 12 MINOR, with a total of 25/35 (round 1: 21). Round 2 confirms 24 of the 32 round-1 findings as fixed. 4 are partly fixed (F23, F26, F28, F32) and 4 are open (F15, F27, F31, and the fokusPlan follow-up of F29). What stops exit: (1) the H1 block is now pictorial but its six images are only „planned“, and a .2 course cannot run it. The fix that also restores the plan is sd1.l3 in its place (F01). (2) The ordinal rule card still generates ✗„achtte“ (F02, the round-1 F15, not fixed). (3) Reisepass and Fotokopie are rejected in two reserve items (F03). Everything else is minor. Two H3 stems are loose, and there are accepted-form inconsistencies, lexicon roles, three continuity nits, the plan/Fokus spec drift and tooling gate holes. After F01–F03 and at most five of the minors, a round 3 should reach 0/0 with every criterion ≥ 4.",
+  "scores": {
+    "R1": {
+      "D": 3,
+      "N": 4,
+      "H": 4,
+      "A": 3,
+      "P": 3,
+      "K": 4,
+      "E": 4,
+      "total": 25
+    },
+    "R2": {
+      "D": 3,
+      "N": 4,
+      "H": 4,
+      "A": 3,
+      "P": 3,
+      "K": 4,
+      "E": 4,
+      "total": 25
+    },
+    "combined": {
+      "D": 3,
+      "N": 4,
+      "H": 4,
+      "A": 3,
+      "P": 3,
+      "K": 4,
+      "E": 4,
+      "total": 25
+    }
+  },
+  "scoreRationale": {
+    "D": "3. The inputs, exam texts and Aufgaben are correct and idiomatic after the round-1 fixes. But the level's ordinal rule card still states a rule that produces ✗„achtte“ (F02, major), and several explanations cite words without quotation marks (F11).",
+    "N": "4. The lexis, sentence length and grammar are on level, and Konjunktiv II is back to the planned chunk. The small role mismatches (receptive Kopie typed; months receptive but produced, F06) are the only look-ahead signal.",
+    "H": "4. The scenes are believable and lively, and every can-do is now performed, the title can-do in the Sp2 phone call. One proof is still recognition-only (F12).",
+    "A": "3. Every key is correct and determined by the German prompt. But two defensible full forms are rejected (Reisepass, Fotokopie: F03, major), two H3 stems are loose (F04), and ls3-p10 and the number formats accept inconsistently (F05, F13).",
+    "P": "3. H3, S1 and Sp2 match sd1.json in items, options, plays, word bands, register and rubric. But the H1 block cannot run in a .2 course without approved images (F01, validator blocker), and the plan's Lesen Teile are still missing with no deviation record (F09).",
+    "K": "4. The facts are verified and current, the Meldepflicht timeline is now part of the story, and the building, calendar and cast are consistent. Small breaks: the LS2 voice is the absent clerk (F07), Bilal's flat and the „Antrag“ (F08), one reserve weekday (F10), and „die U2“ in Leipzig on the shown card (F14).",
+    "E": "4. Instructions are ≤ 90 characters, pools and steps are standard size, and each endLine names a win the step delivers. LS4 (11 double-played texts) is the longest step but stays within its 20 minutes."
+  },
+  "total": 25,
+  "counts": {
+    "blocker": 1,
+    "major": 2,
+    "minor": 12
+  },
+  "previousRound": [
+    {
+      "id": "F01",
+      "status": "fixed",
+      "note": "x01 „am Dienstag?“, x03 „Zimmer vierzehn?“, x02 „um halb neun.“, x04 „am elften Juni.“ (in words, so AUD-02 is moot); the player masks the quote until answered (ItemView.jsx l. 115–116)."
+    },
+    {
+      "id": "F02",
+      "status": "fixed",
+      "note": "f03 exception now reads six months (registered, second flat) / three months (living abroad, not registered), matching § 27 Abs. 2 BMG; § 27 added as a source."
+    },
+    {
+      "id": "F03",
+      "status": "fixed",
+      "note": "CON-06 passes. f02 is narrowed to the DB-A1 § 2.2/§ 3.1 wording; f01 and f03 are verified; f04 (§ 19 BMG) is added."
+    },
+    {
+      "id": "F04",
+      "status": "fixed",
+      "note": "LEX-03 passes. Könnten/Würden are gone from every key and surface (grep: only „hätte“ remains)."
+    },
+    {
+      "id": "F05",
+      "status": "fixed",
+      "note": "LEX-07 passes on the a1.2 lexicon."
+    },
+    {
+      "id": "F06",
+      "status": "fixed",
+      "note": "LS3 is now g.imperativ-sie (a declared review point) with rc.imperativ-sie, model sentence „Bitte nehmen Sie eine Wartenummer.“ and read-aloud „Wie bitte? Noch einmal, bitte.“; the chunk is limited to „Ich hätte gern …“."
+    },
+    {
+      "id": "F07",
+      "status": "fixed",
+      "note": "Sp2 is now a phone call with the Bürgerbüro (AI): decline Tue 9 June, counter-propose Thursday, confirm 11 June 16.30; proofs[1] → sprechen; the LS2 endLine no longer claims the win."
+    },
+    {
+      "id": "F08",
+      "status": "fixed",
+      "note": "p02 was deleted; p01 carries „(haben)“; the explanation is „= Ich möchte …“; rc.konj2-hoeflichkeit columns are „neutral / höflich“."
+    },
+    {
+      "id": "F09",
+      "status": "fixed",
+      "note": "ls2-p03 accepts siebenten; the explanation says „(auch: siebente)“."
+    },
+    {
+      "id": "F10",
+      "status": "fixed",
+      "note": "Every ordinal fill_blank says „(in Wörtern)“ in promptDe (ls2-p01–p04, r01, r02, r05, ls3-r03, c03, c04, q03)."
+    },
+    {
+      "id": "F11",
+      "status": "fixed",
+      "note": "p01 is cued „(Beginn, Zukunft)“ with a seit contrast in the explanation; r02 accepts Nach/nach."
+    },
+    {
+      "id": "F12",
+      "status": "fixed",
+      "note": "All statement tiles say „Bilden Sie einen Aussagesatz.“; ls2-p10 and ls3-p06 accept the object- and gern-fronted orders (see F05 for a new inconsistency in ls3-p10)."
+    },
+    {
+      "id": "F13",
+      "status": "fixed",
+      "note": "Priya: „Wir wohnen schon seit Monaten hier. Wir sind zu spät!“; the clerk: „Nach dem Umzug haben Sie nur zwei Wochen Zeit!“; the story beat names it."
+    },
+    {
+      "id": "F14",
+      "status": "fixed",
+      "note": "t6 is now about the Wartenummer machine on the ground floor; the board, LS3 and LS4 agree (Anmeldung Zimmer 11–16 im 1. Stock)."
+    },
+    {
+      "id": "F15",
+      "status": "open",
+      "note": "The card is unchanged; re-raised as F02 (major)."
+    },
+    {
+      "id": "F16",
+      "status": "fixed",
+      "note": "promptEn now names Dresden."
+    },
+    {
+      "id": "F17",
+      "status": "fixed",
+      "note": "c09 names the plural; ls3-r02 names the bitte positions."
+    },
+    {
+      "id": "F18",
+      "status": "fixed",
+      "note": "ls2-i05 has no „Uhr“ after the gap; ls3-i03 accepts vierzehn; S1 f1 accepts 14.03.99 and 14.3.99. One time format is still missing (F13)."
+    },
+    {
+      "id": "F19",
+      "status": "fixed",
+      "note": "All nine phrasings are corrected (Welches Datum …, bis spätestens einen Tag vorher, Vom 4. bis zum 15. Mai, einen anderen Termin, Sie bekommen den Pass dann im April, meine Frühschicht, Schreiben Sie es in Wörtern, vollständig und richtig)."
+    },
+    {
+      "id": "F20",
+      "status": "fixed",
+      "note": "Machine at the entrance before the number; l08/l09 are dropped; Meldebestätigung; Arjun: „Das war aber leicht!“."
+    },
+    {
+      "id": "F21",
+      "status": "fixed",
+      "note": "l13 names the landlord's form; the clerk asks for „die Formulare“."
+    },
+    {
+      "id": "F22",
+      "status": "fixed",
+      "note": "„Gut, dann bis zum 11. Juni.“"
+    },
+    {
+      "id": "F23",
+      "status": "partly fixed",
+      "note": "The registry now has pictorial:true, and the strategy card mentions the Beispiel, but the assets are only planned: now the validator blocker F01."
+    },
+    {
+      "id": "F24",
+      "status": "fixed",
+      "note": "t6 is a new scenario (machine left of the entrance, exit on the right); it no longer echoes the Übungssatz Beispiel."
+    },
+    {
+      "id": "F25",
+      "status": "fixed",
+      "note": "t9 is a bank with 10–13 on Saturday (story knowledge now points to the wrong 9–12); h3-02 asks what Herr Ahmed brings; t4 is a Paketshop holding the parcel for 7 days."
+    },
+    {
+      "id": "F26",
+      "status": "partly fixed",
+      "note": "t7 has 52 words; the TXT-02 double tolerance remains (F15)."
+    },
+    {
+      "id": "F27",
+      "status": "open (tooling)",
+      "note": "33 advisories, the same classes; carried in F15."
+    },
+    {
+      "id": "F28",
+      "status": "partly fixed",
+      "note": "LS1 i06 (Eingang), LS3 i06 (board) and q01 (Rathaus, „geöffnet“) are fixed; q04 is still tile ordering (F12)."
+    },
+    {
+      "id": "F29",
+      "status": "fixed",
+      "note": "The Fokus has a new angle (Prüfungstag), no Anmeldeschluss, and no unsourced form-field sentence; spec.fokusPlan was not updated (F09)."
+    },
+    {
+      "id": "F30",
+      "status": "fixed",
+      "note": "„Stadt Leipzig“ was removed from the web page."
+    },
+    {
+      "id": "F31",
+      "status": "open",
+      "note": "There is still no L2/L3 block and no deviation record (F09; F01's preferred fix closes it)."
+    },
+    {
+      "id": "F32",
+      "status": "partly fixed",
+      "note": "The daily job is removed (now „Am Vormittag hat er Deutschkurs.“); the new flat is still unestablished (F08)."
+    }
+  ],
+  "findings": [
+    {
+      "id": "F01",
+      "reviewer": "R1",
+      "criterion": "P",
+      "severity": "blocker",
+      "scope": "instance",
+      "unitId": "a1.2-u04",
+      "path": "steps[3].blocks[1] (a1.2-u04-ls4-sd1-h1); assets[0..5] (a1.2-u04-a01 … a06); registries/lanes/sd1.json teile.h1.pictorial",
+      "quote": "validate.mjs EXM-02: „sd1.h1 is pictorial and the block has no approved image assets; in a1.2 that blocks the lane (§4.9)“ · all six assets: \"status\": \"planned\"",
+      "problem": "This is the validator's one blocker. It follows from the round-1 fix for F23. sd1.h1 is now pictorial:true, and t6–t11 point to assets a01–a06, but all six assets are still „planned“. A .2 course may never run the text variant (BLUEPRINT §4.9, §10 LS5 note), so the H1 block cannot go live and the unit cannot exit. H1 was never planned for this unit. a1-2.md §5 row 4, §6 unit 4 and the §11 matrix give u04 L2, L3, H3, S1 and Sp2, and they put H1 in units 1, 6, 7, 10 and 12. The alt texts and prompts themselves are sound: each matches its item's options in order, and no image shows a real document or brand.",
+      "fix": "Preferred: replace the H1 block with the plan's sd1.l3, which is non-pictorial. Use 5 Schilder or Aushänge in and around the Bürgerbüro, one richtig/falsch statement each, 10–25 words per sign. Take the situations from the LS3 board and the LS1 page, but do not copy their sentences, so the items are not ITM-04 copies. Then update spec.lanes.pruefungsfokus and start.pruefungsfokusChips, both in the unit and in specs.json, and swap the h1 strategy card for an l3 card. Keep t6–t11 and a01–a06 for an H1 unit of the plan (6, 7 or 10). This also closes F09. Alternative: run the image pipeline for a01–a06 and get the owner's batch approval (status \"approved\", D16). Until then, the unit stays blocked.",
+      "proposedRule": null
+    },
+    {
+      "id": "F02",
+      "reviewer": "R2",
+      "criterion": "D",
+      "severity": "major",
+      "scope": "class",
+      "unitId": "a1.2-u04",
+      "carriedFrom": "a1.2-u04.r1 F15",
+      "path": "content/course-v2/a1.2/rule-cards.json rc.ordinalzahlen-datum (.de, .en, .table) — shown as steps[1].ruleCard",
+      "quote": "„Bis 19: Zahl + -te: der zweite, der vierte. Aber: der erste, der dritte, der siebte.“",
+      "problem": "This round-1 finding is not fixed. The fix removed the only 8th from the Sp2 model turns but left the card unchanged. The card's rule still generates ✗„achtte“ (acht + -te) and ✗„am achtten“, because „der achte“ is missing from the exceptions. The card is the level's only ordinal card: u12 reuses the dates, and the LS2 generator numbers.dictation (datum-tag-monat) can draw the 8th. A simplification on a rule card that has become false is exactly what §9.5 asks reviewers to catch.",
+      "fix": "de: „… Aber: der erste, der dritte, der siebte, der achte. …“ (47 → 49 words; the a1.2 limit is 60). Add the table row [\"8.\", \"der achte\", \"am achten\"]. en: „irregular: erste, dritte, siebte, achte“.",
+      "proposedRule": "GRM-05 fixture: a card for g.ordinalzahlen-datum must list every ordinal from 1 to 19 that does not follow cardinal + -te (erste, dritte, siebte/siebente, achte). Test by deriving 1.–19. from the card's stated rule and comparing the result with the correct forms."
+    },
+    {
+      "id": "F03",
+      "reviewer": "R2",
+      "criterion": "A",
+      "severity": "major",
+      "scope": "class",
+      "unitId": "a1.2-u04",
+      "path": "steps[2].reserve[4] (a1.2-u04-ls3-r05); steps[2].reserve[0] (a1.2-u04-ls3-r01)",
+      "quote": "r05 „Arjun hat keinen Ausweis. Er bringt seinen ___ mit.“ accepted [Pass] · r01 „Das ist nicht der Pass. Das ist nur eine ___ vom Pass.“ accepted [Kopie]",
+      "problem": "„Er bringt seinen Reisepass mit.“ and „eine Fotokopie vom Pass“ are correct and natural. Reisepass is the everyday full word, and it is what the document says on its cover. The real checker grades both as WRONG (checkAnswer → result \"wrong\"; Levenshtein > 1). These are defensible second answers that are not accepted, which the rubric rates MAJOR. Both items sit in the plateau, mehr-ueben and repair banks, so they are graded outside the unit as well.",
+      "fix": "r05: accepted [Pass, Reisepass], acceptedWhy {\"Reisepass\": \"auch richtig: der Reisepass = der Pass\"}. r01: accepted [Kopie, Fotokopie], acceptedWhy {\"Fotokopie\": \"auch richtig: die Fotokopie = die Kopie\"}.",
+      "proposedRule": "Lexicon entries get an optional alsoAccept list of common full forms (Pass → Reisepass, Kopie → Fotokopie, Ausweis → Personalausweis). ITM-10 then requires a fill_blank keyed on such a lemma to list them in accepted[], or to exclude them explicitly in promptDe."
+    },
+    {
+      "id": "F04",
+      "reviewer": "R1",
+      "criterion": "A",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.2-u04",
+      "path": "steps[3].blocks[0].items[4] (a1.2-u04-ls4-sd1-h3-05); steps[3].blocks[0].items[2] (a1.2-u04-ls4-sd1-h3-03)",
+      "quote": "h3-05 „Wann hat Elif Zeit?“ – a) am Samstag b) am Freitag ab 17 Uhr c) am Sonntag · text: „Und am Sonntag ist alles zu.“ · h3-03 „Was möchte Jonas?“ – „Priya macht am Montag die Schicht.“ / „Priya geht am Montag zum Amt.“ / „Priya arbeitet am Samstag.“",
+      "problem": "h3-05: Elif says only that the shops are closed on Sunday, not that she has no time then. For this stem, the text does not falsify distractor c. The key is still the most likely answer, but a Prüferin would not pass the stem. h3-03: the stem asks what Jonas wants, but the options are statements about Priya. Stem and options do not fit together, while SD1 H3 stems ask what the listener should do.",
+      "fix": "h3-05: „Wann möchte Elif mit Priya einkaufen gehen?“ Now Sunday is falsified by „alles zu“ and Saturday by „da arbeite ich“; the options stay. h3-03: „Was soll Priya machen?“ – „am Montag die Frühschicht machen“ / „am Montag zum Amt gehen“ / „am Samstag arbeiten“.",
+      "proposedRule": null
+    },
+    {
+      "id": "F05",
+      "reviewer": "R2",
+      "criterion": "A",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.2-u04",
+      "path": "steps[2].pool.items[9] (a1.2-u04-ls3-p10)",
+      "quote": "accepted: „Um 16.30 Uhr ist unser Termin am 11. Juni.“ · rejected (checker: wrong): „Unser Termin ist um 16.30 Uhr am 11. Juni.“ · explanation: „Erst der Tag, dann die Uhrzeit.“",
+      "problem": "The item accepts a time-before-date order when the time is fronted, but rejects the same order in the midfield. The explanation states a norm that one of the accepted answers breaks. „Am 11. Juni ist um 16.30 Uhr unser Termin.“ is grammatical too and is also rejected.",
+      "fix": "Accept „Unser Termin ist um 16.30 Uhr am 11. Juni.“ with acceptedWhy „möglich; üblicher ist: erst der Tag, dann die Uhrzeit“, and change the explanation to „Meist: erst der Tag, dann die Uhrzeit.“. Or remove the fronted time-first variant and keep the norm strict.",
+      "proposedRule": null
+    },
+    {
+      "id": "F06",
+      "reviewer": "R2",
+      "criterion": "N",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.2-u04",
+      "path": "content/course-v2/a1.2/lexicon.json lx.kopie, lx.januar … lx.juni (role: receptive); steps[2].reserve[0] (ls3-r01); steps[1].microOutput, steps[2].microOutput, steps[4].task",
+      "quote": "lx.kopie \"role\": \"receptive\" – ls3-r01 key „Kopie“ (typed) · lx.juni/mai/märz … \"role\": \"receptive\" – ls2-mo „Schreiben Sie das Datum in Wörtern“; Sp2 hint „am elften Juni“",
+      "problem": "A receptive lemma is a typed key in ls3-r01. The six month names are receptive, but cd.a1.datum (interaction-spoken: „ein Datum sagen“) is practised and proven productively: in the LS2 written micro-output, in the LS3 spoken micro-output and in Sp2 (am 9. Juni, am elften Juni). The gate does not see this, because LEX-03 treats every allocated lemma as known, whatever its role.",
+      "fix": "Set lx.kopie to productive, or make ls3-r01 a multiple_choice item. Set the months the unit makes learners produce (at least Mai and Juni; ideally all six, since they are A1-list words) to productive, then re-run LEX-05 for the productive share.",
+      "proposedRule": "LEX-03: a lemma allocated to the current unit with role receptive counts as unknown in typed keys (fill_blank, error_correction, micro-output targets), but not in dictation, options or tiles."
+    },
+    {
+      "id": "F07",
+      "reviewer": "R2",
+      "criterion": "K",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.2-u04",
+      "path": "steps[1].input.lines[1] (a1.2-u04-ls2-l02) vs steps[2].input.lines[6]–[12] and steps[2].inputItems/structuredInput (die Sachbearbeiterin)",
+      "quote": "ls2-l02 (cast.ensemble-a1-2): „Die Sachbearbeiterin ist nicht da.“ · LS3 (cast.ensemble-a1-2, same ElkeNeural voice) = „die Sachbearbeiterin“ (i02, i05, s03, s06)",
+      "problem": "The same voice announces the clerk's absence in LS2 and then is the clerk in LS3, in the same office within one week. The learner hears one woman speak of herself in the third person as absent.",
+      "fix": "ls2-l02: „Ich bin am 5. Juni leider nicht da.“ Then ensemble-a1-2 is the same Sachbearbeiterin throughout, and LS2 i02's distractor „die Sachbearbeiterin“ still works. Alternatively, give the LS2 phone lines (l01–l03, l09, l11, l13) to cast.ensemble-a1-1 („Mitarbeiterin am Schalter“).",
+      "proposedRule": null
+    },
+    {
+      "id": "F08",
+      "reviewer": "R2",
+      "criterion": "K",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.2-u04",
+      "carriedFrom": "a1.2-u04.r1 F32 (partly fixed)",
+      "path": "steps[5].task.situationDe (a12-u04-w); steps[3].texts[7].lines[3] (ls4-t8-l04); steps[3].texts[1].lines[1] (ls4-t2-l02) + steps[3].blocks[0].items[1] (h3-02)",
+      "quote": "S1: „Ihr Freund Bilal Ahmed hat eine neue Wohnung in Leipzig.“ · t8: „Und du hast jetzt eine neue Wohnung.“ · t2 (Herr Ahmed, Do 18. Juni 15.15): „Bitte nehmen Sie Ihren Pass und den Antrag mit.“",
+      "problem": "The daily job is gone, but Bilal's new flat is still a new series fact: casts/a1.json only says he „sucht … eine Stelle“, and casts/series.json has no beat for his move. The S1 form ties t2 to Bilal's Anmeldung (the afternoon slot). Yet t2 asks for „den Antrag“, although the unit's own web page (LS1) lists Pass/Ausweis, the „Anmeldung“ form and the landlord's form for a registration, and the LS3 board files „Anträge“ under the 2nd floor (Pass, Ausweis), not under the Anmeldung.",
+      "fix": "Series owner: add Bilal's move (A1.2 u03/u04) to casts/series.json, or give the flat one line in the Folge or the story beat. t2-l02: „Bitte nehmen Sie Ihren Pass und das Formular von Ihrem Vermieter mit.“ and h3-02 key „seinen Pass und das Formular vom Vermieter“. Recount: t2 goes from 46 to about 48 words, inside 28–54. lx.antrag then stays receptive, on the board only.",
+      "proposedRule": null
+    },
+    {
+      "id": "F09",
+      "reviewer": "R1",
+      "criterion": "P",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.2-u04",
+      "carriedFrom": "a1.2-u04.r1 F31 (open) and F29 (follow-up)",
+      "path": "spec.lanes.pruefungsfokus, spec.deviation, spec.fokusPlan[0] (and the same entry in content/course-v2/a1.2/specs.json) vs fokus[0]",
+      "quote": "pruefungsfokus: sd1.h3, sd1.h1, sd1.sp2, sd1.s1 · deviation: null · fokusPlan[0].title „Sich in einem Prüfungszentrum zur A1-Prüfung anmelden“ · fokus[0].title „Der Prüfungstag: Was bringe ich mit?“",
+      "problem": "The plan (a1-2.md §5, §6 unit 4, §11) gives u04 L2, L3, H3, S1 and Sp2. The spec still swaps L2/L3 for H1 and records no deviation, so the unit has no Lesen block although its web page and board are ideal L2/L3 material. The round-1 Fokus fix changed the topic, but the spec still names the old one.",
+      "fix": "Take F01's preferred fix (sd1.l3 instead of sd1.h1). Otherwise record deviation.reason. Update fokusPlan[0].title to „Der Prüfungstag: Was bringe ich mit?“ in both the unit and specs.json.",
+      "proposedRule": "A rule for fokus[i].title ≡ spec.fokusPlan[i].title, and a plan-drift check: spec.lanes.pruefungsfokus ⊆ the plan's Prüfungsteile for the unit, unless deviation.reason is set."
+    },
+    {
+      "id": "F10",
+      "reviewer": "R2",
+      "criterion": "K",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.2-u04",
+      "path": "steps[1].reserve[0] (a1.2-u04-ls2-r01)",
+      "quote": "„Der ___ April ist ein Sonntag. (2., in Wörtern)“",
+      "problem": "The unit's calendar is 2026: 20 story dates agree with 1 June = Monday. In 2026, 2 April is a Thursday. Learners who check it against the unit's own calendar find a contradiction (CON-04: weekday ↔ date in the story calendar).",
+      "fix": "„Der ___ April ist ein Donnerstag. (2., in Wörtern)“, or drop the weekday: „Morgen ist der ___ April. (2., in Wörtern)“.",
+      "proposedRule": null
+    },
+    {
+      "id": "F11",
+      "reviewer": "R2",
+      "criterion": "D",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.2-u04",
+      "path": "steps[0].pool.items[7] (ls1-p08); steps[0].pool.items[5] (ls1-p06), also ls1-p07, p09, p10, ls2-p08, p09, ls3-p08, p09 explanations; steps[2].reserve[0] (ls3-r01)",
+      "quote": "p08 „Die Zeit steht meist vor einen Termin.“ · p06 „Das Verb ist steht auf Position 2, geöffnet am Ende.“ · r01 „die Kopie = das Papier mit dem Foto vom Pass, nicht der Pass.“",
+      "problem": "The explanations cite words without quotation marks. p08 therefore reads as ✗„vor + Akkusativ“, and p06 as a garbled sentence („Das Verb ist steht …“). The English twins do mark the cited words. r01 calls a photocopy „das Foto vom Pass“, which is misleading, because the passport has a photo in it.",
+      "fix": "Put cited words in „…“: „Die Zeitangabe steht meist vor „einen Termin“.“, „Das Verb „ist“ steht auf Position 2, „geöffnet“ am Ende.“ (the same for the other sentence-building explanations). r01: „die Kopie = der Pass auf Papier kopiert, nicht der echte Pass.“",
+      "proposedRule": "ITM-11: in explanation.de, a token that repeats the key's verb or phrase as a word is enclosed in „…“ (the English twin already does this). Fixture: ls1-p06."
+    },
+    {
+      "id": "F12",
+      "reviewer": "R1",
+      "criterion": "H",
+      "severity": "minor",
+      "scope": "instance",
+      "unitId": "a1.2-u04",
+      "carriedFrom": "a1.2-u04.r1 F28 (partly fixed)",
+      "path": "check.proofs[3] → check.proofItems[3] (a1.2-u04-q04)",
+      "quote": "cd.a1.info-schalter (mode interaction-spoken) proven by q04: tiles [Entschuldigung, wo, ist, die Anmeldung] – „Bilden Sie die Frage.“",
+      "problem": "The other round-1 points are fixed: LS1 now asks „Wo ist der Eingang?“ (i06), LS3 reads the board (i06), and q01 is a separate Rathaus with „geöffnet“. But the interaction can-do is still proven by ordering four given tiles. The learner performs it only in ls3-mo, which cannot be a proof target.",
+      "fix": "Make q04 a typed production: „An der Information: Sie suchen die Anmeldung. Schreiben Sie die Frage.“, accepting „Entschuldigung, wo ist die Anmeldung?“, „Wo ist die Anmeldung?“ and „Entschuldigung, wo ist hier die Anmeldung?“ (plus acceptedWhy).",
+      "proposedRule": null
+    },
+    {
+      "id": "F13",
+      "reviewer": "R1",
+      "criterion": "A",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.2-u04",
+      "path": "steps[5].task.form.fields[2] (S1 f3 Telefonnummer); steps[1].inputItems[4] (ls2-i05)",
+      "quote": "f3 accepted [0176 23 45 67, 0176 234567, 0176234567, 0176/234567] · checker: „0176 2345 67“ → wrong, „0176-234567“ → typo · ls2-i05: „16 Uhr 30“ → wrong",
+      "problem": "WritingTaskView grades form_fill fields with type 'form_fill', so check.js does not apply the dictation folding of digit groups. Any grouping the author did not list is therefore wrong or a typo, although the Goethe S1 scoring counts content, not grouping. ls2-i05 lists six time formats but not „16 Uhr 30“.",
+      "fix": "Unit: add „0176 2345 67“ and „0176-234567“ to f3, and „16 Uhr 30“ to ls2-i05. Engine: treat exact:\"number\" form fields like a dictation for digit grouping (normalizeDictation).",
+      "proposedRule": "check.js: checkOptionsFor(item) sets digit folding for any item with exact === 'number' whose key is mainly digits (phone, date, postcode), not only for dictations. Fixture: a12-u04-w f3 with „0176 2345 67“."
+    },
+    {
+      "id": "F14",
+      "reviewer": "R2",
+      "criterion": "K",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.2-u04",
+      "path": "content/course-v2/a1.2/rule-cards.json rc.imperativ-sie (.modelSentence, .de) — shown as steps[2].ruleCard; grammar-spine.json g.imperativ-sie.label",
+      "quote": "„Gehen Sie geradeaus und nehmen Sie die U2!“",
+      "problem": "The course is set in Leipzig (casts/a1.json), and Leipzig has no U-Bahn: its public transport is Straßenbahn, bus and S-Bahn. LS3 of this unit shows the card, and the spine label repeats the example. The card belongs to the level owner, since it was introduced in a1.2-u01, but u04 is where this review sees it.",
+      "fix": "modelSentence: „Gehen Sie geradeaus und nehmen Sie die Straßenbahn!“ or „… die Linie 4!“; keep „Steigen Sie am Markt aus!“, since Leipzig Markt is a real S-Bahn stop. Update the spine label to match.",
+      "proposedRule": null
+    },
+    {
+      "id": "F15",
+      "reviewer": "R1",
+      "criterion": "P",
+      "severity": "minor",
+      "scope": "class",
+      "unitId": "a1.2-u04",
+      "carriedFrom": "a1.2-u04.r1 F26 (rule part) and F27",
+      "path": "scripts/course-v2/rules/TXT-02.mjs (TOLERANCE on top of textWords); scripts/course-v2/lib-validate/detectors.mjs (det.zustandspassiv, det.konjunktiv1, det.adjektiv-endung-*, det.imperativ-du-ihr shape fallback)",
+      "quote": "TXT-02: lo = floor(b[0]·0.85), hi = ceil(b[1]·1.15) on a registry band that „= ±15 % of the sample“ · GRM-04: 33 advisories, e.g. „ist … geöffnet“ as Zustandspassiv, „Freitag arbeite“ as Konjunktiv I, „dritte“ as adjective declension, „Neu“ as an imperative",
+      "problem": "The unit part of both round-1 findings is fixed: t7 is now 52 words, and every exam text sits inside the raw band. The rule part is not. TXT-02 still widens an already-widened band (sd1.h1 32–53 becomes 27–61), which is a gate hole for every lane. GRM-04's 33 advisories are again all false positives or receptive input, so the one real signal (an attributive adjective ending in a key) would be buried.",
+      "fix": "Rule-smith: when textWordsSource is official-sample and the source note says ±15 %, TXT-02 adds no second tolerance. Exempt geöffnet/geschlossen from det.zustandspassiv. Stop det.konjunktiv1 from matching 1sg present. Exempt ordinals once g.ordinalzahlen-datum is introduced, and fix the „Neu“ shape fallback. No change to the unit.",
+      "proposedRule": "As stated in the fix, each with a failing fixture taken from this unit (ls4-t7 at 60 words must fail; steps[0].modelSentence must not raise det.zustandspassiv)."
+    }
+  ],
+  "passed": [
+    "Blind solve: 107 items plus 5 S1 fields. Every key is correct and determined by the German prompt. The only open answer-acceptance points are F03, F05 and F13, and the only stem issues are F04.",
+    "Perception: the four listen_select items now carry their punctuation in the quote, so the played Computerstimme matches the key („?“ ↔ Frage). The quote is masked until the item is answered, so the punctuation gives nothing away.",
+    "Facts: f01–f04 are verified, with a fresh check date and correct exceptions. The Fokus says only what f01/f02 support, plus neutral advice (pünktlich, Ausweis mit Foto, zum Beispiel Pass).",
+    "Grammar ceiling: Konjunktiv II is limited to the planned chunk „Ich hätte gern …“ (rm01, s02, p01, p06, p11, r04, c05). Temporal prepositions and ordinals are introduced receptively before productively. GRM-01/02 pass. The adjective endings (neue Adresse, Ihr neuer Termin, der erste freie Termin) stay in input and options and are never in a key.",
+    "Can-dos: all five are performed. The title can-do is performed in the Sp2 phone negotiation (decline → counter-propose → confirm), „wo es ist“ in LS1 i06, the date in LS2/LS3 micro-outputs, the room question in the LS3 micro-output, and voicemail comprehension in H3 and q02.",
+    "sd1.h3: 5 items, 3 options, played twice. Texts have 38–53 words (band 28–54): three official callers (Sprachschule, Bürgerbüro, Paketshop) and two private ones (Jonas, Elif). Keys c a a b b; both distractors are heard in every text.",
+    "sd1.h1 content: 6 items, texts have 34–52 words (band 32–53), keys b c c a a b. Story knowledge now points to the wrong option in t9 (9–12) and t11 (Unterschrift), so the items must be heard. The format problem is the image status only (F01).",
+    "sd1.s1: the situation text about another person has 46 words (band 36–48) and exactly 5 fields, formell, rubric sd1-s1, examKey goethe_a1. Bilal's data match the cast (Lahore; 27 in 2026) and the H3 afternoon slot.",
+    "sd1.sp2: two topics with one card each for learner and partner, prep 0, rubric sd1-sp2, AI repeat-on-request. The model turns are correct German and consistent with the unit's opening hours.",
+    "Calendar: all story weekday–date pairs agree with 2026 (1 June = Monday; Fri 5, Tue 9, Thu 11, Wed 17, Thu 18 June). Opening hours are consistent across LS1, c02, p02, the Sp2 model turns and q02 (Wednesday 10 Uhr inside 8–12). The only slip is a reserve item (F10).",
+    "Register: Sie in every instruction and in the Bürgerbüro, Herr Richter and Paketshop lines; du only between Priya, Arjun, Jonas, Elif and Bilal. The micro-output registers match their addressees (Freundin/Partner du; Information Sie).",
+    "Story: the scene logic now holds. The queue number is taken before the call, and there is no redundant repeat request. The clerk remarks on the late registration, the Meldebestätigung is handed over, and Arjun's „Das war aber leicht!“ pays off his „Ämter und Behörden finde ich schwer.“ The cliffhanger hands over to u05 (Dr. Sommer).",
+    "Lexis and size: 28 new lemmas (a1.2 band 18–30). LEX-01/03/04/05/07 pass. At most 3 glosses per text. Pools have 12 items + 4 generated. All instructions are ≤ 90 characters. The rule cards are ≤ 60 words.",
+    "Legal: no pass promise and no human-feedback claim. The exam name appears only in the optional Fokus, as a purpose phrase. No official Modellsatz or Übungssatz text is copied."
+  ]
+}

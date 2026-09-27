@@ -485,21 +485,17 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.beleg",
-            "promptDe": "Kassenbon oder Rechnung – beides ist ein ___ (B…) für Ihren Kauf.",
-            "promptEn": "A word for proof of purchase (starts with B).",
+            "promptDe": "Kassenbon oder Rechnung – beides ist ein ___ (B…g) für Ihren Kauf.",
+            "promptEn": "A word for proof of purchase (B…g).",
             "answer": "Beleg",
             "accepted": [
-              "Beleg",
-              "Beweis"
+              "Beleg"
             ],
             "explanation": {
-              "de": "Ein Beleg (auch: ein Beweis) zeigt: Sie haben die Ware gekauft.",
-              "en": "A Beleg (also: a Beweis) proves that you bought the item."
+              "de": "Ein Beleg zeigt: Sie haben die Ware gekauft.",
+              "en": "A Beleg proves that you bought the item."
             },
-            "origin": "agent",
-            "acceptedWhy": {
-              "Beweis": "richtig: auch ein Beweis für den Kauf"
-            }
+            "origin": "agent"
           },
           {
             "id": "b1.1-u04-ls1-p06",
@@ -957,8 +953,8 @@
           {
             "id": "b1.1-u04-ls2-l10",
             "speaker": "cast.priya",
-            "de": "Und wie lange braucht eine Reparatur?",
-            "en": "And how long does a repair take?"
+            "de": "Und wie lange dauert eine Reparatur, wenn ich das Gerät einschicke?",
+            "en": "And how long does a repair take if I send the device in?"
           },
           {
             "id": "b1.1-u04-ls2-l11",
@@ -981,14 +977,8 @@
           {
             "id": "b1.1-u04-ls2-l14",
             "speaker": "cast.priya",
-            "de": "Obwohl ich so lange warten musste, haben Sie mir sehr geholfen.",
-            "en": "Although I had to wait so long, you've been a great help."
-          },
-          {
-            "id": "b1.1-u04-ls2-l15",
-            "speaker": "cast.ensemble-b1-4",
-            "de": "Gern geschehen. Auf Wiederhören!",
-            "en": "You're welcome. Goodbye!"
+            "de": "Gut, vielen Dank. Sie haben mir sehr geholfen. Auf Wiederhören!",
+            "en": "Good, thank you very much. You've been a great help. Goodbye!"
           }
         ],
         "glosses": [
@@ -1489,7 +1479,7 @@
             "generator": "dictation.fromInput",
             "count": 2,
             "source": [
-              "b1.1-u04-ls2-l14",
+              "b1.1-u04-ls2-l10",
               "b1.1-u04-ls2-l12"
             ]
           },
@@ -2702,7 +2692,7 @@
           },
           {
             "speaker": "partner",
-            "de": "Auf meinem Zettel steht die Meinung von Monika. Sie ist 58 und arbeitet als Bibliothekarin. Sie kauft lieber im Laden, weil sie die Ware sehen möchte und dort Hilfe bekommt."
+            "de": "Auf meinem Zettel steht die Meinung von Monika. Sie ist 58. Sie kauft lieber im Laden, weil sie die Ware sehen möchte und dort Hilfe bekommt."
           },
           {
             "speaker": "learner",
@@ -2872,8 +2862,8 @@
       {
         "id": "b1.1-u04-ls8-l01",
         "speaker": "cast.priya",
-        "de": "Obwohl ich schon am Montag geschrieben habe, hat der Shop nicht geantwortet.",
-        "en": "Although I wrote on Monday already, the shop did not answer."
+        "de": "Obwohl ich schon am Montag geschrieben habe, hat mir der Shop erst heute geholfen.",
+        "en": "Although I wrote on Monday already, the shop only helped me today."
       }
     ],
     "items": [
@@ -2970,21 +2960,17 @@
         "type": "fill_blank",
         "role": "check",
         "topic": "lx.erstatten",
-        "promptDe": "Der Shop hat mir das Geld schon ___. (erstatten)",
+        "promptDe": "Der Shop hat mir das Geld schon ___. (Partizip von erstatten)",
         "promptEn": "Past participle.",
         "answer": "erstattet",
         "accepted": [
-          "erstattet",
-          "zurückerstattet"
+          "erstattet"
         ],
         "explanation": {
-          "de": "erstatten ist untrennbar: Das Partizip hat kein ge-: erstattet. Auch zurückerstattet ist richtig.",
-          "en": "erstatten has no ge- in the participle: erstattet. zurückerstattet is correct too."
+          "de": "erstatten ist untrennbar: Das Partizip hat kein ge-: erstattet.",
+          "en": "erstatten has no ge- in the participle: erstattet."
         },
-        "origin": "agent",
-        "acceptedWhy": {
-          "zurückerstattet": "richtig: zurückerstatten hat auch kein ge-"
-        }
+        "origin": "agent"
       },
       {
         "id": "b1.1-u04-c06",
@@ -2994,12 +2980,12 @@
         "promptDe": "Hören Sie und schreiben Sie den Satz.",
         "promptEn": "Listen and write the sentence.",
         "audioLineRef": "b1.1-u04-ls8-l01",
-        "answer": "Obwohl ich schon am Montag geschrieben habe, hat der Shop nicht geantwortet.",
+        "answer": "Obwohl ich schon am Montag geschrieben habe, hat mir der Shop erst heute geholfen.",
         "accepted": [
-          "Obwohl ich schon am Montag geschrieben habe, hat der Shop nicht geantwortet."
+          "Obwohl ich schon am Montag geschrieben habe, hat mir der Shop erst heute geholfen."
         ],
         "explanation": {
-          "de": "obwohl-Satz mit habe am Ende, dann sofort das Verb hat: hat der Shop nicht geantwortet.",
+          "de": "obwohl-Satz mit habe am Ende, dann sofort das Verb hat: hat mir der Shop erst heute geholfen.",
           "en": "obwohl clause with habe at the end, then the verb hat straight away."
         },
         "origin": "agent"
