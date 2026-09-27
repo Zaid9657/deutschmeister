@@ -22,6 +22,11 @@ import { emptyContext, ingest, addDoc, levelSlot } from '../scripts/course-v2/li
 import { detectInText, detectorProblem, buildLexEnv, EMPTY_ENV, stemVowelChanged } from '../scripts/course-v2/lib-validate/detectors.mjs';
 import { BANK_KEY_RE, SCHEMA_PATTERNS } from '../scripts/course-v2/lib-validate/ids.mjs';
 import { coverage } from '../scripts/course-v2/rules/LEX-01.mjs';
+import { entryForms, knownForms, licensedForms, umlaut } from '../scripts/course-v2/lib-validate/lexicon.mjs';
+import { CORE_SIZE, CORE_LEMMAS, CORE_ENTRIES, NUMBER_WORDS } from '../scripts/course-v2/lib-validate/core-lexicon.mjs';
+import { strongPraet } from '../scripts/course-v2/lib-validate/strong-verbs.mjs';
+import { check } from '../scripts/course-v2/lib/schema.mjs';
+import '../scripts/course-v2/lib/schemas/index.mjs';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..');
 const VALIDATE = join(REPO, 'scripts', 'course-v2', 'validate.mjs');
@@ -625,6 +630,175 @@ describe('detectors.json', () => {
     assert.equal(stemVowelChanged('mach', 'macht'), false);
     assert.equal(stemVowelChanged('fahr', 'fährt'), true);
     assert.equal(stemVowelChanged('les', 'liest'), true);
+  });
+});
+
+// ── rule-smith 2026-09-27: morphology, core lexicon, licensed forms (LEX-01/LEX-03), LEX-07, CON-06 ──
+
+const lexCtx = ({ lexicon = {}, spine = [], cards = [], unit = null } = {}) => {
+  const ctx = emptyContext({ root: null, today: '2026-09-27' });
+  for (const [level, entries] of Object.entries(lexicon)) ingest(ctx, { $schema: 'course-v2/lexicon@1', level, entries }, `fixture:${level}/lexicon.json`);
+  if (spine.length) ingest(ctx, { $schema: 'course-v2/spine@1', points: spine }, 'fixture:grammar-spine.json');
+  for (const [level, cs] of Object.entries(cards)) ingest(ctx, { $schema: 'course-v2/rulecards@1', level, cards: cs }, `fixture:${level}/rule-cards.json`);
+  const doc = unit ? addDoc(ctx, 'unit', unit, `fixture:${unit.level}/units/u${String(unit.nr).padStart(2, '0')}.json`, { target: true }) : null;
+  return { ctx, docs: doc ? [doc] : [], unit: doc, levels: unit ? [ctx.levels.get(unit.level)] : [] };
+};
+const lx = (id, lemma, pos, unit, extra = {}) => ({ id, lemma, pos, role: 'productive', unit, block: 1, list_ref: 'A1', gloss: { en: lemma }, example: lemma, wordId: null, ...extra });
+const formsOf = (e) => entryForms(e).forms;
+
+describe('lexicon morphology: an inflected form of a known lemma is known', () => {
+  test('verbs: present with stem change, imperative, Präteritum, Konjunktiv II, participles', () => {
+    const f = formsOf({ lemma: 'helfen', pos: 'VERB', verb_forms: { '2sg': 'hilfst', '3sg': 'hilft', praet: 'half', perfekt: 'hat geholfen' } });
+    for (const w of ['helfe', 'hilfst', 'hilft', 'helft', 'helfen', 'hilf', 'half', 'halfen', 'hälfe', 'geholfen', 'geholfene', 'helfend']) assert.ok(f.has(w), w);
+    const k = formsOf({ lemma: 'kommen', pos: 'VERB', verb_forms: { '3sg': 'kommt', praet: 'kam', perfekt: 'ist gekommen' } });
+    for (const w of ['kam', 'kamst', 'kamen', 'käme', 'kämen', 'kämest']) assert.ok(k.has(w), w);
+    const s = formsOf({ lemma: 'sagen', pos: 'VERB', verb_forms: { '3sg': 'sagt', praet: 'sagte', perfekt: 'hat gesagt' } });
+    assert.ok(s.has('sagte') && s.has('sagten') && s.has('gesagte'));
+    assert.ok(!s.has('sägte'), 'a regular weak verb has no umlauted Konjunktiv II');
+  });
+  test('separable verbs: split, rejoined in a subordinate clause, zu-infinitive; the praet is its FIRST word', () => {
+    const e = { lemma: 'anfangen', pos: 'VERB', separable: true, verb_forms: { '2sg': 'fängst an', '3sg': 'fängt an', perfekt: 'hat angefangen' } };
+    const { forms, prefix } = entryForms(e);
+    assert.equal(prefix, 'an');
+    for (const w of ['fange', 'fängst', 'fängt', 'fing', 'fingen', 'finge', 'anfängt', 'anfing', 'anzufangen', 'angefangen', 'angefangene']) assert.ok(forms.has(w), w);
+    assert.ok(!forms.has('an'), 'the particle is not a form of the verb (LEX-02 would count every „an")');
+    const m = formsOf({ lemma: 'mitkommen', pos: 'VERB', separable: true, verb_forms: { '3sg': 'kommt mit', praet: 'kam mit', perfekt: 'ist mitgekommen' } });
+    assert.ok(m.has('kam') && m.has('mitkam') && m.has('mitkäme'));
+    assert.ok(!m.has('mit'), '„kam mit" used to make „mit" a form of mitkommen');
+    const st = formsOf({ lemma: 'stattfinden', pos: 'VERB', separable: true, verb_forms: { '3sg': 'findet statt', perfekt: 'hat stattgefunden' } });
+    assert.ok(st.has('stattfindet') && st.has('fand') && st.has('stattfand'));
+  });
+  test('the strong-verb table fills a missing praet; never for -ieren or a short key inside a longer verb', () => {
+    assert.equal(strongPraet('verstehen'), 'verstand');
+    assert.equal(strongPraet('bekommen'), 'bekam');
+    assert.equal(strongPraet('fangen'), 'fing');
+    assert.equal(strongPraet('tun'), 'tat');
+    assert.equal(strongPraet('vertun'), null);
+    assert.equal(strongPraet('studieren'), null);
+    assert.equal(strongPraet('arbeiten'), null);
+    assert.equal(umlaut('kam'), 'käm');
+    assert.equal(umlaut('hatt'), 'hätt');
+    assert.equal(umlaut('wurd'), 'würd');
+    assert.equal(umlaut('lauf'), 'läuf');
+  });
+  test('adjectives: endings, comparative/superlative incl. umlaut and irregulars, -el/-er stems', () => {
+    const alt = formsOf({ lemma: 'alt', pos: 'ADJ' });
+    for (const w of ['alte', 'alten', 'älter', 'ältere', 'ältesten']) assert.ok(alt.has(w), w);
+    const gut = formsOf({ lemma: 'gut', pos: 'ADJ' });
+    for (const w of ['gute', 'besser', 'bessere', 'besten', 'beste']) assert.ok(gut.has(w), w);
+    const d = formsOf({ lemma: 'dunkel', pos: 'ADJ' });
+    assert.ok(d.has('dunkle') && d.has('dunkler') && d.has('dunklen'));
+    const t = formsOf({ lemma: 'teuer', pos: 'ADJ' });
+    assert.ok(t.has('teure') && t.has('teurer'));
+  });
+  test('nouns: plural, dative plural, feminine pair, nominalised adjective', () => {
+    const k = formsOf({ lemma: 'Kunde', pos: 'NOUN', article: 'der', plural: 'Kunden', feminine: 'die Kundin' });
+    for (const w of ['kunde', 'kunden', 'kundin', 'kundinnen']) assert.ok(k.has(w), w);
+    const h = formsOf({ lemma: 'Haus', pos: 'NOUN', article: 'das', plural: 'Häuser' });
+    assert.ok(h.has('häuser') && h.has('häusern') && h.has('hauses'));
+    assert.ok(formsOf({ lemma: 'Beschäftigte', pos: 'NOUN', plural: 'Beschäftigten' }).has('beschäftigter'));
+  });
+  test('number words: cardinals and ordinals with every ending', () => {
+    for (const w of ['vierundachtzig', 'zweitausendvierundzwanzig', 'ersten', 'zweite', 'dritten', 'vierte', 'siebten', 'zwanzigsten', 'dreißigsten', 'einunddreißigste', 'zweitens']) assert.ok(NUMBER_WORDS.has(w), w);
+  });
+});
+
+describe('core lexicon (core-lexicon.mjs): a closed A1 floor, outranked by the lexicon', () => {
+  test('closed: ≤ 400 entries, no B-level word, no proper name', () => {
+    assert.ok(CORE_SIZE <= 400, `core has ${CORE_SIZE} entries`);
+    const banned = ['wenigstens', 'zurzeit', 'einander', 'jedoch', 'allerdings', 'nämlich', 'selbst', 'einverstanden', 'Prozent', 'Protokoll', 'Betreff', 'Veranstalter', 'Vertrag', 'sofern', 'vorausgesetzt', 'entsprechen', 'Beschreibung', 'Idee', 'Gruppe', 'Raum', 'besonders', 'anders', 'möglich'];
+    const have = new Set(CORE_LEMMAS.map((w) => w.toLowerCase()));
+    assert.deepEqual(banned.filter((w) => have.has(w.toLowerCase())), []);
+    assert.deepEqual(CORE_LEMMAS.filter((w) => /^[A-ZÄÖÜ]/.test(w) && !CORE_ENTRIES.some((e) => e.lemma === w && e.pos === 'NOUN')), []);
+  });
+  test('basic words and the auxiliary/modal paradigms are known from A1.1 U1', () => {
+    const { ctx } = lexCtx({ lexicon: { 'a1.1': [lx('lx.hallo', 'hallo', 'INTJ', 'a1.1-u01')] } });
+    const known = knownForms(ctx, 'a1.1', 1);
+    for (const w of ['moment', 'einmal', 'fertig', 'tür', 'türen', 'bringt', 'brachte', 'begann', 'hätte', 'hätten', 'könnten', 'würden', 'wäre', 'müsste', 'dritten', 'zwanzigsten', 'dreißigsten']) assert.ok(known.has(w), w);
+    assert.ok(!known.has('einverstanden'));
+  });
+  test('precedence: a core lemma a lexicon allocates to a later unit is unknown before that unit', () => {
+    const { ctx } = lexCtx({ lexicon: { 'a1.1': [lx('lx.hallo', 'hallo', 'INTJ', 'a1.1-u01'), lx('lx.tuer', 'Tür', 'NOUN', 'a1.1-u05', { article: 'die', plural: 'Türen', plural_kind: 'regular' })] } });
+    assert.ok(!knownForms(ctx, 'a1.1', 4).has('tür'));
+    assert.ok(knownForms(ctx, 'a1.1', 5).has('türen'));
+    assert.ok(knownForms(ctx, 'a1.1', 4).has('moment'), 'unallocated core words stay known');
+  });
+});
+
+describe('licensed forms: the grammar a unit teaches licenses its rule-card examples', () => {
+  const spine = [{ id: 'g.konj2-test', label: 'Höfliche Formeln: Ich hätte gern …, Könnten Sie …?', intro: { receptive: 'a1.2-u07', productive: 'a1.2-u07' }, chunkFrom: 'a1.2-u04', detectors: [], errorTags: [], lehrwerk: [], consensus: 'strong', ruleCards: ['rc.konj2-test'], inventory: [] }];
+  const cards = { 'a1.2': [{ id: 'rc.konj2-test', spine: 'g.konj2-test', depth: 1, modelSentence: 'Würden Sie mir helfen?', de: 'Diese Formen sind besonders höflich.', en: 'Polite forms.', table: [['neutral', 'höflich'], ['Können Sie?', 'Könnten Sie?']], caseMarks: [] }] };
+  const unitAt = (nr, grammar) => ({ $schema: 'course-v2/unit@1', id: `a1.2-u${String(nr).padStart(2, '0')}`, level: 'a1.2', nr, stage: 'I', spec: { grammar } });
+  test('a unit naming the point (or placed at/after its chunk) is licensed; prose and table headers are not', () => {
+    const { ctx } = lexCtx({ spine, cards });
+    const l4 = licensedForms(ctx, unitAt(4, { new: [], chunk: ['g.konj2-test'], review: [] })).forms;
+    for (const w of ['würden', 'könnten', 'hätte']) assert.ok(l4.has(w), w);
+    for (const w of ['besonders', 'höflich', 'formen', 'neutral']) assert.ok(!l4.has(w), w);
+    assert.ok(!licensedForms(ctx, unitAt(3, { new: [], chunk: [], review: [] })).forms.has('würden'), 'not before the point enters');
+  });
+});
+
+describe('LEX-03 on a complete cumulative lexicon (A1.1 U1): real blockers stay, false ones are gone', () => {
+  const build = (answer) => lexCtx({
+    lexicon: { 'a1.1': [lx('lx.termin', 'Termin', 'NOUN', 'a1.1-u01', { article: 'der', plural: 'Termine', plural_kind: 'regular' }), lx('lx.mai', 'Mai', 'NOUN', 'a1.1-u01', { article: 'der', plural: null, plural_kind: 'singular-only' })] },
+    unit: { $schema: 'course-v2/unit@1', id: 'a1.1-u01', level: 'a1.1', nr: 1, stage: 'I', spec: { grammar: { new: [], chunk: [], review: [] } }, steps: [{ id: 'a1.1-u01-ls1', pool: { items: [{ id: 'a1.1-u01-ls1-p01', type: 'fill_blank', answer }, { id: 'a1.1-u01-ls1-p02', type: 'zuordnen', answer: 'c' }] } }] },
+  });
+  test('inflected ordinals, Konjunktiv II and an option key pass', async () => {
+    assertPass(await rule('LEX-03', build('Der Termin ist am dritten Mai. Hätten Sie am zwanzigsten Zeit? Könnten Sie das bitte bringen?')));
+  });
+  test('an unallocated word still blocks', async () => {
+    assertFail(await rule('LEX-03', build('Die Rechtsbehelfsbelehrung liegt bei.')), /Rechtsbehelfsbelehrung/);
+  });
+});
+
+describe('LEX-07 duplicates vs homographs', () => {
+  const withB11 = (entries) => {
+    const b = ex();
+    ingest(b.ctx, { $schema: 'course-v2/lexicon@1', level: 'b1.1', entries }, 'fixture:b1.1/lexicon.json');
+    return { ...b, levels: [b.ctx.levels.get('a2.1'), b.ctx.levels.get('b1.1')] };
+  };
+  test('a -2 homograph with its own gloss beside the plain entry passes on both levels', async () => {
+    const b = withB11([lx('lx.anruf-2', 'Anruf', 'NOUN', 'b1.1-u01', { article: 'der', plural: 'Anrufe', plural_kind: 'regular', gloss: { en: 'appeal (to the public)' } })]);
+    assertPass(await rule('LEX-07', b, { mode: 'level' }));
+  });
+  test('a -2 homograph repeating the gloss is one lemma entered twice', async () => {
+    const b = ex();
+    const g = b.parts.lexicon.find((e) => e.id === 'lx.anruf').gloss;
+    const c = withB11([lx('lx.anruf-2', 'Anruf', 'NOUN', 'b1.1-u01', { article: 'der', plural: 'Anrufe', plural_kind: 'regular', gloss: g })]);
+    assertFail(await rule('LEX-07', c, { mode: 'level' }), /homograph lx\.anruf-2 has the same gloss/);
+  });
+  test('the same id allocated again at a higher level blocks on the higher entry only, naming the promotion', async () => {
+    const b = ex();
+    const src = b.parts.lexicon.find((e) => e.role === 'receptive');
+    const c = withB11([{ ...src, unit: 'b1.1-u02', role: 'productive' }]);
+    const r = await rule('LEX-07', c, { mode: 'level' });
+    assertFail(r, /already allocated at a2\.1.*promotions/);
+    assert.ok(r.findings.filter((f) => f.severity === 'blocker').every((f) => /b1\.1/.test(f.file)), messages(r));
+  });
+});
+
+describe('CON-06 while a unit is a draft', () => {
+  test('partial/pending + https source + a reason in notes → a warning quoting the reason, no blocker', async () => {
+    const r = await rule('CON-06', ex((p) => { p.unit.status = 'draft'; }, { verified: false }));
+    assertPass(r);
+    assert.ok(r.findings.some((f) => f.severity === 'advisory' && /^warning: verification is "partial"/.test(f.message) && /notes:/.test(f.message)), messages(r));
+  });
+  test('a draft fact without a reason, or without a source, still blocks', async () => {
+    assertFail(await rule('CON-06', ex((p) => { p.unit.status = 'draft'; delete p.unit.facts[0].notes; }, { verified: false })), /say in notes/);
+    assertFail(await rule('CON-06', ex((p) => { p.unit.status = 'draft'; p.unit.facts[0].sources = []; }, { verified: false })), /without a source/);
+  });
+});
+
+describe('SCHEMA §8 UnitSpec.lexiconBlocks: 6..20 lemmas per block (B2 carries 15–18)', () => {
+  const blockErrors = (n) => {
+    const spec = exampleContext().parts.unit.spec;
+    spec.lexiconBlocks = spec.lexiconBlocks.map((b, i) => ({ ...b, lemmas: Array.from({ length: n }, (_, k) => `lx.test-${i}-${k}`) }));
+    return check('UnitSpec', spec).filter((e) => /lexiconBlocks\[\d\]\.lemmas/.test(e.path || e.at || JSON.stringify(e)) && /items/.test(e.message || JSON.stringify(e)));
+  };
+  test('17 lemmas per block pass, 21 and 5 do not', () => {
+    assert.deepEqual(blockErrors(17), []);
+    assert.ok(blockErrors(21).length > 0);
+    assert.ok(blockErrors(5).length > 0);
   });
 });
 

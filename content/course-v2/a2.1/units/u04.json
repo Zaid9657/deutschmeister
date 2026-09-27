@@ -971,7 +971,7 @@
           "lineDe": "Ich suche eine kleine Kaffeemaschine."
         }
       },
-      "endLine": "Sie können jetzt im Kaufhaus nach einem Gerät fragen."
+      "endLine": "Sie können jetzt im Kaufhaus nach einem Gerät fragen und sagen, wie Sie es finden."
     },
     {
       "id": "a2.1-u04-ls2",
@@ -1489,7 +1489,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.komparation",
-            "promptDe": "Das Angebot im Internet ist am ___. (günstig)",
+            "promptDe": "Das Angebot ist am ___. (günstig)",
             "promptEn": "Superlative of günstig after am.",
             "answer": "günstigsten",
             "accepted": [
@@ -2911,7 +2911,7 @@
           "register": "Sie",
           "support": "clarify"
         },
-        "openingLine": "Hallo, ich bin Marta. Möchten Sie anfangen? Stellen Sie mir bitte Ihre erste Frage.",
+        "openingLine": "Hallo, ich bin Marta. Möchten Sie anfangen? Dann stellen Sie mir bitte Ihre erste Frage.",
         "hintWords": [
           "Wie oft …?",
           "Wo …?",

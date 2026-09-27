@@ -505,16 +505,16 @@
           "promptEn": "“Eier” + “sind”: one egg or more?",
           "options": [
             "ein Ei",
-            "mehr als ein Ei",
+            "zwei oder mehr Eier",
             "kein Ei"
           ],
-          "answer": "mehr als ein Ei",
+          "answer": "zwei oder mehr Eier",
           "accepted": [
-            "mehr als ein Ei"
+            "zwei oder mehr Eier"
           ],
           "explanation": {
-            "de": "Eier und sind: Das ist Plural, also mehr als ein Ei. Singular: das Ei.",
-            "en": "“Eier” with “sind” is plural – more than one egg. Singular: das Ei."
+            "de": "Eier und sind: Das ist Plural, also zwei oder mehr Eier. Singular: das Ei.",
+            "en": "“Eier” with “sind” is plural – two or more eggs. Singular: das Ei."
           },
           "origin": "agent"
         },
@@ -1715,16 +1715,9 @@
           {
             "id": "a1.1-u04-ls3-l01",
             "speaker": "durchsage",
-            "de": "Liebe Kunden, heute im Angebot: Eier! Zehn Stück kosten nur 1,99 Euro.",
-            "en": "Dear customers, on special offer today: eggs! Ten cost only 1.99 euros.",
-            "say": "Liebe Kunden, heute im Angebot: Eier! Zehn Stück kosten nur eins neunundneunzig."
-          },
-          {
-            "id": "a1.1-u04-ls3-l02",
-            "speaker": "durchsage",
-            "de": "Und die Butter: 250 Gramm für 1,59 Euro. Nur heute!",
-            "en": "And the butter: 250 grams for 1.59 euros. Today only!",
-            "say": "Und die Butter: zweihundertfünfzig Gramm für eins neunundfünfzig. Nur heute!"
+            "de": "Liebe Kunden, heute im Angebot: Eier! Zehn Stück kosten nur 1,99 Euro. Und die Butter: 250 Gramm für 1,59 Euro. Nur heute!",
+            "en": "Dear customers, on special offer today: eggs! Ten cost only 1.99 euros. And the butter: 250 grams for 1.59 euros. Today only!",
+            "say": "Liebe Kunden, heute im Angebot: Eier! Zehn Stück kosten nur eins neunundneunzig. Und die Butter: zweihundertfünfzig Gramm für eins neunundfünfzig. Nur heute!"
           },
           {
             "id": "a1.1-u04-ls3-l03",
