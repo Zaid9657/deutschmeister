@@ -219,8 +219,8 @@
         "type": "multiple_choice",
         "role": "gist",
         "topic": "hoeren",
-        "promptDe": "Priya sieht auf die Uhr. Wie spät ist es?",
-        "promptEn": "Priya looks at the clock. What time is it?",
+        "promptDe": "Arjun fragt: „Wie spät ist es?“ Was ist richtig?",
+        "promptEn": "Arjun asks what time it is. What is right?",
         "options": [
           "8.30 Uhr",
           "9.30 Uhr",
@@ -310,8 +310,8 @@
           {
             "id": "a1.1-u07-ls1-l09",
             "speaker": "cast.priya",
-            "de": "Ich stehe immer um sieben Uhr auf. Um halb acht frühstücke ich mit Arjun. Um neun fängt der Kurs an.",
-            "en": "I always get up at seven. At half past seven I have breakfast with Arjun. The class starts at nine."
+            "de": "Ich stehe immer um sieben Uhr auf – aber heute nicht! Um halb acht frühstücke ich mit Arjun. Um neun fängt der Kurs an.",
+            "en": "I always get up at seven – but not today! At half past seven I have breakfast with Arjun. The class starts at nine."
           },
           {
             "id": "a1.1-u07-ls1-l10",
@@ -1080,8 +1080,8 @@
           {
             "id": "a1.1-u07-ls2-l04",
             "speaker": "cast.priya",
-            "de": "Nur am Morgen? Und am Abend nicht?",
-            "en": "Only in the morning? Not in the evening?"
+            "de": "Nur am Morgen? Und am Nachmittag nicht?",
+            "en": "Only in the morning? Not in the afternoon?"
           },
           {
             "id": "a1.1-u07-ls2-l05",
@@ -1110,8 +1110,8 @@
           {
             "id": "a1.1-u07-ls2-l09",
             "speaker": "cast.arjun",
-            "de": "Stimmt, das dauert. Dann fehlst du einmal im Kurs? Nur einmal?",
-            "en": "True, that takes time. Then you miss class once? Just once?"
+            "de": "Stimmt, das dauert. Dann fehlst du einmal im Kurs?",
+            "en": "True, that takes time. Then you miss class once?"
           },
           {
             "id": "a1.1-u07-ls2-l10",
@@ -1594,7 +1594,7 @@
             "count": 2,
             "source": [
               "a1.1-u07-ls2-l02",
-              "a1.1-u07-ls2-l04"
+              "a1.1-u07-ls2-l09"
             ]
           },
           {
@@ -1875,7 +1875,7 @@
           "options": [
             "Am Donnerstag ist kein Kurs.",
             "Der Kurs fängt am Donnerstag später an.",
-            "Priya hat am Donnerstag einen Termin."
+            "Der Kurs fängt am Donnerstag früher an."
           ],
           "answer": "Der Kurs fängt am Donnerstag später an.",
           "accepted": [
@@ -1896,7 +1896,7 @@
           "promptEn": "What is true at the end?",
           "options": [
             "Priya fehlt am Donnerstag im Kurs.",
-            "Arjun arbeitet am Donnerstag zu Hause.",
+            "Arjun hat am Donnerstag keine Zeit.",
             "Sie haben am Donnerstag einen Termin."
           ],
           "answer": "Sie haben am Donnerstag einen Termin.",

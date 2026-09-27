@@ -354,8 +354,8 @@
             "Sie füllen das Formular aus."
           ],
           "explanation": {
-            "de": "Herr Richter sagt: „Jetzt das Formular.“ Er fragt, Priya sagt die Angaben, und er schreibt.",
-            "en": "They fill in the form together: he asks, Priya answers, he writes."
+            "de": "Herr Richter sagt: „Jetzt das Formular.“ Er fragt, Priya buchstabiert, und er schreibt.",
+            "en": "They fill in the form together: he asks, Priya spells, he writes."
           },
           "origin": "agent"
         },
@@ -376,8 +376,8 @@
             "in Leipzig"
           ],
           "explanation": {
-            "de": "Die Adresse ist in Leipzig. „Berliner Straße“ ist nur der Name der Straße.",
-            "en": "Her address is in Leipzig; “Berliner Straße” is just the name of the street."
+            "de": "Die Adresse ist in Leipzig. „Berliner Straße“ ist eine Straße in Leipzig, nicht die Stadt Berlin.",
+            "en": "Her address is in Leipzig; “Berliner Straße” is a street in Leipzig, not the city of Berlin."
           },
           "origin": "agent"
         },
@@ -463,8 +463,8 @@
           ],
           "exact": "name",
           "explanation": {
-            "de": "„Nicht E“: Das E ist falsch. Nur „N – A – I – R“ hat kein E.",
-            "en": "“nicht E” means the E is wrong – only N-A-I-R has no E."
+            "de": "„Nicht E“: Das E ist falsch. Nur „N – A – I – R“ ist ohne E.",
+            "en": "“nicht E” means the E is wrong – only N-A-I-R is without an E."
           },
           "origin": "agent"
         },
@@ -576,7 +576,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "lx.buchstabieren",
-            "promptDe": "Priya ___ den Namen: N – A – I – R. (buchstabier-)",
+            "promptDe": "Priya ___: N – A – I – R. (buchstabier-)",
             "promptEn": "buchstabieren: she-form.",
             "answer": "buchstabiert",
             "accepted": [
@@ -980,7 +980,7 @@
         "register": "Sie"
       },
       "aussprache": {
-        "focus": "Das Alphabet: E und I, A und R (das deutsche E klingt wie das englische „a“)",
+        "focus": "Das Alphabet: E und I, A und R (der Buchstabe E klingt fast wie das englische „A“)",
         "perception": {
           "generator": "perception.pairs",
           "count": 3,
@@ -1126,7 +1126,7 @@
             "Nein, Emre sagt die Nummer noch einmal."
           ],
           "explanation": {
-            "de": "Herr Richter sagt: „Wie bitte? Ich verstehe nicht. Langsam, bitte.“ Dann sagt Emre die Nummer langsam.",
+            "de": "Herr Richter sagt: „Wie bitte? Ich verstehe Sie nicht. Langsam, bitte.“ Dann sagt Emre die Nummer langsam.",
             "en": "He asks Emre to repeat it slowly."
           },
           "origin": "agent"
@@ -1363,8 +1363,8 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.ja-nein-frage",
-            "promptDe": "Bilden Sie die Frage.",
-            "promptEn": "Build the yes/no question.",
+            "promptDe": "Bilden Sie die Ja/Nein-Frage.",
+            "promptEn": "Build the yes/no question (verb first).",
             "tiles": [
               "Sie",
               "wohnen",
@@ -1385,8 +1385,8 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.ja-nein-frage",
-            "promptDe": "Bilden Sie die Frage.",
-            "promptEn": "Build the yes/no question.",
+            "promptDe": "Bilden Sie die Ja/Nein-Frage.",
+            "promptEn": "Build the yes/no question (verb first).",
             "tiles": [
               "das",
               "ist",
@@ -1429,8 +1429,8 @@
             "type": "sentence_building",
             "role": "practice",
             "topic": "g.ja-nein-frage",
-            "promptDe": "Bilden Sie die Frage.",
-            "promptEn": "Build the yes/no question.",
+            "promptDe": "Bilden Sie die Ja/Nein-Frage.",
+            "promptEn": "Build the yes/no question (verb first).",
             "tiles": [
               "lernen",
               "online",
@@ -1587,8 +1587,8 @@
           "type": "sentence_building",
           "role": "practice",
           "topic": "g.ja-nein-frage",
-          "promptDe": "Bilden Sie die Frage.",
-          "promptEn": "Build the yes/no question.",
+          "promptDe": "Bilden Sie die Ja/Nein-Frage.",
+          "promptEn": "Build the yes/no question (verb first).",
           "tiles": [
             "Emre",
             "in Leipzig",
@@ -1742,8 +1742,8 @@
           {
             "id": "a1.1-u02-ls3-l03",
             "speaker": "cast.priya",
-            "de": "Ich bin Rezeptionistin. Ich arbeite am Empfang – wie Sie, Herr Richter!",
-            "en": "I’m a receptionist. I work at a reception desk – like you, Mr Richter!"
+            "de": "Ich bin Rezeptionistin. Das ist am Empfang – wie Sie, Herr Richter!",
+            "en": "I’m a receptionist. That’s at a reception desk – like you, Mr Richter!"
           },
           {
             "id": "a1.1-u02-ls3-l04",
@@ -2298,7 +2298,7 @@
           "type": "fill_blank",
           "role": "practice",
           "topic": "g.praesens",
-          "promptDe": "Olena und ich ___ in Leipzig. (wohn-)",
+          "promptDe": "Olena: „Sophie und ich ___ in Leipzig.“ (wohn-)",
           "promptEn": "wohnen: wir-form.",
           "answer": "wohnen",
           "accepted": [
@@ -2311,8 +2311,8 @@
           ],
           "difficulty": 1,
           "explanation": {
-            "de": "„Olena und ich“ = wir: „wir wohnen“.",
-            "en": "Olena and I = wir: wir wohnen."
+            "de": "„Sophie und ich“ = wir: „wir wohnen“.",
+            "en": "Sophie and I = wir: wir wohnen."
           },
           "origin": "agent"
         },
@@ -2342,21 +2342,26 @@
           "id": "a1.1-u02-ls3-r03",
           "type": "sentence_building",
           "role": "practice",
-          "topic": "g.praesens",
+          "topic": "g.verbposition-2",
           "promptDe": "Bilden Sie einen Aussagesatz.",
           "promptEn": "Build a statement.",
           "tiles": [
-            "arbeitet",
+            "ist",
             "Bilal",
-            "als Informatiker"
+            "Informatiker",
+            "von Beruf"
           ],
-          "answer": "Bilal arbeitet als Informatiker.",
+          "answer": "Bilal ist Informatiker von Beruf.",
           "accepted": [
-            "Bilal arbeitet als Informatiker.",
-            "Als Informatiker arbeitet Bilal."
+            "Bilal ist Informatiker von Beruf.",
+            "Bilal ist von Beruf Informatiker.",
+            "Von Beruf ist Bilal Informatiker.",
+            "Informatiker ist Bilal von Beruf."
           ],
           "acceptedWhy": {
-            "Als Informatiker arbeitet Bilal.": "grammatisch: als Informatiker betont auf Position 1"
+            "Bilal ist von Beruf Informatiker.": "grammatisch: von Beruf vor dem Beruf, das Verb bleibt auf Position 2",
+            "Von Beruf ist Bilal Informatiker.": "grammatisch: von Beruf auf Position 1, das Verb bleibt auf Position 2",
+            "Informatiker ist Bilal von Beruf.": "grammatisch: Informatiker betont auf Position 1"
           },
           "errorTags": [
             "v2-inv"
@@ -2368,8 +2373,8 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "Das Verb „arbeitet“ steht auf Position 2.",
-            "en": "The verb “arbeitet” is in position 2."
+            "de": "Das Verb „ist“ steht auf Position 2.",
+            "en": "The verb “ist” is in position 2."
           },
           "origin": "agent"
         },
@@ -2474,8 +2479,8 @@
             {
               "id": "a1.1-u02-ls4-t1-l01",
               "speaker": "cast.ensemble-a1-2",
-              "de": "So, das Formular ist fertig. Wie ist Ihre Telefonnummer, bitte?",
-              "en": "Right, the form is done. What is your phone number, please?"
+              "de": "Danke. Und jetzt noch die Telefonnummer, bitte. Wie ist die Nummer?",
+              "en": "Thank you. And now the phone number, please. What is the number?"
             },
             {
               "id": "a1.1-u02-ls4-t1-l02",
@@ -2934,7 +2939,7 @@
         "lane": "sd1",
         "aiRole": {
           "name": "Gesprächsleitung",
-          "personaDe": "Gesprächsleitung (KI) in der Prüfung, Sprechen Teil 1; spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste. Nach der Vorstellung sagt sie: „Buchstabieren Sie bitte Ihren Familiennamen.“ Dann fragt sie: „Wie ist Ihre Telefonnummer?“ Sagt die Lernerin „Wie bitte?“, wiederholt sie langsam.",
+          "personaDe": "Gesprächsleitung (KI) in der Prüfung, Sprechen Teil 1; spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste. Nach der Vorstellung sagt sie: „Buchstabieren Sie bitte Ihren Familiennamen.“ Dann fragt sie: „Wie ist Ihre Telefonnummer?“ Bei „Wie bitte?“ wiederholt sie langsam.",
           "register": "Sie",
           "support": "slow-wordbank"
         },
@@ -3059,7 +3064,8 @@
           "Alle fünf Angaben sind ausgefüllt.",
           "Die Angaben sind von Emre, nicht von Ihnen.",
           "Wohnort ist eine Stadt, Land ist ein Land.",
-          "Die Telefonnummer: Jede Zahl ist richtig."
+          "Die Telefonnummer: Jede Zahl ist richtig.",
+          "Ohne ä, ö, ü auf der Tastatur: Schreiben Sie ae, oe, ue (Tuerkei)."
         ],
         "modelText": "Wohnort: İzmir\nLand: Türkei\nMuttersprache: Türkisch\nTelefonnummer: 0090 532 418 30 60\nKurs: online"
       }
@@ -3075,9 +3081,9 @@
       {
         "id": "a1.1-u02-ls7-l01",
         "speaker": "cast.arta",
-        "de": "Hallo, hier ist Arta. Der Familienname ist Berisha: B – E – R – I – S – H – A.",
-        "en": "Hello, this is Arta. My surname is Berisha: B – E – R – I – S – H – A.",
-        "say": "Hallo, hier ist Arta. Der Familienname ist Berisha: Be – E – Err – I – Ess – Ha – A."
+        "de": "Hallo, hier ist Arta Berisha. Ich buchstabiere: B – E – R – I – S – H – A.",
+        "en": "Hello, this is Arta Berisha. I’ll spell it: B – E – R – I – S – H – A.",
+        "say": "Hallo, hier ist Arta Berisha. Ich buchstabiere: Be – E – Err – I – Ess – Ha – A."
       },
       {
         "id": "a1.1-u02-ls7-l02",
@@ -3155,8 +3161,8 @@
         "type": "sentence_building",
         "role": "check",
         "topic": "g.ja-nein-frage",
-        "promptDe": "Bilden Sie die Frage.",
-        "promptEn": "Build the yes/no question.",
+        "promptDe": "Bilden Sie die Ja/Nein-Frage.",
+        "promptEn": "Build the yes/no question (verb first).",
         "tiles": [
           "du",
           "Deutsch",
@@ -3346,7 +3352,7 @@
       "id": "a1.1-u02-rm01",
       "de": "Wie bitte? Noch einmal, bitte.",
       "en": "Sorry? Once more, please.",
-      "function": "nachfragen, wenn man etwas nicht versteht"
+      "function": "nachfragen (Ich verstehe etwas nicht.)"
     },
     {
       "id": "a1.1-u02-rm02",

@@ -309,8 +309,8 @@
           {
             "id": "a1.1-u01-ls1-l09",
             "speaker": "cast.frau-schulz",
-            "de": "Aha, Kochi! Das ist in Indien, oder? Und wo wohnen Sie jetzt, Frau Nair?",
-            "en": "I see, Kochi! That’s in India, isn’t it? And where do you live now, Ms Nair?"
+            "de": "Kochi! Das ist in Indien, oder? Und wo wohnen Sie jetzt, Frau Nair?",
+            "en": "Kochi! That’s in India, isn’t it? And where do you live now, Ms Nair?"
           },
           {
             "id": "a1.1-u01-ls1-l10",
@@ -401,8 +401,8 @@
             "Leipzig"
           ],
           "explanation": {
-            "de": "Frau Schulz sagt: „Ich komme aus Leipzig und ich wohne auch hier.“",
-            "en": "Mrs Schulz says: I’m from Leipzig and I live here too."
+            "de": "Frau Schulz sagt: „Ich komme aus Leipzig.“ Sie wohnt auch in Leipzig.",
+            "en": "Mrs Schulz says she is from Leipzig; she lives there too."
           },
           "origin": "agent"
         },
@@ -423,7 +423,7 @@
             "in Leipzig"
           ],
           "explanation": {
-            "de": "Priya kommt aus Kochi. Aber sie sagt: „Jetzt wohne ich auch hier in Leipzig.“",
+            "de": "Priya kommt aus Kochi. Aber sie sagt: „Und jetzt wohne ich auch hier in Leipzig.“",
             "en": "Priya is from Kochi, but she says she now lives in Leipzig."
           },
           "origin": "agent"
@@ -1052,8 +1052,8 @@
           {
             "id": "a1.1-u01-ls2-l05",
             "speaker": "cast.olena",
-            "de": "Entschuldigung! Hallo, ihr zwei! Ich bin Olena. Ich frage auch: Wie heißt du?",
-            "en": "Excuse me! Hi, you two! I’m Olena. My question too: what’s your name?"
+            "de": "Entschuldigung! Hallo, ihr zwei! Ich bin Olena. Und du? Wie heißt du noch mal?",
+            "en": "Excuse me! Hi, you two! I’m Olena. And you? What was your name again?"
           },
           {
             "id": "a1.1-u01-ls2-l06",
@@ -1209,8 +1209,8 @@
             "Tschüss, Priya! Bis morgen!"
           ],
           "explanation": {
-            "de": "Bilal sagt zu Priya: „Tschüss, Priya! Bis morgen!“ So sagen Freunde im Kurs „auf Wiedersehen“.",
-            "en": "Bilal says “Tschüss, Priya! Bis morgen!” – the informal goodbye between classmates."
+            "de": "Bilal sagt zu Priya: „Tschüss, Priya! Bis morgen!“ „Tschüss“ sagen Freunde. „Auf Wiedersehen“ ist formell.",
+            "en": "Bilal says “Tschüss, Priya! Bis morgen!” – “Tschüss” is informal, “Auf Wiedersehen” formal."
           },
           "origin": "agent"
         }
@@ -1462,11 +1462,13 @@
             "accepted": [
               "Ich lerne jetzt Deutsch.",
               "Jetzt lerne ich Deutsch.",
-              "Deutsch lerne ich jetzt."
+              "Deutsch lerne ich jetzt.",
+              "Ich lerne Deutsch jetzt."
             ],
             "acceptedWhy": {
               "Jetzt lerne ich Deutsch.": "grammatisch: jetzt auf Position 1, das Verb bleibt auf Position 2",
-              "Deutsch lerne ich jetzt.": "grammatisch: Deutsch betont auf Position 1, das Verb bleibt auf Position 2"
+              "Deutsch lerne ich jetzt.": "grammatisch: Deutsch betont auf Position 1, das Verb bleibt auf Position 2",
+              "Ich lerne Deutsch jetzt.": "grammatisch: jetzt betont am Ende, das Verb bleibt auf Position 2"
             },
             "errorTags": [
               "v2-inv"
@@ -1654,11 +1656,13 @@
           "accepted": [
             "Olena lernt hier Deutsch.",
             "Hier lernt Olena Deutsch.",
-            "Deutsch lernt Olena hier."
+            "Deutsch lernt Olena hier.",
+            "Olena lernt Deutsch hier."
           ],
           "acceptedWhy": {
             "Hier lernt Olena Deutsch.": "grammatisch: hier auf Position 1, das Verb bleibt auf Position 2",
-            "Deutsch lernt Olena hier.": "grammatisch: Deutsch betont auf Position 1, das Verb bleibt auf Position 2"
+            "Deutsch lernt Olena hier.": "grammatisch: Deutsch betont auf Position 1, das Verb bleibt auf Position 2",
+            "Olena lernt Deutsch hier.": "grammatisch: hier betont am Ende, das Verb bleibt auf Position 2"
           },
           "errorTags": [
             "v2-inv"
@@ -1957,8 +1961,8 @@
           "type": "multiple_choice",
           "role": "structured",
           "topic": "g.praesens",
-          "promptDe": "Welcher Satz ist über Olena?",
-          "promptEn": "Which sentence is about Olena?",
+          "promptDe": "Sie sprechen über Olena. Was sagen Sie?",
+          "promptEn": "You are talking about Olena. What do you say?",
           "options": [
             "Ich wohne in Leipzig.",
             "Sie wohnt in Leipzig.",
@@ -1969,8 +1973,8 @@
             "Sie wohnt in Leipzig."
           ],
           "explanation": {
-            "de": "„Sie wohnt“: Die Endung -t zeigt „sie“ (Olena). „Ich wohne“ schreibt Olena über Olena.",
-            "en": "“Sie wohnt” – the ending -t shows she/Olena; “ich wohne” is what Olena writes herself."
+            "de": "Über Olena sagen Sie „sie“: sie wohnt – mit -t. „Ich wohne“ sagt nur Olena.",
+            "en": "About Olena you say “sie wohnt”, with -t; only Olena herself says “ich wohne”."
           },
           "origin": "agent"
         },
@@ -2077,7 +2081,7 @@
             "type": "fill_blank",
             "role": "practice",
             "topic": "g.praesens",
-            "promptDe": "Arta fragt: „Und woher ___ du genau, Olena?“ (kommen)",
+            "promptDe": "„Olena, woher ___ du genau?“ (kommen)",
             "promptEn": "kommen, du-form.",
             "answer": "kommst",
             "accepted": [
@@ -2297,7 +2301,7 @@
             "type": "multiple_choice",
             "role": "practice",
             "topic": "lx.muttersprache",
-            "promptDe": "Olena kommt aus der Ukraine. Ukrainisch ist ihre ___.",
+            "promptDe": "Arta kommt aus dem Kosovo. Albanisch ist die ___ von Arta.",
             "promptEn": "Choose the word.",
             "options": [
               "Stadt",
@@ -2309,8 +2313,8 @@
               "Muttersprache"
             ],
             "explanation": {
-              "de": "Ukrainisch ist eine Sprache: Das ist die Muttersprache von Olena.",
-              "en": "Ukrainian is a language – Olena’s first language (Muttersprache)."
+              "de": "Albanisch ist eine Sprache. Arta schreibt: „Muttersprache: Albanisch.“",
+              "en": "Albanian is a language – Arta’s first language (Muttersprache)."
             },
             "origin": "agent"
           }
@@ -2381,11 +2385,13 @@
           "accepted": [
             "Priya lernt jetzt Deutsch.",
             "Jetzt lernt Priya Deutsch.",
-            "Deutsch lernt Priya jetzt."
+            "Deutsch lernt Priya jetzt.",
+            "Priya lernt Deutsch jetzt."
           ],
           "acceptedWhy": {
             "Jetzt lernt Priya Deutsch.": "grammatisch: jetzt auf Position 1, das Verb bleibt auf Position 2",
-            "Deutsch lernt Priya jetzt.": "grammatisch: Deutsch betont auf Position 1, das Verb bleibt auf Position 2"
+            "Deutsch lernt Priya jetzt.": "grammatisch: Deutsch betont auf Position 1, das Verb bleibt auf Position 2",
+            "Priya lernt Deutsch jetzt.": "grammatisch: jetzt betont am Ende, das Verb bleibt auf Position 2"
           },
           "errorTags": [
             "v2-inv"
@@ -2514,7 +2520,7 @@
           "lineDe": "Woher kommst du? Und wo wohnst du jetzt?"
         }
       },
-      "endLine": "Sie können jetzt Profile im Chat lesen und sagen: Emre spricht Türkisch, Olena wohnt in Leipzig."
+      "endLine": "Sie können jetzt Profile im Chat lesen. Und Sie können sagen: Emre spricht Türkisch."
     },
     {
       "id": "a1.1-u01-ls4",
@@ -2642,14 +2648,14 @@
             {
               "id": "a1.1-u01-ls4-t4-l03",
               "speaker": "x.eva-lindner",
-              "de": "Auf Wiedersehen, Tom! Bis morgen!",
-              "en": "Goodbye, Tom! See you tomorrow!"
+              "de": "Auf Wiedersehen, Tom! Bis morgen, Ana!",
+              "en": "Goodbye, Tom! See you tomorrow, Ana!"
             },
             {
               "id": "a1.1-u01-ls4-t4-l04",
               "speaker": "x.tom",
-              "de": "Tschüss, Ana! Bis morgen im Kurs!",
-              "en": "Bye, Ana! See you tomorrow in class!"
+              "de": "Tschüss, Ana! Bis morgen hier im Kurs!",
+              "en": "Bye, Ana! See you tomorrow here in class!"
             },
             {
               "id": "a1.1-u01-ls4-t4-l05",
@@ -2674,8 +2680,8 @@
             {
               "id": "a1.1-u01-ls4-t5-l02",
               "speaker": "x.tom",
-              "de": "Hallo, Ana! Und da ist auch Frau Lindner.",
-              "en": "Hi, Ana! And there’s Ms Lindner too."
+              "de": "Hallo, Ana! Oh, und da ist auch Frau Lindner.",
+              "en": "Hi, Ana! Oh, and there’s Ms Lindner too."
             },
             {
               "id": "a1.1-u01-ls4-t5-l03",
@@ -2686,8 +2692,8 @@
             {
               "id": "a1.1-u01-ls4-t5-l04",
               "speaker": "x.eva-lindner",
-              "de": "Guten Morgen, Ana! Guten Morgen, Tom! Kommen Sie bitte, der Kurs beginnt jetzt.",
-              "en": "Good morning, Ana! Good morning, Tom! Come in, please – class is starting now."
+              "de": "Guten Morgen, Ana! Guten Morgen, Tom! Kommen Sie bitte, der Kurs beginnt jetzt hier.",
+              "en": "Good morning, Ana! Good morning, Tom! Come in, please – class is starting here now."
             }
           ],
           "glosses": []
@@ -2832,7 +2838,7 @@
                 "Auf Wiedersehen!"
               ],
               "explanation": {
-                "de": "Tom sagt zu Frau Lindner: „Auf Wiedersehen!“ Zu Ana sagt er: „Tschüss! Bis morgen im Kurs!“",
+                "de": "Tom sagt zu Frau Lindner: „Auf Wiedersehen!“ Zu Ana sagt er: „Tschüss, Ana! Bis morgen hier im Kurs!“",
                 "en": "Tom says “Auf Wiedersehen” to Ms Lindner and “Tschüss, bis morgen” to Ana."
               },
               "origin": "agent"
@@ -2887,7 +2893,7 @@
       "strategyCards": [
         {
           "template": "sd1.h1",
-          "de": "Hören Teil 1: Sie hören sechs Gespräche, jedes Gespräch zweimal. Lesen Sie zuerst die Frage: Wer? Woher? Wo? Oft hören Sie zwei oder drei Antworten – aber nur eine passt zur Frage. In der Prüfung sind a, b und c Bilder.",
+          "de": "Hören Teil 1: Sie hören sechs Gespräche, jedes Gespräch zweimal. Lesen Sie zuerst die Frage: Wer? Woher? Wo? Oft hören Sie zwei oder drei Antworten. Aber nur eine passt zur Frage. In der Prüfung sind a, b und c Bilder.",
           "en": "Listening part 1: six short conversations, each played twice. Read the question first: who, where from, where? You often hear two or three of the options, but only one answers the question. In the exam the options are pictures."
         }
       ]
@@ -2903,7 +2909,7 @@
         "profile": "sd1-sp1",
         "prepMinutes": 0,
         "instructionsDe": "Stellen Sie sich mit den Stichwörtern vor: Name, Land, Wohnort, Sprachen.",
-        "situationDe": "Sprechen Teil 1: Sie stellen sich in der Gruppe vor. Auf dem Blatt stehen Stichwörter. Sprechen Sie in ganzen Sätzen. In der Prüfung buchstabieren Sie danach ein Wort und sagen eine Zahl – das üben Sie in Einheit 2.",
+        "situationDe": "Sprechen Teil 1: Sie stellen sich in der Gruppe vor. Auf dem Blatt stehen Stichwörter. Sprechen Sie in ganzen Sätzen. Die Prüfung hat danach noch zwei Aufgaben: buchstabieren und eine Zahl sagen. Das üben Sie in Einheit 2.",
         "cards": {
           "learner": [
             "Name?",
@@ -2938,7 +2944,7 @@
         "modelTurns": [
           {
             "speaker": "partner",
-            "de": "Guten Tag! Wie heißen Sie?"
+            "de": "Guten Tag! Bitte, Sie zuerst."
           },
           {
             "speaker": "learner",
@@ -2975,7 +2981,7 @@
         "register": "formell",
         "address": "Sie",
         "title": "Ein Formular für den Kurs: Emre",
-        "situationDe": "Emre Yıldız kommt aus der Türkei, aus İzmir. Er wohnt auch jetzt in İzmir. Emre lernt online Deutsch, im Kurs A1 von Frau Schulz in Leipzig. Die Muttersprache von Emre ist Türkisch. Er spricht auch ein bisschen Deutsch.",
+        "situationDe": "Emre Yıldız kommt aus der Türkei, aus İzmir, und er wohnt auch dort. Emre lernt online Deutsch, im Kurs A1 von Frau Schulz in Leipzig. Die Muttersprache von Emre ist Türkisch. Er spricht auch ein bisschen Deutsch.",
         "taskDe": "Lesen Sie den Text. Schreiben Sie: Name, Land, Wohnort, Muttersprache und Kurs von Emre.",
         "leitpunkte": [],
         "form": {
@@ -3046,7 +3052,7 @@
     {
       "id": "a1.1-u01-ls7",
       "kind": "check",
-      "endLine": "Geschafft! Sie können jetzt andere begrüßen, sich vorstellen und nach Name, Herkunft und Sprachen fragen."
+      "endLine": "Geschafft! Sie können jetzt andere begrüßen und sich vorstellen. Und Sie können nach Name, Herkunft und Sprachen fragen."
     }
   ],
   "check": {
@@ -3300,10 +3306,10 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lx.auf-wiedersehen",
-        "promptDe": "Es ist Abend, der Kurs ist zu Ende. Was sagt Bilal zu Frau Schulz?",
-        "promptEn": "Evening, class is over. What does Bilal say to Mrs Schulz?",
+        "promptDe": "Der Kurs ist zu Ende. Was sagt Bilal zu Frau Schulz?",
+        "promptEn": "Class is over. What does Bilal say to Mrs Schulz?",
         "options": [
-          "Guten Abend, Frau Schulz!",
+          "Guten Morgen, Frau Schulz!",
           "Freut mich, Frau Schulz!",
           "Auf Wiedersehen, Frau Schulz!"
         ],
@@ -3312,8 +3318,8 @@
           "Auf Wiedersehen, Frau Schulz!"
         ],
         "explanation": {
-          "de": "Am Ende sagen Sie zu Frau Schulz: „Auf Wiedersehen!“ „Guten Abend“ sagen Sie am Anfang.",
-          "en": "At the end you say “Auf Wiedersehen”; “Guten Abend” is a greeting."
+          "de": "Am Ende sagen Sie zu Frau Schulz: „Auf Wiedersehen!“ „Guten Morgen“ sagen Sie am Anfang.",
+          "en": "At the end you say “Auf Wiedersehen”; “Guten Morgen” is a greeting."
         },
         "origin": "agent"
       },

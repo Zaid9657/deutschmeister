@@ -174,8 +174,8 @@
         {
           "id": "a1.1-u08-start-l03",
           "speaker": "cast.emre",
-          "de": "Meine Frau Elif wohnt in Leipzig, aber ich bin noch hier in İzmir.",
-          "en": "My wife Elif lives in Leipzig, but I’m still here in İzmir."
+          "de": "Meine Frau Elif wohnt in Leipzig. Ich bin noch hier in İzmir.",
+          "en": "My wife Elif lives in Leipzig. I’m still here in İzmir."
         },
         {
           "id": "a1.1-u08-start-l04",
@@ -279,8 +279,8 @@
           {
             "id": "a1.1-u08-ls1-l05",
             "speaker": "cast.sophie",
-            "de": "Priya, du kannst tanzen? Super! Hast du Lust? Dann können wir am Freitag zusammen tanzen.",
-            "en": "Priya, you can dance? Great! Do you feel like it? Then we can dance together on Friday."
+            "de": "Priya, du kannst tanzen? Super! Dann können wir am Freitag zusammen tanzen. Hast du Lust?",
+            "en": "Priya, you can dance? Great! Then we can dance together on Friday. Do you feel like it?"
           },
           {
             "id": "a1.1-u08-ls1-l06",
@@ -1024,8 +1024,8 @@
           {
             "id": "a1.1-u08-ls2-l05",
             "speaker": "cast.olena",
-            "de": "Nein, ich tanze wirklich nicht gern. Aber um sieben ist ein Konzert: Musik aus Indien und aus der Türkei. Das finde ich interessant.",
-            "en": "No, I really don’t like dancing. But at seven there is a concert: music from India and Turkey. I find that interesting."
+            "de": "Nein, ich tanze wirklich nicht gern. Aber um sieben ist ein Konzert: Musik aus Indien und der Türkei.",
+            "en": "No, I really don’t like dancing. But at seven there is a concert: music from India and Turkey."
           },
           {
             "id": "a1.1-u08-ls2-l06",
@@ -1036,8 +1036,8 @@
           {
             "id": "a1.1-u08-ls2-l07",
             "speaker": "cast.olena",
-            "de": "Das gefällt mir. Und um neun ist ein Film im Park. Was meinst du?",
-            "en": "I like it. And at nine there is a film in the park. What do you think?"
+            "de": "Das finde ich interessant. Das gefällt mir! Und um neun ist ein Film im Park. Was meinst du?",
+            "en": "I find that interesting. I like it! And at nine there is a film in the park. What do you think?"
           },
           {
             "id": "a1.1-u08-ls2-l08",
@@ -1135,10 +1135,14 @@
             "19",
             "19.00",
             "19:00",
-            "neunzehn"
+            "neunzehn",
+            "7",
+            "sieben"
           ],
           "acceptedWhy": {
-            "neunzehn": "Zahl als Wort: so liest man es"
+            "7": "im Alltag: sieben Uhr am Abend = 19 Uhr, so sagt es Olena",
+            "neunzehn": "Zahl als Wort: so liest man es",
+            "sieben": "im Alltag: sieben Uhr am Abend = 19 Uhr, so sagt es Olena"
           },
           "exact": "number",
           "explanation": {
@@ -1756,14 +1760,14 @@
           {
             "id": "a1.1-u08-ls3-l02",
             "speaker": "cast.priya",
-            "de": "Ja, hier ist Priya. Hallo Elif! Emre sagt, du läufst sehr gern und sehr gut.",
-            "en": "Yes, this is Priya. Hi Elif! Emre says you love running and you’re very good at it."
+            "de": "Ja, hier ist Priya. Hallo Elif, wie geht’s? Emre sagt, du läufst sehr gern.",
+            "en": "Yes, this is Priya. Hi Elif, how are you? Emre says you love running."
           },
           {
             "id": "a1.1-u08-ls3-l03",
             "speaker": "cast.elif",
-            "de": "Ja, sehr gern! Ich laufe jeden Samstag im Park. Hast du am Samstag Zeit? Kommst du mit?",
-            "en": "Yes, I love it! I run in the park every Saturday. Are you free on Saturday? Are you coming along?"
+            "de": "Gut, danke! Ja, ich laufe jeden Samstag im Park. Hast du am Samstag Zeit? Kommst du mit?",
+            "en": "Fine, thanks! Yes, I run in the park every Saturday. Are you free on Saturday? Are you coming along?"
           },
           {
             "id": "a1.1-u08-ls3-l04",
@@ -1804,13 +1808,13 @@
           {
             "id": "a1.1-u08-ls3-l10",
             "speaker": "cast.priya",
-            "de": "Danke, Elif! Dann sind wir verabredet: am Samstag um zehn Uhr im Park. Tschüss!",
-            "en": "Thanks, Elif! Then it’s a date: Saturday at ten in the park. Bye!"
+            "de": "Danke, Elif! Dann sind wir verabredet: Samstag, Viertel vor zehn, am Supermarkt. Tschüss!",
+            "en": "Thanks, Elif! Then it’s a date: Saturday, a quarter to ten, by the supermarket. Bye!"
           }
         ],
         "text": {
-          "de": "Priya: Hallo ihr drei! Ich bin am Samstag mit Elif verabredet. Wir laufen um 10 Uhr im Park. Kommt ihr mit?\nOlena: Ja, gern, ich sage zu! Laufen gefällt mir nicht so, aber mit euch schon!\nSophie: Tut mir leid, ich muss absagen. Am Samstag bin ich in Dresden. Meine Eltern wohnen dort.\nBilal: Leider nicht, am Samstag spiele ich Fußball. Aber für das Konzert am Abend sage ich zu. Super Idee!",
-          "en": "Priya: Hi, you three! I’m meeting Elif on Saturday. We’re running in the park at 10. Are you coming? · Olena: Yes, gladly – I’m in! I don’t really like running, but with you I do! · Sophie: Sorry, I have to say no. On Saturday I’m in Dresden. My parents live there. · Bilal: Unfortunately not, I play football on Saturday. But I’m in for the concert in the evening. Great idea!"
+          "de": "Priya: Hallo ihr drei! Ich bin am Samstag mit Elif verabredet. Wir laufen um 10 Uhr im Park. Und um 19 Uhr gehen Olena und ich ins Konzert. Kommt ihr mit?\nOlena: Ja, gern, ich sage zu! Laufen gefällt mir nicht so, aber mit euch schon!\nSophie: Tut mir leid, ich muss absagen. Am Samstag bin ich in Dresden. Meine Eltern wohnen dort.\nBilal: Laufen? Leider nicht, am Samstag spiele ich Fußball. Aber für das Konzert am Abend sage ich zu. Super Idee!",
+          "en": "Priya: Hi, you three! I’m meeting Elif on Saturday. We’re running in the park at 10. And at 7 pm Olena and I are going to the concert. Are you coming? · Olena: Yes, gladly – I’m in! I don’t really like running, but with you I do! · Sophie: Sorry, I have to say no. On Saturday I’m in Dresden. My parents live there. · Bilal: Running? Unfortunately not, I play football on Saturday. But I’m in for the concert in the evening. Great idea!"
         },
         "glosses": [
           {
@@ -2746,8 +2750,8 @@
       "strategyCards": [
         {
           "template": "sd1.h3",
-          "de": "Hören Teil 3: Sie hören fünf Nachrichten am Telefon, jede zweimal. Lesen Sie zuerst die Frage und a, b, c. Oft hören Sie zwei oder drei Zeiten, Tage oder Preise – aber nur eine Antwort passt zur Frage. Achten Sie auf „nicht“ und „sondern“.",
-          "en": "Listening part 3: five phone messages, each played twice. Read the question and the options first. You often hear two or three times, days or prices, but only one answers the question. Listen for “nicht” and “sondern”."
+          "de": "Hören Teil 3: Sie hören fünf Nachrichten am Telefon, jede zweimal. Lesen Sie zuerst die Frage und a, b, c. Oft hören Sie zwei oder drei Zeiten oder Tage. Aber nur eine Antwort passt. Achten Sie auf „nicht“ und „sondern“.",
+          "en": "Listening part 3: five phone messages, each played twice. Read the question and the options first. You often hear two or three times or days, but only one answer fits. Listen for “nicht” and “sondern”."
         }
       ]
     },
@@ -2789,15 +2793,15 @@
             "profile": "sd1-sp2",
             "prepMinutes": 0,
             "instructionsDe": "Zwei Themen: „Freizeit“, dann „Wochenende“. Fragen und antworten Sie mit den Karten.",
-            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin haben Wortkarten zu zwei Themen: zuerst „Freizeit“, dann „Wochenende“. Stellen Sie mit Ihrer Karte eine Frage. Antworten Sie auf die Frage der Partnerin. Bei „Freizeit“ sagen Sie auch: Wie finden Sie das? Bei „Wochenende“ laden Sie ein, und Sie sagen zu oder ab.",
+            "situationDe": "Sprechen Teil 2: Sie und Ihre Partnerin haben Wortkarten zu zwei Themen. Zuerst „Freizeit“, dann „Wochenende“. Stellen Sie mit Ihrer Karte eine Frage. Antworten Sie auf die Frage der Partnerin. Bei „Freizeit“ sagen Sie auch: Wie finden Sie das? Bei „Wochenende“ laden Sie ein, und Sie sagen zu oder ab.",
             "cards": {
               "learner": [
                 "Freizeit – Musik",
-                "Wochenende – Samstag"
+                "Wochenende – Kino"
               ],
               "partner": [
                 "Freizeit – Sport",
-                "Wochenende – Kino"
+                "Wochenende – Samstag"
               ]
             },
             "turns": [
@@ -2809,7 +2813,7 @@
         ],
         "aiRole": {
           "name": "Nora",
-          "personaDe": "In Teil 1 Gesprächsleitung (KI): hört zu, bittet dann um das Buchstabieren des Vornamens und um die Telefonnummer. In Teil 2 Teilnehmerin in der Prüfung: hört gern Musik aus Indien, schwimmt gern und hat am Samstag am Nachmittag Zeit; fragt mit der Karte „Kino“ und lädt ein (Kommen Sie mit?). Spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste.",
+          "personaDe": "In Teil 1 Gesprächsleitung (KI): hört zu, bittet dann um das Buchstabieren des Vornamens und um die Telefonnummer. In Teil 2 Teilnehmerin in der Prüfung: hört gern Musik aus Indien, schwimmt gern und hat am Freitag am Abend Zeit; fragt mit der Karte „Samstag“ und lädt ein (Gehen wir zusammen schwimmen?). Spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste.",
           "register": "Sie",
           "support": "slow-wordbank"
         },
@@ -2867,23 +2871,23 @@
           },
           {
             "speaker": "learner",
-            "de": "Ja, ich schwimme gern. Fußball finde ich nicht so toll."
+            "de": "Ja, ich tanze gern. Fußball finde ich nicht so toll."
           },
           {
             "speaker": "learner",
-            "de": "Haben Sie am Samstag Zeit? Gehen wir zusammen schwimmen?"
-          },
-          {
-            "speaker": "partner",
-            "de": "Am Samstag? Ja, am Nachmittag habe ich Zeit. Gern!"
-          },
-          {
-            "speaker": "partner",
             "de": "Gehen Sie am Wochenende ins Kino? Kommen Sie mit?"
           },
           {
+            "speaker": "partner",
+            "de": "Ja, gern! Am Freitag am Abend habe ich Zeit."
+          },
+          {
+            "speaker": "partner",
+            "de": "Haben Sie am Samstag Zeit? Gehen wir zusammen schwimmen?"
+          },
+          {
             "speaker": "learner",
-            "de": "Tut mir leid, am Samstag kann ich nicht. Ich muss arbeiten."
+            "de": "Tut mir leid, am Samstag kann ich nicht. Ich laufe im Park, und am Abend gehe ich ins Konzert."
           }
         ]
       }
