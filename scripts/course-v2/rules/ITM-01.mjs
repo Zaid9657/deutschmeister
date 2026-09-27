@@ -123,19 +123,26 @@ function cueFindings(doc, item, path, where, pos) {
     const distractors = arr(item.options).map(String).filter((o) => norm(o) !== norm(key));
     const digits = (x) => x.replace(/\D+/g, '');
     const inStem = (x) => (digits(x).length >= 2 && digits(x) === digits(x.replace(/[^\d\s.,:]/g, '')) ? de.replace(/\D+/g, ' ').split(' ').includes(digits(x)) : norm(x).length >= 3 && hasWord(norm(de), norm(x)));
+    // a1.1-u04 r1 F06: „the digits 1,19 appear in the stem and in exactly one option" — a flyer with the
+    // other prices as options is fine, the key alone copied from the stem is not
     if (inStem(key) && !distractors.some(inStem)) out.push(blocker(doc, `${path}.promptDe`, `the key „${key}" stands in the stem and no distractor does — the item answers itself`, id));
   }
   // a cue only promptEn gives
   const cueWords = [];
-  for (const m of en.matchAll(/\b(?:polite form|form|plural|past|participle|noun|verb|opposite|comparative|superlative) (?:of|from) ["„“']?(\p{L}+)/giu)) cueWords.push(m[1]);
+  for (const m of en.matchAll(/\b(?:polite form|form|plural|past|participle|noun|verb|opposite|comparative|superlative) (?:of|from) (?:the |a |an )?["„“']?(\p{L}+)(?=["“”']?\s*(?:$|[.,;:)!?]))/giu)) cueWords.push(m[1]);
   for (const m of en.matchAll(/\(([\p{L}-]+)\)/gu)) cueWords.push(m[1]);
-  for (const w of cueWords) {
-    if (w.length >= 3 && !hasWord(de, w)) out.push(blocker(doc, `${path}.promptDe`, `promptEn names „${w}", promptDe does not — the German prompt must carry the cue`, id));
+  for (const m of en.matchAll(/[„“"]([\p{L}-]+)[“”"]/gu)) cueWords.push(m[1]);
+  // only a German word is a cue (a form the lexicon knows, or one with ä/ö/ü/ß): „nominative" is metalanguage
+  for (const w of new Set(cueWords)) {
+    const german = pos.has(w.toLowerCase()) || /[äöüß]/i.test(w);
+    if (german && w.length >= 3 && !hasWord(de, w)) out.push(blocker(doc, `${path}.promptDe`, `promptEn names „${w}", promptDe does not — the German prompt must carry the cue`, id));
   }
   if (/\b(?:as an? (?:ordinal )?word|in words|written out|spell(?:ed)? out)\b/i.test(en) && !WORD_CUE_RE.test(de)) out.push(blocker(doc, `${path}.promptDe`, 'promptEn asks for a word, promptDe does not („in Wörtern", „als Wort")', id));
   const starts = en.match(/\bstarts? with ["„“']?(\p{L}+)/iu);
   if (starts && !de.toLowerCase().includes(starts[1].toLowerCase())) out.push(blocker(doc, `${path}.promptDe`, `promptEn gives the first letters „${starts[1]}", promptDe does not`, id));
   if (!typed || !key) return out;
+  // comprehension items (input, structured, exam) are decided by their text; the rest by the prompt
+  const lexicalSlot = where === 'pool' || where === 'reserve' || where === 'check';
   // an ordinal word as the key
   if (key.split(/\s+/).some((w) => ordinalValue(w.replace(/[^\p{L}]/gu, '')) !== null) && !accepted.some((a) => /\d/.test(a)) && item.exact !== 'number' && !WORD_CUE_RE.test(de)) {
     out.push(blocker(doc, `${path}.accepted`, `the key „${key}" is an ordinal word: say „Wort" in promptDe, accept the digit form, or set exact: "number" (the checker then takes „4." for „vierte")`, id));
@@ -148,13 +155,19 @@ function cueFindings(doc, item, path, where, pos) {
   }
   if (CUE_RE.test(de.replace(/_{2,}/g, (g, i) => (i > 0 && /\p{L}/u.test(de[i - 1]) ? g : ' ')))) return out;
   const words = key.replace(/[.,!?;:„“"]/g, '').split(/\s+/).filter(Boolean);
-  // a preposition the prompt does not give
+  // a preposition the prompt does not give (a phrase „an der" or a contraction „zum"; a bare „auf" is a
+  // verb's rection, which the verb decides; a gap right after a preposition „gegenüber ___" is framed)
   const gapAt = de.search(/_{2,}/);
-  if (words.length && PREPOSITIONS.has(words[0].toLowerCase()) && !hasWord(de, words[0]) && !/Präposition/i.test(de)) {
+  const wordBefore = (gapAt > 0 ? de.slice(0, gapAt).trim().split(/\s+/).pop() : '') || '';
+  const phrase = words.length >= 2 || /^(?:zum|zur|am|im|ins|ans|beim|vom|aufs)$/i.test(words[0] || '');
+  if (lexicalSlot && phrase && PREPOSITIONS.has(words[0].toLowerCase()) && !PREPOSITIONS.has(wordBefore.toLowerCase()) && !hasWord(de, words[0]) && !/Präposition/i.test(de)) {
     out.push(blocker(doc, `${path}.promptDe`, `the key „${key}" begins with the preposition „${words[0]}", which promptDe does not give — another preposition fits the frame; cue it („(${words[0]})")`, id));
     return out;
   }
-  if (words.length !== 1) return out;
+  if (words.length !== 1 || !lexicalSlot) return out;
+  // synonyms already accepted, or a prompt that defines the word („…: Das ist eine ___.") decide it
+  if (new Set(accepted.map((a) => norm(a))).size >= 2) return out;
+  if (/:\s*[^:]*_{2,}|\bheißt\b|\bnennt man\b/.test(de)) return out;
   // an open lexical gap: noun, adjective, or sentence adverb at the start
   const w = words[0];
   const before = gapAt > 0 ? de.slice(0, gapAt) : '';
