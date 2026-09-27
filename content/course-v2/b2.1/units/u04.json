@@ -392,7 +392,7 @@
           "type": "fill_blank",
           "role": "detail",
           "topic": "lesen",
-          "promptDe": "Fällt ein Ausflug aus, gibt es möglichst eine gleich gute ___. (Wort aus dem Text: Er…)",
+          "promptDe": "Fällt ein Ausflug aus, gibt es möglichst eine gleich gute ___. (Nomen aus dem Text: Er…)",
           "promptEn": "Section 2: the word for what you get instead (it starts with Er…).",
           "answer": "Ersatzleistung",
           "accepted": [
@@ -773,7 +773,7 @@
           "role": "practice",
           "topic": "lx.reisebedingungen",
           "promptDe": "Lesen Sie vor der Buchung die ___. (die Regeln zum Reisevertrag; ein Wort: Reise…)",
-          "promptEn": "Name the travel terms: one word beginning with Reise….",
+          "promptEn": "Name the travel terms: one word that begins with Reise-.",
           "answer": "Reisebedingungen",
           "accepted": [
             "Reisebedingungen"
@@ -786,8 +786,8 @@
           ],
           "difficulty": 2,
           "explanation": {
-            "de": "Die Reisebedingungen sind die Regeln, die zum Reisevertrag gehören: Rechte und Pflichten bei einer Pauschalreise. Allgemein sagt man auch AGB.",
-            "en": "The terms of travel are the rules that belong to the travel contract; the general word for such terms is AGB."
+            "de": "Die Reisebedingungen sind die Regeln, die zum Reisevertrag gehören – die AGB eines Reiseveranstalters.",
+            "en": "The terms of travel are the rules that belong to the travel contract – a tour operator’s general terms and conditions (AGB)."
           },
           "origin": "agent"
         },
@@ -2826,7 +2826,7 @@
           "Schluss und Gruß",
           "Lernmodus etwa 120 Wörter (Prüfung: mindestens 150)"
         ],
-        "modelText": "Betreff: Beschwerde – Pauschalreise Kreta, 12.–19. Oktober\n\nSehr geehrte Damen und Herren,\n\nim Oktober war ich mit einer Freundin auf Ihrer Pauschalreise nach Kreta, die leider erhebliche Mängel hatte.\n\nSie haben ausdrücklich ein ruhiges Hotel mit Blick auf das Meer zugesichert. Neben unserem Zimmer war aber eine Baustelle, und der Baulärm fing jeden Morgen um sieben Uhr an.\n\nObwohl wir die Mängel sofort gemeldet haben, war Ihre Reiseleitung zwei Tage lang nicht erreichbar. Dabei hätte sie uns ein anderes Zimmer anbieten müssen. Außerdem hätten Sie uns schon vor der Reise über die Baustelle informieren müssen.\n\nAufgrund dieser Mängel fordere ich eine Minderung des Reisepreises um 30 Prozent, also 714 Euro. Ich würde Sie bitten, mir den Betrag bis zum 30. November zu überweisen. Andernfalls wende ich mich an die Verbraucherzentrale.\n\nMit freundlichen Grüßen\nPriya Nair"
+        "modelText": "Betreff: Beschwerde – Pauschalreise Kreta, 12.–19. Oktober\n\nSehr geehrte Damen und Herren,\n\nim Oktober war ich mit einer Freundin auf Ihrer Pauschalreise nach Kreta, die leider erhebliche Mängel hatte.\n\nSie haben ausdrücklich ein ruhiges Hotel mit Blick auf das Meer zugesichert. Neben unserem Zimmer war aber eine Baustelle, und der Baulärm fing jeden Morgen um sieben Uhr an.\n\nObwohl wir die Mängel sofort gemeldet haben, hat sich zwei Tage lang niemand um uns gekümmert. Ihre Reiseleitung hätte uns ein anderes Zimmer anbieten müssen. Außerdem hätten Sie uns schon vor der Reise über die Baustelle informieren müssen.\n\nAufgrund dieser Mängel fordere ich eine Minderung des Reisepreises um 30 Prozent, also 714 Euro. Ich würde Sie bitten, mir den Betrag bis zum 30. November zu überweisen. Andernfalls wende ich mich an die Verbraucherzentrale.\n\nMit freundlichen Grüßen\nPriya Nair"
       }
     },
     {

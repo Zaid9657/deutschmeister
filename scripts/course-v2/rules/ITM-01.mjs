@@ -132,18 +132,19 @@ function cueFindings(doc, item, path, where, pos) {
     if (inStem(key) && !distractors.some(inStem)) out.push(blocker(doc, `${path}.promptDe`, `the key „${key}" stands in the stem and no distractor does — the item answers itself`, id));
   }
   // a cue only promptEn gives
-  const cueWords = [];
-  for (const m of en.matchAll(/\b(?:polite form|form|plural|past|participle|noun|verb|opposite|comparative|superlative) (?:of|from) (?:the |a |an )?["„“']?(\p{L}+)(?=["“”']?\s*(?:$|[.,;:)!?]))/giu)) cueWords.push(m[1]);
-  for (const m of en.matchAll(/\(([\p{L}-]+)\)/gu)) cueWords.push(m[1]);
-  for (const m of en.matchAll(/[„“"]([\p{L}-]+)[“”"]/gu)) cueWords.push(m[1]);
-  // only a German word is a cue (a form the lexicon knows, or one with ä/ö/ü/ß): „nominative" is metalanguage
-  // the cue stands in promptDe AS a cue: in brackets, after „von/zu/aus" („die Form von können") or before
-  // an arrow — the word merely occurring in the prompt's sentence („Können Sie …? Höflicher: ___") is no cue
+  // „the polite form of können": the RELATION is the cue — promptDe carries it as a cue (in brackets,
+  // after „von/zu/aus", before an arrow), not merely the word in its sentence („Können Sie …? ___")
+  const relCues = [...en.matchAll(/\b(?:polite form|form|plural|past|participle|noun|verb|opposite|comparative|superlative) (?:of|from) (?:the |a |an )?["„“']?(\p{L}+)(?=["“”']?\s*(?:$|[.,;:)!?]))/giu)].map((m) => m[1]);
+  // a quoted or bracketed word in promptEn only points at a word: promptDe must contain it
+  const wordCues = [...en.matchAll(/\(([\p{L}-]+)\)|[„“"]([\p{L}-]+)[“”"]/gu)].map((m) => m[1] || m[2]);
   const esc = (w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const cued = (w) => new RegExp(`\\([^)]*${esc(w)}[^)]*\\)|(?:von|zu|aus)\\s+[„"]?${esc(w)}|${esc(w)}[“"]?\\s*→`, 'iu').test(de);
-  for (const w of new Set(cueWords)) {
-    const german = pos.has(w.toLowerCase()) || /[äöüß]/i.test(w);
-    if (german && w.length >= 3 && !cued(w)) out.push(blocker(doc, `${path}.promptDe`, `promptEn names „${w}" as the cue, promptDe does not („(${w})") — the German prompt must carry the cue`, id));
+  const german = (w) => w.length >= 3 && (pos.has(w.toLowerCase()) || /[äöüß]/i.test(w));
+  for (const w of new Set(relCues)) {
+    if (german(w) && !cued(w)) out.push(blocker(doc, `${path}.promptDe`, `promptEn names „${w}" as the cue, promptDe does not („(${w})") — the German prompt must carry the cue`, id));
+  }
+  for (const w of new Set(wordCues)) {
+    if (german(w) && !hasWord(de, w)) out.push(blocker(doc, `${path}.promptDe`, `promptEn names „${w}", promptDe does not — the German prompt must carry the cue`, id));
   }
   if (/\b(?:as an? (?:ordinal )?word|in words|written out|spell(?:ed)? out)\b/i.test(en) && !WORD_CUE_RE.test(de)) out.push(blocker(doc, `${path}.promptDe`, 'promptEn asks for a word, promptDe does not („in Wörtern", „als Wort")', id));
   const starts = en.match(/\bstarts? with ["„“']?(\p{L}+)/iu);
