@@ -1,0 +1,19 @@
+{
+  "$schema": "course-v2/rubric@1",
+  "id": "ga2-sp3",
+  "kind": "speaking",
+  "lane": "ga2",
+  "max": 8,
+  "criteria": [
+    { "id": "af", "label": "Aufgabenerfüllung (Sprachfunktion, Interaktion, Register)", "per": "part", "levels": [4, 3, 2, 1, 0] },
+    { "id": "sp", "label": "Sprache (Spektrum, Beherrschung)", "per": "part", "levels": [4, 3, 2, 1, 0] }
+  ],
+  "zeroRules": ["goethe-af-e-zeroes-task"],
+  "capRules": [],
+  "spelling": "not-scored",
+  "feedbackLanguage": ["de-a2", "en"],
+  "modelId": "config:speaking-full",
+  "splitVerified": false,
+  "calibration": { "status": "pending", "rangeBands": 1 },
+  "source": "https://www.goethe.de/pro/relaunch/prf/materialien/A2/A2_Uebungssatz_Erwachsene.pdf"
+}

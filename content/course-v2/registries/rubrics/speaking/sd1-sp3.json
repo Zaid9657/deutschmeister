@@ -1,0 +1,19 @@
+{
+  "$schema": "course-v2/rubric@1",
+  "id": "sd1-sp3",
+  "kind": "speaking",
+  "lane": "sd1",
+  "max": 6,
+  "criteria": [
+    { "id": "bitte", "label": "Zur Bildkarte eine Bitte formulieren", "per": "turn", "levels": [2, 1, 0] },
+    { "id": "reaktion", "label": "Auf eine Bitte reagieren", "per": "turn", "levels": [1, 0.5, 0] }
+  ],
+  "zeroRules": [],
+  "capRules": [],
+  "spelling": "not-scored",
+  "feedbackLanguage": ["de-a1", "en"],
+  "modelId": "config:speaking-full",
+  "splitVerified": true,
+  "calibration": { "status": "pending", "rangeBands": 1 },
+  "source": "https://www.goethe.de/pro/relaunch/prf/de/Pruefungsziele_Testbeschreibung_A1_SD1.pdf"
+}

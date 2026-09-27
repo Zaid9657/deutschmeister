@@ -1,0 +1,161 @@
+{
+  "$schema": "course-v2/lane@1",
+  "id": "sd1",
+  "name": "Goethe-Zertifikat A1: Start Deutsch 1",
+  "level": "A1",
+  "examKey": "goethe_a1",
+  "providers": ["goethe", "telc"],
+  "stand": "2026-09-27",
+  "sources": [
+    "https://www.goethe.de/pro/relaunch/prf/de/Durchfuehrungsbestimmungen_A1_Start_Deutsch_1.pdf",
+    "https://www.goethe.de/pro/relaunch/prf/de/Pruefungsziele_Testbeschreibung_A1_SD1.pdf",
+    "https://www.goethe.de/pro/relaunch/prf/materialien/A1_sd1/sd_1_uebungssatz01.pdf",
+    "https://www.telc.net/sprachpruefungen/zertifikatspruefung/deutsch/start-deutsch-1-/-telc-deutsch-a1/",
+    "https://shop.telc.net/media/catalog/product/file/2/0/20210103_5070-b00-010106_web_1.pdf"
+  ],
+  "access": { "gate": "none" },
+  "modules": {
+    "hoeren": { "minutes": 20, "teile": ["h1", "h2", "h3"] },
+    "lesen": { "minutes": 25, "teile": ["l1", "l2", "l3"] },
+    "schreiben": { "minutes": 20, "teile": ["s1", "s2"] },
+    "sprechen": { "minutes": 15, "teile": ["sp1", "sp2", "sp3"], "prepMinutes": 0, "format": "group" }
+  },
+  "writtenBlock": { "minutes": 65, "breaks": false },
+  "teile": {
+    "h1": {
+      "id": "sd1.h1", "module": "hoeren", "family": "fam.h-detail", "task": "abc",
+      "items": 6, "options": 3, "plays": 2, "minutes": 7,
+      "textType": "tt.kurzdialog", "textWords": [32, 53], "textWordsSource": "official-sample",
+      "points": 6, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
+      "source": "TB-A1 p. 27; DB-A1 §4.1; US-A1 Hören Teil 1 — short everyday dialogues between two people, one picture-supported a/b/c item per text, played twice; the example item (0) is not counted; textWords = ±15 % of the 6 sample dialogues (38–46 words)",
+      "stand": "2026-09-27"
+    },
+    "h2": {
+      "id": "sd1.h2", "module": "hoeren", "family": "fam.h-durchsage", "task": "richtig_falsch",
+      "items": 4, "options": 2, "plays": 1, "minutes": 3,
+      "textType": "tt.durchsage", "textWords": [29, 47], "textWordsSource": "official-sample",
+      "points": 4, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
+      "source": "TB-A1 p. 27; DB-A1 §4.1; US-A1 Hören Teil 2 — public announcements (airport, station, train, shop, coach tour), the instruction understood globally, richtig/falsch, each text played ONCE; textWords = ±15 % of the 4 sample texts (34–41 words)",
+      "stand": "2026-09-27"
+    },
+    "h3": {
+      "id": "sd1.h3", "module": "hoeren", "family": "fam.h-detail", "task": "abc",
+      "items": 5, "options": 3, "plays": 2, "minutes": 5,
+      "textType": "tt.telefonansage", "textWords": [28, 54], "textWordsSource": "official-sample",
+      "points": 5, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
+      "source": "TB-A1 p. 27; DB-A1 §4.1; US-A1 Hören Teil 3 — answering-machine messages, partly private, partly official (practice, company), one a/b/c item per text, played twice; textWords = ±15 % of the 5 sample texts (33–47 words)",
+      "stand": "2026-09-27"
+    },
+    "l1": {
+      "id": "sd1.l1", "module": "lesen", "family": "fam.l-kurztext", "task": "richtig_falsch",
+      "items": 5, "options": 2, "minutes": 9,
+      "textType": "tt.kurzmitteilung", "textWords": [56, 92], "textWordsSource": "official-sample",
+      "points": 5, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
+      "source": "TB-A1 p. 32; DB-A1 §4.2; US-A1 Lesen Teil 1 — two short notes or e-mails from private or working life (messages, instructions, invitations), 5 statements richtig/falsch across both texts; textWords per text = ±15 % of 66 words (sample text 1) to 80 words (memo 01)",
+      "stand": "2026-09-27"
+    },
+    "l2": {
+      "id": "sd1.l2", "module": "lesen", "family": "fam.l-anzeigen", "task": "abc",
+      "items": 5, "options": 2, "minutes": 9,
+      "textType": "tt.internetanzeige", "textWords": [9, 26], "textWordsSource": "official-sample",
+      "points": 5, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
+      "source": "TB-A1 pp. 32–34; DB-A1 §4.2; US-A1 Lesen Teil 2 — ten small ads or website snippets, two per situation: choose the one (a or b) that meets the stated need; textWords per ad = ±15 % of the sample ads (11–23 words)",
+      "stand": "2026-09-27"
+    },
+    "l3": {
+      "id": "sd1.l3", "module": "lesen", "family": "fam.l-orientierung", "task": "richtig_falsch",
+      "items": 5, "options": 2, "minutes": 7,
+      "textType": "tt.schild", "textWords": [10, 25], "textWordsSource": "official-sample",
+      "points": 5, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
+      "source": "TB-A1 p. 32; DB-A1 §4.2; US-A1 Lesen Teil 3 — five very short signs or notices with their location (station, hotel, club, ticket machine), one statement each, richtig/falsch; textWords per sign = ±15 % of the sample signs (12–22 words)",
+      "stand": "2026-09-27"
+    },
+    "s1": {
+      "id": "sd1.s1", "module": "schreiben", "family": "fam.w-formular", "task": "form_fill",
+      "items": 5, "minutes": 5,
+      "textType": "tt.formular", "textWords": [36, 48], "textWordsSource": "official-sample",
+      "rubric": "sd1-s1", "points": 5, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
+      "source": "TB-A1 p. 37; DB-A1 §4.3.1; US-A1 Schreiben Teil 1 — a form (registration, booking, order) with exactly 5 gaps, filled from a short situation text about another person; 1 or 0 points per field; textWords = the situation text, ±15 % of the sample (42 words)",
+      "stand": "2026-09-27"
+    },
+    "s2": {
+      "id": "sd1.s2", "module": "schreiben", "family": "fam.w-nachricht", "task": "writing",
+      "minutes": 15,
+      "textType": "tt.kurzmitteilung", "words": { "target": 30 }, "leitpunkte": 3,
+      "rubric": "sd1-s2", "points": 10, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
+      "source": "TB-A1 pp. 37–38; DB-A1 §4.3.2; US-A1 Schreiben Teil 2 — a short message (note or e-mail: apology, invitation, enquiry) on 3 Leitpunkte given in the situation text, about 30 words; Anrede and Gruß are scored as the text-type criterion, never as a Leitpunkt; register is set per task (US-A1: informal to a friend; TB-A1 sample: formal to a tourist office)",
+      "stand": "2026-09-27"
+    },
+    "sp1": {
+      "id": "sd1.sp1", "module": "sprechen", "family": "fam.s-vorstellen", "task": "speaking",
+      "minutes": 5,
+      "textType": "tt.stichwortblatt", "interaction": "monologue", "prepMinutes": 0,
+      "rubric": "sd1-sp1", "points": 3, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
+      "source": "TB-A1 pp. 44–49; DB-A1 §3, §5; US-A1 Sprechen Teil 1 — introduce yourself in several sentences from a keyword sheet (Name, Alter, Land, Wohnort, Sprachen, Beruf, Hobby; not all needed), about 80 s per candidate, then spell a word and give a number of at least two digits; 1 point each for introduction, spelling, number",
+      "stand": "2026-09-27"
+    },
+    "sp2": {
+      "id": "sd1.sp2", "module": "sprechen", "family": "fam.s-fragekarten", "task": "speaking",
+      "items": 2, "minutes": 5,
+      "textType": "tt.wortkarte", "interaction": "cards-ask", "prepMinutes": 0,
+      "rubric": "sd1-sp2", "points": 6, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
+      "source": "TB-A1 pp. 44–51; DB-A1 §3, §5; US-A1 Sprechen Teil 2 — two topics (items = 2 rounds); per topic each candidate draws a word card, asks one question on the topic and answers one question from another candidate, about 60 s per candidate; 2 points per question, 1 per answer",
+      "stand": "2026-09-27"
+    },
+    "sp3": {
+      "id": "sd1.sp3", "module": "sprechen", "family": "fam.s-bitten", "task": "speaking",
+      "items": 2, "minutes": 5,
+      "textType": "tt.bildkarte", "interaction": "cards-request", "prepMinutes": 0,
+      "rubric": "sd1-sp3", "points": 6, "scaffoldAllowedIn": ["a1.1"], "transfersTo": [],
+      "source": "TB-A1 pp. 44–52; DB-A1 §3, §5; US-A1 Sprechen Teil 3 — two picture cards with everyday objects (items = 2 rounds); per round each candidate makes one request to another candidate and reacts to one, a non-verbal reaction counts; an information question instead of a request is sent back for a new attempt; about 60 s per candidate; 2 points per request, 1 per reaction",
+      "stand": "2026-09-27"
+    }
+  },
+  "blueprint": {
+    "modules": {
+      "hoeren": ["h1", "h2", "h3"],
+      "lesen": ["l1", "l2", "l3"],
+      "schreiben": ["s1", "s2"],
+      "sprechen": ["sp1", "sp2", "sp3"]
+    },
+    "totalMinutes": 80,
+    "answerSheetStep": true
+  },
+  "scale": {
+    "kind": "scaled",
+    "rawToScore": 1.66,
+    "max": 100,
+    "parts": {
+      "hoeren": { "rawMax": 15, "factor": 1.66, "max": 25, "teile": { "h1": 6, "h2": 4, "h3": 5 } },
+      "lesen": { "rawMax": 15, "factor": 1.66, "max": 25, "teile": { "l1": 5, "l2": 5, "l3": 5 } },
+      "schreiben": { "rawMax": 15, "factor": 1.66, "max": 25, "teile": { "s1": 5, "s2": 10 }, "rawRounding": "s2-mean-of-two-raters-half-up" },
+      "sprechen": { "rawMax": 15, "factor": 1.66, "max": 25, "teile": { "sp1": 3, "sp2": 6, "sp3": 6 }, "rawRounding": "mean-of-two-raters-half-up" },
+      "schriftlich": { "modules": ["hoeren", "lesen", "schreiben"], "max": 75, "min": null, "oralCannotRescueBelow": 35 },
+      "muendlich": { "modules": ["sprechen"], "max": 25, "min": null },
+      "gesamt": { "max": 100, "min": 60, "rounding": "factor-per-part-sum-then-whole-points", "allPartsTaken": true },
+      "praedikate": [
+        { "from": 90, "to": 100, "de": "sehr gut" },
+        { "from": 80, "to": 89, "de": "gut" },
+        { "from": 70, "to": 79, "de": "befriedigend" },
+        { "from": 60, "to": 69, "de": "ausreichend" },
+        { "from": 0, "to": 59, "de": "nicht bestanden" }
+      ],
+      "modular": false,
+      "telc": { "rawMax": 60, "min": 36, "minLabelDe": "ausreichend", "partialExam": false, "source": "UT-A1 p. 5; telc exam page (not modelled by passRule)" },
+      "source": "DB-A1 §4.1–4.2 (Hören, Lesen: 1 or 0 per item, max 15 each), §4.3 (Schreiben = Teil 1 [1 or 0 per field] + Teil 2 [mean of two raters, rounded to whole points from .5 up]), §5 (Sprechen 3 + 6 + 6, mean of two raters rounded from .5 up), §6.1 (each part × 1.66, summed, total rounded to whole points), §6.2 (Prädikate), §6.3 (≥ 60 of 100 and every part taken, no part minimum; below 35 written points 60 is out of reach), §7 (not modular; resit only as a whole)"
+    }
+  },
+  "passRule": "goethe-a1",
+  "openQuestions": [
+    "Does the product need a telc view of the result for telc Deutsch A1 candidates? The same format is presented by telc as 60 raw points with 36 = ausreichend (UT-A1 p. 5); passRule holds only the Goethe rule 'goethe-a1' (DB-A1 §6: Σ raw × 1.66, rounded; ≥ 60 of 100 with every part taken, no part minimum; below 35 written points the oral cannot reach 60). A telc view would need its own rule id (e.g. 'telc-a1').",
+    "Boundary for EXM-07: 21 raw written points give 34.86 scaled (< 35) and a full oral (15 raw) gives 24.9, so the total 59.76 rounds to 60. DB-A1 §6.3 says below 35 written points taking the oral makes no sense (German) / is not allowed (English), i.e. treats it as a fail; recommend the goethe-a1 scorer treats written < 35 as not passable and pins 34.86 vs 36.52 (22 raw) in its boundary test.",
+    "Rounding: the official Schreiben Teil 2 and Sprechen results are the mean of two raters rounded to whole points (from .5 up, DB-A1 §4.3.2, §5), and the total is rounded after × 1.66 (§6.1). Our single automated score keeps half points; the goethe-a1 scorer should round S2 and the Sprechen total before scaling (E1-3 decision).",
+    "Per-Teil minutes are a design split of the official module times (Hören ca. 20 min including instructions and about 3–5 min answer transfer, Lesen 25, Schreiben 20); only the module times and about 5 min per Sprechen Teil (DB-A1 §3) are published. Re-time h1–h3 against the first generated audio.",
+    "textWords bands are ±15 % of our own word counts of one official set (US-A1, 6th ed. Feb 2024); Lesen Teil 1 text 2 is an image in that PDF and was not counted, so the l1 upper bound uses memo 01's 70–80 words. Re-count against a second official set (e.g. telc UT-A1) before the registry freeze.",
+    "Schreiben Teil 2 register is not fixed by the format (US-A1: informal e-mail to a friend, du; TB-A1 sample: formal enquiry, Sie), so the template leaves `register` open and each WritingTask sets it. Should a coverage rule require both registers across A1.1/A1.2?",
+    "Answer-sheet transfer: the paper exam gives about 5 min inside the exam time (DB-A1 §2.2; TB-A1 says about 3 min for Hören); the digital and online Goethe formats have no transfer (DB-A1 Anhang), telc A1 is paper only. answerSheetStep = true is meant for one Modelltest form only (BLUEPRINT §2.3).",
+    "Schreiben Teil 1 spelling: TB-A1 p. 37 says spelling costs points only when it harms understanding, in the paragraph after the Teil 2 rule; applying it to Teil 1 fields is our reading (numbers, dates and times stay exact).",
+    "Joint format: US-A1 (2024) says the exam was developed jointly by the Goethe-Institut and telc, while DB-A1 (Stand 1 Sept 2025) names only the Goethe-Institut as Träger; whether current telc A1 papers still match item for item was not re-checked.",
+    "transfersTo is empty on every Teil: the only other A1 lane (oza1, ÖSD ZA1) is deferred under the lean launch, and apart from the form (ZA1: 10 entries for 5 points) no ZA1 Teil has an SD1 task shape; decide when oza1 is authored."
+  ]
+}
