@@ -2540,7 +2540,7 @@
           "id": "a1.1-u05-ls4-t4",
           "kind": "ad",
           "title": "Zimmer in Leipzig",
-          "text": "a) Zimmer in einer WG. Miete: 350 Euro. Hamburger Straße 12, Leipzig.\nb) 1 Zimmer, Küche und Bad. Hinten ist ein Garten. Miete: 420 Euro.",
+          "text": "a) Zimmer in einer WG. Miete: 350 Euro. Hamburger Straße 12, Leipzig.\nb) 1 Zimmer, Küche, Bad mit Toilette. Hinten ist ein Garten. Miete: 420 Euro.",
           "glosses": []
         },
         {
@@ -2568,7 +2568,7 @@
           "id": "a1.1-u05-ls4-t7",
           "kind": "text",
           "title": "Eine Nachricht von Olena",
-          "text": "Hallo Priya,\ndeine Wohnung ist wirklich schön! Das Wohnzimmer ist so hell, und der Balkon ist sehr schön. Aber die Lampe im Wohnzimmer ist sehr klein, oder? Sophie und ich haben noch eine Lampe. Sie ist alt, aber sehr schön. Möchtet ihr die Lampe? Morgen bringe ich die Lampe. Und dann sitzen wir zusammen auf dem Balkon!\nBis morgen!\nOlena",
+          "text": "Hallo Priya,\ndeine Wohnung ist wirklich schön, auch per Video! Das Wohnzimmer ist so hell, und der Balkon ist sehr schön. Aber die Lampe im Wohnzimmer ist sehr klein, oder? Sophie und ich haben noch eine Lampe. Sie ist alt, aber sehr schön. Möchtet ihr die Lampe? Morgen bringe ich die Lampe. Und dann sitzen wir zusammen auf dem Balkon!\nBis morgen!\nOlena",
           "glosses": []
         }
       ],
@@ -2896,7 +2896,7 @@
           "Ich wohne in …",
           "Ich bin neu im Haus.",
           "Meine Wohnung ist …",
-          "Sie hat … Zimmer: …",
+          "Meine Wohnung hat … Zimmer.",
           "Wie ist Ihre …?",
           "Ist Ihr … neu?",
           "Er / Es / Sie ist …",
@@ -3269,12 +3269,12 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Sie haben 700 Euro für die Miete. Wichtig für Sie: Die Wohnung ist nicht laut. Was passt?",
-        "promptEn": "You have 700 euros for rent, and the flat must not be noisy. Which ad fits?",
+        "promptDe": "Sie haben 700 Euro für die Miete. Wichtig für Sie: Die Wohnung ist nicht dunkel. Was passt?",
+        "promptEn": "You have 700 euros for rent, and the flat must not be dark. Which ad fits?",
         "options": [
-          "Sehr hell, aber laut. 590 Euro",
+          "Ruhig, aber dunkel. 590 Euro",
           "Hell und ruhig. 640 Euro",
-          "Ruhig, mit Garten. 790 Euro"
+          "Sehr hell, mit Garten. 790 Euro"
         ],
         "answer": "Hell und ruhig. 640 Euro",
         "accepted": [
@@ -3282,8 +3282,8 @@
         ],
         "exact": "number",
         "explanation": {
-          "de": "„nicht laut“ = ruhig. a ist laut. c ist ruhig, aber 790 Euro: zu teuer. b passt.",
-          "en": "“nicht laut” means quiet. a is noisy; c is quiet but 790 euros is too much. b fits."
+          "de": "„nicht dunkel“ = hell. a ist dunkel. c ist hell, aber 790 Euro: zu teuer. b passt.",
+          "en": "“nicht dunkel” means bright. a is dark; c is bright but 790 euros is too much. b fits."
         },
         "origin": "agent"
       }
