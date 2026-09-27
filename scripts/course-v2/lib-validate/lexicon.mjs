@@ -1,17 +1,150 @@
 // Lexicon helpers (SCHEMA §6): the surface forms of an entry, and token ↔ lemma matching for the
-// LEX rules. Deterministic and deliberately conservative: an inflection is generated from the
-// entry's own fields (plural, feminine, verb_forms) plus regular endings, never guessed from a
-// stem prefix, so „Anrufer" never counts as „Anruf".
+// LEX rules. Deterministic and deliberately conservative: an inflection is GENERATED from the
+// entry's own fields (plural, feminine, verb_forms, separable) plus the regular German paradigms,
+// never guessed by stripping a token, so „Anrufer" is known only because the entry says so.
+//
+// What a lemma licenses (rule-smith 2026-09-27, BLUEPRINT §9.1 LEX-01/LEX-03):
+//   VERB  present (all persons; the 2sg/3sg stem change from verb_forms), imperative (incl. hilf/lies),
+//         Präteritum (verb_forms.praet, else the regular weak forms), Konjunktiv II (umlauted Präteritum:
+//         käme, hätte, könnte, würde …, every person ending), Partizip II (verb_forms.perfekt, else ge…t)
+//         incl. its adjective endings, Partizip I (+d), zu-infinitive; a separable verb also with its
+//         prefix split off („kommt … mit") and rejoined in a subordinate clause („stattfindet", „ankam").
+//   NOUN  singular + case endings, the plural field (+n in the dative), the feminine pair (+nen).
+//   ADJ/ADV  the six adjective endings on the positive, comparative (-er, umlauted where the adjective
+//         umlauts: älter, kürzer) and superlative (-st/-est), the irregulars (gut/besser/best, viel/mehr/meist,
+//         gern/lieber/liebst, hoch/höher/höchst, nah/näher/nächst), -el/-er stems (dunkle, teure).
+// Number words (cardinals 0–999 999 in their spelled forms, ordinals with every ending, -ens adverbs)
+// and the closed core list of `core-lexicon.mjs` are known from A1.1 on.
 
 import { tokens, FUNCTION_WORDS } from './text.mjs';
-import { LEVELS, positionOf, parseUnitId } from './ids.mjs';
+import { LEVELS, positionOf, parseUnitId, unitPosition } from './ids.mjs';
+import { CORE_FORMS, CORE_ENTRIES, NUMBER_WORDS } from './core-lexicon.mjs';
 
 const lc = (s) => String(s ?? '').toLowerCase().trim();
-const lastWord = (s) => lc(s).split(/\s+/).filter(Boolean).pop() || '';
-const SEPARABLE_PREFIXES = ['zurück', 'zusammen', 'weiter', 'vorbei', 'kennen', 'statt', 'fest', 'fern', 'teil', 'weg', 'los', 'vor', 'nach', 'mit', 'ein', 'aus', 'auf', 'an', 'ab', 'zu', 'her', 'hin', 'um', 'durch', 'bei'];
+const words = (s) => lc(s).split(/\s+/).filter(Boolean);
+const arr = (x) => (Array.isArray(x) ? x : []);
+/** Separable particles that are known words on their own (they stand alone at the clause end). */
+const PARTICLES = ['zurück', 'zusammen', 'weiter', 'vorbei', 'kennen', 'statt', 'fest', 'fern', 'teil', 'weg', 'los', 'vor', 'nach', 'mit', 'ein', 'aus', 'auf', 'an', 'ab', 'zu', 'her', 'hin', 'um', 'durch', 'bei'];
+/** Prefixes recognised on a separable entry whose 3sg does not show the split (longest first). */
+const SEPARABLE_PREFIXES = ['zurück', 'zusammen', 'weiter', 'vorbei', 'kennen', 'statt', 'fest', 'fern', 'teil', 'weg', 'los', 'vor', 'nach', 'mit', 'ein', 'aus', 'auf', 'an', 'ab', 'zu', 'her', 'hin', 'um', 'durch', 'bei', 'dar', 'fort', 'heraus', 'herein', 'hinaus', 'hinein', 'herunter', 'hinunter', 'hoch', 'nieder', 'wieder', 'entgegen', 'gegenüber', 'bereit', 'frei', 'klar', 'richtig', 'schief', 'sauber', 'übrig', 'voran', 'voraus'].sort((a, b) => b.length - a.length);
+const INSEPARABLE_RE = /^(?:be|ver|er|ent|emp|zer|miss|ge)/;
+const ADJ_ENDINGS = ['', 'e', 'en', 'er', 'es', 'em'];
 
 /** Words of a German text a learner reads, lower-cased (numbers dropped). */
 export const readTokens = (text) => tokens(text).filter((t) => !/^\d/.test(t.text));
+
+/** Umlaut the last a/o/u (au → äu) of a stem: kam → käm, hatt → hätt, wurd → würd. */
+export function umlaut(stem) {
+  const s = String(stem);
+  const au = s.lastIndexOf('au');
+  const m = [...s.matchAll(/[aou]/g)].pop();
+  if (!m) return s;
+  if (au >= 0 && au === m.index - 1 && s[m.index] === 'u') return `${s.slice(0, au)}äu${s.slice(au + 2)}`;
+  const map = { a: 'ä', o: 'ö', u: 'ü' };
+  return `${s.slice(0, m.index)}${map[m[0]]}${s.slice(m.index + 1)}`;
+}
+
+const withEndings = (add, stem, endings = ADJ_ENDINGS) => { for (const e of endings) add(`${stem}${e}`); };
+
+/** Adjectives that umlaut in the comparative/superlative (closed, Duden list of the common ones). */
+const UMLAUT_COMPARISON = new Set(['alt', 'arm', 'dumm', 'grob', 'groß', 'gesund', 'hart', 'jung', 'kalt', 'klug', 'krank', 'kurz', 'lang', 'nass', 'oft', 'rot', 'scharf', 'schmal', 'schwach', 'schwarz', 'stark', 'warm']);
+const IRREGULAR_COMPARISON = {
+  gut: ['besser', 'best'], viel: ['mehr', 'meist'], gern: ['lieber', 'liebst'], gerne: ['lieber', 'liebst'],
+  hoch: ['höher', 'höchst', 'hoh'], nah: ['näher', 'nächst'], groß: ['größer', 'größt'], bald: ['eher', 'ehest'],
+};
+
+function adjectiveForms(lemma, add) {
+  const w = lemma;
+  withEndings(add, w);
+  // -el/-er/-en stems drop their e before an ending: dunkel → dunkle, teuer → teure, trocken → trockne
+  const syncope = /[^aeiouäöü](?:el|er)$/.test(w) || /euer$/.test(w) ? `${w.slice(0, -2)}${w.slice(-1)}` : null;
+  if (syncope) for (const e of ['e', 'en', 'er', 'es', 'em']) add(`${syncope}${e}`);
+  if (w.endsWith('e')) for (const e of ['n', 'r', 's', 'm']) add(`${w}${e}`);
+  const irr = IRREGULAR_COMPARISON[w];
+  const comp = irr ? [irr[0]] : [syncope ? `${syncope}er` : w.endsWith('e') ? `${w}r` : `${w}er`];
+  const sup = irr ? [irr[1]] : [/(?:[dtsßzx]|sch)$/.test(w) && !/(?:end|isch)$/.test(w) ? `${w}est` : `${w}st`];
+  if (!irr && UMLAUT_COMPARISON.has(w)) {
+    const u = umlaut(w);
+    comp.push(`${u}er`);
+    sup.push(/(?:[dtsßz]|sch)$/.test(w) ? `${u}est` : `${u}st`);
+  }
+  if (irr && irr[2]) withEndings(add, irr[2]); // hohe, hohen …
+  for (const c of comp) withEndings(add, c);
+  for (const s of sup) withEndings(add, s);
+  // „am schnellsten"
+  for (const s of sup) add(`${s}en`);
+}
+
+/**
+ * The finite and non-finite forms of a verb entry. `pre` is its separable prefix (or null).
+ */
+function verbForms(e, add) {
+  const lemma = lc(e.lemma);
+  const inf = lemma.replace(/^sich\s+/, '').split(/\s+/).pop();
+  const third = words(e.verb_forms?.['3sg']);
+  let prefix = null;
+  if (e.separable) {
+    prefix = third.length >= 2 ? third[third.length - 1] : SEPARABLE_PREFIXES.find((p) => inf.startsWith(p) && inf.length > p.length + 2) || null;
+  }
+  const base = prefix && inf.startsWith(prefix) ? inf.slice(prefix.length) : inf;
+  const stem = base.replace(/(?:en|n)$/, '');
+  const e2 = /[dt]$|[^aeiouäöülrh][mn]$/.test(stem) ? 'e' : '';
+  const finite = new Set();
+  const fin = (w) => { if (w) { finite.add(w); add(w); } };
+  // present, imperative, infinitive
+  for (const w of [`${stem}e`, `${stem}${e2}st`, `${stem}${e2}t`, `${stem}en`, stem, `${stem}n`]) fin(w);
+  if (/el$/.test(stem)) fin(`${stem.slice(0, -2)}le`); // sammle
+  add(base);
+  const third0 = third[0];
+  if (third0) {
+    fin(third0);
+    const du = lc(words(e.verb_forms?.['2sg'])[0]) || (third0.endsWith('st') ? third0 : third0.endsWith('t') ? `${third0.slice(0, -1)}st` : null);
+    fin(du);
+    // imperative singular of an e → i/ie verb: hilft → hilf, liest → lies, nimmt → nimm, isst → iss
+    const fstem = third0.replace(/t$/, '');
+    if (fstem !== stem && /i/.test(fstem) && /e/.test(stem) && !/[äöü]/.test(fstem)) fin(fstem);
+  }
+  const w2 = words(e.verb_forms?.['2sg']);
+  if (w2[0]) fin(w2[0]);
+  // Präteritum (the finite word of verb_forms.praet: „kam mit" → kam, „meldete sich" → meldete)
+  const praet = words(e.verb_forms?.praet)[0] || null;
+  let pRoot = null;
+  if (praet) {
+    if (praet.endsWith('te')) {
+      pRoot = praet.slice(0, -1);
+      for (const w of [praet, `${praet}st`, `${praet}n`, `${praet}t`]) fin(w);
+    } else {
+      pRoot = praet.endsWith('e') ? praet.slice(0, -1) : praet; // wurde → wurd
+      for (const w of [praet, `${pRoot}st`, `${pRoot}est`, `${pRoot}en`, `${pRoot}t`, `${pRoot}et`]) fin(w);
+    }
+  } else {
+    // regular weak Präteritum when the entry does not say otherwise
+    pRoot = `${stem}${e2}t`;
+    for (const w of [`${pRoot}e`, `${pRoot}en`, `${pRoot}est`, `${pRoot}et`]) fin(w);
+  }
+  // Konjunktiv II: the Präteritum root, umlauted for strong and mixed verbs (käme, hätte, könnte, würde)
+  if (praet) {
+    const weak = praet.endsWith('te');
+    const roots = new Set([pRoot]);
+    // a regular weak verb keeps its Präteritum (sagte); strong, mixed and modal verbs umlaut (hätte, könnte, brächte)
+    if (!weak || pRoot !== `${stem}${e2}t`) roots.add(umlaut(pRoot));
+    for (const r of roots) for (const en of ['e', 'est', 'st', 'en', 'et', 't']) fin(`${r}${en}`);
+  }
+  // Partizip II (+ adjective endings: „die geplante Reise"), Partizip I (+d)
+  const perf = words(e.verb_forms?.perfekt);
+  const p2 = perf.length ? perf[perf.length - 1] : (/ieren$/.test(base) || INSEPARABLE_RE.test(base) ? `${prefix || ''}${stem}${e2}t` : `${prefix || ''}ge${stem}${e2}t`);
+  withEndings(add, p2);
+  withEndings(add, `${base}d`);
+  if (prefix) {
+    add(prefix);
+    withEndings(add, `${prefix}${base}d`);
+    add(inf);
+    add(`${prefix}zu${base}`);
+    // subordinate clause: the prefix rejoins every finite form (stattfindet, ankam, mitkäme)
+    for (const f of finite) add(`${prefix}${f}`);
+  }
+  return prefix;
+}
 
 /**
  * Surface forms of one entry. Returns { forms: Set, prefix: string|null } — `prefix` is the
@@ -25,43 +158,16 @@ export function entryForms(e) {
   const add = (w) => { if (w) forms.add(lc(w)); };
   const pos = e.pos;
   if (pos === 'VERB') {
-    const inf = lemma.replace(/^sich\s+/, '').split(/\s+/).pop();
-    const third = lc(e.verb_forms?.['3sg']).split(/\s+/).filter(Boolean);
-    if (e.separable) {
-      prefix = third.length >= 2 ? third[third.length - 1] : SEPARABLE_PREFIXES.find((p) => inf.startsWith(p) && inf.length > p.length + 2) || null;
-    }
-    const base = prefix && inf.startsWith(prefix) ? inf.slice(prefix.length) : inf;
-    const stem = base.replace(/(?:en|n)$/, '');
-    const e2 = /[dt]$|[^aeiouäöülrh][mn]$/.test(stem) ? 'e' : '';
-    for (const w of [base, `${stem}e`, `${stem}${e2}st`, `${stem}${e2}t`, `${stem}en`, stem, `${stem}n`]) add(w);
-    if (prefix) {
-      add(inf);
-      add(`${prefix}zu${base}`);
-    }
-    if (third.length) {
-      const fin = third[0];
-      add(fin);
-      if (fin.endsWith('t')) add(`${fin.slice(0, -1)}st`); // fährt → fährst, nimmt → nimmst
-    }
-    const perf = lc(e.verb_forms?.perfekt).split(/\s+/).filter(Boolean);
-    if (perf.length) add(perf[perf.length - 1]);
-    const praet = lastWord(e.verb_forms?.praet);
-    if (praet) {
-      const b = praet;
-      for (const w of b.endsWith('te') ? [b, `${b}st`, `${b}n`, `${b}t`] : [b, `${b}st`, `${b}en`, `${b}t`]) add(w);
-    }
-    // regular weak Präteritum and participle, when the entry does not say otherwise
-    if (!praet) for (const w of [`${stem}${e2}te`, `${stem}${e2}ten`, `${stem}${e2}test`]) add(w);
-    if (!perf.length && !/^(?:be|ver|er|ent|zer|emp|miss|ge)/.test(base)) add(`ge${stem}${e2}t`);
-    if (!perf.length && /ieren$/.test(base)) add(`${stem}t`);
+    prefix = verbForms(e, add);
   } else if (pos === 'NOUN') {
     const w = lemma.replace(/^(der|die|das)\s+/, '');
     add(w);
     for (const suf of ['s', 'es', 'n', 'en', 'e', 'er']) add(`${w}${suf}`);
+    if (w.endsWith('e')) add(`${w}r`); // nominalised adjective: ein Beschäftigter
     if (typeof e.plural === 'string') {
       const pl = lc(e.plural).replace(/^die\s+/, '');
       add(pl);
-      add(`${pl}n`);
+      if (!/[ns]$/.test(pl)) add(`${pl}n`);
     }
     if (typeof e.feminine === 'string') {
       const f = lc(e.feminine).replace(/^die\s+/, '');
@@ -69,23 +175,29 @@ export function entryForms(e) {
       add(`${f}nen`);
     }
   } else if (pos === 'ADJ' || pos === 'ADV') {
-    const w = lemma;
-    add(w);
-    for (const suf of ['e', 'en', 'er', 'es', 'em', 'ere', 'eren', 'erer', 'eres', 'erem', 'ste', 'sten', 'ster', 'stes', 'stem', 'este', 'esten']) add(`${w}${suf}`);
-    if (w.endsWith('e')) for (const suf of ['n', 'r', 's', 'm']) add(`${w}${suf}`);
+    adjectiveForms(lemma, add);
   } else {
-    for (const t of lemma.split(/\s+/)) add(t);
+    for (const t of lemma.split(/\s+/)) add(t.replace(/[^a-zäöüß-]/g, ''));
   }
   return { forms, prefix };
 }
 
+let coreCache = null;
+/** Every form the closed core list (core-lexicon.mjs) and the number words license. */
+export function coreForms() {
+  if (coreCache) return coreCache;
+  const s = new Set([...FUNCTION_WORDS, ...PARTICLES, ...NUMBER_WORDS, ...CORE_FORMS]);
+  for (const e of CORE_ENTRIES) for (const f of entryForms(e).forms) s.add(f);
+  coreCache = s;
+  return s;
+}
+
 /**
- * The known-token set at a course position: lexicon entries of every earlier level and of this
- * level's units ≤ nr, function words, cast names and the separable prefixes.
+ * The known-token set at a course position: the core list and number words, lexicon entries of
+ * every earlier level and of this level's units ≤ nr, cast names.
  */
 export function knownForms(ctx, level, nr) {
-  const known = new Set(FUNCTION_WORDS);
-  for (const p of SEPARABLE_PREFIXES) known.add(p);
+  const known = new Set(coreForms());
   const here = positionOf(level, nr);
   for (const l of LEVELS.slice(0, LEVELS.indexOf(level) + 1)) {
     for (const e of ctx.levels.get(l)?.lexicon?.entries || []) {
@@ -100,6 +212,57 @@ export function knownForms(ctx, level, nr) {
   }
   return known;
 }
+
+/** The tokens of a spine label's examples: what follows its first colon and what stands in brackets. */
+function labelExamples(label) {
+  const s = String(label || '');
+  const parts = [];
+  const colon = s.indexOf(':');
+  if (colon >= 0) parts.push(s.slice(colon + 1));
+  for (const m of s.matchAll(/\(([^)]*)\)/g)) parts.push(m[1]);
+  return parts.join(' ');
+}
+
+/**
+ * Forms LICENSED at a unit by the grammar it teaches (BLUEPRINT §9.1): the example forms of every
+ * spine point the unit names (spec.grammar new/chunk/review) and of every spine point introduced
+ * (receptively, productively or as a chunk) at or before the unit — the spine label's examples and
+ * the point's rule cards (model sentence, paradigm table below its header row, caseMarks tokens).
+ * The explanatory prose of a card is metalanguage and licenses nothing.
+ * Returns { forms: Set, points: [ids] }.
+ */
+export function licensedForms(ctx, unitData) {
+  const forms = new Set();
+  const spine = ctx.registries.spine?.byId;
+  const ids = new Set();
+  const g = unitData?.spec?.grammar || {};
+  for (const k of ['new', 'chunk', 'review']) for (const p of arr(g[k])) ids.add(p);
+  const here = unitPosition(unitData?.id);
+  if (spine && here !== null) {
+    for (const [pid, { point }] of spine) {
+      const pos = [point?.intro?.receptive, point?.intro?.productive, point?.chunkFrom].map(unitPosition).filter((x) => x !== null);
+      if (pos.length && Math.min(...pos) <= here) ids.add(pid);
+    }
+  }
+  const cards = [];
+  for (const slot of ctx.levels.values()) for (const c of arr(slot.ruleCards?.cards)) cards.push(c);
+  const add = (text) => { for (const t of readTokens(text)) forms.add(t.lower); };
+  for (const pid of ids) {
+    const point = spine?.get(pid)?.point;
+    if (point) add(labelExamples(point.label));
+    const cardIds = new Set(arr(point?.ruleCards));
+    for (const c of cards) {
+      if (!c || (c.spine !== pid && !cardIds.has(c.id))) continue;
+      add(c.modelSentence);
+      arr(c.table).slice(1).forEach((row) => arr(row).forEach((cell) => add(cell)));
+      arr(c.caseMarks).forEach((m) => add(m?.token));
+    }
+  }
+  return { forms, points: [...ids] };
+}
+
+/** Is this token known? A one-letter token is an option key or a list label („c", „X"), never a lemma. */
+export const isKnown = (lower, known) => lower.length === 1 || known.has(lower);
 
 /**
  * Is the cumulative lexicon complete up to (level, nr)? Every earlier level has a lexicon, and
