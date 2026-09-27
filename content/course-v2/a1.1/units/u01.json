@@ -1,0 +1,3544 @@
+{
+  "$schema": "course-v2/unit@1",
+  "id": "a1.1-u01",
+  "level": "a1.1",
+  "nr": 1,
+  "etappe": 1,
+  "version": 1,
+  "status": "draft",
+  "reviewedIn": null,
+  "stage": "T",
+  "title": {
+    "de": "Hallo, ich bin Priya",
+    "canDo": "Sie können andere begrüßen, sich mit Name, Herkunft und Sprachen vorstellen und andere danach fragen."
+  },
+  "spec": {
+    "situation": "Erster Kurstag in der Sprachschule in Leipzig: Priya und die anderen Teilnehmenden begrüßen sich, stellen sich vor und fragen nach Name, Herkunft, Wohnort und Sprachen – im Kursraum und im Kurs-Chat; Emre ist online aus İzmir dabei.",
+    "handlungsfeld": [
+      "D",
+      "11"
+    ],
+    "canDos": [
+      "cd.a1.begruessen",
+      "cd.a1.verabschieden",
+      "cd.a1.sich-vorstellen",
+      "cd.a1.person-erfragen",
+      "cd.a1.sprachen-nennen"
+    ],
+    "grammar": {
+      "new": [
+        "g.verbposition-2",
+        "g.praesens"
+      ],
+      "chunk": [
+        "g.imperativ-sie"
+      ],
+      "review": []
+    },
+    "lexiconBlocks": [
+      {
+        "title": "Begrüßung und Abschied",
+        "lemmas": [
+          "lx.hallo",
+          "lx.guten-tag",
+          "lx.guten-morgen",
+          "lx.guten-abend",
+          "lx.tschuess",
+          "lx.auf-wiedersehen",
+          "lx.freut-mich",
+          "lx.entschuldigung",
+          "lx.sprachschule",
+          "lx.online",
+          "lx.chat",
+          "lx.begruessen"
+        ]
+      },
+      {
+        "title": "Name, Herkunft, Wohnort",
+        "lemmas": [
+          "lx.name",
+          "lx.heissen",
+          "lx.kommen",
+          "lx.wohnen",
+          "lx.woher",
+          "lx.stadt",
+          "lx.fragen",
+          "lx.kurs",
+          "lx.teilnehmer",
+          "lx.sich-vorstellen",
+          "lx.wohnort"
+        ]
+      },
+      {
+        "title": "Länder und Sprachen",
+        "lemmas": [
+          "lx.land",
+          "lx.sprache",
+          "lx.deutsch",
+          "lx.sprechen",
+          "lx.lernen",
+          "lx.englisch",
+          "lx.deutschland",
+          "lx.ein-bisschen",
+          "lx.tuerkisch",
+          "lx.spanisch",
+          "lx.muttersprache"
+        ]
+      }
+    ],
+    "textTypes": [
+      "tt.dialog",
+      "tt.kurzdialog",
+      "tt.sms",
+      "tt.steckbrief",
+      "tt.stichwortblatt",
+      "tt.formular"
+    ],
+    "lanes": {
+      "primary": "sd1",
+      "pruefungsfokus": [
+        {
+          "template": "sd1.h1",
+          "length": "full",
+          "modeDefault": "lern",
+          "slot": "ls4"
+        },
+        {
+          "template": "sd1.sp1",
+          "length": "full",
+          "modeDefault": "lern",
+          "slot": "sprechen"
+        },
+        {
+          "template": "sd1.s1",
+          "length": "full",
+          "modeDefault": "lern",
+          "slot": "schreiben"
+        }
+      ],
+      "spur": {}
+    },
+    "lehrwerk": [
+      "M A1 L1 Hallo! Ich bin Nicole … (Konjugation Singular, W-Fragen)",
+      "S1 L1 Guten Tag. Mein Name ist …",
+      "N A1 K1 Guten Tag!",
+      "Linie 1 A1 K1–2 (Grammatik: Präsens, W-Frage; nach memo 06)"
+    ],
+    "deviation": null,
+    "cast": [
+      "cast.priya",
+      "cast.frau-schulz",
+      "cast.emre",
+      "cast.olena",
+      "cast.bilal",
+      "cast.arta"
+    ],
+    "fokusPlan": [],
+    "source": {
+      "w2Draft": "curriculum/a1-1.md §6 Unit 1 (a1.1-u01 „Freut mich!“)"
+    }
+  },
+  "start": {
+    "lernziele": [
+      "cd.a1.begruessen",
+      "cd.a1.verabschieden",
+      "cd.a1.sich-vorstellen",
+      "cd.a1.person-erfragen",
+      "cd.a1.sprachen-nennen"
+    ],
+    "pruefungsfokusChips": [
+      "sd1.h1",
+      "sd1.sp1",
+      "sd1.s1"
+    ],
+    "recapDe": "Priya Nair kommt aus Kochi in Indien. Sie wohnt jetzt in Leipzig. Heute ist ihr erster Tag im Kurs A1.",
+    "folge": {
+      "title": "Der erste Tag im Kurs",
+      "lines": [
+        {
+          "id": "a1.1-u01-start-l01",
+          "speaker": "cast.priya",
+          "de": "Entschuldigung! Hier ist Kurs A1, oder?",
+          "en": "Excuse me! This is course A1, isn’t it?",
+          "say": "Entschuldigung! Hier ist Kurs A eins, oder?"
+        },
+        {
+          "id": "a1.1-u01-start-l02",
+          "speaker": "cast.olena",
+          "de": "Ja, hier ist Kurs A1. Hallo, ich bin Olena.",
+          "en": "Yes, this is course A1. Hi, I’m Olena.",
+          "say": "Ja, hier ist Kurs A eins. Hallo, ich bin Olena."
+        },
+        {
+          "id": "a1.1-u01-start-l03",
+          "speaker": "cast.priya",
+          "de": "Hallo, Olena! Ich heiße Priya. Freut mich!",
+          "en": "Hi, Olena! My name is Priya. Nice to meet you!"
+        },
+        {
+          "id": "a1.1-u01-start-l04",
+          "speaker": "cast.olena",
+          "de": "Freut mich auch! Woher kommst du, Priya?",
+          "en": "Nice to meet you too! Where are you from, Priya?"
+        },
+        {
+          "id": "a1.1-u01-start-l05",
+          "speaker": "cast.priya",
+          "de": "Aus Indien, aus Kochi. Und du?",
+          "en": "From India, from Kochi. And you?"
+        },
+        {
+          "id": "a1.1-u01-start-l06",
+          "speaker": "cast.olena",
+          "de": "Ich komme aus der Ukraine, aus Charkiw. Oh, da ist Frau Schulz!",
+          "en": "I’m from Ukraine, from Kharkiv. Oh, there’s Mrs Schulz!"
+        },
+        {
+          "id": "a1.1-u01-start-l07",
+          "speaker": "cast.frau-schulz",
+          "de": "Guten Morgen! Ich bin Heike Schulz. Ich begrüße Sie in der Sprachschule, im Kurs A1!",
+          "en": "Good morning! I’m Heike Schulz. Welcome to the language school, to course A1!",
+          "say": "Guten Morgen! Ich bin Heike Schulz. Ich begrüße Sie in der Sprachschule, im Kurs A eins!"
+        },
+        {
+          "id": "a1.1-u01-start-l08",
+          "speaker": "cast.frau-schulz",
+          "de": "Und hier ist Emre. Er ist online, aus İzmir in der Türkei. Hallo, Emre!",
+          "en": "And here is Emre. He’s online, from İzmir in Turkey. Hello, Emre!"
+        },
+        {
+          "id": "a1.1-u01-start-l09",
+          "speaker": "cast.emre",
+          "de": "Guten Morgen, Frau Schulz! Hallo, Kurs A1!",
+          "en": "Good morning, Mrs Schulz! Hello, course A1!",
+          "say": "Guten Morgen, Frau Schulz! Hallo, Kurs A eins!"
+        }
+      ],
+      "gistItem": {
+        "id": "a1.1-u01-start-i01",
+        "type": "multiple_choice",
+        "role": "gist",
+        "topic": "hoeren",
+        "promptDe": "Wo sind Priya und Olena?",
+        "promptEn": "Where are Priya and Olena?",
+        "options": [
+          "in Kochi",
+          "im Kurs A1",
+          "in İzmir"
+        ],
+        "answer": "im Kurs A1",
+        "accepted": [
+          "im Kurs A1"
+        ],
+        "exact": "number",
+        "explanation": {
+          "de": "Priya fragt: „Hier ist Kurs A1, oder?“ Olena sagt: „Ja.“ Kochi und İzmir sind Städte.",
+          "en": "Priya asks if this is course A1 and Olena says yes. Kochi and İzmir are cities."
+        },
+        "origin": "agent"
+      }
+    },
+    "testOut": {
+      "offered": true
+    }
+  },
+  "steps": [
+    {
+      "id": "a1.1-u01-ls1",
+      "kind": "situation",
+      "title": "Ich bin Priya. Und Sie?",
+      "structure": "g.praesens",
+      "modelSentence": "Ich heiße Priya Nair und ich komme aus Indien.",
+      "ruleCard": "rc.praesens",
+      "warmup": {
+        "draw": 6
+      },
+      "input": {
+        "kind": "dialog",
+        "title": "Im Kurs: Wie heißen Sie?",
+        "textType": "tt.dialog",
+        "lines": [
+          {
+            "id": "a1.1-u01-ls1-l01",
+            "speaker": "cast.frau-schulz",
+            "de": "So, jetzt sprechen Sie bitte. Sagen Sie: Wie heißen Sie? Woher kommen Sie? Wo wohnen Sie?",
+            "en": "Right, now it’s your turn to speak. Please say: What’s your name? Where are you from? Where do you live?"
+          },
+          {
+            "id": "a1.1-u01-ls1-l02",
+            "speaker": "cast.frau-schulz",
+            "de": "Ich beginne. Mein Name ist Heike Schulz. Ich komme aus Leipzig und ich wohne auch hier.",
+            "en": "I’ll start. My name is Heike Schulz. I’m from Leipzig and I live here too."
+          },
+          {
+            "id": "a1.1-u01-ls1-l03",
+            "speaker": "cast.frau-schulz",
+            "de": "Und Sie? Wie heißen Sie, bitte?",
+            "en": "And you? What’s your name, please?"
+          },
+          {
+            "id": "a1.1-u01-ls1-l04",
+            "speaker": "cast.bilal",
+            "de": "Guten Tag! Ich heiße Bilal Ahmed. Ich komme aus Pakistan, aus Lahore.",
+            "en": "Hello! My name is Bilal Ahmed. I’m from Pakistan, from Lahore."
+          },
+          {
+            "id": "a1.1-u01-ls1-l05",
+            "speaker": "cast.frau-schulz",
+            "de": "Aha, aus Pakistan, aus Lahore. Und wo wohnen Sie jetzt, Herr Ahmed?",
+            "en": "I see, from Pakistan, from Lahore. And where do you live now, Mr Ahmed?"
+          },
+          {
+            "id": "a1.1-u01-ls1-l06",
+            "speaker": "cast.bilal",
+            "de": "Ich wohne jetzt auch in Leipzig. Hier lerne ich Deutsch.",
+            "en": "I live in Leipzig now too. I’m learning German here."
+          },
+          {
+            "id": "a1.1-u01-ls1-l07",
+            "speaker": "cast.frau-schulz",
+            "de": "Danke, Herr Ahmed. Und jetzt Sie, bitte. Wer sind Sie?",
+            "en": "Thank you, Mr Ahmed. And now you, please. Who are you?"
+          },
+          {
+            "id": "a1.1-u01-ls1-l08",
+            "speaker": "cast.priya",
+            "de": "Guten Tag, Frau Schulz! Ich bin Priya Nair. Ich komme aus Indien.",
+            "en": "Hello, Mrs Schulz! I’m Priya Nair. I’m from India."
+          },
+          {
+            "id": "a1.1-u01-ls1-l09",
+            "speaker": "cast.frau-schulz",
+            "de": "Aus Indien! Und woher genau? Wo wohnen Sie jetzt, Frau Nair?",
+            "en": "From India! And where exactly? Where do you live now, Ms Nair?"
+          },
+          {
+            "id": "a1.1-u01-ls1-l10",
+            "speaker": "cast.priya",
+            "de": "Aus Kochi. Das ist eine Stadt in Indien. Jetzt wohne ich auch hier in Leipzig.",
+            "en": "From Kochi. That’s a city in India. Now I live here in Leipzig too."
+          }
+        ],
+        "glosses": [],
+        "transcriptAfterUnaidedListen": true
+      },
+      "inputItems": [
+        {
+          "id": "a1.1-u01-ls1-i01",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "hoeren",
+          "promptDe": "Was sagen Bilal und Priya im Kurs?",
+          "promptEn": "What do Bilal and Priya tell the class?",
+          "options": [
+            "Name, Land und Wohnort",
+            "Name und Sprachen",
+            "Land und Sprachen"
+          ],
+          "answer": "Name, Land und Wohnort",
+          "accepted": [
+            "Name, Land und Wohnort"
+          ],
+          "explanation": {
+            "de": "Frau Schulz fragt: „Wie heißen Sie? Woher kommen Sie? Wo wohnen Sie?“ Das sind Name, Land und Wohnort.",
+            "en": "Mrs Schulz asks for their name, where they are from and where they live."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls1-i02",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "hoeren",
+          "promptDe": "Wer spricht hier im Kurs?",
+          "promptEn": "Who speaks here in the class?",
+          "options": [
+            "Frau Schulz, Olena und Emre",
+            "Bilal, Olena und Priya",
+            "Frau Schulz, Bilal und Priya"
+          ],
+          "answer": "Frau Schulz, Bilal und Priya",
+          "accepted": [
+            "Frau Schulz, Bilal und Priya"
+          ],
+          "explanation": {
+            "de": "Hier sprechen Frau Schulz, Bilal Ahmed und Priya Nair.",
+            "en": "Here Mrs Schulz, Bilal Ahmed and Priya Nair speak."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls1-i03",
+          "type": "multiple_choice",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Woher kommt Bilal?",
+          "promptEn": "Where is Bilal from?",
+          "options": [
+            "aus Indien",
+            "aus Pakistan",
+            "aus Leipzig"
+          ],
+          "answer": "aus Pakistan",
+          "accepted": [
+            "aus Pakistan"
+          ],
+          "explanation": {
+            "de": "Bilal sagt: „Ich komme aus Pakistan, aus Lahore.“",
+            "en": "Bilal says: I’m from Pakistan, from Lahore."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls1-i04",
+          "type": "fill_blank",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Frau Schulz kommt aus ___.",
+          "promptEn": "Where is Mrs Schulz from? Write the city.",
+          "answer": "Leipzig",
+          "accepted": [
+            "Leipzig"
+          ],
+          "explanation": {
+            "de": "Frau Schulz sagt: „Ich komme aus Leipzig und ich wohne auch hier.“",
+            "en": "Mrs Schulz says: I’m from Leipzig and I live here too."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls1-i05",
+          "type": "multiple_choice",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Wo wohnt Priya jetzt?",
+          "promptEn": "Where does Priya live now?",
+          "options": [
+            "in Kochi",
+            "in Leipzig",
+            "in Lahore"
+          ],
+          "answer": "in Leipzig",
+          "accepted": [
+            "in Leipzig"
+          ],
+          "explanation": {
+            "de": "Priya kommt aus Kochi. Aber sie sagt: „Jetzt wohne ich auch hier in Leipzig.“",
+            "en": "Priya is from Kochi, but she says she now lives in Leipzig."
+          },
+          "origin": "agent"
+        }
+      ],
+      "structuredInput": [
+        {
+          "id": "a1.1-u01-ls1-s01",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.praesens",
+          "promptDe": "„… komme aus Indien.“ Welches Wort passt?",
+          "promptEn": "Which word fits? Look at the ending.",
+          "options": [
+            "Ich",
+            "Du",
+            "Sie"
+          ],
+          "answer": "Ich",
+          "accepted": [
+            "Ich"
+          ],
+          "explanation": {
+            "de": "komme: Die Endung -e passt zu „ich“: ich komme.",
+            "en": "komme: the ending -e goes with “ich”."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls1-s02",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.praesens",
+          "promptDe": "„Woher kommen …, Herr Ahmed?“ Welches Wort passt?",
+          "promptEn": "Which word fits? Look at the ending.",
+          "options": [
+            "du",
+            "Sie",
+            "ich"
+          ],
+          "answer": "Sie",
+          "accepted": [
+            "Sie"
+          ],
+          "explanation": {
+            "de": "kommen: Die Endung -en passt zu „Sie“. Frau Schulz sagt „Sie“ zu Herrn Ahmed.",
+            "en": "kommen: the ending -en goes with “Sie”; Mrs Schulz is formal with Mr Ahmed."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls1-s03",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.praesens",
+          "promptDe": "„Wo wohnst …?“ Welches Wort passt?",
+          "promptEn": "Which word fits? Look at the ending.",
+          "options": [
+            "ich",
+            "Sie",
+            "du"
+          ],
+          "answer": "du",
+          "accepted": [
+            "du"
+          ],
+          "explanation": {
+            "de": "wohnst: Die Endung -st passt zu „du“: du wohnst.",
+            "en": "wohnst: the ending -st goes with “du”."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls1-s04",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.praesens",
+          "promptDe": "„… bin Olena.“ Welches Wort passt?",
+          "promptEn": "Which word fits?",
+          "options": [
+            "Du",
+            "Ich",
+            "Sie"
+          ],
+          "answer": "Ich",
+          "accepted": [
+            "Ich"
+          ],
+          "explanation": {
+            "de": "sein: ich bin, du bist, Sie sind. „bin“ passt zu „ich“.",
+            "en": "sein: ich bin, du bist, Sie sind – “bin” goes with “ich”."
+          },
+          "origin": "agent"
+        }
+      ],
+      "pool": {
+        "items": [
+          {
+            "id": "a1.1-u01-ls1-p01",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.praesens",
+            "promptDe": "Ich ___ Priya Nair. (heißen)",
+            "promptEn": "heißen, ich-form.",
+            "answer": "heiße",
+            "accepted": [
+              "heiße"
+            ],
+            "explanation": {
+              "de": "ich + heiß-e: Für „ich“ ist die Endung -e.",
+              "en": "ich takes the ending -e: ich heiße."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls1-p02",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.praesens",
+            "promptDe": "Woher ___ Sie, Frau Nair? (kommen)",
+            "promptEn": "kommen, Sie-form.",
+            "answer": "kommen",
+            "accepted": [
+              "kommen"
+            ],
+            "errorTags": [
+              "register"
+            ],
+            "explanation": {
+              "de": "Sie + komm-en: Für „Sie“ ist die Endung -en.",
+              "en": "Sie takes the ending -en: Sie kommen."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls1-p03",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.praesens",
+            "promptDe": "Ich ___ jetzt in Leipzig. (wohnen)",
+            "promptEn": "wohnen, ich-form.",
+            "answer": "wohne",
+            "accepted": [
+              "wohne"
+            ],
+            "explanation": {
+              "de": "ich + wohn-e: ich wohne.",
+              "en": "ich wohne – ending -e."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls1-p04",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.praesens",
+            "promptDe": "Ich ___ Olena. Und wer sind Sie? (sein)",
+            "promptEn": "sein, ich-form.",
+            "answer": "bin",
+            "accepted": [
+              "bin"
+            ],
+            "explanation": {
+              "de": "sein: ich bin, Sie sind.",
+              "en": "sein: ich bin, Sie sind."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls1-p05",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "lx.freut-mich",
+            "promptDe": "Priya: „Ich heiße Priya.“ – Olena: „Freut ___! Ich bin Olena.“",
+            "promptEn": "Complete the phrase “Nice to meet you”.",
+            "answer": "mich",
+            "accepted": [
+              "mich"
+            ],
+            "explanation": {
+              "de": "„Freut mich!“ sagen Sie nach dem Namen: Ich bin … – Freut mich!",
+              "en": "“Freut mich!” – nice to meet you – is what you say after hearing someone’s name."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls1-p06",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.praesens",
+            "promptDe": "Bilden Sie einen Aussagesatz.",
+            "promptEn": "Build a statement.",
+            "tiles": [
+              "heiße",
+              "ich",
+              "Priya Nair"
+            ],
+            "answer": "Ich heiße Priya Nair.",
+            "accepted": [
+              "Ich heiße Priya Nair.",
+              "Priya Nair heiße ich."
+            ],
+            "acceptedWhy": {
+              "Priya Nair heiße ich.": "grammatisch: der Name betont auf Position 1, das Verb bleibt auf Position 2"
+            },
+            "errorTags": [
+              "v2-inv"
+            ],
+            "explanation": {
+              "de": "Das Verb „heiße“ steht auf Position 2.",
+              "en": "The verb “heiße” is in position 2."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls1-p07",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.praesens",
+            "promptDe": "Bilden Sie einen Aussagesatz.",
+            "promptEn": "Build a statement.",
+            "tiles": [
+              "komme",
+              "ich",
+              "aus Indien"
+            ],
+            "answer": "Ich komme aus Indien.",
+            "accepted": [
+              "Ich komme aus Indien.",
+              "Aus Indien komme ich."
+            ],
+            "acceptedWhy": {
+              "Aus Indien komme ich.": "grammatisch: aus Indien auf Position 1, das Verb bleibt auf Position 2"
+            },
+            "errorTags": [
+              "v2-inv"
+            ],
+            "explanation": {
+              "de": "Das Verb „komme“ steht auf Position 2.",
+              "en": "The verb “komme” is in position 2."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls1-p08",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.verbposition-2",
+            "promptDe": "Bilden Sie die Frage.",
+            "promptEn": "Build the question.",
+            "tiles": [
+              "wohnen",
+              "Sie",
+              "wo"
+            ],
+            "answer": "Wo wohnen Sie?",
+            "accepted": [
+              "Wo wohnen Sie?"
+            ],
+            "errorTags": [
+              "v2-inv"
+            ],
+            "explanation": {
+              "de": "W-Frage: „Wo“ auf Position 1, das Verb „wohnen“ auf Position 2, dann „Sie“.",
+              "en": "W-question: “wo” first, the verb “wohnen” in position 2, then “Sie”."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls1-p09",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.praesens",
+            "promptDe": "Bilden Sie einen Aussagesatz.",
+            "promptEn": "Build a statement.",
+            "tiles": [
+              "wohne",
+              "ich",
+              "jetzt",
+              "in Leipzig"
+            ],
+            "answer": "Ich wohne jetzt in Leipzig.",
+            "accepted": [
+              "Ich wohne jetzt in Leipzig.",
+              "Jetzt wohne ich in Leipzig.",
+              "In Leipzig wohne ich jetzt."
+            ],
+            "acceptedWhy": {
+              "Jetzt wohne ich in Leipzig.": "grammatisch: jetzt auf Position 1, das Verb bleibt auf Position 2",
+              "In Leipzig wohne ich jetzt.": "grammatisch: in Leipzig auf Position 1, das Verb bleibt auf Position 2"
+            },
+            "errorTags": [
+              "v2-inv"
+            ],
+            "explanation": {
+              "de": "Das Verb „wohne“ steht auf Position 2.",
+              "en": "The verb “wohne” is in position 2."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls1-p10",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.verbposition-2",
+            "promptDe": "Bilden Sie die Frage.",
+            "promptEn": "Build the question.",
+            "tiles": [
+              "heißen",
+              "Sie",
+              "wie"
+            ],
+            "answer": "Wie heißen Sie?",
+            "accepted": [
+              "Wie heißen Sie?"
+            ],
+            "explanation": {
+              "de": "W-Frage: „Wie“ auf Position 1, das Verb „heißen“ auf Position 2.",
+              "en": "W-question: “wie” first, the verb “heißen” in position 2."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls1-p11",
+            "type": "error_correction",
+            "role": "practice",
+            "topic": "g.praesens",
+            "promptDe": "Korrigieren Sie: „Frau Schulz, woher kommst du?“",
+            "promptEn": "Correct the sentence.",
+            "answer": "Frau Schulz, woher kommen Sie?",
+            "accepted": [
+              "Frau Schulz, woher kommen Sie?",
+              "Woher kommen Sie, Frau Schulz?"
+            ],
+            "acceptedWhy": {
+              "Woher kommen Sie, Frau Schulz?": "auch richtig: der Name kann auch am Ende stehen"
+            },
+            "intentionalError": true,
+            "errorTag": "register",
+            "errorTags": [
+              "register"
+            ],
+            "explanation": {
+              "de": "Zu Frau Schulz sagen Sie „Sie“. Mit „Sie“ ist das Verb „kommen“.",
+              "en": "You are formal with Mrs Schulz: “Sie”, and with “Sie” the verb is “kommen”."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls1-p12",
+            "type": "multiple_choice",
+            "role": "practice",
+            "topic": "g.praesens",
+            "promptDe": "Frau Schulz fragt Bilal. Was passt?",
+            "promptEn": "Mrs Schulz asks Bilal. Which question fits?",
+            "options": [
+              "Woher kommst du?",
+              "Woher kommen Sie?",
+              "Woher komme ich?"
+            ],
+            "answer": "Woher kommen Sie?",
+            "accepted": [
+              "Woher kommen Sie?"
+            ],
+            "errorTags": [
+              "register"
+            ],
+            "explanation": {
+              "de": "Frau Schulz sagt „Sie“ zu Bilal: „Woher kommen Sie?“",
+              "en": "Mrs Schulz uses the formal “Sie” with Bilal."
+            },
+            "origin": "agent"
+          }
+        ],
+        "generators": [
+          {
+            "generator": "dictation.fromInput",
+            "count": 2,
+            "source": [
+              "a1.1-u01-ls1-l03",
+              "a1.1-u01-ls1-l06"
+            ]
+          },
+          {
+            "generator": "lex.glossTyped",
+            "count": 1,
+            "source": [
+              "lx.kommen",
+              "lx.wohnen",
+              "lx.name",
+              "lx.stadt"
+            ]
+          },
+          {
+            "generator": "lex.glossMatch",
+            "count": 1,
+            "source": [
+              "lx.hallo",
+              "lx.guten-tag",
+              "lx.tschuess",
+              "lx.auf-wiedersehen",
+              "lx.freut-mich"
+            ]
+          }
+        ]
+      },
+      "reserve": [
+        {
+          "id": "a1.1-u01-ls1-r01",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "g.praesens",
+          "promptDe": "Guten Tag! Wie ___ Sie? (heißen)",
+          "promptEn": "heißen, Sie-form.",
+          "answer": "heißen",
+          "accepted": [
+            "heißen"
+          ],
+          "difficulty": 1,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "einstufung"
+          ],
+          "explanation": {
+            "de": "Sie + heiß-en: Wie heißen Sie?",
+            "en": "With Sie the ending is -en: Wie heißen Sie?"
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls1-r02",
+          "type": "sentence_building",
+          "role": "practice",
+          "topic": "g.verbposition-2",
+          "promptDe": "Bilden Sie die Frage.",
+          "promptEn": "Build the question.",
+          "tiles": [
+            "kommen",
+            "Sie",
+            "woher"
+          ],
+          "answer": "Woher kommen Sie?",
+          "accepted": [
+            "Woher kommen Sie?"
+          ],
+          "errorTags": [
+            "v2-inv"
+          ],
+          "difficulty": 1,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "explanation": {
+            "de": "W-Frage: „Woher“ auf Position 1, das Verb „kommen“ auf Position 2.",
+            "en": "W-question: “woher” first, the verb in position 2."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls1-r03",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "g.praesens",
+          "promptDe": "Frau Schulz: „Sie ___ Herr Ahmed, oder?“ (sein)",
+          "promptEn": "sein, Sie-form.",
+          "answer": "sind",
+          "accepted": [
+            "sind"
+          ],
+          "difficulty": 2,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "einstufung"
+          ],
+          "explanation": {
+            "de": "sein: Sie sind, ich bin.",
+            "en": "sein: Sie sind, ich bin."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls1-r04",
+          "type": "sentence_building",
+          "role": "practice",
+          "topic": "g.praesens",
+          "promptDe": "Bilden Sie einen Aussagesatz.",
+          "promptEn": "Build a statement.",
+          "tiles": [
+            "wohnen",
+            "Sie",
+            "jetzt",
+            "in Leipzig"
+          ],
+          "answer": "Sie wohnen jetzt in Leipzig.",
+          "accepted": [
+            "Sie wohnen jetzt in Leipzig.",
+            "Jetzt wohnen Sie in Leipzig.",
+            "In Leipzig wohnen Sie jetzt."
+          ],
+          "acceptedWhy": {
+            "Jetzt wohnen Sie in Leipzig.": "grammatisch: jetzt auf Position 1, das Verb bleibt auf Position 2",
+            "In Leipzig wohnen Sie jetzt.": "grammatisch: in Leipzig auf Position 1, das Verb bleibt auf Position 2"
+          },
+          "errorTags": [
+            "v2-inv"
+          ],
+          "difficulty": 2,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "explanation": {
+            "de": "Das Verb „wohnen“ steht auf Position 2. Mit „Sie“ ist die Endung -en.",
+            "en": "“wohnen” is in position 2; with Sie the ending is -en."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls1-r05",
+          "type": "multiple_choice",
+          "role": "practice",
+          "topic": "g.praesens",
+          "promptDe": "Olena fragt Bilal im Kurs. Was passt?",
+          "promptEn": "Olena asks Bilal in class. Which question fits?",
+          "options": [
+            "Wie heißen Sie?",
+            "Wie heißt du?",
+            "Wie heiße ich?"
+          ],
+          "answer": "Wie heißt du?",
+          "accepted": [
+            "Wie heißt du?"
+          ],
+          "errorTags": [
+            "register"
+          ],
+          "difficulty": 1,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "explanation": {
+            "de": "Olena und Bilal sind im Kurs. Da sagen sie „du“: Wie heißt du?",
+            "en": "Olena and Bilal are classmates, so they say “du”."
+          },
+          "origin": "agent"
+        }
+      ],
+      "microOutput": {
+        "id": "a1.1-u01-ls1-mo",
+        "bankKey": "a11-u01-mo1",
+        "mode": "spoken",
+        "profile": "course-micro-sp",
+        "situationDe": "Ihr erster Tag im Kurs. Frau Schulz fragt Sie: „Wie heißen Sie? Woher kommen Sie?“",
+        "promptDe": "Antworten Sie Frau Schulz in 1–2 Sätzen: Name und Land.",
+        "promptEn": "Answer Mrs Schulz in 1–2 sentences: your name and your country.",
+        "planSeconds": 30,
+        "seconds": [
+          20,
+          30
+        ],
+        "targets": [
+          "g.praesens"
+        ],
+        "register": "Sie"
+      },
+      "aussprache": {
+        "focus": "Endungen hören: ich komme – Sie kommen",
+        "perception": {
+          "generator": "perception.pairs",
+          "count": 3,
+          "source": [
+            "komme|kommen",
+            "wohne|wohnen",
+            "heiße|heißen",
+            "lerne|lernen"
+          ],
+          "voices": 4
+        },
+        "readAloud": {
+          "lineDe": "Guten Tag! Ich heiße Priya. Ich komme aus Indien."
+        }
+      },
+      "endLine": "Sie können jetzt sagen: Ich heiße …, ich komme aus …, ich wohne in …"
+    },
+    {
+      "id": "a1.1-u01-ls2",
+      "kind": "situation",
+      "title": "Woher kommst du?",
+      "structure": "g.verbposition-2",
+      "modelSentence": "Woher kommst du? – Ich komme aus Pakistan.",
+      "ruleCard": "rc.verbposition-2",
+      "warmup": {
+        "draw": 6,
+        "contrastWith": "g.praesens"
+      },
+      "input": {
+        "kind": "dialog",
+        "title": "Im Kurs: Fragen und Antworten",
+        "textType": "tt.dialog",
+        "lines": [
+          {
+            "id": "a1.1-u01-ls2-l01",
+            "speaker": "cast.frau-schulz",
+            "de": "Jetzt fragen Sie bitte im Kurs. Sagen Sie hier „du“: Wie heißt du? Woher kommst du?",
+            "en": "Now please ask each other in class. Use “du” here: What’s your name? Where are you from?"
+          },
+          {
+            "id": "a1.1-u01-ls2-l02",
+            "speaker": "cast.bilal",
+            "de": "Hallo, Priya! Welche Sprachen sprichst du?",
+            "en": "Hi, Priya! Which languages do you speak?"
+          },
+          {
+            "id": "a1.1-u01-ls2-l03",
+            "speaker": "cast.priya",
+            "de": "Ich spreche Malayalam und Englisch. Und du, Bilal?",
+            "en": "I speak Malayalam and English. And you, Bilal?"
+          },
+          {
+            "id": "a1.1-u01-ls2-l04",
+            "speaker": "cast.bilal",
+            "de": "Ich spreche Urdu und Englisch. Und jetzt lerne ich auch Deutsch!",
+            "en": "I speak Urdu and English. And now I’m learning German too!"
+          },
+          {
+            "id": "a1.1-u01-ls2-l05",
+            "speaker": "cast.olena",
+            "de": "Entschuldigung! Hallo, ihr zwei! Ich bin Olena. Und wie heißt du?",
+            "en": "Excuse me! Hi, you two! I’m Olena. And what’s your name?"
+          },
+          {
+            "id": "a1.1-u01-ls2-l06",
+            "speaker": "cast.bilal",
+            "de": "Ich heiße Bilal. Woher kommst du, Olena?",
+            "en": "My name is Bilal. Where are you from, Olena?"
+          },
+          {
+            "id": "a1.1-u01-ls2-l07",
+            "speaker": "cast.olena",
+            "de": "Aus der Ukraine. Jetzt wohne ich hier in Leipzig. Ich spreche Ukrainisch, Englisch und ein bisschen Deutsch.",
+            "en": "From Ukraine. Now I live here in Leipzig. I speak Ukrainian, English and a little German."
+          },
+          {
+            "id": "a1.1-u01-ls2-l08",
+            "speaker": "cast.frau-schulz",
+            "de": "So, das ist alles für heute. Auf Wiedersehen und bis morgen!",
+            "en": "Right, that’s all for today. Goodbye and see you tomorrow!"
+          },
+          {
+            "id": "a1.1-u01-ls2-l09",
+            "speaker": "cast.priya",
+            "de": "Auf Wiedersehen, Frau Schulz! Tschüss, Olena! Tschüss, Bilal!",
+            "en": "Goodbye, Mrs Schulz! Bye, Olena! Bye, Bilal!"
+          },
+          {
+            "id": "a1.1-u01-ls2-l10",
+            "speaker": "cast.bilal",
+            "de": "Tschüss, Priya! Bis morgen!",
+            "en": "Bye, Priya! See you tomorrow!"
+          }
+        ],
+        "glosses": [
+          {
+            "token": "Malayalam",
+            "gloss": {
+              "en": "Malayalam (a language of South India)"
+            }
+          },
+          {
+            "token": "Urdu",
+            "gloss": {
+              "en": "Urdu (a language of Pakistan)"
+            }
+          },
+          {
+            "token": "Ukrainisch",
+            "gloss": {
+              "en": "Ukrainian (language)"
+            }
+          }
+        ],
+        "transcriptAfterUnaidedListen": true
+      },
+      "inputItems": [
+        {
+          "id": "a1.1-u01-ls2-i01",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "hoeren",
+          "promptDe": "Was fragen Priya, Bilal und Olena?",
+          "promptEn": "What do Priya, Bilal and Olena ask each other about?",
+          "options": [
+            "Sie fragen: Name, Land, Sprachen.",
+            "Sie fragen: Stadt und Kurs.",
+            "Sie fragen Frau Schulz."
+          ],
+          "answer": "Sie fragen: Name, Land, Sprachen.",
+          "accepted": [
+            "Sie fragen: Name, Land, Sprachen."
+          ],
+          "explanation": {
+            "de": "Sie fragen: „Wie heißt du? Woher kommst du? Welche Sprachen sprichst du?“",
+            "en": "They ask about names, countries and languages."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls2-i02",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "hoeren",
+          "promptDe": "Was ist am Ende?",
+          "promptEn": "What happens at the end?",
+          "options": [
+            "Der Kurs beginnt.",
+            "Olena kommt.",
+            "Der Kurs ist zu Ende."
+          ],
+          "answer": "Der Kurs ist zu Ende.",
+          "accepted": [
+            "Der Kurs ist zu Ende."
+          ],
+          "explanation": {
+            "de": "Frau Schulz sagt: „Das ist alles für heute.“ Dann sagen alle: „Tschüss!“ oder „Auf Wiedersehen!“",
+            "en": "Mrs Schulz says that’s all for today, and everyone says goodbye."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls2-i03",
+          "type": "multiple_choice",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Wer spricht Urdu?",
+          "promptEn": "Who speaks Urdu?",
+          "options": [
+            "Priya",
+            "Bilal",
+            "Olena"
+          ],
+          "answer": "Bilal",
+          "accepted": [
+            "Bilal"
+          ],
+          "explanation": {
+            "de": "Bilal sagt: „Ich spreche Urdu und Englisch.“ Priya spricht Malayalam und Englisch.",
+            "en": "Bilal speaks Urdu and English; Priya speaks Malayalam and English."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls2-i04",
+          "type": "fill_blank",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Olena wohnt jetzt in ___.",
+          "promptEn": "Where does Olena live now? Write the city.",
+          "answer": "Leipzig",
+          "accepted": [
+            "Leipzig"
+          ],
+          "explanation": {
+            "de": "Olena sagt: „Jetzt wohne ich hier in Leipzig.“",
+            "en": "Olena says she lives in Leipzig now."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls2-i05",
+          "type": "multiple_choice",
+          "role": "detail",
+          "topic": "hoeren",
+          "promptDe": "Was sagt Bilal am Ende zu Priya?",
+          "promptEn": "What does Bilal say to Priya at the end?",
+          "options": [
+            "Auf Wiedersehen, Frau Schulz!",
+            "Freut mich, Priya!",
+            "Tschüss, Priya! Bis morgen!"
+          ],
+          "answer": "Tschüss, Priya! Bis morgen!",
+          "accepted": [
+            "Tschüss, Priya! Bis morgen!"
+          ],
+          "explanation": {
+            "de": "Bilal sagt zu Priya: „Tschüss, Priya! Bis morgen!“ So sagen Freunde im Kurs „auf Wiedersehen“.",
+            "en": "Bilal says “Tschüss, Priya! Bis morgen!” – the informal goodbye between classmates."
+          },
+          "origin": "agent"
+        }
+      ],
+      "structuredInput": [
+        {
+          "id": "a1.1-u01-ls2-s01",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.verbposition-2",
+          "promptDe": "Antwort: „Aus Pakistan.“ Was ist die Frage?",
+          "promptEn": "The answer is “From Pakistan”. What was the question?",
+          "options": [
+            "Wo wohnst du?",
+            "Woher kommst du?",
+            "Wie heißt du?"
+          ],
+          "answer": "Woher kommst du?",
+          "accepted": [
+            "Woher kommst du?"
+          ],
+          "explanation": {
+            "de": "„Aus Pakistan“ sagt das Land: Die Frage ist „Woher kommst du?“",
+            "en": "“Aus Pakistan” names where someone is from: “Woher?”"
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls2-s02",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.verbposition-2",
+          "promptDe": "Antwort: „In Leipzig.“ Was ist die Frage?",
+          "promptEn": "The answer is “In Leipzig”. What was the question?",
+          "options": [
+            "Wo wohnst du?",
+            "Woher kommst du?",
+            "Welche Sprachen sprichst du?"
+          ],
+          "answer": "Wo wohnst du?",
+          "accepted": [
+            "Wo wohnst du?"
+          ],
+          "explanation": {
+            "de": "„In Leipzig“ antwortet auf „Wo?“. Auf „Woher?“ antworten Sie mit „aus“: aus Leipzig.",
+            "en": "“In Leipzig” answers “Wo?”; “Woher?” is answered with “aus …”."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls2-s03",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.verbposition-2",
+          "promptDe": "Antwort: „Olena.“ Was ist die Frage?",
+          "promptEn": "The answer is “Olena”. What was the question?",
+          "options": [
+            "Woher kommst du?",
+            "Wie heißt du?",
+            "Wo wohnst du?"
+          ],
+          "answer": "Wie heißt du?",
+          "accepted": [
+            "Wie heißt du?"
+          ],
+          "explanation": {
+            "de": "Olena ist ein Name. Nach dem Namen fragen Sie: „Wie heißt du?“",
+            "en": "Olena is a name; you ask for a name with “Wie heißt du?”"
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls2-s04",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.verbposition-2",
+          "promptDe": "Welche Frage ist richtig?",
+          "promptEn": "Which question is correct?",
+          "options": [
+            "Woher du kommst?",
+            "Du woher kommst?",
+            "Woher kommst du?"
+          ],
+          "answer": "Woher kommst du?",
+          "accepted": [
+            "Woher kommst du?"
+          ],
+          "errorTags": [
+            "v2-inv"
+          ],
+          "explanation": {
+            "de": "In der W-Frage steht das Verb auf Position 2: Woher (1) kommst (2) du?",
+            "en": "In a W-question the verb is in position 2: Woher – kommst – du?"
+          },
+          "origin": "agent"
+        }
+      ],
+      "pool": {
+        "items": [
+          {
+            "id": "a1.1-u01-ls2-p01",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.verbposition-2",
+            "promptDe": "___ kommst du? – Aus der Türkei.",
+            "promptEn": "Which question word?",
+            "answer": "Woher",
+            "accepted": [
+              "Woher"
+            ],
+            "explanation": {
+              "de": "„Aus der Türkei“ sagt das Land: Die Frage beginnt mit „Woher“.",
+              "en": "“Aus der Türkei” – the question word is “woher”."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls2-p02",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.verbposition-2",
+            "promptDe": "___ wohnst du? – In Leipzig.",
+            "promptEn": "Which question word?",
+            "answer": "Wo",
+            "accepted": [
+              "Wo"
+            ],
+            "explanation": {
+              "de": "„In Leipzig“ antwortet auf „Wo?“.",
+              "en": "“In Leipzig” answers “Wo?”."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls2-p03",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.verbposition-2",
+            "promptDe": "___ heißt du? – Arta.",
+            "promptEn": "Which question word?",
+            "answer": "Wie",
+            "accepted": [
+              "Wie"
+            ],
+            "explanation": {
+              "de": "Nach dem Namen fragen Sie mit „Wie“: Wie heißt du?",
+              "en": "You ask for a name with “wie”: Wie heißt du?"
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls2-p04",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.praesens",
+            "promptDe": "Woher ___ du, Olena? (kommen)",
+            "promptEn": "kommen, du-form.",
+            "answer": "kommst",
+            "accepted": [
+              "kommst"
+            ],
+            "explanation": {
+              "de": "du + komm-st: Für „du“ ist die Endung -st.",
+              "en": "du takes the ending -st: du kommst."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls2-p05",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.praesens",
+            "promptDe": "Und wo ___ du jetzt, Bilal? (wohnen)",
+            "promptEn": "wohnen, du-form.",
+            "answer": "wohnst",
+            "accepted": [
+              "wohnst"
+            ],
+            "explanation": {
+              "de": "du + wohn-st: du wohnst.",
+              "en": "du wohnst – ending -st."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls2-p06",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.verbposition-2",
+            "promptDe": "Bilden Sie die Frage.",
+            "promptEn": "Build the question.",
+            "tiles": [
+              "kommst",
+              "du",
+              "woher"
+            ],
+            "answer": "Woher kommst du?",
+            "accepted": [
+              "Woher kommst du?"
+            ],
+            "errorTags": [
+              "v2-inv"
+            ],
+            "explanation": {
+              "de": "„Woher“ auf Position 1, das Verb „kommst“ auf Position 2, dann „du“.",
+              "en": "“Woher” first, the verb “kommst” in position 2, then “du”."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls2-p07",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.verbposition-2",
+            "promptDe": "Bilden Sie die Frage.",
+            "promptEn": "Build the question.",
+            "tiles": [
+              "sprichst",
+              "du",
+              "welche Sprachen"
+            ],
+            "answer": "Welche Sprachen sprichst du?",
+            "accepted": [
+              "Welche Sprachen sprichst du?"
+            ],
+            "errorTags": [
+              "v2-inv"
+            ],
+            "explanation": {
+              "de": "„Welche Sprachen“ auf Position 1, das Verb „sprichst“ auf Position 2.",
+              "en": "“Welche Sprachen” first, the verb “sprichst” in position 2."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls2-p08",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.verbposition-2",
+            "promptDe": "Bilden Sie einen Aussagesatz.",
+            "promptEn": "Build a statement.",
+            "tiles": [
+              "lerne",
+              "ich",
+              "jetzt",
+              "Deutsch"
+            ],
+            "answer": "Ich lerne jetzt Deutsch.",
+            "accepted": [
+              "Ich lerne jetzt Deutsch.",
+              "Jetzt lerne ich Deutsch.",
+              "Deutsch lerne ich jetzt."
+            ],
+            "acceptedWhy": {
+              "Jetzt lerne ich Deutsch.": "grammatisch: jetzt auf Position 1, das Verb bleibt auf Position 2",
+              "Deutsch lerne ich jetzt.": "grammatisch: Deutsch betont auf Position 1, das Verb bleibt auf Position 2"
+            },
+            "errorTags": [
+              "v2-inv"
+            ],
+            "explanation": {
+              "de": "Das Verb „lerne“ steht auf Position 2. Steht „jetzt“ auf Position 1, kommt „ich“ nach dem Verb.",
+              "en": "“lerne” is in position 2; if “jetzt” comes first, “ich” follows the verb."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls2-p09",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.verbposition-2",
+            "promptDe": "Bilden Sie einen Aussagesatz.",
+            "promptEn": "Build a statement.",
+            "tiles": [
+              "wohnt",
+              "Bilal",
+              "jetzt",
+              "in Leipzig"
+            ],
+            "answer": "Bilal wohnt jetzt in Leipzig.",
+            "accepted": [
+              "Bilal wohnt jetzt in Leipzig.",
+              "Jetzt wohnt Bilal in Leipzig.",
+              "In Leipzig wohnt Bilal jetzt."
+            ],
+            "acceptedWhy": {
+              "Jetzt wohnt Bilal in Leipzig.": "grammatisch: jetzt auf Position 1, das Verb bleibt auf Position 2",
+              "In Leipzig wohnt Bilal jetzt.": "grammatisch: in Leipzig auf Position 1, das Verb bleibt auf Position 2"
+            },
+            "errorTags": [
+              "v2-inv"
+            ],
+            "explanation": {
+              "de": "Das Verb „wohnt“ steht auf Position 2.",
+              "en": "The verb “wohnt” is in position 2."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls2-p10",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.verbposition-2",
+            "promptDe": "Bilden Sie die Frage.",
+            "promptEn": "Build the question.",
+            "tiles": [
+              "wohnst",
+              "du",
+              "wo",
+              "jetzt"
+            ],
+            "answer": "Wo wohnst du jetzt?",
+            "accepted": [
+              "Wo wohnst du jetzt?"
+            ],
+            "errorTags": [
+              "v2-inv"
+            ],
+            "explanation": {
+              "de": "„Wo“ auf Position 1, das Verb „wohnst“ auf Position 2.",
+              "en": "“Wo” first, the verb “wohnst” in position 2."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls2-p11",
+            "type": "error_correction",
+            "role": "practice",
+            "topic": "g.verbposition-2",
+            "promptDe": "Korrigieren Sie: „Jetzt ich wohne in Leipzig.“",
+            "promptEn": "Correct the sentence.",
+            "answer": "Jetzt wohne ich in Leipzig.",
+            "accepted": [
+              "Jetzt wohne ich in Leipzig.",
+              "Ich wohne jetzt in Leipzig."
+            ],
+            "acceptedWhy": {
+              "Ich wohne jetzt in Leipzig.": "auch richtig: ich auf Position 1, das Verb auf Position 2"
+            },
+            "intentionalError": true,
+            "errorTag": "v2-inv",
+            "errorTags": [
+              "v2-inv"
+            ],
+            "explanation": {
+              "de": "„Jetzt“ ist Position 1. Das Verb „wohne“ steht auf Position 2, dann „ich“.",
+              "en": "“Jetzt” is position 1, so the verb “wohne” comes second, then “ich”."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls2-p12",
+            "type": "multiple_choice",
+            "role": "practice",
+            "topic": "lx.tschuess",
+            "promptDe": "Der Kurs ist zu Ende. Was sagt Priya zu Olena?",
+            "promptEn": "Class is over. What does Priya say to Olena?",
+            "options": [
+              "Guten Tag!",
+              "Tschüss!",
+              "Freut mich!"
+            ],
+            "answer": "Tschüss!",
+            "accepted": [
+              "Tschüss!"
+            ],
+            "explanation": {
+              "de": "Am Ende sagen Freunde „Tschüss!“. „Guten Tag“ sagen Sie am Anfang.",
+              "en": "Friends say “Tschüss!” when they leave; “Guten Tag” is a greeting."
+            },
+            "origin": "agent"
+          }
+        ],
+        "generators": [
+          {
+            "generator": "dictation.fromInput",
+            "count": 2,
+            "source": [
+              "a1.1-u01-ls2-l06",
+              "a1.1-u01-ls2-l10"
+            ]
+          },
+          {
+            "generator": "lex.glossTyped",
+            "count": 1,
+            "source": [
+              "lx.woher",
+              "lx.name",
+              "lx.land",
+              "lx.stadt"
+            ]
+          },
+          {
+            "generator": "lex.glossMatch",
+            "count": 1,
+            "source": [
+              "lx.name",
+              "lx.land",
+              "lx.stadt",
+              "lx.wohnort",
+              "lx.woher"
+            ]
+          }
+        ]
+      },
+      "reserve": [
+        {
+          "id": "a1.1-u01-ls2-r01",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "g.verbposition-2",
+          "promptDe": "___ wohnen Sie, Frau Schulz? – In Leipzig.",
+          "promptEn": "Which question word?",
+          "answer": "Wo",
+          "accepted": [
+            "Wo"
+          ],
+          "difficulty": 1,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "einstufung"
+          ],
+          "explanation": {
+            "de": "„In Leipzig“ antwortet auf „Wo?“: Wo wohnen Sie?",
+            "en": "“In Leipzig” answers “Wo?”."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls2-r02",
+          "type": "sentence_building",
+          "role": "practice",
+          "topic": "g.verbposition-2",
+          "promptDe": "Bilden Sie einen Aussagesatz.",
+          "promptEn": "Build a statement.",
+          "tiles": [
+            "kommt",
+            "Bilal",
+            "aus Pakistan"
+          ],
+          "answer": "Bilal kommt aus Pakistan.",
+          "accepted": [
+            "Bilal kommt aus Pakistan.",
+            "Aus Pakistan kommt Bilal."
+          ],
+          "acceptedWhy": {
+            "Aus Pakistan kommt Bilal.": "grammatisch: aus Pakistan auf Position 1, das Verb bleibt auf Position 2"
+          },
+          "errorTags": [
+            "v2-inv"
+          ],
+          "difficulty": 1,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "explanation": {
+            "de": "Das Verb „kommt“ steht auf Position 2.",
+            "en": "The verb “kommt” is in position 2."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls2-r03",
+          "type": "error_correction",
+          "role": "practice",
+          "topic": "g.verbposition-2",
+          "promptDe": "Korrigieren Sie: „Woher du kommst?“",
+          "promptEn": "Correct the sentence.",
+          "answer": "Woher kommst du?",
+          "accepted": [
+            "Woher kommst du?"
+          ],
+          "intentionalError": true,
+          "errorTag": "v2-inv",
+          "errorTags": [
+            "v2-inv"
+          ],
+          "difficulty": 2,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "explanation": {
+            "de": "W-Frage: Das Verb steht auf Position 2, direkt nach „Woher“.",
+            "en": "In a W-question the verb comes right after the question word."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls2-r04",
+          "type": "multiple_choice",
+          "role": "practice",
+          "topic": "g.verbposition-2",
+          "promptDe": "Welche Frage ist richtig?",
+          "promptEn": "Which question is correct?",
+          "options": [
+            "Wie du heißt?",
+            "Wie heißt du?",
+            "Heißt wie du?"
+          ],
+          "answer": "Wie heißt du?",
+          "accepted": [
+            "Wie heißt du?"
+          ],
+          "errorTags": [
+            "v2-inv"
+          ],
+          "difficulty": 1,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "explanation": {
+            "de": "„Wie“ auf Position 1, das Verb „heißt“ auf Position 2, dann „du“.",
+            "en": "“Wie” first, the verb “heißt” second, then “du”."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls2-r05",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "g.praesens",
+          "promptDe": "Und woher ___ Sie, Frau Schulz? (kommen)",
+          "promptEn": "kommen, Sie-form.",
+          "answer": "kommen",
+          "accepted": [
+            "kommen"
+          ],
+          "errorTags": [
+            "register"
+          ],
+          "difficulty": 1,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "einstufung"
+          ],
+          "explanation": {
+            "de": "Sie + komm-en: Woher kommen Sie?",
+            "en": "With Sie: Woher kommen Sie?"
+          },
+          "origin": "agent"
+        }
+      ],
+      "microOutput": {
+        "id": "a1.1-u01-ls2-mo",
+        "bankKey": "a11-u01-mo2",
+        "mode": "written",
+        "profile": "course-micro",
+        "situationDe": "Emre schreibt Ihnen im Chat: „Hallo! Ich bin Emre, aus İzmir. Wie heißt du? Woher kommst du?“",
+        "promptDe": "Antworten Sie Emre in 1–3 Sätzen. Fragen Sie Emre auch etwas.",
+        "promptEn": "Answer Emre in 1–3 sentences and ask him one question too.",
+        "planSeconds": 30,
+        "words": [
+          3,
+          16
+        ],
+        "targets": [
+          "g.verbposition-2"
+        ],
+        "register": "du"
+      },
+      "endLine": "Sie können jetzt fragen: Wie heißt du? Woher kommst du? Wo wohnst du? Und Sie können „Tschüss“ sagen."
+    },
+    {
+      "id": "a1.1-u01-ls3",
+      "kind": "situation",
+      "title": "Der Chat vom Kurs A1",
+      "structure": "g.praesens",
+      "modelSentence": "Arta wohnt in Prishtina und lernt online Deutsch.",
+      "ruleCard": "rc.praesens",
+      "warmup": {
+        "draw": 6,
+        "contrastWith": "g.verbposition-2"
+      },
+      "input": {
+        "kind": "text",
+        "title": "Profile im Kurs-Chat",
+        "textType": "tt.steckbrief",
+        "text": {
+          "de": "Chat · Kurs A1 · Sprachschule Leipzig · 8 Teilnehmer\nArta: Guten Abend! Ich bin Arta Berisha. Land: Kosovo. Wohnort: Prishtina. Muttersprache: Albanisch. Ich spreche auch Englisch und lerne online Deutsch.\nEmre: Hallo, Arta! Ich bin Emre. Ich lerne auch online, hier aus İzmir. Muttersprache: Türkisch. Deutsch spreche ich ein bisschen.\nOlena: Hallo, Arta! Hallo, Emre! Ich heiße Olena und komme aus der Ukraine. Ich wohne jetzt in Leipzig. Ich spreche Ukrainisch, Russisch und Englisch.\nArta: Hallo, Olena! Und woher genau?\nOlena: Aus Charkiw. Tschüss und bis morgen im Kurs!",
+          "en": "Chat · Course A1 · Leipzig language school · 8 participants\nArta: Good evening! I’m Arta Berisha. Country: Kosovo. Place of residence: Prishtina. First language: Albanian. I also speak English and I’m learning German online.\nEmre: Hi, Arta! I’m Emre. I’m learning online too, from here in İzmir. First language: Turkish. I speak a little German.\nOlena: Hi, Arta! Hi, Emre! My name is Olena and I’m from Ukraine. I live in Leipzig now. I speak Ukrainian, Russian and English.\nArta: Hi, Olena! And where exactly are you from?\nOlena: From Kharkiv. Bye, see you tomorrow in class!"
+        },
+        "glosses": [
+          {
+            "token": "Albanisch",
+            "gloss": {
+              "en": "Albanian (language)"
+            }
+          },
+          {
+            "token": "Ukrainisch",
+            "gloss": {
+              "en": "Ukrainian (language)"
+            }
+          },
+          {
+            "token": "Russisch",
+            "gloss": {
+              "en": "Russian (language)"
+            }
+          }
+        ],
+        "transcriptAfterUnaidedListen": false
+      },
+      "inputItems": [
+        {
+          "id": "a1.1-u01-ls3-i01",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "lesen",
+          "promptDe": "Wer schreibt im Chat?",
+          "promptEn": "Who writes in the chat?",
+          "options": [
+            "Priya, Bilal und Olena",
+            "Arta, Emre und Olena",
+            "Frau Schulz und Arta"
+          ],
+          "answer": "Arta, Emre und Olena",
+          "accepted": [
+            "Arta, Emre und Olena"
+          ],
+          "explanation": {
+            "de": "Im Chat schreiben Arta, Emre und Olena.",
+            "en": "Arta, Emre and Olena write in the chat."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls3-i02",
+          "type": "multiple_choice",
+          "role": "gist",
+          "topic": "lesen",
+          "promptDe": "Was schreiben Arta, Emre und Olena?",
+          "promptEn": "What do Arta, Emre and Olena write about?",
+          "options": [
+            "Sie fragen nach dem Kurs.",
+            "Sie sagen: Tschüss, Frau Schulz!",
+            "Sie sagen Name, Land und Sprachen."
+          ],
+          "answer": "Sie sagen Name, Land und Sprachen.",
+          "accepted": [
+            "Sie sagen Name, Land und Sprachen."
+          ],
+          "explanation": {
+            "de": "Alle drei schreiben: Wer sind sie? Woher kommen sie? Welche Sprachen sprechen sie?",
+            "en": "All three write who they are, where they come from and which languages they speak."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls3-i03",
+          "type": "fill_blank",
+          "role": "detail",
+          "topic": "lesen",
+          "promptDe": "Arta wohnt in ___.",
+          "promptEn": "Where does Arta live? Write the city.",
+          "answer": "Prishtina",
+          "accepted": [
+            "Prishtina"
+          ],
+          "explanation": {
+            "de": "Arta schreibt: „Wohnort: Prishtina.“",
+            "en": "Arta writes: place of residence – Prishtina."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls3-i04",
+          "type": "multiple_choice",
+          "role": "detail",
+          "topic": "lesen",
+          "promptDe": "Wer wohnt jetzt in Leipzig?",
+          "promptEn": "Who lives in Leipzig now?",
+          "options": [
+            "Arta",
+            "Emre",
+            "Olena"
+          ],
+          "answer": "Olena",
+          "accepted": [
+            "Olena"
+          ],
+          "explanation": {
+            "de": "Olena schreibt: „Ich wohne jetzt in Leipzig.“ Arta und Emre lernen online.",
+            "en": "Olena lives in Leipzig; Arta and Emre learn online from home."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls3-i05",
+          "type": "multiple_choice",
+          "role": "detail",
+          "topic": "lesen",
+          "promptDe": "Was ist die Muttersprache von Emre?",
+          "promptEn": "What is Emre’s first language?",
+          "options": [
+            "Deutsch",
+            "Türkisch",
+            "Englisch"
+          ],
+          "answer": "Türkisch",
+          "accepted": [
+            "Türkisch"
+          ],
+          "explanation": {
+            "de": "Emre schreibt: „Muttersprache: Türkisch.“ Deutsch spricht er ein bisschen.",
+            "en": "Emre’s first language is Turkish; he speaks a little German."
+          },
+          "origin": "agent"
+        }
+      ],
+      "structuredInput": [
+        {
+          "id": "a1.1-u01-ls3-s01",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.praesens",
+          "promptDe": "„… spricht Albanisch und Englisch.“ Welches Wort passt?",
+          "promptEn": "Which word fits? Look at the verb.",
+          "options": [
+            "Ich",
+            "Du",
+            "Arta"
+          ],
+          "answer": "Arta",
+          "accepted": [
+            "Arta"
+          ],
+          "explanation": {
+            "de": "„spricht“ ist die Form für er und sie: Arta spricht.",
+            "en": "“spricht” is the form for er/sie: Arta spricht."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls3-s02",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.praesens",
+          "promptDe": "Welcher Satz ist über Olena?",
+          "promptEn": "Which sentence is about Olena?",
+          "options": [
+            "Ich wohne in Leipzig.",
+            "Du wohnst in Leipzig.",
+            "Sie wohnt in Leipzig."
+          ],
+          "answer": "Sie wohnt in Leipzig.",
+          "accepted": [
+            "Sie wohnt in Leipzig."
+          ],
+          "explanation": {
+            "de": "„Sie wohnt“: Die Endung -t zeigt „sie“ (Olena). „Ich wohne“ schreibt Olena über Olena.",
+            "en": "“Sie wohnt” – the ending -t shows she/Olena; “ich wohne” is what Olena writes herself."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls3-s03",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.praesens",
+          "promptDe": "„… lernst online Deutsch, oder?“ Welches Wort passt?",
+          "promptEn": "Which word fits? Look at the ending.",
+          "options": [
+            "Du",
+            "Ich",
+            "Emre"
+          ],
+          "answer": "Du",
+          "accepted": [
+            "Du"
+          ],
+          "explanation": {
+            "de": "lernst: Die Endung -st passt zu „du“: du lernst.",
+            "en": "lernst: the ending -st goes with “du”."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls3-s04",
+          "type": "multiple_choice",
+          "role": "structured",
+          "topic": "g.praesens",
+          "promptDe": "Arta schreibt: „Ich wohne in Prishtina.“ Was ist richtig?",
+          "promptEn": "Arta writes “I live in Prishtina”. Which sentence about her is correct?",
+          "options": [
+            "Arta wohne in Prishtina.",
+            "Arta wohnt in Prishtina.",
+            "Arta wohnst in Prishtina."
+          ],
+          "answer": "Arta wohnt in Prishtina.",
+          "accepted": [
+            "Arta wohnt in Prishtina."
+          ],
+          "explanation": {
+            "de": "Über Arta sagen Sie „sie“: sie wohnt, Arta wohnt – mit -t.",
+            "en": "About Arta you use the er/sie form: Arta wohnt, with -t."
+          },
+          "origin": "agent"
+        }
+      ],
+      "pool": {
+        "items": [
+          {
+            "id": "a1.1-u01-ls3-p01",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.praesens",
+            "promptDe": "Emre ___ in İzmir. (wohnen)",
+            "promptEn": "wohnen, er-form.",
+            "answer": "wohnt",
+            "accepted": [
+              "wohnt"
+            ],
+            "explanation": {
+              "de": "er (Emre) + wohn-t: Emre wohnt.",
+              "en": "er/sie takes the ending -t: Emre wohnt."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls3-p02",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.praesens",
+            "promptDe": "Arta ___ online Deutsch. (lernen)",
+            "promptEn": "lernen, sie-form.",
+            "answer": "lernt",
+            "accepted": [
+              "lernt"
+            ],
+            "explanation": {
+              "de": "sie (Arta) + lern-t: Arta lernt.",
+              "en": "er/sie takes -t: Arta lernt."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls3-p03",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.praesens",
+            "promptDe": "Olena ___ aus der Ukraine. (kommen)",
+            "promptEn": "kommen, sie-form.",
+            "answer": "kommt",
+            "accepted": [
+              "kommt"
+            ],
+            "explanation": {
+              "de": "sie (Olena) + komm-t: Olena kommt aus der Ukraine.",
+              "en": "Olena kommt – ending -t."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls3-p04",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "g.praesens",
+            "promptDe": "Arta fragt: „Und woher ___ du genau, Olena?“ (kommen)",
+            "promptEn": "kommen, du-form.",
+            "answer": "kommst",
+            "accepted": [
+              "kommst"
+            ],
+            "explanation": {
+              "de": "du + komm-st: Woher kommst du?",
+              "en": "du takes -st: woher kommst du?"
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls3-p05",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "lx.land",
+            "promptDe": "Indien ist ein ___. Kochi ist eine Stadt.",
+            "promptEn": "Country or city? Complete.",
+            "answer": "Land",
+            "accepted": [
+              "Land"
+            ],
+            "explanation": {
+              "de": "Indien, Pakistan, der Kosovo: Das sind Länder. Kochi ist eine Stadt.",
+              "en": "India is a country (das Land); Kochi is a city."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls3-p06",
+            "type": "fill_blank",
+            "role": "practice",
+            "topic": "lx.stadt",
+            "promptDe": "Prishtina ist eine ___ im Kosovo.",
+            "promptEn": "Country or city? Complete.",
+            "answer": "Stadt",
+            "accepted": [
+              "Stadt"
+            ],
+            "explanation": {
+              "de": "Prishtina, Leipzig und İzmir sind Städte. Der Kosovo ist ein Land.",
+              "en": "Prishtina is a city (die Stadt); Kosovo is a country."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls3-p07",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.praesens",
+            "promptDe": "Bilden Sie einen Aussagesatz.",
+            "promptEn": "Build a statement.",
+            "tiles": [
+              "spricht",
+              "Emre",
+              "Türkisch"
+            ],
+            "answer": "Emre spricht Türkisch.",
+            "accepted": [
+              "Emre spricht Türkisch.",
+              "Türkisch spricht Emre."
+            ],
+            "acceptedWhy": {
+              "Türkisch spricht Emre.": "grammatisch: Türkisch betont auf Position 1, das Verb bleibt auf Position 2"
+            },
+            "errorTags": [
+              "v2-inv"
+            ],
+            "explanation": {
+              "de": "Das Verb „spricht“ steht auf Position 2.",
+              "en": "The verb “spricht” is in position 2."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls3-p08",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.praesens",
+            "promptDe": "Bilden Sie einen Aussagesatz.",
+            "promptEn": "Build a statement.",
+            "tiles": [
+              "lernt",
+              "Arta",
+              "online",
+              "Deutsch"
+            ],
+            "answer": "Arta lernt online Deutsch.",
+            "accepted": [
+              "Arta lernt online Deutsch.",
+              "Arta lernt Deutsch online.",
+              "Deutsch lernt Arta online.",
+              "Online lernt Arta Deutsch."
+            ],
+            "acceptedWhy": {
+              "Arta lernt Deutsch online.": "grammatisch: online kann auch am Ende stehen",
+              "Deutsch lernt Arta online.": "grammatisch: Deutsch betont auf Position 1, das Verb bleibt auf Position 2",
+              "Online lernt Arta Deutsch.": "grammatisch: online auf Position 1, das Verb bleibt auf Position 2"
+            },
+            "errorTags": [
+              "v2-inv"
+            ],
+            "explanation": {
+              "de": "Das Verb „lernt“ steht auf Position 2.",
+              "en": "The verb “lernt” is in position 2."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls3-p09",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.praesens",
+            "promptDe": "Bilden Sie einen Aussagesatz.",
+            "promptEn": "Build a statement.",
+            "tiles": [
+              "kommt",
+              "Emre",
+              "aus der Türkei"
+            ],
+            "answer": "Emre kommt aus der Türkei.",
+            "accepted": [
+              "Emre kommt aus der Türkei.",
+              "Aus der Türkei kommt Emre."
+            ],
+            "acceptedWhy": {
+              "Aus der Türkei kommt Emre.": "grammatisch: aus der Türkei auf Position 1, das Verb bleibt auf Position 2"
+            },
+            "errorTags": [
+              "v2-inv"
+            ],
+            "explanation": {
+              "de": "Das Verb „kommt“ steht auf Position 2.",
+              "en": "The verb “kommt” is in position 2."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls3-p10",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.verbposition-2",
+            "promptDe": "Bilden Sie die Frage.",
+            "promptEn": "Build the question.",
+            "tiles": [
+              "lernst",
+              "du",
+              "wo",
+              "Deutsch"
+            ],
+            "answer": "Wo lernst du Deutsch?",
+            "accepted": [
+              "Wo lernst du Deutsch?"
+            ],
+            "errorTags": [
+              "v2-inv"
+            ],
+            "explanation": {
+              "de": "„Wo“ auf Position 1, das Verb „lernst“ auf Position 2, dann „du“.",
+              "en": "“Wo” first, the verb “lernst” second, then “du”."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls3-p11",
+            "type": "sentence_building",
+            "role": "practice",
+            "topic": "g.verbposition-2",
+            "promptDe": "Bilden Sie die Frage.",
+            "promptEn": "Build the question.",
+            "tiles": [
+              "wohnt",
+              "Arta",
+              "wo"
+            ],
+            "answer": "Wo wohnt Arta?",
+            "accepted": [
+              "Wo wohnt Arta?"
+            ],
+            "errorTags": [
+              "v2-inv"
+            ],
+            "explanation": {
+              "de": "„Wo“ auf Position 1, das Verb „wohnt“ auf Position 2, dann „Arta“.",
+              "en": "“Wo” first, the verb “wohnt” second, then “Arta”."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls3-p12",
+            "type": "error_correction",
+            "role": "practice",
+            "topic": "g.verbposition-2",
+            "promptDe": "Korrigieren Sie: „In İzmir Emre wohnt.“",
+            "promptEn": "Correct the sentence.",
+            "answer": "In İzmir wohnt Emre.",
+            "accepted": [
+              "In İzmir wohnt Emre.",
+              "Emre wohnt in İzmir.",
+              "In Izmir wohnt Emre.",
+              "Emre wohnt in Izmir."
+            ],
+            "acceptedWhy": {
+              "Emre wohnt in İzmir.": "auch richtig: Emre auf Position 1, das Verb auf Position 2",
+              "In Izmir wohnt Emre.": "İzmir ohne Punkt auf dem I (Tastatur)",
+              "Emre wohnt in Izmir.": "auch richtig; İzmir ohne Punkt auf dem I (Tastatur)"
+            },
+            "intentionalError": true,
+            "errorTag": "v2-inv",
+            "errorTags": [
+              "v2-inv"
+            ],
+            "explanation": {
+              "de": "„In İzmir“ ist Position 1. Das Verb „wohnt“ steht auf Position 2, dann „Emre“.",
+              "en": "“In İzmir” is position 1, so the verb “wohnt” comes second, then “Emre”."
+            },
+            "origin": "agent"
+          },
+          {
+            "id": "a1.1-u01-ls3-p13",
+            "type": "multiple_choice",
+            "role": "practice",
+            "topic": "lx.muttersprache",
+            "promptDe": "Olena kommt aus der Ukraine. Ukrainisch ist ihre ___.",
+            "promptEn": "Choose the word.",
+            "options": [
+              "Stadt",
+              "Muttersprache",
+              "Land"
+            ],
+            "answer": "Muttersprache",
+            "accepted": [
+              "Muttersprache"
+            ],
+            "explanation": {
+              "de": "Ukrainisch ist eine Sprache: Das ist die Muttersprache von Olena.",
+              "en": "Ukrainian is a language – Olena’s first language (Muttersprache)."
+            },
+            "origin": "agent"
+          }
+        ],
+        "generators": [
+          {
+            "generator": "lex.glossTyped",
+            "count": 2,
+            "source": [
+              "lx.sprache",
+              "lx.land",
+              "lx.stadt",
+              "lx.lernen",
+              "lx.sprechen"
+            ]
+          },
+          {
+            "generator": "lex.glossMatch",
+            "count": 1,
+            "source": [
+              "lx.deutsch",
+              "lx.englisch",
+              "lx.tuerkisch",
+              "lx.spanisch",
+              "lx.deutschland"
+            ]
+          }
+        ]
+      },
+      "reserve": [
+        {
+          "id": "a1.1-u01-ls3-r01",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "g.praesens",
+          "promptDe": "Bilal ___ jetzt in Leipzig. (wohnen)",
+          "promptEn": "wohnen, er-form.",
+          "answer": "wohnt",
+          "accepted": [
+            "wohnt"
+          ],
+          "difficulty": 1,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "einstufung"
+          ],
+          "explanation": {
+            "de": "er (Bilal) + wohn-t: Bilal wohnt.",
+            "en": "er takes -t: Bilal wohnt."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls3-r02",
+          "type": "sentence_building",
+          "role": "practice",
+          "topic": "g.praesens",
+          "promptDe": "Bilden Sie einen Aussagesatz.",
+          "promptEn": "Build a statement.",
+          "tiles": [
+            "lernt",
+            "Priya",
+            "jetzt",
+            "Deutsch"
+          ],
+          "answer": "Priya lernt jetzt Deutsch.",
+          "accepted": [
+            "Priya lernt jetzt Deutsch.",
+            "Jetzt lernt Priya Deutsch.",
+            "Deutsch lernt Priya jetzt."
+          ],
+          "acceptedWhy": {
+            "Jetzt lernt Priya Deutsch.": "grammatisch: jetzt auf Position 1, das Verb bleibt auf Position 2",
+            "Deutsch lernt Priya jetzt.": "grammatisch: Deutsch betont auf Position 1, das Verb bleibt auf Position 2"
+          },
+          "errorTags": [
+            "v2-inv"
+          ],
+          "difficulty": 2,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "repair"
+          ],
+          "explanation": {
+            "de": "Das Verb „lernt“ steht auf Position 2.",
+            "en": "The verb “lernt” is in position 2."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls3-r03",
+          "type": "fill_blank",
+          "role": "practice",
+          "topic": "g.praesens",
+          "promptDe": "Arta, wo ___ du? – In Prishtina. (wohnen)",
+          "promptEn": "wohnen, du-form.",
+          "answer": "wohnst",
+          "accepted": [
+            "wohnst"
+          ],
+          "difficulty": 1,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "einstufung"
+          ],
+          "explanation": {
+            "de": "du + wohn-st: Wo wohnst du?",
+            "en": "du takes -st: wo wohnst du?"
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls3-r04",
+          "type": "error_correction",
+          "role": "practice",
+          "topic": "g.praesens",
+          "promptDe": "Korrigieren Sie: „Arta wohnen in Prishtina.“",
+          "promptEn": "Correct the sentence.",
+          "answer": "Arta wohnt in Prishtina.",
+          "accepted": [
+            "Arta wohnt in Prishtina."
+          ],
+          "intentionalError": true,
+          "difficulty": 2,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "einstufung"
+          ],
+          "explanation": {
+            "de": "Arta ist „sie“. Für „sie“ ist die Endung -t: Arta wohnt.",
+            "en": "Arta = sie, and sie takes -t: Arta wohnt."
+          },
+          "origin": "agent"
+        },
+        {
+          "id": "a1.1-u01-ls3-r05",
+          "type": "multiple_choice",
+          "role": "practice",
+          "topic": "g.praesens",
+          "promptDe": "„… kommt aus Pakistan.“ Welches Wort passt?",
+          "promptEn": "Which word fits? Look at the verb.",
+          "options": [
+            "Ich",
+            "Du",
+            "Bilal"
+          ],
+          "answer": "Bilal",
+          "accepted": [
+            "Bilal"
+          ],
+          "difficulty": 1,
+          "banks": [
+            "plateau",
+            "mehr-ueben",
+            "einstufung"
+          ],
+          "explanation": {
+            "de": "„kommt“ ist die Form für er und sie: Bilal kommt.",
+            "en": "“kommt” is the er/sie form: Bilal kommt."
+          },
+          "origin": "agent"
+        }
+      ],
+      "microOutput": {
+        "id": "a1.1-u01-ls3-mo",
+        "bankKey": "a11-u01-mo3",
+        "mode": "spoken",
+        "profile": "course-micro-sp",
+        "situationDe": "Olena fragt Sie im Video-Chat: „Welche Sprachen sprichst du?“",
+        "promptDe": "Antworten Sie Olena in 1–2 Sätzen. Fragen Sie Olena dann auch etwas.",
+        "promptEn": "Tell Olena which languages you speak, then ask her a question.",
+        "planSeconds": 30,
+        "seconds": [
+          20,
+          30
+        ],
+        "targets": [
+          "g.praesens",
+          "g.verbposition-2"
+        ],
+        "register": "du"
+      },
+      "aussprache": {
+        "focus": "Endungen hören: du wohnst – sie wohnt",
+        "perception": {
+          "generator": "perception.pairs",
+          "count": 3,
+          "source": [
+            "wohnst|wohnt",
+            "kommst|kommt",
+            "lernst|lernt",
+            "sprichst|spricht"
+          ],
+          "voices": 4
+        },
+        "readAloud": {
+          "lineDe": "Woher kommst du? Welche Sprachen sprichst du?"
+        }
+      },
+      "endLine": "Sie können jetzt Profile im Chat lesen und sagen: Emre spricht Türkisch, Olena wohnt in Leipzig."
+    },
+    {
+      "id": "a1.1-u01-ls4",
+      "kind": "pruefung",
+      "texts": [
+        {
+          "id": "a1.1-u01-ls4-t1",
+          "kind": "audio",
+          "title": "Gespräch 1",
+          "lines": [
+            {
+              "id": "a1.1-u01-ls4-t1-l01",
+              "speaker": "x.paul",
+              "de": "Hallo, ich bin Paul. Ich komme aus Kamerun. Und wie heißt du?",
+              "en": "Hi, I’m Paul. I’m from Cameroon. And what’s your name?"
+            },
+            {
+              "id": "a1.1-u01-ls4-t1-l02",
+              "speaker": "x.ana",
+              "de": "Ich heiße Ana. Freut mich, Paul!",
+              "en": "My name is Ana. Nice to meet you, Paul!"
+            },
+            {
+              "id": "a1.1-u01-ls4-t1-l03",
+              "speaker": "x.paul",
+              "de": "Freut mich auch! Und woher kommst du, Ana?",
+              "en": "Nice to meet you too! And where are you from, Ana?"
+            },
+            {
+              "id": "a1.1-u01-ls4-t1-l04",
+              "speaker": "x.ana",
+              "de": "Ich komme aus Polen. Aber ich wohne jetzt hier in Deutschland.",
+              "en": "I’m from Poland. But I live here in Germany now."
+            },
+            {
+              "id": "a1.1-u01-ls4-t1-l05",
+              "speaker": "x.paul",
+              "de": "Ich auch! Ich wohne und lerne hier in Leipzig.",
+              "en": "Me too! I live and study here in Leipzig."
+            }
+          ],
+          "glosses": []
+        },
+        {
+          "id": "a1.1-u01-ls4-t2",
+          "kind": "audio",
+          "title": "Gespräch 2",
+          "lines": [
+            {
+              "id": "a1.1-u01-ls4-t2-l01",
+              "speaker": "x.karin-roth",
+              "de": "Guten Abend! Ich heiße Karin Roth. Und wie heißen Sie?",
+              "en": "Good evening! My name is Karin Roth. And what’s your name?"
+            },
+            {
+              "id": "a1.1-u01-ls4-t2-l02",
+              "speaker": "x.peter-braun",
+              "de": "Mein Name ist Peter Braun. Guten Abend, Frau Roth! Woher kommen Sie?",
+              "en": "My name is Peter Braun. Good evening, Ms Roth! Where are you from?"
+            },
+            {
+              "id": "a1.1-u01-ls4-t2-l03",
+              "speaker": "x.karin-roth",
+              "de": "Ich komme aus Köln. Aber jetzt wohne ich in Berlin. Und Sie, Herr Braun?",
+              "en": "I’m from Cologne. But now I live in Berlin. And you, Mr Braun?"
+            },
+            {
+              "id": "a1.1-u01-ls4-t2-l04",
+              "speaker": "x.peter-braun",
+              "de": "Ich komme aus Berlin! Aber ich wohne jetzt in Hamburg.",
+              "en": "I’m from Berlin! But I live in Hamburg now."
+            }
+          ],
+          "glosses": []
+        },
+        {
+          "id": "a1.1-u01-ls4-t3",
+          "kind": "audio",
+          "title": "Gespräch 3",
+          "lines": [
+            {
+              "id": "a1.1-u01-ls4-t3-l01",
+              "speaker": "x.lukas",
+              "de": "Hallo, Maria! Welche Sprachen sprichst du?",
+              "en": "Hi, Maria! Which languages do you speak?"
+            },
+            {
+              "id": "a1.1-u01-ls4-t3-l02",
+              "speaker": "x.maria",
+              "de": "Spanisch und Englisch. Und jetzt lerne ich Deutsch. Und du, Lukas?",
+              "en": "Spanish and English. And now I’m learning German. And you, Lukas?"
+            },
+            {
+              "id": "a1.1-u01-ls4-t3-l03",
+              "speaker": "x.lukas",
+              "de": "Ich spreche Deutsch und Englisch. Und jetzt lerne ich Spanisch!",
+              "en": "I speak German and English. And now I’m learning Spanish!"
+            },
+            {
+              "id": "a1.1-u01-ls4-t3-l04",
+              "speaker": "x.maria",
+              "de": "Ah, Spanisch! Dann lernen wir zusammen: Deutsch und Spanisch.",
+              "en": "Oh, Spanish! Then we can learn together: German and Spanish."
+            }
+          ],
+          "glosses": []
+        },
+        {
+          "id": "a1.1-u01-ls4-t4",
+          "kind": "audio",
+          "title": "Gespräch 4",
+          "lines": [
+            {
+              "id": "a1.1-u01-ls4-t4-l01",
+              "speaker": "x.eva-lindner",
+              "de": "So, das ist alles für heute. Danke! Auf Wiedersehen und bis morgen!",
+              "en": "Right, that’s all for today. Thank you! Goodbye and see you tomorrow!"
+            },
+            {
+              "id": "a1.1-u01-ls4-t4-l02",
+              "speaker": "x.tom",
+              "de": "Danke, Frau Lindner! Auf Wiedersehen!",
+              "en": "Thank you, Ms Lindner! Goodbye!"
+            },
+            {
+              "id": "a1.1-u01-ls4-t4-l03",
+              "speaker": "x.eva-lindner",
+              "de": "Auf Wiedersehen, Tom! Bis morgen!",
+              "en": "Goodbye, Tom! See you tomorrow!"
+            },
+            {
+              "id": "a1.1-u01-ls4-t4-l04",
+              "speaker": "x.tom",
+              "de": "Tschüss, Ana! Bis morgen im Kurs!",
+              "en": "Bye, Ana! See you tomorrow in class!"
+            },
+            {
+              "id": "a1.1-u01-ls4-t4-l05",
+              "speaker": "x.ana",
+              "de": "Tschüss, Tom! Bis morgen!",
+              "en": "Bye, Tom! See you tomorrow!"
+            }
+          ],
+          "glosses": []
+        },
+        {
+          "id": "a1.1-u01-ls4-t5",
+          "kind": "audio",
+          "title": "Gespräch 5",
+          "lines": [
+            {
+              "id": "a1.1-u01-ls4-t5-l01",
+              "speaker": "x.ana",
+              "de": "Hallo, Tom! Da bist du ja!",
+              "en": "Hi, Tom! There you are!"
+            },
+            {
+              "id": "a1.1-u01-ls4-t5-l02",
+              "speaker": "x.tom",
+              "de": "Hallo, Ana! Und da ist auch Frau Lindner.",
+              "en": "Hi, Ana! And there’s Ms Lindner too."
+            },
+            {
+              "id": "a1.1-u01-ls4-t5-l03",
+              "speaker": "x.ana",
+              "de": "Oh ja. Guten Morgen, Frau Lindner!",
+              "en": "Oh yes. Good morning, Ms Lindner!"
+            },
+            {
+              "id": "a1.1-u01-ls4-t5-l04",
+              "speaker": "x.eva-lindner",
+              "de": "Guten Morgen, Ana! Guten Morgen, Tom! Kommen Sie bitte, der Kurs beginnt jetzt.",
+              "en": "Good morning, Ana! Good morning, Tom! Come in, please – class is starting now."
+            }
+          ],
+          "glosses": []
+        },
+        {
+          "id": "a1.1-u01-ls4-t6",
+          "kind": "audio",
+          "title": "Gespräch 6",
+          "lines": [
+            {
+              "id": "a1.1-u01-ls4-t6-l01",
+              "speaker": "x.eva-lindner",
+              "de": "Guten Morgen! Heute ist der Kurs online. Herr Walsh, wo sind Sie heute?",
+              "en": "Good morning! Today the class is online. Mr Walsh, where are you today?"
+            },
+            {
+              "id": "a1.1-u01-ls4-t6-l02",
+              "speaker": "x.sam-walsh",
+              "de": "Guten Morgen, Frau Lindner! Ich bin heute in Irland.",
+              "en": "Good morning, Ms Lindner! I’m in Ireland today."
+            },
+            {
+              "id": "a1.1-u01-ls4-t6-l03",
+              "speaker": "x.eva-lindner",
+              "de": "In Irland? Sie wohnen doch in Leipzig.",
+              "en": "In Ireland? But you live in Leipzig."
+            },
+            {
+              "id": "a1.1-u01-ls4-t6-l04",
+              "speaker": "x.sam-walsh",
+              "de": "Ja, ich wohne in Leipzig. Aber heute und morgen bin ich in Irland.",
+              "en": "Yes, I live in Leipzig. But today and tomorrow I’m in Ireland."
+            },
+            {
+              "id": "a1.1-u01-ls4-t6-l05",
+              "speaker": "x.tom",
+              "de": "Und ich bin hier in Leipzig. Hallo, Sam!",
+              "en": "And I’m here in Leipzig. Hi, Sam!"
+            }
+          ],
+          "glosses": []
+        }
+      ],
+      "blocks": [
+        {
+          "id": "a1.1-u01-ls4-sd1-h1",
+          "template": "sd1.h1",
+          "lane": "sd1",
+          "length": "full",
+          "scaffolded": true,
+          "modeDefault": "lern",
+          "instructionsDe": "Sie hören sechs kurze Gespräche zweimal. Wählen Sie a, b oder c.",
+          "textRefs": [
+            "a1.1-u01-ls4-t1",
+            "a1.1-u01-ls4-t2",
+            "a1.1-u01-ls4-t3",
+            "a1.1-u01-ls4-t4",
+            "a1.1-u01-ls4-t5",
+            "a1.1-u01-ls4-t6"
+          ],
+          "items": [
+            {
+              "id": "a1.1-u01-ls4-sd1-h1-01",
+              "type": "abc",
+              "role": "exam",
+              "topic": "hoeren",
+              "promptDe": "Woher kommt Ana?",
+              "options": [
+                "aus Kamerun",
+                "aus Polen",
+                "aus Deutschland"
+              ],
+              "textRef": "a1.1-u01-ls4-t1",
+              "answer": "aus Polen",
+              "accepted": [
+                "aus Polen"
+              ],
+              "explanation": {
+                "de": "Ana sagt: „Ich komme aus Polen.“ Paul kommt aus Kamerun. In Deutschland wohnt Ana jetzt.",
+                "en": "Ana is from Poland; Paul is from Cameroon; Ana now lives in Germany."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "a1.1-u01-ls4-sd1-h1-02",
+              "type": "abc",
+              "role": "exam",
+              "topic": "hoeren",
+              "promptDe": "Wo wohnt Herr Braun jetzt?",
+              "options": [
+                "in Berlin",
+                "in Köln",
+                "in Hamburg"
+              ],
+              "textRef": "a1.1-u01-ls4-t2",
+              "answer": "in Hamburg",
+              "accepted": [
+                "in Hamburg"
+              ],
+              "explanation": {
+                "de": "Herr Braun sagt: „Ich wohne jetzt in Hamburg.“ Er kommt aus Berlin, und Frau Roth wohnt in Berlin.",
+                "en": "Mr Braun lives in Hamburg now; he is from Berlin, and Ms Roth lives in Berlin."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "a1.1-u01-ls4-sd1-h1-03",
+              "type": "abc",
+              "role": "exam",
+              "topic": "hoeren",
+              "promptDe": "Welche Sprache lernt Lukas?",
+              "options": [
+                "Spanisch",
+                "Englisch",
+                "Deutsch"
+              ],
+              "textRef": "a1.1-u01-ls4-t3",
+              "answer": "Spanisch",
+              "accepted": [
+                "Spanisch"
+              ],
+              "explanation": {
+                "de": "Lukas sagt: „Jetzt lerne ich Spanisch!“ Deutsch und Englisch spricht er schon. Deutsch lernt Maria.",
+                "en": "Lukas is learning Spanish; he already speaks German and English. Maria is learning German."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "a1.1-u01-ls4-sd1-h1-04",
+              "type": "abc",
+              "role": "exam",
+              "topic": "hoeren",
+              "promptDe": "Was sagt Tom zu Frau Lindner?",
+              "options": [
+                "Tschüss!",
+                "Bis morgen!",
+                "Auf Wiedersehen!"
+              ],
+              "textRef": "a1.1-u01-ls4-t4",
+              "answer": "Auf Wiedersehen!",
+              "accepted": [
+                "Auf Wiedersehen!"
+              ],
+              "explanation": {
+                "de": "Tom sagt zu Frau Lindner: „Auf Wiedersehen!“ Zu Ana sagt er: „Tschüss! Bis morgen im Kurs!“",
+                "en": "Tom says “Auf Wiedersehen” to Ms Lindner and “Tschüss, bis morgen” to Ana."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "a1.1-u01-ls4-sd1-h1-05",
+              "type": "abc",
+              "role": "exam",
+              "topic": "hoeren",
+              "promptDe": "Was sagt Ana zu Frau Lindner?",
+              "options": [
+                "Hallo!",
+                "Guten Morgen!",
+                "Guten Tag!"
+              ],
+              "textRef": "a1.1-u01-ls4-t5",
+              "answer": "Guten Morgen!",
+              "accepted": [
+                "Guten Morgen!"
+              ],
+              "explanation": {
+                "de": "Ana sagt zu Frau Lindner: „Guten Morgen, Frau Lindner!“ „Hallo“ sagt sie zu Tom.",
+                "en": "Ana says “Guten Morgen” to Ms Lindner and “Hallo” to Tom."
+              },
+              "origin": "agent"
+            },
+            {
+              "id": "a1.1-u01-ls4-sd1-h1-06",
+              "type": "abc",
+              "role": "exam",
+              "topic": "hoeren",
+              "promptDe": "Wo ist Herr Walsh heute?",
+              "options": [
+                "in Irland",
+                "in Leipzig",
+                "in Hamburg"
+              ],
+              "textRef": "a1.1-u01-ls4-t6",
+              "answer": "in Irland",
+              "accepted": [
+                "in Irland"
+              ],
+              "explanation": {
+                "de": "Herr Walsh sagt: „Heute und morgen bin ich in Irland.“ In Leipzig wohnt er, und Tom ist in Leipzig.",
+                "en": "Mr Walsh is in Ireland today; he lives in Leipzig, and Tom is in Leipzig."
+              },
+              "origin": "agent"
+            }
+          ]
+        }
+      ],
+      "strategyCards": [
+        {
+          "template": "sd1.h1",
+          "de": "Hören Teil 1: Sie hören sechs kurze Gespräche, jedes zweimal. Lesen Sie zuerst die Frage: Wer? Woher? Wo? Oft hören Sie zwei oder drei Antworten – aber nur eine passt zur Frage. In der Prüfung sind a, b und c Bilder.",
+          "en": "Listening part 1: six short conversations, each played twice. Read the question first: who, where from, where? You often hear two or three of the options, but only one answers the question. In the exam the options are pictures."
+        }
+      ]
+    },
+    {
+      "id": "a1.1-u01-ls5",
+      "kind": "sprechen",
+      "task": {
+        "bankKey": "a11-u01-s",
+        "lane": "sd1",
+        "template": "sd1.sp1",
+        "mode": "monologue",
+        "profile": "sd1-sp1",
+        "prepMinutes": 0,
+        "instructionsDe": "Stellen Sie sich mit den Stichwörtern vor: Name, Land, Wohnort, Sprachen.",
+        "situationDe": "Sprechen Teil 1: Sie stellen sich in der Gruppe vor. Auf dem Blatt stehen Stichwörter. Sprechen Sie in ganzen Sätzen. In der Prüfung buchstabieren Sie danach ein Wort und sagen eine Zahl – das üben Sie in Einheit 2.",
+        "cards": {
+          "learner": [
+            "Name?",
+            "Land?",
+            "Wohnort?",
+            "Sprachen?"
+          ],
+          "partner": []
+        },
+        "seconds": [
+          30,
+          90
+        ],
+        "moves": [],
+        "aiRole": {
+          "name": "Gesprächsleitung (KI)",
+          "personaDe": "leitet Sprechen Teil 1 wie in der Prüfung; spricht langsam und deutlich, wiederholt gern und zeigt Wörter aus der Wortliste",
+          "register": "Sie",
+          "support": "slow-wordbank"
+        },
+        "openingLine": "Guten Tag! Wir beginnen mit Teil 1. Bitte stellen Sie sich vor. Hier sind die Stichwörter: Name, Land, Wohnort, Sprachen.",
+        "hintWords": [
+          "Guten Tag!",
+          "Ich heiße …",
+          "Mein Name ist …",
+          "Ich komme aus …",
+          "Ich wohne in …",
+          "Ich spreche …",
+          "… und ein bisschen Deutsch.",
+          "Danke!"
+        ],
+        "modelTurns": [
+          {
+            "speaker": "partner",
+            "de": "Guten Tag! Wie heißen Sie?"
+          },
+          {
+            "speaker": "learner",
+            "de": "Guten Tag! Ich heiße Priya Nair."
+          },
+          {
+            "speaker": "learner",
+            "de": "Ich komme aus Indien, aus Kochi."
+          },
+          {
+            "speaker": "learner",
+            "de": "Ich wohne jetzt in Leipzig."
+          },
+          {
+            "speaker": "learner",
+            "de": "Ich spreche Englisch und ein bisschen Deutsch."
+          },
+          {
+            "speaker": "partner",
+            "de": "Danke, Frau Nair!"
+          }
+        ]
+      }
+    },
+    {
+      "id": "a1.1-u01-ls6",
+      "kind": "schreiben",
+      "task": {
+        "bankKey": "a11-u01-w",
+        "lane": "sd1",
+        "template": "sd1.s1",
+        "examKey": "goethe_a1",
+        "profile": "sd1-s1",
+        "register": "formell",
+        "address": "Sie",
+        "title": "Ein Formular für den Kurs: Emre",
+        "situationDe": "Emre Yıldız kommt aus der Türkei, aus İzmir. Er wohnt auch jetzt in İzmir. Emre lernt online Deutsch, im Kurs A1 von Frau Schulz in Leipzig. Die Muttersprache von Emre ist Türkisch. Er spricht auch ein bisschen Deutsch.",
+        "taskDe": "Lesen Sie den Text. Schreiben Sie: Name, Land, Wohnort, Muttersprache und Kurs von Emre.",
+        "leitpunkte": [],
+        "form": {
+          "fields": [
+            {
+              "id": "f1",
+              "labelDe": "Name",
+              "answer": "Emre Yıldız",
+              "accepted": [
+                "Emre Yıldız",
+                "Emre Yildiz",
+                "Yıldız, Emre",
+                "Yildiz, Emre",
+                "Yıldız Emre",
+                "Yildiz Emre"
+              ],
+              "exact": "name"
+            },
+            {
+              "id": "f2",
+              "labelDe": "Land",
+              "answer": "Türkei",
+              "accepted": [
+                "Türkei",
+                "die Türkei"
+              ]
+            },
+            {
+              "id": "f3",
+              "labelDe": "Wohnort",
+              "answer": "İzmir",
+              "accepted": [
+                "İzmir",
+                "Izmir"
+              ]
+            },
+            {
+              "id": "f4",
+              "labelDe": "Muttersprache",
+              "answer": "Türkisch",
+              "accepted": [
+                "Türkisch"
+              ]
+            },
+            {
+              "id": "f5",
+              "labelDe": "Kurs",
+              "answer": "A1",
+              "accepted": [
+                "A1",
+                "A 1"
+              ],
+              "exact": "number"
+            }
+          ],
+          "documents": []
+        },
+        "checklist": [
+          "Name: der ganze Name",
+          "Land: Woher kommt Emre?",
+          "Wohnort: Wo wohnt Emre jetzt?",
+          "Muttersprache: eine Sprache",
+          "Kurs: Welcher Kurs?"
+        ],
+        "modelText": "Name: Emre Yıldız\nLand: Türkei\nWohnort: İzmir\nMuttersprache: Türkisch\nKurs: A1"
+      }
+    },
+    {
+      "id": "a1.1-u01-ls7",
+      "kind": "check",
+      "endLine": "Geschafft! Sie können jetzt andere begrüßen, sich vorstellen und nach Name, Herkunft und Sprachen fragen."
+    }
+  ],
+  "check": {
+    "lines": [
+      {
+        "id": "a1.1-u01-ls7-l01",
+        "speaker": "cast.frau-schulz",
+        "de": "Guten Morgen, Frau Nair!",
+        "en": "Good morning, Ms Nair!"
+      },
+      {
+        "id": "a1.1-u01-ls7-l02",
+        "speaker": "cast.priya",
+        "de": "Ich komme aus Indien und wohne jetzt in Leipzig.",
+        "en": "I’m from India and I live in Leipzig now."
+      }
+    ],
+    "items": [
+      {
+        "id": "a1.1-u01-c01",
+        "type": "fill_blank",
+        "role": "check",
+        "topic": "g.praesens",
+        "promptDe": "Wie ___ Sie? – Ich heiße Bilal Ahmed. (heißen)",
+        "promptEn": "heißen, Sie-form.",
+        "answer": "heißen",
+        "accepted": [
+          "heißen"
+        ],
+        "explanation": {
+          "de": "Sie + heiß-en: Wie heißen Sie?",
+          "en": "With Sie the ending is -en: Wie heißen Sie?"
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a1.1-u01-c02",
+        "type": "fill_blank",
+        "role": "check",
+        "topic": "g.praesens",
+        "promptDe": "Woher ___ du? – Aus der Ukraine. (kommen)",
+        "promptEn": "kommen, du-form.",
+        "answer": "kommst",
+        "accepted": [
+          "kommst"
+        ],
+        "explanation": {
+          "de": "du + komm-st: Woher kommst du?",
+          "en": "du takes -st: woher kommst du?"
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a1.1-u01-c03",
+        "type": "fill_blank",
+        "role": "check",
+        "topic": "g.verbposition-2",
+        "promptDe": "___ wohnen Sie? – In Leipzig.",
+        "promptEn": "Which question word?",
+        "answer": "Wo",
+        "accepted": [
+          "Wo"
+        ],
+        "explanation": {
+          "de": "„In Leipzig“ antwortet auf „Wo?“.",
+          "en": "“In Leipzig” answers “Wo?”."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a1.1-u01-c04",
+        "type": "sentence_building",
+        "role": "check",
+        "topic": "g.verbposition-2",
+        "promptDe": "Bilden Sie einen Aussagesatz.",
+        "promptEn": "Build a statement.",
+        "tiles": [
+          "wohne",
+          "ich",
+          "jetzt",
+          "in Deutschland"
+        ],
+        "answer": "Ich wohne jetzt in Deutschland.",
+        "accepted": [
+          "Ich wohne jetzt in Deutschland.",
+          "Jetzt wohne ich in Deutschland.",
+          "In Deutschland wohne ich jetzt."
+        ],
+        "acceptedWhy": {
+          "Jetzt wohne ich in Deutschland.": "grammatisch: jetzt auf Position 1, das Verb bleibt auf Position 2",
+          "In Deutschland wohne ich jetzt.": "grammatisch: in Deutschland auf Position 1, das Verb bleibt auf Position 2"
+        },
+        "errorTags": [
+          "v2-inv"
+        ],
+        "explanation": {
+          "de": "Das Verb „wohne“ steht auf Position 2.",
+          "en": "The verb “wohne” is in position 2."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a1.1-u01-c05",
+        "type": "sentence_building",
+        "role": "check",
+        "topic": "g.praesens",
+        "promptDe": "Bilden Sie einen Aussagesatz.",
+        "promptEn": "Build a statement.",
+        "tiles": [
+          "spricht",
+          "Bilal",
+          "Englisch"
+        ],
+        "answer": "Bilal spricht Englisch.",
+        "accepted": [
+          "Bilal spricht Englisch.",
+          "Englisch spricht Bilal."
+        ],
+        "acceptedWhy": {
+          "Englisch spricht Bilal.": "grammatisch: Englisch betont auf Position 1, das Verb bleibt auf Position 2"
+        },
+        "errorTags": [
+          "v2-inv"
+        ],
+        "explanation": {
+          "de": "Das Verb „spricht“ steht auf Position 2.",
+          "en": "The verb “spricht” is in position 2."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a1.1-u01-c06",
+        "type": "error_correction",
+        "role": "check",
+        "topic": "g.verbposition-2",
+        "promptDe": "Korrigieren Sie: „Heute ich lerne Deutsch.“",
+        "promptEn": "Correct the sentence.",
+        "answer": "Heute lerne ich Deutsch.",
+        "accepted": [
+          "Heute lerne ich Deutsch.",
+          "Ich lerne heute Deutsch."
+        ],
+        "acceptedWhy": {
+          "Ich lerne heute Deutsch.": "auch richtig: ich auf Position 1, das Verb auf Position 2"
+        },
+        "intentionalError": true,
+        "errorTag": "v2-inv",
+        "errorTags": [
+          "v2-inv"
+        ],
+        "explanation": {
+          "de": "„Heute“ ist Position 1. Das Verb „lerne“ steht auf Position 2, dann „ich“.",
+          "en": "“Heute” is position 1, so the verb “lerne” comes second, then “ich”."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a1.1-u01-c07",
+        "type": "multiple_choice",
+        "role": "check",
+        "topic": "lx.freut-mich",
+        "promptDe": "Priya: „Ich bin Priya.“ – Olena: „…“ Was passt?",
+        "promptEn": "Priya introduces herself. What does Olena answer?",
+        "options": [
+          "Freut mich!",
+          "Auf Wiedersehen!",
+          "Tschüss!"
+        ],
+        "answer": "Freut mich!",
+        "accepted": [
+          "Freut mich!"
+        ],
+        "explanation": {
+          "de": "Jemand sagt: „Ich bin …“ Dann sagen Sie: „Freut mich!“ „Tschüss“ und „Auf Wiedersehen“ sagen Sie am Ende.",
+          "en": "When someone tells you their name, you say “Freut mich!”; the others are goodbyes."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a1.1-u01-c08",
+        "type": "dictation",
+        "role": "check",
+        "topic": "hoeren",
+        "promptDe": "Hören Sie und schreiben Sie den Satz.",
+        "promptEn": "Listen and write the sentence.",
+        "audioLineRef": "a1.1-u01-ls7-l02",
+        "answer": "Ich komme aus Indien und wohne jetzt in Leipzig.",
+        "accepted": [
+          "Ich komme aus Indien und wohne jetzt in Leipzig."
+        ],
+        "explanation": {
+          "de": "Priya sagt: „Ich komme aus Indien und wohne jetzt in Leipzig.“ Länder und Städte schreibt man groß.",
+          "en": "Countries and cities start with a capital letter."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a1.1-u01-c09",
+        "type": "multiple_choice",
+        "role": "check",
+        "topic": "g.praesens",
+        "promptDe": "Sie sprechen mit Frau Schulz. Was passt?",
+        "promptEn": "You are talking to Mrs Schulz. Which question fits?",
+        "options": [
+          "Woher kommst du?",
+          "Woher kommen Sie?",
+          "Woher kommt sie?"
+        ],
+        "answer": "Woher kommen Sie?",
+        "accepted": [
+          "Woher kommen Sie?"
+        ],
+        "errorTags": [
+          "register"
+        ],
+        "explanation": {
+          "de": "Mit Frau Schulz sprechen Sie formell: „Sie“ und „kommen“.",
+          "en": "With Mrs Schulz you are formal: Woher kommen Sie?"
+        },
+        "origin": "agent"
+      }
+    ],
+    "earlierDraw": {
+      "count": 3,
+      "from": "previous-3",
+      "pool": "reserve"
+    },
+    "proofItems": [
+      {
+        "id": "a1.1-u01-q01",
+        "type": "multiple_choice",
+        "role": "proof",
+        "topic": "hoeren",
+        "promptDe": "Hören Sie. Frau Schulz begrüßt Priya. Was antwortet Priya?",
+        "promptEn": "Listen: Mrs Schulz greets Priya. What does Priya answer?",
+        "options": [
+          "Guten Abend, Frau Schulz!",
+          "Guten Morgen, Frau Schulz!",
+          "Tschüss, Frau Schulz!"
+        ],
+        "audioLineRef": "a1.1-u01-ls7-l01",
+        "answer": "Guten Morgen, Frau Schulz!",
+        "accepted": [
+          "Guten Morgen, Frau Schulz!"
+        ],
+        "explanation": {
+          "de": "Frau Schulz sagt: „Guten Morgen!“ Priya grüßt zurück: „Guten Morgen, Frau Schulz!“",
+          "en": "Mrs Schulz says “Guten Morgen”, so Priya answers with the same greeting."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a1.1-u01-q02",
+        "type": "multiple_choice",
+        "role": "proof",
+        "topic": "lx.auf-wiedersehen",
+        "promptDe": "Es ist Abend, der Kurs ist zu Ende. Was sagt Bilal zu Frau Schulz?",
+        "promptEn": "Evening, class is over. What does Bilal say to Mrs Schulz?",
+        "options": [
+          "Guten Abend, Frau Schulz!",
+          "Auf Wiedersehen, Frau Schulz!",
+          "Freut mich, Frau Schulz!"
+        ],
+        "answer": "Auf Wiedersehen, Frau Schulz!",
+        "accepted": [
+          "Auf Wiedersehen, Frau Schulz!"
+        ],
+        "explanation": {
+          "de": "Am Ende sagen Sie zu Frau Schulz: „Auf Wiedersehen!“ „Guten Abend“ sagen Sie am Anfang.",
+          "en": "At the end you say “Auf Wiedersehen”; “Guten Abend” is a greeting."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a1.1-u01-q03",
+        "type": "sentence_building",
+        "role": "proof",
+        "topic": "g.verbposition-2",
+        "promptDe": "Sie fragen Frau Schulz. Bilden Sie die Frage.",
+        "promptEn": "You ask Mrs Schulz. Build the question.",
+        "tiles": [
+          "wohnen",
+          "Sie",
+          "wo",
+          "jetzt"
+        ],
+        "answer": "Wo wohnen Sie jetzt?",
+        "accepted": [
+          "Wo wohnen Sie jetzt?"
+        ],
+        "explanation": {
+          "de": "„Wo“ auf Position 1, das Verb „wohnen“ auf Position 2, dann „Sie“.",
+          "en": "“Wo” first, the verb “wohnen” second, then “Sie”."
+        },
+        "origin": "agent"
+      },
+      {
+        "id": "a1.1-u01-q04",
+        "type": "fill_blank",
+        "role": "proof",
+        "topic": "g.praesens",
+        "promptDe": "„Welche Sprachen sprichst du?“ – „Ich ___ Englisch und Deutsch.“ (sprechen)",
+        "promptEn": "sprechen, ich-form.",
+        "answer": "spreche",
+        "accepted": [
+          "spreche"
+        ],
+        "explanation": {
+          "de": "ich + sprech-e: Ich spreche Englisch und Deutsch.",
+          "en": "ich takes -e: ich spreche."
+        },
+        "origin": "agent"
+      }
+    ],
+    "proofs": [
+      {
+        "canDo": "cd.a1.begruessen",
+        "item": "a1.1-u01-q01",
+        "aufgabe": "sprechen"
+      },
+      {
+        "canDo": "cd.a1.verabschieden",
+        "item": "a1.1-u01-q02"
+      },
+      {
+        "canDo": "cd.a1.sich-vorstellen",
+        "aufgabe": "sprechen"
+      },
+      {
+        "canDo": "cd.a1.person-erfragen",
+        "item": "a1.1-u01-q03"
+      },
+      {
+        "canDo": "cd.a1.sprachen-nennen",
+        "item": "a1.1-u01-q04",
+        "aufgabe": "sprechen"
+      }
+    ],
+    "testOutThreshold": 0.8,
+    "cumulativeShare": 0.25
+  },
+  "redemittel": [
+    {
+      "id": "a1.1-u01-rm01",
+      "de": "Guten Morgen, Frau Schulz!",
+      "en": "Good morning, Mrs Schulz!",
+      "function": "jemanden begrüßen (formell)",
+      "forTemplate": "sd1.sp1"
+    },
+    {
+      "id": "a1.1-u01-rm02",
+      "de": "Hallo, ich bin Priya. Freut mich!",
+      "en": "Hi, I’m Priya. Nice to meet you!",
+      "function": "sich vorstellen (informell)"
+    },
+    {
+      "id": "a1.1-u01-rm03",
+      "de": "Ich heiße Bilal Ahmed. Ich komme aus Pakistan.",
+      "en": "My name is Bilal Ahmed. I’m from Pakistan.",
+      "function": "Name und Herkunft nennen",
+      "forTemplate": "sd1.sp1"
+    },
+    {
+      "id": "a1.1-u01-rm04",
+      "de": "Ich wohne jetzt in Leipzig.",
+      "en": "I live in Leipzig now.",
+      "function": "den Wohnort nennen",
+      "forTemplate": "sd1.sp1"
+    },
+    {
+      "id": "a1.1-u01-rm05",
+      "de": "Ich spreche Englisch und ein bisschen Deutsch.",
+      "en": "I speak English and a little German.",
+      "function": "Sprachen nennen",
+      "forTemplate": "sd1.sp1"
+    },
+    {
+      "id": "a1.1-u01-rm06",
+      "de": "Wie heißen Sie? Woher kommen Sie?",
+      "en": "What’s your name? Where are you from? (formal)",
+      "function": "nach Name und Herkunft fragen (formell)"
+    },
+    {
+      "id": "a1.1-u01-rm07",
+      "de": "Wie heißt du? Woher kommst du? Wo wohnst du?",
+      "en": "What’s your name? Where are you from? Where do you live? (informal)",
+      "function": "nach Name, Herkunft und Wohnort fragen (informell)"
+    },
+    {
+      "id": "a1.1-u01-rm08",
+      "de": "Auf Wiedersehen! – Tschüss, bis morgen!",
+      "en": "Goodbye! – Bye, see you tomorrow!",
+      "function": "sich verabschieden (formell – informell)"
+    }
+  ],
+  "story": {
+    "beat": "Priya ist neu in Leipzig. Heute ist ihr erster Tag im Deutschkurs A1: Sie lernt Frau Schulz, Olena und Bilal kennen. Emre und Arta lernen online mit, aus İzmir und aus Prishtina.",
+    "cliffhanger": "Nach dem Kurs steht Herr Richter an der Tür: „Frau Nair? Bitte kommen Sie morgen ins Büro. Da ist noch ein Formular für Sie.“",
+    "castIn": [
+      "cast.priya",
+      "cast.frau-schulz",
+      "cast.olena",
+      "cast.bilal",
+      "cast.emre",
+      "cast.arta"
+    ]
+  },
+  "fokus": [],
+  "facts": [],
+  "extras": {
+    "x.paul": {
+      "role": "Teilnehmer in einem Deutschkurs in Leipzig, aus Kamerun",
+      "gender": "m",
+      "age": 24,
+      "voice": "de-DE-ConradNeural",
+      "rate": "-10%",
+      "variety": "D"
+    },
+    "x.ana": {
+      "role": "Teilnehmerin im Deutschkurs von Frau Lindner, aus Polen",
+      "gender": "f",
+      "age": 26,
+      "voice": "de-DE-TanjaNeural",
+      "rate": "-10%",
+      "variety": "D"
+    },
+    "x.karin-roth": {
+      "role": "Frau aus Köln, wohnt in Berlin",
+      "gender": "f",
+      "age": 45,
+      "voice": "de-DE-KlarissaNeural",
+      "rate": "-10%",
+      "variety": "D"
+    },
+    "x.peter-braun": {
+      "role": "Mann aus Berlin, wohnt in Hamburg",
+      "gender": "m",
+      "age": 50,
+      "voice": "de-DE-BerndNeural",
+      "rate": "-10%",
+      "variety": "D"
+    },
+    "x.lukas": {
+      "role": "Student, lernt Spanisch",
+      "gender": "m",
+      "age": 22,
+      "voice": "de-DE-KlausNeural",
+      "rate": "-10%",
+      "variety": "D"
+    },
+    "x.maria": {
+      "role": "Studentin, lernt Deutsch",
+      "gender": "f",
+      "age": 23,
+      "voice": "de-DE-ElkeNeural",
+      "rate": "-10%",
+      "variety": "D"
+    },
+    "x.tom": {
+      "role": "Teilnehmer im Deutschkurs von Frau Lindner",
+      "gender": "m",
+      "age": 30,
+      "voice": "de-DE-ChristophNeural",
+      "rate": "-10%",
+      "variety": "D"
+    },
+    "x.eva-lindner": {
+      "role": "Kursleiterin in einer Sprachschule in Leipzig",
+      "gender": "f",
+      "age": 48,
+      "voice": "de-DE-SeraphinaMultilingualNeural",
+      "rate": "-10%",
+      "variety": "D"
+    },
+    "x.sam-walsh": {
+      "role": "Teilnehmer im Deutschkurs von Frau Lindner, aus Irland, wohnt in Leipzig",
+      "gender": "m",
+      "age": 35,
+      "voice": "de-DE-RalfNeural",
+      "rate": "-10%",
+      "variety": "D"
+    }
+  },
+  "assets": []
+}

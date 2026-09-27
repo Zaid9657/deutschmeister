@@ -1855,9 +1855,9 @@
           {
             "id": "a1.2-u04-ls3-l04",
             "speaker": "cast.ensemble-a1-4",
-            "de": "Nein, Zimmer 14. Eins, vier. Und bitte nehmen Sie eine Wartenummer.",
-            "en": "No, room 14. One, four. And please take a queue number.",
-            "say": "Nein, Zimmer vierzehn. Eins, vier. Und bitte nehmen Sie eine Wartenummer."
+            "de": "Nein, Zimmer 14. Eins, vier. Und bitte nehmen Sie eine Wartenummer. Das ist neu seit April.",
+            "en": "No, room 14. One, four. And please take a queue number. That’s new since April.",
+            "say": "Nein, Zimmer vierzehn. Eins, vier. Und bitte nehmen Sie eine Wartenummer. Das ist neu seit April."
           },
           {
             "id": "a1.2-u04-ls3-l05",
@@ -3540,7 +3540,7 @@
         "type": "multiple_choice",
         "role": "proof",
         "topic": "lesen",
-        "promptDe": "Webseite vom Rathaus: „Rathausplatz 1 · Mo–Do 8–16, Fr 8–12 Uhr“. Am Freitag ist es offen:",
+        "promptDe": "Webseite vom Rathaus: „Rathausplatz 1 · Mo–Mi 8–16, Fr 8–12 Uhr“. Am Freitag ist es offen:",
         "promptEn": "The town hall’s website: when is it open on Friday?",
         "options": [
           "von 8 bis 12 Uhr",
