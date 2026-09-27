@@ -77,7 +77,7 @@ export async function checkCourseAi(admin, userId, bankKey, level) {
 }
 
 /** The use kind recorded for a bank key: w → writing, s → speaking, mo → micro. */
-export function useKindFor(parsedKey) {
+export function aiUseKindFor(parsedKey) {
   if (parsedKey?.kind === 'w') return 'writing';
   if (parsedKey?.kind === 's') return 'speaking';
   return 'micro';

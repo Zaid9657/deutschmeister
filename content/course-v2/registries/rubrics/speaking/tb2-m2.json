@@ -15,7 +15,7 @@
   "spelling": "not-scored",
   "feedbackLanguage": ["de"],
   "modelId": "config:speaking-full",
-  "splitVerified": true,
+  "splitVerified": false,
   "calibration": { "status": "pending", "rangeBands": 1 },
   "source": "https://shop.telc.net/media/catalog/product/file/2/0/20201223_5023-b00-010201_web.pdf"
 }

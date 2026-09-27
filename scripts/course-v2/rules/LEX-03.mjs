@@ -1,0 +1,39 @@
+// LEX-03 — items, model texts and expected answers use known lemmas only; ≤ 3 glossed receptive
+// extras per text (BLUEPRINT §9.1). Hard once the cumulative lexicon exists up to the unit; before
+// that advisory (see LEX-01).
+
+import { walkProduction, walkTexts } from '../lib-validate/walk.mjs';
+import { knownForms, lexiconComplete, readTokens } from '../lib-validate/lexicon.mjs';
+import { arr, finding, blocker, list } from '../lib-validate/helpers.mjs';
+import { parseUnitId } from '../lib-validate/ids.mjs';
+
+export const id = 'LEX-03';
+export const title = 'Production uses known lemmas only; ≤ 3 glossed extras per text';
+export const type = 'hard';
+export const scope = 'unit';
+
+export function run({ ctx, docs }) {
+  const findings = [];
+  let n = 0;
+  const cache = new Map();
+  for (const doc of docs) {
+    // ≤ 3 glosses per text needs no lexicon
+    for (const t of walkTexts(doc)) {
+      const src = t.kind === 'exam' ? t.block?.texts?.find((x) => x?.id === t.textId)?.glosses : t.step?.input?.glosses;
+      if (arr(src).length > 3) findings.push(blocker(doc, `${t.path}.glosses`, `${arr(src).length} glossed extras (max 3 per text)`, t.step?.id || t.block?.id || null));
+    }
+    const nr = doc.kind === 'unit' ? doc.nr : doc.kind === 'lanepack' ? parseUnitId(doc.data.unit)?.nr : 12;
+    if (!ctx.levels.get(doc.level)?.lexicon) continue;
+    const key = `${doc.level}|${nr}`;
+    if (!cache.has(key)) cache.set(key, { known: knownForms(ctx, doc.level, nr), state: lexiconComplete(ctx, doc.level, nr) });
+    const { known, state } = cache.get(key);
+    const severity = state.complete ? 'blocker' : 'advisory';
+    for (const p of walkProduction(doc)) {
+      if (p.item?.intentionalError && p.kind !== 'answer') continue;
+      n += 1;
+      const unknown = [...new Set(readTokens(p.de).filter((t) => !known.has(t.lower)).map((t) => t.text))];
+      if (unknown.length) findings.push(finding(severity, doc, p.path, `unknown lemma form(s) in a ${p.kind}: ${list(unknown, 10)}${state.complete ? '' : ` — advisory until the cumulative lexicon exists (${state.why})`}`, p.item?.id || null));
+    }
+  }
+  return n || findings.length ? { findings } : { findings, skipped: 'no lexicon.json for the target level yet, or no production surface' };
+}

@@ -292,7 +292,7 @@
         },
         {
           "id": "au",
-          "label": "Aussprache (Satzmelodie, Wortakzent, einzelne Laute), über alle drei Teile",
+          "label": "Aussprache (Satzmelodie, Wortakzent, einzelne Laute), über alle drei Teile: nicht automatisch bewertet, zählt nicht zur KI-Punktzahl (in der Prüfung bis zu 5 Punkte)",
           "per": "task",
           "levels": [
             5,
@@ -300,12 +300,11 @@
             2,
             0.5,
             0
-          ]
+          ],
+          "weight": 0
         }
       ],
-      "zeroRules": [
-        "goethe-af-e-zeroes-task"
-      ],
+      "zeroRules": [],
       "capRules": [],
       "spelling": "not-scored",
       "feedbackLanguage": [
@@ -352,9 +351,7 @@
           ]
         }
       ],
-      "zeroRules": [
-        "goethe-af-e-zeroes-task"
-      ],
+      "zeroRules": [],
       "capRules": [],
       "spelling": "not-scored",
       "feedbackLanguage": [
@@ -401,9 +398,7 @@
           ]
         }
       ],
-      "zeroRules": [
-        "goethe-af-e-zeroes-task"
-      ],
+      "zeroRules": [],
       "capRules": [],
       "spelling": "not-scored",
       "feedbackLanguage": [
@@ -450,9 +445,7 @@
           ]
         }
       ],
-      "zeroRules": [
-        "goethe-af-e-zeroes-task"
-      ],
+      "zeroRules": [],
       "capRules": [],
       "spelling": "not-scored",
       "feedbackLanguage": [

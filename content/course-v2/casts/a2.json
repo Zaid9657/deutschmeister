@@ -1,8 +1,8 @@
 {
   "$schema": "course-v2/casts@1",
   "members": {
-    "cast.jan-wolf": { "name": "Jan Wolf", "age": 31, "from": "Leipzig", "languages": ["Deutsch", "Englisch"], "role": "Kollege von Priya, Techniker-Disposition bei Brandt Elektrotechnik; betreut ab A2.2 auch Emre in der Ausbildung", "voice": { "azure": "de-DE-ConradNeural", "rate": "-5%" }, "bands": ["a2", "b1"] },
-    "cast.herr-brandt": { "name": "Thomas Brandt", "age": 55, "from": "Halle", "languages": ["Deutsch"], "role": "Chef der Firma Brandt Elektrotechnik in Leipzig; bildet ab A2.2 Emre zum Elektroniker aus", "voice": { "azure": "de-DE-KlausNeural", "rate": "-5%" }, "bands": ["a2", "b1"] },
+    "cast.jan-wolf": { "name": "Jan Wolf", "age": 31, "from": "Leipzig", "languages": ["Deutsch", "Englisch"], "role": "Kollege von Priya, Techniker-Disposition bei Brandt Elektrotechnik; betreut ab B1 auch den Auszubildenden Emre", "voice": { "azure": "de-DE-ConradNeural", "rate": "-5%" }, "bands": ["a2", "b1"] },
+    "cast.herr-brandt": { "name": "Thomas Brandt", "age": 55, "from": "Halle", "languages": ["Deutsch"], "role": "Chef der Firma Brandt Elektrotechnik in Leipzig; gibt Emre in A2.2 einen Ausbildungsplatz als Elektroniker (Start im Herbst)", "voice": { "azure": "de-DE-KlausNeural", "rate": "-5%" }, "bands": ["a2", "b1"] },
     "cast.frau-otto": { "name": "Sabine Otto", "age": 48, "from": "Leipzig", "languages": ["Deutsch"], "role": "Buchhaltung bei Brandt Elektrotechnik, leitet die Teambesprechung", "voice": { "azure": "de-DE-KatjaNeural", "rate": "-5%" }, "bands": ["a2", "b1"] },
     "cast.monika-kowalski": { "name": "Monika Kowalski", "age": 40, "from": "Leipzig", "languages": ["Deutsch", "Polnisch"], "role": "Kundin, Firma Hansen Bau", "voice": { "azure": "de-DE-LouisaNeural", "rate": "-5%" }, "bands": ["a2"] },
     "cast.herr-seidel": { "name": "Peter Seidel", "age": 60, "from": "Leipzig", "languages": ["Deutsch"], "role": "Kunde von Brandt Elektrotechnik", "voice": { "azure": "de-DE-BerndNeural", "rate": "-5%" }, "bands": ["a2"] },

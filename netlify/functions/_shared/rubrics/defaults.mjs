@@ -40,8 +40,13 @@ export const MODEL_CONFIG = {
   'config:micro-sp': 'claude-haiku-4-5-20251001',
 };
 
-/** The concrete model id for a profile, or null for `deterministic` profiles (no model call). */
+/**
+ * The concrete model id for a profile, or null for a deterministic profile (no
+ * model call): `method: 'deterministic'` (SCHEMA §4.5, with `modelId: null`) or
+ * the older `modelId: 'deterministic'` spelling.
+ */
 export function modelFor(profile) {
+  if (profile?.method === 'deterministic') return null;
   const id = profile?.modelId;
   if (!id || id === 'deterministic') return null;
   if (MODEL_CONFIG[id]) return MODEL_CONFIG[id];

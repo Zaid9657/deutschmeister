@@ -4,22 +4,64 @@
   "name": "telc Deutsch B1 / Zertifikat Deutsch",
   "level": "B1",
   "examKey": "telc_b1",
-  "providers": ["telc"],
+  "providers": [
+    "telc"
+  ],
   "stand": "2026-09-27",
   "sources": [
     "https://shop.telc.net/media/catalog/product/file/telc_deutsch_b1_zd_uebungstest_1.pdf",
     "https://www.telc.net/en/language-examinations/certificate-exams/german/certificate-german-telc-german-b1/",
     "https://www.telc.net/fileadmin/user_upload/mock_exams/Deutsch/telc_deutsch_b1.zip"
   ],
-  "access": { "gate": "none" },
-  "modules": {
-    "lesen": { "minutes": 60, "teile": ["lv1", "lv2", "lv3"] },
-    "sprachbausteine": { "minutes": 30, "teile": ["sb1", "sb2"] },
-    "hoeren": { "minutes": 30, "teile": ["hv1", "hv2", "hv3"] },
-    "schreiben": { "minutes": 30, "teile": ["sa"] },
-    "sprechen": { "minutes": 15, "teile": ["m1", "m2", "m3"], "prepMinutes": 20, "format": "pair" }
+  "access": {
+    "gate": "none"
   },
-  "writtenBlock": { "minutes": 150, "breaks": false },
+  "delivery": "both",
+  "modules": {
+    "lesen": {
+      "minutes": 60,
+      "teile": [
+        "lv1",
+        "lv2",
+        "lv3"
+      ]
+    },
+    "sprachbausteine": {
+      "minutes": 30,
+      "teile": [
+        "sb1",
+        "sb2"
+      ]
+    },
+    "hoeren": {
+      "minutes": 30,
+      "teile": [
+        "hv1",
+        "hv2",
+        "hv3"
+      ]
+    },
+    "schreiben": {
+      "minutes": 30,
+      "teile": [
+        "sa"
+      ]
+    },
+    "sprechen": {
+      "minutes": 15,
+      "teile": [
+        "m1",
+        "m2",
+        "m3"
+      ],
+      "prepMinutes": 20,
+      "format": "pair"
+    }
+  },
+  "writtenBlock": {
+    "minutes": 150,
+    "breaks": false
+  },
   "teile": {
     "lv1": {
       "id": "tb1.lv1",
@@ -27,13 +69,32 @@
       "family": "fam.l-ueberschrift",
       "task": "zuordnen",
       "items": 5,
-      "options": 10,
+      "choices": 10,
+      "choiceKind": "heading",
       "minutes": 15,
       "textType": "tt.kurzmeldung",
-      "textWords": [35, 100],
+      "textWords": [
+        35,
+        100
+      ],
       "textWordsSource": "official-sample",
       "points": 25,
-      "scaffoldAllowedIn": ["b1.1"],
+      "pictorial": false,
+      "instructionsDe": "Welche Überschrift passt zu welchem Text? Zehn Überschriften, fünf bleiben übrig.",
+      "paraphraseOf": "UT-B1 S. 6 (Leseverstehen Teil 1, Aufgabenanweisung)",
+      "scaffold": {
+        "minItems": 3,
+        "textWords": [
+          35,
+          100
+        ],
+        "playsFixed": true,
+        "optionsFixed": true,
+        "choicesMin": 6
+      },
+      "scaffoldAllowedIn": [
+        "b1.1"
+      ],
       "transfersTo": [],
       "source": "UT-B1 S. 5 (Testformat: Globalverstehen, 5 Zuordnungsaufgaben) und S. 6-7 (Überschriften a-j zu Texten 1-5, jede Überschrift nur einmal; fünf Überschriften bleiben übrig, keine Option x); S. 39 (25 Punkte = 5 je Item). textWords: ±15 % um unsere Zählung der fünf Kurzmeldungen in UT-B1 (≈ 42-86 Wörter je Text). minutes: Designanteil am gemeinsamen 90-Minuten-Block Leseverstehen + Sprachbausteine.",
       "stand": "2026-09-27"
@@ -47,10 +108,27 @@
       "options": 3,
       "minutes": 25,
       "textType": "tt.zeitungsartikel",
-      "textWords": [270, 400],
+      "textWords": [
+        270,
+        400
+      ],
       "textWordsSource": "official-sample",
       "points": 25,
-      "scaffoldAllowedIn": ["b1.1"],
+      "pictorial": false,
+      "instructionsDe": "Zum Artikel gibt es fünf Fragen. Wählen Sie jeweils die passende von drei Antworten.",
+      "paraphraseOf": "UT-B1 S. 8 (Leseverstehen Teil 2, Aufgabenanweisung)",
+      "scaffold": {
+        "minItems": 3,
+        "textWords": [
+          180,
+          400
+        ],
+        "playsFixed": true,
+        "optionsFixed": true
+      },
+      "scaffoldAllowedIn": [
+        "b1.1"
+      ],
       "transfersTo": [],
       "source": "UT-B1 S. 5 (Detailverstehen, 5 Multiple-Choice-Aufgaben) und S. 8-9 (ein Zeitungsartikel, Aufgaben 6-10 mit a/b/c); S. 39 (25 Punkte = 5 je Item). textWords: unsere Zählung in UT-B1 ≈ 314 Wörter mit Überschrift und Vorspann (Band ±15 %); die Obergrenze 400 übernimmt memo 02 §7 (≈ 400 Wörter), siehe openQuestions. minutes: Designanteil am 90-Minuten-Block.",
       "stand": "2026-09-27"
@@ -61,14 +139,33 @@
       "family": "fam.l-anzeigen",
       "task": "zuordnen",
       "items": 10,
-      "options": 12,
+      "choices": 12,
+      "choiceKind": "ad",
       "noMatch": "x",
       "minutes": 20,
       "textType": "tt.kleinanzeige",
-      "textWords": [10, 65],
+      "textWords": [
+        10,
+        65
+      ],
       "textWordsSource": "official-sample",
       "points": 25,
-      "scaffoldAllowedIn": ["b1.1"],
+      "pictorial": false,
+      "instructionsDe": "Welche Anzeige passt zu welcher Situation? Jede nur einmal; passt keine, wählen Sie x.",
+      "paraphraseOf": "UT-B1 S. 10 (Leseverstehen Teil 3, Aufgabenanweisung)",
+      "scaffold": {
+        "minItems": 5,
+        "textWords": [
+          10,
+          65
+        ],
+        "playsFixed": true,
+        "optionsFixed": true,
+        "choicesMin": 7
+      },
+      "scaffoldAllowedIn": [
+        "b1.1"
+      ],
       "transfersTo": [],
       "source": "UT-B1 S. 5 (Selektives Verstehen, 10 Zuordnungsaufgaben) und S. 10-11 (Situationen 11-20 zu Anzeigen a-l, jede Anzeige nur einmal; gibt es keine passende Anzeige, markiert man x; im Übungstest sind es zwei x-Lösungen); S. 39 (25 Punkte = 2,5 je Item). textWords je Anzeige (≈ 10-60 Wörter, ≈ 390 Wörter für alle zwölf). minutes: Designanteil am 90-Minuten-Block.",
       "stand": "2026-09-27"
@@ -82,10 +179,27 @@
       "options": 3,
       "minutes": 15,
       "textType": "tt.email-informell",
-      "textWords": [110, 150],
+      "textWords": [
+        110,
+        150
+      ],
       "textWordsSource": "official-sample",
       "points": 15,
-      "scaffoldAllowedIn": ["b1.1"],
+      "pictorial": false,
+      "instructionsDe": "Ergänzen Sie den Brief: Pro Lücke passt genau eine von drei Möglichkeiten.",
+      "paraphraseOf": "UT-B1 S. 12 (Sprachbausteine Teil 1, Aufgabenanweisung)",
+      "scaffold": {
+        "minItems": 5,
+        "textWords": [
+          60,
+          150
+        ],
+        "playsFixed": true,
+        "optionsFixed": true
+      },
+      "scaffoldAllowedIn": [
+        "b1.1"
+      ],
       "transfersTo": [],
       "source": "UT-B1 S. 5 (Grammatik, 10 Multiple-Choice-Aufgaben) und S. 12 (persönlicher Brief mit Lücken 21-30, je a/b/c; geprüft werden u. a. Konnektoren, Artikel- und Adjektivendungen, Hilfsverb, Relativpronomen, Präposition, Partizip); S. 39 (15 Punkte = 1,5 je Item). textType: das Beispiel ist ein persönlicher Brief (du, Anrede und Gruß), als E-Mail gleichwertig. textWords: unsere Zählung ≈ 128 Wörter, Band ±15 %. minutes: Designanteil am 90-Minuten-Block.",
       "stand": "2026-09-27"
@@ -96,13 +210,32 @@
       "family": "fam.sb-luecke",
       "task": "cloze",
       "items": 10,
-      "options": 15,
+      "choices": 15,
+      "choiceKind": "word",
       "minutes": 15,
       "textType": "tt.email-formell",
-      "textWords": [130, 180],
+      "textWords": [
+        130,
+        180
+      ],
       "textWordsSource": "official-sample",
       "points": 15,
-      "scaffoldAllowedIn": ["b1.1"],
+      "pictorial": false,
+      "instructionsDe": "Ergänzen Sie den Brief mit Wörtern aus der Liste. Jedes Wort höchstens einmal.",
+      "paraphraseOf": "UT-B1 S. 13 (Sprachbausteine Teil 2, Aufgabenanweisung)",
+      "scaffold": {
+        "minItems": 5,
+        "textWords": [
+          70,
+          180
+        ],
+        "playsFixed": true,
+        "optionsFixed": true,
+        "choicesMin": 8
+      },
+      "scaffoldAllowedIn": [
+        "b1.1"
+      ],
       "transfersTo": [],
       "source": "UT-B1 S. 5 (Lexik, 10 Zuordnungsaufgaben) und S. 13 (formelle Anfrage auf eine Anzeige, Lücken 31-40, Wörter a-o, jedes Wort passt nur einmal; fünf Wörter bleiben übrig); S. 39 (15 Punkte = 1,5 je Item). textWords: unsere Zählung ≈ 154 Wörter Brieftext, Band ±15 %; dazu eine Anzeige von ≈ 30 Wörtern als Anlass. minutes: Designanteil am 90-Minuten-Block.",
       "stand": "2026-09-27"
@@ -118,10 +251,27 @@
       "readingSeconds": 30,
       "minutes": 7,
       "textType": "tt.umfrage",
-      "textWords": [35, 105],
+      "textWords": [
+        35,
+        105
+      ],
       "textWordsSource": "official-sample",
       "points": 25,
-      "scaffoldAllowedIn": ["b1.1"],
+      "pictorial": false,
+      "instructionsDe": "Sie hören fünf Meinungen nur einmal. Stimmt die Aussage dazu: richtig oder falsch?",
+      "paraphraseOf": "UT-B1 S. 14 (Hörverstehen Teil 1, Aufgabenanweisung)",
+      "scaffold": {
+        "minItems": 3,
+        "textWords": [
+          35,
+          105
+        ],
+        "playsFixed": true,
+        "optionsFixed": true
+      },
+      "scaffoldAllowedIn": [
+        "b1.1"
+      ],
       "transfersTo": [],
       "source": "UT-B1 S. 5 (Globalverstehen, 5 Richtig-Falsch-Aufgaben) und S. 14 (fünf kurze Stellungnahmen zu einer Umfrage, nur einmal zu hören; 30 Sekunden zum Lesen der Aufgaben 41-45); Hörtexte S. 42; S. 39 (25 Punkte = 5 je Item). textWords je Stellungnahme (Transkript ≈ 42-90 Wörter, dazu eine Moderation von ≈ 35 Wörtern). minutes: Designanteil am Modul (ca. 30 Min.).",
       "stand": "2026-09-27"
@@ -137,10 +287,27 @@
       "readingSeconds": 60,
       "minutes": 12,
       "textType": "tt.radiointerview",
-      "textWords": [370, 500],
+      "textWords": [
+        370,
+        500
+      ],
       "textWordsSource": "official-sample",
       "points": 25,
-      "scaffoldAllowedIn": ["b1.1"],
+      "pictorial": false,
+      "instructionsDe": "Sie hören ein Radiogespräch zweimal. Sind die zehn Aussagen richtig oder falsch?",
+      "paraphraseOf": "UT-B1 S. 15 (Hörverstehen Teil 2, Aufgabenanweisung)",
+      "scaffold": {
+        "minItems": 5,
+        "textWords": [
+          200,
+          500
+        ],
+        "playsFixed": true,
+        "optionsFixed": true
+      },
+      "scaffoldAllowedIn": [
+        "b1.1"
+      ],
       "transfersTo": [],
       "source": "UT-B1 S. 5 (Detailverstehen, 10 Richtig-Falsch-Aufgaben) und S. 15 (ein Gespräch, zweimal zu hören; eine Minute zum Lesen der Aufgaben 46-55); Hörtexte S. 42 (Studiogespräch Journalist - Vereinsvertreterin); S. 39 (25 Punkte = 2,5 je Item). textType: im Übungstest ein Radiointerview, memo 02 nennt Gespräch oder Interview. textWords: Transkript ≈ 436 Wörter ohne Sprecherangaben, Band ±15 %. minutes: Designanteil am Modul.",
       "stand": "2026-09-27"
@@ -155,10 +322,27 @@
       "plays": 2,
       "minutes": 11,
       "textType": "tt.kurzansage",
-      "textWords": [40, 110],
+      "textWords": [
+        40,
+        110
+      ],
       "textWordsSource": "official-sample",
       "points": 25,
-      "scaffoldAllowedIn": ["b1.1"],
+      "pictorial": false,
+      "instructionsDe": "Sie hören fünf kurze Ansagen je zweimal. Ist die Aussage dazu richtig oder falsch?",
+      "paraphraseOf": "UT-B1 S. 16 (Hörverstehen Teil 3, Aufgabenanweisung)",
+      "scaffold": {
+        "minItems": 3,
+        "textWords": [
+          40,
+          110
+        ],
+        "playsFixed": true,
+        "optionsFixed": true
+      },
+      "scaffoldAllowedIn": [
+        "b1.1"
+      ],
       "transfersTo": [],
       "source": "UT-B1 S. 5 (Selektives Verstehen, 5 Richtig-Falsch-Aufgaben) und S. 16 (fünf kurze Texte, jeder Text zweimal: Wegbeschreibung, Kinoprogramm, Wetterbericht, Zugdurchsage, Werbedurchsage); Hörtexte S. 43; S. 39 (25 Punkte = 5 je Item). textWords je Text (Transkripte ≈ 44-95 Wörter). Eine Lesezeit ist auf dem Aufgabenblatt nicht angegeben (readingSeconds fehlt). minutes: Designanteil am Modul.",
       "stand": "2026-09-27"
@@ -170,13 +354,24 @@
       "task": "writing",
       "minutes": 30,
       "textType": "tt.email-antwort",
-      "words": { "target": 100, "min": 80 },
+      "textWords": [
+        75,
+        105
+      ],
+      "textWordsSource": "official-sample",
+      "words": {
+        "target": 100,
+        "min": 80
+      },
       "leitpunkte": 4,
       "rubric": "tb1-sa",
       "points": 45,
+      "pictorial": false,
+      "instructionsDe": "Schreiben Sie eine Antwort-E-Mail, die auf jeden der vier Punkte eingeht.",
+      "paraphraseOf": "UT-B1 S. 17 (Schriftlicher Ausdruck, Aufgabenanweisung)",
       "scaffoldAllowedIn": [],
       "transfersTo": [],
-      "source": "UT-B1 S. 5 (informelle oder halbformelle E-Mail, Schreibaufgabe mit 4 Leitpunkten, 30 Minuten) und S. 17 (auf eine E-Mail antworten, zu allen vier Punkten schreiben; Reihenfolge, Betreff, Anrede, Einleitung und Schluss selbst wählen; die Anlass-E-Mail hat ≈ 89 Wörter); S. 36-38 (drei Kriterien je 5/3/1/0, Summe × 3 = 45). words: DESIGNWERT - telc nennt keine Wortzahl (openQuestions); nie Grundlage einer Null- oder Deckelregel. register bleibt offen (informell oder halbformell), jede WritingTask setzt es.",
+      "source": "UT-B1 S. 5 (informelle oder halbformelle E-Mail, Schreibaufgabe mit 4 Leitpunkten, 30 Minuten) und S. 17 (auf eine E-Mail antworten, zu allen vier Punkten schreiben; Reihenfolge, Betreff, Anrede, Einleitung und Schluss selbst wählen); S. 36-38 (drei Kriterien je 5/3/1/0, Summe × 3 = 45). textWords = die Anlass-E-Mail (unsere Zählung ≈ 89 Wörter, Band ±15 %), nicht der Lernertext. words: DESIGNWERT - telc nennt keine Wortzahl (openQuestions); er bestimmt nur die Lernmodus-Empfehlung und die Abschlussregel, blockiert nie eine Abgabe und deckelt nie eine Bewertung, im Prüfungsmodus ist der Wortzähler ausgeblendet (delivery). register bleibt offen (informell oder halbformell), jede WritingTask setzt es. scaffoldAllowedIn bleibt leer: EXM-03 verlangt in jeder WritingTask vier Leitpunkte; die Erleichterung in B1.1 läuft über wordBandLearning und den Lernmodus.",
       "stand": "2026-09-27"
     },
     "m1": {
@@ -186,13 +381,28 @@
       "task": "speaking",
       "minutes": 3,
       "textType": "tt.stichwortblatt",
-      "interaction": "monologue",
+      "interaction": "get-to-know",
+      "speaking": {
+        "stimulus": "none",
+        "partnerData": false,
+        "seconds": [
+          150,
+          210
+        ],
+        "turns": [
+          8,
+          16
+        ]
+      },
       "prepMinutes": 3,
       "rubric": "tb1-m1",
       "points": 15,
-      "scaffoldAllowedIn": ["b1.1"],
+      "pictorial": false,
+      "instructionsDe": "Lernen Sie sich kennen: Erzählen Sie von sich und fragen Sie Ihre Partnerin.",
+      "paraphraseOf": "UT-B1 S. 18 (Teil 1, Aufgabenblatt) und S. 30 (Beschreibung Teil 1)",
+      "scaffoldAllowedIn": [],
       "transfersTo": [],
-      "source": "UT-B1 S. 18 (Einander kennenlernen: Stichpunkte wie Name, Herkunft, Wohnen, Familie, Deutsch gelernt, Beruf, Sprachen; die Prüfenden können ein weiteres Thema ansprechen) und S. 30 (ca. 3 Minuten; über sich erzählen und der Partnerin/dem Partner Fragen stellen); S. 34-35 (vier Kriterien, 4/3/1/0 und Aussprache 3/2/1/0 = 15). interaction folgt BLUEPRINT §4.4 (siehe openQuestions). prepMinutes: Designanteil an den 20 Minuten Vorbereitung für alle drei Teile.",
+      "source": "UT-B1 S. 18 (Einander kennenlernen: Stichpunkte wie Name, Herkunft, Wohnen, Familie, Deutsch gelernt, Beruf, Sprachen; die Prüfenden können ein weiteres Thema ansprechen) und S. 30 (ca. 3 Minuten; über sich erzählen UND der Partnerin/dem Partner Fragen stellen); S. 31 (Nachfragen und gegenseitige Hilfestellung werden positiv bewertet); S. 34-35 (vier Kriterien, 4/3/1/0 und Aussprache 3/2/1/0 = 15). interaction get-to-know (SCHEMA §4.3, Prüferin W2 2026-09-27): Gespräch in beide Richtungen, siehe openQuestions. prepMinutes: Designanteil an den 20 Minuten Vorbereitung, die laut S. 30 alle Aufgabenblätter einschließlich Teil 1 umfassen. speaking.seconds/turns: Designband um ca. 3 Minuten.",
       "stand": "2026-09-27"
     },
     "m2": {
@@ -203,12 +413,23 @@
       "minutes": 6,
       "textType": "tt.meinungsblatt",
       "interaction": "discuss",
+      "speaking": {
+        "stimulus": "quotes",
+        "partnerData": false,
+        "seconds": [
+          330,
+          390
+        ]
+      },
       "prepMinutes": 8,
       "rubric": "tb1-m2",
       "points": 30,
-      "scaffoldAllowedIn": ["b1.1"],
+      "pictorial": false,
+      "instructionsDe": "Geben Sie die Meinung auf Ihrem Blatt wieder und diskutieren Sie dann Ihre Sicht.",
+      "paraphraseOf": "UT-B1 S. 19-20 (Teil 2, Aufgabenblätter A und B) und S. 30 (Beschreibung Teil 2)",
+      "scaffoldAllowedIn": [],
       "transfersTo": [],
-      "source": "UT-B1 S. 19-20 (Über ein Thema sprechen: A und B haben unterschiedliche Blätter mit je einer gegensätzlichen Meinung, ≈ 45 Wörter mit Name, Alter, Beruf; zuerst einander berichten, dann die eigene Meinung sagen und von eigenen Erfahrungen erzählen) und S. 30 (ca. 6 Minuten); S. 34-35 (8/6/2/0 und Aussprache 6/4/2/0 = 30). prepMinutes: Designanteil an den 20 Minuten Vorbereitung.",
+      "source": "UT-B1 S. 19-20 (Über ein Thema sprechen: A und B haben unterschiedliche Blätter mit je einer gegensätzlichen Meinung, ≈ 45 Wörter mit Name, Alter, Beruf; zuerst einander berichten, dann die eigene Meinung sagen und von eigenen Erfahrungen erzählen) und S. 30 (ca. 6 Minuten); S. 34-35 (8/6/2/0 und Aussprache 6/4/2/0 = 30). prepMinutes: Designanteil an den 20 Minuten Vorbereitung. speaking.stimulus quotes: die Meinung der KI-Partnerin sieht die lernende Person erst, wenn die Partnerin sie wiedergibt. speaking.seconds: Designband um ca. 6 Minuten.",
       "stand": "2026-09-27"
     },
     "m3": {
@@ -219,22 +440,50 @@
       "minutes": 6,
       "textType": "tt.planungsblatt",
       "interaction": "plan-together",
+      "speaking": {
+        "stimulus": "none",
+        "partnerData": false,
+        "seconds": [
+          330,
+          390
+        ]
+      },
       "prepMinutes": 9,
       "rubric": "tb1-m3",
       "points": 30,
-      "scaffoldAllowedIn": ["b1.1"],
+      "pictorial": false,
+      "instructionsDe": "Planen Sie zu zweit ein Vorhaben: Vorschläge machen, sich einigen, Aufgaben verteilen.",
+      "paraphraseOf": "UT-B1 S. 21 (Teil 3, Aufgabenblatt) und S. 30 (Beschreibung Teil 3)",
+      "scaffoldAllowedIn": [],
       "transfersTo": [],
-      "source": "UT-B1 S. 21 (Gemeinsam etwas planen: Aufgabenblatt mit Stichpunkten und „…“; Ideen vortragen und begründen, auf die Vorschläge reagieren, sich einigen) und S. 30 (ca. 6 Minuten; klären, was zu tun ist und wer welche Aufgabe übernimmt); S. 34-35 (8/6/2/0 und Aussprache 6/4/2/0 = 30). prepMinutes: Designanteil an den 20 Minuten Vorbereitung.",
+      "source": "UT-B1 S. 21 (Gemeinsam etwas planen: Aufgabenblatt mit Stichpunkten und „…“; Ideen vortragen und begründen, auf die Vorschläge reagieren, sich einigen) und S. 30 (ca. 6 Minuten; klären, was zu tun ist und wer welche Aufgabe übernimmt); S. 34-35 (8/6/2/0 und Aussprache 6/4/2/0 = 30). prepMinutes: Designanteil an den 20 Minuten Vorbereitung. speaking.seconds: Designband um ca. 6 Minuten.",
       "stand": "2026-09-27"
     }
   },
   "blueprint": {
     "modules": {
-      "lesen": ["lv1", "lv2", "lv3"],
-      "sprachbausteine": ["sb1", "sb2"],
-      "hoeren": ["hv1", "hv2", "hv3"],
-      "schreiben": ["sa"],
-      "sprechen": ["m1", "m2", "m3"]
+      "lesen": [
+        "lv1",
+        "lv2",
+        "lv3"
+      ],
+      "sprachbausteine": [
+        "sb1",
+        "sb2"
+      ],
+      "hoeren": [
+        "hv1",
+        "hv2",
+        "hv3"
+      ],
+      "schreiben": [
+        "sa"
+      ],
+      "sprechen": [
+        "m1",
+        "m2",
+        "m3"
+      ]
     },
     "totalMinutes": 165,
     "answerSheetStep": false
@@ -247,51 +496,101 @@
         "rawMax": 20,
         "max": 75,
         "teile": {
-          "lv1": { "items": 5, "pointsPerItem": 5, "max": 25 },
-          "lv2": { "items": 5, "pointsPerItem": 5, "max": 25 },
-          "lv3": { "items": 10, "pointsPerItem": 2.5, "max": 25 }
+          "lv1": {
+            "items": 5,
+            "pointsPerItem": 5,
+            "max": 25
+          },
+          "lv2": {
+            "items": 5,
+            "pointsPerItem": 5,
+            "max": 25
+          },
+          "lv3": {
+            "items": 10,
+            "pointsPerItem": 2.5,
+            "max": 25
+          }
         }
       },
       "sprachbausteine": {
         "rawMax": 20,
         "max": 30,
         "teile": {
-          "sb1": { "items": 10, "pointsPerItem": 1.5, "max": 15 },
-          "sb2": { "items": 10, "pointsPerItem": 1.5, "max": 15 }
+          "sb1": {
+            "items": 10,
+            "pointsPerItem": 1.5,
+            "max": 15
+          },
+          "sb2": {
+            "items": 10,
+            "pointsPerItem": 1.5,
+            "max": 15
+          }
         }
       },
       "hoeren": {
         "rawMax": 20,
         "max": 75,
         "teile": {
-          "hv1": { "items": 5, "pointsPerItem": 5, "max": 25 },
-          "hv2": { "items": 10, "pointsPerItem": 2.5, "max": 25 },
-          "hv3": { "items": 5, "pointsPerItem": 5, "max": 25 }
+          "hv1": {
+            "items": 5,
+            "pointsPerItem": 5,
+            "max": 25
+          },
+          "hv2": {
+            "items": 10,
+            "pointsPerItem": 2.5,
+            "max": 25
+          },
+          "hv3": {
+            "items": 5,
+            "pointsPerItem": 5,
+            "max": 25
+          }
         }
       },
       "schreiben": {
         "max": 45,
-        "teile": { "sa": 45 },
+        "teile": {
+          "sa": 45
+        },
         "rubric": "tb1-sa",
-        "criteriaLevels": [5, 3, 1, 0],
+        "criteriaLevels": [
+          5,
+          3,
+          1,
+          0
+        ],
         "criteriaCount": 3,
         "factor": 3,
         "rating": "two-raters-second-overrides-first"
       },
       "sprechen": {
         "max": 75,
-        "teile": { "m1": 15, "m2": 30, "m3": 30 },
+        "teile": {
+          "m1": 15,
+          "m2": 30,
+          "m3": 30
+        },
         "rating": "two-examiners-agree-joint-rating"
       },
       "schriftlich": {
-        "modules": ["lesen", "sprachbausteine", "hoeren", "schreiben"],
+        "modules": [
+          "lesen",
+          "sprachbausteine",
+          "hoeren",
+          "schreiben"
+        ],
         "max": 225,
         "min": 135,
         "moduleMin": null,
         "compensation": "free-within-part"
       },
       "muendlich": {
-        "modules": ["sprechen"],
+        "modules": [
+          "sprechen"
+        ],
         "max": 75,
         "min": 45
       },
@@ -302,13 +601,39 @@
         "gradeOnlyIfBothPartsPassed": true
       },
       "praedikate": [
-        { "from": 270, "to": 300, "de": "sehr gut" },
-        { "from": 240, "to": 269.5, "de": "gut" },
-        { "from": 210, "to": 239.5, "de": "befriedigend" },
-        { "from": 180, "to": 209.5, "de": "ausreichend" },
-        { "from": 0, "to": 179.5, "de": "nicht bestanden" }
+        {
+          "from": 270,
+          "to": 300,
+          "de": "sehr gut"
+        },
+        {
+          "from": 240,
+          "to": 269.5,
+          "de": "gut"
+        },
+        {
+          "from": 210,
+          "to": 239.5,
+          "de": "befriedigend"
+        },
+        {
+          "from": 180,
+          "to": 209.5,
+          "de": "ausreichend"
+        },
+        {
+          "from": 0,
+          "to": 179.5,
+          "de": "nicht bestanden"
+        }
       ],
-      "weights": { "lesen": 0.25, "sprachbausteine": 0.1, "hoeren": 0.25, "schreiben": 0.15, "sprechen": 0.25 },
+      "weights": {
+        "lesen": 0.25,
+        "sprachbausteine": 0.1,
+        "hoeren": 0.25,
+        "schreiben": 0.15,
+        "sprechen": 0.25
+      },
       "modular": false,
       "partResit": {
         "allowed": true,
@@ -321,12 +646,12 @@
   "passRule": "telc-b1",
   "openQuestions": [
     "Bestehensregel telc-b1 (UT-B1 S. 40): bestanden, wenn schriftlich ≥ 135/225 UND mündlich ≥ 45/75, jeder Teil für sich; innerhalb des schriftlichen Teils verrechnen sich Leseverstehen, Sprachbausteine, Hörverstehen und Schreiben frei (keine Modulgrenze). Punkte je Item: LV1, LV2, HV1, HV3 = 5; LV3, HV2 = 2,5; SB1, SB2 = 1,5; Schreiben = Summe der drei Kriterien × 3. Halbe Punkte bleiben stehen (Notenbänder enden auf ,5). Grenzwerte für den Test (EXM-07): schriftlich 134,5 vs. 135, mündlich 44 vs. 45 (mündliche Punkte sind ganzzahlig). Note nur, wenn beide Teile bestanden sind. scale.rawToScore fehlt, weil es keinen einheitlichen Faktor gibt; die Punkte je Item stehen in scale.parts.",
-    "Schreiben, Wortzahl: telc nennt für den Schriftlichen Ausdruck keine Wortzahl (UT-B1 S. 17; memo 02 §2 und open question 1). words = { target 100, min 80 } ist ein DESIGNWERT (vier Leitpunkte plus Anrede, Einleitung, Schluss und Gruß; die B1.1-Aufgaben im Curriculum peilen ≈ 80-100 Wörter an, der alte Kurzversions-Mock 80-120). Er steuert nur den Wortzähler und die Abgaberegel (writingMinShareOfLowerBound), nie eine Null- oder Deckelregel, und darf in Lerner-Texten nie als offizielle Vorgabe erscheinen („telc nennt keine Wortzahl; wir empfehlen …“). Vorbereitungsseiten nennen 120-150 Wörter (unbelegt). Offen, ob neuere Sätze eine Wahl zwischen zwei Aufgaben oder eine Wortangabe enthalten (memo 02 open question 1); die aktuelle Download-Version auf telc.net (ZIP vom 21.03.2023, gelesen 2026-09-27) ist dieselbe Ausgabe mit einer Aufgabe ohne Wortzahl.",
-    "Schreiben, Betreff: Die Aufgabe bittet um einen passenden Betreff, eine Anrede, Einleitung und Schluss (UT-B1 S. 17). Die Kriterien sagen aber, dass Textsortenmerkmale des Briefes (Absender, Empfänger, Datum, Betreffzeile) nicht gefordert sind, und verweigern A auf Kriterium II nur, wenn die Merkmale einer persönlichen oder halbformellen E-Mail fehlen (S. 37). Empfehlung: der Vorab-Check meldet einen fehlenden Betreff nur als Hinweis; die Deckelregel telc-b1-no-a-crit2-textsorte-missing prüft Anrede und Grußformel. Zu bestätigen durch die Prüferin-Review (W2).",
+    "Schreiben, Wortzahl: telc nennt für den Schriftlichen Ausdruck keine Wortzahl (UT-B1 S. 17; memo 02 §2 und open question 1). teile.sa.words = { target 100, min 80 } ist ein DESIGNWERT (vier Leitpunkte plus Anrede, Einleitung, Schluss und Gruß; die B1.1-Aufgaben im Curriculum peilen ≈ 80-110 Wörter an). Verbindlich für alle Verbraucher: (1) Im Prüfungsmodus blockiert der Wert nie eine Abgabe, deckelt nie eine Bewertung und löst keine Null- oder Abzugsregel aus (tb1-sa hat keine Längenregel); der Wortzähler ist dort ausgeblendet (delivery, siehe unten). (2) Im Lernmodus steuert er nur die Empfehlung im Editor und die Abschlussregel für den Fortschritt (writingMinShareOfLowerBound: ab 40 Wörtern gilt die Aufgabe als bearbeitet); auch dort wird jede Abgabe angenommen und bewertet. (3) In Lerner-Texten erscheint er nie als offizielle Vorgabe („telc nennt keine Wortzahl; wir empfehlen etwa 100 Wörter“). Vorbereitungsseiten nennen 120-150 Wörter (unbelegt). Offen, ob neuere Sätze eine Wahl zwischen zwei Aufgaben oder eine Wortangabe enthalten (memo 02 open question 1); die aktuelle Download-Version auf telc.net (ZIP vom 21.03.2023, gelesen 2026-09-27) ist dieselbe Ausgabe mit einer Aufgabe ohne Wortzahl.",
+    "ERLEDIGT (Prüferin W2, 2026-09-27): Schreiben, Betreff. Die Aufgabe bittet um Betreff, Anrede, Einleitung und Schluss (UT-B1 S. 17), die Kriterien verlangen aber keine Briefmerkmale (Absender, Empfänger, Datum, Betreffzeile) und verweigern A auf Kriterium II nur, wenn die Merkmale einer persönlichen oder halbformellen E-Mail fehlen (S. 37). Bestätigt: ein fehlender Betreff ist bei telc B1 nur ein Hinweis im Vorab-Check; die Deckelregel telc-b1-no-a-crit2-textsorte-missing prüft ausschließlich Anrede und Grußformel (so bereits in rules.mjs umgesetzt). Anders bei tb2 (Betreff zählt dort zur Textsorte).",
     "Lesen und Sprachbausteine teilen sich offiziell EINEN 90-Minuten-Block ohne Pause (UT-B1 S. 29; telc.net). modules.lesen = 60 und modules.sprachbausteine = 30 sowie die Teil-Minuten (lv1 15, lv2 25, lv3 20, sb1 15, sb2 15) sind Designwerte für Lernmodus-Timer. Im Prüfungsmodus (Modelltest, Diagnose) muss der Runner Leseverstehen und Sprachbausteine unter einem gemeinsamen 90-Minuten-Timer laufen lassen; das Schema kann einen geteilten Timer nicht ausdrücken (Vorschlag für SCHEMA §4.3: modules.<m>.sharedTimerWith oder ein Feld blueprint.timers).",
     "Hören: Modulzeit „ca. 30 Minuten“ (UT-B1 S. 5, telc.net). Die Teil-Minuten hv1 7, hv2 12, hv3 11 sind Designwerte; die offizielle Audiodatei zu UT-B1 (telc_deutsch_b1.zip) läuft insgesamt ≈ 25 Minuten einschließlich Anweisungen, Lesepausen und Wiederholungen. readingSeconds: hv1 30 s und hv2 60 s stehen auf dem Aufgabenblatt; für hv3 ist keine Lesezeit gedruckt, deshalb fehlt das Feld. Nach der ersten generierten Audiodatei neu takten. HV1 wird nur EINMAL gespielt (Prüfungsmodus erzwingt plays 1).",
-    "Sprechen: 20 Minuten Vorbereitung gelten für alle drei Teile zusammen, Notizen auf gestempelten Blättern sind erlaubt, sollen aber nicht abgelesen werden (UT-B1 S. 30). Die prepMinutes je Teil (m1 3, m2 8, m3 9, Summe 20) sind Designanteile für Übungsblöcke mit nur einem Teil; eine volle mündliche Prüfung nutzt modules.sprechen.prepMinutes = 20 einmal. Einzelprüfung ist nur bei einer einzigen Anmeldung erlaubt; dann spielt eine prüfende Person die Partnerrolle (S. 30) - das entspricht unserer KI-Partnerin.",
-    "m1 interaction: BLUEPRINT §4.4 führt tb1 M1 unter monologue. Offiziell ist Teil 1 aber gegenseitig: beide erzählen über sich UND fragen die Partnerin oder den Partner (UT-B1 S. 30); die Prüfenden können ein Zusatzthema ansprechen (S. 18). Die KI-Partnerin muss also auch Fragen stellen und beantworten. Prüfen, ob ein eigener Wert (z. B. get-to-know) in der interaction-Aufzählung nötig ist; cards-ask passt nicht (keine Wortkarten).",
+    "Sprechen, Vorbereitung (UT-B1 S. 30 am 2026-09-27 erneut gelesen): Im Vorbereitungsraum erhalten die Teilnehmenden ALLE Aufgabenblätter und haben 20 Minuten Zeit; Teil 1 ist also eingeschlossen (anders als telc B2, wo die Vorbereitung nur Teil 2 und 3 betrifft). Deshalb bleiben die prepMinutes je Teil m1 3, m2 8, m3 9 (Summe 20) als Designanteile für Übungsblöcke mit nur einem Teil; eine volle mündliche Prüfung nutzt modules.sprechen.prepMinutes = 20 einmal. Notizen nur auf gestempelten Blättern, nicht ablesen (S. 30). Einzelprüfung ist nur bei einer einzigen Anmeldung erlaubt; dann spielt eine prüfende Person die Partnerrolle (S. 30) - das entspricht unserer KI-Partnerin.",
+    "ERLEDIGT (Prüferin W2, 2026-09-27; SCHEMA §4.3 enthält jetzt get-to-know): teile.m1.interaction = get-to-know statt monologue. Teil 1 ist gegenseitig: beide erzählen über sich UND fragen einander (UT-B1 S. 30), Nachfragen werden positiv bewertet (S. 31), und Kriterium 2 bewertet die Gesprächsbeteiligung. Verbindlich für jede SpeakingPart mit template tb1.m1 (EXM-04 prüft den Modus): (1) Gespräch in beide Richtungen - die lernende Person stellt mindestens 2 eigene Fragen zu den Stichpunkten ihres Blattes, die KI-Partnerin beantwortet sie und stellt selbst mindestens 2 Fragen; (2) die KI-Partnerin erzählt auch über sich (eigene, erfundene Angaben), damit es etwas nachzufragen gibt; (3) optional stellt die Gesprächsleitung am Ende ein Zusatzthema (S. 18); (4) turns im Band 8-16, seconds 150-210. cards-ask passt nicht (keine Wortkarten), monologue auch nicht (keine Gegenfrage).",
     "textWords: Alle Bänder beruhen auf UNSERER Zählung eines einzigen offiziellen Satzes (UT-B1, überarbeitete Auflage 2019, 13. Auflage 2020), ±15 %: LV1 ≈ 42-86 Wörter je Meldung (memo 02 §2 nannte ≈ 80-150, nach unserer Zählung zu hoch), LV2 ≈ 314 Wörter (memo 02 §7 und BLUEPRINT nennen ≈ 400; das Band 270-400 deckt beides, Modelltest-Texte sollten ≈ 320-380 anpeilen), LV3 ≈ 10-60 Wörter je Anzeige, SB1 ≈ 128, SB2 ≈ 154 (+ Anzeige ≈ 30), HV1 ≈ 42-90 je Stellungnahme, HV2 ≈ 436, HV3 ≈ 44-95. Vor dem Registry-Freeze gegen einen zweiten Satz (z. B. einen weiteren telc-Übungstest B1) nachzählen.",
     "LV3: Die Zahl der x-Lösungen (Situation ohne passende Anzeige) ist nicht festgelegt; UT-B1 hat zwei von zehn. Designvorschlag für eigene Formen: ein bis drei x-Lösungen je Form, nie null. LV1: fünf Überschriften bleiben übrig, es gibt keine x-Option (noMatch fehlt). SB2: 15 Wörter für 10 Lücken, jedes Wort nur einmal (fünf Distraktoren).",
     "Wiederholung eines Prüfungsteils: UT-B1 S. 40 (13. Auflage 2020) erlaubt, einen nicht bestandenen oder nicht abgelegten Teil im selben oder im folgenden Kalenderjahr allein zu wiederholen; es gilt nur das Wiederholungsergebnis. Nicht gegen die aktuelle telc-Prüfungsordnung geprüft (memo 02 open question 2), deshalb scale.parts.partResit.verified = false; Produkttexte nennen die Regel erst nach Prüfung und mit Quelle.",
@@ -334,6 +659,14 @@
     "answerSheetStep = false: In der Papierprüfung markieren die Teilnehmenden direkt auf dem Antwortbogen S30 innerhalb der Teilzeiten (Seite 2 wird nach den 90 Minuten eingesammelt, S. 29); es gibt keine zusätzliche Übertragungszeit. telc.net (gelesen 2026-09-27): die Prüfung gibt es papier- oder computerbasiert.",
     "transfersTo ist überall leer, weil die Spuren gb1 (Goethe/ÖSD B1) und dtz in der schlanken Ausführung zurückgestellt sind. Kandidaten, sobald sie existieren (BLUEPRINT §2.3, memo 02 §6): tb1.lv3 → gb1.l3, dtz.l2 (Situationen ↔ Anzeigen); tb1.m3 → gb1.sp1, dtz.s3 (gemeinsam planen); tb1.sb1 → dtz.l5 (Lückenbrief); tb1.sa → dtz.schreiben, gb1.sch1 (E-Mail mit Leitpunkten; Prüferin entscheidet); tb1.hv3 → gb1.h1 (kurze Ansagen, zweimal); tb1.hv1 → dtz.h4 (Meinungen). Laut BLUEPRINT ohne eingehenden Transfer: tb1.lv1, tb1.sb2, tb1.m2.",
     "Die Planungs-Moves-Checkliste für m3 (vorschlagen, reagieren, widersprechen, sich einigen, Aufgaben verteilen; BLUEPRINT §4.4) ist ein Kursmerkmal und steht deshalb nicht im Profil tb1-m3; die offiziellen 30 Punkte kommen allein aus den vier telc-Kriterien.",
-    "Registry-Abgleich (2026-09-27): alle textType-ids lösen gegen registries/text-types.json auf (hv1 = tt.umfrage, m2 = tt.meinungsblatt, sa = tt.email-antwort mit Betreff, Anrede, Einleitung, Schluss und Gruß). SB1 ist im Übungstest ein persönlicher Brief (tt.brief-persoenlich wäre wörtlicher; tt.email-informell ist für eigene Texte gleichwertig), SB2 eine formelle Anfrage auf eine Anzeige (tt.email-formell). registries/families.json fehlt noch; diese Datei nutzt fam.l-ueberschrift, fam.l-artikel, fam.l-anzeigen, fam.sb-luecke, fam.h-meinung, fam.h-gespraech, fam.h-detail, fam.w-mail, fam.s-vorstellen, fam.s-diskutieren, fam.s-planen (Familien nach BLUEPRINT §2.3; ASCII-gefaltet wie fam.h-gespraech in ga2)."
+    "Registry-Abgleich (2026-09-27): alle textType-ids lösen gegen registries/text-types.json auf (hv1 = tt.umfrage, m2 = tt.meinungsblatt, sa = tt.email-antwort mit Betreff, Anrede, Einleitung, Schluss und Gruß). SB1 ist im Übungstest ein persönlicher Brief (tt.brief-persoenlich wäre wörtlicher; tt.email-informell ist für eigene Texte gleichwertig), SB2 eine formelle Anfrage auf eine Anzeige (tt.email-formell). registries/families.json fehlt noch; diese Datei nutzt fam.l-ueberschrift, fam.l-artikel, fam.l-anzeigen, fam.sb-luecke, fam.h-meinung, fam.h-gespraech, fam.h-detail, fam.w-mail, fam.s-vorstellen, fam.s-diskutieren, fam.s-planen (Familien nach BLUEPRINT §2.3; ASCII-gefaltet wie fam.h-gespraech in ga2).",
+    "Aussprache nicht automatisch bewertet (BLUEPRINT §4.4, SCHEMA §4.5): In tb1-m1, tb1-m2 und tb1-m3 hat das Kriterium aussprache scoredBy notAutoScored und keine Deskriptoren; es geht nicht an das Modell und nicht in die Punktsumme. Automatisch bewertbar sind deshalb m1 12 von 15, m2 24 von 30, m3 24 von 30 Punkten (profile.max 12/24/24, examMax 15/30/30), mündlich zusammen 60 von 75. Wo ein Modulwert erscheint (§5.6), wird die Spanne um 0-15 Punkte Aussprache erweitert (z. B. „KI-Richtwert 42 von 60 + Aussprache nicht bewertet (0-15)“). Die Bestehensgrenze 45/75 gilt für die offizielle Skala; ein Richtwert ohne Aussprache darf nie als „bestanden“ oder „nicht bestanden“ angezeigt werden. Schreiben (tb1-sa) hat kein solches Kriterium: max = examMax = 45.",
+    "Deskriptoren und Fehlerpolitik der Profile (SCHEMA §4.5): Jedes KI-bewertete Kriterium in tb1-sa und tb1-m1..m3 trägt eine Beschreibung je Stufe in UNSERER Formulierung (Sie-Form, nie der offizielle Deskriptortext; LGL-05); Quelle der Stufenlogik sind UT-B1 S. 34-38. Status: Entwurf der Lane-Agentin, Freigabe durch die Kalibrierungs-Review vor CAL-01 (calibration.status pending). errorPolicy b1: flag (im Feedback genannt, zählt nicht gegen Formale Richtigkeit) für v2-inv, case-np, case-pp, gender-article, adj-ending, n-dekl, reflexive - telc gewichtet Endungs- und Genusfehler ausdrücklich schwächer, solange das Verständnis nicht leidet (S. 37), und BLUEPRINT §2.5 stuft Inversionsfehler auf B1 als flag ein; score für verb-final, satzklammer, perfekt-aux-participle, connector-position, register, spelling-meaning (Schreiben) - Satzbau im Nebensatz, Zeitformen und Register sind B1-Kernziele bzw. Kriterium-II-Merkmale. Die Sprechprofile führen spelling-meaning nicht. Nach dem ersten Kalibrierungslauf prüfen.",
+    "Register-Deckelregel umbenannt (Prüferin W2, 2026-09-27): telc-b1-no-a-crit2-register-mixed → telc-b1-no-a-crit2-register-wrong-or-mixed. Kriterium II verweigert A auch bei FALSCH gewähltem Register, nicht nur bei schwankendem (UT-B1 S. 37). Die Regel prüft gegen register und address der WritingTask: ausgelöst, wenn die Anredeform (du/Sie) oder die Anrede-/Grußformel nicht zum Register der Aufgabe passt (z. B. „Hallo Tom“ + du in einer halbformellen Aufgabe mit Sie, „Sehr geehrte …“ an eine Freundin) ODER innerhalb des Textes wechselt. Folgeänderung außerhalb dieser Datei: netlify/functions/_shared/rubrics/rules.mjs (Regel-id und Prüfung gegen task.register/address) und tests/course-v2-ai.test.mjs (erwartete id); bis dahin meldet compile-rubrics die Regel als unbekannt.",
+    "Ich/Wir-Deckelregel, „überwiegend“ festgelegt (für EXM-08): telc-b1-no-a-crit2-ich-wir-starts greift, wenn MEHR ALS 50 % der Hauptsätze im Textkörper mit „Ich“ oder „Wir“ beginnen (Anrede, Grußformel und Betreff zählen nicht; Nebensätze zählen nicht; mindestens 3 Hauptsätze, sonst keine Wertung). Genau 50 % löst nicht aus. Die aktuelle rules.mjs-Fassung zählt Sätze statt Hauptsätze (bodySentenceCount ≥ 3, ichWirShare > 0,5); der EXM-08-Test braucht die Grenzfälle 50 % (nein) und 51 % (ja) und einen Satz mit vorangestelltem Nebensatz („Weil ich …, komme ich“ = kein Ich-Anfang des Hauptsatzes).",
+    "delivery = both: telc Deutsch B1 wird auf Papier und computerbasiert angeboten (telc.net, gelesen 2026-09-27). STANDARD ist Papier: im Prüfungsmodus (Plateau, Diagnose, Modelltest) ist der Wortzähler ausgeblendet, es gibt keine Rechtschreibhilfe; nur wenn die lernende Person angibt, digital geprüft zu werden, zeigt der Runner den Zähler (BLUEPRINT §2.3). Ob die digitale telc-Prüfung selbst einen Wortzähler bietet, ist nicht belegt - bis dahin gilt auch digital: kein Zähler im Prüfungsmodus.",
+    "Prüfungsfokus B1.1/B1.2 unter der schlanken Ausführung (Prüferin W2, 2026-09-27; umzusetzen in docs/course-v2/curriculum/b1-1.json und b1-2.json bzw. in den Unit-Dateien, NICHT in dieser Datei): Die Pläne verteilen Schreiben und Sprechen auf drei Lanes, geliefert wird nur tb1. Umschlüsselung: jede Goethe-B1- oder DTZ-Schreibaufgabe → tb1.sa im Lernmodus (neu als Antwort-E-Mail mit vier Leitpunkten; EXM-03 verlangt vier, auch für die bisherigen 40-Wort-Nachrichten; Erleichterung nur über wordBandLearning), gb1.sp1 und dtz.s3 → tb1.m3, gb1.sp2 → tb1.m2 (Präsentationsthema als zwei gegensätzliche Meinungen), dtz.s1 → tb1.m1; gb1.sp3 entfällt. Damit m1 und m3 alle höchstens 4 Einheiten wiederkehren (COV-5), zusätzlich: B1.1 U2 m1 + m3 (neue Kolleginnen kennenlernen, dann Schichtplan), U6 m1 + m3 (beim Ausgehen Freunde von Freunden kennenlernen, dann Abend planen), U7 m3 statt Präsentation (gemeinsam eine Aktion zum gesunden Leben im Kurs planen), U12 m1 + m3 (die Mitreisende kennenlernen, dann Weiterfahrt organisieren); B1.2 U6 m1 + m2 (die neue Kollegin kennenlernen, dann Pünktlichkeit diskutieren), U9 m1 + m3 statt Präsentation (bei der Stadtführung Einheimische kennenlernen, dann das Probewochenende planen), U12 sb2 aus dem Prüfungsfokus in die Wiederholung (sonst 5 Teile). Zwei Teile in einer Einheit = EINE SpeakingTask mit parts. Ergebnis (nachgezählt): B1.1 je Einheit 2-4 tb1-Teile; sa in U1-U12, m1 U1, U2, U6, U8, U12, m2 U4, U5, U9, U10, m3 U2, U3, U6, U7, U11, U12. B1.2 je Einheit 2-4; sa U1-U12, m1 U3, U6, U9, U12, m2 U1, U2, U6, U7, U8, U10, U12, m3 U4, U5, U9, U11, U12. Zusätzlich enthält jede B1-Sprechsitzung eine Planungsrunde von ≥ 3 Minuten mit der Moves-Checkliste (BLUEPRINT §2.8, LS5) - auch dort, wo m3 nicht Prüfungsfokus ist; heute plant der Plan sie nur in 5 B1.1-Einheiten.",
+    "Neue Schemafelder (SCHEMA §4.3, Stand 2026-09-27): choices/choiceKind ersetzen das frühere options bei den Zuordnungsteilen (lv1 10 Überschriften, lv3 12 Anzeigen + x, sb2 15 Wörter); options bleibt nur für Wahlen je Item (lv2, sb1 a/b/c; R/F 2). pictorial ist überall false - telc B1 hat keine Bilder. instructionsDe sind unsere eigenen Kurzfassungen (≤ 90 Zeichen, TXT-04), paraphraseOf nennt die Seite. scaffold (Grenzen für reduced/mini-Blöcke in B1.1) sind DESIGNWERTE: minItems lv1 3, lv2 3, lv3 5, sb1 5, sb2 5, hv1 3, hv2 5, hv3 3; choicesMin so, dass mindestens drei (lv1, sb2) bzw. zwei (lv3, dazu mindestens eine x-Lösung) Ablenker bleiben; Abspielzahl und Optionen je Item bleiben immer wie in der Prüfung (hv1 einmal). Die Sprechteile haben scaffoldAllowedIn [] (vorher b1.1): ein Sprechauftrag ist kein Block mit scaffolded-Flag (EXM-02), die B1.1-Erleichterung beim Sprechen kommt aus der Partnerunterstützung und dem Lernmodus (BLUEPRINT LS5), nicht aus einer verkürzten Vorlage. Das Prüfskript scripts/course-v2/lib/schemas/lane.mjs und rubric.mjs kennt diese Felder noch nicht (unbekannte Schlüssel = Fehler) und muss nachgezogen werden.",
+    "Familie von hv2: Die Prüferin (W2, 2026-09-27) schlägt vor, tb1.hv2 (Radiointerview, 10 R/F) von fam.h-gespraech nach fam.h-vortrag zu verschieben (wie tb2.hv2 und ga2.h4). Diese Datei behält fam.h-gespraech, bis registries/families.json die Zuordnung ändert; beide müssen im selben Durchgang wechseln, sonst widersprechen sich Vorlage und Familienliste."
   ]
 }

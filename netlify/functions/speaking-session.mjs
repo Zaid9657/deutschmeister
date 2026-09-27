@@ -18,7 +18,7 @@ import {
 import { dbLevel } from './_shared/rubrics/keys.mjs';
 import { rubricProfile } from './_shared/rubrics/data.mjs';
 import { unknownRuleIds } from './_shared/rubrics/rules.mjs';
-import { checkCourseAi, recordCourseAi, useKindFor } from './_shared/rubrics/courseAi.mjs';
+import { checkCourseAi, recordCourseAi, aiUseKindFor } from './_shared/rubrics/courseAi.mjs';
 import { SCORE_LABEL_DE } from './_shared/rubrics/defaults.mjs';
 
 // Session pricing (cents). 10/15-min always cost; 5-min may be free (see below).
@@ -171,7 +171,7 @@ async function startCourseV2Session({ user_id, key, parsed, minutes, providedTok
   }
 
   // One attempt = one session: recorded once the session exists.
-  await recordCourseAi(supabase, user_id, key, useKindFor(parsed));
+  await recordCourseAi(supabase, user_id, key, aiUseKindFor(parsed));
 
   try {
     const { error: msgError } = await supabase

@@ -120,11 +120,13 @@ const inRanges = (index, length, ranges) => ranges.some(([a, b]) => index >= a &
 function clauseSpans(sentence) {
   const out = [];
   let offset = 0;
+  let sep = null; // the separator before the clause: ',' ';' ':' '(' … or null at the start
   const parts = String(sentence).split(/([,;:()–—]|\s-\s)/);
   for (const part of parts) {
-    if (!/^([,;:()–—]|\s-\s)$/.test(part) && part.trim()) {
+    if (/^([,;:()–—]|\s-\s)$/.test(part)) sep = part.trim() || '-';
+    else if (part.trim()) {
       const lead = part.length - part.trimStart().length;
-      out.push({ text: part.trim(), start: offset + lead });
+      out.push({ text: part.trim(), start: offset + lead, sep });
     }
     offset += part.length;
   }
@@ -262,6 +264,7 @@ function clauseRelative(det, sentence) {
   for (let ci = 0; ci < spans.length; ci += 1) {
     const c = spans[ci];
     if (ci === 0 && spec.requireComma !== false) continue; // a relative clause follows its head
+    if (spec.requireComma !== false && c.sep !== ',') continue; // „…: über die Familie sprechen" is no relative clause
     const toks = tokens(c.text);
     let k = 0;
     if (toks[0] && preps.has(toks[0].lower) && toks[1] && pronouns.has(toks[1].lower)) k = 1;
@@ -275,10 +278,14 @@ function clauseRelative(det, sentence) {
     }
     if (!endsVerbFinal(c.text)) continue;
     if (toks.length - k < 3) continue;
+    // in a relative clause the finite verb is last: „was hast du gemacht?" is a question
+    if (next && AUX_MODAL_FORMS.has(next.lower)) continue;
     // the head: the clause before ends in a noun (capitalised) or a pronoun like alles/das/etwas
     const prev = tokens(spans[ci - 1]?.text || '');
     const head = prev[prev.length - 1];
-    if (spec.requireNounHead !== false && head && !/^[A-ZÄÖÜ]/.test(head.text) && !['alles', 'das', 'etwas', 'nichts', 'vieles', 'einzige', 'beste', 'erste', 'letzte', 'wenig', 'manches'].includes(head.lower)) continue;
+    const HEAD_PRONOUNS = ['alles', 'das', 'etwas', 'nichts', 'vieles', 'einzige', 'beste', 'erste', 'letzte', 'wenig', 'manches'];
+    if (spec.requireNounHead !== false && head && !/^[A-ZÄÖÜ]/.test(head.text) && !HEAD_PRONOUNS.includes(head.lower)) continue;
+    if (spec.requireNounHead !== false && head && (head.text === 'Sie' || SUBJECT_PRONOUNS.has(head.lower)) && !HEAD_PRONOUNS.includes(head.lower)) continue;
     hits.push({ index: c.start + (toks[0]?.index || 0), match: c.text });
   }
   return hits;
@@ -362,7 +369,7 @@ function clauseAuxFinal(det, sentence, env) {
   return hits;
 }
 
-const NOT_IMPERATIVE = new Set(`hallo tschüss tschüs danke prima super toll schade achtung oh ach na ja nein
+const NOT_IMPERATIVE = new Set(`hallo tschüss tschüs danke prima super toll schade achtung oh ach na ja nein freut
 viel viele gute guten herzlich herzlichen willkommen bis alles liebe lieber hilfe stopp moment
 bitte vorsicht klar genau richtig falsch okay ok los schnell weiter`.split(/\s+/));
 
@@ -386,6 +393,8 @@ function clauseImperative(det, sentence, env) {
   // du / ihr
   if (second && (SUBJECT_PRONOUNS.has(second.lower) || second.text === 'Sie')) return [];
   if (/en$/.test(w) && w !== 'seien') return [];
+  // „Vorname, Nachname …": a list or an address, not an imperative
+  if (/^\s*[A-Za-zÄÖÜäöüß]+\s*,/.test(sentence.replace(/^\s*bitte\s*,?\s*/i, ''))) return [];
   const endsBang = /!\s*[“”"»]?\s*$/.test(sentence.trim());
   const hasBitte = /\bbitte\b/i.test(sentence);
   const reflexNext = second && ['dich', 'euch', 'mir', 'dir', 'uns', 'mich'].includes(second.lower);
@@ -424,7 +433,8 @@ function lexParticipleAux(det, sentence, env) {
       else if (spec.participleAux === 'match-aux') want = /^(?:hat|hät|hab)/.test(words[auxIdx]) ? 'hat' : 'ist';
       if (want && known && known.aux !== want) continue;
       // without a lexicon a sein-reading cannot be told from an adjective („ist geschlossen", „bin verheiratet")
-      if (want === 'ist' && !known) continue;
+      const auxIsSein = /^(?:bin|bist|ist|sind|seid|war|warst|waren|wart|wäre|wärst|wären|wärt)$/.test(words[auxIdx]);
+      if ((want === 'ist' || auxIsSein) && !known && !spec.guessSein) continue;
       if (spec.shape === 'trennbar-untrennbar' && !/^(?:[a-zäöüß]+ge[a-zäöüß]+(?:t|en)|(?:be|ver|er|ent|zer|emp|miss|über|unter|hinter)[a-zäöüß]+(?:t|en)|[a-zäöüß]+iert)$/.test(w)) continue;
       if (spec.shape === 'trennbar-untrennbar' && /^ge/.test(w) && !/iert$/.test(w)) continue;
       hits.push({ index: c.start + toks[auxIdx].index, match: `${toks[auxIdx].text} … ${toks[i].text}`, fallback: !known });

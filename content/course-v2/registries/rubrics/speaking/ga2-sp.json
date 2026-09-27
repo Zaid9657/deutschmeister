@@ -11,9 +11,9 @@
     { "id": "t2-sp", "label": "Teil 2: Sprache (Spektrum, Beherrschung)", "per": "part", "levels": [4, 3, 2, 1, 0] },
     { "id": "t3-af", "label": "Teil 3: Aufgabenerfüllung (Sprachfunktion, Interaktion, Register)", "per": "part", "levels": [4, 3, 2, 1, 0] },
     { "id": "t3-sp", "label": "Teil 3: Sprache (Spektrum, Beherrschung)", "per": "part", "levels": [4, 3, 2, 1, 0] },
-    { "id": "au", "label": "Aussprache (Satzmelodie, Wortakzent, einzelne Laute), über alle drei Teile", "per": "task", "levels": [5, 3.5, 2, 0.5, 0] }
+    { "id": "au", "label": "Aussprache (Satzmelodie, Wortakzent, einzelne Laute), über alle drei Teile: nicht automatisch bewertet, zählt nicht zur KI-Punktzahl (in der Prüfung bis zu 5 Punkte)", "per": "task", "levels": [5, 3.5, 2, 0.5, 0], "weight": 0 }
   ],
-  "zeroRules": ["goethe-af-e-zeroes-task"],
+  "zeroRules": [],
   "capRules": [],
   "spelling": "not-scored",
   "feedbackLanguage": ["de-a2", "en"],

@@ -8,7 +8,7 @@
     { "id": "af", "label": "Aufgabenerfüllung (Sprachfunktion, Interaktion, Register)", "per": "part", "levels": [4, 3, 2, 1, 0] },
     { "id": "sp", "label": "Sprache (Spektrum, Beherrschung)", "per": "part", "levels": [4, 3, 2, 1, 0] }
   ],
-  "zeroRules": ["goethe-af-e-zeroes-task"],
+  "zeroRules": [],
   "capRules": [],
   "spelling": "not-scored",
   "feedbackLanguage": ["de-a2", "en"],

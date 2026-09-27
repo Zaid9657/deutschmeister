@@ -12,7 +12,7 @@ import { bankEntry, rubricProfile, spineLabel } from './data.mjs';
 import { unknownRuleIds, countWords } from './rules.mjs';
 import { modelFor } from './defaults.mjs';
 import { gradeSubmission, callAnthropic } from './grade.mjs';
-import { checkCourseAi, recordCourseAi, useKindFor } from './courseAi.mjs';
+import { checkCourseAi, recordCourseAi, aiUseKindFor } from './courseAi.mjs';
 
 export const V2_MAX_CHARS = 6000;
 export const V2_MIN_WORDS = 2; // "did anything arrive"; the exam length rules are the rubric's, not this floor's
@@ -135,7 +135,7 @@ export async function handleWritingV2({ supabase, userId, body, headers, deps = 
   if (saveError) console.error('[evaluate-writing v2] save failed:', JSON.stringify(saveError.message || saveError));
 
   if (graded.modelCalled) {
-    await (deps.recordUse || recordCourseAi)(supabase, userId, bankKey, useKindFor(parsed));
+    await (deps.recordUse || recordCourseAi)(supabase, userId, bankKey, aiUseKindFor(parsed));
   }
 
   const remaining = Number.isFinite(gate.remaining) ? Math.max(0, gate.remaining - (graded.modelCalled ? 1 : 0)) : null;

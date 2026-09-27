@@ -63,9 +63,12 @@ export function compileRubrics(contentRoot = path.join(REPO_ROOT, 'content/cours
     for (const r of doc.zeroRules || []) if (RULES[r] && RULES[r].kind !== 'zero') errors.push(`${where}: '${r}' is a ${RULES[r].kind} rule, listed under zeroRules`);
     for (const r of doc.capRules || []) if (RULES[r] && RULES[r].kind !== 'cap') errors.push(`${where}: '${r}' is a ${RULES[r].kind} rule, listed under capRules`);
     const m = doc.modelId;
-    if (typeof m !== 'string' || (m !== 'deterministic' && (m.startsWith('config:') ? !MODEL_CONFIG[m] : !/^claude-[a-z0-9-]+$/.test(m)))) {
-      errors.push(`${where}: modelId '${m}' is not 'deterministic', a known config alias (${Object.keys(MODEL_CONFIG).join(', ')}) or a literal model id`);
+    const deterministic = doc.method === 'deterministic';
+    if (deterministic ? !(m === null || m === 'deterministic') : (typeof m !== 'string' || (m !== 'deterministic' && (m.startsWith('config:') ? !MODEL_CONFIG[m] : !/^claude-[a-z0-9-]+$/.test(m))))) {
+      errors.push(`${where}: modelId '${m}' is not ${deterministic ? "null or 'deterministic' (method: deterministic)" : `'deterministic', a known config alias (${Object.keys(MODEL_CONFIG).join(', ')}) or a literal model id`}`);
     }
+    if (doc.method === 'ai' && m === 'deterministic') errors.push(`${where}: method 'ai' with modelId 'deterministic'`);
+    if (Number.isFinite(doc.examMax) && Number.isFinite(doc.max) && doc.examMax < doc.max) errors.push(`${where}: examMax ${doc.examMax} is below max ${doc.max}`);
     if (profiles[doc.id]) errors.push(`${where}: duplicate profile id '${doc.id}'`);
     profiles[doc.id] = doc;
   }

@@ -71,9 +71,11 @@ export function sentences(text) {
       if (before) {
         const w = before[1].toLowerCase();
         if (/^\d+$/.test(w) && j < src.length) {
-          // „am 12. März" / „der 3. Stock": an ordinal; „um 12. Dann" is rare enough to accept.
+          // „am 12. März" / „der 3. Stock" / „vom 3. bis 5. Juni": an ordinal — unless the next
+          // word is a capitalised function word that starts a sentence („Zimmer 12. Auf dem Tisch …")
           const next = src.slice(j).trimStart();
-          if (/^[A-ZÄÖÜa-zäöü]/.test(next) && !/^(Dann|Danach|Aber|Und|Ich|Wir|Sie|Er|Es|Das|Der|Die)\b/.test(next)) continue;
+          const nw = (next.match(/^[A-Za-zÄÖÜäöüß]+/) || [''])[0];
+          if (nw && !(/^[A-ZÄÖÜ]/.test(nw) && FUNCTION_WORDS.has(nw.toLowerCase()))) continue;
         }
         if (ABBREVIATIONS.has(w) && j < src.length) continue;
       }

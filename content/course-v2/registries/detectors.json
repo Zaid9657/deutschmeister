@@ -987,7 +987,7 @@
         ],
         "regex": "\\b(?:[Dd]er|[Dd]ie|[Dd]as|[Dd]en|[Dd]em|[Dd]es|[Dd]iese|[Dd]ieser|[Dd]ieses|[Dd]iesen|[Dd]iesem|[Jj]ede|[Jj]eder|[Jj]edes|[Jj]eden|[Jj]edem)\\s+([a-zäöüß]{2,}(?:e|en|er|es|em))\\s+[A-ZÄÖÜ]",
         "group": 1,
-        "skip": "^(?:heute|morgen|gestern|bitte|gerne|schon|noch|auch|nicht|immer|jetzt|oft|dann|sehr|ganz|gar|leider|wieder|zuerst|alle|beide|beiden|viele|vielen|meisten|wenigen|andere|anderen|einzige|einzigen|erste|ersten|letzte|letzten|nächste|nächsten|paar)$",
+        "skip": "^(?:heute|morgen|gestern|bitte|gerne|schon|noch|auch|nicht|immer|jetzt|oft|dann|sehr|ganz|gar|leider|wieder|zuerst|alle|beide|beiden|viele|vielen|meisten|wenigen|andere|anderen|einzige|einzigen|erste|ersten|letzte|letzten|nächste|nächsten|paar|meine|meinen|meinem|meiner|deine|deinen|deinem|deiner|seine|seinen|seinem|seiner|ihre|ihren|ihrem|ihrer|unsere|unseren|unserem|unserer|eure|euren|eurem|eurer|keine|keinen|keinem|keiner|eine|einen|einem|einer)$",
         "notes": "Ordinalzahlen und erste/letzte/nächste sind ausgenommen (lexikalisch früher). Ein Relativpronomen vor einem Adverb kann fälschlich treffen.",
         "examples": {
           "hit": [
@@ -1012,7 +1012,7 @@
         ],
         "regex": "\\b(?:[Mm]it|[Bb]ei|[Aa]us|[Vv]on|[Zz]u|[Nn]ach|[Ss]eit|[Ff]ür|[Oo]hne|[Gg]egen|[Dd]urch|[Ii]n|[Aa]n|[Aa]uf|[Üü]ber|[Uu]nter|[Vv]or|[Tt]rotz|[Ww]egen|[Zz]wei|[Dd]rei|[Vv]ier|[Ff]ünf|[Ss]echs|[Ss]ieben|[Aa]cht|[Nn]eun|[Zz]ehn|[Vv]iele|[Vv]ielen|[Ee]inige|[Ee]inigen|[Mm]ehrere|[Mm]ehreren|[Ww]enige|[Ww]enigen|\\d+)\\s+([a-zäöüß]{3,}(?:e|en|er|es|em))\\s+[A-ZÄÖÜ][a-zäöüß]+",
         "group": 1,
-        "skip": "^(?:heute|morgen|gestern|bitte|gerne|schon|noch|auch|nicht|immer|jetzt|oft|dann|sehr|ganz|leider|wieder|zuerst|allen|alle|beide|beiden|viele|vielen|andere|anderen|meinen|deinen|seinen|ihren|unseren|euren|meine|deine|seine|ihre|unsere|eure|meinem|deinem|seinem|ihrem|unserem|eurem|meiner|deiner|seiner|ihrer|unserer|eurer|einen|einem|einer|keinen|keinem|keiner|diesen|diesem|dieser|jeden|jedem|jeder|welchen|welchem|welcher|ersten|letzten|nächsten|halbe|halben|paar)$",
+        "skip": "^(?:heute|morgen|gestern|bitte|gerne|schon|noch|auch|nicht|immer|jetzt|oft|dann|sehr|ganz|leider|wieder|zuerst|allen|alle|beide|beiden|viele|vielen|andere|anderen|mehrere|mehreren|einige|einigen|wenige|wenigen|zwischen|gegen|unter|hinter|neben|oben|unten|wegen|außen|innen|meinen|deinen|seinen|ihren|unseren|euren|meine|deine|seine|ihre|unsere|eure|meinem|deinem|seinem|ihrem|unserem|eurem|meiner|deiner|seiner|ihrer|unserer|eurer|einen|einem|einer|keinen|keinem|keiner|diesen|diesem|dieser|jeden|jedem|jeder|welchen|welchem|welcher|ersten|letzten|nächsten|halbe|halben|paar)$",
         "notes": "Nur nach Präposition oder Zahlwort (ohne Artikel dazwischen); am Satzanfang nicht erfasst.",
         "examples": {
           "hit": [
@@ -1475,7 +1475,7 @@
         ],
         "regex": "\\b(?:[Dd]er|[Dd]ie|[Dd]as|[Dd]en|[Dd]em|[Dd]es|[Ee]in|[Ee]ine|[Ee]inen|[Ee]inem|[Ee]iner|[Kk]ein|[Kk]eine|[Kk]einen|[Mm]ein|[Mm]eine|[Mm]einen|[Uu]nser|[Uu]nsere|[Ii]hr|[Ii]hre|Ihr|Ihre)\\s+([a-zäöüß]{2,}(?:er|st)(?:e|en|er|es|em))\\s+[A-ZÄÖÜ]",
         "group": 1,
-        "skip": "^(?:sicher|ander|letzt|nächst|erst|besonder|lecker|bitter|sauber|hinter|vorder|ober|unter|inner|äußer|mittler|fest|gest|weiter)",
+        "skip": "^(?:sicher|ander|letzt|nächst|erst|besonder|lecker|bitter|sauber|hinter|vorder|ober|unter|inner|äußer|mittler|fest|gest|weiter)|(?:zigst|zehnt|ßigst)(?:e|en|er|es|em)$",
         "examples": {
           "hit": [
             "Wir nehmen den günstigeren Tarif.",

@@ -29,35 +29,79 @@ const fmtLevels = (levels) => levels.map((l) => String(l)).join(', ');
 
 // ── scoring plan ───────────────────────────────────────────────────────────────
 /**
- * What each criterion is worth for THIS task: its levels, how many values it
- * takes (one per Leitpunkt for per:'leitpunkt', one per turn for per:'turn') and
- * its weight. When a profile gives no weights and its max is a whole multiple of
- * the raw criterion sum (telc: 5/3/1/0 × 3 criteria × 3 = 45), that multiple is
- * the weight; otherwise the weight is 1 and the task's own max stands (an A1.1
- * message with two Leitpunkte is worth 2 × 3 + 1, not a stretched 10).
+ * Whether the grader scores a criterion at all. BLUEPRINT §4.4 / SCHEMA §4.5:
+ * Aussprache/Intonation is `notAutoScored` — the pipeline sees an STT
+ * transcript, never audio — so it is excluded from the model, the prompt and
+ * the total, and shown as „nicht automatisch bewertet". Honoured three ways,
+ * because the registry is migrating to `scoredBy`: an explicit
+ * `scoredBy: 'notAutoScored'`, the interim `weight: 0` marker, and any
+ * Aussprache criterion whatever it says (a binding rule, not a registry choice).
+ */
+export function isAutoScored(c) {
+  if (!c || typeof c !== 'object') return false;
+  if (c.scoredBy === 'notAutoScored') return false;
+  if (c.weight === 0) return false;
+  if (/^(au|aussprache)$/i.test(String(c.id || '')) || /^\s*Aussprache/i.test(String(c.label || ''))) return false;
+  return true;
+}
+
+function critCount(c, task) {
+  if (c.per !== 'leitpunkt') return 1;
+  const pick = Number(task?.choose?.pick);
+  const n = Array.isArray(task?.leitpunkte) ? task.leitpunkte.length : 0;
+  return Number.isInteger(pick) && pick > 0 ? pick : n || 1;
+}
+
+/**
+ * The criteria of a profile the grader does NOT score, as they appear on the
+ * result card: { id, label, per, scored: false, examMax }. `examMax` is what
+ * the criterion is worth in the real exam (for the widened range, §4.4).
+ */
+export function unscoredCriteria(profile, task = {}) {
+  return (profile?.criteria || []).filter((c) => !isAutoScored(c)).map((c) => {
+    const levels = levelsDesc(c.levels);
+    return { id: c.id, label: c.label, per: c.per || 'task', scored: false, examMax: round2((levels[0] || 0) * critCount(c, task)) };
+  });
+}
+
+/**
+ * The maximum the AUTO-SCORED criteria add up to. SCHEMA §4.5 (2026-09-27):
+ * `max` is the scored maximum when `examMax` is present; a profile written
+ * before that change carries the exam maximum in `max`, so the not-auto-scored
+ * share is taken off it.
+ */
+export function scoredTarget(profile, task = {}) {
+  if (!Number.isFinite(profile?.max)) return null;
+  if (Number.isFinite(profile.examMax)) return profile.max;
+  return round2(profile.max - unscoredCriteria(profile, task).reduce((s, c) => s + c.examMax, 0));
+}
+
+/**
+ * What each AUTO-SCORED criterion is worth for THIS task: its levels, how many
+ * values it takes (one per Leitpunkt for per:'leitpunkt', one per turn for
+ * per:'turn') and its weight. When a profile gives no weights and its scored
+ * max is a whole multiple of the raw criterion sum (telc: 5/3/1/0 × 3 criteria
+ * × 3 = 45), that multiple is the weight; otherwise the weight is 1 and the
+ * task's own max stands (an A1.1 message with two Leitpunkte is worth 2 × 3 + 1,
+ * not a stretched 10). Not-auto-scored criteria (Aussprache) are not in the plan.
  */
 export function criteriaPlan(profile, task = {}) {
-  const plan = (profile?.criteria || []).map((c) => {
+  const target = scoredTarget(profile, task);
+  const plan = (profile?.criteria || []).filter(isAutoScored).map((c) => {
     const levels = levelsDesc(c.levels);
-    let count = 1;
-    if (c.per === 'leitpunkt') {
-      const pick = Number(task?.choose?.pick);
-      const n = Array.isArray(task?.leitpunkte) ? task.leitpunkte.length : 0;
-      count = Number.isInteger(pick) && pick > 0 ? pick : n || 1;
-    }
-    return { id: c.id, label: c.label, per: c.per || 'task', levels, count, weight: Number.isFinite(c.weight) ? c.weight : null };
+    return { id: c.id, label: c.label, per: c.per || 'task', levels, count: critCount(c, task), weight: Number.isFinite(c.weight) ? c.weight : null };
   });
   const turns = plan.filter((c) => c.per === 'turn');
   if (turns.length) {
     const rest = plan.filter((c) => c.per !== 'turn').reduce((s, c) => s + c.levels[0] * c.count * (c.weight ?? 1), 0);
     const unit = turns.reduce((s, c) => s + c.levels[0] * (c.weight ?? 1), 0);
-    const n = unit > 0 ? (profile.max - rest) / unit : 1;
+    const n = unit > 0 && target !== null ? (target - rest) / unit : 1;
     const count = Number.isInteger(n) && n >= 1 && n <= 12 ? n : 1;
     for (const c of turns) c.count = count;
   }
   const explicit = plan.some((c) => c.weight !== null);
   const raw = plan.reduce((s, c) => s + c.levels[0] * c.count * (c.weight ?? 1), 0);
-  const ratio = raw > 0 && Number.isFinite(profile?.max) ? profile.max / raw : 1;
+  const ratio = raw > 0 && target !== null ? target / raw : 1;
   const factor = !explicit && Math.abs(ratio - Math.round(ratio)) < 1e-9 && Math.round(ratio) >= 2 ? Math.round(ratio) : 1;
   for (const c of plan) {
     c.weight = c.weight ?? factor;
@@ -169,14 +213,14 @@ export function buildWritingUserPrompt({ task, text, attemptNr, targetLabels = [
 
 /** The stable system block for a SPEAKING profile at a level. */
 export function buildSpeakingSystemPrompt(profile, level, plan, { withMoves = false } = {}) {
-  const au = plan.some((c) => /aussprache/i.test(c.label));
+  const au = unscoredCriteria(profile).length > 0;
   return [
     `Du bist eine erfahrene Bewerterin für Deutsch als Fremdsprache. Du bewertest die Beiträge eines Lernenden in einer Sprechübung aus einem Online-Kurs (Niveau ${String(level).toUpperCase()}) nach dem Bewertungsprofil "${profile.id}". Das Ergebnis ist eine automatisierte Übungsbewertung (Richtwert): keine offizielle Bewertung, kein Prüfungsergebnis.`,
     'Du bewertest NUR die Beiträge des Lernenden. Die Beiträge der Gesprächspartnerin sind Kontext.',
     'KRITERIEN — bewerte jedes Kriterium ausschließlich mit einer der erlaubten Stufen:',
     ...criteriaLines(plan),
     'Du hast KEIN Audio, nur ein Transkript aus automatischer Spracherkennung. Einzelne seltsame Wörter sind wahrscheinlich Erkennungsfehler: werte sie nicht als Fehler des Lernenden. Entscheidend ist die Verständlichkeit, nicht die Zahl der Fehler.',
-    au ? 'Aussprache kannst du nur indirekt schätzen (ob die Spracherkennung die Wörter verstanden hat); bewerte sie vorsichtig.' : null,
+    au ? 'Aussprache und Intonation bewertest du NICHT (kein Audio): Sie sind nicht Teil der Kriterien und fließen in keine Stufe ein.' : null,
     'Melde in "flags" nur deine Einschätzung: "topicMissed" (die Beiträge verfehlen die Aufgabe ganz), "situationMissed" (falsche Situation oder Rolle), "leitpunkteUnconnected" (Beiträge ohne Bezug zueinander), "ownAspect" (immer false). Berechne keine Summe.',
     'Setze "leitpunkte" auf [].',
     `FEHLER: höchstens 3, die lehrreichsten. "tag" ist genau einer von: ${ERROR_TAGS.join(', ')}. "hint" erklärt kurz, was besser geht; "corrected" nennt eine bessere Formulierung.`,
@@ -334,9 +378,10 @@ async function askModel({ callModel, model, system, user, plan, normalizeOpts })
 }
 
 // ── result assembly ────────────────────────────────────────────────────────────
-function assemble({ profile, plan, scored, fired, model, signals, attemptNr, modelId, decidedBy, allowCorrected }) {
+function assemble({ profile, plan, scored, fired, model, signals, attemptNr, modelId, decidedBy, allowCorrected, task }) {
   const total = round2(scored.reduce((s, c) => s + c.points, 0));
   const max = round2(plan.reduce((s, c) => s + c.max, 0));
+  const unscored = unscoredCriteria(profile, task);
   const errors = model?.errors || [];
   const leitpunkte = model?.leitpunkte || [];
   const reasonsDe = fired.map((f) => f.reasonDe);
@@ -351,12 +396,14 @@ function assemble({ profile, plan, scored, fired, model, signals, attemptNr, mod
       lane: profile.lane ?? null,
       max,
       profileMax: profile.max,
+      examMax: Number.isFinite(profile.examMax) ? profile.examMax : round2(max + unscored.reduce((s, c) => s + c.examMax, 0)),
       spelling: profile.spelling ?? null,
       splitVerified: profile.splitVerified === true,
       calibration: profile.calibration ?? { status: 'pending', rangeBands: 1 },
       source: profile.source ?? null,
     },
-    criteria: scored.map((c) => ({
+    criteria: [...scored.map((c) => ({
+      scored: true,
       id: c.id,
       label: c.label,
       per: c.per,
@@ -367,7 +414,7 @@ function assemble({ profile, plan, scored, fired, model, signals, attemptNr, mod
       points: c.points,
       ...(c.cappedBy ? { cappedBy: c.cappedBy } : {}),
       ...(c.zeroedBy ? { zeroedBy: c.zeroedBy } : {}),
-    })),
+    })), ...unscored], // not-auto-scored entries last: „nicht automatisch bewertet", never in total_score
     rulesApplied: fired.map((f) => ({
       id: f.id,
       kind: f.kind,
@@ -395,6 +442,7 @@ function assemble({ profile, plan, scored, fired, model, signals, attemptNr, mod
       hasGruss: signals.hasGruss,
       hasBetreff: signals.hasBetreff,
       registerMixed: signals.registerMixed || signals.addressDrift,
+      registerWrong: signals.registerWrong === true,
     },
     attempt: attemptNr,
     model: modelId,
@@ -431,7 +479,7 @@ export async function gradeSubmission({
     return {
       ok: true,
       modelCalled: false,
-      result: assemble({ profile, plan, scored, fired: pre, model: null, signals, attemptNr, modelId: 'deterministic', decidedBy: 'rules', allowCorrected }),
+      result: assemble({ profile, plan, scored, fired: pre, model: null, signals, attemptNr, modelId: 'deterministic', decidedBy: 'rules', allowCorrected, task }),
     };
   }
   if (!model) return { ok: false, reason: 'deterministic_profile', modelCalled: false };
@@ -452,6 +500,6 @@ export async function gradeSubmission({
   return {
     ok: true,
     modelCalled: true,
-    result: assemble({ profile, plan, scored, fired, model: out, signals, attemptNr, modelId: model, decidedBy: fired.length ? 'model+rules' : 'model', allowCorrected }),
+    result: assemble({ profile, plan, scored, fired, model: out, signals, attemptNr, modelId: model, decidedBy: fired.length ? 'model+rules' : 'model', allowCorrected, task }),
   };
 }

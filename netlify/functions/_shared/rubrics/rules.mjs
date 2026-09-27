@@ -33,6 +33,16 @@ const BETREFF_RE = /^\s*betreff\s*:/im;
 const DU_FORMS = new Set(['du', 'dich', 'dir', 'dein', 'deine', 'deinen', 'deinem', 'deiner', 'deines', 'euch', 'euer', 'eure', 'euren', 'eurem', 'eurer']);
 const SIE_FORMS = new Set(['Sie', 'Ihnen', 'Ihr', 'Ihre', 'Ihren', 'Ihrem', 'Ihrer', 'Ihres']);
 
+const INFORMAL_CLOSE_RE = /(tschüss|tschüs|ciao|\bhdl\b|\blg\b|mach['’]s\s+gut|bis\s+dann)/i;
+
+/** The address form a task asks for: `address`, else derived from `register`; null when neither says. */
+export function expectedAddress(task) {
+  if (task?.address === 'Sie' || task?.address === 'du') return task.address;
+  if (task?.register === 'formell' || task?.register === 'halbformell') return 'Sie';
+  if (task?.register === 'informell') return 'du';
+  return null;
+}
+
 const tokensOf = (s) => s.split(/\s+/).map((t) => t.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '')).filter(Boolean);
 
 /** Word count the way the pre-check counts it: whitespace tokens that carry a letter or digit. */
@@ -67,6 +77,14 @@ export function textSignals(text, task = {}) {
   const registerMixed = duMarkers > 0 && sieMarkers > 0;
   const addressDrift =
     (task?.address === 'Sie' && duMarkers > 0) || (task?.address === 'du' && sieMarkers > 0);
+  // The WRONG register (telc criterion II): the text holds one address form, but not the one
+  // the task asks for — from `address`, else from `register` (halbformell/formell ⇒ Sie,
+  // informell ⇒ du) — or it closes a Sie letter with a greeting only friends use.
+  const expected = expectedAddress(task);
+  const informalClose = contentLines.slice(-3).some((l) => INFORMAL_CLOSE_RE.test(l));
+  const registerWrong = expected === 'Sie'
+    ? (duMarkers > 0 && sieMarkers === 0) || informalClose
+    : expected === 'du' ? sieMarkers > 0 && duMarkers === 0 : false;
 
   const body = sentences.filter((s) => !ANREDE_RE.test(s) && !GRUSS_RE.test(s) && !BETREFF_RE.test(s));
   const ichWir = body.filter((s) => /^(ich|wir)$/i.test(tokensOf(s)[0] || '')).length;
@@ -83,6 +101,7 @@ export function textSignals(text, task = {}) {
     sieMarkers,
     registerMixed,
     addressDrift,
+    registerWrong,
     ichWirShare,
   };
 }
@@ -106,6 +125,13 @@ const allAtFloor = (c) => {
   return Array.isArray(c.values) && c.values.length > 0 && c.values.every((v) => v <= floor);
 };
 const fmt = (n) => String(n).replace('.', ',');
+
+/** Why a text's register fails telc criterion II, or null: mixed first, then wrong. */
+function registerFinding(signals) {
+  if (signals.registerMixed || signals.addressDrift) return { de: 'Du und Sie sind gemischt oder passen nicht zur Aufgabe.', en: 'du and Sie are mixed or do not fit the task.' };
+  if (signals.registerWrong) return { de: 'Das Register passt nicht zur Aufgabe (Anrede oder Gruß).', en: 'The register does not fit the task (address or closing).' };
+  return null;
+}
 
 /** A cap effect on the n-th criterion of the profile at its k-th best level (0 = A). */
 function capNth(ctx, n, k, reasonDe, reasonEn) {
@@ -276,6 +302,16 @@ export const RULES = {
       return capNth(ctx, 1, 1, 'Du und Sie sind gemischt.', 'du and Sie are mixed.');
     },
   },
+  // telc B1, the Prüferin's reading (W2, 2026-09-27): no A on criterion II when the register is
+  // wrong for the task or du and Sie are mixed. Ready for lanes/tb1 to switch to; the older
+  // id above stays while tb1-sa.json still names it.
+  'telc-b1-no-a-crit2-register-wrong-or-mixed': {
+    kind: 'cap',
+    fn(ctx) {
+      const r = registerFinding(ctx.signals);
+      return r ? capNth(ctx, 1, 1, r.de, r.en) : null;
+    },
+  },
   // telc B1: no A on criterion II when the Leitpunkte stand unconnected (model judgement).
   'telc-b1-no-a-crit2-leitpunkte-unconnected': {
     kind: 'cap',
@@ -305,12 +341,13 @@ export const RULES = {
       return capNth(ctx, 1, 1, `Es fehlt: ${missing.join(', ')}.`, `Missing: ${missing.join(', ')}.`);
     },
   },
-  // telc B2: no B on criterion II with du and Sie mixed.
-  'telc-b2-no-b-crit2-register-mixed': {
+  // telc B2: no B on criterion II when the register is wrong for the task or du and Sie are
+  // mixed (Prüferin W2, 2026-09-27: the official cap names both; memo 03 §2).
+  'telc-b2-no-b-crit2-register-wrong-or-mixed': {
     kind: 'cap',
     fn(ctx) {
-      if (!ctx.signals.registerMixed && !ctx.signals.addressDrift) return null;
-      return capNth(ctx, 1, 2, 'Du und Sie sind gemischt.', 'du and Sie are mixed.');
+      const r = registerFinding(ctx.signals);
+      return r ? capNth(ctx, 1, 2, r.de, r.en) : null;
     },
   },
   // telc B2: no B on criterion II when the points are listed linearly without logical connection.

@@ -32,7 +32,7 @@ import {
   examKeyFor,
 } from '../netlify/functions/_shared/rubrics/keys.mjs';
 import { RULES, RULE_IDS, snapToLevel, textSignals, evaluateRules, applyRuleEffects } from '../netlify/functions/_shared/rubrics/rules.mjs';
-import { criteriaPlan, gradeSubmission, buildWritingSystemPrompt, buildWritingUserPrompt } from '../netlify/functions/_shared/rubrics/grade.mjs';
+import { criteriaPlan, gradeSubmission, buildWritingSystemPrompt, buildWritingUserPrompt, isAutoScored, unscoredCriteria, scoredTarget } from '../netlify/functions/_shared/rubrics/grade.mjs';
 import { __setCourseV2DataForTests, rubricProfile, loadBanks } from '../netlify/functions/_shared/rubrics/data.mjs';
 import { SCORE_LABEL_DE, SCORE_NOTICE_DE, feedbackLanguageFor, modelFor } from '../netlify/functions/_shared/rubrics/defaults.mjs';
 import { __setEntitlementForTests, checkCourseAi } from '../netlify/functions/_shared/rubrics/courseAi.mjs';
@@ -207,9 +207,30 @@ test('criteriaPlan: telc × 3, per-Leitpunkt and per-turn criteria keep each exa
   const sp2 = criteriaPlan(P('sd1-sp2'), {});
   assert.deepEqual(sp2.map((c) => c.count), [2, 2], 'two questions and two answers');
   assert.equal(sum(sp2), 6);
-  assert.equal(sum(criteriaPlan(P('ga2-sp'), {})), 25);
+  assert.equal(sum(criteriaPlan(P('ga2-sp'), {})), 20, 'Goethe A2 oral 25 − Aussprache 5 (not auto-scored)');
   assert.equal(sum(criteriaPlan(P('ga2-s2'), {})), 10);
-  assert.equal(sum(criteriaPlan(P('tb1-m1'), {})), 15);
+  assert.equal(sum(criteriaPlan(P('tb1-m1'), {})), 12, 'telc B1 M1 15 − Aussprache 3 (not auto-scored)');
+  assert.equal(sum(criteriaPlan(P('tb1-m2'), {})), 24);
+  assert.equal(sum(criteriaPlan(P('tb2-m1'), {})), 21);
+});
+
+test('Aussprache is never auto-scored (BLUEPRINT §4.4): out of the plan, the prompt and the total, shown as scored:false', async () => {
+  for (const id of ['ga2-sp', 'tb1-m1', 'tb1-m2', 'tb1-m3', 'tb2-m1', 'tb2-m2', 'tb2-m3']) {
+    assert.ok(!criteriaPlan(P(id), {}).some((c) => /aussprache/i.test(c.label)), `${id}: Aussprache is not sent to the model`);
+    assert.equal(unscoredCriteria(P(id)).length, 1, id);
+  }
+  assert.equal(isAutoScored({ id: 'x', label: 'Wortschatz', scoredBy: 'notAutoScored' }), false, 'the SCHEMA §4.5 field');
+  assert.equal(isAutoScored({ id: 'x', label: 'Wortschatz', weight: 0 }), false, 'the interim weight-0 marker');
+  assert.equal(isAutoScored({ id: 'x', label: 'Wortschatz', scoredBy: 'ai' }), true);
+  assert.equal(scoredTarget({ max: 12, examMax: 15, criteria: [{ id: 'aussprache', label: 'Aussprache', levels: [3, 0] }] }), 12, 'with examMax, max is already the scored max');
+  const model = stubModel({ criteria: { ausdruck: 4, aufgabe: 4, richtigkeit: 4, aussprache: 3 }, flags: {}, leitpunkte: [], errors: [], strengths: [], nextStep: 'x', feedback: 'y', feedbackEn: '' });
+  const r = await gradeSubmission({ kind: 'speaking', profile: P('tb1-m1'), task: { mode: 'group' }, level: 'b1.1', text: 'Ich heiße Ana.', transcript: [{ role: 'user', content: 'Ich heiße Ana.' }], callModel: model });
+  assert.equal(r.result.total_score, 12);
+  assert.equal(r.result.max_score, 12);
+  assert.equal(r.result.rubric.examMax, 15);
+  assert.deepEqual(r.result.criteria.filter((c) => c.scored === false).map((c) => c.id), ['aussprache']);
+  assert.ok(!/"aussprache"/.test(model.calls[0].system), 'the model is never asked for an Aussprache level');
+  assert.match(model.calls[0].system, /Aussprache und Intonation bewertest du NICHT/);
 });
 
 test('textSignals: word count, Anrede/Gruß/Betreff, du/Sie drift, Ich/Wir starts', () => {
@@ -637,7 +658,7 @@ const TRANSCRIPT = [
   { role: 'user', content: 'Ich arbeite am Empfang.' },
 ];
 
-test('speaking v2 evaluation: the rules win here too (Aufgabenerfüllung E → 0), stored once, no pass verdict', async () => {
+test('speaking v2 evaluation: server totals from snapped levels, stored once, no pass verdict (no E-zero rule for Goethe A2 Sprechen)', async () => {
   useFixture();
   const { client, log } = fakeSupabase();
   const model = stubModel({ criteria: { af: 0, sp: 2 }, flags: {}, leitpunkte: [], errors: [], strengths: [], nextStep: 'x', feedback: 'y', feedbackEn: 'z' });
@@ -647,16 +668,18 @@ test('speaking v2 evaluation: the rules win here too (Aufgabenerfüllung E → 0
   });
   assert.equal(res.statusCode, 200);
   const b = bodyOf(res);
-  assert.equal(b.total_score, 0);
+  // Prüferin W2 (2026-09-27): the Goethe E-zero rule is sourced for Schreiben only, so
+  // an Aufgabenerfüllung of 0 in Sprechen Teil 1 no longer wipes out the Sprache points.
+  assert.equal(b.total_score, 2);
   assert.equal(b.max_score, 4);
   assert.equal(b.passed, null);
   assert.equal(b.scoreLabelDe, 'automatisierte Übungsbewertung');
-  assert.ok(b.rulesApplied.some((f) => f.id === 'goethe-af-e-zeroes-task'));
+  assert.deepEqual(b.rulesApplied, []);
   assert.match(model.calls[0].user, /Lernende\/r: Wie lange arbeiten Sie am Tag\?/);
   assert.match(model.calls[0].user, /Sofia: Ich arbeite acht Stunden/);
   const ev = log.inserts.find((i) => i.table === 'speaking_evaluations');
   assert.equal(ev.payload.scores.schema, 2);
-  assert.equal(ev.payload.score, 0);
+  assert.equal(ev.payload.score, 50);
   assert.deepEqual(log.updates[0].payload, { evaluated: true, passed: null });
   __setCourseV2DataForTests(null);
 });
@@ -692,7 +715,7 @@ test('speaking-session starts a v2 session from the key, gated by the course all
   assert.match(src, /parseV2CourseTaskKey\(body\)/);
   assert.match(src, /startCourseV2Session\(/);
   assert.match(src, /checkCourseAi\(supabase, user_id, key, level\)/);
-  assert.match(src, /recordCourseAi\(supabase, user_id, key, useKindFor\(parsed\)\)/);
+  assert.match(src, /recordCourseAi\(supabase, user_id, key, aiUseKindFor\(parsed\)\)/);
   assert.match(src, /const V2_ALLOWED_MINUTES = \[10, 15\];/);
   assert.match(src, /\.\.\.v2TaskColumns\(key, task\)/);
   assert.ok(src.indexOf('parseV2CourseTaskKey(body)') < src.indexOf("from('speaking_missions')"), 'the v2 branch runs before the mission and wallet logic');
