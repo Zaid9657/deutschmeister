@@ -242,7 +242,7 @@ example itself does it (the example must stay as documented — §7 item 13 list
 | b1.1 r1 F02 / r2 F01, b2.2 r1 F01, a1.1 r2 F04 | ITM-03 | Exam blocks: every 3-option item counts (cloze too); no three equal a/b/c keys in a row; with ≥ 3 number items the key is not always the extreme. | blocker |
 | b2.1 r1 F01, b2.2 r1 F02, b1.1 r1 F02 | ITM-03 | Non-exam 3-option keys balanced ±1 per step and in the Check, runs ≤ 3 per item list, ≤ 50 % per position over the unit. | advisory (the player shows options in authored order; the §15 example and 5 of 8 units key every such item at options[0] — one seeded shuffle in the player settles it, §7 item 13) |
 | a1.1 r1 F06 | ITM-01 | A practice, Check or proof choice item whose key (or its digits) stands in the stem while no distractor does. | blocker |
-| a1.2 r1 F08, b2.2 r1 F12 | ITM-01 | A cue promptEn gives stands in promptDe: a relation („the polite form of können") as a cue — in brackets, after „von", before „→"; a quoted word as a word; „as a word", „starts with …". | blocker |
+| a1.2 r1 F08, b2.2 r1 F12 | ITM-01 | A cue promptEn gives stands in promptDe: a relation („the polite form of können") as a cue — in brackets, after „von", before „→", a dash or a colon („der Kellner – die ___"); a quoted word as a word; „as a word", „starts with …". | blocker |
 | a1.2 r1 F10 | ITM-01 | A typed gap keyed with an ordinal word says „Wort", accepts the digits, or carries `exact: "number"`. | blocker |
 | b2.2 r1 F12 | ITM-01 | First letters with underscores show exactly the missing letters. | blocker |
 | a2.2 r2 F04 | ITM-01 | A typed gap keyed with a preposition phrase or contraction („an der", „zum") has the preposition in promptDe, unless the gap follows a preposition („gegenüber ___"). | blocker |
@@ -263,10 +263,10 @@ example itself does it (the example must stay as documented — §7 item 13 list
 | a2.1 r3 F10 | COV-3 | spec.lanes equals the unit's specs.json entry; the message routes to the curriculum owner (the unit file is authored). | blocker |
 | a1.1 r1 F10, a1.2 r1 F26 | TXT-02 | The ±15 % is applied once: a template whose source says its textWords already carry it („Band ±15 %", 23 templates) is compared with textWords itself. | blocker |
 | a1.2 r1 F02 | CON-06 | An exception names a source of its own (§, law, URL, „laut …"). | advisory until SCHEMA gives exceptions a source field |
-| a1.1 r2 F07 | LEX-01 | story.cliffhanger is measured like an input. | as LEX-01 |
+| a1.1 r2 F07 | LEX-01 | story.cliffhanger is measured like an input. | advisory (minor; it teases the next unit's words; an `en` twin is the SCHEMA owner's alternative) |
 | b1.2 r1 F01, b2.2 r1 F05 | LEX-01, LEX-03 (`lib-validate/compounds.mjs`) | A compound of two known forms (with a linking s/es/n/en/e) is known to LEX-01 and an advisory in LEX-03 („allocate compound:a+b"). §3.1a's rule stands: the lexicon still holds compounds. | advisory |
 | a2.2 r1 F08, b1.2 r1 F09, b2.2 r1 F18 | LEX-02 | A lemma allocated to the unit that no authored German string uses, and a productive lemma no input shows. | blocker |
-| a2.1 r2 F09 | LEX-03 | lex.articlePlural / lex.glossTyped sources are productive lemmas (blocker); a dictation line that makes the learner spell the unit's receptive-only or off-list lemma (advisory: minor, and the §15 example dictates „Stau", „Buchhaltung"). | blocker / advisory |
+| a2.1 r2 F09 | LEX-03 | lex.articlePlural / lex.glossTyped sources are productive (or core) lemmas; a dictation line makes the learner spell none of the unit's receptive-only or off-list lemmas. | advisory (minor, one round; the fix is the source or a promotion; the §15 example dictates „Stau", „Buchhaltung") |
 | a1.1 r1 F21 | LEX-07 | A plural token glossed in the singular („Kunden" → „customer"). | advisory |
 | orchestrator 2026-09-27 | `lib-validate/text.mjs` | Tokens are Unicode letters: „Café", „Sprachcafé", „Repair-Café", „à la carte" are words (the old class cut „Café" into „Caf"). | — |
 

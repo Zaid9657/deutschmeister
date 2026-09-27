@@ -5,11 +5,11 @@
 // that advisory (see LEX-01).
 //
 // Rail extensions (rule-smith 2026-09-27):
-//   - generator sources are production (review a2.1-u04 r2 F09): a lex.articlePlural or lex.glossTyped
-//     source lemma is productive (the learner writes its article, plural or the word) — blocker; a
-//     dictation.fromInput line that makes the learner spell one of the unit's receptive-only or off-list
-//     lemmas is an ADVISORY (the finding was minor, and the SCHEMA §15 worked example dictates „Stau",
-//     „Autobahn" and „Buchhaltung", all receptive there);
+//   - generator sources are production (review a2.1-u04 r2 F09, minor, one round): a lex.articlePlural or
+//     lex.glossTyped source lemma is productive or core (the learner writes its article, plural or the
+//     word), and a dictation.fromInput line makes the learner spell none of the unit's receptive-only or
+//     off-list lemmas. Both ADVISORY: the finding was minor, the fix is either the source or the role
+//     (a promotion), and the SCHEMA §15 worked example dictates „Stau", „Buchhaltung" (receptive there);
 //   - a compound of two known forms („Radtour", „Möbelstücke") is an advisory — allocate it as
 //     `compound:a+b` — never a blocker (reviews b1.2-u04 r1 F01, b2.2-u04 r1 F05; compounds.mjs).
 
@@ -22,6 +22,9 @@ import { walkSteps } from '../lib-validate/walk.mjs';
 import { entryForms } from '../lib-validate/lexicon.mjs';
 import { knownCompound } from '../lib-validate/compounds.mjs';
 import { FUNCTION_WORDS } from '../lib-validate/text.mjs';
+import { CORE_LEMMAS } from '../lib-validate/core-lexicon.mjs';
+
+const CORE = new Set(CORE_LEMMAS.map((w) => String(w).toLowerCase()));
 
 const content = await import('../../../src/components/course-v2/content.js').catch(() => null);
 
@@ -62,7 +65,7 @@ function generatorFindings(ctx, doc) {
       if (g.generator === 'lex.articlePlural' || g.generator === 'lex.glossTyped') {
         g.source.forEach((id, k) => {
           const e = byId.get(id);
-          if (e && e.role !== 'productive' && !promoted.has(id)) out.push(blocker(doc, `${gp}.source[${k}]`, `${g.generator} makes the learner write ${e.lemma}${g.generator === 'lex.articlePlural' ? "'s article and plural" : ''}, but ${id} is ${e.role} — use a productive lemma`, id));
+          if (e && e.role !== 'productive' && !promoted.has(id) && !CORE.has(String(e.lemma).toLowerCase())) out.push(finding('advisory', doc, `${gp}.source[${k}]`, `${g.generator} makes the learner write ${e.lemma}${g.generator === 'lex.articlePlural' ? "'s article and plural" : ''}, but ${id} is ${e.role} — use a productive lemma`, id));
         });
       }
       if (g.generator === 'dictation.fromInput') {

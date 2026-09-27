@@ -133,12 +133,13 @@ function cueFindings(doc, item, path, where, pos) {
   }
   // a cue only promptEn gives
   // „the polite form of können": the RELATION is the cue — promptDe carries it as a cue (in brackets,
-  // after „von/zu/aus", before an arrow), not merely the word in its sentence („Können Sie …? ___")
+  // after „von/zu/aus", before an arrow, dash or colon: „der Kellner – die ___"), not merely the word in
+  // its sentence („Können Sie …? Höflicher: ___")
   const relCues = [...en.matchAll(/\b(?:polite form|form|plural|past|participle|noun|verb|opposite|comparative|superlative) (?:of|from) (?:the |a |an )?["„“']?(\p{L}+)(?=["“”']?\s*(?:$|[.,;:)!?]))/giu)].map((m) => m[1]);
   // a quoted or bracketed word in promptEn only points at a word: promptDe must contain it
   const wordCues = [...en.matchAll(/\(([\p{L}-]+)\)|[„“"]([\p{L}-]+)[“”"]/gu)].map((m) => m[1] || m[2]);
   const esc = (w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const cued = (w) => new RegExp(`\\([^)]*${esc(w)}[^)]*\\)|(?:von|zu|aus)\\s+[„"]?${esc(w)}|${esc(w)}[“"]?\\s*→`, 'iu').test(de);
+  const cued = (w) => new RegExp(`\\([^)]*${esc(w)}[^)]*\\)|(?:von|zu|aus)\\s+[„"]?${esc(w)}|${esc(w)}[“"]?\\s*(?:→|[–—:])`, 'iu').test(de);
   const german = (w) => w.length >= 3 && (pos.has(w.toLowerCase()) || /[äöüß]/i.test(w));
   for (const w of new Set(relCues)) {
     if (german(w) && !cued(w)) out.push(blocker(doc, `${path}.promptDe`, `promptEn names „${w}" as the cue, promptDe does not („(${w})") — the German prompt must carry the cue`, id));

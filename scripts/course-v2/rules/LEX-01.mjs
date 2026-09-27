@@ -8,7 +8,9 @@
 // §15.6 fixture row „LEX-01 … unknown tokens are reported as advisory".
 //
 // Rail extensions (rule-smith 2026-09-27): the unit's story.cliffhanger — the line a learner reads at the
-// end of the unit, without an English twin — is measured like an input (review a1.1-u04 r2 F07); a
+// end of the unit, without an English twin — is measured like an input, as an ADVISORY (review a1.1-u04
+// r2 F07, minor; it teases the next unit's words, and the other fix, an `en` twin or glosses, is the
+// SCHEMA owner's); a
 // compound of two known forms (compounds.mjs: „Radtour", „Möbelstücke") counts as known (reviews
 // b1.2-u04 r1 F01, b2.2-u04 r1 F05); its allocation is LEX-03's advisory.
 
@@ -60,7 +62,7 @@ export function run({ ctx, docs }) {
       const need = t.kind === 'reward' ? 0.98 : min;
       const c = coverage(t.de, known, t.glosses);
       if (c.share + 1e-9 < need) {
-        const severity = state.complete ? 'blocker' : 'advisory';
+        const severity = state.complete && t.kind !== 'story' ? 'blocker' : 'advisory';
         findings.push(finding(severity, doc, t.path, `known-token coverage ${pct(c.share)} (need ≥ ${pct(need)}); unknown: ${list([...new Set(c.unknown)], 12)}${state.complete ? '' : ` — advisory until the cumulative lexicon exists (${state.why})`}`, t.step?.id || t.block?.id || null));
       }
     }

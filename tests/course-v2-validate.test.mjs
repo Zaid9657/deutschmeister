@@ -1268,9 +1268,10 @@ describe('EXM-04 cards, calendars, tb1.m2 (a2.1-u04 r1, a2.2-u04 r1 F07, b1.1-u0
 });
 
 describe('LEX rails: cliffhanger, compounds, zero occurrences, generator sources, plural glosses', () => {
-  test('LEX-01 reads story.cliffhanger', async () => {
+  test('LEX-01 reads story.cliffhanger (advisory)', async () => {
     const r = await rule('LEX-01', ex((p) => { p.unit.story.cliffhanger = 'Quartiersmanagement Zuständigkeitsbereich Verwaltungsvorschrift.'; }));
-    assert.ok(r.findings.some((f) => f.path === 'story.cliffhanger'), messages(r));
+    assert.ok(r.findings.some((f) => f.path === 'story.cliffhanger' && f.severity === 'advisory'), messages(r));
+    assert.ok(!(await rule('LEX-01', ex())).findings.some((f) => f.path === 'story.cliffhanger'), 'the exemplar\'s cliffhanger is known');
   });
   test('a compound of two known forms is known to LEX-01 (b1.2 r1 F01, b2.2 r1 F05)', () => {
     const known = new Set(['möbel', 'stücke', 'rad', 'tour']);
@@ -1283,9 +1284,13 @@ describe('LEX rails: cliffhanger, compounds, zero occurrences, generator sources
     p.lexicon.push({ ...p.lexicon[0], id: 'lx.zzz-test', lemma: 'Quittung', plural: 'Quittungen', role: 'receptive' });
     p.unit.spec.lexiconBlocks[0].lemmas.push('lx.zzz-test');
   })), /„Quittung" is allocated to a2\.1-u07 but occurs in none/));
-  test('LEX-03: a receptive lemma as a lex.articlePlural source blocks (a2.1 r2 F09)', async () => assertFail(await rule('LEX-03', ex((p) => {
-    step(p, 0).pool.generators.find((g) => g.generator === 'lex.articlePlural').source = ['lx.leitung'];
-  })), /lx\.leitung is receptive/));
+  test('LEX-03: a receptive lemma as a lex.articlePlural source is an advisory (a2.1 r2 F09, minor)', async () => {
+    const r = await rule('LEX-03', ex((p) => { step(p, 0).pool.generators.find((g) => g.generator === 'lex.articlePlural').source = ['lx.leitung']; }));
+    assertPass(r);
+    assert.ok(r.findings.some((f) => f.severity === 'advisory' && /lx\.leitung is receptive/.test(f.message)), messages(r));
+    const ok = await rule('LEX-03', ex());
+    assert.ok(!ok.findings.some((f) => /makes the learner write/.test(f.message)), 'productive sources pass');
+  });
   test('LEX-07: a plural token glossed in the singular is an advisory (a1.1 r1 F21)', async () => {
     const r = await rule('LEX-07', ex((p) => { step(p, 0).input.glosses = [{ token: 'Anrufe', gloss: { en: 'phone call' } }]; }));
     assert.ok(r.findings.some((f) => f.severity === 'advisory' && /plural of Anruf/.test(f.message)), messages(r));
