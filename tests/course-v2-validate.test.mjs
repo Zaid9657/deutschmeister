@@ -18,8 +18,10 @@ import { fileURLToPath } from 'node:url';
 
 import { exampleContext, choiceContext } from './fixtures/course-v2/schema-example.mjs';
 import { runRules, loadRules, RULE_ORDER, normalizeStage, stageOfDoc } from '../scripts/course-v2/lib-validate/runner.mjs';
-import { emptyContext, ingest, addDoc, levelSlot } from '../scripts/course-v2/lib-validate/context.mjs';
-import { detectInText, detectorProblem, buildLexEnv, EMPTY_ENV, stemVowelChanged } from '../scripts/course-v2/lib-validate/detectors.mjs';
+import { emptyContext, ingest, addDoc, levelSlot, addDetectors } from '../scripts/course-v2/lib-validate/context.mjs';
+import { detectInText, detectorProblem, buildLexEnv, EMPTY_ENV, stemVowelChanged, LEXICALISED_STATES, DETECTOR_OVERLAYS } from '../scripts/course-v2/lib-validate/detectors.mjs';
+import { tokens } from '../scripts/course-v2/lib-validate/text.mjs';
+import { missingOrders } from '../scripts/course-v2/lib-validate/orders.mjs';
 import { BANK_KEY_RE, SCHEMA_PATTERNS } from '../scripts/course-v2/lib-validate/ids.mjs';
 import { coverage } from '../scripts/course-v2/rules/LEX-01.mjs';
 import { entryForms, knownForms, licensedForms, umlaut } from '../scripts/course-v2/lib-validate/lexicon.mjs';
@@ -912,5 +914,213 @@ describe('validate.mjs CLI', () => {
     const crashed = rep.results.flatMap((x) => x.findings).filter((f) => /rule crashed/.test(f.message));
     assert.deepEqual(crashed, []);
     assert.ok(!rep.results.some((x) => x.id === 'LOAD'), 'a content file failed to parse');
+  });
+});
+
+// ── rail fixes from the u04 reviews (rule-smith 2026-09-27, BLUEPRINT §9.4) ─────────────────────
+
+const REAL_DETECTORS = JSON.parse(readFileSync(DETECTORS, 'utf8')).detectors;
+const det = (id) => REAL_DETECTORS.find((d) => d.id === id);
+const hits = (id, s, lexicon = []) => detectInText(det(id), s, buildLexEnv(lexicon)).length;
+
+describe('ITM-13 audio keys (a2.2-u04 r3 F02, a1.1-u04 r2 F01, a1.2-u04 r1 F01, a2.1-u04 r3 F08)', () => {
+  const src = (mutate) => ex((p) => mutate(step(p, 0).input.lines.find((l) => l.id === 'a2.1-u07-ls1-l05')));
+  test('pass: the example (its spoken number words fold to the key digits; long sources are advisories)', async () => {
+    const r = await rule('ITM-13', ex());
+    assertPass(r);
+    assert.ok(r.findings.every((f) => f.severity === 'advisory' && /should hold ≤ 12 words/.test(f.message)), messages(r));
+  });
+  test('pass: an ellipsis in a dictation source is folded', async () => assertPass(await rule('ITM-13', src((l) => { l.de = 'Mir wird schlecht… und ein bisschen kalt.'; delete l.say; }))));
+  test('fail: a dictation key with a character no checker folds', async () => assertFail(await rule('ITM-13', src((l) => { l.de = 'Das sind 10 % (netto).'; delete l.say; })), /„%" „\(" „\)"/));
+  test('fail: the audio says what the key does not (say „eins neunzehn" for „1,19 Euro")', async () => assertFail(await rule('ITM-13', src((l) => { l.de = 'Die Milch kostet heute nur 1,19 Euro.'; l.say = 'Die Milch kostet heute nur eins neunzehn.'; })), /graded WRONG/));
+  test('pass: say with number words for the digits of de', async () => assertPass(await rule('ITM-13', src((l) => { l.de = 'Ich bin um 9 Uhr da.'; l.say = 'Ich bin um neun Uhr da.'; }))));
+  test('advisory: a 17-word, 3-sentence source at A2', async () => {
+    const r = await rule('ITM-13', src((l) => { l.de = 'Hallo Priya, hier ist Anna aus dem Büro. Ich komme heute später. Bitte ruf mich morgen früh noch einmal an.'; delete l.say; }));
+    assertPass(r);
+    assert.ok(r.findings.some((f) => f.severity === 'advisory' && /ls1-l05: 20 words in 3 sentence/.test(f.message)), messages(r));
+  });
+  test('fail: a Frage/Aussage item whose played text contradicts its key (a1.2-u04 r1 F01)', async () => {
+    const add = (answer, speak) => (p) => { step(p, 0).inputItems.push({ id: 'a2.1-u07-ls1-i09', type: 'listen_select', role: 'input', topic: 'aussprache', promptDe: 'Frage oder Aussage?', options: ['Frage', 'Aussage'], answer, accepted: [answer], speak, explanation: { de: 'x', en: 'x' }, origin: 'agent' }); };
+    assertFail(await rule('ITM-13', ex(add('Frage', 'Sie kommen morgen.'))), /is not a question/);
+    assertPass(await rule('ITM-13', ex(add('Frage', 'Sie kommen morgen?'))));
+    assertFail(await rule('ITM-13', ex(add('Aussage', 'Kommen Sie morgen?'))), /is a question/);
+  });
+});
+
+describe('ITM-07 a dictation with a number carries exact: number (a2.2-u04 r2 F07 / r3 F04)', () => {
+  const dict = (exact) => (p) => {
+    const c = p.unit.check.items.find((i) => i.id === 'a2.1-u07-c06');
+    c.answer = 'Bitte rufen Sie mich in zehn Minuten zurück.';
+    c.accepted = [c.answer];
+    if (exact) c.exact = exact;
+  };
+  test('fail: a number word without exact', async () => assertFail(await rule('ITM-07', ex(dict(null))), /whole-sentence mode/));
+  test('fail: exact name on it', async () => assertFail(await rule('ITM-07', ex(dict('name'))), /has exact: "name"/));
+  test('pass: exact number', async () => assertPass(await rule('ITM-07', ex(dict('number')))));
+});
+
+describe('GRM-05 / ITM-11 a form is never denied the ending it has (a2.2-u04 r1 F02, r2 F02, r3 F03)', () => {
+  test('fail: the rc.werden-vollverb wording, de and en', async () => {
+    const r = await rule('GRM-05', ex((p) => {
+      p.ruleCard.de = 'Die Formen sind unregelmäßig. Achtung: du wirst und er wird – ohne d am Ende.';
+      p.ruleCard.en = 'Irregular forms: du wirst, er wird (no -d).';
+    }));
+    assertFail(r, /cards\[0\]\.de „wird" is paired with „ohne d"/);
+    assertFail(r, /cards\[0\]\.en „wird" is paired with „no -d"/);
+  });
+  test('fail: a pronoun-only claim its own table contradicts', async () => assertFail(await rule('GRM-05', ex((p) => {
+    p.ruleCard.de = 'Er/sie/es – ohne d.';
+    p.ruleCard.table = [['Person', 'werden'], ['er/sie/es', 'wird']];
+  })), /„wird" is paired with „ohne d"/));
+  test('pass: the corrected wording', async () => assertPass(await rule('GRM-05', ex((p) => {
+    p.ruleCard.de = 'Achtung: du wirst – ohne d; er/sie/es wird – mit d, aber ohne t.';
+    p.ruleCard.en = 'Note: du wirst (no d); er/sie/es wird (with d, no t).';
+  }))));
+  test('fail: an item explanation „es wird – ohne d"; pass: „mit d, aber ohne t"', async () => {
+    assertFail(await rule('ITM-11', ex((p) => { step(p, 0).pool.items[0].explanation = { de: 'es wird – ohne d.', en: 'es wird (no d).' }; })), /explanation\.de „wird"/);
+    assertPass(await rule('ITM-11', ex((p) => { step(p, 0).pool.items[0].explanation = { de: 'es wird – mit d am Ende, aber ohne t.', en: 'es wird – with d at the end, but no t.' }; })));
+  });
+});
+
+describe('LEX-05 names the owner; another level\'s lemma is no new word (a2.2-u04 r2 F01 / r3 F01)', () => {
+  test('a lemma the lexicon allocates and the spec omits names lexicon.json and the unit file', async () => {
+    const r = await rule('LEX-05', ex((p) => { p.unit.spec.lexiconBlocks[0].lemmas.shift(); }));
+    assertFail(r, /fixture:a2\.1\/lexicon\.json allocates to a2\.1-u07.*owner: the lexicon owner/);
+  });
+  test('with a specs.json that agrees with the lexicon, the unit author is named first', async () => {
+    const b = ex((p) => { p.unit.spec.lexiconBlocks[0].lemmas.shift(); });
+    const full = exampleContext().parts.unit;
+    b.ctx.levels.get('a2.1').specs.set(7, { id: 'a2.1-u07', spec: full.spec });
+    assertFail(await rule('LEX-05', b), /and a2\.1\/specs\.json allocate.*owner: the unit author adds them/);
+  });
+  test('fail: an earlier level\'s lemma listed as new; pass: a promotion to this unit', async () => {
+    const withA12 = (promote) => {
+      const b = ex((p) => { p.unit.spec.lexiconBlocks[0].lemmas.push('lx.treffpunkt'); });
+      ingest(b.ctx, { $schema: 'course-v2/lexicon@1', level: 'a1.2', entries: [{ id: 'lx.treffpunkt', lemma: 'Treffpunkt', pos: 'NOUN', article: 'der', plural: 'Treffpunkte', plural_kind: 'regular', role: 'receptive', unit: 'a1.2-u05', block: 1, list_ref: 'A1', gloss: { en: 'meeting point' }, example: 'Der Treffpunkt ist hier.', wordId: null }] }, 'fixture:a1.2/lexicon.json');
+      if (promote) b.ctx.levels.get('a2.1').lexicon.promotions = [{ lemma: 'lx.treffpunkt', from: 'receptive', to: 'productive', unit: 'a2.1-u07' }];
+      return b;
+    };
+    assertFail(await rule('LEX-05', withA12(false)), /lx\.treffpunkt is allocated at a1\.2.*review word/);
+    const r = await rule('LEX-05', withA12(true));
+    assert.ok(!r.findings.some((f) => /treffpunkt/.test(f.message)), messages(r));
+  });
+});
+
+describe('LEX-07 a lexicon example stays under its unit\'s grammar ceiling (a2.2-u04 r2 F01 / r3 F01)', () => {
+  const entlang = (p) => p.extraSpine.push({ id: 'g.praep-entlang-herum', label: 'Präpositionen entlang, um … herum', intro: { receptive: 'b1.2-u09', productive: 'b1.2-u09' }, detectors: ['det.praeposition-entlang'], errorTags: [], lehrwerk: [], consensus: 'strong', ruleCards: [], inventory: [] });
+  test('fail: „Der Weg geht immer am Fluss entlang." at a2.1-u07', async () => assertFail(await rule('LEX-07', ex((p) => { entlang(p); p.lexicon[0].example = 'Der Weg geht immer am Fluss entlang.'; })), /entries\[0\]\.example.*„entlang".*b1\.2-u09.*owner: the lexicon owner/));
+  test('pass: an example without it', async () => assertPass(await rule('LEX-07', ex((p) => { entlang(p); p.lexicon[0].example = 'Am Fluss machen wir ein Picknick.'; }))));
+});
+
+describe('GRM-04: forms a licensed spine point lists are licensed (orchestrator: g.praeteritum-kernverben)', () => {
+  const build = (unitId) => {
+    const ctx = emptyContext({ root: null, today: '2026-09-27' });
+    ingest(ctx, { $schema: 'course-v2/spine@1', points: [
+      { id: 'g.praeteritum', label: 'Präteritum (kam, ging, sagte, fand)', intro: { receptive: 'a2.1-u11', productive: 'b1.1-u01' }, detectors: ['det.praeteritum-vollverb'], errorTags: [], lehrwerk: [], consensus: 'split', ruleCards: [], inventory: [] },
+      { id: 'g.praeteritum-kernverben', label: 'Präteritum häufiger Verben beim Erzählen: kam, sagte, es gab (Als ich nach Wien kam, gab es noch keinen Kurs.)', intro: { receptive: 'a2.2-u01', productive: 'a2.2-u01' }, detectors: [], errorTags: [], lehrwerk: [], consensus: 'single', ruleCards: [], inventory: [] },
+    ] }, 'fixture:grammar-spine.json');
+    addDetectors(ctx, [det('det.praeteritum-vollverb')], 'detectors.json');
+    const [level, nr] = [unitId.slice(0, 4), Number(unitId.slice(-2))];
+    const doc = addDoc(ctx, 'unit', { $schema: 'course-v2/unit@1', id: unitId, level, nr, stage: 'T', spec: { grammar: { new: [], chunk: [], review: [] } }, steps: [{ id: `${unitId}-ls1`, kind: 'situation', input: { kind: 'dialog', lines: [{ id: `${unitId}-ls1-l01`, speaker: 'cast.priya', de: 'Gestern kam Tomasz spät, und er sagte nichts.' }] } }] }, `fixture:${level}/units/u${String(nr).padStart(2, '0')}.json`, { target: true });
+    return { ctx, docs: [doc], levels: [ctx.levels.get(level)] };
+  };
+  test('pass: „kam", „sagte" at a2.2-u02 (after g.praeteritum-kernverben)', async () => assertPass(await rule('GRM-04', build('a2.2-u02'))));
+  test('fail: the same line at a2.1-u07 (receptive Präteritum only from a2.1-u11)', async () => assertFail(await rule('GRM-04', build('a2.1-u07')), /kam/));
+  test('a form outside the point\'s list still blocks at a2.2-u02 („ging")', async () => {
+    const b = build('a2.2-u02');
+    b.docs[0].data.steps[0].input.lines[0].de = 'Gestern ging Tomasz früh.';
+    assertFail(await rule('GRM-04', { ...b, ctx: b.ctx }), /ging/);
+  });
+});
+
+describe('GRM-04 reads strategy cards and rule-card prose as metalanguage (advisory; a2.1-u04 r2 F07 / F10)', () => {
+  const later = (p) => p.extraSpine.push({ id: 'g.praeteritum-vollverben', label: 'Präteritum', intro: { receptive: 'b1.1-u02', productive: 'b1.1-u03' }, detectors: ['det.praeteritum-vollverb'], errorTags: [], lehrwerk: [], consensus: 'strong', ruleCards: [], inventory: [] });
+  test('a later construction on a strategy card is an advisory, never a blocker', async () => {
+    const r = await rule('GRM-04', ex((p) => { later(p); step(p, 3).strategyCards[0].de = 'Früher ging man zuerst zur Frage.'; }));
+    assertPass(r);
+    assert.ok(r.findings.some((f) => f.severity === 'advisory' && /strategyCards\[0\]\.de/.test(f.path)), messages(r));
+  });
+});
+
+describe('detector engine: review fixtures (a1.1 r1 F24 / r2 F11, a1.2 r1 F27, a2.1 r1/r2, a2.2 r1-r3, b1.1 r1 F08/F17, b1.2 r1 F26)', () => {
+  const haben = (lemma, part, extra = {}) => ({ lemma, pos: 'VERB', verb_forms: { '3sg': 'x', perfekt: `hat ${part}` }, ...extra });
+  test('sein + a lexicalised state is no Zustandspassiv and no Perfekt (the task\'s set phrases)', () => {
+    const lex = [haben('enthalten', 'enthalten'), haben('öffnen', 'geöffnet'), haben('verletzen', 'verletzt'), haben('einreichen', 'eingereicht', { separable: true })];
+    for (const s of ['Der Kaffee ist im Preis enthalten.', 'Das Amt ist geöffnet.', 'Wie viele Personen sind verletzt?', 'Der Laden ist geschlossen.']) {
+      assert.equal(hits('det.zustandspassiv', s, lex), 0, s);
+      assert.equal(hits('det.perfekt-trennbar-untrennbar', s, lex), 0, s);
+    }
+    assert.ok(hits('det.zustandspassiv', 'Der Antrag ist eingereicht.', lex), 'a real Zustandspassiv still hits');
+    assert.deepEqual(LEXICALISED_STATES, ['enthalten', 'geöffnet', 'geschlossen', 'verheiratet', 'geschieden', 'verletzt', 'gebrochen']);
+  });
+  test('a participle with its own ADJ entry is predicative; a conjunct with its own auxiliary is its own clause', () => {
+    const lex = [haben('beschädigen', 'beschädigt'), { lemma: 'beschädigt', pos: 'ADJ' }, haben('verletzen', 'verletzt'), { lemma: 'ausrutschen', pos: 'VERB', separable: true, verb_forms: { '3sg': 'rutscht aus', perfekt: 'ist ausgerutscht' } }];
+    assert.equal(hits('det.zustandspassiv', 'Das Gerät ist beschädigt.', lex), 0);
+    assert.equal(hits('det.zustandspassiv', 'Sie ist ausgerutscht und hat sich am Fuß verletzt.', lex), 0);
+    assert.ok(hits('det.perfekt-haben', 'Sie ist ausgerutscht und hat sich am Fuß verletzt.', lex));
+    assert.ok(hits('det.perfekt-haben', 'Ich habe Brot und Käse gekauft.', [haben('kaufen', 'gekauft')]), '„und" inside one conjunct does not split it');
+  });
+  test('overlays: konjunktiv1, modal particles, zero-article adjectives, „ein bisschen"', () => {
+    assert.equal(hits('det.konjunktiv1', 'Am Samstag arbeite ich.'), 0);
+    assert.equal(hits('det.konjunktiv1', 'Den Bus brauche ich.'), 0);
+    assert.ok(hits('det.konjunktiv1', 'Er sagt, er komme morgen.'));
+    assert.equal(hits('det.modalpartikeln', 'Können Sie noch mal kommen?'), 0);
+    assert.equal(hits('det.modalpartikeln', 'Das ist mal wieder typisch.'), 0);
+    assert.ok(hits('det.modalpartikeln', 'Könnten Sie mal kurz helfen?'));
+    assert.equal(hits('det.adjektiv-endung-nullartikel', 'Ich suche für eine Wohnung einen Tisch.'), 0);
+    assert.equal(hits('det.adjektiv-endung-nullartikel', 'Dann kommen Sie auf unser Boot!'), 0);
+    assert.ok(hits('det.adjektiv-endung-nullartikel', 'Bei gutem Wetter gehen wir spazieren.'));
+    assert.equal(hits('det.adjektiv-endung-unbestimmt', 'Ich möchte ein bisschen Käse.'), 0);
+    assert.equal(hits('det.unbestimmter-artikel', 'Ich möchte ein bisschen Käse.'), 0);
+    assert.ok(hits('det.unbestimmter-artikel', 'Ich möchte einen Apfel.'));
+    for (const id of Object.keys(DETECTOR_OVERLAYS)) assert.ok(det(id), `overlay for a detector the registry does not have: ${id}`);
+  });
+  test('engine: a number opens no imperative; a quoted „Wer …" clause is read; „verboten" is a participle', () => {
+    assert.equal(hits('det.imperativ-du-ihr', '300 Gramm, bitte.'), 0);
+    assert.ok(hits('det.imperativ-du-ihr', 'Kauf bitte Milch!', [{ lemma: 'kaufen', pos: 'VERB', verb_forms: { '3sg': 'kauft', perfekt: 'hat gekauft' } }]));
+    assert.ok(hits('det.relativsatz-wer', '„Wer ein kaputtes Gerät hat, soll anrufen.“'));
+    assert.equal(hits('det.praeteritum-vollverb', 'Parken verboten!', [{ lemma: 'verbieten', pos: 'VERB', verb_forms: { '3sg': 'verbietet', praet: 'verbot', perfekt: 'hat verboten' } }]), 0);
+    assert.ok(hits('det.praeteritum-vollverb', 'Er verbot es.', [{ lemma: 'verbieten', pos: 'VERB', verb_forms: { '3sg': 'verbietet', praet: 'verbot', perfekt: 'hat verboten' } }]));
+  });
+});
+
+describe('the tokenizer reads every letter (orchestrator: Café, Sprachcafé, Repair-Café)', () => {
+  test('é, è, à, ç, ñ are letters', () => {
+    assert.deepEqual(tokens('Im Sprachcafé und im Repair-Café, à la carte, Señor.').map((t) => t.text), ['Im', 'Sprachcafé', 'und', 'im', 'Repair-Café', 'à', 'la', 'carte', 'Señor']);
+  });
+  test('LEX-03: „Café" is known once the lexicon allocates it', async () => {
+    const build = (answer) => lexCtx({
+      lexicon: { 'a1.1': [lx('lx.cafe', 'Café', 'NOUN', 'a1.1-u01', { article: 'das', plural: 'Cafés', plural_kind: 'regular' }), lx('lx.termin', 'Termin', 'NOUN', 'a1.1-u01', { article: 'der', plural: 'Termine', plural_kind: 'regular' })] },
+      unit: { $schema: 'course-v2/unit@1', id: 'a1.1-u01', level: 'a1.1', nr: 1, stage: 'I', spec: { grammar: { new: [], chunk: [], review: [] } }, steps: [{ id: 'a1.1-u01-ls1', pool: { items: [{ id: 'a1.1-u01-ls1-p01', type: 'fill_blank', answer }] } }] },
+    });
+    assertPass(await rule('LEX-03', build('Der Termin ist im Café.')));
+  });
+});
+
+describe('ITM-09 tile orders and question prompts (a1.1 r1 F01/F04, a1.2 r1 F12, a2.1 r3 F01, b1.2 r1 F10, b2.1 r1 F04, b2.2 r1 F15)', () => {
+  const sb = (tiles, answer, accepted, promptDe = 'Bilden Sie den Satz.') => (p) => {
+    Object.assign(step(p, 0).pool.items.find((i) => i.id === 'a2.1-u07-ls1-p05'), { tiles, answer, accepted, promptDe });
+  };
+  test('fail: a question built under „Bilden Sie den Satz."; pass: „Bilden Sie die Frage."', async () => {
+    assertFail(await rule('ITM-09', ex(sb(['melden', 'Sie', 'sich', 'morgen'], 'Melden Sie sich morgen?', ['Melden Sie sich morgen?']))), /is a question/);
+    assertPass(await rule('ITM-09', ex(sb(['melden', 'Sie', 'sich', 'morgen'], 'Melden Sie sich morgen?', ['Melden Sie sich morgen?'], 'Bilden Sie die Frage.'))));
+  });
+  test('fail: a frontable phrase the item does not accept; pass once accepted or the prompt fixes the first tile', async () => {
+    const tiles = ['ich', 'melde', 'mich', 'am Nachmittag'];
+    assertFail(await rule('ITM-09', ex(sb(tiles, 'Ich melde mich am Nachmittag.', ['Ich melde mich am Nachmittag.']))), /„Am Nachmittag melde ich mich\."/);
+    assertPass(await rule('ITM-09', ex(sb(tiles, 'Ich melde mich am Nachmittag.', ['Ich melde mich am Nachmittag.', 'Am Nachmittag melde ich mich.']))));
+    assertPass(await rule('ITM-09', ex(sb(tiles, 'Ich melde mich am Nachmittag.', ['Ich melde mich am Nachmittag.'], 'Beginnen Sie mit „ich“.'))));
+  });
+  test('Mittelfeld: [wir, haben, zu Hause, welche] owes „Wir haben welche zu Hause."; [ich, habe, leider, keinen] owes no „keinen leider"', async () => {
+    assertFail(await rule('ITM-09', ex(sb(['wir', 'haben', 'zu Hause', 'welche'], 'Wir haben zu Hause welche.', ['Wir haben zu Hause welche.', 'Zu Hause haben wir welche.']))), /„Wir haben welche zu Hause\."/);
+    assertPass(await rule('ITM-09', ex(sb(['ich', 'habe', 'leider', 'keinen'], 'Ich habe leider keinen.', ['Ich habe leider keinen.', 'Leider habe ich keinen.']))));
+  });
+  test('Mittelfeld: a sentence adverb and a full noun-phrase subject stand either way round', async () => {
+    const tiles = ['heute', 'hat', 'die Firma', 'leider', 'geschlossen'];
+    const base = ['Heute hat die Firma leider geschlossen.', 'Die Firma hat heute leider geschlossen.', 'Leider hat die Firma heute geschlossen.'];
+    assertFail(await rule('ITM-09', ex(sb(tiles, base[0], base))), /„Heute hat leider die Firma geschlossen\."/);
+  });
+  test('the orders module leaves clause-combining items alone', () => {
+    assert.deepEqual(missingOrders({ tiles: ['der Staubsauger', 'geht', 'aus', 'obwohl', 'ich', 'den Akku aufgeladen habe'], answer: 'Der Staubsauger geht aus, obwohl ich den Akku aufgeladen habe.', accepted: [] }), []);
   });
 });
